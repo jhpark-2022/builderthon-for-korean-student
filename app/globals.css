@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Pretendard — Korean+English display face used by KOMOS-style brand work.
+   @import must precede other rules. */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+:root {
+  --font-sans: "Pretendard", "Pretendard Variable", -apple-system,
+    BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px; /* offset for the sticky nav on anchor jumps */
+}
+
+body {
+  background-color: #f4f6fa;
+  color: #1f2937;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* Respect reduced-motion: kill smooth scroll + decorative animation */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Thin, light scrollbar */
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+::-webkit-scrollbar-track {
+  background: #eef1f7;
+}
+::-webkit-scrollbar-thumb {
+  background: #cdd5e3;
+  border-radius: 999px;
+  border: 2px solid #eef1f7;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a9b4c8;
+}
+
+/* Visible keyboard focus everywhere */
+:focus-visible {
+  outline: 2px solid #1f5be0;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Heading gradient accent (navy → blue) for the few large display lines */
+.text-gradient {
+  background: linear-gradient(100deg, #172747 0%, #22345c 45%, #1f5be0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Horizontal-scroll timetable on small screens: smooth, snap, visible track */
+.timetable-scroll {
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+.timetable-scroll > * {
+  scroll-snap-align: start;
+}
