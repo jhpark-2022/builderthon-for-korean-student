@@ -122,7 +122,7 @@ export const categoryMeta: Record<
     dot: "#E0852A", // orange
   },
   empowerment: {
-    label: { ko: "창업가 임파워먼트", en: "Entrepreneurship Empowerment" },
+    label: { ko: "창업가 정신", en: "Entrepreneurship Empowerment" },
     blurb: {
       ko: "“모두가 창업가가 될 필요는 없다” — 진로의 폭을 넓히는 세션.",
       en: "“Not everyone needs to be a founder” — broadening the path.",
@@ -140,7 +140,7 @@ export const categoryMeta: Record<
   build: {
     label: { ko: "빌드 / 자율", en: "Build / Open" },
     blurb: {
-      ko: "메인 세션 없이 집중 빌드 — 롤링 멘토링과 오픈 빌드.",
+      ko: "메인 세션 없이 빌드에 집중 — 수시 멘토링과 자율 빌드.",
       en: "Focused build with no main session — rolling mentoring & open build.",
     },
     dot: "#64748B", // slate grey
@@ -195,7 +195,7 @@ export const schedule: BEvent[] = [
     date: "08.24",
     category: "network",
     timeOfDay: "PM",
-    title: { ko: "Welcome Mixer", en: "Welcome Mixer" },
+    title: { ko: "웰컴 믹서", en: "Welcome Mixer" },
     summary: {
       ko: "참가자·연사·운영진이 함께하는 환영 네트워킹.",
       en: "A welcome mixer for participants, speakers and the team.",
@@ -232,7 +232,7 @@ export const schedule: BEvent[] = [
     date: "08.25",
     category: "ambassador",
     timeOfDay: "PM",
-    title: { ko: "AI Use Case", en: "AI Use Case" },
+    title: { ko: "AI 활용 사례", en: "AI Use Case" },
     summary: {
       ko: "AI 앰배서더가 전하는 최신 AI 도구 활용 사례.",
       en: "Leading AI-tool use cases from an AI Ambassador.",
@@ -250,7 +250,7 @@ export const schedule: BEvent[] = [
     date: "08.25",
     category: "dinner",
     timeOfDay: "PM",
-    title: { ko: "FinTech Dinner", en: "FinTech Dinner" },
+    title: { ko: "핀테크 디너", en: "FinTech Dinner" },
     summary: {
       ko: "핀테크를 주제로 한 디너 네트워킹.",
       en: "A dinner gathering around FinTech.",
@@ -287,13 +287,13 @@ export const schedule: BEvent[] = [
     date: "08.26",
     category: "ambassador",
     timeOfDay: "PM",
-    title: { ko: "AI Use Case", en: "AI Use Case" },
+    title: { ko: "AI 활용 사례", en: "AI Use Case" },
     summary: {
       ko: "두 번째 AI 앰배서더 세션 — 심화 활용 사례.",
       en: "A second AI Ambassador session — deeper use cases.",
     },
     description: {
-      ko: "두 번째 AI Use Case 세션입니다. 빌드가 본격화되는 시점에 맞춰, 더 깊이 있는 AI 워크플로와 자동화 사례를 공유해 팀들이 제품의 완성도와 속도를 동시에 끌어올릴 수 있도록 돕습니다.",
+      ko: "두 번째 AI 활용 사례 세션입니다. 빌드가 본격화되는 시점에 맞춰, 더 깊이 있는 AI 워크플로와 자동화 사례를 공유해 팀들이 제품의 완성도와 속도를 동시에 끌어올릴 수 있도록 돕습니다.",
       en: "A second AI Use Case session. Timed for when builds are in full swing, it shares deeper AI workflows and automation examples so teams can raise both the polish and the velocity of their product.",
     },
     location: VENUE_TBC,
@@ -305,7 +305,7 @@ export const schedule: BEvent[] = [
     date: "08.26",
     category: "meetup",
     timeOfDay: "PM",
-    title: { ko: "Payment Dinner", en: "Payment Dinner" },
+    title: { ko: "페이먼트 디너", en: "Payment Dinner" },
     summary: {
       ko: "페이먼트 분야를 주제로 한 디너 밋업.",
       en: "A dinner meetup focused on Payments.",
@@ -364,7 +364,7 @@ export const schedule: BEvent[] = [
     category: "meetup",
     timeOfDay: "PM",
     confirmed: true,
-    title: { ko: "Blockchain Meetup", en: "Blockchain Meetup" },
+    title: { ko: "블록체인 밋업", en: "Blockchain Meetup" },
     summary: {
       ko: "Alchemy GTM Lead의 지원이 확정된 블록체인 밋업.",
       en: "Blockchain-focused meetup with confirmed support from an Alchemy GTM Lead.",
@@ -402,13 +402,13 @@ export const schedule: BEvent[] = [
     date: "08.28",
     category: "build",
     timeOfDay: "PM",
-    title: { ko: "Ad-hoc 멘토링", en: "Ad-hoc Mentoring" },
+    title: { ko: "수시 멘토링", en: "Ad-hoc Mentoring" },
     summary: {
       ko: "필요할 때 받는 롤링 멘토링.",
       en: "Rolling mentoring, available when you need it.",
     },
     description: {
-      ko: "정해진 시간표 대신 팀의 필요에 맞춰 진행되는 롤링(ad-hoc) 멘토링입니다. 막히는 지점, 피칭 준비, 기술적 난제 등 무엇이든 멘토와 1:1로 풀어내며 데모데이를 준비합니다. (멘토 라인업은 파트너 확정에 따라 안내될 예정입니다.)",
+      ko: "정해진 시간표 대신 팀의 필요에 맞춰 수시로 진행되는 멘토링입니다. 막히는 지점, 피칭 준비, 기술적 난제 등 무엇이든 멘토와 1:1로 풀어내며 데모데이를 준비합니다. (멘토 라인업은 파트너 확정에 따라 안내될 예정입니다.)",
       en: "Rolling, ad-hoc mentoring that follows each team's needs rather than a fixed timetable. Work through blockers, pitch prep or technical challenges one-on-one with mentors as you head into Demo Day. (Mentor line-up to be announced as partners are confirmed.)",
     },
     location: VENUE_TBC,
@@ -420,13 +420,13 @@ export const schedule: BEvent[] = [
     date: "08.28",
     category: "build",
     timeOfDay: "PM",
-    title: { ko: "Open Build (자율 빌딩)", en: "Open Build" },
+    title: { ko: "자율 빌드 (Open Build)", en: "Open Build" },
     summary: {
-      ko: "자유 빌드 · 오피스 아워 형식의 열린 작업 시간.",
+      ko: "오피스 아워 형식의 열린 자율 빌드 시간.",
       en: "Free build / office-hours style open work time.",
     },
     description: {
-      ko: "오피스 아워 형식의 열린 자율 빌딩 시간입니다. 팀들이 같은 공간에서 각자의 제품을 다듬고, 서로의 진행 상황을 보며 자극을 주고받습니다. 운영진과 멘토가 상주해 필요한 도움을 그때그때 제공합니다.",
+      ko: "오피스 아워 형식의 열린 자율 빌드 시간입니다. 팀들이 같은 공간에서 각자의 제품을 다듬고, 서로의 진행 상황을 보며 자극을 주고받습니다. 운영진과 멘토가 상주해 필요한 도움을 그때그때 제공합니다.",
       en: "An open, office-hours-style build block. Teams polish their products in a shared space, drawing energy from seeing each other's progress, with organizers and mentors on hand to help whenever it's needed.",
     },
     location: VENUE_TBC,
@@ -439,7 +439,7 @@ export const schedule: BEvent[] = [
     date: "08.29",
     category: "main",
     timeOfDay: "PM",
-    title: { ko: "최종 피칭 & 시상", en: "Final Pitch & Awards" },
+    title: { ko: "최종 피칭 및 시상", en: "Final Pitch & Awards" },
     summary: {
       ko: "팀별 최종 피칭과 심사, 그리고 시상.",
       en: "Final team pitches, judging and awards.",
@@ -456,7 +456,7 @@ export const schedule: BEvent[] = [
     date: "08.29",
     category: "network",
     timeOfDay: "PM",
-    title: { ko: "Closing Networking", en: "Closing Networking" },
+    title: { ko: "클로징 네트워킹", en: "Closing Networking" },
     summary: {
       ko: "행사를 마무리하는 클로징 네트워킹.",
       en: "Closing networking to wrap the event.",

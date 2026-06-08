@@ -24,7 +24,7 @@ export const dict = {
 
   hero: {
     eyebrow: {
-      ko: "싱가포르 최초 한인 학생 페스티벌형 빌더톤",
+      ko: "싱가포르 최초의 한인 학생 대상 페스티벌형 빌더톤",
       en: "Singapore's first festival-style builderthon for Korean students",
     },
     titleLine1: { ko: "여기서", en: "Build" },
@@ -38,8 +38,8 @@ export const dict = {
     ctaProgram: { ko: "프로그램 보기", en: "View Program" },
     scroll: { ko: "스크롤", en: "Scroll" },
     statParticipants: { ko: "한인 학생", en: "Korean students" },
-    statDays: { ko: "일간 빌드", en: "days of building" },
-    statLanguage: { ko: "영어 진행", en: "run in English" },
+    statDays: { ko: "일간의 빌드", en: "days of building" },
+    statLanguage: { ko: "영어 중심 진행", en: "run in English" },
   },
 
   about: {
@@ -49,7 +49,7 @@ export const dict = {
       en: "Why a builderthon",
     },
     intro: {
-      ko: "싱가포르에는 약 900명의 한인 유학생이 있지만, 커뮤니티는 학교별로 나뉘어 경험과 인사이트를 나누는 문화가 아직 충분히 자리 잡지 못했습니다. 먼저 길을 걸은 사람이 문을 열어 주는 — 그런 장을 만들고자 합니다.",
+      ko: "싱가포르에는 약 900명의 한인 유학생이 있지만, 커뮤니티는 학교별로 나뉘어 경험과 인사이트를 나누는 문화가 아직 충분히 자리 잡지 못했습니다. 먼저 길을 걸은 사람이 다음 사람을 위해 문을 열어 주는, 그런 장을 만들고자 합니다.",
       en: "There are ~900 Korean students in Singapore, yet the community is split by university and a culture of sharing experience hasn't fully taken root. We want to build the place where those who walked the path first open the door.",
     },
     cards: [
@@ -89,7 +89,7 @@ export const dict = {
     // Short editorial story — 3 concise paragraphs (avoid one wall of text).
     body: [
       {
-        ko: "싱가포르의 한인 학생들은 충분히 뛰어나고, 글로벌하게 도전할 준비가 되어 있습니다. 다만 커뮤니티는 아직 젊습니다. 여러 세대에 걸쳐 뿌리를 내린 지역처럼 선배들의 경험과 기회, 실질적인 조언이 자연스럽게 후배들에게 이어지는 구조는 아직 충분히 자리 잡지 못했습니다.",
+        ko: "싱가포르의 한인 학생들은 충분히 뛰어나고, 글로벌하게 도전할 준비가 되어 있습니다. 다만 커뮤니티는 아직 젊습니다. 여러 세대에 걸쳐 한인 네트워크가 뿌리내린 지역처럼 선배들의 경험과 기회, 실질적인 조언이 자연스럽게 후배들에게 이어지는 구조는 아직 충분히 자리 잡지 못했습니다.",
         en: "Many Korean students in Singapore are ambitious, capable, and globally minded — but the community is still young. Unlike places where Korean networks have grown over several generations, Singapore doesn't yet have a strong structure where experience, opportunities, and practical guidance flow naturally from seniors to juniors.",
       },
       {
@@ -134,13 +134,13 @@ export const dict = {
     tag: { ko: "Program", en: "Program" },
     heading: { ko: "6일간의 여정", en: "The 6-day journey" },
     intro: {
-      ko: "메인 세션(오프닝 · Founder Sharing · 데모데이)은 핵심 트랙으로 유지되며, Day 2–5의 Ad-hoc 이벤트는 제안 배치로 유연하게 조정됩니다. 카드를 누르면 상세 내용을 볼 수 있습니다.",
+      ko: "메인 세션(오프닝 · Founder Sharing · 데모데이)은 핵심 트랙으로 유지되고, Day 2–5의 수시 이벤트는 제안된 구성으로 상황에 따라 조정될 수 있습니다. 카드를 누르면 자세한 내용을 볼 수 있습니다.",
       en: "Main sessions (Opening · Founder Sharing · Demo Day) are retained as the core track; Day 2–5 ad-hoc events are a suggested placement and can be adjusted. Tap any card for details.",
     },
     legendTitle: { ko: "카테고리", en: "Legend" },
     dayLabel: { ko: "Day", en: "Day" },
     tapHint: { ko: "자세히 보기", en: "View details" },
-    confirmedBadge: { ko: "확정", en: "Confirmed" },
+    confirmedBadge: { ko: "지원 확정", en: "Confirmed" },
     swipeHint: {
       ko: "← 좌우로 스크롤하여 6일 전체 일정을 확인하세요 →",
       en: "← Scroll sideways to see all 6 days →",
@@ -170,14 +170,14 @@ export const dict = {
       ko: "SMU 한인학생회",
       en: "SMU Korean Student Association",
     },
-    networkLabel: { ko: "전신 네트워크 · Founding network", en: "Founding network" },
+    networkLabel: { ko: "시작점이 된 네트워크 · Founding network", en: "Founding network" },
     networkDesc: {
-      ko: "이 빌더톤이 잇는 네트워크",
+      ko: "이 빌더톤이 이어가는 네트워크",
       en: "The network this builderthon continues",
     },
     confirmedLabel: { ko: "지원 확정 · Confirmed support", en: "Confirmed support" },
     confirmedSub: {
-      ko: "Blockchain Meetup — Alchemy GTM Lead 지원 확정",
+      ko: "블록체인 밋업 — Alchemy GTM Lead의 지원 확정",
       en: "Blockchain Meetup — Alchemy GTM Lead support confirmed",
     },
     moreLabel: {
@@ -208,7 +208,7 @@ export const dict = {
       {
         q: { ko: "참가비가 있나요?", en: "Is there a fee?" },
         a: {
-          ko: "환급형 보증금 S$30이 있으며, 전 일정에 참석하면 전액 환급됩니다. 무료 운영 대비 참여 몰입도와 인식 가치를 유지하기 위한 장치입니다.",
+          ko: "S$30의 환급형 보증금이 있으며, 전 일정에 참석하면 전액 환급됩니다. 무료 행사에 비해 참여 몰입도를 높이고 행사의 가치를 지키기 위한 장치입니다.",
           en: "There is a refundable S$30 deposit, fully returned to those who attend throughout. It keeps engagement and perceived value high compared to a free event.",
         },
       },
