@@ -149,9 +149,9 @@ export default function Partners() {
                 <Image
                   src="/partners/processed/zero100.png"
                   alt="Zero100"
-                  width={453}
-                  height={144}
-                  className="h-9 w-auto object-contain sm:h-10"
+                  width={225}
+                  height={225}
+                  className="h-12 w-12 rounded-xl object-contain sm:h-14 sm:w-14"
                 />
               </div>
               <p className="mt-3 text-sm text-ink-muted">

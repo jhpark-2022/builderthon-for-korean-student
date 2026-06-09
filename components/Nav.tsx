@@ -77,9 +77,9 @@ export default function Nav() {
             src="/partners/processed/zero100.png"
             alt=""
             aria-hidden
-            width={453}
-            height={144}
-            className="h-[17px] w-auto object-contain sm:h-[19px]"
+            width={225}
+            height={225}
+            className="h-7 w-7 rounded-md object-contain sm:h-8 sm:w-8"
           />
         </a>
 
