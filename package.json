@@ -9,15 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@heroui/react": "^3.1.0",
     "@react-three/drei": "^9.114.0",
     "@react-three/fiber": "^8.17.10",
     "@react-three/postprocessing": "^2.16.3",
     "framer-motion": "^11.18.2",
     "next": "^14.2.35",
+    "postprocessing": "~6.37.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwind-variants": "^3.2.2",
     "three": "^0.160.0"
   },
   "devDependencies": {
