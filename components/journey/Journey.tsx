@@ -129,15 +129,40 @@ export default function Journey() {
       </Chapter>
 
       {/* ── CH 1 · ABOUT ───────────────────────────────────────────── */}
-      <Chapter id="about" align="left">
-        <Eyebrow>{t(dict.about.tag)}</Eyebrow>
-        <h2 className="max-w-2xl text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
-          {t(dict.about.heading)}
-        </h2>
-        <p className="mt-5 max-w-xl text-base leading-relaxed text-white/70">
-          {t(dict.about.intro)}
+      <Chapter id="about" align="center">
+        <div className="text-center">
+          <Eyebrow>{t(dict.about.tag)}</Eyebrow>
+          <h2 className="mx-auto max-w-3xl text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+            {t(dict.about.heading)}
+          </h2>
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/70">
+            {t(dict.about.intro)}
+          </p>
+        </div>
+
+        {/* the problem, in numbers — sets up why this matters before the answer */}
+        <div className="mt-10 rounded-3xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-md sm:p-8">
+          <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
+            {t(dict.about.gapTag)}
+          </p>
+          <div className="mt-6 grid gap-6 sm:grid-cols-3">
+            {dict.about.gap.map((s) => (
+              <div key={s.num} className="text-center">
+                <div className="text-3xl font-black text-white sm:text-4xl">{s.num}</div>
+                <p className="mx-auto mt-2 max-w-[15rem] text-xs leading-relaxed text-white/55">{t(s.label)}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mx-auto mt-6 max-w-2xl border-t border-white/10 pt-5 text-center text-sm leading-relaxed text-white/55">
+            {t(dict.about.gapNote)}
+          </p>
+        </div>
+
+        {/* the answer — the shift we're building */}
+        <p className="mt-12 text-center text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
+          {t(dict.about.shiftTag)}
         </p>
-        <div className="mt-10 grid gap-4 md:grid-cols-3">
+        <div className="mt-5 grid gap-4 text-left md:grid-cols-3">
           {dict.about.cards.map((c) => (
             <Glass key={c.kicker.en} className="!p-6 transition hover:border-violet-400/40 hover:bg-white/[0.07]">
               <span className="text-xs font-bold tracking-[0.2em] text-violet-300">{t(c.kicker)}</span>

@@ -58,6 +58,37 @@ export const dict = {
       ko: "싱가포르에는 약 900명의 한인 유학생이 있지만 커뮤니티는 학교별로 나뉘어 있고, 먼저 길을 걸은 사람의 경험과 기회가 다음 세대로 잘 이어지지 않습니다. 우리는 누군가 조금 더 일찍 열어줬으면 했던 그 문을 직접 만들고자 합니다.",
       en: "There are ~900 Korean students in Singapore, split university by university — with little access or guidance passed down from those a few steps ahead. We're building the door we wished someone had opened for us.",
     },
+    // The problem, in numbers — from the "900 students, no bridge between them"
+    // partner deck. Sourced, not invented.
+    gapTag: { ko: "지금의 현실", en: "The gap today" },
+    gap: [
+      {
+        num: "~900",
+        label: {
+          ko: "NUS · NTU · SMU에 흩어진 한인 유학생 — 학교별로 나뉜 커뮤니티",
+          en: "Korean students across NUS · NTU · SMU — split school by school",
+        },
+      },
+      {
+        num: "60–70%",
+        label: {
+          ko: "사교 중심 모임이 채워주지 못하는 도전 지향 학생",
+          en: "ambition-driven students today's social-only events don't serve",
+        },
+      },
+      {
+        num: "0",
+        label: {
+          ko: "창업가 · 멘토 · 커리어로 잇는 상시 교류 플랫폼",
+          en: "standing cross-university platform linking them to founders, mentors & careers",
+        },
+      },
+    ],
+    gapNote: {
+      ko: "많은 학생이 군 복무 전후로 방향을 잃고 한국으로 돌아가지만, 먼저 온 사람의 기회가 다음 세대로 이어지는 통로는 아직 없습니다.",
+      en: "Many lose direction around military service and head back to Korea — yet there's no channel passing opportunity from those who came before to the next generation.",
+    },
+    shiftTag: { ko: "그래서 우리가 만드는 변화", en: "The shift we're building" },
     cards: [
       {
         kicker: { ko: "01", en: "01" },
