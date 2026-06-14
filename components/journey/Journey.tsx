@@ -414,15 +414,27 @@ export default function Journey() {
           </h2>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/65">{t(dict.partners.note)}</p>
 
+          {/* Organizer + Founding network.
+              Both marks are square-ish, so each sits in an identical 48px optical
+              box. KOMOS lion is white-on-transparent → invert keeps it white.
+              Zero100 ships with a baked-in solid-blue background, so inverting it
+              produces a blank white square — instead it gets a white chip so the
+              white-on-blue mark stays legible while matching the other tiles. */}
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {[
-              { label: t(dict.partners.organizerLabel), img: "/komos-lion-white.png", name: "KOMOS", desc: t(dict.partners.organizerDesc), w: 690, h: 439 },
-              { label: t(dict.partners.networkLabel),   img: "/partners/processed/zero100.png", name: "Zero100", desc: t(dict.partners.networkDesc), w: 225, h: 225 },
+              { label: t(dict.partners.organizerLabel), img: "/komos-lion-white.png",          name: "KOMOS",   desc: t(dict.partners.organizerDesc), w: 1080, h: 1080, treatment: "mono" as const },
+              { label: t(dict.partners.networkLabel),   img: "/partners/processed/zero100.png", name: "Zero100", desc: t(dict.partners.networkDesc),   w: 225,  h: 225,  treatment: "chip" as const },
             ].map((o) => (
               <div key={o.name} className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
                 <span className="text-xs font-bold uppercase tracking-widest text-white/40">{o.label}</span>
                 <div className="mt-4 flex items-center gap-4">
-                  <Image src={o.img} alt={o.name} width={o.w} height={o.h} className="h-10 w-10 rounded-lg object-contain brightness-0 invert" />
+                  {o.treatment === "chip" ? (
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white">
+                      <Image src={o.img} alt={o.name} width={o.w} height={o.h} className="h-10 w-10 object-contain" />
+                    </span>
+                  ) : (
+                    <Image src={o.img} alt={o.name} width={o.w} height={o.h} className="h-12 w-12 shrink-0 object-contain brightness-0 invert" />
+                  )}
                   <div>
                     <p className="text-lg font-bold text-white">{o.name}</p>
                     <p className="text-sm text-white/50">{o.desc}</p>
@@ -432,20 +444,22 @@ export default function Journey() {
             ))}
           </div>
 
+          {/* Wordmark partner wall — every logo capped to a single 28px cap-height
+              so they read at one consistent weight regardless of source aspect ratio. */}
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {[
               { src: "/partners/processed/popup-studio.png", alt: "Popup Studio", w: 476, h: 134 },
               { src: "/partners/processed/codepresso.png",   alt: "Codepresso",   w: 361, h: 113 },
             ].map((b) => (
               <div key={b.alt} className="flex h-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] px-6">
-                <Image src={b.src} alt={b.alt} width={b.w} height={b.h} className="h-9 w-auto max-w-[70%] object-contain brightness-0 invert opacity-70" />
+                <Image src={b.src} alt={b.alt} width={b.w} height={b.h} className="max-h-7 w-auto max-w-full object-contain brightness-0 invert opacity-75" />
               </div>
             ))}
           </div>
 
           <a href="https://www.alchemy.com/" target="_blank" rel="noreferrer"
             className="group mt-6 flex h-20 items-center justify-center gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/5 px-6 transition hover:bg-emerald-400/10 sm:w-1/2">
-            <Image src="/partners/processed/alchemy.png" alt="Alchemy" width={480} height={422} className="h-8 w-auto object-contain brightness-0 invert opacity-80" />
+            <Image src="/partners/processed/alchemy.png" alt="Alchemy" width={480} height={422} className="h-9 w-9 shrink-0 object-contain brightness-0 invert opacity-90" />
             <span className="font-bold text-white">Alchemy</span>
             <span className="text-white/40 group-hover:text-emerald-300">↗</span>
           </a>
