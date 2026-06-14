@@ -150,15 +150,20 @@ export const dict = {
 
   program: {
     tag: { ko: "Program", en: "Program" },
-    heading: { ko: "6일간의 여정", en: "The 6-day journey" },
+    heading: { ko: "경쟁이 아니라, 함께 배우는 6일", en: "Six days to learn together, not compete" },
     intro: {
-      ko: "메인 세션(오프닝 · Founder Sharing · 데모데이)은 핵심 트랙으로 유지되고, Day 2–5의 수시 이벤트는 제안된 구성으로 상황에 따라 조정될 수 있습니다. 카드를 누르면 자세한 내용을 볼 수 있습니다.",
-      en: "Main sessions (Opening · Founder Sharing · Demo Day) are retained as the core track; Day 2–5 ad-hoc events are a suggested placement and can be adjusted. Tap any card for details.",
+      ko: "이 빌더톤은 순위를 가리기 위한 자리가 아닙니다. 서로에게 배우고 함께 성장할 수 있도록 더 많은 세션과 만남을 준비했습니다. 오프닝 · 파운더 셰어링 · 데모데이가 중심 트랙이고, 카드를 누르면 자세한 내용을 볼 수 있습니다.",
+      en: "This builderthon isn't about ranking who wins. We've prepared more sessions and connections than a usual hackathon so everyone can learn from each other and grow together. Opening · Founder Sharing · Demo Day anchor the week — tap any card for details.",
+    },
+    rsvpNote: {
+      ko: "Day 2–5의 사이드 세션(밋업 · 디너 · AI 유즈케이스 · 멘토링 등)은 필수가 아닙니다 — 원하는 세션만 자유롭게 RSVP로 참여하세요.",
+      en: "Day 2–5 side sessions (meetups · dinners · AI use cases · mentoring) are optional — just RSVP for the ones you want to join.",
     },
     legendTitle: { ko: "카테고리", en: "Legend" },
     dayLabel: { ko: "Day", en: "Day" },
     tapHint: { ko: "자세히 보기", en: "View details" },
     confirmedBadge: { ko: "지원 확정", en: "Confirmed" },
+    optionalBadge: { ko: "선택 · RSVP", en: "Optional · RSVP" },
     sessions: { ko: "세션", en: "sessions" },
     swipeHint: {
       ko: "날짜를 눌러 해당 일정을 펼쳐보세요",

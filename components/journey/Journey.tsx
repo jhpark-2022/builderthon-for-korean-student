@@ -47,13 +47,15 @@ type Tfn = (p: { ko: string; en: string }) => string;
 function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEvent) => void }) {
   const meta = categoryMeta[ev.category];
   const isMain = ev.category === "main";
+  // Day 2–5 side sessions are not mandatory — joined freely via RSVP.
+  const optional = ev.day >= 2 && ev.day <= 5 && !isMain;
   return (
     <button
       type="button"
       onClick={() => onSelect(ev)}
-      className="group relative flex w-full flex-col overflow-hidden rounded-xl border border-white/10 bg-white/[0.10] p-4 text-left backdrop-blur-md transition hover:-translate-y-0.5 hover:border-violet-400/30 hover:bg-white/[0.16] xl:min-h-[180px]"
+      className="group relative flex w-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-white/[0.03] p-4 text-left backdrop-blur-md transition hover:-translate-y-0.5 hover:border-violet-400/25 hover:bg-white/[0.06] xl:min-h-[148px]"
     >
-      <span aria-hidden className="absolute inset-y-0 left-0 w-[3px]" style={{ backgroundColor: meta.dot }} />
+      <span aria-hidden className="absolute inset-y-0 left-0 w-[2px] opacity-70" style={{ backgroundColor: meta.dot }} />
       <div className="flex flex-wrap items-center gap-1.5 pl-2">
         <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: meta.dot }}>
           {isMain && <span className="mr-0.5 text-amber-300">★</span>}{t(meta.label)}
@@ -64,7 +66,13 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
               {t(dict.program.confirmedBadge)}
             </span>
           )}
-          <span className="text-[11px] text-white/30">{ev.timeOfDay}</span>
+          {optional ? (
+            <span className="rounded-full border border-white/15 bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-semibold text-white/55">
+              {t(dict.program.optionalBadge)}
+            </span>
+          ) : (
+            <span className="text-[11px] text-white/30">{ev.timeOfDay}</span>
+          )}
         </span>
       </div>
       <h4 className="mt-2 pl-2 text-[15px] font-bold leading-snug text-white">{t(ev.title)}</h4>
@@ -232,23 +240,27 @@ export default function Journey() {
             <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/60">
               {t(dict.program.intro)}
             </p>
-            <p className="mt-3 text-xs text-white/35 xl:hidden">{t(dict.program.swipeHint)}</p>
+            <div className="mx-auto mt-6 max-w-2xl rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.06] px-5 py-3.5 text-xs leading-relaxed text-emerald-100/85">
+              {t(dict.program.rsvpNote)}
+            </div>
+            <p className="mt-4 text-xs text-white/35 xl:hidden">{t(dict.program.swipeHint)}</p>
           </div>
 
-          {/* Desktop (xl+): immersive 6-column grid, one column per day. */}
-          <div className="mt-10 hidden gap-4 xl:grid xl:grid-cols-6">
+          {/* Desktop (xl+): one column per day. Lighter cards + more gap so the
+              full week reads calm, not packed. */}
+          <div className="mt-12 hidden gap-5 xl:grid xl:grid-cols-6">
             {days.map((day) => {
               const evs = schedule.filter((e) => e.day === day.day);
               return (
                 <div key={day.day} className="flex flex-col">
-                  <div className="flex h-14 items-center rounded-t-xl border border-violet-400/25 bg-gradient-to-r from-violet-500/25 to-indigo-500/15 px-4 backdrop-blur">
+                  <div className="flex h-12 items-center rounded-t-xl border border-violet-400/15 bg-gradient-to-r from-violet-500/12 to-indigo-500/8 px-4 backdrop-blur">
                     <div className="flex w-full items-baseline justify-between">
-                      <h3 className="text-sm font-bold text-violet-200">{t(dict.program.dayLabel)} {day.day}</h3>
-                      <span className="text-xs text-white/40">{day.date}</span>
+                      <h3 className="text-sm font-bold text-violet-200/90">{t(dict.program.dayLabel)} {day.day}</h3>
+                      <span className="text-xs text-white/35">{day.date}</span>
                     </div>
                   </div>
-                  <div className="flex min-h-[3rem] items-center rounded-b-xl border-x border-b border-white/10 bg-white/[0.10] px-4 py-2 backdrop-blur-md">
-                    <p className="text-xs font-bold leading-snug text-white/80">{t(day.theme)}</p>
+                  <div className="flex min-h-[2.75rem] items-center rounded-b-xl border-x border-b border-white/[0.06] bg-white/[0.03] px-4 py-2 backdrop-blur-md">
+                    <p className="text-xs font-bold leading-snug text-white/70">{t(day.theme)}</p>
                   </div>
                   <div className="mt-3 flex flex-1 flex-col gap-3">
                     {evs.map((ev) => (
