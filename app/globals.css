@@ -32,7 +32,11 @@
   --radius-card: 16px;
 }
 
-html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+/* Root font bumped 16px -> 18px so the whole site reads larger and fills the
+   screen: every rem-based text size, spacing value, and max-width content rail
+   scales up together. The hero "Build" headline is held at its size separately
+   (its clamp caps were trimmed to compensate). */
+html { font-size: 112.5%; scroll-behavior: smooth; scroll-padding-top: 96px; }
 
 body {
   background-color: var(--bg);

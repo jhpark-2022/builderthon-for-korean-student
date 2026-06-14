@@ -57,27 +57,27 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
     >
       <span aria-hidden className="absolute inset-y-0 left-0 w-[2px] opacity-70" style={{ backgroundColor: meta.dot }} />
       <div className="flex flex-wrap items-center gap-1.5 pl-2">
-        <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: meta.dot }}>
+        <span className="text-xs font-bold uppercase tracking-wide" style={{ color: meta.dot }}>
           {isMain && <span className="mr-0.5 text-amber-300">★</span>}{t(meta.label)}
         </span>
         <span className="ml-auto flex items-center gap-1.5">
           {ev.confirmed && (
-            <span className="rounded-full bg-emerald-400/15 px-1.5 py-0.5 text-[10px] font-bold text-emerald-300 ring-1 ring-emerald-400/25">
+            <span className="rounded-full bg-emerald-400/15 px-1.5 py-0.5 text-[0.7rem] font-bold text-emerald-300 ring-1 ring-emerald-400/25">
               {t(dict.program.confirmedBadge)}
             </span>
           )}
           {optional ? (
-            <span className="rounded-full border border-white/15 bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-semibold text-white/55">
+            <span className="rounded-full border border-white/15 bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/55">
               {t(dict.program.optionalBadge)}
             </span>
           ) : (
-            <span className="text-[11px] text-white/30">{ev.timeOfDay}</span>
+            <span className="text-xs text-white/30">{ev.timeOfDay}</span>
           )}
         </span>
       </div>
-      <h4 className="mt-2 pl-2 text-[15px] font-bold leading-snug text-white">{t(ev.title)}</h4>
-      <p className="mt-1.5 pl-2 text-[12px] leading-relaxed text-white/45">{t(ev.summary)}</p>
-      <span className="mt-auto pl-2 pt-3 text-[11px] font-semibold text-violet-300 opacity-0 transition group-hover:opacity-100">
+      <h4 className="mt-2 pl-2 text-base font-bold leading-snug text-white">{t(ev.title)}</h4>
+      <p className="mt-1.5 pl-2 text-sm leading-relaxed text-white/45">{t(ev.summary)}</p>
+      <span className="mt-auto pl-2 pt-3 text-xs font-semibold text-violet-300 opacity-0 transition group-hover:opacity-100">
         {t(dict.program.tapHint)} →
       </span>
     </button>
@@ -96,7 +96,10 @@ export default function Journey() {
         <div className="mt-10 sm:mt-12">
           <Eyebrow>✦ {t(dict.hero.eyebrow)}</Eyebrow>
         </div>
-        <h1 className="text-[clamp(3rem,11vw,8rem)] font-black leading-[0.88] tracking-tight drop-shadow-[0_4px_40px_rgba(124,58,237,0.5)]">
+        {/* clamp caps trimmed (8rem->7.1rem, 3rem->2.65rem) so the 18px root
+            bump doesn't enlarge the hero headline — it stays ~its current size
+            while the rest of the site grows. */}
+        <h1 className="text-[clamp(2.65rem,11vw,7.1rem)] font-black leading-[0.88] tracking-tight drop-shadow-[0_4px_40px_rgba(124,58,237,0.5)]">
           <span className="block text-white">{t(dict.hero.titleLine1)}</span>
           {/* pb-[0.15em]: bg-clip-text only paints the gradient inside the line
               box; with the tight leading the box cut off g/p descenders, so they
@@ -134,7 +137,7 @@ export default function Journey() {
             </Glass>
           ))}
         </div>
-        <div className="mt-14 flex flex-col items-center gap-2 text-[10px] tracking-[0.3em] text-white/40">
+        <div className="mt-14 flex flex-col items-center gap-2 text-[0.7rem] tracking-[0.3em] text-white/40">
           {t(dict.hero.scroll).toUpperCase()}
           <span className="h-10 w-px animate-pulse bg-gradient-to-b from-white/50 to-transparent" />
         </div>
@@ -287,7 +290,7 @@ export default function Journey() {
                     className="flex w-full items-center gap-3 px-4 py-4 text-left"
                   >
                     <span className="flex h-10 w-10 shrink-0 flex-col items-center justify-center rounded-lg border border-violet-400/25 bg-violet-500/15 text-violet-200">
-                      <span className="text-[8px] font-semibold uppercase leading-none opacity-70">{t(dict.program.dayLabel)}</span>
+                      <span className="text-[0.62rem] font-semibold uppercase leading-none opacity-70">{t(dict.program.dayLabel)}</span>
                       <span className="text-base font-black leading-none">{day.day}</span>
                     </span>
                     <span className="min-w-0 flex-1">
@@ -333,7 +336,7 @@ export default function Journey() {
                 return (
                   <div key={cat} className="flex items-start gap-2.5">
                     <span className="mt-[5px] h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: meta.dot }} />
-                    <p className="text-[13px] text-white/50">
+                    <p className="text-sm text-white/50">
                       <span className="font-bold text-white/85">{t(meta.label)}</span> — {t(meta.blurb)}
                     </p>
                   </div>
@@ -381,7 +384,7 @@ export default function Journey() {
             <ol className="mt-4 space-y-3">
               {dict.traction.wants.map((item, i) => (
                 <li key={i} className="flex items-start gap-3 text-sm leading-relaxed text-white/75">
-                  <span aria-hidden className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cyan-400/15 text-[11px] font-bold text-cyan-300">{i + 1}</span>
+                  <span aria-hidden className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cyan-400/15 text-xs font-bold text-cyan-300">{i + 1}</span>
                   {t(item)}
                 </li>
               ))}
