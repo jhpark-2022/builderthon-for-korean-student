@@ -435,6 +435,15 @@ export default function Journey() {
 
       {/* ── CH 6 · FOOTER ──────────────────────────────────────────── */}
       <section id="closing" className="relative flex min-h-screen w-full flex-col px-6 py-16 sm:px-10">
+        {/* soft dark scrim so the closing CTA + credits stay readable over the field */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-[1]"
+          style={{
+            background:
+              "radial-gradient(60% 55% at 50% 45%, rgba(7,6,18,0.82) 0%, rgba(7,6,18,0.5) 42%, rgba(7,6,18,0) 78%)",
+          }}
+        />
         {/* hero CTA block — vertically centred */}
         <div className="flex flex-1 flex-col items-center justify-center text-center">
           <h2 className="mx-auto max-w-3xl text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_40px_rgba(124,58,237,0.4)]">

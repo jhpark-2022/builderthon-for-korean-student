@@ -86,9 +86,10 @@ void main(){
     vec3 tangent = normalize(cross(dir, vec3(0.0, 0.0, 1.0)) + 1e-4);
     float grip = smoothstep(90.0, 4.0, hd) * parallax;
 
-    // curve early (reveal), spiral hard later (portal), race in (pull)
-    float inward = grip * (uReveal * 6.0 + uPull * 16.0);
-    float swirl  = grip * (uReveal * 3.0 + uPortal * 14.0);
+    // Gentle gravitational drift only — greatly reduced so particles no longer
+    // spiral into a tight, bright convergence ring at the bottom of the page.
+    float inward = grip * (uReveal * 1.2 + uPull * 3.0);
+    float swirl  = grip * (uReveal * 0.5 + uPortal * 2.5);
     disp += dir * inward + tangent * swirl;
   }
   pos += disp;
@@ -110,9 +111,9 @@ void main(){
   float size = aScale * (1.0 + infl * 1.0 + vNear * uPortal * 0.8);
   // trails: enlarge points along the pull to read as streaks (cheap stand-in)
   size *= (1.0 + vSpeed * 1.2);
-  // smaller base scale (150 vs 220) + a hard max clamp so a particle that drifts
-  // close to the camera can never balloon into a large foreground sphere
-  gl_PointSize = min(size * uPixelRatio * (150.0 / max(zCam, 0.001)), 64.0 * uPixelRatio);
+  // smaller base scale + a tight max clamp so a particle that drifts close to
+  // the camera can never balloon into a large foreground sphere
+  gl_PointSize = min(size * uPixelRatio * (130.0 / max(zCam, 0.001)), 34.0 * uPixelRatio);
 
   vGlow = aScale;
 }

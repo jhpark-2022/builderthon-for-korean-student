@@ -34,12 +34,13 @@ export function computePhases(scroll: number): Phases {
 
   // gravity becomes perceptible from ~12% and is fully present by 60%
   const reveal = ease(seg(s, 0.12, 0.6));
-  // portal forms 0.55 → 0.85
-  const portal = ease(seg(s, 0.55, 0.85));
-  // pull ramps through the push/pull phases 0.4 → 0.95
-  const pull = ease(seg(s, 0.4, 0.95));
-  // white-out only in the last 5%
-  const whiteout = ease(seg(s, 0.95, 1.0));
+  // Portal/pull kept very low: a faint gravitational drift, NOT a vortex that
+  // converges particles into a dense bright ring at the bottom of the page.
+  const portal = ease(seg(s, 0.55, 0.85)) * 0.3;
+  const pull = ease(seg(s, 0.4, 0.95)) * 0.3;
+  // No white-out crossing. It turned the footer field bright white and boosted
+  // particle alpha, overriding the calm opacity fade — the "game portal" look.
+  const whiteout = 0;
   // arrived environment fades up right at the very end
   const arrived = ease(seg(s, 0.97, 1.0));
 

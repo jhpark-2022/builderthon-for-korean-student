@@ -116,9 +116,9 @@ export class ParticleField {
       const t = Math.min(Math.max((x - a) / (b - a), 0), 1);
       return t * t * (3 - 2 * t);
     };
-    const HERO = 0.85, CONTENT = 0.4, FOOTER = 0.22;
-    let op = HERO + (CONTENT - HERO) * ss(0.05, 0.32, scroll); // hero → content
-    op += (FOOTER - op) * ss(0.72, 1.0, scroll);               // → footer
+    const HERO = 0.8, CONTENT = 0.3, FOOTER = 0.12;
+    let op = HERO + (CONTENT - HERO) * ss(0.04, 0.26, scroll); // hero → content
+    op += (FOOTER - op) * ss(0.6, 0.95, scroll);               // → footer
     u.uOpacity.value = op * this.intensity;
   }
 
