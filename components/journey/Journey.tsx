@@ -90,7 +90,11 @@ export default function Journey() {
         </div>
         <h1 className="text-[clamp(3rem,11vw,8rem)] font-black leading-[0.88] tracking-tight drop-shadow-[0_4px_40px_rgba(124,58,237,0.5)]">
           <span className="block text-white">{t(dict.hero.titleLine1)}</span>
-          <span className="block bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text text-transparent">
+          {/* pb-[0.15em]: bg-clip-text only paints the gradient inside the line
+              box; with the tight leading the box cut off g/p descenders, so they
+              rendered transparent ("Singapore." looked clipped). The padding
+              extends the paint box below the baseline. */}
+          <span className="block bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text pb-[0.15em] text-transparent">
             {t(dict.hero.titleLine2)}
           </span>
         </h1>
