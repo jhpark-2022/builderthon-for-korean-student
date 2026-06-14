@@ -77,12 +77,16 @@ class LensEffect extends Effect {
       }
     );
   }
-  setPhase(p: Phases) {
+  setPhase(p: Phases, intensity = 1) {
     // lensing builds across reveal→portal so space bends well before any
     // "arrival"; never a sudden on/off that would betray a shape
     (this.uniforms.get("uStrength") as THREE.Uniform).value =
       p.reveal * 0.4 + p.portal * 0.9;
-    (this.uniforms.get("uBright") as THREE.Uniform).value = p.whiteout;
+    // Cap + damp the white-out lift. At full scroll the focus sits over the
+    // footer (CTAs + heading); a full white-out washed that text out — and this
+    // pass runs even on mobile (bloom is gated, the lens is not). Keep it legible.
+    (this.uniforms.get("uBright") as THREE.Uniform).value =
+      p.whiteout * 0.6 * intensity;
   }
   setFocus(x: number, y: number) {
     (this.uniforms.get("uFocus") as THREE.Uniform).value.set(x, y);
@@ -125,8 +129,8 @@ export class PostFX {
     const second: Effect[] = [];
     if (useBloom) {
       this.bloom = new BloomEffect({
-        intensity: 1.1,
-        luminanceThreshold: 0.18,
+        intensity: 0.95,
+        luminanceThreshold: 0.2,
         luminanceSmoothing: 0.95,
         mipmapBlur: true,
         radius: 0.78,
@@ -137,13 +141,19 @@ export class PostFX {
     this.composer.addPass(new EffectPass(camera, ...second));
   }
 
-  /** Drive effect intensity from the narrative phases. */
-  setPhase(p: Phases) {
-    this.lens.setPhase(p);
+  /**
+   * Drive effect intensity from the narrative phases. `intensity` (0..1) damps
+   * the dynamic, flashier parts (portal/white-out) — passed as <1 under
+   * reduced-motion so the journey stays calm. The base bloom is kept gentle and
+   * the portal/white-out multipliers are well below the old blow-out levels so
+   * text over the field stays readable.
+   */
+  setPhase(p: Phases, intensity = 1) {
+    this.lens.setPhase(p, intensity);
     if (this.bloom) {
       // bloom intensifies as particles converge / cross — volumetric light
       // emerging from density, not from a drawn glow
-      this.bloom.intensity = 1.1 + p.portal * 1.4 + p.whiteout * 2.8;
+      this.bloom.intensity = 0.95 + (p.portal * 1.1 + p.whiteout * 1.6) * intensity;
     }
   }
 

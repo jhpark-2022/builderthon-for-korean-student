@@ -11,18 +11,20 @@ export type Phrase = { ko: string; en: string };
 // there is intentionally no application / sign-up / external form link.
 export const links = {
   program: "#program", // main internal CTA target
+  // Organizer contact for partnership/sponsor inquiries, with a prefilled subject.
+  partnership:
+    "mailto:jhpark.2022@business.smu.edu.sg?subject=Korean%20University%20Builderthon%20Partnership%20Inquiry",
 };
 
 export const dict = {
   nav: {
-    about: { ko: "소개", en: "About" },
+    about: { ko: "취지", en: "Why" },
+    join: { ko: "참가 대상", en: "Join" },
     program: { ko: "프로그램", en: "Program" },
     builders: { ko: "빌더 & 파트너", en: "Builders / Partners" },
     faq: { ko: "FAQ", en: "FAQ" },
     viewProgram: { ko: "프로그램 보기", en: "View Program" },
-    register: { ko: "지금 등록하기", en: "Register Now" },
-    regEndsIn: { ko: "등록 마감까지", en: "Registration ends in" },
-    days: { ko: "일", en: "days" },
+    partner: { ko: "파트너십 문의", en: "Partner with us" },
   },
 
   hero: {
@@ -38,7 +40,8 @@ export const dict = {
       ko: "단발성 해커톤이 아닌 6일간의 페스티벌형 빌더톤. 싱가포르 한인 학생 약 100명이 바이브코딩으로 직접 빌드하고, 생태계의 창업가들과 실제로 연결됩니다.",
       en: "Not a one-shot hackathon but a 6-day festival-style builderthon. ~100 Korean students in Singapore build hands-on with vibe coding and genuinely connect with founders across the ecosystem.",
     },
-    ctaProgram: { ko: "프로그램 보기", en: "View Program" },
+    ctaProgram: { ko: "6일의 여정 둘러보기", en: "Explore the 6-day journey" },
+    ctaPartner: { ko: "파트너십 문의", en: "Partner with us" },
     scroll: { ko: "스크롤", en: "Scroll" },
     statParticipants: { ko: "한인 학생", en: "Korean students" },
     statDays: { ko: "일간의 빌드", en: "days of building" },
@@ -46,91 +49,72 @@ export const dict = {
   },
 
   about: {
-    tag: { ko: "About", en: "About" },
+    tag: { ko: "취지", en: "Why this exists" },
     heading: {
-      ko: "왜 빌더톤인가",
-      en: "Why a builderthon",
+      ko: "우리가 있었으면 했던 다리를 직접 만듭니다.",
+      en: "Building the bridge we wished existed.",
     },
     intro: {
-      ko: "싱가포르에는 약 900명의 한인 유학생이 있지만, 커뮤니티는 학교별로 나뉘어 경험과 인사이트를 나누는 문화가 아직 충분히 자리 잡지 못했습니다. 먼저 길을 걸은 사람이 다음 사람을 위해 문을 열어 주는, 그런 장을 만들고자 합니다.",
-      en: "There are ~900 Korean students in Singapore, yet the community is split by university and a culture of sharing experience hasn't fully taken root. We want to build the place where those who walked the path first open the door.",
+      ko: "싱가포르에는 약 900명의 한인 유학생이 있지만 커뮤니티는 학교별로 나뉘어 있고, 먼저 길을 걸은 사람의 경험과 기회가 다음 세대로 잘 이어지지 않습니다. 우리는 누군가 조금 더 일찍 열어줬으면 했던 그 문을 직접 만들고자 합니다.",
+      en: "There are ~900 Korean students in Singapore, split university by university — with little access or guidance passed down from those a few steps ahead. We're building the door we wished someone had opened for us.",
     },
     cards: [
       {
         kicker: { ko: "01", en: "01" },
-        title: { ko: "함께 빌드 (Co-building)", en: "Co-building" },
+        title: { ko: "기회에서 가이던스로", en: "From access to guidance" },
         body: {
-          ko: "학교(SMU·NUS·NTU)와 배경을 넘어 팀을 이루고, 6일간 실제로 작동하는 제품을 함께 만듭니다. 혼자가 아니라 같이.",
-          en: "Form teams across universities (SMU·NUS·NTU) and backgrounds and build a real, working product together over six days — not alone, but side by side.",
+          ko: "필요한 것은 영감만이 아닙니다. 맥락을 열어주고, 시행착오를 나누며, 실제 기회로 이어주는 사람들이 필요합니다.",
+          en: "Inspiration isn't enough. Students need people who open up context, share their mistakes, and point them toward real opportunities.",
         },
       },
       {
         kicker: { ko: "02", en: "02" },
-        title: { ko: "글로벌 아웃바운딩", en: "Global Out-Bounding" },
+        title: { ko: "하나의 행사에서 커뮤니티로", en: "From one event to a community" },
         body: {
-          ko: "세션과 데모데이 피칭을 가능한 한 영어로 진행해, 싱가포르에서 요구되는 글로벌 스탠다드 역량을 직접 훈련합니다.",
-          en: "Sessions and Demo Day pitches run in English wherever possible, training the global-standard capability Singapore expects.",
+          ko: "빌더톤은 끝이 아니라 시작점입니다. 학생·창업가·오퍼레이터가 반복적으로 연결되는 네트워크를 만듭니다.",
+          en: "The builderthon is a starting point, not an end — a network where students, founders, and operators keep connecting.",
         },
       },
       {
         kicker: { ko: "03", en: "03" },
-        title: { ko: "AI-Native 빌딩", en: "AI-Native" },
+        title: { ko: "혼자가 아니라 함께", en: "From building alone to together" },
         body: {
-          ko: "바이브코딩과 AI 도구로 아이디어를 빠르게 프로토타입으로 전환합니다. 기술 장벽이 아니라 아이디어가 한계가 되도록.",
-          en: "Turn ideas into prototypes fast with vibe coding and AI tools — so your ideas, not technical barriers, are the only limit.",
+          ko: "도전적인 학생들이 덜 외롭게, 함께 만들 동료와 멘토를 만날 수 있도록 합니다.",
+          en: "So ambitious students feel less alone — and find peers and mentors to build alongside.",
         },
       },
     ],
   },
 
-  motivation: {
-    tag: { ko: "커뮤니티를 만드는 이유", en: "Community motivation" },
+  whoWhat: {
+    tag: { ko: "참가 대상 · 혜택", en: "Who should join · What you get" },
     heading: {
-      ko: "우리가 있었으면 했던 다리를 직접 만들고자 합니다.",
-      en: "Building the bridge we wished existed.",
+      ko: "전공도, 코딩 실력도 묻지 않습니다.",
+      en: "You don't need to be a CS major.",
     },
-    // Short editorial story — 3 concise paragraphs (avoid one wall of text).
-    body: [
-      {
-        ko: "싱가포르의 한인 학생들은 충분히 뛰어나고, 글로벌하게 도전할 준비가 되어 있습니다. 다만 커뮤니티는 아직 젊습니다. 여러 세대에 걸쳐 한인 네트워크가 뿌리내린 지역처럼 선배들의 경험과 기회, 실질적인 조언이 자연스럽게 후배들에게 이어지는 구조는 아직 충분히 자리 잡지 못했습니다.",
-        en: "Many Korean students in Singapore are ambitious, capable, and globally minded — but the community is still young. Unlike places where Korean networks have grown over several generations, Singapore doesn't yet have a strong structure where experience, opportunities, and practical guidance flow naturally from seniors to juniors.",
-      },
-      {
-        ko: "이번 빌더톤은 그 다리를 직접 만들어보려는 시도입니다. 창업가·오퍼레이터·한인 비즈니스 오너, 그리고 여러 생태계 파트너들과의 대화와 도움을 바탕으로, 학생들이 먼저 길을 걸어간 사람들을 만나고, 제품과 회사가 실제로 어떻게 만들어지는지 배우며, 혼자 도전한다는 외로움을 조금이나마 덜 수 있는 장을 만들고자 합니다.",
-        en: "This Builderthon is our attempt to start building that bridge. With help and conversations across founders, operators, Korean business owners, and ecosystem partners, we want to create a space where students meet people who are a few steps ahead, learn how products and companies are actually built, and feel a little less alone while attempting something ambitious.",
-      },
-      {
-        ko: "목표는 단순히 6일짜리 행사를 여는 것이 아닙니다. 더 큰 목표는 싱가포르 안에서 지속 가능하고 단단한 한인 학생 창업가·빌더 커뮤니티의 기반을 만드는 것 — 기회와 맥락, 그리고 용기가 다음 세대의 학생들에게 계속 이어지는 구조를 만드는 것입니다.",
-        en: "The goal isn't just to run a six-day event. The bigger goal is to lay the foundation for a sustainable Korean student founder and builder community in Singapore — one that keeps passing on access, context, and courage to the next group of students.",
-      },
+    intro: {
+      ko: "참가자의 약 80%는 비전공자입니다. 그리고 그게 핵심입니다 — 바이브코딩과 AI로, 코딩 실력이 아니라 아이디어가 한계가 됩니다.",
+      en: "About 80% of builders won't come from CS — and that's the point. With vibe coding and AI, your ideas, not your syntax, are the limit.",
+    },
+    whoTitle: { ko: "이런 분께", en: "Who should join" },
+    who: [
+      { ko: "전공 불문 — SMU · NUS · NTU의 모든 한인 학생", en: "Any major — Korean students across SMU · NUS · NTU" },
+      { ko: "코딩 경험이 없어도 좋습니다 — 바이브코딩과 AI 도구로 시작합니다", en: "No coding experience needed — start with vibe coding and AI tools" },
+      { ko: "혼자도, 팀도 좋습니다 — 팀 구성을 강제하지 않습니다", en: "Solo or team — grouping is never forced" },
+      { ko: "영어가 부담돼도 괜찮습니다 — 글로벌 스탠다드로 함께 훈련합니다", en: "Nervous about English? We train you to the global standard, together" },
     ],
-    // Three concise belief cards.
-    cards: [
-      {
-        title: { ko: "기회에서 가이던스로", en: "From access to guidance" },
-        body: {
-          ko: "학생들에게 필요한 것은 영감만이 아닙니다. 맥락을 열어주고, 시행착오를 나누며, 실제 기회로 이어지게 해줄 사람들이 필요합니다.",
-          en: "Students don't only need inspiration. They need people who can open up context, share their mistakes, and point them toward real opportunities.",
-        },
-      },
-      {
-        title: { ko: "하나의 행사에서 커뮤니티로", en: "From one event to a community" },
-        body: {
-          ko: "빌더톤은 끝이 아니라 시작점입니다. 학생·창업가·오퍼레이터가 반복적으로 연결되는 네트워크를 만들고자 합니다.",
-          en: "The Builderthon is designed as a starting point — a way to gather students, founders, and operators into a network that can repeat.",
-        },
-      },
-      {
-        title: {
-          ko: "혼자 만드는 것에서 함께 만드는 것으로",
-          en: "From building alone to building together",
-        },
-        body: {
-          ko: "도전적인 학생들이 덜 외롭게, 그리고 함께 만들 수 있는 동료와 멘토를 만날 수 있게 하는 것이 목표입니다.",
-          en: "The aim is to make ambitious students feel less isolated, and to help them find peers and mentors who can build alongside them.",
-        },
-      },
+    getTitle: { ko: "얻어가는 것", en: "What you get" },
+    get: [
+      { ko: "6일간 AI로 실제 작동하는 제품 빌드", en: "Build a real, working product in 6 days with AI" },
+      { ko: "창업가 · VC와의 실질적 네트워킹", en: "Genuine networking with founders & VCs" },
+      { ko: "멘토링 & AI Use Case 세션 (AWS · OpenAI급 연사)", en: "Mentoring & AI Use Case sessions (AWS · OpenAI-class speakers)" },
+      { ko: "우수 참가자 대상 프로젝트 인턴십*", en: "Project internships for top performers*" },
+      { ko: "수료증*", en: "Certificate of completion*" },
     ],
+    disclaimer: {
+      ko: "* 인턴십 · 수료증 등 일부 혜택은 파트너와 논의 중이며 확정 시 안내됩니다.",
+      en: "* Some benefits (internships, certificates) are under discussion with partners and will be confirmed.",
+    },
   },
 
   program: {
@@ -144,9 +128,45 @@ export const dict = {
     dayLabel: { ko: "Day", en: "Day" },
     tapHint: { ko: "자세히 보기", en: "View details" },
     confirmedBadge: { ko: "지원 확정", en: "Confirmed" },
+    sessions: { ko: "세션", en: "sessions" },
     swipeHint: {
-      ko: "← 좌우로 스크롤하여 6일 전체 일정을 확인하세요 →",
-      en: "← Scroll sideways to see all 6 days →",
+      ko: "날짜를 눌러 해당 일정을 펼쳐보세요",
+      en: "Tap a day to expand its sessions",
+    },
+  },
+
+  traction: {
+    tag: { ko: "파트너 안내", en: "For partners" },
+    heading: {
+      ko: "추측이 아니라 근거로 설계합니다.",
+      en: "Designed on evidence, not guesses.",
+    },
+    intro: {
+      ko: "학생 인터뷰·피드백과 18개 빌더 행사 벤치마크를 토대로 프로그램을 설계하고 있습니다. 아래는 지금까지 확인된 수요와 파트너가 얻는 가치입니다.",
+      en: "We're shaping this program on student interviews and 18 benchmarked builder events. Here's the demand we've validated — and what partners get.",
+    },
+    stats: [
+      { num: "~100", label: { ko: "목표 한인 학생 빌더", en: "Target Korean student builders" } },
+      { num: "3", label: { ko: "참가 대학 (SMU · NUS · NTU)", en: "Universities (SMU · NUS · NTU)" } },
+      { num: "6", label: { ko: "일간 빌더 중심 프로그램", en: "Day builder-focused program" } },
+      { num: "18", label: { ko: "벤치마크한 빌더 행사", en: "Builder events benchmarked" } },
+    ],
+    wantTitle: { ko: "학생들이 원하는 것 (인터뷰 기반)", en: "What students told us they want" },
+    wants: [
+      { ko: "프로젝트 기반 인턴십", en: "Project-based internships" },
+      { ko: "멘토링 · 셰어링 세션", en: "Mentoring & sharing sessions" },
+      { ko: "창업가 · VC 네트워킹", en: "Founder & VC networking" },
+    ],
+    getTitle: { ko: "파트너가 얻는 것", en: "What partners get" },
+    gets: [
+      { ko: "약 100명의 한인 학생 빌더에 대한 우선 접근", en: "First access to ~100 Korean student builders" },
+      { ko: "실제로 빌드하는 사람들로부터의 제품 피드백", en: "Product feedback from people who actually build" },
+      { ko: "채용 · 고객 · 창업으로 이어지는 인재 파이프라인", en: "A talent pipeline into hiring, customers, and founders" },
+      { ko: "지속되는 커뮤니티의 파운딩 파트너 포지션", en: "A founding-partner position in a lasting community" },
+    ],
+    note: {
+      ko: "확정된 파트너와 논의 중인 파트너는 아래에서 구분해 안내합니다.",
+      en: "Confirmed and in-discussion partners are distinguished below.",
     },
   },
 

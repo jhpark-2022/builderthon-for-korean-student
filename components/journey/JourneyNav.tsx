@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { useLocale } from "@/lib/LocaleContext";
 import { dict, links } from "@/data/dictionary";
 import LocaleToggle from "@/components/LocaleToggle";
-import Countdown from "./Countdown";
 
 const anchors = [
   { id: "about",    label: dict.nav.about },
+  { id: "join",     label: dict.nav.join },
   { id: "program",  label: dict.nav.program },
   { id: "builders", label: dict.nav.builders },
   { id: "faq",      label: dict.nav.faq },
@@ -41,9 +41,11 @@ export default function JourneyNav() {
         </div>
         <div className="flex items-center gap-3">
           <LocaleToggle />
-          <Countdown />
+          <a href={links.partnership} className="hidden rounded-full border border-white/20 bg-white/5 px-5 py-2 text-sm font-semibold text-white/85 backdrop-blur transition hover:bg-white/10 md:inline-flex">
+            {t(dict.nav.partner)}
+          </a>
           <a href={links.program} className="hidden rounded-full bg-violet-600/90 px-5 py-2 text-sm font-semibold text-white backdrop-blur transition hover:bg-violet-500 sm:inline-flex">
-            {t(dict.nav.register)}
+            {t(dict.nav.viewProgram)}
           </a>
         </div>
       </nav>

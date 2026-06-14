@@ -42,9 +42,10 @@ export function pickQuality(): QualityTier {
   // navigator.deviceMemory is non-standard but widely supported on Chrome/Android
   const mem = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8;
 
-  // Mobile / low memory
+  // Mobile / low memory — leaner particle budget + tighter DPR cap so low-end
+  // phones stay smooth; bloom already off here (the lens glow is enough).
   if (coarse || w < 768 || mem <= 4) {
-    return { particles: 2000, dprMax: 1.5, bloom: false };
+    return { particles: 1400, dprMax: 1.35, bloom: false };
   }
   // Laptops
   if (w < 1680) {

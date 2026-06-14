@@ -39,9 +39,47 @@ function Eyebrow({ children, color = "violet" }: { children: React.ReactNode; co
   );
 }
 
+type Tfn = (p: { ko: string; en: string }) => string;
+
+// A single program event card. Shared by the desktop column grid and the mobile
+// day accordion so both stay in sync. Height is only fixed on desktop (xl) to
+// keep columns even; on mobile cards hug their content.
+function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEvent) => void }) {
+  const meta = categoryMeta[ev.category];
+  const isMain = ev.category === "main";
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(ev)}
+      className="group relative flex w-full flex-col overflow-hidden rounded-xl border border-white/10 bg-white/[0.10] p-4 text-left backdrop-blur-md transition hover:-translate-y-0.5 hover:border-violet-400/30 hover:bg-white/[0.16] xl:min-h-[180px]"
+    >
+      <span aria-hidden className="absolute inset-y-0 left-0 w-[3px]" style={{ backgroundColor: meta.dot }} />
+      <div className="flex flex-wrap items-center gap-1.5 pl-2">
+        <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: meta.dot }}>
+          {isMain && <span className="mr-0.5 text-amber-300">★</span>}{t(meta.label)}
+        </span>
+        <span className="ml-auto flex items-center gap-1.5">
+          {ev.confirmed && (
+            <span className="rounded-full bg-emerald-400/15 px-1.5 py-0.5 text-[10px] font-bold text-emerald-300 ring-1 ring-emerald-400/25">
+              {t(dict.program.confirmedBadge)}
+            </span>
+          )}
+          <span className="text-[11px] text-white/30">{ev.timeOfDay}</span>
+        </span>
+      </div>
+      <h4 className="mt-2 pl-2 text-[15px] font-bold leading-snug text-white">{t(ev.title)}</h4>
+      <p className="mt-1.5 pl-2 text-[12px] leading-relaxed text-white/45">{t(ev.summary)}</p>
+      <span className="mt-auto pl-2 pt-3 text-[11px] font-semibold text-violet-300 opacity-0 transition group-hover:opacity-100">
+        {t(dict.program.tapHint)} →
+      </span>
+    </button>
+  );
+}
+
 export default function Journey() {
   const { t } = useLocale();
   const [active, setActive] = useState<BEvent | null>(null);
+  const [openDay, setOpenDay] = useState<number | null>(1); // mobile program accordion
 
   return (
     <main className="relative z-10">
@@ -68,8 +106,8 @@ export default function Journey() {
           <a href={links.program} className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-8 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)]">
             {t(dict.hero.ctaProgram)} →
           </a>
-          <a href="#about" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-white/85 backdrop-blur transition hover:bg-white/10">
-            {t(dict.about.tag)} ↓
+          <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-white/85 backdrop-blur transition hover:bg-white/10">
+            {t(dict.hero.ctaPartner)}
           </a>
         </div>
         <div className="mt-16 grid grid-cols-3 gap-3 sm:gap-4">
@@ -110,27 +148,42 @@ export default function Journey() {
         </div>
       </Chapter>
 
-      {/* ── CH 2 · MOTIVATION ──────────────────────────────────────── */}
-      <Chapter id="motivation" align="right">
-        <div className="ml-auto max-w-2xl">
-          <Eyebrow color="cyan">{t(dict.motivation.tag)}</Eyebrow>
+      {/* ── CH 2 · WHO SHOULD JOIN / WHAT YOU GET ──────────────────── */}
+      <Chapter id="join" align="center">
+        <div className="text-center">
+          <Eyebrow color="emerald">{t(dict.whoWhat.tag)}</Eyebrow>
           <h2 className="text-[clamp(1.8rem,5vw,3.25rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
-            {t(dict.motivation.heading)}
+            {t(dict.whoWhat.heading)}
           </h2>
-          <Glass className="mt-7 text-left">
-            <div className="space-y-4 text-sm leading-relaxed text-white/70 sm:text-[15px]">
-              {dict.motivation.body.map((p, i) => <p key={i}>{t(p)}</p>)}
-            </div>
-            <div className="mt-6 grid gap-3 border-t border-white/10 pt-6 sm:grid-cols-3">
-              {dict.motivation.cards.map((c) => (
-                <div key={c.title.en} className="border-l-2 border-cyan-400/40 pl-3">
-                  <h3 className="text-sm font-bold text-white">{t(c.title)}</h3>
-                  <p className="mt-1.5 text-xs leading-relaxed text-white/55">{t(c.body)}</p>
-                </div>
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/70">
+            {t(dict.whoWhat.intro)}
+          </p>
+        </div>
+        <div className="mt-10 grid gap-4 text-left md:grid-cols-2">
+          <Glass>
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-violet-300">{t(dict.whoWhat.whoTitle)}</h3>
+            <ul className="mt-4 space-y-3">
+              {dict.whoWhat.who.map((item, i) => (
+                <li key={i} className="flex items-start gap-3 text-sm leading-relaxed text-white/75">
+                  <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400" />
+                  {t(item)}
+                </li>
               ))}
-            </div>
+            </ul>
+          </Glass>
+          <Glass>
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">{t(dict.whoWhat.getTitle)}</h3>
+            <ul className="mt-4 space-y-3">
+              {dict.whoWhat.get.map((item, i) => (
+                <li key={i} className="flex items-start gap-3 text-sm leading-relaxed text-white/75">
+                  <span aria-hidden className="mt-[1px] shrink-0 text-emerald-300">✦</span>
+                  {t(item)}
+                </li>
+              ))}
+            </ul>
           </Glass>
         </div>
+        <p className="mt-5 text-center text-xs text-white/40">{t(dict.whoWhat.disclaimer)}</p>
       </Chapter>
 
       {/* ── CH 3 · PROGRAM ─────────────────────────────────────────── */}
@@ -153,11 +206,12 @@ export default function Journey() {
             <p className="mt-3 text-xs text-white/35 xl:hidden">{t(dict.program.swipeHint)}</p>
           </div>
 
-          <div className="timetable-scroll mt-10 flex gap-4 overflow-x-auto pb-4 xl:grid xl:grid-cols-6 xl:overflow-visible xl:pb-0">
+          {/* Desktop (xl+): immersive 6-column grid, one column per day. */}
+          <div className="mt-10 hidden gap-4 xl:grid xl:grid-cols-6">
             {days.map((day) => {
               const evs = schedule.filter((e) => e.day === day.day);
               return (
-                <div key={day.day} className="flex min-w-[270px] flex-col xl:min-w-0">
+                <div key={day.day} className="flex flex-col">
                   <div className="flex h-14 items-center rounded-t-xl border border-violet-400/25 bg-gradient-to-r from-violet-500/25 to-indigo-500/15 px-4 backdrop-blur">
                     <div className="flex w-full items-baseline justify-between">
                       <h3 className="text-sm font-bold text-violet-200">{t(dict.program.dayLabel)} {day.day}</h3>
@@ -168,39 +222,58 @@ export default function Journey() {
                     <p className="text-xs font-bold leading-snug text-white/80">{t(day.theme)}</p>
                   </div>
                   <div className="mt-3 flex flex-1 flex-col gap-3">
-                    {evs.map((ev) => {
-                      const meta = categoryMeta[ev.category];
-                      const isMain = ev.category === "main";
-                      return (
-                        <button
-                          key={ev.id}
-                          type="button"
-                          onClick={() => setActive(ev)}
-                          className="group relative flex min-h-[180px] flex-col overflow-hidden rounded-xl border border-white/10 bg-white/[0.10] p-4 text-left backdrop-blur-md transition hover:-translate-y-0.5 hover:border-violet-400/30 hover:bg-white/[0.16]"
-                        >
-                          <span aria-hidden className="absolute inset-y-0 left-0 w-[3px]" style={{ backgroundColor: meta.dot }} />
-                          <div className="flex flex-wrap items-center gap-1.5 pl-2">
-                            <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: meta.dot }}>
-                              {isMain && <span className="mr-0.5 text-amber-300">★</span>}{t(meta.label)}
-                            </span>
-                            <span className="ml-auto flex items-center gap-1.5">
-                              {ev.confirmed && (
-                                <span className="rounded-full bg-emerald-400/15 px-1.5 py-0.5 text-[10px] font-bold text-emerald-300 ring-1 ring-emerald-400/25">
-                                  {t(dict.program.confirmedBadge)}
-                                </span>
-                              )}
-                              <span className="text-[11px] text-white/30">{ev.timeOfDay}</span>
-                            </span>
-                          </div>
-                          <h4 className="mt-2 pl-2 text-[15px] font-bold leading-snug text-white">{t(ev.title)}</h4>
-                          <p className="mt-1.5 pl-2 text-[12px] leading-relaxed text-white/45">{t(ev.summary)}</p>
-                          <span className="mt-auto pl-2 pt-3 text-[11px] font-semibold text-violet-300 opacity-0 transition group-hover:opacity-100">
-                            {t(dict.program.tapHint)} →
-                          </span>
-                        </button>
-                      );
-                    })}
+                    {evs.map((ev) => (
+                      <EventCard key={ev.id} ev={ev} t={t} onSelect={setActive} />
+                    ))}
                   </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Mobile / tablet (<xl): vertical accordion, one row per day, so the
+              whole 6-day arc is scannable without horizontal scrolling. */}
+          <div className="mt-8 space-y-3 xl:hidden">
+            {days.map((day) => {
+              const evs = schedule.filter((e) => e.day === day.day);
+              const open = openDay === day.day;
+              return (
+                <div key={day.day} className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur-md">
+                  <button
+                    type="button"
+                    onClick={() => setOpenDay(open ? null : day.day)}
+                    aria-expanded={open}
+                    className="flex w-full items-center gap-3 px-4 py-4 text-left"
+                  >
+                    <span className="flex h-10 w-10 shrink-0 flex-col items-center justify-center rounded-lg border border-violet-400/25 bg-violet-500/15 text-violet-200">
+                      <span className="text-[8px] font-semibold uppercase leading-none opacity-70">{t(dict.program.dayLabel)}</span>
+                      <span className="text-base font-black leading-none">{day.day}</span>
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-bold text-white">{t(day.theme)}</span>
+                      <span className="mt-0.5 block text-xs text-white/40">{day.date} · {evs.length} {t(dict.program.sessions)}</span>
+                    </span>
+                    <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 text-white/50 transition ${open ? "rotate-45 border-violet-400 text-violet-300" : ""}`}>
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                    </span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {open && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <div className="space-y-3 px-3 pb-3">
+                          {evs.map((ev) => (
+                            <EventCard key={ev.id} ev={ev} t={t} onSelect={setActive} />
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               );
             })}
@@ -230,8 +303,57 @@ export default function Journey() {
         </div>
       </section>
 
+      {/* ── CH 3.5 · TRACTION / FOR PARTNERS ───────────────────────── */}
+      <Chapter id="why-partner" align="center">
+        <div className="text-center">
+          <Eyebrow color="cyan">{t(dict.traction.tag)}</Eyebrow>
+          <h2 className="text-[clamp(1.8rem,5vw,3.25rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+            {t(dict.traction.heading)}
+          </h2>
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/70">
+            {t(dict.traction.intro)}
+          </p>
+        </div>
+
+        <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          {dict.traction.stats.map((s) => (
+            <Glass key={s.num} className="!p-5 text-center">
+              <div className="text-2xl font-black text-white sm:text-3xl">{s.num}</div>
+              <div className="mt-1.5 text-xs leading-snug text-white/55">{t(s.label)}</div>
+            </Glass>
+          ))}
+        </div>
+
+        <div className="mt-4 grid gap-4 text-left md:grid-cols-2">
+          <Glass>
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">{t(dict.traction.wantTitle)}</h3>
+            <ol className="mt-4 space-y-3">
+              {dict.traction.wants.map((item, i) => (
+                <li key={i} className="flex items-start gap-3 text-sm leading-relaxed text-white/75">
+                  <span aria-hidden className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cyan-400/15 text-[11px] font-bold text-cyan-300">{i + 1}</span>
+                  {t(item)}
+                </li>
+              ))}
+            </ol>
+          </Glass>
+          <Glass>
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-violet-300">{t(dict.traction.getTitle)}</h3>
+            <ul className="mt-4 space-y-3">
+              {dict.traction.gets.map((item, i) => (
+                <li key={i} className="flex items-start gap-3 text-sm leading-relaxed text-white/75">
+                  <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400" />
+                  {t(item)}
+                </li>
+              ))}
+            </ul>
+          </Glass>
+        </div>
+
+        <p className="mt-5 text-center text-xs text-white/40">{t(dict.traction.note)}</p>
+      </Chapter>
+
       {/* ── CH 4 · PARTNERS ────────────────────────────────────────── */}
-      <Chapter id="builders" align="left" className="!max-w-none">
+      <Chapter id="builders" align="center">
         {/* Contained dark backing box (not full-width) to lift readability over
             the bright background field. */}
         <div className="mx-auto w-full max-w-4xl rounded-[2rem] border border-white/10 bg-[#0a0814]/80 p-8 backdrop-blur-xl sm:p-12">
@@ -309,9 +431,12 @@ export default function Journey() {
             {t(dict.footer.heading)}
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/65">{t(dict.footer.blurb)}</p>
-          <div className="mt-10 flex justify-center">
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
             <a href={links.program} className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5">
-              {t(dict.nav.register)} →
+              {t(dict.footer.ctaProgram)} →
+            </a>
+            <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-9 py-4 text-base font-semibold text-white/85 backdrop-blur transition hover:bg-white/10">
+              {t(dict.nav.partner)}
             </a>
           </div>
         </div>

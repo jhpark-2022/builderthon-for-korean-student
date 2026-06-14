@@ -174,7 +174,9 @@ export class BackgroundScene {
     this.atmosphere.update(t, this.scroll, phases.reveal);
     this.lines.update(t, this.scroll, this.motionScale);
     this.particles.update(t, this.pointer.world, this.scroll, this.motionScale, phases);
-    this.post.setPhase(phases);
+    // under reduced-motion, damp the flashy portal/white-out so the crossing
+    // stays calm and the footer text never washes out
+    this.post.setPhase(phases, this.reduced ? 0.3 : 1);
 
     this.post.render(dt);
   };
