@@ -1,126 +1,100 @@
 "use client";
 
+
 import { motion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
 import { dict, links } from "@/data/dictionary";
 
 const ease = [0.22, 1, 0.36, 1] as const;
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 24 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.7, delay, ease },
+});
 
 export default function Hero() {
   const { t } = useLocale();
 
   return (
-    <section
-      id="top"
-      className="relative flex min-h-[92svh] items-center overflow-hidden pt-[72px]"
-    >
-      {/* Light, airy backdrop */}
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(120%_100%_at_50%_-10%,#ffffff_0%,#eef2f9_45%,#f4f6fa_100%)]" />
-        {/* soft accent glows */}
-        <div className="absolute -left-[10%] top-[8%] h-[42vmax] w-[42vmax] rounded-full bg-[radial-gradient(circle,#cfe0ff,transparent_62%)] opacity-60 blur-[90px]" />
-        <div className="absolute -right-[8%] bottom-[2%] h-[34vmax] w-[34vmax] rounded-full bg-[radial-gradient(circle,#dfe6f5,transparent_62%)] opacity-70 blur-[80px]" />
-        {/* fine navy grid texture */}
-        <div className="absolute inset-0 opacity-[0.05] [background-image:linear-gradient(to_right,#172747_1px,transparent_1px),linear-gradient(to_bottom,#172747_1px,transparent_1px)] [background-size:72px_72px]" />
-        {/* fade into next section */}
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-page" />
+    <section id="top" className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-[#080810]">
+
+      {/* Ambient orbs */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-40 -top-40 h-[600px] w-[600px] rounded-full bg-violet-700/20 blur-[120px]" />
+        <div className="absolute -right-40 top-1/3 h-[500px] w-[500px] rounded-full bg-cyan-500/10 blur-[120px]" />
+        <div className="absolute bottom-0 left-1/3 h-[400px] w-[400px] rounded-full bg-indigo-600/15 blur-[100px]" />
+        <div className="absolute inset-0 opacity-[0.03] [background-image:linear-gradient(rgba(124,58,237,1)_1px,transparent_1px),linear-gradient(90deg,rgba(124,58,237,1)_1px,transparent_1px)] [background-size:60px_60px]" />
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent to-[#080810]" />
       </div>
 
-      <div className="relative mx-auto w-full max-w-wide px-5 sm:px-8">
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease }}
-          className="mb-6 inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-1.5 text-xs font-semibold tracking-wide text-ink-muted shadow-sm"
-        >
-          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-          {t(dict.hero.eyebrow)}
-        </motion.p>
+      <div className="relative mx-auto w-full max-w-5xl px-6 pt-24 sm:px-10 lg:pt-32">
 
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.05, ease }}
-          className="max-w-4xl text-[clamp(2.75rem,9vw,7rem)] font-bold leading-[0.95] tracking-tight"
-          aria-label={`${t(dict.hero.titleLine1)} ${t(dict.hero.titleLine2)}`}
-        >
-          <span aria-hidden className="block text-navy">
-            {t(dict.hero.titleLine1)}
+        {/* Eyebrow */}
+        <motion.div {...fadeUp(0)}>
+          <span className="mb-8 border border-violet-500/30 bg-violet-500/10 text-violet-300">
+            ✦ {t(dict.hero.eyebrow)}
           </span>
-          <span aria-hidden className="block text-gradient">
+        </motion.div>
+
+        {/* Headline */}
+        <motion.h1 {...fadeUp(0.08)} className="max-w-4xl text-[clamp(3rem,8vw,6.5rem)] font-black leading-[0.92] tracking-tight">
+          <span className="block text-white">{t(dict.hero.titleLine1)}</span>
+          <span className="block bg-gradient-to-r from-violet-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent">
             {t(dict.hero.titleLine2)}
           </span>
         </motion.h1>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.15, ease }}
-          className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm sm:text-base"
-        >
-          <span className="font-semibold text-navy">{t(dict.hero.dates)}</span>
-          <span className="hidden h-4 w-px bg-line sm:block" />
-          <span className="text-ink-muted">{t(dict.hero.location)}</span>
+        {/* Meta */}
+        <motion.div {...fadeUp(0.16)} className="mt-7 flex flex-wrap items-center gap-3 text-sm sm:text-base">
+          <span className="font-semibold text-white/90">{t(dict.hero.dates)}</span>
+          <span className="h-4 w-px bg-white/20" />
+          <span className="text-white/45">{t(dict.hero.location)}</span>
         </motion.div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.22, ease }}
-          className="mt-6 max-w-2xl text-base leading-relaxed text-ink-muted sm:text-lg"
-        >
+        {/* Blurb */}
+        <motion.p {...fadeUp(0.22)} className="mt-6 max-w-2xl text-base leading-relaxed text-white/55 sm:text-lg">
           {t(dict.hero.blurb)}
         </motion.p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3, ease }}
-          className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
-        >
+        {/* CTAs */}
+        <motion.div {...fadeUp(0.3)} className="mt-10 flex flex-wrap gap-3">
           <a
             href={links.program}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-navy px-7 py-3.5 text-base font-semibold text-white shadow-soft transition hover:bg-navy-soft"
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-violet-500/30 transition hover:-translate-y-0.5 hover:shadow-violet-500/50"
           >
-            {t(dict.hero.ctaProgram)}
-            <span aria-hidden>→</span>
+            {t(dict.hero.ctaProgram)} →
+          </a>
+          <a
+            href="#about"
+            className="inline-flex items-center gap-2 rounded-full border border-white/15 px-7 py-3.5 text-base font-semibold text-white/80 transition hover:border-white/30 hover:text-white"
+          >
+            {t(dict.about.tag)} ↓
           </a>
         </motion.div>
 
-        {/* Stats */}
-        <motion.dl
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4, ease }}
-          className="mt-14 grid max-w-xl grid-cols-3 gap-6 border-t border-line pt-6"
-        >
-          <div>
-            <dt className="text-2xl font-bold text-navy sm:text-3xl">~100</dt>
-            <dd className="mt-1 text-xs text-ink-muted sm:text-sm">
-              {t(dict.hero.statParticipants)}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-2xl font-bold text-navy sm:text-3xl">6</dt>
-            <dd className="mt-1 text-xs text-ink-muted sm:text-sm">
-              {t(dict.hero.statDays)}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-2xl font-bold text-navy sm:text-3xl">EN</dt>
-            <dd className="mt-1 text-xs text-ink-muted sm:text-sm">
-              {t(dict.hero.statLanguage)}
-            </dd>
-          </div>
-        </motion.dl>
+        {/* Stat tiles */}
+        <motion.div {...fadeUp(0.4)} className="mt-16 grid grid-cols-3 gap-3 border-t border-white/[0.06] pt-10 sm:gap-4">
+          {[
+            { num: "~100", label: t(dict.hero.statParticipants), icon: "👥" },
+            { num: "6",    label: t(dict.hero.statDays),         icon: "📅" },
+            { num: "EN",   label: t(dict.hero.statLanguage),     icon: "🌏" },
+          ].map(({ num, label, icon }) => (
+            <div
+              key={num}
+              className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4 transition hover:border-violet-500/30 hover:bg-white/[0.06] sm:p-5"
+            >
+              <div className="text-xl sm:text-2xl">{icon}</div>
+              <div className="mt-2 text-2xl font-black text-white sm:text-3xl">{num}</div>
+              <div className="mt-1 text-xs text-white/40 sm:text-sm">{label}</div>
+            </div>
+          ))}
+        </motion.div>
       </div>
 
       {/* Scroll cue */}
-      <div className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-ink-faint md:flex">
-        <span className="text-[10px] tracking-[0.3em]">
-          {t(dict.hero.scroll).toUpperCase()}
-        </span>
-        <span className="h-8 w-px bg-gradient-to-b from-ink-faint to-transparent" />
+      <div className="scroll-hint absolute bottom-8 left-1/2 -translate-x-1/2">
+        <span>{t(dict.hero.scroll).toUpperCase()}</span>
+        <div className="scroll-line" />
       </div>
     </section>
   );

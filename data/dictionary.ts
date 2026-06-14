@@ -20,6 +20,9 @@ export const dict = {
     builders: { ko: "빌더 & 파트너", en: "Builders / Partners" },
     faq: { ko: "FAQ", en: "FAQ" },
     viewProgram: { ko: "프로그램 보기", en: "View Program" },
+    register: { ko: "지금 등록하기", en: "Register Now" },
+    regEndsIn: { ko: "등록 마감까지", en: "Registration ends in" },
+    days: { ko: "일", en: "days" },
   },
 
   hero: {

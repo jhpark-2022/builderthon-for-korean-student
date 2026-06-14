@@ -1,25 +1,19 @@
-import Nav from "@/components/Nav";
-import Hero from "@/components/Hero";
-import About from "@/components/About";
-import Motivation from "@/components/Motivation";
-import Timetable from "@/components/Timetable";
-import Partners from "@/components/Partners";
-import FAQ from "@/components/FAQ";
-import FooterCTA from "@/components/FooterCTA";
+"use client";
+
+import dynamic from "next/dynamic";
+import { JourneyProvider } from "@/lib/JourneyContext";
+import JourneyNav from "@/components/journey/JourneyNav";
+import Journey from "@/components/journey/Journey";
+
+// WebGL background is client-only (no SSR).
+const Background = dynamic(() => import("@/components/Background"), { ssr: false });
 
 export default function Home() {
   return (
-    <>
-      <Nav />
-      <main>
-        <Hero />
-        <About />
-        <Motivation />
-        <Timetable />
-        <Partners />
-        <FAQ />
-        <FooterCTA />
-      </main>
-    </>
+    <JourneyProvider>
+      <Background />
+      <JourneyNav />
+      <Journey />
+    </JourneyProvider>
   );
 }

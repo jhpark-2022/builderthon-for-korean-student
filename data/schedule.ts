@@ -95,7 +95,7 @@ export const categoryMeta: Record<
       ko: "오프닝 · Founder Sharing · 데모데이 — 행사의 핵심 트랙 (유지)",
       en: "Opening · Founder Sharing · Demo Day — the core event track (retained)",
     },
-    dot: "#172747", // navy (rendered with a gold star)
+    dot: "#fcd34d", // bright gold (matches the ★) — visible on the dark theme
   },
   ambassador: {
     label: { ko: "AI 앰배서더", en: "AI Ambassador" },

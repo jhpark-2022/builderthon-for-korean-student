@@ -117,14 +117,14 @@ export default function EventModal({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
         >
-          {/* Backdrop — non-focusable, darker, minimal blur for readability */}
+          {/* Backdrop */}
           <div
             aria-hidden
             onClick={onClose}
-            className="absolute inset-0 cursor-default bg-navy-deep/65 backdrop-blur-[1.5px]"
+            className="absolute inset-0 cursor-default bg-black/70 backdrop-blur-sm"
           />
 
-          {/* Dialog — solid white, wide, high contrast */}
+          {/* Dialog — dark glass */}
           <motion.div
             ref={dialogRef}
             role="dialog"
@@ -134,12 +134,12 @@ export default function EventModal({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.985 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 flex max-h-[85vh] w-full max-w-[760px] flex-col overflow-hidden rounded-t-3xl border border-line bg-white shadow-2xl sm:rounded-3xl"
+            className="relative z-10 flex max-h-[85vh] w-full max-w-[760px] flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-[#111] shadow-2xl sm:rounded-3xl"
           >
-            {/* Navy header strip */}
+            {/* Neon header strip */}
             <span
               aria-hidden
-              className="h-1.5 w-full shrink-0 bg-gradient-to-r from-navy to-navy-soft"
+              className="h-[2px] w-full shrink-0 bg-gradient-to-r from-accent to-accent-strong"
             />
 
             {/* Close button */}
@@ -148,7 +148,7 @@ export default function EventModal({
               type="button"
               onClick={onClose}
               aria-label={t(dict.modal.close)}
-              className="absolute right-5 top-7 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-line bg-page text-ink-muted shadow-sm transition hover:bg-navy hover:text-white"
+              className="absolute right-5 top-7 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/50 transition hover:bg-white/10 hover:text-white"
             >
               <svg width="16" height="16" viewBox="0 0 15 15" fill="none">
                 <path
@@ -176,13 +176,13 @@ export default function EventModal({
                   {t(meta.label)}
                 </span>
                 {dayMeta && (
-                  <span className="rounded-full border border-line bg-page px-3 py-1 text-xs font-semibold text-ink-muted">
+                  <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/55">
                     {t(dict.program.dayLabel)} {event.day} · {event.date} ·{" "}
                     {event.timeOfDay}
                   </span>
                 )}
                 {event.confirmed && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 ring-1 ring-emerald-600/20">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-accent/10 px-2.5 py-1 text-xs font-bold text-accent ring-1 ring-accent/20">
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden>
                       <path
                         d="M1.5 5.2 4 7.5 8.5 2.5"
@@ -199,7 +199,7 @@ export default function EventModal({
 
               <h3
                 id="event-modal-title"
-                className="mt-5 text-[26px] font-bold leading-tight text-navy sm:text-[34px]"
+                className="mt-5 text-[26px] font-bold leading-tight text-white sm:text-[34px]"
               >
                 {t(event.title)}
               </h3>
@@ -210,42 +210,42 @@ export default function EventModal({
                 </p>
               )}
 
-              <p className="mt-6 text-[15px] leading-7 text-ink-strong sm:text-base sm:leading-8">
+              <p className="mt-6 text-[15px] leading-7 text-white/70 sm:text-base sm:leading-8">
                 {t(event.description)}
               </p>
 
               {/* Detail rows */}
-              <dl className="mt-8 grid grid-cols-1 gap-x-8 gap-y-4 border-t border-line pt-6 text-sm sm:grid-cols-2">
+              <dl className="mt-8 grid grid-cols-1 gap-x-8 gap-y-4 border-t border-white/10 pt-6 text-sm sm:grid-cols-2">
                 <div className="flex flex-col gap-1">
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-ink-faint">
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/35">
                     {t(dict.modal.category)}
                   </dt>
-                  <dd className="font-semibold text-ink-strong">
+                  <dd className="font-semibold text-white">
                     {t(meta.label)}
                   </dd>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-ink-faint">
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/35">
                     {t(dict.modal.time)}
                   </dt>
-                  <dd className="font-semibold text-ink-strong">
+                  <dd className="font-semibold text-white">
                     {t(dict.program.dayLabel)} {event.day} · {event.date} ·{" "}
                     {event.timeOfDay}
                   </dd>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-ink-faint">
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/35">
                     {t(dict.modal.speaker)}
                   </dt>
-                  <dd className="font-semibold text-ink-strong">
+                  <dd className="font-semibold text-white">
                     {event.speaker ? t(event.speaker) : t(dict.modal.tbc)}
                   </dd>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-ink-faint">
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/35">
                     {t(dict.modal.location)}
                   </dt>
-                  <dd className="font-semibold text-ink-strong">
+                  <dd className="font-semibold text-white">
                     {event.location ? t(event.location) : t(dict.modal.tbc)}
                   </dd>
                 </div>

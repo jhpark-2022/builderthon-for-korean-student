@@ -1,235 +1,96 @@
 "use client";
 
 import Image from "next/image";
+
 import { useLocale } from "@/lib/LocaleContext";
 import { dict } from "@/data/dictionary";
 import Reveal from "./Reveal";
-
-// ── Partner / org assets ─────────────────────────────────────────────────────
-// Provided logos were screenshots on varied (dark / coloured / grey) backgrounds.
-// The one-colour marks (Zero100, Popup Studio, Codepresso, Alchemy, KOMOS) are
-// normalized to a single navy tone on transparent in /public/partners/processed
-// so they sit cleanly on the light theme's white cards (no clashing screenshot
-// backgrounds, consistent size). See scripts run during the logo handoff.
-//
-// OpenAI / AWS / Workato are "in discussion" (NOT confirmed) and are the most
-// trademark-sensitive brands, so they remain plain text wordmarks rather than
-// displayed marks — avoids implying endorsement before any agreement.
-
-type ImageBrand = {
-  name: string;
-  src: string;
-  alt: string;
-  w: number;
-  h: number;
-  imgClass: string;
-};
-type Brand = ({ kind: "image" } & ImageBrand) | { kind: "wordmark"; name: string };
-
-const hosts: Brand[] = [
-  {
-    kind: "image",
-    name: "Popup Studio",
-    src: "/partners/processed/popup-studio.png",
-    alt: "Popup Studio",
-    w: 476,
-    h: 134,
-    // Wordmarks are visually lighter than icon marks, so they're sized taller
-    // (and wider) to read with equal optical weight across the section.
-    imgClass: "h-10 sm:h-12",
-  },
-  {
-    kind: "image",
-    name: "Codepresso",
-    src: "/partners/processed/codepresso.png",
-    alt: "Codepresso (code.presso)",
-    w: 361,
-    h: 113,
-    imgClass: "h-10 sm:h-12",
-  },
-];
-
-// In EARLY DISCUSSION — NOT confirmed. Text wordmarks (see note above).
-const inDiscussion: Brand[] = [
-  { kind: "wordmark", name: "Workato" },
-  { kind: "wordmark", name: "OpenAI" },
-  { kind: "wordmark", name: "AWS" },
-];
-
-function PartnerLogo({ brand }: { brand: Brand }) {
-  if (brand.kind === "image") {
-    return (
-      <Image
-        src={brand.src}
-        alt={brand.alt}
-        width={brand.w}
-        height={brand.h}
-        className={`${brand.imgClass} w-auto max-w-[78%] object-contain`}
-      />
-    );
-  }
-  // Clean text wordmark — intentional, not a placeholder box.
-  return (
-    <span className="text-xl font-bold tracking-tight text-ink-strong sm:text-2xl">
-      {brand.name}
-    </span>
-  );
-}
-
-// Consistent logo card shell (identical height across the section).
-function LogoCard({
-  children,
-  dashed = false,
-}: {
-  children: React.ReactNode;
-  dashed?: boolean;
-}) {
-  return (
-    <div
-      className={`flex h-24 items-center justify-center rounded-2xl border bg-surface px-6 shadow-card transition hover:-translate-y-0.5 hover:shadow-card-hover ${
-        dashed ? "border-dashed border-line" : "border-line"
-      }`}
-    >
-      {children}
-    </div>
-  );
-}
 
 export default function Partners() {
   const { t } = useLocale();
 
   return (
-    <section id="builders" className="relative scroll-mt-24 py-24 sm:py-32">
-      <div className="mx-auto max-w-wide px-5 sm:px-8">
+    <section id="builders" className="relative scroll-mt-20 py-28 sm:py-36">
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-20 top-1/3 h-[350px] w-[350px] rounded-full bg-violet-700/8 blur-[100px]" />
+      </div>
+      <div className="relative mx-auto max-w-5xl px-6 sm:px-10">
         <Reveal>
-          <span className="text-xs font-bold uppercase tracking-[0.3em] text-accent">
+          <span className="mb-6 border border-violet-500/30 bg-violet-500/10 text-violet-300">
             {t(dict.partners.tag)}
           </span>
-          <h2 className="mt-4 text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-navy">
+          <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-bold tracking-tight text-white">
             {t(dict.partners.heading)}
           </h2>
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-muted">
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/50">
             {t(dict.partners.note)}
           </p>
         </Reveal>
 
-        {/* Organizer + Founding network — KOMOS × Zero100 */}
+        {/* Organizer + Network */}
         <Reveal delay={0.05}>
           <div className="mt-12 grid gap-4 sm:grid-cols-2">
-            {/* KOMOS — Organizer */}
-            <div className="rounded-3xl border border-line bg-gradient-to-br from-white to-page p-7 shadow-card">
-              <span className="text-xs font-bold uppercase tracking-[0.25em] text-ink-faint">
-                {t(dict.partners.organizerLabel)}
-              </span>
-              <div className="mt-5 flex items-center gap-4">
-                <Image
-                  src="/partners/processed/komos.png"
-                  alt="KOMOS — SMU Korean Student Association"
-                  width={690}
-                  height={439}
-                  className="h-11 w-11 object-contain sm:h-12 sm:w-12"
-                />
-                <div>
-                  <p className="text-xl font-bold tracking-[0.12em] text-navy sm:text-2xl">
-                    KOMOS
-                  </p>
-                  <p className="text-sm text-ink-muted">
-                    {t(dict.partners.organizerDesc)}
-                  </p>
+            {[
+              { label: t(dict.partners.organizerLabel), img: "/komos-lion-white.png", name: "KOMOS", desc: t(dict.partners.organizerDesc), w: 690, h: 439 },
+              { label: t(dict.partners.networkLabel),   img: "/partners/processed/zero100.png", name: "Zero100", desc: t(dict.partners.networkDesc), w: 225, h: 225 },
+            ].map(({ label, img, name, desc, w, h }) => (
+              <div key={name} className="border border-white/[0.07] bg-white/[0.03]">
+                <div className="p-7">
+                  <span className="text-xs font-bold uppercase tracking-widest text-white/30">{label}</span>
+                  <div className="mt-5 flex items-center gap-4">
+                    <Image src={img} alt={name} width={w} height={h} className="h-11 w-11 rounded-lg object-contain brightness-0 invert" />
+                    <div>
+                      <p className="text-lg font-bold text-white">{name}</p>
+                      <p className="text-sm text-white/40">{desc}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            {/* Zero100 — Founding network */}
-            <div className="rounded-3xl border border-line bg-gradient-to-br from-white to-page p-7 shadow-card">
-              <span className="text-xs font-bold uppercase tracking-[0.25em] text-ink-faint">
-                {t(dict.partners.networkLabel)}
-              </span>
-              <div className="mt-5 flex items-center gap-4">
-                <Image
-                  src="/partners/processed/zero100.png"
-                  alt="Zero100"
-                  width={225}
-                  height={225}
-                  className="h-12 w-12 rounded-xl object-contain sm:h-14 sm:w-14"
-                />
-              </div>
-              <p className="mt-3 text-sm text-ink-muted">
-                {t(dict.partners.networkDesc)}
-              </p>
-            </div>
+            ))}
           </div>
         </Reveal>
 
         {/* Hosts */}
         <Reveal delay={0.1}>
-          <div className="mt-12 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-ink-faint">
-              {t(dict.partners.hostsLabel)}
-            </p>
-            <p className="text-xs text-ink-faint">· {t(dict.partners.hostsSub)}</p>
-          </div>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            {hosts.map((b) => (
-              <LogoCard key={b.name}>
-                <PartnerLogo brand={b} />
-              </LogoCard>
+          <p className="mt-10 text-xs font-bold uppercase tracking-widest text-white/30">{t(dict.partners.hostsLabel)}</p>
+          <p className="mb-4 mt-1 text-xs text-white/25">{t(dict.partners.hostsSub)}</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {[
+              { src: "/partners/processed/popup-studio.png", alt: "Popup Studio", w: 476, h: 134 },
+              { src: "/partners/processed/codepresso.png",   alt: "Codepresso",   w: 361, h: 113 },
+            ].map(({ src, alt, w, h }) => (
+              <div key={alt} className="flex h-24 items-center justify-center rounded-2xl border border-white/[0.07] bg-white/[0.03] px-6 hover:border-white/15 transition">
+                <Image src={src} alt={alt} width={w} height={h} className="h-10 w-auto max-w-[70%] object-contain brightness-0 invert opacity-60 hover:opacity-90 transition" />
+              </div>
             ))}
           </div>
         </Reveal>
 
-        {/* Confirmed support */}
+        {/* Confirmed */}
         <Reveal delay={0.12}>
-          <div className="mt-10 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-emerald-700">
-              {t(dict.partners.confirmedLabel)}
-            </p>
-            <p className="text-xs text-ink-faint">· {t(dict.partners.confirmedSub)}</p>
-          </div>
-          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2">
-            <a
-              href="https://www.alchemy.com/"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Alchemy (opens in a new tab)"
-              className="group flex h-24 items-center justify-center gap-2 rounded-2xl border border-emerald-600/25 bg-surface px-6 shadow-card ring-1 ring-emerald-600/10 transition hover:-translate-y-0.5 hover:shadow-card-hover"
-            >
-              <Image
-                src="/partners/processed/alchemy.png"
-                alt="Alchemy"
-                width={480}
-                height={422}
-                className="h-9 w-auto object-contain"
-              />
-              <span className="text-lg font-bold tracking-tight text-ink-strong">
-                Alchemy
-              </span>
-              <span
-                aria-hidden
-                className="text-ink-faint transition group-hover:text-emerald-700"
-              >
-                ↗
-              </span>
-            </a>
-          </div>
+          <p className="mt-10 text-xs font-bold uppercase tracking-widest text-emerald-400">{t(dict.partners.confirmedLabel)}</p>
+          <p className="mb-4 mt-1 text-xs text-white/30">{t(dict.partners.confirmedSub)}</p>
+          <a href="https://www.alchemy.com/" target="_blank" rel="noreferrer"
+            className="group flex h-24 w-full items-center justify-center gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-6 transition hover:border-emerald-500/40 hover:bg-emerald-500/10 sm:w-1/2">
+            <Image src="/partners/processed/alchemy.png" alt="Alchemy" width={480} height={422}
+              className="h-9 w-auto object-contain brightness-0 invert opacity-75 transition group-hover:opacity-100" />
+            <span className="font-bold text-white">Alchemy</span>
+            <span className="text-white/30 transition group-hover:text-emerald-400">↗</span>
+          </a>
         </Reveal>
 
         {/* In discussion */}
         <Reveal delay={0.15}>
-          <p className="mt-10 text-xs font-bold uppercase tracking-[0.25em] text-ink-faint">
-            {t(dict.partners.partnersLabel)}
-          </p>
-          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
-            {inDiscussion.map((b) => (
-              <LogoCard key={b.name} dashed>
-                <PartnerLogo brand={b} />
-              </LogoCard>
+          <p className="mt-10 text-xs font-bold uppercase tracking-widest text-white/30">{t(dict.partners.partnersLabel)}</p>
+          <div className="mt-4 grid grid-cols-3 gap-4">
+            {["Workato", "OpenAI", "AWS"].map((name) => (
+              <div key={name} className="flex h-24 items-center justify-center rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.02] px-4">
+                <span className="text-lg font-bold text-white/40">{name}</span>
+              </div>
             ))}
           </div>
-          <p className="mt-5 text-xs text-ink-faint">
-            {t(dict.partners.inDiscussionNote)}
-          </p>
-          <p className="mt-1 text-xs text-ink-faint">{t(dict.partners.moreLabel)}</p>
+          <p className="mt-5 text-xs text-white/25">{t(dict.partners.inDiscussionNote)}</p>
+          <p className="mt-1 text-xs text-white/25">{t(dict.partners.moreLabel)}</p>
         </Reveal>
       </div>
     </section>
