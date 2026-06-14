@@ -32,9 +32,11 @@ void main(){
   float r = length(uv) * 2.0;
   if (r > 1.0) discard;
 
+  // tighter core, much weaker halo → refined points of light rather than soft
+  // bokeh orbs (the halo was the main "glowing sphere" read)
   float core = smoothstep(1.0, 0.0, r);
-  float halo = pow(1.0 - r, 2.5);
-  float alpha = (core * 0.7 + halo * 0.5);
+  float halo = pow(1.0 - r, 3.2);
+  float alpha = (core * 0.62 + halo * 0.25);
 
   // scroll palette blend
   vec3 accent = mix(uAccent, uAccent2, uScroll);

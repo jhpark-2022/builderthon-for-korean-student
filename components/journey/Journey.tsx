@@ -305,6 +305,16 @@ export default function Journey() {
 
       {/* ── CH 3.5 · TRACTION / FOR PARTNERS ───────────────────────── */}
       <Chapter id="why-partner" align="center">
+        {/* soft dark scrim so this sponsor-facing section stays calm + readable
+            over the field (the only content section without a dark backing) */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-1/2 -z-[1] h-[150%] w-[140%] -translate-x-1/2 -translate-y-1/2"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(7,6,18,0.78) 0%, rgba(7,6,18,0.45) 42%, rgba(7,6,18,0) 75%)",
+          }}
+        />
         <div className="text-center">
           <Eyebrow color="cyan">{t(dict.traction.tag)}</Eyebrow>
           <h2 className="text-[clamp(1.8rem,5vw,3.25rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">

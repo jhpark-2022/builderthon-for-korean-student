@@ -105,11 +105,14 @@ void main(){
   float zCam = -mv.z;
   vDepth = clamp((zCam - 6.0) / 60.0, 0.0, 1.0);
 
-  // size: distance attenuation, pointer glow-up, and growth as they near the portal
-  float size = aScale * (1.0 + infl * 1.8 + vNear * uPortal * 2.0);
+  // size: distance attenuation, pointer glow-up, and growth as they near the portal.
+  // Inflation factors dialed down so particles stay refined points, not big bokeh.
+  float size = aScale * (1.0 + infl * 1.0 + vNear * uPortal * 0.8);
   // trails: enlarge points along the pull to read as streaks (cheap stand-in)
-  size *= (1.0 + vSpeed * 2.5);
-  gl_PointSize = size * uPixelRatio * (220.0 / max(zCam, 0.001));
+  size *= (1.0 + vSpeed * 1.2);
+  // smaller base scale (150 vs 220) + a hard max clamp so a particle that drifts
+  // close to the camera can never balloon into a large foreground sphere
+  gl_PointSize = min(size * uPixelRatio * (150.0 / max(zCam, 0.001)), 64.0 * uPixelRatio);
 
   vGlow = aScale;
 }

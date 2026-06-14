@@ -81,7 +81,7 @@ class LensEffect extends Effect {
     // lensing builds across reveal→portal so space bends well before any
     // "arrival"; never a sudden on/off that would betray a shape
     (this.uniforms.get("uStrength") as THREE.Uniform).value =
-      p.reveal * 0.4 + p.portal * 0.9;
+      p.reveal * 0.22 + p.portal * 0.45;
     // Cap + damp the white-out lift. At full scroll the focus sits over the
     // footer (CTAs + heading); a full white-out washed that text out — and this
     // pass runs even on mobile (bloom is gated, the lens is not). Keep it legible.
@@ -129,15 +129,16 @@ export class PostFX {
     const second: Effect[] = [];
     if (useBloom) {
       this.bloom = new BloomEffect({
-        intensity: 0.95,
-        luminanceThreshold: 0.2,
+        intensity: 0.6,
+        luminanceThreshold: 0.28,
         luminanceSmoothing: 0.95,
         mipmapBlur: true,
-        radius: 0.78,
+        radius: 0.7,
       });
       second.push(this.bloom);
     }
-    second.push(new VignetteEffect({ offset: 0.28, darkness: 0.72 }));
+    // deeper vignette darkens the edges where text/cards sit → better contrast
+    second.push(new VignetteEffect({ offset: 0.22, darkness: 0.9 }));
     this.composer.addPass(new EffectPass(camera, ...second));
   }
 
@@ -153,7 +154,7 @@ export class PostFX {
     if (this.bloom) {
       // bloom intensifies as particles converge / cross — volumetric light
       // emerging from density, not from a drawn glow
-      this.bloom.intensity = 0.95 + (p.portal * 1.1 + p.whiteout * 1.6) * intensity;
+      this.bloom.intensity = 0.6 + (p.portal * 0.6 + p.whiteout * 1.0) * intensity;
     }
   }
 
