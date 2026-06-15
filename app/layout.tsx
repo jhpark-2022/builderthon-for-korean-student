@@ -52,6 +52,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`dark ${pretendard.variable}`}>
       <body className="font-sans antialiased bg-[#06040f] text-white">
+        {/* Keyboard-only skip link: invisible until focused, lets keyboard /
+            screen-reader users bypass the fixed nav. No effect on normal layout. */}
+        <a
+          href="#top"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-violet-600 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:shadow-lg"
+        >
+          Skip to content
+        </a>
         <LocaleProvider>{children}</LocaleProvider>
         <Analytics />
         <SpeedInsights />

@@ -108,7 +108,7 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
               {t(dict.program.optionalBadge)}
             </span>
           ) : (
-            <span className="text-xs text-white/30">{ev.timeOfDay}</span>
+            <span className="text-xs text-white/65">{ev.timeOfDay}</span>
           )}
         </span>
       </div>
@@ -186,7 +186,7 @@ export default function Journey() {
             >
               <Glass className="!p-3 transition duration-300 hover:border-violet-400/25 hover:bg-white/[0.06] sm:!p-5">
                 <div className="text-2xl font-black text-white sm:text-4xl">{s.num}</div>
-                <div className="mt-1 text-xs text-white/50 sm:text-sm">{s.label}</div>
+                <div className="mt-1 text-xs text-white/70 sm:text-sm">{s.label}</div>
               </Glass>
             </motion.div>
           ))}
@@ -219,7 +219,7 @@ export default function Journey() {
             {dict.about.gap.map((s) => (
               <div key={s.num} className="text-center">
                 <div className="text-3xl font-black text-white sm:text-4xl">{s.num}</div>
-                <p className="mx-auto mt-2 max-w-[15rem] text-xs leading-relaxed text-white/55">{t(s.label)}</p>
+                <p className="mx-auto mt-2 max-w-[15rem] text-xs leading-relaxed text-white/70">{t(s.label)}</p>
               </div>
             ))}
           </div>
@@ -314,7 +314,7 @@ export default function Journey() {
                   <div className="flex h-12 items-center rounded-t-xl border border-violet-400/15 bg-gradient-to-r from-violet-500/12 to-indigo-500/8 px-4 backdrop-blur">
                     <div className="flex w-full items-baseline justify-between">
                       <h3 className="text-sm font-bold text-violet-200/90">{t(dict.program.dayLabel)} {day.day}</h3>
-                      <span className="text-xs text-white/35">{day.date}</span>
+                      <span className="text-xs text-white/65">{day.date}</span>
                     </div>
                   </div>
                   <div className="flex min-h-[2.75rem] items-center rounded-b-xl border-x border-b border-white/[0.06] bg-white/[0.03] px-4 py-2 backdrop-blur-md">
@@ -350,7 +350,7 @@ export default function Journey() {
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-sm font-bold text-white">{t(day.theme)}</span>
-                      <span className="mt-0.5 block text-xs text-white/40">{day.date} · {evs.length} {t(dict.program.sessions)}</span>
+                      <span className="mt-0.5 block text-xs text-white/65">{day.date} · {evs.length} {t(dict.program.sessions)}</span>
                     </span>
                     <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 text-white/50 transition ${open ? "rotate-45 border-violet-400 text-violet-300" : ""}`}>
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
@@ -437,7 +437,7 @@ export default function Journey() {
                 <div className="text-2xl font-black text-white sm:text-3xl">
                   {numeric ? <CountUp value={parseInt(s.num, 10)} /> : s.num}
                 </div>
-                <div className="mt-1.5 text-xs leading-snug text-white/55">{t(s.label)}</div>
+                <div className="mt-1.5 text-xs leading-snug text-white/70">{t(s.label)}</div>
               </Glass>
             );
           })}
@@ -622,7 +622,7 @@ function FAQList() {
             <AnimatePresence initial={false}>
               {isOpen && (
                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: reduce ? 0 : 0.28, ease: [0.22,1,0.36,1] }} className="overflow-hidden">
-                  <p className="pb-5 pr-8 text-sm leading-relaxed text-white/60">{t(item.a)}</p>
+                  <p className="pb-5 pr-8 text-sm leading-relaxed text-white/70">{t(item.a)}</p>
                 </motion.div>
               )}
             </AnimatePresence>

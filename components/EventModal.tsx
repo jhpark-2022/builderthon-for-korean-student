@@ -220,7 +220,7 @@ export default function EventModal({
               {/* Detail rows */}
               <dl className="mt-8 grid grid-cols-1 gap-x-8 gap-y-5 rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-sm sm:grid-cols-2">
                 <div className="flex flex-col gap-1">
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/35">
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/70">
                     {t(dict.modal.category)}
                   </dt>
                   <dd className="font-semibold text-white">
@@ -228,7 +228,7 @@ export default function EventModal({
                   </dd>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/35">
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/70">
                     {t(dict.modal.time)}
                   </dt>
                   <dd className="font-semibold text-white">
@@ -237,7 +237,7 @@ export default function EventModal({
                   </dd>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/35">
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/70">
                     {t(dict.modal.speaker)}
                   </dt>
                   <dd className="font-semibold text-white">
@@ -245,7 +245,7 @@ export default function EventModal({
                   </dd>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/35">
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/70">
                     {t(dict.modal.location)}
                   </dt>
                   <dd className="font-semibold text-white">
