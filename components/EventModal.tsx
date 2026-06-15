@@ -217,6 +217,51 @@ export default function EventModal({
                 {t(event.description)}
               </p>
 
+              {/* Who's behind it — partner/company with a link out */}
+              {event.org && (
+                <div className="mt-7 rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-white/70">
+                    {t(dict.modal.about)}
+                  </p>
+                  <div className="mt-3 flex flex-wrap items-center gap-3">
+                    <span className="text-lg font-bold text-white">{event.org.name}</span>
+                    <a
+                      href={event.org.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent transition hover:bg-accent/20"
+                    >
+                      {t(dict.modal.visit)}
+                      <span aria-hidden>↗</span>
+                    </a>
+                  </div>
+                  <p className="mt-3 text-sm leading-7 text-white/70">{t(event.org.desc)}</p>
+                </div>
+              )}
+
+              {/* What's in it for you — concrete opportunities */}
+              {event.opportunities && event.opportunities.length > 0 && (
+                <div className="mt-7">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-white/70">
+                    {t(dict.modal.opportunities)}
+                  </p>
+                  <ul className="mt-3 space-y-3">
+                    {event.opportunities.map((o, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-3 text-sm leading-7 text-white/75"
+                      >
+                        <span
+                          aria-hidden
+                          className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
+                        />
+                        {t(o)}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               {/* Detail rows */}
               <dl className="mt-8 grid grid-cols-1 gap-x-8 gap-y-5 rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-sm sm:grid-cols-2">
                 <div className="flex flex-col gap-1">

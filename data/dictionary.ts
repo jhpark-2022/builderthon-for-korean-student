@@ -213,6 +213,9 @@ export const dict = {
     category: { ko: "카테고리", en: "Category" },
     time: { ko: "시간", en: "Time" },
     tbc: { ko: "추후 안내", en: "To be announced" },
+    about: { ko: "함께하는 곳", en: "Who's behind it" },
+    visit: { ko: "사이트 방문", en: "Visit site" },
+    opportunities: { ko: "이런 기회가 있어요", en: "What's in it for you" },
   },
 
   partners: {

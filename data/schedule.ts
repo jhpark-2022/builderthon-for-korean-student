@@ -35,6 +35,12 @@ export interface BEvent {
   speaker?: Bilingual;
   location?: Bilingual;
   confirmed?: boolean; // show a "Confirmed / 확정" badge on the card
+  // Optional: the company/org behind the session, shown in the modal with a
+  // link out. Only add when the partner is real & confirmed (honest by default).
+  org?: { name: string; desc: Bilingual; url: string };
+  // Optional: concrete opportunities a student gets from attending. Honest —
+  // describes the value of the session, not guaranteed outcomes.
+  opportunities?: Bilingual[];
 }
 
 export interface DayMeta {
@@ -376,6 +382,28 @@ export const schedule: BEvent[] = [
     // TODO: confirm — specific speaker name not provided yet; using role only.
     speaker: { ko: "Alchemy GTM Lead", en: "Alchemy GTM Lead" },
     location: VENUE_TBC,
+    org: {
+      name: "Alchemy",
+      url: "https://www.alchemy.com",
+      desc: {
+        ko: "Alchemy는 Ethereum을 비롯한 여러 블록체인 위에서 앱을 만들 수 있게 해주는 대표적인 Web3 개발자 인프라 플랫폼입니다. 노드·API·SDK를 제공하며, 전 세계 수많은 Web3 팀이 사용합니다.",
+        en: "Alchemy is a leading web3 developer-infrastructure platform that lets teams build apps on Ethereum and other chains — node infrastructure, APIs, and SDKs used by web3 teams worldwide.",
+      },
+    },
+    opportunities: [
+      {
+        ko: "Alchemy GTM Lead에게서 Web3·크립토의 실제 시장 진입(GTM) 전략을 직접 듣기",
+        en: "Hear real go-to-market (GTM) lessons for web3 & crypto straight from an Alchemy GTM Lead.",
+      },
+      {
+        ko: "크립토 인프라·Web3 제품을 만드는 사람들과 가까이서 네트워킹",
+        en: "Network up close with people building crypto infrastructure and web3 products.",
+      },
+      {
+        ko: "블록체인 생태계의 커리어·기회가 어디에 열려 있는지 감 잡기",
+        en: "Get a feel for where the careers and openings are across the blockchain ecosystem.",
+      },
+    ],
   },
 
   // ─── DAY 5 · Calm Before the Storm (08.28) ──────────────────────────────────
