@@ -219,7 +219,7 @@ function CompanionMarquee({ t }: { t: Tfn }) {
 // (+ hero.mp4 fallback) and a still frame hero-poster.jpg, then set
 // enabled: true. Keep each video file ~1–2MB (see /public/hero/README.md).
 const HERO_VIDEO = {
-  enabled: false,
+  enabled: true,
   webm: "/hero/hero.webm",
   mp4: "/hero/hero.mp4",
   poster: "/hero/hero-poster.jpg",

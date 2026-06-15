@@ -1,9 +1,18 @@
 # Hero background video
 
-The hero (`Chapter id="top"`) can show a full-bleed background video instead of
-just the WebGL field. It's wired up but **off by default** (placeholder state).
+The hero (`Chapter id="top"`) shows a full-bleed background video instead of
+just the WebGL field, toggled by `HERO_VIDEO.enabled` in
+`components/journey/Journey.tsx`.
 
-## How to turn it on
+## Current clip
+
+`hero.webm` / `hero.mp4` / `hero-poster.jpg` are derived from Pexels stock
+video **#8266171** (free for commercial use, no attribution required —
+https://www.pexels.com/video/programmer-using-a-laptop-8266171/). Re-encoded
+to 1080p, silent, ~350–380KB each via the ffmpeg recipe below. To swap it,
+replace the three files (same names) and re-run the recipe.
+
+## How to replace / re-encode
 
 1. Make a short, seamless, **silent** loop (~8–15s). Source it however you like
    (AI: Sora / Runway / Veo / Kling · stock: Pexels / Coverr · or shoot it).
