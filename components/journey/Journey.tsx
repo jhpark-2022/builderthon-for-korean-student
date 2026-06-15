@@ -112,7 +112,7 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
             </span>
           )}
           {optional ? (
-            <span className="rounded-full border border-white/15 bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/55">
+            <span className="rounded-full border border-white/15 bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/75">
               {t(dict.program.optionalBadge)}
             </span>
           ) : (
@@ -121,8 +121,8 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
         </span>
       </div>
       <h4 className="mt-2 pl-2 text-base font-bold leading-snug text-white">{t(ev.title)}</h4>
-      <p className="mt-1.5 pl-2 text-sm leading-relaxed text-white/45">{t(ev.summary)}</p>
-      <span className="mt-auto pl-2 pt-3 text-xs font-semibold text-violet-300/40 transition group-hover:text-violet-300">
+      <p className="mt-1.5 pl-2 text-sm leading-relaxed text-white/70">{t(ev.summary)}</p>
+      <span className="mt-auto pl-2 pt-3 text-xs font-semibold text-violet-300/60 transition group-hover:text-violet-300">
         {t(dict.program.tapHint)} →
       </span>
     </button>
@@ -175,7 +175,9 @@ function CompanionMarquee({ t }: { t: Tfn }) {
       {/* edge fades so logos dissolve into the band rather than hard-cut */}
       <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#0a0814]/55 to-transparent sm:w-28" />
       <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#0a0814]/55 to-transparent sm:w-28" />
-      <div className="group overflow-hidden">
+      {/* decorative logo wall (duplicated track) — hidden from AT to avoid
+          announcing 25 names twice; the "Builder Companions" heading conveys it */}
+      <div aria-hidden className="group overflow-hidden">
         {/* margin (not flex gap) on each tile so the -50% loop is pixel-seamless */}
         <div className="marquee-track marquee-left group-hover:[animation-play-state:paused]">
           {row.map((c, i) => (
@@ -190,8 +192,7 @@ function CompanionMarquee({ t }: { t: Tfn }) {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={c.src}
-                  alt={c.alt ?? ""}
-                  loading="lazy"
+                  alt=""
                   className="max-h-9 w-auto max-w-[82%] object-contain opacity-70 transition group-hover:opacity-100"
                 />
               ) : (
@@ -295,7 +296,7 @@ export default function Journey() {
         </h1>
         <p className="mx-auto mt-8 flex flex-wrap items-center justify-center gap-3 text-sm text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base">
           <span className="font-semibold">{t(dict.hero.dates)}</span>
-          <span className="h-3.5 w-px bg-white/40" />
+          <span aria-hidden className="h-3.5 w-px bg-white/40" />
           <span className="text-white/75">{t(dict.hero.location)}</span>
         </p>
         <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)]">
@@ -308,6 +309,12 @@ export default function Journey() {
           </a>
           <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10">
             {t(dict.hero.ctaPartner)}
+          </a>
+          {/* Playful third entry → /quiz personality test + team matching. */}
+          <a href="/quiz" className="group inline-flex items-center gap-2 rounded-full border border-violet-400/40 bg-violet-400/10 px-8 py-4 text-base font-semibold text-violet-100 transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-400/15">
+            <span aria-hidden>✦</span>
+            {t(dict.nav.quiz)}
+            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </a>
         </div>
         <div className="mt-16 grid grid-cols-3 gap-3 sm:gap-4">
@@ -330,7 +337,7 @@ export default function Journey() {
             </motion.div>
           ))}
         </div>
-        <div className="mt-14 flex flex-col items-center gap-2 text-[0.7rem] tracking-[0.3em] text-white/40">
+        <div className="mt-14 flex flex-col items-center gap-2 text-[0.7rem] tracking-[0.3em] text-white/60">
           {t(dict.hero.scroll).toUpperCase()}
           <span className="h-10 w-px animate-pulse bg-gradient-to-b from-white/50 to-transparent" />
         </div>
@@ -362,7 +369,7 @@ export default function Journey() {
               </div>
             ))}
           </div>
-          <p className="mx-auto mt-6 max-w-2xl border-t border-white/10 pt-5 text-center text-sm leading-relaxed text-white/55">
+          <p className="mx-auto mt-6 max-w-2xl border-t border-white/10 pt-5 text-center text-sm leading-relaxed text-white/70">
             {t(dict.about.gapNote)}
           </p>
         </div>
@@ -376,7 +383,7 @@ export default function Journey() {
             <Glass key={c.kicker.en} className="!p-6 transition hover:border-violet-400/40 hover:bg-white/[0.07]">
               <span className="text-xs font-bold tracking-[0.2em] text-violet-300">{t(c.kicker)}</span>
               <h3 className="mt-3 text-lg font-bold text-white">{t(c.title)}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/60">{t(c.body)}</p>
+              <p className="mt-2 text-sm leading-relaxed text-white/75">{t(c.body)}</p>
             </Glass>
           ))}
         </div>
@@ -417,7 +424,7 @@ export default function Journey() {
             </ul>
           </Glass>
         </div>
-        <p className="mt-5 text-center text-xs text-white/40">{t(dict.whoWhat.disclaimer)}</p>
+        <p className="mt-5 text-center text-xs text-white/65">{t(dict.whoWhat.disclaimer)}</p>
       </Chapter>
 
       {/* ── CH 3 · PROGRAM ─────────────────────────────────────────── */}
@@ -440,7 +447,7 @@ export default function Journey() {
             <div className="mx-auto mt-6 max-w-2xl rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.06] px-5 py-3.5 text-xs leading-relaxed text-emerald-100/85">
               {t(dict.program.rsvpNote)}
             </div>
-            <p className="mt-4 text-xs text-white/35 xl:hidden">{t(dict.program.swipeHint)}</p>
+            <p className="mt-4 text-xs text-white/65 xl:hidden">{t(dict.program.swipeHint)}</p>
           </div>
 
           {/* Pre-program — optional vibe-coding crash course, still being
@@ -523,7 +530,7 @@ export default function Journey() {
                       <span className="block truncate text-sm font-bold text-white">{t(day.theme)}</span>
                       <span className="mt-0.5 block text-xs text-white/65">{day.date} · {evs.length} {t(dict.program.sessions)}</span>
                     </span>
-                    <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 text-white/50 transition ${open ? "rotate-45 border-violet-400 text-violet-300" : ""}`}>
+                    <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 text-white/70 transition ${open ? "rotate-45 border-violet-400 text-violet-300" : ""}`}>
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
                     </span>
                   </button>
@@ -562,7 +569,7 @@ export default function Journey() {
                 return (
                   <div key={cat} className="flex items-start gap-2.5">
                     <span className="mt-[5px] h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: meta.dot }} />
-                    <p className="text-sm text-white/50">
+                    <p className="text-sm text-white/75">
                       <span className="font-bold text-white/85">{t(meta.label)}</span> — {t(meta.blurb)}
                     </p>
                   </div>
@@ -639,7 +646,7 @@ export default function Journey() {
           </Glass>
         </div>
 
-        <p className="mt-5 text-center text-xs text-white/40">{t(dict.traction.note)}</p>
+        <p className="mt-5 text-center text-xs text-white/65">{t(dict.traction.note)}</p>
       </Chapter>
 
       {/* ── CH 4 · PARTNERS ────────────────────────────────────────── */}
@@ -651,7 +658,7 @@ export default function Journey() {
           <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
             {t(dict.partners.heading)}
           </h2>
-          <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/65">{t(dict.partners.note)}</p>
+          <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/75">{t(dict.partners.note)}</p>
 
           {/* Organizer + Founding network. Both marks are clean white-on-
               transparent (the KOMOS lion trimmed to its bounding box so it fills
@@ -665,27 +672,28 @@ export default function Journey() {
             ].map((o) => {
               const inner = (
                 <>
-                  <span className="text-xs font-bold uppercase tracking-widest text-white/40">{o.label}</span>
+                  <span className="text-xs font-bold uppercase tracking-widest text-white/60">{o.label}</span>
                   <div className="mt-4 flex items-center gap-4">
                     {/* fixed optical box so both marks share one height and the
                         name text lines up across the two cards regardless of the
                         lion's wide aspect vs the Zero100 circle */}
                     <span className="flex h-10 w-[72px] shrink-0 items-center justify-center">
-                      <Image src={o.img} alt={o.name} width={o.w} height={o.h} className="max-h-8 w-auto max-w-full object-contain brightness-0 invert" />
+                      {/* name is shown as text beside it → empty alt avoids double announcement */}
+                      <Image src={o.img} alt="" width={o.w} height={o.h} className="max-h-8 w-auto max-w-full object-contain brightness-0 invert" />
                     </span>
                     <div className="min-w-0">
                       <p className="flex items-center gap-1.5 text-lg font-bold text-white">
                         {o.name}
                         {o.url && <span aria-hidden className="text-white/30 transition group-hover:text-white/70">↗</span>}
                       </p>
-                      <p className="text-sm text-white/50">{o.desc}</p>
+                      <p className="text-sm text-white/75">{o.desc}</p>
                     </div>
                   </div>
                 </>
               );
-              const cls = "group block rounded-3xl border border-white/10 bg-white/[0.04] p-6 transition";
+              const cls = "group block rounded-3xl border border-white/10 bg-white/[0.04] p-6 transition hover:border-white/20 hover:bg-white/[0.06]";
               return o.url ? (
-                <a key={o.name} href={o.url} target="_blank" rel="noopener noreferrer" className={`${cls} hover:border-white/20 hover:bg-white/[0.06]`}>{inner}</a>
+                <a key={o.name} href={o.url} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
               ) : (
                 <div key={o.name} className={cls}>{inner}</div>
               );
@@ -717,9 +725,9 @@ export default function Journey() {
             <span className="font-bold text-white">Alchemy</span>
             <span aria-hidden className="text-white/40 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-emerald-300">↗</span>
           </a>
-          <p className="mt-2 text-xs text-emerald-300/70">{t(dict.partners.confirmedSub)}</p>
+          <p className="mt-2 text-xs text-emerald-300/90">{t(dict.partners.confirmedSub)}</p>
 
-          <p className="mt-8 text-xs font-bold uppercase tracking-widest text-white/40">{t(dict.partners.partnersLabel)}</p>
+          <p className="mt-8 text-xs font-bold uppercase tracking-widest text-white/60">{t(dict.partners.partnersLabel)}</p>
           <div className="mt-3 flex flex-wrap justify-center gap-3">
             {[
               { n: "AWS",     url: "https://aws.amazon.com" },
@@ -735,12 +743,12 @@ export default function Journey() {
                 rel="noopener noreferrer"
                 className="group flex h-16 min-w-[8.5rem] flex-1 items-center justify-center gap-1.5 rounded-xl border border-dashed border-white/15 bg-white/[0.02] px-4 transition duration-300 hover:border-violet-400/30 hover:bg-violet-400/[0.04]"
               >
-                <span className="text-sm font-semibold uppercase tracking-wide text-white/40 transition group-hover:text-white/60">{n}</span>
+                <span className="text-sm font-semibold uppercase tracking-wide text-white/70 transition group-hover:text-white/90">{n}</span>
                 <span aria-hidden className="text-white/20 transition group-hover:text-violet-300/70">↗</span>
               </a>
             ))}
           </div>
-          <p className="mt-4 text-xs text-white/40">{t(dict.partners.inDiscussionNote)}</p>
+          <p className="mt-4 text-xs text-white/65">{t(dict.partners.inDiscussionNote)}</p>
         </div>
       </Chapter>
 
@@ -756,7 +764,7 @@ export default function Journey() {
             <h2 className="text-[clamp(1.6rem,4vw,2.5rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
               {t(dict.partners.companionsHeading)}
             </h2>
-            <p className="mx-auto mt-3 text-sm leading-relaxed text-white/55">
+            <p className="mx-auto mt-3 text-sm leading-relaxed text-white/75">
               {t(dict.partners.companionsSub)}
             </p>
           </div>
@@ -800,14 +808,20 @@ export default function Journey() {
             <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-9 py-4 text-base font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10">
               {t(dict.nav.partner)}
             </a>
+            {/* Playful third entry → /quiz personality test + team matching. */}
+            <a href="/quiz" className="group inline-flex items-center gap-2 rounded-full border border-violet-400/40 bg-violet-400/10 px-9 py-4 text-base font-semibold text-violet-100 transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-400/15">
+              <span aria-hidden>✦</span>
+              {t(dict.nav.quiz)}
+              <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+            </a>
           </div>
         </div>
 
         {/* credits — pinned to the very bottom of the final screen */}
         <div className="mx-auto w-full max-w-3xl border-t border-white/10 pt-8 text-center">
           <p className="text-sm font-bold tracking-widest text-white">SMU × ZERO100 BUILDERTHON</p>
-          <p className="mt-2 text-xs text-white/40">{t(dict.footer.hostedBy)}</p>
-          <p className="mt-4 text-xs text-white/35">© 2026 {t(dict.footer.rights)}</p>
+          <p className="mt-2 text-xs text-white/65">{t(dict.footer.hostedBy)}</p>
+          <p className="mt-4 text-xs text-white/55">© 2026 {t(dict.footer.rights)}</p>
         </div>
       </section>
 
@@ -834,7 +848,7 @@ function FAQList() {
               className="flex w-full items-center justify-between gap-4 py-5 text-left"
             >
               <span className="text-base font-semibold text-white">{t(item.q)}</span>
-              <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 text-white/40 transition ${isOpen ? "rotate-45 border-violet-400 text-violet-300" : ""}`}>
+              <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 text-white/70 transition ${isOpen ? "rotate-45 border-violet-400 text-violet-300" : ""}`}>
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
               </span>
             </button>
