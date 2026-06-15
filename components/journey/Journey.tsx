@@ -70,7 +70,10 @@ function CountUp({ value, className }: { value: number; className?: string }) {
 
   return (
     <span ref={ref} className={className}>
-      {n}
+      {/* Animated digits are decorative; expose the real final value to AT so a
+          screen reader never announces a mid-animation number. */}
+      <span aria-hidden="true">{n}</span>
+      <span className="sr-only">{value}</span>
     </span>
   );
 }
@@ -78,7 +81,7 @@ function CountUp({ value, className }: { value: number; className?: string }) {
 // A single program event card. Shared by the desktop column grid and the mobile
 // day accordion so both stay in sync. Height is only fixed on desktop (xl) to
 // keep columns even; on mobile cards hug their content.
-function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEvent) => void }) {
+function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEvent, el: HTMLElement) => void }) {
   const meta = categoryMeta[ev.category];
   const isMain = ev.category === "main";
   // Day 2–5 side sessions are not mandatory — joined freely via RSVP.
@@ -86,7 +89,7 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
   return (
     <button
       type="button"
-      onClick={() => onSelect(ev)}
+      onClick={(e) => onSelect(ev, e.currentTarget)}
       className="group relative flex w-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-white/[0.03] p-4 text-left backdrop-blur-md transition hover:-translate-y-0.5 hover:border-violet-400/25 hover:bg-white/[0.06] xl:min-h-[148px]"
     >
       <span aria-hidden className="absolute inset-y-0 left-0 w-[2px] opacity-70" style={{ backgroundColor: meta.dot }} />
@@ -123,6 +126,13 @@ export default function Journey() {
   const reduce = useReducedMotion();
   const [active, setActive] = useState<BEvent | null>(null);
   const [openDay, setOpenDay] = useState<number | null>(1); // mobile program accordion
+  // Remember the card that opened the modal so focus returns to it on close
+  // (document.activeElement is unreliable in Safari — see EventModal).
+  const triggerRef = useRef<HTMLElement | null>(null);
+  const selectEvent = (ev: BEvent, el?: HTMLElement | null) => {
+    triggerRef.current = el ?? null;
+    setActive(ev);
+  };
 
   return (
     <main className="relative z-10">
@@ -312,7 +322,7 @@ export default function Journey() {
                   </div>
                   <div className="mt-3 flex flex-1 flex-col gap-3">
                     {evs.map((ev) => (
-                      <EventCard key={ev.id} ev={ev} t={t} onSelect={setActive} />
+                      <EventCard key={ev.id} ev={ev} t={t} onSelect={selectEvent} />
                     ))}
                   </div>
                 </div>
@@ -357,7 +367,7 @@ export default function Journey() {
                       >
                         <div className="space-y-3 px-3 pb-3">
                           {evs.map((ev) => (
-                            <EventCard key={ev.id} ev={ev} t={t} onSelect={setActive} />
+                            <EventCard key={ev.id} ev={ev} t={t} onSelect={selectEvent} />
                           ))}
                         </div>
                       </motion.div>
@@ -517,7 +527,7 @@ export default function Journey() {
 
           <a href="https://www.alchemy.com/" target="_blank" rel="noopener noreferrer"
             className="group mt-6 flex h-20 items-center justify-center gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/5 px-6 transition hover:bg-emerald-400/10 sm:w-1/2">
-            <Image src="/partners/processed/alchemy.png" alt="Alchemy" width={480} height={422} className="h-9 w-9 shrink-0 object-contain brightness-0 invert opacity-90" />
+            <Image src="/partners/processed/alchemy.png" alt="" width={480} height={422} className="h-9 w-9 shrink-0 object-contain brightness-0 invert opacity-90" />
             <span className="font-bold text-white">Alchemy</span>
             <span aria-hidden className="text-white/40 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-emerald-300">↗</span>
           </a>
@@ -582,7 +592,7 @@ export default function Journey() {
         </div>
       </section>
 
-      <EventModal event={active} onClose={() => setActive(null)} />
+      <EventModal event={active} onClose={() => setActive(null)} triggerRef={triggerRef} />
     </main>
   );
 }
@@ -601,6 +611,7 @@ function FAQList() {
             <button
               type="button"
               onClick={() => setOpen(isOpen ? null : i)}
+              aria-expanded={isOpen}
               className="flex w-full items-center justify-between gap-4 py-5 text-left"
             >
               <span className="text-base font-semibold text-white">{t(item.q)}</span>
