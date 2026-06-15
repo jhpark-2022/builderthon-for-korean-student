@@ -48,6 +48,13 @@ body {
   overflow-x: hidden;
 }
 
+/* Use the dynamic viewport height where supported so the mobile browser's
+   collapsing address bar doesn't leave empty scroll space at the full-height
+   hero/closing chapters. Falls back to 100vh on older engines. */
+@supports (min-height: 100dvh) {
+  .min-h-screen { min-height: 100dvh; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {

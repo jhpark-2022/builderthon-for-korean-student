@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
 import { dict, links, type Phrase } from "@/data/dictionary";
 import {
@@ -40,6 +40,40 @@ function Eyebrow({ children, color = "violet" }: { children: React.ReactNode; co
 }
 
 type Tfn = (p: Phrase) => string;
+
+// Count-up for the partner-facing traction stats. Honest by construction:
+// animates once when scrolled into view, and only ever counts to the real
+// value. Fully disabled under prefers-reduced-motion (renders the final number
+// immediately). Callers pass only purely-numeric stats; anything with a prefix
+// like "~100" is rendered as static text and never reaches this component.
+function CountUp({ value, className }: { value: number; className?: string }) {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.6 });
+  const [n, setN] = useState(reduce ? value : 0);
+
+  useEffect(() => {
+    if (reduce || !inView) return;
+    let raf = 0;
+    let start: number | null = null;
+    const duration = 900;
+    const tick = (ts: number) => {
+      if (start === null) start = ts;
+      const p = Math.min((ts - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
+      setN(Math.round(eased * value));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, reduce, value]);
+
+  return (
+    <span ref={ref} className={className}>
+      {n}
+    </span>
+  );
+}
 
 // A single program event card. Shared by the desktop column grid and the mobile
 // day accordion so both stay in sync. Height is only fixed on desktop (xl) to
@@ -119,10 +153,11 @@ export default function Journey() {
           {t(dict.hero.blurb)}
         </p>
         <div className="mt-10 flex flex-wrap justify-center gap-3">
-          <a href={links.program} className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-8 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)]">
-            {t(dict.hero.ctaProgram)} →
+          <a href={links.program} className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-8 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)]">
+            {t(dict.hero.ctaProgram)}
+            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </a>
-          <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-white/85 backdrop-blur transition hover:bg-white/10">
+          <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-white/85 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/10">
             {t(dict.hero.ctaPartner)}
           </a>
         </div>
@@ -131,11 +166,19 @@ export default function Journey() {
             { num: "~100", label: t(dict.hero.statParticipants) },
             { num: "6",    label: t(dict.hero.statDays) },
             { num: "EN",   label: t(dict.hero.statLanguage) },
-          ].map((s) => (
-            <Glass key={s.num} className="!p-4 sm:!p-5">
-              <div className="text-3xl font-black text-white sm:text-4xl">{s.num}</div>
-              <div className="mt-1 text-xs text-white/50 sm:text-sm">{s.label}</div>
-            </Glass>
+          ].map((s, i) => (
+            <motion.div
+              key={s.num}
+              initial={reduce ? false : { opacity: 0, y: 16 }}
+              whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.5, delay: 0.12 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <Glass className="!p-3 transition duration-300 hover:border-violet-400/25 hover:bg-white/[0.06] sm:!p-5">
+                <div className="text-2xl font-black text-white sm:text-4xl">{s.num}</div>
+                <div className="mt-1 text-xs text-white/50 sm:text-sm">{s.label}</div>
+              </Glass>
+            </motion.div>
           ))}
         </div>
         <div className="mt-14 flex flex-col items-center gap-2 text-[0.7rem] tracking-[0.3em] text-white/40">
@@ -372,12 +415,18 @@ export default function Journey() {
         </div>
 
         <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-          {dict.traction.stats.map((s) => (
-            <Glass key={s.num} className="!p-5 text-center">
-              <div className="text-2xl font-black text-white sm:text-3xl">{s.num}</div>
-              <div className="mt-1.5 text-xs leading-snug text-white/55">{t(s.label)}</div>
-            </Glass>
-          ))}
+          {dict.traction.stats.map((s) => {
+            // Only count up purely-numeric values; "~100" and friends stay static.
+            const numeric = /^\d+$/.test(s.num);
+            return (
+              <Glass key={s.num} className="!p-5 text-center transition duration-300 hover:border-violet-400/25 hover:bg-white/[0.06]">
+                <div className="text-2xl font-black text-white sm:text-3xl">
+                  {numeric ? <CountUp value={parseInt(s.num, 10)} /> : s.num}
+                </div>
+                <div className="mt-1.5 text-xs leading-snug text-white/55">{t(s.label)}</div>
+              </Glass>
+            );
+          })}
         </div>
 
         <div className="mt-4 grid gap-4 text-left md:grid-cols-2">
@@ -456,8 +505,8 @@ export default function Journey() {
               { src: "/partners/processed/popup-studio.png", alt: "Popup Studio", w: 476, h: 134 },
               { src: "/partners/processed/codepresso.png",   alt: "Codepresso",   w: 361, h: 113 },
             ].map((b) => (
-              <div key={b.alt} className="flex h-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] px-6">
-                <Image src={b.src} alt={b.alt} width={b.w} height={b.h} className="max-h-7 w-auto max-w-full object-contain brightness-0 invert opacity-75" />
+              <div key={b.alt} className="group flex h-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] px-6 transition duration-300 hover:border-white/20 hover:bg-white/[0.06]">
+                <Image src={b.src} alt={b.alt} width={b.w} height={b.h} className="max-h-7 w-auto max-w-full object-contain opacity-75 brightness-0 invert transition duration-300 group-hover:opacity-100" />
               </div>
             ))}
           </div>
@@ -466,15 +515,15 @@ export default function Journey() {
             className="group mt-6 flex h-20 items-center justify-center gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/5 px-6 transition hover:bg-emerald-400/10 sm:w-1/2">
             <Image src="/partners/processed/alchemy.png" alt="Alchemy" width={480} height={422} className="h-9 w-9 shrink-0 object-contain brightness-0 invert opacity-90" />
             <span className="font-bold text-white">Alchemy</span>
-            <span className="text-white/40 group-hover:text-emerald-300">↗</span>
+            <span aria-hidden className="text-white/40 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-emerald-300">↗</span>
           </a>
           <p className="mt-2 text-xs text-emerald-300/70">{t(dict.partners.confirmedSub)}</p>
 
           <p className="mt-8 text-xs font-bold uppercase tracking-widest text-white/40">{t(dict.partners.partnersLabel)}</p>
           <div className="mt-3 grid grid-cols-3 gap-3">
             {["Workato","OpenAI","AWS"].map((n) => (
-              <div key={n} className="flex h-16 items-center justify-center rounded-xl border border-dashed border-white/15 bg-white/[0.02]">
-                <span className="text-sm font-semibold uppercase tracking-wide text-white/40">{n}</span>
+              <div key={n} className="group flex h-16 items-center justify-center rounded-xl border border-dashed border-white/15 bg-white/[0.02] transition duration-300 hover:border-violet-400/30 hover:bg-violet-400/[0.04]">
+                <span className="text-sm font-semibold uppercase tracking-wide text-white/40 transition group-hover:text-white/55">{n}</span>
               </div>
             ))}
           </div>
@@ -511,10 +560,11 @@ export default function Journey() {
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/65">{t(dict.footer.blurb)}</p>
           <div className="mt-10 flex flex-wrap justify-center gap-3">
-            <a href={links.program} className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5">
-              {t(dict.footer.ctaProgram)} →
+            <a href={links.program} className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5">
+              {t(dict.footer.ctaProgram)}
+              <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
             </a>
-            <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-9 py-4 text-base font-semibold text-white/85 backdrop-blur transition hover:bg-white/10">
+            <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-9 py-4 text-base font-semibold text-white/85 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/10">
               {t(dict.nav.partner)}
             </a>
           </div>
