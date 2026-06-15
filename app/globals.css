@@ -64,8 +64,8 @@ body {
   /* Exempt the decorative logo marquee: a slow, continuous horizontal scroll is
      low-risk for motion sensitivity, and freezing it just looks broken. Higher
      selector specificity than `*` lets these win despite both being !important. */
-  .marquee-left  { animation-duration: 35s !important; }
-  .marquee-right { animation-duration: 35s !important; }
+  .marquee-left  { animation-duration: 60s !important; }
+  .marquee-right { animation-duration: 60s !important; }
 }
 
 ::-webkit-scrollbar { width: 6px; }
@@ -283,8 +283,8 @@ body {
 
 /* ── Marquee ───────────────────────────────────────────────────────────────── */
 .marquee-track { display: flex; width: max-content; }
-.marquee-left  { animation: marquee 35s linear infinite; }
-.marquee-right { animation: marquee-reverse 35s linear infinite; }
+.marquee-left  { animation: marquee 60s linear infinite; }
+.marquee-right { animation: marquee-reverse 60s linear infinite; }
 @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 @keyframes marquee-reverse { from{transform:translateX(-50%)} to{transform:translateX(0)} }
 

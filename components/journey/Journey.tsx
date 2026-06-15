@@ -669,7 +669,7 @@ export default function Journey() {
               { src: "/partners/processed/codepresso.png",   alt: "Codepresso",   w: 361, h: 113, url: "https://codepresso.io" },
             ].map((b) => {
               const inner = (
-                <Image src={b.src} alt={b.alt} width={b.w} height={b.h} className="max-h-7 w-auto max-w-full object-contain opacity-75 brightness-0 invert transition duration-300 group-hover:opacity-100" />
+                <Image src={b.src} alt={b.alt} width={b.w} height={b.h} className="max-h-11 w-auto max-w-full object-contain opacity-75 brightness-0 invert transition duration-300 group-hover:opacity-100" />
               );
               const cls = "group flex h-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] px-6 transition duration-300 hover:border-white/20 hover:bg-white/[0.06]";
               return b.url ? (
