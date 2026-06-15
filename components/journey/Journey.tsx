@@ -242,7 +242,7 @@ function HeroVideo() {
       </video>
       {/* legibility scrim — darker top/bottom so the headline reads and the
           band fades into the WebGL sections below */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0814]/75 via-[#0a0814]/45 to-[#0a0814]/90" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0814]/85 via-[#0a0814]/68 to-[#0a0814]/92" />
     </div>
   );
 }
@@ -283,12 +283,12 @@ export default function Journey() {
             {t(dict.hero.titleLine2)}
           </span>
         </h1>
-        <p className="mx-auto mt-8 flex flex-wrap items-center justify-center gap-3 text-sm text-white/80 sm:text-base">
+        <p className="mx-auto mt-8 flex flex-wrap items-center justify-center gap-3 text-sm text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base">
           <span className="font-semibold">{t(dict.hero.dates)}</span>
-          <span className="h-3.5 w-px bg-white/30" />
-          <span className="text-white/55">{t(dict.hero.location)}</span>
+          <span className="h-3.5 w-px bg-white/40" />
+          <span className="text-white/75">{t(dict.hero.location)}</span>
         </p>
-        <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/65">
+        <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)]">
           {t(dict.hero.blurb)}
         </p>
         <div className="mt-10 flex flex-wrap justify-center gap-3">
