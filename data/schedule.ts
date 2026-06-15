@@ -405,6 +405,24 @@ export const schedule: BEvent[] = [
       },
     ],
   },
+  {
+    id: "d4-adhoc-mentoring",
+    day: 4,
+    date: "08.27",
+    category: "build",
+    timeOfDay: "PM",
+    title: { ko: "수시 멘토링", en: "Ad-hoc Mentoring" },
+    summary: {
+      ko: "Day 4–5 동안 필요할 때 받는 롤링 멘토링.",
+      en: "Rolling mentoring across Day 4–5, whenever you need it.",
+    },
+    description: {
+      ko: "Day 4–5에 걸쳐, 정해진 시간표 대신 팀의 필요에 맞춰 수시로 진행되는 멘토링입니다. 막히는 지점, 피칭 준비, 기술적 난제 등 무엇이든 멘토와 1:1로 풀어내며 데모데이를 준비합니다. (멘토 라인업은 파트너 확정에 따라 안내될 예정입니다.)",
+      en: "Across Day 4–5, rolling ad-hoc mentoring that follows each team's needs rather than a fixed timetable. Work through blockers, pitch prep or technical challenges one-on-one with mentors as you head into Demo Day. (Mentor line-up to be announced as partners are confirmed.)",
+    },
+    location: VENUE_TBC,
+    // speaker / mentors — TODO: confirm
+  },
 
   // ─── DAY 5 · Calm Before the Storm (08.28) ──────────────────────────────────
   {
@@ -432,12 +450,12 @@ export const schedule: BEvent[] = [
     timeOfDay: "PM",
     title: { ko: "수시 멘토링", en: "Ad-hoc Mentoring" },
     summary: {
-      ko: "필요할 때 받는 롤링 멘토링.",
-      en: "Rolling mentoring, available when you need it.",
+      ko: "Day 4–5 동안 필요할 때 받는 롤링 멘토링.",
+      en: "Rolling mentoring across Day 4–5, whenever you need it.",
     },
     description: {
-      ko: "정해진 시간표 대신 팀의 필요에 맞춰 수시로 진행되는 멘토링입니다. 막히는 지점, 피칭 준비, 기술적 난제 등 무엇이든 멘토와 1:1로 풀어내며 데모데이를 준비합니다. (멘토 라인업은 파트너 확정에 따라 안내될 예정입니다.)",
-      en: "Rolling, ad-hoc mentoring that follows each team's needs rather than a fixed timetable. Work through blockers, pitch prep or technical challenges one-on-one with mentors as you head into Demo Day. (Mentor line-up to be announced as partners are confirmed.)",
+      ko: "Day 4–5에 걸쳐, 정해진 시간표 대신 팀의 필요에 맞춰 수시로 진행되는 멘토링입니다. 막히는 지점, 피칭 준비, 기술적 난제 등 무엇이든 멘토와 1:1로 풀어내며 데모데이를 준비합니다. (멘토 라인업은 파트너 확정에 따라 안내될 예정입니다.)",
+      en: "Across Day 4–5, rolling ad-hoc mentoring that follows each team's needs rather than a fixed timetable. Work through blockers, pitch prep or technical challenges one-on-one with mentors as you head into Demo Day. (Mentor line-up to be announced as partners are confirmed.)",
     },
     location: VENUE_TBC,
     // speaker / mentors — TODO: confirm
