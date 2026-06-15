@@ -10,11 +10,15 @@ export default function Chapter({
   children,
   align = "center",
   className = "",
+  background,
 }: {
   id?: string;
   children: ReactNode;
   align?: "left" | "center" | "right";
   className?: string;
+  // optional full-bleed layer rendered behind the content rail (e.g. a hero
+  // video). It positions itself absolutely; the rail sits above it via z-10.
+  background?: ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
@@ -49,10 +53,12 @@ export default function Chapter({
     <section
       id={id}
       ref={ref}
-      className={`relative flex min-h-screen w-full flex-col justify-center px-6 py-24 sm:px-10 ${className}`}
+      className={`relative flex min-h-screen w-full flex-col justify-center px-6 py-24 sm:px-10 ${background ? "isolate" : ""} ${className}`}
     >
-      {/* centered content rail — the real boundary */}
-      <div className="mx-auto w-full max-w-6xl">
+      {background}
+      {/* centered content rail — the real boundary (z-10 keeps it above any
+          full-bleed background layer) */}
+      <div className="relative z-10 mx-auto w-full max-w-6xl">
         <div
           className={`w-full transition-all duration-700 ease-out ${textCls} ${offsetCls}`}
           style={{

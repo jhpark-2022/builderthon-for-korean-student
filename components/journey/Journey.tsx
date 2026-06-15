@@ -208,6 +208,45 @@ function CompanionMarquee({ t }: { t: Tfn }) {
   );
 }
 
+// ── Hero background video ──────────────────────────────────────────────────
+// Scoped to the hero only (the rest of the page keeps the WebGL field). It's a
+// standard autoplay/muted/loop/playsInline background video — muted is what
+// lets it autoplay; playsInline stops iOS going fullscreen; the poster shows
+// before the video loads or if it fails.
+//
+// PLACEHOLDER STATE: `enabled: false`, so the live hero is unchanged (WebGL).
+// To turn it on, drop a web-optimised clip into /public/hero/ as hero.webm
+// (+ hero.mp4 fallback) and a still frame hero-poster.jpg, then set
+// enabled: true. Keep each video file ~1–2MB (see /public/hero/README.md).
+const HERO_VIDEO = {
+  enabled: false,
+  webm: "/hero/hero.webm",
+  mp4: "/hero/hero.mp4",
+  poster: "/hero/hero-poster.jpg",
+};
+
+function HeroVideo() {
+  if (!HERO_VIDEO.enabled) return null; // placeholder: keep the WebGL background
+  return (
+    <div aria-hidden className="absolute inset-0 overflow-hidden">
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        poster={HERO_VIDEO.poster}
+        className="h-full w-full object-cover"
+      >
+        <source src={HERO_VIDEO.webm} type="video/webm" />
+        <source src={HERO_VIDEO.mp4} type="video/mp4" />
+      </video>
+      {/* legibility scrim — darker top/bottom so the headline reads and the
+          band fades into the WebGL sections below */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0814]/75 via-[#0a0814]/45 to-[#0a0814]/90" />
+    </div>
+  );
+}
+
 export default function Journey() {
   const { t } = useLocale();
   const reduce = useReducedMotion();
@@ -227,7 +266,7 @@ export default function Journey() {
   return (
     <main className="relative z-10">
       {/* ── CH 0 · HERO ─────────────────────────────────────────────── */}
-      <Chapter id="top" align="center">
+      <Chapter id="top" align="center" background={<HeroVideo />}>
         <div className="mt-10 sm:mt-12">
           <Eyebrow>✦ {t(dict.hero.eyebrow)}</Eyebrow>
         </div>
