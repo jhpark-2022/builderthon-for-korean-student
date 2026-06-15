@@ -43,6 +43,9 @@ export const viewport: Viewport = {
   themeColor: "#06040f",
   width: "device-width",
   initialScale: 1,
+  // Let content extend into the display cutouts so env(safe-area-inset-*) is
+  // non-zero — used by the mobile event modal's bottom-sheet padding.
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

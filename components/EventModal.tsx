@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
 import { dict } from "@/data/dictionary";
 import { categoryMeta, days, type BEvent } from "@/data/schedule";
@@ -25,6 +25,7 @@ export default function EventModal({
   triggerRef,
 }: EventModalProps) {
   const { t } = useLocale();
+  const reduce = useReducedMotion();
   const closeRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -115,7 +116,7 @@ export default function EventModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: reduce ? 0 : 0.2 }}
         >
           {/* Backdrop */}
           <div
@@ -130,10 +131,10 @@ export default function EventModal({
             role="dialog"
             aria-modal="true"
             aria-labelledby="event-modal-title"
-            initial={{ opacity: 0, y: 40, scale: 0.985 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 24, scale: 0.985 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 40, scale: 0.985 }}
+            animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.985 }}
+            transition={{ duration: reduce ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="relative z-10 flex max-h-[85vh] w-full max-w-[760px] flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-[#0c0a18] shadow-2xl sm:rounded-3xl"
           >
             {/* Neon header strip */}
@@ -160,8 +161,10 @@ export default function EventModal({
               </svg>
             </button>
 
-            {/* Scrollable content */}
-            <div className="overflow-y-auto px-7 py-8 sm:px-10 sm:py-9">
+            {/* Scrollable content. Bottom padding honors the iOS home-indicator
+                safe area on the mobile bottom-sheet; sm:py-9 restores it on the
+                centered desktop dialog. */}
+            <div className="overflow-y-auto px-7 pt-8 pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-10 sm:py-9">
               {/* Category + day chips */}
               <div className="flex flex-wrap items-center gap-2 pr-12">
                 <span

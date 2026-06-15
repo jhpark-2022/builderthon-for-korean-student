@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
-import { dict, links } from "@/data/dictionary";
+import { dict, links, type Phrase } from "@/data/dictionary";
 import {
   categoryMeta,
   days,
@@ -39,7 +39,7 @@ function Eyebrow({ children, color = "violet" }: { children: React.ReactNode; co
   );
 }
 
-type Tfn = (p: { ko: string; en: string }) => string;
+type Tfn = (p: Phrase) => string;
 
 // A single program event card. Shared by the desktop column grid and the mobile
 // day accordion so both stay in sync. Height is only fixed on desktop (xl) to
@@ -86,6 +86,7 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
 
 export default function Journey() {
   const { t } = useLocale();
+  const reduce = useReducedMotion();
   const [active, setActive] = useState<BEvent | null>(null);
   const [openDay, setOpenDay] = useState<number | null>(1); // mobile program accordion
 
@@ -308,7 +309,7 @@ export default function Journey() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{ duration: reduce ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] }}
                         className="overflow-hidden"
                       >
                         <div className="space-y-3 px-3 pb-3">
@@ -461,7 +462,7 @@ export default function Journey() {
             ))}
           </div>
 
-          <a href="https://www.alchemy.com/" target="_blank" rel="noreferrer"
+          <a href="https://www.alchemy.com/" target="_blank" rel="noopener noreferrer"
             className="group mt-6 flex h-20 items-center justify-center gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/5 px-6 transition hover:bg-emerald-400/10 sm:w-1/2">
             <Image src="/partners/processed/alchemy.png" alt="Alchemy" width={480} height={422} className="h-9 w-9 shrink-0 object-contain brightness-0 invert opacity-90" />
             <span className="font-bold text-white">Alchemy</span>
@@ -535,6 +536,7 @@ export default function Journey() {
 // FAQ accordion (kept inside Journey for a single client component tree)
 function FAQList() {
   const { t } = useLocale();
+  const reduce = useReducedMotion();
   const [open, setOpen] = useState<number | null>(0);
   return (
     <div className="divide-y divide-white/10">
@@ -554,7 +556,7 @@ function FAQList() {
             </button>
             <AnimatePresence initial={false}>
               {isOpen && (
-                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.28, ease: [0.22,1,0.36,1] }} className="overflow-hidden">
+                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: reduce ? 0 : 0.28, ease: [0.22,1,0.36,1] }} className="overflow-hidden">
                   <p className="pb-5 pr-8 text-sm leading-relaxed text-white/60">{t(item.a)}</p>
                 </motion.div>
               )}
