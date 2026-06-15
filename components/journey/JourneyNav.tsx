@@ -44,7 +44,7 @@ export default function JourneyNav() {
           <a href={links.partnership} className="hidden rounded-full border border-white/20 bg-white/5 px-5 py-2 text-sm font-semibold text-white/85 backdrop-blur transition hover:bg-white/10 md:inline-flex">
             {t(dict.nav.partner)}
           </a>
-          <a href={links.program} className="hidden rounded-full bg-violet-600/90 px-5 py-2 text-sm font-semibold text-white backdrop-blur transition hover:bg-violet-500 sm:inline-flex">
+          <a href={links.program} className="hidden rounded-full bg-violet-600/90 px-5 py-2 text-sm font-semibold text-white backdrop-blur transition hover:bg-violet-500 lg:inline-flex">
             {t(dict.nav.viewProgram)}
           </a>
         </div>

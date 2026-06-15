@@ -19,27 +19,41 @@ export default function Background() {
     let scene: BackgroundScene | null = null;
     let cancelled = false;
 
-    // Defer init by one frame. React 18 StrictMode mounts → unmounts → remounts
-    // effects in dev; deferring lets the throwaway first mount's cleanup run
-    // BEFORE we build the renderer, so we never create a context on a canvas
-    // that's about to be torn down (which previously caused context loss +
-    // the "reading 'precision'" crash on the second mount).
-    const id = requestAnimationFrame(() => {
+    // Reduced-motion: skip the WebGL scene entirely (no Three.js chunk, no
+    // shader compile, no rAF loop) and render the branded CSS gradient. Best for
+    // the motion-sensitive / low-power devices in our audience.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setFailed(true);
+      return;
+    }
+
+    // Build the scene off the critical path: wait for idle so the heavy Three.js
+    // download + shader compile don't compete with hydrating the page content
+    // (protects LCP/INP). The inner rAF keeps the StrictMode mount→unmount→
+    // remount safety from before. Falls back to a timeout on Safari.
+    const init = () => {
       if (cancelled) return;
-      try {
-        scene = new BackgroundScene(canvas);
-        scene.start();
-      } catch (e) {
-        console.error("[Background] init failed, using CSS fallback", e);
-        scene?.dispose();
-        scene = null;
-        setFailed(true);
-      }
-    });
+      requestAnimationFrame(() => {
+        if (cancelled) return;
+        try {
+          scene = new BackgroundScene(canvas);
+          scene.start();
+        } catch (e) {
+          console.error("[Background] init failed, using CSS fallback", e);
+          scene?.dispose();
+          scene = null;
+          setFailed(true);
+        }
+      });
+    };
+    const idleId: number = window.requestIdleCallback
+      ? window.requestIdleCallback(init, { timeout: 1500 })
+      : window.setTimeout(init, 200);
 
     return () => {
       cancelled = true;
-      cancelAnimationFrame(id);
+      if (window.cancelIdleCallback) window.cancelIdleCallback(idleId);
+      else clearTimeout(idleId);
       scene?.dispose();
       scene = null;
     };

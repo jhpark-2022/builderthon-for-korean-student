@@ -33,7 +33,7 @@ function Eyebrow({ children, color = "violet" }: { children: React.ReactNode; co
     emerald: "border-emerald-400/30 bg-emerald-400/10 text-emerald-200",
   } as const;
   return (
-    <span className={`mb-5 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] backdrop-blur ${map[color]}`}>
+    <span className={`mb-4 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] backdrop-blur ${map[color]}`}>
       {children}
     </span>
   );
@@ -77,7 +77,7 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
       </div>
       <h4 className="mt-2 pl-2 text-base font-bold leading-snug text-white">{t(ev.title)}</h4>
       <p className="mt-1.5 pl-2 text-sm leading-relaxed text-white/45">{t(ev.summary)}</p>
-      <span className="mt-auto pl-2 pt-3 text-xs font-semibold text-violet-300 opacity-0 transition group-hover:opacity-100">
+      <span className="mt-auto pl-2 pt-3 text-xs font-semibold text-violet-300/40 transition group-hover:text-violet-300">
         {t(dict.program.tapHint)} →
       </span>
     </button>
@@ -132,7 +132,7 @@ export default function Journey() {
             { num: "EN",   label: t(dict.hero.statLanguage) },
           ].map((s) => (
             <Glass key={s.num} className="!p-4 sm:!p-5">
-              <div className="text-2xl font-black text-white sm:text-3xl">{s.num}</div>
+              <div className="text-3xl font-black text-white sm:text-4xl">{s.num}</div>
               <div className="mt-1 text-xs text-white/50 sm:text-sm">{s.label}</div>
             </Glass>
           ))}
@@ -432,7 +432,7 @@ export default function Journey() {
                 <span className="text-xs font-bold uppercase tracking-widest text-white/40">{o.label}</span>
                 <div className="mt-4 flex items-center gap-4">
                   {o.treatment === "chip" ? (
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white">
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white/90 ring-1 ring-white/20">
                       <Image src={o.img} alt={o.name} width={o.w} height={o.h} className="h-10 w-10 object-contain" />
                     </span>
                   ) : (
@@ -471,8 +471,8 @@ export default function Journey() {
           <p className="mt-8 text-xs font-bold uppercase tracking-widest text-white/40">{t(dict.partners.partnersLabel)}</p>
           <div className="mt-3 grid grid-cols-3 gap-3">
             {["Workato","OpenAI","AWS"].map((n) => (
-              <div key={n} className="flex h-16 items-center justify-center rounded-xl border border-dashed border-white/15 bg-white/[0.03]">
-                <span className="font-bold text-white/45">{n}</span>
+              <div key={n} className="flex h-16 items-center justify-center rounded-xl border border-dashed border-white/15 bg-white/[0.02]">
+                <span className="text-sm font-semibold uppercase tracking-wide text-white/40">{n}</span>
               </div>
             ))}
           </div>
@@ -522,7 +522,7 @@ export default function Journey() {
         <div className="mx-auto w-full max-w-3xl border-t border-white/10 pt-8 text-center">
           <p className="text-sm font-bold tracking-widest text-white">SMU × ZERO100 BUILDERTHON</p>
           <p className="mt-2 text-xs text-white/40">{t(dict.footer.hostedBy)}</p>
-          <p className="mt-4 text-xs text-white/25">© 2026 {t(dict.footer.rights)}</p>
+          <p className="mt-4 text-xs text-white/35">© 2026 {t(dict.footer.rights)}</p>
         </div>
       </section>
 

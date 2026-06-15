@@ -134,7 +134,7 @@ export default function EventModal({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.985 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 flex max-h-[85vh] w-full max-w-[760px] flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-[#111] shadow-2xl sm:rounded-3xl"
+            className="relative z-10 flex max-h-[85vh] w-full max-w-[760px] flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-[#0c0a18] shadow-2xl sm:rounded-3xl"
           >
             {/* Neon header strip */}
             <span
@@ -148,7 +148,7 @@ export default function EventModal({
               type="button"
               onClick={onClose}
               aria-label={t(dict.modal.close)}
-              className="absolute right-5 top-7 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/50 transition hover:bg-white/10 hover:text-white"
+              className="absolute right-5 top-6 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/50 transition hover:bg-white/10 hover:text-white active:scale-95"
             >
               <svg width="16" height="16" viewBox="0 0 15 15" fill="none">
                 <path
@@ -215,7 +215,7 @@ export default function EventModal({
               </p>
 
               {/* Detail rows */}
-              <dl className="mt-8 grid grid-cols-1 gap-x-8 gap-y-4 border-t border-white/10 pt-6 text-sm sm:grid-cols-2">
+              <dl className="mt-8 grid grid-cols-1 gap-x-8 gap-y-5 rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-sm sm:grid-cols-2">
                 <div className="flex flex-col gap-1">
                   <dt className="text-xs font-semibold uppercase tracking-wide text-white/35">
                     {t(dict.modal.category)}
