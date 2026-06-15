@@ -27,7 +27,7 @@ export default function JourneyNav() {
   }, []);
 
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? "bg-[#06040f]/50 backdrop-blur-xl" : "bg-transparent"}`}>
+    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? "bg-[#06040f]/85" : "bg-transparent"}`}>
       <nav className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6 sm:px-10">
         <a href="#top" className="flex items-center gap-2.5">
           <span className="text-lg font-black tracking-wider text-white sm:text-xl">KOMOS</span>
@@ -50,12 +50,12 @@ export default function JourneyNav() {
         </div>
         <div className="flex items-center gap-2.5 sm:gap-3">
           <LocaleToggle />
-          <a href={links.partnership} className="hidden rounded-full border border-white/20 bg-white/5 px-5 py-2 text-sm font-semibold text-white/85 backdrop-blur transition hover:bg-white/10 md:inline-flex">
+          <a href={links.partnership} className="hidden rounded-full border border-white/20 bg-white/5 px-5 py-2 text-sm font-semibold text-white/85 transition hover:bg-white/10 md:inline-flex">
             {t(dict.nav.partner)}
           </a>
           {/* Primary CTA stays reachable on every screen — compact on mobile so
               the partnership/program funnel never disappears below lg. */}
-          <a href={links.program} className="inline-flex shrink-0 items-center rounded-full bg-violet-600/90 px-3 py-2 text-xs font-semibold text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-violet-500 sm:px-5 sm:text-sm">
+          <a href={links.program} className="inline-flex shrink-0 items-center rounded-full bg-violet-600/90 px-3 py-2 text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:bg-violet-500 sm:px-5 sm:text-sm">
             {t(dict.nav.viewProgram)}
           </a>
         </div>

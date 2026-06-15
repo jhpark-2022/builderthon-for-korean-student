@@ -20,7 +20,7 @@ const legendOrder: Category[] = ["main","ambassador","dinner","meetup","empowerm
 // glass panel wrapper
 function Glass({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`rounded-3xl border border-white/10 bg-white/[0.04] p-7 backdrop-blur-xl sm:p-9 ${className}`}>
+    <div className={`rounded-3xl border border-white/10 bg-white/[0.04] p-7 sm:p-9 ${className}`}>
       {children}
     </div>
   );
@@ -33,7 +33,7 @@ function Eyebrow({ children, color = "violet" }: { children: React.ReactNode; co
     emerald: "border-emerald-400/30 bg-emerald-400/10 text-emerald-200",
   } as const;
   return (
-    <span className={`mb-4 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] backdrop-blur ${map[color]}`}>
+    <span className={`mb-4 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] ${map[color]}`}>
       {children}
     </span>
   );
@@ -98,7 +98,7 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
     <button
       type="button"
       onClick={(e) => onSelect(ev, e.currentTarget)}
-      className="group relative flex w-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-white/[0.03] p-4 text-left backdrop-blur-md transition hover:-translate-y-0.5 hover:border-violet-400/25 hover:bg-white/[0.06] xl:min-h-[148px]"
+      className="group relative flex w-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-white/[0.03] p-4 text-left transition hover:-translate-y-0.5 hover:border-violet-400/25 hover:bg-white/[0.06] xl:min-h-[148px]"
     >
       <span aria-hidden className="absolute inset-y-0 left-0 w-[2px] opacity-70" style={{ backgroundColor: meta.dot }} />
       <div className="flex flex-wrap items-center gap-1.5 pl-2">
@@ -182,7 +182,7 @@ function CompanionMarquee({ t }: { t: Tfn }) {
             <div
               key={i}
               aria-hidden={!c.src}
-              className="mr-4 flex h-24 w-44 shrink-0 items-center justify-center rounded-2xl border border-white/[0.08] bg-white/[0.03] px-6 backdrop-blur-md sm:mr-5 sm:h-28 sm:w-52"
+              className="mr-4 flex h-24 w-44 shrink-0 items-center justify-center rounded-2xl border border-white/[0.08] bg-white/[0.03] px-6 sm:mr-5 sm:h-28 sm:w-52"
             >
               {c.src ? (
                 // plain img keeps it simple for the duplicated marquee track;
@@ -296,7 +296,7 @@ export default function Journey() {
             {t(dict.hero.ctaProgram)}
             <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </a>
-          <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-white/85 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/10">
+          <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10">
             {t(dict.hero.ctaPartner)}
           </a>
         </div>
@@ -340,7 +340,7 @@ export default function Journey() {
 
         {/* the problem, in numbers — faint violet weight so it reads as "the
             gap" distinct from the lighter "shift" belief cards below */}
-        <div className="mt-10 rounded-3xl border border-violet-400/15 bg-violet-950/20 p-6 backdrop-blur-md sm:p-8">
+        <div className="mt-10 rounded-3xl border border-violet-400/15 bg-violet-950/20 p-6 sm:p-8">
           <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
             {t(dict.about.gapTag)}
           </p>
@@ -414,7 +414,7 @@ export default function Journey() {
       {/* Full-width translucent program band — a dark violet tint that dims the
           WebGL field for legibility while still letting the background dots show
           through. Top & bottom fade out so it blends into the journey. */}
-      <section id="program" className="relative w-full bg-[#0a0814]/55 py-20 backdrop-blur-[2px] sm:py-28">
+      <section id="program" className="relative w-full bg-[#0a0814]/55 py-20 sm:py-28">
         {/* soft fade at top & bottom edges */}
         <div aria-hidden className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0814]/55 to-transparent" />
         <div aria-hidden className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0814]/55 to-transparent" />
@@ -452,13 +452,13 @@ export default function Journey() {
                 >
                   {/* header + theme, kept visually attached as one block */}
                   <div className="flex flex-col">
-                    <div className="flex h-12 items-center rounded-t-xl border border-violet-400/15 bg-gradient-to-r from-violet-500/12 to-indigo-500/8 px-4 backdrop-blur">
+                    <div className="flex h-12 items-center rounded-t-xl border border-violet-400/15 bg-gradient-to-r from-violet-500/12 to-indigo-500/8 px-4">
                       <div className="flex w-full items-baseline justify-between">
                         <h3 className="text-sm font-bold text-violet-200/90">{t(dict.program.dayLabel)} {day.day}</h3>
                         <span className="text-xs text-white/65">{day.date}</span>
                       </div>
                     </div>
-                    <div className="flex flex-1 min-h-[2.75rem] items-center rounded-b-xl border-x border-b border-white/[0.06] bg-white/[0.03] px-4 py-2 backdrop-blur-md">
+                    <div className="flex flex-1 min-h-[2.75rem] items-center rounded-b-xl border-x border-b border-white/[0.06] bg-white/[0.03] px-4 py-2">
                       <p className="text-xs font-bold leading-snug text-white/70">{t(day.theme)}</p>
                     </div>
                   </div>
@@ -477,7 +477,7 @@ export default function Journey() {
               const evs = schedule.filter((e) => e.day === day.day);
               const open = openDay === day.day;
               return (
-                <div key={day.day} className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] backdrop-blur-md">
+                <div key={day.day} className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06]">
                   <button
                     type="button"
                     onClick={() => setOpenDay(open ? null : day.day)}
@@ -615,7 +615,7 @@ export default function Journey() {
       <Chapter id="builders" align="center">
         {/* Contained dark backing box (not full-width) to lift readability over
             the bright background field. */}
-        <div className="mx-auto w-full max-w-4xl rounded-[2rem] border border-white/10 bg-[#0a0814]/80 p-8 backdrop-blur-xl sm:p-12">
+        <div className="mx-auto w-full max-w-4xl rounded-[2rem] border border-white/10 bg-[#0a0814]/80 p-8 sm:p-12">
           <Eyebrow>{t(dict.partners.tag)}</Eyebrow>
           <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
             {t(dict.partners.heading)}
@@ -717,7 +717,7 @@ export default function Journey() {
       {/* Full-width band echoing the program band's dark tint + edge fades, so
           the scrolling logo wall reads as part of the journey rather than a
           tacked-on strip. */}
-      <section id="companions" className="relative w-full bg-[#0a0814]/55 py-16 backdrop-blur-[2px] sm:py-20">
+      <section id="companions" className="relative w-full bg-[#0a0814]/55 py-16 sm:py-20">
         <div aria-hidden className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#0a0814]/55 to-transparent" />
         <div aria-hidden className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#0a0814]/55 to-transparent" />
         <div className="relative">
@@ -766,7 +766,7 @@ export default function Journey() {
               {t(dict.footer.ctaProgram)}
               <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
             </a>
-            <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-9 py-4 text-base font-semibold text-white/85 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/10">
+            <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-9 py-4 text-base font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10">
               {t(dict.nav.partner)}
             </a>
           </div>
