@@ -622,27 +622,22 @@ export default function Journey() {
           </h2>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/65">{t(dict.partners.note)}</p>
 
-          {/* Organizer + Founding network.
-              Both marks are square-ish, so each sits in an identical 48px optical
-              box. KOMOS lion is white-on-transparent → invert keeps it white.
-              Zero100 ships with a baked-in solid-blue background, so inverting it
-              produces a blank white square — instead it gets a white chip so the
-              white-on-blue mark stays legible while matching the other tiles. */}
+          {/* Organizer + Founding network. Both marks are clean white-on-
+              transparent (the KOMOS lion trimmed to its bounding box so it fills
+              the box, and the Zero100 circle icon extracted from their white
+              wordmark — no more baked-in blue chip), so both render identically
+              as crisp white icons. */}
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {[
-              { label: t(dict.partners.organizerLabel), img: "/komos-lion-white.png",          name: "KOMOS",   desc: t(dict.partners.organizerDesc), w: 1080, h: 1080, treatment: "mono" as const },
-              { label: t(dict.partners.networkLabel),   img: "/partners/processed/zero100.png", name: "Zero100", desc: t(dict.partners.networkDesc),   w: 225,  h: 225,  treatment: "chip" as const },
+              { label: t(dict.partners.organizerLabel), img: "/komos-lion-trim.png", name: "KOMOS",   desc: t(dict.partners.organizerDesc), w: 377, h: 195 },
+              { label: t(dict.partners.networkLabel),   img: "/partners/zero100-icon.png",  name: "Zero100", desc: t(dict.partners.networkDesc),   w: 600, h: 600 },
             ].map((o) => (
               <div key={o.name} className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
                 <span className="text-xs font-bold uppercase tracking-widest text-white/40">{o.label}</span>
                 <div className="mt-4 flex items-center gap-4">
-                  {o.treatment === "chip" ? (
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white/90 ring-1 ring-white/20">
-                      <Image src={o.img} alt={o.name} width={o.w} height={o.h} className="h-10 w-10 object-contain" />
-                    </span>
-                  ) : (
-                    <Image src={o.img} alt={o.name} width={o.w} height={o.h} className="h-12 w-12 shrink-0 object-contain brightness-0 invert" />
-                  )}
+                  <span className="flex h-14 w-14 shrink-0 items-center justify-center">
+                    <Image src={o.img} alt={o.name} width={o.w} height={o.h} className="max-h-12 w-auto max-w-full object-contain brightness-0 invert" />
+                  </span>
                   <div>
                     <p className="text-lg font-bold text-white">{o.name}</p>
                     <p className="text-sm text-white/50">{o.desc}</p>
