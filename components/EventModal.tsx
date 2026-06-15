@@ -149,7 +149,7 @@ export default function EventModal({
               type="button"
               onClick={onClose}
               aria-label={t(dict.modal.close)}
-              className="absolute right-5 top-6 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/50 transition hover:bg-white/10 hover:text-white active:scale-95"
+              className="absolute right-5 top-6 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 transition hover:bg-white/10 hover:text-white active:scale-95"
             >
               <svg width="16" height="16" viewBox="0 0 15 15" fill="none">
                 <path
@@ -179,7 +179,7 @@ export default function EventModal({
                   {t(meta.label)}
                 </span>
                 {dayMeta && (
-                  <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/55">
+                  <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/70">
                     {t(dict.program.dayLabel)} {event.day} · {event.date} ·{" "}
                     {event.timeOfDay}
                   </span>
