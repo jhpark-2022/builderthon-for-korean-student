@@ -393,7 +393,11 @@ export default function Journey() {
       </section>
 
       {/* ── CH 3.5 · TRACTION / FOR PARTNERS ───────────────────────── */}
-      <Chapter id="why-partner" align="center">
+      {/* overflow-x-clip contains the oversized w-[140%] vignette below so it
+          no longer widens the page (no horizontal scroll / distorted mobile
+          captures). Only the horizontal axis is clipped, so the scrim's
+          vertical bleed into neighbouring sections is untouched. */}
+      <Chapter id="why-partner" align="center" className="overflow-x-clip">
         {/* soft dark scrim so this sponsor-facing section stays calm + readable
             over the field (the only content section without a dark backing) */}
         <div
