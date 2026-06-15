@@ -27,7 +27,13 @@ export default function Chapter({
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
-      ([e]) => setShown(e.isIntersecting),
+      ([e]) => {
+        // Reveal once and stay revealed — don't re-hide when scrolled back past.
+        if (e.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
       { threshold: 0.25 }
     );
     io.observe(el);

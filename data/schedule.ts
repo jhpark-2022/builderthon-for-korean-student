@@ -309,7 +309,7 @@ export const schedule: BEvent[] = [
     id: "d3-payment-dinner",
     day: 3,
     date: "08.26",
-    category: "meetup",
+    category: "dinner",
     timeOfDay: "PM",
     title: { ko: "페이먼트 디너", en: "Payment Dinner" },
     summary: {
