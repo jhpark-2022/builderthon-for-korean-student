@@ -251,6 +251,11 @@ export const dict = {
       ko: "* 로고는 논의 진행 상황을 나타내며, 최종 후원·파트너십은 확정 시 안내됩니다.",
       en: "* Logos reflect ongoing discussions; final sponsorships/partnerships will be announced once confirmed.",
     },
+    companionsHeading: { ko: "함께하는 빌더 파트너", en: "Builder Companions" },
+    companionsSub: {
+      ko: "Zero100 · KOMOS 네트워크와 함께하는 확정 파트너들",
+      en: "Confirmed partners alongside the Zero100 & KOMOS network",
+    },
   },
 
   faq: {

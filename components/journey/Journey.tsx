@@ -129,6 +129,58 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
   );
 }
 
+// Confirmed builder-companion logos that scroll in an infinite marquee band.
+// Logos aren't in the repo yet — to fill a slot, drop a processed logo into
+// /public/partners/processed/ and set its `src` + `alt` below. Until then each
+// slot renders a neutral placeholder frame (no fabricated company names), so
+// nothing false is implied. Order here = order on screen.
+const companions: { src?: string; alt?: string }[] = [
+  // e.g. { src: "/partners/processed/startup-alliance.png", alt: "Startup Alliance" },
+  {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+];
+
+// A horizontally-scrolling wall of confirmed builder-companion logos. The track
+// holds the list twice and translates -50%, so the loop is seamless; the global
+// prefers-reduced-motion rule freezes it for motion-sensitive users, and it
+// pauses on hover. Empty slots render a tasteful "logo coming" frame.
+function CompanionMarquee({ t }: { t: Tfn }) {
+  const row = [...companions, ...companions];
+  return (
+    <div className="relative mt-10">
+      {/* edge fades so logos dissolve into the band rather than hard-cut */}
+      <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#0a0814]/55 to-transparent sm:w-28" />
+      <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#0a0814]/55 to-transparent sm:w-28" />
+      <div className="group overflow-hidden">
+        {/* margin (not flex gap) on each tile so the -50% loop is pixel-seamless */}
+        <div className="marquee-track marquee-left group-hover:[animation-play-state:paused]">
+          {row.map((c, i) => (
+            <div
+              key={i}
+              aria-hidden={!c.src}
+              className="mr-4 flex h-24 w-44 shrink-0 items-center justify-center rounded-2xl border border-white/[0.08] bg-white/[0.03] px-6 backdrop-blur-md sm:mr-5 sm:h-28 sm:w-52"
+            >
+              {c.src ? (
+                <Image
+                  src={c.src}
+                  alt={c.alt ?? ""}
+                  width={208}
+                  height={64}
+                  className="max-h-9 w-auto max-w-full object-contain opacity-70 brightness-0 invert transition group-hover:opacity-100"
+                />
+              ) : (
+                // placeholder logo frame — neutral, claims no specific company
+                <span className="flex h-7 w-7 items-center justify-center rounded-md border border-dashed border-white/15 text-white/20">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5 12.5 7 7 12.5 1.5 7 7 1.5Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" /></svg>
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Journey() {
   const { t } = useLocale();
   const reduce = useReducedMotion();
@@ -566,6 +618,26 @@ export default function Journey() {
           <p className="mt-4 text-xs text-white/40">{t(dict.partners.inDiscussionNote)}</p>
         </div>
       </Chapter>
+
+      {/* ── CH 4.5 · BUILDER COMPANIONS (logo marquee) ─────────────── */}
+      {/* Full-width band echoing the program band's dark tint + edge fades, so
+          the scrolling logo wall reads as part of the journey rather than a
+          tacked-on strip. */}
+      <section id="companions" className="relative w-full bg-[#0a0814]/55 py-16 backdrop-blur-[2px] sm:py-20">
+        <div aria-hidden className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#0a0814]/55 to-transparent" />
+        <div aria-hidden className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#0a0814]/55 to-transparent" />
+        <div className="relative">
+          <div className="mx-auto max-w-2xl px-6 text-center">
+            <h2 className="text-[clamp(1.6rem,4vw,2.5rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+              {t(dict.partners.companionsHeading)}
+            </h2>
+            <p className="mx-auto mt-3 text-sm leading-relaxed text-white/55">
+              {t(dict.partners.companionsSub)}
+            </p>
+          </div>
+          <CompanionMarquee t={t} />
+        </div>
+      </section>
 
       {/* ── CH 5 · FAQ ─────────────────────────────────────────────── */}
       <Chapter id="faq" align="center">
