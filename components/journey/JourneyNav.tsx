@@ -47,14 +47,6 @@ export default function JourneyNav() {
               {t(a.label)}
             </a>
           ))}
-          {/* The /quiz mini-site — accented so it reads as the playful entry. */}
-          <a
-            href="/quiz"
-            className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/30 bg-violet-400/10 px-3.5 py-1.5 text-sm font-semibold text-violet-200 transition hover:border-violet-400/50 hover:bg-violet-400/15"
-          >
-            <span aria-hidden>✦</span>
-            {t(dict.nav.quiz)}
-          </a>
         </div>
         <div className="flex items-center gap-2.5 sm:gap-3">
           <LocaleToggle />

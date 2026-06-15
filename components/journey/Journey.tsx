@@ -310,12 +310,6 @@ export default function Journey() {
           <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10">
             {t(dict.hero.ctaPartner)}
           </a>
-          {/* Playful third entry → /quiz personality test + team matching. */}
-          <a href="/quiz" className="group inline-flex items-center gap-2 rounded-full border border-violet-400/40 bg-violet-400/10 px-8 py-4 text-base font-semibold text-violet-100 transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-400/15">
-            <span aria-hidden>✦</span>
-            {t(dict.nav.quiz)}
-            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </a>
         </div>
         <div className="mt-16 grid grid-cols-3 gap-3 sm:gap-4">
           {[
@@ -807,12 +801,6 @@ export default function Journey() {
             </a>
             <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-9 py-4 text-base font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10">
               {t(dict.nav.partner)}
-            </a>
-            {/* Playful third entry → /quiz personality test + team matching. */}
-            <a href="/quiz" className="group inline-flex items-center gap-2 rounded-full border border-violet-400/40 bg-violet-400/10 px-9 py-4 text-base font-semibold text-violet-100 transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-400/15">
-              <span aria-hidden>✦</span>
-              {t(dict.nav.quiz)}
-              <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
             </a>
           </div>
         </div>
