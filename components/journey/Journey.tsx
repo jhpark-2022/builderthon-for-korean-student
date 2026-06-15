@@ -228,7 +228,17 @@ const HERO_VIDEO = {
 function HeroVideo() {
   if (!HERO_VIDEO.enabled) return null; // placeholder: keep the WebGL background
   return (
-    <div aria-hidden className="absolute inset-0 overflow-hidden">
+    // The whole layer fades to transparent over its bottom third (mask) so the
+    // video dissolves into the fixed WebGL field behind it — no hard seam where
+    // the hero ends and the next chapter begins.
+    <div
+      aria-hidden
+      className="absolute inset-0 overflow-hidden"
+      style={{
+        maskImage: "linear-gradient(to bottom, #000 0%, #000 62%, transparent 96%)",
+        WebkitMaskImage: "linear-gradient(to bottom, #000 0%, #000 62%, transparent 96%)",
+      }}
+    >
       <video
         autoPlay
         muted
@@ -240,9 +250,9 @@ function HeroVideo() {
         <source src={HERO_VIDEO.webm} type="video/webm" />
         <source src={HERO_VIDEO.mp4} type="video/mp4" />
       </video>
-      {/* legibility scrim — darker top/bottom so the headline reads and the
-          band fades into the WebGL sections below */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0814]/85 via-[#0a0814]/68 to-[#0a0814]/92" />
+      {/* legibility scrim — darker top so the headline reads; fades to nothing
+          toward the bottom so the mask hands off cleanly to the WebGL field */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0814]/85 via-[#0a0814]/68 to-transparent" />
     </div>
   );
 }
