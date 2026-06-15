@@ -665,7 +665,7 @@ export default function Journey() {
               so they read at one consistent weight regardless of source aspect ratio. */}
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {[
-              { src: "/partners/processed/popup-studio.png", alt: "Popup Studio", w: 476, h: 134, url: undefined as string | undefined },
+              { src: "/partners/processed/popup-studio.png", alt: "Popup Studio", w: 476, h: 134, url: "https://popupstudio.ai" as string | undefined },
               { src: "/partners/processed/codepresso.png",   alt: "Codepresso",   w: 361, h: 113, url: "https://codepresso.io" },
             ].map((b) => {
               const inner = (
