@@ -251,8 +251,8 @@ export const dict = {
       en: "Core companies from the Zero100 network host the event, with the SMU Korean Student Association (KOMOS) as organizer. We are in active discussion with the AI & cloud partners below.",
     },
     inDiscussionNote: {
-      ko: "* 로고는 논의 진행 상황을 나타내며, 최종 후원·파트너십은 확정 시 안내됩니다.",
-      en: "* Logos reflect ongoing discussions; final sponsorships/partnerships will be announced once confirmed.",
+      ko: "* 위 기업명은 논의 진행 상황을 나타내며, 최종 후원·파트너십은 확정 시 안내됩니다.",
+      en: "* The names above reflect ongoing discussions; final sponsorships/partnerships will be announced once confirmed.",
     },
     companionsHeading: { ko: "함께하는 빌더 파트너", en: "Builder Companions" },
     companionsSub: {

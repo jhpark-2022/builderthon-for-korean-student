@@ -627,40 +627,57 @@ export default function Journey() {
               the box, and the Zero100 circle icon extracted from their white
               wordmark — no more baked-in blue chip), so both render identically
               as crisp white icons. */}
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          <div className="mt-8 grid gap-4 text-left sm:grid-cols-2">
             {[
-              { label: t(dict.partners.organizerLabel), img: "/komos-lion-trim.png", name: "KOMOS",   desc: t(dict.partners.organizerDesc), w: 377, h: 195 },
-              { label: t(dict.partners.networkLabel),   img: "/partners/zero100-icon.png",  name: "Zero100", desc: t(dict.partners.networkDesc),   w: 600, h: 600 },
-            ].map((o) => (
-              <div key={o.name} className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
-                <span className="text-xs font-bold uppercase tracking-widest text-white/40">{o.label}</span>
-                <div className="mt-4 flex items-center gap-4">
-                  {/* fixed optical box so both marks share one height and the
-                      name text lines up across the two cards regardless of the
-                      lion's wide aspect vs the Zero100 circle */}
-                  <span className="flex h-10 w-[72px] shrink-0 items-center justify-center">
-                    <Image src={o.img} alt={o.name} width={o.w} height={o.h} className="max-h-8 w-auto max-w-full object-contain brightness-0 invert" />
-                  </span>
-                  <div>
-                    <p className="text-lg font-bold text-white">{o.name}</p>
-                    <p className="text-sm text-white/50">{o.desc}</p>
+              { label: t(dict.partners.organizerLabel), img: "/komos-lion-trim.png", name: "KOMOS",   desc: t(dict.partners.organizerDesc), w: 377, h: 195, url: undefined as string | undefined },
+              { label: t(dict.partners.networkLabel),   img: "/partners/zero100-icon.png",  name: "Zero100", desc: t(dict.partners.networkDesc),   w: 600, h: 600, url: "https://www.zero100.org" },
+            ].map((o) => {
+              const inner = (
+                <>
+                  <span className="text-xs font-bold uppercase tracking-widest text-white/40">{o.label}</span>
+                  <div className="mt-4 flex items-center gap-4">
+                    {/* fixed optical box so both marks share one height and the
+                        name text lines up across the two cards regardless of the
+                        lion's wide aspect vs the Zero100 circle */}
+                    <span className="flex h-10 w-[72px] shrink-0 items-center justify-center">
+                      <Image src={o.img} alt={o.name} width={o.w} height={o.h} className="max-h-8 w-auto max-w-full object-contain brightness-0 invert" />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="flex items-center gap-1.5 text-lg font-bold text-white">
+                        {o.name}
+                        {o.url && <span aria-hidden className="text-white/30 transition group-hover:text-white/70">↗</span>}
+                      </p>
+                      <p className="text-sm text-white/50">{o.desc}</p>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                </>
+              );
+              const cls = "group block rounded-3xl border border-white/10 bg-white/[0.04] p-6 transition";
+              return o.url ? (
+                <a key={o.name} href={o.url} target="_blank" rel="noopener noreferrer" className={`${cls} hover:border-white/20 hover:bg-white/[0.06]`}>{inner}</a>
+              ) : (
+                <div key={o.name} className={cls}>{inner}</div>
+              );
+            })}
           </div>
 
           {/* Wordmark partner wall — every logo capped to a single 28px cap-height
               so they read at one consistent weight regardless of source aspect ratio. */}
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {[
-              { src: "/partners/processed/popup-studio.png", alt: "Popup Studio", w: 476, h: 134 },
-              { src: "/partners/processed/codepresso.png",   alt: "Codepresso",   w: 361, h: 113 },
-            ].map((b) => (
-              <div key={b.alt} className="group flex h-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] px-6 transition duration-300 hover:border-white/20 hover:bg-white/[0.06]">
+              { src: "/partners/processed/popup-studio.png", alt: "Popup Studio", w: 476, h: 134, url: undefined as string | undefined },
+              { src: "/partners/processed/codepresso.png",   alt: "Codepresso",   w: 361, h: 113, url: "https://codepresso.io" },
+            ].map((b) => {
+              const inner = (
                 <Image src={b.src} alt={b.alt} width={b.w} height={b.h} className="max-h-7 w-auto max-w-full object-contain opacity-75 brightness-0 invert transition duration-300 group-hover:opacity-100" />
-              </div>
-            ))}
+              );
+              const cls = "group flex h-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] px-6 transition duration-300 hover:border-white/20 hover:bg-white/[0.06]";
+              return b.url ? (
+                <a key={b.alt} href={b.url} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
+              ) : (
+                <div key={b.alt} className={cls}>{inner}</div>
+              );
+            })}
           </div>
 
           <a href="https://www.alchemy.com/" target="_blank" rel="noopener noreferrer"
@@ -672,11 +689,24 @@ export default function Journey() {
           <p className="mt-2 text-xs text-emerald-300/70">{t(dict.partners.confirmedSub)}</p>
 
           <p className="mt-8 text-xs font-bold uppercase tracking-widest text-white/40">{t(dict.partners.partnersLabel)}</p>
-          <div className="mt-3 grid grid-cols-3 gap-3">
-            {["Workato","OpenAI","AWS"].map((n) => (
-              <div key={n} className="group flex h-16 items-center justify-center rounded-xl border border-dashed border-white/15 bg-white/[0.02] transition duration-300 hover:border-violet-400/30 hover:bg-violet-400/[0.04]">
-                <span className="text-sm font-semibold uppercase tracking-wide text-white/40 transition group-hover:text-white/55">{n}</span>
-              </div>
+          <div className="mt-3 flex flex-wrap justify-center gap-3">
+            {[
+              { n: "AWS",     url: "https://aws.amazon.com" },
+              { n: "OpenAI",  url: "https://openai.com" },
+              { n: "Workato", url: "https://www.workato.com" },
+              { n: "LG CNS",  url: "https://www.lgcns.com" },
+              { n: "Lovable", url: "https://lovable.dev" },
+            ].map(({ n, url }) => (
+              <a
+                key={n}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex h-16 min-w-[8.5rem] flex-1 items-center justify-center gap-1.5 rounded-xl border border-dashed border-white/15 bg-white/[0.02] px-4 transition duration-300 hover:border-violet-400/30 hover:bg-violet-400/[0.04]"
+              >
+                <span className="text-sm font-semibold uppercase tracking-wide text-white/40 transition group-hover:text-white/60">{n}</span>
+                <span aria-hidden className="text-white/20 transition group-hover:text-violet-300/70">↗</span>
+              </a>
             ))}
           </div>
           <p className="mt-4 text-xs text-white/40">{t(dict.partners.inDiscussionNote)}</p>
