@@ -169,6 +169,33 @@ export const dict = {
       ko: "날짜를 눌러 해당 일정을 펼쳐보세요",
       en: "Tap a day to expand its sessions",
     },
+    crashLabel: { ko: "사전 프로그램 · 선택", en: "Pre-program · optional" },
+    crashHeading: { ko: "바이브 코딩 크래시 코스", en: "Vibe Coding Crash Course" },
+    crashBlurb: {
+      ko: "코딩이 처음이어도 괜찮습니다. 본행사 전에 진행되는 선택 사전 코스로, 바이브 코딩의 기본기를 미리 익혀 첫날부터 바로 빌드에 뛰어들 수 있게 준비합니다. 수료 시 수료증이 함께합니다.",
+      en: "New to coding? That's fine. An optional pre-event course that covers the basics of vibe coding so you walk into Day 1 ready to build — with a completion certificate.",
+    },
+    crashSteps: [
+      {
+        step: "STEP 1",
+        title: { ko: "파운데이션", en: "Foundation" },
+        body: { ko: "AI·LLM 기초와 프롬프트 엔지니어링 — 10분 만에 첫 앱 만들기.", en: "AI/LLM basics and prompt engineering — ship your first app in 10 minutes." },
+      },
+      {
+        step: "STEP 2",
+        title: { ko: "빌드", en: "Build" },
+        body: { ko: "에이전트·UI·DB 연동과 첫 배포, 업무 자동화 핸즈온.", en: "Agents, UI, DB integration, your first deploy, and automation hands-on." },
+      },
+      {
+        step: "STEP 3",
+        title: { ko: "연결·심화", en: "Connect" },
+        body: { ko: "AI 도구 심화, 포트폴리오, 본행사 온램프 + 수료증.", en: "Deeper AI tooling, a portfolio, and an on-ramp into the main event + certificate." },
+      },
+    ],
+    crashNote: {
+      ko: "* 코드프레소와 함께 준비 중인 선택 사전 코스입니다. 약 3일 구성으로 기획 중이며, 세부 일정·도구 온보딩·수료증은 조율 중입니다.",
+      en: "* An optional pre-course being prepared with Codepresso, planned as ~3 days. Exact schedule, tool onboarding, and certificate are still being finalized.",
+    },
   },
 
   traction: {

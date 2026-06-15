@@ -443,6 +443,27 @@ export default function Journey() {
             <p className="mt-4 text-xs text-white/35 xl:hidden">{t(dict.program.swipeHint)}</p>
           </div>
 
+          {/* Pre-program — optional vibe-coding crash course, still being
+              arranged. Sits above the 6-day grid because it runs before the
+              main event; framed as optional + planned (honest, not confirmed). */}
+          <div className="mx-auto mt-10 max-w-3xl rounded-3xl border border-violet-400/20 bg-violet-500/[0.06] p-6 text-left sm:p-8">
+            <span className="inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-400/10 px-3 py-1 text-[0.7rem] font-bold uppercase tracking-[0.15em] text-violet-200">
+              {t(dict.program.crashLabel)}
+            </span>
+            <h3 className="mt-3 text-xl font-bold text-white sm:text-2xl">{t(dict.program.crashHeading)}</h3>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/65">{t(dict.program.crashBlurb)}</p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              {dict.program.crashSteps.map((s) => (
+                <div key={s.step} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                  <span className="text-[0.7rem] font-bold uppercase tracking-wider text-violet-300/80">{s.step}</span>
+                  <p className="mt-1 text-sm font-bold text-white">{t(s.title)}</p>
+                  <p className="mt-1.5 text-xs leading-relaxed text-white/50">{t(s.body)}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-4 text-xs leading-relaxed text-white/40">{t(dict.program.crashNote)}</p>
+          </div>
+
           {/* Desktop (xl+): one column per day, laid out on a real grid with
               subgrid rows so every card slot lines up horizontally across all
               six days — no more ragged columns when a card runs taller.
