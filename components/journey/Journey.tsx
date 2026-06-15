@@ -635,8 +635,11 @@ export default function Journey() {
               <div key={o.name} className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
                 <span className="text-xs font-bold uppercase tracking-widest text-white/40">{o.label}</span>
                 <div className="mt-4 flex items-center gap-4">
-                  <span className="flex h-14 w-14 shrink-0 items-center justify-center">
-                    <Image src={o.img} alt={o.name} width={o.w} height={o.h} className="max-h-12 w-auto max-w-full object-contain brightness-0 invert" />
+                  {/* fixed optical box so both marks share one height and the
+                      name text lines up across the two cards regardless of the
+                      lion's wide aspect vs the Zero100 circle */}
+                  <span className="flex h-10 w-[72px] shrink-0 items-center justify-center">
+                    <Image src={o.img} alt={o.name} width={o.w} height={o.h} className="max-h-8 w-auto max-w-full object-contain brightness-0 invert" />
                   </span>
                   <div>
                     <p className="text-lg font-bold text-white">{o.name}</p>
