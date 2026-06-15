@@ -35,18 +35,26 @@ export default function JourneyNav() {
               EN/KR toggle, and the View Program CTA all fit; full lockup returns
               from the sm breakpoint up. */}
           <span className="hidden text-lg text-white/30 sm:inline sm:text-xl">×</span>
-          <span className="hidden text-lg font-semibold text-white/55 sm:inline sm:text-xl">Zero100</span>
+          <span className="hidden text-lg font-semibold text-white/70 sm:inline sm:text-xl">Zero100</span>
         </a>
         <div className="hidden items-center gap-6 lg:flex">
           {anchors.map((a) => (
             <a
               key={a.id}
               href={`#${a.id}`}
-              className="relative text-sm font-medium text-white/55 transition hover:text-white after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-violet-400/70 after:transition-transform after:duration-300 hover:after:scale-x-100"
+              className="relative text-sm font-medium text-white/70 transition hover:text-white after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-violet-400/70 after:transition-transform after:duration-300 hover:after:scale-x-100 focus-visible:after:scale-x-100"
             >
               {t(a.label)}
             </a>
           ))}
+          {/* The /quiz mini-site — accented so it reads as the playful entry. */}
+          <a
+            href="/quiz"
+            className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/30 bg-violet-400/10 px-3.5 py-1.5 text-sm font-semibold text-violet-200 transition hover:border-violet-400/50 hover:bg-violet-400/15"
+          >
+            <span aria-hidden>✦</span>
+            {t(dict.nav.quiz)}
+          </a>
         </div>
         <div className="flex items-center gap-2.5 sm:gap-3">
           <LocaleToggle />

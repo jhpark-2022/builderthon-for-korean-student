@@ -23,8 +23,15 @@ export const dict = {
     program: { ko: "프로그램", en: "Program" },
     builders: { ko: "빌더 & 파트너", en: "Builders / Partners" },
     faq: { ko: "FAQ", en: "FAQ" },
+    quiz: { ko: "성격 테스트", en: "Personality Test" },
     viewProgram: { ko: "프로그램 보기", en: "View Program" },
     partner: { ko: "파트너십 문의", en: "Partner with us" },
+  },
+
+  // Secondary CTA on the hero/footer that sends visitors to the /quiz mini-site.
+  quizCta: {
+    eyebrow: { ko: "✦ AI 성격 테스트 · 팀 매칭", en: "✦ AI test · team matching" },
+    button: { ko: "내 AI 모델 알아보기", en: "Find your AI model" },
   },
 
   hero: {
