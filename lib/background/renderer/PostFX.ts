@@ -79,9 +79,11 @@ class LensEffect extends Effect {
   }
   setPhase(p: Phases, intensity = 1) {
     // lensing builds across reveal→portal so space bends well before any
-    // "arrival"; never a sudden on/off that would betray a shape
+    // "arrival"; never a sudden on/off that would betray a shape. `intensity`
+    // (<1 under reduced-motion) damps the whole space-bend so the scroll-driven
+    // lensing stays gentle, not just the white-out below.
     (this.uniforms.get("uStrength") as THREE.Uniform).value =
-      p.reveal * 0.22 + p.portal * 0.45;
+      (p.reveal * 0.22 + p.portal * 0.45) * intensity;
     // Cap + damp the white-out lift. At full scroll the focus sits over the
     // footer (CTAs + heading); a full white-out washed that text out — and this
     // pass runs even on mobile (bloom is gated, the lens is not). Keep it legible.

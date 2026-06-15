@@ -137,7 +137,9 @@ export class BackgroundScene {
   private applyReducedMotion(reduced: boolean) {
     this.reduced = reduced;
     this.cam.setReducedMotion(reduced);
-    this.motionScale = reduced ? 0.15 : 1; // keep it alive but calm
+    // Keep the field alive but near-static under reduced-motion: very slow
+    // particle/line drift (the camera scroll travel and lens are damped too).
+    this.motionScale = reduced ? 0.1 : 1;
   }
 
   private syncPixelRatio() {

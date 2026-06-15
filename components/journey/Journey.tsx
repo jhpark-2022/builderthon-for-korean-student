@@ -50,10 +50,18 @@ function CountUp({ value, className }: { value: number; className?: string }) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.6 });
-  const [n, setN] = useState(reduce ? value : 0);
+  // Start at 0 on both server and the first client render so hydration matches
+  // regardless of the client's reduced-motion state (useReducedMotion is false
+  // during SSR). The real value is applied in the effect below, post-hydration.
+  const [n, setN] = useState(0);
 
   useEffect(() => {
-    if (reduce || !inView) return;
+    // Reduced motion: skip the animation, snap straight to the final value.
+    if (reduce) {
+      setN(value);
+      return;
+    }
+    if (!inView) return;
     let raf = 0;
     let start: number | null = null;
     const duration = 900;

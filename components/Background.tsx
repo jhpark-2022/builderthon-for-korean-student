@@ -19,13 +19,11 @@ export default function Background() {
     let scene: BackgroundScene | null = null;
     let cancelled = false;
 
-    // Reduced-motion: skip the WebGL scene entirely (no Three.js chunk, no
-    // shader compile, no rAF loop) and render the branded CSS gradient. Best for
-    // the motion-sensitive / low-power devices in our audience.
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setFailed(true);
-      return;
-    }
+    // We always mount the WebGL canvas when WebGL is available. Reduced-motion is
+    // handled *inside* BackgroundScene as a heavily-damped "calm" variant
+    // (near-frozen camera, slow particles, gentle lens/bloom) — it is no longer a
+    // reason to skip the scene. The branded CSS gradient fallback is reserved for
+    // genuinely unsupported / failed WebGL (the try/catch below).
 
     // Build the scene off the critical path: wait for idle so the heavy Three.js
     // download + shader compile don't compete with hydrating the page content
