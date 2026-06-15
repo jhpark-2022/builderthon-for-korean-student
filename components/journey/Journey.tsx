@@ -129,14 +129,39 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
   );
 }
 
-// Confirmed builder-companion logos that scroll in an infinite marquee band.
-// Logos aren't in the repo yet — to fill a slot, drop a processed logo into
-// /public/partners/processed/ and set its `src` + `alt` below. Until then each
-// slot renders a neutral placeholder frame (no fabricated company names), so
-// nothing false is implied. Order here = order on screen.
+// Builder-companion logos that scroll in an infinite marquee band. These are
+// the Zero100 network partners. Source logos from zero100.org were full-res
+// SVGs (~13MB total); they're downscaled to ~100px-tall transparent WebPs in
+// /public/partners/zero100/ (~220KB total) since they only render ~36px tall.
+// They're light-on-transparent already, so they render as-is on the dark band —
+// no invert. To add one: add a WebP there and append { src, alt } here.
+// Order here = order on screen.
 const companions: { src?: string; alt?: string }[] = [
-  // e.g. { src: "/partners/processed/startup-alliance.png", alt: "Startup Alliance" },
-  {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+  { src: "/partners/zero100/01-translink-investment.webp", alt: "Translink Investment" },
+  { src: "/partners/zero100/02-wilt-venture-builder.webp", alt: "Wilt Venture Builder" },
+  { src: "/partners/zero100/03-popup-studio.webp", alt: "Popup Studio" },
+  { src: "/partners/zero100/04-dcamp.webp", alt: "D.CAMP" },
+  { src: "/partners/zero100/05-startup-alliance.webp", alt: "Startup Alliance" },
+  { src: "/partners/zero100/06-KAIA.webp", alt: "KAIA" },
+  { src: "/partners/zero100/07-venturesquare.webp", alt: "Venture Square" },
+  { src: "/partners/zero100/08-mysc.webp", alt: "MYSC" },
+  { src: "/partners/zero100/09-eventus.webp", alt: "EventUs" },
+  { src: "/partners/zero100/10-82Startup.webp", alt: "82Startup" },
+  { src: "/partners/zero100/11-hyeockshin.webp", alt: "혁신의숲" },
+  { src: "/partners/zero100/12-mission.webp", alt: "Mission" },
+  { src: "/partners/zero100/13-code.presso.webp", alt: "Codepresso" },
+  { src: "/partners/zero100/14-themiilk.webp", alt: "TheMiilk" },
+  { src: "/partners/zero100/15-career-day.webp", alt: "Career Day" },
+  { src: "/partners/zero100/16-andar.webp", alt: "andar" },
+  { src: "/partners/zero100/17-ceo-suite.webp", alt: "CEO SUITE" },
+  { src: "/partners/zero100/18-yj.webp", alt: "YJ" },
+  { src: "/partners/zero100/19-brand-worker-partners.webp", alt: "Brand Worker Partners" },
+  { src: "/partners/zero100/20-habit-factory.webp", alt: "Habit Factory" },
+  { src: "/partners/zero100/21-nuldam.webp", alt: "Nuldam" },
+  { src: "/partners/zero100/22-hanyeo.webp", alt: "Hanyeo" },
+  { src: "/partners/zero100/23-twigfarm.webp", alt: "Twigfarm" },
+  { src: "/partners/zero100/24-kowork.webp", alt: "Kowork" },
+  { src: "/partners/zero100/25-one-dgree-labs.webp", alt: "One Degree Labs" },
 ];
 
 // A horizontally-scrolling wall of confirmed builder-companion logos. The track
@@ -160,12 +185,14 @@ function CompanionMarquee({ t }: { t: Tfn }) {
               className="mr-4 flex h-24 w-44 shrink-0 items-center justify-center rounded-2xl border border-white/[0.08] bg-white/[0.03] px-6 backdrop-blur-md sm:mr-5 sm:h-28 sm:w-52"
             >
               {c.src ? (
-                <Image
+                // plain img keeps it simple for the duplicated marquee track;
+                // logos are already light-on-transparent, so no invert needed.
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
                   src={c.src}
                   alt={c.alt ?? ""}
-                  width={208}
-                  height={64}
-                  className="max-h-9 w-auto max-w-full object-contain opacity-70 brightness-0 invert transition group-hover:opacity-100"
+                  loading="lazy"
+                  className="max-h-9 w-auto max-w-[82%] object-contain opacity-70 transition group-hover:opacity-100"
                 />
               ) : (
                 // placeholder logo frame — neutral, claims no specific company
