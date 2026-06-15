@@ -155,8 +155,9 @@ export default function Journey() {
           </p>
         </div>
 
-        {/* the problem, in numbers — sets up why this matters before the answer */}
-        <div className="mt-10 rounded-3xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-md sm:p-8">
+        {/* the problem, in numbers — faint violet weight so it reads as "the
+            gap" distinct from the lighter "shift" belief cards below */}
+        <div className="mt-10 rounded-3xl border border-violet-400/15 bg-violet-950/20 p-6 backdrop-blur-md sm:p-8">
           <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
             {t(dict.about.gapTag)}
           </p>
