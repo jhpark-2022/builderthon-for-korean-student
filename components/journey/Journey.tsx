@@ -141,6 +141,9 @@ export default function Journey() {
     triggerRef.current = el ?? null;
     setActive(ev);
   };
+  // Desktop grid: tallest day determines the shared row count so every column
+  // gets the same number of card slots and rows line up across all six days.
+  const maxEvents = Math.max(...days.map((d) => schedule.filter((e) => e.day === d.day).length));
 
   return (
     <main className="relative z-10">
@@ -312,27 +315,38 @@ export default function Journey() {
             <p className="mt-4 text-xs text-white/35 xl:hidden">{t(dict.program.swipeHint)}</p>
           </div>
 
-          {/* Desktop (xl+): one column per day. Lighter cards + more gap so the
-              full week reads calm, not packed. */}
-          <div className="mt-12 hidden gap-5 xl:grid xl:grid-cols-6">
+          {/* Desktop (xl+): one column per day, laid out on a real grid with
+              subgrid rows so every card slot lines up horizontally across all
+              six days — no more ragged columns when a card runs taller.
+              Row 1 = the day header+theme block; rows 2…(1+maxEvents) = card
+              slots. Days with fewer sessions simply leave trailing slots empty. */}
+          <div
+            className="mt-12 hidden gap-5 xl:grid xl:grid-cols-6"
+            style={{ gridTemplateRows: `auto repeat(${maxEvents}, auto)` }}
+          >
             {days.map((day) => {
               const evs = schedule.filter((e) => e.day === day.day);
               return (
-                <div key={day.day} className="flex flex-col">
-                  <div className="flex h-12 items-center rounded-t-xl border border-violet-400/15 bg-gradient-to-r from-violet-500/12 to-indigo-500/8 px-4 backdrop-blur">
-                    <div className="flex w-full items-baseline justify-between">
-                      <h3 className="text-sm font-bold text-violet-200/90">{t(dict.program.dayLabel)} {day.day}</h3>
-                      <span className="text-xs text-white/65">{day.date}</span>
+                <div
+                  key={day.day}
+                  className="grid grid-rows-subgrid gap-3"
+                  style={{ gridRow: `1 / span ${1 + maxEvents}` }}
+                >
+                  {/* header + theme, kept visually attached as one block */}
+                  <div className="flex flex-col">
+                    <div className="flex h-12 items-center rounded-t-xl border border-violet-400/15 bg-gradient-to-r from-violet-500/12 to-indigo-500/8 px-4 backdrop-blur">
+                      <div className="flex w-full items-baseline justify-between">
+                        <h3 className="text-sm font-bold text-violet-200/90">{t(dict.program.dayLabel)} {day.day}</h3>
+                        <span className="text-xs text-white/65">{day.date}</span>
+                      </div>
+                    </div>
+                    <div className="flex flex-1 min-h-[2.75rem] items-center rounded-b-xl border-x border-b border-white/[0.06] bg-white/[0.03] px-4 py-2 backdrop-blur-md">
+                      <p className="text-xs font-bold leading-snug text-white/70">{t(day.theme)}</p>
                     </div>
                   </div>
-                  <div className="flex min-h-[2.75rem] items-center rounded-b-xl border-x border-b border-white/[0.06] bg-white/[0.03] px-4 py-2 backdrop-blur-md">
-                    <p className="text-xs font-bold leading-snug text-white/70">{t(day.theme)}</p>
-                  </div>
-                  <div className="mt-3 flex flex-1 flex-col gap-3">
-                    {evs.map((ev) => (
-                      <EventCard key={ev.id} ev={ev} t={t} onSelect={selectEvent} />
-                    ))}
-                  </div>
+                  {evs.map((ev) => (
+                    <EventCard key={ev.id} ev={ev} t={t} onSelect={selectEvent} />
+                  ))}
                 </div>
               );
             })}
