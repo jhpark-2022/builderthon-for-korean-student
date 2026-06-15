@@ -424,17 +424,17 @@ export default function Journey() {
       {/* Full-width translucent program band — a dark violet tint that dims the
           WebGL field for legibility while still letting the background dots show
           through. Top & bottom fade out so it blends into the journey. */}
-      <section id="program" className="relative w-full bg-[#0a0814]/55 py-20 sm:py-28">
+      <section id="program" className="relative w-full bg-[#0a0814]/75 py-20 sm:py-28">
         {/* soft fade at top & bottom edges */}
-        <div aria-hidden className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0814]/55 to-transparent" />
-        <div aria-hidden className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0814]/55 to-transparent" />
+        <div aria-hidden className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0814]/75 to-transparent" />
+        <div aria-hidden className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0814]/75 to-transparent" />
         <div className="relative mx-auto w-full max-w-[1700px] px-6 sm:px-10">
           <div className="text-center">
             <Eyebrow>{t(dict.program.tag)}</Eyebrow>
             <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
               {t(dict.program.heading)}
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/60">
+            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">
               {t(dict.program.intro)}
             </p>
             <div className="mx-auto mt-6 max-w-2xl rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.06] px-5 py-3.5 text-xs leading-relaxed text-emerald-100/85">
@@ -451,17 +451,17 @@ export default function Journey() {
               {t(dict.program.crashLabel)}
             </span>
             <h3 className="mt-3 text-xl font-bold text-white sm:text-2xl">{t(dict.program.crashHeading)}</h3>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/65">{t(dict.program.crashBlurb)}</p>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/80">{t(dict.program.crashBlurb)}</p>
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
               {dict.program.crashSteps.map((s) => (
                 <div key={s.step} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
                   <span className="text-[0.7rem] font-bold uppercase tracking-wider text-violet-300/80">{s.step}</span>
                   <p className="mt-1 text-sm font-bold text-white">{t(s.title)}</p>
-                  <p className="mt-1.5 text-xs leading-relaxed text-white/50">{t(s.body)}</p>
+                  <p className="mt-1.5 text-xs leading-relaxed text-white/65">{t(s.body)}</p>
                 </div>
               ))}
             </div>
-            <p className="mt-4 text-xs leading-relaxed text-white/40">{t(dict.program.crashNote)}</p>
+            <p className="mt-4 text-xs leading-relaxed text-white/55">{t(dict.program.crashNote)}</p>
           </div>
 
           {/* Desktop (xl+): one column per day, laid out on a real grid with
