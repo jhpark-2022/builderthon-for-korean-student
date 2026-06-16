@@ -270,6 +270,20 @@ export default function Journey() {
     triggerRef.current = el ?? null;
     setActive(ev);
   };
+
+  // Deep link from the /quiz session recommendations: "/?event=<id>#program"
+  // scrolls to the program band and opens that session's detail modal. Reads
+  // location directly (client-only) to avoid a Suspense boundary for the page.
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("event");
+    if (!id) return;
+    const ev = schedule.find((e) => e.id === id);
+    if (!ev) return;
+    document.getElementById("program")?.scrollIntoView({ behavior: "auto", block: "start" });
+    setActive(ev);
+    // Drop the ?event param (keep the #program hash) so a refresh/back is clean.
+    window.history.replaceState(null, "", `${window.location.pathname}#program`);
+  }, []);
   // Desktop grid: tallest day determines the shared row count so every column
   // gets the same number of card slots and rows line up across all six days.
   const maxEvents = Math.max(...days.map((d) => schedule.filter((e) => e.day === d.day).length));
@@ -309,6 +323,12 @@ export default function Journey() {
           </a>
           <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10">
             {t(dict.hero.ctaPartner)}
+          </a>
+          {/* Playful third entry → /quiz personality test + team matching. */}
+          <a href="/quiz" className="group inline-flex items-center gap-2 rounded-full border border-violet-400/40 bg-violet-400/10 px-8 py-4 text-base font-semibold text-violet-100 transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-400/15">
+            <span aria-hidden>✦</span>
+            {t(dict.nav.quiz)}
+            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </a>
         </div>
         <div className="mt-16 grid grid-cols-3 gap-3 sm:gap-4">
@@ -801,6 +821,12 @@ export default function Journey() {
             </a>
             <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-9 py-4 text-base font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10">
               {t(dict.nav.partner)}
+            </a>
+            {/* Playful third entry → /quiz personality test + team matching. */}
+            <a href="/quiz" className="group inline-flex items-center gap-2 rounded-full border border-violet-400/40 bg-violet-400/10 px-9 py-4 text-base font-semibold text-violet-100 transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-400/15">
+              <span aria-hidden>✦</span>
+              {t(dict.nav.quiz)}
+              <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
             </a>
           </div>
         </div>
