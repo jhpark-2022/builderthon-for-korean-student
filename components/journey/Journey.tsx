@@ -270,6 +270,20 @@ export default function Journey() {
     triggerRef.current = el ?? null;
     setActive(ev);
   };
+
+  // Deep link from the /quiz session recommendations: "/?event=<id>#program"
+  // scrolls to the program band and opens that session's detail modal. Reads
+  // location directly (client-only) to avoid a Suspense boundary for the page.
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("event");
+    if (!id) return;
+    const ev = schedule.find((e) => e.id === id);
+    if (!ev) return;
+    document.getElementById("program")?.scrollIntoView({ behavior: "auto", block: "start" });
+    setActive(ev);
+    // Drop the ?event param (keep the #program hash) so a refresh/back is clean.
+    window.history.replaceState(null, "", `${window.location.pathname}#program`);
+  }, []);
   // Desktop grid: tallest day determines the shared row count so every column
   // gets the same number of card slots and rows line up across all six days.
   const maxEvents = Math.max(...days.map((d) => schedule.filter((e) => e.day === d.day).length));

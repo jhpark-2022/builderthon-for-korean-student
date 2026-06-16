@@ -5,10 +5,10 @@ import Quiz from "@/components/Quiz";
 export const metadata: Metadata = {
   title: "당신의 AI 모델은? — SMU × Zero100 Builderthon",
   description:
-    "12개의 질문으로 알아보는 나의 빌더 유형. 결과는 16개 AI 모델 중 하나로. 팀이 없으면 성격에 맞는 그룹으로 매칭까지. / A 12-question AI personality test for the Singapore Korean-student builderthon — get your AI model and auto-matched to a squad.",
+    "12개의 질문으로 알아보는 나의 빌더 유형. 결과는 16개 AI 모델 중 하나로. 결과에 맞춰 빌더톤에서 참여하면 좋을 세션까지 추천. / A 12-question AI personality test for the Singapore Korean-student builderthon — get your AI model and the sessions worth joining.",
   openGraph: {
     title: "당신의 AI 모델은? · Which AI model are you?",
-    description: "12문항으로 알아보는 나의 빌더 유형 + 솔로 빌더 팀 매칭.",
+    description: "12문항으로 알아보는 나의 빌더 유형 + 결과 맞춤 세션 추천.",
     type: "website",
   },
 };

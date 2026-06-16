@@ -14,8 +14,9 @@ import {
   type MbtiKey,
   type Result,
 } from "@/data/quiz";
+import { categoryMeta } from "@/data/schedule";
 import { scoreQuiz, parseResultId, type Choice } from "@/lib/quizScore";
-import { matchGroup } from "@/lib/groupMatch";
+import { recommendEvents, type EventPick } from "@/lib/eventMatch";
 
 type Phase = "landing" | "quiz" | "result";
 
@@ -67,7 +68,7 @@ export default function Quiz() {
   const [result, setResult] = useState<{ mbti: MbtiKey; identity: Identity; resultId: string } | null>(null);
   const [fromShare, setFromShare] = useState(false);
   const [toast, setToast] = useState(false);
-  const [matched, setMatched] = useState<ReturnType<typeof matchGroup> | null>(null);
+  const [picks, setPicks] = useState<EventPick[] | null>(null);
 
   // Deep-link: ?r=INFJ-A drops a visitor straight onto a friend's result card
   // (the viral loop — they see the result, then take it themselves).
@@ -85,7 +86,7 @@ export default function Quiz() {
     setIndex(0);
     setSelected(null);
     setResult(null);
-    setMatched(null);
+    setPicks(null);
     setFromShare(false);
     setPhase("quiz");
   };
@@ -104,7 +105,7 @@ export default function Quiz() {
       } else {
         const scored = scoreQuiz(next);
         setResult(scored);
-        setMatched(null);
+        setPicks(null);
         setPhase("result");
         if (typeof window !== "undefined") {
           window.history.replaceState(null, "", `/quiz?r=${scored.resultId}`);
@@ -243,8 +244,8 @@ export default function Quiz() {
             t={t}
             reduce={!!reduce}
             fromShare={fromShare}
-            matched={matched}
-            onMatch={() => setMatched(matchGroup(result.resultId))}
+            picks={picks}
+            onRecommend={() => setPicks(recommendEvents(result.resultId))}
             onShare={share}
             onRetake={startQuiz}
           />
@@ -309,14 +310,14 @@ function Landing({ onStart, t, reduce }: { onStart: () => void; t: (p: { ko: str
   );
 }
 
-// ── Result + group matching ────────────────────────────────────────────────
+// ── Result + session recommendation ────────────────────────────────────────
 function ResultView({
   result,
   t,
   reduce,
   fromShare,
-  matched,
-  onMatch,
+  picks,
+  onRecommend,
   onShare,
   onRetake,
 }: {
@@ -324,8 +325,8 @@ function ResultView({
   t: (p: { ko: string; en: string }) => string;
   reduce: boolean;
   fromShare: boolean;
-  matched: ReturnType<typeof matchGroup> | null;
-  onMatch: () => void;
+  picks: EventPick[] | null;
+  onRecommend: () => void;
   onShare: () => void;
   onRetake: () => void;
 }) {
@@ -409,8 +410,8 @@ function ResultView({
         </a>
       </div>
 
-      {/* group matching */}
-      <GroupMatchPanel result={result} matched={matched} onMatch={onMatch} t={t} reduce={reduce} />
+      {/* session recommendation */}
+      <EventRecsPanel picks={picks} onRecommend={onRecommend} t={t} reduce={reduce} />
 
       {/* share / retake */}
       <div className="mt-4 flex w-full max-w-[420px] gap-3">
@@ -425,92 +426,75 @@ function ResultView({
   );
 }
 
-// The new piece — solo builders auto-matched to a squad by their result.
-function GroupMatchPanel({
-  result,
-  matched,
-  onMatch,
+// The new piece — recommend the Day 2–5 sessions a result should RSVP for.
+function EventRecsPanel({
+  picks,
+  onRecommend,
   t,
   reduce,
 }: {
-  result: { resultId: string };
-  matched: ReturnType<typeof matchGroup> | null;
-  onMatch: () => void;
+  picks: EventPick[] | null;
+  onRecommend: () => void;
   t: (p: { ko: string; en: string }) => string;
   reduce: boolean;
 }) {
-  if (!matched) {
+  if (!picks) {
     return (
       <div className="mt-4 w-full max-w-[420px] rounded-[24px] border border-violet-400/20 bg-violet-500/[0.06] p-6 text-center">
         <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-violet-300">
-          ✦ {t(quizUI.matchEyebrow)}
+          ✦ {t(quizUI.recEyebrow)}
         </p>
-        <p className="mt-2 text-sm leading-relaxed text-white/75">{t(quizUI.matchPrompt)}</p>
+        <p className="mt-2 text-sm leading-relaxed text-white/75">{t(quizUI.recPrompt)}</p>
         <button
           type="button"
-          onClick={onMatch}
+          onClick={onRecommend}
           className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-violet-400/40 bg-white/[0.06] px-6 py-3.5 text-sm font-bold text-violet-100 transition hover:bg-white/10"
         >
-          🤝 {t(quizUI.matchCta)}
+          ✦ {t(quizUI.recCta)}
         </button>
       </div>
     );
   }
 
-  const { squad, yourRole, needs } = matched;
   return (
     <motion.div
-      key="matched"
+      key="recs"
       initial={reduce ? false : { opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
       className="mt-4 w-full max-w-[420px] overflow-hidden rounded-[24px] border border-white/12 bg-[#0c0a18] p-6 text-left"
     >
-      <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-white/45">{t(quizUI.matchedTitle)}</p>
+      <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-white/45">{t(quizUI.recTitle)}</p>
 
-      {/* squad badge */}
-      <div className="mt-3 flex items-center gap-3.5">
-        <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${squad.accent} text-2xl font-black text-white shadow-lg`}>
-          {t(squad.name).charAt(0)}
-        </div>
-        <div>
-          <h3 className="text-xl font-black leading-tight tracking-tight">
-            {t({ ko: "팀", en: "Team" })} {t(squad.name)}
-          </h3>
-          <p className="text-sm text-white/60">{t(squad.vibe)}</p>
-        </div>
+      <div className="mt-3 flex flex-col gap-3">
+        {picks.map(({ event, reason }) => {
+          const meta = categoryMeta[event.category];
+          return (
+            <a
+              key={event.id}
+              href={`/?event=${event.id}#program`}
+              className="group block rounded-2xl border border-white/10 bg-white/[0.04] p-4 transition hover:-translate-y-0.5 hover:border-violet-400/30 hover:bg-white/[0.07]"
+            >
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: meta.dot }} aria-hidden />
+                <span className="text-[0.7rem] font-bold uppercase tracking-wide" style={{ color: meta.dot }}>
+                  {t(meta.label)}
+                </span>
+                <span className="ml-auto text-[0.7rem] font-semibold text-white/45">
+                  Day {event.day} · {event.date}
+                </span>
+              </div>
+              <h4 className="mt-2 text-base font-bold leading-snug text-white">{t(event.title)}</h4>
+              <p className="mt-1 text-sm leading-snug text-white/65">{t(reason)}</p>
+              <span className="mt-2.5 inline-flex items-center gap-1 text-xs font-semibold text-violet-300/70 transition group-hover:text-violet-300">
+                {t(quizUI.recView)} →
+              </span>
+            </a>
+          );
+        })}
       </div>
 
-      {/* your role */}
-      <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-        <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/45">{t(quizUI.matchYourRole)}</p>
-        <div className="mt-2 flex items-center gap-2">
-          <span className={`inline-flex items-center gap-2 rounded-full bg-gradient-to-r ${yourRole.accent} px-3.5 py-1.5 text-sm font-bold text-white`}>
-            {yourRole.emoji} {t(yourRole.label)}
-          </span>
-        </div>
-        <p className="mt-2.5 text-sm leading-snug text-white/70">{t(yourRole.blurb)}</p>
-      </div>
-
-      {/* still needs */}
-      <div className="mt-4">
-        <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/45">{t(quizUI.matchNeeds)}</p>
-        <div className="mt-2 flex flex-wrap gap-2">
-          {needs.map((r) => (
-            <span key={r.key} className="inline-flex items-center gap-1.5 rounded-2xl border border-white/10 bg-white/[0.05] px-3 py-2 text-sm font-semibold text-white/80">
-              {r.emoji} {t(r.label)}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <a
-        href={links.program}
-        className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-3.5 text-sm font-bold text-white shadow-[0_8px_30px_rgba(124,58,237,0.45)] transition hover:-translate-y-0.5"
-      >
-        {t(quizUI.matchJoin)} →
-      </a>
-      <p className="mt-4 text-[0.7rem] leading-relaxed text-white/35">{t(quizUI.matchNote)}</p>
+      <p className="mt-4 text-[0.7rem] leading-relaxed text-white/35">{t(quizUI.recNote)}</p>
     </motion.div>
   );
 }

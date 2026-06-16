@@ -3,7 +3,7 @@
 // Source of truth: AI_성격테스트_기획서.md (12 questions · 16 MBTI×AI models ·
 // A/T variants · scoring map). Every string is bilingual { ko, en } like the
 // rest of the site (see data/dictionary.ts). Pure data only — scoring lives in
-// lib/quizScore.ts, group matching in lib/groupMatch.ts.
+// lib/quizScore.ts, session recommendation in lib/eventMatch.ts.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { Phrase } from "@/data/dictionary";
@@ -101,8 +101,8 @@ export const QUESTIONS: Question[] = [
 ];
 
 // ── Builder role buckets ───────────────────────────────────────────────────
-// Each result maps to ONE of four builderthon roles. Used by the group matcher
-// to tell a solo builder what they bring and what their squad still needs.
+// Each result maps to ONE of four builderthon roles. Used by the session
+// recommender to weight which Day 2–5 sessions best fit each builder type.
 export type RoleKey = "plan" | "dev" | "design" | "growth";
 
 export interface Role {
@@ -140,25 +140,6 @@ export const ROLES: Record<RoleKey, Role> = {
     accent: "from-amber-400 to-orange-500",
   },
 };
-
-// ── Matching squads ──────────────────────────────────────────────────────────
-// Solo builders get deterministically assigned to one of these (see lib/groupMatch).
-// Names/vibes only — the squad is a recommended cohort, not a fixed roster.
-export interface Squad {
-  id: string;
-  name: Phrase;
-  vibe: Phrase;
-  accent: string; // literal Tailwind gradient classes
-}
-
-export const SQUADS: Squad[] = [
-  { id: "aurora",  name: { ko: "오로라", en: "Aurora" },   vibe: { ko: "새벽까지 빛나는 빌더들", en: "Builders who glow till dawn" },              accent: "from-violet-500 to-fuchsia-500" },
-  { id: "quasar",  name: { ko: "퀘이사", en: "Quasar" },   vibe: { ko: "가장 밝게 터지는 아이디어", en: "The brightest idea in the room" },           accent: "from-fuchsia-500 to-rose-500" },
-  { id: "monsoon", name: { ko: "몬순", en: "Monsoon" },     vibe: { ko: "폭발적으로 몰아치는 실행력", en: "Execution that comes in waves" },           accent: "from-cyan-500 to-blue-500" },
-  { id: "merlion", name: { ko: "머라이언", en: "Merlion" }, vibe: { ko: "싱가포르의 상징처럼 대담하게", en: "Bold, like Singapore's own icon" },          accent: "from-amber-400 to-orange-500" },
-  { id: "circuit", name: { ko: "서킷", en: "Circuit" },     vibe: { ko: "끊김 없이 연결되는 팀워크", en: "Teamwork with no broken connections" },       accent: "from-emerald-400 to-cyan-500" },
-  { id: "equator", name: { ko: "적도", en: "Equator" },     vibe: { ko: "뜨겁게 달아오르는 6일", en: "Six days at full heat" },                       accent: "from-indigo-500 to-violet-500" },
-];
 
 // ── 16 results (MBTI → AI model) ──────────────────────────────────────────────
 export type MbtiKey =
@@ -453,21 +434,17 @@ export const quizUI = {
   },
   ctaApply: { ko: "빌더톤 신청하러 가기", en: "Go apply to the builderthon" },
 
-  // Group matching
-  matchEyebrow: { ko: "솔로 빌더 매칭", en: "Solo builder matching" },
-  matchPrompt: {
-    ko: "아직 팀이 없으신가요? 성격 테스트에 맞춰 어울리는 그룹으로 매칭해 드려요.",
-    en: "No team yet? We'll match you to a squad that fits your personality.",
+  // Session recommendation
+  recEyebrow: { ko: "맞춤 세션 추천", en: "Sessions for you" },
+  recPrompt: {
+    ko: "결과에 맞춰, 빌더톤에서 참여하면 좋을 세션을 골라드려요.",
+    en: "Based on your result, here are the builderthon sessions worth joining.",
   },
-  matchCta: { ko: "팀 매칭 받기", en: "Match me to a squad" },
-  matchedTitle: { ko: "당신의 매칭 그룹", en: "Your matched squad" },
-  matchYourRole: { ko: "당신이 맡을 역할", en: "What you bring" },
-  matchNeeds: { ko: "이 팀에 아직 필요한 역할", en: "Your squad still needs" },
-  matchIdeal: { ko: "이상적인 팀메이트", en: "Ideal teammates" },
-  matchJoin: { ko: "이 그룹으로 합류하기", en: "Join this squad" },
-  matchRematch: { ko: "다시 매칭", en: "Re-match" },
-  matchNote: {
-    ko: "* 매칭은 추천이에요. 최종 팀은 행사 첫날 같은 그룹의 솔로 빌더들과 함께 꾸려집니다.",
-    en: "* Matching is a recommendation. Final teams form on Day 1 with the solo builders in your squad.",
+  recCta: { ko: "내게 맞는 세션 추천받기", en: "Show my sessions" },
+  recTitle: { ko: "당신에게 추천하는 세션", en: "Your recommended sessions" },
+  recView: { ko: "프로그램에서 보기", en: "See in program" },
+  recNote: {
+    ko: "* Day 2–5 사이드 세션은 자유 선택이에요. 마음에 드는 세션만 골라 RSVP하세요.",
+    en: "* Day 2–5 side sessions are optional — RSVP only for the ones you like.",
   },
 };
