@@ -139,19 +139,17 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
 const companions: { src?: string; alt?: string }[] = [
   { src: "/partners/zero100/01-translink-investment.webp", alt: "Translink Investment" },
   { src: "/partners/zero100/02-wilt-venture-builder.webp", alt: "Wilt Venture Builder" },
-  { src: "/partners/zero100/03-popup-studio.webp", alt: "Popup Studio" },
-  { src: "/partners/zero100/04-dcamp.webp", alt: "D.CAMP" },
-  { src: "/partners/zero100/05-startup-alliance.webp", alt: "Startup Alliance" },
+  // Popup Studio's old logo removed here — the current mark lives in the
+  // confirmed-partner card below. D.CAMP / Startup Alliance / 혁신의숲 / MYSC /
+  // Career Day were 2024-event supporters, not partners of this builderthon, so
+  // they're excluded from the network wall to avoid implying participation.
   { src: "/partners/zero100/06-KAIA.webp", alt: "KAIA" },
   { src: "/partners/zero100/07-venturesquare.webp", alt: "Venture Square" },
-  { src: "/partners/zero100/08-mysc.webp", alt: "MYSC" },
   { src: "/partners/zero100/09-eventus.webp", alt: "EventUs" },
   { src: "/partners/zero100/10-82Startup.webp", alt: "82Startup" },
-  { src: "/partners/zero100/11-hyeockshin.webp", alt: "혁신의숲" },
   { src: "/partners/zero100/12-mission.webp", alt: "Mission" },
   { src: "/partners/zero100/13-code.presso.webp", alt: "Codepresso" },
   { src: "/partners/zero100/14-themiilk.webp", alt: "TheMiilk" },
-  { src: "/partners/zero100/15-career-day.webp", alt: "Career Day" },
   { src: "/partners/zero100/16-andar.webp", alt: "andar" },
   { src: "/partners/zero100/17-ceo-suite.webp", alt: "CEO SUITE" },
   { src: "/partners/zero100/18-yj.webp", alt: "YJ" },

@@ -48,7 +48,7 @@ export default function JourneyNav() {
             className="hidden h-6 w-auto opacity-80 brightness-0 invert sm:block"
           />
         </a>
-        <div className="hidden items-center gap-5 lg:flex">
+        <div className="hidden items-center gap-5 lg:ml-12 lg:flex">
           {anchors.map((a) => (
             <a
               key={a.id}
