@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useLocale } from "@/lib/LocaleContext";
 import { dict, links } from "@/data/dictionary";
@@ -35,7 +36,17 @@ export default function JourneyNav() {
               EN/KR toggle, and the View Program CTA all fit; full lockup returns
               from the sm breakpoint up. */}
           <span className="hidden text-lg text-white/30 sm:inline sm:text-xl">×</span>
-          <span className="hidden text-lg font-semibold text-white/70 sm:inline sm:text-xl">Zero100</span>
+          {/* Official Zero100 lockup (icon + wordmark, no tagline) rendered white
+              to sit beside the KOMOS wordmark; hidden below sm with the × so the
+              brand, toggle, and CTA all fit on the narrowest screens. */}
+          <Image
+            src="/partners/zero100-wordmark.png"
+            alt="Zero100"
+            width={602}
+            height={127}
+            priority
+            className="hidden h-6 w-auto opacity-80 brightness-0 invert sm:block"
+          />
         </a>
         <div className="hidden items-center gap-5 lg:flex">
           {anchors.map((a) => (

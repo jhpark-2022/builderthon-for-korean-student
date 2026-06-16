@@ -674,35 +674,45 @@ export default function Journey() {
           </h2>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/75">{t(dict.partners.note)}</p>
 
-          {/* Organizer + Founding network. Both marks are clean white-on-
-              transparent (the KOMOS lion trimmed to its bounding box so it fills
-              the box, and the Zero100 circle icon extracted from their white
-              wordmark — no more baked-in blue chip), so both render identically
-              as crisp white icons. */}
+          {/* Organizer + Founding network, both clean white-on-transparent marks.
+              KOMOS shows its lion mark beside the name; Zero100 uses its official
+              full lockup (icon + wordmark), so the wordmark IS the name and the
+              text label is dropped to avoid a duplicate. `wide` switches between
+              the two layouts. */}
           <div className="mt-8 grid gap-4 text-left sm:grid-cols-2">
             {[
-              { label: t(dict.partners.organizerLabel), img: "/komos-lion-trim.png", name: "KOMOS",   desc: t(dict.partners.organizerDesc), w: 377, h: 195, url: undefined as string | undefined },
-              { label: t(dict.partners.networkLabel),   img: "/partners/zero100-icon.png",  name: "Zero100", desc: t(dict.partners.networkDesc),   w: 600, h: 600, url: "https://www.zero100.org" },
+              { label: t(dict.partners.organizerLabel), img: "/komos-lion-trim.png", name: "KOMOS",   desc: t(dict.partners.organizerDesc), w: 377, h: 195, url: undefined as string | undefined, wide: false },
+              { label: t(dict.partners.networkLabel),   img: "/partners/zero100-lockup.png", name: "Zero100", desc: t(dict.partners.networkDesc), w: 601, h: 127, url: "https://www.zero100.org", wide: true },
             ].map((o) => {
               const inner = (
                 <>
                   <span className="text-xs font-bold uppercase tracking-widest text-white/60">{o.label}</span>
-                  <div className="mt-4 flex items-center gap-4">
-                    {/* fixed optical box so both marks share one height and the
-                        name text lines up across the two cards regardless of the
-                        lion's wide aspect vs the Zero100 circle */}
-                    <span className="flex h-10 w-[72px] shrink-0 items-center justify-center">
-                      {/* name is shown as text beside it → empty alt avoids double announcement */}
-                      <Image src={o.img} alt="" width={o.w} height={o.h} className="max-h-8 w-auto max-w-full object-contain brightness-0 invert" />
-                    </span>
-                    <div className="min-w-0">
-                      <p className="flex items-center gap-1.5 text-lg font-bold text-white">
-                        {o.name}
+                  {o.wide ? (
+                    /* Official lockup stands in for the name → alt carries it */
+                    <div className="mt-4">
+                      <Image src={o.img} alt={o.name} width={o.w} height={o.h} className="h-9 w-auto max-w-[200px] object-contain brightness-0 invert" />
+                      <p className="mt-3 flex items-center gap-1.5 text-sm text-white/75">
+                        {o.desc}
                         {o.url && <span aria-hidden className="text-white/30 transition group-hover:text-white/70">↗</span>}
                       </p>
-                      <p className="text-sm text-white/75">{o.desc}</p>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="mt-4 flex items-center gap-4">
+                      {/* fixed optical box so the lion mark and the name text line
+                          up cleanly within the card */}
+                      <span className="flex h-10 w-[72px] shrink-0 items-center justify-center">
+                        {/* name is shown as text beside it → empty alt avoids double announcement */}
+                        <Image src={o.img} alt="" width={o.w} height={o.h} className="max-h-8 w-auto max-w-full object-contain brightness-0 invert" />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="flex items-center gap-1.5 text-lg font-bold text-white">
+                          {o.name}
+                          {o.url && <span aria-hidden className="text-white/30 transition group-hover:text-white/70">↗</span>}
+                        </p>
+                        <p className="text-sm text-white/75">{o.desc}</p>
+                      </div>
+                    </div>
+                  )}
                 </>
               );
               const cls = "group block rounded-3xl border border-white/10 bg-white/[0.04] p-6 transition hover:border-white/20 hover:bg-white/[0.06]";
