@@ -157,15 +157,15 @@ export default function Quiz() {
       <div aria-hidden className="orb" style={{ left: "-12%", top: "-10%", width: "42vh", height: "42vh", background: "rgba(124,58,237,0.4)" }} />
       <div aria-hidden className="orb" style={{ bottom: "-14%", right: "-10%", width: "46vh", height: "46vh", background: "rgba(6,182,212,0.3)" }} />
 
-      {/* header */}
-      <header className="relative z-10 mx-auto flex h-20 max-w-2xl items-center justify-between px-6">
+      {/* header — widens on the result screen so it lines up with the 2-col layout */}
+      <header className={`relative z-10 mx-auto flex h-20 items-center justify-between px-6 ${phase === "result" ? "max-w-5xl" : "max-w-2xl"}`}>
         <a href="/" className="text-sm font-semibold text-white/60 transition hover:text-white">
           ← {t(quizUI.back)}
         </a>
         <LocaleToggle />
       </header>
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] max-w-2xl flex-col px-6 pb-12">
+      <div className={`relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] flex-col px-6 pb-12 ${phase === "result" ? "max-w-5xl" : "max-w-2xl"}`}>
         {phase === "landing" && <Landing onStart={startQuiz} t={t} reduce={!!reduce} />}
 
         {phase === "quiz" && current && (
@@ -345,9 +345,13 @@ function ResultView({
         ✦ {t(quizUI.resultEyebrow)}
       </span>
 
-      {/* shareable result card */}
+      {/* On desktop the result card sits left (sticky) and the CTA + session
+          recommendations fill the column to its right; on mobile it all stacks. */}
+      <div className="grid w-full gap-6 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)] lg:items-start">
+      {/* left: shareable result card */}
+      <div className="mx-auto w-full max-w-[420px] lg:mx-0 lg:sticky lg:top-6">
       <div
-        className="relative w-full max-w-[420px] overflow-hidden rounded-[28px] border border-white/12 bg-[#0c0a18] p-7 text-left"
+        className="relative w-full overflow-hidden rounded-[28px] border border-white/12 bg-[#0c0a18] p-7 text-left"
         style={{ boxShadow: "0 30px 70px -28px rgba(217,70,239,0.42)" }}
       >
         <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-fuchsia-500/20 to-transparent" />
@@ -398,30 +402,35 @@ function ResultView({
           </div>
         </div>
       </div>
-
-      {/* apply CTA */}
-      <div className="mt-7 w-full max-w-[420px] rounded-[24px] border border-white/10 bg-white/[0.04] p-6 text-center">
-        <p className="text-[15px] font-bold leading-relaxed text-white/85">{ctaLead}</p>
-        <a
-          href={links.program}
-          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
-        >
-          {t(quizUI.ctaApply)} →
-        </a>
       </div>
 
-      {/* session recommendation */}
-      <EventRecsPanel picks={picks} onRecommend={onRecommend} t={t} reduce={reduce} />
+      {/* right: apply CTA + session recommendation + actions */}
+      <div className="mx-auto flex w-full max-w-[420px] flex-col gap-4 lg:mx-0 lg:max-w-none">
+        {/* apply CTA */}
+        <div className="w-full rounded-[24px] border border-white/10 bg-white/[0.04] p-6 text-center">
+          <p className="text-[15px] font-bold leading-relaxed text-white/85">{ctaLead}</p>
+          <a
+            href={links.program}
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
+          >
+            {t(quizUI.ctaApply)} →
+          </a>
+        </div>
 
-      {/* share / retake */}
-      <div className="mt-4 flex w-full max-w-[420px] gap-3">
-        <button type="button" onClick={onShare} className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10">
-          ↗ {t(quizUI.share)}
-        </button>
-        <button type="button" onClick={onRetake} className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10">
-          ↻ {fromShare ? t(quizUI.retakeViral) : t(quizUI.retake)}
-        </button>
+        {/* session recommendation */}
+        <EventRecsPanel picks={picks} onRecommend={onRecommend} t={t} reduce={reduce} />
+
+        {/* share / retake */}
+        <div className="flex w-full gap-3">
+          <button type="button" onClick={onShare} className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10">
+            ↗ {t(quizUI.share)}
+          </button>
+          <button type="button" onClick={onRetake} className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10">
+            ↻ {fromShare ? t(quizUI.retakeViral) : t(quizUI.retake)}
+          </button>
+        </div>
       </div>
+    </div>
     </motion.div>
   );
 }
@@ -440,7 +449,7 @@ function EventRecsPanel({
 }) {
   if (!picks) {
     return (
-      <div className="mt-4 w-full max-w-[420px] rounded-[24px] border border-violet-400/20 bg-violet-500/[0.06] p-6 text-center">
+      <div className="w-full rounded-[24px] border border-violet-400/20 bg-violet-500/[0.06] p-6 text-center">
         <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-violet-300">
           ✦ {t(quizUI.recEyebrow)}
         </p>
@@ -462,7 +471,7 @@ function EventRecsPanel({
       initial={reduce ? false : { opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      className="mt-4 w-full max-w-[420px] overflow-hidden rounded-[24px] border border-white/12 bg-[#0c0a18] p-6 text-left"
+      className="w-full overflow-hidden rounded-[24px] border border-white/12 bg-[#0c0a18] p-6 text-left"
     >
       <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-white/45">{t(quizUI.recTitle)}</p>
 
