@@ -246,7 +246,11 @@ function HeroVideo() {
         loop
         playsInline
         poster={HERO_VIDEO.poster}
-        className="h-full w-full object-cover"
+        // The clip is 16:9; on a portrait phone object-cover crops the sides
+        // hard and the seated subject (slightly left of frame) drifts off-centre.
+        // Nudge the focal point right on mobile to re-centre him; desktop barely
+        // side-crops, so it stays centred.
+        className="h-full w-full object-cover [object-position:44%_50%] sm:object-center"
       >
         <source src={HERO_VIDEO.webm} type="video/webm" />
         <source src={HERO_VIDEO.mp4} type="video/mp4" />

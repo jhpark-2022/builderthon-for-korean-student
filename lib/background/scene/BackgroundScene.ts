@@ -4,7 +4,6 @@ import { Renderer } from "../renderer/Renderer";
 import { CameraController } from "../camera/CameraController";
 import { Pointer } from "../interactions/Pointer";
 import { ParticleField } from "../particles/ParticleField";
-import { NetworkLines } from "../particles/NetworkLines";
 import { Atmosphere } from "../particles/Atmosphere";
 import { PostFX } from "../renderer/PostFX";
 import { computePhases } from "../utils/phases";
@@ -17,7 +16,6 @@ import { clamp } from "../utils/math";
  *
  * Layer composition (back → front), each at a different parallax speed:
  *   Atmosphere  — drifting nebula gradient (slowest)
- *   NetworkLines— flowing data ribbons (mid)
  *   ParticleField — hero flow-field particles (fastest, interactive)
  */
 export class BackgroundScene {
@@ -28,7 +26,6 @@ export class BackgroundScene {
   private readonly quality: QualityTier;
 
   private readonly atmosphere: Atmosphere;
-  private readonly lines: NetworkLines;
   private readonly particles: ParticleField;
   private readonly post: PostFX;
 
@@ -60,7 +57,6 @@ export class BackgroundScene {
     this.scene.add(rim);
 
     this.atmosphere = new Atmosphere();
-    this.lines = new NetworkLines(this.quality.particles > 8000 ? 60 : 30, 0.6);
     this.particles = new ParticleField(this.quality, 1.0);
 
     // NOTE: there is intentionally NO portal object in the scene. The phenomenon
@@ -68,7 +64,6 @@ export class BackgroundScene {
     // density-driven bloom — never a rendered disc/sphere with a visible edge.
     this.scene.add(
       this.atmosphere.mesh,
-      this.lines.lines,
       this.particles.points
     );
 
@@ -105,7 +100,6 @@ export class BackgroundScene {
     this.mql.removeEventListener("change", this.onReducedChange);
 
     this.atmosphere.dispose();
-    this.lines.dispose();
     this.particles.dispose();
     this.post.dispose();
     this.scene.traverse((o) => {
@@ -174,7 +168,6 @@ export class BackgroundScene {
     );
 
     this.atmosphere.update(t, this.scroll, phases.reveal);
-    this.lines.update(t, this.scroll, this.motionScale);
     this.particles.update(t, this.pointer.world, this.scroll, this.motionScale, phases);
     // under reduced-motion, damp the flashy portal/white-out so the crossing
     // stays calm and the footer text never washes out
