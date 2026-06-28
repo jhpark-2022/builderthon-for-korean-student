@@ -184,6 +184,16 @@ export default function EventModal({
                     {event.timeOfDay}
                   </span>
                 )}
+                <span
+                  className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold ${
+                    event.mode === "offline"
+                      ? "border border-amber-400/30 bg-amber-400/10 text-amber-200"
+                      : "border border-white/15 bg-white/5 text-white/65"
+                  }`}
+                >
+                  {event.mode === "offline" && <span aria-hidden>●</span>}
+                  {t(event.mode === "offline" ? dict.program.offlineLabel : dict.program.onlineLabel)}
+                </span>
                 {event.confirmed && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-accent/10 px-2.5 py-1 text-xs font-bold text-accent ring-1 ring-accent/20">
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden>

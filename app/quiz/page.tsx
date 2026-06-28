@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import Quiz from "@/components/Quiz";
 
 export const metadata: Metadata = {
-  title: "당신의 AI 모델은? — SMU × Zero100 Builderthon",
+  title: "당신의 AI 모델은? — Zero100 Builderthon",
   description:
     "12개의 질문으로 알아보는 나의 빌더 유형. 결과는 16개 AI 모델 중 하나로. 결과에 맞춰 빌더톤에서 참여하면 좋을 세션까지 추천. / A 12-question AI personality test for the Singapore Korean-student builderthon — get your AI model and the sessions worth joining.",
   openGraph: {

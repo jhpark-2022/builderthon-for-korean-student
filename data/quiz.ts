@@ -444,7 +444,7 @@ export const quizUI = {
   recTitle: { ko: "당신에게 추천하는 세션", en: "Your recommended sessions" },
   recView: { ko: "프로그램에서 보기", en: "See in program" },
   recNote: {
-    ko: "* Day 2–5 사이드 세션은 자유 선택이에요. 마음에 드는 세션만 골라 RSVP하세요.",
-    en: "* Day 2–5 side sessions are optional — RSVP only for the ones you like.",
+    ko: "* 8일 프로그램 중 당신과 잘 맞는 세션이에요. 미리 체크해두고 그날 챙겨보세요.",
+    en: "* Sessions from the 8-day program that fit you — bookmark them and catch them on the day.",
   },
 };

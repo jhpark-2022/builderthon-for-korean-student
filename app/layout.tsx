@@ -21,21 +21,21 @@ const SITE_URL = "https://builderthon-for-korean-student.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "SMU × Zero100 Builderthon — Build in Singapore",
+  title: "Zero100 Builderthon — Build in Singapore",
   description:
-    "Singapore's first festival-style builderthon for Korean students. 24–29 Aug 2026 · 6 days · ~100 builders. Co-building, global out-bounding, AI-native.",
-  keywords: ["Builderthon", "Zero100", "KOMOS", "SMU", "Singapore", "Korean students", "hackathon", "vibe coding"],
+    "Singapore's first AI builderthon for Korean students. 22–29 Aug 2026 · 8 days · ~100 builders solving real companies' AI-transformation problems with vibe coding — from zero to MVP.",
+  keywords: ["Builderthon", "Zero100", "Singapore", "Korean students", "AI", "vibe coding", "hackathon", "NUS", "NTU", "SMU"],
   openGraph: {
-    title: "SMU × Zero100 Builderthon",
-    description: "Singapore's first festival-style builderthon for Korean students · 24–29 Aug 2026.",
+    title: "Zero100 Builderthon",
+    description: "Singapore's first AI builderthon for Korean students · 22–29 Aug 2026 · 8 days.",
     url: SITE_URL,
-    siteName: "SMU × Zero100 Builderthon",
+    siteName: "Zero100 Builderthon",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "SMU × Zero100 Builderthon",
-    description: "Singapore's first festival-style builderthon for Korean students · 24–29 Aug 2026.",
+    title: "Zero100 Builderthon",
+    description: "Singapore's first AI builderthon for Korean students · 22–29 Aug 2026 · 8 days.",
   },
 };
 
