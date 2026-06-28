@@ -356,7 +356,7 @@ function ResultView({
       >
         <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-fuchsia-500/20 to-transparent" />
         <div className="relative flex items-center justify-between">
-          <span className="font-mono text-[0.7rem] font-bold uppercase tracking-[0.15em] text-white/45">KOMOS × Zero100</span>
+          <span className="font-mono text-[0.7rem] font-bold uppercase tracking-[0.15em] text-white/45">Zero100 Builderthon</span>
           <span className="font-mono text-[0.7rem] font-bold tracking-wider text-white/45">{result.resultId}</span>
         </div>
         <div className={`relative mt-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br ${data.accent} shadow-lg`}>

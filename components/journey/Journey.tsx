@@ -15,7 +15,7 @@ import {
 import Chapter from "./Chapter";
 import EventModal from "@/components/EventModal";
 
-const legendOrder: Category[] = ["main","ambassador","dinner","meetup","empowerment","network","build"];
+const legendOrder: Category[] = ["main","workshop","build","mentoring","network"];
 
 // glass panel wrapper
 function Glass({ children, className = "" }: { children: React.ReactNode; className?: string }) {
@@ -92,8 +92,7 @@ function CountUp({ value, className }: { value: number; className?: string }) {
 function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEvent, el: HTMLElement) => void }) {
   const meta = categoryMeta[ev.category];
   const isMain = ev.category === "main";
-  // Day 2–5 side sessions are not mandatory — joined freely via RSVP.
-  const optional = ev.day >= 2 && ev.day <= 5 && !isMain;
+  const offline = ev.mode === "offline";
   return (
     <button
       type="button"
@@ -111,12 +110,14 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
               {t(dict.program.confirmedBadge)}
             </span>
           )}
-          {optional ? (
-            <span className="rounded-full border border-white/15 bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/75">
-              {t(dict.program.optionalBadge)}
+          {offline ? (
+            <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/30 bg-amber-400/10 px-1.5 py-0.5 text-[0.7rem] font-bold text-amber-200">
+              <span aria-hidden>●</span>{t(dict.program.offlineLabel)}
             </span>
           ) : (
-            <span className="text-xs text-white/65">{ev.timeOfDay}</span>
+            <span className="rounded-full border border-white/12 bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/60">
+              {t(dict.program.onlineLabel)}
+            </span>
           )}
         </span>
       </div>
@@ -336,8 +337,8 @@ export default function Journey() {
         <div className="mt-16 grid grid-cols-3 gap-3 sm:gap-4">
           {[
             { num: "~100", label: t(dict.hero.statParticipants) },
-            { num: "6",    label: t(dict.hero.statDays) },
-            { num: "EN",   label: t(dict.hero.statLanguage) },
+            { num: "8",    label: t(dict.hero.statDays) },
+            { num: "AX",   label: t(dict.hero.statLanguage) },
           ].map((s, i) => (
             <motion.div
               key={s.num}
@@ -403,6 +404,51 @@ export default function Journey() {
             </Glass>
           ))}
         </div>
+
+        {/* Vision funnel — the event is the entry point to a lasting cross-border
+            community (straight from the vision graphic). Step 1 is highlighted as
+            the "START"; each step grows toward global expansion. */}
+        <div className="mt-14 rounded-3xl border border-violet-400/15 bg-violet-950/20 p-6 sm:p-8">
+          <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
+            {t(dict.about.visionTag)}
+          </p>
+          <h3 className="mx-auto mt-3 max-w-2xl text-center text-xl font-bold leading-snug text-white sm:text-2xl">
+            {t(dict.about.visionHeading)}
+          </h3>
+          <p className="mx-auto mt-3 max-w-2xl text-center text-sm leading-relaxed text-white/70">
+            {t(dict.about.visionIntro)}
+          </p>
+          <ol className="mt-8 grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {dict.about.visionSteps.map((s, i) => {
+              const start = i === 0;
+              return (
+                <li
+                  key={s.num}
+                  className={`relative flex flex-col rounded-2xl border p-4 text-left ${
+                    start
+                      ? "border-violet-400/50 bg-violet-500/15"
+                      : "border-white/10 bg-white/[0.03]"
+                  }`}
+                >
+                  <span
+                    className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-black ${
+                      start ? "bg-violet-500 text-white" : "bg-white/10 text-white/80"
+                    }`}
+                  >
+                    {s.num}
+                  </span>
+                  {start && (
+                    <span className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-violet-400/20 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-violet-200">
+                      ★ START
+                    </span>
+                  )}
+                  <p className="mt-2 text-sm font-bold leading-snug text-white">{t(s.title)}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-white/65">{t(s.body)}</p>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
       </Chapter>
 
       {/* ── CH 2 · WHO SHOULD JOIN / WHAT YOU GET ──────────────────── */}
@@ -460,40 +506,19 @@ export default function Journey() {
             <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">
               {t(dict.program.intro)}
             </p>
-            <div className="mx-auto mt-6 max-w-2xl rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.06] px-5 py-3.5 text-xs leading-relaxed text-emerald-100/85">
-              {t(dict.program.rsvpNote)}
+            <div className="mx-auto mt-6 max-w-2xl rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] px-5 py-3.5 text-xs leading-relaxed text-amber-100/85">
+              {t(dict.program.modeNote)}
             </div>
             <p className="mt-4 text-xs text-white/65 xl:hidden">{t(dict.program.swipeHint)}</p>
           </div>
 
-          {/* Pre-program — optional vibe-coding crash course, still being
-              arranged. Sits above the 6-day grid because it runs before the
-              main event; framed as optional + planned (honest, not confirmed). */}
-          <div className="mx-auto mt-10 max-w-3xl rounded-3xl border border-violet-400/20 bg-violet-500/[0.06] p-6 text-left sm:p-8">
-            <span className="inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-400/10 px-3 py-1 text-[0.7rem] font-bold uppercase tracking-[0.15em] text-violet-200">
-              {t(dict.program.crashLabel)}
-            </span>
-            <h3 className="mt-3 text-xl font-bold text-white sm:text-2xl">{t(dict.program.crashHeading)}</h3>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/80">{t(dict.program.crashBlurb)}</p>
-            <div className="mt-5 grid gap-3 sm:grid-cols-3">
-              {dict.program.crashSteps.map((s) => (
-                <div key={s.step} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                  <span className="text-[0.7rem] font-bold uppercase tracking-wider text-violet-300/80">{s.step}</span>
-                  <p className="mt-1 text-sm font-bold text-white">{t(s.title)}</p>
-                  <p className="mt-1.5 text-xs leading-relaxed text-white/65">{t(s.body)}</p>
-                </div>
-              ))}
-            </div>
-            <p className="mt-4 text-xs leading-relaxed text-white/55">{t(dict.program.crashNote)}</p>
-          </div>
-
           {/* Desktop (xl+): one column per day, laid out on a real grid with
               subgrid rows so every card slot lines up horizontally across all
-              six days — no more ragged columns when a card runs taller.
+              eight days — no more ragged columns when a card runs taller.
               Row 1 = the day header+theme block; rows 2…(1+maxEvents) = card
               slots. Days with fewer sessions simply leave trailing slots empty. */}
           <div
-            className="mt-12 hidden gap-5 xl:grid xl:grid-cols-6"
+            className="mt-12 hidden gap-4 xl:grid xl:grid-cols-8"
             style={{ gridTemplateRows: `auto repeat(${maxEvents}, auto)` }}
           >
             {days.map((day) => {
@@ -506,14 +531,15 @@ export default function Journey() {
                 >
                   {/* header + theme, kept visually attached as one block */}
                   <div className="flex flex-col">
-                    <div className="flex h-12 items-center rounded-t-xl border border-violet-400/15 bg-gradient-to-r from-violet-500/12 to-indigo-500/8 px-4">
+                    <div className="flex h-12 items-center rounded-t-xl border border-violet-400/15 bg-gradient-to-r from-violet-500/12 to-indigo-500/8 px-3">
                       <div className="flex w-full items-baseline justify-between">
                         <h3 className="text-sm font-bold text-violet-200/90">{t(dict.program.dayLabel)} {day.day}</h3>
-                        <span className="text-xs text-white/65">{day.date}</span>
+                        <span className="text-[0.7rem] text-white/60">{day.date}·{t(day.weekday)}</span>
                       </div>
                     </div>
-                    <div className="flex flex-1 min-h-[2.75rem] items-center rounded-b-xl border-x border-b border-white/[0.06] bg-white/[0.03] px-4 py-2">
-                      <p className="text-xs font-bold leading-snug text-white/70">{t(day.theme)}</p>
+                    <div className="flex flex-1 min-h-[3.25rem] flex-col justify-center rounded-b-xl border-x border-b border-white/[0.06] bg-white/[0.03] px-3 py-2">
+                      <span className="text-[0.6rem] font-bold uppercase tracking-wider text-violet-300/70">{t(day.phase)}</span>
+                      <p className="mt-0.5 text-xs font-bold leading-snug text-white/75">{t(day.theme)}</p>
                     </div>
                   </div>
                   {evs.map((ev) => (
@@ -544,7 +570,7 @@ export default function Journey() {
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-sm font-bold text-white">{t(day.theme)}</span>
-                      <span className="mt-0.5 block text-xs text-white/65">{day.date} · {evs.length} {t(dict.program.sessions)}</span>
+                      <span className="mt-0.5 block text-xs text-white/65">{t(day.phase)} · {day.date} · {evs.length} {t(dict.program.sessions)}</span>
                     </span>
                     <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 text-white/70 transition ${open ? "rotate-45 border-violet-400 text-violet-300" : ""}`}>
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
@@ -726,17 +752,26 @@ export default function Journey() {
             })}
           </div>
 
-          {/* Wordmark partner wall — every logo capped to a single 28px cap-height
-              so they read at one consistent weight regardless of source aspect ratio. */}
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          {/* Problem providers — companies supplying the real AX problems
+              (confirmed). Popup Studio + Codepresso have wordmarks; Drimaes has
+              no logo on hand, so it renders as a text card (honest, no invented
+              asset). */}
+          <p className="mt-10 inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-3 py-1 text-[0.7rem] font-bold uppercase tracking-[0.14em] text-emerald-200">
+            {t(dict.partners.providersLabel)}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-white/75">{t(dict.partners.providersNote)}</p>
+          <div className="mt-4 grid gap-4 sm:grid-cols-3">
             {[
-              { src: "/partners/processed/popup-studio.png", alt: "Popup Studio", w: 476, h: 134, url: "https://popupstudio.ai" as string | undefined },
-              { src: "/partners/processed/codepresso.png",   alt: "Codepresso",   w: 361, h: 113, url: "https://codepresso.io" },
+              { alt: "Drimaes",      src: undefined as string | undefined, w: 0,   h: 0,   url: "https://www.drimaes.com" as string | undefined },
+              { alt: "Codepresso",   src: "/partners/processed/codepresso.png",   w: 361, h: 113, url: "https://codepresso.io" },
+              { alt: "Popup Studio", src: "/partners/processed/popup-studio.png", w: 476, h: 134, url: "https://popupstudio.ai" },
             ].map((b) => {
-              const inner = (
-                <Image src={b.src} alt={b.alt} width={b.w} height={b.h} className="max-h-11 w-auto max-w-full object-contain opacity-75 brightness-0 invert transition duration-300 group-hover:opacity-100" />
+              const inner = b.src ? (
+                <Image src={b.src} alt={b.alt} width={b.w} height={b.h} className="max-h-10 w-auto max-w-full object-contain opacity-80 brightness-0 invert transition duration-300 group-hover:opacity-100" />
+              ) : (
+                <span className="text-lg font-bold tracking-wide text-white/85 transition group-hover:text-white">{b.alt}</span>
               );
-              const cls = "group flex h-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] px-6 transition duration-300 hover:border-white/20 hover:bg-white/[0.06]";
+              const cls = "group flex h-20 items-center justify-center rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.04] px-6 transition duration-300 hover:border-emerald-400/40 hover:bg-emerald-400/[0.08]";
               return b.url ? (
                 <a key={b.alt} href={b.url} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
               ) : (
@@ -745,34 +780,57 @@ export default function Journey() {
             })}
           </div>
 
+          {/* Sponsors / partners — three honest stages straight from the deck. */}
+          <div className="mt-8 border-t border-white/10 pt-8" />
+
+          {/* Tier 1 — Confirmed */}
+          <p className="text-xs font-bold uppercase tracking-widest text-emerald-300/90">{t(dict.partners.tierConfirmedLabel)}</p>
           <a href="https://www.alchemy.com/" target="_blank" rel="noopener noreferrer"
-            className="group mt-6 flex h-20 items-center justify-center gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/5 px-6 transition hover:bg-emerald-400/10 sm:w-1/2">
-            <Image src="/partners/processed/alchemy.png" alt="" width={480} height={422} className="h-9 w-9 shrink-0 object-contain brightness-0 invert opacity-90" />
+            className="group mt-3 flex h-16 items-center justify-center gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/5 px-6 transition hover:bg-emerald-400/10 sm:w-1/2">
+            <Image src="/partners/processed/alchemy.png" alt="" width={480} height={422} className="h-8 w-8 shrink-0 object-contain brightness-0 invert opacity-90" />
             <span className="font-bold text-white">Alchemy</span>
             <span aria-hidden className="text-white/40 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-emerald-300">↗</span>
           </a>
-          <p className="mt-2 text-xs text-emerald-300/90">{t(dict.partners.confirmedSub)}</p>
 
-          <p className="mt-8 text-xs font-bold uppercase tracking-widest text-white/60">{t(dict.partners.partnersLabel)}</p>
+          {/* Tier 2 — In advanced talks (meeting done) */}
+          <p className="mt-8 text-xs font-bold uppercase tracking-widest text-amber-300/90">{t(dict.partners.tierAdvancedLabel)}</p>
           <div className="mt-3 flex flex-wrap justify-center gap-3">
             {[
               { n: "AWS",     url: "https://aws.amazon.com" },
               { n: "OpenAI",  url: "https://openai.com" },
               { n: "Workato", url: "https://www.workato.com" },
-              { n: "LG CNS",  url: "https://www.lgcns.com" },
-              { n: "Lovable", url: "https://lovable.dev" },
             ].map(({ n, url }) => (
-              <a
-                key={n}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex h-16 min-w-[8.5rem] flex-1 items-center justify-center gap-1.5 rounded-xl border border-dashed border-white/15 bg-white/[0.02] px-4 transition duration-300 hover:border-violet-400/30 hover:bg-violet-400/[0.04]"
-              >
-                <span className="text-sm font-semibold uppercase tracking-wide text-white/70 transition group-hover:text-white/90">{n}</span>
-                <span aria-hidden className="text-white/20 transition group-hover:text-violet-300/70">↗</span>
+              <a key={n} href={url} target="_blank" rel="noopener noreferrer"
+                className="group flex h-14 min-w-[8.5rem] flex-1 items-center justify-center gap-1.5 rounded-xl border border-amber-400/25 bg-amber-400/[0.04] px-4 transition duration-300 hover:border-amber-400/40 hover:bg-amber-400/[0.08]">
+                <span className="text-sm font-semibold uppercase tracking-wide text-white/80 transition group-hover:text-white">{n}</span>
+                <span aria-hidden className="text-white/25 transition group-hover:text-amber-300/80">↗</span>
               </a>
             ))}
+          </div>
+          <p className="mt-2 text-xs text-white/55">{t(dict.partners.tierAdvancedNote)}</p>
+
+          {/* Tier 3 — In discussion */}
+          <p className="mt-8 text-xs font-bold uppercase tracking-widest text-white/60">{t(dict.partners.tierDiscussionLabel)}</p>
+          <div className="mt-3 flex flex-wrap justify-center gap-3">
+            {[
+              { n: "Lovable",      url: "https://lovable.dev" },
+              { n: "LG CNS",       url: "https://www.lgcns.com" },
+              { n: "Superteam SG", url: "https://superteam.fun" },
+              { n: "Bloom",        url: undefined as string | undefined },
+            ].map(({ n, url }) => {
+              const cls = "group flex h-14 min-w-[8.5rem] flex-1 items-center justify-center gap-1.5 rounded-xl border border-dashed border-white/15 bg-white/[0.02] px-4 transition duration-300 hover:border-violet-400/30 hover:bg-violet-400/[0.04]";
+              const inner = (
+                <>
+                  <span className="text-sm font-semibold uppercase tracking-wide text-white/70 transition group-hover:text-white/90">{n}</span>
+                  {url && <span aria-hidden className="text-white/20 transition group-hover:text-violet-300/70">↗</span>}
+                </>
+              );
+              return url ? (
+                <a key={n} href={url} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
+              ) : (
+                <div key={n} className={cls}>{inner}</div>
+              );
+            })}
           </div>
           <p className="mt-4 text-xs text-white/65">{t(dict.partners.inDiscussionNote)}</p>
         </div>
@@ -845,7 +903,7 @@ export default function Journey() {
 
         {/* credits — pinned to the very bottom of the final screen */}
         <div className="mx-auto w-full max-w-3xl border-t border-white/10 pt-8 text-center">
-          <p className="text-sm font-bold tracking-widest text-white">SMU × ZERO100 BUILDERTHON</p>
+          <p className="text-sm font-bold tracking-widest text-white">ZERO100 BUILDERTHON</p>
           <p className="mt-2 text-xs text-white/65">{t(dict.footer.hostedBy)}</p>
           <p className="mt-4 text-xs text-white/55">© 2026 {t(dict.footer.rights)}</p>
         </div>

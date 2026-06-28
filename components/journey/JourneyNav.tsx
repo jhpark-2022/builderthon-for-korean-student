@@ -31,22 +31,19 @@ export default function JourneyNav() {
     <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? "bg-[#06040f]/85" : "bg-transparent"}`}>
       <nav className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6 sm:px-10">
         <a href="#top" className="flex items-center gap-2.5">
-          <span className="text-lg font-black tracking-wider text-white sm:text-xl">KOMOS</span>
-          {/* Co-brand suffix is hidden on the narrowest screens so the brand,
-              EN/KR toggle, and the View Program CTA all fit; full lockup returns
-              from the sm breakpoint up. */}
-          <span className="hidden text-lg text-white/30 sm:inline sm:text-xl">×</span>
-          {/* Official Zero100 lockup (icon + wordmark, no tagline) rendered white
-              to sit beside the KOMOS wordmark; hidden below sm with the × so the
-              brand, toggle, and CTA all fit on the narrowest screens. */}
+          {/* Official Zero100 lockup (icon + wordmark) leads the brand; the event
+              is "Zero100 Builderthon". The "Builderthon" suffix is hidden on the
+              narrowest screens so the brand, EN/KR toggle and View Program CTA all
+              fit, and returns from the sm breakpoint up. */}
           <Image
             src="/partners/zero100-wordmark.png"
             alt="Zero100"
             width={602}
             height={127}
             priority
-            className="hidden h-6 w-auto opacity-80 brightness-0 invert sm:block"
+            className="h-6 w-auto opacity-90 brightness-0 invert"
           />
+          <span className="hidden text-lg font-black tracking-wide text-white/90 sm:inline sm:text-xl">Builderthon</span>
         </a>
         <div className="hidden items-center gap-5 lg:ml-12 lg:flex">
           {anchors.map((a) => (

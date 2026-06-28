@@ -3,20 +3,28 @@
 // Both the Timetable grid and the EventModal read from this array, so editing an
 // event here updates the card AND the detail view everywhere.
 //
-// Content transcribed from "SMU_Zero100_Builderthon_Daily_Program_EN.png" and the
-// intro docs (EN/KR). Where a detail (speaker / exact venue) is not specified in
-// the source material the field is left undefined with a `// TODO: confirm` note —
-// please do not invent these.
+// Content transcribed from the 2026-06 media brief (Zero100_Builderthon_미디어
+// 브리프.docx), the daily-program graphic (Zero100_일별프로그램.png) and the deck
+// (Zero100_Builderthon_deck.pptx). Where a detail (speaker / exact mentor) is not
+// yet specified in the source material, the field is left undefined with a
+// `// TODO: confirm` note — please do not invent these.
+//
+// THE 8-DAY SHAPE (per the daily-program graphic, which is authoritative):
+//   • Day 1 is the REAL kick-off — the AX problems are released and self-paced
+//     team build starts right after, running continuously to Demo Day.
+//   • Day 5 is a mid-point Keynote & Check-in (NOT the opening / not build start).
+//   • Online by default; the cohort only gathers in person on Day 5 and Day 8
+//     at *SCAPE Lifejungle, Singapore.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type Category =
-  | "main"
-  | "ambassador"
-  | "dinner"
-  | "meetup"
-  | "empowerment"
-  | "network"
-  | "build";
+  | "main" // ★ anchor track: problem release · keynote · demo day
+  | "workshop" // Vibe Coding 101 / 102 (+ certificate)
+  | "build" // self-paced / independent team build
+  | "mentoring" // 1:1 mentoring
+  | "network"; // briefing · networking · mixers
+
+export type Mode = "online" | "offline";
 
 export interface Bilingual {
   ko: string;
@@ -25,9 +33,10 @@ export interface Bilingual {
 
 export interface BEvent {
   id: string;
-  day: number; // 1..6
-  date: string; // e.g. "08.24"
+  day: number; // 1..8
+  date: string; // e.g. "08.22"
   category: Category;
+  mode: Mode; // online or in-person (Day 5 & Day 8 are offline at *SCAPE)
   timeOfDay: "AM" | "PM";
   title: Bilingual;
   summary: Bilingual; // short, shown on the card
@@ -45,48 +54,75 @@ export interface BEvent {
 
 export interface DayMeta {
   day: number;
-  date: string; // "08.24"
+  date: string; // "08.22"
   weekday: Bilingual;
+  phase: Bilingual; // which of the 3 phases this day belongs to
   theme: Bilingual; // day theme label
 }
 
-// Day theme labels (Kick-off → Demo Day)
+// Three phases across the 8 days:
+//   Pre · Release (Day 1–2) → Intro · Vibe Coding (Day 3–4) → Builderthon (Day 5–8)
+const PHASE_PRE: Bilingual = { ko: "사전 · 문제 공개", en: "Pre · Release" };
+const PHASE_INTRO: Bilingual = { ko: "입문 · 바이브 코딩", en: "Intro · Vibe Coding" };
+const PHASE_BUILD: Bilingual = { ko: "빌더톤", en: "Builderthon" };
+
+// Day theme labels (Release → Demo Day)
 export const days: DayMeta[] = [
   {
     day: 1,
-    date: "08.24",
-    weekday: { ko: "월", en: "Mon" },
-    theme: { ko: "Kick-off", en: "Kick-off" },
+    date: "08.22",
+    weekday: { ko: "토", en: "Sat" },
+    phase: PHASE_PRE,
+    theme: { ko: "문제 공개 · 실질적 킥오프", en: "Problem Release · Kick-off" },
   },
   {
     day: 2,
-    date: "08.25",
-    weekday: { ko: "화", en: "Tue" },
-    theme: { ko: "PMF (제품–시장 적합성)", en: "PMF (Product–Market Fit)" },
+    date: "08.23",
+    weekday: { ko: "일", en: "Sun" },
+    phase: PHASE_PRE,
+    theme: { ko: "분석 · 자율 빌드 시작", en: "Deep-Dive · Build begins" },
   },
   {
     day: 3,
-    date: "08.26",
-    weekday: { ko: "수", en: "Wed" },
-    theme: { ko: "GTM (시장 진입 전략)", en: "GTM (Go-to-Market)" },
+    date: "08.24",
+    weekday: { ko: "월", en: "Mon" },
+    phase: PHASE_INTRO,
+    theme: { ko: "바이브 코딩 101", en: "Vibe Coding 101" },
   },
   {
     day: 4,
-    date: "08.27",
-    weekday: { ko: "목", en: "Thu" },
-    theme: { ko: "Scale-up", en: "Scale-up" },
+    date: "08.25",
+    weekday: { ko: "화", en: "Tue" },
+    phase: PHASE_INTRO,
+    theme: { ko: "바이브 코딩 102 · 수료", en: "Vibe Coding 102 · Certificate" },
   },
   {
     day: 5,
-    date: "08.28",
-    weekday: { ko: "금", en: "Fri" },
-    theme: { ko: "Calm Before the Storm", en: "Calm Before the Storm" },
+    date: "08.26",
+    weekday: { ko: "수", en: "Wed" },
+    phase: PHASE_BUILD,
+    theme: { ko: "키노트 · 중간 점검", en: "Keynote · Mid-point Check-in" },
   },
   {
     day: 6,
+    date: "08.27",
+    weekday: { ko: "목", en: "Thu" },
+    phase: PHASE_BUILD,
+    theme: { ko: "집중 빌드 · 멘토링", en: "Focused Build · Mentoring" },
+  },
+  {
+    day: 7,
+    date: "08.28",
+    weekday: { ko: "금", en: "Fri" },
+    phase: PHASE_BUILD,
+    theme: { ko: "집중 빌드 · 멘토링", en: "Focused Build · Mentoring" },
+  },
+  {
+    day: 8,
     date: "08.29",
     weekday: { ko: "토", en: "Sat" },
-    theme: { ko: "Demo Day", en: "Demo Day" },
+    phase: PHASE_BUILD,
+    theme: { ko: "데모데이 · 최종 발표", en: "Demo Day · Final Pitch" },
   },
 ];
 
@@ -96,421 +132,374 @@ export const categoryMeta: Record<
   { label: Bilingual; blurb: Bilingual; dot: string }
 > = {
   main: {
-    label: { ko: "메인 세션", en: "Main Session" },
+    label: { ko: "메인 트랙", en: "Main Track" },
     blurb: {
-      ko: "오프닝 · Founder Sharing · 데모데이 — 행사의 핵심 트랙 (유지)",
-      en: "Opening · Founder Sharing · Demo Day — the core event track (retained)",
+      ko: "문제 공개 · 키노트 · 데모데이 — 행사의 핵심 마디.",
+      en: "Problem Release · Keynote · Demo Day — the anchor moments.",
     },
     dot: "#fcd34d", // bright gold (matches the ★) — visible on the dark theme
   },
-  ambassador: {
-    label: { ko: "AI 앰배서더", en: "AI Ambassador" },
+  workshop: {
+    label: { ko: "워크숍", en: "Workshop" },
     blurb: {
-      ko: "선도적인 AI 도구 활용 사례를 공유합니다.",
-      en: "Shares leading AI-tool use cases.",
+      ko: "바이브 코딩 입문(101 · 102)과 수료증 — 처음이어도 출발선을 맞춥니다.",
+      en: "Vibe Coding 101 · 102 with a certificate — leveling the start line.",
     },
     dot: "#7C5CFF", // purple
   },
-  dinner: {
-    label: { ko: "테마 디너", en: "Theme Dinner" },
+  build: {
+    label: { ko: "빌드 / 자율", en: "Build / Open" },
     blurb: {
-      ko: "FinTech · Payment · Blockchain 등 분야별 디너 / 밋업.",
-      en: "FinTech · Payment · Blockchain theme dinners / meetups.",
+      ko: "문제 분석부터 데모데이까지, 팀별로 상시 진행되는 자율 빌드.",
+      en: "Self-paced team build, running from problem analysis to Demo Day.",
     },
-    dot: "#E0852A", // orange
+    dot: "#64748B", // slate grey
   },
-  meetup: {
-    label: { ko: "테마 밋업", en: "Theme Meetup" },
+  mentoring: {
+    label: { ko: "멘토링", en: "Mentoring" },
     blurb: {
-      ko: "분야별 생태계 인사와 만나는 캐주얼 네트워킹.",
-      en: "Casual networking with people across each ecosystem.",
-    },
-    dot: "#E0852A", // orange
-  },
-  empowerment: {
-    label: { ko: "창업가 정신", en: "Entrepreneurship Empowerment" },
-    blurb: {
-      ko: "“모두가 창업가가 될 필요는 없다” — 진로의 폭을 넓히는 세션.",
-      en: "“Not everyone needs to be a founder” — broadening the path.",
+      ko: "막히는 지점·피칭 준비를 멘토와 1:1로 풀어내는 시간.",
+      en: "1:1 time with mentors for blockers and pitch prep.",
     },
     dot: "#0F9D8F", // teal
   },
   network: {
     label: { ko: "네트워킹", en: "Networking" },
     blurb: {
-      ko: "팀빌딩 · 믹서 · 클로징 — 사람과 사람을 잇는 시간.",
-      en: "Team building · mixers · closing — connecting people.",
+      ko: "브리핑 · 네트워킹 · 믹서 — 사람과 사람을 잇는 시간.",
+      en: "Briefing · networking · mixers — connecting people.",
     },
     dot: "#2F6DF0", // blue
   },
-  build: {
-    label: { ko: "빌드 / 자율", en: "Build / Open" },
-    blurb: {
-      ko: "메인 세션 없이 빌드에 집중 — 수시 멘토링과 자율 빌드.",
-      en: "Focused build with no main session — rolling mentoring & open build.",
-    },
-    dot: "#64748B", // slate grey
-  },
 };
 
-const VENUE_TBC: Bilingual = {
-  ko: "장소 미정 · 확정 예정 (싱가포르)",
-  en: "Venue to be confirmed (Singapore)",
+// Location helpers — the only two venues in the new format.
+const ONLINE: Bilingual = { ko: "온라인", en: "Online" };
+const ONSITE: Bilingual = {
+  ko: "*SCAPE Lifejungle, 싱가포르 · 현장 집결",
+  en: "*SCAPE Lifejungle, Singapore · in person",
 };
+
+// Codepresso runs the Vibe Coding intro track (secured per the media brief).
+const CODEPRESSO_ORG = {
+  name: "Codepresso",
+  url: "https://codepresso.io",
+  desc: {
+    ko: "코드프레소는 AI·소프트웨어 교육 전문 기업으로, 이번 빌더톤의 바이브 코딩 입문 과정(101·102)을 주관합니다.",
+    en: "Codepresso is an AI & software-education company running the builderthon's Vibe Coding intro track (101 · 102).",
+  },
+} as const;
 
 export const schedule: BEvent[] = [
-  // ─── DAY 1 · Kick-off (08.24) ───────────────────────────────────────────────
+  // ─── DAY 1 · Problem Release (08.22) ────────────────────────────────────────
   {
-    id: "d1-opening",
+    id: "d1-problem-release",
     day: 1,
-    date: "08.24",
+    date: "08.22",
     category: "main",
-    timeOfDay: "PM",
-    title: { ko: "오프닝 세리머니", en: "Opening Ceremony" },
+    mode: "online",
+    timeOfDay: "AM",
+    title: { ko: "문제 공개", en: "Problem Release" },
     summary: {
-      ko: "6일간의 빌더톤을 여는 오프닝과 빌더 인사이트 연사.",
-      en: "Opening the 6-day builderthon with a builder insight talk.",
+      ko: "실제 기업의 AX 과제가 공개되고, 8일 빌드가 시작됩니다.",
+      en: "Real companies' AX problems drop — and the 8-day build begins.",
     },
     description: {
-      ko: "Day 1·6(킥오프·데모데이)은 오프라인으로 진행됩니다. 오프닝 세리머니에서 행사의 취지와 6일 여정을 소개하고, 빌더 인사이트 연사를 통해 ‘왜 지금 싱가포르에서 빌드하는가’에 대한 큰 그림을 공유합니다. 단발성 해커톤이 아닌 페스티벌형 빌더톤으로서의 분위기를 함께 만들어 갑니다.",
-      en: "Day 1 and Day 6 (Kick-off & Demo Day) run offline. The opening ceremony introduces the mission and the 6-day journey, followed by a builder insight talk on why now is the moment to build in Singapore. This is where the festival-style builderthon — not a one-shot hackathon — sets its tone.",
+      ko: "Day 1이 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 공개됩니다. 팀별 자율 빌드는 문제가 공개되는 이 순간부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이, 바로 만들기 시작할 수 있습니다.",
+      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now. Self-paced team build starts the moment the problems are released and runs continuously to Demo Day, so you can begin building straight away rather than waiting for a start whistle.",
     },
-    location: VENUE_TBC,
-    // speaker — TODO: confirm
+    location: ONLINE,
   },
   {
-    id: "d1-team-building",
+    id: "d1-briefing",
     day: 1,
-    date: "08.24",
+    date: "08.22",
     category: "network",
+    mode: "online",
     timeOfDay: "PM",
-    title: { ko: "아이데이션 & 팀빌딩", en: "Ideation & Team Building" },
+    title: { ko: "온라인 브리핑 & Q&A", en: "Online Briefing & Q&A" },
     summary: {
-      ko: "아이디어를 모으고 함께 빌드할 팀을 구성합니다.",
-      en: "Gather ideas and form the teams you'll build with.",
+      ko: "과제 설명과 진행 방식 안내, 그리고 질의응답.",
+      en: "Walking through the problems, how it runs, and your questions.",
     },
     description: {
-      ko: "참가자들이 서로의 관심사와 아이디어를 나누고, 6일간 함께 빌드할 팀을 구성하는 시간입니다. 학교(SMU·NUS·NTU)와 배경을 넘어 새로운 팀을 만나고, 바이브코딩(Vibe Coding)으로 곧장 프로토타입을 만들 수 있도록 방향을 잡습니다.",
-      en: "Participants share interests and ideas and form the teams they'll build with over six days. Meet new teammates across universities (SMU·NUS·NTU) and backgrounds, and set a direction so you can move straight into vibe coding your first prototype.",
+      ko: "공개된 과제를 함께 살펴보고, 8일간의 진행 방식·팀 구성·평가 기준을 안내하는 온라인 브리핑입니다. 궁금한 점은 그 자리에서 바로 묻고 답을 들을 수 있어, 첫날부터 막힘 없이 출발할 수 있습니다.",
+      en: "An online briefing that walks through the released problems and explains how the eight days work — team formation, schedule and judging. Bring your questions; you'll get answers on the spot so nobody starts the week unsure of how it runs.",
     },
-    location: VENUE_TBC,
+    location: ONLINE,
+  },
+
+  // ─── DAY 2 · Deep-Dive · Build begins (08.23) ───────────────────────────────
+  {
+    id: "d2-deepdive",
+    day: 2,
+    date: "08.23",
+    category: "build",
+    mode: "online",
+    timeOfDay: "AM",
+    title: { ko: "문제 분석 · 리서치", en: "Problem Deep-Dive" },
+    summary: {
+      ko: "과제를 깊이 파고들어 리서치하는 자율 시간.",
+      en: "Self-paced research, getting deep into the problem.",
+    },
+    description: {
+      ko: "공개된 AX 과제를 팀이 직접 파고드는 자율 리서치 시간입니다. 기업이 진짜로 풀고 싶은 것이 무엇인지, 어디에 기회가 있는지를 정의하면서 빌드의 방향을 잡습니다. 운영진이 정해주는 세션이 아니라, 팀이 스스로 주도하는 시간입니다.",
+      en: "Self-directed research where teams dig into the released AX problem — defining what the company actually wants solved and where the opportunity is, then setting a build direction. This is team-led time, not a hosted session.",
+    },
+    location: ONLINE,
   },
   {
-    id: "d1-welcome-mixer",
-    day: 1,
+    id: "d2-ideation",
+    day: 2,
+    date: "08.23",
+    category: "build",
+    mode: "online",
+    timeOfDay: "PM",
+    title: { ko: "팀 아이데이션 & 빌드 시작", en: "Team Ideation & Build" },
+    summary: {
+      ko: "아이디어를 모으고 곧장 프로토타입을 만들기 시작합니다.",
+      en: "Gather ideas and move straight into a first prototype.",
+    },
+    description: {
+      ko: "팀이 아이디어를 모으고, 가장 만들고 싶은 방향을 정해 곧바로 빌드에 들어가는 시간입니다. 입문 워크숍(Day 3–4)을 듣기 전이라도 괜찮습니다 — 일단 손을 움직여 보고, 워크숍에서 부족한 부분을 채우는 흐름으로 설계되어 있습니다.",
+      en: "Teams converge on an idea, pick the direction they most want to build, and start prototyping. It's fine if this comes before the intro workshops on Day 3–4 — the flow is designed so you get your hands moving first and fill the gaps in the workshops.",
+    },
+    location: ONLINE,
+  },
+
+  // ─── DAY 3 · Vibe Coding 101 (08.24) ────────────────────────────────────────
+  {
+    id: "d3-vibe-101",
+    day: 3,
     date: "08.24",
-    category: "network",
-    timeOfDay: "PM",
-    title: { ko: "웰컴 믹서", en: "Welcome Mixer" },
-    summary: {
-      ko: "참가자·연사·운영진이 함께하는 환영 네트워킹.",
-      en: "A welcome mixer for participants, speakers and the team.",
-    },
-    description: {
-      ko: "첫날을 마무리하는 캐주얼한 환영 믹서입니다. 싱가포르 한인 학생 커뮤니티가 학교별로 분리되어 있던 벽을 넘어, 참가자와 연사·운영진이 편안하게 어울리며 6일간의 빌드를 함께할 관계를 만듭니다.",
-      en: "A casual welcome mixer to close out day one. Crossing the university lines that have kept the Korean student community apart, participants, speakers and organizers mingle and build the relationships that will carry the next six days.",
-    },
-    location: VENUE_TBC,
-  },
-
-  // ─── DAY 2 · PMF (08.25) ────────────────────────────────────────────────────
-  {
-    id: "d2-founder-sharing",
-    day: 2,
-    date: "08.25",
-    category: "main",
-    timeOfDay: "PM",
-    title: { ko: "Founder Sharing — PMF", en: "Founder Sharing — PMF" },
-    summary: {
-      ko: "창업가가 직접 들려주는 제품–시장 적합성(PMF) 이야기.",
-      en: "A founder on finding Product–Market Fit, first-hand.",
-    },
-    description: {
-      ko: "현업 창업가가 제품–시장 적합성(PMF)을 찾아가는 과정을 직접 공유하는 메인 세션입니다. 초기 가설 검증, 사용자 발견, 처음의 ‘될 것 같다’는 신호를 읽는 법까지 — 학생들이 자신의 빌드에 바로 적용할 수 있는 실전 인사이트를 전합니다.",
-      en: "A main-track session where a founder shares how they found Product–Market Fit. From validating early hypotheses to user discovery and reading the first real signals of traction — practical insight students can apply directly to their own builds.",
-    },
-    location: VENUE_TBC,
-    // speaker — TODO: confirm
-  },
-  {
-    id: "d2-ai-use-case",
-    day: 2,
-    date: "08.25",
-    category: "ambassador",
-    timeOfDay: "PM",
-    title: { ko: "AI 활용 사례", en: "AI Use Case" },
-    summary: {
-      ko: "AI 앰배서더가 전하는 최신 AI 도구 활용 사례.",
-      en: "Leading AI-tool use cases from an AI Ambassador.",
-    },
-    description: {
-      ko: "AI 앰배서더가 실제 빌드와 업무에서 AI 도구를 어떻게 활용하는지 구체적인 사례로 보여 줍니다. 아이디어를 작동하는 프로토타입으로 빠르게 전환하는 워크플로를 익혀, 기술 장벽에 막히지 않고 자유롭게 빌드할 수 있도록 돕습니다.",
-      en: "An AI Ambassador walks through concrete examples of how leading AI tools are used in real builds and workflows. Learn how to turn ideas into working prototypes fast, so technical barriers never stand between you and shipping.",
-    },
-    location: VENUE_TBC,
-    // speaker — TODO: confirm
-  },
-  {
-    id: "d2-fintech-dinner",
-    day: 2,
-    date: "08.25",
-    category: "dinner",
-    timeOfDay: "PM",
-    title: { ko: "핀테크 디너", en: "FinTech Dinner" },
-    summary: {
-      ko: "핀테크를 주제로 한 디너 네트워킹.",
-      en: "A dinner gathering around FinTech.",
-    },
-    description: {
-      ko: "핀테크를 주제로 한 테마 디너입니다. 관련 분야의 창업가·비즈니스 오너와 학생들이 한 테이블에서 식사하며, 생태계 전반의 사람들과 ‘실제로’ 연결되는 장을 만듭니다.",
-      en: "A FinTech-themed dinner. Students share a table with founders and business owners in the space — creating a setting where you genuinely connect with people across the ecosystem, not just collect names.",
-    },
-    location: VENUE_TBC,
-  },
-
-  // ─── DAY 3 · GTM (08.26) ────────────────────────────────────────────────────
-  {
-    id: "d3-founder-sharing",
-    day: 3,
-    date: "08.26",
-    category: "main",
-    timeOfDay: "PM",
-    title: { ko: "Founder Sharing — GTM", en: "Founder Sharing — GTM" },
-    summary: {
-      ko: "시장 진입(GTM) 전략을 다루는 창업가 세션.",
-      en: "A founder session on Go-to-Market strategy.",
-    },
-    description: {
-      ko: "제품을 시장에 실제로 내보내는 ‘Go-to-Market(GTM)’을 주제로 한 메인 세션입니다. 첫 사용자 확보, 채널 선택, 초기 성장 전략 등 데모데이까지 빌드를 끌고 갈 실전 노하우를 창업가의 경험으로 풀어냅니다.",
-      en: "A main-track session on Go-to-Market — actually getting a product into the world. Acquiring first users, choosing channels and early growth strategy, drawn from a founder's own experience to carry your build all the way to Demo Day.",
-    },
-    location: VENUE_TBC,
-    // speaker — TODO: confirm
-  },
-  {
-    id: "d3-ai-use-case",
-    day: 3,
-    date: "08.26",
-    category: "ambassador",
-    timeOfDay: "PM",
-    title: { ko: "AI 활용 사례", en: "AI Use Case" },
-    summary: {
-      ko: "두 번째 AI 앰배서더 세션 — 심화 활용 사례.",
-      en: "A second AI Ambassador session — deeper use cases.",
-    },
-    description: {
-      ko: "두 번째 AI 활용 사례 세션입니다. 빌드가 본격화되는 시점에 맞춰, 더 깊이 있는 AI 워크플로와 자동화 사례를 공유해 팀들이 제품의 완성도와 속도를 동시에 끌어올릴 수 있도록 돕습니다.",
-      en: "A second AI Use Case session. Timed for when builds are in full swing, it shares deeper AI workflows and automation examples so teams can raise both the polish and the velocity of their product.",
-    },
-    location: VENUE_TBC,
-    // speaker — TODO: confirm
-  },
-  {
-    id: "d3-payment-dinner",
-    day: 3,
-    date: "08.26",
-    category: "dinner",
-    timeOfDay: "PM",
-    title: { ko: "페이먼트 디너", en: "Payment Dinner" },
-    summary: {
-      ko: "페이먼트 분야를 주제로 한 디너 밋업.",
-      en: "A dinner meetup focused on Payments.",
-    },
-    description: {
-      ko: "페이먼트(결제) 분야를 주제로 한 디너 밋업입니다. 결제·핀테크 인접 분야의 실무자·창업가와 편안한 자리에서 대화하며, 학생들이 산업의 현재와 기회를 가까이서 들여다볼 수 있게 합니다.",
-      en: "A Payments-themed dinner meetup. Over a relaxed meal with practitioners and founders adjacent to payments and fintech, students get a close-up view of where the industry is and where the openings are.",
-    },
-    location: VENUE_TBC,
-  },
-
-  // ─── DAY 4 · Scale-up (08.27) ───────────────────────────────────────────────
-  {
-    id: "d4-founder-sharing",
-    day: 4,
-    date: "08.27",
-    category: "main",
-    timeOfDay: "PM",
-    title: { ko: "Founder Sharing — Scale-up", en: "Founder Sharing — Scale-up" },
-    summary: {
-      ko: "스케일업 단계를 다루는 창업가 메인 세션.",
-      en: "A founder main-session on the Scale-up stage.",
-    },
-    description: {
-      ko: "PMF와 GTM을 지나 ‘스케일업’ 단계로 나아가는 이야기를 다루는 메인 세션입니다. 조직과 제품을 키우며 마주하는 현실적인 도전과 의사결정을, 그 길을 먼저 걸어 본 창업가의 시선으로 공유합니다.",
-      en: "A main-track session on moving past PMF and GTM into Scale-up. The real challenges and decisions that come with growing an organization and a product — shared through the eyes of a founder who has walked the path first.",
-    },
-    location: VENUE_TBC,
-    // speaker — TODO: confirm
-  },
-  {
-    id: "d4-empowerment",
-    day: 4,
-    date: "08.27",
-    category: "empowerment",
-    timeOfDay: "PM",
-    title: {
-      ko: "Empowerment (창업가 정신 세션)",
-      en: "Empowerment (Entrepreneurship session)",
-    },
-    summary: {
-      ko: "“모두가 창업가가 될 필요는 없다” — 진로의 폭을 넓히는 세션.",
-      en: "“Not everyone needs to be a founder” — widening the path.",
-    },
-    description: {
-      ko: "“모두가 창업가가 될 필요는 없다”는 메시지를 중심으로, 창업이라는 길 외에도 빌더로서 가질 수 있는 다양한 진로와 기여 방식을 함께 들여다봅니다. 부담이 아니라 가능성으로서의 창업가 정신을 이야기하며, 각자에게 맞는 다음 걸음을 찾도록 돕습니다.",
-      en: "Built around the idea that not everyone needs to be a founder, this session explores the many paths and ways to contribute as a builder beyond starting a company. It frames entrepreneurship as possibility rather than pressure, helping each person find the next step that fits them.",
-    },
-    location: VENUE_TBC,
-    // speaker — TODO: confirm
-  },
-  {
-    id: "d4-blockchain-meetup",
-    day: 4,
-    date: "08.27",
-    category: "meetup",
-    timeOfDay: "PM",
+    category: "workshop",
+    mode: "online",
+    timeOfDay: "AM",
     confirmed: true,
-    title: { ko: "블록체인 밋업", en: "Blockchain Meetup" },
+    title: { ko: "바이브 코딩 101", en: "Vibe Coding 101" },
     summary: {
-      ko: "Alchemy GTM Lead의 지원이 확정된 블록체인 밋업.",
-      en: "Blockchain-focused meetup with confirmed support from an Alchemy GTM Lead.",
+      ko: "코딩이 처음이어도 OK — 바이브 코딩의 기본기를 익힙니다.",
+      en: "New to coding? Start here — the fundamentals of vibe coding.",
     },
     description: {
-      ko: "크립토 인프라, Web3 제품, 그리고 생태계의 GTM 관점에 관심 있는 학생들을 위한 블록체인 밋업입니다. Alchemy GTM Lead의 지원이 확정되었으며, 구체적인 연사 정보는 확정 후 업데이트합니다.",
-      en: "A focused blockchain meetup for students interested in crypto infrastructure, web3 products, and go-to-market lessons from the ecosystem. Support from an Alchemy GTM Lead has been confirmed; exact speaker details will be updated once finalized.",
+      ko: "참가자의 약 60%가 바이브 코딩이 처음입니다. 그래서 모두의 출발선을 맞추는 입문 워크숍을 준비했습니다. AI 도구로 아이디어를 작동하는 프로토타입으로 바꾸는 기본기를 핸즈온으로 익혀, 기술 장벽이 아니라 아이디어가 한계가 되도록 합니다. 입문 과정은 코드프레소가 주관합니다.",
+      en: "About 60% of participants are trying vibe coding for the first time, so this intro workshop levels the start line. A hands-on run through the fundamentals of turning ideas into working prototypes with AI tools — so your ideas, not the tooling, are the limit. The intro track is run by Codepresso.",
     },
-    // TODO: confirm — specific speaker name not provided yet; using role only.
-    speaker: { ko: "Alchemy GTM Lead", en: "Alchemy GTM Lead" },
-    location: VENUE_TBC,
-    org: {
-      name: "Alchemy",
-      url: "https://www.alchemy.com",
-      desc: {
-        ko: "Alchemy는 Ethereum을 비롯한 여러 블록체인 위에서 앱을 만들 수 있게 해주는 대표적인 Web3 개발자 인프라 플랫폼입니다. 노드·API·SDK를 제공하며, 전 세계 수많은 Web3 팀이 사용합니다.",
-        en: "Alchemy is a leading web3 developer-infrastructure platform that lets teams build apps on Ethereum and other chains — node infrastructure, APIs, and SDKs used by web3 teams worldwide.",
-      },
-    },
+    location: ONLINE,
+    org: CODEPRESSO_ORG,
     opportunities: [
       {
-        ko: "Alchemy GTM Lead에게서 Web3·크립토의 실제 시장 진입(GTM) 전략을 직접 듣기",
-        en: "Hear real go-to-market (GTM) lessons for web3 & crypto straight from an Alchemy GTM Lead.",
+        ko: "코딩 경험이 없어도 첫 작동하는 프로토타입을 직접 만들어 보기",
+        en: "Ship your first working prototype, even with zero coding background.",
       },
       {
-        ko: "크립토 인프라·Web3 제품을 만드는 사람들과 가까이서 네트워킹",
-        en: "Network up close with people building crypto infrastructure and web3 products.",
-      },
-      {
-        ko: "블록체인 생태계의 커리어·기회가 어디에 열려 있는지 감 잡기",
-        en: "Get a feel for where the careers and openings are across the blockchain ecosystem.",
+        ko: "AI 바이브 코딩 워크플로를 핸즈온으로 체득",
+        en: "Pick up an AI vibe-coding workflow hands-on, not just in theory.",
       },
     ],
   },
   {
-    id: "d4-adhoc-mentoring",
+    id: "d3-networking",
+    day: 3,
+    date: "08.24",
+    category: "network",
+    mode: "online",
+    timeOfDay: "PM",
+    title: { ko: "네트워킹", en: "Networking" },
+    summary: {
+      ko: "학교를 넘어 빌더들과 가볍게 연결되는 시간.",
+      en: "Easy connections with builders across universities.",
+    },
+    description: {
+      ko: "학교(NUS·NTU·SMU)와 배경의 벽을 넘어, 같은 주에 함께 빌드하는 사람들과 가볍게 연결되는 네트워킹 시간입니다. 팀을 찾거나, 다른 팀의 접근에서 자극을 받거나, 그냥 좋은 사람을 만나기에 좋은 자리입니다.",
+      en: "A relaxed networking block that crosses the lines between universities (NUS·NTU·SMU) and backgrounds. A good place to find a team, draw energy from how others are approaching their build, or simply meet good people.",
+    },
+    location: ONLINE,
+  },
+
+  // ─── DAY 4 · Vibe Coding 102 · Certificate (08.25) ──────────────────────────
+  {
+    id: "d4-vibe-102",
     day: 4,
+    date: "08.25",
+    category: "workshop",
+    mode: "online",
+    timeOfDay: "AM",
+    confirmed: true,
+    title: { ko: "바이브 코딩 102 · 수료증", en: "Vibe Coding 102 · Certificate" },
+    summary: {
+      ko: "한 단계 더 — 입문 과정을 마치면 수료증이 함께합니다.",
+      en: "One level up — finish the track and earn a certificate.",
+    },
+    description: {
+      ko: "101에서 익힌 기본기 위에 한 단계를 더 쌓는 워크숍입니다. 에이전트·UI·데이터 연동과 배포 등 빌드를 끝까지 끌고 가는 데 필요한 흐름을 다루고, 입문 과정을 마치면 수료증이 발급됩니다. 이 역시 코드프레소가 주관합니다.",
+      en: "Building on the fundamentals from 101, this workshop adds the next layer — agents, UI, data integration and deployment, the flow you need to carry a build all the way through. Finish the track and you receive a certificate of completion. Also run by Codepresso.",
+    },
+    location: ONLINE,
+    org: CODEPRESSO_ORG,
+    opportunities: [
+      {
+        ko: "입문 과정 수료증으로 ‘나도 만들 수 있다’를 증명",
+        en: "Earn a completion certificate that proves you can build.",
+      },
+      {
+        ko: "프로토타입을 배포까지 끌고 가는 흐름을 학습",
+        en: "Learn the flow that carries a prototype all the way to deploy.",
+      },
+    ],
+  },
+  {
+    id: "d4-networking",
+    day: 4,
+    date: "08.25",
+    category: "network",
+    mode: "online",
+    timeOfDay: "PM",
+    title: { ko: "네트워킹", en: "Networking" },
+    summary: {
+      ko: "본격 빌드 전, 다시 한 번 사람들과 연결되는 자리.",
+      en: "One more chance to connect before the build ramps up.",
+    },
+    description: {
+      ko: "입문 과정을 마무리하며 다시 한 번 참가자들이 어울리는 네트워킹입니다. Day 5 현장 집결을 앞두고, 온라인으로 쌓아 온 관계를 한 번 더 다지는 시간입니다.",
+      en: "A networking block to close out the intro track. With the Day 5 in-person gathering ahead, it's a chance to firm up the relationships built online so far.",
+    },
+    location: ONLINE,
+  },
+
+  // ─── DAY 5 · Keynote · Mid-point Check-in (08.26 · OFFLINE) ──────────────────
+  {
+    id: "d5-keynote",
+    day: 5,
+    date: "08.26",
+    category: "main",
+    mode: "offline",
+    timeOfDay: "AM",
+    title: { ko: "키노트 & 중간 점검", en: "Keynote & Check-in" },
+    summary: {
+      ko: "개막이 아닌 중간 점검 — 빌드는 이미 진행 중입니다.",
+      en: "A mid-point check-in, not an opening — the build is already underway.",
+    },
+    description: {
+      ko: "Day 5는 ‘개막’이 아니라 중간 점검입니다. 빌드는 이미 Day 1부터 진행 중이고, 이날은 키노트와 함께 각 팀의 진행 상황을 점검하며 데모데이까지의 남은 절반을 정렬하는 자리입니다. 온라인으로 진행되던 일정 중, 처음으로 전원이 *SCAPE Lifejungle 현장에 모입니다.",
+      en: "Day 5 is a mid-point check-in, not an opening. The build has been running since Day 1; this is where a keynote and a progress check across teams realign everyone for the second half toward Demo Day. It's also the first time the whole cohort gathers in person at *SCAPE Lifejungle.",
+    },
+    location: ONSITE,
+  },
+  {
+    id: "d5-build",
+    day: 5,
+    date: "08.26",
+    category: "build",
+    mode: "offline",
+    timeOfDay: "PM",
+    title: { ko: "자율 빌드 (현장)", en: "Independent Build (on-site)" },
+    summary: {
+      ko: "현장에서 같은 공간에 모여 집중 빌드.",
+      en: "Heads-down build, together in one room.",
+    },
+    description: {
+      ko: "중간 점검에 이어, 팀들이 같은 공간에서 각자의 제품을 다듬는 현장 자율 빌드입니다. 서로의 진행을 보며 자극을 주고받고, 운영진과 멘토가 상주해 필요한 도움을 그때그때 제공합니다.",
+      en: "Following the check-in, an on-site build block where teams polish their products in one shared space — drawing energy from each other's progress, with organizers and mentors on hand to help whenever it's needed.",
+    },
+    location: ONSITE,
+  },
+
+  // ─── DAY 6 · Focused Build · Mentoring (08.27) ──────────────────────────────
+  {
+    id: "d6-build",
+    day: 6,
     date: "08.27",
     category: "build",
-    timeOfDay: "PM",
-    title: { ko: "수시 멘토링", en: "Ad-hoc Mentoring" },
-    summary: {
-      ko: "Day 4–5 동안 필요할 때 받는 롤링 멘토링.",
-      en: "Rolling mentoring across Day 4–5, whenever you need it.",
-    },
-    description: {
-      ko: "Day 4–5에 걸쳐, 정해진 시간표 대신 팀의 필요에 맞춰 수시로 진행되는 멘토링입니다. 막히는 지점, 피칭 준비, 기술적 난제 등 무엇이든 멘토와 1:1로 풀어내며 데모데이를 준비합니다. (멘토 라인업은 파트너 확정에 따라 안내될 예정입니다.)",
-      en: "Across Day 4–5, rolling ad-hoc mentoring that follows each team's needs rather than a fixed timetable. Work through blockers, pitch prep or technical challenges one-on-one with mentors as you head into Demo Day. (Mentor line-up to be announced as partners are confirmed.)",
-    },
-    location: VENUE_TBC,
-    // speaker / mentors — TODO: confirm
-  },
-
-  // ─── DAY 5 · Calm Before the Storm (08.28) ──────────────────────────────────
-  {
-    id: "d5-no-main",
-    day: 5,
-    date: "08.28",
-    category: "build",
+    mode: "online",
     timeOfDay: "AM",
-    title: { ko: "메인 세션 없음 (빌드 집중)", en: "No Main Session (Build Focus)" },
+    title: { ko: "자율 빌드", en: "Independent Build" },
     summary: {
-      ko: "데모데이 전날, 메인 세션 없이 빌드에 집중하는 날.",
-      en: "The day before Demo Day — no sessions, pure build.",
+      ko: "각자 페이스로 제품을 끌어올리는 집중 빌드.",
+      en: "Focused build, each team at its own pace.",
     },
     description: {
-      ko: "‘폭풍 전야(Calm Before the Storm)’ — 데모데이를 하루 앞두고 별도의 메인 세션 없이 팀들이 온전히 빌드에 몰입하는 날입니다. 중간 빌드업 기간은 하이브리드·모듈형으로 운영되어, 각 팀이 자기 페이스로 제품을 마무리할 수 있습니다.",
-      en: "Calm Before the Storm — with Demo Day one day away, there is no main session so teams can immerse themselves fully in building. The build-up period runs in a hybrid, modular format, letting each team finish their product at its own pace.",
+      ko: "데모데이를 향해 제품의 완성도를 끌어올리는 집중 빌드 시간입니다. 온라인으로 각 팀이 자기 페이스로 진행하며, 오후 멘토링과 이어집니다.",
+      en: "Focused build time to raise the polish of your product on the way to Demo Day. Teams work online at their own pace, flowing into the afternoon mentoring.",
     },
-    location: VENUE_TBC,
+    location: ONLINE,
   },
   {
-    id: "d5-adhoc-mentoring",
-    day: 5,
-    date: "08.28",
-    category: "build",
+    id: "d6-mentoring",
+    day: 6,
+    date: "08.27",
+    category: "mentoring",
+    mode: "online",
     timeOfDay: "PM",
-    title: { ko: "수시 멘토링", en: "Ad-hoc Mentoring" },
+    title: { ko: "멘토링 1:1", en: "Mentoring 1:1" },
     summary: {
-      ko: "Day 4–5 동안 필요할 때 받는 롤링 멘토링.",
-      en: "Rolling mentoring across Day 4–5, whenever you need it.",
+      ko: "막히는 지점·피칭 준비를 멘토와 1:1로.",
+      en: "Blockers and pitch prep, one-on-one with mentors.",
     },
     description: {
-      ko: "Day 4–5에 걸쳐, 정해진 시간표 대신 팀의 필요에 맞춰 수시로 진행되는 멘토링입니다. 막히는 지점, 피칭 준비, 기술적 난제 등 무엇이든 멘토와 1:1로 풀어내며 데모데이를 준비합니다. (멘토 라인업은 파트너 확정에 따라 안내될 예정입니다.)",
-      en: "Across Day 4–5, rolling ad-hoc mentoring that follows each team's needs rather than a fixed timetable. Work through blockers, pitch prep or technical challenges one-on-one with mentors as you head into Demo Day. (Mentor line-up to be announced as partners are confirmed.)",
+      ko: "정해진 시간표 대신 팀의 필요에 맞춰 진행되는 1:1 멘토링입니다. 막히는 지점, 기술적 난제, 피칭 준비 등 무엇이든 멘토와 함께 풀어내며 데모데이를 준비합니다. (멘토 라인업은 파트너 확정에 따라 안내될 예정입니다.)",
+      en: "One-on-one mentoring that follows each team's needs rather than a fixed timetable. Work through blockers, technical challenges or pitch prep with a mentor as you head into Demo Day. (Mentor line-up to be announced as partners are confirmed.)",
     },
-    location: VENUE_TBC,
-    // speaker / mentors — TODO: confirm
-  },
-  {
-    id: "d5-open-build",
-    day: 5,
-    date: "08.28",
-    category: "build",
-    timeOfDay: "PM",
-    title: { ko: "자율 빌드 (Open Build)", en: "Open Build" },
-    summary: {
-      ko: "오피스 아워 형식의 열린 자율 빌드 시간.",
-      en: "Free build / office-hours style open work time.",
-    },
-    description: {
-      ko: "오피스 아워 형식의 열린 자율 빌드 시간입니다. 팀들이 같은 공간에서 각자의 제품을 다듬고, 서로의 진행 상황을 보며 자극을 주고받습니다. 운영진과 멘토가 상주해 필요한 도움을 그때그때 제공합니다.",
-      en: "An open, office-hours-style build block. Teams polish their products in a shared space, drawing energy from seeing each other's progress, with organizers and mentors on hand to help whenever it's needed.",
-    },
-    location: VENUE_TBC,
+    location: ONLINE,
+    // mentors — TODO: confirm
   },
 
-  // ─── DAY 6 · Demo Day (08.29) ───────────────────────────────────────────────
+  // ─── DAY 7 · Focused Build · Mentoring (08.28) ──────────────────────────────
   {
-    id: "d6-final-pitch",
-    day: 6,
+    id: "d7-build",
+    day: 7,
+    date: "08.28",
+    category: "build",
+    mode: "online",
+    timeOfDay: "AM",
+    title: { ko: "자율 빌드", en: "Independent Build" },
+    summary: {
+      ko: "데모데이 전, 제품을 마무리하는 마지막 빌드.",
+      en: "The last build push before Demo Day.",
+    },
+    description: {
+      ko: "데모데이를 하루 앞두고 제품을 마무리하는 집중 빌드입니다. 남은 기능을 다듬고, 데모 시나리오를 점검하며, 오후 멘토링에서 마지막 피드백을 받습니다.",
+      en: "With Demo Day one day away, a focused build to finish the product — tightening the last features, rehearsing the demo, and taking final feedback in the afternoon mentoring.",
+    },
+    location: ONLINE,
+  },
+  {
+    id: "d7-mentoring",
+    day: 7,
+    date: "08.28",
+    category: "mentoring",
+    mode: "online",
+    timeOfDay: "PM",
+    title: { ko: "멘토링 1:1", en: "Mentoring 1:1" },
+    summary: {
+      ko: "피칭 리허설과 마지막 점검을 위한 1:1.",
+      en: "One-on-one for pitch rehearsal and final checks.",
+    },
+    description: {
+      ko: "데모데이 직전, 피칭 리허설과 마지막 점검에 초점을 둔 1:1 멘토링입니다. 발표 구성, 데모 흐름, 예상 질문까지 멘토와 함께 다듬어 무대에 오를 준비를 마칩니다.",
+      en: "The day before Demo Day, one-on-one mentoring focused on pitch rehearsal and final checks. Refine your narrative, demo flow and likely questions with a mentor so you're ready for the stage.",
+    },
+    location: ONLINE,
+    // mentors — TODO: confirm
+  },
+
+  // ─── DAY 8 · Demo Day (08.29 · OFFLINE) ─────────────────────────────────────
+  {
+    id: "d8-final-pitch",
+    day: 8,
     date: "08.29",
     category: "main",
-    timeOfDay: "PM",
-    title: { ko: "최종 피칭 및 시상", en: "Final Pitch & Awards" },
+    mode: "offline",
+    timeOfDay: "AM",
+    title: { ko: "최종 발표 & 시상", en: "Final Pitch & Awards" },
     summary: {
-      ko: "팀별 최종 피칭과 심사, 그리고 시상.",
-      en: "Final team pitches, judging and awards.",
+      ko: "8일 빌드를 마무리하는 데모데이 — 최종 피칭과 시상.",
+      en: "Demo Day — final pitches and awards close out the 8-day build.",
     },
     description: {
-      ko: "6일간의 빌드를 마무리하는 데모데이의 하이라이트입니다. 각 팀이 완성한 제품을 무대에서 피칭하고 심사를 거쳐 시상이 이뤄집니다. 피칭은 가능한 한 영어로 진행되어, 싱가포르에서 요구되는 글로벌 스탠다드 역량을 직접 훈련합니다.",
-      en: "The highlight of Demo Day, closing out six days of building. Each team pitches their finished product on stage, judging follows, and awards are presented. Pitches run in English wherever possible — training the global-standard capability Singapore expects.",
+      ko: "8일간의 빌드를 마무리하는 데모데이입니다. 각 팀이 실제 기업의 AX 과제를 풀어 만든 제품을 무대에서 피칭하고, 심사를 거쳐 시상이 이뤄집니다. 전원이 다시 *SCAPE Lifejungle 현장에 모여, ‘데모로 끝나지 않는 성공의 경험’을 함께 마무리합니다.",
+      en: "Demo Day closes out eight days of building. Each team pitches the product they built to solve a real company's AX problem, judging follows, and awards are presented. The whole cohort gathers again at *SCAPE Lifejungle to finish on a success that goes beyond a demo.",
     },
-    location: VENUE_TBC,
-  },
-  {
-    id: "d6-closing-networking",
-    day: 6,
-    date: "08.29",
-    category: "network",
-    timeOfDay: "PM",
-    title: { ko: "클로징 네트워킹", en: "Closing Networking" },
-    summary: {
-      ko: "행사를 마무리하는 클로징 네트워킹.",
-      en: "Closing networking to wrap the event.",
-    },
-    description: {
-      ko: "빌더톤을 마무리하는 클로징 네트워킹입니다. 6일간 함께한 참가자·연사·창업가·운영진이 마지막으로 모여, 이번 행사가 일회성에 그치지 않고 싱가포르 한인 학생 빌더 커뮤니티로 이어지도록 다음을 약속하는 자리입니다.",
-      en: "A closing networking session to wrap up the builderthon. Participants, speakers, founders and organizers gather one last time — turning a single event into the start of a durable community of Korean student builders in Singapore.",
-    },
-    location: VENUE_TBC,
+    location: ONSITE,
   },
 ];
