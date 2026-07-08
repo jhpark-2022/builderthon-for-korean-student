@@ -6,40 +6,37 @@ just the WebGL field, toggled by `HERO_VIDEO.enabled` in
 
 ## Current clip
 
-`hero.webm` / `hero.mp4` / `hero-poster.jpg` are derived from Pexels stock
-video **#8266171** (free for commercial use, no attribution required —
-https://www.pexels.com/video/programmer-using-a-laptop-8266171/). Re-encoded
-to 1080p, silent, ~350–380KB each via the ffmpeg recipe below. To swap it,
-replace the three files (same names) and re-run the recipe.
+`metal-human.mp4` / `metal-human-poster.jpg` — a chrome / liquid-metal humanoid
+loop from **GetLayers** (https://getlayers.ai), no watermark. Source master was
+a 4K (2910×2176) 10s silent loop (~57MB); re-encoded here to 1080p-height,
+silent H.264 at **~665KB** (+ a 114KB poster) via the recipe below.
+
+Only the MP4 ships — at this bitrate a VP9 WebM came out *larger*, so it wasn't
+worth serving. H.264 is universally supported, so the single mp4 is enough.
 
 ## How to replace / re-encode
 
 1. Make a short, seamless, **silent** loop (~8–15s). Source it however you like
-   (AI: Sora / Runway / Veo / Kling · stock: Pexels / Coverr · or shoot it).
+   (AI: Sora / Runway / Veo / Kling · stock: Pexels / Coverr / GetLayers).
 
-2. Optimise it for the web — small files, no audio, 1080p. With ffmpeg:
+2. Optimise it for the web — small file, no audio, 1080p. With ffmpeg:
 
    ```bash
-   # MP4 (H.264) fallback — Safari / iOS
-   ffmpeg -i source.mp4 -t 12 -an -vf "scale=1920:-2" \
-     -c:v libx264 -crf 28 -preset slow -movflags +faststart hero.mp4
+   # MP4 (H.264) — scale to 1080px height, strip audio, faststart for streaming
+   ffmpeg -i source.mp4 -an -vf "scale=-2:1080" \
+     -c:v libx264 -profile:v high -pix_fmt yuv420p \
+     -crf 30 -preset slow -movflags +faststart metal-human.mp4
 
-   # WebM (VP9) — smaller, loaded first
-   ffmpeg -i source.mp4 -t 12 -an -vf "scale=1920:-2" \
-     -c:v libvpx-vp9 -crf 34 -b:v 0 hero.webm
-
-   # Poster still (first frame), shown before the video loads / if it fails
-   ffmpeg -i source.mp4 -vf "select=eq(n\,0)" -q:v 3 hero-poster.jpg
+   # Poster still, shown before the video loads / if it fails
+   ffmpeg -i source.mp4 -vf "scale=-2:1080" -q:v 4 metal-human-poster.jpg
    ```
 
-   Target: each video **≤ ~1–2MB** (zero100.org's hero is ~940KB webm / 1.4MB mp4).
+   Target: video **≤ ~1MB**. (Raise `-crf` for smaller / lower `-crf` for crisper.)
 
-3. Drop the three files in this folder:
-   - `hero.webm`
-   - `hero.mp4`
-   - `hero-poster.jpg`
+3. Keep the same two filenames (`metal-human.mp4`, `metal-human-poster.jpg`) so
+   `HERO_VIDEO` in `Journey.tsx` needs no edit — or update the paths there.
 
-4. In `components/journey/Journey.tsx`, set `HERO_VIDEO.enabled = true`.
+4. Ensure `HERO_VIDEO.enabled = true` in `components/journey/Journey.tsx`.
 
 That's it — the rest of the page keeps the WebGL background; only the hero
 swaps to video, with a dark legibility scrim baked in.
