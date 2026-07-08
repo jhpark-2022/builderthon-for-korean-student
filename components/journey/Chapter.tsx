@@ -10,11 +10,15 @@ export default function Chapter({
   children,
   align = "center",
   className = "",
+  background,
 }: {
   id?: string;
   children: ReactNode;
   align?: "left" | "center" | "right";
   className?: string;
+  // optional full-bleed layer rendered behind the content rail (e.g. a hero
+  // video). It positions itself absolutely; the rail sits above it via z-10.
+  background?: ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
@@ -23,32 +27,53 @@ export default function Chapter({
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
-      ([e]) => setShown(e.isIntersecting),
+      ([e]) => {
+        // Reveal once and stay revealed — don't re-hide when scrolled back past.
+        if (e.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
       { threshold: 0.25 }
     );
     io.observe(el);
     return () => io.disconnect();
   }, []);
 
-  const alignCls =
-    align === "left" ? "items-start text-left"
-    : align === "right" ? "items-end text-right"
-    : "items-center text-center";
+  // text alignment for the inner column
+  const textCls =
+    align === "left" ? "text-left"
+    : align === "right" ? "text-right"
+    : "text-center";
+
+  // how the column sits inside the centered rail.
+  // mobile: always full-width single column.
+  // desktop: left/right become a ~58% column nudged to one side (an editorial
+  // offset within the rail); center stays full-width-centered.
+  const offsetCls =
+    align === "left" ? "lg:mr-auto lg:max-w-[58%]"
+    : align === "right" ? "lg:ml-auto lg:max-w-[58%]"
+    : "mx-auto";
 
   return (
     <section
       id={id}
       ref={ref}
-      className={`relative flex min-h-screen w-full flex-col justify-center px-6 py-24 sm:px-10 ${alignCls} ${className}`}
+      className={`relative flex min-h-screen w-full flex-col justify-center px-6 py-24 sm:px-10 ${background ? "isolate" : ""} ${className}`}
     >
-      <div
-        className="w-full max-w-3xl transition-all duration-700 ease-out"
-        style={{
-          opacity: shown ? 1 : 0,
-          transform: shown ? "translateY(0)" : "translateY(40px)",
-        }}
-      >
-        {children}
+      {background}
+      {/* centered content rail — the real boundary (z-10 keeps it above any
+          full-bleed background layer) */}
+      <div className="relative z-10 mx-auto w-full max-w-6xl">
+        <div
+          className={`w-full transition-all duration-700 ease-out ${textCls} ${offsetCls}`}
+          style={{
+            opacity: shown ? 1 : 0,
+            transform: shown ? "translateY(0)" : "translateY(40px)",
+          }}
+        >
+          {children}
+        </div>
       </div>
     </section>
   );

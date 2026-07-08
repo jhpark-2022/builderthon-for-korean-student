@@ -55,10 +55,14 @@ export class CameraController {
     const driftX = this.reduced ? 0 : Math.sin(elapsed * MOTION.driftSpeed) * 0.8;
     const driftY = this.reduced ? 0 : Math.cos(elapsed * MOTION.driftSpeed * 0.8) * 0.5;
 
+    // Under reduced-motion, nearly freeze the scroll-driven camera travel so
+    // scrolling no longer flies through the field (idle drift/roll are already 0).
+    const scrollTravel = this.reduced ? 0.15 : 1;
+
     // dolly forward (decreasing z) as we scroll down — flying into the field
-    this.camera.position.z = 30 + breathe - s * MOTION.scrollDollyZ;
+    this.camera.position.z = 30 + breathe - s * MOTION.scrollDollyZ * scrollTravel;
     this.camera.position.x = driftX;
-    this.camera.position.y = driftY + s * MOTION.scrollDriftY;
+    this.camera.position.y = driftY + s * MOTION.scrollDriftY * scrollTravel;
 
     // ── rotational: pointer + a gentle scroll roll ──
     this.yaw = damp(this.yaw, this.targetYaw, 4, dt);

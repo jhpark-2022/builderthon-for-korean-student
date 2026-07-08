@@ -86,9 +86,10 @@ void main(){
     vec3 tangent = normalize(cross(dir, vec3(0.0, 0.0, 1.0)) + 1e-4);
     float grip = smoothstep(90.0, 4.0, hd) * parallax;
 
-    // curve early (reveal), spiral hard later (portal), race in (pull)
-    float inward = grip * (uReveal * 6.0 + uPull * 16.0);
-    float swirl  = grip * (uReveal * 3.0 + uPortal * 14.0);
+    // Gentle gravitational drift only — greatly reduced so particles no longer
+    // spiral into a tight, bright convergence ring at the bottom of the page.
+    float inward = grip * (uReveal * 1.2 + uPull * 3.0);
+    float swirl  = grip * (uReveal * 0.5 + uPortal * 2.5);
     disp += dir * inward + tangent * swirl;
   }
   pos += disp;
@@ -105,11 +106,14 @@ void main(){
   float zCam = -mv.z;
   vDepth = clamp((zCam - 6.0) / 60.0, 0.0, 1.0);
 
-  // size: distance attenuation, pointer glow-up, and growth as they near the portal
-  float size = aScale * (1.0 + infl * 1.8 + vNear * uPortal * 2.0);
+  // size: distance attenuation, pointer glow-up, and growth as they near the portal.
+  // Inflation factors dialed down so particles stay refined points, not big bokeh.
+  float size = aScale * (1.0 + infl * 1.0 + vNear * uPortal * 0.8);
   // trails: enlarge points along the pull to read as streaks (cheap stand-in)
-  size *= (1.0 + vSpeed * 2.5);
-  gl_PointSize = size * uPixelRatio * (220.0 / max(zCam, 0.001));
+  size *= (1.0 + vSpeed * 1.2);
+  // smaller base scale + a tight max clamp so a particle that drifts close to
+  // the camera can never balloon into a large foreground sphere
+  gl_PointSize = min(size * uPixelRatio * (130.0 / max(zCam, 0.001)), 34.0 * uPixelRatio);
 
   vGlow = aScale;
 }

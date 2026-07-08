@@ -1,13 +1,14 @@
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+/* Pretendard is now self-hosted via next/font/local (see app/layout.tsx) and
+   exposed as --font-pretendard — no render-blocking third-party @import. */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-sans: "Pretendard", "Pretendard Variable", -apple-system,
-    BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif;
+  --font-sans: var(--font-pretendard), "Pretendard", "Pretendard Variable",
+    -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
 
   /* Core palette */
   --bg:          #080810;
@@ -32,7 +33,11 @@
   --radius-card: 16px;
 }
 
-html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+/* Root font bumped 16px -> 18px so the whole site reads larger and fills the
+   screen: every rem-based text size, spacing value, and max-width content rail
+   scales up together. The hero "Build" headline is held at its size separately
+   (its clamp caps were trimmed to compensate). */
+html { font-size: 112.5%; scroll-behavior: smooth; scroll-padding-top: 96px; }
 
 body {
   background-color: var(--bg);
@@ -43,12 +48,24 @@ body {
   overflow-x: hidden;
 }
 
+/* Use the dynamic viewport height where supported so the mobile browser's
+   collapsing address bar doesn't leave empty scroll space at the full-height
+   hero/closing chapters. Falls back to 100vh on older engines. */
+@supports (min-height: 100dvh) {
+  .min-h-screen { min-height: 100dvh; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
   }
+  /* Exempt the decorative logo marquee: a slow, continuous horizontal scroll is
+     low-risk for motion sensitivity, and freezing it just looks broken. Higher
+     selector specificity than `*` lets these win despite both being !important. */
+  .marquee-left  { animation-duration: 60s !important; }
+  .marquee-right { animation-duration: 60s !important; }
 }
 
 ::-webkit-scrollbar { width: 6px; }
@@ -266,8 +283,8 @@ body {
 
 /* ── Marquee ───────────────────────────────────────────────────────────────── */
 .marquee-track { display: flex; width: max-content; }
-.marquee-left  { animation: marquee 35s linear infinite; }
-.marquee-right { animation: marquee-reverse 35s linear infinite; }
+.marquee-left  { animation: marquee 60s linear infinite; }
+.marquee-right { animation: marquee-reverse 60s linear infinite; }
 @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 @keyframes marquee-reverse { from{transform:translateX(-50%)} to{transform:translateX(0)} }
 

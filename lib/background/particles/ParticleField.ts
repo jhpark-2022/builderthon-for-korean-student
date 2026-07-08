@@ -15,9 +15,11 @@ export class ParticleField {
   readonly points: THREE.Points;
   private readonly geometry: THREE.BufferGeometry;
   private readonly material: THREE.ShaderMaterial;
+  private readonly intensity: number; // device-tier energy/opacity scale
 
   constructor(quality: QualityTier, parallax: number) {
     const count = quality.particles;
+    this.intensity = quality.intensity;
 
     const seeds = new Float32Array(count * 3);
     const scales = new Float32Array(count);
@@ -30,9 +32,10 @@ export class ParticleField {
       seeds[i * 3 + 1] = (Math.random() * 2 - 1) * FIELD.bounds;
       seeds[i * 3 + 2] = (Math.random() * 2 - 1) * FIELD.depth;
 
-      // varied size, opacity (via scale → glow), and velocity
+      // varied size, opacity (via scale → glow), and velocity. Fewer + smaller
+      // "leaders" so the field reads as fine cosmic dust, not big bokeh orbs.
       const tier = Math.random();
-      scales[i] = tier < 0.85 ? 0.6 + Math.random() * 0.8 : 1.6 + Math.random() * 1.4; // a few bright leaders
+      scales[i] = tier < 0.93 ? 0.45 + Math.random() * 0.55 : 1.0 + Math.random() * 0.7;
       speeds[i] = 0.5 + Math.random() * 1.2;
       offsets[i] = Math.random() * 100;
     }
@@ -105,6 +108,18 @@ export class ParticleField {
     u.uPull.value = p.pull;
     u.uPortal.value = p.portal;
     u.uWhiteout.value = p.whiteout;
+
+    // Scroll-aware calm: medium immersive at the hero, then fade the field well
+    // down through the content-heavy sections, and quietest at the footer — so
+    // text/cards stay readable and the lower page feels premium, not crowded.
+    const ss = (a: number, b: number, x: number) => {
+      const t = Math.min(Math.max((x - a) / (b - a), 0), 1);
+      return t * t * (3 - 2 * t);
+    };
+    const HERO = 0.8, CONTENT = 0.3, FOOTER = 0.12;
+    let op = HERO + (CONTENT - HERO) * ss(0.04, 0.26, scroll); // hero → content
+    op += (FOOTER - op) * ss(0.6, 0.95, scroll);               // → footer
+    u.uOpacity.value = op * this.intensity;
   }
 
   dispose() {

@@ -25,6 +25,8 @@ export interface QualityTier {
   particles: number;
   dprMax: number;
   bloom: boolean;
+  /** Global field energy/opacity scale (lower = calmer). Mobile is quietest. */
+  intensity: number;
 }
 
 /**
@@ -34,7 +36,7 @@ export interface QualityTier {
  */
 export function pickQuality(): QualityTier {
   if (typeof window === "undefined") {
-    return { particles: 4000, dprMax: 2, bloom: true };
+    return { particles: 2600, dprMax: 2, bloom: true, intensity: 0.9 };
   }
 
   const w = window.innerWidth;
@@ -42,32 +44,34 @@ export function pickQuality(): QualityTier {
   // navigator.deviceMemory is non-standard but widely supported on Chrome/Android
   const mem = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8;
 
-  // Mobile / low memory
+  // Mobile / low memory — leanest particle budget, tight DPR cap, and the lowest
+  // intensity so the background is quietest on phones (bloom already off here).
   if (coarse || w < 768 || mem <= 4) {
-    return { particles: 2000, dprMax: 1.5, bloom: false };
+    return { particles: 900, dprMax: 1.35, bloom: false, intensity: 0.6 };
   }
   // Laptops
   if (w < 1680) {
-    return { particles: 4500, dprMax: 1.75, bloom: true };
+    return { particles: 2800, dprMax: 1.75, bloom: true, intensity: 0.85 };
   }
   // Desktop / ultrawide
-  return { particles: 7250, dprMax: 2, bloom: true };
+  return { particles: 4000, dprMax: 2, bloom: true, intensity: 1.0 };
 }
 
 /** Camera + motion feel. */
 export const MOTION = {
   cameraLerp: 0.045,          // how fast camera eases to target
-  pointerInfluenceDeg: 4,     // max camera rotation from pointer (spec: 3–5°)
-  breatheAmplitude: 0.35,     // gentle z breathing
-  breatheSpeed: 0.18,
-  driftSpeed: 0.05,
+  pointerInfluenceDeg: 3,     // max camera rotation from pointer (spec: 3–5°)
+  breatheAmplitude: 0.22,     // gentle z breathing (calmer)
+  breatheSpeed: 0.16,
+  driftSpeed: 0.04,
 
   // scroll-driven camera travel (0 = top of page, 1 = bottom)
-  // Camera starts at z=30 and is drawn toward the portal (z=-46), passing
-  // THROUGH its centre at full scroll for the white-out crossing.
-  scrollDollyZ: 76,           // 30 - 76 = -46, exactly at the portal plane
-  scrollDriftY: -2,           // gentle vertical drift across the scroll
-  scrollRollDeg: 14,          // cinematic roll deepens as we approach
+  // Shallow dolly: the camera drifts forward but deliberately STAYS OUT of the
+  // dense core (no plunge to the portal plane) so content-heavy lower sections
+  // keep a sparse, distant, premium field instead of big foreground bokeh.
+  scrollDollyZ: 24,           // 30 - 24 = 6, well short of the core/portal
+  scrollDriftY: -1.2,         // gentle vertical drift across the scroll
+  scrollRollDeg: 5,           // subtle roll only (was a cinematic 14°)
   scrollLambda: 2.4,          // inertia — camera feels carried, never snaps
   scrollEasePower: 2.2,       // ease-in: slow start, accelerating pull near the end
 } as const;
@@ -75,8 +79,8 @@ export const MOTION = {
 /** Flow-field / particle dynamics. */
 export const FIELD = {
   spaceScale: 0.045,          // noise sample frequency
-  flowSpeed: 0.015,           // base drift speed along the field (slower = calmer)
-  curl: 0.9,                  // curl-noise strength
+  flowSpeed: 0.011,           // base drift speed along the field (slower = calmer)
+  curl: 0.65,                 // curl-noise strength (gentler swirl)
   pointerRadius: 2.4,         // world-space radius of pointer influence
   pointerForce: 1.6,          // magnetic displacement strength
   bounds: 26,                 // half-extent of the particle volume (X/Y)
