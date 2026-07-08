@@ -24,3 +24,9 @@ next-env.d.ts
 .audit
 screenshots
 *.log
+
+# large source assets kept locally, not in the repo
+# (the hero uses the extracted mp4/jpg in public/hero/, not these)
+lib/metal-human.zip
+/Gemini_Generated_Image_*.png
+/public/hero-bg.png

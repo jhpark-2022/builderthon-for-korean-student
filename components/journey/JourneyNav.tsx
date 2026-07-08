@@ -29,50 +29,47 @@ export default function JourneyNav() {
 
   return (
     <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? "bg-[#06040f]/85" : "bg-transparent"}`}>
-      <nav className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6 sm:px-10">
-        <a href="#top" className="flex items-center gap-2.5">
-          {/* Official Zero100 lockup (icon + wordmark) leads the brand; the event
-              is "Zero100 Builderthon". The "Builderthon" suffix is hidden on the
-              narrowest screens so the brand, EN/KR toggle and View Program CTA all
-              fit, and returns from the sm breakpoint up. */}
-          <Image
-            src="/partners/zero100-wordmark.png"
-            alt="Zero100"
-            width={602}
-            height={127}
-            priority
-            className="h-6 w-auto opacity-90 brightness-0 invert"
-          />
-          <span className="hidden text-lg font-black tracking-wide text-white/90 sm:inline sm:text-xl">Builderthon</span>
-        </a>
-        <div className="hidden items-center gap-5 lg:ml-12 lg:flex">
-          {anchors.map((a) => (
-            <a
-              key={a.id}
-              href={`#${a.id}`}
-              className="relative text-sm font-medium text-white/70 transition hover:text-white after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-violet-400/70 after:transition-transform after:duration-300 hover:after:scale-x-100 focus-visible:after:scale-x-100"
-            >
-              {t(a.label)}
-            </a>
-          ))}
-          {/* The /quiz mini-site — accented so it reads as the playful entry. */}
-          <a
-            href="/quiz"
-            className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/30 bg-violet-400/10 px-3.5 py-1.5 text-sm font-semibold text-violet-200 transition hover:border-violet-400/50 hover:bg-violet-400/15"
-          >
-            <span aria-hidden>✦</span>
-            {t(dict.nav.quiz)}
+      <nav className="flex h-20 w-full items-center justify-between px-6 sm:px-10">
+        {/* LEFT group — brand logo + anchor links, kept together on the left edge. */}
+        <div className="flex items-center">
+          <a href="#top" className="flex items-center gap-2.5">
+            {/* Official Zero100 lockup (icon + wordmark) leads the brand; the event
+                is "Zero100 Builderthon". The "Builderthon" suffix is hidden on the
+                narrowest screens so the brand, EN/KR toggle and View Program CTA all
+                fit, and returns from the sm breakpoint up. */}
+            <Image
+              src="/partners/zero100-wordmark.png"
+              alt="Zero100"
+              width={602}
+              height={127}
+              priority
+              className="h-6 w-auto opacity-90 brightness-0 invert"
+            />
+            <span className="hidden text-lg font-black tracking-wide text-white/90 sm:inline sm:text-xl">Builderthon</span>
           </a>
+          <div className="hidden items-center gap-5 lg:ml-10 lg:flex">
+            {anchors.map((a) => (
+              <a
+                key={a.id}
+                href={`#${a.id}`}
+                className="relative text-sm font-medium text-white/70 transition hover:text-white after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-violet-400/70 after:transition-transform after:duration-300 hover:after:scale-x-100 focus-visible:after:scale-x-100"
+              >
+                {t(a.label)}
+              </a>
+            ))}
+          </div>
         </div>
+        {/* RIGHT group — EN/KR toggle, Partner, Register — pinned to the right edge. */}
         <div className="flex items-center gap-2.5 sm:gap-3">
           <LocaleToggle />
           <a href={links.partnership} className="hidden shrink-0 whitespace-nowrap rounded-full border border-white/20 bg-white/5 px-5 py-2 text-sm font-semibold text-white/85 transition hover:bg-white/10 md:inline-flex">
             {t(dict.nav.partner)}
           </a>
           {/* Primary CTA stays reachable on every screen — compact on mobile so
-              the partnership/program funnel never disappears below lg. */}
-          <a href={links.program} className="inline-flex shrink-0 items-center rounded-full bg-violet-600/90 px-3 py-2 text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:bg-violet-500 sm:px-5 sm:text-sm">
-            {t(dict.nav.viewProgram)}
+              the funnel never disappears below lg.
+              TODO: point href at the real registration form when it exists. */}
+          <a href="#" className="inline-flex shrink-0 items-center rounded-full bg-violet-600/90 px-3 py-2 text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:bg-violet-500 sm:px-5 sm:text-sm">
+            {t(dict.nav.register)}
           </a>
         </div>
       </nav>

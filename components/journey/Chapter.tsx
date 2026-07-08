@@ -11,14 +11,24 @@ export default function Chapter({
   align = "center",
   className = "",
   background,
+  footer,
+  wide = false,
 }: {
   id?: string;
   children: ReactNode;
   align?: "left" | "center" | "right";
   className?: string;
+  // When true the content spans the full viewport width (no centred max-w-6xl
+  // rail, no side padding) so children can hug the left/right screen edges.
+  // Used by the hero's two-up layout.
+  wide?: boolean;
   // optional full-bleed layer rendered behind the content rail (e.g. a hero
   // video). It positions itself absolutely; the rail sits above it via z-10.
   background?: ReactNode;
+  // optional element pinned to the very bottom of the section (e.g. a scroll
+  // hint). It sits at the section's bottom edge regardless of how tall the
+  // centred content is, so it never pushes the content up.
+  footer?: ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
@@ -59,12 +69,13 @@ export default function Chapter({
     <section
       id={id}
       ref={ref}
-      className={`relative flex min-h-screen w-full flex-col justify-center px-6 py-24 sm:px-10 ${background ? "isolate" : ""} ${className}`}
+      className={`relative flex min-h-screen w-full flex-col justify-center py-24 ${wide ? "" : "px-6 sm:px-10"} ${background ? "isolate" : ""} ${className}`}
     >
       {background}
       {/* centered content rail — the real boundary (z-10 keeps it above any
-          full-bleed background layer) */}
-      <div className="relative z-10 mx-auto w-full max-w-6xl">
+          full-bleed background layer). `wide` drops the max-width + centering so
+          content can reach the screen edges. */}
+      <div className={`relative z-10 w-full ${wide ? "" : "mx-auto max-w-6xl"}`}>
         <div
           className={`w-full transition-all duration-700 ease-out ${textCls} ${offsetCls}`}
           style={{
@@ -75,6 +86,11 @@ export default function Chapter({
           {children}
         </div>
       </div>
+      {footer && (
+        <div className="absolute inset-x-0 bottom-8 z-10 flex justify-center sm:bottom-10">
+          {footer}
+        </div>
+      )}
     </section>
   );
 }
