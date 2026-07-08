@@ -243,13 +243,13 @@ export default function Journey() {
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {[
-              { label: t(dict.partners.organizerLabel), img: "/komos-lion-white.png", name: "KOMOS", desc: t(dict.partners.organizerDesc), w: 690, h: 439 },
-              { label: t(dict.partners.networkLabel),   img: "/partners/processed/zero100.png", name: "Zero100", desc: t(dict.partners.networkDesc), w: 225, h: 225 },
+              { label: t(dict.partners.organizerLabel), img: "/komos-lion-white.png", name: "KOMOS", desc: t(dict.partners.organizerDesc), w: 690, h: 439, invert: true },
+              { label: t(dict.partners.networkLabel),   img: "/partners/processed/zero100.png", name: "Zero100", desc: t(dict.partners.networkDesc), w: 225, h: 225, invert: false },
             ].map((o) => (
               <div key={o.name} className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
                 <span className="text-xs font-bold uppercase tracking-widest text-white/40">{o.label}</span>
                 <div className="mt-4 flex items-center gap-4">
-                  <Image src={o.img} alt={o.name} width={o.w} height={o.h} className="h-10 w-10 rounded-lg object-contain brightness-0 invert" />
+                  <Image src={o.img} alt={o.name} width={o.w} height={o.h} className={`h-11 w-11 rounded-lg object-cover ${o.invert ? "brightness-0 invert" : ""}`} />
                   <div>
                     <p className="text-lg font-bold text-white">{o.name}</p>
                     <p className="text-sm text-white/50">{o.desc}</p>
