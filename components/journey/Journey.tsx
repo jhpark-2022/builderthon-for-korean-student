@@ -86,6 +86,177 @@ function CountUp({ value, className }: { value: number; className?: string }) {
   );
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// HERO LAUNCH PANEL — Countdown ↔ Problem Statement 전환 탭
+//
+// 행사 시작(LAUNCH_AT, 2026-08-22 KST) 전:  실시간 D-day 카운트다운을 보여준다.
+// 행사 시작 후:                             같은 자리에서 Problem Statement 로 전환.
+//
+// 지금은 기획 단계라 두 뷰를 모두 만들어 시각 확인이 가능하도록 수동 토글 탭을 노출한다
+// (`PREVIEW_TABS = true`). 실제 퍼블리시 시점에는 `PREVIEW_TABS = false` 로만 바꾸면
+// 탭이 사라지고, LAUNCH_AT 을 기준으로 카운트다운 → Problem 이 자동 전환된다.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 빌더톤 시작(현지 8/22 00:00, KST=UTC+9 기준 → 08/21 15:00 UTC).
+const LAUNCH_AT = new Date("2026-08-22T00:00:00+09:00").getTime();
+// 기획/디자인 컨펌 단계에서만 true. 퍼블리시 시 false 로 바꾸면 탭이 숨겨지고
+// 날짜(LAUNCH_AT)에 따라서만 뷰가 결정된다.
+const PREVIEW_TABS = true;
+
+type LaunchView = "countdown" | "problem";
+
+function useCountdown(target: number) {
+  // SSR/첫 렌더에서 hydration mismatch 를 피하려고 0 으로 시작, 마운트 후 실제 값으로.
+  const [remaining, setRemaining] = useState<number | null>(null);
+  useEffect(() => {
+    const tick = () => setRemaining(Math.max(0, target - Date.now()));
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [target]);
+  const done = remaining !== null && remaining <= 0;
+  const total = remaining ?? 0;
+  const days = Math.floor(total / 86_400_000);
+  const hours = Math.floor((total % 86_400_000) / 3_600_000);
+  const minutes = Math.floor((total % 3_600_000) / 60_000);
+  const seconds = Math.floor((total % 60_000) / 1000);
+  return { ready: remaining !== null, done, days, hours, minutes, seconds };
+}
+
+function CountdownView({ t }: { t: Tfn }) {
+  const { ready, done, days, hours, minutes, seconds } = useCountdown(LAUNCH_AT);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const units = [
+    { v: days, label: t(dict.hero.countdownUnitDays) },
+    { v: hours, label: t(dict.hero.countdownUnitHours) },
+    { v: minutes, label: t(dict.hero.countdownUnitMinutes) },
+    { v: seconds, label: t(dict.hero.countdownUnitSeconds) },
+  ];
+
+  if (done) {
+    return (
+      <Glass className="text-center">
+        <p className="text-lg font-bold text-white">{t(dict.hero.countdownStarted)}</p>
+      </Glass>
+    );
+  }
+
+  return (
+    <div className="text-center">
+      <p className="mb-5 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/70">
+        <span className="relative flex h-2 w-2">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-violet-400/70" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-violet-400" />
+        </span>
+        {t(dict.hero.countdownEyebrow)}
+        <span className="text-white/40">· {t(dict.hero.countdownLive)}</span>
+      </p>
+      <div className="grid grid-cols-4 gap-2 sm:gap-4">
+        {units.map((u, i) => (
+          <div
+            key={u.label}
+            className="rounded-2xl border border-white/10 bg-white/[0.04] px-2 py-4 sm:px-3 sm:py-6"
+          >
+            <div className="bg-gradient-to-b from-white to-white/60 bg-clip-text font-black tabular-nums text-transparent text-[clamp(1.8rem,7vw,3.25rem)] leading-none">
+              {/* 첫 칸(days)은 자릿수 그대로, 나머지는 2자리 고정 */}
+              {ready ? (i === 0 ? u.v : pad(u.v)) : "—"}
+            </div>
+            <div className="mt-2 text-[0.65rem] uppercase tracking-[0.2em] text-white/50 sm:text-xs">
+              {u.label}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ProblemView({ t }: { t: Tfn }) {
+  return (
+    <Glass className="text-left">
+      <div className="flex items-center justify-between gap-3">
+        <Eyebrow color="cyan">✦ {t(dict.hero.problemEyebrow)}</Eyebrow>
+        <span className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-[0.7rem] font-bold uppercase tracking-widest text-cyan-200">
+          {t(dict.hero.problemPlaceholderBadge)}
+        </span>
+      </div>
+      <h3 className="text-[clamp(1.35rem,3.5vw,2rem)] font-bold leading-tight tracking-tight text-white">
+        {t(dict.hero.problemHeading)}
+      </h3>
+      <p className="mt-4 text-sm leading-relaxed text-white/75 sm:text-base">
+        {t(dict.hero.problemBody)}
+      </p>
+      {/* 실제 문제 카드가 들어갈 자리 — 확정 시 채워질 플레이스홀더 슬롯 3개 */}
+      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        {[0, 1, 2].map((i) => (
+          <div
+            key={i}
+            className="h-24 rounded-xl border border-dashed border-white/12 bg-white/[0.02]"
+            aria-hidden
+          />
+        ))}
+      </div>
+    </Glass>
+  );
+}
+
+// The hero slot that swaps between Countdown and Problem Statement.
+function HeroLaunchPanel({ t, reduce }: { t: Tfn; reduce: boolean }) {
+  // 기본 뷰는 날짜로 결정: 시작 전이면 countdown, 시작 후면 problem.
+  // 마운트 후에만 Date.now() 를 읽어 hydration mismatch 를 피한다.
+  const [view, setView] = useState<LaunchView>("countdown");
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+    setView(Date.now() >= LAUNCH_AT ? "problem" : "countdown");
+  }, []);
+
+  const tabs: { key: LaunchView; label: string }[] = [
+    { key: "countdown", label: t(dict.hero.countdownTabLabel) },
+    { key: "problem", label: t(dict.hero.problemTabLabel) },
+  ];
+
+  return (
+    // Centred/limited on mobile; fills the right column from lg up.
+    <div className="mx-auto w-full max-w-xl lg:max-w-none">
+      {/* 미리보기 탭 — 퍼블리시 시 PREVIEW_TABS=false 로 숨김 */}
+      {PREVIEW_TABS && (
+        <div className="mb-6 inline-flex rounded-full border border-white/10 bg-white/[0.04] p-1 text-sm">
+          {tabs.map((tab) => {
+            const active = view === tab.key;
+            return (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => setView(tab.key)}
+                aria-pressed={active}
+                className={`rounded-full px-4 py-2 font-semibold transition ${
+                  active ? "bg-white/90 text-[#0a0814]" : "text-white/60 hover:text-white"
+                }`}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={view}
+          initial={reduce ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reduce ? undefined : { opacity: 0, y: -12 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {/* mounted 전에는 SSR 기본값(countdown)만 렌더 → hydration 안정 */}
+          {view === "countdown" || !mounted ? <CountdownView t={t} /> : <ProblemView t={t} />}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+}
+
 // A single program event card. Shared by the desktop column grid and the mobile
 // day accordion so both stay in sync. Height is only fixed on desktop (xl) to
 // keep columns even; on mobile cards hug their content.
@@ -218,11 +389,16 @@ function CompanionMarquee({ t }: { t: Tfn }) {
 // To turn it on, drop a web-optimised clip into /public/hero/ as hero.webm
 // (+ hero.mp4 fallback) and a still frame hero-poster.jpg, then set
 // enabled: true. Keep each video file ~1–2MB (see /public/hero/README.md).
+// metal-human — chrome/liquid-metal humanoid loop (GetLayers, no watermark).
+// Source master is 4K mp4 + 2K poster (see /public/hero/metal-human*). No webm
+// variant ships with this asset, so we serve the mp4 alone.
+// TODO: transcode a web-optimised ~1–2MB clip (+ webm) for production — the 4K
+// master is heavy for an autoplaying hero background.
 const HERO_VIDEO = {
   enabled: true,
-  webm: "/hero/hero.webm",
-  mp4: "/hero/hero.mp4",
-  poster: "/hero/hero-poster.jpg",
+  webm: "",
+  mp4: "/hero/metal-human.mp4",
+  poster: "/hero/metal-human-poster.jpg",
 };
 
 function HeroVideo() {
@@ -245,13 +421,11 @@ function HeroVideo() {
         loop
         playsInline
         poster={HERO_VIDEO.poster}
-        // The clip is 16:9; on a portrait phone object-cover crops the sides
-        // hard and the seated subject (slightly left of frame) drifts off-centre.
-        // Nudge the focal point right on mobile to re-centre him; desktop barely
-        // side-crops, so it stays centred.
-        className="h-full w-full object-cover [object-position:44%_50%] sm:object-center"
+        // The figure is centred in-frame; object-center keeps it centred on both
+        // portrait and landscape crops.
+        className="h-full w-full object-cover object-center"
       >
-        <source src={HERO_VIDEO.webm} type="video/webm" />
+        {HERO_VIDEO.webm && <source src={HERO_VIDEO.webm} type="video/webm" />}
         <source src={HERO_VIDEO.mp4} type="video/mp4" />
       </video>
       {/* legibility scrim — darker top so the headline reads; fades to nothing
@@ -294,69 +468,73 @@ export default function Journey() {
   return (
     <main className="relative z-10">
       {/* ── CH 0 · HERO ─────────────────────────────────────────────── */}
-      <Chapter id="top" align="center" background={<HeroVideo />}>
-        <div className="mt-10 sm:mt-12">
-          <Eyebrow>✦ {t(dict.hero.eyebrow)}</Eyebrow>
-        </div>
-        {/* clamp caps trimmed (8rem->7.1rem, 3rem->2.65rem) so the 18px root
-            bump doesn't enlarge the hero headline — it stays ~its current size
-            while the rest of the site grows. */}
-        <h1 className="text-[clamp(2.65rem,11vw,7.1rem)] font-black leading-[0.88] tracking-tight drop-shadow-[0_4px_40px_rgba(124,58,237,0.5)]">
-          <span className="block text-white">{t(dict.hero.titleLine1)}</span>
-          {/* pb-[0.15em]: bg-clip-text only paints the gradient inside the line
-              box; with the tight leading the box cut off g/p descenders, so they
-              rendered transparent ("Singapore." looked clipped). The padding
-              extends the paint box below the baseline. */}
-          <span className="block bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text pb-[0.15em] text-transparent">
-            {t(dict.hero.titleLine2)}
-          </span>
-        </h1>
-        <p className="mx-auto mt-8 flex flex-wrap items-center justify-center gap-3 text-sm text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base">
-          <span className="font-semibold">{t(dict.hero.dates)}</span>
-          <span aria-hidden className="h-3.5 w-px bg-white/40" />
-          <span className="text-white/75">{t(dict.hero.location)}</span>
-        </p>
-        <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)]">
-          {t(dict.hero.blurb)}
-        </p>
-        <div className="mt-10 flex flex-wrap justify-center gap-3">
-          <a href={links.program} className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-8 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)]">
-            {t(dict.hero.ctaProgram)}
-            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </a>
-          <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10">
-            {t(dict.hero.ctaPartner)}
-          </a>
-          {/* Playful third entry → /quiz personality test + team matching. */}
-          <a href="/quiz" className="group inline-flex items-center gap-2 rounded-full border border-violet-400/40 bg-violet-400/10 px-8 py-4 text-base font-semibold text-violet-100 transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-400/15">
-            <span aria-hidden>✦</span>
-            {t(dict.nav.quiz)}
-            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </a>
-        </div>
-        <div className="mt-16 grid grid-cols-3 gap-3 sm:gap-4">
-          {[
-            { num: "~100", label: t(dict.hero.statParticipants) },
-            { num: "8",    label: t(dict.hero.statDays) },
-            { num: "AX",   label: t(dict.hero.statLanguage) },
-          ].map((s, i) => (
-            <motion.div
-              key={s.num}
-              initial={reduce ? false : { opacity: 0, y: 16 }}
-              whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.5, delay: 0.12 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <Glass className="!p-3 transition duration-300 hover:border-violet-400/25 hover:bg-white/[0.06] sm:!p-5">
-                <div className="text-2xl font-black text-white sm:text-4xl">{s.num}</div>
-                <div className="mt-1 text-xs text-white/70 sm:text-sm">{s.label}</div>
-              </Glass>
-            </motion.div>
-          ))}
-        </div>
-        <div className="mt-14 flex flex-col items-center gap-2 text-[0.7rem] tracking-[0.3em] text-white/60">
-          {t(dict.hero.scroll).toUpperCase()}
-          <span className="h-10 w-px animate-pulse bg-gradient-to-b from-white/50 to-transparent" />
+      <Chapter
+        id="top"
+        align="center"
+        wide
+        background={<HeroVideo />}
+        footer={
+          <div className="pointer-events-none flex flex-col items-center gap-2 text-[0.7rem] tracking-[0.3em] text-white/60">
+            {t(dict.hero.scroll).toUpperCase()}
+            <span className="h-10 w-px animate-pulse bg-gradient-to-b from-white/50 to-transparent" />
+          </div>
+        }
+      >
+        {/* Two-up hero: copy + CTAs hugging the left screen edge, the Countdown ↔
+            Problem panel hugging the right edge. Stacks to a single centred column
+            below lg. The small px gutters keep text off the very edge. */}
+        <div className="grid items-center gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
+          {/* LEFT — headline, meta, blurb, CTAs. Centred on mobile, left-aligned
+              and pushed to the left edge from lg up. */}
+          <div className="text-center lg:pl-10 lg:text-left xl:pl-16">
+            <div className="mt-10 sm:mt-12 lg:mt-0">
+              <Eyebrow>✦ {t(dict.hero.eyebrow)}</Eyebrow>
+            </div>
+            {/* clamp caps trimmed (8rem->7.1rem, 3rem->2.65rem) so the 18px root
+                bump doesn't enlarge the hero headline — it stays ~its current size
+                while the rest of the site grows. */}
+            <h1 className="text-[clamp(2.65rem,11vw,7.1rem)] font-black leading-[0.88] tracking-tight drop-shadow-[0_4px_40px_rgba(124,58,237,0.5)] lg:text-[clamp(2.65rem,6vw,5.5rem)]">
+              <span className="block text-white">{t(dict.hero.titleLine1)}</span>
+              {/* pb-[0.15em]: bg-clip-text only paints the gradient inside the line
+                  box; with the tight leading the box cut off g/p descenders, so they
+                  rendered transparent ("Singapore." looked clipped). The padding
+                  extends the paint box below the baseline. */}
+              <span className="block bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text pb-[0.15em] text-transparent">
+                {t(dict.hero.titleLine2)}
+              </span>
+            </h1>
+            <p className="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base lg:justify-start">
+              <span className="font-semibold">{t(dict.hero.dates)}</span>
+              <span aria-hidden className="h-3.5 w-px bg-white/40" />
+              <span className="text-white/75">{t(dict.hero.location)}</span>
+            </p>
+            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] lg:mx-0">
+              {t(dict.hero.blurb)}
+            </p>
+            <div className="mt-10 flex flex-wrap justify-center gap-3 lg:justify-start">
+              <a href={links.program} className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-8 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)]">
+                {t(dict.hero.ctaProgram)}
+                <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </a>
+              {/* Mirrors the nav's "Partner with us" CTA, which is hidden below md.
+                  Shown here only below md so it never disappears, and hidden at md+
+                  to avoid duplicating the visible nav button. */}
+              <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10 md:hidden">
+                {t(dict.hero.ctaPartner)}
+              </a>
+              {/* Playful third entry → /quiz personality test + team matching. */}
+              <a href="/quiz" className="group inline-flex items-center gap-2 rounded-full border border-violet-400/40 bg-violet-400/10 px-8 py-4 text-base font-semibold text-violet-100 transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-400/15">
+                <span aria-hidden>✦</span>
+                {t(dict.nav.quiz)}
+                <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </a>
+            </div>
+          </div>
+
+          {/* RIGHT — Countdown ↔ Problem Statement 전환 슬롯, pushed to the right edge */}
+          <div className="lg:pr-10 xl:pr-16">
+            <HeroLaunchPanel t={t} reduce={!!reduce} />
+          </div>
         </div>
       </Chapter>
 

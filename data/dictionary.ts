@@ -22,12 +22,13 @@ export const links = {
 export const dict = {
   nav: {
     about: { ko: "취지", en: "Why" },
-    join: { ko: "참가 대상", en: "Join" },
+    join: { ko: "참가 대상", en: "Who" },
     program: { ko: "프로그램", en: "Program" },
     builders: { ko: "파트너", en: "Partners" },
     faq: { ko: "FAQ", en: "FAQ" },
     quiz: { ko: "성격 테스트", en: "Personality Test" },
     viewProgram: { ko: "프로그램 보기", en: "View Program" },
+    register: { ko: "등록하기", en: "Register" },
     partner: { ko: "파트너십 문의", en: "Partner with us" },
   },
 
@@ -56,6 +57,34 @@ export const dict = {
     statParticipants: { ko: "한인 학생", en: "Korean students" },
     statDays: { ko: "일간의 빌드", en: "days of building" },
     statLanguage: { ko: "실전 AX 과제", en: "real AX problems" },
+
+    // ── Countdown ↔ Problem Statement 전환 탭 ──────────────────────────
+    // 행사 시작(8/22) 전: 실시간 D-day 카운트다운.
+    // 행사 시작 후: 같은 자리에서 Problem Statement 로 전환.
+    // (실제 카피/문제 내용은 확정되면 교체 — 지금은 레이아웃 확인용 플레이스홀더)
+    countdownTabLabel: { ko: "카운트다운", en: "Countdown" },
+    problemTabLabel: { ko: "Problem Statement", en: "Problem Statement" },
+
+    countdownEyebrow: { ko: "빌더톤 시작까지", en: "Until the builderthon begins" },
+    countdownLive: { ko: "실시간", en: "Live" },
+    countdownUnitDays: { ko: "일", en: "days" },
+    countdownUnitHours: { ko: "시", en: "hrs" },
+    countdownUnitMinutes: { ko: "분", en: "min" },
+    countdownUnitSeconds: { ko: "초", en: "sec" },
+    // 카운트다운이 끝난 뒤(이미 시작한 시점) 노출되는 문구.
+    countdownStarted: { ko: "빌더톤이 시작되었습니다.", en: "The builderthon has begun." },
+
+    problemEyebrow: { ko: "이번 라운드의 과제", en: "This round's challenge" },
+    // TODO: confirm — 실제 문제가 확정되면 교체할 플레이스홀더.
+    problemHeading: {
+      ko: "실제 기업의 AX 과제가 여기서 공개됩니다.",
+      en: "Real companies' AX problems are revealed here.",
+    },
+    problemBody: {
+      ko: "행사가 시작되면 이 자리에서 팀이 8일간 풀어낼 실제 AI 전환(AX) 과제가 공개됩니다. 문제 정의, 제약 조건, 평가 기준이 함께 안내될 예정입니다.",
+      en: "When the event begins, the real AI-transformation (AX) problems your team will solve over 8 days appear here — with the problem definition, constraints, and evaluation criteria.",
+    },
+    problemPlaceholderBadge: { ko: "공개 예정", en: "Coming soon" },
   },
 
   about: {

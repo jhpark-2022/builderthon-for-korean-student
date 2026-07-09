@@ -58,10 +58,11 @@ void main(){
   alpha *= (1.0 - vDepth * 0.7) * uOpacity;
   alpha = mix(alpha, alpha * 1.6 + 0.2, vSpeed);   // trails read brighter
 
-  // thin the convergence cluster: fade out ~1/3 of particles as they near the
-  // focus so the focal region reads sparser (keeps motion, less density)
+  // thin the convergence cluster heavily: fade out ~90% of particles as they
+  // near the focus so only a sparse few stream in (keeps the motion, minimal
+  // density)
   float thinT = vNear * uPortal;                 // only active near the portal
-  float cull = step(vRand, 0.33) * thinT;        // bottom third of particles
+  float cull = step(vRand, 0.90) * thinT;        // bottom 90%
   alpha *= (1.0 - cull);
 
   alpha = clamp(alpha + uWhiteout * 0.4, 0.0, 1.0);
