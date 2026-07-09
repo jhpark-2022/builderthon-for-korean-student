@@ -40,3 +40,6 @@ worth serving. H.264 is universally supported, so the single mp4 is enough.
 
 That's it — the rest of the page keeps the WebGL background; only the hero
 swaps to video, with a dark legibility scrim baked in.
+
+<!-- deploy check: 2026-07-09 -->
+
