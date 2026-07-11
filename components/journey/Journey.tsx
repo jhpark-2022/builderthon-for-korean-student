@@ -673,7 +673,7 @@ function ScrollToTop() {
           animate={{ opacity: 1, y: 0 }}
           exit={reduce ? undefined : { opacity: 0, y: 12 }}
           transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-violet-400/40 bg-violet-500/20 text-violet-100 shadow-[0_6px_24px_rgba(124,58,237,0.3)] backdrop-blur transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-500/30 hover:text-white sm:bottom-8 sm:right-8"
+          className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-violet-400/40 bg-violet-600/85 text-violet-100 shadow-[0_6px_24px_rgba(124,58,237,0.3)] transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-500 hover:text-white sm:bottom-8 sm:right-8"
         >
           {/* upward chevron */}
           <svg aria-hidden viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -726,9 +726,10 @@ export default function Journey() {
   const leftX = useTransform(heroProgress, [0, 0.35], [0, -500]);
   const rightX = useTransform(heroProgress, [0, 0.35], [0, 500]);
   const heroFade = useTransform(heroProgress, [0, 0.35], [1, 0]);
-  // Background video blurs early — in step with the columns flying apart — so
-  // the whole hero softens as soon as the visitor starts scrolling.
-  const bgBlur = useTransform(heroProgress, [0, 0.15], ["blur(0px)", "blur(10px)"]);
+  // NOTE: an earlier scroll-linked `filter: blur()` on the (playing) hero video
+  // was removed — animating a blur filter on a video over the WebGL field forces
+  // a per-frame re-blur and was the main cause of scroll jank. The fly-apart +
+  // fade below are transform/opacity only (GPU-composited, cheap).
 
   return (
     <main className="relative z-10">
@@ -738,7 +739,7 @@ export default function Journey() {
         id="top"
         align="center"
         wide
-        background={<HeroVideo blur={reduce ? undefined : bgBlur} />}
+        background={<HeroVideo />}
         footer={
           <motion.div
             style={{ opacity: reduce ? undefined : heroFade }}
