@@ -1280,15 +1280,29 @@ export default function Journey() {
             </div>
           </div>
 
-          {/* ── Mentors in discussion (from the deck's mentoring slide) ────── */}
+          {/* ── Mentors (Onward confirmed; others in discussion) ──────────── */}
           <div className="mt-8 border-t border-white/10 pt-8 text-left">
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.mentorsLabel)}</p>
               <p className="text-xs text-white/50">{t(dict.partners.mentorsNote)}</p>
             </div>
-            <div className="mt-3 grid grid-cols-3 gap-3">
+
+            {/* Confirmed */}
+            <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-emerald-200">
+              {t(dict.partners.mentorConfirmedLabel)}
+            </p>
+            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
               {[
-                { src: "/partners/logos/white/onword.png",     alt: "Onword Lab",  w: 200,  h: 200, big: true },
+                { src: "/partners/logos/white/onword.png", alt: "Onward Lab", w: 200, h: 200, big: true },
+              ].map((l) => <LogoTile key={l.alt} {...l} />)}
+            </div>
+
+            {/* In discussion */}
+            <p className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/60">
+              {t(dict.partners.mentorDiscussionLabel)}
+            </p>
+            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {[
                 { src: "/partners/logos/white/brandboost.png", alt: "Brand Boost", w: 1200, h: 630, big: false },
                 { src: "/partners/logos/white/remited.png",     alt: "REmited",     w: 1536, h: 317, big: false },
               ].map((l) => <LogoTile key={l.alt} {...l} />)}

@@ -502,11 +502,13 @@ export const dict = {
     catGoods: { ko: "굿즈 · Goods", en: "Goods" },
     catVC: { ko: "벤처 · VC", en: "VC" },
     // ── Mentors in discussion (from the deck's mentoring slide) ──────────────
-    mentorsLabel: { ko: "논의 중 멘토사", en: "Mentors in discussion" },
+    mentorsLabel: { ko: "멘토사", en: "Mentors" },
     mentorsNote: {
-      ko: "학생 눈높이의 선배 멘토로 함께 논의 중인 파트너.",
-      en: "Partners in discussion to mentor as peer-level seniors.",
+      ko: "학생 눈높이의 선배 멘토로 함께하는 파트너.",
+      en: "Partners mentoring as peer-level seniors.",
     },
+    mentorConfirmedLabel: { ko: "확정", en: "Confirmed" },
+    mentorDiscussionLabel: { ko: "논의 중", en: "In discussion" },
     stageNote: {
       ko: "* 단계 표기는 2026년 6월 기준이며, 변동될 수 있습니다. 최종 후원·파트너십은 확정 시 안내됩니다.",
       en: "* Stages are as of June 2026 and may change; final sponsorships/partnerships will be announced once confirmed.",
