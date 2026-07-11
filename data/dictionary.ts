@@ -424,7 +424,6 @@ export const dict = {
         points: [
           { ko: "실패와 재기 스토리 — ‘8일 만에 만들어봤다, 여기서 멈추지 마라’", en: "Failure & comeback stories — ‘you built it in 8 days; don't stop here’" },
           { ko: "실패에서 배우기 · 멘탈 관리 · 회복탄력성", en: "Learning from failure · mental management · resilience" },
-          { ko: "인턴십 · 투자로 이어지는 다음 스텝", en: "The next step — into internships and investment" },
           { ko: "경쟁이 아니라 공헌으로 시작하기", en: "Starting from contribution, not competition" },
         ],
       },
