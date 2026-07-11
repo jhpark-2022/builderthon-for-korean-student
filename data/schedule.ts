@@ -10,7 +10,7 @@
 //
 // THE 8-DAY SHAPE (per the deck, which is authoritative):
 //   • Day 1 — big Opening: 박희덕 opening keynote + AWS speaker session + the AX
-//     problems are released. MANDATORY (필참); on-site is pending, Zoom fallback.
+//     problems are released. MANDATORY (필참); on-site at *SCAPE Lifejungle.
 //   • Day 2 — one concentrated Crash Course (vibe-coding intro, 5–6h), then a
 //     detailed problem video + team building right after.
 //   • Day 3–4 — online self-build + 1:1 mentoring (Day 3 also has a TENTATIVE
@@ -20,7 +20,7 @@
 //   • Day 7 — Final Rehearsal on-site at the AWS office (new venue).
 //   • Day 8 — Demo Day at *SCAPE Lifejungle. MANDATORY (필참).
 //   • Self-paced team build runs continuously from the Day-1 problem release all
-//     the way to the Day-8 pitch. In person on Days 5 / 7 / 8 (+ Day 1 pending).
+//     the way to the Day-8 pitch. In person on Days 1 / 5 / 7 / 8.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type Category =
@@ -87,7 +87,7 @@ export const days: DayMeta[] = [
       ko: "박희덕 오프닝 키노트 · 오리엔테이션 · AWS 연사(확정) · 문제 공개.",
       en: "Park's opening keynote · orientation · AWS session (confirmed) · problem release.",
     },
-    dayMode: "pending",
+    dayMode: "offline",
     mandatory: true,
   },
   {
@@ -235,14 +235,6 @@ const AWS_OFFICE: Bilingual = {
   ko: "AWS 오피스, 싱가포르 · 현장",
   en: "AWS office, Singapore · in person",
 };
-// Day 1 is mandatory and meant to be on-site, but the venue isn't locked yet —
-// Zoom is the fallback. We model Day 1 as online with this honest caveat rather
-// than claiming a confirmed venue.
-const ONSITE_PENDING: Bilingual = {
-  ko: "현장 (장소 미정) · 미확정 시 Zoom · 필참",
-  en: "On-site (venue pending) · Zoom if not locked · required",
-};
-
 // Codepresso runs the Day-2 Crash Course (vibe-coding intro), per the deck.
 const CODEPRESSO_ORG = {
   name: "Codepresso",
@@ -270,7 +262,7 @@ export const schedule: BEvent[] = [
     day: 1,
     date: "08.22",
     category: "main",
-    mode: "online",
+    mode: "offline",
     timeOfDay: "AM",
     confirmed: true,
     title: { ko: "오프닝 키노트 · 박희덕", en: "Opening Keynote · Park Hee-deok" },
@@ -284,14 +276,14 @@ export const schedule: BEvent[] = [
       ko: "빌더톤의 문을 여는 오프닝 키노트입니다. 트랜스링크 인베스트먼트의 박희덕 대표가 ‘제로백의 진짜 의미’를 주제로, 0에서 100까지 이어지는 성장의 이야기와 이번 빌더톤이 왜 지금, 왜 싱가포르의 한인 학생에게 필요한지를 약 1시간 동안 풀어냅니다. ‘바이브 코딩 대회가 아니라 창업’이라는 프레임을 첫날에 세우고, 처음이어도 괜찮다는 톤으로 8일을 시작합니다.",
       en: "The keynote that opens the builderthon. Park Hee-deok (CEO · General Partner, Translink Investment) speaks on “The Real Meaning of Zero100” for about an hour — the arc from zero to a hundred, and why this builderthon matters now, and to Korean students in Singapore. It frames Day 1 as ‘founding, not a vibe-coding contest’ and sets a ‘first-timers welcome’ tone for the eight days.",
     },
-    location: ONSITE_PENDING,
+    location: ONSITE,
   },
   {
     id: "d1-orientation",
     day: 1,
     date: "08.22",
     category: "network",
-    mode: "online",
+    mode: "offline",
     timeOfDay: "AM",
     title: { ko: "오리엔테이션", en: "Orientation" },
     summary: {
@@ -302,14 +294,14 @@ export const schedule: BEvent[] = [
       ko: "8일간의 행사 개요와 진행 방식을 안내하는 오리엔테이션입니다. 트랙 구성과 팀 운영, 평가 흐름을 짚고, 현재까지의 준비 상황을 담은 베이스 리포트를 공유합니다. 첫날부터 ‘어떻게 굴러가는지’를 모두가 같은 그림으로 이해하고 출발할 수 있게 하는 자리입니다.",
       en: "An orientation walking through the shape of the eight days — how it runs, the tracks, team logistics and the judging flow — plus a base report on where preparations stand. The goal is that everyone starts with the same picture of how the week works.",
     },
-    location: ONSITE_PENDING,
+    location: ONSITE,
   },
   {
     id: "d1-aws-session",
     day: 1,
     date: "08.22",
     category: "main",
-    mode: "online",
+    mode: "offline",
     timeOfDay: "PM",
     confirmed: true,
     title: { ko: "AWS 연사 세션", en: "AWS Speaker Session" },
@@ -322,14 +314,14 @@ export const schedule: BEvent[] = [
       ko: "AWS 연사가 진행하는 확정 세션입니다. Amazon이 실제로 AI 문제를 어떻게 정의하고, 어떤 방법론으로 접근하는지를 다룹니다. 문제를 ‘어떻게 풀까’ 이전에 ‘무엇을, 왜 푸는가’를 잡는 관점을 얻어, 곧이어 공개되는 실제 AX 과제에 그대로 적용해볼 수 있습니다. (연사 성함은 확정되는 대로 안내됩니다.)",
       en: "A confirmed session led by an AWS speaker on how Amazon defines AI problems and the methodology it uses to approach them. It's the ‘what and why’ before the ‘how’ — a lens you can apply directly to the real AX problems released the same day. (Speaker name to be announced once released.)",
     },
-    location: ONSITE_PENDING,
+    location: ONSITE,
   },
   {
     id: "d1-problem-release",
     day: 1,
     date: "08.22",
     category: "main",
-    mode: "online",
+    mode: "offline",
     timeOfDay: "PM",
     title: { ko: "문제 공개", en: "Problem Release" },
     summary: {
@@ -337,10 +329,28 @@ export const schedule: BEvent[] = [
       en: "Real companies' AX problems drop — and the 8-day build clock starts.",
     },
     description: {
-      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 공개됩니다. 팀별 자율 빌드는 문제가 공개되는 이 순간부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이, 바로 만들기 시작할 수 있습니다. Day 1은 필참이며, 현장 진행을 지향하되 장소가 확정되지 않으면 Zoom으로 진행합니다. (Day 2에는 크래시코스 직후 상세 문제 영상이 공개됩니다.)",
-      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now. Self-paced team build starts the moment the problems are released and runs continuously to Demo Day, so you can begin building straight away rather than waiting for a start whistle. Day 1 is mandatory; it's meant to be on-site, with Zoom as the fallback if the venue isn't locked. (A detailed problem video follows on Day 2, right after the Crash Course.)",
+      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 공개됩니다. 팀별 자율 빌드는 문제가 공개되는 이 순간부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이, 바로 만들기 시작할 수 있습니다. Day 1은 필참이며 *SCAPE Lifejungle 현장에서 진행됩니다. (Day 2에는 크래시코스 직후 상세 문제 영상이 공개됩니다.)",
+      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now. Self-paced team build starts the moment the problems are released and runs continuously to Demo Day, so you can begin building straight away rather than waiting for a start whistle. Day 1 is mandatory and runs on-site at *SCAPE Lifejungle. (A detailed problem video follows on Day 2, right after the Crash Course.)",
     },
-    location: ONSITE_PENDING,
+    location: ONSITE,
+  },
+  {
+    id: "d1-briefing",
+    day: 1,
+    date: "08.22",
+    category: "network",
+    mode: "offline",
+    timeOfDay: "PM",
+    title: { ko: "현장 브리핑 & Q&A", en: "On-site Briefing & Q&A" },
+    summary: {
+      ko: "과제 설명과 진행 방식 안내, 그리고 질의응답.",
+      en: "Walking through the problems, how it runs, and your questions.",
+    },
+    description: {
+      ko: "공개된 과제를 함께 살펴보고, 8일간의 진행 방식·팀 구성·평가 기준을 안내하는 현장 브리핑입니다. 궁금한 점은 그 자리에서 바로 묻고 답을 들을 수 있어, 첫날부터 막힘 없이 출발할 수 있습니다.",
+      en: "An on-site briefing that walks through the released problems and explains how the eight days work — team formation, schedule and judging. Bring your questions; you'll get answers on the spot so nobody starts the week unsure of how it runs.",
+    },
+    location: ONSITE,
   },
 
   // ─── DAY 2 · Crash Course (08.23) ───────────────────────────────────────────

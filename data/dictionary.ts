@@ -237,8 +237,8 @@ export const dict = {
       en: "Day 1 opening → Day 2 crash course → Day 3–4 self-build + mentoring → Day 5 in-person kickoff → Day 6 open build → Day 7 final rehearsal → Day 8 Demo Day. Day 1 is the real kick-off, and the self-paced build runs from the Day-1 problem release to Demo Day. Tap any card for details.",
     },
     modeNote: {
-      ko: "대부분 온라인으로 진행되며, Day 5(오프라인 킥오프)·Day 7(파이널 리허설·AWS 오피스)·Day 8(데모데이)에 전원이 현장에 모입니다. Day 1은 현장 진행을 지향하되 미확정 시 Zoom으로 진행합니다.",
-      en: "Mostly online — the whole cohort gathers in person on Day 5 (kickoff), Day 7 (final rehearsal · AWS office) and Day 8 (Demo Day). Day 1 aims to be on-site, with Zoom as the fallback if the venue isn't locked.",
+      ko: "대부분 온라인으로 진행되며, Day 1(오프닝·*SCAPE)·Day 5(오프라인 킥오프)·Day 7(파이널 리허설·AWS 오피스)·Day 8(데모데이)에 전원이 현장에 모입니다.",
+      en: "Mostly online — the whole cohort gathers in person on Day 1 (opening · *SCAPE), Day 5 (kickoff), Day 7 (final rehearsal · AWS office) and Day 8 (Demo Day).",
     },
     legendTitle: { ko: "카테고리", en: "Legend" },
     dayLabel: { ko: "Day", en: "Day" },
