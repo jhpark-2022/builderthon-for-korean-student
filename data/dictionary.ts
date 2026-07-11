@@ -20,6 +20,38 @@ export const links = {
     "mailto:jhpark.2022@business.smu.edu.sg?subject=Zero100%20Builderthon%20Partnership%20Inquiry",
 };
 
+// Sponsor / mentor company introductions, shown in a modal when a logo tile is
+// clicked (the tiles no longer link out to external sites). Keyed by the tile's
+// `alt`. HONESTY RULE: only companies we can describe factually get real copy;
+// everyone else falls back to `partnerIntroTBC` until their blurb is confirmed.
+export const partnerIntroTBC: Phrase = {
+  ko: "회사 소개는 준비 중입니다. 파트너십이 확정되는 대로 업데이트할 예정입니다.",
+  en: "Company introduction coming soon — we'll update it as the partnership is confirmed.",
+};
+
+export const partnerIntros: Record<string, Phrase> = {
+  AWS: {
+    ko: "아마존이 운영하는 세계 최대 규모의 클라우드 컴퓨팅 플랫폼입니다. 컴퓨팅·스토리지·데이터베이스부터 생성형 AI까지 폭넓은 서비스를 제공하며, 전 세계 스타트업의 인프라 표준으로 자리잡았습니다.",
+    en: "Amazon's cloud computing platform and the world's most broadly adopted cloud — spanning compute, storage, databases, and generative AI, and the default infrastructure for startups worldwide.",
+  },
+  OpenAI: {
+    ko: "ChatGPT와 GPT 모델을 만든 AI 연구·배포 기업입니다. 안전하고 유익한 인공지능을 목표로, 개발자가 활용할 수 있는 강력한 언어·멀티모달 모델 API를 제공합니다.",
+    en: "The AI research and deployment company behind ChatGPT and the GPT models, offering powerful language and multimodal model APIs for developers building with AI.",
+  },
+  Workato: {
+    ko: "코드를 거의 쓰지 않고도 여러 앱과 데이터를 연결해 업무를 자동화하는 기업용 자동화·통합(iPaaS) 플랫폼입니다. AI 기반 워크플로 자동화로 주목받고 있습니다.",
+    en: "An enterprise automation and integration (iPaaS) platform that connects apps and data to automate work with little to no code, increasingly known for its AI-driven workflow automation.",
+  },
+  "Superteam Singapore": {
+    ko: "솔라나(Solana) 생태계를 기반으로 하는 글로벌 빌더 커뮤니티의 싱가포르 지부입니다. 창업가·개발자·크리에이터가 함께 프로젝트를 만들고 지원받는 네트워크를 운영합니다.",
+    en: "The Singapore chapter of a global builder community in the Solana ecosystem, running a network where founders, developers, and creators build and get supported together.",
+  },
+  Hashed: {
+    ko: "블록체인·웹3 분야에 투자하는 국내 대표 벤처캐피털입니다. 초기 단계 창업팀에 투자와 네트워크를 지원하며 글로벌 웹3 생태계를 연결합니다.",
+    en: "A leading venture capital firm investing in blockchain and Web3, backing early-stage teams with capital and network across the global Web3 ecosystem.",
+  },
+};
+
 export const dict = {
   nav: {
     about: { ko: "취지", en: "Why" },
@@ -469,6 +501,8 @@ export const dict = {
     about: { ko: "함께하는 곳", en: "Who's behind it" },
     visit: { ko: "사이트 방문", en: "Visit site" },
     opportunities: { ko: "이런 기회가 있어요", en: "What's in it for you" },
+    // Partner logo → intro modal
+    companyAbout: { ko: "회사 소개", en: "About" },
   },
 
   partners: {
@@ -509,6 +543,9 @@ export const dict = {
     },
     mentorConfirmedLabel: { ko: "확정", en: "Confirmed" },
     mentorDiscussionLabel: { ko: "논의 중", en: "In discussion" },
+    // Neutral stage pills shown inside the company-intro modal.
+    stageConfirmed: { ko: "확정", en: "Confirmed" },
+    stageDiscussion: { ko: "협의 중", en: "In discussion" },
     stageNote: {
       ko: "* 단계 표기는 2026년 6월 기준이며, 변동될 수 있습니다. 최종 후원·파트너십은 확정 시 안내됩니다.",
       en: "* Stages are as of June 2026 and may change; final sponsorships/partnerships will be announced once confirmed.",

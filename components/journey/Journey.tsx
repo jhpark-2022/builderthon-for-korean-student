@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
-import { dict, links, type Phrase } from "@/data/dictionary";
+import { dict, links, partnerIntros, partnerIntroTBC, type Phrase } from "@/data/dictionary";
 import {
   categoryMeta,
   days,
@@ -16,6 +16,7 @@ import {
 } from "@/data/schedule";
 import Chapter from "./Chapter";
 import EventModal from "@/components/EventModal";
+import PartnerModal, { type PartnerInfo } from "@/components/PartnerModal";
 
 const legendOrder: Category[] = ["main","workshop","build","mentoring","network"];
 
@@ -43,14 +44,17 @@ function Eyebrow({ children, color = "violet" }: { children: React.ReactNode; co
 
 // A single partner logo on a clean white chip. Full-colour marks (crests,
 // gradients) read best on a light tile against the dark section, and a missing
-// file just shows an empty white chip rather than a broken-image icon. `url`
-// makes it a link, `badge` shows a small role/stage pill, `big` gives square
+// file just shows an empty white chip rather than a broken-image icon.
+// `onOpen` makes the tile a button that opens the company-intro modal (takes
+// precedence — sponsor/mentor tiles use this instead of linking out); `url`
+// makes it a link; `badge` shows a small role/stage pill; `big` gives square
 // marks more presence.
 function LogoTile({
-  src, alt, w, h, url, badge, big = false,
+  src, alt, w, h, url, badge, big = false, onOpen,
 }: {
   src: string; alt: string; w: number; h: number;
   url?: string; badge?: string; big?: boolean;
+  onOpen?: (el: HTMLElement) => void;
 }) {
   const inner = (
     <>
@@ -78,6 +82,18 @@ function LogoTile({
   // on this dark tile with no background block behind them.
   const cls =
     "group relative flex h-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] px-5 transition duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.07]";
+  if (onOpen) {
+    return (
+      <button
+        type="button"
+        onClick={(e) => onOpen(e.currentTarget)}
+        className={`${cls} cursor-pointer`}
+        aria-label={alt}
+      >
+        {inner}
+      </button>
+    );
+  }
   return url ? (
     <a href={url} target="_blank" rel="noopener noreferrer" className={cls} aria-label={alt}>
       {inner}
@@ -690,9 +706,17 @@ export default function Journey() {
   const reduce = useReducedMotion();
   const [active, setActive] = useState<BEvent | null>(null);
   const [activeDay, setActiveDay] = useState<number | null>(null); // day detail modal
+  const [activePartner, setActivePartner] = useState<PartnerInfo | null>(null); // sponsor/mentor intro modal
   // Remember the card that opened the modal so focus returns to it on close
   // (document.activeElement is unreliable in Safari — see EventModal).
   const triggerRef = useRef<HTMLElement | null>(null);
+  const partnerTriggerRef = useRef<HTMLElement | null>(null);
+  // Open the company-intro modal for a logo tile. `name` is the tile's `alt`;
+  // copy comes from partnerIntros, falling back to the "coming soon" blurb.
+  const openPartner = (name: string, stage: Phrase, el?: HTMLElement | null) => {
+    partnerTriggerRef.current = el ?? null;
+    setActivePartner({ name, desc: partnerIntros[name] ?? partnerIntroTBC, stage });
+  };
   const selectEvent = (ev: BEvent, el?: HTMLElement | null) => {
     triggerRef.current = el ?? null;
     setActive(ev);
@@ -785,7 +809,7 @@ export default function Journey() {
             {/* clamp caps trimmed (8rem->7.1rem, 3rem->2.65rem) so the 18px root
                 bump doesn't enlarge the hero headline — it stays ~its current size
                 while the rest of the site grows. */}
-            <h1 className="text-[clamp(2.65rem,11vw,7.1rem)] font-black leading-[0.88] tracking-tight drop-shadow-[0_4px_40px_rgba(124,58,237,0.5)] lg:text-[clamp(2.65rem,6vw,5.5rem)]">
+            <h1 className="text-[clamp(2.65rem,11vw,7.1rem)] font-black leading-[1.05] tracking-tight drop-shadow-[0_4px_40px_rgba(124,58,237,0.5)] lg:text-[clamp(2.65rem,6vw,5.5rem)]">
               <span className="block text-white">{t(dict.hero.titleLine1)}</span>
               {/* pb-[0.15em]: bg-clip-text only paints the gradient inside the line
                   box; with the tight leading the box cut off g/p descenders, so they
@@ -1273,10 +1297,10 @@ export default function Journey() {
             </p>
             <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
               {[
-                { src: "/partners/logos/white/aws.png",         alt: "AWS",          w: 600, h: 600, url: "https://aws.amazon.com" as string | undefined, big: true },
-                { src: "/partners/logos/white/innovate360.png", alt: "INNOVATE 360", w: 600, h: 179, url: undefined, big: false },
-                { src: "/partners/logos/white/bzcf.png",        alt: "BZCF",         w: 900, h: 900, url: undefined, big: true },
-              ].map((l) => <LogoTile key={l.alt} {...l} />)}
+                { src: "/partners/logos/white/aws.png",         alt: "AWS",          w: 600, h: 600, big: true },
+                { src: "/partners/logos/white/innovate360.png", alt: "INNOVATE 360", w: 600, h: 179, big: false },
+                { src: "/partners/logos/white/bzcf.png",        alt: "BZCF",         w: 900, h: 900, big: true },
+              ].map((l) => <LogoTile key={l.alt} {...l} onOpen={(el) => openPartner(l.alt, dict.partners.stageConfirmed, el)} />)}
             </div>
 
             {/* In discussion · grouped by category */}
@@ -1285,15 +1309,15 @@ export default function Journey() {
             </p>
             <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
               {[
-                { cat: t(dict.partners.catTech),      src: "/partners/logos/white/openai.png",     alt: "OpenAI",              w: 600,  h: 600, url: "https://openai.com" as string | undefined, big: true },
-                { cat: t(dict.partners.catTech),      src: "/partners/logos/white/workato.png",    alt: "Workato",             w: 1200, h: 600, url: "https://www.workato.com" as string | undefined, big: false },
-                { cat: t(dict.partners.catMarketing), src: "/partners/logos/white/eo-studio.png",  alt: "EO Studio",           w: 1242, h: 537, url: undefined, big: false },
-                { cat: t(dict.partners.catCommunity), src: "/partners/logos/white/superteam.png",  alt: "Superteam Singapore", w: 576,  h: 150, url: "https://superteam.fun" as string | undefined, big: false },
-                { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/brandboost.png", alt: "Brand Boost",         w: 1200, h: 630, url: undefined, big: false },
-                { cat: t(dict.partners.catVC),        src: "/partners/logos/white/hashed.png",     alt: "Hashed",              w: 1200, h: 619, url: "https://www.hashed.com" as string | undefined, big: false },
+                { cat: t(dict.partners.catTech),      src: "/partners/logos/white/openai.png",     alt: "OpenAI",              w: 600,  h: 600, big: true },
+                { cat: t(dict.partners.catTech),      src: "/partners/logos/white/workato.png",    alt: "Workato",             w: 1200, h: 600, big: false },
+                { cat: t(dict.partners.catMarketing), src: "/partners/logos/white/eo-studio.png",  alt: "EO Studio",           w: 1242, h: 537, big: false },
+                { cat: t(dict.partners.catCommunity), src: "/partners/logos/white/superteam.png",  alt: "Superteam Singapore", w: 576,  h: 150, big: false },
+                { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/brandboost.png", alt: "Brand Boost",         w: 1200, h: 630, big: false },
+                { cat: t(dict.partners.catVC),        src: "/partners/logos/white/hashed.png",     alt: "Hashed",              w: 1200, h: 619, big: false },
               ].map(({ cat, ...l }) => (
                 <div key={l.alt} className="flex flex-col gap-1.5">
-                  <LogoTile {...l} />
+                  <LogoTile {...l} onOpen={(el) => openPartner(l.alt, dict.partners.stageDiscussion, el)} />
                   <span className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-white/40">{cat}</span>
                 </div>
               ))}
@@ -1314,7 +1338,7 @@ export default function Journey() {
             <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
               {[
                 { src: "/partners/logos/white/onword.png", alt: "Onward Lab", w: 200, h: 200, big: true },
-              ].map((l) => <LogoTile key={l.alt} {...l} />)}
+              ].map((l) => <LogoTile key={l.alt} {...l} onOpen={(el) => openPartner(l.alt, dict.partners.stageConfirmed, el)} />)}
             </div>
 
             {/* In discussion */}
@@ -1325,7 +1349,7 @@ export default function Journey() {
               {[
                 { src: "/partners/logos/white/brandboost.png", alt: "Brand Boost", w: 1200, h: 630, big: false },
                 { src: "/partners/logos/white/remited.png",     alt: "REmited",     w: 1536, h: 317, big: false },
-              ].map((l) => <LogoTile key={l.alt} {...l} />)}
+              ].map((l) => <LogoTile key={l.alt} {...l} onOpen={(el) => openPartner(l.alt, dict.partners.stageDiscussion, el)} />)}
             </div>
           </div>
 
@@ -1404,6 +1428,7 @@ export default function Journey() {
 
       <DayModal dayNum={activeDay} onClose={() => setActiveDay(null)} onSelectEvent={selectEvent} t={t} />
       <EventModal event={active} onClose={() => setActive(null)} triggerRef={triggerRef} />
+      <PartnerModal partner={activePartner} onClose={() => setActivePartner(null)} triggerRef={partnerTriggerRef} />
     </main>
   );
 }
