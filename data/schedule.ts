@@ -197,7 +197,7 @@ export const schedule: BEvent[] = [
     day: 1,
     date: "08.22",
     category: "main",
-    mode: "online",
+    mode: "offline",
     timeOfDay: "AM",
     title: { ko: "문제 공개", en: "Problem Release" },
     summary: {
@@ -208,25 +208,25 @@ export const schedule: BEvent[] = [
       ko: "Day 1이 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 공개됩니다. 팀별 자율 빌드는 문제가 공개되는 이 순간부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이, 바로 만들기 시작할 수 있습니다.",
       en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now. Self-paced team build starts the moment the problems are released and runs continuously to Demo Day, so you can begin building straight away rather than waiting for a start whistle.",
     },
-    location: ONLINE,
+    location: ONSITE,
   },
   {
     id: "d1-briefing",
     day: 1,
     date: "08.22",
     category: "network",
-    mode: "online",
+    mode: "offline",
     timeOfDay: "PM",
-    title: { ko: "온라인 브리핑 & Q&A", en: "Online Briefing & Q&A" },
+    title: { ko: "현장 브리핑 & Q&A", en: "On-site Briefing & Q&A" },
     summary: {
       ko: "과제 설명과 진행 방식 안내, 그리고 질의응답.",
       en: "Walking through the problems, how it runs, and your questions.",
     },
     description: {
-      ko: "공개된 과제를 함께 살펴보고, 8일간의 진행 방식·팀 구성·평가 기준을 안내하는 온라인 브리핑입니다. 궁금한 점은 그 자리에서 바로 묻고 답을 들을 수 있어, 첫날부터 막힘 없이 출발할 수 있습니다.",
-      en: "An online briefing that walks through the released problems and explains how the eight days work — team formation, schedule and judging. Bring your questions; you'll get answers on the spot so nobody starts the week unsure of how it runs.",
+      ko: "공개된 과제를 함께 살펴보고, 8일간의 진행 방식·팀 구성·평가 기준을 안내하는 현장 브리핑입니다. 궁금한 점은 그 자리에서 바로 묻고 답을 들을 수 있어, 첫날부터 막힘 없이 출발할 수 있습니다.",
+      en: "An on-site briefing that walks through the released problems and explains how the eight days work — team formation, schedule and judging. Bring your questions; you'll get answers on the spot so nobody starts the week unsure of how it runs.",
     },
-    location: ONLINE,
+    location: ONSITE,
   },
 
   // ─── DAY 2 · Deep-Dive · Build begins (08.23) ───────────────────────────────
