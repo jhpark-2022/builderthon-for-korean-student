@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
 import { dict, links, type Phrase } from "@/data/dictionary";
@@ -11,6 +12,7 @@ import {
   schedule,
   type BEvent,
   type Category,
+  type DayMeta,
 } from "@/data/schedule";
 import Chapter from "./Chapter";
 import EventModal from "@/components/EventModal";
@@ -36,6 +38,52 @@ function Eyebrow({ children, color = "violet" }: { children: React.ReactNode; co
     <span className={`mb-4 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] ${map[color]}`}>
       {children}
     </span>
+  );
+}
+
+// A single partner logo on a clean white chip. Full-colour marks (crests,
+// gradients) read best on a light tile against the dark section, and a missing
+// file just shows an empty white chip rather than a broken-image icon. `url`
+// makes it a link, `badge` shows a small role/stage pill, `big` gives square
+// marks more presence.
+function LogoTile({
+  src, alt, w, h, url, badge, big = false,
+}: {
+  src: string; alt: string; w: number; h: number;
+  url?: string; badge?: string; big?: boolean;
+}) {
+  const inner = (
+    <>
+      <Image
+        src={src}
+        alt={alt}
+        width={w}
+        height={h}
+        // Logos are tiny static brand marks (all ≤512px, pre-shrunk): skip the
+        // image optimizer and load eagerly so they appear instantly instead of
+        // popping in one-by-one via lazy-load + on-demand optimization.
+        unoptimized
+        loading="eager"
+        className={`${big ? "max-h-12" : "max-h-9"} w-auto max-w-full object-contain`}
+      />
+      {badge && (
+        <span className="absolute right-1.5 top-1.5 rounded-full border border-white/15 bg-white/10 px-1.5 py-0.5 text-[0.55rem] font-bold uppercase tracking-wide text-white/75">
+          {badge}
+        </span>
+      )}
+    </>
+  );
+  // Uniform dark card that matches the rest of the site's glass cards — the logos
+  // are pre-rendered as white silhouettes (transparent bg), so they read cleanly
+  // on this dark tile with no background block behind them.
+  const cls =
+    "group relative flex h-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] px-5 transition duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.07]";
+  return url ? (
+    <a href={url} target="_blank" rel="noopener noreferrer" className={cls} aria-label={alt}>
+      {inner}
+    </a>
+  ) : (
+    <div className={cls}>{inner}</div>
   );
 }
 
@@ -301,6 +349,157 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
   );
 }
 
+// Small mode/mandatory pill helpers for the clean day cards + day modal.
+function DayModeBadge({ day, t }: { day: DayMeta; t: Tfn }) {
+  if (day.dayMode === "offline")
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[0.68rem] font-bold text-amber-200">
+        <span aria-hidden>●</span>{t(dict.program.offlineLabel)}
+      </span>
+    );
+  if (day.dayMode === "pending")
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-2 py-0.5 text-[0.68rem] font-bold text-amber-200/90">
+        {t(dict.program.pendingLabel)}
+      </span>
+    );
+  return (
+    <span className="rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
+      {t(dict.program.onlineLabel)}
+    </span>
+  );
+}
+
+// One clean summary card per day (deck-style). Opens the day detail modal on
+// click rather than exploding every session inline — keeps the arc scannable.
+function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number) => void }) {
+  const evCount = schedule.filter((e) => e.day === day.day).length;
+  return (
+    <button
+      type="button"
+      onClick={() => onOpen(day.day)}
+      className="group relative flex h-full flex-col rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 text-left transition duration-300 hover:-translate-y-1 hover:border-violet-400/30 hover:bg-white/[0.06]"
+    >
+      <div className="flex items-center justify-between">
+        <span className="flex items-baseline gap-1.5">
+          <span className="text-[0.6rem] font-bold uppercase tracking-wider text-violet-300/70">{t(dict.program.dayLabel)}</span>
+          <span className="text-2xl font-black leading-none text-white">{day.day}</span>
+        </span>
+        <span className="text-[0.7rem] text-white/55">{day.date} · {t(day.weekday)}</span>
+      </div>
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        {day.mandatory && (
+          <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/30 bg-rose-400/10 px-2 py-0.5 text-[0.68rem] font-bold text-rose-200">
+            <span aria-hidden>★</span>{t(dict.program.mandatoryBadge)}
+          </span>
+        )}
+        <DayModeBadge day={day} t={t} />
+      </div>
+      <h4 className="mt-3 text-[15px] font-bold leading-snug text-white">{t(day.theme)}</h4>
+      <p className="mt-1.5 text-[13px] leading-relaxed text-white/65">{t(day.summary)}</p>
+      <span className="mt-auto pt-4 text-xs font-semibold text-violet-300/60 transition group-hover:text-violet-300">
+        {evCount} {t(dict.program.sessions)} · {t(dict.program.tapHint)} →
+      </span>
+    </button>
+  );
+}
+
+// Day detail modal — opened from a DayCard. Lists that day's sessions as the
+// shared EventCard; tapping a session opens the full EventModal on top.
+function DayModal({
+  dayNum,
+  onClose,
+  onSelectEvent,
+  t,
+}: {
+  dayNum: number | null;
+  onClose: () => void;
+  onSelectEvent: (e: BEvent, el: HTMLElement) => void;
+  t: Tfn;
+}) {
+  const reduce = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    if (dayNum == null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [dayNum, onClose]);
+
+  if (!mounted) return null;
+  const day = dayNum != null ? days.find((d) => d.day === dayNum) : null;
+  const evs = day ? schedule.filter((e) => e.day === day.day) : [];
+
+  return createPortal(
+    <AnimatePresence>
+      {day && (
+        <motion.div
+          className="fixed inset-0 z-[55] flex items-end justify-center sm:items-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: reduce ? 0 : 0.2 }}
+        >
+          <div aria-hidden onClick={onClose} className="absolute inset-0 cursor-default bg-black/70 backdrop-blur-sm" />
+          <motion.div
+            role="dialog"
+            aria-modal="true"
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 40, scale: 0.985 }}
+            animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.985 }}
+            transition={{ duration: reduce ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="relative z-10 flex max-h-[85vh] w-full max-w-[720px] flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-[#0c0a18] shadow-2xl sm:rounded-3xl"
+          >
+            <span aria-hidden className="h-[2px] w-full shrink-0 bg-gradient-to-r from-accent to-accent-strong" />
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label={t(dict.modal.close)}
+              className="absolute right-5 top-6 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 transition hover:bg-white/10 hover:text-white active:scale-95"
+            >
+              <svg width="16" height="16" viewBox="0 0 15 15" fill="none">
+                <path d="M1 1l13 13M14 1L1 14" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+              </svg>
+            </button>
+            <div className="overflow-y-auto px-6 pt-8 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:px-9 sm:py-9">
+              <div className="flex flex-wrap items-center gap-2 pr-12">
+                <span className="rounded-full border border-violet-400/25 bg-violet-500/12 px-3 py-1 text-xs font-bold text-violet-200">
+                  {t(day.phase)}
+                </span>
+                <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/70">
+                  {t(dict.program.dayLabel)} {day.day} · {day.date} · {t(day.weekday)}
+                </span>
+                {day.mandatory && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/30 bg-rose-400/10 px-2.5 py-1 text-xs font-bold text-rose-200">
+                    <span aria-hidden>★</span>{t(dict.program.mandatoryBadge)}
+                  </span>
+                )}
+                <DayModeBadge day={day} t={t} />
+              </div>
+              <h3 className="mt-5 text-[24px] font-bold leading-tight text-white sm:text-[30px]">{t(day.theme)}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-white/70">{t(day.summary)}</p>
+              <div className="mt-6 grid gap-3">
+                {evs.map((ev) => (
+                  <EventCard key={ev.id} ev={ev} t={t} onSelect={onSelectEvent} />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>,
+    document.body
+  );
+}
+
 // Builder-companion logos that scroll in an infinite marquee band. These are
 // the Zero100 network partners. Source logos from zero100.org were full-res
 // SVGs (~13MB total); they're downscaled to ~100px-tall transparent WebPs in
@@ -339,41 +538,50 @@ const companions: { src?: string; alt?: string }[] = [
 // prefers-reduced-motion rule freezes it for motion-sensitive users, and it
 // pauses on hover. Empty slots render a tasteful "logo coming" frame.
 function CompanionMarquee({ t }: { t: Tfn }) {
-  const row = [...companions, ...companions];
+  // Two rows: the network is split in half so each row shows distinct logos,
+  // and they scroll in opposite directions (left / right) for a livelier band.
+  const mid = Math.ceil(companions.length / 2);
+  const rows = [
+    { items: companions.slice(0, mid), dir: "marquee-left" },
+    { items: companions.slice(mid), dir: "marquee-right" },
+  ];
   return (
     <div className="relative mt-10">
       {/* edge fades so logos dissolve into the band rather than hard-cut */}
       <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#0a0814]/55 to-transparent sm:w-28" />
       <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#0a0814]/55 to-transparent sm:w-28" />
-      {/* decorative logo wall (duplicated track) — hidden from AT to avoid
-          announcing 25 names twice; the "Builder Companions" heading conveys it */}
-      <div aria-hidden className="group overflow-hidden">
-        {/* margin (not flex gap) on each tile so the -50% loop is pixel-seamless */}
-        <div className="marquee-track marquee-left group-hover:[animation-play-state:paused]">
-          {row.map((c, i) => (
-            <div
-              key={i}
-              aria-hidden={!c.src}
-              className="mr-4 flex h-24 w-44 shrink-0 items-center justify-center rounded-2xl border border-white/[0.08] bg-white/[0.03] px-6 sm:mr-5 sm:h-28 sm:w-52"
-            >
-              {c.src ? (
-                // plain img keeps it simple for the duplicated marquee track;
-                // logos are already light-on-transparent, so no invert needed.
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={c.src}
-                  alt=""
-                  className="max-h-9 w-auto max-w-[82%] object-contain opacity-70 transition group-hover:opacity-100"
-                />
-              ) : (
-                // placeholder logo frame — neutral, claims no specific company
-                <span className="flex h-7 w-7 items-center justify-center rounded-md border border-dashed border-white/15 text-white/20">
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5 12.5 7 7 12.5 1.5 7 7 1.5Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" /></svg>
-                </span>
-              )}
+      {/* decorative logo wall (two duplicated tracks) — hidden from AT to avoid
+          announcing the names twice; the "Builder Network" heading conveys it */}
+      <div aria-hidden className="group flex flex-col gap-4 overflow-hidden sm:gap-5">
+        {rows.map((r, ri) => {
+          // each track holds its half twice so the -50% translate loops seamlessly
+          const track = [...r.items, ...r.items];
+          return (
+            <div key={ri} className={`marquee-track ${r.dir} group-hover:[animation-play-state:paused]`}>
+              {track.map((c, i) => (
+                <div
+                  key={i}
+                  aria-hidden={!c.src}
+                  className="mr-4 flex h-24 w-44 shrink-0 items-center justify-center rounded-2xl border border-white/[0.10] bg-white/[0.05] px-6 sm:mr-5 sm:h-28 sm:w-52"
+                >
+                  {c.src ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={c.src}
+                      alt=""
+                      className="max-h-10 w-auto max-w-[82%] object-contain opacity-95 transition group-hover:opacity-100"
+                    />
+                  ) : (
+                    // placeholder logo frame — neutral, claims no specific company
+                    <span className="flex h-7 w-7 items-center justify-center rounded-md border border-dashed border-white/15 text-white/20">
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5 12.5 7 7 12.5 1.5 7 7 1.5Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" /></svg>
+                    </span>
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -439,7 +647,7 @@ export default function Journey() {
   const { t } = useLocale();
   const reduce = useReducedMotion();
   const [active, setActive] = useState<BEvent | null>(null);
-  const [openDay, setOpenDay] = useState<number | null>(1); // mobile program accordion
+  const [activeDay, setActiveDay] = useState<number | null>(null); // day detail modal
   // Remember the card that opened the modal so focus returns to it on close
   // (document.activeElement is unreliable in Safari — see EventModal).
   const triggerRef = useRef<HTMLElement | null>(null);
@@ -463,7 +671,6 @@ export default function Journey() {
   }, []);
   // Desktop grid: tallest day determines the shared row count so every column
   // gets the same number of card slots and rows line up across all six days.
-  const maxEvents = Math.max(...days.map((d) => schedule.filter((e) => e.day === d.day).length));
 
   return (
     <main className="relative z-10">
@@ -667,11 +874,68 @@ export default function Journey() {
         <p className="mt-5 text-center text-xs text-white/65">{t(dict.whoWhat.disclaimer)}</p>
       </Chapter>
 
+      {/* ── CH 2.5 · WHY JOIN (benefits) + INCENTIVES ──────────────── */}
+      <Chapter id="benefits" align="center">
+        <Eyebrow color="cyan">{t(dict.benefits.tag)}</Eyebrow>
+        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+          {t(dict.benefits.heading)}
+        </h2>
+        <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.benefits.intro)}</p>
+
+        <div className="mt-10 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-3">
+          {dict.benefits.items.map((it) => (
+            <div key={it.num} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-cyan-400/25 hover:bg-white/[0.05]">
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-400/15 text-sm font-black text-cyan-200">{it.num}</span>
+              <h3 className="mt-4 text-lg font-bold text-white">{t(it.title)}</h3>
+              <ul className="mt-3 space-y-2">
+                {it.points.map((p, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm leading-relaxed text-white/70">
+                    <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300/70" />
+                    {t(p)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Participation flow */}
+        <div className="mt-12 text-left">
+          <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/70">{t(dict.benefits.flowTitle)}</p>
+          <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+            {dict.benefits.flow.map((f, i) => (
+              <div key={i} className="flex items-center gap-2 sm:flex-1">
+                <div className="flex w-full items-center justify-center rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-3 text-center text-sm font-semibold text-white">{t(f)}</div>
+                {i < dict.benefits.flow.length - 1 && <span aria-hidden className="shrink-0 text-white/30">→</span>}
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-white/55">{t(dict.benefits.flowNote)}</p>
+        </div>
+
+        {/* Incentives — honest stages */}
+        <div className="mt-10 text-left">
+          <p className="inline-flex items-center gap-2 rounded-full border border-amber-400/25 bg-amber-400/[0.06] px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-amber-200">{t(dict.benefits.incentivesTitle)}</p>
+          <div className="mt-4 grid gap-4 sm:grid-cols-3">
+            {dict.benefits.incentives.map((inc, i) => (
+              <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+                <div className="flex items-center justify-between gap-2">
+                  <h4 className="text-base font-bold text-white">{t(inc.title)}</h4>
+                  <span className="shrink-0 rounded-full border border-amber-400/25 bg-amber-400/[0.08] px-2 py-0.5 text-[0.68rem] font-bold text-amber-200">{t(inc.stage)}</span>
+                </div>
+                <p className="mt-2 text-sm leading-relaxed text-white/70">{t(inc.desc)}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-white/60">{t(dict.benefits.incentiveNote)}</p>
+        </div>
+      </Chapter>
+
       {/* ── CH 3 · PROGRAM ─────────────────────────────────────────── */}
       {/* Full-width translucent program band — a dark violet tint that dims the
           WebGL field for legibility while still letting the background dots show
           through. Top & bottom fade out so it blends into the journey. */}
-      <section id="program" className="relative w-full bg-[#0a0814]/75 py-20 sm:py-28">
+      <section id="program" className="relative w-full bg-[#0a0814]/75 py-14 sm:py-20 lg:py-28">
         {/* soft fade at top & bottom edges */}
         <div aria-hidden className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0814]/75 to-transparent" />
         <div aria-hidden className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0814]/75 to-transparent" />
@@ -687,93 +951,25 @@ export default function Journey() {
             <div className="mx-auto mt-6 max-w-2xl rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] px-5 py-3.5 text-xs leading-relaxed text-amber-100/85">
               {t(dict.program.modeNote)}
             </div>
-            <p className="mt-4 text-xs text-white/65 xl:hidden">{t(dict.program.swipeHint)}</p>
           </div>
 
-          {/* Desktop (xl+): one column per day, laid out on a real grid with
-              subgrid rows so every card slot lines up horizontally across all
-              eight days — no more ragged columns when a card runs taller.
-              Row 1 = the day header+theme block; rows 2…(1+maxEvents) = card
-              slots. Days with fewer sessions simply leave trailing slots empty. */}
-          <div
-            className="mt-12 hidden gap-4 xl:grid xl:grid-cols-8"
-            style={{ gridTemplateRows: `auto repeat(${maxEvents}, auto)` }}
-          >
-            {days.map((day) => {
-              const evs = schedule.filter((e) => e.day === day.day);
-              return (
-                <div
-                  key={day.day}
-                  className="grid grid-rows-subgrid gap-3"
-                  style={{ gridRow: `1 / span ${1 + maxEvents}` }}
-                >
-                  {/* header + theme, kept visually attached as one block */}
-                  <div className="flex flex-col">
-                    <div className="flex h-12 items-center rounded-t-xl border border-violet-400/15 bg-gradient-to-r from-violet-500/12 to-indigo-500/8 px-3">
-                      <div className="flex w-full items-baseline justify-between">
-                        <h3 className="text-sm font-bold text-violet-200/90">{t(dict.program.dayLabel)} {day.day}</h3>
-                        <span className="text-[0.7rem] text-white/60">{day.date}·{t(day.weekday)}</span>
-                      </div>
-                    </div>
-                    <div className="flex flex-1 min-h-[3.25rem] flex-col justify-center rounded-b-xl border-x border-b border-white/[0.06] bg-white/[0.03] px-3 py-2">
-                      <span className="text-[0.6rem] font-bold uppercase tracking-wider text-violet-300/70">{t(day.phase)}</span>
-                      <p className="mt-0.5 text-xs font-bold leading-snug text-white/75">{t(day.theme)}</p>
-                    </div>
-                  </div>
-                  {evs.map((ev) => (
-                    <EventCard key={ev.id} ev={ev} t={t} onSelect={selectEvent} />
+          {/* Two Labs, four clean day cards each. Tapping a card opens the day
+              detail modal (that day's sessions) instead of exploding all ~18
+              sessions inline — the 8-day arc stays scannable. */}
+          <div className="mt-12 space-y-8">
+            {[days.slice(0, 4), days.slice(4, 8)].map((group) => (
+              <div key={group[0].day}>
+                <div className="mb-4 flex items-center gap-3">
+                  <span className="text-sm font-bold uppercase tracking-[0.14em] text-violet-200">{t(group[0].phase)}</span>
+                  <span aria-hidden className="h-px flex-1 bg-white/10" />
+                </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                  {group.map((day) => (
+                    <DayCard key={day.day} day={day} t={t} onOpen={setActiveDay} />
                   ))}
                 </div>
-              );
-            })}
-          </div>
-
-          {/* Mobile / tablet (<xl): vertical accordion, one row per day, so the
-              whole 6-day arc is scannable without horizontal scrolling. */}
-          <div className="mt-8 space-y-3 xl:hidden">
-            {days.map((day) => {
-              const evs = schedule.filter((e) => e.day === day.day);
-              const open = openDay === day.day;
-              return (
-                <div key={day.day} className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06]">
-                  <button
-                    type="button"
-                    onClick={() => setOpenDay(open ? null : day.day)}
-                    aria-expanded={open}
-                    className="flex w-full items-center gap-3 px-4 py-4 text-left"
-                  >
-                    <span className="flex h-10 w-10 shrink-0 flex-col items-center justify-center rounded-lg border border-violet-400/25 bg-violet-500/15 text-violet-200">
-                      <span className="text-[0.62rem] font-semibold uppercase leading-none opacity-70">{t(dict.program.dayLabel)}</span>
-                      <span className="text-base font-black leading-none">{day.day}</span>
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-bold text-white">{t(day.theme)}</span>
-                      <span className="mt-0.5 block text-xs text-white/65">{t(day.phase)} · {day.date} · {evs.length} {t(dict.program.sessions)}</span>
-                    </span>
-                    <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 text-white/70 transition ${open ? "rotate-45 border-violet-400 text-violet-300" : ""}`}>
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
-                    </span>
-                  </button>
-                  <AnimatePresence initial={false}>
-                    {open && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: reduce ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] }}
-                        className="overflow-hidden"
-                      >
-                        <div className="space-y-3 px-3 pb-3">
-                          {evs.map((ev) => (
-                            <EventCard key={ev.id} ev={ev} t={t} onSelect={selectEvent} />
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
 
           <Glass className="mt-8 bg-white/[0.10] text-left">
@@ -799,6 +995,64 @@ export default function Journey() {
           </Glass>
         </div>
       </section>
+
+      {/* ── CH 3.2 · SPEAKER SESSIONS (Day 1·5·8) ──────────────────── */}
+      {/* Speaker names + photos are transcribed from the internal deck — public
+          naming/likeness to be confirmed with the user (flagged in the handoff). */}
+      <Chapter id="speakers" align="center">
+        <Eyebrow>{t(dict.speakers.tag)}</Eyebrow>
+        <h2 className="text-[clamp(1.9rem,5vw,3.5rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+          {t(dict.speakers.heading)}
+        </h2>
+        <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.speakers.intro)}</p>
+        <div className="mt-10 grid gap-5 text-left sm:grid-cols-3">
+          {dict.speakers.people.map((s) => (
+            <div key={s.img} className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-400/25 hover:bg-white/[0.05]">
+              <span className="text-xs font-bold uppercase tracking-wide text-violet-300/80">{t(s.day)}</span>
+              <p className="mt-4 flex-1 text-base font-semibold leading-snug text-white">{t(s.topic)}</p>
+              <div className="mt-5 flex items-center gap-3 border-t border-white/10 pt-4">
+                <Image src={s.img} alt={t(s.name)} width={200} height={200} className="h-14 w-14 shrink-0 rounded-full object-cover ring-1 ring-white/15" />
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-white">{t(s.name)}</p>
+                  <p className="mt-0.5 text-xs leading-snug text-white/60">{t(s.role)}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-6 text-xs text-white/55">{t(dict.speakers.tbcNote)}</p>
+      </Chapter>
+
+      {/* ── CH 3.3 · MENTORING PHILOSOPHY ──────────────────────────── */}
+      <Chapter id="mentoring" align="center">
+        <Eyebrow color="emerald">{t(dict.mentoring.tag)}</Eyebrow>
+        <h2 className="text-[clamp(1.9rem,5vw,3.5rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+          {t(dict.mentoring.heading)}
+        </h2>
+        <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.mentoring.intro)}</p>
+        <div className="mt-8 grid gap-4 text-left lg:grid-cols-3">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 lg:col-span-2">
+            <p className="text-xs font-bold uppercase tracking-wide text-emerald-300/80">{t(dict.mentoring.personaLabel)}</p>
+            <p className="mt-3 text-lg font-semibold leading-relaxed text-white">{t(dict.mentoring.persona)}</p>
+          </div>
+          <div className="rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] p-6">
+            <p className="text-sm font-bold text-amber-200">{t(dict.mentoring.asideLabel)}</p>
+            <p className="mt-2 text-sm leading-relaxed text-amber-100/80">{t(dict.mentoring.aside)}</p>
+          </div>
+        </div>
+        <div className="mt-6 text-left">
+          <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/70">{t(dict.mentoring.asksTitle)}</p>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {dict.mentoring.asks.map((a, i) => (
+              <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-400/15 text-xs font-black text-emerald-200">{i + 1}</span>
+                <h4 className="mt-3 text-sm font-bold text-white">{t(a.title)}</h4>
+                <p className="mt-1.5 text-xs leading-relaxed text-white/65">{t(a.desc)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Chapter>
 
       {/* ── CH 3.5 · TRACTION / FOR PARTNERS ───────────────────────── */}
       {/* overflow-x-clip contains the oversized w-[140%] vignette below so it
@@ -880,137 +1134,94 @@ export default function Journey() {
           </h2>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/75">{t(dict.partners.note)}</p>
 
-          {/* Organizer + Founding network, both clean white-on-transparent marks.
-              KOMOS shows its lion mark beside the name; Zero100 uses its official
-              full lockup (icon + wordmark), so the wordmark IS the name and the
-              text label is dropped to avoid a duplicate. `wide` switches between
-              the two layouts. */}
-          <div className="mt-8 grid gap-4 text-left sm:grid-cols-2">
-            {[
-              { label: t(dict.partners.organizerLabel), img: "/komos-lion-trim.png", name: "KOMOS",   desc: t(dict.partners.organizerDesc), w: 377, h: 195, url: undefined as string | undefined, wide: false },
-              { label: t(dict.partners.networkLabel),   img: "/partners/zero100-lockup.png", name: "Zero100", desc: t(dict.partners.networkDesc), w: 601, h: 127, url: "https://www.zero100.org", wide: true },
-            ].map((o) => {
-              const inner = (
-                <>
-                  <span className="text-xs font-bold uppercase tracking-widest text-white/60">{o.label}</span>
-                  {o.wide ? (
-                    /* Official lockup stands in for the name → alt carries it */
-                    <div className="mt-4">
-                      <Image src={o.img} alt={o.name} width={o.w} height={o.h} className="h-9 w-auto max-w-[200px] object-contain brightness-0 invert" />
-                      <p className="mt-3 flex items-center gap-1.5 text-sm text-white/75">
-                        {o.desc}
-                        {o.url && <span aria-hidden className="text-white/30 transition group-hover:text-white/70">↗</span>}
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="mt-4 flex items-center gap-4">
-                      {/* fixed optical box so the lion mark and the name text line
-                          up cleanly within the card */}
-                      <span className="flex h-10 w-[72px] shrink-0 items-center justify-center">
-                        {/* name is shown as text beside it → empty alt avoids double announcement */}
-                        <Image src={o.img} alt="" width={o.w} height={o.h} className="max-h-8 w-auto max-w-full object-contain brightness-0 invert" />
-                      </span>
-                      <div className="min-w-0">
-                        <p className="flex items-center gap-1.5 text-lg font-bold text-white">
-                          {o.name}
-                          {o.url && <span aria-hidden className="text-white/30 transition group-hover:text-white/70">↗</span>}
-                        </p>
-                        <p className="text-sm text-white/75">{o.desc}</p>
-                      </div>
-                    </div>
-                  )}
-                </>
-              );
-              const cls = "group block rounded-3xl border border-white/10 bg-white/[0.04] p-6 transition hover:border-white/20 hover:bg-white/[0.06]";
-              return o.url ? (
-                <a key={o.name} href={o.url} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
-              ) : (
-                <div key={o.name} className={cls}>{inner}</div>
-              );
-            })}
+          {/* ── Tier 1 · 주최 · HOST (the AXMOS collective) ─────────────────
+              Full-colour marks on white chips, matching the deck's structure
+              slide. Wilt Venture Builder has no public site link on hand → no
+              anchor (honest, not an invented URL). */}
+          <div className="mt-9 text-left">
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.hostLabel)}</p>
+              <p className="text-xs text-white/50">{t(dict.partners.hostNote)}</p>
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              {[
+                { src: "/partners/logos/white/translink.png",    alt: "Translink Investment", w: 490,  h: 150,  url: "https://translinkinvestment.com" as string | undefined, big: false },
+                { src: "/partners/logos/white/wilt.png",         alt: "Wilt Venture Builder", w: 1763, h: 1125, url: undefined, big: true },
+                { src: "/partners/logos/white/codepresso.png",   alt: "Codepresso",           w: 696,  h: 522,  url: "https://codepresso.io", big: true },
+                { src: "/partners/logos/white/drimaes.png",     alt: "Drimaes",              w: 640,  h: 195,  url: "https://www.drimaes.com", big: false },
+                { src: "/partners/logos/white/popup-studio.png", alt: "Popup Studio",         w: 512,  h: 246,  url: "https://popupstudio.ai", big: false },
+              ].map((l) => <LogoTile key={l.alt} {...l} />)}
+            </div>
           </div>
 
-          {/* Problem providers — companies supplying the real AX problems
-              (confirmed). Popup Studio + Codepresso have wordmarks; Drimaes has
-              no logo on hand, so it renders as a text card (honest, no invented
-              asset). */}
-          <p className="mt-10 inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-3 py-1 text-[0.7rem] font-bold uppercase tracking-[0.14em] text-emerald-200">
-            {t(dict.partners.providersLabel)}
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-white/75">{t(dict.partners.providersNote)}</p>
-          <div className="mt-4 grid gap-4 sm:grid-cols-3">
-            {[
-              { alt: "Drimaes",      src: undefined as string | undefined, w: 0,   h: 0,   url: "https://www.drimaes.com" as string | undefined },
-              { alt: "Codepresso",   src: "/partners/processed/codepresso.png",   w: 361, h: 113, url: "https://codepresso.io" },
-              { alt: "Popup Studio", src: "/partners/processed/popup-studio.png", w: 476, h: 134, url: "https://popupstudio.ai" },
-            ].map((b) => {
-              const inner = b.src ? (
-                <Image src={b.src} alt={b.alt} width={b.w} height={b.h} className="max-h-10 w-auto max-w-full object-contain opacity-80 brightness-0 invert transition duration-300 group-hover:opacity-100" />
-              ) : (
-                <span className="text-lg font-bold tracking-wide text-white/85 transition group-hover:text-white">{b.alt}</span>
-              );
-              const cls = "group flex h-20 items-center justify-center rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.04] px-6 transition duration-300 hover:border-emerald-400/40 hover:bg-emerald-400/[0.08]";
-              return b.url ? (
-                <a key={b.alt} href={b.url} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
-              ) : (
-                <div key={b.alt} className={cls}>{inner}</div>
-              );
-            })}
+          {/* ── Tier 2 · 주관 · 운영 · ORGANIZERS (the student associations) ── */}
+          <div className="mt-8 text-left">
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.organizersLabel)}</p>
+              <p className="text-xs text-white/50">{t(dict.partners.organizersNote)}</p>
+            </div>
+            <div className="mt-3 grid grid-cols-3 gap-3">
+              {[
+                { src: "/partners/logos/white/smu-lion.png", alt: "SMU KSA",           w: 1080, h: 1080, badge: t(dict.partners.roleLead), big: true },
+                { src: "/partners/logos/white/nus.png",     alt: "NUS Korea Society", w: 225,  h: 225,  badge: t(dict.partners.roleOps),  big: true },
+                { src: "/partners/logos/white/ntu-ksa.png",  alt: "NTU KSA",           w: 447,  h: 447,  badge: t(dict.partners.roleOps),  big: true },
+              ].map((l) => <LogoTile key={l.alt} {...l} />)}
+            </div>
           </div>
 
-          {/* Sponsors / partners — three honest stages straight from the deck. */}
-          <div className="mt-8 border-t border-white/10 pt-8" />
+          {/* ── Tier 3 · 후원 · SPONSORS (confirmed + in-discussion by category) ── */}
+          <div className="mt-8 border-t border-white/10 pt-8 text-left">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.sponsorsLabel)}</p>
 
-          {/* Tier 1 — Confirmed */}
-          <p className="text-xs font-bold uppercase tracking-widest text-emerald-300/90">{t(dict.partners.tierConfirmedLabel)}</p>
-          <a href="https://www.alchemy.com/" target="_blank" rel="noopener noreferrer"
-            className="group mt-3 flex h-16 items-center justify-center gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/5 px-6 transition hover:bg-emerald-400/10 sm:w-1/2">
-            <Image src="/partners/processed/alchemy.png" alt="" width={480} height={422} className="h-8 w-8 shrink-0 object-contain brightness-0 invert opacity-90" />
-            <span className="font-bold text-white">Alchemy</span>
-            <span aria-hidden className="text-white/40 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-emerald-300">↗</span>
-          </a>
+            {/* Confirmed · venue · marketing */}
+            <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-emerald-200">
+              {t(dict.partners.sponsorConfirmedLabel)}
+            </p>
+            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {[
+                { src: "/partners/logos/white/aws.png",         alt: "AWS",          w: 600, h: 600, url: "https://aws.amazon.com" as string | undefined, big: true },
+                { src: "/partners/logos/white/innovate360.png", alt: "INNOVATE 360", w: 600, h: 179, url: undefined, big: false },
+                { src: "/partners/logos/white/bzcf.png",        alt: "BZCF",         w: 900, h: 900, url: undefined, big: true },
+              ].map((l) => <LogoTile key={l.alt} {...l} />)}
+            </div>
 
-          {/* Tier 2 — In advanced talks (meeting done) */}
-          <p className="mt-8 text-xs font-bold uppercase tracking-widest text-amber-300/90">{t(dict.partners.tierAdvancedLabel)}</p>
-          <div className="mt-3 flex flex-wrap justify-center gap-3">
-            {[
-              { n: "AWS",     url: "https://aws.amazon.com" },
-              { n: "OpenAI",  url: "https://openai.com" },
-              { n: "Workato", url: "https://www.workato.com" },
-            ].map(({ n, url }) => (
-              <a key={n} href={url} target="_blank" rel="noopener noreferrer"
-                className="group flex h-14 min-w-[8.5rem] flex-1 items-center justify-center gap-1.5 rounded-xl border border-amber-400/25 bg-amber-400/[0.04] px-4 transition duration-300 hover:border-amber-400/40 hover:bg-amber-400/[0.08]">
-                <span className="text-sm font-semibold uppercase tracking-wide text-white/80 transition group-hover:text-white">{n}</span>
-                <span aria-hidden className="text-white/25 transition group-hover:text-amber-300/80">↗</span>
-              </a>
-            ))}
+            {/* In discussion · grouped by category */}
+            <p className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/60">
+              {t(dict.partners.sponsorDiscussionLabel)}
+            </p>
+            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+              {[
+                { cat: t(dict.partners.catTech),      src: "/partners/logos/white/openai.png",     alt: "OpenAI",              w: 600,  h: 600, url: "https://openai.com" as string | undefined, big: true },
+                { cat: t(dict.partners.catTech),      src: "/partners/logos/white/workato.png",    alt: "Workato",             w: 1200, h: 600, url: "https://www.workato.com" as string | undefined, big: false },
+                { cat: t(dict.partners.catMarketing), src: "/partners/logos/white/eo-studio.png",  alt: "EO Studio",           w: 1242, h: 537, url: undefined, big: false },
+                { cat: t(dict.partners.catCommunity), src: "/partners/logos/white/superteam.png",  alt: "Superteam Singapore", w: 576,  h: 150, url: "https://superteam.fun" as string | undefined, big: false },
+                { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/brandboost.png", alt: "Brand Boost",         w: 1200, h: 630, url: undefined, big: false },
+                { cat: t(dict.partners.catVC),        src: "/partners/logos/white/hashed.png",     alt: "Hashed",              w: 1200, h: 619, url: "https://www.hashed.com" as string | undefined, big: false },
+              ].map(({ cat, ...l }) => (
+                <div key={l.alt} className="flex flex-col gap-1.5">
+                  <LogoTile {...l} />
+                  <span className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-white/40">{cat}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <p className="mt-2 text-xs text-white/55">{t(dict.partners.tierAdvancedNote)}</p>
 
-          {/* Tier 3 — In discussion */}
-          <p className="mt-8 text-xs font-bold uppercase tracking-widest text-white/60">{t(dict.partners.tierDiscussionLabel)}</p>
-          <div className="mt-3 flex flex-wrap justify-center gap-3">
-            {[
-              { n: "Lovable",      url: "https://lovable.dev" },
-              { n: "LG CNS",       url: "https://www.lgcns.com" },
-              { n: "Superteam SG", url: "https://superteam.fun" },
-              { n: "Bloom",        url: undefined as string | undefined },
-            ].map(({ n, url }) => {
-              const cls = "group flex h-14 min-w-[8.5rem] flex-1 items-center justify-center gap-1.5 rounded-xl border border-dashed border-white/15 bg-white/[0.02] px-4 transition duration-300 hover:border-violet-400/30 hover:bg-violet-400/[0.04]";
-              const inner = (
-                <>
-                  <span className="text-sm font-semibold uppercase tracking-wide text-white/70 transition group-hover:text-white/90">{n}</span>
-                  {url && <span aria-hidden className="text-white/20 transition group-hover:text-violet-300/70">↗</span>}
-                </>
-              );
-              return url ? (
-                <a key={n} href={url} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
-              ) : (
-                <div key={n} className={cls}>{inner}</div>
-              );
-            })}
+          {/* ── Mentors in discussion (from the deck's mentoring slide) ────── */}
+          <div className="mt-8 border-t border-white/10 pt-8 text-left">
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.mentorsLabel)}</p>
+              <p className="text-xs text-white/50">{t(dict.partners.mentorsNote)}</p>
+            </div>
+            <div className="mt-3 grid grid-cols-3 gap-3">
+              {[
+                { src: "/partners/logos/white/onword.png",     alt: "Onword Lab",  w: 200,  h: 200, big: true },
+                { src: "/partners/logos/white/brandboost.png", alt: "Brand Boost", w: 1200, h: 630, big: false },
+                { src: "/partners/logos/white/remited.png",     alt: "REmited",     w: 1536, h: 317, big: false },
+              ].map((l) => <LogoTile key={l.alt} {...l} />)}
+            </div>
           </div>
-          <p className="mt-4 text-xs text-white/65">{t(dict.partners.inDiscussionNote)}</p>
+
+          <p className="mt-6 text-left text-xs text-white/60">{t(dict.partners.stageNote)}</p>
         </div>
       </Chapter>
 
@@ -1018,7 +1229,7 @@ export default function Journey() {
       {/* Full-width band echoing the program band's dark tint + edge fades, so
           the scrolling logo wall reads as part of the journey rather than a
           tacked-on strip. */}
-      <section id="companions" className="relative w-full bg-[#0a0814]/55 py-16 sm:py-20">
+      <section id="companions" className="relative w-full bg-[#0a0814]/55 py-12 sm:py-16 lg:py-20">
         <div aria-hidden className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#0a0814]/55 to-transparent" />
         <div aria-hidden className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#0a0814]/55 to-transparent" />
         <div className="relative">
@@ -1087,6 +1298,7 @@ export default function Journey() {
         </div>
       </section>
 
+      <DayModal dayNum={activeDay} onClose={() => setActiveDay(null)} onSelectEvent={selectEvent} t={t} />
       <EventModal event={active} onClose={() => setActive(null)} triggerRef={triggerRef} />
     </main>
   );
