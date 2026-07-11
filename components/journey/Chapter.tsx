@@ -69,7 +69,7 @@ export default function Chapter({
     <section
       id={id}
       ref={ref}
-      className={`relative flex min-h-screen w-full flex-col justify-center py-24 ${wide ? "" : "px-6 sm:px-10"} ${background ? "isolate" : ""} ${className}`}
+      className={`relative flex min-h-[auto] w-full flex-col justify-center py-14 sm:py-20 md:min-h-screen lg:py-24 ${wide ? "" : "px-6 sm:px-10"} ${background ? "isolate" : ""} ${className}`}
     >
       {background}
       {/* centered content rail — the real boundary (z-10 keeps it above any
