@@ -9,7 +9,9 @@ import LocaleToggle from "@/components/LocaleToggle";
 const anchors = [
   { id: "about",    label: dict.nav.about },
   { id: "join",     label: dict.nav.join },
+  { id: "benefits", label: dict.nav.benefits },
   { id: "program",  label: dict.nav.program },
+  { id: "speakers", label: dict.nav.speakers },
   // Lands on the partner pitch (#why-partner / "For partners"); the logo wall
   // (#builders) follows immediately below it.
   { id: "why-partner", label: dict.nav.builders },
