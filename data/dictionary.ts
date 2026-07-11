@@ -3,8 +3,9 @@
 // Every string is bilingual: { ko, en }. Add new strings as { ko, en } pairs and
 // read them with the t() helper in components.
 //
-// Source of truth for the 2026 program: the media brief (Zero100_Builderthon_
-// 미디어브리프.docx), the daily-program graphic, the vision graphic and the deck.
+// Source of truth for the 2026 program: the authoritative deck (Zero100_
+// Builderthon_deck_수정본.pptx / _EN.pptx), with the vision graphic and media
+// brief for supporting copy.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type Locale = "ko" | "en";
@@ -23,7 +24,9 @@ export const dict = {
   nav: {
     about: { ko: "취지", en: "Why" },
     join: { ko: "참가 대상", en: "Who" },
+    benefits: { ko: "혜택", en: "Benefits" },
     program: { ko: "프로그램", en: "Program" },
+    speakers: { ko: "연사", en: "Speakers" },
     builders: { ko: "파트너", en: "Partners" },
     faq: { ko: "FAQ", en: "FAQ" },
     quiz: { ko: "성격 테스트", en: "Personality Test" },
@@ -200,13 +203,13 @@ export const dict = {
       en: "You don't need to be a CS major.",
     },
     intro: {
-      ko: "참가자의 약 60%는 바이브 코딩이 처음입니다. 그리고 그게 핵심입니다 — 입문 워크숍(101·102)으로 출발선을 맞추고, 코딩 실력이 아니라 아이디어가 한계가 되게 합니다.",
-      en: "About 60% of participants are trying vibe coding for the first time — and that's the point. Intro workshops (101 · 102) level the start line so your ideas, not your syntax, are the limit.",
+      ko: "참가자의 약 60%는 바이브 코딩이 처음입니다. 그리고 그게 핵심입니다 — 크래시코스(Day 2, 코드프레소 주관)로 출발선을 맞추고, 코딩 실력이 아니라 아이디어가 한계가 되게 합니다.",
+      en: "About 60% of participants are trying vibe coding for the first time — and that's the point. A crash course (Day 2, run by Codepresso) levels the start line so your ideas, not your syntax, are the limit.",
     },
     whoTitle: { ko: "이런 분께", en: "Who should join" },
     who: [
       { ko: "전공 불문 — NUS · NTU · SMU의 모든 한인 학생", en: "Any major — Korean students across NUS · NTU · SMU" },
-      { ko: "코딩이 처음이어도 좋습니다 — 입문 워크숍과 수료증이 함께합니다", en: "First time coding is fine — intro workshops and a certificate are included" },
+      { ko: "코딩이 처음이어도 좋습니다 — 크래시코스와 수료증이 함께합니다", en: "First time coding is fine — a crash course and a certificate are included" },
       { ko: "입대 전·전역 후, 다시 도전하고 싶은 분", en: "Anyone wanting a fresh challenge — before enlistment or after service" },
       { ko: "실제 기업의 문제를 직접 풀어보고 싶은 분", en: "Anyone who wants to solve a real company's problem hands-on" },
     ],
@@ -214,7 +217,7 @@ export const dict = {
     get: [
       { ko: "8일간 AI로 실제 작동하는 제품 빌드", en: "Build a real, working product in 8 days with AI" },
       { ko: "실제 기업의 AX 과제를 푼 ‘성공의 경험’", en: "A real success — solving an actual company's AX problem" },
-      { ko: "바이브 코딩 입문 수료증 (코드프레소 주관)", en: "A Vibe Coding completion certificate (run by Codepresso)" },
+      { ko: "크래시코스 수료증 (Day 2, 코드프레소 주관)", en: "A crash-course completion certificate (Day 2, run by Codepresso)" },
       { ko: "창업가 · 빌더 · 멘토와의 실질적 네트워킹", en: "Genuine networking with founders, builders & mentors" },
       { ko: "지속되는 한–싱 빌더 커뮤니티의 시작 멤버", en: "Founding membership in a lasting Korea–SG builder community" },
     ],
@@ -228,23 +231,25 @@ export const dict = {
     tag: { ko: "Program", en: "Program" },
     heading: { ko: "8일, zero에서 MVP까지", en: "8 days, from zero to MVP" },
     intro: {
-      ko: "사전 2일(문제 공개) → 입문 2일(바이브 코딩) → 빌더톤 4일로 이어집니다. Day 1이 실질적 킥오프이고, 자율 빌드는 그 직후부터 데모데이까지 상시 진행됩니다. 카드를 누르면 자세한 내용을 볼 수 있습니다.",
-      en: "Pre 2 days (problem release) → Intro 2 days (vibe coding) → Builderthon 4 days. Day 1 is the real kick-off, with self-paced build running from then to Demo Day. Tap any card for details.",
+      ko: "Day 1 오프닝 → Day 2 크래시코스 → Day 3–4 자율 빌드·멘토링 → Day 5 오프라인 킥오프 → Day 6 오픈 빌드 → Day 7 파이널 리허설 → Day 8 데모데이로 이어집니다. Day 1이 실질적 킥오프이고, 자율 빌드는 문제 공개 직후부터 데모데이까지 상시 진행됩니다. 카드를 누르면 자세한 내용을 볼 수 있습니다.",
+      en: "Day 1 opening → Day 2 crash course → Day 3–4 self-build + mentoring → Day 5 in-person kickoff → Day 6 open build → Day 7 final rehearsal → Day 8 Demo Day. Day 1 is the real kick-off, and the self-paced build runs from the Day-1 problem release to Demo Day. Tap any card for details.",
     },
     modeNote: {
-      ko: "대부분 온라인으로 진행되며, Day 5(중간 점검)와 Day 8(데모데이)에만 *SCAPE Lifejungle 현장에 전원이 모입니다.",
-      en: "Mostly online — the whole cohort only gathers in person at *SCAPE Lifejungle on Day 5 (check-in) and Day 8 (Demo Day).",
+      ko: "대부분 온라인으로 진행되며, Day 5(오프라인 킥오프)·Day 7(파이널 리허설·AWS 오피스)·Day 8(데모데이)에 전원이 현장에 모입니다. Day 1은 현장 진행을 지향하되 미확정 시 Zoom으로 진행합니다.",
+      en: "Mostly online — the whole cohort gathers in person on Day 5 (kickoff), Day 7 (final rehearsal · AWS office) and Day 8 (Demo Day). Day 1 aims to be on-site, with Zoom as the fallback if the venue isn't locked.",
     },
     legendTitle: { ko: "카테고리", en: "Legend" },
     dayLabel: { ko: "Day", en: "Day" },
     tapHint: { ko: "자세히 보기", en: "View details" },
     confirmedBadge: { ko: "확정", en: "Confirmed" },
+    mandatoryBadge: { ko: "필참", en: "Required" },
     onlineLabel: { ko: "온라인", en: "Online" },
     offlineLabel: { ko: "현장", en: "In person" },
+    pendingLabel: { ko: "현장 (미정)", en: "On-site (TBC)" },
     sessions: { ko: "세션", en: "sessions" },
     swipeHint: {
-      ko: "날짜를 눌러 해당 일정을 펼쳐보세요",
-      en: "Tap a day to expand its sessions",
+      ko: "카드를 눌러 하루 일정을 펼쳐보세요",
+      en: "Tap a day card to see its sessions",
     },
   },
 
@@ -283,6 +288,139 @@ export const dict = {
     },
   },
 
+  // ── 참가 혜택 · WHY JOIN (6 benefits) + 참여 플로우 + 인센티브 ──────────────
+  benefits: {
+    tag: { ko: "참가 혜택", en: "Why Join" },
+    heading: { ko: "참가하면 무엇을 얻나요?", en: "What you get by joining" },
+    intro: {
+      ko: "참여 자체만으로 얻어가도록 설계했습니다 — 스크리닝·사전 평가 없이, 개발 경험이 없어도 누구나 환영합니다.",
+      en: "Designed so you gain just by taking part — no screening or pre-assessment, and no dev experience needed.",
+    },
+    items: [
+      {
+        num: "01",
+        title: { ko: "개발 경험 없어도 OK", en: "No dev experience needed" },
+        points: [
+          { ko: "Codex 기반 beginner-friendly 크래시 코스", en: "A Codex-based, beginner-friendly crash course" },
+          { ko: "주최사 FDE의 실제 예시 라이브 빌드 → 따라 하기", en: "Live example builds by the hosts' FDEs to follow along" },
+          { ko: "모델 선택·프롬프트·용어 가이드 제공", en: "Model-choice, prompt and terminology guides" },
+          { ko: "0→1 첫 성공 경험 (기본기는 Day 1)", en: "Your first 0→1 success (fundamentals on Day 1)" },
+        ],
+      },
+      {
+        num: "02",
+        title: { ko: "실제 기업의 진짜 문제", en: "A real company's real problem" },
+        points: [
+          { ko: "가상 과제가 아닌 파트너사의 실제 AX 문제 + 직원 피드백", en: "Not toy prompts — a partner's real AX problem + employee feedback" },
+          { ko: "세일즈·재무 2트랙 · AWS 방법론으로 접근", en: "Sales & finance tracks · approached with AWS methodology" },
+          { ko: "지원하면 무조건 진짜 문제 + 회사 인원과 만남", en: "Everyone who applies gets a real problem + meets the company" },
+        ],
+      },
+      {
+        num: "03",
+        title: { ko: "‘성공 체험’", en: "A taste of success" },
+        points: [
+          { ko: "생각한 것이 눈앞에서 돌아가는 짜릿함", en: "The thrill of seeing your idea actually run" },
+          { ko: "데모로 끝나지 않는 첫 성공 경험", en: "A first success that goes beyond a demo" },
+          { ko: "군 입대 전 첫 성공 · 전역 후 재도전 동력", en: "A first win before enlistment · momentum to return after service" },
+        ],
+      },
+      {
+        num: "04",
+        title: { ko: "네트워킹", en: "Networking" },
+        points: [
+          { ko: "대표·경력자와 Day 1·5·7·8 현장 교류", en: "In-person exchange with founders on Days 1·5·7·8" },
+          { ko: "박희덕·원대로·이병일 등 연사 세션", en: "Speaker sessions with Park · Won · Lee and more" },
+          { ko: "패널·공유 세션으로 technical 그 이상의 인사이트", en: "Panels & sharing sessions for more-than-technical insight" },
+          { ko: "Day 5 참가자 AI 유스케이스 발표 (대표진 청중)", en: "Day 5 participant AI use-case showcase (founders in the room)" },
+        ],
+      },
+      {
+        num: "05",
+        title: { ko: "수료증", en: "Certificate" },
+        points: [
+          { ko: "크래시 코스 참여자 전원 발급 · 8일차 이후", en: "Issued to every crash-course participant · after Day 8" },
+          { ko: "포트폴리오 · 이력에 활용", en: "Use it in your portfolio and CV" },
+          { ko: "발급 기관·기준 협의 중", en: "Issuing body & criteria in discussion" },
+        ],
+      },
+      {
+        num: "06",
+        title: { ko: "인턴십 · 상금", en: "Internships & prizes" },
+        points: [
+          { ko: "우수 팀 인턴십 기회", en: "Internship opportunities for top teams" },
+          { ko: "데모데이 순위별 시상 · 상금", en: "Ranked awards & prizes on Demo Day" },
+          { ko: "After 파이프라인(투자·인턴)으로 연결", en: "Bridges into an After pipeline (investment · internship)" },
+          { ko: "굿즈 (pen·notes) 등", en: "Goods (pens · notes) and more" },
+        ],
+      },
+    ],
+    flowTitle: { ko: "참여 플로우", en: "How it flows" },
+    flow: [
+      { ko: "참가 신청", en: "Apply" },
+      { ko: "8일 빌더톤", en: "8-day builderthon" },
+      { ko: "데모데이", en: "Demo Day" },
+      { ko: "네트워크 · 경험 · 성장", en: "Network · experience · growth" },
+    ],
+    flowNote: {
+      ko: "네트워크·경험·성장은 참가자 전원 · 시상은 데모데이 상위 팀.",
+      en: "Network, experience and growth for everyone · awards for Demo Day's top teams.",
+    },
+    incentivesTitle: { ko: "참가자 인센티브 · 협의 진행 중", en: "Participant incentives · in discussion" },
+    incentives: [
+      { title: { ko: "상금 · 시상", en: "Prizes & awards" }, stage: { ko: "협의 중", en: "In discussion" }, desc: { ko: "데모데이 순위별 시상 · 상금 규모·구성 협의 중.", en: "Ranked Demo-Day awards · size & structure in discussion." } },
+      { title: { ko: "크래시 코스 수료증", en: "Crash-course certificate" }, stage: { ko: "협의 중", en: "In discussion" }, desc: { ko: "참여자 전원 발급 추진 · 8일차 이후 · 발급 기관·기준 협의 중.", en: "Aiming to issue to all · after Day 8 · body & criteria in discussion." } },
+      { title: { ko: "그 외 혜택", en: "Other perks" }, stage: { ko: "제공 예정", en: "Planned" }, desc: { ko: "Free Food · 굿즈(pen & notes) · 네트워킹 · 1–3인 참여 · 스크리닝 없음.", en: "Free food · goods · networking · teams of 1–3 · no screening." } },
+    ],
+    incentiveNote: {
+      ko: "* 인센티브는 파트너사와 협의 진행 중 — 확정되는 대로 업데이트합니다.",
+      en: "* Incentives are in discussion with partners — updated as they're confirmed.",
+    },
+  },
+
+  // ── 연사 · 공유 세션 (Day 1·5·8) ────────────────────────────────────────────
+  speakers: {
+    tag: { ko: "연사 · 공유 세션", en: "Speaker sessions" },
+    heading: { ko: "Day 1 · 5 · 8 — 스피커 & 공유 세션", en: "Day 1 · 5 · 8 — Speaker & sharing sessions" },
+    intro: {
+      ko: "이 시간을 따로 두는 이유 — Zero100의 앙트레프레너십 정체성을 지키기 위해. (연사 라인업은 확정되는 대로 안내됩니다.)",
+      en: "Why we set this time aside — to protect Zero100's entrepreneurial identity. (Speaker line-up announced as confirmed.)",
+    },
+    people: [
+      { day: { ko: "Day 1 · 오프닝 키노트", en: "Day 1 · Opening keynote" }, name: { ko: "박희덕", en: "Park Hee-deok" }, role: { ko: "CEO · General Partner, Translink Investment (VC)", en: "CEO · General Partner, Translink Investment (VC)" }, topic: { ko: "‘제로백의 진짜 의미’", en: "“The Real Meaning of Zero100”" }, img: "/partners/logos/speaker-park.jpeg" },
+      { day: { ko: "Day 5 · 오프라인 킥오프", en: "Day 5 · In-person kickoff" }, name: { ko: "원대로", en: "Won Dae-ro" }, role: { ko: "Managing Director, Wilt Venture Builder (SG)", en: "Managing Director, Wilt Venture Builder (SG)" }, topic: { ko: "‘AI 시대의 창업’", en: "“Founding in the AI era”" }, img: "/partners/logos/speaker-won.jpeg" },
+      { day: { ko: "Day 8 · 데모데이", en: "Day 8 · Demo Day" }, name: { ko: "이병일", en: "Lee Byung-il" }, role: { ko: "Venture Partner, Wilt Venture Builder (SG)", en: "Venture Partner, Wilt Venture Builder (SG)" }, topic: { ko: "‘창업가의 멘탈관리와 회복탄력성’", en: "“Founder resilience & mental management”" }, img: "/partners/logos/speaker-lee.jpeg" },
+    ],
+    tbcNote: {
+      ko: "* 연사 라인업은 미확정이며 공개 시점·구성은 조정될 수 있습니다.",
+      en: "* The speaker line-up is not yet final and may change.",
+    },
+  },
+
+  // ── 멘토링 철학 ─────────────────────────────────────────────────────────────
+  mentoring: {
+    tag: { ko: "멘토링", en: "Mentoring" },
+    heading: { ko: "멘토는 ‘학생 눈높이의 선배’", en: "Mentors are ‘peer-level seniors’" },
+    intro: {
+      ko: "좋은 기업이 많이 참여해도, 학생 정체성·giver 문화는 멘토 페르소나로 지킵니다.",
+      en: "Even with many companies involved, we protect the student identity & giver culture through the mentor persona.",
+    },
+    personaLabel: { ko: "멘토 페르소나", en: "Mentor persona" },
+    persona: {
+      ko: "한때 우리와 같았고, 같은 고민을 하던 한국 유학생 출신 founder · startup 멤버.",
+      en: "Korean ex-international-student founders / startup members — once in our shoes, with the same struggles.",
+    },
+    asideLabel: { ko: "AXMOS = 심사 · 문제 발의 전담", en: "AXMOS = judging & problem-setting only" },
+    aside: { ko: "멘토가 아니라 ‘선배’ — 역할을 분리합니다.", en: "Not mentors — the roles are kept separate." },
+    asksTitle: { ko: "멘토에게 요청하는 것", en: "What we ask of mentors" },
+    asks: [
+      { title: { ko: "정답 아닌 ‘눈높이’", en: "Eye-level, not the answer" }, desc: { ko: "정답보다 같은 레벨의 context를 공유 — 학생으로서 함께 ideate.", en: "Share same-level context and ideate as a student — don't hand over the answer." } },
+      { title: { ko: "제품 아닌 ‘삶’까지", en: "Life, not just the product" }, desc: { ko: "먼저 같은 길을 걸어본 선배로서 제품 + 삶·커리어 멘토링.", en: "Mentor on life & career as someone who walked the path first." } },
+      { title: { ko: "팀당 1시간+", en: "1+ hour per team" }, desc: { ko: "제대로 된 멘토링을 위해 팀당 최소 1시간 이상 확보.", en: "At least an hour per team for proper mentoring." } },
+      { title: { ko: "연락처 공유", en: "Share contacts" }, desc: { ko: "email · LinkedIn 공유 → 행사 이후에도 팀이 후속 연락(follow-up).", en: "Share email · LinkedIn so teams can follow up after the event." } },
+    ],
+  },
+
   modal: {
     close: { ko: "닫기", en: "Close" },
     speaker: { ko: "연사", en: "Speaker" },
@@ -300,35 +438,40 @@ export const dict = {
     tag: { ko: "Partners", en: "Partners" },
     heading: { ko: "함께 만드는 사람들", en: "Built together" },
     note: {
-      ko: "한인 학생회(SMU·NUS·NTU)와 Zero100 빌더 네트워크가 함께 만들고, 실제 AX 과제를 제공하는 기업과 AI·클라우드 파트너가 함께합니다. 각 파트너의 진행 단계를 솔직하게 구분해 안내합니다.",
-      en: "Built by the Korean student associations (SMU·NUS·NTU) and the Zero100 builder network, with the companies providing real AX problems and the AI & cloud partners alongside. Each partner's stage is labelled honestly.",
+      ko: "실제 AX 과제를 함께 제공하는 주최 파트너(AXMOS), SMU·NUS·NTU 한인 학생회의 주관·운영, 그리고 AI·클라우드·커뮤니티 후원사가 함께합니다. 각 파트너의 진행 단계를 솔직하게 구분해 안내합니다.",
+      en: "Built with the host partners providing the real AX problems (AXMOS), organized and run by the SMU · NUS · NTU Korean student associations, and supported by AI, cloud and community sponsors. Each partner's stage is labelled honestly.",
     },
-    organizerLabel: { ko: "주관 · Organizers", en: "Organizers" },
-    organizerDesc: {
-      ko: "SMU · NUS · NTU 한인 학생회",
-      en: "SMU · NUS · NTU Korean Student Associations",
+    // ── Tier 1 · 주최 · HOST (the AXMOS collective) ──────────────────────────
+    hostLabel: { ko: "주최 · HOST", en: "Host" },
+    hostNote: {
+      ko: "AXMOS — 실제 AX 과제를 함께 제공하는 주최 파트너.",
+      en: "AXMOS — the host partners providing the real AX problems.",
     },
-    networkLabel: { ko: "시작점이 된 네트워크 · Founding network", en: "Founding network" },
-    networkDesc: {
-      ko: "이 빌더톤이 이어가는 빌더 네트워크",
-      en: "The builder network this builderthon continues",
+    // ── Tier 2 · 주관 · 운영 · ORGANIZERS (student associations) ─────────────
+    organizersLabel: { ko: "주관 · 운영", en: "Organizers" },
+    organizersNote: {
+      ko: "SMU · NUS · NTU 한인 학생회가 기획하고 운영합니다.",
+      en: "Planned & run by the SMU · NUS · NTU Korean student associations.",
     },
-    // Companies supplying the real AX problems (confirmed per the media brief).
-    providersLabel: { ko: "문제 제공 · 확정", en: "Problem providers · Confirmed" },
-    providersNote: {
-      ko: "실제 AX 과제를 제공하는 파트너사 (확정).",
-      en: "Partner companies supplying the real AX problems (confirmed).",
+    roleLead: { ko: "기획 · 운영", en: "Lead · Ops" },
+    roleOps: { ko: "운영", en: "Ops" },
+    // ── Tier 3 · 후원 · SPONSORS ─────────────────────────────────────────────
+    sponsorsLabel: { ko: "후원 · SPONSORS", en: "Sponsors" },
+    sponsorConfirmedLabel: { ko: "확정 · 장소 · 마케팅", en: "Confirmed · Venue · Marketing" },
+    sponsorDiscussionLabel: { ko: "협의 중", en: "In discussion" },
+    catTech: { ko: "기술 · Tech", en: "Tech" },
+    catMarketing: { ko: "마케팅 · Marketing", en: "Marketing" },
+    catCommunity: { ko: "커뮤니티 · Community", en: "Community" },
+    catGoods: { ko: "굿즈 · Goods", en: "Goods" },
+    catVC: { ko: "벤처 · VC", en: "VC" },
+    // ── Mentors in discussion (from the deck's mentoring slide) ──────────────
+    mentorsLabel: { ko: "논의 중 멘토사", en: "Mentors in discussion" },
+    mentorsNote: {
+      ko: "학생 눈높이의 선배 멘토로 함께 논의 중인 파트너.",
+      en: "Partners in discussion to mentor as peer-level seniors.",
     },
-    // Three honest tiers for sponsors / partners.
-    tierConfirmedLabel: { ko: "확정 · Confirmed", en: "Confirmed" },
-    tierAdvancedLabel: { ko: "협의 완료 · 미팅 진행", en: "In advanced talks" },
-    tierDiscussionLabel: { ko: "논의 중 · In discussion", en: "In discussion" },
-    tierAdvancedNote: {
-      ko: "* 미팅을 마치고 구체적 협업을 조율 중인 단계입니다.",
-      en: "* Meetings done; specific collaboration being arranged.",
-    },
-    inDiscussionNote: {
-      ko: "* 위 단계 표기는 2026년 6월 기준이며, 변동될 수 있습니다. 최종 후원·파트너십은 확정 시 안내됩니다.",
+    stageNote: {
+      ko: "* 단계 표기는 2026년 6월 기준이며, 변동될 수 있습니다. 최종 후원·파트너십은 확정 시 안내됩니다.",
       en: "* Stages are as of June 2026 and may change; final sponsorships/partnerships will be announced once confirmed.",
     },
     companionsHeading: { ko: "함께하는 빌더 네트워크", en: "Builder network" },
@@ -343,45 +486,80 @@ export const dict = {
     heading: { ko: "자주 묻는 질문", en: "Frequently asked" },
     items: [
       {
-        q: { ko: "누가 참가할 수 있나요?", en: "Who can take part?" },
+        q: { ko: "왜 8일이나 하나요? 해커톤치고 길지 않나요?", en: "Why 8 days? Isn't that long for a hackathon?" },
         a: {
-          ko: "싱가포르에 기반을 둔 한인 학생(NUS · NTU · SMU 등) 약 100명을 대상으로 합니다. ‘한인 학생을 위한 최초의 AI 빌더톤’이라는 정체성을 유지합니다.",
-          en: "It's for ~100 Korean students based in Singapore (NUS · NTU · SMU and others), keeping its founding identity: the first AI builderthon made for Korean students.",
+          ko: "8일은 ‘가볍게 들어와 깊게 몰입하는’ 퍼널로 설계했습니다. 앞 4일(Lab 1)은 크래시코스·네트워킹 중심의 가벼운 워밍업이고, 뒤 4일(Lab 2)에서 본격적으로 빌드합니다. 현장 필참은 킥오프·데모데이 같은 핵심 순간뿐이고, 나머지는 원하는 시간·장소에서 진행하는 self-led 빌드입니다(24/7 아님). 학생 인터뷰를 거쳐 ‘너무 짧지도 길지도 않은’ 8일을 골든 넘버로 잡았습니다 — 학기 중에도 짧고 집중적으로 몰입하기 좋은 길이입니다.",
+          en: "The 8 days are a funnel — come in light, then go deep. The first four days (Lab 1) are a low-pressure warm-up around the crash course and networking; the last four (Lab 2) are the real build. In-person attendance is only for the key moments like the kickoff and Demo Day — the rest is self-led build on your own time and place (not 24/7). Student interviews landed on 8 days as the sweet spot: long enough to go deep, short and focused enough to fit a busy semester.",
         },
       },
       {
-        q: { ko: "코딩을 잘 못해도 괜찮나요?", en: "What if I'm not a strong coder?" },
+        q: { ko: "테마가 뭔가요? 너무 막연해요.", en: "What's the theme? It feels vague." },
         a: {
-          ko: "네. 참가자의 약 60%가 바이브 코딩이 처음입니다. 입문 워크숍(바이브 코딩 101·102, 코드프레소 주관)과 멘토링이 준비되어 있어, 기술 실력보다 아이디어와 실행이 더 중요합니다. 입문 과정을 마치면 수료증도 발급됩니다.",
-          en: "Yes. About 60% of participants are first-time vibe coders. With intro workshops (Vibe Coding 101 · 102, run by Codepresso) and mentoring, ideas and execution matter more than raw skill — and you earn a certificate for completing the track.",
+          ko: "테마는 ‘AI’가 아니라 ‘산업’입니다. 실제 한국 기업이 지금 겪는 진짜 AX(AI 전환) 과제를 트랙별로 제공합니다. 문제는 ‘Broad problem, sharp objective’ — 목표는 뾰족하게 주되 푸는 방법은 여러분의 몫입니다. 트랙은 세일즈·재무 등으로 구체화하고 있으며, 비전공자도 감을 잡을 수 있도록 산업 맥락을 함께 제공합니다.",
+          en: "The theme isn't ‘AI’ — it's industry. You'll get real AX (AI-transformation) problems Korean companies are facing right now, organized by track. The format is ‘broad problem, sharp objective’: the goal is sharp, but how you solve it is up to you. Tracks (e.g. sales and finance) are being finalized, and we give you the industry context so non-CS participants can find their footing.",
         },
       },
       {
-        q: { ko: "무엇을 만드나요?", en: "What do we build?" },
+        q: { ko: "문과인데 이과생들에게 밀리지 않을까요?", en: "I'm not from a STEM major — will I fall behind?" },
         a: {
-          ko: "가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제를 바이브 코딩으로 풉니다. Day 1에 과제가 공개되고, 팀별로 8일간 빌드해 데모데이에 발표합니다. (과제 제공: Drimaes · Codepresso · Popup Studio 확정, Workato 논의 중.)",
-          en: "Not made-up prompts — you solve real AX (AI-transformation) problems partner companies face right now, with vibe coding. Problems drop on Day 1; teams build over 8 days and present on Demo Day. (Problems from Drimaes · Codepresso · Popup Studio confirmed, Workato in discussion.)",
+          ko: "그 두려움을 없애는 것이 설계의 핵심입니다. 본 행사 전 바이브 코딩 크래시코스로 코딩 장벽을 미리 낮추고, 1인 참가도 허용해 부담을 줄였습니다. 오히려 산업 맥락을 잘 아는 학생이 바이브 코딩을 더 잘 살릴 수 있습니다. 그리고 우승하지 못해도 수료증·네트워킹·굿즈처럼 손에 남는 것이 반드시 있도록 설계했습니다.",
+          en: "Removing that fear is the whole point of the design. A vibe-coding crash course before the event lowers the coding barrier up front, and solo entry keeps the pressure low. If anything, people who understand industry context can get more out of vibe coding — and even if you don't win, you always leave with something: a certificate, networking and goods.",
         },
       },
       {
-        q: { ko: "온라인인가요, 오프라인인가요?", en: "Is it online or in person?" },
+        q: { ko: "‘해커톤’이라는 말이 부담돼요. 영어 발표도 자신 없어요.", en: "‘Hackathon’ feels intimidating, and I'm not confident presenting in English." },
         a: {
-          ko: "대부분 온라인으로 진행되며, 전원이 현장에 모이는 날은 Day 5(중간 점검)와 Day 8(데모데이) 두 번입니다. 현장은 싱가포르 *SCAPE Lifejungle(100명+ 수용 확보)입니다. 자율 빌드는 Day 1부터 온라인으로 상시 진행됩니다.",
-          en: "Mostly online. The whole cohort gathers in person twice — Day 5 (check-in) and Day 8 (Demo Day) — at *SCAPE Lifejungle, Singapore (100+ capacity secured). Self-paced build runs online from Day 1.",
+          ko: "그래서 이름부터 ‘빌더톤’으로 프레이밍해 무게를 낮췄습니다(창업 경진대회에 가까운 톤). 영어 발표 부담 때문에 영상 제출도 검토했지만, 현장 데모데이를 유지하기로 했습니다 — 비원어민 학생에게 오히려 값진 무대·발표 경험이고, 현장에서만 얻는 에너지와 기록이 크기 때문입니다.",
+          en: "That's exactly why we frame it as a ‘Builderthon’ rather than a hackathon — closer in tone to a startup showcase. We considered a demo-video submission to ease the English-presentation worry, but chose to keep the in-person Demo Day: it's a genuinely valuable stage and presenting experience for non-native speakers, with energy and memories you only get on-site.",
         },
       },
       {
-        q: { ko: "일정과 장소는 확정인가요?", en: "Are the dates and venue final?" },
+        q: { ko: "수료증을 주나요? 의미가 있나요?", en: "Is there a certificate? Is it worth anything?" },
         a: {
-          ko: "일정은 2026년 8월 22일(토)–29일(토), 8일입니다. 장소는 *SCAPE Lifejungle(싱가포르)로, Day 5·Day 8 현장 집결을 위해 확보되어 있습니다. 세부 프로그램·연사·멘토는 후원사·파트너 확정에 따라 일부 조정될 수 있습니다.",
-          en: "The dates are Sat 22 – Sat 29 Aug 2026, 8 days. The venue is *SCAPE Lifejungle (Singapore), secured for the Day 5 and Day 8 gatherings. Detailed program, speakers and mentors may shift as sponsors and partners are confirmed.",
+          ko: "크래시코스를 완료한 참여자 전원에게 수료증을 드리고, 링크드인에 올릴 수 있습니다. 발급 명의는 주최 기업·컨소시엄으로 붙어 무게를 더합니다. 처음 시작하는 분에게 특히 좋은 출발점이 되고, 이미 개발 경험이 있는 분에게는 수료증보다 커리큘럼·네트워킹·멘토링이 더 큰 가치가 됩니다.",
+          en: "Everyone who completes the crash course gets a certificate you can post on LinkedIn, issued under the host company/consortium's name to give it weight. It's a strong starting point especially if you're new; if you already build, the curriculum, networking and mentoring will matter more to you than the certificate itself.",
         },
       },
       {
-        q: { ko: "더 자세한 내용은 어디서 볼 수 있나요?", en: "Where can I learn more?" },
+        q: { ko: "인턴십이 진짜인가요? 유급인가요?", en: "Is the internship real? Is it paid?" },
         a: {
-          ko: "이 페이지는 빌더톤 프로그램을 소개하는 정보용 페이지입니다. 8일간의 일정과 테마는 ‘프로그램’ 섹션에서 확인할 수 있으며, 연사·멘토·파트너 등 세부 사항은 확정되는 대로 이 페이지에 업데이트됩니다.",
-          en: "This is an informational page introducing the builderthon. You can explore the 8-day schedule and themes in the “Program” section; details such as speakers, mentors and partners will be updated here as they're confirmed.",
+          ko: "네, 실제 기회입니다. 상위 팀에게는 파트너 기업에서 자신이 푼 그 문제를 실무로 이어가는 유급 인턴십 기회가 열립니다. 유급인 만큼 선발은 경쟁이 있지만, 저희는 소수의 인턴십보다 ‘참여하면 누구나 얻는’ 네트워킹과 협업을 앞세웁니다. 세부 조건은 파트너와 확정되는 대로 안내합니다.",
+          en: "Yes — it's a real opportunity. Top teams may be offered a paid internship with a partner company to carry the very problem they solved into real work. Because it's paid, selection is competitive — but we put the networking and collaboration everyone gains ahead of the few internships. Details will be announced as they're confirmed with partners.",
+        },
+      },
+      {
+        q: { ko: "혼자(1인) 참가해도 되나요?", en: "Can I take part solo?" },
+        a: {
+          ko: "됩니다 — 솔로 참가를 환영합니다. 다만 1~3인 팀을 권장합니다(4인은 지양). 혼자 자신의 기량을 보여주고 싶은 분을 위해 1인 참가를 열어두었고, 팀이 없어도 네트워킹·팀 빌딩 시간에 팀을 찾을 수 있습니다.",
+          en: "Yes — solo entries are welcome. We recommend teams of 1–3 (4 is discouraged). Solo is kept open for anyone who wants to show what they can do on their own, and if you don't have a team you can find one during the networking and team-building sessions.",
+        },
+      },
+      {
+        q: { ko: "상금이나 현금 지원이 있나요?", en: "Are there prizes or cash?" },
+        a: {
+          ko: "있습니다. 파트너 기업들이 함께 후원하며 순위별 차등 시상을 검토 중입니다. 다만 상금·인턴을 전면에 내세우기보다 ‘참여하면 누구나 남는 게 있다’를 먼저 이야기합니다. 규모·구성은 확정되는 대로 안내합니다.",
+          en: "Yes. Partner companies co-sponsor it, and tiered awards are under consideration. That said, we lead with ‘everyone who takes part gains something’ rather than putting prizes and internships front and center. Size and structure will be announced once confirmed.",
+        },
+      },
+      {
+        q: { ko: "결과물이 실제로 쓰이나요? AI로 대충 만들면 어떡하죠?", en: "Will the results actually be used? What if it's just AI slop?" },
+        a: {
+          ko: "이 행사의 초점은 ‘완성된 프로덕트’보다 ‘참여한 사람과 그 이후’에 있습니다. 진짜 문제 + 복수 트랙으로 결과물의 다양성을 확보하고, 시연은 실제 과제가 아닌 다른 예시로 진행해 사고를 특정 답에 가두지 않습니다. 8일 동안 진짜 문제를 붙잡고 끝까지 만들어 본 경험 자체가 핵심 성과입니다.",
+          en: "The focus is less on a finished product and more on the people who take part and what they do next. Real problems plus multiple tracks keep the outputs diverse, and the walk-through uses a different example — not the actual problem — so it doesn't box your thinking into one answer. The real outcome is taking a real problem all the way through in 8 days.",
+        },
+      },
+      {
+        q: { ko: "저는 개발 경험이 있는데 크래시코스가 필요 없어요.", en: "I already code — I don't need the crash course." },
+        a: {
+          ko: "크래시코스는 필수가 아니라 선택입니다. 개발 경험이 있으면 건너뛰고 바로 빌드로 갈 수 있는 이원 트랙(코스 트랙 / 바로 빌드 트랙)입니다. 이미 빌드 경험이 있는 분들을 위해 OpenAI Codex 워크샵 같은 상급 트랙도 별도로 준비하고 있습니다(조율 중).",
+          en: "The crash course is optional, not required. There are two tracks — take the course, or skip straight to building if you already have dev experience. For experienced builders we're also arranging an advanced track such as the OpenAI Codex workshop (in coordination).",
+        },
+      },
+      {
+        q: { ko: "제가 여기서 얻는 게 뭔가요?", en: "What do I actually get out of this?" },
+        a: {
+          ko: "학습 → 빌드 → 인턴십·멘토링으로 이어지는 단계형 파이프라인입니다. 커리어 탐색, 바이브 코딩 실전 학습, 그리고 현업 창업가·대표와의 네트워킹(Day 5 유스케이스 피치에서 대표진과 직접 연결)을 얻어갑니다. 싱가포르 한인 유학생에게 가장 부족한 ‘연결의 기회’를 정면으로 겨냥합니다.",
+          en: "It's a staged pipeline: learn → build → internship and mentoring. You get career exploration, hands-on vibe-coding practice, and real networking with founders and executives — the Day 5 use-case pitch connects you with them directly. It squarely targets the biggest gap for Korean students in Singapore: the lack of connections.",
         },
       },
     ],
