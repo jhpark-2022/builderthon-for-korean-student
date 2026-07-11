@@ -33,6 +33,8 @@ export const dict = {
     viewProgram: { ko: "프로그램 보기", en: "View Program" },
     register: { ko: "등록하기", en: "Register" },
     partner: { ko: "파트너십 문의", en: "Partner with us" },
+    // Brand suffix beside the Zero100 wordmark in the nav.
+    brandSuffix: { ko: "빌더톤", en: "Builderthon" },
   },
 
   // Secondary CTA on the hero/footer that sends visitors to the /quiz mini-site.
@@ -46,8 +48,8 @@ export const dict = {
       ko: "싱가포르 최초의 한인 학생 AI 빌더톤",
       en: "Singapore's first AI builderthon for Korean students",
     },
-    titleLine1: { ko: "여기서", en: "Build" },
-    titleLine2: { ko: "빌드하라.", en: "in Singapore." },
+    titleLine1: { ko: "싱가포르,", en: "Build" },
+    titleLine2: { ko: "빌드의 무대", en: "in Singapore." },
     dates: { ko: "2026.08.22 – 08.29 · 8일", en: "22–29 Aug 2026 · 8 days" },
     location: { ko: "싱가포르 · *SCAPE Lifejungle", en: "Singapore · *SCAPE Lifejungle" },
     blurb: {

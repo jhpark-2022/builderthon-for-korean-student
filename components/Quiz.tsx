@@ -20,16 +20,35 @@ import { recommendEvents, type EventPick } from "@/lib/eventMatch";
 
 type Phase = "landing" | "quiz" | "result";
 
-// Six landing-cluster logos with reliable Simple Icons coverage (others fall
-// back to emoji on individual result cards via ModelGlyph's onError).
+// Landing-cluster logos, served from Simple Icons. Each carries an emoji
+// fallback because the CDN occasionally drops a brand mark for trademark
+// reasons (e.g. OpenAI's `openai`/`chatgpt` slugs were removed and now 404) —
+// HeroLogo swaps to the emoji on load error so a tile never renders broken.
 const HERO_LOGOS = [
-  { slug: "deepseek", alt: "DeepSeek" },
-  { slug: "anthropic", alt: "Claude" },
-  { slug: "openai", alt: "ChatGPT" },
-  { slug: "googlegemini", alt: "Gemini" },
-  { slug: "ollama", alt: "Llama" },
-  { slug: "perplexity", alt: "Perplexity" },
+  { slug: "deepseek", alt: "DeepSeek", emoji: "🐋" },
+  { slug: "anthropic", alt: "Claude", emoji: "✳️" },
+  { slug: "openai", alt: "ChatGPT", emoji: "🤖" },
+  { slug: "googlegemini", alt: "Gemini", emoji: "✨" },
+  { slug: "ollama", alt: "Llama", emoji: "🦙" },
+  { slug: "perplexity", alt: "Perplexity", emoji: "❓" },
 ];
+
+// A single landing logo tile that falls back to its emoji if the CDN mark 404s.
+function HeroLogo({ slug, alt, emoji }: { slug: string; alt: string; emoji: string }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return <span className="text-2xl leading-none" aria-hidden>{emoji}</span>;
+  }
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={`https://cdn.simpleicons.org/${slug}/ffffff`}
+      alt={alt}
+      className="h-6 w-6 object-contain"
+      onError={() => setFailed(true)}
+    />
+  );
+}
 
 // Real brand logo (white mono) with a graceful emoji fallback.
 function ModelGlyph({
@@ -292,8 +311,7 @@ function Landing({ onStart, t, reduce }: { onStart: () => void; t: (p: { ko: str
       <div className="mt-9 flex flex-wrap items-center justify-center gap-2.5">
         {HERO_LOGOS.map((l) => (
           <span key={l.slug} className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`https://cdn.simpleicons.org/${l.slug}/ffffff`} alt={l.alt} className="h-6 w-6 object-contain" />
+            <HeroLogo slug={l.slug} alt={l.alt} emoji={l.emoji} />
           </span>
         ))}
       </div>

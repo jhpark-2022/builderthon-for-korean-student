@@ -19,7 +19,7 @@ const anchors = [
 ];
 
 export default function JourneyNav() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function JourneyNav() {
       <nav className="flex h-20 w-full items-center justify-between px-6 sm:px-10">
         {/* LEFT group — brand logo + anchor links, kept together on the left edge. */}
         <div className="flex items-center">
-          <a href="#top" className="flex items-center gap-2.5">
+          <a href="#top" className="flex items-center gap-2.5 leading-none">
             {/* Official Zero100 lockup (icon + wordmark) leads the brand; the event
                 is "Zero100 Builderthon". The "Builderthon" suffix is hidden on the
                 narrowest screens so the brand, EN/KR toggle and View Program CTA all
@@ -45,9 +45,13 @@ export default function JourneyNav() {
               width={602}
               height={127}
               priority
-              className="h-6 w-auto opacity-90 brightness-0 invert"
+              className="h-7 w-auto opacity-90 brightness-0 invert sm:h-8"
             />
-            <span className="hidden text-lg font-black tracking-wide text-white/90 sm:inline sm:text-xl">Builderthon</span>
+            {/* items-center centres the text box, but Hangul glyphs sit high in
+                that box (no descenders) so "빌더톤" reads as floating above the
+                Zero100 wordmark. Nudge it down only for Korean; Latin already
+                lines up. */}
+            <span className={`hidden items-center text-lg font-black leading-none tracking-wide text-white/90 sm:inline-flex sm:text-xl ${locale === "ko" ? "translate-y-[2px]" : ""}`}>{t(dict.nav.brandSuffix)}</span>
           </a>
           <div className="hidden items-center gap-5 lg:ml-10 lg:flex">
             {anchors.map((a) => (

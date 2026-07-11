@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
 import { dict, links, type Phrase } from "@/data/dictionary";
 import {
@@ -223,8 +223,8 @@ function ProblemView({ t }: { t: Tfn }) {
   return (
     <Glass className="text-left">
       <div className="flex items-center justify-between gap-3">
-        <Eyebrow color="cyan">✦ {t(dict.hero.problemEyebrow)}</Eyebrow>
-        <span className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-[0.7rem] font-bold uppercase tracking-widest text-cyan-200">
+        <Eyebrow color="violet">✦ {t(dict.hero.problemEyebrow)}</Eyebrow>
+        <span className="rounded-full border border-violet-400/30 bg-violet-400/10 px-3 py-1 text-[0.7rem] font-bold uppercase tracking-widest text-violet-200">
           {t(dict.hero.problemPlaceholderBadge)}
         </span>
       </div>
@@ -609,7 +609,7 @@ const HERO_VIDEO = {
   poster: "/hero/metal-human-poster.jpg",
 };
 
-function HeroVideo() {
+function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
   if (!HERO_VIDEO.enabled) return null; // placeholder: keep the WebGL background
   return (
     // The whole layer fades to transparent over its bottom third (mask) so the
@@ -623,23 +623,65 @@ function HeroVideo() {
         WebkitMaskImage: "linear-gradient(to bottom, #000 0%, #000 62%, transparent 96%)",
       }}
     >
-      <video
+      <motion.video
         autoPlay
         muted
         loop
         playsInline
         poster={HERO_VIDEO.poster}
+        // Scroll-driven blur (sharp → soft as the hero scrolls away).
+        style={blur ? { filter: blur } : undefined}
         // The figure is centred in-frame; object-center keeps it centred on both
         // portrait and landscape crops.
         className="h-full w-full object-cover object-center"
       >
         {HERO_VIDEO.webm && <source src={HERO_VIDEO.webm} type="video/webm" />}
         <source src={HERO_VIDEO.mp4} type="video/mp4" />
-      </video>
+      </motion.video>
       {/* legibility scrim — darker top so the headline reads; fades to nothing
           toward the bottom so the mask hands off cleanly to the WebGL field */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#0a0814]/85 via-[#0a0814]/68 to-transparent" />
     </div>
+  );
+}
+
+// Fixed bottom-right "back to top" button. Hidden near the top of the page and
+// fades in once the visitor has scrolled down ~1.5 viewports. Respects
+// prefers-reduced-motion (jumps instantly instead of smooth-scrolling).
+function ScrollToTop() {
+  const reduce = useReducedMotion();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > window.innerHeight * 1.5);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const toTop = () =>
+    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.button
+          type="button"
+          onClick={toTop}
+          aria-label="Scroll to top"
+          initial={reduce ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reduce ? undefined : { opacity: 0, y: 12 }}
+          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-violet-400/40 bg-violet-500/20 text-violet-100 shadow-[0_6px_24px_rgba(124,58,237,0.3)] backdrop-blur transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-500/30 hover:text-white sm:bottom-8 sm:right-8"
+        >
+          {/* upward chevron */}
+          <svg aria-hidden viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M6 15l6-6 6 6" />
+          </svg>
+        </motion.button>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -672,30 +714,52 @@ export default function Journey() {
   // Desktop grid: tallest day determines the shared row count so every column
   // gets the same number of card slots and rows line up across all six days.
 
+  // Hero split — as the hero scrolls out, the two columns fly apart to the
+  // left/right screen edges and fade, so the screen "opens" onto what's below.
+  const heroRef = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress: heroProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  // Columns fly apart from the first scroll (0) but slide out slowly, over the
+  // first 35% of the hero, so the motion is gentle. Fade tracks alongside.
+  const leftX = useTransform(heroProgress, [0, 0.35], [0, -500]);
+  const rightX = useTransform(heroProgress, [0, 0.35], [0, 500]);
+  const heroFade = useTransform(heroProgress, [0, 0.35], [1, 0]);
+  // Background video blurs early — in step with the columns flying apart — so
+  // the whole hero softens as soon as the visitor starts scrolling.
+  const bgBlur = useTransform(heroProgress, [0, 0.15], ["blur(0px)", "blur(10px)"]);
+
   return (
     <main className="relative z-10">
+      <ScrollToTop />
       {/* ── CH 0 · HERO ─────────────────────────────────────────────── */}
       <Chapter
         id="top"
         align="center"
         wide
-        background={<HeroVideo />}
+        background={<HeroVideo blur={reduce ? undefined : bgBlur} />}
         footer={
-          <div className="pointer-events-none flex flex-col items-center gap-2 text-[0.7rem] tracking-[0.3em] text-white/60">
+          <motion.div
+            style={{ opacity: reduce ? undefined : heroFade }}
+            className="pointer-events-none flex flex-col items-center gap-2 text-[0.7rem] tracking-[0.3em] text-white/60"
+          >
             {t(dict.hero.scroll).toUpperCase()}
             <span className="h-10 w-px animate-pulse bg-gradient-to-b from-white/50 to-transparent" />
-          </div>
+          </motion.div>
         }
       >
         {/* Two-up hero: copy + CTAs hugging the left screen edge, the Countdown ↔
             Problem panel hugging the right edge. Stacks to a single centred column
-            below lg. The small px gutters keep text off the very edge. */}
-        <div className="grid items-center gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
+            below lg. The small px gutters keep text off the very edge.
+            heroRef anchors the scroll-parallax: the two columns drift up at
+            different speeds and fade as the hero scrolls out. */}
+        <div ref={heroRef} className="grid items-center gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
           {/* LEFT — headline, meta, blurb, CTAs. Centred on mobile, left-aligned
               and pushed to the left edge from lg up. */}
-          <div className="text-center lg:pl-10 lg:text-left xl:pl-16">
+          <motion.div style={{ x: reduce ? undefined : leftX, opacity: reduce ? undefined : heroFade }} className="text-center lg:pl-10 lg:text-left xl:pl-16">
             <div className="mt-10 sm:mt-12 lg:mt-0">
-              <Eyebrow>✦ {t(dict.hero.eyebrow)}</Eyebrow>
+              <Eyebrow>{t(dict.hero.eyebrow)}</Eyebrow>
             </div>
             {/* clamp caps trimmed (8rem->7.1rem, 3rem->2.65rem) so the 18px root
                 bump doesn't enlarge the hero headline — it stays ~its current size
@@ -736,12 +800,13 @@ export default function Journey() {
                 <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
               </a>
             </div>
-          </div>
+          </motion.div>
 
-          {/* RIGHT — Countdown ↔ Problem Statement 전환 슬롯, pushed to the right edge */}
-          <div className="lg:pr-10 xl:pr-16">
+          {/* RIGHT — Countdown ↔ Problem Statement 전환 슬롯, pushed to the right edge.
+              Slides right (opposite the left column) as the hero scrolls out. */}
+          <motion.div style={{ x: reduce ? undefined : rightX, opacity: reduce ? undefined : heroFade }} className="lg:pr-10 xl:pr-16">
             <HeroLaunchPanel t={t} reduce={!!reduce} />
-          </div>
+          </motion.div>
         </div>
       </Chapter>
 
@@ -1274,18 +1339,14 @@ export default function Journey() {
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/65">{t(dict.footer.blurb)}</p>
           <div className="mt-10 flex flex-wrap justify-center gap-3">
-            <a href={links.program} className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5">
-              {t(dict.footer.ctaProgram)}
+            {/* Primary CTA → Register. TODO: point href at the real registration
+                form when it exists. */}
+            <a href="#" className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5">
+              {t(dict.nav.register)}
               <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
             </a>
             <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-9 py-4 text-base font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10">
               {t(dict.nav.partner)}
-            </a>
-            {/* Playful third entry → /quiz personality test + team matching. */}
-            <a href="/quiz" className="group inline-flex items-center gap-2 rounded-full border border-violet-400/40 bg-violet-400/10 px-9 py-4 text-base font-semibold text-violet-100 transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-400/15">
-              <span aria-hidden>✦</span>
-              {t(dict.nav.quiz)}
-              <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
             </a>
           </div>
         </div>
