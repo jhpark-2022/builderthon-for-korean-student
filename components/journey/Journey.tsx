@@ -726,10 +726,30 @@ export default function Journey() {
   const leftX = useTransform(heroProgress, [0, 0.35], [0, -500]);
   const rightX = useTransform(heroProgress, [0, 0.35], [0, 500]);
   const heroFade = useTransform(heroProgress, [0, 0.35], [1, 0]);
-  // NOTE: an earlier scroll-linked `filter: blur()` on the (playing) hero video
-  // was removed — animating a blur filter on a video over the WebGL field forces
-  // a per-frame re-blur and was the main cause of scroll jank. The fly-apart +
-  // fade below are transform/opacity only (GPU-composited, cheap).
+  // The ±500px horizontal fly-apart only makes sense in the lg+ two-up layout,
+  // where the columns actually sit side by side. Below lg they stack into one
+  // centred column, so translating them left/right just throws the content off
+  // both screen edges and overlaps them (it looked broken on phones). Gate the
+  // x-shift on the desktop layout; mobile keeps only the gentle opacity fade.
+  const [isWide, setIsWide] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const sync = () => setIsWide(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  // Apply the horizontal split on the wide (two-up) layout only — it stays on
+  // even under reduced-motion (by explicit request), so this is NOT gated on
+  // `reduce`. Below lg the columns stack, so no horizontal shift there.
+  const splitX = isWide;
+  // Background video blurs early — in step with the columns flying apart — so the
+  // whole hero softens as soon as the visitor starts scrolling.
+  // NOTE: this scroll-linked `filter: blur()` on the (playing) hero video repaints
+  // the video every frame and can cause scroll jank on weaker devices. It was
+  // removed once for that reason, then restored by request. By request it also
+  // stays on under reduced-motion (not gated on `reduce`).
+  const bgBlur = useTransform(heroProgress, [0, 0.15], ["blur(0px)", "blur(10px)"]);
 
   return (
     <main className="relative z-10">
@@ -739,10 +759,10 @@ export default function Journey() {
         id="top"
         align="center"
         wide
-        background={<HeroVideo />}
+        background={<HeroVideo blur={bgBlur} />}
         footer={
           <motion.div
-            style={{ opacity: reduce ? undefined : heroFade }}
+            style={{ opacity: heroFade }}
             className="pointer-events-none flex flex-col items-center gap-2 text-[0.7rem] tracking-[0.3em] text-white/60"
           >
             {t(dict.hero.scroll).toUpperCase()}
@@ -758,7 +778,7 @@ export default function Journey() {
         <div ref={heroRef} className="grid items-center gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
           {/* LEFT — headline, meta, blurb, CTAs. Centred on mobile, left-aligned
               and pushed to the left edge from lg up. */}
-          <motion.div style={{ x: reduce ? undefined : leftX, opacity: reduce ? undefined : heroFade }} className="text-center lg:pl-10 lg:text-left xl:pl-16">
+          <motion.div style={{ x: splitX ? leftX : undefined, opacity: heroFade }} className="text-center lg:pl-10 lg:text-left xl:pl-16">
             <div className="mt-10 sm:mt-12 lg:mt-0">
               <Eyebrow>{t(dict.hero.eyebrow)}</Eyebrow>
             </div>
@@ -805,7 +825,7 @@ export default function Journey() {
 
           {/* RIGHT — Countdown ↔ Problem Statement 전환 슬롯, pushed to the right edge.
               Slides right (opposite the left column) as the hero scrolls out. */}
-          <motion.div style={{ x: reduce ? undefined : rightX, opacity: reduce ? undefined : heroFade }} className="lg:pr-10 xl:pr-16">
+          <motion.div style={{ x: splitX ? rightX : undefined, opacity: heroFade }} className="lg:pr-10 xl:pr-16">
             <HeroLaunchPanel t={t} reduce={!!reduce} />
           </motion.div>
         </div>
@@ -1001,10 +1021,10 @@ export default function Journey() {
       {/* Full-width translucent program band — a dark violet tint that dims the
           WebGL field for legibility while still letting the background dots show
           through. Top & bottom fade out so it blends into the journey. */}
-      <section id="program" className="relative w-full bg-[#0a0814]/75 py-14 sm:py-20 lg:py-28">
+      <section id="program" className="relative w-full bg-[#0a0814]/45 py-14 sm:py-20 lg:py-28">
         {/* soft fade at top & bottom edges */}
-        <div aria-hidden className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0814]/75 to-transparent" />
-        <div aria-hidden className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0814]/75 to-transparent" />
+        <div aria-hidden className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0814]/45 to-transparent" />
+        <div aria-hidden className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0814]/45 to-transparent" />
         <div className="relative mx-auto w-full max-w-[1700px] px-6 sm:px-10">
           <div className="text-center">
             <Eyebrow>{t(dict.program.tag)}</Eyebrow>
