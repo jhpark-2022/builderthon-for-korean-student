@@ -389,9 +389,45 @@ export const dict = {
       en: "Why we set this time aside — to protect Zero100's entrepreneurial identity. (Speaker line-up announced as confirmed.)",
     },
     people: [
-      { day: { ko: "Day 1 · 오프닝 키노트", en: "Day 1 · Opening keynote" }, name: { ko: "박희덕", en: "Park Hee-deok" }, role: { ko: "CEO · General Partner, Translink Investment (VC)", en: "CEO · General Partner, Translink Investment (VC)" }, topic: { ko: "‘제로백의 진짜 의미’", en: "“The Real Meaning of Zero100”" }, img: "/partners/logos/speaker-park.jpeg" },
-      { day: { ko: "Day 5 · 오프라인 킥오프", en: "Day 5 · In-person kickoff" }, name: { ko: "원대로", en: "Won Dae-ro" }, role: { ko: "Managing Director, Wilt Venture Builder (SG)", en: "Managing Director, Wilt Venture Builder (SG)" }, topic: { ko: "‘AI 시대의 창업’", en: "“Founding in the AI era”" }, img: "/partners/logos/speaker-won.jpeg" },
-      { day: { ko: "Day 8 · 데모데이", en: "Day 8 · Demo Day" }, name: { ko: "이병일", en: "Lee Byung-il" }, role: { ko: "Venture Partner, Wilt Venture Builder (SG)", en: "Venture Partner, Wilt Venture Builder (SG)" }, topic: { ko: "‘창업가의 멘탈관리와 회복탄력성’", en: "“Founder resilience & mental management”" }, img: "/partners/logos/speaker-lee.jpeg" },
+      {
+        day: { ko: "Day 1 · 오프닝 키노트", en: "Day 1 · Opening keynote" },
+        name: { ko: "박희덕", en: "Park Hee-deok" },
+        role: { ko: "CEO · General Partner, Translink Investment (VC)", en: "CEO · General Partner, Translink Investment (VC)" },
+        topic: { ko: "‘제로백의 진짜 의미’", en: "“The Real Meaning of Zero100”" },
+        img: "/partners/logos/speaker-park.jpeg",
+        points: [
+          { ko: "0 → 100의 핵심 — 협업 · 가치 · 실행 · 글로벌", en: "The core of 0 → 100 — collaboration · value · execution · global" },
+          { ko: "0 → 1 → 10 → 100 성장 서사와 4대 핵심 가치", en: "The 0 → 1 → 10 → 100 growth arc and four core values" },
+          { ko: "‘바이브 코딩 대회가 아니라 창업’이라는 프레임", en: "The frame — ‘founding, not a vibe-coding contest’" },
+          { ko: "왜 지금, 왜 싱가포르의 한인 학생인가", en: "Why now, and why Korean students in Singapore" },
+        ],
+      },
+      {
+        day: { ko: "Day 5 · 오프라인 킥오프", en: "Day 5 · In-person kickoff" },
+        name: { ko: "원대로", en: "Won Dae-ro" },
+        role: { ko: "Managing Director, Wilt Venture Builder (SG)", en: "Managing Director, Wilt Venture Builder (SG)" },
+        topic: { ko: "‘AI 시대의 창업’", en: "“Founding in the AI era”" },
+        img: "/partners/logos/speaker-won.jpeg",
+        points: [
+          { ko: "AI 시대의 창업 — AI가 창업의 판을 어떻게 바꾸나", en: "Founding in the AI era — how AI reshapes starting up" },
+          { ko: "Q&A 포함 · 약 1시간", en: "About an hour, with Q&A" },
+          { ko: "헤드다운 빌드 직전, ‘무엇을·왜 만들지’와 완주 동기를 다지는 자리", en: "Right before the heads-down build — re-anchoring ‘what & why to build’ and the drive to finish" },
+          { ko: "같은 날 ‘참여자 AI Use Case’ 패널도 함께 진행", en: "Paired the same day with a ‘Participant AI Use Cases’ panel" },
+        ],
+      },
+      {
+        day: { ko: "Day 8 · 데모데이", en: "Day 8 · Demo Day" },
+        name: { ko: "이병일", en: "Lee Byung-il" },
+        role: { ko: "Venture Partner, Wilt Venture Builder (SG)", en: "Venture Partner, Wilt Venture Builder (SG)" },
+        topic: { ko: "‘창업가의 멘탈관리와 회복탄력성’", en: "“Founder resilience & mental management”" },
+        img: "/partners/logos/speaker-lee.jpeg",
+        points: [
+          { ko: "실패와 재기 스토리 — ‘8일 만에 만들어봤다, 여기서 멈추지 마라’", en: "Failure & comeback stories — ‘you built it in 8 days; don't stop here’" },
+          { ko: "실패에서 배우기 · 멘탈 관리 · 회복탄력성", en: "Learning from failure · mental management · resilience" },
+          { ko: "인턴십 · 투자로 이어지는 다음 스텝", en: "The next step — into internships and investment" },
+          { ko: "경쟁이 아니라 공헌으로 시작하기", en: "Starting from contribution, not competition" },
+        ],
+      },
     ],
     tbcNote: {
       ko: "* 연사 라인업은 미확정이며 공개 시점·구성은 조정될 수 있습니다.",

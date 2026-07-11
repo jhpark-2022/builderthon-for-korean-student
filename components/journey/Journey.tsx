@@ -1075,8 +1075,16 @@ export default function Journey() {
           {dict.speakers.people.map((s) => (
             <div key={s.img} className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-400/25 hover:bg-white/[0.05]">
               <span className="text-xs font-bold uppercase tracking-wide text-violet-300/80">{t(s.day)}</span>
-              <p className="mt-4 flex-1 text-base font-semibold leading-snug text-white">{t(s.topic)}</p>
-              <div className="mt-5 flex items-center gap-3 border-t border-white/10 pt-4">
+              <p className="mt-4 text-base font-semibold leading-snug text-white">{t(s.topic)}</p>
+              <ul className="mt-4 space-y-2">
+                {s.points.map((p, i) => (
+                  <li key={i} className="flex items-start gap-2 text-[13px] leading-relaxed text-white/70">
+                    <span aria-hidden className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-violet-300/70" />
+                    {t(p)}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-6 flex items-center gap-3 border-t border-white/10 pt-4">
                 <Image src={s.img} alt={t(s.name)} width={200} height={200} className="h-14 w-14 shrink-0 rounded-full object-cover ring-1 ring-white/15" />
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-white">{t(s.name)}</p>
