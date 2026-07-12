@@ -449,105 +449,116 @@ function ResultView({
         ✦ {t(quizUI.resultEyebrow)}
       </span>
 
-      {/* On desktop the result card sits left (sticky) and the CTA + session
-          recommendations fill the column to its right; on mobile it all stacks. */}
-      <div className="grid w-full gap-6 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)] lg:items-start">
-      {/* left: shareable result card */}
-      <div className="mx-auto w-full max-w-[420px] lg:mx-0 lg:sticky lg:top-6">
-      <div
-        className="relative w-full overflow-hidden rounded-[28px] border border-white/12 bg-[#0c0a18] p-7 text-left"
-        style={{ boxShadow: "0 30px 70px -28px rgba(217,70,239,0.42)" }}
-      >
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-fuchsia-500/20 to-transparent" />
-        <div className="relative flex items-center justify-between">
-          <span className="font-mono text-[0.7rem] font-bold uppercase tracking-[0.15em] text-white/45">Zero100 Builderthon</span>
-          <span className="font-mono text-[0.7rem] font-bold tracking-wider text-white/45">{result.resultId}</span>
-        </div>
-        <div className={`relative mt-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br ${data.accent} shadow-lg`}>
-          <ModelGlyph result={data} imgClass="h-10 w-10 object-contain" emojiClass="text-4xl leading-none" />
-        </div>
-        <p className="relative mt-6 text-sm font-semibold text-white/55">{t(quizUI.youAre)}</p>
-        <h2 className="relative mt-1 text-[1.7rem] font-black leading-tight tracking-tight">{t(variant.name)}</h2>
-        <p className="relative mt-1 text-sm font-bold text-fuchsia-200">{data.model} · {result.resultId}</p>
-        <p className="relative mt-4 text-[15px] font-semibold leading-relaxed text-white/90">“{t(data.phrase)}”</p>
-        <p className="relative mt-3 text-sm leading-relaxed text-white/65">{t(data.desc)}</p>
-        <p className="relative mt-3 text-sm italic leading-relaxed text-white/55">{t(variant.line)}</p>
-
-        <div className="relative mt-5 grid grid-cols-1 gap-2.5">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3.5">
-            <p className="text-[0.7rem] font-bold uppercase tracking-wider text-emerald-300">{t(quizUI.strengthsLabel)}</p>
-            <p className="mt-1 text-sm leading-snug text-white/80">{t(data.strengths)}</p>
+      {/* Stacked: the shareable result card spans the full width on top, then
+          the apply CTA + session recommendations + actions sit below it. */}
+      <div className="flex w-full flex-col gap-6">
+        {/* full-width shareable result card */}
+        <div
+          className="relative w-full overflow-hidden rounded-[28px] border border-white/12 bg-[#0c0a18] p-7 text-left sm:p-9"
+          style={{ boxShadow: "0 30px 70px -28px rgba(217,70,239,0.42)" }}
+        >
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-fuchsia-500/20 to-transparent" />
+          <div className="relative flex items-center justify-between">
+            <span className="font-mono text-[0.7rem] font-bold uppercase tracking-[0.15em] text-white/45">Zero100 Builderthon</span>
+            <span className="font-mono text-[0.7rem] font-bold tracking-wider text-white/45">{result.resultId}</span>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3.5">
-            <p className="text-[0.7rem] font-bold uppercase tracking-wider text-rose-300">{t(quizUI.weaknessLabel)}</p>
-            <p className="mt-1 text-sm leading-snug text-white/80">{t(data.weakness)}</p>
-          </div>
-        </div>
 
-        {/* Per-axis % gauges — only when the visitor actually took the quiz.
-            Deep-linked (shared) results carry no axes, so this section is hidden. */}
-        {result.axes && result.axes.length > 0 && (
-          <div className="relative mt-5">
-            <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/45">{t(quizUI.axesLabel)}</p>
-            <div className="mt-3 flex flex-col gap-2.5">
-              {result.axes.map((a, i) => (
-                <AxisGauge key={a.axis} axis={a} accent={data.accent} t={t} reduce={reduce} order={i} />
-              ))}
+          {/* two columns fill the wide card: identity + gauges on the left,
+              strengths / weakness / role / match on the right */}
+          <div className="relative mt-6 grid gap-8 lg:grid-cols-2 lg:gap-14">
+            {/* identity + traits */}
+            <div>
+              <div className={`flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br ${data.accent} shadow-lg`}>
+                <ModelGlyph result={data} imgClass="h-10 w-10 object-contain" emojiClass="text-4xl leading-none" />
+              </div>
+              <p className="mt-6 text-sm font-semibold text-white/55">{t(quizUI.youAre)}</p>
+              <h2 className="mt-1 text-[1.7rem] font-black leading-tight tracking-tight sm:text-[2rem]">{t(variant.name)}</h2>
+              <p className="mt-1 text-sm font-bold text-fuchsia-200">{data.model} · {result.resultId}</p>
+              <p className="mt-4 text-[15px] font-semibold leading-relaxed text-white/90">“{t(data.phrase)}”</p>
+              <p className="mt-3 text-sm leading-relaxed text-white/65">{t(data.desc)}</p>
+              <p className="mt-3 text-sm italic leading-relaxed text-white/55">{t(variant.line)}</p>
+            </div>
+
+            {/* strengths / weakness / gauges / role / match */}
+            <div className="flex flex-col gap-5">
+              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3.5">
+                  <p className="text-[0.7rem] font-bold uppercase tracking-wider text-emerald-300">{t(quizUI.strengthsLabel)}</p>
+                  <p className="mt-1 text-sm leading-snug text-white/80">{t(data.strengths)}</p>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3.5">
+                  <p className="text-[0.7rem] font-bold uppercase tracking-wider text-rose-300">{t(quizUI.weaknessLabel)}</p>
+                  <p className="mt-1 text-sm leading-snug text-white/80">{t(data.weakness)}</p>
+                </div>
+              </div>
+
+              {/* Per-axis % gauges — only when the visitor actually took the quiz.
+                  Deep-linked (shared) results carry no axes, so this is hidden. */}
+              {result.axes && result.axes.length > 0 && (
+                <div>
+                  <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/45">{t(quizUI.axesLabel)}</p>
+                  <div className="mt-3 flex flex-col gap-2.5">
+                    {result.axes.map((a, i) => (
+                      <AxisGauge key={a.axis} axis={a} accent={data.accent} t={t} reduce={reduce} order={i} />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/45">{t(quizUI.roleLabel)}</p>
+                <span className="mt-2 inline-flex items-center gap-2 rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-4 py-2 text-sm font-bold text-fuchsia-200">
+                  ★ {t(data.role)}
+                </span>
+              </div>
+
+              <div>
+                <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/45">{t(quizUI.matchLabel)}</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {data.match.map((m) => {
+                    const mate = RESULTS[m];
+                    return (
+                      <span key={m} className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.05] px-3 py-2 text-sm font-semibold text-white/85">
+                        <ModelGlyph result={mate} imgClass="h-4 w-4 object-contain" emojiClass="text-lg leading-none" />
+                        {mate.model} · {m}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
-        )}
-
-        <div className="relative mt-5">
-          <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/45">{t(quizUI.roleLabel)}</p>
-          <span className="mt-2 inline-flex items-center gap-2 rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-4 py-2 text-sm font-bold text-fuchsia-200">
-            ★ {t(data.role)}
-          </span>
         </div>
 
-        <div className="relative mt-5">
-          <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/45">{t(quizUI.matchLabel)}</p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {data.match.map((m) => {
-              const mate = RESULTS[m];
-              return (
-                <span key={m} className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.05] px-3 py-2 text-sm font-semibold text-white/85">
-                  <ModelGlyph result={mate} imgClass="h-4 w-4 object-contain" emojiClass="text-lg leading-none" />
-                  {mate.model} · {m}
-                </span>
-              );
-            })}
+        {/* below the card: apply CTA + actions on one side, session recs on the other */}
+        <div className="grid w-full gap-4 lg:grid-cols-2 lg:items-start">
+          <div className="flex flex-col gap-4">
+            {/* apply CTA */}
+            <div className="w-full rounded-[24px] border border-white/10 bg-white/[0.04] p-6 text-center">
+              <p className="text-[15px] font-bold leading-relaxed text-white/85">{ctaLead}</p>
+              <a
+                href={links.program}
+                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
+              >
+                {t(quizUI.ctaApply)} →
+              </a>
+            </div>
+
+            {/* share / retake */}
+            <div className="flex w-full gap-3">
+              <button type="button" onClick={onShare} className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10">
+                ↗ {t(quizUI.share)}
+              </button>
+              <button type="button" onClick={onRetake} className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10">
+                ↻ {fromShare ? t(quizUI.retakeViral) : t(quizUI.retake)}
+              </button>
+            </div>
           </div>
+
+          {/* session recommendation */}
+          <EventRecsPanel picks={picks} onRecommend={onRecommend} t={t} reduce={reduce} />
         </div>
       </div>
-      </div>
-
-      {/* right: apply CTA + session recommendation + actions */}
-      <div className="mx-auto flex w-full max-w-[420px] flex-col gap-4 lg:mx-0 lg:max-w-none">
-        {/* apply CTA */}
-        <div className="w-full rounded-[24px] border border-white/10 bg-white/[0.04] p-6 text-center">
-          <p className="text-[15px] font-bold leading-relaxed text-white/85">{ctaLead}</p>
-          <a
-            href={links.program}
-            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
-          >
-            {t(quizUI.ctaApply)} →
-          </a>
-        </div>
-
-        {/* session recommendation */}
-        <EventRecsPanel picks={picks} onRecommend={onRecommend} t={t} reduce={reduce} />
-
-        {/* share / retake */}
-        <div className="flex w-full gap-3">
-          <button type="button" onClick={onShare} className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10">
-            ↗ {t(quizUI.share)}
-          </button>
-          <button type="button" onClick={onRetake} className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10">
-            ↻ {fromShare ? t(quizUI.retakeViral) : t(quizUI.retake)}
-          </button>
-        </div>
-      </div>
-    </div>
     </motion.div>
   );
 }
