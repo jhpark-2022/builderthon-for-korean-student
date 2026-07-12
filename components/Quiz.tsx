@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
@@ -10,20 +10,56 @@ import {
   QUESTIONS,
   RESULTS,
   quizUI,
-  type Identity,
+  axisMeta,
   type MbtiKey,
   type Result,
 } from "@/data/quiz";
 import { categoryMeta } from "@/data/schedule";
-import { scoreQuiz, parseResultId, type Choice } from "@/lib/quizScore";
+import { scoreQuiz, parseResultId, type Choice, type QuizResult, type AxisScore } from "@/lib/quizScore";
 import { recommendEvents, type EventPick } from "@/lib/eventMatch";
 
-type Phase = "landing" | "quiz" | "result";
+type Phase = "landing" | "quiz" | "analyzing" | "result";
 
-// Landing-cluster logos, served from Simple Icons. Each carries an emoji
-// fallback because the CDN occasionally drops a brand mark for trademark
-// reasons (e.g. OpenAI's `openai`/`chatgpt` slugs were removed and now 404) —
-// HeroLogo swaps to the emoji on load error so a tile never renders broken.
+// The visitor's OWN result id, stashed in sessionStorage the moment they finish
+// the quiz. On a result-screen refresh the ?r= deep-link would otherwise look
+// like a friend's share; matching it against this key keeps "my result" =
+// "my result" (correct CTA button, gauges preserved across the reload).
+// All access is guarded — sessionStorage can throw (private mode, blocked
+// storage) — and any failure silently falls back to the old share behavior.
+const OWN_KEY = "z100-quiz-own";
+
+function readOwnResult(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return window.sessionStorage.getItem(OWN_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function writeOwnResult(resultId: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.setItem(OWN_KEY, resultId);
+  } catch {
+    /* storage blocked — keep old behavior */
+  }
+}
+
+function clearOwnResult(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.removeItem(OWN_KEY);
+  } catch {
+    /* storage blocked — no-op */
+  }
+}
+
+// Landing-cluster logos, now self-hosted from /public/logos (copied from the
+// simple-icons npm package by scripts/copy-logos.mjs) — no more CDN dependency
+// after the `openai` slug 404'd on cdn.simpleicons.org. Each still carries an
+// emoji fallback: HeroLogo swaps to it if the local SVG is ever missing, so a
+// tile never renders broken.
 const HERO_LOGOS = [
   { slug: "deepseek", alt: "DeepSeek", emoji: "🐋" },
   { slug: "anthropic", alt: "Claude", emoji: "✳️" },
@@ -33,7 +69,14 @@ const HERO_LOGOS = [
   { slug: "perplexity", alt: "Perplexity", emoji: "❓" },
 ];
 
-// A single landing logo tile that falls back to its emoji if the CDN mark 404s.
+// Detects an <img> that already failed before React could attach onError (the
+// SSR/hydration race for a 404'd src): if it's complete with zero intrinsic
+// width, it errored — flip to the emoji fallback.
+function markBrokenImage(node: HTMLImageElement | null, fail: () => void) {
+  if (node && node.complete && node.naturalWidth === 0) fail();
+}
+
+// A single landing logo tile that falls back to its emoji if the local SVG 404s.
 function HeroLogo({ slug, alt, emoji }: { slug: string; alt: string; emoji: string }) {
   const [failed, setFailed] = useState(false);
   if (failed) {
@@ -42,9 +85,10 @@ function HeroLogo({ slug, alt, emoji }: { slug: string; alt: string; emoji: stri
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={`https://cdn.simpleicons.org/${slug}/ffffff`}
+      src={`/logos/${slug}.svg`}
       alt={alt}
       className="h-6 w-6 object-contain"
+      ref={(n) => markBrokenImage(n, () => setFailed(true))}
       onError={() => setFailed(true)}
     />
   );
@@ -67,9 +111,10 @@ function ModelGlyph({
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={`https://cdn.simpleicons.org/${result.logo}/ffffff`}
+      src={`/logos/${result.logo}.svg`}
       alt={result.model}
       className={imgClass}
+      ref={(n) => markBrokenImage(n, () => setFailed(true))}
       onError={() => setFailed(true)}
     />
   );
@@ -84,21 +129,45 @@ export default function Quiz() {
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Choice[]>([]);
   const [selected, setSelected] = useState<Choice | null>(null);
-  const [result, setResult] = useState<{ mbti: MbtiKey; identity: Identity; resultId: string } | null>(null);
+  const [result, setResult] = useState<QuizResult | null>(null);
   const [fromShare, setFromShare] = useState(false);
   const [toast, setToast] = useState(false);
   const [picks, setPicks] = useState<EventPick[] | null>(null);
 
-  // Deep-link: ?r=INFJ-A drops a visitor straight onto a friend's result card
-  // (the viral loop — they see the result, then take it themselves).
+  // Deep-link: ?r=INFJ-A drops a visitor straight onto a result card. Usually
+  // that's a friend's share (the viral loop). But if the id matches the one WE
+  // just stashed, it's the visitor's own result surviving a refresh — treat it
+  // as theirs (fromShare=false) so the retake button/copy stay correct.
   useEffect(() => {
     const parsed = parseResultId(params.get("r"));
-    if (parsed) {
-      setResult(parsed);
-      setPhase("result");
-      setFromShare(true);
-    }
+    if (!parsed) return;
+    setPhase("result");
+    setFromShare(readOwnResult() !== parsed.resultId);
+    // Keep a freshly-scored result (which carries `axes` for the gauges) when
+    // our OWN enterResult → replaceState re-fires this effect with the same id
+    // (Next 14.2 syncs replaceState into useSearchParams). A genuine deep-link
+    // has no prior result, so it falls through to the axes-less parsed one.
+    setResult((prev) => (prev && prev.resultId === parsed.resultId ? prev : parsed));
   }, [params]);
+
+  // Enter the result phase: persist the id (so refresh keeps it "ours"), reflect
+  // it in the URL for sharing, then flip the phase. Called either straight away
+  // (reduced motion) or after the analyzing interstitial.
+  const enterResult = useCallback((scored: QuizResult) => {
+    writeOwnResult(scored.resultId);
+    if (typeof window !== "undefined") {
+      window.history.replaceState(null, "", `/quiz?r=${scored.resultId}`);
+    }
+    setPhase("result");
+  }, []);
+
+  // Analyzing interstitial → result, after ~2.4s. Timer is cleaned up so leaving
+  // the page (or hitting Back) mid-analysis never fires setState on an unmount.
+  useEffect(() => {
+    if (phase !== "analyzing" || !result) return;
+    const id = window.setTimeout(() => enterResult(result), 2400);
+    return () => window.clearTimeout(id);
+  }, [phase, result, enterResult]);
 
   const startQuiz = () => {
     setAnswers([]);
@@ -107,6 +176,11 @@ export default function Quiz() {
     setResult(null);
     setPicks(null);
     setFromShare(false);
+    clearOwnResult();
+    // drop the ?r= so a retake doesn't leave a stale result in the URL
+    if (typeof window !== "undefined") {
+      window.history.replaceState(null, "", "/quiz");
+    }
     setPhase("quiz");
   };
 
@@ -125,9 +199,12 @@ export default function Quiz() {
         const scored = scoreQuiz(next);
         setResult(scored);
         setPicks(null);
-        setPhase("result");
-        if (typeof window !== "undefined") {
-          window.history.replaceState(null, "", `/quiz?r=${scored.resultId}`);
+        // Reduced motion skips the interstitial and jumps straight to the result;
+        // otherwise show the "analyzing" beat, which then enters the result.
+        if (reduce) {
+          enterResult(scored);
+        } else {
+          setPhase("analyzing");
         }
       }
     };
@@ -199,7 +276,14 @@ export default function Quiz() {
                 <span className="text-white/35"> / {QUESTIONS.length}</span>
               </span>
             </div>
-            <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
+            <div
+              className="h-2 w-full overflow-hidden rounded-full bg-white/10"
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={QUESTIONS.length}
+              aria-valuenow={index + 1}
+              aria-label={t(quizUI.progressLabel)}
+            >
               <motion.div
                 className="h-full rounded-full bg-gradient-to-r from-violet-500 to-cyan-400"
                 animate={{ width: `${progress}%` }}
@@ -256,6 +340,8 @@ export default function Quiz() {
             </div>
           </div>
         )}
+
+        {phase === "analyzing" && <Analyzing t={t} reduce={!!reduce} />}
 
         {phase === "result" && result && (
           <ResultView
@@ -339,7 +425,7 @@ function ResultView({
   onShare,
   onRetake,
 }: {
-  result: { mbti: MbtiKey; identity: Identity; resultId: string };
+  result: QuizResult;
   t: (p: { ko: string; en: string }) => string;
   reduce: boolean;
   fromShare: boolean;
@@ -397,6 +483,19 @@ function ResultView({
             <p className="mt-1 text-sm leading-snug text-white/80">{t(data.weakness)}</p>
           </div>
         </div>
+
+        {/* Per-axis % gauges — only when the visitor actually took the quiz.
+            Deep-linked (shared) results carry no axes, so this section is hidden. */}
+        {result.axes && result.axes.length > 0 && (
+          <div className="relative mt-5">
+            <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/45">{t(quizUI.axesLabel)}</p>
+            <div className="mt-3 flex flex-col gap-2.5">
+              {result.axes.map((a, i) => (
+                <AxisGauge key={a.axis} axis={a} accent={data.accent} t={t} reduce={reduce} order={i} />
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="relative mt-5">
           <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/45">{t(quizUI.roleLabel)}</p>
@@ -523,5 +622,85 @@ function EventRecsPanel({
 
       <p className="mt-4 text-[0.7rem] leading-relaxed text-white/35">{t(quizUI.recNote)}</p>
     </motion.div>
+  );
+}
+
+// ── Axis % gauge (one row per MBTI axis) ────────────────────────────────────
+// Winner pole + %, an accent bar that fills 0→pct, and the losing pole faint.
+function AxisGauge({
+  axis,
+  accent,
+  t,
+  reduce,
+  order,
+}: {
+  axis: AxisScore;
+  accent: string; // literal Tailwind gradient classes, reused from the card
+  t: (p: { ko: string; en: string }) => string;
+  reduce: boolean;
+  order: number;
+}) {
+  return (
+    <div className="flex items-center gap-2.5">
+      <span className="w-11 shrink-0 text-right text-xs font-bold text-white/85">{t(axisMeta[axis.winner])}</span>
+      <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-white/10">
+        <motion.div
+          className={`h-full rounded-full bg-gradient-to-r ${accent}`}
+          initial={reduce ? false : { width: 0 }}
+          animate={{ width: `${axis.pct}%` }}
+          transition={{ duration: reduce ? 0 : 0.7, ease: [0.22, 1, 0.36, 1], delay: reduce ? 0 : 0.15 + order * 0.08 }}
+        />
+      </div>
+      <span className="w-9 shrink-0 text-right font-mono text-xs font-bold tabular-nums text-white/85">{axis.pct}%</span>
+      <span className="w-11 shrink-0 text-xs font-medium text-white/30">{t(axisMeta[axis.loser])}</span>
+    </div>
+  );
+}
+
+// ── "Analyzing…" interstitial ───────────────────────────────────────────────
+// A spinner + three copy lines that swap on an ~0.8s cadence (≈2.4s total, the
+// parent's timer). Only mounted on the non-reduced-motion path.
+function Analyzing({ t, reduce }: { t: (p: { ko: string; en: string }) => string; reduce: boolean }) {
+  const messages = quizUI.analyzing;
+  const [step, setStep] = useState(0);
+  useEffect(() => {
+    const id = window.setInterval(
+      () => setStep((s) => (s < messages.length - 1 ? s + 1 : s)),
+      800
+    );
+    return () => window.clearInterval(id);
+  }, [messages.length]);
+
+  return (
+    <div className="flex flex-1 flex-col items-center justify-center py-16 text-center">
+      <motion.div
+        className="h-14 w-14 rounded-full border-[3px] border-white/15 border-t-violet-400"
+        animate={reduce ? undefined : { rotate: 360 }}
+        transition={reduce ? undefined : { repeat: Infinity, ease: "linear", duration: 0.9 }}
+      />
+      <div className="mt-8 h-7">
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={step}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="text-lg font-bold text-white"
+          >
+            {t(messages[step])}
+          </motion.p>
+        </AnimatePresence>
+      </div>
+      <div className="mt-6 flex gap-1.5">
+        {messages.map((_, i) => (
+          <span
+            key={i}
+            className={`h-1.5 w-1.5 rounded-full transition-colors ${i <= step ? "bg-violet-400" : "bg-white/15"}`}
+            aria-hidden
+          />
+        ))}
+      </div>
+    </div>
   );
 }
