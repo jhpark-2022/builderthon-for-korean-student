@@ -25,6 +25,14 @@ export interface Question {
 }
 
 // 12 questions · MZ tone · order preserved from the brief (§6).
+//
+// First-choice debias: people who click the first option by habit used to skew
+// every axis toward E/N/T/J/A (all were option `a`). We swapped the a/b objects
+// (label AND pole move together, so scoreQuiz is untouched — it reads
+// q[choice].pole) on Q4·Q6·Q7·Q8·Q10·Q12 so both poles of every axis sit in the
+// first slot at least once. Weighted first-position now nets 8:7 (E/N/T/J/A vs
+// I/S/F/P/Tid) instead of 15:0. Per-axis weight totals stay odd (3), so the
+// no-tie invariant (§7-2) holds. Verified by scripts/verify-quiz-axes.mjs.
 export const QUESTIONS: Question[] = [
   {
     id: "Q1", axis: "MIND", w: 2,
@@ -47,8 +55,9 @@ export const QUESTIONS: Question[] = [
   {
     id: "Q4", axis: "TACTICS", w: 2,
     text: { ko: "데드라인까지 48시간. 내 작업 스타일은?", en: "48 hours to the deadline. My work style is…" },
-    a: { label: { ko: "시간표부터 짜고 계획대로", en: "Map the schedule, then run the plan" }, pole: "J" },
-    b: { label: { ko: "일단 만들면서 흐름 타기", en: "Start building and ride the flow" }, pole: "P" },
+    // a/b swapped (P first) to debias the first-choice tendency — see the note above QUESTIONS.
+    a: { label: { ko: "일단 만들면서 흐름 타기", en: "Start building and ride the flow" }, pole: "P" },
+    b: { label: { ko: "시간표부터 짜고 계획대로", en: "Map the schedule, then run the plan" }, pole: "J" },
   },
   {
     id: "Q5", axis: "IDENTITY", w: 2,
@@ -59,20 +68,23 @@ export const QUESTIONS: Question[] = [
   {
     id: "Q6", axis: "MIND", w: 1,
     text: { ko: "쉬는 시간, 에너지 충전법은?", en: "On a break, I recharge by…" },
-    a: { label: { ko: "사람들이랑 수다 떨기", en: "Chatting with people" }, pole: "E" },
-    b: { label: { ko: "혼자 바람 쐬기", en: "Stepping out alone for air" }, pole: "I" },
+    // a/b swapped (I first) — see the debias note above QUESTIONS.
+    a: { label: { ko: "혼자 바람 쐬기", en: "Stepping out alone for air" }, pole: "I" },
+    b: { label: { ko: "사람들이랑 수다 떨기", en: "Chatting with people" }, pole: "E" },
   },
   {
     id: "Q7", axis: "ENERGY", w: 1,
     text: { ko: "멘토가 “이거 왜 만들었어요?” 묻는다. 내 대답은?", en: "A mentor asks “why did you build this?” I answer with…" },
-    a: { label: { ko: "비전·의미·가능성으로", en: "Vision, meaning, what it could become" }, pole: "N" },
-    b: { label: { ko: "구체적 데이터·사례로", en: "Concrete data and examples" }, pole: "S" },
+    // a/b swapped (S first) — see the debias note above QUESTIONS.
+    a: { label: { ko: "구체적 데이터·사례로", en: "Concrete data and examples" }, pole: "S" },
+    b: { label: { ko: "비전·의미·가능성으로", en: "Vision, meaning, what it could become" }, pole: "N" },
   },
   {
     id: "Q8", axis: "NATURE", w: 1,
     text: { ko: "팀 내 의견 충돌. 내 기준은?", en: "The team clashes on a call. My yardstick is…" },
-    a: { label: { ko: "뭐가 더 효율적·합리적인가", en: "What's more efficient and rational" }, pole: "T" },
-    b: { label: { ko: "다들 납득하고 기분 좋은가", en: "Whether everyone's on board and okay" }, pole: "F" },
+    // a/b swapped (F first) — see the debias note above QUESTIONS.
+    a: { label: { ko: "다들 납득하고 기분 좋은가", en: "Whether everyone's on board and okay" }, pole: "F" },
+    b: { label: { ko: "뭐가 더 효율적·합리적인가", en: "What's more efficient and rational" }, pole: "T" },
   },
   {
     id: "Q9", axis: "TACTICS", w: 1,
@@ -83,8 +95,9 @@ export const QUESTIONS: Question[] = [
   {
     id: "Q10", axis: "IDENTITY", w: 1,
     text: { ko: "결과 발표, 우리 팀은 입상 못 했다. 집 가는 길의 나는?", en: "Results are in — we didn't place. On the way home I…" },
-    a: { label: { ko: "“잘했으니 됐지, 다음에 또” 툭툭 털기", en: "“We did well, next time” — shake it off" }, pole: "A" },
-    b: { label: { ko: "“그때 그것만 고쳤어도…” 곱씹기", en: "“If only we'd fixed that…” — replay it" }, pole: "Tid" },
+    // a/b swapped (Tid first) — see the debias note above QUESTIONS.
+    a: { label: { ko: "“그때 그것만 고쳤어도…” 곱씹기", en: "“If only we'd fixed that…” — replay it" }, pole: "Tid" },
+    b: { label: { ko: "“잘했으니 됐지, 다음에 또” 툭툭 털기", en: "“We did well, next time” — shake it off" }, pole: "A" },
   },
   {
     id: "Q11", axis: "ENERGY", w: 1,
@@ -95,10 +108,39 @@ export const QUESTIONS: Question[] = [
   {
     id: "Q12", axis: "NATURE", w: 1,
     text: { ko: "팀원이 밤새다 멘붕왔다. 첫 반응은?", en: "A teammate hits a wall after an all-nighter. My first move…" },
-    a: { label: { ko: "“어디서 막혔어? 같이 해결하자” 문제부터", en: "“Where are you stuck? let's solve it” — the problem" }, pole: "T" },
-    b: { label: { ko: "“괜찮아? 좀 쉬어, 내가 도울게” 다독임부터", en: "“You okay? rest — I've got you” — the person" }, pole: "F" },
+    // a/b swapped (F first) — see the debias note above QUESTIONS.
+    a: { label: { ko: "“괜찮아? 좀 쉬어, 내가 도울게” 다독임부터", en: "“You okay? rest — I've got you” — the person" }, pole: "F" },
+    b: { label: { ko: "“어디서 막혔어? 같이 해결하자” 문제부터", en: "“Where are you stuck? let's solve it” — the problem" }, pole: "T" },
   },
 ];
+
+// ── Axis metadata (for the result-screen % gauges) ──────────────────────────
+// Display order for the gauge rows and the two poles of each axis. The first
+// pole in each pair is the "canonical" MBTI letter; the % gauge just reports
+// whichever pole won, so order here is presentation-only.
+export const AXIS_ORDER: Axis[] = ["MIND", "ENERGY", "NATURE", "TACTICS", "IDENTITY"];
+
+export const AXIS_POLES: Record<Axis, [Pole, Pole]> = {
+  MIND: ["E", "I"],
+  ENERGY: ["N", "S"],
+  NATURE: ["T", "F"],
+  TACTICS: ["J", "P"],
+  IDENTITY: ["A", "Tid"],
+};
+
+// Short bilingual label for each pole, shown next to the gauge bar.
+export const axisMeta: Record<Pole, Phrase> = {
+  E: { ko: "외향", en: "Extraverted" },
+  I: { ko: "내향", en: "Introverted" },
+  N: { ko: "직관", en: "Intuitive" },
+  S: { ko: "현실", en: "Observant" },
+  T: { ko: "이성", en: "Thinking" },
+  F: { ko: "감성", en: "Feeling" },
+  J: { ko: "계획", en: "Judging" },
+  P: { ko: "즉흥", en: "Prospecting" },
+  A: { ko: "안정", en: "Assertive" },
+  Tid: { ko: "예민", en: "Turbulent" },
+};
 
 // ── Builder role buckets ───────────────────────────────────────────────────
 // Each result maps to ONE of four builderthon roles. Used by the session
@@ -369,7 +411,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   ESTP: {
-    mbti: "ESTP", model: "Mistral", emoji: "🌬️", logo: "",
+    mbti: "ESTP", model: "Mistral", emoji: "🌬️", logo: "mistralai",
     role: { ko: "그로스 · 해커톤 스프린터", en: "Growth · Hackathon sprinter" }, roleKey: "growth",
     match: ["ISTJ", "ISFJ"],
     phrase: { ko: "고민은 짧게, 출시는 빠르게.", en: "Think fast, ship faster." },
@@ -383,7 +425,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   ESFP: {
-    mbti: "ESFP", model: "Suno", emoji: "🎵", logo: "",
+    mbti: "ESFP", model: "Suno", emoji: "🎵", logo: "suno",
     role: { ko: "무대 · 데모 · 발표 퍼포먼스", en: "Stage · Demo · Performance" }, roleKey: "growth",
     match: ["ISTJ", "ISFJ"],
     phrase: { ko: "일단 한 곡 뽑고 시작하자!", en: "Let's drop a track and get going!" },
@@ -416,11 +458,20 @@ export const quizUI = {
   start: { ko: "테스트 시작하기", en: "Start the test" },
   meta: { ko: "12문항 · 약 3분 · 결과 공유 가능", en: "12 questions · ~3 min · shareable result" },
   prev: { ko: "이전", en: "Back" },
+  progressLabel: { ko: "진행 상황", en: "Progress" },
   question: { ko: "질문", en: "Question" },
+
+  // "Analyzing…" interstitial shown after the last answer (skipped on reduced motion).
+  analyzing: [
+    { ko: "답변 패턴 분석 중…", en: "Analyzing your answers…" },
+    { ko: "16개 AI 모델과 대조 중…", en: "Matching against 16 AI models…" },
+    { ko: "당신의 모델 확정!", en: "Locking in your model!" },
+  ] as Phrase[],
   youAre: { ko: "당신은", en: "You are" },
   resultEyebrow: { ko: "당신의 결과", en: "Your result" },
   strengthsLabel: { ko: "강점", en: "Strengths" },
   weaknessLabel: { ko: "약점", en: "Weak spot" },
+  axesLabel: { ko: "성향 분석", en: "Your breakdown" },
   roleLabel: { ko: "빌더톤 추천 역할", en: "Your builderthon role" },
   matchLabel: { ko: "환상의 궁합", en: "Dream teammates" },
   share: { ko: "결과 공유하기", en: "Share result" },
