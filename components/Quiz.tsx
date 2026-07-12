@@ -11,11 +11,13 @@ import {
   RESULTS,
   quizUI,
   axisMeta,
+  type Axis,
   type MbtiKey,
   type Result,
 } from "@/data/quiz";
 import { categoryMeta } from "@/data/schedule";
 import { scoreQuiz, parseResultId, type Choice, type QuizResult, type AxisScore } from "@/lib/quizScore";
+import { getExplanation } from "@/data/quizExplanations";
 import { recommendEvents, type EventPick } from "@/lib/eventMatch";
 
 type Phase = "landing" | "quiz" | "analyzing" | "result";
@@ -477,6 +479,12 @@ function ResultView({
               <p className="mt-4 text-[15px] font-semibold leading-relaxed text-white/90">“{t(data.phrase)}”</p>
               <p className="mt-3 text-sm leading-relaxed text-white/65">{t(data.desc)}</p>
               <p className="mt-3 text-sm italic leading-relaxed text-white/55">{t(variant.line)}</p>
+
+              {/* Why this model — the research-backed reason the type maps here. */}
+              <div className="mt-4 rounded-2xl border border-fuchsia-400/15 bg-fuchsia-500/[0.05] p-3.5">
+                <p className="text-[0.7rem] font-bold uppercase tracking-wider text-fuchsia-200/70">{t(quizUI.whyModel)} · {data.model}</p>
+                <p className="mt-1 text-sm leading-relaxed text-white/75">{t(data.whyModel)}</p>
+              </div>
             </div>
 
             {/* strengths / weakness / gauges / role / match */}
@@ -493,15 +501,13 @@ function ResultView({
               </div>
 
               {/* Per-axis % gauges — only when the visitor actually took the quiz.
-                  Deep-linked (shared) results carry no axes, so this is hidden. */}
+                  Deep-linked (shared) results carry no axes, so this is hidden.
+                  Each row is a click-to-expand accordion explaining the % from
+                  the taker's own answers. */}
               {result.axes && result.axes.length > 0 && (
                 <div>
                   <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/45">{t(quizUI.axesLabel)}</p>
-                  <div className="mt-3 flex flex-col gap-2.5">
-                    {result.axes.map((a, i) => (
-                      <AxisGauge key={a.axis} axis={a} accent={data.accent} t={t} reduce={reduce} order={i} />
-                    ))}
-                  </div>
+                  <AxisGauges axes={result.axes} accent={data.accent} t={t} reduce={reduce} />
                 </div>
               )}
 
@@ -636,23 +642,60 @@ function EventRecsPanel({
   );
 }
 
-// ── Axis % gauge (one row per MBTI axis) ────────────────────────────────────
-// Winner pole + %, an accent bar that fills 0→pct, and the losing pole faint.
-function AxisGauge({
+// ── Axis % gauges (accordion) ───────────────────────────────────────────────
+// One row per MBTI axis: winner pole + %, an accent bar that fills 0→pct, the
+// losing pole faint, and a chevron. Click a row to expand an answer-aware
+// explanation of that %. Single-open accordion; the first axis starts open.
+function AxisGauges({
+  axes,
+  accent,
+  t,
+  reduce,
+}: {
+  axes: AxisScore[];
+  accent: string;
+  t: (p: { ko: string; en: string }) => string;
+  reduce: boolean;
+}) {
+  const [open, setOpen] = useState<Axis | null>(axes[0]?.axis ?? null);
+  return (
+    <div className="mt-3 flex flex-col gap-1">
+      {axes.map((a, i) => (
+        <AxisGaugeRow
+          key={a.axis}
+          axis={a}
+          accent={accent}
+          t={t}
+          reduce={reduce}
+          order={i}
+          isOpen={open === a.axis}
+          onToggle={() => setOpen((cur) => (cur === a.axis ? null : a.axis))}
+        />
+      ))}
+    </div>
+  );
+}
+
+function AxisGaugeRow({
   axis,
   accent,
   t,
   reduce,
   order,
+  isOpen,
+  onToggle,
 }: {
   axis: AxisScore;
   accent: string; // literal Tailwind gradient classes, reused from the card
   t: (p: { ko: string; en: string }) => string;
   reduce: boolean;
   order: number;
+  isOpen: boolean;
+  onToggle: () => void;
 }) {
-  return (
-    <div className="flex items-center gap-2.5">
+  const explanation = getExplanation(axis.axis, axis.pattern, axis.pct);
+  const bar = (
+    <>
       <span className="w-11 shrink-0 text-right text-xs font-bold text-white/85">{t(axisMeta[axis.winner])}</span>
       <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-white/10">
         <motion.div
@@ -664,6 +707,46 @@ function AxisGauge({
       </div>
       <span className="w-9 shrink-0 text-right font-mono text-xs font-bold tabular-nums text-white/85">{axis.pct}%</span>
       <span className="w-11 shrink-0 text-xs font-medium text-white/30">{t(axisMeta[axis.loser])}</span>
+    </>
+  );
+
+  // Defensive: a missing explanation (getExplanation already warned) → static row.
+  if (!explanation) {
+    return <div className="flex items-center gap-2.5 py-1">{bar}</div>;
+  }
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        className="flex w-full items-center gap-2.5 rounded-lg py-1 text-left transition hover:bg-white/[0.03]"
+      >
+        {bar}
+        <motion.span
+          className="shrink-0 text-white/40"
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: reduce ? 0 : 0.2 }}
+          aria-hidden
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+        </motion.span>
+      </button>
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            key="exp"
+            initial={reduce ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={reduce ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+            transition={{ duration: reduce ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
+            <p className="px-1 pb-2 pt-0.5 text-[13px] leading-relaxed text-white/65">{t(explanation)}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
