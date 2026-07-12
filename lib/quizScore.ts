@@ -6,8 +6,11 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import {
+  AXIS_ORDER,
+  AXIS_POLES,
   QUESTIONS,
   RESULTS,
+  type Axis,
   type Identity,
   type MbtiKey,
   type Pole,
@@ -15,10 +18,22 @@ import {
 
 export type Choice = "a" | "b";
 
+// Per-axis winner + margin, used to render the result-screen % gauges.
+export interface AxisScore {
+  axis: Axis;
+  winner: Pole; // the pole that won this axis (e.g. "E")
+  loser: Pole; // the opposite pole
+  pct: number; // winner share, round(winner / (winner+loser) * 100) → 67 or 100
+}
+
 export interface QuizResult {
   mbti: MbtiKey;
   identity: Identity;
   resultId: string; // e.g. "INFJ-A"
+  // Only present when the taker actually answered the quiz. Deep-linked results
+  // (parseResultId) carry no per-answer data, so `axes` is undefined there and
+  // the UI hides the gauge section.
+  axes?: AxisScore[];
 }
 
 // answers[i] is the choice for QUESTIONS[i]. Missing/short answers just don't
@@ -43,7 +58,21 @@ export function scoreQuiz(answers: Choice[]): QuizResult {
   const identity: Identity = score.A >= score.Tid ? "A" : "T";
 
   const mbti = `${l1}${l2}${l3}${l4}` as MbtiKey;
-  return { mbti, identity, resultId: `${mbti}-${identity}` };
+
+  // Per-axis margins for the gauges — display order fixed by AXIS_ORDER.
+  const axes: AxisScore[] = AXIS_ORDER.map((axis) => {
+    const [left, right] = AXIS_POLES[axis];
+    const leftScore = score[left];
+    const rightScore = score[right];
+    const winner = leftScore >= rightScore ? left : right;
+    const loser = winner === left ? right : left;
+    const winnerScore = Math.max(leftScore, rightScore);
+    const total = leftScore + rightScore; // always 3 given odd per-axis weights
+    const pct = total > 0 ? Math.round((winnerScore / total) * 100) : 0;
+    return { axis, winner, loser, pct };
+  });
+
+  return { mbti, identity, resultId: `${mbti}-${identity}`, axes };
 }
 
 // Parse a shared "?r=INFJ-A" query into a validated result, or null if bogus.
