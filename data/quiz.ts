@@ -27,11 +27,14 @@ export interface Question {
 
 // 14 questions · MZ tone. Four MBTI axes carry 3 questions each, Identity 2.
 //
-// First-choice debias (phase 1): every axis used to lead with the E/N/T/J/A pole
-// as option `a`, skewing habitual first-tappers toward ENTJ-A. The a/b objects
-// (label AND pole move together, so scoring is untouched — it reads q[choice].pole)
-// were swapped on Q4·Q6·Q7·Q8·Q10·Q12; the two new questions (Q13 MIND, Q14
-// TACTICS) keep the balance, with Q13 leading on the right pole (I).
+// First-choice debias: leading every question with the E/N/T/J/A pole as option
+// `a` would skew habitual first-tappers toward one type. The a/b objects (label
+// AND pole move together, so scoring is untouched — it reads q[choice].pole) are
+// arranged so each axis's WEIGHTED first-option mass splits as evenly as the
+// Sidon weights allow: swapped on Q1·Q3·Q4·Q7·Q10·Q12, plus Q13 leading I.
+// Per-axis a-lead split — MIND E8:I6, ENERGY N4:S6, NATURE T5:F3, TACTICS J3:P4,
+// IDENTITY A3:Tid7 → 23:26 overall. Re-run scripts/verify-quiz-axes.mjs after
+// touching weights or option order.
 //
 // Sidon weighting (phase 2): each axis's per-question weights form a Sidon set —
 // MIND {2,4,8}, ENERGY {1,3,6}, NATURE {1,2,5}, TACTICS {1,2,4}, IDENTITY {3,7} —
@@ -45,8 +48,9 @@ export const QUESTIONS: Question[] = [
   {
     id: "Q1", axis: "MIND", w: 2, // light first-impression behavior — low diagnostic weight
     text: { ko: "빌더톤 첫날, 처음 보는 팀원들과 한 방에 모였다. 나는?", en: "Day 1 of the builderthon, in a room full of strangers. I…" },
-    a: { label: { ko: "먼저 “어디 학교세요?” 분위기 띄운다", en: "Break the ice first — “which school are you at?”" }, pole: "E" },
-    b: { label: { ko: "일단 관찰하다 자연스러워지면 낀다", en: "Hang back, read the room, then ease in" }, pole: "I" },
+    // a/b swapped (I first) — Sidon rebalance; see the debias note above QUESTIONS.
+    a: { label: { ko: "일단 관찰하다 자연스러워지면 낀다", en: "Hang back, read the room, then ease in" }, pole: "I" },
+    b: { label: { ko: "먼저 “어디 학교세요?” 분위기 띄운다", en: "Break the ice first — “which school are you at?”" }, pole: "E" },
   },
   {
     id: "Q2", axis: "ENERGY", w: 3, // abstract big-picture vs concrete — solid N/S signal
@@ -57,8 +61,9 @@ export const QUESTIONS: Question[] = [
   {
     id: "Q3", axis: "NATURE", w: 1, // feedback delivery style — lightest T/F signal
     text: { ko: "팀원 아이디어가 좀 별로다. 나는?", en: "A teammate's idea is… kind of weak. I…" },
-    a: { label: { ko: "“이 부분 논리적으로 약한데?” 솔직하게 짚음", en: "“This part doesn't hold up” — say it straight" }, pole: "T" },
-    b: { label: { ko: "“오 좋다! 근데 이건 어때?” 기분 안 상하게", en: "“Love it! but what about this?” — keep it kind" }, pole: "F" },
+    // a/b swapped (F first) — Sidon rebalance; see the debias note above QUESTIONS.
+    a: { label: { ko: "“오 좋다! 근데 이건 어때?” 기분 안 상하게", en: "“Love it! but what about this?” — keep it kind" }, pole: "F" },
+    b: { label: { ko: "“이 부분 논리적으로 약한데?” 솔직하게 짚음", en: "“This part doesn't hold up” — say it straight" }, pole: "T" },
   },
   {
     id: "Q4", axis: "TACTICS", w: 4, // plan-first vs ride-the-flow — the core J/P scenario
@@ -76,9 +81,8 @@ export const QUESTIONS: Question[] = [
   {
     id: "Q6", axis: "MIND", w: 8, // energy source = the essence of E/I — highest MIND weight
     text: { ko: "쉬는 시간, 에너지 충전법은?", en: "On a break, I recharge by…" },
-    // a/b swapped (I first) — see the debias note above QUESTIONS.
-    a: { label: { ko: "혼자 바람 쐬기", en: "Stepping out alone for air" }, pole: "I" },
-    b: { label: { ko: "사람들이랑 수다 떨기", en: "Chatting with people" }, pole: "E" },
+    a: { label: { ko: "사람들이랑 수다 떨기", en: "Chatting with people" }, pole: "E" },
+    b: { label: { ko: "혼자 바람 쐬기", en: "Stepping out alone for air" }, pole: "I" },
   },
   {
     id: "Q7", axis: "ENERGY", w: 6, // meaning vs data when justifying — highest ENERGY weight
@@ -90,9 +94,8 @@ export const QUESTIONS: Question[] = [
   {
     id: "Q8", axis: "NATURE", w: 5, // decision yardstick under conflict — highest NATURE weight
     text: { ko: "팀 내 의견 충돌. 내 기준은?", en: "The team clashes on a call. My yardstick is…" },
-    // a/b swapped (F first) — see the debias note above QUESTIONS.
-    a: { label: { ko: "다들 납득하고 기분 좋은가", en: "Whether everyone's on board and okay" }, pole: "F" },
-    b: { label: { ko: "뭐가 더 효율적·합리적인가", en: "What's more efficient and rational" }, pole: "T" },
+    a: { label: { ko: "뭐가 더 효율적·합리적인가", en: "What's more efficient and rational" }, pole: "T" },
+    b: { label: { ko: "다들 납득하고 기분 좋은가", en: "Whether everyone's on board and okay" }, pole: "F" },
   },
   {
     id: "Q9", axis: "TACTICS", w: 2, // replan-under-pressure — mid J/P signal
