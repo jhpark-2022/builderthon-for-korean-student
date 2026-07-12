@@ -8,8 +8,9 @@
 // follows one grammar: (1) cite the specific scenario answered against the
 // result — the highest-weight one, or "all three" when unanimous; (2) name the
 // behavior; (3) tie it to the % with {pct} (substituted at render); (4) hedge to
-// a level set by the score band — strong (76–78%), mid (81–86%), low (88–89%),
-// none (91–95%); (5) close with one emoji.
+// a level set by the score band — the margin mapping + ±2 spice lands these at
+// strong (~56–66%), mid (~68–75%), low (~80–87%), none (~89–97%); (5) close
+// with one emoji.
 //
 // Pattern position → question map (1 = first pole):
 //   MIND     [Q1 ice-break(2), Q6 recharge(8), Q13 networking(4)]   1=E
@@ -27,7 +28,7 @@ export const EXPLANATIONS: Record<Axis, Record<string, Phrase>> = {
     "0,0,0": { ko: "충전도 혼자, 네트워킹도 소수랑, 첫날도 관찰부터 — 세 질문 전부 안쪽으로 답했어요. 완전 내향형, 딱 {pct}% 의심 여지 없어요 🔋", en: "Recharge alone, network in small circles, hang back on day one — all three point inward. Fully introverted, {pct}%, no doubt 🔋" },
     "1,0,0": { ko: "첫날엔 먼저 말을 걸었지만, 정작 충전은 혼자 조용히 하는 쪽이었죠. 사교성은 장착해도 에너지는 안에서 나와요 — 꽤 강하게 {pct}% 내향이에요 🌙", en: "You broke the ice on day one, but you recharge quietly and alone. Social when needed, yet the energy comes from within — pretty firmly {pct}% introverted 🌙" },
     "0,0,1": { ko: "네트워킹에선 많은 사람과 인사하지만, 쉴 땐 혼자가 편하고 첫날도 관찰부터였어요. 확실히 안쪽 사람인데 가끔 밖으로 나가죠 — {pct}% 내향이에요 🍃", en: "You work the room at networking, but you rest alone and read the room first. Clearly an inside type who steps out now and then — {pct}% introverted 🍃" },
-    "1,0,1": { ko: "먼저 말도 걸고 네트워킹도 열심이지만, 진짜 충전은 결국 혼자였어요. 겉보기엔 활발해도 속은 내향 — 어느 정도 안쪽이긴 한데 바깥 기운도 꽤 있어요 🌗", en: "You break the ice and work the room, but real recharging still happens alone. Lively outside, introvert inside — leaning inward {pct}%, though there's outward energy too 🌗" },
+    "1,0,1": { ko: "먼저 말도 걸고 네트워킹도 열심이지만, 진짜 충전은 결국 혼자였어요. 겉보기엔 활발해도 속은 내향 — 어느 정도 {pct}% 안쪽이긴 한데 바깥 기운도 꽤 있어요 🌗", en: "You break the ice and work the room, but real recharging still happens alone. Lively outside, introvert inside — leaning inward {pct}%, though there's outward energy too 🌗" },
     "0,1,0": { ko: "먼저 나서지도, 네트워킹에 뛰어들지도 않았지만, 사람들과 수다로 충전하는 걸 보면 결국 밖에서 힘을 얻네요 — 어느 정도 {pct}% 외향인데 혼자 시간도 꽤 필요해요 🌤️", en: "You didn't jump in first or work the room, but you recharge by chatting — energy from outside after all. Somewhat {pct}% extraverted, though you need alone time too 🌤️" },
     "1,1,0": { ko: "네트워킹은 소수랑 깊게 가는 편이지만, 첫날부터 말 걸고 수다로 충전하는 걸 보면 사람에서 힘을 얻어요 — {pct}% 외향, 확실한데 가끔 조용히도 있고 싶죠 ☀️", en: "You go deep with a few at networking, but you break the ice early and recharge by chatting — people fuel you. {pct}% extraverted, with the odd quiet moment ☀️" },
     "0,1,1": { ko: "첫날엔 좀 관찰부터 했지만, 충전도 네트워킹도 사람들 속에서 하는 사람이에요. 초반 탐색만 빼면 완전 바깥형 — 꽤 강하게 {pct}% 외향이에요 🔆", en: "You observed a bit on day one, but you recharge and network right in the crowd. Minus that early scan, fully outward — pretty firmly {pct}% extraverted 🔆" },

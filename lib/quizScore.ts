@@ -6,9 +6,15 @@
 // (E/N/T/J/A) and divide by the axis denom → r ∈ [0,1]. r > 0.5 wins the first
 // pole, r < 0.5 the second. Because each axis's weights are a Sidon set (all
 // subset sums distinct) and no subset sums to denom/2, r === 0.5 is impossible —
-// so ties can't happen. The displayed % maps r onto a per-axis [floor, ceil]
-// band, giving 4 distinct values per 3-question axis (2 for Identity) instead
-// of the old flat 67%. See AXIS_CONFIG and data/quiz.ts.
+// so ties can't happen.
+//
+// Displayed %: the win margin (max(r,1-r) - 0.5) * 2 ∈ (0,1] is stretched over
+// the per-axis [floor, ceil] band — a barely-won axis shows ~58%, a sweep ~95% —
+// then a deterministic ±2 "spice" derived from the FULL answer sheet is added,
+// so two takers with the same pattern on one axis (but any difference elsewhere)
+// see different numbers. Same answers → always the same result; the winner and
+// the explanation band can never flip (adjacent base bands sit ≥ 8 apart).
+// See AXIS_CONFIG, spice(), and data/quiz.ts.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import {
@@ -24,9 +30,10 @@ import {
 
 export type Choice = "a" | "b";
 
-// Per-axis display band. denom = sum of that axis's question weights; a raw
-// ratio r maps to round(floor + max(r, 1-r) * (ceil - floor)). floor/ceil are
-// tuned per axis so every axis shows a distinct spread of %s.
+// Per-axis display band. denom = sum of that axis's question weights; the win
+// margin ((max(r, 1-r) - 0.5) * 2) maps to round(floor + margin * (ceil - floor)),
+// plus the ±2 spice. floor/ceil differ per axis so the five gauges never show
+// the same spread of numbers.
 export interface AxisBand {
   denom: number;
   floor: number;
@@ -34,11 +41,11 @@ export interface AxisBand {
 }
 
 export const AXIS_CONFIG: Record<Axis, AxisBand> = {
-  MIND: { denom: 14, floor: 52, ceil: 95 }, // weights {2,4,8} → 77 / 83 / 89 / 95
-  ENERGY: { denom: 10, floor: 54, ceil: 93 }, // weights {1,3,6} → 77 / 81 / 89 / 93
-  NATURE: { denom: 8, floor: 55, ceil: 91 }, // weights {1,2,5} → 78 / 82 / 86 / 91
-  TACTICS: { denom: 7, floor: 53, ceil: 94 }, // weights {1,2,4} → 76 / 82 / 88 / 94
-  IDENTITY: { denom: 10, floor: 56, ceil: 92 }, // weights {3,7} → 81 / 92
+  MIND: { denom: 14, floor: 52, ceil: 95 }, // weights {2,4,8} → bases 58 / 70 / 83 / 95 (±2 spice)
+  ENERGY: { denom: 10, floor: 54, ceil: 93 }, // weights {1,3,6} → bases 62 / 70 / 85 / 93 (±2 spice)
+  NATURE: { denom: 8, floor: 55, ceil: 91 }, // weights {1,2,5} → bases 64 / 73 / 82 / 91 (±2 spice)
+  TACTICS: { denom: 7, floor: 53, ceil: 94 }, // weights {1,2,4} → bases 59 / 71 / 82 / 94 (±2 spice)
+  IDENTITY: { denom: 10, floor: 56, ceil: 92 }, // weights {3,7} → bases 70 / 92 (±2 spice)
 };
 
 // Round half to even — reconciles the published bands with the ratio formula:
@@ -50,13 +57,26 @@ function bankRound(x: number): number {
   return Math.round(x);
 }
 
+// Deterministic per-person nudge in [-2, +2] — djb2 over the FULL 14-answer
+// sheet + the axis id. NOT random: the same answer sheet always produces the
+// same %, so shared/retaken results stay stable — but any single different
+// answer anywhere shifts every axis's number, so the gauges stop looking like
+// a fixed 4-value menu. ±2 can't flip a winner (lowest base is 58) and can't
+// cross bands (adjacent bases are ≥ 8 apart on every axis).
+function spice(answers: Choice[], axis: Axis): number {
+  const s = `${answers.join("")}|${axis}`;
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+  return (Math.abs(h) % 5) - 2;
+}
+
 // Per-axis winner + margin + the raw answer pattern, used by the result-screen
 // gauges and the answer-aware explanation lookup.
 export interface AxisScore {
   axis: Axis;
   winner: Pole; // the pole that won this axis (e.g. "E")
   loser: Pole; // the opposite pole
-  pct: number; // displayed % for the winning pole (per-axis band)
+  pct: number; // displayed % for the winning pole (margin over the axis band, ±2 spice)
   // Each of the axis's questions in QUESTION order, encoded 1 if the chosen pole
   // is the axis's FIRST pole (E/N/T/J/A), else 0. Pole-based (NOT a/b) so it
   // survives the phase-1 a/b swaps. Keys data/quizExplanations.ts.
@@ -96,7 +116,8 @@ export function scoreQuiz(answers: Choice[]): QuizResult {
     if (r === 0.5) throw new Error(`quiz: impossible tie on ${axis}`);
     const winner = r > 0.5 ? first : second;
     const loser = winner === first ? second : first;
-    const pct = bankRound(cfg.floor + Math.max(r, 1 - r) * (cfg.ceil - cfg.floor));
+    const margin = (Math.max(r, 1 - r) - 0.5) * 2; // (0,1] — how decisively it broke
+    const pct = bankRound(cfg.floor + margin * (cfg.ceil - cfg.floor)) + spice(answers, axis);
     return { axis, winner, loser, pct, pattern };
   });
 

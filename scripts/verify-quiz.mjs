@@ -1,7 +1,8 @@
 // One-off invariant check for the phase-2 Sidon scoring + explanation layer.
 // Parses data/quiz.ts + data/quizExplanations.ts (sources of truth) and, per axis,
 // enumerates every answer combination to verify:
-//   ① the displayed %s are the expected distinct bands (no collisions),
+//   ① the base %s are distinct bands with ≥5-gap (so the ±2 spice from
+//      lib/quizScore.ts can never blur two bands or dip a % to ≤50),
 //   ② no combination lands on exactly 50% (Sidon: r never = 0.5),
 //   ③ EXPLANATIONS covers every reachable pattern key (and no extras),
 //   ④ the 14 questions' per-axis counts + weights match the design table.
@@ -85,7 +86,8 @@ for (const axis of AXIS_ORDER) {
     const r = firstSum / cfg.denom;
     if (Math.abs(r - 0.5) < 1e-9) anyHalf = true;
     const winner = r > 0.5 ? "first" : "second";
-    const pct = bankRound(cfg.floor + Math.max(r, 1 - r) * (cfg.ceil - cfg.floor));
+    const margin = (Math.max(r, 1 - r) - 0.5) * 2; // mirror of lib/quizScore.ts
+    const pct = bankRound(cfg.floor + margin * (cfg.ceil - cfg.floor));
     pcts.add(pct);
     states.add(`${winner}:${pct}`);
     patternKeys.push(pattern.join(","));
@@ -113,6 +115,11 @@ for (const axis of AXIS_ORDER) {
   }
 
   const bands = [...pcts].sort((a, b) => a - b);
+  // ① spice safety: bands must sit ≥5 apart and never reach ≤52 (base - 2 > 50)
+  for (let i = 1; i < bands.length; i++) {
+    if (bands[i] - bands[i - 1] < 5) fail(`${axis}: bands ${bands[i - 1]} and ${bands[i]} are <5 apart — ±2 spice could blur them`);
+  }
+  if (bands[0] - 2 <= 50) fail(`${axis}: lowest band ${bands[0]} - 2 spice dips to ≤50%`);
   console.log(`  ${ok ? "✓" : "·"} ${axis}: weights ${JSON.stringify(weights)} (Σ=${cfg.denom}), bands = ${bands.join(" / ")} %, explanations ${keys ? keys.length : 0}/${combos}`);
 }
 
