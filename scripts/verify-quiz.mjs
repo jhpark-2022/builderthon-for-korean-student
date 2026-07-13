@@ -123,6 +123,28 @@ for (const axis of AXIS_ORDER) {
   console.log(`  ${ok ? "✓" : "·"} ${axis}: weights ${JSON.stringify(weights)} (Σ=${cfg.denom}), bands = ${bands.join(" / ")} %, explanations ${keys ? keys.length : 0}/${combos}`);
 }
 
+// ── Dream-teammate reasons: matchWhy is index-aligned to match ───────────────
+// Every result must have match.length === matchWhy.length === 2, and each of the
+// 32 matchWhy phrases must carry both ko and en. Parse both arrays per result.
+const matchArrays = [...quizSrc.matchAll(/\n    match:\s*\[([^\]]*)\]/g)].map(
+  (m) => [...m[1].matchAll(/"[^"]+"/g)].length
+);
+const whyBlocks = [...quizSrc.matchAll(/matchWhy:\s*\[\s*\n([\s\S]*?)\n\s*\],/g)].map((m) =>
+  [...m[1].matchAll(/\{\s*ko:\s*"((?:[^"\\]|\\.)*)"\s*,\s*en:\s*"((?:[^"\\]|\\.)*)"\s*\}/g)]
+);
+let whyPhrases = 0;
+if (matchArrays.length !== 16) fail(`expected 16 match arrays, got ${matchArrays.length}`);
+if (whyBlocks.length !== 16) fail(`expected 16 matchWhy arrays, got ${whyBlocks.length}`);
+matchArrays.forEach((len, i) => { if (len !== 2) fail(`result #${i}: match.length ${len} ≠ 2`); });
+whyBlocks.forEach((entries, i) => {
+  if (entries.length !== 2) fail(`result #${i}: matchWhy.length ${entries.length} ≠ 2`);
+  for (const e of entries) {
+    if (!e[1]?.trim() || !e[2]?.trim()) fail(`result #${i}: a matchWhy phrase is missing ko or en`);
+    whyPhrases++;
+  }
+});
+if (ok) console.log(`\nDream teammates: 16 results × 2 = ${whyPhrases} matchWhy phrases, all ko/en, match↔matchWhy aligned.`);
+
 // Logo sanity: which RESULTS logos resolve to a local file vs emoji fallback.
 const logos = [...quizSrc.matchAll(/logo:\s*"([^"]*)"/g)].map((m) => m[1]);
 const nonEmpty = logos.filter(Boolean);
