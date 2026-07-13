@@ -589,10 +589,6 @@ export const quizUI = {
     en: "Spot one of these at the builderthon? Team up first, talk later ✦",
   },
   matchRoleLabel: { ko: "이 친구 추천 역할", en: "Their builderthon role" },
-  share: { ko: "결과 공유하기", en: "Share result" },
-  copied: { ko: "링크가 복사됐어요!", en: "Link copied!" },
-  retake: { ko: "다시 테스트하기", en: "Retake" },
-  retakeViral: { ko: "나도 테스트하기", en: "Take it myself" },
   ctaLead: {
     // {role} is interpolated in the component.
     ko: "이 성격이면 빌더톤에서 {role} 포지션으로 빛나요 ✦",

@@ -20,41 +20,6 @@ import { getExplanation } from "@/data/quizExplanations";
 
 type Phase = "landing" | "quiz" | "analyzing" | "result";
 
-// The visitor's OWN result id, stashed in sessionStorage the moment they finish
-// the quiz. On a result-screen refresh the ?r= deep-link would otherwise look
-// like a friend's share; matching it against this key keeps "my result" =
-// "my result" (correct CTA button, gauges preserved across the reload).
-// All access is guarded — sessionStorage can throw (private mode, blocked
-// storage) — and any failure silently falls back to the old share behavior.
-const OWN_KEY = "z100-quiz-own";
-
-function readOwnResult(): string | null {
-  if (typeof window === "undefined") return null;
-  try {
-    return window.sessionStorage.getItem(OWN_KEY);
-  } catch {
-    return null;
-  }
-}
-
-function writeOwnResult(resultId: string): void {
-  if (typeof window === "undefined") return;
-  try {
-    window.sessionStorage.setItem(OWN_KEY, resultId);
-  } catch {
-    /* storage blocked — keep old behavior */
-  }
-}
-
-function clearOwnResult(): void {
-  if (typeof window === "undefined") return;
-  try {
-    window.sessionStorage.removeItem(OWN_KEY);
-  } catch {
-    /* storage blocked — no-op */
-  }
-}
-
 // Landing-cluster logos, now self-hosted from /public/logos (copied from the
 // simple-icons npm package by scripts/copy-logos.mjs) — no more CDN dependency
 // after the `openai` slug 404'd on cdn.simpleicons.org. Each still carries an
@@ -130,18 +95,13 @@ export default function Quiz() {
   const [answers, setAnswers] = useState<Choice[]>([]);
   const [selected, setSelected] = useState<Choice | null>(null);
   const [result, setResult] = useState<QuizResult | null>(null);
-  const [fromShare, setFromShare] = useState(false);
-  const [toast, setToast] = useState(false);
 
-  // Deep-link: ?r=INFJ-A drops a visitor straight onto a result card. Usually
-  // that's a friend's share (the viral loop). But if the id matches the one WE
-  // just stashed, it's the visitor's own result surviving a refresh — treat it
-  // as theirs (fromShare=false) so the retake button/copy stay correct.
+  // Deep-link: ?r=INFJ-A drops a visitor straight onto a result card (a shared
+  // link, or the visitor's own result surviving a refresh).
   useEffect(() => {
     const parsed = parseResultId(params.get("r"));
     if (!parsed) return;
     setPhase("result");
-    setFromShare(readOwnResult() !== parsed.resultId);
     // Keep a freshly-scored result (which carries `axes` for the gauges) when
     // our OWN enterResult → replaceState re-fires this effect with the same id
     // (Next 14.2 syncs replaceState into useSearchParams). A genuine deep-link
@@ -149,11 +109,10 @@ export default function Quiz() {
     setResult((prev) => (prev && prev.resultId === parsed.resultId ? prev : parsed));
   }, [params]);
 
-  // Enter the result phase: persist the id (so refresh keeps it "ours"), reflect
-  // it in the URL for sharing, then flip the phase. Called either straight away
-  // (reduced motion) or after the analyzing interstitial.
+  // Enter the result phase: reflect the id in the URL (so a refresh keeps the
+  // result), then flip the phase. Called either straight away (reduced motion)
+  // or after the analyzing interstitial.
   const enterResult = useCallback((scored: QuizResult) => {
-    writeOwnResult(scored.resultId);
     if (typeof window !== "undefined") {
       window.history.replaceState(null, "", `/quiz?r=${scored.resultId}`);
     }
@@ -173,9 +132,7 @@ export default function Quiz() {
     setIndex(0);
     setSelected(null);
     setResult(null);
-    setFromShare(false);
-    clearOwnResult();
-    // drop the ?r= so a retake doesn't leave a stale result in the URL
+    // drop the ?r= so a restart doesn't leave a stale result in the URL
     if (typeof window !== "undefined") {
       window.history.replaceState(null, "", "/quiz");
     }
@@ -217,28 +174,6 @@ export default function Quiz() {
     setIndex(index - 1);
     setSelected(answers[index - 1] ?? null);
   };
-
-  const share = useCallback(async () => {
-    if (!result) return;
-    const url = `${typeof window !== "undefined" ? window.location.origin : ""}/quiz?r=${result.resultId}`;
-    const data = RESULTS[result.mbti];
-    const title = `${t(data.variants[result.identity].name)} · ${result.resultId}`;
-    try {
-      if (typeof navigator !== "undefined" && navigator.share) {
-        await navigator.share({ title, text: t(quizUI.title), url });
-        return;
-      }
-      throw new Error("no share");
-    } catch {
-      try {
-        await navigator.clipboard.writeText(url);
-        setToast(true);
-        window.setTimeout(() => setToast(false), 2200);
-      } catch {
-        /* clipboard blocked — silently no-op */
-      }
-    }
-  }, [result, t]);
 
   const current = QUESTIONS[index];
   const progress = ((index + 1) / QUESTIONS.length) * 100;
@@ -341,30 +276,9 @@ export default function Quiz() {
         {phase === "analyzing" && <Analyzing t={t} reduce={!!reduce} />}
 
         {phase === "result" && result && (
-          <ResultView
-            result={result}
-            t={t}
-            reduce={!!reduce}
-            fromShare={fromShare}
-            onShare={share}
-            onRetake={startQuiz}
-          />
+          <ResultView result={result} t={t} reduce={!!reduce} />
         )}
       </div>
-
-      {/* copy toast */}
-      <AnimatePresence>
-        {toast && (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 16 }}
-            className="fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full border border-white/15 bg-[#13131f] px-5 py-3 text-sm font-semibold text-white shadow-xl"
-          >
-            ✓ {t(quizUI.copied)}
-          </motion.div>
-        )}
-      </AnimatePresence>
     </main>
   );
 }
@@ -414,16 +328,10 @@ function ResultView({
   result,
   t,
   reduce,
-  fromShare,
-  onShare,
-  onRetake,
 }: {
   result: QuizResult;
   t: (p: { ko: string; en: string }) => string;
   reduce: boolean;
-  fromShare: boolean;
-  onShare: () => void;
-  onRetake: () => void;
 }) {
   const data = RESULTS[result.mbti];
   const variant = data.variants[result.identity];
@@ -525,18 +433,6 @@ function ResultView({
 
         {/* Dream teammates — the two types this result pairs best with, and why. */}
         <DreamTeammates result={result} t={t} reduce={reduce} />
-
-        {/* share / retake — the final row under the match section */}
-        <div className="mx-auto w-full max-w-xl">
-          <div className="flex w-full gap-3">
-              <button type="button" onClick={onShare} className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10">
-                ↗ {t(quizUI.share)}
-              </button>
-              <button type="button" onClick={onRetake} className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10">
-                ↻ {fromShare ? t(quizUI.retakeViral) : t(quizUI.retake)}
-              </button>
-            </div>
-          </div>
       </div>
     </motion.div>
   );

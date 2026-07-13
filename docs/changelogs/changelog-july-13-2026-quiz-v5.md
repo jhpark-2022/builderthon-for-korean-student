@@ -7,7 +7,7 @@
 ## Summary
 
 Reworked the result screen from *card → CTA → session recommendations → share*
-to *card → CTA → **dream-teammate section** → share*. The session recommender
+to *card → CTA → **dream-teammate section***. The session recommender
 (matching takers to Day 2–5 sessions) is retired entirely and replaced by a
 "환상의 궁합 (Dream teammates)" section that shows the two types a result pairs
 best with **and why**, in the same B-grade self-roast tone as the axis
@@ -40,10 +40,22 @@ state / `onRecommend` flow, and the `rec*` `quizUI` copy. Removed the orphaned
 (its only producer was the rec panel). Retitled the main-site quiz CTA eyebrow
 from "세션 추천 / session picks" to "환상의 궁합 / dream teammates".
 
+## Refactor — remove share / retake buttons
+
+**User impact:** The result screen no longer shows the "결과 공유하기 / 나도
+테스트하기" row; it ends at the dream-teammate section.
+**Technical:** Removed the share/retake button row and everything it exclusively
+drove — the `share` handler, the copy toast, the `fromShare` state, the
+`share`/`copied`/`retake`/`retakeViral` `quizUI` copy, and the sessionStorage
+"own-result" machinery (`OWN_KEY` + read/write/clear helpers) whose only purpose
+was picking the retake label. Deep-link (`?r=`) result-on-refresh still works via
+the URL. `RESULTS`-type retake (`startQuiz`) stays — the landing start button
+still uses it.
+
 ## Feat — mid-page signup CTA + ref attribution
 
 **User impact:** The apply CTA sits between the personality card and the match
-section (final order: card → CTA → 궁합 → share/retake).
+section (final order: card → CTA → 궁합).
 **Technical:** New `links.signup` constant in `data/dictionary.ts` (placeholder
 → `#program` anchor for now, with a `TODO` to swap when the form opens). The CTA
 href is `${links.signup}?ref=quiz&type=<resultId>` so a lead can be attributed
@@ -58,7 +70,7 @@ to the taker's result once the form is wired up.
   new guard confirms 16 results × 2 = 32 matchWhy phrases, all ko/en,
   match↔matchWhy aligned. ✅
 - `node scripts/verify-quiz-axes.mjs` — a-lead balance intact. ✅
-- Manual QA (dev @ :3999): result order card → CTA → 궁합 → share; no in-card
-  match chip; two teammate cards render with reasons; `?r=INTJ-A` deep-link
-  shows the match section; CTA href carries `?ref=quiz&type=INTJ-A`; mobile
-  width stacks cleanly.
+- Manual QA (dev @ :3999): result order card → CTA → 궁합 (no share/retake row);
+  no in-card match chip; two teammate cards render with reasons; `?r=INTJ-A`
+  deep-link shows the match section; CTA href carries `?ref=quiz&type=INTJ-A`;
+  mobile width stacks cleanly.
