@@ -71,7 +71,7 @@ export const dict = {
 
   // Secondary CTA on the hero/footer that sends visitors to the /quiz mini-site.
   quizCta: {
-    eyebrow: { ko: "✦ AI 성격 테스트 · 세션 추천", en: "✦ AI test · session picks" },
+    eyebrow: { ko: "✦ AI 성격 테스트 · 환상의 궁합", en: "✦ AI test · dream teammates" },
     button: { ko: "내 AI 모델 알아보기", en: "Find your AI model" },
   },
 

@@ -3,7 +3,7 @@
 // Source of truth: AI_성격테스트_기획서.md (14 questions · 16 MBTI×AI models ·
 // A/T variants · scoring map). Every string is bilingual { ko, en } like the
 // rest of the site (see data/dictionary.ts). Pure data only — scoring lives in
-// lib/quizScore.ts, session recommendation in lib/eventMatch.ts.
+// lib/quizScore.ts.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { Phrase } from "@/data/dictionary";
@@ -166,8 +166,8 @@ export const axisMeta: Record<Pole, Phrase> = {
 };
 
 // ── Builder role buckets ───────────────────────────────────────────────────
-// Each result maps to ONE of four builderthon roles. Used by the session
-// recommender to weight which Day 2–5 sessions best fit each builder type.
+// Each result maps to ONE of four builderthon roles, shown on the result card
+// and the dream-teammate cards.
 export type RoleKey = "plan" | "dev" | "design" | "growth";
 
 export interface Role {
@@ -599,18 +599,4 @@ export const quizUI = {
     en: "With this type, you'll shine in the {role} role at the builderthon ✦",
   },
   ctaApply: { ko: "빌더톤 신청하러 가기", en: "Go apply to the builderthon" },
-
-  // Session recommendation
-  recEyebrow: { ko: "맞춤 세션 추천", en: "Sessions for you" },
-  recPrompt: {
-    ko: "결과에 맞춰, 빌더톤에서 참여하면 좋을 세션을 골라드려요.",
-    en: "Based on your result, here are the builderthon sessions worth joining.",
-  },
-  recCta: { ko: "내게 맞는 세션 추천받기", en: "Show my sessions" },
-  recTitle: { ko: "당신에게 추천하는 세션", en: "Your recommended sessions" },
-  recView: { ko: "프로그램에서 보기", en: "See in program" },
-  recNote: {
-    ko: "* 8일 프로그램 중 당신과 잘 맞는 세션이에요. 미리 체크해두고 그날 챙겨보세요.",
-    en: "* Sessions from the 8-day program that fit you — bookmark them and catch them on the day.",
-  },
 };

@@ -15,10 +15,8 @@ import {
   type MbtiKey,
   type Result,
 } from "@/data/quiz";
-import { categoryMeta } from "@/data/schedule";
 import { scoreQuiz, parseResultId, type Choice, type QuizResult, type AxisScore } from "@/lib/quizScore";
 import { getExplanation } from "@/data/quizExplanations";
-import { recommendEvents, type EventPick } from "@/lib/eventMatch";
 
 type Phase = "landing" | "quiz" | "analyzing" | "result";
 
@@ -134,7 +132,6 @@ export default function Quiz() {
   const [result, setResult] = useState<QuizResult | null>(null);
   const [fromShare, setFromShare] = useState(false);
   const [toast, setToast] = useState(false);
-  const [picks, setPicks] = useState<EventPick[] | null>(null);
 
   // Deep-link: ?r=INFJ-A drops a visitor straight onto a result card. Usually
   // that's a friend's share (the viral loop). But if the id matches the one WE
@@ -176,7 +173,6 @@ export default function Quiz() {
     setIndex(0);
     setSelected(null);
     setResult(null);
-    setPicks(null);
     setFromShare(false);
     clearOwnResult();
     // drop the ?r= so a retake doesn't leave a stale result in the URL
@@ -200,7 +196,6 @@ export default function Quiz() {
       } else {
         const scored = scoreQuiz(next);
         setResult(scored);
-        setPicks(null);
         // Reduced motion skips the interstitial and jumps straight to the result;
         // otherwise show the "analyzing" beat, which then enters the result.
         if (reduce) {
@@ -351,8 +346,6 @@ export default function Quiz() {
             t={t}
             reduce={!!reduce}
             fromShare={fromShare}
-            picks={picks}
-            onRecommend={() => setPicks(recommendEvents(result.resultId))}
             onShare={share}
             onRetake={startQuiz}
           />
@@ -416,14 +409,12 @@ function Landing({ onStart, t, reduce }: { onStart: () => void; t: (p: { ko: str
   );
 }
 
-// ── Result + session recommendation ────────────────────────────────────────
+// ── Result screen ───────────────────────────────────────────────────────────
 function ResultView({
   result,
   t,
   reduce,
   fromShare,
-  picks,
-  onRecommend,
   onShare,
   onRetake,
 }: {
@@ -431,8 +422,6 @@ function ResultView({
   t: (p: { ko: string; en: string }) => string;
   reduce: boolean;
   fromShare: boolean;
-  picks: EventPick[] | null;
-  onRecommend: () => void;
   onShare: () => void;
   onRetake: () => void;
 }) {
@@ -524,22 +513,21 @@ function ResultView({
         {/* Dream teammates — the two types this result pairs best with, and why. */}
         <DreamTeammates result={result} t={t} reduce={reduce} />
 
-        {/* below the card: apply CTA + actions on one side, session recs on the other */}
-        <div className="grid w-full gap-4 lg:grid-cols-2 lg:items-start">
-          <div className="flex flex-col gap-4">
-            {/* apply CTA */}
-            <div className="w-full rounded-[24px] border border-white/10 bg-white/[0.04] p-6 text-center">
-              <p className="text-[15px] font-bold leading-relaxed text-white/85">{ctaLead}</p>
-              <a
-                href={links.program}
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
-              >
-                {t(quizUI.ctaApply)} →
-              </a>
-            </div>
+        {/* below the card: apply CTA + actions, stacked */}
+        <div className="mx-auto flex w-full max-w-xl flex-col gap-4">
+          {/* apply CTA */}
+          <div className="w-full rounded-[24px] border border-white/10 bg-white/[0.04] p-6 text-center">
+            <p className="text-[15px] font-bold leading-relaxed text-white/85">{ctaLead}</p>
+            <a
+              href={links.program}
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
+            >
+              {t(quizUI.ctaApply)} →
+            </a>
+          </div>
 
-            {/* share / retake */}
-            <div className="flex w-full gap-3">
+          {/* share / retake */}
+          <div className="flex w-full gap-3">
               <button type="button" onClick={onShare} className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10">
                 ↗ {t(quizUI.share)}
               </button>
@@ -548,10 +536,6 @@ function ResultView({
               </button>
             </div>
           </div>
-
-          {/* session recommendation */}
-          <EventRecsPanel picks={picks} onRecommend={onRecommend} t={t} reduce={reduce} />
-        </div>
       </div>
     </motion.div>
   );
@@ -620,79 +604,6 @@ function DreamTeammates({
         })}
       </div>
     </motion.section>
-  );
-}
-
-// The new piece — recommend the Day 2–5 sessions a result should RSVP for.
-function EventRecsPanel({
-  picks,
-  onRecommend,
-  t,
-  reduce,
-}: {
-  picks: EventPick[] | null;
-  onRecommend: () => void;
-  t: (p: { ko: string; en: string }) => string;
-  reduce: boolean;
-}) {
-  if (!picks) {
-    return (
-      <div className="w-full rounded-[24px] border border-violet-400/20 bg-violet-500/[0.06] p-6 text-center">
-        <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-violet-300">
-          ✦ {t(quizUI.recEyebrow)}
-        </p>
-        <p className="mt-2 text-sm leading-relaxed text-white/75">{t(quizUI.recPrompt)}</p>
-        <button
-          type="button"
-          onClick={onRecommend}
-          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-violet-400/40 bg-white/[0.06] px-6 py-3.5 text-sm font-bold text-violet-100 transition hover:bg-white/10"
-        >
-          ✦ {t(quizUI.recCta)}
-        </button>
-      </div>
-    );
-  }
-
-  return (
-    <motion.div
-      key="recs"
-      initial={reduce ? false : { opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      className="w-full overflow-hidden rounded-[24px] border border-white/12 bg-[#0c0a18] p-6 text-left"
-    >
-      <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-white/45">{t(quizUI.recTitle)}</p>
-
-      <div className="mt-3 flex flex-col gap-3">
-        {picks.map(({ event, reason }) => {
-          const meta = categoryMeta[event.category];
-          return (
-            <a
-              key={event.id}
-              href={`/?event=${event.id}#program`}
-              className="group block rounded-2xl border border-white/10 bg-white/[0.04] p-4 transition hover:-translate-y-0.5 hover:border-violet-400/30 hover:bg-white/[0.07]"
-            >
-              <div className="flex items-center gap-2">
-                <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: meta.dot }} aria-hidden />
-                <span className="text-[0.7rem] font-bold uppercase tracking-wide" style={{ color: meta.dot }}>
-                  {t(meta.label)}
-                </span>
-                <span className="ml-auto text-[0.7rem] font-semibold text-white/45">
-                  Day {event.day} · {event.date}
-                </span>
-              </div>
-              <h4 className="mt-2 text-base font-bold leading-snug text-white">{t(event.title)}</h4>
-              <p className="mt-1 text-sm leading-snug text-white/65">{t(reason)}</p>
-              <span className="mt-2.5 inline-flex items-center gap-1 text-xs font-semibold text-violet-300/70 transition group-hover:text-violet-300">
-                {t(quizUI.recView)} →
-              </span>
-            </a>
-          );
-        })}
-      </div>
-
-      <p className="mt-4 text-[0.7rem] leading-relaxed text-white/35">{t(quizUI.recNote)}</p>
-    </motion.div>
   );
 }
 
