@@ -8,6 +8,7 @@
 //   ④ the 14 questions' per-axis counts + weights match the design table.
 // Run: node scripts/verify-quiz.mjs
 import { readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -145,10 +146,18 @@ whyBlocks.forEach((entries, i) => {
 });
 if (ok) console.log(`\nDream teammates: 16 results × 2 = ${whyPhrases} matchWhy phrases, all ko/en, match↔matchWhy aligned.`);
 
-// Logo sanity: which RESULTS logos resolve to a local file vs emoji fallback.
+// Logo files: every non-empty `logo` field is a filename (ext included) under
+// public/logos — assert the file actually exists (a missing file silently falls
+// back to emoji, which is what we want the check to catch). Empty logos are the
+// deliberate emoji-fallback models (openai/cohere have no self-hostable mono
+// mark); they're reported, not failed.
 const logos = [...quizSrc.matchAll(/logo:\s*"([^"]*)"/g)].map((m) => m[1]);
-const nonEmpty = logos.filter(Boolean);
-console.log(`\nRESULTS logos: ${nonEmpty.length} slugged, ${logos.length - nonEmpty.length} emoji-only. Slugs: ${[...new Set(nonEmpty)].join(", ")}`);
+const withFile = logos.filter(Boolean);
+const emojiOnly = logos.length - withFile.length;
+for (const f of withFile) {
+  if (!existsSync(join(root, "public/logos", f))) fail(`logo file missing: public/logos/${f}`);
+}
+console.log(`\nRESULTS logos: ${withFile.length}/${logos.length} have a file in public/logos, ${emojiOnly} emoji-fallback. Files: ${[...new Set(withFile)].join(", ")}`);
 
 console.log(ok ? "\n✅ All Sidon + explanation invariants hold." : "\n❌ Invariant violation — see above.");
 process.exit(ok ? 0 : 1);

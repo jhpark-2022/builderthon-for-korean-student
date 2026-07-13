@@ -20,18 +20,18 @@ import { getExplanation } from "@/data/quizExplanations";
 
 type Phase = "landing" | "quiz" | "analyzing" | "result";
 
-// Landing-cluster logos, now self-hosted from /public/logos (copied from the
-// simple-icons npm package by scripts/copy-logos.mjs) — no more CDN dependency
-// after the `openai` slug 404'd on cdn.simpleicons.org. Each still carries an
-// emoji fallback: HeroLogo swaps to it if the local SVG is ever missing, so a
-// tile never renders broken.
+// Landing-cluster logos, self-hosted from /public/logos — no CDN dependency.
+// `file` is the full filename (ext included) under /public/logos, matching the
+// `logo` field on RESULTS. Each still carries an emoji fallback: HeroLogo swaps
+// to it if the local file is ever missing (e.g. openai has no self-hostable
+// mono mark), so a tile never renders broken.
 const HERO_LOGOS = [
-  { slug: "deepseek", alt: "DeepSeek", emoji: "🐋" },
-  { slug: "anthropic", alt: "Claude", emoji: "✳️" },
-  { slug: "openai", alt: "ChatGPT", emoji: "🤖" },
-  { slug: "googlegemini", alt: "Gemini", emoji: "✨" },
-  { slug: "ollama", alt: "Llama", emoji: "🦙" },
-  { slug: "perplexity", alt: "Perplexity", emoji: "❓" },
+  { file: "deepseek.svg", alt: "DeepSeek", emoji: "🐋" },
+  { file: "anthropic.svg", alt: "Claude", emoji: "✳️" },
+  { file: "openai.svg", alt: "ChatGPT", emoji: "🤖" }, // no file → emoji fallback
+  { file: "googlegemini.svg", alt: "Gemini", emoji: "✨" },
+  { file: "ollama.svg", alt: "Llama", emoji: "🦙" },
+  { file: "perplexity.svg", alt: "Perplexity", emoji: "❓" },
 ];
 
 // Detects an <img> that already failed before React could attach onError (the
@@ -41,8 +41,8 @@ function markBrokenImage(node: HTMLImageElement | null, fail: () => void) {
   if (node && node.complete && node.naturalWidth === 0) fail();
 }
 
-// A single landing logo tile that falls back to its emoji if the local SVG 404s.
-function HeroLogo({ slug, alt, emoji }: { slug: string; alt: string; emoji: string }) {
+// A single landing logo tile that falls back to its emoji if the local file 404s.
+function HeroLogo({ file, alt, emoji }: { file: string; alt: string; emoji: string }) {
   const [failed, setFailed] = useState(false);
   if (failed) {
     return <span className="text-2xl leading-none" aria-hidden>{emoji}</span>;
@@ -50,7 +50,7 @@ function HeroLogo({ slug, alt, emoji }: { slug: string; alt: string; emoji: stri
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={`/logos/${slug}.svg`}
+      src={`/logos/${file}`}
       alt={alt}
       className="h-6 w-6 object-contain"
       ref={(n) => markBrokenImage(n, () => setFailed(true))}
@@ -76,7 +76,7 @@ function ModelGlyph({
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={`/logos/${result.logo}.svg`}
+      src={`/logos/${result.logo}`}
       alt={result.model}
       className={imgClass}
       ref={(n) => markBrokenImage(n, () => setFailed(true))}
@@ -305,8 +305,8 @@ function Landing({ onStart, t, reduce }: { onStart: () => void; t: (p: { ko: str
       </p>
       <div className="mt-9 flex flex-wrap items-center justify-center gap-2.5">
         {HERO_LOGOS.map((l) => (
-          <span key={l.slug} className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05]">
-            <HeroLogo slug={l.slug} alt={l.alt} emoji={l.emoji} />
+          <span key={l.file} className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05]">
+            <HeroLogo file={l.file} alt={l.alt} emoji={l.emoji} />
           </span>
         ))}
       </div>

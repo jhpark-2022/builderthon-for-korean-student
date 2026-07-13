@@ -224,7 +224,7 @@ export interface Result {
   mbti: MbtiKey;
   model: string;        // brand name, shown as-is in both locales
   emoji: string;        // fallback glyph when the brand logo can't load
-  logo: string;         // Simple Icons slug ("" = emoji only)
+  logo: string;         // logo filename in public/logos, ext included ("" = emoji fallback)
   role: Phrase;         // the brief's recommended builderthon role (display)
   roleKey: RoleKey;     // bucket for group matching
   match: MbtiKey[];     // 2 best-fit teammate types
@@ -243,7 +243,7 @@ export interface Result {
 
 export const RESULTS: Record<MbtiKey, Result> = {
   INTJ: {
-    mbti: "INTJ", model: "DeepSeek", emoji: "🐋", logo: "deepseek",
+    mbti: "INTJ", model: "DeepSeek", emoji: "🐋", logo: "deepseek.svg",
     role: { ko: "아키텍트 · 전략 리드", en: "Architect · Strategy lead" }, roleKey: "plan",
     match: ["ENFP", "ENTP"],
     matchWhy: [
@@ -262,7 +262,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   INTP: {
-    mbti: "INTP", model: "Meta Llama", emoji: "🔓", logo: "meta",
+    mbti: "INTP", model: "Meta Llama", emoji: "🔓", logo: "meta.svg",
     role: { ko: "코어 로직 · 알고리즘", en: "Core logic · Algorithms" }, roleKey: "dev",
     match: ["ENTJ", "ENFJ"],
     matchWhy: [
@@ -281,7 +281,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   ENTJ: {
-    mbti: "ENTJ", model: "Gemini", emoji: "✨", logo: "googlegemini",
+    mbti: "ENTJ", model: "Gemini", emoji: "✨", logo: "googlegemini.svg",
     role: { ko: "팀 리더 · PM", en: "Team lead · PM" }, roleKey: "plan",
     match: ["INTP", "INFP"],
     matchWhy: [
@@ -300,7 +300,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   ENTP: {
-    mbti: "ENTP", model: "Grok", emoji: "🃏", logo: "",
+    mbti: "ENTP", model: "Grok", emoji: "🃏", logo: "grok.svg",
     role: { ko: "아이데이션 · 브레인스토밍 리드", en: "Ideation · Brainstorm lead" }, roleKey: "plan",
     match: ["INTJ", "INFJ"],
     matchWhy: [
@@ -319,7 +319,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   INFJ: {
-    mbti: "INFJ", model: "Claude", emoji: "🌅", logo: "anthropic",
+    mbti: "INFJ", model: "Claude", emoji: "🌅", logo: "anthropic.svg",
     role: { ko: "기획 · 카피 · 내러티브", en: "Planning · Copy · Narrative" }, roleKey: "design",
     match: ["ENTP", "ENFP"],
     matchWhy: [
@@ -338,7 +338,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   INFP: {
-    mbti: "INFP", model: "Character.AI", emoji: "🎭", logo: "",
+    mbti: "INFP", model: "Character.AI", emoji: "🎭", logo: "characterai.png",
     role: { ko: "UX 라이팅 · 유저 리서치", en: "UX writing · User research" }, roleKey: "design",
     match: ["ENTJ", "ENFJ"],
     matchWhy: [
@@ -357,7 +357,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   ENFJ: {
-    mbti: "ENFJ", model: "ChatGPT", emoji: "💬", logo: "openai",
+    mbti: "ENFJ", model: "ChatGPT", emoji: "💬", logo: "",
     role: { ko: "팀 빌더 · 발표 · 피칭", en: "Team builder · Pitching" }, roleKey: "growth",
     match: ["INFP", "INTP"],
     matchWhy: [
@@ -376,7 +376,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   ENFP: {
-    mbti: "ENFP", model: "Pi", emoji: "🫂", logo: "",
+    mbti: "ENFP", model: "Pi", emoji: "🫂", logo: "pi.png",
     role: { ko: "마케팅 · 콘텐츠", en: "Marketing · Content" }, roleKey: "growth",
     match: ["INTJ", "INFJ"],
     matchWhy: [
@@ -395,7 +395,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   ISTJ: {
-    mbti: "ISTJ", model: "Perplexity", emoji: "🔎", logo: "perplexity",
+    mbti: "ISTJ", model: "Perplexity", emoji: "🔎", logo: "perplexity.svg",
     role: { ko: "리서치 · 데이터 검증", en: "Research · Fact-checking" }, roleKey: "plan",
     match: ["ESFP", "ESTP"],
     matchWhy: [
@@ -414,7 +414,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   ISFJ: {
-    mbti: "ISFJ", model: "GitHub Copilot", emoji: "🐙", logo: "githubcopilot",
+    mbti: "ISFJ", model: "GitHub Copilot", emoji: "🐙", logo: "githubcopilot.svg",
     role: { ko: "개발 서포트 · 페어 프로그래밍", en: "Dev support · Pair programming" }, roleKey: "dev",
     match: ["ESFP", "ESTP"],
     matchWhy: [
@@ -433,7 +433,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   ESTJ: {
-    mbti: "ESTJ", model: "Cohere Command", emoji: "📋", logo: "cohere",
+    mbti: "ESTJ", model: "Cohere Command", emoji: "📋", logo: "",
     role: { ko: "운영 · 일정 · 자원 관리", en: "Ops · Schedule · Resources" }, roleKey: "plan",
     match: ["ISFP", "ISTP"],
     matchWhy: [
@@ -452,7 +452,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   ESFJ: {
-    mbti: "ESFJ", model: "Microsoft Copilot", emoji: "🪁", logo: "",
+    mbti: "ESFJ", model: "Microsoft Copilot", emoji: "🪁", logo: "microsoftcopilot.png",
     role: { ko: "커뮤니티 · 참가자 운영", en: "Community · Participant ops" }, roleKey: "growth",
     match: ["ISFP", "ISTP"],
     matchWhy: [
@@ -471,7 +471,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   ISTP: {
-    mbti: "ISTP", model: "Ollama", emoji: "🦙", logo: "ollama",
+    mbti: "ISTP", model: "Ollama", emoji: "🦙", logo: "ollama.svg",
     role: { ko: "풀스택 · 인프라", en: "Full-stack · Infra" }, roleKey: "dev",
     match: ["ESFJ", "ESTJ"],
     matchWhy: [
@@ -490,7 +490,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   ISFP: {
-    mbti: "ISFP", model: "Midjourney", emoji: "🎨", logo: "",
+    mbti: "ISFP", model: "Midjourney", emoji: "🎨", logo: "midjourney.png",
     role: { ko: "디자인 · 비주얼", en: "Design · Visuals" }, roleKey: "design",
     match: ["ESFJ", "ESTJ"],
     matchWhy: [
@@ -509,7 +509,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   ESTP: {
-    mbti: "ESTP", model: "Mistral", emoji: "🌬️", logo: "mistralai",
+    mbti: "ESTP", model: "Mistral", emoji: "🌬️", logo: "mistralai.svg",
     role: { ko: "그로스 · 해커톤 스프린터", en: "Growth · Hackathon sprinter" }, roleKey: "growth",
     match: ["ISTJ", "ISFJ"],
     matchWhy: [
@@ -528,7 +528,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   ESFP: {
-    mbti: "ESFP", model: "Suno", emoji: "🎵", logo: "suno",
+    mbti: "ESFP", model: "Suno", emoji: "🎵", logo: "suno.svg",
     role: { ko: "무대 · 데모 · 발표 퍼포먼스", en: "Stage · Demo · Performance" }, roleKey: "growth",
     match: ["ISTJ", "ISFJ"],
     matchWhy: [
