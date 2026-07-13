@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
@@ -14,6 +14,7 @@ import {
   type Axis,
   type MbtiKey,
   type Result,
+  type Variant,
 } from "@/data/quiz";
 import { scoreQuiz, parseResultId, type Choice, type QuizResult, type AxisScore } from "@/lib/quizScore";
 import { getExplanation } from "@/data/quizExplanations";
@@ -337,6 +338,72 @@ function ResultView({
   const variant = data.variants[result.identity];
   const ctaLead = t(quizUI.ctaLead).replace("{role}", t(data.role));
 
+  // 9:16 story-image export. We capture a dedicated, fixed-size (1080×1920) card
+  // rendered off-screen — never the live card (it's responsive and its gauge
+  // accordion state would leak in). On mobile the PNG goes into the native share
+  // sheet (→ Instagram story / save to photos); desktop falls back to download.
+  const storyRef = useRef<HTMLDivElement>(null);
+  const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+  const [host, setHost] = useState("");
+  useEffect(() => {
+    setHost(window.location.hostname.replace(/^www\./, ""));
+  }, []);
+
+  const saveImage = useCallback(async () => {
+    const node = storyRef.current;
+    if (!node || saving) return;
+    setSaving(true);
+    try {
+      // Dynamic import keeps html-to-image out of the initial bundle.
+      const { toBlob } = await import("html-to-image");
+      // Wait for Pretendard to be ready before the first paint we capture.
+      if (typeof document !== "undefined" && document.fonts?.ready) {
+        await document.fonts.ready;
+      }
+      const opts = { width: 1080, height: 1920, pixelRatio: 1, cacheBust: true, backgroundColor: "#06040f" };
+      // iOS Safari drops fonts/images on the FIRST html-to-image pass — render
+      // twice and keep the second blob. Logos are self-hosted (/logos), so no
+      // CORS taint; the double pass is purely for font/image warm-up.
+      await toBlob(node, opts);
+      const blob = await toBlob(node, opts);
+      if (!blob) throw new Error("capture produced no blob");
+
+      const fileName = `zero100-quiz-${result.resultId}.png`;
+      const file = new File([blob], fileName, { type: "image/png" });
+
+      const canShareFiles =
+        typeof navigator !== "undefined" &&
+        typeof navigator.canShare === "function" &&
+        navigator.canShare({ files: [file] });
+
+      if (canShareFiles) {
+        try {
+          await navigator.share({ files: [file] });
+        } catch (err) {
+          // User dismissed the share sheet — not a failure, stay silent.
+          if ((err as Error)?.name === "AbortError") return;
+          throw err;
+        }
+      } else {
+        // Desktop (no file-share support) → download the PNG.
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+    } catch {
+      setToast(t(quizUI.saveImageError));
+      window.setTimeout(() => setToast(null), 2600);
+    } finally {
+      setSaving(false);
+    }
+  }, [saving, result.resultId, t]);
+
   return (
     <motion.div
       className="flex flex-col items-center pb-6 pt-2"
@@ -433,10 +500,129 @@ function ResultView({
 
         {/* Dream teammates — the two types this result pairs best with, and why. */}
         <DreamTeammates result={result} t={t} reduce={reduce} />
+
+        {/* Save as a 9:16 story image (native share sheet on mobile). */}
+        <div className="mx-auto w-full max-w-xl">
+          <button
+            type="button"
+            onClick={saveImage}
+            disabled={saving}
+            aria-busy={saving}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-4 text-sm font-bold text-white/90 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {saving ? (
+              <>
+                <span className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-white/30 border-t-white" aria-hidden />
+                {t(quizUI.saveImageLoading)}
+              </>
+            ) : (
+              <>📸 {t(quizUI.saveImage)}</>
+            )}
+          </button>
+        </div>
       </div>
+
+      {/* Off-screen 9:16 capture target (not display:none — that captures blank). */}
+      <div aria-hidden style={{ position: "fixed", top: 0, left: -9999, pointerEvents: "none", zIndex: -1 }}>
+        <StoryCard ref={storyRef} result={result} data={data} variant={variant} host={host} t={t} />
+      </div>
+
+      {/* error toast (share-sheet cancels stay silent) */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
+            className="fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full border border-white/15 bg-[#13131f] px-5 py-3 text-sm font-semibold text-white shadow-xl"
+          >
+            {toast}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
+
+// ── 9:16 story card (capture target) ────────────────────────────────────────
+// A fixed 1080×1920 card rendered off-screen and captured to a PNG for Instagram
+// stories. Fixed px (not responsive) so the export is pixel-stable regardless of
+// viewport. ~180px top/bottom safe margins keep content clear of the story UI
+// (profile bar up top, reply bar at the bottom). Gauges only render when the
+// visitor actually took the quiz (deep-link `?r=` results carry no `axes`).
+const StoryCard = forwardRef<
+  HTMLDivElement,
+  {
+    result: QuizResult;
+    data: Result;
+    variant: Variant;
+    host: string;
+    t: (p: { ko: string; en: string }) => string;
+  }
+>(function StoryCard({ result, data, variant, host, t }, ref) {
+  const axes = result.axes && result.axes.length > 0 ? result.axes : null;
+  const url = `${host || "builderthon-for-korean-student.vercel.app"}/quiz`;
+  return (
+    <div
+      ref={ref}
+      style={{
+        width: 1080,
+        height: 1920,
+        position: "relative",
+        overflow: "hidden",
+        background: "#06040f",
+        color: "#fff",
+        fontFamily: '"Pretendard Variable", Pretendard, -apple-system, sans-serif',
+      }}
+    >
+      {/* orbs — same palette as the live page */}
+      <div style={{ position: "absolute", top: -180, left: -180, width: 660, height: 660, borderRadius: "50%", background: "radial-gradient(circle, rgba(124,58,237,0.45), transparent 70%)" }} />
+      <div style={{ position: "absolute", bottom: -220, right: -180, width: 700, height: 700, borderRadius: "50%", background: "radial-gradient(circle, rgba(6,182,212,0.32), transparent 70%)" }} />
+
+      <div style={{ position: "relative", height: "100%", display: "flex", flexDirection: "column", padding: "180px 84px", boxSizing: "border-box" }}>
+        {/* top */}
+        <div style={{ textAlign: "center" }}>
+          <p style={{ margin: 0, fontSize: 26, fontWeight: 700, letterSpacing: 6, textTransform: "uppercase", color: "rgba(196,181,253,0.9)" }}>✦ {t(quizUI.eyebrow)}</p>
+          <h1 style={{ margin: "16px 0 0", fontSize: 66, fontWeight: 900, lineHeight: 1.05, color: "#fff" }}>{t(quizUI.title)}</h1>
+          <p style={{ margin: "14px 0 0", fontSize: 22, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", color: "rgba(255,255,255,0.4)", fontFamily: "ui-monospace, monospace" }}>Zero100 Builderthon</p>
+        </div>
+
+        {/* center — identity */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+          <div className={`bg-gradient-to-br ${data.accent}`} style={{ width: 256, height: 256, borderRadius: 56, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 30px 80px -22px rgba(217,70,239,0.5)" }}>
+            <ModelGlyph result={data} imgClass="h-[148px] w-[148px] object-contain" emojiClass="text-[128px] leading-none" />
+          </div>
+          <p style={{ margin: "44px 0 0", fontSize: 30, fontWeight: 600, color: "rgba(255,255,255,0.55)" }}>{t(quizUI.youAre)}</p>
+          <h2 style={{ margin: "8px 0 0", fontSize: 72, fontWeight: 900, lineHeight: 1.1, color: "#fff" }}>{t(variant.name)}</h2>
+          <p style={{ margin: "14px 0 0", fontSize: 34, fontWeight: 700, color: "rgb(245,208,254)" }}>{data.model} · {result.resultId}</p>
+          <p style={{ margin: "28px auto 0", maxWidth: 820, fontSize: 40, fontWeight: 600, lineHeight: 1.4, color: "rgba(255,255,255,0.9)" }}>“{t(data.phrase)}”</p>
+
+          {/* mini axis gauges */}
+          {axes && (
+            <div style={{ margin: "60px 0 0", width: "100%", display: "flex", flexDirection: "column", gap: 22 }}>
+              {axes.map((a) => (
+                <div key={a.axis} style={{ display: "flex", alignItems: "center", gap: 20 }}>
+                  <span style={{ width: 120, textAlign: "right", fontSize: 27, fontWeight: 700, color: "#fff" }}>{t(axisMeta[a.winner])}</span>
+                  <div style={{ flex: 1, height: 16, borderRadius: 999, background: "rgba(255,255,255,0.1)", overflow: "hidden" }}>
+                    <div className={`bg-gradient-to-r ${data.accent}`} style={{ height: "100%", width: `${a.pct}%`, borderRadius: 999 }} />
+                  </div>
+                  <span style={{ width: 84, textAlign: "right", fontSize: 27, fontWeight: 700, fontVariantNumeric: "tabular-nums", color: "#fff" }}>{a.pct}%</span>
+                  <span style={{ width: 120, fontSize: 24, color: "rgba(255,255,255,0.3)" }}>{t(axisMeta[a.loser])}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* bottom — call to action + url */}
+        <div style={{ textAlign: "center" }}>
+          <p style={{ margin: 0, fontSize: 38, fontWeight: 800, color: "#fff" }}>{t(quizUI.storyRetake)} →</p>
+          <p style={{ margin: "12px 0 0", fontSize: 30, fontWeight: 600, letterSpacing: 1, color: "rgba(255,255,255,0.45)" }}>{url}</p>
+        </div>
+      </div>
+    </div>
+  );
+});
 
 // ── Dream teammates ─────────────────────────────────────────────────────────
 // The two MBTI/model types this result pairs best with. Type-only, so it renders

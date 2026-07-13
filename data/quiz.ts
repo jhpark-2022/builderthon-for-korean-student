@@ -595,4 +595,11 @@ export const quizUI = {
     en: "With this type, you'll shine in the {role} role at the builderthon ✦",
   },
   ctaApply: { ko: "빌더톤 신청하러 가기", en: "Go apply to the builderthon" },
+
+  // 9:16 story-image export
+  saveImage: { ko: "이미지로 저장", en: "Save as image" },
+  saveImageLoading: { ko: "만드는 중…", en: "Creating…" },
+  saveImageError: { ko: "이미지 생성에 실패했어요", en: "Couldn't create the image" },
+  // shown on the story card itself
+  storyRetake: { ko: "나도 테스트하기", en: "Take the test yourself" },
 };
