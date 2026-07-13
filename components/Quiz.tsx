@@ -517,24 +517,12 @@ function ResultView({
                   ★ {t(data.role)}
                 </span>
               </div>
-
-              <div>
-                <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/45">{t(quizUI.matchLabel)}</p>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {data.match.map((m) => {
-                    const mate = RESULTS[m];
-                    return (
-                      <span key={m} className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.05] px-3 py-2 text-sm font-semibold text-white/85">
-                        <ModelGlyph result={mate} imgClass="h-4 w-4 object-contain" emojiClass="text-lg leading-none" />
-                        {mate.model} · {m}
-                      </span>
-                    );
-                  })}
-                </div>
-              </div>
             </div>
           </div>
         </div>
+
+        {/* Dream teammates — the two types this result pairs best with, and why. */}
+        <DreamTeammates result={result} t={t} reduce={reduce} />
 
         {/* below the card: apply CTA + actions on one side, session recs on the other */}
         <div className="grid w-full gap-4 lg:grid-cols-2 lg:items-start">
@@ -566,6 +554,72 @@ function ResultView({
         </div>
       </div>
     </motion.div>
+  );
+}
+
+// ── Dream teammates ─────────────────────────────────────────────────────────
+// The two MBTI/model types this result pairs best with. Type-only, so it renders
+// for deep-link (?r=) visitors too — no answer data needed. Each card shows the
+// mate's glyph, model · type, catchphrase, the from-this-type reason it clicks,
+// and the mate's recommended builderthon role.
+function DreamTeammates({
+  result,
+  t,
+  reduce,
+}: {
+  result: QuizResult;
+  t: (p: { ko: string; en: string }) => string;
+  reduce: boolean;
+}) {
+  const data = RESULTS[result.mbti];
+  return (
+    <motion.section
+      initial={reduce ? false : { opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: reduce ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] }}
+      className="w-full"
+      aria-label={t(quizUI.matchTitle)}
+    >
+      <div className="mb-4 text-center">
+        <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-fuchsia-200">
+          ✦ {t(quizUI.matchTitle)}
+        </p>
+        <p className="mx-auto mt-1.5 max-w-md text-sm leading-relaxed text-white/60">{t(quizUI.matchSub)}</p>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        {data.match.map((m, i) => {
+          const mate = RESULTS[m];
+          const why = data.matchWhy[i];
+          return (
+            <div
+              key={m}
+              className="flex flex-col rounded-[24px] border border-white/12 bg-[#0c0a18] p-6 text-left"
+            >
+              <div className="flex items-center gap-3">
+                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${mate.accent} shadow-lg`}>
+                  <ModelGlyph result={mate} imgClass="h-6 w-6 object-contain" emojiClass="text-2xl leading-none" />
+                </div>
+                <div className="min-w-0">
+                  <p className="truncate text-base font-black leading-tight">{mate.model}</p>
+                  <p className="text-xs font-bold text-fuchsia-200/80">{mate.mbti}</p>
+                </div>
+              </div>
+
+              <p className="mt-4 text-[15px] font-semibold leading-relaxed text-white/90">“{t(mate.phrase)}”</p>
+              <p className="mt-2.5 text-sm leading-relaxed text-white/70">{t(why)}</p>
+
+              <div className="mt-auto pt-4">
+                <p className="text-[0.65rem] font-bold uppercase tracking-wider text-white/40">{t(quizUI.matchRoleLabel)}</p>
+                <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-fuchsia-400/25 bg-fuchsia-400/[0.08] px-3 py-1.5 text-xs font-bold text-fuchsia-100">
+                  ★ {t(mate.role)}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </motion.section>
   );
 }
 
