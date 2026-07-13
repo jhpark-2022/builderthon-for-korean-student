@@ -11,10 +11,13 @@
 export type Locale = "ko" | "en";
 export type Phrase = { ko: string; en: string };
 
-// Internal navigation only. This is an informational program-introduction page —
-// there is intentionally no application / sign-up / external form link.
+// Internal navigation only. The main site is an informational program page —
+// its primary CTA is the internal #program anchor.
 export const links = {
   program: "#program", // main internal CTA target
+  // Builderthon sign-up target for the quiz result CTA. Placeholder for now.
+  // TODO: 신청 폼 열리면 교체 (placeholder) — 당분간 program 앵커를 재사용.
+  signup: "#program",
   // Organizer contact for partnership/sponsor inquiries, with a prefilled subject.
   partnership:
     "mailto:jhpark.2022@business.smu.edu.sg?subject=Zero100%20Builderthon%20Partnership%20Inquiry",

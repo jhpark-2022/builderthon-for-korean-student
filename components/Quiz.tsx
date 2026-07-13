@@ -510,23 +510,24 @@ function ResultView({
           </div>
         </div>
 
+        {/* apply CTA — sits between the personality card and the match section.
+            href carries ?ref=quiz&type=<resultId> so the (placeholder) signup
+            link can attribute a lead to the taker's result once it goes live. */}
+        <div className="mx-auto w-full max-w-xl rounded-[24px] border border-white/10 bg-white/[0.04] p-6 text-center">
+          <p className="text-[15px] font-bold leading-relaxed text-white/85">{ctaLead}</p>
+          <a
+            href={`${links.signup}?ref=quiz&type=${result.resultId}`}
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
+          >
+            {t(quizUI.ctaApply)} →
+          </a>
+        </div>
+
         {/* Dream teammates — the two types this result pairs best with, and why. */}
         <DreamTeammates result={result} t={t} reduce={reduce} />
 
-        {/* below the card: apply CTA + actions, stacked */}
-        <div className="mx-auto flex w-full max-w-xl flex-col gap-4">
-          {/* apply CTA */}
-          <div className="w-full rounded-[24px] border border-white/10 bg-white/[0.04] p-6 text-center">
-            <p className="text-[15px] font-bold leading-relaxed text-white/85">{ctaLead}</p>
-            <a
-              href={links.program}
-              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
-            >
-              {t(quizUI.ctaApply)} →
-            </a>
-          </div>
-
-          {/* share / retake */}
+        {/* share / retake — the final row under the match section */}
+        <div className="mx-auto w-full max-w-xl">
           <div className="flex w-full gap-3">
               <button type="button" onClick={onShare} className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10">
                 ↗ {t(quizUI.share)}
