@@ -21,6 +21,41 @@ import { getExplanation } from "@/data/quizExplanations";
 
 type Phase = "landing" | "quiz" | "analyzing" | "result";
 
+// The visitor's OWN result id, stashed in sessionStorage the moment they finish
+// the quiz. On a result-screen refresh the ?r= deep-link would otherwise look
+// like a friend's share; matching it against this key keeps "my result" =
+// "my result" (so a taker sees "다시 테스트하기", not the viral "나도 테스트하기").
+// All access is guarded — sessionStorage can throw (private mode, blocked
+// storage) — and any failure silently falls back to treating it as a share.
+const OWN_KEY = "z100-quiz-own";
+
+function readOwnResult(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return window.sessionStorage.getItem(OWN_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function writeOwnResult(resultId: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.setItem(OWN_KEY, resultId);
+  } catch {
+    /* storage blocked — keep old behavior */
+  }
+}
+
+function clearOwnResult(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.removeItem(OWN_KEY);
+  } catch {
+    /* storage blocked — no-op */
+  }
+}
+
 // Landing-cluster logos, self-hosted from /public/logos — no CDN dependency.
 // `file` is the full filename (ext included) under /public/logos, matching the
 // `logo` field on RESULTS. Each still carries an emoji fallback: HeroLogo swaps
@@ -96,13 +131,17 @@ export default function Quiz() {
   const [answers, setAnswers] = useState<Choice[]>([]);
   const [selected, setSelected] = useState<Choice | null>(null);
   const [result, setResult] = useState<QuizResult | null>(null);
+  const [fromShare, setFromShare] = useState(false);
 
-  // Deep-link: ?r=INFJ-A drops a visitor straight onto a result card (a shared
-  // link, or the visitor's own result surviving a refresh).
+  // Deep-link: ?r=INFJ-A drops a visitor straight onto a result card. Usually
+  // that's a friend's share (the viral loop → show "나도 테스트하기"). But if the id
+  // matches the one WE stashed, it's the visitor's own result surviving a refresh
+  // — treat it as theirs (fromShare=false → "다시 테스트하기").
   useEffect(() => {
     const parsed = parseResultId(params.get("r"));
     if (!parsed) return;
     setPhase("result");
+    setFromShare(readOwnResult() !== parsed.resultId);
     // Keep a freshly-scored result (which carries `axes` for the gauges) when
     // our OWN enterResult → replaceState re-fires this effect with the same id
     // (Next 14.2 syncs replaceState into useSearchParams). A genuine deep-link
@@ -110,10 +149,11 @@ export default function Quiz() {
     setResult((prev) => (prev && prev.resultId === parsed.resultId ? prev : parsed));
   }, [params]);
 
-  // Enter the result phase: reflect the id in the URL (so a refresh keeps the
-  // result), then flip the phase. Called either straight away (reduced motion)
-  // or after the analyzing interstitial.
+  // Enter the result phase: persist the id (so a refresh keeps it "ours" → the
+  // taker still sees "다시 테스트하기"), reflect it in the URL for sharing, then flip
+  // the phase. Called straight away (reduced motion) or after the interstitial.
   const enterResult = useCallback((scored: QuizResult) => {
+    writeOwnResult(scored.resultId);
     if (typeof window !== "undefined") {
       window.history.replaceState(null, "", `/quiz?r=${scored.resultId}`);
     }
@@ -133,6 +173,8 @@ export default function Quiz() {
     setIndex(0);
     setSelected(null);
     setResult(null);
+    setFromShare(false);
+    clearOwnResult();
     // drop the ?r= so a restart doesn't leave a stale result in the URL
     if (typeof window !== "undefined") {
       window.history.replaceState(null, "", "/quiz");
@@ -277,7 +319,7 @@ export default function Quiz() {
         {phase === "analyzing" && <Analyzing t={t} reduce={!!reduce} />}
 
         {phase === "result" && result && (
-          <ResultView result={result} t={t} reduce={!!reduce} />
+          <ResultView result={result} t={t} reduce={!!reduce} fromShare={fromShare} onRetake={startQuiz} />
         )}
       </div>
     </main>
@@ -329,10 +371,14 @@ function ResultView({
   result,
   t,
   reduce,
+  fromShare,
+  onRetake,
 }: {
   result: QuizResult;
   t: (p: { ko: string; en: string }) => string;
   reduce: boolean;
+  fromShare: boolean;
+  onRetake: () => void;
 }) {
   const data = RESULTS[result.mbti];
   const variant = data.variants[result.identity];
@@ -403,6 +449,29 @@ function ResultView({
       setSaving(false);
     }
   }, [saving, result.resultId, t]);
+
+  // Share the result LINK (distinct from the story image above). Native share
+  // sheet where available; otherwise copy the link and confirm via the toast.
+  const share = useCallback(async () => {
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const url = `${origin}/quiz?r=${result.resultId}`;
+    try {
+      if (typeof navigator !== "undefined" && navigator.share) {
+        await navigator.share({ title: `${t(variant.name)} · ${result.resultId}`, text: t(quizUI.title), url });
+        return;
+      }
+      throw new Error("no native share");
+    } catch (err) {
+      if ((err as Error)?.name === "AbortError") return; // user dismissed the sheet
+      try {
+        await navigator.clipboard.writeText(url);
+        setToast(t(quizUI.copied));
+        window.setTimeout(() => setToast(null), 2200);
+      } catch {
+        /* clipboard blocked — silently no-op */
+      }
+    }
+  }, [result.resultId, t, variant]);
 
   return (
     <motion.div
@@ -501,8 +570,9 @@ function ResultView({
         {/* Dream teammates — the two types this result pairs best with, and why. */}
         <DreamTeammates result={result} t={t} reduce={reduce} />
 
-        {/* Save as a 9:16 story image (native share sheet on mobile). */}
-        <div className="mx-auto w-full max-w-xl">
+        {/* Actions: story-image save (primary, full width), then share + retake. */}
+        <div className="mx-auto flex w-full max-w-xl flex-col gap-3">
+          {/* Save as a 9:16 story image (native share sheet on mobile). */}
           <button
             type="button"
             onClick={saveImage}
@@ -519,6 +589,35 @@ function ResultView({
               <>📸 {t(quizUI.saveImage)}</>
             )}
           </button>
+
+          {/* share link + retake. For share-link visitors the retake becomes the
+              prominent viral CTA ("나도 테스트하기") — the loop's key conversion. */}
+          <div className="flex w-full gap-3">
+            <button
+              type="button"
+              onClick={share}
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10"
+            >
+              ↗ {t(quizUI.share)}
+            </button>
+            {fromShare ? (
+              <button
+                type="button"
+                onClick={onRetake}
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-3.5 text-sm font-bold text-white shadow-[0_8px_30px_rgba(124,58,237,0.45)] transition hover:-translate-y-0.5"
+              >
+                ✦ {t(quizUI.retakeViral)}
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={onRetake}
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10"
+              >
+                ↻ {t(quizUI.retake)}
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
