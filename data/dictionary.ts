@@ -65,6 +65,8 @@ export const dict = {
     builders: { ko: "파트너", en: "Partners" },
     faq: { ko: "FAQ", en: "FAQ" },
     quiz: { ko: "성격 테스트", en: "Personality Test" },
+    // Shown instead of `quiz` once a visitor has taken the test (links to their saved result).
+    quizResult: { ko: "내 결과 보기", en: "View my result" },
     viewProgram: { ko: "프로그램 보기", en: "View Program" },
     register: { ko: "등록하기", en: "Register" },
     partner: { ko: "파트너십 문의", en: "Partner with us" },

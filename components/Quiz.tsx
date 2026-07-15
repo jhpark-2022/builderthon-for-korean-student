@@ -17,6 +17,7 @@ import {
   type Variant,
 } from "@/data/quiz";
 import { scoreQuiz, parseResultId, type Choice, type QuizResult, type AxisScore } from "@/lib/quizScore";
+import { saveOwnResult, loadOwnResult, type OwnResult } from "@/lib/quizResult";
 import { getExplanation } from "@/data/quizExplanations";
 
 type Phase = "landing" | "quiz" | "analyzing" | "result";
@@ -132,16 +133,28 @@ export default function Quiz() {
   const [selected, setSelected] = useState<Choice | null>(null);
   const [result, setResult] = useState<QuizResult | null>(null);
   const [fromShare, setFromShare] = useState(false);
+  // The visitor's DURABLE own result (localStorage), loaded post-mount so it
+  // never diverges from SSR. Powers the landing "지난 결과" hint and, on a
+  // deep-link, lets us recognise their own type across a browser restart.
+  const [ownResult, setOwnResult] = useState<OwnResult | null>(null);
+  useEffect(() => {
+    setOwnResult(loadOwnResult());
+  }, []);
 
   // Deep-link: ?r=INFJ-A drops a visitor straight onto a result card. Usually
   // that's a friend's share (the viral loop → show "나도 테스트하기"). But if the id
-  // matches the one WE stashed, it's the visitor's own result surviving a refresh
-  // — treat it as theirs (fromShare=false → "다시 테스트하기").
+  // matches the one WE stashed, it's the visitor's own result — treat it as
+  // theirs (fromShare=false → "다시 테스트하기"). "Ours" = the sessionStorage key
+  // (survives a refresh) OR the durable localStorage id (survives a restart), so
+  // reopening your own shared link on a later visit still reads as your result.
   useEffect(() => {
     const parsed = parseResultId(params.get("r"));
     if (!parsed) return;
     setPhase("result");
-    setFromShare(readOwnResult() !== parsed.resultId);
+    const isOwn =
+      readOwnResult() === parsed.resultId ||
+      loadOwnResult()?.resultId === parsed.resultId;
+    setFromShare(!isOwn);
     // Keep a freshly-scored result (which carries `axes` for the gauges) when
     // our OWN enterResult → replaceState re-fires this effect with the same id
     // (Next 14.2 syncs replaceState into useSearchParams). A genuine deep-link
@@ -152,8 +165,14 @@ export default function Quiz() {
   // Enter the result phase: persist the id (so a refresh keeps it "ours" → the
   // taker still sees "다시 테스트하기"), reflect it in the URL for sharing, then flip
   // the phase. Called straight away (reduced motion) or after the interstitial.
+  // This is the ONLY genuine-completion path, so it's the ONLY place we write the
+  // durable localStorage result — a `?r=` deep-link never reaches here, so a
+  // friend's shared type is never saved as the visitor's own. A retake that
+  // completes overwrites the previous type.
   const enterResult = useCallback((scored: QuizResult) => {
     writeOwnResult(scored.resultId);
+    saveOwnResult(scored.resultId);
+    setOwnResult({ resultId: scored.resultId, savedAt: new Date().toISOString() });
     if (typeof window !== "undefined") {
       window.history.replaceState(null, "", `/quiz?r=${scored.resultId}`);
     }
@@ -237,7 +256,7 @@ export default function Quiz() {
       </header>
 
       <div className={`relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] flex-col px-6 pb-12 ${phase === "result" ? "max-w-5xl" : "max-w-2xl"}`}>
-        {phase === "landing" && <Landing onStart={startQuiz} t={t} reduce={!!reduce} />}
+        {phase === "landing" && <Landing onStart={startQuiz} t={t} reduce={!!reduce} ownResult={ownResult} />}
 
         {phase === "quiz" && current && (
           <div className="flex flex-1 flex-col pt-4">
@@ -327,7 +346,27 @@ export default function Quiz() {
 }
 
 // ── Landing ──────────────────────────────────────────────────────────────────
-function Landing({ onStart, t, reduce }: { onStart: () => void; t: (p: { ko: string; en: string }) => string; reduce: boolean }) {
+function Landing({
+  onStart,
+  t,
+  reduce,
+  ownResult,
+}: {
+  onStart: () => void;
+  t: (p: { ko: string; en: string }) => string;
+  reduce: boolean;
+  ownResult: OwnResult | null;
+}) {
+  // A returning taker gets a subtle "지난 결과: {variantName} · 다시 보기 →" line
+  // under the start button — an extra path to their result, never blocking a
+  // retake. Derived (not stored) so copy changes always show the latest name.
+  // `ownResult` is null on the server + first client render (loaded in an effect),
+  // so this is absent then → no hydration mismatch; it just fades in on mount.
+  const parsedOwn = ownResult ? parseResultId(ownResult.resultId) : null;
+  const ownVariantName = parsedOwn
+    ? RESULTS[parsedOwn.mbti].variants[parsedOwn.identity].name
+    : null;
+
   return (
     <motion.div
       className="flex flex-1 flex-col items-center justify-center text-center"
@@ -362,9 +401,34 @@ function Landing({ onStart, t, reduce }: { onStart: () => void; t: (p: { ko: str
         <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
       </button>
       <p className="mt-5 text-xs font-medium text-white/40">{t(quizUI.meta)}</p>
+
+      {/* Returning taker: a low-key link back to their saved result. Fades in
+          post-mount (ownResult loads client-side), so it never disrupts the
+          landing for a first-time visitor. */}
+      {ownResult && ownVariantName && (
+        <motion.a
+          href={`/quiz?r=${ownResult.resultId}`}
+          initial={reduce ? false : { opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-xs font-semibold text-white/70 transition hover:border-white/20 hover:bg-white/[0.09] hover:text-white"
+        >
+          <span className="text-white/45">{t(quizLandingHint.lead)}</span>
+          <span className="font-bold text-violet-200">{t(ownVariantName)}</span>
+          <span aria-hidden className="text-white/30">·</span>
+          <span className="text-violet-300">{t(quizLandingHint.cta)} →</span>
+        </motion.a>
+      )}
     </motion.div>
   );
 }
+
+// Landing "지난 결과" hint copy (returning taker only). Kept local — it's specific
+// to this component and not part of the shared quizUI export.
+const quizLandingHint = {
+  lead: { ko: "지난 결과:", en: "Last result:" },
+  cta: { ko: "다시 보기", en: "View again" },
+};
 
 // ── Result screen ───────────────────────────────────────────────────────────
 function ResultView({

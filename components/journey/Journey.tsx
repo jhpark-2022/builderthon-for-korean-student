@@ -17,6 +17,8 @@ import {
 import Chapter from "./Chapter";
 import EventModal from "@/components/EventModal";
 import PartnerModal, { type PartnerInfo } from "@/components/PartnerModal";
+import ReturningGreeting from "./ReturningGreeting";
+import { loadOwnResult } from "@/lib/quizResult";
 
 const legendOrder: Category[] = ["main","workshop","build","mentoring","network"];
 
@@ -722,6 +724,15 @@ export default function Journey() {
     setActive(ev);
   };
 
+  // Returning quiz-taker? Load their durable result post-mount (null on SSR +
+  // first render so the CTA label matches the server output → no hydration
+  // mismatch; it just swaps to "내 결과 보기" once read).
+  const [ownResultId, setOwnResultId] = useState<string | null>(null);
+  useEffect(() => {
+    const r = loadOwnResult();
+    if (r) setOwnResultId(r.resultId);
+  }, []);
+
   // Desktop grid: tallest day determines the shared row count so every column
   // gets the same number of card slots and rows line up across all six days.
 
@@ -790,6 +801,9 @@ export default function Journey() {
           {/* LEFT — headline, meta, blurb, CTAs. Centred on mobile, left-aligned
               and pushed to the left edge from lg up. */}
           <motion.div style={{ x: splitX ? leftX : undefined, opacity: heroFade }} className="text-center lg:pl-10 lg:text-left xl:pl-16">
+            {/* Greets a returning quiz-taker by their AI-model type; renders
+                nothing for everyone else (hydration-safe, see the component). */}
+            <ReturningGreeting />
             <div className="mt-10 sm:mt-12 lg:mt-0">
               <Eyebrow>{t(dict.hero.eyebrow)}</Eyebrow>
             </div>
@@ -825,10 +839,12 @@ export default function Journey() {
               <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10 md:hidden">
                 {t(dict.hero.ctaPartner)}
               </a>
-              {/* Playful third entry → /quiz personality test + team matching. */}
-              <a href="/quiz" className="group inline-flex items-center gap-2 rounded-full border border-violet-400/40 bg-violet-400/10 px-8 py-4 text-base font-semibold text-violet-100 transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-400/15">
+              {/* Playful third entry → /quiz personality test + team matching.
+                  For a returning taker this becomes "내 결과 보기" and deep-links
+                  straight to their saved result. */}
+              <a href={ownResultId ? `/quiz?r=${ownResultId}` : "/quiz"} className="group inline-flex items-center gap-2 rounded-full border border-violet-400/40 bg-violet-400/10 px-8 py-4 text-base font-semibold text-violet-100 transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-400/15">
                 <span aria-hidden>✦</span>
-                {t(dict.nav.quiz)}
+                {t(ownResultId ? dict.nav.quizResult : dict.nav.quiz)}
                 <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
               </a>
             </div>
