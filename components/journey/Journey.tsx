@@ -31,14 +31,14 @@ function Glass({ children, className = "" }: { children: React.ReactNode; classN
   );
 }
 
-function Eyebrow({ children, color = "violet" }: { children: React.ReactNode; color?: "violet" | "cyan" | "emerald" }) {
+function Eyebrow({ children, color = "violet", className = "" }: { children: React.ReactNode; color?: "violet" | "cyan" | "emerald"; className?: string }) {
   const map = {
     violet: "border-violet-400/30 bg-violet-400/10 text-violet-200",
     cyan: "border-cyan-400/30 bg-cyan-400/10 text-cyan-200",
     emerald: "border-emerald-400/30 bg-emerald-400/10 text-emerald-200",
   } as const;
   return (
-    <span className={`mb-4 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] ${map[color]}`}>
+    <span className={`mb-4 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] ${map[color]} ${className}`}>
       {children}
     </span>
   );
@@ -747,7 +747,7 @@ export default function Journey() {
   // first 35% of the hero, so the motion is gentle. Fade tracks alongside.
   const leftX = useTransform(heroProgress, [0, 0.35], [0, -500]);
   const rightX = useTransform(heroProgress, [0, 0.35], [0, 500]);
-  const heroFade = useTransform(heroProgress, [0, 0.35], [1, 0]);
+  const heroFadeWide = useTransform(heroProgress, [0, 0.35], [1, 0]);
   // The ±500px horizontal fly-apart only makes sense in the lg+ two-up layout,
   // where the columns actually sit side by side. Below lg they stack into one
   // centred column, so translating them left/right just throws the content off
@@ -772,6 +772,14 @@ export default function Journey() {
   // removed once for that reason, then restored by request. By request it also
   // stays on under reduced-motion (not gated on `reduce`).
   const bgBlur = useTransform(heroProgress, [0, 0.15], ["blur(0px)", "blur(10px)"]);
+  // The scroll-linked opacity FADE is a DESKTOP effect (it plays as the two
+  // columns fly apart). On mobile the hero stacks into one tall column with the
+  // Countdown/Problem panel at the bottom — so scrolling to reach it is exactly
+  // what the fade reacts to, dimming the panel before you can read it. Gate the
+  // fade on the wide layout so mobile keeps the hero fully opaque and readable.
+  // The background blur stays on everywhere (kept on mobile by request) — it's
+  // behind the content, so it doesn't hurt readability.
+  const heroFade = isWide ? heroFadeWide : undefined;
 
   return (
     <main className="relative z-10">
@@ -805,7 +813,9 @@ export default function Journey() {
                 nothing for everyone else (hydration-safe, see the component). */}
             <ReturningGreeting />
             <div className="mt-10 sm:mt-12 lg:mt-0">
-              <Eyebrow>{t(dict.hero.eyebrow)}</Eyebrow>
+              {/* Smaller on phones so the long eyebrow line doesn't crowd the
+                  narrow column; back to the default size from sm up. */}
+              <Eyebrow className="!text-[0.55rem] sm:!text-xs">{t(dict.hero.eyebrow)}</Eyebrow>
             </div>
             {/* clamp caps trimmed (8rem->7.1rem, 3rem->2.65rem) so the 18px root
                 bump doesn't enlarge the hero headline — it stays ~its current size
@@ -820,29 +830,29 @@ export default function Journey() {
                 {t(dict.hero.titleLine2)}
               </span>
             </h1>
-            <p className="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base lg:justify-start">
+            <p className="mt-8 flex items-center justify-center gap-2 whitespace-nowrap text-[0.65rem] text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:gap-3 sm:text-base lg:justify-start">
               <span className="font-semibold">{t(dict.hero.dates)}</span>
               <span aria-hidden className="h-3.5 w-px bg-white/40" />
               <span className="text-white/75">{t(dict.hero.location)}</span>
             </p>
-            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] lg:mx-0">
+            <p className="mx-auto mt-6 max-w-xl text-sm leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base lg:mx-0">
               {t(dict.hero.blurb)}
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-3 lg:justify-start">
-              <a href={links.program} className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-8 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)]">
+              <a href={links.program} className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)] sm:px-8 sm:py-4 sm:text-base">
                 {t(dict.hero.ctaProgram)}
                 <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
               </a>
               {/* Mirrors the nav's "Partner with us" CTA, which is hidden below md.
                   Shown here only below md so it never disappears, and hidden at md+
                   to avoid duplicating the visible nav button. */}
-              <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10 md:hidden">
+              <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10 sm:px-8 sm:py-4 sm:text-base md:hidden">
                 {t(dict.hero.ctaPartner)}
               </a>
               {/* Playful third entry → /quiz personality test + team matching.
                   For a returning taker this becomes "내 결과 보기" and deep-links
                   straight to their saved result. */}
-              <a href={ownResultId ? `/quiz?r=${ownResultId}` : "/quiz"} className="group inline-flex items-center gap-2 rounded-full border border-violet-400/40 bg-violet-400/10 px-8 py-4 text-base font-semibold text-violet-100 transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-400/15">
+              <a href={ownResultId ? `/quiz?r=${ownResultId}` : "/quiz"} className="group inline-flex items-center gap-2 rounded-full border border-violet-400/40 bg-violet-400/10 px-5 py-3 text-sm font-semibold text-violet-100 transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-400/15 sm:px-8 sm:py-4 sm:text-base">
                 <span aria-hidden>✦</span>
                 {t(ownResultId ? dict.nav.quizResult : dict.nav.quiz)}
                 <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
@@ -851,12 +861,23 @@ export default function Journey() {
           </motion.div>
 
           {/* RIGHT — Countdown ↔ Problem Statement 전환 슬롯, pushed to the right edge.
-              Slides right (opposite the left column) as the hero scrolls out. */}
-          <motion.div style={{ x: splitX ? rightX : undefined, opacity: heroFade }} className="lg:pr-10 xl:pr-16">
+              Slides right (opposite the left column) as the hero scrolls out.
+              Desktop only: on mobile this panel is pulled out into its own
+              section below the hero (see #launch), so the stacked hero doesn't
+              get too tall / the panel doesn't get buried under the fade. */}
+          <motion.div style={{ x: splitX ? rightX : undefined, opacity: heroFade }} className="hidden lg:block lg:pr-10 xl:pr-16">
             <HeroLaunchPanel t={t} reduce={!!reduce} />
           </motion.div>
         </div>
       </Chapter>
+
+      {/* ── Countdown ↔ Problem Statement · MOBILE-ONLY standalone section ──
+          On desktop the panel lives in the hero's right column (above); on
+          mobile it gets its own section between the hero and About so it's
+          readable and not buried in a tall stacked hero. */}
+      <section id="launch" className="w-full px-6 py-12 lg:hidden">
+        <HeroLaunchPanel t={t} reduce={!!reduce} />
+      </section>
 
       {/* ── CH 1 · ABOUT ───────────────────────────────────────────── */}
       <Chapter id="about" align="center">

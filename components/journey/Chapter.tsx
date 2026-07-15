@@ -36,6 +36,12 @@ export default function Chapter({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    // Fire as soon as ANY part of the section enters the viewport (threshold 0),
+    // not once 25% of it is on screen. A section taller than the viewport — e.g.
+    // the About/Vision chapter on a phone — can never show 25% of its area at
+    // once, so a 0.25 threshold left it stuck at opacity:0 (invisible) on real
+    // iOS Safari, where the usable viewport is shorter than desktop emulators.
+    // A small negative rootMargin still lets it reveal a touch before fully in.
     const io = new IntersectionObserver(
       ([e]) => {
         // Reveal once and stay revealed — don't re-hide when scrolled back past.
@@ -44,10 +50,17 @@ export default function Chapter({
           io.disconnect();
         }
       },
-      { threshold: 0.25 }
+      { threshold: 0, rootMargin: "0px 0px -10% 0px" }
     );
     io.observe(el);
-    return () => io.disconnect();
+    // Safety net: if the observer somehow never fires (e.g. the element starts
+    // already spanning the viewport with no scroll event), reveal after a beat
+    // so content can never stay permanently hidden.
+    const fallback = window.setTimeout(() => setShown(true), 1200);
+    return () => {
+      io.disconnect();
+      window.clearTimeout(fallback);
+    };
   }, []);
 
   // text alignment for the inner column
@@ -69,13 +82,22 @@ export default function Chapter({
     <section
       id={id}
       ref={ref}
-      className={`relative flex min-h-[auto] w-full flex-col justify-center py-14 sm:py-20 md:min-h-screen lg:py-24 ${wide ? "" : "px-6 sm:px-10"} ${background ? "isolate" : ""} ${className}`}
+      // A footer (the scroll hint) is pinned to the section's bottom, so it only
+      // lands at the real screen bottom if the section fills the viewport. Force
+      // full height at every breakpoint when a footer exists (min-h-screen →
+      // 100dvh via globals.css, correct on iOS). Otherwise keep the collaborator's
+      // mobile auto-height (content-sized on phones, full-height from md up).
+      className={`relative flex w-full flex-col justify-center py-14 sm:py-20 lg:py-24 ${footer ? "min-h-screen" : "min-h-[auto] md:min-h-screen"} ${wide ? "" : "px-6 sm:px-10"} ${background ? "isolate" : ""} ${className}`}
     >
       {background}
       {/* centered content rail — the real boundary (z-10 keeps it above any
           full-bleed background layer). `wide` drops the max-width + centering so
-          content can reach the screen edges. */}
-      <div className={`relative z-10 w-full ${wide ? "" : "mx-auto max-w-6xl"}`}>
+          content can reach the screen edges.
+          When there's a bottom-pinned footer (the scroll hint), reserve space
+          for it so the centred content can't grow down into it on short phones —
+          iPhone heights vary, so we don't chase a fixed number: pad the bottom
+          on mobile and let it drop away once there's room (sm+). */}
+      <div className={`relative z-10 w-full ${wide ? "" : "mx-auto max-w-6xl"} ${footer ? "pb-24 sm:pb-0" : ""}`}>
         <div
           className={`w-full transition-all duration-700 ease-out ${textCls} ${offsetCls}`}
           style={{
@@ -87,7 +109,12 @@ export default function Chapter({
         </div>
       </div>
       {footer && (
-        <div className="absolute inset-x-0 bottom-8 z-10 flex justify-center sm:bottom-10">
+        // Pinned to the bottom edge, offset by the iOS safe-area inset so it
+        // clears the home indicator / gesture bar on any iPhone height.
+        <div
+          className="absolute inset-x-0 z-10 flex justify-center"
+          style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 1.25rem)" }}
+        >
           {footer}
         </div>
       )}
