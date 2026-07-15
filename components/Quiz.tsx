@@ -725,6 +725,56 @@ const StoryCard = forwardRef<
 >(function StoryCard({ result, data, variant, host, t }, ref) {
   const axes = result.axes && result.axes.length > 0 ? result.axes : null;
   const url = `${host || "builderthon-for-korean-student.vercel.app"}/quiz`;
+
+  // Two axis-explanation highlights below the gauges: the MOST decisive axis
+  // (highest %) beside the CLOSEST-CALL axis (lowest %) — a "92% 단정" line next
+  // to a "56% 반반" line is the whole gag. Ties resolve to the earlier axis (we
+  // scan in AXIS_ORDER and keep the first extreme via strict compare). Only when
+  // the taker actually answered (axes present); deep-link results carry none.
+  let hiAxis: AxisScore | null = null;
+  let loAxis: AxisScore | null = null;
+  if (axes) {
+    hiAxis = axes[0];
+    loAxis = axes[0];
+    for (const a of axes) {
+      if (a.pct > hiAxis.pct) hiAxis = a;
+      if (a.pct < loAxis.pct) loAxis = a;
+    }
+  }
+  // Build each card's copy; a missing explanation (defensive — pattern key gap)
+  // silently drops just that card. The low card is skipped if it's the same axis
+  // as the high one (all-equal %), so we never show a duplicate.
+  const buildCard = (a: AxisScore | null, label: { ko: string; en: string }, tone: "hi" | "lo") => {
+    if (!a) return null;
+    const exp = getExplanation(a.axis, a.pattern, a.pct);
+    if (!exp) return null;
+    return { tone, label, text: t(exp) };
+  };
+  const highlightCards = [
+    buildCard(hiAxis, quizUI.storyHighlightHi, "hi"),
+    loAxis && hiAxis && loAxis.axis !== hiAxis.axis
+      ? buildCard(loAxis, quizUI.storyHighlightLo, "lo")
+      : null,
+  ].filter(Boolean) as { tone: "hi" | "lo"; label: { ko: string; en: string }; text: string }[];
+
+  // Overflow guard: render both cards, then measure whether the bottom CTA gets
+  // pushed past the safe line (content bottom = 1740 = 1920 − 180px margin). If
+  // so, drop the SECOND card so nothing ever clips off-frame. Runs off-screen and
+  // long before the user hits save (the card is always mounted), so it's settled
+  // by capture time. Resets whenever the copy changes (new result / locale).
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const [dropSecond, setDropSecond] = useState(false);
+  const cardSig = highlightCards.map((c) => c.text).join("|");
+  useEffect(() => {
+    setDropSecond(false); // re-attempt both cards when the content changes
+  }, [cardSig]);
+  useEffect(() => {
+    if (highlightCards.length < 2 || dropSecond) return;
+    const el = bottomRef.current;
+    if (el && el.getBoundingClientRect().bottom > 1742) setDropSecond(true);
+  });
+  const shownCards = dropSecond ? highlightCards.slice(0, 1) : highlightCards;
+
   return (
     <div
       ref={ref}
@@ -746,23 +796,23 @@ const StoryCard = forwardRef<
         {/* top */}
         <div style={{ textAlign: "center" }}>
           <p style={{ margin: 0, fontSize: 26, fontWeight: 700, letterSpacing: 6, textTransform: "uppercase", color: "rgba(196,181,253,0.9)" }}>✦ {t(quizUI.eyebrow)}</p>
-          <h1 style={{ margin: "16px 0 0", fontSize: 66, fontWeight: 900, lineHeight: 1.05, color: "#fff" }}>{t(quizUI.title)}</h1>
-          <p style={{ margin: "14px 0 0", fontSize: 22, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", color: "rgba(255,255,255,0.4)", fontFamily: "ui-monospace, monospace" }}>Zero100 Builderthon</p>
+          <h1 style={{ margin: "12px 0 0", fontSize: 60, fontWeight: 900, lineHeight: 1.05, color: "#fff" }}>{t(quizUI.title)}</h1>
+          <p style={{ margin: "10px 0 0", fontSize: 22, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", color: "rgba(255,255,255,0.4)", fontFamily: "ui-monospace, monospace" }}>Zero100 Builderthon</p>
         </div>
 
         {/* center — identity */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
-          <div className={`bg-gradient-to-br ${data.accent}`} style={{ width: 256, height: 256, borderRadius: 56, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 30px 80px -22px rgba(217,70,239,0.5)" }}>
-            <ModelGlyph result={data} imgClass="h-[148px] w-[148px] object-contain" emojiClass="text-[128px] leading-none" />
+          <div className={`bg-gradient-to-br ${data.accent}`} style={{ width: 192, height: 192, borderRadius: 44, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 30px 80px -22px rgba(217,70,239,0.5)" }}>
+            <ModelGlyph result={data} imgClass="h-[114px] w-[114px] object-contain" emojiClass="text-[100px] leading-none" />
           </div>
-          <p style={{ margin: "44px 0 0", fontSize: 30, fontWeight: 600, color: "rgba(255,255,255,0.55)" }}>{t(quizUI.youAre)}</p>
-          <h2 style={{ margin: "8px 0 0", fontSize: 72, fontWeight: 900, lineHeight: 1.1, color: "#fff" }}>{t(variant.name)}</h2>
-          <p style={{ margin: "14px 0 0", fontSize: 34, fontWeight: 700, color: "rgb(245,208,254)" }}>{data.model} · {result.resultId}</p>
-          <p style={{ margin: "28px auto 0", maxWidth: 820, fontSize: 40, fontWeight: 600, lineHeight: 1.4, color: "rgba(255,255,255,0.9)" }}>“{t(data.phrase)}”</p>
+          <p style={{ margin: "24px 0 0", fontSize: 30, fontWeight: 600, color: "rgba(255,255,255,0.55)" }}>{t(quizUI.youAre)}</p>
+          <h2 style={{ margin: "6px 0 0", fontSize: 68, fontWeight: 900, lineHeight: 1.1, color: "#fff" }}>{t(variant.name)}</h2>
+          <p style={{ margin: "10px 0 0", fontSize: 33, fontWeight: 700, color: "rgb(245,208,254)" }}>{data.model} · {result.resultId}</p>
+          <p style={{ margin: "18px auto 0", maxWidth: 820, fontSize: 33, fontWeight: 600, lineHeight: 1.4, color: "rgba(255,255,255,0.9)" }}>“{t(data.phrase)}”</p>
 
           {/* mini axis gauges */}
           {axes && (
-            <div style={{ margin: "60px 0 0", width: "100%", display: "flex", flexDirection: "column", gap: 22 }}>
+            <div style={{ margin: "28px 0 0", width: "100%", display: "flex", flexDirection: "column", gap: 14 }}>
               {axes.map((a) => (
                 <div key={a.axis} style={{ display: "flex", alignItems: "center", gap: 20 }}>
                   <span style={{ width: 120, textAlign: "right", fontSize: 27, fontWeight: 700, color: "#fff" }}>{t(axisMeta[a.winner])}</span>
@@ -775,10 +825,41 @@ const StoryCard = forwardRef<
               ))}
             </div>
           )}
+
+          {/* axis-explanation highlights — the B-grade one-liners from the result
+              screen, just the most-decisive + closest-call axes. First card violet
+              (단정), second cyan (반반), for the visual contrast. Full text, no
+              ellipsis; the overflow guard above drops the 2nd card if needed. */}
+          {shownCards.length > 0 && (
+            <div style={{ margin: "24px auto 0", width: 880, display: "flex", flexDirection: "column", gap: 18 }}>
+              {shownCards.map((c) => {
+                const hi = c.tone === "hi";
+                return (
+                  <div
+                    key={c.tone}
+                    style={{
+                      border: `2px solid ${hi ? "rgba(167,139,250,0.6)" : "rgba(34,211,238,0.55)"}`,
+                      background: hi ? "rgba(124,58,237,0.12)" : "rgba(6,182,212,0.10)",
+                      borderRadius: 28,
+                      padding: "24px 30px",
+                      textAlign: "left",
+                    }}
+                  >
+                    <p style={{ margin: 0, fontSize: 22, fontWeight: 800, letterSpacing: 2, textTransform: "uppercase", color: hi ? "rgb(196,181,253)" : "rgb(103,232,249)" }}>
+                      {t(c.label)}
+                    </p>
+                    <p style={{ margin: "12px 0 0", fontSize: 31, fontWeight: 600, lineHeight: 1.5, color: "rgba(255,255,255,0.92)" }}>
+                      {c.text}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* bottom — call to action + url */}
-        <div style={{ textAlign: "center" }}>
+        <div ref={bottomRef} style={{ textAlign: "center" }}>
           <p style={{ margin: 0, fontSize: 38, fontWeight: 800, color: "#fff" }}>{t(quizUI.storyRetake)} →</p>
           <p style={{ margin: "12px 0 0", fontSize: 30, fontWeight: 600, letterSpacing: 1, color: "rgba(255,255,255,0.45)" }}>{url}</p>
         </div>

@@ -606,4 +606,8 @@ export const quizUI = {
   saveImageError: { ko: "이미지 생성에 실패했어요", en: "Couldn't create the image" },
   // shown on the story card itself
   storyRetake: { ko: "나도 테스트하기", en: "Take the test yourself" },
+  // Story-card axis-explanation highlights — the most decisive axis (highest %)
+  // vs the closest-call axis (lowest %), sitting side by side for the contrast.
+  storyHighlightHi: { ko: "빼박인 부분", en: "No debate here" },
+  storyHighlightLo: { ko: "아슬아슬한 부분", en: "The coin toss" },
 };
