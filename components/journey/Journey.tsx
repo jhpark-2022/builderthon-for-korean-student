@@ -832,8 +832,6 @@ export default function Journey() {
             </h1>
             <p className="mt-8 flex items-center justify-center gap-2 whitespace-nowrap text-[0.65rem] text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:gap-3 sm:text-base lg:justify-start">
               <span className="font-semibold">{t(dict.hero.dates)}</span>
-              <span aria-hidden className="h-3.5 w-px bg-white/40" />
-              <span className="text-white/75">{t(dict.hero.location)}</span>
             </p>
             <p className="mx-auto mt-6 max-w-xl text-sm leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base lg:mx-0">
               {t(dict.hero.blurb)}
