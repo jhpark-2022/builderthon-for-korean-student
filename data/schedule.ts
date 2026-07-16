@@ -10,15 +10,15 @@
 //
 // THE 8-DAY SHAPE (per the deck, which is authoritative):
 //   • Day 1 — big Opening: 박희덕 opening keynote + AWS speaker session + the AX
-//     problems are released. MANDATORY (필참); on-site at *SCAPE Lifejungle.
+//     problems are released. MANDATORY (필참); on-site at *SCAPE L^IFE Jungle.
 //   • Day 2 — one concentrated Crash Course (vibe-coding intro, 5–6h), then a
 //     detailed problem video + team building right after.
 //   • Day 3–4 — online self-build + 1:1 mentoring (Day 3 also has a TENTATIVE
 //     OpenAI Codex workshop, still in coordination).
-//   • Day 5 — in-person kickoff with panels at *SCAPE Lifejungle; opens Lab 2.
+//   • Day 5 — in-person kickoff with panels at *SCAPE L^IFE Jungle; opens Lab 2.
 //   • Day 6 — open build (online, self-paced).
 //   • Day 7 — Final Rehearsal on-site at the AWS office (new venue).
-//   • Day 8 — Demo Day at *SCAPE Lifejungle. MANDATORY (필참).
+//   • Day 8 — Demo Day at *SCAPE L^IFE Jungle. MANDATORY (필참).
 //   • Self-paced team build runs continuously from the Day-1 problem release all
 //     the way to the Day-8 pitch. In person on Days 1 / 5 / 7 / 8.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -227,8 +227,8 @@ export const categoryMeta: Record<
 // Location helpers.
 const ONLINE: Bilingual = { ko: "온라인", en: "Online" };
 const ONSITE: Bilingual = {
-  ko: "*SCAPE Lifejungle, 싱가포르 · 현장 집결",
-  en: "*SCAPE Lifejungle, Singapore · in person",
+  ko: "*SCAPE L^IFE Jungle, 싱가포르 · 현장 집결",
+  en: "*SCAPE L^IFE Jungle, Singapore · in person",
 };
 // Day 7's new venue — the Final Rehearsal moves to the AWS office (confirmed).
 const AWS_OFFICE: Bilingual = {
@@ -329,8 +329,8 @@ export const schedule: BEvent[] = [
       en: "Real companies' AX problems drop — and the 8-day build clock starts.",
     },
     description: {
-      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 공개됩니다. 팀별 자율 빌드는 문제가 공개되는 이 순간부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이, 바로 만들기 시작할 수 있습니다. Day 1은 필참이며 *SCAPE Lifejungle 현장에서 진행됩니다. (Day 2에는 크래시코스 직후 상세 문제 영상이 공개됩니다.)",
-      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now. Self-paced team build starts the moment the problems are released and runs continuously to Demo Day, so you can begin building straight away rather than waiting for a start whistle. Day 1 is mandatory and runs on-site at *SCAPE Lifejungle. (A detailed problem video follows on Day 2, right after the Crash Course.)",
+      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 공개됩니다. 팀별 자율 빌드는 문제가 공개되는 이 순간부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이, 바로 만들기 시작할 수 있습니다. Day 1은 필참이며 *SCAPE L^IFE Jungle 현장에서 진행됩니다. (Day 2에는 크래시코스 직후 상세 문제 영상이 공개됩니다.)",
+      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now. Self-paced team build starts the moment the problems are released and runs continuously to Demo Day, so you can begin building straight away rather than waiting for a start whistle. Day 1 is mandatory and runs on-site at *SCAPE L^IFE Jungle. (A detailed problem video follows on Day 2, right after the Crash Course.)",
     },
     location: ONSITE,
   },
@@ -519,8 +519,8 @@ export const schedule: BEvent[] = [
       en: "The whole cohort meets in person for the first time — Lab 2 begins.",
     },
     description: {
-      ko: "온라인으로 진행되던 일정 중, 처음으로 전원이 *SCAPE Lifejungle 현장에 모이는 날입니다(10AM–2PM). Zero100 소개와 파트너사 인사로 문을 열고, 여기서부터 실전 단계인 Lab 2가 시작됩니다. 화면 너머로만 함께 빌드하던 사람들을 직접 만나, 남은 절반을 같은 공간에서 이어갑니다.",
-      en: "The first day the whole cohort gathers in person at *SCAPE Lifejungle (10AM–2PM). It opens with a Zero100 intro and partner-company greetings, and from here Lab 2 — the main event — begins. You finally meet the people you'd only built alongside on-screen, and carry the second half forward in one room.",
+      ko: "온라인으로 진행되던 일정 중, 처음으로 전원이 *SCAPE L^IFE Jungle 현장에 모이는 날입니다(10AM–2PM). Zero100 소개와 파트너사 인사로 문을 열고, 여기서부터 실전 단계인 Lab 2가 시작됩니다. 화면 너머로만 함께 빌드하던 사람들을 직접 만나, 남은 절반을 같은 공간에서 이어갑니다.",
+      en: "The first day the whole cohort gathers in person at *SCAPE L^IFE Jungle (10AM–2PM). It opens with a Zero100 intro and partner-company greetings, and from here Lab 2 — the main event — begins. You finally meet the people you'd only built alongside on-screen, and carry the second half forward in one room.",
     },
     location: ONSITE,
   },
@@ -693,8 +693,8 @@ export const schedule: BEvent[] = [
       en: "Top teams' final pitch, then results, awards and feedback.",
     },
     description: {
-      ko: "8일간의 빌드를 마무리하는 최종 발표입니다. Problem Statement별 상위 팀(Top 3)이 즉석에서 슬라이드를 정리해 무대에서 피칭하고, 이어서 결과 발표·시상·피드백이 진행됩니다. 전원이 *SCAPE Lifejungle 현장(11AM–3PM)에 모여, ‘데모로 끝나지 않는 성공의 경험’으로 8일을 함께 마칩니다.",
-      en: "The final pitch closing out eight days of building. The top teams per problem statement (Top 3) compile slides on the spot and pitch on stage, followed by results, awards and feedback. The whole cohort gathers at *SCAPE Lifejungle (11AM–3PM) to finish the eight days on a success that goes beyond a demo.",
+      ko: "8일간의 빌드를 마무리하는 최종 발표입니다. Problem Statement별 상위 팀(Top 3)이 즉석에서 슬라이드를 정리해 무대에서 피칭하고, 이어서 결과 발표·시상·피드백이 진행됩니다. 전원이 *SCAPE L^IFE Jungle 현장(11AM–3PM)에 모여, ‘데모로 끝나지 않는 성공의 경험’으로 8일을 함께 마칩니다.",
+      en: "The final pitch closing out eight days of building. The top teams per problem statement (Top 3) compile slides on the spot and pitch on stage, followed by results, awards and feedback. The whole cohort gathers at *SCAPE L^IFE Jungle (11AM–3PM) to finish the eight days on a success that goes beyond a demo.",
     },
     location: ONSITE,
   },

@@ -88,7 +88,7 @@ export const dict = {
     titleLine1: { ko: "싱가포르,", en: "Build" },
     titleLine2: { ko: "빌드의 무대", en: "in Singapore." },
     dates: { ko: "2026.08.22 – 08.29 · 8일", en: "22–29 Aug 2026 · 8 days" },
-    location: { ko: "싱가포르 · *SCAPE Lifejungle", en: "Singapore · *SCAPE Lifejungle" },
+    location: { ko: "싱가포르 · *SCAPE L^IFE Jungle", en: "Singapore · *SCAPE L^IFE Jungle" },
     blurb: {
       ko: "싱가포르에서 공부하는 한국 학생 약 100명이 8일간, 실제 기업의 AI 전환(AX) 과제를 바이브 코딩으로 직접 풀어내는 AI 빌더톤. zero에서 MVP까지 — 데모로 끝나지 않는 ‘성공의 경험’을 남깁니다.",
       en: "Around 100 Korean students in Singapore spend 8 days solving real companies' AI-transformation (AX) problems with vibe coding. From zero to MVP — a real success that goes beyond a demo.",
