@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
 import { dict, links } from "@/data/dictionary";
+import { useRegister } from "@/lib/RegisterContext";
 import LocaleToggle from "@/components/LocaleToggle";
 
 const anchors = [
@@ -20,6 +22,8 @@ const anchors = [
 
 export default function JourneyNav() {
   const { t, locale } = useLocale();
+  const reduce = useReducedMotion();
+  const { openRegister, registered } = useRegister();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -27,6 +31,30 @@ export default function JourneyNav() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Reveal the register button only once the visitor reaches the "취지 · Why this
+  // exists" chapter — CH 1, <Chapter id="about"> in Journey.tsx, the section that
+  // explains why the event exists. Once shown it STAYS shown regardless of later
+  // scroll position (the observer disconnects on first intersection), so
+  // scrolling back above #about never hides or flickers it.
+  const [showRegister, setShowRegister] = useState(false);
+  useEffect(() => {
+    const el = document.getElementById("about");
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setShowRegister(true);
+          io.disconnect();
+        }
+      },
+      // Fire when #about is meaningfully in view (not just its first pixel at the
+      // very bottom edge), by trimming 30% off the root's bottom.
+      { rootMargin: "0px 0px -30% 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   return (
@@ -65,18 +93,30 @@ export default function JourneyNav() {
             ))}
           </div>
         </div>
-        {/* RIGHT group — EN/KR toggle, Partner, Register — pinned to the right edge. */}
+        {/* RIGHT group — EN/KR toggle + Partner, with the register button
+            appearing only after the visitor reaches the 취지/about chapter. */}
         <div className="flex items-center gap-2.5 sm:gap-3">
           <LocaleToggle />
           <a href={links.partnership} className="hidden shrink-0 whitespace-nowrap rounded-full border border-white/20 bg-white/5 px-5 py-2 text-sm font-semibold text-white/85 transition hover:bg-white/10 md:inline-flex">
             {t(dict.nav.partner)}
           </a>
-          {/* Primary CTA stays reachable on every screen — compact on mobile so
-              the funnel never disappears below lg.
-              TODO: point href at the real registration form when it exists. */}
-          <a href="#" className="inline-flex shrink-0 items-center rounded-full bg-violet-600/90 px-3 py-2 text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:bg-violet-500 sm:px-5 sm:text-sm">
-            {t(dict.nav.register)}
-          </a>
+          {/* Scroll-revealed register CTA — fades/slides in once #about is reached
+              and then persists. Opens the shared register modal (useRegister). */}
+          <AnimatePresence>
+            {showRegister && (
+              <motion.button
+                type="button"
+                onClick={openRegister}
+                initial={reduce ? false : { opacity: 0, x: 12 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={reduce ? undefined : { opacity: 0, x: 12 }}
+                transition={{ duration: reduce ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="inline-flex shrink-0 items-center rounded-full bg-violet-600/90 px-3 py-2 text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:bg-violet-500 sm:px-5 sm:text-sm"
+              >
+                {registered ? t(dict.register.navRegistered) : t(dict.nav.register)}
+              </motion.button>
+            )}
+          </AnimatePresence>
         </div>
       </nav>
     </header>
