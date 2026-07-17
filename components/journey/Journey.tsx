@@ -19,6 +19,7 @@ import EventModal from "@/components/EventModal";
 import PartnerModal, { type PartnerInfo } from "@/components/PartnerModal";
 import ReturningGreeting from "./ReturningGreeting";
 import { loadOwnResult } from "@/lib/quizResult";
+import { useRegister } from "@/lib/RegisterContext";
 
 const legendOrder: Category[] = ["main","workshop","build","mentoring","network"];
 
@@ -705,6 +706,7 @@ function ScrollToTop() {
 
 export default function Journey() {
   const { t } = useLocale();
+  const { openRegister } = useRegister();
   const reduce = useReducedMotion();
   const [active, setActive] = useState<BEvent | null>(null);
   const [activeDay, setActiveDay] = useState<number | null>(null); // day detail modal
@@ -847,14 +849,36 @@ export default function Journey() {
               <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10 sm:px-8 sm:py-4 sm:text-base md:hidden">
                 {t(dict.hero.ctaPartner)}
               </a>
-              {/* Playful third entry → /quiz personality test + team matching.
-                  For a returning taker this becomes "내 결과 보기" and deep-links
-                  straight to their saved result. */}
-              <a href={ownResultId ? `/quiz?r=${ownResultId}` : "/quiz"} className="group inline-flex items-center gap-2 rounded-full border border-violet-400/40 bg-violet-400/10 px-5 py-3 text-sm font-semibold text-violet-100 transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-400/15 sm:px-8 sm:py-4 sm:text-base">
-                <span aria-hidden>✦</span>
-                {t(ownResultId ? dict.nav.quizResult : dict.nav.quiz)}
-                <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-              </a>
+            </div>
+
+            {/* Question-hook branch under the primary CTA:
+                  • need a team → take the personality test (team matching)
+                  • lone wolf / already have a squad → open the register modal
+                Two cards, two-up from sm, stacked on mobile. The test hook keeps
+                the returning-taker deep link ("내 결과 보기" → their saved result). */}
+            <div className="mx-auto mt-5 grid max-w-xl gap-3 sm:grid-cols-2 lg:mx-0">
+              <div className="flex flex-col gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left">
+                <p className="text-xs font-medium text-white/60">{t(dict.register.hookTeamQ)}</p>
+                <a
+                  href={ownResultId ? `/quiz?r=${ownResultId}` : "/quiz"}
+                  className="group inline-flex w-fit items-center gap-1.5 text-sm font-bold text-violet-100 transition hover:text-white"
+                >
+                  <span aria-hidden>✦</span>
+                  {t(ownResultId ? dict.nav.quizResult : dict.register.hookTeamCta)}
+                  <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </a>
+              </div>
+              <div className="flex flex-col gap-2 rounded-2xl border border-violet-400/25 bg-violet-400/[0.07] p-4 text-left">
+                <p className="text-xs font-medium text-white/60">{t(dict.register.hookSoloQ)}</p>
+                <button
+                  type="button"
+                  onClick={openRegister}
+                  className="group inline-flex w-fit items-center gap-1.5 text-sm font-bold text-white transition hover:text-violet-100"
+                >
+                  {t(dict.register.hookSoloCta)}
+                  <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </button>
+              </div>
             </div>
           </motion.div>
 
