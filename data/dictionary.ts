@@ -350,8 +350,9 @@ export const dict = {
         num: "02",
         title: { ko: "실제 기업의 진짜 문제", en: "A real company's real problem" },
         points: [
+          { ko: "출제가 아니라 ‘의뢰’ — 학생은 주니어 컨설턴트로 프로세스·아픔을 진단해 AI로 재설계", en: "Not a prompt but a brief — you're a junior consultant diagnosing a real process & pain, then redesigning it with AI" },
           { ko: "가상 과제가 아닌 파트너사의 실제 AX 문제 + 직원 피드백", en: "Not toy prompts — a partner's real AX problem + employee feedback" },
-          { ko: "세일즈·재무 2트랙 · AWS 방법론으로 접근", en: "Sales & finance tracks · approached with AWS methodology" },
+          { ko: "재무·영업·마케팅 3트랙 · AWS 방법론으로 접근 (클라이언트 사명은 조율 중)", en: "Finance · sales · marketing — 3 tracks · approached with AWS methodology (client names TBC)" },
           { ko: "지원하면 무조건 진짜 문제 + 회사 인원과 만남", en: "Everyone who applies gets a real problem + meets the company" },
         ],
       },
@@ -387,8 +388,8 @@ export const dict = {
         num: "06",
         title: { ko: "인턴십 · 상금", en: "Internships & prizes" },
         points: [
-          { ko: "우수 팀 인턴십 기회", en: "Internship opportunities for top teams" },
-          { ko: "데모데이 순위별 시상 · 상금", en: "Ranked awards & prizes on Demo Day" },
+          { ko: "Normal 2트랙(재무·영업) 1위 = 유급 FDE 인턴 — ‘AXMOS 학생 TF’로 잇는 선순환 · 잠정", en: "1st in each Normal track (finance · sales) = paid FDE internship — a virtuous loop as the ‘AXMOS student TF’ · tentative" },
+          { ko: "트랙별 순위 시상 · 상금 S$100 · 널담 바우처 · 잠정", en: "Ranked per-track awards · S$100 prize · Nuldam voucher · tentative" },
           { ko: "After 파이프라인(투자·인턴)으로 연결", en: "Bridges into an After pipeline (investment · internship)" },
           { ko: "굿즈 (pen·notes) 등", en: "Goods (pens · notes) and more" },
         ],
@@ -407,7 +408,7 @@ export const dict = {
     },
     incentivesTitle: { ko: "참가자 인센티브 · 협의 진행 중", en: "Participant incentives · in discussion" },
     incentives: [
-      { title: { ko: "상금 · 시상", en: "Prizes & awards" }, stage: { ko: "협의 중", en: "In discussion" }, desc: { ko: "데모데이 순위별 시상 · 상금 규모·구성 협의 중.", en: "Ranked Demo-Day awards · size & structure in discussion." } },
+      { title: { ko: "상금 · 시상", en: "Prizes & awards" }, stage: { ko: "잠정 · 조율 중", en: "Tentative · in discussion" }, desc: { ko: "Normal 2트랙(재무·영업): 1위 유급 FDE 인턴(코드프레소·WVB · 겨울 ~1.5개월 · 트랙당 최대 3명) · 2위 상금 S$100 · 3위 널담 $25 바우처. Beginner 트랙(마케팅): 1위 상금 S$100 · 2·3위 널담 $25 바우처. 유급 인턴은 Normal 트랙만 · 전 항목 잠정(조율 중).", en: "Normal tracks ×2 (finance · sales): 1st = paid FDE internship (Codepresso · WVB · ~1.5 winter months · up to 3 per track) · 2nd = S$100 · 3rd = a Nuldam S$25 voucher. Beginner track (marketing): 1st = S$100 · 2nd/3rd = Nuldam S$25 voucher. Paid internships are Normal-track only · all tentative (in discussion)." } },
       { title: { ko: "크래시 코스 수료증", en: "Crash-course certificate" }, stage: { ko: "협의 중", en: "In discussion" }, desc: { ko: "참여자 전원 발급 추진 · 8일차 이후 · 발급 기관·기준 협의 중.", en: "Aiming to issue to all · after Day 8 · body & criteria in discussion." } },
       { title: { ko: "그 외 혜택", en: "Other perks" }, stage: { ko: "제공 예정", en: "Planned" }, desc: { ko: "Free Food · 굿즈(pen & notes) · 네트워킹 · 1–3인 참여 · 스크리닝 없음.", en: "Free food · goods · networking · teams of 1–3 · no screening." } },
     ],
@@ -577,8 +578,8 @@ export const dict = {
       {
         q: { ko: "테마가 뭔가요? 너무 막연해요.", en: "What's the theme? It feels vague." },
         a: {
-          ko: "테마는 ‘AI’가 아니라 ‘산업’입니다. 실제 한국 기업이 지금 겪는 진짜 AX(AI 전환) 과제를 트랙별로 제공합니다. 문제는 ‘Broad problem, sharp objective’ — 목표는 뾰족하게 주되 푸는 방법은 여러분의 몫입니다. 트랙은 세일즈·재무 등으로 구체화하고 있으며, 비전공자도 감을 잡을 수 있도록 산업 맥락을 함께 제공합니다.",
-          en: "The theme isn't ‘AI’ — it's industry. You'll get real AX (AI-transformation) problems Korean companies are facing right now, organized by track. The format is ‘broad problem, sharp objective’: the goal is sharp, but how you solve it is up to you. Tracks (e.g. sales and finance) are being finalized, and we give you the industry context so non-CS participants can find their footing.",
+          ko: "테마는 ‘AI’가 아니라 ‘산업’입니다. 실제 한국 기업이 지금 겪는 진짜 AX(AI 전환) 과제를 트랙별로 제공합니다. 문제는 ‘Broad problem, sharp objective’ — 목표는 뾰족하게 주되 푸는 방법은 여러분의 몫입니다. 출제가 아니라 ‘의뢰’에 가깝습니다 — 학생은 주니어 컨설턴트처럼 클라이언트의 프로세스와 아픔을 진단해 AI로 다시 설계합니다. 트랙은 재무·영업·마케팅 3트랙(마케팅은 입문 트랙)으로 구체화하고 있고 클라이언트 사명은 조율 중이며, 비전공자도 감을 잡을 수 있도록 산업 맥락을 함께 제공합니다.",
+          en: "The theme isn't ‘AI’ — it's industry. You'll get real AX (AI-transformation) problems Korean companies are facing right now, organized by track. The format is ‘broad problem, sharp objective’: the goal is sharp, but how you solve it is up to you. It's less a prompt than a brief — you act like a junior consultant, diagnosing a client's process and pain and redesigning it with AI. Tracks are being finalized as three — finance, sales and marketing (marketing is the beginner track) — with client names still being arranged, and we give you the industry context so non-CS participants can find their footing.",
         },
       },
       {
