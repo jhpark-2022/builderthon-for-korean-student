@@ -23,6 +23,13 @@ export const links = {
     "mailto:jhpark.2022@business.smu.edu.sg?subject=Zero100%20Builderthon%20Partnership%20Inquiry",
 };
 
+// Registration submit target. Empty for now → the register modal simulates a
+// ~1s submit and shows the success state, logging the payload to console.info so
+// the shape can be confirmed before wiring a backend. When this holds a URL, the
+// modal POSTs the payload as JSON instead.
+// TODO: Formspree/Apps Script 연결 — paste the endpoint URL here.
+export const REGISTER_ENDPOINT = "";
+
 // Sponsor / mentor company introductions, shown in a modal when a logo tile is
 // clicked (the tiles no longer link out to external sites). Keyed by the tile's
 // `alt`. HONESTY RULE: only companies we can describe factually get real copy;
@@ -78,6 +85,88 @@ export const dict = {
   quizCta: {
     eyebrow: { ko: "✦ AI 성격 테스트 · 환상의 궁합", en: "✦ AI test · dream teammates" },
     button: { ko: "내 AI 모델 알아보기", en: "Find your AI model" },
+  },
+
+  // ── Registration — hero question hooks, nav button, and the register modal ──
+  register: {
+    // Hero "question hook" branch: need a team → take the test · solo/have a
+    // squad → register.
+    hookTeamQ: { ko: "팀이 필요하신가요?", en: "Need a team?" },
+    hookTeamCta: { ko: "성격 테스트", en: "Personality test" },
+    hookSoloQ: { ko: "외로운 늑대? 아니면 이미 팀이 있다면", en: "Lone wolf? Or already have a squad?" },
+    hookSoloCta: { ko: "등록하기", en: "Register" },
+    // Nav scroll-revealed button + its post-registration label.
+    navRegistered: { ko: "등록 완료 ✓", en: "Registered ✓" },
+    // Modal chrome.
+    modalTitle: { ko: "빌더톤 등록", en: "Register for the Builderthon" },
+    modalSubtitle: {
+      ko: "몇 가지만 알려주시면 운영진이 텔레그램으로 다음 절차를 안내드려요.",
+      en: "A few details and our team will reach out on Telegram with next steps.",
+    },
+    optional: { ko: "선택", en: "optional" },
+    selectPlaceholder: { ko: "선택하세요", en: "Select…" },
+    // Field 1 — name.
+    nameLabel: { ko: "이름", en: "Name" },
+    namePlaceholder: { ko: "홍길동", en: "Your name" },
+    // Field 2 — email.
+    emailLabel: { ko: "이메일", en: "Email" },
+    emailPlaceholder: { ko: "you@example.com", en: "you@example.com" },
+    // Field 3 — school.
+    schoolLabel: { ko: "학교", en: "University" },
+    schoolOptions: [
+      { value: "NUS", label: { ko: "NUS", en: "NUS" } },
+      { value: "NTU", label: { ko: "NTU", en: "NTU" } },
+      { value: "SMU", label: { ko: "SMU", en: "SMU" } },
+      { value: "SIM", label: { ko: "SIM", en: "SIM" } },
+      { value: "other", label: { ko: "기타", en: "Other" } },
+    ],
+    schoolOtherPlaceholder: { ko: "학교명을 입력해 주세요", en: "Enter your university" },
+    // Field 4 — contact (Telegram preferred).
+    contactLabel: { ko: "연락처 (텔레그램 ID 권장)", en: "Contact (Telegram ID preferred)" },
+    contactHint: {
+      ko: "운영 단체방 초대에 사용돼요.",
+      en: "Used to invite you to the participant group chat.",
+    },
+    contactPlaceholder: { ko: "@username", en: "@username" },
+    // Field 5 — participation type.
+    partLabel: { ko: "참가 형태", en: "How are you joining?" },
+    partOptions: [
+      { value: "has-team", label: { ko: "팀이 이미 있어요", en: "I already have a team" } },
+      { value: "seeking", label: { ko: "팀원을 구하고 있어요", en: "Looking for teammates" } },
+      { value: "solo", label: { ko: "솔로로 갑니다", en: "Going solo" } },
+    ],
+    soloMatchLabel: {
+      ko: "매칭을 원해요 (팀·팀원 연결)",
+      en: "I'd like to be matched (with a team / teammates)",
+    },
+    // Field 6 — interested track.
+    trackLabel: { ko: "관심 트랙", en: "Track of interest" },
+    trackOptions: [
+      { value: "finance", label: { ko: "재무", en: "Finance" } },
+      { value: "sales", label: { ko: "영업", en: "Sales" } },
+      { value: "marketing", label: { ko: "마케팅 (입문)", en: "Marketing (beginner)" } },
+      { value: "unsure", label: { ko: "아직 모르겠어요", en: "Not sure yet" } },
+    ],
+    // Quiz-type auto-attach chip (not a field).
+    quizChipPrefix: { ko: "내 AI 유형: ", en: "My AI type: " },
+    quizChipSuffix: { ko: " — 팀 매칭에 활용돼요 ✦", en: " — used for team matching ✦" },
+    quizChipNone: {
+      ko: "성격 테스트를 하면 팀 매칭에 도움이 돼요",
+      en: "Taking the personality test helps with team matching",
+    },
+    quizChipNoneCta: { ko: "테스트하기 →", en: "Take the test →" },
+    // Submit + states.
+    submit: { ko: "등록하기", en: "Register" },
+    submitting: { ko: "등록 중…", en: "Registering…" },
+    successTitle: { ko: "등록 완료!", en: "You're registered!" },
+    successBody: {
+      ko: "운영진이 텔레그램으로 연락드릴게요. 조금만 기다려 주세요.",
+      en: "Our team will reach out on Telegram — hang tight.",
+    },
+    successClose: { ko: "닫기", en: "Close" },
+    // Validation.
+    errRequired: { ko: "필수 항목이에요.", en: "This field is required." },
+    errEmail: { ko: "이메일 형식을 확인해 주세요.", en: "Please enter a valid email." },
   },
 
   hero: {

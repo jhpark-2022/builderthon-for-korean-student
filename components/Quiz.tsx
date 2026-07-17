@@ -4,7 +4,6 @@ import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
-import { links } from "@/data/dictionary";
 import LocaleToggle from "@/components/LocaleToggle";
 import {
   QUESTIONS,
@@ -619,12 +618,13 @@ function ResultView({
         </div>
 
         {/* apply CTA — sits between the personality card and the match section.
-            href carries ?ref=quiz&type=<resultId> so the (placeholder) signup
-            link can attribute a lead to the taker's result once it goes live. */}
+            Deep-links back to the main page's register modal, carrying the
+            taker's type + a quiz referrer so the modal auto-opens and attaches
+            the AI type (/?register=1&type=<resultId>&ref=quiz). */}
         <div className="mx-auto w-full max-w-xl rounded-[24px] border border-white/10 bg-white/[0.04] p-6 text-center">
           <p className="text-[15px] font-bold leading-relaxed text-white/85">{ctaLead}</p>
           <a
-            href={`${links.signup}?ref=quiz&type=${result.resultId}`}
+            href={`/?register=1&type=${result.resultId}&ref=quiz`}
             className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
           >
             {t(quizUI.ctaApply)} →
