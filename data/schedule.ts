@@ -99,8 +99,8 @@ export const days: DayMeta[] = [
     phase: LAB1,
     theme: { ko: "크래시코스 (집중)", en: "Crash Course" },
     summary: {
-      ko: "바이브 코딩 입문 집중 5–6시간 · 종료 직후 문제 영상 공개 & 팀 빌딩.",
-      en: "A focused 5–6h vibe-coding intro · problem video & team building right after.",
+      ko: "바이브 코딩 입문 집중 5–6시간 · 종료 후 트랙별 라이브 브리핑 & 팀 빌딩.",
+      en: "A focused 5–6h vibe-coding intro · live track briefings & team building right after.",
     },
     dayMode: "online",
   },
@@ -111,8 +111,8 @@ export const days: DayMeta[] = [
     phase: LAB1,
     theme: { ko: "자율 빌드 · 멘토링", en: "Self-build · Mentoring" },
     summary: {
-      ko: "오전 자율 빌드 · 오후 1:1 멘토링 (OpenAI Codex 워크샵 조율 중).",
-      en: "AM self-build · PM 1:1 mentoring (OpenAI Codex workshop TBC).",
+      ko: "오전 온라인 자율 빌드 · 오후 1:1 멘토링(NUS 대면) · OpenAI Codex 워크샵 조율 중.",
+      en: "AM online self-build · PM 1:1 mentoring (NUS, in person) · OpenAI Codex workshop TBC.",
     },
     dayMode: "online",
   },
@@ -123,8 +123,8 @@ export const days: DayMeta[] = [
     phase: LAB1,
     theme: { ko: "자율 빌드 · 멘토링", en: "Self-build · Mentoring" },
     summary: {
-      ko: "오전 자율 빌드 · 오후 1:1 멘토링 — 프로토타입 진전.",
-      en: "AM self-build · PM 1:1 mentoring — advancing the prototype.",
+      ko: "오전 온라인 자율 빌드 · 오후 1:1 멘토링(NUS 대면) — 프로토타입 진전.",
+      en: "AM online self-build · PM 1:1 mentoring (NUS, in person) — advancing the prototype.",
     },
     dayMode: "online",
   },
@@ -236,6 +236,12 @@ const ONSITE: Bilingual = {
 const AWS_OFFICE: Bilingual = {
   ko: "AWS 오피스, 싱가포르 · 현장",
   en: "AWS office, Singapore · in person",
+};
+// Days 3–4's 1:1 mentoring is in person at NUS (per the deck) — the self-build
+// on those days stays online; only the mentoring is F2F.
+const NUS: Bilingual = {
+  ko: "NUS, 싱가포르 · 대면 (F2F)",
+  en: "NUS, Singapore · in person (F2F)",
 };
 // Codepresso runs the Day-2 Crash Course (vibe-coding intro), per the deck.
 const CODEPRESSO_ORG = {
@@ -399,14 +405,14 @@ export const schedule: BEvent[] = [
     category: "main",
     mode: "online",
     timeOfDay: "PM",
-    title: { ko: "문제 영상 공개 & 팀 빌딩", en: "Problem Video Release & Team Building" },
+    title: { ko: "트랙별 라이브 브리핑 & 팀 빌딩", en: "Live Track Briefings & Team Building" },
     summary: {
-      ko: "크래시코스 직후, 상세 문제 영상 공개와 팀 빌딩 시작.",
-      en: "Right after the crash course — a detailed problem video, then team building.",
+      ko: "크래시코스 종료 후 · 트랙별로 기업 담당자가 문제·프로세스를 직접 소개.",
+      en: "Right after the crash course — client contacts brief each track's problem live.",
     },
     description: {
-      ko: "크래시코스가 끝난 직후, 과제를 더 깊이 보여주는 상세 문제 영상이 공개됩니다. 다른 접근 예시까지 함께 시연한 뒤, 곧바로 팀 빌딩이 시작됩니다. 방금 익힌 기본기를 실제 문제 위에 얹어, ‘무엇을 만들지’를 팀과 함께 정하는 흐름으로 이어집니다.",
-      en: "Right after the Crash Course, a detailed problem video goes deeper into the challenge. After a walk-through of different example approaches, team building begins straight away — putting the fundamentals you just learned onto a real problem and deciding, as a team, what to build.",
+      ko: "크래시코스가 끝난 직후, 트랙별 라이브 브리핑이 이어집니다. 각 트랙의 클라이언트(기업) 담당자가 실제 문제와 내부 프로세스를 직접 소개하고, 세션은 녹화로 제공되어 언제든 다시 볼 수 있습니다. 브리핑에 이어 팀 빌딩이 시작됩니다 — 방금 익힌 기본기를 실제 문제 위에 얹어, ‘무엇을 만들지’를 팀과 함께 정하는 흐름으로 이어집니다.",
+      en: "Right after the Crash Course, a live briefing runs for each track: the client (company) contact walks through the real problem and their internal process first-hand, and the session is recorded so you can revisit it anytime. Team building follows the briefing — putting the fundamentals you just learned onto a real problem and deciding, as a team, what to build.",
     },
     location: ONLINE,
   },
@@ -455,19 +461,20 @@ export const schedule: BEvent[] = [
     day: 3,
     date: "08.24",
     category: "mentoring",
-    mode: "online",
+    mode: "offline",
     timeOfDay: "PM",
-    title: { ko: "1:1 멘토링", en: "1:1 Mentoring" },
+    title: { ko: "1:1 멘토링 · NUS 대면", en: "1:1 Mentoring · at NUS" },
     summary: {
-      ko: "막힌 지점을 점검하고 방향을 조정하는 1:1.",
-      en: "Unblock and adjust direction, one-on-one.",
+      ko: "NUS 현장에서 막힌 지점을 점검하고 방향을 조정하는 대면 1:1.",
+      en: "In-person, at NUS: unblock and adjust direction, one-on-one.",
     },
     description: {
-      ko: "정해진 시간표 대신 팀의 필요에 맞춰 진행되는 1:1 멘토링입니다. 막힌 지점을 함께 점검하고 방향을 조정합니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표 — 같은 눈높이에서 함께 고민하는 선배입니다. 학생 정체성과 giver 문화를 지키는 이 멘토 persona가 이 시간의 핵심입니다. (멘토 라인업은 확정에 따라 안내됩니다.)",
-      en: "One-on-one mentoring that follows each team's needs rather than a fixed timetable — checking blockers and adjusting direction. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes, thinking alongside you at eye level. That peer-mentor persona — protecting the student identity and giver culture — is the point of this time. (Mentor line-up to be announced as it's confirmed.)",
+      ko: "정해진 시간표 대신 팀의 필요에 맞춰 진행되는 1:1 멘토링입니다. NUS 현장에서 대면(F2F)으로 진행하며, 막힌 지점을 함께 점검하고 방향을 조정합니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표 — 같은 눈높이에서 함께 고민하는 선배입니다. 학생 정체성과 giver 문화를 지키는 이 멘토 persona가 이 시간의 핵심입니다. 확정 멘토로 황영준(T3Q · AI), 신동혁(AWS · GTM), 한장환(AWS · SA), 이유택(NTU · 前 Naver) 님이 함께합니다.",
+      en: "One-on-one mentoring that follows each team's needs rather than a fixed timetable — held in person (F2F) at NUS, checking blockers and adjusting direction. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes, thinking alongside you at eye level. That peer-mentor persona — protecting the student identity and giver culture — is the point of this time. Confirmed mentors include Hwang Young-jun (T3Q · AI), Shin Dong-hyuk (AWS · GTM), Han Jang-whan (AWS · SA) and Lee Yoo-taek (NTU · ex-Naver).",
     },
-    location: ONLINE,
-    // mentors — TODO: confirm line-up
+    location: NUS,
+    // TODO: confirm public naming — mentors 황영준·신동혁·한장환·이유택 are confirmed in
+    // the internal deck; verify their names may be shown publicly before surfacing.
   },
 
   // ─── DAY 4 · Self-build · Mentoring (08.25) ─────────────────────────────────
@@ -494,19 +501,18 @@ export const schedule: BEvent[] = [
     day: 4,
     date: "08.25",
     category: "mentoring",
-    mode: "online",
+    mode: "offline",
     timeOfDay: "PM",
-    title: { ko: "1:1 멘토링", en: "1:1 Mentoring" },
+    title: { ko: "1:1 멘토링 · NUS 대면", en: "1:1 Mentoring · at NUS" },
     summary: {
-      ko: "프로토타입을 점검하고 진전을 함께 봅니다.",
-      en: "Prototype review and progress, together.",
+      ko: "NUS 현장에서 프로토타입을 점검하고 진전을 함께 봅니다.",
+      en: "In-person, at NUS: prototype review and progress, together.",
     },
     description: {
-      ko: "팀이 만든 프로토타입을 함께 점검하고 진전을 살피는 1:1 멘토링입니다. 무엇이 잘 되고 있는지, 어디를 더 밀어야 하는지를 같은 눈높이의 선배 멘토와 짚어봅니다. 멘토는 유학생 출신 현직 대표로, 학생 교류와 giver 문화를 지키는 역할입니다.",
-      en: "One-on-one mentoring to review the prototype your team built and look at progress together — what's working, and where to push harder — with peer-level senior mentors. Mentors are Korean ex-international-student founders, there to keep the student exchange and giver culture alive.",
+      ko: "팀이 만든 프로토타입을 함께 점검하고 진전을 살피는 1:1 멘토링입니다. Day 3에 이어 NUS 현장에서 대면(F2F)으로 진행하며, 무엇이 잘 되고 있는지, 어디를 더 밀어야 하는지를 같은 눈높이의 선배 멘토와 짚어봅니다. 멘토는 유학생 출신 현직 대표로, 학생 교류와 giver 문화를 지키는 역할입니다(확정 멘토진은 Day 3과 동일).",
+      en: "One-on-one mentoring to review the prototype your team built and look at progress together — held in person (F2F) at NUS, following on from Day 3 — what's working, and where to push harder, with peer-level senior mentors. Mentors are Korean ex-international-student founders, there to keep the student exchange and giver culture alive (same confirmed line-up as Day 3).",
     },
-    location: ONLINE,
-    // mentors — TODO: confirm line-up
+    location: NUS,
   },
 
   // ─── DAY 5 · In-person Kickoff · Panels (08.26 · OFFLINE) ────────────────────
