@@ -9,15 +9,16 @@
 // `// TODO: confirm` note — please do not invent these.
 //
 // THE 8-DAY SHAPE (per the deck, which is authoritative):
-//   • Day 1 — big Opening: 박희덕 opening keynote + AWS speaker session + the AX
-//     problems are released. MANDATORY (필참); on-site at *SCAPE L^IFE Jungle.
+//   • Day 1 — big Opening: 원대로 opening keynote + AWS speaker session + the AX
+//     problems are released and tracks are chosen. MANDATORY (필참); on-site
+//     is pending (Zoom fallback if the venue isn't locked).
 //   • Day 2 — one concentrated Crash Course (vibe-coding intro, 5–6h), then a
-//     detailed problem video + team building right after.
-//   • Day 3–4 — online self-build + 1:1 mentoring (Day 3 also has a TENTATIVE
-//     OpenAI Codex workshop, still in coordination).
-//   • Day 5 — in-person kickoff with panels at *SCAPE L^IFE Jungle; opens Lab 2.
+//     live per-track briefing (client contacts present the problem) right after.
+//   • Day 3–4 — online self-build + 1:1 mentoring in person at NUS (Day 3 also
+//     has a TENTATIVE OpenAI Codex workshop, still in coordination).
+//   • Day 5 — recharge · in-person kickoff with panels at *SCAPE L^IFE Jungle; opens Lab 2.
 //   • Day 6 — open build (online, self-paced).
-//   • Day 7 — Final Rehearsal on-site at the AWS office (new venue).
+//   • Day 7 — Final Rehearsal on-site at the AWS office (9AM–1:30PM, new venue).
 //   • Day 8 — Demo Day at *SCAPE L^IFE Jungle. MANDATORY (필참).
 //   • Self-paced team build runs continuously from the Day-1 problem release all
 //     the way to the Day-8 pitch. In person on Days 1 / 5 / 7 / 8.
@@ -84,10 +85,11 @@ export const days: DayMeta[] = [
     phase: LAB1,
     theme: { ko: "오프닝 · 문제 공개", en: "Opening · Problem Release" },
     summary: {
-      ko: "박희덕 오프닝 키노트 · 오리엔테이션 · AWS 연사(확정) · 문제 공개.",
-      en: "Park's opening keynote · orientation · AWS session (confirmed) · problem release.",
+      ko: "원대로 오프닝 키노트 · 오리엔테이션 · AWS 연사(확정) · 문제 공개·트랙 선택.",
+      en: "Won's opening keynote · orientation · AWS session (confirmed) · problem release & track selection.",
     },
-    dayMode: "offline",
+    // Deck: on-site is pending (Zoom fallback if the venue isn't locked).
+    dayMode: "pending",
     mandatory: true,
   },
   {
@@ -133,8 +135,8 @@ export const days: DayMeta[] = [
     phase: LAB2,
     theme: { ko: "오프라인 킥오프 · 패널", en: "In-person Kickoff · Panels" },
     summary: {
-      ko: "*SCAPE 현장 집결 · 참여자 AI Use Case · 원대로 패널 · 네트워킹.",
-      en: "In person at *SCAPE · AI use-case panel · Won Dae-ro panel · networking.",
+      ko: "*SCAPE 현장 집결 · 재충전 · 참여자 AI Use Case · 이병일 패널 · 네트워킹.",
+      en: "In person at *SCAPE · a recharge beat · AI use-case panel · Lee Byung-il panel · networking.",
     },
     dayMode: "offline",
   },
@@ -169,8 +171,8 @@ export const days: DayMeta[] = [
     phase: LAB2,
     theme: { ko: "데모데이 · 최종 발표", en: "Demo Day · Final Pitch" },
     summary: {
-      ko: "*SCAPE 현장 · 이병일 키노트 · 심사 · 최종 발표 & 시상.",
-      en: "In person at *SCAPE · Lee Byung-il keynote · judging · final pitch & awards.",
+      ko: "*SCAPE 현장 · 박희덕 키노트 · 팀별 5분 발표 · 결과 발표 & 시상.",
+      en: "In person at *SCAPE · Park Hee-deok keynote · 5-min team pitches · results & awards.",
     },
     dayMode: "offline",
     mandatory: true,
@@ -265,16 +267,16 @@ export const schedule: BEvent[] = [
     mode: "offline",
     timeOfDay: "AM",
     confirmed: true,
-    title: { ko: "오프닝 키노트 · 박희덕", en: "Opening Keynote · Park Hee-deok" },
+    title: { ko: "오프닝 키노트 · 원대로", en: "Opening Keynote · Won Dae-ro" },
     // TODO: confirm — speaker name is from the internal deck; confirm public naming is OK.
-    speaker: { ko: "박희덕", en: "Park Hee-deok" },
+    speaker: { ko: "원대로", en: "Won Dae-ro" },
     summary: {
-      ko: "‘제로백의 진짜 의미’ — 8일의 ‘왜’를 여는 오프닝 키노트.",
-      en: "“The Real Meaning of Zero100” — the keynote that opens the 8-day ‘why’.",
+      ko: "‘취업과 창업의 사이’ — 8일의 ‘왜’를 여는 오프닝 키노트.",
+      en: "“Between Employment and Founding” — the keynote that opens the 8-day ‘why’.",
     },
     description: {
-      ko: "빌더톤의 문을 여는 오프닝 키노트입니다. 트랜스링크 인베스트먼트의 박희덕 대표가 ‘제로백의 진짜 의미’를 주제로, 0에서 100까지 이어지는 성장의 이야기와 이번 빌더톤이 왜 지금, 왜 싱가포르의 한인 학생에게 필요한지를 약 1시간 동안 풀어냅니다. ‘바이브 코딩 대회가 아니라 창업’이라는 프레임을 첫날에 세우고, 처음이어도 괜찮다는 톤으로 8일을 시작합니다.",
-      en: "The keynote that opens the builderthon. Park Hee-deok (CEO · General Partner, Translink Investment) speaks on “The Real Meaning of Zero100” for about an hour — the arc from zero to a hundred, and why this builderthon matters now, and to Korean students in Singapore. It frames Day 1 as ‘founding, not a vibe-coding contest’ and sets a ‘first-timers welcome’ tone for the eight days.",
+      ko: "빌더톤의 문을 여는 오프닝 키노트입니다. Wilt Venture Builder(SG)의 원대로 대표가 ‘취업과 창업의 사이’를 주제로, 정형화된 ‘취업 vs 창업’ 이분법에서 벗어나 벤처빌더가 본 다양한 진로·커리어 경로와 비개발자도 시작할 수 있는 여러 갈래를 약 1시간 동안 Q&A와 함께 풀어냅니다. ‘처음이어도 괜찮다’는 톤으로 8일의 ‘왜’를 세우며 출발선을 엽니다.",
+      en: "The keynote that opens the builderthon. Won Dae-ro (Managing Director, Wilt Venture Builder SG) speaks on “Between Employment and Founding” for about an hour, with Q&A — stepping past the tidy ‘employment vs. founding’ binary to the many career paths a venture builder has seen, and the routes even non-developers can start from. It sets the 8-day ‘why’ in a ‘first-timers welcome’ tone.",
     },
     location: ONSITE,
   },
@@ -305,14 +307,16 @@ export const schedule: BEvent[] = [
     timeOfDay: "PM",
     confirmed: true,
     title: { ko: "AWS 연사 세션", en: "AWS Speaker Session" },
-    // TODO: confirm — AWS speaker's public name not yet released; kept generic on purpose.
+    // TODO: confirm public naming — speaker (한장환 · AWS) is confirmed in the internal
+    // deck; verify the public name may be shown before surfacing it in the UI.
+    speaker: { ko: "한장환 (AWS)", en: "Han Jang-whan (AWS)" },
     summary: {
       ko: "Amazon의 AI 문제 정의 · 접근 방법론.",
       en: "Amazon's AI problem-definition & approach methodology.",
     },
     description: {
-      ko: "AWS 연사가 진행하는 확정 세션입니다. Amazon이 실제로 AI 문제를 어떻게 정의하고, 어떤 방법론으로 접근하는지를 다룹니다. 문제를 ‘어떻게 풀까’ 이전에 ‘무엇을, 왜 푸는가’를 잡는 관점을 얻어, 곧이어 공개되는 실제 AX 과제에 그대로 적용해볼 수 있습니다. (연사 성함은 확정되는 대로 안내됩니다.)",
-      en: "A confirmed session led by an AWS speaker on how Amazon defines AI problems and the methodology it uses to approach them. It's the ‘what and why’ before the ‘how’ — a lens you can apply directly to the real AX problems released the same day. (Speaker name to be announced once released.)",
+      ko: "AWS 연사 한장환 님이 진행하는 확정 세션입니다. Amazon이 실제로 AI 문제를 어떻게 정의하고, 어떤 방법론으로 접근하는지를 다룹니다. 문제를 ‘어떻게 풀까’ 이전에 ‘무엇을, 왜 푸는가’를 잡는 관점을 얻어, 곧이어 공개되는 실제 AX 과제에 그대로 적용해볼 수 있습니다.",
+      en: "A confirmed session led by AWS speaker Han Jang-whan on how Amazon defines AI problems and the methodology it uses to approach them. It's the ‘what and why’ before the ‘how’ — a lens you can apply directly to the real AX problems released the same day.",
     },
     location: ONSITE,
   },
@@ -323,14 +327,14 @@ export const schedule: BEvent[] = [
     category: "main",
     mode: "offline",
     timeOfDay: "PM",
-    title: { ko: "문제 공개", en: "Problem Release" },
+    title: { ko: "문제 공개 · 트랙 선택", en: "Problem Release · Track Selection" },
     summary: {
-      ko: "실제 기업의 AX 과제가 공개되고, 8일 빌드 시계가 시작됩니다.",
-      en: "Real companies' AX problems drop — and the 8-day build clock starts.",
+      ko: "실제 기업의 AX 과제가 공개되고, 트랙을 고르며 8일 빌드 시계가 시작됩니다.",
+      en: "Real companies' AX problems drop, you pick a track — and the 8-day build clock starts.",
     },
     description: {
-      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 공개됩니다. 팀별 자율 빌드는 문제가 공개되는 이 순간부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이, 바로 만들기 시작할 수 있습니다. Day 1은 필참이며 *SCAPE L^IFE Jungle 현장에서 진행됩니다. (Day 2에는 크래시코스 직후 상세 문제 영상이 공개됩니다.)",
-      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now. Self-paced team build starts the moment the problems are released and runs continuously to Demo Day, so you can begin building straight away rather than waiting for a start whistle. Day 1 is mandatory and runs on-site at *SCAPE L^IFE Jungle. (A detailed problem video follows on Day 2, right after the Crash Course.)",
+      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 팀별 자율 빌드는 문제가 공개되는 이 순간부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이, 바로 만들기 시작할 수 있습니다. Day 1은 필참이며 *SCAPE L^IFE Jungle 현장 진행을 목표로 합니다(장소 미정 시 Zoom). (Day 2에는 크래시코스 직후 트랙별 라이브 브리핑이 이어집니다.)",
+      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. Self-paced team build starts the moment the problems are released and runs continuously to Demo Day, so you can begin building straight away rather than waiting for a start whistle. Day 1 is mandatory and aims to run on-site at *SCAPE L^IFE Jungle (Zoom fallback if the venue isn't locked). (A live per-track briefing follows on Day 2, right after the Crash Course.)",
     },
     location: ONSITE,
   },
@@ -549,16 +553,16 @@ export const schedule: BEvent[] = [
     category: "main",
     mode: "offline",
     timeOfDay: "AM",
-    title: { ko: "패널 2 · 원대로 · AI 시대의 창업", en: "Panel 2 · Won Dae-ro · Founding in the AI Era" },
+    title: { ko: "패널 2 · 이병일 · 멘탈관리와 회복탄력성", en: "Panel 2 · Lee Byung-il · Resilience & Mental Management" },
     // TODO: confirm — speaker name is from the internal deck; confirm public naming is OK.
-    speaker: { ko: "원대로", en: "Won Dae-ro" },
+    speaker: { ko: "이병일", en: "Lee Byung-il" },
     summary: {
-      ko: "AI가 창업의 판을 어떻게 바꾸는지 — 원대로 대표와 함께.",
-      en: "How AI reshapes founding — with Won Dae-ro.",
+      ko: "실패·재기에서 배우는 회복탄력성 — 이병일 파트너와 함께.",
+      en: "Resilience, learned from failure & comebacks — with Lee Byung-il.",
     },
     description: {
-      ko: "Wilt Venture Builder(SG)의 원대로 대표와 함께하는 패널입니다. ‘AI 시대의 창업’을 주제로, AI가 창업의 판을 어떻게 바꾸고 있는지를 약 1시간 동안 Q&A와 함께 풀어냅니다. 헤드다운 빌드로 들어가기 직전, ‘무엇을·왜 만들지’와 끝까지 완주할 동기를 다시 잡는 시간입니다.",
-      en: "A panel with Won Dae-ro (Managing Director, Wilt Venture Builder SG) on ‘Startups in the AI era’ — how AI is reshaping founding — for about an hour, with Q&A. Right before the heads-down build, it's a moment to re-anchor ‘what and why to build’ and the motivation to see it through.",
+      ko: "Wilt Venture Builder(SG)의 이병일 파트너와 함께하는 패널입니다. ‘창업가의 멘탈관리와 회복탄력성’을 주제로, 스타트업의 실패·재기 스토리에서 배우는 회복탄력성과 빌드 중 좌절을 다루는 법을 나눕니다. 헤드다운 빌드로 들어가기 직전, 끝까지 완주할 동기를 다시 채우는 시간입니다.",
+      en: "A panel with Lee Byung-il (Venture Partner, Wilt Venture Builder SG) on ‘Founder resilience & mental management’ — the resilience learned from startup failure-and-comeback stories, and how to handle the setbacks that come mid-build. Right before the heads-down build, it's a moment to top up the motivation to see it through.",
     },
     location: ONSITE,
   },
@@ -649,16 +653,16 @@ export const schedule: BEvent[] = [
     mode: "offline",
     timeOfDay: "AM",
     confirmed: true,
-    title: { ko: "오프닝 키노트 · 이병일", en: "Opening Keynote · Lee Byung-il" },
+    title: { ko: "데모데이 키노트 · 박희덕", en: "Demo Day Keynote · Park Hee-deok" },
     // TODO: confirm — speaker name is from the internal deck; confirm public naming is OK.
-    speaker: { ko: "이병일", en: "Lee Byung-il" },
+    speaker: { ko: "박희덕", en: "Park Hee-deok" },
     summary: {
-      ko: "‘창업가의 멘탈관리와 회복탄력성’으로 여는 데모데이.",
-      en: "Demo Day opens on ‘Founder Resilience & Mental Management’.",
+      ko: "‘제로백의 진짜 의미’로 여는 데모데이.",
+      en: "Demo Day opens on ‘The Real Meaning of Zero100’.",
     },
     description: {
-      ko: "데모데이를 여는 오프닝 키노트입니다. Wilt Venture Builder(SG)의 이병일 파트너가 ‘창업가의 멘탈관리와 회복탄력성’을 주제로 약 1시간 동안 이야기합니다. ‘8일 만에 만들어봤다, 여기서 멈추지 마라’ — 실패와 재기의 이야기, 그리고 이 경험을 인턴십·투자 등 다음 단계로 잇는 관점을 전하며, 피칭 직전의 동기를 끌어올립니다.",
-      en: "The keynote that opens Demo Day. Lee Byung-il (Venture Partner, Wilt Venture Builder SG) speaks for about an hour on ‘Founder Resilience & Mental Management’ — ‘you built it in 8 days; don't stop here’ — with failure-and-comeback stories and a view of how this experience bridges to next steps like internships and investment, lifting the motivation right before pitching.",
+      ko: "데모데이를 여는 키노트입니다. 트랜스링크 인베스트먼트의 박희덕 대표가 ‘제로백의 진짜 의미’를 주제로 약 1시간 동안 이야기합니다. 창업가가 0에서 100으로 가기 위한 핵심 요소 — 협업·가치·실행·글로벌 스탠다드의 중요성과 협업의 힘, 그리고 왜 지금, 왜 싱가포르의 한인 학생인지를 짚으며 피칭 직전의 동기를 끌어올립니다.",
+      en: "The keynote that opens Demo Day. Park Hee-deok (CEO · General Partner, Translink Investment) speaks for about an hour on ‘The Real Meaning of Zero100’ — the core of going from zero to a hundred: collaboration, value, execution and global standards, the power of collaboration, and why now and why Korean students in Singapore — lifting the motivation right before pitching.",
     },
     location: ONSITE,
   },
