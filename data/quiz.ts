@@ -599,6 +599,14 @@ export const quizUI = {
     en: "With this type, you'll shine in the {role} role at the builderthon ✦",
   },
   ctaApply: { ko: "빌더톤 신청하러 가기", en: "Go apply to the builderthon" },
+  // Shown after a genuine completion that came from the register modal's
+  // round-trip (/quiz?return=register) — links back to the modal, which restores
+  // the saved draft and attaches this freshly-saved type. Never auto-redirects.
+  ctaBackToRegister: { ko: "등록으로 돌아가기 →", en: "Back to registration →" },
+  ctaBackToRegisterNote: {
+    ko: "결과가 저장됐어요 — 이어서 등록을 마무리하세요.",
+    en: "Your result is saved — head back to finish registering.",
+  },
 
   // 9:16 story-image export
   saveImage: { ko: "이미지로 저장", en: "Save as image" },

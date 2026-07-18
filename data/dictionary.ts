@@ -135,9 +135,14 @@ export const dict = {
     partLabel: { ko: "참가 형태", en: "How are you joining?" },
     partOptions: [
       { value: "team", label: { ko: "팀이 이미 있어요", en: "I already have a team" } },
-      { value: "looking", label: { ko: "팀원을 구하고 있어요", en: "Looking for teammates" } },
       { value: "solo", label: { ko: "솔로로 갑니다", en: "Going solo" } },
     ],
+    // Solo-only: opt into being matched with other solo builders. The AI-type
+    // block appears only while this is checked.
+    soloMatchLabel: {
+      ko: "다른 솔로 참가자와 팀 매칭을 원해요",
+      en: "Match me with other solo builders",
+    },
     // Team section — shown only when "team" is selected.
     teamSectionTitle: { ko: "팀 정보", en: "Team details" },
     teamSizeNote: { ko: "팀은 1–3인이에요", en: "Teams are 1–3 people" },
@@ -161,14 +166,23 @@ export const dict = {
       { value: "marketing", label: { ko: "마케팅 (입문)", en: "Marketing (beginner)" } },
       { value: "unsure", label: { ko: "아직 모르겠어요", en: "Not sure yet" } },
     ],
-    // Quiz-type auto-attach chip (not a field).
-    quizChipPrefix: { ko: "내 AI 유형: ", en: "My AI type: " },
-    quizChipSuffix: { ko: " — 팀 매칭에 활용돼요 ✦", en: " — used for team matching ✦" },
-    quizChipNone: {
-      ko: "성격 테스트를 하면 팀 매칭에 도움이 돼요",
-      en: "Taking the personality test helps with team matching",
+    // AI-type block — shown ONLY for solo applicants who opted into matching.
+    aiTypePrefix: { ko: "내 AI 유형: ", en: "My AI type: " },
+    // State A — a saved result exists on this device.
+    aiConfirmQ: {
+      ko: "이 결과가 맞나요? 팀 매칭에 활용돼요.",
+      en: "Is this you? We'll use it for team matching.",
     },
-    quizChipNoneCta: { ko: "테스트하기 →", en: "Take the test →" },
+    aiYes: { ko: "네, 이거예요", en: "Yep, that's me" },
+    aiRetake: { ko: "내 결과가 아니에요 · 다시 테스트", en: "Not mine · retake the test" },
+    aiAttached: { ko: "AI 유형이 첨부됐어요", en: "AI type attached" },
+    aiRetakeShort: { ko: "다시 테스트", en: "Retake" },
+    // State B — no saved result on this device.
+    aiNoneMsg: {
+      ko: "아직 테스트를 안 하셨네요 — 3분이면 돼요",
+      en: "Looks like you haven't taken the test — it takes 3 minutes",
+    },
+    aiGoTest: { ko: "테스트 하러 가기 →", en: "Take the test →" },
     // Submit + states.
     submit: { ko: "등록하기", en: "Register" },
     submitting: { ko: "등록 중…", en: "Registering…" },

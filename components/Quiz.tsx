@@ -140,6 +140,16 @@ export default function Quiz() {
     setOwnResult(loadOwnResult());
   }, []);
 
+  // Came here from the register modal's round-trip (/quiz?return=register)?
+  // Captured once on mount, BEFORE enterResult's replaceState strips the param,
+  // so the result screen can offer "Back to registration →" after a genuine
+  // completion. (Deep-link views carry no axes, so the button stays hidden.)
+  const [returnToRegister, setReturnToRegister] = useState(false);
+  useEffect(() => {
+    if (params.get("return") === "register") setReturnToRegister(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Deep-link: ?r=INFJ-A drops a visitor straight onto a result card. Usually
   // that's a friend's share (the viral loop → show "나도 테스트하기"). But if the id
   // matches the one WE stashed, it's the visitor's own result — treat it as
@@ -337,7 +347,7 @@ export default function Quiz() {
         {phase === "analyzing" && <Analyzing t={t} reduce={!!reduce} />}
 
         {phase === "result" && result && (
-          <ResultView result={result} t={t} reduce={!!reduce} fromShare={fromShare} onRetake={startQuiz} />
+          <ResultView result={result} t={t} reduce={!!reduce} fromShare={fromShare} onRetake={startQuiz} returnToRegister={returnToRegister} />
         )}
       </div>
     </main>
@@ -436,12 +446,14 @@ function ResultView({
   reduce,
   fromShare,
   onRetake,
+  returnToRegister,
 }: {
   result: QuizResult;
   t: (p: { ko: string; en: string }) => string;
   reduce: boolean;
   fromShare: boolean;
   onRetake: () => void;
+  returnToRegister: boolean;
 }) {
   const data = RESULTS[result.mbti];
   const variant = data.variants[result.identity];
@@ -617,14 +629,29 @@ function ResultView({
           </div>
         </div>
 
+        {/* Round-trip return banner — only after a GENUINE completion (axes
+            present; a deep-link view has none) that arrived from the register
+            modal. Prominent, and never auto-redirects: the visitor taps to go
+            back, where the modal restores their draft and attaches this type. */}
+        {returnToRegister && result.axes && result.axes.length > 0 && (
+          <div className="mx-auto w-full max-w-xl rounded-[24px] border border-emerald-400/25 bg-emerald-400/[0.06] p-6 text-center">
+            <p className="text-[15px] font-bold leading-relaxed text-white/85">{t(quizUI.ctaBackToRegisterNote)}</p>
+            <a
+              href="/?register=1&ref=quiz-return"
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(16,185,129,0.4)] transition hover:-translate-y-0.5"
+            >
+              {t(quizUI.ctaBackToRegister)}
+            </a>
+          </div>
+        )}
+
         {/* apply CTA — sits between the personality card and the match section.
-            Deep-links back to the main page's register modal, carrying the
-            taker's type + a quiz referrer so the modal auto-opens and attaches
-            the AI type (/?register=1&type=<resultId>&ref=quiz). */}
+            Links to the main page's register modal (/?register=1&ref=quiz); the
+            AI type is sourced from this device's saved result, not the URL. */}
         <div className="mx-auto w-full max-w-xl rounded-[24px] border border-white/10 bg-white/[0.04] p-6 text-center">
           <p className="text-[15px] font-bold leading-relaxed text-white/85">{ctaLead}</p>
           <a
-            href={`/?register=1&type=${result.resultId}&ref=quiz`}
+            href="/?register=1&ref=quiz"
             className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
           >
             {t(quizUI.ctaApply)} →

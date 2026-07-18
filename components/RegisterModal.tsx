@@ -5,19 +5,26 @@
 //
 // Reuses the EventModal/PartnerModal dialog pattern verbatim (portal, backdrop,
 // ESC + Tab focus-trap, body scroll-lock, inert background, focus restoration,
-// bottom-sheet on mobile). The quiz personality type, if the visitor has one, is
-// auto-attached (not a field, registrant only) and shown as a small chip.
+// bottom-sheet on mobile).
 //
-// TEAM FLOW: the "How are you joining?" select drives everything.
-//   • "team"    → reveals the team section: required team name + multi-member
-//                 entry (registrant = Member 1; add up to Member 3).
-//   • "looking" → no team section; the team-matching chip stays prominent.
-//   • "solo"    → no team section.
+// JOIN FLOW: the "How are you joining?" select has two options.
+//   • "team" → team section: required team name + multi-member entry
+//              (registrant = Member 1; add up to Member 3). NO AI-type UI.
+//   • "solo" → a "match me with other solo builders" checkbox. ONLY while that
+//              box is checked does the AI-type block appear, in one of two states:
+//                A) a saved quiz result exists on this device (localStorage) →
+//                   confirm-and-attach card;
+//                B) none → prompt to take the 3-min test, via a round-trip that
+//                   saves the form draft to sessionStorage, sends the visitor to
+//                   /quiz?return=register, and (after they complete it) brings
+//                   them back to /?register=1&ref=quiz-return with the draft
+//                   restored and the freshly-saved type now in State A.
+// The AI type is NEVER read from the URL — always from this device's saved
+// result. No cross-device fallback, no manual picker.
 //
 // Submit: with no REGISTER_ENDPOINT it simulates a ~1s submit, logs the payload
-// to console.info (so the shape can be confirmed pre-backend), and shows the
-// success state. With a URL it POSTs the payload as JSON. On success it sets the
-// `z100-registered` flag (via onSuccess) so the nav button flips to "등록 완료 ✓".
+// to console.info, and shows the success state. With a URL it POSTs JSON. On
+// success it sets the `z100-registered` flag and clears the draft.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useRef, useState } from "react";
@@ -32,10 +39,8 @@ import { loadOwnResult } from "@/lib/quizResult";
 interface RegisterModalProps {
   open: boolean;
   onClose: () => void;
-  // Quiz type + referrer captured from the URL (?type=&ref=) when the modal is
-  // auto-opened from the /quiz result CTA. `urlType` falls back to the visitor's
-  // saved own-result when absent.
-  urlType?: string | null;
+  // Referrer captured from the URL (?ref=) on the auto-open path — "quiz" or
+  // "quiz-return". The AI type is NOT passed via the URL (localStorage only).
   urlRef?: string | null;
   // Called once a submit succeeds (persists the "registered" flag in the parent).
   onSuccess: () => void;
@@ -51,6 +56,8 @@ const FIELD =
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // Teams are strictly 1–3 people → at most 2 members beyond the registrant.
 const MAX_ADDITIONAL = 2;
+// Draft persisted across the quiz round-trip (survives the full navigation).
+const DRAFT_KEY = "z100-register-draft";
 
 type Status = "idle" | "submitting" | "success";
 
@@ -76,22 +83,44 @@ const blankMember = (id: number): Member => ({
   linkedin: "",
 });
 
-// Resolve a resultId ("ESTP-T") to its display variant name ("조급한 Mistral"),
+// Resolve a resultId ("ESTP-T") to its display info (variant name + brand mark),
 // mirroring ReturningGreeting. Returns null for an unparseable id.
-function useVariantName(resultId: string | null): string | null {
+function useTypeInfo(resultId: string | null) {
   const { t } = useLocale();
   if (!resultId) return null;
   const parsed = parseResultId(resultId);
   if (!parsed) return null;
   const data = RESULTS[parsed.mbti];
   if (!data) return null;
-  return t(data.variants[parsed.identity].name);
+  return {
+    name: t(data.variants[parsed.identity].name),
+    logo: data.logo,
+    emoji: data.emoji,
+    model: data.model,
+  };
+}
+
+// Model brand mark (white mono) with an emoji fallback — mirrors the quiz glyph.
+function TypeGlyph({ logo, emoji, model }: { logo: string; emoji: string; model: string }) {
+  const [failed, setFailed] = useState(false);
+  if (!logo || failed) return <span className="text-base leading-none" aria-hidden>{emoji}</span>;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={`/logos/${logo}`}
+      alt={model}
+      className="h-5 w-5 object-contain"
+      onError={() => setFailed(true)}
+      ref={(n) => {
+        if (n && n.complete && n.naturalWidth === 0) setFailed(true);
+      }}
+    />
+  );
 }
 
 export default function RegisterModal({
   open,
   onClose,
-  urlType,
   urlRef,
   onSuccess,
 }: RegisterModalProps) {
@@ -111,18 +140,22 @@ export default function RegisterModal({
   const [contact, setContact] = useState("");
   const [linkedin, setLinkedin] = useState("");
   // Team-level fields.
-  const [joinType, setJoinType] = useState(""); // "" | "team" | "looking" | "solo"
+  const [joinType, setJoinType] = useState(""); // "" | "team" | "solo"
   const [teamName, setTeamName] = useState("");
   const [track, setTrack] = useState("");
-  // Added teammates (Member 2 / 3). State is preserved when switching join type
-  // away from "team" and back within the session.
+  // Added teammates (Member 2 / 3). Preserved when toggling join type.
   const [members, setMembers] = useState<Member[]>([]);
   const memberIdRef = useRef(0);
+  // Solo-matching opt-in + AI-type attach.
+  const [soloMatch, setSoloMatch] = useState(false);
+  const [savedResultId, setSavedResultId] = useState<string | null>(null);
+  const [attachConfirmed, setAttachConfirmed] = useState(false); // "네, 이거예요" tapped
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<Status>("idle");
 
   const isTeam = joinType === "team";
+  const wantsMatching = joinType === "solo" && soloMatch;
 
   const addMember = () =>
     setMembers((prev) =>
@@ -133,16 +166,48 @@ export default function RegisterModal({
   const patchMember = (id: number, patch: Partial<Member>) =>
     setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, ...patch } : m)));
 
-  // The attached quiz type — the URL's ?type= wins, else the saved own-result.
-  // Read post-mount only (localStorage is absent during SSR → no mismatch).
-  const [resolvedType, setResolvedType] = useState<string | null>(null);
+  // Restore a round-trip draft (client-only, post-mount → no SSR mismatch) and
+  // read this device's saved quiz result. The draft is written just before
+  // navigating to the quiz, so restoring it here brings every field back.
+  useEffect(() => {
+    let raw: string | null = null;
+    try {
+      raw = window.sessionStorage.getItem(DRAFT_KEY);
+    } catch {
+      /* storage blocked */
+    }
+    if (raw) {
+      try {
+        const d = JSON.parse(raw);
+        setName(d.name ?? "");
+        setEmail(d.email ?? "");
+        setSchool(d.school ?? "");
+        setSchoolOther(d.schoolOther ?? "");
+        setContact(d.contact ?? "");
+        setLinkedin(d.linkedin ?? "");
+        setJoinType(d.joinType ?? "");
+        setTeamName(d.teamName ?? "");
+        setTrack(d.track ?? "");
+        setSoloMatch(!!d.soloMatch);
+        const mem: Member[] = Array.isArray(d.members) ? d.members : [];
+        setMembers(mem);
+        memberIdRef.current = mem.reduce((mx, x) => Math.max(mx, x?.id ?? 0), 0);
+      } catch {
+        /* corrupt draft — ignore */
+      }
+    }
+    setSavedResultId(loadOwnResult()?.resultId ?? null);
+  }, []);
+
+  // On (re)open: return to the form and re-read the saved result (it may have
+  // just been written by a completed round-trip in this same tab).
   useEffect(() => {
     if (!open) return;
-    setStatus("idle"); // reopening always returns to the form
-    setResolvedType(urlType ?? loadOwnResult()?.resultId ?? null);
-  }, [open, urlType]);
+    setStatus("idle");
+    setSavedResultId(loadOwnResult()?.resultId ?? null);
+  }, [open]);
 
-  const variantName = useVariantName(resolvedType);
+  const typeInfo = useTypeInfo(savedResultId);
 
   // ESC + focus trap, body scroll lock, inert background, focus restoration —
   // kept in lockstep with PartnerModal so all dialogs behave identically.
@@ -196,6 +261,24 @@ export default function RegisterModal({
     };
   }, [open, onClose]);
 
+  // Save the whole form to sessionStorage and route to the quiz. On completion
+  // the quiz surfaces a "Back to registration →" button (→ ?register=1&
+  // ref=quiz-return) that brings the visitor back to this restored draft.
+  function goToQuiz() {
+    try {
+      window.sessionStorage.setItem(
+        DRAFT_KEY,
+        JSON.stringify({
+          name, email, school, schoolOther, contact, linkedin,
+          joinType, teamName, track, soloMatch, members,
+        })
+      );
+    } catch {
+      /* storage blocked — the round-trip just won't restore fields */
+    }
+    window.location.href = "/quiz?return=register";
+  }
+
   function validate(): boolean {
     const next: Record<string, string> = {};
     const req = t(dict.register.errRequired);
@@ -210,15 +293,12 @@ export default function RegisterModal({
 
     if (isTeam) {
       if (!teamName.trim()) next.teamName = req;
-      // Added members validate the same way as Member 1.
       members.forEach((m) => {
         if (!m.name.trim()) next[`m${m.id}-name`] = req;
         if (!m.email.trim()) next[`m${m.id}-email`] = req;
         else if (!EMAIL_RE.test(m.email.trim())) next[`m${m.id}-email`] = badEmail;
         if (!m.contact.trim()) next[`m${m.id}-contact`] = req;
       });
-      // No duplicate emails across Member 1–3 — flag the later duplicate, and
-      // don't clobber a required/format error already set on that field.
       const entries = [
         { key: "email", value: email },
         ...members.map((m) => ({ key: `m${m.id}-email`, value: m.email })),
@@ -226,7 +306,7 @@ export default function RegisterModal({
       const seen = new Set<string>();
       entries.forEach(({ key, value }) => {
         const norm = value.trim().toLowerCase();
-        if (!norm) return; // emptiness handled by the required check
+        if (!norm) return;
         if (seen.has(norm)) {
           if (!next[key]) next[key] = dupEmail;
         } else {
@@ -266,12 +346,16 @@ export default function RegisterModal({
         }))
       : [];
 
+    // AI type attaches ONLY for a solo matcher whose device has a saved result.
+    const attachedType = wantsMatching && savedResultId ? savedResultId : undefined;
+
     const payload = {
-      joinType: joinType || null, // "team" | "looking" | "solo"
+      joinType: joinType || null, // "team" | "solo"
       ...(isTeam ? { teamName: teamName.trim() } : {}),
+      wantsMatching, // solo only; always false for teams
       track,
       members: [registrant, ...extra], // [0] is the registrant
-      quizType: resolvedType ?? null, // registrant only
+      ...(attachedType ? { quizType: attachedType } : {}), // present iff matching + saved result
       ref: urlRef ?? null,
       submittedAt: new Date().toISOString(),
     };
@@ -284,16 +368,18 @@ export default function RegisterModal({
           body: JSON.stringify(payload),
         });
       } else {
-        // No backend yet — log the payload and simulate a submit delay.
         console.info("[register] payload (no endpoint configured):", payload);
         await new Promise((r) => setTimeout(r, 1000));
       }
     } catch (err) {
-      // Even on a network error we surface success — the console payload is the
-      // pre-backend fallback and we don't want a hard failure UX before wiring.
       console.warn("[register] submit failed, showing success anyway:", err);
     }
 
+    try {
+      window.sessionStorage.removeItem(DRAFT_KEY); // draft fulfilled
+    } catch {
+      /* ignore */
+    }
     setStatus("success");
     onSuccess();
   }
@@ -388,7 +474,6 @@ export default function RegisterModal({
                   </p>
 
                   <form onSubmit={onSubmit} className="mt-6 flex flex-col gap-4" noValidate>
-                    {/* Member-1 group label appears once the team section is open. */}
                     {isTeam && (
                       <p className="-mb-1 text-sm font-bold text-violet-200">
                         {t(dict.register.memberYou)}
@@ -456,7 +541,7 @@ export default function RegisterModal({
                       />
                     </Field>
 
-                    {/* 6 · Join type — drives the team section */}
+                    {/* 6 · Join type */}
                     <Field label={t(dict.register.partLabel)} optional={t(dict.register.optional)}>
                       <select
                         value={joinType}
@@ -472,7 +557,7 @@ export default function RegisterModal({
                       </select>
                     </Field>
 
-                    {/* Team section — revealed only for "team", with a smooth expand */}
+                    {/* Team section — revealed only for "team" */}
                     <AnimatePresence initial={false}>
                       {isTeam && (
                         <motion.div
@@ -493,7 +578,6 @@ export default function RegisterModal({
                               </span>
                             </div>
 
-                            {/* Team name (required) */}
                             <Field
                               label={t(dict.register.teamNameLabel)}
                               required
@@ -509,7 +593,6 @@ export default function RegisterModal({
                               />
                             </Field>
 
-                            {/* Members 2 / 3 */}
                             <AnimatePresence initial={false}>
                               {members.map((m, i) => (
                                 <motion.div
@@ -586,7 +669,6 @@ export default function RegisterModal({
                               ))}
                             </AnimatePresence>
 
-                            {/* Add teammate (hidden once Member 3 exists) */}
                             {members.length < MAX_ADDITIONAL ? (
                               <button
                                 type="button"
@@ -604,6 +686,102 @@ export default function RegisterModal({
                       )}
                     </AnimatePresence>
 
+                    {/* Solo matching opt-in + AI-type block (solo only) */}
+                    {joinType === "solo" && (
+                      <div className="flex flex-col gap-3">
+                        <label className="flex cursor-pointer items-center gap-2.5 text-sm text-white/80">
+                          <input
+                            type="checkbox"
+                            checked={soloMatch}
+                            onChange={(e) => setSoloMatch(e.target.checked)}
+                            className="h-4 w-4 shrink-0 accent-violet-500"
+                          />
+                          {t(dict.register.soloMatchLabel)}
+                        </label>
+
+                        <AnimatePresence initial={false}>
+                          {soloMatch && (
+                            <motion.div
+                              key="ai-block"
+                              initial={expand.initial}
+                              animate={expand.animate}
+                              exit={expand.exit}
+                              transition={expandT}
+                              className="overflow-hidden"
+                            >
+                              <div className="rounded-2xl border border-violet-400/25 bg-violet-400/[0.06] p-4">
+                                {savedResultId && typeInfo ? (
+                                  // State A — a saved result exists on this device.
+                                  <>
+                                    <div className="flex items-center gap-2.5">
+                                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/[0.06]">
+                                        <TypeGlyph logo={typeInfo.logo} emoji={typeInfo.emoji} model={typeInfo.model} />
+                                      </span>
+                                      <span className="text-[13px] font-bold text-violet-100">
+                                        {t(dict.register.aiTypePrefix)}
+                                        {typeInfo.name} ({savedResultId})
+                                      </span>
+                                    </div>
+                                    {attachConfirmed ? (
+                                      <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+                                        <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-emerald-300">
+                                          <span aria-hidden>✓</span>
+                                          {t(dict.register.aiAttached)}
+                                        </span>
+                                        <button
+                                          type="button"
+                                          onClick={goToQuiz}
+                                          className="text-xs font-semibold text-white/50 underline underline-offset-2 transition hover:text-white/80"
+                                        >
+                                          {t(dict.register.aiRetakeShort)}
+                                        </button>
+                                      </div>
+                                    ) : (
+                                      <>
+                                        <p className="mt-3 text-[13px] leading-relaxed text-white/70">
+                                          {t(dict.register.aiConfirmQ)}
+                                        </p>
+                                        <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+                                          <button
+                                            type="button"
+                                            onClick={() => setAttachConfirmed(true)}
+                                            className="inline-flex items-center justify-center rounded-xl bg-violet-500/90 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-violet-500"
+                                          >
+                                            {t(dict.register.aiYes)}
+                                          </button>
+                                          <button
+                                            type="button"
+                                            onClick={goToQuiz}
+                                            className="inline-flex items-center justify-center rounded-xl border border-white/12 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-white/75 transition hover:bg-white/[0.08]"
+                                          >
+                                            {t(dict.register.aiRetake)}
+                                          </button>
+                                        </div>
+                                      </>
+                                    )}
+                                  </>
+                                ) : (
+                                  // State B — no saved result on this device.
+                                  <>
+                                    <p className="text-[13px] leading-relaxed text-white/75">
+                                      {t(dict.register.aiNoneMsg)}
+                                    </p>
+                                    <button
+                                      type="button"
+                                      onClick={goToQuiz}
+                                      className="mt-3 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-2.5 text-sm font-bold text-white transition hover:-translate-y-0.5"
+                                    >
+                                      {t(dict.register.aiGoTest)}
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    )}
+
                     {/* 7 · Interested track (team-level) */}
                     <Field label={t(dict.register.trackLabel)} optional={t(dict.register.optional)}>
                       <select
@@ -619,25 +797,6 @@ export default function RegisterModal({
                         ))}
                       </select>
                     </Field>
-
-                    {/* Quiz-type auto-attach chip (not a field; registrant only) */}
-                    {variantName ? (
-                      <div className="flex items-center gap-2 rounded-xl border border-violet-400/25 bg-violet-400/10 px-3.5 py-2.5 text-[13px] font-semibold text-violet-100">
-                        <span aria-hidden>✦</span>
-                        <span>
-                          {t(dict.register.quizChipPrefix)}
-                          {variantName} ({resolvedType})
-                          {t(dict.register.quizChipSuffix)}
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2.5 text-[13px] text-white/60">
-                        <span>{t(dict.register.quizChipNone)}</span>
-                        <a href="/quiz" className="font-semibold text-violet-300 transition hover:text-violet-200">
-                          {t(dict.register.quizChipNoneCta)}
-                        </a>
-                      </div>
-                    )}
 
                     <button
                       type="submit"

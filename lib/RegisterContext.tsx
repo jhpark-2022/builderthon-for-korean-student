@@ -41,8 +41,9 @@ export function useRegister(): RegisterContextValue {
 export function RegisterProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const [registered, setRegistered] = useState(false);
-  // Quiz type + referrer captured from the URL on the auto-open path.
-  const [urlType, setUrlType] = useState<string | null>(null);
+  // Referrer captured from the URL on the auto-open path ("quiz" | "quiz-return").
+  // The AI type is NEVER passed via the URL — it's read from this device's saved
+  // result inside the modal (localStorage), so there's no cross-device leak.
   const [urlRef, setUrlRef] = useState<string | null>(null);
 
   useEffect(() => {
@@ -53,11 +54,9 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
       /* storage blocked — treat as not registered */
     }
 
-    // Auto-open from the /quiz result CTA: /?register=1&type=<id>&ref=quiz.
+    // Auto-open from the /quiz result CTA: /?register=1&ref=quiz[-return].
     const params = new URLSearchParams(window.location.search);
-    const type = params.get("type");
     const ref = params.get("ref");
-    if (type) setUrlType(type);
     if (ref) setUrlRef(ref);
     if (params.get("register") === "1") {
       setOpen(true);
@@ -88,7 +87,6 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
       <RegisterModal
         open={open}
         onClose={closeRegister}
-        urlType={urlType}
         urlRef={urlRef}
         onSuccess={onSuccess}
       />
