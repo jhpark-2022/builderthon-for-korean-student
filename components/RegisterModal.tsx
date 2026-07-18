@@ -35,6 +35,7 @@ import { dict, REGISTER_ENDPOINT } from "@/data/dictionary";
 import { RESULTS } from "@/data/quiz";
 import { parseResultId } from "@/lib/quizScore";
 import { loadOwnResult } from "@/lib/quizResult";
+import { REGISTER_DRAFT_KEY as DRAFT_KEY } from "@/lib/storage";
 
 interface RegisterModalProps {
   open: boolean;
@@ -56,8 +57,6 @@ const FIELD =
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // Teams are strictly 1–3 people → at most 2 members beyond the registrant.
 const MAX_ADDITIONAL = 2;
-// Draft persisted across the quiz round-trip (survives the full navigation).
-const DRAFT_KEY = "z100-register-draft";
 
 type Status = "idle" | "submitting" | "success";
 

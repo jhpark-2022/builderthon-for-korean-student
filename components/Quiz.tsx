@@ -17,6 +17,7 @@ import {
 } from "@/data/quiz";
 import { scoreQuiz, parseResultId, type Choice, type QuizResult, type AxisScore } from "@/lib/quizScore";
 import { saveOwnResult, loadOwnResult, type OwnResult } from "@/lib/quizResult";
+import { QUIZ_OWN_KEY as OWN_KEY } from "@/lib/storage";
 import { getExplanation } from "@/data/quizExplanations";
 
 type Phase = "landing" | "quiz" | "analyzing" | "result";
@@ -27,7 +28,7 @@ type Phase = "landing" | "quiz" | "analyzing" | "result";
 // "my result" (so a taker sees "다시 테스트하기", not the viral "나도 테스트하기").
 // All access is guarded — sessionStorage can throw (private mode, blocked
 // storage) — and any failure silently falls back to treating it as a share.
-const OWN_KEY = "z100-quiz-own";
+// (OWN_KEY is centralized in lib/storage.ts so the ?reset=1 sweep covers it.)
 
 function readOwnResult(): string | null {
   if (typeof window === "undefined") return null;

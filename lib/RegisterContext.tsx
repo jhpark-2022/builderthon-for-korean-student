@@ -21,6 +21,7 @@ import {
   useState,
 } from "react";
 import RegisterModal from "@/components/RegisterModal";
+import { REGISTERED_KEY } from "@/lib/storage";
 
 interface RegisterContextValue {
   openRegister: () => void;
@@ -28,9 +29,6 @@ interface RegisterContextValue {
 }
 
 const RegisterContext = createContext<RegisterContextValue | null>(null);
-
-// Set once a submit succeeds → the nav button flips to "등록 완료 ✓" on return.
-const REGISTERED_KEY = "z100-registered";
 
 export function useRegister(): RegisterContextValue {
   const ctx = useContext(RegisterContext);

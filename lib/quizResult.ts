@@ -17,10 +17,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { parseResultId } from "@/lib/quizScore";
+import { QUIZ_RESULT_KEY as KEY } from "@/lib/storage";
 
 // Bump `v` if the stored shape ever changes; loadOwnResult treats an unknown
 // version as invalid (→ null + key removed), so old blobs never mis-render.
-const KEY = "z100-quiz-result";
 const VERSION = 1;
 
 export interface OwnResult {

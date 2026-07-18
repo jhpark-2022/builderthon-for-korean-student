@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Quiz from "@/components/Quiz";
+import ResetHandler from "@/components/ResetHandler";
 
 export const metadata: Metadata = {
   title: "당신의 AI 모델은? — Zero100 Builderthon",
@@ -17,8 +18,14 @@ export default function QuizPage() {
   // LocaleProvider is already supplied by the root layout.
   // useSearchParams (the ?r= deep link) must sit under a Suspense boundary.
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#06040f]" />}>
-      <Quiz />
-    </Suspense>
+    <>
+      {/* First: the ?reset=1 sweep runs before Quiz reads its saved result.
+          ResetHandler reads window.location directly (no useSearchParams), so it
+          sits outside the Suspense boundary. */}
+      <ResetHandler />
+      <Suspense fallback={<div className="min-h-screen bg-[#06040f]" />}>
+        <Quiz />
+      </Suspense>
+    </>
   );
 }

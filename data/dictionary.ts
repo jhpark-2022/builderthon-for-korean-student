@@ -87,6 +87,12 @@ export const dict = {
     button: { ko: "내 AI 모델 알아보기", en: "Find your AI model" },
   },
 
+  // Toast shown by the undocumented ?reset=1 QA helper (see components/ResetHandler).
+  resetToast: {
+    ko: "저장된 로컬 데이터를 지웠어요 — 새 사용자 상태예요",
+    en: "Local data cleared — you're a fresh user now",
+  },
+
   // ── Registration — hero question hooks, nav button, and the register modal ──
   register: {
     // Hero "question hook" branch: need a team → take the test · solo/have a
