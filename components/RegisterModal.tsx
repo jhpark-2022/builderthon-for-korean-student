@@ -5,9 +5,14 @@
 //
 // Reuses the EventModal/PartnerModal dialog pattern verbatim (portal, backdrop,
 // ESC + Tab focus-trap, body scroll-lock, inert background, focus restoration,
-// bottom-sheet on mobile). Six fields (see the dict.register block); the quiz
-// personality type, if the visitor has one, is auto-attached (not a field) and
-// shown as a small chip.
+// bottom-sheet on mobile). The quiz personality type, if the visitor has one, is
+// auto-attached (not a field, registrant only) and shown as a small chip.
+//
+// TEAM FLOW: the "How are you joining?" select drives everything.
+//   • "team"    → reveals the team section: required team name + multi-member
+//                 entry (registrant = Member 1; add up to Member 3).
+//   • "looking" → no team section; the team-matching chip stays prominent.
+//   • "solo"    → no team section.
 //
 // Submit: with no REGISTER_ENDPOINT it simulates a ~1s submit, logs the payload
 // to console.info (so the shape can be confirmed pre-backend), and shows the
@@ -43,7 +48,33 @@ const FOCUSABLE =
 const FIELD =
   "w-full rounded-xl border border-white/12 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/35 outline-none transition focus:border-violet-400/50 focus:bg-white/[0.06]";
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Teams are strictly 1–3 people → at most 2 members beyond the registrant.
+const MAX_ADDITIONAL = 2;
+
 type Status = "idle" | "submitting" | "success";
+
+// An added teammate (Member 2 / Member 3). `id` is a stable key for
+// AnimatePresence + clean renumbering on removal.
+interface Member {
+  id: number;
+  name: string;
+  email: string;
+  contact: string;
+  university: string;
+  universityOther: string;
+  linkedin: string;
+}
+
+const blankMember = (id: number): Member => ({
+  id,
+  name: "",
+  email: "",
+  contact: "",
+  university: "",
+  universityOther: "",
+  linkedin: "",
+});
 
 // Resolve a resultId ("ESTP-T") to its display variant name ("조급한 Mistral"),
 // mirroring ReturningGreeting. Returns null for an unparseable id.
@@ -72,17 +103,35 @@ export default function RegisterModal({
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  // Form state.
+  // Registrant (Member 1) fields.
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [school, setSchool] = useState("");
   const [schoolOther, setSchoolOther] = useState("");
   const [contact, setContact] = useState("");
-  const [participation, setParticipation] = useState("");
-  const [soloMatch, setSoloMatch] = useState(false);
+  const [linkedin, setLinkedin] = useState("");
+  // Team-level fields.
+  const [joinType, setJoinType] = useState(""); // "" | "team" | "looking" | "solo"
+  const [teamName, setTeamName] = useState("");
   const [track, setTrack] = useState("");
+  // Added teammates (Member 2 / 3). State is preserved when switching join type
+  // away from "team" and back within the session.
+  const [members, setMembers] = useState<Member[]>([]);
+  const memberIdRef = useRef(0);
+
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<Status>("idle");
+
+  const isTeam = joinType === "team";
+
+  const addMember = () =>
+    setMembers((prev) =>
+      prev.length >= MAX_ADDITIONAL ? prev : [...prev, blankMember(++memberIdRef.current)]
+    );
+  const removeMember = (id: number) =>
+    setMembers((prev) => prev.filter((m) => m.id !== id));
+  const patchMember = (id: number, patch: Partial<Member>) =>
+    setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, ...patch } : m)));
 
   // The attached quiz type — the URL's ?type= wins, else the saved own-result.
   // Read post-mount only (localStorage is absent during SSR → no mismatch).
@@ -149,11 +198,43 @@ export default function RegisterModal({
 
   function validate(): boolean {
     const next: Record<string, string> = {};
-    if (!name.trim()) next.name = t(dict.register.errRequired);
-    if (!email.trim()) next.email = t(dict.register.errRequired);
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
-      next.email = t(dict.register.errEmail);
-    if (!contact.trim()) next.contact = t(dict.register.errRequired);
+    const req = t(dict.register.errRequired);
+    const badEmail = t(dict.register.errEmail);
+    const dupEmail = t(dict.register.errDupEmail);
+
+    // Member 1 (registrant).
+    if (!name.trim()) next.name = req;
+    if (!email.trim()) next.email = req;
+    else if (!EMAIL_RE.test(email.trim())) next.email = badEmail;
+    if (!contact.trim()) next.contact = req;
+
+    if (isTeam) {
+      if (!teamName.trim()) next.teamName = req;
+      // Added members validate the same way as Member 1.
+      members.forEach((m) => {
+        if (!m.name.trim()) next[`m${m.id}-name`] = req;
+        if (!m.email.trim()) next[`m${m.id}-email`] = req;
+        else if (!EMAIL_RE.test(m.email.trim())) next[`m${m.id}-email`] = badEmail;
+        if (!m.contact.trim()) next[`m${m.id}-contact`] = req;
+      });
+      // No duplicate emails across Member 1–3 — flag the later duplicate, and
+      // don't clobber a required/format error already set on that field.
+      const entries = [
+        { key: "email", value: email },
+        ...members.map((m) => ({ key: `m${m.id}-email`, value: m.email })),
+      ];
+      const seen = new Set<string>();
+      entries.forEach(({ key, value }) => {
+        const norm = value.trim().toLowerCase();
+        if (!norm) return; // emptiness handled by the required check
+        if (seen.has(norm)) {
+          if (!next[key]) next[key] = dupEmail;
+        } else {
+          seen.add(norm);
+        }
+      });
+    }
+
     setErrors(next);
     return Object.keys(next).length === 0;
   }
@@ -163,15 +244,34 @@ export default function RegisterModal({
     if (!validate()) return;
     setStatus("submitting");
 
-    const payload = {
+    // Light normalization: trim only (accept full URL or bare handle).
+    const uni = (val: string, other: string) =>
+      val === "other" ? other.trim() || undefined : val || undefined;
+    const link = (v: string) => v.trim() || undefined;
+
+    const registrant = {
       name: name.trim(),
       email: email.trim(),
-      school: school === "other" ? schoolOther.trim() : school,
       contact: contact.trim(),
-      participation,
-      ...(participation === "solo" ? { wantsMatching: soloMatch } : {}),
+      university: uni(school, schoolOther),
+      linkedin: link(linkedin),
+    };
+    const extra = isTeam
+      ? members.map((m) => ({
+          name: m.name.trim(),
+          email: m.email.trim(),
+          contact: m.contact.trim(),
+          university: uni(m.university, m.universityOther),
+          linkedin: link(m.linkedin),
+        }))
+      : [];
+
+    const payload = {
+      joinType: joinType || null, // "team" | "looking" | "solo"
+      ...(isTeam ? { teamName: teamName.trim() } : {}),
       track,
-      quizType: resolvedType ?? null,
+      members: [registrant, ...extra], // [0] is the registrant
+      quizType: resolvedType ?? null, // registrant only
       ref: urlRef ?? null,
       submittedAt: new Date().toISOString(),
     };
@@ -201,6 +301,14 @@ export default function RegisterModal({
   if (!mounted) return null;
 
   const submitting = status === "submitting";
+  const expand = reduce
+    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
+    : {
+        initial: { height: 0, opacity: 0 },
+        animate: { height: "auto" as const, opacity: 1 },
+        exit: { height: 0, opacity: 0 },
+      };
+  const expandT = { duration: reduce ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] as const };
 
   return createPortal(
     <AnimatePresence>
@@ -280,6 +388,13 @@ export default function RegisterModal({
                   </p>
 
                   <form onSubmit={onSubmit} className="mt-6 flex flex-col gap-4" noValidate>
+                    {/* Member-1 group label appears once the team section is open. */}
+                    {isTeam && (
+                      <p className="-mb-1 text-sm font-bold text-violet-200">
+                        {t(dict.register.memberYou)}
+                      </p>
+                    )}
+
                     {/* 1 · Name */}
                     <Field label={t(dict.register.nameLabel)} required error={errors.name}>
                       <input
@@ -306,27 +421,12 @@ export default function RegisterModal({
 
                     {/* 3 · School (+ "other" free text) */}
                     <Field label={t(dict.register.schoolLabel)} optional={t(dict.register.optional)}>
-                      <select
+                      <UniversitySelect
                         value={school}
-                        onChange={(e) => setSchool(e.target.value)}
-                        className={`${FIELD} ${school ? "" : "text-white/35"}`}
-                      >
-                        <option value="" className="bg-[#0c0a18] text-white/50">{t(dict.register.selectPlaceholder)}</option>
-                        {dict.register.schoolOptions.map((o) => (
-                          <option key={o.value} value={o.value} className="bg-[#0c0a18] text-white">
-                            {t(o.label)}
-                          </option>
-                        ))}
-                      </select>
-                      {school === "other" && (
-                        <input
-                          type="text"
-                          value={schoolOther}
-                          onChange={(e) => setSchoolOther(e.target.value)}
-                          placeholder={t(dict.register.schoolOtherPlaceholder)}
-                          className={`${FIELD} mt-2`}
-                        />
-                      )}
+                        otherValue={schoolOther}
+                        onValue={setSchool}
+                        onOther={setSchoolOther}
+                      />
                     </Field>
 
                     {/* 4 · Contact (Telegram preferred) */}
@@ -345,12 +445,23 @@ export default function RegisterModal({
                       />
                     </Field>
 
-                    {/* 5 · Participation type (+ solo matching checkbox) */}
+                    {/* 5 · LinkedIn (optional) */}
+                    <Field label={t(dict.register.linkedinLabel)} optional={t(dict.register.optional)}>
+                      <input
+                        type="text"
+                        value={linkedin}
+                        onChange={(e) => setLinkedin(e.target.value)}
+                        placeholder={t(dict.register.linkedinPlaceholder)}
+                        className={FIELD}
+                      />
+                    </Field>
+
+                    {/* 6 · Join type — drives the team section */}
                     <Field label={t(dict.register.partLabel)} optional={t(dict.register.optional)}>
                       <select
-                        value={participation}
-                        onChange={(e) => setParticipation(e.target.value)}
-                        className={`${FIELD} ${participation ? "" : "text-white/35"}`}
+                        value={joinType}
+                        onChange={(e) => setJoinType(e.target.value)}
+                        className={`${FIELD} ${joinType ? "" : "text-white/35"}`}
                       >
                         <option value="" className="bg-[#0c0a18] text-white/50">{t(dict.register.selectPlaceholder)}</option>
                         {dict.register.partOptions.map((o) => (
@@ -359,20 +470,141 @@ export default function RegisterModal({
                           </option>
                         ))}
                       </select>
-                      {participation === "solo" && (
-                        <label className="mt-2.5 flex cursor-pointer items-center gap-2.5 text-sm text-white/75">
-                          <input
-                            type="checkbox"
-                            checked={soloMatch}
-                            onChange={(e) => setSoloMatch(e.target.checked)}
-                            className="h-4 w-4 shrink-0 accent-violet-500"
-                          />
-                          {t(dict.register.soloMatchLabel)}
-                        </label>
-                      )}
                     </Field>
 
-                    {/* 6 · Interested track */}
+                    {/* Team section — revealed only for "team", with a smooth expand */}
+                    <AnimatePresence initial={false}>
+                      {isTeam && (
+                        <motion.div
+                          key="team-section"
+                          initial={expand.initial}
+                          animate={expand.animate}
+                          exit={expand.exit}
+                          transition={expandT}
+                          className="overflow-hidden"
+                        >
+                          <div className="flex flex-col gap-4 rounded-2xl border border-violet-400/20 bg-violet-400/[0.04] p-4">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-sm font-bold text-white/90">
+                                {t(dict.register.teamSectionTitle)}
+                              </span>
+                              <span className="shrink-0 rounded-full border border-violet-400/25 bg-violet-400/10 px-2.5 py-0.5 text-[0.7rem] font-semibold text-violet-200">
+                                {t(dict.register.teamSizeNote)}
+                              </span>
+                            </div>
+
+                            {/* Team name (required) */}
+                            <Field
+                              label={t(dict.register.teamNameLabel)}
+                              required
+                              error={errors.teamName}
+                              hint={t(dict.register.teamNameHelper)}
+                            >
+                              <input
+                                type="text"
+                                value={teamName}
+                                onChange={(e) => setTeamName(e.target.value)}
+                                placeholder={t(dict.register.teamNamePlaceholder)}
+                                className={FIELD}
+                              />
+                            </Field>
+
+                            {/* Members 2 / 3 */}
+                            <AnimatePresence initial={false}>
+                              {members.map((m, i) => (
+                                <motion.div
+                                  key={m.id}
+                                  initial={expand.initial}
+                                  animate={expand.animate}
+                                  exit={expand.exit}
+                                  transition={expandT}
+                                  className="overflow-hidden"
+                                >
+                                  <div className="flex flex-col gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-sm font-bold text-white/85">
+                                        {t(dict.register.memberLabel)} {i + 2}
+                                      </span>
+                                      <button
+                                        type="button"
+                                        onClick={() => removeMember(m.id)}
+                                        aria-label={`${t(dict.register.removeMember)} (${t(dict.register.memberLabel)} ${i + 2})`}
+                                        className="flex h-7 w-7 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/60 transition hover:bg-white/10 hover:text-white active:scale-95"
+                                      >
+                                        <svg width="12" height="12" viewBox="0 0 15 15" fill="none" aria-hidden>
+                                          <path d="M1 1l13 13M14 1L1 14" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+                                        </svg>
+                                      </button>
+                                    </div>
+
+                                    <Field label={t(dict.register.nameLabel)} required error={errors[`m${m.id}-name`]}>
+                                      <input
+                                        type="text"
+                                        value={m.name}
+                                        onChange={(e) => patchMember(m.id, { name: e.target.value })}
+                                        placeholder={t(dict.register.namePlaceholder)}
+                                        className={FIELD}
+                                      />
+                                    </Field>
+                                    <Field label={t(dict.register.emailLabel)} required error={errors[`m${m.id}-email`]}>
+                                      <input
+                                        type="email"
+                                        value={m.email}
+                                        onChange={(e) => patchMember(m.id, { email: e.target.value })}
+                                        placeholder={t(dict.register.emailPlaceholder)}
+                                        className={FIELD}
+                                      />
+                                    </Field>
+                                    <Field label={t(dict.register.contactLabel)} required error={errors[`m${m.id}-contact`]}>
+                                      <input
+                                        type="text"
+                                        value={m.contact}
+                                        onChange={(e) => patchMember(m.id, { contact: e.target.value })}
+                                        placeholder={t(dict.register.contactPlaceholder)}
+                                        className={FIELD}
+                                      />
+                                    </Field>
+                                    <Field label={t(dict.register.schoolLabel)} optional={t(dict.register.optional)}>
+                                      <UniversitySelect
+                                        value={m.university}
+                                        otherValue={m.universityOther}
+                                        onValue={(v) => patchMember(m.id, { university: v })}
+                                        onOther={(v) => patchMember(m.id, { universityOther: v })}
+                                      />
+                                    </Field>
+                                    <Field label={t(dict.register.linkedinLabel)} optional={t(dict.register.optional)}>
+                                      <input
+                                        type="text"
+                                        value={m.linkedin}
+                                        onChange={(e) => patchMember(m.id, { linkedin: e.target.value })}
+                                        placeholder={t(dict.register.linkedinPlaceholder)}
+                                        className={FIELD}
+                                      />
+                                    </Field>
+                                  </div>
+                                </motion.div>
+                              ))}
+                            </AnimatePresence>
+
+                            {/* Add teammate (hidden once Member 3 exists) */}
+                            {members.length < MAX_ADDITIONAL ? (
+                              <button
+                                type="button"
+                                onClick={addMember}
+                                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-violet-400/30 bg-violet-400/[0.04] px-4 py-3 text-sm font-semibold text-violet-100 transition hover:border-violet-400/50 hover:bg-violet-400/10"
+                              >
+                                <span aria-hidden className="text-base leading-none">+</span>
+                                {t(dict.register.addTeammate)}
+                              </button>
+                            ) : (
+                              <p className="text-center text-xs text-white/45">{t(dict.register.maxNote)}</p>
+                            )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    {/* 7 · Interested track (team-level) */}
                     <Field label={t(dict.register.trackLabel)} optional={t(dict.register.optional)}>
                       <select
                         value={track}
@@ -388,7 +620,7 @@ export default function RegisterModal({
                       </select>
                     </Field>
 
-                    {/* Quiz-type auto-attach chip (not a field) */}
+                    {/* Quiz-type auto-attach chip (not a field; registrant only) */}
                     {variantName ? (
                       <div className="flex items-center gap-2 rounded-xl border border-violet-400/25 bg-violet-400/10 px-3.5 py-2.5 text-[13px] font-semibold text-violet-100">
                         <span aria-hidden>✦</span>
@@ -429,6 +661,47 @@ export default function RegisterModal({
   );
 }
 
+// University select shared by the registrant and each teammate — same options,
+// with a free-text input when "Other" is chosen.
+function UniversitySelect({
+  value,
+  otherValue,
+  onValue,
+  onOther,
+}: {
+  value: string;
+  otherValue: string;
+  onValue: (v: string) => void;
+  onOther: (v: string) => void;
+}) {
+  const { t } = useLocale();
+  return (
+    <>
+      <select
+        value={value}
+        onChange={(e) => onValue(e.target.value)}
+        className={`${FIELD} ${value ? "" : "text-white/35"}`}
+      >
+        <option value="" className="bg-[#0c0a18] text-white/50">{t(dict.register.selectPlaceholder)}</option>
+        {dict.register.schoolOptions.map((o) => (
+          <option key={o.value} value={o.value} className="bg-[#0c0a18] text-white">
+            {t(o.label)}
+          </option>
+        ))}
+      </select>
+      {value === "other" && (
+        <input
+          type="text"
+          value={otherValue}
+          onChange={(e) => onOther(e.target.value)}
+          placeholder={t(dict.register.schoolOtherPlaceholder)}
+          className={`${FIELD} mt-2`}
+        />
+      )}
+    </>
+  );
+}
+
 // One labelled form row: label (+ required asterisk / optional tag), the control,
 // an optional hint line, and an inline error.
 function Field({
@@ -458,7 +731,7 @@ function Field({
         )}
       </span>
       {children}
-      {hint && <span className="text-xs text-white/45">{hint}</span>}
+      {hint && <span className="text-xs leading-relaxed text-white/45">{hint}</span>}
       {error && <span className="text-xs font-medium text-rose-300">{error}</span>}
     </label>
   );

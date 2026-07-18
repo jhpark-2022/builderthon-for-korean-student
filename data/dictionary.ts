@@ -100,8 +100,8 @@ export const dict = {
     // Modal chrome.
     modalTitle: { ko: "빌더톤 등록", en: "Register for the Builderthon" },
     modalSubtitle: {
-      ko: "몇 가지만 알려주시면 운영진이 텔레그램으로 다음 절차를 안내드려요.",
-      en: "A few details and our team will reach out on Telegram with next steps.",
+      ko: "몇 가지만 알려주시면 운영진이 텔레그램으로 다음 절차를 안내드려요. 이미 팀이 있다면 한 명이 팀 전체를 등록할 수 있어요.",
+      en: "A few details and our team will reach out on Telegram. Have a team already? One person can register everyone.",
     },
     optional: { ko: "선택", en: "optional" },
     selectPlaceholder: { ko: "선택하세요", en: "Select…" },
@@ -128,17 +128,31 @@ export const dict = {
       en: "Used to invite you to the participant group chat.",
     },
     contactPlaceholder: { ko: "@username", en: "@username" },
-    // Field 5 — participation type.
+    // LinkedIn (optional) — registrant + each team member.
+    linkedinLabel: { ko: "링크드인", en: "LinkedIn" },
+    linkedinPlaceholder: { ko: "linkedin.com/in/… 또는 @handle", en: "linkedin.com/in/… or @handle" },
+    // Field 5 — join type (drives the team section).
     partLabel: { ko: "참가 형태", en: "How are you joining?" },
     partOptions: [
-      { value: "has-team", label: { ko: "팀이 이미 있어요", en: "I already have a team" } },
-      { value: "seeking", label: { ko: "팀원을 구하고 있어요", en: "Looking for teammates" } },
+      { value: "team", label: { ko: "팀이 이미 있어요", en: "I already have a team" } },
+      { value: "looking", label: { ko: "팀원을 구하고 있어요", en: "Looking for teammates" } },
       { value: "solo", label: { ko: "솔로로 갑니다", en: "Going solo" } },
     ],
-    soloMatchLabel: {
-      ko: "매칭을 원해요 (팀·팀원 연결)",
-      en: "I'd like to be matched (with a team / teammates)",
+    // Team section — shown only when "team" is selected.
+    teamSectionTitle: { ko: "팀 정보", en: "Team details" },
+    teamSizeNote: { ko: "팀은 1–3인이에요", en: "Teams are 1–3 people" },
+    teamNameLabel: { ko: "팀명", en: "Team name" },
+    teamNamePlaceholder: { ko: "예: 빌드 마스터즈", en: "e.g. Build Masters" },
+    teamNameHelper: {
+      ko: "팀원이 따로따로 등록한다면 반드시 똑같은 팀명으로 적어주세요 — 그래야 같은 팀으로 묶여요. 한 명이 팀 전체를 등록하면 나머지는 등록 안 해도 돼요.",
+      en: "If teammates register separately, everyone must enter exactly the same team name so we can group you. If one person registers the whole team, the others don't need to submit again.",
     },
+    // Multi-member entry (registrant is Member 1; add up to Member 3).
+    memberYou: { ko: "나 (팀원 1)", en: "You (Member 1)" },
+    memberLabel: { ko: "팀원", en: "Member" },
+    addTeammate: { ko: "팀원 추가", en: "Add teammate" },
+    maxNote: { ko: "최대 3인까지예요", en: "3 is the max" },
+    removeMember: { ko: "팀원 삭제", en: "Remove teammate" },
     // Field 6 — interested track.
     trackLabel: { ko: "관심 트랙", en: "Track of interest" },
     trackOptions: [
@@ -167,6 +181,7 @@ export const dict = {
     // Validation.
     errRequired: { ko: "필수 항목이에요.", en: "This field is required." },
     errEmail: { ko: "이메일 형식을 확인해 주세요.", en: "Please enter a valid email." },
+    errDupEmail: { ko: "이미 입력한 이메일이에요.", en: "This email is already entered." },
   },
 
   hero: {
