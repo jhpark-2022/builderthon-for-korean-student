@@ -23,12 +23,13 @@ export const links = {
     "mailto:jhpark.2022@business.smu.edu.sg?subject=Zero100%20Builderthon%20Partnership%20Inquiry",
 };
 
-// Registration submit target. Empty for now → the register modal simulates a
-// ~1s submit and shows the success state, logging the payload to console.info so
-// the shape can be confirmed before wiring a backend. When this holds a URL, the
-// modal POSTs the payload as JSON instead.
-// TODO: Formspree/Apps Script 연결 — paste the endpoint URL here.
-export const REGISTER_ENDPOINT = "";
+// Registration submit target — our own route handler, which validates the
+// payload server-side and writes it to Supabase (see app/api/register/route.ts
+// and supabase/migrations/0001_registrations.sql).
+//
+// Set this to "" to go back to the offline simulation: the modal then fakes a
+// ~1s submit and logs the payload to console.info instead of POSTing.
+export const REGISTER_ENDPOINT = "/api/register";
 
 // Sponsor / mentor company introductions, shown in a modal when a logo tile is
 // clicked (the tiles no longer link out to external sites). Keyed by the tile's
@@ -202,6 +203,12 @@ export const dict = {
     errRequired: { ko: "필수 항목이에요.", en: "This field is required." },
     errEmail: { ko: "이메일 형식을 확인해 주세요.", en: "Please enter a valid email." },
     errDupEmail: { ko: "이미 입력한 이메일이에요.", en: "This email is already entered." },
+    // Shown when the submit itself fails (network down / server error). The
+    // form stays filled in so the visitor can just press the button again.
+    errSubmit: {
+      ko: "등록에 실패했어요. 잠시 후 다시 시도해 주세요.",
+      en: "Registration failed. Please try again in a moment.",
+    },
   },
 
   hero: {

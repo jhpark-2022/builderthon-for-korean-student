@@ -17,6 +17,9 @@ next-env.d.ts
 # deploy
 .vercel
 
+# local agent/editor config
+.claude
+
 # os / editor
 .DS_Store
 

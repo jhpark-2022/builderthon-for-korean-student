@@ -22,9 +22,11 @@
 // The AI type is NEVER read from the URL — always from this device's saved
 // result. No cross-device fallback, no manual picker.
 //
-// Submit: with no REGISTER_ENDPOINT it simulates a ~1s submit, logs the payload
-// to console.info, and shows the success state. With a URL it POSTs JSON. On
-// success it sets the `z100-registered` flag and clears the draft.
+// Submit: POSTs JSON to REGISTER_ENDPOINT (/api/register → Supabase). With that
+// set to "" it instead simulates a ~1s submit and logs the payload to
+// console.info. Only a 2xx reaches the success state, where it sets the
+// `z100-registered` flag and clears the draft; anything else returns to the
+// filled-in form with an inline retry error.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useRef, useState } from "react";
@@ -532,19 +534,26 @@ export default function RegisterModal({
       submittedAt: new Date().toISOString(),
     };
 
+    // A failed write must NOT show the success state — the registration would be
+    // silently lost and the visitor would never know to retry. On failure we
+    // return to the form with an inline error and everything still filled in.
     try {
       if (REGISTER_ENDPOINT) {
-        await fetch(REGISTER_ENDPOINT, {
+        const res = await fetch(REGISTER_ENDPOINT, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
+        if (!res.ok) throw new Error(`submit failed: ${res.status}`);
       } else {
         console.info("[register] payload (no endpoint configured):", payload);
         await new Promise((r) => setTimeout(r, 1000));
       }
     } catch (err) {
-      console.warn("[register] submit failed, showing success anyway:", err);
+      console.error("[register] submit failed:", err);
+      setErrors({ submit: t(dict.register.errSubmit) });
+      setStatus("idle");
+      return;
     }
 
     try {
@@ -957,6 +966,15 @@ export default function RegisterModal({
                         options={dict.register.trackOptions.map((o) => ({ value: o.value, label: t(o.label) }))}
                       />
                     </Field>
+
+                    {errors.submit && (
+                      <p
+                        role="alert"
+                        className="rounded-xl border border-rose-400/25 bg-rose-400/[0.08] px-4 py-3 text-[13px] font-medium leading-relaxed text-rose-200"
+                      >
+                        {errors.submit}
+                      </p>
+                    )}
 
                     <button
                       type="submit"
