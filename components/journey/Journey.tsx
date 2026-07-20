@@ -45,6 +45,21 @@ function Eyebrow({ children, color = "violet", className = "" }: { children: Rea
   );
 }
 
+// Renders a plain string with every "→" arrow recoloured a bright violet, so
+// the day-flow sentence reads as a clearly-arrowed progression. Splits on the
+// arrow and interleaves coloured spans; all other text is unchanged.
+function withVioletArrows(text: string) {
+  const parts = text.split("→");
+  return parts.map((part, i) => (
+    <span key={i}>
+      {part}
+      {i < parts.length - 1 && (
+        <span className="font-semibold text-violet-400">→</span>
+      )}
+    </span>
+  ));
+}
+
 // A single partner logo on a clean white chip. Full-colour marks (crests,
 // gradients) read best on a light tile against the dark section, and a missing
 // file just shows an empty white chip rather than a broken-image icon.
@@ -1079,7 +1094,15 @@ export default function Journey() {
                   <h4 className="text-base font-bold text-white">{t(inc.title)}</h4>
                   <span className="shrink-0 rounded-full border border-amber-400/25 bg-amber-400/[0.08] px-2 py-0.5 text-[0.68rem] font-bold text-amber-200">{t(inc.stage)}</span>
                 </div>
-                <p className="mt-2 text-sm leading-relaxed text-white/70">{t(inc.desc)}</p>
+                {/* Bulleted dot list — matches the who/get sections. */}
+                <ul className="mt-3 space-y-2">
+                  {inc.bullets.map((b, bi) => (
+                    <li key={bi} className="flex items-start gap-2.5 text-sm leading-relaxed text-white/70">
+                      <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-amber-300/80" />
+                      {t(b)}
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
@@ -1102,7 +1125,7 @@ export default function Journey() {
               {t(dict.program.heading)}
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">
-              {t(dict.program.intro)}
+              {withVioletArrows(t(dict.program.intro))}
             </p>
             <div className="mx-auto mt-6 max-w-2xl rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] px-5 py-3.5 text-xs leading-relaxed text-amber-100/85">
               {t(dict.program.modeNote)}

@@ -532,9 +532,38 @@ export const dict = {
     },
     incentivesTitle: { ko: "참가자 인센티브 · 협의 진행 중", en: "Participant incentives · in discussion" },
     incentives: [
-      { title: { ko: "상금 · 시상", en: "Prizes & awards" }, stage: { ko: "잠정 · 조율 중", en: "Tentative · in discussion" }, desc: { ko: "Normal 2트랙(재무·영업): 1위 유급 FDE 인턴(코드프레소·WVB · 겨울 ~1.5개월 · 트랙당 최대 3명) · 2위 상금 S$100 · 3위 널담 $25 바우처. Beginner 트랙(마케팅): 1위 상금 S$100 · 2·3위 널담 $25 바우처. 유급 인턴은 Normal 트랙만 · 전 항목 잠정(조율 중).", en: "Normal tracks ×2 (finance · sales): 1st = paid FDE internship (Codepresso · WVB · ~1.5 winter months · up to 3 per track) · 2nd = S$100 · 3rd = a Nuldam S$25 voucher. Beginner track (marketing): 1st = S$100 · 2nd/3rd = Nuldam S$25 voucher. Paid internships are Normal-track only · all tentative (in discussion)." } },
-      { title: { ko: "크래시 코스 수료증", en: "Crash-course certificate" }, stage: { ko: "협의 중", en: "In discussion" }, desc: { ko: "참여자 전원 발급 추진 · 8일차 이후 · 발급 기관·기준 협의 중.", en: "Aiming to issue to all · after Day 8 · body & criteria in discussion." } },
-      { title: { ko: "그 외 혜택", en: "Other perks" }, stage: { ko: "제공 예정", en: "Planned" }, desc: { ko: "Free Food · 굿즈(pen & notes) · 네트워킹 · 팀 1–3인(솔로 OK) · 스크리닝 없음.", en: "Free food · goods · networking · teams of 1–3 (solo OK) · no screening." } },
+      {
+        title: { ko: "상금 · 시상", en: "Prizes & awards" },
+        stage: { ko: "잠정 · 조율 중", en: "Tentative · in discussion" },
+        // Broken into sentence-level bullets so it renders as a dot list (like
+        // the other sections) rather than one dense run-on paragraph.
+        bullets: [
+          { ko: "Normal 2트랙(재무·영업): 1위 유급 FDE 인턴(코드프레소·WVB · 겨울 ~1.5개월 · 트랙당 최대 3명) · 2위 상금 S$100 · 3위 널담 $25 바우처", en: "Normal tracks ×2 (finance · sales): 1st = paid FDE internship (Codepresso · WVB · ~1.5 winter months · up to 3 per track) · 2nd = S$100 · 3rd = a Nuldam S$25 voucher" },
+          { ko: "Beginner 트랙(마케팅): 1위 상금 S$100 · 2·3위 널담 $25 바우처", en: "Beginner track (marketing): 1st = S$100 · 2nd/3rd = Nuldam S$25 voucher" },
+          { ko: "유급 인턴은 Normal 트랙만", en: "Paid internships are Normal-track only" },
+          { ko: "전 항목 잠정(조율 중)", en: "All tentative (in discussion)" },
+        ],
+      },
+      {
+        title: { ko: "크래시 코스 수료증", en: "Crash-course certificate" },
+        stage: { ko: "협의 중", en: "In discussion" },
+        bullets: [
+          { ko: "참여자 전원 발급 추진", en: "Aiming to issue to all participants" },
+          { ko: "8일차 이후", en: "After Day 8" },
+          { ko: "발급 기관·기준 협의 중", en: "Body & criteria in discussion" },
+        ],
+      },
+      {
+        title: { ko: "그 외 혜택", en: "Other perks" },
+        stage: { ko: "제공 예정", en: "Planned" },
+        bullets: [
+          { ko: "Free Food", en: "Free food" },
+          { ko: "굿즈 (pen & notes)", en: "Goods (pen & notes)" },
+          { ko: "네트워킹", en: "Networking" },
+          { ko: "팀 1–3인 (솔로 OK)", en: "Teams of 1–3 (solo OK)" },
+          { ko: "스크리닝 없음", en: "No screening" },
+        ],
+      },
     ],
     incentiveNote: {
       ko: "* 인센티브는 파트너사와 협의 진행 중 — 확정되는 대로 업데이트합니다.",

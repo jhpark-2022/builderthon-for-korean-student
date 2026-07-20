@@ -58,6 +58,179 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // Teams are strictly 1–3 people → at most 2 members beyond the registrant.
 const MAX_ADDITIONAL = 2;
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Custom dropdown — replaces the native <select> so it matches the dark/violet
+// design system (the OS-styled dropdown looked out of place). Keyboard- and
+// screen-reader-accessible: it's a listbox trigger with roving focus, opens on
+// click / Enter / Space / ↓, navigates with ↑↓/Home/End, selects on Enter, and
+// closes on Escape or outside-click.
+// ─────────────────────────────────────────────────────────────────────────────
+interface SelectOption {
+  value: string;
+  label: string;
+}
+function SelectField({
+  value,
+  options,
+  placeholder,
+  onChange,
+  id,
+}: {
+  value: string;
+  options: SelectOption[];
+  placeholder: string;
+  onChange: (v: string) => void;
+  id?: string;
+}) {
+  const reduce = useReducedMotion();
+  const [open, setOpen] = useState(false);
+  // The option currently highlighted by keyboard (index into `options`).
+  const [active, setActive] = useState(0);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+
+  const selected = options.find((o) => o.value === value);
+
+  // Close on outside-click / focus leaving the widget.
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [open]);
+
+  // When opening, highlight the current selection (or the first option).
+  const openMenu = () => {
+    const i = options.findIndex((o) => o.value === value);
+    setActive(i >= 0 ? i : 0);
+    setOpen(true);
+  };
+
+  const choose = (i: number) => {
+    onChange(options[i].value);
+    setOpen(false);
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (!open) {
+      if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
+        e.preventDefault();
+        openMenu();
+      }
+      return;
+    }
+    switch (e.key) {
+      case "Escape":
+        e.preventDefault();
+        setOpen(false);
+        break;
+      case "ArrowDown":
+        e.preventDefault();
+        setActive((i) => Math.min(i + 1, options.length - 1));
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setActive((i) => Math.max(i - 1, 0));
+        break;
+      case "Home":
+        e.preventDefault();
+        setActive(0);
+        break;
+      case "End":
+        e.preventDefault();
+        setActive(options.length - 1);
+        break;
+      case "Enter":
+      case " ":
+        e.preventDefault();
+        choose(active);
+        break;
+    }
+  };
+
+  return (
+    <div ref={wrapRef} className="relative">
+      <button
+        type="button"
+        id={id}
+        role="combobox"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        // Toggle on mousedown (same event as option selection) so there's no
+        // delayed click landing on the trigger after an option closes the menu
+        // on mousedown — which was reopening it. preventDefault keeps focus put.
+        onMouseDown={(e) => {
+          e.preventDefault();
+          open ? setOpen(false) : openMenu();
+        }}
+        onKeyDown={onKeyDown}
+        className={`${FIELD} flex items-center justify-between gap-2 text-left ${selected ? "" : "text-white/35"}`}
+      >
+        <span className="truncate">{selected ? selected.label : placeholder}</span>
+        {/* chevron — rotates when open */}
+        <svg
+          aria-hidden
+          viewBox="0 0 24 24"
+          className={`h-4 w-4 shrink-0 text-white/50 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.ul
+            ref={listRef}
+            role="listbox"
+            initial={reduce ? false : { opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? undefined : { opacity: 0, y: -6 }}
+            transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute z-20 mt-2 max-h-60 w-full overflow-auto rounded-xl border border-white/12 bg-[#0c0a18] p-1 shadow-[0_12px_40px_rgba(0,0,0,0.5)] backdrop-blur"
+          >
+            {options.map((o, i) => {
+              const isSelected = o.value === value;
+              const isActive = i === active;
+              return (
+                <li
+                  key={o.value}
+                  role="option"
+                  aria-selected={isSelected}
+                  onMouseEnter={() => setActive(i)}
+                  // Select on mousedown (not click) and preventDefault so the
+                  // choice + close fire before the outside-click mousedown
+                  // handler or any blur can interfere — the menu always closes.
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    choose(i);
+                  }}
+                  className={`flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm transition ${
+                    isActive ? "bg-violet-500/20 text-white" : "text-white/80"
+                  }`}
+                >
+                  <span className="truncate">{o.label}</span>
+                  {isSelected && (
+                    <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-violet-300" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </li>
+              );
+            })}
+          </motion.ul>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 type Status = "idle" | "submitting" | "success";
 
 // An added teammate (Member 2 / Member 3). `id` is a stable key for
@@ -542,18 +715,12 @@ export default function RegisterModal({
 
                     {/* 6 · Join type */}
                     <Field label={t(dict.register.partLabel)} optional={t(dict.register.optional)}>
-                      <select
+                      <SelectField
                         value={joinType}
-                        onChange={(e) => setJoinType(e.target.value)}
-                        className={`${FIELD} ${joinType ? "" : "text-white/35"}`}
-                      >
-                        <option value="" className="bg-[#0c0a18] text-white/50">{t(dict.register.selectPlaceholder)}</option>
-                        {dict.register.partOptions.map((o) => (
-                          <option key={o.value} value={o.value} className="bg-[#0c0a18] text-white">
-                            {t(o.label)}
-                          </option>
-                        ))}
-                      </select>
+                        onChange={setJoinType}
+                        placeholder={t(dict.register.selectPlaceholder)}
+                        options={dict.register.partOptions.map((o) => ({ value: o.value, label: t(o.label) }))}
+                      />
                     </Field>
 
                     {/* Team section — revealed only for "team" */}
@@ -783,18 +950,12 @@ export default function RegisterModal({
 
                     {/* 7 · Interested track (team-level) */}
                     <Field label={t(dict.register.trackLabel)} optional={t(dict.register.optional)}>
-                      <select
+                      <SelectField
                         value={track}
-                        onChange={(e) => setTrack(e.target.value)}
-                        className={`${FIELD} ${track ? "" : "text-white/35"}`}
-                      >
-                        <option value="" className="bg-[#0c0a18] text-white/50">{t(dict.register.selectPlaceholder)}</option>
-                        {dict.register.trackOptions.map((o) => (
-                          <option key={o.value} value={o.value} className="bg-[#0c0a18] text-white">
-                            {t(o.label)}
-                          </option>
-                        ))}
-                      </select>
+                        onChange={setTrack}
+                        placeholder={t(dict.register.selectPlaceholder)}
+                        options={dict.register.trackOptions.map((o) => ({ value: o.value, label: t(o.label) }))}
+                      />
                     </Field>
 
                     <button
@@ -835,18 +996,12 @@ function UniversitySelect({
   const { t } = useLocale();
   return (
     <>
-      <select
+      <SelectField
         value={value}
-        onChange={(e) => onValue(e.target.value)}
-        className={`${FIELD} ${value ? "" : "text-white/35"}`}
-      >
-        <option value="" className="bg-[#0c0a18] text-white/50">{t(dict.register.selectPlaceholder)}</option>
-        {dict.register.schoolOptions.map((o) => (
-          <option key={o.value} value={o.value} className="bg-[#0c0a18] text-white">
-            {t(o.label)}
-          </option>
-        ))}
-      </select>
+        onChange={onValue}
+        placeholder={t(dict.register.selectPlaceholder)}
+        options={dict.register.schoolOptions.map((o) => ({ value: o.value, label: t(o.label) }))}
+      />
       {value === "other" && (
         <input
           type="text"
