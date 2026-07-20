@@ -60,12 +60,11 @@ function clearOwnResult(): void {
 // Landing-cluster logos, self-hosted from /public/logos — no CDN dependency.
 // `file` is the full filename (ext included) under /public/logos, matching the
 // `logo` field on RESULTS. Each still carries an emoji fallback: HeroLogo swaps
-// to it if the local file is ever missing (e.g. openai has no self-hostable
-// mono mark), so a tile never renders broken.
+// to it if the local file is ever missing, so a tile never renders broken.
 const HERO_LOGOS = [
   { file: "deepseek.svg", alt: "DeepSeek", emoji: "🐋" },
   { file: "anthropic.svg", alt: "Claude", emoji: "✳️" },
-  { file: "openai.svg", alt: "ChatGPT", emoji: "🤖" }, // no file → emoji fallback
+  { file: "openai.svg", alt: "ChatGPT", emoji: "🤖" },
   { file: "googlegemini.svg", alt: "Gemini", emoji: "✨" },
   { file: "ollama.svg", alt: "Llama", emoji: "🦙" },
   { file: "perplexity.svg", alt: "Perplexity", emoji: "❓" },

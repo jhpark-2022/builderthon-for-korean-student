@@ -357,7 +357,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   ENFJ: {
-    mbti: "ENFJ", model: "ChatGPT", emoji: "💬", logo: "",
+    mbti: "ENFJ", model: "ChatGPT", emoji: "💬", logo: "openai.svg",
     role: { ko: "팀 빌더 · 발표 · 피칭", en: "Team builder · Pitching" }, roleKey: "growth",
     match: ["INFP", "INTP"],
     matchWhy: [
@@ -433,7 +433,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     },
   },
   ESTJ: {
-    mbti: "ESTJ", model: "Cohere Command", emoji: "📋", logo: "",
+    mbti: "ESTJ", model: "Cohere Command", emoji: "📋", logo: "cohere.svg",
     role: { ko: "운영 · 일정 · 자원 관리", en: "Ops · Schedule · Resources" }, roleKey: "plan",
     match: ["ISFP", "ISTP"],
     matchWhy: [
