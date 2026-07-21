@@ -375,6 +375,9 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
   const meta = categoryMeta[ev.category];
   const isMain = ev.category === "main";
   const offline = ev.mode === "offline";
+  // "mixed" (1:1 mentoring — in person or online depending on the mentor) gets
+  // its own neutral badge: an amber "현장" would promise F2F to everyone.
+  const byMentor = ev.mode === "mixed";
   return (
     <button
       type="button"
@@ -392,7 +395,11 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
               {t(dict.program.confirmedBadge)}
             </span>
           )}
-          {offline ? (
+          {byMentor ? (
+            <span className="rounded-full border border-white/12 bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/60">
+              {t(dict.program.byMentorLabel)}
+            </span>
+          ) : offline ? (
             <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/30 bg-amber-400/10 px-1.5 py-0.5 text-[0.7rem] font-bold text-amber-200">
               <span aria-hidden>●</span>{t(dict.program.offlineLabel)}
             </span>

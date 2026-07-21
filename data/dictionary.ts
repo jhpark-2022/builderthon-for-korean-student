@@ -494,6 +494,9 @@ export const dict = {
     onlineLabel: { ko: "온라인", en: "Online" },
     offlineLabel: { ko: "현장", en: "In person" },
     pendingLabel: { ko: "현장 (미정)", en: "On-site (TBC)" },
+    // 1:1 mentoring is arranged mentor by mentor — some meet at NUS in person,
+    // others take it online. Neither plain badge is true for everyone.
+    byMentorLabel: { ko: "대면·온라인 (멘토별)", en: "In person / online (by mentor)" },
     sessions: { ko: "세션", en: "sessions" },
     swipeHint: {
       ko: "카드를 눌러 하루 일정을 펼쳐보세요",

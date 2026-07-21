@@ -33,7 +33,10 @@ export type Category =
   | "mentoring" // 1:1 mentoring
   | "network"; // orientation · panels · networking · mixers
 
-export type Mode = "online" | "offline";
+// "mixed" = arranged case by case, so neither badge alone is honest — used by
+// the Day 3–4 1:1 mentoring, which is in person at NUS or online depending on
+// the individual mentor.
+export type Mode = "online" | "offline" | "mixed";
 
 export interface Bilingual {
   ko: string;
@@ -45,7 +48,7 @@ export interface BEvent {
   day: number; // 1..8
   date: string; // e.g. "08.22"
   category: Category;
-  mode: Mode; // online or in-person (Days 5 / 7 / 8 are offline)
+  mode: Mode; // online, in-person (Days 5 / 7 / 8), or mixed (see Mode)
   timeOfDay: "AM" | "PM";
   title: Bilingual;
   summary: Bilingual; // short, shown on the card
@@ -113,8 +116,8 @@ export const days: DayMeta[] = [
     phase: LAB1,
     theme: { ko: "자율 빌드 · 멘토링", en: "Self-build · Mentoring" },
     summary: {
-      ko: "오전 자율 빌드 — 팀 단위로 방향 설정·문제 해결 착수 · 오후 1:1 멘토링(NUS 대면) · OpenAI Codex 워크샵 조율 중.",
-      en: "AM self-build — teams set direction and start solving · PM 1:1 mentoring (NUS, in person) · OpenAI Codex workshop TBC.",
+      ko: "오전 자율 빌드 — 팀 단위로 방향 설정·문제 해결 착수 · 오후 1:1 멘토링(NUS 대면·온라인, 멘토별) · OpenAI Codex 워크샵 조율 중.",
+      en: "AM self-build — teams set direction and start solving · PM 1:1 mentoring (at NUS or online, by mentor) · OpenAI Codex workshop TBC.",
     },
     dayMode: "online",
   },
@@ -125,8 +128,8 @@ export const days: DayMeta[] = [
     phase: LAB1,
     theme: { ko: "자율 빌드 · 멘토링", en: "Self-build · Mentoring" },
     summary: {
-      ko: "오전 자율 빌드 — 프로토타입 완성도 높이기 · 오후 1:1 멘토링(NUS 대면)으로 점검·진전.",
-      en: "AM self-build — build the prototype and raise its completeness · PM 1:1 mentoring (NUS, in person) to review and push it forward.",
+      ko: "오전 자율 빌드 — 프로토타입 완성도 높이기 · 오후 1:1 멘토링(NUS 대면·온라인, 멘토별)으로 점검·진전.",
+      en: "AM self-build — build the prototype and raise its completeness · PM 1:1 mentoring (at NUS or online, by mentor) to review and push it forward.",
     },
     dayMode: "online",
   },
@@ -239,11 +242,13 @@ const AWS_OFFICE: Bilingual = {
   ko: "AWS 오피스, 싱가포르 · 현장",
   en: "AWS office, Singapore · in person",
 };
-// Days 3–4's 1:1 mentoring is in person at NUS (per the deck) — the self-build
+// Days 3–4's 1:1 mentoring is arranged MENTOR BY MENTOR: the deck's default is
+// in person at NUS, but each mentor settles their own format with the team, so
+// some sessions run online. Stated that way rather than promising F2F. The self-build
 // on those days stays online; only the mentoring is F2F.
 const NUS: Bilingual = {
-  ko: "NUS, 싱가포르 · 대면 (F2F)",
-  en: "NUS, Singapore · in person (F2F)",
+  ko: "NUS 대면(F2F) 또는 온라인 — 멘토별로 정해집니다",
+  en: "In person at NUS (F2F) or online — set by each mentor",
 };
 // Codepresso runs the Day-2 Crash Course (vibe-coding intro), per the deck.
 const CODEPRESSO_ORG = {
@@ -474,16 +479,16 @@ export const schedule: BEvent[] = [
     day: 3,
     date: "08.24",
     category: "mentoring",
-    mode: "offline",
+    mode: "mixed",
     timeOfDay: "PM",
-    title: { ko: "1:1 멘토링 · NUS 대면", en: "1:1 Mentoring · at NUS" },
+    title: { ko: "1:1 멘토링 (멘토별 대면·온라인)", en: "1:1 Mentoring (in person / online, by mentor)" },
     summary: {
-      ko: "NUS 현장에서 막힌 지점을 점검하고 방향을 조정하는 대면 1:1.",
-      en: "In-person, at NUS: unblock and adjust direction, one-on-one.",
+      ko: "막힌 지점을 점검하고 방향을 조정하는 1:1 — NUS 대면 또는 온라인, 멘토별로 정해집니다.",
+      en: "One-on-one to unblock and adjust direction — at NUS in person or online, depending on the mentor.",
     },
     description: {
-      ko: "정해진 시간표 대신 팀의 필요에 맞춰 진행되는 1:1 멘토링입니다. NUS 현장에서 대면(F2F)으로 진행하며, 막힌 지점을 함께 점검하고 방향을 조정합니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표 — 같은 눈높이에서 함께 고민하는 선배입니다. 학생 정체성과 giver 문화를 지키는 이 멘토 persona가 이 시간의 핵심입니다. 확정 멘토로 황영준(T3Q · AI), 신동혁(AWS · GTM), 한장환(AWS · SA), 이유택(NTU · 前 Naver) 님이 함께합니다.",
-      en: "One-on-one mentoring that follows each team's needs rather than a fixed timetable — held in person (F2F) at NUS, checking blockers and adjusting direction. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes, thinking alongside you at eye level. That peer-mentor persona — protecting the student identity and giver culture — is the point of this time. Confirmed mentors include Hwang Young-jun (T3Q · AI), Shin Dong-hyuk (AWS · GTM), Han Jang-whan (AWS · SA) and Lee Yoo-taek (NTU · ex-Naver).",
+      ko: "정해진 시간표 대신 팀의 필요에 맞춰 진행되는 1:1 멘토링입니다. 진행 방식은 멘토별로 정해집니다 — NUS 현장 대면(F2F)이 기본이지만, 멘토에 따라 온라인으로 진행될 수 있으니 배정된 멘토와 직접 맞추시면 됩니다. 막힌 지점을 함께 점검하고 방향을 조정합니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표 — 같은 눈높이에서 함께 고민하는 선배입니다. 학생 정체성과 giver 문화를 지키는 이 멘토 persona가 이 시간의 핵심입니다. 확정 멘토로 황영준(T3Q · AI), 신동혁(AWS · GTM), 한장환(AWS · SA), 이유택(NTU · 前 Naver) 님이 함께합니다.",
+      en: "One-on-one mentoring that follows each team's needs rather than a fixed timetable. The format is set mentor by mentor — in person (F2F) at NUS by default, but some mentors take it online, so you'll settle it with the mentor you're matched with. It's time to check blockers and adjust direction. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes, thinking alongside you at eye level. That peer-mentor persona — protecting the student identity and giver culture — is the point of this time. Confirmed mentors include Hwang Young-jun (T3Q · AI), Shin Dong-hyuk (AWS · GTM), Han Jang-whan (AWS · SA) and Lee Yoo-taek (NTU · ex-Naver).",
     },
     location: NUS,
     // TODO: confirm public naming — mentors 황영준·신동혁·한장환·이유택 are confirmed in
@@ -514,16 +519,16 @@ export const schedule: BEvent[] = [
     day: 4,
     date: "08.25",
     category: "mentoring",
-    mode: "offline",
+    mode: "mixed",
     timeOfDay: "PM",
-    title: { ko: "1:1 멘토링 · NUS 대면", en: "1:1 Mentoring · at NUS" },
+    title: { ko: "1:1 멘토링 (멘토별 대면·온라인)", en: "1:1 Mentoring (in person / online, by mentor)" },
     summary: {
-      ko: "NUS 현장에서 프로토타입을 점검하고 진전을 함께 봅니다.",
-      en: "In-person, at NUS: prototype review and progress, together.",
+      ko: "프로토타입을 점검하고 진전을 함께 보는 1:1 — NUS 대면 또는 온라인, 멘토별로 정해집니다.",
+      en: "One-on-one prototype review and progress — at NUS in person or online, depending on the mentor.",
     },
     description: {
-      ko: "팀이 만든 프로토타입을 함께 점검하고 진전을 살피는 1:1 멘토링입니다. Day 3에 이어 NUS 현장에서 대면(F2F)으로 진행하며, 무엇이 잘 되고 있는지, 어디를 더 밀어야 하는지를 같은 눈높이의 선배 멘토와 짚어봅니다. 멘토는 유학생 출신 현직 대표로, 학생 교류와 giver 문화를 지키는 역할입니다(확정 멘토진은 Day 3과 동일).",
-      en: "One-on-one mentoring to review the prototype your team built and look at progress together — held in person (F2F) at NUS, following on from Day 3 — what's working, and where to push harder, with peer-level senior mentors. Mentors are Korean ex-international-student founders, there to keep the student exchange and giver culture alive (same confirmed line-up as Day 3).",
+      ko: "팀이 만든 프로토타입을 함께 점검하고 진전을 살피는 1:1 멘토링입니다. Day 3과 마찬가지로 NUS 대면(F2F)이 기본이되 진행 방식은 멘토별로 정해지며(온라인 가능), 무엇이 잘 되고 있는지, 어디를 더 밀어야 하는지를 같은 눈높이의 선배 멘토와 짚어봅니다. 멘토는 유학생 출신 현직 대표로, 학생 교류와 giver 문화를 지키는 역할입니다(확정 멘토진은 Day 3과 동일).",
+      en: "One-on-one mentoring to review the prototype your team built and look at progress together. As on Day 3 it's in person (F2F) at NUS by default, with the format set by each mentor (online is possible) — what's working, and where to push harder, with peer-level senior mentors. Mentors are Korean ex-international-student founders, there to keep the student exchange and giver culture alive (same confirmed line-up as Day 3).",
     },
     location: NUS,
   },

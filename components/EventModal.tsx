@@ -192,7 +192,13 @@ export default function EventModal({
                   }`}
                 >
                   {event.mode === "offline" && <span aria-hidden>●</span>}
-                  {t(event.mode === "offline" ? dict.program.offlineLabel : dict.program.onlineLabel)}
+                  {t(
+                    event.mode === "offline"
+                      ? dict.program.offlineLabel
+                      : event.mode === "mixed"
+                        ? dict.program.byMentorLabel
+                        : dict.program.onlineLabel
+                  )}
                 </span>
                 {event.confirmed && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-accent/10 px-2.5 py-1 text-xs font-bold text-accent ring-1 ring-accent/20">
