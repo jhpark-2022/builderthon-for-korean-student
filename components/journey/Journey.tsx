@@ -520,6 +520,23 @@ const companions: { src?: string; alt?: string }[] = [
   { src: "/partners/zero100/23-twigfarm.webp", alt: "Twigfarm" },
   { src: "/partners/zero100/24-kowork.webp", alt: "Kowork" },
   { src: "/partners/zero100/25-one-dgree-labs.webp", alt: "One Degree Labs" },
+  // This builderthon's own partner slide (host · organizers · confirmed
+  // sponsors) rides in the same band, so every logo on that slide appears here
+  // too. These are the white-mono marks the partner wall above uses.
+  { src: "/partners/logos/white/drimaes.png", alt: "Drimaes" },
+  { src: "/partners/logos/white/popup-studio.png", alt: "Popup Studio" },
+  { src: "/partners/logos/white/smu-lion.png", alt: "SMU KSA" },
+  { src: "/partners/logos/white/nus.png", alt: "NUS Korea Society" },
+  { src: "/partners/logos/white/ntu-ksa.png", alt: "NTU KSA" },
+  { src: "/partners/logos/white/aws.png", alt: "AWS" },
+  { src: "/partners/logos/white/innovate360.png", alt: "INNOVATE 360" },
+  { src: "/partners/logos/white/life.png", alt: "L^IFE" },
+  { src: "/partners/logos/white/bzcf.png", alt: "BZCF" },
+  { src: "/partners/logos/white/korean-association.png", alt: "Korean Association in Singapore" },
+  { src: "/partners/logos/white/onword.png", alt: "Onward Lab" },
+  { src: "/partners/logos/white/remited.png", alt: "REmited" },
+  { src: "/partners/logos/white/brandboost.png", alt: "Brand Boost" },
+  { src: "/partners/logos/white/hashed.png", alt: "Hashed" },
 ];
 
 // A horizontally-scrolling wall of confirmed builder-companion logos. The track
@@ -1244,69 +1261,35 @@ export default function Journey() {
             </div>
           </div>
 
-          {/* ── Tier 3 · 후원 · SPONSORS (confirmed + in-discussion by category) ── */}
+          {/* ── Tier 3 · 후원 · SPONSORS ──────────────────────────────────
+              Mirrors the deck's partner slide exactly: one confirmed row, each
+              logo captioned with what that sponsor actually provides. The old
+              "협의 중" tier and the separate 멘토사 tier were folded away — the
+              deck lists no in-discussion sponsors, and 멘토링 is just another
+              role caption here. */}
           <div className="mt-8 border-t border-white/10 pt-8 text-left">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.sponsorsLabel)}</p>
 
-            {/* Confirmed · venue · marketing */}
             <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-emerald-200">
               {t(dict.partners.sponsorConfirmedLabel)}
             </p>
-            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
               {[
-                { src: "/partners/logos/white/aws.png",         alt: "AWS",          w: 600, h: 600, big: true },
-                { src: "/partners/logos/white/innovate360.png", alt: "INNOVATE 360", w: 600, h: 179, big: false },
-                { src: "/partners/logos/white/bzcf.png",        alt: "BZCF",         w: 900, h: 900, big: true },
-              ].map((l) => <LogoTile key={l.alt} {...l} onOpen={(el) => openPartner(l.alt, dict.partners.stageConfirmed, el)} />)}
-            </div>
-
-            {/* In discussion · grouped by category */}
-            <p className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/60">
-              {t(dict.partners.sponsorDiscussionLabel)}
-            </p>
-            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-              {[
-                { cat: t(dict.partners.catTech),      src: "/partners/logos/white/openai.png",     alt: "OpenAI",              w: 600,  h: 600, big: true },
-                { cat: t(dict.partners.catTech),      src: "/partners/logos/white/workato.png",    alt: "Workato",             w: 1200, h: 600, big: false },
-                { cat: t(dict.partners.catMarketing), src: "/partners/logos/white/eo-studio.png",  alt: "EO Studio",           w: 1242, h: 537, big: false },
-                { cat: t(dict.partners.catCommunity), src: "/partners/logos/white/superteam.png",  alt: "Superteam Singapore", w: 576,  h: 150, big: false },
-                { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/brandboost.png", alt: "Brand Boost",         w: 1200, h: 630, big: false },
-                { cat: t(dict.partners.catVC),        src: "/partners/logos/white/hashed.png",     alt: "Hashed",              w: 1200, h: 619, big: false },
+                { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/aws.png",                alt: "AWS",                          w: 600, h: 600, big: true },
+                { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/innovate360.png",        alt: "INNOVATE 360",                 w: 600, h: 179, big: false },
+                { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/life.png",               alt: "L^IFE",                        w: 900, h: 352, big: false },
+                { cat: t(dict.partners.catMarketing), src: "/partners/logos/white/bzcf.png",               alt: "BZCF",                         w: 900, h: 900, big: true },
+                { cat: t(dict.partners.catJudges),    src: "/partners/logos/white/korean-association.png", alt: "Korean Association in Singapore", w: 443, h: 90, big: false },
+                { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/onword.png",             alt: "Onward Lab",                   w: 200, h: 200, big: true },
+                { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/remited.png",            alt: "REmited",                      w: 1536, h: 317, big: false },
+                { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/brandboost.png",         alt: "Brand Boost",                  w: 1200, h: 630, big: false },
+                { cat: t(dict.partners.catOverall),   src: "/partners/logos/white/hashed.png",             alt: "Hashed",                       w: 1200, h: 619, big: false },
               ].map(({ cat, ...l }) => (
                 <div key={l.alt} className="flex flex-col gap-1.5">
-                  <LogoTile {...l} onOpen={(el) => openPartner(l.alt, dict.partners.stageDiscussion, el)} />
+                  <LogoTile {...l} onOpen={(el) => openPartner(l.alt, dict.partners.stageConfirmed, el)} />
                   <span className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-white/40">{cat}</span>
                 </div>
               ))}
-            </div>
-          </div>
-
-          {/* ── Mentors (Onward confirmed; others in discussion) ──────────── */}
-          <div className="mt-8 border-t border-white/10 pt-8 text-left">
-            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.mentorsLabel)}</p>
-              <p className="text-xs text-white/50">{t(dict.partners.mentorsNote)}</p>
-            </div>
-
-            {/* Confirmed */}
-            <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-emerald-200">
-              {t(dict.partners.mentorConfirmedLabel)}
-            </p>
-            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {[
-                { src: "/partners/logos/white/onword.png", alt: "Onward Lab", w: 200, h: 200, big: true },
-              ].map((l) => <LogoTile key={l.alt} {...l} onOpen={(el) => openPartner(l.alt, dict.partners.stageConfirmed, el)} />)}
-            </div>
-
-            {/* In discussion */}
-            <p className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/60">
-              {t(dict.partners.mentorDiscussionLabel)}
-            </p>
-            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {[
-                { src: "/partners/logos/white/brandboost.png", alt: "Brand Boost", w: 1200, h: 630, big: false },
-                { src: "/partners/logos/white/remited.png",     alt: "REmited",     w: 1536, h: 317, big: false },
-              ].map((l) => <LogoTile key={l.alt} {...l} onOpen={(el) => openPartner(l.alt, dict.partners.stageDiscussion, el)} />)}
             </div>
           </div>
 

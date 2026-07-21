@@ -634,8 +634,8 @@ export const dict = {
     tag: { ko: "Partners", en: "Partners" },
     heading: { ko: "함께 만드는 사람들", en: "Built together" },
     note: {
-      ko: "실제 AX 과제를 함께 제공하는 주최 파트너(AXMOS), SMU·NUS·NTU 한인 학생회의 주관·운영, 그리고 AI·클라우드·커뮤니티 후원사가 함께합니다. 각 파트너의 진행 단계를 솔직하게 구분해 안내합니다.",
-      en: "Built with the host partners providing the real AX problems (AXMOS), organized and run by the SMU · NUS · NTU Korean student associations, and supported by AI, cloud and community sponsors. Each partner's stage is labelled honestly.",
+      ko: "실제 AX 과제를 함께 제공하는 주최 파트너(AXMOS), SMU·NUS·NTU 한인 학생회의 주관·운영, 그리고 장소·마케팅·멘토링·굿즈를 맡아주는 후원사가 함께합니다. 각 파트너가 맡은 역할을 그대로 표기합니다.",
+      en: "Built with the host partners providing the real AX problems (AXMOS), organized and run by the SMU · NUS · NTU Korean student associations, and supported by sponsors covering venue, marketing, mentoring and goods. Each partner is labelled with the role they actually play.",
     },
     // ── Tier 1 · 주최 · HOST (the AXMOS collective) ──────────────────────────
     hostLabel: { ko: "주최 · HOST", en: "Host" },
@@ -652,33 +652,26 @@ export const dict = {
     roleLead: { ko: "기획 · 운영", en: "Lead · Ops" },
     roleOps: { ko: "운영", en: "Ops" },
     // ── Tier 3 · 후원 · SPONSORS ─────────────────────────────────────────────
+    // One confirmed row, captioned by the role each sponsor plays — mirrors the
+    // deck's partner slide. Role captions below.
     sponsorsLabel: { ko: "후원 · SPONSORS", en: "Sponsors" },
-    sponsorConfirmedLabel: { ko: "확정 · 장소 · 마케팅", en: "Confirmed · Venue · Marketing" },
-    sponsorDiscussionLabel: { ko: "협의 중", en: "In discussion" },
-    catTech: { ko: "기술 · Tech", en: "Tech" },
-    catMarketing: { ko: "마케팅 · Marketing", en: "Marketing" },
-    catCommunity: { ko: "커뮤니티 · Community", en: "Community" },
-    catGoods: { ko: "굿즈 · Goods", en: "Goods" },
-    catVC: { ko: "벤처 · VC", en: "VC" },
-    // ── Mentors in discussion (from the deck's mentoring slide) ──────────────
-    mentorsLabel: { ko: "멘토사", en: "Mentors" },
-    mentorsNote: {
-      ko: "학생 눈높이의 선배 멘토로 함께하는 파트너.",
-      en: "Partners mentoring as peer-level seniors.",
-    },
-    mentorConfirmedLabel: { ko: "확정", en: "Confirmed" },
-    mentorDiscussionLabel: { ko: "논의 중", en: "In discussion" },
-    // Neutral stage pills shown inside the company-intro modal.
+    sponsorConfirmedLabel: { ko: "확정 (Confirmed)", en: "Confirmed" },
+    catVenue: { ko: "장소", en: "Venue" },
+    catMarketing: { ko: "마케팅", en: "Marketing" },
+    catJudges: { ko: "심사위원 지원", en: "Judges" },
+    catMentoring: { ko: "멘토링", en: "Mentoring" },
+    catGoods: { ko: "굿즈", en: "Goods" },
+    catOverall: { ko: "종합 지원", en: "Overall support" },
+    // Neutral stage pill shown inside the company-intro modal.
     stageConfirmed: { ko: "확정", en: "Confirmed" },
-    stageDiscussion: { ko: "협의 중", en: "In discussion" },
     stageNote: {
-      ko: "* 단계 표기는 2026년 6월 기준이며, 변동될 수 있습니다. 최종 후원·파트너십은 확정 시 안내됩니다.",
-      en: "* Stages are as of June 2026 and may change; final sponsorships/partnerships will be announced once confirmed.",
+      ko: "* 파트너 구성은 2026년 7월 기준이며, 변동될 수 있습니다. 추가되는 후원·파트너십은 확정 시 안내됩니다.",
+      en: "* The partner line-up is as of July 2026 and may change; further sponsorships/partnerships will be announced once confirmed.",
     },
     companionsHeading: { ko: "함께하는 빌더 네트워크", en: "Builder network" },
     companionsSub: {
-      ko: "이 빌더톤의 시작점이 된 Zero100 빌더 네트워크",
-      en: "The Zero100 builder network this builderthon grew from",
+      ko: "이 빌더톤의 시작점이 된 Zero100 빌더 네트워크와 이번 빌더톤의 파트너",
+      en: "The Zero100 builder network this builderthon grew from — and this builderthon's own partners",
     },
   },
 
