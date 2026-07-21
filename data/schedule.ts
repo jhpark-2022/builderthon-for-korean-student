@@ -16,7 +16,9 @@
 //     live per-track briefing (client contacts present the problem) right after.
 //   • Day 3–4 — online self-build + 1:1 mentoring in person at NUS (Day 3 also
 //     has a TENTATIVE OpenAI Codex workshop, still in coordination).
-//   • Day 5 — recharge · in-person kickoff with panels at *SCAPE L^IFE Jungle; opens Lab 2.
+//   • Day 5 — mid-point check-in at *SCAPE L^IFE Jungle (10AM–2PM): student AI
+//     use-case showcase with a QR popular vote, the ‘From Int'l Student to
+//     Founder’ panel (TBC) and cross-track exchange; opens Lab 2.
 //   • Day 6 — open build (online, self-paced).
 //   • Day 7 — Final Rehearsal on-site at the AWS office (9AM–1:30PM, new venue).
 //   • Day 8 — Demo Day at *SCAPE L^IFE Jungle. MANDATORY (필참).
@@ -133,10 +135,10 @@ export const days: DayMeta[] = [
     date: "08.26",
     weekday: { ko: "수", en: "Wed" },
     phase: LAB2,
-    theme: { ko: "오프라인 킥오프 · 패널", en: "In-person Kickoff · Panels" },
+    theme: { ko: "중간 점검 · 교류", en: "Mid-point · Exchange" },
     summary: {
-      ko: "*SCAPE 현장 집결 · 재충전 · 참여자 AI Use Case · 이병일 패널 · 네트워킹.",
-      en: "In person at *SCAPE · a recharge beat · AI use-case panel · Lee Byung-il panel · networking.",
+      ko: "*SCAPE 현장 집결 · 학생 AI Use Case 공유 · 패널 ‘유학생에서 창업가로’(섭외 중) · 크로스트랙 교류.",
+      en: "In person at *SCAPE · student AI use-case showcase · panel ‘From Int'l Student to Founder’ (TBC) · cross-track exchange.",
     },
     dayMode: "offline",
   },
@@ -529,9 +531,10 @@ export const schedule: BEvent[] = [
       en: "The whole cohort meets in person for the first time — Lab 2 begins.",
     },
     description: {
-      ko: "온라인으로 진행되던 일정 중, 처음으로 전원이 *SCAPE L^IFE Jungle 현장에 모이는 날입니다(10AM–2PM). Zero100 소개와 파트너사 인사로 문을 열고, 여기서부터 실전 단계인 Lab 2가 시작됩니다. 화면 너머로만 함께 빌드하던 사람들을 직접 만나, 남은 절반을 같은 공간에서 이어갑니다.",
-      en: "The first day the whole cohort gathers in person at *SCAPE L^IFE Jungle (10AM–2PM). It opens with a Zero100 intro and partner-company greetings, and from here Lab 2 — the main event — begins. You finally meet the people you'd only built alongside on-screen, and carry the second half forward in one room.",
+      ko: "온라인으로 진행되던 일정 중, 처음으로 전원이 *SCAPE L^IFE Jungle 현장에 모이는 날입니다(10AM–2PM). 10:00 오프닝과 함께 각 팀의 진행 상황을 짚는 중간 점검으로 문을 열고, 10:15에는 AI 빌더 커뮤니티 소개(이수민)가 이어집니다. 여기서부터 실전 단계인 Lab 2가 시작됩니다 — 화면 너머로만 함께 빌드하던 사람들을 직접 만나, 남은 절반을 같은 공간에서 이어갑니다.",
+      en: "The first day the whole cohort gathers in person at *SCAPE L^IFE Jungle (10AM–2PM). It opens at 10:00 with a mid-point check-in on where each team stands, followed at 10:15 by an intro to the AI builder community (Lee Su-min). From here Lab 2 — the main event — begins: you finally meet the people you'd only built alongside on-screen, and carry the second half forward in one room.",
     },
+    // TODO: confirm public naming — 이수민 is from the internal deck.
     location: ONSITE,
   },
   {
@@ -543,12 +546,12 @@ export const schedule: BEvent[] = [
     timeOfDay: "AM",
     title: { ko: "패널 1 · 참여자 AI Use Case", en: "Panel 1 · Participant AI Use Cases" },
     summary: {
-      ko: "참여자들이 자기 AI 활용 사례를 라이트닝으로 공유.",
-      en: "Participants share their own AI use cases, lightning-style.",
+      ko: "10:30 · 학생 AI 활용 사례 발표 + QR 인기투표 · Top 3 시상(잠정).",
+      en: "10:30 · student AI use-case showcase + QR popular vote · Top 3 awarded (tentative).",
     },
     description: {
-      ko: "참여자 몇 명이 자기 AI 활용 사례를 짧은 라이트닝 형식으로 공유하는 패널입니다. 대표진도 청중으로 함께하며, 참가자 간 교류가 자연스럽게 이어집니다. 다른 사람이 실제로 AI를 어떻게 쓰는지에서 자극을 받고, 내 빌드에 바로 가져올 아이디어를 얻는 자리입니다.",
-      en: "A panel where a handful of participants share their own AI use cases in a short lightning format, with founders in the audience and easy peer exchange throughout. A chance to draw energy from how others actually use AI — and take ideas straight back into your own build.",
+      ko: "참여자 몇 명이 자기 AI 활용 사례를 짧은 라이트닝 형식으로 공유하는 패널입니다(10:30~). 대표진도 청중으로 함께하며, 발표가 끝나면 현장에서 QR 코드로 인기투표를 진행합니다. 12:15에는 인기투표 Top 3에게 ‘해녀의 부엌’ $25 다이닝 바우처(싱가포르 지점)를 시상할 예정입니다(잠정). 다른 사람이 실제로 AI를 어떻게 쓰는지에서 자극을 받고, 내 빌드에 바로 가져올 아이디어를 얻는 자리입니다.",
+      en: "A panel where a handful of participants share their own AI use cases in a short lightning format (from 10:30), with founders in the audience. After the talks, everyone votes on the spot via a QR popular vote, and at 12:15 the top 3 are awarded a S$25 dining voucher for ‘Haenyeo's Kitchen’ (Singapore branch) — tentative. A chance to draw energy from how others actually use AI, and take ideas straight back into your own build.",
     },
     location: ONSITE,
   },
@@ -559,16 +562,14 @@ export const schedule: BEvent[] = [
     category: "main",
     mode: "offline",
     timeOfDay: "AM",
-    title: { ko: "패널 2 · 이병일 · 멘탈관리와 회복탄력성", en: "Panel 2 · Lee Byung-il · Resilience & Mental Management" },
-    // TODO: confirm — speaker name is from the internal deck; confirm public naming is OK.
-    speaker: { ko: "이병일", en: "Lee Byung-il" },
+    title: { ko: "패널 · 유학생에서 창업가로 (섭외 중)", en: "Panel · From Int'l Student to Founder (TBC)" },
     summary: {
-      ko: "실패·재기에서 배우는 회복탄력성 — 이병일 파트너와 함께.",
-      en: "Resilience, learned from failure & comebacks — with Lee Byung-il.",
+      ko: "11:35 · 싱가포르 유학생 출신 창업가 3인의 인사이트·pain + 학생 Q&A · 섭외 중.",
+      en: "11:35 · insights & real pains from 3 founders who came up as int'l students + student Q&A · TBC.",
     },
     description: {
-      ko: "Wilt Venture Builder(SG)의 이병일 파트너와 함께하는 패널입니다. ‘창업가의 멘탈관리와 회복탄력성’을 주제로, 스타트업의 실패·재기 스토리에서 배우는 회복탄력성과 빌드 중 좌절을 다루는 법을 나눕니다. 헤드다운 빌드로 들어가기 직전, 끝까지 완주할 동기를 다시 채우는 시간입니다.",
-      en: "A panel with Lee Byung-il (Venture Partner, Wilt Venture Builder SG) on ‘Founder resilience & mental management’ — the resilience learned from startup failure-and-comeback stories, and how to handle the setbacks that come mid-build. Right before the heads-down build, it's a moment to top up the motivation to see it through.",
+      ko: "싱가포르 유학생 출신 창업가 3인과 함께하는 패널입니다(11:35~). 유학생 앙트레프레너십의 인사이트와 실제 pain을 가감 없이 나누고, 이어서 학생 Q&A로 연결됩니다. 같은 길을 먼저 걸어본 사람의 관점을 가까이에서 듣는 자리입니다. 패널 3인은 현재 섭외 중이며, 확정되는 대로 안내됩니다.",
+      en: "A panel with three founders who came up as international students in Singapore (from 11:35). They share the insights and the real pains of international-student entrepreneurship without varnish, flowing into a student Q&A. It's a chance to hear, up close, from people who walked the same path first. The three panelists are still being arranged and will be announced once confirmed.",
     },
     location: ONSITE,
   },
@@ -579,14 +580,14 @@ export const schedule: BEvent[] = [
     category: "network",
     mode: "offline",
     timeOfDay: "PM",
-    title: { ko: "네트워킹", en: "Networking" },
+    title: { ko: "크로스트랙 교류 세션", en: "Cross-track Exchange" },
     summary: {
-      ko: "현장에서 사람과 사람을 잇는 온사이트 믹서.",
-      en: "An on-site mixer connecting people in person.",
+      ko: "13:00 · 트랙을 넘나드는 교류 세션 (12:25 런치 이후).",
+      en: "13:00 · exchange across the tracks (after the 12:25 lunch).",
     },
     description: {
-      ko: "패널에 이어, 현장에서 참가자·멘토·파트너가 자연스럽게 어울리는 네트워킹입니다. 온라인으로 쌓아 온 관계를 얼굴을 맞대고 다지고, 팀을 넘어선 연결을 만드는 자리입니다.",
-      en: "Following the panels, an on-site networking block where participants, mentors and partners mix in person — turning the relationships built online into face-to-face ones, and making connections beyond your own team.",
+      ko: "12:25 런치로 숨을 고른 뒤, 13:00부터 이어지는 크로스트랙 교류 세션입니다. 재무·영업·마케팅 트랙을 넘나들며 참가자·멘토·파트너가 자연스럽게 섞이고, 다른 트랙이 같은 8일을 어떻게 풀고 있는지를 직접 듣습니다. 온라인으로 쌓아 온 관계를 얼굴을 맞대고 다지고, 팀을 넘어선 연결을 만드는 자리입니다.",
+      en: "After a 12:25 lunch break, a cross-track exchange session runs from 13:00. Participants, mentors and partners mix across the finance, sales and marketing tracks, and you hear first-hand how another track is tackling the same eight days. It turns the relationships built online into face-to-face ones and makes connections beyond your own team.",
     },
     location: ONSITE,
   },
