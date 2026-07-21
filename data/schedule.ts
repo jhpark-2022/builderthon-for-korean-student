@@ -22,7 +22,7 @@
 //   • Day 6 — open build (online, self-paced).
 //   • Day 7 — Final Rehearsal on-site at the AWS office (9AM–2PM, new venue).
 //   • Day 8 — Demo Day at *SCAPE L^IFE Jungle. MANDATORY (필참).
-//   • Self-paced team build runs continuously from the Day-1 problem release all
+//   • Self-paced team build runs continuously from the Day-2 client briefing all
 //     the way to the Day-8 pitch. In person on Days 1 / 5 / 7 / 8.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -87,8 +87,8 @@ export const days: DayMeta[] = [
     phase: LAB1,
     theme: { ko: "오프닝 · 문제 공개", en: "Opening · Problem Release" },
     summary: {
-      ko: "원대로 오프닝 키노트 · 오리엔테이션 · AWS 연사(확정) · 문제 공개·트랙 선택.",
-      en: "Won's opening keynote · orientation · AWS session (confirmed) · problem release & track selection.",
+      ko: "원대로 오프닝 키노트 · 오리엔테이션(문제 공개·트랙 선택·베이스 리포트) · AWS 연사 한장환(확정).",
+      en: "Won's opening keynote · orientation (problem release · track pick · base report) · AWS talk by Han Jang-whan (confirmed).",
     },
     // Deck: on-site is pending (Zoom fallback if the venue isn't locked).
     dayMode: "pending",
@@ -101,8 +101,8 @@ export const days: DayMeta[] = [
     phase: LAB1,
     theme: { ko: "크래시코스 (집중)", en: "Crash Course" },
     summary: {
-      ko: "바이브 코딩 입문 집중 5–6시간 · 종료 후 트랙별 라이브 브리핑 & 팀 빌딩.",
-      en: "A focused 5–6h vibe-coding intro · live track briefings & team building right after.",
+      ko: "바이브 코딩 입문 집중 5–6시간(비개발자 OK) · 종료 후 기업 담당자의 트랙별 라이브 브리핑(녹화 제공).",
+      en: "A focused 5–6h vibe-coding intro (beginners OK) · live per-track briefings by the client contacts right after (recorded).",
     },
     dayMode: "online",
   },
@@ -113,8 +113,8 @@ export const days: DayMeta[] = [
     phase: LAB1,
     theme: { ko: "자율 빌드 · 멘토링", en: "Self-build · Mentoring" },
     summary: {
-      ko: "오전 온라인 자율 빌드 · 오후 1:1 멘토링(NUS 대면) · OpenAI Codex 워크샵 조율 중.",
-      en: "AM online self-build · PM 1:1 mentoring (NUS, in person) · OpenAI Codex workshop TBC.",
+      ko: "오전 자율 빌드 — 팀 단위로 방향 설정·문제 해결 착수 · 오후 1:1 멘토링(NUS 대면) · OpenAI Codex 워크샵 조율 중.",
+      en: "AM self-build — teams set direction and start solving · PM 1:1 mentoring (NUS, in person) · OpenAI Codex workshop TBC.",
     },
     dayMode: "online",
   },
@@ -125,8 +125,8 @@ export const days: DayMeta[] = [
     phase: LAB1,
     theme: { ko: "자율 빌드 · 멘토링", en: "Self-build · Mentoring" },
     summary: {
-      ko: "오전 온라인 자율 빌드 · 오후 1:1 멘토링(NUS 대면) — 프로토타입 진전.",
-      en: "AM online self-build · PM 1:1 mentoring (NUS, in person) — advancing the prototype.",
+      ko: "오전 자율 빌드 — 프로토타입 완성도 높이기 · 오후 1:1 멘토링(NUS 대면)으로 점검·진전.",
+      en: "AM self-build — build the prototype and raise its completeness · PM 1:1 mentoring (NUS, in person) to review and push it forward.",
     },
     dayMode: "online",
   },
@@ -137,8 +137,8 @@ export const days: DayMeta[] = [
     phase: LAB2,
     theme: { ko: "중간 점검 · 교류", en: "Mid-point · Exchange" },
     summary: {
-      ko: "*SCAPE 현장 집결 · 학생 AI Use Case 공유 · 패널 ‘유학생에서 창업가로’(섭외 중) · 크로스트랙 교류.",
-      en: "In person at *SCAPE · student AI use-case showcase · panel ‘From Int'l Student to Founder’ (TBC) · cross-track exchange.",
+      ko: "*SCAPE 현장 10AM–2PM · 중간 점검 · 학생 AI Use Case + QR 투표(Top 3 시상) · 패널 ‘유학생에서 창업가로’(섭외 중) · 크로스트랙 교류.",
+      en: "In person at *SCAPE, 10AM–2PM · mid-point check-in · student AI use cases + QR vote (top 3 awarded) · panel ‘From Int'l Student to Founder’ (TBC) · cross-track exchange.",
     },
     dayMode: "offline",
   },
@@ -161,8 +161,8 @@ export const days: DayMeta[] = [
     phase: LAB2,
     theme: { ko: "파이널 리허설", en: "Final Rehearsal" },
     summary: {
-      ko: "AWS 오피스 9AM–2PM · 최종 발표 리허설 · 박희덕 커리어 간담회.",
-      en: "AWS office, 9AM–2PM · final-pitch rehearsal · Park Hee-deok career session.",
+      ko: "AWS 오피스(확정) 9AM–2PM · 팀당 최종 피드백 · 네트워킹 점심 · 박희덕 커리어 간담회.",
+      en: "AWS office (confirmed), 9AM–2PM · per-team final feedback · networking lunch · Park Hee-deok career session.",
     },
     dayMode: "offline",
   },
@@ -173,8 +173,8 @@ export const days: DayMeta[] = [
     phase: LAB2,
     theme: { ko: "데모데이 · 최종 발표", en: "Demo Day · Final Pitch" },
     summary: {
-      ko: "*SCAPE 현장 · 박희덕 키노트 · 팀별 5분 발표 · 결과 발표 & 시상.",
-      en: "In person at *SCAPE · Park Hee-deok keynote · 5-min team pitches · results & awards.",
+      ko: "*SCAPE 현장 11AM–3PM · 박희덕 키노트 · 트랙별 5분 팀 발표 · 결과 발표·시상·수료증 배부.",
+      en: "In person at *SCAPE, 11AM–3PM · Park Hee-deok keynote · 5-min team pitches, track by track · results, awards & certificates.",
     },
     dayMode: "offline",
     mandatory: true,
@@ -265,6 +265,17 @@ const OPENAI_ORG = {
   },
 } as const;
 
+// Hashed is in discussion as the collaborator on the Day-5 Quickathon side
+// quest (deck: "병행 검토 · 해시드와 협업 논의 중").
+const HASHED_ORG = {
+  name: "Hashed",
+  url: "https://hashed.com",
+  desc: {
+    ko: "해시드는 블록체인·프론티어 테크 투자사로, Day 5에 병행 검토 중인 숙련자용 Quickathon 사이드 퀘스트를 함께 논의하고 있습니다.",
+    en: "Hashed, a blockchain & frontier-tech investment firm, is in discussion with us on the advanced-builder Quickathon side quest being considered for Day 5.",
+  },
+} as const;
+
 export const schedule: BEvent[] = [
   // ─── DAY 1 · Opening · Problem Release (08.22) ──────────────────────────────
   {
@@ -341,8 +352,8 @@ export const schedule: BEvent[] = [
       en: "Real companies' AX problems drop, you pick a track — and the 8-day build clock starts.",
     },
     description: {
-      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 팀별 자율 빌드는 문제가 공개되는 이 순간부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이, 바로 만들기 시작할 수 있습니다. Day 1은 필참이며 *SCAPE L^IFE Jungle 현장 진행을 목표로 합니다(장소 미정 시 Zoom). (Day 2에는 크래시코스 직후 트랙별 라이브 브리핑이 이어집니다.)",
-      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. Self-paced team build starts the moment the problems are released and runs continuously to Demo Day, so you can begin building straight away rather than waiting for a start whistle. Day 1 is mandatory and aims to run on-site at *SCAPE L^IFE Jungle (Zoom fallback if the venue isn't locked). (A live per-track briefing follows on Day 2, right after the Crash Course.)",
+      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 여기서 공개된 문제를 Day 2 기업 브리핑에서 담당자에게 직접 듣고 나면, 팀별 자율 빌드가 그때부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 만들어 갑니다. Day 1은 필참이며 *SCAPE L^IFE Jungle 현장 진행을 목표로 합니다(장소 미정 시 Zoom). (Day 2에는 크래시코스 직후 트랙별 라이브 브리핑이 이어집니다.)",
+      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. Once the Day-2 briefing has the client contacts walk you through those problems first-hand, self-paced team build runs continuously from there to Demo Day — no start whistle to wait for, each team at its own pace. Day 1 is mandatory and aims to run on-site at *SCAPE L^IFE Jungle (Zoom fallback if the venue isn't locked). (A live per-track briefing follows on Day 2, right after the Crash Course.)",
     },
     location: ONSITE,
   },
@@ -590,6 +601,27 @@ export const schedule: BEvent[] = [
       en: "After a 12:25 lunch break, a cross-track exchange session runs from 13:00. Participants, mentors and partners mix across the finance, sales and marketing tracks, and you hear first-hand how another track is tackling the same eight days. It turns the relationships built online into face-to-face ones and makes connections beyond your own team.",
     },
     location: ONSITE,
+  },
+
+  {
+    id: "d5-quickathon",
+    day: 5,
+    date: "08.26",
+    category: "build",
+    mode: "offline",
+    timeOfDay: "PM",
+    confirmed: false,
+    title: { ko: "Quickathon 사이드 퀘스트 (검토 중)", en: "Quickathon Side Quest (under review)" },
+    summary: {
+      ko: "이미 빌드에 익숙한 참가자를 위한 ~4시간 병행 트랙 — 아직 검토 중입니다.",
+      en: "A ~4h parallel track for participants already comfortable building — still under review.",
+    },
+    description: {
+      ko: "이미 빌드에 익숙한 참가자를 위해 Day 5 일정과 병행으로 검토 중인 ~4시간짜리 사이드 퀘스트입니다. 본 일정을 따라가기엔 여유가 있는 숙련 참가자가 같은 자리에서 짧게 몰입할 수 있는 트랙을 두자는 취지이고, 해시드와 협업을 논의하고 있습니다. 아직 확정된 세션이 아니라 진행 여부·형식 모두 검토 단계이며, 확정되는 대로 안내합니다.",
+      en: "A ~4-hour side quest under consideration alongside the Day-5 programme, for participants who are already comfortable building — the idea being that more experienced builders have a short, intense track to sink into in the same room. We're discussing it with Hashed. It isn't confirmed: whether it runs and in what shape are both still being worked out, and we'll announce it once settled.",
+    },
+    location: ONSITE,
+    org: HASHED_ORG,
   },
 
   // ─── DAY 6 · Open Build (08.27) ─────────────────────────────────────────────
