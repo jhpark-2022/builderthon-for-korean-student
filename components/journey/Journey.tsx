@@ -48,18 +48,6 @@ function Eyebrow({ children, color = "violet", className = "" }: { children: Rea
 // Renders a plain string with every "→" arrow recoloured a bright violet, so
 // the day-flow sentence reads as a clearly-arrowed progression. Splits on the
 // arrow and interleaves coloured spans; all other text is unchanged.
-function withVioletArrows(text: string) {
-  const parts = text.split("→");
-  return parts.map((part, i) => (
-    <span key={i}>
-      {part}
-      {i < parts.length - 1 && (
-        <span className="font-semibold text-violet-400">→</span>
-      )}
-    </span>
-  ));
-}
-
 // A single partner logo on a clean white chip. Full-colour marks (crests,
 // gradients) read best on a light tile against the dark section, and a missing
 // file just shows an empty white chip rather than a broken-image icon.
@@ -1206,9 +1194,8 @@ export default function Journey() {
             <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
               {t(dict.program.heading)}
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">
-              {withVioletArrows(t(dict.program.intro))}
-            </p>
+            {/* No day-by-day summary paragraph here — the eight cards below ARE
+                the arc, and spelling it out in prose first read as clutter. */}
             <div className="mx-auto mt-6 max-w-2xl rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] px-5 py-3.5 text-xs leading-relaxed text-amber-100/85">
               {t(dict.program.modeNote)}
             </div>

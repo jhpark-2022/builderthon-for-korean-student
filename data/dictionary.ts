@@ -482,10 +482,6 @@ export const dict = {
   program: {
     tag: { ko: "Program", en: "Program" },
     heading: { ko: "8일, zero에서 MVP까지", en: "8 days, from zero to MVP" },
-    intro: {
-      ko: "Day 1 오프닝 → Day 2 크래시코스 → Day 3–4 자율 빌드·멘토링 → Day 5 오프라인 킥오프 → Day 6 오픈 빌드 → Day 7 파이널 리허설 → Day 8 데모데이로 이어집니다. Day 1이 실질적 킥오프이고, 자율 빌드는 문제 공개 직후부터 데모데이까지 상시 진행됩니다. 카드를 누르면 자세한 내용을 볼 수 있습니다.",
-      en: "Day 1 opening → Day 2 crash course → Day 3–4 self-build + mentoring → Day 5 in-person kickoff → Day 6 open build → Day 7 final rehearsal → Day 8 Demo Day. Day 1 is the real kick-off, and the self-paced build runs from the Day-1 problem release to Demo Day. Tap any card for details.",
-    },
     modeNote: {
       ko: "대부분 온라인으로 진행되며, Day 1(오프닝·*SCAPE)·Day 5(오프라인 킥오프)·Day 7(파이널 리허설·AWS 오피스)·Day 8(데모데이)에 전원이 현장에 모입니다.",
       en: "Mostly online — the whole cohort gathers in person on Day 1 (opening · *SCAPE), Day 5 (kickoff), Day 7 (final rehearsal · AWS office) and Day 8 (Demo Day).",
