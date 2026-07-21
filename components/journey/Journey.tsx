@@ -691,7 +691,7 @@ const companions: { src?: string; alt?: string; w?: number; h?: number }[] = [
   { src: "/partners/logos/white/trimmed/life.png", alt: "L^IFE", w: 900, h: 352 },
   { src: "/partners/logos/white/trimmed/bzcf.png", alt: "BZCF", w: 465, h: 156 },
   { src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore", w: 443, h: 90 },
-  { src: "/partners/logos/white/trimmed/onword.png", alt: "Onward Lab", w: 276, h: 264 },
+  { src: "/partners/logos/white/trimmed/onword.png", alt: "Onword Lab", w: 276, h: 264 },
   { src: "/partners/logos/white/trimmed/remited.png", alt: "REmited", w: 512, h: 105 },
   { src: "/partners/logos/white/trimmed/brandboost.png", alt: "Brand Boost", w: 205, h: 81 },
   { src: "/partners/logos/white/trimmed/hashed.png", alt: "Hashed", w: 355, h: 90 },
@@ -865,9 +865,9 @@ export default function Journey() {
   const partnerTriggerRef = useRef<HTMLElement | null>(null);
   // Open the company-intro modal for a logo tile. `name` is the tile's `alt`;
   // copy comes from partnerIntros, falling back to the "coming soon" blurb.
-  const openPartner = (name: string, stage: Phrase, el?: HTMLElement | null) => {
+  const openPartner = (name: string, stage: Phrase, el?: HTMLElement | null, url?: string) => {
     partnerTriggerRef.current = el ?? null;
-    setActivePartner({ name, desc: partnerIntros[name] ?? partnerIntroTBC, stage });
+    setActivePartner({ name, desc: partnerIntros[name] ?? partnerIntroTBC, stage, url });
   };
   const selectEvent = (ev: BEvent, el?: HTMLElement | null) => {
     triggerRef.current = el ?? null;
@@ -1373,7 +1373,13 @@ export default function Journey() {
                 { src: "/partners/logos/white/trimmed/codepresso.png",   alt: "Codepresso",           w: 456, h: 91,  url: "https://codepresso.io" },
                 { src: "/partners/logos/white/trimmed/drimaes.png",      alt: "Drimaes",              w: 332, h: 50,  url: "https://www.drimaes.com" },
                 { src: "/partners/logos/white/trimmed/popup-studio.png", alt: "Popup Studio",         w: 512, h: 245, url: "https://popupstudio.ai" },
-              ].map((l) => <LogoTile key={l.alt} {...l} />)}
+              ].map(({ url, ...l }) => (
+                <LogoTile
+                  key={l.alt}
+                  {...l}
+                  onOpen={(el) => openPartner(l.alt, dict.partners.stageConfirmed, el, url)}
+                />
+              ))}
             </div>
           </div>
 
@@ -1388,7 +1394,13 @@ export default function Journey() {
                 { src: "/partners/logos/white/trimmed/smu-lion.png", alt: "SMU KSA",           w: 292, h: 173, badge: t(dict.partners.roleLead) },
                 { src: "/partners/logos/white/trimmed/nus.png",      alt: "NUS Korea Society", w: 512, h: 512, badge: t(dict.partners.roleOps) },
                 { src: "/partners/logos/white/trimmed/ntu-ksa.png",  alt: "NTU KSA",           w: 318, h: 382, badge: t(dict.partners.roleOps) },
-              ].map((l) => <LogoTile key={l.alt} {...l} />)}
+              ].map((l) => (
+                <LogoTile
+                  key={l.alt}
+                  {...l}
+                  onOpen={(el) => openPartner(l.alt, dict.partners.stageConfirmed, el)}
+                />
+              ))}
             </div>
           </div>
 
@@ -1411,7 +1423,7 @@ export default function Journey() {
                 { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/life.png",               alt: "L^IFE",                           w: 900, h: 352 },
                 { cat: t(dict.partners.catMarketing), src: "/partners/logos/white/trimmed/bzcf.png",               alt: "BZCF",                            w: 465, h: 156 },
                 { cat: t(dict.partners.catJudges),    src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore",  w: 443, h: 90 },
-                { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/onword.png",             alt: "Onward Lab",                      w: 276, h: 264 },
+                { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/onword.png",             alt: "Onword Lab",                      w: 276, h: 264 },
                 { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105 },
                 { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81 },
                 { cat: t(dict.partners.catOverall),   src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90 },

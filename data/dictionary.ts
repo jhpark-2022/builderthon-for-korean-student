@@ -60,8 +60,76 @@ export const partnerIntros: Record<string, Phrase> = {
     en: "The Singapore chapter of a global builder community in the Solana ecosystem, running a network where founders, developers, and creators build and get supported together.",
   },
   Hashed: {
-    ko: "블록체인·웹3 분야에 투자하는 국내 대표 벤처캐피털입니다. 초기 단계 창업팀에 투자와 네트워크를 지원하며 글로벌 웹3 생태계를 연결합니다.",
-    en: "A leading venture capital firm investing in blockchain and Web3, backing early-stage teams with capital and network across the global Web3 ecosystem.",
+    ko: "블록체인·웹3 분야에 투자하는 대표적 벤처캐피털로, 스테이블코인·RWA·AI 인프라 등에 투자합니다. 2026년에는 AI 코딩 시대의 창업을 지원하는 액셀러레이터 ‘해시드 바이브 랩스’를 새로 열었습니다 — 이 행사가 다루는 바이브 코딩의 최전선에 있는 하우스입니다.",
+    en: "A leading blockchain and Web3 venture capital firm, investing across stablecoins, RWA and AI infrastructure. In 2026 it launched Hashed Vibe Labs, an accelerator for the AI-coding era of company building — the very frontier this builderthon plays on.",
+  },
+
+  // ── 주최 · HOST ────────────────────────────────────────────────────────────
+  "Translink Investment": {
+    ko: "실리콘밸리 트랜스링크캐피탈과 합작해 2016년 출범한 벤처캐피탈로, SaaS·딥테크 중심으로 7개 조합·누적 약 1,900억 원 규모를 운용합니다. 마켓컬리 초기 투자사로 알려져 있으며, 포트폴리오사의 글로벌 진출 지원이 강점입니다. 데모데이 키노트를 맡은 박희덕 대표가 이끄는 하우스입니다.",
+    en: "A venture capital firm launched in 2016 with Silicon Valley's TransLink Capital, running seven funds (~KRW 190B) focused on SaaS and deep tech. An early investor in Market Kurly, known for helping portfolios expand globally — led by Hee-Duk Park, our Demo Day keynote speaker.",
+  },
+  "Wilt Venture Builder": {
+    ko: "싱가포르에 본사를 둔 한–싱 크로스보더 벤처빌더로, 초기 아이디어부터 시리즈 A까지 창업자와 ‘공동 창업’ 방식으로 회사를 함께 만듭니다. AI·콘텐츠·F&B·B2B SaaS 영역에서 한국 브랜드의 동남아 진출을 빌드해 왔으며, 이 빌더톤을 만든 Zero100 프로그램의 모조직입니다.",
+    en: "A Korea–Singapore cross-border venture builder headquartered in Singapore, co-founding companies with founders from first idea to Series A across AI, content, F&B and B2B SaaS. The parent organization of Zero100 — the program behind this builderthon.",
+  },
+  Codepresso: {
+    ko: "‘AI 리터러시의 표준화’를 내건 AI 역량 평가·교육 기업입니다. 채용용 AI 역량 평가(SkillCertify)와 비개발자 대상 AI 활용 교육(AI Fluent)을 운영하며, 현대오토에버·현대모비스 등 대기업 프로그램을 진행해 왔습니다. 이번 빌더톤에서는 Day 2 크래시코스를 주관합니다.",
+    en: "An AI competency assessment & education company working to standardize AI literacy — running skill assessments (SkillCertify) and AI-fluency training (AI Fluent) used by companies like Hyundai AutoEver and Hyundai Mobis. Codepresso runs this builderthon's Day-2 Crash Course.",
+  },
+  Drimaes: {
+    ko: "SDV(소프트웨어 정의 차량)·차량용 인포테인먼트(IVI)를 만드는 모빌리티 소프트웨어 기업입니다. 독자 리눅스 기반 OS와 가상화 기술로 차량의 여러 화면을 하나의 칩으로 통합하며, CES에서 퀄컴·텔레칩스와의 협업을 선보였고 2025년 국가 SW R&D 우수성과에 선정됐습니다.",
+    en: "A mobility-software company building SDV and in-vehicle infotainment tech — its own Linux-based OS and virtualization stack runs multiple car displays on a single chip. Showcased Qualcomm and Telechips collaborations at CES, and named a national SW R&D standout in 2025.",
+  },
+  "Popup Studio": {
+    ko: "싱가포르 본사와 한국 개발 허브를 둔 AI 전환(AX) 기업으로, FDE(Forward-Deployed Engineer)가 현장에 직접 들어가 작동하는 AI를 팀 안에 이식하는 방식으로 일합니다. 대화만으로 백엔드를 만드는 Bkend와 빌더 커뮤니티 bkamp도 운영합니다 — 이 행사가 다루는 ‘바이브 코딩’을 실제 사업으로 하는 회사입니다.",
+    en: "An AI-transformation (AX) company with its HQ in Singapore and a dev hub in Korea — forward-deployed engineers embed working AI directly inside client teams. Also builds Bkend, a conversational backend-as-a-service, and the builder community bkamp. Vibe coding, as an actual business.",
+  },
+
+  // ── 후원 · SPONSORS ────────────────────────────────────────────────────────
+  "INNOVATE 360": {
+    ko: "싱가포르 최초의 푸드테크 액셀러레이터로, 공유 R&D 랩·인증 주방·생산 공간 등 약 20만 sq ft의 시설과 VC 펀드를 함께 운영하며 230개 이상의 스타트업을 지원해 왔습니다. Enterprise Singapore StartupSG 공인 멘토 파트너이며, 이번 행사에는 장소로 함께합니다.",
+    en: "Singapore's first food-tech accelerator, running ~200,000 sq ft of facilities — shared R&D labs, certified kitchens, production space — alongside a VC fund, with 230+ startups supported. An accredited StartupSG mentor partner, joining this event as a venue sponsor.",
+  },
+  "L^IFE": {
+    ko: "*SCAPE 오차드에 자리한 2층 규모의 체험형 리테일·이벤트 공간으로, Innovate 360가 운영합니다. 싱가포르 신진 브랜드들이 입점한 리테일 층과 크리에이터·라이브커머스 스튜디오, 정기 커뮤니티 프로그램이 함께 돌아갑니다. 빌더톤의 현장 일정이 열리는 L^ife Jungle이 바로 이곳입니다.",
+    en: "A two-storey experiential retail & event space at *SCAPE Orchard, run by Innovate 360 — a floor of emerging Singapore brands plus creator and live-commerce studios with regular community programming. This is L^ife Jungle, home of the builderthon's on-site days.",
+  },
+  BZCF: {
+    ko: "구독자 32만의 유튜브 채널을 중심으로 한 비즈니스·창업 콘텐츠 미디어입니다. 창업가 인터뷰와 산업 분석 콘텐츠를 만들고 창업가 커뮤니티 ‘BZCF Fellowship’을 운영하며, 이번 빌더톤에는 마케팅 파트너로 함께합니다.",
+    en: "A business & startup content media brand built around a 320K-subscriber YouTube channel — founder interviews, industry analysis, and the BZCF Fellowship community. Joining the builderthon as a marketing partner.",
+  },
+  "Korean Association in Singapore": {
+    ko: "1963년 설립된 싱가포르 한인 사회의 대표 단체로, 탄종파가에 자체 회관을 두고 장학 사업과 청년 멘토링·네트워킹 프로그램, 연례 한인 행사를 운영합니다. 이번 빌더톤에는 심사위원 연계로 함께합니다.",
+    en: "The representative body of Singapore's Korean community since 1963, with its own hall in Tanjong Pagar — running scholarships, young-professionals mentoring and the community's annual events. Supporting the builderthon through its judge network.",
+  },
+  "Onword Lab": {
+    ko: "‘We Make Old Businesses Young’을 내건 AI 전환(AX) 스타트업으로, 리테일·커머스의 운영과 마케팅을 AI로 다시 설계합니다. 이커머스 올인원 운영 에이전틱 대시보드를 만들고 있으며, 이번 빌더톤에는 멘토링으로 함께합니다.",
+    en: "An AI-transformation startup — 'We Make Old Businesses Young' — redesigning retail and commerce operations and marketing with AI, building an agentic all-in-one e-commerce operations dashboard. Joining the builderthon as a mentoring partner.",
+  },
+  REmited: {
+    ko: "영수증 리워드 앱으로 2천만 건 이상의 구매 데이터를 모아 브랜드에 초개인화 마케팅 솔루션을 제공하는 AI 커머스 스타트업(팀리미티드)입니다. CJ제일제당·이랜드리테일과 협업하며 구글·앤틀러 등의 지원 속에 동남아 진출을 준비 중이고, 이번 빌더톤에는 멘토링으로 함께합니다.",
+    en: "An AI-commerce startup (Team REmited) whose receipt-reward app has gathered 20M+ purchase records, powering hyper-personalized marketing for brands like CJ CheilJedang and E-Land Retail. Backed by Google for Startups and Antler and eyeing Southeast Asia — joining as a mentoring partner.",
+  },
+  "Brand Boost": {
+    ko: "브랜드 굿즈·판촉물을 기획부터 제작·패킹까지 원스톱으로 만드는 제작 플랫폼입니다. 아이디어 단계의 구상을 구성·공정·단가가 잡힌 제작 플랜으로 바꿔 주는 것이 강점이며, 이번 빌더톤의 굿즈를 함께 만듭니다.",
+    en: "A one-stop platform for branded goods and merch — from planning through production and packing — turning rough ideas into concrete, costed production plans. Making this builderthon's goods.",
+  },
+
+  // ── 주관 · 운영 · ORGANIZERS ────────────────────────────────────────────────
+  // TODO: confirm with the organizers before this ships — these three are a
+  // draft written here, not copy the associations themselves supplied.
+  "SMU KSA": {
+    ko: "SMU 한인 학생회(KOMOS)입니다. 이번 빌더톤의 기획과 운영을 총괄합니다.",
+    en: "The Korean student association at SMU (KOMOS) — leading the planning and operations of this builderthon.",
+  },
+  "NUS Korea Society": {
+    ko: "NUS 한인 학생회입니다. 이번 빌더톤의 운영에 함께합니다.",
+    en: "The Korean student society at NUS, co-running this builderthon.",
+  },
+  "NTU KSA": {
+    ko: "NTU 한인 학생회(KSA)입니다. 이번 빌더톤의 운영에 함께합니다.",
+    en: "The Korean student association at NTU (KSA), co-running this builderthon.",
   },
 };
 
@@ -712,6 +780,8 @@ export const dict = {
     opportunities: { ko: "이런 기회가 있어요", en: "What's in it for you" },
     // Partner logo → intro modal
     companyAbout: { ko: "회사 소개", en: "About" },
+    // Shown in the partner modal when the tile it replaced had an outbound link.
+    companySite: { ko: "사이트 열기", en: "Visit site" },
   },
 
   partners: {

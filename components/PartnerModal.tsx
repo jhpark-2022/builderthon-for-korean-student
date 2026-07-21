@@ -13,6 +13,9 @@ export interface PartnerInfo {
   name: string;
   desc: Phrase;
   stage?: Phrase;
+  // The company's own site. Host-tier tiles used to link straight out; they now
+  // open this modal instead, so the link lives here rather than being lost.
+  url?: string;
 }
 
 interface PartnerModalProps {
@@ -172,6 +175,17 @@ export default function PartnerModal({
               <p className="mt-6 text-[15px] leading-7 text-white/75 sm:text-base sm:leading-8">
                 {t(partner.desc)}
               </p>
+
+              {partner.url && (
+                <a
+                  href={partner.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-6 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white/80 transition hover:border-white/30 hover:bg-white/10 hover:text-white"
+                >
+                  {t(dict.modal.companySite)} <span aria-hidden>↗</span>
+                </a>
+              )}
             </div>
           </motion.div>
         </motion.div>
