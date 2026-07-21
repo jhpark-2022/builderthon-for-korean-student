@@ -1178,29 +1178,10 @@ export default function Journey() {
           <p className="mt-3 text-xs text-white/55">{t(dict.benefits.flowNote)}</p>
         </div>
 
-        {/* Incentives — honest stages */}
+        {/* The incentives block (certificate + perks, every line hedged) used to
+            sit here. It doubled the 수료증 card above and read as a wall of
+            "협의 중"; the CTA band below is what it was really holding up. */}
         <div className="mt-10 text-left">
-          <p className="inline-flex items-center gap-2 rounded-full border border-amber-400/25 bg-amber-400/[0.06] px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-amber-200">{t(dict.benefits.incentivesTitle)}</p>
-          <div className="mt-4 grid gap-4 sm:grid-cols-3">
-            {dict.benefits.incentives.map((inc, i) => (
-              <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                <div className="flex items-center justify-between gap-2">
-                  <h4 className="text-base font-bold text-white">{t(inc.title)}</h4>
-                  <span className="shrink-0 rounded-full border border-amber-400/25 bg-amber-400/[0.08] px-2 py-0.5 text-[0.68rem] font-bold text-amber-200">{t(inc.stage)}</span>
-                </div>
-                {/* Bulleted dot list — matches the who/get sections. */}
-                <ul className="mt-3 space-y-2">
-                  {inc.bullets.map((b, bi) => (
-                    <li key={bi} className="flex items-start gap-2.5 text-sm leading-relaxed text-white/70">
-                      <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-amber-300/80" />
-                      {t(b)}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-          <p className="mt-4 text-xs text-white/60">{t(dict.benefits.incentiveNote)}</p>
           {/* Mid-page CTA band — the same hook cards as the hero. Someone who
               has just read what they get shouldn't have to scroll back to the
               top (or all the way to the footer) to act on it. */}

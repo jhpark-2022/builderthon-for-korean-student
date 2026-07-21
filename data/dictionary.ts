@@ -612,7 +612,7 @@ export const dict = {
         points: [
           { ko: "크래시 코스 참여자 전원 발급 · 8일차 이후", en: "Issued to every crash-course participant · after Day 8" },
           { ko: "포트폴리오 · 이력에 활용", en: "Use it in your portfolio and CV" },
-          { ko: "발급 기관·기준 협의 중", en: "Issuing body & criteria in discussion" },
+          { ko: "링크드인에 올릴 수 있는 형태", en: "In a form you can post on LinkedIn" },
         ],
       },
       {
@@ -636,38 +636,6 @@ export const dict = {
     flowNote: {
       ko: "네트워크·경험·성장은 참가자 전원 · 시상은 데모데이 상위 팀.",
       en: "Network, experience and growth for everyone · awards for Demo Day's top teams.",
-    },
-    incentivesTitle: { ko: "참가자 인센티브 · 협의 진행 중", en: "Participant incentives · in discussion" },
-    // NOTE: the '상금 · 시상' card (track-by-track prize/internship breakdown)
-    // was removed at the organizers' request — the amounts are still being
-    // negotiated, and benefits.items[5] already covers prizes at a high level.
-    incentives: [
-      {
-        title: { ko: "크래시 코스 수료증", en: "Crash-course certificate" },
-        // Issuance is CONFIRMED — only the issuing body and the criteria are
-        // still being agreed (that caveat stays in the bullets below).
-        stage: { ko: "발급 확정", en: "Confirmed" },
-        bullets: [
-          { ko: "참여자 전원 발급", en: "Issued to every participant" },
-          { ko: "8일차 이후", en: "After Day 8" },
-          { ko: "발급 기관·기준 협의 중", en: "Body & criteria in discussion" },
-        ],
-      },
-      {
-        title: { ko: "그 외 혜택", en: "Other perks" },
-        stage: { ko: "제공 예정", en: "Planned" },
-        bullets: [
-          { ko: "Free Food", en: "Free food" },
-          { ko: "굿즈 (pen & notes)", en: "Goods (pen & notes)" },
-          { ko: "네트워킹", en: "Networking" },
-          { ko: "팀 1–3인 (솔로 OK)", en: "Teams of 1–3 (solo OK)" },
-          { ko: "스크리닝 없음", en: "No screening" },
-        ],
-      },
-    ],
-    incentiveNote: {
-      ko: "* 인센티브는 파트너사와 협의 진행 중 — 확정되는 대로 업데이트합니다.",
-      en: "* Incentives are in discussion with partners — updated as they're confirmed.",
     },
   },
 
