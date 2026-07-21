@@ -365,10 +365,12 @@ export const dict = {
       },
     ],
     // ── Press ────────────────────────────────────────────────────────────────
-    // One outside voice making the same argument this section makes. Deliberately
-    // links out (the only external link on the page) and deliberately does NOT
-    // name the organizer the piece profiles — the site's own copy stays
-    // name-free, and the byline is one click away in the article itself.
+    // Outside coverage of the gap described just above, rendered as a slim
+    // citation row under the 지금의 현실 block (logo · title · date · link — no
+    // blurb, the row stays one line). Deliberately links out (the only external
+    // link on the page) and deliberately does NOT name the organizer the piece
+    // profiles — the site's own copy stays name-free, and the byline is one
+    // click away in the article itself.
     pressTag: { ko: "언론에 소개된 이야기", en: "In the press" },
     press: [
       {
@@ -377,10 +379,6 @@ export const dict = {
         title: {
           ko: "「세계는 넓고 할 일은 많다」",
           en: "“The world is wide, and there's much to do”",
-        },
-        blurb: {
-          ko: "싱가포르 한인 유학생 1,000명에게 왜 대표 조직과 멘토십이 필요한지, 그리고 이 빌더톤이 어떻게 ‘벽이 아니라 다리’를 놓으려 하는지를 다룬 기사입니다.",
-          en: "On why 1,000 Korean students in Singapore need a body and mentorship of their own — and how this builderthon is trying to build bridges rather than walls.",
         },
         url: "https://bzcf.io/segyeneun-neolbgo-hal-ileun-manhda/",
         logo: "/partners/logos/white/trimmed/bzcf.png",

@@ -921,6 +921,35 @@ export default function Journey() {
           <p className="mx-auto mt-6 max-w-2xl border-t border-white/10 pt-5 text-center text-sm leading-relaxed text-white/70">
             {t(dict.about.gapNote)}
           </p>
+
+          {/* Press — outside coverage of the very gap this block just described,
+              so it sits with the claim rather than after the chapter's closing
+              vision funnel. One slim full-width row per article (logo · title ·
+              date · outbound), not a card, so it reads as a citation. Add
+              entries to dict.about.press to extend. */}
+          <div className="mx-auto mt-6 max-w-2xl">
+            <p className="text-center text-[0.68rem] font-bold uppercase tracking-[0.2em] text-white/40">
+              {t(dict.about.pressTag)}
+            </p>
+            {dict.about.press.map((p) => (
+              <a
+                key={p.url}
+                href={p.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-center transition hover:border-violet-400/30 hover:bg-white/[0.06]"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={p.logo} alt={p.outlet} className="h-4 w-auto max-w-[5.5rem] shrink-0 object-contain opacity-70" />
+                <span className="text-sm font-semibold text-white/90">{t(p.title)}</span>
+                <span className="text-xs text-white/40">{t(p.date)}</span>
+                <span className="inline-flex items-center gap-1 text-xs font-semibold text-violet-300 transition group-hover:text-violet-200">
+                  {t(dict.about.pressCta)}
+                  <span aria-hidden>↗</span>
+                </span>
+              </a>
+            ))}
+          </div>
         </div>
 
         {/* the answer — the shift we're building */}
@@ -982,37 +1011,6 @@ export default function Journey() {
           </ol>
         </div>
 
-        {/* Press — outside coverage making the same case this chapter makes.
-            The only external link on the page, so it's explicit about leaving
-            (new tab + noopener). Add entries to dict.about.press to extend. */}
-        <div className="mt-10 text-left">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/55">
-            {t(dict.about.pressTag)}
-          </p>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            {dict.about.press.map((p) => (
-              <a
-                key={p.url}
-                href={p.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition hover:border-violet-400/30 hover:bg-white/[0.06]"
-              >
-                <div className="flex items-center gap-3">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={p.logo} alt={p.outlet} className="h-5 w-auto max-w-[7rem] object-contain opacity-80" />
-                  <span className="text-xs text-white/45">{t(p.date)}</span>
-                </div>
-                <p className="mt-3 text-base font-semibold leading-snug text-white">{t(p.title)}</p>
-                <p className="mt-2 text-[13px] leading-relaxed text-white/70">{t(p.blurb)}</p>
-                <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-violet-300 transition group-hover:text-violet-200">
-                  {t(dict.about.pressCta)}
-                  <span aria-hidden>↗</span>
-                </span>
-              </a>
-            ))}
-          </div>
-        </div>
       </Chapter>
 
       {/* ── CH 2 · WHO SHOULD JOIN / WHAT YOU GET ──────────────────── */}

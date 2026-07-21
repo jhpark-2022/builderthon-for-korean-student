@@ -141,8 +141,16 @@ rather than in a footer strip — the chapter's claims were all self-asserted, a
 deleting the traction section had left the page with no outside evidence at all.
 
 - `dict.about.press` (array, so more articles just append) + `pressTag` /
-  `pressCta`, and a card in `Journey.tsx` rendering outlet logo, date, title,
-  blurb and an outbound CTA.
+  `pressCta`, rendered in `Journey.tsx`.
+- **Moved once, after seeing it live.** It first went at the very end of the
+  chapter, under the vision funnel, as a half-width card — and read as an
+  orphan: it interrupted "이벤트는 끝이 아니라 초입", which is the chapter's
+  closing beat, and sat alone beside the funnel's full-width framed box. It now
+  lives **inside the 지금의 현실 block**, directly under `gapNote`, as a slim
+  centred row (logo · title · date · outbound). Evidence next to the claim it
+  supports, the vision funnel gets its ending back, and the row reads as a
+  citation rather than a promo card. The article `blurb` copy was dropped with
+  the card since the row is one line.
 - **The site's own copy does not name the organizer the article profiles.** The
   piece is a personal profile; the byline stays one click away, matching how the
   rest of the site handles real names.
