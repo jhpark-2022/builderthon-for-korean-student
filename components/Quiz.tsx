@@ -571,29 +571,6 @@ function ResultView({
     }
   }, [saving, result.resultId, t]);
 
-  // Share the result LINK (distinct from the story image above). Native share
-  // sheet where available; otherwise copy the link and confirm via the toast.
-  const share = useCallback(async () => {
-    const origin = typeof window !== "undefined" ? window.location.origin : "";
-    const url = `${origin}/quiz?r=${result.resultId}`;
-    try {
-      if (typeof navigator !== "undefined" && navigator.share) {
-        await navigator.share({ title: `${t(variant.name)} · ${result.resultId}`, text: t(quizUI.title), url });
-        return;
-      }
-      throw new Error("no native share");
-    } catch (err) {
-      if ((err as Error)?.name === "AbortError") return; // user dismissed the sheet
-      try {
-        await navigator.clipboard.writeText(url);
-        setToast(t(quizUI.copied));
-        window.setTimeout(() => setToast(null), 2200);
-      } catch {
-        /* clipboard blocked — silently no-op */
-      }
-    }
-  }, [result.resultId, t, variant]);
-
   return (
     <motion.div
       className="flex flex-col items-center pb-6 pt-2"
@@ -707,7 +684,7 @@ function ResultView({
         {/* Dream teammates — the two types this result pairs best with, and why. */}
         <DreamTeammates result={result} t={t} reduce={reduce} />
 
-        {/* Actions: story-image save (primary, full width), then share + retake. */}
+        {/* Actions: story-image save (primary), then retake. */}
         <div className="mx-auto flex w-full max-w-xl flex-col gap-3">
           {/* Save as a 9:16 story image (native share sheet on mobile). */}
           <button
@@ -727,34 +704,25 @@ function ResultView({
             )}
           </button>
 
-          {/* share link + retake. For share-link visitors the retake becomes the
-              prominent viral CTA ("나도 테스트하기") — the loop's key conversion. */}
-          <div className="flex w-full gap-3">
+          {/* retake. For share-link visitors it becomes the prominent viral CTA
+              ("나도 테스트하기") — the loop's key conversion. */}
+          {fromShare ? (
             <button
               type="button"
-              onClick={share}
-              className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10"
+              onClick={onRetake}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-3.5 text-sm font-bold text-white shadow-[0_8px_30px_rgba(124,58,237,0.45)] transition hover:-translate-y-0.5"
             >
-              ↗ {t(quizUI.share)}
+              ✦ {t(quizUI.retakeViral)}
             </button>
-            {fromShare ? (
-              <button
-                type="button"
-                onClick={onRetake}
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-3.5 text-sm font-bold text-white shadow-[0_8px_30px_rgba(124,58,237,0.45)] transition hover:-translate-y-0.5"
-              >
-                ✦ {t(quizUI.retakeViral)}
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={onRetake}
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10"
-              >
-                ↻ {t(quizUI.retake)}
-              </button>
-            )}
-          </div>
+          ) : (
+            <button
+              type="button"
+              onClick={onRetake}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10"
+            >
+              ↻ {t(quizUI.retake)}
+            </button>
+          )}
         </div>
       </div>
 
