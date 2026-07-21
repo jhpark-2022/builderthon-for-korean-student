@@ -3,6 +3,7 @@
 import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
 import LocaleToggle from "@/components/LocaleToggle";
 import {
@@ -533,6 +534,8 @@ function ResultView({
       if (canShareFiles) {
         try {
           await navigator.share({ files: [file] });
+          // Counted only on resolve — a dismissed sheet throws AbortError below.
+          track("story_share", { type: result.resultId });
         } catch (err) {
           // User dismissed the share sheet — not a failure, stay silent.
           if ((err as Error)?.name === "AbortError") return;
@@ -544,6 +547,7 @@ function ResultView({
         // nothing and the visitor was left with no image. Show the PNG instead
         // and tell them to long-press it, which always works.
         setHoldImage(URL.createObjectURL(blob));
+        track("story_longpress_shown", { type: result.resultId });
       } else {
         // Desktop → download the PNG, and say so: a file landing in a folder
         // somewhere is otherwise invisible feedback.
@@ -555,6 +559,7 @@ function ResultView({
         a.click();
         a.remove();
         URL.revokeObjectURL(url);
+        track("story_download", { type: result.resultId });
         setToast(t(quizUI.saveImageSaved));
         window.setTimeout(() => setToast(null), 2600);
       }
