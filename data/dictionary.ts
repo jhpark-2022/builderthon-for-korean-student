@@ -160,8 +160,8 @@ export const dict = {
     // or a KakaoTalk id means someone we can't invite.
     contactLabel: { ko: "텔레그램 ID", en: "Telegram username" },
     contactHint: {
-      ko: "텔레그램 단체방 초대에 사용돼요. 텔레그램 앱 → 설정에서 사용자명을 확인할 수 있어요.",
-      en: "Used to invite you to the Telegram group chat. Find yours in Telegram → Settings.",
+      ko: "@username 형태로 적어주세요. 텔레그램 단체방 초대에 사용돼요 (앱 → 설정에서 확인).",
+      en: "Please give it as @username — used for the Telegram group-chat invite (Telegram → Settings).",
     },
     contactPlaceholder: { ko: "@username", en: "@username" },
     // LinkedIn (optional) — registrant + each team member.
@@ -235,12 +235,6 @@ export const dict = {
     errRequired: { ko: "필수 항목이에요.", en: "This field is required." },
     errEmail: { ko: "이메일 형식을 확인해 주세요.", en: "Please enter a valid email." },
     errDupEmail: { ko: "이미 입력한 이메일이에요.", en: "This email is already entered." },
-    // Telegram handles are 5–32 characters: letters, digits and underscores,
-    // starting with a letter. A t.me link or a bare username is fine too.
-    errTelegram: {
-      ko: "텔레그램 ID를 입력해 주세요. 예: @username (전화번호·카카오톡 ID는 안 돼요)",
-      en: "Enter your Telegram username, e.g. @username (not a phone number).",
-    },
     // Shown when the submit itself fails (network down / server error). The
     // form stays filled in so the visitor can just press the button again.
     errSubmit: {

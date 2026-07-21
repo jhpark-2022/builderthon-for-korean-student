@@ -33,7 +33,7 @@ import { cloneElement, isValidElement, useEffect, useRef, useState } from "react
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
-import { isTelegramHandle, normalizeTelegramHandle } from "@/lib/telegram";
+import { normalizeTelegramHandle } from "@/lib/telegram";
 import { dict, REGISTER_ENDPOINT } from "@/data/dictionary";
 import { RESULTS } from "@/data/quiz";
 import { parseResultId } from "@/lib/quizScore";
@@ -394,14 +394,12 @@ export default function RegisterModal({
     const req = t(dict.register.errRequired);
     const badEmail = t(dict.register.errEmail);
     const dupEmail = t(dict.register.errDupEmail);
-    const badHandle = t(dict.register.errTelegram);
 
     // Member 1 (registrant).
     if (!name.trim()) next.name = req;
     if (!email.trim()) next.email = req;
     else if (!EMAIL_RE.test(email.trim())) next.email = badEmail;
     if (!contact.trim()) next.contact = req;
-    else if (!isTelegramHandle(contact)) next.contact = badHandle;
     // Join type drives the whole rest of the form (team section, matching, and
     // how organizers group the entry), so it's required here even though the API
     // still accepts null — no server change needed.
@@ -414,7 +412,6 @@ export default function RegisterModal({
         if (!m.email.trim()) next[`m${m.id}-email`] = req;
         else if (!EMAIL_RE.test(m.email.trim())) next[`m${m.id}-email`] = badEmail;
         if (!m.contact.trim()) next[`m${m.id}-contact`] = req;
-        else if (!isTelegramHandle(m.contact)) next[`m${m.id}-contact`] = badHandle;
       });
       const entries = [
         { key: "email", value: email },
@@ -444,8 +441,10 @@ export default function RegisterModal({
     setStatus("submitting");
 
     // Light normalization: trim only (accept full URL or bare handle). The
-    // Telegram field is the exception — it's stored canonicalised as "@handle"
-    // so organizers can paste it straight into Telegram search.
+    // Telegram field is the exception — when it parses as a handle it's stored
+    // canonicalised as "@handle" so organizers can paste it straight into
+    // Telegram search. Anything else goes through as typed: the copy asks for a
+    // handle, it doesn't police the answer.
     const uni = (val: string, other: string) =>
       val === "other" ? other.trim() || undefined : val || undefined;
     const link = (v: string) => v.trim() || undefined;

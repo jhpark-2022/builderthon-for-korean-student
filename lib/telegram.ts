@@ -1,11 +1,11 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Telegram handle normalisation + validation.
+// Telegram handle normalisation.
 //
-// The registration contact field is a Telegram username, full stop — organizers
-// invite every participant to the Telegram group chat, so anything else (a phone
-// number, a KakaoTalk id) means a registrant we can't reach. Shared by the
-// client form (instant feedback) and app/api/register (the actual gate), so both
-// accept exactly the same inputs and store exactly the same shape.
+// The registration contact field asks for a Telegram username — organizers
+// invite every participant to the Telegram group chat. It's an ASK, not a gate:
+// nothing here rejects a registration. All this does is tidy whatever people
+// paste into one storable shape, so organizers aren't left with a mix of
+// "@me", "t.me/me" and "  me  " for the same person.
 //
 // Accepted input, since people paste whatever their app shows them:
 //   @jhpark  ·  jhpark  ·  t.me/jhpark  ·  https://t.me/jhpark  ·  telegram.me/jhpark
@@ -33,13 +33,9 @@ function bare(raw: string): string {
     .trim();
 }
 
-/** True when the input is a usable Telegram handle in any accepted form. */
-export function isTelegramHandle(raw: string | null | undefined): boolean {
-  return typeof raw === "string" && HANDLE_RE.test(bare(raw));
-}
-
 /**
- * Canonical "@username" for storage, or null if the input isn't a valid handle.
+ * Canonical "@username" for storage, or null when the input isn't handle-shaped
+ * — callers keep the raw text in that case rather than refusing it.
  * Case is preserved as typed — Telegram handles are case-insensitive, but the
  * capitalisation the visitor uses is how they'd recognise themselves.
  */
