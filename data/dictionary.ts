@@ -249,6 +249,13 @@ export const dict = {
     removeMember: { ko: "팀원 삭제", en: "Remove teammate" },
     // Field 6 — interested track.
     trackLabel: { ko: "관심 트랙", en: "Track of interest" },
+    // The track line-up is still being worked out, so this answer is a signal of
+    // interest, not a pick from a final menu — say so rather than let the select
+    // imply otherwise.
+    trackHint: {
+      ko: "트랙 구성은 아직 확정 전이에요. 참고용으로만 받고, 확정되면 다시 안내드려요.",
+      en: "The track line-up isn't final yet — this is just a signal of interest, and we'll follow up once it's confirmed.",
+    },
     trackOptions: [
       { value: "finance", label: { ko: "재무", en: "Finance" } },
       { value: "sales", label: { ko: "영업", en: "Sales" } },
@@ -582,7 +589,7 @@ export const dict = {
         points: [
           { ko: "출제가 아니라 ‘의뢰’ — 학생은 주니어 컨설턴트로 프로세스·아픔을 진단해 AI로 재설계", en: "Not a prompt but a brief — you're a junior consultant diagnosing a real process & pain, then redesigning it with AI" },
           { ko: "가상 과제가 아닌 파트너사의 실제 AX 문제 + 직원 피드백", en: "Not toy prompts — a partner's real AX problem + employee feedback" },
-          { ko: "재무·영업·마케팅 3트랙 · AWS 방법론으로 접근 (클라이언트 사명은 조율 중)", en: "Finance · sales · marketing — 3 tracks · approached with AWS methodology (client names TBC)" },
+          { ko: "트랙 구성 미확정 — 재무·영업·마케팅 3트랙으로 논의 중(잠정) · AWS 방법론으로 접근 · 클라이언트 사명도 조율 중", en: "Tracks not finalized — finance · sales · marketing under discussion (tentative) · approached with AWS methodology · client names TBC" },
           { ko: "모든 참가팀에게 실제 문제와 기업 담당자 브리핑 제공 (Day 2 라이브 브리핑)", en: "Every team gets a real problem and a briefing from the company contact (Day 2, live)" },
         ],
       },
@@ -796,8 +803,8 @@ export const dict = {
       {
         q: { ko: "테마가 뭔가요? 너무 막연해요.", en: "What's the theme? It feels vague." },
         a: {
-          ko: "테마는 ‘AI’가 아니라 ‘산업’입니다. 실제 한국 기업이 지금 겪는 진짜 AX(AI 전환) 과제를 트랙별로 제공합니다. 문제는 ‘Broad problem, sharp objective’ — 목표는 뾰족하게 주되 푸는 방법은 여러분의 몫입니다. 출제가 아니라 ‘의뢰’에 가깝습니다 — 학생은 주니어 컨설턴트처럼 클라이언트의 프로세스와 아픔을 진단해 AI로 다시 설계합니다. 트랙은 재무·영업·마케팅 3트랙(마케팅은 입문 트랙)으로 구체화하고 있고 클라이언트 사명은 조율 중이며, 비전공자도 감을 잡을 수 있도록 산업 맥락을 함께 제공합니다.",
-          en: "The theme isn't ‘AI’ — it's industry. You'll get real AX (AI-transformation) problems Korean companies are facing right now, organized by track. The format is ‘broad problem, sharp objective’: the goal is sharp, but how you solve it is up to you. It's less a prompt than a brief — you act like a junior consultant, diagnosing a client's process and pain and redesigning it with AI. Tracks are being finalized as three — finance, sales and marketing (marketing is the beginner track) — with client names still being arranged, and we give you the industry context so non-CS participants can find their footing.",
+          ko: "테마는 ‘AI’가 아니라 ‘산업’입니다. 실제 한국 기업이 지금 겪는 진짜 AX(AI 전환) 과제를 트랙별로 제공합니다. 문제는 ‘Broad problem, sharp objective’ — 목표는 뾰족하게 주되 푸는 방법은 여러분의 몫입니다. 출제가 아니라 ‘의뢰’에 가깝습니다 — 학생은 주니어 컨설턴트처럼 클라이언트의 프로세스와 아픔을 진단해 AI로 다시 설계합니다. 트랙 구성은 아직 확정되지 않았습니다 — 현재 재무·영업·마케팅 3트랙(마케팅은 입문 트랙)으로 논의 중이며, 트랙과 클라이언트 사명 모두 확정되는 대로 안내합니다. 비전공자도 감을 잡을 수 있도록 산업 맥락을 함께 제공합니다.",
+          en: "The theme isn't ‘AI’ — it's industry. You'll get real AX (AI-transformation) problems Korean companies are facing right now, organized by track. The format is ‘broad problem, sharp objective’: the goal is sharp, but how you solve it is up to you. It's less a prompt than a brief — you act like a junior consultant, diagnosing a client's process and pain and redesigning it with AI. The tracks aren't confirmed yet — three are under discussion (finance, sales and marketing, with marketing as the beginner track), and we'll announce both the tracks and the client names once they're settled. We give you the industry context either way, so non-CS participants can find their footing.",
         },
       },
       {

@@ -922,7 +922,11 @@ export default function RegisterModal({
                     )}
 
                     {/* 7 · Interested track (team-level) */}
-                    <Field label={t(dict.register.trackLabel)} optional={t(dict.register.optional)}>
+                    <Field
+                      label={t(dict.register.trackLabel)}
+                      optional={t(dict.register.optional)}
+                      hint={t(dict.register.trackHint)}
+                    >
                       <SelectField
                         value={track}
                         onChange={setTrack}

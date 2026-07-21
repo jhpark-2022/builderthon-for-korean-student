@@ -353,12 +353,12 @@ export const schedule: BEvent[] = [
     timeOfDay: "PM",
     title: { ko: "문제 공개 · 트랙 선택", en: "Problem Release · Track Selection" },
     summary: {
-      ko: "실제 기업의 AX 과제가 공개되고, 트랙을 고르며 8일 빌드 시계가 시작됩니다.",
-      en: "Real companies' AX problems drop, you pick a track — and the 8-day build clock starts.",
+      ko: "실제 기업의 AX 과제가 공개되고, 트랙을 고르며 8일 빌드 시계가 시작됩니다 (트랙 구성은 확정 전).",
+      en: "Real companies' AX problems drop, you pick a track — and the 8-day build clock starts (track line-up not final yet).",
     },
     description: {
-      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 여기서 공개된 문제를 Day 2 기업 브리핑에서 담당자에게 직접 듣고 나면, 팀별 자율 빌드가 그때부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 만들어 갑니다. Day 1은 필참이며 *SCAPE L^IFE Jungle 현장 진행을 목표로 합니다(장소 미정 시 Zoom). (Day 2에는 크래시코스 직후 트랙별 라이브 브리핑이 이어집니다.)",
-      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. Once the Day-2 briefing has the client contacts walk you through those problems first-hand, self-paced team build runs continuously from there to Demo Day — no start whistle to wait for, each team at its own pace. Day 1 is mandatory and aims to run on-site at *SCAPE L^IFE Jungle (Zoom fallback if the venue isn't locked). (A live per-track briefing follows on Day 2, right after the Crash Course.)",
+      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 트랙 구성은 아직 확정 전이며(재무·영업·마케팅 3트랙으로 논의 중), 확정되는 대로 안내합니다. 여기서 공개된 문제를 Day 2 기업 브리핑에서 담당자에게 직접 듣고 나면, 팀별 자율 빌드가 그때부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 만들어 갑니다. Day 1은 필참이며 *SCAPE L^IFE Jungle 현장 진행을 목표로 합니다(장소 미정 시 Zoom). (Day 2에는 크래시코스 직후 트랙별 라이브 브리핑이 이어집니다.)",
+      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. The track line-up isn't confirmed yet (three — finance, sales and marketing — are under discussion) and we'll announce it once settled. Once the Day-2 briefing has the client contacts walk you through those problems first-hand, self-paced team build runs continuously from there to Demo Day — no start whistle to wait for, each team at its own pace. Day 1 is mandatory and aims to run on-site at *SCAPE L^IFE Jungle (Zoom fallback if the venue isn't locked). (A live per-track briefing follows on Day 2, right after the Crash Course.)",
     },
     location: ONSITE,
   },
@@ -602,8 +602,8 @@ export const schedule: BEvent[] = [
       en: "13:00 · exchange across the tracks (after the 12:25 lunch).",
     },
     description: {
-      ko: "12:25 런치로 숨을 고른 뒤, 13:00부터 이어지는 크로스트랙 교류 세션입니다. 재무·영업·마케팅 트랙을 넘나들며 참가자·멘토·파트너가 자연스럽게 섞이고, 다른 트랙이 같은 8일을 어떻게 풀고 있는지를 직접 듣습니다. 온라인으로 쌓아 온 관계를 얼굴을 맞대고 다지고, 팀을 넘어선 연결을 만드는 자리입니다.",
-      en: "After a 12:25 lunch break, a cross-track exchange session runs from 13:00. Participants, mentors and partners mix across the finance, sales and marketing tracks, and you hear first-hand how another track is tackling the same eight days. It turns the relationships built online into face-to-face ones and makes connections beyond your own team.",
+      ko: "12:25 런치로 숨을 고른 뒤, 13:00부터 이어지는 크로스트랙 교류 세션입니다. 트랙을 넘나들며 참가자·멘토·파트너가 자연스럽게 섞이고, 다른 트랙이 같은 8일을 어떻게 풀고 있는지를 직접 듣습니다. 온라인으로 쌓아 온 관계를 얼굴을 맞대고 다지고, 팀을 넘어선 연결을 만드는 자리입니다.",
+      en: "After a 12:25 lunch break, a cross-track exchange session runs from 13:00. Participants, mentors and partners mix across the tracks, and you hear first-hand how another track is tackling the same eight days. It turns the relationships built online into face-to-face ones and makes connections beyond your own team.",
     },
     location: ONSITE,
   },
