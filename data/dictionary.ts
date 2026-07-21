@@ -219,7 +219,7 @@ export const dict = {
     titleLine1: { ko: "싱가포르,", en: "Build" },
     titleLine2: { ko: "빌드의 무대", en: "in Singapore." },
     dates: { ko: "2026.08.22 – 08.29 · 8일", en: "22–29 Aug 2026 · 8 days" },
-    location: { ko: "싱가포르 · *SCAPE L^IFE Jungle", en: "Singapore · *SCAPE L^IFE Jungle" },
+    location: { ko: "싱가포르 · *SCAPE L^IFE Jungle & AWS 오피스", en: "Singapore · *SCAPE L^IFE Jungle & AWS office" },
     blurb: {
       ko: "싱가포르에서 공부하는 한국 학생 약 100명이 8일간, 실제 기업의 AI 전환(AX) 과제를 바이브 코딩으로 직접 풀어내는 AI 빌더톤. zero에서 MVP까지 — 데모로 끝나지 않는 ‘성공의 경험’을 남깁니다.",
       en: "Around 100 Korean students in Singapore spend 8 days solving real companies' AI-transformation (AX) problems with vibe coding. From zero to MVP — a real success that goes beyond a demo.",
@@ -501,9 +501,9 @@ export const dict = {
         title: { ko: "네트워킹", en: "Networking" },
         points: [
           { ko: "대표·경력자와 Day 1·5·7·8 현장 교류", en: "In-person exchange with founders on Days 1·5·7·8" },
-          { ko: "박희덕·원대로·이병일 등 연사 세션", en: "Speaker sessions with Park · Won · Lee and more" },
+          { ko: "박희덕·원대로 등 연사 세션", en: "Speaker sessions with Park · Won and more" },
           { ko: "패널·공유 세션으로 technical 그 이상의 인사이트", en: "Panels & sharing sessions for more-than-technical insight" },
-          { ko: "Day 5 참가자 AI 유스케이스 발표 (대표진 청중)", en: "Day 5 participant AI use-case showcase (founders in the room)" },
+          { ko: "Day 5 참가자 AI 유스케이스 발표 · QR 인기투표 (대표진 청중)", en: "Day 5 participant AI use-case showcase + QR popular vote (founders in the room)" },
         ],
       },
       {
@@ -519,7 +519,7 @@ export const dict = {
         num: "06",
         title: { ko: "인턴십 · 상금", en: "Internships & prizes" },
         points: [
-          { ko: "Normal 2트랙(재무·영업) 1위 = 유급 FDE 인턴 — ‘AXMOS 학생 TF’로 잇는 선순환 · 잠정", en: "1st in each Normal track (finance · sales) = paid FDE internship — a virtuous loop as the ‘AXMOS student TF’ · tentative" },
+          { ko: "딥다이브 2트랙(재무·영업) 1위 = 유급 FDE 인턴 — ‘AXMOS 학생 TF’로 잇는 선순환 · 잠정", en: "1st in each Deep Dive track (finance · sales) = paid FDE internship — a virtuous loop as the ‘AXMOS student TF’ · tentative" },
           { ko: "트랙별 순위 시상 · 상금 S$100 · 널담 바우처 · 잠정", en: "Ranked per-track awards · S$100 prize · Nuldam voucher · tentative" },
           { ko: "After 파이프라인(투자·인턴)으로 연결", en: "Bridges into an After pipeline (investment · internship)" },
           { ko: "굿즈 (pen·notes) 등", en: "Goods (pens · notes) and more" },
@@ -545,9 +545,10 @@ export const dict = {
         // Broken into sentence-level bullets so it renders as a dot list (like
         // the other sections) rather than one dense run-on paragraph.
         bullets: [
-          { ko: "Normal 2트랙(재무·영업): 1위 유급 FDE 인턴(코드프레소·WVB · 겨울 ~1.5개월 · 트랙당 최대 3명) · 2위 상금 S$100 · 3위 널담 $25 바우처", en: "Normal tracks ×2 (finance · sales): 1st = paid FDE internship (Codepresso · WVB · ~1.5 winter months · up to 3 per track) · 2nd = S$100 · 3rd = a Nuldam S$25 voucher" },
-          { ko: "Beginner 트랙(마케팅): 1위 상금 S$100 · 2·3위 널담 $25 바우처", en: "Beginner track (marketing): 1st = S$100 · 2nd/3rd = Nuldam S$25 voucher" },
-          { ko: "유급 인턴은 Normal 트랙만", en: "Paid internships are Normal-track only" },
+          { ko: "딥다이브 2트랙(재무·영업): 1위 유급 FDE 인턴(코드프레소·WVB · 겨울 ~1.5개월 · 트랙당 최대 3명) · 2위 상금 S$100 · 3위 널담 $25 바우처", en: "Deep Dive tracks ×2 (finance · sales): 1st = paid FDE internship (Codepresso · WVB · ~1.5 winter months · up to 3 per track) · 2nd = S$100 · 3rd = a Nuldam S$25 voucher" },
+          { ko: "스프린트 트랙(마케팅 · 입문): 1위 상금 S$100 · 2·3위 널담 $25 바우처", en: "Sprint track (marketing · beginner): 1st = S$100 · 2nd/3rd = Nuldam S$25 voucher" },
+          { ko: "유급 인턴은 딥다이브 트랙만", en: "Paid internships are Deep Dive-track only" },
+          { ko: "별도 · AI Use Case: Day 5 학생 AI 활용 사례 발표 · QR 인기투표 Top 3 = ‘해녀의 부엌’ $25 다이닝 바우처(싱가포르 지점) · 잠정", en: "Separately · AI Use Case: the Day 5 student AI use-case showcase — QR popular-vote top 3 = a S$25 dining voucher for ‘Haenyeo's Kitchen’ (Singapore branch) · tentative" },
           { ko: "전 항목 잠정(조율 중)", en: "All tentative (in discussion)" },
         ],
       },
@@ -601,19 +602,6 @@ export const dict = {
         ],
       },
       {
-        day: { ko: "Day 5 · 오프라인 킥오프", en: "Day 5 · In-person kickoff" },
-        name: { ko: "이병일", en: "Lee Byung-il" },
-        role: { ko: "Venture Partner, Wilt Venture Builder (SG)", en: "Venture Partner, Wilt Venture Builder (SG)" },
-        topic: { ko: "‘창업가의 멘탈관리와 회복탄력성’", en: "“Founder resilience & mental management”" },
-        img: "/partners/logos/speaker-lee.jpeg",
-        points: [
-          { ko: "스타트업 실패·재기 스토리로 배우는 회복탄력성", en: "Resilience, learned from startup failure & comeback stories" },
-          { ko: "빌드 중 좌절 대처 + 완주 동기부여", en: "Handling mid-build setbacks + the drive to finish" },
-          { ko: "헤드다운 빌드 직전, 완주 동기를 다시 채우는 자리", en: "Right before the heads-down build — topping up the motivation to finish" },
-          { ko: "같은 날 ‘참여자 AI Use Case’ 패널도 함께 진행", en: "Paired the same day with a ‘Participant AI Use Cases’ panel" },
-        ],
-      },
-      {
         day: { ko: "Day 8 · 데모데이", en: "Day 8 · Demo Day" },
         name: { ko: "박희덕", en: "Park Hee-deok" },
         role: { ko: "CEO · General Partner, Translink Investment (VC)", en: "CEO · General Partner, Translink Investment (VC)" },
@@ -628,8 +616,8 @@ export const dict = {
       },
     ],
     tbcNote: {
-      ko: "* 연사 라인업은 미확정이며 공개 시점·구성은 조정될 수 있습니다.",
-      en: "* The speaker line-up is not yet final and may change.",
+      ko: "* Day 5에는 ‘유학생에서 창업가로’ 패널(유학생 출신 창업가 3인)이 예정되어 있으며 현재 섭외 중입니다. 연사 라인업은 미확정이며 공개 시점·구성은 조정될 수 있습니다.",
+      en: "* Day 5 hosts a ‘From Int'l Student to Founder’ panel (three founders who came up as international students) — panelists are still being arranged. The speaker line-up is not yet final and may change.",
     },
   },
 
