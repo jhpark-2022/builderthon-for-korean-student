@@ -538,20 +538,10 @@ export const dict = {
       en: "Network, experience and growth for everyone · awards for Demo Day's top teams.",
     },
     incentivesTitle: { ko: "참가자 인센티브 · 협의 진행 중", en: "Participant incentives · in discussion" },
+    // NOTE: the '상금 · 시상' card (track-by-track prize/internship breakdown)
+    // was removed at the organizers' request — the amounts are still being
+    // negotiated, and benefits.items[5] already covers prizes at a high level.
     incentives: [
-      {
-        title: { ko: "상금 · 시상", en: "Prizes & awards" },
-        stage: { ko: "잠정 · 조율 중", en: "Tentative · in discussion" },
-        // Broken into sentence-level bullets so it renders as a dot list (like
-        // the other sections) rather than one dense run-on paragraph.
-        bullets: [
-          { ko: "딥다이브 2트랙(재무·영업): 1위 유급 FDE 인턴(코드프레소·WVB · 겨울 ~1.5개월 · 트랙당 최대 3명) · 2위 상금 S$100 · 3위 널담 $25 바우처", en: "Deep Dive tracks ×2 (finance · sales): 1st = paid FDE internship (Codepresso · WVB · ~1.5 winter months · up to 3 per track) · 2nd = S$100 · 3rd = a Nuldam S$25 voucher" },
-          { ko: "스프린트 트랙(마케팅 · 입문): 1위 상금 S$100 · 2·3위 널담 $25 바우처", en: "Sprint track (marketing · beginner): 1st = S$100 · 2nd/3rd = Nuldam S$25 voucher" },
-          { ko: "유급 인턴은 딥다이브 트랙만", en: "Paid internships are Deep Dive-track only" },
-          { ko: "별도 · AI Use Case: Day 5 학생 AI 활용 사례 발표 · QR 인기투표 Top 3 = ‘해녀의 부엌’ $25 다이닝 바우처(싱가포르 지점) · 잠정", en: "Separately · AI Use Case: the Day 5 student AI use-case showcase — QR popular-vote top 3 = a S$25 dining voucher for ‘Haenyeo's Kitchen’ (Singapore branch) · tentative" },
-          { ko: "전 항목 잠정(조율 중)", en: "All tentative (in discussion)" },
-        ],
-      },
       {
         title: { ko: "크래시 코스 수료증", en: "Crash-course certificate" },
         stage: { ko: "협의 중", en: "In discussion" },
