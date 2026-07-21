@@ -19,8 +19,10 @@ export const links = {
   // TODO: 신청 폼 열리면 교체 (placeholder) — 당분간 program 앵커를 재사용.
   signup: "#program",
   // Organizer contact for partnership/sponsor inquiries, with a prefilled subject.
+  // Deliberately a personal address rather than the school one: partner threads
+  // outlive the .edu account.
   partnership:
-    "mailto:jhpark.2022@business.smu.edu.sg?subject=Zero100%20Builderthon%20Partnership%20Inquiry",
+    "mailto:pjh030924@gmail.com?subject=Zero100%20Builderthon%20Partnership%20Inquiry",
 };
 
 // Registration submit target — our own route handler, which validates the
@@ -223,8 +225,8 @@ export const dict = {
     // people with no idea whether to wait a day or a month, or whom to poke.
     // TODO: '며칠 내' → 운영 확정 시 '2–3일 내'로 (EN: "within a few days" → "in 2–3 days")
     successBody: {
-      ko: "며칠 내 텔레그램 단체방으로 초대해 드려요. 연락이 없으면 jhpark.2022@business.smu.edu.sg 로 문의해 주세요.",
-      en: "We'll invite you to the Telegram group chat within a few days. If you don't hear from us, email jhpark.2022@business.smu.edu.sg.",
+      ko: "며칠 내 텔레그램 단체방으로 초대해 드려요. 연락이 없으면 pjh030924@gmail.com 로 문의해 주세요.",
+      en: "We'll invite you to the Telegram group chat within a few days. If you don't hear from us, email pjh030924@gmail.com.",
     },
     successClose: { ko: "닫기", en: "Close" },
     // Validation.
