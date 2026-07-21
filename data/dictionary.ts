@@ -592,9 +592,11 @@ export const dict = {
     incentives: [
       {
         title: { ko: "크래시 코스 수료증", en: "Crash-course certificate" },
-        stage: { ko: "협의 중", en: "In discussion" },
+        // Issuance is CONFIRMED — only the issuing body and the criteria are
+        // still being agreed (that caveat stays in the bullets below).
+        stage: { ko: "발급 확정", en: "Confirmed" },
         bullets: [
-          { ko: "참여자 전원 발급 추진", en: "Aiming to issue to all participants" },
+          { ko: "참여자 전원 발급", en: "Issued to every participant" },
           { ko: "8일차 이후", en: "After Day 8" },
           { ko: "발급 기관·기준 협의 중", en: "Body & criteria in discussion" },
         ],
@@ -793,8 +795,8 @@ export const dict = {
       {
         q: { ko: "수료증을 주나요? 의미가 있나요?", en: "Is there a certificate? Is it worth anything?" },
         a: {
-          ko: "크래시코스를 완료한 참여자 전원에게 수료증 발급을 추진하고 있습니다(링크드인에 올릴 수 있는 형태). 발급 기관과 기준은 아직 협의 중이며, 확정되는 대로 안내합니다. 처음 시작하는 분에게 특히 좋은 출발점이 되고, 이미 개발 경험이 있는 분에게는 수료증보다 커리큘럼·네트워킹·멘토링이 더 큰 가치가 됩니다.",
-          en: "We're working to issue a certificate — in a form you can post on LinkedIn — to everyone who completes the crash course. The issuing body and the criteria are still being agreed, and we'll announce them once confirmed. It's a strong starting point especially if you're new; if you already build, the curriculum, networking and mentoring will matter more to you than the certificate itself.",
+          ko: "크래시코스를 완료한 참여자 전원에게 수료증을 발급합니다(링크드인에 올릴 수 있는 형태). 발급 기관과 기준은 아직 협의 중이며, 확정되는 대로 안내합니다. 처음 시작하는 분에게 특히 좋은 출발점이 되고, 이미 개발 경험이 있는 분에게는 수료증보다 커리큘럼·네트워킹·멘토링이 더 큰 가치가 됩니다.",
+          en: "Everyone who completes the crash course gets a certificate — in a form you can post on LinkedIn. The issuing body and the criteria are still being agreed, and we'll announce them once confirmed. It's a strong starting point especially if you're new; if you already build, the curriculum, networking and mentoring will matter more to you than the certificate itself.",
         },
       },
       {
