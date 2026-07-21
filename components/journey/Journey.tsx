@@ -522,21 +522,25 @@ const companions: { src?: string; alt?: string }[] = [
   { src: "/partners/zero100/25-one-dgree-labs.webp", alt: "One Degree Labs" },
   // This builderthon's own partner slide (host · organizers · confirmed
   // sponsors) rides in the same band, so every logo on that slide appears here
-  // too. These are the white-mono marks the partner wall above uses.
-  { src: "/partners/logos/white/drimaes.png", alt: "Drimaes" },
-  { src: "/partners/logos/white/popup-studio.png", alt: "Popup Studio" },
-  { src: "/partners/logos/white/smu-lion.png", alt: "SMU KSA" },
-  { src: "/partners/logos/white/nus.png", alt: "NUS Korea Society" },
-  { src: "/partners/logos/white/ntu-ksa.png", alt: "NTU KSA" },
-  { src: "/partners/logos/white/aws.png", alt: "AWS" },
-  { src: "/partners/logos/white/innovate360.png", alt: "INNOVATE 360" },
-  { src: "/partners/logos/white/life.png", alt: "L^IFE" },
-  { src: "/partners/logos/white/bzcf.png", alt: "BZCF" },
-  { src: "/partners/logos/white/korean-association.png", alt: "Korean Association in Singapore" },
-  { src: "/partners/logos/white/onword.png", alt: "Onward Lab" },
-  { src: "/partners/logos/white/remited.png", alt: "REmited" },
-  { src: "/partners/logos/white/brandboost.png", alt: "Brand Boost" },
-  { src: "/partners/logos/white/hashed.png", alt: "Hashed" },
+  // too. These read from white/trimmed/ — the same marks as the partner wall
+  // above, cropped to their alpha bbox. Several ship with transparent padding
+  // baked into the canvas (Brand Boost filled 40%x30% of its file), which made
+  // them render visibly smaller than the tightly-cropped zero100 logos beside
+  // them. See scripts/process-partner-logos.py.
+  { src: "/partners/logos/white/trimmed/drimaes.png", alt: "Drimaes" },
+  { src: "/partners/logos/white/trimmed/popup-studio.png", alt: "Popup Studio" },
+  { src: "/partners/logos/white/trimmed/smu-lion.png", alt: "SMU KSA" },
+  { src: "/partners/logos/white/trimmed/nus.png", alt: "NUS Korea Society" },
+  { src: "/partners/logos/white/trimmed/ntu-ksa.png", alt: "NTU KSA" },
+  { src: "/partners/logos/white/trimmed/aws.png", alt: "AWS" },
+  { src: "/partners/logos/white/trimmed/innovate360.png", alt: "INNOVATE 360" },
+  { src: "/partners/logos/white/trimmed/life.png", alt: "L^IFE" },
+  { src: "/partners/logos/white/trimmed/bzcf.png", alt: "BZCF" },
+  { src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore" },
+  { src: "/partners/logos/white/trimmed/onword.png", alt: "Onward Lab" },
+  { src: "/partners/logos/white/trimmed/remited.png", alt: "REmited" },
+  { src: "/partners/logos/white/trimmed/brandboost.png", alt: "Brand Boost" },
+  { src: "/partners/logos/white/trimmed/hashed.png", alt: "Hashed" },
 ];
 
 // A horizontally-scrolling wall of confirmed builder-companion logos. The track
@@ -575,7 +579,7 @@ function CompanionMarquee({ t }: { t: Tfn }) {
                     <img
                       src={c.src}
                       alt=""
-                      className="max-h-10 w-auto max-w-[82%] object-contain opacity-95 transition group-hover:opacity-100"
+                      className="max-h-14 w-auto max-w-[82%] object-contain opacity-95 transition group-hover:opacity-100"
                     />
                   ) : (
                     // placeholder logo frame — neutral, claims no specific company

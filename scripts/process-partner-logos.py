@@ -14,6 +14,15 @@ Two source shapes are handled:
 Both are trimmed to the alpha bbox and downscaled so the long edge is 900px —
 these render ~40px tall, so anything larger is wasted bytes.
 
+Second job: build the marquee's copies. The logo band sizes every mark with the
+same `max-h-10 / max-w-[82%]` box, so a logo that ships with transparent padding
+baked into its canvas renders visibly smaller than a tightly-cropped neighbour
+(Brand Boost filled 40%x30% of its file; the zero100 WebPs fill ~100%). The band
+therefore reads from white/trimmed/, which is the same art cropped to its alpha
+bounding box so every mark fills its tile the same way. The partner wall above
+keeps using the untrimmed originals — its LogoTile has its own `big` sizing
+calibrated against them.
+
     python3 scripts/process-partner-logos.py
 """
 from PIL import Image
@@ -23,9 +32,17 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 CI = ROOT.parent / "CI"
 OUT = ROOT / "public" / "partners" / "logos" / "white"
+TRIMMED = OUT / "trimmed"
 
 MAX_EDGE = 900
 LO, HI = 40, 110  # colour-distance → alpha ramp, for the "color" mode
+
+# Marks the marquee band shows (see `companions` in Journey.tsx).
+MARQUEE = [
+    "aws", "bzcf", "brandboost", "drimaes", "hashed", "innovate360",
+    "korean-association", "life", "ntu-ksa", "nus", "onword", "popup-studio",
+    "remited", "smu-lion",
+]
 
 # source filename → (output slug, mode)
 JOBS = [
@@ -52,6 +69,23 @@ def from_color(im):
     return np.clip((dist - LO) / (HI - LO), 0.0, 1.0) * 255.0
 
 
+def trim_for_marquee():
+    """Crop each marquee mark to its alpha bbox so they all fill their tile."""
+    TRIMMED.mkdir(parents=True, exist_ok=True)
+    for slug in MARQUEE:
+        im = Image.open(OUT / f"{slug}.png")
+        bbox = im.getbbox()
+        if not bbox:
+            print(f"  {slug:24s} -- empty alpha, skipped")
+            continue
+        cropped = im.crop(bbox)
+        dst = TRIMMED / f"{slug}.png"
+        cropped.save(dst, "PNG", optimize=True)
+        print(f"  {slug:24s} {im.size[0]}x{im.size[1]} -> "
+              f"{cropped.size[0]}x{cropped.size[1]}  "
+              f"{dst.stat().st_size / 1024:.1f} KB")
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     for src, out, mode in JOBS:
@@ -73,6 +107,7 @@ def main():
         img.save(dst, "PNG", optimize=True)
         print(f"  {src:24s} -> {out:24s} {img.size[0]}x{img.size[1]}  "
               f"{dst.stat().st_size / 1024:.1f} KB")
+    trim_for_marquee()
 
 
 if __name__ == "__main__":
