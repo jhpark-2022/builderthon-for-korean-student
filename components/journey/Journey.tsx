@@ -48,6 +48,22 @@ function Eyebrow({ children, color = "violet", className = "" }: { children: Rea
 // Renders a plain string with every "→" arrow recoloured a bright violet, so
 // the day-flow sentence reads as a clearly-arrowed progression. Splits on the
 // arrow and interleaves coloured spans; all other text is unchanged.
+// Optical logo sizing. Capping every mark at the same HEIGHT is what made the
+// wall look ragged: a two-line lockup and a long thin wordmark set to the same
+// height carry wildly different visual weight (the wordmark ends up three times
+// the area). So we hold the rendered AREA roughly constant instead — for a mark
+// of aspect r drawn at height h the area goes as r·h², hence h = √(A / r).
+//
+// The clamp keeps it sane at the extremes: without a floor a 8:1 wordmark like
+// INNOVATE 360 would shrink to a hairline, and without a ceiling a square crest
+// would overflow the tile. Anything still too wide is caught by `max-w-full`,
+// which letterboxes it down — that only pushes it further toward equal area.
+// Dimensions must describe the INK, not the shipped canvas, so every caller
+// passes the trimmed art (see scripts/process-partner-logos.py).
+function opticalHeight(w: number, h: number, area: number, min: number, max: number) {
+  return Math.round(Math.min(max, Math.max(min, Math.sqrt(area / (w / h)))));
+}
+
 // A single partner logo on a clean white chip. Full-colour marks (crests,
 // gradients) read best on a light tile against the dark section, and a missing
 // file just shows an empty white chip rather than a broken-image icon.
@@ -56,12 +72,14 @@ function Eyebrow({ children, color = "violet", className = "" }: { children: Rea
 // makes it a link; `badge` shows a small role/stage pill; `big` gives square
 // marks more presence.
 function LogoTile({
-  src, alt, w, h, url, badge, big = false, onOpen,
+  src, alt, w, h, url, badge, onOpen,
 }: {
   src: string; alt: string; w: number; h: number;
-  url?: string; badge?: string; big?: boolean;
+  url?: string; badge?: string;
   onOpen?: (el: HTMLElement) => void;
 }) {
+  // Tile is h-20 (80px); 44px max leaves the mark breathing room inside it.
+  const boxH = opticalHeight(w, h, 2000, 24, 44);
   const inner = (
     <>
       <Image
@@ -74,7 +92,8 @@ function LogoTile({
         // popping in one-by-one via lazy-load + on-demand optimization.
         unoptimized
         loading="eager"
-        className={`${big ? "max-h-12" : "max-h-9"} w-auto max-w-full object-contain`}
+        style={{ height: boxH }}
+        className="w-auto max-w-full object-contain"
       />
       {badge && (
         <span className="absolute right-1.5 top-1.5 rounded-full border border-white/15 bg-white/10 px-1.5 py-0.5 text-[0.55rem] font-bold uppercase tracking-wide text-white/75">
@@ -617,32 +636,37 @@ function DayModal({
 // SVGs (~13MB total); they're downscaled to ~100px-tall transparent WebPs in
 // /public/partners/zero100/ (~220KB total) since they only render ~36px tall.
 // They're light-on-transparent already, so they render as-is on the dark band —
-// no invert. To add one: add a WebP there and append { src, alt } here.
+// no invert. To add one: add a trimmed WebP there and append { src, alt, w, h }
+// here — w/h are the file's own pixel dimensions and must describe the INK, as
+// the band sizes every mark to equal area from them (see opticalHeight).
 // Order here = order on screen.
-const companions: { src?: string; alt?: string }[] = [
-  { src: "/partners/zero100/01-translink-investment.webp", alt: "Translink Investment" },
-  { src: "/partners/zero100/02-wilt-venture-builder.webp", alt: "Wilt Venture Builder" },
+const companions: { src?: string; alt?: string; w?: number; h?: number }[] = [
+  { src: "/partners/zero100/01-translink-investment.webp", alt: "Translink Investment", w: 338, h: 100 },
+  { src: "/partners/zero100/02-wilt-venture-builder.webp", alt: "Wilt Venture Builder", w: 203, h: 100 },
   // Popup Studio's old logo removed here — the current mark lives in the
-  // confirmed-partner card below. D.CAMP / Startup Alliance / 혁신의숲 / MYSC /
-  // Career Day were 2024-event supporters, not partners of this builderthon, so
-  // they're excluded from the network wall to avoid implying participation.
-  { src: "/partners/zero100/06-KAIA.webp", alt: "KAIA" },
-  { src: "/partners/zero100/07-venturesquare.webp", alt: "Venture Square" },
-  { src: "/partners/zero100/09-eventus.webp", alt: "EventUs" },
-  { src: "/partners/zero100/10-82Startup.webp", alt: "82Startup" },
-  { src: "/partners/zero100/12-mission.webp", alt: "Mission" },
-  { src: "/partners/zero100/13-code.presso.webp", alt: "Codepresso" },
-  { src: "/partners/zero100/14-themiilk.webp", alt: "TheMiilk" },
-  { src: "/partners/zero100/16-andar.webp", alt: "andar" },
-  { src: "/partners/zero100/17-ceo-suite.webp", alt: "CEO SUITE" },
-  { src: "/partners/zero100/18-yj.webp", alt: "YJ" },
-  { src: "/partners/zero100/19-brand-worker-partners.webp", alt: "Brand Worker Partners" },
-  { src: "/partners/zero100/20-habit-factory.webp", alt: "Habit Factory" },
-  { src: "/partners/zero100/21-nuldam.webp", alt: "Nuldam" },
-  { src: "/partners/zero100/22-hanyeo.webp", alt: "Hanyeo" },
-  { src: "/partners/zero100/23-twigfarm.webp", alt: "Twigfarm" },
-  { src: "/partners/zero100/24-kowork.webp", alt: "Kowork" },
-  { src: "/partners/zero100/25-one-dgree-labs.webp", alt: "One Degree Labs" },
+  // confirmed-partner card below. D.CAMP / 혁신의숲 / Career Day / Brand Worker
+  // Partners were 2024-event supporters with no ongoing tie to this builderthon,
+  // so they're excluded from the network wall to avoid implying participation.
+  // Startup Alliance and MYSC are in at the network's own request (they were
+  // missing), and UKF stands in for 82Startup as the better-known mark.
+  { src: "/partners/zero100/05-startup-alliance.webp", alt: "Startup Alliance", w: 268, h: 100 },
+  { src: "/partners/zero100/06-KAIA.webp", alt: "KAIA", w: 263, h: 100 },
+  { src: "/partners/zero100/07-venturesquare.webp", alt: "Venture Square", w: 354, h: 100 },
+  { src: "/partners/zero100/08-mysc.webp", alt: "MYSC", w: 256, h: 100 },
+  { src: "/partners/zero100/09-eventus.webp", alt: "EventUs", w: 212, h: 100 },
+  { src: "/partners/zero100/26-ukf.webp", alt: "United Korean Founders", w: 310, h: 100 },
+  { src: "/partners/zero100/12-mission.webp", alt: "Mission", w: 401, h: 100 },
+  { src: "/partners/zero100/13-code.presso.webp", alt: "Codepresso", w: 509, h: 100 },
+  { src: "/partners/zero100/14-themiilk.webp", alt: "TheMiilk", w: 427, h: 100 },
+  { src: "/partners/zero100/16-andar.webp", alt: "andar", w: 368, h: 100 },
+  { src: "/partners/zero100/17-ceo-suite.webp", alt: "CEO SUITE", w: 489, h: 100 },
+  { src: "/partners/zero100/18-yj.webp", alt: "YJ", w: 98, h: 100 },
+  { src: "/partners/zero100/20-habit-factory.webp", alt: "Habit Factory", w: 560, h: 75 },
+  { src: "/partners/zero100/21-nuldam.webp", alt: "Nuldam", w: 443, h: 100 },
+  { src: "/partners/zero100/22-hanyeo.webp", alt: "Hanyeo", w: 329, h: 100 },
+  { src: "/partners/zero100/23-twigfarm.webp", alt: "Twigfarm", w: 370, h: 100 },
+  { src: "/partners/zero100/24-kowork.webp", alt: "Kowork", w: 478, h: 100 },
+  { src: "/partners/zero100/25-one-dgree-labs.webp", alt: "One Degree Labs", w: 122, h: 100 },
   // This builderthon's own partner slide (host · organizers · confirmed
   // sponsors) rides in the same band, so every logo on that slide appears here
   // too. These read from white/trimmed/ — the same marks as the partner wall
@@ -650,20 +674,20 @@ const companions: { src?: string; alt?: string }[] = [
   // baked into the canvas (Brand Boost filled 40%x30% of its file), which made
   // them render visibly smaller than the tightly-cropped zero100 logos beside
   // them. See scripts/process-partner-logos.py.
-  { src: "/partners/logos/white/trimmed/drimaes.png", alt: "Drimaes" },
-  { src: "/partners/logos/white/trimmed/popup-studio.png", alt: "Popup Studio" },
-  { src: "/partners/logos/white/trimmed/smu-lion.png", alt: "SMU KSA" },
-  { src: "/partners/logos/white/trimmed/nus.png", alt: "NUS Korea Society" },
-  { src: "/partners/logos/white/trimmed/ntu-ksa.png", alt: "NTU KSA" },
-  { src: "/partners/logos/white/trimmed/aws.png", alt: "AWS" },
-  { src: "/partners/logos/white/trimmed/innovate360.png", alt: "INNOVATE 360" },
-  { src: "/partners/logos/white/trimmed/life.png", alt: "L^IFE" },
-  { src: "/partners/logos/white/trimmed/bzcf.png", alt: "BZCF" },
-  { src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore" },
-  { src: "/partners/logos/white/trimmed/onword.png", alt: "Onward Lab" },
-  { src: "/partners/logos/white/trimmed/remited.png", alt: "REmited" },
-  { src: "/partners/logos/white/trimmed/brandboost.png", alt: "Brand Boost" },
-  { src: "/partners/logos/white/trimmed/hashed.png", alt: "Hashed" },
+  { src: "/partners/logos/white/trimmed/drimaes.png", alt: "Drimaes", w: 332, h: 50 },
+  { src: "/partners/logos/white/trimmed/popup-studio.png", alt: "Popup Studio", w: 512, h: 245 },
+  { src: "/partners/logos/white/trimmed/smu-lion.png", alt: "SMU KSA", w: 292, h: 173 },
+  { src: "/partners/logos/white/trimmed/nus.png", alt: "NUS Korea Society", w: 512, h: 512 },
+  { src: "/partners/logos/white/trimmed/ntu-ksa.png", alt: "NTU KSA", w: 318, h: 382 },
+  { src: "/partners/logos/white/trimmed/aws.png", alt: "AWS", w: 512, h: 306 },
+  { src: "/partners/logos/white/trimmed/innovate360.png", alt: "INNOVATE 360", w: 455, h: 54 },
+  { src: "/partners/logos/white/trimmed/life.png", alt: "L^IFE", w: 900, h: 352 },
+  { src: "/partners/logos/white/trimmed/bzcf.png", alt: "BZCF", w: 465, h: 156 },
+  { src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore", w: 443, h: 90 },
+  { src: "/partners/logos/white/trimmed/onword.png", alt: "Onward Lab", w: 276, h: 264 },
+  { src: "/partners/logos/white/trimmed/remited.png", alt: "REmited", w: 512, h: 105 },
+  { src: "/partners/logos/white/trimmed/brandboost.png", alt: "Brand Boost", w: 205, h: 81 },
+  { src: "/partners/logos/white/trimmed/hashed.png", alt: "Hashed", w: 355, h: 90 },
 ];
 
 // A horizontally-scrolling wall of confirmed builder-companion logos. The track
@@ -702,7 +726,10 @@ function CompanionMarquee({ t }: { t: Tfn }) {
                     <img
                       src={c.src}
                       alt=""
-                      className="max-h-14 w-auto max-w-[82%] object-contain opacity-95 transition group-hover:opacity-100"
+                      // Same equal-area rule as the partner wall above, sized up
+                      // for the taller band tile — see opticalHeight().
+                      style={{ height: c.w && c.h ? opticalHeight(c.w, c.h, 3000, 28, 56) : undefined }}
+                      className="w-auto max-w-[82%] object-contain opacity-95 transition group-hover:opacity-100"
                     />
                   ) : (
                     // placeholder logo frame — neutral, claims no specific company
@@ -1334,11 +1361,11 @@ export default function Journey() {
             </div>
             <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
               {[
-                { src: "/partners/logos/white/translink.png",    alt: "Translink Investment", w: 490,  h: 150,  url: "https://translinkinvestment.com" as string | undefined, big: false },
-                { src: "/partners/logos/white/wilt.png",         alt: "Wilt Venture Builder", w: 1763, h: 1125, url: undefined, big: true },
-                { src: "/partners/logos/white/codepresso.png",   alt: "Codepresso",           w: 696,  h: 522,  url: "https://codepresso.io", big: true },
-                { src: "/partners/logos/white/drimaes.png",     alt: "Drimaes",              w: 640,  h: 195,  url: "https://www.drimaes.com", big: false },
-                { src: "/partners/logos/white/popup-studio.png", alt: "Popup Studio",         w: 512,  h: 246,  url: "https://popupstudio.ai", big: false },
+                { src: "/partners/logos/white/trimmed/translink.png",    alt: "Translink Investment", w: 330, h: 91,  url: "https://translinkinvestment.com" as string | undefined },
+                { src: "/partners/logos/white/trimmed/wilt.png",         alt: "Wilt Venture Builder", w: 309, h: 148, url: undefined },
+                { src: "/partners/logos/white/trimmed/codepresso.png",   alt: "Codepresso",           w: 456, h: 91,  url: "https://codepresso.io" },
+                { src: "/partners/logos/white/trimmed/drimaes.png",      alt: "Drimaes",              w: 332, h: 50,  url: "https://www.drimaes.com" },
+                { src: "/partners/logos/white/trimmed/popup-studio.png", alt: "Popup Studio",         w: 512, h: 245, url: "https://popupstudio.ai" },
               ].map((l) => <LogoTile key={l.alt} {...l} />)}
             </div>
           </div>
@@ -1351,9 +1378,9 @@ export default function Journey() {
             </div>
             <div className="mt-3 grid grid-cols-3 gap-3">
               {[
-                { src: "/partners/logos/white/smu-lion.png", alt: "SMU KSA",           w: 1080, h: 1080, badge: t(dict.partners.roleLead), big: true },
-                { src: "/partners/logos/white/nus.png",     alt: "NUS Korea Society", w: 225,  h: 225,  badge: t(dict.partners.roleOps),  big: true },
-                { src: "/partners/logos/white/ntu-ksa.png",  alt: "NTU KSA",           w: 447,  h: 447,  badge: t(dict.partners.roleOps),  big: true },
+                { src: "/partners/logos/white/trimmed/smu-lion.png", alt: "SMU KSA",           w: 292, h: 173, badge: t(dict.partners.roleLead) },
+                { src: "/partners/logos/white/trimmed/nus.png",      alt: "NUS Korea Society", w: 512, h: 512, badge: t(dict.partners.roleOps) },
+                { src: "/partners/logos/white/trimmed/ntu-ksa.png",  alt: "NTU KSA",           w: 318, h: 382, badge: t(dict.partners.roleOps) },
               ].map((l) => <LogoTile key={l.alt} {...l} />)}
             </div>
           </div>
@@ -1372,15 +1399,15 @@ export default function Journey() {
             </p>
             <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
               {[
-                { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/aws.png",                alt: "AWS",                          w: 600, h: 600, big: true },
-                { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/innovate360.png",        alt: "INNOVATE 360",                 w: 600, h: 179, big: false },
-                { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/life.png",               alt: "L^IFE",                        w: 900, h: 352, big: false },
-                { cat: t(dict.partners.catMarketing), src: "/partners/logos/white/bzcf.png",               alt: "BZCF",                         w: 900, h: 900, big: true },
-                { cat: t(dict.partners.catJudges),    src: "/partners/logos/white/korean-association.png", alt: "Korean Association in Singapore", w: 443, h: 90, big: false },
-                { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/onword.png",             alt: "Onward Lab",                   w: 200, h: 200, big: true },
-                { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/remited.png",            alt: "REmited",                      w: 1536, h: 317, big: false },
-                { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/brandboost.png",         alt: "Brand Boost",                  w: 1200, h: 630, big: false },
-                { cat: t(dict.partners.catOverall),   src: "/partners/logos/white/hashed.png",             alt: "Hashed",                       w: 1200, h: 619, big: false },
+                { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/aws.png",                alt: "AWS",                             w: 512, h: 306 },
+                { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/innovate360.png",        alt: "INNOVATE 360",                    w: 455, h: 54 },
+                { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/life.png",               alt: "L^IFE",                           w: 900, h: 352 },
+                { cat: t(dict.partners.catMarketing), src: "/partners/logos/white/trimmed/bzcf.png",               alt: "BZCF",                            w: 465, h: 156 },
+                { cat: t(dict.partners.catJudges),    src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore",  w: 443, h: 90 },
+                { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/onword.png",             alt: "Onward Lab",                      w: 276, h: 264 },
+                { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105 },
+                { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81 },
+                { cat: t(dict.partners.catOverall),   src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90 },
               ].map(({ cat, ...l }) => (
                 <div key={l.alt} className="flex flex-col gap-1.5">
                   <LogoTile {...l} onOpen={(el) => openPartner(l.alt, dict.partners.stageConfirmed, el)} />

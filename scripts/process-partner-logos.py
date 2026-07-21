@@ -37,12 +37,10 @@ TRIMMED = OUT / "trimmed"
 MAX_EDGE = 900
 LO, HI = 40, 110  # colour-distance → alpha ramp, for the "color" mode
 
-# Marks the marquee band shows (see `companions` in Journey.tsx).
-MARQUEE = [
-    "aws", "bzcf", "brandboost", "drimaes", "hashed", "innovate360",
-    "korean-association", "life", "ntu-ksa", "nus", "onword", "popup-studio",
-    "remited", "smu-lion",
-]
+# Every white-mono mark gets a trimmed copy. Both the marquee band and the
+# partner wall read from trimmed/: sizing there normalises each logo by its
+# rendered area, which is only meaningful when the file's dimensions describe
+# the INK rather than whatever transparent canvas the brand shipped.
 
 # source filename → (output slug, mode)
 JOBS = [
@@ -69,11 +67,12 @@ def from_color(im):
     return np.clip((dist - LO) / (HI - LO), 0.0, 1.0) * 255.0
 
 
-def trim_for_marquee():
-    """Crop each marquee mark to its alpha bbox so they all fill their tile."""
+def trim_all():
+    """Crop every mark to its alpha bbox so they all fill their tile the same."""
     TRIMMED.mkdir(parents=True, exist_ok=True)
-    for slug in MARQUEE:
-        im = Image.open(OUT / f"{slug}.png")
+    for src in sorted(OUT.glob("*.png")):
+        slug = src.stem
+        im = Image.open(src)
         bbox = im.getbbox()
         if not bbox:
             print(f"  {slug:24s} -- empty alpha, skipped")
@@ -107,7 +106,7 @@ def main():
         img.save(dst, "PNG", optimize=True)
         print(f"  {src:24s} -> {out:24s} {img.size[0]}x{img.size[1]}  "
               f"{dst.stat().st_size / 1024:.1f} KB")
-    trim_for_marquee()
+    trim_all()
 
 
 if __name__ == "__main__":
