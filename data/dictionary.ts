@@ -223,7 +223,7 @@ export const dict = {
     // people with no idea whether to wait a day or a month, or whom to poke.
     // TODO: '며칠 내' → 운영 확정 시 '2–3일 내'로 (EN: "within a few days" → "in 2–3 days")
     successBody: {
-      ko: "며칠 내 텔레그램 단톡방으로 초대해 드려요. 연락이 없으면 jhpark.2022@business.smu.edu.sg 로 문의해 주세요.",
+      ko: "며칠 내 텔레그램 단체방으로 초대해 드려요. 연락이 없으면 jhpark.2022@business.smu.edu.sg 로 문의해 주세요.",
       en: "We'll invite you to the Telegram group chat within a few days. If you don't hear from us, email jhpark.2022@business.smu.edu.sg.",
     },
     successClose: { ko: "닫기", en: "Close" },
@@ -367,37 +367,68 @@ export const dict = {
       ko: "이벤트는 끝이 아니라, 모든 것의 ‘초입’입니다.",
       en: "The event isn't the end — it's the entry point to everything.",
     },
+    // Rewritten from community persona interviews + operator advice: the funnel
+    // now describes how the thing actually works from a participant's seat
+    // (what happens after the eight days, and how you move up), not an
+    // organizer's multi-year roadmap. Research flagged roadmap-speak and soft
+    // "grow together" phrasing as trust-killers, so both are out.
     visionIntro: {
-      ko: "Zero100 Builderthon → 지속가능한 한–싱 빌더 커뮤니티로 이어지는 ‘깔때기의 입구’. 한 번의 행사가 아니라 5년·10년 이어질 구조입니다.",
-      en: "Zero100 Builderthon → the entry point to a lasting Korea–Singapore builder community. Not a one-off event but a structure meant to last 5 or 10 years.",
+      ko: "기회는 많은데 ‘내 기회’는 아니었던 싱가포르에서 — 행사가 끝나도 다음 모임이 잡혀 있도록, 8일의 경험이 정기 세션과 성장 사다리로 이어지게 설계하고 있습니다.",
+      en: "In a Singapore full of opportunities that never quite felt like ours — we're designing the eight days to continue: regular builder sessions and a growth ladder, so there's always a next gathering after the event ends.",
     },
     visionSteps: [
       {
         num: "1",
         title: { ko: "Zero100 빌더톤", en: "Zero100 Builderthon" },
-        body: { ko: "모든 것의 시작점", en: "Where it all starts" },
+        body: {
+          ko: "8일의 성공 경험 — 여기서 만나는 동료·멘토·기업이 전부의 시작점입니다.",
+          en: "8 days of real success — the peers, mentors and companies you meet here start everything.",
+        },
       },
       {
         num: "2",
-        title: { ko: "코어 커뮤니티", en: "Core community" },
-        body: { ko: "작게라도 시작 — 단톡방에서 코어 멤버로", en: "Start small — a group chat to core members" },
+        title: { ko: "이어지는 리듬", en: "A rhythm that continues" },
+        body: {
+          ko: "한 번 하고 끝나지 않습니다 — 기업 문제를 해부하고, 만든 것을 서로 발표하는 정기 빌더 세션. 소수정예 코어로 시작합니다.",
+          en: "Not a one-off — regular builder sessions where a small core dissects real company problems and demos what they built.",
+        },
       },
       {
         num: "3",
-        title: { ko: "싱가포르 한인 빌더", en: "SG Korean builders" },
-        body: { ko: "학생·빌더 지속 활동 기반 (1차 목표)", en: "A standing base for students & builders (1st goal)" },
+        title: { ko: "성장 사다리", en: "A growth ladder" },
+        body: {
+          ko: "참가자 → 코어 멤버 → 기업 프로젝트 TF. 스터디와 미니 스프린트를 거쳐 실제 기업 프로젝트를 이어받는 구조가 1차 목표입니다.",
+          en: "Participant → core member → company-project TF — through studies and mini-sprints to owning a real company project. That ladder is goal #1.",
+        },
       },
       {
         num: "4",
         title: { ko: "한–싱 Cross-border", en: "Korea–SG cross-border" },
-        body: { ko: "한국 기업과 연결 · 5~10년 자생 구조", en: "Linked to Korean companies · self-sustaining over 5–10 yrs" },
+        body: {
+          ko: "공고판이 아니라, 실력을 증명한 학생을 기업이 찾아오게 만드는 다리 — 해마다 싱가포르를 오가는 수백 개의 한국 기업이 그 상대입니다.",
+          en: "Not a job board — a bridge where companies seek out proven builders, among the hundreds of Korean companies moving through Singapore each year.",
+        },
       },
       {
         num: "5",
-        title: { ko: "글로벌 확산", en: "Global expansion" },
-        body: { ko: "싱가포르를 넘어 전 세계 한인 커뮤니티로", en: "Beyond Singapore to Korean communities worldwide" },
+        title: { ko: "목적지가 되는 것", en: "Becoming the destination" },
+        body: {
+          ko: "‘이걸 하러 싱가포르에 온다’ — 한인 학생 빌더의 목적지가 될 때까지.",
+          en: "“You come to Singapore to do this” — until this is the destination for Korean student builders.",
+        },
       },
     ],
+    // Continuity note — the single most-cited worry in the interviews.
+    visionNote: {
+      ko: "군 복무나 교환을 다녀와도 연결이 끊기지 않는 커뮤니티를 목표로 합니다.",
+      en: "A community where the connection survives military service and exchange terms.",
+    },
+    // Bridge into the closing register CTA that sits directly below this
+    // section — higher in the hierarchy than visionNote for that reason.
+    visionBridge: {
+      ko: "그 시작점의 첫 ~100명이 이번 8월에 모입니다.",
+      en: "The first ~100 of that starting point gather this August.",
+    },
     // ── Press ────────────────────────────────────────────────────────────────
     // Outside coverage of the gap described just above, rendered as a slim
     // citation row under the 지금의 현실 block (logo · title · date · link — no

@@ -1449,9 +1449,9 @@ export default function Journey() {
           which lands better as the last thing read before the closing CTA than
           as a coda inside the chapter that opens the page. */}
       <Chapter id="vision" align="center">
-        {/* Vision funnel — the event is the entry point to a lasting cross-border
-            community (straight from the vision graphic). Step 1 is highlighted as
-            the "START"; each step grows toward global expansion. */}
+        {/* Vision funnel — how the eight days keep going, from a participant's
+            seat: the event, the rhythm after it, the ladder up, and where that
+            leads. Step 1 is highlighted as the "START". */}
         <div className="mt-14 rounded-3xl border border-violet-400/15 bg-violet-950/20 p-6 sm:p-8">
           <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
             {t(dict.about.visionTag)}
@@ -1492,6 +1492,29 @@ export default function Journey() {
               );
             })}
           </ol>
+
+          {/* Continuity note (small), then the bridge into the closing register
+              CTA that follows immediately below — hence the bridge outranks the
+              note typographically. The button reuses the nav/footer pill style
+              rather than introducing another CTA treatment. */}
+          <p className="mx-auto mt-8 max-w-2xl text-center text-xs leading-relaxed text-white/55">
+            {t(dict.about.visionNote)}
+          </p>
+          <div className="mt-6 flex flex-col items-center gap-4">
+            <p className="max-w-2xl text-center text-base font-bold leading-snug text-white sm:text-lg">
+              {t(dict.about.visionBridge)}
+            </p>
+            <button
+              type="button"
+              onClick={() => openRegister()}
+              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-violet-600/90 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-violet-500"
+            >
+              {t(registered ? dict.register.navRegistered : dict.nav.register)}
+              {!registered && (
+                <span aria-hidden className="transition-transform duration-300 hover:translate-x-1">→</span>
+              )}
+            </button>
+          </div>
         </div>
       </Chapter>
 
