@@ -981,6 +981,38 @@ export default function Journey() {
             })}
           </ol>
         </div>
+
+        {/* Press — outside coverage making the same case this chapter makes.
+            The only external link on the page, so it's explicit about leaving
+            (new tab + noopener). Add entries to dict.about.press to extend. */}
+        <div className="mt-10 text-left">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/55">
+            {t(dict.about.pressTag)}
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {dict.about.press.map((p) => (
+              <a
+                key={p.url}
+                href={p.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition hover:border-violet-400/30 hover:bg-white/[0.06]"
+              >
+                <div className="flex items-center gap-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={p.logo} alt={p.outlet} className="h-5 w-auto max-w-[7rem] object-contain opacity-80" />
+                  <span className="text-xs text-white/45">{t(p.date)}</span>
+                </div>
+                <p className="mt-3 text-base font-semibold leading-snug text-white">{t(p.title)}</p>
+                <p className="mt-2 text-[13px] leading-relaxed text-white/70">{t(p.blurb)}</p>
+                <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-violet-300 transition group-hover:text-violet-200">
+                  {t(dict.about.pressCta)}
+                  <span aria-hidden>↗</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
       </Chapter>
 
       {/* ── CH 2 · WHO SHOULD JOIN / WHAT YOU GET ──────────────────── */}

@@ -107,3 +107,53 @@ also means the four in-discussion sponsors that aren't on the deck are gone.
 - Promoting Brand Boost / Hashed / REmited from 협의 중 to 확정 follows the deck,
   which lists them under 확정 (Confirmed). Worth a sanity check against the
   actual agreements before this goes wide, since it raises a public claim.
+
+---
+
+## Follow-ups, same day
+
+### 로고 롤 크기 편차 — 여백 트리밍
+
+Once the sponsor logos joined the band, several rendered visibly smaller than
+their neighbours. Not a CSS problem: the marquee sizes every mark inside the
+same box, and some of the white PNGs carry transparent padding baked into the
+canvas — Brand Boost's actual mark filled **40%×30%** of its file, SMU 57%×34%,
+Onward 54%×52%, Drimaes 65%×32%, while the zero100 WebPs are cropped tight
+(~100%). Same box, much smaller mark.
+
+- `scripts/process-partner-logos.py` gained a trim pass that crops each marquee
+  mark to its alpha bbox into `public/partners/logos/white/trimmed/`, and the
+  band now reads from there.
+- The partner wall above deliberately keeps the untrimmed originals — its
+  `LogoTile` `big` sizing is calibrated against them. (Three of its rows were
+  repointed by accident during the edit and had to be reverted; the wall was
+  re-checked against a before screenshot.)
+- Tile image cap `max-h-10` → `max-h-14`. Wide wordmarks are width-bound and
+  don't move; near-square marks (NUS, NTU, Onward, AWS) grow to match.
+
+### 언론 보도 카드 (BZCF)
+
+BZCF ran a feature on the builderthon on 5 July 2026 —
+「세계는 넓고 할 일은 많다」. It argues the same thing the 취지 chapter argues
+(1,000+ Korean students with no representing body; bridges rather than walls),
+so it goes at the **end of the 취지 chapter**, right under the vision funnel,
+rather than in a footer strip — the chapter's claims were all self-asserted, and
+deleting the traction section had left the page with no outside evidence at all.
+
+- `dict.about.press` (array, so more articles just append) + `pressTag` /
+  `pressCta`, and a card in `Journey.tsx` rendering outlet logo, date, title,
+  blurb and an outbound CTA.
+- **The site's own copy does not name the organizer the article profiles.** The
+  piece is a personal profile; the byline stays one click away, matching how the
+  rest of the site handles real names.
+- This is the page's only external link, so it's explicit about leaving:
+  `target="_blank"` with `rel="noopener noreferrer"`.
+
+### Verification note
+
+Browser checks for this round ran in a **backgrounded** Chrome tab, where
+`document.visibilityState === "hidden"` throttles the IntersectionObserver that
+drives `Chapter`'s reveal — every chapter sits at `opacity: 0` and screenshots
+come back black. Not a site bug (the 1200ms fallback in `Chapter.tsx` covers
+real users); the reveal state was forced from the console to inspect layout.
+Worth remembering before chasing a "blank page" that isn't one.
