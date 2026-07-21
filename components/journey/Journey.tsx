@@ -1394,13 +1394,10 @@ export default function Journey() {
                 { src: "/partners/logos/white/trimmed/smu-lion.png", alt: "SMU KSA",           w: 292, h: 173, badge: t(dict.partners.roleLead) },
                 { src: "/partners/logos/white/trimmed/nus.png",      alt: "NUS Korea Society", w: 512, h: 512, badge: t(dict.partners.roleOps) },
                 { src: "/partners/logos/white/trimmed/ntu-ksa.png",  alt: "NTU KSA",           w: 318, h: 382, badge: t(dict.partners.roleOps) },
-              ].map((l) => (
-                <LogoTile
-                  key={l.alt}
-                  {...l}
-                  onOpen={(el) => openPartner(l.alt, dict.partners.stageConfirmed, el)}
-                />
-              ))}
+                // No intro modal here: the associations write their own copy and
+                // haven't yet, and the generic fallback ("파트너십이 확정되는 대로")
+                // reads wrong for the people actually running the event.
+              ].map((l) => <LogoTile key={l.alt} {...l} />)}
             </div>
           </div>
 

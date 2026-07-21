@@ -116,21 +116,6 @@ export const partnerIntros: Record<string, Phrase> = {
     en: "A one-stop platform for branded goods and merch — from planning through production and packing — turning rough ideas into concrete, costed production plans. Making this builderthon's goods.",
   },
 
-  // ── 주관 · 운영 · ORGANIZERS ────────────────────────────────────────────────
-  // TODO: confirm with the organizers before this ships — these three are a
-  // draft written here, not copy the associations themselves supplied.
-  "SMU KSA": {
-    ko: "SMU 한인 학생회(KOMOS)입니다. 이번 빌더톤의 기획과 운영을 총괄합니다.",
-    en: "The Korean student association at SMU (KOMOS) — leading the planning and operations of this builderthon.",
-  },
-  "NUS Korea Society": {
-    ko: "NUS 한인 학생회입니다. 이번 빌더톤의 운영에 함께합니다.",
-    en: "The Korean student society at NUS, co-running this builderthon.",
-  },
-  "NTU KSA": {
-    ko: "NTU 한인 학생회(KSA)입니다. 이번 빌더톤의 운영에 함께합니다.",
-    en: "The Korean student association at NTU (KSA), co-running this builderthon.",
-  },
 };
 
 export const dict = {
