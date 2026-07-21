@@ -10,6 +10,7 @@
 
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
+import { normalizeTelegramHandle } from "@/lib/telegram";
 
 // Uses a secret + a live DB → must not be statically evaluated at build time.
 export const dynamic = "force-dynamic";
@@ -56,7 +57,8 @@ export async function POST(req: Request) {
       ordinal: i + 1,
       name: str(src.name),
       email: str(src.email),
-      contact: str(src.contact),
+      // Stored canonicalised ("@handle") — see the validation loop below.
+      contact: normalizeTelegramHandle(str(src.contact)) ?? str(src.contact),
       university: optStr(src.university),
       linkedin: optStr(src.linkedin),
     };
@@ -68,6 +70,12 @@ export async function POST(req: Request) {
     }
     if (!EMAIL_RE.test(m.email)) {
       return NextResponse.json({ error: "invalid_email", ordinal: m.ordinal }, { status: 400 });
+    }
+    // Contact must be a Telegram handle — the participant group chat runs on
+    // Telegram, so a phone number here is an entry nobody can invite. The form
+    // enforces the same rule; this is the gate that actually holds.
+    if (!normalizeTelegramHandle(m.contact)) {
+      return NextResponse.json({ error: "invalid_telegram", ordinal: m.ordinal }, { status: 400 });
     }
   }
 

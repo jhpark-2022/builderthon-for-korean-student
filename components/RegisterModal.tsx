@@ -33,6 +33,7 @@ import { cloneElement, isValidElement, useEffect, useRef, useState } from "react
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
+import { isTelegramHandle, normalizeTelegramHandle } from "@/lib/telegram";
 import { dict, REGISTER_ENDPOINT } from "@/data/dictionary";
 import { RESULTS } from "@/data/quiz";
 import { parseResultId } from "@/lib/quizScore";
@@ -393,12 +394,14 @@ export default function RegisterModal({
     const req = t(dict.register.errRequired);
     const badEmail = t(dict.register.errEmail);
     const dupEmail = t(dict.register.errDupEmail);
+    const badHandle = t(dict.register.errTelegram);
 
     // Member 1 (registrant).
     if (!name.trim()) next.name = req;
     if (!email.trim()) next.email = req;
     else if (!EMAIL_RE.test(email.trim())) next.email = badEmail;
     if (!contact.trim()) next.contact = req;
+    else if (!isTelegramHandle(contact)) next.contact = badHandle;
     // Join type drives the whole rest of the form (team section, matching, and
     // how organizers group the entry), so it's required here even though the API
     // still accepts null — no server change needed.
@@ -411,6 +414,7 @@ export default function RegisterModal({
         if (!m.email.trim()) next[`m${m.id}-email`] = req;
         else if (!EMAIL_RE.test(m.email.trim())) next[`m${m.id}-email`] = badEmail;
         if (!m.contact.trim()) next[`m${m.id}-contact`] = req;
+        else if (!isTelegramHandle(m.contact)) next[`m${m.id}-contact`] = badHandle;
       });
       const entries = [
         { key: "email", value: email },
@@ -439,7 +443,9 @@ export default function RegisterModal({
     if (!validate()) return;
     setStatus("submitting");
 
-    // Light normalization: trim only (accept full URL or bare handle).
+    // Light normalization: trim only (accept full URL or bare handle). The
+    // Telegram field is the exception — it's stored canonicalised as "@handle"
+    // so organizers can paste it straight into Telegram search.
     const uni = (val: string, other: string) =>
       val === "other" ? other.trim() || undefined : val || undefined;
     const link = (v: string) => v.trim() || undefined;
@@ -447,7 +453,7 @@ export default function RegisterModal({
     const registrant = {
       name: name.trim(),
       email: email.trim(),
-      contact: contact.trim(),
+      contact: normalizeTelegramHandle(contact) ?? contact.trim(),
       university: uni(school, schoolOther),
       linkedin: link(linkedin),
     };
@@ -455,7 +461,7 @@ export default function RegisterModal({
       ? members.map((m) => ({
           name: m.name.trim(),
           email: m.email.trim(),
-          contact: m.contact.trim(),
+          contact: normalizeTelegramHandle(m.contact) ?? m.contact.trim(),
           university: uni(m.university, m.universityOther),
           linkedin: link(m.linkedin),
         }))
