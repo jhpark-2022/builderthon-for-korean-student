@@ -20,7 +20,7 @@
 //     use-case showcase with a QR popular vote, the ‘From Int'l Student to
 //     Founder’ panel (TBC) and cross-track exchange; opens Lab 2.
 //   • Day 6 — open build (online, self-paced).
-//   • Day 7 — Final Rehearsal on-site at the AWS office (9AM–1:30PM, new venue).
+//   • Day 7 — Final Rehearsal on-site at the AWS office (9AM–2PM, new venue).
 //   • Day 8 — Demo Day at *SCAPE L^IFE Jungle. MANDATORY (필참).
 //   • Self-paced team build runs continuously from the Day-1 problem release all
 //     the way to the Day-8 pitch. In person on Days 1 / 5 / 7 / 8.
@@ -161,8 +161,8 @@ export const days: DayMeta[] = [
     phase: LAB2,
     theme: { ko: "파이널 리허설", en: "Final Rehearsal" },
     summary: {
-      ko: "AWS 오피스 9AM–1:30PM · 최종 발표 리허설 · 유학생 창업가 패널.",
-      en: "AWS office, 9AM–1:30PM · final-pitch rehearsal · international-student founder panel.",
+      ko: "AWS 오피스 9AM–2PM · 최종 발표 리허설 · 박희덕 커리어 간담회.",
+      en: "AWS office, 9AM–2PM · final-pitch rehearsal · Park Hee-deok career session.",
     },
     dayMode: "offline",
   },
@@ -622,12 +622,12 @@ export const schedule: BEvent[] = [
     timeOfDay: "AM",
     title: { ko: "파이널 리허설 (현장)", en: "Final Rehearsal (on-site)" },
     summary: {
-      ko: "AWS 오피스 9AM–1:30PM · 팀당 최종 피드백과 무대 리허설.",
-      en: "AWS office, 9AM–1:30PM · per-team final feedback and stage rehearsal.",
+      ko: "AWS 오피스 9AM–2PM · 팀당 최종 피드백과 무대 리허설.",
+      en: "AWS office, 9AM–2PM · per-team final feedback and stage rehearsal.",
     },
     description: {
-      ko: "데모데이를 하루 앞두고, AWS 오피스(확정)에서 9AM–1:30PM 진행하는 현장 파이널 리허설입니다. 09:00–11:30 팀당 최종 피드백으로 최종 발표를 준비하고 무대를 리허설하며 데모의 흐름과 예상 질문을 다듬은 뒤, 11:30–12:30 네트워킹·점심으로 이어집니다. Day 5에 이은 두 번째 현장 집결이자, 새 장소인 AWS 오피스에서 열립니다.",
-      en: "The day before Demo Day, an on-site final rehearsal at the AWS office (confirmed), 9AM–1:30PM. From 09:00–11:30 teams get per-team final feedback — prepping the final pitch, rehearsing on stage, and tightening the demo flow and likely questions — followed by networking and lunch from 11:30–12:30. It's the second in-person gathering after Day 5 — at the new AWS-office venue.",
+      ko: "데모데이를 하루 앞두고, AWS 오피스(확정)에서 9AM–2PM 진행하는 현장 파이널 리허설입니다. 09:00–11:30 팀당 최종 피드백으로 최종 발표를 준비하고 무대를 리허설하며 데모의 흐름과 예상 질문을 다듬은 뒤, 11:30–12:30 네트워킹·점심으로 이어집니다. Day 5에 이은 두 번째 현장 집결이자, 새 장소인 AWS 오피스에서 열립니다.",
+      en: "The day before Demo Day, an on-site final rehearsal at the AWS office (confirmed), 9AM–2PM. From 09:00–11:30 teams get per-team final feedback — prepping the final pitch, rehearsing on stage, and tightening the demo flow and likely questions — followed by networking and lunch from 11:30–12:30. It's the second in-person gathering after Day 5 — at the new AWS-office venue.",
     },
     location: AWS_OFFICE,
   },
@@ -638,14 +638,16 @@ export const schedule: BEvent[] = [
     category: "network",
     mode: "offline",
     timeOfDay: "PM",
-    title: { ko: "패널 토크 · 유학생 창업가", en: "Panel Talk · International-Student Founders" },
+    // TODO: confirm public naming — speaker (박희덕) from the internal deck.
+    speaker: { ko: "박희덕", en: "Park Hee-deok" },
+    title: { ko: "박희덕 커리어 간담회", en: "Career Session · Park Hee-deok" },
     summary: {
-      ko: "12:30–13:30 · 싱가포르 유학생 출신 학생 창업가의 인사이트·pain 공유.",
-      en: "12:30–13:30 · insights & pains from Singapore international-student founders.",
+      ko: "12:30–14:00 · FDE 사업에 관심 있는 학생·졸업생 대상 커리어 간담회.",
+      en: "12:30–14:00 · a career session for students & grads interested in the FDE business.",
     },
     description: {
-      ko: "파이널 리허설 일정의 마무리로 마련된 패널 토크입니다(12:30–13:30). 싱가포르 유학생 출신 학생 창업가가 유학생 앙트레프레너십의 인사이트와 실제 pain을 나눕니다. 발표를 앞둔 팀들에게 같은 길을 걸어본 사람의 관점과 자극을 더하며, 리허설 사이의 호흡을 고르고 마지막 동기를 채우는 자리입니다.",
-      en: "A panel talk closing out the final-rehearsal day (12:30–13:30): student founders who came up as international students in Singapore share the insights and real pains of international-student entrepreneurship. For teams about to present, it adds the perspective and energy of people who walked the same path — a beat between rehearsals to top up the final motivation.",
+      ko: "파이널 리허설 일정의 마무리로 마련된 커리어 간담회입니다(12:30–14:00). 트랜스링크 인베스트먼트의 박희덕 대표가 자사 FDE 사업에 관심 있는 학생·졸업생을 대상으로 어떤 일을 하는 자리인지, 어떤 사람을 찾는지를 직접 이야기하며, 인턴·채용 pool로 이어지는 실질적 연결의 시간입니다. 간담회 후속 1:1 면담·멘토링(희망자)은 8/29 행사 종료(3PM) 후 현장 또는 널담에서 진행됩니다.",
+      en: "A career session closing out the final-rehearsal day (12:30–14:00). Park Hee-deok (CEO · General Partner, Translink Investment) talks directly with students and graduates interested in the firm's FDE business — what the work actually is and who they're looking for — a genuine connection into the internship and hiring pool. Follow-up 1:1 conversations and mentoring (for those who want them) run after the event closes on 29 Aug (3PM), either on-site or at Nuldam.",
     },
     location: AWS_OFFICE,
   },
@@ -663,32 +665,12 @@ export const schedule: BEvent[] = [
     // TODO: confirm — speaker name is from the internal deck; confirm public naming is OK.
     speaker: { ko: "박희덕", en: "Park Hee-deok" },
     summary: {
-      ko: "‘제로백의 진짜 의미’로 여는 데모데이.",
-      en: "Demo Day opens on ‘The Real Meaning of Zero100’.",
+      ko: "11:00~ 약 1시간 · ‘제로백의 진짜 의미’로 여는 데모데이.",
+      en: "11:00~, about an hour · Demo Day opens on ‘The Real Meaning of Zero100’.",
     },
     description: {
-      ko: "데모데이를 여는 키노트입니다. 트랜스링크 인베스트먼트의 박희덕 대표가 ‘제로백의 진짜 의미’를 주제로 약 1시간 동안 이야기합니다. 창업가가 0에서 100으로 가기 위한 핵심 요소 — 협업·가치·실행·글로벌 스탠다드의 중요성과 협업의 힘, 그리고 왜 지금, 왜 싱가포르의 한인 학생인지를 짚으며 피칭 직전의 동기를 끌어올립니다.",
-      en: "The keynote that opens Demo Day. Park Hee-deok (CEO · General Partner, Translink Investment) speaks for about an hour on ‘The Real Meaning of Zero100’ — the core of going from zero to a hundred: collaboration, value, execution and global standards, the power of collaboration, and why now and why Korean students in Singapore — lifting the motivation right before pitching.",
-    },
-    location: ONSITE,
-  },
-  {
-    id: "d8-career-session",
-    day: 8,
-    date: "08.29",
-    category: "network",
-    mode: "offline",
-    timeOfDay: "AM",
-    // TODO: confirm public naming — speaker (박희덕) from the internal deck.
-    speaker: { ko: "박희덕", en: "Park Hee-deok" },
-    title: { ko: "박희덕 커리어 간담회 · 개별 면접", en: "Park Hee-deok Career Session · 1:1 Interviews" },
-    summary: {
-      ko: "11:10~ · 관심 학생·졸업생과의 커리어 간담회 및 개별 면접·멘토링.",
-      en: "11:10~ · a career session plus 1:1 interviews & mentoring for interested students.",
-    },
-    description: {
-      ko: "키노트에 이어 11:10부터 박희덕 대표(Translink Investment)와의 커리어 간담회입니다(~12:00). FDE 등 관심 있는 학생·졸업생을 대상으로 개별 면접·멘토링을 진행하며, 인턴·채용 pool로 이어지는 실질적 연결의 자리입니다.",
-      en: "Following the keynote, a career session with Park Hee-deok (Translink Investment) from 11:10 (until ~12:00). It offers 1:1 interviews and mentoring for interested students and graduates (e.g. for FDE roles) — a genuine connection into the internship and hiring pool.",
+      ko: "데모데이를 여는 키노트입니다. 11:00부터 약 1시간 동안, 트랜스링크 인베스트먼트의 박희덕 대표가 ‘제로백의 진짜 의미’를 주제로 이야기합니다. 창업가가 0에서 100으로 가기 위한 핵심 요소 — 협업·가치·실행·글로벌 스탠다드의 중요성과 협업의 힘, 그리고 왜 지금, 왜 싱가포르의 한인 학생인지를 짚으며 피칭 직전의 동기를 끌어올립니다.",
+      en: "The keynote that opens Demo Day. From 11:00, Park Hee-deok (CEO · General Partner, Translink Investment) speaks for about an hour on ‘The Real Meaning of Zero100’ — the core of going from zero to a hundred: collaboration, value, execution and global standards, the power of collaboration, and why now and why Korean students in Singapore — lifting the motivation right before pitching.",
     },
     location: ONSITE,
   },
