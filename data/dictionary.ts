@@ -857,6 +857,14 @@ export const dict = {
       en: "The event isn't an end but an entry point. Beyond a single event, we're building a lasting Korea–Singapore builder community. Explore the full 8-day schedule in the program section.",
     },
     ctaProgram: { ko: "프로그램 보기", en: "View Program" },
+    // Shown under the partnership CTA: `mailto:` does nothing when the visitor
+    // has no mail client configured, so the address is also readable/copyable.
+    partnerFallback: {
+      ko: "메일 앱이 열리지 않으면 이 주소로 보내주세요 —",
+      en: "If your mail app doesn't open, write to us at",
+    },
+    copy: { ko: "복사", en: "Copy" },
+    copied: { ko: "복사됨 ✓", en: "Copied ✓" },
     hostedBy: {
       ko: "주관 SMU · NUS · NTU 한인 학생회  ·  Zero100 빌더 네트워크",
       en: "Organized by the SMU · NUS · NTU Korean Student Associations  ·  Zero100 builder network",

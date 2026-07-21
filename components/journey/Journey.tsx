@@ -123,6 +123,9 @@ function LogoTile({
 
 type Tfn = (p: Phrase) => string;
 
+// Read off links.partnership so the address can never drift from the mailto.
+const PARTNER_EMAIL = links.partnership.replace(/^mailto:/, "").split("?")[0];
+
 // Kept identical to EventModal's list so every dialog traps focus the same way.
 const FOCUSABLE =
   'a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])';
@@ -1553,6 +1556,13 @@ export default function Journey() {
               {t(dict.nav.partner)}
             </a>
           </div>
+
+          {/* mailto: only opens whatever mail client the visitor's device has
+              configured — on a desktop without one, or inside some in-app
+              browsers, the button does nothing at all and the inquiry is simply
+              lost. Show the address as selectable text with a copy button so
+              there's always a way to reach us. */}
+          <PartnerEmailFallback t={t} />
         </div>
 
         {/* credits — pinned to the very bottom of the final screen */}
@@ -1567,6 +1577,49 @@ export default function Journey() {
       <EventModal event={active} onClose={() => setActive(null)} triggerRef={triggerRef} />
       <PartnerModal partner={activePartner} onClose={() => setActivePartner(null)} triggerRef={partnerTriggerRef} />
     </main>
+  );
+}
+
+
+// Copyable partnership address — the fallback for when `mailto:` goes nowhere.
+// Uses the clipboard API where available and falls back to selecting the text,
+// so "copy" never silently fails.
+function PartnerEmailFallback({ t }: { t: Tfn }) {
+  const [copied, setCopied] = useState(false);
+  const addrRef = useRef<HTMLSpanElement>(null);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(PARTNER_EMAIL);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard blocked (insecure context / permission) — select the text so
+      // the visitor can copy it by hand instead of getting nothing.
+      const node = addrRef.current;
+      if (!node) return;
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      const sel = window.getSelection();
+      sel?.removeAllRanges();
+      sel?.addRange(range);
+    }
+  };
+
+  return (
+    <p className="mt-5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-white/50">
+      <span>{t(dict.footer.partnerFallback)}</span>
+      <span ref={addrRef} className="select-all font-medium text-white/75">
+        {PARTNER_EMAIL}
+      </span>
+      <button
+        type="button"
+        onClick={copy}
+        className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 font-semibold text-white/70 transition hover:bg-white/10 hover:text-white"
+      >
+        {t(copied ? dict.footer.copied : dict.footer.copy)}
+      </button>
+    </p>
   );
 }
 
