@@ -29,7 +29,7 @@
 // filled-in form with an inline retry error.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useEffect, useRef, useState } from "react";
+import { cloneElement, isValidElement, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
@@ -38,6 +38,7 @@ import { RESULTS } from "@/data/quiz";
 import { parseResultId } from "@/lib/quizScore";
 import { loadOwnResult } from "@/lib/quizResult";
 import { REGISTER_DRAFT_KEY as DRAFT_KEY } from "@/lib/storage";
+import type { RegisterPreset } from "@/lib/RegisterContext";
 
 interface RegisterModalProps {
   open: boolean;
@@ -45,6 +46,10 @@ interface RegisterModalProps {
   // Referrer captured from the URL (?ref=) on the auto-open path — "quiz" or
   // "quiz-return". The AI type is NOT passed via the URL (localStorage only).
   urlRef?: string | null;
+  // Starting state requested by whichever CTA opened the modal (e.g. the hero's
+  // team-matching card opens it as solo + matching). Applied on open, on top of
+  // any restored draft — the visitor just expressed this intent by clicking.
+  preset?: RegisterPreset | null;
   // Called once a submit succeeds (persists the "registered" flag in the parent).
   onSuccess: () => void;
 }
@@ -53,8 +58,11 @@ const FOCUSABLE =
   'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea,[tabindex]:not([tabindex="-1"])';
 
 // Shared input styling so every field reads as one system on the dark sheet.
+// text-base (16px), not text-sm: iOS Safari zooms the whole page in when a
+// focused input's font-size is under 16px, and the visitor then has to pinch
+// back out mid-form.
 const FIELD =
-  "w-full rounded-xl border border-white/12 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder:text-white/35 outline-none transition focus:border-violet-400/50 focus:bg-white/[0.06]";
+  "w-full rounded-xl border border-white/12 bg-white/[0.04] px-4 py-3 text-base text-white placeholder:text-white/35 outline-none transition focus:border-violet-400/50 focus:bg-white/[0.06]";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // Teams are strictly 1–3 people → at most 2 members beyond the registrant.
@@ -296,6 +304,7 @@ export default function RegisterModal({
   open,
   onClose,
   urlRef,
+  preset,
   onSuccess,
 }: RegisterModalProps) {
   const { t } = useLocale();
@@ -373,13 +382,17 @@ export default function RegisterModal({
     setSavedResultId(loadOwnResult()?.resultId ?? null);
   }, []);
 
-  // On (re)open: return to the form and re-read the saved result (it may have
-  // just been written by a completed round-trip in this same tab).
+  // On (re)open: return to the form, re-read the saved result (it may have just
+  // been written by a completed round-trip in this same tab), and apply whatever
+  // the opening CTA asked for. The preset only touches join type / matching, so
+  // a restored draft keeps every field the visitor already typed.
   useEffect(() => {
     if (!open) return;
     setStatus("idle");
     setSavedResultId(loadOwnResult()?.resultId ?? null);
-  }, [open]);
+    if (preset?.joinType) setJoinType(preset.joinType);
+    if (preset?.wantsMatching !== undefined) setSoloMatch(preset.wantsMatching);
+  }, [open, preset]);
 
   const typeInfo = useTypeInfo(savedResultId);
 
@@ -453,6 +466,29 @@ export default function RegisterModal({
     window.location.href = "/quiz?return=register";
   }
 
+  // Move the visitor to the first thing that needs fixing. Without this a
+  // failed submit on a long form looks like nothing happened — the error is
+  // often scrolled off-screen above the button.
+  function focusFirstError(next: Record<string, string>) {
+    // Declaration order of the form, so "first" means first on screen.
+    const order = ["name", "email", "joinType", "contact", "teamName"];
+    const keys = Object.keys(next);
+    const first =
+      order.find((k) => next[k]) ?? keys.find((k) => k !== "submit") ?? keys[0];
+    if (!first) return;
+    window.requestAnimationFrame(() => {
+      const el = dialogRef.current?.querySelector<HTMLElement>(
+        `[data-field="${first}"]`
+      );
+      if (!el) return;
+      el.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
+      const control = el.querySelector<HTMLElement>(
+        'input,select,textarea,[role="combobox"],button'
+      );
+      control?.focus({ preventScroll: true });
+    });
+  }
+
   function validate(): boolean {
     const next: Record<string, string> = {};
     const req = t(dict.register.errRequired);
@@ -464,6 +500,10 @@ export default function RegisterModal({
     if (!email.trim()) next.email = req;
     else if (!EMAIL_RE.test(email.trim())) next.email = badEmail;
     if (!contact.trim()) next.contact = req;
+    // Join type drives the whole rest of the form (team section, matching, and
+    // how organizers group the entry), so it's required here even though the API
+    // still accepts null — no server change needed.
+    if (!joinType) next.joinType = req;
 
     if (isTeam) {
       if (!teamName.trim()) next.teamName = req;
@@ -490,7 +530,9 @@ export default function RegisterModal({
     }
 
     setErrors(next);
-    return Object.keys(next).length === 0;
+    const ok = Object.keys(next).length === 0;
+    if (!ok) focusFirstError(next);
+    return ok;
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -653,6 +695,13 @@ export default function RegisterModal({
                   <p className="mt-2 pr-4 text-sm leading-relaxed text-white/65">
                     {t(dict.register.modalSubtitle)}
                   </p>
+                  {/* Who's actually on the other end of this form — the same
+                      organizer fact the footer states, surfaced where the
+                      visitor is deciding whether to hand over contact details. */}
+                  <p className="mt-3 flex items-start gap-2 text-xs leading-relaxed text-white/50">
+                    <span aria-hidden className="mt-[1px] text-violet-300/80">◆</span>
+                    {t(dict.register.trustOrganizer)}
+                  </p>
 
                   <form onSubmit={onSubmit} className="mt-6 flex flex-col gap-4" noValidate>
                     {isTeam && (
@@ -662,7 +711,7 @@ export default function RegisterModal({
                     )}
 
                     {/* 1 · Name */}
-                    <Field label={t(dict.register.nameLabel)} required error={errors.name}>
+                    <Field name="name" label={t(dict.register.nameLabel)} required error={errors.name}>
                       <input
                         type="text"
                         value={name}
@@ -674,7 +723,7 @@ export default function RegisterModal({
                     </Field>
 
                     {/* 2 · Email */}
-                    <Field label={t(dict.register.emailLabel)} required error={errors.email}>
+                    <Field name="email" label={t(dict.register.emailLabel)} required error={errors.email}>
                       <input
                         type="email"
                         value={email}
@@ -685,7 +734,26 @@ export default function RegisterModal({
                       />
                     </Field>
 
-                    {/* 3 · School (+ "other" free text) */}
+
+                    {/* 3 · Join type — required, and asked early: it decides
+                        whether the rest of the form is a team block or the
+                        solo-matching block, so burying it under the optional
+                        fields made people fill the wrong shape of form. */}
+                    <Field
+                      name="joinType"
+                      label={t(dict.register.partLabel)}
+                      required
+                      error={errors.joinType}
+                    >
+                      <SelectField
+                        value={joinType}
+                        onChange={setJoinType}
+                        placeholder={t(dict.register.selectPlaceholder)}
+                        options={dict.register.partOptions.map((o) => ({ value: o.value, label: t(o.label) }))}
+                      />
+                    </Field>
+
+                    {/* 4 · School (+ "other" free text) */}
                     <Field label={t(dict.register.schoolLabel)} optional={t(dict.register.optional)}>
                       <UniversitySelect
                         value={school}
@@ -695,8 +763,9 @@ export default function RegisterModal({
                       />
                     </Field>
 
-                    {/* 4 · Contact (Telegram preferred) */}
+                    {/* 5 · Contact (Telegram preferred) */}
                     <Field
+                      name="contact"
                       label={t(dict.register.contactLabel)}
                       required
                       error={errors.contact}
@@ -711,7 +780,7 @@ export default function RegisterModal({
                       />
                     </Field>
 
-                    {/* 5 · LinkedIn (optional) */}
+                    {/* 6 · LinkedIn (optional) */}
                     <Field label={t(dict.register.linkedinLabel)} optional={t(dict.register.optional)}>
                       <input
                         type="text"
@@ -719,16 +788,6 @@ export default function RegisterModal({
                         onChange={(e) => setLinkedin(e.target.value)}
                         placeholder={t(dict.register.linkedinPlaceholder)}
                         className={FIELD}
-                      />
-                    </Field>
-
-                    {/* 6 · Join type */}
-                    <Field label={t(dict.register.partLabel)} optional={t(dict.register.optional)}>
-                      <SelectField
-                        value={joinType}
-                        onChange={setJoinType}
-                        placeholder={t(dict.register.selectPlaceholder)}
-                        options={dict.register.partOptions.map((o) => ({ value: o.value, label: t(o.label) }))}
                       />
                     </Field>
 
@@ -754,6 +813,7 @@ export default function RegisterModal({
                             </div>
 
                             <Field
+                              name="teamName"
                               label={t(dict.register.teamNameLabel)}
                               required
                               error={errors.teamName}
@@ -976,6 +1036,14 @@ export default function RegisterModal({
                       </p>
                     )}
 
+                    {/* What happens to what they just typed — stated right
+                        where they're about to hand it over, including the ask
+                        about teammates' details (they're entering data about
+                        other people). */}
+                    <p className="text-xs leading-relaxed text-white/45">
+                      {t(dict.register.trustPrivacy)}
+                    </p>
+
                     <button
                       type="submit"
                       disabled={submitting}
@@ -1035,7 +1103,12 @@ function UniversitySelect({
 
 // One labelled form row: label (+ required asterisk / optional tag), the control,
 // an optional hint line, and an inline error.
+// `name` does double duty: it's the scroll target focusFirstError() looks for
+// (data-field) and the id stem that ties the error text to the control via
+// aria-describedby, so a screen reader reads the reason, not just "invalid".
+// The control is cloned rather than asking ~15 call sites to repeat the wiring.
 function Field({
+  name,
   label,
   required,
   optional,
@@ -1043,6 +1116,7 @@ function Field({
   error,
   children,
 }: {
+  name?: string;
   label: string;
   required?: boolean;
   optional?: string;
@@ -1050,8 +1124,17 @@ function Field({
   error?: string;
   children: React.ReactNode;
 }) {
+  const errorId = name && error ? `${name}-error` : undefined;
+  const control =
+    isValidElement(children) && (errorId || error)
+      ? cloneElement(children as React.ReactElement<Record<string, unknown>>, {
+          "aria-invalid": error ? true : undefined,
+          "aria-describedby": errorId,
+        })
+      : children;
+
   return (
-    <label className="flex flex-col gap-1.5">
+    <label className="flex flex-col gap-1.5" data-field={name}>
       <span className="flex items-center gap-1.5 text-sm font-semibold text-white/85">
         {label}
         {required && <span className="text-rose-400" aria-hidden>*</span>}
@@ -1061,9 +1144,13 @@ function Field({
           </span>
         )}
       </span>
-      {children}
+      {control}
       {hint && <span className="text-xs leading-relaxed text-white/45">{hint}</span>}
-      {error && <span className="text-xs font-medium text-rose-300">{error}</span>}
+      {error && (
+        <span id={errorId} className="text-xs font-medium text-rose-300">
+          {error}
+        </span>
+      )}
     </label>
   );
 }

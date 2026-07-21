@@ -23,8 +23,17 @@ import {
 import RegisterModal from "@/components/RegisterModal";
 import { REGISTERED_KEY } from "@/lib/storage";
 
+// Optional starting state for the modal, so a CTA can express what it promised.
+// The hero's "팀이 없어도 괜찮아요 → 등록하고 팀 매칭 받기" card opens the form
+// already set to solo + matching, instead of making the visitor re-answer a
+// question they just answered by clicking.
+export interface RegisterPreset {
+  joinType?: "team" | "solo";
+  wantsMatching?: boolean;
+}
+
 interface RegisterContextValue {
-  openRegister: () => void;
+  openRegister: (preset?: RegisterPreset) => void;
   registered: boolean;
 }
 
@@ -43,6 +52,8 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
   // The AI type is NEVER passed via the URL — it's read from this device's saved
   // result inside the modal (localStorage), so there's no cross-device leak.
   const [urlRef, setUrlRef] = useState<string | null>(null);
+  // Preset applied on the next open (cleared by the modal once consumed).
+  const [preset, setPreset] = useState<RegisterPreset | null>(null);
 
   useEffect(() => {
     // Restore the "already registered" flag (client-only).
@@ -68,7 +79,10 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const openRegister = useCallback(() => setOpen(true), []);
+  const openRegister = useCallback((next?: RegisterPreset) => {
+    setPreset(next ?? null);
+    setOpen(true);
+  }, []);
   const closeRegister = useCallback(() => setOpen(false), []);
   const onSuccess = useCallback(() => {
     setRegistered(true);
@@ -86,6 +100,7 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
         open={open}
         onClose={closeRegister}
         urlRef={urlRef}
+        preset={preset}
         onSuccess={onSuccess}
       />
     </RegisterContext.Provider>

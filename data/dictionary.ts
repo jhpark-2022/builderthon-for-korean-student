@@ -96,12 +96,26 @@ export const dict = {
 
   // ── Registration — hero question hooks, nav button, and the register modal ──
   register: {
-    // Hero "question hook" branch: need a team → take the test · solo/have a
-    // squad → register.
-    hookTeamQ: { ko: "팀이 필요하신가요?", en: "Need a team?" },
-    hookTeamCta: { ko: "성격 테스트", en: "Personality test" },
-    hookSoloQ: { ko: "외로운 늑대? 아니면 이미 팀이 있다면", en: "Lone wolf? Or already have a squad?" },
-    hookSoloCta: { ko: "등록하기", en: "Register" },
+    // Hero "question hook" pair — also reused as the mid-page CTA bands.
+    // Card 1 is the PRIMARY one and goes straight to registration (it opens the
+    // modal preset to solo + matching, which is what the copy promises). Card 2
+    // is the quiz, framed as an optional bit of fun, not as the way in — it used
+    // to be the lead card, which sent people who wanted to register into a
+    // 14-question personality test instead.
+    hookRegisterQ: { ko: "팀이 없어도 괜찮아요", en: "No team? No problem." },
+    hookRegisterSub: {
+      ko: "이미 팀이 있다면 대표 1명이 팀 전체를 등록하면 돼요.",
+      en: "Already have a team? One person can register everyone.",
+    },
+    hookRegisterCta: { ko: "등록하고 팀 매칭 받기", en: "Register & get matched" },
+    hookQuizQ: { ko: "재미로 3분 — 내 AI 유형은?", en: "3 fun minutes — what's your AI model?" },
+    hookQuizCta: { ko: "성격 테스트", en: "Personality test" },
+    // Facts repeated on the mid-page CTA bands. Nothing new — screening and team
+    // size are both already stated in the benefits section.
+    hookFacts: {
+      ko: "스크리닝 없음 · 팀 1–3인(솔로 OK) · 참가비 무료",
+      en: "No screening · teams of 1–3 (solo OK) · free to enter",
+    },
     // Nav scroll-revealed button + its post-registration label.
     navRegistered: { ko: "등록 완료 ✓", en: "Registered ✓" },
     // Modal chrome.
@@ -109,6 +123,17 @@ export const dict = {
     modalSubtitle: {
       ko: "몇 가지만 알려주시면 운영진이 텔레그램으로 다음 절차를 안내드려요. 이미 팀이 있다면 한 명이 팀 전체를 등록할 수 있어요.",
       en: "A few details and our team will reach out on Telegram. Have a team already? One person can register everyone.",
+    },
+    // Trust signals — who's asking, what happens to the data, and what happens
+    // next. All three restate facts already true elsewhere on the site; none of
+    // them promises anything new.
+    trustOrganizer: {
+      ko: "SMU · NUS · NTU 한인 학생회 주관 · Zero100 빌더톤 운영진이 직접 확인합니다.",
+      en: "Organized by the SMU · NUS · NTU Korean student associations — the Zero100 builderthon team reads every entry.",
+    },
+    trustPrivacy: {
+      ko: "입력하신 연락처는 참가 안내·단체방 초대에만 사용하고 외부에 공유하지 않습니다. 팀원 정보는 팀원 동의 하에 입력해 주세요.",
+      en: "Your contact details are used only for event updates and the group-chat invite, and are never shared outside the team. Please enter teammates' details only with their consent.",
     },
     optional: { ko: "선택", en: "optional" },
     selectPlaceholder: { ko: "선택하세요", en: "Select…" },
@@ -194,9 +219,12 @@ export const dict = {
     submit: { ko: "등록하기", en: "Register" },
     submitting: { ko: "등록 중…", en: "Registering…" },
     successTitle: { ko: "등록 완료!", en: "You're registered!" },
+    // Concrete next step + a way out if it doesn't arrive — "hang tight" left
+    // people with no idea whether to wait a day or a month, or whom to poke.
+    // TODO: '며칠 내' → 운영 확정 시 '2–3일 내'로 (EN: "within a few days" → "in 2–3 days")
     successBody: {
-      ko: "운영진이 텔레그램으로 연락드릴게요. 조금만 기다려 주세요.",
-      en: "Our team will reach out on Telegram — hang tight.",
+      ko: "며칠 내 텔레그램 단톡방으로 초대해 드려요. 연락이 없으면 jhpark.2022@business.smu.edu.sg 로 문의해 주세요.",
+      en: "We'll invite you to the Telegram group chat within a few days. If you don't hear from us, email jhpark.2022@business.smu.edu.sg.",
     },
     successClose: { ko: "닫기", en: "Close" },
     // Validation.

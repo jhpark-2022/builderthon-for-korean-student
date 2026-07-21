@@ -93,7 +93,7 @@ export default function JourneyNav() {
             {showRegister && (
               <motion.button
                 type="button"
-                onClick={openRegister}
+                onClick={() => openRegister()}
                 initial={reduce ? false : { opacity: 0, x: 12 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={reduce ? undefined : { opacity: 0, x: 12 }}

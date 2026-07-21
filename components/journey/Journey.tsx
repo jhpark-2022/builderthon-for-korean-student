@@ -19,7 +19,7 @@ import EventModal from "@/components/EventModal";
 import PartnerModal, { type PartnerInfo } from "@/components/PartnerModal";
 import ReturningGreeting from "./ReturningGreeting";
 import { loadOwnResult } from "@/lib/quizResult";
-import { useRegister } from "@/lib/RegisterContext";
+import { useRegister, type RegisterPreset } from "@/lib/RegisterContext";
 
 const legendOrder: Category[] = ["main","workshop","build","mentoring","network"];
 
@@ -122,6 +122,66 @@ function LogoTile({
 }
 
 type Tfn = (p: Phrase) => string;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HOOK CARDS — the two-up entry point, rendered in the hero and reused verbatim
+// as the mid-page CTA bands (after 혜택, after FAQ). One component, one style:
+// the bands are the same cards, not a second design.
+//
+// Card 1 (violet, primary) opens the register modal ALREADY set to solo +
+// matching, because that's exactly what its copy promises. Card 2 is the quiz,
+// kept as a light aside; for a visitor who already took it, it deep-links to
+// their saved result instead ("내 결과 보기").
+//
+// `facts` adds the one-line reassurance strip — only used on the mid-page bands,
+// where the visitor has read enough to be weighing whether to commit.
+// ─────────────────────────────────────────────────────────────────────────────
+function HookCards({
+  t,
+  ownResultId,
+  openRegister,
+  className = "",
+  facts = false,
+}: {
+  t: Tfn;
+  ownResultId: string | null;
+  openRegister: (preset?: RegisterPreset) => void;
+  className?: string;
+  facts?: boolean;
+}) {
+  return (
+    <div className={className}>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="flex flex-col gap-2 rounded-2xl border border-violet-400/25 bg-violet-400/[0.07] p-4 text-left">
+          <p className="text-xs font-medium text-white/60">{t(dict.register.hookRegisterQ)}</p>
+          <button
+            type="button"
+            onClick={() => openRegister({ joinType: "solo", wantsMatching: true })}
+            className="group inline-flex w-fit items-center gap-1.5 text-sm font-bold text-white transition hover:text-violet-100"
+          >
+            {t(dict.register.hookRegisterCta)}
+            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </button>
+          <p className="text-[11px] leading-relaxed text-white/45">{t(dict.register.hookRegisterSub)}</p>
+        </div>
+        <div className="flex flex-col gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left">
+          <p className="text-xs font-medium text-white/60">{t(dict.register.hookQuizQ)}</p>
+          <a
+            href={ownResultId ? `/quiz?r=${ownResultId}` : "/quiz"}
+            className="group inline-flex w-fit items-center gap-1.5 text-sm font-bold text-violet-100 transition hover:text-white"
+          >
+            <span aria-hidden>✦</span>
+            {t(ownResultId ? dict.nav.quizResult : dict.register.hookQuizCta)}
+            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </a>
+        </div>
+      </div>
+      {facts && (
+        <p className="mt-3 text-center text-xs text-white/50">{t(dict.register.hookFacts)}</p>
+      )}
+    </div>
+  );
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HERO LAUNCH PANEL — Countdown ↔ Problem Statement 전환 탭
@@ -842,35 +902,12 @@ export default function Journey() {
               </a>
             </div>
 
-            {/* Question-hook branch under the primary CTA:
-                  • need a team → take the personality test (team matching)
-                  • lone wolf / already have a squad → open the register modal
-                Two cards, two-up from sm, stacked on mobile. The test hook keeps
-                the returning-taker deep link ("내 결과 보기" → their saved result). */}
-            <div className="mx-auto mt-5 grid max-w-xl gap-3 sm:grid-cols-2 lg:mx-0">
-              <div className="flex flex-col gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left">
-                <p className="text-xs font-medium text-white/60">{t(dict.register.hookTeamQ)}</p>
-                <a
-                  href={ownResultId ? `/quiz?r=${ownResultId}` : "/quiz"}
-                  className="group inline-flex w-fit items-center gap-1.5 text-sm font-bold text-violet-100 transition hover:text-white"
-                >
-                  <span aria-hidden>✦</span>
-                  {t(ownResultId ? dict.nav.quizResult : dict.register.hookTeamCta)}
-                  <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                </a>
-              </div>
-              <div className="flex flex-col gap-2 rounded-2xl border border-violet-400/25 bg-violet-400/[0.07] p-4 text-left">
-                <p className="text-xs font-medium text-white/60">{t(dict.register.hookSoloQ)}</p>
-                <button
-                  type="button"
-                  onClick={openRegister}
-                  className="group inline-flex w-fit items-center gap-1.5 text-sm font-bold text-white transition hover:text-violet-100"
-                >
-                  {t(dict.register.hookSoloCta)}
-                  <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                </button>
-              </div>
-            </div>
+            <HookCards
+              t={t}
+              ownResultId={ownResultId}
+              openRegister={openRegister}
+              className="mx-auto mt-5 max-w-xl lg:mx-0"
+            />
           </motion.div>
 
           {/* RIGHT — Countdown ↔ Problem Statement 전환 슬롯, pushed to the right edge.
@@ -1113,6 +1150,16 @@ export default function Journey() {
             ))}
           </div>
           <p className="mt-4 text-xs text-white/60">{t(dict.benefits.incentiveNote)}</p>
+          {/* Mid-page CTA band — the same hook cards as the hero. Someone who
+              has just read what they get shouldn't have to scroll back to the
+              top (or all the way to the footer) to act on it. */}
+          <HookCards
+            t={t}
+            ownResultId={ownResultId}
+            openRegister={openRegister}
+            className="mx-auto mt-10 max-w-xl"
+            facts
+          />
         </div>
       </Chapter>
 
@@ -1360,6 +1407,15 @@ export default function Journey() {
         <Glass className="mt-8 text-left">
           <FAQList />
         </Glass>
+        {/* Second CTA band — the last objection has just been answered, so this
+            is the other natural moment to act. */}
+        <HookCards
+          t={t}
+          ownResultId={ownResultId}
+          openRegister={openRegister}
+          className="mx-auto mt-10 max-w-xl"
+          facts
+        />
       </Chapter>
 
       {/* ── CH 6 · FOOTER ──────────────────────────────────────────── */}
@@ -1385,7 +1441,7 @@ export default function Journey() {
                 the nav button's registered-label swap. */}
             <button
               type="button"
-              onClick={openRegister}
+              onClick={() => openRegister()}
               className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
             >
               {t(registered ? dict.register.navRegistered : dict.nav.register)}
