@@ -463,16 +463,36 @@ function DayModal({
   dayNum,
   onClose,
   onSelectEvent,
+  eventOpen,
   t,
 }: {
   dayNum: number | null;
   onClose: () => void;
   onSelectEvent: (e: BEvent, el: HTMLElement) => void;
+  // True while an EventModal is stacked on top of this one. Both dialogs listen
+  // for Escape on `document`, so without this one press closed BOTH — you'd
+  // land back on the page instead of the day you were reading, and the two
+  // focus-restores raced each other down to <body>.
+  eventOpen: boolean;
   t: Tfn;
 }) {
   const reduce = useReducedMotion();
   const closeRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+  // Read through a ref, not the effect deps: putting `eventOpen` in the deps
+  // would tear down and re-run this effect every time an event dialog opens,
+  // which fires the cleanup's focus-restore and bounces focus back to the day
+  // card mid-interaction.
+  const eventOpenRef = useRef(eventOpen);
+  eventOpenRef.current = eventOpen;
+  // Same reason: `onClose` is an inline arrow from the parent, so it's a new
+  // function on every render. With it in the deps the effect tore down and
+  // re-ran on every re-render — including the one caused by opening an event
+  // dialog — and each re-run re-captured `opener` from whatever happened to
+  // have focus at that moment. By the time the dialog actually closed, the
+  // original day card was long forgotten and focus fell to <body>.
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -487,8 +507,10 @@ function DayModal({
     const opener = document.activeElement as HTMLElement | null;
 
     const onKey = (e: KeyboardEvent) => {
+      // The event dialog on top owns the keyboard while it's open.
+      if (eventOpenRef.current) return;
       if (e.key === "Escape") {
-        onClose();
+        onCloseRef.current();
         return;
       }
       if (e.key === "Tab" && dialogRef.current) {
@@ -528,7 +550,7 @@ function DayModal({
       window.clearTimeout(id);
       opener?.focus?.();
     };
-  }, [dayNum, onClose]);
+  }, [dayNum]);
 
   if (!mounted) return null;
   const day = dayNum != null ? days.find((d) => d.day === dayNum) : null;
@@ -1518,7 +1540,7 @@ export default function Journey() {
         </div>
       </section>
 
-      <DayModal dayNum={activeDay} onClose={() => setActiveDay(null)} onSelectEvent={selectEvent} t={t} />
+      <DayModal dayNum={activeDay} onClose={() => setActiveDay(null)} onSelectEvent={selectEvent} eventOpen={active != null} t={t} />
       <EventModal event={active} onClose={() => setActive(null)} triggerRef={triggerRef} />
       <PartnerModal partner={activePartner} onClose={() => setActivePartner(null)} triggerRef={partnerTriggerRef} />
     </main>

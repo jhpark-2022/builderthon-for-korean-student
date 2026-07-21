@@ -41,7 +41,15 @@ export default function JourneyNav() {
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    // Anchor jumps (the hero CTA → #program) normally emit a scroll event, but
+    // not in every context — a backgrounded tab coalesces them away. Since that
+    // exact path is what used to hide this button entirely, re-check on
+    // hashchange too rather than depend on scroll alone.
+    window.addEventListener("hashchange", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("hashchange", onScroll);
+    };
   }, []);
 
   return (

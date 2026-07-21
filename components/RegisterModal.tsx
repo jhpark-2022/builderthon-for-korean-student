@@ -371,17 +371,21 @@ export default function RegisterModal({
     const first =
       order.find((k) => next[k]) ?? keys.find((k) => k !== "submit") ?? keys[0];
     if (!first) return;
-    window.requestAnimationFrame(() => {
+    // setTimeout, not requestAnimationFrame: rAF is paused in a backgrounded
+    // tab, so a submit there would leave focus on the button with the error
+    // off-screen. `data-field` is on the label and always present, so there's
+    // nothing to wait for a paint on anyway.
+    window.setTimeout(() => {
       const el = dialogRef.current?.querySelector<HTMLElement>(
         `[data-field="${first}"]`
       );
       if (!el) return;
       el.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
       const control = el.querySelector<HTMLElement>(
-        'input,select,textarea,[role="combobox"],button'
+        "input,select,textarea"
       );
       control?.focus({ preventScroll: true });
-    });
+    }, 0);
   }
 
   function validate(): boolean {
