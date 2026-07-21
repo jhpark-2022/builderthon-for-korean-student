@@ -380,8 +380,8 @@ export const schedule: BEvent[] = [
       en: "A focused 5–6h vibe-coding intro — non-developers welcome.",
     },
     description: {
-      ko: "참가자의 약 60%가 바이브 코딩이 처음입니다. 그래서 여러 번에 나누지 않고, 하루에 몰아서 끝내는 집중 5–6시간의 크래시코스로 모두의 출발선을 맞춥니다. AI 도구로 아이디어를 작동하는 프로토타입으로 바꾸는 기본기를 핸즈온으로 익혀, 기술 장벽이 아니라 아이디어가 한계가 되도록 합니다. 비개발자도 따라올 수 있게 설계되었고, 참여자 전원에게는 8일차 이후 수료증이 발급됩니다. 이 크래시코스는 코드프레소가 주관합니다.",
-      en: "About 60% of participants are trying vibe coding for the first time — so instead of spreading it out, one concentrated 5–6 hour Crash Course levels the start line in a single day. A hands-on run through the fundamentals of turning ideas into working prototypes with AI tools, so your ideas — not the tooling — are the limit. It's built so non-developers can keep up, and every participant receives a certificate after Day 8. The Crash Course is run by Codepresso.",
+      ko: "참가자의 약 60%가 바이브 코딩이 처음입니다. 그래서 여러 번에 나누지 않고, 하루에 몰아서 끝내는 집중 5–6시간의 크래시코스로 모두의 출발선을 맞춥니다. AI 도구로 아이디어를 작동하는 프로토타입으로 바꾸는 기본기를 핸즈온으로 익혀, 기술 장벽이 아니라 아이디어가 한계가 되도록 합니다. 비개발자도 따라올 수 있게 설계되었고, 참여자 전원에게 8일차 이후 수료증 발급을 추진 중입니다(발급 기관·기준 협의 중). 이 크래시코스는 코드프레소가 주관합니다.",
+      en: "About 60% of participants are trying vibe coding for the first time — so instead of spreading it out, one concentrated 5–6 hour Crash Course levels the start line in a single day. A hands-on run through the fundamentals of turning ideas into working prototypes with AI tools, so your ideas — not the tooling — are the limit. It's built so non-developers can keep up, and we're working to issue every participant a certificate after Day 8 (issuing body and criteria still being agreed). The Crash Course is run by Codepresso.",
     },
     location: ONLINE,
     org: CODEPRESSO_ORG,
@@ -395,8 +395,8 @@ export const schedule: BEvent[] = [
         en: "Pick up an AI vibe-coding workflow hands-on, not just in theory.",
       },
       {
-        ko: "참여자 전원 수료증 (8일차 이후 발급)",
-        en: "A completion certificate for every participant (issued after Day 8).",
+        ko: "참여자 전원 수료증 추진 (8일차 이후 · 협의 중)",
+        en: "A completion certificate for every participant — in the works (after Day 8).",
       },
     ],
   },

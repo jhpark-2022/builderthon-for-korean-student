@@ -356,6 +356,12 @@ export const dict = {
     ],
     // The vision funnel — straight from the vision graphic. The event is a
     // starting point, not an end; it feeds a lasting cross-border community.
+    // One-line stand-in left in the 취지 chapter after the five-step funnel moved
+    // to its own section before the footer.
+    visionOneLiner: {
+      ko: "이 행사는 끝이 아니라 깔때기의 입구입니다 — 그 시작이 당신입니다.",
+      en: "This event isn't an end but the mouth of a funnel — and you're where it starts.",
+    },
     visionTag: { ko: "비전", en: "Vision" },
     visionHeading: {
       ko: "이벤트는 끝이 아니라, 모든 것의 ‘초입’입니다.",
@@ -416,7 +422,7 @@ export const dict = {
   },
 
   whoWhat: {
-    tag: { ko: "참가 대상 · 혜택", en: "Who should join · What you get" },
+    tag: { ko: "참가 대상", en: "Who should join" },
     heading: {
       ko: "전공도, 코딩 실력도 묻지 않습니다.",
       en: "You don't need to be a CS major.",
@@ -431,14 +437,6 @@ export const dict = {
       { ko: "코딩이 처음이어도 좋습니다 — 크래시코스와 수료증이 함께합니다", en: "First time coding is fine — a crash course and a certificate are included" },
       { ko: "입대 전·전역 후, 다시 도전하고 싶은 분", en: "Anyone wanting a fresh challenge — before enlistment or after service" },
       { ko: "실제 기업의 문제를 직접 풀어보고 싶은 분", en: "Anyone who wants to solve a real company's problem hands-on" },
-    ],
-    getTitle: { ko: "얻어가는 것", en: "What you get" },
-    get: [
-      { ko: "8일간 AI로 실제 작동하는 제품 빌드", en: "Build a real, working product in 8 days with AI" },
-      { ko: "실제 기업의 AX 과제를 푼 ‘성공의 경험’", en: "A real success — solving an actual company's AX problem" },
-      { ko: "크래시코스 수료증 (Day 2, 코드프레소 주관)", en: "A crash-course completion certificate (Day 2, run by Codepresso)" },
-      { ko: "창업가 · 빌더 · 멘토와의 실질적 네트워킹", en: "Genuine networking with founders, builders & mentors" },
-      { ko: "지속되는 한–싱 빌더 커뮤니티의 시작 멤버", en: "Founding membership in a lasting Korea–SG builder community" },
     ],
     disclaimer: {
       ko: "* 일부 혜택(인센티브·멘토 라인업 등)은 파트너와 논의 중이며 확정 시 안내됩니다.",
@@ -498,7 +496,7 @@ export const dict = {
           { ko: "출제가 아니라 ‘의뢰’ — 학생은 주니어 컨설턴트로 프로세스·아픔을 진단해 AI로 재설계", en: "Not a prompt but a brief — you're a junior consultant diagnosing a real process & pain, then redesigning it with AI" },
           { ko: "가상 과제가 아닌 파트너사의 실제 AX 문제 + 직원 피드백", en: "Not toy prompts — a partner's real AX problem + employee feedback" },
           { ko: "재무·영업·마케팅 3트랙 · AWS 방법론으로 접근 (클라이언트 사명은 조율 중)", en: "Finance · sales · marketing — 3 tracks · approached with AWS methodology (client names TBC)" },
-          { ko: "지원하면 무조건 진짜 문제 + 회사 인원과 만남", en: "Everyone who applies gets a real problem + meets the company" },
+          { ko: "모든 참가팀에게 실제 문제와 기업 담당자 브리핑 제공 (Day 2 라이브 브리핑)", en: "Every team gets a real problem and a briefing from the company contact (Day 2, live)" },
         ],
       },
       {
@@ -518,6 +516,7 @@ export const dict = {
           { ko: "박희덕·원대로 등 연사 세션", en: "Speaker sessions with Park · Won and more" },
           { ko: "패널·공유 세션으로 technical 그 이상의 인사이트", en: "Panels & sharing sessions for more-than-technical insight" },
           { ko: "Day 5 참가자 AI 유스케이스 발표 · QR 인기투표 (대표진 청중)", en: "Day 5 participant AI use-case showcase + QR popular vote (founders in the room)" },
+          { ko: "지속되는 한–싱 빌더 커뮤니티의 시작 멤버", en: "Founding membership in a lasting Korea–SG builder community" },
         ],
       },
       {
@@ -635,8 +634,8 @@ export const dict = {
       },
     ],
     tbcNote: {
-      ko: "* Day 5에는 ‘유학생에서 창업가로’ 패널(유학생 출신 창업가 3인)이 예정되어 있으며 현재 섭외 중입니다. 연사 라인업은 미확정이며 공개 시점·구성은 조정될 수 있습니다.",
-      en: "* Day 5 hosts a ‘From Int'l Student to Founder’ panel (three founders who came up as international students) — panelists are still being arranged. The speaker line-up is not yet final and may change.",
+      ko: "* Day 5에는 ‘유학생에서 창업가로’ 패널(유학생 출신 창업가 3인)이 예정되어 있으며 현재 섭외 중입니다. 세션 시간·구성은 조정될 수 있습니다.",
+      en: "* Day 5 hosts a ‘From Int'l Student to Founder’ panel (three founders who came up as international students) — panelists are still being arranged. Session times and format may still change.",
     },
   },
 
@@ -759,15 +758,15 @@ export const dict = {
       {
         q: { ko: "수료증을 주나요? 의미가 있나요?", en: "Is there a certificate? Is it worth anything?" },
         a: {
-          ko: "크래시코스를 완료한 참여자 전원에게 수료증을 드리고, 링크드인에 올릴 수 있습니다. 발급 명의는 주최 기업·컨소시엄으로 붙어 무게를 더합니다. 처음 시작하는 분에게 특히 좋은 출발점이 되고, 이미 개발 경험이 있는 분에게는 수료증보다 커리큘럼·네트워킹·멘토링이 더 큰 가치가 됩니다.",
-          en: "Everyone who completes the crash course gets a certificate you can post on LinkedIn, issued under the host company/consortium's name to give it weight. It's a strong starting point especially if you're new; if you already build, the curriculum, networking and mentoring will matter more to you than the certificate itself.",
+          ko: "크래시코스를 완료한 참여자 전원에게 수료증 발급을 추진하고 있습니다(링크드인에 올릴 수 있는 형태). 발급 기관과 기준은 아직 협의 중이며, 확정되는 대로 안내합니다. 처음 시작하는 분에게 특히 좋은 출발점이 되고, 이미 개발 경험이 있는 분에게는 수료증보다 커리큘럼·네트워킹·멘토링이 더 큰 가치가 됩니다.",
+          en: "We're working to issue a certificate — in a form you can post on LinkedIn — to everyone who completes the crash course. The issuing body and the criteria are still being agreed, and we'll announce them once confirmed. It's a strong starting point especially if you're new; if you already build, the curriculum, networking and mentoring will matter more to you than the certificate itself.",
         },
       },
       {
         q: { ko: "인턴십이 진짜인가요? 유급인가요?", en: "Is the internship real? Is it paid?" },
         a: {
-          ko: "네, 실제 기회입니다. 상위 팀에게는 파트너 기업에서 자신이 푼 그 문제를 실무로 이어가는 유급 인턴십 기회가 열립니다. 유급인 만큼 선발은 경쟁이 있지만, 저희는 소수의 인턴십보다 ‘참여하면 누구나 얻는’ 네트워킹과 협업을 앞세웁니다. 세부 조건은 파트너와 확정되는 대로 안내합니다.",
-          en: "Yes — it's a real opportunity. Top teams may be offered a paid internship with a partner company to carry the very problem they solved into real work. Because it's paid, selection is competitive — but we put the networking and collaboration everyone gains ahead of the few internships. Details will be announced as they're confirmed with partners.",
+          ko: "실제로 추진 중인 기회입니다. 상위 팀이 자신이 푼 문제를 파트너 기업에서 실무로 이어가는 유급 인턴십을 목표로 논의하고 있고, 조건(참여 기업·기간·인원)은 아직 조율 중이며 확정되는 대로 업데이트합니다. 그래서 저희는 확정되지 않은 인턴십보다, 참여하면 누구나 얻는 네트워킹과 협업을 먼저 이야기합니다.",
+          en: "It's a real opportunity we're actively working on. We're in discussion to have top teams carry the problem they solved into paid internship work at a partner company; the terms (which companies, how long, how many people) are still being arranged and we'll update this as they're confirmed. That's why we lead with the networking and collaboration everyone gains, rather than an internship that isn't locked yet.",
         },
       },
       {

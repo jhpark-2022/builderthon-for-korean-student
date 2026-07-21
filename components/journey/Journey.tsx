@@ -1003,50 +1003,13 @@ export default function Journey() {
           ))}
         </div>
 
-        {/* Vision funnel — the event is the entry point to a lasting cross-border
-            community (straight from the vision graphic). Step 1 is highlighted as
-            the "START"; each step grows toward global expansion. */}
-        <div className="mt-14 rounded-3xl border border-violet-400/15 bg-violet-950/20 p-6 sm:p-8">
-          <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
-            {t(dict.about.visionTag)}
-          </p>
-          <h3 className="mx-auto mt-3 max-w-2xl text-center text-xl font-bold leading-snug text-white sm:text-2xl">
-            {t(dict.about.visionHeading)}
-          </h3>
-          <p className="mx-auto mt-3 max-w-2xl text-center text-sm leading-relaxed text-white/70">
-            {t(dict.about.visionIntro)}
-          </p>
-          <ol className="mt-8 grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {dict.about.visionSteps.map((s, i) => {
-              const start = i === 0;
-              return (
-                <li
-                  key={s.num}
-                  className={`relative flex flex-col rounded-2xl border p-4 text-left ${
-                    start
-                      ? "border-violet-400/50 bg-violet-500/15"
-                      : "border-white/10 bg-white/[0.03]"
-                  }`}
-                >
-                  <span
-                    className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-black ${
-                      start ? "bg-violet-500 text-white" : "bg-white/10 text-white/80"
-                    }`}
-                  >
-                    {s.num}
-                  </span>
-                  {start && (
-                    <span className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-violet-400/20 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-violet-200">
-                      ★ START
-                    </span>
-                  )}
-                  <p className="mt-2 text-sm font-bold leading-snug text-white">{t(s.title)}</p>
-                  <p className="mt-1 text-xs leading-relaxed text-white/65">{t(s.body)}</p>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
+        {/* The vision funnel used to sit here, at the end of this chapter. It
+            is now its own section between the FAQ and the footer, where it reads
+            as a closing note rather than a second ending inside the chapter that
+            opens the page. One line keeps the idea present. */}
+        <p className="mx-auto mt-10 max-w-2xl text-sm font-medium leading-relaxed text-violet-100/80">
+          {t(dict.about.visionOneLiner)}
+        </p>
 
       </Chapter>
 
@@ -1061,30 +1024,21 @@ export default function Journey() {
             {t(dict.whoWhat.intro)}
           </p>
         </div>
-        <div className="mt-10 grid gap-4 text-left md:grid-cols-2">
-          <Glass>
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-violet-300">{t(dict.whoWhat.whoTitle)}</h3>
-            <ul className="mt-4 space-y-3">
-              {dict.whoWhat.who.map((item, i) => (
-                <li key={i} className="flex items-start gap-3 text-sm leading-relaxed text-white/75">
-                  <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400" />
-                  {t(item)}
-                </li>
-              ))}
-            </ul>
-          </Glass>
-          <Glass>
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">{t(dict.whoWhat.getTitle)}</h3>
-            <ul className="mt-4 space-y-3">
-              {dict.whoWhat.get.map((item, i) => (
-                <li key={i} className="flex items-start gap-3 text-sm leading-relaxed text-white/75">
-                  <span aria-hidden className="mt-[1px] shrink-0 text-emerald-300">✦</span>
-                  {t(item)}
-                </li>
-              ))}
-            </ul>
-          </Glass>
-        </div>
+        {/* "얻어가는 것" used to sit beside this list, repeating the benefits
+            chapter that follows immediately after. This chapter now does one
+            job — who it's for, and why the usual reasons not to join don't
+            apply — and the next chapter answers "what do I get". */}
+        <Glass className="mx-auto mt-10 max-w-2xl text-left">
+          <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-violet-300">{t(dict.whoWhat.whoTitle)}</h3>
+          <ul className="mt-4 space-y-3">
+            {dict.whoWhat.who.map((item, i) => (
+              <li key={i} className="flex items-start gap-3 text-sm leading-relaxed text-white/75">
+                <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400" />
+                {t(item)}
+              </li>
+            ))}
+          </ul>
+        </Glass>
         <p className="mt-5 text-center text-xs text-white/65">{t(dict.whoWhat.disclaimer)}</p>
       </Chapter>
 
@@ -1416,6 +1370,57 @@ export default function Journey() {
           className="mx-auto mt-10 max-w-xl"
           facts
         />
+      </Chapter>
+
+      {/* ── CH 5.5 · VISION FUNNEL ─────────────────────────────────────
+          Moved out of the 취지 chapter: this is the "what it grows into" note,
+          which lands better as the last thing read before the closing CTA than
+          as a coda inside the chapter that opens the page. */}
+      <Chapter id="vision" align="center">
+        {/* Vision funnel — the event is the entry point to a lasting cross-border
+            community (straight from the vision graphic). Step 1 is highlighted as
+            the "START"; each step grows toward global expansion. */}
+        <div className="mt-14 rounded-3xl border border-violet-400/15 bg-violet-950/20 p-6 sm:p-8">
+          <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
+            {t(dict.about.visionTag)}
+          </p>
+          <h3 className="mx-auto mt-3 max-w-2xl text-center text-xl font-bold leading-snug text-white sm:text-2xl">
+            {t(dict.about.visionHeading)}
+          </h3>
+          <p className="mx-auto mt-3 max-w-2xl text-center text-sm leading-relaxed text-white/70">
+            {t(dict.about.visionIntro)}
+          </p>
+          <ol className="mt-8 grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {dict.about.visionSteps.map((s, i) => {
+              const start = i === 0;
+              return (
+                <li
+                  key={s.num}
+                  className={`relative flex flex-col rounded-2xl border p-4 text-left ${
+                    start
+                      ? "border-violet-400/50 bg-violet-500/15"
+                      : "border-white/10 bg-white/[0.03]"
+                  }`}
+                >
+                  <span
+                    className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-black ${
+                      start ? "bg-violet-500 text-white" : "bg-white/10 text-white/80"
+                    }`}
+                  >
+                    {s.num}
+                  </span>
+                  {start && (
+                    <span className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-violet-400/20 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-violet-200">
+                      ★ START
+                    </span>
+                  )}
+                  <p className="mt-2 text-sm font-bold leading-snug text-white">{t(s.title)}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-white/65">{t(s.body)}</p>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
       </Chapter>
 
       {/* ── CH 6 · FOOTER ──────────────────────────────────────────── */}
