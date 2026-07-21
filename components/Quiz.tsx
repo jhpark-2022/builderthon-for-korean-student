@@ -130,6 +130,8 @@ export default function Quiz() {
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Choice[]>([]);
   const [selected, setSelected] = useState<Choice | null>(null);
+  // The question <h2>; focused on each step so the swap is announced (see below).
+  const questionRef = useRef<HTMLHeadingElement>(null);
   const [result, setResult] = useState<QuizResult | null>(null);
   const [fromShare, setFromShare] = useState(false);
   // The visitor's DURABLE own result (localStorage), loaded post-mount so it
@@ -249,6 +251,17 @@ export default function Quiz() {
   const current = QUESTIONS[index];
   const progress = ((index + 1) / QUESTIONS.length) * 100;
 
+  // Focus the new question after it mounts (both forward and back). preventScroll
+  // keeps the page still — the question is already centred in the viewport.
+  useEffect(() => {
+    if (phase !== "quiz") return;
+    const id = window.setTimeout(
+      () => questionRef.current?.focus({ preventScroll: true }),
+      reduce ? 0 : 300
+    );
+    return () => window.clearTimeout(id);
+  }, [phase, index, reduce]);
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#06040f] text-white">
       {/* decorative field — same tokens as the main site */}
@@ -295,6 +308,14 @@ export default function Quiz() {
               />
             </div>
 
+            {/* Position announcement — the "n / 14" counter above is visual
+                only; this is its polite spoken equivalent. */}
+            <p className="sr-only" aria-live="polite">
+              {t(quizUI.questionPosition)
+                .replace("{n}", String(index + 1))
+                .replace("{total}", String(QUESTIONS.length))}
+            </p>
+
             {/* question */}
             <div className="flex flex-1 flex-col justify-center py-8">
               <AnimatePresence mode="wait">
@@ -308,7 +329,16 @@ export default function Quiz() {
                   <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
                     {current.id}
                   </p>
-                  <h2 className="text-[1.6rem] font-bold leading-snug tracking-tight sm:text-[1.8rem]">
+                  {/* Focused on every step: the question swaps in place, so a
+                      keyboard/screen-reader user was left with focus on the
+                      option button they just pressed (or on <body> after it
+                      unmounted) and never heard the new question. tabIndex={-1}
+                      makes the heading programmatically focusable only. */}
+                  <h2
+                    ref={questionRef}
+                    tabIndex={-1}
+                    className="text-[1.6rem] font-bold leading-snug tracking-tight outline-none sm:text-[1.8rem]"
+                  >
                     {t(current.text)}
                   </h2>
                   <div className="mt-8 flex flex-col gap-3.5">
@@ -466,6 +496,8 @@ function ResultView({
   const storyRef = useRef<HTMLDivElement>(null);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  // In-app-browser fallback: the captured PNG shown full-screen to long-press.
+  const [holdImage, setHoldImage] = useState<string | null>(null);
   const [host, setHost] = useState("");
   useEffect(() => {
     setHost(window.location.hostname.replace(/^www\./, ""));
@@ -506,8 +538,15 @@ function ResultView({
           if ((err as Error)?.name === "AbortError") return;
           throw err;
         }
+      } else if (window.matchMedia("(pointer: coarse)").matches) {
+        // Mobile in-app browsers (Instagram, KakaoTalk, LINE…) support neither
+        // the file share sheet nor <a download> — the click silently did
+        // nothing and the visitor was left with no image. Show the PNG instead
+        // and tell them to long-press it, which always works.
+        setHoldImage(URL.createObjectURL(blob));
       } else {
-        // Desktop (no file-share support) → download the PNG.
+        // Desktop → download the PNG, and say so: a file landing in a folder
+        // somewhere is otherwise invisible feedback.
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
@@ -516,6 +555,8 @@ function ResultView({
         a.click();
         a.remove();
         URL.revokeObjectURL(url);
+        setToast(t(quizUI.saveImageSaved));
+        window.setTimeout(() => setToast(null), 2600);
       }
     } catch {
       setToast(t(quizUI.saveImageError));
@@ -716,6 +757,42 @@ function ResultView({
       <div aria-hidden style={{ position: "fixed", top: 0, left: -9999, pointerEvents: "none", zIndex: -1 }}>
         <StoryCard ref={storyRef} result={result} data={data} variant={variant} host={host} t={t} />
       </div>
+
+      {/* Long-press-to-save overlay (in-app browsers — see saveImage). */}
+      <AnimatePresence>
+        {holdImage && (
+          <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label={t(quizUI.saveImageHold)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reduce ? 0 : 0.2 }}
+            className="fixed inset-0 z-[70] flex flex-col items-center justify-center gap-4 bg-black/90 px-6 py-8"
+          >
+            <p className="text-center text-sm font-semibold text-white/90">
+              {t(quizUI.saveImageHold)}
+            </p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={holdImage}
+              alt={`${t(variant.name)} · ${result.resultId}`}
+              className="max-h-[70vh] w-auto max-w-full rounded-2xl border border-white/15 object-contain"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                URL.revokeObjectURL(holdImage);
+                setHoldImage(null);
+              }}
+              className="rounded-2xl border border-white/20 bg-white/10 px-6 py-3 text-sm font-bold text-white"
+            >
+              {t(quizUI.saveImageHoldClose)}
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* error toast (share-sheet cancels stay silent) */}
       <AnimatePresence>
@@ -1085,7 +1162,11 @@ function Analyzing({ t, reduce }: { t: (p: { ko: string; en: string }) => string
   }, [messages.length]);
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center py-16 text-center">
+    <div
+      role="status"
+      aria-live="polite"
+      className="flex flex-1 flex-col items-center justify-center py-16 text-center"
+    >
       <motion.div
         className="h-14 w-14 rounded-full border-[3px] border-white/15 border-t-violet-400"
         animate={reduce ? undefined : { rotate: 360 }}

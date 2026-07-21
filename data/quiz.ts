@@ -568,6 +568,9 @@ export const quizUI = {
   prev: { ko: "이전", en: "Back" },
   progressLabel: { ko: "진행 상황", en: "Progress" },
   question: { ko: "질문", en: "Question" },
+  // Spoken equivalent of the visual "n / 14" counter (sr-only live region).
+  // {n} / {total} are substituted at render time.
+  questionPosition: { ko: "질문 {n} / {total}", en: "Question {n} of {total}" },
 
   // "Analyzing…" interstitial shown after the last answer (skipped on reduced motion).
   analyzing: [
@@ -612,6 +615,16 @@ export const quizUI = {
   saveImage: { ko: "이미지로 저장", en: "Save as image" },
   saveImageLoading: { ko: "만드는 중…", en: "Creating…" },
   saveImageError: { ko: "이미지 생성에 실패했어요", en: "Couldn't create the image" },
+  // Desktop: the file went to the downloads folder — say so, since nothing
+  // visible happens otherwise.
+  saveImageSaved: { ko: "이미지를 저장했어요", en: "Image saved" },
+  // In-app browsers (Instagram, KakaoTalk…) support neither the file share
+  // sheet nor <a download>, so the PNG is shown full-screen to long-press.
+  saveImageHold: {
+    ko: "이미지를 길게 눌러 저장하세요",
+    en: "Press and hold the image to save it",
+  },
+  saveImageHoldClose: { ko: "닫기", en: "Close" },
   // shown on the story card itself
   storyRetake: { ko: "나도 테스트하기", en: "Take the test yourself" },
   // Story-card axis-explanation highlights — the most decisive axis (highest %)

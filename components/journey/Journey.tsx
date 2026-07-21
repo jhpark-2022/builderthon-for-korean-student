@@ -123,6 +123,10 @@ function LogoTile({
 
 type Tfn = (p: Phrase) => string;
 
+// Kept identical to EventModal's list so every dialog traps focus the same way.
+const FOCUSABLE =
+  'a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // HOOK CARDS — the two-up entry point, rendered in the hero and reused verbatim
 // as the mid-page CTA bands (after 혜택, after FAQ). One component, one style:
@@ -467,19 +471,62 @@ function DayModal({
   t: Tfn;
 }) {
   const reduce = useReducedMotion();
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
+
+  // Same open/close lifecycle as EventModal and RegisterModal — ESC, Tab focus
+  // trap, body scroll lock, inert background, initial focus and focus
+  // restoration. This dialog only had ESC + scroll lock, so Tab walked straight
+  // out into the page behind it and closing dropped focus back to <body>: with
+  // a keyboard you could open a day, tab away into content you couldn't see,
+  // and never find your way back to the day card you came from.
   useEffect(() => {
     if (dayNum == null) return;
+    const opener = document.activeElement as HTMLElement | null;
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key === "Tab" && dialogRef.current) {
+        const nodes = Array.from(
+          dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)
+        ).filter((el) => el.offsetParent !== null || el === document.activeElement);
+        if (nodes.length === 0) {
+          e.preventDefault();
+          return;
+        }
+        const first = nodes[0];
+        const last = nodes[nodes.length - 1];
+        const active = document.activeElement;
+        if (e.shiftKey && (active === first || !dialogRef.current.contains(active))) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && (active === last || !dialogRef.current.contains(active))) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
+
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    const inerted = Array.from(
+      document.querySelectorAll<HTMLElement>("header, main, footer")
+    );
+    inerted.forEach((el) => el.setAttribute("inert", ""));
+    const id = window.setTimeout(() => closeRef.current?.focus(), 50);
+
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
+      inerted.forEach((el) => el.removeAttribute("inert"));
+      window.clearTimeout(id);
+      opener?.focus?.();
     };
   }, [dayNum, onClose]);
 
@@ -499,8 +546,10 @@ function DayModal({
         >
           <div aria-hidden onClick={onClose} className="absolute inset-0 cursor-default bg-black/70 backdrop-blur-sm" />
           <motion.div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
+            aria-labelledby="day-modal-title"
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 40, scale: 0.985 }}
             animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.985 }}
@@ -509,6 +558,7 @@ function DayModal({
           >
             <span aria-hidden className="h-[2px] w-full shrink-0 bg-gradient-to-r from-accent to-accent-strong" />
             <button
+              ref={closeRef}
               type="button"
               onClick={onClose}
               aria-label={t(dict.modal.close)}
@@ -533,7 +583,7 @@ function DayModal({
                 )}
                 <DayModeBadge day={day} t={t} />
               </div>
-              <h3 className="mt-5 text-[24px] font-bold leading-tight text-white sm:text-[30px]">{t(day.theme)}</h3>
+              <h3 id="day-modal-title" className="mt-5 text-[24px] font-bold leading-tight text-white sm:text-[30px]">{t(day.theme)}</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/70">{t(day.summary)}</p>
               <div className="mt-6 grid gap-3">
                 {evs.map((ev) => (
