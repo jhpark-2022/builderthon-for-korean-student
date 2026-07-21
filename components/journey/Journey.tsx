@@ -1140,8 +1140,10 @@ export default function Journey() {
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.speakers.intro)}</p>
         <div className="mt-10 grid gap-5 text-left sm:grid-cols-3">
-          {dict.speakers.people.map((s) => (
-            <div key={s.img} className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-400/25 hover:bg-white/[0.05]">
+          {/* keyed by index, not `img` — one speaker can hold two sessions
+              (박희덕: Day 7 간담회 + Day 8 키노트) and so reuse the same photo */}
+          {dict.speakers.people.map((s, si) => (
+            <div key={si} className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-400/25 hover:bg-white/[0.05]">
               <span className="text-xs font-bold uppercase tracking-wide text-violet-300/80">{t(s.day)}</span>
               <p className="mt-4 text-base font-semibold leading-snug text-white">{t(s.topic)}</p>
               <ul className="mt-4 space-y-2">

@@ -537,7 +537,7 @@ export const dict = {
   // ── 연사 · 공유 세션 (Day 1·5·8) ────────────────────────────────────────────
   speakers: {
     tag: { ko: "연사 · 공유 세션", en: "Speaker sessions" },
-    heading: { ko: "Day 1 · 5 · 8 — 스피커 & 공유 세션", en: "Day 1 · 5 · 8 — Speaker & sharing sessions" },
+    heading: { ko: "Day 1 · 5 · 7 · 8 — 스피커 & 공유 세션", en: "Day 1 · 5 · 7 · 8 — Speaker & sharing sessions" },
     intro: {
       ko: "이 시간을 따로 두는 이유 — Zero100의 앙트레프레너십 정체성을 지키기 위해. (연사 라인업은 확정되는 대로 안내됩니다.)",
       en: "Why we set this time aside — to protect Zero100's entrepreneurial identity. (Speaker line-up announced as confirmed.)",
@@ -554,6 +554,21 @@ export const dict = {
           { ko: "벤처빌더가 본 다양한 진로·커리어 경로 탐색", en: "The many career paths a venture builder has seen" },
           { ko: "학생·비개발자도 시작할 수 있는 여러 갈래", en: "Routes even students and non-developers can start from" },
           { ko: "Q&A 포함 · 약 1시간 — ‘처음이어도 된다’ 동기부여", en: "About an hour with Q&A — a ‘first-timers welcome’ nudge" },
+        ],
+      },
+      {
+        // Same speaker as the Day 8 keynote — the career session is a separate
+        // session on a separate day, so it gets its own card (see d7-speaker-session).
+        day: { ko: "Day 7 · 커리어 간담회", en: "Day 7 · Career session" },
+        name: { ko: "박희덕", en: "Park Hee-deok" },
+        role: { ko: "CEO · General Partner, Translink Investment (VC)", en: "CEO · General Partner, Translink Investment (VC)" },
+        topic: { ko: "‘FDE로 일한다는 것’ — 커리어 간담회", en: "“Working as an FDE” — a career session" },
+        img: "/partners/logos/speaker-park.jpeg",
+        points: [
+          { ko: "자사 FDE 사업에 관심 있는 학생·졸업생 대상 · 12:30–14:00", en: "For students & grads interested in the firm's FDE business · 12:30–14:00" },
+          { ko: "어떤 일을 하는 자리인지, 어떤 사람을 찾는지 직접 듣기", en: "What the work actually is, and who they're looking for — first-hand" },
+          { ko: "인턴 · 채용 pool로 이어지는 실질적 연결", en: "A genuine connection into the internship & hiring pool" },
+          { ko: "후속 1:1 면담·멘토링(희망자)은 8/29 행사 종료 후", en: "Follow-up 1:1s & mentoring (opt-in) after the event closes on 29 Aug" },
         ],
       },
       {
