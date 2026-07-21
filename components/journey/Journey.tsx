@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
 import { dict, links, partnerIntros, partnerIntroTBC, type Phrase } from "@/data/dictionary";
 import {
@@ -122,51 +122,6 @@ function LogoTile({
 }
 
 type Tfn = (p: Phrase) => string;
-
-// Count-up for the partner-facing traction stats. Honest by construction:
-// animates once when scrolled into view, and only ever counts to the real
-// value. Fully disabled under prefers-reduced-motion (renders the final number
-// immediately). Callers pass only purely-numeric stats; anything with a prefix
-// like "~100" is rendered as static text and never reaches this component.
-function CountUp({ value, className }: { value: number; className?: string }) {
-  const reduce = useReducedMotion();
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.6 });
-  // Start at 0 on both server and the first client render so hydration matches
-  // regardless of the client's reduced-motion state (useReducedMotion is false
-  // during SSR). The real value is applied in the effect below, post-hydration.
-  const [n, setN] = useState(0);
-
-  useEffect(() => {
-    // Reduced motion: skip the animation, snap straight to the final value.
-    if (reduce) {
-      setN(value);
-      return;
-    }
-    if (!inView) return;
-    let raf = 0;
-    let start: number | null = null;
-    const duration = 900;
-    const tick = (ts: number) => {
-      if (start === null) start = ts;
-      const p = Math.min((ts - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
-      setN(Math.round(eased * value));
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [inView, reduce, value]);
-
-  return (
-    <span ref={ref} className={className}>
-      {/* Animated digits are decorative; expose the real final value to AT so a
-          screen reader never announces a mid-animation number. */}
-      <span aria-hidden="true">{n}</span>
-      <span className="sr-only">{value}</span>
-    </span>
-  );
-}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HERO LAUNCH PANEL — Countdown ↔ Problem Statement 전환 탭
@@ -1239,75 +1194,6 @@ export default function Journey() {
             ))}
           </div>
         </div>
-      </Chapter>
-
-      {/* ── CH 3.5 · TRACTION / FOR PARTNERS ───────────────────────── */}
-      {/* overflow-x-clip contains the oversized w-[140%] vignette below so it
-          no longer widens the page (no horizontal scroll / distorted mobile
-          captures). Only the horizontal axis is clipped, so the scrim's
-          vertical bleed into neighbouring sections is untouched. */}
-      <Chapter id="why-partner" align="center" className="overflow-x-clip">
-        {/* soft dark scrim so this sponsor-facing section stays calm + readable
-            over the field (the only content section without a dark backing) */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/2 -z-[1] h-[150%] w-[140%] -translate-x-1/2 -translate-y-1/2"
-          style={{
-            background:
-              "radial-gradient(ellipse at center, rgba(7,6,18,0.78) 0%, rgba(7,6,18,0.45) 42%, rgba(7,6,18,0) 75%)",
-          }}
-        />
-        <div className="text-center">
-          <Eyebrow color="cyan">{t(dict.traction.tag)}</Eyebrow>
-          <h2 className="text-[clamp(1.8rem,5vw,3.25rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
-            {t(dict.traction.heading)}
-          </h2>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/70">
-            {t(dict.traction.intro)}
-          </p>
-        </div>
-
-        <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-          {dict.traction.stats.map((s) => {
-            // Only count up purely-numeric values; "~100" and friends stay static.
-            const numeric = /^\d+$/.test(s.num);
-            return (
-              <Glass key={s.num} className="!p-5 text-center transition duration-300 hover:border-violet-400/25 hover:bg-white/[0.06]">
-                <div className="text-2xl font-black text-white sm:text-3xl">
-                  {numeric ? <CountUp value={parseInt(s.num, 10)} /> : s.num}
-                </div>
-                <div className="mt-1.5 text-xs leading-snug text-white/70">{t(s.label)}</div>
-              </Glass>
-            );
-          })}
-        </div>
-
-        <div className="mt-4 grid gap-4 text-left md:grid-cols-2">
-          <Glass>
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">{t(dict.traction.wantTitle)}</h3>
-            <ol className="mt-4 space-y-3">
-              {dict.traction.wants.map((item, i) => (
-                <li key={i} className="flex items-start gap-3 text-sm leading-relaxed text-white/75">
-                  <span aria-hidden className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cyan-400/15 text-xs font-bold text-cyan-300">{i + 1}</span>
-                  {t(item)}
-                </li>
-              ))}
-            </ol>
-          </Glass>
-          <Glass>
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-violet-300">{t(dict.traction.getTitle)}</h3>
-            <ul className="mt-4 space-y-3">
-              {dict.traction.gets.map((item, i) => (
-                <li key={i} className="flex items-start gap-3 text-sm leading-relaxed text-white/75">
-                  <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400" />
-                  {t(item)}
-                </li>
-              ))}
-            </ul>
-          </Glass>
-        </div>
-
-        <p className="mt-5 text-center text-xs text-white/65">{t(dict.traction.note)}</p>
       </Chapter>
 
       {/* ── CH 4 · PARTNERS ────────────────────────────────────────── */}

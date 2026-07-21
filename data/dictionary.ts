@@ -423,41 +423,6 @@ export const dict = {
     },
   },
 
-  traction: {
-    tag: { ko: "파트너 안내", en: "For partners" },
-    heading: {
-      ko: "추측이 아니라 근거로 설계합니다.",
-      en: "Designed on evidence, not guesses.",
-    },
-    intro: {
-      ko: "학생 인터뷰·피드백과 빌더 행사 벤치마크를 토대로 프로그램을 설계하고 있습니다. 아래는 지금까지 확인된 수요와 파트너가 얻는 가치입니다.",
-      en: "We're shaping this program on student interviews and benchmarked builder events. Here's the demand we've validated — and what partners get.",
-    },
-    stats: [
-      { num: "~100", label: { ko: "목표 한인 학생 빌더", en: "Target Korean student builders" } },
-      { num: "3", label: { ko: "참가 대학 (NUS · NTU · SMU)", en: "Universities (NUS · NTU · SMU)" } },
-      { num: "8", label: { ko: "일간 AI 빌더톤", en: "Day AI builderthon" } },
-      { num: "60%", label: { ko: "바이브 코딩 첫 시도 참가자", en: "First-time vibe coders" } },
-    ],
-    wantTitle: { ko: "학생들이 원하는 것 (인터뷰 기반)", en: "What students told us they want" },
-    wants: [
-      { ko: "실제 기업의 문제로 만드는 성공 경험", en: "A real success on an actual company's problem" },
-      { ko: "멘토링 · 셰어링 세션", en: "Mentoring & sharing sessions" },
-      { ko: "창업가 · 빌더 네트워킹", en: "Founder & builder networking" },
-    ],
-    getTitle: { ko: "파트너가 얻는 것", en: "What partners get" },
-    gets: [
-      { ko: "약 100명의 한인 학생 빌더에 대한 우선 접근", en: "First access to ~100 Korean student builders" },
-      { ko: "실제 AX 과제를 학생이 직접 푸는 결과물·피드백", en: "Solutions & feedback as students tackle a real AX problem" },
-      { ko: "채용 · 고객 · 창업으로 이어지는 인재 파이프라인", en: "A talent pipeline into hiring, customers, and founders" },
-      { ko: "지속되는 한–싱 커뮤니티의 파운딩 파트너 포지션", en: "A founding-partner position in a lasting Korea–SG community" },
-    ],
-    note: {
-      ko: "확정·진행 단계별 파트너는 아래에서 구분해 안내합니다.",
-      en: "Partners are distinguished by stage (confirmed / in talks) below.",
-    },
-  },
-
   // ── 참가 혜택 · WHY JOIN (6 benefits) + 참여 플로우 + 인센티브 ──────────────
   benefits: {
     tag: { ko: "참가 혜택", en: "Why Join" },

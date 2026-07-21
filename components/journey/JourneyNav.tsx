@@ -14,9 +14,9 @@ const anchors = [
   { id: "benefits", label: dict.nav.benefits },
   { id: "program",  label: dict.nav.program },
   { id: "speakers", label: dict.nav.speakers },
-  // Lands on the partner pitch (#why-partner / "For partners"); the logo wall
-  // (#builders) follows immediately below it.
-  { id: "why-partner", label: dict.nav.builders },
+  // The "For partners" pitch chapter (#why-partner) was removed, so this now
+  // lands directly on the partner/logo wall.
+  { id: "builders", label: dict.nav.builders },
   { id: "faq",      label: dict.nav.faq },
 ];
 
