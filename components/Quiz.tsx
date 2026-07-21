@@ -163,15 +163,24 @@ export default function Quiz() {
     const parsed = parseResultId(params.get("r"));
     if (!parsed) return;
     setPhase("result");
+    const saved = loadOwnResult();
     const isOwn =
-      readOwnResult() === parsed.resultId ||
-      loadOwnResult()?.resultId === parsed.resultId;
+      readOwnResult() === parsed.resultId || saved?.resultId === parsed.resultId;
     setFromShare(!isOwn);
+    // Revisiting your OWN result (landing "다시 보기", a reopened link, a fresh
+    // tab): re-score the stored answers so the per-axis % gauges come back
+    // instead of the card rendering axis-less. Only ever for our own saved
+    // answers, and only if they still score to this exact type — a scoring
+    // change that shifts the outcome falls back to the axis-less card rather
+    // than showing percentages that contradict the type on screen.
+    const rescored =
+      isOwn && saved?.answers?.length === QUESTIONS.length ? scoreQuiz(saved.answers) : null;
+    const restored = rescored?.resultId === parsed.resultId ? rescored : parsed;
     // Keep a freshly-scored result (which carries `axes` for the gauges) when
     // our OWN enterResult → replaceState re-fires this effect with the same id
     // (Next 14.2 syncs replaceState into useSearchParams). A genuine deep-link
-    // has no prior result, so it falls through to the axes-less parsed one.
-    setResult((prev) => (prev && prev.resultId === parsed.resultId ? prev : parsed));
+    // has no prior result, so it falls through to `restored`.
+    setResult((prev) => (prev && prev.resultId === parsed.resultId ? prev : restored));
   }, [params]);
 
   // Enter the result phase: persist the id (so a refresh keeps it "ours" → the
@@ -181,10 +190,14 @@ export default function Quiz() {
   // durable localStorage result — a `?r=` deep-link never reaches here, so a
   // friend's shared type is never saved as the visitor's own. A retake that
   // completes overwrites the previous type.
-  const enterResult = useCallback((scored: QuizResult) => {
+  // `taken` is the answer array the result was scored from — persisted alongside
+  // the id so a later revisit can re-score it and show the gauges again. It's
+  // passed in rather than read from state: the reduced-motion path calls this in
+  // the same tick as setAnswers, where the state hasn't flushed yet.
+  const enterResult = useCallback((scored: QuizResult, taken: Choice[]) => {
     writeOwnResult(scored.resultId);
-    saveOwnResult(scored.resultId);
-    setOwnResult({ resultId: scored.resultId, savedAt: new Date().toISOString() });
+    saveOwnResult(scored.resultId, taken);
+    setOwnResult({ resultId: scored.resultId, savedAt: new Date().toISOString(), answers: taken });
     if (typeof window !== "undefined") {
       window.history.replaceState(null, "", `/quiz?r=${scored.resultId}`);
     }
@@ -195,9 +208,9 @@ export default function Quiz() {
   // the page (or hitting Back) mid-analysis never fires setState on an unmount.
   useEffect(() => {
     if (phase !== "analyzing" || !result) return;
-    const id = window.setTimeout(() => enterResult(result), 2400);
+    const id = window.setTimeout(() => enterResult(result, answers), 2400);
     return () => window.clearTimeout(id);
-  }, [phase, result, enterResult]);
+  }, [phase, result, answers, enterResult]);
 
   const startQuiz = () => {
     setAnswers([]);
@@ -230,7 +243,7 @@ export default function Quiz() {
         // Reduced motion skips the interstitial and jumps straight to the result;
         // otherwise show the "analyzing" beat, which then enters the result.
         if (reduce) {
-          enterResult(scored);
+          enterResult(scored, next);
         } else {
           setPhase("analyzing");
         }
