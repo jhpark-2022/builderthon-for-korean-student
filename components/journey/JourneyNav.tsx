@@ -25,36 +25,23 @@ export default function JourneyNav() {
   const reduce = useReducedMotion();
   const { openRegister, registered } = useRegister();
   const [scrolled, setScrolled] = useState(false);
+  // Reveal the register button as soon as the visitor leaves the hero — the same
+  // scrollY > 40 threshold that tints the bar. It used to wait on an
+  // IntersectionObserver over #about, which broke the most likely first action on
+  // the page: the hero's primary CTA jumps straight to #program, so #about is
+  // never scrolled through and the register button never appeared at all. Once
+  // shown it stays shown (latched below), so it never flickers on scroll-up.
+  const [showRegister, setShowRegister] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => {
+      const past = window.scrollY > 40;
+      setScrolled(past);
+      if (past) setShowRegister(true);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Reveal the register button only once the visitor reaches the "취지 · Why this
-  // exists" chapter — CH 1, <Chapter id="about"> in Journey.tsx, the section that
-  // explains why the event exists. Once shown it STAYS shown regardless of later
-  // scroll position (the observer disconnects on first intersection), so
-  // scrolling back above #about never hides or flickers it.
-  const [showRegister, setShowRegister] = useState(false);
-  useEffect(() => {
-    const el = document.getElementById("about");
-    if (!el) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setShowRegister(true);
-          io.disconnect();
-        }
-      },
-      // Fire when #about is meaningfully in view (not just its first pixel at the
-      // very bottom edge), by trimming 30% off the root's bottom.
-      { rootMargin: "0px 0px -30% 0px" }
-    );
-    io.observe(el);
-    return () => io.disconnect();
   }, []);
 
   return (
@@ -94,14 +81,14 @@ export default function JourneyNav() {
           </div>
         </div>
         {/* RIGHT group — EN/KR toggle + Partner, with the register button
-            appearing only after the visitor reaches the 취지/about chapter. */}
+            appearing as soon as the visitor scrolls off the hero. */}
         <div className="flex items-center gap-2.5 sm:gap-3">
           <LocaleToggle />
           <a href={links.partnership} className="hidden shrink-0 whitespace-nowrap rounded-full border border-white/20 bg-white/5 px-5 py-2 text-sm font-semibold text-white/85 transition hover:bg-white/10 md:inline-flex">
             {t(dict.nav.partner)}
           </a>
-          {/* Scroll-revealed register CTA — fades/slides in once #about is reached
-              and then persists. Opens the shared register modal (useRegister). */}
+          {/* Scroll-revealed register CTA — fades/slides in once the hero is
+              scrolled past, then persists. Opens the shared register modal. */}
           <AnimatePresence>
             {showRegister && (
               <motion.button

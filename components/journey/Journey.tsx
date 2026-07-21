@@ -138,7 +138,7 @@ type Tfn = (p: Phrase) => string;
 const LAUNCH_AT = new Date("2026-08-22T00:00:00+09:00").getTime();
 // 기획/디자인 컨펌 단계에서만 true. 퍼블리시 시 false 로 바꾸면 탭이 숨겨지고
 // 날짜(LAUNCH_AT)에 따라서만 뷰가 결정된다.
-const PREVIEW_TABS = true;
+const PREVIEW_TABS = false;
 
 type LaunchView = "countdown" | "problem";
 
@@ -697,7 +697,7 @@ function ScrollToTop() {
 
 export default function Journey() {
   const { t } = useLocale();
-  const { openRegister } = useRegister();
+  const { openRegister, registered } = useRegister();
   const reduce = useReducedMotion();
   const [active, setActive] = useState<BEvent | null>(null);
   const [activeDay, setActiveDay] = useState<number | null>(null); // day detail modal
@@ -1380,12 +1380,19 @@ export default function Journey() {
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/65">{t(dict.footer.blurb)}</p>
           <div className="mt-10 flex flex-wrap justify-center gap-3">
-            {/* Primary CTA → Register. TODO: point href at the real registration
-                form when it exists. */}
-            <a href="#" className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5">
-              {t(dict.nav.register)}
-              <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-            </a>
+            {/* Primary CTA → opens the register modal (it used to be href="#",
+                a dead link that silently swallowed the page's last CTA). Mirrors
+                the nav button's registered-label swap. */}
+            <button
+              type="button"
+              onClick={openRegister}
+              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
+            >
+              {t(registered ? dict.register.navRegistered : dict.nav.register)}
+              {!registered && (
+                <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+              )}
+            </button>
             <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-9 py-4 text-base font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10">
               {t(dict.nav.partner)}
             </a>
