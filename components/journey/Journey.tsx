@@ -147,21 +147,19 @@ const FOCUSABLE =
 // kept as a light aside; for a visitor who already took it, it deep-links to
 // their saved result instead ("내 결과 보기").
 //
-// `facts` adds the one-line reassurance strip — only used on the mid-page bands,
-// where the visitor has read enough to be weighing whether to commit.
+// The register card carries `register.reassure` under its CTA — the same line in
+// all three placements, from one key.
 // ─────────────────────────────────────────────────────────────────────────────
 function HookCards({
   t,
   ownResultId,
   openRegister,
   className = "",
-  facts = false,
 }: {
   t: Tfn;
   ownResultId: string | null;
   openRegister: (preset?: RegisterPreset) => void;
   className?: string;
-  facts?: boolean;
 }) {
   return (
     <div className={className}>
@@ -180,8 +178,17 @@ function HookCards({
               action looks identical wherever it appears. */}
           <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition group-hover:-translate-y-0.5 group-hover:shadow-[0_0_28px_rgba(124,92,255,0.6)]">
             {t(dict.register.hookRegisterCta)}
+            {/* Effort estimate as a chip rather than words in the label — the
+                label is already the longest thing in the card, and "3분" reads
+                faster as a badge than as a clause. */}
+            <span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[0.6rem] font-bold tracking-wide">
+              {t(dict.register.hookRegisterMinutes)}
+            </span>
             <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </span>
+          {/* The four objections, immediately under the button that acts on them.
+              One key, so the hero card and both mid-page bands always agree. */}
+          <p className="text-xs leading-relaxed text-white/60">{t(dict.register.reassure)}</p>
           <p className="text-[11px] leading-relaxed text-white/45">{t(dict.register.hookRegisterSub)}</p>
         </button>
         <div className="flex flex-col gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left">
@@ -196,9 +203,6 @@ function HookCards({
           </a>
         </div>
       </div>
-      {facts && (
-        <p className="mt-3 text-center text-xs text-white/50">{t(dict.register.hookFacts)}</p>
-      )}
     </div>
   );
 }
@@ -284,6 +288,16 @@ function CountdownView({ t }: { t: Tfn }) {
           </div>
         ))}
       </div>
+      {/* What the ticking clock actually costs you — deliberately about what
+          registering gets you sooner, not about seats running out. There is no
+          cap and no deadline yet, so "선착순 / 마감 임박 / 잔여석" would be an
+          invented pressure; every clause below is something we already do.
+          Static text: it must not animate alongside the seconds.
+          TODO: 매칭 '등록 순서' 운영 방침 확정 시 "일찍 등록할수록 매칭 풀이
+          넓어요"로 강화 가능 */}
+      <p className="mx-auto mt-4 max-w-md text-xs leading-relaxed text-white/55">
+        {t(dict.hero.countdownUrgency)}
+      </p>
     </div>
   );
 }
@@ -976,6 +990,14 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
       <p className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-white/55 drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)] transition group-hover:text-white/80">
         {t(dict.hero.partnersLabel)}
       </p>
+      {/* The two facts that make these logos mean something — folded into the
+          strip's caption rather than added as a separate line, since it's the
+          same claim ("these partners are really involved") in specifics.
+          Hidden below sm: the phone hero is already tall, and this is the one
+          line here that is a nice-to-have rather than an objection-remover. */}
+      <p className="mt-1.5 hidden text-center text-xs leading-relaxed text-white/50 drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)] sm:block">
+        {t(dict.hero.heroNameValue)}
+      </p>
 
       {/* ≥sm — one row per tier, caption centred above its own marks. The tiers
           used to run inline (caption, then marks, then the next caption) which
@@ -1472,7 +1494,6 @@ export default function Journey() {
             ownResultId={ownResultId}
             openRegister={openRegister}
             className="mx-auto mt-10 max-w-xl"
-            facts
           />
         </div>
       </Chapter>
@@ -1736,7 +1757,6 @@ export default function Journey() {
           ownResultId={ownResultId}
           openRegister={openRegister}
           className="mx-auto mt-10 max-w-xl"
-          facts
         />
       </Chapter>
 

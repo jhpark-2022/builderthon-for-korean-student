@@ -165,19 +165,32 @@ export const dict = {
     hookRegisterCta: { ko: "등록하고 팀 매칭 받기", en: "Register & get matched" },
     hookQuizQ: { ko: "재미로 3분 — 내 AI 유형은?", en: "3 fun minutes — what's your AI model?" },
     hookQuizCta: { ko: "성격 테스트", en: "Personality test" },
-    // Facts repeated on the mid-page CTA bands. Nothing new — screening and team
-    // size are both already stated in the benefits section.
-    hookFacts: {
-      ko: "스크리닝 없음 · 팀 1–3인(솔로 OK) · 참가비 무료",
-      en: "No screening · teams of 1–3 (solo OK) · free to enter",
+    // The four things that stop people from registering, answered in one line.
+    // Rendered under the register CTA everywhere the hook cards appear (hero +
+    // both mid-page bands) from this single key, so the answer can never drift
+    // between placements. Every clause is a confirmed fact stated elsewhere on
+    // the site — nothing here is new promise.
+    reassure: {
+      ko: "참가비 무료 · 스크리닝 없음 · 코딩 몰라도 OK · 솔로 환영",
+      en: "Free to join · No screening · No coding needed · Solo welcome",
     },
+    // "How long will this take" — the other silent objection. Sits as a chip on
+    // the hook CTA and is restated at the top of the modal, where it's checkable
+    // (the form really does have three required fields).
+    hookRegisterMinutes: { ko: "3분", en: "3 min" },
     // Nav scroll-revealed button + its post-registration label.
     navRegistered: { ko: "등록 완료 ✓", en: "Registered ✓" },
     // Modal chrome.
     modalTitle: { ko: "빌더톤 등록", en: "Register for the Builderthon" },
+    // Leads with the effort estimate, then the original subtitle unchanged: the
+    // question someone has with the form already open is "how long is this".
+    // COUNT THIS AGAINST THE FORM before editing — it's a claim the visitor can
+    // check in one glance. Solo path has four `required` Fields (name, email,
+    // joinType, contact); picking 팀 adds the team name, so "4" is the floor,
+    // not the average. Bump it if a required field is ever added.
     modalSubtitle: {
-      ko: "몇 가지만 알려주시면 운영진이 텔레그램으로 다음 절차를 안내드려요. 이미 팀이 있다면 한 명이 팀 전체를 등록할 수 있어요.",
-      en: "A few details and our team will reach out on Telegram. Have a team already? One person can register everyone.",
+      ko: "필수는 4칸 — 3분이면 끝나요. 몇 가지만 알려주시면 운영진이 텔레그램으로 다음 절차를 안내드려요. 이미 팀이 있다면 한 명이 팀 전체를 등록할 수 있어요.",
+      en: "Only 4 required fields — done in 3 minutes. A few details and our team will reach out on Telegram. Have a team already? One person can register everyone.",
     },
     // Trust signals — who's asking, what happens to the data, and what happens
     // next. All three restate facts already true elsewhere on the site; none of
@@ -348,6 +361,21 @@ export const dict = {
     countdownUnitHours: { ko: "시", en: "hrs" },
     countdownUnitMinutes: { ko: "분", en: "min" },
     countdownUnitSeconds: { ko: "초", en: "sec" },
+    // Sits under the countdown grid. Says what registering early actually gets
+    // you — NOT that seats are running out. There is no cap and no registration
+    // deadline set, so scarcity framing ("선착순", "마감 임박", "잔여석") would
+    // be fabricated pressure. Each clause here is something already true.
+    countdownUrgency: {
+      ko: "등록자부터 텔레그램 단톡방 초대 · 트랙 사전 안내 · 팀 매칭이 시작돼요.",
+      en: "Registered builders get the group-chat invite, track previews and team matching first.",
+    },
+    // Two confirmed headline facts, used as the hero partner strip's caption.
+    // Both are locked: the AWS office venue and the Translink CEO keynote are
+    // confirmed. Do NOT append other speakers or venues to this line.
+    heroNameValue: {
+      ko: "AWS 오피스에서 파이널 리허설 · Translink 대표의 데모데이 키노트",
+      en: "Final rehearsal at the AWS office · Demo Day keynote by Translink's CEO",
+    },
     // 카운트다운이 끝난 뒤(이미 시작한 시점) 노출되는 문구.
     countdownStarted: { ko: "빌더톤이 시작되었습니다.", en: "The builderthon has begun." },
 
