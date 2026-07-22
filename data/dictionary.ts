@@ -619,9 +619,13 @@ export const dict = {
     },
     // Bridge into the closing register CTA that sits directly below this
     // section — higher in the hierarchy than visionNote for that reason.
+    // No headcount: the target has been ~100 all along but the actual number
+    // isn't settled, and a figure printed under a register button reads as a
+    // cap ("only 100 spots") rather than an ambition. "첫 빌더들" says the same
+    // thing — you'd be at the start of this — without a number to be wrong about.
     visionBridge: {
-      ko: "그 시작점의 첫 ~100명이 이번 8월에 모입니다.",
-      en: "The first ~100 of that starting point gather this August.",
+      ko: "그 시작점의 첫 빌더들이 이번 8월에 모입니다.",
+      en: "The first builders of that starting point gather this August.",
     },
     // ── Press ────────────────────────────────────────────────────────────────
     // Outside coverage of the gap described just above, rendered as a slim
@@ -791,9 +795,12 @@ export const dict = {
         num: "05",
         title: { ko: "수료증", en: "Certificate" },
         points: [
+          // The issuer is the point. A certificate from an unnamed organiser is
+          // a PDF; one signed by the five AXMOS companies is five real firms
+          // vouching for you, which is what makes it worth putting on a CV.
+          { ko: "Zero100 주최 5개사(AXMOS) 공동 발급", en: "Jointly issued by the five Zero100 host companies (AXMOS)" },
           { ko: "크래시 코스 참여자 전원 발급 · 8일차 이후", en: "Issued to every crash-course participant · after Day 8" },
-          { ko: "포트폴리오 · 이력에 활용", en: "Use it in your portfolio and CV" },
-          { ko: "링크드인에 올릴 수 있는 형태", en: "In a form you can post on LinkedIn" },
+          { ko: "링크드인 · 포트폴리오 · 이력에 활용", en: "Use it on LinkedIn, in your portfolio and CV" },
         ],
       },
       {
@@ -1001,8 +1008,8 @@ export const dict = {
       {
         q: { ko: "수료증을 주나요? 의미가 있나요?", en: "Is there a certificate? Is it worth anything?" },
         a: {
-          ko: "크래시코스를 완료한 참여자 전원에게 수료증을 발급합니다(링크드인에 올릴 수 있는 형태). 발급 기관과 기준은 아직 협의 중이며, 확정되는 대로 안내합니다. 처음 시작하는 분에게 특히 좋은 출발점이 되고, 이미 개발 경험이 있는 분에게는 수료증보다 커리큘럼·네트워킹·멘토링이 더 큰 가치가 됩니다.",
-          en: "Everyone who completes the crash course gets a certificate — in a form you can post on LinkedIn. The issuing body and the criteria are still being agreed, and we'll announce them once confirmed. It's a strong starting point especially if you're new; if you already build, the curriculum, networking and mentoring will matter more to you than the certificate itself.",
+          ko: "크래시코스를 완료한 참여자 전원에게 수료증을 발급합니다(링크드인에 올릴 수 있는 형태). 발급은 Zero100 주최 5개사(AXMOS — Translink · Wilt · Codepresso · DRIMAES · Popup Studio) 공동 명의로 나갑니다. 처음 시작하는 분에게 특히 좋은 출발점이 되고, 이미 개발 경험이 있는 분에게는 수료증보다 커리큘럼·네트워킹·멘토링이 더 큰 가치가 됩니다.",
+          en: "Everyone who completes the crash course gets a certificate — in a form you can post on LinkedIn. It is issued jointly by the five Zero100 host companies (AXMOS — Translink · Wilt · Codepresso · DRIMAES · Popup Studio). It's a strong starting point especially if you're new; if you already build, the curriculum, networking and mentoring will matter more to you than the certificate itself.",
         },
       },
       {
