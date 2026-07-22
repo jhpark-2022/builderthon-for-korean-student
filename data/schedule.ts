@@ -150,8 +150,8 @@ export const days: DayMeta[] = [
     phase: LAB2,
     theme: { ko: "중간 점검 · 교류", en: "Mid-point · Exchange" },
     summary: {
-      ko: "*SCAPE 현장 10AM–2PM · 중간 점검 · 학생 AI Use Case + QR 투표(Top 3 시상) · 패널 ‘유학생에서 창업가로’(섭외 중) · 크로스트랙 교류.",
-      en: "In person at *SCAPE, 10AM–2PM · mid-point check-in · student AI use cases + QR vote (top 3 awarded) · panel ‘From Int'l Student to Founder’ (TBC) · cross-track exchange.",
+      ko: "*SCAPE 현장 10AM–2PM · 중간 점검 · 학생 AI Use Case + QR 투표(검토 중) · 패널 ‘유학생에서 창업가로’(섭외 중) · 크로스트랙 교류.",
+      en: "In person at *SCAPE, 10AM–2PM · mid-point check-in · student AI use cases + QR vote (under review) · panel ‘From Int'l Student to Founder’ (TBC) · cross-track exchange.",
     },
     dayMode: "offline",
   },
@@ -574,14 +574,17 @@ export const schedule: BEvent[] = [
     category: "network",
     mode: "offline",
     timeOfDay: "AM",
-    title: { ko: "패널 1 · 참여자 AI Use Case", en: "Panel 1 · Participant AI Use Cases" },
+    // Whether this runs at all is still open — only the PRIZE carried a
+    // "(잠정)" before, which read as "the session happens, the voucher might
+    // not." Same convention as the Codex workshop and the founder panel.
+    title: { ko: "패널 1 · 참여자 AI Use Case (검토 중)", en: "Panel 1 · Participant AI Use Cases (under review)" },
     summary: {
-      ko: "10:30 · 학생 AI 활용 사례 발표 + QR 인기투표 · Top 3 시상(잠정).",
-      en: "10:30 · student AI use-case showcase + QR popular vote · Top 3 awarded (tentative).",
+      ko: "학생 AI 활용 사례 발표 + QR 인기투표 — 진행 여부를 검토 중입니다.",
+      en: "Student AI use-case showcase + QR popular vote — whether it runs is still under review.",
     },
     description: {
-      ko: "참여자 몇 명이 자기 AI 활용 사례를 짧은 라이트닝 형식으로 공유하는 패널입니다(10:30~). 대표진도 청중으로 함께하며, 발표가 끝나면 현장에서 QR 코드로 인기투표를 진행합니다. 12:15에는 인기투표 Top 3에게 ‘해녀의 부엌’ $25 다이닝 바우처(싱가포르 지점)를 시상할 예정입니다(잠정). 다른 사람이 실제로 AI를 어떻게 쓰는지에서 자극을 받고, 내 빌드에 바로 가져올 아이디어를 얻는 자리입니다.",
-      en: "A panel where a handful of participants share their own AI use cases in a short lightning format (from 10:30), with founders in the audience. After the talks, everyone votes on the spot via a QR popular vote, and at 12:15 the top 3 are awarded a S$25 dining voucher for ‘Haenyeo's Kitchen’ (Singapore branch) — tentative. A chance to draw energy from how others actually use AI, and take ideas straight back into your own build.",
+      ko: "아직 확정된 세션이 아닙니다 — 진행 여부와 형식 모두 검토 중이며, 확정되는 대로 안내드립니다. 구상은 이렇습니다: 참여자 몇 명이 자기 AI 활용 사례를 짧은 라이트닝 형식으로 공유하고(10:30~), 대표진도 청중으로 함께합니다. 발표가 끝나면 현장에서 QR 코드로 인기투표를 진행하고, Top 3에게 ‘해녀의 부엌’ $25 다이닝 바우처(싱가포르 지점)를 시상하는 안을 논의 중입니다. 성사되면 다른 사람이 실제로 AI를 어떻게 쓰는지에서 자극을 받고, 내 빌드에 바로 가져올 아이디어를 얻는 자리가 됩니다.",
+      en: "This isn't a confirmed session — whether it runs and in what shape are both still under review, and we'll announce it once settled. The idea: a handful of participants share their own AI use cases in a short lightning format (from 10:30), with founders in the audience; after the talks everyone votes on the spot via a QR popular vote, and a S$25 dining voucher for ‘Haenyeo's Kitchen’ (Singapore branch) for the top 3 is under discussion. If it goes ahead, it's a chance to draw energy from how others actually use AI and take ideas straight back into your own build.",
     },
     location: ONSITE,
   },

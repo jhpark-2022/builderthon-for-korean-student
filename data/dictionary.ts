@@ -772,7 +772,10 @@ export const dict = {
           { ko: "대표·경력자와 Day 1·5·7·8 현장 교류", en: "In-person exchange with founders on Days 1·5·7·8" },
           { ko: "박희덕·원대로 등 연사 세션", en: "Speaker sessions with Park · Won and more" },
           { ko: "패널·공유 세션으로 technical 그 이상의 인사이트", en: "Panels & sharing sessions for more-than-technical insight" },
-          { ko: "Day 5 참가자 AI 유스케이스 발표 · QR 인기투표 (대표진 청중)", en: "Day 5 participant AI use-case showcase + QR popular vote (founders in the room)" },
+          // Not confirmed — see d5-panel-usecase in data/schedule.ts. Listing an
+          // unconfirmed activity as a flat benefit is the kind of thing someone
+          // registers for and then doesn't get.
+          { ko: "Day 5 참가자 AI 유스케이스 발표 · QR 인기투표 (검토 중)", en: "Day 5 participant AI use-case showcase + QR popular vote (under review)" },
           { ko: "지속되는 한–싱 빌더 커뮤니티의 시작 멤버", en: "Founding membership in a lasting Korea–SG builder community" },
         ],
       },
