@@ -12,7 +12,6 @@ import {
   days,
   schedule,
   type BEvent,
-  type Category,
   type DayMeta,
 } from "@/data/schedule";
 import Chapter from "./Chapter";
@@ -24,7 +23,6 @@ import { parseResultId } from "@/lib/quizScore";
 import { RESULTS } from "@/data/quiz";
 import { useRegister, type RegisterPreset } from "@/lib/RegisterContext";
 
-const legendOrder: Category[] = ["main","workshop","build","mentoring","network"];
 
 // glass panel wrapper
 function Glass({ children, className = "" }: { children: React.ReactNode; className?: string }) {
@@ -468,6 +466,35 @@ function HeroLaunchPanel({ t, reduce }: { t: Tfn; reduce: boolean }) {
   );
 }
 
+// Self-paced build is not a session: no start time, nowhere to be, nothing to
+// attend. Read off the explicit data flag rather than category === "build",
+// because that category ALSO holds the Day 5 Quickathon, which is a scheduled
+// 4-hour on-site track. See BEvent.selfPaced.
+const isSelfPaced = (ev: BEvent) => ev.selfPaced === true;
+// Everything on this day a participant actually has to show up for.
+const realSessions = (dayNum: number) =>
+  schedule.filter((e) => e.day === dayNum && !isSelfPaced(e));
+const dayHasSelfPaced = (dayNum: number) =>
+  schedule.some((e) => e.day === dayNum && isSelfPaced(e));
+// A day with NO real sessions (Day 6): nothing to count, and no online /
+// in-person mode to report either.
+const dayIsSelfPaced = (dayNum: number) =>
+  dayHasSelfPaced(dayNum) && realSessions(dayNum).length === 0;
+
+// Self-paced build as a quiet, NON-INTERACTIVE line — no badge, no
+// "자세히 보기", nothing to click. Rendered as a session card it read as one
+// more thing to turn up for, and on an 8-day programme that is what tips
+// "exciting" into "exhausting". There is nothing to open because there is
+// nothing to attend.
+function SelfPacedNote({ t }: { t: Tfn }) {
+  return (
+    <p className="flex items-start gap-2 rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-3.5 py-3 text-xs leading-relaxed text-white/45">
+      <span aria-hidden className="mt-[1px] text-white/25">◇</span>
+      {t(dict.program.selfPacedNote)}
+    </p>
+  );
+}
+
 // A single program event card. Shared by the desktop column grid and the mobile
 // day accordion so both stay in sync. Height is only fixed on desktop (xl) to
 // keep columns even; on mobile cards hug their content.
@@ -478,6 +505,7 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
   // "mixed" (1:1 mentoring — in person or online depending on the mentor) gets
   // its own neutral badge: an amber "현장" would promise F2F to everyone.
   const byMentor = ev.mode === "mixed";
+  const selfPaced = isSelfPaced(ev);
   return (
     <button
       type="button"
@@ -495,7 +523,11 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
               {t(dict.program.confirmedBadge)}
             </span>
           )}
-          {byMentor ? (
+          {selfPaced ? (
+            <span className="rounded-full border border-white/12 bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/60">
+              {t(dict.program.selfPacedLabel)}
+            </span>
+          ) : byMentor ? (
             <span className="rounded-full border border-white/12 bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/60">
               {t(dict.program.byMentorLabel)}
             </span>
@@ -520,7 +552,15 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
 }
 
 // Small mode/mandatory pill helpers for the clean day cards + day modal.
-function DayModeBadge({ day, t }: { day: DayMeta; t: Tfn }) {
+function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; selfPaced?: boolean }) {
+  // Checked before dayMode: a fully self-paced day's dayMode is "online" in the
+  // data, and that badge is the misleading one being replaced.
+  if (selfPaced)
+    return (
+      <span className="rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
+        {t(dict.program.selfPacedLabel)}
+      </span>
+    );
   if (day.dayMode === "offline")
     return (
       <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[0.68rem] font-bold text-amber-200">
@@ -543,7 +583,8 @@ function DayModeBadge({ day, t }: { day: DayMeta; t: Tfn }) {
 // One clean summary card per day (deck-style). Opens the day detail modal on
 // click rather than exploding every session inline — keeps the arc scannable.
 function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number) => void }) {
-  const evCount = schedule.filter((e) => e.day === day.day).length;
+  const evCount = realSessions(day.day).length;
+  const allSelfPaced = dayIsSelfPaced(day.day);
   return (
     <button
       type="button"
@@ -563,12 +604,15 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
             <span aria-hidden>★</span>{t(dict.program.mandatoryBadge)}
           </span>
         )}
-        <DayModeBadge day={day} t={t} />
+        <DayModeBadge day={day} t={t} selfPaced={allSelfPaced} />
       </div>
       <h4 className="mt-3 text-[15px] font-bold leading-snug text-white">{t(day.theme)}</h4>
       <p className="mt-1.5 text-[13px] leading-relaxed text-white/65">{t(day.summary)}</p>
       <span className="mt-auto pt-4 text-xs font-semibold text-violet-300/60 transition group-hover:text-violet-300">
-        {evCount} {t(dict.program.sessions)} · {t(dict.program.tapHint)} →
+        {evCount === 0
+          ? t(dict.program.noSessions)
+          : `${evCount} ${t(evCount === 1 ? dict.program.session : dict.program.sessions)}`}{" "}
+        · {t(dict.program.tapHint)} →
       </span>
     </button>
   );
@@ -671,7 +715,7 @@ function DayModal({
 
   if (!mounted) return null;
   const day = dayNum != null ? days.find((d) => d.day === dayNum) : null;
-  const evs = day ? schedule.filter((e) => e.day === day.day) : [];
+  const evs = day ? realSessions(day.day) : [];
 
   return createPortal(
     <AnimatePresence>
@@ -720,7 +764,7 @@ function DayModal({
                     <span aria-hidden>★</span>{t(dict.program.mandatoryBadge)}
                   </span>
                 )}
-                <DayModeBadge day={day} t={t} />
+                <DayModeBadge day={day} t={t} selfPaced={dayIsSelfPaced(day.day)} />
               </div>
               <h3 id="day-modal-title" className="mt-5 text-[24px] font-bold leading-tight text-white sm:text-[30px]">{t(day.theme)}</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/70">{t(day.summary)}</p>
@@ -728,6 +772,7 @@ function DayModal({
                 {evs.map((ev) => (
                   <EventCard key={ev.id} ev={ev} t={t} onSelect={onSelectEvent} />
                 ))}
+                {day && dayHasSelfPaced(day.day) && <SelfPacedNote t={t} />}
               </div>
             </div>
           </motion.div>
@@ -791,7 +836,7 @@ const companions: { src?: string; alt?: string; w?: number; h?: number }[] = [
   { src: "/partners/logos/white/trimmed/life.png", alt: "L^IFE", w: 900, h: 352 },
   { src: "/partners/logos/white/trimmed/bzcf.png", alt: "BZCF", w: 465, h: 156 },
   { src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore", w: 443, h: 90 },
-  { src: "/partners/logos/white/trimmed/onword.png", alt: "Onword Lab", w: 276, h: 264 },
+  { src: "/partners/logos/white/trimmed/onword.png", alt: "Onword Lab", w: 900, h: 92 },
   { src: "/partners/logos/white/trimmed/remited.png", alt: "REmited", w: 512, h: 105 },
   { src: "/partners/logos/white/trimmed/brandboost.png", alt: "Brand Boost", w: 205, h: 81 },
   { src: "/partners/logos/white/trimmed/hashed.png", alt: "Hashed", w: 355, h: 90 },
@@ -965,7 +1010,7 @@ const confirmedPartnerTiers: { label: Phrase; items: StripLogoSpec[] }[] = [
       { src: "/partners/logos/white/trimmed/life.png",               alt: "L^IFE",                           w: 900, h: 352 },
       { src: "/partners/logos/white/trimmed/bzcf.png",               alt: "BZCF",                            w: 465, h: 156 },
       { src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore",  w: 443, h: 90 },
-      { src: "/partners/logos/white/trimmed/onword.png",             alt: "Onword Lab",                      w: 276, h: 264 },
+      { src: "/partners/logos/white/trimmed/onword.png",             alt: "Onword Lab",                      w: 900, h: 92 },
       { src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105 },
       { src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81 },
     ],
@@ -1629,7 +1674,14 @@ export default function Journey() {
             </h2>
             {/* No day-by-day summary paragraph here — the eight cards below ARE
                 the arc, and spelling it out in prose first read as clutter. */}
-            <div className="mx-auto mt-6 max-w-2xl rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] px-5 py-3.5 text-xs leading-relaxed text-amber-100/85">
+            {/* Two separate notes, in this order on purpose. First: how much of
+                this is settled — read before the cards, it stops eight tidy day
+                boxes being taken for a finished timetable. Second: how little of
+                it you actually have to attend. */}
+            <p className="mx-auto mt-6 max-w-2xl text-xs leading-relaxed text-white/50">
+              {t(dict.program.pendingNote)}
+            </p>
+            <div className="mx-auto mt-3 max-w-2xl rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] px-5 py-3.5 text-xs leading-relaxed text-amber-100/85">
               {t(dict.program.modeNote)}
             </div>
           </div>
@@ -1653,27 +1705,6 @@ export default function Journey() {
             ))}
           </div>
 
-          <Glass className="mt-8 bg-white/[0.10] text-left">
-            <div className="flex items-start gap-3 border-b border-white/10 pb-4">
-              <span className="text-amber-300">★</span>
-              <p className="text-sm text-white/65">
-                <span className="font-bold text-white">{t(categoryMeta.main.label)}</span> — {t(categoryMeta.main.blurb)}
-              </p>
-            </div>
-            <div className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
-              {legendOrder.filter((c) => c !== "main").map((cat) => {
-                const meta = categoryMeta[cat];
-                return (
-                  <div key={cat} className="flex items-start gap-2.5">
-                    <span className="mt-[5px] h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: meta.dot }} />
-                    <p className="text-sm text-white/75">
-                      <span className="font-bold text-white/85">{t(meta.label)}</span> — {t(meta.blurb)}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </Glass>
         </div>
       </section>
 
@@ -1819,7 +1850,7 @@ export default function Journey() {
                 { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/life.png",               alt: "L^IFE",                           w: 900, h: 352 },
                 { cat: t(dict.partners.catMarketing), src: "/partners/logos/white/trimmed/bzcf.png",               alt: "BZCF",                            w: 465, h: 156 },
                 { cat: t(dict.partners.catJudges),    src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore",  w: 443, h: 90 },
-                { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/onword.png",             alt: "Onword Lab",                      w: 276, h: 264 },
+                { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/onword.png",             alt: "Onword Lab",                      w: 900, h: 92 },
                 { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105 },
                 { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81 },
                 { cat: t(dict.partners.catOverall),   src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90 },

@@ -414,8 +414,8 @@ export const dict = {
     dates: { ko: "2026.08.22 – 08.29 · 8일", en: "22–29 Aug 2026 · 8 days" },
     location: { ko: "싱가포르 · *SCAPE L^IFE Jungle & AWS 오피스", en: "Singapore · *SCAPE L^IFE Jungle & AWS office" },
     blurb: {
-      ko: "싱가포르에서 공부하는 한국 학생 약 100명이 8일간, 실제 기업의 AI 전환(AX) 과제를 바이브 코딩으로 직접 풀어내는 AI 빌더톤. zero에서 MVP까지 — 데모로 끝나지 않는 ‘성공의 경험’을 남깁니다.",
-      en: "Around 100 Korean students in Singapore spend 8 days solving real companies' AI-transformation (AX) problems with vibe coding. From zero to MVP — a real success that goes beyond a demo.",
+      ko: "싱가포르에서 공부하는 한국 학생들이 8일간, 실제 기업의 AI 전환(AX) 과제를 바이브 코딩으로 직접 풀어내는 AI 빌더톤. 필참은 첫날과 마지막 날 이틀뿐 — 나머지는 각자 편한 시간·장소에서 팀별로 빌드합니다. zero에서 MVP까지, 데모로 끝나지 않는 ‘성공의 경험’을 남깁니다.",
+      en: "Korean students in Singapore spend 8 days solving real companies' AI-transformation (AX) problems with vibe coding. Only the first and last day are required — the rest your team builds whenever and wherever suits you. From zero to MVP, a real success that goes beyond a demo.",
     },
     ctaProgram: { ko: "8일의 여정 둘러보기", en: "Explore the 8-day journey" },
     ctaPartner: { ko: "파트너십 문의", en: "Partner with us" },
@@ -672,22 +672,63 @@ export const dict = {
   program: {
     tag: { ko: "Program", en: "Program" },
     heading: { ko: "8일, zero에서 MVP까지", en: "8 days, from zero to MVP" },
-    modeNote: {
-      ko: "대부분 온라인으로 진행되며, Day 1(오프닝·*SCAPE)·Day 5(오프라인 킥오프)·Day 7(파이널 리허설·AWS 오피스)·Day 8(데모데이)에 전원이 현장에 모입니다.",
-      en: "Mostly online — the whole cohort gathers in person on Day 1 (opening · *SCAPE), Day 5 (kickoff), Day 7 (final rehearsal · AWS office) and Day 8 (Demo Day).",
+    // Leads with what's REQUIRED, because the previous version led with the
+    // four in-person days and read as "block out all eight." Only Day 1 and
+    // Day 8 carry `mandatory: true` in data/schedule.ts — keep this in step with
+    // that flag. Everything between is either optional or self-paced, and saying
+    // so up front is what stops the programme looking like an 8-day lock-in.
+    // Sits above modeNote. The schedule already marks individual items
+    // ("조율 중", "섭외 중", "검토 중"), but someone scanning eight day-cards
+    // reads them as a finished timetable and treats every line as a promise.
+    // Say once, up front, that this is still moving — it costs nothing now and
+    // saves explaining a change later.
+    pendingNote: {
+      ko: "프로그램은 아직 확정 전인 부분이 많습니다 — 세션·연사·시간은 조율 중이며, 확정되는 대로 이 페이지에 업데이트합니다.",
+      en: "Much of the programme is still being finalised — sessions, speakers and times are being worked out, and this page is updated as each is confirmed.",
     },
-    legendTitle: { ko: "카테고리", en: "Legend" },
+    modeNote: {
+      ko: "필참은 Day 1(오프닝)과 Day 8(데모데이) 둘뿐이에요. 그 사이는 대부분 온라인이고, 자율 빌드는 각자 편한 시간·장소에서 팀별로 이어갑니다 — 8일 내내 붙어 있어야 하는 일정이 아닙니다. Day 5(오프라인 킥오프)·Day 7(파이널 리허설·AWS 오피스)은 현장에 모이지만 필참은 아니에요.",
+      en: "Only two days are required: Day 1 (opening) and Day 8 (Demo Day). Everything in between is mostly online, and the self-paced build happens whenever and wherever works for your team — this is not eight days you have to block out. Day 5 (kickoff) and Day 7 (final rehearsal · AWS office) meet in person too, but attendance isn't required.",
+    },
     dayLabel: { ko: "Day", en: "Day" },
     tapHint: { ko: "자세히 보기", en: "View details" },
     confirmedBadge: { ko: "확정", en: "Confirmed" },
     mandatoryBadge: { ko: "필참", en: "Required" },
     onlineLabel: { ko: "온라인", en: "Online" },
     offlineLabel: { ko: "현장", en: "In person" },
+    // ── Self-paced (category "build") ──────────────────────────────────────
+    // Build events carry mode "online" in the data because they have to carry
+    // SOMETHING, but showing them an "온라인" badge told a lie: it reads as a
+    // room you log into at a set hour. There is no hour and no room — teams
+    // build whenever they like. The data keeps its Mode value; only the display
+    // changes, so nothing downstream of `mode` has to know about this.
+    selfPacedLabel: { ko: "자유 진행", en: "Your own pace" },
+    // The event modal's "진행 방식" row, where there's space to say why.
+    selfPacedMode: {
+      ko: "자유 진행 · 정해진 시간·접속 없음",
+      en: "Your own pace · no set time, nothing to join",
+    },
+    // Replaces the "N 세션" count on a day whose events are ALL self-paced —
+    // counting sessions on a day with no sessions is the same misread again.
+    selfPacedDay: { ko: "자율 진행", en: "Self-paced" },
+    // Replaces the whole session card for self-paced build. Non-interactive on
+    // purpose — there is nothing to open, because there is nothing to attend.
+    selfPacedNote: {
+      ko: "정해진 세션 없이, 팀별로 편한 시간에 빌드를 이어갑니다 — 출석·접속 없음",
+      en: "No scheduled session — teams just keep building whenever suits them. Nothing to attend or join.",
+    },
+    // A day whose only entries are self-paced: there is no session to count.
+    noSessions: { ko: "정해진 세션 없음", en: "No scheduled sessions" },
     pendingLabel: { ko: "현장 (미정)", en: "On-site (TBC)" },
     // 1:1 mentoring is arranged mentor by mentor — some meet at NUS in person,
     // others take it online. Neither plain badge is true for everyone.
     byMentorLabel: { ko: "대면·온라인 (멘토별)", en: "In person / online (by mentor)" },
     sessions: { ko: "세션", en: "sessions" },
+    // English needs the singular for a one-session day. Korean has no plural, so
+    // both forms are identical there — kept as a pair rather than a special case
+    // in the component. (Only reachable since self-paced build stopped being
+    // counted; before that no day was down to one.)
+    session: { ko: "세션", en: "session" },
     swipeHint: {
       ko: "카드를 눌러 하루 일정을 펼쳐보세요",
       en: "Tap a day card to see its sessions",
@@ -739,7 +780,10 @@ export const dict = {
           { ko: "대표·경력자와 Day 1·5·7·8 현장 교류", en: "In-person exchange with founders on Days 1·5·7·8" },
           { ko: "박희덕·원대로 등 연사 세션", en: "Speaker sessions with Park · Won and more" },
           { ko: "패널·공유 세션으로 technical 그 이상의 인사이트", en: "Panels & sharing sessions for more-than-technical insight" },
-          { ko: "Day 5 참가자 AI 유스케이스 발표 · QR 인기투표 (대표진 청중)", en: "Day 5 participant AI use-case showcase + QR popular vote (founders in the room)" },
+          // Not confirmed — see d5-panel-usecase in data/schedule.ts. Listing an
+          // unconfirmed activity as a flat benefit is the kind of thing someone
+          // registers for and then doesn't get.
+          { ko: "Day 5 참가자 AI 유스케이스 발표 · QR 인기투표 (검토 중)", en: "Day 5 participant AI use-case showcase + QR popular vote (under review)" },
           { ko: "지속되는 한–싱 빌더 커뮤니티의 시작 멤버", en: "Founding membership in a lasting Korea–SG builder community" },
         ],
       },
@@ -779,7 +823,10 @@ export const dict = {
   // ── 연사 · 공유 세션 (Day 1·5·8) ────────────────────────────────────────────
   speakers: {
     tag: { ko: "연사 · 공유 세션", en: "Speaker sessions" },
-    heading: { ko: "Day 1 · 5 · 7 · 8 — 스피커 & 공유 세션", en: "Day 1 · 5 · 7 · 8 — Speaker & sharing sessions" },
+    // Days listed here must match the cards in `people` below. Day 5 was in the
+    // heading with no card to back it — its only content was the panel in
+    // tbcNote, whose panelists were never arranged.
+    heading: { ko: "Day 1 · 7 · 8 — 스피커 & 공유 세션", en: "Day 1 · 7 · 8 — Speaker & sharing sessions" },
     intro: {
       ko: "이 시간을 따로 두는 이유 — Zero100의 앙트레프레너십 정체성을 지키기 위해. (연사 라인업은 확정되는 대로 안내됩니다.)",
       en: "Why we set this time aside — to protect Zero100's entrepreneurial identity. (Speaker line-up announced as confirmed.)",
@@ -828,8 +875,8 @@ export const dict = {
       },
     ],
     tbcNote: {
-      ko: "* Day 5에는 ‘유학생에서 창업가로’ 패널(유학생 출신 창업가 3인)이 예정되어 있으며 현재 섭외 중입니다. 세션 시간·구성은 조정될 수 있습니다.",
-      en: "* Day 5 hosts a ‘From Int'l Student to Founder’ panel (three founders who came up as international students) — panelists are still being arranged. Session times and format may still change.",
+      ko: "* 세션 시간·구성은 조정될 수 있습니다.",
+      en: "* Session times and format may still change.",
     },
   },
 

@@ -103,6 +103,9 @@ export default function EventModal({
   }, [event, onClose]);
 
   const meta = event ? categoryMeta[event.category] : null;
+  // Category, not `mode`: build events still carry a Mode value in the data, but
+  // the online/in-person axis doesn't apply to them (see Journey.tsx isSelfPaced).
+  const selfPaced = event?.category === "build";
   const dayMeta = event ? days.find((d) => d.day === event.day) : null;
   const isMain = event?.category === "main";
 
@@ -186,18 +189,20 @@ export default function EventModal({
                 )}
                 <span
                   className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold ${
-                    event.mode === "offline"
+                    !selfPaced && event.mode === "offline"
                       ? "border border-amber-400/30 bg-amber-400/10 text-amber-200"
                       : "border border-white/15 bg-white/5 text-white/65"
                   }`}
                 >
-                  {event.mode === "offline" && <span aria-hidden>●</span>}
+                  {!selfPaced && event.mode === "offline" && <span aria-hidden>●</span>}
                   {t(
-                    event.mode === "offline"
-                      ? dict.program.offlineLabel
-                      : event.mode === "mixed"
-                        ? dict.program.byMentorLabel
-                        : dict.program.onlineLabel
+                    selfPaced
+                      ? dict.program.selfPacedLabel
+                      : event.mode === "offline"
+                        ? dict.program.offlineLabel
+                        : event.mode === "mixed"
+                          ? dict.program.byMentorLabel
+                          : dict.program.onlineLabel
                   )}
                 </span>
                 {event.confirmed && (
@@ -305,12 +310,21 @@ export default function EventModal({
                     {event.speaker ? t(event.speaker) : t(dict.modal.tbc)}
                   </dd>
                 </div>
+                {/* Self-paced build has no location to give — its `location` is
+                    "온라인", which is the single line most responsible for the
+                    "so I log in at that hour?" misread. Swap the whole row to
+                    FORMAT and say plainly that there's no time and nothing to
+                    join. Every other category keeps its real venue. */}
                 <div className="flex flex-col gap-1">
                   <dt className="text-xs font-semibold uppercase tracking-wide text-white/70">
-                    {t(dict.modal.location)}
+                    {t(selfPaced ? dict.modal.mode : dict.modal.location)}
                   </dt>
                   <dd className="font-semibold text-white">
-                    {event.location ? t(event.location) : t(dict.modal.tbc)}
+                    {selfPaced
+                      ? t(dict.program.selfPacedMode)
+                      : event.location
+                        ? t(event.location)
+                        : t(dict.modal.tbc)}
                   </dd>
                 </div>
               </dl>
