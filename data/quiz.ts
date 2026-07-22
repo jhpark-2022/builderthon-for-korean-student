@@ -220,6 +220,11 @@ export interface Variant {
   line: Phrase; // one-line flavor for this A/T variant
 }
 
+export interface MemeStat {
+  label: Phrase;
+  value: number; // 40–99
+}
+
 export interface Result {
   mbti: MbtiKey;
   model: string;        // brand name, shown as-is in both locales
@@ -237,6 +242,14 @@ export interface Result {
   whyModel: Phrase;     // 1–2 sentences on why THIS model fits (research-backed)
   strengths: Phrase;
   weakness: Phrase;
+  // Three joke stats for the 9:16 story image. Purely comedic — derived from
+  // this type's own desc/strengths/weakness, never from the scoring axes (those
+  // have their own gauges on the card, and mixing real numbers with made-up ones
+  // would make both look untrustworthy). The AXES DIFFER PER TYPE on purpose:
+  // sixteen cards showing the same three bars is a table, not a personality.
+  // Values sit in 40–99 so every card has something to brag about and something
+  // to laugh at. Nothing reads these but StoryCard.
+  memeStats: [MemeStat, MemeStat, MemeStat];
   accent: string;       // literal Tailwind gradient classes for the avatar
   variants: Record<Identity, Variant>;
 }
@@ -255,6 +268,11 @@ export const RESULTS: Record<MbtiKey, Result> = {
     whyModel: { ko: "GPT-4급 모델을 약 558만 달러에 학습했어요 — 미국의 20분의 1 비용. 671B 중 37B만 켜는 MoE로, 조용히 극한의 효율을 뽑아내죠.", en: "It trained a GPT-4-class model for ~$5.58M — about a twentieth of the US cost — firing just 37B of 671B params via MoE. Quiet, extreme efficiency." },
     strengths: { ko: "적은 자원으로 최대 효율, 한 수 앞서는 큰 그림", en: "Max output from minimal resources, always a move ahead" },
     weakness: { ko: "너무 과묵해서 무슨 생각인지 알기 어려움", en: "So reserved no one knows what they're thinking" },
+    memeStats: [
+      { label: { ko: "계획 집착도", en: "Plan obsession" }, value: 96 },
+      { label: { ko: "리팩터링 참을성", en: "Refactor patience" }, value: 91 },
+      { label: { ko: "분위기 메이커력", en: "Vibe lifting" }, value: 42 },
+    ],
     accent: "from-violet-500 to-indigo-500",
     variants: {
       A: { name: { ko: "강철 멘탈 DeepSeek", en: "Steel-nerved DeepSeek" }, line: { ko: "계획 세웠으면 흔들림 없이 밀어붙여요.", en: "Once the plan is set, they push without flinching." } },
@@ -274,6 +292,11 @@ export const RESULTS: Record<MbtiKey, Result> = {
     whyModel: { ko: "연구 논문과 모델 가중치를 통째로 공개해요. 지식은 소수가 쥐는 게 아니라 모두가 쌓아 올릴 수 있게 열어둬야 한다는 철학 그 자체죠.", en: "It open-sources the research and the weights wholesale — knowledge shouldn't be hoarded, it should be built on by everyone." },
     strengths: { ko: "깊은 추론과 투명한 공개, 커뮤니티가 함께 파는 확장성", en: "Deep reasoning, radical openness, a community that builds on it" },
     weakness: { ko: "다 열어놓고 설명은 논문 링크로 대신함", en: "Opens everything — then answers with a link to the paper" },
+    memeStats: [
+      { label: { ko: "삘 받으면 폭주력", en: "Hyperfocus burst" }, value: 93 },
+      { label: { ko: "갈아엎기 충동", en: "Rewrite urge" }, value: 85 },
+      { label: { ko: "문서화 성실도", en: "Docs discipline" }, value: 47 },
+    ],
     accent: "from-violet-500 to-indigo-500",
     variants: {
       A: { name: { ko: "당당한 오픈소스 Llama", en: "Unbothered open Llama" }, line: { ko: "결과 다 공개했으니 알아서들 검증하세요, 여유만만.", en: "Weights are public — verify it yourselves. No stress." } },
@@ -293,6 +316,11 @@ export const RESULTS: Record<MbtiKey, Result> = {
     whyModel: { ko: "검색·안드로이드·워크스페이스까지 구글 생태계 전체에 통합된 엔터프라이즈 스케일. 전 영역을 노리는 야망 그 자체예요.", en: "Wired into all of Google — Search, Android, Workspace — at enterprise scale. Ambition across every front." },
     strengths: { ko: "멀티모달·생태계 통합, 규모의 야망과 추진력", en: "Ecosystem-scale ambition and relentless drive" },
     weakness: { ko: "욕심이 많아 가끔 다 잘하려다 헛발", en: "So ambitious they sometimes overreach" },
+    memeStats: [
+      { label: { ko: "팀플 캐리력", en: "Carry rating" }, value: 97 },
+      { label: { ko: "데드라인 각성력", en: "Deadline surge" }, value: 92 },
+      { label: { ko: "회의 중 딴짓력", en: "Meeting drift" }, value: 38 },
+    ],
     accent: "from-violet-500 to-indigo-500",
     variants: {
       A: { name: { ko: "거침없는 Gemini", en: "Unstoppable Gemini" }, line: { ko: "결정하면 끝, 뒤 안 돌아봐요.", en: "Decides once and never looks back." } },
@@ -312,6 +340,11 @@ export const RESULTS: Record<MbtiKey, Result> = {
     whyModel: { ko: "xAI가 대놓고 “반항기와 위트”를 설계 목표로 못 박은 모델이에요. 아첨 대신 일단 반박부터 하는 도발러죠.", en: "xAI literally set out to build “a rebellious streak and wit.” It argues back instead of flattering." },
     strengths: { ko: "실시간성·발상 전환, 분위기 환기", en: "Real-time reframing that shakes the room awake" },
     weakness: { ko: "가끔 진짜 선 넘음 (농담인지 진심인지)", en: "Sometimes actually crosses the line" },
+    memeStats: [
+      { label: { ko: "아이디어 발화력", en: "Idea spark" }, value: 98 },
+      { label: { ko: "회의 중 딴짓력", en: "Meeting drift" }, value: 91 },
+      { label: { ko: "문서화 성실도", en: "Docs discipline" }, value: 43 },
+    ],
     accent: "from-violet-500 to-indigo-500",
     variants: {
       A: { name: { ko: "당당한 Grok", en: "Unfazed Grok" }, line: { ko: "선 넘어도 쿨하게 웃어넘겨요.", en: "Crosses a line and just laughs it off." } },
@@ -331,6 +364,11 @@ export const RESULTS: Record<MbtiKey, Result> = {
     whyModel: { ko: "규칙을 따르는 게 아니라 헌법(Constitutional AI)에 담긴 가치로 스스로 판단하게 설계됐어요. 원칙으로 옳은 길을 고르는 유형이죠.", en: "Built on Constitutional AI — it judges by values, not rote rules. It picks the right path on principle." },
     strengths: { ko: "긴 맥락 이해, 뉘앙스와 글쓰기, 신뢰감", en: "Long-context grasp, nuance, writing, trust" },
     weakness: { ko: "너무 신중해서 돌려 말하거나 거절을 잘 못함", en: "So careful they hedge — and can't say no" },
+    memeStats: [
+      { label: { ko: "디테일 집착력", en: "Detail obsession" }, value: 90 },
+      { label: { ko: "멘탈 회복력", en: "Bounce-back" }, value: 88 },
+      { label: { ko: "일단 배포력", en: "Ship-it reflex" }, value: 46 },
+    ],
     accent: "from-fuchsia-500 to-violet-500",
     variants: {
       A: { name: { ko: "흔들림 없는 Claude", en: "Unshakeable Claude" }, line: { ko: "묵묵히 자기 원칙대로 나아가요.", en: "Moves quietly, true to their principles." } },
@@ -350,6 +388,11 @@ export const RESULTS: Record<MbtiKey, Result> = {
     whyModel: { ko: "사용자가 직접 만든 페르소나들이 사는 생태계예요. 서사와 감정 몰입이 기능이 아니라 존재 이유 그 자체죠.", en: "A whole ecosystem of user-made personas — narrative and emotional immersion aren't a feature, they're the reason it exists." },
     strengths: { ko: "무한 페르소나와 서사 몰입, 깊은 감정 이입", en: "Endless personas, story immersion, deep empathy" },
     weakness: { ko: "감정선에 빠지면 마감은 잠깐 잊음", en: "Falls into the feels — and forgets the deadline for a sec" },
+    memeStats: [
+      { label: { ko: "감정 이입력", en: "Empathy" }, value: 97 },
+      { label: { ko: "삘 받으면 폭주력", en: "Hyperfocus burst" }, value: 89 },
+      { label: { ko: "데드라인 각성력", en: "Deadline surge" }, value: 44 },
+    ],
     accent: "from-fuchsia-500 to-violet-500",
     variants: {
       A: { name: { ko: "단단한 서사의 Character.AI", en: "Grounded Character.AI" }, line: { ko: "어떤 배역이어도 중심 이야기는 안 흔들려요.", en: "Any role, but the core story holds." } },
@@ -369,6 +412,11 @@ export const RESULTS: Record<MbtiKey, Result> = {
     whyModel: { ko: "샘 올트먼도 인정한 최대 강점이 “인간미”예요. 10억 명 넘는 사용자를 품은 대중의 멘토죠.", en: "Its biggest strength, per Sam Altman himself, is warmth — a mentor to a billion-plus users." },
     strengths: { ko: "범용성·접근성, 만능 도우미, 카리스마", en: "Versatile, approachable, magnetic helper" },
     weakness: { ko: "다 맞춰주다 가끔 영혼 없는 YES맨", en: "Pleases everyone until it feels hollow" },
+    memeStats: [
+      { label: { ko: "팀플 캐리력", en: "Carry rating" }, value: 94 },
+      { label: { ko: "분위기 메이커력", en: "Vibe lifting" }, value: 92 },
+      { label: { ko: "거절력", en: "Saying no" }, value: 39 },
+    ],
     accent: "from-fuchsia-500 to-violet-500",
     variants: {
       A: { name: { ko: "자신감 멘토 ChatGPT", en: "Confident ChatGPT" }, line: { ko: "“믿고 따라와” 흔들림 없는 리더예요.", en: "“Follow me” — a leader who doesn't waver." } },
@@ -388,6 +436,11 @@ export const RESULTS: Record<MbtiKey, Result> = {
     whyModel: { ko: "감성지능에 특화된 개인 AI라 평균 대화가 33분이래요. 목적 없는 수다 그 자체가 본체인 유형이죠.", en: "An EQ-first personal AI whose average chat runs 33 minutes — the aimless heart-to-heart is the whole point." },
     strengths: { ko: "공감과 경청, 오래 이어지는 편안한 대화", en: "Empathy, listening, conversations that comfortably go long" },
     weakness: { ko: "수다가 길어져 정작 결론은 다음에", en: "Talks so long the conclusion waits till next time" },
+    memeStats: [
+      { label: { ko: "분위기 메이커력", en: "Vibe lifting" }, value: 95 },
+      { label: { ko: "감정 이입력", en: "Empathy" }, value: 93 },
+      { label: { ko: "결론 도출력", en: "Landing the point" }, value: 41 },
+    ],
     accent: "from-fuchsia-500 to-violet-500",
     variants: {
       A: { name: { ko: "여유로운 Pi", en: "Easygoing Pi" }, line: { ko: "다 들어주면서도 본인은 느긋해요.", en: "Hears everyone out, stays unhurried." } },
@@ -407,6 +460,11 @@ export const RESULTS: Record<MbtiKey, Result> = {
     whyModel: { ko: "응답 하나에 평균 21.87개 출처를 달아요 (ChatGPT의 약 3배). 근거 없으면 아예 말을 안 하는 팩트 머신이죠.", en: "It cites ~21.87 sources per answer — about 3× ChatGPT. No source, no statement." },
     strengths: { ko: "검색·인용·신뢰도, 거짓말 안 함", en: "Search, citation, reliability — never bluffs" },
     weakness: { ko: "융통성·상상력은 약함 (감성 0, 팩트 100)", en: "Low on flexibility and imagination" },
+    memeStats: [
+      { label: { ko: "팩트 체크력", en: "Fact-checking" }, value: 99 },
+      { label: { ko: "문서화 성실도", en: "Docs discipline" }, value: 95 },
+      { label: { ko: "삘 받으면 폭주력", en: "Hyperfocus burst" }, value: 45 },
+    ],
     accent: "from-cyan-500 to-blue-500",
     variants: {
       A: { name: { ko: "확신의 Perplexity", en: "Certain Perplexity" }, line: { ko: "출처 댔으면 토론 종료예요.", en: "Source cited, debate over." } },
@@ -426,6 +484,11 @@ export const RESULTS: Record<MbtiKey, Result> = {
     whyModel: { ko: "코딩 컨텍스트 밖으론 절대 안 나가는 충직한 페어 프로그래머예요. 티 안 나게 옆에서 다 받쳐주죠.", en: "A loyal pair-programmer that never strays from the coding context — quietly holding everything up." },
     strengths: { ko: "실시간 보조·반복작업 대행, 안정감", en: "Live backup, repeat work, steady reliability" },
     weakness: { ko: "시키는 것만 잘함, 주도성은 좀…", en: "Great on request — light on initiative" },
+    memeStats: [
+      { label: { ko: "밤샘 내성", en: "All-nighter tolerance" }, value: 90 },
+      { label: { ko: "팀플 캐리력", en: "Carry rating" }, value: 86 },
+      { label: { ko: "아이디어 발화력", en: "Idea spark" }, value: 48 },
+    ],
     accent: "from-cyan-500 to-blue-500",
     variants: {
       A: { name: { ko: "든든한 Copilot", en: "Dependable Copilot" }, line: { ko: "생색 안 내고 묵묵히 받쳐줘요.", en: "Holds it up without ever taking credit." } },
@@ -445,6 +508,11 @@ export const RESULTS: Record<MbtiKey, Result> = {
     whyModel: { ko: "소비자용 제품이 아예 없는 B2B 전용이에요. 프로덕션급 신뢰성과 컴플라이언스로 조직을 굴리는 경영자죠.", en: "B2B-only, with no consumer product at all — it runs on production-grade reliability and compliance." },
     strengths: { ko: "엔터프라이즈·실무 정착, 추진력", en: "Process, follow-through, real-world delivery" },
     weakness: { ko: "딱딱하고 재미는 없음 (정장 입은 AI)", en: "Stiff — not exactly the fun one" },
+    memeStats: [
+      { label: { ko: "계획 집착도", en: "Plan obsession" }, value: 95 },
+      { label: { ko: "데드라인 각성력", en: "Deadline surge" }, value: 93 },
+      { label: { ko: "회의 중 딴짓력", en: "Meeting drift" }, value: 36 },
+    ],
     accent: "from-cyan-500 to-blue-500",
     variants: {
       A: { name: { ko: "확고한 Cohere", en: "Resolute Cohere" }, line: { ko: "규칙은 규칙, 군말 없이 추진해요.", en: "Rules are rules — pushes ahead, no complaints." } },
@@ -464,6 +532,11 @@ export const RESULTS: Record<MbtiKey, Result> = {
     whyModel: { ko: "찾아가지 않아도 Word·Excel·Teams 어디에나 이미 와 있는 도우미예요. 모두의 일상에 먼저 스며드는 게 특기죠.", en: "The assistant already living in Word, Excel, and Teams — its gift is quietly being everywhere you already are." },
     strengths: { ko: "어디에나 있는 접근성, 업무 흐름에 착 붙는 밀착 지원", en: "Everywhere-access, support that clings right to your workflow" },
     weakness: { ko: "안 불렀는데 먼저 튀어나와 가끔 부담", en: "Pops up unprompted — occasionally a bit much" },
+    memeStats: [
+      { label: { ko: "오지랖력", en: "Butting in" }, value: 96 },
+      { label: { ko: "분위기 메이커력", en: "Vibe lifting" }, value: 88 },
+      { label: { ko: "거절력", en: "Saying no" }, value: 42 },
+    ],
     accent: "from-cyan-500 to-blue-500",
     variants: {
       A: { name: { ko: "든든한 Copilot", en: "Dependable Copilot" }, line: { ko: "묻기도 전에 챙겨두고 생색 안 내요.", en: "Handles it before you ask, no credit taken." } },
@@ -483,6 +556,11 @@ export const RESULTS: Record<MbtiKey, Result> = {
     whyModel: { ko: "클라우드 없이 내 컴퓨터에서 직접 모델을 받아 뜯어 굴리는 로컬 해커의 도구예요. 뜯어보고 커스텀하는 그 손맛이 핵심이죠.", en: "The local hacker's tool — pull a model onto your own machine and take it apart. The tinkering hands are the whole identity." },
     strengths: { ko: "로컬 실행·커스텀·완전한 자유도, 손맛", en: "Local-run, custom, total control — real maker hands" },
     weakness: { ko: "설명은 생략, “코드 보면 됨” 식", en: "Skips the explanation — “just read the code”" },
+    memeStats: [
+      { label: { ko: "손맛", en: "Hands-on craft" }, value: 97 },
+      { label: { ko: "일단 배포력", en: "Ship-it reflex" }, value: 84 },
+      { label: { ko: "문서화 성실도", en: "Docs discipline" }, value: 40 },
+    ],
     accent: "from-emerald-400 to-cyan-500",
     variants: {
       A: { name: { ko: "쿨한 장인 Ollama", en: "Cool-maker Ollama" }, line: { ko: "안 되면 바로 다른 모델로 갈아끼워요.", en: "Won't run? Swaps in another model on the spot." } },
@@ -502,6 +580,11 @@ export const RESULTS: Record<MbtiKey, Result> = {
     whyModel: { ko: "정확성보다 미감, 돛단배 로고가 말하는 “예술적 여정”의 브랜드예요. 설명 대신 압도적 비주얼로 말하죠.", en: "Taste over accuracy — the sailboat mark says “artistic voyage.” It speaks in striking visuals, not words." },
     strengths: { ko: "압도적 비주얼·분위기, 미감", en: "Striking visuals, atmosphere, taste" },
     weakness: { ko: "말로 설명 못 함, 논리 약함 (예쁜데 이유는 몰라)", en: "Can't explain it — pretty, but why?" },
+    memeStats: [
+      { label: { ko: "미감", en: "Taste" }, value: 99 },
+      { label: { ko: "삘 받으면 폭주력", en: "Hyperfocus burst" }, value: 90 },
+      { label: { ko: "설득력", en: "Persuasion" }, value: 44 },
+    ],
     accent: "from-emerald-400 to-cyan-500",
     variants: {
       A: { name: { ko: "마이웨이 Midjourney", en: "My-way Midjourney" }, line: { ko: "내 무드대로, 평가 신경 안 써요.", en: "Their mood, their way — unbothered by ratings." } },
@@ -521,6 +604,11 @@ export const RESULTS: Record<MbtiKey, Result> = {
     whyModel: { ko: "“훨씬 큰 모델의 품질을 훨씬 작은 비용으로” — 린하고 빠르게 치고 나가는 유럽의 도전자예요.", en: "“The quality of much bigger models at a fraction of the cost” — Europe's lean, fast challenger." },
     strengths: { ko: "경량·고속·가성비, 빠른 출시", en: "Light, fast, scrappy — ships quick" },
     weakness: { ko: "깊이보다 속도 (일단 내고 보자)", en: "Speed over depth — ship now, ask later" },
+    memeStats: [
+      { label: { ko: "일단 배포력", en: "Ship-it reflex" }, value: 99 },
+      { label: { ko: "밤샘 내성", en: "All-nighter tolerance" }, value: 87 },
+      { label: { ko: "리팩터링 참을성", en: "Refactor patience" }, value: 41 },
+    ],
     accent: "from-emerald-400 to-cyan-500",
     variants: {
       A: { name: { ko: "배짱의 Mistral", en: "Gutsy Mistral" }, line: { ko: "일단 출시, 욕먹어도 쿨해요.", en: "Ships first, shrugs off the heat." } },
@@ -540,6 +628,11 @@ export const RESULTS: Record<MbtiKey, Result> = {
     whyModel: { ko: "한 줄 프롬프트로 완성된 곡을 뽑아내는 즉흥 창작가예요. 완성도보다 지금 이 순간의 바이브가 먼저죠.", en: "It spins a full track from a one-line prompt — the vibe of the moment over polish." },
     strengths: { ko: "창작의 즐거움·결과물의 흥, 무대 장악", en: "Joy of making, infectious energy, owns the stage" },
     weakness: { ko: "진지함은 약함 (재밌는데 실속은?)", en: "Light on the serious bits — fun, but substance?" },
+    memeStats: [
+      { label: { ko: "분위기 메이커력", en: "Vibe lifting" }, value: 98 },
+      { label: { ko: "삘 받으면 폭주력", en: "Hyperfocus burst" }, value: 92 },
+      { label: { ko: "문서화 성실도", en: "Docs discipline" }, value: 39 },
+    ],
     accent: "from-emerald-400 to-cyan-500",
     variants: {
       A: { name: { ko: "무대 체질 Suno", en: "Born-performer Suno" }, line: { ko: "분위기 띄우고 본인도 즐겨요.", en: "Hypes the room and enjoys it too." } },
@@ -632,6 +725,15 @@ export const quizUI = {
   saveImageHoldClose: { ko: "닫기", en: "Close" },
   // shown on the story card itself
   storyRetake: { ko: "나도 테스트하기", en: "Take the test yourself" },
+  // Ticket stamp across the top of the story image. The date is the builderthon's
+  // Day 1 (2026-08-22) — the day this image is actually used for on-site
+  // matching, which is the whole reason it's framed as a ticket.
+  storyTicket: { ko: "ZERO100 팀 매칭 티켓 · DAY 1 · 08.22", en: "ZERO100 TEAM-MATCHING TICKET · DAY 1 · 08.22" },
+  // Meme-stat block heading.
+  storyStats: { ko: "능력치 (자칭)", en: "Stats (self-reported)" },
+  // One-line dream-teammate tease. The full two-card version lives on the result
+  // screen; the image gets the headline so it stays readable at story scale.
+  storyMatch: { ko: "환상의 짝꿍", en: "Dream teammate" },
   // Story-card axis-explanation highlights — the most decisive axis (highest %)
   // vs the closest-call axis (lowest %), sitting side by side for the contrast.
   storyHighlightHi: { ko: "빼박인 부분", en: "No debate here" },

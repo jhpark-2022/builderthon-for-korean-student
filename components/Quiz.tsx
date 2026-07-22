@@ -858,18 +858,23 @@ const StoryCard = forwardRef<
   // so, drop the SECOND card so nothing ever clips off-frame. Runs off-screen and
   // long before the user hits save (the card is always mounted), so it's settled
   // by capture time. Resets whenever the copy changes (new result / locale).
+  // The ticket stamp, meme stats and dream-teammate line all landed in this
+  // budget, so the guard now steps DOWN one card at a time (2 → 1 → 0) instead
+  // of only ever dropping the second. The axis highlights are the most
+  // expendable thing on the card: the gauges directly above already carry the
+  // same information, just without the joke.
   const bottomRef = useRef<HTMLDivElement>(null);
-  const [dropSecond, setDropSecond] = useState(false);
+  const [maxCards, setMaxCards] = useState(2);
   const cardSig = highlightCards.map((c) => c.text).join("|");
   useEffect(() => {
-    setDropSecond(false); // re-attempt both cards when the content changes
+    setMaxCards(2); // re-attempt both cards when the content changes
   }, [cardSig]);
   useEffect(() => {
-    if (highlightCards.length < 2 || dropSecond) return;
+    if (maxCards === 0) return;
     const el = bottomRef.current;
-    if (el && el.getBoundingClientRect().bottom > 1742) setDropSecond(true);
+    if (el && el.getBoundingClientRect().bottom > 1742) setMaxCards((n) => n - 1);
   });
-  const shownCards = dropSecond ? highlightCards.slice(0, 1) : highlightCards;
+  const shownCards = highlightCards.slice(0, maxCards);
 
   return (
     <div
@@ -893,7 +898,13 @@ const StoryCard = forwardRef<
         <div style={{ textAlign: "center" }}>
           <p style={{ margin: 0, fontSize: 26, fontWeight: 700, letterSpacing: 6, textTransform: "uppercase", color: "rgba(196,181,253,0.9)" }}>✦ {t(quizUI.eyebrow)}</p>
           <h1 style={{ margin: "12px 0 0", fontSize: 60, fontWeight: 900, lineHeight: 1.05, color: "#fff" }}>{t(quizUI.title)}</h1>
-          <p style={{ margin: "10px 0 0", fontSize: 22, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", color: "rgba(255,255,255,0.4)", fontFamily: "ui-monospace, monospace" }}>Zero100 Builderthon</p>
+          {/* Ticket stamp — dashed border + mono type so it reads as a stub,
+              not a logo lockup. Replaces the plain wordmark line: the image is
+              a Day 1 matching ticket now, and saying so on the artwork is what
+              makes someone keep it in their camera roll. */}
+          <div style={{ display: "inline-block", margin: "16px 0 0", border: "3px dashed rgba(196,181,253,0.55)", borderRadius: 18, padding: "12px 26px", background: "rgba(124,58,237,0.12)" }}>
+            <p style={{ margin: 0, fontSize: 24, fontWeight: 800, letterSpacing: 3, color: "rgb(221,214,254)", fontFamily: "ui-monospace, monospace" }}>{t(quizUI.storyTicket)}</p>
+          </div>
         </div>
 
         {/* center — identity */}
@@ -954,8 +965,28 @@ const StoryCard = forwardRef<
           )}
         </div>
 
-        {/* bottom — call to action + url */}
+        {/* bottom — meme stats, dream teammate, call to action + url */}
         <div ref={bottomRef} style={{ textAlign: "center" }}>
+          {/* Joke stats as three columns of label + number — deliberately NOT
+              bars. The axis gauges above are already bars with percentages, and
+              a second bar block would read as more of the same real data
+              instead of the gag it is. */}
+          <div style={{ display: "flex", gap: 16, marginBottom: 26 }}>
+            {data.memeStats.map((st) => (
+              <div key={st.label.en} style={{ flex: 1, border: "2px solid rgba(255,255,255,0.14)", background: "rgba(255,255,255,0.05)", borderRadius: 22, padding: "18px 10px" }}>
+                <p style={{ margin: 0, fontSize: 40, fontWeight: 900, lineHeight: 1, color: "#fff", fontVariantNumeric: "tabular-nums" }}>{st.value}</p>
+                <p style={{ margin: "8px 0 0", fontSize: 21, fontWeight: 700, lineHeight: 1.25, color: "rgba(255,255,255,0.55)" }}>{t(st.label)}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Dream teammate, one line. The result screen carries the full
+              two-card version with reasons; at story scale a name is all that
+              survives being shrunk into someone's feed. */}
+          <p style={{ margin: "0 0 22px", fontSize: 27, fontWeight: 700, color: "rgba(255,255,255,0.65)" }}>
+            {t(quizUI.storyMatch)} · <span style={{ color: "rgb(245,208,254)" }}>{RESULTS[data.match[0]].model} · {data.match[0]}</span>
+          </p>
+
           <p style={{ margin: 0, fontSize: 38, fontWeight: 800, color: "#fff" }}>{t(quizUI.storyRetake)} →</p>
           <p style={{ margin: "12px 0 0", fontSize: 30, fontWeight: 600, letterSpacing: 1, color: "rgba(255,255,255,0.45)" }}>{url}</p>
         </div>
