@@ -285,6 +285,15 @@ body {
 .marquee-track { display: flex; width: max-content; }
 .marquee-left  { animation: marquee 60s linear infinite; }
 .marquee-right { animation: marquee-reverse 60s linear infinite; }
+/* Hero confirmed-partner strip (mobile only). Deliberately a separate class from
+   .marquee-left so it is NOT covered by that rule's reduced-motion exemption
+   below — this one sits in the hero and must hold still for motion-sensitive
+   visitors. Slower than the companion band since it's a hairline detail. */
+.marquee-hero { animation: marquee 75s linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  /* Beats the global `*` rule (which would instead loop it at 0.001ms). */
+  .marquee-hero { animation: none !important; }
+}
 @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 @keyframes marquee-reverse { from{transform:translateX(-50%)} to{transform:translateX(0)} }
 

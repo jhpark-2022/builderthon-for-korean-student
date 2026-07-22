@@ -812,6 +812,108 @@ function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
   );
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// HERO CONFIRMED-PARTNER STRIP — the deck cover's "CONFIRMED PARTNERS" band.
+//
+// HONESTY RULE (same as the partner wall): only partners whose participation is
+// CONFIRMED may appear here — the AXMOS host collective plus the confirmed
+// sponsor row. Anything in discussion, and the Zero100 network marquee (those
+// are network companions, not partners of this event), stays out. The student
+// associations are organizers, not partners, so they're covered by the partner
+// section instead of this strip.
+//
+// Assets are the same trimmed white silhouettes the partner wall uses — no new
+// files. They're above the fold, so they load eagerly (never lazily).
+// ─────────────────────────────────────────────────────────────────────────────
+const confirmedPartners: { src: string; alt: string; w: number; h: number }[] = [
+  // 주최 · HOST (AXMOS)
+  { src: "/partners/logos/white/trimmed/translink.png",    alt: "Translink Investment",           w: 330, h: 91 },
+  { src: "/partners/logos/white/trimmed/wilt.png",         alt: "Wilt Venture Builder",           w: 309, h: 148 },
+  { src: "/partners/logos/white/trimmed/codepresso.png",   alt: "Codepresso",                     w: 456, h: 91 },
+  { src: "/partners/logos/white/trimmed/drimaes.png",      alt: "Drimaes",                        w: 332, h: 50 },
+  { src: "/partners/logos/white/trimmed/popup-studio.png", alt: "Popup Studio",                   w: 512, h: 245 },
+  // 후원 · CONFIRMED SPONSORS
+  { src: "/partners/logos/white/trimmed/aws.png",                alt: "AWS",                            w: 512, h: 306 },
+  { src: "/partners/logos/white/trimmed/innovate360.png",        alt: "INNOVATE 360",                   w: 455, h: 54 },
+  { src: "/partners/logos/white/trimmed/life.png",               alt: "L^IFE",                          w: 900, h: 352 },
+  { src: "/partners/logos/white/trimmed/bzcf.png",               alt: "BZCF",                           w: 465, h: 156 },
+  { src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore", w: 443, h: 90 },
+  { src: "/partners/logos/white/trimmed/onword.png",             alt: "Onword Lab",                     w: 276, h: 264 },
+  { src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                        w: 512, h: 105 },
+  { src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                    w: 205, h: 81 },
+  { src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                         w: 355, h: 90 },
+];
+
+// One logo, sized by the same equal-area rule as the partner wall (see
+// opticalHeight) but tuned to a 14–24px band so the strip stays a hairline.
+function StripLogo({ src, alt, w, h }: { src: string; alt: string; w: number; h: number }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt=""
+      aria-hidden
+      // Above the fold: never lazy-load. These are the same small pre-shrunk
+      // static marks the partner wall uses, so there's nothing to optimize.
+      // fetchPriority="low" is the counterweight: 14 eager images at default
+      // priority pushed hero LCP from ~0.97s to ~1.56s on throttled Slow 4G /
+      // 4x CPU by crowding the critical path. Low priority keeps them eager (no
+      // pop-in on fast connections) but yields the pipe to the hero itself.
+      loading="eager"
+      fetchPriority="low"
+      decoding="async"
+      title={alt}
+      style={{ height: opticalHeight(w, h, 1200, 14, 24) }}
+      // The marks are white silhouettes and the hero video runs bright behind
+      // them on phones, where the strip sits over the figure — a plain opacity
+      // knock-back made them vanish there. The dark drop-shadow keeps them
+      // legible on both the dark desktop area and the bright mobile band.
+      className="w-auto max-w-[7.5rem] shrink-0 object-contain opacity-65 grayscale drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)] transition duration-300 group-hover:opacity-90"
+    />
+  );
+}
+
+// Thin confirmed-partner logo band at the bottom of the hero, above the scroll
+// hint. Desktop gets a static single line (wrapping to a second if it must);
+// below sm it reuses the site's marquee animation as a slow auto-scroll, since
+// 14 marks can't fit a phone width. Tapping anywhere on it jumps to the full
+// partner section — individual intro modals stay there, not here.
+function HeroPartnerStrip({ t }: { t: Tfn }) {
+  return (
+    <a
+      href="#builders"
+      aria-label={t(dict.hero.partnersAria)}
+      className="group mt-8 block w-full rounded-2xl py-2 sm:mt-10"
+    >
+      <p className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-white/55 drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)] transition group-hover:text-white/80">
+        {t(dict.hero.partnersLabel)}
+      </p>
+
+      {/* ≥sm — static row, wrapping only if the viewport can't hold one line */}
+      <div className="mt-4 hidden flex-wrap items-center justify-center gap-x-8 gap-y-4 sm:flex">
+        {confirmedPartners.map((p) => (
+          <StripLogo key={p.alt} {...p} />
+        ))}
+      </div>
+
+      {/* <sm — slow auto-scroll. The track holds the list twice and translates
+          -50%, so the loop is seamless. `marquee-hero` (not `marquee-left`) is
+          deliberately NOT in globals.css's reduced-motion exemption list: unlike
+          the big companion band, this one sits in the hero and freezes flat for
+          motion-sensitive visitors. */}
+      <div aria-hidden className="mt-4 overflow-hidden sm:hidden">
+        <div className="marquee-track marquee-hero">
+          {[...confirmedPartners, ...confirmedPartners].map((p, i) => (
+            <div key={i} className="mr-8 flex shrink-0 items-center">
+              <StripLogo {...p} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </a>
+  );
+}
+
 // Fixed bottom-right "back to top" button. Hidden near the top of the page and
 // fades in once the visitor has scrolled down ~1.5 viewports. Respects
 // prefers-reduced-motion (jumps instantly instead of smooth-scrolling).
@@ -1016,6 +1118,13 @@ export default function Journey() {
             <HeroLaunchPanel t={t} reduce={!!reduce} />
           </motion.div>
         </div>
+
+        {/* Confirmed-partner logo band, spanning under both hero columns and
+            above the pinned scroll hint. It fades out with the hero on desktop
+            (heroFade is undefined below lg, where the hero stays opaque). */}
+        <motion.div style={{ opacity: heroFade }} className="px-6 sm:px-10 lg:px-10 xl:px-16">
+          <HeroPartnerStrip t={t} />
+        </motion.div>
       </Chapter>
 
       {/* ── Countdown ↔ Problem Statement · MOBILE-ONLY standalone section ──

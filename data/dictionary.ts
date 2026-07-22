@@ -319,6 +319,12 @@ export const dict = {
     ctaProgram: { ko: "8일의 여정 둘러보기", en: "Explore the 8-day journey" },
     ctaPartner: { ko: "파트너십 문의", en: "Partner with us" },
     scroll: { ko: "스크롤", en: "Scroll" },
+    // Label above the hero's confirmed-partner logo strip (mirrors the deck's
+    // "CONFIRMED PARTNERS" cover band). Only partners already confirmed appear
+    // there — see `confirmedPartners` in Journey.tsx.
+    partnersLabel: { ko: "확정 파트너 · CONFIRMED PARTNERS", en: "Confirmed Partners" },
+    // Accessible name for the strip, which links to the full partner section.
+    partnersAria: { ko: "확정 파트너 전체 보기", en: "See all confirmed partners" },
     statParticipants: { ko: "한인 학생", en: "Korean students" },
     statDays: { ko: "일간의 빌드", en: "days of building" },
     statLanguage: { ko: "실전 AX 과제", en: "real AX problems" },
