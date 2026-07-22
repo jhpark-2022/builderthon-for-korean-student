@@ -166,18 +166,24 @@ function HookCards({
   return (
     <div className={className}>
       <div className="grid gap-3 sm:grid-cols-2">
-        <div className="flex flex-col gap-2 rounded-2xl border border-violet-400/25 bg-violet-400/[0.07] p-4 text-left">
+        {/* The WHOLE card is the button — the CTA used to be a text link inside a
+            dead card, so the obvious tap target (the card) did nothing. One
+            <button> keeps it a single tab stop and rules out nested interactives;
+            the pill inside is a styled span, not another control. */}
+        <button
+          type="button"
+          onClick={() => openRegister({ joinType: "solo", wantsMatching: true })}
+          className="group flex flex-col items-start gap-2 rounded-2xl border border-violet-400/25 bg-violet-400/[0.07] p-4 text-left transition hover:border-violet-400/45 hover:bg-violet-400/[0.11]"
+        >
           <p className="text-xs font-medium text-white/60">{t(dict.register.hookRegisterQ)}</p>
-          <button
-            type="button"
-            onClick={() => openRegister({ joinType: "solo", wantsMatching: true })}
-            className="group inline-flex w-fit items-center gap-1.5 text-sm font-bold text-white transition hover:text-violet-100"
-          >
+          {/* Same gradient + glow as the nav register button, so the primary
+              action looks identical wherever it appears. */}
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition group-hover:-translate-y-0.5 group-hover:shadow-[0_0_28px_rgba(124,92,255,0.6)]">
             {t(dict.register.hookRegisterCta)}
             <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </button>
+          </span>
           <p className="text-[11px] leading-relaxed text-white/45">{t(dict.register.hookRegisterSub)}</p>
-        </div>
+        </button>
         <div className="flex flex-col gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left">
           <p className="text-xs font-medium text-white/60">{t(dict.register.hookQuizQ)}</p>
           <a
@@ -914,6 +920,62 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
   );
 }
 
+// Mobile-only sticky register bar. Below lg the nav's register button is easy to
+// miss once the visitor is deep in the page, so registration gets a permanent
+// bottom rail from the moment #about scrolls past. Latched on: once shown it
+// stays, so it can't flicker on scroll-up.
+function MobileRegisterBar() {
+  const reduce = useReducedMotion();
+  const { openRegister, registered } = useRegister();
+  const { t } = useLocale();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const about = document.getElementById("about");
+      // Fires once #about's TOP has passed the top of the viewport — i.e. the
+      // visitor is reading the "why" and has left the hero for good. Waiting for
+      // its BOTTOM would be far too late: on a phone #about is ~2400px tall, so
+      // the bar wouldn't show until three screens of scrolling in. If the section
+      // isn't in the DOM for any reason, fall back to a plain scroll depth so the
+      // bar can never be permanently missing.
+      const past = about
+        ? about.getBoundingClientRect().top < 0
+        : window.scrollY > window.innerHeight;
+      if (past) setVisible(true);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          initial={reduce ? false : { opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reduce ? undefined : { opacity: 0, y: 24 }}
+          transition={{ duration: reduce ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
+          // z-40 keeps it under the ScrollToTop button (z-50), which is offset
+          // upward on this breakpoint so the two never collide. pr-20 reserves
+          // the bottom-right corner the round button sits in.
+          className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#06040f]/90 px-4 pr-20 pt-3 backdrop-blur lg:hidden"
+          style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
+        >
+          <button
+            type="button"
+            onClick={() => openRegister()}
+            className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition active:scale-[0.99]"
+          >
+            {registered ? t(dict.register.navRegistered) : t(dict.nav.register)}
+          </button>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 // Fixed bottom-right "back to top" button. Hidden near the top of the page and
 // fades in once the visitor has scrolled down ~1.5 viewports. Respects
 // prefers-reduced-motion (jumps instantly instead of smooth-scrolling).
@@ -942,7 +1004,12 @@ function ScrollToTop() {
           animate={{ opacity: 1, y: 0 }}
           exit={reduce ? undefined : { opacity: 0, y: 12 }}
           transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-violet-400/40 bg-violet-600/85 text-violet-100 shadow-[0_6px_24px_rgba(124,58,237,0.3)] transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-500 hover:text-white sm:bottom-8 sm:right-8"
+          // Below lg the sticky register bar owns the bottom edge, so this sits
+          // above it (bar height + safe area). Unconditional at that breakpoint
+          // rather than wired to the bar's state: both appear at essentially the
+          // same scroll depth, and an offset with no bar just reads as margin.
+          // From lg up there's no bar, so it returns to the normal corner.
+          className="fixed bottom-[calc(env(safe-area-inset-bottom,0px)+5.25rem)] right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-violet-400/40 bg-violet-600/85 text-violet-100 shadow-[0_6px_24px_rgba(124,58,237,0.3)] transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-500 hover:text-white sm:right-8 lg:bottom-8"
         >
           {/* upward chevron */}
           <svg aria-hidden viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -1036,6 +1103,7 @@ export default function Journey() {
   return (
     <main className="relative z-10">
       <ScrollToTop />
+      <MobileRegisterBar />
       {/* ── CH 0 · HERO ─────────────────────────────────────────────── */}
       <Chapter
         id="top"

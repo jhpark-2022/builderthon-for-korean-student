@@ -92,7 +92,12 @@ export default function JourneyNav() {
             appearing as soon as the visitor scrolls off the hero. */}
         <div className="flex items-center gap-2.5 sm:gap-3">
           <LocaleToggle />
-          <a href={links.partnership} className="hidden shrink-0 whitespace-nowrap rounded-full border border-white/20 bg-white/5 px-5 py-2 text-sm font-semibold text-white/85 transition hover:bg-white/10 md:inline-flex">
+          {/* Demoted to a plain text link (no border/fill): registration is the
+              only top-level action in this bar, and a second pill next to it read
+              as an equal choice. Desktop-only — on phones the bottom sticky bar
+              carries registration, and the hero already shows a partnership CTA
+              below md. */}
+          <a href={links.partnership} className="hidden shrink-0 whitespace-nowrap px-1 text-sm font-medium text-white/60 underline-offset-4 transition hover:text-white/90 hover:underline md:inline-flex">
             {t(dict.nav.partner)}
           </a>
           {/* Scroll-revealed register CTA — fades/slides in once the hero is
@@ -106,7 +111,10 @@ export default function JourneyNav() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={reduce ? undefined : { opacity: 0, x: 12 }}
                 transition={{ duration: reduce ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
-                className="inline-flex shrink-0 items-center rounded-full bg-violet-600/90 px-3 py-2 text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:bg-violet-500 sm:px-5 sm:text-sm"
+                // The bar's single top-level action: gradient fill + a soft violet
+                // glow so it outranks every other element in the nav. Slightly
+                // tighter padding below sm so it still fits beside the brand.
+                className="inline-flex shrink-0 items-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-3.5 py-2 text-xs font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(124,92,255,0.6)] sm:px-5 sm:py-2.5 sm:text-sm"
               >
                 {registered ? t(dict.register.navRegistered) : t(dict.nav.register)}
               </motion.button>
