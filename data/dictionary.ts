@@ -390,6 +390,13 @@ export const dict = {
       ko: "등록에 실패했어요. 잠시 후 다시 시도해 주세요.",
       en: "Registration failed. Please try again in a moment.",
     },
+    // 429 from the per-IP / global throttle. Separate from errSubmit because
+    // the remedy differs: this one really is "wait", not "retry now", and a
+    // shared campus IP can legitimately hit it during an info session.
+    errRateLimited: {
+      ko: "요청이 너무 몰리고 있어요. 잠시 후 다시 시도해 주세요.",
+      en: "Too many requests right now — please try again in a moment.",
+    },
   },
 
   hero: {

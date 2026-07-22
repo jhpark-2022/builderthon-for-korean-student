@@ -236,6 +236,9 @@ export default function RegisterModal({
   const [savedResultId, setSavedResultId] = useState<string | null>(null);
   const [attachConfirmed, setAttachConfirmed] = useState(false); // "네, 이거예요" tapped
 
+  // Honeypot. Never shown, never restored from a draft, never read by a human —
+  // see the input's comment below.
+  const [website, setWebsite] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<Status>("idle");
   // Set when the visitor clicks through the already-registered panel to the
@@ -494,6 +497,8 @@ export default function RegisterModal({
       ...(attachedType ? { quizType: attachedType } : {}), // present iff matching + saved result
       ref: urlRef ?? null,
       submittedAt: new Date().toISOString(),
+      // Empty for every real submitter; the server discards anything else.
+      website,
     };
 
     // A failed write must NOT show the success state — the registration would be
@@ -506,6 +511,13 @@ export default function RegisterModal({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
+        if (res.status === 429) {
+          // Not a failure to retry immediately — tell them to wait, and keep
+          // every field so waiting costs them nothing.
+          setErrors({ submit: t(dict.register.errRateLimited) });
+          setStatus("idle");
+          return;
+        }
         if (!res.ok) throw new Error(`submit failed: ${res.status}`);
       } else {
         console.info("[register] payload (no endpoint configured):", payload);
@@ -702,6 +714,28 @@ export default function RegisterModal({
                   </p>
 
                   <form onSubmit={onSubmit} className="mt-6 flex flex-col gap-4" noValidate>
+                    {/* ── Honeypot ────────────────────────────────────────────
+                        A field only a script will fill. Hidden by OFF-SCREEN
+                        POSITIONING rather than display:none or type="hidden":
+                        both of those are trivially detected by form-fillers,
+                        and this has to look like a real input to be worth
+                        taking. Everything that would expose it to a person is
+                        switched off — out of tab order, hidden from the
+                        accessibility tree, and excluded from autofill so a
+                        password manager can't put a URL in it and get a real
+                        visitor silently discarded.
+                        Deliberately absent from goToQuiz()'s draft, so a quiz
+                        round-trip can never restore a value into it. */}
+                    <input
+                      type="text"
+                      name="website"
+                      value={website}
+                      onChange={(e) => setWebsite(e.target.value)}
+                      tabIndex={-1}
+                      aria-hidden="true"
+                      autoComplete="off"
+                      style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+                    />
                     {isTeam && (
                       <p className="-mb-1 text-sm font-bold text-violet-200">
                         {t(dict.register.memberYou)}

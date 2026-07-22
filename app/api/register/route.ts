@@ -8,6 +8,7 @@
 // The service_role key stays on the server — see lib/supabaseAdmin.ts.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { normalizeKakaoId } from "@/lib/kakao";
@@ -17,6 +18,18 @@ export const dynamic = "force-dynamic";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_MEMBERS = 3;
+
+// ── Throttle limits ─────────────────────────────────────────────────────────
+// Tuned to be USELESS against a real student and painful for a script. The
+// binding constraint is a campus shared IP: at an info session a whole room can
+// register from one NAT'd address within minutes, and locking that out would
+// cost far more than the spam it prevents. Hence limits an individual will
+// never reach and a flood always will. Adjust here — nothing else reads these.
+const PER_IP_SHORT = { minutes: 10, max: 10 };
+const PER_IP_LONG = { minutes: 60, max: 30 };
+// Circuit breaker across ALL submitters: if the whole table is moving this
+// fast, something automated is running regardless of source address.
+const GLOBAL = { minutes: 10, max: 120 };
 // Generous caps that still stop someone pasting a novel into a text input.
 const MAX_LEN = 200;
 
@@ -31,9 +44,46 @@ function optStr(v: unknown): string | null {
   return str(v) || null;
 }
 
+/**
+ * Salted, one-way fingerprint of the submitter's IP.
+ *
+ * The raw address never reaches the database. The salt is derived from
+ * SUPABASE_SERVICE_ROLE_KEY rather than a new env var: it is already required
+ * for this route to function at all, is server-only, and rotating it (which is
+ * what you'd do after a leak) invalidates every stored hash — exactly the
+ * behaviour you want. The hash is therefore meaningless outside this
+ * deployment and cannot be used to correlate a person across projects.
+ */
+function hashIp(ip: string, secret: string): string {
+  return createHash("sha256").update(`${secret}::ip-salt::${ip}`).digest("hex");
+}
+
+/**
+ * Best-effort client IP. `x-forwarded-for` is a comma-separated chain appended
+ * to by each proxy, so the ORIGINAL client is the first entry. Behind Vercel
+ * this header is set by the platform; locally it's usually absent, which is why
+ * an unknown IP still gets throttled — under one shared "unknown" bucket. That
+ * is deliberate: failing open here would make the limiter trivially bypassable
+ * by anyone who can strip a header.
+ */
+function clientIp(req: Request): string {
+  const fwd = req.headers.get("x-forwarded-for");
+  if (fwd) {
+    const first = fwd.split(",")[0]?.trim();
+    if (first) return first;
+  }
+  return req.headers.get("x-real-ip")?.trim() || "unknown";
+}
+
+const sinceIso = (minutes: number) =>
+  new Date(Date.now() - minutes * 60_000).toISOString();
+
 export async function POST(req: Request) {
   const supabase = getSupabaseAdmin();
-  if (!supabase) {
+  // Read directly rather than exporting it from supabaseAdmin: this is the only
+  // consumer, and the value is used here purely as hash salt (see hashIp).
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabase || !serviceKey) {
     console.error("[register] Supabase env missing — set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY");
     return NextResponse.json({ error: "not_configured" }, { status: 503 });
   }
@@ -43,6 +93,56 @@ export async function POST(req: Request) {
     body = (await req.json()) as Json;
   } catch {
     return NextResponse.json({ error: "invalid_json" }, { status: 400 });
+  }
+
+  // ── Honeypot ───────────────────────────────────────────────────────────────
+  // `website` is rendered off-screen with tabIndex={-1} and aria-hidden, so no
+  // human — sighted, keyboard-only or using a screen reader — is offered it.
+  // Anything in it came from a form-filling script.
+  //
+  // The response is a NORMAL-LOOKING 201 with a random id. Returning 400 would
+  // tell the author exactly which field tripped them, and they'd remove it and
+  // retry within the hour; a silent accept costs them nothing to keep sending
+  // and us nothing to keep discarding.
+  if (str(body.website)) {
+    console.warn("[register] honeypot tripped — discarding submission");
+    return NextResponse.json({ ok: true, id: crypto.randomUUID() }, { status: 201 });
+  }
+
+  // ── Throttle ───────────────────────────────────────────────────────────────
+  // Counted BEFORE any write, so a rejected burst leaves no rows behind.
+  const ipHash = hashIp(clientIp(req), serviceKey);
+
+  const [shortWindow, longWindow, globalWindow] = await Promise.all([
+    supabase
+      .from("registrations")
+      .select("id", { count: "exact", head: true })
+      .eq("ip_hash", ipHash)
+      .gte("created_at", sinceIso(PER_IP_SHORT.minutes)),
+    supabase
+      .from("registrations")
+      .select("id", { count: "exact", head: true })
+      .eq("ip_hash", ipHash)
+      .gte("created_at", sinceIso(PER_IP_LONG.minutes)),
+    supabase
+      .from("registrations")
+      .select("id", { count: "exact", head: true })
+      .gte("created_at", sinceIso(GLOBAL.minutes)),
+  ]);
+
+  // A failed COUNT must not block registration — the limiter is a guard rail,
+  // not a gate. If Supabase can't answer, the insert below will fail loudly on
+  // its own if the database is genuinely down.
+  if ((shortWindow.count ?? 0) >= PER_IP_SHORT.max || (longWindow.count ?? 0) >= PER_IP_LONG.max) {
+    return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+  }
+  if ((globalWindow.count ?? 0) >= GLOBAL.max) {
+    // Loud on purpose: this one fires only when the whole endpoint is under
+    // load no organic audience produces.
+    console.error(
+      `[register] GLOBAL RATE LIMIT HIT — ${globalWindow.count} registrations in ${GLOBAL.minutes}m. Possible attack.`
+    );
+    return NextResponse.json({ error: "rate_limited" }, { status: 429 });
   }
 
   // ── Validate ───────────────────────────────────────────────────────────────
@@ -112,6 +212,7 @@ export async function POST(req: Request) {
       quiz_type: optStr(body.quizType),
       ref: optStr(body.ref),
       submitted_at: submittedAt,
+      ip_hash: ipHash,
     })
     .select("id")
     .single();
