@@ -677,11 +677,19 @@ export const dict = {
     // Day 8 carry `mandatory: true` in data/schedule.ts — keep this in step with
     // that flag. Everything between is either optional or self-paced, and saying
     // so up front is what stops the programme looking like an 8-day lock-in.
+    // Sits above modeNote. The schedule already marks individual items
+    // ("조율 중", "섭외 중", "검토 중"), but someone scanning eight day-cards
+    // reads them as a finished timetable and treats every line as a promise.
+    // Say once, up front, that this is still moving — it costs nothing now and
+    // saves explaining a change later.
+    pendingNote: {
+      ko: "프로그램은 아직 확정 전인 부분이 많습니다 — 세션·연사·시간은 조율 중이며, 확정되는 대로 이 페이지에 업데이트합니다.",
+      en: "Much of the programme is still being finalised — sessions, speakers and times are being worked out, and this page is updated as each is confirmed.",
+    },
     modeNote: {
       ko: "필참은 Day 1(오프닝)과 Day 8(데모데이) 둘뿐이에요. 그 사이는 대부분 온라인이고, 자율 빌드는 각자 편한 시간·장소에서 팀별로 이어갑니다 — 8일 내내 붙어 있어야 하는 일정이 아닙니다. Day 5(오프라인 킥오프)·Day 7(파이널 리허설·AWS 오피스)은 현장에 모이지만 필참은 아니에요.",
       en: "Only two days are required: Day 1 (opening) and Day 8 (Demo Day). Everything in between is mostly online, and the self-paced build happens whenever and wherever works for your team — this is not eight days you have to block out. Day 5 (kickoff) and Day 7 (final rehearsal · AWS office) meet in person too, but attendance isn't required.",
     },
-    legendTitle: { ko: "카테고리", en: "Legend" },
     dayLabel: { ko: "Day", en: "Day" },
     tapHint: { ko: "자세히 보기", en: "View details" },
     confirmedBadge: { ko: "확정", en: "Confirmed" },

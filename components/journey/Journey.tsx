@@ -12,7 +12,6 @@ import {
   days,
   schedule,
   type BEvent,
-  type Category,
   type DayMeta,
 } from "@/data/schedule";
 import Chapter from "./Chapter";
@@ -24,7 +23,6 @@ import { parseResultId } from "@/lib/quizScore";
 import { RESULTS } from "@/data/quiz";
 import { useRegister, type RegisterPreset } from "@/lib/RegisterContext";
 
-const legendOrder: Category[] = ["main","workshop","build","mentoring","network"];
 
 // glass panel wrapper
 function Glass({ children, className = "" }: { children: React.ReactNode; className?: string }) {
@@ -1676,7 +1674,14 @@ export default function Journey() {
             </h2>
             {/* No day-by-day summary paragraph here — the eight cards below ARE
                 the arc, and spelling it out in prose first read as clutter. */}
-            <div className="mx-auto mt-6 max-w-2xl rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] px-5 py-3.5 text-xs leading-relaxed text-amber-100/85">
+            {/* Two separate notes, in this order on purpose. First: how much of
+                this is settled — read before the cards, it stops eight tidy day
+                boxes being taken for a finished timetable. Second: how little of
+                it you actually have to attend. */}
+            <p className="mx-auto mt-6 max-w-2xl text-xs leading-relaxed text-white/50">
+              {t(dict.program.pendingNote)}
+            </p>
+            <div className="mx-auto mt-3 max-w-2xl rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] px-5 py-3.5 text-xs leading-relaxed text-amber-100/85">
               {t(dict.program.modeNote)}
             </div>
           </div>
@@ -1700,27 +1705,6 @@ export default function Journey() {
             ))}
           </div>
 
-          <Glass className="mt-8 bg-white/[0.10] text-left">
-            <div className="flex items-start gap-3 border-b border-white/10 pb-4">
-              <span className="text-amber-300">★</span>
-              <p className="text-sm text-white/65">
-                <span className="font-bold text-white">{t(categoryMeta.main.label)}</span> — {t(categoryMeta.main.blurb)}
-              </p>
-            </div>
-            <div className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
-              {legendOrder.filter((c) => c !== "main").map((cat) => {
-                const meta = categoryMeta[cat];
-                return (
-                  <div key={cat} className="flex items-start gap-2.5">
-                    <span className="mt-[5px] h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: meta.dot }} />
-                    <p className="text-sm text-white/75">
-                      <span className="font-bold text-white/85">{t(meta.label)}</span> — {t(meta.blurb)}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </Glass>
         </div>
       </section>
 
