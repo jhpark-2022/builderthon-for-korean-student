@@ -1054,13 +1054,15 @@ function StripLogo({ src, alt, w, h }: StripLogoSpec) {
       // as it scales. Ceilings verified against the two places this can break:
       // the 9-logo 후원 row wrapping on a laptop, and the phone marquee.
       style={{ height: opticalHeight(w, h, 1400, 16, 26) }}
-      // The marks are white silhouettes and the hero video runs bright behind
-      // them on phones, where the strip sits over the figure — a plain opacity
-      // knock-back made them vanish there. The dark drop-shadow keeps them
-      // legible on both the dark desktop area and the bright mobile band.
+      // Opacity raised 50 → 80. At 50 the marks were only legible once the page
+      // had scrolled far enough for the strip to sit over the hero scrim's dark
+      // end — brightness was an accident of scroll position, not a design, so
+      // they looked muddy exactly where they matter most (at rest, first view).
+      // The scrim added behind the strip is what makes 80 safe on the bright
+      // part of the video; the drop-shadow still carries the thin wordmarks.
       // max-w is the backstop for the widest wordmarks: it letterboxes them
       // down instead of letting one mark blow out its row's width.
-      className="w-auto max-w-[8.5rem] shrink-0 object-contain opacity-50 grayscale drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)] transition duration-300 group-hover:opacity-80"
+      className="w-auto max-w-[8.5rem] shrink-0 object-contain opacity-80 grayscale drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] transition duration-300 group-hover:opacity-100"
     />
   );
 }
@@ -1068,7 +1070,7 @@ function StripLogo({ src, alt, w, h }: StripLogoSpec) {
 // The small 주최 / 주관 / 후원 caption that leads each tier.
 function StripTierLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="shrink-0 whitespace-nowrap text-[0.55rem] font-bold uppercase tracking-[0.16em] text-violet-200/60 drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)]">
+    <span className="shrink-0 whitespace-nowrap text-[0.55rem] font-bold uppercase tracking-[0.16em] text-violet-200/85 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)]">
       {children}
     </span>
   );
@@ -1105,8 +1107,29 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
   return (
     // Non-clickable: kept the `group` wrapper so the hover highlight still plays,
     // but it's a div (not a link) so the strip no longer jumps to #builders.
-    <div className="group mt-4 block w-full rounded-2xl py-1.5 sm:mt-5">
-      <p className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-white/55 drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)] transition group-hover:text-white/80">
+    // `relative` + the scrim below. The hero's own legibility scrim fades to
+    // TRANSPARENT at its bottom edge, which is exactly where this strip sits —
+    // so the brightest part of the video was showing through the marks at full
+    // strength, and they only sharpened once scrolling carried them up into the
+    // dark end of that gradient. This gives the strip its own constant backdrop
+    // so legibility no longer depends on scroll position or on which frame of
+    // the video happens to be playing. The background scene itself is untouched.
+    <div className="group relative mt-4 block w-full rounded-2xl py-1.5 sm:mt-5">
+      <div
+        aria-hidden
+        // No rounding and a long falloff that runs PAST the container on every
+        // side: with a tight radius this read as a dark card floating over the
+        // video — fine behind the tall three-tier desktop stack, obviously a box
+        // behind the single-line mobile marquee. Bleeding the gradient outside
+        // the element and fading to transparent well before its edge keeps it a
+        // shadow rather than a panel.
+        className="pointer-events-none absolute -inset-x-10 -inset-y-6 -z-10"
+        style={{
+          background:
+            "radial-gradient(75% 130% at 50% 50%, rgba(6,4,15,0.7) 0%, rgba(6,4,15,0.5) 42%, rgba(6,4,15,0.22) 68%, transparent 88%)",
+        }}
+      />
+      <p className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-white/75 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)] transition group-hover:text-white/90">
         {t(dict.hero.partnersLabel)}
       </p>
       {/* The two facts that make these logos mean something — folded into the
@@ -1114,7 +1137,7 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
           same claim ("these partners are really involved") in specifics.
           Hidden below sm: the phone hero is already tall, and this is the one
           line here that is a nice-to-have rather than an objection-remover. */}
-      <p className="mt-1.5 hidden text-center text-xs leading-relaxed text-white/50 drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)] sm:block">
+      <p className="mt-1.5 hidden text-center text-xs leading-relaxed text-white/70 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)] sm:block">
         {t(dict.hero.heroNameValue)}
       </p>
 
