@@ -468,6 +468,19 @@ function HeroLaunchPanel({ t, reduce }: { t: Tfn; reduce: boolean }) {
   );
 }
 
+// Self-paced events have no start time and nothing to join, so the online /
+// in-person axis simply doesn't apply to them. Category is the source of truth
+// (not `mode`, which the data still needs for other reasons) — see
+// dict.program.selfPacedLabel.
+const isSelfPaced = (ev: BEvent) => ev.category === "build";
+// A whole day of nothing but self-paced build: no sessions to count, no mode to
+// report. Day 6 was showing "온라인 · 1 세션", which is precisely the
+// "log in at the scheduled hour" reading this change removes.
+const dayIsSelfPaced = (dayNum: number) => {
+  const evs = schedule.filter((e) => e.day === dayNum);
+  return evs.length > 0 && evs.every(isSelfPaced);
+};
+
 // A single program event card. Shared by the desktop column grid and the mobile
 // day accordion so both stay in sync. Height is only fixed on desktop (xl) to
 // keep columns even; on mobile cards hug their content.
@@ -478,6 +491,7 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
   // "mixed" (1:1 mentoring — in person or online depending on the mentor) gets
   // its own neutral badge: an amber "현장" would promise F2F to everyone.
   const byMentor = ev.mode === "mixed";
+  const selfPaced = isSelfPaced(ev);
   return (
     <button
       type="button"
@@ -495,7 +509,11 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
               {t(dict.program.confirmedBadge)}
             </span>
           )}
-          {byMentor ? (
+          {selfPaced ? (
+            <span className="rounded-full border border-white/12 bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/60">
+              {t(dict.program.selfPacedLabel)}
+            </span>
+          ) : byMentor ? (
             <span className="rounded-full border border-white/12 bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/60">
               {t(dict.program.byMentorLabel)}
             </span>
@@ -520,7 +538,15 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
 }
 
 // Small mode/mandatory pill helpers for the clean day cards + day modal.
-function DayModeBadge({ day, t }: { day: DayMeta; t: Tfn }) {
+function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; selfPaced?: boolean }) {
+  // Checked before dayMode: a fully self-paced day's dayMode is "online" in the
+  // data, and that badge is the misleading one being replaced.
+  if (selfPaced)
+    return (
+      <span className="rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
+        {t(dict.program.selfPacedLabel)}
+      </span>
+    );
   if (day.dayMode === "offline")
     return (
       <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[0.68rem] font-bold text-amber-200">
@@ -544,6 +570,7 @@ function DayModeBadge({ day, t }: { day: DayMeta; t: Tfn }) {
 // click rather than exploding every session inline — keeps the arc scannable.
 function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number) => void }) {
   const evCount = schedule.filter((e) => e.day === day.day).length;
+  const allSelfPaced = dayIsSelfPaced(day.day);
   return (
     <button
       type="button"
@@ -563,12 +590,15 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
             <span aria-hidden>★</span>{t(dict.program.mandatoryBadge)}
           </span>
         )}
-        <DayModeBadge day={day} t={t} />
+        <DayModeBadge day={day} t={t} selfPaced={allSelfPaced} />
       </div>
       <h4 className="mt-3 text-[15px] font-bold leading-snug text-white">{t(day.theme)}</h4>
       <p className="mt-1.5 text-[13px] leading-relaxed text-white/65">{t(day.summary)}</p>
       <span className="mt-auto pt-4 text-xs font-semibold text-violet-300/60 transition group-hover:text-violet-300">
-        {evCount} {t(dict.program.sessions)} · {t(dict.program.tapHint)} →
+        {allSelfPaced
+          ? t(dict.program.selfPacedDay)
+          : `${evCount} ${t(dict.program.sessions)}`}{" "}
+        · {t(dict.program.tapHint)} →
       </span>
     </button>
   );
@@ -720,7 +750,7 @@ function DayModal({
                     <span aria-hidden>★</span>{t(dict.program.mandatoryBadge)}
                   </span>
                 )}
-                <DayModeBadge day={day} t={t} />
+                <DayModeBadge day={day} t={t} selfPaced={dayIsSelfPaced(day.day)} />
               </div>
               <h3 id="day-modal-title" className="mt-5 text-[24px] font-bold leading-tight text-white sm:text-[30px]">{t(day.theme)}</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/70">{t(day.summary)}</p>

@@ -683,6 +683,21 @@ export const dict = {
     mandatoryBadge: { ko: "필참", en: "Required" },
     onlineLabel: { ko: "온라인", en: "Online" },
     offlineLabel: { ko: "현장", en: "In person" },
+    // ── Self-paced (category "build") ──────────────────────────────────────
+    // Build events carry mode "online" in the data because they have to carry
+    // SOMETHING, but showing them an "온라인" badge told a lie: it reads as a
+    // room you log into at a set hour. There is no hour and no room — teams
+    // build whenever they like. The data keeps its Mode value; only the display
+    // changes, so nothing downstream of `mode` has to know about this.
+    selfPacedLabel: { ko: "자유 진행", en: "Your own pace" },
+    // The event modal's "진행 방식" row, where there's space to say why.
+    selfPacedMode: {
+      ko: "자유 진행 · 정해진 시간·접속 없음",
+      en: "Your own pace · no set time, nothing to join",
+    },
+    // Replaces the "N 세션" count on a day whose events are ALL self-paced —
+    // counting sessions on a day with no sessions is the same misread again.
+    selfPacedDay: { ko: "자율 진행", en: "Self-paced" },
     pendingLabel: { ko: "현장 (미정)", en: "On-site (TBC)" },
     // 1:1 mentoring is arranged mentor by mentor — some meet at NUS in person,
     // others take it online. Neither plain badge is true for everyone.
