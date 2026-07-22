@@ -5,6 +5,12 @@
 **Window covered:** wiring the 빌더톤 등록 form to a real datastore — it had been
 posting nowhere since the form shipped on July 18.
 
+> **Superseded (July 22, 2026):** the participant channel moved from Telegram
+> to KakaoTalk — the contact field now asks for a 카카오톡 ID and `lib/telegram.ts`
+> became `lib/kakao.ts`. Telegram references below describe what shipped on this
+> date and are left as written. See
+> `changelog-july-22-2026-cta-hierarchy-partner-strip.md`.
+
 ## Summary
 
 `등록하기` now actually persists. The RegisterModal POSTs to a first-party route

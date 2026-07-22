@@ -2,7 +2,7 @@
 -- Zero100 Builderthon — 등록 (registration) storage.
 --
 -- Two tables, because the operational need is a *participant* list (emails and
--- Telegram IDs for the group-chat invite), not just a list of teams:
+-- messenger IDs for the group-chat invite), not just a list of teams:
 --   registrations         — one row per submitted form (a team or a solo entry)
 --   registration_members  — one row per person; ordinal 1 is the registrant
 --
@@ -41,6 +41,9 @@ create table if not exists public.registration_members (
 
   name            text not null,
   email           text not null,
+  -- Messenger handle for the group-chat invite. Deliberately channel-neutral:
+  -- the app has asked for a Telegram handle and now asks for a KakaoTalk id
+  -- (see lib/kakao.ts), and neither switch needed a migration.
   contact         text not null,
   university      text,
   linkedin        text,
