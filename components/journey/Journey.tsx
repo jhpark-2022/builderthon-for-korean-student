@@ -1026,6 +1026,21 @@ const confirmedPartnerTiers: { label: Phrase; items: StripLogoSpec[] }[] = [
   },
 ];
 
+// Sort any sponsor list into the hero strip's order. The strip is the single
+// source of truth for sponsor sequence (AWS and Hashed lead it — the two marks
+// a visitor recognises without being told); anything the strip doesn't list
+// keeps its relative position at the end rather than being dropped.
+function sortLikeHeroStrip<T extends { src: string }>(rows: T[]): T[] {
+  const order = confirmedPartnerTiers
+    .find((tier) => tier.label === dict.hero.partnersSponsors)!
+    .items.map((i) => i.src);
+  const rank = (src: string) => {
+    const i = order.indexOf(src);
+    return i === -1 ? Number.MAX_SAFE_INTEGER : i;
+  };
+  return [...rows].sort((a, b) => rank(a.src) - rank(b.src));
+}
+
 // One logo, sized by the same equal-area rule as the partner wall (see
 // opticalHeight). The band was originally tuned to 14–24px, which turned out to
 // be past "understated" and into "unreadable" — a wordmark like WILT VENTURE
@@ -1883,7 +1898,15 @@ export default function Journey() {
               {t(dict.partners.sponsorConfirmedLabel)}
             </p>
             <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-              {[
+              {/* ORDER FOLLOWS THE HERO STRIP — sorted below against
+                  `confirmedPartnerTiers`, not hand-ordered here, so the two
+                  lists cannot drift apart again. Seeing AWS·Hashed lead the
+                  hero and Hashed last down here read as two different rosters.
+                  Each logo keeps its own role caption, so the captions are no
+                  longer grouped (장소·장소·장소 …) — that grouping was the only
+                  thing the old order bought, and matching the hero is worth
+                  more than it. */}
+              {sortLikeHeroStrip([
                 { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/aws.png",                alt: "AWS",                             w: 512, h: 306 },
                 { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/innovate360.png",        alt: "INNOVATE 360",                    w: 455, h: 54 },
                 { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/life.png",               alt: "L^IFE",                           w: 900, h: 352 },
@@ -1893,7 +1916,7 @@ export default function Journey() {
                 { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105 },
                 { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81 },
                 { cat: t(dict.partners.catOverall),   src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90 },
-              ].map(({ cat, ...l }) => (
+              ]).map(({ cat, ...l }) => (
                 <div key={l.alt} className="flex flex-col gap-1.5">
                   <LogoTile {...l} onOpen={(el) => openPartner(l.alt, dict.partners.stageConfirmed, el)} />
                   <span className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-white/40">{cat}</span>
