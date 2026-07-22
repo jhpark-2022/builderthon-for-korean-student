@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
 import { dict, links, partnerIntros, partnerIntroTBC, type Phrase } from "@/data/dictionary";
 import {
@@ -150,16 +151,53 @@ const FOCUSABLE =
 // The register card carries `register.reassure` under its CTA — the same line in
 // all three placements, from one key.
 // ─────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// OPEN-CHAT LINK — the third CTA, for the visitor who isn't ready to register.
+//
+// Deliberately the lowest-hierarchy element wherever it appears: no border, no
+// fill, no pill. It sits directly under a register CTA, and the moment it reads
+// as a peer it starts taking clicks from the conversion it exists to catch. If
+// this ever looks like a button, that's the bug.
+//
+// `src` tags where the click came from so the funnel can be read per placement.
+// ─────────────────────────────────────────────────────────────────────────────
+function OpenChatLink({
+  t,
+  src,
+  className = "",
+}: {
+  t: Tfn;
+  src: "hero" | "band" | "footer";
+  className?: string;
+}) {
+  if (!links.openChat) return null;
+  return (
+    <a
+      href={links.openChat}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={() => track("openchat_click", { src })}
+      className={`inline-flex items-center gap-1 text-xs leading-relaxed text-white/45 underline decoration-white/20 underline-offset-4 transition hover:text-white/70 hover:decoration-white/40 ${className}`}
+    >
+      {t(dict.register.openChatCta)}
+      <span aria-hidden>→</span>
+    </a>
+  );
+}
+
 function HookCards({
   t,
   ownResultId,
   openRegister,
   className = "",
+  chatSrc,
 }: {
   t: Tfn;
   ownResultId: string | null;
   openRegister: (preset?: RegisterPreset) => void;
   className?: string;
+  // Which placement this instance is, for the open-chat link's funnel tag.
+  chatSrc: "hero" | "band";
 }) {
   return (
     <div className={className}>
@@ -202,6 +240,10 @@ function HookCards({
             <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </a>
         </div>
+      </div>
+      {/* Third CTA — under both cards, quieter than either. */}
+      <div className="mt-3 text-center">
+        <OpenChatLink t={t} src={chatSrc} />
       </div>
     </div>
   );
@@ -1294,6 +1336,7 @@ export default function Journey() {
               ownResultId={ownResultId}
               openRegister={openRegister}
               className="mx-auto mt-5 max-w-xl lg:mx-0"
+              chatSrc="hero"
             />
           </motion.div>
 
@@ -1494,6 +1537,7 @@ export default function Journey() {
             ownResultId={ownResultId}
             openRegister={openRegister}
             className="mx-auto mt-10 max-w-xl"
+            chatSrc="band"
           />
         </div>
       </Chapter>
@@ -1757,6 +1801,7 @@ export default function Journey() {
           ownResultId={ownResultId}
           openRegister={openRegister}
           className="mx-auto mt-10 max-w-xl"
+          chatSrc="band"
         />
       </Chapter>
 
@@ -1869,6 +1914,10 @@ export default function Journey() {
               {t(dict.nav.partner)}
             </a>
           </div>
+
+          {/* Third CTA — the page's last chance to keep someone who scrolled all
+              the way here without registering. Still a text link. */}
+          <OpenChatLink t={t} src="footer" className="mt-5" />
 
           {/* mailto: only opens whatever mail client the visitor's device has
               configured — on a desktop without one, or inside some in-app

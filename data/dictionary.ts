@@ -188,6 +188,29 @@ export const dict = {
     // the hook CTA and is restated at the top of the modal, where it's checkable
     // (the form really does have three required fields).
     hookRegisterMinutes: { ko: "3분", en: "3 min" },
+    // ── Open-chat third CTA ────────────────────────────────────────────────
+    // The low-commitment exit for someone who isn't ready to register. Rendered
+    // as a TEXT LINK everywhere, never a button: it sits next to the register
+    // CTA and the moment it competes visually it starts cannibalising the
+    // conversion it's meant to catch. See OpenChatLink in Journey.tsx.
+    openChatCta: {
+      ko: "아직 고민 중이라면 — 오픈채팅에서 소식만 받아보세요",
+      en: "Not sure yet? Just follow along in our open chat",
+    },
+    // Shown once per session when the register modal is dismissed WITHOUT
+    // submitting. Not a second modal — a bottom toast that self-dismisses, so it
+    // can't trap focus or stack on top of the dialog that just closed.
+    openChatNudge: {
+      ko: "등록은 나중에 해도 돼요. 오픈채팅에서 소식 받아보실래요?",
+      en: "No rush — want updates in our open chat instead?",
+    },
+    // Success screen: the participant room is private and invite-only, so this
+    // says why the OPEN room is still worth joining rather than repeating it.
+    successOpenChatTitle: {
+      ko: "오픈채팅방에도 들어와 계세요 — 공지가 가장 먼저 올라와요",
+      en: "Join the open chat too — announcements land there first",
+    },
+    successOpenChatCta: { ko: "오픈채팅 들어가기", en: "Open the chat" },
     // Nav scroll-revealed button + its post-registration label.
     navRegistered: { ko: "등록 완료 ✓", en: "Registered ✓" },
     // Modal chrome.
@@ -210,8 +233,8 @@ export const dict = {
       en: "Organized by the SMU · NUS · NTU Korean student associations — the Zero100 builderthon team reads every entry.",
     },
     trustPrivacy: {
-      ko: "입력하신 연락처는 참가 안내·단체방 초대에만 사용하고 외부에 공유하지 않습니다. 팀원 정보는 팀원 동의 하에 입력해 주세요.",
-      en: "Your contact details are used only for event updates and the group-chat invite, and are never shared outside the team. Please enter teammates' details only with their consent.",
+      ko: "입력하신 연락처는 참가 안내·참가자 단톡방 초대에만 사용하고 외부에 공유하지 않습니다. 팀원 정보는 팀원 동의 하에 입력해 주세요.",
+      en: "Your contact details are used only for event updates and the participants' chat invite, and are never shared outside the team. Please enter teammates' details only with their consent.",
     },
     optional: { ko: "선택", en: "optional" },
     selectPlaceholder: { ko: "선택하세요", en: "Select…" },
@@ -238,8 +261,8 @@ export const dict = {
     // — see lib/kakao.ts, which strips one if it's typed anyway.
     contactLabel: { ko: "카카오톡 ID", en: "KakaoTalk ID" },
     contactHint: {
-      ko: "카카오톡 앱 → 프로필 → 설정에서 확인할 수 있어요. 단체방 초대에 사용돼요.",
-      en: "Find it in KakaoTalk → Profile → Settings. Used for the group-chat invite.",
+      ko: "카카오톡 앱 → 프로필 → 설정에서 확인할 수 있어요. 참가자 단톡방 초대에 사용돼요.",
+      en: "Find it in KakaoTalk → Profile → Settings. Used for the participants' chat invite.",
     },
     contactPlaceholder: { ko: "kakao_id", en: "kakao_id" },
     // LinkedIn (optional) — registrant + each team member.
@@ -312,8 +335,8 @@ export const dict = {
     // people with no idea whether to wait a day or a month, or whom to poke.
     // TODO: '며칠 내' → 운영 확정 시 '2–3일 내'로 (EN: "within a few days" → "in 2–3 days")
     successBody: {
-      ko: "며칠 내 카카오톡 단체방으로 초대해 드려요. 연락이 없으면 pjh030924@gmail.com 로 문의해 주세요.",
-      en: "We'll invite you to the KakaoTalk group chat within a few days. If you don't hear from us, email pjh030924@gmail.com.",
+      ko: "며칠 내 참가자 단톡방으로 초대해 드려요. 연락이 없으면 pjh030924@gmail.com 로 문의해 주세요.",
+      en: "We'll invite you to the participants' KakaoTalk chat within a few days. If you don't hear from us, email pjh030924@gmail.com.",
     },
     successClose: { ko: "닫기", en: "Close" },
     // ── Already-registered panel ───────────────────────────────────────────
@@ -332,10 +355,10 @@ export const dict = {
     },
     alreadyEmailCta: { ko: "운영진에게 메일 보내기", en: "Email the organizers" },
     alreadyChatBody: {
-      ko: "빌더톤 오픈 톡방에 문의를 남기셔도 돼요.",
-      en: "You can also leave a message in the builderthon open group chat.",
+      ko: "빌더톤 오픈채팅방에 문의를 남기셔도 돼요.",
+      en: "You can also leave a message in the builderthon open chat.",
     },
-    alreadyChatCta: { ko: "오픈 톡방 열기", en: "Open the group chat" },
+    alreadyChatCta: { ko: "오픈채팅 들어가기", en: "Open the chat" },
     alreadyAgain: {
       ko: "다른 사람을 등록하시나요? 새로 등록하기",
       en: "Registering someone else? Start a new registration",
@@ -402,8 +425,8 @@ export const dict = {
     // deadline set, so scarcity framing ("선착순", "마감 임박", "잔여석") would
     // be fabricated pressure. Each clause here is something already true.
     countdownUrgency: {
-      ko: "등록자부터 카카오톡 단톡방 초대 · 트랙 사전 안내 · 팀 매칭이 시작돼요.",
-      en: "Registered builders get the group-chat invite, track previews and team matching first.",
+      ko: "등록자부터 참가자 단톡방 초대 · 트랙 사전 안내 · 팀 매칭이 시작돼요.",
+      en: "Registered builders get the participants' chat invite, track previews and team matching first.",
     },
     // Two confirmed headline facts, used as the hero partner strip's caption.
     // Both are locked: the AWS office venue and the Translink CEO keynote are

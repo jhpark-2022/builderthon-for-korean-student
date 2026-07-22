@@ -32,6 +32,8 @@
 import { cloneElement, isValidElement, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+// Aliased: this component already has a `track` state (관심 트랙 form field).
+import { track as analytics } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
 import { normalizeKakaoId } from "@/lib/kakao";
 import { dict, links, REGISTER_ENDPOINT } from "@/data/dictionary";
@@ -617,6 +619,7 @@ export default function RegisterModal({
                         href={links.openChat}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() => analytics("openchat_click", { src: "already" })}
                         className="font-semibold text-violet-200 underline underline-offset-4 transition hover:text-white"
                       >
                         {t(dict.register.alreadyChatCta)}
@@ -649,6 +652,30 @@ export default function RegisterModal({
                   <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-white/70">
                     {t(dict.register.successBody)}
                   </p>
+
+                  {/* Room hierarchy, stated once: the line above promises the
+                      PRIVATE participant room (invite goes to the Kakao id they
+                      just gave us); this is the PUBLIC open chat, which they can
+                      join right now. Two different rooms — the copy names both so
+                      "이미 초대받았나?" never comes up. */}
+                  {links.openChat && (
+                    <div className="mx-auto mt-6 max-w-sm rounded-2xl border border-white/12 bg-white/[0.04] px-5 py-4">
+                      <p className="text-sm leading-relaxed text-white/75">
+                        {t(dict.register.successOpenChatTitle)}
+                      </p>
+                      <a
+                        href={links.openChat}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => analytics("openchat_click", { src: "success" })}
+                        className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-violet-400/35 bg-violet-500/15 px-5 py-2.5 text-sm font-bold text-violet-100 transition hover:bg-violet-500/25 hover:text-white"
+                      >
+                        {t(dict.register.successOpenChatCta)}
+                        <span aria-hidden>→</span>
+                      </a>
+                    </div>
+                  )}
+
                   <button
                     type="button"
                     onClick={onClose}

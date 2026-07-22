@@ -18,6 +18,10 @@ export const QUIZ_RESULT_KEY = "z100-quiz-result";
 export const REGISTER_DRAFT_KEY = "z100-register-draft";
 // localStorage — "already registered" flag (nav button → "등록 완료 ✓").
 export const REGISTERED_KEY = "z100-registered";
+// sessionStorage — the open-chat nudge toast has been shown this session.
+// Session-scoped on purpose: someone who closes the register modal twice in one
+// visit gets nudged once, but a visitor returning next week is a fresh chance.
+export const OPENCHAT_NUDGE_KEY = "z100-openchat-nudged";
 
 // Remove every `z100-*` key from BOTH localStorage and sessionStorage. A prefix
 // sweep rather than a known-list delete, so keys added later are cleared too.

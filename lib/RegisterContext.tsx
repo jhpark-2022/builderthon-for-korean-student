@@ -21,7 +21,8 @@ import {
   useState,
 } from "react";
 import RegisterModal from "@/components/RegisterModal";
-import { REGISTERED_KEY } from "@/lib/storage";
+import OpenChatNudge from "@/components/OpenChatNudge";
+import { OPENCHAT_NUDGE_KEY, REGISTERED_KEY } from "@/lib/storage";
 
 // Optional starting state for the modal, so a CTA can express what it promised.
 // The hero's "팀이 없어도 괜찮아요 → 등록하고 팀 매칭 받기" card opens the form
@@ -83,7 +84,24 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
     setPreset(next ?? null);
     setOpen(true);
   }, []);
-  const closeRegister = useCallback(() => setOpen(false), []);
+  // Dismissing the form without submitting is the moment to offer the
+  // low-commitment alternative. Deliberately NOT a second modal: the toast
+  // renders outside the dialog and self-dismisses, so it can't fight
+  // RegisterModal's focus restoration or stack a dialog on a closing dialog.
+  // Suppressed for anyone already registered (nothing to nudge them toward) and
+  // capped at once per session via sessionStorage.
+  const [nudge, setNudge] = useState(false);
+  const closeRegister = useCallback(() => {
+    setOpen(false);
+    if (registered) return;
+    try {
+      if (window.sessionStorage.getItem(OPENCHAT_NUDGE_KEY)) return;
+      window.sessionStorage.setItem(OPENCHAT_NUDGE_KEY, "1");
+    } catch {
+      /* storage blocked — show it this once rather than not at all */
+    }
+    setNudge(true);
+  }, [registered]);
   const onSuccess = useCallback(() => {
     setRegistered(true);
     try {
@@ -104,6 +122,7 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
         onSuccess={onSuccess}
         alreadyRegistered={registered}
       />
+      <OpenChatNudge open={nudge} onClose={() => setNudge(false)} />
     </RegisterContext.Provider>
   );
 }
