@@ -859,9 +859,14 @@ const confirmedPartnerTiers: { label: Phrase; items: StripLogoSpec[] }[] = [
   },
   {
     // 후원 · SPONSORS — confirmed only; the deck lists no in-discussion sponsors.
+    // AWS and Hashed lead: they are the two marks a visitor recognises without
+    // being told, so they do the most work in a first-screen band. The rest keep
+    // the partner section's order. (Only the hero strip is ordered this way —
+    // the section itself stays grouped by what each sponsor provides.)
     label: dict.hero.partnersSponsors,
     items: [
       { src: "/partners/logos/white/trimmed/aws.png",                alt: "AWS",                             w: 512, h: 306 },
+      { src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90 },
       { src: "/partners/logos/white/trimmed/innovate360.png",        alt: "INNOVATE 360",                    w: 455, h: 54 },
       { src: "/partners/logos/white/trimmed/life.png",               alt: "L^IFE",                           w: 900, h: 352 },
       { src: "/partners/logos/white/trimmed/bzcf.png",               alt: "BZCF",                            w: 465, h: 156 },
@@ -869,13 +874,15 @@ const confirmedPartnerTiers: { label: Phrase; items: StripLogoSpec[] }[] = [
       { src: "/partners/logos/white/trimmed/onword.png",             alt: "Onword Lab",                      w: 276, h: 264 },
       { src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105 },
       { src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81 },
-      { src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90 },
     ],
   },
 ];
 
 // One logo, sized by the same equal-area rule as the partner wall (see
-// opticalHeight) but tuned to a 14–24px band so the strip stays a hairline.
+// opticalHeight). The band was originally tuned to 14–24px, which turned out to
+// be past "understated" and into "unreadable" — a wordmark like WILT VENTURE
+// BUILDER lost its subtitle entirely. 22–38px is still a thin strip but the
+// marks are legible at a glance, which is the only reason they're here.
 function StripLogo({ src, alt, w, h }: StripLogoSpec) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
@@ -893,12 +900,12 @@ function StripLogo({ src, alt, w, h }: StripLogoSpec) {
       fetchPriority="low"
       decoding="async"
       title={alt}
-      style={{ height: opticalHeight(w, h, 1200, 14, 24) }}
+      style={{ height: opticalHeight(w, h, 2600, 22, 38) }}
       // The marks are white silhouettes and the hero video runs bright behind
       // them on phones, where the strip sits over the figure — a plain opacity
       // knock-back made them vanish there. The dark drop-shadow keeps them
       // legible on both the dark desktop area and the bright mobile band.
-      className="w-auto max-w-[7.5rem] shrink-0 object-contain opacity-65 grayscale drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)] transition duration-300 group-hover:opacity-90"
+      className="w-auto max-w-[10rem] shrink-0 object-contain opacity-70 grayscale drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)] transition duration-300 group-hover:opacity-95"
     />
   );
 }
@@ -939,21 +946,29 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
     <a
       href="#builders"
       aria-label={t(dict.hero.partnersAria)}
-      className="group mt-8 block w-full rounded-2xl py-2 sm:mt-10"
+      className="group mt-6 block w-full rounded-2xl py-2 sm:mt-7"
     >
       <p className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-white/55 drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)] transition group-hover:text-white/80">
         {t(dict.hero.partnersLabel)}
       </p>
 
-      {/* ≥sm — tiers inline, wrapping as a unit. Each tier keeps its caption
-          glued to its own marks, so a wrap never orphans a label from its row. */}
-      <div className="mt-4 hidden flex-wrap items-center justify-center gap-x-7 gap-y-3 sm:flex">
+      {/* ≥sm — one row per tier, caption centred above its own marks. The tiers
+          used to run inline (caption, then marks, then the next caption) which
+          read as one long undifferentiated line: the whole point of the tiering
+          is that 주최 / 주관 / 후원 are answers to different questions, and a
+          vertical stack is what makes them read that way. */}
+      {/* Gaps are deliberately tight: stacking three tiers and enlarging the
+          marks already added ~160px to a hero that overflows a laptop viewport,
+          so every row here is spaced to the minimum that still separates them. */}
+      <div className="mt-3 hidden flex-col items-center gap-3 sm:flex">
         {confirmedPartnerTiers.map((tier) => (
-          <div key={tier.label.en} className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+          <div key={tier.label.en} className="flex flex-col items-center gap-1.5">
             <StripTierLabel>{t(tier.label)}</StripTierLabel>
-            {tier.items.map((p) => (
-              <StripLogo key={p.alt} {...p} />
-            ))}
+            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
+              {tier.items.map((p) => (
+                <StripLogo key={p.alt} {...p} />
+              ))}
+            </div>
           </div>
         ))}
       </div>
