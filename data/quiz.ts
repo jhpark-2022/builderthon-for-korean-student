@@ -610,6 +610,13 @@ export const quizUI = {
   },
 
   // 9:16 story-image export
+  // Sits directly above the save button. The image stopped being a vanity
+  // screenshot the moment on-site matching started using it — so the button
+  // needs a reason attached, not just a verb.
+  saveImageTicket: {
+    ko: "이 이미지를 저장해 두세요 — 솔로 참가자는 Day 1 현장 팀 매칭에 쓰여요 🎟️",
+    en: "Save this image — solo builders use it for on-site team matching on Day 1 🎟️",
+  },
   saveImage: { ko: "이미지로 저장", en: "Save as image" },
   saveImageLoading: { ko: "만드는 중…", en: "Creating…" },
   saveImageError: { ko: "이미지 생성에 실패했어요", en: "Couldn't create the image" },

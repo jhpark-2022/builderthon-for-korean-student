@@ -699,6 +699,12 @@ function ResultView({
 
         {/* Actions: story-image save (primary), then retake. */}
         <div className="mx-auto flex w-full max-w-xl flex-col gap-3">
+          {/* Why the save matters — the image is the Day 1 matching ticket, not
+              just a share graphic. Above the button so it's read before the tap,
+              not after. */}
+          <p className="text-center text-xs leading-relaxed text-violet-100/70">
+            {t(quizUI.saveImageTicket)}
+          </p>
           {/* Save as a 9:16 story image (native share sheet on mobile). */}
           <button
             type="button"
