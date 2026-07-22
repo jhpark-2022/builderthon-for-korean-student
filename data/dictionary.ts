@@ -444,6 +444,8 @@ export const dict = {
     problemTabLabel: { ko: "Problem Statement", en: "Problem Statement" },
 
     countdownEyebrow: { ko: "빌더톤 시작까지", en: "Until the builderthon begins" },
+    // Short variant shown on mobile, where the full line is too long.
+    countdownEyebrowShort: { ko: "시작까지", en: "Begins in" },
     countdownLive: { ko: "실시간", en: "Live" },
     countdownUnitDays: { ko: "일", en: "days" },
     countdownUnitHours: { ko: "시", en: "hrs" },

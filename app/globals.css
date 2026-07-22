@@ -78,6 +78,14 @@ body {
 
 :focus-visible { outline: 2px solid var(--violet-soft); outline-offset: 3px; border-radius: 4px; }
 
+/* Soft "live" pulse — a gentle expanding ring, slower and calmer than Tailwind's
+   animate-ping (used by the countdown's live dot). */
+@keyframes softPulse {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  70%  { transform: scale(2.2); opacity: 0;   }
+  100% { transform: scale(2.2); opacity: 0;   }
+}
+
 /* ── Gradient text ─────────────────────────────────────────────────────────── */
 .text-gradient-hero {
   background: linear-gradient(135deg, #c4b5fd 0%, #818cf8 30%, #67e8f9 70%, #a5f3fc 100%);

@@ -341,11 +341,15 @@ function CountdownView({ t }: { t: Tfn }) {
   return (
     <div className="text-center">
       <p className="mb-5 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/70">
+        {/* Gentle, slow pulse (~2.4s) instead of animate-ping's snappy 1s scale,
+            which read as too fast / twitchy on mobile. */}
         <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-violet-400/70" />
+          <span className="absolute inline-flex h-full w-full animate-[softPulse_2.4s_ease-in-out_infinite] rounded-full bg-violet-400/60" />
           <span className="relative inline-flex h-2 w-2 rounded-full bg-violet-400" />
         </span>
-        {t(dict.hero.countdownEyebrow)}
+        {/* Short label on mobile ("Begins in"), full line from sm up. */}
+        <span className="sm:hidden">{t(dict.hero.countdownEyebrowShort)}</span>
+        <span className="hidden sm:inline">{t(dict.hero.countdownEyebrow)}</span>
         <span className="text-white/40">· {t(dict.hero.countdownLive)}</span>
       </p>
       <div className="mx-auto grid w-fit grid-cols-4 gap-1.5 sm:gap-2.5">
