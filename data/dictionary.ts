@@ -823,7 +823,10 @@ export const dict = {
   // ── 연사 · 공유 세션 (Day 1·5·8) ────────────────────────────────────────────
   speakers: {
     tag: { ko: "연사 · 공유 세션", en: "Speaker sessions" },
-    heading: { ko: "Day 1 · 5 · 7 · 8 — 스피커 & 공유 세션", en: "Day 1 · 5 · 7 · 8 — Speaker & sharing sessions" },
+    // Days listed here must match the cards in `people` below. Day 5 was in the
+    // heading with no card to back it — its only content was the panel in
+    // tbcNote, whose panelists were never arranged.
+    heading: { ko: "Day 1 · 7 · 8 — 스피커 & 공유 세션", en: "Day 1 · 7 · 8 — Speaker & sharing sessions" },
     intro: {
       ko: "이 시간을 따로 두는 이유 — Zero100의 앙트레프레너십 정체성을 지키기 위해. (연사 라인업은 확정되는 대로 안내됩니다.)",
       en: "Why we set this time aside — to protect Zero100's entrepreneurial identity. (Speaker line-up announced as confirmed.)",
@@ -872,8 +875,8 @@ export const dict = {
       },
     ],
     tbcNote: {
-      ko: "* Day 5에는 ‘유학생에서 창업가로’ 패널(유학생 출신 창업가 3인)이 예정되어 있으며 현재 섭외 중입니다. 세션 시간·구성은 조정될 수 있습니다.",
-      en: "* Day 5 hosts a ‘From Int'l Student to Founder’ panel (three founders who came up as international students) — panelists are still being arranged. Session times and format may still change.",
+      ko: "* 세션 시간·구성은 조정될 수 있습니다.",
+      en: "* Session times and format may still change.",
     },
   },
 

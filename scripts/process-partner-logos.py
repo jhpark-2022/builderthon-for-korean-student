@@ -4,12 +4,18 @@ One-off: turn brand logos from the shared CI folder into the partner-wall
 convention — WHITE MONO on TRANSPARENT, natural aspect ratio (not squared),
 matching the files already in public/partners/logos/white/.
 
-Two source shapes are handled:
+Three source shapes are handled:
   • "dark"  — a dark mark on a white/transparent sheet (L^IFE). Alpha comes
               straight from darkness, so outlines and counters survive.
   • "color" — a multicolour mark on a flat light background (싱가포르 한인회).
               Alpha comes from each pixel's colour distance to the sampled
               background, then everything surviving is flattened to white.
+  • "alpha" — a solid-colour mark ALREADY cut out on transparency (Onword Lab).
+              The shape is exactly the source alpha, so use it as-is and just
+              repaint the ink white. Running such a file through "dark" instead
+              would scale alpha by the ink's luminance and render the mark
+              semi-transparent — a mid-purple wordmark came out visibly dimmer
+              than every logo beside it.
 
 Both are trimmed to the alpha bbox and downscaled so the long edge is 900px —
 these render ~40px tall, so anything larger is wasted bytes.
@@ -46,6 +52,9 @@ LO, HI = 40, 110  # colour-distance → alpha ramp, for the "color" mode
 JOBS = [
     ("life_logo.png", "life.png", "dark"),
     ("싱가포르 한인회.jpg", "korean-association.png", "color"),
+    # Replaced the old mark-only logo (a small near-square glyph that rendered
+    # as an unreadable ">." in the hero strip) with the full ONWORD LAB lockup.
+    ("onword new logo.png", "onword.png", "alpha"),
 ]
 
 
@@ -65,6 +74,11 @@ def from_color(im):
     bg = np.median(corners, axis=0)
     dist = np.sqrt(((a - bg) ** 2).sum(axis=2))
     return np.clip((dist - LO) / (HI - LO), 0.0, 1.0) * 255.0
+
+
+def from_alpha(im):
+    """Already cut out on transparency → the source alpha IS the shape."""
+    return np.asarray(im.convert("RGBA")).astype(int)[:, :, 3].astype(float)
 
 
 def trim_all():
@@ -89,7 +103,7 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     for src, out, mode in JOBS:
         im = Image.open(CI / src)
-        alpha = (from_dark if mode == "dark" else from_color)(im)
+        alpha = {"dark": from_dark, "color": from_color, "alpha": from_alpha}[mode](im)
         h, w = alpha.shape
         # white mono is fully described by alpha → store as LA (L=255 + alpha)
         img = Image.fromarray(
