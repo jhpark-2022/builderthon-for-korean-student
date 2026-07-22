@@ -12,6 +12,14 @@ export const metadata: Metadata = {
     description: "14문항으로 알아보는 나의 빌더 유형 + 결과 맞춤 세션 추천.",
     type: "website",
   },
+  // Without this the page inherited the root layout's twitter card, so a shared
+  // quiz link showed the quiz's og:title next to the EVENT's twitter:title.
+  // The image comes from ./opengraph-image.tsx via the summary_large_image card.
+  twitter: {
+    card: "summary_large_image",
+    title: "당신의 AI 모델은? · Which AI model are you?",
+    description: "14문항으로 알아보는 나의 빌더 유형 + 결과 맞춤 세션 추천.",
+  },
 };
 
 export default function QuizPage() {
