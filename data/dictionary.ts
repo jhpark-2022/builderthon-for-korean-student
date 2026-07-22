@@ -414,8 +414,8 @@ export const dict = {
     dates: { ko: "2026.08.22 – 08.29 · 8일", en: "22–29 Aug 2026 · 8 days" },
     location: { ko: "싱가포르 · *SCAPE L^IFE Jungle & AWS 오피스", en: "Singapore · *SCAPE L^IFE Jungle & AWS office" },
     blurb: {
-      ko: "싱가포르에서 공부하는 한국 학생 약 100명이 8일간, 실제 기업의 AI 전환(AX) 과제를 바이브 코딩으로 직접 풀어내는 AI 빌더톤. zero에서 MVP까지 — 데모로 끝나지 않는 ‘성공의 경험’을 남깁니다.",
-      en: "Around 100 Korean students in Singapore spend 8 days solving real companies' AI-transformation (AX) problems with vibe coding. From zero to MVP — a real success that goes beyond a demo.",
+      ko: "싱가포르에서 공부하는 한국 학생들이 8일간, 실제 기업의 AI 전환(AX) 과제를 바이브 코딩으로 직접 풀어내는 AI 빌더톤. 필참은 첫날과 마지막 날 이틀뿐 — 나머지는 각자 편한 시간·장소에서 팀별로 빌드합니다. zero에서 MVP까지, 데모로 끝나지 않는 ‘성공의 경험’을 남깁니다.",
+      en: "Korean students in Singapore spend 8 days solving real companies' AI-transformation (AX) problems with vibe coding. Only the first and last day are required — the rest your team builds whenever and wherever suits you. From zero to MVP, a real success that goes beyond a demo.",
     },
     ctaProgram: { ko: "8일의 여정 둘러보기", en: "Explore the 8-day journey" },
     ctaPartner: { ko: "파트너십 문의", en: "Partner with us" },
@@ -672,9 +672,14 @@ export const dict = {
   program: {
     tag: { ko: "Program", en: "Program" },
     heading: { ko: "8일, zero에서 MVP까지", en: "8 days, from zero to MVP" },
+    // Leads with what's REQUIRED, because the previous version led with the
+    // four in-person days and read as "block out all eight." Only Day 1 and
+    // Day 8 carry `mandatory: true` in data/schedule.ts — keep this in step with
+    // that flag. Everything between is either optional or self-paced, and saying
+    // so up front is what stops the programme looking like an 8-day lock-in.
     modeNote: {
-      ko: "대부분 온라인으로 진행되며, Day 1(오프닝·*SCAPE)·Day 5(오프라인 킥오프)·Day 7(파이널 리허설·AWS 오피스)·Day 8(데모데이)에 전원이 현장에 모입니다.",
-      en: "Mostly online — the whole cohort gathers in person on Day 1 (opening · *SCAPE), Day 5 (kickoff), Day 7 (final rehearsal · AWS office) and Day 8 (Demo Day).",
+      ko: "필참은 Day 1(오프닝)과 Day 8(데모데이) 둘뿐이에요. 그 사이는 대부분 온라인이고, 자율 빌드는 각자 편한 시간·장소에서 팀별로 이어갑니다 — 8일 내내 붙어 있어야 하는 일정이 아닙니다. Day 5(오프라인 킥오프)·Day 7(파이널 리허설·AWS 오피스)은 현장에 모이지만 필참은 아니에요.",
+      en: "Only two days are required: Day 1 (opening) and Day 8 (Demo Day). Everything in between is mostly online, and the self-paced build happens whenever and wherever works for your team — this is not eight days you have to block out. Day 5 (kickoff) and Day 7 (final rehearsal · AWS office) meet in person too, but attendance isn't required.",
     },
     legendTitle: { ko: "카테고리", en: "Legend" },
     dayLabel: { ko: "Day", en: "Day" },
