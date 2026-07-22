@@ -56,13 +56,15 @@ LO, HI = 40, 110  # colour-distance → alpha ramp, for the "color" mode
 JOBS = [
     ("life_logo.png", "life.png", "dark"),
     ("싱가포르 한인회.jpg", "korean-association.png", "color"),
-    # Onword Lab ships two marks. The wide "⊃ ONWORD LAB" lockup spells the name
-    # out, but at 5.2:1 the equal-area rule sizes it to ~16px in the hero strip
-    # and the width cap letterboxes it smaller still. The square glyph is chosen
-    # instead: at 1:1 it reaches the 26px ceiling, so it holds its own beside the
-    # other marks. The trade is that neither placement says "Onword Lab" —
-    # accepted deliberately (the alt text and the intro modal still name it).
-    ("onwordlab_logo.jpeg", "onword.png", "light"),
+    # Onword Lab: the wide "⊃ ONWORD LAB" lockup, NOT the square ">." glyph —
+    # the glyph alone names nothing.
+    #
+    # NOTE THE OUTPUT FILENAME. This shipped as `onword.png` twice with different
+    # artwork inside, and browsers and the CDN kept serving the first version:
+    # the change was invisible on the live site for a whole round of review, and
+    # the logo got "fixed" a second time on the strength of a stale image. Any
+    # future ARTWORK swap must land on a NEW filename for the same reason.
+    ("onword new logo.png", "onword-lab.png", "alpha"),
 ]
 
 
