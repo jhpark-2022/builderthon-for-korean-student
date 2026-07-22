@@ -75,6 +75,19 @@ function clientIp(req: Request): string {
   return req.headers.get("x-real-ip")?.trim() || "unknown";
 }
 
+/**
+ * Name/email pairs straight off an unvalidated body, for the honeypot log only.
+ * Deliberately tolerant: the whole point is to describe a submission we are
+ * about to throw away, so it must not throw on a malformed payload.
+ */
+function rawMembersPreview(body: Json): { name: string; email: string }[] | null {
+  if (!Array.isArray(body.members)) return null;
+  return body.members.slice(0, MAX_MEMBERS).map((m) => {
+    const src = (m ?? {}) as Json;
+    return { name: str(src.name), email: str(src.email) };
+  });
+}
+
 const sinceIso = (minutes: number) =>
   new Date(Date.now() - minutes * 60_000).toISOString();
 
@@ -96,16 +109,27 @@ export async function POST(req: Request) {
   }
 
   // ── Honeypot ───────────────────────────────────────────────────────────────
-  // `website` is rendered off-screen with tabIndex={-1} and aria-hidden, so no
-  // human — sighted, keyboard-only or using a screen reader — is offered it.
-  // Anything in it came from a form-filling script.
+  // `url_confirm` is rendered off-screen with tabIndex={-1} and aria-hidden, so
+  // no human is offered it. Anything in it came from a form-filling script —
+  // or, the case we actually have to plan for, an over-eager password manager.
   //
   // The response is a NORMAL-LOOKING 201 with a random id. Returning 400 would
   // tell the author exactly which field tripped them, and they'd remove it and
   // retry within the hour; a silent accept costs them nothing to keep sending
   // and us nothing to keep discarding.
-  if (str(body.website)) {
-    console.warn("[register] honeypot tripped — discarding submission");
+  //
+  // BUT that same silence is dangerous for a false positive: the visitor sees
+  // "등록 완료" and never appears on the list. So log enough to tell the two
+  // apart and to reach the person if it was real. Yes, this puts a name and an
+  // email in the server log — that is the point. Casino-spam is obvious at a
+  // glance; a Korean name with an .edu address is a student to go and re-register
+  // by hand. Without this the mistake is undetectable AND unrecoverable.
+  const honeypot = str(body.url_confirm);
+  if (honeypot) {
+    const who = (rawMembersPreview(body) ?? []).map((m) => `${m.name} <${m.email}>`).join(", ");
+    console.warn(
+      `[register] honeypot tripped — discarded. field=${JSON.stringify(honeypot.slice(0, 120))} submitter=${who || "(no member data)"}`
+    );
     return NextResponse.json({ ok: true, id: crypto.randomUUID() }, { status: 201 });
   }
 

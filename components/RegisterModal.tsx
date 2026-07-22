@@ -498,7 +498,7 @@ export default function RegisterModal({
       ref: urlRef ?? null,
       submittedAt: new Date().toISOString(),
       // Empty for every real submitter; the server discards anything else.
-      website,
+      url_confirm: website,
     };
 
     // A failed write must NOT show the success state — the registration would be
@@ -719,21 +719,35 @@ export default function RegisterModal({
                         POSITIONING rather than display:none or type="hidden":
                         both of those are trivially detected by form-fillers,
                         and this has to look like a real input to be worth
-                        taking. Everything that would expose it to a person is
-                        switched off — out of tab order, hidden from the
-                        accessibility tree, and excluded from autofill so a
-                        password manager can't put a URL in it and get a real
-                        visitor silently discarded.
+                        taking. Out of tab order and hidden from the
+                        accessibility tree, so no human — sighted, keyboard-only
+                        or using a screen reader — is ever offered it.
                         Deliberately absent from goToQuiz()'s draft, so a quiz
-                        round-trip can never restore a value into it. */}
+                        round-trip can never restore a value into it.
+
+                        THE FAILURE MODE THAT MATTERS is not a bot getting
+                        through — it's a password manager auto-filling this and
+                        a REAL student being silently discarded while the screen
+                        says "등록 완료". Three defences, because autoComplete
+                        alone is routinely ignored by extensions:
+                          • the name is not a field autofill profiles target
+                            (it was `website`, which fill-a-profile extensions
+                            do treat as a URL slot),
+                          • explicit opt-outs for the managers that publish one,
+                          • and the server logs what it discarded, so a false
+                            positive is at least recoverable by hand. */}
                     <input
                       type="text"
-                      name="website"
+                      name="url_confirm"
                       value={website}
                       onChange={(e) => setWebsite(e.target.value)}
                       tabIndex={-1}
                       aria-hidden="true"
                       autoComplete="off"
+                      data-1p-ignore
+                      data-lpignore="true"
+                      data-bwignore
+                      data-form-type="other"
                       style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
                     />
                     {isTeam && (
