@@ -698,11 +698,24 @@ export const dict = {
     // Replaces the "N 세션" count on a day whose events are ALL self-paced —
     // counting sessions on a day with no sessions is the same misread again.
     selfPacedDay: { ko: "자율 진행", en: "Self-paced" },
+    // Replaces the whole session card for self-paced build. Non-interactive on
+    // purpose — there is nothing to open, because there is nothing to attend.
+    selfPacedNote: {
+      ko: "정해진 세션 없이, 팀별로 편한 시간에 빌드를 이어갑니다 — 출석·접속 없음",
+      en: "No scheduled session — teams just keep building whenever suits them. Nothing to attend or join.",
+    },
+    // A day whose only entries are self-paced: there is no session to count.
+    noSessions: { ko: "정해진 세션 없음", en: "No scheduled sessions" },
     pendingLabel: { ko: "현장 (미정)", en: "On-site (TBC)" },
     // 1:1 mentoring is arranged mentor by mentor — some meet at NUS in person,
     // others take it online. Neither plain badge is true for everyone.
     byMentorLabel: { ko: "대면·온라인 (멘토별)", en: "In person / online (by mentor)" },
     sessions: { ko: "세션", en: "sessions" },
+    // English needs the singular for a one-session day. Korean has no plural, so
+    // both forms are identical there — kept as a pair rather than a special case
+    // in the component. (Only reachable since self-paced build stopped being
+    // counted; before that no day was down to one.)
+    session: { ko: "세션", en: "session" },
     swipeHint: {
       ko: "카드를 눌러 하루 일정을 펼쳐보세요",
       en: "Tap a day card to see its sessions",

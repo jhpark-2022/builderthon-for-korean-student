@@ -468,18 +468,34 @@ function HeroLaunchPanel({ t, reduce }: { t: Tfn; reduce: boolean }) {
   );
 }
 
-// Self-paced events have no start time and nothing to join, so the online /
-// in-person axis simply doesn't apply to them. Category is the source of truth
-// (not `mode`, which the data still needs for other reasons) — see
-// dict.program.selfPacedLabel.
-const isSelfPaced = (ev: BEvent) => ev.category === "build";
-// A whole day of nothing but self-paced build: no sessions to count, no mode to
-// report. Day 6 was showing "온라인 · 1 세션", which is precisely the
-// "log in at the scheduled hour" reading this change removes.
-const dayIsSelfPaced = (dayNum: number) => {
-  const evs = schedule.filter((e) => e.day === dayNum);
-  return evs.length > 0 && evs.every(isSelfPaced);
-};
+// Self-paced build is not a session: no start time, nowhere to be, nothing to
+// attend. Read off the explicit data flag rather than category === "build",
+// because that category ALSO holds the Day 5 Quickathon, which is a scheduled
+// 4-hour on-site track. See BEvent.selfPaced.
+const isSelfPaced = (ev: BEvent) => ev.selfPaced === true;
+// Everything on this day a participant actually has to show up for.
+const realSessions = (dayNum: number) =>
+  schedule.filter((e) => e.day === dayNum && !isSelfPaced(e));
+const dayHasSelfPaced = (dayNum: number) =>
+  schedule.some((e) => e.day === dayNum && isSelfPaced(e));
+// A day with NO real sessions (Day 6): nothing to count, and no online /
+// in-person mode to report either.
+const dayIsSelfPaced = (dayNum: number) =>
+  dayHasSelfPaced(dayNum) && realSessions(dayNum).length === 0;
+
+// Self-paced build as a quiet, NON-INTERACTIVE line — no badge, no
+// "자세히 보기", nothing to click. Rendered as a session card it read as one
+// more thing to turn up for, and on an 8-day programme that is what tips
+// "exciting" into "exhausting". There is nothing to open because there is
+// nothing to attend.
+function SelfPacedNote({ t }: { t: Tfn }) {
+  return (
+    <p className="flex items-start gap-2 rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-3.5 py-3 text-xs leading-relaxed text-white/45">
+      <span aria-hidden className="mt-[1px] text-white/25">◇</span>
+      {t(dict.program.selfPacedNote)}
+    </p>
+  );
+}
 
 // A single program event card. Shared by the desktop column grid and the mobile
 // day accordion so both stay in sync. Height is only fixed on desktop (xl) to
@@ -569,7 +585,7 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
 // One clean summary card per day (deck-style). Opens the day detail modal on
 // click rather than exploding every session inline — keeps the arc scannable.
 function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number) => void }) {
-  const evCount = schedule.filter((e) => e.day === day.day).length;
+  const evCount = realSessions(day.day).length;
   const allSelfPaced = dayIsSelfPaced(day.day);
   return (
     <button
@@ -595,9 +611,9 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
       <h4 className="mt-3 text-[15px] font-bold leading-snug text-white">{t(day.theme)}</h4>
       <p className="mt-1.5 text-[13px] leading-relaxed text-white/65">{t(day.summary)}</p>
       <span className="mt-auto pt-4 text-xs font-semibold text-violet-300/60 transition group-hover:text-violet-300">
-        {allSelfPaced
-          ? t(dict.program.selfPacedDay)
-          : `${evCount} ${t(dict.program.sessions)}`}{" "}
+        {evCount === 0
+          ? t(dict.program.noSessions)
+          : `${evCount} ${t(evCount === 1 ? dict.program.session : dict.program.sessions)}`}{" "}
         · {t(dict.program.tapHint)} →
       </span>
     </button>
@@ -701,7 +717,7 @@ function DayModal({
 
   if (!mounted) return null;
   const day = dayNum != null ? days.find((d) => d.day === dayNum) : null;
-  const evs = day ? schedule.filter((e) => e.day === day.day) : [];
+  const evs = day ? realSessions(day.day) : [];
 
   return createPortal(
     <AnimatePresence>
@@ -758,6 +774,7 @@ function DayModal({
                 {evs.map((ev) => (
                   <EventCard key={ev.id} ev={ev} t={t} onSelect={onSelectEvent} />
                 ))}
+                {day && dayHasSelfPaced(day.day) && <SelfPacedNote t={t} />}
               </div>
             </div>
           </motion.div>

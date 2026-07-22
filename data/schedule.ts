@@ -56,6 +56,16 @@ export interface BEvent {
   speaker?: Bilingual;
   location?: Bilingual;
   confirmed?: boolean; // show a "Confirmed / 확정" badge on the card
+  // NOT A SESSION. Self-paced build has no start time, no place to be and
+  // nothing to attend — teams just build when it suits them. Flagged explicitly
+  // rather than inferred from category === "build", because that category also
+  // holds the Day 5 Quickathon, which IS a scheduled 4h on-site track.
+  //
+  // The UI hides these from the session list entirely (see Journey.tsx): shown
+  // as a card with a "자세히 보기" link they read as one more thing to turn up
+  // for, which is the opposite of what they are and exactly what makes an
+  // 8-day programme look exhausting.
+  selfPaced?: boolean;
   // Optional: the company/org behind the session, shown in the modal with a
   // link out. Only add when the partner is real & confirmed (honest by default).
   org?: { name: string; desc: Bilingual; url: string };
@@ -443,6 +453,7 @@ export const schedule: BEvent[] = [
     day: 3,
     date: "08.24",
     category: "build",
+    selfPaced: true,
     mode: "online",
     timeOfDay: "AM",
     title: { ko: "자율 빌드", en: "Self-led Build" },
@@ -503,6 +514,7 @@ export const schedule: BEvent[] = [
     day: 4,
     date: "08.25",
     category: "build",
+    selfPaced: true,
     mode: "online",
     timeOfDay: "AM",
     title: { ko: "자율 빌드", en: "Self-led Build" },
@@ -637,6 +649,7 @@ export const schedule: BEvent[] = [
     day: 6,
     date: "08.27",
     category: "build",
+    selfPaced: true,
     mode: "online",
     timeOfDay: "AM",
     title: { ko: "오픈 빌드", en: "Open Build" },
