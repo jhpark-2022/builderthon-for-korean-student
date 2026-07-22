@@ -143,6 +143,11 @@ export const dict = {
     viewProgram: { ko: "프로그램 보기", en: "View Program" },
     register: { ko: "등록하기", en: "Register" },
     partner: { ko: "파트너십 문의", en: "Partner with us" },
+    // Nav open-chat entry. Present from first paint (unlike the register button,
+    // which is scroll-revealed): the whole point is to give someone who isn't
+    // ready to register a door that is already open when they land.
+    openChat: { ko: "오픈채팅", en: "Open Chat" },
+    openChatAria: { ko: "카카오톡 오픈채팅방 열기", en: "Open the KakaoTalk open chat" },
     // Brand suffix beside the Zero100 wordmark in the nav.
     brandSuffix: { ko: "빌더톤", en: "Builderthon" },
   },

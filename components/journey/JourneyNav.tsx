@@ -3,10 +3,12 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
 import { dict, links } from "@/data/dictionary";
 import { useRegister } from "@/lib/RegisterContext";
 import LocaleToggle from "@/components/LocaleToggle";
+import ChatGlyph from "@/components/ChatGlyph";
 
 const anchors = [
   { id: "about",    label: dict.nav.about },
@@ -88,18 +90,42 @@ export default function JourneyNav() {
             ))}
           </div>
         </div>
-        {/* RIGHT group — EN/KR toggle + Partner, with the register button
-            appearing as soon as the visitor scrolls off the hero. */}
+        {/* RIGHT group — open chat + EN/KR toggle, with the register button
+            appearing as soon as the visitor scrolls off the hero.
+ 
+            "파트너십 문의" USED TO LIVE HERE and was moved to the footer. This
+            bar is seen by every visitor on every screen, and the two audiences
+            want opposite things: a student wants a way in, a company wants an
+            email address. Spending the most valuable slot on the smaller
+            audience cost the larger one a door. Companies still reach it from
+            the footer CTA (a full pill, more prominent than this ever was) and
+            from the partner section. */}
         <div className="flex items-center gap-2.5 sm:gap-3">
-          <LocaleToggle />
-          {/* Demoted to a plain text link (no border/fill): registration is the
-              only top-level action in this bar, and a second pill next to it read
-              as an equal choice. Desktop-only — on phones the bottom sticky bar
-              carries registration, and the hero already shows a partnership CTA
-              below md. */}
-          <a href={links.partnership} className="hidden shrink-0 whitespace-nowrap px-1 text-sm font-medium text-white/60 underline-offset-4 transition hover:text-white/90 hover:underline md:inline-flex">
-            {t(dict.nav.partner)}
-          </a>
+          {/* Open chat — visible from first paint, NOT scroll-revealed. Someone
+              who lands and isn't ready to register should find the low-commitment
+              door immediately, not after proving they'll scroll.
+ 
+              Ghost/outline while unregistered so it stays a clear step below the
+              register pill. Once registered the roles swap: registration is done
+              ("등록 완료 ✓"), so the next real action is the chat, and this
+              becomes the filled control. See the registered branch below. */}
+          {links.openChat && (
+            <a
+              href={links.openChat}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t(dict.nav.openChatAria)}
+              onClick={() => track("openchat_click", { src: "nav" })}
+              className={
+                registered
+                  ? "hidden shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(124,92,255,0.6)] lg:inline-flex"
+                  : "hidden shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-white/75 transition hover:border-white/35 hover:bg-white/10 hover:text-white lg:inline-flex"
+              }
+            >
+              <ChatGlyph className="h-4 w-4" />
+              {t(dict.nav.openChat)}
+            </a>
+          )}
           {/* Scroll-revealed register CTA — fades/slides in once the hero is
               scrolled past, then persists. Opens the shared register modal. */}
           <AnimatePresence>
@@ -111,15 +137,28 @@ export default function JourneyNav() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={reduce ? undefined : { opacity: 0, x: 12 }}
                 transition={{ duration: reduce ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
-                // The bar's single top-level action: gradient fill + a soft violet
-                // glow so it outranks every other element in the nav. Slightly
-                // tighter padding below sm so it still fits beside the brand.
-                className="inline-flex shrink-0 items-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-3.5 py-2 text-xs font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(124,92,255,0.6)] sm:px-5 sm:py-2.5 sm:text-sm"
+                // Unregistered: the bar's single top-level action — gradient fill
+                // + soft violet glow so it outranks everything else here.
+                //
+                // Registered: it stops being an action and becomes a STATUS.
+                // Promoting open chat while leaving this a matching violet pill
+                // produced two identical primaries and swapped nothing, so this
+                // recedes to a quiet outline. It stays clickable (it opens the
+                // "how do I change my details" panel) — it just no longer claims
+                // to be the thing to do next.
+                className={
+                  registered
+                    ? "inline-flex shrink-0 items-center rounded-full border border-emerald-400/30 bg-emerald-400/[0.08] px-3.5 py-2 text-xs font-semibold text-emerald-200/90 transition hover:bg-emerald-400/15 sm:px-5 sm:py-2.5 sm:text-sm"
+                    : "inline-flex shrink-0 items-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-3.5 py-2 text-xs font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(124,92,255,0.6)] sm:px-5 sm:py-2.5 sm:text-sm"
+                }
               >
                 {registered ? t(dict.register.navRegistered) : t(dict.nav.register)}
               </motion.button>
             )}
           </AnimatePresence>
+          {/* Language last — it's a setting, not an action, so it sits after
+              both CTAs rather than between the brand and them. */}
+          <LocaleToggle />
         </div>
       </nav>
     </header>

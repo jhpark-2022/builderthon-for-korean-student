@@ -19,6 +19,7 @@ import Chapter from "./Chapter";
 import EventModal from "@/components/EventModal";
 import PartnerModal, { type PartnerInfo } from "@/components/PartnerModal";
 import ReturningGreeting from "./ReturningGreeting";
+import ChatGlyph from "@/components/ChatGlyph";
 import { loadOwnResult } from "@/lib/quizResult";
 import { parseResultId } from "@/lib/quizScore";
 import { RESULTS } from "@/data/quiz";
@@ -169,7 +170,7 @@ function OpenChatLink({
   className = "",
 }: {
   t: Tfn;
-  src: "hero" | "band" | "footer";
+  src: "band" | "footer";
   className?: string;
 }) {
   if (!links.openChat) return null;
@@ -199,7 +200,10 @@ function HookCards({
   openRegister: (preset?: RegisterPreset) => void;
   className?: string;
   // Which placement this instance is, for the open-chat link's funnel tag.
-  chatSrc: "hero" | "band";
+  // `null` renders no open-chat link at all — used by the hero, where the nav
+  // now carries a permanent open-chat button in the same viewport and a second
+  // link two hundred pixels below it was the same offer twice.
+  chatSrc: "band" | null;
 }) {
   // "조급한 Mistral" for a visitor who already took the test. Derived from the
   // same saved id the CTA links to, so the greeting can never name a different
@@ -265,10 +269,13 @@ function HookCards({
           )}
         </div>
       </div>
-      {/* Third CTA — under both cards, quieter than either. */}
-      <div className="mt-3 text-center">
-        <OpenChatLink t={t} src={chatSrc} />
-      </div>
+      {/* Third CTA — under both cards, quieter than either. Absent in the hero:
+          the nav's open-chat button is already on screen there. */}
+      {chatSrc && (
+        <div className="mt-3 text-center">
+          <OpenChatLink t={t} src={chatSrc} />
+        </div>
+      )}
     </div>
   );
 }
@@ -1149,13 +1156,44 @@ function MobileRegisterBar() {
           className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#06040f]/90 px-4 pr-20 pt-3 backdrop-blur lg:hidden"
           style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
         >
-          <button
-            type="button"
-            onClick={() => openRegister()}
-            className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition active:scale-[0.99]"
-          >
-            {registered ? t(dict.register.navRegistered) : t(dict.nav.register)}
-          </button>
+          {/* Register keeps the full remaining width (flex-1); the chat icon is
+              a fixed 48px square beside it, so adding it costs the primary CTA
+              nothing but its own width. The row still sits inside pr-20, which
+              is what keeps both clear of the ScrollToTop button. */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => openRegister()}
+              // Same role swap as the nav: once registered this is a status,
+              // not the next action, so the chat icon beside it carries the fill.
+              className={
+                registered
+                  ? "inline-flex flex-1 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/[0.08] px-5 py-3 text-sm font-semibold text-emerald-200/90 transition active:scale-[0.99]"
+                  : "inline-flex flex-1 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition active:scale-[0.99]"
+              }
+            >
+              {registered ? t(dict.register.navRegistered) : t(dict.nav.register)}
+            </button>
+            {/* Icon-only, so aria-label is the ONLY name a screen reader gets —
+                it is not optional here. Promoted to the violet fill once
+                registered, matching the nav's role swap. */}
+            {links.openChat && (
+              <a
+                href={links.openChat}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={t(dict.nav.openChatAria)}
+                onClick={() => track("openchat_click", { src: "mobile-bar" })}
+                className={
+                  registered
+                    ? "inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition active:scale-95"
+                    : "inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white/75 transition active:scale-95"
+                }
+              >
+                <ChatGlyph className="h-5 w-5" />
+              </a>
+            )}
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
@@ -1347,9 +1385,14 @@ export default function Journey() {
                 {t(dict.hero.ctaProgram)}
                 <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
               </a>
-              {/* Mirrors the nav's "Partner with us" CTA, which is hidden below md.
-                  Shown here only below md so it never disappears, and hidden at md+
-                  to avoid duplicating the visible nav button. */}
+              {/* This used to mirror a "파트너십 문의" button in the nav, hidden at
+                  md+ to avoid duplicating it. That nav button is gone (the slot
+                  went to open chat — see JourneyNav), so nothing is duplicated
+                  any more and the md:hidden gate is now the only reason a
+                  desktop visitor doesn't see a partnership CTA above the fold.
+                  Kept as-is deliberately: the nav's audience was moved to
+                  students on purpose, and the footer carries a full partnership
+                  pill for companies. Drop `md:hidden` if that ever needs undoing. */}
               <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10 sm:px-8 sm:py-4 sm:text-base md:hidden">
                 {t(dict.hero.ctaPartner)}
               </a>
@@ -1360,7 +1403,7 @@ export default function Journey() {
               ownResultId={ownResultId}
               openRegister={openRegister}
               className="mx-auto mt-5 max-w-xl lg:mx-0"
-              chatSrc="hero"
+              chatSrc={null}
             />
           </motion.div>
 
