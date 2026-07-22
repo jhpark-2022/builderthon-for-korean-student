@@ -9,6 +9,7 @@ import { dict, links } from "@/data/dictionary";
 import { useRegister } from "@/lib/RegisterContext";
 import LocaleToggle from "@/components/LocaleToggle";
 import ChatGlyph from "@/components/ChatGlyph";
+import ReturningGreeting from "./ReturningGreeting";
 
 const anchors = [
   { id: "about",    label: dict.nav.about },
@@ -101,6 +102,13 @@ export default function JourneyNav() {
             the footer CTA (a full pill, more prominent than this ever was) and
             from the partner section. */}
         <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* Returning quiz-taker greeting — sits to the LEFT of open chat.
+              Compact single-line pill; renders nothing for first-time visitors.
+              lg-only, matching the open-chat button, so the mobile bar stays
+              uncluttered. */}
+          <span className="hidden xl:inline-flex">
+            <ReturningGreeting compact />
+          </span>
           {/* Open chat — visible from first paint, NOT scroll-revealed. Someone
               who lands and isn't ready to register should find the low-commitment
               door immediately, not after proving they'll scroll.

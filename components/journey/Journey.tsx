@@ -18,7 +18,6 @@ import {
 import Chapter from "./Chapter";
 import EventModal from "@/components/EventModal";
 import PartnerModal, { type PartnerInfo } from "@/components/PartnerModal";
-import ReturningGreeting from "./ReturningGreeting";
 import ChatGlyph from "@/components/ChatGlyph";
 import { loadOwnResult } from "@/lib/quizResult";
 import { parseResultId } from "@/lib/quizScore";
@@ -194,6 +193,7 @@ function HookCards({
   openRegister,
   className = "",
   chatSrc,
+  stacked = false,
 }: {
   t: Tfn;
   ownResultId: string | null;
@@ -204,6 +204,9 @@ function HookCards({
   // now carries a permanent open-chat button in the same viewport and a second
   // link two hundred pixels below it was the same offer twice.
   chatSrc: "band" | null;
+  // Force a single vertical column (no 2-up grid) — used in the hero's narrow
+  // right column, where two cards side by side would be too cramped.
+  stacked?: boolean;
 }) {
   // "조급한 Mistral" for a visitor who already took the test. Derived from the
   // same saved id the CTA links to, so the greeting can never name a different
@@ -217,7 +220,7 @@ function HookCards({
 
   return (
     <div className={className}>
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className={`grid gap-3 ${stacked ? "" : "sm:grid-cols-2"}`}>
         {/* The WHOLE card is the button — the CTA used to be a text link inside a
             dead card, so the obvious tap target (the card) did nothing. One
             <button> keeps it a single tab stop and rules out nested interactives;
@@ -230,7 +233,7 @@ function HookCards({
           <p className="text-xs font-medium text-white/60">{t(dict.register.hookRegisterQ)}</p>
           {/* Same gradient + glow as the nav register button, so the primary
               action looks identical wherever it appears. */}
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition group-hover:-translate-y-0.5 group-hover:shadow-[0_0_28px_rgba(124,92,255,0.6)]">
+          <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition group-hover:-translate-y-0.5 group-hover:shadow-[0_0_28px_rgba(124,92,255,0.6)]">
             {t(dict.register.hookRegisterCta)}
             {/* Effort estimate as a chip rather than words in the label — the
                 label is already the longest thing in the card, and "3분" reads
@@ -345,17 +348,17 @@ function CountdownView({ t }: { t: Tfn }) {
         {t(dict.hero.countdownEyebrow)}
         <span className="text-white/40">· {t(dict.hero.countdownLive)}</span>
       </p>
-      <div className="grid grid-cols-4 gap-2 sm:gap-4">
+      <div className="mx-auto grid w-fit grid-cols-4 gap-1.5 sm:gap-2.5">
         {units.map((u, i) => (
           <div
             key={u.label}
-            className="rounded-2xl border border-white/10 bg-white/[0.04] px-2 py-4 sm:px-3 sm:py-6"
+            className="w-14 rounded-xl border border-white/10 bg-white/[0.04] px-1.5 py-2.5 sm:w-16 sm:px-2 sm:py-3.5"
           >
-            <div className="bg-gradient-to-b from-white to-white/60 bg-clip-text font-black tabular-nums text-transparent text-[clamp(1.8rem,7vw,3.25rem)] leading-none">
+            <div className="bg-gradient-to-b from-white to-white/60 bg-clip-text font-black tabular-nums text-transparent text-[clamp(1.4rem,5vw,2.25rem)] leading-none">
               {/* 첫 칸(days)은 자릿수 그대로, 나머지는 2자리 고정 */}
               {ready ? (i === 0 ? u.v : pad(u.v)) : "—"}
             </div>
-            <div className="mt-2 text-[0.65rem] uppercase tracking-[0.2em] text-white/50 sm:text-xs">
+            <div className="mt-1.5 text-[0.6rem] uppercase tracking-[0.2em] text-white/50 sm:text-[0.65rem]">
               {u.label}
             </div>
           </div>
@@ -987,12 +990,12 @@ function StripLogo({ src, alt, w, h }: StripLogoSpec) {
       fetchPriority="low"
       decoding="async"
       title={alt}
-      style={{ height: opticalHeight(w, h, 2600, 22, 38) }}
+      style={{ height: opticalHeight(w, h, 820, 12, 19) }}
       // The marks are white silhouettes and the hero video runs bright behind
       // them on phones, where the strip sits over the figure — a plain opacity
       // knock-back made them vanish there. The dark drop-shadow keeps them
       // legible on both the dark desktop area and the bright mobile band.
-      className="w-auto max-w-[10rem] shrink-0 object-contain opacity-70 grayscale drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)] transition duration-300 group-hover:opacity-95"
+      className="w-auto max-w-[6.5rem] shrink-0 object-contain opacity-50 grayscale drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)] transition duration-300 group-hover:opacity-80"
     />
   );
 }
@@ -1055,11 +1058,9 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
   useEffect(() => setLooped(true), []);
 
   return (
-    <a
-      href="#builders"
-      aria-label={t(dict.hero.partnersAria)}
-      className="group mt-6 block w-full rounded-2xl py-2 sm:mt-7"
-    >
+    // Non-clickable: kept the `group` wrapper so the hover highlight still plays,
+    // but it's a div (not a link) so the strip no longer jumps to #builders.
+    <div className="group mt-4 block w-full rounded-2xl py-1.5 sm:mt-5">
       <p className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-white/55 drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)] transition group-hover:text-white/80">
         {t(dict.hero.partnersLabel)}
       </p>
@@ -1080,11 +1081,11 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
       {/* Gaps are deliberately tight: stacking three tiers and enlarging the
           marks already added ~160px to a hero that overflows a laptop viewport,
           so every row here is spaced to the minimum that still separates them. */}
-      <div className={`mt-3 flex-col items-center gap-3 sm:flex ${reduce ? "flex" : "hidden"}`}>
+      <div className={`mt-2.5 flex-col items-center gap-2 sm:flex ${reduce ? "flex" : "hidden"}`}>
         {confirmedPartnerTiers.map((tier) => (
-          <div key={tier.label.en} className="flex flex-col items-center gap-1.5">
+          <div key={tier.label.en} className="flex flex-col items-center gap-1">
             <StripTierLabel>{t(tier.label)}</StripTierLabel>
-            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1.5">
               {tier.items.map((p) => (
                 <StripLogo key={p.alt} {...p} />
               ))}
@@ -1109,7 +1110,7 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
           ))}
         </div>
       </div>
-    </a>
+    </div>
   );
 }
 
@@ -1151,9 +1152,9 @@ function MobileRegisterBar() {
           exit={reduce ? undefined : { opacity: 0, y: 24 }}
           transition={{ duration: reduce ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
           // z-40 keeps it under the ScrollToTop button (z-50), which is offset
-          // upward on this breakpoint so the two never collide. pr-20 reserves
-          // the bottom-right corner the round button sits in.
-          className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#06040f]/90 px-4 pr-20 pt-3 backdrop-blur lg:hidden"
+          // ~5.25rem UP on this breakpoint (a vertical band above the bar), so
+          // the bar can use the full screen width — no right-side reservation.
+          className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#06040f]/90 px-4 pt-3 backdrop-blur lg:hidden"
           style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
         >
           {/* Register keeps the full remaining width (flex-1); the chat icon is
@@ -1353,9 +1354,9 @@ export default function Journey() {
           {/* LEFT — headline, meta, blurb, CTAs. Centred on mobile, left-aligned
               and pushed to the left edge from lg up. */}
           <motion.div style={{ x: splitX ? leftX : undefined, opacity: heroFade }} className="text-center lg:pl-10 lg:text-left xl:pl-16">
-            {/* Greets a returning quiz-taker by their AI-model type; renders
-                nothing for everyone else (hydration-safe, see the component). */}
-            <ReturningGreeting />
+            {/* The returning-quiz-taker greeting lives only in the nav now
+                (compact, desktop-only), so there's no hero greeting — it stays
+                off mobile entirely and never shows twice on desktop. */}
             <div className="mt-10 sm:mt-12 lg:mt-0">
               {/* Smaller on phones so the long eyebrow line doesn't crowd the
                   narrow column; back to the default size from sm up. */}
@@ -1398,22 +1399,39 @@ export default function Journey() {
               </a>
             </div>
 
+            {/* Mobile only — the hook cards sit in the stacked hero below the
+                CTAs. On lg+ they move to the right column, above the countdown
+                (see below), so this copy is hidden there to avoid duplication. */}
             <HookCards
               t={t}
               ownResultId={ownResultId}
               openRegister={openRegister}
-              className="mx-auto mt-5 max-w-xl lg:mx-0"
+              className="mx-auto mt-5 max-w-xl lg:hidden"
               chatSrc={null}
             />
           </motion.div>
 
-          {/* RIGHT — Countdown ↔ Problem Statement 전환 슬롯, pushed to the right edge.
-              Slides right (opposite the left column) as the hero scrolls out.
-              Desktop only: on mobile this panel is pulled out into its own
-              section below the hero (see #launch), so the stacked hero doesn't
-              get too tall / the panel doesn't get buried under the fade. */}
+          {/* RIGHT — hook cards ABOVE the Countdown ↔ Problem Statement panel,
+              pushed to the right edge. Slides right (opposite the left column) as
+              the hero scrolls out. Desktop only: on mobile these are pulled out
+              (hook cards into the left stack above; the panel into #launch below)
+              so the stacked hero doesn't get too tall / buried under the fade. */}
           <motion.div style={{ x: splitX ? rightX : undefined, opacity: heroFade }} className="hidden lg:block lg:pr-10 xl:pr-16">
-            <HeroLaunchPanel t={t} reduce={!!reduce} />
+            {/* One shared-width, right-aligned column: the hook cards and the
+                countdown/problem panel line up to the same max-width so the
+                stack reads as a single unit rather than mismatched widths. */}
+            <div className="ml-auto w-full max-w-sm">
+              {/* Stacked (not 2-up) in the narrower right column. */}
+              <HookCards
+                t={t}
+                ownResultId={ownResultId}
+                openRegister={openRegister}
+                className="mb-5"
+                chatSrc={null}
+                stacked
+              />
+              <HeroLaunchPanel t={t} reduce={!!reduce} />
+            </div>
           </motion.div>
         </div>
 

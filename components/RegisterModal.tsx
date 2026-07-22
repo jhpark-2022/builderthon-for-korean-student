@@ -75,19 +75,15 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_ADDITIONAL = 2;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Dropdown — a NATIVE <select>, styled to match the dark/violet system with
-// `appearance-none` + our own chevron.
+// Dropdown — a custom listbox so the OPEN menu matches the dark/violet system
+// (the native <select> popup renders on the OS layer, which doesn't match).
 //
-// This was a custom listbox (button + role="listbox" + roving focus) purely for
-// looks. That reimplements, imperfectly, what the platform already gives away:
-// mobile OS pickers, type-ahead, screen-reader semantics every AT already knows,
-// and form autofill. The custom version also had no aria-activedescendant, so a
-// screen-reader user got no announcement of the highlighted option. The native
-// control gets all of it for free, and `appearance-none` keeps the styling — so
-// there's nothing left to trade off.
-//
-// Options render on the OS layer, so they need explicit colours: some platforms
-// draw the popup on white regardless of the trigger's styling.
+// Accessibility is handled properly (addressing the reason it was once reverted
+// to native): role=combobox trigger + role=listbox/option, aria-expanded,
+// aria-activedescendant announcing the highlighted option, full keyboard support
+// (Enter/Space/↓ open · ↑↓/Home/End navigate · type-ahead by first letter ·
+// Enter select · Esc close), and it closes cleanly on select. `...rest` (the
+// aria-invalid / aria-describedby that Field injects) is spread onto the trigger.
 // ─────────────────────────────────────────────────────────────────────────────
 interface SelectOption {
   value: string;
@@ -107,29 +103,101 @@ function SelectField({
   onChange: (v: string) => void;
   id?: string;
   // `rest` is how Field's cloneElement injects aria-invalid / aria-describedby.
-} & Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "value" | "onChange">) {
+  // Typed as the aria props it actually passes so it spreads onto the <button>.
+} & Pick<React.AriaAttributes, "aria-invalid" | "aria-describedby">) {
+  const reduce = useReducedMotion();
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(0);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const typeahead = useRef({ buf: "", at: 0 });
+  const listId = id ? `${id}-listbox` : undefined;
+  const optId = (i: number) => (id ? `${id}-opt-${i}` : undefined);
+
+  const selected = options.find((o) => o.value === value);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [open]);
+
+  const openMenu = () => {
+    const i = options.findIndex((o) => o.value === value);
+    setActive(i >= 0 ? i : 0);
+    setOpen(true);
+  };
+  const choose = (i: number) => {
+    onChange(options[i].value);
+    setOpen(false);
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    // Type-ahead: jump to the next option starting with the typed letter(s).
+    if (e.key.length === 1 && /\S/.test(e.key)) {
+      const now = Date.now();
+      const ta = typeahead.current;
+      ta.buf = now - ta.at > 700 ? e.key : ta.buf + e.key;
+      ta.at = now;
+      const q = ta.buf.toLowerCase();
+      const from = open ? active : options.findIndex((o) => o.value === value);
+      const n = options.length;
+      for (let k = 1; k <= n; k++) {
+        const idx = (Math.max(from, 0) + k) % n;
+        if (options[idx].label.toLowerCase().startsWith(q)) {
+          if (open) setActive(idx);
+          else onChange(options[idx].value);
+          break;
+        }
+      }
+      return;
+    }
+    if (!open) {
+      if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
+        e.preventDefault();
+        openMenu();
+      }
+      return;
+    }
+    switch (e.key) {
+      case "Escape": e.preventDefault(); setOpen(false); break;
+      case "ArrowDown": e.preventDefault(); setActive((i) => Math.min(i + 1, options.length - 1)); break;
+      case "ArrowUp": e.preventDefault(); setActive((i) => Math.max(i - 1, 0)); break;
+      case "Home": e.preventDefault(); setActive(0); break;
+      case "End": e.preventDefault(); setActive(options.length - 1); break;
+      case "Enter":
+      case " ": e.preventDefault(); choose(active); break;
+    }
+  };
+
   return (
-    <div className="relative">
-      <select
+    <div ref={wrapRef} className="relative">
+      <button
         {...rest}
+        type="button"
         id={id}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className={`${FIELD} cursor-pointer appearance-none pr-11 ${value ? "" : "text-white/35"}`}
+        role="combobox"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={listId}
+        aria-activedescendant={open ? optId(active) : undefined}
+        // Toggle on mousedown (same event as option selection) so a follow-up
+        // click can't land on the trigger and reopen the just-closed menu.
+        onMouseDown={(e) => {
+          e.preventDefault();
+          open ? setOpen(false) : openMenu();
+        }}
+        onKeyDown={onKeyDown}
+        className={`${FIELD} flex cursor-pointer items-center justify-between gap-2 pr-11 text-left ${selected ? "" : "text-white/35"}`}
       >
-        <option value="" disabled className="bg-[#0c0a18] text-white/50">
-          {placeholder}
-        </option>
-        {options.map((o) => (
-          <option key={o.value} value={o.value} className="bg-[#0c0a18] text-white">
-            {o.label}
-          </option>
-        ))}
-      </select>
+        <span className="truncate">{selected ? selected.label : placeholder}</span>
+      </button>
       <svg
         aria-hidden
         viewBox="0 0 24 24"
-        className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50"
+        className={`pointer-events-none absolute right-4 top-[1.35rem] h-4 w-4 -translate-y-1/2 text-white/50 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
@@ -138,6 +206,48 @@ function SelectField({
       >
         <path d="M6 9l6 6 6-6" />
       </svg>
+
+      <AnimatePresence>
+        {open && (
+          <motion.ul
+            id={listId}
+            role="listbox"
+            initial={reduce ? false : { opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? undefined : { opacity: 0, y: -6 }}
+            transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute z-20 mt-2 max-h-60 w-full overflow-auto rounded-xl border border-white/12 bg-[#0c0a18] p-1 shadow-[0_12px_40px_rgba(0,0,0,0.5)]"
+          >
+            {options.map((o, i) => {
+              const isSelected = o.value === value;
+              const isActive = i === active;
+              return (
+                <li
+                  key={o.value}
+                  id={optId(i)}
+                  role="option"
+                  aria-selected={isSelected}
+                  onMouseEnter={() => setActive(i)}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    choose(i);
+                  }}
+                  className={`flex cursor-pointer items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm transition ${
+                    isActive ? "bg-violet-500/20 text-white" : "text-white/80"
+                  }`}
+                >
+                  <span className="truncate">{o.label}</span>
+                  {isSelected && (
+                    <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-violet-300" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </li>
+              );
+            })}
+          </motion.ul>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -45,7 +45,7 @@ function GreetingGlyph({ logo, emoji, model }: { logo: string; emoji: string; mo
   );
 }
 
-export default function ReturningGreeting() {
+export default function ReturningGreeting({ compact = false }: { compact?: boolean }) {
   const { t, locale } = useLocale();
   const reduce = useReducedMotion();
   const [own, setOwn] = useState<OwnResult | null>(null);
@@ -64,6 +64,28 @@ export default function ReturningGreeting() {
   const lead =
     locale === "ko" ? `안녕하세요, ${variantName}님 👋` : `Welcome back, ${variantName} 👋`;
   const sub = locale === "ko" ? "다시 보러 가기 →" : "See it again →";
+
+  // Compact variant — a single-line pill sized for the top nav bar. Same link
+  // and glyph, but the "다시 보러 가기" sub-line is dropped and the name shows
+  // just the type ("조급한 Mistral님"), so it fits inline beside the nav buttons.
+  if (compact) {
+    const nameOnly =
+      locale === "ko" ? `${variantName}님` : variantName;
+    return (
+      <a
+        href={`/quiz?r=${own.resultId}`}
+        title={sub}
+        className="group inline-flex shrink-0 items-center gap-2 rounded-full border border-violet-400/30 bg-violet-400/10 py-1.5 pl-2 pr-3.5 transition hover:border-violet-400/50 hover:bg-violet-400/15"
+      >
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/[0.06]">
+          <GreetingGlyph logo={data.logo} emoji={data.emoji} model={data.model} />
+        </span>
+        <span className="whitespace-nowrap text-sm font-semibold text-white">
+          {nameOnly} <span aria-hidden className="text-violet-200/80 transition group-hover:text-violet-100">👋</span>
+        </span>
+      </a>
+    );
+  }
 
   return (
     <motion.div
