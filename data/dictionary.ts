@@ -325,6 +325,12 @@ export const dict = {
     partnersLabel: { ko: "확정 파트너 · CONFIRMED PARTNERS", en: "Confirmed Partners" },
     // Accessible name for the strip, which links to the full partner section.
     partnersAria: { ko: "확정 파트너 전체 보기", en: "See all confirmed partners" },
+    // Tier captions inside the strip. Deliberately shorter than the partner
+    // section's own labels ("주최 · HOST", "주관 · 운영", "후원 · SPONSORS") —
+    // at 0.55rem in a hairline band the full forms crowd out the logos.
+    partnersHost: { ko: "주최", en: "Host" },
+    partnersOrganizers: { ko: "주관", en: "Organizers" },
+    partnersSponsors: { ko: "후원", en: "Sponsors" },
     statParticipants: { ko: "한인 학생", en: "Korean students" },
     statDays: { ko: "일간의 빌드", en: "days of building" },
     statLanguage: { ko: "실전 AX 과제", en: "real AX problems" },

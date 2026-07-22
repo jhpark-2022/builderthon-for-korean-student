@@ -822,37 +822,61 @@ function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
 // HERO CONFIRMED-PARTNER STRIP — the deck cover's "CONFIRMED PARTNERS" band.
 //
 // HONESTY RULE (same as the partner wall): only partners whose participation is
-// CONFIRMED may appear here — the AXMOS host collective plus the confirmed
-// sponsor row. Anything in discussion, and the Zero100 network marquee (those
-// are network companions, not partners of this event), stays out. The student
-// associations are organizers, not partners, so they're covered by the partner
-// section instead of this strip.
+// CONFIRMED may appear here. The Zero100 network marquee stays out — those are
+// network companions, not partners of this event — as does anything still in
+// discussion.
+//
+// STRUCTURE: the strip mirrors the partner section's own 주최 → 주관 → 후원
+// tiering rather than dumping every mark into one anonymous row, so the hero
+// answers "who is running this" and "who is backing it" as separate questions —
+// which is the whole point of showing logos this early.
 //
 // Assets are the same trimmed white silhouettes the partner wall uses — no new
 // files. They're above the fold, so they load eagerly (never lazily).
 // ─────────────────────────────────────────────────────────────────────────────
-const confirmedPartners: { src: string; alt: string; w: number; h: number }[] = [
-  // 주최 · HOST (AXMOS)
-  { src: "/partners/logos/white/trimmed/translink.png",    alt: "Translink Investment",           w: 330, h: 91 },
-  { src: "/partners/logos/white/trimmed/wilt.png",         alt: "Wilt Venture Builder",           w: 309, h: 148 },
-  { src: "/partners/logos/white/trimmed/codepresso.png",   alt: "Codepresso",                     w: 456, h: 91 },
-  { src: "/partners/logos/white/trimmed/drimaes.png",      alt: "Drimaes",                        w: 332, h: 50 },
-  { src: "/partners/logos/white/trimmed/popup-studio.png", alt: "Popup Studio",                   w: 512, h: 245 },
-  // 후원 · CONFIRMED SPONSORS
-  { src: "/partners/logos/white/trimmed/aws.png",                alt: "AWS",                            w: 512, h: 306 },
-  { src: "/partners/logos/white/trimmed/innovate360.png",        alt: "INNOVATE 360",                   w: 455, h: 54 },
-  { src: "/partners/logos/white/trimmed/life.png",               alt: "L^IFE",                          w: 900, h: 352 },
-  { src: "/partners/logos/white/trimmed/bzcf.png",               alt: "BZCF",                           w: 465, h: 156 },
-  { src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore", w: 443, h: 90 },
-  { src: "/partners/logos/white/trimmed/onword.png",             alt: "Onword Lab",                     w: 276, h: 264 },
-  { src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                        w: 512, h: 105 },
-  { src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                    w: 205, h: 81 },
-  { src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                         w: 355, h: 90 },
+type StripLogoSpec = { src: string; alt: string; w: number; h: number };
+
+const confirmedPartnerTiers: { label: Phrase; items: StripLogoSpec[] }[] = [
+  {
+    // 주최 · HOST — the AXMOS collective.
+    label: dict.hero.partnersHost,
+    items: [
+      { src: "/partners/logos/white/trimmed/translink.png",    alt: "Translink Investment", w: 330, h: 91 },
+      { src: "/partners/logos/white/trimmed/wilt.png",         alt: "Wilt Venture Builder", w: 309, h: 148 },
+      { src: "/partners/logos/white/trimmed/codepresso.png",   alt: "Codepresso",           w: 456, h: 91 },
+      { src: "/partners/logos/white/trimmed/drimaes.png",      alt: "Drimaes",              w: 332, h: 50 },
+      { src: "/partners/logos/white/trimmed/popup-studio.png", alt: "Popup Studio",         w: 512, h: 245 },
+    ],
+  },
+  {
+    // 주관 · 운영 — the student associations actually running the event.
+    label: dict.hero.partnersOrganizers,
+    items: [
+      { src: "/partners/logos/white/trimmed/smu-lion.png", alt: "SMU KSA",           w: 292, h: 173 },
+      { src: "/partners/logos/white/trimmed/nus.png",      alt: "NUS Korea Society", w: 512, h: 512 },
+      { src: "/partners/logos/white/trimmed/ntu-ksa.png",  alt: "NTU KSA",           w: 318, h: 382 },
+    ],
+  },
+  {
+    // 후원 · SPONSORS — confirmed only; the deck lists no in-discussion sponsors.
+    label: dict.hero.partnersSponsors,
+    items: [
+      { src: "/partners/logos/white/trimmed/aws.png",                alt: "AWS",                             w: 512, h: 306 },
+      { src: "/partners/logos/white/trimmed/innovate360.png",        alt: "INNOVATE 360",                    w: 455, h: 54 },
+      { src: "/partners/logos/white/trimmed/life.png",               alt: "L^IFE",                           w: 900, h: 352 },
+      { src: "/partners/logos/white/trimmed/bzcf.png",               alt: "BZCF",                            w: 465, h: 156 },
+      { src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore",  w: 443, h: 90 },
+      { src: "/partners/logos/white/trimmed/onword.png",             alt: "Onword Lab",                      w: 276, h: 264 },
+      { src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105 },
+      { src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81 },
+      { src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90 },
+    ],
+  },
 ];
 
 // One logo, sized by the same equal-area rule as the partner wall (see
 // opticalHeight) but tuned to a 14–24px band so the strip stays a hairline.
-function StripLogo({ src, alt, w, h }: { src: string; alt: string; w: number; h: number }) {
+function StripLogo({ src, alt, w, h }: StripLogoSpec) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
@@ -879,12 +903,38 @@ function StripLogo({ src, alt, w, h }: { src: string; alt: string; w: number; h:
   );
 }
 
+// The small 주최 / 주관 / 후원 caption that leads each tier.
+function StripTierLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="shrink-0 whitespace-nowrap text-[0.55rem] font-bold uppercase tracking-[0.16em] text-violet-200/60 drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)]">
+      {children}
+    </span>
+  );
+}
+
 // Thin confirmed-partner logo band at the bottom of the hero, above the scroll
-// hint. Desktop gets a static single line (wrapping to a second if it must);
-// below sm it reuses the site's marquee animation as a slow auto-scroll, since
-// 14 marks can't fit a phone width. Tapping anywhere on it jumps to the full
-// partner section — individual intro modals stay there, not here.
+// hint — grouped 주최 → 주관 → 후원 like the partner section. Desktop lays the
+// tiers out inline and lets them wrap; below sm it reuses the site's marquee
+// animation as a slow auto-scroll (17 marks can't fit a phone width) with the
+// tier captions riding inline in the same track. Tapping anywhere jumps to the
+// full partner section — individual intro modals stay there, not here.
 function HeroPartnerStrip({ t }: { t: Tfn }) {
+  // One flat sequence for the marquee: caption, then that tier's marks, repeated.
+  const marqueeItems = confirmedPartnerTiers.flatMap((tier) => [
+    { label: t(tier.label) },
+    ...tier.items,
+  ]) as ({ label: string } | StripLogoSpec)[];
+
+  // The seamless loop needs the track duplicated (translate -50% lands back on
+  // an identical copy), but that doubles the above-fold element count for a
+  // payoff nobody can see until the animation has run for a while. Ship one copy
+  // in the first paint and duplicate right after mount: on throttled mobile the
+  // 17 tiers-worth of marks are already the heaviest thing in the hero, and
+  // rendering 34 of them up front measurably pushed LCP out. The second copy
+  // appends off-screen to the right, so the swap is invisible.
+  const [looped, setLooped] = useState(false);
+  useEffect(() => setLooped(true), []);
+
   return (
     <a
       href="#builders"
@@ -895,10 +945,16 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
         {t(dict.hero.partnersLabel)}
       </p>
 
-      {/* ≥sm — static row, wrapping only if the viewport can't hold one line */}
-      <div className="mt-4 hidden flex-wrap items-center justify-center gap-x-8 gap-y-4 sm:flex">
-        {confirmedPartners.map((p) => (
-          <StripLogo key={p.alt} {...p} />
+      {/* ≥sm — tiers inline, wrapping as a unit. Each tier keeps its caption
+          glued to its own marks, so a wrap never orphans a label from its row. */}
+      <div className="mt-4 hidden flex-wrap items-center justify-center gap-x-7 gap-y-3 sm:flex">
+        {confirmedPartnerTiers.map((tier) => (
+          <div key={tier.label.en} className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+            <StripTierLabel>{t(tier.label)}</StripTierLabel>
+            {tier.items.map((p) => (
+              <StripLogo key={p.alt} {...p} />
+            ))}
+          </div>
         ))}
       </div>
 
@@ -908,10 +964,12 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
           the big companion band, this one sits in the hero and freezes flat for
           motion-sensitive visitors. */}
       <div aria-hidden className="mt-4 overflow-hidden sm:hidden">
-        <div className="marquee-track marquee-hero">
-          {[...confirmedPartners, ...confirmedPartners].map((p, i) => (
-            <div key={i} className="mr-8 flex shrink-0 items-center">
-              <StripLogo {...p} />
+        {/* marquee-hero only once the track is duplicated — animating a single
+            copy would scroll half the marks off and never bring them back. */}
+        <div className={`marquee-track ${looped ? "marquee-hero" : ""}`}>
+          {(looped ? [...marqueeItems, ...marqueeItems] : marqueeItems).map((it, i) => (
+            <div key={i} className="mr-6 flex shrink-0 items-center">
+              {"label" in it ? <StripTierLabel>{it.label}</StripTierLabel> : <StripLogo {...it} />}
             </div>
           ))}
         </div>
@@ -1188,11 +1246,18 @@ export default function Journey() {
         </div>
 
         {/* Confirmed-partner logo band, spanning under both hero columns and
-            above the pinned scroll hint. It fades out with the hero on desktop
-            (heroFade is undefined below lg, where the hero stays opaque). */}
-        <motion.div style={{ opacity: heroFade }} className="px-6 sm:px-10 lg:px-10 xl:px-16">
+            above the pinned scroll hint.
+
+            Deliberately NOT wired to heroFade like the columns are. That curve
+            starts dropping on the first pixel of scroll and is gone by 35% of
+            the hero, which made the strip the shortest-lived thing on the page —
+            it sits lowest, so it is the last thing to come into view and the
+            first thing the fade erased. It just scrolls away with the page
+            instead, which also keeps one more element off the scroll-linked
+            repaint path. */}
+        <div className="px-6 sm:px-10 lg:px-10 xl:px-16">
           <HeroPartnerStrip t={t} />
-        </motion.div>
+        </div>
       </Chapter>
 
       {/* ── Countdown ↔ Problem Statement · MOBILE-ONLY standalone section ──
