@@ -10,7 +10,7 @@
 
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
-import { normalizeTelegramHandle } from "@/lib/telegram";
+import { normalizeKakaoId } from "@/lib/kakao";
 
 // Uses a secret + a live DB → must not be statically evaluated at build time.
 export const dynamic = "force-dynamic";
@@ -57,10 +57,11 @@ export async function POST(req: Request) {
       ordinal: i + 1,
       name: str(src.name),
       email: str(src.email),
-      // A Telegram handle in any form (@user, t.me/user) is stored canonicalised
-      // as "@user"; anything else is kept verbatim rather than rejected — we ask
-      // for a handle in the form copy, we don't refuse the registration over it.
-      contact: normalizeTelegramHandle(str(src.contact)) ?? str(src.contact),
+      // A KakaoTalk id in any form (@me, "카톡: me", stray case) is stored
+      // canonicalised as the bare lowercase id; anything else is kept verbatim
+      // rather than rejected — we ask for an id in the form copy, we don't
+      // refuse the registration over it.
+      contact: normalizeKakaoId(str(src.contact)) ?? str(src.contact),
       university: optStr(src.university),
       linkedin: optStr(src.linkedin),
     };

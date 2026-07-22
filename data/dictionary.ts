@@ -29,11 +29,10 @@ export const links = {
   // to a later request. Organizers edit by hand instead.
   registerEdit:
     "mailto:pjh030924@gmail.com?subject=Zero100%20Builderthon%20%EB%93%B1%EB%A1%9D%20%EC%A0%95%EB%B3%B4%20%EC%88%98%EC%A0%95%20%EC%9A%94%EC%B2%AD",
-  // Public builderthon group chat. EMPTY UNTIL A REAL URL EXISTS — the
-  // already-registered panel renders the chat option only when this is set, so
-  // an unset link shows nothing rather than a dead button. Paste the invite URL
-  // here (Telegram t.me/... or a KakaoTalk open-chat link) to switch it on.
-  openChat: "",
+  // Public builderthon group chat — KakaoTalk 오픈채팅 "싱가폴 한인 학생 AI 빌더톤".
+  // This is the open room anyone can join to ask a question; the participant
+  // room registrants are invited to is a separate, private one.
+  openChat: "https://open.kakao.com/o/g6msvcFi",
 };
 
 // Registration submit target — our own route handler, which validates the
@@ -200,8 +199,8 @@ export const dict = {
     // joinType, contact); picking 팀 adds the team name, so "4" is the floor,
     // not the average. Bump it if a required field is ever added.
     modalSubtitle: {
-      ko: "필수는 4칸 — 3분이면 끝나요. 몇 가지만 알려주시면 운영진이 텔레그램으로 다음 절차를 안내드려요. 이미 팀이 있다면 한 명이 팀 전체를 등록할 수 있어요.",
-      en: "Only 4 required fields — done in 3 minutes. A few details and our team will reach out on Telegram. Have a team already? One person can register everyone.",
+      ko: "필수는 4칸 — 3분이면 끝나요. 몇 가지만 알려주시면 운영진이 카카오톡으로 다음 절차를 안내드려요. 이미 팀이 있다면 한 명이 팀 전체를 등록할 수 있어요.",
+      en: "Only 4 required fields — done in 3 minutes. A few details and our team will reach out on KakaoTalk. Have a team already? One person can register everyone.",
     },
     // Trust signals — who's asking, what happens to the data, and what happens
     // next. All three restate facts already true elsewhere on the site; none of
@@ -232,15 +231,17 @@ export const dict = {
       { value: "other", label: { ko: "기타", en: "Other" } },
     ],
     schoolOtherPlaceholder: { ko: "학교명을 입력해 주세요", en: "Enter your university" },
-    // Field 4 — Telegram handle. Required, and it must be a real handle: the
-    // organizers run the participant group chat on Telegram, so a phone number
-    // or a KakaoTalk id means someone we can't invite.
-    contactLabel: { ko: "텔레그램 ID", en: "Telegram username" },
+    // Field 4 — KakaoTalk id. Required, and it must be a real id: the organizers
+    // run the participant group chat on KakaoTalk, so a phone number or an
+    // email here means someone we can't invite.
+    // Kakao ids are lowercase letters/digits/./_ , 4–20 chars, and carry no "@"
+    // — see lib/kakao.ts, which strips one if it's typed anyway.
+    contactLabel: { ko: "카카오톡 ID", en: "KakaoTalk ID" },
     contactHint: {
-      ko: "@username 형태로 적어주세요. 텔레그램 단체방 초대에 사용돼요 (앱 → 설정에서 확인).",
-      en: "Please give it as @username — used for the Telegram group-chat invite (Telegram → Settings).",
+      ko: "카카오톡 앱 → 프로필 → 설정에서 확인할 수 있어요. 단체방 초대에 사용돼요.",
+      en: "Find it in KakaoTalk → Profile → Settings. Used for the group-chat invite.",
     },
-    contactPlaceholder: { ko: "@username", en: "@username" },
+    contactPlaceholder: { ko: "kakao_id", en: "kakao_id" },
     // LinkedIn (optional) — registrant + each team member.
     linkedinLabel: { ko: "링크드인", en: "LinkedIn" },
     linkedinPlaceholder: { ko: "linkedin.com/in/… 또는 @handle", en: "linkedin.com/in/… or @handle" },
@@ -311,8 +312,8 @@ export const dict = {
     // people with no idea whether to wait a day or a month, or whom to poke.
     // TODO: '며칠 내' → 운영 확정 시 '2–3일 내'로 (EN: "within a few days" → "in 2–3 days")
     successBody: {
-      ko: "며칠 내 텔레그램 단체방으로 초대해 드려요. 연락이 없으면 pjh030924@gmail.com 로 문의해 주세요.",
-      en: "We'll invite you to the Telegram group chat within a few days. If you don't hear from us, email pjh030924@gmail.com.",
+      ko: "며칠 내 카카오톡 단체방으로 초대해 드려요. 연락이 없으면 pjh030924@gmail.com 로 문의해 주세요.",
+      en: "We'll invite you to the KakaoTalk group chat within a few days. If you don't hear from us, email pjh030924@gmail.com.",
     },
     successClose: { ko: "닫기", en: "Close" },
     // ── Already-registered panel ───────────────────────────────────────────
@@ -401,7 +402,7 @@ export const dict = {
     // deadline set, so scarcity framing ("선착순", "마감 임박", "잔여석") would
     // be fabricated pressure. Each clause here is something already true.
     countdownUrgency: {
-      ko: "등록자부터 텔레그램 단톡방 초대 · 트랙 사전 안내 · 팀 매칭이 시작돼요.",
+      ko: "등록자부터 카카오톡 단톡방 초대 · 트랙 사전 안내 · 팀 매칭이 시작돼요.",
       en: "Registered builders get the group-chat invite, track previews and team matching first.",
     },
     // Two confirmed headline facts, used as the hero partner strip's caption.

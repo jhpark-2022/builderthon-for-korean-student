@@ -33,7 +33,7 @@ import { cloneElement, isValidElement, useEffect, useRef, useState } from "react
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
-import { normalizeTelegramHandle } from "@/lib/telegram";
+import { normalizeKakaoId } from "@/lib/kakao";
 import { dict, links, REGISTER_ENDPOINT } from "@/data/dictionary";
 import { RESULTS } from "@/data/quiz";
 import { parseResultId } from "@/lib/quizScore";
@@ -455,10 +455,10 @@ export default function RegisterModal({
     setStatus("submitting");
 
     // Light normalization: trim only (accept full URL or bare handle). The
-    // Telegram field is the exception — when it parses as a handle it's stored
-    // canonicalised as "@handle" so organizers can paste it straight into
-    // Telegram search. Anything else goes through as typed: the copy asks for a
-    // handle, it doesn't police the answer.
+    // KakaoTalk field is the exception — when it parses as an id it's stored
+    // canonicalised (bare, lowercase) so organizers can paste it straight into
+    // Kakao's 친구 추가 → ID 검색. Anything else goes through as typed: the copy
+    // asks for an id, it doesn't police the answer.
     const uni = (val: string, other: string) =>
       val === "other" ? other.trim() || undefined : val || undefined;
     const link = (v: string) => v.trim() || undefined;
@@ -466,7 +466,7 @@ export default function RegisterModal({
     const registrant = {
       name: name.trim(),
       email: email.trim(),
-      contact: normalizeTelegramHandle(contact) ?? contact.trim(),
+      contact: normalizeKakaoId(contact) ?? contact.trim(),
       university: uni(school, schoolOther),
       linkedin: link(linkedin),
     };
@@ -474,7 +474,7 @@ export default function RegisterModal({
       ? members.map((m) => ({
           name: m.name.trim(),
           email: m.email.trim(),
-          contact: normalizeTelegramHandle(m.contact) ?? m.contact.trim(),
+          contact: normalizeKakaoId(m.contact) ?? m.contact.trim(),
           university: uni(m.university, m.universityOther),
           linkedin: link(m.linkedin),
         }))
@@ -734,7 +734,7 @@ export default function RegisterModal({
                       />
                     </Field>
 
-                    {/* 5 · Contact (Telegram preferred) */}
+                    {/* 5 · Contact (KakaoTalk id) */}
                     <Field
                       name="contact"
                       label={t(dict.register.contactLabel)}
