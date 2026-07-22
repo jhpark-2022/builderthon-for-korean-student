@@ -102,6 +102,7 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
         urlRef={urlRef}
         preset={preset}
         onSuccess={onSuccess}
+        alreadyRegistered={registered}
       />
     </RegisterContext.Provider>
   );

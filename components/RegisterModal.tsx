@@ -34,7 +34,7 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
 import { normalizeTelegramHandle } from "@/lib/telegram";
-import { dict, REGISTER_ENDPOINT } from "@/data/dictionary";
+import { dict, links, REGISTER_ENDPOINT } from "@/data/dictionary";
 import { RESULTS } from "@/data/quiz";
 import { parseResultId } from "@/lib/quizScore";
 import { loadOwnResult } from "@/lib/quizResult";
@@ -53,6 +53,9 @@ interface RegisterModalProps {
   preset?: RegisterPreset | null;
   // Called once a submit succeeds (persists the "registered" flag in the parent).
   onSuccess: () => void;
+  // This browser already has the registered flag. Opens on a "how do I change
+  // it" panel instead of a blank form — see the alreadyRegistered branch below.
+  alreadyRegistered?: boolean;
 }
 
 const FOCUSABLE =
@@ -202,6 +205,7 @@ export default function RegisterModal({
   urlRef,
   preset,
   onSuccess,
+  alreadyRegistered = false,
 }: RegisterModalProps) {
   const { t } = useLocale();
   const reduce = useReducedMotion();
@@ -232,6 +236,12 @@ export default function RegisterModal({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<Status>("idle");
+  // Set when the visitor clicks through the already-registered panel to the
+  // form anyway (shared device, registering a teammate, cleared-flag edge case).
+  const [bypassRegistered, setBypassRegistered] = useState(false);
+  // Show the notice, not the form — but never after a submit lands in this same
+  // open, or the success screen would be replaced by "you're already registered".
+  const showAlready = alreadyRegistered && !bypassRegistered && status !== "success";
 
   const isTeam = joinType === "team";
   const wantsMatching = joinType === "solo" && soloMatch;
@@ -285,6 +295,10 @@ export default function RegisterModal({
   useEffect(() => {
     if (!open) return;
     setStatus("idle");
+    // Every open starts from the already-registered panel again (when the flag
+    // is set). Someone who clicked past it once to register a second person
+    // shouldn't silently skip the notice on their next visit.
+    setBypassRegistered(false);
     setSavedResultId(loadOwnResult()?.resultId ?? null);
     if (preset?.joinType) setJoinType(preset.joinType);
     if (preset?.wantsMatching !== undefined) setSoloMatch(preset.wantsMatching);
@@ -568,7 +582,60 @@ export default function RegisterModal({
             </button>
 
             <div className="overflow-y-auto px-6 pt-8 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:px-9 sm:py-9">
-              {status === "success" ? (
+              {showAlready ? (
+                // ── Already registered ────────────────────────────────────────
+                // No self-serve edit: /api/register writes once and the browser
+                // keeps no registration id, so a later request has no way to
+                // prove which row is "yours". Rather than fake it, route people
+                // to the humans who can edit it by hand.
+                <div className="py-4 text-center">
+                  <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/10">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-300">
+                      <path d="M4 12.5l5 5L20 6.5" />
+                    </svg>
+                  </span>
+                  <h3 id="register-modal-title" className="mt-5 text-[22px] font-bold leading-tight text-white sm:text-[26px]">
+                    {t(dict.register.alreadyTitle)}
+                  </h3>
+                  <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-white/70">
+                    {t(dict.register.alreadyBody)}
+                  </p>
+
+                  <a
+                    href={links.registerEdit}
+                    className="mt-6 inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-7 py-3.5 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
+                  >
+                    {t(dict.register.alreadyEmailCta)}
+                  </a>
+
+                  {/* Rendered only once links.openChat holds a real invite URL —
+                      an unset link shows nothing rather than a dead button. */}
+                  {links.openChat && (
+                    <p className="mx-auto mt-5 max-w-sm text-sm leading-relaxed text-white/60">
+                      {t(dict.register.alreadyChatBody)}{" "}
+                      <a
+                        href={links.openChat}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-semibold text-violet-200 underline underline-offset-4 transition hover:text-white"
+                      >
+                        {t(dict.register.alreadyChatCta)}
+                      </a>
+                    </p>
+                  )}
+
+                  {/* Always available: the flag proves this BROWSER registered,
+                      not who is using it. A shared laptop must not lock the next
+                      person out. */}
+                  <button
+                    type="button"
+                    onClick={() => setBypassRegistered(true)}
+                    className="mx-auto mt-7 block text-xs text-white/45 underline underline-offset-4 transition hover:text-white/75"
+                  >
+                    {t(dict.register.alreadyAgain)}
+                  </button>
+                </div>
+              ) : status === "success" ? (
                 // ── Success state ─────────────────────────────────────────────
                 <div className="py-6 text-center">
                   <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/10">

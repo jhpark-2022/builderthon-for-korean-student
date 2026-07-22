@@ -23,6 +23,17 @@ export const links = {
   // outlive the .edu account.
   partnership:
     "mailto:pjh030924@gmail.com?subject=Zero100%20Builderthon%20Partnership%20Inquiry",
+  // Where an already-registered visitor goes to change or cancel their entry.
+  // There is no self-serve edit: registrations are written once by /api/register
+  // and the browser keeps no registration id, so nothing can identify "your" row
+  // to a later request. Organizers edit by hand instead.
+  registerEdit:
+    "mailto:pjh030924@gmail.com?subject=Zero100%20Builderthon%20%EB%93%B1%EB%A1%9D%20%EC%A0%95%EB%B3%B4%20%EC%88%98%EC%A0%95%20%EC%9A%94%EC%B2%AD",
+  // Public builderthon group chat. EMPTY UNTIL A REAL URL EXISTS — the
+  // already-registered panel renders the chat option only when this is set, so
+  // an unset link shows nothing rather than a dead button. Paste the invite URL
+  // here (Telegram t.me/... or a KakaoTalk open-chat link) to switch it on.
+  openChat: "",
 };
 
 // Registration submit target — our own route handler, which validates the
@@ -304,6 +315,30 @@ export const dict = {
       en: "We'll invite you to the Telegram group chat within a few days. If you don't hear from us, email pjh030924@gmail.com.",
     },
     successClose: { ko: "닫기", en: "Close" },
+    // ── Already-registered panel ───────────────────────────────────────────
+    // Shown instead of a blank form when this browser has the registered flag.
+    // Before this existed, "등록 완료 ✓" reopened an empty form, which invited
+    // duplicate entries and gave someone wanting to fix a typo nowhere to go.
+    //
+    // The copy says "이 브라우저" on purpose: the flag is device-local, so it is
+    // evidence that THIS BROWSER registered, not proof of who is holding it.
+    // Same reason `alreadyAgain` always offers a way through to the form —
+    // a shared laptop must never lock the next person out of registering.
+    alreadyTitle: { ko: "이미 등록하셨어요", en: "You're already registered" },
+    alreadyBody: {
+      ko: "이 브라우저에 등록 기록이 남아 있어요. 등록 정보를 고치거나 취소하시려면 운영진에게 알려주세요 — 직접 수정하는 기능은 아직 없어요.",
+      en: "This browser has a registration on record. To change or cancel your details, just tell the organizers — there's no self-serve edit yet.",
+    },
+    alreadyEmailCta: { ko: "운영진에게 메일 보내기", en: "Email the organizers" },
+    alreadyChatBody: {
+      ko: "빌더톤 오픈 톡방에 문의를 남기셔도 돼요.",
+      en: "You can also leave a message in the builderthon open group chat.",
+    },
+    alreadyChatCta: { ko: "오픈 톡방 열기", en: "Open the group chat" },
+    alreadyAgain: {
+      ko: "다른 사람을 등록하시나요? 새로 등록하기",
+      en: "Registering someone else? Start a new registration",
+    },
     // Validation.
     errRequired: { ko: "필수 항목이에요.", en: "This field is required." },
     errEmail: { ko: "이메일 형식을 확인해 주세요.", en: "Please enter a valid email." },
