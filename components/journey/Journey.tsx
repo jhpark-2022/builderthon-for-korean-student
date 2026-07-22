@@ -172,15 +172,24 @@ function OpenChatLink({
 }) {
   if (!links.openChat) return null;
   return (
+    // Ghost CHIP, not a bare underlined line. At text-white/45 with a hairline
+    // underline this read as a footnote and was skipped — which defeats the
+    // point, since this is the only offer on the page for someone who has read
+    // everything and still isn't ready to register. Same ghost treatment as the
+    // nav's open-chat button, so the two are recognisably the same door.
+    //
+    // Still deliberately NOT a fill: it sits under the violet register pill and
+    // must stay a clear step below it. Border + brighter text is the ceiling.
     <a
       href={links.openChat}
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => track("openchat_click", { src })}
-      className={`inline-flex items-center gap-1 text-xs leading-relaxed text-white/45 underline decoration-white/20 underline-offset-4 transition hover:text-white/70 hover:decoration-white/40 ${className}`}
+      className={`inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2.5 text-sm font-medium leading-relaxed text-white/75 transition hover:border-white/35 hover:bg-white/10 hover:text-white ${className}`}
     >
+      <ChatGlyph className="h-4 w-4 shrink-0" />
       {t(dict.register.openChatCta)}
-      <span aria-hidden>→</span>
+      <span aria-hidden className="text-white/50">→</span>
     </a>
   );
 }
@@ -1039,12 +1048,19 @@ function StripLogo({ src, alt, w, h }: StripLogoSpec) {
       fetchPriority="low"
       decoding="async"
       title={alt}
-      style={{ height: opticalHeight(w, h, 820, 12, 19) }}
+      // Band widened from 12–19px. Equal-AREA sizing (see opticalHeight), so a
+      // square crest and a long wordmark grow by the same visual weight rather
+      // than the same pixel height — that's what keeps a row from going ragged
+      // as it scales. Ceilings verified against the two places this can break:
+      // the 9-logo 후원 row wrapping on a laptop, and the phone marquee.
+      style={{ height: opticalHeight(w, h, 1400, 16, 26) }}
       // The marks are white silhouettes and the hero video runs bright behind
       // them on phones, where the strip sits over the figure — a plain opacity
       // knock-back made them vanish there. The dark drop-shadow keeps them
       // legible on both the dark desktop area and the bright mobile band.
-      className="w-auto max-w-[6.5rem] shrink-0 object-contain opacity-50 grayscale drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)] transition duration-300 group-hover:opacity-80"
+      // max-w is the backstop for the widest wordmarks: it letterboxes them
+      // down instead of letting one mark blow out its row's width.
+      className="w-auto max-w-[8.5rem] shrink-0 object-contain opacity-50 grayscale drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)] transition duration-300 group-hover:opacity-80"
     />
   );
 }
