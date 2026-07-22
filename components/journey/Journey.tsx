@@ -1000,23 +1000,6 @@ function StripLogo({ src, alt, w, h }: StripLogoSpec) {
   );
 }
 
-// Reads prefers-reduced-motion straight off matchMedia. framer's
-// useReducedMotion() was the obvious choice here and it reported `false` on a
-// browser where matchMedia("(prefers-reduced-motion: reduce)").matches was
-// `true` — not a difference worth debugging when the platform API is one line
-// and testable. Starts `false` so the first client render matches the server's.
-function usePrefersReducedMotion() {
-  const [reduce, setReduce] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => setReduce(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-  return reduce;
-}
-
 // The small 주최 / 주관 / 후원 caption that leads each tier.
 function StripTierLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -1033,13 +1016,10 @@ function StripTierLabel({ children }: { children: React.ReactNode }) {
 // tier captions riding inline in the same track. Tapping anywhere jumps to the
 // full partner section — individual intro modals stay there, not here.
 function HeroPartnerStrip({ t }: { t: Tfn }) {
-  // Freezing the marquee for motion-sensitive visitors is right, but freezing it
-  // is NOT enough on a phone: a stopped track sits at translateX(0), so 주최 and
-  // its first three marks are all that is ever on screen — 주관 and 후원 stay
-  // parked off the right edge with no way to reach them. So under reduced motion
-  // the phone gets the same stacked, wrapping layout the desktop uses. It's
-  // taller, but every partner is actually visible, which is the point.
-  const reduce = usePrefersReducedMotion();
+  // Layout split: mobile always gets the single-line auto-scroll marquee (it
+  // keeps moving even under reduced motion — see the marquee-hero exemption in
+  // globals.css — because a frozen line would park 주관/후원 off-screen). From
+  // sm up it's the stacked 주최 / 주관 / 후원 tiers instead.
 
   // One flat sequence for the marquee: caption, then that tier's marks, repeated.
   const marqueeItems = confirmedPartnerTiers.flatMap((tier) => [
@@ -1081,7 +1061,7 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
       {/* Gaps are deliberately tight: stacking three tiers and enlarging the
           marks already added ~160px to a hero that overflows a laptop viewport,
           so every row here is spaced to the minimum that still separates them. */}
-      <div className={`mt-2.5 flex-col items-center gap-2 sm:flex ${reduce ? "flex" : "hidden"}`}>
+      <div className="mt-2.5 hidden flex-col items-center gap-2 sm:flex">
         {confirmedPartnerTiers.map((tier) => (
           <div key={tier.label.en} className="flex flex-col items-center gap-1">
             <StripTierLabel>{t(tier.label)}</StripTierLabel>
@@ -1094,12 +1074,12 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
         ))}
       </div>
 
-      {/* <sm — slow auto-scroll. The track holds the list twice and translates
-          -50%, so the loop is seamless. `marquee-hero` (not `marquee-left`) is
-          deliberately NOT in globals.css's reduced-motion exemption list: unlike
-          the big companion band, this one sits in the hero. Under reduced motion
-          it isn't rendered at all — the stacked layout above takes over. */}
-      <div aria-hidden className={`mt-4 overflow-hidden sm:hidden ${reduce ? "hidden" : ""}`}>
+      {/* <sm — slow auto-scroll, always (even under reduced motion). The track
+          holds the list twice and translates -50%, so the loop is seamless.
+          marquee-hero is exempt from the reduced-motion kill in globals.css, so
+          it keeps moving here — a frozen single line would hide half the tiers
+          off the right edge with no way to reach them. */}
+      <div aria-hidden className="mt-4 overflow-hidden sm:hidden">
         {/* marquee-hero only once the track is duplicated — animating a single
             copy would scroll half the marks off and never bring them back. */}
         <div className={`marquee-track ${looped ? "marquee-hero" : ""}`}>
@@ -1338,7 +1318,9 @@ export default function Journey() {
         footer={
           <motion.div
             style={{ opacity: heroFade }}
-            className="pointer-events-none flex flex-col items-center gap-2 text-[0.7rem] tracking-[0.3em] text-white/60"
+            // Hidden on mobile — the stacked mobile hero is already tall and the
+            // scroll affordance is obvious there; the ticker just adds clutter.
+            className="pointer-events-none hidden flex-col items-center gap-2 text-[0.7rem] tracking-[0.3em] text-white/60 lg:flex"
           >
             {t(dict.hero.scroll).toUpperCase()}
             <span className="h-10 w-px animate-pulse bg-gradient-to-b from-white/50 to-transparent" />

@@ -61,11 +61,15 @@ body {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
   }
-  /* Exempt the decorative logo marquee: a slow, continuous horizontal scroll is
+  /* Exempt the decorative logo marquees: a slow, continuous horizontal scroll is
      low-risk for motion sensitivity, and freezing it just looks broken. Higher
-     selector specificity than `*` lets these win despite both being !important. */
+     selector specificity than `*` lets these win despite both being !important.
+     marquee-hero is exempt too — the hero strip is a single-line marquee on
+     mobile, and a frozen track parks half the partners off the right edge with
+     no way to reach them, so keeping it moving is the accessible choice here. */
   .marquee-left  { animation-duration: 60s !important; }
   .marquee-right { animation-duration: 60s !important; }
+  .marquee-hero  { animation-duration: 75s !important; }
 }
 
 ::-webkit-scrollbar { width: 6px; }
@@ -285,15 +289,12 @@ body {
 .marquee-track { display: flex; width: max-content; }
 .marquee-left  { animation: marquee 60s linear infinite; }
 .marquee-right { animation: marquee-reverse 60s linear infinite; }
-/* Hero confirmed-partner strip (mobile only). Deliberately a separate class from
-   .marquee-left so it is NOT covered by that rule's reduced-motion exemption
-   below — this one sits in the hero and must hold still for motion-sensitive
-   visitors. Slower than the companion band since it's a hairline detail. */
+/* Hero confirmed-partner strip (mobile only). Slower than the companion band
+   since it's a hairline detail. It keeps scrolling under reduced motion (see the
+   exemption in the prefers-reduced-motion block above): a frozen single-line
+   track parks half the partners off the right edge, so movement is what keeps
+   every partner reachable here. */
 .marquee-hero { animation: marquee 75s linear infinite; }
-@media (prefers-reduced-motion: reduce) {
-  /* Beats the global `*` rule (which would instead loop it at 0.001ms). */
-  .marquee-hero { animation: none !important; }
-}
 @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 @keyframes marquee-reverse { from{transform:translateX(-50%)} to{transform:translateX(0)} }
 

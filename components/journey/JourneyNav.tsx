@@ -154,10 +154,13 @@ export default function JourneyNav() {
                 // recedes to a quiet outline. It stays clickable (it opens the
                 // "how do I change my details" panel) — it just no longer claims
                 // to be the thing to do next.
+                // Hidden below lg: on mobile the sticky bottom register bar
+                // already carries this action, so a second one in the nav is
+                // redundant. Shows from lg up, where there's no bottom bar.
                 className={
                   registered
-                    ? "inline-flex shrink-0 items-center rounded-full border border-emerald-400/30 bg-emerald-400/[0.08] px-3.5 py-2 text-xs font-semibold text-emerald-200/90 transition hover:bg-emerald-400/15 sm:px-5 sm:py-2.5 sm:text-sm"
-                    : "inline-flex shrink-0 items-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-3.5 py-2 text-xs font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(124,92,255,0.6)] sm:px-5 sm:py-2.5 sm:text-sm"
+                    ? "hidden shrink-0 items-center rounded-full border border-emerald-400/30 bg-emerald-400/[0.08] px-3.5 py-2 text-xs font-semibold text-emerald-200/90 transition hover:bg-emerald-400/15 sm:px-5 sm:py-2.5 sm:text-sm lg:inline-flex"
+                    : "hidden shrink-0 items-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-3.5 py-2 text-xs font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(124,92,255,0.6)] sm:px-5 sm:py-2.5 sm:text-sm lg:inline-flex"
                 }
               >
                 {registered ? t(dict.register.navRegistered) : t(dict.nav.register)}
