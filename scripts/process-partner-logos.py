@@ -10,12 +10,16 @@ Three source shapes are handled:
   • "color" — a multicolour mark on a flat light background (싱가포르 한인회).
               Alpha comes from each pixel's colour distance to the sampled
               background, then everything surviving is flattened to white.
-  • "alpha" — a solid-colour mark ALREADY cut out on transparency (Onword Lab).
-              The shape is exactly the source alpha, so use it as-is and just
-              repaint the ink white. Running such a file through "dark" instead
-              would scale alpha by the ink's luminance and render the mark
-              semi-transparent — a mid-purple wordmark came out visibly dimmer
-              than every logo beside it.
+  • "alpha" — a solid-colour mark ALREADY cut out on transparency. The shape is
+              exactly the source alpha, so use it as-is and just repaint the ink
+              white. Running such a file through "dark" instead would scale
+              alpha by the ink's luminance and render the mark semi-transparent —
+              a mid-purple wordmark came out visibly dimmer than its neighbours.
+  • "light" — a WHITE mark on a dark sheet (Onword Lab's square glyph). The
+              inverse of "dark": brightness IS the ink, so alpha comes from
+              luminance above the sheet's own level. Feeding this to "dark"
+              would produce a perfect negative — the background solid and the
+              glyph punched out of it.
 
 Both are trimmed to the alpha bbox and downscaled so the long edge is 900px —
 these render ~40px tall, so anything larger is wasted bytes.
@@ -52,9 +56,13 @@ LO, HI = 40, 110  # colour-distance → alpha ramp, for the "color" mode
 JOBS = [
     ("life_logo.png", "life.png", "dark"),
     ("싱가포르 한인회.jpg", "korean-association.png", "color"),
-    # Replaced the old mark-only logo (a small near-square glyph that rendered
-    # as an unreadable ">." in the hero strip) with the full ONWORD LAB lockup.
-    ("onword new logo.png", "onword.png", "alpha"),
+    # Onword Lab ships two marks. The wide "⊃ ONWORD LAB" lockup spells the name
+    # out, but at 5.2:1 the equal-area rule sizes it to ~16px in the hero strip
+    # and the width cap letterboxes it smaller still. The square glyph is chosen
+    # instead: at 1:1 it reaches the 26px ceiling, so it holds its own beside the
+    # other marks. The trade is that neither placement says "Onword Lab" —
+    # accepted deliberately (the alt text and the intro modal still name it).
+    ("onwordlab_logo.jpeg", "onword.png", "light"),
 ]
 
 
@@ -74,6 +82,16 @@ def from_color(im):
     bg = np.median(corners, axis=0)
     dist = np.sqrt(((a - bg) ** 2).sum(axis=2))
     return np.clip((dist - LO) / (HI - LO), 0.0, 1.0) * 255.0
+
+
+def from_light(im):
+    """White-on-dark sheet → alpha = brightness above the sheet's own level."""
+    a = np.asarray(im.convert("RGB")).astype(int)
+    lum = a.mean(axis=2)
+    h, w = lum.shape
+    sheet = np.median([lum[0, 0], lum[0, w - 1], lum[h - 1, 0], lum[h - 1, w - 1]])
+    # Ramp starts a little above the sheet so its noise doesn't become haze.
+    return np.clip((lum - (sheet + 12)) / (255 - (sheet + 12)), 0.0, 1.0) * 255.0
 
 
 def from_alpha(im):
@@ -103,7 +121,12 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     for src, out, mode in JOBS:
         im = Image.open(CI / src)
-        alpha = {"dark": from_dark, "color": from_color, "alpha": from_alpha}[mode](im)
+        alpha = {
+            "dark": from_dark,
+            "color": from_color,
+            "alpha": from_alpha,
+            "light": from_light,
+        }[mode](im)
         h, w = alpha.shape
         # white mono is fully described by alpha → store as LA (L=255 + alpha)
         img = Image.fromarray(
