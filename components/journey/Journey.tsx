@@ -20,6 +20,8 @@ import EventModal from "@/components/EventModal";
 import PartnerModal, { type PartnerInfo } from "@/components/PartnerModal";
 import ReturningGreeting from "./ReturningGreeting";
 import { loadOwnResult } from "@/lib/quizResult";
+import { parseResultId } from "@/lib/quizScore";
+import { RESULTS } from "@/data/quiz";
 import { useRegister, type RegisterPreset } from "@/lib/RegisterContext";
 
 const legendOrder: Category[] = ["main","workshop","build","mentoring","network"];
@@ -199,6 +201,16 @@ function HookCards({
   // Which placement this instance is, for the open-chat link's funnel tag.
   chatSrc: "hero" | "band";
 }) {
+  // "조급한 Mistral" for a visitor who already took the test. Derived from the
+  // same saved id the CTA links to, so the greeting can never name a different
+  // type than the link opens. Unparseable/unknown ids fall back to first-visit
+  // copy rather than greeting someone as "undefined".
+  const parsed = ownResultId ? parseResultId(ownResultId) : null;
+  const ownName =
+    parsed && RESULTS[parsed.mbti]
+      ? t(RESULTS[parsed.mbti].variants[parsed.identity].name)
+      : null;
+
   return (
     <div className={className}>
       <div className="grid gap-3 sm:grid-cols-2">
@@ -229,16 +241,28 @@ function HookCards({
           <p className="text-xs leading-relaxed text-white/60">{t(dict.register.reassure)}</p>
           <p className="text-[11px] leading-relaxed text-white/45">{t(dict.register.hookRegisterSub)}</p>
         </button>
+        {/* Card 2 — the aside. Copy only: it must stay a visual step below the
+            register card, so nothing here gains a fill, a border weight or a
+            pill. `ownName` is null until after mount (loadOwnResult is
+            client-only), so the first render always matches the server's. */}
         <div className="flex flex-col gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left">
-          <p className="text-xs font-medium text-white/60">{t(dict.register.hookQuizQ)}</p>
+          <p className="text-xs font-medium text-white/60">
+            {ownName
+              ? t(dict.register.hookQuizQReturn).replace("{name}", ownName)
+              : t(dict.register.hookQuizQ)}
+          </p>
           <a
             href={ownResultId ? `/quiz?r=${ownResultId}` : "/quiz"}
             className="group inline-flex w-fit items-center gap-1.5 text-sm font-bold text-violet-100 transition hover:text-white"
           >
             <span aria-hidden>✦</span>
-            {t(ownResultId ? dict.nav.quizResult : dict.register.hookQuizCta)}
-            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+            {t(ownName ? dict.register.hookQuizCtaReturn : dict.register.hookQuizCta)}
           </a>
+          {/* First-visit only — a returning visitor has already seen the joke
+              and is here for their result, not the disclaimer. */}
+          {!ownName && (
+            <p className="text-xs leading-relaxed text-white/40">{t(dict.register.hookQuizNote)}</p>
+          )}
         </div>
       </div>
       {/* Third CTA — under both cards, quieter than either. */}

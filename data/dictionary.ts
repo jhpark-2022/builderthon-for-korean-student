@@ -173,8 +173,25 @@ export const dict = {
       en: "Already have a team? One person can register everyone.",
     },
     hookRegisterCta: { ko: "등록하고 팀 매칭 받기", en: "Register & get matched" },
-    hookQuizQ: { ko: "재미로 3분 — 내 AI 유형은?", en: "3 fun minutes — what's your AI model?" },
-    hookQuizCta: { ko: "성격 테스트", en: "Personality test" },
+    // Quiz card — the aside, so it earns attention with tone rather than weight.
+    // The two type names are REAL variantNames from data/quiz.ts (ESTP-T and
+    // ENFP-A); the pairing is the gag, so they have to be a genuine opposite.
+    // Check the data before editing — an invented name here reads as a bug the
+    // moment someone takes the test and never finds it.
+    hookQuizQ: {
+      ko: "조급한 Mistral? 여유로운 Pi? — 너 뭔데",
+      en: "Impatient Mistral? Easygoing Pi? — which one are you",
+    },
+    hookQuizCta: { ko: "3분 만에 정체 확인 →", en: "Find out in 3 min →" },
+    // The disclaimer IS the joke — and it's also true, which is why it can be
+    // said out loud instead of buried.
+    hookQuizNote: { ko: "*과학적 근거는 없습니다. 재미는 있습니다.", en: "*Zero science. 100% fun." },
+    // Returning visitor with a saved result: {name} is their own variantName.
+    hookQuizQReturn: {
+      ko: "{name}님, 환상의 짝꿍은 확인하셨어요?",
+      en: "Hey {name} — met your perfect match yet?",
+    },
+    hookQuizCtaReturn: { ko: "내 결과 다시 보기 →", en: "Back to my result →" },
     // The four things that stop people from registering, answered in one line.
     // Rendered under the register CTA everywhere the hook cards appear (hero +
     // both mid-page bands) from this single key, so the answer can never drift
