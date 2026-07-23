@@ -215,10 +215,25 @@ export async function POST(req: Request) {
   if (isTeam && !str(body.teamName)) {
     return NextResponse.json({ error: "missing_team_name" }, { status: 400 });
   }
+  // A team is 2–3 people — a single-member "team" is really a solo entry, and
+  // the form steers them to the solo option rather than posting this.
+  if (isTeam && members.length < 2) {
+    return NextResponse.json({ error: "team_too_small" }, { status: 400 });
+  }
   // Only a team submits extra members.
   if (!isTeam && members.length > 1) {
     return NextResponse.json({ error: "invalid_members" }, { status: 400 });
   }
+
+  // Team name is stored for teams (required, above) AND for a solo entry that
+  // named its 1인 팀 — but never for a solo matcher, whose team is decided
+  // on-site, so an incidental teamName in that payload is dropped to null.
+  const wantsMatching = !isTeam && body.wantsMatching === true;
+  const teamName = isTeam
+    ? str(body.teamName)
+    : wantsMatching
+      ? null
+      : optStr(body.teamName);
 
   const submittedAt = typeof body.submittedAt === "string" && !Number.isNaN(Date.parse(body.submittedAt))
     ? body.submittedAt
@@ -229,9 +244,9 @@ export async function POST(req: Request) {
     .from("registrations")
     .insert({
       join_type: joinType || null,
-      team_name: isTeam ? str(body.teamName) : null,
+      team_name: teamName,
       // Matching is solo-only; a team payload claiming otherwise is ignored.
-      wants_matching: !isTeam && body.wantsMatching === true,
+      wants_matching: wantsMatching,
       track: optStr(body.track),
       quiz_type: optStr(body.quizType),
       ref: optStr(body.ref),

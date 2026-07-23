@@ -337,6 +337,9 @@ export default function RegisterModal({
   // Team-level fields.
   const [joinType, setJoinType] = useState(""); // "" | "team" | "solo"
   const [teamName, setTeamName] = useState("");
+  // Solo-only: mirror the name into the team name and lock the field.
+  const [useNameAsTeam, setUseNameAsTeam] = useState(false);
+  const nameRef = useRef<HTMLInputElement>(null);
   const [track, setTrack] = useState("");
   // Added teammates (Member 2 / 3). Preserved when toggling join type.
   const [members, setMembers] = useState<Member[]>([]);
@@ -370,6 +373,16 @@ export default function RegisterModal({
   const patchMember = (id: number, patch: Partial<Member>) =>
     setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, ...patch } : m)));
 
+  // Solo "use my name as the team name" toggle. The sync effect keeps teamName
+  // mirrored to name; here we only handle the empty-name case — a guide, not an
+  // error: focus the name field so the team name fills in as they type.
+  const toggleNameAsTeam = (checked: boolean) => {
+    setUseNameAsTeam(checked);
+    if (checked && !name.trim()) {
+      window.setTimeout(() => nameRef.current?.focus(), 0);
+    }
+  };
+
   // Restore a round-trip draft (client-only, post-mount → no SSR mismatch) and
   // read this device's saved quiz result. The draft is written just before
   // navigating to the quiz, so restoring it here brings every field back.
@@ -391,6 +404,7 @@ export default function RegisterModal({
         setLinkedin(d.linkedin ?? "");
         setJoinType(d.joinType ?? "");
         setTeamName(d.teamName ?? "");
+        setUseNameAsTeam(!!d.useNameAsTeam);
         setTrack(d.track ?? "");
         setSoloMatch(!!d.soloMatch);
         const mem: Member[] = Array.isArray(d.members) ? d.members : [];
@@ -402,6 +416,14 @@ export default function RegisterModal({
     }
     setSavedResultId(loadOwnResult()?.resultId ?? null);
   }, []);
+
+  // Solo "use my name as the team name": while the box is checked, keep the
+  // team name mirrored to the name so editing the name updates both. Gated to
+  // solo so it never overwrites a real team name typed in the team section, and
+  // it also re-syncs on draft restore (checked → matches the restored name).
+  useEffect(() => {
+    if (joinType === "solo" && useNameAsTeam) setTeamName(name);
+  }, [joinType, useNameAsTeam, name]);
 
   // On (re)open: return to the form, re-read the saved result (it may have just
   // been written by a completed round-trip in this same tab), and apply whatever
@@ -482,7 +504,7 @@ export default function RegisterModal({
         DRAFT_KEY,
         JSON.stringify({
           name, email, school, schoolOther, contact, linkedin,
-          joinType, teamName, track, soloMatch, members,
+          joinType, teamName, useNameAsTeam, track, soloMatch, members,
         })
       );
     } catch {
@@ -536,6 +558,9 @@ export default function RegisterModal({
 
     if (isTeam) {
       if (!teamName.trim()) next.teamName = req;
+      // A team is 2–3 people. Only the registrant → steer them to solo, with
+      // the error under 참가 형태 so the fix (the join-type field) gets focus.
+      if (members.length < 1) next.joinType = t(dict.register.errTeamTooSmall);
       members.forEach((m) => {
         if (!m.name.trim()) next[`m${m.id}-name`] = req;
         if (!m.email.trim()) next[`m${m.id}-email`] = req;
@@ -598,9 +623,13 @@ export default function RegisterModal({
     // AI type attaches ONLY for a solo matcher whose device has a saved result.
     const attachedType = wantsMatching && savedResultId ? savedResultId : undefined;
 
+    // Team name goes up for a team (required) and for a solo entry naming its
+    // 1인 팀 — but NOT for a solo matcher, whose team is settled on-site.
+    const sendTeamName = isTeam || (joinType === "solo" && !wantsMatching);
+
     const payload = {
       joinType: joinType || null, // "team" | "solo"
-      ...(isTeam ? { teamName: teamName.trim() } : {}),
+      ...(sendTeamName ? { teamName: teamName.trim() } : {}),
       wantsMatching, // solo only; always false for teams
       track,
       members: [registrant, ...extra], // [0] is the registrant
@@ -869,6 +898,7 @@ export default function RegisterModal({
                     {/* 1 · Name */}
                     <Field name="name" label={t(dict.register.nameLabel)} required error={errors.name}>
                       <input
+                        ref={nameRef}
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
@@ -1077,9 +1107,80 @@ export default function RegisterModal({
                       )}
                     </AnimatePresence>
 
-                    {/* Solo matching opt-in + AI-type block (solo only) */}
+                    {/* Solo team name + matching opt-in + AI-type block (solo only) */}
                     {joinType === "solo" && (
                       <div className="flex flex-col gap-3">
+                        {/* A 1인 팀 can name itself in advance. Hidden the moment
+                            matching is on — the team is decided on-site then. */}
+                        <AnimatePresence initial={false}>
+                          {!soloMatch && (
+                            <motion.div
+                              key="solo-teamname"
+                              initial={expand.initial}
+                              animate={expand.animate}
+                              exit={expand.exit}
+                              transition={expandT}
+                              className="overflow-hidden"
+                            >
+                              <div className="flex flex-col gap-3">
+                                <Field
+                                  label={t(dict.register.teamNameLabel)}
+                                  optional={t(dict.register.optional)}
+                                  hint={useNameAsTeam ? undefined : t(dict.register.soloTeamNameHelper)}
+                                >
+                                  <div className="relative">
+                                    <input
+                                      type="text"
+                                      value={teamName}
+                                      onChange={(e) => setTeamName(e.target.value)}
+                                      placeholder={t(dict.register.teamNamePlaceholder)}
+                                      disabled={useNameAsTeam}
+                                      aria-disabled={useNameAsTeam || undefined}
+                                      aria-describedby={useNameAsTeam ? "solo-teamname-note" : undefined}
+                                      className={`${FIELD} ${useNameAsTeam ? "cursor-not-allowed pr-11 text-white/55" : ""}`}
+                                    />
+                                    {useNameAsTeam && (
+                                      <svg
+                                        aria-hidden
+                                        viewBox="0 0 24 24"
+                                        className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      >
+                                        <rect x="5" y="11" width="14" height="9" rx="2" />
+                                        <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+                                      </svg>
+                                    )}
+                                  </div>
+                                </Field>
+
+                                <label className="flex cursor-pointer items-center gap-2.5 text-sm text-white/80">
+                                  <input
+                                    type="checkbox"
+                                    checked={useNameAsTeam}
+                                    onChange={(e) => toggleNameAsTeam(e.target.checked)}
+                                    className="h-4 w-4 shrink-0 accent-violet-500"
+                                  />
+                                  {t(dict.register.soloTeamNameSameLabel)}
+                                </label>
+
+                                {useNameAsTeam && (
+                                  <p id="solo-teamname-note" className="text-xs leading-relaxed text-white/50">
+                                    {t(
+                                      name.trim()
+                                        ? dict.register.soloTeamNameLocked
+                                        : dict.register.soloTeamNameNeedName
+                                    )}
+                                  </p>
+                                )}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+
                         <label className="flex cursor-pointer items-center gap-2.5 text-sm text-white/80">
                           <input
                             type="checkbox"

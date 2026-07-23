@@ -293,8 +293,8 @@ export const dict = {
     // Field 5 — join type (drives the team section).
     partLabel: { ko: "참가 형태", en: "How are you joining?" },
     partOptions: [
-      { value: "team", label: { ko: "팀이 이미 있어요", en: "I already have a team" } },
-      { value: "solo", label: { ko: "솔로로 갑니다", en: "Going solo" } },
+      { value: "team", label: { ko: "팀이 이미 있어요 (2–3인)", en: "I already have a team (2–3)" } },
+      { value: "solo", label: { ko: "솔로로 갑니다 (1인)", en: "Going solo (1)" } },
     ],
     // Solo-only: opt into being matched with other solo builders. The AI-type
     // block appears only while this is checked.
@@ -302,9 +302,34 @@ export const dict = {
       ko: "다른 솔로 참가자와 팀 매칭을 원해요",
       en: "Match me with other solo builders",
     },
+    // Solo-only team name — a 1인 팀 can name itself in advance. Optional, and
+    // hidden the moment matching is checked (the team is decided on-site then).
+    soloTeamNameHelper: {
+      ko: "1인 팀으로 출전할 팀명이에요. 비워두면 현장에서 정해도 돼요.",
+      en: "Your one-person team's name — leave it blank and decide on-site if you like.",
+    },
+    // Checkbox: mirror the name into the team name and lock the field.
+    soloTeamNameSameLabel: {
+      ko: "팀명을 내 이름과 똑같이 할래요",
+      en: "Use my name as the team name",
+    },
+    // Shown (not an error) when the box is checked before a name is entered —
+    // focus jumps to the name field and the team name fills in as they type.
+    soloTeamNameNeedName: {
+      ko: "먼저 이름을 입력해 주세요 — 팀명에 그대로 채워드려요.",
+      en: "Enter your name first — we'll fill it into the team name for you.",
+    },
+    // The locked-field reason, tied to the input via aria-describedby.
+    soloTeamNameLocked: {
+      ko: "이름과 똑같이 맞춰뒀어요. 체크를 해제하면 직접 고칠 수 있어요.",
+      en: "Matched to your name. Uncheck to edit it yourself.",
+    },
     // Team section — shown only when "team" is selected.
     teamSectionTitle: { ko: "팀 정보", en: "Team details" },
-    teamSizeNote: { ko: "팀은 1–3인이에요", en: "Teams are 1–3 people" },
+    teamSizeNote: {
+      ko: "팀은 2–3인이에요 — 혼자라면 '솔로'로",
+      en: "Teams are 2–3 — going alone? Pick solo.",
+    },
     teamNameLabel: { ko: "팀명", en: "Team name" },
     teamNamePlaceholder: { ko: "예: 빌드 마스터즈", en: "e.g. Build Masters" },
     teamNameHelper: {
@@ -389,6 +414,12 @@ export const dict = {
     errRequired: { ko: "필수 항목이에요.", en: "This field is required." },
     errEmail: { ko: "이메일 형식을 확인해 주세요.", en: "Please enter a valid email." },
     errDupEmail: { ko: "이미 입력한 이메일이에요.", en: "This email is already entered." },
+    // A "team" with only the registrant — a team is 2–3 people, so route them
+    // to the solo option instead of accepting a 1인 team.
+    errTeamTooSmall: {
+      ko: "혼자라면 '솔로'로 바꿔주세요.",
+      en: "Going alone? Switch to 'Going solo'.",
+    },
     // Shown when the submit itself fails (network down / server error). The
     // form stays filled in so the visitor can just press the button again.
     errSubmit: {
