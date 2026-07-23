@@ -807,7 +807,7 @@ export const dict = {
         num: "06",
         title: { ko: "인턴십 · 상금", en: "Internships & prizes" },
         points: [
-          { ko: "딥다이브 2트랙(재무·영업) 1위 = 유급 FDE 인턴 — ‘AXMOS 학생 TF’로 잇는 선순환 · 잠정", en: "1st in each Deep Dive track (finance · sales) = paid FDE internship — a virtuous loop as the ‘AXMOS student TF’ · tentative" },
+          { ko: "우수 팀에 유급 FDE 인턴 기회 — ‘AXMOS 학생 TF’로 잇는 선순환 · 잠정", en: "A paid FDE internship for top teams — a virtuous loop as the ‘AXMOS student TF’ · tentative" },
           { ko: "트랙별 순위 시상 · 상금 S$100 · 널담 바우처 · 잠정", en: "Ranked per-track awards · S$100 prize · Nuldam voucher · tentative" },
           { ko: "After 파이프라인(투자·인턴)으로 연결", en: "Bridges into an After pipeline (investment · internship)" },
           { ko: "굿즈 (pen·notes) 등", en: "Goods (pens · notes) and more" },
