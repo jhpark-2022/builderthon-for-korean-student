@@ -113,10 +113,13 @@ export default function JourneyNav() {
               who lands and isn't ready to register should find the low-commitment
               door immediately, not after proving they'll scroll.
  
-              Ghost/outline while unregistered so it stays a clear step below the
-              register pill. Once registered the roles swap: registration is done
-              ("등록 완료 ✓"), so the next real action is the chat, and this
-              becomes the filled control. See the registered branch below. */}
+              Emphasized violet-tinted outline while unregistered: a soft violet
+              glow + brighter text so the low-commitment door actually draws the
+              eye — but still an OUTLINE, not a fill, so it stays one tier below
+              the solid register pill (no two competing primaries). Once
+              registered the roles swap: registration is done ("등록 완료 ✓"), so
+              the next real action is the chat, and this becomes the filled
+              control. See the registered branch below. */}
           {links.openChat && (
             <a
               href={links.openChat}
@@ -127,7 +130,7 @@ export default function JourneyNav() {
               className={
                 registered
                   ? "hidden shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(124,92,255,0.6)] lg:inline-flex"
-                  : "hidden shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium text-white/75 transition hover:border-white/35 hover:bg-white/10 hover:text-white lg:inline-flex"
+                  : "hidden shrink-0 items-center gap-1.5 rounded-full border border-violet-400/45 bg-violet-500/15 px-4 py-2 text-sm font-semibold text-violet-100 shadow-[0_0_18px_rgba(124,92,255,0.28)] transition hover:-translate-y-0.5 hover:border-violet-300/70 hover:bg-violet-500/25 hover:text-white hover:shadow-[0_0_26px_rgba(124,92,255,0.45)] lg:inline-flex"
               }
             >
               <ChatGlyph className="h-4 w-4" />

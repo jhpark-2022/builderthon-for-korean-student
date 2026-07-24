@@ -1271,7 +1271,7 @@ function MobileRegisterBar() {
                 className={
                   registered
                     ? "inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition active:scale-95"
-                    : "inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white/75 transition active:scale-95"
+                    : "inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-violet-400/45 bg-violet-500/15 text-violet-100 shadow-[0_0_18px_rgba(124,92,255,0.28)] transition active:scale-95"
                 }
               >
                 <ChatGlyph className="h-5 w-5" />
