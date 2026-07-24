@@ -1418,17 +1418,17 @@ export default function Journey() {
         align="center"
         wide
         background={<HeroVideo blur={bgBlur} />}
-        footer={
-          <motion.div
-            style={{ opacity: heroFade }}
-            // Hidden on mobile — the stacked mobile hero is already tall and the
-            // scroll affordance is obvious there; the ticker just adds clutter.
-            className="pointer-events-none hidden flex-col items-center gap-2 text-[0.7rem] tracking-[0.3em] text-white/60 lg:flex"
-          >
-            {t(dict.hero.scroll).toUpperCase()}
-            <span className="h-10 w-px animate-pulse bg-gradient-to-b from-white/50 to-transparent" />
-          </motion.div>
-        }
+        // Scroll ticker disabled on all screen sizes (commented out). Restore by
+        // re-adding this footer prop:
+        // footer={
+        //   <motion.div
+        //     style={{ opacity: heroFade }}
+        //     className="pointer-events-none hidden flex-col items-center gap-2 text-[0.7rem] tracking-[0.3em] text-white/60 lg:flex"
+        //   >
+        //     {t(dict.hero.scroll).toUpperCase()}
+        //     <span className="h-10 w-px animate-pulse bg-gradient-to-b from-white/50 to-transparent" />
+        //   </motion.div>
+        // }
       >
         {/* Two-up hero: copy + CTAs hugging the left screen edge, the Countdown ↔
             Problem panel hugging the right edge. Stacks to a single centred column
