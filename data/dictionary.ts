@@ -956,18 +956,22 @@ export const dict = {
     // default to "" / 0) so the array stays a single homogeneous type — otherwise
     // TS infers a union and `m.linkedin` / `m.img` can't be read on the cards.
     // Avatar precedence on the card: img (face photo) → logo (company mark) → initial.
-    // Only 신동혁 has a face photo on hand; the rest keep the initial avatar.
-    // LinkedIn URLs are ONLY the ones confirmed in the deck; the rest stay "".
+    // Only 신동혁 has a face photo on hand; everyone else keeps the initial avatar.
+    // The two host companies (Onword Lab · REmited) are represented by the SPECIFIC
+    // founder(s) coming as mentors — not just a company logo — with names/titles
+    // taken verbatim from their own LinkedIn profiles (not invented).
+    // LinkedIn URLs are the mentors' confirmed public profiles; the rest stay "".
     // daysPending marks a day that is confirmed-in-principle but not locked
     // (한장환: Day 1 confirmed, Day 7 still TBC) — rendered as a separate amber pill.
-    // TODO: confirm public naming — the six named mentors below are confirmed in
-    // the internal deck; verify they may be shown publicly before surfacing.
+    // TODO: confirm public naming — verify each named mentor may be shown publicly.
     gridLabel: { ko: "확정 멘토 · Confirmed", en: "Confirmed mentors" },
     dayPendingLabel: { ko: "협의 중", en: "TBC" },
     mentors: [
-      // Company mentors — reuse the existing partner logos as the avatar.
-      { name: { ko: "Onword Lab", en: "Onword Lab" }, org: { ko: "기업 멘토", en: "Company mentor" }, role: { ko: "", en: "" }, days: "Day 3·4", daysPending: "", img: "", logo: "/partners/logos/white/trimmed/onword-lab.png", logoW: 900, logoH: 92, linkedin: "" },
-      { name: { ko: "REmited", en: "REmited" }, org: { ko: "기업 멘토", en: "Company mentor" }, role: { ko: "", en: "" }, days: "Day 3·4", daysPending: "", img: "", logo: "/partners/logos/white/trimmed/remited.png", logoW: 512, logoH: 105, linkedin: "" },
+      // Onword Lab — two founders as mentors.
+      { name: { ko: "김진호", en: "Jinho Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CEO", en: "Co-founder · CEO" }, days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/kimjinho" },
+      { name: { ko: "Sihoon Kim", en: "Sihoon Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CTO", en: "Co-founder · CTO" }, days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sihoon-kim-306551372" },
+      // REmited (Team Remited) — CEO as mentor.
+      { name: { ko: "Brian Bae", en: "Brian Bae" }, org: { ko: "REmited", en: "REmited" }, role: { ko: "CEO", en: "CEO" }, days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/brian-bae-ba638a131" },
       // Individual mentors — face photo where available, else initials avatar.
       { name: { ko: "황영준", en: "Hwang Young-jun" }, org: { ko: "T3Q", en: "T3Q" }, role: { ko: "AI", en: "AI" }, days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "" },
       { name: { ko: "이유택", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" }, days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "" },
