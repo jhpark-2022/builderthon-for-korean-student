@@ -1871,8 +1871,12 @@ export default function Journey() {
               const role = t(m.role);
               return (
                 <div key={i} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-emerald-400/25 hover:bg-white/[0.05]">
-                  {/* Avatar — logo chip for company mentors, initial for people. */}
-                  {m.logo ? (
+                  {/* Avatar — face photo → company logo chip → initial (in that order). */}
+                  {m.img ? (
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10">
+                      <Image src={m.img} alt={name} width={400} height={400} className="h-full w-full object-cover" />
+                    </span>
+                  ) : m.logo ? (
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/[0.06] px-1.5">
                       <Image src={m.logo} alt={name} width={m.logoW} height={m.logoH} unoptimized loading="eager" className="h-auto w-auto max-h-6 max-w-full object-contain" />
                     </span>
@@ -1889,9 +1893,17 @@ export default function Journey() {
                     <p className="mt-0.5 text-xs leading-snug text-white/60">
                       {t(m.org)}{role ? ` · ${role}` : ""}
                     </p>
-                    <span className="mt-2 inline-flex items-center rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.62rem] font-semibold text-white/60">
-                      {m.days}
-                    </span>
+                    <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                      <span className="inline-flex items-center rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.62rem] font-semibold text-white/60">
+                        {m.days}
+                      </span>
+                      {/* A day confirmed-in-principle but not locked (한장환 · Day 7). */}
+                      {m.daysPending && (
+                        <span className="inline-flex items-center rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-2 py-0.5 text-[0.62rem] font-semibold text-amber-200/90">
+                          {m.daysPending} · {t(dict.mentoring.dayPendingLabel)}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               );
@@ -1900,9 +1912,8 @@ export default function Journey() {
         </div>
 
         {/* ── Judges subsection (deck p13) · no new nav item ────────────────
-            6 confirmed judge cards + 2 "to be announced" placeholders. Photos
-            are initial avatars for now, swappable when files arrive. LinkedIn
-            icon only where a confirmed URL exists. */}
+            6 confirmed judge cards (face photos) + 2 "to be announced"
+            placeholders. LinkedIn icon only where a confirmed URL exists. */}
         <div className="mt-16 border-t border-white/10 pt-12 text-left">
           <div className="text-center">
             <Eyebrow color="violet">{t(dict.judges.tag)}</Eyebrow>
@@ -1917,10 +1928,16 @@ export default function Journey() {
               return (
                 <div key={i} className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-400/25 hover:bg-white/[0.05]">
                   <div className="flex items-center gap-3">
-                    {/* Initial avatar — replace with <Image> when photo files land. */}
-                    <span aria-hidden className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-violet-400/20 bg-violet-400/10 text-base font-black text-violet-200">
-                      {name.charAt(0)}
-                    </span>
+                    {/* Face photo when on hand, else initial avatar. */}
+                    {j.img ? (
+                      <span className="h-12 w-12 shrink-0 overflow-hidden rounded-full border border-violet-400/20">
+                        <Image src={j.img} alt={name} width={400} height={400} className="h-full w-full object-cover" />
+                      </span>
+                    ) : (
+                      <span aria-hidden className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-violet-400/20 bg-violet-400/10 text-base font-black text-violet-200">
+                        {name.charAt(0)}
+                      </span>
+                    )}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-start justify-between gap-2">
                         <p className="text-sm font-bold leading-snug text-white">{name}</p>
