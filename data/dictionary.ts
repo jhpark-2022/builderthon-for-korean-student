@@ -961,7 +961,8 @@ export const dict = {
     // The two host companies (Onword Lab · REmited) are represented by the SPECIFIC
     // founder(s) coming as mentors — not just a company logo — with names/titles
     // taken verbatim from their own LinkedIn profiles (not invented).
-    // LinkedIn URLs are the mentors' confirmed public profiles; the rest stay "".
+    // LinkedIn URLs are the mentors' public profiles (all individuals now have one;
+    // 황영준·이유택·한장환 came from prior records — re-verify if a link looks off).
     // daysPending marks a day that is confirmed-in-principle but not locked
     // (한장환: Day 1 confirmed, Day 7 still TBC) — rendered as a separate amber pill.
     // TODO: confirm public naming — verify each named mentor may be shown publicly.
@@ -975,22 +976,21 @@ export const dict = {
       { name: { ko: "Brian Bae", en: "Brian Bae" }, org: { ko: "REmited", en: "REmited" }, role: { ko: "CEO", en: "CEO" }, days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/brian-bae-ba638a131" },
       // Individual mentors — face photo where available, else initials avatar.
       { name: { ko: "황영준", en: "Hwang Young-jun" }, org: { ko: "T3Q", en: "T3Q" }, role: { ko: "AI", en: "AI" }, days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620" },
-      { name: { ko: "이유택", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" }, days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "" },
+      { name: { ko: "이유택", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" }, days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek" },
       // 한장환: Day 1 확정, Day 7 협의 중(pending) → days + daysPending 분리.
       { name: { ko: "한장환", en: "Han Jang-whan" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "SA", en: "SA" }, days: "Day 1", daysPending: "Day 7", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jangwhan" },
       // 신동혁 has a photo (used on his JUDGE card) but mentor cards stay photo-free by request → initial avatar.
       { name: { ko: "신동혁", en: "Shin Dong-hyuk" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "GTM", en: "GTM" }, days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/donghyukshin" },
-      { name: { ko: "이화영", en: "Lee Hwa-young" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "Sales", en: "Sales" }, days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "" },
-      { name: { ko: "임석근", en: "Lim Seok-geun" }, org: { ko: "NetApp", en: "NetApp" }, role: { ko: "APAC", en: "APAC" }, days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "" },
+      { name: { ko: "이화영", en: "Lee Hwa-young" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "Sales", en: "Sales" }, days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hwayoung-lee-bbb79a134" },
+      { name: { ko: "임석근", en: "Lim Seok-geun" }, org: { ko: "NetApp", en: "NetApp" }, role: { ko: "APAC", en: "APAC" }, days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sugkun-lim" },
     ],
   },
 
   // ── 심사위원 (덱 p13) ────────────────────────────────────────────────────────
   // Rendered as a subsection of the mentoring chapter (no new nav item). Bios are
   // tidied from the deck's own copy — NO facts added, EN is a translation. Every
-  // person object carries identical keys (linkedin defaults to "") to keep the
-  // array homogeneous. All six have a face photo (img). LinkedIn is filled for the
-  // five whose profiles were verified; 신상길's stays "" (no profile confirmed).
+  // person object carries identical keys to keep the array homogeneous. All six
+  // have a face photo (img) and a confirmed LinkedIn profile.
   // TODO: confirm public naming — verify each name may be shown publicly.
   // Internal-only figures (e.g. Shin Sang-gil's "FY24 S$22M·+45%") are omitted.
   judges: {
@@ -1059,7 +1059,7 @@ export const dict = {
           ko: "후지필름 BI 싱가포르 고객성공·DX/AI 컨설팅 총괄로 금융·정부·제조 전반을 담당. 前 HP 24년 — APJ 매니지드 서비스·잉크젯 제품·시장개발.",
           en: "Leads customer success and DX·AI consulting at FUJIFILM BI Singapore across finance, government and manufacturing. 24 years at HP before that — APJ managed services, inkjet products and market development.",
         },
-        linkedin: "", // TODO: LinkedIn URL not provided — leave blank until confirmed
+        linkedin: "https://www.linkedin.com/in/steveskshin",
       },
       {
         name: { ko: "신동혁", en: "Shin Dong-hyuk" },
