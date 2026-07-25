@@ -1967,10 +1967,10 @@ export default function Journey() {
               CARD whose header carries the AXMOS wordmark + one-liner; the header
               is a button that opens the same partner-intro modal as the tiles.
               The header→body containment reads "AXMOS ⊃ these five" at a glance.
-              The wordmark is set as type (site font, wide tracking, brand-gradient
-              text) rather than an image: the only AXMOS asset on hand is a
-              white-background JPEG / a colour-gradient PNG, neither a dark-ready
-              white silhouette like the member logos — see handoff note. */}
+              The AXMOS mark is the brand's own colour-gradient wordmark (trimmed
+              to its alpha bbox, transparent bg) — kept in colour on purpose so the
+              umbrella brand reads a step apart from the white member silhouettes
+              below it. See scripts note / handoff. */}
           <div className="mt-9 text-left">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.hostLabel)}</p>
             <div className="mt-3 overflow-hidden rounded-2xl border border-white/12 bg-white/[0.02]">
@@ -1981,9 +1981,15 @@ export default function Journey() {
                 aria-label="AXMOS"
                 className="group flex w-full flex-col items-start gap-1.5 border-b border-white/10 bg-white/[0.04] px-5 py-4 text-left transition hover:bg-white/[0.07] sm:flex-row sm:items-center sm:gap-4"
               >
-                <span className="bg-gradient-to-r from-sky-300 via-cyan-300 to-teal-200 bg-clip-text text-2xl font-black leading-none tracking-[0.22em] text-transparent">
-                  AXMOS
-                </span>
+                <Image
+                  src="/partners/logos/axmos-wordmark.png"
+                  alt="AXMOS"
+                  width={750}
+                  height={200}
+                  unoptimized
+                  loading="eager"
+                  className="h-7 w-auto shrink-0"
+                />
                 <span className="text-xs leading-relaxed text-white/60">{t(dict.partners.axmosTagline)}</span>
                 <span aria-hidden className="ml-auto hidden shrink-0 text-white/30 transition group-hover:text-white/70 sm:inline">↗</span>
               </button>
