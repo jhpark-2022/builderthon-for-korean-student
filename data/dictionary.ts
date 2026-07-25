@@ -75,6 +75,10 @@ export const partnerIntros: Record<string, Phrase> = {
   },
 
   // ── 주최 · HOST ────────────────────────────────────────────────────────────
+  AXMOS: {
+    ko: "AXMOS는 Translink Investment · Wilt Venture Builder · Codepresso · Popup Studio · DRIMAES 5개 사가 결성한 AX(AI 전환) 컨소시엄입니다. 이번 빌더톤의 실제 기업 과제 발의와 심사를 함께 담당합니다.",
+    en: "AXMOS is an AX (AI-transformation) consortium formed by Translink Investment, Wilt Venture Builder, Codepresso, Popup Studio and DRIMAES — jointly providing this builderthon's real company problems and judging.",
+  },
   "Translink Investment": {
     ko: "실리콘밸리 트랜스링크캐피탈과 합작해 2016년 출범한 벤처캐피탈로, SaaS·딥테크 중심으로 7개 조합·누적 약 1,900억 원 규모를 운용합니다. 마켓컬리 초기 투자사로 알려져 있으며, 포트폴리오사의 글로벌 진출 지원이 강점입니다. 데모데이 키노트를 맡은 박희덕 대표가 이끄는 하우스입니다.",
     en: "A venture capital firm launched in 2016 with Silicon Valley's TransLink Capital, running seven funds (~KRW 190B) focused on SaaS and deep tech. An early investor in Market Kurly, known for helping portfolios expand globally — led by Hee-Duk Park, our Demo Day keynote speaker.",
@@ -460,7 +464,7 @@ export const dict = {
     // Tier captions inside the strip. Deliberately shorter than the partner
     // section's own labels ("주최 · HOST", "주관 · 운영", "후원 · SPONSORS") —
     // at 0.55rem in a hairline band the full forms crowd out the logos.
-    partnersHost: { ko: "주최", en: "Host" },
+    partnersHost: { ko: "주최 · AXMOS", en: "Host · AXMOS" },
     partnersOrganizers: { ko: "주관", en: "Organizers" },
     partnersSponsors: { ko: "후원", en: "Sponsors" },
     statParticipants: { ko: "한인 학생", en: "Korean students" },
@@ -1076,14 +1080,16 @@ export const dict = {
     tag: { ko: "Partners", en: "Partners" },
     heading: { ko: "함께 만드는 사람들", en: "Built together" },
     note: {
-      ko: "실제 AX 과제를 함께 제공하는 주최 파트너(AXMOS), SMU·NUS·NTU 한인 학생회의 주관·운영, 그리고 장소·마케팅·멘토링·굿즈를 맡아주는 후원사가 함께합니다. 각 파트너가 맡은 역할을 그대로 표기합니다.",
-      en: "Built with the host partners providing the real AX problems (AXMOS), organized and run by the SMU · NUS · NTU Korean student associations, and supported by sponsors covering venue, marketing, mentoring and goods. Each partner is labelled with the role they actually play.",
+      ko: "실제 기업 과제를 함께 제공하는 주최 컨소시엄 AXMOS(5개 사), SMU·NUS·NTU 한인 학생회의 주관·운영, 그리고 장소·마케팅·멘토링·굿즈를 맡아주는 후원사가 함께합니다. 각 파트너가 맡은 역할을 그대로 표기합니다.",
+      en: "Built with AXMOS — the host consortium of five companies providing the real company problems — organized and run by the SMU · NUS · NTU Korean student associations, and supported by sponsors covering venue, marketing, mentoring and goods. Each partner is labelled with the role they actually play.",
     },
-    // ── Tier 1 · 주최 · HOST (the AXMOS collective) ──────────────────────────
+    // ── Tier 1 · 주최 · HOST (the AXMOS consortium) ──────────────────────────
     hostLabel: { ko: "주최 · HOST", en: "Host" },
-    hostNote: {
-      ko: "AXMOS — 실제 AX 과제를 함께 제공하는 주최 파트너.",
-      en: "AXMOS — the host partners providing the real AX problems.",
+    // Header line inside the AXMOS umbrella container (the wordmark "AXMOS"
+    // renders separately, so the copy starts after the em-dash — no double name).
+    axmosTagline: {
+      ko: "5개 사가 결성한 AX 컨소시엄 · 실제 기업 과제를 함께 제공합니다",
+      en: "an AX consortium of the five companies below, providing the real company problems",
     },
     // ── Tier 2 · 주관 · 운영 · ORGANIZERS (student associations) ─────────────
     organizersLabel: { ko: "주관 · 운영", en: "Organizers" },

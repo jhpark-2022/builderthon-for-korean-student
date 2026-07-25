@@ -1959,31 +1959,50 @@ export default function Journey() {
           <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
             {t(dict.partners.heading)}
           </h2>
-          <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/75">{t(dict.partners.note)}</p>
+          <p className="mx-auto mt-4 max-w-2xl text-center text-sm leading-relaxed text-white/75">{t(dict.partners.note)}</p>
 
-          {/* ── Tier 1 · 주최 · HOST (the AXMOS collective) ─────────────────
-              Full-colour marks on white chips, matching the deck's structure
-              slide. Wilt Venture Builder has no public site link on hand → no
-              anchor (honest, not an invented URL). */}
+          {/* ── Tier 1 · 주최 · HOST (the AXMOS consortium) ──────────────────
+              AXMOS is NOT a sixth company — it's the AX consortium the five host
+              companies formed. So the five marks are wrapped in one umbrella
+              CARD whose header carries the AXMOS wordmark + one-liner; the header
+              is a button that opens the same partner-intro modal as the tiles.
+              The header→body containment reads "AXMOS ⊃ these five" at a glance.
+              The wordmark is set as type (site font, wide tracking, brand-gradient
+              text) rather than an image: the only AXMOS asset on hand is a
+              white-background JPEG / a colour-gradient PNG, neither a dark-ready
+              white silhouette like the member logos — see handoff note. */}
           <div className="mt-9 text-left">
-            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.hostLabel)}</p>
-              <p className="text-xs text-white/50">{t(dict.partners.hostNote)}</p>
-            </div>
-            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-              {[
-                { src: "/partners/logos/white/trimmed/translink.png",    alt: "Translink Investment", w: 330, h: 91,  url: "https://translinkinvestment.com" as string | undefined },
-                { src: "/partners/logos/white/trimmed/wilt.png",         alt: "Wilt Venture Builder", w: 309, h: 148, url: undefined },
-                { src: "/partners/logos/white/trimmed/codepresso.png",   alt: "Codepresso",           w: 456, h: 91,  url: "https://codepresso.io" },
-                { src: "/partners/logos/white/trimmed/popup-studio.png", alt: "Popup Studio",         w: 512, h: 245, url: "https://popupstudio.ai" },
-                { src: "/partners/logos/white/trimmed/drimaes.png",      alt: "Drimaes",              w: 332, h: 50,  url: "https://www.drimaes.com" },
-              ].map(({ url, ...l }) => (
-                <LogoTile
-                  key={l.alt}
-                  {...l}
-                  onOpen={(el) => openPartner(l.alt, dict.partners.stageConfirmed, el, url)}
-                />
-              ))}
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.hostLabel)}</p>
+            <div className="mt-3 overflow-hidden rounded-2xl border border-white/12 bg-white/[0.02]">
+              {/* Umbrella header — click opens the AXMOS intro modal. */}
+              <button
+                type="button"
+                onClick={(e) => openPartner("AXMOS", dict.partners.stageConfirmed, e.currentTarget)}
+                aria-label="AXMOS"
+                className="group flex w-full flex-col items-start gap-1.5 border-b border-white/10 bg-white/[0.04] px-5 py-4 text-left transition hover:bg-white/[0.07] sm:flex-row sm:items-center sm:gap-4"
+              >
+                <span className="bg-gradient-to-r from-sky-300 via-cyan-300 to-teal-200 bg-clip-text text-2xl font-black leading-none tracking-[0.22em] text-transparent">
+                  AXMOS
+                </span>
+                <span className="text-xs leading-relaxed text-white/60">{t(dict.partners.axmosTagline)}</span>
+                <span aria-hidden className="ml-auto hidden shrink-0 text-white/30 transition group-hover:text-white/70 sm:inline">↗</span>
+              </button>
+              {/* The five member companies inside the umbrella. */}
+              <div className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-3 lg:grid-cols-5">
+                {[
+                  { src: "/partners/logos/white/trimmed/translink.png",    alt: "Translink Investment", w: 330, h: 91,  url: "https://translinkinvestment.com" as string | undefined },
+                  { src: "/partners/logos/white/trimmed/wilt.png",         alt: "Wilt Venture Builder", w: 309, h: 148, url: undefined },
+                  { src: "/partners/logos/white/trimmed/codepresso.png",   alt: "Codepresso",           w: 456, h: 91,  url: "https://codepresso.io" },
+                  { src: "/partners/logos/white/trimmed/popup-studio.png", alt: "Popup Studio",         w: 512, h: 245, url: "https://popupstudio.ai" },
+                  { src: "/partners/logos/white/trimmed/drimaes.png",      alt: "Drimaes",              w: 332, h: 50,  url: "https://www.drimaes.com" },
+                ].map(({ url, ...l }) => (
+                  <LogoTile
+                    key={l.alt}
+                    {...l}
+                    onOpen={(el) => openPartner(l.alt, dict.partners.stageConfirmed, el, url)}
+                  />
+                ))}
+              </div>
             </div>
           </div>
 
