@@ -1095,8 +1095,8 @@ export const dict = {
         tag: { ko: "웹 · AI 풀스택", en: "Web · AI full-stack" },
         img: "/partners/people/jeong-yo-cheon.webp",
         bio: {
-          ko: "웹·AI 서비스 풀스택 개발사 Brie의 CEO 겸 CTO이자 현 Popup Studio 총괄. 前 워프벤처스 CEO/CTO — 건축주–건축사·시공사 매칭 웹 플랫폼과 딥러닝 기반 개인화 추천(deep collaborative filtering) 개발. 아이앤제이자산운용 Pre-IPO 메자닌 운용역, 한국산업은행(KDB) 기업금융 출신.",
-          en: "CEO and CTO of Brie, a full-stack web·AI service development company, and currently head of Popup Studio. Formerly CEO/CTO of Warp Ventures — a web platform matching building owners with architects and contractors, plus deep-learning personalised recommendation (deep collaborative filtering). Earlier, Pre-IPO mezzanine investing at I&J Asset Management and corporate finance at the Korea Development Bank (KDB).",
+          ko: "웹·AI 풀스택 개발사 Brie 대표(CEO 겸 CTO)·Popup Studio 총괄. 前 워프벤처스 CEO/CTO — 건축 매칭 플랫폼·딥러닝 추천 개발. 前 산업은행(KDB) 기업금융.",
+          en: "CEO·CTO of Brie, a full-stack web·AI development studio, and head of Popup Studio. Formerly CEO/CTO of Warp Ventures — construction matching platform and deep-learning recommendations. Earlier corporate finance at KDB.",
         },
         linkedin: "",
       },
