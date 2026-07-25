@@ -956,7 +956,8 @@ export const dict = {
     // default to "" / 0) so the array stays a single homogeneous type — otherwise
     // TS infers a union and `m.linkedin` / `m.img` can't be read on the cards.
     // Avatar precedence on the card: img (face photo) → logo (company mark) → initial.
-    // Only 신동혁 has a face photo on hand; everyone else keeps the initial avatar.
+    // Mentor cards are photo-free by request (img stays "") — everyone shows an
+    // initial avatar; the photo path is kept only for the JUDGE cards below.
     // The two host companies (Onword Lab · REmited) are represented by the SPECIFIC
     // founder(s) coming as mentors — not just a company logo — with names/titles
     // taken verbatim from their own LinkedIn profiles (not invented).
@@ -977,7 +978,8 @@ export const dict = {
       { name: { ko: "이유택", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" }, days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "" },
       // 한장환: Day 1 확정, Day 7 협의 중(pending) → days + daysPending 분리.
       { name: { ko: "한장환", en: "Han Jang-whan" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "SA", en: "SA" }, days: "Day 1", daysPending: "Day 7", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jangwhan" },
-      { name: { ko: "신동혁", en: "Shin Dong-hyuk" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "GTM", en: "GTM" }, days: "Day 7", daysPending: "", img: "/partners/people/shin-dong-hyuk.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "" },
+      // 신동혁 has a photo (used on his JUDGE card) but mentor cards stay photo-free by request → initial avatar.
+      { name: { ko: "신동혁", en: "Shin Dong-hyuk" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "GTM", en: "GTM" }, days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "" },
       { name: { ko: "이화영", en: "Lee Hwa-young" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "Sales", en: "Sales" }, days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "" },
       { name: { ko: "임석근", en: "Lim Seok-geun" }, org: { ko: "NetApp", en: "NetApp" }, role: { ko: "APAC", en: "APAC" }, days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "" },
     ],
