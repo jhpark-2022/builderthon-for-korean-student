@@ -896,7 +896,7 @@ export const dict = {
         role: { ko: "CEO · General Partner, Translink Investment (VC)", en: "CEO · General Partner, Translink Investment (VC)" },
         topic: { ko: "‘FDE로 일한다는 것’ — 커리어 간담회", en: "“Working as an FDE” — a career session" },
         img: "/partners/logos/speaker-park.jpeg",
-        linkedin: "https://www.linkedin.com/in/hee-duk-park",
+        linkedin: "https://www.linkedin.com/in/hee-duk-park-304079bb",
         points: [
           { ko: "자사 FDE 사업에 관심 있는 학생·졸업생 대상 · 12:30–14:00", en: "For students & grads interested in the firm's FDE business · 12:30–14:00" },
           { ko: "어떤 일을 하는 자리인지, 어떤 사람을 찾는지 직접 듣기", en: "What the work actually is, and who they're looking for — first-hand" },
@@ -910,7 +910,7 @@ export const dict = {
         role: { ko: "CEO · General Partner, Translink Investment (VC)", en: "CEO · General Partner, Translink Investment (VC)" },
         topic: { ko: "‘제로백의 진짜 의미’", en: "“The Real Meaning of Zero100”" },
         img: "/partners/logos/speaker-park.jpeg",
-        linkedin: "https://www.linkedin.com/in/hee-duk-park",
+        linkedin: "https://www.linkedin.com/in/hee-duk-park-304079bb",
         points: [
           { ko: "0 → 100의 핵심 — 협업 · 가치 · 실행 · 글로벌 스탠다드", en: "The core of 0 → 100 — collaboration · value · execution · global standards" },
           { ko: "협업의 힘 · 커뮤니티의 중요성", en: "The power of collaboration · why community matters" },
@@ -974,12 +974,12 @@ export const dict = {
       // REmited (Team Remited) — CEO as mentor.
       { name: { ko: "Brian Bae", en: "Brian Bae" }, org: { ko: "REmited", en: "REmited" }, role: { ko: "CEO", en: "CEO" }, days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/brian-bae-ba638a131" },
       // Individual mentors — face photo where available, else initials avatar.
-      { name: { ko: "황영준", en: "Hwang Young-jun" }, org: { ko: "T3Q", en: "T3Q" }, role: { ko: "AI", en: "AI" }, days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "" },
+      { name: { ko: "황영준", en: "Hwang Young-jun" }, org: { ko: "T3Q", en: "T3Q" }, role: { ko: "AI", en: "AI" }, days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620" },
       { name: { ko: "이유택", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" }, days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "" },
       // 한장환: Day 1 확정, Day 7 협의 중(pending) → days + daysPending 분리.
       { name: { ko: "한장환", en: "Han Jang-whan" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "SA", en: "SA" }, days: "Day 1", daysPending: "Day 7", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jangwhan" },
       // 신동혁 has a photo (used on his JUDGE card) but mentor cards stay photo-free by request → initial avatar.
-      { name: { ko: "신동혁", en: "Shin Dong-hyuk" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "GTM", en: "GTM" }, days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "" },
+      { name: { ko: "신동혁", en: "Shin Dong-hyuk" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "GTM", en: "GTM" }, days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/donghyukshin" },
       { name: { ko: "이화영", en: "Lee Hwa-young" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "Sales", en: "Sales" }, days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "" },
       { name: { ko: "임석근", en: "Lim Seok-geun" }, org: { ko: "NetApp", en: "NetApp" }, role: { ko: "APAC", en: "APAC" }, days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "" },
     ],
@@ -989,8 +989,8 @@ export const dict = {
   // Rendered as a subsection of the mentoring chapter (no new nav item). Bios are
   // tidied from the deck's own copy — NO facts added, EN is a translation. Every
   // person object carries identical keys (linkedin defaults to "") to keep the
-  // array homogeneous. All six have a face photo (img); LinkedIn URLs are ONLY
-  // the two confirmed in the deck.
+  // array homogeneous. All six have a face photo (img). LinkedIn is filled for the
+  // five whose profiles were verified; 신상길's stays "" (no profile confirmed).
   // TODO: confirm public naming — verify each name may be shown publicly.
   // Internal-only figures (e.g. Shin Sang-gil's "FY24 S$22M·+45%") are omitted.
   judges: {
@@ -1011,7 +1011,7 @@ export const dict = {
           ko: "트랜스링크인베스트먼트 대표·GP. 前 CJ인베스트먼트 CIO, KT 신사업, KTB네트워크 — 30년 벤처투자·펀드운용.",
           en: "CEO·GP of Translink Investment. Formerly CIO at CJ Investment, new-business at KT, and KTB Network — 30 years in venture investing and fund management.",
         },
-        linkedin: "https://www.linkedin.com/in/hee-duk-park",
+        linkedin: "https://www.linkedin.com/in/hee-duk-park-304079bb",
       },
       {
         name: { ko: "원대로", en: "Won Dae-ro" },
@@ -1035,7 +1035,7 @@ export const dict = {
           ko: "헬스케어·바이오 창업가이자 글로벌 오픈이노베이션 전문가. 前 MUST 액셀러레이터 파트너, AllLive Healthcare 창업(국내 1호 규제샌드박스).",
           en: "Healthcare·bio founder and global open-innovation specialist. Formerly a partner at MUST Accelerator and founder of AllLive Healthcare (Korea's first regulatory-sandbox case).",
         },
-        linkedin: "", // TODO: LinkedIn URL not provided — leave blank until confirmed
+        linkedin: "https://www.linkedin.com/in/danielbyungillee",
       },
       {
         name: { ko: "이동훈", en: "Lee Dong-hoon" },
@@ -1047,7 +1047,7 @@ export const dict = {
           ko: "AI 코딩·역량진단 교육 플랫폼 코드프레소 대표(AXMOS 컨소시엄). 비개발자 대상 바이브코딩·AX 교육을 다수 운영. 前 스마일게이트·LG전자 소프트웨어 엔지니어.",
           en: "CEO of Codepresso, an AI-coding & skills-assessment education platform (AXMOS consortium). Runs many vibe-coding·AX programs for non-developers. Formerly a software engineer at Smilegate and LG Electronics.",
         },
-        linkedin: "", // TODO: LinkedIn URL not provided — leave blank until confirmed
+        linkedin: "https://www.linkedin.com/in/donghun-lee-8888a13a",
       },
       {
         name: { ko: "신상길", en: "Shin Sang-gil" },
@@ -1071,7 +1071,7 @@ export const dict = {
           ko: "AWS APJC GenAI GTM 총괄. GenAI 고객경험(CX) 사업을 2021년 이후 약 10배 성장시키고 7개+ 산업으로 확장. 前 삼성전자 북미 5G 네트워크 사업개발.",
           en: "Leads GenAI GTM for AWS APJC — grew the GenAI customer-experience business roughly 10× since 2021 and expanded it across 7+ industries. Formerly 5G network business development for Samsung Electronics in North America.",
         },
-        linkedin: "", // TODO: LinkedIn URL not provided — leave blank until confirmed
+        linkedin: "https://www.linkedin.com/in/donghyukshin",
       },
     ],
     tbcLabel: { ko: "추후 공개", en: "To be announced" },
