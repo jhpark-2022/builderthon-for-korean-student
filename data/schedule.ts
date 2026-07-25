@@ -100,11 +100,12 @@ export const days: DayMeta[] = [
     phase: LAB1,
     theme: { ko: "오프닝 · 문제 공개", en: "Opening · Problem Release" },
     summary: {
-      ko: "원대로 오프닝 키노트 · 오리엔테이션(문제 공개·트랙 선택·베이스 리포트) · AWS 연사 한장환(확정).",
-      en: "Won's opening keynote · orientation (problem release · track pick · base report) · AWS talk by Han Jang-whan (confirmed).",
+      ko: "YPHSL B2-03 현장 11AM–5PM · 원대로 오프닝 키노트 · 오리엔테이션(문제 공개·트랙 선택·베이스 리포트) · AWS 연사 한장환(확정).",
+      en: "In person at YPHSL B2-03, 11AM–5PM · Won's opening keynote · orientation (problem release · track pick · base report) · AWS talk by Han Jang-whan (confirmed).",
     },
-    // Deck: on-site is pending (Zoom fallback if the venue isn't locked).
-    dayMode: "pending",
+    // Venue booked: YPHSL B2-03, 22 Aug 2026, 11AM–5PM → on-site confirmed
+    // (was "pending" with a Zoom fallback while the room wasn't locked).
+    dayMode: "offline",
     mandatory: true,
   },
   {
@@ -249,6 +250,12 @@ const ONSITE: Bilingual = {
   ko: "*SCAPE L^IFE Jungle, 싱가포르 · 현장 집결",
   en: "*SCAPE L^IFE Jungle, Singapore · in person",
 };
+// Day 1 kickoff venue — booked: YPHSL B2-03, 22 Aug 2026, 11AM–5PM. Only Day 1
+// moves here; the mid-point (Day 5) and Demo Day (Day 8) stay at *SCAPE (ONSITE).
+const YPHSL_B203: Bilingual = {
+  ko: "YPHSL B2-03, 싱가포르 · 현장 집결",
+  en: "YPHSL B2-03, Singapore · in person",
+};
 // Day 7's new venue — the Final Rehearsal moves to the AWS office (confirmed).
 const AWS_OFFICE: Bilingual = {
   ko: "AWS 오피스, 싱가포르 · 현장",
@@ -314,7 +321,7 @@ export const schedule: BEvent[] = [
       ko: "빌더톤의 문을 여는 오프닝 키노트입니다. Wilt Venture Builder(SG)의 원대로 대표가 ‘취업과 창업의 사이’를 주제로, 정형화된 ‘취업 vs 창업’ 이분법에서 벗어나 벤처빌더가 본 다양한 진로·커리어 경로와 비개발자도 시작할 수 있는 여러 갈래를 약 1시간 동안 Q&A와 함께 풀어냅니다. ‘처음이어도 괜찮다’는 톤으로 8일의 ‘왜’를 세우며 출발선을 엽니다.",
       en: "The keynote that opens the builderthon. Won Dae-ro (Managing Director, Wilt Venture Builder SG) speaks on “Between Employment and Founding” for about an hour, with Q&A — stepping past the tidy ‘employment vs. founding’ binary to the many career paths a venture builder has seen, and the routes even non-developers can start from. It sets the 8-day ‘why’ in a ‘first-timers welcome’ tone.",
     },
-    location: ONSITE,
+    location: YPHSL_B203,
   },
   {
     id: "d1-orientation",
@@ -332,7 +339,7 @@ export const schedule: BEvent[] = [
       ko: "8일간의 행사 개요와 진행 방식을 안내하는 오리엔테이션입니다. 트랙 구성과 팀 운영, 평가 흐름을 짚고, 현재까지의 준비 상황을 담은 베이스 리포트를 공유합니다. 첫날부터 ‘어떻게 굴러가는지’를 모두가 같은 그림으로 이해하고 출발할 수 있게 하는 자리입니다.",
       en: "An orientation walking through the shape of the eight days — how it runs, the tracks, team logistics and the judging flow — plus a base report on where preparations stand. The goal is that everyone starts with the same picture of how the week works.",
     },
-    location: ONSITE,
+    location: YPHSL_B203,
   },
   {
     id: "d1-aws-session",
@@ -354,7 +361,7 @@ export const schedule: BEvent[] = [
       ko: "AWS 연사 한장환 님이 진행하는 확정 세션입니다. Amazon이 실제로 AI 문제를 어떻게 정의하고, 어떤 방법론으로 접근하는지를 다룹니다. 문제를 ‘어떻게 풀까’ 이전에 ‘무엇을, 왜 푸는가’를 잡는 관점을 얻어, 곧이어 공개되는 실제 AX 과제에 그대로 적용해볼 수 있습니다.",
       en: "A confirmed session led by AWS speaker Han Jang-whan on how Amazon defines AI problems and the methodology it uses to approach them. It's the ‘what and why’ before the ‘how’ — a lens you can apply directly to the real AX problems released the same day.",
     },
-    location: ONSITE,
+    location: YPHSL_B203,
   },
   {
     id: "d1-problem-release",
@@ -369,10 +376,10 @@ export const schedule: BEvent[] = [
       en: "Real companies' AX problems drop, you pick a track — and the 8-day build clock starts (track line-up not final yet).",
     },
     description: {
-      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 트랙 구성은 아직 확정 전이며(재무·영업·마케팅 3트랙으로 논의 중), 확정되는 대로 안내합니다. 여기서 공개된 문제를 Day 2 기업 브리핑에서 담당자에게 직접 듣고 나면, 팀별 자율 빌드가 그때부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 만들어 갑니다. Day 1은 필참이며 *SCAPE L^IFE Jungle 현장 진행을 목표로 합니다(장소 미정 시 Zoom). (Day 2에는 크래시코스 직후 트랙별 라이브 브리핑이 이어집니다.)",
-      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. The track line-up isn't confirmed yet (three — finance, sales and marketing — are under discussion) and we'll announce it once settled. Once the Day-2 briefing has the client contacts walk you through those problems first-hand, self-paced team build runs continuously from there to Demo Day — no start whistle to wait for, each team at its own pace. Day 1 is mandatory and aims to run on-site at *SCAPE L^IFE Jungle (Zoom fallback if the venue isn't locked). (A live per-track briefing follows on Day 2, right after the Crash Course.)",
+      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 트랙 구성은 아직 확정 전이며(재무·영업·마케팅 3트랙으로 논의 중), 확정되는 대로 안내합니다. 여기서 공개된 문제를 Day 2 기업 브리핑에서 담당자에게 직접 듣고 나면, 팀별 자율 빌드가 그때부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 만들어 갑니다. Day 1은 필참이며 YPHSL B2-03 현장(11AM–5PM)에서 진행합니다. (Day 2에는 크래시코스 직후 트랙별 라이브 브리핑이 이어집니다.)",
+      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. The track line-up isn't confirmed yet (three — finance, sales and marketing — are under discussion) and we'll announce it once settled. Once the Day-2 briefing has the client contacts walk you through those problems first-hand, self-paced team build runs continuously from there to Demo Day — no start whistle to wait for, each team at its own pace. Day 1 is mandatory and runs on-site at YPHSL B2-03 (11AM–5PM). (A live per-track briefing follows on Day 2, right after the Crash Course.)",
     },
-    location: ONSITE,
+    location: YPHSL_B203,
   },
   {
     id: "d1-briefing",
@@ -390,7 +397,7 @@ export const schedule: BEvent[] = [
       ko: "공개된 과제를 함께 살펴보고, 8일간의 진행 방식·팀 구성·평가 기준을 안내하는 현장 브리핑입니다. 궁금한 점은 그 자리에서 바로 묻고 답을 들을 수 있어, 첫날부터 막힘 없이 출발할 수 있습니다.",
       en: "An on-site briefing that walks through the released problems and explains how the eight days work — team formation, schedule and judging. Bring your questions; you'll get answers on the spot so nobody starts the week unsure of how it runs.",
     },
-    location: ONSITE,
+    location: YPHSL_B203,
   },
 
   // ─── DAY 2 · Crash Course (08.23) ───────────────────────────────────────────
