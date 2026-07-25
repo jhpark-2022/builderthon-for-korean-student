@@ -803,7 +803,6 @@ export const dict = {
           { ko: "Codex 기반 beginner-friendly 크래시 코스", en: "A Codex-based, beginner-friendly crash course" },
           { ko: "주최사 FDE의 실제 예시 라이브 빌드 → 따라 하기", en: "Live example builds by the hosts' FDEs to follow along" },
           { ko: "모델 선택·프롬프트·용어 가이드 제공", en: "Model-choice, prompt and terminology guides" },
-          { ko: "0→1 첫 성공 경험 (기본기는 Day 1)", en: "Your first 0→1 success (fundamentals on Day 1)" },
         ],
       },
       {
@@ -812,7 +811,9 @@ export const dict = {
         points: [
           { ko: "출제가 아니라 ‘의뢰’ — 학생은 주니어 컨설턴트로 프로세스·아픔을 진단해 AI로 재설계", en: "Not a prompt but a brief — you're a junior consultant diagnosing a real process & pain, then redesigning it with AI" },
           { ko: "가상 과제가 아닌 파트너사의 실제 AX 문제 + 직원 피드백", en: "Not toy prompts — a partner's real AX problem + employee feedback" },
-          { ko: "트랙 구성 미확정 — 재무·영업·마케팅 3트랙으로 논의 중(잠정) · AWS 방법론으로 접근 · 클라이언트 사명도 조율 중", en: "Tracks not finalized — finance · sales · marketing under discussion (tentative) · approached with AWS methodology · client names TBC" },
+          // REMOVED: "트랙 구성 미확정 — 재무·영업·마케팅 3트랙으로 논의 중(잠정) ·
+          // AWS 방법론으로 접근 · 클라이언트 사명도 조율 중". 트랙/클라이언트가 확정되기
+          // 전까지는 표기하지 않습니다.
           // REMOVED: "모든 참가팀에게 실제 문제와 기업 담당자 브리핑 제공 (Day 2 라이브 브리핑)".
           // How the client contacts would actually deliver a per-track problem
           // briefing is not worked out, so the site no longer promises one. The
@@ -836,11 +837,9 @@ export const dict = {
           { ko: "대표·경력자와 Day 1·5·7·8 현장 교류", en: "In-person exchange with founders on Days 1·5·7·8" },
           { ko: "박희덕·원대로 등 연사 세션", en: "Speaker sessions with Park · Won and more" },
           { ko: "패널·공유 세션으로 technical 그 이상의 인사이트", en: "Panels & sharing sessions for more-than-technical insight" },
-          // Not confirmed — see d5-panel-usecase in data/schedule.ts. Listing an
-          // unconfirmed activity as a flat benefit is the kind of thing someone
-          // registers for and then doesn't get.
-          { ko: "Day 5 참가자 AI 유스케이스 발표 · QR 인기투표 (검토 중)", en: "Day 5 participant AI use-case showcase + QR popular vote (under review)" },
-          { ko: "지속되는 한–싱 빌더 커뮤니티의 시작 멤버", en: "Founding membership in a lasting Korea–SG builder community" },
+          // REMOVED: "Day 5 참가자 AI 유스케이스 발표 · QR 인기투표 (검토 중)" 및
+          // "지속되는 한–싱 빌더 커뮤니티의 시작 멤버". 전자는 아직 미확정 세션
+          // (schedule.ts의 d5-panel-usecase)이고, 후자는 확정된 약속이 아닙니다.
         ],
       },
       {
@@ -862,7 +861,7 @@ export const dict = {
           { ko: "우수 팀에 유급 FDE 인턴 기회 — ‘AXMOS 학생 TF’로 잇는 선순환 · 잠정", en: "A paid FDE internship for top teams — a virtuous loop as the ‘AXMOS student TF’ · tentative" },
           { ko: "트랙별 순위 시상 · 상금 S$100 · 널담 바우처 · 잠정", en: "Ranked per-track awards · S$100 prize · Nuldam voucher · tentative" },
           { ko: "After 파이프라인(투자·인턴)으로 연결", en: "Bridges into an After pipeline (investment · internship)" },
-          { ko: "굿즈 (pen·notes) 등", en: "Goods (pens · notes) and more" },
+          { ko: "굿즈 (pen·notes) 등 · 검토 중", en: "Goods (pens · notes) and more · under review" },
         ],
       },
     ],
