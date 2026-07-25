@@ -132,6 +132,19 @@ export const partnerIntros: Record<string, Phrase> = {
 
 };
 
+// Press coverage shown as outbound links in a company's intro modal, keyed by the
+// same tile `alt` / modal name as partnerIntros. Each label is the PUBLICATION
+// (not an invented headline) so the link is honest about where it points. URLs
+// are supplied verbatim by the user.
+export type PartnerArticle = { url: string; label: Phrase };
+export const partnerArticles: Record<string, PartnerArticle[]> = {
+  AXMOS: [
+    { url: "https://magazine.hankyung.com/business/article/202603238734b", label: { ko: "한국경제 매거진", en: "Hankyung Business" } },
+    { url: "https://zdnet.co.kr/view/?no=20260714141002", label: { ko: "ZDNet Korea", en: "ZDNet Korea" } },
+    { url: "https://www.prnewswire.com/kr/news-releases/u0061u0078u006Du006Fu0073u002DuCEE8uC18CuC2DCuC5C4u002DuCF54uB4DCuD504uB808uC18Cu002Cu002DuBD80uC0B0uC815uBCF4uC0B0uC5C5uC9C4uD765uC6D0u2022-302811904.html", label: { ko: "PR Newswire", en: "PR Newswire" } },
+  ],
+};
+
 export const dict = {
   nav: {
     about: { ko: "취지", en: "Why" },
@@ -1093,6 +1106,8 @@ export const dict = {
     companyAbout: { ko: "회사 소개", en: "About" },
     // Shown in the partner modal when the tile it replaced had an outbound link.
     companySite: { ko: "사이트 열기", en: "Visit site" },
+    // Heading for the press-coverage link list in the partner modal.
+    inTheNews: { ko: "관련 기사", en: "In the news" },
   },
 
   partners: {

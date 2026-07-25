@@ -6,7 +6,7 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
-import { dict, links, partnerIntros, partnerIntroTBC, type Phrase } from "@/data/dictionary";
+import { dict, links, partnerIntros, partnerIntroTBC, partnerArticles, type Phrase } from "@/data/dictionary";
 import {
   categoryMeta,
   days,
@@ -1370,7 +1370,7 @@ export default function Journey() {
   // copy comes from partnerIntros, falling back to the "coming soon" blurb.
   const openPartner = (name: string, stage: Phrase, el?: HTMLElement | null, url?: string) => {
     partnerTriggerRef.current = el ?? null;
-    setActivePartner({ name, desc: partnerIntros[name] ?? partnerIntroTBC, stage, url });
+    setActivePartner({ name, desc: partnerIntros[name] ?? partnerIntroTBC, stage, url, articles: partnerArticles[name] });
   };
   const selectEvent = (ev: BEvent, el?: HTMLElement | null) => {
     triggerRef.current = el ?? null;
@@ -2015,7 +2015,7 @@ export default function Journey() {
               <div className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-3 lg:grid-cols-5">
                 {[
                   { src: "/partners/logos/white/trimmed/translink.png",    alt: "Translink Investment", w: 330, h: 91,  url: "https://translinkinvestment.com" as string | undefined },
-                  { src: "/partners/logos/white/trimmed/wilt.png",         alt: "Wilt Venture Builder", w: 309, h: 148, url: undefined },
+                  { src: "/partners/logos/white/trimmed/wilt.png",         alt: "Wilt Venture Builder", w: 309, h: 148, url: "https://www.wiltvb.com/" as string | undefined },
                   { src: "/partners/logos/white/trimmed/codepresso.png",   alt: "Codepresso",           w: 456, h: 91,  url: "https://codepresso.io" },
                   { src: "/partners/logos/white/trimmed/popup-studio.png", alt: "Popup Studio",         w: 512, h: 245, url: "https://popupstudio.ai" },
                   { src: "/partners/logos/white/trimmed/drimaes.png",      alt: "Drimaes",              w: 332, h: 50,  url: "https://www.drimaes.com" },

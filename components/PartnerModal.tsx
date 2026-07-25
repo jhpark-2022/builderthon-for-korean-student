@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
-import { dict, type Phrase } from "@/data/dictionary";
+import { dict, type Phrase, type PartnerArticle } from "@/data/dictionary";
 
 // A sponsor/mentor whose logo was clicked. `desc` is the company intro shown in
 // the modal; `stage` is an optional pill (e.g. "확정" / "협의 중") mirroring the
@@ -16,6 +16,8 @@ export interface PartnerInfo {
   // The company's own site. Host-tier tiles used to link straight out; they now
   // open this modal instead, so the link lives here rather than being lost.
   url?: string;
+  // Optional press coverage, each labelled by publication (e.g. AXMOS).
+  articles?: PartnerArticle[];
 }
 
 interface PartnerModalProps {
@@ -185,6 +187,27 @@ export default function PartnerModal({
                 >
                   {t(dict.modal.companySite)} <span aria-hidden>↗</span>
                 </a>
+              )}
+
+              {partner.articles && partner.articles.length > 0 && (
+                <div className="mt-7 border-t border-white/10 pt-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/50">
+                    {t(dict.modal.inTheNews)}
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {partner.articles.map((a) => (
+                      <a
+                        key={a.url}
+                        href={a.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/[0.04] px-3.5 py-1.5 text-[13px] font-medium text-white/70 transition hover:border-white/25 hover:bg-white/10 hover:text-white"
+                      >
+                        {t(a.label)} <span aria-hidden className="text-white/40">↗</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
           </motion.div>
