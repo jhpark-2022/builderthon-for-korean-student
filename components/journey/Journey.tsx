@@ -1967,10 +1967,11 @@ export default function Journey() {
               CARD whose header carries the AXMOS wordmark + one-liner; the header
               is a button that opens the same partner-intro modal as the tiles.
               The header→body containment reads "AXMOS ⊃ these five" at a glance.
-              The AXMOS mark is the brand's own colour-gradient wordmark (trimmed
-              to its alpha bbox, transparent bg) — kept in colour on purpose so the
-              umbrella brand reads a step apart from the white member silhouettes
-              below it. See scripts note / handoff. */}
+              The AXMOS mark is a WHITE silhouette of the brand wordmark (the source
+              gradient's darker "AX" half was near-invisible on this panel), matching
+              the white member logos below — recoloured from CI/AXMOS.png via its
+              alpha channel, trimmed + downscaled. Filename carries "-white" so a
+              browser can't serve the earlier colour version from cache. */}
           <div className="mt-9 text-left">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.hostLabel)}</p>
             <div className="mt-3 overflow-hidden rounded-2xl border border-white/12 bg-white/[0.02]">
@@ -1982,7 +1983,7 @@ export default function Journey() {
                 className="group flex w-full flex-col items-start gap-1.5 border-b border-white/10 bg-white/[0.04] px-5 py-4 text-left transition hover:bg-white/[0.07] sm:flex-row sm:items-center sm:gap-4"
               >
                 <Image
-                  src="/partners/logos/axmos-wordmark.png"
+                  src="/partners/logos/axmos-wordmark-white.png"
                   alt="AXMOS"
                   width={750}
                   height={200}
