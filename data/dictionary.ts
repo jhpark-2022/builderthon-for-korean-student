@@ -813,7 +813,11 @@ export const dict = {
           { ko: "출제가 아니라 ‘의뢰’ — 학생은 주니어 컨설턴트로 프로세스·아픔을 진단해 AI로 재설계", en: "Not a prompt but a brief — you're a junior consultant diagnosing a real process & pain, then redesigning it with AI" },
           { ko: "가상 과제가 아닌 파트너사의 실제 AX 문제 + 직원 피드백", en: "Not toy prompts — a partner's real AX problem + employee feedback" },
           { ko: "트랙 구성 미확정 — 재무·영업·마케팅 3트랙으로 논의 중(잠정) · AWS 방법론으로 접근 · 클라이언트 사명도 조율 중", en: "Tracks not finalized — finance · sales · marketing under discussion (tentative) · approached with AWS methodology · client names TBC" },
-          { ko: "모든 참가팀에게 실제 문제와 기업 담당자 브리핑 제공 (Day 2 라이브 브리핑)", en: "Every team gets a real problem and a briefing from the company contact (Day 2, live)" },
+          // REMOVED: "모든 참가팀에게 실제 문제와 기업 담당자 브리핑 제공 (Day 2 라이브 브리핑)".
+          // How the client contacts would actually deliver a per-track problem
+          // briefing is not worked out, so the site no longer promises one. The
+          // problems themselves still drop on Day 1 — that part is unchanged.
+          // TODO: 문제 브리핑 방식 확정 시 복원 검토.
         ],
       },
       {

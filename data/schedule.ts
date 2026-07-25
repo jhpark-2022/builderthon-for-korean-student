@@ -12,8 +12,9 @@
 //   • Day 1 — big Opening: 원대로 opening keynote + AWS speaker session + the AX
 //     problems are released and tracks are chosen. MANDATORY (필참); on-site
 //     is pending (Zoom fallback if the venue isn't locked).
-//   • Day 2 — one concentrated Crash Course (vibe-coding intro, 5–6h), then a
-//     live per-track briefing (client contacts present the problem) right after.
+//   • Day 2 — one concentrated Crash Course (vibe-coding intro, 5–6h), then team
+//     building right after. (A live per-track briefing by the client contacts
+//     used to sit here; it was pulled because the format is undecided.)
 //   • Day 3–4 — online self-build + 1:1 mentoring in person at NUS (Day 3 also
 //     has a TENTATIVE OpenAI Codex workshop, still in coordination).
 //   • Day 5 — mid-point check-in at *SCAPE L^IFE Jungle (10AM–2PM): student AI
@@ -22,7 +23,7 @@
 //   • Day 6 — open build (online, self-paced).
 //   • Day 7 — Final Rehearsal on-site at the AWS office (9AM–2PM, new venue).
 //   • Day 8 — Demo Day at *SCAPE L^IFE Jungle. MANDATORY (필참).
-//   • Self-paced team build runs continuously from the Day-2 client briefing all
+//   • Self-paced team build runs continuously from the Day-1 problem release all
 //     the way to the Day-8 pitch. In person on Days 1 / 5 / 7 / 8.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -115,8 +116,8 @@ export const days: DayMeta[] = [
     phase: LAB1,
     theme: { ko: "크래시코스 (집중)", en: "Crash Course" },
     summary: {
-      ko: "바이브 코딩 입문 집중 5–6시간(비개발자 OK) · 종료 후 기업 담당자의 트랙별 라이브 브리핑(녹화 제공).",
-      en: "A focused 5–6h vibe-coding intro (beginners OK) · live per-track briefings by the client contacts right after (recorded).",
+      ko: "바이브 코딩 입문 집중 5–6시간(비개발자 OK) · 종료 후 팀 빌딩으로 이어집니다.",
+      en: "A focused 5–6h vibe-coding intro (beginners OK) · team building follows right after.",
     },
     dayMode: "online",
   },
@@ -376,8 +377,8 @@ export const schedule: BEvent[] = [
       en: "Real companies' AX problems drop, you pick a track — and the 8-day build clock starts (track line-up not final yet).",
     },
     description: {
-      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 트랙 구성은 아직 확정 전이며(재무·영업·마케팅 3트랙으로 논의 중), 확정되는 대로 안내합니다. 여기서 공개된 문제를 Day 2 기업 브리핑에서 담당자에게 직접 듣고 나면, 팀별 자율 빌드가 그때부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 만들어 갑니다. Day 1은 필참이며 SMU YPHSL B2-03 현장(11AM–5PM)에서 진행합니다. (Day 2에는 크래시코스 직후 트랙별 라이브 브리핑이 이어집니다.)",
-      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. The track line-up isn't confirmed yet (three — finance, sales and marketing — are under discussion) and we'll announce it once settled. Once the Day-2 briefing has the client contacts walk you through those problems first-hand, self-paced team build runs continuously from there to Demo Day — no start whistle to wait for, each team at its own pace. Day 1 is mandatory and runs on-site at SMU YPHSL B2-03 (11AM–5PM). (A live per-track briefing follows on Day 2, right after the Crash Course.)",
+      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 트랙 구성은 아직 확정 전이며(재무·영업·마케팅 3트랙으로 논의 중), 확정되는 대로 안내합니다. 공개된 문제는 이어지는 현장 브리핑 & Q&A에서 함께 살펴보고, 팀별 자율 빌드가 그때부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 만들어 갑니다. Day 1은 필참이며 SMU YPHSL B2-03 현장(11AM–5PM)에서 진행합니다.",
+      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. The track line-up isn't confirmed yet (three — finance, sales and marketing — are under discussion) and we'll announce it once settled. The released problems are walked through in the on-site briefing & Q&A that follows, and self-paced team build runs continuously from there to Demo Day — no start whistle to wait for, each team at its own pace. Day 1 is mandatory and runs on-site at SMU YPHSL B2-03 (11AM–5PM).",
     },
     location: YPHSL_B203,
   },
@@ -435,21 +436,31 @@ export const schedule: BEvent[] = [
       },
     ],
   },
+  // The per-track LIVE BRIEFING by the client contacts was removed from this
+  // slot: how the company contacts would actually run it (and whether it can be
+  // recorded) is not worked out, and announcing it invites questions we cannot
+  // answer. Team building is unaffected and keeps the slot — it is the thing
+  // participants actually have to do after the Crash Course. The problems
+  // themselves still drop on Day 1 (d1-problem-release), so nothing is lost from
+  // the build timeline; teams just work from the Day-1 release.
+  // Category moved main → network: without the briefing this is no longer an
+  // anchor moment, it is orientation / team formation like the other network events.
+  // TODO: 문제 브리핑 방식 확정 시 이 슬롯에 복원 검토.
   {
-    id: "d2-problem-video",
+    id: "d2-team-building",
     day: 2,
     date: "08.23",
-    category: "main",
+    category: "network",
     mode: "online",
     timeOfDay: "PM",
-    title: { ko: "트랙별 라이브 브리핑 & 팀 빌딩", en: "Live Track Briefings & Team Building" },
+    title: { ko: "팀 빌딩", en: "Team Building" },
     summary: {
-      ko: "크래시코스 종료 후 · 트랙별로 기업 담당자가 문제·프로세스를 직접 소개.",
-      en: "Right after the crash course — client contacts brief each track's problem live.",
+      ko: "크래시코스 종료 후 · 팀을 이루고 무엇을 만들지 함께 정합니다.",
+      en: "Right after the crash course — form a team and decide together what to build.",
     },
     description: {
-      ko: "크래시코스가 끝난 직후, 트랙별 라이브 브리핑이 이어집니다. 각 트랙의 클라이언트(기업) 담당자가 실제 문제와 내부 프로세스를 직접 소개하고, 세션은 녹화로 제공되어 언제든 다시 볼 수 있습니다. 브리핑에 이어 팀 빌딩이 시작됩니다 — 방금 익힌 기본기를 실제 문제 위에 얹어, ‘무엇을 만들지’를 팀과 함께 정하는 흐름으로 이어집니다.",
-      en: "Right after the Crash Course, a live briefing runs for each track: the client (company) contact walks through the real problem and their internal process first-hand, and the session is recorded so you can revisit it anytime. Team building follows the briefing — putting the fundamentals you just learned onto a real problem and deciding, as a team, what to build.",
+      ko: "크래시코스가 끝난 직후 이어지는 팀 빌딩 시간입니다. 방금 익힌 기본기를 Day 1에 공개된 실제 AX 과제 위에 얹어, 함께할 팀을 이루고 ‘무엇을 만들지’를 팀과 정합니다. 팀은 1–3인까지 가능하며 혼자 참가해도 괜찮습니다 — 팀이 없다면 이 시간에 찾을 수 있습니다. 여기서 잡은 방향 위에서 팀별 자율 빌드가 데모데이까지 상시로 이어집니다.",
+      en: "Team building runs right after the Crash Course. You take the fundamentals you just learned, put them onto the real AX problem released on Day 1, form the team you'll build with and decide together what to make. Teams can be 1–3 people and going solo is fine — if you don't have a team yet, this is where you find one. Self-paced team build then runs continuously from here to Demo Day.",
     },
     location: ONLINE,
   },
