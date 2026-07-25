@@ -100,10 +100,10 @@ export const days: DayMeta[] = [
     phase: LAB1,
     theme: { ko: "오프닝 · 문제 공개", en: "Opening · Problem Release" },
     summary: {
-      ko: "YPHSL B2-03 현장 11AM–5PM · 원대로 오프닝 키노트 · 오리엔테이션(문제 공개·트랙 선택·베이스 리포트) · AWS 연사 한장환(확정).",
-      en: "In person at YPHSL B2-03, 11AM–5PM · Won's opening keynote · orientation (problem release · track pick · base report) · AWS talk by Han Jang-whan (confirmed).",
+      ko: "SMU YPHSL B2-03 현장 11AM–5PM · 원대로 오프닝 키노트 · 오리엔테이션(문제 공개·트랙 선택·베이스 리포트) · AWS 연사 한장환(확정).",
+      en: "In person at SMU YPHSL B2-03, 11AM–5PM · Won's opening keynote · orientation (problem release · track pick · base report) · AWS talk by Han Jang-whan (confirmed).",
     },
-    // Venue booked: YPHSL B2-03, 22 Aug 2026, 11AM–5PM → on-site confirmed
+    // Venue booked: SMU YPHSL B2-03, 22 Aug 2026, 11AM–5PM → on-site confirmed
     // (was "pending" with a Zoom fallback while the room wasn't locked).
     dayMode: "offline",
     mandatory: true,
@@ -250,11 +250,11 @@ const ONSITE: Bilingual = {
   ko: "*SCAPE L^IFE Jungle, 싱가포르 · 현장 집결",
   en: "*SCAPE L^IFE Jungle, Singapore · in person",
 };
-// Day 1 kickoff venue — booked: YPHSL B2-03, 22 Aug 2026, 11AM–5PM. Only Day 1
+// Day 1 kickoff venue — booked: SMU YPHSL B2-03, 22 Aug 2026, 11AM–5PM. Only Day 1
 // moves here; the mid-point (Day 5) and Demo Day (Day 8) stay at *SCAPE (ONSITE).
 const YPHSL_B203: Bilingual = {
-  ko: "YPHSL B2-03, 싱가포르 · 현장 집결",
-  en: "YPHSL B2-03, Singapore · in person",
+  ko: "SMU YPHSL B2-03, 싱가포르 · 현장 집결",
+  en: "SMU YPHSL B2-03, Singapore · in person",
 };
 // Day 7's new venue — the Final Rehearsal moves to the AWS office (confirmed).
 const AWS_OFFICE: Bilingual = {
@@ -376,8 +376,8 @@ export const schedule: BEvent[] = [
       en: "Real companies' AX problems drop, you pick a track — and the 8-day build clock starts (track line-up not final yet).",
     },
     description: {
-      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 트랙 구성은 아직 확정 전이며(재무·영업·마케팅 3트랙으로 논의 중), 확정되는 대로 안내합니다. 여기서 공개된 문제를 Day 2 기업 브리핑에서 담당자에게 직접 듣고 나면, 팀별 자율 빌드가 그때부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 만들어 갑니다. Day 1은 필참이며 YPHSL B2-03 현장(11AM–5PM)에서 진행합니다. (Day 2에는 크래시코스 직후 트랙별 라이브 브리핑이 이어집니다.)",
-      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. The track line-up isn't confirmed yet (three — finance, sales and marketing — are under discussion) and we'll announce it once settled. Once the Day-2 briefing has the client contacts walk you through those problems first-hand, self-paced team build runs continuously from there to Demo Day — no start whistle to wait for, each team at its own pace. Day 1 is mandatory and runs on-site at YPHSL B2-03 (11AM–5PM). (A live per-track briefing follows on Day 2, right after the Crash Course.)",
+      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 트랙 구성은 아직 확정 전이며(재무·영업·마케팅 3트랙으로 논의 중), 확정되는 대로 안내합니다. 여기서 공개된 문제를 Day 2 기업 브리핑에서 담당자에게 직접 듣고 나면, 팀별 자율 빌드가 그때부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 만들어 갑니다. Day 1은 필참이며 SMU YPHSL B2-03 현장(11AM–5PM)에서 진행합니다. (Day 2에는 크래시코스 직후 트랙별 라이브 브리핑이 이어집니다.)",
+      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. The track line-up isn't confirmed yet (three — finance, sales and marketing — are under discussion) and we'll announce it once settled. Once the Day-2 briefing has the client contacts walk you through those problems first-hand, self-paced team build runs continuously from there to Demo Day — no start whistle to wait for, each team at its own pace. Day 1 is mandatory and runs on-site at SMU YPHSL B2-03 (11AM–5PM). (A live per-track briefing follows on Day 2, right after the Crash Course.)",
     },
     location: YPHSL_B203,
   },
