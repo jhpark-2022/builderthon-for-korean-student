@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { track } from "@vercel/analytics";
@@ -43,6 +43,24 @@ function Eyebrow({ children, color = "violet", className = "" }: { children: Rea
     <span className={`mb-4 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] ${map[color]} ${className}`}>
       {children}
     </span>
+  );
+}
+
+// Renders `**…**` spans in a dictionary string as emphasized text. Copy that
+// needs one emphasized phrase per locale would otherwise have to be split into
+// separate ko/en fragments, which drifts out of sync; keeping the marker inline
+// keeps each locale a single readable sentence.
+function Emph({ text, className = "font-semibold text-white" }: { text: string; className?: string }) {
+  return (
+    <>
+      {text.split("**").map((part, i) =>
+        i % 2 === 1 ? (
+          <strong key={i} className={className}>{part}</strong>
+        ) : (
+          <Fragment key={i}>{part}</Fragment>
+        ),
+      )}
+    </>
   );
 }
 
@@ -1857,11 +1875,26 @@ export default function Journey() {
           </div>
         </div>
 
+        {/* ── How matching works ────────────────────────────────────────────
+            Sits directly above the grid on purpose: the cards below are a
+            line-up, not a menu. Teams cannot request a named mentor — the
+            organizers assign each session from the overlap between the team's
+            submitted availability and a mentor's. */}
+        <div className="mt-10 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] p-5 text-left sm:p-6">
+          <p className="flex items-center gap-2 text-sm font-bold text-emerald-200">
+            <span aria-hidden className="text-emerald-300/70">◇</span>
+            {t(dict.mentoring.matchNote.title)}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-emerald-50/80">
+            <Emph text={t(dict.mentoring.matchNote.body)} className="font-bold text-white" />
+          </p>
+        </div>
+
         {/* ── Confirmed mentor grid (deck p12) ──────────────────────────────
             8 cards: company mentors use their partner logo as the avatar,
             individuals use an initial. A LinkedIn icon shows ONLY on cards with
             a confirmed URL — never invented. */}
-        <div className="mt-10 text-left">
+        <div className="mt-6 text-left">
           <p className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-emerald-200">
             {t(dict.mentoring.gridLabel)}
           </p>

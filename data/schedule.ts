@@ -507,8 +507,8 @@ export const schedule: BEvent[] = [
       en: "One-on-one to unblock and adjust direction — at NUS in person or online, depending on the mentor.",
     },
     description: {
-      ko: "정해진 시간표 대신 팀의 필요에 맞춰 진행되는 1:1 멘토링입니다. 진행 방식은 멘토별로 정해집니다 — NUS 현장 대면(F2F)이 기본이지만, 멘토에 따라 온라인으로 진행될 수 있으니 배정된 멘토와 직접 맞추시면 됩니다. 막힌 지점을 함께 점검하고 방향을 조정합니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표 — 같은 눈높이에서 함께 고민하는 선배입니다. 학생 정체성과 giver 문화를 지키는 이 멘토 persona가 이 시간의 핵심입니다. 확정 멘토로 기업 멘토 2곳(Onword Lab · REmited)과 현직 시니어 6인이 함께합니다 — 전체 명단은 멘토링 섹션을 참고하세요.",
-      en: "One-on-one mentoring that follows each team's needs rather than a fixed timetable. The format is set mentor by mentor — in person (F2F) at NUS by default, but some mentors take it online, so you'll settle it with the mentor you're matched with. It's time to check blockers and adjust direction. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes, thinking alongside you at eye level. That peer-mentor persona — protecting the student identity and giver culture — is the point of this time. The confirmed line-up is two company mentors (Onword Lab · REmited) plus six working seniors — see the mentoring section for the full roster.",
+      ko: "정해진 시간표 대신 팀의 필요에 맞춰 진행되는 1:1 멘토링입니다. 진행 방식은 멘토별로 정해집니다 — NUS 현장 대면(F2F)이 기본이지만, 멘토에 따라 온라인으로 진행될 수 있으니 배정된 멘토와 직접 맞추시면 됩니다. 막힌 지점을 함께 점검하고 방향을 조정합니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표 — 같은 눈높이에서 함께 고민하는 선배입니다. 학생 정체성과 giver 문화를 지키는 이 멘토 persona가 이 시간의 핵심입니다. 확정 멘토로 기업 멘토 2곳(Onword Lab · REmited)과 현직 시니어 6인이 함께합니다 — 전체 명단은 멘토링 섹션을 참고하세요. 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다.",
+      en: "One-on-one mentoring that follows each team's needs rather than a fixed timetable. The format is set mentor by mentor — in person (F2F) at NUS by default, but some mentors take it online, so you'll settle it with the mentor you're matched with. It's time to check blockers and adjust direction. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes, thinking alongside you at eye level. That peer-mentor persona — protecting the student identity and giver culture — is the point of this time. The confirmed line-up is two company mentors (Onword Lab · REmited) plus six working seniors — see the mentoring section for the full roster. Mentors are assigned by overlapping availability, not by request.",
     },
     location: NUS,
     // TODO: confirm public naming — the confirmed individual mentors (황영준·이유택·
@@ -549,8 +549,8 @@ export const schedule: BEvent[] = [
       en: "One-on-one prototype review and progress — at NUS in person or online, depending on the mentor.",
     },
     description: {
-      ko: "팀이 만든 프로토타입을 함께 점검하고 진전을 살피는 1:1 멘토링입니다. Day 3과 마찬가지로 NUS 대면(F2F)이 기본이되 진행 방식은 멘토별로 정해지며(온라인 가능), 무엇이 잘 되고 있는지, 어디를 더 밀어야 하는지를 같은 눈높이의 선배 멘토와 짚어봅니다. 멘토는 유학생 출신 현직 대표로, 학생 교류와 giver 문화를 지키는 역할입니다(확정 멘토진은 Day 3과 동일).",
-      en: "One-on-one mentoring to review the prototype your team built and look at progress together. As on Day 3 it's in person (F2F) at NUS by default, with the format set by each mentor (online is possible) — what's working, and where to push harder, with peer-level senior mentors. Mentors are Korean ex-international-student founders, there to keep the student exchange and giver culture alive (same confirmed line-up as Day 3).",
+      ko: "팀이 만든 프로토타입을 함께 점검하고 진전을 살피는 1:1 멘토링입니다. Day 3과 마찬가지로 NUS 대면(F2F)이 기본이되 진행 방식은 멘토별로 정해지며(온라인 가능), 무엇이 잘 되고 있는지, 어디를 더 밀어야 하는지를 같은 눈높이의 선배 멘토와 짚어봅니다. 멘토는 유학생 출신 현직 대표로, 학생 교류와 giver 문화를 지키는 역할입니다(확정 멘토진은 Day 3과 동일). 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다.",
+      en: "One-on-one mentoring to review the prototype your team built and look at progress together. As on Day 3 it's in person (F2F) at NUS by default, with the format set by each mentor (online is possible) — what's working, and where to push harder, with peer-level senior mentors. Mentors are Korean ex-international-student founders, there to keep the student exchange and giver culture alive (same confirmed line-up as Day 3). Mentors are assigned by overlapping availability, not by request.",
     },
     location: NUS,
   },

@@ -964,6 +964,24 @@ export const dict = {
       { title: { ko: "팀당 1시간+", en: "1+ hour per team" }, desc: { ko: "제대로 된 멘토링을 위해 팀당 최소 1시간 이상 확보.", en: "At least an hour per team for proper mentoring." } },
       { title: { ko: "연락처 공유", en: "Share contacts" }, desc: { ko: "email · LinkedIn 공유 → 행사 이후에도 팀이 후속 연락(follow-up).", en: "Share email · LinkedIn so teams can follow up after the event." } },
     ],
+    // ── 매칭 방식 안내 (그리드 바로 위) ────────────────────────────────────────
+    // Expectation management: participants kept asking to be assigned a NAMED
+    // mentor. Sessions are assigned by the organizers from the overlap between a
+    // team's submitted availability and a mentor's — never by request. Stated
+    // right above the mentor grid so the line-up reads as "who you might meet",
+    // not "who you can pick". The reassurance sentence ("whoever you meet …") is
+    // load-bearing: without it "no requests" reads as a restriction.
+    // `**…**` marks the emphasized span — rendered by <Emph> in Journey.tsx.
+    // TODO: 가용시간 수집 방식 확정 시 구체화 — the submission channel and timing
+    // are not decided yet, so the copy says only "a scheduling survey announced
+    // before the event".
+    matchNote: {
+      title: { ko: "멘토 매칭은 이렇게 배정돼요", en: "How mentor matching works" },
+      body: {
+        ko: "특정 멘토를 지정하는 방식이 아니에요. 행사 전 팀이 제출한 가능 시간과 멘토의 가능 시간이 **겹치는 구간**을 기준으로 운영진이 배정합니다. 누구와 만나든 — 모든 멘토는 여러분이 푸는 그 문제를 미리 보고 들어옵니다.",
+        en: "You don't pick a specific mentor. Sessions are assigned by the organizers where your team's submitted availability **overlaps** with a mentor's. And whoever you meet — every mentor comes in having already seen the problem you're solving.",
+      },
+    },
     // ── 확정 멘토 그리드 (덱 p12) ──────────────────────────────────────────────
     // Every object carries the SAME keys (img/logo/logoW/logoH/linkedin/daysPending
     // default to "" / 0) so the array stays a single homogeneous type — otherwise
@@ -1222,6 +1240,16 @@ export const dict = {
         a: {
           ko: "됩니다 — 솔로 참가를 환영합니다. 팀은 1–3인까지 가능하며(솔로 OK · 매칭 선택), 혼자 자신의 기량을 보여주고 싶은 분을 위해 1인 참가를 열어두었습니다. 팀이 없어도 네트워킹·팀 빌딩 시간에 팀을 찾을 수 있습니다.",
           en: "Yes — solo entries are welcome. Teams can be 1–3 people (solo is fine · matching optional), and solo is kept open for anyone who wants to show what they can do on their own. If you don't have a team you can find one during the networking and team-building sessions.",
+        },
+      },
+      // Mentor requests were the most common pre-event ask — answered next to the
+      // solo/team question since both are about how you get placed.
+      // TODO: 가용시간 수집 방식 확정 시 구체화 (제출 채널·시점은 아직 미정).
+      {
+        q: { ko: "멘토를 직접 고를 수 있나요?", en: "Can I choose my mentor?" },
+        a: {
+          ko: "멘토 지정은 받지 않아요. 팀이 제출한 가능 시간과 멘토의 가능 시간이 겹치는 구간으로 운영진이 배정합니다. 대신 모든 멘토가 여러분 트랙의 문제를 미리 보고 들어오고, Day 7 커리어 세션에서는 시니어 리더들과 만나는 시간이 따로 있어요.",
+          en: "We don't take mentor requests. The organizers assign sessions where your team's submitted availability overlaps with a mentor's. Every mentor comes in having seen your track's problem, and Day 7 has its own career session with senior leaders.",
         },
       },
       {
