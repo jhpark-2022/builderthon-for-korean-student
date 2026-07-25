@@ -382,6 +382,44 @@ export const schedule: BEvent[] = [
     },
     location: YPHSL_B203,
   },
+  // Sits between the problem release and the operational briefing on purpose.
+  // The question "so how do I actually approach this?" only becomes concrete once
+  // a team has seen its problem and picked a track — before that it is abstract,
+  // and after everyone leaves the room there is no good channel to answer it
+  // (the next all-hands in-person day is Day 5). This is the slot where the
+  // context is worth most.
+  //
+  // No role conflict with the mentor persona: the people giving this context are
+  // AXMOS — the consortium the site already scopes to "심사 · 문제 발의 전담"
+  // (dict.mentoring.asideLabel). Explaining the problem you set IS problem-
+  // setting, not peer mentoring, so the Day 3·4 mentor boundary stays intact.
+  //
+  // confirmed: false + "(조율 중)/(TBC)" in the title — same convention as
+  // d3-codex-workshop. Deliberately NOT naming the two candidates yet: they are
+  // still at "아마 해주실 수 있을 것 같다", and a named session is exactly the kind
+  // of promise the Day-2 client briefing had to be pulled for.
+  // TODO: 진행자 확정 시 speaker 추가 + 제목의 "(조율 중)" 제거. 후보는 AXMOS 측
+  // 두 분(Popup Studio 총괄 · Codepresso 대표) — 공개 표기 가능 여부도 함께 확인.
+  // TODO: 형식(길이·구성) 확정 시 description의 마지막 문장 교체.
+  {
+    id: "d1-problem-deep-dive",
+    day: 1,
+    date: "08.22",
+    category: "main",
+    mode: "offline",
+    timeOfDay: "PM",
+    confirmed: false,
+    title: { ko: "과제 딥다이브 (조율 중)", en: "Problem Deep-Dive (TBC)" },
+    summary: {
+      ko: "과제를 낸 주최사가 문제의 배경과 맥락을 직접 풀어주는 시간 — 형식 조율 중.",
+      en: "The companies that set the problems walk through the background and context first-hand — format still being arranged.",
+    },
+    description: {
+      ko: "문제가 공개되고 트랙을 고른 직후, 그 과제를 실제로 낸 주최사(AXMOS) 측이 배경과 맥락을 직접 풀어주는 시간입니다. 왜 이게 현업에서 문제인지, 안에서는 지금 어떻게 처리하고 있는지, 이번 과제의 범위는 어디까지인지 — 문제 설명문만으로는 보이지 않는 부분을 짚고 질문을 받습니다. 이어지는 현장 브리핑 & Q&A가 진행 방식·팀 구성·평가 기준을 다룬다면, 이 시간은 과제 내용 자체를 다룹니다. 참가자 전원이 한자리에 모이는 다음 기회는 Day 5이므로, 맥락을 가장 깊게 가져갈 수 있는 자리이기도 합니다. 진행자와 형식(길이·구성)은 아직 조율 중이며, 확정되는 대로 안내합니다.",
+      en: "Right after the problems drop and tracks are chosen, the host companies (AXMOS) that actually set them walk through the background and context first-hand: why this is a real problem inside the business, how it's handled today, and where the scope of this brief starts and ends — the parts a written problem statement doesn't show. Questions are taken on the spot. Where the on-site briefing & Q&A that follows covers how the eight days run, this session is about the problem itself. The next time everyone is in one room is Day 5, so this is the deepest context you can carry out of the room. Who runs it and in what format (length, structure) is still being arranged; we'll announce it once settled.",
+    },
+    location: YPHSL_B203,
+  },
   {
     id: "d1-briefing",
     day: 1,
