@@ -876,6 +876,7 @@ export const dict = {
         role: { ko: "Managing Director, Wilt Venture Builder (SG)", en: "Managing Director, Wilt Venture Builder (SG)" },
         topic: { ko: "‘취업과 창업의 사이’", en: "“Between employment and founding”" },
         img: "/partners/logos/speaker-won.jpeg",
+        linkedin: "https://www.linkedin.com/in/wondaero",
         points: [
           { ko: "정형화된 ‘취업 vs 창업’ 이분법에서 벗어나기", en: "Stepping past the tidy ‘employment vs. founding’ binary" },
           { ko: "벤처빌더가 본 다양한 진로·커리어 경로 탐색", en: "The many career paths a venture builder has seen" },
@@ -891,6 +892,7 @@ export const dict = {
         role: { ko: "CEO · General Partner, Translink Investment (VC)", en: "CEO · General Partner, Translink Investment (VC)" },
         topic: { ko: "‘FDE로 일한다는 것’ — 커리어 간담회", en: "“Working as an FDE” — a career session" },
         img: "/partners/logos/speaker-park.jpeg",
+        linkedin: "https://www.linkedin.com/in/hee-duk-park",
         points: [
           { ko: "자사 FDE 사업에 관심 있는 학생·졸업생 대상 · 12:30–14:00", en: "For students & grads interested in the firm's FDE business · 12:30–14:00" },
           { ko: "어떤 일을 하는 자리인지, 어떤 사람을 찾는지 직접 듣기", en: "What the work actually is, and who they're looking for — first-hand" },
@@ -904,6 +906,7 @@ export const dict = {
         role: { ko: "CEO · General Partner, Translink Investment (VC)", en: "CEO · General Partner, Translink Investment (VC)" },
         topic: { ko: "‘제로백의 진짜 의미’", en: "“The Real Meaning of Zero100”" },
         img: "/partners/logos/speaker-park.jpeg",
+        linkedin: "https://www.linkedin.com/in/hee-duk-park",
         points: [
           { ko: "0 → 100의 핵심 — 협업 · 가치 · 실행 · 글로벌 스탠다드", en: "The core of 0 → 100 — collaboration · value · execution · global standards" },
           { ko: "협업의 힘 · 커뮤니티의 중요성", en: "The power of collaboration · why community matters" },
@@ -931,6 +934,10 @@ export const dict = {
       ko: "한때 우리와 같았고, 같은 고민을 하던 한국 유학생 출신 founder · startup 멤버.",
       en: "Korean ex-international-student founders / startup members — once in our shoes, with the same struggles.",
     },
+    dayTierNote: {
+      ko: "Day 3·4 자율 빌드는 눈높이 선배가, Day 7 커리어 세션은 한 단계 위 현직 시니어 리더가 함께합니다.",
+      en: "On Day 3·4's self-build the peer-level seniors are with you; on Day 7's career session, working senior leaders one step ahead join in.",
+    },
     asideLabel: { ko: "AXMOS = 심사 · 문제 발의 전담", en: "AXMOS = judging & problem-setting only" },
     aside: { ko: "멘토가 아니라 ‘선배’ — 역할을 분리합니다.", en: "Not mentors — the roles are kept separate." },
     asksTitle: { ko: "멘토에게 요청하는 것", en: "What we ask of mentors" },
@@ -940,6 +947,112 @@ export const dict = {
       { title: { ko: "팀당 1시간+", en: "1+ hour per team" }, desc: { ko: "제대로 된 멘토링을 위해 팀당 최소 1시간 이상 확보.", en: "At least an hour per team for proper mentoring." } },
       { title: { ko: "연락처 공유", en: "Share contacts" }, desc: { ko: "email · LinkedIn 공유 → 행사 이후에도 팀이 후속 연락(follow-up).", en: "Share email · LinkedIn so teams can follow up after the event." } },
     ],
+    // ── 확정 멘토 그리드 (덱 p12) ──────────────────────────────────────────────
+    // Every object carries the SAME keys (logo/logoW/logoH/linkedin default to
+    // "" / 0) so the array stays a single homogeneous type — otherwise TS infers
+    // a union and `m.linkedin` / `m.logo` can't be read on the cards.
+    // LinkedIn URLs are ONLY the ones confirmed in the deck; the rest stay "".
+    // TODO: confirm public naming — the six named mentors below are confirmed in
+    // the internal deck; verify they may be shown publicly before surfacing.
+    gridLabel: { ko: "확정 멘토 · Confirmed", en: "Confirmed mentors" },
+    mentors: [
+      // Company mentors — reuse the existing partner logos as the avatar.
+      { name: { ko: "Onword Lab", en: "Onword Lab" }, org: { ko: "기업 멘토", en: "Company mentor" }, role: { ko: "", en: "" }, days: "Day 3·4", logo: "/partners/logos/white/trimmed/onword-lab.png", logoW: 900, logoH: 92, linkedin: "" },
+      { name: { ko: "REmited", en: "REmited" }, org: { ko: "기업 멘토", en: "Company mentor" }, role: { ko: "", en: "" }, days: "Day 3·4", logo: "/partners/logos/white/trimmed/remited.png", logoW: 512, logoH: 105, linkedin: "" },
+      // Individual mentors — initials avatar.
+      { name: { ko: "황영준", en: "Hwang Young-jun" }, org: { ko: "T3Q", en: "T3Q" }, role: { ko: "AI", en: "AI" }, days: "Day 3·4·7", logo: "", logoW: 0, logoH: 0, linkedin: "" },
+      { name: { ko: "이유택", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" }, days: "Day 3·4·7", logo: "", logoW: 0, logoH: 0, linkedin: "" },
+      { name: { ko: "한장환", en: "Han Jang-whan" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "SA", en: "SA" }, days: "Day 1·7", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jangwhan" },
+      { name: { ko: "신동혁", en: "Shin Dong-hyuk" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "GTM", en: "GTM" }, days: "Day 7", logo: "", logoW: 0, logoH: 0, linkedin: "" },
+      { name: { ko: "이화영", en: "Lee Hwa-young" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "Sales", en: "Sales" }, days: "Day 7", logo: "", logoW: 0, logoH: 0, linkedin: "" },
+      { name: { ko: "임석근", en: "Lim Seok-geun" }, org: { ko: "NetApp", en: "NetApp" }, role: { ko: "APAC", en: "APAC" }, days: "Day 7", logo: "", logoW: 0, logoH: 0, linkedin: "" },
+    ],
+  },
+
+  // ── 심사위원 (덱 p13) ────────────────────────────────────────────────────────
+  // Rendered as a subsection of the mentoring chapter (no new nav item). Bios are
+  // tidied from the deck's own copy — NO facts added, EN is a translation. Every
+  // person object carries identical keys (linkedin defaults to "") to keep the
+  // array homogeneous. LinkedIn URLs are ONLY the two confirmed in the deck.
+  // TODO: confirm public naming — verify each name may be shown publicly.
+  // Internal-only figures (e.g. Shin Sang-gil's "FY24 S$22M·+45%") are omitted.
+  judges: {
+    tag: { ko: "심사위원", en: "Judges" },
+    heading: { ko: "심사는 현업 리더가 합니다", en: "Judged by working leaders" },
+    sub: {
+      ko: "실제 산업에서 문제를 풀어온 시니어 리더가 데모데이 결과물을 직접 심사합니다.",
+      en: "Senior leaders who have solved real problems in industry judge the Demo-Day work first-hand.",
+    },
+    people: [
+      {
+        name: { ko: "박희덕", en: "Park Hee-deok" },
+        org: { ko: "Translink Investment", en: "Translink Investment" },
+        role: { ko: "대표 · General Partner", en: "CEO · General Partner" },
+        tag: { ko: "美·韓 크로스보더 VC", en: "US–Korea cross-border VC" },
+        bio: {
+          ko: "트랜스링크인베스트먼트 대표·GP. 前 CJ인베스트먼트 CIO, KT 신사업, KTB네트워크 — 30년 벤처투자·펀드운용.",
+          en: "CEO·GP of Translink Investment. Formerly CIO at CJ Investment, new-business at KT, and KTB Network — 30 years in venture investing and fund management.",
+        },
+        linkedin: "https://www.linkedin.com/in/hee-duk-park",
+      },
+      {
+        name: { ko: "원대로", en: "Won Dae-ro" },
+        org: { ko: "Wilt Venture Builder", en: "Wilt Venture Builder" },
+        role: { ko: "대표 · Managing Director", en: "CEO · Managing Director" },
+        tag: { ko: "싱가포르 벤처스튜디오", en: "Singapore venture studio" },
+        bio: {
+          ko: "Wilt VB 대표·d·camp 글로벌 어드바이저. 한–싱 스타트업 빌딩·동남아 크로스보더 투자. 前 KB자산운용 COO·KTB Asia MD — 25년+.",
+          en: "MD of Wilt VB and a d·camp global advisor. Korea–Singapore startup building and SEA cross-border investing. Formerly COO at KB Asset Management and MD at KTB Asia — 25+ years.",
+        },
+        linkedin: "https://www.linkedin.com/in/wondaero",
+      },
+      {
+        name: { ko: "이병일", en: "Lee Byung-il" },
+        org: { ko: "Wilt Venture Builder", en: "Wilt Venture Builder" },
+        role: { ko: "Venture Partner · 한국대표", en: "Venture Partner · Korea Head" },
+        tag: { ko: "헬스케어 · 바이오", en: "Healthcare · Bio" },
+        bio: {
+          ko: "헬스케어·바이오 창업가이자 글로벌 오픈이노베이션 전문가. 前 MUST 액셀러레이터 파트너, AllLive Healthcare 창업(국내 1호 규제샌드박스).",
+          en: "Healthcare·bio founder and global open-innovation specialist. Formerly a partner at MUST Accelerator and founder of AllLive Healthcare (Korea's first regulatory-sandbox case).",
+        },
+        linkedin: "", // TODO: LinkedIn URL not provided — leave blank until confirmed
+      },
+      {
+        name: { ko: "이동훈", en: "Lee Dong-hoon" },
+        org: { ko: "Codepresso", en: "Codepresso" },
+        role: { ko: "대표 · CEO", en: "CEO" },
+        tag: { ko: "AI 코딩 · 교육 플랫폼", en: "AI coding · education platform" },
+        bio: {
+          ko: "AI 코딩·역량진단 교육 플랫폼 코드프레소 대표(AXMOS 컨소시엄). 비개발자 대상 바이브코딩·AX 교육을 다수 운영. 前 스마일게이트·LG전자 소프트웨어 엔지니어.",
+          en: "CEO of Codepresso, an AI-coding & skills-assessment education platform (AXMOS consortium). Runs many vibe-coding·AX programs for non-developers. Formerly a software engineer at Smilegate and LG Electronics.",
+        },
+        linkedin: "", // TODO: LinkedIn URL not provided — leave blank until confirmed
+      },
+      {
+        name: { ko: "신상길", en: "Shin Sang-gil" },
+        org: { ko: "FUJIFILM BI Singapore", en: "FUJIFILM BI Singapore" },
+        role: { ko: "고객성공 · DX/AI", en: "Customer Success · DX/AI" },
+        tag: { ko: "DX · AI 컨설팅", en: "DX · AI consulting" },
+        bio: {
+          ko: "후지필름 BI 싱가포르 고객성공·DX/AI 컨설팅 총괄로 금융·정부·제조 전반을 담당. 前 HP 24년 — APJ 매니지드 서비스·잉크젯 제품·시장개발.",
+          en: "Leads customer success and DX·AI consulting at FUJIFILM BI Singapore across finance, government and manufacturing. 24 years at HP before that — APJ managed services, inkjet products and market development.",
+        },
+        linkedin: "", // TODO: LinkedIn URL not provided — leave blank until confirmed
+      },
+      {
+        name: { ko: "신동혁", en: "Shin Dong-hyuk" },
+        org: { ko: "AWS", en: "AWS" },
+        role: { ko: "Head of GTM Scaling · APJC", en: "Head of GTM Scaling · APJC" },
+        tag: { ko: "GenAI GTM", en: "GenAI GTM" },
+        bio: {
+          ko: "AWS APJC GenAI GTM 총괄. GenAI 고객경험(CX) 사업을 2021년 이후 약 10배 성장시키고 7개+ 산업으로 확장. 前 삼성전자 북미 5G 네트워크 사업개발.",
+          en: "Leads GenAI GTM for AWS APJC — grew the GenAI customer-experience business roughly 10× since 2021 and expanded it across 7+ industries. Formerly 5G network business development for Samsung Electronics in North America.",
+        },
+        linkedin: "", // TODO: LinkedIn URL not provided — leave blank until confirmed
+      },
+    ],
+    tbcLabel: { ko: "추후 공개", en: "To be announced" },
+    tbcNote: { ko: "트랙별 심사위원 섭외 중", en: "Track judges being confirmed" },
   },
 
   modal: {

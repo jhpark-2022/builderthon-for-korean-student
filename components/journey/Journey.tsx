@@ -46,6 +46,32 @@ function Eyebrow({ children, color = "violet", className = "" }: { children: Rea
   );
 }
 
+// LinkedIn glyph + link — shown ONLY on mentor / judge / speaker cards that
+// carry a confirmed public URL (never invented). Opens in a new tab with
+// noopener; stopPropagation keeps a click off any surrounding button/card.
+function LinkedInIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className={className}>
+      <path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 8.98h4V21H3zM9 8.98h3.83v1.64h.05c.53-.95 1.83-1.95 3.77-1.95 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.34c0-1.27-.02-2.9-1.77-2.9-1.77 0-2.04 1.38-2.04 2.81V21H9z" />
+    </svg>
+  );
+}
+
+function LinkedInLink({ url, label, className = "" }: { url: string; label: string; className?: string }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => e.stopPropagation()}
+      aria-label={`${label} · LinkedIn`}
+      className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] text-white/60 transition hover:border-[#0a66c2]/60 hover:bg-[#0a66c2]/15 hover:text-[#7cb8f5] ${className}`}
+    >
+      <LinkedInIcon className="h-3.5 w-3.5" />
+    </a>
+  );
+}
+
 // Renders a plain string with every "→" arrow recoloured a bright violet, so
 // the day-flow sentence reads as a clearly-arrowed progression. Splits on the
 // arrow and interleaves coloured spans; all other text is unchanged.
@@ -1792,6 +1818,7 @@ export default function Journey() {
                   <p className="text-sm font-bold text-white">{t(s.name)}</p>
                   <p className="mt-0.5 text-xs leading-snug text-white/60">{t(s.role)}</p>
                 </div>
+                {s.linkedin && <LinkedInLink url={s.linkedin} label={t(s.name)} className="ml-auto" />}
               </div>
             </div>
           ))}
@@ -1806,6 +1833,7 @@ export default function Journey() {
           {t(dict.mentoring.heading)}
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.mentoring.intro)}</p>
+        <p className="mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-emerald-100/70">{t(dict.mentoring.dayTierNote)}</p>
         <div className="mt-8 grid gap-4 text-left lg:grid-cols-3">
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 lg:col-span-2">
             <p className="text-xs font-bold uppercase tracking-wide text-emerald-300/80">{t(dict.mentoring.personaLabel)}</p>
@@ -1824,6 +1852,98 @@ export default function Journey() {
                 <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-400/15 text-xs font-black text-emerald-200">{i + 1}</span>
                 <h4 className="mt-3 text-sm font-bold text-white">{t(a.title)}</h4>
                 <p className="mt-1.5 text-xs leading-relaxed text-white/65">{t(a.desc)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Confirmed mentor grid (deck p12) ──────────────────────────────
+            8 cards: company mentors use their partner logo as the avatar,
+            individuals use an initial. A LinkedIn icon shows ONLY on cards with
+            a confirmed URL — never invented. */}
+        <div className="mt-10 text-left">
+          <p className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-emerald-200">
+            {t(dict.mentoring.gridLabel)}
+          </p>
+          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {dict.mentoring.mentors.map((m, i) => {
+              const name = t(m.name);
+              const role = t(m.role);
+              return (
+                <div key={i} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-emerald-400/25 hover:bg-white/[0.05]">
+                  {/* Avatar — logo chip for company mentors, initial for people. */}
+                  {m.logo ? (
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/[0.06] px-1.5">
+                      <Image src={m.logo} alt={name} width={m.logoW} height={m.logoH} unoptimized loading="eager" className="h-auto w-auto max-h-6 max-w-full object-contain" />
+                    </span>
+                  ) : (
+                    <span aria-hidden className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-400/20 bg-emerald-400/10 text-sm font-black text-emerald-200">
+                      {name.charAt(0)}
+                    </span>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="text-sm font-bold leading-snug text-white">{name}</p>
+                      {m.linkedin && <LinkedInLink url={m.linkedin} label={name} />}
+                    </div>
+                    <p className="mt-0.5 text-xs leading-snug text-white/60">
+                      {t(m.org)}{role ? ` · ${role}` : ""}
+                    </p>
+                    <span className="mt-2 inline-flex items-center rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.62rem] font-semibold text-white/60">
+                      {m.days}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ── Judges subsection (deck p13) · no new nav item ────────────────
+            6 confirmed judge cards + 2 "to be announced" placeholders. Photos
+            are initial avatars for now, swappable when files arrive. LinkedIn
+            icon only where a confirmed URL exists. */}
+        <div className="mt-16 border-t border-white/10 pt-12 text-left">
+          <div className="text-center">
+            <Eyebrow color="violet">{t(dict.judges.tag)}</Eyebrow>
+            <h3 className="text-[clamp(1.5rem,4vw,2.5rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+              {t(dict.judges.heading)}
+            </h3>
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.judges.sub)}</p>
+          </div>
+          <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {dict.judges.people.map((j, i) => {
+              const name = t(j.name);
+              return (
+                <div key={i} className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-400/25 hover:bg-white/[0.05]">
+                  <div className="flex items-center gap-3">
+                    {/* Initial avatar — replace with <Image> when photo files land. */}
+                    <span aria-hidden className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-violet-400/20 bg-violet-400/10 text-base font-black text-violet-200">
+                      {name.charAt(0)}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-sm font-bold leading-snug text-white">{name}</p>
+                        {j.linkedin && <LinkedInLink url={j.linkedin} label={name} />}
+                      </div>
+                      <p className="mt-0.5 text-xs leading-snug text-white/60">{t(j.org)} · {t(j.role)}</p>
+                    </div>
+                  </div>
+                  <span className="mt-4 inline-flex w-fit items-center rounded-full border border-violet-400/20 bg-violet-400/[0.08] px-2.5 py-0.5 text-[0.62rem] font-semibold uppercase tracking-wide text-violet-200/90">
+                    {t(j.tag)}
+                  </span>
+                  <p className="mt-3 text-[13px] leading-relaxed text-white/70">{t(j.bio)}</p>
+                </div>
+              );
+            })}
+            {/* Two "추후 공개" placeholders — track judges being confirmed. */}
+            {[0, 1].map((i) => (
+              <div key={`tbc-${i}`} className="flex h-full flex-col items-center justify-center rounded-2xl border border-dashed border-white/12 bg-white/[0.02] p-6 text-center">
+                <span aria-hidden className="flex h-12 w-12 items-center justify-center rounded-full border border-dashed border-white/15 text-white/25">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" /><path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                </span>
+                <p className="mt-3 text-xs font-bold uppercase tracking-[0.14em] text-white/55">{t(dict.judges.tbcLabel)}</p>
+                <p className="mt-1.5 text-xs leading-relaxed text-white/45">{t(dict.judges.tbcNote)}</p>
               </div>
             ))}
           </div>

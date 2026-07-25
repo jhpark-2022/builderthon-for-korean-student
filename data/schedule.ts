@@ -500,12 +500,13 @@ export const schedule: BEvent[] = [
       en: "One-on-one to unblock and adjust direction — at NUS in person or online, depending on the mentor.",
     },
     description: {
-      ko: "정해진 시간표 대신 팀의 필요에 맞춰 진행되는 1:1 멘토링입니다. 진행 방식은 멘토별로 정해집니다 — NUS 현장 대면(F2F)이 기본이지만, 멘토에 따라 온라인으로 진행될 수 있으니 배정된 멘토와 직접 맞추시면 됩니다. 막힌 지점을 함께 점검하고 방향을 조정합니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표 — 같은 눈높이에서 함께 고민하는 선배입니다. 학생 정체성과 giver 문화를 지키는 이 멘토 persona가 이 시간의 핵심입니다. 확정 멘토로 황영준(T3Q · AI), 신동혁(AWS · GTM), 한장환(AWS · SA), 이유택(NTU · 前 Naver) 님이 함께합니다.",
-      en: "One-on-one mentoring that follows each team's needs rather than a fixed timetable. The format is set mentor by mentor — in person (F2F) at NUS by default, but some mentors take it online, so you'll settle it with the mentor you're matched with. It's time to check blockers and adjust direction. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes, thinking alongside you at eye level. That peer-mentor persona — protecting the student identity and giver culture — is the point of this time. Confirmed mentors include Hwang Young-jun (T3Q · AI), Shin Dong-hyuk (AWS · GTM), Han Jang-whan (AWS · SA) and Lee Yoo-taek (NTU · ex-Naver).",
+      ko: "정해진 시간표 대신 팀의 필요에 맞춰 진행되는 1:1 멘토링입니다. 진행 방식은 멘토별로 정해집니다 — NUS 현장 대면(F2F)이 기본이지만, 멘토에 따라 온라인으로 진행될 수 있으니 배정된 멘토와 직접 맞추시면 됩니다. 막힌 지점을 함께 점검하고 방향을 조정합니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표 — 같은 눈높이에서 함께 고민하는 선배입니다. 학생 정체성과 giver 문화를 지키는 이 멘토 persona가 이 시간의 핵심입니다. 확정 멘토로 기업 멘토 2곳(Onword Lab · REmited)과 현직 시니어 6인이 함께합니다 — 전체 명단은 멘토링 섹션을 참고하세요.",
+      en: "One-on-one mentoring that follows each team's needs rather than a fixed timetable. The format is set mentor by mentor — in person (F2F) at NUS by default, but some mentors take it online, so you'll settle it with the mentor you're matched with. It's time to check blockers and adjust direction. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes, thinking alongside you at eye level. That peer-mentor persona — protecting the student identity and giver culture — is the point of this time. The confirmed line-up is two company mentors (Onword Lab · REmited) plus six working seniors — see the mentoring section for the full roster.",
     },
     location: NUS,
-    // TODO: confirm public naming — mentors 황영준·신동혁·한장환·이유택 are confirmed in
-    // the internal deck; verify their names may be shown publicly before surfacing.
+    // TODO: confirm public naming — the confirmed individual mentors (황영준·이유택·
+    // 한장환·신동혁·이화영·임석근) are from the internal deck; verify their names may be
+    // shown publicly before surfacing. Full roster lives in dict.mentoring.mentors.
   },
 
   // ─── DAY 4 · Self-build · Mentoring (08.25) ─────────────────────────────────
@@ -695,14 +696,14 @@ export const schedule: BEvent[] = [
     timeOfDay: "PM",
     // TODO: confirm public naming — speaker (박희덕) from the internal deck.
     speaker: { ko: "박희덕", en: "Park Hee-deok" },
-    title: { ko: "박희덕 커리어 간담회", en: "Career Session · Park Hee-deok" },
+    title: { ko: "커리어 간담회 · ‘FDE로 일한다는 것’", en: "Career Session · “Working as an FDE”" },
     summary: {
-      ko: "12:30–14:00 · FDE 사업에 관심 있는 학생·졸업생 대상 커리어 간담회.",
-      en: "12:30–14:00 · a career session for students & grads interested in the FDE business.",
+      ko: "12:30–14:00 · 박희덕 대표의 ‘FDE로 일한다는 것’ — FDE 사업에 관심 있는 학생·졸업생 대상.",
+      en: "12:30–14:00 · Park Hee-deok on “Working as an FDE” — for students & grads interested in the FDE business.",
     },
     description: {
-      ko: "파이널 리허설 일정의 마무리로 마련된 커리어 간담회입니다(12:30–14:00). 트랜스링크 인베스트먼트의 박희덕 대표가 자사 FDE 사업에 관심 있는 학생·졸업생을 대상으로 어떤 일을 하는 자리인지, 어떤 사람을 찾는지를 직접 이야기하며, 인턴·채용 pool로 이어지는 실질적 연결의 시간입니다. 간담회 후속 1:1 면담·멘토링(희망자)은 8/29 행사 종료(3PM) 후 현장 또는 널담에서 진행됩니다.",
-      en: "A career session closing out the final-rehearsal day (12:30–14:00). Park Hee-deok (CEO · General Partner, Translink Investment) talks directly with students and graduates interested in the firm's FDE business — what the work actually is and who they're looking for — a genuine connection into the internship and hiring pool. Follow-up 1:1 conversations and mentoring (for those who want them) run after the event closes on 29 Aug (3PM), either on-site or at Nuldam.",
+      ko: "파이널 리허설 일정의 마무리로 마련된 커리어 간담회입니다(12:30–14:00). 트랜스링크 인베스트먼트의 박희덕 대표가 ‘FDE로 일한다는 것’을 주제로, 자사 FDE 사업에 관심 있는 학생·졸업생에게 어떤 일을 하는 자리인지, 어떤 사람을 찾는지를 직접 이야기하며, 인턴·채용 pool로 이어지는 실질적 연결의 시간입니다. 간담회 후속 1:1 면담·멘토링(희망자)은 8/29 행사 종료(3PM) 후 현장 또는 널담에서 진행됩니다.",
+      en: "A career session closing out the final-rehearsal day (12:30–14:00). Under the theme “Working as an FDE,” Park Hee-deok (CEO · General Partner, Translink Investment) talks directly with students and graduates interested in the firm's FDE business — what the work actually is and who they're looking for — a genuine connection into the internship and hiring pool. Follow-up 1:1 conversations and mentoring (for those who want them) run after the event closes on 29 Aug (3PM), either on-site or at Nuldam.",
     },
     location: AWS_OFFICE,
   },
@@ -742,8 +743,8 @@ export const schedule: BEvent[] = [
       en: "12:00~ 5-min pitches per team, by track in one space — attend your own track.",
     },
     description: {
-      ko: "12:00부터 데모데이 팀별 발표가 시작됩니다. 같은 공간에서 트랙별로 순차 진행하며, 각 팀이 5분씩 발표합니다(트랙당 약 1시간 × 3트랙, 총 약 2.5시간 · 팀 수에 따라 유동). 참가자는 본인 트랙 발표에 참석하고, 그 외 시간은 자유롭게 관람하거나 식사할 수 있습니다. 심사와 문제 발의는 AXMOS·파트너가 전담하며, 멘토와는 역할을 분리해 학생 눈높이의 멘토 문화를 지킵니다.",
-      en: "From 12:00, the Demo-Day pitches begin. In one space, tracks run in sequence and each team pitches for five minutes (about an hour per track × 3 tracks, ~2.5 hours total, depending on team count). You attend your own track's pitches and are free to watch others or grab food the rest of the time. Judging and problem-setting are handled by AXMOS and partners, kept separate from the mentor role so the peer-level mentor culture stays intact.",
+      ko: "12:00부터 데모데이 팀별 발표가 시작됩니다. 같은 공간에서 트랙별로 순차 진행하며, 각 팀이 5분씩 발표합니다(트랙당 약 1시간 × 3트랙, 총 약 2.5시간 · 팀 수에 따라 유동). 참가자는 본인 트랙 발표에 참석하고, 그 외 시간은 자유롭게 관람하거나 식사할 수 있습니다. 심사는 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다(문제 발의는 AXMOS). 멘토와는 역할을 분리해 학생 눈높이의 멘토 문화를 지킵니다.",
+      en: "From 12:00, the Demo-Day pitches begin. In one space, tracks run in sequence and each team pitches for five minutes (about an hour per track × 3 tracks, ~2.5 hours total, depending on team count). You attend your own track's pitches and are free to watch others or grab food the rest of the time. Judging is done by working leaders who have solved real problems in industry (problem-setting by AXMOS), kept separate from the mentor role so the peer-level mentor culture stays intact.",
     },
     location: ONSITE,
   },
