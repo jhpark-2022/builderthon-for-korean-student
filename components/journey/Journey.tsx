@@ -1912,7 +1912,7 @@ export default function Journey() {
         </div>
 
         {/* ── Judges subsection (deck p13) · no new nav item ────────────────
-            6 confirmed judge cards (face photos) + 2 "to be announced"
+            7 confirmed judge cards (face photos) + 2 "to be announced"
             placeholders. LinkedIn icon only where a confirmed URL exists. */}
         <div className="mt-16 border-t border-white/10 pt-12 text-left">
           <div className="text-center">

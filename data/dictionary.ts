@@ -1002,8 +1002,10 @@ export const dict = {
   // ── 심사위원 (덱 p13) ────────────────────────────────────────────────────────
   // Rendered as a subsection of the mentoring chapter (no new nav item). Bios are
   // tidied from the deck's own copy — NO facts added, EN is a translation. Every
-  // person object carries identical keys to keep the array homogeneous. All six
-  // have a face photo (img) and a confirmed LinkedIn profile.
+  // person object carries identical keys to keep the array homogeneous. All seven
+  // have a face photo (img); 정요천 has no LinkedIn, so `linkedin` is "" (the card
+  // simply drops the icon) rather than omitted — an omitted key would make TS
+  // infer a union and break `j.linkedin` on the card.
   // TODO: confirm public naming — verify each name may be shown publicly.
   // Internal-only figures (e.g. Shin Sang-gil's "FY24 S$22M·+45%") are omitted.
   judges: {
@@ -1085,6 +1087,18 @@ export const dict = {
           en: "Leads GenAI GTM for AWS APJC — grew the GenAI customer-experience business roughly 10× since 2021 and expanded it across 7+ industries. Formerly 5G network business development for Samsung Electronics in North America.",
         },
         linkedin: "https://www.linkedin.com/in/donghyukshin",
+      },
+      {
+        name: { ko: "정요천", en: "Jeong Yo-cheon" },
+        org: { ko: "Brie", en: "Brie" },
+        role: { ko: "CEO/CTO · Popup Studio 총괄", en: "CEO/CTO · Head of Popup Studio" },
+        tag: { ko: "웹 · AI 풀스택", en: "Web · AI full-stack" },
+        img: "/partners/people/jeong-yo-cheon.webp",
+        bio: {
+          ko: "웹·AI 서비스 풀스택 개발사 Brie의 CEO 겸 CTO이자 현 Popup Studio 총괄. 前 워프벤처스 CEO/CTO — 건축주–건축사·시공사 매칭 웹 플랫폼과 딥러닝 기반 개인화 추천(deep collaborative filtering) 개발. 아이앤제이자산운용 Pre-IPO 메자닌 운용역, 한국산업은행(KDB) 기업금융 출신.",
+          en: "CEO and CTO of Brie, a full-stack web·AI service development company, and currently head of Popup Studio. Formerly CEO/CTO of Warp Ventures — a web platform matching building owners with architects and contractors, plus deep-learning personalised recommendation (deep collaborative filtering). Earlier, Pre-IPO mezzanine investing at I&J Asset Management and corporate finance at the Korea Development Bank (KDB).",
+        },
+        linkedin: "",
       },
     ],
     tbcLabel: { ko: "추후 공개", en: "To be announced" },
