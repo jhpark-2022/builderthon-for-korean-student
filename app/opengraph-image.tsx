@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Zero100 Builderthon — Build in Singapore";
+export const alt = "Zero100 AI Builderthon — Build in Singapore";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -24,7 +24,7 @@ export default function OpengraphImage() {
       >
         <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 30, fontWeight: 700, letterSpacing: 2, color: "#c4b5fd" }}>
           <span>Zero100</span>
-          <span style={{ opacity: 0.75 }}>Builderthon</span>
+          <span style={{ opacity: 0.75 }}>AI Builderthon</span>
         </div>
         <div style={{ display: "flex", fontSize: 34, color: "#a5b4fc", marginTop: 26, fontWeight: 600 }}>
           Singapore&apos;s first AI builderthon for Korean students

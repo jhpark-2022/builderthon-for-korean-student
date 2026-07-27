@@ -22,13 +22,13 @@ export const links = {
   // Deliberately a personal address rather than the school one: partner threads
   // outlive the .edu account.
   partnership:
-    "mailto:pjh030924@gmail.com?subject=Zero100%20Builderthon%20Partnership%20Inquiry",
+    "mailto:pjh030924@gmail.com?subject=Zero100%20AI%20Builderthon%20Partnership%20Inquiry",
   // Where an already-registered visitor goes to change or cancel their entry.
   // There is no self-serve edit: registrations are written once by /api/register
   // and the browser keeps no registration id, so nothing can identify "your" row
   // to a later request. Organizers edit by hand instead.
   registerEdit:
-    "mailto:pjh030924@gmail.com?subject=Zero100%20Builderthon%20%EB%93%B1%EB%A1%9D%20%EC%A0%95%EB%B3%B4%20%EC%88%98%EC%A0%95%20%EC%9A%94%EC%B2%AD",
+    "mailto:pjh030924@gmail.com?subject=Zero100%20AI%20Builderthon%20%EB%93%B1%EB%A1%9D%20%EC%A0%95%EB%B3%B4%20%EC%88%98%EC%A0%95%20%EC%9A%94%EC%B2%AD",
   // Public builderthon group chat — KakaoTalk 오픈채팅 "싱가폴 한인 학생 AI 빌더톤".
   // This is the open room anyone can join to ask a question; the participant
   // room registrants are invited to is a separate, private one.
@@ -166,7 +166,7 @@ export const dict = {
     openChat: { ko: "오픈채팅", en: "Open Chat" },
     openChatAria: { ko: "카카오톡 오픈채팅방 열기", en: "Open the KakaoTalk open chat" },
     // Brand suffix beside the Zero100 wordmark in the nav.
-    brandSuffix: { ko: "빌더톤", en: "Builderthon" },
+    brandSuffix: { ko: "AI 빌더톤", en: "AI Builderthon" },
   },
 
   // Secondary CTA on the hero/footer that sends visitors to the /quiz mini-site.
@@ -268,8 +268,8 @@ export const dict = {
     // next. All three restate facts already true elsewhere on the site; none of
     // them promises anything new.
     trustOrganizer: {
-      ko: "SMU · NUS · NTU 한인 학생회 주관 · Zero100 빌더톤 운영진이 직접 확인합니다.",
-      en: "Organized by the SMU · NUS · NTU Korean student associations — the Zero100 builderthon team reads every entry.",
+      ko: "SMU · NUS · NTU 한인 학생회 주관 · Zero100 AI 빌더톤 운영진이 직접 확인합니다.",
+      en: "Organized by the SMU · NUS · NTU Korean student associations — the Zero100 AI Builderthon team reads every entry.",
     },
     trustPrivacy: {
       ko: "입력하신 연락처는 참가 안내·참가자 단톡방 초대에만 사용하고 외부에 공유하지 않습니다. 팀원 정보는 팀원 동의 하에 입력해 주세요.",
@@ -621,7 +621,7 @@ export const dict = {
     visionSteps: [
       {
         num: "1",
-        title: { ko: "Zero100 빌더톤", en: "Zero100 Builderthon" },
+        title: { ko: "Zero100 AI 빌더톤", en: "Zero100 AI Builderthon" },
         body: {
           ko: "8일의 성공 경험 — 여기서 만나는 동료·멘토·기업이 전부의 시작점입니다.",
           en: "8 days of real success — the peers, mentors and companies you meet here start everything.",
@@ -1316,8 +1316,8 @@ export const dict = {
       en: "Organized by the SMU · NUS · NTU Korean Student Associations  ·  Zero100 builder network",
     },
     rights: {
-      ko: "Zero100 Builderthon. All rights reserved.",
-      en: "Zero100 Builderthon. All rights reserved.",
+      ko: "Zero100 AI Builderthon. All rights reserved.",
+      en: "Zero100 AI Builderthon. All rights reserved.",
     },
   },
 

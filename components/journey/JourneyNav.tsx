@@ -62,9 +62,9 @@ export default function JourneyNav() {
         <div className="flex items-center">
           <a href="#top" className="flex items-center gap-2.5 leading-none">
             {/* Official Zero100 lockup (icon + wordmark) leads the brand; the event
-                is "Zero100 Builderthon". The "Builderthon" suffix is hidden on the
-                narrowest screens so the brand, EN/KR toggle and View Program CTA all
-                fit, and returns from the sm breakpoint up. */}
+                is "Zero100 AI Builderthon". The "AI Builderthon" suffix is hidden
+                on the narrowest screens so the brand, EN/KR toggle and View Program
+                CTA all fit, and returns from the sm breakpoint up. */}
             <Image
               src="/partners/zero100-wordmark.png"
               alt="Zero100"
@@ -74,7 +74,7 @@ export default function JourneyNav() {
               className="h-7 w-auto opacity-90 brightness-0 invert sm:h-8"
             />
             {/* items-center centres the text box, but Hangul glyphs sit high in
-                that box (no descenders) so "빌더톤" reads as floating above the
+                that box (no descenders) so "AI 빌더톤" reads as floating above the
                 Zero100 wordmark. Nudge it down only for Korean; Latin already
                 lines up. */}
             <span className={`hidden items-center text-lg font-black leading-none tracking-wide text-white/90 sm:inline-flex sm:text-xl ${locale === "ko" ? "translate-y-[2px]" : ""}`}>{t(dict.nav.brandSuffix)}</span>

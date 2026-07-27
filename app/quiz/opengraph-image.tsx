@@ -102,7 +102,7 @@ export default function QuizOpengraphImage() {
               fontWeight: 800,
             }}
           >
-            Zero100 Builderthon
+            Zero100 AI Builderthon
           </div>
           <div
             style={{

@@ -650,7 +650,9 @@ export const MODEL_MAP: Record<MbtiKey, string> = Object.fromEntries(
 // ── UI copy (bilingual) ────────────────────────────────────────────────────
 export const quizUI = {
   eyebrow: { ko: "AI 성격 테스트", en: "AI Personality Test" },
-  back: { ko: "빌더톤", en: "Builderthon" },
+  // Back-link to the event site — mirrors the nav's brandSuffix, so it carries
+  // the same "AI 빌더톤 / AI Builderthon" wording.
+  back: { ko: "AI 빌더톤", en: "AI Builderthon" },
   title: { ko: "당신의 AI 모델은?", en: "Which AI model are you?" },
   subtitle: {
     ko: "14개의 질문으로 알아보는 나의 빌더 유형. 결과는 16개 AI 모델 중 하나로 나와요.",

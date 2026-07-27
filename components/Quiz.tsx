@@ -604,9 +604,14 @@ function ResultView({
           style={{ boxShadow: "0 30px 70px -28px rgba(217,70,239,0.42)" }}
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-fuchsia-500/20 to-transparent" />
-          <div className="relative flex items-center justify-between">
-            <span className="font-mono text-[0.7rem] font-bold uppercase tracking-[0.15em] text-white/45">Zero100 Builderthon</span>
-            <span className="font-mono text-[0.7rem] font-bold tracking-wider text-white/45">{result.resultId}</span>
+          {/* Stub header. The event name is long enough that at phone widths the
+              wide mono tracking wrapped it — and squeezed the type code into
+              "ESTP-/T". Both stay on one line now; the size scales with the
+              viewport (capped at the original 0.7rem from ~430px up) and the
+              tracking only opens up from `sm`, where the card can carry it. */}
+          <div className="relative flex items-center justify-between gap-3">
+            <span className="whitespace-nowrap font-mono text-[clamp(0.52rem,2.6vw,0.7rem)] font-bold uppercase tracking-[0.08em] text-white/45 sm:tracking-[0.15em]">Zero100 AI Builderthon</span>
+            <span className="whitespace-nowrap font-mono text-[clamp(0.52rem,2.6vw,0.7rem)] font-bold tracking-wider text-white/45">{result.resultId}</span>
           </div>
 
           {/* two columns fill the wide card: identity + gauges on the left,

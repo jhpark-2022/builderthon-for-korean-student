@@ -2298,7 +2298,7 @@ export default function Journey() {
 
         {/* credits — pinned to the very bottom of the final screen */}
         <div className="mx-auto w-full max-w-3xl border-t border-white/10 pt-8 text-center">
-          <p className="text-sm font-bold tracking-widest text-white">ZERO100 BUILDERTHON</p>
+          <p className="text-sm font-bold tracking-widest text-white">ZERO100 AI BUILDERTHON</p>
           <p className="mt-2 text-xs text-white/65">{t(dict.footer.hostedBy)}</p>
           <p className="mt-4 text-xs text-white/55">© 2026 {t(dict.footer.rights)}</p>
         </div>
