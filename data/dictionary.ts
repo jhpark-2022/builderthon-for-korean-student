@@ -1197,10 +1197,13 @@ export const dict = {
         linkedin: "https://www.linkedin.com/in/donghun-lee-8888a13a",
       },
       {
-        // Facts below come from her own LinkedIn (headline + her posts): GTM &
-        // partnerships at Codepresso, the non-developer AI-literacy courses she
-        // runs, Women in Vibe Coding ("why we started…", now Korea · Singapore ·
-        // Vietnam · Luxembourg) and AXMOS ("제가 함께 참여하고 있는 AXMOS").
+        // A bio has to say what someone DID, not what they are in charge of —
+        // the first draft here listed her role and affiliations and told a reader
+        // nothing. Both claims below are things she carried out, taken from her
+        // own LinkedIn posts: "이번 AI 특강 3기를 진행하며…", "why we started Women
+        // in Vibe Coding", "Watching this cohort from the very first session to
+        // Demo Day", "Across Korea, Singapore, Vietnam, and now Luxembourg".
+        // The GTM/partnerships title stays in `role` and is not repeated here.
         // Her headline is a description, not a formal title — "GTM · 파트너십 총괄"
         // renders it without inventing a rank.
         name: { ko: "백민정", en: "MJ Baek" },
@@ -1209,8 +1212,8 @@ export const dict = {
         tag: { ko: "AI 리터러시 · 빌더 커뮤니티", en: "AI literacy · builder community" },
         img: "/partners/people/baek-min-joung.jpg",
         bio: {
-          ko: "코드프레소의 GTM·파트너십을 총괄하며 비개발 직군 대상 AI 입문 특강을 운영합니다. 한국·싱가포르·베트남·룩셈부르크로 이어지는 빌더 커뮤니티 ‘Women in Vibe Coding’을 함께 시작해 이끌고 있고, AXMOS에도 참여합니다.",
-          en: "Leads go-to-market and partnerships at Codepresso, running its AI-literacy courses for non-developers. Co-started and runs Women in Vibe Coding, a builder community now spanning Korea, Singapore, Vietnam and Luxembourg, and takes part in AXMOS.",
+          ko: "코딩을 해본 적 없는 사람들을 데모데이까지 데려가는 빌더 커뮤니티 ‘Women in Vibe Coding’을 함께 만들어 한국·싱가포르·베트남·룩셈부르크 4개국으로 넓혔습니다. 비개발 직군 AI 입문 특강도 3기까지 직접 운영했어요.",
+          en: "Co-created Women in Vibe Coding — a builder community that takes people who have never written code all the way to a demo day — and grew it across Korea, Singapore, Vietnam and Luxembourg. Has personally run three cohorts of the AI intro course for non-developers.",
         },
         linkedin: "https://www.linkedin.com/in/mjbaek",
       },
