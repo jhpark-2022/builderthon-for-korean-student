@@ -76,8 +76,8 @@ export const partnerIntros: Record<string, Phrase> = {
 
   // ── 주최 · HOST ────────────────────────────────────────────────────────────
   AXMOS: {
-    ko: "AXMOS는 Translink Investment · Wilt Venture Builder · Codepresso · Popup Studio · DRIMAES 5개 사가 결성한 AX(AI 전환) 컨소시엄입니다. 이번 빌더톤의 실제 기업 과제 발의와 심사를 함께 담당합니다.",
-    en: "AXMOS is an AX (AI-transformation) consortium formed by Translink Investment, Wilt Venture Builder, Codepresso, Popup Studio and DRIMAES — jointly providing this builderthon's real company problems and judging.",
+    ko: "AXMOS는 Translink Investment · Wilt Venture Builder · Codepresso · Popup Studio · DRIMAES 5개 사가 결성한 AX(AI 전환) 컨소시엄입니다. 이번 빌더톤의 실제 기업 과제 발의·멘토링·심사를 함께 담당합니다.",
+    en: "AXMOS is an AX (AI-transformation) consortium formed by Translink Investment, Wilt Venture Builder, Codepresso, Popup Studio and DRIMAES — jointly providing this builderthon's real company problems, mentoring and judging.",
   },
   "Translink Investment": {
     ko: "실리콘밸리 트랜스링크캐피탈과 합작해 2016년 출범한 벤처캐피탈로, SaaS·딥테크 중심으로 7개 조합·누적 약 1,900억 원 규모를 운용합니다. 마켓컬리 초기 투자사로 알려져 있으며, 포트폴리오사의 글로벌 진출 지원이 강점입니다. 데모데이 키노트를 맡은 박희덕 대표가 이끄는 하우스입니다.",
@@ -959,13 +959,20 @@ export const dict = {
       en: "Even with many companies involved, we protect the student identity & giver culture through the mentor persona.",
     },
     personaLabel: { ko: "멘토 페르소나", en: "Mentor persona" },
+    // The persona describes STAGE 1 only. Stage 2 (Day 5–7) is Popup Studio's
+    // FDEs, who are professionals rather than peer-level seniors — so the line
+    // now says which stage it applies to instead of reading as a claim about
+    // every mentor on the page.
     persona: {
-      ko: "한때 우리와 같았고, 같은 고민을 하던 한국 유학생 출신 founder · startup 멤버.",
-      en: "Korean ex-international-student founders / startup members — once in our shoes, with the same struggles.",
+      ko: "한때 우리와 같았고, 같은 고민을 하던 한국 유학생 출신 founder · startup 멤버 (Day 3·4 기초 멘토링).",
+      en: "Korean ex-international-student founders / startup members — once in our shoes, with the same struggles (Day 3·4, the foundational stage).",
     },
+    // Two stages, stated in day order. Stage 2 is NOT a repeat of stage 1 — it is
+    // for teams that already have the basics down, which is why the wording
+    // separates 기본기 from 문제 정의·워크플로·구현 방향.
     dayTierNote: {
-      ko: "Day 3·4 자율 빌드는 눈높이 선배가, Day 7 커리어 세션은 한 단계 위 현직 시니어 리더가 함께합니다.",
-      en: "On Day 3·4's self-build the peer-level seniors are with you; on Day 7's career session, working senior leaders one step ahead join in.",
+      ko: "멘토링은 두 단계로 설계했습니다 — Day 3·4에는 유학생 출신 실무자들이 기본기를 잡아주고, Day 5–7에는 팝업스튜디오의 FDE가 실전 관점에서 팀별 문제 정의·워크플로·구현 방향을 점검합니다. Day 7 커리어 세션은 한 단계 위 시니어 리더들과 함께합니다.",
+      en: "Mentoring runs in two stages — on Day 3·4, working seniors who studied abroad themselves help you get the fundamentals right; from Day 5–7, Popup Studio's FDEs review each team's problem definition, workflow and implementation direction from a practitioner's angle. The Day 7 career session brings in senior leaders one step further ahead.",
     },
     // The exception is named on purpose. This box used to read "AXMOS = 심사 ·
     // 문제 발의 전담 / 멘토가 아니라" while the grid right below it shows a
@@ -996,8 +1003,8 @@ export const dict = {
     matchNote: {
       title: { ko: "멘토 매칭은 이렇게 배정돼요", en: "How mentor matching works" },
       body: {
-        ko: "특정 멘토를 지정하는 방식이 아니에요. 행사 전 팀이 제출한 가능 시간과 멘토의 가능 시간이 **겹치는 구간**을 기준으로 운영진이 배정합니다. 누구와 만나든 — 모든 멘토는 여러분이 푸는 그 문제를 미리 보고 들어옵니다.",
-        en: "You don't pick a specific mentor. Sessions are assigned by the organizers where your team's submitted availability **overlaps** with a mentor's. And whoever you meet — every mentor comes in having already seen the problem you're solving.",
+        ko: "특정 멘토를 지정하는 방식이 아니에요. 행사 전 팀이 제출한 가능 시간과 멘토의 가능 시간이 **겹치는 구간**을 기준으로 운영진이 배정합니다. Day 5–7의 팝업스튜디오 오피스아워도 같은 방식입니다. 누구와 만나든 — 모든 멘토는 여러분이 푸는 그 문제를 미리 보고 들어옵니다.",
+        en: "You don't pick a specific mentor. Sessions are assigned by the organizers where your team's submitted availability **overlaps** with a mentor's. Popup Studio's Day 5–7 office hours work the same way. And whoever you meet — every mentor comes in having already seen the problem you're solving.",
       },
     },
     // ── 확정 멘토 그리드 (덱 p12) ──────────────────────────────────────────────
@@ -1102,6 +1109,21 @@ export const dict = {
           en: "Student marketplace in Singapore — NTU featured. Ex-Naver engineer, 5 yrs.",
         },
         days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek",
+      },
+      // ── Day 5–7 · 2단계 실전 멘토링 ─────────────────────────────────────────
+      // The one COMPANY entry in this grid — Popup Studio sends FDEs rather than
+      // a single named person, so `name` is the company and `linkedin` stays
+      // empty (the card simply drops the icon). Everything else is the same
+      // shape as the individual cards; there is no logo slot since the avatar
+      // column was removed. `org` carries what they do here so the intro doesn't
+      // have to repeat it, and the day pill carries "Day 5–7".
+      {
+        name: { ko: "Popup Studio", en: "Popup Studio" }, org: { ko: "FDE 실전 멘토링", en: "FDE hands-on mentoring" }, role: { ko: "", en: "" },
+        intro: {
+          ko: "싱가포르 본사 AX 기업 · 온라인 오피스아워. 팀별 문제 정의 · 워크플로 · 구현 방향 점검.",
+          en: "Singapore-HQ AX firm. Online office hours — problem definition · workflow.",
+        },
+        days: "Day 5–7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "",
       },
       // ── Day 7 · 커리어 세션 ─────────────────────────────────────────────────
       {

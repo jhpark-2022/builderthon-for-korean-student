@@ -544,8 +544,8 @@ export const schedule: BEvent[] = [
       en: "One-on-one to unblock and adjust direction — at NUS in person or online, depending on the mentor.",
     },
     description: {
-      ko: "정해진 시간표 대신 팀의 필요에 맞춰 진행되는 1:1 멘토링입니다. 진행 방식은 멘토별로 정해집니다 — NUS 현장 대면(F2F)이 기본이지만, 멘토에 따라 온라인으로 진행될 수 있으니 배정된 멘토와 직접 맞추시면 됩니다. 막힌 지점을 함께 점검하고 방향을 조정합니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표 — 같은 눈높이에서 함께 고민하는 선배입니다. 학생 정체성과 giver 문화를 지키는 이 멘토 persona가 이 시간의 핵심입니다. 확정 멘토로 기업 멘토 2곳(Onword Lab · REmited)과 현직 시니어 6인이 함께합니다 — 전체 명단은 멘토링 섹션을 참고하세요. 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다.",
-      en: "One-on-one mentoring that follows each team's needs rather than a fixed timetable. The format is set mentor by mentor — in person (F2F) at NUS by default, but some mentors take it online, so you'll settle it with the mentor you're matched with. It's time to check blockers and adjust direction. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes, thinking alongside you at eye level. That peer-mentor persona — protecting the student identity and giver culture — is the point of this time. The confirmed line-up is two company mentors (Onword Lab · REmited) plus six working seniors — see the mentoring section for the full roster. Mentors are assigned by overlapping availability, not by request.",
+      ko: "멘토링 1단계(기초)로, 정해진 시간표 대신 팀의 필요에 맞춰 진행되는 1:1 멘토링입니다. 진행 방식은 멘토별로 정해집니다 — NUS 현장 대면(F2F)이 기본이지만, 멘토에 따라 온라인으로 진행될 수 있으니 배정된 멘토와 직접 맞추시면 됩니다. 막힌 지점을 함께 점검하고 방향을 조정합니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표 — 같은 눈높이에서 함께 고민하는 선배입니다. 학생 정체성과 giver 문화를 지키는 이 멘토 persona가 이 시간의 핵심입니다. 확정 멘토로 기업 멘토 2곳(Onword Lab · REmited)과 현직 시니어 6인이 함께합니다 — 전체 명단은 멘토링 섹션을 참고하세요. 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다. Day 5–7에는 팝업스튜디오 FDE의 실전 멘토링이 2단계로 이어집니다.",
+      en: "Stage one of mentoring — the foundational round, following each team's needs rather than a fixed timetable. The format is set mentor by mentor — in person (F2F) at NUS by default, but some mentors take it online, so you'll settle it with the mentor you're matched with. It's time to check blockers and adjust direction. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes, thinking alongside you at eye level. That peer-mentor persona — protecting the student identity and giver culture — is the point of this time. The confirmed line-up is two company mentors (Onword Lab · REmited) plus six working seniors — see the mentoring section for the full roster. Mentors are assigned by overlapping availability, not by request. Stage two — Popup Studio's FDE mentoring — follows on Day 5–7.",
     },
     location: NUS,
     // TODO: confirm public naming — the confirmed individual mentors (황영준·이유택·
@@ -586,8 +586,8 @@ export const schedule: BEvent[] = [
       en: "One-on-one prototype review and progress — at NUS in person or online, depending on the mentor.",
     },
     description: {
-      ko: "팀이 만든 프로토타입을 함께 점검하고 진전을 살피는 1:1 멘토링입니다. Day 3과 마찬가지로 NUS 대면(F2F)이 기본이되 진행 방식은 멘토별로 정해지며(온라인 가능), 무엇이 잘 되고 있는지, 어디를 더 밀어야 하는지를 같은 눈높이의 선배 멘토와 짚어봅니다. 멘토는 유학생 출신 현직 대표로, 학생 교류와 giver 문화를 지키는 역할입니다(확정 멘토진은 Day 3과 동일). 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다.",
-      en: "One-on-one mentoring to review the prototype your team built and look at progress together. As on Day 3 it's in person (F2F) at NUS by default, with the format set by each mentor (online is possible) — what's working, and where to push harder, with peer-level senior mentors. Mentors are Korean ex-international-student founders, there to keep the student exchange and giver culture alive (same confirmed line-up as Day 3). Mentors are assigned by overlapping availability, not by request.",
+      ko: "멘토링 1단계(기초)의 마무리로, 팀이 만든 프로토타입을 함께 점검하고 진전을 살피는 1:1 멘토링입니다. Day 3과 마찬가지로 NUS 대면(F2F)이 기본이되 진행 방식은 멘토별로 정해지며(온라인 가능), 무엇이 잘 되고 있는지, 어디를 더 밀어야 하는지를 같은 눈높이의 선배 멘토와 짚어봅니다. 멘토는 유학생 출신 현직 대표로, 학생 교류와 giver 문화를 지키는 역할입니다(확정 멘토진은 Day 3과 동일). 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다.",
+      en: "The close of stage one — one-on-one mentoring to review the prototype your team built and look at progress together. As on Day 3 it's in person (F2F) at NUS by default, with the format set by each mentor (online is possible) — what's working, and where to push harder, with peer-level senior mentors. Mentors are Korean ex-international-student founders, there to keep the student exchange and giver culture alive (same confirmed line-up as Day 3). Mentors are assigned by overlapping availability, not by request.",
     },
     location: NUS,
   },
@@ -606,8 +606,8 @@ export const schedule: BEvent[] = [
       en: "The whole cohort meets in person for the first time — Lab 2 begins.",
     },
     description: {
-      ko: "온라인으로 진행되던 일정 중, 처음으로 전원이 *SCAPE L^IFE Jungle 현장에 모이는 날입니다(10AM–2PM). 10:00 오프닝과 함께 각 팀의 진행 상황을 짚는 중간 점검으로 문을 열고, 10:15에는 AI 빌더 커뮤니티 소개(이수민)가 이어집니다. 여기서부터 실전 단계인 Lab 2가 시작됩니다 — 화면 너머로만 함께 빌드하던 사람들을 직접 만나, 남은 절반을 같은 공간에서 이어갑니다.",
-      en: "The first day the whole cohort gathers in person at *SCAPE L^IFE Jungle (10AM–2PM). It opens at 10:00 with a mid-point check-in on where each team stands, followed at 10:15 by an intro to the AI builder community (Lee Su-min). From here Lab 2 — the main event — begins: you finally meet the people you'd only built alongside on-screen, and carry the second half forward in one room.",
+      ko: "온라인으로 진행되던 일정 중, 처음으로 전원이 *SCAPE L^IFE Jungle 현장에 모이는 날입니다(10AM–2PM). 10:00 오프닝과 함께 각 팀의 진행 상황을 짚는 중간 점검으로 문을 열고, 10:15에는 AI 빌더 커뮤니티 소개(이수민)가 이어집니다. 여기서부터 실전 단계인 Lab 2가 시작됩니다 — 화면 너머로만 함께 빌드하던 사람들을 직접 만나, 남은 절반을 같은 공간에서 이어갑니다. 오늘부터 Day 7까지는 팝업스튜디오 FDE의 실전 멘토링·온라인 오피스아워가 함께 열립니다(시간대는 추후 안내).",
+      en: "The first day the whole cohort gathers in person at *SCAPE L^IFE Jungle (10AM–2PM). It opens at 10:00 with a mid-point check-in on where each team stands, followed at 10:15 by an intro to the AI builder community (Lee Su-min). From here Lab 2 — the main event — begins: you finally meet the people you'd only built alongside on-screen, and carry the second half forward in one room. From today through Day 7, Popup Studio's FDE mentoring and online office hours run alongside (times to be announced).",
     },
     // TODO: confirm public naming — 이수민 is from the internal deck.
     location: ONSITE,
@@ -706,8 +706,8 @@ export const schedule: BEvent[] = [
       en: "No scheduled sessions — teams keep building whenever suits them.",
     },
     description: {
-      ko: "정해진 세션이 하나도 없는 오픈 빌드 데이입니다. 출석 개념이 없고 접속해야 할 곳도 없습니다 — 각 팀이 편한 시간·장소에서 자기 페이스로 프로덕트를 완성해 갑니다. 하루 종일 붙어 있어야 한다는 뜻이 아니라, 하루를 팀이 원하는 대로 쓸 수 있다는 뜻입니다. 필요한 팀은 가벼운 멘토링 접점을 활용할 수 있습니다.",
-      en: "An open build day with no scheduled sessions at all. There's no attendance and nothing to join — each team pushes its product toward completion at its own pace, whenever and wherever suits them. It doesn't mean being glued to it all day; it means the day is yours to use as the team wants. A light mentoring touchpoint is available for teams that need it.",
+      ko: "정해진 세션이 하나도 없는 오픈 빌드 데이입니다. 출석 개념이 없고 접속해야 할 곳도 없습니다 — 각 팀이 편한 시간·장소에서 자기 페이스로 프로덕트를 완성해 갑니다. 하루 종일 붙어 있어야 한다는 뜻이 아니라, 하루를 팀이 원하는 대로 쓸 수 있다는 뜻입니다. Day 5–7에는 팝업스튜디오 FDE의 온라인 오피스아워가 열려 있어, 필요한 팀은 문제 정의·워크플로·구현 방향을 점검받을 수 있습니다(시간대는 추후 안내).",
+      en: "An open build day with no scheduled sessions at all. There's no attendance and nothing to join — each team pushes its product toward completion at its own pace, whenever and wherever suits them. It doesn't mean being glued to it all day; it means the day is yours to use as the team wants. Popup Studio's FDE office hours run online across Day 5–7, so any team that wants a check on its problem definition, workflow or implementation direction can take one (times to be announced).",
     },
     location: ONLINE,
   },
@@ -726,8 +726,8 @@ export const schedule: BEvent[] = [
       en: "AWS office, 9AM–2PM · per-team final feedback and stage rehearsal.",
     },
     description: {
-      ko: "데모데이를 하루 앞두고, AWS 오피스(확정)에서 9AM–2PM 진행하는 현장 파이널 리허설입니다. 09:00–11:30 팀당 최종 피드백으로 최종 발표를 준비하고 무대를 리허설하며 데모의 흐름과 예상 질문을 다듬은 뒤, 11:30–12:30 네트워킹·점심으로 이어집니다. Day 5에 이은 두 번째 현장 집결이자, 새 장소인 AWS 오피스에서 열립니다.",
-      en: "The day before Demo Day, an on-site final rehearsal at the AWS office (confirmed), 9AM–2PM. From 09:00–11:30 teams get per-team final feedback — prepping the final pitch, rehearsing on stage, and tightening the demo flow and likely questions — followed by networking and lunch from 11:30–12:30. It's the second in-person gathering after Day 5 — at the new AWS-office venue.",
+      ko: "데모데이를 하루 앞두고, AWS 오피스(확정)에서 9AM–2PM 진행하는 현장 파이널 리허설입니다. 09:00–11:30 팀당 최종 피드백으로 최종 발표를 준비하고 무대를 리허설하며 데모의 흐름과 예상 질문을 다듬은 뒤, 11:30–12:30 네트워킹·점심으로 이어집니다. Day 5에 이은 두 번째 현장 집결이자, 새 장소인 AWS 오피스에서 열립니다. 팝업스튜디오 FDE의 온라인 오피스아워는 오늘까지 이어집니다.",
+      en: "The day before Demo Day, an on-site final rehearsal at the AWS office (confirmed), 9AM–2PM. From 09:00–11:30 teams get per-team final feedback — prepping the final pitch, rehearsing on stage, and tightening the demo flow and likely questions — followed by networking and lunch from 11:30–12:30. It's the second in-person gathering after Day 5 — at the new AWS-office venue. Popup Studio's FDE office hours run through today.",
     },
     location: AWS_OFFICE,
   },
