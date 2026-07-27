@@ -711,7 +711,7 @@ export const dict = {
     whoTitle: { ko: "이런 분께", en: "Who should join" },
     who: [
       { ko: "전공 불문 — NUS · NTU · SMU의 모든 한인 학생", en: "Any major — Korean students across NUS · NTU · SMU" },
-      { ko: "코딩이 처음이어도 좋습니다 — 크래시코스와 수료증이 함께합니다", en: "First time coding is fine — a crash course and a certificate are included" },
+      { ko: "코딩이 처음이어도 좋습니다 — 크래시코스와 수료증(전 시간 참석 시)이 함께합니다", en: "First time coding is fine — a crash course, plus a certificate if you attend all of it" },
       { ko: "입대 전·전역 후, 다시 도전하고 싶은 분", en: "Anyone wanting a fresh challenge — before enlistment or after service" },
       { ko: "실제 기업의 문제를 직접 풀어보고 싶은 분", en: "Anyone who wants to solve a real company's problem hands-on" },
     ],
@@ -846,11 +846,13 @@ export const dict = {
         num: "05",
         title: { ko: "수료증", en: "Certificate" },
         points: [
-          // The issuer is the point. A certificate from an unnamed organiser is
-          // a PDF; one signed by the five AXMOS companies is five real firms
-          // vouching for you, which is what makes it worth putting on a CV.
-          { ko: "Zero100 주최 5개사(AXMOS) 공동 발급", en: "Jointly issued by the five Zero100 host companies (AXMOS)" },
-          { ko: "크래시 코스 참여자 전원 발급 · 8일차 이후", en: "Issued to every crash-course participant · after Day 8" },
+          // CONFIRMED policy — issuer, criterion and hand-out are all settled, so
+          // none of these three lines carries a hedge. The criterion is FULL
+          // attendance, not participation: never write "참여자 전원" here, or the
+          // bar reads as "showed up once". Mirrored in the FAQ certificate item
+          // and in schedule.ts (d2 crash course · d8 awards) — change all four.
+          { ko: "Zero100 명의로 발급", en: "Issued by Zero100" },
+          { ko: "크래시코스 전 시간 참석 시 · Day 8 시상 때 배부", en: "For attending the full Crash Course · handed out at the Day 8 awards" },
           { ko: "링크드인 · 포트폴리오 · 이력에 활용", en: "Use it on LinkedIn, in your portfolio and CV" },
         ],
       },

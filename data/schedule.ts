@@ -454,8 +454,8 @@ export const schedule: BEvent[] = [
       en: "A focused 5–6h vibe-coding intro — non-developers welcome.",
     },
     description: {
-      ko: "참가자의 약 60%가 바이브 코딩이 처음입니다. 그래서 여러 번에 나누지 않고, 하루에 몰아서 끝내는 집중 5–6시간의 크래시코스로 모두의 출발선을 맞춥니다. AI 도구로 아이디어를 작동하는 프로토타입으로 바꾸는 기본기를 핸즈온으로 익혀, 기술 장벽이 아니라 아이디어가 한계가 되도록 합니다. 비개발자도 따라올 수 있게 설계되었고, 참여자 전원에게 8일차 이후 수료증을 발급합니다(발급 기관·기준 협의 중). 이 크래시코스는 코드프레소가 주관합니다.",
-      en: "About 60% of participants are trying vibe coding for the first time — so instead of spreading it out, one concentrated 5–6 hour Crash Course levels the start line in a single day. A hands-on run through the fundamentals of turning ideas into working prototypes with AI tools, so your ideas — not the tooling — are the limit. It's built so non-developers can keep up, and every participant gets a certificate after Day 8 (issuing body and criteria still being agreed). The Crash Course is run by Codepresso.",
+      ko: "참가자의 약 60%가 바이브 코딩이 처음입니다. 그래서 여러 번에 나누지 않고, 하루에 몰아서 끝내는 집중 5–6시간의 크래시코스로 모두의 출발선을 맞춥니다. AI 도구로 아이디어를 작동하는 프로토타입으로 바꾸는 기본기를 핸즈온으로 익혀, 기술 장벽이 아니라 아이디어가 한계가 되도록 합니다. 비개발자도 따라올 수 있게 설계되었고, 이 크래시코스 전 시간을 참석하면 Zero100 명의의 수료증이 발급되어 Day 8 시상 때 배부됩니다. 크래시코스는 코드프레소가 주관합니다.",
+      en: "About 60% of participants are trying vibe coding for the first time — so instead of spreading it out, one concentrated 5–6 hour Crash Course levels the start line in a single day. A hands-on run through the fundamentals of turning ideas into working prototypes with AI tools, so your ideas — not the tooling — are the limit. It's built so non-developers can keep up, and attending the full Crash Course earns a certificate issued by Zero100, handed out at the Day 8 awards. The Crash Course is run by Codepresso.",
     },
     location: ONLINE,
     org: CODEPRESSO_ORG,
@@ -469,8 +469,8 @@ export const schedule: BEvent[] = [
         en: "Pick up an AI vibe-coding workflow hands-on, not just in theory.",
       },
       {
-        ko: "참여자 전원 수료증 발급 (8일차 이후)",
-        en: "A completion certificate for every participant (after Day 8).",
+        ko: "크래시코스 전 시간 참석 시 Zero100 명의 수료증 (Day 8 배부)",
+        en: "Attend the full Crash Course and get a Zero100-issued certificate (handed out on Day 8).",
       },
     ],
   },
@@ -817,8 +817,8 @@ export const schedule: BEvent[] = [
       en: "14:30~ results, awards, certificates handed out, and a group photo.",
     },
     description: {
-      ko: "8일간의 빌드를 마무리하는 시간입니다. 트랙별 발표가 끝나면 14:30부터 결과 발표와 시상이 이어지고, 참여자 전원에게 수료증을 배부한 뒤 단체 사진으로 마무리합니다. 전원이 *SCAPE L^IFE Jungle 현장(11AM~)에 모여, ‘데모로 끝나지 않는 성공의 경험’으로 8일을 함께 마칩니다.",
-      en: "The close of eight days of building. After the track pitches, results and awards follow from 14:30; every participant receives a certificate, and the day ends with a group photo. The whole cohort gathers at *SCAPE L^IFE Jungle (from 11AM) to finish the eight days on a success that goes beyond a demo.",
+      ko: "8일간의 빌드를 마무리하는 시간입니다. 트랙별 발표가 끝나면 14:30부터 결과 발표와 시상이 이어지고, 크래시코스 전 과정을 참석한 분들께 수료증을 배부한 뒤 단체 사진으로 마무리합니다. 전원이 *SCAPE L^IFE Jungle 현장(11AM~)에 모여, ‘데모로 끝나지 않는 성공의 경험’으로 8일을 함께 마칩니다.",
+      en: "The close of eight days of building. After the track pitches, results and awards follow from 14:30; certificates go to everyone who attended the full Crash Course, and the day ends with a group photo. The whole cohort gathers at *SCAPE L^IFE Jungle (from 11AM) to finish the eight days on a success that goes beyond a demo.",
     },
     location: ONSITE,
   },
