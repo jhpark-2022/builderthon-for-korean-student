@@ -1035,8 +1035,8 @@ export const dict = {
       {
         name: { ko: "한장환", en: "Han Jang-whan" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "SA", en: "SA" },
         intro: {
-          ko: "싱가포르 AWS에서 5년 넘게 클라우드 아키텍처를 설계해 왔어요 — 그 전엔 오라클과 Dell EMC.",
-          en: "Five years of cloud architecture at AWS Singapore, via Oracle and Dell EMC.",
+          ko: "클라우드 아키텍처 설계 — AWS 싱가포르 5년+. 前 오라클 · Dell EMC.",
+          en: "Cloud architecture — 5+ yrs, AWS Singapore. Ex-Oracle · Dell EMC.",
         },
         days: "Day 1", daysPending: "Day 7", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jangwhan",
       },
@@ -1054,8 +1054,8 @@ export const dict = {
       {
         name: { ko: "황현진", en: "Hyunjin Hwang" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "공동창업자 · 콘텐츠 R&D 총괄", en: "Co-founder · Content R&D Lead" },
         intro: {
-          ko: "LG전자에서 9년간 개발하다 창업 — Day 2 크래시코스를 직접 설계하고 진행합니다.",
-          en: "Nine years engineering at LG before co-founding; runs the Crash Course.",
+          ko: "Day 2 크래시코스 설계 · 진행. 前 LG전자 소프트웨어 엔지니어 9년.",
+          en: "Day 2 Crash Course design · delivery. Ex-LG Electronics software engineer, 9 yrs.",
         },
         days: "Day 2", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697",
       },
@@ -1064,16 +1064,16 @@ export const dict = {
       {
         name: { ko: "김진호", en: "Jinho Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CEO", en: "Co-founder · CEO" },
         intro: {
-          ko: "NUS 재학 중 휴학하고 창업 — 한국 리테일·유통에 AI를 들이는 일을 합니다.",
-          en: "Took leave from NUS to found it — AI for Korean retail and distribution.",
+          ko: "한국 리테일·유통 AI 전환. NUS 재학 중 휴학 후 창업.",
+          en: "AI transformation for Korean retail · distribution. Founded on leave from NUS.",
         },
         days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/kimjinho",
       },
       {
         name: { ko: "Sihoon Kim", en: "Sihoon Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CTO", en: "Co-founder · CTO" },
         intro: {
-          ko: "‘성장하는 팀을 위한 AI 인프라’를 만듭니다 — 샌프란시스코 베이 에어리어 기반.",
-          en: "Builds “AI infra for growing teams,” out of the SF Bay Area.",
+          ko: "성장기 팀을 위한 AI 인프라. 샌프란시스코 베이 에어리어 기반.",
+          en: "AI infra for growing teams. Based in the SF Bay Area.",
         },
         days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sihoon-kim-306551372",
       },
@@ -1081,8 +1081,8 @@ export const dict = {
       {
         name: { ko: "Brian Bae", en: "Brian Bae" }, org: { ko: "REmited", en: "REmited" }, role: { ko: "CEO", en: "CEO" },
         intro: {
-          ko: "구글 스타트업 액셀러레이터 2026 참가 — 앤틀러를 거쳐, 대학생 앱부터 시작한 창업자.",
-          en: "In Google for Startups Accelerator 2026; came up through Antler.",
+          ko: "구글 스타트업 액셀러레이터 2026. 前 앤틀러 · 대학생 대상 앱 창업.",
+          en: "Google for Startups Accelerator 2026. Ex-Antler · founded a campus app.",
         },
         days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/brian-bae-ba638a131",
       },
@@ -1090,16 +1090,16 @@ export const dict = {
       {
         name: { ko: "황영준", en: "Hwang Young-jun" }, org: { ko: "T3Q", en: "T3Q" }, role: { ko: "AI", en: "AI" },
         intro: {
-          ko: "컴퓨터 비전을 다루는 AI 엔지니어 — VLM으로 문서를 구조화하고 검색 엔진을 고도화해 왔어요.",
-          en: "A computer-vision AI engineer — VLM document work and search engines.",
+          ko: "컴퓨터 비전 AI 엔지니어. VLM 문서 구조화 · 검색 엔진 고도화.",
+          en: "Computer-vision AI engineer. VLM document structuring · search-engine work.",
         },
         days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620",
       },
       {
         name: { ko: "이유택", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" },
         intro: {
-          ko: "싱가포르 학생용 마켓플레이스를 직접 만들어 NTU에 소개됐어요 — 그 전엔 네이버에서 5년.",
-          en: "Built a student marketplace NTU featured; five years at Naver before.",
+          ko: "싱가포르 학생 마켓플레이스 창업 — NTU 소개. 前 네이버 소프트웨어 엔지니어 5년.",
+          en: "Student marketplace in Singapore — NTU featured. Ex-Naver engineer, 5 yrs.",
         },
         days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek",
       },
@@ -1107,24 +1107,24 @@ export const dict = {
       {
         name: { ko: "신동혁", en: "Shin Dong-hyuk" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "GTM", en: "GTM" },
         intro: {
-          ko: "AWS에서 7년 — GenAI 고객경험 사업을 아태 전역으로 키워 왔어요.",
-          en: "Seven years at AWS, scaling its GenAI CX business across APJC.",
+          ko: "GenAI 고객경험 GTM — 아태 전역. AWS 7년.",
+          en: "GenAI customer-experience GTM — APJC. 7 yrs at AWS.",
         },
         days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/donghyukshin",
       },
       {
         name: { ko: "이화영", en: "Lee Hwa-young" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "Sales", en: "Sales" },
         intro: {
-          ko: "AWS에서 중소기업 신규 고객을 엽니다 — 그 전엔 VMware에서 아태 파트너 얼라이언스를 맡았어요.",
-          en: "Opens new SMB customers at AWS; before, APAC alliances at VMware.",
+          ko: "중소기업 신규 고객 개척. 前 VMware 아태 파트너 얼라이언스.",
+          en: "New SMB customer acquisition. Ex-VMware, APAC partner alliances.",
         },
         days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hwayoung-lee-bbb79a134",
       },
       {
         name: { ko: "임석근", en: "Lim Seok-geun" }, org: { ko: "NetApp", en: "NetApp" }, role: { ko: "APAC", en: "APAC" },
         intro: {
-          ko: "APAC AWS 세일즈 담당 — 탄자니아 IT 컨설턴트로 시작한 커리어.",
-          en: "APAC AWS sales — a path from IT consulting in Tanzania through startups.",
+          ko: "APAC AWS 세일즈. 前 스타트업 사업개발 · 탄자니아 IT 컨설턴트.",
+          en: "APAC AWS sales. Ex-startup BD · IT consultant in Tanzania.",
         },
         days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sugkun-lim",
       },
@@ -1155,8 +1155,8 @@ export const dict = {
         tag: { ko: "美·韓 크로스보더 VC", en: "US–Korea cross-border VC" },
         img: "/partners/people/park-hee-deok.jpg",
         bio: {
-          ko: "트랜스링크인베스트먼트 대표·GP. 前 CJ인베스트먼트 CIO, KT 신사업, KTB네트워크 — 30년 벤처투자·펀드운용.",
-          en: "CEO·GP of Translink Investment. Formerly CIO at CJ Investment, new-business at KT, and KTB Network — 30 years in venture investing and fund management.",
+          ko: "트랜스링크인베스트먼트 대표 · GP. 前 CJ인베스트먼트 CIO · KT 신사업 · KTB네트워크 — 벤처투자·펀드운용 30년.",
+          en: "CEO · GP, Translink Investment. Ex-CJ Investment CIO · KT new business · KTB Network — 30 yrs in venture investing · fund management.",
         },
         linkedin: "https://www.linkedin.com/in/hee-duk-park-304079bb",
       },
@@ -1167,8 +1167,8 @@ export const dict = {
         tag: { ko: "싱가포르 벤처스튜디오", en: "Singapore venture studio" },
         img: "/partners/people/won-dae-ro.jpg",
         bio: {
-          ko: "Wilt VB 대표·d·camp 글로벌 어드바이저. 한–싱 스타트업 빌딩·동남아 크로스보더 투자. 前 KB자산운용 COO·KTB Asia MD — 25년+.",
-          en: "MD of Wilt VB and a d·camp global advisor. Korea–Singapore startup building and SEA cross-border investing. Formerly COO at KB Asset Management and MD at KTB Asia — 25+ years.",
+          ko: "Wilt VB 대표 · d·camp 글로벌 어드바이저. 한–싱 스타트업 빌딩 · 동남아 크로스보더 투자. 前 KB자산운용 COO · KTB Asia MD — 25년+.",
+          en: "MD, Wilt VB · d·camp global advisor. Korea–Singapore startup building · SEA cross-border investing. Ex-KB Asset Management COO · KTB Asia MD — 25+ yrs.",
         },
         linkedin: "https://www.linkedin.com/in/wondaero",
       },
@@ -1179,8 +1179,8 @@ export const dict = {
         tag: { ko: "헬스케어 · 바이오", en: "Healthcare · Bio" },
         img: "/partners/people/lee-byung-il.jpg",
         bio: {
-          ko: "헬스케어·바이오 창업가이자 글로벌 오픈이노베이션 전문가. 前 MUST 액셀러레이터 파트너, AllLive Healthcare 창업(국내 1호 규제샌드박스).",
-          en: "Healthcare·bio founder and global open-innovation specialist. Formerly a partner at MUST Accelerator and founder of AllLive Healthcare (Korea's first regulatory-sandbox case).",
+          ko: "헬스케어·바이오 창업가 · 글로벌 오픈이노베이션 전문가. 前 MUST 액셀러레이터 파트너 · AllLive Healthcare 창업(국내 1호 규제샌드박스).",
+          en: "Healthcare·bio founder · global open-innovation specialist. Ex-MUST Accelerator partner · founder, AllLive Healthcare (Korea's first regulatory-sandbox case).",
         },
         linkedin: "https://www.linkedin.com/in/danielbyungillee",
       },
@@ -1191,8 +1191,8 @@ export const dict = {
         tag: { ko: "AI 코딩 · 교육 플랫폼", en: "AI coding · education platform" },
         img: "/partners/people/lee-dong-hoon.jpg",
         bio: {
-          ko: "AI 코딩·역량진단 교육 플랫폼 코드프레소 대표(AXMOS 컨소시엄). 비개발자 대상 바이브코딩·AX 교육을 다수 운영. 前 스마일게이트·LG전자 소프트웨어 엔지니어.",
-          en: "CEO of Codepresso, an AI-coding & skills-assessment education platform (AXMOS consortium). Runs many vibe-coding·AX programs for non-developers. Formerly a software engineer at Smilegate and LG Electronics.",
+          ko: "코드프레소 대표 — AI 코딩·역량진단 교육 플랫폼(AXMOS 컨소시엄). 비개발자 대상 바이브코딩·AX 교육 다수 운영. 前 스마일게이트 · LG전자 소프트웨어 엔지니어.",
+          en: "CEO, Codepresso — AI-coding · skills-assessment education platform (AXMOS consortium). Vibe-coding · AX programs for non-developers. Ex-Smilegate · LG Electronics software engineer.",
         },
         linkedin: "https://www.linkedin.com/in/donghun-lee-8888a13a",
       },
@@ -1212,8 +1212,8 @@ export const dict = {
         tag: { ko: "AI 리터러시 · 빌더 커뮤니티", en: "AI literacy · builder community" },
         img: "/partners/people/baek-min-joung.jpg",
         bio: {
-          ko: "코딩을 해본 적 없는 사람들을 데모데이까지 데려가는 빌더 커뮤니티 ‘Women in Vibe Coding’을 함께 만들어 한국·싱가포르·베트남·룩셈부르크 4개국으로 넓혔습니다. 비개발 직군 AI 입문 특강도 3기까지 직접 운영했어요.",
-          en: "Co-created Women in Vibe Coding — a builder community that takes people who have never written code all the way to a demo day — and grew it across Korea, Singapore, Vietnam and Luxembourg. Has personally run three cohorts of the AI intro course for non-developers.",
+          ko: "코드프레소 GTM · 파트너십 총괄. ‘Women in Vibe Coding’ 공동 설립 · 4개국(한·싱·베·룩) 운영. 비개발 직군 AI 입문 특강 3기.",
+          en: "GTM · partnerships, Codepresso. Co-founder, Women in Vibe Coding · 4 countries (KR · SG · VN · LU). Three cohorts, AI intro course for non-developers.",
         },
         linkedin: "https://www.linkedin.com/in/mjbaek",
       },
@@ -1224,8 +1224,8 @@ export const dict = {
         tag: { ko: "DX · AI 컨설팅", en: "DX · AI consulting" },
         img: "/partners/people/shin-sang-gil.jpg",
         bio: {
-          ko: "후지필름 BI 싱가포르 고객성공·DX/AI 컨설팅 총괄로 금융·정부·제조 전반을 담당. 前 HP 24년 — APJ 매니지드 서비스·잉크젯 제품·시장개발.",
-          en: "Leads customer success and DX·AI consulting at FUJIFILM BI Singapore across finance, government and manufacturing. 24 years at HP before that — APJ managed services, inkjet products and market development.",
+          ko: "후지필름 BI 싱가포르 고객성공 · DX/AI 컨설팅 총괄 — 금융·정부·제조. 前 HP 24년 — APJ 매니지드 서비스 · 잉크젯 제품 · 시장개발.",
+          en: "Head of customer success · DX·AI consulting, FUJIFILM BI Singapore — finance · government · manufacturing. Ex-HP, 24 yrs — APJ managed services · inkjet · market development.",
         },
         linkedin: "https://www.linkedin.com/in/steveskshin",
       },
@@ -1236,8 +1236,8 @@ export const dict = {
         tag: { ko: "GenAI GTM", en: "GenAI GTM" },
         img: "/partners/people/shin-dong-hyuk.jpg",
         bio: {
-          ko: "AWS APJC GenAI GTM 총괄. GenAI 고객경험(CX) 사업을 2021년 이후 약 10배 성장시키고 7개+ 산업으로 확장. 前 삼성전자 북미 5G 네트워크 사업개발.",
-          en: "Leads GenAI GTM for AWS APJC — grew the GenAI customer-experience business roughly 10× since 2021 and expanded it across 7+ industries. Formerly 5G network business development for Samsung Electronics in North America.",
+          ko: "AWS APJC GenAI GTM 총괄. 2021년 이후 GenAI 고객경험(CX) 사업 약 10배 성장 · 7개+ 산업 확장. 前 삼성전자 북미 5G 네트워크 사업개발.",
+          en: "Head of GenAI GTM, AWS APJC. GenAI customer-experience business ~10× since 2021 · 7+ industries. Ex-Samsung Electronics, 5G network BD in North America.",
         },
         linkedin: "https://www.linkedin.com/in/donghyukshin",
       },
@@ -1248,8 +1248,8 @@ export const dict = {
         tag: { ko: "웹 · AI 풀스택", en: "Web · AI full-stack" },
         img: "/partners/people/jeong-yo-cheon.webp",
         bio: {
-          ko: "웹·AI 풀스택 개발사 Brie 대표(CEO 겸 CTO)·Popup Studio 총괄. 前 워프벤처스 CEO/CTO — 건축 매칭 플랫폼·딥러닝 추천 개발. 前 산업은행(KDB) 기업금융.",
-          en: "CEO·CTO of Brie, a full-stack web·AI development studio, and head of Popup Studio. Formerly CEO/CTO of Warp Ventures — construction matching platform and deep-learning recommendations. Earlier corporate finance at KDB.",
+          ko: "Brie 대표(CEO 겸 CTO) — 웹·AI 풀스택 개발사 · Popup Studio 총괄. 前 워프벤처스 CEO/CTO — 건축 매칭 플랫폼 · 딥러닝 추천. 前 산업은행(KDB) 기업금융.",
+          en: "CEO · CTO, Brie — full-stack web·AI studio · head of Popup Studio. Ex-Warp Ventures CEO/CTO — construction matching platform · deep-learning recommendations. Earlier KDB corporate finance.",
         },
         linkedin: "",
       },
