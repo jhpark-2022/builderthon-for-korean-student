@@ -116,8 +116,8 @@ export const days: DayMeta[] = [
     phase: LAB1,
     theme: { ko: "크래시코스 (집중)", en: "Crash Course" },
     summary: {
-      ko: "바이브 코딩 입문 집중 5–6시간(비개발자 OK) · 종료 후 팀 빌딩으로 이어집니다.",
-      en: "A focused 5–6h vibe-coding intro (beginners OK) · team building follows right after.",
+      ko: "바이브 코딩 입문 집중 5–6시간(비개발자 OK) · 코드프레소 황현진 진행.",
+      en: "A focused 5–6h vibe-coding intro (beginners OK) · led by Hyunjin Hwang of Codepresso.",
     },
     dayMode: "online",
   },
@@ -449,13 +449,18 @@ export const schedule: BEvent[] = [
     timeOfDay: "AM",
     confirmed: true,
     title: { ko: "크래시코스 · 바이브 코딩 입문", en: "Crash Course · Vibe Coding Intro" },
+    // Confirmed instructor. Title from her own LinkedIn headline — "Co-founder &
+    // Director & Content R&D Lead at Codepresso". She runs Codepresso's content
+    // R&D, which is exactly what this session is, so the credential is worth
+    // naming rather than leaving the day to read as a generic vendor workshop.
+    speaker: { ko: "황현진 (코드프레소)", en: "Hyunjin Hwang (Codepresso)" },
     summary: {
-      ko: "집중 5–6시간의 바이브 코딩 입문 — 비개발자도 OK.",
-      en: "A focused 5–6h vibe-coding intro — non-developers welcome.",
+      ko: "집중 5–6시간의 바이브 코딩 입문 — 비개발자도 OK · 코드프레소 황현진 진행.",
+      en: "A focused 5–6h vibe-coding intro — non-developers welcome · led by Hyunjin Hwang of Codepresso.",
     },
     description: {
-      ko: "참가자의 약 60%가 바이브 코딩이 처음입니다. 그래서 여러 번에 나누지 않고, 하루에 몰아서 끝내는 집중 5–6시간의 크래시코스로 모두의 출발선을 맞춥니다. AI 도구로 아이디어를 작동하는 프로토타입으로 바꾸는 기본기를 핸즈온으로 익혀, 기술 장벽이 아니라 아이디어가 한계가 되도록 합니다. 비개발자도 따라올 수 있게 설계되었고, 이 크래시코스 전 시간을 참석하면 Zero100 명의의 수료증이 발급되어 Day 8 시상 때 배부됩니다. 크래시코스는 코드프레소가 주관합니다.",
-      en: "About 60% of participants are trying vibe coding for the first time — so instead of spreading it out, one concentrated 5–6 hour Crash Course levels the start line in a single day. A hands-on run through the fundamentals of turning ideas into working prototypes with AI tools, so your ideas — not the tooling — are the limit. It's built so non-developers can keep up, and attending the full Crash Course earns a certificate issued by Zero100, handed out at the Day 8 awards. The Crash Course is run by Codepresso.",
+      ko: "참가자의 약 60%가 바이브 코딩이 처음입니다. 그래서 여러 번에 나누지 않고, 하루에 몰아서 끝내는 집중 5–6시간의 크래시코스로 모두의 출발선을 맞춥니다. AI 도구로 아이디어를 작동하는 프로토타입으로 바꾸는 기본기를 핸즈온으로 익혀, 기술 장벽이 아니라 아이디어가 한계가 되도록 합니다. 비개발자도 따라올 수 있게 설계되었고, 이 크래시코스 전 시간을 참석하면 Zero100 명의의 수료증이 발급되어 Day 8 시상 때 배부됩니다. 크래시코스는 코드프레소가 주관하며, 코드프레소 공동창업자이자 콘텐츠 R&D를 총괄하는 황현진 디렉터가 직접 진행합니다.",
+      en: "About 60% of participants are trying vibe coding for the first time — so instead of spreading it out, one concentrated 5–6 hour Crash Course levels the start line in a single day. A hands-on run through the fundamentals of turning ideas into working prototypes with AI tools, so your ideas — not the tooling — are the limit. It's built so non-developers can keep up, and attending the full Crash Course earns a certificate issued by Zero100, handed out at the Day 8 awards. The Crash Course is run by Codepresso and led in person by Hyunjin Hwang, its co-founder and Content R&D Lead.",
     },
     location: ONLINE,
     org: CODEPRESSO_ORG,
@@ -474,34 +479,17 @@ export const schedule: BEvent[] = [
       },
     ],
   },
-  // The per-track LIVE BRIEFING by the client contacts was removed from this
-  // slot: how the company contacts would actually run it (and whether it can be
-  // recorded) is not worked out, and announcing it invites questions we cannot
-  // answer. Team building is unaffected and keeps the slot — it is the thing
-  // participants actually have to do after the Crash Course. The problems
-  // themselves still drop on Day 1 (d1-problem-release), so nothing is lost from
-  // the build timeline; teams just work from the Day-1 release.
-  // Category moved main → network: without the briefing this is no longer an
-  // anchor moment, it is orientation / team formation like the other network events.
-  // TODO: 문제 브리핑 방식 확정 시 이 슬롯에 복원 검토.
-  {
-    id: "d2-team-building",
-    day: 2,
-    date: "08.23",
-    category: "network",
-    mode: "online",
-    timeOfDay: "PM",
-    title: { ko: "팀 빌딩", en: "Team Building" },
-    summary: {
-      ko: "크래시코스 종료 후 · 팀을 이루고 무엇을 만들지 함께 정합니다.",
-      en: "Right after the crash course — form a team and decide together what to build.",
-    },
-    description: {
-      ko: "크래시코스가 끝난 직후 이어지는 팀 빌딩 시간입니다. 방금 익힌 기본기를 Day 1에 공개된 실제 AX 과제 위에 얹어, 함께할 팀을 이루고 ‘무엇을 만들지’를 팀과 정합니다. 팀은 1–3인까지 가능하며 혼자 참가해도 괜찮습니다 — 팀이 없다면 이 시간에 찾을 수 있습니다. 여기서 잡은 방향 위에서 팀별 자율 빌드가 데모데이까지 상시로 이어집니다.",
-      en: "Team building runs right after the Crash Course. You take the fundamentals you just learned, put them onto the real AX problem released on Day 1, form the team you'll build with and decide together what to make. Teams can be 1–3 people and going solo is fine — if you don't have a team yet, this is where you find one. Self-paced team build then runs continuously from here to Demo Day.",
-    },
-    location: ONLINE,
-  },
+  // Day 2 is the Crash Course and nothing else.
+  //
+  // Two slots have been removed from this day. The per-track LIVE BRIEFING by the
+  // client contacts went first (how the company contacts would run it was never
+  // worked out); the problems still drop on Day 1, and the deep-dive that walks
+  // through them now lives there too as `d1-problem-deep-dive`. TEAM BUILDING
+  // followed: teams are matched from registration (AI-type test) and grouped
+  // on-site on Day 1, so a separate Day-2 slot was describing a step that had
+  // already happened. Nothing downstream depends on it — the FAQ solo answer
+  // points at registration + Day 1, not at this day.
+  // Do not re-add a briefing slot here: Day 1 is where the problem work happens.
 
   // ─── DAY 3 · Self-build · Mentoring (08.24) ─────────────────────────────────
   {
