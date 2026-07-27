@@ -1858,8 +1858,11 @@ export default function Journey() {
             <p className="mt-3 text-lg font-semibold leading-relaxed text-white">{t(dict.mentoring.persona)}</p>
           </div>
           <div className="rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] p-6">
-            <p className="text-sm font-bold text-amber-200">{t(dict.mentoring.asideLabel)}</p>
-            <p className="mt-2 text-sm leading-relaxed text-amber-100/80">{t(dict.mentoring.aside)}</p>
+            {/* break-keep — same reason as the mentor cards below: the label now
+                runs long enough to wrap, and Korean's default break split the
+                particle off its stem ("진행 / 은 예외"). */}
+            <p className="break-keep text-sm font-bold text-amber-200">{t(dict.mentoring.asideLabel)}</p>
+            <p className="mt-2 break-keep text-sm leading-relaxed text-amber-100/80">{t(dict.mentoring.aside)}</p>
           </div>
         </div>
         <div className="mt-6 text-left">

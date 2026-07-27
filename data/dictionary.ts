@@ -967,8 +967,14 @@ export const dict = {
       ko: "Day 3·4 자율 빌드는 눈높이 선배가, Day 7 커리어 세션은 한 단계 위 현직 시니어 리더가 함께합니다.",
       en: "On Day 3·4's self-build the peer-level seniors are with you; on Day 7's career session, working senior leaders one step ahead join in.",
     },
-    asideLabel: { ko: "AXMOS = 심사 · 문제 발의 전담", en: "AXMOS = judging & problem-setting only" },
-    aside: { ko: "멘토가 아니라 ‘선배’ — 역할을 분리합니다.", en: "Not mentors — the roles are kept separate." },
+    // The exception is named on purpose. This box used to read "AXMOS = 심사 ·
+    // 문제 발의 전담 / 멘토가 아니라" while the grid right below it shows a
+    // Codepresso (an AXMOS company) name — a reader who knows the consortium
+    // spots that in one glance, and an overclaim that gets caught costs more than
+    // the tidier sentence was worth. What the separation actually protects is
+    // 1:1 mentoring vs judging; teaching the Crash Course was never part of it.
+    asideLabel: { ko: "AXMOS = 심사 · 문제 발의 전담 (크래시코스 진행은 예외)", en: "AXMOS = judging & problem-setting only (bar the Crash Course)" },
+    aside: { ko: "1:1 멘토링은 ‘선배’가 맡습니다 — 심사와 역할을 분리해요.", en: "1:1 mentoring is left to the peer-level seniors — kept apart from judging." },
     asksTitle: { ko: "멘토에게 요청하는 것", en: "What we ask of mentors" },
     asks: [
       { title: { ko: "정답 아닌 ‘눈높이’", en: "Eye-level, not the answer" }, desc: { ko: "정답보다 같은 레벨의 context를 공유 — 학생으로서 함께 ideate.", en: "Share same-level context and ideate as a student — don't hand over the answer." } },
@@ -1023,9 +1029,10 @@ export const dict = {
       // (Day 3·4·7) unless she is actually booked for them.
       // Title verbatim from her LinkedIn headline ("Co-founder & Director &
       // Content R&D Lead at Codepresso") — not inferred.
-      // NOTE: Codepresso is an AXMOS company, and the aside directly above this
-      // grid still reads "AXMOS = 심사 · 문제 발의 전담 / 멘토가 아니라". Those two
-      // statements cannot both stand — flagged for the organizers to resolve.
+      // Codepresso is an AXMOS company, so the aside above this grid names the
+      // Crash Course as the one exception to "AXMOS = 심사 · 문제 발의 전담".
+      // Keep the two in step: any further AXMOS name added here needs that
+      // sentence revisited, or the page contradicts itself in one screen.
       { name: { ko: "황현진", en: "Hyunjin Hwang" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "공동창업자 · 콘텐츠 R&D 총괄", en: "Co-founder · Content R&D Lead" }, days: "Day 2", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697" },
       // Individual mentors — face photo where available, else initials avatar.
       { name: { ko: "황영준", en: "Hwang Young-jun" }, org: { ko: "T3Q", en: "T3Q" }, role: { ko: "AI", en: "AI" }, days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620" },
