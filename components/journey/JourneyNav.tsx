@@ -77,14 +77,27 @@ export default function JourneyNav() {
                 that box (no descenders) so "AI 빌더톤" reads as floating above the
                 Zero100 wordmark. Nudge it down only for Korean; Latin already
                 lines up. */}
-            <span className={`hidden items-center text-lg font-black leading-none tracking-wide text-white/90 sm:inline-flex sm:text-xl ${locale === "ko" ? "translate-y-[2px]" : ""}`}>{t(dict.nav.brandSuffix)}</span>
+            {/* The suffix is part of a lockup, so it must never wrap
+                (whitespace-nowrap) and it yields whenever the bar is tight
+                rather than pushing anything off-screen.
+                Two bands drop it: below `sm`, and again from `lg` to `xl`. The
+                second one is where the seven anchor links appear but the bar is
+                still narrow — at 1024px the row needs ~1100px with the suffix in
+                it, so it used to overlap the links and shove the EN/KR toggle
+                off the edge. The zero100 wordmark alone still carries the brand
+                there; the full lockup returns at `xl`, where it fits. */}
+            <span className={`hidden items-center whitespace-nowrap text-lg font-black leading-none tracking-wide text-white/90 sm:inline-flex sm:text-xl lg:hidden xl:inline-flex ${locale === "ko" ? "translate-y-[2px]" : ""}`}>{t(dict.nav.brandSuffix)}</span>
           </a>
           <div className="hidden items-center gap-5 lg:ml-10 lg:flex">
             {anchors.map((a) => (
               <a
                 key={a.id}
                 href={`#${a.id}`}
-                className="relative text-sm font-medium text-white/70 transition hover:text-white after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-violet-400/70 after:transition-transform after:duration-300 hover:after:scale-x-100 focus-visible:after:scale-x-100"
+                // whitespace-nowrap: a nav label is a single target and must stay
+                // on one line. The Korean labels are the longer set and were
+                // breaking apart at the narrow end of `lg` — "참가 대상" split at
+                // its space and the row turned into two ragged lines of syllables.
+                className="relative whitespace-nowrap text-sm font-medium text-white/70 transition hover:text-white after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-violet-400/70 after:transition-transform after:duration-300 hover:after:scale-x-100 focus-visible:after:scale-x-100"
               >
                 {t(a.label)}
               </a>
@@ -104,9 +117,16 @@ export default function JourneyNav() {
         <div className="flex items-center gap-2.5 sm:gap-3">
           {/* Returning quiz-taker greeting — sits to the LEFT of open chat.
               Compact single-line pill; renders nothing for first-time visitors.
-              lg-only, matching the open-chat button, so the mobile bar stays
-              uncluttered. */}
-          <span className="hidden xl:inline-flex">
+              Desktop-only, so the mobile bar stays uncluttered.
+              Held back to 1700px: it used to appear at `xl`, the same breakpoint
+              where the brand suffix returns, and the two together overran the bar
+              for anyone who had taken the quiz (~210px pill + ~130px suffix).
+              Of the two the brand lockup wins, so the pill waits for the width.
+              1700 rather than `2xl` because at 1536 — a very common effective
+              width, 1920 at 125% scaling — the row fits only exactly: the FAQ
+              link ends at the pixel the pill starts. This is the width where the
+              two groups stop touching. */}
+          <span className="hidden min-[1700px]:inline-flex">
             <ReturningGreeting compact />
           </span>
           {/* Open chat — visible from first paint, NOT scroll-revealed. Someone
