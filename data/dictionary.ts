@@ -1017,6 +1017,16 @@ export const dict = {
       { name: { ko: "Sihoon Kim", en: "Sihoon Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CTO", en: "Co-founder · CTO" }, days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sihoon-kim-306551372" },
       // REmited (Team Remited) — CEO as mentor.
       { name: { ko: "Brian Bae", en: "Brian Bae" }, org: { ko: "REmited", en: "REmited" }, role: { ko: "CEO", en: "CEO" }, days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/brian-bae-ba638a131" },
+      // Codepresso — runs the Day 2 Crash Course (see schedule.ts d2-crash-course,
+      // where she is also the `speaker`). Day 2 is the day she is confirmed for, so
+      // that is what the pill says; do not widen it to the 1:1 mentoring days
+      // (Day 3·4·7) unless she is actually booked for them.
+      // Title verbatim from her LinkedIn headline ("Co-founder & Director &
+      // Content R&D Lead at Codepresso") — not inferred.
+      // NOTE: Codepresso is an AXMOS company, and the aside directly above this
+      // grid still reads "AXMOS = 심사 · 문제 발의 전담 / 멘토가 아니라". Those two
+      // statements cannot both stand — flagged for the organizers to resolve.
+      { name: { ko: "황현진", en: "Hyunjin Hwang" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "공동창업자 · 콘텐츠 R&D 총괄", en: "Co-founder · Content R&D Lead" }, days: "Day 2", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697" },
       // Individual mentors — face photo where available, else initials avatar.
       { name: { ko: "황영준", en: "Hwang Young-jun" }, org: { ko: "T3Q", en: "T3Q" }, role: { ko: "AI", en: "AI" }, days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620" },
       { name: { ko: "이유택", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" }, days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek" },
