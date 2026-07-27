@@ -1192,6 +1192,15 @@ export const dict = {
     },
   },
 
+  // ── FAQ ────────────────────────────────────────────────────────────────────
+  // ONE RULE, applied to every answer: the FIRST SENTENCE is the direct answer
+  // to the question asked — 네/아니요, or a concrete number, date or condition.
+  // Philosophy and background come after, in one or two sentences at most.
+  // The previous set led with design rationale and made the reader dig for the
+  // fact they came for; if you add or edit an item, front-load the answer.
+  //
+  // Numbers here are NOT independent copy — they mirror the benefits, judging
+  // and schedule sections. Change one, change all of them.
   faq: {
     tag: { ko: "FAQ", en: "FAQ" },
     heading: { ko: "자주 묻는 질문", en: "Frequently asked" },
@@ -1199,50 +1208,52 @@ export const dict = {
       {
         q: { ko: "왜 8일이나 하나요? 해커톤치고 길지 않나요?", en: "Why 8 days? Isn't that long for a hackathon?" },
         a: {
-          ko: "8일은 ‘가볍게 들어와 깊게 몰입하는’ 퍼널로 설계했습니다. 앞 4일(Lab 1)은 크래시코스·네트워킹 중심의 가벼운 워밍업이고, 뒤 4일(Lab 2)에서 본격적으로 빌드합니다. 현장 필참은 킥오프·데모데이 같은 핵심 순간뿐이고, 나머지는 원하는 시간·장소에서 진행하는 self-led 빌드입니다(24/7 아님). 학생 인터뷰를 거쳐 ‘너무 짧지도 길지도 않은’ 8일을 골든 넘버로 잡았습니다 — 학기 중에도 짧고 집중적으로 몰입하기 좋은 길이입니다.",
-          en: "The 8 days are a funnel — come in light, then go deep. The first four days (Lab 1) are a low-pressure warm-up around the crash course and networking; the last four (Lab 2) are the real build. In-person attendance is only for the key moments like the kickoff and Demo Day — the rest is self-led build on your own time and place (not 24/7). Student interviews landed on 8 days as the sweet spot: long enough to go deep, short and focused enough to fit a busy semester.",
+          ko: "시간을 통으로 내야 하는 날은 사실 이틀입니다 — 필참은 Day 1(오프닝)과 Day 8(데모데이)뿐이고, 나머지는 각자 편한 시간에 하는 자율 빌드와 선택 참여 세션입니다. 8일로 늘린 건 매일 나오라는 뜻이 아니라, 학기 중에도 크래시 코스로 배우고 → 만들고 → 발표까지 가는 호흡을 만들기 위해서예요.",
+          en: "Only two days actually need blocking out — Day 1 (opening) and Day 8 (Demo Day) are the only required ones. Everything else is self-paced building on your own time, plus optional sessions. Stretching it to eight days isn't asking you to show up daily: it's what makes room, mid-semester, for the full arc — learn at the crash course → build → present.",
         },
       },
       {
         q: { ko: "테마가 뭔가요? 너무 막연해요.", en: "What's the theme? It feels vague." },
         a: {
-          ko: "테마는 ‘AI’가 아니라 ‘산업’입니다. 실제 한국 기업이 지금 겪는 진짜 AX(AI 전환) 과제를 트랙별로 제공합니다. 문제는 ‘Broad problem, sharp objective’ — 목표는 뾰족하게 주되 푸는 방법은 여러분의 몫입니다. 출제가 아니라 ‘의뢰’에 가깝습니다 — 학생은 주니어 컨설턴트처럼 클라이언트의 프로세스와 아픔을 진단해 AI로 다시 설계합니다. 트랙 구성은 아직 확정되지 않았습니다 — 현재 재무·영업·마케팅 3트랙(마케팅은 입문 트랙)으로 논의 중이며, 트랙과 클라이언트 사명 모두 확정되는 대로 안내합니다. 비전공자도 감을 잡을 수 있도록 산업 맥락을 함께 제공합니다.",
-          en: "The theme isn't ‘AI’ — it's industry. You'll get real AX (AI-transformation) problems Korean companies are facing right now, organized by track. The format is ‘broad problem, sharp objective’: the goal is sharp, but how you solve it is up to you. It's less a prompt than a brief — you act like a junior consultant, diagnosing a client's process and pain and redesigning it with AI. The tracks aren't confirmed yet — three are under discussion (finance, sales and marketing, with marketing as the beginner track), and we'll announce both the tracks and the client names once they're settled. We give you the industry context either way, so non-CS participants can find their footing.",
+          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다 — 예를 들어 ‘회사 돈이 어디서 새는지 눈에 안 보인다’ 같은 실무 문제요. 가상 과제가 아니라 기업 담당자가 Day 2에 직접 브리핑하는 ‘의뢰’입니다. 트랙 구성은 재무·영업·마케팅(입문) 3트랙으로 논의 중이며 확정되는 대로 안내합니다.",
+          en: "You take on the AX (AI-transformation) problems Korean companies are facing right now, one set per track — practical things like “we can't see where the company's money is leaking.” These aren't invented exercises but briefs, walked through in person by the company's own people on Day 2. Three tracks are under discussion — finance, sales and marketing (the beginner track) — and we'll announce them once settled.",
         },
       },
       {
         q: { ko: "문과인데 이과생들에게 밀리지 않을까요?", en: "I'm not from a STEM major — will I fall behind?" },
         a: {
-          ko: "그 두려움을 없애는 것이 설계의 핵심입니다. 본 행사 전 바이브 코딩 크래시코스로 코딩 장벽을 미리 낮추고, 1인 참가도 허용해 부담을 줄였습니다. 오히려 산업 맥락을 잘 아는 학생이 바이브 코딩을 더 잘 살릴 수 있습니다. 그리고 우승하지 못해도 수료증·네트워킹·굿즈처럼 손에 남는 것이 반드시 있도록 설계했습니다.",
-          en: "Removing that fear is the whole point of the design. A vibe-coding crash course before the event lowers the coding barrier up front, and solo entry keeps the pressure low. If anything, people who understand industry context can get more out of vibe coding — and even if you don't win, you always leave with something: a certificate, networking and goods.",
+          ko: "아니요 — 코드 실력을 겨루는 대회가 아닙니다. 심사 배점의 75%가 문제 이해(20)·아이디어(25)·데모와 아이디어의 정합(30)이고, 프로토타입은 와이어프레임 수준이어도 됩니다. 산업 맥락을 아는 사람이 오히려 유리한 구조이고, 코딩 기본기는 Day 2 크래시코스에서 맞춰 드립니다.",
+          en: "No — this isn't a contest of coding ability. 75% of the rubric is problem understanding (20), the idea itself (25) and how well the demo matches that idea (30), and a wireframe-level prototype is fine. The structure actually favours people who understand the industry context, and the Day 2 Crash Course levels the coding basics for everyone.",
         },
       },
       {
+        // TODO: 발표 언어 방침 확정 시 문구 확정. 확정되면 "발표는 한국어로 해도
+        // 됩니다"로 직답을 강화할 것 — 그 전까지는 아래의 보수적 표현을 유지한다.
         q: { ko: "‘해커톤’이라는 말이 부담돼요. 영어 발표도 자신 없어요.", en: "‘Hackathon’ feels intimidating, and I'm not confident presenting in English." },
         a: {
-          ko: "그래서 이름부터 ‘빌더톤’으로 프레이밍해 무게를 낮췄습니다(창업 경진대회에 가까운 톤). 영어 발표 부담 때문에 영상 제출도 검토했지만, 현장 데모데이를 유지하기로 했습니다 — 비원어민 학생에게 오히려 값진 무대·발표 경험이고, 현장에서만 얻는 에너지와 기록이 크기 때문입니다.",
-          en: "That's exactly why we frame it as a ‘Builderthon’ rather than a hackathon — closer in tone to a startup showcase. We considered a demo-video submission to ease the English-presentation worry, but chose to keep the in-person Demo Day: it's a genuinely valuable stage and presenting experience for non-native speakers, with energy and memories you only get on-site.",
+          ko: "발표 언어는 편한 쪽을 택할 수 있게 준비 중입니다 — 참가자와 심사위원 모두 한인 커뮤니티 기반이에요. 그리고 이건 밤샘 해커톤이 아니라 8일에 걸쳐 만드는 빌더톤 — 완성도보다 ‘내 손으로 만들었다’를 보여주는 자리입니다.",
+          en: "We're arranging it so you can present in whichever language you're comfortable in — both the participants and the judges come from the Korean community here. And this isn't an all-nighter hackathon but a builderthon built over eight days: it's about showing you made it yourself, not about polish.",
         },
       },
       {
         q: { ko: "수료증을 주나요? 의미가 있나요?", en: "Is there a certificate? Is it worth anything?" },
         a: {
-          ko: "크래시코스를 완료한 참여자 전원에게 수료증을 발급합니다(링크드인에 올릴 수 있는 형태). 발급은 Zero100 주최 5개사(AXMOS — Translink · Wilt · Codepresso · DRIMAES · Popup Studio) 공동 명의로 나갑니다. 처음 시작하는 분에게 특히 좋은 출발점이 되고, 이미 개발 경험이 있는 분에게는 수료증보다 커리큘럼·네트워킹·멘토링이 더 큰 가치가 됩니다.",
-          en: "Everyone who completes the crash course gets a certificate — in a form you can post on LinkedIn. It is issued jointly by the five Zero100 host companies (AXMOS — Translink · Wilt · Codepresso · DRIMAES · Popup Studio). It's a strong starting point especially if you're new; if you already build, the curriculum, networking and mentoring will matter more to you than the certificate itself.",
+          ko: "네 — 크래시코스 전 시간을 참석한 분들께 Zero100 명의의 수료증이 발급되고, Day 8 시상 때 배부됩니다. 링크드인·이력서에 올릴 수 있어요. 이미 개발 경험이 있다면 수료증보다 멘토링·네트워킹이 더 큰 수확일 거예요.",
+          en: "Yes — everyone who attends the full Crash Course receives a certificate issued by Zero100, handed out at the Day 8 awards. It's LinkedIn- and CV-ready. If you already build, the mentoring and network will matter more than the paper.",
         },
       },
       {
         q: { ko: "인턴십이 진짜인가요? 유급인가요?", en: "Is the internship real? Is it paid?" },
         a: {
-          ko: "실제로 추진 중인 기회입니다. 상위 팀이 자신이 푼 문제를 파트너 기업에서 실무로 이어가는 유급 인턴십을 목표로 논의하고 있고, 조건(참여 기업·기간·인원)은 아직 조율 중이며 확정되는 대로 업데이트합니다. 그래서 저희는 확정되지 않은 인턴십보다, 참여하면 누구나 얻는 네트워킹과 협업을 먼저 이야기합니다.",
-          en: "It's a real opportunity we're actively working on. We're in discussion to have top teams carry the problem they solved into paid internship work at a partner company; the terms (which companies, how long, how many people) are still being arranged and we'll update this as they're confirmed. That's why we lead with the networking and collaboration everyone gains, rather than an internship that isn't locked yet.",
+          ko: "네, 실제로 추진 중인 유급 인턴십입니다 — 딥다이브 트랙 1위 팀에게 AXMOS(코드프레소·WVB)의 겨울방학 약 1.5개월 유급 FDE 인턴 기회가 열립니다(트랙당 최대 3명 · 조건은 조율 중이라 확정 시 안내). 인턴이 안 되더라도 Day 7 커리어 간담회가 인턴·채용 풀로 이어지는 별도 연결 통로예요.",
+          en: "Yes — it's a paid internship we're actively arranging. The winning team in the Deep-Dive track gets a roughly 1.5-month paid FDE internship over the winter break with AXMOS (Codepresso · WVB) — up to three people per track; the terms are still being settled and we'll post them once confirmed. And even without the internship, the Day 7 career session is its own route into the internship and hiring pool.",
         },
       },
       {
         q: { ko: "혼자(1인) 참가해도 되나요?", en: "Can I take part solo?" },
         a: {
-          ko: "됩니다 — 솔로 참가를 환영합니다. 팀은 1–3인까지 가능하며(솔로 OK · 매칭 선택), 혼자 자신의 기량을 보여주고 싶은 분을 위해 1인 참가를 열어두었습니다. 팀이 없어도 네트워킹·팀 빌딩 시간에 팀을 찾을 수 있습니다.",
-          en: "Yes — solo entries are welcome. Teams can be 1–3 people (solo is fine · matching optional), and solo is kept open for anyone who wants to show what they can do on their own. If you don't have a team you can find one during the networking and team-building sessions.",
+          ko: "됩니다 — 솔로로 등록하면 1인 팀으로 출전할 수 있어요. 원하면 팀 매칭도 신청할 수 있고(AI 유형 테스트 + Day 1 현장 그룹핑), 이미 팀이 있다면 2–3인 팀 등록으로 대표 1명이 한 번에 등록하면 됩니다.",
+          en: "Yes — register solo and you compete as a one-person team. You can also opt into team matching (the AI personality test plus on-site grouping on Day 1), and if you already have a team, one person registers the whole 2–3 person group in one go.",
         },
       },
       // Mentor requests were the most common pre-event ask — answered next to the
@@ -1258,36 +1269,38 @@ export const dict = {
       {
         q: { ko: "상금이나 현금 지원이 있나요?", en: "Are there prizes or cash?" },
         a: {
-          ko: "있습니다. 파트너 기업들이 함께 후원하며 순위별 차등 시상을 검토 중입니다. 다만 상금·인턴을 전면에 내세우기보다 ‘참여하면 누구나 남는 게 있다’를 먼저 이야기합니다. 규모·구성은 확정되는 대로 안내합니다.",
-          en: "Yes. Partner companies co-sponsor it, and tiered awards are under consideration. That said, we lead with ‘everyone who takes part gains something’ rather than putting prizes and internships front and center. Size and structure will be announced once confirmed.",
+          // 수료증은 이 목록에서 의도적으로 빠져 있습니다 — 발급 기준이 "크래시코스
+          // 전 시간 참석"이라, 참가자 전원이 받는 항목과 나란히 두면 기준이 오해됩니다.
+          ko: "네 — 현재 조율 중인 시상(잠정)은: 딥다이브 트랙 1위 유급 FDE 인턴십 · 2위 S$100 · 3위 널담 바우처, 스프린트 트랙 1위 S$100, Day 5 AI Use Case Top 3에 해녀의 부엌 바우처입니다. 참가비는 무료이고, 순위에 못 들어도 밥·굿즈·네트워킹은 전원에게 돌아가며 수료증은 크래시코스 전 시간을 들으면 받습니다. ※ 시상은 파트너 협의로 변경될 수 있어요.",
+          en: "Yes — the awards currently being arranged (tentative) are: in the Deep-Dive track, a paid FDE internship for 1st, S$100 for 2nd and a Nuldam voucher for 3rd; S$100 for 1st in the Sprint track; and a Haenyeo's Kitchen voucher for the top 3 of the Day 5 AI Use Case session. Entry is free, and even off the podium the food, goods and networking go to everyone — the certificate comes with full Crash Course attendance. ※ Awards may change as partner discussions continue.",
         },
       },
       {
         q: { ko: "결과물이 실제로 쓰이나요? AI로 대충 만들면 어떡하죠?", en: "Will the results actually be used? What if it's just AI slop?" },
         a: {
-          ko: "이 행사의 초점은 ‘완성된 프로덕트’보다 ‘참여한 사람과 그 이후’에 있습니다. 진짜 문제 + 복수 트랙으로 결과물의 다양성을 확보하고, 시연은 실제 과제가 아닌 다른 예시로 진행해 사고를 특정 답에 가두지 않습니다. 8일 동안 진짜 문제를 붙잡고 끝까지 만들어 본 경험 자체가 핵심 성과입니다.",
-          en: "The focus is less on a finished product and more on the people who take part and what they do next. Real problems plus multiple tracks keep the outputs diverse, and the walk-through uses a different example — not the actual problem — so it doesn't box your thinking into one answer. The real outcome is taking a real problem all the way through in 8 days.",
+          ko: "기업이 결과물 도입을 약속하는 건 아니에요 — 도입 가능성은 심사의 15%인 보조 항목입니다. 대신 우승팀은 인턴으로 그 문제를 실무에서 이어갈 기회(잠정)가 있고요. ‘AI로 대충’은 심사에서 걸러집니다 — 데모가 무대에서 실제로 돌아가는지(배점 30%)를 보고, 목업·슬라이드만이면 감점이에요.",
+          en: "No company commits to adopting what you build — adoption feasibility is a secondary line worth 15% of the score. What the winning team does get is the chance (tentative) to carry that problem into real work as an intern. And “AI slop” doesn't survive judging: 30% of the score is whether the demo actually runs on stage, and mockups or slides alone lose points.",
         },
       },
       {
         q: { ko: "저는 개발 경험이 있는데 크래시코스가 필요 없어요.", en: "I already code — I don't need the crash course." },
         a: {
-          ko: "크래시코스는 필수가 아니라 선택입니다. 개발 경험이 있으면 건너뛰고 바로 빌드로 갈 수 있는 이원 트랙(코스 트랙 / 바로 빌드 트랙)입니다. 이미 빌드 경험이 있는 분들을 위해 OpenAI Codex 워크샵 같은 상급 트랙도 별도로 준비하고 있습니다(조율 중).",
-          en: "The crash course is optional, not required. There are two tracks — take the course, or skip straight to building if you already have dev experience. For experienced builders we're also arranging an advanced track such as the OpenAI Codex workshop (in coordination).",
+          ko: "크래시코스는 선택입니다 — 건너뛰고 Day 1 문제 공개 직후부터 바로 빌드에 들어가면 됩니다. 경험자를 위한 OpenAI Codex 워크샵(레포 연동·API·MCP)도 별도로 조율 중이에요.",
+          en: "The Crash Course is optional — skip it and start building the moment the problems drop on Day 1. An OpenAI Codex workshop for experienced builders (repo integration, APIs, MCP) is being arranged separately.",
         },
       },
       {
         q: { ko: "제가 여기서 얻는 게 뭔가요?", en: "What do I actually get out of this?" },
         a: {
-          ko: "학습 → 빌드 → 인턴십·멘토링으로 이어지는 단계형 파이프라인입니다. 커리어 탐색, 바이브 코딩 실전 학습, 그리고 현업 창업가·대표와의 네트워킹(Day 5 유스케이스 피치에서 대표진과 직접 연결)을 얻어갑니다. 싱가포르 한인 유학생에게 가장 부족한 ‘연결의 기회’를 정면으로 겨냥합니다.",
-          en: "It's a staged pipeline: learn → build → internship and mentoring. You get career exploration, hands-on vibe-coding practice, and real networking with founders and executives — the Day 5 use-case pitch connects you with them directly. It squarely targets the biggest gap for Korean students in Singapore: the lack of connections.",
+          ko: "손에 남는 것 기준으로: 실제 기업 문제를 8일간 풀어본 결과물, 크래시코스 수료증, 현직 선배들과의 1:1 멘토링, 데모데이 무대 발표 경험, 그리고 행사 후에도 이어지는 커뮤니티입니다. Day 7 커리어 세션에서는 시니어 리더들과 직접 만나요.",
+          en: "In terms of what you actually walk away with: something you built against a real company's problem over eight days, the Crash Course certificate, 1:1 mentoring with people already working in the field, the experience of presenting on the Demo Day stage, and a community that keeps going after the event. The Day 7 career session puts you in front of senior leaders directly.",
         },
       },
       {
         q: { ko: "심사는 어떻게 하나요? 기술이 완벽해야 하나요?", en: "How is judging done? Does it need to be technically polished?" },
         a: {
-          ko: "기술적 완성도가 아니라 ‘회사·문제 이해 → 아이디어 → 데모의 정합성’을 봅니다. 배점은 회사·문제 이해도 20 · 아이디어의 적절성 25 · 데모↔아이디어 정합 30 · 도입 가능성 15 · 발표·전달 10이며, 이해+아이디어+정합이 75%를 차지합니다. 프로토타입은 프론트엔드 와이어프레임 수준이어도 괜찮고, 목업·슬라이드만이면 감점됩니다. 배점은 심사위원·파트너 합의로 조정될 수 있습니다.",
-          en: "We look at the coherence of ‘understanding the company & problem → idea → demo’, not technical polish. The rubric is: company/problem understanding 20 · appropriateness of the idea 25 · demo ↔ idea alignment 30 · adoption feasibility 15 · delivery 10 — with understanding + idea + alignment making up 75%. A front-end wireframe-level prototype is fine; mockups or slides alone lose points. Weightings may be adjusted by agreement among judges and partners.",
+          ko: "기술 완성도는 심사 기준이 아닙니다. 보는 것은 ‘회사·문제 이해 → 아이디어 → 데모의 정합성’이고, 배점은 회사·문제 이해도 20 · 아이디어의 적절성 25 · 데모↔아이디어 정합 30 · 도입 가능성 15 · 발표·전달 10 — 이해+아이디어+정합이 75%를 차지합니다. 프로토타입은 프론트엔드 와이어프레임 수준이어도 괜찮고, 목업·슬라이드만이면 감점됩니다. 배점은 심사위원·파트너 합의로 조정될 수 있습니다. 심사는 실제 산업에서 문제를 풀어온 현업 리더들이 직접 합니다(심사위원 섹션 참조).",
+          en: "Technical polish is not a judging criterion. What we look at is the coherence of ‘understanding the company & problem → idea → demo’, scored as: company/problem understanding 20 · appropriateness of the idea 25 · demo ↔ idea alignment 30 · adoption feasibility 15 · delivery 10 — understanding + idea + alignment make up 75%. A front-end wireframe-level prototype is fine; mockups or slides alone lose points. Weightings may be adjusted by agreement among judges and partners. Judging is done first-hand by leaders who have solved these problems in industry (see the judges section).",
         },
       },
     ],
