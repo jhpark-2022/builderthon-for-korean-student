@@ -1003,26 +1003,44 @@ export const dict = {
     // ── 확정 멘토 그리드 (덱 p12) ──────────────────────────────────────────────
     // Every object carries the SAME keys (img/logo/logoW/logoH/linkedin/daysPending
     // default to "" / 0) so the array stays a single homogeneous type — otherwise
-    // TS infers a union and `m.linkedin` / `m.img` can't be read on the cards.
-    // Avatar precedence on the card: img (face photo) → logo (company mark) → initial.
-    // Mentor cards are photo-free by request (img stays "") — everyone shows an
-    // initial avatar; the photo path is kept only for the JUDGE cards below.
+    // TS infers a union and `m.linkedin` / `m.intro` can't be read on the cards.
+    // The img/logo fields are now unused by the card (the avatar was dropped in
+    // favour of the intro line) but stay on the type so the array shape matches
+    // the judges' and a photo can be reinstated without a schema change.
     // The two host companies (Onword Lab · REmited) are represented by the SPECIFIC
     // founder(s) coming as mentors — not just a company logo — with names/titles
     // taken verbatim from their own LinkedIn profiles (not invented).
-    // LinkedIn URLs are the mentors' public profiles (all individuals now have one;
-    // 황영준·이유택·한장환 came from prior records — re-verify if a link looks off).
+    // LinkedIn URLs are the mentors' public profiles.
+    //
+    // ORDER = the day they are with you (Day 1 → 2 → 3·4 → 3·4·7 → 7). This is the
+    // order a participant meets them, which is the only ordering that means
+    // anything on a page they read before the event. If a mentor's `days` change,
+    // move the entry too — the grid renders the array as-is.
+    //
+    // `intro` is one line of NEW information, sourced from that person's own
+    // LinkedIn (headline + experience) and nothing else. Rules that keep it
+    // useful: never restate the org/role already printed above it on the card;
+    // no honorifics or embellishment; no internal figures (revenue, targets) and
+    // no contact details; keep it to roughly one 60–70 character Korean sentence
+    // so it clamps to two lines. If a profile can't be verified, leave `intro`
+    // empty — the card drops the line rather than guessing.
     // daysPending marks a day that is confirmed-in-principle but not locked
     // (한장환: Day 1 confirmed, Day 7 still TBC) — rendered as a separate amber pill.
     // TODO: confirm public naming — verify each named mentor may be shown publicly.
     gridLabel: { ko: "확정 멘토 · Confirmed", en: "Confirmed mentors" },
     dayPendingLabel: { ko: "협의 중", en: "TBC" },
     mentors: [
-      // Onword Lab — two founders as mentors.
-      { name: { ko: "김진호", en: "Jinho Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CEO", en: "Co-founder · CEO" }, days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/kimjinho" },
-      { name: { ko: "Sihoon Kim", en: "Sihoon Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CTO", en: "Co-founder · CTO" }, days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sihoon-kim-306551372" },
-      // REmited (Team Remited) — CEO as mentor.
-      { name: { ko: "Brian Bae", en: "Brian Bae" }, org: { ko: "REmited", en: "REmited" }, role: { ko: "CEO", en: "CEO" }, days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/brian-bae-ba638a131" },
+      // ── Day 1 ────────────────────────────────────────────────────────────────
+      // 한장환: Day 1 확정, Day 7 협의 중(pending) → days + daysPending 분리.
+      {
+        name: { ko: "한장환", en: "Han Jang-whan" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "SA", en: "SA" },
+        intro: {
+          ko: "싱가포르 AWS에서 5년 넘게 클라우드 아키텍처를 설계해 왔어요 — 그 전엔 오라클과 Dell EMC.",
+          en: "Five years of cloud architecture at AWS Singapore, via Oracle and Dell EMC.",
+        },
+        days: "Day 1", daysPending: "Day 7", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jangwhan",
+      },
+      // ── Day 2 · 크래시코스 ───────────────────────────────────────────────────
       // Codepresso — runs the Day 2 Crash Course (see schedule.ts d2-crash-course,
       // where she is also the `speaker`). Day 2 is the day she is confirmed for, so
       // that is what the pill says; do not widen it to the 1:1 mentoring days
@@ -1033,16 +1051,83 @@ export const dict = {
       // Crash Course as the one exception to "AXMOS = 심사 · 문제 발의 전담".
       // Keep the two in step: any further AXMOS name added here needs that
       // sentence revisited, or the page contradicts itself in one screen.
-      { name: { ko: "황현진", en: "Hyunjin Hwang" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "공동창업자 · 콘텐츠 R&D 총괄", en: "Co-founder · Content R&D Lead" }, days: "Day 2", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697" },
-      // Individual mentors — face photo where available, else initials avatar.
-      { name: { ko: "황영준", en: "Hwang Young-jun" }, org: { ko: "T3Q", en: "T3Q" }, role: { ko: "AI", en: "AI" }, days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620" },
-      { name: { ko: "이유택", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" }, days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek" },
-      // 한장환: Day 1 확정, Day 7 협의 중(pending) → days + daysPending 분리.
-      { name: { ko: "한장환", en: "Han Jang-whan" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "SA", en: "SA" }, days: "Day 1", daysPending: "Day 7", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jangwhan" },
-      // 신동혁 has a photo (used on his JUDGE card) but mentor cards stay photo-free by request → initial avatar.
-      { name: { ko: "신동혁", en: "Shin Dong-hyuk" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "GTM", en: "GTM" }, days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/donghyukshin" },
-      { name: { ko: "이화영", en: "Lee Hwa-young" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "Sales", en: "Sales" }, days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hwayoung-lee-bbb79a134" },
-      { name: { ko: "임석근", en: "Lim Seok-geun" }, org: { ko: "NetApp", en: "NetApp" }, role: { ko: "APAC", en: "APAC" }, days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sugkun-lim" },
+      {
+        name: { ko: "황현진", en: "Hyunjin Hwang" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "공동창업자 · 콘텐츠 R&D 총괄", en: "Co-founder · Content R&D Lead" },
+        intro: {
+          ko: "LG전자에서 9년간 개발하다 창업 — Day 2 크래시코스를 직접 설계하고 진행합니다.",
+          en: "Nine years engineering at LG before co-founding; runs the Crash Course.",
+        },
+        days: "Day 2", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697",
+      },
+      // ── Day 3·4 · 자율 빌드 1:1 ─────────────────────────────────────────────
+      // Onword Lab — two founders as mentors.
+      {
+        name: { ko: "김진호", en: "Jinho Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CEO", en: "Co-founder · CEO" },
+        intro: {
+          ko: "NUS 재학 중 휴학하고 창업 — 한국 리테일·유통에 AI를 들이는 일을 합니다.",
+          en: "Took leave from NUS to found it — AI for Korean retail and distribution.",
+        },
+        days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/kimjinho",
+      },
+      {
+        name: { ko: "Sihoon Kim", en: "Sihoon Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CTO", en: "Co-founder · CTO" },
+        intro: {
+          ko: "‘성장하는 팀을 위한 AI 인프라’를 만듭니다 — 샌프란시스코 베이 에어리어 기반.",
+          en: "Builds “AI infra for growing teams,” out of the SF Bay Area.",
+        },
+        days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sihoon-kim-306551372",
+      },
+      // REmited (Team Remited) — CEO as mentor.
+      {
+        name: { ko: "Brian Bae", en: "Brian Bae" }, org: { ko: "REmited", en: "REmited" }, role: { ko: "CEO", en: "CEO" },
+        intro: {
+          ko: "구글 스타트업 액셀러레이터 2026 참가 — 앤틀러를 거쳐, 대학생 앱부터 시작한 창업자.",
+          en: "In Google for Startups Accelerator 2026; came up through Antler.",
+        },
+        days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/brian-bae-ba638a131",
+      },
+      // ── Day 3·4·7 ───────────────────────────────────────────────────────────
+      {
+        name: { ko: "황영준", en: "Hwang Young-jun" }, org: { ko: "T3Q", en: "T3Q" }, role: { ko: "AI", en: "AI" },
+        intro: {
+          ko: "컴퓨터 비전을 다루는 AI 엔지니어 — VLM으로 문서를 구조화하고 검색 엔진을 고도화해 왔어요.",
+          en: "A computer-vision AI engineer — VLM document work and search engines.",
+        },
+        days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620",
+      },
+      {
+        name: { ko: "이유택", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" },
+        intro: {
+          ko: "싱가포르 학생용 마켓플레이스를 직접 만들어 NTU에 소개됐어요 — 그 전엔 네이버에서 5년.",
+          en: "Built a student marketplace NTU featured; five years at Naver before.",
+        },
+        days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek",
+      },
+      // ── Day 7 · 커리어 세션 ─────────────────────────────────────────────────
+      {
+        name: { ko: "신동혁", en: "Shin Dong-hyuk" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "GTM", en: "GTM" },
+        intro: {
+          ko: "AWS에서 7년 — GenAI 고객경험 사업을 아태 전역으로 키워 왔어요.",
+          en: "Seven years at AWS, scaling its GenAI CX business across APJC.",
+        },
+        days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/donghyukshin",
+      },
+      {
+        name: { ko: "이화영", en: "Lee Hwa-young" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "Sales", en: "Sales" },
+        intro: {
+          ko: "AWS에서 중소기업 신규 고객을 엽니다 — 그 전엔 VMware에서 아태 파트너 얼라이언스를 맡았어요.",
+          en: "Opens new SMB customers at AWS; before, APAC alliances at VMware.",
+        },
+        days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hwayoung-lee-bbb79a134",
+      },
+      {
+        name: { ko: "임석근", en: "Lim Seok-geun" }, org: { ko: "NetApp", en: "NetApp" }, role: { ko: "APAC", en: "APAC" },
+        intro: {
+          ko: "APAC AWS 세일즈 담당 — 탄자니아 IT 컨설턴트로 시작한 커리어.",
+          en: "APAC AWS sales — a path from IT consulting in Tanzania through startups.",
+        },
+        days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sugkun-lim",
+      },
     ],
   },
 

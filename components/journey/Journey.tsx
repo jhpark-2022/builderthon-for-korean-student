@@ -1894,9 +1894,9 @@ export default function Journey() {
         </div>
 
         {/* ── Confirmed mentor grid (deck p12) ──────────────────────────────
-            8 cards: company mentors use their partner logo as the avatar,
-            individuals use an initial. A LinkedIn icon shows ONLY on cards with
-            a confirmed URL — never invented. */}
+            Ordered by the day each mentor is with you (see data/dictionary.ts) —
+            the order a participant actually meets them. A LinkedIn icon shows
+            ONLY on cards with a confirmed URL — never invented. */}
         <div className="mt-6 text-left">
           <p className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-emerald-200">
             {t(dict.mentoring.gridLabel)}
@@ -1909,45 +1909,43 @@ export default function Journey() {
             {dict.mentoring.mentors.map((m, i) => {
               const name = t(m.name);
               const role = t(m.role);
+              const intro = t(m.intro);
               return (
-                <div key={i} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-emerald-400/25 hover:bg-white/[0.05]">
-                  {/* Avatar — face photo → company logo chip → initial (in that order). */}
-                  {m.img ? (
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10">
-                      <Image src={m.img} alt={name} width={400} height={400} className="h-full w-full object-cover" />
-                    </span>
-                  ) : m.logo ? (
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/[0.06] px-1.5">
-                      <Image src={m.logo} alt={name} width={m.logoW} height={m.logoH} unoptimized loading="eager" className="h-auto w-auto max-h-6 max-w-full object-contain" />
-                    </span>
-                  ) : (
-                    <span aria-hidden className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-400/20 bg-emerald-400/10 text-sm font-black text-emerald-200">
-                      {name.charAt(0)}
-                    </span>
+                /* The initial-avatar square that used to lead this card is gone —
+                   it was a placeholder standing in for a face nobody had, and the
+                   room it took is worth more as a line about the person. Card is a
+                   column with the day pill pushed to the bottom (`mt-auto`), so
+                   cards in a row stay the same height whatever the intro's length. */
+                <div key={i} className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-emerald-400/25 hover:bg-white/[0.05]">
+                  <div className="flex items-start justify-between gap-2">
+                    {/* break-keep (word-break: keep-all) — Korean breaks between
+                        syllables by default, which shreds a 3-syllable name into
+                        a vertical column. Wrapping is still allowed, but only at
+                        word boundaries; never truncated. */}
+                    <p className="min-w-0 break-keep text-sm font-bold leading-snug text-white">{name}</p>
+                    {m.linkedin && <LinkedInLink url={m.linkedin} label={name} />}
+                  </div>
+                  <p className="mt-0.5 break-keep text-xs leading-snug text-white/60">
+                    {t(m.org)}{role ? ` · ${role}` : ""}
+                  </p>
+                  {/* One line from the person's own LinkedIn. Clamped to two lines
+                      so a long one can't stretch its row; dimmer than the org line
+                      above so the two don't read as one block of grey. Rendered
+                      only when present — an unverified mentor keeps the same card,
+                      minus this line. */}
+                  {intro && (
+                    <p className="mt-2 line-clamp-2 break-keep text-xs leading-relaxed text-white/50">{intro}</p>
                   )}
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-start justify-between gap-2">
-                      {/* break-keep (word-break: keep-all) — Korean breaks between
-                          syllables by default, which shreds a 3-syllable name into
-                          a vertical column. Wrapping is still allowed, but only at
-                          word boundaries; never truncated. */}
-                      <p className="min-w-0 break-keep text-sm font-bold leading-snug text-white">{name}</p>
-                      {m.linkedin && <LinkedInLink url={m.linkedin} label={name} />}
-                    </div>
-                    <p className="mt-0.5 break-keep text-xs leading-snug text-white/60">
-                      {t(m.org)}{role ? ` · ${role}` : ""}
-                    </p>
-                    <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                      <span className="inline-flex items-center rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.62rem] font-semibold text-white/60">
-                        {m.days}
+                  <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-3">
+                    <span className="inline-flex items-center rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.62rem] font-semibold text-white/60">
+                      {m.days}
+                    </span>
+                    {/* A day confirmed-in-principle but not locked (한장환 · Day 7). */}
+                    {m.daysPending && (
+                      <span className="inline-flex items-center rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-2 py-0.5 text-[0.62rem] font-semibold text-amber-200/90">
+                        {m.daysPending} · {t(dict.mentoring.dayPendingLabel)}
                       </span>
-                      {/* A day confirmed-in-principle but not locked (한장환 · Day 7). */}
-                      {m.daysPending && (
-                        <span className="inline-flex items-center rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-2 py-0.5 text-[0.62rem] font-semibold text-amber-200/90">
-                          {m.daysPending} · {t(dict.mentoring.dayPendingLabel)}
-                        </span>
-                      )}
-                    </div>
+                    )}
                   </div>
                 </div>
               );
