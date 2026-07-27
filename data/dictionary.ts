@@ -1112,6 +1112,24 @@ export const dict = {
         linkedin: "https://www.linkedin.com/in/donghun-lee-8888a13a",
       },
       {
+        // Facts below come from her own LinkedIn (headline + her posts): GTM &
+        // partnerships at Codepresso, the non-developer AI-literacy courses she
+        // runs, Women in Vibe Coding ("why we started…", now Korea · Singapore ·
+        // Vietnam · Luxembourg) and AXMOS ("제가 함께 참여하고 있는 AXMOS").
+        // Her headline is a description, not a formal title — "GTM · 파트너십 총괄"
+        // renders it without inventing a rank.
+        name: { ko: "백민정", en: "MJ Baek" },
+        org: { ko: "Codepresso", en: "Codepresso" },
+        role: { ko: "GTM · 파트너십 총괄", en: "Go-to-Market & Partnerships" },
+        tag: { ko: "AI 리터러시 · 빌더 커뮤니티", en: "AI literacy · builder community" },
+        img: "/partners/people/baek-min-joung.jpg",
+        bio: {
+          ko: "코드프레소의 GTM·파트너십을 총괄하며 비개발 직군 대상 AI 입문 특강을 운영합니다. 한국·싱가포르·베트남·룩셈부르크로 이어지는 빌더 커뮤니티 ‘Women in Vibe Coding’을 함께 시작해 이끌고 있고, AXMOS에도 참여합니다.",
+          en: "Leads go-to-market and partnerships at Codepresso, running its AI-literacy courses for non-developers. Co-started and runs Women in Vibe Coding, a builder community now spanning Korea, Singapore, Vietnam and Luxembourg, and takes part in AXMOS.",
+        },
+        linkedin: "https://www.linkedin.com/in/mjbaek",
+      },
+      {
         name: { ko: "신상길", en: "Shin Sang-gil" },
         org: { ko: "FUJIFILM BI Singapore", en: "FUJIFILM BI Singapore" },
         role: { ko: "고객성공 · DX/AI", en: "Customer Success · DX/AI" },
