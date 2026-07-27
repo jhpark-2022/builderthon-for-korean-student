@@ -859,10 +859,17 @@ export const dict = {
       {
         num: "06",
         title: { ko: "인턴십 · 상금", en: "Internships & prizes" },
+        // Detail lifted to match the FAQ (they were a tier apart, and the FAQ was
+        // the more specific of the two — the mismatch itself read as unreliable).
+        // WHAT is on offer is settled; HOW MUCH and HOW MANY are not. Every line
+        // carrying an amount or a headcount says so on the same line — a single
+        // "잠정" at the end of the card lets a reader take the numbers as fixed.
+        // Mirrored in the FAQ internship + prize items; change both together.
         points: [
-          { ko: "우수 팀에 유급 FDE 인턴 기회 — ‘AXMOS 학생 TF’로 잇는 선순환 · 잠정", en: "A paid FDE internship for top teams — a virtuous loop as the ‘AXMOS student TF’ · tentative" },
-          { ko: "트랙별 순위 시상 · 상금 S$100 · 널담 바우처 · 잠정", en: "Ranked per-track awards · S$100 prize · Nuldam voucher · tentative" },
-          { ko: "After 파이프라인(투자·인턴)으로 연결", en: "Bridges into an After pipeline (investment · internship)" },
+          { ko: "메인 트랙 각 1위 · AXMOS(코드프레소·WVB) 유급 FDE 인턴십 기회", en: "1st place in each main track · a paid FDE internship with AXMOS (Codepresso · WVB)" },
+          { ko: "겨울방학 약 1.5개월 · 트랙당 최대 3명 — 기간·인원 확정 전", en: "~1.5 months over the winter break · up to 3 per track — duration & headcount not yet final" },
+          { ko: "2위 S$100 · 3위 널담 바우처 — 금액 확정 전", en: "2nd S$100 · 3rd Nuldam voucher — amounts not yet final" },
+          { ko: "Day 5 AI Use Case Top 3 · 해녀의 부엌 바우처 · 논의 중", en: "Day 5 AI Use Case top 3 · Haenyeo's Kitchen voucher · under discussion" },
           { ko: "굿즈 (pen·notes) 등 · 검토 중", en: "Goods (pens · notes) and more · under review" },
         ],
       },
@@ -1217,8 +1224,11 @@ export const dict = {
       {
         q: { ko: "테마가 뭔가요? 너무 막연해요.", en: "What's the theme? It feels vague." },
         a: {
-          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다 — 예를 들어 ‘회사 돈이 어디서 새는지 눈에 안 보인다’ 같은 실무 문제요. 가상 과제가 아니라 기업 담당자가 Day 2에 직접 브리핑하는 ‘의뢰’입니다. 트랙 구성은 재무·영업·마케팅(입문) 3트랙으로 논의 중이며 확정되는 대로 안내합니다.",
-          en: "You take on the AX (AI-transformation) problems Korean companies are facing right now, one set per track — practical things like “we can't see where the company's money is leaking.” These aren't invented exercises but briefs, walked through in person by the company's own people on Day 2. Three tracks are under discussion — finance, sales and marketing (the beginner track) — and we'll announce them once settled.",
+          // 브리핑은 Day 1(문제 공개 직후)이며 schedule.ts의 `d1-problem-deep-dive`와
+          // 같은 사실을 말해야 합니다. 진행자·형식은 아직 조율 중이라 여기서도 확정으로
+          // 쓰지 않습니다 — 특정 인물을 진행자로 명시하지 말 것(미확정).
+          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다 — 예를 들어 ‘회사 돈이 어디서 새는지 눈에 안 보인다’ 같은 실무 문제요. 가상 과제가 아니라, Day 1에 문제가 공개되고 과제를 낸 주최사(AXMOS) 측이 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자·형식은 조율 중). 트랙 구성은 메인 트랙 2개로 좁혀 논의 중이며 확정되는 대로 안내합니다.",
+          en: "You take on the AX (AI-transformation) problems Korean companies are facing right now, one set per track — practical things like “we can't see where the company's money is leaking.” These aren't invented exercises but briefs: the problems drop on Day 1 and the host companies (AXMOS) that set them walk through the background first-hand (presenter and format still being arranged). The line-up has been narrowed to two main tracks, and we'll announce them once settled.",
         },
       },
       {
@@ -1247,8 +1257,8 @@ export const dict = {
       {
         q: { ko: "인턴십이 진짜인가요? 유급인가요?", en: "Is the internship real? Is it paid?" },
         a: {
-          ko: "네, 실제로 추진 중인 유급 인턴십입니다 — 딥다이브 트랙 1위 팀에게 AXMOS(코드프레소·WVB)의 겨울방학 약 1.5개월 유급 FDE 인턴 기회가 열립니다(트랙당 최대 3명 · 조건은 조율 중이라 확정 시 안내). 인턴이 안 되더라도 Day 7 커리어 간담회가 인턴·채용 풀로 이어지는 별도 연결 통로예요.",
-          en: "Yes — it's a paid internship we're actively arranging. The winning team in the Deep-Dive track gets a roughly 1.5-month paid FDE internship over the winter break with AXMOS (Codepresso · WVB) — up to three people per track; the terms are still being settled and we'll post them once confirmed. And even without the internship, the Day 7 career session is its own route into the internship and hiring pool.",
+          ko: "네, 실제로 추진 중인 유급 인턴십입니다 — 메인 트랙 각 1위 팀에게 AXMOS(코드프레소·WVB)의 겨울방학 유급 FDE 인턴 기회가 열립니다(약 1.5개월 · 트랙당 최대 3명 — 기간·인원 모두 확정 전이라 조율되는 대로 안내). 인턴이 안 되더라도 Day 7 커리어 간담회가 인턴·채용 풀로 이어지는 별도 연결 통로예요.",
+          en: "Yes — it's a paid internship we're actively arranging. The winning team in each main track gets a paid FDE internship with AXMOS (Codepresso · WVB) over the winter break — around 1.5 months, up to three people per track, though both the duration and the headcount are still being settled; we'll post them once confirmed. And even without the internship, the Day 7 career session is its own route into the internship and hiring pool.",
         },
       },
       {
@@ -1273,8 +1283,8 @@ export const dict = {
         a: {
           // 수료증은 이 목록에서 의도적으로 빠져 있습니다 — 발급 기준이 "크래시코스
           // 전 시간 참석"이라, 참가자 전원이 받는 항목과 나란히 두면 기준이 오해됩니다.
-          ko: "네 — 현재 조율 중인 시상(잠정)은: 딥다이브 트랙 1위 유급 FDE 인턴십 · 2위 S$100 · 3위 널담 바우처, 스프린트 트랙 1위 S$100, Day 5 AI Use Case Top 3에 해녀의 부엌 바우처입니다. 참가비는 무료이고, 순위에 못 들어도 밥·굿즈·네트워킹은 전원에게 돌아가며 수료증은 크래시코스 전 시간을 들으면 받습니다. ※ 시상은 파트너 협의로 변경될 수 있어요.",
-          en: "Yes — the awards currently being arranged (tentative) are: in the Deep-Dive track, a paid FDE internship for 1st, S$100 for 2nd and a Nuldam voucher for 3rd; S$100 for 1st in the Sprint track; and a Haenyeo's Kitchen voucher for the top 3 of the Day 5 AI Use Case session. Entry is free, and even off the podium the food, goods and networking go to everyone — the certificate comes with full Crash Course attendance. ※ Awards may change as partner discussions continue.",
+          ko: "네 — 시상은 메인 트랙 2개 각각에 1~3위로 걸립니다: 1위 유급 FDE 인턴십 기회 · 2위 S$100 · 3위 널담 바우처. Day 5 AI Use Case Top 3의 해녀의 부엌 바우처도 논의 중이에요. 참가비는 무료이고, 순위에 못 들어도 밥·굿즈·네트워킹은 전원에게 돌아가며 수료증은 크래시코스 전 시간을 들으면 받습니다. ※ 금액·인원 등 세부는 아직 확정 전이며 파트너 협의로 변경될 수 있어요.",
+          en: "Yes — each of the two main tracks carries awards for 1st through 3rd: a paid FDE internship for 1st, S$100 for 2nd and a Nuldam voucher for 3rd. A Haenyeo's Kitchen voucher for the top 3 of the Day 5 AI Use Case session is also under discussion. Entry is free, and off the podium the food, goods and networking still go to everyone — the certificate comes with full Crash Course attendance. ※ Amounts, headcounts and other details aren't final and may change as partner discussions continue.",
         },
       },
       {

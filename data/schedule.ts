@@ -377,8 +377,8 @@ export const schedule: BEvent[] = [
       en: "Real companies' AX problems drop, you pick a track — and the 8-day build clock starts (track line-up not final yet).",
     },
     description: {
-      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 트랙 구성은 아직 확정 전이며(재무·영업·마케팅 3트랙으로 논의 중), 확정되는 대로 안내합니다. 공개된 문제는 이어지는 현장 브리핑 & Q&A에서 함께 살펴보고, 팀별 자율 빌드가 그때부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 만들어 갑니다. Day 1은 필참이며 SMU YPHSL B2-03 현장(11AM–5PM)에서 진행합니다.",
-      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. The track line-up isn't confirmed yet (three — finance, sales and marketing — are under discussion) and we'll announce it once settled. The released problems are walked through in the on-site briefing & Q&A that follows, and self-paced team build runs continuously from there to Demo Day — no start whistle to wait for, each team at its own pace. Day 1 is mandatory and runs on-site at SMU YPHSL B2-03 (11AM–5PM).",
+      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 트랙 구성은 아직 확정 전이며(메인 트랙 2개로 좁혀 논의 중), 확정되는 대로 안내합니다. 공개된 문제는 이어지는 현장 브리핑 & Q&A에서 함께 살펴보고, 팀별 자율 빌드가 그때부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 만들어 갑니다. Day 1은 필참이며 SMU YPHSL B2-03 현장(11AM–5PM)에서 진행합니다.",
+      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. The track line-up isn't confirmed yet (narrowed to two main tracks, still under discussion) and we'll announce it once settled. The released problems are walked through in the on-site briefing & Q&A that follows, and self-paced team build runs continuously from there to Demo Day — no start whistle to wait for, each team at its own pace. Day 1 is mandatory and runs on-site at SMU YPHSL B2-03 (11AM–5PM).",
     },
     location: YPHSL_B203,
   },
@@ -799,8 +799,8 @@ export const schedule: BEvent[] = [
       en: "12:00~ 5-min pitches per team, by track in one space — attend your own track.",
     },
     description: {
-      ko: "12:00부터 데모데이 팀별 발표가 시작됩니다. 같은 공간에서 트랙별로 순차 진행하며, 각 팀이 5분씩 발표합니다(트랙당 약 1시간 × 3트랙, 총 약 2.5시간 · 팀 수에 따라 유동). 참가자는 본인 트랙 발표에 참석하고, 그 외 시간은 자유롭게 관람하거나 식사할 수 있습니다. 심사는 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다(문제 발의는 AXMOS). 멘토와는 역할을 분리해 학생 눈높이의 멘토 문화를 지킵니다.",
-      en: "From 12:00, the Demo-Day pitches begin. In one space, tracks run in sequence and each team pitches for five minutes (about an hour per track × 3 tracks, ~2.5 hours total, depending on team count). You attend your own track's pitches and are free to watch others or grab food the rest of the time. Judging is done by working leaders who have solved real problems in industry (problem-setting by AXMOS), kept separate from the mentor role so the peer-level mentor culture stays intact.",
+      ko: "12:00부터 데모데이 팀별 발표가 시작됩니다. 같은 공간에서 트랙별로 순차 진행하며, 각 팀이 5분씩 발표합니다(트랙당 약 1시간 × 메인 트랙 2개 · 팀 수에 따라 유동). 참가자는 본인 트랙 발표에 참석하고, 그 외 시간은 자유롭게 관람하거나 식사할 수 있습니다. 심사는 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다(문제 발의는 AXMOS). 멘토와는 역할을 분리해 학생 눈높이의 멘토 문화를 지킵니다.",
+      en: "From 12:00, the Demo-Day pitches begin. In one space, tracks run in sequence and each team pitches for five minutes (about an hour per track × two main tracks, depending on team count). You attend your own track's pitches and are free to watch others or grab food the rest of the time. Judging is done by working leaders who have solved real problems in industry (problem-setting by AXMOS), kept separate from the mentor role so the peer-level mentor culture stays intact.",
     },
     location: ONSITE,
   },
