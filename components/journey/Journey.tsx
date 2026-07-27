@@ -1898,7 +1898,11 @@ export default function Journey() {
           <p className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-emerald-200">
             {t(dict.mentoring.gridLabel)}
           </p>
-          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          {/* One column below `sm`: at two columns a 375px phone left each card
+              ~150px of text, which forced Korean names and org strings to break
+              mid-word (김진호 → 김/진/호). Two from `sm`, four from `lg` — the
+              desktop layout is unchanged. */}
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {dict.mentoring.mentors.map((m, i) => {
               const name = t(m.name);
               const role = t(m.role);
@@ -1920,10 +1924,14 @@ export default function Journey() {
                   )}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-2">
-                      <p className="text-sm font-bold leading-snug text-white">{name}</p>
+                      {/* break-keep (word-break: keep-all) — Korean breaks between
+                          syllables by default, which shreds a 3-syllable name into
+                          a vertical column. Wrapping is still allowed, but only at
+                          word boundaries; never truncated. */}
+                      <p className="min-w-0 break-keep text-sm font-bold leading-snug text-white">{name}</p>
                       {m.linkedin && <LinkedInLink url={m.linkedin} label={name} />}
                     </div>
-                    <p className="mt-0.5 text-xs leading-snug text-white/60">
+                    <p className="mt-0.5 break-keep text-xs leading-snug text-white/60">
                       {t(m.org)}{role ? ` · ${role}` : ""}
                     </p>
                     <div className="mt-2 flex flex-wrap items-center gap-1.5">
@@ -1973,10 +1981,11 @@ export default function Journey() {
                     )}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-start justify-between gap-2">
-                        <p className="text-sm font-bold leading-snug text-white">{name}</p>
+                        {/* break-keep — see the mentor grid above. */}
+                        <p className="min-w-0 break-keep text-sm font-bold leading-snug text-white">{name}</p>
                         {j.linkedin && <LinkedInLink url={j.linkedin} label={name} />}
                       </div>
-                      <p className="mt-0.5 text-xs leading-snug text-white/60">{t(j.org)} · {t(j.role)}</p>
+                      <p className="mt-0.5 break-keep text-xs leading-snug text-white/60">{t(j.org)} · {t(j.role)}</p>
                     </div>
                   </div>
                   <span className="mt-4 inline-flex w-fit items-center rounded-full border border-violet-400/20 bg-violet-400/[0.08] px-2.5 py-0.5 text-[0.62rem] font-semibold uppercase tracking-wide text-violet-200/90">
