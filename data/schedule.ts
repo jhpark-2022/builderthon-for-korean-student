@@ -85,6 +85,13 @@ export interface DayMeta {
   // "pending" = meant to be on-site but venue isn't locked (Zoom fallback).
   dayMode: "online" | "offline" | "pending";
   mandatory?: boolean; // 필참 — required attendance (Day 1 & Day 8)
+  // Force the "자유 진행 / Your own pace" day badge on. Normally that badge is
+  // inferred (a day with self-paced build and no real sessions), but Day 6 now
+  // carries the FDE office hour — an OPTIONAL drop-in, which doesn't make the
+  // day scheduled. Without this the badge would flip to "온라인" and the day
+  // would read as somewhere you have to be. Set it only where a day's sessions
+  // are all optional.
+  selfPacedDay?: boolean;
 }
 
 // Two "Labs" across the 8 days (matches the deck):
@@ -152,8 +159,8 @@ export const days: DayMeta[] = [
     phase: LAB2,
     theme: { ko: "중간 점검 · 교류", en: "Mid-point · Exchange" },
     summary: {
-      ko: "*SCAPE 현장 10AM–2PM · 중간 점검 · 학생 AI Use Case + QR 투표(검토 중) · 패널 ‘유학생에서 창업가로’(섭외 중) · 크로스트랙 교류.",
-      en: "In person at *SCAPE, 10AM–2PM · mid-point check-in · student AI use cases + QR vote (under review) · panel ‘From Int'l Student to Founder’ (TBC) · cross-track exchange.",
+      ko: "*SCAPE 현장 10AM–2PM · 중간 점검 · 학생 AI Use Case + QR 투표(검토 중) · 패널 ‘유학생에서 창업가로’(섭외 중) · 크로스트랙 교류 · FDE 오피스아워(온라인).",
+      en: "In person at *SCAPE, 10AM–2PM · mid-point check-in · student AI use cases + QR vote (under review) · panel ‘From Int'l Student to Founder’ (TBC) · cross-track exchange · FDE office hours (online).",
     },
     dayMode: "offline",
   },
@@ -164,10 +171,12 @@ export const days: DayMeta[] = [
     phase: LAB2,
     theme: { ko: "오픈 빌드", en: "Open Build" },
     summary: {
-      ko: "정해진 세션이 없는 날 — 각자 편한 시간·장소에서 팀별로 빌드를 이어갑니다.",
-      en: "No scheduled sessions — teams keep building whenever and wherever works for them.",
+      ko: "필수 일정이 없는 날 — 각자 편한 시간에 팀 빌드를 이어가고, 필요하면 FDE 오피스아워(온라인)에 드롭인하세요.",
+      en: "Nothing required today — keep building on your own time, and drop in to the FDE office hours (online) if you want them.",
     },
     dayMode: "online",
+    // The FDE office hour is a drop-in, so the day is still free-form.
+    selfPacedDay: true,
   },
   {
     day: 7,
@@ -176,8 +185,8 @@ export const days: DayMeta[] = [
     phase: LAB2,
     theme: { ko: "파이널 리허설", en: "Final Rehearsal" },
     summary: {
-      ko: "AWS 오피스(확정) 9AM–2PM · 팀당 최종 피드백 · 네트워킹 점심 · 박희덕 커리어 간담회.",
-      en: "AWS office (confirmed), 9AM–2PM · per-team final feedback · networking lunch · Park Hee-deok career session.",
+      ko: "AWS 오피스(확정) 9AM–2PM · 팀당 최종 피드백 · 네트워킹 점심 · 박희덕 커리어 간담회 · FDE 오피스아워(온라인).",
+      en: "AWS office (confirmed), 9AM–2PM · per-team final feedback · networking lunch · Park Hee-deok career session · FDE office hours (online).",
     },
     dayMode: "offline",
   },
@@ -289,6 +298,42 @@ const OPENAI_ORG = {
     en: "OpenAI is in discussion to run a hands-on Codex workshop for students with some building experience (schedule TBC).",
   },
 } as const;
+
+// Popup Studio runs the stage-2 mentoring: online FDE office hours across
+// Day 5–7. The programme itself is agreed; only the time slots are open, which
+// is why the events carry neither a "확정" nor a "TBC" badge — a TBC badge would
+// read as "this might not happen", which is not what is unsettled here.
+const POPUP_STUDIO_ORG = {
+  name: "Popup Studio",
+  url: "https://popupstudio.ai",
+  desc: {
+    ko: "팝업스튜디오는 AI 전환(AX)을 업으로 하는 싱가포르 본사 기업으로, Day 5–7 동안 FDE 온라인 오피스아워를 열어 팀별 문제 정의·워크플로·구현 방향을 함께 점검합니다.",
+    en: "Popup Studio is a Singapore-headquartered AI-transformation (AX) company. Across Day 5–7 its FDEs hold online office hours to review each team's problem definition, workflow and implementation direction.",
+  },
+} as const;
+
+// The three Day 5–7 office-hour entries are identical apart from `day`/`id` —
+// one per day so the session shows up on each day's card and modal, rather than
+// living on Day 5 only and being invisible to someone opening Day 6 or 7.
+// Written once here so the three can never drift apart.
+// TODO: 시간대 확정 시 timeOfDay 조정 (현재 PM은 자리표시자).
+const FDE_OFFICE_HOUR = {
+  date: "",
+  category: "mentoring" as const,
+  mode: "online" as const,
+  timeOfDay: "PM" as const,
+  title: { ko: "FDE 오피스아워 · 팝업스튜디오", en: "FDE Office Hours · Popup Studio" },
+  summary: {
+    ko: "온라인 드롭인 — 문제 정의·워크플로·구현 방향을 FDE와 점검해요 (시간 추후 안내).",
+    en: "Online drop-in — check your problem definition, workflow and build direction with FDEs (times TBA).",
+  },
+  description: {
+    ko: "기초 멘토링(Day 3·4)을 지난 팀을 위한 실전 2단계입니다. AI 전환을 업으로 하는 팝업스튜디오의 FDE(Forward-Deployed Engineer)들이 Day 5–7 동안 온라인 오피스아워를 열어 둡니다 — 원하는 팀이 원하는 때 드롭인해서 문제 정의, 워크플로 분석, 구현 방향을 점검받으세요. 예약·출석 의무가 없고, 시간대는 추후 안내됩니다. 멘토 지정 없이 열려 있는 시간이라는 점은 다른 멘토링과 같아요.",
+    en: "Stage two, for teams past the foundational mentoring on Day 3·4. Popup Studio — an AI-transformation company — keeps online office hours open across Day 5–7 with its FDEs (Forward-Deployed Engineers): drop in whenever your team wants and get a read on your problem definition, workflow analysis and implementation direction. There's no booking and no attendance obligation, and the time slots will be announced. Like the rest of the mentoring, it's open time rather than a mentor you pick.",
+  },
+  location: ONLINE,
+  org: POPUP_STUDIO_ORG,
+};
 
 // Hashed is in discussion as the collaborator on the Day-5 Quickathon side
 // quest (deck: "병행 검토 · 해시드와 협업 논의 중").
@@ -690,6 +735,8 @@ export const schedule: BEvent[] = [
     location: ONSITE,
     org: HASHED_ORG,
   },
+  // Stage-2 mentoring, one entry per day (see FDE_OFFICE_HOUR above).
+  { ...FDE_OFFICE_HOUR, id: "d5-fde-office-hour", day: 5, date: "08.26" },
 
   // ─── DAY 6 · Open Build (08.27) ─────────────────────────────────────────────
   {
@@ -711,6 +758,8 @@ export const schedule: BEvent[] = [
     },
     location: ONLINE,
   },
+  // Stage-2 mentoring, one entry per day (see FDE_OFFICE_HOUR above).
+  { ...FDE_OFFICE_HOUR, id: "d6-fde-office-hour", day: 6, date: "08.27" },
 
   // ─── DAY 7 · Final Rehearsal (08.28 · OFFLINE · AWS office) ──────────────────
   {
@@ -751,6 +800,8 @@ export const schedule: BEvent[] = [
     },
     location: AWS_OFFICE,
   },
+  // Stage-2 mentoring, one entry per day (see FDE_OFFICE_HOUR above).
+  { ...FDE_OFFICE_HOUR, id: "d7-fde-office-hour", day: 7, date: "08.28" },
 
   // ─── DAY 8 · Demo Day · Final Pitch (08.29 · OFFLINE) ────────────────────────
   {

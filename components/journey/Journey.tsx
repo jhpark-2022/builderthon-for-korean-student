@@ -657,7 +657,7 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
             <span aria-hidden>★</span>{t(dict.program.mandatoryBadge)}
           </span>
         )}
-        <DayModeBadge day={day} t={t} selfPaced={allSelfPaced} />
+        <DayModeBadge day={day} t={t} selfPaced={day.selfPacedDay ?? allSelfPaced} />
       </div>
       <h4 className="mt-3 text-[15px] font-bold leading-snug text-white">{t(day.theme)}</h4>
       <p className="mt-1.5 text-[13px] leading-relaxed text-white/65">{t(day.summary)}</p>
@@ -817,7 +817,7 @@ function DayModal({
                     <span aria-hidden>★</span>{t(dict.program.mandatoryBadge)}
                   </span>
                 )}
-                <DayModeBadge day={day} t={t} selfPaced={dayIsSelfPaced(day.day)} />
+                <DayModeBadge day={day} t={t} selfPaced={day.selfPacedDay ?? dayIsSelfPaced(day.day)} />
               </div>
               <h3 id="day-modal-title" className="mt-5 text-[24px] font-bold leading-tight text-white sm:text-[30px]">{t(day.theme)}</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/70">{t(day.summary)}</p>
