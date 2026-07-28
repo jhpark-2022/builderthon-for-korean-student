@@ -1143,7 +1143,7 @@ export const dict = {
         days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hwayoung-lee-bbb79a134",
       },
       {
-        name: { ko: "임석근", en: "Lim Seok-geun" }, org: { ko: "NetApp", en: "NetApp" }, role: { ko: "APAC", en: "APAC" },
+        name: { ko: "임석건", en: "Lim Seok-geon" }, org: { ko: "NetApp", en: "NetApp" }, role: { ko: "APAC", en: "APAC" },
         intro: {
           ko: "APAC AWS 세일즈. 前 스타트업 사업개발 · 탄자니아 IT 컨설턴트.",
           en: "APAC AWS sales. Ex-startup BD · IT consultant in Tanzania.",

@@ -594,7 +594,7 @@ export const schedule: BEvent[] = [
     },
     location: NUS,
     // TODO: confirm public naming — the confirmed individual mentors (황영준·이유택·
-    // 한장환·신동혁·이화영·임석근) are from the internal deck; verify their names may be
+    // 한장환·신동혁·이화영·임석건) are from the internal deck; verify their names may be
     // shown publicly before surfacing. Full roster lives in dict.mentoring.mentors.
   },
 
