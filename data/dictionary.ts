@@ -1051,8 +1051,8 @@ export const dict = {
       {
         name: { ko: "한장환", en: "Han Jang-whan" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "SA", en: "SA" },
         intro: {
-          ko: "클라우드 아키텍처 설계 — AWS 싱가포르 5년+. 前 오라클 · Dell EMC.",
-          en: "Cloud architecture — 5+ yrs, AWS Singapore. Ex-Oracle · Dell EMC.",
+          ko: "AWS 싱가포르 솔루션즈 아키텍트 — 클라우드·인프라 18년+. 前 오라클 JAPAC · Dell EMC.",
+          en: "Solutions Architect, AWS Singapore — 18+ yrs in cloud & infrastructure. Ex-Oracle JAPAC, Dell EMC.",
         },
         days: "Day 1", daysPending: "Day 7", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jangwhan",
       },
@@ -1070,8 +1070,8 @@ export const dict = {
       {
         name: { ko: "황현진", en: "Hyunjin Hwang" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "공동창업자 · 콘텐츠 R&D 총괄", en: "Co-founder · Content R&D Lead" },
         intro: {
-          ko: "Day 2 크래시코스 설계 · 진행. 前 LG전자 소프트웨어 엔지니어 9년.",
-          en: "Day 2 Crash Course design · delivery. Ex-LG Electronics software engineer, 9 yrs.",
+          ko: "코드프레소 공동창업자·디렉터 — 개발자 교육 콘텐츠 R&D 총괄. 前 LG전자 SW 엔지니어 9년.",
+          en: "Co-founder & Director, Codepresso — leads content R&D. Ex-LG Electronics software engineer, 9 yrs.",
         },
         days: "Day 2", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697",
       },
@@ -1080,16 +1080,16 @@ export const dict = {
       {
         name: { ko: "김진호", en: "Jinho Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CEO", en: "Co-founder · CEO" },
         intro: {
-          ko: "한국 리테일·유통 AI 전환. NUS 재학 중 휴학 후 창업.",
-          en: "AI transformation for Korean retail · distribution. Founded on leave from NUS.",
+          ko: "온워드랩 공동창업자·CEO — 유통·리테일 AI 전환(AX). NUS Business.",
+          en: "Co-founder & CEO, Onword Lab — AI transformation for retail & distribution. NUS Business.",
         },
         days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/kimjinho",
       },
       {
         name: { ko: "Sihoon Kim", en: "Sihoon Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CTO", en: "Co-founder · CTO" },
         intro: {
-          ko: "성장기 팀을 위한 AI 인프라. 샌프란시스코 베이 에어리어 기반.",
-          en: "AI infra for growing teams. Based in the SF Bay Area.",
+          ko: "온워드랩 공동창업자·CTO — 커머스 운영 에이전트 시스템 개발. 미네르바대.",
+          en: "Co-founder & CTO, Onword Lab — builds agentic ops systems for commerce. Minerva University.",
         },
         days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sihoon-kim-306551372",
       },
@@ -1097,8 +1097,8 @@ export const dict = {
       {
         name: { ko: "Brian Bae", en: "Brian Bae" }, org: { ko: "REmited", en: "REmited" }, role: { ko: "CEO", en: "CEO" },
         intro: {
-          ko: "구글 스타트업 액셀러레이터 2026. 前 앤틀러 · 대학생 대상 앱 창업.",
-          en: "Google for Startups Accelerator 2026. Ex-Antler · founded a campus app.",
+          ko: "REmited 공동창업자·CEO — Google for Startups Accelerator 2026 선정. 前 Antler.",
+          en: "Co-founder & CEO, REmited — Google for Startups Accelerator 2026. Ex-Antler.",
         },
         days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/brian-bae-ba638a131",
       },
@@ -1106,56 +1106,46 @@ export const dict = {
       {
         name: { ko: "황영준", en: "Hwang Young-jun" }, org: { ko: "T3Q", en: "T3Q" }, role: { ko: "AI", en: "AI" },
         intro: {
-          ko: "컴퓨터 비전 AI 엔지니어. VLM 문서 구조화 · 검색 엔진 고도화.",
-          en: "Computer-vision AI engineer. VLM document structuring · search-engine work.",
+          ko: "T3Q AI 엔지니어 3년+ — 컴퓨터 비전·NLP. VLM 문서 처리·검색엔진 고도화. 고려대.",
+          en: "AI Engineer, T3Q (3+ yrs) — computer vision & NLP; VLM document processing, search. Korea University.",
         },
         days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620",
       },
       {
         name: { ko: "이유택", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" },
         intro: {
-          ko: "싱가포르 학생 마켓플레이스 창업 — NTU 소개. 前 네이버 소프트웨어 엔지니어 5년.",
-          en: "Student marketplace in Singapore — NTU featured. Ex-Naver engineer, 5 yrs.",
+          ko: "前 네이버 SW 엔지니어 5년 — LLM 코드리뷰 봇·사내 RAG 구축. 현 NTU AI 석사과정.",
+          en: "Ex-NAVER software engineer (5 yrs) — built LLM code-review bots & internal RAG. Now MSc AI at NTU.",
         },
         days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek",
       },
-      // ── Day 5–7 · 2단계 실전 멘토링 ─────────────────────────────────────────
-      // The one COMPANY entry in this grid — Popup Studio sends FDEs rather than
-      // a single named person, so `name` is the company and `linkedin` stays
-      // empty (the card simply drops the icon). Everything else is the same
-      // shape as the individual cards; there is no logo slot since the avatar
-      // column was removed. `org` carries what they do here so the intro doesn't
-      // have to repeat it, and the day pill carries "Day 5–7".
-      {
-        name: { ko: "Popup Studio", en: "Popup Studio" }, org: { ko: "FDE 실전 멘토링", en: "FDE hands-on mentoring" }, role: { ko: "", en: "" },
-        intro: {
-          ko: "싱가포르 본사 AX 기업 · 온라인 오피스아워. 팀별 문제 정의 · 워크플로 · 구현 방향 점검.",
-          en: "Singapore-HQ AX firm. Online office hours — problem definition · workflow.",
-        },
-        days: "Day 5–7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "",
-      },
+      // Day 5–7 stage-2 mentoring is Popup Studio's, but it has NO card here:
+      // this grid is named people you may be matched with 1:1, and Popup Studio
+      // sends FDEs rather than a named mentor. It stays described in the section
+      // intro above and as its own sessions in the programme (schedule.ts
+      // d5/d6/d7-fde-office-hour) — do not re-add a card for it.
       // ── Day 7 · 커리어 세션 ─────────────────────────────────────────────────
       {
         name: { ko: "신동혁", en: "Shin Dong-hyuk" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "GTM", en: "GTM" },
         intro: {
-          ko: "GenAI 고객경험 GTM — 아태 전역. AWS 7년.",
-          en: "GenAI customer-experience GTM — APJC. 7 yrs at AWS.",
+          ko: "AWS APJC GenAI 커뮤니케이션·CX GTM 총괄 — AWS 7년+. 前 삼성전자 북미 5G 사업개발.",
+          en: "Head of GTM, GenAI Communications & CX APJC at AWS (7+ yrs). Ex-Samsung Electronics 5G BD, North America.",
         },
         days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/donghyukshin",
       },
       {
         name: { ko: "이화영", en: "Lee Hwa-young" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "Sales", en: "Sales" },
         intro: {
-          ko: "중소기업 신규 고객 개척. 前 VMware 아태 파트너 얼라이언스.",
-          en: "New SMB customer acquisition. Ex-VMware, APAC partner alliances.",
+          ko: "AWS 클라우드 세일즈(싱가포르). 前 브로드컴 어카운트 디렉터 · VMware 5년+.",
+          en: "Cloud Sales, AWS Singapore. Ex-Broadcom account director; 5+ yrs at VMware.",
         },
         days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hwayoung-lee-bbb79a134",
       },
       {
         name: { ko: "임석건", en: "Lim Seok-geon" }, org: { ko: "NetApp", en: "NetApp" }, role: { ko: "APAC", en: "APAC" },
         intro: {
-          ko: "APAC AWS 세일즈. 前 스타트업 사업개발 · 탄자니아 IT 컨설턴트.",
-          en: "APAC AWS sales. Ex-startup BD · IT consultant in Tanzania.",
+          ko: "NetApp AWS 세일즈 스페셜리스트(APAC) 4년+. 前 Rescale. 난양 MBA.",
+          en: "AWS Sales Specialist APAC at NetApp (4+ yrs). Ex-Rescale. MBA, Nanyang Business School.",
         },
         days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sugkun-lim",
       },
@@ -1267,8 +1257,8 @@ export const dict = {
         tag: { ko: "GenAI GTM", en: "GenAI GTM" },
         img: "/partners/people/shin-dong-hyuk.jpg",
         bio: {
-          ko: "AWS APJC GenAI GTM 총괄. 2021년 이후 GenAI 고객경험(CX) 사업 약 10배 성장 · 7개+ 산업 확장. 前 삼성전자 북미 5G 네트워크 사업개발.",
-          en: "Head of GenAI GTM, AWS APJC. GenAI customer-experience business ~10× since 2021 · 7+ industries. Ex-Samsung Electronics, 5G network BD in North America.",
+          ko: "AWS APJC GenAI 커뮤니케이션·CX GTM 총괄 — AWS 7년+. 前 삼성전자 북미 5G 사업개발.",
+          en: "Head of GTM, GenAI Communications & CX APJC at AWS (7+ yrs). Ex-Samsung Electronics 5G BD, North America.",
         },
         linkedin: "https://www.linkedin.com/in/donghyukshin",
       },

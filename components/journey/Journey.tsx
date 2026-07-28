@@ -1928,13 +1928,17 @@ export default function Journey() {
                   <p className="mt-0.5 break-keep text-xs leading-snug text-white/60">
                     {t(m.org)}{role ? ` · ${role}` : ""}
                   </p>
-                  {/* One line from the person's own LinkedIn. Clamped to two lines
-                      so a long one can't stretch its row; dimmer than the org line
-                      above so the two don't read as one block of grey. Rendered
-                      only when present — an unverified mentor keeps the same card,
-                      minus this line. */}
+                  {/* One line from the person's own LinkedIn. Dimmer than the org
+                      line above so the two don't read as one block of grey.
+                      Rendered only when present — an unverified mentor keeps the
+                      same card, minus this line.
+                      Clamped at THREE lines, not two: the bios end on the 前 경력
+                      clause, and at one column on a phone the English runs to a
+                      third line — a 2-line clamp silently ate exactly that clause
+                      on 8 of 10 cards. Desktop still lands at two lines, so the
+                      clamp only ever engages as an overflow guard. */}
                   {intro && (
-                    <p className="mt-2 line-clamp-2 break-keep text-xs leading-relaxed text-white/50">{intro}</p>
+                    <p className="mt-2 line-clamp-3 break-keep text-xs leading-relaxed text-white/50">{intro}</p>
                   )}
                   <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-3">
                     <span className="inline-flex items-center rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.62rem] font-semibold text-white/60">
