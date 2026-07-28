@@ -15,6 +15,13 @@ Three source shapes are handled:
               white. Running such a file through "dark" instead would scale
               alpha by the ink's luminance and render the mark semi-transparent —
               a mid-purple wordmark came out visibly dimmer than its neighbours.
+  • "chroma"— a SATURATED mark on a white sheet whose shapes are separated by
+              DARK outlines (Fyreflyz). "color" would keep both the gold body and
+              the brown outline — every pixel is far from white — and the mark
+              flattens to one featureless blob. Here alpha needs the saturated ink
+              only: the white sheet drops out for having no saturation, the dark
+              outline drops out for being dark, and what's left reads as the
+              outline gaps that give the mark its shape.
   • "light" — a WHITE mark on a dark sheet (Onword Lab's square glyph). The
               inverse of "dark": brightness IS the ink, so alpha comes from
               luminance above the sheet's own level. Feeding this to "dark"
@@ -65,6 +72,9 @@ JOBS = [
     # the logo got "fixed" a second time on the strength of a stale image. Any
     # future ARTWORK swap must land on a NEW filename for the same reason.
     ("onword new logo.png", "onword-lab.png", "alpha"),
+    # Fyreflyz: gold mark on a white sheet — "color" so the mid-tone outline
+    # survives the cut, then flattened to white like every other mark.
+    ("Fyreflyz.png", "fyreflyz.png", "chroma"),
 ]
 
 
@@ -94,6 +104,19 @@ def from_light(im):
     sheet = np.median([lum[0, 0], lum[0, w - 1], lum[h - 1, 0], lum[h - 1, w - 1]])
     # Ramp starts a little above the sheet so its noise doesn't become haze.
     return np.clip((lum - (sheet + 12)) / (255 - (sheet + 12)), 0.0, 1.0) * 255.0
+
+
+def from_chroma(im):
+    """Saturated mark on white, dark outlines → keep the ink, drop sheet & outline."""
+    a = np.asarray(im.convert("RGB")).astype(float) / 255.0
+    mx, mn = a.max(axis=2), a.min(axis=2)
+    sat = np.where(mx > 0, (mx - mn) / np.maximum(mx, 1e-6), 0.0)
+    lum = a.mean(axis=2)
+    # Saturation carries the ink; luminance vetoes the outline. Both ramps are
+    # soft so the mark keeps an anti-aliased edge instead of a jagged one.
+    ink = np.clip((sat - 0.18) / 0.22, 0.0, 1.0)
+    lit = np.clip((lum - 0.34) / 0.16, 0.0, 1.0)
+    return ink * lit * 255.0
 
 
 def from_alpha(im):
@@ -128,6 +151,7 @@ def main():
             "color": from_color,
             "alpha": from_alpha,
             "light": from_light,
+            "chroma": from_chroma,
         }[mode](im)
         h, w = alpha.shape
         # white mono is fully described by alpha → store as LA (L=255 + alpha)

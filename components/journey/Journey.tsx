@@ -1026,28 +1026,45 @@ function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
 // Assets are the same trimmed white silhouettes the partner wall uses — no new
 // files. They're above the fold, so they load eagerly (never lazily).
 // ─────────────────────────────────────────────────────────────────────────────
-type StripLogoSpec = { src: string; alt: string; w: number; h: number };
+// `area`/`min`/`max` override the strip's default equal-area sizing for one
+// mark or one whole tier (see STRIP_* below). Needed because equal-area alone
+// made the 주최·주관 rows read smaller than 후원: those marks are narrow crests
+// and short wordmarks, so the same area buys them far less width than a long
+// sponsor wordmark, and the eye reads width.
+type StripLogoSpec = { src: string; alt: string; w: number; h: number; area?: number; min?: number; max?: number };
+
+// Default band, unchanged — this is what the 후원 tier still uses.
+const STRIP_AREA = 1400;
+const STRIP_MIN = 16;
+const STRIP_MAX = 26;
+// 주최 · 주관 sit above the sponsors in the hierarchy but were rendering below
+// them in weight. More area, and a higher ceiling so the square crests (NUS,
+// NTU KSA) can actually use it — at max 26 all three 주관 marks were pinned to
+// the cap and the extra area did nothing.
+const LEAD_TIER = { area: 1900, max: 32 } as const;
 
 const confirmedPartnerTiers: { label: Phrase; items: StripLogoSpec[] }[] = [
   {
     // 주최 · HOST — the AXMOS collective.
     label: dict.hero.partnersHost,
-    items: [
+    items: ([
+
       { src: "/partners/logos/white/trimmed/translink.png",    alt: "Translink Investment", w: 330, h: 91 },
       { src: "/partners/logos/white/trimmed/wilt.png",         alt: "Wilt Venture Builder", w: 309, h: 148 },
       { src: "/partners/logos/white/trimmed/codepresso.png",   alt: "Codepresso",           w: 456, h: 91 },
       { src: "/partners/logos/white/trimmed/popup-studio.png", alt: "Popup Studio",         w: 512, h: 245 },
       { src: "/partners/logos/white/trimmed/drimaes.png",      alt: "Drimaes",              w: 332, h: 50 },
-    ],
+    ] as StripLogoSpec[]).map((i) => ({ ...LEAD_TIER, ...i })),
   },
   {
     // 주관 · 운영 — the student associations actually running the event.
     label: dict.hero.partnersOrganizers,
-    items: [
+    items: ([
+
       { src: "/partners/logos/white/trimmed/smu-lion.png", alt: "SMU KSA",           w: 292, h: 173 },
       { src: "/partners/logos/white/trimmed/nus.png",      alt: "NUS Korea Society", w: 512, h: 512 },
       { src: "/partners/logos/white/trimmed/ntu-ksa.png",  alt: "NTU KSA",           w: 318, h: 382 },
-    ],
+    ] as StripLogoSpec[]).map((i) => ({ ...LEAD_TIER, ...i })),
   },
   {
     // 후원 · SPONSORS — confirmed only; the deck lists no in-discussion sponsors.
@@ -1062,10 +1079,16 @@ const confirmedPartnerTiers: { label: Phrase; items: StripLogoSpec[] }[] = [
       { src: "/partners/logos/white/trimmed/innovate360.png",        alt: "INNOVATE 360",                    w: 455, h: 54 },
       { src: "/partners/logos/white/trimmed/life.png",               alt: "L^IFE",                           w: 900, h: 352 },
       { src: "/partners/logos/white/trimmed/bzcf.png",               alt: "BZCF",                            w: 465, h: 156 },
-      { src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore",  w: 443, h: 90 },
-      { src: "/partners/logos/white/trimmed/onword-lab.png",             alt: "Onword Lab",                      w: 900, h: 92 },
+      // Slightly more area than its row: the 한인회 crest is dense (a seal plus
+      // two lines of type) and at the default height its text turned to mush.
+      { src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore",  w: 443, h: 90, area: 1900 },
+      // The opposite case — a 9.8:1 wordmark. Equal area pins it to the floor
+      // and it still comes out the widest mark in the strip by a distance, so
+      // it needs a lower floor rather than less area to stop dominating the row.
+      { src: "/partners/logos/white/trimmed/onword-lab.png",         alt: "Onword Lab",                      w: 900, h: 92, area: 1000, min: 12 },
       { src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105 },
       { src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81 },
+      { src: "/partners/logos/white/trimmed/fyreflyz.png",           alt: "Fyreflyz",                        w: 203, h: 192 },
     ],
   },
 ];
@@ -1090,7 +1113,7 @@ function sortLikeHeroStrip<T extends { src: string }>(rows: T[]): T[] {
 // be past "understated" and into "unreadable" — a wordmark like WILT VENTURE
 // BUILDER lost its subtitle entirely. 22–38px is still a thin strip but the
 // marks are legible at a glance, which is the only reason they're here.
-function StripLogo({ src, alt, w, h }: StripLogoSpec) {
+function StripLogo({ src, alt, w, h, area, min, max }: StripLogoSpec) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
@@ -1112,7 +1135,7 @@ function StripLogo({ src, alt, w, h }: StripLogoSpec) {
       // than the same pixel height — that's what keeps a row from going ragged
       // as it scales. Ceilings verified against the two places this can break:
       // the 9-logo 후원 row wrapping on a laptop, and the phone marquee.
-      style={{ height: opticalHeight(w, h, 1400, 16, 26) }}
+      style={{ height: opticalHeight(w, h, area ?? STRIP_AREA, min ?? STRIP_MIN, max ?? STRIP_MAX) }}
       // Opacity raised 50 → 80. At 50 the marks were only legible once the page
       // had scrolled far enough for the strip to sit over the hero scrim's dark
       // end — brightness was an accident of scroll position, not a design, so
@@ -1191,15 +1214,6 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
       <p className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-white/75 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)] transition group-hover:text-white/90">
         {t(dict.hero.partnersLabel)}
       </p>
-      {/* The two facts that make these logos mean something — folded into the
-          strip's caption rather than added as a separate line, since it's the
-          same claim ("these partners are really involved") in specifics.
-          Hidden below sm: the phone hero is already tall, and this is the one
-          line here that is a nice-to-have rather than an objection-remover. */}
-      <p className="mt-1.5 hidden text-center text-xs leading-relaxed text-white/70 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)] sm:block">
-        {t(dict.hero.heroNameValue)}
-      </p>
-
       {/* ≥sm — one row per tier, caption centred above its own marks. The tiers
           used to run inline (caption, then marks, then the next caption) which
           read as one long undifferentiated line: the whole point of the tiering

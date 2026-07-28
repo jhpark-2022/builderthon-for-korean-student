@@ -507,13 +507,6 @@ export const dict = {
       ko: "등록자부터 참가자 단톡방 초대 · 트랙 사전 안내 · 팀 매칭이 시작돼요.",
       en: "Registered builders get the participants' chat invite, track previews and team matching first.",
     },
-    // Two confirmed headline facts, used as the hero partner strip's caption.
-    // Both are locked: the AWS office venue and the Translink CEO keynote are
-    // confirmed. Do NOT append other speakers or venues to this line.
-    heroNameValue: {
-      ko: "AWS 오피스에서 파이널 리허설 · Translink 대표의 데모데이 키노트",
-      en: "Final rehearsal at the AWS office · Demo Day keynote by Translink's CEO",
-    },
     // 카운트다운이 끝난 뒤(이미 시작한 시점) 노출되는 문구.
     countdownStarted: { ko: "빌더톤이 시작되었습니다.", en: "The builderthon has begun." },
 
