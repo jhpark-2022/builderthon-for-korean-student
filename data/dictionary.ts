@@ -974,14 +974,23 @@ export const dict = {
       ko: "멘토링은 두 단계로 설계했습니다 — Day 3·4에는 유학생 출신 실무자들이 기본기를 잡아주고, Day 5–7에는 팝업스튜디오의 FDE가 실전 관점에서 팀별 문제 정의·워크플로·구현 방향을 점검합니다. Day 7 커리어 세션은 한 단계 위 시니어 리더들과 함께합니다.",
       en: "Mentoring runs in two stages — on Day 3·4, working seniors who studied abroad themselves help you get the fundamentals right; from Day 5–7, Popup Studio's FDEs review each team's problem definition, workflow and implementation direction from a practitioner's angle. The Day 7 career session brings in senior leaders one step further ahead.",
     },
-    // The exception is named on purpose. This box used to read "AXMOS = 심사 ·
-    // 문제 발의 전담 / 멘토가 아니라" while the grid right below it shows a
-    // Codepresso (an AXMOS company) name — a reader who knows the consortium
-    // spots that in one glance, and an overclaim that gets caught costs more than
-    // the tidier sentence was worth. What the separation actually protects is
-    // 1:1 mentoring vs judging; teaching the Crash Course was never part of it.
-    asideLabel: { ko: "AXMOS = 심사 · 문제 발의 전담 (크래시코스 진행은 예외)", en: "AXMOS = judging & problem-setting only (bar the Crash Course)" },
-    aside: { ko: "1:1 멘토링은 ‘선배’가 맡습니다 — 심사와 역할을 분리해요.", en: "1:1 mentoring is left to the peer-level seniors — kept apart from judging." },
+    // Scoped to what is actually true, twice over.
+    //
+    // A blanket "멘토와 심사는 분리" was never true: 신동혁 is a Day 7 mentor AND a
+    // judge. And "AXMOS = 심사·문제 발의 전담" broke a second time once Popup
+    // Studio (an AXMOS company) took the Day 5–7 FDE mentoring — the earlier
+    // "크래시코스만 예외" patch no longer covered it.
+    //
+    // What IS true, and checked against the data: NO judge appears among the
+    // Day 3·4 mentors. So the claim now names that stage instead of the whole
+    // programme, and the Day 7 overlap is disclosed rather than papered over —
+    // a reader who recognises a name on both lists finds it already admitted.
+    // Re-verify this line whenever a mentor or judge is added.
+    asideLabel: { ko: "기초 멘토링(Day 3·4)에 심사위원은 없어요", en: "No judges in the Day 3·4 mentoring" },
+    aside: {
+      ko: "AXMOS는 문제 발의·심사와 Day 2 크래시코스·Day 5–7 FDE 멘토링을 맡습니다. Day 7에 만나는 시니어 중엔 심사위원도 있지만, 눈높이 선배와의 1:1은 심사와 분리된 시간이에요.",
+      en: "AXMOS handles problem-setting and judging, plus the Day 2 Crash Course and the Day 5–7 FDE mentoring. Some of the Day 7 seniors also judge — but the peer-level 1:1s stay separate from judging.",
+    },
     asksTitle: { ko: "멘토에게 요청하는 것", en: "What we ask of mentors" },
     asks: [
       { title: { ko: "정답 아닌 ‘눈높이’", en: "Eye-level, not the answer" }, desc: { ko: "정답보다 같은 레벨의 context를 공유 — 학생으로서 함께 ideate.", en: "Share same-level context and ideate as a student — don't hand over the answer." } },
@@ -1055,9 +1064,9 @@ export const dict = {
       // Title verbatim from her LinkedIn headline ("Co-founder & Director &
       // Content R&D Lead at Codepresso") — not inferred.
       // Codepresso is an AXMOS company, so the aside above this grid names the
-      // Crash Course as the one exception to "AXMOS = 심사 · 문제 발의 전담".
-      // Keep the two in step: any further AXMOS name added here needs that
-      // sentence revisited, or the page contradicts itself in one screen.
+      // AXMOS involvement stated in the aside above this grid. Keep the two in
+      // step: any further AXMOS name added here needs that sentence revisited,
+      // or the page contradicts itself in one screen.
       {
         name: { ko: "황현진", en: "Hyunjin Hwang" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "공동창업자 · 콘텐츠 R&D 총괄", en: "Co-founder · Content R&D Lead" },
         intro: {

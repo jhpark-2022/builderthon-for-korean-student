@@ -435,7 +435,8 @@ export const schedule: BEvent[] = [
   // context is worth most.
   //
   // No role conflict with the mentor persona: the people giving this context are
-  // AXMOS — the consortium the site already scopes to "심사 · 문제 발의 전담"
+  // AXMOS — the consortium that sets the problems and judges, and also runs the
+  // Day 2 Crash Course and the Day 5–7 FDE mentoring
   // (dict.mentoring.asideLabel). Explaining the problem you set IS problem-
   // setting, not peer mentoring, so the Day 3·4 mentor boundary stays intact.
   //
@@ -838,8 +839,8 @@ export const schedule: BEvent[] = [
       en: "12:00~ 5-min pitches per team, by track in one space — attend your own track.",
     },
     description: {
-      ko: "12:00부터 데모데이 팀별 발표가 시작됩니다. 같은 공간에서 트랙별로 순차 진행하며, 각 팀이 5분씩 발표합니다(트랙당 약 1시간 × 메인 트랙 2개 · 팀 수에 따라 유동). 참가자는 본인 트랙 발표에 참석하고, 그 외 시간은 자유롭게 관람하거나 식사할 수 있습니다. 심사는 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다(문제 발의는 AXMOS). 멘토와는 역할을 분리해 학생 눈높이의 멘토 문화를 지킵니다.",
-      en: "From 12:00, the Demo-Day pitches begin. In one space, tracks run in sequence and each team pitches for five minutes (about an hour per track × two main tracks, depending on team count). You attend your own track's pitches and are free to watch others or grab food the rest of the time. Judging is done by working leaders who have solved real problems in industry (problem-setting by AXMOS), kept separate from the mentor role so the peer-level mentor culture stays intact.",
+      ko: "12:00부터 데모데이 팀별 발표가 시작됩니다. 같은 공간에서 트랙별로 순차 진행하며, 각 팀이 5분씩 발표합니다(트랙당 약 1시간 × 메인 트랙 2개 · 팀 수에 따라 유동). 참가자는 본인 트랙 발표에 참석하고, 그 외 시간은 자유롭게 관람하거나 식사할 수 있습니다. 심사는 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다(문제 발의는 AXMOS). Day 3·4 기초 멘토링은 심사에 참여하지 않는 선배들이 맡아, 학생 눈높이의 멘토 문화를 지킵니다.",
+      en: "From 12:00, the Demo-Day pitches begin. In one space, tracks run in sequence and each team pitches for five minutes (about an hour per track × two main tracks, depending on team count). You attend your own track's pitches and are free to watch others or grab food the rest of the time. Judging is done by working leaders who have solved real problems in industry (problem-setting by AXMOS). The Day 3·4 foundational mentoring is handled by seniors who take no part in judging, which is what keeps the peer-level mentor culture intact.",
     },
     location: ONSITE,
   },
