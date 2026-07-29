@@ -2130,11 +2130,21 @@ export default function Journey() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-6 flex items-center gap-3 border-t border-white/10 pt-4">
-                <Image src={s.img} alt={t(s.name)} width={200} height={200} className="h-14 w-14 shrink-0 rounded-full object-cover ring-1 ring-white/15" />
+              <div className="mt-auto flex items-center gap-3 border-t border-white/10 pt-4">
+                {/* No photo means the speaker asked not to be identified — not a
+                    missing file. A neutral glyph, never an initial: an initial of
+                    a role label ("M") is meaningless, and an initial of a name is
+                    exactly what we are not publishing. */}
+                {s.img ? (
+                  <Image src={s.img} alt={t(s.name)} width={200} height={200} className="h-14 w-14 shrink-0 rounded-full object-cover ring-1 ring-white/15" />
+                ) : (
+                  <span aria-hidden className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-white/35 ring-1 ring-white/15">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" /><path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                  </span>
+                )}
                 <div className="min-w-0">
-                  <p className="text-sm font-bold text-white">{t(s.name)}</p>
-                  <p className="mt-0.5 text-xs leading-snug text-white/60">{t(s.role)}</p>
+                  <p className="break-keep text-sm font-bold text-white">{t(s.name)}</p>
+                  <p className="mt-0.5 break-keep text-xs leading-snug text-white/60">{t(s.role)}</p>
                 </div>
                 {s.linkedin && <LinkedInLink url={s.linkedin} label={t(s.name)} className="ml-auto" />}
               </div>
@@ -2142,6 +2152,10 @@ export default function Journey() {
           ))}
         </div>
         <p className="mt-6 text-xs text-white/55">{t(dict.speakers.tbcNote)}</p>
+        {/* The 8/13 card asks for questions in advance; this is where that ask
+            becomes something you can act on. Same ghost treatment as every other
+            open-chat entry, so it stays under the register CTA in weight. */}
+        <OpenChatLink t={t} src="band" className="mt-4" />
       </Chapter>
 
       {/* ── CH 3.3 · MENTORING PHILOSOPHY ──────────────────────────── */}
