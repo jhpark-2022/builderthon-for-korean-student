@@ -259,16 +259,24 @@ function MiniQuizHook({ t }: { t: Tfn }) {
   };
 
   return (
-    <section className="relative w-full px-6 py-14 sm:px-10 sm:py-20">
-      <div className="mx-auto w-full max-w-3xl text-center">
-        <Eyebrow>{t(dict.miniQuiz.tag)}</Eyebrow>
-        <h2 className="break-keep text-[clamp(1.5rem,4vw,2.5rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+    // A CARD inside the programme section, not a section of its own. Standing
+    // alone between Program and Speakers it got a full screen of empty space on
+    // either side and read as a stray page — and it separated "here is the
+    // programme" from "here is who teaches it", which belong together.
+    // It now closes the programme, right under the day grid that the quiz's
+    // session recommendations point at.
+    <div className="mt-10 rounded-2xl border border-violet-400/20 bg-violet-500/[0.05] px-6 py-8 text-center sm:px-10">
+      <div className="mx-auto w-full max-w-2xl">
+        <span className="inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-violet-200">
+          {t(dict.miniQuiz.tag)}
+        </span>
+        <h3 className="mt-3 break-keep text-[clamp(1.25rem,3vw,1.75rem)] font-bold tracking-tight text-white">
           {t(dict.miniQuiz.heading)}
-        </h2>
-        <p className="mx-auto mt-3 max-w-xl break-keep text-sm leading-relaxed text-white/70">
+        </h3>
+        <p className="mx-auto mt-2 max-w-xl break-keep text-sm leading-relaxed text-white/70">
           {t(dict.miniQuiz.sub)}
         </p>
-        <p className="mx-auto mt-8 max-w-xl break-keep text-base font-semibold leading-relaxed text-white sm:text-lg">
+        <p className="mx-auto mt-6 max-w-xl break-keep text-[15px] font-semibold leading-relaxed text-white">
           {t(q.text)}
         </p>
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -307,7 +315,7 @@ function MiniQuizHook({ t }: { t: Tfn }) {
           {t(dict.miniQuiz.cta)}
         </a>
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -1828,7 +1836,11 @@ export default function Journey() {
             <p className="mt-8 flex items-center justify-center gap-2 whitespace-nowrap text-[0.65rem] text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:gap-3 sm:text-base lg:justify-start">
               <span className="font-semibold">{t(dict.hero.dates)}</span>
             </p>
-            <p className="mx-auto mt-6 max-w-xl text-sm leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base lg:mx-0">
+            {/* break-keep — without it Korean breaks between syllables and the
+                paragraph ended "…남깁니" / "다." with a single orphaned syllable
+                on its own line. Wrapping still happens, but only at word
+                boundaries. */}
+            <p className="mx-auto mt-6 max-w-xl break-keep text-sm leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base lg:mx-0">
               {t(dict.hero.blurb)}
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-3 lg:justify-start">
@@ -2137,17 +2149,16 @@ export default function Journey() {
             ))}
           </div>
 
+          {/* Closes the programme: the day grid above is exactly what the quiz's
+              session recommendations are picking from. */}
+          <MiniQuizHook t={t} />
+
         </div>
       </section>
 
       {/* ── CH 3.2 · SPEAKER SESSIONS (Day 1·5·8) ──────────────────── */}
       {/* Speaker names + photos are transcribed from the internal deck — public
           naming/likeness to be confirmed with the user (flagged in the handoff). */}
-      {/* One-question hook — sits between the programme and the speakers, the
-          point where a reader has seen what the event is and has a natural pause
-          before the line-up. */}
-      <MiniQuizHook t={t} />
-
       <Chapter id="speakers" align="center">
         <Eyebrow>{t(dict.speakers.tag)}</Eyebrow>
         <h2 className="text-[clamp(1.9rem,5vw,3.5rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">

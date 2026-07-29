@@ -59,6 +59,15 @@ export interface BEvent {
   summary: Bilingual; // short, shown on the card
   description: Bilingual; // full, shown in the modal
   speaker?: Bilingual;
+  // A fuller "who is running this" card for the modal, for sessions where the
+  // person is the reason to turn up. `speaker` stays the one-line meta row.
+  speakerProfile?: {
+    name: Bilingual;
+    role: Bilingual;
+    bio: Bilingual;
+    linkedin?: string;
+    img?: string;
+  };
   location?: Bilingual;
   confirmed?: boolean; // show a "Confirmed / 확정" badge on the card
   // NOT A SESSION. Self-paced build has no start time, no place to be and
@@ -127,8 +136,8 @@ export const days: DayMeta[] = [
     phase: LAB1,
     theme: { ko: "크래시코스 (집중)", en: "Crash Course" },
     summary: {
-      ko: "바이브 코딩 입문 집중 5–6시간(비개발자 OK) · 코드프레소 황현진 진행.",
-      en: "A focused 5–6h vibe-coding intro (beginners OK) · led by Hyunjin Hwang of Codepresso.",
+      ko: "바이브 코딩 입문 집중 5–6시간(비개발자 OK) · 코드프레소 김지훈 이사 진행.",
+      en: "A focused 5–6h vibe-coding intro (beginners OK) · led by Jihoon Kim, Director at Codepresso.",
     },
     dayMode: "online",
   },
@@ -543,14 +552,28 @@ export const schedule: BEvent[] = [
     // Director & Content R&D Lead at Codepresso". She runs Codepresso's content
     // R&D, which is exactly what this session is, so the credential is worth
     // naming rather than leaving the day to read as a generic vendor workshop.
-    speaker: { ko: "황현진 (코드프레소)", en: "Hyunjin Hwang (Codepresso)" },
+    speaker: { ko: "김지훈 이사 (코드프레소)", en: "Jihoon Kim, Director (Codepresso)" },
+    // Shown as its own block in the modal — who is actually in the room matters
+    // more for this session than for any other, because the Crash Course is the
+    // one thing a non-developer is nervous about. Facts from his own LinkedIn.
+    // No photo: we have not been given one, and lifting a LinkedIn headshot is
+    // not ours to do. Add `img` here if he sends one.
+    speakerProfile: {
+      name: { ko: "김지훈", en: "Jihoon Kim" },
+      role: { ko: "코드프레소 이사", en: "Director, Codepresso" },
+      bio: {
+        ko: "추천 시스템 · 스마트팩토리 데이터 7년+. 前 스마일게이트 · LG CNS. 서강대 물리학.",
+        en: "7+ yrs on recommender systems and smart-factory data. Ex-Smilegate · LG CNS. Physics, Sogang University.",
+      },
+      linkedin: "https://www.linkedin.com/in/jihoon-kim-613878134",
+    },
     summary: {
-      ko: "집중 5–6시간의 바이브 코딩 입문 — 비개발자도 OK · 코드프레소 황현진 진행.",
-      en: "A focused 5–6h vibe-coding intro — non-developers welcome · led by Hyunjin Hwang of Codepresso.",
+      ko: "집중 5–6시간의 바이브 코딩 입문 — 비개발자도 OK · 코드프레소 김지훈 이사 진행.",
+      en: "A focused 5–6h vibe-coding intro — non-developers welcome · led by Jihoon Kim of Codepresso.",
     },
     description: {
-      ko: "참가자의 약 60%가 바이브 코딩이 처음입니다. 그래서 여러 번에 나누지 않고, 하루에 몰아서 끝내는 집중 5–6시간의 크래시코스로 모두의 출발선을 맞춥니다. AI 도구로 아이디어를 작동하는 프로토타입으로 바꾸는 기본기를 핸즈온으로 익혀, 기술 장벽이 아니라 아이디어가 한계가 되도록 합니다. 비개발자도 따라올 수 있게 설계되었고, 이 크래시코스 전 시간을 참석하면 Zero100 명의의 수료증이 발급되어 Day 8 시상 때 배부됩니다. 크래시코스는 코드프레소가 주관하며, 코드프레소 공동창업자이자 콘텐츠 R&D를 총괄하는 황현진 디렉터가 직접 진행합니다.",
-      en: "About 60% of participants are trying vibe coding for the first time — so instead of spreading it out, one concentrated 5–6 hour Crash Course levels the start line in a single day. A hands-on run through the fundamentals of turning ideas into working prototypes with AI tools, so your ideas — not the tooling — are the limit. It's built so non-developers can keep up, and attending the full Crash Course earns a certificate issued by Zero100, handed out at the Day 8 awards. The Crash Course is run by Codepresso and led in person by Hyunjin Hwang, its co-founder and Content R&D Lead.",
+      ko: "참가자의 약 60%가 바이브 코딩이 처음입니다. 그래서 여러 번에 나누지 않고, 하루에 몰아서 끝내는 집중 5–6시간의 크래시코스로 모두의 출발선을 맞춥니다. AI 도구로 아이디어를 작동하는 프로토타입으로 바꾸는 기본기를 핸즈온으로 익혀, 기술 장벽이 아니라 아이디어가 한계가 되도록 합니다. 비개발자도 따라올 수 있게 설계되었고, 이 크래시코스 전 시간을 참석하면 Zero100 명의의 수료증이 발급되어 Day 8 시상 때 배부됩니다. 크래시코스는 코드프레소가 주관하며, 코드프레소의 김지훈 이사가 직접 진행합니다.",
+      en: "About 60% of participants are trying vibe coding for the first time — so instead of spreading it out, one concentrated 5–6 hour Crash Course levels the start line in a single day. A hands-on run through the fundamentals of turning ideas into working prototypes with AI tools, so your ideas — not the tooling — are the limit. It's built so non-developers can keep up, and attending the full Crash Course earns a certificate issued by Zero100, handed out at the Day 8 awards. The Crash Course is run by Codepresso and led in person by Jihoon Kim, a Director there.",
     },
     location: ONLINE,
     org: CODEPRESSO_ORG,

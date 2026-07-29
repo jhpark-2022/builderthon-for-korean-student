@@ -240,6 +240,47 @@ export default function EventModal({
               </p>
 
               {/* Who's behind it — partner/company with a link out */}
+              {/* Who is actually running it. Placed ABOVE the company block: for
+                  the Crash Course the person is the reassurance, and "which firm
+                  runs it" answers a question nobody nervous about coding asked. */}
+              {event.speakerProfile && (
+                <div className="mt-7 rounded-2xl border border-accent/20 bg-accent/[0.05] p-6">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-white/70">
+                    {t(dict.modal.runBy)}
+                  </p>
+                  <div className="mt-3 flex items-start gap-4">
+                    {event.speakerProfile.img ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={event.speakerProfile.img} alt="" aria-hidden className="h-14 w-14 shrink-0 rounded-full object-cover ring-1 ring-white/15" />
+                    ) : (
+                      <span aria-hidden className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-white/35 ring-1 ring-white/15">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" /><path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                      </span>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="break-keep text-base font-bold text-white">{t(event.speakerProfile.name)}</span>
+                        {event.speakerProfile.linkedin && (
+                          <a
+                            href={event.speakerProfile.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${t(event.speakerProfile.name)} · LinkedIn`}
+                            className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] text-white/60 transition hover:border-[#0a66c2]/60 hover:bg-[#0a66c2]/15 hover:text-[#7cb8f5]"
+                          >
+                            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className="h-3.5 w-3.5">
+                              <path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 8.98h4V21H3zM9 8.98h3.83v1.64h.05c.53-.95 1.83-1.95 3.77-1.95 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.34c0-1.27-.02-2.9-1.77-2.9-1.77 0-2.04 1.38-2.04 2.81V21H9z" />
+                            </svg>
+                          </a>
+                        )}
+                      </div>
+                      <p className="mt-0.5 break-keep text-xs font-semibold text-accent">{t(event.speakerProfile.role)}</p>
+                      <p className="mt-2 break-keep text-sm leading-relaxed text-white/70">{t(event.speakerProfile.bio)}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {event.org && (
                 <div className="mt-7 rounded-2xl border border-white/10 bg-white/[0.03] p-6">
                   <p className="text-xs font-semibold uppercase tracking-wide text-white/70">

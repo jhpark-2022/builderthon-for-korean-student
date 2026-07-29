@@ -1113,19 +1113,21 @@ export const dict = {
       // where she is also the `speaker`). Day 2 is the day she is confirmed for, so
       // that is what the pill says; do not widen it to the 1:1 mentoring days
       // (Day 3·4·7) unless she is actually booked for them.
-      // Title verbatim from her LinkedIn headline ("Co-founder & Director &
-      // Content R&D Lead at Codepresso") — not inferred.
+      // Title verbatim from his LinkedIn ("Director at Codepresso") — not inferred.
+      // He replaced a colleague here when the Crash Course instructor changed;
+      // if it changes again, this card and every 크래시코스 mention in
+      // data/schedule.ts move together.
       // Codepresso is an AXMOS company, so the aside above this grid names the
       // AXMOS involvement stated in the aside above this grid. Keep the two in
       // step: any further AXMOS name added here needs that sentence revisited,
       // or the page contradicts itself in one screen.
       {
-        name: { ko: "황현진", en: "Hyunjin Hwang" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "공동창업자 · 콘텐츠 R&D 총괄", en: "Co-founder · Content R&D Lead" },
+        name: { ko: "김지훈", en: "Jihoon Kim" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "이사 · Director", en: "Director" },
         intro: {
-          ko: "개발자 교육 도메인 · 디렉터. 前 LG전자 SW 엔지니어 9년.",
-          en: "Developer education · Director. Ex-LG Electronics software engineer, 9 yrs.",
+          ko: "추천 시스템 · 스마트팩토리 데이터 7년+. 前 스마일게이트 · LG CNS. 서강대 물리학.",
+          en: "7+ yrs on recommender systems & smart-factory data. Ex-Smilegate · LG CNS. Physics, Sogang University.",
         },
-        days: "Day 2", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697",
+        days: "Day 2", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jihoon-kim-613878134",
       },
       // ── Day 3·4 · 자율 빌드 1:1 ─────────────────────────────────────────────
       // Onword Lab — two founders as mentors.
@@ -1138,7 +1140,7 @@ export const dict = {
         days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/kimjinho",
       },
       {
-        name: { ko: "Sihoon Kim", en: "Sihoon Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CTO", en: "Co-founder · CTO" },
+        name: { ko: "김시훈", en: "Sihoon Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CTO", en: "Co-founder · CTO" },
         intro: {
           ko: "커머스 운영 에이전트 시스템 개발. 미네르바대.",
           en: "Agentic ops systems for commerce. Minerva University.",
@@ -1332,6 +1334,8 @@ export const dict = {
   },
 
   modal: {
+    // Header for the instructor block in an event modal (see BEvent.speakerProfile).
+    runBy: { ko: "이 세션을 진행해요", en: "Who runs this session" },
     close: { ko: "닫기", en: "Close" },
     speaker: { ko: "연사", en: "Speaker" },
     location: { ko: "장소", en: "Location" },
