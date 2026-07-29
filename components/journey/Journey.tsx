@@ -444,22 +444,30 @@ function QuizTypeShuffle({ t }: { t: Tfn }) {
 // A ~72px 9:16 mock of the shareable result card, tilted -4°. Built from the
 // type's own accent gradient + emoji rather than an image, so it costs no
 // request and cannot go stale against the real card.
-function QuizResultPeek({ className = "" }: { className?: string }) {
+function QuizResultPeek({ mbti, className = "" }: { mbti?: MbtiKey; className?: string }) {
   const reduce = useReducedMotion();
   const [i, setI] = useState(0);
   useEffect(() => {
-    if (reduce) return;
+    // A visitor with a saved result gets THEIR card, held still. Rotating
+    // sample types next to "무대 체질 Suno님, …" showed a Grok card beside a
+    // greeting naming Suno — the one place this mock must not be decorative.
+    if (reduce || mbti) return;
     const id = setInterval(() => setI((n) => (n + 1) % PEEK_TYPES.length), 3000);
     return () => clearInterval(id);
-  }, [reduce]);
-  const r = RESULTS[PEEK_TYPES[reduce ? 0 : i]];
+  }, [reduce, mbti]);
+  const r = RESULTS[mbti ?? PEEK_TYPES[reduce ? 0 : i]];
   return (
     <span
       aria-hidden
       className={`relative block w-[72px] shrink-0 -rotate-[4deg] overflow-hidden rounded-lg border border-white/15 bg-[#0c0a18] shadow-[0_6px_18px_-6px_rgba(0,0,0,0.8)] ${className}`}
       style={{ aspectRatio: "9 / 16" }}
     >
-      <span key={r.mbti} className="absolute inset-0 flex flex-col items-center justify-center gap-1 px-1 motion-safe:animate-[quizPeekFade_3s_ease-in-out_infinite]">
+      <span
+        key={r.mbti}
+        className={`absolute inset-0 flex flex-col items-center justify-center gap-1 px-1 ${
+          mbti ? "" : "motion-safe:animate-[quizPeekFade_3s_ease-in-out_infinite]"
+        }`}
+      >
         <span className={`flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br text-sm ${r.accent}`}>
           {r.emoji}
         </span>
@@ -566,7 +574,7 @@ function HookCards({
                 the two are stacked, so the aside was physically the bigger of
                 the two. The mid-page bands lay them side by side and have the
                 room, so that is where the visual assets earn their space. */}
-            {!compact && <QuizResultPeek className="hidden shrink-0 sm:block" />}
+            {!compact && <QuizResultPeek mbti={parsed?.mbti} className="hidden shrink-0 sm:block" />}
           </div>
           <QuizEmojiStack compact={compact} />
           <span className={`inline-flex w-fit items-center gap-1.5 rounded-full border border-violet-400/40 bg-violet-500/10 px-4 text-sm font-bold text-violet-100 transition group-hover:border-violet-300/60 group-hover:bg-violet-500/20 group-hover:text-white ${compact ? "py-1.5" : "py-2"}`}>

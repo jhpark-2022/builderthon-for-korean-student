@@ -237,7 +237,6 @@ export const dict = {
       ko: "조급한 Mistral? 여유로운 Pi? — 너 뭔데",
       en: "Impatient Mistral? Easygoing Pi? — which one are you",
     },
-    hookQuizCta: { ko: "3분 만에 정체 확인 →", en: "Find out in 3 min →" },
     // ── Quiz hook card, promoted ────────────────────────────────────────────
     // The old card was a text link at text-xs/white-60 inside a dead panel: it
     // read as a disclaimer and its tap target was ~20px. These keys drive the
@@ -268,7 +267,9 @@ export const dict = {
       ko: "{name}님, 환상의 짝꿍은 확인하셨어요?",
       en: "Hey {name} — met your perfect match yet?",
     },
-    hookQuizCtaReturn: { ko: "내 결과 다시 보기 →", en: "Back to my result →" },
+    // No trailing arrow: the card draws its own (and animates it on hover), so
+    // one baked into the string rendered as "내 결과 다시 보기 → →".
+    hookQuizCtaReturn: { ko: "내 결과 다시 보기", en: "Back to my result" },
     // The four things that stop people from registering, answered in one line.
     // Rendered under the register CTA everywhere the hook cards appear (hero +
     // both mid-page bands) from this single key, so the answer can never drift
