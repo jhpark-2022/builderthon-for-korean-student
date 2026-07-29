@@ -792,6 +792,9 @@ export const dict = {
       en: "Only two days are required: Day 1 (opening) and Day 8 (Demo Day). Everything in between is mostly online, and the self-paced build happens whenever and wherever works for your team — this is not eight days you have to block out. Day 5 (kickoff) and Day 7 (final rehearsal · AWS office) meet in person too, but attendance isn't required.",
     },
     dayLabel: { ko: "Day", en: "Day" },
+    // Label on the wide band above Lab 1. "사전" rather than "Day 0" — the
+    // session is a prologue to the eight days, not a day of them.
+    preEventTag: { ko: "사전 세션 · 8/13", en: "Pre-event · 13 Aug" },
     tapHint: { ko: "자세히 보기", en: "View details" },
     confirmedBadge: { ko: "확정", en: "Confirmed" },
     mandatoryBadge: { ko: "필참", en: "Required" },
@@ -936,45 +939,18 @@ export const dict = {
     },
   },
 
-  // ── 연사 · 공유 세션 (사전 세션 + Day 1·7·8) ─────────────────────────────────
+  // ── 연사 · 공유 세션 (Day 1·7·8) ────────────────────────────────────────────
   speakers: {
     tag: { ko: "연사 · 공유 세션", en: "Speaker sessions" },
     // Days listed here must match the cards in `people` below. Day 5 was in the
     // heading with no card to back it — its only content was the panel in
     // tbcNote, whose panelists were never arranged.
-    heading: { ko: "사전 세션 · Day 1 · 7 · 8 — 스피커 & 공유 세션", en: "Pre-event · Day 1 · 7 · 8 — Speaker & sharing sessions" },
+    heading: { ko: "Day 1 · 7 · 8 — 스피커 & 공유 세션", en: "Day 1 · 7 · 8 — Speaker & sharing sessions" },
     intro: {
       ko: "이 시간을 따로 두는 이유 — Zero100의 앙트레프레너십 정체성을 지키기 위해. (연사 라인업은 확정되는 대로 안내됩니다.)",
       en: "Why we set this time aside — to protect Zero100's entrepreneurial identity. (Speaker line-up announced as confirmed.)",
     },
     people: [
-      {
-        // ── PRE-EVENT SESSION · 13 Aug ──────────────────────────────────────
-        // Nine days BEFORE Day 1, so it is deliberately NOT in the Day 1–8 grid
-        // in data/schedule.ts — putting it there would break the "8일" framing
-        // and make the event look like it starts on the 13th.
-        //
-        // THE SPEAKER ASKED NOT TO BE NAMED PUBLICLY. He is described by role
-        // only, and `name` carries that description rather than a person. Do not
-        // add a name, a photo or a LinkedIn URL to this entry — the omission is
-        // the point, not missing data. Role wording is from his own LinkedIn
-        // headline ("Senior Cloud & AI Solution Architect @ Microsoft").
-        //
-        // Room is still to be confirmed; the campus (SMU) is agreed. Keep the
-        // "강의실 확정 시 안내" clause until a room is booked.
-        day: { ko: "사전 세션 · 8/13 (목)", en: "Pre-event · 13 Aug (Thu)" },
-        name: { ko: "Microsoft 솔루션 아키텍트", en: "Microsoft Solution Architect" },
-        role: { ko: "클라우드 · AI · 엔터프라이즈 AI (싱가포르) · 성함 비공개", en: "Cloud · AI · Enterprise AI, Singapore · name withheld" },
-        topic: { ko: "‘Enterprise Tech Deep Dive — How to Build’", en: "“Enterprise Tech Deep Dive — How to Build”" },
-        img: "",
-        linkedin: "",
-        points: [
-          { ko: "8월 13일(목) 18:30–19:30 · SMU 현장 (강의실 확정 시 안내)", en: "Thu 13 Aug, 18:30–19:30 · in person at SMU (room to be announced)" },
-          { ko: "기업 현장에서 AI를 실제로 어떻게 만들고 붙이는지 — 아키텍트 관점", en: "How enterprise AI actually gets built and shipped — from an architect's seat" },
-          { ko: "NUS · NTU · SMU 한인 학생이면 누구나 · 빌더톤 등록과 무관", en: "Open to any Korean student at NUS · NTU · SMU — no builderthon registration needed" },
-          { ko: "사전 질문을 미리 받아 세션에 반영합니다 — 오픈채팅으로 보내주세요", en: "Questions are collected in advance and worked into the session — send them via the open chat" },
-        ],
-      },
       {
         day: { ko: "Day 1 · 오프닝 키노트", en: "Day 1 · Opening keynote" },
         name: { ko: "원대로", en: "Won Dae-ro" },

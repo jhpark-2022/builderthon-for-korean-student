@@ -183,8 +183,9 @@ export default function EventModal({
                 </span>
                 {dayMeta && (
                   <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/70">
-                    {t(dict.program.dayLabel)} {event.day} · {event.date} ·{" "}
-                    {event.timeOfDay}
+                    {event.dayLabel
+                      ? t(event.dayLabel)
+                      : `${t(dict.program.dayLabel)} ${event.day} · ${event.date} · ${event.timeOfDay}`}
                   </span>
                 )}
                 <span
@@ -298,8 +299,9 @@ export default function EventModal({
                     {t(dict.modal.time)}
                   </dt>
                   <dd className="font-semibold text-white">
-                    {t(dict.program.dayLabel)} {event.day} · {event.date} ·{" "}
-                    {event.timeOfDay}
+                    {event.dayLabel
+                      ? t(event.dayLabel)
+                      : `${t(dict.program.dayLabel)} ${event.day} · ${event.date} · ${event.timeOfDay}`}
                   </dd>
                 </div>
                 <div className="flex flex-col gap-1">

@@ -51,6 +51,10 @@ export interface BEvent {
   category: Category;
   mode: Mode; // online, in-person (Days 5 / 7 / 8), or mixed (see Mode)
   timeOfDay: "AM" | "PM";
+  // Overrides the modal's "Day {n} · {date} · {AM|PM}" chip. Only the pre-event
+  // session uses it: it sits OUTSIDE the Day 1–8 arc (day: 0), and "Day 0" is
+  // not a thing anyone should read.
+  dayLabel?: Bilingual;
   title: Bilingual;
   summary: Bilingual; // short, shown on the card
   description: Bilingual; // full, shown in the modal
@@ -347,6 +351,46 @@ const HASHED_ORG = {
 } as const;
 
 export const schedule: BEvent[] = [
+  // ─── PRE-EVENT · 13 Aug ────────────────────────────────────────────────────
+  // day: 0 — this is NOT part of the 8-day arc; it runs nine days before Day 1.
+  // Everything that walks the day grid filters by `e.day === dayNum` for 1..8,
+  // so 0 never appears in a day card, a day modal or a session count. It is
+  // surfaced by one band above Lab 1 (see PreEventBand in Journey.tsx).
+  //
+  // THE SPEAKER ASKED NOT TO BE NAMED PUBLICLY. `speaker` carries a role, not a
+  // person, and there is no photo or LinkedIn anywhere for this entry. That is
+  // the request, not missing data — do not "complete" it.
+  // Wording is from his own LinkedIn headline ("Senior Cloud & AI Solution
+  // Architect @ Microsoft").
+  //
+  // Room is still TBC; the campus (SMU) is agreed. Keep the "강의실 확정 시
+  // 안내" clause until a room is booked.
+  {
+    id: "pre-enterprise-deep-dive",
+    day: 0,
+    date: "08.13",
+    category: "workshop",
+    mode: "offline",
+    timeOfDay: "PM",
+    confirmed: true,
+    dayLabel: { ko: "사전 세션 · 08.13 (목) 18:30–19:30", en: "Pre-event · Thu 13 Aug, 18:30–19:30" },
+    title: { ko: "Enterprise Tech Deep Dive — How to Build", en: "Enterprise Tech Deep Dive — How to Build" },
+    speaker: { ko: "Microsoft 솔루션 아키텍트 (성함 비공개)", en: "A Microsoft solution architect (name withheld)" },
+    summary: {
+      ko: "본 행사 9일 전 · SMU 현장 — 기업이 AI를 실제로 어떻게 만드는지 아키텍트 관점에서.",
+      en: "Nine days before the event · in person at SMU — how enterprise AI actually gets built, from an architect's seat.",
+    },
+    description: {
+      ko: "빌더톤이 시작되기 전, 기업 현장에서 AI를 실제로 설계하고 배포하는 사람에게 직접 듣는 시간입니다. Microsoft에서 클라우드·AI 솔루션 아키텍트로 일하는 분이 엔터프라이즈 AI를 어떻게 만들고 조직에 붙이는지를 1시간가량 풀어냅니다(연사 요청에 따라 성함은 공개하지 않습니다). 8월 13일 목요일 18:30–19:30, SMU 현장에서 열리며 강의실은 확정되는 대로 안내합니다. 빌더톤 등록 여부와 무관하게 NUS·NTU·SMU 한인 학생이면 누구나 올 수 있습니다. 사전에 질문을 받아 세션에 반영하니, 궁금한 점은 오픈채팅으로 미리 보내주세요.",
+      en: "Before the builderthon starts, an hour with someone who designs and ships enterprise AI for a living. A cloud & AI solution architect at Microsoft walks through how enterprise AI actually gets built and adopted inside an organisation (the speaker asked us not to publish their name). Thursday 13 August, 18:30–19:30, in person at SMU — the room will be announced once booked. Open to any Korean student at NUS, NTU or SMU, whether or not you register for the builderthon. Questions are collected beforehand and worked into the session, so send yours via the open chat.",
+    },
+    location: { ko: "SMU 현장 (강의실 추후 안내)", en: "In person at SMU (room TBA)" },
+    opportunities: [
+      { ko: "기업이 AI를 도입할 때 실제로 무엇을 설계하고 무엇에 막히는지", en: "What actually gets designed — and what actually blocks — when a company adopts AI" },
+      { ko: "빌더톤 과제를 풀 때 바로 쓸 수 있는 아키텍처 관점", en: "An architecture lens you can take straight into the builderthon problems" },
+      { ko: "사전 질문을 받아 세션에 반영 — 오픈채팅으로 보내면 됩니다", en: "Questions collected in advance and worked into the session — send them via the open chat" },
+    ],
+  },
   // ─── DAY 1 · Opening · Problem Release (08.22) ──────────────────────────────
   {
     id: "d1-opening-keynote",
