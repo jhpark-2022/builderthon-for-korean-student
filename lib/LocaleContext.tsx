@@ -26,8 +26,15 @@ const LocaleContext = createContext<LocaleContextValue | null>(null);
 const STORAGE_KEY = "builderthon.locale";
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  // Default locale: en (the timetable is in English).
-  const [locale, setLocaleState] = useState<Locale>("en");
+  // Default locale: ko. The audience is Korean students in Singapore, so this is
+  // the language most first-time visitors want — and the server has no way to
+  // know better (the preference lives in localStorage, which never reaches it).
+  //
+  // ANY server-rendered copy that hardcodes a language MUST match this value —
+  // today that is app/quiz/QuizIntroShell.tsx. If the two disagree the visitor
+  // gets two swaps instead of one: server language → this default → their saved
+  // preference. Change both together.
+  const [locale, setLocaleState] = useState<Locale>("ko");
 
   // Restore a saved preference on mount (client-only).
   useEffect(() => {

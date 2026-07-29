@@ -50,7 +50,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`dark ${pretendard.variable}`}>
+    // Matches LocaleProvider's default. Kept in sync after mount by the
+    // provider's `document.documentElement.lang = locale` effect, so a visitor
+    // who has chosen English still gets lang="en" — this is only the value the
+    // markup ships with.
+    <html lang="ko" className={`dark ${pretendard.variable}`}>
       <body className="font-sans antialiased bg-[#06040f] text-white">
         {/* Keyboard-only skip link: invisible until focused, lets keyboard /
             screen-reader users bypass the fixed nav. No effect on normal layout. */}
