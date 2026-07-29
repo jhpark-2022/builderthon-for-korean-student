@@ -2201,7 +2201,33 @@ export default function Journey() {
           {t(dict.mentoring.heading)}
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.mentoring.intro)}</p>
-        <p className="mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-emerald-100/70">{t(dict.mentoring.dayTierNote)}</p>
+        {/* Three stages, laid out as steps. Horizontal on desktop so the
+            progression reads left-to-right; stacked below sm. The 워밍업/실전
+            label on each step is read from data/schedule.ts (the day's own
+            phase), so it can never disagree with the programme section. */}
+        <div className="mx-auto mt-8 grid max-w-5xl gap-3 text-left sm:grid-cols-3">
+          {dict.mentoring.stages.map((st, i) => {
+            const phase = days.find((d) => d.day === st.phaseDay)?.phase;
+            return (
+              <div key={i} className="flex h-full flex-col rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.05] p-5">
+                <div className="flex items-center gap-2">
+                  <span aria-hidden className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-emerald-400/35 bg-emerald-400/10 text-[0.7rem] font-black text-emerald-200">
+                    {i + 1}
+                  </span>
+                  <span className="whitespace-nowrap text-xs font-bold text-emerald-200">{t(st.day)}</span>
+                  {phase && (
+                    <span className="ml-auto whitespace-nowrap rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.6rem] font-semibold text-white/55">
+                      {t(phase)}
+                    </span>
+                  )}
+                </div>
+                <p className="mt-3 break-keep text-[15px] font-bold leading-snug text-white">{t(st.title)}</p>
+                <p className="mt-1.5 break-keep text-xs leading-relaxed text-white/70">{t(st.body)}</p>
+              </div>
+            );
+          })}
+        </div>
+        <p className="mx-auto mt-4 max-w-3xl break-keep text-sm leading-relaxed text-emerald-100/70">{t(dict.mentoring.stageFrame)}</p>
         <div className="mt-8 grid gap-4 text-left lg:grid-cols-3">
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 lg:col-span-2">
             <p className="text-xs font-bold uppercase tracking-wide text-emerald-300/80">{t(dict.mentoring.personaLabel)}</p>

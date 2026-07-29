@@ -1005,12 +1005,17 @@ export const dict = {
   // ── 멘토링 철학 ─────────────────────────────────────────────────────────────
   mentoring: {
     tag: { ko: "멘토링", en: "Mentoring" },
-    heading: { ko: "멘토는 ‘학생 눈높이의 선배’", en: "Mentors are ‘peer-level seniors’" },
+    // The heading used to be "멘토는 '학생 눈높이의 선배'" — a claim over the whole
+    // section. With three stages that is no longer true: stage 2 is Popup
+    // Studio's FDEs and stage 3 is working GTM/sales people, and calling either
+    // a peer-level senior undersells them and misleads the reader. The
+    // 눈높이/선배 framing now lives inside stage 1, where it is accurate.
+    heading: { ko: "단계마다 다른 멘토가 붙습니다", en: "A different kind of mentor at each stage" },
     intro: {
-      ko: "좋은 기업이 많이 참여해도, 학생 정체성·giver 문화는 멘토 페르소나로 지킵니다.",
-      en: "Even with many companies involved, we protect the student identity & giver culture through the mentor persona.",
+      ko: "아이디어를 형태로 만들 때, 빌드가 막힐 때, 무대에서 팔아야 할 때 — 필요한 사람이 매번 다릅니다.",
+      en: "Shaping the idea, unblocking the build, selling it on stage — each needs a different person in the room.",
     },
-    personaLabel: { ko: "멘토 페르소나", en: "Mentor persona" },
+    personaLabel: { ko: "1단계 멘토 페르소나", en: "Stage 1 · mentor persona" },
     // The persona describes STAGE 1 only. Stage 2 (Day 5–7) is Popup Studio's
     // FDEs, who are professionals rather than peer-level seniors — so the line
     // now says which stage it applies to instead of reading as a claim about
@@ -1019,13 +1024,49 @@ export const dict = {
       ko: "한때 우리와 같았고, 같은 고민을 하던 한국 유학생 출신 founder · startup 멤버 (Day 3·4 기초 멘토링).",
       en: "Korean ex-international-student founders / startup members — once in our shoes, with the same struggles (Day 3·4, the foundational stage).",
     },
-    // Two stages, stated in day order. Stage 2 is NOT a repeat of stage 1 — it is
-    // for teams that already have the basics down, which is why the wording
-    // separates 기본기 from 문제 정의·워크플로·구현 방향.
-    dayTierNote: {
-      ko: "멘토링은 두 단계로 설계했습니다 — Day 3·4에는 유학생 출신 실무자들이 기본기를 잡아주고, Day 5–7에는 팝업스튜디오의 FDE가 실전 관점에서 팀별 문제 정의·워크플로·구현 방향을 점검합니다. Day 7 커리어 세션은 한 단계 위 시니어 리더들과 함께합니다.",
-      en: "Mentoring runs in two stages — on Day 3·4, working seniors who studied abroad themselves help you get the fundamentals right; from Day 5–7, Popup Studio's FDEs review each team's problem definition, workflow and implementation direction from a practitioner's angle. The Day 7 career session brings in senior leaders one step further ahead.",
+    // ── Three stages ────────────────────────────────────────────────────────
+    // The frame is the point: this is NOT a difficulty ladder. It tracks how a
+    // product actually grows — shape the idea, then harden it, then learn to
+    // sell it — which is why stage 3 is about delivery rather than a harder
+    // version of stage 2.
+    //
+    // `day` strings must match the mentor cards' `days` badges below; the steps
+    // are what makes those badges legible (3·4 = ideation, 7 = pitch & sales).
+    // `phase` is read from data/schedule.ts at render time, so the 워밍업/실전
+    // labels can never drift from the programme section.
+    stageFrame: {
+      ko: "난이도 순서가 아니라, 아이디에이션 → 고도화 → 세일즈로 이어지는 제품의 발전 과정을 따라갑니다.",
+      en: "Not levels of difficulty — mentoring that follows how a product grows: ideation → refinement → selling.",
     },
+    stages: [
+      {
+        day: { ko: "Day 3·4", en: "Day 3·4" },
+        phaseDay: 3,
+        title: { ko: "아이디에이션", en: "Ideation" },
+        body: {
+          ko: "학생 눈높이의 선배들과 아이디어를 형태로 만드는 멘토링. 또래 창업가·현직 주니어 엔지니어가 함께합니다.",
+          en: "Ideation mentoring with seniors who speak your language — peer founders and early-career engineers.",
+        },
+      },
+      {
+        day: { ko: "Day 5–7", en: "Day 5–7" },
+        phaseDay: 5,
+        title: { ko: "고도화", en: "Refinement" },
+        body: {
+          ko: "Popup Studio FDE와의 온라인 오피스아워. 빌드가 막히는 지점을 현업 전문가와 풉니다. 드롭인 방식.",
+          en: "Online office hours with Popup Studio FDEs — drop in when your build hits a wall.",
+        },
+      },
+      {
+        day: { ko: "Day 7", en: "Day 7" },
+        phaseDay: 7,
+        title: { ko: "피치 · 세일즈", en: "Pitch & sales" },
+        body: {
+          ko: "데모데이 전, ‘어떻게 파는가’를 다듬는 멘토링. 기술이 아니라 전달을 봐주는 현직 GTM·세일즈 멘토들입니다.",
+          en: "Pre–demo day pitch mentoring — how to sell, not how to build. Led by working GTM & sales professionals.",
+        },
+      },
+    ],
     // Scoped to what is actually true, twice over.
     //
     // A blanket "멘토와 심사는 분리" was never true: 신동혁 is a Day 7 mentor AND a
@@ -1043,7 +1084,11 @@ export const dict = {
       ko: "AXMOS는 문제 발의·심사와 Day 2 크래시코스·Day 5–7 FDE 멘토링을 맡습니다. Day 7에 만나는 시니어 중엔 심사위원도 있지만, 눈높이 선배와의 1:1은 심사와 분리된 시간이에요.",
       en: "AXMOS handles problem-setting and judging, plus the Day 2 Crash Course and the Day 5–7 FDE mentoring. Some of the Day 7 seniors also judge — but the peer-level 1:1s stay separate from judging.",
     },
-    asksTitle: { ko: "멘토에게 요청하는 것", en: "What we ask of mentors" },
+    // Scoped to stage 1. These four asks describe a peer-level persona ("학생
+    //으로서 함께 ideate", "먼저 같은 길을 걸어본 선배") — asking that of Popup
+    // Studio's FDEs or a working GTM lead would be both wrong and faintly
+    // insulting. They are what we ask of the Day 3·4 mentors specifically.
+    asksTitle: { ko: "1단계 멘토에게 요청하는 것", en: "What we ask of the stage-1 mentors" },
     asks: [
       { title: { ko: "정답 아닌 ‘눈높이’", en: "Eye-level, not the answer" }, desc: { ko: "정답보다 같은 레벨의 context를 공유 — 학생으로서 함께 ideate.", en: "Share same-level context and ideate as a student — don't hand over the answer." } },
       { title: { ko: "제품 아닌 ‘삶’까지", en: "Life, not just the product" }, desc: { ko: "먼저 같은 길을 걸어본 선배로서 제품 + 삶·커리어 멘토링.", en: "Mentor on life & career as someone who walked the path first." } },
