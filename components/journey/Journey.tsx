@@ -2332,8 +2332,11 @@ export default function Journey() {
         </div>
 
         {/* ── Judges subsection (deck p13) · no new nav item ────────────────
-            7 confirmed judge cards (face photos) + 2 "to be announced"
-            placeholders. LinkedIn icon only where a confirmed URL exists. */}
+            Judge cards (all with face photos) + 2 "to be announced" placeholders.
+            LinkedIn icon only where a confirmed URL exists. A judge who is agreed
+            but not locked keeps a normal card and adds an amber "협의 중" pill
+            (dict.judges.people[].pending) — the placeholders are for judges we
+            cannot name at all, which is a different thing. */}
         <div className="mt-16 border-t border-white/10 pt-12 text-left">
           <div className="text-center">
             <Eyebrow color="violet">{t(dict.judges.tag)}</Eyebrow>
@@ -2367,9 +2370,18 @@ export default function Journey() {
                       <p className="mt-0.5 break-keep text-xs leading-snug text-white/60">{t(j.org)} · {t(j.role)}</p>
                     </div>
                   </div>
-                  <span className="mt-4 inline-flex w-fit items-center rounded-full border border-violet-400/20 bg-violet-400/[0.08] px-2.5 py-0.5 text-[0.62rem] font-semibold uppercase tracking-wide text-violet-200/90">
-                    {t(j.tag)}
-                  </span>
+                  <div className="mt-4 flex flex-wrap items-center gap-1.5">
+                    <span className="inline-flex w-fit items-center rounded-full border border-violet-400/20 bg-violet-400/[0.08] px-2.5 py-0.5 text-[0.62rem] font-semibold uppercase tracking-wide text-violet-200/90">
+                      {t(j.tag)}
+                    </span>
+                    {/* Agreed in principle, not locked — same amber dashed pill the
+                        mentor grid uses for a pending day, so the two read alike. */}
+                    {j.pending && (
+                      <span className="inline-flex items-center rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-2 py-0.5 text-[0.62rem] font-semibold text-amber-200/90">
+                        {t(dict.judges.pendingLabel)}
+                      </span>
+                    )}
+                  </div>
                   <p className="mt-3 text-[13px] leading-relaxed text-white/70">{t(j.bio)}</p>
                 </div>
               );
@@ -2490,19 +2502,37 @@ export default function Journey() {
                   longer grouped (장소·장소·장소 …) — that grouping was the only
                   thing the old order bought, and matching the hero is worth
                   more than it. */}
+              {/* `url` adds the "사이트 방문 ↗" button to the intro modal, exactly as
+                  it does for the five host companies above. Every one of these was
+                  opened and read before being wired, not inferred from the name —
+                  several plausible-looking guesses were wrong:
+                  · L^IFE has its OWN domain (life-singapore.com); it is NOT a path
+                    under innovate360.sg, even though Innovate 360 runs the space.
+                  · REmited's product is 영끌 / REmited AI but the company site is
+                    teamremited.com — remited.ai does not resolve (only its blog
+                    subdomain does), so it would have shipped as a dead link.
+                  · BZCF is bzcf.io (a link hub for the YouTube channel), not a
+                    .co.kr; 브랜드부스트 is brandboost.kr, whose own blog describes the
+                    구성·공정·단가 → 패킹 flow this tile's caption is about.
+                  · 싱가포르 한인회 is singapore.korean.net. korchamsg.org looks right
+                    but is KorCham, the chamber of commerce — a different body. */}
               {sortLikeHeroStrip([
-                { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/aws.png",                alt: "AWS",                             w: 512, h: 306 },
-                { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/innovate360.png",        alt: "INNOVATE 360",                    w: 455, h: 54 },
-                { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/life.png",               alt: "L^IFE",                           w: 900, h: 352 },
-                { cat: t(dict.partners.catMarketing), src: "/partners/logos/white/trimmed/bzcf.png",               alt: "BZCF",                            w: 465, h: 156 },
-                { cat: t(dict.partners.catJudges),    src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore",  w: 443, h: 90 },
-                { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/onword-lab.png",             alt: "Onword Lab",                      w: 900, h: 92 },
-                { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105 },
-                { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81 },
-                { cat: t(dict.partners.catOverall),   src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90 },
-              ]).map(({ cat, ...l }) => (
+                { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/aws.png",                alt: "AWS",                             w: 512, h: 306, url: "https://aws.amazon.com/" as string | undefined },
+                { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/innovate360.png",        alt: "INNOVATE 360",                    w: 455, h: 54,  url: "https://innovate360.sg/" },
+                { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/life.png",               alt: "L^IFE",                           w: 900, h: 352, url: "https://life-singapore.com/" },
+                { cat: t(dict.partners.catMarketing), src: "/partners/logos/white/trimmed/bzcf.png",               alt: "BZCF",                            w: 465, h: 156, url: "https://bzcf.io/" },
+                { cat: t(dict.partners.catJudges),    src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore",  w: 443, h: 90,  url: "https://singapore.korean.net/" },
+                // Fyreflyz was in the hero strip but missing here, so the two
+                // rosters disagreed by one mark. 심사위원 지원 is the role: its
+                // co-founder 한정필 comes in as a judge (dict.judges.people).
+                { cat: t(dict.partners.catJudges),    src: "/partners/logos/white/trimmed/fyreflyz.png",           alt: "Fyreflyz",                        w: 203, h: 192, url: "https://fyreflyz.com/" },
+                { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/onword-lab.png",             alt: "Onword Lab",                      w: 900, h: 92,  url: "https://www.onwordlab.com/" },
+                { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105, url: "https://teamremited.com/" },
+                { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81,  url: "https://www.brandboost.kr/" },
+                { cat: t(dict.partners.catOverall),   src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90,  url: "https://www.hashed.com/" },
+              ]).map(({ cat, url, ...l }) => (
                 <div key={l.alt} className="flex flex-col gap-1.5">
-                  <LogoTile {...l} onOpen={(el) => openPartner(l.alt, dict.partners.stageConfirmed, el)} />
+                  <LogoTile {...l} onOpen={(el) => openPartner(l.alt, dict.partners.stageConfirmed, el, url)} />
                   <span className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-white/40">{cat}</span>
                 </div>
               ))}
@@ -2542,15 +2572,11 @@ export default function Journey() {
         <Glass className="mt-8 text-left">
           <FAQList />
         </Glass>
-        {/* Second CTA band — the last objection has just been answered, so this
-            is the other natural moment to act. */}
-        <HookCards
-          t={t}
-          ownResultId={ownResultId}
-          openRegister={openRegister}
-          className="mx-auto mt-10 max-w-xl"
-          chatSrc="band"
-        />
+        {/* A second CTA band (register + quiz hook cards) used to close this
+            chapter. Removed: it was byte-for-byte the band already sitting at the
+            end of 혜택 (CH 2), and with the 혜택 band now carrying the mini-quiz
+            the repeat read as the page looping rather than as a fresh ask. The
+            nav 등록하기 button and the footer CTA are both still one tap away. */}
       </Chapter>
 
       {/* ── CH 5.5 · VISION FUNNEL ─────────────────────────────────────

@@ -129,6 +129,14 @@ export const partnerIntros: Record<string, Phrase> = {
     ko: "브랜드 굿즈·판촉물을 기획부터 제작·패킹까지 원스톱으로 만드는 제작 플랫폼입니다. 아이디어 단계의 구상을 구성·공정·단가가 잡힌 제작 플랜으로 바꿔 주는 것이 강점이며, 이번 빌더톤의 굿즈를 함께 만듭니다.",
     en: "A one-stop platform for branded goods and merch — from planning through production and packing — turning rough ideas into concrete, costed production plans. Making this builderthon's goods.",
   },
+  // Figures are the ones Fyreflyz publishes on its own site (fyreflyz.com) —
+  // since 2009, 2,000+ youths, 300+ partner organisations, 1,800+ jobs. The last
+  // sentence is the reason the tile's caption is 심사위원 지원: their co-founder
+  // 한정필 joins as a judge (see dict.judges.people).
+  Fyreflyz: {
+    ko: "2009년 설립된 싱가포르의 소셜벤처 마케팅 에이전시입니다. 브랜드 진단·시장 분석부터 콘텐츠 실행까지 맡으면서, 교육을 마친 청년들을 실제 클라이언트 프로젝트에 투입하는 방식으로 일합니다 — 지금까지 청년 2,000명 이상, 파트너 기관 300곳 이상과 함께하며 1,800개 이상의 일자리를 만들었습니다. 이번 빌더톤에는 심사위원 연계로 함께합니다.",
+    en: "A Singapore social-enterprise marketing agency founded in 2009. It runs brand audits, market analysis and content execution while embedding trained youths into real client projects — 2,000+ youths, 300+ partner organisations and 1,800+ jobs created so far. Supporting the builderthon through its judge connection.",
+  },
 
 };
 
@@ -1134,21 +1142,26 @@ export const dict = {
     // no contact details; keep it to roughly one 60–70 character Korean sentence
     // so it clamps to two lines. If a profile can't be verified, leave `intro`
     // empty — the card drops the line rather than guessing.
-    // daysPending marks a day that is confirmed-in-principle but not locked
-    // (한장환: Day 1 confirmed, Day 7 still TBC) — rendered as a separate amber pill.
+    // daysPending marks a day that is confirmed-in-principle but not locked —
+    // rendered as a separate amber pill. Nobody carries one right now (한장환 held
+    // a pending Day 7 until it was dropped and he became Day 1 only); the field
+    // and its pill stay, since this is the normal state for a newly added day.
     // TODO: confirm public naming — verify each named mentor may be shown publicly.
     gridLabel: { ko: "확정 멘토 · Confirmed", en: "Confirmed mentors" },
     dayPendingLabel: { ko: "협의 중", en: "TBC" },
     mentors: [
       // ── Day 1 ────────────────────────────────────────────────────────────────
-      // 한장환: Day 1 확정, Day 7 협의 중(pending) → days + daysPending 분리.
+      // 한장환: Day 1 ONLY. He used to also carry a pending Day 7 (daysPending);
+      // that day is no longer his, so the pill is gone — he is the Day 1 AWS
+      // speaker and nothing else. Do not re-add a Day 7 unless he is booked for it
+      // again; the Day 3 event copy counts the mentoring seniors and moves with it.
       {
         name: { ko: "한장환", en: "Han Jang-whan" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "SA", en: "SA" },
         intro: {
           ko: "싱가포르 근무 · 클라우드·인프라 18년+. 前 오라클 JAPAC · Dell EMC.",
           en: "Based in Singapore · 18+ yrs in cloud & infrastructure. Ex-Oracle JAPAC, Dell EMC.",
         },
-        days: "Day 1", daysPending: "Day 7", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jangwhan",
+        days: "Day 1", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jangwhan",
       },
       // ── Day 2 · 크래시코스 ───────────────────────────────────────────────────
       // Codepresso — runs the Day 2 Crash Course (see schedule.ts d2-crash-course,
@@ -1251,10 +1264,11 @@ export const dict = {
   // ── 심사위원 (덱 p13) ────────────────────────────────────────────────────────
   // Rendered as a subsection of the mentoring chapter (no new nav item). Bios are
   // tidied from the deck's own copy — NO facts added, EN is a translation. Every
-  // person object carries identical keys to keep the array homogeneous. All seven
-  // have a face photo (img); 정요천 has no LinkedIn, so `linkedin` is "" (the card
+  // person object carries identical keys to keep the array homogeneous. Everyone
+  // has a face photo (img); 정요천 has no LinkedIn, so `linkedin` is "" (the card
   // simply drops the icon) rather than omitted — an omitted key would make TS
-  // infer a union and break `j.linkedin` on the card.
+  // infer a union and break `j.linkedin` on the card. Same reason `pending` is
+  // false on every confirmed judge instead of being left off the object.
   // TODO: confirm public naming — verify each name may be shown publicly.
   // Internal-only figures (e.g. Shin Sang-gil's "FY24 S$22M·+45%") are omitted.
   judges: {
@@ -1271,6 +1285,7 @@ export const dict = {
         role: { ko: "대표 · General Partner", en: "CEO · General Partner" },
         tag: { ko: "美·韓 크로스보더 VC", en: "US–Korea cross-border VC" },
         img: "/partners/people/park-hee-deok.jpg",
+        pending: false,
         bio: {
           ko: "트랜스링크인베스트먼트 대표 · GP. 前 CJ인베스트먼트 CIO · KT 신사업 · KTB네트워크 — 벤처투자·펀드운용 30년.",
           en: "CEO · GP, Translink Investment. Ex-CJ Investment CIO · KT new business · KTB Network — 30 yrs in venture investing · fund management.",
@@ -1283,6 +1298,7 @@ export const dict = {
         role: { ko: "대표 · Managing Director", en: "CEO · Managing Director" },
         tag: { ko: "싱가포르 벤처스튜디오", en: "Singapore venture studio" },
         img: "/partners/people/won-dae-ro.jpg",
+        pending: false,
         bio: {
           ko: "Wilt VB 대표 · d·camp 글로벌 어드바이저. 한–싱 스타트업 빌딩 · 동남아 크로스보더 투자. 前 KB자산운용 COO · KTB Asia MD — 25년+.",
           en: "MD, Wilt VB · d·camp global advisor. Korea–Singapore startup building · SEA cross-border investing. Ex-KB Asset Management COO · KTB Asia MD — 25+ yrs.",
@@ -1295,11 +1311,44 @@ export const dict = {
         role: { ko: "Venture Partner · 한국대표", en: "Venture Partner · Korea Head" },
         tag: { ko: "헬스케어 · 바이오", en: "Healthcare · Bio" },
         img: "/partners/people/lee-byung-il.jpg",
+        pending: false,
         bio: {
           ko: "헬스케어·바이오 창업가 · 글로벌 오픈이노베이션 전문가. 前 MUST 액셀러레이터 파트너 · AllLive Healthcare 창업(국내 1호 규제샌드박스).",
           en: "Healthcare·bio founder · global open-innovation specialist. Ex-MUST Accelerator partner · founder, AllLive Healthcare (Korea's first regulatory-sandbox case).",
         },
         linkedin: "https://www.linkedin.com/in/danielbyungillee",
+      },
+      // 한정필 (Jungpil Hahn) — `pending: true`, so the card carries an amber
+      // dashed "협의 중" pill next to its topic tag. Flip `pending` to false the
+      // moment he confirms; nothing else on the card changes. He sits 4th because
+      // ARRAY ORDER IS THE ORGANISERS' SENIORITY ORDER, not a confirmed-first sort —
+      // he was briefly kept last for that reason and moved here on request. Ask
+      // before resequencing.
+      //
+      // Titles are verbatim from his own NUS department page (comp.nus.edu.sg/disa)
+      // — "Provost's Chair Professor" in the Department of Information Systems and
+      // Analytics, Director of the NUS FinTech Lab, Deputy Director of TRAIL (the
+      // Centre for Technology, Robotics, AI & the Law). Secondary sources also
+      // credit him with an AI Singapore AI-governance role; that one is NOT here
+      // because his own page doesn't list it. The Fyreflyz co-founder line comes
+      // from the organisers, not from a public source — Fyreflyz is already a
+      // confirmed sponsor in the hero strip, which is the connection.
+      {
+        name: { ko: "한정필", en: "Jungpil Hahn" },
+        org: { ko: "NUS Computing", en: "NUS Computing" },
+        // The card prints "{org} · {role}", so keep the role to ONE segment — an
+        // internal "·" here rendered as "NUS Computing · 석좌교수 · Provost's Chair"
+        // and read like three separate affiliations. The full English title is in
+        // the bio's first clause, which is where it belongs.
+        role: { ko: "석좌교수", en: "Provost's Chair Professor" },
+        tag: { ko: "AI 거버넌스 · 핀테크", en: "AI governance · FinTech" },
+        img: "/partners/people/hahn-jungpil.jpg",
+        pending: true,
+        bio: {
+          ko: "NUS 정보시스템·분석학과 석좌교수 · NUS 핀테크랩 디렉터 · NUS TRAIL(기술·로봇·AI·법 센터) 부센터장. Fyreflyz 공동창업자. 前 퍼듀대 교수. 미네소타대 박사 · 연세대 경영.",
+          en: "Provost's Chair Professor, Information Systems & Analytics, NUS Computing · Director, NUS FinTech Lab · Deputy Director, NUS TRAIL (Technology, Robotics, AI & the Law). Co-founder, Fyreflyz. Ex-Purdue faculty. PhD Minnesota · Yonsei BBA·MBA.",
+        },
+        linkedin: "https://www.linkedin.com/in/jungpil/",
       },
       {
         name: { ko: "이동훈", en: "Lee Dong-hoon" },
@@ -1307,11 +1356,38 @@ export const dict = {
         role: { ko: "대표 · CEO", en: "CEO" },
         tag: { ko: "AI 코딩 · 교육 플랫폼", en: "AI coding · education platform" },
         img: "/partners/people/lee-dong-hoon.jpg",
+        pending: false,
         bio: {
           ko: "코드프레소 대표 — AI 코딩·역량진단 교육 플랫폼(AXMOS 컨소시엄). 비개발자 대상 바이브코딩·AX 교육 다수 운영. 前 스마일게이트 · LG전자 소프트웨어 엔지니어.",
           en: "CEO, Codepresso — AI-coding · skills-assessment education platform (AXMOS consortium). Vibe-coding · AX programs for non-developers. Ex-Smilegate · LG Electronics software engineer.",
         },
         linkedin: "https://www.linkedin.com/in/donghun-lee-8888a13a",
+      },
+      {
+        name: { ko: "신상길", en: "Shin Sang-gil" },
+        org: { ko: "FUJIFILM BI Singapore", en: "FUJIFILM BI Singapore" },
+        role: { ko: "고객성공 · DX/AI", en: "Customer Success · DX/AI" },
+        tag: { ko: "DX · AI 컨설팅", en: "DX · AI consulting" },
+        img: "/partners/people/shin-sang-gil.jpg",
+        pending: false,
+        bio: {
+          ko: "후지필름 BI 싱가포르 고객성공 · DX/AI 컨설팅 총괄 — 금융·정부·제조. 前 HP 24년 — APJ 매니지드 서비스 · 잉크젯 제품 · 시장개발.",
+          en: "Head of customer success · DX·AI consulting, FUJIFILM BI Singapore — finance · government · manufacturing. Ex-HP, 24 yrs — APJ managed services · inkjet · market development.",
+        },
+        linkedin: "https://www.linkedin.com/in/steveskshin",
+      },
+      {
+        name: { ko: "신동혁", en: "Shin Dong-hyuk" },
+        org: { ko: "AWS", en: "AWS" },
+        role: { ko: "Head of GTM Scaling · APJC", en: "Head of GTM Scaling · APJC" },
+        tag: { ko: "GenAI GTM", en: "GenAI GTM" },
+        img: "/partners/people/shin-dong-hyuk.jpg",
+        pending: false,
+        bio: {
+          ko: "AWS APJC GenAI 커뮤니케이션·CX GTM 총괄 — AWS 7년+. 前 삼성전자 북미 5G 사업개발.",
+          en: "Head of GTM, GenAI Communications & CX APJC at AWS (7+ yrs). Ex-Samsung Electronics 5G BD, North America.",
+        },
+        linkedin: "https://www.linkedin.com/in/donghyukshin",
       },
       {
         // A bio has to say what someone DID, not what they are in charge of —
@@ -1328,6 +1404,7 @@ export const dict = {
         role: { ko: "GTM · 파트너십 총괄", en: "Go-to-Market & Partnerships" },
         tag: { ko: "AI 리터러시 · 빌더 커뮤니티", en: "AI literacy · builder community" },
         img: "/partners/people/baek-min-joung.jpg",
+        pending: false,
         bio: {
           ko: "코드프레소 GTM · 파트너십 총괄. ‘Women in Vibe Coding’ 공동 설립 · 4개국(한·싱·베·룩) 운영. 비개발 직군 AI 입문 특강 3기.",
           en: "GTM · partnerships, Codepresso. Co-founder, Women in Vibe Coding · 4 countries (KR · SG · VN · LU). Three cohorts, AI intro course for non-developers.",
@@ -1335,35 +1412,12 @@ export const dict = {
         linkedin: "https://www.linkedin.com/in/mjbaek",
       },
       {
-        name: { ko: "신상길", en: "Shin Sang-gil" },
-        org: { ko: "FUJIFILM BI Singapore", en: "FUJIFILM BI Singapore" },
-        role: { ko: "고객성공 · DX/AI", en: "Customer Success · DX/AI" },
-        tag: { ko: "DX · AI 컨설팅", en: "DX · AI consulting" },
-        img: "/partners/people/shin-sang-gil.jpg",
-        bio: {
-          ko: "후지필름 BI 싱가포르 고객성공 · DX/AI 컨설팅 총괄 — 금융·정부·제조. 前 HP 24년 — APJ 매니지드 서비스 · 잉크젯 제품 · 시장개발.",
-          en: "Head of customer success · DX·AI consulting, FUJIFILM BI Singapore — finance · government · manufacturing. Ex-HP, 24 yrs — APJ managed services · inkjet · market development.",
-        },
-        linkedin: "https://www.linkedin.com/in/steveskshin",
-      },
-      {
-        name: { ko: "신동혁", en: "Shin Dong-hyuk" },
-        org: { ko: "AWS", en: "AWS" },
-        role: { ko: "Head of GTM Scaling · APJC", en: "Head of GTM Scaling · APJC" },
-        tag: { ko: "GenAI GTM", en: "GenAI GTM" },
-        img: "/partners/people/shin-dong-hyuk.jpg",
-        bio: {
-          ko: "AWS APJC GenAI 커뮤니케이션·CX GTM 총괄 — AWS 7년+. 前 삼성전자 북미 5G 사업개발.",
-          en: "Head of GTM, GenAI Communications & CX APJC at AWS (7+ yrs). Ex-Samsung Electronics 5G BD, North America.",
-        },
-        linkedin: "https://www.linkedin.com/in/donghyukshin",
-      },
-      {
         name: { ko: "정요천", en: "Jeong Yo-cheon" },
         org: { ko: "Brie", en: "Brie" },
         role: { ko: "CEO/CTO · Popup Studio 총괄", en: "CEO/CTO · Head of Popup Studio" },
         tag: { ko: "웹 · AI 풀스택", en: "Web · AI full-stack" },
         img: "/partners/people/jeong-yo-cheon.webp",
+        pending: false,
         bio: {
           ko: "Brie 대표(CEO 겸 CTO) — 웹·AI 풀스택 개발사 · Popup Studio 총괄. 前 워프벤처스 CEO/CTO — 건축 매칭 플랫폼 · 딥러닝 추천. 前 산업은행(KDB) 기업금융.",
           en: "CEO · CTO, Brie — full-stack web·AI studio · head of Popup Studio. Ex-Warp Ventures CEO/CTO — construction matching platform · deep-learning recommendations. Earlier KDB corporate finance.",
@@ -1371,6 +1425,10 @@ export const dict = {
         linkedin: "",
       },
     ],
+    // Amber dashed pill on a judge whose participation is agreed in principle but
+    // not locked — the same convention as the mentor grid's daysPending pill, so a
+    // reader who has scrolled past the mentors already knows what amber means.
+    pendingLabel: { ko: "협의 중", en: "TBC" },
     tbcLabel: { ko: "추후 공개", en: "To be announced" },
     tbcNote: { ko: "트랙별 심사위원 섭외 중", en: "Track judges being confirmed" },
   },

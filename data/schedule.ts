@@ -556,11 +556,11 @@ export const schedule: BEvent[] = [
     // Shown as its own block in the modal — who is actually in the room matters
     // more for this session than for any other, because the Crash Course is the
     // one thing a non-developer is nervous about. Facts from his own LinkedIn.
-    // No photo: we have not been given one, and lifting a LinkedIn headshot is
-    // not ours to do. Add `img` here if he sends one.
+    // Photo supplied by him (CI/김지훈.jpeg) — not lifted from LinkedIn.
     speakerProfile: {
       name: { ko: "김지훈", en: "Jihoon Kim" },
       role: { ko: "코드프레소 이사", en: "Director, Codepresso" },
+      img: "/partners/people/kim-ji-hoon.jpg",
       bio: {
         ko: "추천 시스템 · 스마트팩토리 데이터 7년+. 前 스마일게이트 · LG CNS. 서강대 물리학.",
         en: "7+ yrs on recommender systems and smart-factory data. Ex-Smilegate · LG CNS. Physics, Sogang University.",
@@ -657,13 +657,16 @@ export const schedule: BEvent[] = [
       en: "One-on-one to unblock and adjust direction — at NUS in person or online, depending on the mentor.",
     },
     description: {
-      ko: "멘토링 1단계(기초)로, 정해진 시간표 대신 팀의 필요에 맞춰 진행되는 1:1 멘토링입니다. 진행 방식은 멘토별로 정해집니다 — NUS 현장 대면(F2F)이 기본이지만, 멘토에 따라 온라인으로 진행될 수 있으니 배정된 멘토와 직접 맞추시면 됩니다. 막힌 지점을 함께 점검하고 방향을 조정합니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표 — 같은 눈높이에서 함께 고민하는 선배입니다. 학생 정체성과 giver 문화를 지키는 이 멘토 persona가 이 시간의 핵심입니다. 확정 멘토로 기업 멘토 2곳(Onword Lab · REmited)과 현직 시니어 6인이 함께합니다 — 전체 명단은 멘토링 섹션을 참고하세요. 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다. Day 5–7에는 팝업스튜디오 FDE의 실전 멘토링이 2단계로 이어집니다.",
-      en: "Stage one of mentoring — the foundational round, following each team's needs rather than a fixed timetable. The format is set mentor by mentor — in person (F2F) at NUS by default, but some mentors take it online, so you'll settle it with the mentor you're matched with. It's time to check blockers and adjust direction. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes, thinking alongside you at eye level. That peer-mentor persona — protecting the student identity and giver culture — is the point of this time. The confirmed line-up is two company mentors (Onword Lab · REmited) plus six working seniors — see the mentoring section for the full roster. Mentors are assigned by overlapping availability, not by request. Stage two — Popup Studio's FDE mentoring — follows on Day 5–7.",
+      ko: "멘토링 1단계(기초)로, 정해진 시간표 대신 팀의 필요에 맞춰 진행되는 1:1 멘토링입니다. 진행 방식은 멘토별로 정해집니다 — NUS 현장 대면(F2F)이 기본이지만, 멘토에 따라 온라인으로 진행될 수 있으니 배정된 멘토와 직접 맞추시면 됩니다. 막힌 지점을 함께 점검하고 방향을 조정합니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표 — 같은 눈높이에서 함께 고민하는 선배입니다. 학생 정체성과 giver 문화를 지키는 이 멘토 persona가 이 시간의 핵심입니다. 확정 멘토로 기업 멘토 2곳(Onword Lab · REmited)과 현직 시니어 5인이 함께합니다 — 전체 명단은 멘토링 섹션을 참고하세요. 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다. Day 5–7에는 팝업스튜디오 FDE의 실전 멘토링이 2단계로 이어집니다.",
+      en: "Stage one of mentoring — the foundational round, following each team's needs rather than a fixed timetable. The format is set mentor by mentor — in person (F2F) at NUS by default, but some mentors take it online, so you'll settle it with the mentor you're matched with. It's time to check blockers and adjust direction. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes, thinking alongside you at eye level. That peer-mentor persona — protecting the student identity and giver culture — is the point of this time. The confirmed line-up is two company mentors (Onword Lab · REmited) plus five working seniors — see the mentoring section for the full roster. Mentors are assigned by overlapping availability, not by request. Stage two — Popup Studio's FDE mentoring — follows on Day 5–7.",
     },
     location: NUS,
     // TODO: confirm public naming — the confirmed individual mentors (황영준·이유택·
-    // 한장환·신동혁·이화영·임석건) are from the internal deck; verify their names may be
+    // 신동혁·이화영·임석건) are from the internal deck; verify their names may be
     // shown publicly before surfacing. Full roster lives in dict.mentoring.mentors.
+    // 한장환 was the sixth name here until his pending Day 7 was dropped (he is now
+    // Day 1 only) — which is why the copy above says 5인 / "five", not 6. If a
+    // mentoring day is ever added back for him, both move together.
   },
 
   // ─── DAY 4 · Self-build · Mentoring (08.25) ─────────────────────────────────
