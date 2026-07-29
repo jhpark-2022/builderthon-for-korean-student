@@ -239,87 +239,6 @@ function OpenChatLink({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ONE-QUESTION HOOK — the quiz's REAL Q1, answered inline. Tapping an option
-// shows a 300ms check, then hands the choice to /quiz via ?q1=a|b so the bar
-// starts at 1/14 rather than 0. No new copy: the question and both labels come
-// straight from data/quiz.ts.
-// ─────────────────────────────────────────────────────────────────────────────
-function MiniQuizHook({ t }: { t: Tfn }) {
-  const reduce = useReducedMotion();
-  const [picked, setPicked] = useState<"a" | "b" | null>(null);
-  const q = QUESTIONS[0];
-
-  const choose = (side: "a" | "b") => {
-    if (picked) return;
-    setPicked(side);
-    track("quiz_click", { src: "mini_q1" });
-    const go = () => { window.location.href = `/quiz?q1=${side}`; };
-    if (reduce) go();
-    else window.setTimeout(go, 300);
-  };
-
-  return (
-    // A CARD inside the programme section, not a section of its own. Standing
-    // alone between Program and Speakers it got a full screen of empty space on
-    // either side and read as a stray page — and it separated "here is the
-    // programme" from "here is who teaches it", which belong together.
-    // It now closes the programme, right under the day grid that the quiz's
-    // session recommendations point at.
-    <div className="mt-10 rounded-2xl border border-violet-400/20 bg-violet-500/[0.05] px-6 py-8 text-center sm:px-10">
-      <div className="mx-auto w-full max-w-2xl">
-        <span className="inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-violet-200">
-          {t(dict.miniQuiz.tag)}
-        </span>
-        <h3 className="mt-3 break-keep text-[clamp(1.25rem,3vw,1.75rem)] font-bold tracking-tight text-white">
-          {t(dict.miniQuiz.heading)}
-        </h3>
-        <p className="mx-auto mt-2 max-w-xl break-keep text-sm leading-relaxed text-white/70">
-          {t(dict.miniQuiz.sub)}
-        </p>
-        <p className="mx-auto mt-6 max-w-xl break-keep text-[15px] font-semibold leading-relaxed text-white">
-          {t(q.text)}
-        </p>
-        <div className="mt-5 grid gap-3 sm:grid-cols-2">
-          {(["a", "b"] as const).map((side) => (
-            <button
-              key={side}
-              type="button"
-              onClick={() => choose(side)}
-              aria-pressed={picked === side}
-              className={`group flex min-h-[64px] items-center gap-3 rounded-2xl border p-4 text-left transition ${
-                picked === side
-                  ? "border-violet-400/60 bg-violet-500/15"
-                  : "border-white/12 bg-white/[0.04] hover:border-violet-400/35 hover:bg-white/[0.07]"
-              }`}
-            >
-              <span
-                aria-hidden
-                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-black transition ${
-                  picked === side
-                    ? "border-violet-300 bg-violet-400 text-[#120d22]"
-                    : "border-white/25 text-white/50"
-                }`}
-              >
-                {picked === side ? "✓" : side.toUpperCase()}
-              </span>
-              <span className="break-keep text-sm leading-relaxed text-white/85">{t(q[side].label)}</span>
-            </button>
-          ))}
-        </div>
-        {/* Single outline CTA — stays below any register CTA in weight. */}
-        <a
-          href="/quiz"
-          onClick={() => track("quiz_click", { src: "mini_skip" })}
-          className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-white/18 bg-white/[0.05] px-4 py-2 text-xs font-semibold text-white/70 transition hover:border-white/35 hover:text-white"
-        >
-          {t(dict.miniQuiz.cta)}
-        </a>
-      </div>
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
 // MOBILE STICKY BAR — register primary + quiz chip. Phone only.
 //
 // Appears once the hero is behind you (~120vh) and hides again over the closing
@@ -493,6 +412,7 @@ function HookCards({
   className = "",
   chatSrc,
   stacked = false,
+  withQuestion = false,
 }: {
   t: Tfn;
   ownResultId: string | null;
@@ -506,12 +426,32 @@ function HookCards({
   // Force a single vertical column (no 2-up grid) — used in the hero's narrow
   // right column, where two cards side by side would be too cramped.
   stacked?: boolean;
+  // Fold the quiz's real Q1 INTO the quiz card, so the question and the card
+  // are one thing rather than a card followed by a separate question block
+  // further down the page. Only the 혜택 band uses it: the hero has no room and
+  // repeating the same question in three placements would read as a loop.
+  // Ignored for a returning visitor — they have a result; re-asking Q1 as the
+  // headline of their card would be a step backwards.
+  withQuestion?: boolean;
 }) {
   // The hero is the one place the register CTA must be unambiguously the
   // biggest thing on screen, and there the two cards sit one above the other.
   // `compact` strips the quiz card's two tallest ornaments there and nowhere
   // else. If this ever stops tracking `stacked`, re-measure both cards.
   const compact = stacked;
+  // Q1 answered inline. Handing the choice to /quiz via ?q1= means the bar
+  // starts at 1/14 instead of throwing the answer away and asking again.
+  const reduce = useReducedMotion();
+  const [picked, setPicked] = useState<"a" | "b" | null>(null);
+  const q1 = QUESTIONS[0];
+  const askQ = withQuestion && !ownResultId;
+  const choose = (side: "a" | "b") => {
+    if (picked) return;
+    setPicked(side);
+    track("quiz_click", { src: "hook_q1" });
+    const go = () => { window.location.href = `/quiz?q1=${side}`; };
+    if (reduce) go(); else window.setTimeout(go, 300);
+  };
   // "조급한 Mistral" for a visitor who already took the test. Derived from the
   // same saved id the CTA links to, so the greeting can never name a different
   // type than the link opens. Unparseable/unknown ids fall back to first-visit
@@ -524,7 +464,13 @@ function HookCards({
 
   return (
     <div className={className}>
-      <div className={`grid gap-3 ${stacked ? "" : "sm:grid-cols-2"}`}>
+      {/* items-start only in the question variant. Folding Q1 in roughly doubles
+          the quiz card's height, and a stretched grid row would blow the
+          register card up to match it — leaving the page's primary CTA as a
+          box that is half empty space, which reads as the weaker of the two.
+          Letting each card keep its own height costs a ragged bottom edge and
+          buys back the hierarchy. */}
+      <div className={`grid gap-3 ${stacked ? "" : "sm:grid-cols-2"} ${askQ ? "items-start" : ""}`}>
         {/* The WHOLE card is the button — the CTA used to be a text link inside a
             dead card, so the obvious tap target (the card) did nothing. One
             <button> keeps it a single tab stop and rules out nested interactives;
@@ -559,6 +505,60 @@ function HookCards({
             only, never the violet gradient + glow, which stays the register
             button's alone. `ownName` is null until after mount (loadOwnResult is
             client-only), so the first render always matches the server's. */}
+        {askQ ? (
+        // Question variant: the card holds real controls, so it cannot itself be
+        // a link (a <button> inside an <a> is invalid and unusable by keyboard).
+        <div className="flex min-h-[56px] flex-col gap-2 rounded-2xl border border-white/12 bg-white/[0.04] p-4 text-left">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="break-keep text-sm font-bold leading-snug text-white">
+                {t(dict.register.hookQuizQBig)}
+              </p>
+              <QuizTypeShuffle t={t} />
+            </div>
+            <QuizResultPeek className="hidden shrink-0 sm:block" />
+          </div>
+          <QuizEmojiStack />
+          {/* The question itself — this is the whole point of the variant. */}
+          <p className="mt-1 break-keep text-xs font-semibold leading-relaxed text-white/85">{t(q1.text)}</p>
+          <div className="grid gap-2">
+            {(["a", "b"] as const).map((side) => (
+              <button
+                key={side}
+                type="button"
+                onClick={() => choose(side)}
+                aria-pressed={picked === side}
+                className={`flex min-h-[44px] items-center gap-2.5 rounded-xl border p-2.5 text-left transition ${
+                  picked === side
+                    ? "border-violet-400/60 bg-violet-500/15"
+                    : "border-white/12 bg-white/[0.03] hover:border-violet-400/35 hover:bg-white/[0.06]"
+                }`}
+              >
+                <span
+                  aria-hidden
+                  className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-[0.6rem] font-black transition ${
+                    picked === side ? "border-violet-300 bg-violet-400 text-[#120d22]" : "border-white/25 text-white/50"
+                  }`}
+                >
+                  {picked === side ? "✓" : side.toUpperCase()}
+                </span>
+                <span className="break-keep text-xs leading-relaxed text-white/80">{t(q1[side].label)}</span>
+              </button>
+            ))}
+          </div>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <a
+              href="/quiz"
+              onClick={() => track("quiz_click", { src: "hook_skip" })}
+              className="text-xs font-semibold text-violet-200/80 underline-offset-4 transition hover:text-violet-100 hover:underline"
+            >
+              {t(dict.miniQuiz.cta)}
+            </a>
+            <span className="text-[11px] text-white/40">{t(dict.register.hookQuizMeta)}</span>
+          </div>
+          <p className="text-xs leading-relaxed text-white/40">{t(dict.register.hookQuizNote)}</p>
+        </div>
+        ) : (
         <a
           href={ownResultId ? `/quiz?r=${ownResultId}` : "/quiz"}
           onClick={() => track("quiz_click", { src: "hook_card" })}
@@ -600,6 +600,7 @@ function HookCards({
             <p className="text-xs leading-relaxed text-white/40">{t(dict.register.hookQuizNote)}</p>
           )}
         </a>
+        )}
       </div>
       {/* Third CTA — under both cards, quieter than either. Absent in the hero:
           the nav's open-chat button is already on screen there. */}
@@ -2085,6 +2086,7 @@ export default function Journey() {
             openRegister={openRegister}
             className="mx-auto mt-10 max-w-xl"
             chatSrc="band"
+            withQuestion
           />
         </div>
       </Chapter>
@@ -2148,10 +2150,6 @@ export default function Journey() {
               </div>
             ))}
           </div>
-
-          {/* Closes the programme: the day grid above is exactly what the quiz's
-              session recommendations are picking from. */}
-          <MiniQuizHook t={t} />
 
         </div>
       </section>

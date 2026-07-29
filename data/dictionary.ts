@@ -188,16 +188,13 @@ export const dict = {
     aria: { ko: "빠른 실행", en: "Quick actions" },
   },
 
-  // ── One-question hook, inline on the home page ────────────────────────────
-  // The quiz's real Q1, rendered where people already are. Answering it carries
-  // the choice into /quiz so the bar starts at 1/14 instead of 0.
+  // ── One-question hook ─────────────────────────────────────────────────────
+  // The quiz's real Q1 now lives INSIDE the quiz hook card in the 혜택 band
+  // (HookCards `withQuestion`), not as a section of its own — so the only copy
+  // left here is the way past it. The heading/sub the standalone block used are
+  // gone: the card's own title already introduces the quiz, and repeating it
+  // above the question read as two intros stacked.
   miniQuiz: {
-    tag: { ko: "1문항 미리보기", en: "One-question preview" },
-    heading: { ko: "첫 질문만 먼저 풀어볼래요?", en: "Want to try just the first question?" },
-    sub: {
-      ko: "고르면 나머지 13문항으로 이어져요. 약 3분이면 끝나요.",
-      en: "Pick one and the remaining 13 follow. About three minutes in total.",
-    },
     cta: { ko: "질문 없이 바로 시작하기 →", en: "Skip ahead and just start →" },
   },
 
