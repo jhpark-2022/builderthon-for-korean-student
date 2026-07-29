@@ -36,6 +36,9 @@ export interface RegisterPreset {
 interface RegisterContextValue {
   openRegister: (preset?: RegisterPreset) => void;
   registered: boolean;
+  // Whether the modal is currently open — the mobile sticky bar has to hide
+  // while it is, or it sits on top of the form it just opened.
+  registerOpen: boolean;
 }
 
 const RegisterContext = createContext<RegisterContextValue | null>(null);
@@ -112,7 +115,7 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <RegisterContext.Provider value={{ openRegister, registered }}>
+    <RegisterContext.Provider value={{ openRegister, registered, registerOpen: open }}>
       {children}
       <RegisterModal
         open={open}

@@ -212,6 +212,19 @@ export default function Quiz() {
     return () => window.clearTimeout(id);
   }, [phase, result, answers, enterResult]);
 
+  // ?q1=a|b — the home page's one-question hook was answered inline, so start
+  // from that answer instead of throwing it away and asking again. Runs once on
+  // mount; anything other than "a"/"b" is ignored.
+  useEffect(() => {
+    const seed = params.get("q1");
+    if (seed !== "a" && seed !== "b") return;
+    setAnswers([seed as Choice]);
+    setIndex(1);
+    setPhase("quiz");
+    window.history.replaceState(null, "", "/quiz");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const startQuiz = () => {
     setAnswers([]);
     setIndex(0);
@@ -445,10 +458,13 @@ function Landing({
           </span>
         ))}
       </div>
+      {/* Full-width and 56px tall on a phone, sitting low enough to fall in the
+          thumb zone. It was a centred inline pill — reachable on a desktop, a
+          stretch on a 6" screen where this is the only thing to press. */}
       <button
         type="button"
         onClick={onStart}
-        className="group mt-10 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
+        className="group mt-10 inline-flex min-h-[56px] w-full max-w-sm items-center justify-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 sm:w-auto"
       >
         {t(quizUI.start)}
         <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
@@ -484,6 +500,45 @@ const quizLandingHint = {
 };
 
 // ── Result screen ───────────────────────────────────────────────────────────
+// One-shot confetti on the result reveal. 18 particles, 1.2s, brand hues only,
+// pointer-events-none, and it is removed from the DOM the moment it finishes so
+// nothing lingers. Absent entirely under prefers-reduced-motion (CSS gate in
+// globals.css) and skipped for a shared/deep-linked result — the flourish is for
+// the person who just answered 14 questions, not for a visitor landing cold.
+const CONFETTI_HUES = ["#a78bfa", "#818cf8", "#f0abfc", "#67e8f9"];
+
+function ResultConfetti() {
+  const [done, setDone] = useState(false);
+  useEffect(() => {
+    const id = window.setTimeout(() => setDone(true), 1400);
+    return () => window.clearTimeout(id);
+  }, []);
+  if (done) return null;
+  return (
+    <div aria-hidden className="quiz-confetti pointer-events-none absolute inset-x-0 top-0 z-10 flex justify-center overflow-visible">
+      {Array.from({ length: 18 }).map((_, i) => {
+        const angle = (i / 18) * Math.PI * 2;
+        return (
+          <span
+            key={i}
+            className="absolute h-1.5 w-1.5 rounded-[1px]"
+            style={{
+              background: CONFETTI_HUES[i % CONFETTI_HUES.length],
+              // Distance and spin are derived from the index — no randomness, so
+              // the burst is identical every time and can't be mistaken for jank.
+              ["--dx" as string]: `${Math.cos(angle) * 120}px`,
+              ["--dy" as string]: `${Math.abs(Math.sin(angle)) * 90 + 40}px`,
+              ["--rot" as string]: `${(i % 2 ? 1 : -1) * 220}deg`,
+              animation: "quizConfetti 1.2s cubic-bezier(0.2,0.6,0.3,1) forwards",
+              animationDelay: `${(i % 6) * 25}ms`,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 function ResultView({
   result,
   t,
@@ -586,11 +641,15 @@ function ResultView({
 
   return (
     <motion.div
-      className="flex flex-col items-center pb-6 pt-2"
+      // `relative` so the confetti burst can anchor to the card's own top edge.
+      className="relative flex flex-col items-center pb-6 pt-2"
       initial={reduce ? false : { opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
+      {/* Only for someone who actually finished the quiz — a shared link is a
+          stranger's result and gets no celebration. */}
+      {!fromShare && <ResultConfetti />}
       <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white/60">
         ✦ {t(quizUI.resultEyebrow)}
       </span>

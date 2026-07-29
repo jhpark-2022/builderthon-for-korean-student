@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import Quiz from "@/components/Quiz";
 import ResetHandler from "@/components/ResetHandler";
+import QuizIntroShell from "./QuizIntroShell";
 
 export const metadata: Metadata = {
   title: "당신의 AI 모델은? — Zero100 AI Builderthon",
@@ -31,7 +32,10 @@ export default function QuizPage() {
           ResetHandler reads window.location directly (no useSearchParams), so it
           sits outside the Suspense boundary. */}
       <ResetHandler />
-      <Suspense fallback={<div className="min-h-screen bg-[#06040f]" />}>
+      {/* The fallback used to be a bare black rectangle. Quiz opts out of server
+          rendering (useSearchParams), so that black frame was the entire first
+          paint of /quiz until the bundle arrived. */}
+      <Suspense fallback={<QuizIntroShell />}>
         <Quiz />
       </Suspense>
     </>

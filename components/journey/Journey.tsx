@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { track } from "@vercel/analytics";
@@ -20,7 +20,7 @@ import PartnerModal, { type PartnerInfo } from "@/components/PartnerModal";
 import ChatGlyph from "@/components/ChatGlyph";
 import { loadOwnResult } from "@/lib/quizResult";
 import { parseResultId } from "@/lib/quizScore";
-import { RESULTS } from "@/data/quiz";
+import { RESULTS, QUESTIONS, type MbtiKey } from "@/data/quiz";
 import { useRegister, type RegisterPreset } from "@/lib/RegisterContext";
 
 
@@ -238,6 +238,238 @@ function OpenChatLink({
   );
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// ONE-QUESTION HOOK — the quiz's REAL Q1, answered inline. Tapping an option
+// shows a 300ms check, then hands the choice to /quiz via ?q1=a|b so the bar
+// starts at 1/14 rather than 0. No new copy: the question and both labels come
+// straight from data/quiz.ts.
+// ─────────────────────────────────────────────────────────────────────────────
+function MiniQuizHook({ t }: { t: Tfn }) {
+  const reduce = useReducedMotion();
+  const [picked, setPicked] = useState<"a" | "b" | null>(null);
+  const q = QUESTIONS[0];
+
+  const choose = (side: "a" | "b") => {
+    if (picked) return;
+    setPicked(side);
+    track("quiz_click", { src: "mini_q1" });
+    const go = () => { window.location.href = `/quiz?q1=${side}`; };
+    if (reduce) go();
+    else window.setTimeout(go, 300);
+  };
+
+  return (
+    <section className="relative w-full px-6 py-14 sm:px-10 sm:py-20">
+      <div className="mx-auto w-full max-w-3xl text-center">
+        <Eyebrow>{t(dict.miniQuiz.tag)}</Eyebrow>
+        <h2 className="break-keep text-[clamp(1.5rem,4vw,2.5rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+          {t(dict.miniQuiz.heading)}
+        </h2>
+        <p className="mx-auto mt-3 max-w-xl break-keep text-sm leading-relaxed text-white/70">
+          {t(dict.miniQuiz.sub)}
+        </p>
+        <p className="mx-auto mt-8 max-w-xl break-keep text-base font-semibold leading-relaxed text-white sm:text-lg">
+          {t(q.text)}
+        </p>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          {(["a", "b"] as const).map((side) => (
+            <button
+              key={side}
+              type="button"
+              onClick={() => choose(side)}
+              aria-pressed={picked === side}
+              className={`group flex min-h-[64px] items-center gap-3 rounded-2xl border p-4 text-left transition ${
+                picked === side
+                  ? "border-violet-400/60 bg-violet-500/15"
+                  : "border-white/12 bg-white/[0.04] hover:border-violet-400/35 hover:bg-white/[0.07]"
+              }`}
+            >
+              <span
+                aria-hidden
+                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-black transition ${
+                  picked === side
+                    ? "border-violet-300 bg-violet-400 text-[#120d22]"
+                    : "border-white/25 text-white/50"
+                }`}
+              >
+                {picked === side ? "✓" : side.toUpperCase()}
+              </span>
+              <span className="break-keep text-sm leading-relaxed text-white/85">{t(q[side].label)}</span>
+            </button>
+          ))}
+        </div>
+        {/* Single outline CTA — stays below any register CTA in weight. */}
+        <a
+          href="/quiz"
+          onClick={() => track("quiz_click", { src: "mini_skip" })}
+          className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-white/18 bg-white/[0.05] px-4 py-2 text-xs font-semibold text-white/70 transition hover:border-white/35 hover:text-white"
+        >
+          {t(dict.miniQuiz.cta)}
+        </a>
+      </div>
+    </section>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MOBILE STICKY BAR — register primary + quiz chip. Phone only.
+//
+// Appears once the hero is behind you (~120vh) and hides again over the closing
+// section, so it can never sit on top of the footer's copy-email button. Hidden
+// outright while the register modal is open. The <body> gets bottom padding for
+// the bar's height from first paint, so revealing it shifts nothing.
+// ─────────────────────────────────────────────────────────────────────────────
+function MobileStickyBar({
+  t,
+  openRegister,
+  registerOpen,
+}: {
+  t: Tfn;
+  openRegister: (preset?: RegisterPreset) => void;
+  registerOpen: boolean;
+}) {
+  const [past, setPast] = useState(false);
+  const [atEnd, setAtEnd] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setPast(window.scrollY > window.innerHeight * 1.2);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // The closing section carries the partnership CTA and the copyable email.
+  // Covering either with a fixed bar is the one failure mode worth an observer.
+  useEffect(() => {
+    const end = document.getElementById("closing") ?? document.querySelector("footer");
+    if (!end) return;
+    const io = new IntersectionObserver(([e]) => setAtEnd(e.isIntersecting), { rootMargin: "0px 0px -20% 0px" });
+    io.observe(end);
+    return () => io.disconnect();
+  }, []);
+
+  const shown = past && !atEnd && !registerOpen;
+
+  return (
+    <div
+      aria-label={t(dict.stickyBar.aria)}
+      className={`fixed inset-x-0 bottom-0 z-40 sm:hidden ${shown ? "pointer-events-auto" : "pointer-events-none"}`}
+      style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+    >
+      <div
+        className={`mx-3 flex items-center gap-2 rounded-full border border-white/12 bg-[#0b0817]/92 p-1.5 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.9)] backdrop-blur-md transition duration-300 ${
+          shown ? "translate-y-0 opacity-100" : "translate-y-24 opacity-0"
+        }`}
+      >
+        <button
+          type="button"
+          onClick={() => openRegister()}
+          className="flex h-12 flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-4 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)]"
+        >
+          {t(dict.stickyBar.register)}
+        </button>
+        <a
+          href="/quiz"
+          onClick={() => track("quiz_click", { src: "sticky_bar" })}
+          className="flex h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-violet-400/35 bg-violet-500/10 px-4 text-xs font-bold text-violet-100"
+        >
+          {t(dict.stickyBar.quiz)}
+        </a>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// QUIZ HOOK PARTS — all three read from data/quiz.ts. Nothing here invents a
+// type name, an emoji or a gradient: if the quiz data changes these follow.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Five type glyphs in an overlapping stack, last tile a "?" — the curiosity gap
+// the old card had no way to show. Fans out on hover (stagger 40ms); under
+// prefers-reduced-motion the transforms simply never apply.
+const PEEK_TYPES: MbtiKey[] = ["ENTP", "INFP", "ISTJ", "ESFP"];
+
+function QuizEmojiStack({ compact = false }: { compact?: boolean }) {
+  const size = compact ? "h-6 w-6 text-[0.7rem]" : "h-7 w-7 text-[0.8rem]";
+  return (
+    <span aria-hidden className="flex items-center">
+      {PEEK_TYPES.map((k, i) => (
+        <span
+          key={k}
+          style={{ marginLeft: i === 0 ? 0 : -8, transitionDelay: `${i * 40}ms` }}
+          className={`inline-flex ${size} items-center justify-center rounded-full border border-white/15 bg-[#120d22] shadow-[0_2px_8px_rgba(0,0,0,0.5)] transition-transform duration-300 motion-safe:group-hover:translate-x-[var(--fan)]`}
+        >
+          {RESULTS[k].emoji}
+        </span>
+      ))}
+      <span
+        style={{ marginLeft: -8, transitionDelay: `${PEEK_TYPES.length * 40}ms` }}
+        className={`inline-flex ${size} items-center justify-center rounded-full border border-violet-400/40 bg-violet-500/20 font-black text-violet-100 transition-transform duration-300 motion-safe:group-hover:translate-x-[var(--fan)]`}
+      >
+        ?
+      </span>
+    </span>
+  );
+}
+
+// The teaser line: one REAL variant name at a time, swapped every 2.5s. Uses the
+// same names the result screen prints, so nothing here can be a name a taker
+// will never see. Static under reduced motion.
+function QuizTypeShuffle({ t }: { t: Tfn }) {
+  const reduce = useReducedMotion();
+  const names = useMemo(
+    () => PEEK_TYPES.map((k) => t(RESULTS[k].variants.T.name)),
+    [t],
+  );
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (reduce) return;
+    const id = setInterval(() => setI((n) => (n + 1) % names.length), 2500);
+    return () => clearInterval(id);
+  }, [reduce, names.length]);
+  return (
+    <p className="mt-1 text-xs text-white/50">
+      {t(dict.register.hookQuizShufflePrefix)}{" "}
+      <span
+        key={reduce ? "static" : i}
+        className="font-semibold text-violet-200/90 motion-safe:animate-[quizNameSwap_2.5s_ease-in-out_infinite]"
+      >
+        {names[reduce ? 0 : i]}
+      </span>
+    </p>
+  );
+}
+
+// A ~72px 9:16 mock of the shareable result card, tilted -4°. Built from the
+// type's own accent gradient + emoji rather than an image, so it costs no
+// request and cannot go stale against the real card.
+function QuizResultPeek({ className = "" }: { className?: string }) {
+  const reduce = useReducedMotion();
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (reduce) return;
+    const id = setInterval(() => setI((n) => (n + 1) % PEEK_TYPES.length), 3000);
+    return () => clearInterval(id);
+  }, [reduce]);
+  const r = RESULTS[PEEK_TYPES[reduce ? 0 : i]];
+  return (
+    <span
+      aria-hidden
+      className={`relative block w-[72px] shrink-0 -rotate-[4deg] overflow-hidden rounded-lg border border-white/15 bg-[#0c0a18] shadow-[0_6px_18px_-6px_rgba(0,0,0,0.8)] ${className}`}
+      style={{ aspectRatio: "9 / 16" }}
+    >
+      <span key={r.mbti} className="absolute inset-0 flex flex-col items-center justify-center gap-1 px-1 motion-safe:animate-[quizPeekFade_3s_ease-in-out_infinite]">
+        <span className={`flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br text-sm ${r.accent}`}>
+          {r.emoji}
+        </span>
+        <span className="text-[0.4rem] font-bold leading-tight text-white/85">{r.model}</span>
+        <span className="text-[0.35rem] font-semibold tracking-wider text-white/40">{r.mbti}</span>
+      </span>
+    </span>
+  );
+}
+
 function HookCards({
   t,
   ownResultId,
@@ -259,6 +491,11 @@ function HookCards({
   // right column, where two cards side by side would be too cramped.
   stacked?: boolean;
 }) {
+  // The hero is the one place the register CTA must be unambiguously the
+  // biggest thing on screen, and there the two cards sit one above the other.
+  // `compact` strips the quiz card's two tallest ornaments there and nowhere
+  // else. If this ever stops tracking `stacked`, re-measure both cards.
+  const compact = stacked;
   // "조급한 Mistral" for a visitor who already took the test. Derived from the
   // same saved id the CTA links to, so the greeting can never name a different
   // type than the link opens. Unparseable/unknown ids fall back to first-visit
@@ -299,29 +536,54 @@ function HookCards({
           <p className="text-xs leading-relaxed text-white/60">{t(dict.register.reassure)}</p>
           <p className="text-[11px] leading-relaxed text-white/45">{t(dict.register.hookRegisterSub)}</p>
         </button>
-        {/* Card 2 — the aside. Copy only: it must stay a visual step below the
-            register card, so nothing here gains a fill, a border weight or a
-            pill. `ownName` is null until after mount (loadOwnResult is
+        {/* Card 2 — the quiz. Promoted from a text link inside a dead panel to a
+            whole-card link: the tap target was ~20px and the copy read as a
+            disclaimer, which is most of why 6 of 115 weekly visitors tried it.
+            It is still a clear step below the register card — outline and glass
+            only, never the violet gradient + glow, which stays the register
+            button's alone. `ownName` is null until after mount (loadOwnResult is
             client-only), so the first render always matches the server's. */}
-        <div className="flex flex-col gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left">
-          <p className="text-xs font-medium text-white/60">
-            {ownName
-              ? t(dict.register.hookQuizQReturn).replace("{name}", ownName)
-              : t(dict.register.hookQuizQ)}
-          </p>
-          <a
-            href={ownResultId ? `/quiz?r=${ownResultId}` : "/quiz"}
-            className="group inline-flex w-fit items-center gap-1.5 text-sm font-bold text-violet-100 transition hover:text-white"
-          >
-            <span aria-hidden>✦</span>
-            {t(ownName ? dict.register.hookQuizCtaReturn : dict.register.hookQuizCta)}
-          </a>
+        <a
+          href={ownResultId ? `/quiz?r=${ownResultId}` : "/quiz"}
+          onClick={() => track("quiz_click", { src: "hook_card" })}
+          className={`group flex min-h-[56px] flex-col rounded-2xl border border-white/12 bg-white/[0.04] p-4 text-left transition hover:border-violet-400/35 hover:bg-white/[0.07] active:scale-[0.99] ${compact ? "gap-1.5" : "gap-2"}`}
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="break-keep text-sm font-bold leading-snug text-white">
+                {ownName
+                  ? t(dict.register.hookQuizQReturn).replace("{name}", ownName)
+                  : t(dict.register.hookQuizQBig)}
+              </p>
+              {/* Rotating REAL variant names — the single most concrete thing the
+                  quiz has, and it was nowhere on the home page. */}
+              {!ownName && !compact && <QuizTypeShuffle t={t} />}
+            </div>
+            {/* 9:16 story-card mock, rebuilt from the same type data the real
+                result card uses — no new asset.
+                NOT in the hero: with the peek and the teaser line this card came
+                out 300px tall against the register card's 172, and in the hero
+                the two are stacked, so the aside was physically the bigger of
+                the two. The mid-page bands lay them side by side and have the
+                room, so that is where the visual assets earn their space. */}
+            {!compact && <QuizResultPeek className="hidden shrink-0 sm:block" />}
+          </div>
+          <QuizEmojiStack compact={compact} />
+          <span className={`inline-flex w-fit items-center gap-1.5 rounded-full border border-violet-400/40 bg-violet-500/10 px-4 text-sm font-bold text-violet-100 transition group-hover:border-violet-300/60 group-hover:bg-violet-500/20 group-hover:text-white ${compact ? "py-1.5" : "py-2"}`}>
+            {t(ownName ? dict.register.hookQuizCtaReturn : dict.register.hookQuizCtaBig)}
+            {!ownName && (
+              <span className="rounded-full bg-white/15 px-1.5 py-0.5 text-[0.6rem] font-bold tracking-wide">
+                {t(dict.register.hookQuizMeta)}
+              </span>
+            )}
+            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </span>
           {/* First-visit only — a returning visitor has already seen the joke
               and is here for their result, not the disclaimer. */}
           {!ownName && (
             <p className="text-xs leading-relaxed text-white/40">{t(dict.register.hookQuizNote)}</p>
           )}
-        </div>
+        </a>
       </div>
       {/* Third CTA — under both cards, quieter than either. Absent in the hero:
           the nav's open-chat button is already on screen there. */}
@@ -1389,7 +1651,7 @@ function ScrollToTop() {
 
 export default function Journey() {
   const { t } = useLocale();
-  const { openRegister, registered } = useRegister();
+  const { openRegister, registered, registerOpen } = useRegister();
   const reduce = useReducedMotion();
   const [active, setActive] = useState<BEvent | null>(null);
   const [activeDay, setActiveDay] = useState<number | null>(null); // day detail modal
@@ -1790,6 +2052,17 @@ export default function Journey() {
                 this is settled — read before the cards, it stops eight tidy day
                 boxes being taken for a finished timetable. Second: how little of
                 it you actually have to attend. */}
+            {/* Cross-link: the quiz already recommends sessions by type, and
+                nothing on the home page said so. Ghost chip — a step under the
+                section's own content, two under any register CTA. */}
+            <a
+              href="/quiz"
+              onClick={() => track("quiz_click", { src: "program_chip" })}
+              className="group mx-auto mt-5 inline-flex items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/[0.08] px-4 py-2 text-xs font-semibold text-violet-100/90 transition hover:border-violet-300/45 hover:bg-violet-500/15 hover:text-white"
+            >
+              <span aria-hidden>✦</span>
+              <span className="break-keep">{t(dict.programQuizChip)}</span>
+            </a>
             <p className="mx-auto mt-6 max-w-2xl text-xs leading-relaxed text-white/50">
               {t(dict.program.pendingNote)}
             </p>
@@ -1823,6 +2096,11 @@ export default function Journey() {
       {/* ── CH 3.2 · SPEAKER SESSIONS (Day 1·5·8) ──────────────────── */}
       {/* Speaker names + photos are transcribed from the internal deck — public
           naming/likeness to be confirmed with the user (flagged in the handoff). */}
+      {/* One-question hook — sits between the programme and the speakers, the
+          point where a reader has seen what the event is and has a natural pause
+          before the line-up. */}
+      <MiniQuizHook t={t} />
+
       <Chapter id="speakers" align="center">
         <Eyebrow>{t(dict.speakers.tag)}</Eyebrow>
         <h2 className="text-[clamp(1.9rem,5vw,3.5rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
@@ -2326,6 +2604,7 @@ export default function Journey() {
       <DayModal dayNum={activeDay} onClose={() => setActiveDay(null)} onSelectEvent={selectEvent} eventOpen={active != null} t={t} />
       <EventModal event={active} onClose={() => setActive(null)} triggerRef={triggerRef} />
       <PartnerModal partner={activePartner} onClose={() => setActivePartner(null)} triggerRef={partnerTriggerRef} />
+      <MobileStickyBar t={t} openRegister={openRegister} registerOpen={registerOpen} />
     </main>
   );
 }

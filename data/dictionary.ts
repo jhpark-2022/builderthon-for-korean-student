@@ -155,6 +155,10 @@ export const dict = {
     builders: { ko: "파트너", en: "Partners" },
     faq: { ko: "FAQ", en: "FAQ" },
     quiz: { ko: "성격 테스트", en: "Personality Test" },
+    // Nav anchor for the quiz, sitting after FAQ. Deliberately a text link at the
+    // same weight as the section anchors — a step below the open-chat ghost
+    // button, two below the register pill.
+    quizNav: { ko: "유형 테스트 ✦", en: "Type test ✦" },
     // Shown instead of `quiz` once a visitor has taken the test (links to their saved result).
     quizResult: { ko: "내 결과 보기", en: "View my result" },
     viewProgram: { ko: "프로그램 보기", en: "View Program" },
@@ -173,6 +177,35 @@ export const dict = {
   quizCta: {
     eyebrow: { ko: "✦ AI 성격 테스트 · 환상의 궁합", en: "✦ AI test · dream teammates" },
     button: { ko: "내 AI 모델 알아보기", en: "Find your AI model" },
+  },
+
+  // ── Mobile sticky action bar ──────────────────────────────────────────────
+  // Register stays the primary; the quiz rides along as a chip so it is reachable
+  // from anywhere on a phone without competing for the same visual weight.
+  stickyBar: {
+    register: { ko: "등록하기", en: "Register" },
+    quiz: { ko: "✦ 내 유형은?", en: "✦ My type?" },
+    aria: { ko: "빠른 실행", en: "Quick actions" },
+  },
+
+  // ── One-question hook, inline on the home page ────────────────────────────
+  // The quiz's real Q1, rendered where people already are. Answering it carries
+  // the choice into /quiz so the bar starts at 1/14 instead of 0.
+  miniQuiz: {
+    tag: { ko: "1문항 미리보기", en: "One-question preview" },
+    heading: { ko: "첫 질문만 먼저 풀어볼래요?", en: "Want to try just the first question?" },
+    sub: {
+      ko: "고르면 나머지 13문항으로 이어져요. 약 3분이면 끝나요.",
+      en: "Pick one and the remaining 13 follow. About three minutes in total.",
+    },
+    cta: { ko: "질문 없이 바로 시작하기 →", en: "Skip ahead and just start →" },
+  },
+
+  // Program-section cross-link — the quiz already recommends sessions by type,
+  // which nothing on the home page said out loud.
+  programQuizChip: {
+    ko: "유형 테스트 결과로 맞춤 세션 추천받기 →",
+    en: "Get session picks from your type →",
   },
 
   // Toast shown by the undocumented ?reset=1 QA helper (see components/ResetHandler).
@@ -205,6 +238,28 @@ export const dict = {
       en: "Impatient Mistral? Easygoing Pi? — which one are you",
     },
     hookQuizCta: { ko: "3분 만에 정체 확인 →", en: "Find out in 3 min →" },
+    // ── Quiz hook card, promoted ────────────────────────────────────────────
+    // The old card was a text link at text-xs/white-60 inside a dead panel: it
+    // read as a disclaimer and its tap target was ~20px. These keys drive the
+    // promoted version. The effort label deliberately differs from the register
+    // card's "3분" chip so the two CTAs don't sound like the same offer.
+    hookQuizQBig: {
+      ko: "16개 AI 모델 중, 당신은 뭘까요?",
+      en: "16 AI models. Which one are you?",
+    },
+    hookQuizCtaBig: { ko: "내 유형 보기", en: "See my type" },
+    hookQuizMeta: { ko: "14문항 · 약 3분", en: "14 questions · ~3 min" },
+    // Rotating teaser under the question — REAL variant names from data/quiz.ts,
+    // resolved at runtime from RESULTS so they can never drift from the data.
+    hookQuizShufflePrefix: { ko: "예를 들면", en: "For instance" },
+    // ── Post-registration ───────────────────────────────────────────────────
+    // The one moment a visitor is guaranteed to be receptive: they just finished
+    // the form and there is nothing else to do until the event.
+    successQuizTitle: {
+      ko: "등록 완료! 행사 전까지 — 내 AI 모델 알아보고 스토리에 공유하기",
+      en: "You're in! While you wait — find your AI model & share it",
+    },
+    successQuizCta: { ko: "유형 테스트 하러 가기", en: "Take the type test" },
     // The disclaimer IS the joke — and it's also true, which is why it can be
     // said out loud instead of buried.
     hookQuizNote: { ko: "*과학적 근거는 없습니다. 재미는 있습니다.", en: "*Zero science. 100% fun." },

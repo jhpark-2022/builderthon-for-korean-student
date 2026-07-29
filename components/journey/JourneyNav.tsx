@@ -102,6 +102,17 @@ export default function JourneyNav() {
                 {t(a.label)}
               </a>
             ))}
+            {/* Quiz — an anchor-weight text link after FAQ, not a button. It has
+                to be reachable from the nav (there was no path at all), but it
+                sits under the open-chat ghost button and two under the register
+                pill, which is the order these three should always be in. */}
+            <a
+              href="/quiz"
+              onClick={() => track("quiz_click", { src: "nav" })}
+              className="relative whitespace-nowrap text-sm font-medium text-violet-200/80 transition hover:text-violet-100 after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-violet-400/70 after:transition-transform after:duration-300 hover:after:scale-x-100 focus-visible:after:scale-x-100"
+            >
+              {t(dict.nav.quizNav)}
+            </a>
           </div>
         </div>
         {/* RIGHT group — open chat + EN/KR toggle, with the register button
@@ -140,6 +151,19 @@ export default function JourneyNav() {
               registered the roles swap: registration is done ("등록 완료 ✓"), so
               the next real action is the chat, and this becomes the filled
               control. See the registered branch below. */}
+          {/* Phone/tablet path to the quiz. The anchor row above is `lg:flex`, so
+              without this there is no route to /quiz from the header at all
+              below lg. Kept to a compact chip rather than a new hamburger — the
+              header's minimalism is the point, and one more sheet to open is one
+              more reason not to. */}
+          <a
+            href="/quiz"
+            onClick={() => track("quiz_click", { src: "nav_mobile" })}
+            aria-label={t(dict.nav.quizNav)}
+            className="inline-flex min-h-[44px] shrink-0 items-center gap-1 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 text-xs font-bold text-violet-100/90 transition hover:border-violet-300/50 hover:bg-violet-500/20 hover:text-white lg:hidden"
+          >
+            <span aria-hidden>✦</span>
+          </a>
           {links.openChat && (
             <a
               href={links.openChat}

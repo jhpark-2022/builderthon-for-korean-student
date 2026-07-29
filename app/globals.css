@@ -315,3 +315,33 @@ body {
   background-clip: text;
   color: transparent;
 }
+
+/* ── Quiz hook micro-animations ──────────────────────────────────────────────
+   Both are opacity/blur only — no layout properties, so nothing here can shift
+   the page. Wrapped in motion-safe at the call site AND gated here, so a
+   reduced-motion visitor gets a static frame either way. */
+@keyframes quizNameSwap {
+  0%, 8%    { opacity: 0; filter: blur(4px); }
+  16%, 84%  { opacity: 1; filter: blur(0); }
+  92%, 100% { opacity: 0; filter: blur(4px); }
+}
+@keyframes quizPeekFade {
+  0%, 6%    { opacity: 0; }
+  14%, 86%  { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+/* One-shot confetti on the quiz result reveal. 18 particles, 1.2s, brand hues
+   only, and it never repeats — a sponsor is reading this page too. */
+@keyframes quizConfetti {
+  0%   { opacity: 1; transform: translate3d(0,0,0) rotate(0deg); }
+  100% { opacity: 0; transform: translate3d(var(--dx), var(--dy), 0) rotate(var(--rot)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quiz-confetti { display: none; }
+}
+
+/* Reserve the mobile sticky bar's height from first paint so revealing it can
+   never shift the page. Phone only — the bar itself is `sm:hidden`. */
+@media (max-width: 639px) {
+  body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); }
+}

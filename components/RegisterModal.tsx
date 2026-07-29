@@ -809,8 +809,27 @@ export default function RegisterModal({
                       just gave us); this is the PUBLIC open chat, which they can
                       join right now. Two different rooms — the copy names both so
                       "이미 초대받았나?" never comes up. */}
+                  {/* The one moment a visitor is guaranteed to be receptive and
+                      has nothing else to do: the form is done and the event is
+                      weeks away. Outline only — the register action is finished,
+                      but this still must not read as a second primary CTA. */}
+                  <div className="mx-auto mt-6 max-w-sm rounded-2xl border border-violet-400/25 bg-violet-500/[0.07] px-5 py-4">
+                    <p className="break-keep text-sm leading-relaxed text-white/80">
+                      {t(dict.register.successQuizTitle)}
+                    </p>
+                    <a
+                      href="/quiz?ref=postreg"
+                      onClick={() => analytics("quiz_click", { src: "postreg" })}
+                      className="mt-3 inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-violet-400/40 bg-violet-500/15 px-5 py-2.5 text-sm font-bold text-violet-100 transition hover:bg-violet-500/25 hover:text-white"
+                    >
+                      <span aria-hidden>✦</span>
+                      {t(dict.register.successQuizCta)}
+                      <span aria-hidden>→</span>
+                    </a>
+                  </div>
+
                   {links.openChat && (
-                    <div className="mx-auto mt-6 max-w-sm rounded-2xl border border-white/12 bg-white/[0.04] px-5 py-4">
+                    <div className="mx-auto mt-4 max-w-sm rounded-2xl border border-white/12 bg-white/[0.04] px-5 py-4">
                       <p className="text-sm leading-relaxed text-white/75">
                         {t(dict.register.successOpenChatTitle)}
                       </p>
