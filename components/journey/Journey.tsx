@@ -2233,7 +2233,12 @@ export default function Journey() {
         <div className="mt-8 grid gap-4 text-left lg:grid-cols-3">
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 lg:col-span-2">
             <p className="text-xs font-bold uppercase tracking-wide text-emerald-300/80">{t(dict.mentoring.personaLabel)}</p>
-            <p className="mt-3 text-lg font-semibold leading-relaxed text-white">{t(dict.mentoring.persona)}</p>
+            {/* break-keep + text-balance, together, for one orphan: this line was
+                breaking mid-word into "…기초 멘토 / 링)." — Korean wraps between
+                syllables by default, so "멘토링" got split in half. break-keep moves
+                the break to a word boundary; text-balance then evens the two lines
+                out so the second one isn't a stub hanging under a full first line. */}
+            <p className="mt-3 break-keep text-balance text-lg font-semibold leading-relaxed text-white">{t(dict.mentoring.persona)}</p>
           </div>
           <div className="rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] p-6">
             {/* break-keep — same reason as the mentor cards below: the label now
