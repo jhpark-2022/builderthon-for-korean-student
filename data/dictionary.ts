@@ -1377,7 +1377,7 @@ export const dict = {
         pending: true,
         bio: {
           ko: "NUS 정보시스템·분석학과 석좌교수 · NUS 핀테크랩 디렉터 · NUS TRAIL(기술·로봇·AI·법 센터) 부센터장. Fyreflyz 공동창업자. 前 퍼듀대 교수. 미네소타대 박사 · 연세대 경영.",
-          en: "Provost's Chair Professor, Information Systems & Analytics, NUS Computing · Director, NUS FinTech Lab · Deputy Director, NUS TRAIL (Technology, Robotics, AI & the Law). Co-founder, Fyreflyz. Ex-Purdue faculty. PhD Minnesota · Yonsei BBA·MBA.",
+          en: "Director of the NUS FinTech Lab · Deputy Director of NUS TRAIL (technology, robotics, AI & the law). Co-founder, Fyreflyz. Ex-Purdue. PhD Minnesota · Yonsei.",
         },
         linkedin: "https://www.linkedin.com/in/jungpil/",
       },
@@ -1390,7 +1390,7 @@ export const dict = {
         pending: false,
         bio: {
           ko: "코드프레소 대표 — AI 코딩·역량진단 교육 플랫폼(AXMOS 컨소시엄). 비개발자 대상 바이브코딩·AX 교육 다수 운영. 前 스마일게이트 · LG전자 소프트웨어 엔지니어.",
-          en: "CEO, Codepresso — AI-coding · skills-assessment education platform (AXMOS consortium). Vibe-coding · AX programs for non-developers. Ex-Smilegate · LG Electronics software engineer.",
+          en: "Runs an AI-coding & skills-assessment education platform (AXMOS consortium). Many vibe-coding · AX programmes for non-developers. Ex-Smilegate · LG Electronics.",
         },
         linkedin: "https://www.linkedin.com/in/donghun-lee-8888a13a",
       },
@@ -1451,7 +1451,7 @@ export const dict = {
         pending: false,
         bio: {
           ko: "Brie 대표(CEO 겸 CTO) — 웹·AI 풀스택 개발사 · Popup Studio 총괄. 前 워프벤처스 CEO/CTO — 건축 매칭 플랫폼 · 딥러닝 추천. 前 산업은행(KDB) 기업금융.",
-          en: "CEO · CTO, Brie — full-stack web·AI studio · head of Popup Studio. Ex-Warp Ventures CEO/CTO — construction matching platform · deep-learning recommendations. Earlier KDB corporate finance.",
+          en: "Runs a full-stack web·AI studio. Ex-Warp Ventures CEO/CTO — construction matching platform · deep-learning recommendations. Earlier KDB corporate finance.",
         },
         linkedin: "",
       },

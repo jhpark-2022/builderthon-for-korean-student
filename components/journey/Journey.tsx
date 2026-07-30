@@ -2386,7 +2386,17 @@ export default function Journey() {
                       </span>
                     )}
                   </div>
-                  <p className="mt-3 text-[13px] leading-relaxed text-white/70">{t(j.bio)}</p>
+                  {/* Every bio occupies EXACTLY three lines. min-h reserves the third
+                      line for the short ones (박희덕·신동혁 ran to two, so their cards
+                      sat visibly shorter than 한정필's three and the row looked
+                      ragged); line-clamp-3 is the guard on the other side. 4.875em =
+                      3 × leading-relaxed (1.625) — in `em`, so it tracks the 13px
+                      font size rather than the 18px root and cannot drift if either
+                      changes. Same rule the mentor grid above already uses.
+                      A bio long enough to CLAMP would lose its tail silently, so
+                      keep them within three lines in BOTH languages — English wraps
+                      differently and is the tighter constraint. */}
+                  <p className="mt-3 line-clamp-3 min-h-[4.875em] text-[13px] leading-relaxed text-white/70">{t(j.bio)}</p>
                 </div>
               );
             })}
