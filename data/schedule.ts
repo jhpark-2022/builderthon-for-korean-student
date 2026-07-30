@@ -121,7 +121,7 @@ export const days: DayMeta[] = [
     phase: LAB1,
     theme: { ko: "오프닝 · 문제 공개", en: "Opening · Problem Release" },
     summary: {
-      ko: "SMU YPHSL B2-03 현장 11AM–5PM · 원대로 오프닝 키노트 · 오리엔테이션(문제 공개·트랙 선택·베이스 리포트) · AWS 연사 한장환(확정).",
+      ko: "SMU YPHSL B2-03 현장 11AM–5PM · 원대로 오프닝 키노트 · 오리엔테이션(문제 공개·트랙 선택·베이스 리포트) · AWS 연사 한장환 님(확정).",
       en: "In person at SMU YPHSL B2-03, 11AM–5PM · Won's opening keynote · orientation (problem release · track pick · base report) · AWS talk by Han Jang-whan (confirmed).",
     },
     // Venue booked: SMU YPHSL B2-03, 22 Aug 2026, 11AM–5PM → on-site confirmed
@@ -136,7 +136,7 @@ export const days: DayMeta[] = [
     phase: LAB1,
     theme: { ko: "크래시코스 (집중)", en: "Crash Course" },
     summary: {
-      ko: "바이브 코딩 입문 집중 5–6시간(비개발자 OK) · 코드프레소 김지훈 이사 진행.",
+      ko: "바이브 코딩 입문 집중 5–6시간(비개발자 OK) · 코드프레소 김지훈 이사님 진행.",
       en: "A focused 5–6h vibe-coding intro (beginners OK) · led by Jihoon Kim, Director at Codepresso.",
     },
     dayMode: "online",
@@ -426,7 +426,7 @@ export const schedule: BEvent[] = [
       en: "“Between Employment and Founding” — the keynote that opens the 8-day ‘why’.",
     },
     description: {
-      ko: "빌더톤의 문을 여는 오프닝 키노트입니다. Wilt Venture Builder(SG)의 원대로 대표가 ‘취업과 창업의 사이’를 주제로, 정형화된 ‘취업 vs 창업’ 이분법에서 벗어나 벤처빌더가 본 다양한 진로·커리어 경로와 비개발자도 시작할 수 있는 여러 갈래를 약 1시간 동안 Q&A와 함께 풀어냅니다. ‘처음이어도 괜찮다’는 톤으로 8일의 ‘왜’를 세우며 출발선을 엽니다.",
+      ko: "빌더톤의 문을 여는 오프닝 키노트입니다. Wilt Venture Builder(SG)의 원대로 대표님이 ‘취업과 창업의 사이’를 주제로, 정형화된 ‘취업 vs 창업’ 이분법에서 벗어나 벤처빌더가 본 다양한 진로·커리어 경로와 비개발자도 시작할 수 있는 여러 갈래를 약 1시간 동안 Q&A와 함께 풀어냅니다. ‘처음이어도 괜찮다’는 톤으로 8일의 ‘왜’를 세우며 출발선을 엽니다.",
       en: "The keynote that opens the builderthon. Won Dae-ro (Managing Director, Wilt Venture Builder SG) speaks on “Between Employment and Founding” for about an hour, with Q&A — stepping past the tidy ‘employment vs. founding’ binary to the many career paths a venture builder has seen, and the routes even non-developers can start from. It sets the 8-day ‘why’ in a ‘first-timers welcome’ tone.",
     },
     location: YPHSL_B203,
@@ -561,7 +561,7 @@ export const schedule: BEvent[] = [
     // Director & Content R&D Lead at Codepresso". She runs Codepresso's content
     // R&D, which is exactly what this session is, so the credential is worth
     // naming rather than leaving the day to read as a generic vendor workshop.
-    speaker: { ko: "김지훈 이사 (코드프레소)", en: "Jihoon Kim, Director (Codepresso)" },
+    speaker: { ko: "김지훈 이사님 (코드프레소)", en: "Jihoon Kim, Director (Codepresso)" },
     // Shown as its own block in the modal — who is actually in the room matters
     // more for this session than for any other, because the Crash Course is the
     // one thing a non-developer is nervous about. Facts from his own LinkedIn.
@@ -577,11 +577,11 @@ export const schedule: BEvent[] = [
       linkedin: "https://www.linkedin.com/in/jihoon-kim-613878134",
     },
     summary: {
-      ko: "집중 5–6시간의 바이브 코딩 입문 — 비개발자도 OK · 코드프레소 김지훈 이사 진행.",
+      ko: "집중 5–6시간의 바이브 코딩 입문 — 비개발자도 OK · 코드프레소 김지훈 이사님 진행.",
       en: "A focused 5–6h vibe-coding intro — non-developers welcome · led by Jihoon Kim of Codepresso.",
     },
     description: {
-      ko: "참가자의 약 60%가 바이브 코딩이 처음입니다. 그래서 여러 번에 나누지 않고, 하루에 몰아서 끝내는 집중 5–6시간의 크래시코스로 모두의 출발선을 맞춥니다. AI 도구로 아이디어를 작동하는 프로토타입으로 바꾸는 기본기를 핸즈온으로 익혀, 기술 장벽이 아니라 아이디어가 한계가 되도록 합니다. 비개발자도 따라올 수 있게 설계되었고, 이 크래시코스 전 시간을 참석하면 Zero100 명의의 수료증이 발급되어 Day 8 시상 때 배부됩니다. 크래시코스는 코드프레소가 주관하며, 코드프레소의 김지훈 이사가 직접 진행합니다.",
+      ko: "참가자의 약 60%가 바이브 코딩이 처음입니다. 그래서 여러 번에 나누지 않고, 하루에 몰아서 끝내는 집중 5–6시간의 크래시코스로 모두의 출발선을 맞춥니다. AI 도구로 아이디어를 작동하는 프로토타입으로 바꾸는 기본기를 핸즈온으로 익혀, 기술 장벽이 아니라 아이디어가 한계가 되도록 합니다. 비개발자도 따라올 수 있게 설계되었고, 이 크래시코스 전 시간을 참석하면 Zero100 명의의 수료증이 발급되어 Day 8 시상 때 배부됩니다. 크래시코스는 코드프레소가 주관하며, 코드프레소의 김지훈 이사님이 직접 진행합니다.",
       en: "About 60% of participants are trying vibe coding for the first time — so instead of spreading it out, one concentrated 5–6 hour Crash Course levels the start line in a single day. A hands-on run through the fundamentals of turning ideas into working prototypes with AI tools, so your ideas — not the tooling — are the limit. It's built so non-developers can keep up, and attending the full Crash Course earns a certificate issued by Zero100, handed out at the Day 8 awards. The Crash Course is run by Codepresso and led in person by Jihoon Kim, a Director there.",
     },
     location: ONLINE,
@@ -871,11 +871,11 @@ export const schedule: BEvent[] = [
     speaker: { ko: "박희덕", en: "Park Hee-deok" },
     title: { ko: "커리어 간담회 · ‘FDE로 일한다는 것’", en: "Career Session · “Working as an FDE”" },
     summary: {
-      ko: "12:30–14:00 · 박희덕 대표의 ‘FDE로 일한다는 것’ — FDE 사업에 관심 있는 학생·졸업생 대상.",
+      ko: "12:30–14:00 · 박희덕 대표님의 ‘FDE로 일한다는 것’ — FDE 사업에 관심 있는 학생·졸업생 대상.",
       en: "12:30–14:00 · Park Hee-deok on “Working as an FDE” — for students & grads interested in the FDE business.",
     },
     description: {
-      ko: "파이널 리허설 일정의 마무리로 마련된 커리어 간담회입니다(12:30–14:00). 트랜스링크 인베스트먼트의 박희덕 대표가 ‘FDE로 일한다는 것’을 주제로, 자사 FDE 사업에 관심 있는 학생·졸업생에게 어떤 일을 하는 자리인지, 어떤 사람을 찾는지를 직접 이야기하며, 인턴·채용 pool로 이어지는 실질적 연결의 시간입니다. 간담회 후속 1:1 면담·멘토링(희망자)은 8/29 행사 종료(3PM) 후 현장 또는 널담에서 진행됩니다.",
+      ko: "파이널 리허설 일정의 마무리로 마련된 커리어 간담회입니다(12:30–14:00). 트랜스링크 인베스트먼트의 박희덕 대표님이 ‘FDE로 일한다는 것’을 주제로, 자사 FDE 사업에 관심 있는 학생·졸업생에게 어떤 일을 하는 자리인지, 어떤 사람을 찾는지를 직접 이야기하며, 인턴·채용 pool로 이어지는 실질적 연결의 시간입니다. 간담회 후속 1:1 면담·멘토링(희망자)은 8/29 행사 종료(3PM) 후 현장 또는 널담에서 진행됩니다.",
       en: "A career session closing out the final-rehearsal day (12:30–14:00). Under the theme “Working as an FDE,” Park Hee-deok (CEO · General Partner, Translink Investment) talks directly with students and graduates interested in the firm's FDE business — what the work actually is and who they're looking for — a genuine connection into the internship and hiring pool. Follow-up 1:1 conversations and mentoring (for those who want them) run after the event closes on 29 Aug (3PM), either on-site or at Nuldam.",
     },
     location: AWS_OFFICE,
@@ -900,7 +900,7 @@ export const schedule: BEvent[] = [
       en: "11:00~, about an hour · Demo Day opens on ‘The Real Meaning of Zero100’.",
     },
     description: {
-      ko: "데모데이를 여는 키노트입니다. 11:00부터 약 1시간 동안, 트랜스링크 인베스트먼트의 박희덕 대표가 ‘제로백의 진짜 의미’를 주제로 이야기합니다. 창업가가 0에서 100으로 가기 위한 핵심 요소 — 협업·가치·실행·글로벌 스탠다드의 중요성과 협업의 힘, 그리고 왜 지금, 왜 싱가포르의 한인 학생인지를 짚으며 피칭 직전의 동기를 끌어올립니다.",
+      ko: "데모데이를 여는 키노트입니다. 11:00부터 약 1시간 동안, 트랜스링크 인베스트먼트의 박희덕 대표님이 ‘제로백의 진짜 의미’를 주제로 이야기합니다. 창업가가 0에서 100으로 가기 위한 핵심 요소 — 협업·가치·실행·글로벌 스탠다드의 중요성과 협업의 힘, 그리고 왜 지금, 왜 싱가포르의 한인 학생인지를 짚으며 피칭 직전의 동기를 끌어올립니다.",
       en: "The keynote that opens Demo Day. From 11:00, Park Hee-deok (CEO · General Partner, Translink Investment) speaks for about an hour on ‘The Real Meaning of Zero100’ — the core of going from zero to a hundred: collaboration, value, execution and global standards, the power of collaboration, and why now and why Korean students in Singapore — lifting the motivation right before pitching.",
     },
     location: ONSITE,

@@ -80,7 +80,7 @@ export const partnerIntros: Record<string, Phrase> = {
     en: "AXMOS is an AX (AI-transformation) consortium formed by Translink Investment, Wilt Venture Builder, Codepresso, Popup Studio and DRIMAES — jointly providing this builderthon's real company problems, mentoring and judging.",
   },
   "Translink Investment": {
-    ko: "실리콘밸리 트랜스링크캐피탈과 합작해 2016년 출범한 벤처캐피탈로, SaaS·딥테크 중심으로 7개 조합·누적 약 1,900억 원 규모를 운용합니다. 마켓컬리 초기 투자사로 알려져 있으며, 포트폴리오사의 글로벌 진출 지원이 강점입니다. 데모데이 키노트를 맡은 박희덕 대표가 이끄는 하우스입니다.",
+    ko: "실리콘밸리 트랜스링크캐피탈과 합작해 2016년 출범한 벤처캐피탈로, SaaS·딥테크 중심으로 7개 조합·누적 약 1,900억 원 규모를 운용합니다. 마켓컬리 초기 투자사로 알려져 있으며, 포트폴리오사의 글로벌 진출 지원이 강점입니다. 데모데이 키노트를 맡은 박희덕 대표님이 이끄는 하우스입니다.",
     en: "A venture capital firm launched in 2016 with Silicon Valley's TransLink Capital, running seven funds (~KRW 190B) focused on SaaS and deep tech. An early investor in Market Kurly, known for helping portfolios expand globally — led by Hee-Duk Park, our Demo Day keynote speaker.",
   },
   "Wilt Venture Builder": {
@@ -892,7 +892,7 @@ export const dict = {
         title: { ko: "네트워킹", en: "Networking" },
         points: [
           { ko: "대표·경력자와 Day 1·5·7·8 현장 교류", en: "In-person exchange with founders on Days 1·5·7·8" },
-          { ko: "박희덕·원대로 등 연사 세션", en: "Speaker sessions with Park · Won and more" },
+          { ko: "박희덕·원대로 대표님 등 연사 세션", en: "Speaker sessions with Park · Won and more" },
           { ko: "패널·공유 세션으로 technical 그 이상의 인사이트", en: "Panels & sharing sessions for more-than-technical insight" },
           // REMOVED: "Day 5 참가자 AI 유스케이스 발표 · QR 인기투표 (검토 중)" 및
           // "지속되는 한–싱 빌더 커뮤니티의 시작 멤버". 전자는 아직 미확정 세션
@@ -1111,9 +1111,9 @@ export const dict = {
     // programme, and the Day 7 overlap is disclosed rather than papered over —
     // a reader who recognises a name on both lists finds it already admitted.
     // Re-verify this line whenever a mentor or judge is added.
-    asideLabel: { ko: "기초 멘토링(Day 3·4)에 심사위원은 없어요", en: "No judges in the Day 3·4 mentoring" },
+    asideLabel: { ko: "기초 멘토링(Day 3·4)에 심사위원님은 없어요", en: "No judges in the Day 3·4 mentoring" },
     aside: {
-      ko: "AXMOS는 문제 발의·심사와 Day 2 크래시코스·Day 5–7 FDE 멘토링을 맡습니다. Day 7에 만나는 시니어 중엔 심사위원도 있지만, 눈높이 선배와의 1:1은 심사와 분리된 시간이에요.",
+      ko: "AXMOS는 문제 발의·심사와 Day 2 크래시코스·Day 5–7 FDE 멘토링을 맡습니다. Day 7에 만나는 시니어 중엔 심사위원님도 있지만, 눈높이 선배와의 1:1은 심사와 분리된 시간이에요.",
       en: "AXMOS handles problem-setting and judging, plus the Day 2 Crash Course and the Day 5–7 FDE mentoring. Some of the Day 7 seniors also judge — but the peer-level 1:1s stay separate from judging.",
     },
     // Scoped to stage 1. These four asks describe a peer-level persona ("학생
@@ -1574,7 +1574,7 @@ export const dict = {
         // 됩니다"로 직답을 강화할 것 — 그 전까지는 아래의 보수적 표현을 유지한다.
         q: { ko: "‘해커톤’이라는 말이 부담돼요. 영어 발표도 자신 없어요.", en: "‘Hackathon’ feels intimidating, and I'm not confident presenting in English." },
         a: {
-          ko: "발표 언어는 편한 쪽을 택할 수 있게 준비 중입니다 — 참가자와 심사위원 모두 한인 커뮤니티 기반이에요. 그리고 이건 밤샘 해커톤이 아니라 8일에 걸쳐 만드는 빌더톤 — 완성도보다 ‘내 손으로 만들었다’를 보여주는 자리입니다.",
+          ko: "발표 언어는 편한 쪽을 택할 수 있게 준비 중입니다 — 참가자와 심사위원님 모두 한인 커뮤니티 기반이에요. 그리고 이건 밤샘 해커톤이 아니라 8일에 걸쳐 만드는 빌더톤 — 완성도보다 ‘내 손으로 만들었다’를 보여주는 자리입니다.",
           en: "We're arranging it so you can present in whichever language you're comfortable in — both the participants and the judges come from the Korean community here. And this isn't an all-nighter hackathon but a builderthon built over eight days: it's about showing you made it yourself, not about polish.",
         },
       },
@@ -1642,7 +1642,7 @@ export const dict = {
       {
         q: { ko: "심사는 어떻게 하나요? 기술이 완벽해야 하나요?", en: "How is judging done? Does it need to be technically polished?" },
         a: {
-          ko: "기술 완성도는 심사 기준이 아닙니다. 보는 것은 ‘회사·문제 이해 → 아이디어 → 데모의 정합성’이고, 배점은 회사·문제 이해도 20 · 아이디어의 적절성 25 · 데모↔아이디어 정합 30 · 도입 가능성 15 · 발표·전달 10 — 이해+아이디어+정합이 75%를 차지합니다. 프로토타입은 프론트엔드 와이어프레임 수준이어도 괜찮고, 목업·슬라이드만이면 감점됩니다. 배점은 심사위원·파트너 합의로 조정될 수 있습니다. 심사는 실제 산업에서 문제를 풀어온 현업 리더들이 직접 합니다(심사위원 섹션 참조).",
+          ko: "기술 완성도는 심사 기준이 아닙니다. 보는 것은 ‘회사·문제 이해 → 아이디어 → 데모의 정합성’이고, 배점은 회사·문제 이해도 20 · 아이디어의 적절성 25 · 데모↔아이디어 정합 30 · 도입 가능성 15 · 발표·전달 10 — 이해+아이디어+정합이 75%를 차지합니다. 프로토타입은 프론트엔드 와이어프레임 수준이어도 괜찮고, 목업·슬라이드만이면 감점됩니다. 배점은 심사위원님·파트너사 합의로 조정될 수 있습니다. 심사는 실제 산업에서 문제를 풀어온 현업 리더분들이 직접 합니다(심사위원 섹션 참조).",
           en: "Technical polish is not a judging criterion. What we look at is the coherence of ‘understanding the company & problem → idea → demo’, scored as: company/problem understanding 20 · appropriateness of the idea 25 · demo ↔ idea alignment 30 · adoption feasibility 15 · delivery 10 — understanding + idea + alignment make up 75%. A front-end wireframe-level prototype is fine; mockups or slides alone lose points. Weightings may be adjusted by agreement among judges and partners. Judging is done first-hand by leaders who have solved these problems in industry (see the judges section).",
         },
       },
