@@ -2163,7 +2163,11 @@ export default function Journey() {
           {t(dict.speakers.heading)}
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.speakers.intro)}</p>
-        <div className="mt-10 grid gap-5 text-left sm:grid-cols-3">
+        {/* 2-up then 4-up, not 3-up: there are four cards now (한장환's Day 1 AWS
+            session joined the keynote), and a 3-column grid left one card orphaned
+            on its own row. 4-across keeps them on one line at lg and pairs them
+            evenly below that. Revisit if a fifth card ever lands here. */}
+        <div className="mt-10 grid gap-5 text-left sm:grid-cols-2 lg:grid-cols-4">
           {/* keyed by index, not `img` — one speaker can hold two sessions
               (박희덕: Day 7 간담회 + Day 8 키노트) and so reuse the same photo */}
           {dict.speakers.people.map((s, si) => (

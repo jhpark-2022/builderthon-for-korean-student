@@ -971,6 +971,33 @@ export const dict = {
         ],
       },
       {
+        // Second Day 1 card, placed right after the keynote so the four cards read
+        // in day order (1 · 1 · 7 · 8). Backs `d1-aws-session` in data/schedule.ts —
+        // that entry's summary and this card's points describe the same hour and
+        // should move together.
+        //
+        // Content is from his own AI-DLC deck (Execution Research/Mentoring/
+        // TalkFile_AIDLC-janghan.pdf): the SDLC-as-waiting problem, the 10–15%
+        // velocity ceiling when AI is bolted onto coding alone, AI-DLC as the
+        // answer, and its three phases run as a mob. Deliberately NOT included:
+        // the Kiro demo and the 3-day workshop agenda in that deck — that deck is
+        // his multi-day enterprise workshop, and this is a ~1h session. Promising
+        // a live tool demo we have not scheduled would be a claim we can't keep.
+        // Role is verbatim from that deck's title slide.
+        day: { ko: "Day 1 · AWS 세션", en: "Day 1 · AWS session" },
+        name: { ko: "한장환", en: "Jang Whan Han" },
+        role: { ko: "Well-Architected Solution Innovation SA, AWS", en: "Well-Architected Solution Innovation SA, AWS" },
+        topic: { ko: "‘AI-DLC’ — AI가 주도하는 개발 라이프사이클", en: "“AI-DLC” — the AI-Driven Development Lifecycle" },
+        img: "/partners/logos/speaker-han.jpeg",
+        linkedin: "https://www.linkedin.com/in/jangwhan/",
+        points: [
+          { ko: "개발의 진짜 병목은 코딩이 아니라 대기 — 서로가 서로를 기다리는 구조", en: "The real bottleneck isn't coding — it's everyone waiting on everyone else" },
+          { ko: "AI를 코딩 보조로만 쓰면 속도는 10–15% — 도약이 아니라 계단인 이유", en: "Bolt AI onto coding alone and velocity moves 10–15% — a step, not a leap" },
+          { ko: "AI-DLC — AI가 계획·작업 분해·아키텍처를 주도하고, 검증·결정·감독은 사람이", en: "AI-DLC — AI drives planning, task breakdown & architecture; humans keep validation, decisions & oversight" },
+          { ko: "Inception → Construction → Operation · 팀이 한 화면에서 함께(Mob)", en: "Inception → Construction → Operation, with the whole team on one screen (mob)" },
+        ],
+      },
+      {
         // Same speaker as the Day 8 keynote — the career session is a separate
         // session on a separate day, so it gets its own card (see d7-speaker-session).
         day: { ko: "Day 7 · 커리어 간담회", en: "Day 7 · Career session" },
