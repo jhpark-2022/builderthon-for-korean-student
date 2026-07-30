@@ -1232,9 +1232,13 @@ export const dict = {
       // REmited (Team Remited) — CEO as mentor.
       {
         name: { ko: "Brian Bae", en: "Brian Bae" }, org: { ko: "REmited", en: "REmited" }, role: { ko: "CEO", en: "CEO" },
+        // NOT "前 Antler" — he is an Entrepreneur in Residence AT Antler, which is
+        // a current standing, not a past employment. "공동창업자" was dropped: the
+        // card already prints "REmited · CEO" directly above, so it spent a line
+        // restating the org line instead of adding anything.
         intro: {
-          ko: "공동창업자 · Google for Startups Accelerator 2026 선정. 前 Antler.",
-          en: "Co-founder · Google for Startups Accelerator 2026. Ex-Antler.",
+          ko: "Google for Startups Accelerator 2026 선정 · Antler Entrepreneur in Residence.",
+          en: "Google for Startups Accelerator 2026 · Entrepreneur in Residence at Antler.",
         },
         days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/brian-bae-ba638a131",
       },

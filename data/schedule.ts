@@ -372,8 +372,8 @@ export const schedule: BEvent[] = [
   // Wording is from his own LinkedIn headline ("Senior Cloud & AI Solution
   // Architect @ Microsoft").
   //
-  // Room is still TBC; the campus (SMU) is agreed. Keep the "강의실 확정 시
-  // 안내" clause until a room is booked.
+  // Building is agreed (SMU SOL, the School of Law); the ROOM is still TBC. Keep the
+  // "강의실 확정 시 안내" clause until a room is actually booked.
   {
     id: "pre-enterprise-deep-dive",
     day: 0,
@@ -384,18 +384,27 @@ export const schedule: BEvent[] = [
     confirmed: true,
     dayLabel: { ko: "사전 세션 · 08.13 (목) 18:30–19:30", en: "Pre-event · Thu 13 Aug, 18:30–19:30" },
     title: { ko: "Enterprise Tech Deep Dive — How to Build", en: "Enterprise Tech Deep Dive — How to Build" },
-    speaker: { ko: "Microsoft 솔루션 아키텍트 (성함 비공개)", en: "A Microsoft solution architect (name withheld)" },
+    // Just the role — no "(성함 비공개)" tag. Saying out loud that a name is being
+    // withheld draws attention to the absence and reads as something hidden; the
+    // role alone reads as a normal listing. The comment above is the record of WHY
+    // there is no name here — keep that, and never fill one in.
+    speaker: { ko: "Microsoft 클라우드·AI 솔루션 아키텍트", en: "Microsoft cloud & AI solution architect" },
     summary: {
-      ko: "본 행사 9일 전 · SMU 현장 — 기업이 AI를 실제로 어떻게 만드는지 아키텍트 관점에서.",
-      en: "Nine days before the event · in person at SMU — how enterprise AI actually gets built, from an architect's seat.",
+      ko: "본 행사 9일 전 · SMU SOL 현장 — “데모는 쉽고, 시스템은 어렵다”. 엔터프라이즈 AI 에이전트를 실제로 만드는 이야기.",
+      en: "Nine days before the event · in person at SMU SOL — “the demo is easy, the system is hard”: building enterprise AI agents for real.",
     },
     description: {
-      ko: "빌더톤이 시작되기 전, 기업 현장에서 AI를 실제로 설계하고 배포하는 사람에게 직접 듣는 시간입니다. Microsoft에서 클라우드·AI 솔루션 아키텍트로 일하는 분이 엔터프라이즈 AI를 어떻게 만들고 조직에 붙이는지를 1시간가량 풀어냅니다(연사 요청에 따라 성함은 공개하지 않습니다). 8월 13일 목요일 18:30–19:30, SMU 현장에서 열리며 강의실은 확정되는 대로 안내합니다. 빌더톤 등록 여부와 무관하게 NUS·NTU·SMU 한인 학생이면 누구나 올 수 있습니다. 사전에 질문을 받아 세션에 반영하니, 궁금한 점은 오픈채팅으로 미리 보내주세요.",
-      en: "Before the builderthon starts, an hour with someone who designs and ships enterprise AI for a living. A cloud & AI solution architect at Microsoft walks through how enterprise AI actually gets built and adopted inside an organisation (the speaker asked us not to publish their name). Thursday 13 August, 18:30–19:30, in person at SMU — the room will be announced once booked. Open to any Korean student at NUS, NTU or SMU, whether or not you register for the builderthon. Questions are collected beforehand and worked into the session, so send yours via the open chat.",
+      ko: "빌더톤이 시작되기 전, 기업 현장에서 AI를 실제로 설계하고 배포하는 사람에게 직접 듣는 시간입니다. Microsoft 클라우드·AI 솔루션 아키텍트가 ‘엔터프라이즈 AI 에이전트가 보기보다 어려운 이유’를 다룹니다 — 데모는 2초면 되지만 프로덕션까지는 몇 달이 걸리는 이유, 챗봇과 에이전트를 가르는 것(신원·권한·툴·승인·감사), 그리고 실제로 구축된 회계 자동화 에이전트 사례. 8월 13일 목요일 18:30–19:30, SMU SOL(School of Law)에서 열리며 강의실은 확정되는 대로 안내합니다. 빌더톤 등록 여부와 무관하게 NUS·NTU·SMU 한인 학생이면 누구나 올 수 있습니다. 사전에 받은 질문을 세션에 반영하니 오픈채팅으로 미리 보내주세요.",
+      en: "Before the builderthon starts, an hour with someone who designs and ships enterprise AI for a living. A Microsoft cloud & AI solution architect covers why enterprise AI agents are harder than they look — why a 2-second demo takes months to reach production, what separates a chatbot from an agent (identity, permissions, tools, approval, audit), and a real accounts-payable agent built end to end. Thursday 13 August, 18:30–19:30, at SMU SOL (School of Law) — the room will be announced once booked. Open to any Korean student at NUS, NTU or SMU, whether or not you register for the builderthon. Questions are worked into the session, so send yours via the open chat beforehand.",
     },
-    location: { ko: "SMU 현장 (강의실 추후 안내)", en: "In person at SMU (room TBA)" },
+    // Building is settled (SMU School of Law); the ROOM is not. Day 1 uses the same
+    // law school under its full name — "SMU YPHSL B2-03" — so if these two ever need
+    // to read as one venue, unify the naming rather than leaving SOL and YPHSL to
+    // look like two different buildings to a student trying to find the door.
+    location: { ko: "SMU SOL (강의실 추후 안내)", en: "SMU SOL — School of Law (room TBA)" },
     opportunities: [
-      { ko: "기업이 AI를 도입할 때 실제로 무엇을 설계하고 무엇에 막히는지", en: "What actually gets designed — and what actually blocks — when a company adopts AI" },
+      { ko: "챗봇과 에이전트의 차이 — 신원·권한·툴·승인·감사까지 붙어야 일이 된다", en: "What separates a chatbot from an agent — identity, permissions, tools, approval, audit" },
+      { ko: "기업 에이전트가 어려운 6가지 이유와, 실제 구축된 회계 자동화 에이전트 사례", en: "The six reasons enterprise agents are hard, and a real accounts-payable agent that works" },
       { ko: "빌더톤 과제를 풀 때 바로 쓸 수 있는 아키텍처 관점", en: "An architecture lens you can take straight into the builderthon problems" },
       { ko: "사전 질문을 받아 세션에 반영 — 오픈채팅으로 보내면 됩니다", en: "Questions collected in advance and worked into the session — send them via the open chat" },
     ],
