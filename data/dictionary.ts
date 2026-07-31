@@ -1047,16 +1047,7 @@ export const dict = {
       ko: "아이디어를 형태로 만들 때, 빌드가 막힐 때, 무대에서 팔아야 할 때 — 필요한 사람이 매번 다릅니다.",
       en: "Shaping the idea, unblocking the build, selling it on stage — each needs a different person in the room.",
     },
-    personaLabel: { ko: "1단계 멘토 페르소나", en: "Stage 1 · mentor persona" },
-    // The persona describes STAGE 1 only. Stage 2 (Day 5–7) is Popup Studio's
-    // FDEs, who are professionals rather than peer-level seniors — so the line
-    // now says which stage it applies to instead of reading as a claim about
-    // every mentor on the page.
-    persona: {
-      ko: "한때 우리와 같았고, 같은 고민을 하던 한국 유학생 출신 founder · startup 멤버 (Day 3·4 기초 멘토링).",
-      en: "Korean ex-international-student founders / startup members — once in our shoes, with the same struggles (Day 3·4, the foundational stage).",
-    },
-    // ── Three stages ────────────────────────────────────────────────────────
+    // ── Three stages, one card each ─────────────────────────────────────────
     // The frame is the point: this is NOT a difficulty ladder. It tracks how a
     // product actually grows — shape the idea, then harden it, then learn to
     // sell it — which is why stage 3 is about delivery rather than a harder
@@ -1066,67 +1057,71 @@ export const dict = {
     // are what makes those badges legible (3·4 = ideation, 7 = pitch & sales).
     // `phase` is read from data/schedule.ts at render time, so the 워밍업/실전
     // labels can never drift from the programme section.
-    stageFrame: {
-      ko: "난이도 순서가 아니라, 아이디에이션 → 고도화 → 세일즈로 이어지는 제품의 발전 과정을 따라갑니다.",
-      en: "Not levels of difficulty — mentoring that follows how a product grows: ideation → refinement → selling.",
-    },
+    //
+    // ONE stage = ONE card = label + `persona` (who you meet) + `role` (what the
+    // time is for). Nothing else. This block used to be three stacked things —
+    // a large "1단계 멘토 페르소나" card, an amber AXMOS aside, and four "멘토에게
+    // 요청하는 것" cards — which buried the one fact a participant needs (who
+    // shows up on which day) under recruiting-side copy. The persona that lived
+    // in the big card is now inside stage 1, where it is actually true; the
+    // aside's load-bearing sentence survives as `separationNote` below. Keep the
+    // two sentences per card ONE sentence each: the whole point of this layout
+    // is what it leaves out.
     stages: [
       {
         day: { ko: "Day 3·4", en: "Day 3·4" },
         phaseDay: 3,
         title: { ko: "아이디에이션", en: "Ideation" },
-        body: {
-          ko: "학생 눈높이의 선배들과 아이디어를 형태로 만드는 멘토링. 또래 창업가·현직 주니어 엔지니어가 함께합니다.",
-          en: "Ideation mentoring with seniors who speak your language — peer founders and early-career engineers.",
+        persona: {
+          ko: "한때 우리와 같았고, 같은 고민을 하던 한국 유학생 출신 또래 창업가·주니어 엔지니어.",
+          en: "Peer founders and early-career engineers who were once exactly where you are — Korean students abroad.",
+        },
+        role: {
+          ko: "정답이 아니라 같은 레벨의 context로 — 아이디어를 형태로 만드는 시간.",
+          en: "Ideation with people who share your context, not lectures.",
         },
       },
       {
         day: { ko: "Day 5–7", en: "Day 5–7" },
         phaseDay: 5,
         title: { ko: "고도화", en: "Refinement" },
-        body: {
-          ko: "Popup Studio FDE와의 온라인 오피스아워. 빌드가 막히는 지점을 현업 전문가와 풉니다. 드롭인 방식.",
-          en: "Online office hours with Popup Studio FDEs — drop in when your build hits a wall.",
+        // Stage 2 is Popup Studio's, NOT "AXMOS's" — Popup Studio is one member
+        // of that consortium, and attributing its FDE office hours to AXMOS was
+        // pre-pivot copy. Name the company here and everywhere else.
+        persona: {
+          ko: "Popup Studio의 FDE(Forward Deployed Engineer) — AI 제품을 현장에서 만드는 현업 엔지니어.",
+          en: "Forward Deployed Engineers from Popup Studio — engineers who build AI products in the field.",
+        },
+        role: {
+          ko: "온라인 오피스아워, 드롭인 방식. 빌드가 막히는 지점을 전문가와 풉니다.",
+          en: "Drop-in online office hours for when your build hits a wall.",
         },
       },
       {
         day: { ko: "Day 7", en: "Day 7" },
         phaseDay: 7,
         title: { ko: "피치 · 세일즈", en: "Pitch & sales" },
-        body: {
-          ko: "데모데이 전, ‘어떻게 파는가’를 다듬는 멘토링. 기술이 아니라 전달을 봐주는 현직 GTM·세일즈 멘토들입니다.",
-          en: "Pre–demo day pitch mentoring — how to sell, not how to build. Led by working GTM & sales professionals.",
+        persona: {
+          ko: "AWS 등 현직 GTM·세일즈 시니어.",
+          en: "Senior GTM & sales professionals from AWS and beyond.",
+        },
+        role: {
+          ko: "데모데이 전, 기술이 아니라 ‘어떻게 파는가’를 다듬습니다.",
+          en: "Pre–demo day pitch sharpening — how to sell, not how to build.",
         },
       },
     ],
-    // Scoped to what is actually true, twice over.
-    //
-    // A blanket "멘토와 심사는 분리" was never true: 신동혁 is a Day 7 mentor AND a
-    // judge. And "AXMOS = 심사·문제 발의 전담" broke a second time once Popup
-    // Studio (an AXMOS company) took the Day 5–7 FDE mentoring — the earlier
-    // "크래시코스만 예외" patch no longer covered it.
-    //
-    // What IS true, and checked against the data: NO judge appears among the
-    // Day 3·4 mentors. So the claim now names that stage instead of the whole
-    // programme, and the Day 7 overlap is disclosed rather than papered over —
-    // a reader who recognises a name on both lists finds it already admitted.
-    // Re-verify this line whenever a mentor or judge is added.
-    asideLabel: { ko: "기초 멘토링(Day 3·4)에 심사위원님은 없어요", en: "No judges in the Day 3·4 mentoring" },
-    aside: {
-      ko: "AXMOS는 문제 발의·심사와 Day 2 크래시코스·Day 5–7 FDE 멘토링을 맡습니다. Day 7에 만나는 시니어 중엔 심사위원님도 있지만, 눈높이 선배와의 1:1은 심사와 분리된 시간이에요.",
-      en: "AXMOS handles problem-setting and judging, plus the Day 2 Crash Course and the Day 5–7 FDE mentoring. Some of the Day 7 seniors also judge — but the peer-level 1:1s stay separate from judging.",
+    // The one line kept from the amber aside that used to sit here. That aside
+    // ran four clauses about who runs which day; the only part a participant
+    // needed was this — mentoring hours are not assessed. Everything else it
+    // said (AXMOS's roles, the Day 7 mentor/judge overlap) is already visible
+    // in the programme section and on the cards themselves.
+    // It is deliberately a footnote, not a card: it answers a worry, it isn't
+    // information anyone came for.
+    separationNote: {
+      ko: "심사와 멘토링은 분리 운영됩니다 — 멘토링 시간은 평가와 무관해요.",
+      en: "Judging and mentoring are kept separate — mentoring hours never affect your score.",
     },
-    // Scoped to stage 1. These four asks describe a peer-level persona ("학생
-    //으로서 함께 ideate", "먼저 같은 길을 걸어본 선배") — asking that of Popup
-    // Studio's FDEs or a working GTM lead would be both wrong and faintly
-    // insulting. They are what we ask of the Day 3·4 mentors specifically.
-    asksTitle: { ko: "1단계 멘토에게 요청하는 것", en: "What we ask of the stage-1 mentors" },
-    asks: [
-      { title: { ko: "정답 아닌 ‘눈높이’", en: "Eye-level, not the answer" }, desc: { ko: "정답보다 같은 레벨의 context를 공유 — 학생으로서 함께 ideate.", en: "Share same-level context and ideate as a student — don't hand over the answer." } },
-      { title: { ko: "제품 아닌 ‘삶’까지", en: "Life, not just the product" }, desc: { ko: "먼저 같은 길을 걸어본 선배로서 제품 + 삶·커리어 멘토링.", en: "Mentor on life & career as someone who walked the path first." } },
-      { title: { ko: "팀당 1시간+", en: "1+ hour per team" }, desc: { ko: "제대로 된 멘토링을 위해 팀당 최소 1시간 이상 확보.", en: "At least an hour per team for proper mentoring." } },
-      { title: { ko: "연락처 공유", en: "Share contacts" }, desc: { ko: "email · LinkedIn 공유 → 행사 이후에도 팀이 후속 연락(follow-up).", en: "Share email · LinkedIn so teams can follow up after the event." } },
-    ],
     // ── 매칭 방식 안내 (그리드 바로 위) ────────────────────────────────────────
     // Expectation management: participants kept asking to be assigned a NAMED
     // mentor. Sessions are assigned by the organizers from the overlap between a
@@ -1157,7 +1152,7 @@ export const dict = {
     // taken verbatim from their own LinkedIn profiles (not invented).
     // LinkedIn URLs are the mentors' public profiles.
     //
-    // ORDER = the day they are with you (Day 1 → 2 → 3·4 → 3·4·7 → 7). This is the
+    // ORDER = the day they are with you (Day 1 → 2 → 3·4 → 7). This is the
     // order a participant meets them, which is the only ordering that means
     // anything on a page they read before the event. If a mentor's `days` change,
     // move the entry too — the grid renders the array as-is.
@@ -1199,10 +1194,11 @@ export const dict = {
       // He replaced a colleague here when the Crash Course instructor changed;
       // if it changes again, this card and every 크래시코스 mention in
       // data/schedule.ts move together.
-      // Codepresso is an AXMOS company, so the aside above this grid names the
-      // AXMOS involvement stated in the aside above this grid. Keep the two in
-      // step: any further AXMOS name added here needs that sentence revisited,
-      // or the page contradicts itself in one screen.
+      // Codepresso is an AXMOS company. The amber aside that used to spell out
+      // which days AXMOS runs is gone (the stage cards now say who is on each
+      // day), so nothing above this grid needs re-checking when an AXMOS name is
+      // added here — but the stage-2 card must keep naming POPUP STUDIO, not
+      // AXMOS, as the FDE office-hours host.
       {
         name: { ko: "김지훈", en: "Jihoon Kim" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "이사 · Director", en: "Director" },
         intro: {
@@ -1242,14 +1238,35 @@ export const dict = {
         },
         days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/brian-bae-ba638a131",
       },
-      // ── Day 3·4·7 ───────────────────────────────────────────────────────────
+      // YMX (XR·디지털 트윈 스타트업, 싱가포르) — 사업개발 총괄로 참여. Facts below are
+      // from his own LinkedIn: Head of Business Development at YMX.INC since Jan
+      // 2023 (also its PDPC Data Protection Officer — one title per card, so the
+      // DPO role is not printed), KITRI Best-of-the-Best faculty mentor in digital
+      // forensics & incident response since 2012, and 2006–2022 in forensics
+      // (Douzon BizOn chief forensic analyst · Duzon ISS). Korea University.
+      // `img` is set even though the mentor card doesn't render a photo — the
+      // file is on hand, so the field is ready if the avatar ever returns.
+      // NOTE: the Korean name is a transliteration of "JongHyun Kim" — confirm the
+      // spelling with him before this goes out.
+      {
+        name: { ko: "김종현", en: "Joseph JongHyun Kim" }, org: { ko: "YMX", en: "YMX" }, role: { ko: "사업개발 총괄", en: "Head of Business Development" },
+        intro: {
+          ko: "XR·디지털 트윈 스타트업 · 싱가포르 근무. 디지털 포렌식 16년+ · KITRI BoB 멘토. 고려대.",
+          en: "An XR & digital-twin startup, based in Singapore. 16+ yrs in digital forensics · KITRI BoB mentor. Korea University.",
+        },
+        days: "Day 3·4", daysPending: "", img: "/partners/people/joseph-jonghyun-kim.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/joseph-jonghyun-kim-009b244a",
+      },
+      // 황영준 · 이유택 were "Day 3·4·7" until their Day 7 was dropped — both are
+      // stage-1 mentors only now, which is why there is no longer a Day 3·4·7
+      // group between this block and the Day 7 one. Re-add the day (and move the
+      // cards back out) only if they are actually booked for the career session.
       {
         name: { ko: "황영준", en: "Hwang Young-jun" }, org: { ko: "T3Q", en: "T3Q" }, role: { ko: "AI", en: "AI" },
         intro: {
           ko: "컴퓨터 비전·NLP 3년+. VLM 문서 처리·검색엔진 고도화. 고려대.",
           en: "3+ yrs in computer vision & NLP. VLM document processing, search. Korea University.",
         },
-        days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620",
+        days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620",
       },
       {
         name: { ko: "이유택", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" },
@@ -1257,7 +1274,7 @@ export const dict = {
           ko: "SW 엔지니어 5년 — LLM 코드리뷰 봇·사내 RAG 구축. 현 AI 석사과정.",
           en: "5 yrs as a software engineer — LLM code-review bots, internal RAG. Now an MSc AI student.",
         },
-        days: "Day 3·4·7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek",
+        days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek",
       },
       // Day 5–7 stage-2 mentoring is Popup Studio's, but it has NO card here:
       // this grid is named people you may be matched with 1:1, and Popup Studio
@@ -1288,6 +1305,36 @@ export const dict = {
           en: "AWS Sales Specialist, 4+ yrs. Ex-Rescale. MBA, Nanyang Business School.",
         },
         days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sugkun-lim",
+      },
+      // Codepresso — the two below are ALSO Day 8 judges (dict.judges.people).
+      // That double role is disclosed by dict.mentoring.separationNote above:
+      // judging and mentoring are run separately, so a Day 7 mentor may judge
+      // while the mentoring hours themselves stay outside the scoring. Keep name,
+      // org, role and LinkedIn identical to their judge cards — one person, two
+      // surfaces. No judge appears among the Day 3·4 mentors; re-check that
+      // whenever a mentor or judge is added.
+      {
+        name: { ko: "이동훈", en: "Lee Dong-hoon" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "대표 · CEO", en: "CEO" },
+        // The judge card carries the full bio; this line keeps only what a team
+        // meeting him 1:1 needs, without repeating "Codepresso · 대표" above it.
+        intro: {
+          ko: "AI 코딩·역량진단 교육 플랫폼 운영. 前 스마일게이트 · LG전자 소프트웨어 엔지니어.",
+          en: "Runs an AI-coding & skills-assessment education platform. Ex-Smilegate · LG Electronics engineer.",
+        },
+        days: "Day 7", daysPending: "", img: "/partners/people/lee-dong-hoon.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/donghun-lee-8888a13a",
+      },
+      // 황현진: LinkedIn headline is "Co-founder & Director & Content R&D Lead at
+      // Codepresso" — the card prints ONE role segment, so 공동창업자 · 이사 goes here
+      // and the 콘텐츠 R&D 총괄 line moves into the intro. Director since Jan 2020,
+      // before that 9 years as an LG Electronics software engineer. 서강대.
+      // NOTE: Korean name transliterated from "Hyunjin Hwang" — confirm the spelling.
+      {
+        name: { ko: "황현진", en: "Hyunjin Hwang" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "공동창업자 · 이사", en: "Co-founder · Director" },
+        intro: {
+          ko: "콘텐츠 R&D 총괄. 前 LG전자 소프트웨어 엔지니어 9년. 서강대.",
+          en: "Content R&D lead. Ex-LG Electronics software engineer, 9 yrs. Sogang University.",
+        },
+        days: "Day 7", daysPending: "", img: "/partners/people/hwang-hyun-jin.png", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697",
       },
     ],
   },
@@ -1394,6 +1441,25 @@ export const dict = {
         },
         linkedin: "https://www.linkedin.com/in/donghun-lee-8888a13a",
       },
+      // Sits directly after 이동훈: same company, and the two come as a pair —
+      // both are Day 7 mentors as well as judges (dict.mentoring.mentors).
+      // Facts from her own LinkedIn ("Co-founder & Director & Content R&D Lead at
+      // Codepresso", Director since Jan 2020, LG Electronics software engineer
+      // Feb 2011 – Jan 2020, 서강대). The AXMOS clause is the same one 이동훈's bio
+      // carries — it is the consortium her company belongs to, not a claim of her own.
+      {
+        name: { ko: "황현진", en: "Hyunjin Hwang" },
+        org: { ko: "Codepresso", en: "Codepresso" },
+        role: { ko: "공동창업자 · 이사", en: "Co-founder · Director" },
+        tag: { ko: "AI 코딩 교육 · 콘텐츠 R&D", en: "AI coding education · content R&D" },
+        img: "/partners/people/hwang-hyun-jin.png",
+        pending: false,
+        bio: {
+          ko: "코드프레소 공동창업자 · 콘텐츠 R&D 총괄 — AI 코딩·역량진단 교육 콘텐츠 설계(AXMOS 컨소시엄). 前 LG전자 소프트웨어 엔지니어 9년. 서강대.",
+          en: "Co-founder · content R&D lead at Codepresso — designs its AI-coding & skills-assessment curriculum (AXMOS consortium). Ex-LG Electronics engineer, 9 yrs. Sogang.",
+        },
+        linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697",
+      },
       {
         name: { ko: "신상길", en: "Shin Sang-gil" },
         org: { ko: "FUJIFILM BI Singapore", en: "FUJIFILM BI Singapore" },
@@ -1460,8 +1526,10 @@ export const dict = {
     // not locked — the same convention as the mentor grid's daysPending pill, so a
     // reader who has scrolled past the mentors already knows what amber means.
     pendingLabel: { ko: "협의 중", en: "TBC" },
-    tbcLabel: { ko: "추후 공개", en: "To be announced" },
-    tbcNote: { ko: "트랙별 심사위원 섭외 중", en: "Track judges being confirmed" },
+    // tbcLabel / tbcNote ("추후 공개 · 트랙별 심사위원 섭외 중") lived here for the two
+    // dashed placeholder cards at the end of the grid. The panel is complete, so
+    // the cards and their copy were both removed — restore the pair together if
+    // judges are ever pending again.
   },
 
   modal: {

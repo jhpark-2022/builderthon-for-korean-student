@@ -2203,10 +2203,20 @@ export default function Journey() {
           {t(dict.mentoring.heading)}
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.mentoring.intro)}</p>
-        {/* Three stages, laid out as steps. Horizontal on desktop so the
-            progression reads left-to-right; stacked below sm. The 워밍업/실전
-            label on each step is read from data/schedule.ts (the day's own
-            phase), so it can never disagree with the programme section. */}
+        {/* Three stages, one card each — WHO you meet and WHAT the time is for,
+            and nothing more. Horizontal on desktop so the progression reads
+            left-to-right; stacked below sm. The 워밍업/실전 label on each card is
+            read from data/schedule.ts (the day's own phase), so it can never
+            disagree with the programme section.
+
+            This replaced three stacked blocks (a large stage-1 persona card, an
+            amber AXMOS aside, and four "멘토에게 요청하는 것" cards). Those were
+            mentor-recruiting copy addressed to mentors, sitting in a section a
+            participant reads to find out who they will meet — so the answer was
+            buried. Same card tokens as before (emerald border/tint, numbered
+            pill, phase pill): this is a subtraction, not a new design language.
+            If a fourth line ever gets added to a card, it belongs somewhere
+            else. */}
         <div className="mx-auto mt-8 grid max-w-5xl gap-3 text-left sm:grid-cols-3">
           {dict.mentoring.stages.map((st, i) => {
             const phase = days.find((d) => d.day === st.phaseDay)?.phase;
@@ -2224,42 +2234,22 @@ export default function Journey() {
                   )}
                 </div>
                 <p className="mt-3 break-keep text-[15px] font-bold leading-snug text-white">{t(st.title)}</p>
-                <p className="mt-1.5 break-keep text-xs leading-relaxed text-white/70">{t(st.body)}</p>
+                {/* Persona first (who), then the role line (what for) — dimmer and
+                    separated by a hairline so the two don't read as one block.
+                    break-keep everywhere: Korean breaks between syllables by
+                    default, which splits words like 멘토링 in half. */}
+                <p className="mt-2.5 break-keep text-xs leading-relaxed text-white/75">{t(st.persona)}</p>
+                {/* mt-auto pins the role block to the bottom of the card, so the
+                    three hairlines line up across the row even though the persona
+                    lines differ in length (stage 3's is one line, stages 1–2 run
+                    to two). Without it the dividers stair-stepped. */}
+                <p className="mt-auto break-keep border-t border-emerald-400/15 pt-2.5 text-xs leading-relaxed text-emerald-100/70">{t(st.role)}</p>
               </div>
             );
           })}
         </div>
-        <p className="mx-auto mt-4 max-w-3xl break-keep text-sm leading-relaxed text-emerald-100/70">{t(dict.mentoring.stageFrame)}</p>
-        <div className="mt-8 grid gap-4 text-left lg:grid-cols-3">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 lg:col-span-2">
-            <p className="text-xs font-bold uppercase tracking-wide text-emerald-300/80">{t(dict.mentoring.personaLabel)}</p>
-            {/* break-keep + text-balance, together, for one orphan: this line was
-                breaking mid-word into "…기초 멘토 / 링)." — Korean wraps between
-                syllables by default, so "멘토링" got split in half. break-keep moves
-                the break to a word boundary; text-balance then evens the two lines
-                out so the second one isn't a stub hanging under a full first line. */}
-            <p className="mt-3 break-keep text-balance text-lg font-semibold leading-relaxed text-white">{t(dict.mentoring.persona)}</p>
-          </div>
-          <div className="rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] p-6">
-            {/* break-keep — same reason as the mentor cards below: the label now
-                runs long enough to wrap, and Korean's default break split the
-                particle off its stem ("진행 / 은 예외"). */}
-            <p className="break-keep text-sm font-bold text-amber-200">{t(dict.mentoring.asideLabel)}</p>
-            <p className="mt-2 break-keep text-sm leading-relaxed text-amber-100/80">{t(dict.mentoring.aside)}</p>
-          </div>
-        </div>
-        <div className="mt-6 text-left">
-          <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/70">{t(dict.mentoring.asksTitle)}</p>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {dict.mentoring.asks.map((a, i) => (
-              <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-400/15 text-xs font-black text-emerald-200">{i + 1}</span>
-                <h4 className="mt-3 text-sm font-bold text-white">{t(a.title)}</h4>
-                <p className="mt-1.5 text-xs leading-relaxed text-white/65">{t(a.desc)}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* The single footnote left under the cards — see dict.mentoring.separationNote. */}
+        <p className="mx-auto mt-4 max-w-3xl break-keep text-xs leading-relaxed text-white/50">{t(dict.mentoring.separationNote)}</p>
 
         {/* ── How matching works ────────────────────────────────────────────
             Sits directly above the grid on purpose: the cards below are a
@@ -2405,16 +2395,10 @@ export default function Journey() {
                 </div>
               );
             })}
-            {/* Two "추후 공개" placeholders — track judges being confirmed. */}
-            {[0, 1].map((i) => (
-              <div key={`tbc-${i}`} className="flex h-full flex-col items-center justify-center rounded-2xl border border-dashed border-white/12 bg-white/[0.02] p-6 text-center">
-                <span aria-hidden className="flex h-12 w-12 items-center justify-center rounded-full border border-dashed border-white/15 text-white/25">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5" /><path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
-                </span>
-                <p className="mt-3 text-xs font-bold uppercase tracking-[0.14em] text-white/55">{t(dict.judges.tbcLabel)}</p>
-                <p className="mt-1.5 text-xs leading-relaxed text-white/45">{t(dict.judges.tbcNote)}</p>
-              </div>
-            ))}
+            {/* The two "추후 공개" placeholder cards that used to close this grid are
+                gone: the panel is full at ten judges, so an empty dashed slot read
+                as a gap rather than as news. dict.judges.tbcLabel/tbcNote went with
+                them — bring both back together if more judges are ever pending. */}
           </div>
         </div>
       </Chapter>
