@@ -863,7 +863,13 @@ export const dict = {
         title: { ko: "개발 경험 없어도 OK", en: "No dev experience needed" },
         points: [
           { ko: "Codex 기반 beginner-friendly 크래시 코스", en: "A Codex-based, beginner-friendly crash course" },
-          { ko: "주최사 FDE의 실제 예시 라이브 빌드 → 따라 하기", en: "Live example builds by the hosts' FDEs to follow along" },
+          // NOT "주최사 FDE". FDEs are Popup Studio's, and their only slot here is
+          // the Day 5–7 office hours — the Crash Course is Codepresso's, and its
+          // body is a live build of one simple tool that the room follows along
+          // with. Naming the company instead of a job title also keeps this line
+          // out of the way of who is actually on the mic (schedule.ts
+          // d2-crash-course carries that, and the two must agree).
+          { ko: "코드프레소가 간단한 툴을 바이브 코딩으로 만드는 라이브 빌드 → 따라 하기", en: "Follow along as Codepresso builds a simple tool live, by vibe coding" },
           { ko: "모델 선택·프롬프트·용어 가이드 제공", en: "Model-choice, prompt and terminology guides" },
         ],
       },
