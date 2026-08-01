@@ -926,7 +926,11 @@ export const dict = {
           { ko: "메인 트랙 각 1위 · AXMOS(코드프레소·WVB) 유급 FDE 인턴십 기회", en: "1st place in each main track · a paid FDE internship with AXMOS (Codepresso · WVB)" },
           { ko: "겨울방학 약 1.5개월 · 트랙당 최대 3명 — 기간·인원 확정 전", en: "~1.5 months over the winter break · up to 3 per track — duration & headcount not yet final" },
           { ko: "2위 S$100 · 3위 널담 바우처 — 금액 확정 전", en: "2nd S$100 · 3rd Nuldam voucher — amounts not yet final" },
-          { ko: "Day 5 AI Use Case Top 3 · 해녀의 부엌 바우처 · 논의 중", en: "Day 5 AI Use Case top 3 · Haenyeo's Kitchen voucher · under discussion" },
+          // Both vouchers on this card are 널담 now — the 해녀의 부엌 one was dropped
+          // from the incentives entirely. Keep the two lines saying the same
+          // vendor; if one ever splits off again, the FAQ prize answer and
+          // schedule.ts d5-panel-usecase carry the same sentence and move with it.
+          { ko: "Day 5 AI Use Case Top 3 · 널담 바우처 · 논의 중", en: "Day 5 AI Use Case top 3 · Nuldam voucher · under discussion" },
           { ko: "굿즈 (pen·notes) 등 · 검토 중", en: "Goods (pens · notes) and more · under review" },
         ],
       },
@@ -1691,8 +1695,8 @@ export const dict = {
         a: {
           // 수료증은 이 목록에서 의도적으로 빠져 있습니다 — 발급 기준이 "크래시코스
           // 전 시간 참석"이라, 참가자 전원이 받는 항목과 나란히 두면 기준이 오해됩니다.
-          ko: "네 — 시상은 메인 트랙 2개 각각에 1~3위로 걸립니다: 1위 유급 FDE 인턴십 기회 · 2위 S$100 · 3위 널담 바우처. Day 5 AI Use Case Top 3의 해녀의 부엌 바우처도 논의 중이에요. 참가비는 무료이고, 순위에 못 들어도 밥·굿즈·네트워킹은 전원에게 돌아가며 수료증은 크래시코스 전 시간을 들으면 받습니다. ※ 금액·인원 등 세부는 아직 확정 전이며 파트너 협의로 변경될 수 있어요.",
-          en: "Yes — each of the two main tracks carries awards for 1st through 3rd: a paid FDE internship for 1st, S$100 for 2nd and a Nuldam voucher for 3rd. A Haenyeo's Kitchen voucher for the top 3 of the Day 5 AI Use Case session is also under discussion. Entry is free, and off the podium the food, goods and networking still go to everyone — the certificate comes with full Crash Course attendance. ※ Amounts, headcounts and other details aren't final and may change as partner discussions continue.",
+          ko: "네 — 시상은 메인 트랙 2개 각각에 1~3위로 걸립니다: 1위 유급 FDE 인턴십 기회 · 2위 S$100 · 3위 널담 바우처. Day 5 AI Use Case Top 3의 널담 바우처도 논의 중이에요. 참가비는 무료이고, 순위에 못 들어도 밥·굿즈·네트워킹은 전원에게 돌아가며 수료증은 크래시코스 전 시간을 들으면 받습니다. ※ 금액·인원 등 세부는 아직 확정 전이며 파트너 협의로 변경될 수 있어요.",
+          en: "Yes — each of the two main tracks carries awards for 1st through 3rd: a paid FDE internship for 1st, S$100 for 2nd and a Nuldam voucher for 3rd. A Nuldam voucher for the top 3 of the Day 5 AI Use Case session is also under discussion. Entry is free, and off the podium the food, goods and networking still go to everyone — the certificate comes with full Crash Course attendance. ※ Amounts, headcounts and other details aren't final and may change as partner discussions continue.",
         },
       },
       {
