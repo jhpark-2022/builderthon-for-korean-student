@@ -48,6 +48,39 @@ body {
   overflow-x: hidden;
 }
 
+/* ── Korean line breaking, site-wide ─────────────────────────────────────────
+   CSS breaks Korean between SYLLABLES by default, so a narrow column shreds
+   words mid-token: 라이프사이클 → "라 / 이프사이클", 간담회 → "간담 / 회". Every
+   fix for this used to be a `break-keep` class on one element, which meant every
+   new element started broken again — this is the same rule applied once, at the
+   root, so nothing can be missed.
+
+     word-break: keep-all   — break at spaces only (the Korean rule)
+     overflow-wrap: break-word — escape hatch: a token with no space that is
+                                 wider than its box (long URLs, 회사명+직함
+                                 compounds in a phone-width card) may still be
+                                 split, so it can never overflow the layout
+
+   In @layer base, so any Tailwind utility (break-words, break-all, truncate…)
+   still wins on the element that needs it. The `break-keep` classes already
+   scattered through Journey.tsx / EventModal.tsx / RegisterModal.tsx are now
+   redundant, not wrong — they set exactly this value, so they were left alone
+   rather than touched in bulk.
+
+   text-wrap balance/pretty: unsupported engines ignore the declaration and get
+   the old greedy wrapping, which is why there is no fallback here. `balance` is
+   for short, few-line strings (headings, and it is capped around six lines by
+   the engine anyway); `pretty` is the body-copy variant that mainly kills
+   single-word last lines. */
+@layer base {
+  body {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+  h1, h2, h3, h4, h5, h6 { text-wrap: balance; }
+  p, li { text-wrap: pretty; }
+}
+
 /* Use the dynamic viewport height where supported so the mobile browser's
    collapsing address bar doesn't leave empty scroll space at the full-height
    hero/closing chapters. Falls back to 100vh on older engines. */
