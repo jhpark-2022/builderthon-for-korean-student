@@ -506,7 +506,8 @@ export const schedule: BEvent[] = [
   // Day 2 Crash Course. (The Day 5–7 FDE office hours are POPUP STUDIO's, not
   // "AXMOS's" — Popup Studio is one member company, and attributing its FDE
   // mentoring to the consortium was pre-pivot copy; see FDE_OFFICE_HOUR above
-  // and dict.mentoring.stages[1].) Explaining the problem you set IS problem-
+  // and the build group in dict.mentoring.groups.) Explaining the problem you
+  // set IS problem-
   // setting, not peer mentoring, so the Day 3·4 mentor boundary stays intact.
   //
   // confirmed: false + "(조율 중)/(TBC)" in the title — same convention as

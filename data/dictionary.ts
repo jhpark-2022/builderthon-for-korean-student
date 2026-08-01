@@ -1169,68 +1169,95 @@ export const dict = {
       ko: "아이디어를 형태로 만들 때, 빌드가 막힐 때, 무대에서 팔아야 할 때 — 필요한 사람이 매번 다릅니다.",
       en: "Shaping the idea, unblocking the build, selling it on stage — each needs a different person in the room.",
     },
-    // ── Three stages, one card each ─────────────────────────────────────────
-    // The frame is the point: this is NOT a difficulty ladder. It tracks how a
-    // product actually grows — shape the idea, then harden it, then learn to
-    // sell it — which is why stage 3 is about delivery rather than a harder
-    // version of stage 2.
+    // ── 멘토링 그룹 (두 박스 + 워밍업 줄) ────────────────────────────────────
+    // Replaces the three stage cards that stood here. Those cards described the
+    // arc well but sat ABOVE an undivided grid of thirteen mentors, so a reader
+    // still had to match day pills by eye — and the click-to-filter interaction
+    // that tried to fix it was a second mechanism for something the layout can
+    // just do. Grouping the mentors physically says the same thing with no
+    // affordance to discover: 만들 때 돕는 사람 / 팔 때 돕는 사람.
     //
-    // `day` strings must match the mentor cards' `days` badges below; the steps
-    // are what makes those badges legible (3·4 = ideation, 7 = pitch & sales).
-    // `phase` is read from data/schedule.ts at render time, so the 워밍업/실전
-    // labels can never drift from the programme section.
+    // `stages` on each group is the JOIN KEY back to `mentors[].stages`
+    // (1 = Day 3·4, 2 = Day 5–7, 3 = Day 7). Nothing counts people: add or
+    // remove a mentor and they land in the right box on their own. A mentor with
+    // an empty `stages` (Day 1·2) belongs to neither box and appears in the
+    // warm-up strip above them.
     //
-    // ONE stage = ONE card = label + `persona` (who you meet) + `role` (what the
-    // time is for). Nothing else. This block used to be three stacked things —
-    // a large "1단계 멘토 페르소나" card, an amber AXMOS aside, and four "멘토에게
-    // 요청하는 것" cards — which buried the one fact a participant needs (who
-    // shows up on which day) under recruiting-side copy. The persona that lived
-    // in the big card is now inside stage 1, where it is actually true; the
-    // aside's load-bearing sentence survives as `separationNote` below. Keep the
-    // two sentences per card ONE sentence each: the whole point of this layout
-    // is what it leaves out.
-    stages: [
+    // The persona/role copy from the old cards is not thrown away — it carries
+    // over as each group's `sub`/`note`, which is where it now does its work.
+    warmup: {
+      label: { ko: "워밍업 · Day 1–2", en: "Warm-up · Day 1–2" },
+      // A strip, not a box: these two run sessions (Day 1 AWS talk, Day 2
+      // 크래시코스) rather than 1:1 mentoring, so giving them a box the size of
+      // the other two would overstate what they are here to do.
+      note: {
+        ko: "1:1 멘토링 전, 출발선을 맞추는 세션을 맡습니다.",
+        en: "They run the sessions that level the start line, before the 1:1s begin.",
+      },
+    },
+    groups: [
       {
-        day: { ko: "Day 3·4", en: "Day 3·4" },
-        phaseDay: 3,
-        title: { ko: "아이디에이션", en: "Ideation" },
-        persona: {
-          ko: "한때 우리와 같았고, 같은 고민을 하던 한국 유학생 출신 또래 창업가·주니어 엔지니어.",
-          en: "Peer founders and early-career engineers who were once exactly where you are — Korean students abroad.",
+        id: "build",
+        stages: [1, 2],
+        dayRange: { ko: "Day 3–6", en: "Day 3–6" },
+        title: { ko: "빌드 멘토링", en: "Build mentoring" },
+        theme: { ko: "만들 때 돕는 사람들", en: "The people who help you build" },
+        sub: {
+          ko: "한때 우리와 같았던 또래 창업가·주니어 엔지니어와 아이디어를 형태로 만들고, 빌드가 막히면 현업 엔지니어와 함께 풉니다.",
+          en: "Shape the idea with peer founders and early-career engineers who were once where you are — then unjam the build with working engineers.",
         },
-        role: {
-          ko: "정답이 아니라 같은 레벨의 context로 — 아이디어를 형태로 만드는 시간.",
-          en: "Ideation with people who share your context, not lectures.",
+        // "메인 멘토링 파트너" is load-bearing, not decoration: most of the cards
+        // in this box are NOT Onword people (REmited · YMX · T3Q · NTU), and two
+        // logos over a list of faces reads as an org chart unless the label says
+        // otherwise. Each partner carries its own span as a chip, taken from the
+        // programme — Popup Studio's says Day 5–7 even though the box says
+        // Day 3–6, because that is when its office hours actually run
+        // (schedule.ts d5/d6/d7-fde-office-hour). Never round a chip to fit a box.
+        partnersLabel: { ko: "메인 멘토링 파트너", en: "Main mentoring partners" },
+        partners: [
+          {
+            name: "Onword Lab",
+            logo: "/partners/logos/white/trimmed/onword-lab.png",
+            logoW: 900,
+            logoH: 92,
+            chip: { ko: "Day 3·4 · 아이디에이션", en: "Day 3·4 · ideation" },
+          },
+          {
+            name: "Popup Studio",
+            logo: "/partners/logos/white/trimmed/popup-studio.png",
+            logoW: 512,
+            logoH: 245,
+            chip: { ko: "Day 5–7 · FDE 오피스아워", en: "Day 5–7 · FDE office hours" },
+          },
+        ],
+        // Placeholder card at the end of this box's grid. Popup Studio sends FDEs
+        // rather than named mentors, so there is nobody to list yet — and an
+        // invented name would be the one thing this page has never done. The copy
+        // is the old stage-2 card's, which described exactly this.
+        placeholder: {
+          title: { ko: "FDE 오피스아워 · 멘토 명단 공개 예정", en: "FDE office hours · mentors to be announced" },
+          body: {
+            ko: "Popup Studio의 FDE(Forward Deployed Engineer)가 온라인 오피스아워를 엽니다 — 드롭인 방식이라 지정 멘토 없이, 빌드가 막히는 지점을 현업 엔지니어와 함께 풀어요.",
+            en: "Popup Studio's Forward Deployed Engineers keep online office hours — drop in with no assigned mentor and work through whatever your build is stuck on.",
+          },
         },
       },
       {
-        day: { ko: "Day 5–7", en: "Day 5–7" },
-        phaseDay: 5,
-        title: { ko: "고도화", en: "Refinement" },
-        // Stage 2 is Popup Studio's, NOT "AXMOS's" — Popup Studio is one member
-        // of that consortium, and attributing its FDE office hours to AXMOS was
-        // pre-pivot copy. Name the company here and everywhere else.
-        persona: {
-          ko: "Popup Studio의 FDE(Forward Deployed Engineer) — AI 제품을 현장에서 만드는 현업 엔지니어.",
-          en: "Forward Deployed Engineers from Popup Studio — engineers who build AI products in the field.",
+        id: "pitch",
+        stages: [3],
+        dayRange: { ko: "Day 7", en: "Day 7" },
+        title: { ko: "피치 · 세일즈 멘토링", en: "Pitch & sales mentoring" },
+        theme: { ko: "팔 때 돕는 사람들", en: "The people who help you sell it" },
+        sub: {
+          ko: "데모데이 전, 기술이 아니라 ‘어떻게 파는가’를 다듬습니다 — AWS 등 현직 GTM·세일즈 시니어와 함께.",
+          en: "Pre–demo day: sharpening how to sell it, not how to build it — with senior GTM and sales people from AWS and beyond.",
         },
-        role: {
-          ko: "온라인 오피스아워, 드롭인 방식. 빌드가 막히는 지점을 전문가와 풉니다.",
-          en: "Drop-in online office hours for when your build hits a wall.",
-        },
-      },
-      {
-        day: { ko: "Day 7", en: "Day 7" },
-        phaseDay: 7,
-        title: { ko: "피치 · 세일즈", en: "Pitch & sales" },
-        persona: {
-          ko: "AWS 등 현직 GTM·세일즈 시니어.",
-          en: "Senior GTM & sales professionals from AWS and beyond.",
-        },
-        role: {
-          ko: "데모데이 전, 기술이 아니라 ‘어떻게 파는가’를 다듬습니다.",
-          en: "Pre–demo day pitch sharpening — how to sell, not how to build.",
-        },
+        // No partner logos here on purpose. AWS is where several of these mentors
+        // work, and it sponsors the Day 7 venue — but it has never been named a
+        // 메인 멘토링 파트너, and a logo in this header would say that it has.
+        partnersLabel: { ko: "", en: "" },
+        partners: [],
+        placeholder: null,
       },
     ],
     // The one line kept from the amber aside that used to sit here. That aside
@@ -1290,13 +1317,14 @@ export const dict = {
     // university line invites students to rank the room by admissions instead.
     // Academic POSTS are career (한정필's professorship stays); degrees are not. If a profile can't be verified, leave `intro`
     // empty — the card drops the line rather than guessing.
-    // `stages` maps a mentor onto the three stage cards above (1 = Day 3·4
-    // 아이디에이션, 2 = Day 5–7 고도화, 3 = Day 7 피치·세일즈) and is what the
-    // stage filter reads. It is DERIVED from `days`/`daysPending` — never set it
-    // to a stage the day pills don't already claim, or the card will highlight
-    // for a stage its own badge denies. Empty array = outside the three stages
-    // (한장환's Day 1 talk, 김지훈's Day 2 크래시코스): those cards simply never
-    // highlight. No mentor carries stage 2 — see `stageNoMentors` above.
+    // `stages` decides WHICH BOX a mentor's card appears in (1 = Day 3·4,
+    // 2 = Day 5–7, 3 = Day 7; see `groups` above, whose own `stages` is the join
+    // key). It is DERIVED from `days`/`daysPending` — never set it to a stage the
+    // day pills don't already claim, or a card lands in a box its own badge
+    // denies. Empty array = neither box: those mentors run the Day 1·2 sessions
+    // and show up in the warm-up strip instead. Nobody carries stage 2 today,
+    // which is why the build box ends with the FDE placeholder card rather than
+    // a name — Popup Studio sends FDEs, not an assigned mentor.
     // daysPending marks a day that is confirmed-in-principle but not locked —
     // rendered as a separate amber pill. Nobody carries one right now (한장환 held
     // a pending Day 7 until it was dropped and he became Day 1 only); the field
@@ -1304,23 +1332,6 @@ export const dict = {
     // TODO: confirm public naming — verify each named mentor may be shown publicly.
     gridLabel: { ko: "확정 멘토 · Confirmed", en: "Confirmed mentors" },
     dayPendingLabel: { ko: "협의 중", en: "TBC" },
-    // ── Stage → mentor filter (the stage cards above are buttons) ────────────
-    // Picking a stage card highlights the mentors who are with you in that
-    // stage and dims the rest. The chip below repeats the active filter next to
-    // the grid label, because the stage cards scroll out of view long before the
-    // grid does — without it, a dimmed grid looks broken rather than filtered.
-    // `{day} + filterSuffix` builds the chip text ("Day 3·4 멘토") so the day
-    // string is never written twice; it always comes from stages[].day.
-    filterSuffix: { ko: "멘토", en: "mentors" },
-    filterClear: { ko: "필터 해제", en: "Clear filter" },
-    // Stage 2 (Day 5–7 고도화) has NO cards in this grid and that is correct:
-    // it is Popup Studio's FDE office hours, a drop-in with no named mentor
-    // (see the comment on `mentors` below). Selecting it would otherwise dim
-    // every card with no explanation, so the grid says why instead.
-    stageNoMentors: {
-      ko: "이 단계는 팝업스튜디오 FDE 오피스아워예요 — 지정 멘토 없이 원하는 때 드롭인하는 방식이라 아래 명단에는 카드가 없습니다.",
-      en: "This stage is Popup Studio's FDE office hours — drop in whenever you like, with no assigned mentor, so nobody in the list below carries it.",
-    },
     mentors: [
       // ── Day 1 ────────────────────────────────────────────────────────────────
       // 한장환: Day 1 ONLY. He used to also carry a pending Day 7 (daysPending);

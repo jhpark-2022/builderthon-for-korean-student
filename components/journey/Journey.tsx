@@ -1729,19 +1729,14 @@ export default function Journey() {
   const [active, setActive] = useState<BEvent | null>(null);
   const [activeDay, setActiveDay] = useState<number | null>(null); // day detail modal
   const [activePartner, setActivePartner] = useState<PartnerInfo | null>(null); // sponsor/mentor intro modal
-  // ── Mentoring: stage → mentor highlight ───────────────────────────────────
-  // Two pieces of state, not one. `activeStage` is a deliberate choice (a click
-  // or Enter) and survives scrolling down to the grid; `hoverStage` is a preview
-  // that follows the pointer and dies with it. A single value would have made a
-  // stray mouse-over destroy a filter the visitor had just set. Click wins:
-  // `shownStage` reads active first and only falls back to hover.
-  // `mentorHoverStage` is the reverse direction — pointing at a mentor card
-  // lights up the stage they belong to, which is how you answer "and when do I
-  // meet this person" without moving your eyes back up.
-  const [activeStage, setActiveStage] = useState<number | null>(null);
-  const [hoverStage, setHoverStage] = useState<number | null>(null);
-  const [mentorHoverStage, setMentorHoverStage] = useState<number | null>(null);
-  const shownStage = activeStage ?? hoverStage;
+  // ── Mentoring: who belongs where ──────────────────────────────────────────
+  // The click-to-filter state that used to live here (activeStage / hoverStage /
+  // mentorHoverStage) is gone with the three stage cards: the mentors are now
+  // physically grouped into the box they belong to, so there is nothing left to
+  // filter. What remains is the one derivation the layout needs — the mentors
+  // who belong to NEITHER box, i.e. the Day 1·2 session leads, who ride in the
+  // warm-up strip. Computed rather than listed so it follows the data.
+  const warmupMentors = dict.mentoring.mentors.filter((m) => m.stages.length === 0);
   // Remember the card that opened the modal so focus returns to it on close
   // (document.activeElement is unreliable in Safari — see EventModal).
   const triggerRef = useRef<HTMLElement | null>(null);
@@ -2275,212 +2270,156 @@ export default function Journey() {
           {t(dict.mentoring.heading)}
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.mentoring.intro)}</p>
-        {/* Three stages, one card each — WHO you meet and WHAT the time is for,
-            and nothing more. Horizontal on desktop so the progression reads
-            left-to-right; stacked below sm. The 워밍업/실전 label on each card is
-            read from data/schedule.ts (the day's own phase), so it can never
-            disagree with the programme section.
-
-            This replaced three stacked blocks (a large stage-1 persona card, an
-            amber AXMOS aside, and four "멘토에게 요청하는 것" cards). Those were
-            mentor-recruiting copy addressed to mentors, sitting in a section a
-            participant reads to find out who they will meet — so the answer was
-            buried. Same card tokens as before (emerald border/tint, numbered
-            pill, phase pill): this is a subtraction, not a new design language.
-            If a fourth line ever gets added to a card, it belongs somewhere
-            else. */}
-        {/* Each card is a BUTTON now: it filters the mentor grid below to the
-            people who are with you in that stage. It stays a card visually —
-            the affordance is the hover/selected state plus the chip that appears
-            next to the grid label, not a new control shape. aria-pressed carries
-            the toggle to assistive tech, and focus-visible gets the same ring the
-            selected state uses so keyboard and mouse see the same thing. */}
-        <div className="mx-auto mt-8 grid max-w-5xl gap-3 text-left sm:grid-cols-3">
-          {dict.mentoring.stages.map((st, i) => {
-            const phase = days.find((d) => d.day === st.phaseDay)?.phase;
-            const stageNo = i + 1;
-            const selected = activeStage === stageNo;
-            // Lit = chosen, previewed by hover, or pointed at from a mentor card.
-            const lit = selected || hoverStage === stageNo || mentorHoverStage === stageNo;
-            return (
-              <button
-                key={i}
-                type="button"
-                aria-pressed={selected}
-                onClick={() => setActiveStage(selected ? null : stageNo)}
-                // pointerType guard, not onMouseEnter: a tap on a touch screen
-                // fires a synthetic mouseenter with no matching mouseleave, which
-                // would leave the grid dimmed by a "preview" the visitor can't
-                // see the cause of and can't clear (the chip only ever shows a
-                // clicked filter). Mouse hovers preview; taps go straight to the
-                // click above.
-                onPointerEnter={(e) => e.pointerType === "mouse" && setHoverStage(stageNo)}
-                onPointerLeave={() => setHoverStage((h) => (h === stageNo ? null : h))}
-                onFocus={() => setHoverStage(stageNo)}
-                onBlur={() => setHoverStage((h) => (h === stageNo ? null : h))}
-                className={`flex h-full flex-col rounded-2xl border p-5 text-left outline-none ${
-                  reduce ? "" : "transition-colors duration-200"
-                } ${
-                  selected
-                    ? "border-emerald-400/60 bg-emerald-400/[0.12] ring-1 ring-emerald-400/40"
-                    : lit
-                      ? "border-emerald-400/40 bg-emerald-400/[0.08]"
-                      : "border-emerald-400/20 bg-emerald-400/[0.05]"
-                } focus-visible:border-emerald-400/60 focus-visible:ring-1 focus-visible:ring-emerald-400/40`}
-              >
-                <div className="flex items-center gap-2">
-                  <span aria-hidden className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-emerald-400/35 bg-emerald-400/10 text-[0.7rem] font-black text-emerald-200">
-                    {stageNo}
-                  </span>
-                  <span className="whitespace-nowrap text-xs font-bold text-emerald-200">{t(st.day)}</span>
-                  {phase && (
-                    <span className="ml-auto whitespace-nowrap rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.6rem] font-semibold text-white/55">
-                      {t(phase)}
-                    </span>
-                  )}
-                </div>
-                <p className="mt-3 break-keep text-[15px] font-bold leading-snug text-white">{t(st.title)}</p>
-                {/* Persona first (who), then the role line (what for) — dimmer and
-                    separated by a hairline so the two don't read as one block.
-                    break-keep everywhere: Korean breaks between syllables by
-                    default, which splits words like 멘토링 in half. */}
-                <p className="mt-2.5 break-keep text-xs leading-relaxed text-white/75">{t(st.persona)}</p>
-                {/* mt-auto pins the role block to the bottom of the card, so the
-                    three hairlines line up across the row even though the persona
-                    lines differ in length (stage 3's is one line, stages 1–2 run
-                    to two). Without it the dividers stair-stepped. */}
-                <p className="mt-auto break-keep border-t border-emerald-400/15 pt-2.5 text-xs leading-relaxed text-emerald-100/70">{t(st.role)}</p>
-              </button>
-            );
-          })}
-        </div>
-        {/* The single footnote left under the cards — see dict.mentoring.separationNote. */}
+        {/* The separation footnote leads now, directly under the intro: it answers
+            a worry ("does this affect my score?") that belongs before the names,
+            not after them. */}
         <p className="mx-auto mt-4 max-w-3xl break-keep text-xs leading-relaxed text-white/50">{t(dict.mentoring.separationNote)}</p>
 
-        {/* ── Confirmed mentor grid (deck p12) ──────────────────────────────
-            Ordered by the day each mentor is with you (see data/dictionary.ts) —
-            the order a participant actually meets them. A LinkedIn icon shows
-            ONLY on cards with a confirmed URL — never invented. */}
-        <div className="mt-8 text-left">
-          <div className="flex flex-wrap items-center gap-2">
-            <p className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-emerald-200">
-              {t(dict.mentoring.gridLabel)}
-            </p>
-            {/* Active-filter chip. The stage cards are a screen or more above by
-                the time the grid is in view, so without this a dimmed grid reads
-                as broken rather than filtered. Only shown for a CLICKED filter —
-                a hover preview is already explained by the cursor sitting on the
-                card that caused it. */}
-            {activeStage !== null && (
-              <button
-                type="button"
-                onClick={() => setActiveStage(null)}
-                className={`inline-flex min-h-[32px] items-center gap-1.5 rounded-full border border-emerald-400/45 bg-emerald-400/[0.12] px-3 text-[0.68rem] font-bold text-emerald-100 ${
-                  reduce ? "" : "transition-colors"
-                } hover:bg-emerald-400/20`}
-              >
-                {t(dict.mentoring.stages[activeStage - 1].day)} {t(dict.mentoring.filterSuffix)}
-                <span aria-hidden className="text-emerald-200/70">✕</span>
-                <span className="sr-only">{t(dict.mentoring.filterClear)}</span>
-              </button>
-            )}
-          </div>
-          {/* Stage 2 has no cards in this grid by design (Popup Studio's FDE
-              office hours). Say so rather than leaving a fully dimmed grid. */}
-          {activeStage !== null && !dict.mentoring.mentors.some((m) => m.stages.includes(activeStage)) && (
-            <p className="mt-3 break-keep rounded-xl border border-emerald-400/20 bg-emerald-400/[0.05] px-4 py-3 text-xs leading-relaxed text-emerald-50/80">
-              {t(dict.mentoring.stageNoMentors)}
-            </p>
-          )}
-          {/* One column below `sm`: at two columns a 375px phone left each card
-              ~150px of text, which forced Korean names and org strings to break
-              mid-word (김진호 → 김/진/호). Two from `sm`, four from `lg` — the
-              desktop layout is unchanged.
+        {/* ── Mentors, grouped by what they help you DO ──────────────────────
+            This replaced three stage cards sitting above one undivided grid of
+            thirteen names, plus a click-to-filter interaction that connected the
+            two. The interaction worked, but it was a mechanism a visitor had to
+            discover for something the layout can simply be: put the people who
+            help you BUILD in one box and the people who help you SELL in
+            another, and the mapping needs no affordance at all.
 
-              flex-wrap + justify-center, NOT grid: with 13 mentors a 4-column
-              grid left the 13th card alone against the left edge, reading as a
-              layout bug. Wrapped flex lines centre themselves, so only the last
-              short line moves — full lines still span the row exactly, because
-              each card's width is the grid column it replaces (100% minus the
-              gaps, divided by the column count). Nothing here counts the people:
-              add or drop a mentor and the last line re-centres on its own.
-              `items-stretch` (the flex default) keeps cards on one line equal in
-              height, exactly as grid rows did. */}
-          <div className="mt-4 flex flex-wrap justify-center gap-3">
-            {dict.mentoring.mentors.map((m, i) => {
-              const name = t(m.name);
-              const role = t(m.role);
-              const intro = t(m.intro);
-              // Three states, and only two of them touch this card: no filter
-              // (everything normal), in the filter (emerald edge), out of it
-              // (dimmed but still readable — 45% is above the floor where the
-              // name stops being legible, and the card stays focusable and
-              // clickable, since dimming is a hint, not a disable).
-              const filtered = shownStage !== null;
-              const inStage = filtered && m.stages.includes(shownStage);
+            Which box a card lands in comes from `mentors[].stages` joined against
+            each group's own `stages` — no counts, no name lists here. Add or drop
+            a mentor in data/dictionary.ts and the boxes rearrange themselves. */}
+        <div className="mt-8 text-left">
+          <p className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-emerald-200">
+            {t(dict.mentoring.gridLabel)}
+          </p>
+
+          {/* Warm-up strip — Day 1·2. A single line, not a box: these two run
+              SESSIONS (the AWS talk, the crash course) rather than 1:1 mentoring,
+              and a third box their size would claim otherwise. Rendered only if
+              somebody actually has no stage, so it disappears on its own if that
+              stops being true. */}
+          {warmupMentors.length > 0 && (
+            <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3">
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/60">
+                  {t(dict.mentoring.warmup.label)}
+                </span>
+                <span className="break-keep text-xs text-white/45">{t(dict.mentoring.warmup.note)}</span>
+              </div>
+              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5">
+                {warmupMentors.map((m, i) => (
+                  <span key={i} className="inline-flex items-center gap-1.5 break-keep text-xs text-white/75">
+                    <span className="font-bold text-white">{t(m.name)}</span>
+                    <span className="text-white/50">{t(m.org)}</span>
+                    <span className="rounded-full border border-white/12 bg-white/[0.04] px-1.5 py-0.5 text-[0.6rem] font-semibold text-white/55">{m.days}</span>
+                    {m.linkedin && <LinkedInLink url={m.linkedin} label={t(m.name)} />}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* The two boxes. Stacked, not side by side: each holds a full mentor
+              grid, and two grids in parallel columns would halve the card width
+              for no gain. */}
+          <div className="mt-4 space-y-4">
+            {dict.mentoring.groups.map((g) => {
+              const mentors = dict.mentoring.mentors.filter((m) => m.stages.some((n) => g.stages.includes(n)));
               return (
-                /* The initial-avatar square that used to lead this card is gone —
-                   it was a placeholder standing in for a face nobody had, and the
-                   room it took is worth more as a line about the person. Card is a
-                   column with the day pill pushed to the bottom (`mt-auto`), so
-                   cards in a row stay the same height whatever the intro's length.
-                   Widths mirror the old grid: gap-3 = 0.75rem, so two columns are
-                   (100% − 0.75rem)/2 and four are (100% − 2.25rem)/4. */
-                <div
-                  key={i}
-                  // Reverse highlight: pointing at a mentor lights their stage
-                  // card. Only for mentors that HAVE a stage — the Day 1/2 cards
-                  // would otherwise clear someone else's preview for nothing.
-                  onPointerEnter={(e) => e.pointerType === "mouse" && m.stages.length > 0 && setMentorHoverStage(m.stages[0])}
-                  onPointerLeave={() => setMentorHoverStage(null)}
-                  className={`flex w-full flex-col rounded-2xl border p-4 sm:w-[calc((100%-0.75rem)/2)] lg:w-[calc((100%-2.25rem)/4)] ${
-                    reduce ? "" : "transition duration-200"
-                  } ${
-                    inStage
-                      ? "border-emerald-400/40 bg-emerald-400/[0.07]"
-                      : filtered
-                        ? "border-white/10 bg-white/[0.03] opacity-45"
-                        : "border-white/10 bg-white/[0.03] hover:border-emerald-400/25 hover:bg-white/[0.05]"
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    {/* break-keep (word-break: keep-all) — Korean breaks between
-                        syllables by default, which shreds a 3-syllable name into
-                        a vertical column. Wrapping is still allowed, but only at
-                        word boundaries; never truncated. */}
-                    <p className="min-w-0 break-keep text-sm font-bold leading-snug text-white">{name}</p>
-                    {m.linkedin && <LinkedInLink url={m.linkedin} label={name} />}
-                  </div>
-                  <p className="mt-0.5 break-keep text-xs leading-snug text-white/60">
-                    {t(m.org)}{role ? ` · ${role}` : ""}
-                  </p>
-                  {/* One line from the person's own LinkedIn. Dimmer than the org
-                      line above so the two don't read as one block of grey.
-                      Rendered only when present — an unverified mentor keeps the
-                      same card, minus this line.
-                      Clamped at THREE lines, not two: the bios end on the 前 경력
-                      clause, and at one column on a phone the English runs to a
-                      third line — a 2-line clamp silently ate exactly that clause
-                      on 8 of 10 cards. Desktop still lands at two lines, so the
-                      clamp only ever engages as an overflow guard. */}
-                  {intro && (
-                    <p className="mt-2 break-keep text-xs leading-relaxed text-white/50 sm:line-clamp-3">{intro}</p>
-                  )}
-                  <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-3">
-                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[0.62rem] font-semibold ${
-                      reduce ? "" : "transition-colors"
-                    } ${
-                      inStage
-                        ? "border border-emerald-400/40 bg-emerald-400/10 text-emerald-100"
-                        : "border border-white/12 bg-white/[0.04] text-white/60"
-                    }`}>
-                      {m.days}
+                <div key={g.id} className="rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.04] p-4 sm:p-5">
+                  {/* Header: what this group is for, then who partners on it. */}
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <span className="whitespace-nowrap rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-0.5 text-[0.68rem] font-bold text-emerald-200">
+                      {t(g.dayRange)}
                     </span>
-                    {/* A day confirmed-in-principle but not locked (한장환 · Day 7). */}
-                    {m.daysPending && (
-                      <span className="inline-flex items-center rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-2 py-0.5 text-[0.62rem] font-semibold text-amber-200/90">
-                        {m.daysPending} · {t(dict.mentoring.dayPendingLabel)}
-                      </span>
+                    <p className="break-keep text-[15px] font-bold text-white">{t(g.title)}</p>
+                    <p className="break-keep text-xs text-emerald-100/70">{t(g.theme)}</p>
+                  </div>
+                  <p className="mt-2 max-w-3xl break-keep text-xs leading-relaxed text-white/70">{t(g.sub)}</p>
+
+                  {/* Partner logos. The label above them is not decoration: most of
+                      the cards below belong to other companies (REmited · YMX ·
+                      T3Q · NTU), and two marks over a list of faces would read as
+                      an org chart without it. White trimmed silhouettes — the same
+                      assets the hero strip and partner wall use, so no tile is
+                      needed on this dark panel. Each logo keeps its own span chip;
+                      Popup Studio's says Day 5–7 because that is when its office
+                      hours run, even though this box is labelled Day 3–6. */}
+                  {g.partners.length > 0 && (
+                    <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
+                      <p className="text-[0.62rem] font-bold uppercase tracking-[0.14em] text-white/50">
+                        {t(g.partnersLabel)}
+                      </p>
+                      <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-4">
+                        {g.partners.map((pt) => (
+                          <div key={pt.name} className="flex min-w-0 items-center gap-3">
+                            <Image
+                              src={pt.logo}
+                              alt={pt.name}
+                              width={pt.logoW}
+                              height={pt.logoH}
+                              // Height-capped so a wide wordmark and a squarer mark
+                              // read at similar weight; max-w keeps either from
+                              // running past the panel on a 375px phone.
+                              className="h-5 w-auto max-w-[8.5rem] shrink-0 object-contain opacity-90 sm:h-6"
+                            />
+                            <span className="break-keep rounded-full border border-emerald-400/25 bg-emerald-400/[0.08] px-2 py-0.5 text-[0.62rem] font-semibold text-emerald-100/85">
+                              {t(pt.chip)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Same mentor card as before — flex-wrap, widths mirroring the
+                      old grid columns (gap-3 = 0.75rem), last line centred. */}
+                  <div className="mt-4 flex flex-wrap justify-center gap-3">
+                    {mentors.map((m, i) => {
+                      const name = t(m.name);
+                      const role = t(m.role);
+                      const intro = t(m.intro);
+                      return (
+                        <div key={i} className="flex w-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-emerald-400/25 hover:bg-white/[0.05] sm:w-[calc((100%-0.75rem)/2)] lg:w-[calc((100%-1.5rem)/3)]">
+                          <div className="flex items-start justify-between gap-2">
+                            {/* break-keep — Korean breaks between syllables by
+                                default, which shreds a 3-syllable name into a
+                                vertical column. */}
+                            <p className="min-w-0 break-keep text-sm font-bold leading-snug text-white">{name}</p>
+                            {m.linkedin && <LinkedInLink url={m.linkedin} label={name} />}
+                          </div>
+                          <p className="mt-0.5 break-keep text-xs leading-snug text-white/60">
+                            {t(m.org)}{role ? ` · ${role}` : ""}
+                          </p>
+                          {/* One line from the person's own LinkedIn. Clamped from
+                              `sm` up only: on a phone the cards are one per row and
+                              nothing needs evening out, and the clamp was eating a
+                              line off the longer intros. */}
+                          {intro && (
+                            <p className="mt-2 break-keep text-xs leading-relaxed text-white/50 sm:line-clamp-3">{intro}</p>
+                          )}
+                          <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-3">
+                            <span className="inline-flex items-center rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.62rem] font-semibold text-white/60">
+                              {m.days}
+                            </span>
+                            {/* A day confirmed-in-principle but not locked. */}
+                            {m.daysPending && (
+                              <span className="inline-flex items-center rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-2 py-0.5 text-[0.62rem] font-semibold text-amber-200/90">
+                                {m.daysPending} · {t(dict.mentoring.dayPendingLabel)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {/* Nobody is listed for Popup Studio's office hours because
+                        they send FDEs on rotation rather than an assigned mentor.
+                        A dashed card says that in the one place a reader would
+                        otherwise wonder about it — inventing a name is the one
+                        thing this page has never done. */}
+                    {g.placeholder && (
+                      <div className="flex w-full flex-col rounded-2xl border border-dashed border-emerald-400/25 bg-emerald-400/[0.03] p-4 sm:w-[calc((100%-0.75rem)/2)] lg:w-[calc((100%-1.5rem)/3)]">
+                        <p className="break-keep text-sm font-bold leading-snug text-emerald-100/90">{t(g.placeholder.title)}</p>
+                        <p className="mt-2 break-keep text-xs leading-relaxed text-white/60">{t(g.placeholder.body)}</p>
+                      </div>
                     )}
                   </div>
                 </div>
