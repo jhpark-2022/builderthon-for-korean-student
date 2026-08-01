@@ -2540,7 +2540,11 @@ export default function Journey() {
                 { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/innovate360.png",        alt: "INNOVATE 360",                    w: 455, h: 54,  url: "https://innovate360.sg/" },
                 { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/life.png",               alt: "L^IFE",                           w: 900, h: 352, url: "https://life-singapore.com/" },
                 { cat: t(dict.partners.catMarketing), src: "/partners/logos/white/trimmed/bzcf.png",               alt: "BZCF",                            w: 465, h: 156, url: "https://bzcf.io/" },
-                { cat: t(dict.partners.catJudges),    src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore",  w: 443, h: 90,  url: "https://singapore.korean.net/" },
+                // 한인회's role is the venue plus goodie bags for the mentors — it
+                // read 심사위원 지원 until the organizers corrected it, and no judge
+                // reaches us through the association. Its intro modal copy
+                // (dict["Korean Association in Singapore"]) says the same thing.
+                { cat: t(dict.partners.catVenueGoods), src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore",  w: 443, h: 90,  url: "https://singapore.korean.net/" },
                 // Fyreflyz was in the hero strip but missing here, so the two
                 // rosters disagreed by one mark. 심사위원 지원 is the role: its
                 // co-founder 한정필 comes in as a judge (dict.judges.people).

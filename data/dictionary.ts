@@ -119,8 +119,8 @@ export const partnerIntros: Record<string, Phrase> = {
     en: "A business & startup content media brand built around a 320K-subscriber YouTube channel — founder interviews, industry analysis, and the BZCF Fellowship community. Joining the builderthon as a marketing partner.",
   },
   "Korean Association in Singapore": {
-    ko: "1963년 설립된 싱가포르 한인 사회의 대표 단체로, 탄종파가에 자체 회관을 두고 장학 사업과 청년 멘토링·네트워킹 프로그램, 연례 한인 행사를 운영합니다. 이번 빌더톤에는 심사위원 연계로 함께합니다.",
-    en: "The representative body of Singapore's Korean community since 1963, with its own hall in Tanjong Pagar — running scholarships, young-professionals mentoring and the community's annual events. Supporting the builderthon through its judge network.",
+    ko: "1963년 설립된 싱가포르 한인 사회의 대표 단체로, 탄종파가에 자체 회관을 두고 장학 사업과 청년 멘토링·네트워킹 프로그램, 연례 한인 행사를 운영합니다. 이번 빌더톤에는 장소 지원과 멘토 굿즈백 준비로 함께합니다.",
+    en: "The representative body of Singapore's Korean community since 1963, with its own hall in Tanjong Pagar — running scholarships, young-professionals mentoring and the community's annual events. Supporting the builderthon with the venue and goodie bags for the mentors.",
   },
   "Onword Lab": {
     ko: "‘We Make Old Businesses Young’을 내건 AI 전환(AX) 스타트업으로, 리테일·커머스의 운영과 마케팅을 AI로 다시 설계합니다. 이커머스 올인원 운영 에이전틱 대시보드를 만들고 있으며, 이번 빌더톤에는 멘토링으로 함께합니다.",
@@ -1635,6 +1635,11 @@ export const dict = {
     catJudges: { ko: "심사위원 지원", en: "Judges" },
     catMentoring: { ko: "멘토링", en: "Mentoring" },
     catGoods: { ko: "굿즈", en: "Goods" },
+    // 싱가포르 한인회 only. Its caption said 심사위원 지원, which was wrong: the
+    // association is helping with the venue and with goodie bags for the mentors,
+    // and no judge comes through it. Two roles in one caption because the tile
+    // takes a single label and neither half tells the truth alone.
+    catVenueGoods: { ko: "장소 · 굿즈", en: "Venue · Goods" },
     catOverall: { ko: "종합 지원", en: "Overall support" },
     // Neutral stage pill shown inside the company-intro modal.
     stageConfirmed: { ko: "확정", en: "Confirmed" },
