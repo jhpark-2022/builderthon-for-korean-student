@@ -2542,7 +2542,10 @@ export default function Journey() {
               <button
                 type="button"
                 onClick={(e) => openPartner("AXMOS", dict.partners.stageConfirmed, e.currentTarget)}
-                aria-label="AXMOS"
+                // No aria-label: it was "AXMOS" while the button's visible text is the
+                // consortium tagline, so the accessible name didn't contain the label
+                // (WCAG 2.5.3). Without it the name comes from the wordmark's alt plus
+                // that tagline — which is both the visible text and more useful.
                 className="group flex w-full flex-col items-start gap-1.5 border-b border-white/10 bg-white/[0.04] px-5 py-4 text-left transition hover:bg-white/[0.07] sm:flex-row sm:items-center sm:gap-4"
               >
                 <Image

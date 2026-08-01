@@ -1895,6 +1895,12 @@ export const dict = {
 
   toggle: {
     label: { ko: "EN", en: "한국어" }, // shows the language you'll switch TO
-    aria: { ko: "Switch to English", en: "한국어로 전환" },
+    // WCAG 2.5.3 (Label in Name): the accessible name has to CONTAIN the visible
+    // label, which on this control is "EN / KR". It read only "Switch to English",
+    // so a voice-control user saying "EN" or "KR" could not activate it — the one
+    // control on the page whose visible text is the language itself.
+    // "EN/KR" with no spaces — that is exactly how the three spans render, and the
+    // check compares the literal visible string.
+    aria: { ko: "EN/KR — Switch to English", en: "EN/KR — 한국어로 전환" },
   },
 };
