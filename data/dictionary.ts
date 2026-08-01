@@ -1516,8 +1516,9 @@ export const dict = {
   // Rendered as a subsection of the mentoring chapter (no new nav item). Bios are
   // tidied from the deck's own copy — NO facts added, EN is a translation. Every
   // person object carries identical keys to keep the array homogeneous. Everyone
-  // has a face photo (img); 정요천 has no LinkedIn, so `linkedin` is "" (the card
-  // simply drops the icon) rather than omitted — an omitted key would make TS
+  // has a face photo (img) and a LinkedIn. `linkedin` stays on every object even
+  // when empty — the card just drops the icon — rather than omitted, since an
+  // omitted key would make TS
   // infer a union and break `j.linkedin` on the card. Same reason `pending` is
   // false on every confirmed judge instead of being left off the object.
   // TODO: confirm public naming — verify each name may be shown publicly.
@@ -1699,7 +1700,9 @@ export const dict = {
           ko: "前 Brie 대표(CEO 겸 CTO) — 웹·AI 풀스택 개발사. 前 워프벤처스 CEO/CTO — 건축 매칭 플랫폼 · 딥러닝 추천. 前 산업은행(KDB) 기업금융.",
           en: "Ex-CEO/CTO of Brie, a full-stack web·AI studio. Ex-Warp Ventures CEO/CTO — construction matching platform · deep-learning recommendations. Earlier KDB corporate finance.",
         },
-        linkedin: "",
+        // Korean-slug profile URL — keep it percent-encoded exactly as LinkedIn
+        // serves it; the decoded form (/in/요천-정-…) 404s in some clients.
+        linkedin: "https://www.linkedin.com/in/%EC%9A%94%EC%B2%9C-%EC%A0%95-8245a94b/",
       },
     ],
     // Amber dashed pill on a judge whose participation is agreed in principle but
