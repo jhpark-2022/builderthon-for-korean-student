@@ -978,12 +978,22 @@ export const dict = {
         //
         // Content is from his own AI-DLC deck (Execution Research/Mentoring/
         // TalkFile_AIDLC-janghan.pdf): the SDLC-as-waiting problem, the 10–15%
-        // velocity ceiling when AI is bolted onto coding alone, AI-DLC as the
-        // answer, and its three phases run as a mob. Deliberately NOT included:
-        // the Kiro demo and the 3-day workshop agenda in that deck — that deck is
-        // his multi-day enterprise workshop, and this is a ~1h session. Promising
-        // a live tool demo we have not scheduled would be a claim we can't keep.
+        // velocity ceiling when AI is bolted onto coding alone, and AI-DLC as the
+        // answer. Deliberately NOT included: the Kiro demo and the 3-day workshop
+        // agenda in that deck — that deck is his multi-day enterprise workshop,
+        // and this is a ~1h session. Promising a live tool demo we have not
+        // scheduled would be a claim we can't keep.
         // Role is verbatim from that deck's title slide.
+        //
+        // THREE short bullets, not four long ones. This card ran at a different
+        // altitude from its three siblings — theirs are one-line takeaways, this
+        // one carried the deck's own phrasing ("Inception → Construction →
+        // Operation · 팀이 한 화면에서 함께(Mob)"), which is process detail for
+        // engineers inside a delivery org, not something a student choosing which
+        // session to attend can use. The dropped phase/mob bullet is the deck's
+        // method, not the session's promise; keep it out unless the session grows
+        // into a workshop. Same rule as the sibling cards: what will I take away,
+        // in one line.
         day: { ko: "Day 1 · AWS 세션", en: "Day 1 · AWS session" },
         name: { ko: "한장환", en: "Jang Whan Han" },
         role: { ko: "Well-Architected Solution Innovation SA, AWS", en: "Well-Architected Solution Innovation SA, AWS" },
@@ -991,10 +1001,9 @@ export const dict = {
         img: "/partners/logos/speaker-han.jpeg",
         linkedin: "https://www.linkedin.com/in/jangwhan/",
         points: [
-          { ko: "개발의 진짜 병목은 코딩이 아니라 대기 — 서로가 서로를 기다리는 구조", en: "The real bottleneck isn't coding — it's everyone waiting on everyone else" },
-          { ko: "AI를 코딩 보조로만 쓰면 속도는 10–15% — 도약이 아니라 계단인 이유", en: "Bolt AI onto coding alone and velocity moves 10–15% — a step, not a leap" },
-          { ko: "AI-DLC — AI가 계획·작업 분해·아키텍처를 주도하고, 검증·결정·감독은 사람이", en: "AI-DLC — AI drives planning, task breakdown & architecture; humans keep validation, decisions & oversight" },
-          { ko: "Inception → Construction → Operation · 팀이 한 화면에서 함께(Mob)", en: "Inception → Construction → Operation, with the whole team on one screen (mob)" },
+          { ko: "개발의 진짜 병목은 코딩이 아니라 기다리는 시간", en: "The real bottleneck isn't coding — it's waiting" },
+          { ko: "AI를 코딩 보조로만 쓰면 속도는 10–15%에 그침", en: "AI as a coding assistant alone moves velocity 10–15%" },
+          { ko: "AI가 계획·설계까지 주도하고, 검증·결정은 사람이", en: "Let AI drive planning and design; humans validate and decide" },
         ],
       },
       {
