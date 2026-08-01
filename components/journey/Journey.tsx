@@ -2124,6 +2124,38 @@ export default function Journey() {
             </h2>
             {/* No day-by-day summary paragraph here — the eight cards below ARE
                 the arc, and spelling it out in prose first read as clutter. */}
+            {/* ── 최종 아웃풋 ────────────────────────────────────────────────
+                What a team actually hands in, stated before the eight day-cards
+                so they read as steps toward it rather than a calendar. Same
+                visual grammar as the benefits flow strip (bordered violet boxes
+                joined by →) on purpose: this is the second three-step strip on
+                the page and inventing a new one for it would read as a different
+                kind of thing. Numbered pills carry ①②③ for the arrows' benefit
+                on mobile, where the row becomes a stack and the → sits to the
+                right of each box. Boxes stretch to equal height per row. */}
+            <div className="mx-auto mt-8 max-w-5xl">
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-violet-300">{t(dict.program.outputTag)}</p>
+              <h3 className="mx-auto mt-2 max-w-3xl text-[clamp(1.05rem,2.4vw,1.5rem)] font-bold leading-snug text-white">
+                {t(dict.program.outputHeading)}
+              </h3>
+              <div className="mt-5 flex flex-col gap-2 text-left sm:flex-row sm:items-stretch">
+                {dict.program.outputSteps.map((s, i) => (
+                  <div key={i} className="flex items-center gap-2 sm:flex-1">
+                    <div className="flex h-full w-full flex-col rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-3.5">
+                      <div className="flex items-center gap-2">
+                        <span aria-hidden className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-violet-400/35 bg-violet-400/10 text-[0.62rem] font-black text-violet-200">
+                          {i + 1}
+                        </span>
+                        <p className="text-sm font-bold leading-snug text-white">{t(s.title)}</p>
+                      </div>
+                      <p className="mt-2 text-xs leading-relaxed text-white/70">{t(s.body)}</p>
+                    </div>
+                    {i < dict.program.outputSteps.length - 1 && <span aria-hidden className="shrink-0 text-white/30">→</span>}
+                  </div>
+                ))}
+              </div>
+              <p className="mx-auto mt-3 max-w-3xl text-xs leading-relaxed text-white/55">{t(dict.program.outputNote)}</p>
+            </div>
             {/* Two separate notes, in this order on purpose. First: how much of
                 this is settled — read before the cards, it stops eight tidy day
                 boxes being taken for a finished timetable. Second: how little of

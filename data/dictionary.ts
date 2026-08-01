@@ -802,6 +802,54 @@ export const dict = {
   program: {
     tag: { ko: "Program", en: "Program" },
     heading: { ko: "8일, zero에서 MVP까지", en: "8 days, from zero to MVP" },
+    // ── 최종 아웃풋 (프로그램 머리) ──────────────────────────────────────────
+    // The page said what happens on each day and never said what a team hands in
+    // at the end of it, so "8일, zero에서 MVP까지" left people building toward a
+    // finished product. The deliverable is a proposal in three parts — read the
+    // client's workflow, diagnose where it jams and how AI unjams it, and bring a
+    // demo that backs the idea up. Stated once, right under the heading, so the
+    // eight day-cards below are read as steps toward it.
+    //
+    // The demo is EVIDENCE, not the point: "완성도가 아니라 설득력" is the whole
+    // reason this block exists, and it is the same claim the judging FAQ makes
+    // with its weightings (이해 20 · 아이디어 25 · 정합 30). If those move, this
+    // moves too — but never put the presentation's minute-by-minute split here;
+    // that guidance is internal and not settled.
+    outputTag: { ko: "최종 아웃풋", en: "The final output" },
+    outputHeading: {
+      ko: "데모데이에 내는 건 코드가 아니라, 하나의 제안입니다",
+      en: "What you present isn't code — it's a proposal",
+    },
+    outputSteps: [
+      {
+        title: { ko: "워크플로우 이해", en: "Read the workflow" },
+        body: {
+          ko: "의뢰 기업이 실제로 일하는 방식을 얼마나 정확히 읽었는가.",
+          en: "How accurately you've read the way the client company actually works.",
+        },
+      },
+      {
+        title: { ko: "병목 진단 + AI 해법", en: "The bottleneck, and the AI fix" },
+        body: {
+          ko: "그 흐름의 어디가 막혀 있고, AI를 어떻게 접목하면 풀리는지 — 당신의 아이디어.",
+          en: "Where that flow jams, and how AI unjams it — your idea.",
+        },
+      },
+      {
+        title: { ko: "증명하는 데모", en: "A demo that proves it" },
+        body: {
+          ko: "아이디어를 뒷받침하는 임팩트 있는 데모 — 완성도가 아니라 설득력.",
+          en: "A demo with impact behind the idea — persuasive, not polished.",
+        },
+      },
+    ],
+    // Second sentence is the one that changes behaviour: teams assume a hidden
+    // correct answer and try to guess it. The company does have one; what it
+    // wants is the approach that isn't on it.
+    outputNote: {
+      ko: "8일의 모든 세션은 이 세 가지를 완성해 가는 정거장입니다. 회사에는 ‘답지’가 있지만, 답지에 없던 접근을 가장 반깁니다.",
+      en: "Every session across the eight days is a stop on the way to these three. The company has its own answer sheet — the approach that isn't on it is the one they want most.",
+    },
     // Leads with what's REQUIRED, because the previous version led with the
     // four in-person days and read as "block out all eight." Only Day 1 and
     // Day 8 carry `mandatory: true` in data/schedule.ts — keep this in step with
@@ -909,6 +957,12 @@ export const dict = {
         points: [
           { ko: "출제가 아니라 ‘의뢰’ — 학생은 주니어 컨설턴트로 프로세스·아픔을 진단해 AI로 재설계", en: "Not a prompt but a brief — you're a junior consultant diagnosing a real process & pain, then redesigning it with AI" },
           { ko: "가상 과제가 아닌 파트너사의 실제 AX 문제 + 직원 피드백", en: "Not toy prompts — a partner's real AX problem + employee feedback" },
+          // WHAT the brief actually contains. "실제 기업의 진짜 문제" was a claim
+          // with nothing behind it — a reader had no way to picture what lands on
+          // Day 1. These three items (워크플로우 · 페인포인트 · 맥락과 데이터) are
+          // what makes the 주니어 컨설턴트 framing above possible; without them it
+          // is a prompt with a nicer name. Same fact as the 테마 FAQ answer.
+          { ko: "문제는 ‘AX 의뢰서’로 — 실제 업무 워크플로우, 담당자의 페인포인트, 맥락과 데이터가 함께 Day 1에 공개", en: "The problem arrives as an AX brief — the real workflow, the owner's pain points, plus context and data, released on Day 1" },
           // REMOVED: "트랙 구성 미확정 — 재무·영업·마케팅 3트랙으로 논의 중(잠정) ·
           // AWS 방법론으로 접근 · 클라이언트 사명도 조율 중". 트랙/클라이언트가 확정되기
           // 전까지는 표기하지 않습니다.
@@ -1710,8 +1764,8 @@ export const dict = {
           // 브리핑은 Day 1(문제 공개 직후)이며 schedule.ts의 `d1-problem-deep-dive`와
           // 같은 사실을 말해야 합니다. 진행자·형식은 아직 조율 중이라 여기서도 확정으로
           // 쓰지 않습니다 — 특정 인물을 진행자로 명시하지 말 것(미확정).
-          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다 — 예를 들어 ‘회사 돈이 어디서 새는지 눈에 안 보인다’ 같은 실무 문제요. 가상 과제가 아니라, Day 1에 문제가 공개되고 과제를 낸 주최사(AXMOS) 측이 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자·형식은 조율 중). 트랙 구성은 메인 트랙 2개로 좁혀 논의 중이며 확정되는 대로 안내합니다.",
-          en: "You take on the AX (AI-transformation) problems Korean companies are facing right now, one set per track — practical things like “we can't see where the company's money is leaking.” These aren't invented exercises but briefs: the problems drop on Day 1 and the host companies (AXMOS) that set them walk through the background first-hand (presenter and format still being arranged). The line-up has been narrowed to two main tracks, and we'll announce them once settled.",
+          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다 — 예를 들어 ‘회사 돈이 어디서 새는지 눈에 안 보인다’ 같은 실무 문제요. 가상 과제가 아니라, Day 1에 문제가 공개되고 과제를 낸 주최사(AXMOS) 측이 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자·형식은 조율 중). 의뢰서에는 그 회사의 실제 업무 워크플로우와 담당자의 페인포인트, 관련 맥락·데이터가 담깁니다. 트랙 구성은 메인 트랙 2개로 좁혀 논의 중이며 확정되는 대로 안내합니다.",
+          en: "You take on the AX (AI-transformation) problems Korean companies are facing right now, one set per track — practical things like “we can't see where the company's money is leaking.” These aren't invented exercises but briefs: the problems drop on Day 1 and the host companies (AXMOS) that set them walk through the background first-hand (presenter and format still being arranged). Each brief carries the company's real workflow, the pain points of the person who owns it, and the context and data around it. The line-up has been narrowed to two main tracks, and we'll announce them once settled.",
         },
       },
       {
@@ -1798,8 +1852,14 @@ export const dict = {
       {
         q: { ko: "심사는 어떻게 하나요? 기술이 완벽해야 하나요?", en: "How is judging done? Does it need to be technically polished?" },
         a: {
-          ko: "기술 완성도는 심사 기준이 아닙니다. 보는 것은 ‘회사·문제 이해 → 아이디어 → 데모의 정합성’이고, 배점은 회사·문제 이해도 20 · 아이디어의 적절성 25 · 데모↔아이디어 정합 30 · 도입 가능성 15 · 발표·전달 10 — 이해+아이디어+정합이 75%를 차지합니다. 프로토타입은 프론트엔드 와이어프레임 수준이어도 괜찮고, 목업·슬라이드만이면 감점됩니다. 배점은 심사위원님·파트너사 합의로 조정될 수 있습니다. 심사는 실제 산업에서 문제를 풀어온 현업 리더분들이 직접 합니다(심사위원 섹션 참조).",
-          en: "Technical polish is not a judging criterion. What we look at is the coherence of ‘understanding the company & problem → idea → demo’, scored as: company/problem understanding 20 · appropriateness of the idea 25 · demo ↔ idea alignment 30 · adoption feasibility 15 · delivery 10 — understanding + idea + alignment make up 75%. A front-end wireframe-level prototype is fine; mockups or slides alone lose points. Weightings may be adjusted by agreement among judges and partners. Judging is done first-hand by leaders who have solved these problems in industry (see the judges section).",
+          // Opens with the deliverable, not the scoring: someone asking how judging
+          // works is really asking what they have to hand in. The three parts are
+          // the same ones dict.program.outputSteps names, in the same order, and
+          // the weightings that follow are what each part is worth — so the answer
+          // reads as one sentence rather than a rubric arriving out of nowhere.
+          // The numbers (20/25/30/15/10) are fixed elsewhere too; do not touch.
+          ko: "제출물의 뼈대는 ① 워크플로우 이해 ② 병목 진단과 AI 해법 아이디어 ③ 이를 뒷받침하는 데모입니다 — 기술 완성도는 심사 기준이 아닙니다. 보는 것은 ‘회사·문제 이해 → 아이디어 → 데모의 정합성’이고, 배점은 회사·문제 이해도 20 · 아이디어의 적절성 25 · 데모↔아이디어 정합 30 · 도입 가능성 15 · 발표·전달 10 — 이해+아이디어+정합이 75%를 차지합니다. 프로토타입은 프론트엔드 와이어프레임 수준이어도 괜찮고, 목업·슬라이드만이면 감점됩니다. 배점은 심사위원님·파트너사 합의로 조정될 수 있습니다. 심사는 실제 산업에서 문제를 풀어온 현업 리더분들이 직접 합니다(심사위원 섹션 참조).",
+          en: "What you hand in has three parts: (1) your reading of the workflow, (2) your diagnosis of the bottleneck and the AI fix for it, and (3) a demo that backs the idea up — technical polish is not a judging criterion. What we look at is the coherence of ‘understanding the company & problem → idea → demo’, scored as: company/problem understanding 20 · appropriateness of the idea 25 · demo ↔ idea alignment 30 · adoption feasibility 15 · delivery 10 — understanding + idea + alignment make up 75%. A front-end wireframe-level prototype is fine; mockups or slides alone lose points. Weightings may be adjusted by agreement among judges and partners. Judging is done first-hand by leaders who have solved these problems in industry (see the judges section).",
         },
       },
     ],
