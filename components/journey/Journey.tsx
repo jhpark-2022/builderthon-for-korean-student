@@ -1297,31 +1297,38 @@ const HERO_VIDEO = {
   enabled: true,
   webm: "",
   mp4: "/hero/metal-human.mp4",
+  // Phone cut of the same clip — 480×360, 274KB against the desktop file's 649KB.
+  // The hero crops to portrait behind a dark scrim and blurs as it scrolls away,
+  // so the softer source is invisible in place; what a phone would have felt is
+  // the 649KB, which was 99% of the page's first-load transfer on mobile.
+  // Re-encode both from the same master if the clip is ever replaced
+  // (avconvert --source metal-human.mp4 -p PresetAppleM4VWiFi -o mobile.m4v).
+  mp4Mobile: "/hero/metal-human-mobile.mp4",
   poster: "/hero/metal-human-poster.jpg",
 };
 
 function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
-  // PHONES GET THE POSTER, NOT THE CLIP. The mp4 is ~650KB and was 99% of the
-  // page's first-load transfer on mobile — for a decorative background, on the
-  // half of our traffic that arrives on a phone (and often on mobile data).
-  // The poster is the same frame at 112KB, so the hero looks the same; it just
-  // stops moving. Gated in an effect rather than at render so the server and
-  // the first client paint agree (poster-only) and the video attaches after
-  // mount — which is also why there is no CLS cost.
+  // THE HERO MOVES ON EVERY SCREEN. A phone briefly got the poster instead —
+  // that saved the 649KB but cost the thing the hero is for, so phones now get
+  // their own cut of the clip (HERO_VIDEO.mp4Mobile, 274KB) rather than a still.
   //
-  // Two more opt-outs on the same switch, both cheap and both correct: a
-  // visitor who asked for reduced motion, and one whose browser reports
-  // Save-Data. Neither wants an autoplaying background loop.
-  const [playVideo, setPlayVideo] = useState(false);
+  // Which source is chosen after mount, not at render: the server and the first
+  // client paint agree on poster-only, then the right file attaches. That keeps
+  // a phone from ever starting the desktop download, and it is why swapping in
+  // the video costs no layout shift.
+  //
+  // The one case that still stops at the poster is prefers-reduced-motion. That
+  // is the visitor's own setting, and an autoplaying loop is exactly what it
+  // asks us not to do.
+  const [videoSrc, setVideoSrc] = useState<string | null>(null);
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const wide = window.matchMedia("(min-width: 640px)").matches;
-    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-    setPlayVideo(wide && !calm && !conn?.saveData);
+    setVideoSrc(wide ? HERO_VIDEO.mp4 : HERO_VIDEO.mp4Mobile);
   }, []);
 
   if (!HERO_VIDEO.enabled) return null; // placeholder: keep the WebGL background
-  if (!playVideo)
+  if (!videoSrc)
     return (
       <div
         aria-hidden
@@ -1367,7 +1374,7 @@ function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
         className="h-full w-full object-cover object-center"
       >
         {HERO_VIDEO.webm && <source src={HERO_VIDEO.webm} type="video/webm" />}
-        <source src={HERO_VIDEO.mp4} type="video/mp4" />
+        <source src={videoSrc} type="video/mp4" />
       </motion.video>
       {/* legibility scrim — darker top so the headline reads; fades to nothing
           toward the bottom so the mask hands off cleanly to the WebGL field */}
