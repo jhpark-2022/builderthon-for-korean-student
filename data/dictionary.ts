@@ -87,9 +87,14 @@ export const partnerIntros: Record<string, Phrase> = {
     ko: "싱가포르에 본사를 둔 한–싱 크로스보더 벤처빌더로, 초기 아이디어부터 시리즈 A까지 창업자와 ‘공동 창업’ 방식으로 회사를 함께 만듭니다. AI·콘텐츠·F&B·B2B SaaS 영역에서 한국 브랜드의 동남아 진출을 빌드해 왔으며, 이 빌더톤을 만든 Zero100 프로그램의 모조직입니다.",
     en: "A Korea–Singapore cross-border venture builder headquartered in Singapore, co-founding companies with founders from first idea to Series A across AI, content, F&B and B2B SaaS. The parent organization of Zero100 — the program behind this builderthon.",
   },
+  // The last sentence lists every role Codepresso plays here, and 문제 제공 comes
+  // first because that is the one a participant actually meets — one of the AX
+  // problems teams pick on Day 1 is theirs. Crash Course and mentoring follow.
+  // If any of the three changes, dict.mentoring.mentors (김지훈 · 이동훈 · 황현진)
+  // and schedule.ts d2-crash-course are the other places that name them.
   Codepresso: {
-    ko: "‘AI 리터러시의 표준화’를 내건 AI 역량 평가·교육 기업입니다. 채용용 AI 역량 평가(SkillCertify)와 비개발자 대상 AI 활용 교육(AI Fluent)을 운영하며, 현대오토에버·현대모비스 등 대기업 프로그램을 진행해 왔습니다. 이번 빌더톤에서는 Day 2 크래시코스를 주관합니다.",
-    en: "An AI competency assessment & education company working to standardize AI literacy — running skill assessments (SkillCertify) and AI-fluency training (AI Fluent) used by companies like Hyundai AutoEver and Hyundai Mobis. Codepresso runs this builderthon's Day-2 Crash Course.",
+    ko: "‘AI 리터러시의 표준화’를 내건 AI 역량 평가·교육 기업입니다. 채용용 AI 역량 평가(SkillCertify)와 비개발자 대상 AI 활용 교육(AI Fluent)을 운영하며, 현대오토에버·현대모비스 등 대기업 프로그램을 진행해 왔습니다. 이번 빌더톤에서는 실제 기업 과제를 내는 문제 제공사이자 Day 2 크래시코스를 주관하고, Day 7 커리어 세션 멘토링에도 함께합니다.",
+    en: "An AI competency assessment & education company working to standardize AI literacy — running skill assessments (SkillCertify) and AI-fluency training (AI Fluent) used by companies like Hyundai AutoEver and Hyundai Mobis. Here it sets one of the real company problems, runs the Day-2 Crash Course, and mentors at the Day 7 career session.",
   },
   Drimaes: {
     ko: "SDV(소프트웨어 정의 차량)·차량용 인포테인먼트(IVI)를 만드는 모빌리티 소프트웨어 기업입니다. 독자 리눅스 기반 OS와 가상화 기술로 차량의 여러 화면을 하나의 칩으로 통합하며, CES에서 퀄컴·텔레칩스와의 협업을 선보였고 2025년 국가 SW R&D 우수성과에 선정됐습니다.",
@@ -923,8 +928,13 @@ export const dict = {
         // "잠정" at the end of the card lets a reader take the numbers as fixed.
         // Mirrored in the FAQ internship + prize items; change both together.
         points: [
-          { ko: "메인 트랙 각 1위 · AXMOS(코드프레소·WVB) 유급 FDE 인턴십 기회", en: "1st place in each main track · a paid FDE internship with AXMOS (Codepresso · WVB)" },
-          { ko: "겨울방학 약 1.5개월 · 트랙당 최대 3명 — 기간·인원 확정 전", en: "~1.5 months over the winter break · up to 3 per track — duration & headcount not yet final" },
+          // NOT "FDE 인턴십". The internship itself is confirmed; what the intern
+          // would actually DO is not decided yet, and naming a role we haven't
+          // agreed sets an expectation the partners never made. Say the offer,
+          // leave the job description to the line below. Same rule in both FAQ
+          // answers (인턴십이 진짜인가요 / 상금이나 현금 지원) — change all three.
+          { ko: "메인 트랙 각 1위 · AXMOS(코드프레소·WVB) 유급 인턴십 기회", en: "1st place in each main track · a paid internship with AXMOS (Codepresso · WVB)" },
+          { ko: "겨울방학 약 1.5개월 · 트랙당 최대 3명 — 직무·기간·인원 확정 전", en: "~1.5 months over the winter break · up to 3 per track — role, duration & headcount not yet final" },
           { ko: "2위 S$100 · 3위 널담 바우처 — 금액 확정 전", en: "2nd S$100 · 3rd Nuldam voucher — amounts not yet final" },
           // Both vouchers on this card are 널담 now — the 해녀의 부엌 one was dropped
           // from the incentives entirely. Keep the two lines saying the same
@@ -1669,8 +1679,12 @@ export const dict = {
       {
         q: { ko: "인턴십이 진짜인가요? 유급인가요?", en: "Is the internship real? Is it paid?" },
         a: {
-          ko: "네, 실제로 추진 중인 유급 인턴십입니다 — 메인 트랙 각 1위 팀에게 AXMOS(코드프레소·WVB)의 겨울방학 유급 FDE 인턴 기회가 열립니다(약 1.5개월 · 트랙당 최대 3명 — 기간·인원 모두 확정 전이라 조율되는 대로 안내). 인턴이 안 되더라도 Day 7 커리어 간담회가 인턴·채용 풀로 이어지는 별도 연결 통로예요.",
-          en: "Yes — it's a paid internship we're actively arranging. The winning team in each main track gets a paid FDE internship with AXMOS (Codepresso · WVB) over the winter break — around 1.5 months, up to three people per track, though both the duration and the headcount are still being settled; we'll post them once confirmed. And even without the internship, the Day 7 career session is its own route into the internship and hiring pool.",
+          // The internship is real and paid — that part is settled. The ROLE is
+          // not: it used to say "FDE 인턴", which named a job nobody has agreed to
+          // yet. The answer now says what is decided and says plainly that the
+          // job description isn't, which is also what a reader is really asking.
+          ko: "네, 실제로 추진 중인 유급 인턴십입니다 — 메인 트랙 각 1위 팀에게 AXMOS(코드프레소·WVB)의 겨울방학 유급 인턴 기회가 열립니다(약 1.5개월 · 트랙당 최대 3명). 어떤 일을 맡게 될지(직무)와 기간·인원은 아직 조율 중이라, 확정되는 대로 안내드릴게요. 인턴이 안 되더라도 Day 7 커리어 간담회가 인턴·채용 풀로 이어지는 별도 연결 통로예요.",
+          en: "Yes — it's a paid internship we're actively arranging. The winning team in each main track gets a paid internship with AXMOS (Codepresso · WVB) over the winter break — around 1.5 months, up to three people per track. What the role itself will be, along with the exact duration and headcount, is still being settled; we'll post it once confirmed. And even without the internship, the Day 7 career session is its own route into the internship and hiring pool.",
         },
       },
       {
@@ -1695,8 +1709,8 @@ export const dict = {
         a: {
           // 수료증은 이 목록에서 의도적으로 빠져 있습니다 — 발급 기준이 "크래시코스
           // 전 시간 참석"이라, 참가자 전원이 받는 항목과 나란히 두면 기준이 오해됩니다.
-          ko: "네 — 시상은 메인 트랙 2개 각각에 1~3위로 걸립니다: 1위 유급 FDE 인턴십 기회 · 2위 S$100 · 3위 널담 바우처. Day 5 AI Use Case Top 3의 널담 바우처도 논의 중이에요. 참가비는 무료이고, 순위에 못 들어도 밥·굿즈·네트워킹은 전원에게 돌아가며 수료증은 크래시코스 전 시간을 들으면 받습니다. ※ 금액·인원 등 세부는 아직 확정 전이며 파트너 협의로 변경될 수 있어요.",
-          en: "Yes — each of the two main tracks carries awards for 1st through 3rd: a paid FDE internship for 1st, S$100 for 2nd and a Nuldam voucher for 3rd. A Nuldam voucher for the top 3 of the Day 5 AI Use Case session is also under discussion. Entry is free, and off the podium the food, goods and networking still go to everyone — the certificate comes with full Crash Course attendance. ※ Amounts, headcounts and other details aren't final and may change as partner discussions continue.",
+          ko: "네 — 시상은 메인 트랙 2개 각각에 1~3위로 걸립니다: 1위 유급 인턴십 기회 · 2위 S$100 · 3위 널담 바우처. Day 5 AI Use Case Top 3의 널담 바우처도 논의 중이에요. 참가비는 무료이고, 순위에 못 들어도 밥·굿즈·네트워킹은 전원에게 돌아가며 수료증은 크래시코스 전 시간을 들으면 받습니다. ※ 금액·인원 등 세부는 아직 확정 전이며 파트너 협의로 변경될 수 있어요.",
+          en: "Yes — each of the two main tracks carries awards for 1st through 3rd: a paid internship for 1st, S$100 for 2nd and a Nuldam voucher for 3rd. A Nuldam voucher for the top 3 of the Day 5 AI Use Case session is also under discussion. Entry is free, and off the podium the food, goods and networking still go to everyone — the certificate comes with full Crash Course attendance. ※ Amounts, headcounts and other details aren't final and may change as partner discussions continue.",
         },
       },
       {
