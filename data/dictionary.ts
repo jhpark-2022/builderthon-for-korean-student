@@ -768,8 +768,16 @@ export const dict = {
       en: "About 60% of participants are trying vibe coding for the first time — and that's the point. A crash course (Day 2, run by Codepresso) levels the start line so your ideas, not your syntax, are the limit.",
     },
     whoTitle: { ko: "이런 분께", en: "Who should join" },
+    // Eligibility is TWO groups, not one: the universities, and Koreans who are
+    // job-hunting right now whether or not they are enrolled anywhere. The list
+    // used to name only NUS·NTU·SMU, which read as a closed door to the second
+    // group — and they are the people an 8-day build with real company problems
+    // and an internship at the end is most useful to. The register form already
+    // handles them: 학교 is optional and carries an 기타 option, so nothing there
+    // needs to change (components/RegisterModal.tsx · dict.register.schoolOptions).
     who: [
       { ko: "전공 불문 — NUS · NTU · SMU의 모든 한인 학생", en: "Any major — Korean students across NUS · NTU · SMU" },
+      { ko: "재학생이 아니어도 — 지금 구직 중인 한인이라면 누구나", en: "Not enrolled? Open to any Korean who's job-hunting right now" },
       { ko: "코딩이 처음이어도 좋습니다 — 크래시코스와 수료증(전 시간 참석 시)이 함께합니다", en: "First time coding is fine — a crash course, plus a certificate if you attend all of it" },
       { ko: "입대 전·전역 후, 다시 도전하고 싶은 분", en: "Anyone wanting a fresh challenge — before enlistment or after service" },
       { ko: "실제 기업의 문제를 직접 풀어보고 싶은 분", en: "Anyone who wants to solve a real company's problem hands-on" },
