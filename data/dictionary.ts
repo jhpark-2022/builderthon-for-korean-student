@@ -940,7 +940,16 @@ export const dict = {
           // leave the job description to the line below. Same rule in both FAQ
           // answers (인턴십이 진짜인가요 / 상금이나 현금 지원) — change all three.
           { ko: "메인 트랙 각 1위 · AXMOS(코드프레소·WVB) 유급 인턴십 기회", en: "1st place in each main track · a paid internship with AXMOS (Codepresso · WVB)" },
-          { ko: "겨울방학 약 1.5개월 · 트랙당 최대 3명 — 직무·기간·인원 확정 전", en: "~1.5 months over the winter break · up to 3 per track — role, duration & headcount not yet final" },
+          // The numbers that used to sit here ("겨울방학 약 1.5개월 · 트랙당 최대
+          // 3명") were never agreed with the companies — they came from an early
+          // deck. Timing in particular can only be settled between the student
+          // and the company after the event, around that student's own term
+          // dates, so a figure printed now would be a promise made on their
+          // behalf. Note the line does NOT list what is undecided ("직무·기간·
+          // 인원은 미정"): spelling out the gaps next to a prize reads as a
+          // warning label. It says when the terms get set, and stops there.
+          // Put a number back only when a partner has confirmed it.
+          { ko: "행사 후 우승팀과 직접 협의", en: "Settled directly with the winning team after the event" },
           { ko: "2위 S$100 · 3위 널담 바우처 — 금액 확정 전", en: "2nd S$100 · 3rd Nuldam voucher — amounts not yet final" },
           // Both vouchers on this card are 널담 now — the 해녀의 부엌 one was dropped
           // from the incentives entirely. Keep the two lines saying the same
@@ -1689,8 +1698,8 @@ export const dict = {
           // not: it used to say "FDE 인턴", which named a job nobody has agreed to
           // yet. The answer now says what is decided and says plainly that the
           // job description isn't, which is also what a reader is really asking.
-          ko: "네, 실제로 추진 중인 유급 인턴십입니다 — 메인 트랙 각 1위 팀에게 AXMOS(코드프레소·WVB)의 겨울방학 유급 인턴 기회가 열립니다(약 1.5개월 · 트랙당 최대 3명). 어떤 일을 맡게 될지(직무)와 기간·인원은 아직 조율 중이라, 확정되는 대로 안내드릴게요. 인턴이 안 되더라도 Day 7 커리어 간담회가 인턴·채용 풀로 이어지는 별도 연결 통로예요.",
-          en: "Yes — it's a paid internship we're actively arranging. The winning team in each main track gets a paid internship with AXMOS (Codepresso · WVB) over the winter break — around 1.5 months, up to three people per track. What the role itself will be, along with the exact duration and headcount, is still being settled; we'll post it once confirmed. And even without the internship, the Day 7 career session is its own route into the internship and hiring pool.",
+          ko: "네, 실제로 추진 중인 유급 인턴십입니다 — 메인 트랙 각 1위 팀에게 AXMOS(코드프레소·WVB)의 유급 인턴 기회가 열립니다. 구체적인 조건은 행사가 끝난 뒤 회사와 학생이 학기 일정에 맞춰 직접 이야기해 정합니다. 인턴이 안 되더라도 Day 7 커리어 간담회가 인턴·채용 풀로 이어지는 별도 연결 통로예요.",
+          en: "Yes — it's a paid internship we're actively arranging: the winning team in each main track gets a paid internship with AXMOS (Codepresso · WVB). The specifics are settled directly between the company and the students after the event, around their term dates. And even without the internship, the Day 7 career session is its own route into the internship and hiring pool.",
         },
       },
       {
