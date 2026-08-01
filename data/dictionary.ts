@@ -790,8 +790,8 @@ export const dict = {
     // between are self-paced and mostly online, which is why the second half of
     // the sentence is there — without it this reads as an 8-day residency.
     requirement: {
-      ko: "참가 조건은 하나예요 — Day 1(8/22 킥오프)과 Day 8(8/29 데모데이)은 싱가포르 현장에 꼭 오셔야 합니다. 사이 6일은 대부분 온라인이고, 각자 편한 시간·장소에서 팀별로 빌드해요.",
-      en: "One condition: you need to be in Singapore in person for Day 1 (22 Aug, kick-off) and Day 8 (29 Aug, Demo Day). The six days between are mostly online and self-paced, wherever you are.",
+      ko: "참가 조건은 하나예요 — Day 1(8/22 킥오프)과 Day 8(8/29 데모데이)은 싱가포르 현장 필참입니다. 그 사이에도 Day 3·4 1:1 멘토링(NUS 대면 기본)과 Day 5·7 현장 세션이 있고, 팀별 자율 빌드만 각자 편한 시간·장소에서 진행해요.",
+      en: "One condition: Day 1 (22 Aug, kick-off) and Day 8 (29 Aug, Demo Day) are in person in Singapore and required. In between there's 1:1 mentoring on Day 3·4 (in person at NUS by default) and on-site sessions on Day 5 and 7 — only the team's own build time is wherever suits you.",
     },
     disclaimer: {
       ko: "* 일부 혜택(인센티브·멘토 라인업 등)은 파트너와 논의 중이며 확정 시 안내됩니다.",
@@ -816,9 +816,13 @@ export const dict = {
       ko: "프로그램은 아직 확정 전인 부분이 많습니다 — 세션·연사·시간은 조율 중이며, 확정되는 대로 이 페이지에 업데이트합니다.",
       en: "Much of the programme is still being finalised — sessions, speakers and times are being worked out, and this page is updated as each is confirmed.",
     },
+    // "그 사이는 대부분 온라인" was doing damage: the only genuinely online part is
+    // the team's own build time, and stating it that broadly made a programme with
+    // four in-person days plus F2F mentoring read as a remote event. What is
+    // REQUIRED (Day 1 · 8) and what is IN PERSON are two different lists — say both.
     modeNote: {
-      ko: "필참은 Day 1(오프닝)과 Day 8(데모데이) 둘뿐이에요. 그 사이는 대부분 온라인이고, 자율 빌드는 각자 편한 시간·장소에서 팀별로 이어갑니다 — 8일 내내 붙어 있어야 하는 일정이 아닙니다. Day 5(오프라인 킥오프)·Day 7(파이널 리허설·AWS 오피스)은 현장에 모이지만 필참은 아니에요.",
-      en: "Only two days are required: Day 1 (opening) and Day 8 (Demo Day). Everything in between is mostly online, and the self-paced build happens whenever and wherever works for your team — this is not eight days you have to block out. Day 5 (kickoff) and Day 7 (final rehearsal · AWS office) meet in person too, but attendance isn't required.",
+      ko: "필참은 Day 1(오프닝)과 Day 8(데모데이) 둘뿐이에요 — 8일 내내 붙어 있어야 하는 일정이 아닙니다. 다만 현장에서 만나는 시간은 그보다 많아요: Day 3·4 1:1 멘토링은 NUS 대면이 기본이고, Day 5(오프라인 킥오프)·Day 7(파이널 리허설·AWS 오피스)도 현장입니다(필참은 아니에요). 온라인으로 진행되는 건 팀별 자율 빌드와 일부 세션이고, 그 시간은 각자 편한 곳에서 이어가면 됩니다.",
+      en: "Only two days are required: Day 1 (opening) and Day 8 (Demo Day) — this is not eight days you have to block out. But you'll meet in person more often than that: the Day 3·4 1:1 mentoring is at NUS by default, and Day 5 (kickoff) and Day 7 (final rehearsal · AWS office) are on-site too, though not required. What runs online is your team's own build time and some of the sessions — that part happens wherever works for you.",
     },
     dayLabel: { ko: "Day", en: "Day" },
     // Label on the wide band above Lab 1. "사전" rather than "Day 0" — the
@@ -829,6 +833,10 @@ export const dict = {
     mandatoryBadge: { ko: "필참", en: "Required" },
     onlineLabel: { ko: "온라인", en: "Online" },
     offlineLabel: { ko: "현장", en: "In person" },
+    // Day 3·4 only (dayMode "mixed"): the build is online, the 1:1 mentoring is
+    // at NUS. Both halves are named because either one alone misleads — 온라인
+    // hides the mentoring the mentors travel for, 현장 promises a full day there.
+    mixedLabel: { ko: "온라인 · NUS 대면", en: "Online · at NUS" },
     // ── Self-paced (category "build") ──────────────────────────────────────
     // Build events carry mode "online" in the data because they have to carry
     // SOMETHING, but showing them an "온라인" badge told a lie: it reads as a
@@ -853,9 +861,12 @@ export const dict = {
     // A day whose only entries are self-paced: there is no session to count.
     noSessions: { ko: "정해진 세션 없음", en: "No scheduled sessions" },
     pendingLabel: { ko: "현장 (미정)", en: "On-site (TBC)" },
-    // 1:1 mentoring is arranged mentor by mentor — some meet at NUS in person,
-    // others take it online. Neither plain badge is true for everyone.
-    byMentorLabel: { ko: "대면·온라인 (멘토별)", en: "In person / online (by mentor)" },
+    // 1:1 mentoring is arranged mentor by mentor, but the DEFAULT is in person at
+    // NUS — that is what the mentors were asked for and what most of them expect.
+    // The badge used to read "대면·온라인 (멘토별)", which weighted the two equally
+    // and let the day scan as an online one. Lead with the default; the "멘토별"
+    // qualifier keeps it honest for the mentors who take theirs online.
+    byMentorLabel: { ko: "NUS 대면 기본 (멘토별)", en: "In person at NUS by default" },
     sessions: { ko: "세션", en: "sessions" },
     // English needs the singular for a one-session day. Korean has no plural, so
     // both forms are identical there — kept as a pair rather than a special case

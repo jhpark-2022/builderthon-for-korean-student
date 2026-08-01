@@ -905,6 +905,15 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
         {t(dict.program.pendingLabel)}
       </span>
     );
+  // Day 3·4: online build + on-site mentoring. Carries the amber dot the
+  // in-person days use, at a lighter weight — the day has an on-site half, it
+  // just isn't an on-site day.
+  if (day.dayMode === "mixed")
+    return (
+      <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/20 bg-amber-400/[0.06] px-2 py-0.5 text-[0.68rem] font-semibold text-amber-100/80">
+        <span aria-hidden className="text-amber-300/70">●</span>{t(dict.program.mixedLabel)}
+      </span>
+    );
   return (
     <span className="rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
       {t(dict.program.onlineLabel)}
