@@ -782,6 +782,17 @@ export const dict = {
       { ko: "입대 전·전역 후, 다시 도전하고 싶은 분", en: "Anyone wanting a fresh challenge — before enlistment or after service" },
       { ko: "실제 기업의 문제를 직접 풀어보고 싶은 분", en: "Anyone who wants to solve a real company's problem hands-on" },
     ],
+    // The only eligibility CONDITION on the page. It sits with the invitation
+    // because the list above says "누구나" — and the honest limit is not where
+    // you study or whether you're enrolled, it's whether you can be in the room
+    // on the two mandatory days. Those two are the only `mandatory: true`
+    // entries in data/schedule.ts (Day 1 킥오프 · Day 8 데모데이); the six days
+    // between are self-paced and mostly online, which is why the second half of
+    // the sentence is there — without it this reads as an 8-day residency.
+    requirement: {
+      ko: "참가 조건은 하나예요 — Day 1(8/22 킥오프)과 Day 8(8/29 데모데이)은 싱가포르 현장에 꼭 오셔야 합니다. 사이 6일은 대부분 온라인이고, 각자 편한 시간·장소에서 팀별로 빌드해요.",
+      en: "One condition: you need to be in Singapore in person for Day 1 (22 Aug, kick-off) and Day 8 (29 Aug, Demo Day). The six days between are mostly online and self-paced, wherever you are.",
+    },
     disclaimer: {
       ko: "* 일부 혜택(인센티브·멘토 라인업 등)은 파트너와 논의 중이며 확정 시 안내됩니다.",
       en: "* Some benefits (incentives, mentor line-up) are under discussion with partners and will be confirmed.",

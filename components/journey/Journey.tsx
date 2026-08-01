@@ -2030,6 +2030,14 @@ export default function Journey() {
               </li>
             ))}
           </ul>
+          {/* The one hard condition, inside the same box as the invitation —
+              anyone reading "누구나" needs it in the same glance, not two
+              chapters later in the programme section. Day 1 and Day 8 are the
+              only `mandatory: true` days in data/schedule.ts; if that ever
+              changes, this line changes with it. */}
+          <p className="mt-5 border-t border-white/10 pt-4 text-sm leading-relaxed text-white/60">
+            {t(dict.whoWhat.requirement)}
+          </p>
         </Glass>
         <p className="mt-5 text-center text-xs text-white/65">{t(dict.whoWhat.disclaimer)}</p>
       </Chapter>
