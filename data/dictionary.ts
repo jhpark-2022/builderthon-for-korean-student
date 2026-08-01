@@ -1214,20 +1214,32 @@ export const dict = {
         // Day 3–6, because that is when its office hours actually run
         // (schedule.ts d5/d6/d7-fde-office-hour). Never round a chip to fit a box.
         partnersLabel: { ko: "메인 멘토링 파트너", en: "Main mentoring partners" },
+        // `logoClass` is OPTICAL sizing, not a uniform cap. Capping both marks at
+        // the same height is what made Popup Studio look like a footnote next to
+        // Onword Lab: Onword is a long single-line wordmark (900×92, aspect ~9.8)
+        // and Popup is a stacked block (512×245, aspect ~2.1), so at equal height
+        // the wordmark carries four times the ink. Taller for the stacked mark
+        // brings the two to similar visual weight — the same reasoning the hero
+        // partner strip applies with its area-based sizing.
+        // The chip is one phrase, no interior separator: "Day 3·4 · 아이디에이션"
+        // wrapped into "Day 3·4 ·" / "아이디에이션" on a phone and the orphaned
+        // middot read as a typo.
         partners: [
           {
             name: "Onword Lab",
             logo: "/partners/logos/white/trimmed/onword-lab.png",
             logoW: 900,
             logoH: 92,
-            chip: { ko: "Day 3·4 · 아이디에이션", en: "Day 3·4 · ideation" },
+            logoClass: "h-6 sm:h-7",
+            chip: { ko: "Day 3·4 아이디에이션", en: "Day 3·4 ideation" },
           },
           {
             name: "Popup Studio",
             logo: "/partners/logos/white/trimmed/popup-studio.png",
             logoW: 512,
             logoH: 245,
-            chip: { ko: "Day 5–7 · FDE 오피스아워", en: "Day 5–7 · FDE office hours" },
+            logoClass: "h-11 sm:h-12",
+            chip: { ko: "Day 5–7 FDE 오피스아워", en: "Day 5–7 FDE office hours" },
           },
         ],
         // Placeholder card at the end of this box's grid. Popup Studio sends FDEs

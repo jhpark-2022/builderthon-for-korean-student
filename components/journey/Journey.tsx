@@ -2297,14 +2297,16 @@ export default function Journey() {
               somebody actually has no stage, so it disappears on its own if that
               stops being true. */}
           {warmupMentors.length > 0 && (
-            <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3">
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 text-center">
+              {/* Centred like the partner panel below it: this strip spans the full
+                  width and two names pinned left left the row looking unfinished. */}
+              <div className="flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1">
                 <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/60">
                   {t(dict.mentoring.warmup.label)}
                 </span>
                 <span className="break-keep text-xs text-white/45">{t(dict.mentoring.warmup.note)}</span>
               </div>
-              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5">
+              <div className="mt-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5">
                 {warmupMentors.map((m, i) => (
                   <span key={i} className="inline-flex items-center gap-1.5 break-keep text-xs text-white/75">
                     <span className="font-bold text-white">{t(m.name)}</span>
@@ -2352,20 +2354,33 @@ export default function Journey() {
                       <p className="text-center text-[0.62rem] font-bold uppercase tracking-[0.14em] text-white/50">
                         {t(g.partnersLabel)}
                       </p>
-                      <div className="mt-3 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
+                      {/* One column per partner — logo over its span chip — with a
+                          wide gap between them. Side by side (logo, chip, logo,
+                          chip) the four items read as one run: which chip belonged
+                          to which mark was a guess, and the pair looked cramped.
+                          Stacking also lets the chip stay on one line at 375px,
+                          where "Day 3·4 아이디에이션" used to wrap mid-phrase.
+                          gap-x-14: the separation IS the grouping here. */}
+                      <div className="mt-4 flex flex-wrap items-start justify-center gap-x-14 gap-y-7">
                         {g.partners.map((pt) => (
-                          <div key={pt.name} className="flex min-w-0 items-center gap-3">
-                            <Image
-                              src={pt.logo}
-                              alt={pt.name}
-                              width={pt.logoW}
-                              height={pt.logoH}
-                              // Height-capped so a wide wordmark and a squarer mark
-                              // read at similar weight; max-w keeps either from
-                              // running past the panel on a 375px phone.
-                              className="h-5 w-auto max-w-[8.5rem] shrink-0 object-contain opacity-90 sm:h-6"
-                            />
-                            <span className="break-keep rounded-full border border-emerald-400/25 bg-emerald-400/[0.08] px-2 py-0.5 text-[0.62rem] font-semibold text-emerald-100/85">
+                          <div key={pt.name} className="flex min-w-0 flex-col items-center gap-2.5">
+                            {/* Fixed-height band with the mark centred inside it.
+                                The two logos are deliberately DIFFERENT heights
+                                (optical sizing — see logoClass in dictionary.ts),
+                                and without a common band the chips underneath sat
+                                at two different heights and the pair read as
+                                ragged. The band equalises the row; the marks keep
+                                their own sizes. */}
+                            <span className="flex h-12 items-center sm:h-14">
+                              <Image
+                                src={pt.logo}
+                                alt={pt.name}
+                                width={pt.logoW}
+                                height={pt.logoH}
+                                className={`w-auto max-w-[10rem] shrink-0 object-contain opacity-90 ${pt.logoClass}`}
+                              />
+                            </span>
+                            <span className="whitespace-nowrap rounded-full border border-emerald-400/25 bg-emerald-400/[0.08] px-2.5 py-0.5 text-[0.62rem] font-semibold text-emerald-100/85">
                               {t(pt.chip)}
                             </span>
                           </div>
