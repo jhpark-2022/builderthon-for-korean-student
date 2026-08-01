@@ -2277,8 +2277,18 @@ export default function Journey() {
           {/* One column below `sm`: at two columns a 375px phone left each card
               ~150px of text, which forced Korean names and org strings to break
               mid-word (김진호 → 김/진/호). Two from `sm`, four from `lg` — the
-              desktop layout is unchanged. */}
-          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              desktop layout is unchanged.
+
+              flex-wrap + justify-center, NOT grid: with 13 mentors a 4-column
+              grid left the 13th card alone against the left edge, reading as a
+              layout bug. Wrapped flex lines centre themselves, so only the last
+              short line moves — full lines still span the row exactly, because
+              each card's width is the grid column it replaces (100% minus the
+              gaps, divided by the column count). Nothing here counts the people:
+              add or drop a mentor and the last line re-centres on its own.
+              `items-stretch` (the flex default) keeps cards on one line equal in
+              height, exactly as grid rows did. */}
+          <div className="mt-4 flex flex-wrap justify-center gap-3">
             {dict.mentoring.mentors.map((m, i) => {
               const name = t(m.name);
               const role = t(m.role);
@@ -2288,8 +2298,10 @@ export default function Journey() {
                    it was a placeholder standing in for a face nobody had, and the
                    room it took is worth more as a line about the person. Card is a
                    column with the day pill pushed to the bottom (`mt-auto`), so
-                   cards in a row stay the same height whatever the intro's length. */
-                <div key={i} className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-emerald-400/25 hover:bg-white/[0.05]">
+                   cards in a row stay the same height whatever the intro's length.
+                   Widths mirror the old grid: gap-3 = 0.75rem, so two columns are
+                   (100% − 0.75rem)/2 and four are (100% − 2.25rem)/4. */
+                <div key={i} className="flex w-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-emerald-400/25 hover:bg-white/[0.05] sm:w-[calc((100%-0.75rem)/2)] lg:w-[calc((100%-2.25rem)/4)]">
                   <div className="flex items-start justify-between gap-2">
                     {/* break-keep (word-break: keep-all) — Korean breaks between
                         syllables by default, which shreds a 3-syllable name into
@@ -2331,11 +2343,9 @@ export default function Journey() {
         </div>
 
         {/* ── Judges subsection (deck p13) · no new nav item ────────────────
-            Judge cards (all with face photos) + 2 "to be announced" placeholders.
-            LinkedIn icon only where a confirmed URL exists. A judge who is agreed
-            but not locked keeps a normal card and adds an amber "협의 중" pill
-            (dict.judges.people[].pending) — the placeholders are for judges we
-            cannot name at all, which is a different thing. */}
+            Judge cards, all with face photos. LinkedIn icon only where a
+            confirmed URL exists. A judge who is agreed but not locked keeps a
+            normal card and adds an amber "협의 중" pill (dict.judges.people[].pending). */}
         <div className="mt-16 border-t border-white/10 pt-12 text-left">
           <div className="text-center">
             <Eyebrow color="violet">{t(dict.judges.tag)}</Eyebrow>
@@ -2344,11 +2354,17 @@ export default function Journey() {
             </h3>
             <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.judges.sub)}</p>
           </div>
-          <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Same flex-wrap + justify-center treatment as the mentor grid above:
+              ten judges over three columns left the tenth stranded on its own
+              line. Card widths reproduce the grid columns — gap-4 = 1rem, so two
+              columns are (100% − 1rem)/2 and three are (100% − 2rem)/3 — and the
+              count is never hardcoded, so the last line keeps centring itself as
+              judges are added or removed. */}
+          <div className="mt-9 flex flex-wrap justify-center gap-4">
             {dict.judges.people.map((j, i) => {
               const name = t(j.name);
               return (
-                <div key={i} className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-400/25 hover:bg-white/[0.05]">
+                <div key={i} className="flex w-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-400/25 hover:bg-white/[0.05] sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-2rem)/3)]">
                   <div className="flex items-center gap-3">
                     {/* Face photo when on hand, else initial avatar. */}
                     {j.img ? (
