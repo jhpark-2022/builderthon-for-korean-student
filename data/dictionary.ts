@@ -1260,9 +1260,13 @@ export const dict = {
         dayRange: { ko: "Day 7", en: "Day 7" },
         title: { ko: "피치 · 세일즈 멘토링", en: "Pitch & sales mentoring" },
         theme: { ko: "팔 때 돕는 사람들", en: "The people who help you sell it" },
+        // "AWS 등 현직 GTM·세일즈 시니어" alone stopped being true as this box filled
+        // up: it now also holds an AI-education platform's founders (이동훈 · 황현진)
+        // and a studio head (정요천). What they share isn't a job title, it's that
+        // they sell something for a living — say that instead of listing one role.
         sub: {
-          ko: "데모데이 전, 기술이 아니라 ‘어떻게 파는가’를 다듬습니다 — AWS 등 현직 GTM·세일즈 시니어와 함께.",
-          en: "Pre–demo day: sharpening how to sell it, not how to build it — with senior GTM and sales people from AWS and beyond.",
+          ko: "데모데이 전, 기술이 아니라 ‘어떻게 파는가’를 다듬습니다 — AWS의 GTM·세일즈 시니어를 비롯해, 현업에서 제품을 직접 파는 사람들과 함께.",
+          en: "Pre–demo day: sharpening how to sell it, not how to build it — with senior GTM and sales people from AWS, and others who sell a product for a living.",
         },
         // No partner logos here on purpose. AWS is where several of these mentors
         // work, and it sponsors the Day 7 venue — but it has never been named a
@@ -1508,6 +1512,22 @@ export const dict = {
           en: "Content R&D lead. Ex-LG Electronics software engineer, 9 yrs.",
         },
         days: "Day 7", daysPending: "", stages: [3], img: "/partners/people/hwang-hyun-jin.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697",
+      },
+      // 정요천: Popup Studio 총괄. Popup Studio already appears in the BUILD box as
+      // a mentoring partner (its FDEs run the Day 5–7 drop-in office hours) — this
+      // is a different thing: he comes on Day 7 in person as a named mentor, so he
+      // belongs to the pitch group like the other Day 7 seniors. He is also a Day 8
+      // judge (dict.judges.people); name, org, role and LinkedIn are kept identical
+      // across both cards — one person, two surfaces.
+      {
+        name: { ko: "정요천", en: "Jeong Yo-cheon" }, org: { ko: "Popup Studio", en: "Popup Studio" }, role: { ko: "총괄", en: "Head" },
+        // The judge card carries the full history; this keeps what a team meeting
+        // him on Day 7 would want, minus anything the org line already says.
+        intro: {
+          ko: "前 Brie 대표(CEO 겸 CTO) — 웹·AI 풀스택. 前 워프벤처스 CEO/CTO · 산업은행(KDB).",
+          en: "Ex-CEO/CTO of Brie, a full-stack web·AI studio. Ex-Warp Ventures CEO/CTO · KDB.",
+        },
+        days: "Day 7", daysPending: "", stages: [3], img: "/partners/people/jeong-yo-cheon.webp", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/%EC%9A%94%EC%B2%9C-%EC%A0%95-8245a94b/",
       },
     ],
   },
