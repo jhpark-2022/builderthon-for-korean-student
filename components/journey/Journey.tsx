@@ -2345,10 +2345,14 @@ export default function Journey() {
                       hours run, even though this box is labelled Day 3–6. */}
                   {g.partners.length > 0 && (
                     <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
-                      <p className="text-[0.62rem] font-bold uppercase tracking-[0.14em] text-white/50">
+                      {/* Centred, not left-aligned. This panel spans the full box,
+                          so two marks pinned to the left edge left a wide empty
+                          field to their right and read as an unfinished row rather
+                          than a pair. Centring makes the pair the subject. */}
+                      <p className="text-center text-[0.62rem] font-bold uppercase tracking-[0.14em] text-white/50">
                         {t(g.partnersLabel)}
                       </p>
-                      <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-4">
+                      <div className="mt-3 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
                         {g.partners.map((pt) => (
                           <div key={pt.name} className="flex min-w-0 items-center gap-3">
                             <Image
