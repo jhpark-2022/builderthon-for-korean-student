@@ -1200,7 +1200,11 @@ export const dict = {
     // useful: never restate the org/role already printed above it on the card;
     // no honorifics or embellishment; no internal figures (revenue, targets) and
     // no contact details; keep it to roughly one 60–70 character Korean sentence
-    // so it clamps to two lines. If a profile can't be verified, leave `intro`
+    // so it clamps to two lines. NO SCHOOLS — every alma mater and degree was
+    // removed from these cards and from the judge bios on purpose: what a mentor
+    // has BUILT is what a team needs to know before an hour with them, and a
+    // university line invites students to rank the room by admissions instead.
+    // Academic POSTS are career (한정필's professorship stays); degrees are not. If a profile can't be verified, leave `intro`
     // empty — the card drops the line rather than guessing.
     // daysPending marks a day that is confirmed-in-principle but not locked —
     // rendered as a separate amber pill. Nobody carries one right now (한장환 held
@@ -1240,8 +1244,8 @@ export const dict = {
       {
         name: { ko: "김지훈", en: "Jihoon Kim" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "이사 · Director", en: "Director" },
         intro: {
-          ko: "추천 시스템 · 스마트팩토리 데이터 7년+. 前 스마일게이트 · LG CNS. 서강대 물리학.",
-          en: "7+ yrs on recommender systems & smart-factory data. Ex-Smilegate · LG CNS. Physics, Sogang University.",
+          ko: "추천 시스템 · 스마트팩토리 데이터 7년+. 前 스마일게이트 · LG CNS.",
+          en: "7+ yrs on recommender systems & smart-factory data. Ex-Smilegate · LG CNS.",
         },
         days: "Day 2", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jihoon-kim-613878134",
       },
@@ -1250,16 +1254,16 @@ export const dict = {
       {
         name: { ko: "김진호", en: "Jinho Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CEO", en: "Co-founder · CEO" },
         intro: {
-          ko: "유통·리테일 AI 전환(AX). NUS Business.",
-          en: "AI transformation for retail & distribution. NUS Business.",
+          ko: "유통·리테일 AI 전환(AX).",
+          en: "AI transformation for retail & distribution.",
         },
         days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/kimjinho",
       },
       {
         name: { ko: "김시훈", en: "Sihoon Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CTO", en: "Co-founder · CTO" },
         intro: {
-          ko: "커머스 운영 에이전트 시스템 개발. 미네르바대.",
-          en: "Agentic ops systems for commerce. Minerva University.",
+          ko: "커머스 운영 에이전트 시스템 개발.",
+          en: "Agentic ops systems for commerce.",
         },
         days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sihoon-kim-306551372",
       },
@@ -1289,8 +1293,8 @@ export const dict = {
       {
         name: { ko: "김종현", en: "Joseph JongHyun Kim" }, org: { ko: "YMX", en: "YMX" }, role: { ko: "사업개발 총괄", en: "Head of Business Development" },
         intro: {
-          ko: "XR·디지털 트윈 스타트업 · 싱가포르 근무. 디지털 포렌식 16년+ · KITRI BoB 멘토. 고려대.",
-          en: "An XR & digital-twin startup, based in Singapore. 16+ yrs in digital forensics · KITRI BoB mentor. Korea University.",
+          ko: "XR·디지털 트윈 스타트업 · 싱가포르 근무. 디지털 포렌식 16년+ · KITRI BoB 멘토.",
+          en: "An XR & digital-twin startup, based in Singapore. 16+ yrs in digital forensics · KITRI BoB mentor.",
         },
         days: "Day 3·4", daysPending: "", img: "/partners/people/joseph-jonghyun-kim.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/joseph-jonghyun-kim-009b244a",
       },
@@ -1301,16 +1305,16 @@ export const dict = {
       {
         name: { ko: "황영준", en: "Hwang Young-jun" }, org: { ko: "T3Q", en: "T3Q" }, role: { ko: "AI", en: "AI" },
         intro: {
-          ko: "컴퓨터 비전·NLP 3년+. VLM 문서 처리·검색엔진 고도화. 고려대.",
-          en: "3+ yrs in computer vision & NLP. VLM document processing, search. Korea University.",
+          ko: "컴퓨터 비전·NLP 3년+. VLM 문서 처리·검색엔진 고도화.",
+          en: "3+ yrs in computer vision & NLP. VLM document processing, search.",
         },
         days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620",
       },
       {
         name: { ko: "이유택", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" },
         intro: {
-          ko: "SW 엔지니어 5년 — LLM 코드리뷰 봇·사내 RAG 구축. 현 AI 석사과정.",
-          en: "5 yrs as a software engineer — LLM code-review bots, internal RAG. Now an MSc AI student.",
+          ko: "SW 엔지니어 5년 — LLM 코드리뷰 봇·사내 RAG 구축.",
+          en: "5 yrs as a software engineer — LLM code-review bots, internal RAG.",
         },
         days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek",
       },
@@ -1339,8 +1343,8 @@ export const dict = {
       {
         name: { ko: "임석건", en: "Lim Seok-geon" }, org: { ko: "NetApp", en: "NetApp" }, role: { ko: "APAC", en: "APAC" },
         intro: {
-          ko: "AWS 세일즈 스페셜리스트 4년+. 前 Rescale. 난양 MBA.",
-          en: "AWS Sales Specialist, 4+ yrs. Ex-Rescale. MBA, Nanyang Business School.",
+          ko: "AWS 세일즈 스페셜리스트 4년+. 前 Rescale.",
+          en: "AWS Sales Specialist, 4+ yrs. Ex-Rescale.",
         },
         days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sugkun-lim",
       },
@@ -1369,8 +1373,8 @@ export const dict = {
       {
         name: { ko: "황현진", en: "Hyunjin Hwang" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "공동창업자 · 이사", en: "Co-founder · Director" },
         intro: {
-          ko: "콘텐츠 R&D 총괄. 前 LG전자 소프트웨어 엔지니어 9년. 서강대.",
-          en: "Content R&D lead. Ex-LG Electronics software engineer, 9 yrs. Sogang University.",
+          ko: "콘텐츠 R&D 총괄. 前 LG전자 소프트웨어 엔지니어 9년.",
+          en: "Content R&D lead. Ex-LG Electronics software engineer, 9 yrs.",
         },
         days: "Day 7", daysPending: "", img: "/partners/people/hwang-hyun-jin.png", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697",
       },
@@ -1461,8 +1465,8 @@ export const dict = {
         img: "/partners/people/hahn-jungpil.jpg",
         pending: true,
         bio: {
-          ko: "NUS 정보시스템·분석학과 석좌교수 · NUS 핀테크랩 디렉터 · NUS TRAIL(기술·로봇·AI·법 센터) 부센터장. Fyreflyz 공동창업자. 前 퍼듀대 교수. 미네소타대 박사 · 연세대 경영.",
-          en: "Director of the NUS FinTech Lab · Deputy Director of NUS TRAIL (technology, robotics, AI & the law). Co-founder, Fyreflyz. Ex-Purdue. PhD Minnesota · Yonsei.",
+          ko: "NUS 정보시스템·분석학과 석좌교수 · NUS 핀테크랩 디렉터 · NUS TRAIL(기술·로봇·AI·법 센터) 부센터장. Fyreflyz 공동창업자. 前 퍼듀대 교수.",
+          en: "Director of the NUS FinTech Lab · Deputy Director of NUS TRAIL (technology, robotics, AI & the law). Co-founder, Fyreflyz. Ex-Purdue.",
         },
         linkedin: "https://www.linkedin.com/in/jungpil/",
       },
@@ -1493,8 +1497,8 @@ export const dict = {
         img: "/partners/people/hwang-hyun-jin.png",
         pending: false,
         bio: {
-          ko: "코드프레소 공동창업자 · 콘텐츠 R&D 총괄 — AI 코딩·역량진단 교육 콘텐츠 설계(AXMOS 컨소시엄). 前 LG전자 소프트웨어 엔지니어 9년. 서강대.",
-          en: "Co-founder · content R&D lead at Codepresso — designs its AI-coding & skills-assessment curriculum (AXMOS consortium). Ex-LG Electronics engineer, 9 yrs. Sogang.",
+          ko: "코드프레소 공동창업자 · 콘텐츠 R&D 총괄 — AI 코딩·역량진단 교육 콘텐츠 설계(AXMOS 컨소시엄). 前 LG전자 소프트웨어 엔지니어 9년.",
+          en: "Co-founder · content R&D lead at Codepresso — designs its AI-coding & skills-assessment curriculum (AXMOS consortium). Ex-LG Electronics engineer, 9 yrs.",
         },
         linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697",
       },
