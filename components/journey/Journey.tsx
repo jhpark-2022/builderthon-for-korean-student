@@ -240,7 +240,7 @@ function OpenChatLink({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MOBILE STICKY BAR — register primary + quiz chip. Phone only.
+// MOBILE STICKY BAR — open chat + register. Phone only.
 //
 // Appears once the hero is behind you (~120vh) and hides again over the closing
 // section, so it can never sit on top of the footer's copy-email button. Hidden
@@ -290,14 +290,38 @@ function MobileStickyBar({
       style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
     >
       <div
-        // p-1 rather than p-1.5, and the quiz chip drops to h-10: the rail lost
-        // ~8px of its own height without touching the 44px register button.
+        // p-1 rather than p-1.5: the rail lost ~8px of its own height without
+        // touching either button, both of which stay at h-12 (48px).
         // focus-within overrides the hidden transform so tabbing into the bar
         // can never scroll it away from under the keyboard.
         className={`mx-3 flex items-center gap-2 rounded-full border border-white/12 bg-[#0b0817]/92 p-1 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.9)] backdrop-blur-md transition duration-300 focus-within:translate-y-0 focus-within:opacity-100 ${
           shown ? "translate-y-0 opacity-100" : "translate-y-24 opacity-0"
         }`}
       >
+        {/* OPEN CHAT sits FIRST, register second — the pair reads low-commitment →
+            commitment, and the primary keeps the wider, brighter slot on the right
+            where the thumb rests. The quiz chip that used to hold this slot is
+            gone: the funnel's low-friction entrance is the open chat, and the quiz
+            already has two permanent doors (the nav's ✦ chip, in view at all
+            times, and the hook card in the 혜택 band). Open chat had none on a
+            phone — the nav's open-chat button is `lg`-only, so between the hero
+            and the footer there was no way in at all.
+            ICON + LABEL, never icon alone: a bare speech bubble in a dark pill is
+            not a recognisable KakaoTalk affordance, and this is the one CTA a
+            hesitant visitor is looking for by name. */}
+        {links.openChat && (
+          <a
+            href={links.openChat}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={t(dict.nav.openChatAria)}
+            onClick={() => track("openchat_click", { src: "sticky" })}
+            className="flex h-12 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/35 bg-violet-500/10 px-3.5 text-xs font-bold text-violet-100"
+          >
+            <ChatGlyph className="h-4 w-4 shrink-0" />
+            {t(dict.nav.openChat)}
+          </a>
+        )}
         <button
           type="button"
           onClick={() => openRegister()}
@@ -305,13 +329,6 @@ function MobileStickyBar({
         >
           {t(dict.stickyBar.register)}
         </button>
-        <a
-          href="/quiz"
-          onClick={() => track("quiz_click", { src: "sticky_bar" })}
-          className="flex h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-violet-400/35 bg-violet-500/10 px-3.5 text-xs font-bold text-violet-100"
-        >
-          {t(dict.stickyBar.quiz)}
-        </a>
       </div>
     </div>
   );
@@ -1657,7 +1674,12 @@ function MobileRegisterBar() {
           // the bar can use the full screen width — no right-side reservation.
           // pt-2 / pb 0.5rem + safe area: the bar lost ~10px of padding without
           // touching the buttons inside it, which stay at 44px+.
-          className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#06040f]/90 px-4 pt-2 backdrop-blur lg:hidden"
+          // `hidden sm:block lg:hidden` — TABLET ONLY. This was `lg:hidden` alone,
+          // which meant that below sm it rendered on top of MobileStickyBar (also
+          // `sm:hidden`): two fixed bars at bottom-0, two register buttons, and
+          // after this change two open-chat buttons as well. The phone rail is the
+          // pill bar; this one starts where that one stops.
+          className="fixed inset-x-0 bottom-0 z-40 hidden border-t border-white/10 bg-[#06040f]/90 px-4 pt-2 backdrop-blur sm:block lg:hidden"
           style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)" }}
         >
           {/* Register keeps the full remaining width (flex-1); the chat icon is
@@ -1678,9 +1700,13 @@ function MobileRegisterBar() {
             >
               {registered ? t(dict.register.navRegistered) : t(dict.nav.register)}
             </button>
-            {/* Icon-only, so aria-label is the ONLY name a screen reader gets —
-                it is not optional here. Promoted to the violet fill once
-                registered, matching the nav's role swap. */}
+            {/* No longer icon-only: a bare speech bubble asks the visitor to guess
+                which service it opens, and open chat is the funnel's low-friction
+                entrance — the thing a hesitant reader looks for BY NAME. The label
+                comes from dict.nav.openChat, the same string the desktop nav
+                button uses, so the two are recognisably one door. aria-label stays
+                for the fuller "카카오톡 오픈채팅방 열기". Promoted to the violet
+                fill once registered, matching the nav's role swap. */}
             {links.openChat && (
               <a
                 href={links.openChat}
@@ -1690,11 +1716,12 @@ function MobileRegisterBar() {
                 onClick={() => track("openchat_click", { src: "mobile-bar" })}
                 className={
                   registered
-                    ? "inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition active:scale-95"
-                    : "inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-violet-400/45 bg-violet-500/15 text-violet-100 shadow-[0_0_18px_rgba(124,92,255,0.28)] transition active:scale-95"
+                    ? "inline-flex h-12 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-4 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition active:scale-95"
+                    : "inline-flex h-12 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/45 bg-violet-500/15 px-4 text-sm font-semibold text-violet-100 shadow-[0_0_18px_rgba(124,92,255,0.28)] transition active:scale-95"
                 }
               >
-                <ChatGlyph className="h-5 w-5" />
+                <ChatGlyph className="h-5 w-5 shrink-0" />
+                {t(dict.nav.openChat)}
               </a>
             )}
           </div>
@@ -1970,6 +1997,27 @@ export default function Journey() {
               <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10 sm:px-8 sm:py-4 sm:text-base md:hidden">
                 {t(dict.hero.ctaPartner)}
               </a>
+              {/* OPEN CHAT — phones and tablets only (`lg:hidden`). From lg up the
+                  nav carries a permanent open-chat button in the same viewport, so
+                  a second one here would be the same offer twice (that is why
+                  HookCards passes `chatSrc={null}` in the hero). Below lg that nav
+                  button does not exist, and the hero — the screen most visitors
+                  never scroll past — had no low-commitment door at all.
+                  Ghost pill, one tier under the violet 여정 둘러보기 CTA: it is the
+                  alternative for someone not ready to act, not a competing primary. */}
+              {links.openChat && (
+                <a
+                  href={links.openChat}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={t(dict.nav.openChatAria)}
+                  onClick={() => track("openchat_click", { src: "hero" })}
+                  className="inline-flex items-center gap-2 rounded-full border border-violet-400/35 bg-violet-500/10 px-5 py-3 text-sm font-semibold text-violet-100 transition hover:border-violet-400/55 hover:bg-violet-500/15 lg:hidden"
+                >
+                  <ChatGlyph className="h-4 w-4 shrink-0" />
+                  {t(dict.nav.openChat)}
+                </a>
+              )}
             </div>
 
             {/* Mobile only — the hook cards sit in the stacked hero below the

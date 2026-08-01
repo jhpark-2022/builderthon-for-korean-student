@@ -195,9 +195,14 @@ export const dict = {
   // ── Mobile sticky action bar ──────────────────────────────────────────────
   // Register stays the primary; the quiz rides along as a chip so it is reachable
   // from anywhere on a phone without competing for the same visual weight.
+  // The phone's fixed bottom rail. It carries the two actions the funnel is built
+  // on — the low-friction door (open chat) and the commitment (register) — and
+  // borrows their labels from `nav` so the same door never has two names.
+  // `quiz` ("✦ 내 유형은?") used to sit here and was removed: the quiz already has
+  // two permanent entrances on a phone (the nav's ✦ chip and the hook card in the
+  // 혜택 band), while open chat had none between the hero and the footer.
   stickyBar: {
     register: { ko: "등록하기", en: "Register" },
-    quiz: { ko: "✦ 내 유형은?", en: "✦ My type?" },
     aria: { ko: "빠른 실행", en: "Quick actions" },
   },
 
