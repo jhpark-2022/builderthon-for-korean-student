@@ -62,7 +62,7 @@ export default function QuizIntroShell() {
           >
             {quizUI.start.ko}
           </div>
-          <p className="mt-5 text-xs font-medium text-white/40">{quizUI.meta.ko}</p>
+          <p className="mt-5 text-xs font-medium text-white/55">{quizUI.meta.ko}</p>
         </div>
       </div>
     </main>

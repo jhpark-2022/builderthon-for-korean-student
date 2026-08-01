@@ -83,7 +83,7 @@ function LinkedInLink({ url, label, className = "" }: { url: string; label: stri
       rel="noopener noreferrer"
       onClick={(e) => e.stopPropagation()}
       aria-label={`${label} · LinkedIn`}
-      className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] text-white/60 transition hover:border-[#0a66c2]/60 hover:bg-[#0a66c2]/15 hover:text-[#7cb8f5] ${className}`}
+      className={`relative inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] text-white/60 transition after:absolute after:-inset-2 after:content-[''] hover:border-[#0a66c2]/60 hover:bg-[#0a66c2]/15 hover:text-[#7cb8f5] ${className}`}
     >
       <LinkedInIcon className="h-3.5 w-3.5" />
     </a>
@@ -216,7 +216,7 @@ function OpenChatLink({
 }) {
   if (!links.openChat) return null;
   return (
-    // Ghost CHIP, not a bare underlined line. At text-white/45 with a hairline
+    // Ghost CHIP, not a bare underlined line. At text-white/60 with a hairline
     // underline this read as a footnote and was skipped — which defeats the
     // point, since this is the only offer on the page for someone who has read
     // everything and still isn't ready to register. Same ghost treatment as the
@@ -399,7 +399,7 @@ function QuizResultPeek({ mbti, className = "" }: { mbti?: MbtiKey; className?: 
           {r.emoji}
         </span>
         <span className="text-[0.4rem] font-bold leading-tight text-white/85">{r.model}</span>
-        <span className="text-[0.35rem] font-semibold tracking-wider text-white/40">{r.mbti}</span>
+        <span className="text-[0.35rem] font-semibold tracking-wider text-white/55">{r.mbti}</span>
       </span>
     </span>
   );
@@ -496,7 +496,7 @@ function HookCards({
           {/* The four objections, immediately under the button that acts on them.
               One key, so the hero card and both mid-page bands always agree. */}
           <p className="text-xs leading-relaxed text-white/60">{t(dict.register.reassure)}</p>
-          <p className="text-[11px] leading-relaxed text-white/45">{t(dict.register.hookRegisterSub)}</p>
+          <p className="text-[11px] leading-relaxed text-white/60">{t(dict.register.hookRegisterSub)}</p>
         </button>
         {/* Card 2 — the quiz. Promoted from a text link inside a dead panel to a
             whole-card link: the tap target was ~20px and the copy read as a
@@ -550,13 +550,14 @@ function HookCards({
             <a
               href="/quiz"
               onClick={() => track("quiz_click", { src: "hook_skip" })}
-              className="text-xs font-semibold text-violet-200/80 underline-offset-4 transition hover:text-violet-100 hover:underline"
+              // -my-3 py-3: 44px of touch height without moving the line visually.
+              className="-my-3 inline-flex min-h-[44px] items-center py-3 text-xs font-semibold text-violet-200/80 underline-offset-4 transition hover:text-violet-100 hover:underline"
             >
               {t(dict.miniQuiz.cta)}
             </a>
-            <span className="text-[11px] text-white/40">{t(dict.register.hookQuizMeta)}</span>
+            <span className="text-[11px] text-white/55">{t(dict.register.hookQuizMeta)}</span>
           </div>
-          <p className="text-xs leading-relaxed text-white/40">{t(dict.register.hookQuizNote)}</p>
+          <p className="text-xs leading-relaxed text-white/55">{t(dict.register.hookQuizNote)}</p>
         </div>
         ) : (
         <a
@@ -597,7 +598,7 @@ function HookCards({
           {/* First-visit only — a returning visitor has already seen the joke
               and is here for their result, not the disclaimer. */}
           {!ownName && (
-            <p className="text-xs leading-relaxed text-white/40">{t(dict.register.hookQuizNote)}</p>
+            <p className="text-xs leading-relaxed text-white/55">{t(dict.register.hookQuizNote)}</p>
           )}
         </a>
         )}
@@ -680,7 +681,7 @@ function CountdownView({ t }: { t: Tfn }) {
         {/* Short label on mobile ("Begins in"), full line from sm up. */}
         <span className="sm:hidden">{t(dict.hero.countdownEyebrowShort)}</span>
         <span className="hidden sm:inline">{t(dict.hero.countdownEyebrow)}</span>
-        <span className="text-white/40">· {t(dict.hero.countdownLive)}</span>
+        <span className="text-white/55">· {t(dict.hero.countdownLive)}</span>
       </p>
       <div className="mx-auto grid w-fit grid-cols-4 gap-1.5 sm:gap-2.5">
         {units.map((u, i) => (
@@ -820,7 +821,7 @@ const dayIsSelfPaced = (dayNum: number) =>
 // nothing to attend.
 function SelfPacedNote({ t }: { t: Tfn }) {
   return (
-    <p className="flex items-start gap-2 rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-3.5 py-3 text-xs leading-relaxed text-white/45">
+    <p className="flex items-start gap-2 rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-3.5 py-3 text-xs leading-relaxed text-white/60">
       <span aria-hidden className="mt-[1px] text-white/25">◇</span>
       {t(dict.program.selfPacedNote)}
     </p>
@@ -876,7 +877,7 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
       </div>
       <h4 className="mt-2 pl-2 text-base font-bold leading-snug text-white">{t(ev.title)}</h4>
       <p className="mt-1.5 pl-2 text-sm leading-relaxed text-white/70">{t(ev.summary)}</p>
-      <span className="mt-auto pl-2 pt-3 text-xs font-semibold text-violet-300/60 transition group-hover:text-violet-300">
+      <span className="mt-auto pl-2 pt-3 text-xs font-semibold text-violet-300/75 transition group-hover:text-violet-300">
         {t(dict.program.tapHint)} →
       </span>
     </button>
@@ -949,7 +950,7 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
       </div>
       <h4 className="mt-3 text-[15px] font-bold leading-snug text-white">{t(day.theme)}</h4>
       <p className="mt-1.5 text-[13px] leading-relaxed text-white/65">{t(day.summary)}</p>
-      <span className="mt-auto pt-4 text-xs font-semibold text-violet-300/60 transition group-hover:text-violet-300">
+      <span className="mt-auto pt-4 text-xs font-semibold text-violet-300/75 transition group-hover:text-violet-300">
         {evCount === 0
           ? t(dict.program.noSessions)
           : `${evCount} ${t(evCount === 1 ? dict.program.session : dict.program.sessions)}`}{" "}
@@ -1300,7 +1301,47 @@ const HERO_VIDEO = {
 };
 
 function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
+  // PHONES GET THE POSTER, NOT THE CLIP. The mp4 is ~650KB and was 99% of the
+  // page's first-load transfer on mobile — for a decorative background, on the
+  // half of our traffic that arrives on a phone (and often on mobile data).
+  // The poster is the same frame at 112KB, so the hero looks the same; it just
+  // stops moving. Gated in an effect rather than at render so the server and
+  // the first client paint agree (poster-only) and the video attaches after
+  // mount — which is also why there is no CLS cost.
+  //
+  // Two more opt-outs on the same switch, both cheap and both correct: a
+  // visitor who asked for reduced motion, and one whose browser reports
+  // Save-Data. Neither wants an autoplaying background loop.
+  const [playVideo, setPlayVideo] = useState(false);
+  useEffect(() => {
+    const wide = window.matchMedia("(min-width: 640px)").matches;
+    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    setPlayVideo(wide && !calm && !conn?.saveData);
+  }, []);
+
   if (!HERO_VIDEO.enabled) return null; // placeholder: keep the WebGL background
+  if (!playVideo)
+    return (
+      <div
+        aria-hidden
+        className="absolute inset-0 overflow-hidden"
+        style={{
+          maskImage: "linear-gradient(to bottom, #000 0%, #000 62%, transparent 96%)",
+          WebkitMaskImage: "linear-gradient(to bottom, #000 0%, #000 62%, transparent 96%)",
+        }}
+      >
+        <Image
+          src={HERO_VIDEO.poster}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0814]/85 via-[#0a0814]/68 to-transparent" />
+      </div>
+    );
   return (
     // The whole layer fades to transparent over its bottom third (mask) so the
     // video dissolves into the fixed WebGL field behind it — no hard seam where
@@ -1966,7 +2007,7 @@ export default function Journey() {
               date · outbound), not a card, so it reads as a citation. Add
               entries to dict.about.press to extend. */}
           <div className="mx-auto mt-6 max-w-2xl">
-            <p className="text-center text-[0.68rem] font-bold uppercase tracking-[0.2em] text-white/40">
+            <p className="text-center text-[0.68rem] font-bold uppercase tracking-[0.2em] text-white/55">
               {t(dict.about.pressTag)}
             </p>
             {dict.about.press.map((p) => (
@@ -1980,7 +2021,7 @@ export default function Journey() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={p.logo} alt={p.outlet} className="h-4 w-auto max-w-[5.5rem] shrink-0 object-contain opacity-70" />
                 <span className="text-sm font-semibold text-white/90">{t(p.title)}</span>
-                <span className="text-xs text-white/40">{t(p.date)}</span>
+                <span className="text-xs text-white/55">{t(p.date)}</span>
                 <span className="inline-flex items-center gap-1 text-xs font-semibold text-violet-300 transition group-hover:text-violet-200">
                   {t(dict.about.pressCta)}
                   <span aria-hidden>↗</span>
@@ -2166,7 +2207,7 @@ export default function Journey() {
             <a
               href="/quiz"
               onClick={() => track("quiz_click", { src: "program_chip" })}
-              className="group mx-auto mt-5 inline-flex items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/[0.08] px-4 py-2 text-xs font-semibold text-violet-100/90 transition hover:border-violet-300/45 hover:bg-violet-500/15 hover:text-white"
+              className="group mx-auto mt-5 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/[0.08] px-4 py-2.5 text-xs font-semibold text-violet-100/90 transition hover:border-violet-300/45 hover:bg-violet-500/15 hover:text-white"
             >
               <span aria-hidden>✦</span>
               <span className="break-keep">{t(dict.programQuizChip)}</span>
@@ -2372,7 +2413,7 @@ export default function Journey() {
                       on 8 of 10 cards. Desktop still lands at two lines, so the
                       clamp only ever engages as an overflow guard. */}
                   {intro && (
-                    <p className="mt-2 line-clamp-3 break-keep text-xs leading-relaxed text-white/50">{intro}</p>
+                    <p className="mt-2 break-keep text-xs leading-relaxed text-white/50 sm:line-clamp-3">{intro}</p>
                   )}
                   <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-3">
                     <span className="inline-flex items-center rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.62rem] font-semibold text-white/60">
@@ -2456,7 +2497,11 @@ export default function Journey() {
                       A bio long enough to CLAMP would lose its tail silently, so
                       keep them within three lines in BOTH languages — English wraps
                       differently and is the tighter constraint. */}
-                  <p className="mt-3 line-clamp-3 min-h-[4.875em] text-[13px] leading-relaxed text-white/70">{t(j.bio)}</p>
+                  {/* The clamp + reserved third line are a DESKTOP device: they keep a row of
+                      cards even. On a phone the cards are one per row, nothing needs
+                      evening out, and the clamp was silently eating 1–2 lines off 8 of
+                      10 bios in English (9 of 10 at 360px). Both rules start at `sm`. */}
+                  <p className="mt-3 text-[13px] leading-relaxed text-white/70 sm:line-clamp-3 sm:min-h-[4.875em]">{t(j.bio)}</p>
                 </div>
               );
             })}
@@ -2605,7 +2650,7 @@ export default function Journey() {
               ]).map(({ cat, url, ...l }) => (
                 <div key={l.alt} className="flex flex-col gap-1.5">
                   <LogoTile {...l} onOpen={(el) => openPartner(l.alt, dict.partners.stageConfirmed, el, url)} />
-                  <span className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-white/40">{cat}</span>
+                  <span className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-white/55">{cat}</span>
                 </div>
               ))}
             </div>

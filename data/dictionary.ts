@@ -1460,7 +1460,7 @@ export const dict = {
           ko: "콘텐츠 R&D 총괄. 前 LG전자 소프트웨어 엔지니어 9년.",
           en: "Content R&D lead. Ex-LG Electronics software engineer, 9 yrs.",
         },
-        days: "Day 7", daysPending: "", img: "/partners/people/hwang-hyun-jin.png", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697",
+        days: "Day 7", daysPending: "", img: "/partners/people/hwang-hyun-jin.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697",
       },
     ],
   },
@@ -1578,7 +1578,7 @@ export const dict = {
         org: { ko: "Codepresso", en: "Codepresso" },
         role: { ko: "공동창업자 · 이사", en: "Co-founder · Director" },
         tag: { ko: "AI 코딩 교육 · 콘텐츠 R&D", en: "AI coding education · content R&D" },
-        img: "/partners/people/hwang-hyun-jin.png",
+        img: "/partners/people/hwang-hyun-jin.jpg",
         pending: false,
         bio: {
           ko: "코드프레소 공동창업자 · 콘텐츠 R&D 총괄 — AI 코딩·역량진단 교육 콘텐츠 설계(AXMOS 컨소시엄). 前 LG전자 소프트웨어 엔지니어 9년.",

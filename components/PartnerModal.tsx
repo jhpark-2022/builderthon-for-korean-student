@@ -203,7 +203,7 @@ export default function PartnerModal({
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/[0.04] px-3.5 py-1.5 text-[13px] font-medium text-white/70 transition hover:border-white/25 hover:bg-white/10 hover:text-white"
                       >
-                        {t(a.label)} <span aria-hidden className="text-white/40">↗</span>
+                        {t(a.label)} <span aria-hidden className="text-white/55">↗</span>
                       </a>
                     ))}
                   </div>

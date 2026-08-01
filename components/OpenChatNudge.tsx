@@ -80,7 +80,7 @@ export default function OpenChatNudge({
               type="button"
               onClick={onClose}
               aria-label={t(dict.modal.close)}
-              className="-mr-1 -mt-1 shrink-0 rounded-full p-1.5 text-white/40 transition hover:bg-white/10 hover:text-white/80"
+              className="-mr-1 -mt-1 shrink-0 rounded-full p-1.5 text-white/55 transition hover:bg-white/10 hover:text-white/80"
             >
               <svg width="12" height="12" viewBox="0 0 15 15" fill="none" aria-hidden>
                 <path d="M1 1l13 13M14 1L1 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />

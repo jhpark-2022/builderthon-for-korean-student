@@ -784,7 +784,7 @@ export default function RegisterModal({
                   <button
                     type="button"
                     onClick={() => setBypassRegistered(true)}
-                    className="mx-auto mt-7 block text-xs text-white/45 underline underline-offset-4 transition hover:text-white/75"
+                    className="mx-auto mt-7 block text-xs text-white/60 underline underline-offset-4 transition hover:text-white/75"
                   >
                     {t(dict.register.alreadyAgain)}
                   </button>
@@ -1119,7 +1119,7 @@ export default function RegisterModal({
                                 {t(dict.register.addTeammate)}
                               </button>
                             ) : (
-                              <p className="text-center text-xs text-white/45">{t(dict.register.maxNote)}</p>
+                              <p className="text-center text-xs text-white/60">{t(dict.register.maxNote)}</p>
                             )}
                           </div>
                         </motion.div>
@@ -1162,7 +1162,7 @@ export default function RegisterModal({
                                       <svg
                                         aria-hidden
                                         viewBox="0 0 24 24"
-                                        className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40"
+                                        className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/55"
                                         fill="none"
                                         stroke="currentColor"
                                         strokeWidth="2"
@@ -1320,7 +1320,7 @@ export default function RegisterModal({
                         where they're about to hand it over, including the ask
                         about teammates' details (they're entering data about
                         other people). */}
-                    <p className="text-xs leading-relaxed text-white/45">
+                    <p className="text-xs leading-relaxed text-white/60">
                       {t(dict.register.trustPrivacy)}
                     </p>
 
@@ -1419,13 +1419,13 @@ function Field({
         {label}
         {required && <span className="text-rose-400" aria-hidden>*</span>}
         {optional && (
-          <span className="text-[0.7rem] font-medium uppercase tracking-wide text-white/40">
+          <span className="text-[0.7rem] font-medium uppercase tracking-wide text-white/55">
             {optional}
           </span>
         )}
       </span>
       {control}
-      {hint && <span className="text-xs leading-relaxed text-white/45">{hint}</span>}
+      {hint && <span className="text-xs leading-relaxed text-white/60">{hint}</span>}
       {error && (
         <span id={errorId} className="text-xs font-medium text-rose-300">
           {error}

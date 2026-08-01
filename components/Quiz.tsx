@@ -469,7 +469,7 @@ function Landing({
         {t(quizUI.start)}
         <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
       </button>
-      <p className="mt-5 text-xs font-medium text-white/40">{t(quizUI.meta)}</p>
+      <p className="mt-5 text-xs font-medium text-white/55">{t(quizUI.meta)}</p>
 
       {/* Returning taker: a low-key link back to their saved result. Fades in
           post-mount (ownResult loads client-side), so it never disrupts the
@@ -482,7 +482,7 @@ function Landing({
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-xs font-semibold text-white/70 transition hover:border-white/20 hover:bg-white/[0.09] hover:text-white"
         >
-          <span className="text-white/45">{t(quizLandingHint.lead)}</span>
+          <span className="text-white/60">{t(quizLandingHint.lead)}</span>
           <span className="font-bold text-violet-200">{t(ownVariantName)}</span>
           <span aria-hidden className="text-white/30">·</span>
           <span className="text-violet-300">{t(quizLandingHint.cta)} →</span>
@@ -669,8 +669,8 @@ function ResultView({
               viewport (capped at the original 0.7rem from ~430px up) and the
               tracking only opens up from `sm`, where the card can carry it. */}
           <div className="relative flex items-center justify-between gap-3">
-            <span className="whitespace-nowrap font-mono text-[clamp(0.52rem,2.6vw,0.7rem)] font-bold uppercase tracking-[0.08em] text-white/45 sm:tracking-[0.15em]">Zero100 AI Builderthon</span>
-            <span className="whitespace-nowrap font-mono text-[clamp(0.52rem,2.6vw,0.7rem)] font-bold tracking-wider text-white/45">{result.resultId}</span>
+            <span className="whitespace-nowrap font-mono text-[clamp(0.52rem,2.6vw,0.7rem)] font-bold uppercase tracking-[0.08em] text-white/60 sm:tracking-[0.15em]">Zero100 AI Builderthon</span>
+            <span className="whitespace-nowrap font-mono text-[clamp(0.52rem,2.6vw,0.7rem)] font-bold tracking-wider text-white/60">{result.resultId}</span>
           </div>
 
           {/* two columns fill the wide card: identity + gauges on the left,
@@ -714,13 +714,13 @@ function ResultView({
                   the taker's own answers. */}
               {result.axes && result.axes.length > 0 && (
                 <div>
-                  <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/45">{t(quizUI.axesLabel)}</p>
+                  <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/60">{t(quizUI.axesLabel)}</p>
                   <AxisGauges axes={result.axes} accent={data.accent} t={t} reduce={reduce} />
                 </div>
               )}
 
               <div>
-                <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/45">{t(quizUI.roleLabel)}</p>
+                <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/60">{t(quizUI.roleLabel)}</p>
                 <span className="mt-2 inline-flex items-center gap-2 rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-4 py-2 text-sm font-bold text-fuchsia-200">
                   ★ {t(data.role)}
                 </span>
@@ -1112,7 +1112,7 @@ function DreamTeammates({
               <p className="mt-2.5 text-sm leading-relaxed text-white/70">{t(why)}</p>
 
               <div className="mt-auto pt-4">
-                <p className="text-[0.65rem] font-bold uppercase tracking-wider text-white/40">{t(quizUI.matchRoleLabel)}</p>
+                <p className="text-[0.65rem] font-bold uppercase tracking-wider text-white/55">{t(quizUI.matchRoleLabel)}</p>
                 <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-fuchsia-400/25 bg-fuchsia-400/[0.08] px-3 py-1.5 text-xs font-bold text-fuchsia-100">
                   ★ {t(mate.role)}
                 </span>
@@ -1208,7 +1208,7 @@ function AxisGaugeRow({
       >
         {bar}
         <motion.span
-          className="shrink-0 text-white/40"
+          className="shrink-0 text-white/55"
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: reduce ? 0 : 0.2 }}
           aria-hidden

@@ -39,6 +39,14 @@
    (its clamp caps were trimmed to compensate). */
 html { font-size: 112.5%; scroll-behavior: smooth; scroll-padding-top: 96px; }
 
+/* Below `lg` the fixed header grows a second row — the scrollable section rail
+   (components/journey/JourneyNav.tsx), which only exists at this breakpoint.
+   Without the extra offset an anchor jump parks the target heading underneath
+   it. Keep this in step with the rail's height if its padding ever changes. */
+@media (max-width: 1023px) {
+  html { scroll-padding-top: 160px; }
+}
+
 body {
   background-color: var(--bg);
   color: var(--text);

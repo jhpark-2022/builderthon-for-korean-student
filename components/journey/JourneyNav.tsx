@@ -55,8 +55,12 @@ export default function JourneyNav() {
     };
   }, []);
 
+  // backdrop-blur once scrolled: at 85% the bar was legible on desktop, but the
+  // mobile section rail below doubles its height and page text kept reading
+  // through between the two rows. The blur separates bar from page without
+  // making it a solid slab.
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? "bg-[#06040f]/85" : "bg-transparent"}`}>
+    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? "bg-[#06040f]/85 backdrop-blur-md" : "bg-transparent"}`}>
       <nav className="flex h-20 w-full items-center justify-between px-6 sm:px-10">
         {/* LEFT group — brand logo + anchor links, kept together on the left edge. */}
         <div className="flex items-center">
@@ -219,6 +223,39 @@ export default function JourneyNav() {
           <LocaleToggle />
         </div>
       </nav>
+      {/* ── Section rail (below `lg` only) ────────────────────────────────────
+          The anchor row above is `lg:flex`, so on a phone the header carried the
+          brand, the quiz chip and the language toggle and nothing else — while
+          the page itself runs ~27,000px on a 390px screen. A visitor who wanted
+          the programme or the FAQ had one tool: scrolling, or the back-to-top
+          button. This is that missing route.
+
+          Deliberately a scrollable rail, not a hamburger sheet: the same chips
+          the desktop bar uses, laid on their side, so nothing new has to be
+          opened or learned (the header's minimalism was the reason a menu was
+          turned down before, and it still holds).
+
+          Appears only once the hero is behind you — the same `scrolled` latch
+          the register button uses. On the first screen the hero's own CTAs are
+          the point and this would just be a second row of chrome.
+
+          `scroll-padding-top` in globals.css accounts for the extra height on
+          this breakpoint, so an anchor jump doesn't park a heading underneath. */}
+      {scrolled && (
+        <div className="lg:hidden">
+          <div className="flex gap-2 overflow-x-auto px-6 pb-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]{display:none}">
+            {anchors.map((a) => (
+              <a
+                key={a.id}
+                href={`#${a.id}`}
+                className="inline-flex min-h-[44px] shrink-0 items-center whitespace-nowrap rounded-full border border-white/12 bg-white/[0.06] px-3.5 text-xs font-semibold text-white/75 backdrop-blur transition active:scale-[0.97]"
+              >
+                {t(a.label)}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
     </header>
   );
 }
