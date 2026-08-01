@@ -1729,6 +1729,19 @@ export default function Journey() {
   const [active, setActive] = useState<BEvent | null>(null);
   const [activeDay, setActiveDay] = useState<number | null>(null); // day detail modal
   const [activePartner, setActivePartner] = useState<PartnerInfo | null>(null); // sponsor/mentor intro modal
+  // ── Mentoring: stage → mentor highlight ───────────────────────────────────
+  // Two pieces of state, not one. `activeStage` is a deliberate choice (a click
+  // or Enter) and survives scrolling down to the grid; `hoverStage` is a preview
+  // that follows the pointer and dies with it. A single value would have made a
+  // stray mouse-over destroy a filter the visitor had just set. Click wins:
+  // `shownStage` reads active first and only falls back to hover.
+  // `mentorHoverStage` is the reverse direction — pointing at a mentor card
+  // lights up the stage they belong to, which is how you answer "and when do I
+  // meet this person" without moving your eyes back up.
+  const [activeStage, setActiveStage] = useState<number | null>(null);
+  const [hoverStage, setHoverStage] = useState<number | null>(null);
+  const [mentorHoverStage, setMentorHoverStage] = useState<number | null>(null);
+  const shownStage = activeStage ?? hoverStage;
   // Remember the card that opened the modal so focus returns to it on close
   // (document.activeElement is unreliable in Safari — see EventModal).
   const triggerRef = useRef<HTMLElement | null>(null);
@@ -2276,14 +2289,48 @@ export default function Journey() {
             pill, phase pill): this is a subtraction, not a new design language.
             If a fourth line ever gets added to a card, it belongs somewhere
             else. */}
+        {/* Each card is a BUTTON now: it filters the mentor grid below to the
+            people who are with you in that stage. It stays a card visually —
+            the affordance is the hover/selected state plus the chip that appears
+            next to the grid label, not a new control shape. aria-pressed carries
+            the toggle to assistive tech, and focus-visible gets the same ring the
+            selected state uses so keyboard and mouse see the same thing. */}
         <div className="mx-auto mt-8 grid max-w-5xl gap-3 text-left sm:grid-cols-3">
           {dict.mentoring.stages.map((st, i) => {
             const phase = days.find((d) => d.day === st.phaseDay)?.phase;
+            const stageNo = i + 1;
+            const selected = activeStage === stageNo;
+            // Lit = chosen, previewed by hover, or pointed at from a mentor card.
+            const lit = selected || hoverStage === stageNo || mentorHoverStage === stageNo;
             return (
-              <div key={i} className="flex h-full flex-col rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.05] p-5">
+              <button
+                key={i}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => setActiveStage(selected ? null : stageNo)}
+                // pointerType guard, not onMouseEnter: a tap on a touch screen
+                // fires a synthetic mouseenter with no matching mouseleave, which
+                // would leave the grid dimmed by a "preview" the visitor can't
+                // see the cause of and can't clear (the chip only ever shows a
+                // clicked filter). Mouse hovers preview; taps go straight to the
+                // click above.
+                onPointerEnter={(e) => e.pointerType === "mouse" && setHoverStage(stageNo)}
+                onPointerLeave={() => setHoverStage((h) => (h === stageNo ? null : h))}
+                onFocus={() => setHoverStage(stageNo)}
+                onBlur={() => setHoverStage((h) => (h === stageNo ? null : h))}
+                className={`flex h-full flex-col rounded-2xl border p-5 text-left outline-none ${
+                  reduce ? "" : "transition-colors duration-200"
+                } ${
+                  selected
+                    ? "border-emerald-400/60 bg-emerald-400/[0.12] ring-1 ring-emerald-400/40"
+                    : lit
+                      ? "border-emerald-400/40 bg-emerald-400/[0.08]"
+                      : "border-emerald-400/20 bg-emerald-400/[0.05]"
+                } focus-visible:border-emerald-400/60 focus-visible:ring-1 focus-visible:ring-emerald-400/40`}
+              >
                 <div className="flex items-center gap-2">
                   <span aria-hidden className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-emerald-400/35 bg-emerald-400/10 text-[0.7rem] font-black text-emerald-200">
-                    {i + 1}
+                    {stageNo}
                   </span>
                   <span className="whitespace-nowrap text-xs font-bold text-emerald-200">{t(st.day)}</span>
                   {phase && (
@@ -2303,36 +2350,48 @@ export default function Journey() {
                     lines differ in length (stage 3's is one line, stages 1–2 run
                     to two). Without it the dividers stair-stepped. */}
                 <p className="mt-auto break-keep border-t border-emerald-400/15 pt-2.5 text-xs leading-relaxed text-emerald-100/70">{t(st.role)}</p>
-              </div>
+              </button>
             );
           })}
         </div>
         {/* The single footnote left under the cards — see dict.mentoring.separationNote. */}
         <p className="mx-auto mt-4 max-w-3xl break-keep text-xs leading-relaxed text-white/50">{t(dict.mentoring.separationNote)}</p>
 
-        {/* ── How matching works ────────────────────────────────────────────
-            Sits directly above the grid on purpose: the cards below are a
-            line-up, not a menu. Teams cannot request a named mentor — the
-            organizers assign each session from the overlap between the team's
-            submitted availability and a mentor's. */}
-        <div className="mt-10 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] p-5 text-left sm:p-6">
-          <p className="flex items-center gap-2 text-sm font-bold text-emerald-200">
-            <span aria-hidden className="text-emerald-300/70">◇</span>
-            {t(dict.mentoring.matchNote.title)}
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-emerald-50/80">
-            <Emph text={t(dict.mentoring.matchNote.body)} className="font-bold text-white" />
-          </p>
-        </div>
-
         {/* ── Confirmed mentor grid (deck p12) ──────────────────────────────
             Ordered by the day each mentor is with you (see data/dictionary.ts) —
             the order a participant actually meets them. A LinkedIn icon shows
             ONLY on cards with a confirmed URL — never invented. */}
-        <div className="mt-6 text-left">
-          <p className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-emerald-200">
-            {t(dict.mentoring.gridLabel)}
-          </p>
+        <div className="mt-8 text-left">
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-emerald-200">
+              {t(dict.mentoring.gridLabel)}
+            </p>
+            {/* Active-filter chip. The stage cards are a screen or more above by
+                the time the grid is in view, so without this a dimmed grid reads
+                as broken rather than filtered. Only shown for a CLICKED filter —
+                a hover preview is already explained by the cursor sitting on the
+                card that caused it. */}
+            {activeStage !== null && (
+              <button
+                type="button"
+                onClick={() => setActiveStage(null)}
+                className={`inline-flex min-h-[32px] items-center gap-1.5 rounded-full border border-emerald-400/45 bg-emerald-400/[0.12] px-3 text-[0.68rem] font-bold text-emerald-100 ${
+                  reduce ? "" : "transition-colors"
+                } hover:bg-emerald-400/20`}
+              >
+                {t(dict.mentoring.stages[activeStage - 1].day)} {t(dict.mentoring.filterSuffix)}
+                <span aria-hidden className="text-emerald-200/70">✕</span>
+                <span className="sr-only">{t(dict.mentoring.filterClear)}</span>
+              </button>
+            )}
+          </div>
+          {/* Stage 2 has no cards in this grid by design (Popup Studio's FDE
+              office hours). Say so rather than leaving a fully dimmed grid. */}
+          {activeStage !== null && !dict.mentoring.mentors.some((m) => m.stages.includes(activeStage)) && (
+            <p className="mt-3 break-keep rounded-xl border border-emerald-400/20 bg-emerald-400/[0.05] px-4 py-3 text-xs leading-relaxed text-emerald-50/80">
+              {t(dict.mentoring.stageNoMentors)}
+            </p>
+          )}
           {/* One column below `sm`: at two columns a 375px phone left each card
               ~150px of text, which forced Korean names and org strings to break
               mid-word (김진호 → 김/진/호). Two from `sm`, four from `lg` — the
@@ -2352,6 +2411,13 @@ export default function Journey() {
               const name = t(m.name);
               const role = t(m.role);
               const intro = t(m.intro);
+              // Three states, and only two of them touch this card: no filter
+              // (everything normal), in the filter (emerald edge), out of it
+              // (dimmed but still readable — 45% is above the floor where the
+              // name stops being legible, and the card stays focusable and
+              // clickable, since dimming is a hint, not a disable).
+              const filtered = shownStage !== null;
+              const inStage = filtered && m.stages.includes(shownStage);
               return (
                 /* The initial-avatar square that used to lead this card is gone —
                    it was a placeholder standing in for a face nobody had, and the
@@ -2360,7 +2426,23 @@ export default function Journey() {
                    cards in a row stay the same height whatever the intro's length.
                    Widths mirror the old grid: gap-3 = 0.75rem, so two columns are
                    (100% − 0.75rem)/2 and four are (100% − 2.25rem)/4. */
-                <div key={i} className="flex w-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-emerald-400/25 hover:bg-white/[0.05] sm:w-[calc((100%-0.75rem)/2)] lg:w-[calc((100%-2.25rem)/4)]">
+                <div
+                  key={i}
+                  // Reverse highlight: pointing at a mentor lights their stage
+                  // card. Only for mentors that HAVE a stage — the Day 1/2 cards
+                  // would otherwise clear someone else's preview for nothing.
+                  onPointerEnter={(e) => e.pointerType === "mouse" && m.stages.length > 0 && setMentorHoverStage(m.stages[0])}
+                  onPointerLeave={() => setMentorHoverStage(null)}
+                  className={`flex w-full flex-col rounded-2xl border p-4 sm:w-[calc((100%-0.75rem)/2)] lg:w-[calc((100%-2.25rem)/4)] ${
+                    reduce ? "" : "transition duration-200"
+                  } ${
+                    inStage
+                      ? "border-emerald-400/40 bg-emerald-400/[0.07]"
+                      : filtered
+                        ? "border-white/10 bg-white/[0.03] opacity-45"
+                        : "border-white/10 bg-white/[0.03] hover:border-emerald-400/25 hover:bg-white/[0.05]"
+                  }`}
+                >
                   <div className="flex items-start justify-between gap-2">
                     {/* break-keep (word-break: keep-all) — Korean breaks between
                         syllables by default, which shreds a 3-syllable name into
@@ -2385,7 +2467,13 @@ export default function Journey() {
                     <p className="mt-2 break-keep text-xs leading-relaxed text-white/50 sm:line-clamp-3">{intro}</p>
                   )}
                   <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-3">
-                    <span className="inline-flex items-center rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.62rem] font-semibold text-white/60">
+                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[0.62rem] font-semibold ${
+                      reduce ? "" : "transition-colors"
+                    } ${
+                      inStage
+                        ? "border border-emerald-400/40 bg-emerald-400/10 text-emerald-100"
+                        : "border border-white/12 bg-white/[0.04] text-white/60"
+                    }`}>
                       {m.days}
                     </span>
                     {/* A day confirmed-in-principle but not locked (한장환 · Day 7). */}
@@ -2399,6 +2487,24 @@ export default function Journey() {
               );
             })}
           </div>
+        </div>
+
+        {/* ── How matching works ────────────────────────────────────────────
+            Moved BELOW the grid. It used to sit above it, on the reasoning that
+            a reader should know the line-up isn't a menu before reading names.
+            Two things changed that: the stage cards now filter this grid, so
+            they have to sit next to what they filter — anything wedged between
+            them breaks the connection — and "can I pick one?" is a question the
+            cards provoke, not one a reader arrives with. Answering it directly
+            under the faces is answering it where it is asked. */}
+        <div className="mt-8 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] p-5 text-left sm:p-6">
+          <p className="flex items-center gap-2 text-sm font-bold text-emerald-200">
+            <span aria-hidden className="text-emerald-300/70">◇</span>
+            {t(dict.mentoring.matchNote.title)}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-emerald-50/80">
+            <Emph text={t(dict.mentoring.matchNote.body)} className="font-bold text-white" />
+          </p>
         </div>
 
         {/* ── Judges subsection (deck p13) · no new nav item ────────────────

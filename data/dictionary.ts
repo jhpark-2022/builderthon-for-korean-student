@@ -1290,6 +1290,13 @@ export const dict = {
     // university line invites students to rank the room by admissions instead.
     // Academic POSTS are career (한정필's professorship stays); degrees are not. If a profile can't be verified, leave `intro`
     // empty — the card drops the line rather than guessing.
+    // `stages` maps a mentor onto the three stage cards above (1 = Day 3·4
+    // 아이디에이션, 2 = Day 5–7 고도화, 3 = Day 7 피치·세일즈) and is what the
+    // stage filter reads. It is DERIVED from `days`/`daysPending` — never set it
+    // to a stage the day pills don't already claim, or the card will highlight
+    // for a stage its own badge denies. Empty array = outside the three stages
+    // (한장환's Day 1 talk, 김지훈's Day 2 크래시코스): those cards simply never
+    // highlight. No mentor carries stage 2 — see `stageNoMentors` above.
     // daysPending marks a day that is confirmed-in-principle but not locked —
     // rendered as a separate amber pill. Nobody carries one right now (한장환 held
     // a pending Day 7 until it was dropped and he became Day 1 only); the field
@@ -1297,6 +1304,23 @@ export const dict = {
     // TODO: confirm public naming — verify each named mentor may be shown publicly.
     gridLabel: { ko: "확정 멘토 · Confirmed", en: "Confirmed mentors" },
     dayPendingLabel: { ko: "협의 중", en: "TBC" },
+    // ── Stage → mentor filter (the stage cards above are buttons) ────────────
+    // Picking a stage card highlights the mentors who are with you in that
+    // stage and dims the rest. The chip below repeats the active filter next to
+    // the grid label, because the stage cards scroll out of view long before the
+    // grid does — without it, a dimmed grid looks broken rather than filtered.
+    // `{day} + filterSuffix` builds the chip text ("Day 3·4 멘토") so the day
+    // string is never written twice; it always comes from stages[].day.
+    filterSuffix: { ko: "멘토", en: "mentors" },
+    filterClear: { ko: "필터 해제", en: "Clear filter" },
+    // Stage 2 (Day 5–7 고도화) has NO cards in this grid and that is correct:
+    // it is Popup Studio's FDE office hours, a drop-in with no named mentor
+    // (see the comment on `mentors` below). Selecting it would otherwise dim
+    // every card with no explanation, so the grid says why instead.
+    stageNoMentors: {
+      ko: "이 단계는 팝업스튜디오 FDE 오피스아워예요 — 지정 멘토 없이 원하는 때 드롭인하는 방식이라 아래 명단에는 카드가 없습니다.",
+      en: "This stage is Popup Studio's FDE office hours — drop in whenever you like, with no assigned mentor, so nobody in the list below carries it.",
+    },
     mentors: [
       // ── Day 1 ────────────────────────────────────────────────────────────────
       // 한장환: Day 1 ONLY. He used to also carry a pending Day 7 (daysPending);
@@ -1309,7 +1333,7 @@ export const dict = {
           ko: "싱가포르 근무 · 클라우드·인프라 18년+. 前 오라클 JAPAC · Dell EMC.",
           en: "Based in Singapore · 18+ yrs in cloud & infrastructure. Ex-Oracle JAPAC, Dell EMC.",
         },
-        days: "Day 1", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jangwhan",
+        days: "Day 1", daysPending: "", stages: [], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jangwhan",
       },
       // ── Day 2 · 크래시코스 ───────────────────────────────────────────────────
       // Codepresso — runs the Day 2 Crash Course (see schedule.ts d2-crash-course,
@@ -1331,7 +1355,7 @@ export const dict = {
           ko: "추천 시스템 · 스마트팩토리 데이터 7년+. 前 스마일게이트 · LG CNS.",
           en: "7+ yrs on recommender systems & smart-factory data. Ex-Smilegate · LG CNS.",
         },
-        days: "Day 2", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jihoon-kim-613878134",
+        days: "Day 2", daysPending: "", stages: [], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jihoon-kim-613878134",
       },
       // ── Day 3·4 · 자율 빌드 1:1 ─────────────────────────────────────────────
       // Onword Lab — two founders as mentors.
@@ -1341,7 +1365,7 @@ export const dict = {
           ko: "유통·리테일 AI 전환(AX).",
           en: "AI transformation for retail & distribution.",
         },
-        days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/kimjinho",
+        days: "Day 3·4", daysPending: "", stages: [1], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/kimjinho",
       },
       {
         name: { ko: "김시훈", en: "Sihoon Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CTO", en: "Co-founder · CTO" },
@@ -1349,7 +1373,7 @@ export const dict = {
           ko: "커머스 운영 에이전트 시스템 개발.",
           en: "Agentic ops systems for commerce.",
         },
-        days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sihoon-kim-306551372",
+        days: "Day 3·4", daysPending: "", stages: [1], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sihoon-kim-306551372",
       },
       // REmited (Team Remited) — CEO as mentor.
       {
@@ -1362,7 +1386,7 @@ export const dict = {
           ko: "Google for Startups Accelerator 2026 선정 · Antler Entrepreneur in Residence.",
           en: "Google for Startups Accelerator 2026 · Entrepreneur in Residence at Antler.",
         },
-        days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/brian-bae-ba638a131",
+        days: "Day 3·4", daysPending: "", stages: [1], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/brian-bae-ba638a131",
       },
       // YMX (XR·디지털 트윈 스타트업, 싱가포르) — 사업개발 총괄로 참여. Facts below are
       // from his own LinkedIn: Head of Business Development at YMX.INC since Jan
@@ -1380,7 +1404,7 @@ export const dict = {
           ko: "XR·디지털 트윈 스타트업 · 싱가포르 근무. 디지털 포렌식 16년+ · KITRI BoB 멘토.",
           en: "An XR & digital-twin startup, based in Singapore. 16+ yrs in digital forensics · KITRI BoB mentor.",
         },
-        days: "Day 3·4", daysPending: "", img: "/partners/people/joseph-jonghyun-kim.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/joseph-jonghyun-kim-009b244a",
+        days: "Day 3·4", daysPending: "", stages: [1], img: "/partners/people/joseph-jonghyun-kim.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/joseph-jonghyun-kim-009b244a",
       },
       // 황영준 · 이유택 were "Day 3·4·7" until their Day 7 was dropped — both are
       // stage-1 mentors only now, which is why there is no longer a Day 3·4·7
@@ -1392,7 +1416,7 @@ export const dict = {
           ko: "컴퓨터 비전·NLP 3년+. VLM 문서 처리·검색엔진 고도화.",
           en: "3+ yrs in computer vision & NLP. VLM document processing, search.",
         },
-        days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620",
+        days: "Day 3·4", daysPending: "", stages: [1], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620",
       },
       {
         name: { ko: "이유택", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" },
@@ -1400,7 +1424,7 @@ export const dict = {
           ko: "SW 엔지니어 5년 — LLM 코드리뷰 봇·사내 RAG 구축.",
           en: "5 yrs as a software engineer — LLM code-review bots, internal RAG.",
         },
-        days: "Day 3·4", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek",
+        days: "Day 3·4", daysPending: "", stages: [1], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek",
       },
       // Day 5–7 stage-2 mentoring is Popup Studio's, but it has NO card here:
       // this grid is named people you may be matched with 1:1, and Popup Studio
@@ -1414,7 +1438,7 @@ export const dict = {
           ko: "GenAI 커뮤니케이션·CX APJC 총괄 · 7년+. 前 삼성전자 북미 5G 사업개발.",
           en: "Head of GenAI Communications & CX, APJC · 7+ yrs. Ex-Samsung Electronics 5G BD, North America.",
         },
-        days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/donghyukshin",
+        days: "Day 7", daysPending: "", stages: [3], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/donghyukshin",
       },
       {
         name: { ko: "이화영", en: "Lee Hwa-young" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "Sales", en: "Sales" },
@@ -1422,7 +1446,7 @@ export const dict = {
           ko: "싱가포르 근무. 前 브로드컴 어카운트 디렉터 · VMware 5년+.",
           en: "Based in Singapore. Ex-Broadcom account director; 5+ yrs at VMware.",
         },
-        days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hwayoung-lee-bbb79a134",
+        days: "Day 7", daysPending: "", stages: [3], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hwayoung-lee-bbb79a134",
       },
       {
         name: { ko: "임석건", en: "Lim Seok-geon" }, org: { ko: "NetApp", en: "NetApp" }, role: { ko: "APAC", en: "APAC" },
@@ -1430,7 +1454,7 @@ export const dict = {
           ko: "AWS 세일즈 스페셜리스트 4년+. 前 Rescale.",
           en: "AWS Sales Specialist, 4+ yrs. Ex-Rescale.",
         },
-        days: "Day 7", daysPending: "", img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sugkun-lim",
+        days: "Day 7", daysPending: "", stages: [3], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sugkun-lim",
       },
       // Codepresso — the two below are ALSO Day 8 judges (dict.judges.people).
       // That double role is disclosed by dict.mentoring.separationNote above:
@@ -1447,7 +1471,7 @@ export const dict = {
           ko: "AI 코딩·역량진단 교육 플랫폼 운영. 前 스마일게이트 · LG전자 소프트웨어 엔지니어.",
           en: "Runs an AI-coding & skills-assessment education platform. Ex-Smilegate · LG Electronics engineer.",
         },
-        days: "Day 7", daysPending: "", img: "/partners/people/lee-dong-hoon.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/donghun-lee-8888a13a",
+        days: "Day 7", daysPending: "", stages: [3], img: "/partners/people/lee-dong-hoon.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/donghun-lee-8888a13a",
       },
       // 황현진: LinkedIn headline is "Co-founder & Director & Content R&D Lead at
       // Codepresso" — the card prints ONE role segment, so 공동창업자 · 이사 goes here
@@ -1460,7 +1484,7 @@ export const dict = {
           ko: "콘텐츠 R&D 총괄. 前 LG전자 소프트웨어 엔지니어 9년.",
           en: "Content R&D lead. Ex-LG Electronics software engineer, 9 yrs.",
         },
-        days: "Day 7", daysPending: "", img: "/partners/people/hwang-hyun-jin.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697",
+        days: "Day 7", daysPending: "", stages: [3], img: "/partners/people/hwang-hyun-jin.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697",
       },
     ],
   },
