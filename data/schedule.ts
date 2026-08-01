@@ -926,12 +926,12 @@ export const schedule: BEvent[] = [
     timeOfDay: "PM",
     title: { ko: "데모데이 발표 · 심사", en: "Demo-Day Pitches · Judging" },
     summary: {
-      ko: "12:00~ 같은 공간에서 트랙별로 팀당 5분 발표 — 본인 트랙만 참석.",
-      en: "12:00~ 5-min pitches per team, by track in one space — attend your own track.",
+      ko: "12:00~ 문제를 낸 기업과 심사위원 앞에서 팀당 5분 피칭·검증 — 본인 트랙만 참석.",
+      en: "12:00~ 5-min pitch per team to the company that set the problem and the judges — attend your own track.",
     },
     description: {
-      ko: "12:00부터 데모데이 팀별 발표가 시작됩니다. 같은 공간에서 트랙별로 순차 진행하며, 각 팀이 5분씩 발표합니다(트랙당 약 1시간 × 메인 트랙 2개 · 팀 수에 따라 유동). 참가자는 본인 트랙 발표에 참석하고, 그 외 시간은 자유롭게 관람하거나 식사할 수 있습니다. 심사는 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다(문제 발의는 AXMOS). Day 3·4 기초 멘토링은 심사에 참여하지 않는 선배들이 맡아, 학생 눈높이의 멘토 문화를 지킵니다.",
-      en: "From 12:00, the Demo-Day pitches begin. In one space, tracks run in sequence and each team pitches for five minutes (about an hour per track × two main tracks, depending on team count). You attend your own track's pitches and are free to watch others or grab food the rest of the time. Judging is done by working leaders who have solved real problems in industry (problem-setting by AXMOS). The Day 3·4 foundational mentoring is handled by seniors who take no part in judging, which is what keeps the peer-level mentor culture intact.",
+      ko: "12:00부터 데모데이 팀별 발표가 시작됩니다. 8일의 마지막이자, 문제를 낸 기업과 심사위원 앞에서 ‘내 아이디어가 돌아간다’를 검증받는 자리입니다. 같은 공간에서 트랙별로 순차 진행하며, 각 팀이 5분씩 발표합니다(트랙당 약 1시간 × 메인 트랙 2개 · 팀 수에 따라 유동). 참가자는 본인 트랙 발표에 참석하고, 그 외 시간은 자유롭게 관람하거나 식사할 수 있습니다. 심사는 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다(문제 발의는 AXMOS). Day 3·4 기초 멘토링은 심사에 참여하지 않는 선배들이 맡아, 학생 눈높이의 멘토 문화를 지킵니다.",
+      en: "From 12:00, the Demo-Day pitches begin — the end of the eight days, and the moment your idea gets validated in front of the company that set the problem and the judges. In one space, tracks run in sequence and each team pitches for five minutes (about an hour per track × two main tracks, depending on team count). You attend your own track's pitches and are free to watch others or grab food the rest of the time. Judging is done by working leaders who have solved real problems in industry (problem-setting by AXMOS). The Day 3·4 foundational mentoring is handled by seniors who take no part in judging, which is what keeps the peer-level mentor culture intact.",
     },
     location: ONSITE,
   },
@@ -948,7 +948,7 @@ export const schedule: BEvent[] = [
       en: "14:30~ results, awards, certificates handed out, and a group photo.",
     },
     description: {
-      ko: "8일간의 빌드를 마무리하는 시간입니다. 트랙별 발표가 끝나면 14:30부터 결과 발표와 시상이 이어지고, 크래시코스 전 과정을 참석한 분들께 수료증을 배부한 뒤 단체 사진으로 마무리합니다. 전원이 *SCAPE L^IFE Jungle 현장(11AM~)에 모여, ‘데모로 끝나지 않는 성공의 경험’으로 8일을 함께 마칩니다.",
+      ko: "8일간의 빌드를 마무리하는 시간입니다. 트랙별 발표가 끝나면 14:30부터 결과 발표와 시상이 이어지고, 크래시코스 전 시간을 참석한 분들께 수료증을 배부한 뒤 단체 사진으로 마무리합니다. 전원이 *SCAPE L^IFE Jungle 현장(11AM~)에 모여, ‘데모로 끝나지 않는 성공의 경험’으로 8일을 함께 마칩니다.",
       en: "The close of eight days of building. After the track pitches, results and awards follow from 14:30; certificates go to everyone who attended the full Crash Course, and the day ends with a group photo. The whole cohort gathers at *SCAPE L^IFE Jungle (from 11AM) to finish the eight days on a success that goes beyond a demo.",
     },
     location: ONSITE,

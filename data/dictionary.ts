@@ -527,9 +527,16 @@ export const dict = {
     titleLine2: { ko: "빌드의 무대", en: "in Singapore." },
     dates: { ko: "2026.08.22 – 08.29 · 8일", en: "22–29 Aug 2026 · 8 days" },
     location: { ko: "싱가포르 · *SCAPE L^IFE Jungle & AWS 오피스", en: "Singapore · *SCAPE L^IFE Jungle & AWS office" },
+    // Q1 spine (2026-08-01): the one thing these eight days leave you is a real
+    // company's real problem SOLVED and VALIDATED in front of that company and
+    // working leaders — plus the artefacts that prove it. The old last sentence
+    // ("zero에서 MVP까지, 데모로 끝나지 않는 '성공의 경험'") named a feeling and
+    // left the reader to guess what they walk away holding. Same spine appears in
+    // benefits.spine, judges.heading/sub and the "8일이 끝나면 뭐가 남나요" FAQ —
+    // change them together.
     blurb: {
-      ko: "싱가포르에서 공부하는 한국 학생들이 8일간, 실제 기업의 AI 전환(AX) 과제를 바이브 코딩으로 직접 풀어내는 AI 빌더톤. 필참은 첫날과 마지막 날 이틀뿐 — 나머지는 각자 편한 시간·장소에서 팀별로 빌드합니다. zero에서 MVP까지, 데모로 끝나지 않는 ‘성공의 경험’을 남깁니다.",
-      en: "Korean students in Singapore spend 8 days solving real companies' AI-transformation (AX) problems with vibe coding. Only the first and last day are required — the rest your team builds whenever and wherever suits you. From zero to MVP, a real success that goes beyond a demo.",
+      ko: "싱가포르에서 공부하는 한국 학생들이 8일간, 실제 기업의 AI 전환(AX) 과제를 바이브 코딩으로 직접 풀어내는 AI 빌더톤. 필참은 첫날과 마지막 날 이틀뿐 — 나머지는 각자 편한 시간·장소에서 팀별로 빌드합니다. 8일의 끝, 문제를 낸 기업과 현업 리더들 앞에서 ‘내 아이디어가 돌아간다’를 검증받습니다 — 데모·피칭·수료증으로 손에 남게.",
+      en: "Korean students in Singapore spend 8 days solving real companies' AI-transformation (AX) problems with vibe coding. Only the first and last day are required — the rest your team builds whenever and wherever suits you. On the last day you pitch to the company that set the problem and to working leaders, and get told your idea holds up — with a demo, a pitch and a certificate to show for it."
     },
     ctaProgram: { ko: "8일의 여정 둘러보기", en: "Explore the 8-day journey" },
     ctaPartner: { ko: "파트너십 문의", en: "Partner with us" },
@@ -931,9 +938,38 @@ export const dict = {
   benefits: {
     tag: { ko: "참가 혜택", en: "Why Join" },
     heading: { ko: "참가하면 무엇을 얻나요?", en: "What you get by joining" },
+    // Q1 spine (2026-08-01). This section listed six benefits side by side, which
+    // read as six reasons of equal size — and the actual answer to "what do I get"
+    // was scattered across cards 02 and 03 and the judges section, never stated in
+    // one sentence. The spine block states it once, up front; the six cards below
+    // it become what makes that one thing REACHABLE (crash course = you can build
+    // at all, mentoring = you don't get stuck, certificate = it's provable,
+    // networking = it doesn't end on Day 8). Card order and numbering unchanged.
+    //
+    // `spineTangibles` are the three things a participant physically leaves with.
+    // Keep them concrete: a feeling ("성공의 경험") is what this replaced. The
+    // certificate's condition is NOT restated here — it lives on card 05 and in
+    // the FAQ, both worded "크래시코스 전 시간 참석 시"; a second, looser wording
+    // here would quietly lower the bar.
+    spine: {
+      tag: { ko: "이 8일이 남기는 단 하나", en: "The one thing these 8 days leave you" },
+      heading: {
+        ko: "실제 기업의 진짜 문제를 풀고, 그 기업과 심사위원 앞에서 검증받은 경험.",
+        en: "You solve a real company's real problem — and have it validated in front of that company and its judges.",
+      },
+      tangibles: [
+        { ko: "돌아가는 데모", en: "A demo that runs" },
+        { ko: "무대 위 피칭", en: "A pitch on stage" },
+        { ko: "수료증", en: "A certificate" },
+      ],
+    },
+    // Reframed with the spine: the six cards are not six parallel perks, they are
+    // the things that put that one experience within reach of someone who has
+    // never built anything. The no-screening promise stays — it is the first
+    // barrier this section removes.
     intro: {
-      ko: "참여 자체만으로 얻어가도록 설계했습니다 — 스크리닝·사전 평가 없이, 개발 경험이 없어도 누구나 환영합니다.",
-      en: "Designed so you gain just by taking part — no screening or pre-assessment, and no dev experience needed.",
+      ko: "아래의 모든 것 — 크래시코스, 멘토링, 수료증, 네트워킹 — 은 이 하나의 경험을 누구나 가질 수 있게 만드는 장치입니다. 스크리닝·사전 평가 없이, 개발 경험이 없어도 환영합니다.",
+      en: "Everything below — the crash course, the mentoring, the certificate, the network — exists to put that one experience within anyone's reach. No screening, no pre-assessment, and no dev experience needed.",
     },
     items: [
       {
@@ -979,6 +1015,9 @@ export const dict = {
         points: [
           { ko: "생각한 것이 눈앞에서 돌아가는 짜릿함", en: "The thrill of seeing your idea actually run" },
           { ko: "데모로 끝나지 않는 첫 성공 경험", en: "A first success that goes beyond a demo" },
+          // The spine, said once more where the "성공" claim is actually made —
+          // this card used to describe a feeling and stop there.
+          { ko: "문제를 낸 기업과 심사위원 앞에서 검증 — 데모·피칭·수료증으로 남습니다", en: "Validated in front of the company that set the problem and its judges — and it stays with you as a demo, a pitch and a certificate" },
           { ko: "군 입대 전 첫 성공 · 전역 후 재도전 동력", en: "A first win before enlistment · momentum to return after service" },
         ],
       },
@@ -1545,10 +1584,17 @@ export const dict = {
   // Internal-only figures (e.g. Shin Sang-gil's "FY24 S$22M·+45%") are omitted.
   judges: {
     tag: { ko: "심사위원", en: "Judges" },
-    heading: { ko: "심사는 현업 리더가 합니다", en: "Judged by working leaders" },
+    // Q1 spine (2026-08-01). "심사는 현업 리더가 합니다" was written from the
+    // organizers' side — it answered "who runs the judging" when the participant's
+    // question is "who is going to look at MY work". Same people, same order, same
+    // cards: only the framing turns around. 검증 rather than 심사 is deliberate —
+    // being judged is a risk, being validated is the thing they came for, and the
+    // latter is what actually happens when the company that set the problem tells
+    // a team their idea holds up.
+    heading: { ko: "당신의 데모를 검증할 사람들", en: "The people who will validate your demo" },
     sub: {
-      ko: "실제 산업에서 문제를 풀어온 시니어 리더가 데모데이 결과물을 직접 심사합니다.",
-      en: "Senior leaders who have solved real problems in industry judge the Demo-Day work first-hand.",
+      ko: "심사가 아니라 검증입니다 — 문제를 낸 기업과, 실제 산업에서 문제를 풀어온 시니어 리더들이 데모데이 결과물을 직접 봅니다.",
+      en: "Less judging than validation — the company that set the problem, and senior leaders who have solved real ones in industry, look at your Demo-Day work first-hand.",
     },
     people: [
       {
@@ -1859,6 +1905,19 @@ export const dict = {
         a: {
           ko: "네 — 크래시코스 전 시간을 참석한 분들께 Zero100 명의의 수료증이 발급되고, Day 8 시상 때 배부됩니다. 링크드인·이력서에 올릴 수 있어요. 이미 개발 경험이 있다면 수료증보다 멘토링·네트워킹이 더 큰 수확일 거예요.",
           en: "Yes — everyone who attends the full Crash Course receives a certificate issued by Zero100, handed out at the Day 8 awards. It's LinkedIn- and CV-ready. If you already build, the mentoring and network will matter more than the paper.",
+        },
+      },
+      // Q1 spine (2026-08-01), placed straight after the certificate question —
+      // that is where a reader is already thinking about what they keep. The three
+      // artefacts are the same three in benefits.spine.tangibles, and the
+      // certificate's condition is worded exactly as it is on benefits card 05 and
+      // in the certificate FAQ above ("크래시코스 전 시간 참석 시"): four places, one
+      // sentence, no drift.
+      {
+        q: { ko: "8일이 끝나면 저에게 뭐가 남나요?", en: "What do I walk away with after the 8 days?" },
+        a: {
+          ko: "세 가지가 실물로 남습니다 — 실제로 돌아가는 데모, 기업과 심사위원 앞에서 피칭한 경험(사진으로 남는), 그리고 수료증(크래시코스 전 시간 참석 시). 그리고 그 데모는 가상 과제가 아니라 실제 기업의 진짜 문제를 푼 결과물입니다.",
+          en: "Three things you can actually show: a demo that runs, the experience of pitching it to the company and the judges (photos included), and a certificate (for attending the full Crash Course). And that demo isn't a toy exercise — it's your answer to a real company's real problem.",
         },
       },
       {

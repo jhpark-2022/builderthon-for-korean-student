@@ -2075,7 +2075,33 @@ export default function Journey() {
         <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
           {t(dict.benefits.heading)}
         </h2>
-        <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.benefits.intro)}</p>
+        {/* ── Q1 spine ──────────────────────────────────────────────────────
+            The one thing these eight days leave you, stated before the six cards
+            rather than assembled from them. It sits between the heading and the
+            intro on purpose: the intro's job is now to say the cards BELOW are
+            what make this reachable, which only reads correctly once "this" has
+            been named. Tinted panel + three tangible chips — deliberately the
+            most emphatic block in the section, because it is the section's
+            answer; the cards are the footnotes to it. */}
+        <div className="mx-auto mt-7 max-w-3xl rounded-2xl border border-cyan-400/25 bg-cyan-400/[0.06] px-5 py-6 sm:px-7">
+          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-cyan-200/90">{t(dict.benefits.spine.tag)}</p>
+          <p className="mx-auto mt-2.5 max-w-2xl break-keep text-[clamp(1.05rem,2.4vw,1.45rem)] font-bold leading-snug text-white">
+            {t(dict.benefits.spine.heading)}
+          </p>
+          {/* The artefacts, not adjectives: what a participant physically holds
+              on Day 9. The certificate's condition stays off these chips — card
+              05 and the FAQ carry it, and a looser second wording here would
+              quietly lower the bar. */}
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+            {dict.benefits.spine.tangibles.map((x, i) => (
+              <span key={i} className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-cyan-400/25 bg-cyan-400/[0.08] px-3 py-1 text-xs font-semibold text-cyan-50/90">
+                <span aria-hidden className="text-cyan-300/80">✓</span>
+                {t(x)}
+              </span>
+            ))}
+          </div>
+        </div>
+        <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.benefits.intro)}</p>
 
         <div className="mt-10 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-3">
           {dict.benefits.items.map((it) => (
