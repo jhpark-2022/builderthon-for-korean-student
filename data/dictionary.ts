@@ -1551,15 +1551,22 @@ export const dict = {
         linkedin: "https://www.linkedin.com/in/mjbaek",
       },
       {
+        // Brie is PAST, not present: he led it as CEO/CTO and no longer does.
+        // The org/role line therefore carries the current post — Popup Studio,
+        // which is also the company running the Day 5–7 FDE office hours — and
+        // Brie moves into the bio with the rest of the career history. Do not
+        // put "Brie · 대표" back on the card without checking with him first.
         name: { ko: "정요천", en: "Jeong Yo-cheon" },
-        org: { ko: "Brie", en: "Brie" },
-        role: { ko: "CEO/CTO · Popup Studio 총괄", en: "CEO/CTO · Head of Popup Studio" },
+        org: { ko: "Popup Studio", en: "Popup Studio" },
+        // "Head of Popup Studio" rendered as "Popup Studio · Head of Popup Studio"
+        // — the card already prints the org, so the role stays a bare title.
+        role: { ko: "총괄", en: "Head" },
         tag: { ko: "웹 · AI 풀스택", en: "Web · AI full-stack" },
         img: "/partners/people/jeong-yo-cheon.webp",
         pending: false,
         bio: {
-          ko: "Brie 대표(CEO 겸 CTO) — 웹·AI 풀스택 개발사 · Popup Studio 총괄. 前 워프벤처스 CEO/CTO — 건축 매칭 플랫폼 · 딥러닝 추천. 前 산업은행(KDB) 기업금융.",
-          en: "Runs a full-stack web·AI studio. Ex-Warp Ventures CEO/CTO — construction matching platform · deep-learning recommendations. Earlier KDB corporate finance.",
+          ko: "前 Brie 대표(CEO 겸 CTO) — 웹·AI 풀스택 개발사. 前 워프벤처스 CEO/CTO — 건축 매칭 플랫폼 · 딥러닝 추천. 前 산업은행(KDB) 기업금융.",
+          en: "Ex-CEO/CTO of Brie, a full-stack web·AI studio. Ex-Warp Ventures CEO/CTO — construction matching platform · deep-learning recommendations. Earlier KDB corporate finance.",
         },
         linkedin: "",
       },
