@@ -1293,62 +1293,24 @@ function CompanionMarquee({ t }: { t: Tfn }) {
 // variant ships with this asset, so we serve the mp4 alone.
 // TODO: transcode a web-optimised ~1–2MB clip (+ webm) for production — the 4K
 // master is heavy for an autoplaying hero background.
+// ONE clip, server-rendered, on every screen. Two mobile variants were tried and
+// reverted: a poster-only phone hero (killed the point of the hero) and a 480×360
+// phone cut (visibly soft at 3× DPR). Measured on Slow 4G — the pessimistic end of
+// what our visitors use — the full file lands in 4.3s vs the small cut's 2.1s and
+// neither delays anything: the poster paints immediately, the clip is decorative,
+// and LCP (1.67s) and CLS (0.00) are the same either way. Both variants also had to
+// mount client-side to pick a source, and a <video> mounted after hydration would
+// not start loading in Chrome at all (readyState stuck at 0) — which is the second
+// reason this is back to the plain server-rendered element.
 const HERO_VIDEO = {
   enabled: true,
   webm: "",
   mp4: "/hero/metal-human.mp4",
-  // Phone cut of the same clip — 480×360, 274KB against the desktop file's 649KB.
-  // The hero crops to portrait behind a dark scrim and blurs as it scrolls away,
-  // so the softer source is invisible in place; what a phone would have felt is
-  // the 649KB, which was 99% of the page's first-load transfer on mobile.
-  // Re-encode both from the same master if the clip is ever replaced
-  // (avconvert --source metal-human.mp4 -p PresetAppleM4VWiFi -o mobile.m4v).
-  mp4Mobile: "/hero/metal-human-mobile.mp4",
   poster: "/hero/metal-human-poster.jpg",
 };
 
 function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
-  // THE HERO MOVES ON EVERY SCREEN. A phone briefly got the poster instead —
-  // that saved the 649KB but cost the thing the hero is for, so phones now get
-  // their own cut of the clip (HERO_VIDEO.mp4Mobile, 274KB) rather than a still.
-  //
-  // Which source is chosen after mount, not at render: the server and the first
-  // client paint agree on poster-only, then the right file attaches. That keeps
-  // a phone from ever starting the desktop download, and it is why swapping in
-  // the video costs no layout shift.
-  //
-  // The one case that still stops at the poster is prefers-reduced-motion. That
-  // is the visitor's own setting, and an autoplaying loop is exactly what it
-  // asks us not to do.
-  const [videoSrc, setVideoSrc] = useState<string | null>(null);
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const wide = window.matchMedia("(min-width: 640px)").matches;
-    setVideoSrc(wide ? HERO_VIDEO.mp4 : HERO_VIDEO.mp4Mobile);
-  }, []);
-
   if (!HERO_VIDEO.enabled) return null; // placeholder: keep the WebGL background
-  if (!videoSrc)
-    return (
-      <div
-        aria-hidden
-        className="absolute inset-0 overflow-hidden"
-        style={{
-          maskImage: "linear-gradient(to bottom, #000 0%, #000 62%, transparent 96%)",
-          WebkitMaskImage: "linear-gradient(to bottom, #000 0%, #000 62%, transparent 96%)",
-        }}
-      >
-        <Image
-          src={HERO_VIDEO.poster}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0814]/85 via-[#0a0814]/68 to-transparent" />
-      </div>
-    );
   return (
     // The whole layer fades to transparent over its bottom third (mask) so the
     // video dissolves into the fixed WebGL field behind it — no hard seam where
@@ -1374,7 +1336,7 @@ function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
         className="h-full w-full object-cover object-center"
       >
         {HERO_VIDEO.webm && <source src={HERO_VIDEO.webm} type="video/webm" />}
-        <source src={videoSrc} type="video/mp4" />
+        <source src={HERO_VIDEO.mp4} type="video/mp4" />
       </motion.video>
       {/* legibility scrim — darker top so the headline reads; fades to nothing
           toward the bottom so the mask hands off cleanly to the WebGL field */}
