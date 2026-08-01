@@ -22,6 +22,7 @@ import { loadOwnResult } from "@/lib/quizResult";
 import { parseResultId } from "@/lib/quizScore";
 import { RESULTS, QUESTIONS, type MbtiKey } from "@/data/quiz";
 import { useRegister, type RegisterPreset } from "@/lib/RegisterContext";
+import { useScrollDirection } from "@/lib/useScrollDirection";
 
 
 // glass panel wrapper
@@ -257,6 +258,9 @@ function MobileStickyBar({
 }) {
   const [past, setPast] = useState(false);
   const [atEnd, setAtEnd] = useState(false);
+  // Same signal the header and the FAB use — the three move as one surface, so
+  // the page never settles at a height that only some of them agreed on.
+  const chromeHidden = useScrollDirection();
 
   useEffect(() => {
     const onScroll = () => setPast(window.scrollY > window.innerHeight * 1.2);
@@ -275,7 +279,9 @@ function MobileStickyBar({
     return () => io.disconnect();
   }, []);
 
-  const shown = past && !atEnd && !registerOpen;
+  // `chromeHidden` is the only condition that comes back on its own (scroll up);
+  // the other three are states of the page, not of the gesture.
+  const shown = past && !atEnd && !registerOpen && !chromeHidden;
 
   return (
     <div
@@ -284,7 +290,11 @@ function MobileStickyBar({
       style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
     >
       <div
-        className={`mx-3 flex items-center gap-2 rounded-full border border-white/12 bg-[#0b0817]/92 p-1.5 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.9)] backdrop-blur-md transition duration-300 ${
+        // p-1 rather than p-1.5, and the quiz chip drops to h-10: the rail lost
+        // ~8px of its own height without touching the 44px register button.
+        // focus-within overrides the hidden transform so tabbing into the bar
+        // can never scroll it away from under the keyboard.
+        className={`mx-3 flex items-center gap-2 rounded-full border border-white/12 bg-[#0b0817]/92 p-1 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.9)] backdrop-blur-md transition duration-300 focus-within:translate-y-0 focus-within:opacity-100 ${
           shown ? "translate-y-0 opacity-100" : "translate-y-24 opacity-0"
         }`}
       >
@@ -298,7 +308,7 @@ function MobileStickyBar({
         <a
           href="/quiz"
           onClick={() => track("quiz_click", { src: "sticky_bar" })}
-          className="flex h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-violet-400/35 bg-violet-500/10 px-4 text-xs font-bold text-violet-100"
+          className="flex h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-violet-400/35 bg-violet-500/10 px-3.5 text-xs font-bold text-violet-100"
         >
           {t(dict.stickyBar.quiz)}
         </a>
@@ -1599,6 +1609,9 @@ function MobileRegisterBar() {
   const { openRegister, registered } = useRegister();
   const { t } = useLocale();
   const [visible, setVisible] = useState(false);
+  const [atEnd, setAtEnd] = useState(false);
+  // Shared with the header and the FAB (lib/useScrollDirection).
+  const chromeHidden = useScrollDirection();
 
   useEffect(() => {
     const onScroll = () => {
@@ -1619,9 +1632,21 @@ function MobileRegisterBar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // The closing section carries its own register CTA. Two identical buttons, one
+  // fixed over the other, is the kind of duplication a visitor reads as a bug —
+  // so this bar stands down while that section is on screen. Same observer the
+  // phone-width bar already used; this one never had it.
+  useEffect(() => {
+    const end = document.getElementById("closing") ?? document.querySelector("footer");
+    if (!end) return;
+    const io = new IntersectionObserver(([e]) => setAtEnd(e.isIntersecting), { rootMargin: "0px 0px -20% 0px" });
+    io.observe(end);
+    return () => io.disconnect();
+  }, []);
+
   return (
     <AnimatePresence>
-      {visible && (
+      {visible && !atEnd && !chromeHidden && (
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -1630,8 +1655,10 @@ function MobileRegisterBar() {
           // z-40 keeps it under the ScrollToTop button (z-50), which is offset
           // ~5.25rem UP on this breakpoint (a vertical band above the bar), so
           // the bar can use the full screen width — no right-side reservation.
-          className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#06040f]/90 px-4 pt-3 backdrop-blur lg:hidden"
-          style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
+          // pt-2 / pb 0.5rem + safe area: the bar lost ~10px of padding without
+          // touching the buttons inside it, which stay at 44px+.
+          className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#06040f]/90 px-4 pt-2 backdrop-blur lg:hidden"
+          style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)" }}
         >
           {/* Register keeps the full remaining width (flex-1); the chat icon is
               a fixed 48px square beside it, so adding it costs the primary CTA
@@ -1684,6 +1711,12 @@ function ScrollToTop() {
   const reduce = useReducedMotion();
   const [visible, setVisible] = useState(false);
 
+  // Rides the same scroll signal as the bars. Two reasons: on a phone this button
+  // sits directly above the register rail, so a rail that slides away leaving the
+  // FAB floating mid-air reads as a stray dot; and hiding it is what guarantees
+  // the two can never overlap, whatever the bar's height ends up being.
+  const chromeHidden = useScrollDirection();
+
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > window.innerHeight * 1.5);
     onScroll();
@@ -1705,12 +1738,18 @@ function ScrollToTop() {
           animate={{ opacity: 1, y: 0 }}
           exit={reduce ? undefined : { opacity: 0, y: 12 }}
           transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-          // Below lg the sticky register bar owns the bottom edge, so this sits
-          // above it (bar height + safe area). Unconditional at that breakpoint
-          // rather than wired to the bar's state: both appear at essentially the
-          // same scroll depth, and an offset with no bar just reads as margin.
-          // From lg up there's no bar, so it returns to the normal corner.
-          className="fixed bottom-[calc(env(safe-area-inset-bottom,0px)+5.25rem)] right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-violet-400/40 bg-violet-600/85 text-violet-100 shadow-[0_6px_24px_rgba(124,58,237,0.3)] transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-500 hover:text-white sm:right-8 lg:bottom-8"
+          // Below lg the register rail owns the bottom edge, so this sits above it
+          // (rail height + safe area). The rail got shorter, but the offset stays
+          // generous on purpose: it also has to clear the phone-width pill bar,
+          // whose height differs, and the FAB now disappears with the rail anyway
+          // so an over-generous gap is never seen as dead space.
+          // From lg up there's no rail, so it returns to the normal corner.
+          // The hide-on-scroll-down is a MOBILE behaviour (max-lg): from lg up there
+          // is no bottom rail for this button to keep company with, and a corner
+          // control that vanishes while you scroll would be a regression there.
+          // Opacity + pointer-events rather than unmounting, so the desktop render
+          // path is byte-identical to what it was.
+          className={`${chromeHidden ? "max-lg:pointer-events-none max-lg:opacity-0" : ""} fixed bottom-[calc(env(safe-area-inset-bottom,0px)+5.25rem)] right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-violet-400/40 bg-violet-600/85 text-violet-100 shadow-[0_6px_24px_rgba(124,58,237,0.3)] transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-500 hover:text-white sm:right-8 lg:bottom-8`}
         >
           {/* upward chevron */}
           <svg aria-hidden viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">

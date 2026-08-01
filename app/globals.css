@@ -42,9 +42,11 @@ html { font-size: 112.5%; scroll-behavior: smooth; scroll-padding-top: 96px; }
 /* Below `lg` the fixed header grows a second row — the scrollable section rail
    (components/journey/JourneyNav.tsx), which only exists at this breakpoint.
    Without the extra offset an anchor jump parks the target heading underneath
-   it. Keep this in step with the rail's height if its padding ever changes. */
+   it. Keep this in step with the rail's height if its padding ever changes:
+   the bar row is h-14 (56px) and the rail is a 44px chip plus 8px of padding,
+   so ~108px of chrome — 120 leaves a little air under it. */
 @media (max-width: 1023px) {
-  html { scroll-padding-top: 160px; }
+  html { scroll-padding-top: 120px; }
 }
 
 body {
@@ -382,7 +384,11 @@ body {
 }
 
 /* Reserve the mobile sticky bar's height from first paint so revealing it can
-   never shift the page. Phone only — the bar itself is `sm:hidden`. */
+   never shift the page. Phone only — the bar itself is `sm:hidden`.
+   4rem, down from 4.5: the bar's own padding shrank (p-1 instead of p-1.5). The
+   reservation stays FIXED rather than following the bar's hide/show — the bar
+   now slides away on scroll-down, and reclaiming its space each time would make
+   the page height breathe under the reader's thumb. */
 @media (max-width: 639px) {
-  body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); }
+  body { padding-bottom: calc(4rem + env(safe-area-inset-bottom)); }
 }

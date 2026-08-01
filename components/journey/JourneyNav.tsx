@@ -7,6 +7,7 @@ import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
 import { dict, links } from "@/data/dictionary";
 import { useRegister } from "@/lib/RegisterContext";
+import { useScrollDirection } from "@/lib/useScrollDirection";
 import LocaleToggle from "@/components/LocaleToggle";
 import ChatGlyph from "@/components/ChatGlyph";
 import ReturningGreeting from "./ReturningGreeting";
@@ -35,6 +36,12 @@ export default function JourneyNav() {
   // never scrolled through and the register button never appeared at all. Once
   // shown it stays shown (latched below), so it never flickers on scroll-up.
   const [showRegister, setShowRegister] = useState(false);
+  // Shared with the bottom bars and the back-to-top button (lib/useScrollDirection):
+  // on a phone this header is two rows tall and, together with the bottom rail,
+  // was taking a quarter of an in-app browser's viewport. Scrolling DOWN — the
+  // gesture that means "show me more page" — slides it out; scrolling up brings
+  // it straight back. Desktop is untouched: the translate only applies below lg.
+  const chromeHidden = useScrollDirection();
 
   useEffect(() => {
     const onScroll = () => {
@@ -60,8 +67,22 @@ export default function JourneyNav() {
   // through between the two rows. The blur separates bar from page without
   // making it a solid slab.
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? "bg-[#06040f]/85 backdrop-blur-md" : "bg-transparent"}`}>
-      <nav className="flex h-20 w-full items-center justify-between px-6 sm:px-10">
+    <header
+      // focus-within pins it open: a keyboard user tabbing into the nav must not
+      // have it slide away under them. `lg:!translate-y-0` keeps the desktop bar
+      // fixed in place no matter what the scroll signal says.
+      className={`fixed inset-x-0 top-0 z-50 focus-within:translate-y-0 lg:!translate-y-0 ${
+        reduce ? "" : "transition-all duration-300 lg:duration-500"
+      } ${scrolled ? "bg-[#06040f]/85 backdrop-blur-md" : "bg-transparent"} ${
+        chromeHidden ? "-translate-y-full" : "translate-y-0"
+      }`}
+    >
+      {/* 52px on phones, h-20 from lg: the tall bar was designed for a desktop
+          row of seven anchor links, but below lg it carries a logo, one chip and
+          the language toggle — and it sits above a second row. Together with the
+          rail's tightened padding this takes the mobile header from ~145px to
+          ~105px — about a quarter of the two-row chrome back. Touch targets inside are unchanged (44px minimums). */}
+      <nav className="flex h-[52px] w-full items-center justify-between px-6 sm:px-10 lg:h-20">
         {/* LEFT group — brand logo + anchor links, kept together on the left edge. */}
         <div className="flex items-center">
           <a href="#top" className="flex items-center gap-2.5 leading-none">
@@ -243,12 +264,14 @@ export default function JourneyNav() {
           this breakpoint, so an anchor jump doesn't park a heading underneath. */}
       {scrolled && (
         <div className="lg:hidden">
-          <div className="flex gap-2 overflow-x-auto px-6 pb-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]{display:none}">
+          <div className="flex gap-2 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]{display:none}">
             {anchors.map((a) => (
               <a
                 key={a.id}
                 href={`#${a.id}`}
-                className="inline-flex min-h-[44px] shrink-0 items-center whitespace-nowrap rounded-full border border-white/12 bg-white/[0.06] px-3.5 text-xs font-semibold text-white/75 backdrop-blur transition active:scale-[0.97]"
+                // min-h stays 44px — the row got shorter by losing padding around
+                // it, never by shrinking the thing a thumb has to hit.
+                className="inline-flex min-h-[44px] shrink-0 items-center whitespace-nowrap rounded-full border border-white/12 bg-white/[0.06] px-3 text-[0.7rem] font-semibold text-white/75 backdrop-blur transition active:scale-[0.97]"
               >
                 {t(a.label)}
               </a>
