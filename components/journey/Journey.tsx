@@ -1704,6 +1704,50 @@ function MobileRegisterBar() {
   );
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// FLOW STRIP — a row of boxes joined by arrows (참여 플로우, 최종 아웃풋).
+//
+// The arrows used to live INSIDE each box's own flex row: [box →][box →][box].
+// Horizontally that looks right, but stacked on a phone it puts the arrow beside
+// the box instead of between boxes — and because the arrow takes width, the two
+// boxes that carry one end up narrower than the third. Boxes in a column that
+// don't share a width read as a rendering bug, which is what this was.
+//
+// So the children are FLAT: [box, arrow, box, arrow, box]. In a column every box
+// is full width and each arrow is its own centred row; in a row from `sm` the
+// same elements line up horizontally with the arrows between them, exactly as
+// before. One glyph, rotated 90° on phones — a second glyph conditionally
+// rendered would be two things to keep in step for no gain.
+// ─────────────────────────────────────────────────────────────────────────────
+function FlowStrip<T>({
+  items,
+  render,
+  align = "stretch",
+  className = "",
+}: {
+  items: readonly T[];
+  render: (item: T, i: number) => React.ReactNode;
+  // "stretch" = boxes in a row match the tallest (the output cards carry two
+  // lines of copy); "center" = single-line pills that shouldn't grow.
+  align?: "stretch" | "center";
+  className?: string;
+}) {
+  return (
+    <div className={`flex flex-col gap-2 sm:flex-row ${align === "center" ? "sm:items-center" : "sm:items-stretch"} ${className}`}>
+      {items.map((item, i) => (
+        <Fragment key={i}>
+          <div className="w-full sm:flex-1">{render(item, i)}</div>
+          {i < items.length - 1 && (
+            <span aria-hidden className="shrink-0 self-center rotate-90 leading-none text-white/30 sm:rotate-0">
+              →
+            </span>
+          )}
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
 // Fixed bottom-right "back to top" button. Hidden near the top of the page and
 // fades in once the visitor has scrolled down ~1.5 viewports. Respects
 // prefers-reduced-motion (jumps instantly instead of smooth-scrolling).
@@ -2162,14 +2206,14 @@ export default function Journey() {
         {/* Participation flow */}
         <div className="mt-12 text-left">
           <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/70">{t(dict.benefits.flowTitle)}</p>
-          <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
-            {dict.benefits.flow.map((f, i) => (
-              <div key={i} className="flex items-center gap-2 sm:flex-1">
-                <div className="flex w-full items-center justify-center rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-3 text-center text-sm font-semibold text-white">{t(f)}</div>
-                {i < dict.benefits.flow.length - 1 && <span aria-hidden className="shrink-0 text-white/30">→</span>}
-              </div>
-            ))}
-          </div>
+          <FlowStrip
+            className="mt-4"
+            align="center"
+            items={dict.benefits.flow}
+            render={(f) => (
+              <div className="flex w-full items-center justify-center rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-3 text-center text-sm font-semibold text-white">{t(f)}</div>
+            )}
+          />
           <p className="mt-3 text-xs text-white/55">{t(dict.benefits.flowNote)}</p>
         </div>
 
@@ -2221,22 +2265,21 @@ export default function Journey() {
               <h3 className="mx-auto mt-2 max-w-3xl text-[clamp(1.05rem,2.4vw,1.5rem)] font-bold leading-snug text-white">
                 {t(dict.program.outputHeading)}
               </h3>
-              <div className="mt-5 flex flex-col gap-2 text-left sm:flex-row sm:items-stretch">
-                {dict.program.outputSteps.map((s, i) => (
-                  <div key={i} className="flex items-center gap-2 sm:flex-1">
-                    <div className="flex h-full w-full flex-col rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-3.5">
-                      <div className="flex items-center gap-2">
-                        <span aria-hidden className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-violet-400/35 bg-violet-400/10 text-[0.62rem] font-black text-violet-200">
-                          {i + 1}
-                        </span>
-                        <p className="text-sm font-bold leading-snug text-white">{t(s.title)}</p>
-                      </div>
-                      <p className="mt-2 text-xs leading-relaxed text-white/70">{t(s.body)}</p>
+              <FlowStrip
+                className="mt-5 text-left"
+                items={dict.program.outputSteps}
+                render={(st, i) => (
+                  <div className="flex h-full w-full flex-col rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-3.5">
+                    <div className="flex items-center gap-2">
+                      <span aria-hidden className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-violet-400/35 bg-violet-400/10 text-[0.62rem] font-black text-violet-200">
+                        {i + 1}
+                      </span>
+                      <p className="text-sm font-bold leading-snug text-white">{t(st.title)}</p>
                     </div>
-                    {i < dict.program.outputSteps.length - 1 && <span aria-hidden className="shrink-0 text-white/30">→</span>}
+                    <p className="mt-2 text-xs leading-relaxed text-white/70">{t(st.body)}</p>
                   </div>
-                ))}
-              </div>
+                )}
+              />
               <p className="mx-auto mt-3 max-w-3xl text-xs leading-relaxed text-white/55">{t(dict.program.outputNote)}</p>
             </div>
             {/* Two separate notes, in this order on purpose. First: how much of
