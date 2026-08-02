@@ -1732,6 +1732,38 @@ function MobileRegisterBar() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// SECTION BACKGROUND TINT — two steps, one token, nothing in between.
+//
+// INVENTORY (before this was unified), section-level tints only:
+//   #program     bg-[#0a0814]/45 + h-24 top/bottom fades
+//   #companions  bg-[#0a0814]/55 + h-20 top/bottom fades
+//   everything else (Chapter: about · join · benefits · speakers · mentoring ·
+//                    builders · faq · vision)  — no tint at all
+// Two bands, two opacities, two fade heights. Scrolling from a /45 band into an
+// untinted chapter and later into a /55 one produced three different background
+// levels, and the eye reads the third as an error rather than a rhythm.
+//
+// Now: BASE (no tint, WebGL field as-is) or BAND (this one value). 45 and 55
+// both collapse into 50 — the midpoint, so neither section moves much — and
+// every band gets the SAME fade height, so no band can announce its edge.
+// Any new section picks one of the two; a third opacity is the bug.
+const BAND_TINT = "bg-[#0a0814]/50";
+// h-24 (96px) both ends: the taller of the two previous fades. At 20px the
+// companions band's edge was still visible against the field on a wide screen.
+const BAND_FADE_TOP = "pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0814]/50 to-transparent";
+const BAND_FADE_BOTTOM = "pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0814]/50 to-transparent";
+
+/** The two fade edges of a tinted section. Always rendered as a pair. */
+function BandFades() {
+  return (
+    <>
+      <div aria-hidden className={BAND_FADE_TOP} />
+      <div aria-hidden className={BAND_FADE_BOTTOM} />
+    </>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // FLOW STRIP — a row of boxes joined by arrows (참여 플로우, 최종 아웃풋).
 //
 // The arrows used to live INSIDE each box's own flex row: [box →][box →][box].
@@ -2287,10 +2319,8 @@ export default function Journey() {
       {/* Full-width translucent program band — a dark violet tint that dims the
           WebGL field for legibility while still letting the background dots show
           through. Top & bottom fade out so it blends into the journey. */}
-      <section id="program" className="relative w-full bg-[#0a0814]/45 py-14 sm:py-20 lg:py-28">
-        {/* soft fade at top & bottom edges */}
-        <div aria-hidden className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0814]/45 to-transparent" />
-        <div aria-hidden className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0814]/45 to-transparent" />
+      <section id="program" className={`relative w-full ${BAND_TINT} py-14 sm:py-20 lg:py-28`}>
+        <BandFades />
         <div className="relative mx-auto w-full max-w-[1700px] px-6 sm:px-10">
           <div className="text-center">
             <Eyebrow>{t(dict.program.tag)}</Eyebrow>
@@ -2856,9 +2886,8 @@ export default function Journey() {
       {/* Full-width band echoing the program band's dark tint + edge fades, so
           the scrolling logo wall reads as part of the journey rather than a
           tacked-on strip. */}
-      <section id="companions" className="relative w-full bg-[#0a0814]/55 py-12 sm:py-16 lg:py-20">
-        <div aria-hidden className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#0a0814]/55 to-transparent" />
-        <div aria-hidden className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#0a0814]/55 to-transparent" />
+      <section id="companions" className={`relative w-full ${BAND_TINT} py-12 sm:py-16 lg:py-20`}>
+        <BandFades />
         <div className="relative">
           <div className="mx-auto max-w-2xl px-6 text-center">
             <h2 className="text-[clamp(1.6rem,4vw,2.5rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">

@@ -46,7 +46,9 @@ void main(){
   // Converging particles get HOTTER (brighter highlight) rather than snapping to
   // a white core — so the focus reveals itself as accumulating volumetric light
   // (via bloom on dense regions), never as an outlined bright shape.
-  float heat = clamp(vGlow * 0.5 + vPointer * 0.9 + vSpeed * 0.6 + vNear * uPortal * 0.8, 0.0, 1.0);
+  // Portal heat halved — the hue shift toward the hot highlight was the other
+  // half of "the tone changes here", separate from the brightness change.
+  float heat = clamp(vGlow * 0.5 + vPointer * 0.9 + vSpeed * 0.6 + vNear * uPortal * 0.4, 0.0, 1.0);
   vec3 col = mix(accent, highlight, heat);
 
   // only the actual crossing dissolves particles into pure light
@@ -56,7 +58,10 @@ void main(){
   col = mix(col, uFog, vDepth * 0.85 * (1.0 - uWhiteout));
 
   alpha *= (1.0 - vDepth * 0.7) * uOpacity;
-  alpha = mix(alpha, alpha * 1.6 + 0.2, vSpeed);   // trails read brighter
+  // Trails still read brighter, at about a third of the old lift: the additive
+  // +0.2 in particular put a floor under every fast particle, which is what made
+  // the lower page glow as a whole rather than sparkle.
+  alpha = mix(alpha, alpha * 1.25 + 0.06, vSpeed);
 
   // thin the convergence cluster heavily: fade out ~90% of particles as they
   // near the focus so only a sparse few stream in (keeps the motion, minimal

@@ -116,7 +116,13 @@ export class ParticleField {
       const t = Math.min(Math.max((x - a) / (b - a), 0), 1);
       return t * t * (3 - 2 * t);
     };
-    const HERO = 0.8, CONTENT = 0.3, FOOTER = 0.12;
+    // HERO is untouched (the hero's staging is deliberate). CONTENT and FOOTER
+    // move up so the ramp is a gentle settle rather than a fade-out: 0.30→0.12
+    // meant the bottom third of the page sat at 40% of the brightness of the
+    // middle, and any local variation on top of that (bloom, trails) read as a
+    // jump because the floor kept moving. 0.34→0.22 keeps the same direction
+    // with a third of the travel.
+    const HERO = 0.8, CONTENT = 0.34, FOOTER = 0.22;
     let op = HERO + (CONTENT - HERO) * ss(0.04, 0.26, scroll); // hero → content
     op += (FOOTER - op) * ss(0.6, 0.95, scroll);               // → footer
     u.uOpacity.value = op * this.intensity;

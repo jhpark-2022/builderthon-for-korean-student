@@ -83,7 +83,11 @@ class LensEffect extends Effect {
     // (<1 under reduced-motion) damps the whole space-bend so the scroll-driven
     // lensing stays gentle, not just the white-out below.
     (this.uniforms.get("uStrength") as THREE.Uniform).value =
-      (p.reveal * 0.22 + p.portal * 0.45) * intensity;
+      // Halved with the same reasoning as bloom above: `reveal` runs 0→1 across
+      // the whole page, so anything it multiplies is a slow but total change in
+      // how the field reads. Distortion still builds — just not enough to make
+      // one section look like a different backdrop from its neighbour.
+      (p.reveal * 0.12 + p.portal * 0.22) * intensity;
     // Cap + damp the white-out lift. At full scroll the focus sits over the
     // footer (CTAs + heading); a full white-out washed that text out — and this
     // pass runs even on mobile (bloom is gated, the lens is not). Keep it legible.
@@ -156,7 +160,11 @@ export class PostFX {
     if (this.bloom) {
       // bloom intensifies as particles converge / cross — volumetric light
       // emerging from density, not from a drawn glow
-      this.bloom.intensity = 0.6 + (p.portal * 0.6 + p.whiteout * 1.0) * intensity;
+      // Clamped swing. portal maxes at 0.3 (see utils/phases), so the old 0.6
+      // coefficient moved bloom 0.60 → 0.78 — a ~30% brightness change between
+      // the top of the page and the FAQ/vision stretch, which read as the
+      // background "turning on". 0.25 holds the same shape inside ±15%.
+      this.bloom.intensity = 0.6 + (p.portal * 0.25 + p.whiteout * 1.0) * intensity;
     }
   }
 

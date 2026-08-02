@@ -88,14 +88,20 @@ void main(){
 
     // Gentle gravitational drift only — greatly reduced so particles no longer
     // spiral into a tight, bright convergence ring at the bottom of the page.
-    float inward = grip * (uReveal * 1.2 + uPull * 3.0);
-    float swirl  = grip * (uReveal * 0.5 + uPortal * 2.5);
+    // Displacement magnitude feeds vSpeed, which feeds both point size and alpha —
+    // so reveal (0..1 across the whole page) was quietly making the middle of
+    // the document brighter than its ends. Trimmed so the field still organises
+    // toward the portal, with roughly two thirds of the previous travel.
+    float inward = grip * (uReveal * 0.9 + uPull * 2.2);
+    float swirl  = grip * (uReveal * 0.4 + uPortal * 1.8);
     disp += dir * inward + tangent * swirl;
   }
   pos += disp;
 
   // 4 ─ velocity-aligned trail stretch (long exposure during the pull)
-  vSpeed = clamp(length(disp) * 0.06 + uPull * 0.5, 0.0, 1.0);
+  // uPull's contribution halved: vSpeed feeds BOTH size and alpha downstream,
+  // so it was the single biggest amplifier of the lower-page brightening.
+  vSpeed = clamp(length(disp) * 0.06 + uPull * 0.25, 0.0, 1.0);
 
   // stable per-particle random for thinning the convergence cluster
   vRand = fract(aOffset * 0.1234 + aSpeed);
@@ -108,12 +114,18 @@ void main(){
 
   // size: distance attenuation, pointer glow-up, and growth as they near the portal.
   // Inflation factors dialed down so particles stay refined points, not big bokeh.
-  float size = aScale * (1.0 + infl * 1.0 + vNear * uPortal * 0.8);
+  // Growth toward the portal trimmed 0.8 → 0.35. Combined with the smaller cap
+  // below, this is what stops the near-field particles from resolving into
+  // large soft discs behind the FAQ/vision copy — they stay a glow.
+  float size = aScale * (1.0 + infl * 1.0 + vNear * uPortal * 0.35);
   // trails: enlarge points along the pull to read as streaks (cheap stand-in)
-  size *= (1.0 + vSpeed * 1.2);
+  size *= (1.0 + vSpeed * 0.6);
   // smaller base scale + a tight max clamp so a particle that drifts close to
   // the camera can never balloon into a large foreground sphere
-  gl_PointSize = min(size * uPixelRatio * (130.0 / max(zCam, 0.001)), 34.0 * uPixelRatio);
+  // Cap 34 → 22 px. At 34 the nearest particles crossed the threshold where a
+  // blurred point stops reading as light and starts reading as a circle sitting
+  // on top of the text. Everything below the cap is unchanged.
+  gl_PointSize = min(size * uPixelRatio * (130.0 / max(zCam, 0.001)), 22.0 * uPixelRatio);
 
   vGlow = aScale;
 }
