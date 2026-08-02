@@ -113,6 +113,10 @@ export interface DayMeta {
   // would read as somewhere you have to be. Set it only where a day's sessions
   // are all optional.
   selfPacedDay?: boolean;
+  // Day 7 only: the pre-submission package is due this evening. Turns on the
+  // required-deliverable box in the day modal. Copy lives in
+  // dict.program.submission — this is a switch, not content.
+  deliverableDue?: boolean;
 }
 
 // Two "Labs" across the 8 days (matches the deck):
@@ -206,10 +210,15 @@ export const days: DayMeta[] = [
     phase: LAB2,
     theme: { ko: "파이널 리허설", en: "Final Rehearsal" },
     summary: {
-      ko: "AWS 오피스(확정) 9AM–2PM · 팀당 최종 피드백 · 네트워킹 점심 · 박희덕 커리어 간담회 · FDE 오피스아워(온라인).",
-      en: "AWS office (confirmed), 9AM–2PM · per-team final feedback · networking lunch · Park Hee-deok career session · FDE office hours (online).",
+      ko: "AWS 오피스(확정) 9AM–2PM · 팀당 최종 피드백 · 네트워킹 점심 · 박희덕 커리어 간담회 · FDE 오피스아워(온라인) · 저녁: 사전 제출물 마감(필수).",
+      en: "AWS office (confirmed), 9AM–2PM · per-team final feedback · networking lunch · Park Hee-deok career session · FDE office hours (online) · Evening: submission deadline (required).",
     },
     dayMode: "offline",
+    // What the deadline actually consists of is a LIST, and a list read as a
+    // parenthetical inside an already-long day summary is the one thing nobody
+    // parses. The modal renders it as its own bordered box instead (see
+    // dict.program.submission) — this flag is what turns that box on.
+    deliverableDue: true,
   },
   {
     day: 8,
@@ -867,8 +876,8 @@ export const schedule: BEvent[] = [
     timeOfDay: "AM",
     title: { ko: "파이널 리허설 (현장)", en: "Final Rehearsal (on-site)" },
     summary: {
-      ko: "AWS 오피스 9AM–2PM · 팀당 최종 피드백과 무대 리허설.",
-      en: "AWS office, 9AM–2PM · per-team final feedback and stage rehearsal.",
+      ko: "AWS 오피스 9AM–2PM · 팀당 최종 피드백과 무대 리허설 · 저녁: 사전 제출물 마감(필수).",
+      en: "AWS office, 9AM–2PM · per-team final feedback and stage rehearsal · Evening: submission deadline (required).",
     },
     description: {
       ko: "데모데이를 하루 앞두고, AWS 오피스(확정)에서 9AM–2PM 진행하는 현장 파이널 리허설입니다. 09:00–11:30 팀당 최종 피드백으로 최종 발표를 준비하고 무대를 리허설하며 데모의 흐름과 예상 질문을 다듬은 뒤, 11:30–12:30 네트워킹·점심으로 이어집니다. Day 5에 이은 두 번째 현장 집결이자, 새 장소인 AWS 오피스에서 열립니다. 팝업스튜디오 FDE의 온라인 오피스아워는 오늘까지 이어집니다.",

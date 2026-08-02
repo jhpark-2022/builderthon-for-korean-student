@@ -855,6 +855,110 @@ export const dict = {
         },
       },
     ],
+    // ── 사전 제출물 (Day 7 저녁 마감) ──────────────────────────────────────
+    // outputSteps says WHAT a team is arguing; this says what physically has to
+    // be uploaded, by when, and what happens if it isn't. It is deliberately a
+    // BOX and not a sentence in the Day 7 summary: it's a checklist, and a
+    // checklist folded into prose inside an already-long day line is the thing
+    // nobody reads. Rendered in the day modal, gated on
+    // days[].deliverableDue in data/schedule.ts.
+    //
+    // The consequence line is the whole reason the box exists. Teams treat a
+    // deadline with no stated cost as a soft one; the real cost here isn't a
+    // penalty we invented, it's mechanical — judges read the package beforehand,
+    // so no package means being judged cold on stage. Say that, not "감점".
+    submission: {
+      tag: { ko: "사전 제출물", en: "Submission package" },
+      mustBadge: { ko: "필수", en: "Required" },
+      heading: {
+        ko: "Day 7 저녁 마감 — 네 가지를 올립니다",
+        en: "Due Day 7 evening — four things to upload",
+      },
+      items: [
+        {
+          ko: "데모 영상 1–2분 — 실제 입력→처리→출력 화면",
+          en: "1–2 min demo video — real input → processing → output on screen",
+        },
+        {
+          ko: "문제 정의 카드 — 병목 한 문장 + 근거 숫자·출처 + 풀지 않은 것 + 성공의 정의",
+          en: "Problem-definition card — the bottleneck in one sentence, evidence numbers and their source, what you didn't solve, your definition of success",
+        },
+        {
+          ko: "설계요약 1장 — 담당자가 믿게 만드는 장치와 오판 대응",
+          en: "One-page design summary — what makes the owner trust it, and what happens when it's wrong",
+        },
+        {
+          ko: "베이스라인 비교 컷 1장 + 레포·배포 링크",
+          en: "One baseline comparison shot + repo / deployment links",
+        },
+      ],
+      warning: {
+        ko: "내지 않으면 감점이 아니라, 심사위원분들의 사전 리뷰 없이 데모데이 당일 무대에서만 심사됩니다 — 사전 지식이 전혀 없는 상태로요.",
+        en: "Miss it and there's no penalty as such — but judges arrive without having reviewed anything, so you're judged on the stage slot alone, cold.",
+      },
+    },
+    // ── 체크인 폼 3종 ─────────────────────────────────────────────────────
+    // Sits AFTER the eight day cards on purpose: the reader has just seen Day 4,
+    // 6 and 7 go past, so "a form lands that evening" attaches to a day they
+    // already have in their head. Above the cards it would be three more boxes
+    // to parse before the programme itself.
+    //
+    // Roles only — NOT the question list. The forms' actual job is operational
+    // (drift detection, unblocking, stage logistics); publishing all 31 questions
+    // here would turn a landing page into a document and would go stale the
+    // moment the forms are edited. Each card answers only: when does it arrive,
+    // how long does it take, what is it FOR.
+    //
+    // The bonus line carries no numbers, same contract as the judging FAQ — the
+    // weights live only in the score sheet, which is internal and not published.
+    checkins: {
+      tag: { ko: "체크인 폼", en: "Check-in forms" },
+      heading: {
+        ko: "8일 동안 폼은 세 번 옵니다",
+        en: "Three forms across the eight days",
+      },
+      intro: {
+        ko: "같은 설문을 세 번 받는 게 아니라, 질문이 ‘생각’에서 ‘증빙’으로 옮겨갑니다. 앞 폼에 쓴 답이 다음 폼에 이월돼서, 같은 걸 두 번 쓰는 게 아니라 v1을 최종본으로 다듬게 돼요.",
+        en: "It isn't the same survey three times — the questions move from what you're thinking to what you can show. Each form carries your previous answers forward, so you're not writing it twice; you're sharpening a v1 into the final.",
+      },
+      forms: [
+        {
+          id: "f1",
+          when: { ko: "Day 4 저녁 발송", en: "Sent Day 4 evening" },
+          duration: { ko: "5분", en: "5 min" },
+          title: { ko: "중간 체크인", en: "Mid-point check-in" },
+          body: {
+            ko: "무엇을 풀기로 했는지 한 문장으로 고정하고, 막힌 팀을 Day 5–7 오피스아워로 연결합니다.",
+            en: "Pins down what you've decided to solve in one sentence, and routes stuck teams into the Day 5–7 office hours.",
+          },
+        },
+        {
+          id: "f2",
+          when: { ko: "Day 6 저녁 발송", en: "Sent Day 6 evening" },
+          duration: { ko: "2분", en: "2 min" },
+          title: { ko: "제출 D-1 체크인", en: "Submission D-1 check-in" },
+          body: {
+            ko: "내일 마감까지 남은 위험 요소를 짚고, 아직 안 풀린 막힘을 운영진이 바로 붙습니다.",
+            en: "Surfaces what could still go wrong before tomorrow's deadline, so the organisers can step in on anything still blocking you.",
+          },
+        },
+        {
+          id: "f3",
+          when: { ko: "Day 7 저녁 마감", en: "Due Day 7 evening" },
+          duration: { ko: "15분", en: "15 min" },
+          title: { ko: "최종 제출 폼", en: "Final submission form" },
+          body: {
+            ko: "사전 제출물이 실제로 올라가는 곳이자, 데모데이 무대 운영(발표자·장비·동의)을 함께 받는 폼입니다. 무엇을 내는지는 Day 7 카드에 있어요.",
+            en: "Where the submission package actually gets uploaded — and where Demo Day stage logistics (presenter, equipment, consent) are collected. What's in the package is on the Day 7 card.",
+          },
+        },
+      ],
+      bonusLabel: { ko: "참여 가산점", en: "Participation counts" },
+      bonus: {
+        ko: "세 폼의 응답과 오피스아워 참여는 심사에서 과정 가산점으로 반영됩니다 — 잘 쓴 답이 아니라, 과정을 남겼는지를 봅니다.",
+        en: "Responding to the three forms and showing up to office hours count as process credit in judging — not for writing good answers, but for leaving a trail of the process.",
+      },
+    },
     // Second sentence is the one that changes behaviour: teams assume a hidden
     // correct answer and try to guess it. The company does have one; what it
     // wants is the approach that isn't on it.
@@ -1927,8 +2031,11 @@ export const dict = {
       {
         q: { ko: "문과인데 이과생들에게 밀리지 않을까요?", en: "I'm not from a STEM major — will I fall behind?" },
         a: {
-          ko: "아니요 — 코드 실력을 겨루는 대회가 아닙니다. 심사 배점의 75%가 문제 이해(20)·아이디어(25)·데모와 아이디어의 정합(30)이고, 프로토타입은 와이어프레임 수준이어도 됩니다. 산업 맥락을 아는 사람이 오히려 유리한 구조이고, 코딩 기본기는 Day 2 크래시코스에서 맞춰 드립니다.",
-          en: "No — this isn't a contest of coding ability. 75% of the rubric is problem understanding (20), the idea itself (25) and how well the demo matches that idea (30), and a wireframe-level prototype is fine. The structure actually favours people who understand the industry context, and the Day 2 Crash Course levels the coding basics for everyone.",
+          // 배점 숫자는 여기에도 쓰지 않습니다 — 아래 "심사는 어떻게 하나요?" 답변과
+          // 같은 계약: 숫자는 심사표 PDF·덱 GRADING 슬라이드에만 존재하고 둘 다
+          // 내부 문서라 공개하지 않습니다. 여기서는 무게가 실리는 '방향'만 말할 것.
+          ko: "아니요 — 코드 실력을 겨루는 대회가 아닙니다. 심사의 무게는 코드가 아니라 문제를 얼마나 정확히 이해했는가, 그 위에 세운 아이디어가 적절한가, 데모가 그 아이디어를 실제로 증명하는가에 실려 있어요. 프로토타입은 와이어프레임 수준이어도 되고, 화면의 세련됨은 채점하지 않습니다. 산업 맥락을 아는 사람이 오히려 유리한 구조이고, 코딩 기본기는 Day 2 크래시코스에서 맞춰 드립니다.",
+          en: "No — this isn't a contest of coding ability. The weight sits on how accurately you understand the problem, whether the idea you build on it is the right one, and whether the demo actually proves that idea — not on the code. A wireframe-level prototype is fine, and visual polish isn't graded. The structure actually favours people who understand the industry context, and the Day 2 Crash Course levels the coding basics for everyone.",
         },
       },
       {
@@ -2020,15 +2127,59 @@ export const dict = {
       },
       {
         q: { ko: "심사는 어떻게 하나요? 기술이 완벽해야 하나요?", en: "How is judging done? Does it need to be technically polished?" },
+        // DELIBERATELY ROUGH (updated 2026-08-02). The itemised rubric is NOT
+        // public. Fuller guidance on what judging looks for goes to the open chat
+        // room as a reason to be in it — but the score sheet itself is INTERNAL
+        // and is never published, so nothing here or in aOpenChat may promise the
+        // document or its per-axis weights. This answer says the SHAPE of what
+        // matters — process over polish, evidence over ambition — and stops.
+        //
+        // It previously listed five checkable axes; that is exactly the content
+        // being held back, so do not restore it, and do not re-add numbers (they
+        // live only in the judge score sheet PDF at Execution/Problem Statement/
+        // 빌더톤_심사표_ScoreSheet.pdf and the deck GRADING slide — both internal).
+        //
+        // What DOES stay public is the not-graded list. It isn't a criterion
+        // anyone can game — it's the reassurance that gets a nervous
+        // non-developer to register, and hiding it would cost sign-ups for
+        // nothing. Same reason the three-part deliverable framing stays in
+        // dict.program.outputSteps and the upload checklist in
+        // dict.program.submission: those tell you what to DO, not how you score.
         a: {
-          // Opens with the deliverable, not the scoring: someone asking how judging
-          // works is really asking what they have to hand in. The three parts are
-          // the same ones dict.program.outputSteps names, in the same order, and
-          // the weightings that follow are what each part is worth — so the answer
-          // reads as one sentence rather than a rubric arriving out of nowhere.
-          // The numbers (20/25/30/15/10) are fixed elsewhere too; do not touch.
-          ko: "제출물의 뼈대는 ① 워크플로우 이해 ② 병목 진단과 AI 해법 아이디어 ③ 이를 뒷받침하는 데모입니다 — 기술 완성도는 심사 기준이 아닙니다. 보는 것은 ‘회사·문제 이해 → 아이디어 → 데모의 정합성’이고, 배점은 회사·문제 이해도 20 · 아이디어의 적절성 25 · 데모↔아이디어 정합 30 · 도입 가능성 15 · 발표·전달 10 — 이해+아이디어+정합이 75%를 차지합니다. 프로토타입은 프론트엔드 와이어프레임 수준이어도 괜찮고, 목업·슬라이드만이면 감점됩니다. 배점은 심사위원님·파트너사 합의로 조정될 수 있습니다. 심사는 실제 산업에서 문제를 풀어온 현업 리더분들이 직접 합니다(심사위원 섹션 참조).",
-          en: "What you hand in has three parts: (1) your reading of the workflow, (2) your diagnosis of the bottleneck and the AI fix for it, and (3) a demo that backs the idea up — technical polish is not a judging criterion. What we look at is the coherence of ‘understanding the company & problem → idea → demo’, scored as: company/problem understanding 20 · appropriateness of the idea 25 · demo ↔ idea alignment 30 · adoption feasibility 15 · delivery 10 — understanding + idea + alignment make up 75%. A front-end wireframe-level prototype is fine; mockups or slides alone lose points. Weightings may be adjusted by agreement among judges and partners. Judging is done first-hand by leaders who have solved these problems in industry (see the judges section).",
+          ko: "기술 완성도는 심사 기준이 아닙니다. 크게 보면 무게는 결과물의 완성도가 아니라 거기까지 간 과정에 실려 있어요 — 문제를 감이 아니라 근거로 골랐는지, 그리고 그게 실제로 돌아가는지.",
+          en: "Technical polish is not a judging criterion. Broadly, the weight sits on the process rather than the finish — whether you chose the problem from evidence rather than instinct, and whether the thing actually runs.",
+        },
+        aGroups: [
+          {
+            label: { ko: "채점하지 않는 것", en: "What is not graded" },
+            items: [
+              { ko: "발표력 · 영어 · 화면의 세련됨", en: "Delivery · English · visual polish" },
+              {
+                ko: "무대에서 데모가 터지는 것 — 작동 판정은 사전 제출 영상 기준입니다",
+                en: "A demo failing live — running is judged on the submitted video",
+              },
+              {
+                ko: "팀에 개발자가 몇 명인지 · 어떤 전공인지",
+                en: "How many developers are on your team, or what you studied",
+              },
+            ],
+          },
+        ],
+        // The withheld-detail line. Phrased as an offer, not a wall: it says more
+        // detail exists and that being in the room is how you get it.
+        //
+        // Promises GUIDANCE, not a document and not numbers. The score sheet is
+        // internal and is not published — so neither "심사표 원본" nor "축별 배점"
+        // may be offered here, in either language. Anything that reads as "the
+        // rubric drops in the chat" is a promise the organisers would have to
+        // break. Keep it to what judging looks for.
+        aOpenChat: {
+          ko: "심사에서 뭘 더 보는지는 오픈채팅방에서 먼저 풀어요 — 준비하면서 참고할 만한 것들부터요.",
+          en: "We go into more of what judging looks for in the open chat first — starting with what's useful while you're still building.",
+        },
+        aTail: {
+          ko: "체크인 폼 응답과 오피스아워 참여는 과정 가산점으로 반영돼요. 심사는 실제 산업에서 문제를 풀어온 현업 리더분들이 직접 합니다(심사위원 섹션 참조).",
+          en: "Responding to the check-in forms and using the office hours count as process credit. Judging is done first-hand by leaders who have solved these problems in industry (see the judges section).",
         },
       },
     ],

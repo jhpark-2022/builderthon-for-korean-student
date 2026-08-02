@@ -1175,6 +1175,7 @@ function DayModal({
               </div>
               <h3 id="day-modal-title" className="mt-5 text-[24px] font-bold leading-tight text-white sm:text-[30px]">{t(day.theme)}</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/70">{t(day.summary)}</p>
+              {day.deliverableDue && <SubmissionBox t={t} />}
               <div className="mt-6 grid gap-3">
                 {evs.map((ev) => (
                   <EventCard key={ev.id} ev={ev} t={t} onSelect={onSelectEvent} />
@@ -1187,6 +1188,44 @@ function DayModal({
       )}
     </AnimatePresence>,
     document.body
+  );
+}
+
+// The Day 7 required-deliverable box. Rose, matching the 필참 badge — this page
+// already uses rose for "you don't get to skip this", and inventing a second
+// required-colour would make one of them look softer than it is.
+//
+// Sits directly under the day summary, ABOVE the session cards: it isn't a
+// session (there's nowhere to turn up to), and putting it below the cards would
+// bury the one thing on Day 7 with a hard consequence.
+function SubmissionBox({ t }: { t: Tfn }) {
+  const s = dict.program.submission;
+  return (
+    <div className="mt-5 rounded-2xl border border-rose-400/25 bg-rose-400/[0.07] px-5 py-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/35 bg-rose-400/12 px-2.5 py-1 text-[0.68rem] font-bold text-rose-100">
+          <span aria-hidden>★</span>{t(s.mustBadge)}
+        </span>
+        <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-rose-200/80">{t(s.tag)}</span>
+      </div>
+      <p className="mt-2.5 break-keep text-sm font-bold leading-snug text-white">{t(s.heading)}</p>
+      <ul className="mt-3 space-y-2">
+        {s.items.map((item, i) => (
+          <li key={i} className="flex gap-2.5 text-xs leading-relaxed text-rose-50/85">
+            <span
+              aria-hidden
+              className="mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-rose-300/30 bg-rose-400/10 text-[0.58rem] font-black text-rose-100"
+            >
+              {i + 1}
+            </span>
+            <span className="break-keep">{t(item)}</span>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-3.5 break-keep border-t border-rose-300/15 pt-3 text-xs leading-relaxed text-rose-100/75">
+        {t(s.warning)}
+      </p>
+    </div>
   );
 }
 
@@ -2430,6 +2469,48 @@ export default function Journey() {
             ))}
           </div>
 
+          {/* ── 체크인 폼 3종 ───────────────────────────────────────────────
+              Placed AFTER the eight cards, not before: "a form lands on Day 4
+              evening" only means something once Day 4 has gone past the reader's
+              eye. Same FlowStrip grammar as the output steps — three boxes joined
+              by → — because this is also a sequence, and the arrows carry the
+              "questions move from thinking to evidence" claim without a sentence.
+              Roles only; the question lists themselves stay in the forms. */}
+          <div className="mx-auto mt-12 max-w-5xl text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-violet-300">{t(dict.program.checkins.tag)}</p>
+            <h3 className="mx-auto mt-2 max-w-3xl text-[clamp(1.05rem,2.4vw,1.5rem)] font-bold leading-snug text-white">
+              {t(dict.program.checkins.heading)}
+            </h3>
+            <p className="mx-auto mt-3 max-w-3xl break-keep text-xs leading-relaxed text-white/60">
+              {t(dict.program.checkins.intro)}
+            </p>
+            <FlowStrip
+              className="mt-5 text-left"
+              items={dict.program.checkins.forms}
+              render={(f) => (
+                <div className="flex h-full w-full flex-col rounded-xl border border-white/12 bg-white/[0.04] px-4 py-3.5">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="rounded-full border border-violet-400/25 bg-violet-500/12 px-2 py-0.5 text-[0.62rem] font-bold text-violet-200">
+                      {t(f.when)}
+                    </span>
+                    <span className="text-[0.62rem] font-semibold text-white/45">{t(f.duration)}</span>
+                  </div>
+                  <p className="mt-2 text-sm font-bold leading-snug text-white">{t(f.title)}</p>
+                  <p className="mt-1.5 break-keep text-xs leading-relaxed text-white/70">{t(f.body)}</p>
+                </div>
+              )}
+            />
+            {/* Emerald, not violet: this is the one line here that is an upside
+                rather than an instruction, and it should not read as a fourth box. */}
+            <div className="mx-auto mt-4 max-w-3xl rounded-xl border border-emerald-400/20 bg-emerald-400/[0.06] px-4 py-3 text-left">
+              <p className="break-keep text-xs leading-relaxed text-emerald-50/85">
+                <span className="font-bold text-emerald-200">{t(dict.program.checkins.bonusLabel)}</span>
+                {" — "}
+                {t(dict.program.checkins.bonus)}
+              </p>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -3137,7 +3218,61 @@ function FAQList() {
             <AnimatePresence initial={false}>
               {isOpen && (
                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: reduce ? 0 : 0.28, ease: [0.22,1,0.36,1] }} className="overflow-hidden">
-                  <p className="pb-5 pr-8 text-sm leading-relaxed text-white/70">{t(item.a)}</p>
+                  {/* Most answers are a single paragraph and stay one. An item may
+                      opt into structure (aGroups / aTail) when its answer contains
+                      lists someone LOOKS UP rather than reads — the judging answer
+                      does, and as prose it read as a wall. `a` becomes the lead in
+                      that case; the shape is otherwise unchanged. */}
+                  <div className="pb-5 pr-8">
+                    <p className="text-sm leading-relaxed text-white/70">{t(item.a)}</p>
+                    {/* items-start, not stretch: groups rarely hold the same
+                        number of rows, and a box padded out with dead space to
+                        match its neighbour reads as a missing item. Two columns
+                        only when there are two boxes to fill them — a lone group
+                        in a half-width column looks like its pair failed to load. */}
+                    {"aGroups" in item && item.aGroups && (
+                      <div className={`mt-4 grid items-start gap-4 ${item.aGroups.length > 1 ? "sm:grid-cols-2" : ""}`}>
+                        {item.aGroups.map((g, gi) => (
+                          <div key={gi} className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5">
+                            <p className="text-[0.7rem] font-bold uppercase tracking-[0.12em] text-violet-200/90">
+                              {t(g.label)}
+                            </p>
+                            <ul className="mt-2.5 space-y-1.5">
+                              {g.items.map((x, xi) => (
+                                <li key={xi} className="flex gap-2 text-[0.8rem] leading-relaxed text-white/70">
+                                  <span aria-hidden className="mt-[0.45em] h-1 w-1 shrink-0 rounded-full bg-violet-300/60" />
+                                  <span className="break-keep">{t(x)}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {/* Withheld detail → the open chat. Amber, and the only
+                        coloured thing in an answer: it is an offer, and it has to
+                        out-rank the grey tail line under it or the reader stops
+                        at "criteria not published" and never sees where they are.
+                        Sits ABOVE the tail for the same reason. */}
+                    {"aOpenChat" in item && item.aOpenChat && links.openChat && (
+                      <a
+                        href={links.openChat}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => track("openchat_click", { src: "faq_judging" })}
+                        className="group mt-4 flex items-start gap-2.5 rounded-xl border border-amber-400/25 bg-amber-400/[0.07] px-4 py-3 transition hover:border-amber-300/45 hover:bg-amber-400/[0.12]"
+                      >
+                        <ChatGlyph className="mt-0.5 h-4 w-4 shrink-0 text-amber-200" />
+                        <span className="break-keep text-xs leading-relaxed text-amber-50/90">
+                          {t(item.aOpenChat)}
+                          <span aria-hidden className="ml-1.5 text-amber-200/70 transition group-hover:text-amber-100">→</span>
+                        </span>
+                      </a>
+                    )}
+                    {"aTail" in item && item.aTail && (
+                      <p className="mt-4 text-xs leading-relaxed text-white/55">{t(item.aTail)}</p>
+                    )}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
