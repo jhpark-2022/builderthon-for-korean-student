@@ -2628,7 +2628,12 @@ export default function Journey() {
                     <p className="break-keep text-[15px] font-bold text-white">{t(g.title)}</p>
                     <p className="break-keep text-xs text-emerald-100/70">{t(g.theme)}</p>
                   </div>
-                  <p className="mt-2 max-w-3xl break-keep text-xs leading-relaxed text-white/70">{t(g.sub)}</p>
+                  {/* No max-width. The partner panel and the mentor grid below
+                      both span the full box, so a capped paragraph stopped
+                      two-thirds of the way across and read as a ragged column
+                      floating inside a wider card. These blurbs are three
+                      sentences now, so the cap was visible on every line. */}
+                  <p className="mt-2 break-keep text-xs leading-relaxed text-white/70">{t(g.sub)}</p>
 
                   {/* Partner logos. The label above them is not decoration: most of
                       the cards below belong to other companies (REmited · YMX ·

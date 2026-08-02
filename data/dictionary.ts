@@ -1388,9 +1388,21 @@ export const dict = {
         dayRange: { ko: "Day 3–6", en: "Day 3–6" },
         title: { ko: "빌드 멘토링", en: "Build mentoring" },
         theme: { ko: "만들 때 돕는 사람들", en: "The people who help you build" },
+        // Two-verb contract (2026-08-02): stage 1 = help them BUILD the thing
+        // (scope, evidence, unblock — direction can still change), stage 3 = help
+        // them PROVE it (5-min structure, judges' questions, final submission
+        // check — direction is frozen). Keep the verbs distinct; do not let
+        // build-stage advice language leak into the Day 7 blurb or vice versa.
+        //
+        // NO PEER/AGE CLAIM (2026-08-03). This said "또래 창업가·주니어 엔지니어"
+        // and the cards below contradict it: 김종현 is 16년+ in digital forensics
+        // and a KITRI BoB mentor, and three of the six are founders/CEO/CTO. The
+        // group's shared trait is having shipped product, not being the same age
+        // as the students — describe them by that. Re-check this line whenever a
+        // stage-1 mentor is added.
         sub: {
-          ko: "한때 우리와 같았던 또래 창업가·주니어 엔지니어와 아이디어를 형태로 만들고, 빌드가 막히면 현업 엔지니어와 함께 풉니다.",
-          en: "Shape the idea with peer founders and early-career engineers who were once where you are — then unjam the build with working engineers.",
+          ko: "아직 방향을 바꿀 수 있는 구간의 멘토링입니다. 제품을 직접 만들어 온 창업가·현업 엔지니어와 — 여러 병목 중 하나를 고르고, 버릴 것을 정하고, 그 선택을 제공 데이터로 뒷받침합니다. 정답을 주는 자리가 아니라 같은 문제를 놓고 ‘나라면 이렇게 했을 수도’를 나누는 자리이고, 빌드가 막히면 팝업스튜디오 엔지니어(FDE 오피스아워)와 함께 풀어요.",
+          en: "This is mentoring while the direction can still change. With founders and working engineers who have built and shipped products themselves — you pick one bottleneck, decide what NOT to solve, and back that choice with the provided data. It's not an answer-giving session but a ‘here's how I might have done it’ conversation over the same problem — and when the build gets stuck, Popup Studio's engineers (FDE office hours) work through it with you.",
         },
         // "메인 멘토링 파트너" is load-bearing, not decoration: most of the cards
         // in this box are NOT Onword people (REmited · YMX · T3Q · NTU), and two
@@ -1447,9 +1459,14 @@ export const dict = {
         // up: it now also holds an AI-education platform's founders (이동훈 · 황현진)
         // and a studio head (정요천). What they share isn't a job title, it's that
         // they sell something for a living — say that instead of listing one role.
+        // Two-verb contract (2026-08-02): stage 1 = help them BUILD the thing
+        // (scope, evidence, unblock — direction can still change), stage 3 = help
+        // them PROVE it (5-min structure, judges' questions, final submission
+        // check — direction is frozen). Keep the verbs distinct; do not let
+        // build-stage advice language leak into the Day 7 blurb or vice versa.
         sub: {
-          ko: "데모데이 전, 기술이 아니라 ‘어떻게 파는가’를 다듬습니다 — AWS의 GTM·세일즈 시니어를 비롯해, 현업에서 제품을 직접 파는 사람들과 함께.",
-          en: "Pre–demo day: sharpening how to sell it, not how to build it — with senior GTM and sales people from AWS, and others who sell a product for a living.",
+          ko: "빌드는 끝났고, 남은 것은 증명입니다. 데모데이 전날 — AWS의 GTM·세일즈 시니어를 비롯해 현업에서 제품을 직접 파는 사람들과 — 5분 안에 ‘어떤 병목을 왜 골랐고, 근거는 무엇이고, 실제로 돌아가는가’가 서는지 점검하고, 심사위원이 던질 질문(“프롬프트 한 줄로 한 것과 뭐가 다르죠?”)을 미리 받아봅니다. 그날 저녁 마감되는 사전 제출물의 마지막 점검 자리이기도 해요.",
+          en: "The build is done; what's left is the proof. The day before Demo Day — with AWS GTM & sales seniors and people who sell products for a living — you pressure-test whether ‘which bottleneck, why, on what evidence, and does it actually run’ stands up in five minutes, and field the questions judges will ask (“how is this different from a one-line prompt?”). It's also the last check before the submission package closes that evening.",
         },
         // No partner logos here on purpose. AWS is where several of these mentors
         // work, and it sponsors the Day 7 venue — but it has never been named a
