@@ -1045,11 +1045,18 @@ export const dict = {
     // room you log into at a set hour. There is no hour and no room — teams
     // build whenever they like. The data keeps its Mode value; only the display
     // changes, so nothing downstream of `mode` has to know about this.
-    selfPacedLabel: { ko: "자유 진행", en: "Your own pace" },
+    // ONE NAME FOR ONE THING (2026-08-03). This used to read 자유 진행 here,
+    // 자율 진행 two keys down, 자율 빌드 on Day 3·4 and 오픈 빌드 on Day 6 — four
+    // Korean words and five English ones for the same non-event, which made
+    // three identical days look like three different regimes. Canonical now:
+    //   activity = 자율 빌드 / self-paced build
+    //   badge    = 자율 진행 / Self-paced
+    // Keep the 자율 root. Do not reintroduce 자유 진행 or 오픈 빌드.
+    selfPacedLabel: { ko: "자율 진행", en: "Self-paced" },
     // The event modal's "진행 방식" row, where there's space to say why.
     selfPacedMode: {
-      ko: "자유 진행 · 정해진 시간·접속 없음",
-      en: "Your own pace · no set time, nothing to join",
+      ko: "자율 진행 · 정해진 시간·접속 없음",
+      en: "Self-paced · no set time, nothing to join",
     },
     // Replaces the "N 세션" count on a day whose events are ALL self-paced —
     // counting sessions on a day with no sessions is the same misread again.
@@ -1057,8 +1064,8 @@ export const dict = {
     // Replaces the whole session card for self-paced build. Non-interactive on
     // purpose — there is nothing to open, because there is nothing to attend.
     selfPacedNote: {
-      ko: "정해진 세션 없이, 팀별로 편한 시간에 빌드를 이어갑니다 — 출석·접속 없음",
-      en: "No scheduled session — teams just keep building whenever suits them. Nothing to attend or join.",
+      ko: "자율 빌드 — 정해진 세션도, 출석도, 접속도 없습니다. 팀이 각자 비는 시간에 원하는 만큼만 이어가면 돼요.",
+      en: "Self-paced build — no scheduled session, no attendance, nothing to join. Teams pick it up in whatever free time they have, for as long as they want.",
     },
     // A day whose only entries are self-paced: there is no session to count.
     noSessions: { ko: "정해진 세션 없음", en: "No scheduled sessions" },

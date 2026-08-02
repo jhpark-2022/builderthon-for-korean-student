@@ -106,7 +106,7 @@ export interface DayMeta {
   //             will want it.
   dayMode: "online" | "offline" | "pending" | "mixed";
   mandatory?: boolean; // 필참 — required attendance (Day 1 & Day 8)
-  // Force the "자유 진행 / Your own pace" day badge on. Normally that badge is
+  // Force the "자율 진행 / Self-paced" day badge on. Normally that badge is
   // inferred (a day with self-paced build and no real sessions), but Day 6 now
   // carries the FDE office hour — an OPTIONAL drop-in, which doesn't make the
   // day scheduled. Without this the badge would flip to "온라인" and the day
@@ -158,10 +158,13 @@ export const days: DayMeta[] = [
     date: "08.24",
     weekday: { ko: "월", en: "Mon" },
     phase: LAB1,
-    theme: { ko: "자율 빌드 · 멘토링", en: "Self-build · Mentoring" },
+    theme: { ko: "자율 빌드 · 멘토링", en: "Self-paced build · Mentoring" },
+    // Leads with "정해진 일정은 …뿐" rather than the task list. The old version
+    // opened with what teams should get done, which reads as assigned work on a
+    // day whose only fixed item is an optional 1:1 slot.
     summary: {
-      ko: "자율 빌드는 각자 자유롭게 — 팀 단위로 방향 설정·문제 해결 착수 · 오후 1:1 멘토링(온라인 기본) · OpenAI Codex 워크샵 조율 중.",
-      en: "Self-build at your own pace — teams set direction and start solving · PM 1:1 mentoring (online by default) · OpenAI Codex workshop TBC.",
+      ko: "정해진 일정은 오후 1:1 멘토링(온라인 기본)뿐 — 나머지는 각자 비는 시간에 원하는 만큼 빌드하면 됩니다. OpenAI Codex 워크샵 조율 중.",
+      en: "The only fixed thing is a PM 1:1 mentoring slot (online by default) — the rest is yours to build in whatever free time you have. OpenAI Codex workshop TBC.",
     },
     dayMode: "online",
   },
@@ -170,10 +173,10 @@ export const days: DayMeta[] = [
     date: "08.25",
     weekday: { ko: "화", en: "Tue" },
     phase: LAB1,
-    theme: { ko: "자율 빌드 · 멘토링", en: "Self-build · Mentoring" },
+    theme: { ko: "자율 빌드 · 멘토링", en: "Self-paced build · Mentoring" },
     summary: {
-      ko: "자율 빌드는 각자 자유롭게 — 프로토타입 완성도 높이기 · 오후 1:1 멘토링(온라인 기본)으로 점검·진전.",
-      en: "Self-build at your own pace — build the prototype and raise its completeness · PM 1:1 mentoring (online by default) to review and push it forward.",
+      ko: "정해진 일정은 오후 1:1 멘토링(온라인 기본)뿐 — 나머지는 각자 비는 시간에 원하는 만큼 빌드하면 됩니다.",
+      en: "The only fixed thing is a PM 1:1 mentoring slot (online by default) — the rest is yours to build in whatever free time you have.",
     },
     dayMode: "online",
   },
@@ -194,10 +197,10 @@ export const days: DayMeta[] = [
     date: "08.27",
     weekday: { ko: "목", en: "Thu" },
     phase: LAB2,
-    theme: { ko: "오픈 빌드", en: "Open Build" },
+    theme: { ko: "자율 빌드", en: "Self-paced build" },
     summary: {
-      ko: "필수 일정이 없는 날 — 각자 편한 시간에 팀 빌드를 이어가고, 필요하면 FDE 오피스아워(온라인)에 드롭인하세요.",
-      en: "Nothing required today — keep building on your own time, and drop in to the FDE office hours (online) if you want them.",
+      ko: "정해진 일정이 하나도 없는 날 — 각자 비는 시간에 원하는 만큼 빌드하면 됩니다. 필요하면 FDE 오피스아워(온라인)에 드롭인하세요.",
+      en: "Nothing fixed at all today — build in whatever free time you have, for as long as you want. Drop in to the FDE office hours (online) if you need them.",
     },
     dayMode: "online",
     // The FDE office hour is a drop-in, so the day is still free-form.
@@ -634,7 +637,7 @@ export const schedule: BEvent[] = [
   // points at registration + Day 1, not at this day.
   // Do not re-add a briefing slot here: Day 1 is where the problem work happens.
 
-  // ─── DAY 3 · Self-build · Mentoring (08.24) ─────────────────────────────────
+  // ─── DAY 3 · Self-paced build · Mentoring (08.24) ─────────────────────────────────
   {
     id: "d3-self-build",
     day: 3,
@@ -643,14 +646,14 @@ export const schedule: BEvent[] = [
     selfPaced: true,
     mode: "online",
     timeOfDay: "AM",
-    title: { ko: "자율 빌드", en: "Self-led Build" },
+    title: { ko: "자율 빌드", en: "Self-paced build" },
     summary: {
       ko: "팀 단위로 방향을 정하고 문제 해결에 착수합니다.",
       en: "Teams set direction and start solving the problem.",
     },
     description: {
       ko: "팀이 스스로 방향을 설정하고 문제 해결에 착수하는 자율 빌드 시간입니다. 공개된 AX 과제를 어떻게 풀지 정하고, 첫 구현으로 들어갑니다. 정해진 시간도, 접속해야 할 곳도 없습니다 — 운영진이 여는 세션이 아니라 팀이 각자 편한 때에 진행하는 시간입니다.",
-      en: "Self-directed build time where teams set their own direction and start solving the problem — deciding how to tackle the released AX problem and moving into a first implementation. There is no set time and nothing to join: this is team-led time you take whenever suits you, not a hosted session.",
+      en: "Self-paced build time where teams set their own direction and start solving the problem — deciding how to tackle the released AX problem and moving into a first implementation. There is no set time and nothing to join: this is team-led time you take whenever suits you, not a hosted session.",
     },
     location: ONLINE,
   },
@@ -703,7 +706,7 @@ export const schedule: BEvent[] = [
     // Day 8), and 김종현 the Day 3·4 round — hence 9인 / "nine" above.
   },
 
-  // ─── DAY 4 · Self-build · Mentoring (08.25) ─────────────────────────────────
+  // ─── DAY 4 · Self-paced build · Mentoring (08.25) ─────────────────────────────────
   {
     id: "d4-self-build",
     day: 4,
@@ -712,14 +715,14 @@ export const schedule: BEvent[] = [
     selfPaced: true,
     mode: "online",
     timeOfDay: "AM",
-    title: { ko: "자율 빌드", en: "Self-led Build" },
+    title: { ko: "자율 빌드", en: "Self-paced build" },
     summary: {
       ko: "프로토타입을 빌드하고 완성도를 높입니다.",
       en: "Build the prototype and raise its completeness.",
     },
     description: {
       ko: "전날 잡은 방향 위에서 프로토타입을 실제로 빌드하고 완성도를 끌어올리는 자율 빌드 시간입니다. 핵심 흐름이 작동하게 만들고, 부족한 부분을 채워가며 데모데이를 향한 토대를 다집니다. 정해진 시간도, 접속해야 할 곳도 없습니다.",
-      en: "Self-led build time to actually build the prototype and raise its completeness on top of the direction set the day before — getting the core flow working and filling the gaps that lay the foundation toward Demo Day. There is no set time and nothing to join.",
+      en: "Self-paced build time to actually build the prototype and raise its completeness on top of the direction set the day before — getting the core flow working and filling the gaps that lay the foundation toward Demo Day. There is no set time and nothing to join.",
     },
     location: ONLINE,
   },
@@ -843,7 +846,7 @@ export const schedule: BEvent[] = [
   // Stage-2 mentoring, one entry per day (see FDE_OFFICE_HOUR above).
   { ...FDE_OFFICE_HOUR, id: "d5-fde-office-hour", day: 5, date: "08.26" },
 
-  // ─── DAY 6 · Open Build (08.27) ─────────────────────────────────────────────
+  // ─── DAY 6 · Self-paced build (08.27) ─────────────────────────────────────────────
   {
     id: "d6-open-build",
     day: 6,
@@ -852,13 +855,13 @@ export const schedule: BEvent[] = [
     selfPaced: true,
     mode: "online",
     timeOfDay: "AM",
-    title: { ko: "오픈 빌드", en: "Open Build" },
+    title: { ko: "자율 빌드", en: "Self-paced build" },
     summary: {
       ko: "정해진 세션이 없는 날 — 팀별로 편한 시간에 빌드를 이어갑니다.",
       en: "No scheduled sessions — teams keep building whenever suits them.",
     },
     description: {
-      ko: "정해진 세션이 하나도 없는 오픈 빌드 데이입니다. 출석 개념이 없고 접속해야 할 곳도 없습니다 — 각 팀이 편한 시간·장소에서 자기 페이스로 프로덕트를 완성해 갑니다. 하루 종일 붙어 있어야 한다는 뜻이 아니라, 하루를 팀이 원하는 대로 쓸 수 있다는 뜻입니다. Day 5–7에는 팝업스튜디오 FDE의 온라인 오피스아워가 열려 있어, 필요한 팀은 문제 정의·워크플로·구현 방향을 점검받을 수 있습니다(시간대는 추후 안내).",
+      ko: "정해진 세션이 하나도 없는 자율 빌드 데이입니다. 출석 개념이 없고 접속해야 할 곳도 없습니다 — 각 팀이 편한 시간·장소에서 자기 페이스로 프로덕트를 완성해 갑니다. 하루 종일 붙어 있어야 한다는 뜻이 아니라, 하루를 팀이 원하는 대로 쓸 수 있다는 뜻입니다. Day 5–7에는 팝업스튜디오 FDE의 온라인 오피스아워가 열려 있어, 필요한 팀은 문제 정의·워크플로·구현 방향을 점검받을 수 있습니다(시간대는 추후 안내).",
       en: "An open build day with no scheduled sessions at all. There's no attendance and nothing to join — each team pushes its product toward completion at its own pace, whenever and wherever suits them. It doesn't mean being glued to it all day; it means the day is yours to use as the team wants. Popup Studio's FDE office hours run online across Day 5–7, so any team that wants a check on its problem definition, workflow or implementation direction can take one (times to be announced).",
     },
     location: ONLINE,

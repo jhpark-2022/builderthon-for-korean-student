@@ -975,6 +975,19 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
           </span>
         )}
         <DayModeBadge day={day} t={t} selfPaced={day.selfPacedDay ?? allSelfPaced} />
+        {/* Day 3·4 carry self-paced build AND a real session (the 1:1 slot), so
+            DayModeBadge resolves them to a plain "온라인" pill — which is the
+            exact misread this badge exists to prevent: it reads as a scheduled
+            online day when the fixed part is one optional slot. Show the
+            self-paced pill ALONGSIDE the mode on those days. Day 6 already
+            resolves to self-paced on its own, hence the guard against doubling
+            it up. Only Days 3·4·6 have self-paced entries, so this stays rare
+            enough to mean something. */}
+        {dayHasSelfPaced(day.day) && !(day.selfPacedDay ?? allSelfPaced) && (
+          <span className="rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
+            {t(dict.program.selfPacedLabel)}
+          </span>
+        )}
       </div>
       <h4 className="mt-3 text-[15px] font-bold leading-snug text-white">{t(day.theme)}</h4>
       <p className="mt-1.5 text-[13px] leading-relaxed text-white/65">{t(day.summary)}</p>
