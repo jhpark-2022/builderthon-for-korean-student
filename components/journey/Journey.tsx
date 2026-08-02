@@ -950,6 +950,169 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
   );
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// 정거장 원칙 — the 8-day arc as a route, not a calendar.
+//
+// The grid below shows eight cards of equal weight, which reads as eight days of
+// obligation however many sentences say otherwise. A route says it structurally:
+// two terminals you have to be at, six stops you choose. Sits directly above the
+// grid so the grid is read through it.
+//
+// Everything is derived from days[].mandatory — see the note in dict.program.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// The node keyword. days[].theme is "오프닝 · 문제 공개" / "크래시코스 (집중)";
+// a stop label needs the head of that, without the parenthetical. Derived rather
+// than duplicated so the strip can never drift from the card heading below it.
+const stopKeyword = (theme: string) =>
+  theme.split("·")[0].replace(/\([^)]*\)/g, "").trim();
+
+function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
+  const r = dict.program.route;
+  return (
+    <div className="mt-10">
+      {/* Horizontal scroll is the mobile fallback, not a stacked rewrite: a route
+          that wraps to two rows stops being a route. min-w keeps the eight stops
+          legible at 375px and the container scrolls instead of crushing them. */}
+      <div className="-mx-6 overflow-x-auto px-6 pb-1 sm:mx-0 sm:px-0">
+        <ol
+          aria-label={t(r.ariaLabel)}
+          className="relative flex min-w-[600px] items-start sm:min-w-0"
+        >
+          {/* The rail. Inset by half a column at each end so it runs terminal to
+              terminal instead of bleeding past the outer nodes. top-4 is the
+              centre of the h-8 node row. */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute left-[6.25%] right-[6.25%] top-4 h-px bg-gradient-to-r from-rose-300/40 via-white/15 to-rose-300/40"
+          />
+          {days.map((d) => {
+            const anchor = d.mandatory === true;
+            return (
+              <li key={d.day} className="relative flex-1">
+                <button
+                  type="button"
+                  onClick={() => onOpen(d.day)}
+                  className="group flex w-full flex-col items-center gap-1.5 px-1 py-1 text-center"
+                  aria-label={`Day ${d.day} · ${t(d.theme)}`}
+                >
+                  {/* Fixed-height row so both node sizes share one centreline and
+                      the rail passes through every node at the same height. */}
+                  <span className="flex h-8 items-center justify-center">
+                    {anchor ? (
+                      <span className="flex h-7 w-7 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-[0.6rem] text-rose-100 shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:bg-rose-400/40">
+                        <span aria-hidden>★</span>
+                      </span>
+                    ) : (
+                      <span className="h-3 w-3 rounded-full border border-white/35 bg-[#0a0614] shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:border-violet-300/70 group-hover:bg-violet-400/30" />
+                    )}
+                  </span>
+                  <span
+                    className={`text-[0.62rem] font-bold leading-none ${
+                      anchor ? "text-rose-200" : "text-white/45"
+                    }`}
+                  >
+                    {t(dict.program.dayLabel)} {d.day}
+                  </span>
+                  <span
+                    className={`break-keep text-[0.68rem] leading-tight transition ${
+                      anchor
+                        ? "font-bold text-white"
+                        : "text-white/60 group-hover:text-white/85"
+                    }`}
+                  >
+                    {stopKeyword(t(d.theme))}
+                  </span>
+                  {anchor && (
+                    <span className="rounded-full border border-rose-400/30 bg-rose-400/10 px-1.5 py-0.5 text-[0.58rem] font-bold leading-none text-rose-200">
+                      {t(dict.program.mandatoryBadge)}
+                    </span>
+                  )}
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+
+      {/* Legend left, destination right — right-aligned so it sits under the
+          terminus it describes. Stacks on mobile, where "under Day 8" stops
+          meaning anything anyway. */}
+      <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+          <span className="flex items-center gap-1.5 text-[0.66rem] text-rose-200/85">
+            <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-[0.42rem] text-rose-100">★</span>
+            {t(r.legendMandatory)}
+          </span>
+          <span className="flex items-center gap-1.5 text-[0.66rem] text-white/50">
+            <span aria-hidden className="h-2 w-2 rounded-full border border-white/35" />
+            {t(r.legendOptional)}
+          </span>
+        </div>
+        <p className="break-keep text-[0.68rem] font-semibold text-rose-100/80 sm:text-right">
+          <span aria-hidden className="mr-1 text-rose-300/70">→</span>
+          {t(r.destination)}
+        </p>
+      </div>
+
+      {/* The principle, then what the optional stops actually are. Two lines, one
+          claim: "you choose" on top, "and here's why they're worth choosing"
+          underneath. The second is a step quieter so the thesis still leads, but
+          not a footnote — it is the line that stops "선택" being read as
+          "skippable filler". */}
+      <div className="mx-auto mt-5 max-w-3xl text-center">
+        <p className="break-keep text-[13px] font-semibold leading-relaxed text-white/80 sm:text-sm">
+          {t(r.principle)}
+        </p>
+        <p className="mt-2.5 break-keep text-xs leading-relaxed text-white/60 sm:text-[13px]">
+          {t(r.optionalValue)}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// Headline counts, all computed from days[].mandatory / dayMode. Sits directly
+// under the heading because "how much of my August is this" is the first
+// question, and three numbers answer it faster than the amber box below can.
+function ProgramStats({ t }: { t: Tfn }) {
+  const s = dict.program.stats;
+  const required = days.filter((d) => d.mandatory === true).length;
+  // Two stats, not three. An 온라인 count sat here and pulled against the point:
+  // this rule exists to answer "how many days do I owe you", and online-vs-on-site
+  // is a different question that modeNote already answers in full. Required and
+  // optional are also a clean complement (2 + 6 = 8), so the pair reads as the
+  // whole programme; a third number turned it into a stat dump.
+  const rows = [
+    { key: "required", n: required, label: s.mandatory, strong: true },
+    { key: "optional", n: days.length - required, label: s.optional, strong: false },
+  ];
+  return (
+    <div className="mx-auto mt-6 max-w-2xl">
+      <dl className="flex items-stretch justify-center">
+        {rows.map((row, i) => (
+          <Fragment key={row.key}>
+            {/* Bracket opacity, not bg-white/12: the repo's fine alphas are all
+                arbitrary values and /12 is off Tailwind's default scale, so it
+                compiled to nothing and the rule read as three floating numbers. */}
+            {i > 0 && <span aria-hidden className="mx-5 h-9 w-px self-center bg-white/[0.14] sm:mx-9" />}
+            <div className="flex flex-col items-center px-1">
+              <dd className={`text-[clamp(1.5rem,4vw,2.25rem)] font-black leading-none ${row.strong ? "text-rose-200" : "text-white"}`}>
+                {row.n}
+                <span className="ml-0.5 text-[0.5em] font-bold">{t(s.unit)}</span>
+              </dd>
+              <dt className={`mt-1.5 text-[0.68rem] font-bold uppercase tracking-[0.1em] ${row.strong ? "text-rose-300/80" : "text-white/50"}`}>
+                {t(row.label)}
+              </dt>
+            </div>
+          </Fragment>
+        ))}
+      </dl>
+      <p className="mt-3 break-keep text-center text-xs leading-relaxed text-white/55">{t(s.note)}</p>
+    </div>
+  );
+}
+
 // One clean summary card per day (deck-style). Opens the day detail modal on
 // click rather than exploding every session inline — keeps the arc scannable.
 function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number) => void }) {
@@ -959,7 +1122,16 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
     <button
       type="button"
       onClick={() => onOpen(day.day)}
-      className="group relative flex h-full flex-col rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 text-left transition duration-300 hover:-translate-y-1 hover:border-violet-400/30 hover:bg-white/[0.06]"
+      // The two anchors carry a rose-tinted border at rest so they read first in
+      // a grid of eight. Rose because that is already the 필참 colour on the badge
+      // inside them and on the route terminals above — one meaning, one hue. Kept
+      // to a border/tint step: a stronger treatment would turn the other six into
+      // greyed-out rejects, which is the opposite of "stops you choose".
+      className={`group relative flex h-full flex-col rounded-2xl border p-5 text-left transition duration-300 hover:-translate-y-1 hover:border-violet-400/30 hover:bg-white/[0.06] ${
+        day.mandatory
+          ? "border-rose-400/25 bg-white/[0.055]"
+          : "border-white/[0.08] bg-white/[0.03]"
+      }`}
     >
       <div className="flex items-center justify-between">
         <span className="flex items-baseline gap-1.5">
@@ -969,9 +1141,17 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
         <span className="text-[0.7rem] text-white/55">{day.date} · {t(day.weekday)}</span>
       </div>
       <div className="mt-3 flex flex-wrap gap-1.5">
-        {day.mandatory && (
+        {day.mandatory ? (
           <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/30 bg-rose-400/10 px-2 py-0.5 text-[0.68rem] font-bold text-rose-200">
             <span aria-hidden>★</span>{t(dict.program.mandatoryBadge)}
+          </span>
+        ) : (
+          /* Same slot as the 필참 pill, deliberately quieter: borderless and
+             low-contrast so it registers as a fact about the day rather than
+             competing with the two anchors. Every non-required day gets one, so
+             the absence of a 선택 pill is itself the signal on Day 1·8. */
+          <span className="inline-flex items-center rounded-full bg-white/[0.06] px-2 py-0.5 text-[0.68rem] font-semibold text-white/45">
+            {t(dict.program.optionalBadge)}
           </span>
         )}
         <DayModeBadge day={day} t={t} selfPaced={day.selfPacedDay ?? allSelfPaced} />
@@ -2380,6 +2560,10 @@ export default function Journey() {
             <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
               {t(dict.program.heading)}
             </h2>
+            {/* Three numbers before anything else: the first question this section
+                gets is "how much of my August does this take", and it used to be
+                answerable only by reading the amber box four blocks down. */}
+            <ProgramStats t={t} />
             {/* No day-by-day summary paragraph here — the eight cards below ARE
                 the arc, and spelling it out in prose first read as clutter. */}
             {/* ── 최종 아웃풋 ────────────────────────────────────────────────
@@ -2460,6 +2644,10 @@ export default function Journey() {
               </dl>
             </div>
           </div>
+
+          {/* The route, immediately above the grid it describes: the eight cards
+              are read through it rather than as eight equal obligations. */}
+          <RouteMap t={t} onOpen={setActiveDay} />
 
           {/* Two Labs, four clean day cards each. Tapping a card opens the day
               detail modal (that day's sessions) instead of exploding all ~18

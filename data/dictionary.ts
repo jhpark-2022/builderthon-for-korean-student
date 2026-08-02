@@ -1026,6 +1026,76 @@ export const dict = {
         },
       ],
     },
+    // ── 정거장 원칙 (2026-08-03) ──────────────────────────────────────────
+    // The fact that only two of the eight days are required lived in FOUR prose
+    // places (hero paragraph · modeNote · FAQ · the 필참 badge) and in none of
+    // the visual structure. Eight identically-weighted cards in a grid say
+    // "eight days of programme" louder than any sentence says otherwise, and
+    // the grid is what people scan. These three blocks put the same fact into
+    // the layout: a route where two stops are terminals and six are optional,
+    // a headline count, and an 선택 pill on every non-required card.
+    //
+    // EVERY number and every ★ here is derived from days[].mandatory in
+    // data/schedule.ts. Nothing is hardcoded — if a day's mandatory flag flips,
+    // the strip, the stats and the pills all follow. Do not type "2" into this
+    // file.
+    stats: {
+      // Rendered as: big value + unit, small label beneath. Every count here is
+      // ≥2 by construction (2 required / 6 optional / 4 online), so a plural-only
+      // English unit is safe and avoids a pluralisation helper for three numbers.
+      unit: { ko: "일", en: "days" },
+      mandatory: { ko: "필참", en: "Required" },
+      optional: { ko: "선택", en: "Optional" },
+      // TWO stats only — 필참 + 선택, which sum to the whole 8. A third (온라인)
+      // was here and removed: online-vs-on-site is a different question and
+      // modeNote answers it properly one block down, so the number only diluted
+      // the one thing this rule is for. Do not add a third.
+      //
+      // The note carries the on-site reassurance the removed stat was reaching
+      // for, without asserting the programme is "온라인 중심" — it isn't, four of
+      // the eight days are on-site (Day 1·5·7·8).
+      note: {
+        ko: "현장 4일 중 시간을 비워야 하는 날은 Day 1·8 이틀뿐이에요.",
+        en: "Four days are on-site, but only Day 1 and Day 8 need blocking out.",
+      },
+    },
+    route: {
+      // The one-word-per-stop keyword is derived from days[].theme (first segment
+      // before "·", parentheses stripped), so it can never drift from the card
+      // heading below it.
+      legendMandatory: { ko: "필참 정거장", en: "Required stop" },
+      legendOptional: { ko: "선택 정거장", en: "Optional stop" },
+      destination: {
+        ko: "데모데이 — 기업·심사위원 앞 검증",
+        en: "Demo Day — put it in front of the companies and the judges",
+      },
+      // The frame the whole section hangs on. Sized between the heading and
+      // modeNote on purpose: it is the claim those four prose places were
+      // making, said once where the structure can back it up. "정거장" is the
+      // load-bearing word — a stop you choose to get off at, not a day you
+      // failed to attend. Keep it.
+      principle: {
+        ko: "하루하루는 이 무대로 나아가는 정거장 — 방문은 당신의 선택입니다. 시간을 비워야 하는 날은 Day 1·8 이틀뿐.",
+        en: "Each day is a stop on the way to that stage — which ones you get off at is your call. Only Day 1 and Day 8 need blocking out.",
+      },
+      // The other half of the principle, and the guardrail on it. Saying six of
+      // eight days are optional, and stopping there, invites the reading that
+      // those six are padding — which would be a worse outcome than the "eight
+      // days of obligation" misread this whole block exists to fix. This line
+      // says what the six ARE: each was built to be worth choosing, because it
+      // makes the thing you hand in on Day 8 better. Keep it immediately under
+      // the principle; separated, either half reads wrong.
+      optionalValue: {
+        ko: "나머지 여섯 정거장은 그냥 늘어난 일정이 아니에요. 결과물을 더 의미 있게 만들기 위해 직접 고르는 준비 과정이자 중간 정거장이고, 하나하나 내려설 이유가 있도록 설계했습니다.",
+        en: "The other six stops aren't schedule padding. Each one is a preparation stage you choose because it makes what you hand in better — and each was designed to be worth getting off for.",
+      },
+      ariaLabel: { ko: "8일 노선도", en: "The 8-day route" },
+    },
+    // Sits in the same slot as the ★필참 pill and must stay quieter than it —
+    // the point is "you may skip this", not "this day is filler". Neutral tone,
+    // no colour: colour here would make optional days compete with the two
+    // anchors, which is the exact misread being fixed.
+    optionalBadge: { ko: "선택", en: "Optional" },
     dayLabel: { ko: "Day", en: "Day" },
     // Label on the wide band above Lab 1. "사전" rather than "Day 0" — the
     // session is a prologue to the eight days, not a day of them.
