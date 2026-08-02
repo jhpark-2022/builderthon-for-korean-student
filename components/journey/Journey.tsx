@@ -933,9 +933,10 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
         {t(dict.program.pendingLabel)}
       </span>
     );
-  // Day 3·4: online build + on-site mentoring. Carries the amber dot the
-  // in-person days use, at a lighter weight — the day has an on-site half, it
-  // just isn't an on-site day.
+  // A half-on-site day: carries the amber dot the in-person days use, at a
+  // lighter weight — the day has an on-site half, it just isn't an on-site day.
+  // No day is "mixed" at the moment (Day 3·4 were, until their mentoring went
+  // online-first); kept for the next one that is.
   if (day.dayMode === "mixed")
     return (
       <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/20 bg-amber-400/[0.06] px-2 py-0.5 text-[0.68rem] font-semibold text-amber-100/80">
@@ -2378,8 +2379,33 @@ export default function Journey() {
             <p className="mx-auto mt-6 max-w-2xl text-xs leading-relaxed text-white/50">
               {t(dict.program.pendingNote)}
             </p>
-            <div className="mx-auto mt-3 max-w-2xl rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] px-5 py-3.5 text-xs leading-relaxed text-amber-100/85">
-              {t(dict.program.modeNote)}
+            {/* A labelled list, not a paragraph: this box answers "which days do
+                I actually have to show up for", and that is a lookup, not a read.
+                Two grid columns rather than inline labels — `auto` sizes the label
+                column to the longest label in whichever language is showing, so
+                the three answers line up under each other and can be compared in
+                one downward glance. Left-aligned inside a centred section for the
+                same reason. */}
+            <div className="mx-auto mt-3 max-w-2xl rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] px-5 py-4 text-left">
+              <p className="text-xs font-bold leading-relaxed text-amber-100">
+                {t(dict.program.modeNote.lead)}
+              </p>
+              <dl className="mt-2.5 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5">
+                {dict.program.modeNote.rows.map((row) => (
+                  <Fragment key={row.id}>
+                    <dt
+                      className={`text-xs font-bold leading-relaxed ${
+                        row.id === "required" ? "text-amber-200" : "text-amber-100/55"
+                      }`}
+                    >
+                      {t(row.label)}
+                    </dt>
+                    <dd className="min-w-0 break-keep text-xs leading-relaxed text-amber-100/85">
+                      {t(row.body)}
+                    </dd>
+                  </Fragment>
+                ))}
+              </dl>
             </div>
           </div>
 
@@ -2528,9 +2554,10 @@ export default function Journey() {
                       T3Q · NTU), and two marks over a list of faces would read as
                       an org chart without it. White trimmed silhouettes — the same
                       assets the hero strip and partner wall use, so no tile is
-                      needed on this dark panel. Each logo keeps its own span chip;
-                      Popup Studio's says Day 5–7 because that is when its office
-                      hours run, even though this box is labelled Day 3–6. */}
+                      needed on this dark panel. Marks only: each used to carry a
+                      day-span chip ("Day 3·4 아이디에이션" / "Day 5–7 FDE 오피스아워"),
+                      which repeated what the box heading and the programme already
+                      say and turned a two-logo credit into a third schedule. */}
                   {g.partners.length > 0 && (
                     <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.03] p-3.5">
                       {/* Centred, not left-aligned. This panel spans the full box,
@@ -2540,36 +2567,23 @@ export default function Journey() {
                       <p className="text-center text-[0.62rem] font-bold uppercase tracking-[0.14em] text-white/50">
                         {t(g.partnersLabel)}
                       </p>
-                      {/* One column per partner — logo over its span chip — with a
-                          wide gap between them. Side by side (logo, chip, logo,
-                          chip) the four items read as one run: which chip belonged
-                          to which mark was a guess, and the pair looked cramped.
-                          Stacking also lets the chip stay on one line at 375px,
-                          where "Day 3·4 아이디에이션" used to wrap mid-phrase.
-                          gap-x-14: the separation IS the grouping here. */}
-                      <div className="mt-4 flex flex-wrap items-start justify-center gap-x-14 gap-y-7">
+                      {/* gap-x-14: the separation IS the grouping here — two marks
+                          any closer read as one lockup. Each sits in a common
+                          fixed-height band because the logos are deliberately
+                          DIFFERENT heights (optical sizing — see logoClass in
+                          dictionary.ts); the band centres them on one line while
+                          the marks keep their own sizes. */}
+                      <div className="mt-4 flex flex-wrap items-center justify-center gap-x-14 gap-y-6">
                         {g.partners.map((pt) => (
-                          <div key={pt.name} className="flex min-w-0 flex-col items-center gap-2.5">
-                            {/* Fixed-height band with the mark centred inside it.
-                                The two logos are deliberately DIFFERENT heights
-                                (optical sizing — see logoClass in dictionary.ts),
-                                and without a common band the chips underneath sat
-                                at two different heights and the pair read as
-                                ragged. The band equalises the row; the marks keep
-                                their own sizes. */}
-                            <span className="flex h-12 items-center sm:h-14">
-                              <Image
-                                src={pt.logo}
-                                alt={pt.name}
-                                width={pt.logoW}
-                                height={pt.logoH}
-                                className={`w-auto max-w-[10rem] shrink-0 object-contain opacity-90 ${pt.logoClass}`}
-                              />
-                            </span>
-                            <span className="whitespace-nowrap rounded-full border border-emerald-400/25 bg-emerald-400/[0.08] px-2.5 py-0.5 text-[0.62rem] font-semibold text-emerald-100/85">
-                              {t(pt.chip)}
-                            </span>
-                          </div>
+                          <span key={pt.name} className="flex h-12 items-center sm:h-14">
+                            <Image
+                              src={pt.logo}
+                              alt={pt.name}
+                              width={pt.logoW}
+                              height={pt.logoH}
+                              className={`w-auto max-w-[10rem] shrink-0 object-contain opacity-90 ${pt.logoClass}`}
+                            />
+                          </span>
                         ))}
                       </div>
                     </div>

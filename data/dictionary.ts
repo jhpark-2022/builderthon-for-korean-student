@@ -802,8 +802,8 @@ export const dict = {
     // between are self-paced and mostly online, which is why the second half of
     // the sentence is there — without it this reads as an 8-day residency.
     requirement: {
-      ko: "참가 조건은 하나예요 — Day 1(8/22 킥오프)과 Day 8(8/29 데모데이)은 싱가포르 현장 필참입니다. 그 사이에도 Day 3·4 1:1 멘토링(NUS 대면 기본)과 Day 5·7 현장 세션이 있고, 팀별 자율 빌드만 각자 편한 시간·장소에서 진행해요.",
-      en: "One condition: Day 1 (22 Aug, kick-off) and Day 8 (29 Aug, Demo Day) are in person in Singapore and required. In between there's 1:1 mentoring on Day 3·4 (in person at NUS by default) and on-site sessions on Day 5 and 7 — only the team's own build time is wherever suits you.",
+      ko: "참가 조건은 하나예요 — Day 1(8/22 킥오프)과 Day 8(8/29 데모데이)은 싱가포르 현장 필참입니다. 그 사이 현장 일정은 Day 5·7 세션뿐이고(선택), Day 3·4 1:1 멘토링과 팀별 자율 빌드는 온라인으로 진행돼요.",
+      en: "One condition: Day 1 (22 Aug, kick-off) and Day 8 (29 Aug, Demo Day) are in person in Singapore and required. The only other on-site days are the Day 5 and Day 7 sessions, and those are optional — the Day 3·4 1:1 mentoring and your team's own build time run online.",
     },
     disclaimer: {
       ko: "* 일부 혜택(인센티브·멘토 라인업 등)은 파트너와 논의 중이며 확정 시 안내됩니다.",
@@ -873,16 +873,54 @@ export const dict = {
     // Say once, up front, that this is still moving — it costs nothing now and
     // saves explaining a change later.
     pendingNote: {
-      ko: "프로그램은 아직 확정 전인 부분이 많습니다 — 세션·연사·시간은 조율 중이며, 확정되는 대로 이 페이지에 업데이트합니다.",
-      en: "Much of the programme is still being finalised — sessions, speakers and times are being worked out, and this page is updated as each is confirmed.",
+      ko: "세션·연사·시간은 아직 조율 중이며, 확정되는 대로 이 페이지에 업데이트합니다.",
+      en: "Sessions, speakers and times are still being worked out — this page is updated as each is confirmed.",
     },
-    // "그 사이는 대부분 온라인" was doing damage: the only genuinely online part is
-    // the team's own build time, and stating it that broadly made a programme with
-    // four in-person days plus F2F mentoring read as a remote event. What is
-    // REQUIRED (Day 1 · 8) and what is IN PERSON are two different lists — say both.
+    // Three rows, not a paragraph. The previous version said all of this in one
+    // 4-sentence block and nobody finished it: the two facts that actually change
+    // a decision — WHICH days you must attend, and WHERE the rest happens — were
+    // buried mid-sentence behind qualifiers. A visitor scanning this needs to
+    // answer "how much of my August does this take?" in about three seconds, and
+    // a labelled list answers it; prose does not.
+    // Keep it to three rows. Every exception that gets appended here (venue
+    // names, mentor-by-mentor caveats, TBC markers) belongs on the day card or in
+    // the session modal, which is where someone who wants that detail is already
+    // looking.
     modeNote: {
-      ko: "필참은 Day 1(오프닝)과 Day 8(데모데이) 둘뿐이에요 — 8일 내내 붙어 있어야 하는 일정이 아닙니다. 다만 현장에서 만나는 시간은 그보다 많아요: Day 3·4 1:1 멘토링은 NUS 대면이 기본이고, Day 5(오프라인 킥오프)·Day 7(파이널 리허설·AWS 오피스)도 현장입니다(필참은 아니에요). 온라인으로 진행되는 건 팀별 자율 빌드와 일부 세션이고, 그 시간은 각자 편한 곳에서 이어가면 됩니다.",
-      en: "Only two days are required: Day 1 (opening) and Day 8 (Demo Day) — this is not eight days you have to block out. But you'll meet in person more often than that: the Day 3·4 1:1 mentoring is at NUS by default, and Day 5 (kickoff) and Day 7 (final rehearsal · AWS office) are on-site too, though not required. What runs online is your team's own build time and some of the sessions — that part happens wherever works for you.",
+      lead: {
+        ko: "8일 내내 붙어 있는 일정이 아니에요.",
+        en: "This isn't eight days you have to block out.",
+      },
+      // Labels stay ONE WORD in both languages — they sit in a shared grid column
+      // that sizes to the longest of them, so "On-site · optional" would push the
+      // English body into a ribbon on a phone. Qualifiers ("이 이틀뿐", "optional")
+      // ride in the body instead, where there's room for them.
+      rows: [
+        {
+          id: "required",
+          label: { ko: "필참 2일", en: "Required" },
+          body: {
+            ko: "Day 1 오프닝 · Day 8 데모데이 — 싱가포르 현장",
+            en: "Day 1 opening · Day 8 Demo Day — in person in Singapore",
+          },
+        },
+        {
+          id: "onsite",
+          label: { ko: "현장", en: "On-site" },
+          body: {
+            ko: "Day 5 중간 점검 · Day 7 파이널 리허설 — 참여는 선택",
+            en: "Day 5 mid-point check-in · Day 7 final rehearsal — optional",
+          },
+        },
+        {
+          id: "online",
+          label: { ko: "온라인", en: "Online" },
+          body: {
+            ko: "크래시코스 · 1:1 멘토링 · 팀별 자율 빌드",
+            en: "Crash course · 1:1 mentoring · your team's own build time",
+          },
+        },
+      ],
     },
     dayLabel: { ko: "Day", en: "Day" },
     // Label on the wide band above Lab 1. "사전" rather than "Day 0" — the
@@ -893,10 +931,10 @@ export const dict = {
     mandatoryBadge: { ko: "필참", en: "Required" },
     onlineLabel: { ko: "온라인", en: "Online" },
     offlineLabel: { ko: "현장", en: "In person" },
-    // Day 3·4 only (dayMode "mixed"): the build is online, the 1:1 mentoring is
-    // at NUS. Both halves are named because either one alone misleads — 온라인
-    // hides the mentoring the mentors travel for, 현장 promises a full day there.
-    mixedLabel: { ko: "온라인 · NUS 대면", en: "Online · at NUS" },
+    // dayMode "mixed" — a day that is genuinely half online, half on-site.
+    // UNUSED right now: Day 3·4 carried it while their mentoring defaulted to
+    // NUS F2F, and both went back to plain 온라인 when that default flipped.
+    mixedLabel: { ko: "온라인 · 현장", en: "Online · in person" },
     // ── Self-paced (category "build") ──────────────────────────────────────
     // Build events carry mode "online" in the data because they have to carry
     // SOMETHING, but showing them an "온라인" badge told a lie: it reads as a
@@ -921,12 +959,12 @@ export const dict = {
     // A day whose only entries are self-paced: there is no session to count.
     noSessions: { ko: "정해진 세션 없음", en: "No scheduled sessions" },
     pendingLabel: { ko: "현장 (미정)", en: "On-site (TBC)" },
-    // 1:1 mentoring is arranged mentor by mentor, but the DEFAULT is in person at
-    // NUS — that is what the mentors were asked for and what most of them expect.
-    // The badge used to read "대면·온라인 (멘토별)", which weighted the two equally
-    // and let the day scan as an online one. Lead with the default; the "멘토별"
-    // qualifier keeps it honest for the mentors who take theirs online.
-    byMentorLabel: { ko: "NUS 대면 기본 (멘토별)", en: "In person at NUS by default" },
+    // 1:1 mentoring is arranged mentor by mentor, and the DEFAULT is now online
+    // (Aug 2026 — enough mentors can only make an online slot). The badge led
+    // with "NUS 대면 기본" while that was the promise; leading with the wrong
+    // default is what makes people plan a trip they don't need. "멘토별" keeps it
+    // honest for the mentors who do offer F2F at NUS.
+    byMentorLabel: { ko: "온라인 기본 (멘토별)", en: "Online by default (by mentor)" },
     sessions: { ko: "세션", en: "sessions" },
     // English needs the singular for a one-session day. Korean has no plural, so
     // both forms are identical there — kept as a pair rather than a special case
@@ -1253,10 +1291,7 @@ export const dict = {
         // "메인 멘토링 파트너" is load-bearing, not decoration: most of the cards
         // in this box are NOT Onword people (REmited · YMX · T3Q · NTU), and two
         // logos over a list of faces reads as an org chart unless the label says
-        // otherwise. Each partner carries its own span as a chip, taken from the
-        // programme — Popup Studio's says Day 5–7 even though the box says
-        // Day 3–6, because that is when its office hours actually run
-        // (schedule.ts d5/d6/d7-fde-office-hour). Never round a chip to fit a box.
+        // otherwise.
         partnersLabel: { ko: "메인 멘토링 파트너", en: "Main mentoring partners" },
         // `logoClass` is OPTICAL sizing, not a uniform cap. Capping both marks at
         // the same height is what made Popup Studio look like a footnote next to
@@ -1265,9 +1300,11 @@ export const dict = {
         // the wordmark carries four times the ink. Taller for the stacked mark
         // brings the two to similar visual weight — the same reasoning the hero
         // partner strip applies with its area-based sizing.
-        // The chip is one phrase, no interior separator: "Day 3·4 · 아이디에이션"
-        // wrapped into "Day 3·4 ·" / "아이디에이션" on a phone and the orphaned
-        // middot read as a typo.
+        // No `chip` here on purpose. Each mark used to carry its day span
+        // ("Day 3·4 아이디에이션" / "Day 5–7 FDE 오피스아워"), which said again what
+        // this box's own heading and the programme below already say — a credit
+        // panel reading as a third schedule. If a partner's span ever needs
+        // stating, the session it runs is where it belongs.
         partners: [
           {
             name: "Onword Lab",
@@ -1275,7 +1312,6 @@ export const dict = {
             logoW: 900,
             logoH: 92,
             logoClass: "h-6 sm:h-7",
-            chip: { ko: "Day 3·4 아이디에이션", en: "Day 3·4 ideation" },
           },
           {
             name: "Popup Studio",
@@ -1283,7 +1319,6 @@ export const dict = {
             logoW: 512,
             logoH: 245,
             logoClass: "h-11 sm:h-12",
-            chip: { ko: "Day 5–7 FDE 오피스아워", en: "Day 5–7 FDE office hours" },
           },
         ],
         // Placeholder card at the end of this box's grid. Popup Studio sends FDEs
