@@ -2660,6 +2660,13 @@ export default function Journey() {
           <p className="mt-5 border-t border-white/10 pt-4 text-sm leading-relaxed text-white/60">
             {t(dict.whoWhat.requirement)}
           </p>
+          {/* 준비물 — 조건 바로 다음, 같은 박스 안. 이 페이지에서 유일하게 돈이
+              드는 항목이라 등록을 결정하는 그 자리에 있어야 하고, 조건과 같은
+              시선 안에 들어와야 "참가비 무료"와 나란히 정직하게 읽힙니다.
+              같은 타이포·같은 구분선을 쓰되 mt만 좁혀 한 덩어리로 붙입니다. */}
+          <p className="mt-3 text-sm leading-relaxed text-white/60">
+            {t(dict.whoWhat.prep)}
+          </p>
         </Glass>
         <p className="mt-5 text-center text-xs text-white/65">{t(dict.whoWhat.disclaimer)}</p>
       </Chapter>

@@ -817,6 +817,22 @@ export const dict = {
       ko: "참가 조건은 하나예요 — Day 1(8/22 킥오프)과 Day 8(8/29 데모데이)은 싱가포르 현장 필참입니다. 그 사이 현장 일정은 Day 5·7 세션뿐이고(선택), Day 3·4 1:1 멘토링과 팀별 자율 빌드는 온라인으로 진행돼요.",
       en: "One condition: Day 1 (22 Aug, kick-off) and Day 8 (29 Aug, Demo Day) are in person in Singapore and required. The only other on-site days are the Day 5 and Day 7 sessions, and those are optional — the Day 3·4 1:1 mentoring and your team's own build time run online.",
     },
+    // 준비물 — 참가비가 아니라 각자 준비해 오는 것. requirement(필참 2일) 바로
+    // 아래, 등록을 결정하는 자리에 둡니다: 이걸 등록 후에 알게 되면 Day 1에 와서
+    // 아무것도 못 만드는 사람이 생깁니다. 사이트에서 유일하게 '돈이 드는' 항목이라
+    // 숨기지 않고 먼저 말하되, 자격 조건이 아니라 준비물로 씁니다(스크리닝 없음은
+    // 그대로 사실).
+    //
+    // 금액은 적지 않습니다 — 벤더 가격은 지역·시점에 따라 다르고, 공개 페이지에
+    // 틀린 숫자를 박아두는 쪽이 숫자가 없는 것보다 나쁩니다. "기본 유료 플랜"까지만.
+    // "그 이상은 필요 없다"가 이 문단의 핵심입니다: 심사가 기술 완성도를 보지 않기
+    // 때문에(심사표 — 프로세스 중심, 완성도·발표력 미채점) API 크레딧이나 상위
+    // 플랜이 필요하지 않습니다. 심사 배점 수치는 아직 파트너 조율 중이라 여기에
+    // 퍼센트를 쓰지 않습니다.
+    prep: {
+      ko: "준비물은 하나예요 — AI 코딩 도구를 쓸 수 있는 계정. Claude나 ChatGPT의 기본 유료 플랜 정도면 8일 내내 충분하고, 그 이상은 필요 없습니다. 크래시코스는 Codex를 기준으로 진행하지만 팀 빌드와 데모에 쓰는 도구는 자유예요.",
+      en: "One thing to bring: an account you can vibe-code with. A basic paid plan on Claude or ChatGPT covers the whole eight days — nothing beyond that is needed. The crash course runs on Codex, but the tool you build and demo with is yours to choose.",
+    },
     disclaimer: {
       ko: "* 일부 혜택(인센티브·멘토 라인업 등)은 파트너와 논의 중이며 확정 시 안내됩니다.",
       en: "* Some benefits (incentives, mentor line-up) are under discussion with partners and will be confirmed.",
@@ -1225,7 +1241,12 @@ export const dict = {
         num: "01",
         title: { ko: "개발 경험 없어도 OK", en: "No dev experience needed" },
         points: [
-          { ko: "Codex 기반 beginner-friendly 크래시 코스", en: "A Codex-based, beginner-friendly crash course" },
+          // "Codex 기반"만 있으면 이 카드 제목("개발 경험 없어도 OK") 바로 아래에서
+          // 진입장벽으로 읽힙니다 — 초보는 "Codex를 따로 사야 하나", 경험자는
+          // "난 Claude Code 쓰는데 여긴 OpenAI 행사인가"로. 두 사실은 항상 붙어
+          // 다녀야 해서 줄을 나누지 않고 한 줄로 씁니다. 카드는 모바일에서 앞 두
+          // 줄만 보이므로 새 포인트를 추가하면 접혀서 안 보입니다.
+          { ko: "Codex 기반 beginner-friendly 크래시 코스 — 이후 빌드 툴은 자유", en: "A Codex-based, beginner-friendly crash course — your own build isn't tied to it" },
           // NOT "주최사 FDE". FDEs are Popup Studio's, and their only slot here is
           // the Day 5–7 office hours — the Crash Course is Codepresso's, and its
           // body is a live build of one simple tool that the room follows along
@@ -2258,8 +2279,19 @@ export const dict = {
       {
         q: { ko: "결과물이 실제로 쓰이나요? AI로 대충 만들면 어떡하죠?", en: "Will the results actually be used? What if it's just AI slop?" },
         a: {
-          ko: "기업이 결과물 도입을 약속하는 건 아니에요 — 도입 가능성은 심사의 15%인 보조 항목입니다. 대신 우승팀은 인턴으로 그 문제를 실무에서 이어갈 기회(잠정)가 있고요. ‘AI로 대충’은 심사에서 걸러집니다 — 데모가 무대에서 실제로 돌아가는지(배점 30%)를 보고, 목업·슬라이드만이면 감점이에요.",
-          en: "No company commits to adopting what you build — adoption feasibility is a secondary line worth 15% of the score. What the winning team does get is the chance (tentative) to carry that problem into real work as an intern. And “AI slop” doesn't survive judging: 30% of the score is whether the demo actually runs on stage, and mockups or slides alone lose points.",
+          // 퍼센트를 뺐습니다 (2026-08-03). 여기 있던 "도입 가능성 15%"와 "데모
+          // 30%"는 트랙별 옛 채점표의 숫자로, 현재 심사표의 5축 구성에는 그 이름의
+          // 항목이 없습니다. 게다가 배점 자체가 파트너 조율 중이라("배점은 파트너
+          // 조율에 따라 확정 전" — 심사표 각주) 새 숫자로 갈아끼우면 또 낡습니다.
+          // 그래서 확정적으로 말할 수 있는 것만 서술로 씁니다.
+          //
+          // "무대에서 실제로 돌아가는지"도 함께 고쳤습니다 — 심사표는 반대로
+          // 말합니다: 작동 판정은 사전 제출 영상 기준이고 라이브 실패는 감점이
+          // 아닙니다. 학생이 무대 사고를 치명적으로 오해하게 두면 안 됩니다.
+          // 숫자를 다시 넣지 마세요. 배점이 확정되면 심사표를 정본으로 삼되,
+          // 이 답변은 서술로 두는 편이 오래갑니다.
+          ko: "기업이 도입을 약속하는 건 아니에요 — 심사에서 ‘담당자가 다음 주 월요일부터 쓸 수 있는가’를 보긴 하지만, 그건 도입 확정과는 다릅니다. 대신 우승팀에게는 인턴으로 그 문제를 실무에서 이어갈 기회(잠정)가 있어요. ‘AI로 대충’은 심사에서 걸러집니다 — 심사위원이 현장에서 “프롬프트 한 줄로 한 것과 뭐가 다르죠?”를 직접 묻고, 근거 없이 결과만 내놓는 산출물은 요구사항 미충족으로 처리됩니다. 목업·슬라이드만 있는 경우도 마찬가지고요. 반대로 무대에서 라이브 시연이 삐끗하는 건 감점이 아닙니다 — 작동 여부는 사전에 제출한 데모 영상 기준으로 봅니다.",
+          en: "No company commits to adopting what you build — judging does ask whether the owner could use it from next Monday, but that isn't the same as a decision to adopt. What the winning team does get is the chance (tentative) to carry that problem into real work as an intern. And “AI slop” doesn't survive judging: judges ask out loud, “how is this different from a one-line prompt?”, and output that returns results with no reasoning behind them counts as a failed requirement. Mockups or slides alone go the same way. A live demo stumbling on stage, on the other hand, costs nothing — whether it runs is judged on the demo video you submit beforehand.",
         },
       },
       {
@@ -2272,6 +2304,19 @@ export const dict = {
           // 된다"를 말해주는 것까지입니다.
           ko: "크래시코스는 선택입니다 — 건너뛰고 Day 1 문제 공개 직후부터 바로 빌드에 들어가면 됩니다.",
           en: "The Crash Course is optional — skip it and start building the moment the problems drop on Day 1.",
+        },
+      },
+      // 툴 질문은 바로 위 "크래시코스 필요 없어요" 옆이 자리입니다 — 같은 사람이
+      // 연달아 묻는 두 질문이고(경험자·도구), 초보는 "Codex를 사야 하나"를 여기서
+      // 확인합니다. 답의 순서가 곧 요지: ① 강의만 Codex 기준 ② 빌드는 자유
+      // ③ 그래서 기본 플랜이면 충분 — ③의 근거는 심사 방식입니다.
+      // 심사 배점(프로세스 대 작동의 비율)은 파트너 조율 중이라 숫자를 쓰지 않고,
+      // 심사표가 확정적으로 말하는 것만 씁니다: 완성도·발표력은 채점 대상이 아님.
+      {
+        q: { ko: "어떤 AI 툴을 써야 하나요? Codex를 꼭 써야 하나요?", en: "Which AI tool do I need? Do I have to use Codex?" },
+        a: {
+          ko: "크래시코스는 Codex를 기준으로 진행해요 — 강사와 같은 화면을 따라 하기 좋게 하나로 맞춘 것뿐입니다. 팀 빌드와 데모데이 결과물에는 툴 제한이 없어요. Claude Code든 커서든 ChatGPT든 손에 맞는 걸 쓰면 됩니다. 다만 계정은 필요해요 — Claude나 ChatGPT의 기본 유료 플랜 정도면 8일 내내 충분하고, 그 이상은 필요 없습니다. 심사가 기술 완성도나 화면의 세련됨이 아니라, 어떤 병목을 왜 골랐고 그 판단의 근거가 무엇인지를 보기 때문이에요.",
+          en: "The crash course runs on Codex — that's so everyone can follow the same screen, not a rule about what you build with. There's no tool restriction on your team's build or your Demo Day work: Claude Code, Cursor, ChatGPT, whatever fits your hand. You do need an account, though — a basic paid plan on Claude or ChatGPT covers the whole eight days, and nothing beyond that is needed. Judging looks at which bottleneck you picked, why, and what backs that call — not at technical polish or how slick the screen looks.",
         },
       },
       {
