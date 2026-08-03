@@ -26,22 +26,66 @@ The tier stack is no longer `hidden sm:flex`. It renders at **every width**, fro
 the same `confirmedPartnerTiers` data, through the same `StripLogo` component. No
 new logo render path was introduced.
 
-Mobile differs only in two spacing values:
+### Sizing: a separate mobile band, not a narrower cap
 
-| | mobile | sm+ |
+The first cut of this shrank the per-mark width cap on mobile
+(`max-w-[5.5rem]`) and left the heights alone. That was wrong, and it produced
+exactly the complaint that followed — *the logos look like different sizes.*
+
+A cap below a mark's natural width letterboxes it, which silently overrides the
+equal-area height it had earned. Measured against the real 18 marks:
+
+| mark | ratio | earned H | natural W | capped to | height lost |
+|---|---|---|---|---|---|
+| INNOVATE 360 | 8.4:1 | 16px | 135px | 99px | **−27%** |
+| Onword Lab | 9.8:1 | 12px | 117px | 99px | **−16%** |
+| Drimaes | 6.6:1 | 17px | 113px | 99px | **−12%** |
+
+The three marks the cap hit were already the shortest in the strip, so the cap
+made the spread worse, not better.
+
+The underlying issue is that the desktop band spans **12–32px — a 2.67× spread**.
+Equal-area sizing means that on purpose (a square crest and a long wordmark carry
+equal visual mass, not equal height), and across a wide desktop row it reads as
+one family. Squeezed onto 375px it stops reading that way: a 12px wordmark beside
+a 32px crest looks like a rendering fault.
+
+So mobile gets **its own clamp**, not a scaled copy of the desktop one:
+
+| | area | min | max |
+|---|---|---|---|
+| 후원 (`STRIP_M_*`) | 1100 | 18 | 24 |
+| 주최 · 주관 (`LEAD_TIER.m*`) | 1500 | 21 | 27 |
+
+| | before | after |
 |---|---|---|
-| row gap between marks | `gap-x-3` | `gap-x-6` |
-| per-mark width cap | `max-w-[5.5rem]` | `max-w-[8.5rem]` |
+| height range | 12–32px | **18–27px** |
+| spread | 2.67× | **1.50×** |
+| letterboxed marks | 3 | **0** |
+| widest mark | — | 176px in a 327px column |
 
-The width cap is what decides how many marks land per row now that nothing
-scrolls; at 8.5rem the two widest wordmarks sat alone on a line at 375px. **Logo
-heights are untouched** — every mark keeps its equal-area `opticalHeight` sizing
-(22–38px), and only the widest wordmarks letterbox down inside the narrower cap.
-`LEAD_TIER` (`area: 1900, max: 32`) still applies to 주최 and 주관, so the size
-hierarchy between lead tiers and 후원 survives the smaller scale.
+Lead tiers still sit above 후원 (21–27 vs 18–24), so the hierarchy the desktop
+band establishes survives.
 
-Result at 375px: 18 marks, 3 tier labels, ~3–4 marks per row, nothing scrolling,
-nothing off-screen.
+Two implementation notes:
+
+- **Two heights, one `<img>`.** `StripLogo` computes both and writes them as
+  `--sl-h` / `--sl-h-sm`, consumed by `h-[var(--sl-h)] sm:h-[var(--sl-h-sm)]`.
+  These are 18 above-fold images; duplicating them for a media query is not a
+  trade worth making.
+- **Per-mark overrides do not carry into the mobile band.** Onword Lab's
+  `min: 12` exists to stop a 9.8:1 wordmark dominating a laptop line; on a phone
+  it just made it the smallest thing on screen. The mobile clamp handles both.
+
+`max-w` is now a backstop again rather than a layout tool: `11rem` on mobile sits
+above the widest natural width (176px) so it never bites, `8.5rem` from sm up as
+before. How many marks land per row is decided by the band and the flex wrap.
+
+Row gap is the one remaining spacing difference: `gap-x-3` on mobile,
+`gap-x-6` from sm up.
+
+Result at 375px: 18 marks, 3 tier labels, 7 wrapped rows, nothing scrolling,
+nothing off-screen, nothing letterboxed.
 
 ### What was deleted
 
@@ -98,7 +142,7 @@ The "확정 파트너 · CONFIRMED PARTNERS" label is unchanged.
 |---|---|
 | 18 logos, 3 tiers | ✅ |
 | zero marquee tracks in the strip | ✅ |
-| logo heights 12–32px (unchanged range) | ✅ |
+| every mark's height identical to pre-change (18/18 exact, 12–32px) | ✅ |
 | mobile hook-cards instance hidden | ✅ |
 | right-column hook cards visible | ✅ |
 | `#companions` marquee still running | ✅ (2 tracks) |

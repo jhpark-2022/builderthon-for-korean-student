@@ -1731,17 +1731,42 @@ function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
 // made the 주최·주관 rows read smaller than 후원: those marks are narrow crests
 // and short wordmarks, so the same area buys them far less width than a long
 // sponsor wordmark, and the eye reads width.
-type StripLogoSpec = { src: string; alt: string; w: number; h: number; area?: number; min?: number; max?: number };
+// `m*` are the MOBILE band (see STRIP_M_* below) — the strip is static on phones
+// now, so it needs its own clamp rather than inheriting the desktop one.
+type StripLogoSpec = {
+  src: string; alt: string; w: number; h: number;
+  area?: number; min?: number; max?: number;
+  mArea?: number; mMin?: number; mMax?: number;
+};
 
 // Default band, unchanged — this is what the 후원 tier still uses.
 const STRIP_AREA = 1400;
 const STRIP_MIN = 16;
 const STRIP_MAX = 26;
+
+// ── Mobile band ──────────────────────────────────────────────────────────────
+// A SEPARATE, TIGHTER clamp, not a scaled copy of the desktop one.
+//
+// Equal-area sizing gives a square crest a taller box than a long wordmark on
+// purpose — equal visual mass, not equal height. Across a wide desktop row that
+// reads as one family. Squeezed onto a 375px phone it stopped reading that way:
+// the desktop band spans 12–32px, a 2.67× spread, so INNOVATE 360 and Onword Lab
+// landed at 12px next to a 32px NUS crest and looked like a rendering fault
+// rather than a design.
+//
+// 18–24 for 후원 and 21–27 for the lead tiers narrows the whole strip to a 1.50×
+// spread while keeping 주최·주관 visibly above 후원. Verified against the real
+// 18 marks: max natural width 176px inside a 327px content column, so nothing
+// needs letterboxing and every mark keeps the height its area earned.
+const STRIP_M_AREA = 1100;
+const STRIP_M_MIN = 18;
+const STRIP_M_MAX = 24;
+
 // 주최 · 주관 sit above the sponsors in the hierarchy but were rendering below
 // them in weight. More area, and a higher ceiling so the square crests (NUS,
 // NTU KSA) can actually use it — at max 26 all three 주관 marks were pinned to
 // the cap and the extra area did nothing.
-const LEAD_TIER = { area: 1900, max: 32 } as const;
+const LEAD_TIER = { area: 1900, max: 32, mArea: 1500, mMin: 21, mMax: 27 } as const;
 
 const confirmedPartnerTiers: { label: Phrase; items: StripLogoSpec[] }[] = [
   {
@@ -1813,7 +1838,18 @@ function sortLikeHeroStrip<T extends { src: string }>(rows: T[]): T[] {
 // be past "understated" and into "unreadable" — a wordmark like WILT VENTURE
 // BUILDER lost its subtitle entirely. 22–38px is still a thin strip but the
 // marks are legible at a glance, which is the only reason they're here.
-function StripLogo({ src, alt, w, h, area, min, max }: StripLogoSpec) {
+function StripLogo({ src, alt, w, h, area, min, max, mArea, mMin, mMax }: StripLogoSpec) {
+  // Two heights, one <img>. A CSS variable per breakpoint is what lets the
+  // mobile band be a genuinely different clamp instead of a scaled-down desktop
+  // one, without a second element in the DOM (these are 18 above-fold images —
+  // duplicating them for a media query is not a trade worth making).
+  //
+  // Per-mark overrides deliberately do NOT carry into the mobile band. They are
+  // desktop tunings for a wide row: Onword Lab's `min: 12` exists to stop a
+  // 9.8:1 wordmark dominating a laptop line, and on a phone it just made it the
+  // smallest thing on the screen. The mobile clamp handles both cases itself.
+  const hSm = opticalHeight(w, h, area ?? STRIP_AREA, min ?? STRIP_MIN, max ?? STRIP_MAX);
+  const hMobile = opticalHeight(w, h, mArea ?? STRIP_M_AREA, mMin ?? STRIP_M_MIN, mMax ?? STRIP_M_MAX);
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
@@ -1835,20 +1871,22 @@ function StripLogo({ src, alt, w, h, area, min, max }: StripLogoSpec) {
       // than the same pixel height — that's what keeps a row from going ragged
       // as it scales. Ceilings verified against the two places this can break:
       // the 9-logo 후원 row wrapping on a laptop, and the phone marquee.
-      style={{ height: opticalHeight(w, h, area ?? STRIP_AREA, min ?? STRIP_MIN, max ?? STRIP_MAX) }}
+      style={{ "--sl-h": `${hMobile}px`, "--sl-h-sm": `${hSm}px` } as React.CSSProperties}
       // Opacity raised 50 → 80. At 50 the marks were only legible once the page
       // had scrolled far enough for the strip to sit over the hero scrim's dark
       // end — brightness was an accident of scroll position, not a design, so
       // they looked muddy exactly where they matter most (at rest, first view).
       // The scrim added behind the strip is what makes 80 safe on the bright
       // part of the video; the drop-shadow still carries the thin wordmarks.
-      // max-w is the backstop for the widest wordmarks: it letterboxes them
-      // down instead of letting one mark blow out its row's width. 5.5rem below
-      // sm: with the strip static rather than scrolling, the cap is what decides
-      // how many marks land per row, and 8.5rem put the widest two alone on a
-      // line at 375px. Heights are untouched — the marks stay at their 22–38px
-      // equal-area sizing and only the widest wordmarks letterbox down.
-      className="w-auto max-w-[5.5rem] shrink-0 object-contain opacity-80 grayscale drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] transition duration-300 group-hover:opacity-100 sm:max-w-[8.5rem]"
+      // max-w is a BACKSTOP, not a layout tool. It briefly did double duty on
+      // mobile at 5.5rem and that was the bug behind "the logos are different
+      // sizes": a cap below a mark's natural width letterboxes it, so the three
+      // widest wordmarks lost 12–27% of the height their area had earned — and
+      // they were already the shortest marks in the strip. 11rem sits above the
+      // widest natural width in the mobile band (176px), so it never bites; how
+      // many marks land per row is decided by the band and the flex wrap, which
+      // is where that decision belongs.
+      className="h-[var(--sl-h)] w-auto max-w-[11rem] shrink-0 object-contain opacity-80 grayscale drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] transition duration-300 group-hover:opacity-100 sm:h-[var(--sl-h-sm)] sm:max-w-[8.5rem]"
     />
   );
 }
