@@ -971,22 +971,49 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
   const r = dict.program.route;
   return (
     <div className="mt-10">
-      {/* Horizontal scroll is the mobile fallback, not a stacked rewrite: a route
-          that wraps to two rows stops being a route. min-w keeps the eight stops
-          legible at 375px and the container scrolls instead of crushing them. */}
-      <div className="-mx-6 overflow-x-auto px-6 pb-1 sm:mx-0 sm:px-0">
+      {/* TWO ROWS OF FOUR ON MOBILE, one row of eight from sm up.
+          This was a horizontally scrolling single row, on the theory that a route
+          which wraps stops being a route. That theory lost to a fact: at 375px the
+          strip cut off around Day 5, so Day 8 — the ★ terminal this device exists
+          to show — was invisible until you scrolled it. A route map whose
+          destination is off-screen by default is worse than a wrapped one.
+          Both anchors are now on screen at 375px with no scrolling.
+
+          Implementation: the eight days are split into two <ol>s of four. Below sm
+          they stack; from sm up they sit side by side and read as the original
+          single line of eight. Each row owns its own rail, inset so the two halves
+          join seamlessly on desktop (see the rail comments). */}
+      <div className="flex flex-col sm:flex-row">
+        {[days.slice(0, 4), days.slice(4, 8)].map((row, rowIdx) => (
+        <Fragment key={rowIdx}>
+        {/* Mobile-only elbow between the rows. The rail can't be drawn across a
+            flex-direction change, and a plain arrow says "continues below" just
+            as well as a bent line would. sm:hidden — on desktop the rails meet. */}
+        {rowIdx === 1 && (
+          <div aria-hidden className="flex flex-col items-center justify-center py-1.5 sm:hidden">
+            <span className="h-4 w-px bg-gradient-to-b from-white/5 to-white/25" />
+            <svg viewBox="0 0 12 8" className="h-2 w-3 text-white/30" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M1 1l5 5 5-5" />
+            </svg>
+          </div>
+        )}
         <ol
-          aria-label={t(r.ariaLabel)}
-          className="relative flex min-w-[600px] items-start sm:min-w-0"
+          aria-label={rowIdx === 0 ? t(r.ariaLabel) : undefined}
+          className="relative flex flex-1 items-start"
         >
-          {/* The rail. Inset by half a column at each end so it runs terminal to
-              terminal instead of bleeding past the outer nodes. top-4 is the
-              centre of the h-8 node row. */}
+          {/* The rail. Ends are inset by half a column (12.5% of a four-up row) so
+              it runs node-centre to node-centre. On desktop the INNER ends run to
+              the edge instead, so row 1's rail meets row 2's and the eight stops
+              read as one unbroken line. top-4 is the centre of the h-8 node row. */}
           <span
             aria-hidden
-            className="pointer-events-none absolute left-[6.25%] right-[6.25%] top-4 h-px bg-gradient-to-r from-rose-300/40 via-white/15 to-rose-300/40"
+            className={`pointer-events-none absolute top-4 h-px bg-gradient-to-r from-rose-300/40 via-white/15 to-rose-300/40 ${
+              rowIdx === 0
+                ? "left-[12.5%] right-[12.5%] sm:right-0"
+                : "left-[12.5%] right-[12.5%] sm:left-0"
+            }`}
           />
-          {days.map((d) => {
+          {row.map((d) => {
             const anchor = d.mandatory === true;
             return (
               <li key={d.day} className="relative flex-1">
@@ -1033,6 +1060,8 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
             );
           })}
         </ol>
+        </Fragment>
+        ))}
       </div>
 
       {/* Legend left, destination right — right-aligned so it sits under the
@@ -1068,6 +1097,82 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
           {t(r.optionalValue)}
         </p>
       </div>
+    </div>
+  );
+}
+
+// One benefit card. Collapses to two bullets ON MOBILE ONLY.
+//
+// Desktop must render exactly what it rendered before, so the extra points are
+// never removed from the DOM — they are `hidden sm:flex`, which means the phone
+// hides them and every other viewport (and every crawler and screen reader in
+// desktop layout) sees the full list. The toggle itself is `sm:hidden`, so above
+// the breakpoint there is no button, no tab stop and no aria state at all.
+//
+// The tap target is a transparent overlay across the whole card rather than a
+// small "더 보기" link: on a phone the card IS the control, and a 4mm link at the
+// bottom of a card is a worse target than the 200px block above it. The label row
+// stays visible as the affordance — an overlay with no visible cue is a card that
+// silently eats taps.
+function BenefitCard({
+  item,
+  t,
+}: {
+  item: (typeof dict.benefits.items)[number];
+  t: Tfn;
+}) {
+  const [open, setOpen] = useState(false);
+  const listId = `benefit-${item.num}-points`;
+  const hidden = item.points.length - 2;
+  return (
+    <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-cyan-400/25 hover:bg-white/[0.05]">
+      <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-400/15 text-sm font-black text-cyan-200">{item.num}</span>
+      <h3 className="mt-4 text-lg font-bold text-white">{t(item.title)}</h3>
+      <ul id={listId} className="mt-3 space-y-2">
+        {item.points.map((p, i) => (
+          <li
+            key={i}
+            className={`items-start gap-2 text-sm leading-relaxed text-white/70 ${
+              i > 1 && !open ? "hidden sm:flex" : "flex"
+            }`}
+          >
+            <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300/70" />
+            {t(p)}
+          </li>
+        ))}
+      </ul>
+      {hidden > 0 && (
+        <>
+          <span
+            aria-hidden
+            className="mt-3 flex items-center gap-1 text-xs font-semibold text-cyan-200/70 sm:hidden"
+          >
+            {t(open ? dict.benefits.collapse : dict.benefits.expand)}
+            <svg
+              viewBox="0 0 12 8"
+              className={`h-2 w-3 transition-transform ${open ? "rotate-180" : ""}`}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M1 1l5 5 5-5" />
+            </svg>
+          </span>
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls={listId}
+            className="absolute inset-0 rounded-2xl sm:hidden"
+          >
+            <span className="sr-only">
+              {t(item.title)} — {t(open ? dict.benefits.collapse : dict.benefits.expand)}
+            </span>
+          </button>
+        </>
+      )}
     </div>
   );
 }
@@ -1980,20 +2085,30 @@ function MobileRegisterBar() {
 // both collapse into 50 — the midpoint, so neither section moves much — and
 // every band gets the SAME fade height, so no band can announce its edge.
 // Any new section picks one of the two; a third opacity is the bug.
-const BAND_TINT = "bg-[#0a0814]/50";
-// h-24 (96px) both ends: the taller of the two previous fades. At 20px the
-// companions band's edge was still visible against the field on a wide screen.
-const BAND_FADE_TOP = "pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0814]/50 to-transparent";
-const BAND_FADE_BOTTOM = "pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0a0814]/50 to-transparent";
-
-/** The two fade edges of a tinted section. Always rendered as a pair. */
+// The band tint FADES ITSELF at both ends instead of being a flat fill with two
+// dark gradients laid over its edges.
+//
+// The old shape was `bg-[#0a0814]/50` on the whole section plus a `/50`
+// top-to-transparent gradient at each edge. That does the opposite of blending:
+// at the very edge you get tint AND fade (0.5 over 0.5 ≈ 0.75 alpha), and one
+// pixel outside the section you get 0. The edge was the DARKEST part of the band
+// and the discontinuity was maximal — which is why the seam was still visible
+// entering the speakers chapter, and why simply making the fade taller only made
+// the dark strip taller without touching the step.
+//
+// A single vertical gradient has no step at all: transparent at the boundary,
+// full tint 10rem in, held flat through the body, back to transparent. Both band
+// sections (#program, #companions) share it, so no edge can drift from another.
+const BAND_TINT =
+  "bg-[linear-gradient(to_bottom,transparent,rgba(10,8,20,0.5)_10rem,rgba(10,8,20,0.5)_calc(100%_-_10rem),transparent)]";
+/**
+ * Kept as a no-op so every band section keeps one obvious place to opt into edge
+ * treatment, and so the two call sites don't have to change shape. The fading now
+ * lives in BAND_TINT itself — see the note there for why overlay gradients could
+ * not soften an edge they were painted on top of.
+ */
 function BandFades() {
-  return (
-    <>
-      <div aria-hidden className={BAND_FADE_TOP} />
-      <div aria-hidden className={BAND_FADE_BOTTOM} />
-    </>
-  );
+  return null;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -2085,12 +2200,28 @@ function ScrollToTop() {
           // control that vanishes while you scroll would be a regression there.
           // Opacity + pointer-events rather than unmounting, so the desktop render
           // path is byte-identical to what it was.
-          className={`${chromeHidden ? "max-lg:pointer-events-none max-lg:opacity-0" : ""} fixed bottom-[calc(env(safe-area-inset-bottom,0px)+5.25rem)] right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-violet-400/40 bg-violet-600/85 text-violet-100 shadow-[0_6px_24px_rgba(124,58,237,0.3)] transition hover:-translate-y-0.5 hover:border-violet-400/60 hover:bg-violet-500 hover:text-white sm:right-8 lg:bottom-8`}
+          // The BUTTON is the hit area, the SPAN is the artwork. On a phone the
+          // visible disc drops to 32px — this is a utility, and at 48px solid
+          // violet it was reading as loudly as the 등록하기 pill and sitting on top
+          // of body copy (the 참가 대상 disclaimer, the benefits paragraph, the
+          // footer). The tap target stays 44px via the transparent button around
+          // it, so the size cut costs nothing in reachability.
+          // From lg up nothing changes: 48px, filled violet, same shadow.
+          // `!opacity-0`, not `opacity-0`. framer-motion writes `opacity: 1` as an
+          // INLINE style from the `animate` prop, and inline beats any class — so
+          // the hide-on-scroll-down never actually hid this button. It only went
+          // pointer-events:none, which is invisible to the user: the FAB sat on
+          // top of the body copy the whole way down the page and merely stopped
+          // responding to taps. `!important` is the one thing that outranks an
+          // inline style, and it is why this is the only `!` in the file.
+          className={`${chromeHidden ? "max-lg:pointer-events-none max-lg:!opacity-0" : ""} group fixed bottom-[calc(env(safe-area-inset-bottom,0px)+5.25rem)] right-6 z-50 flex h-11 w-11 items-center justify-center transition-opacity duration-200 sm:right-8 lg:bottom-8 lg:h-12 lg:w-12`}
         >
-          {/* upward chevron */}
-          <svg aria-hidden viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M6 15l6-6 6 6" />
-          </svg>
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/[0.07] text-white/65 backdrop-blur-sm transition group-hover:-translate-y-0.5 group-hover:border-white/35 group-hover:text-white lg:h-12 lg:w-12 lg:border-violet-400/40 lg:bg-violet-600/85 lg:text-violet-100 lg:shadow-[0_6px_24px_rgba(124,58,237,0.3)] lg:group-hover:border-violet-400/60 lg:group-hover:bg-violet-500 lg:group-hover:text-white">
+            {/* upward chevron */}
+            <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4 lg:h-5 lg:w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 15l6-6 6 6" />
+            </svg>
+          </span>
         </motion.button>
       )}
     </AnimatePresence>
@@ -2340,7 +2471,12 @@ export default function Journey() {
           On desktop the panel lives in the hero's right column (above); on
           mobile it gets its own section between the hero and About so it's
           readable and not buried in a tall stacked hero. */}
-      <section id="launch" className="w-full px-6 py-12 lg:hidden">
+      {/* pb-4 rather than py-12: this section is `lg:hidden`, so it is a mobile
+          block by definition and its bottom padding stacked on top of the About
+          chapter's own py-14 — 104px of nothing between the countdown and the
+          first line of copy. Top padding is untouched; the gap under the hero is
+          doing real work. Desktop never renders this. */}
+      <section id="launch" className="w-full px-6 pb-4 pt-12 lg:hidden">
         <HeroLaunchPanel t={t} reduce={!!reduce} />
       </section>
 
@@ -2501,18 +2637,7 @@ export default function Journey() {
 
         <div className="mt-10 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-3">
           {dict.benefits.items.map((it) => (
-            <div key={it.num} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-cyan-400/25 hover:bg-white/[0.05]">
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-400/15 text-sm font-black text-cyan-200">{it.num}</span>
-              <h3 className="mt-4 text-lg font-bold text-white">{t(it.title)}</h3>
-              <ul className="mt-3 space-y-2">
-                {it.points.map((p, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm leading-relaxed text-white/70">
-                    <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300/70" />
-                    {t(p)}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <BenefitCard key={it.num} item={it} t={t} />
           ))}
         </div>
 
@@ -2876,15 +3001,27 @@ export default function Journey() {
                     </div>
                   )}
 
-                  {/* Same mentor card as before — flex-wrap, widths mirroring the
-                      old grid columns (gap-3 = 0.75rem), last line centred. */}
-                  <div className="mt-4 flex flex-wrap justify-center gap-3">
+                  {/* MOBILE: a swipe row. DESKTOP: the same flex-wrap grid as
+                      before — widths mirror the old grid columns (gap-3 = 0.75rem)
+                      and the last line stays centred.
+                      Twelve mentor cards stacked one per screen was the single
+                      largest block on the mobile page; as a snap row they cost one
+                      screen instead of twelve. The peek of the next card (75vw +
+                      gap) is the whole affordance — no dots, because a dot row is
+                      more chrome than the thing it explains.
+                      The negative margin + padding lets cards scroll to the screen
+                      edge while the first one still lines up with the section. */}
+                  <div
+                    role="region"
+                    aria-label={t(g.theme)}
+                    className="-mx-4 mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:justify-center sm:overflow-x-visible sm:px-0 sm:pb-0"
+                  >
                     {mentors.map((m, i) => {
                       const name = t(m.name);
                       const role = t(m.role);
                       const intro = t(m.intro);
                       return (
-                        <div key={i} className="flex w-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-emerald-400/25 hover:bg-white/[0.05] sm:w-[calc((100%-0.75rem)/2)] lg:w-[calc((100%-1.5rem)/3)]">
+                        <div key={i} className="flex w-[75vw] shrink-0 snap-start flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-emerald-400/25 hover:bg-white/[0.05] sm:w-[calc((100%-0.75rem)/2)] sm:shrink lg:w-[calc((100%-1.5rem)/3)]">
                           <div className="flex items-start justify-between gap-2">
                             {/* break-keep — Korean breaks between syllables by
                                 default, which shreds a 3-syllable name into a
@@ -2970,11 +3107,18 @@ export default function Journey() {
               columns are (100% − 1rem)/2 and three are (100% − 2rem)/3 — and the
               count is never hardcoded, so the last line keeps centring itself as
               judges are added or removed. */}
-          <div className="mt-9 flex flex-wrap justify-center gap-4">
+          {/* Swipe row on mobile, unchanged wrap grid from sm up — same treatment
+              and the same reasoning as the mentor rows above. Ten judges is ten
+              screens of scrolling otherwise. */}
+          <div
+            role="region"
+            aria-label={t(dict.judges.heading)}
+            className="-mx-4 mt-9 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:justify-center sm:overflow-x-visible sm:px-0 sm:pb-0"
+          >
             {dict.judges.people.map((j, i) => {
               const name = t(j.name);
               return (
-                <div key={i} className="flex w-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-400/25 hover:bg-white/[0.05] sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-2rem)/3)]">
+                <div key={i} className="flex w-[75vw] shrink-0 snap-start flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-400/25 hover:bg-white/[0.05] sm:w-[calc((100%-1rem)/2)] sm:shrink lg:w-[calc((100%-2rem)/3)]">
                   <div className="flex items-center gap-3">
                     {/* Face photo when on hand, else initial avatar. */}
                     {j.img ? (

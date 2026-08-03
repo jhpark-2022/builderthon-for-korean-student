@@ -1162,6 +1162,13 @@ export const dict = {
   benefits: {
     tag: { ko: "참가 혜택", en: "Why Join" },
     heading: { ko: "참가하면 무엇을 얻나요?", en: "What you get by joining" },
+    // MOBILE ONLY. The six cards carry 3–5 bullets each, and fully expanded they
+    // were the second-longest block on a phone. Collapsed to two bullets, a card
+    // still reads as a complete claim (title + the point that matters most), and
+    // tapping it opens the rest. Desktop never collapses — there the cards sit
+    // three-up and the full list is what makes them comparable.
+    expand: { ko: "더 보기", en: "Show more" },
+    collapse: { ko: "접기", en: "Show less" },
     // Q1 spine (2026-08-01). This section listed six benefits side by side, which
     // read as six reasons of equal size — and the actual answer to "what do I get"
     // was scattered across cards 02 and 03 and the judges section, never stated in
