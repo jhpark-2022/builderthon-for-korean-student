@@ -255,9 +255,18 @@ export const days: DayMeta[] = [
       },
       {
         time: "2:10PM–2:30PM",
-        label: { ko: "7일 진행 안내 · 멘토링 안내 · 문제 공개", en: "How the next 7 days run · mentoring · problem release" },
-        note: { ko: "문제 공개가 이 블록의 마지막 순서입니다", en: "The problems drop at the end of this block" },
+        label: { ko: "7일 진행 안내 · 멘토링 안내", en: "How the next 7 days run · mentoring" },
         eventId: "d1-orientation",
+      },
+      // 같은 20분 블록의 마지막 순서. time을 비우면 시간 열에 ↳가 찍혀 위 줄에
+      // 이어지는 항목으로 읽힙니다 — 없는 시각을 쪼개 만들지 않으면서도 문제 공개가
+      // 자기 카드로 이어질 수 있게 하는 유일한 방법입니다. 시간표가 세션 카드를
+      // 대체하므로, 여기 걸리지 않은 세션은 열 방법이 사라집니다.
+      {
+        time: "",
+        label: { ko: "문제 공개 · 트랙 선택", en: "Problem release · track selection" },
+        note: { ko: "이 블록의 마지막 순서입니다", en: "The last item in that block" },
+        eventId: "d1-problem-release",
       },
       {
         time: "2:30PM–3:10PM",

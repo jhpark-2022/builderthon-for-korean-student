@@ -1500,18 +1500,29 @@ function DayModal({
               <h3 id="day-modal-title" className="mt-5 text-[24px] font-bold leading-tight text-white sm:text-[30px]">{t(day.theme)}</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/70">{t(day.summary)}</p>
               {day.deliverableDue && <SubmissionBox t={t} />}
-              {/* 진행 순서가 세션 카드보다 위에 옵니다 — "그날 뭐가 있나"보다
-                  "몇 시에 뭘 하나"가 먼저 궁금하고, 카드에 없는 순간(입장·휴식·
-                  네트워킹)이 절반이라 카드만으로는 하루가 설명되지 않습니다. */}
+              {/* 진행 순서가 있으면 그것이 세션 목록을 대신합니다 — 둘 다 두면
+                  같은 세션을 시간표에서 한 번, 카드에서 또 한 번 읽게 됩니다.
+                  시간표가 더 나은 이유: 카드에 없는 순간(입장·휴식·네트워킹·정리)
+                  까지 담고, 순서와 시각이 보이고, 카드로 가는 길(→)도 그 안에
+                  있습니다. 그래서 시간표를 채울 때는 모든 세션이 어느 줄엔가
+                  걸려 있어야 합니다 — 안 걸린 세션은 열 방법이 없어집니다. */}
               {day.runOfShow?.length ? (
-                <RunOfShow rows={day.runOfShow} t={t} onSelectEvent={onSelectEvent} />
-              ) : null}
-              <div className="mt-6 grid gap-3">
-                {evs.map((ev) => (
-                  <EventCard key={ev.id} ev={ev} t={t} onSelect={onSelectEvent} />
-                ))}
-                {day && dayHasSelfPaced(day.day) && <SelfPacedNote t={t} />}
-              </div>
+                <>
+                  <RunOfShow rows={day.runOfShow} t={t} onSelectEvent={onSelectEvent} />
+                  {dayHasSelfPaced(day.day) && (
+                    <div className="mt-3">
+                      <SelfPacedNote t={t} />
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="mt-6 grid gap-3">
+                  {evs.map((ev) => (
+                    <EventCard key={ev.id} ev={ev} t={t} onSelect={onSelectEvent} />
+                  ))}
+                  {day && dayHasSelfPaced(day.day) && <SelfPacedNote t={t} />}
+                </div>
+              )}
             </div>
           </motion.div>
         </motion.div>
@@ -1555,8 +1566,10 @@ function RunOfShow({
             <>
               {/* tabular-nums + a fixed column: times that don't line up read as
                   a list of strings rather than a schedule. */}
+              {/* 빈 time = 위 줄과 같은 블록의 하위 항목. 시각을 지어내지 않으면서
+                  "이어지는 순서"임을 보여줍니다 (Day 1의 문제 공개). */}
               <span className="w-[6.5rem] shrink-0 pt-[1px] text-[0.72rem] font-semibold tabular-nums text-white/50 sm:w-[7.5rem] sm:text-xs">
-                {row.time}
+                {row.time || <span aria-hidden className="pl-3 text-white/25">↳</span>}
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block break-keep text-[13px] font-semibold leading-snug text-white/85">
