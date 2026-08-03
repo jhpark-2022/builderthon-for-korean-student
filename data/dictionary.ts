@@ -1620,8 +1620,17 @@ export const dict = {
         // check — direction is frozen). Keep the verbs distinct; do not let
         // build-stage advice language leak into the Day 7 blurb or vice versa.
         sub: {
-          ko: "빌드는 끝났고, 남은 것은 증명입니다. 데모데이 전날 — AWS의 GTM·세일즈 시니어를 비롯해 현업에서 제품을 직접 파는 사람들과 — 5분 안에 ‘어떤 병목을 왜 골랐고, 근거는 무엇이고, 실제로 돌아가는가’가 서는지 점검하고, 심사위원이 던질 질문(“프롬프트 한 줄로 한 것과 뭐가 다르죠?”)을 미리 받아봅니다. 그날 저녁 마감되는 사전 제출물의 마지막 점검 자리이기도 해요.",
-          en: "The build is done; what's left is the proof. The day before Demo Day — with AWS GTM & sales seniors and people who sell products for a living — you pressure-test whether ‘which bottleneck, why, on what evidence, and does it actually run’ stands up in five minutes, and field the questions judges will ask (“how is this different from a one-line prompt?”). It's also the last check before the submission package closes that evening.",
+          // 인용문을 풀어 쓴 이유 (2026-08-04): 원래 "프롬프트 한 줄로 한 것과 뭐가
+          // 다르죠?"였는데, 심사위원(정요천 님)조차 이 축약형의 의미를 되물었습니다.
+          // 심사위원이 되묻는 문장을 학생이 제대로 읽을 리 없습니다. 실제 질문은
+          // "학생 팀이 프롬프트를 한 줄만 썼느냐"가 아니라 "기업 담당자가 그냥 범용
+          // LLM에 물어봐서 얻는 답 대비, 이 솔루션이 무엇을 더 하느냐"입니다 —
+          // 비교 대상이 학생의 노력이 아니라 담당자의 대안이라는 게 요지라서, 그
+          // 대상을 문장 안에 넣지 않으면 뜻이 서지 않습니다.
+          // 같은 인용이 FAQ("AI로 대충 만들면?")에도 있습니다 — 함께 움직이세요.
+          // 축약형으로 되돌리지 말 것.
+          ko: "빌드는 끝났고, 남은 것은 증명입니다. 데모데이 전날 — AWS의 GTM·세일즈 시니어를 비롯해 현업에서 제품을 직접 파는 사람들과 — 5분 안에 ‘어떤 병목을 왜 골랐고, 근거는 무엇이고, 실제로 돌아가는가’가 서는지 점검하고, 심사위원이 던질 질문(“담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”)을 미리 받아봅니다. 그날 저녁 마감되는 사전 제출물의 마지막 점검 자리이기도 해요.",
+          en: "The build is done; what's left is the proof. The day before Demo Day — with AWS GTM & sales seniors and people who sell products for a living — you pressure-test whether ‘which bottleneck, why, on what evidence, and does it actually run’ stands up in five minutes, and field the questions judges will ask (“how is this different from what the problem owner would get by just asking a general LLM?”). It's also the last check before the submission package closes that evening.",
         },
         // No partner logos here on purpose. AWS is where several of these mentors
         // work, and it sponsors the Day 7 venue — but it has never been named a
@@ -2297,8 +2306,8 @@ export const dict = {
           // 아닙니다. 학생이 무대 사고를 치명적으로 오해하게 두면 안 됩니다.
           // 숫자를 다시 넣지 마세요. 배점이 확정되면 심사표를 정본으로 삼되,
           // 이 답변은 서술로 두는 편이 오래갑니다.
-          ko: "기업이 도입을 약속하는 건 아니에요 — 심사에서 ‘담당자가 다음 주 월요일부터 쓸 수 있는가’를 보긴 하지만, 그건 도입 확정과는 다릅니다. 대신 우승팀에게는 인턴으로 그 문제를 실무에서 이어갈 기회(잠정)가 있어요. ‘AI로 대충’은 심사에서 걸러집니다 — 심사위원이 현장에서 “프롬프트 한 줄로 한 것과 뭐가 다르죠?”를 직접 묻고, 근거 없이 결과만 내놓는 산출물은 요구사항 미충족으로 처리됩니다. 목업·슬라이드만 있는 경우도 마찬가지고요. 반대로 무대에서 라이브 시연이 삐끗하는 건 감점이 아닙니다 — 작동 여부는 사전에 제출한 데모 영상 기준으로 봅니다.",
-          en: "No company commits to adopting what you build — judging does ask whether the owner could use it from next Monday, but that isn't the same as a decision to adopt. What the winning team does get is the chance (tentative) to carry that problem into real work as an intern. And “AI slop” doesn't survive judging: judges ask out loud, “how is this different from a one-line prompt?”, and output that returns results with no reasoning behind them counts as a failed requirement. Mockups or slides alone go the same way. A live demo stumbling on stage, on the other hand, costs nothing — whether it runs is judged on the demo video you submit beforehand.",
+          ko: "기업이 도입을 약속하는 건 아니에요 — 심사에서 ‘담당자가 다음 주 월요일부터 쓸 수 있는가’를 보긴 하지만, 그건 도입 확정과는 다릅니다. 대신 우승팀에게는 인턴으로 그 문제를 실무에서 이어갈 기회(잠정)가 있어요. ‘AI로 대충’은 심사에서 걸러집니다 — 심사위원이 현장에서 “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”를 직접 묻고, 근거 없이 결과만 내놓는 산출물은 요구사항 미충족으로 처리됩니다. 목업·슬라이드만 있는 경우도 마찬가지고요. 반대로 무대에서 라이브 시연이 삐끗하는 건 감점이 아닙니다 — 작동 여부는 사전에 제출한 데모 영상 기준으로 봅니다.",
+          en: "No company commits to adopting what you build — judging does ask whether the owner could use it from next Monday, but that isn't the same as a decision to adopt. What the winning team does get is the chance (tentative) to carry that problem into real work as an intern. And “AI slop” doesn't survive judging: judges ask out loud, “how is this different from what the problem owner would get by just asking a general LLM?”, and output that returns results with no reasoning behind them counts as a failed requirement. Mockups or slides alone go the same way. A live demo stumbling on stage, on the other hand, costs nothing — whether it runs is judged on the demo video you submit beforehand.",
         },
       },
       {
