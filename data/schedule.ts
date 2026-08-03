@@ -907,10 +907,13 @@ export const schedule: BEvent[] = [
     locationUrl: FOUNDRY_URL,
   },
   // 파트너 인사말. 구성·길이가 아직 조율 중이라 confirmed를 세우지 않습니다 —
-  // 시각(2:00–2:10PM)만 진행 순서에 잡혀 있습니다.
-  // 개인 실명은 넣지 않습니다: 본인 공개 동의 전이고, 회사명으로 두면 나오는
-  // 사람이 바뀌어도 카피가 깨지지 않습니다. 무슨 이야기를 할지도 쓰지 않습니다 —
-  // 정해지지 않은 것을 지어내는 자리가 아닙니다.
+  // 시각(2:00–2:10PM)만 진행 순서에 잡혀 있습니다. 무슨 이야기를 할지는 쓰지
+  // 않습니다: 정해지지 않은 것을 지어내는 자리가 아닙니다.
+  //
+  // 실명·사진은 2026-08-04에 추가했습니다. 그전까지는 "본인 공개 동의 전"이라
+  // 회사명만 두고 있었는데, 사진과 LinkedIn을 함께 받아 공개로 전환했습니다.
+  // speakerProfile의 내용은 공개 LinkedIn 프로필에서 확인한 것만 씁니다 —
+  // 직함을 추측해 붙이지 마세요(아래 role 주석 참고).
   {
     id: "d1-hashed-greeting",
     day: 1,
@@ -920,6 +923,19 @@ export const schedule: BEvent[] = [
     timeOfDay: "PM",
     time: "2PM–2:10PM",
     title: { ko: "해시드 파트너 인사말", en: "A word from Hashed" },
+    speaker: { ko: "김성호 (해시드)", en: "Sungho Kim (Hashed)" },
+    speakerProfile: {
+      name: { ko: "김성호", en: "Sungho Kim" },
+      // 공개 프로필이 말하는 만큼만: 소속과 하는 일. 정확한 직함(파트너 등)은
+      // 확인되면 여기에 넣으세요 — 추측해서 붙이지 않았습니다.
+      role: { ko: "해시드 · 벤처 투자자 (싱가포르)", en: "Venture investor, Hashed (Singapore)" },
+      img: "/partners/people/kim-sung-ho.jpg",
+      bio: {
+        ko: "Web3·AI 투자. AI 에이전트 인프라와 신뢰 구조, 아시아의 스테이블코인·크로스보더 결제를 봅니다. KAIST.",
+        en: "Invests across Web3 and AI — agent infrastructure and trust in AI systems, plus stablecoins and cross-border payments in Asia. KAIST.",
+      },
+      linkedin: "https://www.linkedin.com/in/ryansunghokim/",
+    },
     summary: {
       ko: "종합 지원 파트너 해시드의 인사말 — 구성·길이는 조율 중입니다.",
       en: "A greeting from Hashed, our overall supporting partner — shape and length still being arranged.",
