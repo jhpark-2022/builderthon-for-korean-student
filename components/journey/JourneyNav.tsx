@@ -77,12 +77,17 @@ export default function JourneyNav() {
         chromeHidden ? "-translate-y-full" : "translate-y-0"
       }`}
     >
-      {/* 52px on phones, h-20 from lg: the tall bar was designed for a desktop
-          row of seven anchor links, but below lg it carries a logo, one chip and
-          the language toggle — and it sits above a second row. Together with the
-          rail's tightened padding this takes the mobile header from ~145px to
-          ~105px — about a quarter of the two-row chrome back. Touch targets inside are unchanged (44px minimums). */}
-      <nav className="flex h-[52px] w-full items-center justify-between px-6 sm:px-10 lg:h-20">
+      {/* 52px in the two-row band, h-20 from xl: the tall bar was designed for a
+          desktop row of seven anchor links, but below that it carries a logo, a
+          chip or two and the language toggle — and it sits above a second row.
+          Together with the rail's tightened padding this takes the two-row header
+          from ~145px to ~105px — about a quarter of that chrome back. Touch
+          targets inside are unchanged (44px minimums), and the nav CTAs that
+          appear from lg are ~43px tall, so they still clear the 52px bar.
+          Tracks the anchor row's breakpoint (`lg` → `xl`, 2026-08-03) so the bar
+          is tall exactly when it has a row of links to hold — and so
+          scroll-padding-top in globals.css only ever needs two bands. */}
+      <nav className="flex h-[52px] w-full items-center justify-between px-6 sm:px-10 xl:h-20">
         {/* LEFT group — brand logo + anchor links, kept together on the left edge. */}
         <div className="flex items-center">
           <a href="#top" className="flex items-center gap-2.5 leading-none">
@@ -105,15 +110,25 @@ export default function JourneyNav() {
             {/* The suffix is part of a lockup, so it must never wrap
                 (whitespace-nowrap) and it yields whenever the bar is tight
                 rather than pushing anything off-screen.
-                Two bands drop it: below `sm`, and again from `lg` to `xl`. The
-                second one is where the seven anchor links appear but the bar is
-                still narrow — at 1024px the row needs ~1100px with the suffix in
-                it, so it used to overlap the links and shove the EN/KR toggle
-                off the edge. The zero100 wordmark alone still carries the brand
-                there; the full lockup returns at `xl`, where it fits. */}
-            <span className={`hidden items-center whitespace-nowrap text-lg font-black leading-none tracking-wide text-white/90 sm:inline-flex sm:text-xl lg:hidden xl:inline-flex ${locale === "ko" ? "translate-y-[2px]" : ""}`}>{t(dict.nav.brandSuffix)}</span>
+                It drops below `sm` in both locales, and ENGLISH drops it again
+                from `xl` to 1500px. That second band is where the anchor row
+                appears, and the EN labels are the longer set — "AI Builderthon"
+                is 163px against "AI 빌더톤"'s 89px, and the EN anchor row is
+                577px against 509px. Measured with the suffix forced on: at 1400
+                the two nav groups touch (0px between them) and the lockup still
+                overflows its own flex item by 18px, at 1440 the gap is 15px, at
+                1500 it is 75px. Below that the lockup printed on top of the first
+                two links; the zero100 wordmark alone carries the brand there.
+                KR fits from `xl` with 42px to spare, so it needs no second band.
+                Re-measure before touching 1500 — it is the EN row width, not a
+                round number. */}
+            <span className={`hidden items-center whitespace-nowrap text-lg font-black leading-none tracking-wide text-white/90 sm:inline-flex sm:text-xl ${locale === "ko" ? "translate-y-[2px]" : "xl:hidden min-[1500px]:inline-flex"}`}>{t(dict.nav.brandSuffix)}</span>
           </a>
-          <div className="hidden items-center gap-5 lg:ml-10 lg:flex">
+          {/* ANCHOR ROW — `xl` (1280), not `lg` (1024). See the note on the
+              section rail below: between 1024 and 1279 this row does not fit
+              next to the brand and the two CTAs in either locale, and flex
+              silently crushed the brand to make room. */}
+          <div className="hidden items-center gap-5 xl:ml-10 xl:flex">
             {anchors.map((a) => (
               <a
                 key={a.id}
@@ -176,16 +191,17 @@ export default function JourneyNav() {
               registered the roles swap: registration is done ("등록 완료 ✓"), so
               the next real action is the chat, and this becomes the filled
               control. See the registered branch below. */}
-          {/* Phone/tablet path to the quiz. The anchor row above is `lg:flex`, so
+          {/* Phone/tablet path to the quiz. The anchor row above is `xl:flex`, so
               without this there is no route to /quiz from the header at all
-              below lg. Kept to a compact chip rather than a new hamburger — the
+              below xl. Kept to a compact chip rather than a new hamburger — the
               header's minimalism is the point, and one more sheet to open is one
-              more reason not to. */}
+              more reason not to. Tracks the anchor row's breakpoint: if that
+              moves, this moves with it or the quiz loses its only header route. */}
           <a
             href="/quiz"
             onClick={() => track("quiz_click", { src: "nav_mobile" })}
             aria-label={t(dict.nav.quizNav)}
-            className="inline-flex min-h-[44px] shrink-0 items-center gap-1 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 text-xs font-bold text-violet-100/90 transition hover:border-violet-300/50 hover:bg-violet-500/20 hover:text-white lg:hidden"
+            className="inline-flex min-h-[44px] shrink-0 items-center gap-1 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 text-xs font-bold text-violet-100/90 transition hover:border-violet-300/50 hover:bg-violet-500/20 hover:text-white xl:hidden"
           >
             <span aria-hidden>✦</span>
           </a>
@@ -244,12 +260,25 @@ export default function JourneyNav() {
           <LocaleToggle />
         </div>
       </nav>
-      {/* ── Section rail (below `lg` only) ────────────────────────────────────
-          The anchor row above is `lg:flex`, so on a phone the header carried the
+      {/* ── Section rail (below `xl` only) ────────────────────────────────────
+          The anchor row above is `xl:flex`, so on a phone the header carried the
           brand, the quiz chip and the language toggle and nothing else — while
           the page itself runs ~27,000px on a 390px screen. A visitor who wanted
           the programme or the FAQ had one tool: scrolling, or the back-to-top
           button. This is that missing route.
+
+          THE BOUNDARY MOVED `lg` → `xl` (2026-08-03). The inline row appeared at
+          1024 but did not FIT until ~1200 (KR) / ~1280 (EN): brand 171 + row 509
+          /577 + the two CTAs 324 + rail padding came to 1139px (KR) and 1201px
+          (EN) inside a 1024px bar. Nothing wrapped, because every label is
+          whitespace-nowrap — instead flex shrank the one item that could give,
+          the brand link, and at 1024 the zero100 wordmark was crushed from 171px
+          to 50px while the EN/KR toggle sat off the right edge. Measured, both
+          locales, before and after. So 1024–1279 now gets the same two-row
+          treatment as a phone: compact bar + this rail, which reaches every
+          section the inline row does. Do not move this back to `lg` without
+          re-measuring the widest locale — the row is the constraint, not the
+          breakpoint name.
 
           Deliberately a scrollable rail, not a hamburger sheet: the same chips
           the desktop bar uses, laid on their side, so nothing new has to be
@@ -263,7 +292,7 @@ export default function JourneyNav() {
           `scroll-padding-top` in globals.css accounts for the extra height on
           this breakpoint, so an anchor jump doesn't park a heading underneath. */}
       {scrolled && (
-        <div className="lg:hidden">
+        <div className="xl:hidden">
           <div className="flex gap-2 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]{display:none}">
             {anchors.map((a) => (
               <a

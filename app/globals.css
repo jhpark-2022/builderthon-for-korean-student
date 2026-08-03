@@ -39,13 +39,16 @@
    (its clamp caps were trimmed to compensate). */
 html { font-size: 112.5%; scroll-behavior: smooth; scroll-padding-top: 96px; }
 
-/* Below `lg` the fixed header grows a second row — the scrollable section rail
+/* Below `xl` the fixed header grows a second row — the scrollable section rail
    (components/journey/JourneyNav.tsx), which only exists at this breakpoint.
    Without the extra offset an anchor jump parks the target heading underneath
    it. Keep this in step with the rail's height if its padding ever changes:
-   the bar row is h-14 (56px) and the rail is a 44px chip plus 8px of padding,
-   so ~108px of chrome — 120 leaves a little air under it. */
-@media (max-width: 1023px) {
+   the bar row is 52px and the rail is a 44px chip plus 8px of padding, so
+   ~105px of chrome — 120 leaves a little air under it.
+   The bound moved 1023 → 1279 with the nav's anchor row (2026-08-03): the
+   inline row and the tall h-20 bar now both start at `xl`, so 1024–1279 gets
+   the same two-row header a phone does and needs the same offset. */
+@media (max-width: 1279px) {
   html { scroll-padding-top: 120px; }
 }
 
