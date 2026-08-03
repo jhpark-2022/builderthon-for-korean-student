@@ -539,9 +539,17 @@ export const dict = {
     // left the reader to guess what they walk away holding. Same spine appears in
     // benefits.spine, judges.heading/sub and the "8일이 끝나면 뭐가 남나요" FAQ —
     // change them together.
+    // SAY ONLY WHAT NOTHING ELSE IN THE HERO SAYS (2026-08-03). This opened with
+    // "싱가포르에서 공부하는 한국 학생들이 8일간 … AI 빌더톤", which is the eyebrow
+    // ("싱가포르 최초의 한인 학생 AI 빌더톤") and the date line ("… · 8일") read back
+    // in sentence form — roughly half the paragraph restating its own neighbours.
+    // Cut to the four things only this block carries, in the order a reader needs
+    // them: what you actually do → how little of your August it costs → who you
+    // prove it to → what you keep. Any addition here should have to displace one
+    // of those four rather than sit alongside them.
     blurb: {
-      ko: "싱가포르에서 공부하는 한국 학생들이 8일간, 실제 기업의 AI 전환(AX) 과제를 바이브 코딩으로 직접 풀어내는 AI 빌더톤. 필참은 첫날과 마지막 날 이틀뿐 — 나머지는 각자 편한 시간·장소에서 팀별로 빌드합니다. 8일의 끝, 문제를 낸 기업과 현업 리더들 앞에서 ‘내 아이디어가 돌아간다’를 검증받습니다 — 데모·피칭·수료증으로 손에 남게.",
-      en: "Korean students in Singapore spend 8 days solving real companies' AI-transformation (AX) problems with vibe coding. Only the first and last day are required — the rest your team builds whenever and wherever suits you. On the last day you pitch to the company that set the problem and to working leaders, and get told your idea holds up — with a demo, a pitch and a certificate to show for it."
+      ko: "실제 기업의 AI 전환(AX) 과제를 바이브 코딩으로 풉니다. 필참은 첫날과 마지막 날 이틀뿐 — 나머지는 팀이 편한 시간에 빌드해요. 마지막 날, 문제를 낸 기업과 현업 리더 앞에서 ‘내 아이디어가 돌아간다’를 증명하고 데모·피칭·수료증으로 남깁니다.",
+      en: "Solve a real company's AI-transformation (AX) problem with vibe coding. Only day one and day eight are required — the rest is your team's own time. On the last day you show it running to the company that set the problem and to working leaders, and keep the demo, the pitch and the certificate."
     },
     ctaProgram: { ko: "8일의 여정 둘러보기", en: "Explore the 8-day journey" },
     ctaPartner: { ko: "파트너십 문의", en: "Partner with us" },
