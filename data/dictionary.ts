@@ -2133,6 +2133,9 @@ export const dict = {
     about: { ko: "함께하는 곳", en: "Who's behind it" },
     visit: { ko: "사이트 방문", en: "Visit site" },
     opportunities: { ko: "이런 기회가 있어요", en: "What's in it for you" },
+    // 멘토링 카드의 점검 목록(BEvent.checkpoints) 제목. `opportunities`가 "여기서
+    // 뭘 얻나"라면 이건 "그 시간에 뭘 하나"입니다 — 같은 마크업, 다른 질문.
+    checkpoints: { ko: "이 시간에 함께 보는 것", en: "What you'll go through" },
     // Partner logo → intro modal
     companyAbout: { ko: "회사 소개", en: "About" },
     // Shown in the partner modal when the tile it replaced had an outbound link.

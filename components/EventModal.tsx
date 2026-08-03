@@ -311,6 +311,35 @@ export default function EventModal({
                 </div>
               )}
 
+              {/* 멘토링 시간에 함께 보는 것 — description이 "무슨 시간인지"를
+                  말하고, 이 목록이 "무엇을 보는지"를 말합니다. opportunities와
+                  같은 마크업·간격을 그대로 씁니다(다른 질문이지만 같은 종류의
+                  목록이라 새 스타일을 만들 이유가 없습니다). 번호는 순서가 아니라
+                  개수를 보여주는 용도라 목록 마커로 충분합니다.
+                  checkpoints가 없는 카드는 이 블록 자체가 렌더되지 않습니다. */}
+              {event.checkpoints && event.checkpoints.length > 0 && (
+                <div className="mt-7">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-white/70">
+                    {t(dict.modal.checkpoints)}
+                  </p>
+                  <ul className="mt-3 space-y-3">
+                    {event.checkpoints.map((c, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-3 text-sm leading-7 text-white/75"
+                      >
+                        <span
+                          aria-hidden
+                          className="mt-[3px] flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent/30 bg-accent/10 text-[0.62rem] font-bold text-accent"
+                        >
+                          {i + 1}
+                        </span>
+                        {t(c)}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               {/* What's in it for you — concrete opportunities */}
               {event.opportunities && event.opportunities.length > 0 && (
                 <div className="mt-7">

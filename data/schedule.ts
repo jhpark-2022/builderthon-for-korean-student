@@ -122,6 +122,13 @@ export interface BEvent {
   // Optional: concrete opportunities a student gets from attending. Honest —
   // describes the value of the session, not guaranteed outcomes.
   opportunities?: Bilingual[];
+  // 멘토링 시간에 멘토와 함께 짚는 것들. 세션 소개(description)가 "이게 무슨
+  // 시간인지"를 말한다면, 이 배열은 "무엇을 보는지"를 말한다.
+  // Day 3–6(점수를 만드는 시간)과 Day 7(만든 점수를 잃지 않는 시간)이 서로 다른
+  // 목록을 쓴다 — 두 구간의 할 일이 다르기 때문이다. 아래 공용 상수를 참조만
+  // 하고 카드마다 문장을 복사하지 마라(같은 문장을 두 곳에서 관리하면 반드시
+  // 갈라진다).
+  checkpoints?: Bilingual[];
 }
 
 export interface DayMeta {
@@ -341,8 +348,8 @@ export const days: DayMeta[] = [
       en: "The only fixed thing is a PM 1:1 mentoring slot (online by default) — the rest is yours to build in whatever free time you have.",
     },
     whyStop: {
-      ko: "방향을 아직 바꿀 수 있을 때 받는 두 번째 1:1",
-      en: "A second 1:1, while there's still time to change direction",
+      ko: "내 아이디어를 현직자에게 1:1로 검증받는 첫 기회",
+      en: "The first time your idea meets a working founder, 1:1",
     },
     stopLabel: { ko: "1:1 멘토링", en: "1:1 mentoring" },
     dayMode: "online",
@@ -358,8 +365,8 @@ export const days: DayMeta[] = [
       en: "The only fixed thing is a PM 1:1 mentoring slot (online by default) — the rest is yours to build in whatever free time you have.",
     },
     whyStop: {
-      ko: "내 아이디어를 현직자에게 1:1로 검증받는 첫 기회",
-      en: "The first time your idea meets a working founder, 1:1",
+      ko: "방향을 아직 바꿀 수 있을 때 받는 두 번째 1:1",
+      en: "A second 1:1, while there's still time to change direction",
     },
     stopLabel: { ko: "1:1 멘토링", en: "1:1 mentoring" },
     dayMode: "online",
@@ -648,10 +655,68 @@ const POPUP_STUDIO_ORG = {
   },
 } as const;
 
+// ── 멘토링 점검 항목 (BEvent.checkpoints) ────────────────────────────────────
+// 두 구간의 할 일이 다르므로 목록도 둘입니다.
+//
+// 원문은 멘토에게 주는 지침("~해주시면 좋겠습니다")이었는데, 사이트는 학생이
+// 읽는 곳이라 시점을 학생으로 옮겨 다시 썼습니다 — 내용은 그대로 두고 "멘토와
+// 함께 이런 걸 점검한다"로. 카피에 멘토를 부르는 말투를 남기지 마세요.
+//
+// Day 3–6 · 점수를 만드는 시간: 문제의 범위와 솔루션 방향을 아직 실제로 고칠 수
+// 있는 구간. 핵심 질문 두 개 — 심사 기준에 맞는 솔루션을 어떻게 만들 것인가,
+// 그 차별성과 효과를 어떻게 증명할 것인가.
+const SCORE_BUILDING_CHECKS: Bilingual[] = [
+  {
+    ko: "문제의 범위가 지나치게 넓지 않은지 — 끝까지 갈 수 있는 크기로 좁혔는가",
+    en: "Whether the problem is scoped too wide — is it cut down to something you can finish",
+  },
+  {
+    ko: "선택한 병목이 충분한 데이터와 근거로 설명되는지",
+    en: "Whether the bottleneck you picked is backed by data and evidence",
+  },
+  // "프롬프트 한 줄과 뭐가 다른가"의 풀어쓴 버전입니다. 축약형은 심사위원조차
+  // 되물었던 표현이라 사이트 전체에서 쓰지 않기로 했습니다 — 되돌리지 마세요.
+  {
+    ko: "솔루션이 범용 LLM에 그냥 물어보면 나오는 답과 무엇이 다른지",
+    en: "How the solution differs from what you'd get by just asking a general LLM",
+  },
+  {
+    ko: "AI가 실제로 어떤 판단이나 처리를 담당하는지",
+    en: "Which judgements or steps the AI actually takes on",
+  },
+  {
+    ko: "그 차별성과 효과를 데모와 비교 자료로 증명할 수 있는지",
+    en: "Whether you can prove that difference and its effect with the demo and a comparison",
+  },
+];
+
+// Day 7 · 만든 점수를 잃지 않는 시간: 제출 마감 당일이라 범위를 다시 좁히거나
+// 방향을 트는 날이 아닙니다. 남은 일은 이미 만든 것을 증명하는 것뿐.
+const SCORE_KEEPING_CHECKS: Bilingual[] = [
+  {
+    ko: "3분 발표 구조 — 병목 → 근거 → 데모 → 위험과 대응의 흐름이 서 있는지, 베이스라인 비교 자료가 필요한 자리에 놓였는지",
+    en: "The 3-minute pitch structure — does bottleneck → evidence → demo → risk-and-response hold up, and is the baseline comparison where it needs to be",
+  },
+  {
+    ko: "심사 질문 사전 리허설 — “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”, “어떤 판단을 AI에 맡겼나요?”, “이 솔루션의 효과를 어떻게 증명할 수 있나요?”에 자기 언어로 답할 수 있는지",
+    en: "A dry run of the judges' questions — “how is this different from what the problem owner would get by just asking a general LLM?”, “which judgements did you hand to the AI?”, “how would you prove this actually helps?” — in your own words",
+  },
+  {
+    ko: "오늘 저녁 마감되는 사전 제출물 네 가지가 다 완성됐는지",
+    en: "Whether all four pieces of the submission package due this evening are finished",
+  },
+];
+
 // The three Day 5–7 office-hour entries are identical apart from `day`/`id` —
 // one per day so the session shows up on each day's card and modal, rather than
 // living on Day 5 only and being invisible to someone opening Day 6 or 7.
 // Written once here so the three can never drift apart.
+//
+// ⚠️ 단 하나 갈라지는 것: checkpoints. 이 상수는 Day 3–6의 목록
+// (SCORE_BUILDING_CHECKS)을 갖고, Day 7 항목만 SCORE_KEEPING_CHECKS로
+// override합니다. Day 7은 제출 마감 당일이라 "문제 범위를 다시 좁혀보자"를
+// 그대로 보여주면 오늘 방향을 틀어도 된다고 잘못 안내하는 셈입니다.
+// 아래 Day 7 spread의 override를 지우지 마세요.
 // TODO: 시간대 확정 시 timeOfDay 조정 (현재 PM은 자리표시자).
 const FDE_OFFICE_HOUR = {
   date: "",
@@ -669,6 +734,7 @@ const FDE_OFFICE_HOUR = {
   },
   location: ONLINE,
   org: POPUP_STUDIO_ORG,
+  checkpoints: SCORE_BUILDING_CHECKS,
 };
 
 // Hashed co-designs the Day-5 Networking Day (2026-08-03; it was the Quickathon
@@ -1012,14 +1078,15 @@ export const schedule: BEvent[] = [
     timeOfDay: "PM",
     title: { ko: "1:1 멘토링 (온라인 기본)", en: "1:1 Mentoring (online by default)" },
     summary: {
-      ko: "막힌 지점을 점검하고 방향을 조정하는 1:1 — 온라인이 기본이고, 멘토에 따라 한인회관 대면.",
-      en: "One-on-one to unblock and adjust direction — online by default, in person at the Korean Association hall with some mentors.",
+      ko: "아이디어에서 가장 뾰족한 지점을 찾고, 그걸 어떻게 증명할지까지 잡는 1:1 — 온라인이 기본이고, 멘토에 따라 한인회관 대면.",
+      en: "A 1:1 to find the sharpest point in your idea — and work out how you'll prove it — online by default, in person at the Korean Association hall with some mentors.",
     },
     description: {
-      ko: "멘토링 1단계(기초)로, 정해진 시간표 대신 팀의 필요에 맞춰 진행되는 1:1 멘토링입니다. 진행 방식은 멘토별로 정해집니다 — 온라인이 기본이고, 멘토에 따라 싱가포르 한인회관(탄종파가) 대면(F2F)으로 진행될 수 있으니 배정된 멘토와 직접 맞추시면 됩니다. 막힌 지점을 함께 점검하고 방향을 조정합니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표 — 같은 눈높이에서 함께 고민하는 선배입니다. 학생 정체성과 giver 문화를 지키는 이 멘토 persona가 이 시간의 핵심입니다. 확정 멘토로 기업 멘토 2곳(Onword Lab · REmited)과 현직 시니어 9인이 함께합니다 — 전체 명단은 멘토링 섹션을 참고하세요. 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다. Day 5–7에는 팝업스튜디오 FDE의 실전 멘토링이 2단계로 이어집니다.",
-      en: "Stage one of mentoring — the foundational round, following each team's needs rather than a fixed timetable. The format is set mentor by mentor — online by default, though some mentors take theirs in person (F2F) at the Korean Association hall in Tanjong Pagar, so you'll settle it with the mentor you're matched with. It's time to check blockers and adjust direction. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes, thinking alongside you at eye level. That peer-mentor persona — protecting the student identity and giver culture — is the point of this time. The confirmed line-up is two company mentors (Onword Lab · REmited) plus nine working seniors — see the mentoring section for the full roster. Mentors are assigned by overlapping availability, not by request. Stage two — Popup Studio's FDE mentoring — follows on Day 5–7.",
+      ko: "Day 3–6은 점수를 만드는 시간입니다 — 문제의 범위도, 솔루션의 방향도 아직 실제로 고칠 수 있는 구간이에요. 그래서 이 1:1은 막힌 것을 뚫는 데서 끝나지 않고, 심사 기준에 맞는 솔루션을 어떻게 만들지와 그 차별성·효과를 어떻게 증명할지를 함께 잡습니다. 멘토와 함께 아이디어에서 가장 뾰족한 지점을 찾아, 그게 데모와 결과물에서 제일 잘 드러나게 만드는 시간이에요. 멘토링 1단계(기초)로, 정해진 시간표 대신 팀의 필요에 맞춰 진행됩니다. 진행 방식은 멘토별로 정해집니다 — 온라인이 기본이고, 멘토에 따라 싱가포르 한인회관(탄종파가) 대면(F2F)으로 진행될 수 있으니 배정된 멘토와 직접 맞추시면 됩니다. 막힌 지점을 함께 점검하고 방향을 조정합니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표 — 같은 눈높이에서 함께 고민하는 선배입니다. 학생 정체성과 giver 문화를 지키는 이 멘토 persona가 이 시간의 핵심입니다. 확정 멘토로 기업 멘토 2곳(Onword Lab · REmited)과 현직 시니어 9인이 함께합니다 — 전체 명단은 멘토링 섹션을 참고하세요. 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다. Day 5–7에는 팝업스튜디오 FDE의 실전 멘토링이 2단계로 이어집니다.",
+      en: "Day 3–6 is where the score gets built — the window in which the scope of the problem and the direction of the solution can still genuinely change. So this 1:1 doesn't stop at unblocking you: it's where you work out how to build something the judging criteria actually reward, and how you'll prove its difference and its effect. With a mentor you find the sharpest point in your idea and make sure that's what the demo shows. It's stage one of mentoring — the foundational round, following each team's needs rather than a fixed timetable. The format is set mentor by mentor — online by default, though some mentors take theirs in person (F2F) at the Korean Association hall in Tanjong Pagar, so you'll settle it with the mentor you're matched with. It's time to check blockers and adjust direction. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes, thinking alongside you at eye level. That peer-mentor persona — protecting the student identity and giver culture — is the point of this time. The confirmed line-up is two company mentors (Onword Lab · REmited) plus nine working seniors — see the mentoring section for the full roster. Mentors are assigned by overlapping availability, not by request. Stage two — Popup Studio's FDE mentoring — follows on Day 5–7.",
     },
     location: MENTORING_MODE,
+    checkpoints: SCORE_BUILDING_CHECKS,
     // TODO: confirm public naming — the confirmed individual mentors (김종현·황영준·
     // 이유택·신동혁·이화영·임석건·이동훈·황현진·정요천) are from the internal deck; verify
     // their names may be shown publicly before surfacing. Full roster lives in
@@ -1061,14 +1128,15 @@ export const schedule: BEvent[] = [
     timeOfDay: "PM",
     title: { ko: "1:1 멘토링 (온라인 기본)", en: "1:1 Mentoring (online by default)" },
     summary: {
-      ko: "프로토타입을 점검하고 진전을 함께 보는 1:1 — 온라인이 기본이고, 멘토에 따라 한인회관 대면.",
-      en: "One-on-one prototype review and progress — online by default, in person at the Korean Association hall with some mentors.",
+      ko: "프로토타입을 놓고 뾰족함과 증명 방법을 다시 조이는 1:1 — 온라인이 기본이고, 멘토에 따라 한인회관 대면.",
+      en: "A 1:1 over the prototype — tightening what makes it sharp and how you'll prove it — online by default, in person at the Korean Association hall with some mentors.",
     },
     description: {
-      ko: "멘토링 1단계(기초)의 마무리로, 팀이 만든 프로토타입을 함께 점검하고 진전을 살피는 1:1 멘토링입니다. Day 3과 마찬가지로 온라인이 기본이되 진행 방식은 멘토별로 정해지며(멘토에 따라 한인회관 대면 가능), 무엇이 잘 되고 있는지, 어디를 더 밀어야 하는지를 같은 눈높이의 선배 멘토와 짚어봅니다. 멘토는 유학생 출신 현직 대표로, 학생 교류와 giver 문화를 지키는 역할입니다(확정 멘토진은 Day 3과 동일). 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다.",
-      en: "The close of stage one — one-on-one mentoring to review the prototype your team built and look at progress together. As on Day 3 it's online by default, with the format set by each mentor (in person at the Korean Association hall is possible) — what's working, and where to push harder, with peer-level senior mentors. Mentors are Korean ex-international-student founders, there to keep the student exchange and giver culture alive (same confirmed line-up as Day 3). Mentors are assigned by overlapping availability, not by request.",
+      ko: "아직 점수를 만드는 구간(Day 3–6)의 두 번째 1:1입니다 — 방향을 바꿀 수 있는 시간이 남아 있을 때, 팀이 만든 프로토타입을 놓고 무엇이 뾰족한지와 그걸 어떻게 증명할지를 다시 조입니다. 멘토링 1단계(기초)의 마무리이기도 합니다. Day 3과 마찬가지로 온라인이 기본이되 진행 방식은 멘토별로 정해지며(멘토에 따라 한인회관 대면 가능), 무엇이 잘 되고 있는지, 어디를 더 밀어야 하는지를 같은 눈높이의 선배 멘토와 짚어봅니다. 멘토는 유학생 출신 현직 대표로, 학생 교류와 giver 문화를 지키는 역할입니다(확정 멘토진은 Day 3과 동일). 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다.",
+      en: "The second 1:1 inside the score-building window (Day 3–6) — while there is still time to change direction, you put the prototype on the table and tighten two things: what makes it sharp, and how you'll prove it. It also closes out stage one of mentoring. As on Day 3 it's online by default, with the format set by each mentor (in person at the Korean Association hall is possible) — what's working, and where to push harder, with peer-level senior mentors. Mentors are Korean ex-international-student founders, there to keep the student exchange and giver culture alive (same confirmed line-up as Day 3). Mentors are assigned by overlapping availability, not by request.",
     },
     location: MENTORING_MODE,
+    checkpoints: SCORE_BUILDING_CHECKS,
   },
 
   // ─── DAY 5 · Networking Day (08.26 · OFFLINE · *SCAPE) ───────────────────────
@@ -1158,10 +1226,11 @@ export const schedule: BEvent[] = [
       en: "Making what you already built stand up in a 3-minute pitch and the Q&A — the last check, with mentors.",
     },
     description: {
-      ko: "Day 7은 사전 제출물 마감 당일이라, 새 기능을 붙이거나 방향을 크게 바꾸는 날이 아닙니다. 남은 일은 이미 만든 결과를 3분 발표와 이어지는 Q&A 안에서 명확히 증명하는 것 — 그래서 이 시간은 만드는 자리가 아니라 잃지 않는 자리입니다. 멘토와 함께 세 가지를 점검합니다. ① 3분 발표 구조 — 병목 → 근거 → 데모 → 위험과 대응의 흐름이 서 있는지, 베이스라인 비교 자료가 필요한 자리에 놓였는지. ② 심사 질문 사전 리허설 — “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”, “어떤 판단을 AI에 맡겼나요?”, “이 솔루션의 효과를 어떻게 증명할 수 있나요?” 같은 질문에 자기 언어로 답할 수 있는지. ③ 사전 제출물 최종 점검 — 오늘 저녁 마감되는 그 네 가지가 다 완성됐는지 함께 확인합니다(무엇을 내는지는 이 날 카드의 제출물 안내를 보세요). AWS 오피스에서 열리며, Day 5에 이은 두 번째 현장 집결입니다. 팝업스튜디오 FDE의 온라인 오피스아워도 오늘까지 이어집니다.",
-      en: "Day 7 is the submission deadline, so it isn't a day for new features or a change of direction. What's left is proving what you already built — making it stand up inside a 3-minute pitch and the Q&A that follows — so this session is about not losing points rather than earning new ones. Three things get checked with a mentor. ① The 3-minute pitch structure — does bottleneck → evidence → demo → risk-and-response hold up, and is the baseline comparison where it needs to be. ② A dry run of the judges' questions — “how is this different from what the problem owner would get by just asking a general LLM?”, “which judgements did you hand to the AI?”, “how would you prove this actually helps?” — can you answer them in your own words. ③ A final pass over the submission package due this evening: all four pieces finished (what they are is in this day's submission box). It runs at the AWS office, the second in-person gathering after Day 5, and Popup Studio's online FDE office hours run through today too.",
+      ko: "Day 7은 사전 제출물 마감 당일이라, 새 기능을 붙이거나 방향을 크게 바꾸는 날이 아닙니다. 남은 일은 이미 만든 결과를 3분 발표와 이어지는 Q&A 안에서 명확히 증명하는 것 — 그래서 이 시간은 만드는 자리가 아니라 잃지 않는 자리입니다. 멘토와 함께 무엇을 보는지는 아래 목록에 있습니다(무엇을 내는지는 이 날 카드의 제출물 안내를 보세요). AWS 오피스에서 열리며, Day 5에 이은 두 번째 현장 집결입니다. 팝업스튜디오 FDE의 온라인 오피스아워도 오늘까지 이어집니다.",
+      en: "Day 7 is the submission deadline, so it isn't a day for new features or a change of direction. What's left is proving what you already built — making it stand up inside a 3-minute pitch and the Q&A that follows — so this session is about not losing points rather than earning new ones. What you go through with a mentor is listed below (what the package contains is in this day's submission box). It runs at the AWS office, the second in-person gathering after Day 5, and Popup Studio's online FDE office hours run through today too.",
     },
     location: AWS_OFFICE,
+    checkpoints: SCORE_KEEPING_CHECKS,
   },
   {
     id: "d7-speaker-session",
@@ -1187,7 +1256,10 @@ export const schedule: BEvent[] = [
     location: AWS_OFFICE,
   },
   // Stage-2 mentoring, one entry per day (see FDE_OFFICE_HOUR above).
-  { ...FDE_OFFICE_HOUR, id: "d7-fde-office-hour", day: 7, date: "08.28" },
+  // Day 7만 점검 목록이 다릅니다 — 제출 마감 당일이라 범위를 다시 좁히는 날이
+  // 아니라 이미 만든 것을 증명하는 날입니다. 상수의 SCORE_BUILDING_CHECKS를
+  // 여기서 SCORE_KEEPING_CHECKS로 덮습니다. 지우지 마세요.
+  { ...FDE_OFFICE_HOUR, id: "d7-fde-office-hour", day: 7, date: "08.28", checkpoints: SCORE_KEEPING_CHECKS },
 
   // ─── DAY 8 · Demo Day · Final Pitch (08.29 · OFFLINE) ────────────────────────
   {
