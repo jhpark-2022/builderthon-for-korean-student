@@ -227,9 +227,15 @@ export const days: DayMeta[] = [
       {
         time: "12:40PM–1PM",
         label: { ko: "입장 · 이름표 수령 · 선착순 굿즈", en: "Doors open · name tags · first-come goods" },
+        // 굿즈 안내가 여기 다 들어 있습니다 — 오리엔테이션 설명에 있던 것을
+        // 옮겨왔습니다(2026-08-04). 나눠주는 시점이 이 줄이니 읽는 자리도 이 줄이어야
+        // 하고, 오리엔테이션(2:10PM) 설명에서 "굿즈는 12:40에 드려요"라고 말하는 건
+        // 이미 지나간 일을 뒤늦게 알려주는 셈이었습니다.
         // 사이즈 이야기를 미리 하는 게 현장 불만을 줄입니다. "전원 제공"으로
         // 읽히는 표현은 금지 — 60세트가 사실입니다.
-        note: { ko: "브랜드부스트 후드·캡 60세트 선착순 · 사이즈 선택은 어렵습니다", en: "60 Brand Boost hoodie + cap sets, first come first served · sizes can't be chosen" },
+        // 참석 여부 확인도 여기 붙습니다: 이 줄이 "현장에 오는 일"을 다루는 유일한
+        // 줄이고, 확인 채널은 아직 정해지지 않아 경로는 쓰지 않습니다.
+        note: { ko: "브랜드부스트 후드·캡 세트 60개 선착순 · 사이즈 선택은 어렵습니다 — 받고 싶다면 일찍 오시는 게 확실해요. 현장 인원을 미리 잡기 위해 행사 이틀 전에 참석 여부를 여쭤봅니다.", en: "60 Brand Boost hoodie + cap sets, first come first served · sizes can't be chosen — arriving early is the sure way to get one. We'll also ask whether you're coming two days before the event, so we can size the room." },
       },
       {
         time: "1PM–1:10PM",
@@ -655,17 +661,17 @@ export const schedule: BEvent[] = [
     // 바로 다음 순서인 AWS 세션 연사입니다 — 오리엔테이션 진행자일 리 없어 복사
     // 실수로 판단했습니다. 진행자가 정해지면 다시 넣으세요.
     //
-    // 굿즈가 여기 붙는 이유: 이 세션이 "오늘 어떻게 굴러가는지"를 다루는 자리라서
-    // 입니다. 다만 배포 시점은 이 세션이 아니라 12:40 입장 때입니다 — 그 사실이
-    // 드러나야 일찍 올 이유가 됩니다. 수량·선착순은 여기 한 번만 정확히 적고,
-    // 배송·비용 등 물류 정보는 쓰지 않습니다.
+    // 굿즈·참석 확인 안내는 여기 있다가 12:40 입장 줄(runOfShow)로 옮겼습니다
+    // (2026-08-04). 2:10PM 세션 설명에서 "굿즈는 12:40에 드려요"라고 말하는 건
+    // 이미 지나간 일을 뒤늦게 알려주는 셈이었고, 나눠주는 시점과 읽는 자리가
+    // 같아야 일찍 올 이유가 됩니다. 여기로 되돌리지 마세요.
     summary: {
       ko: "앞으로 7일이 어떻게 굴러가는지 · 멘토링 운영 · 마지막 순서로 문제 공개.",
       en: "How the next seven days run · how mentoring works · and the problems drop at the end.",
     },
     description: {
-      ko: "앞으로 7일이 어떻게 굴러가는지를 한 번에 정리하는 자리입니다. 트랙 구성과 팀 운영, 평가 흐름을 짚고, 멘토링이 어떻게 돌아가는지 — 언제 열리고, 어떻게 신청하고, 누구를 만나게 되는지 — 를 함께 안내합니다. 그리고 이 블록의 마지막 순서로 실제 과제가 공개됩니다(문제 공개 카드 참고). 굿즈는 이 시간이 아니라 12:40 입장 때 나눠 드려요 — 브랜드부스트가 준비한 후드·캡 세트 60개를 선착순으로 드리고, 사이즈 선택은 어렵습니다. 받고 싶다면 일찍 오시는 게 확실합니다. 참, 현장 인원을 미리 잡기 위해 행사 이틀 전에 참석 여부를 여쭤봅니다.",
-      en: "One sitting that lays out how the next seven days run: the tracks, team logistics and the judging flow, plus how mentoring actually works — when it opens, how you request a slot, who you end up with. The real problems are then released as the last item in this block (see the problem-release card). Goods aren't handed out here but at the 12:40 doors — 60 hoodie + cap sets from Brand Boost, first come first served, and sizes can't be chosen, so arriving early is the sure way to get one. One more thing: we'll ask whether you're coming two days before the event, so we can size the room.",
+      ko: "앞으로 7일이 어떻게 굴러가는지를 한 번에 정리하는 자리입니다. 트랙 구성과 팀 운영, 평가 흐름을 짚고, 멘토링이 어떻게 돌아가는지 — 언제 열리고, 어떻게 신청하고, 누구를 만나게 되는지 — 를 함께 안내합니다. 그리고 이 블록의 마지막 순서로 실제 과제가 공개됩니다(문제 공개 카드 참고).",
+      en: "One sitting that lays out how the next seven days run: the tracks, team logistics and the judging flow, plus how mentoring actually works — when it opens, how you request a slot, who you end up with. The real problems are then released as the last item in this block (see the problem-release card).",
     },
     location: FOUNDRY_REFINERY,
     locationUrl: FOUNDRY_URL,
