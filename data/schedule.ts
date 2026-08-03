@@ -993,6 +993,15 @@ export const schedule: BEvent[] = [
     // more for this session than for any other, because the Crash Course is the
     // one thing a non-developer is nervous about. Facts from his own LinkedIn.
     // Photo supplied by him (CI/김지훈.jpeg) — not lifted from LinkedIn.
+    // 설명에서 뺀 것들 (2026-08-04) — 전부 같은 모달의 다른 자리가 이미 말합니다.
+    // 지우기 전에 그 자리를 확인하고 옮기세요, 문장만 되살리지 말고:
+    //   · "코드프레소가 주관 · 김지훈 이사님이 진행" → speaker · speakerProfile ·
+    //     org 세 곳이 말하고 있었습니다(문단까지 네 번째)
+    //   · "전 시간 참석 시 수료증, Day 8 배부" → opportunities 세 번째 항목
+    //   · "집중 5–6시간 · 비개발자도 따라올 수 있게" → summary
+    //   · "작동하는 프로토타입을 만드는 기본기" → opportunities 첫·둘째 항목
+    // 남은 문단은 이 카드에서만 말하는 것뿐입니다: 왜 하루에 몰아서 하는지,
+    // 라이브 빌드라는 진행 방식, 그리고 Codex 기준이되 툴은 자유라는 정책.
     speakerProfile: {
       name: { ko: "김지훈", en: "Jihoon Kim" },
       role: { ko: "코드프레소 이사", en: "Director, Codepresso" },
@@ -1008,8 +1017,8 @@ export const schedule: BEvent[] = [
       en: "A focused 5–6h vibe-coding intro — non-developers welcome · led by Jihoon Kim of Codepresso.",
     },
     description: {
-      ko: "참가자의 약 60%가 바이브 코딩이 처음입니다. 그래서 여러 번에 나누지 않고, 하루에 몰아서 끝내는 집중 5–6시간의 크래시코스로 모두의 출발선을 맞춥니다. 슬라이드 강의가 아니라, 간단한 툴 하나를 바이브 코딩으로 처음부터 만드는 라이브 빌드를 따라가는 방식입니다 — AI 도구로 아이디어를 작동하는 프로토타입으로 바꾸는 기본기를 그대로 몸에 익혀, 기술 장벽이 아니라 아이디어가 한계가 되도록 합니다. 강의는 Codex를 기준으로 진행해요 — 모두가 같은 화면을 보며 따라 하기 위해서지, 도구를 정해주려는 게 아닙니다. 배우는 건 특정 툴이 아니라 AI로 만드는 방식이라, 이후 팀 빌드와 데모데이 결과물은 Claude Code든 커서든 손에 맞는 도구로 만들면 됩니다. 비개발자도 따라올 수 있게 설계되었고, 이 크래시코스 전 시간을 참석하면 Zero100 명의의 수료증이 발급되어 Day 8 시상 때 배부됩니다. 크래시코스는 코드프레소가 주관하며, 코드프레소의 김지훈 이사님이 직접 진행합니다.",
-      en: "About 60% of participants are trying vibe coding for the first time — so instead of spreading it out, one concentrated 5–6 hour Crash Course levels the start line in a single day. It isn't a slide deck: the session is a live build of one simple tool from scratch, vibe-coded, with the room following along — you pick up the fundamentals of turning ideas into working prototypes with AI tools by doing them, so your ideas rather than the tooling are the limit. The class runs on Codex, so everyone follows the same screen — it isn't the tool being prescribed. What you take away is the method rather than the tool, so your own team build and Demo Day work can run on Claude Code, Cursor or whatever fits your hand. It's built so non-developers can keep up, and attending the full Crash Course earns a certificate issued by Zero100, handed out at the Day 8 awards. The Crash Course is run by Codepresso and led in person by Jihoon Kim, a Director there.",
+      ko: "참가자의 약 60%가 바이브 코딩이 처음이라, 여러 번 나누지 않고 하루에 몰아서 출발선을 맞춥니다. 슬라이드 강의가 아니라 간단한 툴 하나를 바이브 코딩으로 처음부터 만드는 라이브 빌드를 따라가는 방식이에요 — 기술 장벽이 아니라 아이디어가 한계가 되도록. 강의는 Codex를 기준으로 진행하지만 도구를 정해주려는 건 아닙니다. 배우는 건 방식이라, 이후 팀 빌드와 데모데이 결과물은 Claude Code든 커서든 손에 맞는 도구로 만들면 돼요.",
+      en: "About 60% of participants are trying vibe coding for the first time, so it runs in one concentrated day rather than spread out. It isn't a slide deck: it's a live build of one simple tool from scratch, vibe-coded, with the room following along — so your ideas, not the tooling, are the limit. The class runs on Codex, but the tool isn't being prescribed: what you take away is the method, and your own team build and Demo Day work can run on Claude Code, Cursor or whatever fits your hand.",
     },
     location: ONLINE,
     org: CODEPRESSO_ORG,
