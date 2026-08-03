@@ -1500,6 +1500,12 @@ function DayModal({
               <h3 id="day-modal-title" className="mt-5 text-[24px] font-bold leading-tight text-white sm:text-[30px]">{t(day.theme)}</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/70">{t(day.summary)}</p>
               {day.deliverableDue && <SubmissionBox t={t} />}
+              {/* 진행 순서가 세션 카드보다 위에 옵니다 — "그날 뭐가 있나"보다
+                  "몇 시에 뭘 하나"가 먼저 궁금하고, 카드에 없는 순간(입장·휴식·
+                  네트워킹)이 절반이라 카드만으로는 하루가 설명되지 않습니다. */}
+              {day.runOfShow?.length ? (
+                <RunOfShow rows={day.runOfShow} t={t} onSelectEvent={onSelectEvent} />
+              ) : null}
               <div className="mt-6 grid gap-3">
                 {evs.map((ev) => (
                   <EventCard key={ev.id} ev={ev} t={t} onSelect={onSelectEvent} />
@@ -1512,6 +1518,90 @@ function DayModal({
       )}
     </AnimatePresence>,
     document.body
+  );
+}
+
+// The day's run of show (days[].runOfShow). Two columns: time on the left in a
+// fixed-width tabular column so the times stack into a readable ruler, content
+// on the right. No new design language — same border/tint/typography as the
+// session cards, one step quieter because this is the index, not the content.
+//
+// A row with an `eventId` is a button that opens that session's modal (the same
+// handler the cards use); rows without one are plain text, because there is
+// nothing more to show for a break or a doors-open slot. Making every row look
+// clickable would promise detail that doesn't exist.
+function RunOfShow({
+  rows,
+  t,
+  onSelectEvent,
+}: {
+  rows: NonNullable<DayMeta["runOfShow"]>;
+  t: Tfn;
+  onSelectEvent: (e: BEvent, el: HTMLElement) => void;
+}) {
+  const open = (eventId: string, el: HTMLElement) => {
+    const ev = schedule.find((e) => e.id === eventId);
+    if (ev) onSelectEvent(ev, el);
+  };
+  return (
+    <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-4 sm:p-5">
+      <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-violet-200/80">
+        {t(dict.program.runOfShowTitle)}
+      </p>
+      <ol className="mt-3 space-y-px">
+        {rows.map((row) => {
+          const linked = row.eventId ? schedule.find((e) => e.id === row.eventId) : undefined;
+          const body = (
+            <>
+              {/* tabular-nums + a fixed column: times that don't line up read as
+                  a list of strings rather than a schedule. */}
+              <span className="w-[6.5rem] shrink-0 pt-[1px] text-[0.72rem] font-semibold tabular-nums text-white/50 sm:w-[7.5rem] sm:text-xs">
+                {row.time}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block break-keep text-[13px] font-semibold leading-snug text-white/85">
+                  {t(row.label)}
+                  {(linked || row.href) && (
+                    <span aria-hidden className="ml-1.5 text-violet-300/70 transition group-hover:text-violet-300">→</span>
+                  )}
+                </span>
+                {row.note && (
+                  <span className="mt-1 block break-keep text-xs leading-relaxed text-white/55">
+                    {t(row.note)}
+                  </span>
+                )}
+              </span>
+            </>
+          );
+          return (
+            <li key={row.time + row.label.en} className="border-t border-white/[0.06] first:border-t-0">
+              {linked ? (
+                <button
+                  type="button"
+                  onClick={(e) => open(row.eventId!, e.currentTarget)}
+                  className="group flex w-full gap-3 rounded-lg px-1.5 py-2.5 text-left transition hover:bg-white/[0.04]"
+                >
+                  {body}
+                  <span className="sr-only">{t(dict.program.runOfShowOpen)}</span>
+                </button>
+              ) : row.href ? (
+                // 세션이 아니라 사이트 안의 다른 페이지로 가는 줄 (/quiz).
+                // 링크이므로 button이 아닌 a — 새 탭으로 열지 않습니다(내부 이동).
+                <a
+                  href={row.href}
+                  onClick={() => track("quiz_click", { src: "run_of_show" })}
+                  className="group flex w-full gap-3 rounded-lg px-1.5 py-2.5 text-left transition hover:bg-white/[0.04]"
+                >
+                  {body}
+                </a>
+              ) : (
+                <div className="flex gap-3 px-1.5 py-2.5">{body}</div>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </div>
   );
 }
 

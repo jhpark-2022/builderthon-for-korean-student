@@ -1193,6 +1193,12 @@ export const dict = {
     // VALUE is not translated: `days[].hours` is one string for both locales
     // (see DayMeta.hours), so only this prefix is bilingual.
     hoursLabel: { ko: "현장 시간", en: "On-site hours" },
+    // 데이 모달의 진행 순서 블록 (days[].runOfShow). 확정된 날에만 렌더되므로
+    // "추후 안내" 같은 빈 상태 문구는 없습니다 — 없으면 블록 자체가 없습니다.
+    runOfShowTitle: { ko: "진행 순서", en: "Run of show" },
+    // 시간표 줄 중 세션 카드로 이어지는 줄에 붙는 접근성 힌트. 화면에는 → 하나만
+    // 보이고, 스크린리더는 이 문장을 읽습니다.
+    runOfShowOpen: { ko: "세션 자세히 보기", en: "Open this session" },
     swipeHint: {
       ko: "카드를 눌러 하루 일정을 펼쳐보세요",
       en: "Tap a day card to see its sessions",
@@ -2205,6 +2211,12 @@ export const dict = {
           // 브리핑은 Day 1(문제 공개 직후)이며 schedule.ts의 `d1-problem-deep-dive`와
           // 같은 사실을 말해야 합니다. 진행자·형식은 아직 조율 중이라 여기서도 확정으로
           // 쓰지 않습니다 — 특정 인물을 진행자로 명시하지 말 것(미확정).
+          //
+          // ⚠️ 2026-08-04: 그 `d1-problem-deep-dive`가 보류됐습니다 — 확정된 Day 1
+          // 진행 순서(12:40–4:30PM)에 슬롯이 없어 schedule.ts에서 주석 처리됐고,
+          // 부활 여부는 미정입니다. 이 답변의 "주최사가 배경을 직접 브리핑하는" 절만
+          // 그 세션에 걸려 있습니다. 딥다이브를 되살리지 않기로 하면 이 절을 함께
+          // 정리해야 합니다(문제가 Day 1에 공개된다는 나머지 부분은 그대로 사실).
           ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다 — 예를 들어 ‘회사 돈이 어디서 새는지 눈에 안 보인다’ 같은 실무 문제요. 가상 과제가 아니라, Day 1에 문제가 공개되고 과제를 낸 주최사(AXMOS) 측이 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자·형식은 조율 중). 의뢰서에는 그 회사의 실제 업무 워크플로우와 담당자의 페인포인트, 관련 맥락·데이터가 담깁니다. 트랙 구성은 메인 트랙 2개로 좁혀 논의 중이며 확정되는 대로 안내합니다.",
           en: "You take on the AX (AI-transformation) problems Korean companies are facing right now, one set per track — practical things like “we can't see where the company's money is leaking.” These aren't invented exercises but briefs: the problems drop on Day 1 and the host companies (AXMOS) that set them walk through the background first-hand (presenter and format still being arranged). Each brief carries the company's real workflow, the pain points of the person who owns it, and the context and data around it. The line-up has been narrowed to two main tracks, and we'll announce them once settled.",
         },

@@ -73,6 +73,12 @@ export interface BEvent {
   category: Category;
   mode: Mode; // online, in-person (Days 5 / 7 / 8), or mixed (see Mode)
   timeOfDay: "AM" | "PM";
+  // 확정된 세션의 실제 시각 ("1:10PM–1:50PM"). 있으면 모달의 시간 행이 AM/PM
+  // 대신 이 값을 보여줍니다. Day 1만 채워져 있습니다 — 다른 날은 진행 순서가
+  // 아직 없고, 없는 시각을 추론해서 채우면 안 됩니다.
+  // 표기는 days[].hours와 같은 컨벤션: 12시간제 대문자 AM/PM, en-dash, 분은
+  // 필요할 때만, ko/en 동일 문자열.
+  time?: string;
   // Overrides the modal's "Day {n} · {date} · {AM|PM}" chip. Two users: the
   // pre-event session, which sits OUTSIDE the Day 1–8 arc (day: 0) where "Day 0"
   // is not a thing anyone should read; and the Day 5 networking day, whose hours
@@ -135,6 +141,19 @@ export interface DayMeta {
   // EventModal의 시간 행도 그대로다. 그날의 대관 창을 개별 세션 시각처럼 보이게
   // 만들지 말 것.
   hours?: string; // "1PM–4:30PM"
+  // 그날의 실제 진행 순서. 세션 카드(BEvent)로 만들 만한 것뿐 아니라 입장·휴식·
+  // 네트워킹처럼 "카드는 없지만 참가자에겐 중요한" 순간까지 담습니다.
+  // eventId가 있으면 그 줄이 해당 세션 카드와 같은 것이라는 뜻이고, 모달에서
+  // 클릭하면 그 카드가 열립니다.
+  // 확정된 날만 채웁니다 — 비어 있으면 시간표를 아예 렌더하지 않습니다("추후
+  // 안내" 같은 자리표시자를 넣지 마세요. 없는 게 정보입니다).
+  //
+  // hours와의 관계: hours는 프로그램 시간(1PM–4:30PM), 이 배열의 첫 줄은 그보다
+  // 이른 입장 시각(12:40)입니다. 입장은 프로그램 시작이 아니므로 hours를
+  // 앞당기지 않습니다 — 대신 시간표 첫 줄이 일찍 올 이유를 보여줍니다.
+  // href: 세션 카드가 아니라 사이트 안의 다른 페이지로 가는 줄(현재는 /quiz).
+  // eventId와 함께 쓰지 마세요 — 한 줄에 목적지는 하나입니다.
+  runOfShow?: { time: string; label: Bilingual; note?: Bilingual; eventId?: string; href?: string }[];
   // "pending" = meant to be on-site but venue isn't locked (Zoom fallback).
   // "mixed"   = both halves in the same day and neither badge alone is honest.
   //             NO DAY USES THIS RIGHT NOW: Day 3·4 held it while their 1:1
@@ -181,9 +200,12 @@ export const days: DayMeta[] = [
     // 시간은 이 문장에 없습니다 — `hours`가 카드의 뱃지와 데이 모달 칩으로 한 번씩
     // 렌더되므로, 요약이 다시 말하면 같은 카드에서 두 번 읽힙니다. 시간을 바꿀 때
     // 고치는 곳은 `hours` 하나입니다. (Day 5·7·8도 같은 규칙.)
+    // 예외가 하나: 12:40 입장. hours(1PM–)보다 이르고, 일찍 올 이유(선착순 굿즈)가
+    // 붙어 있어 카드에서 한 번은 보여야 합니다. 상세 순서는 runOfShow가 맡으므로
+    // 요약은 짧게 유지하세요.
     summary: {
-      ko: "The Foundry(The Refinery 홀) 현장 · 원대로 오프닝 키노트 · 오리엔테이션(문제 공개·트랙 선택·베이스 리포트) · AWS 연사 한장환 님(확정) · 현장 선착순 굿즈.",
-      en: "In person at The Foundry (The Refinery hall) · Won's opening keynote · orientation (problem release · track pick · base report) · AWS talk by Han Jang-whan (confirmed) · goods on site, first come first served.",
+      ko: "The Foundry(The Refinery 홀) 현장 · 12:40 입장(선착순 굿즈) · 원대로 오프닝 키노트 · 해시드 인사말 · 문제 공개 · AWS 연사 한장환 님(확정).",
+      en: "In person at The Foundry (The Refinery hall) · doors 12:40 (first-come goods) · Won's opening keynote · a word from Hashed · problem release · AWS talk by Han Jang-whan (confirmed).",
     },
     // Venue booked: The Foundry — The Refinery hall, 11 Prinsep Link, 22 Aug 2026
     // (2026-08-03). On-site was already confirmed under the previous booking (SMU
@@ -195,6 +217,63 @@ export const days: DayMeta[] = [
     // 프로그램 시간이므로 깎지 않습니다 — 장소마다 계약 구조가 달라 날마다 계산이
     // 다릅니다. 운영 시각(대관 창·셋업·철수)은 사이트 어디에도 쓰지 않습니다.
     hours: "1PM–4:30PM",
+    // 확정 진행 순서 (2026-08-04). 9줄 전부 — 카드가 없는 줄(입장·휴식·네트워킹·
+    // 정리)이 절반이라 이벤트 배열로는 표현되지 않습니다.
+    // 팀 매칭이 두 번 나오는데(1:50 성향 테스트 · 3:10 즉석 매칭) 둘 다 "팀 없이
+    // 온 분"만 해당합니다 — 사이트에서 팀을 만들어 신청한 사람은 해당 없음을
+    // 두 줄 모두에 적었습니다. 이걸 빼면 이미 팀이 있는 사람이 자기도 뭔가
+    // 해야 하는 줄 압니다.
+    runOfShow: [
+      {
+        time: "12:40PM–1PM",
+        label: { ko: "입장 · 이름표 수령 · 선착순 굿즈", en: "Doors open · name tags · first-come goods" },
+        // 사이즈 이야기를 미리 하는 게 현장 불만을 줄입니다. "전원 제공"으로
+        // 읽히는 표현은 금지 — 60세트가 사실입니다.
+        note: { ko: "브랜드부스트 후드·캡 60세트 선착순 · 사이즈 선택은 어렵습니다", en: "60 Brand Boost hoodie + cap sets, first come first served · sizes can't be chosen" },
+      },
+      {
+        time: "1PM–1:10PM",
+        label: { ko: "환영 인사 · 오늘의 순서 안내", en: "Welcome · what today looks like" },
+      },
+      {
+        time: "1:10PM–1:50PM",
+        label: { ko: "오프닝 키노트 · 원대로", en: "Opening keynote · Won Dae-ro" },
+        eventId: "d1-opening-keynote",
+      },
+      {
+        time: "1:50PM–2PM",
+        label: { ko: "쉬는 시간 · 팀 매칭 성향 테스트", en: "Break · personality test for team matching" },
+        note: { ko: "팀 없이 오신 분만 — 유형 테스트로 성향을 받아 현장에서 팀을 이어드립니다. 이미 팀으로 신청했다면 해당 없어요.", en: "Only if you came without a team — the type test reads your working style so we can match you on site. Nothing to do if you registered as a team." },
+        // 이 줄이 가리키는 것은 사이트의 /quiz입니다 — FAQ 솔로 답변이 팀 매칭을
+        // "AI 유형 테스트 + Day 1 현장 그룹핑"으로 이미 설명하고 있어 같은 흐름입니다.
+        href: "/quiz",
+      },
+      {
+        time: "2PM–2:10PM",
+        label: { ko: "해시드 파트너 인사말", en: "A word from Hashed" },
+        eventId: "d1-hashed-greeting",
+      },
+      {
+        time: "2:10PM–2:30PM",
+        label: { ko: "7일 진행 안내 · 멘토링 안내 · 문제 공개", en: "How the next 7 days run · mentoring · problem release" },
+        note: { ko: "문제 공개가 이 블록의 마지막 순서입니다", en: "The problems drop at the end of this block" },
+        eventId: "d1-orientation",
+      },
+      {
+        time: "2:30PM–3:10PM",
+        label: { ko: "AWS 세션 · 한장환", en: "AWS session · Han Jang-whan" },
+        eventId: "d1-aws-session",
+      },
+      {
+        time: "3:10PM–4PM",
+        label: { ko: "네트워킹 · 문제 브레인스토밍 · 팀 매칭", en: "Networking · brainstorming the problem · team matching" },
+        note: { ko: "원하는 팀은 이때부터 바로 빌드를 시작해도 됩니다 · 팀 없이 오신 분은 이 시간에 즉석 매칭", en: "Teams can start building right here if they want · anyone who came solo gets matched during this slot" },
+      },
+      {
+        time: "4PM–4:30PM",
+        label: { ko: "마무리 · 정리", en: "Wrap-up" },
+      },
+    ],
     dayMode: "offline",
     mandatory: true,
   },
@@ -537,7 +616,8 @@ export const schedule: BEvent[] = [
     date: "08.22",
     category: "main",
     mode: "offline",
-    timeOfDay: "AM",
+    timeOfDay: "PM",
+    time: "1:10PM–1:50PM",
     confirmed: true,
     title: { ko: "오프닝 키노트 · 원대로", en: "Opening Keynote · Won Dae-ro" },
     // TODO: confirm — speaker name is from the internal deck; confirm public naming is OK.
@@ -559,19 +639,24 @@ export const schedule: BEvent[] = [
     date: "08.22",
     category: "network",
     mode: "offline",
-    timeOfDay: "AM",
+    timeOfDay: "PM",
+    time: "2:10PM–2:30PM",
     title: { ko: "오리엔테이션", en: "Orientation" },
-    // 굿즈가 여기 붙는 이유: 확정된 배포 시점이 Day 1 현장이고, 이 세션이 "오늘
-    // 어떻게 굴러가는지"를 다루는 자리입니다. 수량·선착순은 여기 한 번만 정확히
-    // 적고, 날짜 카드 요약에는 "현장 선착순 굿즈"까지만 둡니다. 배송·비용 등
-    // 물류 정보는 쓰지 않습니다.
+    // SPEAKER 필드를 지웠습니다 (2026-08-04). `한장환 (AWS)`로 돼 있었는데 그분은
+    // 바로 다음 순서인 AWS 세션 연사입니다 — 오리엔테이션 진행자일 리 없어 복사
+    // 실수로 판단했습니다. 진행자가 정해지면 다시 넣으세요.
+    //
+    // 굿즈가 여기 붙는 이유: 이 세션이 "오늘 어떻게 굴러가는지"를 다루는 자리라서
+    // 입니다. 다만 배포 시점은 이 세션이 아니라 12:40 입장 때입니다 — 그 사실이
+    // 드러나야 일찍 올 이유가 됩니다. 수량·선착순은 여기 한 번만 정확히 적고,
+    // 배송·비용 등 물류 정보는 쓰지 않습니다.
     summary: {
-      ko: "행사 개요 · 진행 방식 · 트랙 안내 · 베이스 리포트 · 선착순 굿즈.",
-      en: "Event overview, how it runs, tracks, the base report, and first-come goods.",
+      ko: "앞으로 7일이 어떻게 굴러가는지 · 멘토링 운영 · 마지막 순서로 문제 공개.",
+      en: "How the next seven days run · how mentoring works · and the problems drop at the end.",
     },
     description: {
-      ko: "8일간의 행사 개요와 진행 방식을 안내하는 오리엔테이션입니다. 트랙 구성과 팀 운영, 평가 흐름을 짚고, 현재까지의 준비 상황을 담은 베이스 리포트를 공유합니다. 첫날부터 ‘어떻게 굴러가는지’를 모두가 같은 그림으로 이해하고 출발할 수 있게 하는 자리입니다. 그리고 오늘 현장에는 굿즈 파트너 브랜드부스트가 준비한 후드·캡 세트가 60개 있습니다 — 현장 방문자 선착순으로 드리니, 받고 싶다면 일찍 오는 게 유리합니다.",
-      en: "An orientation walking through the shape of the eight days — how it runs, the tracks, team logistics and the judging flow — plus a base report on where preparations stand. The goal is that everyone starts with the same picture of how the week works. There are also 60 hoodie + cap sets on site today from our goods partner Brand Boost — handed out first come, first served to people who show up, so coming early helps if you want one.",
+      ko: "앞으로 7일이 어떻게 굴러가는지를 한 번에 정리하는 자리입니다. 트랙 구성과 팀 운영, 평가 흐름을 짚고, 멘토링이 어떻게 돌아가는지 — 언제 열리고, 어떻게 신청하고, 누구를 만나게 되는지 — 를 함께 안내합니다. 그리고 이 블록의 마지막 순서로 실제 과제가 공개됩니다(문제 공개 카드 참고). 굿즈는 이 시간이 아니라 12:40 입장 때 나눠 드려요 — 브랜드부스트가 준비한 후드·캡 세트 60개를 선착순으로 드리고, 사이즈 선택은 어렵습니다. 받고 싶다면 일찍 오시는 게 확실합니다. 참, 현장 인원을 미리 잡기 위해 행사 이틀 전에 참석 여부를 여쭤봅니다.",
+      en: "One sitting that lays out how the next seven days run: the tracks, team logistics and the judging flow, plus how mentoring actually works — when it opens, how you request a slot, who you end up with. The real problems are then released as the last item in this block (see the problem-release card). Goods aren't handed out here but at the 12:40 doors — 60 hoodie + cap sets from Brand Boost, first come first served, and sizes can't be chosen, so arriving early is the sure way to get one. One more thing: we'll ask whether you're coming two days before the event, so we can size the room.",
     },
     location: FOUNDRY_REFINERY,
     locationUrl: FOUNDRY_URL,
@@ -583,6 +668,7 @@ export const schedule: BEvent[] = [
     category: "main",
     mode: "offline",
     timeOfDay: "PM",
+    time: "2:30PM–3:10PM",
     confirmed: true,
     title: { ko: "AWS 연사 세션", en: "AWS Speaker Session" },
     // TODO: confirm public naming — speaker (한장환 · AWS) is confirmed in the internal
@@ -593,8 +679,8 @@ export const schedule: BEvent[] = [
       en: "Amazon's AI problem-definition & approach methodology.",
     },
     description: {
-      ko: "AWS 연사 한장환 님이 진행하는 확정 세션입니다. Amazon이 실제로 AI 문제를 어떻게 정의하고, 어떤 방법론으로 접근하는지를 다룹니다. 문제를 ‘어떻게 풀까’ 이전에 ‘무엇을, 왜 푸는가’를 잡는 관점을 얻어, 곧이어 공개되는 실제 AX 과제에 그대로 적용해볼 수 있습니다.",
-      en: "A confirmed session led by AWS speaker Han Jang-whan on how Amazon defines AI problems and the methodology it uses to approach them. It's the ‘what and why’ before the ‘how’ — a lens you can apply directly to the real AX problems released the same day.",
+      ko: "AWS 연사 한장환 님이 진행하는 확정 세션입니다. Amazon이 실제로 AI 문제를 어떻게 정의하고, 어떤 방법론으로 접근하는지를 다룹니다. 문제를 ‘어떻게 풀까’ 이전에 ‘무엇을, 왜 푸는가’를 잡는 관점입니다. 순서상 과제가 공개된 바로 다음 시간이라 — 방금 손에 쥔 진짜 문제를 어떤 눈으로 뜯어볼지, 배운 걸 그 자리에서 바로 얹어볼 수 있습니다.",
+      en: "A confirmed session led by AWS speaker Han Jang-whan on how Amazon defines AI problems and the methodology it uses to approach them. It's the ‘what and why’ before the ‘how’ — and it comes immediately after the problems are released, so the lens lands on the real brief you're holding rather than on a hypothetical one.",
     },
     location: FOUNDRY_REFINERY,
     locationUrl: FOUNDRY_URL,
@@ -606,80 +692,88 @@ export const schedule: BEvent[] = [
     category: "main",
     mode: "offline",
     timeOfDay: "PM",
+    // 오리엔테이션과 같은 20분 블록입니다 — 문제 공개가 그 블록의 마지막 순서라,
+    // 두 카드가 같은 시각을 갖는 게 맞습니다(중복이 아니라 사실).
+    time: "2:10PM–2:30PM",
     title: { ko: "문제 공개 · 트랙 선택", en: "Problem Release · Track Selection" },
     summary: {
       ko: "실제 기업의 AX 과제가 공개되고, 트랙을 고르며 8일 빌드 시계가 시작됩니다 (트랙 구성은 확정 전).",
       en: "Real companies' AX problems drop, you pick a track — and the 8-day build clock starts (track line-up not final yet).",
     },
     description: {
-      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 트랙 구성은 아직 확정 전이며(메인 트랙 2개로 좁혀 논의 중), 확정되는 대로 안내합니다. 공개된 문제는 이어지는 현장 브리핑 & Q&A에서 함께 살펴보고, 팀별 자율 빌드가 그때부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 만들어 갑니다. Day 1은 필참이며 The Foundry의 The Refinery 홀(11 Prinsep Link) 현장에서 1PM–4:30PM 진행합니다.",
-      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. The track line-up isn't confirmed yet (narrowed to two main tracks, still under discussion) and we'll announce it once settled. The released problems are walked through in the on-site briefing & Q&A that follows, and self-paced team build runs continuously from there to Demo Day — no start whistle to wait for, each team at its own pace. Day 1 is mandatory and runs on-site at The Foundry's The Refinery hall, 11 Prinsep Link, 1PM–4:30PM.",
+      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 공개는 오리엔테이션의 마지막 순서로 이뤄집니다 — 앞으로 7일이 어떻게 굴러가는지를 듣고 난 직후에 진짜 과제를 받는 흐름이에요. 트랙 구성은 아직 확정 전이며(메인 트랙 2개로 좁혀 논의 중), 확정되는 대로 안내합니다. 바로 다음 순서인 AWS 세션이 이 문제를 어떤 방법론으로 뜯어볼지를 다루고, 이어지는 네트워킹 시간부터는 원하는 팀은 그 자리에서 빌드를 시작해도 됩니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 데모데이까지 이어집니다. Day 1은 필참이며 The Foundry의 The Refinery 홀(11 Prinsep Link) 현장에서 1PM–4:30PM 진행합니다.",
+      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. The release lands as the final item of the orientation block: you hear how the next seven days work, then get the real brief. The track line-up isn't confirmed yet (narrowed to two main tracks, still under discussion) and we'll announce it once settled. The AWS session immediately after gives you a methodology to take the problem apart, and from the networking slot that follows any team can start building on the spot — no start whistle to wait for, each team at its own pace through to Demo Day. Day 1 is mandatory and runs on-site at The Foundry's The Refinery hall, 11 Prinsep Link, 1PM–4:30PM.",
     },
     location: FOUNDRY_REFINERY,
     locationUrl: FOUNDRY_URL,
   },
-  // Sits between the problem release and the operational briefing on purpose.
-  // The question "so how do I actually approach this?" only becomes concrete once
-  // a team has seen its problem and picked a track — before that it is abstract,
-  // and after everyone leaves the room there is no good channel to answer it
-  // (the next all-hands in-person day is Day 5). This is the slot where the
-  // context is worth most.
-  //
-  // No role conflict with the mentor persona: the people giving this context are
-  // AXMOS — the consortium that sets the problems and judges, and also runs the
-  // Day 2 Crash Course. (The Day 5–7 FDE office hours are POPUP STUDIO's, not
-  // "AXMOS's" — Popup Studio is one member company, and attributing its FDE
-  // mentoring to the consortium was pre-pivot copy; see FDE_OFFICE_HOUR above
-  // and the build group in dict.mentoring.groups.) Explaining the problem you
-  // set IS problem-
-  // setting, not peer mentoring, so the Day 3·4 mentor boundary stays intact.
-  //
-  // confirmed: false + "(조율 중)/(TBC)" in the title — same convention as
-  // d3-codex-workshop. Deliberately NOT naming the two candidates yet: they are
-  // still at "아마 해주실 수 있을 것 같다", and a named session is exactly the kind
-  // of promise the Day-2 client briefing had to be pulled for.
-  // TODO: 진행자 확정 시 speaker 추가 + 제목의 "(조율 중)" 제거. 후보는 AXMOS 측
-  // 두 분(Popup Studio 총괄 · Codepresso 대표) — 공개 표기 가능 여부도 함께 확인.
-  // TODO: 형식(길이·구성) 확정 시 description의 마지막 문장 교체.
+  // 파트너 인사말. 구성·길이가 아직 조율 중이라 confirmed를 세우지 않습니다 —
+  // 시각(2:00–2:10PM)만 진행 순서에 잡혀 있습니다.
+  // 개인 실명은 넣지 않습니다: 본인 공개 동의 전이고, 회사명으로 두면 나오는
+  // 사람이 바뀌어도 카피가 깨지지 않습니다. 무슨 이야기를 할지도 쓰지 않습니다 —
+  // 정해지지 않은 것을 지어내는 자리가 아닙니다.
   {
-    id: "d1-problem-deep-dive",
-    day: 1,
-    date: "08.22",
-    category: "main",
-    mode: "offline",
-    timeOfDay: "PM",
-    confirmed: false,
-    title: { ko: "과제 딥다이브 (조율 중)", en: "Problem Deep-Dive (TBC)" },
-    summary: {
-      ko: "과제를 낸 주최사가 문제의 배경과 맥락을 직접 풀어주는 시간 — 형식 조율 중.",
-      en: "The companies that set the problems walk through the background and context first-hand — format still being arranged.",
-    },
-    description: {
-      ko: "문제가 공개되고 트랙을 고른 직후, 그 과제를 실제로 낸 주최사(AXMOS) 측이 배경과 맥락을 직접 풀어주는 시간입니다. 왜 이게 현업에서 문제인지, 안에서는 지금 어떻게 처리하고 있는지, 이번 과제의 범위는 어디까지인지 — 문제 설명문만으로는 보이지 않는 부분을 짚고 질문을 받습니다. 이어지는 현장 브리핑 & Q&A가 진행 방식·팀 구성·평가 기준을 다룬다면, 이 시간은 과제 내용 자체를 다룹니다. 참가자 전원이 한자리에 모이는 다음 기회는 Day 5이므로, 맥락을 가장 깊게 가져갈 수 있는 자리이기도 합니다. 진행자와 형식(길이·구성)은 아직 조율 중이며, 확정되는 대로 안내합니다.",
-      en: "Right after the problems drop and tracks are chosen, the host companies (AXMOS) that actually set them walk through the background and context first-hand: why this is a real problem inside the business, how it's handled today, and where the scope of this brief starts and ends — the parts a written problem statement doesn't show. Questions are taken on the spot. Where the on-site briefing & Q&A that follows covers how the eight days run, this session is about the problem itself. The next time everyone is in one room is Day 5, so this is the deepest context you can carry out of the room. Who runs it and in what format (length, structure) is still being arranged; we'll announce it once settled.",
-    },
-    location: FOUNDRY_REFINERY,
-    locationUrl: FOUNDRY_URL,
-  },
-  {
-    id: "d1-briefing",
+    id: "d1-hashed-greeting",
     day: 1,
     date: "08.22",
     category: "network",
     mode: "offline",
     timeOfDay: "PM",
-    title: { ko: "현장 브리핑 & Q&A", en: "On-site Briefing & Q&A" },
+    time: "2PM–2:10PM",
+    title: { ko: "해시드 파트너 인사말", en: "A word from Hashed" },
     summary: {
-      ko: "과제 설명과 진행 방식 안내, 그리고 질의응답.",
-      en: "Walking through the problems, how it runs, and your questions.",
+      ko: "종합 지원 파트너 해시드의 인사말 — 구성·길이는 조율 중입니다.",
+      en: "A greeting from Hashed, our overall supporting partner — shape and length still being arranged.",
     },
     description: {
-      ko: "공개된 과제를 함께 살펴보고, 8일간의 진행 방식·팀 구성·평가 기준을 안내하는 현장 브리핑입니다. 궁금한 점은 그 자리에서 바로 묻고 답을 들을 수 있어, 첫날부터 막힘 없이 출발할 수 있습니다.",
-      en: "An on-site briefing that walks through the released problems and explains how the eight days work — team formation, schedule and judging. Bring your questions; you'll get answers on the spot so nobody starts the week unsure of how it runs.",
+      ko: "이번 빌더톤을 종합 지원하는 해시드(Hashed)가 참가자에게 건네는 인사말입니다. 구성과 길이는 아직 조율 중이라 정해지는 대로 안내합니다. 해시드는 Day 5 네트워킹 데이의 프로그램도 저희와 함께 기획하고 있어요.",
+      en: "A short greeting to the room from Hashed, the builderthon's overall supporting partner. Its shape and length are still being arranged and we'll share them once settled. Hashed is also co-designing the Day 5 Networking Day programme with us.",
     },
     location: FOUNDRY_REFINERY,
     locationUrl: FOUNDRY_URL,
+    org: HASHED_ORG,
   },
+  // ─── 보류된 Day 1 세션 2개 (2026-08-04) ────────────────────────────────────
+  // `d1-problem-deep-dive`(과제 딥다이브 · 조율 중)와 `d1-briefing`(현장 브리핑 &
+  // Q&A)은 확정된 진행 순서에 슬롯이 없습니다. 12:40–4:30PM 아홉 줄 어디에도
+  // 들어갈 자리가 없어 배열에서 뺐습니다 — 내용은 지우지 않고 아래에 그대로
+  // 보존합니다. 부활 여부는 결정되지 않았습니다.
+  //
+  // 되살릴 때 확인할 것: 두 세션이 다루던 것(과제 배경 딥다이브 / 진행 방식·평가
+  // 기준 Q&A) 중 후자의 상당 부분은 이제 오리엔테이션(2:10–2:30PM)이 흡수했습니다.
+  // 그대로 복원하면 같은 이야기가 두 카드가 됩니다.
+  //
+  // {
+  //   id: "d1-problem-deep-dive",
+  //   day: 1, date: "08.22", category: "main", mode: "offline", timeOfDay: "PM",
+  //   confirmed: false,
+  //   title: { ko: "과제 딥다이브 (조율 중)", en: "Problem Deep-Dive (TBC)" },
+  //   summary: {
+  //     ko: "과제를 낸 주최사가 문제의 배경과 맥락을 직접 풀어주는 시간 — 형식 조율 중.",
+  //     en: "The companies that set the problems walk through the background and context first-hand — format still being arranged.",
+  //   },
+  //   description: {
+  //     ko: "문제가 공개되고 트랙을 고른 직후, 그 과제를 실제로 낸 주최사(AXMOS) 측이 배경과 맥락을 직접 풀어주는 시간입니다. 왜 이게 현업에서 문제인지, 안에서는 지금 어떻게 처리하고 있는지, 이번 과제의 범위는 어디까지인지 — 문제 설명문만으로는 보이지 않는 부분을 짚고 질문을 받습니다. 이어지는 현장 브리핑 & Q&A가 진행 방식·팀 구성·평가 기준을 다룬다면, 이 시간은 과제 내용 자체를 다룹니다. 참가자 전원이 한자리에 모이는 다음 기회는 Day 5이므로, 맥락을 가장 깊게 가져갈 수 있는 자리이기도 합니다. 진행자와 형식(길이·구성)은 아직 조율 중이며, 확정되는 대로 안내합니다.",
+  //     en: "Right after the problems drop and tracks are chosen, the host companies (AXMOS) that actually set them walk through the background and context first-hand: why this is a real problem inside the business, how it's handled today, and where the scope of this brief starts and ends — the parts a written problem statement doesn't show. Questions are taken on the spot. Where the on-site briefing & Q&A that follows covers how the eight days run, this session is about the problem itself. The next time everyone is in one room is Day 5, so this is the deepest context you can carry out of the room. Who runs it and in what format (length, structure) is still being arranged; we'll announce it once settled.",
+  //   },
+  //   location: FOUNDRY_REFINERY,
+  //   locationUrl: FOUNDRY_URL,
+  // },
+  // {
+  //   id: "d1-briefing",
+  //   day: 1, date: "08.22", category: "network", mode: "offline", timeOfDay: "PM",
+  //   title: { ko: "현장 브리핑 & Q&A", en: "On-site Briefing & Q&A" },
+  //   summary: {
+  //     ko: "과제 설명과 진행 방식 안내, 그리고 질의응답.",
+  //     en: "Walking through the problems, how it runs, and your questions.",
+  //   },
+  //   description: {
+  //     ko: "공개된 과제를 함께 살펴보고, 8일간의 진행 방식·팀 구성·평가 기준을 안내하는 현장 브리핑입니다. 궁금한 점은 그 자리에서 바로 묻고 답을 들을 수 있어, 첫날부터 막힘 없이 출발할 수 있습니다.",
+  //     en: "An on-site briefing that walks through the released problems and explains how the eight days work — team formation, schedule and judging. Bring your questions; you'll get answers on the spot so nobody starts the week unsure of how it runs.",
+  //   },
+  //   location: FOUNDRY_REFINERY,
+  //   locationUrl: FOUNDRY_URL,
+  // },
 
   // ─── DAY 2 · Crash Course (08.23) ───────────────────────────────────────────
   {
@@ -739,8 +833,10 @@ export const schedule: BEvent[] = [
   //
   // Two slots have been removed from this day. The per-track LIVE BRIEFING by the
   // client contacts went first (how the company contacts would run it was never
-  // worked out); the problems still drop on Day 1, and the deep-dive that walks
-  // through them now lives there too as `d1-problem-deep-dive`. TEAM BUILDING
+  // worked out); the problems still drop on Day 1. (The deep-dive that used to
+  // walk through them moved to Day 1 as `d1-problem-deep-dive` and is now
+  // shelved there — the confirmed Day-1 run-of-show has no slot for it.)
+  // TEAM BUILDING
   // followed: teams are matched from registration (AI-type test) and grouped
   // on-site on Day 1, so a separate Day-2 slot was describing a step that had
   // already happened. Nothing downstream depends on it — the FAQ solo answer

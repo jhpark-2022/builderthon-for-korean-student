@@ -108,6 +108,17 @@ export default function EventModal({
   const selfPaced = event?.category === "build";
   const dayMeta = event ? days.find((d) => d.day === event.day) : null;
   const isMain = event?.category === "main";
+  // The chip and the 시간 row say the same thing, so they are built once.
+  // Precedence: dayLabel (an explicit override — only the pre-event session uses
+  // it) → the session's real clock time when the run of show is confirmed
+  // (`event.time`, Day 1 only today) → the AM/PM fallback everywhere else.
+  // The AM/PM half is REPLACED, not appended: "Day 1 · 08.22 · PM · 1:10PM–1:50PM"
+  // would be saying the same thing twice, less precisely first.
+  const timeChip = !event
+    ? null
+    : event.dayLabel
+      ? t(event.dayLabel)
+      : `${t(dict.program.dayLabel)} ${event.day} · ${event.date} · ${event.time ?? event.timeOfDay}`;
 
   if (!mounted) return null;
 
@@ -183,9 +194,7 @@ export default function EventModal({
                 </span>
                 {dayMeta && (
                   <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/70">
-                    {event.dayLabel
-                      ? t(event.dayLabel)
-                      : `${t(dict.program.dayLabel)} ${event.day} · ${event.date} · ${event.timeOfDay}`}
+                    {timeChip}
                   </span>
                 )}
                 <span
@@ -339,11 +348,7 @@ export default function EventModal({
                   <dt className="text-xs font-semibold uppercase tracking-wide text-white/70">
                     {t(dict.modal.time)}
                   </dt>
-                  <dd className="font-semibold text-white">
-                    {event.dayLabel
-                      ? t(event.dayLabel)
-                      : `${t(dict.program.dayLabel)} ${event.day} · ${event.date} · ${event.timeOfDay}`}
-                  </dd>
+                  <dd className="font-semibold text-white">{timeChip}</dd>
                 </div>
                 <div className="flex flex-col gap-1">
                   <dt className="text-xs font-semibold uppercase tracking-wide text-white/70">
