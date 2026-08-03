@@ -25,8 +25,8 @@
 //   • Day 3–4 — online self-build + 1:1 mentoring, ONLINE-FIRST as of Aug 2026
 //     (was "in person at NUS by default"): most mentors need to take theirs
 //     online, so online is the default and in-person at NUS is the exception a
-//     mentor may offer. (Day 3 also has a TENTATIVE OpenAI Codex workshop, still
-//     in coordination.)
+//     mentor may offer. Day 3 and Day 4 are now identical in shape — the
+//     tentative OpenAI Codex workshop that sat on Day 3 was removed 2026-08-03.
 //   • Day 5 — Networking Day at *SCAPE L^IFE Jungle (10AM–2PM), the first time
 //     the whole cohort is in one room; opens Lab 2. Venue and hours are
 //     confirmed; the PROGRAMME is IN PLANNING (2026-08-03): the day was
@@ -42,7 +42,10 @@
 
 export type Category =
   | "main" // ★ anchor track: opening · problem release · keynote · demo day
-  | "workshop" // Crash Course (vibe-coding intro) + OpenAI Codex workshop
+  // Only the Day-2 Crash Course uses this today — the Day-3 Codex workshop was
+  // the other one and is gone (2026-08-03). Kept as its own category rather than
+  // folded into "main": a teaching session is not an anchor moment.
+  | "workshop" // Crash Course (vibe-coding intro)
   | "build" // self-paced / independent team build
   | "mentoring" // 1:1 mentoring
   | "network"; // orientation · panels · networking · mixers
@@ -201,8 +204,8 @@ export const days: DayMeta[] = [
     // opened with what teams should get done, which reads as assigned work on a
     // day whose only fixed item is an optional 1:1 slot.
     summary: {
-      ko: "정해진 일정은 오후 1:1 멘토링(온라인 기본)뿐 — 나머지는 각자 비는 시간에 원하는 만큼 빌드하면 됩니다. OpenAI Codex 워크샵 조율 중.",
-      en: "The only fixed thing is a PM 1:1 mentoring slot (online by default) — the rest is yours to build in whatever free time you have. OpenAI Codex workshop TBC.",
+      ko: "정해진 일정은 오후 1:1 멘토링(온라인 기본)뿐 — 나머지는 각자 비는 시간에 원하는 만큼 빌드하면 됩니다.",
+      en: "The only fixed thing is a PM 1:1 mentoring slot (online by default) — the rest is yours to build in whatever free time you have.",
     },
     dayMode: "online",
   },
@@ -311,8 +314,8 @@ export const categoryMeta: Record<
   workshop: {
     label: { ko: "워크숍", en: "Workshop" },
     blurb: {
-      ko: "크래시코스(바이브 코딩 입문)와 OpenAI Codex 워크샵 — 처음이어도 출발선을 맞춥니다.",
-      en: "Crash Course (vibe-coding intro) + OpenAI Codex workshop — leveling the start line.",
+      ko: "크래시코스(바이브 코딩 입문) — 처음이어도 출발선을 맞춥니다.",
+      en: "The Crash Course (vibe-coding intro) — leveling the start line.",
     },
     dot: "#7C5CFF", // purple
   },
@@ -393,15 +396,9 @@ const CODEPRESSO_ORG = {
   },
 } as const;
 
-// OpenAI is in discussion to run a hands-on Codex workshop on Day 3 (TBC).
-const OPENAI_ORG = {
-  name: "OpenAI",
-  url: "https://openai.com",
-  desc: {
-    ko: "OpenAI가 빌드 경험이 있는 학생을 위한 Codex 실전 워크샵을 함께 논의 중입니다 (일정 조율 중).",
-    en: "OpenAI is in discussion to run a hands-on Codex workshop for students with some building experience (schedule TBC).",
-  },
-} as const;
+// OPENAI_ORG lived here for the Day-3 Codex workshop and was deleted with it
+// (2026-08-03). OpenAI is not a partner of this event — do not add it back as
+// one without an agreement.
 
 // Popup Studio runs the stage-2 mentoring: online FDE office hours across
 // Day 5–7. The programme itself is agreed; only the time slots are open, which
@@ -744,26 +741,13 @@ export const schedule: BEvent[] = [
     },
     location: ONLINE,
   },
-  {
-    id: "d3-codex-workshop",
-    day: 3,
-    date: "08.24",
-    category: "workshop",
-    mode: "online",
-    timeOfDay: "AM",
-    confirmed: false,
-    title: { ko: "OpenAI Codex 워크샵 (조율 중)", en: "OpenAI Codex Workshop (TBC)" },
-    summary: {
-      ko: "빌드 경험자를 위한 Codex 실전 세션 — 아직 조율 중입니다.",
-      en: "A hands-on Codex session for experienced builders — still being arranged.",
-    },
-    description: {
-      ko: "빌드 경험이 어느 정도 있는 학생을 위해 OpenAI와 함께 논의 중인 Codex 워크샵/셰어링 세션입니다. Codex를 레포·스펙(테스트, QA/QC)과 연결하는 법, OpenAI API, function calling, MCP 등 아직 많은 학생이 접해보지 못한 Codex 기능을 다룰 예정입니다. 아직 확정된 세션이 아니라 일정과 형태를 조율 중이며, 확정되는 대로 안내됩니다.",
-      en: "A Codex-focused workshop / sharing session being discussed with OpenAI for students who already have some building experience. It may cover connecting Codex with repos & specs (tests, QA/QC), the OpenAI API, function calling, MCP and other Codex features many students haven't seen yet. It isn't confirmed — the schedule and format are still in coordination, and it'll be announced once locked.",
-    },
-    location: ONLINE,
-    org: OPENAI_ORG,
-  },
+  // REMOVED (2026-08-03): "OpenAI Codex 워크샵 (조율 중)" — d3-codex-workshop.
+  // It never got past "조율 중" with OpenAI, and a TBC session on an otherwise
+  // self-paced day made Day 3 look scheduled when it isn't. Day 3 now reads
+  // exactly like Day 4: one optional 1:1 slot, the rest is the team's own time.
+  // Its partner constant (OPENAI_ORG) went with it. Do not restore either until
+  // there is an actual agreement — this is the second TBC session pulled from
+  // the schedule this week, for the same reason (see the Day 5 block).
   {
     id: "d3-mentoring",
     day: 3,

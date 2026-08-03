@@ -2265,8 +2265,13 @@ export const dict = {
       {
         q: { ko: "저는 개발 경험이 있는데 크래시코스가 필요 없어요.", en: "I already code — I don't need the crash course." },
         a: {
-          ko: "크래시코스는 선택입니다 — 건너뛰고 Day 1 문제 공개 직후부터 바로 빌드에 들어가면 됩니다. 경험자를 위한 OpenAI Codex 워크샵(레포 연동·API·MCP)도 별도로 조율 중이에요.",
-          en: "The Crash Course is optional — skip it and start building the moment the problems drop on Day 1. An OpenAI Codex workshop for experienced builders (repo integration, APIs, MCP) is being arranged separately.",
+          // 두 번째 문장("경험자를 위한 OpenAI Codex 워크샵(레포 연동·API·MCP)도
+          // 별도로 조율 중")은 2026-08-03에 삭제했습니다 — 그 워크샵이 스케줄에서
+          // 빠졌기 때문입니다(schedule.ts d3-codex-workshop). 경험자용 대체 세션을
+          // 여기에 새로 적지 마세요: 지금 확정된 건 없고, 이 답의 일은 "안 들어도
+          // 된다"를 말해주는 것까지입니다.
+          ko: "크래시코스는 선택입니다 — 건너뛰고 Day 1 문제 공개 직후부터 바로 빌드에 들어가면 됩니다.",
+          en: "The Crash Course is optional — skip it and start building the moment the problems drop on Day 1.",
         },
       },
       {
