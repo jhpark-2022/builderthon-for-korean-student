@@ -199,6 +199,12 @@ renders this section.
 - Route strip `aria-label` is carried by the first `<ol>` only, so the split into
   two lists does not announce twice.
 
+## Known issue at the time — **RESOLVED 2026-08-03**
+
+> The 18px horizontal document overflow at 375px (hero marquee + `-inset-x-10`
+> glow layer) was still open when this work shipped. Fixed later the same day —
+> see `changelog-august-03-2026-horizontal-overflow.md`.
+
 ## Verification
 
 - `npx tsc --noEmit` → 0

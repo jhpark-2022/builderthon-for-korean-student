@@ -49,13 +49,35 @@ html { font-size: 112.5%; scroll-behavior: smooth; scroll-padding-top: 96px; }
   html { scroll-padding-top: 120px; }
 }
 
+/* ── Horizontal-overflow guard ────────────────────────────────────────────────
+   THE ROOT CAUSES ARE FIXED AT THE SECTION LEVEL. As of 2026-08-03 the two real
+   offenders are gone: the hero confirmed-partner marquee (replaced by a static
+   wrapped grid) and its glow layer (-inset-x-10 → -inset-x-6 below sm, so it
+   reaches the screen edge and not past it). Measured document overflow is 0 at
+   both 375px and 320px, and the only elements still wider than the viewport are
+   inside the #companions marquee, which clips them itself.
+
+   THIS IS A SAFETY NET, NOT A FIX. It exists so a future mistake never reaches a
+   user as a page that slides sideways under a vertical swipe. DO NOT hide a new
+   overflow behind it — if `document.documentElement.scrollWidth` exceeds
+   `clientWidth` again, find the element and contain it where it lives.
+
+   `clip`, not `hidden`: `hidden` makes the element a scroll container, which
+   silently breaks `position: sticky` in descendants and lets programmatic
+   scrollLeft push content sideways anyway. `clip` just clips. It is applied to
+   BOTH html and body because body alone does not stop the document element from
+   reporting the overflow — that is precisely why the old
+   `body { overflow-x: hidden }` measured 18px of document overflow while
+   visually clipping. */
+html { overflow-x: clip; }
+
 body {
   background-color: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* ── Korean line breaking, site-wide ─────────────────────────────────────────
@@ -107,12 +129,14 @@ body {
   /* Exempt the decorative logo marquees: a slow, continuous horizontal scroll is
      low-risk for motion sensitivity, and freezing it just looks broken. Higher
      selector specificity than `*` lets these win despite both being !important.
-     marquee-hero is exempt too — the hero strip is a single-line marquee on
-     mobile, and a frozen track parks half the partners off the right edge with
-     no way to reach them, so keeping it moving is the accessible choice here. */
+     These two are the #companions band — atmosphere, not evidence.
+     `.marquee-hero` used to be exempt here as well, for the hero confirmed-partner
+     strip. That strip is static at every width now (see HeroPartnerStrip), so
+     there is no longer any animation to exempt — which also retires the awkward
+     part of this rule: an exemption that overrode a user's reduced-motion
+     preference because the layout depended on movement to stay reachable. */
   .marquee-left  { animation-duration: 60s !important; }
   .marquee-right { animation-duration: 60s !important; }
-  .marquee-hero  { animation-duration: 75s !important; }
 }
 
 ::-webkit-scrollbar { width: 6px; }
@@ -340,12 +364,10 @@ body {
 .marquee-track { display: flex; width: max-content; }
 .marquee-left  { animation: marquee 60s linear infinite; }
 .marquee-right { animation: marquee-reverse 60s linear infinite; }
-/* Hero confirmed-partner strip (mobile only). Slower than the companion band
-   since it's a hairline detail. It keeps scrolling under reduced motion (see the
-   exemption in the prefers-reduced-motion block above): a frozen single-line
-   track parks half the partners off the right edge, so movement is what keeps
-   every partner reachable here. */
-.marquee-hero { animation: marquee 75s linear infinite; }
+/* `.marquee-hero` lived here for the hero confirmed-partner strip on mobile.
+   Removed 2026-08-03: that strip is now a static wrapped grid at every width, so
+   nothing referenced this rule. `.marquee-track` stays — the #companions band
+   still uses it with marquee-left / marquee-right. */
 @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 @keyframes marquee-reverse { from{transform:translateX(-50%)} to{transform:translateX(0)} }
 

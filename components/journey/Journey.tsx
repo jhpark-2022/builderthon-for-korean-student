@@ -1843,8 +1843,12 @@ function StripLogo({ src, alt, w, h, area, min, max }: StripLogoSpec) {
       // The scrim added behind the strip is what makes 80 safe on the bright
       // part of the video; the drop-shadow still carries the thin wordmarks.
       // max-w is the backstop for the widest wordmarks: it letterboxes them
-      // down instead of letting one mark blow out its row's width.
-      className="w-auto max-w-[8.5rem] shrink-0 object-contain opacity-80 grayscale drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] transition duration-300 group-hover:opacity-100"
+      // down instead of letting one mark blow out its row's width. 5.5rem below
+      // sm: with the strip static rather than scrolling, the cap is what decides
+      // how many marks land per row, and 8.5rem put the widest two alone on a
+      // line at 375px. Heights are untouched — the marks stay at their 22–38px
+      // equal-area sizing and only the widest wordmarks letterbox down.
+      className="w-auto max-w-[5.5rem] shrink-0 object-contain opacity-80 grayscale drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] transition duration-300 group-hover:opacity-100 sm:max-w-[8.5rem]"
     />
   );
 }
@@ -1865,27 +1869,26 @@ function StripTierLabel({ children }: { children: React.ReactNode }) {
 // tier captions riding inline in the same track. Tapping anywhere jumps to the
 // full partner section — individual intro modals stay there, not here.
 function HeroPartnerStrip({ t }: { t: Tfn }) {
-  // Layout split: mobile always gets the single-line auto-scroll marquee (it
-  // keeps moving even under reduced motion — see the marquee-hero exemption in
-  // globals.css — because a frozen line would park 주관/후원 off-screen). From
-  // sm up it's the stacked 주최 / 주관 / 후원 tiers instead.
-
-  // One flat sequence for the marquee: caption, then that tier's marks, repeated.
-  const marqueeItems = confirmedPartnerTiers.flatMap((tier) => [
-    { label: t(tier.label) },
-    ...tier.items,
-  ]) as ({ label: string } | StripLogoSpec)[];
-
-  // The seamless loop needs the track duplicated (translate -50% lands back on
-  // an identical copy), but that doubles the above-fold element count for a
-  // payoff nobody can see until the animation has run for a while. Ship one copy
-  // in the first paint and duplicate right after mount: on throttled mobile the
-  // 17 tiers-worth of marks are already the heaviest thing in the hero, and
-  // rendering 34 of them up front measurably pushed LCP out. The second copy
-  // appends off-screen to the right, so the swap is invisible.
-  const [looped, setLooped] = useState(false);
-  useEffect(() => setLooped(true), []);
-
+  // ONE STATIC LAYOUT AT EVERY WIDTH (2026-08-03).
+  //
+  // Mobile used to render this as a single-line auto-scroll marquee, on the
+  // reasoning that 18 marks can't fit a phone width. They can — they just have to
+  // wrap. And the marquee cost the thing the strip exists for: a logo wall earns
+  // trust by being SEEN AT ONCE. Three marks sliding past one at a time is a
+  // ticker; it reads as decoration, and a visitor who looks away has no idea
+  // whether they saw two sponsors or twenty. Sequential exposure is a weak trust
+  // signal no matter how many logos are in the queue.
+  //
+  // So the tier stack below is no longer `hidden sm:flex` — it renders at every
+  // width, from the same data, through the same StripLogo. Mobile only tightens
+  // the gaps and the per-mark width cap so ~3–4 marks land per row; the equal-AREA
+  // sizing and the LEAD_TIER bump for 주최/주관 carry over untouched, so the size
+  // hierarchy survives the smaller scale.
+  //
+  // Side effects, both good: no animation means nothing to exempt from
+  // prefers-reduced-motion (the old marquee deliberately ignored it, because a
+  // frozen ticker hides half its content), and the duplicated marquee track is
+  // gone so the above-fold image count drops back to one copy.
   return (
     // Non-clickable: kept the `group` wrapper so the hover highlight still plays,
     // but it's a div (not a link) so the strip no longer jumps to #builders.
@@ -1905,7 +1908,14 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
         // behind the single-line mobile marquee. Bleeding the gradient outside
         // the element and fading to transparent well before its edge keeps it a
         // shadow rather than a panel.
-        className="pointer-events-none absolute -inset-x-10 -inset-y-6 -z-10"
+        // -inset-x-6 on mobile, not -inset-x-10. The hero rail pads the strip in
+        // by px-6 (24px), so a 40px horizontal bleed put this layer 16px past the
+        // viewport on each side — that was one of the two sources of the 18px
+        // horizontal document overflow (see the overflow changelog). At -6 the
+        // glow reaches exactly the screen edge and no further. The gradient is
+        // already ~0 alpha out there, so nothing visible changed; from sm up the
+        // rail pads by 40px and the original bleed still fits.
+        className="pointer-events-none absolute -inset-x-6 -inset-y-6 -z-10 sm:-inset-x-10"
         style={{
           background:
             "radial-gradient(75% 130% at 50% 50%, rgba(6,4,15,0.7) 0%, rgba(6,4,15,0.5) 42%, rgba(6,4,15,0.22) 68%, transparent 88%)",
@@ -1922,34 +1932,20 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
       {/* Gaps are deliberately tight: stacking three tiers and enlarging the
           marks already added ~160px to a hero that overflows a laptop viewport,
           so every row here is spaced to the minimum that still separates them. */}
-      <div className="mt-2.5 hidden flex-col items-center gap-2 sm:flex">
+      {/* Gaps are deliberately tight on mobile: three tiers of wrapped marks in a
+          hero that is already stacked will run long otherwise. gap-x-3 + the
+          narrower cap on StripLogo is what lands ~3–4 marks per row at 375px. */}
+      <div className="mt-2.5 flex flex-col items-center gap-2">
         {confirmedPartnerTiers.map((tier) => (
           <div key={tier.label.en} className="flex flex-col items-center gap-1">
             <StripTierLabel>{t(tier.label)}</StripTierLabel>
-            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1.5">
+            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 sm:gap-x-6">
               {tier.items.map((p) => (
                 <StripLogo key={p.alt} {...p} />
               ))}
             </div>
           </div>
         ))}
-      </div>
-
-      {/* <sm — slow auto-scroll, always (even under reduced motion). The track
-          holds the list twice and translates -50%, so the loop is seamless.
-          marquee-hero is exempt from the reduced-motion kill in globals.css, so
-          it keeps moving here — a frozen single line would hide half the tiers
-          off the right edge with no way to reach them. */}
-      <div aria-hidden className="mt-4 overflow-hidden sm:hidden">
-        {/* marquee-hero only once the track is duplicated — animating a single
-            copy would scroll half the marks off and never bring them back. */}
-        <div className={`marquee-track ${looped ? "marquee-hero" : ""}`}>
-          {(looped ? [...marqueeItems, ...marqueeItems] : marqueeItems).map((it, i) => (
-            <div key={i} className="mr-6 flex shrink-0 items-center">
-              {"label" in it ? <StripTierLabel>{it.label}</StripTierLabel> : <StripLogo {...it} />}
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
@@ -2416,16 +2412,11 @@ export default function Journey() {
               )}
             </div>
 
-            {/* Mobile only — the hook cards sit in the stacked hero below the
-                CTAs. On lg+ they move to the right column, above the countdown
-                (see below), so this copy is hidden there to avoid duplication. */}
-            <HookCards
-              t={t}
-              ownResultId={ownResultId}
-              openRegister={openRegister}
-              className="mx-auto mt-5 max-w-xl lg:hidden"
-              chatSrc={null}
-            />
+            {/* The mobile hook cards USED to sit here, directly under the CTAs.
+                They now render after the partner strip below, so the first swipe
+                answers "who is behind this" before it asks for a signup. Nothing
+                moved on desktop: that copy is `lg:hidden` and lg+ uses the
+                right-column instance, which is untouched. */}
           </motion.div>
 
           {/* RIGHT — hook cards ABOVE the Countdown ↔ Problem Statement panel,
@@ -2464,6 +2455,20 @@ export default function Journey() {
             repaint path. */}
         <div className="px-6 sm:px-10 lg:px-10 xl:px-16">
           <HeroPartnerStrip t={t} />
+          {/* Mobile only — moved here from directly under the hero CTAs so the
+              logo wall comes FIRST. On a phone the hero is a vertical stack and
+              whatever sits highest is what the first swipe reveals; putting the
+              signup hooks above the confirmed partners asked for commitment
+              before showing any reason to give it. On lg+ this copy is hidden and
+              the right column's instance renders instead — desktop composition is
+              unchanged. */}
+          <HookCards
+            t={t}
+            ownResultId={ownResultId}
+            openRegister={openRegister}
+            className="mx-auto mt-6 max-w-xl lg:hidden"
+            chatSrc={null}
+          />
         </div>
       </Chapter>
 

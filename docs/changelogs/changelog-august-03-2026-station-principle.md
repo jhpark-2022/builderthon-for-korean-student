@@ -157,13 +157,19 @@ arbitrary values (`bg-white/[0.03]`, `/[0.04]`, `/[0.06]`). The rule rendered as
 three unseparated numbers. Fixed to `bg-white/[0.14]`, spacing widened to
 `mx-5 sm:mx-9`.
 
-## Pre-existing, not introduced
+## Pre-existing, not introduced — **RESOLVED 2026-08-03**
 
 At 375px the document overflows horizontally by 18px. The culprits are the hero
 marquee track and a decorative `-inset-x-10 -z-10` glow layer, both of which
 predate this change; the route strip is not among the overflowing elements and
 handles its own width via internal scroll. Recorded here so it is not attributed
 to this work later — it is worth a separate fix.
+
+> **Resolved** later the same day — see
+> `changelog-august-03-2026-horizontal-overflow.md`. The marquee was removed
+> outright (the hero partner strip is static now) and the glow layer's bleed was
+> matched to the rail padding. Document overflow is 0 at 375px and 320px, with an
+> `overflow-x: clip` guard on `html`/`body` as a safety net.
 
 ## Files
 
