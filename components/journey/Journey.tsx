@@ -972,6 +972,12 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
 // The node keyword. days[].theme is "오프닝 · 문제 공개" / "크래시코스 (집중)";
 // a stop label needs the head of that, without the parenthetical. Derived rather
 // than duplicated so the strip can never drift from the card heading below it.
+//
+// `days[].stopLabel` overrides the derivation where the head of the theme isn't
+// the reason to get off. Day 3·4's theme is "자율 빌드 · 멘토링", so the derived
+// keyword was 자율 빌드 — but self-paced build is not something you turn up for;
+// the 1:1 mentoring is. Day 6 keeps the derived value because there really is
+// nothing but the build that day.
 const stopKeyword = (theme: string) =>
   theme.split("·")[0].replace(/\([^)]*\)/g, "").trim();
 
@@ -1056,7 +1062,7 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                         : "text-white/60 group-hover:text-white/85"
                     }`}
                   >
-                    {stopKeyword(t(d.theme))}
+                    {d.stopLabel ? t(d.stopLabel) : stopKeyword(t(d.theme))}
                   </span>
                   {anchor && (
                     <span className="rounded-full border border-rose-400/30 bg-rose-400/10 px-1.5 py-0.5 text-[0.58rem] font-bold leading-none text-rose-200">
@@ -1297,6 +1303,19 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
       </div>
       <h4 className="mt-3 text-[15px] font-bold leading-snug text-white">{t(day.theme)}</h4>
       <p className="mt-1.5 text-[13px] leading-relaxed text-white/65">{t(day.summary)}</p>
+      {/* '올 이유' 한 줄 — 요약(무엇을 하는 날인가) 아래, 세션 카운트 위.
+          노선도 아래 문단이 "하나하나 내려설 이유가 있도록 설계했습니다"라고
+          주장하는데 카드들이 그걸 증명하지 못하고 있었습니다. 이 줄이 증명입니다.
+          에메랄드는 이 페이지에서 '얻는 것'에 쓰는 색(혜택 섹션)이라, 일정 서술과
+          가치 제시를 색으로 갈라 놓습니다. 새 토큰은 만들지 않았습니다.
+          필참일에는 렌더하지 않습니다 — 갈지 말지 고르는 날이 아니어서, 거기에
+          '올 이유'를 붙이면 필참이 설득의 문제로 보입니다. */}
+      {day.whyStop && !day.mandatory && (
+        <p className="mt-2 flex gap-1.5 break-keep text-[12.5px] font-semibold leading-snug text-emerald-200/85">
+          <span aria-hidden className="text-emerald-300/70">→</span>
+          {t(day.whyStop)}
+        </p>
+      )}
       <span className="mt-auto pt-4 text-xs font-semibold text-violet-300/75 transition group-hover:text-violet-300">
         {evCount === 0
           ? t(dict.program.noSessions)

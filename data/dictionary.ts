@@ -1120,9 +1120,14 @@ export const dict = {
       // says what the six ARE: each was built to be worth choosing, because it
       // makes the thing you hand in on Day 8 better. Keep it immediately under
       // the principle; separated, either half reads wrong.
+      // 2026-08-04: 가운데 부연("결과물을 더 의미 있게 만들기 위해 직접 고르는
+      // 준비 과정이자 중간 정거장이고")을 덜어냈습니다. 그 자리는 이제 카드가
+      // 맡습니다 — 각 선택일 카드에 '올 이유' 한 줄(days[].whyStop)이 붙어서,
+      // 이 문단은 주장만 하고 증명은 바로 아래 그리드가 합니다. 부연을 다시
+      // 붙이면 같은 말을 문단과 카드가 두 번 하게 됩니다.
       optionalValue: {
-        ko: "나머지 여섯 정거장은 그냥 늘어난 일정이 아니에요. 결과물을 더 의미 있게 만들기 위해 직접 고르는 준비 과정이자 중간 정거장이고, 하나하나 내려설 이유가 있도록 설계했습니다.",
-        en: "The other six stops aren't schedule padding. Each one is a preparation stage you choose because it makes what you hand in better — and each was designed to be worth getting off for.",
+        ko: "나머지 여섯 정거장은 그냥 늘어난 일정이 아니에요 — 하나하나 내려설 이유가 있도록 설계했습니다.",
+        en: "The other six stops aren't schedule padding — each was designed to be worth getting off for.",
       },
       ariaLabel: { ko: "8일 노선도", en: "The 8-day route" },
     },

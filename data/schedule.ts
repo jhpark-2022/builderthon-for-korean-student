@@ -154,6 +154,25 @@ export interface DayMeta {
   // href: 세션 카드가 아니라 사이트 안의 다른 페이지로 가는 줄(현재는 /quiz).
   // eventId와 함께 쓰지 마세요 — 한 줄에 목적지는 하나입니다.
   runOfShow?: { time: string; label: Bilingual; note?: Bilingual; eventId?: string; href?: string }[];
+  // 이 날 들르면 무엇을 얻는가 — 일정 서술이 아니라 '올 이유' 한 줄.
+  //
+  // 노선도 아래에서 "하나하나 내려설 이유가 있도록 설계했습니다"라고 주장하는데,
+  // 정작 카드들은 그 이유를 말하지 않고 무엇을 하는 날인지만 말하고 있었습니다.
+  // 주장은 문단이 하고 증명은 카드가 해야 합니다 — 이 필드가 그 증명입니다.
+  //
+  // 선택일 전용입니다. 필참일(Day 1·8)에는 렌더하지 않습니다: 갈지 말지를
+  // 고르는 날이 아니라 이미 가야 하는 날이고, 거기에 '올 이유'를 붙이면 필참이
+  // 설득의 문제로 보입니다(DayCard의 렌더 가드 참고).
+  //
+  // 없는 이유를 지어내지 마세요. Day 6은 정말로 아무 일정이 없는 날이라 그 사실
+  // 자체가 이 줄의 내용입니다 — 가짜 이유를 붙이면 나머지 다섯 줄의 신뢰가 같이
+  // 떨어집니다. 한 줄, 길어야 두 줄로 유지하세요(모바일 카드가 늘어납니다).
+  whyStop?: Bilingual;
+  // 노선도 정거장 키워드 override. 기본값은 theme의 머리(stopKeyword)인데,
+  // Day 3·4는 theme이 "자율 빌드 · 멘토링"이라 머리가 "자율 빌드"가 됩니다 —
+  // 그날 내려설 이유는 자율 빌드가 아니라 1:1 멘토링이므로 여기서 덮습니다.
+  // Day 6은 정말 자율 빌드뿐이라 파생값 그대로 둡니다.
+  stopLabel?: Bilingual;
   // "pending" = meant to be on-site but venue isn't locked (Zoom fallback).
   // "mixed"   = both halves in the same day and neither badge alone is honest.
   //             NO DAY USES THIS RIGHT NOW: Day 3·4 held it while their 1:1
@@ -302,6 +321,10 @@ export const days: DayMeta[] = [
       ko: "바이브 코딩 입문 집중 5–6시간(비개발자 OK) · 코드프레소 김지훈 이사님 진행.",
       en: "A focused 5–6h vibe-coding intro (beginners OK) · led by Jihoon Kim, Director at Codepresso.",
     },
+    whyStop: {
+      ko: "혼자 헤매며 배울 몇 주를, 출발선 맞추는 하루로 압축",
+      en: "Weeks of solo trial-and-error, compressed into one day",
+    },
     dayMode: "online",
   },
   {
@@ -317,6 +340,11 @@ export const days: DayMeta[] = [
       ko: "정해진 일정은 오후 1:1 멘토링(온라인 기본)뿐 — 나머지는 각자 비는 시간에 원하는 만큼 빌드하면 됩니다.",
       en: "The only fixed thing is a PM 1:1 mentoring slot (online by default) — the rest is yours to build in whatever free time you have.",
     },
+    whyStop: {
+      ko: "방향을 아직 바꿀 수 있을 때 받는 두 번째 1:1",
+      en: "A second 1:1, while there's still time to change direction",
+    },
+    stopLabel: { ko: "1:1 멘토링", en: "1:1 mentoring" },
     dayMode: "online",
   },
   {
@@ -329,6 +357,11 @@ export const days: DayMeta[] = [
       ko: "정해진 일정은 오후 1:1 멘토링(온라인 기본)뿐 — 나머지는 각자 비는 시간에 원하는 만큼 빌드하면 됩니다.",
       en: "The only fixed thing is a PM 1:1 mentoring slot (online by default) — the rest is yours to build in whatever free time you have.",
     },
+    whyStop: {
+      ko: "내 아이디어를 현직자에게 1:1로 검증받는 첫 기회",
+      en: "The first time your idea meets a working founder, 1:1",
+    },
+    stopLabel: { ko: "1:1 멘토링", en: "1:1 mentoring" },
     dayMode: "online",
   },
   {
@@ -358,6 +391,12 @@ export const days: DayMeta[] = [
       ko: "온라인 구간을 지나 다시 현장으로 — *SCAPE에서 학생 간 네트워킹에 초점을 둔 프로그램을 해시드와 기획 중입니다 · FDE 오피스아워(온라인).",
       en: "Back in person after the online stretch — at *SCAPE, with a programme focused on student-to-student networking being planned with Hashed · FDE office hours (online).",
     },
+    // 프로그램이 아니라 '만남' 자체가 이유입니다 — 세부 구성은 아직 해시드와
+    // 기획 중이라, 여기서 프로그램을 약속하면 헤지가 무너집니다.
+    whyStop: {
+      ko: "함께 만드는 사람들을 전원이 처음 만나는 날",
+      en: "The day you finally meet everyone you've been building alongside",
+    },
     hours: "10AM–2PM",
     dayMode: "offline",
   },
@@ -368,8 +407,15 @@ export const days: DayMeta[] = [
     phase: LAB2,
     theme: { ko: "자율 빌드", en: "Self-paced build" },
     summary: {
-      ko: "정해진 일정이 하나도 없는 날 — 각자 비는 시간에 원하는 만큼 빌드하면 됩니다. 필요하면 FDE 오피스아워(온라인)에 드롭인하세요.",
-      en: "Nothing fixed at all today — build in whatever free time you have, for as long as you want. Drop in to the FDE office hours (online) if you need them.",
+      ko: "필요하면 팝업스튜디오 FDE 오피스아워(온라인)에 드롭인하세요 — 예약도 출석도 없습니다.",
+      en: "Drop in to Popup Studio's FDE office hours (online) if you need them — no booking, no attendance.",
+    },
+    // 없는 이유를 지어내지 않습니다. 이 날은 정말 아무 일정이 없고, 그 사실이
+    // 이 줄의 내용입니다. 요약에서 "정해진 일정이 하나도 없는 날"을 뺀 것도
+    // 이 줄과 같은 말이기 때문입니다 — 한 카드에서 두 번 읽히면 안 됩니다.
+    whyStop: {
+      ko: "정해진 것 없음 — 온전히 팀의 빌드 시간",
+      en: "Nothing scheduled — the day belongs to your team's build",
     },
     dayMode: "online",
     // The FDE office hour is a drop-in, so the day is still free-form.
@@ -387,6 +433,10 @@ export const days: DayMeta[] = [
     summary: {
       ko: "AWS 오피스(확정) · 멘토와 함께하는 최종 점검 · 점심(개별) · 박희덕 커리어 간담회 · FDE 오피스아워(온라인) · 저녁: 사전 제출물 마감(필수).",
       en: "AWS office (confirmed) · final check with mentors · lunch (on your own) · Park Hee-deok career session · FDE office hours (online) · Evening: submission deadline (required).",
+    },
+    whyStop: {
+      ko: "심사위원이 던질 질문을 무대에 서기 하루 전에 미리 받아보는 자리",
+      en: "The judges' questions, asked a day before you're on stage",
     },
     hours: "9AM–2PM",
     // 확정 진행 순서 (2026-08-04). 9AM–2PM 안에서 네 줄이 전부입니다.
