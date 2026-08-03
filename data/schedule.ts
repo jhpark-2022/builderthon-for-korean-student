@@ -1082,11 +1082,15 @@ export const schedule: BEvent[] = [
       en: "A 1:1 to find the sharpest point in your idea — and work out how you'll prove it — online by default, in person at the Korean Association hall with some mentors.",
     },
     description: {
-      ko: "Day 3–6은 점수를 만드는 시간입니다 — 문제의 범위도, 솔루션의 방향도 아직 실제로 고칠 수 있는 구간이에요. 그래서 이 1:1은 막힌 것을 뚫는 데서 끝나지 않고, 심사 기준에 맞는 솔루션을 어떻게 만들지와 그 차별성·효과를 어떻게 증명할지를 함께 잡습니다. 멘토와 함께 아이디어에서 가장 뾰족한 지점을 찾아, 그게 데모와 결과물에서 제일 잘 드러나게 만드는 시간이에요. 멘토링 1단계(기초)로, 정해진 시간표 대신 팀의 필요에 맞춰 진행됩니다. 진행 방식은 멘토별로 정해집니다 — 온라인이 기본이고, 멘토에 따라 싱가포르 한인회관(탄종파가) 대면(F2F)으로 진행될 수 있으니 배정된 멘토와 직접 맞추시면 됩니다. 막힌 지점을 함께 점검하고 방향을 조정합니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표 — 같은 눈높이에서 함께 고민하는 선배입니다. 학생 정체성과 giver 문화를 지키는 이 멘토 persona가 이 시간의 핵심입니다. 확정 멘토로 기업 멘토 2곳(Onword Lab · REmited)과 현직 시니어 9인이 함께합니다 — 전체 명단은 멘토링 섹션을 참고하세요. 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다. Day 5–7에는 팝업스튜디오 FDE의 실전 멘토링이 2단계로 이어집니다.",
-      en: "Day 3–6 is where the score gets built — the window in which the scope of the problem and the direction of the solution can still genuinely change. So this 1:1 doesn't stop at unblocking you: it's where you work out how to build something the judging criteria actually reward, and how you'll prove its difference and its effect. With a mentor you find the sharpest point in your idea and make sure that's what the demo shows. It's stage one of mentoring — the foundational round, following each team's needs rather than a fixed timetable. The format is set mentor by mentor — online by default, though some mentors take theirs in person (F2F) at the Korean Association hall in Tanjong Pagar, so you'll settle it with the mentor you're matched with. It's time to check blockers and adjust direction. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes, thinking alongside you at eye level. That peer-mentor persona — protecting the student identity and giver culture — is the point of this time. The confirmed line-up is two company mentors (Onword Lab · REmited) plus nine working seniors — see the mentoring section for the full roster. Mentors are assigned by overlapping availability, not by request. Stage two — Popup Studio's FDE mentoring — follows on Day 5–7.",
+      ko: "Day 3–6은 점수를 만드는 시간입니다 — 범위도 방향도 아직 실제로 고칠 수 있는 구간이라, 멘토와 함께 아이디어에서 가장 뾰족한 지점을 찾아 그게 데모에서 제일 잘 드러나게 만듭니다. 멘토링 1단계로, 정해진 시간표 대신 팀의 필요에 맞춰 진행돼요. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표입니다 — 확정 멘토진(기업 2곳 · 현직 시니어 9인)은 멘토링 섹션에 있고, 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다. Day 5–7에는 팝업스튜디오 FDE의 실전 멘토링이 2단계로 이어집니다.",
+      en: "Day 3–6 is where the score gets built — scope and direction can still genuinely change, so this is when you and a mentor find the sharpest point in your idea and make sure that's what the demo shows. It's stage one of mentoring, following each team's needs rather than a fixed timetable. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes — the confirmed line-up (two companies · nine working seniors) is in the mentoring section, and slots are assigned by overlapping availability rather than by request. Stage two — Popup Studio's FDE mentoring — follows on Day 5–7.",
     },
     location: MENTORING_MODE,
     checkpoints: SCORE_BUILDING_CHECKS,
+    // 설명에서 "온라인 기본 / 한인회관 대면 가능"을 뺐습니다 (2026-08-04) —
+    // 같은 모달의 '장소' 행이 MENTORING_MODE로 이미 그대로 말합니다. 사실이
+    // 사라진 게 아니라 한 번만 말하게 한 것이고, 설명은 이 시간이 무엇을 위한
+    // 시간인지에만 씁니다. 되돌려 문장을 다시 넣지 마세요.
     // TODO: confirm public naming — the confirmed individual mentors (김종현·황영준·
     // 이유택·신동혁·이화영·임석건·이동훈·황현진·정요천) are from the internal deck; verify
     // their names may be shown publicly before surfacing. Full roster lives in
@@ -1132,8 +1136,8 @@ export const schedule: BEvent[] = [
       en: "A 1:1 over the prototype — tightening what makes it sharp and how you'll prove it — online by default, in person at the Korean Association hall with some mentors.",
     },
     description: {
-      ko: "아직 점수를 만드는 구간(Day 3–6)의 두 번째 1:1입니다 — 방향을 바꿀 수 있는 시간이 남아 있을 때, 팀이 만든 프로토타입을 놓고 무엇이 뾰족한지와 그걸 어떻게 증명할지를 다시 조입니다. 멘토링 1단계(기초)의 마무리이기도 합니다. Day 3과 마찬가지로 온라인이 기본이되 진행 방식은 멘토별로 정해지며(멘토에 따라 한인회관 대면 가능), 무엇이 잘 되고 있는지, 어디를 더 밀어야 하는지를 같은 눈높이의 선배 멘토와 짚어봅니다. 멘토는 유학생 출신 현직 대표로, 학생 교류와 giver 문화를 지키는 역할입니다(확정 멘토진은 Day 3과 동일). 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다.",
-      en: "The second 1:1 inside the score-building window (Day 3–6) — while there is still time to change direction, you put the prototype on the table and tighten two things: what makes it sharp, and how you'll prove it. It also closes out stage one of mentoring. As on Day 3 it's online by default, with the format set by each mentor (in person at the Korean Association hall is possible) — what's working, and where to push harder, with peer-level senior mentors. Mentors are Korean ex-international-student founders, there to keep the student exchange and giver culture alive (same confirmed line-up as Day 3). Mentors are assigned by overlapping availability, not by request.",
+      ko: "아직 점수를 만드는 구간(Day 3–6)의 두 번째 1:1입니다 — 방향을 바꿀 수 있는 시간이 남아 있을 때, 팀이 만든 프로토타입을 놓고 무엇이 뾰족한지와 그걸 어떻게 증명할지를 다시 조입니다. 멘토링 1단계의 마무리이고, 멘토진과 배정 방식은 Day 3과 같습니다.",
+      en: "The second 1:1 inside the score-building window (Day 3–6) — while there is still time to change direction, you put the prototype on the table and tighten two things: what makes it sharp, and how you'll prove it. It closes out stage one of mentoring; the mentors and how slots are assigned are the same as Day 3.",
     },
     location: MENTORING_MODE,
     checkpoints: SCORE_BUILDING_CHECKS,
