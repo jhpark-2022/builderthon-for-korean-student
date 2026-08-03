@@ -1578,7 +1578,9 @@ function RunOfShow({
         {t(dict.program.runOfShowTitle)}
       </p>
       <ol className="mt-3 space-y-px">
-        {rows.map((row) => {
+        {/* key는 index입니다 — 한 세션이 두 블록으로 나뉘어 도는 경우(Day 8의 두
+            트랙 발표)가 있어 eventId도, time+label 조합도 유일하지 않습니다. */}
+        {rows.map((row, i) => {
           const linked = row.eventId ? schedule.find((e) => e.id === row.eventId) : undefined;
           const body = (
             <>
@@ -1605,7 +1607,7 @@ function RunOfShow({
             </>
           );
           return (
-            <li key={row.time + row.label.en} className="border-t border-white/[0.06] first:border-t-0">
+            <li key={i} className="border-t border-white/[0.06] first:border-t-0">
               {linked ? (
                 <button
                   type="button"

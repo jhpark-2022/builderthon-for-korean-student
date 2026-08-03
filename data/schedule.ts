@@ -427,10 +427,51 @@ export const days: DayMeta[] = [
     phase: LAB2,
     theme: { ko: "데모데이 · 최종 발표", en: "Demo Day · Final Pitch" },
     summary: {
-      ko: "*SCAPE 현장 · 박희덕 키노트 · 트랙별 5분 팀 발표 · 결과 발표·시상·수료증 배부.",
-      en: "In person at *SCAPE · Park Hee-deok keynote · 5-min team pitches, track by track · results, awards & certificates.",
+      ko: "*SCAPE 현장 · 두 트랙 팀 발표(팀당 8분) · 박희덕 연사 · 수상자 발표 · 수료증과 단체 사진.",
+      en: "In person at *SCAPE · team pitches across two tracks (8 min each) · Park Hee-deok · awards · certificates and a group photo.",
     },
     hours: "11AM–3PM",
+    // 확정 진행 순서 (2026-08-04). 10:40 입장은 hours(11AM–)보다 이르지만 프로그램
+    // 시작이 아니므로 hours를 앞당기지 않습니다 — Day 1의 12:40 입장과 같은 규칙.
+    // 두 트랙 발표(3·4번 줄)가 같은 카드(d8-judging)를 가리킵니다. 하나의 세션이
+    // 두 블록으로 나뉘어 도는 것이고, 카드를 둘로 쪼개면 같은 설명이 두 번 생깁니다.
+    runOfShow: [
+      {
+        time: "10:40AM–11AM",
+        label: { ko: "입장", en: "Doors open" },
+        note: { ko: "발표 순서는 이날 아침 오픈 카톡방으로 미리 공지됩니다", en: "The running order goes out that morning in the open chat" },
+      },
+      {
+        time: "11AM–11:10AM",
+        label: { ko: "지금까지의 여정 정리 · 데모데이 시작", en: "Looking back at the eight days · Demo Day begins" },
+      },
+      {
+        time: "11:10AM–12:30PM",
+        label: { ko: "첫 번째 트랙 발표", en: "First track pitches" },
+        note: { ko: "팀당 8분 — 발표 3분 + Q&A 포함 심사 5분", en: "8 minutes per team — a 3-minute pitch, then 5 minutes of judging including Q&A" },
+        eventId: "d8-judging",
+      },
+      {
+        time: "12:30PM–1:50PM",
+        label: { ko: "두 번째 트랙 발표", en: "Second track pitches" },
+        note: { ko: "자기 트랙이 아닌 시간에는 자유롭게 — 남아서 봐도, *SCAPE를 둘러봐도 됩니다", en: "Outside your own track you're free — stay and watch, or wander *SCAPE" },
+        eventId: "d8-judging",
+      },
+      {
+        time: "1:50PM–2:30PM",
+        label: { ko: "박희덕 연사", en: "Park Hee-deok speaks" },
+        eventId: "d8-opening-keynote",
+      },
+      {
+        time: "2:30PM–2:45PM",
+        label: { ko: "수상자 발표 · 사진", en: "Awards announced · photos" },
+        eventId: "d8-final-pitch",
+      },
+      {
+        time: "2:45PM–3PM",
+        label: { ko: "What's next 안내 · 수료증과 함께 단체 사진", en: "What's next · group photo with your certificate" },
+      },
+    ],
     dayMode: "offline",
     mandatory: true,
   },
@@ -1063,12 +1104,12 @@ export const schedule: BEvent[] = [
     // 멘토진이 진행합니다 — Day 1 오리엔테이션과 같은 종류의 복사 오염이었습니다.
     title: { ko: "최종 점검 멘토링 (현장)", en: "Final-check Mentoring (on-site)" },
     summary: {
-      ko: "이미 만든 것을 심사위원이 5분 안에 이해하도록 — 멘토와 함께하는 마지막 점검.",
-      en: "Making what you already built land in five minutes — the last check, with mentors.",
+      ko: "이미 만든 것을 3분 발표와 Q&A 안에서 증명하도록 — 멘토와 함께하는 마지막 점검.",
+      en: "Making what you already built stand up in a 3-minute pitch and the Q&A — the last check, with mentors.",
     },
     description: {
-      ko: "Day 7은 사전 제출물 마감 당일이라, 새 기능을 붙이거나 방향을 크게 바꾸는 날이 아닙니다. 남은 일은 이미 만든 결과를 심사위원이 5분 안에 명확히 이해하도록 증명하는 것 — 그래서 이 시간은 만드는 자리가 아니라 잃지 않는 자리입니다. 멘토와 함께 세 가지를 점검합니다. ① 5분 피칭 구조 — 병목 → 근거 → 데모 → 위험과 대응의 흐름이 서 있는지, 베이스라인 비교 자료가 필요한 자리에 놓였는지. ② 심사 질문 사전 리허설 — “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”, “어떤 판단을 AI에 맡겼나요?”, “이 솔루션의 효과를 어떻게 증명할 수 있나요?” 같은 질문에 자기 언어로 답할 수 있는지. ③ 사전 제출물 최종 점검 — 오늘 저녁 마감되는 그 네 가지가 다 완성됐는지 함께 확인합니다(무엇을 내는지는 이 날 카드의 제출물 안내를 보세요). AWS 오피스에서 열리며, Day 5에 이은 두 번째 현장 집결입니다. 팝업스튜디오 FDE의 온라인 오피스아워도 오늘까지 이어집니다.",
-      en: "Day 7 is the submission deadline, so it isn't a day for new features or a change of direction. What's left is proving what you already built — making it land with a judge inside five minutes — so this session is about not losing points rather than earning new ones. Three things get checked with a mentor. ① The five-minute pitch structure — does bottleneck → evidence → demo → risk-and-response hold up, and is the baseline comparison where it needs to be. ② A dry run of the judges' questions — “how is this different from what the problem owner would get by just asking a general LLM?”, “which judgements did you hand to the AI?”, “how would you prove this actually helps?” — can you answer them in your own words. ③ A final pass over the submission package due this evening: all four pieces finished (what they are is in this day's submission box). It runs at the AWS office, the second in-person gathering after Day 5, and Popup Studio's online FDE office hours run through today too.",
+      ko: "Day 7은 사전 제출물 마감 당일이라, 새 기능을 붙이거나 방향을 크게 바꾸는 날이 아닙니다. 남은 일은 이미 만든 결과를 3분 발표와 이어지는 Q&A 안에서 명확히 증명하는 것 — 그래서 이 시간은 만드는 자리가 아니라 잃지 않는 자리입니다. 멘토와 함께 세 가지를 점검합니다. ① 3분 발표 구조 — 병목 → 근거 → 데모 → 위험과 대응의 흐름이 서 있는지, 베이스라인 비교 자료가 필요한 자리에 놓였는지. ② 심사 질문 사전 리허설 — “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”, “어떤 판단을 AI에 맡겼나요?”, “이 솔루션의 효과를 어떻게 증명할 수 있나요?” 같은 질문에 자기 언어로 답할 수 있는지. ③ 사전 제출물 최종 점검 — 오늘 저녁 마감되는 그 네 가지가 다 완성됐는지 함께 확인합니다(무엇을 내는지는 이 날 카드의 제출물 안내를 보세요). AWS 오피스에서 열리며, Day 5에 이은 두 번째 현장 집결입니다. 팝업스튜디오 FDE의 온라인 오피스아워도 오늘까지 이어집니다.",
+      en: "Day 7 is the submission deadline, so it isn't a day for new features or a change of direction. What's left is proving what you already built — making it stand up inside a 3-minute pitch and the Q&A that follows — so this session is about not losing points rather than earning new ones. Three things get checked with a mentor. ① The 3-minute pitch structure — does bottleneck → evidence → demo → risk-and-response hold up, and is the baseline comparison where it needs to be. ② A dry run of the judges' questions — “how is this different from what the problem owner would get by just asking a general LLM?”, “which judgements did you hand to the AI?”, “how would you prove this actually helps?” — can you answer them in your own words. ③ A final pass over the submission package due this evening: all four pieces finished (what they are is in this day's submission box). It runs at the AWS office, the second in-person gathering after Day 5, and Popup Studio's online FDE office hours run through today too.",
     },
     location: AWS_OFFICE,
   },
@@ -1100,23 +1141,30 @@ export const schedule: BEvent[] = [
 
   // ─── DAY 8 · Demo Day · Final Pitch (08.29 · OFFLINE) ────────────────────────
   {
+    // ⚠️ id가 "d8-OPENING-keynote"지만 더 이상 여는 순서가 아닙니다 — 확정된 진행
+    // 순서에서 이 키노트는 두 트랙 발표가 모두 끝난 뒤(1:50PM), 시상 직전에
+    // 놓입니다. id는 다른 곳에서 참조될 수 있어 그대로 두었으니, 위치를 id로
+    // 짐작하지 마세요.
+    // 제목도 "데모데이 키노트"에서 "클로징 키노트"로 바꿨습니다: 행사의 대표
+    // 강연이라는 무게는 유지하되, 여는 강연이라는 잘못된 위치를 지웠습니다.
     id: "d8-opening-keynote",
     day: 8,
     date: "08.29",
     category: "main",
     mode: "offline",
-    timeOfDay: "AM",
+    timeOfDay: "PM",
+    time: "1:50PM–2:30PM",
     confirmed: true,
-    title: { ko: "데모데이 키노트 · 박희덕", en: "Demo Day Keynote · Park Hee-deok" },
+    title: { ko: "클로징 키노트 · 박희덕", en: "Closing Keynote · Park Hee-deok" },
     // TODO: confirm — speaker name is from the internal deck; confirm public naming is OK.
     speaker: { ko: "박희덕", en: "Park Hee-deok" },
     summary: {
-      ko: "11:00~ 약 1시간 · ‘제로백의 진짜 의미’로 여는 데모데이.",
-      en: "11:00~, about an hour · Demo Day opens on ‘The Real Meaning of Zero100’.",
+      ko: "모든 발표가 끝난 뒤, 시상 직전 40분 — ‘제로백의 진짜 의미’.",
+      en: "After every pitch, 40 minutes before the awards — ‘The Real Meaning of Zero100’.",
     },
     description: {
-      ko: "데모데이를 여는 키노트입니다. 11:00부터 약 1시간 동안, 트랜스링크 인베스트먼트의 박희덕 대표님이 ‘제로백의 진짜 의미’를 주제로 이야기합니다. 창업가가 0에서 100으로 가기 위한 핵심 요소 — 협업·가치·실행·글로벌 스탠다드의 중요성과 협업의 힘, 그리고 왜 지금, 왜 싱가포르의 한인 학생인지를 짚으며 피칭 직전의 동기를 끌어올립니다.",
-      en: "The keynote that opens Demo Day. From 11:00, Park Hee-deok (CEO · General Partner, Translink Investment) speaks for about an hour on ‘The Real Meaning of Zero100’ — the core of going from zero to a hundred: collaboration, value, execution and global standards, the power of collaboration, and why now and why Korean students in Singapore — lifting the motivation right before pitching.",
+      ko: "두 트랙의 발표가 모두 끝나고 시상을 앞둔 40분, 트랜스링크 인베스트먼트의 박희덕 대표님이 ‘제로백의 진짜 의미’를 주제로 이야기합니다. 창업가가 0에서 100으로 가기 위한 핵심 요소 — 협업·가치·실행·글로벌 스탠다드의 중요성과 협업의 힘, 그리고 왜 지금, 왜 싱가포르의 한인 학생인지. 8일을 막 끝낸 사람들에게, 오늘이 끝이 아니라 어디의 시작인지를 짚어주는 자리입니다.",
+      en: "With both tracks done pitching and the awards still ahead, Park Hee-deok (CEO · General Partner, Translink Investment) takes 40 minutes on ‘The Real Meaning of Zero100’ — what actually carries a founder from zero to a hundred: collaboration, value, execution, global standards, and why now, why Korean students in Singapore. Spoken to people who have just finished the eight days, about what today is the start of rather than the end of.",
     },
     location: ONSITE,
   },
@@ -1127,14 +1175,18 @@ export const schedule: BEvent[] = [
     category: "main",
     mode: "offline",
     timeOfDay: "PM",
+    time: "11:10AM–1:50PM",
     title: { ko: "데모데이 발표 · 심사", en: "Demo-Day Pitches · Judging" },
+    // 발표 길이가 "팀당 5분"에서 "팀당 8분 = 발표 3분 + Q&A 포함 심사 5분"으로
+    // 정정됐습니다 (2026-08-04 확정). 참가자가 5분짜리 발표를 준비해 오면 현장에서
+    // 그대로 사고가 나는 종류의 숫자라, 이 값이 나오는 모든 곳을 함께 고쳤습니다.
     summary: {
-      ko: "12:00~ 문제를 낸 기업과 심사위원 앞에서 팀당 5분 피칭·검증 — 본인 트랙만 참석.",
-      en: "12:00~ 5-min pitch per team to the company that set the problem and the judges — attend your own track.",
+      ko: "문제를 낸 기업과 심사위원 앞에서 팀당 8분 — 발표 3분 + Q&A 포함 심사 5분.",
+      en: "Eight minutes per team in front of the company that set the problem and the judges — a 3-minute pitch, then 5 minutes of judging with Q&A.",
     },
     description: {
-      ko: "12:00부터 데모데이 팀별 발표가 시작됩니다. 8일의 마지막이자, 문제를 낸 기업과 심사위원 앞에서 ‘내 아이디어가 돌아간다’를 검증받는 자리입니다. 같은 공간에서 트랙별로 순차 진행하며, 각 팀이 5분씩 발표합니다(트랙당 약 1시간 × 메인 트랙 2개 · 팀 수에 따라 유동). 참가자는 본인 트랙 발표에 참석하고, 그 외 시간은 자유롭게 관람하거나 식사할 수 있습니다. 심사는 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다(문제 발의는 AXMOS). Day 3·4 기초 멘토링은 심사에 참여하지 않는 선배들이 맡아, 학생 눈높이의 멘토 문화를 지킵니다.",
-      en: "From 12:00, the Demo-Day pitches begin — the end of the eight days, and the moment your idea gets validated in front of the company that set the problem and the judges. In one space, tracks run in sequence and each team pitches for five minutes (about an hour per track × two main tracks, depending on team count). You attend your own track's pitches and are free to watch others or grab food the rest of the time. Judging is done by working leaders who have solved real problems in industry (problem-setting by AXMOS). The Day 3·4 foundational mentoring is handled by seniors who take no part in judging, which is what keeps the peer-level mentor culture intact.",
+      ko: "8일의 마지막이자, 문제를 낸 기업과 심사위원 앞에서 ‘내 아이디어가 돌아간다’를 검증받는 자리입니다. 같은 공간에서 트랙별로 순차 진행하며, 팀당 8분입니다 — 발표 3분에 이어 Q&A를 포함한 심사 5분(트랙마다 약 1시간 20분). 발표 순서는 이날 아침 오픈 카톡방으로 미리 공지되니, 자기 차례를 미리 알고 오시면 됩니다. 자기 트랙 발표에는 참석하시고, 그 외 시간은 자유롭게 쓰셔도 됩니다 — 남아서 다른 트랙을 봐도 좋고, 자리를 지킬 의무는 없어요. 심사는 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다(문제 발의는 AXMOS). Day 3·4 기초 멘토링은 심사에 참여하지 않는 선배들이 맡아, 학생 눈높이의 멘토 문화를 지킵니다.",
+      en: "The end of the eight days, and the moment your idea gets validated in front of the company that set the problem and the judges. Tracks run in sequence in one space, eight minutes per team: a 3-minute pitch, then 5 minutes of judging including Q&A (about an hour and twenty minutes per track). The running order goes out in the open chat that morning, so you'll know your slot before you arrive. Attend your own track's pitches; the rest of the time is yours — stay and watch another track if you like, but you're not required to sit through it. Judging is done by working leaders who have solved real problems in industry (problem-setting by AXMOS). The Day 3·4 foundational mentoring is handled by seniors who take no part in judging, which is what keeps the peer-level mentor culture intact.",
     },
     location: ONSITE,
   },
@@ -1145,14 +1197,15 @@ export const schedule: BEvent[] = [
     category: "main",
     mode: "offline",
     timeOfDay: "PM",
+    time: "2:30PM–3PM",
     title: { ko: "결과 발표 · 시상", en: "Results · Awards" },
     summary: {
-      ko: "14:30~ 결과 발표 · 시상 · 수료증 배부 · 단체 사진.",
-      en: "14:30~ results, awards, certificates handed out, and a group photo.",
+      ko: "수상자 발표 · 사진 → 앞으로의 안내 → 수료증과 함께 단체 사진.",
+      en: "Awards and photos → what comes next → a group photo with your certificate.",
     },
     description: {
-      ko: "8일간의 빌드를 마무리하는 시간입니다. 트랙별 발표가 끝나면 14:30부터 결과 발표와 시상이 이어지고, 크래시코스 전 시간을 참석한 분들께 수료증을 배부한 뒤 단체 사진으로 마무리합니다. 전원이 *SCAPE L^IFE Jungle 현장(11AM~)에 모여, ‘데모로 끝나지 않는 성공의 경험’으로 8일을 함께 마칩니다.",
-      en: "The close of eight days of building. After the track pitches, results and awards follow from 14:30; certificates go to everyone who attended the full Crash Course, and the day ends with a group photo. The whole cohort gathers at *SCAPE L^IFE Jungle (from 11AM) to finish the eight days on a success that goes beyond a demo.",
+      ko: "8일간의 빌드를 마무리하는 30분입니다. 두 트랙 발표와 박희덕 대표님의 이야기가 끝나면 수상자 발표와 사진 촬영이 이어지고(2:30~), 이어서 앞으로 무엇이 남아 있는지를 짧게 안내합니다(2:45~). 마지막 2:50에는 수료증을 손에 들고 다 함께 단체 사진을 찍으며 끝납니다 — 수료증은 크래시코스 전 시간을 참석한 분들께 드립니다. 전원이 *SCAPE L^IFE Jungle 현장에 모여, ‘데모로 끝나지 않는 성공의 경험’으로 8일을 함께 마칩니다.",
+      en: "Thirty minutes to close out eight days of building. Once both tracks have pitched and Park Hee-deok has spoken, the awards are announced with photos (from 2:30), followed by a short word on what comes next (from 2:45). At 2:50 everyone gathers for a group photo, certificate in hand — the certificate goes to everyone who attended the full Crash Course. The whole cohort is at *SCAPE L^IFE Jungle to finish the eight days on a success that goes beyond a demo.",
     },
     location: ONSITE,
   },

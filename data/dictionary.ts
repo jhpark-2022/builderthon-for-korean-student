@@ -1493,7 +1493,10 @@ export const dict = {
           { ko: "0 → 100의 핵심 — 협업 · 가치 · 실행 · 글로벌 스탠다드", en: "The core of 0 → 100 — collaboration · value · execution · global standards" },
           { ko: "협업의 힘 · 커뮤니티의 중요성", en: "The power of collaboration · why community matters" },
           { ko: "왜 지금, 왜 싱가포르의 한인 학생인가", en: "Why now, and why Korean students in Singapore" },
-          { ko: "데모데이 키노트 · 약 1시간", en: "Demo-Day keynote · about an hour" },
+          // 위치·길이 정정 (2026-08-04): 확정 진행 순서에서 이 키노트는 여는
+          // 순서가 아니라 두 트랙 발표가 끝난 뒤 시상 직전 40분입니다. 이 줄이
+          // schedule.ts d8-opening-keynote와 같은 사실을 말해야 합니다.
+          { ko: "모든 발표가 끝난 뒤 · 시상 직전 40분", en: "After every pitch · 40 minutes before the awards" },
         ],
       },
     ],
@@ -1551,7 +1554,7 @@ export const dict = {
         theme: { ko: "만들 때 돕는 사람들", en: "The people who help you build" },
         // Two-verb contract (2026-08-02): stage 1 = help them BUILD the thing
         // (scope, evidence, unblock — direction can still change), stage 3 = help
-        // them PROVE it (5-min structure, judges' questions, final submission
+        // them PROVE it (3-min pitch structure, judges questions, final submission
         // check — direction is frozen). Keep the verbs distinct; do not let
         // build-stage advice language leak into the Day 7 blurb or vice versa.
         //
@@ -1622,7 +1625,7 @@ export const dict = {
         // they sell something for a living — say that instead of listing one role.
         // Two-verb contract (2026-08-02): stage 1 = help them BUILD the thing
         // (scope, evidence, unblock — direction can still change), stage 3 = help
-        // them PROVE it (5-min structure, judges' questions, final submission
+        // them PROVE it (3-min pitch structure, judges questions, final submission
         // check — direction is frozen). Keep the verbs distinct; do not let
         // build-stage advice language leak into the Day 7 blurb or vice versa.
         sub: {
@@ -1635,8 +1638,8 @@ export const dict = {
           // 대상을 문장 안에 넣지 않으면 뜻이 서지 않습니다.
           // 같은 인용이 FAQ("AI로 대충 만들면?")에도 있습니다 — 함께 움직이세요.
           // 축약형으로 되돌리지 말 것.
-          ko: "빌드는 끝났고, 남은 것은 증명입니다. 데모데이 전날 — AWS의 GTM·세일즈 시니어를 비롯해 현업에서 제품을 직접 파는 사람들과 — 5분 안에 ‘어떤 병목을 왜 골랐고, 근거는 무엇이고, 실제로 돌아가는가’가 서는지 점검하고, 심사위원이 던질 질문(“담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”)을 미리 받아봅니다. 그날 저녁 마감되는 사전 제출물의 마지막 점검 자리이기도 해요.",
-          en: "The build is done; what's left is the proof. The day before Demo Day — with AWS GTM & sales seniors and people who sell products for a living — you pressure-test whether ‘which bottleneck, why, on what evidence, and does it actually run’ stands up in five minutes, and field the questions judges will ask (“how is this different from what the problem owner would get by just asking a general LLM?”). It's also the last check before the submission package closes that evening.",
+          ko: "빌드는 끝났고, 남은 것은 증명입니다. 데모데이 전날 — AWS의 GTM·세일즈 시니어를 비롯해 현업에서 제품을 직접 파는 사람들과 — 3분 발표와 이어지는 Q&A 안에서 ‘어떤 병목을 왜 골랐고, 근거는 무엇이고, 실제로 돌아가는가’가 서는지 점검하고, 심사위원이 던질 질문(“담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”)을 미리 받아봅니다. 그날 저녁 마감되는 사전 제출물의 마지막 점검 자리이기도 해요.",
+          en: "The build is done; what's left is the proof. The day before Demo Day — with AWS GTM & sales seniors and people who sell products for a living — you pressure-test whether ‘which bottleneck, why, on what evidence, and does it actually run’ stands up in a 3-minute pitch and the Q&A that follows, and field the questions judges will ask (“how is this different from what the problem owner would get by just asking a general LLM?”). It's also the last check before the submission package closes that evening.",
         },
         // No partner logos here on purpose. AWS is where several of these mentors
         // work, and it sponsors the Day 7 venue — but it has never been named a
