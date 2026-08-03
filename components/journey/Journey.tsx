@@ -1281,6 +1281,19 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
             {t(dict.program.selfPacedLabel)}
           </span>
         )}
+        {/* The booked on-site window, ONLY on days that have one (see
+            DayMeta.hours). Same pill as the self-paced badge on purpose — this
+            is one more fact about the day, not a new kind of thing, so it gets
+            no colour of its own. A day without hours renders NOTHING here: an
+            online day has no time to be at, and printing "미정" would invent a
+            gap that doesn't exist. `hours` is one string for both locales, so
+            only the sr-only label is translated. */}
+        {day.hours && (
+          <span className="rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
+            <span className="sr-only">{t(dict.program.hoursLabel)} </span>
+            {day.hours}
+          </span>
+        )}
       </div>
       <h4 className="mt-3 text-[15px] font-bold leading-snug text-white">{t(day.theme)}</h4>
       <p className="mt-1.5 text-[13px] leading-relaxed text-white/65">{t(day.summary)}</p>
@@ -1469,8 +1482,13 @@ function DayModal({
                 <span className="rounded-full border border-violet-400/25 bg-violet-500/12 px-3 py-1 text-xs font-bold text-violet-200">
                   {t(day.phase)}
                 </span>
+                {/* The booked window rides in the same chip as the date — it
+                    answers the same question ("when do I turn up") and a second
+                    chip would split one answer across two. Appended only when
+                    the day has hours; online days keep the chip as it was. */}
                 <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/70">
                   {t(dict.program.dayLabel)} {day.day} · {day.date} · {t(day.weekday)}
+                  {day.hours ? ` · ${day.hours}` : ""}
                 </span>
                 {day.mandatory && (
                   <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/30 bg-rose-400/10 px-2.5 py-1 text-xs font-bold text-rose-200">

@@ -1164,6 +1164,12 @@ export const dict = {
     // in the component. (Only reachable since self-paced build stopped being
     // counted; before that no day was down to one.)
     session: { ko: "세션", en: "session" },
+    // Accessible name for the day card's hours pill. The pill itself shows only
+    // the window ("1PM–5PM") — short enough to read at a glance, but with no
+    // label a screen reader announces a bare time next to two other pills. The
+    // VALUE is not translated: `days[].hours` is one string for both locales
+    // (see DayMeta.hours), so only this prefix is bilingual.
+    hoursLabel: { ko: "현장 시간", en: "On-site hours" },
     swipeHint: {
       ko: "카드를 눌러 하루 일정을 펼쳐보세요",
       en: "Tap a day card to see its sessions",
