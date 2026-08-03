@@ -381,11 +381,38 @@ export const days: DayMeta[] = [
     weekday: { ko: "금", en: "Fri" },
     phase: LAB2,
     theme: { ko: "파이널 리허설", en: "Final Rehearsal" },
+    // "네트워킹 점심"이었는데 고쳤습니다 (2026-08-04) — 식사가 제공되는 것으로
+    // 읽히지만 실제로는 각자 나가서 사 먹습니다. 현장에서 바로 불만이 되는 종류의
+    // 오해라 요약과 시간표 양쪽에서 "개별"임이 드러나야 합니다.
     summary: {
-      ko: "AWS 오피스(확정) · 팀당 최종 피드백 · 네트워킹 점심 · 박희덕 커리어 간담회 · FDE 오피스아워(온라인) · 저녁: 사전 제출물 마감(필수).",
-      en: "AWS office (confirmed) · per-team final feedback · networking lunch · Park Hee-deok career session · FDE office hours (online) · Evening: submission deadline (required).",
+      ko: "AWS 오피스(확정) · 멘토와 함께하는 최종 점검 · 점심(개별) · 박희덕 커리어 간담회 · FDE 오피스아워(온라인) · 저녁: 사전 제출물 마감(필수).",
+      en: "AWS office (confirmed) · final check with mentors · lunch (on your own) · Park Hee-deok career session · FDE office hours (online) · Evening: submission deadline (required).",
     },
     hours: "9AM–2PM",
+    // 확정 진행 순서 (2026-08-04). 9AM–2PM 안에서 네 줄이 전부입니다.
+    // FDE 오피스아워(d7-fde-office-hour)는 온라인 별개 트랙이고 시간도 미정이라
+    // 여기 넣지 않습니다 — 시간표는 현장에 있는 사람의 하루입니다. 카드로만 남습니다.
+    runOfShow: [
+      {
+        time: "9AM–9:10AM",
+        label: { ko: "인트로 · 멘토 소개", en: "Intro · meet the mentors" },
+      },
+      {
+        time: "9:10AM–11:30AM",
+        label: { ko: "멘토링 · 최종 점검", en: "Mentoring · final check" },
+        eventId: "d7-final-rehearsal",
+      },
+      {
+        time: "11:30AM–12:30PM",
+        label: { ko: "점심", en: "Lunch" },
+        note: { ko: "식사는 제공되지 않아요 — 근처에서 각자 해결합니다. 그대로 나가서 네트워킹하거나 멘토와 이야기를 이어가도 좋아요.", en: "Lunch isn't provided — grab something nearby. Feel free to head out together and keep networking, or carry on with a mentor." },
+      },
+      {
+        time: "12:30PM–2PM",
+        label: { ko: "커리어 간담회 · 박희덕", en: "Career session · Park Hee-deok" },
+        eventId: "d7-speaker-session",
+      },
+    ],
     dayMode: "offline",
     // What the deadline actually consists of is a LIST, and a list read as a
     // parenthetical inside an already-long day summary is the one thing nobody
@@ -1023,14 +1050,25 @@ export const schedule: BEvent[] = [
     category: "main",
     mode: "offline",
     timeOfDay: "AM",
-    title: { ko: "파이널 리허설 (현장)", en: "Final Rehearsal (on-site)" },
+    time: "9:10AM–11:30AM",
+    // 제목을 "파이널 리허설 (현장)"에서 바꿨습니다 (2026-08-04). 확정된 내용은
+    // 멘토와 함께하는 최종 점검이고, "리허설"은 무대에 서보는 것으로 읽힙니다 —
+    // 무대 리허설은 확정된 순서가 아닙니다. 하지 않을 일을 제목으로 약속하지 않게
+    // 실제로 하는 일로 바꿨고, 진행 순서의 줄 이름과도 같은 말이 됩니다.
+    // 날짜 테마(days[6].theme "파이널 리허설")는 그대로 둡니다 — 그건 하루 전체의
+    // 성격이고 노선도 키워드가 여기서 파생됩니다.
+    //
+    // SPEAKER 필드를 지웠습니다: `박희덕`으로 돼 있었는데 그분은 같은 날 오후
+    // 커리어 간담회(d7-speaker-session) 연사입니다. 이 시간은 특정 연사가 아니라
+    // 멘토진이 진행합니다 — Day 1 오리엔테이션과 같은 종류의 복사 오염이었습니다.
+    title: { ko: "최종 점검 멘토링 (현장)", en: "Final-check Mentoring (on-site)" },
     summary: {
-      ko: "AWS 오피스 9AM–2PM · 팀당 최종 피드백과 무대 리허설 · 저녁: 사전 제출물 마감(필수).",
-      en: "AWS office, 9AM–2PM · per-team final feedback and stage rehearsal · Evening: submission deadline (required).",
+      ko: "이미 만든 것을 심사위원이 5분 안에 이해하도록 — 멘토와 함께하는 마지막 점검.",
+      en: "Making what you already built land in five minutes — the last check, with mentors.",
     },
     description: {
-      ko: "데모데이를 하루 앞두고, AWS 오피스(확정)에서 9AM–2PM 진행하는 현장 파이널 리허설입니다. 09:00–11:30 팀당 최종 피드백으로 최종 발표를 준비하고 무대를 리허설하며 데모의 흐름과 예상 질문을 다듬은 뒤, 11:30–12:30 네트워킹·점심으로 이어집니다. Day 5에 이은 두 번째 현장 집결이자, 새 장소인 AWS 오피스에서 열립니다. 팝업스튜디오 FDE의 온라인 오피스아워는 오늘까지 이어집니다.",
-      en: "The day before Demo Day, an on-site final rehearsal at the AWS office (confirmed), 9AM–2PM. From 09:00–11:30 teams get per-team final feedback — prepping the final pitch, rehearsing on stage, and tightening the demo flow and likely questions — followed by networking and lunch from 11:30–12:30. It's the second in-person gathering after Day 5 — at the new AWS-office venue. Popup Studio's FDE office hours run through today.",
+      ko: "Day 7은 사전 제출물 마감 당일이라, 새 기능을 붙이거나 방향을 크게 바꾸는 날이 아닙니다. 남은 일은 이미 만든 결과를 심사위원이 5분 안에 명확히 이해하도록 증명하는 것 — 그래서 이 시간은 만드는 자리가 아니라 잃지 않는 자리입니다. 멘토와 함께 세 가지를 점검합니다. ① 5분 피칭 구조 — 병목 → 근거 → 데모 → 위험과 대응의 흐름이 서 있는지, 베이스라인 비교 자료가 필요한 자리에 놓였는지. ② 심사 질문 사전 리허설 — “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”, “어떤 판단을 AI에 맡겼나요?”, “이 솔루션의 효과를 어떻게 증명할 수 있나요?” 같은 질문에 자기 언어로 답할 수 있는지. ③ 사전 제출물 최종 점검 — 오늘 저녁 마감되는 그 네 가지가 다 완성됐는지 함께 확인합니다(무엇을 내는지는 이 날 카드의 제출물 안내를 보세요). AWS 오피스에서 열리며, Day 5에 이은 두 번째 현장 집결입니다. 팝업스튜디오 FDE의 온라인 오피스아워도 오늘까지 이어집니다.",
+      en: "Day 7 is the submission deadline, so it isn't a day for new features or a change of direction. What's left is proving what you already built — making it land with a judge inside five minutes — so this session is about not losing points rather than earning new ones. Three things get checked with a mentor. ① The five-minute pitch structure — does bottleneck → evidence → demo → risk-and-response hold up, and is the baseline comparison where it needs to be. ② A dry run of the judges' questions — “how is this different from what the problem owner would get by just asking a general LLM?”, “which judgements did you hand to the AI?”, “how would you prove this actually helps?” — can you answer them in your own words. ③ A final pass over the submission package due this evening: all four pieces finished (what they are is in this day's submission box). It runs at the AWS office, the second in-person gathering after Day 5, and Popup Studio's online FDE office hours run through today too.",
     },
     location: AWS_OFFICE,
   },
@@ -1041,16 +1079,19 @@ export const schedule: BEvent[] = [
     category: "network",
     mode: "offline",
     timeOfDay: "PM",
+    time: "12:30PM–2PM",
     // TODO: confirm public naming — speaker (박희덕) from the internal deck.
     speaker: { ko: "박희덕", en: "Park Hee-deok" },
     title: { ko: "커리어 간담회 · ‘FDE로 일한다는 것’", en: "Career Session · “Working as an FDE”" },
+    // 시각은 `time`이 갖습니다 — 요약과 설명 앞머리에 박혀 있던 "12:30–14:00"을
+    // 뺐습니다. 같은 정보가 세 군데 있으면 하나가 바뀔 때 나머지가 어긋납니다.
     summary: {
-      ko: "12:30–14:00 · 박희덕 대표님의 ‘FDE로 일한다는 것’ — FDE 사업에 관심 있는 학생·졸업생 대상.",
-      en: "12:30–14:00 · Park Hee-deok on “Working as an FDE” — for students & grads interested in the FDE business.",
+      ko: "박희덕 대표님의 ‘FDE로 일한다는 것’ — FDE 사업에 관심 있는 학생·졸업생 대상.",
+      en: "Park Hee-deok on “Working as an FDE” — for students & grads interested in the FDE business.",
     },
     description: {
-      ko: "파이널 리허설 일정의 마무리로 마련된 커리어 간담회입니다(12:30–14:00). 트랜스링크 인베스트먼트의 박희덕 대표님이 ‘FDE로 일한다는 것’을 주제로, 자사 FDE 사업에 관심 있는 학생·졸업생에게 어떤 일을 하는 자리인지, 어떤 사람을 찾는지를 직접 이야기하며, 인턴·채용 pool로 이어지는 실질적 연결의 시간입니다. 간담회 후속 1:1 면담·멘토링(희망자)은 8/29 행사 종료(3PM) 후 현장 또는 널담에서 진행됩니다.",
-      en: "A career session closing out the final-rehearsal day (12:30–14:00). Under the theme “Working as an FDE,” Park Hee-deok (CEO · General Partner, Translink Investment) talks directly with students and graduates interested in the firm's FDE business — what the work actually is and who they're looking for — a genuine connection into the internship and hiring pool. Follow-up 1:1 conversations and mentoring (for those who want them) run after the event closes on 29 Aug (3PM), either on-site or at Nuldam.",
+      ko: "파이널 리허설 일정의 마무리로 마련된 커리어 간담회입니다. 트랜스링크 인베스트먼트의 박희덕 대표님이 ‘FDE로 일한다는 것’을 주제로, 자사 FDE 사업에 관심 있는 학생·졸업생에게 어떤 일을 하는 자리인지, 어떤 사람을 찾는지를 직접 이야기하며, 인턴·채용 pool로 이어지는 실질적 연결의 시간입니다. 간담회 후속 1:1 면담·멘토링(희망자)은 8/29 행사 종료(3PM) 후 현장 또는 널담에서 진행됩니다.",
+      en: "A career session closing out the final-rehearsal day. Under the theme “Working as an FDE,” Park Hee-deok (CEO · General Partner, Translink Investment) talks directly with students and graduates interested in the firm's FDE business — what the work actually is and who they're looking for — a genuine connection into the internship and hiring pool. Follow-up 1:1 conversations and mentoring (for those who want them) run after the event closes on 29 Aug (3PM), either on-site or at Nuldam.",
     },
     location: AWS_OFFICE,
   },

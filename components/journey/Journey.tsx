@@ -1442,6 +1442,10 @@ function DayModal({
   if (!mounted) return null;
   const day = dayNum != null ? days.find((d) => d.day === dayNum) : null;
   const evs = day ? realSessions(day.day) : [];
+  // 진행 순서가 이미 가리키고 있는 세션들. 시간표가 세션 목록을 대신하는 날에는
+  // 여기 걸리지 않은 세션만 카드로 남깁니다 (아래 렌더 주석 참고).
+  const linkedIds = new Set((day?.runOfShow ?? []).map((r) => r.eventId).filter(Boolean));
+  const leftoverEvs = evs.filter((ev) => !linkedIds.has(ev.id));
 
   return createPortal(
     <AnimatePresence>
@@ -1509,6 +1513,20 @@ function DayModal({
               {day.runOfShow?.length ? (
                 <>
                   <RunOfShow rows={day.runOfShow} t={t} onSelectEvent={onSelectEvent} />
+                  {/* 시간표에 걸리지 않은 세션만 카드로 남깁니다. 시간표에 있는 걸
+                      또 카드로 보여주면 같은 세션을 두 번 읽게 되고, 반대로 아무
+                      카드도 안 두면 시간표에 없는 세션은 열 방법이 사라집니다.
+                      Day 7의 FDE 오피스아워가 그 경우예요 — 온라인 드롭인이라
+                      시각이 없어서 현장 시간표에 넣을 수 없습니다. Day 1은 모든
+                      세션이 시간표에 걸려 있어 이 목록이 비고, 아무것도 렌더되지
+                      않습니다. */}
+                  {leftoverEvs.length > 0 && (
+                    <div className="mt-3 grid gap-3">
+                      {leftoverEvs.map((ev) => (
+                        <EventCard key={ev.id} ev={ev} t={t} onSelect={onSelectEvent} />
+                      ))}
+                    </div>
+                  )}
                   {dayHasSelfPaced(day.day) && (
                     <div className="mt-3">
                       <SelfPacedNote t={t} />
