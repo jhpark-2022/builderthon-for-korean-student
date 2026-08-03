@@ -119,8 +119,10 @@ export const partnerIntros: Record<string, Phrase> = {
     en: "A business & startup content media brand built around a 320K-subscriber YouTube channel — founder interviews, industry analysis, and the BZCF Fellowship community. Joining the builderthon as a marketing partner.",
   },
   "Korean Association in Singapore": {
-    ko: "1963년 설립된 싱가포르 한인 사회의 대표 단체로, 탄종파가에 자체 회관을 두고 장학 사업과 청년 멘토링·네트워킹 프로그램, 연례 한인 행사를 운영합니다. 이번 빌더톤에는 장소 지원과 멘토 굿즈백 준비로 함께합니다.",
-    en: "The representative body of Singapore's Korean community since 1963, with its own hall in Tanjong Pagar — running scholarships, young-professionals mentoring and the community's annual events. Supporting the builderthon with the venue and goodie bags for the mentors.",
+    // "장소 지원"이 무엇인지 2026-08-04에 구체화됐습니다 — Day 3·4 1:1 멘토링의
+    // 대면 진행이 이 회관에서 열립니다(schedule.ts MENTORING_MODE와 함께 움직일 것).
+    ko: "1963년 설립된 싱가포르 한인 사회의 대표 단체로, 탄종파가에 자체 회관을 두고 장학 사업과 청년 멘토링·네트워킹 프로그램, 연례 한인 행사를 운영합니다. 이번 빌더톤에는 Day 3·4 1:1 멘토링의 대면 장소로 한인회관을 내어주고, 멘토 굿즈백 준비로 함께합니다.",
+    en: "The representative body of Singapore's Korean community since 1963, with its own hall in Tanjong Pagar — running scholarships, young-professionals mentoring and the community's annual events. For the builderthon it opens that hall for the in-person Day 3·4 1:1 mentoring, and prepares goodie bags for the mentors.",
   },
   "Onword Lab": {
     ko: "‘We Make Old Businesses Young’을 내건 AI 전환(AX) 스타트업으로, 리테일·커머스의 운영과 마케팅을 AI로 다시 설계합니다. 이커머스 올인원 운영 에이전틱 대시보드를 만들고 있으며, 이번 빌더톤에는 멘토링으로 함께합니다.",
@@ -1140,7 +1142,7 @@ export const dict = {
     offlineLabel: { ko: "현장", en: "In person" },
     // dayMode "mixed" — a day that is genuinely half online, half on-site.
     // UNUSED right now: Day 3·4 carried it while their mentoring defaulted to
-    // NUS F2F, and both went back to plain 온라인 when that default flipped.
+    // in-person F2F, and both went back to plain 온라인 when that default flipped.
     mixedLabel: { ko: "온라인 · 현장", en: "Online · in person" },
     // ── Self-paced (category "build") ──────────────────────────────────────
     // Build events carry mode "online" in the data because they have to carry
@@ -1175,9 +1177,9 @@ export const dict = {
     pendingLabel: { ko: "현장 (미정)", en: "On-site (TBC)" },
     // 1:1 mentoring is arranged mentor by mentor, and the DEFAULT is now online
     // (Aug 2026 — enough mentors can only make an online slot). The badge led
-    // with "NUS 대면 기본" while that was the promise; leading with the wrong
+    // with "대면 기본" while that was the promise; leading with the wrong
     // default is what makes people plan a trip they don't need. "멘토별" keeps it
-    // honest for the mentors who do offer F2F at NUS.
+    // honest for the mentors who do offer F2F (at the Korean Association hall).
     byMentorLabel: { ko: "온라인 기본 (멘토별)", en: "Online by default (by mentor)" },
     sessions: { ko: "세션", en: "sessions" },
     // English needs the singular for a one-session day. Korean has no plural, so

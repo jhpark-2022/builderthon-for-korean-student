@@ -28,8 +28,9 @@
 //     building right after. (A live per-track briefing by the client contacts
 //     used to sit here; it was pulled because the format is undecided.)
 //   • Day 3–4 — online self-build + 1:1 mentoring, ONLINE-FIRST as of Aug 2026
-//     (was "in person at NUS by default"): most mentors need to take theirs
-//     online, so online is the default and in-person at NUS is the exception a
+//     (was "in person by default"): most mentors need to take theirs online, so
+//     online is the default and in person — at the KOREAN ASSOCIATION hall in
+//     Tanjong Pagar, not NUS (corrected 2026-08-04) — is the exception a
 //     mentor may offer. Day 3 and Day 4 are now identical in shape — the
 //     tentative OpenAI Codex workshop that sat on Day 3 was removed 2026-08-03.
 //   • Day 5 — Networking Day at *SCAPE L^IFE Jungle (10AM–2PM), the first time
@@ -56,7 +57,8 @@ export type Category =
   | "network"; // orientation · panels · networking · mixers
 
 // "mixed" = arranged case by case — used by the Day 3–4 1:1 mentoring, which
-// runs online by default but may be in person at NUS depending on the mentor.
+// runs online by default but may be in person (Korean Association hall) with
+// some mentors.
 export type Mode = "online" | "offline" | "mixed";
 
 export interface Bilingual {
@@ -136,7 +138,7 @@ export interface DayMeta {
   // "pending" = meant to be on-site but venue isn't locked (Zoom fallback).
   // "mixed"   = both halves in the same day and neither badge alone is honest.
   //             NO DAY USES THIS RIGHT NOW: Day 3·4 held it while their 1:1
-  //             mentoring defaulted to in-person at NUS. That default flipped to
+  //             mentoring defaulted to in-person. That default flipped to
   //             online, so both days are plain "online" again. Kept because the
   //             badge still renders (Journey.tsx) and the next partly-on-site day
   //             will want it.
@@ -392,14 +394,20 @@ const AWS_OFFICE: Bilingual = {
   ko: "AWS 오피스, 싱가포르 · 현장",
   en: "AWS office, Singapore · in person",
 };
-// Days 3–4's 1:1 mentoring is arranged MENTOR BY MENTOR, and the default is now
-// ONLINE (Aug 2026). It used to read "in person at NUS by default", from the
-// deck — but enough of the mentors can only make an online slot that promising
-// F2F would be the wrong way round. In person at NUS is what an individual
-// mentor may offer, not what the programme promises.
+// Days 3–4's 1:1 mentoring is arranged MENTOR BY MENTOR, and the default is
+// ONLINE. In person is what an individual mentor may offer, not what the
+// programme promises — enough of them can only make an online slot that leading
+// with F2F would be the wrong way round.
+//
+// THE F2F VENUE IS THE KOREAN ASSOCIATION HALL (2026-08-04), not NUS. Every
+// "NUS 대면" on this page came from the deck's original plan; the sessions are
+// actually hosted by the Korean Association in Singapore at its own hall in
+// Tanjong Pagar — which is also why it carries the 장소 role on the partner wall.
+// NUS stays everywhere it is legitimately used (organizer 학생회, eligibility,
+// a judge's affiliation); only the mentoring VENUE moved.
 const MENTORING_MODE: Bilingual = {
-  ko: "온라인 기본 — 멘토에 따라 NUS 대면(F2F)",
-  en: "Online by default — in person at NUS with some mentors",
+  ko: "온라인 기본 — 멘토에 따라 한인회관 대면(F2F)",
+  en: "Online by default — in person at the Korean Association hall with some mentors",
 };
 // Codepresso runs the Day-2 Crash Course (vibe-coding intro), per the deck.
 const CODEPRESSO_ORG = {
@@ -775,12 +783,12 @@ export const schedule: BEvent[] = [
     timeOfDay: "PM",
     title: { ko: "1:1 멘토링 (온라인 기본)", en: "1:1 Mentoring (online by default)" },
     summary: {
-      ko: "막힌 지점을 점검하고 방향을 조정하는 1:1 — 온라인이 기본이고, 멘토에 따라 NUS 대면.",
-      en: "One-on-one to unblock and adjust direction — online by default, in person at NUS with some mentors.",
+      ko: "막힌 지점을 점검하고 방향을 조정하는 1:1 — 온라인이 기본이고, 멘토에 따라 한인회관 대면.",
+      en: "One-on-one to unblock and adjust direction — online by default, in person at the Korean Association hall with some mentors.",
     },
     description: {
-      ko: "멘토링 1단계(기초)로, 정해진 시간표 대신 팀의 필요에 맞춰 진행되는 1:1 멘토링입니다. 진행 방식은 멘토별로 정해집니다 — 온라인이 기본이고, 멘토에 따라 NUS 현장 대면(F2F)으로 진행될 수 있으니 배정된 멘토와 직접 맞추시면 됩니다. 막힌 지점을 함께 점검하고 방향을 조정합니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표 — 같은 눈높이에서 함께 고민하는 선배입니다. 학생 정체성과 giver 문화를 지키는 이 멘토 persona가 이 시간의 핵심입니다. 확정 멘토로 기업 멘토 2곳(Onword Lab · REmited)과 현직 시니어 9인이 함께합니다 — 전체 명단은 멘토링 섹션을 참고하세요. 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다. Day 5–7에는 팝업스튜디오 FDE의 실전 멘토링이 2단계로 이어집니다.",
-      en: "Stage one of mentoring — the foundational round, following each team's needs rather than a fixed timetable. The format is set mentor by mentor — online by default, though some mentors take theirs in person (F2F) at NUS, so you'll settle it with the mentor you're matched with. It's time to check blockers and adjust direction. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes, thinking alongside you at eye level. That peer-mentor persona — protecting the student identity and giver culture — is the point of this time. The confirmed line-up is two company mentors (Onword Lab · REmited) plus nine working seniors — see the mentoring section for the full roster. Mentors are assigned by overlapping availability, not by request. Stage two — Popup Studio's FDE mentoring — follows on Day 5–7.",
+      ko: "멘토링 1단계(기초)로, 정해진 시간표 대신 팀의 필요에 맞춰 진행되는 1:1 멘토링입니다. 진행 방식은 멘토별로 정해집니다 — 온라인이 기본이고, 멘토에 따라 싱가포르 한인회관(탄종파가) 대면(F2F)으로 진행될 수 있으니 배정된 멘토와 직접 맞추시면 됩니다. 막힌 지점을 함께 점검하고 방향을 조정합니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표 — 같은 눈높이에서 함께 고민하는 선배입니다. 학생 정체성과 giver 문화를 지키는 이 멘토 persona가 이 시간의 핵심입니다. 확정 멘토로 기업 멘토 2곳(Onword Lab · REmited)과 현직 시니어 9인이 함께합니다 — 전체 명단은 멘토링 섹션을 참고하세요. 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다. Day 5–7에는 팝업스튜디오 FDE의 실전 멘토링이 2단계로 이어집니다.",
+      en: "Stage one of mentoring — the foundational round, following each team's needs rather than a fixed timetable. The format is set mentor by mentor — online by default, though some mentors take theirs in person (F2F) at the Korean Association hall in Tanjong Pagar, so you'll settle it with the mentor you're matched with. It's time to check blockers and adjust direction. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes, thinking alongside you at eye level. That peer-mentor persona — protecting the student identity and giver culture — is the point of this time. The confirmed line-up is two company mentors (Onword Lab · REmited) plus nine working seniors — see the mentoring section for the full roster. Mentors are assigned by overlapping availability, not by request. Stage two — Popup Studio's FDE mentoring — follows on Day 5–7.",
     },
     location: MENTORING_MODE,
     // TODO: confirm public naming — the confirmed individual mentors (김종현·황영준·
@@ -824,12 +832,12 @@ export const schedule: BEvent[] = [
     timeOfDay: "PM",
     title: { ko: "1:1 멘토링 (온라인 기본)", en: "1:1 Mentoring (online by default)" },
     summary: {
-      ko: "프로토타입을 점검하고 진전을 함께 보는 1:1 — 온라인이 기본이고, 멘토에 따라 NUS 대면.",
-      en: "One-on-one prototype review and progress — online by default, in person at NUS with some mentors.",
+      ko: "프로토타입을 점검하고 진전을 함께 보는 1:1 — 온라인이 기본이고, 멘토에 따라 한인회관 대면.",
+      en: "One-on-one prototype review and progress — online by default, in person at the Korean Association hall with some mentors.",
     },
     description: {
-      ko: "멘토링 1단계(기초)의 마무리로, 팀이 만든 프로토타입을 함께 점검하고 진전을 살피는 1:1 멘토링입니다. Day 3과 마찬가지로 온라인이 기본이되 진행 방식은 멘토별로 정해지며(멘토에 따라 NUS 대면 가능), 무엇이 잘 되고 있는지, 어디를 더 밀어야 하는지를 같은 눈높이의 선배 멘토와 짚어봅니다. 멘토는 유학생 출신 현직 대표로, 학생 교류와 giver 문화를 지키는 역할입니다(확정 멘토진은 Day 3과 동일). 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다.",
-      en: "The close of stage one — one-on-one mentoring to review the prototype your team built and look at progress together. As on Day 3 it's online by default, with the format set by each mentor (in person at NUS is possible) — what's working, and where to push harder, with peer-level senior mentors. Mentors are Korean ex-international-student founders, there to keep the student exchange and giver culture alive (same confirmed line-up as Day 3). Mentors are assigned by overlapping availability, not by request.",
+      ko: "멘토링 1단계(기초)의 마무리로, 팀이 만든 프로토타입을 함께 점검하고 진전을 살피는 1:1 멘토링입니다. Day 3과 마찬가지로 온라인이 기본이되 진행 방식은 멘토별로 정해지며(멘토에 따라 한인회관 대면 가능), 무엇이 잘 되고 있는지, 어디를 더 밀어야 하는지를 같은 눈높이의 선배 멘토와 짚어봅니다. 멘토는 유학생 출신 현직 대표로, 학생 교류와 giver 문화를 지키는 역할입니다(확정 멘토진은 Day 3과 동일). 멘토는 지정이 아니라 가능 시간이 겹치는 구간으로 배정됩니다.",
+      en: "The close of stage one — one-on-one mentoring to review the prototype your team built and look at progress together. As on Day 3 it's online by default, with the format set by each mentor (in person at the Korean Association hall is possible) — what's working, and where to push harder, with peer-level senior mentors. Mentors are Korean ex-international-student founders, there to keep the student exchange and giver culture alive (same confirmed line-up as Day 3). Mentors are assigned by overlapping availability, not by request.",
     },
     location: MENTORING_MODE,
   },
