@@ -484,8 +484,8 @@ export const days: DayMeta[] = [
     phase: LAB2,
     theme: { ko: "데모데이 · 최종 발표", en: "Demo Day · Final Pitch" },
     summary: {
-      ko: "*SCAPE 현장 · 두 트랙 팀 발표(팀당 8분) · 박희덕 연사 · 수상자 발표 · 수료증과 단체 사진.",
-      en: "In person at *SCAPE · team pitches across two tracks (8 min each) · Park Hee-deok · awards · certificates and a group photo.",
+      ko: "*SCAPE 현장 · 두 트랙 팀 발표(팀당 8분·잠정) · 박희덕 연사 · 수상자 발표 · 수료증과 단체 사진.",
+      en: "In person at *SCAPE · team pitches across two tracks (8 min each, provisional) · Park Hee-deok · awards · certificates and a group photo.",
     },
     hours: "11AM–3PM",
     // 확정 진행 순서 (2026-08-04). 10:40 입장은 hours(11AM–)보다 이르지만 프로그램
@@ -505,7 +505,7 @@ export const days: DayMeta[] = [
       {
         time: "11:10AM–12:30PM",
         label: { ko: "첫 번째 트랙 발표", en: "First track pitches" },
-        note: { ko: "팀당 8분 — 발표 3분 + Q&A 포함 심사 5분", en: "8 minutes per team — a 3-minute pitch, then 5 minutes of judging including Q&A" },
+        note: { ko: "팀당 8분 — 발표 3분 + Q&A 포함 심사 5분 (잠정, 확정 시 안내)", en: "8 minutes per team — a 3-minute pitch, then 5 minutes of judging including Q&A (provisional, we'll confirm)" },
         eventId: "d8-judging",
       },
       {
@@ -694,8 +694,8 @@ const SCORE_BUILDING_CHECKS: Bilingual[] = [
 // 방향을 트는 날이 아닙니다. 남은 일은 이미 만든 것을 증명하는 것뿐.
 const SCORE_KEEPING_CHECKS: Bilingual[] = [
   {
-    ko: "3분 발표 구조 — 병목 → 근거 → 데모 → 위험과 대응의 흐름이 서 있는지, 베이스라인 비교 자료가 필요한 자리에 놓였는지",
-    en: "The 3-minute pitch structure — does bottleneck → evidence → demo → risk-and-response hold up, and is the baseline comparison where it needs to be",
+    ko: "발표 구조 — 병목 → 근거 → 데모 → 위험과 대응의 흐름이 서 있는지, 베이스라인 비교 자료가 필요한 자리에 놓였는지",
+    en: "The pitch structure — does bottleneck → evidence → demo → risk-and-response hold up, and is the baseline comparison where it needs to be",
   },
   {
     ko: "심사 질문 사전 리허설 — “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”, “어떤 판단을 AI에 맡겼나요?”, “이 솔루션의 효과를 어떻게 증명할 수 있나요?”에 자기 언어로 답할 수 있는지",
@@ -1222,12 +1222,12 @@ export const schedule: BEvent[] = [
     // 멘토진이 진행합니다 — Day 1 오리엔테이션과 같은 종류의 복사 오염이었습니다.
     title: { ko: "최종 점검 멘토링 (현장)", en: "Final-check Mentoring (on-site)" },
     summary: {
-      ko: "이미 만든 것을 3분 발표와 Q&A 안에서 증명하도록 — 멘토와 함께하는 마지막 점검.",
-      en: "Making what you already built stand up in a 3-minute pitch and the Q&A — the last check, with mentors.",
+      ko: "이미 만든 것을 발표와 Q&A 안에서 증명하도록 — 멘토와 함께하는 마지막 점검.",
+      en: "Making what you already built stand up in the pitch and the Q&A — the last check, with mentors.",
     },
     description: {
-      ko: "Day 7은 사전 제출물 마감 당일이라, 새 기능을 붙이거나 방향을 크게 바꾸는 날이 아닙니다. 남은 일은 이미 만든 결과를 3분 발표와 이어지는 Q&A 안에서 명확히 증명하는 것 — 그래서 이 시간은 만드는 자리가 아니라 잃지 않는 자리입니다. 멘토와 함께 무엇을 보는지는 아래 목록에 있습니다(무엇을 내는지는 이 날 카드의 제출물 안내를 보세요). AWS 오피스에서 열리며, Day 5에 이은 두 번째 현장 집결입니다. 팝업스튜디오 FDE의 온라인 오피스아워도 오늘까지 이어집니다.",
-      en: "Day 7 is the submission deadline, so it isn't a day for new features or a change of direction. What's left is proving what you already built — making it stand up inside a 3-minute pitch and the Q&A that follows — so this session is about not losing points rather than earning new ones. What you go through with a mentor is listed below (what the package contains is in this day's submission box). It runs at the AWS office, the second in-person gathering after Day 5, and Popup Studio's online FDE office hours run through today too.",
+      ko: "Day 7은 사전 제출물 마감 당일이라, 새 기능을 붙이거나 방향을 크게 바꾸는 날이 아닙니다. 남은 일은 이미 만든 결과를 발표와 이어지는 Q&A 안에서 명확히 증명하는 것 — 그래서 이 시간은 만드는 자리가 아니라 잃지 않는 자리입니다. 멘토와 함께 무엇을 보는지는 아래 목록에 있습니다(무엇을 내는지는 이 날 카드의 제출물 안내를 보세요). AWS 오피스에서 열리며, Day 5에 이은 두 번째 현장 집결입니다. 팝업스튜디오 FDE의 온라인 오피스아워도 오늘까지 이어집니다.",
+      en: "Day 7 is the submission deadline, so it isn't a day for new features or a change of direction. What's left is proving what you already built — making it stand up inside the pitch and the Q&A that follows — so this session is about not losing points rather than earning new ones. What you go through with a mentor is listed below (what the package contains is in this day's submission box). It runs at the AWS office, the second in-person gathering after Day 5, and Popup Studio's online FDE office hours run through today too.",
     },
     location: AWS_OFFICE,
     checkpoints: SCORE_KEEPING_CHECKS,
@@ -1300,15 +1300,22 @@ export const schedule: BEvent[] = [
     time: "11:10AM–1:50PM",
     title: { ko: "데모데이 발표 · 심사", en: "Demo-Day Pitches · Judging" },
     // 발표 길이가 "팀당 5분"에서 "팀당 8분 = 발표 3분 + Q&A 포함 심사 5분"으로
-    // 정정됐습니다 (2026-08-04 확정). 참가자가 5분짜리 발표를 준비해 오면 현장에서
-    // 그대로 사고가 나는 종류의 숫자라, 이 값이 나오는 모든 곳을 함께 고쳤습니다.
+    // 바뀌었습니다. 참가자가 잘못된 길이로 준비해 오면 현장에서 그대로 사고가
+    // 나는 종류의 숫자라, 이 값이 나오는 모든 곳을 함께 고쳤습니다.
+    //
+    // ⚠️ 아직 잠정입니다 (2026-08-04) — 바뀔 수 있어서 표기마다 "잠정"을 답니다.
+    // 숫자가 사는 곳은 Day 8 세 군데뿐입니다: days[7].summary · runOfShow의 첫
+    // 트랙 발표 note · 이 카드의 summary와 description. 확정되면 이 셋과 헤지를
+    // 함께 고치세요.
+    // Day 7 멘토링 카피에서는 숫자를 일부러 뺐습니다("발표와 Q&A") — 그쪽까지
+    // 숫자를 퍼뜨리면 바뀔 때마다 다섯 곳을 쫓아다녀야 합니다.
     summary: {
-      ko: "문제를 낸 기업과 심사위원 앞에서 팀당 8분 — 발표 3분 + Q&A 포함 심사 5분.",
-      en: "Eight minutes per team in front of the company that set the problem and the judges — a 3-minute pitch, then 5 minutes of judging with Q&A.",
+      ko: "문제를 낸 기업과 심사위원 앞에서 팀당 8분 — 발표 3분 + Q&A 포함 심사 5분 (잠정).",
+      en: "Eight minutes per team in front of the company that set the problem and the judges — a 3-minute pitch, then 5 minutes of judging with Q&A (provisional).",
     },
     description: {
-      ko: "8일의 마지막이자, 문제를 낸 기업과 심사위원 앞에서 ‘내 아이디어가 돌아간다’를 검증받는 자리입니다. 같은 공간에서 트랙별로 순차 진행하며, 팀당 8분입니다 — 발표 3분에 이어 Q&A를 포함한 심사 5분(트랙마다 약 1시간 20분). 발표 순서는 이날 아침 오픈 카톡방으로 미리 공지되니, 자기 차례를 미리 알고 오시면 됩니다. 자기 트랙 발표에는 참석하시고, 그 외 시간은 자유롭게 쓰셔도 됩니다 — 남아서 다른 트랙을 봐도 좋고, 자리를 지킬 의무는 없어요. 심사는 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다(문제 발의는 AXMOS). Day 3·4 기초 멘토링은 심사에 참여하지 않는 선배들이 맡아, 학생 눈높이의 멘토 문화를 지킵니다.",
-      en: "The end of the eight days, and the moment your idea gets validated in front of the company that set the problem and the judges. Tracks run in sequence in one space, eight minutes per team: a 3-minute pitch, then 5 minutes of judging including Q&A (about an hour and twenty minutes per track). The running order goes out in the open chat that morning, so you'll know your slot before you arrive. Attend your own track's pitches; the rest of the time is yours — stay and watch another track if you like, but you're not required to sit through it. Judging is done by working leaders who have solved real problems in industry (problem-setting by AXMOS). The Day 3·4 foundational mentoring is handled by seniors who take no part in judging, which is what keeps the peer-level mentor culture intact.",
+      ko: "8일의 마지막이자, 문제를 낸 기업과 심사위원 앞에서 ‘내 아이디어가 돌아간다’를 검증받는 자리입니다. 같은 공간에서 트랙별로 순차 진행하며, 팀당 8분입니다 — 발표 3분에 이어 Q&A를 포함한 심사 5분(트랙마다 약 1시간 20분). 이 배분은 아직 잠정이라 바뀔 수 있고, 확정되면 이 페이지에 업데이트합니다. 발표 순서는 이날 아침 오픈 카톡방으로 미리 공지되니, 자기 차례를 미리 알고 오시면 됩니다. 자기 트랙 발표에는 참석하시고, 그 외 시간은 자유롭게 쓰셔도 됩니다 — 남아서 다른 트랙을 봐도 좋고, 자리를 지킬 의무는 없어요. 심사는 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다(문제 발의는 AXMOS). Day 3·4 기초 멘토링은 심사에 참여하지 않는 선배들이 맡아, 학생 눈높이의 멘토 문화를 지킵니다.",
+      en: "The end of the eight days, and the moment your idea gets validated in front of the company that set the problem and the judges. Tracks run in sequence in one space, eight minutes per team: a 3-minute pitch, then 5 minutes of judging including Q&A (about an hour and twenty minutes per track). That split is still provisional and may change — we'll update this page once it's settled. The running order goes out in the open chat that morning, so you'll know your slot before you arrive. Attend your own track's pitches; the rest of the time is yours — stay and watch another track if you like, but you're not required to sit through it. Judging is done by working leaders who have solved real problems in industry (problem-setting by AXMOS). The Day 3·4 foundational mentoring is handled by seniors who take no part in judging, which is what keeps the peer-level mentor culture intact.",
     },
     location: ONSITE,
   },

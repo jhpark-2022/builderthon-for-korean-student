@@ -1643,8 +1643,8 @@ export const dict = {
           // 대상을 문장 안에 넣지 않으면 뜻이 서지 않습니다.
           // 같은 인용이 FAQ("AI로 대충 만들면?")에도 있습니다 — 함께 움직이세요.
           // 축약형으로 되돌리지 말 것.
-          ko: "빌드는 끝났고, 남은 것은 증명입니다. 데모데이 전날 — AWS의 GTM·세일즈 시니어를 비롯해 현업에서 제품을 직접 파는 사람들과 — 3분 발표와 이어지는 Q&A 안에서 ‘어떤 병목을 왜 골랐고, 근거는 무엇이고, 실제로 돌아가는가’가 서는지 점검하고, 심사위원이 던질 질문(“담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”)을 미리 받아봅니다. 그날 저녁 마감되는 사전 제출물의 마지막 점검 자리이기도 해요.",
-          en: "The build is done; what's left is the proof. The day before Demo Day — with AWS GTM & sales seniors and people who sell products for a living — you pressure-test whether ‘which bottleneck, why, on what evidence, and does it actually run’ stands up in a 3-minute pitch and the Q&A that follows, and field the questions judges will ask (“how is this different from what the problem owner would get by just asking a general LLM?”). It's also the last check before the submission package closes that evening.",
+          ko: "빌드는 끝났고, 남은 것은 증명입니다. 데모데이 전날 — AWS의 GTM·세일즈 시니어를 비롯해 현업에서 제품을 직접 파는 사람들과 — 발표와 이어지는 Q&A 안에서 ‘어떤 병목을 왜 골랐고, 근거는 무엇이고, 실제로 돌아가는가’가 서는지 점검하고, 심사위원이 던질 질문(“담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”)을 미리 받아봅니다. 그날 저녁 마감되는 사전 제출물의 마지막 점검 자리이기도 해요.",
+          en: "The build is done; what's left is the proof. The day before Demo Day — with AWS GTM & sales seniors and people who sell products for a living — you pressure-test whether ‘which bottleneck, why, on what evidence, and does it actually run’ stands up in the pitch and the Q&A that follows, and field the questions judges will ask (“how is this different from what the problem owner would get by just asking a general LLM?”). It's also the last check before the submission package closes that evening.",
         },
         // No partner logos here on purpose. AWS is where several of these mentors
         // work, and it sponsors the Day 7 venue — but it has never been named a
