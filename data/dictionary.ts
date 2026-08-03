@@ -791,7 +791,12 @@ export const dict = {
       ko: "참가자의 약 60%는 바이브 코딩이 처음입니다. 그리고 그게 핵심입니다 — 크래시코스(Day 2, 코드프레소 주관)로 출발선을 맞추고, 코딩 실력이 아니라 아이디어가 한계가 되게 합니다.",
       en: "About 60% of participants are trying vibe coding for the first time — and that's the point. A crash course (Day 2, run by Codepresso) levels the start line so your ideas, not your syntax, are the limit.",
     },
-    whoTitle: { ko: "이런 분께", en: "Who should join" },
+    // EN ONLY diverges from KR here. 한국어는 eyebrow "참가 대상"과 이 제목
+    // "이런 분께"가 서로 다른 말이라 문제가 없는데, 영어는 둘 다 "Who should join"
+    // 으로 번역돼 화면에서 같은 문구가 두 줄 연달아 찍혔습니다. eyebrow(섹션 이름)를
+    // 유지하고 이 리스트 제목만 바꿉니다 — 리스트가 조건 나열이라 "This is for you
+    // if"가 문법적으로도 이어집니다. KR은 건드리지 않습니다.
+    whoTitle: { ko: "이런 분께", en: "This is for you if" },
     // Eligibility is TWO groups, not one: the universities, and Koreans who are
     // job-hunting right now whether or not they are enrolled anywhere. The list
     // used to name only NUS·NTU·SMU, which read as a closed door to the second
@@ -1181,7 +1186,7 @@ export const dict = {
     // counted; before that no day was down to one.)
     session: { ko: "세션", en: "session" },
     // Accessible name for the day card's hours pill. The pill itself shows only
-    // the window ("1PM–5PM") — short enough to read at a glance, but with no
+    // the window ("1PM–4:30PM") — short enough to read at a glance, but with no
     // label a screen reader announces a bare time next to two other pills. The
     // VALUE is not translated: `days[].hours` is one string for both locales
     // (see DayMeta.hours), so only this prefix is bilingual.

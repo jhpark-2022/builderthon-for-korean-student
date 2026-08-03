@@ -8,15 +8,20 @@
 // specified in the source material, the field is left undefined with a
 // `// TODO: confirm` note — please do not invent these.
 //
-// HOURS: the on-site days carry their booked window in `days[].hours`
-// (Day 1 1PM–5PM · Day 5 10AM–2PM · Day 7 9AM–2PM · Day 8 11AM–3PM, all
-// confirmed 2026-08-03). That field is the single source — the summaries repeat
-// it in prose, nothing else computes it. Set-up/teardown time is inside the
-// bookings and is NEVER published. Online / self-paced days have no hours by
-// design. Per-session clock times do not exist yet: do not invent them.
+// HOURS: the on-site days carry their PARTICIPANT-FACING window in
+// `days[].hours` (Day 1 1PM–4:30PM · Day 5 10AM–2PM · Day 7 9AM–2PM ·
+// Day 8 11AM–3PM). That field is the single source — nothing else computes it.
+//
+// It is NOT the booking. Whether set-up/teardown sits inside or outside the
+// booked slot differs by venue, so the subtraction differs by day: the Foundry
+// (Day 1) includes both inside its slot, *SCAPE (Day 5·8) books them separately
+// around the event window. Operational clock times — booked slots, set-up,
+// teardown, buffers — are NEVER published; only the numbers above are.
+// Online / self-paced days have no hours by design. Per-session clock times do
+// not exist yet: do not invent them.
 //
 // THE 8-DAY SHAPE (per the deck, which is authoritative):
-//   • Day 1 — big Opening (1PM–5PM at The Foundry, The Refinery hall): 원대로
+//   • Day 1 — big Opening (1PM–4:30PM at The Foundry, The Refinery hall): 원대로
 //     opening keynote + AWS speaker session + the AX problems are released and
 //     tracks are chosen. MANDATORY (필참).
 //   • Day 2 — one concentrated Crash Course (vibe-coding intro, 5–6h), then team
@@ -127,7 +132,7 @@ export interface DayMeta {
   // 세션별 시각의 출처가 아니다: BEvent는 여전히 timeOfDay("AM"|"PM")만 갖고,
   // EventModal의 시간 행도 그대로다. 그날의 대관 창을 개별 세션 시각처럼 보이게
   // 만들지 말 것.
-  hours?: string; // "1PM–5PM"
+  hours?: string; // "1PM–4:30PM"
   // "pending" = meant to be on-site but venue isn't locked (Zoom fallback).
   // "mixed"   = both halves in the same day and neither badge alone is honest.
   //             NO DAY USES THIS RIGHT NOW: Day 3·4 held it while their 1:1
@@ -151,9 +156,14 @@ export interface DayMeta {
 }
 
 // Two "Labs" across the 8 days (matches the deck):
-//   Lab 1 · Warm-up (Day 1–4) → Lab 2 · Builderthon (Day 5–8)
+//   Lab 1 · Warm-up (Day 1–4) → Lab 2 · In action (Day 5–8)
 const LAB1: Bilingual = { ko: "Lab 1 · 워밍업", en: "Lab 1 · Warm-up" };
-const LAB2: Bilingual = { ko: "Lab 2 · 실전", en: "Lab 2 · Builderthon" };
+// EN ONLY diverges from KR here. KR "실전"의 짝으로 "Builderthon"이 붙어 있었는데,
+// 그건 행사 이름 자체라 페이즈 라벨로 쓰면 "빌더톤 안의 빌더톤"이 됩니다 — 무엇이
+// 달라지는 구간인지도 말해주지 못하고요. "In action"은 KR "실전"의 뜻(이제 실제로
+// 한다)을 그대로 옮기면서 "Warm-up"과 같은 급의 짧은 상태 표현이라 짝이 맞습니다.
+// KR은 건드리지 않습니다.
+const LAB2: Bilingual = { ko: "Lab 2 · 실전", en: "Lab 2 · In action" };
 
 // Day theme labels + one-line summaries (Opening → Demo Day)
 export const days: DayMeta[] = [
@@ -176,9 +186,13 @@ export const days: DayMeta[] = [
     // Venue booked: The Foundry — The Refinery hall, 11 Prinsep Link, 22 Aug 2026
     // (2026-08-03). On-site was already confirmed under the previous booking (SMU
     // YPHSL B2-03) and stays confirmed; only the room changed.
-    // 대관 슬롯에는 셋업·철수가 포함돼 있고, 공개 시간은 참가자가 실제로 와 있는
-    // 1PM–5PM만 씁니다 — 셋업 시간은 사이트에 노출하지 않습니다.
-    hours: "1PM–5PM",
+    // 이 날만 계산이 다릅니다. Foundry는 셋업·철수가 대관 시간 "안에" 들어 있어서
+    // (12–5PM 슬롯, 17:00 완전 퇴장), 앞의 셋업·등록 1시간과 뒤의 철수 30분을 뺀
+    // 1PM–4:30PM이 참가자 기준 실제 프로그램 시간입니다. *SCAPE(Day 5·8)는 반대로
+    // 셋업/철수가 이벤트 시간 밖에 따로 잡혀 있어 10AM–2PM·11AM–3PM이 이미 순수
+    // 프로그램 시간이므로 깎지 않습니다 — 장소마다 계약 구조가 달라 날마다 계산이
+    // 다릅니다. 운영 시각(대관 창·셋업·철수)은 사이트 어디에도 쓰지 않습니다.
+    hours: "1PM–4:30PM",
     dayMode: "offline",
     mandatory: true,
   },
@@ -231,9 +245,10 @@ export const days: DayMeta[] = [
     // parentheses stripped — see stopKeyword in Journey.tsx), and the strip wants
     // the one word: 네트워킹 / Networking.
     theme: { ko: "네트워킹 (기획 중)", en: "Networking (in planning)" },
-    // 10AM–2PM is the *SCAPE booking, confirmed 2026-08-03 — it was dropped for a
-    // while because the OLD session line-up was what those hours had been framed
-    // around, and that line-up is gone. The window is a fact again now.
+    // 10AM–2PM is the *SCAPE EVENT window — set-up (9AM) and teardown (3PM) are
+    // booked separately OUTSIDE it, so unlike Day 1 there is nothing to subtract:
+    // this is already pure programme time. Do not trim it "for consistency" with
+    // the Foundry day.
     // WHAT IS STILL OPEN IS THE PROGRAMME, not the time: keep the "해시드와 기획 중
     // / being planned with Hashed" hedge exactly as it is until the joint
     // programme is settled. 장소·시간 확정 ≠ 프로그램 확정.
@@ -472,9 +487,12 @@ export const schedule: BEvent[] = [
     mode: "offline",
     timeOfDay: "PM",
     confirmed: true,
-    // 강의실 대관이 18:00–20:00으로 확정됐습니다(2026-08-03). 이전 표기 18:30–19:30은
-    // 세션 길이 추정치였는데, 대관 창과 어긋나 사람을 30분 늦게 도착시킬 표기였습니다.
-    // 여기와 description 두 곳이 같은 값을 말해야 합니다.
+    // 이 세션만 예약 창을 그대로 공개합니다 (18:00–20:00, 2026-08-03 확정).
+    // Day 1처럼 버퍼를 빼지 않는 것은 의도된 결정입니다 — 강연 1시간에 입장·Q&A·
+    // 정리가 얹히는 자리라, 학생에게 필요한 정보는 "몇 분짜리 강연인가"가 아니라
+    // "이 시간대를 비워두면 된다"이기 때문입니다. 이전에는 강연 길이만 적어(1시간
+    // 창) 실제 창보다 좁게 안내됐습니다. 여기와 description 두 곳이 같은 값을
+    // 말해야 하고, 되돌려 버퍼를 빼지 마세요.
     dayLabel: { ko: "사전 세션 · 08.13 (목) 18:00–20:00", en: "Pre-event · Thu 13 Aug, 18:00–20:00" },
     title: { ko: "Enterprise Tech Deep Dive — How to Build", en: "Enterprise Tech Deep Dive — How to Build" },
     // Just the role — no "(성함 비공개)" tag. Saying out loud that a name is being
@@ -586,8 +604,8 @@ export const schedule: BEvent[] = [
       en: "Real companies' AX problems drop, you pick a track — and the 8-day build clock starts (track line-up not final yet).",
     },
     description: {
-      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 트랙 구성은 아직 확정 전이며(메인 트랙 2개로 좁혀 논의 중), 확정되는 대로 안내합니다. 공개된 문제는 이어지는 현장 브리핑 & Q&A에서 함께 살펴보고, 팀별 자율 빌드가 그때부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 만들어 갑니다. Day 1은 필참이며 The Foundry의 The Refinery 홀(11 Prinsep Link) 현장에서 1PM–5PM 진행합니다.",
-      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. The track line-up isn't confirmed yet (narrowed to two main tracks, still under discussion) and we'll announce it once settled. The released problems are walked through in the on-site briefing & Q&A that follows, and self-paced team build runs continuously from there to Demo Day — no start whistle to wait for, each team at its own pace. Day 1 is mandatory and runs on-site at The Foundry's The Refinery hall, 11 Prinsep Link, 1PM–5PM.",
+      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 트랙 구성은 아직 확정 전이며(메인 트랙 2개로 좁혀 논의 중), 확정되는 대로 안내합니다. 공개된 문제는 이어지는 현장 브리핑 & Q&A에서 함께 살펴보고, 팀별 자율 빌드가 그때부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 만들어 갑니다. Day 1은 필참이며 The Foundry의 The Refinery 홀(11 Prinsep Link) 현장에서 1PM–4:30PM 진행합니다.",
+      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. The track line-up isn't confirmed yet (narrowed to two main tracks, still under discussion) and we'll announce it once settled. The released problems are walked through in the on-site briefing & Q&A that follows, and self-paced team build runs continuously from there to Demo Day — no start whistle to wait for, each team at its own pace. Day 1 is mandatory and runs on-site at The Foundry's The Refinery hall, 11 Prinsep Link, 1PM–4:30PM.",
     },
     location: FOUNDRY_REFINERY,
     locationUrl: FOUNDRY_URL,
