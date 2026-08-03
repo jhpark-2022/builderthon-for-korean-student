@@ -3007,7 +3007,7 @@ export default function Journey() {
             ))}
           </div>
 
-          {/* ── 체크인 폼 3종 ───────────────────────────────────────────────
+          {/* ── 체크인 3종 ───────────────────────────────────────────────
               Placed AFTER the eight cards, not before: "a form lands on Day 4
               evening" only means something once Day 4 has gone past the reader's
               eye. Same FlowStrip grammar as the output steps — three boxes joined

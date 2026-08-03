@@ -946,14 +946,18 @@ export const dict = {
     //
     // The bonus line carries no numbers, same contract as the judging FAQ — the
     // weights live only in the score sheet, which is internal and not published.
+    // 한국어에서 "폼"을 쓰지 않습니다 (2026-08-04). 구글 폼 때문에 익숙하긴 해도
+    // 카피에서는 콩글리시로 읽혀서, 문장은 행위로("여쭤봅니다", "받습니다")·
+    // 이름은 성격으로(체크인 / 최종 제출) 바꿨습니다. 영어는 form이 맞는 단어라
+    // 그대로 둡니다 — 이 섹션은 ko와 en이 일부러 다른 명사를 씁니다.
     checkins: {
-      tag: { ko: "체크인 폼", en: "Check-in forms" },
+      tag: { ko: "체크인", en: "Check-in forms" },
       heading: {
-        ko: "8일 동안 폼은 세 번 옵니다",
+        ko: "8일 동안 세 번 여쭤봅니다",
         en: "Three forms across the eight days",
       },
       intro: {
-        ko: "같은 설문을 세 번 받는 게 아니라, 질문이 ‘생각’에서 ‘증빙’으로 옮겨갑니다. 앞 폼에 쓴 답이 다음 폼에 이월돼서, 같은 걸 두 번 쓰는 게 아니라 v1을 최종본으로 다듬게 돼요.",
+        ko: "같은 설문을 세 번 받는 게 아니라, 질문이 ‘생각’에서 ‘증빙’으로 옮겨갑니다. 앞서 쓴 답이 다음으로 이월돼서, 같은 걸 두 번 쓰는 게 아니라 v1을 최종본으로 다듬게 돼요.",
         en: "It isn't the same survey three times — the questions move from what you're thinking to what you can show. Each form carries your previous answers forward, so you're not writing it twice; you're sharpening a v1 into the final.",
       },
       forms: [
@@ -981,16 +985,16 @@ export const dict = {
           id: "f3",
           when: { ko: "Day 7 저녁 마감", en: "Due Day 7 evening" },
           duration: { ko: "15분", en: "15 min" },
-          title: { ko: "최종 제출 폼", en: "Final submission form" },
+          title: { ko: "최종 제출", en: "Final submission form" },
           body: {
-            ko: "사전 제출물이 실제로 올라가는 곳이자, 데모데이 무대 운영(발표자·장비·동의)을 함께 받는 폼입니다. 무엇을 내는지는 Day 7 카드에 있어요.",
+            ko: "사전 제출물이 실제로 올라가는 곳이자, 데모데이 무대 운영(발표자·장비·동의)도 여기서 함께 받습니다. 무엇을 내는지는 Day 7 카드에 있어요.",
             en: "Where the submission package actually gets uploaded — and where Demo Day stage logistics (presenter, equipment, consent) are collected. What's in the package is on the Day 7 card.",
           },
         },
       ],
       bonusLabel: { ko: "참여 가산점", en: "Participation counts" },
       bonus: {
-        ko: "세 폼의 응답과 오피스아워 참여는 심사에서 과정 가산점으로 반영됩니다 — 잘 쓴 답이 아니라, 과정을 남겼는지를 봅니다.",
+        ko: "세 번의 응답과 오피스아워 참여는 심사에서 과정 가산점으로 반영됩니다 — 잘 쓴 답이 아니라, 과정을 남겼는지를 봅니다.",
         en: "Responding to the three forms and showing up to office hours count as process credit in judging — not for writing good answers, but for leaving a trail of the process.",
       },
     },
@@ -2418,7 +2422,7 @@ export const dict = {
           en: "We go into more of what judging looks for in the open chat first — starting with what's useful while you're still building.",
         },
         aTail: {
-          ko: "체크인 폼 응답과 오피스아워 참여는 과정 가산점으로 반영돼요. 심사는 실제 산업에서 문제를 풀어온 현업 리더분들이 직접 합니다(심사위원 섹션 참조).",
+          ko: "체크인 응답과 오피스아워 참여는 과정 가산점으로 반영돼요. 심사는 실제 산업에서 문제를 풀어온 현업 리더분들이 직접 합니다(심사위원 섹션 참조).",
           en: "Responding to the check-in forms and using the office hours count as process credit. Judging is done first-hand by leaders who have solved these problems in industry (see the judges section).",
         },
       },
