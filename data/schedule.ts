@@ -20,9 +20,11 @@
 //     online, so online is the default and in-person at NUS is the exception a
 //     mentor may offer. (Day 3 also has a TENTATIVE OpenAI Codex workshop, still
 //     in coordination.)
-//   • Day 5 — mid-point check-in at *SCAPE L^IFE Jungle (10AM–2PM): student AI
-//     use-case showcase with a QR popular vote, the ‘From Int'l Student to
-//     Founder’ panel (TBC) and cross-track exchange; opens Lab 2.
+//   • Day 5 — Networking Day at *SCAPE L^IFE Jungle, the first time the whole
+//     cohort is in one room; opens Lab 2. IN PLANNING (2026-08-03): the day was
+//     re-pointed from "mid-point check-in" to student-to-student networking, and
+//     the programme is being designed with Hashed. Its sessions were emptied on
+//     purpose — see the DAY 5 block below before adding anything back.
 //   • Day 6 — open build (online, self-paced).
 //   • Day 7 — Final Rehearsal on-site at the AWS office (9AM–2PM, new venue).
 //   • Day 8 — Demo Day at *SCAPE L^IFE Jungle. MANDATORY (필참).
@@ -53,9 +55,10 @@ export interface BEvent {
   category: Category;
   mode: Mode; // online, in-person (Days 5 / 7 / 8), or mixed (see Mode)
   timeOfDay: "AM" | "PM";
-  // Overrides the modal's "Day {n} · {date} · {AM|PM}" chip. Only the pre-event
-  // session uses it: it sits OUTSIDE the Day 1–8 arc (day: 0), and "Day 0" is
-  // not a thing anyone should read.
+  // Overrides the modal's "Day {n} · {date} · {AM|PM}" chip. Two users: the
+  // pre-event session, which sits OUTSIDE the Day 1–8 arc (day: 0) where "Day 0"
+  // is not a thing anyone should read; and the Day 5 networking day, whose hours
+  // are genuinely unset — an "AM" chip there would assert a time we don't have.
   dayLabel?: Bilingual;
   title: Bilingual;
   summary: Bilingual; // short, shown on the card
@@ -71,11 +74,18 @@ export interface BEvent {
     img?: string;
   };
   location?: Bilingual;
+  // Optional: the venue's own site, turning the modal's 장소 row into a link.
+  // For venues a visitor has to physically find and may not know by name — Day 1
+  // is at a hall inside a building on Prinsep Link. Not for online sessions, and
+  // not a place for booking/cost detail: it links the venue, nothing more.
+  locationUrl?: string;
   confirmed?: boolean; // show a "Confirmed / 확정" badge on the card
   // NOT A SESSION. Self-paced build has no start time, no place to be and
   // nothing to attend — teams just build when it suits them. Flagged explicitly
-  // rather than inferred from category === "build", because that category also
-  // holds the Day 5 Quickathon, which IS a scheduled 4h on-site track.
+  // rather than inferred from category === "build": the category held a
+  // scheduled 4h on-site track (the Day 5 Quickathon) until the Day-5 pivot
+  // (2026-08-03), and the next scheduled build session would break inference
+  // again. Every "build" event happens to carry this flag today; keep setting it.
   //
   // The UI hides these from the session list entirely (see Journey.tsx): shown
   // as a card with a "자세히 보기" link they read as one more thing to turn up
@@ -132,12 +142,23 @@ export const days: DayMeta[] = [
     weekday: { ko: "토", en: "Sat" },
     phase: LAB1,
     theme: { ko: "오프닝 · 문제 공개", en: "Opening · Problem Release" },
+    // 마지막 절만 굿즈입니다. 이 요약은 이미 길어서 확정 내용(브랜드부스트 후드·캡
+    // 세트 60개)은 오리엔테이션 세션 설명이 맡고, 카드에는 일찍 올 이유가 되는
+    // 부분 — 선착순이라는 사실 — 만 남깁니다.
     summary: {
-      ko: "SMU YPHSL B2-03 현장 11AM–5PM · 원대로 오프닝 키노트 · 오리엔테이션(문제 공개·트랙 선택·베이스 리포트) · AWS 연사 한장환 님(확정).",
-      en: "In person at SMU YPHSL B2-03, 11AM–5PM · Won's opening keynote · orientation (problem release · track pick · base report) · AWS talk by Han Jang-whan (confirmed).",
+      ko: "The Foundry(The Refinery 홀) 현장 · 원대로 오프닝 키노트 · 오리엔테이션(문제 공개·트랙 선택·베이스 리포트) · AWS 연사 한장환 님(확정) · 현장 선착순 굿즈. 시간 확정 예정.",
+      en: "In person at The Foundry (The Refinery hall) · Won's opening keynote · orientation (problem release · track pick · base report) · AWS talk by Han Jang-whan (confirmed) · goods on site, first come first served. Time to be confirmed.",
     },
-    // Venue booked: SMU YPHSL B2-03, 22 Aug 2026, 11AM–5PM → on-site confirmed
-    // (was "pending" with a Zoom fallback while the room wasn't locked).
+    // Venue booked: The Foundry — The Refinery hall, 11 Prinsep Link, 22 Aug 2026
+    // (2026-08-03). On-site was already confirmed under the previous booking (SMU
+    // YPHSL B2-03) and stays confirmed; only the room changed.
+    //
+    // THE HOURS CAME OFF WITH THE OLD ROOM. "11AM–5PM" was the SMU booking's
+    // window and cannot be asserted for a different venue, so the day carries
+    // "시간 확정 예정" until the Foundry schedule is set — same convention as the
+    // Day 5 networking day. Put the real window back in both this summary and
+    // d1-problem-release's description once it is confirmed.
+    // TODO: Day 1 시간 확정 시 표기 복원.
     dayMode: "offline",
     mandatory: true,
   },
@@ -185,10 +206,22 @@ export const days: DayMeta[] = [
     date: "08.26",
     weekday: { ko: "수", en: "Wed" },
     phase: LAB2,
-    theme: { ko: "중간 점검 · 교류", en: "Mid-point · Exchange" },
+    // "네트워킹 데이 (기획 중)" is the EVENT title; the theme drops 데이 because the
+    // route-map stop label is derived from this field (head segment before "·",
+    // parentheses stripped — see stopKeyword in Journey.tsx), and the strip wants
+    // the one word: 네트워킹 / Networking.
+    theme: { ko: "네트워킹 (기획 중)", en: "Networking (in planning)" },
+    // No time here any more. 10AM–2PM was the old session line-up's frame; with
+    // those sessions gone the hours get set with the new programme.
+    //
+    // Deliberately NOT the event's own summary reworded: the day modal prints
+    // this line directly above the networking-day card, and with one session
+    // carrying the whole day the two were saying the same sentence twice. This
+    // one gives the frame (온라인 구간을 지나 현장으로 · 선택), the card gives the
+    // programme.
     summary: {
-      ko: "*SCAPE 현장 10AM–2PM · 중간 점검 · 학생 AI Use Case + QR 투표(검토 중) · 패널 ‘유학생에서 창업가로’(섭외 중) · 크로스트랙 교류 · FDE 오피스아워(온라인).",
-      en: "In person at *SCAPE, 10AM–2PM · mid-point check-in · student AI use cases + QR vote (under review) · panel ‘From Int'l Student to Founder’ (TBC) · cross-track exchange · FDE office hours (online).",
+      ko: "온라인 구간을 지나 다시 현장으로 — *SCAPE에서 학생 간 네트워킹에 초점을 둔 프로그램을 해시드와 기획 중입니다(시간 확정 예정) · FDE 오피스아워(온라인).",
+      en: "Back in person after the online stretch — at *SCAPE, with a programme focused on student-to-student networking being planned with Hashed (time to be confirmed) · FDE office hours (online).",
     },
     dayMode: "offline",
   },
@@ -293,12 +326,25 @@ const ONSITE: Bilingual = {
   ko: "*SCAPE L^IFE Jungle, 싱가포르 · 현장 집결",
   en: "*SCAPE L^IFE Jungle, Singapore · in person",
 };
-// Day 1 kickoff venue — booked: SMU YPHSL B2-03, 22 Aug 2026, 11AM–5PM. Only Day 1
-// moves here; the mid-point (Day 5) and Demo Day (Day 8) stay at *SCAPE (ONSITE).
-const YPHSL_B203: Bilingual = {
-  ko: "SMU YPHSL B2-03, 싱가포르 · 현장 집결",
-  en: "SMU YPHSL B2-03, Singapore · in person",
+// Day 1 kickoff venue — The Foundry's The Refinery hall, booked 2026-08-03 for
+// 22 Aug. This REPLACED SMU YPHSL B2-03: that room was the Day-1 booking until
+// the Foundry hall was confirmed, and every Day-1 venue string moved with it in
+// one pass. Do not leave the two names co-existing — a student reading "SMU" on
+// one surface and "Prinsep Link" on another has no way to tell which door to
+// walk through. (The 8/13 PRE-EVENT session is a different booking and is still
+// at SMU SOL; SMU also remains an organizer and an eligibility term. Only VENUE
+// references changed.)
+// The street address rides in the string because this is a room inside a
+// building on a road nobody knows by name; "The Foundry" alone is not findable.
+// Only Day 1 uses this — Networking Day (Day 5) and Demo Day (Day 8) are at
+// *SCAPE (ONSITE), Day 7 at the AWS office.
+const FOUNDRY_REFINERY: Bilingual = {
+  ko: "The Foundry (The Refinery 홀) · 11 Prinsep Link",
+  en: "The Foundry (The Refinery hall) · 11 Prinsep Link",
 };
+// The venue's own site, shown as a link on the modal's 장소 row (see
+// BEvent.locationUrl). Booking terms and costs stay OUT of the site.
+const FOUNDRY_URL = "https://foundry.sg";
 // Day 7's new venue — the Final Rehearsal moves to the AWS office (confirmed).
 const AWS_OFFICE: Bilingual = {
   ko: "AWS 오피스, 싱가포르 · 현장",
@@ -369,14 +415,16 @@ const FDE_OFFICE_HOUR = {
   org: POPUP_STUDIO_ORG,
 };
 
-// Hashed is in discussion as the collaborator on the Day-5 Quickathon side
-// quest (deck: "병행 검토 · 해시드와 협업 논의 중").
+// Hashed co-designs the Day-5 Networking Day (2026-08-03; it was the Quickathon
+// side quest before that day was re-pointed at networking). STILL A DISCUSSION —
+// keep the "함께 기획 중 / co-designing" hedge, same as 조율 중 / 섭외 중 elsewhere.
+// Nothing about the programme is agreed, so never write this as a fixed session.
 const HASHED_ORG = {
   name: "Hashed",
   url: "https://hashed.com",
   desc: {
-    ko: "해시드는 블록체인·프론티어 테크 투자사로, Day 5에 병행 검토 중인 숙련자용 Quickathon 사이드 퀘스트를 함께 논의하고 있습니다.",
-    en: "Hashed, a blockchain & frontier-tech investment firm, is in discussion with us on the advanced-builder Quickathon side quest being considered for Day 5.",
+    ko: "해시드는 블록체인·프론티어 테크 투자사로, Day 5 네트워킹 데이의 프로그램을 저희와 함께 기획하고 있습니다 (세부 구성 논의 중).",
+    en: "Hashed, a blockchain & frontier-tech investment firm, is co-designing the Day-5 Networking Day programme with us (the details are still under discussion).",
   },
 } as const;
 
@@ -418,10 +466,12 @@ export const schedule: BEvent[] = [
       ko: "빌더톤이 시작되기 전, 기업 현장에서 AI를 실제로 설계하고 배포하는 사람에게 직접 듣는 시간입니다. Microsoft 클라우드·AI 솔루션 아키텍트가 ‘엔터프라이즈 AI 에이전트가 보기보다 어려운 이유’를 다룹니다 — 데모는 2초면 되지만 프로덕션까지는 몇 달이 걸리는 이유, 챗봇과 에이전트를 가르는 것(신원·권한·툴·승인·감사), 그리고 실제로 구축된 회계 자동화 에이전트 사례. 8월 13일 목요일 18:30–19:30, SMU SOL(School of Law)에서 열리며 강의실은 확정되는 대로 안내합니다. 빌더톤 등록 여부와 무관하게 NUS·NTU·SMU 한인 학생이면 누구나 올 수 있습니다. 사전에 받은 질문을 세션에 반영하니 오픈채팅으로 미리 보내주세요.",
       en: "Before the builderthon starts, an hour with someone who designs and ships enterprise AI for a living. A Microsoft cloud & AI solution architect covers why enterprise AI agents are harder than they look — why a 2-second demo takes months to reach production, what separates a chatbot from an agent (identity, permissions, tools, approval, audit), and a real accounts-payable agent built end to end. Thursday 13 August, 18:30–19:30, at SMU SOL (School of Law) — the room will be announced once booked. Open to any Korean student at NUS, NTU or SMU, whether or not you register for the builderthon. Questions are worked into the session, so send yours via the open chat beforehand.",
     },
-    // Building is settled (SMU School of Law); the ROOM is not. Day 1 uses the same
-    // law school under its full name — "SMU YPHSL B2-03" — so if these two ever need
-    // to read as one venue, unify the naming rather than leaving SOL and YPHSL to
-    // look like two different buildings to a student trying to find the door.
+    // Building is settled (SMU School of Law); the ROOM is not.
+    // This is now the ONLY SMU venue in the schedule. Day 1 used to share the
+    // same law school under its full name ("SMU YPHSL B2-03") and this note
+    // asked for the two to be named consistently — as of 2026-08-03 Day 1 moved
+    // to The Foundry, so there is nothing left to unify. Keep this session at
+    // SMU SOL: it is a separate booking and was never part of that move.
     location: { ko: "SMU SOL (강의실 추후 안내)", en: "SMU SOL — School of Law (room TBA)" },
     opportunities: [
       { ko: "챗봇과 에이전트의 차이 — 신원·권한·툴·승인·감사까지 붙어야 일이 된다", en: "What separates a chatbot from an agent — identity, permissions, tools, approval, audit" },
@@ -450,7 +500,8 @@ export const schedule: BEvent[] = [
       ko: "빌더톤의 문을 여는 오프닝 키노트입니다. Wilt Venture Builder(SG)의 원대로 대표님이 ‘취업과 창업의 사이’를 주제로, 정형화된 ‘취업 vs 창업’ 이분법에서 벗어나 벤처빌더가 본 다양한 진로·커리어 경로와 비개발자도 시작할 수 있는 여러 갈래를 약 1시간 동안 Q&A와 함께 풀어냅니다. ‘처음이어도 괜찮다’는 톤으로 8일의 ‘왜’를 세우며 출발선을 엽니다.",
       en: "The keynote that opens the builderthon. Won Dae-ro (Managing Director, Wilt Venture Builder SG) speaks on “Between Employment and Founding” for about an hour, with Q&A — stepping past the tidy ‘employment vs. founding’ binary to the many career paths a venture builder has seen, and the routes even non-developers can start from. It sets the 8-day ‘why’ in a ‘first-timers welcome’ tone.",
     },
-    location: YPHSL_B203,
+    location: FOUNDRY_REFINERY,
+    locationUrl: FOUNDRY_URL,
   },
   {
     id: "d1-orientation",
@@ -460,15 +511,20 @@ export const schedule: BEvent[] = [
     mode: "offline",
     timeOfDay: "AM",
     title: { ko: "오리엔테이션", en: "Orientation" },
+    // 굿즈가 여기 붙는 이유: 확정된 배포 시점이 Day 1 현장이고, 이 세션이 "오늘
+    // 어떻게 굴러가는지"를 다루는 자리입니다. 수량·선착순은 여기 한 번만 정확히
+    // 적고, 날짜 카드 요약에는 "현장 선착순 굿즈"까지만 둡니다. 배송·비용 등
+    // 물류 정보는 쓰지 않습니다.
     summary: {
-      ko: "행사 개요 · 진행 방식 · 트랙 안내 · 베이스 리포트.",
-      en: "Event overview, how it runs, tracks, and the base report.",
+      ko: "행사 개요 · 진행 방식 · 트랙 안내 · 베이스 리포트 · 선착순 굿즈.",
+      en: "Event overview, how it runs, tracks, the base report, and first-come goods.",
     },
     description: {
-      ko: "8일간의 행사 개요와 진행 방식을 안내하는 오리엔테이션입니다. 트랙 구성과 팀 운영, 평가 흐름을 짚고, 현재까지의 준비 상황을 담은 베이스 리포트를 공유합니다. 첫날부터 ‘어떻게 굴러가는지’를 모두가 같은 그림으로 이해하고 출발할 수 있게 하는 자리입니다.",
-      en: "An orientation walking through the shape of the eight days — how it runs, the tracks, team logistics and the judging flow — plus a base report on where preparations stand. The goal is that everyone starts with the same picture of how the week works.",
+      ko: "8일간의 행사 개요와 진행 방식을 안내하는 오리엔테이션입니다. 트랙 구성과 팀 운영, 평가 흐름을 짚고, 현재까지의 준비 상황을 담은 베이스 리포트를 공유합니다. 첫날부터 ‘어떻게 굴러가는지’를 모두가 같은 그림으로 이해하고 출발할 수 있게 하는 자리입니다. 그리고 오늘 현장에는 굿즈 파트너 브랜드부스트가 준비한 후드·캡 세트가 60개 있습니다 — 현장 방문자 선착순으로 드리니, 받고 싶다면 일찍 오는 게 유리합니다.",
+      en: "An orientation walking through the shape of the eight days — how it runs, the tracks, team logistics and the judging flow — plus a base report on where preparations stand. The goal is that everyone starts with the same picture of how the week works. There are also 60 hoodie + cap sets on site today from our goods partner Brand Boost — handed out first come, first served to people who show up, so coming early helps if you want one.",
     },
-    location: YPHSL_B203,
+    location: FOUNDRY_REFINERY,
+    locationUrl: FOUNDRY_URL,
   },
   {
     id: "d1-aws-session",
@@ -490,7 +546,8 @@ export const schedule: BEvent[] = [
       ko: "AWS 연사 한장환 님이 진행하는 확정 세션입니다. Amazon이 실제로 AI 문제를 어떻게 정의하고, 어떤 방법론으로 접근하는지를 다룹니다. 문제를 ‘어떻게 풀까’ 이전에 ‘무엇을, 왜 푸는가’를 잡는 관점을 얻어, 곧이어 공개되는 실제 AX 과제에 그대로 적용해볼 수 있습니다.",
       en: "A confirmed session led by AWS speaker Han Jang-whan on how Amazon defines AI problems and the methodology it uses to approach them. It's the ‘what and why’ before the ‘how’ — a lens you can apply directly to the real AX problems released the same day.",
     },
-    location: YPHSL_B203,
+    location: FOUNDRY_REFINERY,
+    locationUrl: FOUNDRY_URL,
   },
   {
     id: "d1-problem-release",
@@ -505,10 +562,11 @@ export const schedule: BEvent[] = [
       en: "Real companies' AX problems drop, you pick a track — and the 8-day build clock starts (track line-up not final yet).",
     },
     description: {
-      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 트랙 구성은 아직 확정 전이며(메인 트랙 2개로 좁혀 논의 중), 확정되는 대로 안내합니다. 공개된 문제는 이어지는 현장 브리핑 & Q&A에서 함께 살펴보고, 팀별 자율 빌드가 그때부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 만들어 갑니다. Day 1은 필참이며 SMU YPHSL B2-03 현장(11AM–5PM)에서 진행합니다.",
-      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. The track line-up isn't confirmed yet (narrowed to two main tracks, still under discussion) and we'll announce it once settled. The released problems are walked through in the on-site briefing & Q&A that follows, and self-paced team build runs continuously from there to Demo Day — no start whistle to wait for, each team at its own pace. Day 1 is mandatory and runs on-site at SMU YPHSL B2-03 (11AM–5PM).",
+      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 가상의 과제가 아니라, 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 트랙 구성은 아직 확정 전이며(메인 트랙 2개로 좁혀 논의 중), 확정되는 대로 안내합니다. 공개된 문제는 이어지는 현장 브리핑 & Q&A에서 함께 살펴보고, 팀별 자율 빌드가 그때부터 데모데이까지 상시로 이어집니다 — 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 만들어 갑니다. Day 1은 필참이며 The Foundry의 The Refinery 홀(11 Prinsep Link) 현장에서 진행합니다 — 시간은 확정되는 대로 안내합니다.",
+      en: "Day 1 is the real kick-off. These aren't made-up prompts — they're the actual AX (AI-transformation) problems partner companies are facing right now, released by track, and this is where you choose yours. The track line-up isn't confirmed yet (narrowed to two main tracks, still under discussion) and we'll announce it once settled. The released problems are walked through in the on-site briefing & Q&A that follows, and self-paced team build runs continuously from there to Demo Day — no start whistle to wait for, each team at its own pace. Day 1 is mandatory and runs on-site at The Foundry's The Refinery hall, 11 Prinsep Link — the hours will be announced once set.",
     },
-    location: YPHSL_B203,
+    location: FOUNDRY_REFINERY,
+    locationUrl: FOUNDRY_URL,
   },
   // Sits between the problem release and the operational briefing on purpose.
   // The question "so how do I actually approach this?" only becomes concrete once
@@ -550,7 +608,8 @@ export const schedule: BEvent[] = [
       ko: "문제가 공개되고 트랙을 고른 직후, 그 과제를 실제로 낸 주최사(AXMOS) 측이 배경과 맥락을 직접 풀어주는 시간입니다. 왜 이게 현업에서 문제인지, 안에서는 지금 어떻게 처리하고 있는지, 이번 과제의 범위는 어디까지인지 — 문제 설명문만으로는 보이지 않는 부분을 짚고 질문을 받습니다. 이어지는 현장 브리핑 & Q&A가 진행 방식·팀 구성·평가 기준을 다룬다면, 이 시간은 과제 내용 자체를 다룹니다. 참가자 전원이 한자리에 모이는 다음 기회는 Day 5이므로, 맥락을 가장 깊게 가져갈 수 있는 자리이기도 합니다. 진행자와 형식(길이·구성)은 아직 조율 중이며, 확정되는 대로 안내합니다.",
       en: "Right after the problems drop and tracks are chosen, the host companies (AXMOS) that actually set them walk through the background and context first-hand: why this is a real problem inside the business, how it's handled today, and where the scope of this brief starts and ends — the parts a written problem statement doesn't show. Questions are taken on the spot. Where the on-site briefing & Q&A that follows covers how the eight days run, this session is about the problem itself. The next time everyone is in one room is Day 5, so this is the deepest context you can carry out of the room. Who runs it and in what format (length, structure) is still being arranged; we'll announce it once settled.",
     },
-    location: YPHSL_B203,
+    location: FOUNDRY_REFINERY,
+    locationUrl: FOUNDRY_URL,
   },
   {
     id: "d1-briefing",
@@ -568,7 +627,8 @@ export const schedule: BEvent[] = [
       ko: "공개된 과제를 함께 살펴보고, 8일간의 진행 방식·팀 구성·평가 기준을 안내하는 현장 브리핑입니다. 궁금한 점은 그 자리에서 바로 묻고 답을 들을 수 있어, 첫날부터 막힘 없이 출발할 수 있습니다.",
       en: "An on-site briefing that walks through the released problems and explains how the eight days work — team formation, schedule and judging. Bring your questions; you'll get answers on the spot so nobody starts the week unsure of how it runs.",
     },
-    location: YPHSL_B203,
+    location: FOUNDRY_REFINERY,
+    locationUrl: FOUNDRY_URL,
   },
 
   // ─── DAY 2 · Crash Course (08.23) ───────────────────────────────────────────
@@ -745,100 +805,39 @@ export const schedule: BEvent[] = [
     location: MENTORING_MODE,
   },
 
-  // ─── DAY 5 · In-person Kickoff · Panels (08.26 · OFFLINE) ────────────────────
+  // ─── DAY 5 · Networking Day (08.26 · OFFLINE · *SCAPE) ───────────────────────
+  // WHY THIS DAY HOLDS ONE PLACEHOLDER AND NOTHING ELSE (2026-08-03):
+  // feedback settled that Day 5's job is NOT to serve the technical needs of the
+  // cohort but to get students meeting each other, so the day was re-pointed at
+  // student-to-student networking. Every on-site session that was written for
+  // the old frame was deleted with that decision — the mid-point check-in,
+  // the student AI Use Case showcase + QR vote, the ‘유학생에서 창업가로’ panel,
+  // the cross-track exchange and the Quickathon side quest. The replacement
+  // programme is being designed WITH HASHED and none of it is agreed yet, so a
+  // single honest "기획 중" entry stands where five half-committed ones did.
+  // Do not restore any of them, and do not set `confirmed` here, until the joint
+  // programme actually exists. The FDE office hour below stays: it is the
+  // separate ONLINE Day 5–7 track, not part of this day's on-site programme.
   {
-    id: "d5-kickoff",
-    day: 5,
-    date: "08.26",
-    category: "main",
-    mode: "offline",
-    timeOfDay: "AM",
-    title: { ko: "오프라인 킥오프 · 직접 만나는 날", en: "In-person Kickoff · Meeting Day" },
-    summary: {
-      ko: "전원이 처음으로 현장에 모여 Lab 2(실전)를 엽니다.",
-      en: "The whole cohort meets in person for the first time — Lab 2 begins.",
-    },
-    description: {
-      ko: "온라인으로 진행되던 일정 중, 처음으로 전원이 *SCAPE L^IFE Jungle 현장에 모이는 날입니다(10AM–2PM). 10:00 오프닝과 함께 각 팀의 진행 상황을 짚는 중간 점검으로 문을 열고, 10:15에는 AI 빌더 커뮤니티 소개(이수민)가 이어집니다. 여기서부터 실전 단계인 Lab 2가 시작됩니다 — 화면 너머로만 함께 빌드하던 사람들을 직접 만나, 남은 절반을 같은 공간에서 이어갑니다. 오늘부터 Day 7까지는 팝업스튜디오 FDE의 실전 멘토링·온라인 오피스아워가 함께 열립니다(시간대는 추후 안내).",
-      en: "The first day the whole cohort gathers in person at *SCAPE L^IFE Jungle (10AM–2PM). It opens at 10:00 with a mid-point check-in on where each team stands, followed at 10:15 by an intro to the AI builder community (Lee Su-min). From here Lab 2 — the main event — begins: you finally meet the people you'd only built alongside on-screen, and carry the second half forward in one room. From today through Day 7, Popup Studio's FDE mentoring and online office hours run alongside (times to be announced).",
-    },
-    // TODO: confirm public naming — 이수민 is from the internal deck.
-    location: ONSITE,
-  },
-  {
-    id: "d5-panel-usecase",
+    id: "d5-networking-day",
     day: 5,
     date: "08.26",
     category: "network",
     mode: "offline",
+    // TODO: 시간 확정 시 timeOfDay를 실제 시간대로 바꾸고 dayLabel을 지우세요.
+    // AM은 자리표시자입니다 — 기존 10AM–2PM은 삭제된 세션 구성의 전제였고, 시간은
+    // 새 프로그램과 함께 다시 잡힙니다. 그래서 모달 칩은 dayLabel로 덮어 "AM"을
+    // 노출하지 않습니다: 시간이 미정인데 오전이라고 단언하면 헤지가 무너집니다.
     timeOfDay: "AM",
-    // Whether this runs at all is still open — only the PRIZE carried a
-    // "(잠정)" before, which read as "the session happens, the voucher might
-    // not." Same convention as the Codex workshop and the founder panel.
-    title: { ko: "패널 1 · 참여자 AI Use Case (검토 중)", en: "Panel 1 · Participant AI Use Cases (under review)" },
+    dayLabel: { ko: "Day 5 · 08.26 (수) · 시간 확정 예정", en: "Day 5 · Wed 26 Aug · time to be confirmed" },
+    title: { ko: "네트워킹 데이 (기획 중)", en: "Networking Day (in planning)" },
     summary: {
-      ko: "학생 AI 활용 사례 발표 + QR 인기투표 — 진행 여부를 검토 중입니다.",
-      en: "Student AI use-case showcase + QR popular vote — whether it runs is still under review.",
+      ko: "*SCAPE 현장 · 전원이 처음으로 한자리에 모이는 날 — 학생 간 네트워킹에 초점을 맞춘 프로그램을 해시드(Hashed)와 함께 기획하고 있습니다. 확정되는 대로 공개해요.",
+      en: "On-site at *SCAPE · the first day the whole cohort is in one room — we're designing a programme built around student-to-student networking together with Hashed. We'll share it as soon as it's settled.",
     },
     description: {
-      ko: "아직 확정된 세션이 아닙니다 — 진행 여부와 형식 모두 검토 중이며, 확정되는 대로 안내드립니다. 구상은 이렇습니다: 참여자 몇 명이 자기 AI 활용 사례를 짧은 라이트닝 형식으로 공유하고(10:30~), 대표진도 청중으로 함께합니다. 발표가 끝나면 현장에서 QR 코드로 인기투표를 진행하고, Top 3에게 널담 바우처를 시상하는 안을 논의 중입니다. 성사되면 다른 사람이 실제로 AI를 어떻게 쓰는지에서 자극을 받고, 내 빌드에 바로 가져올 아이디어를 얻는 자리가 됩니다.",
-      en: "This isn't a confirmed session — whether it runs and in what shape are both still under review, and we'll announce it once settled. The idea: a handful of participants share their own AI use cases in a short lightning format (from 10:30), with founders in the audience; after the talks everyone votes on the spot via a QR popular vote, and a Nuldam voucher for the top 3 is under discussion. If it goes ahead, it's a chance to draw energy from how others actually use AI and take ideas straight back into your own build.",
-    },
-    location: ONSITE,
-  },
-  {
-    id: "d5-panel-founding",
-    day: 5,
-    date: "08.26",
-    category: "main",
-    mode: "offline",
-    timeOfDay: "AM",
-    title: { ko: "패널 · 유학생에서 창업가로 (섭외 중)", en: "Panel · From Int'l Student to Founder (TBC)" },
-    summary: {
-      ko: "11:35 · 싱가포르 유학생 출신 창업가 3인의 인사이트·pain + 학생 Q&A · 섭외 중.",
-      en: "11:35 · insights & real pains from 3 founders who came up as int'l students + student Q&A · TBC.",
-    },
-    description: {
-      ko: "싱가포르 유학생 출신 창업가 3인과 함께하는 패널입니다(11:35~). 유학생 앙트레프레너십의 인사이트와 실제 pain을 가감 없이 나누고, 이어서 학생 Q&A로 연결됩니다. 같은 길을 먼저 걸어본 사람의 관점을 가까이에서 듣는 자리입니다. 패널 3인은 현재 섭외 중이며, 확정되는 대로 안내됩니다.",
-      en: "A panel with three founders who came up as international students in Singapore (from 11:35). They share the insights and the real pains of international-student entrepreneurship without varnish, flowing into a student Q&A. It's a chance to hear, up close, from people who walked the same path first. The three panelists are still being arranged and will be announced once confirmed.",
-    },
-    location: ONSITE,
-  },
-  {
-    id: "d5-networking",
-    day: 5,
-    date: "08.26",
-    category: "network",
-    mode: "offline",
-    timeOfDay: "PM",
-    title: { ko: "크로스트랙 교류 세션", en: "Cross-track Exchange" },
-    summary: {
-      ko: "13:00 · 트랙을 넘나드는 교류 세션 (12:25 런치 이후).",
-      en: "13:00 · exchange across the tracks (after the 12:25 lunch).",
-    },
-    description: {
-      ko: "12:25 런치로 숨을 고른 뒤, 13:00부터 이어지는 크로스트랙 교류 세션입니다. 트랙을 넘나들며 참가자·멘토·파트너가 자연스럽게 섞이고, 다른 트랙이 같은 8일을 어떻게 풀고 있는지를 직접 듣습니다. 온라인으로 쌓아 온 관계를 얼굴을 맞대고 다지고, 팀을 넘어선 연결을 만드는 자리입니다.",
-      en: "After a 12:25 lunch break, a cross-track exchange session runs from 13:00. Participants, mentors and partners mix across the tracks, and you hear first-hand how another track is tackling the same eight days. It turns the relationships built online into face-to-face ones and makes connections beyond your own team.",
-    },
-    location: ONSITE,
-  },
-
-  {
-    id: "d5-quickathon",
-    day: 5,
-    date: "08.26",
-    category: "build",
-    mode: "offline",
-    timeOfDay: "PM",
-    confirmed: false,
-    title: { ko: "Quickathon 사이드 퀘스트 (검토 중)", en: "Quickathon Side Quest (under review)" },
-    summary: {
-      ko: "이미 빌드에 익숙한 참가자를 위한 ~4시간 병행 트랙 — 아직 검토 중입니다.",
-      en: "A ~4h parallel track for participants already comfortable building — still under review.",
-    },
-    description: {
-      ko: "이미 빌드에 익숙한 참가자를 위해 Day 5 일정과 병행으로 검토 중인 ~4시간짜리 사이드 퀘스트입니다. 본 일정을 따라가기엔 여유가 있는 숙련 참가자가 같은 자리에서 짧게 몰입할 수 있는 트랙을 두자는 취지이고, 해시드와 협업을 논의하고 있습니다. 아직 확정된 세션이 아니라 진행 여부·형식 모두 검토 단계이며, 확정되는 대로 안내합니다.",
-      en: "A ~4-hour side quest under consideration alongside the Day-5 programme, for participants who are already comfortable building — the idea being that more experienced builders have a short, intense track to sink into in the same room. We're discussing it with Hashed. It isn't confirmed: whether it runs and in what shape are both still being worked out, and we'll announce it once settled.",
+      ko: "온라인으로 이어지던 8일 중, 전원이 처음으로 *SCAPE L^IFE Jungle에 모이는 날입니다. 이날의 목적은 세션을 채우는 게 아니라 사람을 만나는 것 — 화면 너머로만 함께 빌드하던 동료를 직접 만나고, 다른 트랙에서 같은 8일을 풀고 있는 팀들과 섞이는 자리입니다. 세부 프로그램은 학생 간 네트워킹에 초점을 맞춰 해시드(Hashed)와 함께 설계하고 있고, 구성도 시간도 아직 확정 전입니다 — 정해지는 대로 이 페이지에 올립니다. 참여는 선택이에요(필참은 Day 1·8뿐). 같은 기간 열리는 팝업스튜디오 FDE 온라인 오피스아워는 별개 트랙이라, 빌드를 점검받고 싶은 팀은 따로 드롭인하면 됩니다.",
+      en: "The first day everyone gathers in person at *SCAPE L^IFE Jungle after a week that ran online. The point of the day isn't to fill a timetable — it's to meet people: the teammates you'd only built alongside on-screen, and the teams working the same eight days in another track. We're designing the programme around student-to-student networking together with Hashed; neither the shape nor the hours are settled yet, and we'll put them on this page once they are. Attending is your choice (only Day 1 and Day 8 are required). Popup Studio's online FDE office hours run over the same stretch but are a separate track — drop in there if your team wants a read on the build.",
     },
     location: ONSITE,
     org: HASHED_ORG,

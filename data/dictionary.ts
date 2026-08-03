@@ -130,9 +130,13 @@ export const partnerIntros: Record<string, Phrase> = {
     ko: "영수증 리워드 앱으로 2천만 건 이상의 구매 데이터를 모아 브랜드에 초개인화 마케팅 솔루션을 제공하는 AI 커머스 스타트업(팀리미티드)입니다. CJ제일제당·이랜드리테일과 협업하며 구글·앤틀러 등의 지원 속에 동남아 진출을 준비 중이고, 이번 빌더톤에는 멘토링으로 함께합니다.",
     en: "An AI-commerce startup (Team REmited) whose receipt-reward app has gathered 20M+ purchase records, powering hyper-personalized marketing for brands like CJ CheilJedang and E-Land Retail. Backed by Google for Startups and Antler and eyeing Southeast Asia — joining as a mentoring partner.",
   },
+  // 2026-08-03: 굿즈가 확정되면서 마지막 문장이 "굿즈를 함께 만듭니다"(무엇인지
+  // 미정)에서 실제 품목으로 바뀌었습니다. 수량·선착순 조건은 여기 쓰지 않습니다 —
+  // 이 카드는 파트너가 누구인지를 설명하는 자리이고, 받는 방법은 혜택 카드와 FAQ,
+  // Day 1 일정이 말합니다. 물류(배송지·비용) 정보는 어디에도 쓰지 않습니다.
   "Brand Boost": {
-    ko: "브랜드 굿즈·판촉물을 기획부터 제작·패킹까지 원스톱으로 만드는 제작 플랫폼입니다. 아이디어 단계의 구상을 구성·공정·단가가 잡힌 제작 플랜으로 바꿔 주는 것이 강점이며, 이번 빌더톤의 굿즈를 함께 만듭니다.",
-    en: "A one-stop platform for branded goods and merch — from planning through production and packing — turning rough ideas into concrete, costed production plans. Making this builderthon's goods.",
+    ko: "브랜드 굿즈·판촉물을 기획부터 제작·패킹까지 원스톱으로 만드는 제작 플랫폼입니다. 아이디어 단계의 구상을 구성·공정·단가가 잡힌 제작 플랜으로 바꿔 주는 것이 강점이며, 이번 빌더톤에는 참가자 굿즈(후드·캡 세트)를 제공하는 굿즈 파트너로 함께합니다.",
+    en: "A one-stop platform for branded goods and merch — from planning through production and packing — turning rough ideas into concrete, costed production plans. Joining the builderthon as its goods partner, providing the participant hoodie + cap sets.",
   },
   // Figures are the ones Fyreflyz publishes on its own site (fyreflyz.com) —
   // since 2009, 2,000+ youths, 300+ partner organisations, 1,800+ jobs. The last
@@ -1020,8 +1024,8 @@ export const dict = {
           id: "onsite",
           label: { ko: "현장", en: "On-site" },
           body: {
-            ko: "Day 5 중간 점검 · Day 7 파이널 리허설 — 참여는 선택",
-            en: "Day 5 mid-point check-in · Day 7 final rehearsal — optional",
+            ko: "Day 5 네트워킹 데이 · Day 7 파이널 리허설 — 참여는 선택",
+            en: "Day 5 Networking Day · Day 7 final rehearsal — optional",
           },
         },
         {
@@ -1263,13 +1267,31 @@ export const dict = {
       {
         num: "04",
         title: { ko: "네트워킹", en: "Networking" },
+        // 또래가 첫 줄인 이유 (2026-08-03 피드백): 이 카드의 세 포인트가 전부
+        // 대표·경력자·연사와의 수직 네트워킹이었고, 정작 이 행사의 핵심 혜택인
+        // 학생 간(수평) 네트워킹은 혜택 섹션 어디에도 없었습니다. 같은 피드백으로
+        // Day 5가 네트워킹 데이로 재편됐으니(schedule.ts) 순서도 그 결론을 따릅니다:
+        // 또래 → Day 5 → 선배. 모바일에서는 앞의 두 줄만 보이고 나머지는 '더 보기'로
+        // 접히므로(BenefitCard: i > 1 && !open), 접힌 채로 읽히는 두 줄이 또래와
+        // Day 5여야 합니다. 순서를 되돌려 선배 교류를 위로 올리지 마세요.
         points: [
-          { ko: "대표·경력자와 Day 1·5·7·8 현장 교류", en: "In-person exchange with founders on Days 1·5·7·8" },
-          { ko: "박희덕·원대로 대표님 등 연사 세션", en: "Speaker sessions with Park · Won and more" },
-          { ko: "패널·공유 세션으로 technical 그 이상의 인사이트", en: "Panels & sharing sessions for more-than-technical insight" },
+          { ko: "NUS·NTU·SMU에 흩어져 있던 또래 한인 빌더들 — 팀으로 만나 8일을 함께 만듭니다", en: "The Korean student builders scattered across NUS, NTU and SMU — you meet them as a team and build the eight days together" },
+          // Day 5의 상태 표기는 schedule.ts(네트워킹 데이 (기획 중) · 해시드와 함께
+          // 기획 중)와 반드시 같이 움직여야 합니다. 확정 전까지 '기획 중'을 떼지 마세요.
+          { ko: "Day 5는 통째로 네트워킹 데이 — 전원이 처음 한자리에 모이는 날, 해시드와 함께 기획 중", en: "Day 5 is a networking day end to end — the first time everyone is in one room, being planned together with Hashed" },
+          // 기존 세 줄(대표·경력자 현장 교류 / 연사 세션 / 패널·공유 세션)을 한 줄로
+          // 압축했습니다. 셋 다 같은 이야기(선배와의 수직 교류)였고, 또래를 위에
+          // 세우려면 그 자리를 만들어야 했습니다.
+          { ko: "대표·현직 경력자와의 현장 교류와 연사·패널 세션 — Day 1·5·7·8", en: "In-person exchange with founders and working seniors, plus speaker and panel sessions — Days 1·5·7·8" },
           // REMOVED: "Day 5 참가자 AI 유스케이스 발표 · QR 인기투표 (검토 중)" 및
-          // "지속되는 한–싱 빌더 커뮤니티의 시작 멤버". 전자는 아직 미확정 세션
-          // (schedule.ts의 d5-panel-usecase)이고, 후자는 확정된 약속이 아닙니다.
+          // "지속되는 한–싱 빌더 커뮤니티의 시작 멤버". 후자는 확정된 약속이 아니고,
+          // 전자의 세션은 2026-08-03 Day 5가 네트워킹 데이로 재정의되며 아예
+          // 사라졌습니다 — 둘 다 되살리지 마세요. 특히 커뮤니티 약속은 비전 섹션이
+          // 맡는 서사입니다(거기서는 "설계하고 있습니다"로 헤지되어 있고, 혜택 카드에
+          // 놓이면 확정된 혜택으로 읽힙니다). 참가 인원 숫자도 쓰지 않습니다 —
+          // 사이트 전체가 규모 숫자를 의도적으로 피합니다.
+          // "Day 1·5·7·8 현장 교류"는 유지: Day 5가 네트워킹 날이 되면서 오히려 더
+          // 정확해진 문장이라, 압축된 셋째 줄이 그대로 물려받았습니다.
         ],
       },
       {
@@ -1313,12 +1335,18 @@ export const dict = {
           // Put a number back only when a partner has confirmed it.
           { ko: "행사 후 우승팀과 직접 협의", en: "Settled directly with the winning team after the event" },
           { ko: "2위 S$100 · 3위 널담 바우처 — 금액 확정 전", en: "2nd S$100 · 3rd Nuldam voucher — amounts not yet final" },
-          // Both vouchers on this card are 널담 now — the 해녀의 부엌 one was dropped
-          // from the incentives entirely. Keep the two lines saying the same
-          // vendor; if one ever splits off again, the FAQ prize answer and
-          // schedule.ts d5-panel-usecase carry the same sentence and move with it.
-          { ko: "Day 5 AI Use Case Top 3 · 널담 바우처 · 논의 중", en: "Day 5 AI Use Case top 3 · Nuldam voucher · under discussion" },
-          { ko: "굿즈 (pen·notes) 등 · 검토 중", en: "Goods (pens · notes) and more · under review" },
+          // 널담 바우처는 이제 3위 시상 한 곳뿐입니다 — 해녀의 부엌 바우처는 이전에
+          // 인센티브에서 빠졌고, "Day 5 AI Use Case Top 3 · 널담 바우처 · 논의 중"은
+          // 2026-08-03에 삭제됐습니다: Day 5가 학생 간 네트워킹 데이로 재정의되면서
+          // 해당 세션(schedule.ts d5-panel-usecase)이 사라졌고, 세션이 없으면 시상도
+          // 없는 게 맞습니다. 같은 문장이 FAQ 상금 답변에도 있었고 함께 지웠습니다.
+          // CONFIRMED 2026-08-03 (브랜드부스트 미팅): 후드+캡 세트 60개, Day 1 전
+          // 도착 확정, 현장 선착순. 이전 줄("굿즈 (pen·notes) 등 · 검토 중")은
+          // 품목도 진행 여부도 미정이던 시절의 표기라 헤지가 붙어 있었습니다 —
+          // 확정된 지금은 헤지를 붙이지 않습니다. 수량(60)과 '선착순'은 세트로
+          // 유지하세요: 이 카드의 다른 줄과 달리 여기는 전원에게 가지 않습니다.
+          // 배송·비용 등 물류 정보는 사이트에 쓰지 않습니다.
+          { ko: "브랜드부스트 굿즈 — 후드·캡 세트, Day 1 현장 선착순 60세트", en: "Brand Boost goods — a hoodie + cap set, 60 sets on a first-come basis on Day 1" },
         ],
       },
     ],
@@ -1340,7 +1368,8 @@ export const dict = {
     tag: { ko: "연사 · 공유 세션", en: "Speaker sessions" },
     // Days listed here must match the cards in `people` below. Day 5 was in the
     // heading with no card to back it — its only content was the panel in
-    // tbcNote, whose panelists were never arranged.
+    // tbcNote, whose panelists were never arranged. That panel is gone for good
+    // now (2026-08-03: Day 5 became a networking day), so Day 5 stays out.
     heading: { ko: "Day 1 · 7 · 8 — 스피커 & 공유 세션", en: "Day 1 · 7 · 8 — Speaker & sharing sessions" },
     intro: {
       ko: "이 시간을 따로 두는 이유 — Zero100의 앙트레프레너십 정체성을 지키기 위해. (연사 라인업은 확정되는 대로 안내됩니다.)",
@@ -2209,8 +2238,15 @@ export const dict = {
         a: {
           // 수료증은 이 목록에서 의도적으로 빠져 있습니다 — 발급 기준이 "크래시코스
           // 전 시간 참석"이라, 참가자 전원이 받는 항목과 나란히 두면 기준이 오해됩니다.
-          ko: "네 — 시상은 메인 트랙 2개 각각에 1~3위로 걸립니다: 1위 유급 인턴십 기회 · 2위 S$100 · 3위 널담 바우처. Day 5 AI Use Case Top 3의 널담 바우처도 논의 중이에요. 참가비는 무료이고, 순위에 못 들어도 밥·굿즈·네트워킹은 전원에게 돌아가며 수료증은 크래시코스 전 시간을 들으면 받습니다. ※ 금액·인원 등 세부는 아직 확정 전이며 파트너 협의로 변경될 수 있어요.",
-          en: "Yes — each of the two main tracks carries awards for 1st through 3rd: a paid internship for 1st, S$100 for 2nd and a Nuldam voucher for 3rd. A Nuldam voucher for the top 3 of the Day 5 AI Use Case session is also under discussion. Entry is free, and off the podium the food, goods and networking still go to everyone — the certificate comes with full Crash Course attendance. ※ Amounts, headcounts and other details aren't final and may change as partner discussions continue.",
+          // "Day 5 AI Use Case Top 3의 널담 바우처도 논의 중" 문장은 2026-08-03에
+          // 빠졌습니다 — Day 5가 네트워킹 데이로 바뀌며 그 세션이 없어졌습니다.
+          // benefits 인턴십·상금 카드와 같은 목록이니 함께 움직여 주세요.
+          // "밥·굿즈·네트워킹은 전원에게"였다가 굿즈만 떼어냈습니다 (2026-08-03):
+          // 브랜드부스트 굿즈가 후드·캡 세트 60개로 확정되면서 '전원'이 과약속이
+          // 됐습니다. 밥·네트워킹은 그대로 전원, 굿즈는 Day 1 현장 선착순 60세트.
+          // benefits 06 카드와 같은 사실을 말하는 자리이니 함께 움직여 주세요.
+          ko: "네 — 시상은 메인 트랙 2개 각각에 1~3위로 걸립니다: 1위 유급 인턴십 기회 · 2위 S$100 · 3위 널담 바우처. 참가비는 무료이고, 순위에 못 들어도 밥과 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드·캡 세트는 Day 1 현장에서 선착순 60세트로 드리고, 수료증은 크래시코스 전 시간을 들으면 받습니다. ※ 금액·인원 등 세부는 아직 확정 전이며 파트너 협의로 변경될 수 있어요.",
+          en: "Yes — each of the two main tracks carries awards for 1st through 3rd: a paid internship for 1st, S$100 for 2nd and a Nuldam voucher for 3rd. Entry is free, and off the podium the food and the networking still go to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come, and the certificate comes with full Crash Course attendance. ※ Amounts, headcounts and other details aren't final and may change as partner discussions continue.",
         },
       },
       {

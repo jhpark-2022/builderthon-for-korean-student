@@ -834,9 +834,10 @@ function HeroLaunchPanel({ t, reduce }: { t: Tfn; reduce: boolean }) {
 }
 
 // Self-paced build is not a session: no start time, nowhere to be, nothing to
-// attend. Read off the explicit data flag rather than category === "build",
-// because that category ALSO holds the Day 5 Quickathon, which is a scheduled
-// 4-hour on-site track. See BEvent.selfPaced.
+// attend. Read off the explicit data flag rather than category === "build" —
+// that category held a scheduled 4-hour on-site track (the Day 5 Quickathon)
+// until the Day-5 networking pivot (2026-08-03), and the next scheduled build
+// session would break the inference again. See BEvent.selfPaced.
 const isSelfPaced = (ev: BEvent) => ev.selfPaced === true;
 // Everything on this day a participant actually has to show up for.
 const realSessions = (dayNum: number) =>

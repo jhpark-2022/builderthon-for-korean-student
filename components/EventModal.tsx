@@ -362,12 +362,31 @@ export default function EventModal({
                   <dt className="text-xs font-semibold uppercase tracking-wide text-white/70">
                     {t(selfPaced ? dict.modal.mode : dict.modal.location)}
                   </dt>
+                  {/* A venue with its own site becomes a link (Day 1's Foundry
+                      hall). Same underlined-anchor treatment the speaker's
+                      LinkedIn row above uses, so it reads as one pattern rather
+                      than a new affordance — and the row is plain text whenever
+                      `locationUrl` is absent, which is every other session. */}
                   <dd className="font-semibold text-white">
-                    {selfPaced
-                      ? t(dict.program.selfPacedMode)
-                      : event.location
-                        ? t(event.location)
-                        : t(dict.modal.tbc)}
+                    {selfPaced ? (
+                      t(dict.program.selfPacedMode)
+                    ) : event.location ? (
+                      event.locationUrl ? (
+                        <a
+                          href={event.locationUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline decoration-white/30 underline-offset-4 transition hover:decoration-white/70"
+                        >
+                          {t(event.location)}
+                          <span aria-hidden className="ml-1 text-white/50">↗</span>
+                        </a>
+                      ) : (
+                        t(event.location)
+                      )
+                    ) : (
+                      t(dict.modal.tbc)
+                    )}
                   </dd>
                 </div>
               </dl>
