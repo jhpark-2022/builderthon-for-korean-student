@@ -3100,14 +3100,35 @@ export default function Journey() {
                         they send FDEs on rotation rather than an assigned mentor.
                         A dashed card says that in the one place a reader would
                         otherwise wonder about it — inventing a name is the one
-                        thing this page has never done. */}
+                        thing this page has never done.
+
+                        DESKTOP ONLY. In the wrap grid it is simply the last cell
+                        and behaves. In the mobile swipe row it was a disaster: it
+                        carries no `w-[75vw] shrink-0` like its siblings, so flex
+                        crushed it to a sliver, its two sentences wrapped to ~15
+                        lines, and at 463px tall it dragged every mentor card in
+                        the row up to match — 283–305px of dead space per card,
+                        measured. It also isn't a mentor, so a full-width note
+                        below the row is the more honest shape for it anyway. */}
                     {g.placeholder && (
-                      <div className="flex w-full flex-col rounded-2xl border border-dashed border-emerald-400/25 bg-emerald-400/[0.03] p-4 sm:w-[calc((100%-0.75rem)/2)] lg:w-[calc((100%-1.5rem)/3)]">
+                      <div className="hidden w-full flex-col rounded-2xl border border-dashed border-emerald-400/25 bg-emerald-400/[0.03] p-4 sm:flex sm:w-[calc((100%-0.75rem)/2)] lg:w-[calc((100%-1.5rem)/3)]">
                         <p className="break-keep text-sm font-bold leading-snug text-emerald-100/90">{t(g.placeholder.title)}</p>
                         <p className="mt-2 break-keep text-xs leading-relaxed text-white/60">{t(g.placeholder.body)}</p>
                       </div>
                     )}
                   </div>
+
+                  {/* The same note, mobile only, as a full-width block under the
+                      row instead of a card inside it. Same copy, same dashed
+                      emerald treatment, so it still reads as "this slot exists but
+                      has no name yet" — it just stops being a peer of the people
+                      cards and stops setting their height. */}
+                  {g.placeholder && (
+                    <div className="mt-3 rounded-2xl border border-dashed border-emerald-400/25 bg-emerald-400/[0.03] p-4 sm:hidden">
+                      <p className="break-keep text-sm font-bold leading-snug text-emerald-100/90">{t(g.placeholder.title)}</p>
+                      <p className="mt-1.5 break-keep text-xs leading-relaxed text-white/60">{t(g.placeholder.body)}</p>
+                    </div>
+                  )}
                 </div>
               );
             })}
