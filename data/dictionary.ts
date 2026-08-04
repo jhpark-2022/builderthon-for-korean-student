@@ -2361,12 +2361,13 @@ export const dict = {
           // "Day 5 AI Use Case Top 3의 널담 바우처도 논의 중" 문장은 2026-08-03에
           // 빠졌습니다 — Day 5가 네트워킹 데이로 바뀌며 그 세션이 없어졌습니다.
           // benefits 인턴십·상금 카드와 같은 목록이니 함께 움직여 주세요.
-          // "밥·굿즈·네트워킹은 전원에게"였다가 굿즈만 떼어냈습니다 (2026-08-03):
-          // 브랜드부스트 굿즈가 후드·캡 세트 60개로 확정되면서 '전원'이 과약속이
-          // 됐습니다. 밥·네트워킹은 그대로 전원, 굿즈는 Day 1 현장 선착순 60세트.
+          // DECIDED 2026-08-04: NO meals are provided at any point — aligned with
+          // schedule.ts d7 ("점심(개별)"). What IS free: entry, networking, and the
+          // Brand Boost hoodie+cap sets (Day 1 on-site, 60 sets first-come). Do not
+          // reintroduce food promises here or in any benefit/schedule copy.
           // benefits 06 카드와 같은 사실을 말하는 자리이니 함께 움직여 주세요.
-          ko: "네 — 시상은 메인 트랙 2개 각각에 1~3위로 걸립니다: 1위 유급 인턴십 기회 · 2위 S$100 · 3위 널담 바우처. 참가비는 무료이고, 순위에 못 들어도 밥과 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드·캡 세트는 Day 1 현장에서 선착순 60세트로 드리고, 수료증은 크래시코스 전 시간을 들으면 받습니다. ※ 금액·인원 등 세부는 아직 확정 전이며 파트너 협의로 변경될 수 있어요.",
-          en: "Yes — each of the two main tracks carries awards for 1st through 3rd: a paid internship for 1st, S$100 for 2nd and a Nuldam voucher for 3rd. Entry is free, and off the podium the food and the networking still go to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come, and the certificate comes with full Crash Course attendance. ※ Amounts, headcounts and other details aren't final and may change as partner discussions continue.",
+          ko: "네 — 시상은 메인 트랙 2개 각각에 1~3위로 걸립니다: 1위 유급 인턴십 기회 · 2위 S$100 · 3위 널담 바우처. 참가비는 무료이고, 순위에 못 들어도 네트워킹은 전원에게 돌아갑니다(식사는 제공되지 않아요 — 각자 해결). 브랜드부스트 후드·캡 세트는 Day 1 현장에서 선착순 60세트로 드리고, 수료증은 크래시코스 전 시간을 들으면 받습니다. ※ 금액·인원 등 세부는 아직 확정 전이며 파트너 협의로 변경될 수 있어요.",
+          en: "Yes — each of the two main tracks carries awards for 1st through 3rd: a paid internship for 1st, S$100 for 2nd and a Nuldam voucher for 3rd. Entry is free, and off the podium the networking still goes to everyone (meals aren't provided — grab food on your own). The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come, and the certificate comes with full Crash Course attendance. ※ Amounts, headcounts and other details aren't final and may change as partner discussions continue.",
         },
       },
       {
