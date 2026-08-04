@@ -446,7 +446,7 @@ export const days: DayMeta[] = [
       en: "The judges' questions, asked a day before you're on stage",
     },
     hours: "9AM–2PM",
-    // 확정 진행 순서 (2026-08-04). 9AM–2PM 안에서 네 줄이 전부입니다.
+    // 확정 진행 순서 (2026-08-04). 9AM–2PM 안에서 다섯 줄이 전부입니다.
     // FDE 오피스아워(d7-fde-office-hour)는 온라인 별개 트랙이고 시간도 미정이라
     // 여기 넣지 않습니다 — 시간표는 현장에 있는 사람의 하루입니다. 카드로만 남습니다.
     runOfShow: [
@@ -465,9 +465,20 @@ export const days: DayMeta[] = [
         note: { ko: "식사는 제공되지 않아요 — 근처에서 각자 해결합니다. 그대로 나가서 네트워킹하거나 멘토와 이야기를 이어가도 좋아요.", en: "Lunch isn't provided — grab something nearby. Feel free to head out together and keep networking, or carry on with a mentor." },
       },
       {
-        time: "12:30PM–2PM",
+        time: "12:30PM–1:40PM",
         label: { ko: "커리어 간담회 · 박희덕", en: "Career session · Park Hee-deok" },
         eventId: "d7-speaker-session",
+      },
+      // 12:30–2PM 한 줄이었는데 쪼갰습니다 (2026-08-04). 간담회는 1시간 10분이고
+      // 남은 20분은 촬영입니다 — 합쳐두면 간담회가 90분인 것으로 읽히고, 그 20분에
+      // 자리를 뜬 사람은 사진에서 빠집니다. 아직 잠정이라 note에 그렇게 적었습니다.
+      {
+        time: "1:40PM–2PM",
+        label: { ko: "기념촬영 · 단체 사진", en: "Photos · group shot" },
+        note: {
+          ko: "주최사와 주관 학생회 임원진 기념촬영, 이어서 단체 사진 (잠정, 확정 시 안내)",
+          en: "Commemorative photos with the host companies and the student council executives, then a group shot (provisional, we'll confirm)",
+        },
       },
     ],
     dayMode: "offline",
@@ -1275,7 +1286,10 @@ export const schedule: BEvent[] = [
     category: "network",
     mode: "offline",
     timeOfDay: "PM",
-    time: "12:30PM–2PM",
+    // 2PM이 아니라 1:40PM입니다 — 뒤 20분은 간담회가 아니라 기념촬영·단체 사진이고,
+    // 그 줄은 runOfShow에 따로 있습니다 (2026-08-04). 이 세션 카드가 말하는 시각은
+    // 간담회 자체의 길이여야 합니다.
+    time: "12:30PM–1:40PM",
     // TODO: confirm public naming — speaker (박희덕) from the internal deck.
     speaker: { ko: "박희덕", en: "Park Hee-deok" },
     title: { ko: "커리어 간담회 · ‘FDE로 일한다는 것’", en: "Career Session · “Working as an FDE”" },

@@ -1485,7 +1485,12 @@ export const dict = {
         img: "/partners/logos/speaker-park.jpeg",
         linkedin: "https://www.linkedin.com/in/hee-duk-park-304079bb",
         points: [
-          { ko: "자사 FDE 사업에 관심 있는 학생·졸업생 대상 · 12:30–14:00", en: "For students & grads interested in the firm's FDE business · 12:30–14:00" },
+          // 시각을 여기서 뺐습니다 (2026-08-04). schedule.ts의 d7-speaker-session
+          // `time`과 Day 7 runOfShow에 이미 있는데, 세 번째 사본이던 이 줄만
+          // 12:30–14:00으로 남아 실제로 어긋났습니다 — 간담회는 13:40에 끝나고
+          // 뒤 20분은 촬영입니다. 이 섹션은 "무슨 이야기를 하는가"를 말하는 자리이니
+          // 시각은 프로그램 쪽 한 곳에만 둡니다. 다시 넣지 마세요.
+          { ko: "자사 FDE 사업에 관심 있는 학생·졸업생 대상", en: "For students & grads interested in the firm's FDE business" },
           { ko: "어떤 일을 하는 자리인지, 어떤 사람을 찾는지 직접 듣기", en: "What the work actually is, and who they're looking for — first-hand" },
           { ko: "인턴 · 채용 pool로 이어지는 실질적 연결", en: "A genuine connection into the internship & hiring pool" },
           { ko: "후속 1:1 면담·멘토링(희망자)은 8/29 행사 종료 후", en: "Follow-up 1:1s & mentoring (opt-in) after the event closes on 29 Aug" },
