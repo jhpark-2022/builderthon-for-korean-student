@@ -974,7 +974,9 @@ export const dict = {
     // how long does it take, what is it FOR.
     //
     // The bonus line carries no numbers, same contract as the judging FAQ — the
-    // weights live only in the score sheet, which is internal and not published.
+    // weights live in the score sheet, which as of 2026-08-04 IS disclosed to
+    // participants before the event, but is still being settled. Copy stays
+    // number-free so it can't go stale; the sheet carries the figures.
     // 한국어에서 "폼"을 쓰지 않습니다 (2026-08-04). 구글 폼 때문에 익숙하긴 해도
     // 카피에서는 콩글리시로 읽혀서, 문장은 행위로("여쭤봅니다", "받습니다")·
     // 이름은 성격으로(체크인 / 최종 제출) 바꿨습니다. 영어는 form이 맞는 단어라
@@ -2288,8 +2290,9 @@ export const dict = {
         q: { ko: "문과인데 이과생들에게 밀리지 않을까요?", en: "I'm not from a STEM major — will I fall behind?" },
         a: {
           // 배점 숫자는 여기에도 쓰지 않습니다 — 아래 "심사는 어떻게 하나요?" 답변과
-          // 같은 계약: 숫자는 심사표 PDF·덱 GRADING 슬라이드에만 존재하고 둘 다
-          // 내부 문서라 공개하지 않습니다. 여기서는 무게가 실리는 '방향'만 말할 것.
+          // 같은 계약입니다. 심사표 자체는 2026-08-04 결정으로 참가자에게 사전
+          // 공개하지만, 배점은 아직 파트너 조율 중이라 카피에 숫자를 박으면 곧
+          // 낡습니다. 숫자는 심사표가 나르게 두고, 여기서는 무게가 실리는 '방향'만.
           ko: "아니요 — 코드 실력을 겨루는 대회가 아닙니다. 심사의 무게는 코드가 아니라 문제를 얼마나 정확히 이해했는가, 그 위에 세운 아이디어가 적절한가, 데모가 그 아이디어를 실제로 증명하는가에 실려 있어요. 프로토타입은 와이어프레임 수준이어도 되고, 화면의 세련됨은 채점하지 않습니다. 산업 맥락을 아는 사람이 오히려 유리한 구조이고, 코딩 기본기는 Day 2 크래시코스에서 맞춰 드립니다.",
           en: "No — this isn't a contest of coding ability. The weight sits on how accurately you understand the problem, whether the idea you build on it is the right one, and whether the demo actually proves that idea — not on the code. A wireframe-level prototype is fine, and visual polish isn't graded. The structure actually favours people who understand the industry context, and the Day 2 Crash Course levels the coding basics for everyone.",
         },
@@ -2422,27 +2425,27 @@ export const dict = {
       },
       {
         q: { ko: "심사는 어떻게 하나요? 기술이 완벽해야 하나요?", en: "How is judging done? Does it need to be technically polished?" },
-        // DELIBERATELY ROUGH (updated 2026-08-02). The itemised rubric is NOT
-        // public. Fuller guidance on what judging looks for goes to the open chat
-        // room as a reason to be in it — but the score sheet itself is INTERNAL
-        // and is never published, so nothing here or in aOpenChat may promise the
-        // document or its per-axis weights. This answer says the SHAPE of what
-        // matters — process over polish, evidence over ambition — and stops.
+        // DECIDED 2026-08-04: the score sheet IS disclosed to participants before
+        // the event. This REVERSES the earlier "internal, never published" stance
+        // (2026-08-02), so this answer may — and now does — promise the document.
         //
-        // It previously listed five checkable axes; that is exactly the content
-        // being held back, so do not restore it, and do not re-add numbers (they
-        // live only in the judge score sheet PDF at Execution/Problem Statement/
-        // 빌더톤_심사표_ScoreSheet.pdf and the deck GRADING slide — both internal).
+        // What it still does NOT print is the per-axis weights. That is not
+        // secrecy any more, it's freshness: the weights are not settled yet
+        // ("배점은 파트너 조율에 따라 확정 전" — score sheet footnote), so numbers
+        // typed into copy go stale the moment they land, and the sheet reaching
+        // participants is the thing that carries them anyway. Let the sheet carry
+        // the numbers; keep this answer to the SHAPE of what matters.
+        // (Source of truth: Execution/Problem Statement/빌더톤_심사표_ScoreSheet.pdf
+        // and the deck GRADING slide.)
         //
-        // What DOES stay public is the not-graded list. It isn't a criterion
+        // The not-graded list below stays public regardless. It isn't a criterion
         // anyone can game — it's the reassurance that gets a nervous
-        // non-developer to register, and hiding it would cost sign-ups for
-        // nothing. Same reason the three-part deliverable framing stays in
-        // dict.program.outputSteps and the upload checklist in
+        // non-developer to register. Same reason the three-part deliverable
+        // framing stays in dict.program.outputSteps and the upload checklist in
         // dict.program.submission: those tell you what to DO, not how you score.
         a: {
-          ko: "기술 완성도는 심사 기준이 아닙니다. 크게 보면 무게는 결과물의 완성도가 아니라 거기까지 간 과정에 실려 있어요 — 문제를 감이 아니라 근거로 골랐는지, 그리고 그게 실제로 돌아가는지.",
-          en: "Technical polish is not a judging criterion. Broadly, the weight sits on the process rather than the finish — whether you chose the problem from evidence rather than instinct, and whether the thing actually runs.",
+          ko: "기술 완성도는 심사 기준이 아닙니다. 크게 보면 무게는 결과물의 완성도가 아니라 거기까지 간 과정에 실려 있어요 — 문제를 감이 아니라 근거로 골랐는지, 그리고 그게 실제로 돌아가는지. 심사표는 대회 전에 참가자에게 그대로 공개합니다 — 무엇으로 평가받는지 모르는 채 준비하실 일은 없어요.",
+          en: "Technical polish is not a judging criterion. Broadly, the weight sits on the process rather than the finish — whether you chose the problem from evidence rather than instinct, and whether the thing actually runs. And the score sheet goes out to participants before the event, as it is — you'll never be preparing without knowing what you're judged on.",
         },
         aGroups: [
           {
@@ -2463,11 +2466,15 @@ export const dict = {
         // The withheld-detail line. Phrased as an offer, not a wall: it says more
         // detail exists and that being in the room is how you get it.
         //
-        // Promises GUIDANCE, not a document and not numbers. The score sheet is
-        // internal and is not published — so neither "심사표 원본" nor "축별 배점"
-        // may be offered here, in either language. Anything that reads as "the
-        // rubric drops in the chat" is a promise the organisers would have to
-        // break. Keep it to what judging looks for.
+        // UPDATED 2026-08-04: the score sheet is no longer internal (see the
+        // judging answer above), so the old ban on naming it here is lifted.
+        //
+        // This line still promises GUIDANCE rather than the document, and that is
+        // deliberate: the answer above already commits to "대회 전에 공개", which is
+        // the promise. Naming a delivery CHANNEL here would be a second, narrower
+        // promise — the open chat is public while the sheet goes to participants —
+        // and the organisers would have to keep both. Still no per-axis numbers:
+        // they aren't settled, and the sheet carries them.
         aOpenChat: {
           ko: "심사에서 뭘 더 보는지는 오픈채팅방에서 먼저 풀어요 — 준비하면서 참고할 만한 것들부터요.",
           en: "We go into more of what judging looks for in the open chat first — starting with what's useful while you're still building.",
