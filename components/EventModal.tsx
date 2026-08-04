@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
+import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 import { dict } from "@/data/dictionary";
 import { categoryMeta, days, type BEvent } from "@/data/schedule";
 
@@ -33,8 +34,13 @@ export default function EventModal({
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  // Open/close lifecycle: ESC + focus trap, body scroll lock, inert background,
-  // and focus restoration to the element that opened the modal.
+  // Freeze the page behind the dialog. Declared BEFORE the lifecycle effect so
+  // its cleanup runs first: the scroll offset is back before focus returns to
+  // the card that opened this, rather than focus landing on a still-frozen page.
+  useBodyScrollLock(!!event);
+
+  // Open/close lifecycle: ESC + focus trap, inert background, and focus
+  // restoration to the element that opened the modal.
   useEffect(() => {
     if (!event) return;
 
@@ -73,10 +79,6 @@ export default function EventModal({
     };
 
     document.addEventListener("keydown", onKey);
-    // Save/restore (not reset to "") so we don't clobber another scroll-lock
-    // owner, e.g. the Nav mobile menu, if both are open.
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
 
     // Make the rest of the page inert/inaccessible while the dialog is open.
     // The dialog is portaled to <body>, so these siblings can be safely inerted.
@@ -94,7 +96,6 @@ export default function EventModal({
 
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
       inerted.forEach((el) => el.removeAttribute("inert"));
       window.clearTimeout(id);
       // Return focus to the triggering card.
@@ -132,11 +133,14 @@ export default function EventModal({
           exit={{ opacity: 0 }}
           transition={{ duration: reduce ? 0 : 0.2 }}
         >
-          {/* Backdrop */}
+          {/* Backdrop. `touch-none` (touch-action: none) is a second line of
+              defence behind the position-fixed scroll lock — this element only
+              ever handles a click-to-close, so refusing touch gestures outright
+              costs nothing. */}
           <div
             aria-hidden
             onClick={onClose}
-            className="absolute inset-0 cursor-default bg-black/70 backdrop-blur-sm"
+            className="absolute inset-0 cursor-default touch-none bg-black/70 backdrop-blur-sm"
           />
 
           {/* Dialog — dark glass */}
@@ -177,8 +181,11 @@ export default function EventModal({
 
             {/* Scrollable content. Bottom padding honors the iOS home-indicator
                 safe area on the mobile bottom-sheet; sm:py-9 restores it on the
-                centered desktop dialog. */}
-            <div className="overflow-y-auto px-7 pt-8 pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-10 sm:py-9">
+                centered desktop dialog.
+                `overscroll-contain` stops a flick that reaches the top or bottom
+                of this list from handing the rest of the gesture to the page
+                behind the modal. */}
+            <div className="overflow-y-auto overscroll-contain px-7 pt-8 pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-10 sm:py-9">
               {/* Category + day chips */}
               <div className="flex flex-wrap items-center gap-2 pr-12">
                 <span

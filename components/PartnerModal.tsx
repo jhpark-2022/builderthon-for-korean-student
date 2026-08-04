@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
+import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 import { dict, type Phrase, type PartnerArticle } from "@/data/dictionary";
 
 // A sponsor/mentor whose logo was clicked. `desc` is the company intro shown in
@@ -45,8 +46,12 @@ export default function PartnerModal({
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  // ESC + focus trap, body scroll lock, inert background, focus restoration.
-  // Kept in lockstep with EventModal so both dialogs behave identically.
+  // Declared before the lifecycle effect so the page is unfrozen before focus
+  // returns to the tile — see useBodyScrollLock.
+  useBodyScrollLock(!!partner);
+
+  // ESC + focus trap, inert background, focus restoration. Kept in lockstep with
+  // EventModal so both dialogs behave identically.
   useEffect(() => {
     if (!partner) return;
 
@@ -83,8 +88,6 @@ export default function PartnerModal({
     };
 
     document.addEventListener("keydown", onKey);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
 
     const inerted = Array.from(
       document.querySelectorAll<HTMLElement>("header, main, footer")
@@ -95,7 +98,6 @@ export default function PartnerModal({
 
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
       inerted.forEach((el) => el.removeAttribute("inert"));
       window.clearTimeout(id);
       opener?.focus?.();
@@ -114,11 +116,11 @@ export default function PartnerModal({
           exit={{ opacity: 0 }}
           transition={{ duration: reduce ? 0 : 0.2 }}
         >
-          {/* Backdrop */}
+          {/* Backdrop — `touch-none` backs up the scroll lock (see EventModal). */}
           <div
             aria-hidden
             onClick={onClose}
-            className="absolute inset-0 cursor-default bg-black/70 backdrop-blur-sm"
+            className="absolute inset-0 cursor-default touch-none bg-black/70 backdrop-blur-sm"
           />
 
           {/* Dialog — dark glass, matching EventModal */}
@@ -155,7 +157,9 @@ export default function PartnerModal({
               </svg>
             </button>
 
-            <div className="overflow-y-auto px-7 pt-8 pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-10 sm:py-9">
+            {/* overscroll-contain: a flick that hits either end stays here
+                instead of scrolling the page behind the modal. */}
+            <div className="overflow-y-auto overscroll-contain px-7 pt-8 pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-10 sm:py-9">
               <p className="pr-12 text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
                 {t(dict.modal.companyAbout)}
               </p>

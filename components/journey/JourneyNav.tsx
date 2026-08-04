@@ -8,6 +8,7 @@ import { useLocale } from "@/lib/LocaleContext";
 import { dict, links } from "@/data/dictionary";
 import { useRegister } from "@/lib/RegisterContext";
 import { useScrollDirection } from "@/lib/useScrollDirection";
+import { isScrollLocked } from "@/lib/useBodyScrollLock";
 import LocaleToggle from "@/components/LocaleToggle";
 import ChatGlyph from "@/components/ChatGlyph";
 import ReturningGreeting from "./ReturningGreeting";
@@ -45,6 +46,11 @@ export default function JourneyNav() {
 
   useEffect(() => {
     const onScroll = () => {
+      // The scroll lock parks <body> at `position: fixed`, so `window.scrollY`
+      // reads 0 for as long as a modal is open. Taking that at face value would
+      // strip the header back to its top-of-page styling behind the backdrop and
+      // then snap it back on close. Hold the last real reading instead.
+      if (isScrollLocked()) return;
       const past = window.scrollY > 40;
       setScrolled(past);
       if (past) setShowRegister(true);

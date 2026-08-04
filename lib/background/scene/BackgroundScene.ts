@@ -8,6 +8,7 @@ import { Atmosphere } from "../particles/Atmosphere";
 import { PostFX } from "../renderer/PostFX";
 import { computePhases } from "../utils/phases";
 import { clamp } from "../utils/math";
+import { isScrollLocked } from "../../useBodyScrollLock";
 
 /**
  * Top-level controller. Owns the renderer, camera, layers, and the animation
@@ -120,6 +121,12 @@ export class BackgroundScene {
     this.syncPixelRatio();
   };
   private onScroll = () => {
+    // While a modal holds the scroll lock the page is parked at
+    // `position: fixed` (lib/useBodyScrollLock): scrollY reads 0 and the
+    // document collapses to viewport height, so this would drive the scene back
+    // to its start and then jump it forward again on close — visible through the
+    // 70%-opacity backdrop. Hold the last real reading until the page is free.
+    if (isScrollLocked()) return;
     const max = document.documentElement.scrollHeight - window.innerHeight;
     this.scroll = max > 0 ? clamp(window.scrollY / max, 0, 1) : 0;
   };

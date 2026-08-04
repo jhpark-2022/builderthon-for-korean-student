@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { isScrollLocked } from "./useBodyScrollLock";
 
 /**
  * Shared scroll-direction signal for the fixed mobile chrome (top nav, bottom
@@ -20,11 +21,17 @@ import { useEffect, useState } from "react";
  * ALWAYS VISIBLE near the top (`topZone`): the header is part of the first
  * impression, and hiding it during the initial flick down would look broken.
  *
- * SCROLL LOCK. Every modal in this app sets `body.style.overflow = "hidden"`
- * while open (EventModal, PartnerModal, RegisterModal, the day modal). While
- * locked, no scroll events arrive, so a bar hidden just before the modal opened
- * would stay hidden underneath it and reappear only after the next scroll. The
+ * SCROLL LOCK. Every modal in this app freezes the page while open (see
+ * lib/useBodyScrollLock: EventModal, PartnerModal, RegisterModal, the day
+ * modal). The lock pins <body> at `position: fixed`, which makes `window.scrollY`
+ * read 0 for as long as it is held — so this hook has to stand down rather than
+ * interpret that as a jump to the top of the page. It also means a bar hidden
+ * just before the modal opened would otherwise stay hidden underneath it. The
  * lock check pins the chrome visible for exactly that window.
+ *
+ * Returning BEFORE `last = y` is what makes the release clean: `last` still
+ * holds the real pre-lock offset, so when the modal closes and the page is
+ * scrolled back, the delta is zero and nothing moves.
  *
  * @returns true when the chrome should slide out of view.
  */
@@ -39,7 +46,7 @@ export function useScrollDirection({ threshold = 12, topZone = 80 } = {}) {
     const evaluate = () => {
       frame = 0;
       // A modal owns the screen — leave the chrome where it is (visible).
-      if (document.body.style.overflow === "hidden") {
+      if (isScrollLocked()) {
         setHidden(false);
         return;
       }

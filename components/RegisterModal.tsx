@@ -35,6 +35,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 // Aliased: this component already has a `track` state (관심 트랙 form field).
 import { track as analytics } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
+import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 import { normalizeKakaoId } from "@/lib/kakao";
 import { dict, links, REGISTER_ENDPOINT } from "@/data/dictionary";
 import { RESULTS } from "@/data/quiz";
@@ -443,8 +444,12 @@ export default function RegisterModal({
 
   const typeInfo = useTypeInfo(savedResultId);
 
-  // ESC + focus trap, body scroll lock, inert background, focus restoration —
-  // kept in lockstep with PartnerModal so all dialogs behave identically.
+  // Declared before the lifecycle effect so the page is unfrozen before focus
+  // returns to the opener — see useBodyScrollLock.
+  useBodyScrollLock(open);
+
+  // ESC + focus trap, inert background, focus restoration — kept in lockstep
+  // with PartnerModal so all dialogs behave identically.
   useEffect(() => {
     if (!open) return;
     const opener = document.activeElement as HTMLElement | null;
@@ -476,8 +481,6 @@ export default function RegisterModal({
     };
 
     document.addEventListener("keydown", onKey);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
 
     const inerted = Array.from(
       document.querySelectorAll<HTMLElement>("header, main, footer")
@@ -488,7 +491,6 @@ export default function RegisterModal({
 
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
       inerted.forEach((el) => el.removeAttribute("inert"));
       window.clearTimeout(id);
       opener?.focus?.();
@@ -700,10 +702,11 @@ export default function RegisterModal({
           exit={{ opacity: 0 }}
           transition={{ duration: reduce ? 0 : 0.2 }}
         >
+          {/* Backdrop — `touch-none` backs up the scroll lock (see EventModal). */}
           <div
             aria-hidden
             onClick={onClose}
-            className="absolute inset-0 cursor-default bg-black/70 backdrop-blur-sm"
+            className="absolute inset-0 cursor-default touch-none bg-black/70 backdrop-blur-sm"
           />
 
           <motion.div
@@ -734,7 +737,9 @@ export default function RegisterModal({
               </svg>
             </button>
 
-            <div className="overflow-y-auto px-6 pt-8 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:px-9 sm:py-9">
+            {/* overscroll-contain: a flick that hits either end of the form
+                stays here instead of scrolling the page behind the modal. */}
+            <div className="overflow-y-auto overscroll-contain px-6 pt-8 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:px-9 sm:py-9">
               {showAlready ? (
                 // ── Already registered ────────────────────────────────────────
                 // No self-serve edit: /api/register writes once and the browser

@@ -23,6 +23,7 @@ import { parseResultId } from "@/lib/quizScore";
 import { RESULTS, QUESTIONS, type MbtiKey } from "@/data/quiz";
 import { useRegister, type RegisterPreset } from "@/lib/RegisterContext";
 import { useScrollDirection } from "@/lib/useScrollDirection";
+import { useBodyScrollLock, isScrollLocked } from "@/lib/useBodyScrollLock";
 
 
 // glass panel wrapper
@@ -270,7 +271,12 @@ function MobileStickyBar({
   const chromeHidden = useScrollDirection();
 
   useEffect(() => {
-    const onScroll = () => setPast(window.scrollY > window.innerHeight * 1.2);
+    // `isScrollLocked` guard: a frozen page reports scrollY 0, which would pull
+    // this bar down behind an open modal and snap it back on close.
+    const onScroll = () => {
+      if (isScrollLocked()) return;
+      setPast(window.scrollY > window.innerHeight * 1.2);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -1402,8 +1408,14 @@ function DayModal({
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
+  // The event dialog stacks on top of this one, so both hold the lock at the
+  // same time — useBodyScrollLock counts depth and only the outer release
+  // restores the offset. Declared before the lifecycle effect so the page is
+  // unfrozen before focus returns to the day card.
+  useBodyScrollLock(dayNum != null);
+
   // Same open/close lifecycle as EventModal and RegisterModal — ESC, Tab focus
-  // trap, body scroll lock, inert background, initial focus and focus
+  // trap, inert background, initial focus and focus
   // restoration. This dialog only had ESC + scroll lock, so Tab walked straight
   // out into the page behind it and closing dropped focus back to <body>: with
   // a keyboard you could open a day, tab away into content you couldn't see,
@@ -1441,8 +1453,6 @@ function DayModal({
     };
 
     document.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     const inerted = Array.from(
       document.querySelectorAll<HTMLElement>("header, main, footer")
     );
@@ -1451,7 +1461,6 @@ function DayModal({
 
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
       inerted.forEach((el) => el.removeAttribute("inert"));
       window.clearTimeout(id);
       opener?.focus?.();
@@ -1476,7 +1485,8 @@ function DayModal({
           exit={{ opacity: 0 }}
           transition={{ duration: reduce ? 0 : 0.2 }}
         >
-          <div aria-hidden onClick={onClose} className="absolute inset-0 cursor-default bg-black/70 backdrop-blur-sm" />
+          {/* Backdrop — `touch-none` backs up the scroll lock (see EventModal). */}
+          <div aria-hidden onClick={onClose} className="absolute inset-0 cursor-default touch-none bg-black/70 backdrop-blur-sm" />
           <motion.div
             ref={dialogRef}
             role="dialog"
@@ -1500,7 +1510,9 @@ function DayModal({
                 <path d="M1 1l13 13M14 1L1 14" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
               </svg>
             </button>
-            <div className="overflow-y-auto px-6 pt-8 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:px-9 sm:py-9">
+            {/* overscroll-contain: a flick that hits either end stays here
+                instead of scrolling the page behind the modal. */}
+            <div className="overflow-y-auto overscroll-contain px-6 pt-8 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:px-9 sm:py-9">
               <div className="flex flex-wrap items-center gap-2 pr-12">
                 <span className="rounded-full border border-violet-400/25 bg-violet-500/12 px-3 py-1 text-xs font-bold text-violet-200">
                   {t(day.phase)}
@@ -2365,7 +2377,11 @@ function ScrollToTop() {
   const chromeHidden = useScrollDirection();
 
   useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > window.innerHeight * 1.5);
+    // Same reason as the register rail: don't read a locked page's fake 0.
+    const onScroll = () => {
+      if (isScrollLocked()) return;
+      setVisible(window.scrollY > window.innerHeight * 1.5);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
