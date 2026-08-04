@@ -156,6 +156,19 @@ export const partnerIntros: Record<string, Phrase> = {
 // (not an invented headline) so the link is honest about where it points. URLs
 // are supplied verbatim by the user.
 export type PartnerArticle = { url: string; label: Phrase };
+
+// 언론 인용 한 줄 (dict.about.press). `logo`는 선택입니다 — 이 사이트의 로고는
+// 전부 흰색으로 트림한 자산이라, 그 처리를 거치지 않은 매체까지 이미지로 넣으려면
+// 색이 남은 파일을 어두운 배경에 얹게 됩니다. 자산이 없는 매체는 제호를 텍스트로
+// 냅니다(렌더는 Journey.tsx의 press 블록). 나중에 트림한 로고가 생기면 그때 채우면
+// 되고, 그 전까지 줄은 멀쩡히 읽힙니다.
+export type PressItem = {
+  outlet: string;
+  date: Phrase;
+  title: Phrase;
+  url: string;
+  logo?: string;
+};
 export const partnerArticles: Record<string, PartnerArticle[]> = {
   AXMOS: [
     { url: "https://magazine.hankyung.com/business/article/202603238734b", label: { ko: "한국경제 매거진", en: "Hankyung Business" } },
@@ -768,7 +781,23 @@ export const dict = {
     // profiles — the site's own copy stays name-free, and the byline is one
     // click away in the article itself.
     pressTag: { ko: "언론에 소개된 이야기", en: "In the press" },
+    // 최신순입니다. 새 기사는 맨 위에 넣으세요 — 이 줄은 "이 이야기가 계속 다뤄지고
+    // 있다"를 보이는 자리라, 가장 최근 것이 먼저 읽혀야 합니다.
     press: [
+      // 경인일보 '수요광장' 칼럼. 온라인 입력 8/4, 지면은 8/5이고 방문자가 링크를
+      // 눌렀을 때 화면에서 보는 날짜(입력일)를 씁니다.
+      // 로고 없음 — 위 PressItem 주석 참고. 제호가 텍스트로 나갑니다.
+      // 제목에서 섹션 라벨 "[수요광장]"은 뺐습니다. 칼럼 이름이지 기사 제목이 아니고,
+      // 한 줄짜리 인용에서 대괄호가 먼저 눈에 걸립니다.
+      {
+        outlet: "경인일보",
+        date: { ko: "2026.08.04", en: "4 Aug 2026" },
+        title: {
+          ko: "「‘취업 안되면 만든다’ 스물세살의 바이브 코딩」",
+          en: "“If I can't get hired, I'll build it” — vibe coding at 23",
+        },
+        url: "https://www.kyeongin.com/article/1768469",
+      },
       {
         outlet: "BZCF · 비즈까페",
         date: { ko: "2026.07.05", en: "5 Jul 2026" },
@@ -779,7 +808,7 @@ export const dict = {
         url: "https://bzcf.io/segyeneun-neolbgo-hal-ileun-manhda/",
         logo: "/partners/logos/white/trimmed/bzcf.png",
       },
-    ],
+    ] as PressItem[],
     pressCta: { ko: "원문 보기", en: "Read the article" },
   },
 

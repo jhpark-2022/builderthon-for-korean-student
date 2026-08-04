@@ -2748,8 +2748,16 @@ export default function Journey() {
                 rel="noopener noreferrer"
                 className="group mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-center transition hover:border-violet-400/30 hover:bg-white/[0.06]"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.logo} alt={p.outlet} className="h-4 w-auto max-w-[5.5rem] shrink-0 object-contain opacity-70" />
+                {/* 로고는 선택입니다 (dict의 PressItem 참고). 흰색 트림 자산이 없는
+                    매체는 제호를 텍스트로 냅니다 — 이미지와 같은 높이·불투명도라 한
+                    줄 안에서 같은 무게로 읽히고, 색이 남은 로고를 어두운 배경에
+                    얹는 것보다 낫습니다. */}
+                {p.logo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={p.logo} alt={p.outlet} className="h-4 w-auto max-w-[5.5rem] shrink-0 object-contain opacity-70" />
+                ) : (
+                  <span className="shrink-0 text-sm font-semibold tracking-tight text-white/70">{p.outlet}</span>
+                )}
                 <span className="text-sm font-semibold text-white/90">{t(p.title)}</span>
                 <span className="text-xs text-white/55">{t(p.date)}</span>
                 <span className="inline-flex items-center gap-1 text-xs font-semibold text-violet-300 transition group-hover:text-violet-200">
