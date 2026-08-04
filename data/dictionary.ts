@@ -1137,7 +1137,13 @@ export const dict = {
       // 있어야 합니다 — 설명 없는 모양은 "왜 저것만 크지"가 됩니다.
       // 의무를 암시하는 낱말을 피합니다("필참"·"전원 참석" 등): 이 날은 선택입니다.
       // 말하는 것은 의무가 아니라 그날 무엇이 벌어지는가입니다.
-      legendSpotlight: { ko: "전원이 처음 모이는 날", en: "The day everyone first meets" },
+      //
+      // "전원이 처음 모이는 날"이었는데 사실이 아니라 고쳤습니다 (2026-08-04):
+      // Day 1이 필참 현장이라 전원은 이미 첫날 만납니다. Day 5가 다른 것은 처음이냐가
+      // 아니라 밀도입니다 — 하루를 통째로 학생끼리 섞이는 데만 씁니다.
+      // schedule.ts Day 5의 whyStop, 그리고 dict.benefits의 네트워킹 줄도 같은 주장을
+      // 하고 있었고 함께 고쳤습니다. 되돌릴 거면 세 곳을 같이 되돌리세요.
+      legendSpotlight: { ko: "학생끼리 제대로 교류하는 날", en: "The day students really connect" },
       destination: {
         ko: "데모데이 — 기업·심사위원 앞 검증",
         en: "Demo Day — put it in front of the companies and the judges",
@@ -1361,7 +1367,10 @@ export const dict = {
           { ko: "NUS·NTU·SMU에 흩어져 있던 또래 한인 빌더들 — 팀으로 만나 8일을 함께 만듭니다", en: "The Korean student builders scattered across NUS, NTU and SMU — you meet them as a team and build the eight days together" },
           // Day 5의 상태 표기는 schedule.ts(네트워킹 데이 (기획 중) · 해시드와 함께
           // 기획 중)와 반드시 같이 움직여야 합니다. 확정 전까지 '기획 중'을 떼지 마세요.
-          { ko: "Day 5는 통째로 네트워킹 데이 — 전원이 처음 한자리에 모이는 날, 해시드와 함께 기획 중", en: "Day 5 is a networking day end to end — the first time everyone is in one room, being planned together with Hashed" },
+          // "전원이 처음 한자리에 모이는 날"이었습니다 — 사실이 아닙니다. Day 1이
+          // 필참 현장이라 전원은 첫날 이미 만납니다. Day 5의 값은 '처음'이 아니라
+          // 하루를 통째로 학생 간 교류에만 쓴다는 것입니다.
+          { ko: "Day 5는 통째로 네트워킹 데이 — 학생끼리 교류하는 데만 하루를 쓰는 날, 해시드와 함께 기획 중", en: "Day 5 is a networking day end to end — a whole day given to students connecting with each other, being planned together with Hashed" },
           // 기존 세 줄(대표·경력자 현장 교류 / 연사 세션 / 패널·공유 세션)을 한 줄로
           // 압축했습니다. 셋 다 같은 이야기(선배와의 수직 교류)였고, 또래를 위에
           // 세우려면 그 자리를 만들어야 했습니다.
