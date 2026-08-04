@@ -2295,12 +2295,14 @@ export const dict = {
         },
       },
       {
-        // TODO: 발표 언어 방침 확정 시 문구 확정. 확정되면 "발표는 한국어로 해도
-        // 됩니다"로 직답을 강화할 것 — 그 전까지는 아래의 보수적 표현을 유지한다.
+        // DECIDED 2026-08-04: all presentations incl. Demo Day pitches are in KOREAN.
+        // This is final — do not reintroduce "choose your language" hedging here or
+        // anywhere else. If an English-speaking participant ever needs an exception,
+        // that's handled by the organizers case-by-case, not promised on the site.
         q: { ko: "‘해커톤’이라는 말이 부담돼요. 영어 발표도 자신 없어요.", en: "‘Hackathon’ feels intimidating, and I'm not confident presenting in English." },
         a: {
-          ko: "발표 언어는 편한 쪽을 택할 수 있게 준비 중입니다 — 참가자와 심사위원님 모두 한인 커뮤니티 기반이에요. 그리고 이건 밤샘 해커톤이 아니라 8일에 걸쳐 만드는 빌더톤 — 완성도보다 ‘내 손으로 만들었다’를 보여주는 자리입니다.",
-          en: "We're arranging it so you can present in whichever language you're comfortable in — both the participants and the judges come from the Korean community here. And this isn't an all-nighter hackathon but a builderthon built over eight days: it's about showing you made it yourself, not about polish.",
+          ko: "발표는 전부 한국어로 진행합니다 — 참가자와 심사위원님 모두 한인 커뮤니티 기반이에요. 영어 발표 걱정은 내려놓으셔도 됩니다. 그리고 이건 밤샘 해커톤이 아니라 8일에 걸쳐 만드는 빌더톤 — 완성도보다 ‘내 손으로 만들었다’를 보여주는 자리입니다.",
+          en: "All presentations, Demo Day pitches included, are in Korean — both the participants and the judges come from the Korean community here, so you can put the English worry down. And this isn't an all-nighter hackathon but a builderthon built over eight days: it's about showing you made it yourself, not about polish.",
         },
       },
       {
