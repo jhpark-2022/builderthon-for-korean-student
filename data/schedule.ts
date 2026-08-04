@@ -189,6 +189,13 @@ export interface DayMeta {
   //             will want it.
   dayMode: "online" | "offline" | "pending" | "mixed";
   mandatory?: boolean; // 필참 — required attendance (Day 1 & Day 8)
+  // 노선도에서 이 정거장을 한 단계 크게 그립니다. 필참(★·rose)과는 다른 층입니다 —
+  // "와야 하는 날"이 아니라 "놓치면 아까운 날"이라 색도 글리프도 다르게 씁니다.
+  // 배지는 붙이지 않습니다: Day 5는 선택일이고, 필참 배지와 비슷한 무엇이든 달면
+  // 의무로 읽힙니다.
+  // 지금은 Day 5(네트워킹) 하나뿐입니다. 늘리지 마세요 — 둘 이상이 되는 순간
+  // 강조가 강조가 아니게 되고, 노선도에 층이 세 개나 생깁니다.
+  spotlight?: boolean;
   // Force the "자율 진행 / Self-paced" day badge on. Normally that badge is
   // inferred (a day with self-paced build and no real sessions), but Day 6 now
   // carries the FDE office hour — an OPTIONAL drop-in, which doesn't make the
@@ -406,6 +413,11 @@ export const days: DayMeta[] = [
     },
     hours: "10AM–2PM",
     dayMode: "offline",
+    // 선택일 여섯 중 유일하게 노선도에서 크게 그립니다. 온라인 구간을 지나 전원이
+    // 처음 한자리에 모이는 날인데, 작은 점 하나로는 Day 2·3·4·6과 구분되지
+    // 않았습니다 — whyStop이 "전원이 처음 만나는 날"이라고 말하는 동안 노선도는
+    // 그냥 지나가는 정거장으로 그리고 있었습니다.
+    spotlight: true,
   },
   {
     day: 6,

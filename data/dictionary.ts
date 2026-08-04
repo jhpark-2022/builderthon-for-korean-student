@@ -1133,6 +1133,11 @@ export const dict = {
       // heading below it.
       legendMandatory: { ko: "필참 정거장", en: "Required stop" },
       legendOptional: { ko: "선택 정거장", en: "Optional stop" },
+      // Day 5(spotlight)용. 노선도에 세 번째 모양이 생겼으니 범례에도 세 번째 줄이
+      // 있어야 합니다 — 설명 없는 모양은 "왜 저것만 크지"가 됩니다.
+      // 의무를 암시하는 낱말을 피합니다("필참"·"전원 참석" 등): 이 날은 선택입니다.
+      // 말하는 것은 의무가 아니라 그날 무엇이 벌어지는가입니다.
+      legendSpotlight: { ko: "전원이 처음 모이는 날", en: "The day everyone first meets" },
       destination: {
         ko: "데모데이 — 기업·심사위원 앞 검증",
         en: "Demo Day — put it in front of the companies and the judges",

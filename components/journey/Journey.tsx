@@ -1035,20 +1035,51 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
           />
           {row.map((d) => {
             const anchor = d.mandatory === true;
+            // 세 번째 층이 아니라 두 번째입니다: 필참(anchor) → 스포트라이트 →
+            // 나머지. anchor가 이미 참이면 spotlight는 무시합니다(같은 정거장이
+            // 두 가지로 그려질 일은 없지만, 우선순위를 코드에 남겨둡니다).
+            const spot = !anchor && d.spotlight === true;
+            // 싱가포르에 몸이 있어야 하는 날. "pending"(장소 미확정)은 일부러
+            // 제외합니다 — 마커는 "여기로 오세요"라는 약속인데, 아직 어디로 갈지
+            // 모르는 날에 그 약속을 하면 안 됩니다. 지금은 해당 날이 없습니다.
+            const onSite = d.dayMode === "offline";
             return (
               <li key={d.day} className="relative flex-1">
                 <button
                   type="button"
                   onClick={() => onOpen(d.day)}
                   className="group flex w-full flex-col items-center gap-1.5 px-1 py-1 text-center"
-                  aria-label={`Day ${d.day} · ${t(d.theme)}`}
+                  // 마커는 aria-hidden이라 스크린리더에는 안 보입니다. 눈으로 읽는
+                  // 사람이 얻는 정보를 여기서 말로 채웁니다.
+                  aria-label={`Day ${d.day} · ${t(d.theme)}${onSite ? ` · ${t(dict.program.offlineLabel)}` : ""}`}
                 >
                   {/* Fixed-height row so both node sizes share one centreline and
                       the rail passes through every node at the same height. */}
-                  <span className="flex h-8 items-center justify-center">
+                  <span className="relative flex h-8 items-center justify-center">
+                    {/* 현장 마커. ABSOLUTE인 것이 핵심입니다 — 흐름에 넣으면 모든
+                        노드가 아래로 밀리는데, 레일은 <ol> 기준 top-4에 절대
+                        배치돼 있어서 함께 내려오지 않습니다. 레일이 노드를 관통하는
+                        정렬이 깨지느니 마커를 띄웁니다. */}
+                    {onSite && (
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute -top-5 left-1/2 -translate-x-1/2 text-violet-200/60 transition group-hover:text-violet-200"
+                      >
+                        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor">
+                          <path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" />
+                        </svg>
+                      </span>
+                    )}
                     {anchor ? (
                       <span className="flex h-7 w-7 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-[0.6rem] text-rose-100 shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:bg-rose-400/40">
                         <span aria-hidden>★</span>
+                      </span>
+                    ) : spot ? (
+                      // 필참보다 한 치수 작고 점보다 두 치수 큽니다. ★를 쓰지 않고
+                      // 색도 rose가 아닌 violet인 것은 의도적입니다 — ★와 rose는
+                      // 노선도에서 오직 "필참"만 뜻해야 하고, 이 날은 선택일입니다.
+                      <span className="flex h-6 w-6 items-center justify-center rounded-full border border-violet-300/60 bg-violet-400/20 shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:bg-violet-400/40">
+                        <span aria-hidden className="h-2 w-2 rounded-full bg-violet-200" />
                       </span>
                     ) : (
                       <span className="h-3 w-3 rounded-full border border-white/35 bg-[#0a0614] shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:border-violet-300/70 group-hover:bg-violet-400/30" />
@@ -1056,14 +1087,14 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                   </span>
                   <span
                     className={`text-[0.62rem] font-bold leading-none ${
-                      anchor ? "text-rose-200" : "text-white/45"
+                      anchor ? "text-rose-200" : spot ? "text-violet-200" : "text-white/45"
                     }`}
                   >
                     {t(dict.program.dayLabel)} {d.day}
                   </span>
                   <span
                     className={`break-keep text-[0.68rem] leading-tight transition ${
-                      anchor
+                      anchor || spot
                         ? "font-bold text-white"
                         : "text-white/60 group-hover:text-white/85"
                     }`}
@@ -1096,6 +1127,14 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
           <span className="flex items-center gap-1.5 text-[0.66rem] text-white/50">
             <span aria-hidden className="h-2 w-2 rounded-full border border-white/35" />
             {t(r.legendOptional)}
+          </span>
+          {/* 세 번째 모양. 스와치는 노선도의 스포트라이트 노드를 그대로 줄인 것이라
+              둘이 같은 것임이 눈으로 이어집니다. */}
+          <span className="flex items-center gap-1.5 text-[0.66rem] text-violet-200/85">
+            <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-violet-300/60 bg-violet-400/20">
+              <span className="h-1.5 w-1.5 rounded-full bg-violet-200" />
+            </span>
+            {t(r.legendSpotlight)}
           </span>
         </div>
         <p className="break-keep text-[0.68rem] font-semibold text-rose-100/80 sm:text-right">
