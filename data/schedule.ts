@@ -777,8 +777,9 @@ export const schedule: BEvent[] = [
     // Day 1처럼 버퍼를 빼지 않는 것은 의도된 결정입니다 — 강연 1시간에 입장·Q&A·
     // 정리가 얹히는 자리라, 학생에게 필요한 정보는 "몇 분짜리 강연인가"가 아니라
     // "이 시간대를 비워두면 된다"이기 때문입니다. 이전에는 강연 길이만 적어(1시간
-    // 창) 실제 창보다 좁게 안내됐습니다. 여기와 description 두 곳이 같은 값을
-    // 말해야 하고, 되돌려 버퍼를 빼지 마세요.
+    // 창) 실제 창보다 좁게 안내됐습니다. 되돌려 버퍼를 빼지 마세요.
+    // 시각을 말하는 곳은 이제 여기 하나입니다. description에도 같은 창이 적혀 있어
+    // 둘을 맞춰 두어야 했는데, 한쪽만 고쳐지면 조용히 어긋나므로 뺐습니다.
     dayLabel: { ko: "사전 세션 · 08.13 (목) 18:00–20:00", en: "Pre-event · Thu 13 Aug, 18:00–20:00" },
     title: { ko: "Enterprise Tech Deep Dive — How to Build", en: "Enterprise Tech Deep Dive — How to Build" },
     // Just the role — no "(성함 비공개)" tag. Saying out loud that a name is being
@@ -790,9 +791,15 @@ export const schedule: BEvent[] = [
       ko: "본 행사 9일 전 · SMU SOL 현장 — “데모는 쉽고, 시스템은 어렵다”. 엔터프라이즈 AI 에이전트를 실제로 만드는 이야기.",
       en: "Nine days before the event · in person at SMU SOL — “the demo is easy, the system is hard”: building enterprise AI agents for real.",
     },
+    // 모달이 스스로 말하는 것은 여기서 반복하지 않습니다: 연사 소속은 연사 행,
+    // 시각은 시간 행, 강의실 TBC는 장소 행, 그리고 신원·권한·툴·승인·감사 · 회계
+    // 자동화 사례 · 사전 질문은 바로 아래 opportunities에 이미 그대로 있습니다.
+    // 남은 두 문장은 다른 어디에도 없는 것뿐입니다 — 왜 들을 만한지, 그리고 누가
+    // 올 수 있는지. 특히 "등록 무관, 세 학교 누구나"는 이 문장이 유일한 출처라
+    // 지우면 정보가 사라집니다.
     description: {
-      ko: "빌더톤이 시작되기 전, 기업 현장에서 AI를 실제로 설계하고 배포하는 사람에게 직접 듣는 시간입니다. Microsoft 클라우드·AI 솔루션 아키텍트가 ‘엔터프라이즈 AI 에이전트가 보기보다 어려운 이유’를 다룹니다 — 데모는 2초면 되지만 프로덕션까지는 몇 달이 걸리는 이유, 챗봇과 에이전트를 가르는 것(신원·권한·툴·승인·감사), 그리고 실제로 구축된 회계 자동화 에이전트 사례. 8월 13일 목요일 18:00–20:00, SMU SOL(School of Law)에서 열리며 강의실은 확정되는 대로 안내합니다. 빌더톤 등록 여부와 무관하게 NUS·NTU·SMU 한인 학생이면 누구나 올 수 있습니다. 사전에 받은 질문을 세션에 반영하니 오픈채팅으로 미리 보내주세요.",
-      en: "Before the builderthon starts, an evening with someone who designs and ships enterprise AI for a living. A Microsoft cloud & AI solution architect covers why enterprise AI agents are harder than they look — why a 2-second demo takes months to reach production, what separates a chatbot from an agent (identity, permissions, tools, approval, audit), and a real accounts-payable agent built end to end. Thursday 13 August, 18:00–20:00, at SMU SOL (School of Law) — the room will be announced once booked. Open to any Korean student at NUS, NTU or SMU, whether or not you register for the builderthon. Questions are worked into the session, so send yours via the open chat beforehand.",
+      ko: "빌더톤이 시작되기 전, 기업 현장에서 AI를 실제로 설계하고 배포하는 사람에게 직접 듣는 자리입니다. 데모는 2초면 되지만 프로덕션까지는 몇 달이 걸리는 이유 — 엔터프라이즈 AI 에이전트가 보기보다 어려운 지점을 다룹니다. 빌더톤 등록 여부와 무관하게 NUS·NTU·SMU 한인 학생이면 누구나 올 수 있습니다.",
+      en: "Before the builderthon starts, an evening with someone who designs and ships enterprise AI for a living — why a 2-second demo takes months to reach production, and where enterprise AI agents turn out to be harder than they look. Open to any Korean student at NUS, NTU or SMU, whether or not you register for the builderthon.",
     },
     // Building is settled (SMU School of Law); the ROOM is not.
     // This is now the ONLY SMU venue in the schedule. Day 1 used to share the
