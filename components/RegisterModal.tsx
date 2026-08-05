@@ -32,7 +32,8 @@
 import { cloneElement, isValidElement, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-// Aliased: this component already has a `track` state (관심 트랙 form field).
+// Aliased: this component already has a `track` state (the 관심 분야 form field —
+// the state and DB column keep the older `track` name).
 import { track as analytics } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
@@ -1298,7 +1299,10 @@ export default function RegisterModal({
                       </div>
                     )}
 
-                    {/* 7 · Interested track (team-level) */}
+                    {/* 7 · 관심 분야 (team-level). Was "관심 트랙" — see the comment on
+                        dict.register.trackLabel for why the question changed and
+                        why track names must not come back into this select. The
+                        state/payload key stays `track` (Supabase column name). */}
                     <Field
                       label={t(dict.register.trackLabel)}
                       optional={t(dict.register.optional)}

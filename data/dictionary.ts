@@ -456,19 +456,36 @@ export const dict = {
     addTeammate: { ko: "팀원 추가", en: "Add teammate" },
     maxNote: { ko: "최대 3인까지예요", en: "3 is the max" },
     removeMember: { ko: "팀원 삭제", en: "Remove teammate" },
-    // Field 6 — interested track.
-    trackLabel: { ko: "관심 트랙", en: "Track of interest" },
-    // The track line-up is still being worked out, so this answer is a signal of
-    // interest, not a pick from a final menu — say so rather than let the select
-    // imply otherwise.
+    // Field 6 — 관심 분야 (was 관심 트랙 until 2026-08-06).
+    //
+    // WHY THE RENAME: the options were 재무 · 영업 · 마케팅(입문), which came from a
+    // provisional 3-track split that is NOT what the event will actually run —
+    // 재무, for one, will not exist as a track. A hint saying "확정 전, 참고용"
+    // (which this field already carried) does not undo that: a select labelled
+    // 관심 "트랙" listing three names reads as a preview of the track list no
+    // matter what the small print says, and the first person who signs up for
+    // 재무 and finds no 재무 track has been misled by us.
+    //
+    // THE RULE THIS FIELD NOW FOLLOWS: ask only what stays true whatever the
+    // tracks turn out to be. 분야 is the person's own interest — it describes
+    // THEM, not our programme — so no answer here can be contradicted by the
+    // final line-up. Do NOT put track names back in this select, not even
+    // "잠정" ones; when the tracks are real, they belong on the programme page,
+    // and the pick (if we ever let people pick) is a separate ask.
+    trackLabel: { ko: "관심 분야", en: "Area of interest" },
     trackHint: {
-      ko: "트랙 구성은 아직 확정 전이에요. 참고용으로만 받고, 확정되면 다시 안내드려요.",
-      en: "The track line-up isn't final yet — this is just a signal of interest, and we'll follow up once it's confirmed.",
+      ko: "어떤 문제를 풀고 싶은지만 가볍게 받아둘게요. 트랙·팀 배정과는 무관해요.",
+      en: "Just a light read on the kind of problem you'd like to work on — it doesn't decide your track or team.",
     },
+    // `value`s are stored in Supabase (registrations.track, free text — no enum,
+    // so changing them is safe). They are deliberately NOT the old finance/sales/
+    // marketing keys: any row carrying those came in under the old question and
+    // should stay distinguishable from answers to this one.
     trackOptions: [
-      { value: "finance", label: { ko: "재무", en: "Finance" } },
-      { value: "sales", label: { ko: "영업", en: "Sales" } },
-      { value: "marketing", label: { ko: "마케팅 (입문)", en: "Marketing (beginner)" } },
+      { value: "ops_automation", label: { ko: "업무 자동화 · 반복작업 줄이기", en: "Ops automation · cutting repetitive work" } },
+      { value: "data_analytics", label: { ko: "데이터 · 분석", en: "Data & analytics" } },
+      { value: "customer_marketing", label: { ko: "고객 · 마케팅", en: "Customers & marketing" } },
+      { value: "engineering", label: { ko: "개발 · 엔지니어링", en: "Engineering" } },
       { value: "unsure", label: { ko: "아직 모르겠어요", en: "Not sure yet" } },
     ],
     // AI-type block — shown ONLY for solo applicants who opted into matching.
