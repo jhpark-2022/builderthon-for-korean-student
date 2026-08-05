@@ -35,7 +35,7 @@ export const EXPLANATIONS: Record<Axis, Record<string, Phrase>> = {
     "0,1,0": { ko: "먼저 나서지도 않고 명함도 안 돌리는데, 결국 사람들이랑 수다 떨어야 살아나요. 낯은 가리는데 사람은 좋아함 — {pct}% 외향이긴 한데 안쪽 기운도 만만치 않아요", en: "You don't jump in first or work the room, but chatting is what brings you back to life. Shy, yet people-powered — {pct}% extraverted, with serious inside energy" },
     "1,1,0": { ko: "첫날부터 말 걸고 수다로 충전하는데, 네트워킹에선 정작 소수랑 진득하게 가요. 넓게 뿌리기보다 깊게 파는 외향 — {pct}% 외향, 확실한데 아무나랑 놀진 않아요", en: "You break the ice early and recharge on chatter, but networking gets the go-deep-with-a-few treatment. An extravert who digs, not sprays — {pct}% extraverted, just picky" },
     "0,1,1": { ko: "첫날 5분은 스캔 타임이에요. 판 파악이 끝나면? 수다로 충전하고 명함 뿌리는 본체가 등판하죠 — 꽤 강하게 {pct}% 외향이에요", en: "Day one opens with a five-minute scan. Once the room is mapped, the main character logs in: recharging on chatter, cards flying — pretty firmly {pct}% extraverted" },
-    "1,1,1": { ko: "첫날부터 말 걸고, 쉬는 시간에도 떠들고, 네트워킹에선 명함이 남아나질 않아요 — 세 질문 전부 바깥. {pct}% 외향, 데모데이 전에 팀원 전원 인스타 맞팔 예정", en: "Ice broken by minute one, chatting through every break, business cards raining — all three point outward. {pct}% extraverted; the whole team gets a follow request before demo day" },
+    "1,1,1": { ko: "첫날부터 말 걸고, 쉬는 시간에도 떠들고, 네트워킹에선 명함이 남아나질 않아요 — 세 질문 전부 바깥. {pct}% 외향, 공유회 전에 팀원 전원 인스타 맞팔 예정", en: "Ice broken by minute one, chatting through every break, business cards raining — all three point outward. {pct}% extraverted; the whole team gets a follow request before showcase day" },
   },
   ENERGY: {
     "0,0,0": { ko: "10년 뒤요? 일단 오늘 밤 빌드부터 살립시다. 멘토한텐 데이터 들이밀고 새 툴은 스펙 문서부터 정독 — 세 질문 전부 땅에 붙어 있어요. {pct}% 현실형, 꿈은 배포 후에 꿔요", en: "Ten years out? Let's survive tonight's build first. Data for the mentor, spec sheets for the new tool — all three feet-on-the-ground. {pct}% grounded; dreaming is scheduled post-deploy" },
@@ -65,13 +65,13 @@ export const EXPLANATIONS: Record<Axis, Record<string, Phrase>> = {
     "1,1,0": { ko: "시간표 짜고, 막판의 달콤한 유혹도 “위험해”로 쳐내요. 역할만 좀 느슨한데 그건 다 같이 붙는 게 좋아서고요 — 꽤 강하게 {pct}% 계획형이에요", en: "Schedule made, late-game temptations rejected on sight. Only the roles run loose — and that's by choice — pretty firmly {pct}% judging" },
     "1,0,1": { ko: "시간표도 짜고 역할도 딱딱 나누는데, 마감 12시간 전의 번뜩임엔 “가보자고”를 눌러버려요. 계획형인데 한 방 로망이 있음 — {pct}% 계획이에요", en: "Schedules made, roles split clean — but the 12-hours-out spark gets a “let's GO.” A planner with exactly one gambling gene — {pct}% judging" },
     "0,1,1": { ko: "막판 계획도 지키고 역할도 나누는데, 정작 손은 “일단 만들면서 생각하자”로 움직여요. 문서는 J인데 커밋 로그는 P — {pct}% 즉흥이긴 한데 사실상 반반이에요", en: "You hold the plan and split the roles, but the hands just start building. The docs say J; the commit log says P — {pct}% prospecting, basically split" },
-    "1,1,1": { ko: "시간표, 계획 고수, 역할 분담까지 3연속 풀콤보 — {pct}% 계획형이에요. 노션에 이미 데모데이 D-day 위젯 있죠? 다 알아요", en: "Schedule, plan held, roles split — a full combo. {pct}% judging. There's already a demo-day countdown widget in your Notion, isn't there" },
+    "1,1,1": { ko: "시간표, 계획 고수, 역할 분담까지 3연속 풀콤보 — {pct}% 계획형이에요. 노션에 이미 공유회 D-day 위젯 있죠? 다 알아요", en: "Schedule, plan held, roles split — a full combo. {pct}% judging. There's already a showcase countdown widget in your Notion, isn't there" },
   },
   IDENTITY: {
-    "0,0": { ko: "데모 터지면 심장부터 떨어지고, 입상 못 한 날엔 침대에서 하이라이트 무한 재생 — 두 질문 다 흔들렸어요. {pct}% 예민(Turbulent). 근데 그 곱씹는 힘으로 다음 판을 진짜 잘하죠", en: "Demo breaks: heart drops. No podium: the bedtime highlight reel runs on loop — both landed turbulent. {pct}% Turbulent. That replaying is exactly why round two goes better" },
-    "1,0": { ko: "데모 터진 순간엔 “어떻게든 되겠지” 침착했는데, 입상 못 한 밤엔 “그때 그것만...”이 새벽 3시까지 재생돼요. 위기엔 강한데 뒤끝이 긺 — {pct}% 예민이에요", en: "Mid-crisis you were all “we'll figure it out” — then the loss ran on loop till 3am. Strong in the moment, long in the aftertaste — {pct}% Turbulent" },
+    "0,0": { ko: "데모 터지면 심장부터 떨어지고, 무대 내려온 밤엔 침대에서 하이라이트 무한 재생 — 두 질문 다 흔들렸어요. {pct}% 예민(Turbulent). 근데 그 곱씹는 힘으로 다음 판을 진짜 잘하죠", en: "Demo breaks: heart drops. Off the stage: the bedtime highlight reel runs on loop — both landed turbulent. {pct}% Turbulent. That replaying is exactly why round two goes better" },
+    "1,0": { ko: "데모 터진 순간엔 “어떻게든 되겠지” 침착했는데, 반응이 미지근했던 밤엔 “그때 그것만...”이 새벽 3시까지 재생돼요. 위기엔 강한데 뒤끝이 긺 — {pct}% 예민이에요", en: "Mid-crisis you were all “we'll figure it out” — then the lukewarm room ran on loop till 3am. Strong in the moment, long in the aftertaste — {pct}% Turbulent" },
     "0,1": { ko: "데모 터질 땐 심장이 쿵 했지만, 결과는 “잘했으니 됐지”로 하루 만에 정리돼요. 순간 리액션만 크지 회복은 초고속 — {pct}% 안정이에요", en: "The demo break got a real heart-drop, but the loss was filed under “we did well” by morning. Big reactions, absurdly fast recovery — {pct}% Assertive" },
-    "1,1": { ko: "데모가 터져도 “어떻게든 되겠지”, 입상 못 해도 “다음에 또” — 두 질문 다 강철이에요. {pct}% 안정(Assertive). 이 팀 멘탈 탱커는 당신입니다", en: "Demo breaks: “we'll figure it out.” No podium: “next time.” Both answers pure steel. {pct}% Assertive — you're the team's designated mental tank" },
+    "1,1": { ko: "데모가 터져도 “어떻게든 되겠지”, 반응이 미지근해도 “다음에 또” — 두 질문 다 강철이에요. {pct}% 안정(Assertive). 이 팀 멘탈 탱커는 당신입니다", en: "Demo breaks: “we'll figure it out.” Lukewarm room: “next time.” Both answers pure steel. {pct}% Assertive — you're the team's designated mental tank" },
   },
 };
 

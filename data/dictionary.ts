@@ -76,12 +76,12 @@ export const partnerIntros: Record<string, Phrase> = {
 
   // ── 주최 · HOST ────────────────────────────────────────────────────────────
   AXMOS: {
-    ko: "AXMOS는 Translink Investment · Wilt Venture Builder · Codepresso · Popup Studio · DRIMAES 5개 사가 결성한 AX(AI 전환) 컨소시엄입니다. 이번 빌더톤의 실제 기업 과제 발의·멘토링·심사를 함께 담당합니다.",
-    en: "AXMOS is an AX (AI-transformation) consortium formed by Translink Investment, Wilt Venture Builder, Codepresso, Popup Studio and DRIMAES — jointly providing this builderthon's real company problems, mentoring and judging.",
+    ko: "AXMOS는 Translink Investment · Wilt Venture Builder · Codepresso · Popup Studio · DRIMAES 5개 사가 결성한 AX(AI 전환) 컨소시엄입니다. 이번 빌더톤의 실제 기업 과제 발의·멘토링·피드백을 함께 담당합니다.",
+    en: "AXMOS is an AX (AI-transformation) consortium formed by Translink Investment, Wilt Venture Builder, Codepresso, Popup Studio and DRIMAES — jointly providing this builderthon's real company problems, mentoring and expert feedback.",
   },
   "Translink Investment": {
-    ko: "실리콘밸리 트랜스링크캐피탈과 합작해 2016년 출범한 벤처캐피탈로, SaaS·딥테크 중심으로 7개 조합·누적 약 1,900억 원 규모를 운용합니다. 마켓컬리 초기 투자사로 알려져 있으며, 포트폴리오사의 글로벌 진출 지원이 강점입니다. 데모데이 키노트를 맡은 박희덕 대표님이 이끄는 하우스입니다.",
-    en: "A venture capital firm launched in 2016 with Silicon Valley's TransLink Capital, running seven funds (~KRW 190B) focused on SaaS and deep tech. An early investor in Market Kurly, known for helping portfolios expand globally — led by Hee-Duk Park, our Demo Day keynote speaker.",
+    ko: "실리콘밸리 트랜스링크캐피탈과 합작해 2016년 출범한 벤처캐피탈로, SaaS·딥테크 중심으로 7개 조합·누적 약 1,900억 원 규모를 운용합니다. 마켓컬리 초기 투자사로 알려져 있으며, 포트폴리오사의 글로벌 진출 지원이 강점입니다. 클로징 키노트를 맡은 박희덕 대표님이 이끄는 하우스입니다.",
+    en: "A venture capital firm launched in 2016 with Silicon Valley's TransLink Capital, running seven funds (~KRW 190B) focused on SaaS and deep tech. An early investor in Market Kurly, known for helping portfolios expand globally — led by Hee-Duk Park, our closing-keynote speaker.",
   },
   "Wilt Venture Builder": {
     ko: "싱가포르에 본사를 둔 한–싱 크로스보더 벤처빌더로, 초기 아이디어부터 시리즈 A까지 창업자와 ‘공동 창업’ 방식으로 회사를 함께 만듭니다. AI·콘텐츠·F&B·B2B SaaS 영역에서 한국 브랜드의 동남아 진출을 빌드해 왔으며, 이 빌더톤을 만든 Zero100 프로그램의 모조직입니다.",
@@ -142,11 +142,11 @@ export const partnerIntros: Record<string, Phrase> = {
   },
   // Figures are the ones Fyreflyz publishes on its own site (fyreflyz.com) —
   // since 2009, 2,000+ youths, 300+ partner organisations, 1,800+ jobs. The last
-  // sentence is the reason the tile's caption is 심사위원 지원: their co-founder
-  // 한정필 joins as a judge (see dict.judges.people).
+  // sentence is the reason the tile's caption is 피드백 패널 지원: their co-founder
+  // 한정필 joins the Day 8 feedback panel (see dict.judges.people).
   Fyreflyz: {
-    ko: "2009년 설립된 싱가포르의 소셜벤처 마케팅 에이전시입니다. 브랜드 진단·시장 분석부터 콘텐츠 실행까지 맡으면서, 교육을 마친 청년들을 실제 클라이언트 프로젝트에 투입하는 방식으로 일합니다 — 지금까지 청년 2,000명 이상, 파트너 기관 300곳 이상과 함께하며 1,800개 이상의 일자리를 만들었습니다. 이번 빌더톤에는 심사위원 연계로 함께합니다.",
-    en: "A Singapore social-enterprise marketing agency founded in 2009. It runs brand audits, market analysis and content execution while embedding trained youths into real client projects — 2,000+ youths, 300+ partner organisations and 1,800+ jobs created so far. Supporting the builderthon through its judge connection.",
+    ko: "2009년 설립된 싱가포르의 소셜벤처 마케팅 에이전시입니다. 브랜드 진단·시장 분석부터 콘텐츠 실행까지 맡으면서, 교육을 마친 청년들을 실제 클라이언트 프로젝트에 투입하는 방식으로 일합니다 — 지금까지 청년 2,000명 이상, 파트너 기관 300곳 이상과 함께하며 1,800개 이상의 일자리를 만들었습니다. 이번 빌더톤에는 피드백 패널 연계로 함께합니다.",
+    en: "A Singapore social-enterprise marketing agency founded in 2009. It runs brand audits, market analysis and content execution while embedding trained youths into real client projects — 2,000+ youths, 300+ partner organisations and 1,800+ jobs created so far. Supporting the builderthon through its feedback-panel connection.",
   },
 
 };
@@ -846,12 +846,12 @@ export const dict = {
     // because the list above says "누구나" — and the honest limit is not where
     // you study or whether you're enrolled, it's whether you can be in the room
     // on the two mandatory days. Those two are the only `mandatory: true`
-    // entries in data/schedule.ts (Day 1 킥오프 · Day 8 데모데이); the six days
+    // entries in data/schedule.ts (Day 1 킥오프 · Day 8 결과 공유회); the six days
     // between are self-paced and mostly online, which is why the second half of
     // the sentence is there — without it this reads as an 8-day residency.
     requirement: {
-      ko: "참가 조건은 하나예요 — Day 1(8/22 킥오프)과 Day 8(8/29 데모데이)은 싱가포르 현장 필참입니다. 그 사이 현장 일정은 Day 5·7 세션뿐이고(선택), Day 3·4 1:1 멘토링과 팀별 자율 빌드는 온라인으로 진행돼요.",
-      en: "One condition: Day 1 (22 Aug, kick-off) and Day 8 (29 Aug, Demo Day) are in person in Singapore and required. The only other on-site days are the Day 5 and Day 7 sessions, and those are optional — the Day 3·4 1:1 mentoring and your team's own build time run online.",
+      ko: "참가 조건은 하나예요 — Day 1(8/22 킥오프)과 Day 8(8/29 결과 공유회)은 싱가포르 현장 필참입니다. 그 사이 현장 일정은 Day 5·7 세션뿐이고(선택), Day 3·4 1:1 멘토링과 팀별 자율 빌드는 온라인으로 진행돼요.",
+      en: "One condition: Day 1 (22 Aug, kick-off) and Day 8 (29 Aug, the Showcase) are in person in Singapore and required. The only other on-site days are the Day 5 and Day 7 sessions, and those are optional — the Day 3·4 1:1 mentoring and your team's own build time run online.",
     },
     // 준비물 — 참가비가 아니라 각자 준비해 오는 것. requirement(필참 2일) 바로
     // 아래, 등록을 결정하는 자리에 둡니다: 이걸 등록 후에 알게 되면 Day 1에 와서
@@ -861,10 +861,10 @@ export const dict = {
     //
     // 금액은 적지 않습니다 — 벤더 가격은 지역·시점에 따라 다르고, 공개 페이지에
     // 틀린 숫자를 박아두는 쪽이 숫자가 없는 것보다 나쁩니다. "기본 유료 플랜"까지만.
-    // "그 이상은 필요 없다"가 이 문단의 핵심입니다: 심사가 기술 완성도를 보지 않기
-    // 때문에(심사표 — 프로세스 중심, 완성도·발표력 미채점) API 크레딧이나 상위
-    // 플랜이 필요하지 않습니다. 심사 배점 수치는 아직 파트너 조율 중이라 여기에
-    // 퍼센트를 쓰지 않습니다.
+    // "그 이상은 필요 없다"가 이 문단의 핵심입니다: 무게가 기술 완성도에 실리지
+    // 않기 때문에(피드백 문서 — 프로세스 중심, 완성도·발표력은 보지 않음) API
+    // 크레딧이나 상위 플랜이 필요하지 않습니다. 배점 수치는 아직 파트너 조율
+    // 중이라 여기에 퍼센트를 쓰지 않습니다.
     prep: {
       ko: "준비물은 하나예요 — AI 코딩 도구를 쓸 수 있는 계정. Claude나 ChatGPT의 기본 유료 플랜 정도면 8일 내내 충분하고, 그 이상은 필요 없습니다. 크래시코스는 Codex를 기준으로 진행하지만 팀 빌드와 데모에 쓰는 도구는 자유예요.",
       en: "One thing to bring: an account you can vibe-code with. A basic paid plan on Claude or ChatGPT covers the whole eight days — nothing beyond that is needed. The crash course runs on Codex, but the tool you build and demo with is yours to choose.",
@@ -887,13 +887,13 @@ export const dict = {
     // eight day-cards below are read as steps toward it.
     //
     // The demo is EVIDENCE, not the point: "완성도가 아니라 설득력" is the whole
-    // reason this block exists, and it is the same claim the judging FAQ makes
-    // with its weightings (이해 20 · 아이디어 25 · 정합 30). If those move, this
-    // moves too — but never put the presentation's minute-by-minute split here;
-    // that guidance is internal and not settled.
+    // reason this block exists, and it is the same claim the "피드백과 어워드는
+    // 어떤 기준인가요" FAQ makes. If that answer moves, this moves too — but never
+    // put the presentation's minute-by-minute split here; that guidance is
+    // internal and not settled.
     outputTag: { ko: "최종 아웃풋", en: "The final output" },
     outputHeading: {
-      ko: "데모데이에 내는 건 코드가 아니라, 하나의 제안입니다",
+      ko: "공유회에 내는 건 코드가 아니라, 하나의 제안입니다",
       en: "What you present isn't code — it's a proposal",
     },
     outputSteps: [
@@ -929,8 +929,14 @@ export const dict = {
     //
     // The consequence line is the whole reason the box exists. Teams treat a
     // deadline with no stated cost as a soft one; the real cost here isn't a
-    // penalty we invented, it's mechanical — judges read the package beforehand,
-    // so no package means being judged cold on stage. Say that, not "감점".
+    // penalty we invented, it's mechanical — the experts read the package
+    // beforehand. Say that, not "감점".
+    //
+    // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회. 그러면서
+    // 이 경고문의 논리 자체가 바뀌었습니다. 옛 논리는 공포였습니다 — "안 내면
+    // 차갑게 심사받는다". 순위가 없는 자리에서는 그 협박이 성립하지 않고, 실제로
+    // 잃는 것은 다른 겁니다: 사전에 읽고 온 사람만이 줄 수 있는 깊이의 피드백.
+    // 공포가 아니라 손실로 씁니다.
     submission: {
       tag: { ko: "사전 제출물", en: "Submission package" },
       mustBadge: { ko: "필수", en: "Required" },
@@ -957,8 +963,8 @@ export const dict = {
         },
       ],
       warning: {
-        ko: "내지 않으면 감점이 아니라, 심사위원분들의 사전 리뷰 없이 데모데이 당일 무대에서만 심사됩니다 — 사전 지식이 전혀 없는 상태로요.",
-        en: "Miss it and there's no penalty as such — but judges arrive without having reviewed anything, so you're judged on the stage slot alone, cold.",
+        ko: "내지 않아도 감점은 없습니다 — 다만 피드백을 주시는 전문가들이 사전 리뷰 없이 무대에서 처음 보게 되어, 받을 수 있는 피드백의 깊이가 그만큼 얕아져요.",
+        en: "Miss it and there's no penalty — but the experts arrive without having reviewed anything, and the feedback you get on stage is only as deep as what they can take in cold.",
       },
     },
     // ── 체크인 폼 3종 ─────────────────────────────────────────────────────
@@ -973,10 +979,10 @@ export const dict = {
     // moment the forms are edited. Each card answers only: when does it arrive,
     // how long does it take, what is it FOR.
     //
-    // The bonus line carries no numbers, same contract as the judging FAQ — the
-    // weights live in the score sheet, which as of 2026-08-04 IS disclosed to
-    // participants before the event, but is still being settled. Copy stays
-    // number-free so it can't go stale; the sheet carries the figures.
+    // The bonus line carries no numbers, same contract as the feedback FAQ — the
+    // weights live in the feedback document, which as of 2026-08-04 IS disclosed
+    // to participants before the event, but is still being settled. Copy stays
+    // number-free so it can't go stale; the document carries the figures.
     // 한국어에서 "폼"을 쓰지 않습니다 (2026-08-04). 구글 폼 때문에 익숙하긴 해도
     // 카피에서는 콩글리시로 읽혀서, 문장은 행위로("여쭤봅니다", "받습니다")·
     // 이름은 성격으로(체크인 / 최종 제출) 바꿨습니다. 영어는 form이 맞는 단어라
@@ -1018,15 +1024,20 @@ export const dict = {
           duration: { ko: "15분", en: "15 min" },
           title: { ko: "최종 제출", en: "Final submission form" },
           body: {
-            ko: "사전 제출물이 실제로 올라가는 곳이자, 데모데이 무대 운영(발표자·장비·동의)도 여기서 함께 받습니다. 무엇을 내는지는 Day 7 카드에 있어요.",
-            en: "Where the submission package actually gets uploaded — and where Demo Day stage logistics (presenter, equipment, consent) are collected. What's in the package is on the Day 7 card.",
+            ko: "사전 제출물이 실제로 올라가는 곳이자, 공유회 무대 운영(발표자·장비·동의)도 여기서 함께 받습니다. 무엇을 내는지는 Day 7 카드에 있어요.",
+            en: "Where the submission package actually gets uploaded — and where Showcase stage logistics (presenter, equipment, consent) are collected. What's in the package is on the Day 7 card.",
           },
         },
       ],
-      bonusLabel: { ko: "참여 가산점", en: "Participation counts" },
+      // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회. 가산점이
+      // 꽂힐 순위가 사라졌으므로 이 줄의 '행선지'를 바꿨습니다 — 점수가 아니라
+      // 기록으로, 그리고 그 기록이 실제로 도착하는 두 곳(전문가 피드백 · 주최사의
+      // 인턴십 검토)으로. 인턴십이 전원에게 열리면서 오히려 더 강한 문장이 됐습니다.
+      // 오픈챗 티저(faq aTail)도 같은 논리로 맞춰져 있으니 함께 움직이세요.
+      bonusLabel: { ko: "과정이 기록됩니다", en: "Your process counts" },
       bonus: {
-        ko: "세 번의 응답과 오피스아워 참여는 심사에서 과정 가산점으로 반영됩니다 — 잘 쓴 답이 아니라, 과정을 남겼는지를 봅니다.",
-        en: "Responding to the three forms and showing up to office hours count as process credit in judging — not for writing good answers, but for leaving a trail of the process.",
+        ko: "세 번의 응답과 오피스아워 참여는 과정 기록으로 남아, 전문가 피드백과 주최사의 인턴십 검토에서 그대로 참고됩니다 — 잘 쓴 답이 아니라, 과정을 남겼는지를 봅니다.",
+        en: "Responding to the three forms and showing up to office hours leaves a trail of your process — one the experts' feedback and the hosts' internship review draw on directly. Not for writing good answers, but for leaving the trail.",
       },
     },
     // Second sentence is the one that changes behaviour: teams assume a hidden
@@ -1074,8 +1085,8 @@ export const dict = {
           id: "required",
           label: { ko: "필참 2일", en: "Required" },
           body: {
-            ko: "Day 1 오프닝 · Day 8 데모데이 — 싱가포르 현장",
-            en: "Day 1 opening · Day 8 Demo Day — in person in Singapore",
+            ko: "Day 1 오프닝 · Day 8 결과 공유회 — 싱가포르 현장",
+            en: "Day 1 opening · Day 8 Showcase — in person in Singapore",
           },
         },
         {
@@ -1147,8 +1158,8 @@ export const dict = {
       // 하고 있었고 함께 고쳤습니다. 되돌릴 거면 세 곳을 같이 되돌리세요.
       legendSpotlight: { ko: "학생끼리 제대로 교류하는 날", en: "The day students really connect" },
       destination: {
-        ko: "데모데이 — 기업·심사위원 앞 검증",
-        en: "Demo Day — put it in front of the companies and the judges",
+        ko: "결과 공유회 — 기업·업계 전문가 앞 검증",
+        en: "The Showcase — put it in front of the companies and the experts",
       },
       // The frame the whole section hangs on. Sized between the heading and
       // modeNote on purpose: it is the claim those four prose places were
@@ -1269,7 +1280,7 @@ export const dict = {
     collapse: { ko: "접기", en: "Show less" },
     // Q1 spine (2026-08-01). This section listed six benefits side by side, which
     // read as six reasons of equal size — and the actual answer to "what do I get"
-    // was scattered across cards 02 and 03 and the judges section, never stated in
+    // was scattered across cards 02 and 03 and the feedback-panel section, never stated in
     // one sentence. The spine block states it once, up front; the six cards below
     // it become what makes that one thing REACHABLE (crash course = you can build
     // at all, mentoring = you don't get stuck, certificate = it's provable,
@@ -1283,8 +1294,8 @@ export const dict = {
     spine: {
       tag: { ko: "이 8일이 남기는 단 하나", en: "The one thing these 8 days leave you" },
       heading: {
-        ko: "실제 기업의 진짜 문제를 풀고, 그 기업과 심사위원 앞에서 검증받은 경험.",
-        en: "You solve a real company's real problem — and have it validated in front of that company and its judges.",
+        ko: "실제 기업의 진짜 문제를 풀고, 그 기업과 업계 전문가 앞에서 검증받은 경험.",
+        en: "You solve a real company's real problem — and have it validated in front of that company and industry experts.",
       },
       tangibles: [
         { ko: "돌아가는 데모", en: "A demo that runs" },
@@ -1351,7 +1362,7 @@ export const dict = {
           { ko: "데모로 끝나지 않는 첫 성공 경험", en: "A first success that goes beyond a demo" },
           // The spine, said once more where the "성공" claim is actually made —
           // this card used to describe a feeling and stop there.
-          { ko: "문제를 낸 기업과 심사위원 앞에서 검증 — 데모·피칭·수료증으로 남습니다", en: "Validated in front of the company that set the problem and its judges — and it stays with you as a demo, a pitch and a certificate" },
+          { ko: "문제를 낸 기업과 업계 전문가 앞에서 검증 — 데모·피칭·수료증으로 남습니다", en: "Validated in front of the company that set the problem and industry experts — and it stays with you as a demo, a pitch and a certificate" },
           { ko: "군 입대 전 첫 성공 · 전역 후 재도전 동력", en: "A first win before enlistment · momentum to return after service" },
         ],
       },
@@ -1397,43 +1408,51 @@ export const dict = {
           // attendance, not participation: never write "참여자 전원" here, or the
           // bar reads as "showed up once". Mirrored in the FAQ certificate item
           // and in schedule.ts (d2 crash course · d8 awards) — change all four.
+          // 배부 시점 표기는 "Day 8 시상 때"였는데, 순위형 시상이 폐지되면서
+          // (2026-08-05) 시상이라는 순간 자체가 사라졌습니다 — 발급 기준은 그대로,
+          // 배부는 그날 마무리 세션에서 이뤄집니다.
           { ko: "Zero100 명의로 발급", en: "Issued by Zero100" },
-          { ko: "크래시코스 전 시간 참석 시 · Day 8 시상 때 배부", en: "For attending the full Crash Course · handed out at the Day 8 awards" },
+          { ko: "크래시코스 전 시간 참석 시 · Day 8 마무리 세션에서 배부", en: "For attending the full Crash Course · handed out at the Day 8 closing" },
           { ko: "링크드인 · 포트폴리오 · 이력에 활용", en: "Use it on LinkedIn, in your portfolio and CV" },
         ],
       },
       {
         num: "06",
-        title: { ko: "인턴십 · 상금", en: "Internships & prizes" },
-        // Detail lifted to match the FAQ (they were a tier apart, and the FAQ was
-        // the more specific of the two — the mismatch itself read as unreliable).
-        // WHAT is on offer is settled; HOW MUCH and HOW MANY are not. Every line
-        // carrying an amount or a headcount says so on the same line — a single
-        // "잠정" at the end of the card lets a reader take the numbers as fixed.
-        // Mirrored in the FAQ internship + prize items; change both together.
+        title: { ko: "인턴십 · 어워드", en: "Internships & awards" },
+        // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회. 순위형
+        // 시상 폐지·테마형 어워드(부문 pending)·인턴십 전원 개방.
+        //
+        // 이 카드는 1·2·3위를 순서대로 나열하던 자리였습니다. 순위가 사라지면서
+        // 나열할 대상 자체가 없어졌고, 남은 것은 "무엇이 걸려 있는가"뿐입니다 —
+        // 테마형 어워드 · 인센티브 · 인턴십 · 굿즈. WHAT is on offer is settled;
+        // 부문 구성도, 금액도, 인원도 전부 미정이라 어느 줄에도 숫자를 쓰지 않습니다.
+        //
+        // "부문 구성은 확정되는 대로 안내" 헤지는 사이트 전체에서 딱 세 곳입니다 —
+        // 이 카드, FAQ 상금 답변, schedule.ts d8-final-pitch description. 부문이
+        // 확정되면 그 세 곳만 갈아끼우면 되고, 네 번째 자리를 만들면 확정 시
+        // 쫓아다녀야 합니다.
+        //
+        // 널담 바우처는 3위 시상이 사라지며 자리를 잃었습니다 — 인센티브 바우처로
+        // 편입될지는 미정이라 실명 표기를 뺐습니다. (해녀의 부엌 바우처는 그 전에
+        // 인센티브에서 빠졌고, "Day 5 AI Use Case Top 3 · 널담 바우처"는 2026-08-03
+        // Day 5가 네트워킹 데이로 재정의되며 삭제됐습니다 — 둘 다 되살리지 마세요.)
+        // Mirrored in the FAQ internship + award items; change them together.
         points: [
           // NOT "FDE 인턴십". The internship itself is confirmed; what the intern
           // would actually DO is not decided yet, and naming a role we haven't
           // agreed sets an expectation the partners never made. Say the offer,
           // leave the job description to the line below. Same rule in both FAQ
           // answers (인턴십이 진짜인가요 / 상금이나 현금 지원) — change all three.
-          { ko: "메인 트랙 각 1위 · AXMOS(코드프레소·WVB) 유급 인턴십 기회", en: "1st place in each main track · a paid internship with AXMOS (Codepresso · WVB)" },
-          // The numbers that used to sit here ("겨울방학 약 1.5개월 · 트랙당 최대
-          // 3명") were never agreed with the companies — they came from an early
-          // deck. Timing in particular can only be settled between the student
-          // and the company after the event, around that student's own term
-          // dates, so a figure printed now would be a promise made on their
-          // behalf. Note the line does NOT list what is undecided ("직무·기간·
-          // 인원은 미정"): spelling out the gaps next to a prize reads as a
-          // warning label. It says when the terms get set, and stops there.
-          // Put a number back only when a partner has confirmed it.
-          { ko: "행사 후 우승팀과 직접 협의", en: "Settled directly with the winning team after the event" },
-          { ko: "2위 S$100 · 3위 널담 바우처 — 금액 확정 전", en: "2nd S$100 · 3rd Nuldam voucher — amounts not yet final" },
-          // 널담 바우처는 이제 3위 시상 한 곳뿐입니다 — 해녀의 부엌 바우처는 이전에
-          // 인센티브에서 빠졌고, "Day 5 AI Use Case Top 3 · 널담 바우처 · 논의 중"은
-          // 2026-08-03에 삭제됐습니다: Day 5가 학생 간 네트워킹 데이로 재정의되면서
-          // 해당 세션(schedule.ts d5-panel-usecase)이 사라졌고, 세션이 없으면 시상도
-          // 없는 게 맞습니다. 같은 문장이 FAQ 상금 답변에도 있었고 함께 지웠습니다.
+          //
+          // 인턴십 대상이 "메인 트랙 각 1위 팀"에서 "참가자 전원"으로 바뀌었습니다
+          // (2026-08-05). 행사에서 잘하는 것과 실무에서 잘하는 것이 다르다는 파트너
+          // 판단이고, 그래서 검토 기준도 등수가 아니라 '행사 과정과 제출물'입니다.
+          // CONFIRMED 2026-08-05: AXMOS(코드프레소·WVB) 실명 표기 가능 — 바뀐 것은
+          // 대상 범위(1위 팀 → 전원)이지 인턴십을 여는 회사가 아닙니다. 실명은 FAQ
+          // 인턴십 답변과 여기 두 곳에만 두세요.
+          { ko: "테마형 어워드 — 1·2·3위 순위 대신 각 팀의 강점을 조명 · 부문 구성은 확정되는 대로 안내", en: "Thematic awards — spotlighting each team's strengths instead of a 1st–3rd ranking · categories announced once set" },
+          { ko: "어워드 인센티브는 현금·식사 바우처 형태로 주최사가 지원 — 규모 확정 전", en: "Award incentives come as cash or dining vouchers from the hosts — amounts not yet final" },
+          { ko: "AXMOS(코드프레소·WVB) 유급 인턴십 기회 — 수상과 무관하게 모든 참가자에게 열려 있습니다 · 주최사가 행사 과정과 제출물을 바탕으로 직접 검토", en: "A paid internship with AXMOS (Codepresso · WVB) — open to every participant, awards or not · the hosts review interest on the strength of your work across the event" },
           // CONFIRMED 2026-08-03 (브랜드부스트 미팅): 후드+캡 세트 60개, Day 1 전
           // 도착 확정, 현장 선착순. 이전 줄("굿즈 (pen·notes) 등 · 검토 중")은
           // 품목도 진행 여부도 미정이던 시절의 표기라 헤지가 붙어 있었습니다 —
@@ -1448,12 +1467,16 @@ export const dict = {
     flow: [
       { ko: "참가 신청", en: "Apply" },
       { ko: "8일 빌더톤", en: "8-day builderthon" },
-      { ko: "데모데이", en: "Demo Day" },
+      { ko: "결과 공유회", en: "Showcase" },
       { ko: "네트워크 · 경험 · 성장", en: "Network · experience · growth" },
     ],
+    // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회. 이 줄은
+    // "시상은 상위 팀"으로 끝나면서 앞의 세 스텝을 예선처럼 읽히게 만들었습니다.
+    // 어워드가 순위를 매기지 않으니 대조 자체가 성립하지 않습니다 — 전원 vs 상위
+    // 팀이 아니라, 전원 vs 각 팀의 강점입니다.
     flowNote: {
-      ko: "네트워크·경험·성장은 참가자 전원 · 시상은 데모데이 상위 팀.",
-      en: "Network, experience and growth for everyone · awards for Demo Day's top teams.",
+      ko: "네트워크·경험·성장은 참가자 전원 · 어워드는 순위가 아니라 각 팀의 강점에.",
+      en: "Network, experience and growth for everyone · awards go to strengths, not rankings.",
     },
   },
 
@@ -1542,7 +1565,7 @@ export const dict = {
         ],
       },
       {
-        day: { ko: "Day 8 · 데모데이", en: "Day 8 · Demo Day" },
+        day: { ko: "Day 8 · 결과 공유회", en: "Day 8 · Showcase" },
         name: { ko: "박희덕", en: "Park Hee-deok" },
         role: { ko: "CEO · General Partner, Translink Investment (VC)", en: "CEO · General Partner, Translink Investment (VC)" },
         topic: { ko: "‘제로백의 진짜 의미’", en: "“The Real Meaning of Zero100”" },
@@ -1553,9 +1576,9 @@ export const dict = {
           { ko: "협업의 힘 · 커뮤니티의 중요성", en: "The power of collaboration · why community matters" },
           { ko: "왜 지금, 왜 싱가포르의 한인 학생인가", en: "Why now, and why Korean students in Singapore" },
           // 위치·길이 정정 (2026-08-04): 확정 진행 순서에서 이 키노트는 여는
-          // 순서가 아니라 두 트랙 발표가 끝난 뒤 시상 직전 40분입니다. 이 줄이
+          // 순서가 아니라 두 트랙 발표가 끝난 뒤 어워드 발표 직전 40분입니다. 이 줄이
           // schedule.ts d8-opening-keynote와 같은 사실을 말해야 합니다.
-          { ko: "모든 발표가 끝난 뒤 · 시상 직전 40분", en: "After every pitch · 40 minutes before the awards" },
+          { ko: "모든 발표가 끝난 뒤 · 어워드 발표 직전 40분", en: "After every pitch · 40 minutes before the awards" },
         ],
       },
     ],
@@ -1684,21 +1707,22 @@ export const dict = {
         // they sell something for a living — say that instead of listing one role.
         // Two-verb contract (2026-08-02): stage 1 = help them BUILD the thing
         // (scope, evidence, unblock — direction can still change), stage 3 = help
-        // them PROVE it (3-min pitch structure, judges questions, final submission
-        // check — direction is frozen). Keep the verbs distinct; do not let
-        // build-stage advice language leak into the Day 7 blurb or vice versa.
+        // them PROVE it (3-min pitch structure, the questions the Day 8 experts
+        // will ask, final submission check — direction is frozen). Keep the verbs
+        // distinct; do not let build-stage advice language leak into the Day 7
+        // blurb or vice versa.
         sub: {
           // 인용문을 풀어 쓴 이유 (2026-08-04): 원래 "프롬프트 한 줄로 한 것과 뭐가
-          // 다르죠?"였는데, 심사위원(정요천 님)조차 이 축약형의 의미를 되물었습니다.
-          // 심사위원이 되묻는 문장을 학생이 제대로 읽을 리 없습니다. 실제 질문은
+          // 다르죠?"였는데, 패널에 서는 전문가(정요천 님)조차 이 축약형의 의미를
+          // 되물었습니다. 전문가가 되묻는 문장을 학생이 제대로 읽을 리 없습니다. 실제 질문은
           // "학생 팀이 프롬프트를 한 줄만 썼느냐"가 아니라 "기업 담당자가 그냥 범용
           // LLM에 물어봐서 얻는 답 대비, 이 솔루션이 무엇을 더 하느냐"입니다 —
           // 비교 대상이 학생의 노력이 아니라 담당자의 대안이라는 게 요지라서, 그
           // 대상을 문장 안에 넣지 않으면 뜻이 서지 않습니다.
           // 같은 인용이 FAQ("AI로 대충 만들면?")에도 있습니다 — 함께 움직이세요.
           // 축약형으로 되돌리지 말 것.
-          ko: "빌드는 끝났고, 남은 것은 증명입니다. 데모데이 전날 — AWS의 GTM·세일즈 시니어를 비롯해 현업에서 제품을 직접 파는 사람들과 — 발표와 이어지는 Q&A 안에서 ‘어떤 병목을 왜 골랐고, 근거는 무엇이고, 실제로 돌아가는가’가 서는지 점검하고, 심사위원이 던질 질문(“담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”)을 미리 받아봅니다. 그날 저녁 마감되는 사전 제출물의 마지막 점검 자리이기도 해요.",
-          en: "The build is done; what's left is the proof. The day before Demo Day — with AWS GTM & sales seniors and people who sell products for a living — you pressure-test whether ‘which bottleneck, why, on what evidence, and does it actually run’ stands up in the pitch and the Q&A that follows, and field the questions judges will ask (“how is this different from what the problem owner would get by just asking a general LLM?”). It's also the last check before the submission package closes that evening.",
+          ko: "빌드는 끝났고, 남은 것은 증명입니다. 공유회 전날 — AWS의 GTM·세일즈 시니어를 비롯해 현업에서 제품을 직접 파는 사람들과 — 발표와 이어지는 Q&A 안에서 ‘어떤 병목을 왜 골랐고, 근거는 무엇이고, 실제로 돌아가는가’가 서는지 점검하고, 전문가들이 던질 질문(“담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”)을 미리 받아봅니다. 그날 저녁 마감되는 사전 제출물의 마지막 점검 자리이기도 해요.",
+          en: "The build is done; what's left is the proof. The day before the Showcase — with AWS GTM & sales seniors and people who sell products for a living — you pressure-test whether ‘which bottleneck, why, on what evidence, and does it actually run’ stands up in the pitch and the Q&A that follows, and field the questions the experts will ask (“how is this different from what the problem owner would get by just asking a general LLM?”). It's also the last check before the submission package closes that evening.",
         },
         // No partner logos here on purpose. AWS is where several of these mentors
         // work, and it sponsors the Day 7 venue — but it has never been named a
@@ -1711,13 +1735,13 @@ export const dict = {
     // The one line kept from the amber aside that used to sit here. That aside
     // ran four clauses about who runs which day; the only part a participant
     // needed was this — mentoring hours are not assessed. Everything else it
-    // said (AXMOS's roles, the Day 7 mentor/judge overlap) is already visible
+    // said (AXMOS's roles, the Day 7 mentor/panel overlap) is already visible
     // in the programme section and on the cards themselves.
     // It is deliberately a footnote, not a card: it answers a worry, it isn't
     // information anyone came for.
     separationNote: {
-      ko: "심사와 멘토링은 분리 운영됩니다 — 멘토링 시간은 평가와 무관해요.",
-      en: "Judging and mentoring are kept separate — mentoring hours never affect your score.",
+      ko: "Day 8 피드백 패널과 멘토링은 분리 운영됩니다 — 멘토링 시간은 피드백·어워드와 무관해요.",
+      en: "The Day 8 feedback panel and the mentoring are run separately — mentoring hours have no bearing on feedback or awards.",
     },
     // ── 매칭 방식 안내 (그리드 바로 위) ────────────────────────────────────────
     // Expectation management: participants kept asking to be assigned a NAMED
@@ -1743,7 +1767,7 @@ export const dict = {
     // TS infers a union and `m.linkedin` / `m.intro` can't be read on the cards.
     // The img/logo fields are now unused by the card (the avatar was dropped in
     // favour of the intro line) but stay on the type so the array shape matches
-    // the judges' and a photo can be reinstated without a schema change.
+    // the feedback panel's and a photo can be reinstated without a schema change.
     // The two host companies (Onword Lab · REmited) are represented by the SPECIFIC
     // founder(s) coming as mentors — not just a company logo — with names/titles
     // taken verbatim from their own LinkedIn profiles (not invented).
@@ -1760,7 +1784,7 @@ export const dict = {
     // no honorifics or embellishment; no internal figures (revenue, targets) and
     // no contact details; keep it to roughly one 60–70 character Korean sentence
     // so it clamps to two lines. NO SCHOOLS — every alma mater and degree was
-    // removed from these cards and from the judge bios on purpose: what a mentor
+    // removed from these cards and from the panel bios on purpose: what a mentor
     // has BUILT is what a team needs to know before an hour with them, and a
     // university line invites students to rank the room by admissions instead.
     // Academic POSTS are career (한정필's professorship stays); degrees are not. If a profile can't be verified, leave `intro`
@@ -1915,16 +1939,17 @@ export const dict = {
         },
         days: "Day 7", daysPending: "", stages: [3], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sugkun-lim",
       },
-      // Codepresso — the two below are ALSO Day 8 judges (dict.judges.people).
-      // That double role is disclosed by dict.mentoring.separationNote above:
-      // judging and mentoring are run separately, so a Day 7 mentor may judge
-      // while the mentoring hours themselves stay outside the scoring. Keep name,
-      // org, role and LinkedIn identical to their judge cards — one person, two
-      // surfaces. No judge appears among the Day 3·4 mentors; re-check that
-      // whenever a mentor or judge is added.
+      // Codepresso — the two below are ALSO on the Day 8 feedback panel
+      // (dict.judges.people; the key stays `judges` because components read it).
+      // That double role is disclosed by dict.mentoring.separationNote above: the
+      // panel and the mentoring are run separately, so a Day 7 mentor may sit on
+      // the panel while the mentoring hours themselves stay outside it. Keep name,
+      // org, role and LinkedIn identical to their panel cards — one person, two
+      // surfaces. Nobody on the panel appears among the Day 3·4 mentors; re-check
+      // that whenever a mentor or panellist is added.
       {
         name: { ko: "이동훈", en: "Lee Dong-hoon" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "대표 · CEO", en: "CEO" },
-        // The judge card carries the full bio; this line keeps only what a team
+        // The panel card carries the full bio; this line keeps only what a team
         // meeting him 1:1 needs, without repeating "Codepresso · 대표" above it.
         intro: {
           ko: "AI 코딩·역량진단 교육 플랫폼 운영. 前 스마일게이트 · LG전자 소프트웨어 엔지니어.",
@@ -1948,12 +1973,12 @@ export const dict = {
       // 정요천: Popup Studio 총괄. Popup Studio already appears in the BUILD box as
       // a mentoring partner (its FDEs run the Day 5–7 drop-in office hours) — this
       // is a different thing: he comes on Day 7 in person as a named mentor, so he
-      // belongs to the pitch group like the other Day 7 seniors. He is also a Day 8
-      // judge (dict.judges.people); name, org, role and LinkedIn are kept identical
-      // across both cards — one person, two surfaces.
+      // belongs to the pitch group like the other Day 7 seniors. He is also on the
+      // Day 8 feedback panel (dict.judges.people); name, org, role and LinkedIn are
+      // kept identical across both cards — one person, two surfaces.
       {
         name: { ko: "정요천", en: "Jeong Yo-cheon" }, org: { ko: "Popup Studio", en: "Popup Studio" }, role: { ko: "총괄", en: "Head" },
-        // The judge card carries the full history; this keeps what a team meeting
+        // The panel card carries the full history; this keeps what a team meeting
         // him on Day 7 would want, minus anything the org line already says.
         intro: {
           ko: "前 Brie 대표(CEO 겸 CTO) — 웹·AI 풀스택. 前 워프벤처스 CEO/CTO · 산업은행(KDB).",
@@ -1964,7 +1989,10 @@ export const dict = {
     ],
   },
 
-  // ── 심사위원 (덱 p13) ────────────────────────────────────────────────────────
+  // ── 피드백 패널 (덱 p13의 심사위원 슬롯) ─────────────────────────────────────
+  // The OBJECT KEY stays `judges` — components read dict.judges, and the rename
+  // is a copy change, not a schema one. 2026-08-05 이후 사람을 부르는 이름은
+  // '업계 전문가', 이 자리를 부르는 이름은 '피드백 패널'입니다.
   // Rendered as a subsection of the mentoring chapter (no new nav item). Bios are
   // tidied from the deck's own copy — NO facts added, EN is a translation. Every
   // person object carries identical keys to keep the array homogeneous. Everyone
@@ -1972,22 +2000,27 @@ export const dict = {
   // when empty — the card just drops the icon — rather than omitted, since an
   // omitted key would make TS
   // infer a union and break `j.linkedin` on the card. Same reason `pending` is
-  // false on every confirmed judge instead of being left off the object.
+  // false on every confirmed panellist instead of being left off the object.
   // TODO: confirm public naming — verify each name may be shown publicly.
   // Internal-only figures (e.g. Shin Sang-gil's "FY24 S$22M·+45%") are omitted.
   judges: {
-    tag: { ko: "심사위원", en: "Judges" },
+    tag: { ko: "피드백 패널", en: "Feedback panel" },
     // Q1 spine (2026-08-01). "심사는 현업 리더가 합니다" was written from the
     // organizers' side — it answered "who runs the judging" when the participant's
     // question is "who is going to look at MY work". Same people, same order, same
-    // cards: only the framing turns around. 검증 rather than 심사 is deliberate —
-    // being judged is a risk, being validated is the thing they came for, and the
-    // latter is what actually happens when the company that set the problem tells
-    // a team their idea holds up.
-    heading: { ko: "당신의 데모를 검증할 사람들", en: "The people who will validate your demo" },
+    // cards: only the framing turns around.
+    //
+    // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회. 순위형
+    // 시상 폐지·테마형 어워드(부문 pending)·인턴십 전원 개방. 이 섹션의 논리는
+    // 원래 "검증 rather than 심사"였는데, 이제 한 칸 더 갔습니다 —
+    // 피드백 rather than 심사 (2026-08-05). 이분들이 하는 일은 누가 더 잘했는지
+    // 가리는 게 아니라 각 팀 결과물에 전문적인 시각과 다음 가능성을 주는 것이고,
+    // 그건 등수가 사라진 뒤에도 그대로 남는 값입니다. 인물 카드·순서·pending
+    // 규칙(확정 전 인물은 amber pill)은 그대로입니다.
+    heading: { ko: "당신의 결과물에 피드백을 줄 사람들", en: "The people who'll give you feedback on your work" },
     sub: {
-      ko: "심사가 아니라 검증입니다 — 문제를 낸 기업과, 실제 산업에서 문제를 풀어온 시니어 리더들이 데모데이 결과물을 직접 봅니다.",
-      en: "Less judging than validation — the company that set the problem, and senior leaders who have solved real ones in industry, look at your Demo-Day work first-hand.",
+      ko: "순위를 매기는 심사가 아니라, 전문적인 시각의 피드백입니다 — 문제를 낸 기업과, 실제 산업에서 문제를 풀어온 시니어 리더들이 결과 공유회에서 각자의 관점으로 피드백과 다음 가능성을 제안합니다.",
+      en: "Not a ranking exercise — expert feedback. The company that set the problem and senior leaders who have solved real ones in industry look at your Showcase work and, each from their own vantage point, offer feedback and what could come next.",
     },
     people: [
       {
@@ -2075,7 +2108,7 @@ export const dict = {
         linkedin: "https://www.linkedin.com/in/donghun-lee-8888a13a",
       },
       // Sits directly after 이동훈: same company, and the two come as a pair —
-      // both are Day 7 mentors as well as judges (dict.mentoring.mentors).
+      // both are Day 7 mentors as well as Day 8 panellists (dict.mentoring.mentors).
       // Facts from her own LinkedIn ("Co-founder & Director & Content R&D Lead at
       // Codepresso", Director since Jan 2020, LG Electronics software engineer
       // Feb 2011 – Jan 2020, 서강대). The AXMOS clause is the same one 이동훈's bio
@@ -2164,14 +2197,15 @@ export const dict = {
         linkedin: "https://www.linkedin.com/in/%EC%9A%94%EC%B2%9C-%EC%A0%95-8245a94b/",
       },
     ],
-    // Amber dashed pill on a judge whose participation is agreed in principle but
+    // Amber dashed pill on a panellist whose participation is agreed in principle but
     // not locked — the same convention as the mentor grid's daysPending pill, so a
     // reader who has scrolled past the mentors already knows what amber means.
     pendingLabel: { ko: "협의 중", en: "TBC" },
     // tbcLabel / tbcNote ("추후 공개 · 트랙별 심사위원 섭외 중") lived here for the two
     // dashed placeholder cards at the end of the grid. The panel is complete, so
     // the cards and their copy were both removed — restore the pair together if
-    // judges are ever pending again.
+    // panellists are ever pending again (and reword the ko string: 심사위원 is no
+    // longer the name for these people — 업계 전문가 / 피드백 패널 is).
   },
 
   modal: {
@@ -2228,13 +2262,14 @@ export const dict = {
     sponsorConfirmedLabel: { ko: "확정 (Confirmed)", en: "Confirmed" },
     catVenue: { ko: "장소", en: "Venue" },
     catMarketing: { ko: "마케팅", en: "Marketing" },
-    catJudges: { ko: "심사위원 지원", en: "Judges" },
+    catJudges: { ko: "피드백 패널 지원", en: "Feedback panel" },
     catMentoring: { ko: "멘토링", en: "Mentoring" },
     catGoods: { ko: "굿즈", en: "Goods" },
     // 싱가포르 한인회 only. Its caption said 심사위원 지원, which was wrong: the
     // association is helping with the venue and with goodie bags for the mentors,
-    // and no judge comes through it. Two roles in one caption because the tile
-    // takes a single label and neither half tells the truth alone.
+    // and nobody on the Day 8 feedback panel comes through it. Two roles in one
+    // caption because the tile takes a single label and neither half tells the
+    // truth alone.
     catVenueGoods: { ko: "장소 · 굿즈", en: "Venue · Goods" },
     catOverall: { ko: "종합 지원", en: "Overall support" },
     // Neutral stage pill shown inside the company-intro modal.
@@ -2257,7 +2292,7 @@ export const dict = {
   // The previous set led with design rationale and made the reader dig for the
   // fact they came for; if you add or edit an item, front-load the answer.
   //
-  // Numbers here are NOT independent copy — they mirror the benefits, judging
+  // Numbers here are NOT independent copy — they mirror the benefits, feedback
   // and schedule sections. Change one, change all of them.
   faq: {
     tag: { ko: "FAQ", en: "FAQ" },
@@ -2266,8 +2301,8 @@ export const dict = {
       {
         q: { ko: "왜 8일이나 하나요? 해커톤치고 길지 않나요?", en: "Why 8 days? Isn't that long for a hackathon?" },
         a: {
-          ko: "시간을 통으로 내야 하는 날은 사실 이틀입니다 — 필참은 Day 1(오프닝)과 Day 8(데모데이)뿐이고, 나머지는 각자 편한 시간에 하는 자율 빌드와 선택 참여 세션입니다. 8일로 늘린 건 매일 나오라는 뜻이 아니라, 학기 중에도 크래시 코스로 배우고 → 만들고 → 발표까지 가는 호흡을 만들기 위해서예요.",
-          en: "Only two days actually need blocking out — Day 1 (opening) and Day 8 (Demo Day) are the only required ones. Everything else is self-paced building on your own time, plus optional sessions. Stretching it to eight days isn't asking you to show up daily: it's what makes room, mid-semester, for the full arc — learn at the crash course → build → present.",
+          ko: "시간을 통으로 내야 하는 날은 사실 이틀입니다 — 필참은 Day 1(오프닝)과 Day 8(8/29 결과 공유회)뿐이고, 나머지는 각자 편한 시간에 하는 자율 빌드와 선택 참여 세션입니다. 8일로 늘린 건 매일 나오라는 뜻이 아니라, 학기 중에도 크래시 코스로 배우고 → 만들고 → 발표까지 가는 호흡을 만들기 위해서예요.",
+          en: "Only two days actually need blocking out — Day 1 (opening) and Day 8 (29 Aug, the Showcase) are the only required ones. Everything else is self-paced building on your own time, plus optional sessions. Stretching it to eight days isn't asking you to show up daily: it's what makes room, mid-semester, for the full arc — learn at the crash course → build → present.",
         },
       },
       {
@@ -2289,30 +2324,31 @@ export const dict = {
       {
         q: { ko: "문과인데 이과생들에게 밀리지 않을까요?", en: "I'm not from a STEM major — will I fall behind?" },
         a: {
-          // 배점 숫자는 여기에도 쓰지 않습니다 — 아래 "심사는 어떻게 하나요?" 답변과
-          // 같은 계약입니다. 심사표 자체는 2026-08-04 결정으로 참가자에게 사전
-          // 공개하지만, 배점은 아직 파트너 조율 중이라 카피에 숫자를 박으면 곧
-          // 낡습니다. 숫자는 심사표가 나르게 두고, 여기서는 무게가 실리는 '방향'만.
-          ko: "아니요 — 코드 실력을 겨루는 대회가 아닙니다. 심사의 무게는 코드가 아니라 문제를 얼마나 정확히 이해했는가, 그 위에 세운 아이디어가 적절한가, 데모가 그 아이디어를 실제로 증명하는가에 실려 있어요. 프로토타입은 와이어프레임 수준이어도 되고, 화면의 세련됨은 채점하지 않습니다. 산업 맥락을 아는 사람이 오히려 유리한 구조이고, 코딩 기본기는 Day 2 크래시코스에서 맞춰 드립니다.",
-          en: "No — this isn't a contest of coding ability. The weight sits on how accurately you understand the problem, whether the idea you build on it is the right one, and whether the demo actually proves that idea — not on the code. A wireframe-level prototype is fine, and visual polish isn't graded. The structure actually favours people who understand the industry context, and the Day 2 Crash Course levels the coding basics for everyone.",
+          // 배점 숫자는 여기에도 쓰지 않습니다 — 아래 "피드백과 어워드는 어떤
+          // 기준인가요?" 답변과 같은 계약입니다. 피드백 문서 자체는 2026-08-04
+          // 결정으로 참가자에게 사전 공개하지만, 배점은 아직 파트너 조율 중이라
+          // 카피에 숫자를 박으면 곧 낡습니다. 숫자는 피드백 문서가 나르게 두고,
+          // 여기서는 무게가 실리는 '방향'만.
+          ko: "아니요 — 코드 실력을 겨루는 대회가 아닙니다. 피드백의 무게는 코드가 아니라 문제를 얼마나 정확히 이해했는가, 그 위에 세운 아이디어가 적절한가, 데모가 그 아이디어를 실제로 증명하는가에 실려 있어요. 프로토타입은 와이어프레임 수준이어도 되고, 화면의 세련됨은 보지 않습니다. 산업 맥락을 아는 사람이 오히려 유리한 구조이고, 코딩 기본기는 Day 2 크래시코스에서 맞춰 드립니다.",
+          en: "No — this isn't a contest of coding ability. The weight of the feedback sits on how accurately you understand the problem, whether the idea you build on it is the right one, and whether the demo actually proves that idea — not on the code. A wireframe-level prototype is fine, and visual polish isn't part of it. The structure actually favours people who understand the industry context, and the Day 2 Crash Course levels the coding basics for everyone.",
         },
       },
       {
-        // DECIDED 2026-08-04: all presentations incl. Demo Day pitches are in KOREAN.
+        // DECIDED 2026-08-04: all presentations incl. the Showcase pitches are in KOREAN.
         // This is final — do not reintroduce "choose your language" hedging here or
         // anywhere else. If an English-speaking participant ever needs an exception,
         // that's handled by the organizers case-by-case, not promised on the site.
         q: { ko: "‘해커톤’이라는 말이 부담돼요. 영어 발표도 자신 없어요.", en: "‘Hackathon’ feels intimidating, and I'm not confident presenting in English." },
         a: {
-          ko: "발표는 전부 한국어로 진행합니다 — 참가자와 심사위원님 모두 한인 커뮤니티 기반이에요. 영어 발표 걱정은 내려놓으셔도 됩니다. 그리고 이건 밤샘 해커톤이 아니라 8일에 걸쳐 만드는 빌더톤 — 완성도보다 ‘내 손으로 만들었다’를 보여주는 자리입니다.",
-          en: "All presentations, Demo Day pitches included, are in Korean — both the participants and the judges come from the Korean community here, so you can put the English worry down. And this isn't an all-nighter hackathon but a builderthon built over eight days: it's about showing you made it yourself, not about polish.",
+          ko: "발표는 전부 한국어로 진행합니다 — 참가자와 피드백을 주시는 전문가분들 모두 한인 커뮤니티 기반이에요. 영어 발표 걱정은 내려놓으셔도 됩니다. 그리고 이건 밤샘 해커톤이 아니라 8일에 걸쳐 만드는 빌더톤 — 완성도보다 ‘내 손으로 만들었다’를 보여주는 자리입니다.",
+          en: "All presentations, the Showcase pitches included, are in Korean — both the participants and the industry experts giving feedback come from the Korean community here, so you can put the English worry down. And this isn't an all-nighter hackathon but a builderthon built over eight days: it's about showing you made it yourself, not about polish.",
         },
       },
       {
         q: { ko: "수료증을 주나요? 의미가 있나요?", en: "Is there a certificate? Is it worth anything?" },
         a: {
-          ko: "네 — 크래시코스 전 시간을 참석한 분들께 Zero100 명의의 수료증이 발급되고, Day 8 시상 때 배부됩니다. 링크드인·이력서에 올릴 수 있어요. 이미 개발 경험이 있다면 수료증보다 멘토링·네트워킹이 더 큰 수확일 거예요.",
-          en: "Yes — everyone who attends the full Crash Course receives a certificate issued by Zero100, handed out at the Day 8 awards. It's LinkedIn- and CV-ready. If you already build, the mentoring and network will matter more than the paper.",
+          ko: "네 — 크래시코스 전 시간을 참석한 분들께 Zero100 명의의 수료증이 발급되고, Day 8 마무리 세션에서 배부됩니다. 링크드인·이력서에 올릴 수 있어요. 이미 개발 경험이 있다면 수료증보다 멘토링·네트워킹이 더 큰 수확일 거예요.",
+          en: "Yes — everyone who attends the full Crash Course receives a certificate issued by Zero100, handed out at the Day 8 closing. It's LinkedIn- and CV-ready. If you already build, the mentoring and network will matter more than the paper.",
         },
       },
       // Q1 spine (2026-08-01), placed straight after the certificate question —
@@ -2324,8 +2360,8 @@ export const dict = {
       {
         q: { ko: "8일이 끝나면 저에게 뭐가 남나요?", en: "What do I walk away with after the 8 days?" },
         a: {
-          ko: "세 가지가 실물로 남습니다 — 실제로 돌아가는 데모, 기업과 심사위원 앞에서 피칭한 경험(사진으로 남는), 그리고 수료증(크래시코스 전 시간 참석 시). 그리고 그 데모는 가상 과제가 아니라 실제 기업의 진짜 문제를 푼 결과물입니다.",
-          en: "Three things you can actually show: a demo that runs, the experience of pitching it to the company and the judges (photos included), and a certificate (for attending the full Crash Course). And that demo isn't a toy exercise — it's your answer to a real company's real problem.",
+          ko: "세 가지가 실물로 남습니다 — 실제로 돌아가는 데모, 기업과 업계 전문가 앞에서 피칭한 경험(사진으로 남는), 그리고 수료증(크래시코스 전 시간 참석 시). 그리고 그 데모는 가상 과제가 아니라 실제 기업의 진짜 문제를 푼 결과물입니다.",
+          en: "Three things you can actually show: a demo that runs, the experience of pitching it to the company and industry experts (photos included), and a certificate (for attending the full Crash Course). And that demo isn't a toy exercise — it's your answer to a real company's real problem.",
         },
       },
       {
@@ -2333,10 +2369,22 @@ export const dict = {
         a: {
           // The internship is real and paid — that part is settled. The ROLE is
           // not: it used to say "FDE 인턴", which named a job nobody has agreed to
-          // yet. The answer now says what is decided and says plainly that the
-          // job description isn't, which is also what a reader is really asking.
-          ko: "네, 실제로 추진 중인 유급 인턴십입니다 — 메인 트랙 각 1위 팀에게 AXMOS(코드프레소·WVB)의 유급 인턴 기회가 열립니다. 구체적인 조건은 행사가 끝난 뒤 회사와 학생이 학기 일정에 맞춰 직접 이야기해 정합니다. 인턴이 안 되더라도 Day 7 커리어 간담회가 인턴·채용 풀로 이어지는 별도 연결 통로예요.",
-          en: "Yes — it's a paid internship we're actively arranging: the winning team in each main track gets a paid internship with AXMOS (Codepresso · WVB). The specifics are settled directly between the company and the students after the event, around their term dates. And even without the internship, the Day 7 career session is its own route into the internship and hiring pool.",
+          // yet. The answer says what is decided and leaves the job description
+          // out, which is also what a reader is really asking. NOT "FDE 인턴십" —
+          // that rule still holds.
+          //
+          // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회. 순위형
+          // 시상 폐지·테마형 어워드(부문 pending)·인턴십 전원 개방. 이 답의 옛 논리는
+          // "1위 한정"이었습니다 — 이제 등수와 무관하게 전원에게 열려 있고, 검토
+          // 기준은 행사 과정과 제출 자료입니다(그래서 8일 전체가 포트폴리오가 됩니다).
+          //
+          // CONFIRMED 2026-08-05: AXMOS(코드프레소·WVB) 실명 표기 가능. 옛 약속의
+          // 형태("1위 팀에게")는 바뀌었지만 인턴십을 여는 회사는 그대로라, 개방형
+          // 문구에도 실명이 남습니다 — 오히려 "누가 검토하는가"가 등수를 대신하는
+          // 문장이라 실명이 있어야 답이 섭니다.
+          // benefits 06 카드의 인턴십 줄과 같은 사실이니 함께 움직여 주세요.
+          ko: "네, 실제로 추진 중인 유급 인턴십입니다 — AXMOS(코드프레소·WVB)의 인턴 기회이고, 특정 수상팀에게만 열리는 게 아닙니다. 행사에서 좋은 결과를 내는 것과 실제 현장에서 잘하는 것은 다를 수 있어서, 주최사가 관심 있는 참가자를 행사 과정과 제출 자료를 바탕으로 직접 검토해요. 8일 전체가 사실상 포트폴리오가 되는 구조입니다. 구체적인 조건은 행사가 끝난 뒤 회사와 학생이 학기 일정에 맞춰 직접 이야기해 정합니다. Day 7 커리어 간담회도 인턴·채용 풀로 이어지는 별도 연결 통로예요.",
+          en: "Yes — a paid internship that's actually in motion, with AXMOS (Codepresso · WVB), and it isn't reserved for winning teams. Doing well at an event and doing well on the job aren't the same thing, so the hosts review interested participants directly, on the strength of their work across the event and what they submit. The whole eight days effectively become your portfolio. Specific terms get settled after the event, directly between the company and the student around their term dates. The Day 7 career session is a separate route into the internship & hiring pool too.",
         },
       },
       {
@@ -2359,36 +2407,53 @@ export const dict = {
       {
         q: { ko: "상금이나 현금 지원이 있나요?", en: "Are there prizes or cash?" },
         a: {
+          // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회. 순위형
+          // 시상 폐지·테마형 어워드(부문 pending)·인턴십 전원 개방.
+          //
+          // 답의 첫 문장이 "네 — 다만 …"인 이유: 질문은 돈이 있느냐이고 답은 예스인데,
+          // 바로 뒤에 오는 사실("1·2·3위가 아니다")이 예스의 모양을 바꿉니다. 부정을
+          // 먼저 꺼내면 상금이 없다고 읽힙니다.
+          //
+          // "부문 구성은 확정되는 대로 안내" 헤지가 사는 세 곳 중 하나입니다 —
+          // 나머지는 benefits 06 카드와 schedule.ts d8-final-pitch description.
+          // 부문 이름·인센티브 금액·인원은 어디에도 쓰지 않습니다.
+          //
           // 수료증은 이 목록에서 의도적으로 빠져 있습니다 — 발급 기준이 "크래시코스
           // 전 시간 참석"이라, 참가자 전원이 받는 항목과 나란히 두면 기준이 오해됩니다.
           // "Day 5 AI Use Case Top 3의 널담 바우처도 논의 중" 문장은 2026-08-03에
           // 빠졌습니다 — Day 5가 네트워킹 데이로 바뀌며 그 세션이 없어졌습니다.
-          // benefits 인턴십·상금 카드와 같은 목록이니 함께 움직여 주세요.
           // DECIDED 2026-08-04: NO meals are provided at any point — aligned with
           // schedule.ts d7 ("점심(개별)"). What IS free: entry, networking, and the
           // Brand Boost hoodie+cap sets (Day 1 on-site, 60 sets first-come). Do not
           // reintroduce food promises here or in any benefit/schedule copy.
           // benefits 06 카드와 같은 사실을 말하는 자리이니 함께 움직여 주세요.
-          ko: "네 — 시상은 메인 트랙 2개 각각에 1~3위로 걸립니다: 1위 유급 인턴십 기회 · 2위 S$100 · 3위 널담 바우처. 참가비는 무료이고, 순위에 못 들어도 네트워킹은 전원에게 돌아갑니다(식사는 제공되지 않아요 — 각자 해결). 브랜드부스트 후드·캡 세트는 Day 1 현장에서 선착순 60세트로 드리고, 수료증은 크래시코스 전 시간을 들으면 받습니다. ※ 금액·인원 등 세부는 아직 확정 전이며 파트너 협의로 변경될 수 있어요.",
-          en: "Yes — each of the two main tracks carries awards for 1st through 3rd: a paid internship for 1st, S$100 for 2nd and a Nuldam voucher for 3rd. Entry is free, and off the podium the networking still goes to everyone (meals aren't provided — grab food on your own). The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come, and the certificate comes with full Crash Course attendance. ※ Amounts, headcounts and other details aren't final and may change as partner discussions continue.",
+          ko: "네 — 다만 팀을 1·2·3위로 세우는 방식은 아닙니다. 시상은 각 팀의 강점을 드러내는 테마형 어워드로 구성되며, 부문은 현재 기획 중이라 확정되는 대로 안내드려요. 인센티브는 현금·식사 바우처 형태로 주최사가 지원합니다(규모 확정 전). 참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다(식사는 제공되지 않아요 — 각자 해결). 브랜드부스트 후드·캡 세트는 Day 1 현장에서 선착순 60세트로 드리고, 수료증은 크래시코스 전 시간을 들으면 받습니다.",
+          en: "Yes — but not as a 1st-2nd-3rd ranking. Awards are thematic, built to recognise each team's strengths, and the categories are being designed now — we'll announce them once set. Incentives come as cash or dining vouchers from the hosts (amounts not yet final). Entry is free and the networking goes to everyone (meals aren't provided — grab food on your own). The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come, and the certificate comes with full Crash Course attendance.",
         },
       },
       {
         q: { ko: "결과물이 실제로 쓰이나요? AI로 대충 만들면 어떡하죠?", en: "Will the results actually be used? What if it's just AI slop?" },
         a: {
           // 퍼센트를 뺐습니다 (2026-08-03). 여기 있던 "도입 가능성 15%"와 "데모
-          // 30%"는 트랙별 옛 채점표의 숫자로, 현재 심사표의 5축 구성에는 그 이름의
+          // 30%"는 트랙별 옛 채점표의 숫자로, 현재 피드백 문서의 5축 구성에는 그 이름의
           // 항목이 없습니다. 게다가 배점 자체가 파트너 조율 중이라("배점은 파트너
-          // 조율에 따라 확정 전" — 심사표 각주) 새 숫자로 갈아끼우면 또 낡습니다.
+          // 조율에 따라 확정 전" — 피드백 문서 각주) 새 숫자로 갈아끼우면 또 낡습니다.
           // 그래서 확정적으로 말할 수 있는 것만 서술로 씁니다.
           //
-          // "무대에서 실제로 돌아가는지"도 함께 고쳤습니다 — 심사표는 반대로
+          // "무대에서 실제로 돌아가는지"도 함께 고쳤습니다 — 피드백 문서는 반대로
           // 말합니다: 작동 판정은 사전 제출 영상 기준이고 라이브 실패는 감점이
           // 아닙니다. 학생이 무대 사고를 치명적으로 오해하게 두면 안 됩니다.
-          // 숫자를 다시 넣지 마세요. 배점이 확정되면 심사표를 정본으로 삼되,
+          // 숫자를 다시 넣지 마세요. 배점이 확정되면 피드백 문서를 정본으로 삼되,
           // 이 답변은 서술로 두는 편이 오래갑니다.
-          ko: "기업이 도입을 약속하는 건 아니에요 — 심사에서 ‘담당자가 다음 주 월요일부터 쓸 수 있는가’를 보긴 하지만, 그건 도입 확정과는 다릅니다. 대신 우승팀에게는 인턴으로 그 문제를 실무에서 이어갈 기회(잠정)가 있어요. ‘AI로 대충’은 심사에서 걸러집니다 — 심사위원이 현장에서 “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”를 직접 묻고, 근거 없이 결과만 내놓는 산출물은 요구사항 미충족으로 처리됩니다. 목업·슬라이드만 있는 경우도 마찬가지고요. 반대로 무대에서 라이브 시연이 삐끗하는 건 감점이 아닙니다 — 작동 여부는 사전에 제출한 데모 영상 기준으로 봅니다.",
-          en: "No company commits to adopting what you build — judging does ask whether the owner could use it from next Monday, but that isn't the same as a decision to adopt. What the winning team does get is the chance (tentative) to carry that problem into real work as an intern. And “AI slop” doesn't survive judging: judges ask out loud, “how is this different from what the problem owner would get by just asking a general LLM?”, and output that returns results with no reasoning behind them counts as a failed requirement. Mockups or slides alone go the same way. A live demo stumbling on stage, on the other hand, costs nothing — whether it runs is judged on the demo video you submit beforehand.",
+          //
+          // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회.
+          // 두 절이 바뀌었습니다 — ① 인턴 기회의 대상이 우승팀에서 "관심 있는
+          // 참가자"로 열렸고, ② 'AI로 대충'을 걸러내는 주체가 심사가 아니라 전문가
+          // 피드백입니다(순위를 매기는 자리가 아니어도 전문가 앞에서는 그대로
+          // 드러납니다). "요구사항 미충족"과 라이브 시연 문장은 그대로 둡니다 —
+          // 영상 기준 원칙은 전환과 무관하게 살아 있습니다.
+          ko: "기업이 도입을 약속하는 건 아니에요 — ‘담당자가 다음 주 월요일부터 쓸 수 있는가’를 보긴 하지만, 그건 도입 확정과는 다릅니다. 대신 주최사가 관심 있는 참가자에게는 인턴으로 그 문제를 실무에서 이어갈 기회를 열어두고 있어요 — 수상과 무관하게, 행사 과정을 바탕으로요. ‘AI로 대충’은 전문가 피드백에서 그대로 드러납니다 — 전문가들이 현장에서 “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”를 직접 묻고, 근거 없이 결과만 내놓는 산출물은 요구사항 미충족으로 처리됩니다. 목업·슬라이드만 있는 경우도 마찬가지고요. 반대로 무대에서 라이브 시연이 삐끗하는 건 감점이 아닙니다 — 작동 여부는 사전에 제출한 데모 영상 기준으로 봅니다.",
+          en: "No company commits to adopting what you build — the question “could the owner use this from next Monday?” does get asked, but that isn't the same as a decision to adopt. What the hosts do keep open is the chance to carry that problem into real work as an intern, for participants they're interested in — awards or not, on the strength of your work across the event. And “AI slop” shows up plainly in the expert feedback: the experts ask out loud, “how is this different from what the problem owner would get by just asking a general LLM?”, and output that returns results with no reasoning behind them counts as a failed requirement. Mockups or slides alone go the same way. A live demo stumbling on stage, on the other hand, costs nothing — whether it runs is judged on the demo video you submit beforehand.",
         },
       },
       {
@@ -2406,50 +2471,53 @@ export const dict = {
       // 툴 질문은 바로 위 "크래시코스 필요 없어요" 옆이 자리입니다 — 같은 사람이
       // 연달아 묻는 두 질문이고(경험자·도구), 초보는 "Codex를 사야 하나"를 여기서
       // 확인합니다. 답의 순서가 곧 요지: ① 강의만 Codex 기준 ② 빌드는 자유
-      // ③ 그래서 기본 플랜이면 충분 — ③의 근거는 심사 방식입니다.
-      // 심사 배점(프로세스 대 작동의 비율)은 파트너 조율 중이라 숫자를 쓰지 않고,
-      // 심사표가 확정적으로 말하는 것만 씁니다: 완성도·발표력은 채점 대상이 아님.
+      // ③ 그래서 기본 플랜이면 충분 — ③의 근거는 무엇을 보느냐입니다.
+      // 배점(프로세스 대 작동의 비율)은 파트너 조율 중이라 숫자를 쓰지 않고,
+      // 피드백 문서가 확정적으로 말하는 것만 씁니다: 완성도·발표력은 보지 않음.
       {
         q: { ko: "어떤 AI 툴을 써야 하나요? Codex를 꼭 써야 하나요?", en: "Which AI tool do I need? Do I have to use Codex?" },
         a: {
-          ko: "크래시코스는 Codex를 기준으로 진행해요 — 강사와 같은 화면을 따라 하기 좋게 하나로 맞춘 것뿐입니다. 팀 빌드와 데모데이 결과물에는 툴 제한이 없어요. Claude Code든 커서든 ChatGPT든 손에 맞는 걸 쓰면 됩니다. 다만 계정은 필요해요 — Claude나 ChatGPT의 기본 유료 플랜 정도면 8일 내내 충분하고, 그 이상은 필요 없습니다. 심사가 기술 완성도나 화면의 세련됨이 아니라, 어떤 병목을 왜 골랐고 그 판단의 근거가 무엇인지를 보기 때문이에요.",
-          en: "The crash course runs on Codex — that's so everyone can follow the same screen, not a rule about what you build with. There's no tool restriction on your team's build or your Demo Day work: Claude Code, Cursor, ChatGPT, whatever fits your hand. You do need an account, though — a basic paid plan on Claude or ChatGPT covers the whole eight days, and nothing beyond that is needed. Judging looks at which bottleneck you picked, why, and what backs that call — not at technical polish or how slick the screen looks.",
+          ko: "크래시코스는 Codex를 기준으로 진행해요 — 강사와 같은 화면을 따라 하기 좋게 하나로 맞춘 것뿐입니다. 팀 빌드와 공유회 결과물에는 툴 제한이 없어요. Claude Code든 커서든 ChatGPT든 손에 맞는 걸 쓰면 됩니다. 다만 계정은 필요해요 — Claude나 ChatGPT의 기본 유료 플랜 정도면 8일 내내 충분하고, 그 이상은 필요 없습니다. 피드백이 기술 완성도나 화면의 세련됨이 아니라, 어떤 병목을 왜 골랐고 그 판단의 근거가 무엇인지를 보기 때문이에요.",
+          en: "The crash course runs on Codex — that's so everyone can follow the same screen, not a rule about what you build with. There's no tool restriction on your team's build or your Showcase work: Claude Code, Cursor, ChatGPT, whatever fits your hand. You do need an account, though — a basic paid plan on Claude or ChatGPT covers the whole eight days, and nothing beyond that is needed. The feedback looks at which bottleneck you picked, why, and what backs that call — not at technical polish or how slick the screen looks.",
         },
       },
       {
         q: { ko: "제가 여기서 얻는 게 뭔가요?", en: "What do I actually get out of this?" },
         a: {
-          ko: "손에 남는 것 기준으로: 실제 기업 문제를 8일간 풀어본 결과물, 크래시코스 수료증, 현직 선배들과의 1:1 멘토링, 데모데이 무대 발표 경험, 그리고 행사 후에도 이어지는 커뮤니티입니다. Day 7 커리어 세션에서는 시니어 리더들과 직접 만나요.",
-          en: "In terms of what you actually walk away with: something you built against a real company's problem over eight days, the Crash Course certificate, 1:1 mentoring with people already working in the field, the experience of presenting on the Demo Day stage, and a community that keeps going after the event. The Day 7 career session puts you in front of senior leaders directly.",
+          ko: "손에 남는 것 기준으로: 실제 기업 문제를 8일간 풀어본 결과물, 크래시코스 수료증, 현직 선배들과의 1:1 멘토링, 공유회 무대 발표 경험, 그리고 행사 후에도 이어지는 커뮤니티입니다. Day 7 커리어 세션에서는 시니어 리더들과 직접 만나요.",
+          en: "In terms of what you actually walk away with: something you built against a real company's problem over eight days, the Crash Course certificate, 1:1 mentoring with people already working in the field, the experience of presenting on the Showcase stage, and a community that keeps going after the event. The Day 7 career session puts you in front of senior leaders directly.",
         },
       },
       {
-        q: { ko: "심사는 어떻게 하나요? 기술이 완벽해야 하나요?", en: "How is judging done? Does it need to be technically polished?" },
-        // DECIDED 2026-08-04: the score sheet IS disclosed to participants before
+        q: { ko: "피드백과 어워드는 어떤 기준인가요? 기술이 완벽해야 하나요?", en: "What's the feedback based on? Does it need to be technically polished?" },
+        // DECIDED 2026-08-04: the criteria ARE disclosed to participants before
         // the event. This REVERSES the earlier "internal, never published" stance
         // (2026-08-02), so this answer may — and now does — promise the document.
         //
         // What it still does NOT print is the per-axis weights. That is not
         // secrecy any more, it's freshness: the weights are not settled yet
-        // ("배점은 파트너 조율에 따라 확정 전" — score sheet footnote), so numbers
-        // typed into copy go stale the moment they land, and the sheet reaching
-        // participants is the thing that carries them anyway. Let the sheet carry
-        // the numbers; keep this answer to the SHAPE of what matters.
-        // (Source of truth: Execution/Problem Statement/빌더톤_심사표_ScoreSheet.pdf
-        // and the deck GRADING slide.)
+        // ("배점은 파트너 조율에 따라 확정 전"), so numbers typed into copy go stale
+        // the moment they land, and the document reaching participants is the
+        // thing that carries them anyway. Let the document carry the numbers;
+        // keep this answer to the SHAPE of what matters.
         //
-        // The not-graded list below stays public regardless. It isn't a criterion
-        // anyone can game — it's the reassurance that gets a nervous
+        // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회. 문서의
+        // 이름이 심사표에서 '피드백 문서'로 바뀌었습니다 — 이름만 바꾼 게 아니라
+        // 하는 일이 바뀐 것이라(점수를 매기는 표 → 각 팀에게 돌아가는 피드백),
+        // 사이트에서도 심사표라고 부르지 마세요. 공개 약속 자체는 그대로입니다.
+        //
+        // The not-looked-at list below stays public regardless. It isn't a
+        // criterion anyone can game — it's the reassurance that gets a nervous
         // non-developer to register. Same reason the three-part deliverable
         // framing stays in dict.program.outputSteps and the upload checklist in
-        // dict.program.submission: those tell you what to DO, not how you score.
+        // dict.program.submission: those tell you what to DO.
         a: {
-          ko: "기술 완성도는 심사 기준이 아닙니다. 크게 보면 무게는 결과물의 완성도가 아니라 거기까지 간 과정에 실려 있어요 — 문제를 감이 아니라 근거로 골랐는지, 그리고 그게 실제로 돌아가는지. 심사표는 대회 전에 참가자에게 그대로 공개합니다 — 무엇으로 평가받는지 모르는 채 준비하실 일은 없어요.",
-          en: "Technical polish is not a judging criterion. Broadly, the weight sits on the process rather than the finish — whether you chose the problem from evidence rather than instinct, and whether the thing actually runs. And the score sheet goes out to participants before the event, as it is — you'll never be preparing without knowing what you're judged on.",
+          ko: "기술 완성도는 보는 기준이 아닙니다. 크게 보면 무게는 결과물의 완성도가 아니라 거기까지 간 과정에 실려 있어요 — 문제를 감이 아니라 근거로 골랐는지, 그리고 그게 실제로 돌아가는지. 무엇을 보고 피드백을 드리는지는 피드백 문서로 대회 전에 그대로 공개합니다 — 무엇을 준비해야 하는지 모르는 채 무대에 서실 일은 없어요.",
+          en: "Technical polish isn't one of the things looked at. Broadly, the weight sits on the process rather than the finish — whether you chose the problem from evidence rather than instinct, and whether the thing actually runs. What the feedback is based on goes out to participants before the event as a feedback document, exactly as it stands — you'll never be preparing without knowing.",
         },
         aGroups: [
           {
-            label: { ko: "채점하지 않는 것", en: "What is not graded" },
+            label: { ko: "보지 않는 것", en: "What isn't looked at" },
             items: [
               { ko: "발표력 · 영어 · 화면의 세련됨", en: "Delivery · English · visual polish" },
               {
@@ -2466,22 +2534,24 @@ export const dict = {
         // The withheld-detail line. Phrased as an offer, not a wall: it says more
         // detail exists and that being in the room is how you get it.
         //
-        // UPDATED 2026-08-04: the score sheet is no longer internal (see the
-        // judging answer above), so the old ban on naming it here is lifted.
+        // UPDATED 2026-08-04: the feedback document is no longer internal (see the
+        // answer above), so the old ban on naming it here is lifted.
         //
         // This line still promises GUIDANCE rather than the document, and that is
         // deliberate: the answer above already commits to "대회 전에 공개", which is
         // the promise. Naming a delivery CHANNEL here would be a second, narrower
-        // promise — the open chat is public while the sheet goes to participants —
-        // and the organisers would have to keep both. Still no per-axis numbers:
-        // they aren't settled, and the sheet carries them.
+        // promise — the open chat is public while the document goes to participants
+        // — and the organisers would have to keep both. Still no per-axis numbers:
+        // they aren't settled.
         aOpenChat: {
-          ko: "심사에서 뭘 더 보는지는 오픈채팅방에서 먼저 풀어요 — 준비하면서 참고할 만한 것들부터요.",
-          en: "We go into more of what judging looks for in the open chat first — starting with what's useful while you're still building.",
+          ko: "전문가들이 뭘 눈여겨보는지는 오픈채팅방에서 먼저 풀어요 — 준비하면서 참고할 만한 것들부터요.",
+          en: "We go into what the experts actually look for in the open chat first — starting with what's useful while you're still building.",
         },
+        // 과정 기록의 행선지가 순위가 아니라 피드백·인턴십 검토로 바뀌었습니다
+        // (2026-08-05) — dict.program.checkins.bonus와 같은 논리이니 함께 움직이세요.
         aTail: {
-          ko: "체크인 응답과 오피스아워 참여는 과정 가산점으로 반영돼요. 심사는 실제 산업에서 문제를 풀어온 현업 리더분들이 직접 합니다(심사위원 섹션 참조).",
-          en: "Responding to the check-in forms and using the office hours count as process credit. Judging is done first-hand by leaders who have solved these problems in industry (see the judges section).",
+          ko: "체크인 응답과 오피스아워 참여는 과정 기록으로 남아, 전문가 피드백과 주최사의 인턴십 검토에서 그대로 참고돼요. 피드백은 실제 산업에서 문제를 풀어온 현업 리더분들이 직접 주십니다(피드백 패널 섹션 참조).",
+          en: "Responding to the check-in forms and using the office hours leaves a trail of your process, which the experts' feedback and the hosts' internship review draw on. The feedback itself comes first-hand from leaders who have solved these problems in industry (see the feedback panel section).",
         },
       },
     ],

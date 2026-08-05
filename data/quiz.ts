@@ -104,8 +104,12 @@ export const QUESTIONS: Question[] = [
     b: { label: { ko: "가보자고, 갈아엎기", en: "Let's go — tear it up and rebuild" }, pole: "P" },
   },
   {
-    id: "Q10", axis: "IDENTITY", w: 7, // rumination after a loss = core Turbulent trait — highest IDENTITY weight
-    text: { ko: "결과 발표, 우리 팀은 입상 못 했다. 집 가는 길의 나는?", en: "Results are in — we didn't place. On the way home I…" },
+    id: "Q10", axis: "IDENTITY", w: 7, // rumination after a flat reception = core Turbulent trait — highest IDENTITY weight
+    // 원래 "입상 못 했다"였습니다 — 2026-08-05 결과 공유회 전환으로 등수 자체가
+    // 없어졌으니, 흔들리는 순간을 순위가 아니라 무대 반응으로 바꿨습니다.
+    // 재는 축(곱씹기 vs 털기)은 그대로입니다. quizExplanations의 IDENTITY 설명
+    // 문구도 같이 움직였습니다.
+    text: { ko: "발표는 끝났는데 반응이 미지근했다. 집 가는 길의 나는?", en: "The presentation is done and the room was lukewarm. On the way home I…" },
     // a/b swapped (Tid first) — see the debias note above QUESTIONS.
     a: { label: { ko: "“그때 그것만 고쳤어도…” 곱씹기", en: "“If only we'd fixed that…” — replay it" }, pole: "Tid" },
     b: { label: { ko: "“잘했으니 됐지, 다음에 또” 툭툭 털기", en: "“We did well, next time” — shake it off" }, pole: "A" },
@@ -452,7 +456,7 @@ export const RESULTS: Record<MbtiKey, Result> = {
     role: { ko: "리서치 · 데이터 검증", en: "Research · Fact-checking" }, roleKey: "plan",
     match: ["ESFP", "ESTP"],
     matchWhy: [
-      { ko: "출처 21개 달아온 당신 자료를 얘가 무대에서 노래로 만들어요. 팩트에 흥 붙이면 우승 각이죠 🎤", en: "The doc you brought with 21 citations, this one turns into a song on stage. Facts + a beat = podium 🎤" },
+      { ko: "출처 21개 달아온 당신 자료를 얘가 무대에서 노래로 만들어요. 팩트에 흥 붙이면 무대 찢을 각이죠 🎤", en: "The doc you brought with 21 citations, this one turns into a song on stage. Facts + a beat = a stage-stealer 🎤" },
       { ko: "당신이 근거 다 확인하는 사이 얘는 이미 출시했어요. 근데 당신의 팩트체크가 얘 데모 터질 뻔한 걸 막아주죠 — 속도와 신뢰의 콤비 ⚡", en: "While you verify every source, this one's already shipped — but your fact-check catches the thing that would've blown up their demo. Speed meets rigor ⚡" },
     ],
     phrase: { ko: "느낌적 느낌? 노. 근거 가져와.", en: "Vibes? No. Bring the sources." },
