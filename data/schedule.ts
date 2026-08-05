@@ -464,12 +464,15 @@ export const days: DayMeta[] = [
     weekday: { ko: "금", en: "Fri" },
     phase: LAB2,
     theme: { ko: "파이널 리허설", en: "Final Rehearsal" },
-    // "네트워킹 점심"이었는데 고쳤습니다 (2026-08-04) — 식사가 제공되는 것으로
-    // 읽히지만 실제로는 각자 나가서 사 먹습니다. 현장에서 바로 불만이 되는 종류의
-    // 오해라 요약과 시간표 양쪽에서 "개별"임이 드러나야 합니다.
+    // DECIDED 2026-08-05: 식사 언급 전면 제거 — 제공 안내도, 미제공 안내도 쓰지
+    // 않는다. (식사 미제공 정책 자체는 2026-08-04 결정 그대로) 어느 방향으로든 다시
+    // 넣지 마세요. 이 나열에 있던 "점심(개별)"이 그래서 빠졌습니다 — 요약은 그날
+    // 무엇이 열리는지를 말하는 줄이고, 참가자가 알아서 먹는 시간은 행사가 여는
+    // 프로그램이 아닙니다. 아래 시간표에도 같은 시간대가 "휴식"으로 남아 있습니다.
+    // 끝의 "저녁: 사전 제출물 마감"은 시간대이지 식사가 아닙니다 — 건드리지 마세요.
     summary: {
-      ko: "AWS 오피스(확정) · 멘토와 함께하는 최종 점검 · 점심(개별) · 박희덕 커리어 간담회 · FDE 오피스아워(온라인) · 저녁: 사전 제출물 마감(필수).",
-      en: "AWS office (confirmed) · final check with mentors · lunch (on your own) · Park Hee-deok career session · FDE office hours (online) · Evening: submission deadline (required).",
+      ko: "AWS 오피스(확정) · 멘토와 함께하는 최종 점검 · 박희덕 커리어 간담회 · FDE 오피스아워(온라인) · 저녁: 사전 제출물 마감(필수).",
+      en: "AWS office (confirmed) · final check with mentors · Park Hee-deok career session · FDE office hours (online) · Evening: submission deadline (required).",
     },
     whyStop: {
       ko: "전문가들이 던질 질문을 무대에 서기 하루 전에 미리 받아보는 자리",
@@ -490,9 +493,19 @@ export const days: DayMeta[] = [
         eventId: "d7-final-rehearsal",
       },
       {
+        // 이 줄은 "네트워킹 점심" → "점심 (식사 미제공 안내)"을 거쳐 지금의 "점심시간"이
+        // 됐습니다. DECIDED 2026-08-05: 식사 언급 전면 제거 — 제공 안내도, 미제공
+        // 안내도 쓰지 않는다. (식사 미제공 정책 자체는 2026-08-04 결정 그대로) 어느
+        // 방향으로든 다시 넣지 마세요.
+        // 여기서 걷어낸 것은 "제공/미제공"이지 시간대 이름이 아닙니다. 시간표에는
+        // 점심시간이 그대로 있어야 합니다 — 9AM–2PM을 관통하는 하루에서 11:30에
+        // 무엇이 열리는지 이름이 없으면 현장에 있는 사람이 자리를 떠도 되는지를
+        // 모릅니다. "점심시간"은 그 시간대의 이름일 뿐, 끼니를 준다는 말이 아닙니다.
+        // note에는 무엇을 해도 되는 시간인지만 씁니다 — 식판도, 각자 해결하라는
+        // 안내도 넣지 마세요.
         time: "11:30AM–12:30PM",
-        label: { ko: "점심", en: "Lunch" },
-        note: { ko: "식사는 제공되지 않아요 — 근처에서 각자 해결합니다. 그대로 나가서 네트워킹하거나 멘토와 이야기를 이어가도 좋아요.", en: "Lunch isn't provided — grab something nearby. Feel free to head out together and keep networking, or carry on with a mentor." },
+        label: { ko: "점심시간", en: "Lunch break" },
+        note: { ko: "자유 시간이에요 — 그대로 나가서 네트워킹을 이어가거나, 멘토와 이야기를 이어가도 좋아요.", en: "Free time — head out and keep networking, or carry on the conversation with a mentor." },
       },
       {
         time: "12:30PM–1:40PM",

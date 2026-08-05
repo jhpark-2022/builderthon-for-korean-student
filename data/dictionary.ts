@@ -1464,7 +1464,12 @@ export const dict = {
           // 대상 범위(1위 팀 → 전원)이지 인턴십을 여는 회사가 아닙니다. 실명은 FAQ
           // 인턴십 답변과 여기 두 곳에만 두세요.
           { ko: "테마형 어워드 — 1·2·3위 순위 대신 각 팀의 강점을 조명 · 부문 구성은 확정되는 대로 안내", en: "Thematic awards — spotlighting each team's strengths instead of a 1st–3rd ranking · categories announced once set" },
-          { ko: "어워드 인센티브는 현금·식사 바우처 형태로 주최사가 지원 — 규모 확정 전", en: "Award incentives come as cash or dining vouchers from the hosts — amounts not yet final" },
+          // DECIDED 2026-08-05: 식사 언급 전면 제거 — 제공 안내도, 미제공 안내도 쓰지
+          // 않는다. (식사 미제공 정책 자체는 2026-08-04 결정 그대로) 어느 방향으로든
+          // 다시 넣지 마세요. 이 줄에서는 "현금·식사 바우처"의 식사가 빠졌습니다 —
+          // 바우처 종류는 애초에 확정된 적이 없고, 그 한 단어가 사이트에서 유일하게
+          // 식사가 나온다고 읽힐 여지를 만들고 있었습니다.
+          { ko: "어워드 인센티브는 현금·바우처 형태로 주최사가 지원 — 규모 확정 전", en: "Award incentives come as cash or vouchers from the hosts — amounts not yet final" },
           { ko: "AXMOS(코드프레소·WVB) 유급 인턴십 기회 — 수상과 무관하게 모든 참가자에게 열려 있습니다 · 주최사가 행사 과정과 제출물을 바탕으로 직접 검토", en: "A paid internship with AXMOS (Codepresso · WVB) — open to every participant, awards or not · the hosts review interest on the strength of your work across the event" },
           // CONFIRMED 2026-08-03 (브랜드부스트 미팅): 후드+캡 세트 60개, Day 1 전
           // 도착 확정, 현장 선착순. 이전 줄("굿즈 (pen·notes) 등 · 검토 중")은
@@ -2446,13 +2451,19 @@ export const dict = {
           // 전 시간 참석"이라, 참가자 전원이 받는 항목과 나란히 두면 기준이 오해됩니다.
           // "Day 5 AI Use Case Top 3의 널담 바우처도 논의 중" 문장은 2026-08-03에
           // 빠졌습니다 — Day 5가 네트워킹 데이로 바뀌며 그 세션이 없어졌습니다.
-          // DECIDED 2026-08-04: NO meals are provided at any point — aligned with
-          // schedule.ts d7 ("점심(개별)"). What IS free: entry, networking, and the
-          // Brand Boost hoodie+cap sets (Day 1 on-site, 60 sets first-come). Do not
-          // reintroduce food promises here or in any benefit/schedule copy.
+          // DECIDED 2026-08-04: NO meals are provided at any point. What IS free:
+          // entry, networking, and the Brand Boost hoodie+cap sets (Day 1 on-site,
+          // 60 sets first-come). Do not reintroduce food promises here or in any
+          // benefit/schedule copy.
+          // DECIDED 2026-08-05: 식사 언급 전면 제거 — 제공 안내도, 미제공 안내도 쓰지
+          // 않는다. (식사 미제공 정책 자체는 2026-08-04 결정 그대로) 어느 방향으로든
+          // 다시 넣지 마세요. 정책은 그대로이고 바뀐 것은 그 사실을 사이트에 쓰지
+          // 않는다는 점입니다 — 이 답변에 있던 "(식사는 제공되지 않아요 — 각자 해결)"
+          // 괄호가 그래서 빠졌습니다. 안 준다는 안내조차 식사를 화제로 만들고, 이
+          // 답변은 상금을 묻는 자리지 끼니를 묻는 자리가 아닙니다.
           // benefits 06 카드와 같은 사실을 말하는 자리이니 함께 움직여 주세요.
-          ko: "네 — 다만 팀을 1·2·3위로 세우는 방식은 아닙니다. 시상은 각 팀의 강점을 드러내는 테마형 어워드로 구성되며, 부문은 현재 기획 중이라 확정되는 대로 안내드려요. 인센티브는 현금·식사 바우처 형태로 주최사가 지원합니다(규모 확정 전). 참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다(식사는 제공되지 않아요 — 각자 해결). 브랜드부스트 후드·캡 세트는 Day 1 현장에서 선착순 60세트로 드리고, 수료증은 크래시코스 전 시간을 들으면 받습니다.",
-          en: "Yes — but not as a 1st-2nd-3rd ranking. Awards are thematic, built to recognise each team's strengths, and the categories are being designed now — we'll announce them once set. Incentives come as cash or dining vouchers from the hosts (amounts not yet final). Entry is free and the networking goes to everyone (meals aren't provided — grab food on your own). The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come, and the certificate comes with full Crash Course attendance.",
+          ko: "네 — 다만 팀을 1·2·3위로 세우는 방식은 아닙니다. 시상은 각 팀의 강점을 드러내는 테마형 어워드로 구성되며, 부문은 현재 기획 중이라 확정되는 대로 안내드려요. 인센티브는 현금·바우처 형태로 주최사가 지원합니다(규모 확정 전). 참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드·캡 세트는 Day 1 현장에서 선착순 60세트로 드리고, 수료증은 크래시코스 전 시간을 들으면 받습니다.",
+          en: "Yes — but not as a 1st-2nd-3rd ranking. Awards are thematic, built to recognise each team's strengths, and the categories are being designed now — we'll announce them once set. Incentives come as cash or vouchers from the hosts (amounts not yet final). Entry is free, and the networking goes to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come, and the certificate comes with full Crash Course attendance.",
         },
       },
       {
