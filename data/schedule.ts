@@ -191,10 +191,18 @@ export interface DayMeta {
   mandatory?: boolean; // 필참 — required attendance (Day 1 & Day 8)
   // 노선도에서 이 정거장을 한 단계 크게 그립니다. 필참(★·rose)과는 다른 층입니다 —
   // "와야 하는 날"이 아니라 "놓치면 아까운 날"이라 색도 글리프도 다르게 씁니다.
-  // 배지는 붙이지 않습니다: Day 5는 선택일이고, 필참 배지와 비슷한 무엇이든 달면
+  // 배지는 붙이지 않습니다: 둘 다 선택일이고, 필참 배지와 비슷한 무엇이든 달면
   // 의무로 읽힙니다.
-  // 지금은 Day 5(네트워킹) 하나뿐입니다. 늘리지 마세요 — 둘 이상이 되는 순간
-  // 강조가 강조가 아니게 되고, 노선도에 층이 세 개나 생깁니다.
+  //
+  // 지금은 Day 5(네트워킹)와 Day 7(파이널 리허설) 둘입니다 — 선택 여섯 중 둘.
+  // 셋째를 만들지 마세요: 선택일의 절반이 크게 그려지는 순간 큰 점이 기본값이 되고,
+  // 작은 점이 "덜 중요한 날"이라는 뜻으로 뒤집힙니다(그건 dict.program.route의
+  // optionalValue가 정면으로 부정하는 주장입니다).
+  //
+  // 이 층에 들어오는 기준: 현장(dayMode: "offline")이면서, 그날 벌어지는 일이
+  // 혼자서는 대체 불가능할 것. Day 5는 학생끼리 섞이는 하루, Day 7은 무대 전날
+  // 현업 앞에서 받아보는 리허설 — 둘 다 자율 빌드로는 못 얻습니다.
+  // 범례(dict.program.route.legendSpotlight)는 이 둘을 다 덮는 말이어야 합니다.
   spotlight?: boolean;
   // Force the "자율 진행 / Self-paced" day badge on. Normally that badge is
   // inferred (a day with self-paced build and no real sessions), but Day 6 now
@@ -413,17 +421,20 @@ export const days: DayMeta[] = [
     // 것은 '처음'이 아니라 밀도입니다 — 첫날의 만남은 키노트·문제 공개 사이에 낀
     // 쉬는 시간이고, 이 날은 하루 전체가 학생끼리 섞이는 데 쓰입니다.
     // 같은 주장이 dict의 노선도 범례(legendSpotlight)와 혜택 네트워킹 줄에도 있었고
-    // 셋을 함께 고쳤습니다. 되돌릴 거면 세 곳을 같이 되돌리세요.
+    // 셋을 함께 고쳤습니다. 되돌릴 거면 두 곳을 같이 되돌리세요 — 범례는 2026-08-05
+    // Day 7이 스포트라이트에 합류하며 일반화됐고("놓치면 아까운 정거장"), 이제 Day 5를
+    // 서술하지 않습니다. Day 5가 무엇인지는 아래 whyStop과 혜택 네트워킹 줄 둘만
+    // 말합니다.
     whyStop: {
       ko: "학생끼리 교류하는 데 하루를 통째로 쓰는 날",
       en: "A whole day given to students connecting with each other",
     },
     hours: "10AM–2PM",
     dayMode: "offline",
-    // 선택일 여섯 중 유일하게 노선도에서 크게 그립니다. 하루를 통째로 학생 간 교류에
-    // 쓰는 유일한 날인데, 작은 점 하나로는 Day 2·3·4·6과 구분되지 않았습니다 —
-    // whyStop이 그 값을 말하는 동안 노선도는 그냥 지나가는 정거장으로 그리고
-    // 있었습니다.
+    // 노선도에서 크게 그리는 두 선택일 중 하나(다른 하나는 Day 7). 하루를 통째로
+    // 학생 간 교류에 쓰는 유일한 날인데, 작은 점 하나로는 Day 2·3·4·6과 구분되지
+    // 않았습니다 — whyStop이 그 값을 말하는 동안 노선도는 그냥 지나가는 정거장으로
+    // 그리고 있었습니다.
     spotlight: true,
   },
   {
@@ -501,6 +512,16 @@ export const days: DayMeta[] = [
       },
     ],
     dayMode: "offline",
+    // 노선도에서 크게 그리는 두 선택일 중 하나(다른 하나는 Day 5). Day 5와 같은
+    // 이유입니다 — 현장이고, 그날 벌어지는 일이 혼자서는 대체 불가능합니다: 무대에
+    // 서기 하루 전, 현업에서 제품을 파는 사람들 앞에서 발표와 Q&A를 미리 받아보는
+    // 자리는 자율 빌드로 대신할 수 없습니다. 게다가 이날 저녁이 사전 제출물 마감이라
+    // 실질적으로 마지막 손볼 기회이기도 합니다(deliverableDue).
+    //
+    // 배지는 붙이지 않습니다 — Day 7은 선택일입니다. 노선도에서 크게 그리는 것과
+    // 필참은 다른 층이고, 그 구분이 무너지면 "이틀만 비우면 된다"는 이 섹션 전체의
+    // 주장이 무너집니다.
+    spotlight: true,
     // What the deadline actually consists of is a LIST, and a list read as a
     // parenthetical inside an already-long day summary is the one thing nobody
     // parses. The modal renders it as its own bordered box instead (see
