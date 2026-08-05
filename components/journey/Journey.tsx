@@ -3276,6 +3276,20 @@ export default function Journey() {
                     </div>
                   )}
 
+                  {/* Who these people are here as. It sits BETWEEN the partner
+                      logos and the faces because that adjacency is exactly what
+                      would otherwise mislead: two company marks directly above a
+                      grid of cards that each print a company name reads as "these
+                      are their people", and none of them are. Quiet styling on
+                      purpose — it's a qualifier on the grid, not a third heading
+                      competing with the box title. */}
+                  {g.personalNote && (
+                    <div className="mt-4 border-l-2 border-emerald-400/25 pl-3">
+                      <p className="break-keep text-xs font-bold text-emerald-100/80">{t(g.personalNote.title)}</p>
+                      <p className="mt-1 break-keep text-xs leading-relaxed text-white/55">{t(g.personalNote.body)}</p>
+                    </div>
+                  )}
+
                   {/* MOBILE: a swipe row. DESKTOP: the same flex-wrap grid as
                       before — widths mirror the old grid columns (gap-3 = 0.75rem)
                       and the last line stays centred.
@@ -3328,39 +3342,15 @@ export default function Journey() {
                         </div>
                       );
                     })}
-                    {/* Nobody is listed for Popup Studio's office hours because
-                        they send FDEs on rotation rather than an assigned mentor.
-                        A dashed card says that in the one place a reader would
-                        otherwise wonder about it — inventing a name is the one
-                        thing this page has never done.
-
-                        DESKTOP ONLY. In the wrap grid it is simply the last cell
-                        and behaves. In the mobile swipe row it was a disaster: it
-                        carries no `w-[75vw] shrink-0` like its siblings, so flex
-                        crushed it to a sliver, its two sentences wrapped to ~15
-                        lines, and at 463px tall it dragged every mentor card in
-                        the row up to match — 283–305px of dead space per card,
-                        measured. It also isn't a mentor, so a full-width note
-                        below the row is the more honest shape for it anyway. */}
-                    {g.placeholder && (
-                      <div className="hidden w-full flex-col rounded-2xl border border-dashed border-emerald-400/25 bg-emerald-400/[0.03] p-4 sm:flex sm:w-[calc((100%-0.75rem)/2)] lg:w-[calc((100%-1.5rem)/3)]">
-                        <p className="break-keep text-sm font-bold leading-snug text-emerald-100/90">{t(g.placeholder.title)}</p>
-                        <p className="mt-2 break-keep text-xs leading-relaxed text-white/60">{t(g.placeholder.body)}</p>
-                      </div>
-                    )}
+                    {/* A dashed "FDE 오피스아워 · 멘토 명단 공개 예정" card used to close
+                        this row (desktop) with a full-width twin below it
+                        (mobile) — it stood in for Popup Studio, who send FDEs on
+                        rotation rather than an assigned mentor. Both are gone with
+                        the `placeholder` field (2026-08-05): the office hours are
+                        still described in the box blurb above and scheduled in the
+                        programme, so what the card contributed was an empty slot
+                        among cards that are otherwise all people. */}
                   </div>
-
-                  {/* The same note, mobile only, as a full-width block under the
-                      row instead of a card inside it. Same copy, same dashed
-                      emerald treatment, so it still reads as "this slot exists but
-                      has no name yet" — it just stops being a peer of the people
-                      cards and stops setting their height. */}
-                  {g.placeholder && (
-                    <div className="mt-3 rounded-2xl border border-dashed border-emerald-400/25 bg-emerald-400/[0.03] p-4 sm:hidden">
-                      <p className="break-keep text-sm font-bold leading-snug text-emerald-100/90">{t(g.placeholder.title)}</p>
-                      <p className="mt-1.5 break-keep text-xs leading-relaxed text-white/60">{t(g.placeholder.body)}</p>
-                    </div>
-                  )}
                 </div>
               );
             })}

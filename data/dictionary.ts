@@ -1663,10 +1663,11 @@ export const dict = {
           ko: "아직 방향을 바꿀 수 있는 구간의 멘토링입니다. 제품을 직접 만들어 온 창업가·현업 엔지니어와 — 여러 병목 중 하나를 고르고, 버릴 것을 정하고, 그 선택을 제공 데이터로 뒷받침합니다. 정답을 주는 자리가 아니라 같은 문제를 놓고 ‘나라면 이렇게 했을 수도’를 나누는 자리이고, 빌드가 막히면 팝업스튜디오 엔지니어(FDE 오피스아워)와 함께 풀어요.",
           en: "This is mentoring while the direction can still change. With founders and working engineers who have built and shipped products themselves — you pick one bottleneck, decide what NOT to solve, and back that choice with the provided data. It's not an answer-giving session but a ‘here's how I might have done it’ conversation over the same problem — and when the build gets stuck, Popup Studio's engineers (FDE office hours) work through it with you.",
         },
-        // "메인 멘토링 파트너" is load-bearing, not decoration: most of the cards
-        // in this box are NOT Onword people (REmited · YMX · T3Q · NTU), and two
-        // logos over a list of faces reads as an org chart unless the label says
-        // otherwise.
+        // "메인 멘토링 파트너" is load-bearing, not decoration: NONE of the cards in
+        // this box belong to either mark since the two Onword founders came out
+        // (2026-08-05) — the grid below is REmited · YMX · T3Q · NTU, all personal
+        // capacity — and two logos over a list of faces reads as an org chart
+        // unless the label says otherwise. `personalNote` below now says the rest.
         partnersLabel: { ko: "메인 멘토링 파트너", en: "Main mentoring partners" },
         // `logoClass` is OPTICAL sizing, not a uniform cap. Capping both marks at
         // the same height is what made Popup Studio look like a footnote next to
@@ -1696,17 +1697,28 @@ export const dict = {
             logoClass: "h-11 sm:h-12",
           },
         ],
-        // Placeholder card at the end of this box's grid. Popup Studio sends FDEs
-        // rather than named mentors, so there is nobody to list yet — and an
-        // invented name would be the one thing this page has never done. The copy
-        // is the old stage-2 card's, which described exactly this.
-        placeholder: {
-          title: { ko: "FDE 오피스아워 · 멘토 명단 공개 예정", en: "FDE office hours · mentors to be announced" },
+        // Label over this box's mentor grid. The people in it are NOT sent by the
+        // companies printed on their cards — they come as individuals — and the
+        // 메인 멘토링 파트너 panel directly above them would otherwise imply that the
+        // whole grid is corporate participation. Saying it once here is cheaper
+        // and less repetitive than a per-card badge.
+        // Only the build box carries this. The Day 7 box is a mix (Codepresso and
+        // Popup Studio are there officially), so a blanket label there would be
+        // false — if that ever needs stating, it has to be per person.
+        personalNote: {
+          title: { ko: "개인적으로 도움을 주시는 분들", en: "Helping in a personal capacity" },
           body: {
-            ko: "Popup Studio의 FDE(Forward Deployed Engineer)가 온라인 오피스아워를 엽니다 — 드롭인 방식이라 지정 멘토 없이, 빌드가 막히는 지점을 현업 엔지니어와 함께 풀어요.",
-            en: "Popup Studio's Forward Deployed Engineers keep online office hours — drop in with no assigned mentor and work through whatever your build is stuck on.",
+            ko: "아래 멘토분들은 소속 회사의 공식 참여가 아니라, 개인 자격으로 시간을 내어 함께해 주십니다.",
+            en: "The mentors below join in a personal capacity — not as an official commitment from the companies they work at.",
           },
         },
+        // The dashed "FDE 오피스아워 · 멘토 명단 공개 예정" card that used to close this
+        // grid was removed on 2026-08-05, along with the `placeholder` field and
+        // the JSX that rendered it in Journey.tsx. The office hours themselves are
+        // unchanged — they are described in this box's `sub` above and run as their
+        // own sessions in the programme (schedule.ts d5/d6/d7-fde-office-hour).
+        // What the card added was a slot with no name in it, on a page where every
+        // other card is a person.
       },
       {
         id: "pitch",
@@ -1742,7 +1754,11 @@ export const dict = {
         // 메인 멘토링 파트너, and a logo in this header would say that it has.
         partnersLabel: { ko: "", en: "" },
         partners: [],
-        placeholder: null,
+        // Null on purpose, not an oversight: this box holds Codepresso and Popup
+        // Studio people who ARE here on their company's behalf alongside the AWS
+        // and NetApp seniors who are not. A blanket "개인 자격" label would be false
+        // for half the grid. See the build group's `personalNote`.
+        personalNote: null,
       },
     ],
     // The one line kept from the amber aside that used to sit here. That aside
@@ -1854,24 +1870,19 @@ export const dict = {
         days: "Day 2", daysPending: "", stages: [], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jihoon-kim-613878134",
       },
       // ── Day 3·4 · 자율 빌드 1:1 ─────────────────────────────────────────────
-      // Onword Lab — two founders as mentors.
-      {
-        name: { ko: "김진호", en: "Jinho Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CEO", en: "Co-founder · CEO" },
-        intro: {
-          ko: "유통·리테일 AI 전환(AX).",
-          en: "AI transformation for retail & distribution.",
-        },
-        days: "Day 3·4", daysPending: "", stages: [1], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/kimjinho",
-      },
-      {
-        name: { ko: "김시훈", en: "Sihoon Kim" }, org: { ko: "Onword Lab", en: "Onword Lab" }, role: { ko: "공동창업자 · CTO", en: "Co-founder · CTO" },
-        intro: {
-          ko: "커머스 운영 에이전트 시스템 개발.",
-          en: "Agentic ops systems for commerce.",
-        },
-        days: "Day 3·4", daysPending: "", stages: [1], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sihoon-kim-306551372",
-      },
-      // REmited (Team Remited) — CEO as mentor.
+      // Onword Lab's two founders (김진호 CEO · 김시훈 CTO) stood at the head of this
+      // block until 2026-08-05, when their names came out. The company stays a
+      // 메인 멘토링 파트너 in the box header — what is gone is the pair of named
+      // individuals, not the partnership. Re-add cards here (stages: [1]) if
+      // Onword names people again; do not touch the partner logo panel for it.
+      //
+      // Everyone below is here in a PERSONAL capacity — see `personalNote` on the
+      // build group, which is the label printed over this run of cards. The org
+      // line on each card is where that person works, not a company that has
+      // signed on to the event. If a mentor's participation ever becomes their
+      // employer's official one, they move out from under that label (and the
+      // label's copy has to stop covering "이 박스의 모든 분").
+      // REmited (Team Remited) — CEO, joining personally.
       {
         name: { ko: "Brian Bae", en: "Brian Bae" }, org: { ko: "REmited", en: "REmited" }, role: { ko: "CEO", en: "CEO" },
         // NOT "前 Antler" — he is an Entrepreneur in Residence AT Antler, which is
