@@ -1032,8 +1032,8 @@ export const schedule: BEvent[] = [
   //     en: "The companies that set the problems walk through the background and context first-hand — format still being arranged.",
   //   },
   //   description: {
-  //     ko: "문제가 공개되고 트랙을 고른 직후, 그 과제를 실제로 낸 주최사(AXMOS) 측이 배경과 맥락을 직접 풀어주는 시간입니다. 왜 이게 현업에서 문제인지, 안에서는 지금 어떻게 처리하고 있는지, 이번 과제의 범위는 어디까지인지 — 문제 설명문만으로는 보이지 않는 부분을 짚고 질문을 받습니다. 이어지는 현장 브리핑 & Q&A가 진행 방식·팀 구성·평가 기준을 다룬다면, 이 시간은 과제 내용 자체를 다룹니다. 참가자 전원이 한자리에 모이는 다음 기회는 Day 5이므로, 맥락을 가장 깊게 가져갈 수 있는 자리이기도 합니다. 진행자와 형식(길이·구성)은 아직 조율 중이며, 확정되는 대로 안내합니다.",
-  //     en: "Right after the problems drop and tracks are chosen, the host companies (AXMOS) that actually set them walk through the background and context first-hand: why this is a real problem inside the business, how it's handled today, and where the scope of this brief starts and ends — the parts a written problem statement doesn't show. Questions are taken on the spot. Where the on-site briefing & Q&A that follows covers how the eight days run, this session is about the problem itself. The next time everyone is in one room is Day 5, so this is the deepest context you can carry out of the room. Who runs it and in what format (length, structure) is still being arranged; we'll announce it once settled.",
+  //     ko: "문제가 공개되고 트랙을 고른 직후, 그 과제를 실제로 낸 코드프레소가 배경과 맥락을 직접 풀어주는 시간입니다. 왜 이게 현업에서 문제인지, 안에서는 지금 어떻게 처리하고 있는지, 이번 과제의 범위는 어디까지인지 — 문제 설명문만으로는 보이지 않는 부분을 짚고 질문을 받습니다. 이어지는 현장 브리핑 & Q&A가 진행 방식·팀 구성·평가 기준을 다룬다면, 이 시간은 과제 내용 자체를 다룹니다. 참가자 전원이 한자리에 모이는 다음 기회는 Day 5이므로, 맥락을 가장 깊게 가져갈 수 있는 자리이기도 합니다. 진행자와 형식(길이·구성)은 아직 조율 중이며, 확정되는 대로 안내합니다.",
+  //     en: "Right after the problems drop and tracks are chosen, Codepresso, which actually set it, walks through the background and context first-hand: why this is a real problem inside the business, how it's handled today, and where the scope of this brief starts and ends — the parts a written problem statement doesn't show. Questions are taken on the spot. Where the on-site briefing & Q&A that follows covers how the eight days run, this session is about the problem itself. The next time everyone is in one room is Day 5, so this is the deepest context you can carry out of the room. Who runs it and in what format (length, structure) is still being arranged; we'll announce it once settled.",
   //   },
   //   location: FOUNDRY_REFINERY,
   //   locationUrl: FOUNDRY_URL,
@@ -1410,13 +1410,23 @@ export const schedule: BEvent[] = [
     // 됐을 뿐, 8분이라는 잠정 숫자와 그 헤지는 그대로입니다.)
     // Day 7 멘토링 카피에서는 숫자를 일부러 뺐습니다("발표와 Q&A") — 그쪽까지
     // 숫자를 퍼뜨리면 바뀔 때마다 다섯 곳을 쫓아다녀야 합니다.
+    // 길이 정리 (2026-08-05). 일곱 문장이던 description을 넷으로 줄였습니다. 덜어낸
+    // 것은 전부 이 모달 안에서 이미 다른 줄이 말하고 있던 내용입니다:
+    //   · "발표 순서는 이날 아침 오픈 카톡방으로…" → runOfShow 첫 줄(입장)의 note
+    //   · "(트랙마다 약 1시간 20분)" → runOfShow의 11:10–12:30 / 12:30–1:50이 보여줌
+    //   · "남아서 다른 트랙을 봐도 좋고 자리를 지킬 의무는 없어요"
+    //      → 앞 문장 "그 외 시간은 자유롭게"와 같은 말
+    //   · "Day 3·4 기초 멘토링은 피드백 패널에 서지 않는 선배들이…"
+    //      → dict.mentoring.separationNote가 멘토링 섹션에서 말하는 주장
+    // 남긴 넷: 이게 무슨 자리인가 · 형식(8분·잠정) · 오고 갈 자유 · 누가 어떤
+    // 성격의 피드백을 주는가. 덜어낸 문장을 여기로 되돌리지 마세요.
     summary: {
-      ko: "문제를 낸 기업과 업계 전문가 앞에서 팀당 8분 — 발표 3분 + Q&A 포함 피드백 5분 (잠정).",
-      en: "Eight minutes per team in front of the company that set the problem and industry experts — a 3-minute presentation, then 5 minutes of feedback with Q&A (provisional).",
+      ko: "문제를 낸 코드프레소와 업계 전문가 앞에서 팀당 8분 — 발표 3분 + Q&A 포함 피드백 5분 (잠정).",
+      en: "Eight minutes per team in front of Codepresso, who set the problem, and industry experts — a 3-minute presentation, then 5 minutes of feedback with Q&A (provisional).",
     },
     description: {
-      ko: "8일의 마지막이자, 문제를 낸 기업과 업계 전문가 앞에서 ‘내 아이디어가 돌아간다’를 검증받는 자리입니다. 같은 공간에서 트랙별로 순차 진행하며, 팀당 8분입니다 — 발표 3분에 이어 Q&A를 포함한 피드백 5분(트랙마다 약 1시간 20분). 이 배분은 아직 잠정이라 바뀔 수 있고, 확정되면 이 페이지에 업데이트합니다. 발표 순서는 이날 아침 오픈 카톡방으로 미리 공지되니, 자기 차례를 미리 알고 오시면 됩니다. 자기 트랙 발표에는 참석하시고, 그 외 시간은 자유롭게 쓰셔도 됩니다 — 남아서 다른 트랙을 봐도 좋고, 자리를 지킬 의무는 없어요. 피드백은 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다(문제 발의는 AXMOS) — 누가 더 잘했는지 평가하는 자리가 아니라, 각 팀 결과물에 전문적인 시각과 다음 가능성을 제안하는 자리예요. Day 3·4 기초 멘토링은 Day 8 피드백 패널에 서지 않는 선배들이 맡아, 학생 눈높이의 멘토 문화를 지킵니다.",
-      en: "The end of the eight days, and the moment your idea gets validated in front of the company that set the problem and industry experts. Tracks run in sequence in one space, eight minutes per team: a 3-minute presentation, then 5 minutes of feedback including Q&A (about an hour and twenty minutes per track). That split is still provisional and may change — we'll update this page once it's settled. The running order goes out in the open chat that morning, so you'll know your slot before you arrive. Attend your own track's presentations; the rest of the time is yours — stay and watch another track if you like, but you're not required to sit through it. The feedback comes from working leaders who have solved real problems in industry (problem-setting by AXMOS) — this isn't a room deciding who did better, but one where each team's work gets an expert read and a sense of what could come next. The Day 3·4 foundational mentoring is handled by seniors who don't sit on the Day 8 feedback panel, which is what keeps the peer-level mentor culture intact.",
+      ko: "8일의 마지막이자, 문제를 낸 코드프레소와 업계 전문가 앞에서 ‘내 아이디어가 돌아간다’를 검증받는 자리입니다. 같은 공간에서 트랙별로 순차 진행하며, 팀당 8분 — 발표 3분에 이어 Q&A를 포함한 피드백 5분입니다(잠정, 확정되면 업데이트합니다). 자기 트랙 발표에는 참석하시고, 그 외 시간은 자유롭게 쓰셔도 됩니다. 피드백은 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다 — 누가 더 잘했는지 가리는 자리가 아니라, 각 팀 결과물에 전문적인 시각과 다음 가능성을 제안하는 자리예요.",
+      en: "The end of the eight days, and the moment your idea gets validated in front of Codepresso, who set the problem, and industry experts. Tracks run in sequence in one space, eight minutes per team: a 3-minute presentation, then 5 minutes of feedback including Q&A (provisional — we'll update this page once it's settled). Attend your own track's presentations; the rest of the time is yours. The feedback comes from working leaders who have solved real problems in industry — this isn't a room deciding who did better, but one where each team's work gets an expert read and a sense of what could come next.",
     },
     location: ONSITE,
   },

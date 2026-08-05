@@ -75,9 +75,14 @@ export const partnerIntros: Record<string, Phrase> = {
   },
 
   // ── 주최 · HOST ────────────────────────────────────────────────────────────
+  // CORRECTED 2026-08-05: 과제를 내는 것은 AXMOS가 아니라 구성사인 코드프레소입니다.
+  // 코드프레소가 AXMOS 소속인 것은 맞지만, "AXMOS가 과제를 준다"는 사실이 아닙니다 —
+  // 컨소시엄 이름으로 뭉뚱그리면 나머지 네 회사도 과제를 낸다는 뜻이 됩니다.
+  // 같은 오류가 있던 곳: 파트너 섹션 인트로 · FAQ 테마 답변 · schedule d8-judging
+  // (+ 보류된 d1-problem-deep-dive 주석). 되돌리지 마세요.
   AXMOS: {
-    ko: "AXMOS는 Translink Investment · Wilt Venture Builder · Codepresso · Popup Studio · DRIMAES 5개 사가 결성한 AX(AI 전환) 컨소시엄입니다. 이번 빌더톤의 실제 기업 과제 발의·멘토링·피드백을 함께 담당합니다.",
-    en: "AXMOS is an AX (AI-transformation) consortium formed by Translink Investment, Wilt Venture Builder, Codepresso, Popup Studio and DRIMAES — jointly providing this builderthon's real company problems, mentoring and expert feedback.",
+    ko: "AXMOS는 Translink Investment · Wilt Venture Builder · Codepresso · Popup Studio · DRIMAES 5개 사가 결성한 AX(AI 전환) 컨소시엄입니다. 이번 빌더톤에는 멘토링과 전문가 피드백으로 함께하며, 실제 기업 과제는 구성사인 코드프레소가 냅니다.",
+    en: "AXMOS is an AX (AI-transformation) consortium formed by Translink Investment, Wilt Venture Builder, Codepresso, Popup Studio and DRIMAES. It joins this builderthon with mentoring and expert feedback; the real company problem comes from Codepresso, one of its member companies.",
   },
   "Translink Investment": {
     ko: "실리콘밸리 트랜스링크캐피탈과 합작해 2016년 출범한 벤처캐피탈로, SaaS·딥테크 중심으로 7개 조합·누적 약 1,900억 원 규모를 운용합니다. 마켓컬리 초기 투자사로 알려져 있으며, 포트폴리오사의 글로벌 진출 지원이 강점입니다. 클로징 키노트를 맡은 박희덕 대표님이 이끄는 하우스입니다.",
@@ -88,8 +93,10 @@ export const partnerIntros: Record<string, Phrase> = {
     en: "A Korea–Singapore cross-border venture builder headquartered in Singapore, co-founding companies with founders from first idea to Series A across AI, content, F&B and B2B SaaS. The parent organization of Zero100 — the program behind this builderthon.",
   },
   // The last sentence lists every role Codepresso plays here, and 문제 제공 comes
-  // first because that is the one a participant actually meets — one of the AX
-  // problems teams pick on Day 1 is theirs. Crash Course and mentoring follow.
+  // first because that is the one a participant actually meets — the AX problem
+  // teams pick on Day 1 is theirs. Crash Course and mentoring follow.
+  // 2026-08-05: 문제 제공사는 여기, 코드프레소입니다 — AXMOS 카드 쪽 정정 주석 참고.
+  // 과제 출처를 컨소시엄 이름으로 쓰지 마세요.
   // If any of the three changes, dict.mentoring.mentors (김지훈 · 이동훈 · 황현진)
   // and schedule.ts d2-crash-course are the other places that name them.
   Codepresso: {
@@ -2242,8 +2249,8 @@ export const dict = {
     tag: { ko: "Partners", en: "Partners" },
     heading: { ko: "함께 만드는 사람들", en: "Built together" },
     note: {
-      ko: "실제 기업 과제를 함께 제공하는 주최 컨소시엄 AXMOS(5개 사), SMU·NUS·NTU 한인 학생회의 주관·운영, 그리고 장소·마케팅·멘토링·굿즈를 맡아주는 후원사가 함께합니다. 각 파트너가 맡은 역할을 그대로 표기합니다.",
-      en: "Built with AXMOS — the host consortium of five companies providing the real company problems — organized and run by the SMU · NUS · NTU Korean student associations, and supported by sponsors covering venue, marketing, mentoring and goods. Each partner is labelled with the role they actually play.",
+      ko: "주최 컨소시엄 AXMOS(5개 사, 실제 기업 과제는 구성사인 코드프레소가 냅니다), SMU·NUS·NTU 한인 학생회의 주관·운영, 그리고 장소·마케팅·멘토링·굿즈를 맡아주는 후원사가 함께합니다. 각 파트너가 맡은 역할을 그대로 표기합니다.",
+      en: "Built with AXMOS, the host consortium of five companies — the real company problem comes from Codepresso, one of them — organized and run by the SMU · NUS · NTU Korean student associations, and supported by sponsors covering venue, marketing, mentoring and goods. Each partner is labelled with the role they actually play.",
     },
     // ── Tier 1 · 주최 · HOST (the AXMOS consortium) ──────────────────────────
     hostLabel: { ko: "주최 · HOST", en: "Host" },
@@ -2323,8 +2330,8 @@ export const dict = {
           // 부활 여부는 미정입니다. 이 답변의 "주최사가 배경을 직접 브리핑하는" 절만
           // 그 세션에 걸려 있습니다. 딥다이브를 되살리지 않기로 하면 이 절을 함께
           // 정리해야 합니다(문제가 Day 1에 공개된다는 나머지 부분은 그대로 사실).
-          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다 — 예를 들어 ‘회사 돈이 어디서 새는지 눈에 안 보인다’ 같은 실무 문제요. 가상 과제가 아니라, Day 1에 문제가 공개되고 과제를 낸 주최사(AXMOS) 측이 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자·형식은 조율 중). 의뢰서에는 그 회사의 실제 업무 워크플로우와 담당자의 페인포인트, 관련 맥락·데이터가 담깁니다. 트랙 구성은 메인 트랙 2개로 좁혀 논의 중이며 확정되는 대로 안내합니다.",
-          en: "You take on the AX (AI-transformation) problems Korean companies are facing right now, one set per track — practical things like “we can't see where the company's money is leaking.” These aren't invented exercises but briefs: the problems drop on Day 1 and the host companies (AXMOS) that set them walk through the background first-hand (presenter and format still being arranged). Each brief carries the company's real workflow, the pain points of the person who owns it, and the context and data around it. The line-up has been narrowed to two main tracks, and we'll announce them once settled.",
+          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다 — 예를 들어 ‘회사 돈이 어디서 새는지 눈에 안 보인다’ 같은 실무 문제요. 가상 과제가 아니라, Day 1에 문제가 공개되고 과제를 낸 코드프레소가 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자·형식은 조율 중). 의뢰서에는 그 회사의 실제 업무 워크플로우와 담당자의 페인포인트, 관련 맥락·데이터가 담깁니다. 트랙 구성은 메인 트랙 2개로 좁혀 논의 중이며 확정되는 대로 안내합니다.",
+          en: "You take on the AX (AI-transformation) problems a Korean company is facing right now, one set per track — practical things like “we can't see where the company's money is leaking.” These aren't invented exercises but briefs: the problems drop on Day 1 and Codepresso, which set them, walks through the background first-hand (presenter and format still being arranged). Each brief carries the company's real workflow, the pain points of the person who owns it, and the context and data around it. The line-up has been narrowed to two main tracks, and we'll announce them once settled.",
         },
       },
       {
