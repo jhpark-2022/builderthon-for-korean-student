@@ -1331,7 +1331,6 @@ function ProgramStats({ t }: { t: Tfn }) {
 // One clean summary card per day (deck-style). Opens the day detail modal on
 // click rather than exploding every session inline — keeps the arc scannable.
 function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number) => void }) {
-  const evCount = realSessions(day.day).length;
   const allSelfPaced = dayIsSelfPaced(day.day);
   return (
     <button
@@ -1412,11 +1411,19 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
           {t(day.whyStop)}
         </p>
       )}
+      {/* 세션 개수는 뺐습니다 (되돌리지 마세요).
+          여덟 장이 격자로 놓인 자리에서 숫자는 점수로 읽힙니다. Day 1이 5, Day 3이
+          1이면 "Day 1이 다섯 배 값어치"로 보이는데, 바로 위 문단이 주장하는 것은
+          정반대입니다: 나머지 여섯도 하나하나 내려설 이유가 있고, 필참이라고 더
+          값진 날인 것도 아닙니다.
+
+          게다가 세는 단위가 서로 다릅니다. Day 1의 다섯은 3시간 반짜리 오후 하나에
+          들어 있는 진행 순서고, Day 3의 하나는 1:1 멘토링 슬롯입니다. 같은 낱말로
+          세지만 같은 것이 아니라, 방문자가 이 숫자로 답할 수 있는 질문이 없습니다.
+          그날 무엇을 하는지는 이미 카드의 제목과 요약이, 시간은 hours 칩이,
+          내려설 이유는 whyStop 줄이 말합니다. */}
       <span className="mt-auto pt-4 text-xs font-semibold text-violet-300/75 transition group-hover:text-violet-300">
-        {evCount === 0
-          ? t(dict.program.noSessions)
-          : `${evCount} ${t(evCount === 1 ? dict.program.session : dict.program.sessions)}`}{" "}
-        · {t(dict.program.tapHint)} →
+        {t(dict.program.tapHint)} →
       </span>
     </button>
   );

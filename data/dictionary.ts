@@ -1290,8 +1290,6 @@ export const dict = {
       ko: "자율 빌드입니다. 정해진 세션도, 출석도, 접속도 없어요. 팀이 각자 비는 시간에 원하는 만큼만 이어가면 돼요.",
       en: "Self-paced build. No scheduled session, no attendance, nothing to join. Teams pick it up in whatever free time they have, for as long as they want.",
     },
-    // A day whose only entries are self-paced: there is no session to count.
-    noSessions: { ko: "정해진 세션 없음", en: "No scheduled sessions" },
     pendingLabel: { ko: "현장 (미정)", en: "On-site (TBC)" },
     // 1:1 mentoring is arranged mentor by mentor, and the DEFAULT is now online
     // (Aug 2026 — enough mentors can only make an online slot). The badge led
@@ -1299,12 +1297,9 @@ export const dict = {
     // default is what makes people plan a trip they don't need. "멘토별" keeps it
     // honest for the mentors who do offer F2F (at the Korean Association hall).
     byMentorLabel: { ko: "온라인 기본 (멘토별)", en: "Online by default (by mentor)" },
-    sessions: { ko: "세션", en: "sessions" },
-    // English needs the singular for a one-session day. Korean has no plural, so
-    // both forms are identical there — kept as a pair rather than a special case
-    // in the component. (Only reachable since self-paced build stopped being
-    // counted; before that no day was down to one.)
-    session: { ko: "세션", en: "session" },
+    // REMOVED: session · sessions · noSessions. 데이 카드 하단이 "5 세션 ·
+    // 자세히 보기"였는데, 세션 개수를 세는 일 자체를 그만뒀습니다. 이유는
+    // Journey.tsx의 DayCard 주석에 있습니다. 다시 추가하지 마세요.
     // Accessible name for the day card's hours pill. The pill itself shows only
     // the window ("1PM–4:30PM") — short enough to read at a glance, but with no
     // label a screen reader announces a bare time next to two other pills. The
