@@ -119,6 +119,15 @@ export interface BEvent {
   // Optional: the company/org behind the session, shown in the modal with a
   // link out. Only add when the partner is real & confirmed (honest by default).
   org?: { name: string; desc: Bilingual; url: string };
+  // 연사가 다니는 회사의 로고. 지금은 사전 세션 밴드(PreEventBand) 하나만 씁니다.
+  //
+  // `org`와 절대 헷갈리지 마세요. org는 "이 세션을 주관하는 파트너사"라는 뜻이고,
+  // 모달에 소개 문단과 바깥 링크까지 함께 렌더됩니다. 이 필드는 그냥 연사의 소속
+  // 표시입니다 — 마이크로소프트는 이 행사의 파트너가 아니라 연사가 다니는 회사라,
+  // org 자리에 세우면 사이트가 하지 않은 약속을 하게 됩니다.
+  //
+  // 파일은 white/trimmed 규격(흰색 모노 · 투명 배경)이어야 합니다.
+  speakerLogo?: { src: string; alt: string };
   // Optional: concrete opportunities a student gets from attending. Honest —
   // describes the value of the session, not guaranteed outcomes.
   opportunities?: Bilingual[];
@@ -188,6 +197,20 @@ export interface DayMeta {
   //             badge still renders (Journey.tsx) and the next partly-on-site day
   //             will want it.
   dayMode: "online" | "offline" | "pending" | "mixed";
+  // 노선도의 현장 마커. 원래 이 자리에는 지도 핀 아이콘이 있었는데, 핀은 "현장"
+  // 하나만 말합니다 — 그건 바로 아래 카드의 뱃지가 이미 하는 말이고, 정작 궁금한
+  // 것은 "어디로 가야 하나"입니다. 그래서 핀 대신 그날의 장소 로고를 세웁니다.
+  //
+  // dayMode가 "offline"인 날에만 렌더됩니다. 로고가 없으면 마커도 없습니다 —
+  // 자리를 채우려고 아무 마크나 넣지 마세요. "pending"(장소 미확정)에 이걸 다는
+  // 것도 안 됩니다: 마커는 "여기로 오세요"라는 약속입니다.
+  //
+  // 파일은 파트너 월과 같은 규격이어야 합니다(흰색 모노 · 투명 배경 ·
+  // white/trimmed). 어두운 배경 위에서 다른 로고와 같은 무게로 읽히는 것은 그
+  // 규격뿐이고, 브랜드 원색 마크를 그대로 넣으면 노선도에서 그 하나만 튑니다.
+  // 마커 박스는 h-4 × w-14이고 object-contain이라 가로로 긴 워드마크도 잘리지
+  // 않습니다.
+  venueLogo?: { src: string; name: string };
   mandatory?: boolean; // 필참 — required attendance (Day 1 & Day 8)
   // 노선도에서 이 정거장을 한 단계 크게 그립니다. 필참(★·rose)과는 다른 층입니다 —
   // "와야 하는 날"이 아니라 "놓치면 아까운 날"이라 색도 글리프도 다르게 씁니다.
@@ -226,6 +249,18 @@ const LAB1: Bilingual = { ko: "Lab 1 · 워밍업", en: "Lab 1 · Warm-up" };
 // 한다)을 그대로 옮기면서 "Warm-up"과 같은 급의 짧은 상태 표현이라 짝이 맞습니다.
 // KR은 건드리지 않습니다.
 const LAB2: Bilingual = { ko: "Lab 2 · 실전", en: "Lab 2 · In action" };
+
+// 노선도 현장 마커에 쓰는 장소 로고 (DayMeta.venueLogo 참고). 상수로 두는 이유는
+// L^IFE Jungle이 Day 5와 Day 8 두 곳에 붙기 때문입니다 — 장소가 바뀌면 고칠 곳이
+// 하나여야 합니다. 아트워크는 scripts/process-partner-logos.py가 CI 폴더에서
+// 만들고, `name`은 스크린리더가 읽는 장소 이름입니다.
+//
+// FOUNDRY는 "FOUNDRY." 워드마크만 씁니다. 원본 로고는 말풍선 도형 + 워드마크인데,
+// 흰색 모노로 바꾸면 도형이 통짜 흰 사각형이 되어 이 크기(16px)에서는 아무것도
+// 말하지 않습니다. 자세한 것은 스크립트의 JOBS 주석에 있습니다.
+const VENUE_FOUNDRY = { src: "/partners/logos/white/trimmed/foundry.png", name: "The Foundry" };
+const VENUE_LIFE = { src: "/partners/logos/white/trimmed/life.png", name: "*SCAPE L^IFE Jungle" };
+const VENUE_AWS = { src: "/partners/logos/white/trimmed/aws.png", name: "AWS office" };
 
 // Day theme labels + one-line summaries (Opening → the Showcase)
 export const days: DayMeta[] = [
@@ -331,6 +366,7 @@ export const days: DayMeta[] = [
       },
     ],
     dayMode: "offline",
+    venueLogo: VENUE_FOUNDRY,
     mandatory: true,
   },
   {
@@ -431,6 +467,7 @@ export const days: DayMeta[] = [
     },
     hours: "10AM–2PM",
     dayMode: "offline",
+    venueLogo: VENUE_LIFE,
     // 노선도에서 크게 그리는 두 선택일 중 하나(다른 하나는 Day 7). 하루를 통째로
     // 학생 간 교류에 쓰는 유일한 날인데, 작은 점 하나로는 Day 2·3·4·6과 구분되지
     // 않았습니다 — whyStop이 그 값을 말하는 동안 노선도는 그냥 지나가는 정거장으로
@@ -525,6 +562,7 @@ export const days: DayMeta[] = [
       },
     ],
     dayMode: "offline",
+    venueLogo: VENUE_AWS,
     // 노선도에서 크게 그리는 두 선택일 중 하나(다른 하나는 Day 5). Day 5와 같은
     // 이유입니다 — 현장이고, 그날 벌어지는 일이 혼자서는 대체 불가능합니다: 무대에
     // 서기 하루 전, 현업에서 제품을 파는 사람들 앞에서 발표와 Q&A를 미리 받아보는
@@ -597,6 +635,7 @@ export const days: DayMeta[] = [
       },
     ],
     dayMode: "offline",
+    venueLogo: VENUE_LIFE,
     mandatory: true,
   },
 ];
@@ -857,6 +896,10 @@ export const schedule: BEvent[] = [
     // role alone reads as a normal listing. The comment above is the record of WHY
     // there is no name here — keep that, and never fill one in.
     speaker: { ko: "Microsoft 클라우드·AI 솔루션 아키텍트", en: "Microsoft cloud & AI solution architect" },
+    // 이름이 비공개인 만큼, 밴드에서 이 세션의 무게를 말할 수 있는 것은 소속뿐입니다.
+    // 밴드는 제목과 요약 한 줄만 보여주고 speaker 행은 모달에만 있어서, 목록을 훑는
+    // 사람에게는 이 로고가 "누가 와서 말하는가"의 유일한 신호입니다.
+    speakerLogo: { src: "/partners/logos/white/trimmed/microsoft.png", alt: "Microsoft" },
     summary: {
       ko: "본 행사 9일 전 · SMU SOL 현장. “데모는 쉽고, 시스템은 어렵다”, 엔터프라이즈 AI 에이전트를 실제로 만드는 이야기.",
       en: "Nine days before the event · in person at SMU SOL. “The demo is easy, the system is hard”: building enterprise AI agents for real.",

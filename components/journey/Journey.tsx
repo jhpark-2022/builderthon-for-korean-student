@@ -1051,7 +1051,7 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                   className="group flex w-full flex-col items-center gap-1.5 px-1 py-1 text-center"
                   // 마커는 aria-hidden이라 스크린리더에는 안 보입니다. 눈으로 읽는
                   // 사람이 얻는 정보를 여기서 말로 채웁니다.
-                  aria-label={`Day ${d.day} · ${t(d.theme)}${onSite ? ` · ${t(dict.program.offlineLabel)}` : ""}`}
+                  aria-label={`Day ${d.day} · ${t(d.theme)}${onSite ? ` · ${t(dict.program.offlineLabel)}` : ""}${onSite && d.venueLogo ? ` · ${d.venueLogo.name}` : ""}`}
                 >
                   {/* Fixed-height row so both node sizes share one centreline and
                       the rail passes through every node at the same height. */}
@@ -1059,16 +1059,34 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                     {/* 현장 마커. ABSOLUTE인 것이 핵심입니다 — 흐름에 넣으면 모든
                         노드가 아래로 밀리는데, 레일은 <ol> 기준 top-4에 절대
                         배치돼 있어서 함께 내려오지 않습니다. 레일이 노드를 관통하는
-                        정렬이 깨지느니 마커를 띄웁니다. */}
-                    {onSite && (
-                      <span
+                        정렬이 깨지느니 마커를 띄웁니다.
+
+                        핀 아이콘이 아니라 그날의 장소 로고입니다. 핀은 "현장"
+                        하나만 말하는데 그건 아래 카드의 뱃지가 이미 하는 말이고,
+                        노선도에서 알고 싶은 것은 어느 문으로 가느냐입니다.
+
+                        박스는 h-4 × w-14 고정에 object-contain입니다. 폭을 고정해
+                        두는 것이 핵심이에요 — 모바일에서 한 칸이 ~86px이라 마크가
+                        제 비율대로 늘어나면 옆 칸을 침범합니다. 덕분에 FOUNDRY처럼
+                        가로로 긴 워드마크는 폭에, aws처럼 정사각에 가까운 마크는
+                        높이에 맞춰 각자 들어갑니다.
+
+                        max-w-none이 없으면 안 됩니다. Tailwind preflight의
+                        `img { max-width: 100% }`에서 100%는 이 이미지의 컨테이닝
+                        블록, 즉 노드 하나짜리 span(w-7 또는 w-6)입니다 — 그대로
+                        두면 로고가 27~32px로 눌려서 필참일과 선택일의 마크 크기가
+                        제각각이 됩니다.
+
+                        alt는 비워 둡니다. 장소 이름은 버튼의 aria-label이 이미
+                        말하고 있어서, 여기에 또 넣으면 두 번 읽힙니다. */}
+                    {onSite && d.venueLogo && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={d.venueLogo.src}
+                        alt=""
                         aria-hidden
-                        className="pointer-events-none absolute -top-5 left-1/2 -translate-x-1/2 text-violet-200/60 transition group-hover:text-violet-200"
-                      >
-                        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor">
-                          <path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" />
-                        </svg>
-                      </span>
+                        className="pointer-events-none absolute -top-5 left-1/2 h-4 w-14 max-w-none -translate-x-1/2 object-contain opacity-45 transition group-hover:opacity-90"
+                      />
                     )}
                     {anchor ? (
                       <span className="flex h-7 w-7 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-[0.6rem] text-rose-100 shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:bg-rose-400/40">
@@ -1393,8 +1411,23 @@ function PreEventBand({ t, onOpen }: { t: Tfn; onOpen: (e: BEvent, el: HTMLEleme
       onClick={(e) => onOpen(ev, e.currentTarget)}
       className="group flex w-full flex-col gap-3 rounded-2xl border border-violet-400/20 bg-violet-500/[0.05] px-5 py-4 text-left transition hover:border-violet-400/40 hover:bg-violet-500/[0.09] sm:flex-row sm:items-center sm:gap-5"
     >
-      <span className="inline-flex shrink-0 items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-violet-200">
-        {t(dict.program.preEventTag)}
+      {/* 칩과 연사 소속 로고를 한 묶음으로 둡니다. 모바일에서 밴드가 세로로
+          쌓이는데(flex-col), 둘을 따로 두면 로고가 자기 줄을 차지하면서 제목보다
+          커 보입니다 — 여기 묶어두면 어느 폭에서도 "언제 · 누구"가 한 줄입니다. */}
+      <span className="flex shrink-0 items-center gap-3">
+        <span className="inline-flex shrink-0 items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-violet-200">
+          {t(dict.program.preEventTag)}
+        </span>
+        {/* alt를 채웁니다(노선도 마커와 반대). 이 밴드는 어디에도 회사명을 글로
+            적지 않아서, 로고를 비워두면 스크린리더에는 소속이 아예 없습니다. */}
+        {ev.speakerLogo && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={ev.speakerLogo.src}
+            alt={ev.speakerLogo.alt}
+            className="h-5 w-auto max-w-[4.5rem] shrink-0 object-contain opacity-65 transition group-hover:opacity-95"
+          />
+        )}
       </span>
       <span className="min-w-0 flex-1">
         <span className="block break-keep text-[15px] font-bold leading-snug text-white">{t(ev.title)}</span>

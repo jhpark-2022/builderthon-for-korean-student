@@ -59,10 +59,36 @@ LO, HI = 40, 110  # colour-distance → alpha ramp, for the "color" mode
 # rendered area, which is only meaningful when the file's dimensions describe
 # the INK rather than whatever transparent canvas the brand shipped.
 
-# source filename → (output slug, mode)
+# source filename → (output slug, mode) with an optional 4th element, a dict of
+# per-source options applied BEFORE the alpha cut:
+#   crop:    (l, t, r, b) box on the source, for lockups where only one part of
+#            the art is wanted.
+#   upscale: LANCZOS factor applied after the crop. A crop out of a small sheet
+#            leaves a mark whose edges are a handful of pixels wide; enlarging
+#            before the alpha ramp gives the ramp something to work with, so the
+#            result has a soft edge rather than a staircase.
 JOBS = [
     ("life_logo.png", "life.png", "dark"),
     ("싱가포르 한인회.jpg", "korean-association.png", "color"),
+    # Microsoft: the stacked lockup (four squares over the wordmark) is the only
+    # art we have. It is used small — a 16px-tall mark on the pre-event band —
+    # and the stacked form survives that better than a horizontal one would,
+    # because the squares stay square instead of shrinking with the cap height.
+    ("마이크로소프트.jpg", "microsoft.png", "color"),
+    # The Foundry: black speech-bubble + "FOUNDRY." wordmark on an orange sheet.
+    #
+    # Only the WORDMARK is taken (crop). The bubble is a filled shape, so in white
+    # mono it is a featureless white square — at the size this renders (a route-map
+    # venue marker, ~63x17 CSS px) it names nothing and eats a quarter of the width
+    # the letters need.
+    #
+    # SOURCE: "The Foundry horizontal.png", the official horizontal lockup from
+    # foundry.sg, 2452x701. NOT "The Foundry.jpeg" — that is the square avatar at
+    # 225x225, where the wordmark is 65x16px of JPEG-artefacted ink. Upscaled to
+    # the marker's device pixels it was visibly mushy, and no amount of blur-and-
+    # threshold tracing recovers letterforms that were never sampled. If this logo
+    # ever needs redoing, start by looking for a bigger source, not a better filter.
+    ("The Foundry horizontal.png", "foundry.png", "color", {"crop": (640, 145, 2362, 557)}),
     # Onword Lab: the wide "⊃ ONWORD LAB" lockup, NOT the square ">." glyph —
     # the glyph alone names nothing.
     #
@@ -144,8 +170,14 @@ def trim_all():
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
-    for src, out, mode in JOBS:
+    for src, out, mode, *rest in JOBS:
+        opts = rest[0] if rest else {}
         im = Image.open(CI / src)
+        if "crop" in opts:
+            im = im.crop(opts["crop"])
+        if "upscale" in opts:
+            k = opts["upscale"]
+            im = im.resize((im.width * k, im.height * k), Image.LANCZOS)
         alpha = {
             "dark": from_dark,
             "color": from_color,
