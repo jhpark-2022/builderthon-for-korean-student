@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { LocaleProvider } from "@/lib/LocaleContext";
+import SkipLink from "@/components/SkipLink";
 
 // Self-hosted Pretendard (variable) — served same-origin from the Vercel edge,
 // preloaded, with a metric-matched fallback (no CLS). Replaces the old
@@ -48,23 +49,39 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
+// Runs while the browser is still parsing <body>, before anything paints, and
+// stamps the saved locale onto <html> as `lang` and `data-locale`.
+//
+// The markup ships as Korean because that is LocaleProvider's default and these
+// pages are statically generated — the server has no way to know a preference
+// that lives in localStorage. Without this, an English visitor saw Korean until
+// the React bundle landed and the provider's effect swapped it. On the home page
+// that is a frame; on /quiz it is the whole pre-hydration window, because the
+// server shell there paints real copy (app/quiz/QuizIntroShell.tsx).
+//
+// So the shell ships BOTH languages and lets CSS pick one off `data-locale`
+// (see the [data-l] rules in globals.css). This script is what sets that
+// attribute in time. Reading cookies in the layout instead would work too, but
+// it would opt every page out of static rendering for one string.
+//
+// Keep the storage key and the "ko" fallback in step with LocaleContext.
+const LOCALE_BOOTSTRAP = `(function(){try{var l=localStorage.getItem("builderthon.locale");if(l!=="ko"&&l!=="en")l="ko";var d=document.documentElement;d.lang=l;d.setAttribute("data-locale",l);}catch(e){}})()`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    // Matches LocaleProvider's default. Kept in sync after mount by the
-    // provider's `document.documentElement.lang = locale` effect, so a visitor
-    // who has chosen English still gets lang="en" — this is only the value the
+    // Matches LocaleProvider's default. Corrected before paint by the bootstrap
+    // script below, and kept in sync afterwards by the provider's effect, so a
+    // visitor who has chosen English gets lang="en" — this is only the value the
     // markup ships with.
-    <html lang="ko" className={`dark ${pretendard.variable}`}>
+    <html lang="ko" data-locale="ko" className={`dark ${pretendard.variable}`}>
       <body className="font-sans antialiased bg-[#06040f] text-white">
-        {/* Keyboard-only skip link: invisible until focused, lets keyboard /
-            screen-reader users bypass the fixed nav. No effect on normal layout. */}
-        <a
-          href="#top"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-violet-600 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:shadow-lg"
-        >
-          Skip to content
-        </a>
-        <LocaleProvider>{children}</LocaleProvider>
+        <script dangerouslySetInnerHTML={{ __html: LOCALE_BOOTSTRAP }} />
+        <LocaleProvider>
+          {/* First child of the provider so it stays first in the DOM — the
+              provider renders no markup of its own. */}
+          <SkipLink />
+          {children}
+        </LocaleProvider>
         <Analytics />
         <SpeedInsights />
       </body>

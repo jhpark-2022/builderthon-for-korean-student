@@ -2439,6 +2439,7 @@ function FlowStrip<T>({
 // fades in once the visitor has scrolled down ~1.5 viewports. Respects
 // prefers-reduced-motion (jumps instantly instead of smooth-scrolling).
 function ScrollToTop() {
+  const { t } = useLocale();
   const reduce = useReducedMotion();
   const [visible, setVisible] = useState(false);
 
@@ -2468,7 +2469,7 @@ function ScrollToTop() {
         <motion.button
           type="button"
           onClick={toTop}
-          aria-label="Scroll to top"
+          aria-label={t(dict.a11y.scrollTop)}
           initial={reduce ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           exit={reduce ? undefined : { opacity: 0, y: 12 }}
@@ -2793,8 +2794,8 @@ export default function Journey() {
           </p>
           <div className="mt-6 grid gap-6 sm:grid-cols-3">
             {dict.about.gap.map((s) => (
-              <div key={s.num} className="text-center">
-                <div className="text-3xl font-black text-white sm:text-4xl">{s.num}</div>
+              <div key={s.num.en} className="text-center">
+                <div className="text-3xl font-black text-white sm:text-4xl">{t(s.num)}</div>
                 <p className="mx-auto mt-2 max-w-[15rem] text-xs leading-relaxed text-white/70">{t(s.label)}</p>
               </div>
             ))}
@@ -2826,9 +2827,9 @@ export default function Journey() {
                     얹는 것보다 낫습니다. */}
                 {p.logo ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.logo} alt={p.outlet} className="h-4 w-auto max-w-[5.5rem] shrink-0 object-contain opacity-70" />
+                  <img src={p.logo} alt={t(p.outlet)} className="h-4 w-auto max-w-[5.5rem] shrink-0 object-contain opacity-70" />
                 ) : (
-                  <span className="shrink-0 text-sm font-semibold tracking-tight text-white/70">{p.outlet}</span>
+                  <span className="shrink-0 text-sm font-semibold tracking-tight text-white/70">{t(p.outlet)}</span>
                 )}
                 <span className="text-sm font-semibold text-white/90">{t(p.title)}</span>
                 <span className="text-xs text-white/55">{t(p.date)}</span>
@@ -3720,7 +3721,7 @@ export default function Journey() {
                   </span>
                   {start && (
                     <span className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-violet-400/20 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-violet-200">
-                      ★ START
+                      {t(dict.about.visionStartBadge)}
                     </span>
                   )}
                   <p className="mt-2 text-sm font-bold leading-snug text-white">{t(s.title)}</p>

@@ -13,16 +13,34 @@ import { quizUI } from "@/data/quiz";
 // subtitle, logo row, button — from static markup, so the page is legible
 // immediately and hydration swaps like-for-like.
 //
-// LOCALE: Korean, because that is LocaleProvider's default. These two must not
-// diverge — the shell paints, then hydration renders with the provider's default,
-// then the effect applies the saved preference. Matching them makes that one
-// swap at most; mismatching them makes it two, with a visible flash in between.
+// LOCALE: both. This page is statically generated, so the HTML cannot know a
+// preference that lives in localStorage — and unlike the home page, where the
+// pre-hydration frame is a frame, here the shell is what an English visitor
+// READS for the entire time the bundle is downloading.
+//
+// So every string ships twice and CSS shows one, keyed off the `data-locale`
+// that app/layout.tsx's bootstrap script stamps on <html> before the body is
+// parsed. See the [data-l] rules in globals.css.
+//
+// Both variants must be bare <span>s: the CSS out-specifies Tailwind's display
+// utilities, so hanging [data-l] on the styled element itself would reset it to
+// inline. Wrap the TEXT, never the box.
 //
 // Keep the box metrics (chip height, title clamp, button min-height) in step
 // with Landing in components/Quiz.tsx — that is what keeps the handover from
 // shifting anything.
 // ─────────────────────────────────────────────────────────────────────────────
 const SHELL_LOGOS = ["🐋", "✳️", "🤖", "✨", "🦙", "❓"];
+
+// One string, both languages, hidden/shown by CSS before paint.
+function Both({ phrase }: { phrase: { ko: string; en: string } }) {
+  return (
+    <>
+      <span data-l="ko">{phrase.ko}</span>
+      <span data-l="en">{phrase.en}</span>
+    </>
+  );
+}
 
 export default function QuizIntroShell() {
   return (
@@ -32,15 +50,15 @@ export default function QuizIntroShell() {
         <div className="h-20 shrink-0" />
         <div className="flex flex-1 flex-col items-center justify-center text-center">
           <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-400/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-violet-200">
-            ✦ {quizUI.eyebrow.ko}
+            ✦ <Both phrase={quizUI.eyebrow} />
           </span>
           <h1 className="text-[2.6rem] font-black leading-[1.05] tracking-tight sm:text-[3rem]">
             <span className="bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text pb-[0.12em] text-transparent">
-              {quizUI.title.ko}
+              <Both phrase={quizUI.title} />
             </span>
           </h1>
           <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-white/70">
-            {quizUI.subtitle.ko}
+            <Both phrase={quizUI.subtitle} />
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-2.5">
             {SHELL_LOGOS.map((e, i) => (
@@ -60,9 +78,9 @@ export default function QuizIntroShell() {
             aria-hidden
             className="mt-10 flex min-h-[56px] w-full max-w-sm items-center justify-center rounded-full bg-gradient-to-r from-violet-600/60 to-indigo-600/60 px-9 py-4 text-base font-bold text-white/70 shadow-[0_8px_40px_rgba(124,58,237,0.35)] sm:w-auto"
           >
-            {quizUI.start.ko}
+            <Both phrase={quizUI.start} />
           </div>
-          <p className="mt-5 text-xs font-medium text-white/55">{quizUI.meta.ko}</p>
+          <p className="mt-5 text-xs font-medium text-white/55"><Both phrase={quizUI.meta} /></p>
         </div>
       </div>
     </main>

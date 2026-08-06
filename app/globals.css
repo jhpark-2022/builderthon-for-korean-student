@@ -417,3 +417,25 @@ body {
 @media (max-width: 639px) {
   body { padding-bottom: calc(4rem + env(safe-area-inset-bottom)); }
 }
+
+/* ── Pre-hydration language swap (server-rendered copy only) ─────────────────
+   These pages are statically generated, so their HTML ships in LocaleProvider's
+   default language (ko). Everything React renders is fixed the moment the
+   bundle hydrates, but /quiz paints real copy from a server shell BEFORE that
+   (app/quiz/QuizIntroShell.tsx) — an English visitor was reading Korean for the
+   whole download.
+
+   So that shell ships both languages and CSS picks one, off the `data-locale`
+   the layout's bootstrap script stamps on <html> before the body is parsed.
+   Nothing else on the site needs this: every other string goes through t().
+
+   The default branch is `html:not([data-locale="en"])` rather than
+   `[data-locale="ko"]` on purpose — with JS disabled the attribute is whatever
+   the static HTML carried, and Korean is the honest fallback either way.
+
+   Only ever put bare <span>s on [data-l]. The rules below out-specify a Tailwind
+   display utility (0,2,1 vs 0,1,0), so putting one on a flex/grid element would
+   silently reset it to inline. */
+[data-l] { display: none; }
+html[data-locale="en"] [data-l="en"],
+html:not([data-locale="en"]) [data-l="ko"] { display: inline; }

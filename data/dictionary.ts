@@ -170,7 +170,10 @@ export type PartnerArticle = { url: string; label: Phrase };
 // 냅니다(렌더는 Journey.tsx의 press 블록). 나중에 트림한 로고가 생기면 그때 채우면
 // 되고, 그 전까지 줄은 멀쩡히 읽힙니다.
 export type PressItem = {
-  outlet: string;
+  // 제호는 번역이 아니라 표기의 문제입니다. 영어 모드에서 "경인일보"가 그대로
+  // 남으면 영어권 독자에게는 읽을 수 없는 덩어리라, ko는 제호를, en은 로마자
+  // 표기를 둡니다. 영문 브랜드명이 따로 있는 매체(BZCF)는 그것을 씁니다.
+  outlet: Phrase;
   date: Phrase;
   title: Phrase;
   url: string;
@@ -666,21 +669,25 @@ export const dict = {
     gapTag: { ko: "지금의 현실", en: "The gap today" },
     gap: [
       {
-        num: "1,000+",
+        num: { ko: "1,000+", en: "1,000+" },
         label: {
           ko: "NUS · NTU · SMU에 흩어진 싱가포르의 한인 유학생 (추정)",
           en: "Korean students in Singapore (est.), scattered across NUS · NTU · SMU",
         },
       },
       {
-        num: "0",
+        num: { ko: "0", en: "0" },
         label: {
           ko: "이들을 대표하는 학생 단체. 친목 위주의 행사뿐입니다",
           en: "bodies representing them. Only social-first events exist",
         },
       },
       {
-        num: "2년",
+        // 세 숫자 중 이것만 단위가 붙습니다. 평문 문자열이던 시절 영어 모드에서
+        // "2년 of motivation and community continuity…"로 나갔습니다 — 나머지
+        // 둘("1,000+", "0")이 언어 중립이라 눈에 띄지 않았을 뿐입니다.
+        // 숫자에 낱말이 붙는 순간 그 값은 번역 대상입니다.
+        num: { ko: "2년", en: "2 yrs" },
         label: {
           ko: "군 복무로 끊기는 동기부여와 커뮤니티의 연속성",
           en: "of motivation and community continuity, cut by military service",
@@ -740,6 +747,10 @@ export const dict = {
       ko: "기회는 많은데 ‘내 기회’는 아니었던 싱가포르에서, 행사가 끝나도 다음 모임이 잡혀 있도록 8일의 경험이 정기 세션과 성장 사다리로 이어지게 설계하고 있습니다.",
       en: "In a Singapore full of opportunities that never quite felt like ours, we're designing the eight days to continue: regular builder sessions and a growth ladder, so there's always a next gathering after the event ends.",
     },
+    // 퍼널 1번 칸에 붙는 배지. 하드코딩된 "★ START"였고, 한국어 모드에서도 영어로
+    // 나왔습니다. 이 페이지에서 눈에 보이는 배지는 전부 번역되므로(필참 · 선택 ·
+    // 자율 진행) 이것만 예외로 둘 이유가 없습니다.
+    visionStartBadge: { ko: "★ 시작", en: "★ START" },
     visionSteps: [
       {
         num: "1",
@@ -814,7 +825,7 @@ export const dict = {
       // 제목에서 섹션 라벨 "[수요광장]"은 뺐습니다. 칼럼 이름이지 기사 제목이 아니고,
       // 한 줄짜리 인용에서 대괄호가 먼저 눈에 걸립니다.
       {
-        outlet: "경인일보",
+        outlet: { ko: "경인일보", en: "Kyeongin Ilbo" },
         date: { ko: "2026.08.04", en: "4 Aug 2026" },
         title: {
           ko: "「‘취업 안되면 만든다’ 스물세살의 바이브 코딩」",
@@ -823,7 +834,7 @@ export const dict = {
         url: "https://www.kyeongin.com/article/1768469",
       },
       {
-        outlet: "BZCF · 비즈까페",
+        outlet: { ko: "BZCF · 비즈까페", en: "BZCF" },
         date: { ko: "2026.07.05", en: "5 Jul 2026" },
         title: {
           ko: "「세계는 넓고 할 일은 많다」",
@@ -1531,7 +1542,7 @@ export const dict = {
       {
         day: { ko: "Day 1 · 오프닝 키노트", en: "Day 1 · Opening keynote" },
         name: { ko: "원대로", en: "Won Dae-ro" },
-        role: { ko: "Managing Director, Wilt Venture Builder (SG)", en: "Managing Director, Wilt Venture Builder (SG)" },
+        role: { ko: "Wilt Venture Builder 대표 (싱가포르)", en: "Managing Director, Wilt Venture Builder (SG)" },
         topic: { ko: "‘취업과 창업의 사이’", en: "“Between employment and founding”" },
         img: "/partners/logos/speaker-won.jpeg",
         linkedin: "https://www.linkedin.com/in/wondaero",
@@ -1568,7 +1579,7 @@ export const dict = {
         // in one line.
         day: { ko: "Day 1 · AWS 세션", en: "Day 1 · AWS session" },
         name: { ko: "한장환", en: "Jang Whan Han" },
-        role: { ko: "Well-Architected Solution Innovation SA, AWS", en: "Well-Architected Solution Innovation SA, AWS" },
+        role: { ko: "AWS 솔루션 아키텍트 · Well-Architected Solution Innovation", en: "Well-Architected Solution Innovation SA, AWS" },
         topic: { ko: "‘AI-DLC’: AI가 주도하는 개발 라이프사이클", en: "“AI-DLC”: the AI-Driven Development Lifecycle" },
         img: "/partners/logos/speaker-han.jpeg",
         linkedin: "https://www.linkedin.com/in/jangwhan/",
@@ -1583,7 +1594,7 @@ export const dict = {
         // session on a separate day, so it gets its own card (see d7-speaker-session).
         day: { ko: "Day 7 · 커리어 간담회", en: "Day 7 · Career session" },
         name: { ko: "박희덕", en: "Park Hee-deok" },
-        role: { ko: "CEO · General Partner, Translink Investment (VC)", en: "CEO · General Partner, Translink Investment (VC)" },
+        role: { ko: "트랜스링크인베스트먼트 대표 · GP", en: "CEO · General Partner, Translink Investment (VC)" },
         topic: { ko: "‘FDE로 일한다는 것’ 커리어 간담회", en: "“Working as an FDE”, a career session" },
         img: "/partners/logos/speaker-park.jpeg",
         linkedin: "https://www.linkedin.com/in/hee-duk-park-304079bb",
@@ -1602,7 +1613,7 @@ export const dict = {
       {
         day: { ko: "Day 8 · 결과 공유회", en: "Day 8 · Showcase" },
         name: { ko: "박희덕", en: "Park Hee-deok" },
-        role: { ko: "CEO · General Partner, Translink Investment (VC)", en: "CEO · General Partner, Translink Investment (VC)" },
+        role: { ko: "트랜스링크인베스트먼트 대표 · GP", en: "CEO · General Partner, Translink Investment (VC)" },
         topic: { ko: "‘제로백의 진짜 의미’", en: "“The Real Meaning of Zero100”" },
         img: "/partners/logos/speaker-park.jpeg",
         linkedin: "https://www.linkedin.com/in/hee-duk-park-304079bb",
@@ -2188,8 +2199,8 @@ export const dict = {
       {
         name: { ko: "신동혁", en: "Shin Dong-hyuk" },
         org: { ko: "AWS", en: "AWS" },
-        role: { ko: "Head of GTM Scaling · APJC", en: "Head of GTM Scaling · APJC" },
-        tag: { ko: "GenAI GTM", en: "GenAI GTM" },
+        role: { ko: "APJC GTM 스케일링 총괄", en: "Head of GTM Scaling · APJC" },
+        tag: { ko: "생성형 AI · GTM", en: "GenAI GTM" },
         img: "/partners/people/shin-dong-hyuk.jpg",
         pending: false,
         bio: {
@@ -2635,6 +2646,16 @@ export const dict = {
       ko: "Zero100 AI Builderthon. All rights reserved.",
       en: "Zero100 AI Builderthon. All rights reserved.",
     },
+  },
+
+  // ── 화면에 글로 보이지 않는 문구들 ──────────────────────────────────────
+  // 스킵 링크는 키보드 포커스를 받을 때만 보이고, 맨 위로 버튼은 아이콘뿐이라
+  // 이름이 aria-label에만 있습니다. 둘 다 영어로 하드코딩돼 있었는데, 안 보인다고
+  // 번역에서 빠져도 되는 것은 아닙니다 — 이 둘을 실제로 쓰는 사람이 스크린리더나
+  // 키보드 사용자이고, 그들이 듣는 것이 이 문자열입니다.
+  a11y: {
+    skipToContent: { ko: "본문으로 건너뛰기", en: "Skip to content" },
+    scrollTop: { ko: "맨 위로 이동", en: "Scroll to top" },
   },
 
   toggle: {
