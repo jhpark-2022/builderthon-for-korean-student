@@ -21,9 +21,9 @@ const SITE_URL = "https://builderthon-for-korean-student.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Zero100 AI Builderthon — Build in Singapore",
+  title: "Zero100 AI Builderthon · Build in Singapore",
   description:
-    "Singapore's first AI builderthon for Korean students. 22–29 Aug 2026 · 8 days · ~100 builders solving real companies' AI-transformation problems with vibe coding — from zero to MVP.",
+    "Singapore's first AI builderthon for Korean students. 22–29 Aug 2026 · 8 days · ~100 builders solving real companies' AI-transformation problems with vibe coding, from zero to MVP.",
   keywords: ["Builderthon", "Zero100", "Singapore", "Korean students", "AI", "vibe coding", "hackathon", "NUS", "NTU", "SMU"],
   openGraph: {
     title: "Zero100 AI Builderthon",

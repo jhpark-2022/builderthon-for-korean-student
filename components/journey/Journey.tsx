@@ -1227,7 +1227,7 @@ function BenefitCard({
             className="absolute inset-0 rounded-2xl sm:hidden"
           >
             <span className="sr-only">
-              {t(item.title)} — {t(open ? dict.benefits.collapse : dict.benefits.expand)}
+              {t(item.title)}, {t(open ? dict.benefits.collapse : dict.benefits.expand)}
             </span>
           </button>
         </>
@@ -3106,7 +3106,7 @@ export default function Journey() {
             <div className="mx-auto mt-4 max-w-3xl rounded-xl border border-emerald-400/20 bg-emerald-400/[0.06] px-4 py-3 text-left">
               <p className="break-keep text-xs leading-relaxed text-emerald-50/85">
                 <span className="font-bold text-emerald-200">{t(dict.program.checkins.bonusLabel)}</span>
-                {" — "}
+                {": "}
                 {t(dict.program.checkins.bonus)}
               </p>
             </div>
