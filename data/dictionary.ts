@@ -631,6 +631,21 @@ export const dict = {
     countdownUnitHours: { ko: "시", en: "hrs" },
     countdownUnitMinutes: { ko: "분", en: "min" },
     countdownUnitSeconds: { ko: "초", en: "sec" },
+    // The moment the clock is actually counting to, said in words. A countdown
+    // alone answers "how long" and never "when", so a visitor who wants to put it
+    // in a calendar had to go find the Day 1 card. The hero meta above says
+    // "2026.08.22 – 08.29 · 8일", which is the RANGE, not the start.
+    //
+    // 현지 시각을 명시합니다. 이 사이트를 읽는 사람의 절반쯤은 한국 시간을
+    // 기준으로 읽을 텐데, 싱가포르는 KST보다 한 시간 느립니다. 시각만 적으면
+    // 오후 2시로 잘못 계산하는 사람이 생깁니다.
+    //
+    // 값은 Journey.tsx의 LAUNCH_AT과 반드시 같아야 합니다. 둘이 갈라지면
+    // 시계와 글이 서로 다른 시각을 가리키게 됩니다.
+    countdownStartsAt: {
+      ko: "8월 22일 (토) 오후 1시 · 싱가포르 현지 시각",
+      en: "Sat 22 Aug, 1PM · Singapore time",
+    },
     // Sits under the countdown grid. Says what registering early actually gets
     // you — NOT that seats are running out. There is no cap and no registration
     // deadline set, so scarcity framing ("선착순", "마감 임박", "잔여석") would

@@ -665,8 +665,21 @@ function HookCards({
 // 탭이 사라지고, LAUNCH_AT 을 기준으로 카운트다운 → Problem 이 자동 전환된다.
 // ─────────────────────────────────────────────────────────────────────────────
 
-// 빌더톤 시작(현지 8/22 00:00, KST=UTC+9 기준 → 08/21 15:00 UTC).
-const LAUNCH_AT = new Date("2026-08-22T00:00:00+09:00").getTime();
+// 빌더톤이 실제로 시작하는 순간. Day 1 오프닝이 열리는 8/22 오후 1시,
+// 싱가포르 현지 시각입니다(SGT=UTC+8 → 08/22 05:00 UTC).
+//
+// 직전 값은 "2026-08-22T00:00:00+09:00", 즉 한국 시각 자정이었습니다. 두 군데가
+// 틀렸습니다: 행사는 싱가포르에서 열리므로 기준 시간대가 KST가 아니라 SGT이고,
+// 시작은 자정이 아니라 오후 1시입니다(schedule.ts Day 1의 hours "1PM–4:30PM",
+// 입장 12:40). 결과적으로 시계가 실제보다 14시간 이르게 0을 찍었습니다.
+//
+// 오프셋을 문자열에 박아두는 것이 핵심입니다. 오프셋 없이 쓰면 이 코드를 읽는
+// 브라우저의 시간대로 해석되어, 서울에서 보는 시계와 싱가포르에서 보는 시계가
+// 서로 다른 순간을 가리킵니다.
+//
+// dict.hero.countdownStartsAt이 같은 시각을 글로 말합니다. 하나를 고치면
+// 반드시 다른 하나도 고치세요.
+const LAUNCH_AT = new Date("2026-08-22T13:00:00+08:00").getTime();
 // 기획/디자인 컨펌 단계에서만 true. 퍼블리시 시 false 로 바꾸면 탭이 숨겨지고
 // 날짜(LAUNCH_AT)에 따라서만 뷰가 결정된다.
 const PREVIEW_TABS = false;
@@ -727,9 +740,22 @@ function CountdownView({ t }: { t: Tfn }) {
         {units.map((u, i) => (
           <div
             key={u.label}
-            className="w-14 rounded-xl border border-white/10 bg-white/[0.04] px-1.5 py-2.5 sm:w-16 sm:px-2 sm:py-3.5"
+            className="w-14 rounded-xl border border-white/10 bg-white/[0.04] px-1 py-2.5 sm:w-16 sm:py-3.5"
           >
-            <div className="bg-gradient-to-b from-white to-white/60 bg-clip-text font-black tabular-nums text-transparent text-[clamp(1.4rem,5vw,2.25rem)] leading-none">
+            {/* whitespace-nowrap과 좁은 px는 장식이 아니라 버그 수정입니다.
+                "00"은 나올 수 있는 두 자리 중 가장 넓은 조합이고(비례폭 서체에서
+                1은 좁고 0은 넓습니다), 예전 여백(px-1.5 sm:px-2)으로는 폭이
+                딱 맞아떨어져서 조금만 넓은 서체를 만나면 넘쳤습니다. 넘치면
+                줄바꿈이 일어나 두 자리가 세로로 쌓입니다. 그래서 다른 숫자는
+                멀쩡한데 00에서만 무너져 보였습니다.
+
+                Pretendard가 아직 안 왔을 때(font-display: swap) 쓰이는 폴백이나
+                브라우저 최소 글꼴 크기 설정처럼, 글자만 커지고 타일은 그대로인
+                상황이 실제로 있습니다. 그래서 두 겹으로 막습니다: nowrap이
+                세로 쌓임 자체를 불가능하게 하고, 넓어진 안쪽 폭이 애초에
+                넘칠 일을 없앱니다. tabular-nums는 숫자가 바뀔 때 폭이
+                출렁이지 않게 하는 별개의 장치이니 함께 두세요. */}
+            <div className="whitespace-nowrap bg-gradient-to-b from-white to-white/60 bg-clip-text font-black tabular-nums text-transparent text-[clamp(1.4rem,5vw,2.25rem)] leading-none">
               {/* 첫 칸(days)은 자릿수 그대로, 나머지는 2자리 고정 */}
               {ready ? (i === 0 ? u.v : pad(u.v)) : "—"}
             </div>
@@ -739,6 +765,13 @@ function CountdownView({ t }: { t: Tfn }) {
           </div>
         ))}
       </div>
+      {/* 시계가 가리키는 순간을 글로. 카운트다운은 "얼마나 남았나"만 말하고
+          "언제인가"는 말하지 않아서, 달력에 넣으려는 사람은 Day 1 카드까지
+          내려가야 했습니다. 위 히어로의 날짜 줄은 8일 기간(08.22–08.29)이라
+          시작 시각을 대신하지 못합니다. */}
+      <p className="mt-3.5 text-xs font-semibold text-white/75">
+        {t(dict.hero.countdownStartsAt)}
+      </p>
       {/* What the ticking clock actually costs you — deliberately about what
           registering gets you sooner, not about seats running out. There is no
           cap and no deadline yet, so "선착순 / 마감 임박 / 잔여석" would be an
@@ -746,7 +779,7 @@ function CountdownView({ t }: { t: Tfn }) {
           Static text: it must not animate alongside the seconds.
           TODO: 매칭 '등록 순서' 운영 방침 확정 시 "일찍 등록할수록 매칭 풀이
           넓어요"로 강화 가능 */}
-      <p className="mx-auto mt-4 max-w-md text-xs leading-relaxed text-white/55">
+      <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-white/55">
         {t(dict.hero.countdownUrgency)}
       </p>
     </div>
