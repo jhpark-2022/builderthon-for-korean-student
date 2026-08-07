@@ -3016,9 +3016,11 @@ export default function Journey() {
             {t(dict.benefits.spine.heading)}
           </p>
           {/* The artefacts, not adjectives: what a participant physically holds
-              on Day 9. The certificate's condition stays off these chips — card
-              05 and the FAQ carry it, and a looser second wording here would
-              quietly lower the bar. */}
+              on Day 9. The certificates' conditions stay off these chips — card
+              05 and the FAQ carry them, and a looser second wording here would
+              quietly lower the bar. Same reason the chip doesn't count them:
+              "수료증 2종" would put the number here without the criteria that
+              earn it. */}
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
             {dict.benefits.spine.tangibles.map((x, i) => (
               <span key={i} className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-cyan-400/25 bg-cyan-400/[0.08] px-3 py-1 text-xs font-semibold text-cyan-50/90">

@@ -1564,19 +1564,28 @@ export const dict = {
       },
       {
         num: "05",
-        title: { ko: "수료증", en: "Certificate" },
+        title: { ko: "수료증 2종", en: "Two certificates" },
         points: [
-          // CONFIRMED policy — issuer, criterion and hand-out are all settled, so
-          // none of these three lines carries a hedge. The criterion is FULL
-          // attendance, not participation: never write "참여자 전원" here, or the
-          // bar reads as "showed up once". Mirrored in the FAQ certificate item
-          // and in schedule.ts (d2 crash course · d8 awards) — change all four.
-          // 배부 시점 표기는 "Day 8 시상 때"였는데, 순위형 시상이 폐지되면서
-          // (2026-08-05) 시상이라는 순간 자체가 사라졌습니다 — 발급 기준은 그대로,
-          // 배부는 그날 마무리 세션에서 이뤄집니다.
-          { ko: "Zero100 명의로 발급", en: "Issued by Zero100" },
-          { ko: "크래시코스 전 시간 참석 시 · Day 8 마무리 세션에서 배부", en: "For attending the full Crash Course · handed out at the Day 8 closing" },
-          { ko: "링크드인 · 포트폴리오 · 이력에 활용", en: "Use it on LinkedIn, in your portfolio and CV" },
+          // CONFIRMED policy — issuer, criteria and delivery are all settled, so
+          // none of these lines carries a hedge. The Crash Course criterion is
+          // FULL attendance, not participation: never write "참여자 전원" here, or
+          // the bar reads as "showed up once". Mirrored in the FAQ certificate
+          // item and in schedule.ts (d2 crash course · d8 awards) — change all
+          // four together.
+          // DECIDED 2026-08-07: 수료증은 두 장이고, 전달 방식이 서로 다릅니다 —
+          // 크래시코스 수료증은 이수자에게 마지막 날 PDF로 나가고, 완주 수료증은
+          // 공유회 발표까지 마친 분들께 Day 8 현장에서 실물로 드립니다. 두 줄이
+          // 각자의 기준과 전달 방식을 함께 지고 있는 이유입니다 — 배부 방식을
+          // 하나로 묶어 "둘 다 PDF"로 쓰지 마세요. 손에 들 물건이 있다는 사실이
+          // schedule.ts의 "수료증과 함께 단체 사진"(d8 summary · runOfShow ·
+          // d8-final-pitch 세 곳)을 떠받칩니다.
+          // 모바일에서는 앞 두 줄만 펼쳐진 채 보이므로(BenefitCard: i > 1 && !open)
+          // 그 두 줄이 수료증 두 장이어야 합니다 — 발급 주체·활용처를 위로 올리지
+          // 마세요.
+          { ko: "크래시코스 수료증 — 크래시코스 전 시간 참석 시 · 마지막 날 PDF로 발송", en: "The Crash Course certificate, for attending the full Crash Course: a PDF sent on the final day" },
+          { ko: "완주 수료증 — 공유회 발표까지 마치면 · Day 8 현장에서 실물로", en: "The completion certificate, for going all the way through your Showcase pitch: printed and handed to you on Day 8" },
+          { ko: "둘 다 Zero100 명의로 발급", en: "Both issued by Zero100" },
+          { ko: "링크드인 · 포트폴리오 · 이력에 활용", en: "Use them on LinkedIn, in your portfolio and CV" },
         ],
       },
       {
@@ -2543,21 +2552,21 @@ export const dict = {
       {
         q: { ko: "수료증을 주나요? 의미가 있나요?", en: "Is there a certificate? Is it worth anything?" },
         a: {
-          ko: "네, 크래시코스 전 시간을 참석한 분들께 Zero100 명의의 수료증이 발급되고, Day 8 마무리 세션에서 배부됩니다. 링크드인·이력서에 올릴 수 있어요. 이미 개발 경험이 있다면 수료증보다 멘토링·네트워킹이 더 큰 수확일 거예요.",
-          en: "Yes, everyone who attends the full Crash Course receives a certificate issued by Zero100, handed out at the Day 8 closing. It's LinkedIn- and CV-ready. If you already build, the mentoring and network will matter more than the paper.",
+          ko: "네, 두 장입니다. 크래시코스 전 시간을 참석하면 크래시코스 수료증을 마지막 날 PDF로 보내드리고, 공유회 발표까지 마치면 완주 수료증을 Day 8 현장에서 실물로 드립니다. 둘 다 Zero100 명의로 발급되고, 링크드인·이력서에 올릴 수 있어요. 이미 개발 경험이 있다면 수료증보다 멘토링·네트워킹이 더 큰 수확일 거예요.",
+          en: "Yes, two of them. Attend the full Crash Course and the Crash Course certificate reaches you as a PDF on the final day; go all the way through your Showcase pitch and you're handed a printed completion certificate on Day 8. Both are issued by Zero100 and ready for LinkedIn and your CV. If you already build, the mentoring and network will matter more than the paper.",
         },
       },
       // Q1 spine (2026-08-01), placed straight after the certificate question —
       // that is where a reader is already thinking about what they keep. The three
       // artefacts are the same three in benefits.spine.tangibles, and the
-      // certificate's condition is worded exactly as it is on benefits card 05 and
-      // in the certificate FAQ above ("크래시코스 전 시간 참석 시"): four places, one
-      // sentence, no drift.
+      // certificate's conditions are worded exactly as they are on benefits card
+      // 05 and in the certificate FAQ above ("크래시코스 전 시간 참석" · "공유회
+      // 발표까지"): four places, one sentence, no drift.
       {
         q: { ko: "8일이 끝나면 저에게 뭐가 남나요?", en: "What do I walk away with after the 8 days?" },
         a: {
-          ko: "세 가지가 실물로 남습니다. 실제로 돌아가는 데모, 기업과 업계 전문가 앞에서 피칭한 경험(사진으로 남는), 그리고 수료증(크래시코스 전 시간 참석 시). 그리고 그 데모는 가상 과제가 아니라 실제 기업의 진짜 문제를 푼 결과물입니다.",
-          en: "Three things you can actually show: a demo that runs, the experience of pitching it to the company and industry experts (photos included), and a certificate (for attending the full Crash Course). And that demo isn't a toy exercise. It's your answer to a real company's real problem.",
+          ko: "세 가지가 실물로 남습니다. 실제로 돌아가는 데모, 기업과 업계 전문가 앞에서 피칭한 경험(사진으로 남는), 그리고 수료증 두 장(크래시코스 전 시간 참석 시 크래시코스 수료증, 공유회 발표까지 마치면 완주 수료증). 그리고 그 데모는 가상 과제가 아니라 실제 기업의 진짜 문제를 푼 결과물입니다.",
+          en: "Three things you can actually show: a demo that runs, the experience of pitching it to the company and industry experts (photos included), and two certificates (one for attending the full Crash Course, one for going all the way through your Showcase pitch). And that demo isn't a toy exercise. It's your answer to a real company's real problem.",
         },
       },
       {
@@ -2633,8 +2642,10 @@ export const dict = {
           // 말을 붙이지 마세요: 미정이 아니라 비공개이고, 그 문장은 방금 걷어낸
           // 헤지를 이 답변에 되돌려 놓습니다.
           //
-          // 수료증은 이 목록에서 의도적으로 빠져 있습니다 — 발급 기준이 "크래시코스
-          // 전 시간 참석"이라, 참가자 전원이 받는 항목과 나란히 두면 기준이 오해됩니다.
+          // 수료증은 이 목록에서 의도적으로 빠져 있습니다 — 발급 기준이 있어서
+          // (크래시코스 전 시간 참석 · 공유회 발표까지 완주), 참가자 전원이 받는
+          // 항목과 나란히 두면 기준이 오해됩니다. 마지막 문장이 기준을 붙여
+          // 말하는 이유입니다.
           // "Day 5 AI Use Case Top 3의 널담 바우처도 논의 중" 문장은 2026-08-03에
           // 빠졌습니다 — Day 5가 네트워킹 데이로 바뀌며 그 세션이 없어졌습니다.
           // DECIDED 2026-08-04: NO meals are provided at any point. What IS free:
@@ -2648,8 +2659,8 @@ export const dict = {
           // 괄호가 그래서 빠졌습니다. 안 준다는 안내조차 식사를 화제로 만들고, 이
           // 답변은 상금을 묻는 자리지 끼니를 묻는 자리가 아닙니다.
           // benefits 06 카드와 같은 사실을 말하는 자리이니 함께 움직여 주세요.
-          ko: "네, 다만 팀을 1·2·3위로 세우지 않습니다. 시상은 테마형 어워드 4부문이고 여덟 팀이 받아 가요. 부상은 부문에 따라 현금 또는 널담 바우처입니다. 어떤 부문이 있고 누가 뽑는지는 프로그램의 Day 8 카드에 정리해 뒀습니다. 참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드·캡 세트는 Day 1 현장에서 선착순 60세트로 드리고, 수료증은 크래시코스 전 시간을 들으면 받습니다.",
-          en: "Yes, but nobody gets lined up 1st-2nd-3rd. There are four thematic awards and eight teams take one home, each carrying either a cash prize or a Nuldam voucher. Which awards there are and who picks them is laid out on the Day 8 card in the programme. Entry is free and the networking goes to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come, and the certificate comes with full Crash Course attendance.",
+          ko: "네, 다만 팀을 1·2·3위로 세우지 않습니다. 시상은 테마형 어워드 4부문이고 여덟 팀이 받아 가요. 부상은 부문에 따라 현금 또는 널담 바우처입니다. 어떤 부문이 있고 누가 뽑는지는 프로그램의 Day 8 카드에 정리해 뒀습니다. 참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드·캡 세트는 Day 1 현장에서 선착순 60세트로 드리고, 수료증은 크래시코스 전 시간을 들으면 크래시코스 수료증, 공유회 발표까지 마치면 완주 수료증으로 두 장이 나갑니다.",
+          en: "Yes, but nobody gets lined up 1st-2nd-3rd. There are four thematic awards and eight teams take one home, each carrying either a cash prize or a Nuldam voucher. Which awards there are and who picks them is laid out on the Day 8 card in the programme. Entry is free and the networking goes to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come, and two certificates go out: one for full Crash Course attendance, one for going all the way through your Showcase pitch.",
         },
       },
       {
@@ -2705,8 +2716,8 @@ export const dict = {
       {
         q: { ko: "제가 여기서 얻는 게 뭔가요?", en: "What do I actually get out of this?" },
         a: {
-          ko: "손에 남는 것 기준으로: 실제 기업 문제를 8일간 풀어본 결과물, 크래시코스 수료증, 현직 선배들과의 1:1 멘토링, 공유회 무대 발표 경험, 그리고 행사 후에도 이어지는 커뮤니티입니다. Day 7 커리어 세션에서는 시니어 리더들과 직접 만나요.",
-          en: "In terms of what you actually walk away with: something you built against a real company's problem over eight days, the Crash Course certificate, 1:1 mentoring with people already working in the field, the experience of presenting on the Showcase stage, and a community that keeps going after the event. The Day 7 career session puts you in front of senior leaders directly.",
+          ko: "손에 남는 것 기준으로: 실제 기업 문제를 8일간 풀어본 결과물, 크래시코스 수료증과 완주 수료증, 현직 선배들과의 1:1 멘토링, 공유회 무대 발표 경험, 그리고 행사 후에도 이어지는 커뮤니티입니다. Day 7 커리어 세션에서는 시니어 리더들과 직접 만나요.",
+          en: "In terms of what you actually walk away with: something you built against a real company's problem over eight days, the Crash Course and completion certificates, 1:1 mentoring with people already working in the field, the experience of presenting on the Showcase stage, and a community that keeps going after the event. The Day 7 career session puts you in front of senior leaders directly.",
         },
       },
       {

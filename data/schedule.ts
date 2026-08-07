@@ -595,8 +595,8 @@ export const days: DayMeta[] = [
     // 둡니다 — 바뀐 것은 카피뿐입니다.
     theme: { ko: "결과 공유회 · 최종 발표", en: "Showcase · Final Presentations" },
     summary: {
-      ko: "*SCAPE 현장 · 두 트랙 팀 발표(팀당 8분·잠정) · 박희덕 연사 · 테마별 어워드 발표 · 수료증과 단체 사진.",
-      en: "In person at *SCAPE · team presentations across two tracks (8 min each, provisional) · Park Hee-deok · thematic awards · certificates and a group photo.",
+      ko: "*SCAPE 현장 · 두 트랙 팀 발표(팀당 8분·잠정) · 박희덕 연사 · 테마별 어워드 발표 · 완주 수료증과 단체 사진.",
+      en: "In person at *SCAPE · team presentations across two tracks (8 min each, provisional) · Park Hee-deok · thematic awards · completion certificates and a group photo.",
     },
     hours: "11AM–3PM",
     // 확정 진행 순서 (2026-08-04). 10:40 입장은 hours(11AM–)보다 이르지만 프로그램
@@ -637,7 +637,11 @@ export const days: DayMeta[] = [
       },
       {
         time: "2:45PM–3PM",
-        label: { ko: "What's next 안내 · 수료증과 함께 단체 사진", en: "What's next · group photo with your certificate" },
+        // 손에 드는 것은 완주 수료증입니다 — 공유회 발표까지 마친 분들께 이 자리에서
+        // 실물로 드리는 그 한 장. 크래시코스 수료증은 PDF로 나가므로 이 사진에
+        // 등장하지 않습니다. 둘을 "수료증"으로 뭉뚱그리면 PDF도 현장에서 받는
+        // 것처럼 읽힙니다.
+        label: { ko: "What's next 안내 · 완주 수료증과 함께 단체 사진", en: "What's next · group photo with your completion certificate" },
       },
     ],
     dayMode: "offline",
@@ -1140,7 +1144,7 @@ export const schedule: BEvent[] = [
     // 지우기 전에 그 자리를 확인하고 옮기세요, 문장만 되살리지 말고:
     //   · "코드프레소가 주관 · 김지훈 이사님이 진행" → speaker · speakerProfile ·
     //     org 세 곳이 말하고 있었습니다(문단까지 네 번째)
-    //   · "전 시간 참석 시 수료증, Day 8 배부" → opportunities 세 번째 항목
+    //   · "전 시간 참석 시 수료증, Day 8 PDF 발송" → opportunities 세 번째 항목
     //   · "집중 5–6시간 · 비개발자도 따라올 수 있게" → summary
     //   · "작동하는 프로토타입을 만드는 기본기" → opportunities 첫·둘째 항목
     // 남은 문단은 이 카드에서만 말하는 것뿐입니다: 왜 하루에 몰아서 하는지,
@@ -1175,8 +1179,8 @@ export const schedule: BEvent[] = [
         en: "Pick up an AI vibe-coding workflow hands-on, not just in theory.",
       },
       {
-        ko: "크래시코스 전 시간 참석 시 Zero100 명의 수료증 (Day 8 배부)",
-        en: "Attend the full Crash Course and get a Zero100-issued certificate (handed out on Day 8).",
+        ko: "크래시코스 전 시간 참석 시 Zero100 명의 수료증 (Day 8에 PDF로 발송)",
+        en: "Attend the full Crash Course and get a Zero100-issued certificate (sent as a PDF on Day 8).",
       },
     ],
   },
@@ -1503,8 +1507,8 @@ export const schedule: BEvent[] = [
     time: "2:30PM–3PM",
     title: { ko: "어워드 · 클로징", en: "Awards & Closing" },
     summary: {
-      ko: "테마별 어워드 발표 · 사진 → 앞으로의 안내 → 수료증과 함께 단체 사진.",
-      en: "Thematic awards and photos → what comes next → a group photo with your certificate.",
+      ko: "테마별 어워드 발표 · 사진 → 앞으로의 안내 → 완주 수료증과 함께 단체 사진.",
+      en: "Thematic awards and photos → what comes next → a group photo with your completion certificate.",
     },
     // DECIDED 2026-08-06: 테마형 어워드 4부문 확정(비욘드 브리프·비즈니스 포텐셜·빌더스
     // 초이스·0→100). 이름은 포멀·설명은 유머 원칙. 금액 확정 S$100/75/50 —
@@ -1519,8 +1523,8 @@ export const schedule: BEvent[] = [
     // 공개를 보류한 상태라(WITHHELD 2026-08-07, 같은 주석 참고) "추후 안내"류의
     // 헤지도 붙이지 않습니다. runOfShow 라벨과 summary는 그대로 둡니다.
     description: {
-      ko: "8일간의 빌드를 마무리하는 30분입니다. 두 트랙 발표와 박희덕 대표님의 이야기가 끝나면 테마별 어워드 발표와 사진 촬영이 이어집니다(2:30~). 어워드는 1·2·3위가 아니라 각 팀의 강점을 조명하는 4개 부문이고, 어떤 부문이 있고 누가 뽑는지는 이 날 카드에 정리돼 있습니다. 이어서 앞으로 무엇이 남아 있는지를 짧게 안내합니다(2:45~). 마지막 2:50에는 수료증을 손에 들고 다 함께 단체 사진을 찍으며 끝나요. 수료증은 크래시코스 전 시간을 참석한 분들께 드립니다. 전원이 *SCAPE L^IFE Jungle 현장에 모여, ‘데모로 끝나지 않는 성공의 경험’으로 8일을 함께 마칩니다.",
-      en: "Thirty minutes to close out eight days of building. Once both tracks have presented and Park Hee-deok has spoken, the thematic awards are announced with photos (from 2:30). They aren't a 1st-to-3rd ranking but four categories that spotlight each team's strengths, and what each one looks for is laid out on this day's card. Then comes a short word on what comes next (from 2:45). At 2:50 everyone gathers for a group photo, certificate in hand, and the certificate goes to everyone who attended the full Crash Course. The whole cohort is at *SCAPE L^IFE Jungle to finish the eight days on a success that goes beyond a demo.",
+      ko: "8일간의 빌드를 마무리하는 30분입니다. 두 트랙 발표와 박희덕 대표님의 이야기가 끝나면 테마별 어워드 발표와 사진 촬영이 이어집니다(2:30~). 어워드는 1·2·3위가 아니라 각 팀의 강점을 조명하는 4개 부문이고, 어떤 부문이 있고 누가 뽑는지는 이 날 카드에 정리돼 있습니다. 이어서 앞으로 무엇이 남아 있는지를 짧게 안내합니다(2:45~). 마지막 2:50에는 완주 수료증을 손에 들고 다 함께 단체 사진을 찍으며 끝나요. 완주 수료증은 공유회 발표까지 마친 분들께 이 자리에서 실물로 드리고, 크래시코스 수료증은 크래시코스 전 시간을 참석한 분들께 이날 PDF로 발송됩니다. 전원이 *SCAPE L^IFE Jungle 현장에 모여, ‘데모로 끝나지 않는 성공의 경험’으로 8일을 함께 마칩니다.",
+      en: "Thirty minutes to close out eight days of building. Once both tracks have presented and Park Hee-deok has spoken, the thematic awards are announced with photos (from 2:30). They aren't a 1st-to-3rd ranking but four categories that spotlight each team's strengths, and what each one looks for is laid out on this day's card. Then comes a short word on what comes next (from 2:45). At 2:50 everyone gathers for a group photo, completion certificate in hand. That one is printed and handed to you here for going all the way through your Showcase pitch, while the Crash Course certificate goes out the same day as a PDF to everyone who attended the full Crash Course. The whole cohort is at *SCAPE L^IFE Jungle to finish the eight days on a success that goes beyond a demo.",
     },
     location: ONSITE,
   },
