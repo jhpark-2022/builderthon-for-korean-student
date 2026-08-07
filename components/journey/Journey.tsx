@@ -2145,7 +2145,7 @@ const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpe
       { src: "/partners/logos/white/trimmed/onword-lab.png",         alt: "Onword Lab",                      w: 900, h: 92 },
       { src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105 },
       { src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81 },
-      { src: "/partners/logos/white/trimmed/fyreflyz.png",           alt: "Fyreflyz",                        w: 203, h: 192 },
+      { src: "/partners/logos/white/trimmed/nuldam.png",             alt: "Nuldam",                          w: 631, h: 136 },
     ],
   },
 ];
@@ -3712,10 +3712,15 @@ export default function Journey() {
                 // reaches us through the association. Its intro modal copy
                 // (dict["Korean Association in Singapore"]) says the same thing.
                 { cat: t(dict.partners.catVenueGoods), src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore",  w: 443, h: 90,  url: "https://singapore.korean.net/" },
-                // Fyreflyz was in the hero strip but missing here, so the two
-                // rosters disagreed by one mark. 심사위원 지원 is the role: its
-                // co-founder 한정필 comes in as a judge (dict.judges.people).
-                { cat: t(dict.partners.catJudges),    src: "/partners/logos/white/trimmed/fyreflyz.png",           alt: "Fyreflyz",                        w: 203, h: 192, url: "https://fyreflyz.com/" },
+                // 널담 replaced Fyreflyz here on 2026-08-07. Both rosters (this
+                // one and the hero strip) must be edited together — they used to
+                // disagree by one mark, which is how Fyreflyz ended up in the
+                // strip and missing here for a while.
+                //
+                // url is nuldam.com, the brand site. NOT the Daniel Food Diary
+                // review — that is a source for the *SCAPE outlet, not a partner's
+                // own page, and every other tile here links to the company itself.
+                { cat: t(dict.partners.catAwards),    src: "/partners/logos/white/trimmed/nuldam.png",             alt: "Nuldam",                          w: 631, h: 136, url: "https://nuldam.com/" },
                 { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/onword-lab.png",             alt: "Onword Lab",                      w: 900, h: 92,  url: "https://www.onwordlab.com/" },
                 { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105, url: "https://teamremited.com/" },
                 { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81,  url: "https://www.brandboost.kr/" },

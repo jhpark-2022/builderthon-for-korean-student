@@ -16,7 +16,10 @@ Three source shapes are handled:
               alpha by the ink's luminance and render the mark semi-transparent —
               a mid-purple wordmark came out visibly dimmer than its neighbours.
   • "chroma"— a SATURATED mark on a white sheet whose shapes are separated by
-              DARK outlines (Fyreflyz). "color" would keep both the gold body and
+              DARK outlines. No JOB uses this today (it was built for Fyreflyz,
+              which is no longer a partner); it is kept because the shape recurs
+              and the ramp constants took a while to land. "color" would keep
+              both the gold body and
               the brown outline — every pixel is far from white — and the mark
               flattens to one featureless blob. Here alpha needs the saturated ink
               only: the white sheet drops out for having no saturation, the dark
@@ -98,9 +101,13 @@ JOBS = [
     # the logo got "fixed" a second time on the strength of a stale image. Any
     # future ARTWORK swap must land on a NEW filename for the same reason.
     ("onword new logo.png", "onword-lab.png", "alpha"),
-    # Fyreflyz: gold mark on a white sheet — "color" so the mid-tone outline
-    # survives the cut, then flattened to white like every other mark.
-    ("Fyreflyz.png", "fyreflyz.png", "chroma"),
+    # 널담(Nuldam): a solid blue "Nuldam" wordmark already cut out on
+    # transparency, so "alpha" — the source alpha IS the shape and we only
+    # repaint the ink white. Do NOT feed this to "color": the sheet is
+    # transparent, so the corner samples that mode averages for a background
+    # colour are (255,255,255,0), and every ink pixel then measures its distance
+    # from white rather than from nothing.
+    ("Nuldam.png", "nuldam.png", "alpha"),
 ]
 
 

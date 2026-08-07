@@ -147,13 +147,28 @@ export const partnerIntros: Record<string, Phrase> = {
     ko: "브랜드 굿즈·판촉물을 기획부터 제작·패킹까지 원스톱으로 만드는 제작 플랫폼입니다. 아이디어 단계의 구상을 구성·공정·단가가 잡힌 제작 플랜으로 바꿔 주는 것이 강점이며, 이번 빌더톤에는 참가자 굿즈(후드·캡 세트)를 제공하는 굿즈 파트너로 함께합니다.",
     en: "A one-stop platform for branded goods and merch, from planning through production and packing, turning rough ideas into concrete, costed production plans. Joining the builderthon as its goods partner, providing the participant hoodie + cap sets.",
   },
-  // Figures are the ones Fyreflyz publishes on its own site (fyreflyz.com) —
-  // since 2009, 2,000+ youths, 300+ partner organisations, 1,800+ jobs. The last
-  // sentence is the reason the tile's caption is 피드백 패널 지원: their co-founder
-  // 한정필 joins the Day 8 feedback panel (see dict.judges.people).
-  Fyreflyz: {
-    ko: "2009년 설립된 싱가포르의 소셜벤처 마케팅 에이전시입니다. 브랜드 진단·시장 분석부터 콘텐츠 실행까지 맡으면서, 교육을 마친 청년들을 실제 클라이언트 프로젝트에 투입하는 방식으로 일합니다. 지금까지 청년 2,000명 이상, 파트너 기관 300곳 이상과 함께하며 1,800개 이상의 일자리를 만들었습니다. 이번 빌더톤에는 피드백 패널 연계로 함께합니다.",
-    en: "A Singapore social-enterprise marketing agency founded in 2009. It runs brand audits, market analysis and content execution while embedding trained youths into real client projects. 2,000+ youths, 300+ partner organisations and 1,800+ jobs created so far. Supporting the builderthon through its feedback-panel connection.",
+  // 널담(Nuldam) — REPLACED Fyreflyz on the sponsor wall (2026-08-07).
+  //
+  // 출처는 두 곳입니다. 브랜드 소개(고단백·저당·식이섬유·비건 등 영양 지향
+  // 디저트·베이커리)는 nuldam.com, 싱가포르 지점 정보는 Daniel Food Diary의
+  // 2025-12-23 널담 스페이스 리뷰입니다. 후자가 *SCAPE점(#02/14/15, 2 Orchard
+  // Link)을 "한국 밖 첫 지점"으로 적고 있고, 미래의 나에게 편지를 써서 우편함에
+  // 넣어두면 몇 달 뒤 받는 컨셉도 거기서 나옵니다.
+  //
+  // *SCAPE는 우연이 아니라 이 타일에서 가장 할 말이 많은 지점입니다 — Day 5
+  // 네트워킹 데이와 Day 8 결과 공유회가 열리는 바로 그 건물이라, 부상 바우처를
+  // 받는 곳과 쓰는 곳이 같습니다. 그래서 그 사실을 마지막 문장에 둡니다.
+  //
+  // 본사 표기는 넣지 않았습니다. 자동 요약이 "전북"을 North Korea로 옮겨 놓는
+  // 것을 봤고, 지명 하나 때문에 사실관계가 뒤집힐 자리를 만들 이유가 없습니다.
+  //
+  // 식사 언급 금지 원칙(2026-08-05)과의 관계: 이 문단은 널담이 무엇을 만드는
+  // 회사인지를 말하는 자리라 디저트·베이커리가 나옵니다. 그 원칙이 막는 것은
+  // 부상을 "식사 바우처"·"디저트 바우처"로 부르는 것입니다 — 어워드 카피에서는
+  // 지금도 "널담 바우처"까지만 씁니다. 두 규칙은 충돌하지 않습니다.
+  Nuldam: {
+    ko: "고단백·저당·식이섬유·비건 등 영양 설계를 앞세운 한국의 디저트·베이커리 브랜드입니다. 카페 브랜드 ‘널담 스페이스’는 미래의 나에게 편지를 써서 우편함에 넣어두면 몇 달 뒤 받아보는 컨셉으로 알려져 있고, 한국 밖 첫 지점이 싱가포르 *SCAPE에 있습니다. 이번 빌더톤에는 어워드 부상 바우처를 후원합니다. Day 5와 Day 8이 열리는 바로 그 건물이라, 받는 자리와 쓰는 자리가 같아요.",
+    en: "A Korean dessert and bakery brand built around nutrition, high protein, low sugar, fibre and vegan options. Its café brand, Nuldam Space, is known for letting you write a letter to your future self and post it in a mailbox that delivers months later; its first outlet outside Korea is at *SCAPE in Singapore. It sponsors the award vouchers for this builderthon, in the same building where Day 5 and Day 8 take place.",
   },
 
 };
@@ -2244,9 +2259,14 @@ export const dict = {
       // Analytics, Director of the NUS FinTech Lab, Deputy Director of TRAIL (the
       // Centre for Technology, Robotics, AI & the Law). Secondary sources also
       // credit him with an AI Singapore AI-governance role; that one is NOT here
-      // because his own page doesn't list it. The Fyreflyz co-founder line comes
-      // from the organisers, not from a public source — Fyreflyz is already a
-      // confirmed sponsor in the hero strip, which is the connection.
+      // because his own page doesn't list it.
+      //
+      // The Fyreflyz co-founder line comes from the organisers, not from a public
+      // source. It used to lean on Fyreflyz being a confirmed sponsor in the hero
+      // strip; that tile was replaced by 널담 on 2026-08-07, so the line now rests
+      // on the organisers' word alone. It stays because it is his own credential
+      // and nothing about him changed — but if it ever needs defending, this is
+      // where the support used to be and no longer is.
       {
         name: { ko: "한정필", en: "Jungpil Hahn" },
         org: { ko: "NUS Computing", en: "NUS Computing" },
@@ -2432,9 +2452,15 @@ export const dict = {
     sponsorConfirmedLabel: { ko: "확정 (Confirmed)", en: "Confirmed" },
     catVenue: { ko: "장소", en: "Venue" },
     catMarketing: { ko: "마케팅", en: "Marketing" },
-    catJudges: { ko: "피드백 패널 지원", en: "Feedback panel" },
     catMentoring: { ko: "멘토링", en: "Mentoring" },
     catGoods: { ko: "굿즈", en: "Goods" },
+    // 널담 only (2026-08-07). 캡션은 "부상"까지만 말하고 금액은 말하지 않습니다 —
+    // 액수 비공개는 dict.program.awards의 WITHHELD 주석에 있는 결정이고, 파트너
+    // 타일은 그 결정이 새는 네 번째 자리가 되기 쉬운 곳입니다.
+    // catJudges("피드백 패널 지원")가 여기 있었습니다. Fyreflyz 전용 캡션이었고,
+    // 그 타일이 빠지면서 쓰는 곳이 없어져 함께 지웠습니다. 피드백 패널 자체는
+    // dict.judges 섹션이 따로 맡습니다 — 파트너 캡션과는 다른 층입니다.
+    catAwards: { ko: "어워드 부상", en: "Award prizes" },
     // 싱가포르 한인회 only. Its caption said 심사위원 지원, which was wrong: the
     // association is helping with the venue and with goodie bags for the mentors,
     // and nobody on the Day 8 feedback panel comes through it. Two roles in one
