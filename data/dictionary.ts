@@ -1017,6 +1017,103 @@ export const dict = {
         en: "Miss it and there's no penalty, but the experts arrive without having reviewed anything, and the feedback you get on stage is only as deep as what they can take in cold.",
       },
     },
+    // ── Day 8 테마형 어워드 4부문 ───────────────────────────────────────────
+    // DECIDED 2026-08-06: 테마형 어워드 4부문 확정(비욘드 브리프·비즈니스 포텐셜·
+    // 빌더스 초이스·0→100). 이름은 포멀·설명은 유머 원칙. 금액 확정
+    // S$100/75/50 — 헤지("확정되는 대로 안내"·"규모 확정 전") 제거.
+    //
+    // WITHHELD 2026-08-07: 금액은 웹에 쓰지 않습니다. 미정이라서가 아닙니다 —
+    // S$100/75/50은 2026-08-06에 확정됐고 그 사실은 바로 위 줄에 남아 있습니다.
+    // 공개만 보류하는 것이니 "미정"·"확정 전"·"추후 안내" 같은 헤지를 대신
+    // 채워 넣지 마세요. 틀린 말이 되고, 방금 걷어낸 헤지가 되돌아옵니다.
+    // 남기는 것은 부상의 종류(현금 / 널담 바우처)까지입니다: 상금이 있느냐는
+    // 질문에는 답해야 하고, 종류는 얼마인지를 말하지 않으면서 답합니다.
+    // 다시 공개하기로 하면 고칠 곳은 세 군데입니다 — 아래 items의 meta 넷,
+    // benefits 06 카드의 부상 줄, FAQ 상금 답변.
+    //
+    // 부문별 설명이 사는 유일한 곳입니다. 원래는 FAQ 상금 답변이 ①~④를 문단으로
+    // 늘어놓았는데, 상 넷을 각각 소개하면 답이 화면 한 장을 넘어갔습니다 —
+    // 목록으로 읽어야 할 것을 산문으로 읽히게 만든 셈입니다. 그래서 Day 7의
+    // 사전 제출물 박스와 같은 형태로 옮겼고(dict.program.submission 참고),
+    // FAQ는 "몇 부문·몇 팀·무엇을"만 답하고 여기로 보냅니다.
+    //
+    // 세 곳의 역할 분담을 지켜주세요: benefits 06 카드 = 이름과 선정 주체만,
+    // FAQ 상금 답변 = 규모(4부문 8팀 · 부상 종류)만, 여기 = 부문별 전체.
+    // 네 번째 자리를 만들면 바뀔 때 또 쫓아다니게 됩니다.
+    //
+    // 톤 규칙: name은 포멀하게, desc는 웃기게. meta는 사실만(선정 주체 · 인원 ·
+    // 부상) 담고 농담을 섞지 않습니다 — 참가자가 조건을 확인하러 오는 줄입니다.
+    // 우산 명칭 "성장 어워드"는 파트너 확인 전이라 쓰지 않고, 정본 docx의
+    // 유머명(답지 찢었상 등)은 내부·무대용이라 웹에 올리지 않습니다.
+    awards: {
+      tag: { ko: "테마형 어워드", en: "Thematic awards" },
+      countBadge: { ko: "4부문 · 8팀", en: "4 awards · 8 teams" },
+      heading: {
+        ko: "순위 대신, 네 가지 다른 잘함에 상을 줍니다",
+        en: "No ranking, four different ways to be good",
+      },
+      items: [
+        {
+          // DECIDED 2026-08-07: ko는 "답지 너머 어워드" → "비욘드 브리프 어워드".
+          // 나머지 셋이 비즈니스 포텐셜·빌더스 초이스·0→100이라 외래어·숫자
+          // 계열인데 이것만 순우리말 비유여서, 넷을 나란히 놓으면 이 하나가
+          // 가볍게 읽혔습니다. 영문명과도 1:1이 됩니다.
+          //
+          // 대신 이름이 뜻을 스스로 말해주지 않게 됐습니다("브리프"는 한국어
+          // 독자에게 바로 오지 않아요). 그 몫은 아래 desc가 집니다 — 저 줄의
+          // ‘답지’ 인용은 장식이 아니라 이 상의 정의이고, 프로그램 최종 아웃풋
+          // 문구("회사에는 ‘답지’가 있지만, 답지에 없던 접근을 가장 반깁니다")를
+          // 받는 콜백이기도 합니다. desc에서 답지를 빼면 이 상은 이름도 설명도
+          // 뜻이 없어집니다.
+          name: { ko: "비욘드 브리프 어워드", en: "Beyond the Brief" },
+          meta: {
+            ko: "출제사 코드프레소 지명 · 트랙당 1팀 · 현금 부상",
+            en: "Named by Codepresso, the problem owner · one per track · cash prize",
+          },
+          desc: {
+            ko: "‘어… 이건 우리 답지에 없던 접근인데요?’ 소리가 나오게 한 팀.",
+            en: "For the team that made them go “wait… that wasn't in our answer key.”",
+          },
+        },
+        {
+          name: { ko: "비즈니스 포텐셜 어워드", en: "Business Potential Award" },
+          meta: {
+            ko: "VC 패널 지목 · 트랙당 1팀 · 현금 부상",
+            en: "The VC panel's pick · one per track · cash prize",
+          },
+          desc: {
+            ko: "발표를 듣다가 ‘이거 되겠는데?’ 하고 지갑이 먼저 반응한 팀.",
+            en: "For the team that made wallets twitch mid-pitch: “this could actually sell.”",
+          },
+        },
+        {
+          name: { ko: "빌더스 초이스", en: "Builder's Choice" },
+          meta: {
+            ko: "참가자 투표 · 트랙당 1팀 · 널담 바우처",
+            en: "Voted by the participants · one per track · Nuldam voucher",
+          },
+          desc: {
+            ko: "발표가 다 끝났는데도 자꾸 생각나는, 빌더들이 뽑은 최애의 팀.",
+            en: "The team you kept thinking about long after the pitches ended.",
+          },
+        },
+        {
+          name: { ko: "0→100 어워드", en: "Zero to Hundred" },
+          meta: {
+            ko: "운영진 선정 · 트랙 무관 2팀 · 널담 바우처",
+            en: "The organizers' pick · two teams, any track · Nuldam voucher",
+          },
+          desc: {
+            ko: "첫날엔 ‘제가요? 이걸요?’였다가 마지막 날 ‘제가 만들었는데요’가 된, 출발선에서 가장 먼 거리를 온 팀.",
+            en: "From “Me? Build this?” on day one to “I built this” on day eight, for the teams that travelled the furthest from their starting line.",
+          },
+        },
+      ],
+      note: {
+        ko: "1·2·3위로 줄 세우지 않습니다. 네 부문은 각각 다른 것을 보고, 보는 사람도 출제사·VC·참가자·운영진으로 다 다릅니다.",
+        en: "Nobody gets lined up 1st to 3rd. Each award looks for something different, and so does each set of eyes: the problem owner, the VC panel, your fellow builders, the organizers.",
+      },
+    },
     // ── 체크인 폼 3종 ─────────────────────────────────────────────────────
     // Sits AFTER the eight day cards on purpose: the reader has just seen Day 4,
     // 6 and 7 go past, so "a form lands that evening" attaches to a day they
@@ -1472,19 +1569,25 @@ export const dict = {
         title: { ko: "인턴십 · 어워드", en: "Internships & awards" },
         // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회. 순위형
         // 시상 폐지·테마형 어워드(부문 pending)·인턴십 전원 개방.
+        // DECIDED 2026-08-06: 테마형 어워드 4부문 확정(비욘드 브리프·비즈니스 포텐셜·
+        // 빌더스 초이스·0→100). 이름은 포멀·설명은 유머 원칙. 금액 확정
+        // S$100/75/50 — 헤지("확정되는 대로 안내"·"규모 확정 전") 제거.
         //
         // 이 카드는 1·2·3위를 순서대로 나열하던 자리였습니다. 순위가 사라지면서
         // 나열할 대상 자체가 없어졌고, 남은 것은 "무엇이 걸려 있는가"뿐입니다 —
-        // 테마형 어워드 · 인센티브 · 인턴십 · 굿즈. WHAT is on offer is settled;
-        // 부문 구성도, 금액도, 인원도 전부 미정이라 어느 줄에도 숫자를 쓰지 않습니다.
+        // 테마형 어워드 · 인센티브 · 인턴십 · 굿즈.
         //
-        // "부문 구성은 확정되는 대로 안내" 헤지는 사이트 전체에서 딱 세 곳입니다 —
-        // 이 카드, FAQ 상금 답변, schedule.ts d8-final-pitch description. 부문이
-        // 확정되면 그 세 곳만 갈아끼우면 되고, 네 번째 자리를 만들면 확정 시
-        // 쫓아다녀야 합니다.
+        // 부문 헤지가 살던 세 곳(이 카드, FAQ 상금 답변, schedule.ts d8-final-pitch
+        // description)은 2026-08-06 확정 반영으로 전부 헤지가 사라졌습니다. 부문
+        // 이름·금액을 새로 퍼뜨리는 네 번째 자리는 만들지 마세요 — 바뀌면 또
+        // 쫓아다녀야 합니다. 여기는 이름과 선정 주체만, 유머 설명은 FAQ 한 곳에만.
         //
-        // 널담 바우처는 3위 시상이 사라지며 자리를 잃었습니다 — 인센티브 바우처로
-        // 편입될지는 미정이라 실명 표기를 뺐습니다. (해녀의 부엌 바우처는 그 전에
+        // 우산 명칭 "성장 어워드"는 파트너 확인 전이라 웹에 쓰지 않습니다 —
+        // 표기는 "테마형 어워드 4부문". 정본 docx의 유머명(답지 찢었상 등)은
+        // 내부·무대용이고, 웹은 포멀명입니다. 두 층위가 공존하는 것이 의도입니다.
+        //
+        // 널담 바우처는 3위 시상이 사라지며 자리를 잃었다가 빌더스 초이스·0→100의
+        // 부상으로 돌아왔습니다. (해녀의 부엌 바우처는 그 전에
         // 인센티브에서 빠졌고, "Day 5 AI Use Case Top 3 · 널담 바우처"는 2026-08-03
         // Day 5가 네트워킹 데이로 재정의되며 삭제됐습니다 — 둘 다 되살리지 마세요.)
         // Mirrored in the FAQ internship + award items; change them together.
@@ -1501,13 +1604,13 @@ export const dict = {
           // CONFIRMED 2026-08-05: AXMOS(코드프레소·WVB) 실명 표기 가능 — 바뀐 것은
           // 대상 범위(1위 팀 → 전원)이지 인턴십을 여는 회사가 아닙니다. 실명은 FAQ
           // 인턴십 답변과 여기 두 곳에만 두세요.
-          { ko: "테마형 어워드로 1·2·3위 순위 대신 각 팀의 강점을 조명 · 부문 구성은 확정되는 대로 안내", en: "Thematic awards, spotlighting each team's strengths instead of a 1st–3rd ranking · categories announced once set" },
+          { ko: "테마형 어워드 4부문 · 8팀: 비욘드 브리프(출제사 픽) · 비즈니스 포텐셜(VC 픽) · 빌더스 초이스(참가자 투표) · 0→100(운영진 선정)", en: "Four thematic awards, eight teams: Beyond the Brief (problem owner's pick) · Business Potential (VC pick) · Builder's Choice (participant vote) · Zero to Hundred (organizers' pick)" },
           // DECIDED 2026-08-05: 식사 언급 전면 제거 — 제공 안내도, 미제공 안내도 쓰지
           // 않는다. (식사 미제공 정책 자체는 2026-08-04 결정 그대로) 어느 방향으로든
-          // 다시 넣지 마세요. 이 줄에서는 "현금·식사 바우처"의 식사가 빠졌습니다 —
-          // 바우처 종류는 애초에 확정된 적이 없고, 그 한 단어가 사이트에서 유일하게
-          // 식사가 나온다고 읽힐 여지를 만들고 있었습니다.
-          { ko: "어워드 인센티브는 현금·바우처 형태로 주최사가 지원 (규모 확정 전)", en: "Award incentives come as cash or vouchers from the hosts (amounts not yet final)" },
+          // 다시 넣지 마세요. 바우처는 "널담 바우처"로만 적고 식사·디저트 같은 단어를
+          // 붙이지 않습니다 — 그 한 단어가 사이트에서 유일하게 식사가 나온다고 읽힐
+          // 여지를 만듭니다.
+          { ko: "1·2·3위 순위는 없고, 부상은 부문별로 현금 또는 널담 바우처입니다", en: "No 1st–3rd ranking; each award carries a cash prize or a Nuldam voucher" },
           { ko: "AXMOS(코드프레소·WVB) 유급 인턴십 기회는 수상과 무관하게 모든 참가자에게 열려 있습니다 · 주최사가 행사 과정과 제출물을 바탕으로 직접 검토", en: "A paid internship with AXMOS (Codepresso · WVB), open to every participant, awards or not · the hosts review interest on the strength of your work across the event" },
           // CONFIRMED 2026-08-03 (브랜드부스트 미팅): 후드+캡 세트 60개, Day 1 전
           // 도착 확정, 현장 선착순. 이전 줄("굿즈 (pen·notes) 등 · 검토 중")은
@@ -2481,9 +2584,28 @@ export const dict = {
           // 바로 뒤에 오는 사실("1·2·3위가 아니다")이 예스의 모양을 바꿉니다. 부정을
           // 먼저 꺼내면 상금이 없다고 읽힙니다.
           //
-          // "부문 구성은 확정되는 대로 안내" 헤지가 사는 세 곳 중 하나입니다 —
-          // 나머지는 benefits 06 카드와 schedule.ts d8-final-pitch description.
-          // 부문 이름·인센티브 금액·인원은 어디에도 쓰지 않습니다.
+          // DECIDED 2026-08-06: 테마형 어워드 4부문 확정(비욘드 브리프·비즈니스 포텐셜·
+          // 빌더스 초이스·0→100). 이름은 포멀·설명은 유머 원칙. 금액 확정
+          // S$100/75/50 — 헤지("확정되는 대로 안내"·"규모 확정 전") 제거.
+          //
+          // 부문 헤지가 살던 세 곳(benefits 06 카드, 이 답변, schedule.ts
+          // d8-final-pitch description) 중 하나였고, 2026-08-06 확정 반영으로
+          // 헤지는 소멸했습니다.
+          //
+          // 이 답변은 부문을 하나씩 소개하지 않습니다. 한 번 그렇게 써봤더니
+          // ①~④가 문단이 되면서 답 하나가 화면을 넘어갔어요 — 목록으로 읽어야
+          // 할 것을 산문으로 읽히게 만든 셈입니다. 부문별 설명은 Day 8 데이
+          // 모달의 어워드 박스(dict.program.awards)로 옮겼고, 여기는 질문에만
+          // 답합니다: 돈이 있느냐(예), 무엇으로 받느냐(현금 / 널담 바우처),
+          // 몇 팀이냐(8팀). 부문을 다시 나열하고 싶어지면 그건 이 답이 아니라
+          // 저 박스를 고칠 신호입니다.
+          //
+          // WITHHELD 2026-08-07: 금액은 확정돼 있지만 웹에 쓰지 않습니다
+          // (dict.program.awards의 WITHHELD 주석 참고). 그래서 이 답은 "얼마"가
+          // 아니라 "무엇으로"까지만 말합니다 — 상금이 있느냐는 질문에는 답이
+          // 되면서 액수는 말하지 않는 선입니다. 여기에 "금액은 추후 안내" 같은
+          // 말을 붙이지 마세요: 미정이 아니라 비공개이고, 그 문장은 방금 걷어낸
+          // 헤지를 이 답변에 되돌려 놓습니다.
           //
           // 수료증은 이 목록에서 의도적으로 빠져 있습니다 — 발급 기준이 "크래시코스
           // 전 시간 참석"이라, 참가자 전원이 받는 항목과 나란히 두면 기준이 오해됩니다.
@@ -2500,8 +2622,8 @@ export const dict = {
           // 괄호가 그래서 빠졌습니다. 안 준다는 안내조차 식사를 화제로 만들고, 이
           // 답변은 상금을 묻는 자리지 끼니를 묻는 자리가 아닙니다.
           // benefits 06 카드와 같은 사실을 말하는 자리이니 함께 움직여 주세요.
-          ko: "네, 다만 팀을 1·2·3위로 세우는 방식은 아닙니다. 시상은 각 팀의 강점을 드러내는 테마형 어워드로 구성되며, 부문은 현재 기획 중이라 확정되는 대로 안내드려요. 인센티브는 현금·바우처 형태로 주최사가 지원합니다(규모 확정 전). 참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드·캡 세트는 Day 1 현장에서 선착순 60세트로 드리고, 수료증은 크래시코스 전 시간을 들으면 받습니다.",
-          en: "Yes, but not as a 1st-2nd-3rd ranking. Awards are thematic, built to recognise each team's strengths, and the categories are being designed now; we'll announce them once set. Incentives come as cash or vouchers from the hosts (amounts not yet final). Entry is free, and the networking goes to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come, and the certificate comes with full Crash Course attendance.",
+          ko: "네, 다만 팀을 1·2·3위로 세우지 않습니다. 시상은 테마형 어워드 4부문이고 여덟 팀이 받아 가요. 부상은 부문에 따라 현금 또는 널담 바우처입니다. 어떤 부문이 있고 누가 뽑는지는 프로그램의 Day 8 카드에 정리해 뒀습니다. 참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드·캡 세트는 Day 1 현장에서 선착순 60세트로 드리고, 수료증은 크래시코스 전 시간을 들으면 받습니다.",
+          en: "Yes, but nobody gets lined up 1st-2nd-3rd. There are four thematic awards and eight teams take one home, each carrying either a cash prize or a Nuldam voucher. Which awards there are and who picks them is laid out on the Day 8 card in the programme. Entry is free and the networking goes to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come, and the certificate comes with full Crash Course attendance.",
         },
       },
       {

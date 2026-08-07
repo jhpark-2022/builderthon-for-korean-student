@@ -1647,6 +1647,7 @@ function DayModal({
               <h3 id="day-modal-title" className="mt-5 text-[24px] font-bold leading-tight text-white sm:text-[30px]">{t(day.theme)}</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/70">{t(day.summary)}</p>
               {day.deliverableDue && <SubmissionBox t={t} />}
+              {day.awardsBox && <AwardsBox t={t} />}
               {/* 진행 순서가 있으면 그것이 세션 목록을 대신합니다 — 둘 다 두면
                   같은 세션을 시간표에서 한 번, 카드에서 또 한 번 읽게 됩니다.
                   시간표가 더 나은 이유: 카드에 없는 순간(입장·휴식·네트워킹·정리)
@@ -1814,6 +1815,51 @@ function SubmissionBox({ t }: { t: Tfn }) {
       </ul>
       <p className="mt-3.5 break-keep border-t border-rose-300/15 pt-3 text-xs leading-relaxed text-rose-100/75">
         {t(s.warning)}
+      </p>
+    </div>
+  );
+}
+
+// The Day 8 thematic-awards box. Same shape and position as SubmissionBox above,
+// amber where that one is rose: rose on this page means "you don't get to skip
+// this", and an award is the opposite of an obligation. Amber is already the
+// page's ★ main-track colour, which is the right neighbourhood for a prize.
+//
+// Each row carries three lines because they answer three different questions and
+// readers arrive with different ones: the NAME (what it's called on stage), the
+// META (who picks it, how many teams, what you get — the line people scan for),
+// and the DESC (what it's actually looking for, in the voice of the event).
+// Keep the humour in desc only; a joke in meta makes the conditions look soft.
+function AwardsBox({ t }: { t: Tfn }) {
+  const a = dict.program.awards;
+  return (
+    <div className="mt-5 rounded-2xl border border-amber-400/25 bg-amber-400/[0.07] px-5 py-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/35 bg-amber-400/12 px-2.5 py-1 text-[0.68rem] font-bold text-amber-100">
+          <span aria-hidden>★</span>{t(a.countBadge)}
+        </span>
+        <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-amber-200/80">{t(a.tag)}</span>
+      </div>
+      <p className="mt-2.5 break-keep text-sm font-bold leading-snug text-white">{t(a.heading)}</p>
+      <ul className="mt-3 space-y-3">
+        {a.items.map((item, i) => (
+          <li key={i} className="flex gap-2.5">
+            <span
+              aria-hidden
+              className="mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-amber-300/30 bg-amber-400/10 text-[0.58rem] font-black text-amber-100"
+            >
+              {i + 1}
+            </span>
+            <div className="min-w-0">
+              <p className="break-keep text-xs font-bold leading-snug text-amber-50">{t(item.name)}</p>
+              <p className="mt-0.5 break-keep text-[0.68rem] leading-relaxed text-amber-100/60">{t(item.meta)}</p>
+              <p className="mt-1 break-keep text-xs leading-relaxed text-amber-50/85">{t(item.desc)}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-3.5 break-keep border-t border-amber-300/15 pt-3 text-xs leading-relaxed text-amber-100/75">
+        {t(a.note)}
       </p>
     </div>
   );
