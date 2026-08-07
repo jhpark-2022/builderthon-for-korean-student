@@ -1829,9 +1829,14 @@ export const dict = {
         // group's shared trait is having shipped product, not being the same age
         // as the students — describe them by that. Re-check this line whenever a
         // stage-1 mentor is added.
+        // The last sentence is an operating rule, not description. Mentors give
+        // their time in a personal capacity around day jobs (see personalNote
+        // below), so a team swapping its slot after the fact moves someone else's
+        // evening too. Saying it here — inside the box that shows the 1:1s — is
+        // where a team reads it before booking, not after they ask to move.
         sub: {
-          ko: "아직 방향을 바꿀 수 있는 구간의 멘토링입니다. 제품을 직접 만들어 온 창업가·현업 엔지니어와 함께 여러 병목 중 하나를 고르고, 버릴 것을 정하고, 그 선택을 제공 데이터로 뒷받침합니다. 정답을 주는 자리가 아니라 같은 문제를 놓고 ‘나라면 이렇게 했을 수도’를 나누는 자리이고, 빌드가 막히면 팝업스튜디오 엔지니어(FDE 오피스아워)와 함께 풀어요.",
-          en: "This is mentoring while the direction can still change. With founders and working engineers who have built and shipped products themselves, you pick one bottleneck, decide what NOT to solve, and back that choice with the provided data. It's not an answer-giving session but a ‘here's how I might have done it’ conversation over the same problem, and when the build gets stuck, Popup Studio's engineers (FDE office hours) work through it with you.",
+          ko: "아직 방향을 바꿀 수 있는 구간의 멘토링입니다. 제품을 직접 만들어 온 창업가·현업 엔지니어와 함께 여러 병목 중 하나를 고르고, 버릴 것을 정하고, 그 선택을 제공 데이터로 뒷받침합니다. 정답을 주는 자리가 아니라 같은 문제를 놓고 ‘나라면 이렇게 했을 수도’를 나누는 자리이고, 빌드가 막히면 팝업스튜디오 엔지니어(FDE 오피스아워)와 함께 풀어요. 1:1 슬롯은 한 번 확정되면 이후 변경하지 않으니, 신청 전에 팀 일정을 맞춰 주세요.",
+          en: "This is mentoring while the direction can still change. With founders and working engineers who have built and shipped products themselves, you pick one bottleneck, decide what NOT to solve, and back that choice with the provided data. It's not an answer-giving session but a ‘here's how I might have done it’ conversation over the same problem, and when the build gets stuck, Popup Studio's engineers (FDE office hours) work through it with you. Once a 1:1 slot is confirmed it stays as booked, so settle your team's schedule before you request one.",
         },
         // "메인 멘토링 파트너" is load-bearing, not decoration: NONE of the cards in
         // this box belong to either mark since the two Onword founders came out
