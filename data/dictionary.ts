@@ -936,9 +936,13 @@ export const dict = {
     // entries in data/schedule.ts (Day 1 킥오프 · Day 8 결과 공유회); the six days
     // between are self-paced and mostly online, which is why the second half of
     // the sentence is there — without it this reads as an 8-day residency.
+    // 마지막 문장에서 자율 빌드를 "온라인으로 진행되는 것" 목록에서 뺐습니다
+    // (2026-08-08). 진행되는 게 아니라 각자 비는 시간에 하는 것이고, 1:1과
+    // 묶어 "온라인으로 진행돼요"라고 쓰면 접속해야 할 일정이 하나 더 있는 것처럼
+    // 읽힙니다. 같은 이유로 modeNote의 온라인 행에서도 빠졌습니다.
     requirement: {
-      ko: "참가 조건은 하나예요. Day 1(8/22 킥오프)과 Day 8(8/29 결과 공유회)은 싱가포르 현장 필참입니다. 그 사이 현장 일정은 Day 5·7 세션뿐이고(선택), Day 3·4 1:1 멘토링과 팀별 자율 빌드는 온라인으로 진행돼요.",
-      en: "One condition: Day 1 (22 Aug, kick-off) and Day 8 (29 Aug, the Showcase) are in person in Singapore and required. The only other on-site days are the Day 5 and Day 7 sessions, and those are optional. The Day 3·4 1:1 mentoring and your team's own build time run online.",
+      ko: "참가 조건은 하나예요. Day 1(8/22 킥오프)과 Day 8(8/29 결과 공유회)은 싱가포르 현장 필참입니다. 그 사이 현장 일정은 Day 5·7 세션뿐이고(선택), Day 3·4 1:1 멘토링은 온라인이 기본이에요. 나머지 시간은 팀이 각자 편할 때 빌드하면 됩니다.",
+      en: "One condition: Day 1 (22 Aug, kick-off) and Day 8 (29 Aug, the Showcase) are in person in Singapore and required. The only other on-site days are the Day 5 and Day 7 sessions, and those are optional; the Day 3·4 1:1 mentoring is online by default. The rest of the time is your team's to build in, whenever suits you.",
     },
     // 준비물 — 참가비가 아니라 각자 준비해 오는 것. requirement(필참 2일) 바로
     // 아래, 등록을 결정하는 자리에 둡니다: 이걸 등록 후에 알게 되면 Day 1에 와서
@@ -1283,10 +1287,19 @@ export const dict = {
         },
         {
           id: "online",
+          // 이 행에는 "접속해서 참여하는 것"만 적습니다 (2026-08-08).
+          // "팀별 자율 빌드"가 여기 세 번째 항목으로 서 있었는데, 자율 빌드는
+          // 활동이 아니라 각자 비는 시간에 알아서 하는 것입니다 — 크래시코스·
+          // 1:1과 나란히 세우는 순간 온라인으로 참석해야 할 세 번째 일정이
+          // 되고, 그건 바로 위 lead("8일 내내 붙어 있는 일정이 아니에요")를
+          // 스스로 뒤집습니다. 다시 넣지 마세요.
+          // 1:1에만 "(온라인 기본)"이 붙는 이유: 멘토에 따라 한인회관 대면이
+          // 있습니다. 조건(누가·어디서)은 여기 적지 않습니다 — Day 3·4 세션
+          // 카드와 그 모달의 장소 행이 이미 전부 말합니다.
           label: { ko: "온라인", en: "Online" },
           body: {
-            ko: "크래시코스 · 1:1 멘토링 · 팀별 자율 빌드",
-            en: "Crash course · 1:1 mentoring · your team's own build time",
+            ko: "크래시코스 · 1:1 멘토링(온라인 기본)",
+            en: "Crash course · 1:1 mentoring (online by default)",
           },
         },
       ],
@@ -1396,6 +1409,14 @@ export const dict = {
     // UNUSED right now: Day 3·4 carried it while their mentoring defaulted to
     // in-person F2F, and both went back to plain 온라인 when that default flipped.
     mixedLabel: { ko: "온라인 · 현장", en: "Online · in person" },
+    // dayMode "online-default" — Day 3·4. The day badge's whole job is to stop
+    // "온라인" from reading as a guarantee that nothing that day is in person;
+    // it does NOT try to explain the exception. Deliberately shorter than the
+    // session badge below (byMentorLabel): the day card already carries 선택 ·
+    // 자율 진행 next to it, and "(멘토별)" here would be a third qualifier in a
+    // row of pills. Who gets F2F and where lives on the 1:1 session card and its
+    // modal 장소 row — one condition, stated once, where there is room for it.
+    onlineDefaultLabel: { ko: "온라인 기본", en: "Online by default" },
     // ── Self-paced (category "build") ──────────────────────────────────────
     // Build events carry mode "online" in the data because they have to carry
     // SOMETHING, but showing them an "온라인" badge told a lie: it reads as a

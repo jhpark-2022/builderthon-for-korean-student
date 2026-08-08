@@ -1030,6 +1030,16 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
         <span aria-hidden className="text-amber-300/70">●</span>{t(dict.program.mixedLabel)}
       </span>
     );
+  // Day 3·4: online unless your mentor offers F2F. Same neutral pill as 온라인,
+  // no amber and no dot — the amber treatments above are "there is somewhere to
+  // be", and here there isn't one for most people. Only the wording changes,
+  // which is exactly the size of the correction.
+  if (day.dayMode === "online-default")
+    return (
+      <span className="rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
+        {t(dict.program.onlineDefaultLabel)}
+      </span>
+    );
   return (
     <span className="rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
       {t(dict.program.onlineLabel)}

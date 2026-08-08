@@ -196,7 +196,16 @@ export interface DayMeta {
   //             online, so both days are plain "online" again. Kept because the
   //             badge still renders (Journey.tsx) and the next partly-on-site day
   //             will want it.
-  dayMode: "online" | "offline" | "pending" | "mixed";
+  // "online-default" = online unless a specific mentor offers otherwise. Day 3·4
+  //             (2026-08-08): plain "online" was reading as a promise that the
+  //             day is entirely online, and some mentors do take their 1:1 in
+  //             person at the Korean Association hall. NOT "mixed" — "mixed" is a
+  //             day with an on-site half for EVERYONE, which would send people
+  //             planning a trip they probably don't need. The badge says only
+  //             "온라인 기본"; WHO gets F2F and WHERE stays on the 1:1 session
+  //             card (mode "mixed") and its modal 장소 row (MENTORING_MODE),
+  //             which is the one place that can carry the condition in full.
+  dayMode: "online" | "offline" | "pending" | "mixed" | "online-default";
   // 노선도의 현장 마커. 원래 이 자리에는 지도 핀 아이콘이 있었는데, 핀은 "현장"
   // 하나만 말합니다 — 그건 바로 아래 카드의 뱃지가 이미 하는 말이고, 정작 궁금한
   // 것은 "어디로 가야 하나"입니다. 그래서 핀 대신 그날의 장소 로고를 세웁니다.
@@ -409,7 +418,9 @@ export const days: DayMeta[] = [
       en: "The first time your idea meets a working founder, 1:1",
     },
     stopLabel: { ko: "1:1 멘토링", en: "1:1 mentoring" },
-    dayMode: "online",
+    // 온라인이 기본이되 멘토에 따라 한인회관 대면이 있을 수 있는 날 — "online"이
+    // 아닌 이유는 dayMode 주석에 있습니다.
+    dayMode: "online-default",
   },
   {
     day: 4,
@@ -426,7 +437,8 @@ export const days: DayMeta[] = [
       en: "A second 1:1, while there's still time to change direction",
     },
     stopLabel: { ko: "1:1 멘토링", en: "1:1 mentoring" },
-    dayMode: "online",
+    // Day 3과 같습니다 (dayMode 주석 참고).
+    dayMode: "online-default",
   },
   {
     day: 5,
