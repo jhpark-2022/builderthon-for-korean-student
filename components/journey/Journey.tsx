@@ -680,6 +680,18 @@ function HookCards({
 // dict.hero.countdownStartsAt이 같은 시각을 글로 말합니다. 하나를 고치면
 // 반드시 다른 하나도 고치세요.
 const LAUNCH_AT = new Date("2026-08-22T13:00:00+08:00").getTime();
+// 등록 마감. 시작(오후 1시)보다 세 시간 늦은 오후 4시입니다 — Day 1 오프닝이
+// 1PM–4:30PM이라 그 자리에 온 사람도 마감 전까지는 등록할 수 있습니다.
+//
+// 이 세 시간 때문에 상수가 따로 필요합니다. 패널은 LAUNCH_AT에 카운트다운에서
+// Problem 뷰로 넘어가는데, 카운트다운에만 마감 안내를 두면 정작 마감 직전
+// 세 시간 동안 안내가 사라집니다. 그래서 Problem 뷰가 이 값을 보고 "아직
+// 등록할 수 있어요" 밴드를 띄우고, 오후 4시가 지나면 스스로 내립니다.
+//
+// dict.hero.countdownDeadline / problemRegistrationOpen이 이 시각을 글로
+// 말합니다. 하나를 고치면 반드시 함께 고치세요. LAUNCH_AT과 마찬가지로
+// 오프셋(+08:00)을 문자열에 박아둡니다.
+const REGISTRATION_CLOSES_AT = new Date("2026-08-22T16:00:00+08:00").getTime();
 // 기획/디자인 컨펌 단계에서만 true. 퍼블리시 시 false 로 바꾸면 탭이 숨겨지고
 // 날짜(LAUNCH_AT)에 따라서만 뷰가 결정된다.
 const PREVIEW_TABS = false;
@@ -772,10 +784,19 @@ function CountdownView({ t }: { t: Tfn }) {
       <p className="mt-3.5 text-xs font-semibold text-white/75">
         {t(dict.hero.countdownStartsAt)}
       </p>
+      {/* 등록 마감. 시계는 "시작까지"만 세고 있어서, 언제까지 등록해야 하는지는
+          이 줄이 없으면 사이트 어디에도 없습니다. 시작 시각 바로 아래에 두되
+          알약 배지로 한 단계 띄웁니다 — 위 줄은 달력에 넣을 정보이고, 이 줄은
+          지금 행동해야 하는 정보라 무게가 달라야 합니다.
+          마감(오후 4시)이 시작(오후 1시)보다 늦은 이유는 dictionary 쪽 주석 참고. */}
+      <p className="mt-2.5 inline-flex items-center gap-1.5 rounded-full border border-violet-400/25 bg-violet-400/10 px-3 py-1 text-[0.7rem] font-semibold text-violet-100">
+        {t(dict.hero.countdownDeadline)}
+      </p>
       {/* What the ticking clock actually costs you — deliberately about what
-          registering gets you sooner, not about seats running out. There is no
-          cap and no deadline yet, so "선착순 / 마감 임박 / 잔여석" would be an
-          invented pressure; every clause below is something we already do.
+          registering gets you sooner, not about seats running out. The line
+          above is a date, not a scarcity device: there is no cap, so
+          "선착순 / 마감 임박 / 잔여석" would still be an invented pressure;
+          every clause below is something we already do.
           Static text: it must not animate alongside the seconds.
           TODO: 매칭 '등록 순서' 운영 방침 확정 시 "일찍 등록할수록 매칭 풀이
           넓어요"로 강화 가능 */}
@@ -787,8 +808,27 @@ function CountdownView({ t }: { t: Tfn }) {
 }
 
 function ProblemView({ t }: { t: Tfn }) {
+  // 오프닝이 열린 뒤(=이 뷰가 보이기 시작한 뒤)에도 등록은 오후 4시까지 열려
+  // 있습니다. 시계를 그대로 재사용해 마감이 지나면 밴드가 스스로 사라지게 합니다
+  // — 새로고침을 기다리지 않고 그 초에 내려갑니다. ready는 SSR/첫 렌더에서
+  // false라 hydration mismatch도 막아줍니다.
+  const { ready, done } = useCountdown(REGISTRATION_CLOSES_AT);
+  const registrationOpen = ready && !done;
+
   return (
     <Glass className="text-left">
+      {/* 문제 카드 위에 붙는 마감 밴드. 바이올렛이 아니라 앰버인 건 아래
+          Eyebrow·"공개 예정" 배지가 이미 바이올렛이기 때문입니다. 같은 색을
+          세 번 쓰면 어느 것이 시간에 쫓기는 정보인지 구분이 사라집니다. */}
+      {registrationOpen && (
+        <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-[0.7rem] font-semibold text-amber-100">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-[softPulse_2.4s_ease-in-out_infinite] rounded-full bg-amber-300/60" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-amber-300" />
+          </span>
+          {t(dict.hero.problemRegistrationOpen)}
+        </p>
+      )}
       <div className="flex items-center justify-between gap-3">
         <Eyebrow color="violet">✦ {t(dict.hero.problemEyebrow)}</Eyebrow>
         <span className="rounded-full border border-violet-400/30 bg-violet-400/10 px-3 py-1 text-[0.7rem] font-bold uppercase tracking-widest text-violet-200">

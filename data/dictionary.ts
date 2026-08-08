@@ -661,16 +661,38 @@ export const dict = {
       ko: "8월 22일 (토) 오후 1시 · 싱가포르 현지 시각",
       en: "Sat 22 Aug, 1PM · Singapore time",
     },
+    // 등록 마감. 시작 시각(countdownStartsAt) 바로 아래에 붙습니다.
+    //
+    // 마감이 시작(오후 1시)보다 늦은 오후 4시인 건 오타가 아닙니다. Day 1
+    // 오프닝이 1PM–4:30PM이라, 그 자리에 온 사람도 오후 4시까지는 등록할 수
+    // 있습니다. 그래서 "시작 전까지"가 아니라 날짜와 시각을 그대로 적습니다.
+    //
+    // 시간대는 바로 위 줄이 이미 "싱가포르 현지 시각"이라고 말하지만, 이 줄만
+    // 스크린샷으로 잘려 돌아다니는 경우가 실제로 있어서 (현지 시각)을 다시
+    // 답니다. KST로 읽으면 한 시간이 틀어집니다(= 한국 시각 오후 5시).
+    countdownDeadline: {
+      ko: "등록 마감 8월 22일 (토) 오후 4시 (현지 시각)",
+      en: "Registration closes Sat 22 Aug, 4PM (Singapore time)",
+    },
     // Sits under the countdown grid. Says what registering early actually gets
-    // you — NOT that seats are running out. There is no cap and no registration
-    // deadline set, so scarcity framing ("선착순", "마감 임박", "잔여석") would
-    // be fabricated pressure. Each clause here is something already true.
+    // you — NOT that seats are running out. The deadline above is a date, not a
+    // scarcity device: there is no cap, so "선착순 / 마감 임박 / 잔여석" would
+    // still be fabricated pressure. Each clause here is something already true.
     countdownUrgency: {
       ko: "등록자부터 참가자 단톡방 초대 · 트랙 사전 안내 · 팀 매칭이 시작돼요.",
       en: "Registered builders get the participants' chat invite, track previews and team matching first.",
     },
     // 카운트다운이 끝난 뒤(이미 시작한 시점) 노출되는 문구.
     countdownStarted: { ko: "빌더톤이 시작되었습니다.", en: "The builderthon has begun." },
+
+    // Problem 뷰 맨 위 밴드. 오프닝(오후 1시)이 열려 카운트다운이 사라진 뒤에도
+    // 등록은 오후 4시까지 열려 있어서, 그 세 시간 동안 마감을 대신 말합니다.
+    // 오후 4시가 지나면 밴드 자체가 사라지므로 "오늘"은 항상 8월 22일입니다.
+    // 시각은 REGISTRATION_CLOSES_AT / countdownDeadline과 반드시 같아야 합니다.
+    problemRegistrationOpen: {
+      ko: "아직 등록할 수 있어요 · 오늘 오후 4시 마감 (현지 시각)",
+      en: "You can still register — closes 4PM today (Singapore time)",
+    },
 
     problemEyebrow: { ko: "이번 라운드의 과제", en: "This round's challenge" },
     // TODO: confirm — 실제 문제가 확정되면 교체할 플레이스홀더.
