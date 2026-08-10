@@ -1459,6 +1459,27 @@ export const dict = {
     // no colour: colour here would make optional days compete with the two
     // anchors, which is the exact misread being fixed.
     optionalBadge: { ko: "선택", en: "Optional" },
+    // 카드에서 "선택" 필을 대신하는 세 번째 층 (schedule.ts days[].spotlight,
+    // 현재 Day 5·7). 노선도 범례의 "놓치면 아까운 정거장"과 같은 말을 필 크기로
+    // 줄인 것이라, 둘을 따로 읽을 필요가 없습니다.
+    //
+    // 의무를 암시하는 낱말은 쓰지 마세요 — "필참"·"전원"·"꼭"·"must" 전부. 이
+    // 날들은 선택이고, 배지가 하는 말은 의무가 아니라 왜 내려설 만한가입니다.
+    // EN이 범례("Worth getting off for")보다 짧은 것은 필이라서입니다. 정거장
+    // 비유는 범례가 이미 세워 놓았고, 필은 그 층을 가리키기만 하면 됩니다.
+    spotlightBadge: { ko: "놓치면 아까운", en: "Worth it" },
+    // 스포트라이트 날의 데이 모달에만 답니다. 카드에서 그날의 "선택" 필이
+    // ◉ 필로 바뀌기 때문에, 필참이 아니라는 사실을 말로 받아 주는 자리가
+    // 한 곳은 있어야 합니다 (schedule.ts spotlight 주석의 거래).
+    // "선택"이 아니라 "선택 참여"인 것은, 모달의 이 줄이 배지 행이라 옆에
+    // 현장/온라인 같은 참여 방식 칩들과 나란히 서기 때문입니다.
+    optionalAttendance: { ko: "선택 참여", en: "Optional to attend" },
+    // 멘토링이 열리는 날의 카드에 붙는 칩 (schedule.ts MENTORING_DAYS, 현재
+    // Day 3~7). 노선도의 점 마커·필과 같은 에메랄드 점을 앞에 답니다 — 세
+    // 표면이 같은 기호를 쓰므로 한 번 배우면 어디서든 읽힙니다.
+    // 날짜를 적지 않습니다: 카드는 이미 자기 날짜를 말하고 있고, 구간을 말하는
+    // 것은 노선도 아래 필의 몫입니다.
+    mentoringChip: { ko: "1:1 멘토링", en: "1:1 mentoring" },
     dayLabel: { ko: "Day", en: "Day" },
     // Label on the wide band above Lab 1. "사전" rather than "Day 0" — the
     // session is a prologue to the eight days, not a day of them.

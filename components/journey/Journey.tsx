@@ -9,8 +9,11 @@ import { useLocale } from "@/lib/LocaleContext";
 import { dict, links, partnerIntros, partnerIntroTBC, partnerArticles, type Phrase } from "@/data/dictionary";
 import {
   categoryMeta,
+  dayEmphasis,
   days,
+  mentoringOpenOn,
   schedule,
+  MENTORING_DAY_RANGE,
   type BEvent,
   type DayMeta,
 } from "@/data/schedule";
@@ -1019,6 +1022,30 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
   );
 }
 
+// ── 노선도의 기호를 필 크기로 줄인 것들 ───────────────────────────────────────
+// 카드·모달의 배지가 노선도의 노드와 같은 뜻이려면 같은 모양이어야 합니다. 글자
+// (★는 문자, ◉·●는 문자로 쓰면 폰트마다 크기·정렬이 제각각)로 적는 대신, 노드와
+// 범례 스와치가 쓰는 마크업을 그대로 줄여서 씁니다. 한 곳에 모아 둔 이유는 색이
+// 바뀔 때 노선도만 바뀌고 카드가 남는 일을 막기 위해서입니다.
+//
+// ★(필참)는 예외적으로 문자 그대로 씁니다 — 원래부터 그랬고, 별은 어느 폰트에서나
+// 별입니다. 여기 있는 둘은 원형이라 문자로는 재현이 안 됩니다.
+
+// ◉ 놓치면 아까운 — 노선도 스포트라이트 노드(violet 링 + 안쪽 점)의 축소판.
+function SpotlightGlyph() {
+  return (
+    <span aria-hidden className="flex h-3 w-3 shrink-0 items-center justify-center rounded-full border border-violet-300/60 bg-violet-400/20">
+      <span className="h-1.5 w-1.5 rounded-full bg-violet-200" />
+    </span>
+  );
+}
+
+// ● 멘토링 — 노선도 노드 아래의 점, 그리고 그 아래 필 앞의 점과 같은 것.
+// 7px 그대로입니다: 크기가 다르면 "같은 것"으로 안 읽힙니다.
+function MentoringDot() {
+  return <span aria-hidden className="h-[7px] w-[7px] shrink-0 rounded-full bg-emerald-400/80" />;
+}
+
 // Small mode/mandatory pill helpers for the clean day cards + day modal.
 function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; selfPaced?: boolean }) {
   // Checked before dayMode: a fully self-paced day's dayMode is "online" in the
@@ -1091,32 +1118,22 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
 const stopKeyword = (theme: string) =>
   theme.split("·")[0].replace(/\([^)]*\)/g, "").trim();
 
-// ── 멘토링이 열리는 날 ────────────────────────────────────────────────────────
-// 노선도의 에메랄드 점 마커와 그 아래 필의 "Day 3~7"이 둘 다 여기서 나옵니다.
-// 스케줄에서 세는 이유는 하나입니다: 멘토링 기간이 바뀌면(하루 늘거나, 앞당겨
-// 시작하거나) 노선도가 저절로 따라오게 하려고요. 손으로 적어둔 3·4·5·6·7은
-// 반드시 스케줄과 어긋나는 날이 옵니다.
-//
-// 출처는 category === "mentoring" 이벤트입니다 — 지금은 Day 3·4의 1:1 예약제와
-// Day 5–7의 FDE 오피스아워(드롭인)입니다. 두 트랙을 나누지 않고 한 덩어리로
-// 세는 것은 참가자 입장에서 "오늘 도움을 받을 수 있는가"가 같은 질문이기
-// 때문입니다(schedule.ts FDE_OFFICE_HOUR 주석의 결정과 같은 이유).
-// day > 0: 사전 세션(day 0)은 8일 노선도 밖이라 셈에서 뺍니다.
-const MENTORING_DAYS = new Set(
-  schedule.filter((e) => e.category === "mentoring" && e.day > 0).map((e) => e.day),
-);
-const MENTORING_DAY_RANGE = {
-  from: Math.min(...MENTORING_DAYS),
-  to: Math.max(...MENTORING_DAYS),
-};
+// ── 멘토링 점 마커 ────────────────────────────────────────────────────────────
+// 어느 날에 점이 붙는지(mentoringOpenOn)와 구간(MENTORING_DAY_RANGE)은
+// schedule.ts가 스케줄에서 셉니다. 여기서 다시 세지 마세요 — 데이 카드의
+// "● 1:1 멘토링" 칩이 같은 함수를 읽고 있어서, 한쪽만 고치면 두 표면이
+// 어긋납니다. 판정이 그리로 올라간 이유는 그 파일의 주석에 있습니다.
+// ─────────────────────────────────────────────────────────────────────────────
 
 function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
   const r = dict.program.route;
-  // 필 문구의 {from}·{to}를 위 파생값으로 채웁니다. 사전 계산해 두는 것은 두 행이
+  // 필 문구의 {from}·{to}를 파생값으로 채웁니다. 사전 계산해 두는 것은 두 행이
   // 각각 렌더될 때 같은 문자열을 두 번 만들지 않게 하려는 것뿐입니다.
-  const mentoringPill = t(r.mentoringBand)
-    .replace("{from}", String(MENTORING_DAY_RANGE.from))
-    .replace("{to}", String(MENTORING_DAY_RANGE.to));
+  const mentoringPill = MENTORING_DAY_RANGE
+    ? t(r.mentoringBand)
+        .replace("{from}", String(MENTORING_DAY_RANGE.from))
+        .replace("{to}", String(MENTORING_DAY_RANGE.to))
+    : null;
   return (
     <div className="mt-10">
       {/* TWO ROWS OF FOUR ON MOBILE, one row of eight from sm up.
@@ -1205,7 +1222,7 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
           <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-[30px] flex">
             {row.map((d) => (
               <span key={d.day} className="flex flex-1 justify-center">
-                {MENTORING_DAYS.has(d.day) && (
+                {mentoringOpenOn(d.day) && (
                   <span className="h-[7px] w-[7px] rounded-full bg-emerald-400/80" />
                 )}
               </span>
@@ -1237,11 +1254,12 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
             </span>
           )}
           {row.map((d) => {
-            const anchor = d.mandatory === true;
-            // 세 번째 층이 아니라 두 번째입니다: 필참(anchor) → 스포트라이트 →
-            // 나머지. anchor가 이미 참이면 spotlight는 무시합니다(같은 정거장이
-            // 두 가지로 그려질 일은 없지만, 우선순위를 코드에 남겨둡니다).
-            const spot = !anchor && d.spotlight === true;
+            // 층 판정은 schedule.ts의 dayEmphasis 하나뿐입니다. 여기서
+            // mandatory·spotlight를 직접 보지 마세요 — 데이 카드의 배지가 같은
+            // 함수를 읽고 있어서, 우선순위를 두 곳에 적으면 갈라집니다.
+            const emphasis = dayEmphasis(d);
+            const anchor = emphasis === "must";
+            const spot = emphasis === "worth";
             // 싱가포르에 몸이 있어야 하는 날. "pending"(장소 미확정)은 일부러
             // 제외합니다 — 마커는 "여기로 오세요"라는 약속인데, 아직 어디로 갈지
             // 모르는 날에 그 약속을 하면 안 됩니다. 지금은 해당 날이 없습니다.
@@ -1528,6 +1546,9 @@ function ProgramStats({ t }: { t: Tfn }) {
 // click rather than exploding every session inline — keeps the arc scannable.
 function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number) => void }) {
   const allSelfPaced = dayIsSelfPaced(day.day);
+  // 노선도의 노드 모양을 결정하는 그 함수입니다. 카드가 자기만의 판정을 갖지
+  // 않아야 두 표면이 함께 움직입니다.
+  const emphasis = dayEmphasis(day);
   return (
     <button
       type="button"
@@ -1537,8 +1558,13 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
       // inside them and on the route terminals above — one meaning, one hue. Kept
       // to a border/tint step: a stronger treatment would turn the other six into
       // greyed-out rejects, which is the opposite of "stops you choose".
+      //
+      // 스포트라이트 날에는 테두리를 주지 않습니다 (2026-08-10에 한 번 검토하고
+      // 접었습니다). 카드 테두리는 "격자에서 먼저 읽히는 것"이라는 축이고, 그
+      // 축은 필참 둘에만 있어야 합니다. 층은 안쪽 배지가 이미 말하고 있어서,
+      // 테두리까지 세 단계로 나누면 여덟 장이 3등급으로 줄 세워집니다.
       className={`group relative flex h-full flex-col rounded-2xl border p-5 text-left transition duration-300 hover:-translate-y-1 hover:border-violet-400/30 hover:bg-white/[0.06] ${
-        day.mandatory
+        emphasis === "must"
           ? "border-rose-400/25 bg-white/[0.055]"
           : "border-white/[0.08] bg-white/[0.03]"
       }`}
@@ -1550,16 +1576,31 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
         </span>
         <span className="text-[0.7rem] text-white/55">{day.date} · {t(day.weekday)}</span>
       </div>
+      {/* ── 정거장의 층, 노선도와 같은 세 가지 (2026-08-10) ──────────────────
+          여기는 오래 필참/선택 두 가지였습니다. 노선도가 Day 5·7을 ◉로 강조하는
+          동안 카드에서는 그 둘이 나머지 선택일과 똑같이 보여서, 같은 사실을 두
+          표면이 다르게 말하고 있었습니다. 이제 셋 다 dayEmphasis 하나에서 나옵니다.
+          날짜를 여기에 적지 마세요 — spotlight를 뒤집으면 노드와 이 배지가 같이
+          움직여야 합니다. */}
       <div className="mt-3 flex flex-wrap gap-1.5">
-        {day.mandatory ? (
+        {emphasis === "must" ? (
           <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/30 bg-rose-400/10 px-2 py-0.5 text-[0.68rem] font-bold text-rose-200">
             <span aria-hidden>★</span>{t(dict.program.mandatoryBadge)}
+          </span>
+        ) : emphasis === "worth" ? (
+          /* 필참과 같은 무게(테두리 + 굵은 글씨)지만 색과 글리프가 다릅니다 —
+             violet ◉는 이 사이트에서 오직 "놓치면 아까운"만 뜻하고, rose ★는
+             오직 "필참"만 뜻합니다. 두 축이 색으로 갈려 있어서 무게가 같아도
+             의무로 번지지 않습니다. 이 날이 선택이라는 사실은 데이 모달의
+             "선택 참여" 칩이 글자로 받습니다(schedule.ts spotlight 주석의 거래).
+             rose를 쓰거나 ★를 달지 마세요 — 그 순간 필참일이 넷이 됩니다. */
+          <span className="inline-flex items-center gap-1 rounded-full border border-violet-400/30 bg-violet-400/10 px-2 py-0.5 text-[0.68rem] font-bold text-violet-200">
+            <SpotlightGlyph />{t(dict.program.spotlightBadge)}
           </span>
         ) : (
           /* Same slot as the 필참 pill, deliberately quieter: borderless and
              low-contrast so it registers as a fact about the day rather than
-             competing with the two anchors. Every non-required day gets one, so
-             the absence of a 선택 pill is itself the signal on Day 1·8. */
+             competing with the two anchors. */
           <span className="inline-flex items-center rounded-full bg-white/[0.06] px-2 py-0.5 text-[0.68rem] font-semibold text-white/45">
             {t(dict.program.optionalBadge)}
           </span>
@@ -1601,10 +1642,36 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
           가치 제시를 색으로 갈라 놓습니다. 새 토큰은 만들지 않았습니다.
           필참일에는 렌더하지 않습니다 — 갈지 말지 고르는 날이 아니어서, 거기에
           '올 이유'를 붙이면 필참이 설득의 문제로 보입니다. */}
-      {day.whyStop && !day.mandatory && (
+      {day.whyStop && emphasis !== "must" && (
         <p className="mt-2 flex gap-1.5 break-keep text-[12.5px] font-semibold leading-snug text-emerald-200/85">
           <span aria-hidden className="text-emerald-300/70">→</span>
           {t(day.whyStop)}
+        </p>
+      )}
+      {/* ── 멘토링 칩 (2026-08-10) ────────────────────────────────────────────
+          노선도는 Day 3~7 노드 아래에 에메랄드 점을 찍는데 카드에는 그 표시가
+          없었습니다. 같은 점을 카드에도 답니다 — 한 번 배운 기호가 두 표면에서
+          같은 뜻이면 범례를 다시 읽을 필요가 없습니다. 어느 날에 붙는지는
+          schedule.ts의 mentoringOpenOn이 스케줄에서 셉니다.
+
+          제목에 이미 "멘토링"이 있는 Day 3·4에도 똑같이 답니다. 중복처럼
+          보이지만, 이 칩이 하는 말은 "이 날 멘토링이 있다"가 아니라 "이 날은
+          노선도에서 점이 찍힌 그 날들 중 하나"입니다 — 셋 중 둘에만 붙으면
+          기호가 아니라 장식이 됩니다.
+
+          배지 행이 아니라 자기 줄인 이유: 375px에서 배지 행이 이미 세 칩(층 ·
+          현장/온라인 · 시간)까지 차고, 넷째를 넣으면 날마다 다른 데서 줄이
+          접혀 카드 여덟 장의 배지 행 높이가 들쭉날쭉해집니다. 게다가 멘토링은
+          '참여 방식'이 아니라 '그날 얻는 것'이라, 층·모드 칩보다 바로 위
+          whyStop 줄과 한 덩어리로 읽히는 편이 맞습니다.
+
+          점은 aria-hidden이고 칩의 글자가 뜻을 그대로 말합니다. */}
+      {mentoringOpenOn(day.day) && (
+        <p className="mt-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/25 bg-emerald-400/[0.08] px-2 py-0.5 text-[0.68rem] font-semibold text-emerald-100/90">
+            <MentoringDot />
+            {t(dict.program.mentoringChip)}
+          </span>
         </p>
       )}
       {/* 세션 개수는 뺐습니다 (되돌리지 마세요).
@@ -1833,10 +1900,28 @@ function DayModal({
                   {t(dict.program.dayLabel)} {day.day} · {day.date} · {t(day.weekday)}
                   {day.hours ? ` · ${day.hours}` : ""}
                 </span>
-                {day.mandatory && (
+                {dayEmphasis(day) === "must" && (
                   <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/30 bg-rose-400/10 px-2.5 py-1 text-xs font-bold text-rose-200">
                     <span aria-hidden>★</span>{t(dict.program.mandatoryBadge)}
                   </span>
+                )}
+                {/* 스포트라이트 날은 배지 + "선택 참여" 두 칩이 한 쌍으로 섭니다.
+                    카드에서 이 날의 "선택" 필이 ◉ 필로 바뀌었기 때문에, 필참이
+                    아니라는 사실을 글자로 받는 자리가 한 곳은 있어야 합니다 —
+                    그 자리가 여기입니다(schedule.ts spotlight 주석의 거래).
+                    둘을 떼어 놓지 마세요. ◉만 남으면 이 모달은 무게만 말하고
+                    의무 여부는 말하지 않는 화면이 됩니다.
+                    "선택 참여" 칩은 중립색입니다 — 카드의 선택 필과 같은 층이고,
+                    여기서 색을 주면 세 번째 축이 하나 더 생깁니다. */}
+                {dayEmphasis(day) === "worth" && (
+                  <>
+                    <span className="inline-flex items-center gap-1 rounded-full border border-violet-400/30 bg-violet-400/10 px-2.5 py-1 text-xs font-bold text-violet-200">
+                      <SpotlightGlyph />{t(dict.program.spotlightBadge)}
+                    </span>
+                    <span className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-xs font-semibold text-white/60">
+                      {t(dict.program.optionalAttendance)}
+                    </span>
+                  </>
                 )}
                 <DayModeBadge day={day} t={t} selfPaced={day.selfPacedDay ?? dayIsSelfPaced(day.day)} />
               </div>
