@@ -131,14 +131,25 @@ function LogoTile({
   src: string; alt: string; w: number; h: number;
   url?: string; badge?: string;
   // Target bounding-box area in px², the axis opticalHeight sizes on. The
-  // default is right for a mark that is ONE line of ink. A STACKED lockup
-  // splits the same box across two rows, so at equal area each of its rows is
-  // drawn at roughly half the height of a single-line neighbour and the mark
-  // reads small no matter how much area you give the box — that is exactly what
-  // happened to Brand Boost (BRAND over BOOST) in this grid. Raising `area` for
-  // those marks is the fix, and it is the ONLY thing this prop is for: it is
-  // not a knob for "this one looks a bit small". If a single-line mark looks
-  // wrong here, the rule itself is wrong.
+  // default is right for a mark that is ONE line of ink at ordinary density.
+  // Two things break that assumption, and this prop exists for those two only:
+  //
+  //   1. STACKED LOCKUPS. A stacked mark splits the same box across two rows,
+  //      so at equal area each row is drawn at roughly half the height of a
+  //      single-line neighbour and the mark reads small no matter how much area
+  //      you give the box — exactly what happened to Brand Boost (BRAND over
+  //      BOOST). RAISE `area`.
+  //   2. SOLID SILHOUETTES NEXT TO LINE-DRAWN MARKS. Area is the box, not the
+  //      ink in it. A filled silhouette turns nearly the whole box into ink; a
+  //      crest drawn in thin lines fills maybe half of it. Side by side at equal
+  //      area the silhouette reads a size larger — the SMU lion against the NUS
+  //      and NTU seals in the organizers grid. LOWER `area` for the silhouette.
+  //
+  // Both are cases where equal area gives unequal perceived size, which is what
+  // this prop corrects. It is NOT a knob for "this one looks a bit small": if a
+  // single-line mark of ordinary density looks wrong here, the rule itself is
+  // wrong. And a correction is local to the grid that motivated it — the same
+  // mark elsewhere sits next to different neighbours.
   area?: number;
   onOpen?: (el: HTMLElement) => void;
 }) {
@@ -1263,11 +1274,21 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                   >
                     {t(dict.program.dayLabel)} {d.day}
                   </span>
+                  {/* 정거장 이름의 밝기 규칙은 하나입니다: 필참·스포트라이트는
+                      굵은 흰색, 나머지 선택일(Day 2·3·4·6)은 같은 회색.
+                      세션이 있는 날/자율일 같은 기준으로 흐리게 하는 로직은 없고,
+                      만들지도 마세요 — 노드의 층(필참 / 놓치면 아까운 / 선택)이
+                      이 페이지가 쓰는 유일한 위계입니다. Day 6이 유독 흐려 보인다면
+                      그건 규칙이 아니라 이웃 탓입니다(양옆 Day 5·7이 둘 다 굵은
+                      흰색이라 대비가 큽니다).
+                      /60 → /75 (2026-08-10, 모바일 폴리시): 굵기 차이만으로도
+                      위계는 서므로, 대비를 낮추는 일까지 색이 겹쳐 할 필요는
+                      없었습니다. 작은 화면에서 0.68rem·/60은 읽히지 않습니다. */}
                   <span
                     className={`break-keep text-[0.68rem] leading-tight transition ${
                       anchor || spot
                         ? "font-bold text-white"
-                        : "text-white/60 group-hover:text-white/85"
+                        : "text-white/75 group-hover:text-white"
                     }`}
                   >
                     {d.stopLabel ? t(d.stopLabel) : stopKeyword(t(d.theme))}
@@ -1294,14 +1315,21 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
         ))}
       </div>
 
-      {/* 범례와 행선지가 한 줄입니다 (2026-08-09).
-          두 번의 배치를 거쳤습니다. (1) 좌우 양끝 정렬: Day 3–7 밴드가 생기자
-          행선지가 밴드 오른쪽 끝 바로 아래에 서고, 앞의 화살표까지 오른쪽을
-          가리켜서 밴드가 그리로 이어지는 것처럼 읽혔습니다. (2) 오른쪽 정렬로
-          한 줄 아래: 이번엔 넓은 빈 자리에 이 문장만 혼자 떠서 툭 튀어나왔습니다.
-          지금은 범례 뒤에 이어 붙입니다 — 노선도 아래 잔글씨는 한 줄이고,
-          행선지는 그 줄의 끝에서 세로 구분선 하나로 갈라집니다. 범례 항목처럼
-          보이지 않게 색(rose)과 굵기는 유지합니다. */}
+      {/* 범례 한 줄. 노선도 아래에 남은 유일한 잔글씨입니다.
+          행선지 줄("→ 결과 공유회: 기업·업계 전문가 앞 검증")이 여기 있었고,
+          세 자리를 거쳐 결국 아래 원칙 문단으로 합쳐졌습니다 (2026-08-10).
+          (1) 좌우 양끝 정렬: Day 3–7 밴드가 생기자 밴드 오른쪽 끝 바로 아래에
+          서고, 앞의 화살표까지 오른쪽을 가리켜 밴드가 그리로 이어지는 것처럼
+          읽혔습니다. (2) 오른쪽 정렬로 한 줄 아래: 빈 자리에 혼자 떠서 툭
+          튀어나왔습니다. (3) 범례 끝에 구분선으로 붙이기: 네 번째 범례로 읽혔고,
+          모바일에서는 어차피 줄이 넘어가 한 줄이 늘었습니다.
+          합친 이유는 자리 때문만이 아닙니다 — 원칙 문단이 "이 무대"라고 쓰는데
+          그 무대의 이름을 대는 문장이 바로 이 줄이었습니다. 한 문장 안에 있어야
+          지시어가 자기 앞의 말을 가리킵니다.
+          범례 세 줄은 그대로 둡니다. 스포트라이트가 붙는 날이 둘(Day 5·7)뿐이라
+          노드에 직접 라벨을 다는 안도 검토했지만, 그 자리는 필참 배지의 자리이고
+          선택일에 배지 비슷한 것을 달면 의무로 읽힙니다(schedule.ts spotlight
+          주석의 결정). 게다가 지금 그 아래는 멘토링 밴드가 지나갑니다. */}
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
         <span className="flex items-center gap-1.5 text-[0.66rem] text-rose-200/85">
           <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-[0.42rem] text-rose-100">★</span>
@@ -1319,22 +1347,17 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
           </span>
           {t(r.legendSpotlight)}
         </span>
-        {/* 구분선. 범례 세 개와 행선지는 다른 종류의 말이라(모양 설명 / 이 노선이
-            가는 곳), 같은 줄에 그냥 이어 붙이면 네 번째 범례로 읽힙니다.
-            줄바꿈된 뒤에는 의미가 없어서 sm 이상에서만 보입니다. */}
-        <span aria-hidden className="hidden h-3 w-px bg-white/15 sm:block" />
-        <p className="break-keep text-[0.68rem] font-semibold text-rose-100/80">
-          <span aria-hidden className="mr-1 text-rose-300/70">→</span>
-          {t(r.destination)}
-        </p>
       </div>
 
       {/* The principle, then what the optional stops actually are. Two lines, one
           claim: "you choose" on top, "and here's why they're worth choosing"
           underneath. The second is a step quieter so the thesis still leads, but
           not a footnote — it is the line that stops "선택" being read as
-          "skippable filler". */}
-      <div className="mx-auto mt-5 max-w-3xl text-center">
+          "skippable filler".
+          첫 줄이 행선지("결과 공유회 = 기업·업계 전문가 앞 검증")까지 안고
+          있습니다 — 위 범례 옆에 따로 서 있던 줄을 여기로 합쳤습니다 (2026-08-10).
+          mt-5 → mt-4: 그 줄이 사라지며 위쪽 여백이 한 칸 헐거워졌습니다. */}
+      <div className="mx-auto mt-4 max-w-3xl text-center">
         <p className="break-keep text-[13px] font-semibold leading-relaxed text-white/80 sm:text-sm">
           {t(r.principle)}
         </p>
@@ -3863,7 +3886,18 @@ export default function Journey() {
             </div>
             <div className="mt-3 grid grid-cols-3 gap-3">
               {[
-                { src: "/partners/logos/white/trimmed/smu-lion.png", alt: "SMU KSA",           w: 292, h: 173, badge: t(dict.partners.roleLead) },
+                // area 2000 → 1450 (SMU만, 2026-08-10). 높이로는 34px → 29px,
+                // 약 15% 작아집니다. 이 세 칸에서만 두는 예외이고, 이유는 잉크
+                // 밀도입니다: SMU 라이온은 통짜 실루엣이라 상자 넓이가 거의 전부
+                // 잉크로 바뀌는 반면, 옆의 NUS·NTU는 선으로 그린 인장이라 같은
+                // 넓이에서 실제로 칠해지는 면적이 절반쯤입니다. 그래서 규칙대로
+                // 같은 area를 주면 라이온만 한 치수 커 보였습니다. 상자 넓이는
+                // 같은데 체감 크기가 다른 것이므로, 맞춰야 하는 쪽은 상자가 아니라
+                // 눈입니다 — Brand Boost가 스택 락업이라 area를 올린 것과 같은
+                // 종류의 보정이고, 방향만 반대입니다.
+                // 다른 실루엣 마크에 기계적으로 복사하지 마세요. 이 값은 "인장
+                // 두 개 옆에 선 실루엣 하나"라는 이 그리드의 조합에서 나온 값입니다.
+                { src: "/partners/logos/white/trimmed/smu-lion.png", alt: "SMU KSA",           w: 292, h: 173, area: 1450, badge: t(dict.partners.roleLead) },
                 { src: "/partners/logos/white/trimmed/nus.png",      alt: "NUS Korea Society", w: 512, h: 512, badge: t(dict.partners.roleOps) },
                 { src: "/partners/logos/white/trimmed/ntu-ksa.png",  alt: "NTU KSA",           w: 318, h: 382, badge: t(dict.partners.roleOps) },
                 // No intro modal here: the associations write their own copy and

@@ -1391,18 +1391,20 @@ export const dict = {
       // 앞의 두 줄과 같은 '정거장' 낱말을 씁니다 — 필참 정거장 / 선택 정거장 /
       // 놓치면 아까운 정거장. 셋이 한 체계로 읽혀야 세 모양이 한 축 위에 놓입니다.
       legendSpotlight: { ko: "놓치면 아까운 정거장", en: "Worth getting off for" },
-      destination: {
-        ko: "결과 공유회: 기업·업계 전문가 앞 검증",
-        en: "The Showcase: put it in front of the companies and the experts",
-      },
+      // `destination`("결과 공유회: 기업·업계 전문가 앞 검증")이 여기 있었고,
+      // 노선도 범례 옆에 자기 줄로 렌더됐습니다. 2026-08-10에 principle 첫 문장으로
+      // 흡수했습니다 — 세로로 겹겹이 쌓이던 잔글씨를 한 줄 줄이는 것이 목표였고,
+      // 마침 principle이 "이 무대"라고 쓰면서 그 무대의 이름은 이 줄이 대고 있어
+      // 둘은 원래 한 문장이어야 했습니다. 키를 되살리지 마세요: 행선지를 다시
+      // 독립 줄로 만들면 지시어가 다시 자기 앞의 말을 잃습니다.
       // The frame the whole section hangs on. Sized between the heading and
       // modeNote on purpose: it is the claim those four prose places were
       // making, said once where the structure can back it up. "정거장" is the
       // load-bearing word — a stop you choose to get off at, not a day you
       // failed to attend. Keep it.
       principle: {
-        ko: "하루하루는 이 무대로 나아가는 정거장이고, 방문은 당신의 선택입니다. 시간을 비워야 하는 날은 Day 1·8 이틀뿐.",
-        en: "Each day is a stop on the way to that stage, and which ones you get off at is your call. Only Day 1 and Day 8 need blocking out.",
+        ko: "하루하루는 기업·업계 전문가 앞에서 검증받는 무대, 결과 공유회로 나아가는 정거장입니다. 방문은 당신의 선택이고, 시간을 비워야 하는 날은 Day 1·8 이틀뿐.",
+        en: "Each day is a stop on the way to the Showcase, where what you built goes in front of the companies and the experts. Which ones you get off at is your call, and only Day 1 and Day 8 need blocking out.",
       },
       // The other half of the principle, and the guardrail on it. Saying six of
       // eight days are optional, and stopping there, invites the reading that
