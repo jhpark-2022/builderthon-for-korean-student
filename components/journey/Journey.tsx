@@ -1091,8 +1091,32 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
 const stopKeyword = (theme: string) =>
   theme.split("·")[0].replace(/\([^)]*\)/g, "").trim();
 
+// ── 멘토링이 열리는 날 ────────────────────────────────────────────────────────
+// 노선도의 에메랄드 점 마커와 그 아래 필의 "Day 3~7"이 둘 다 여기서 나옵니다.
+// 스케줄에서 세는 이유는 하나입니다: 멘토링 기간이 바뀌면(하루 늘거나, 앞당겨
+// 시작하거나) 노선도가 저절로 따라오게 하려고요. 손으로 적어둔 3·4·5·6·7은
+// 반드시 스케줄과 어긋나는 날이 옵니다.
+//
+// 출처는 category === "mentoring" 이벤트입니다 — 지금은 Day 3·4의 1:1 예약제와
+// Day 5–7의 FDE 오피스아워(드롭인)입니다. 두 트랙을 나누지 않고 한 덩어리로
+// 세는 것은 참가자 입장에서 "오늘 도움을 받을 수 있는가"가 같은 질문이기
+// 때문입니다(schedule.ts FDE_OFFICE_HOUR 주석의 결정과 같은 이유).
+// day > 0: 사전 세션(day 0)은 8일 노선도 밖이라 셈에서 뺍니다.
+const MENTORING_DAYS = new Set(
+  schedule.filter((e) => e.category === "mentoring" && e.day > 0).map((e) => e.day),
+);
+const MENTORING_DAY_RANGE = {
+  from: Math.min(...MENTORING_DAYS),
+  to: Math.max(...MENTORING_DAYS),
+};
+
 function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
   const r = dict.program.route;
+  // 필 문구의 {from}·{to}를 위 파생값으로 채웁니다. 사전 계산해 두는 것은 두 행이
+  // 각각 렌더될 때 같은 문자열을 두 번 만들지 않게 하려는 것뿐입니다.
+  const mentoringPill = t(r.mentoringBand)
+    .replace("{from}", String(MENTORING_DAY_RANGE.from))
+    .replace("{to}", String(MENTORING_DAY_RANGE.to));
   return (
     <div className="mt-10">
       {/* TWO ROWS OF FOUR ON MOBILE, one row of eight from sm up.
@@ -1109,26 +1133,29 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
           join seamlessly on desktop (see the rail comments). */}
       <div className="flex flex-col sm:flex-row">
         {[days.slice(0, 4), days.slice(4, 8)].map((row, rowIdx) => (
-        <Fragment key={rowIdx}>
-        {/* Mobile-only elbow between the rows. The rail can't be drawn across a
-            flex-direction change, and a plain arrow says "continues below" just
-            as well as a bent line would. sm:hidden — on desktop the rails meet. */}
-        {rowIdx === 1 && (
-          <div aria-hidden className="flex flex-col items-center justify-center py-1.5 sm:hidden">
-            <span className="h-4 w-px bg-gradient-to-b from-white/5 to-white/25" />
-            <svg viewBox="0 0 12 8" className="h-2 w-3 text-white/30" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M1 1l5 5 5-5" />
-            </svg>
-          </div>
-        )}
         <ol
+          key={rowIdx}
           aria-label={rowIdx === 0 ? t(r.ariaLabel) : undefined}
-          // pb-9: the mentoring band below lives in this padding. It is padding
-          // rather than a sibling block because the band has to be positioned
-          // against the SAME box the nodes are (percentages of a four-up row),
-          // and on desktop both rows stretch to one height so the two halves of
-          // the band land on one line.
-          className="relative flex flex-1 items-start pb-9"
+          // pb-9: the mentoring dots and the pill below live in this padding. It
+          // is padding rather than a sibling block because both have to be
+          // positioned against the SAME box the nodes are (one flex-1 column per
+          // day), and on desktop both rows stretch to one height so the dots of
+          // the two halves land on one line.
+          //
+          // pb-9 → pb-10 (2026-08-10): 점을 5px에서 7px로 키우면서 4px을 돌려
+          // 줬습니다. 이 36px 안에 필(24px)과 점이 같이 살고 있어서, 점만 키우면
+          // 위로는 정거장 이름에, 아래로는 필에 붙습니다.
+          //
+          // mt-9(모바일, 둘째 행): 여기 "계속 아래로"를 뜻하는 세로선+꺾쇠 화살표가
+          // 있었습니다 (2026-08-10 제거). 두 행이 위아래로 놓인 것만으로 순서는
+          // 읽히고, 화살표는 노선도에서 유일하게 아무 정거장도 가리키지 않는
+          // 표시라 시선을 먹었습니다. 여백은 남깁니다 — 지우기만 하면 둘째 행의
+          // 장소 로고(노드 위로 -top-5만큼 삐져나옵니다)가 첫 행의 멘토링 점·필과
+          // 부딪힙니다. 36px은 화살표 블록이 차지하던 높이 그대로라, 제거로 세로
+          // 리듬이 바뀌지 않습니다. 데스크톱은 두 행이 나란해서 여백이 없습니다.
+          className={`relative flex flex-1 items-start pb-10 ${
+            rowIdx === 1 ? "mt-9 sm:mt-0" : ""
+          }`}
         >
           {/* The rail. Ends are inset by half a column (12.5% of a four-up row) so
               it runs node-centre to node-centre. On desktop the INNER ends run to
@@ -1142,58 +1169,70 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                 : "left-[12.5%] right-[12.5%] sm:left-0"
             }`}
           />
-          {/* ── Day 3–7 멘토링 밴드 ────────────────────────────────────────
-              DECIDED 2026-08-09: 멘토링은 Day 3–7 닷새 매일, 팀 단위 1시간 예약제로
-              열립니다. 노선도는 Day 3·4 노드에만 "1:1 멘토링" 키워드를 달고 있어서
-              멘토링이 이틀짜리로 읽혔는데, 다섯 날 카드에 같은 문장을 다섯 번 적는
-              대신 구조로 말합니다 — Day 3 노드에서 Day 7 노드까지 이어지는 보조 레일.
+          {/* ── 멘토링 점 마커 ──────────────────────────────────────────────
+              멘토링이 열리는 날(현재 Day 3·4·5·6·7)의 노드 아래에 에메랄드 점을
+              하나씩 찍습니다. 날짜는 MENTORING_DAYS가 스케줄에서 셉니다 —
+              여기에 3·4·5·6·7을 적지 마세요.
 
-              기하: 한 행은 네 칸이고 노드 중심은 12.5% · 37.5% · 62.5% · 87.5%입니다.
-              그래서 Day 3 = 첫 행의 62.5%, Day 7 = 둘째 행의 62.5%(= right 37.5%).
-              모바일에서는 두 행이 위아래로 끊기므로 각 조각이 자기 행의 마지막/첫
-              노드 중심까지만 가고, 데스크톱(sm+)에서는 위 레일과 같은 규칙으로 안쪽
-              끝을 행 가장자리까지 늘려 두 조각이 한 줄로 이어집니다.
+              2026-08-10, 연속 선에서 바뀌었습니다. 원래는 Day 3 노드에서 Day 7
+              노드까지 이어지는 에메랄드 레일 한 줄이었습니다. 데스크톱 한 줄
+              노선도에서는 잘 읽혔지만 모바일에서 노선도가 두 행으로 접히면서
+              레일도 두 토막이 났고, 첫 행에 남은 토막(Day 3–4)은 라벨이 붙을
+              자리가 없어 정체불명의 녹색 선으로 떠 있었습니다. 연속성을 그리는
+              장치가 줄바꿈을 견디지 못한 것이라, 줄바꿈과 무관한 장치로 바꿉니다:
+              점은 노드 하나에 붙으므로 행이 어디서 접히든 자기 노드를 따라갑니다.
 
-              메인 레일보다 얇고(h-[3px] vs h-px지만 색이 훨씬 진합니다) 색이 다릅니다 —
-              emerald는 이 사이트에서 멘토링 섹션의 색이라, 범례의 rose(필참)·
-              violet(스포트라이트)와 층이 겹치지 않습니다. 범례에 넣지 않는 이유는
-              dict.program.route.mentoringBand 주석에 있습니다. */}
-          <span
-            aria-hidden
-            // 안쪽 끝의 라운딩은 데스크톱에서 뗍니다 — 둥근 끝 두 개가 행 경계에서
-            // 맞닿으면 이어진 레일에 잘록한 이음매가 생깁니다.
-            className={`pointer-events-none absolute bottom-7 h-[5px] rounded-full bg-emerald-400/60 ${
-              rowIdx === 0
-                ? "left-[62.5%] right-[12.5%] sm:right-0 sm:rounded-r-none"
-                : "left-[12.5%] right-[37.5%] sm:left-0 sm:rounded-l-none"
-            }`}
-          />
-          {/* 라벨은 둘째 행 조각에만 답니다. 첫 행 조각은 데스크톱에서 폭이 한 칸
-              반(62.5%→100%), 모바일에서는 한 칸(Day 3→4)뿐이라 이 문장이 들어갈
-              자리가 없습니다 — 같은 색 레일이 이어지는 것으로 충분하고, 스크린리더는
-              아래 aria-label이 구간을 말로 받습니다. */}
+              데스크톱도 같은 점입니다. 한 줄일 때는 선이 "닷새 내내"를 더 잘
+              말하지만, 그 이득보다 두 레이아웃이 다른 시각 언어를 쓰는 값이
+              큽니다 — 같은 페이지를 폰과 노트북에서 번갈아 보는 사람에게 노선도가
+              두 개인 것처럼 보입니다. 점 다섯 개가 나란한 것으로도 "매일"은
+              읽히고, 아래 필이 그것을 말로 확인해 줍니다.
+
+              기하: 노드 행과 같은 flex-1 칸을 다시 깔아 점을 가운데 세웁니다.
+              퍼센트(12.5%·37.5%…)를 쓰지 않는 이유는, 그러면 한 행이 네 칸이라는
+              사실이 두 군데에 적히기 때문입니다. 점을 li 안에 넣지 않은 것도
+              의도적입니다 — 정거장 이름이 두 줄로 접히는 날이 있어서, li 기준으로
+              잡으면 점 높이가 날마다 들쭉날쭉해집니다.
+
+              크기 5px → 7px (2026-08-10): 5px은 400원짜리 먼지처럼 보여서 노드에
+              딸린 표시가 아니라 렌더 잡티로 읽혔습니다. 위로는 ol의 pb를 한 칸
+              늘리고(pb-10) 아래로는 이 값을 30px로 내려, 정거장 이름과 필 사이의
+              여백을 키우기 전과 같게 유지합니다. 더 키우지는 마세요 — 선택일
+              노드(○ 12px)와 크기가 붙으면 점이 아홉 번째 정거장처럼 보입니다.
+
+              aria-hidden: 스크린리더에는 아래 필의 문장 하나로 충분합니다.
+              점 다섯 개를 각각 읽어 주는 것은 소음입니다. */}
+          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-[30px] flex">
+            {row.map((d) => (
+              <span key={d.day} className="flex flex-1 justify-center">
+                {MENTORING_DAYS.has(d.day) && (
+                  <span className="h-[7px] w-[7px] rounded-full bg-emerald-400/80" />
+                )}
+              </span>
+            ))}
+          </div>
+          {/* 필은 둘째 행에만, 자리는 종전 밴드 라벨 그대로입니다. 두 폭 모두
+              "점들과 같은 중심"을 만들려고 잡은 값입니다.
+               · 모바일: 이 행의 점은 Day 5·6·7(12.5%·37.5%·62.5%), 중심은 37.5%.
+                 컨테이너를 0→75%로 두면 중심이 같고, 필이 그보다 넓어도(영문
+                 라벨이 그렇습니다) 잘리거나 줄바꿈되지 않습니다.
+               · 데스크톱: 점이 두 행에 걸쳐 있는데 필은 한 행 안에서만 위치를
+                 잡을 수 있어서, 왼쪽으로 37.5%(= 첫 행에 있는 몫)만큼 넘겨
+                 컨테이너를 Day 3~7 전체와 같은 구간으로 만듭니다. 그래야 필이
+                 오른쪽 3분의 1이 아니라 진짜 중앙(Day 5 언저리)에 섭니다. */}
           {rowIdx === 1 && (
-            <span
-              role="img"
-              aria-label={t(r.mentoringBandAria)}
-              // 두 폭 모두 "밴드와 같은 중심"을 만들려고 잡은 값이지, 밴드와 같은
-              // 구간이 아닙니다.
-              //  · 모바일: 이 행의 밴드는 12.5%→62.5%, 중심은 37.5%. 컨테이너를
-              //    0→75%로 두면 중심이 같고 칩이 조각보다 넓어도(영문 라벨이 그렇습니다)
-              //    잘리거나 줄바꿈되지 않습니다.
-              //  · 데스크톱: 밴드가 두 행에 걸쳐 있는데 라벨은 한 행 안에서만 위치를
-              //    잡을 수 있어서, 왼쪽으로 37.5%(= 첫 행에 있는 조각의 폭)만큼 넘겨
-              //    컨테이너를 밴드 전체와 같은 구간으로 만듭니다. 그래야 라벨이 오른쪽
-              //    3분의 1이 아니라 진짜 중앙(Day 5 언저리)에 섭니다.
-              className="pointer-events-none absolute bottom-0 left-0 right-[25%] flex justify-center sm:left-[-37.5%] sm:right-[37.5%]"
-            >
-              {/* whitespace-nowrap + justify-center: 칩이 조각보다 넓어지면 양쪽으로
-                  똑같이 넘칩니다. 줄바꿈되어 밴드 아래 두 줄이 되는 것보다 낫습니다. */}
+            <span className="pointer-events-none absolute bottom-0 left-0 right-[25%] flex justify-center sm:left-[-37.5%] sm:right-[37.5%]">
+              {/* whitespace-nowrap + justify-center: 필이 컨테이너보다 넓어지면
+                  양쪽으로 똑같이 넘칩니다. 줄바꿈되어 두 줄이 되는 것보다 낫습니다. */}
               {/* 범례(0.66rem)·정거장 이름(0.68rem)보다 한 급 큽니다. 이 줄은
                   범례 항목이 아니라 다섯 날을 덮는 사실 하나라, 주변 잔글씨와
-                  같은 크기면 각주로 읽힙니다. */}
-              <span className="whitespace-nowrap rounded-full border border-emerald-400/30 bg-emerald-400/[0.1] px-2.5 py-1 text-[0.72rem] font-semibold leading-none text-emerald-100">
-                {t(r.mentoringBand)}
+                  같은 크기면 각주로 읽힙니다.
+                  앞의 점은 위 마커와 같은 색·같은 크기입니다. 이 둘이 서로를
+                  설명하는 짝이라 범례에는 넣지 않습니다(범례는 정거장의 층을
+                  말하는 축이고, 멘토링은 정거장이 아닙니다). */}
+              <span className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-emerald-400/30 bg-emerald-400/[0.1] px-2.5 py-1 text-[0.72rem] font-semibold leading-none text-emerald-100">
+                <span aria-hidden className="h-[7px] w-[7px] shrink-0 rounded-full bg-emerald-400/80" />
+                {mentoringPill}
               </span>
             </span>
           )}
@@ -1297,10 +1336,10 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                       보이는 자리는 전과 같지만 — 정거장 이름 바로 아래 —
                       행 높이에는 더하지 않습니다. 이 배지를 다는 날은 Day 1·8
                       둘뿐인데, 흐름 안에 있으면 그 두 칸이 행 전체를 24px 키우고,
-                      행 바닥에 붙는 Day 3–7 멘토링 밴드가 정거장 이름에서
-                      그만큼 멀어져 허공에 뜬 선처럼 보였습니다. 배지가 넘치는
-                      구간(Day 1·8 칸)과 밴드·라벨이 지나는 구간(Day 3–7)은
-                      가로로 겹치지 않아, 넘쳐도 부딪히지 않습니다. */}
+                      행 바닥에 붙는 멘토링 마커가 정거장 이름에서 그만큼 멀어져
+                      허공에 뜬 표시처럼 보였습니다. 배지가 넘치는 구간(Day 1·8
+                      칸)과 마커·필이 지나는 구간(Day 3~7)은 가로로 겹치지 않아,
+                      넘쳐도 부딪히지 않습니다. */}
                   {anchor && (
                     <span className="absolute left-1/2 top-full mt-0.5 -translate-x-1/2 whitespace-nowrap rounded-full border border-rose-400/30 bg-rose-400/10 px-1.5 py-0.5 text-[0.58rem] font-bold leading-none text-rose-200">
                       {t(dict.program.mandatoryBadge)}
@@ -1311,16 +1350,15 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
             );
           })}
         </ol>
-        </Fragment>
         ))}
       </div>
 
       {/* 범례 한 줄. 노선도 아래에 남은 유일한 잔글씨입니다.
           행선지 줄("→ 결과 공유회: 기업·업계 전문가 앞 검증")이 여기 있었고,
           세 자리를 거쳐 결국 아래 원칙 문단으로 합쳐졌습니다 (2026-08-10).
-          (1) 좌우 양끝 정렬: Day 3–7 밴드가 생기자 밴드 오른쪽 끝 바로 아래에
-          서고, 앞의 화살표까지 오른쪽을 가리켜 밴드가 그리로 이어지는 것처럼
-          읽혔습니다. (2) 오른쪽 정렬로 한 줄 아래: 빈 자리에 혼자 떠서 툭
+          (1) 좌우 양끝 정렬: Day 3~7 멘토링 표시가 생기자 그 오른쪽 끝 바로
+          아래에 서고, 앞의 화살표까지 오른쪽을 가리켜 멘토링 구간이 그리로
+          이어지는 것처럼 읽혔습니다. (2) 오른쪽 정렬로 한 줄 아래: 빈 자리에 혼자 떠서 툭
           튀어나왔습니다. (3) 범례 끝에 구분선으로 붙이기: 네 번째 범례로 읽혔고,
           모바일에서는 어차피 줄이 넘어가 한 줄이 늘었습니다.
           합친 이유는 자리 때문만이 아닙니다 — 원칙 문단이 "이 무대"라고 쓰는데
@@ -1329,7 +1367,7 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
           범례 세 줄은 그대로 둡니다. 스포트라이트가 붙는 날이 둘(Day 5·7)뿐이라
           노드에 직접 라벨을 다는 안도 검토했지만, 그 자리는 필참 배지의 자리이고
           선택일에 배지 비슷한 것을 달면 의무로 읽힙니다(schedule.ts spotlight
-          주석의 결정). 게다가 지금 그 아래는 멘토링 밴드가 지나갑니다. */}
+          주석의 결정). 게다가 지금 그 아래는 멘토링 점 마커가 지나갑니다. */}
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
         <span className="flex items-center gap-1.5 text-[0.66rem] text-rose-200/85">
           <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-[0.42rem] text-rose-100">★</span>
