@@ -2170,6 +2170,15 @@ const HERO_VIDEO = {
   poster: "/hero/metal-human-poster.jpg",
 };
 
+// 모집 국면별 히어로 모드 — "journey"=둘러보고 등록(모집 초기), "register"=곧장
+// 등록(마감 임박, 8/10 전환). 되돌릴 땐 이 한 줄만.
+//
+// 전환 이유: 모바일 첫 화면에 등록 진입점이 아예 없었습니다. 주 CTA가 "8일의 여정
+// 둘러보기"였고, 등록 버튼을 가진 스티키 바는 히어로 구간에서 숨겨집니다(그 구간의
+// CTA는 히어로 자신이 맡는다는 전제였는데, 그 CTA가 등록이 아니었습니다).
+// 스티키 바와 네비의 동작은 이 스위치와 무관하게 그대로입니다.
+const HERO_PRIMARY: "journey" | "register" = "register";
+
 function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
   if (!HERO_VIDEO.enabled) return null; // placeholder: keep the WebGL background
   return (
@@ -2958,21 +2967,64 @@ export default function Journey() {
               {t(dict.hero.blurb)}
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-3 lg:justify-start">
-              <a href={links.program} className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)] sm:px-8 sm:py-4 sm:text-base">
-                {t(dict.hero.ctaProgram)}
-                <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-              </a>
-              {/* This used to mirror a "파트너십 문의" button in the nav, hidden at
+              {/* ── 주 CTA ────────────────────────────────────────────────
+                  HERO_PRIMARY가 무엇이 이 자리에 서는지를 정합니다(파일 상단).
+                  두 모드가 같은 시각 위계(보라 그라디언트 필 하나)를 쓰고, 바뀌는
+                  것은 그 자리에 오는 행동뿐입니다. */}
+              {HERO_PRIMARY === "register" ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    track("register_click", { src: "hero" });
+                    openRegister();
+                  }}
+                  // 네비·푸터와 같은 관례: 이미 등록한 방문자에게 이 버튼은 행동이
+                  // 아니라 상태입니다. 라벨이 바뀌고 화살표는 빠집니다(갈 곳이
+                  // 없으니까). 클릭은 그대로 열립니다 — 등록 정보를 다시 보려는
+                  // 사람에게 문을 잠글 이유가 없습니다.
+                  className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)] sm:px-8 sm:py-4 sm:text-base"
+                >
+                  {t(registered ? dict.register.navRegistered : dict.nav.register)}
+                  {!registered && (
+                    <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  )}
+                </button>
+              ) : (
+                <a href={links.program} className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)] sm:px-8 sm:py-4 sm:text-base">
+                  {t(dict.hero.ctaProgram)}
+                  <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </a>
+              )}
+              {/* 보조: 여정 둘러보기. register 모드에서만 이 자리에 있습니다 —
+                  journey 모드에서는 위의 주 CTA가 같은 링크라 두 번 걸릴 이유가
+                  없습니다. 고스트 필이라 주 CTA와 경쟁하지 않습니다. */}
+              {HERO_PRIMARY === "register" && (
+                <a
+                  href={links.program}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10 sm:px-8 sm:py-4 sm:text-base"
+                >
+                  {t(dict.hero.ctaProgram)}
+                </a>
+              )}
+              {/* 파트너십 문의 — journey 모드 전용입니다.
+                  This used to mirror a "파트너십 문의" button in the nav, hidden at
                   md+ to avoid duplicating it. That nav button is gone (the slot
                   went to open chat — see JourneyNav), so nothing is duplicated
                   any more and the md:hidden gate is now the only reason a
                   desktop visitor doesn't see a partnership CTA above the fold.
                   Kept as-is deliberately: the nav's audience was moved to
                   students on purpose, and the footer carries a full partnership
-                  pill for companies. Drop `md:hidden` if that ever needs undoing. */}
-              <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10 sm:px-8 sm:py-4 sm:text-base md:hidden">
-                {t(dict.hero.ctaPartner)}
-              </a>
+                  pill for companies. Drop `md:hidden` if that ever needs undoing.
+                  register 모드에서는 히어로에서 빠집니다: 학생 등록 마감 국면에
+                  첫 화면의 버튼 자리는 등록·여정·오픈채팅 셋이면 충분하고, 넷째가
+                  붙으면 375px에서 두 줄로 접히며 주 CTA의 무게가 흩어집니다.
+                  기업용 문의 창구가 사라지는 것은 아닙니다 — 클로징 섹션과 푸터가
+                  같은 링크를 그대로 갖고 있습니다. */}
+              {HERO_PRIMARY === "journey" && (
+                <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10 sm:px-8 sm:py-4 sm:text-base md:hidden">
+                  {t(dict.hero.ctaPartner)}
+                </a>
+              )}
               {/* OPEN CHAT — phones and tablets only (`lg:hidden`). From lg up the
                   nav carries a permanent open-chat button in the same viewport, so
                   a second one here would be the same offer twice (that is why
