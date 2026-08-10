@@ -745,8 +745,8 @@ const ONSITE: Bilingual = {
 // one pass. Do not leave the two names co-existing — a student reading "SMU" on
 // one surface and "Prinsep Link" on another has no way to tell which door to
 // walk through. (The 8/13 PRE-EVENT session is a different booking and is still
-// at SMU SOL; SMU also remains an organizer and an eligibility term. Only VENUE
-// references changed.)
+// at the law school — YPHSL Seminar Room 2-01, confirmed 2026-07-31; SMU also
+// remains an organizer and an eligibility term. Only VENUE references changed.)
 // The street address rides in the string because this is a room inside a
 // building on a road nobody knows by name; "The Foundry" alone is not findable.
 // Only Day 1 uses this — Networking Day (Day 5) and the Showcase (Day 8) are at
@@ -928,8 +928,10 @@ export const schedule: BEvent[] = [
   // Wording is from his own LinkedIn headline ("Senior Cloud & AI Solution
   // Architect @ Microsoft").
   //
-  // Building is agreed (SMU SOL, the School of Law); the ROOM is still TBC. Keep the
-  // "강의실 확정 시 안내" clause until a room is actually booked.
+  // VENUE FULLY CONFIRMED 2026-07-31: YPHSL Seminar Room 2-01, 18:00–20:00.
+  // Facility booking ref BK-20260731-000114 (SMU Facility Booking System →
+  // James LEE). The room was TBC until then and every venue string carried a
+  // "강의실 추후 안내" hedge; the hedge is gone. Do not put it back.
   {
     id: "pre-enterprise-deep-dive",
     day: 0,
@@ -957,11 +959,11 @@ export const schedule: BEvent[] = [
     // 사람에게는 이 로고가 "누가 와서 말하는가"의 유일한 신호입니다.
     speakerLogo: { src: "/partners/logos/white/trimmed/microsoft.png", alt: "Microsoft" },
     summary: {
-      ko: "본 행사 9일 전 · SMU SOL 현장. “데모는 쉽고, 시스템은 어렵다”, 엔터프라이즈 AI 에이전트를 실제로 만드는 이야기.",
-      en: "Nine days before the event · in person at SMU SOL. “The demo is easy, the system is hard”: building enterprise AI agents for real.",
+      ko: "본 행사 9일 전 · SMU 법학대학원 현장. “데모는 쉽고, 시스템은 어렵다”, 엔터프라이즈 AI 에이전트를 실제로 만드는 이야기.",
+      en: "Nine days before the event · in person at SMU's School of Law. “The demo is easy, the system is hard”: building enterprise AI agents for real.",
     },
     // 모달이 스스로 말하는 것은 여기서 반복하지 않습니다: 연사 소속은 연사 행,
-    // 시각은 시간 행, 강의실 TBC는 장소 행, 그리고 신원·권한·툴·승인·감사 · 회계
+    // 시각은 시간 행, 강의실은 장소 행, 그리고 신원·권한·툴·승인·감사 · 회계
     // 자동화 사례 · 사전 질문은 바로 아래 opportunities에 이미 그대로 있습니다.
     // 남은 두 문장은 다른 어디에도 없는 것뿐입니다 — 왜 들을 만한지, 그리고 누가
     // 올 수 있는지. 특히 "등록 무관, 세 학교 누구나"는 이 문장이 유일한 출처라
@@ -971,13 +973,21 @@ export const schedule: BEvent[] = [
       ko: "빌더톤이 시작되기 전, 기업 현장에서 AI를 설계하고 배포해 온 사람이 직접 이야기합니다. 데모는 2초면 되지만 프로덕션까지는 몇 달이 걸리는 이유, 엔터프라이즈 AI 에이전트가 보기보다 어려운 지점을 다룹니다. 빌더톤 등록 여부와 무관하게 NUS·NTU·SMU 한인 학생이면 누구나 올 수 있습니다.",
       en: "Before the builderthon starts, an evening with someone who designs and ships enterprise AI for a living: why a 2-second demo takes months to reach production, and where enterprise AI agents turn out to be harder than they look. Open to any Korean student at NUS, NTU or SMU, whether or not you register for the builderthon.",
     },
-    // Building is settled (SMU School of Law); the ROOM is not.
-    // This is now the ONLY SMU venue in the schedule. Day 1 used to share the
-    // same law school under its full name ("SMU YPHSL B2-03") and this note
-    // asked for the two to be named consistently — as of 2026-08-03 Day 1 moved
-    // to The Foundry, so there is nothing left to unify. Keep this session at
-    // SMU SOL: it is a separate booking and was never part of that move.
-    location: { ko: "SMU SOL (강의실 추후 안내)", en: "SMU SOL, School of Law (room TBA)" },
+    // This is the ONLY SMU venue left in the schedule. Day 1 used to share the
+    // same law school ("SMU YPHSL B2-03") and this note asked for the two to be
+    // named consistently — as of 2026-08-03 Day 1 moved to The Foundry, so there
+    // is nothing left to unify. This session was always a separate booking and
+    // was never part of that move.
+    //
+    // 건물 이름은 사이트 전체에서 하나여야 합니다. 예약 시스템과 건물 안내판은
+    // YPHSL(Yong Pung How School of Law)로 적고, 이전 문구는 SOL(School of Law)을
+    // 썼습니다 — 같은 건물의 다른 약어라 둘을 함께 두면 읽는 사람이 두 곳인지
+    // 의심합니다. 한국어로 뜻이 바로 통하는 "법학대학원"을 앞에 두고 괄호로
+    // 예약·안내판의 표기를 답니다. summary의 표기도 같이 맞췄습니다.
+    location: {
+      ko: "SMU 법학대학원(YPHSL) 세미나룸 2-01",
+      en: "SMU Yong Pung How School of Law (YPHSL), Seminar Room 2-01",
+    },
     opportunities: [
       { ko: "챗봇과 에이전트의 차이: 신원·권한·툴·승인·감사까지 붙어야 일이 된다", en: "What separates a chatbot from an agent: identity, permissions, tools, approval, audit" },
       { ko: "기업 에이전트가 어려운 6가지 이유와, 실제 구축된 회계 자동화 에이전트 사례", en: "The six reasons enterprise agents are hard, and a real accounts-payable agent that works" },
