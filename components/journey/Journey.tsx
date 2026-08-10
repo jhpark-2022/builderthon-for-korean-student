@@ -111,9 +111,9 @@ function LinkedInLink({ url, label, className = "" }: { url: string; label: stri
 // TWO CALLERS ONLY, both of which draw marks inside a VISIBLE container: the
 // white partner-wall chip (LogoTile) and the Zero100 companion band tile. The
 // hero confirmed-partner strip used this too and no longer does — with no tile
-// to measure a mark against, equal area let width run free and the widest
-// wordmarks dominated their tier. It uses fixed per-tier boxes instead; see
-// StripBox. Don't reintroduce area sizing there.
+// to measure a mark against, bounding-box area let width run free and the
+// widest wordmarks dominated their tier. It sizes by measured optical mass
+// instead; see stripHeight().
 function opticalHeight(w: number, h: number, area: number, min: number, max: number) {
   return Math.round(Math.min(max, Math.max(min, Math.sqrt(area / (w / h)))));
 }
@@ -2114,45 +2114,95 @@ function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
 // Assets are the same trimmed white silhouettes the partner wall uses — no new
 // files. They're above the fold, so they load eagerly (never lazily).
 // ─────────────────────────────────────────────────────────────────────────────
-// ── SIZING: one fixed box per tier ───────────────────────────────────────────
-// WHY THIS IS NOT EQUAL-AREA ANY MORE (2026-08-03).
+// ── SIZING: equal OPTICAL MASS, with a width wall ────────────────────────────
+// WHY NOT ONE FIXED HEIGHT PER TIER (2026-08-10).
 //
-// This strip used to size every mark by rendered AREA (opticalHeight(), with
-// STRIP_AREA / STRIP_M_* bands and a LEAD_TIER bump). The theory — equal ink,
-// not equal height — holds on a wall of white chips, where each mark sits in its
-// own visible tile. It does not hold here, because this strip has no tiles: the
-// marks float on the hero with nothing to measure them against except each
-// other. Equal area then lets WIDTH run free, and width is what the eye reads as
-// "big". The three widest wordmarks (DRIMAES, INNOVATE 360, ONWORD LAB) came out
-// 2–3× the width of Translink inside the same tier and dominated their rows,
-// which is the opposite of what a partner strip is for: same tier, same weight.
-// Chasing it with per-mark overrides (`area`, `min`) only moved the problem
-// around — every exception made the next mark look wrong.
+// The previous rule drew every mark in a tier at the same box height, capped by
+// the same max width. It is the obvious rule and it looks wrong, because a
+// logo's apparent size is not its bounding box:
 //
-// So: ONE BOX PER TIER, and every mark is `object-contain`-ed inside it. A wide
-// wordmark hits the width wall and shrinks; a square crest hits the height wall.
-// Nothing can exceed its tier's box in either dimension, so nothing sticks out.
-// The two tiers differ only to keep 주최·주관 above 후원 in the hierarchy —
-// WITHIN a tier the box is identical, with no per-logo exceptions. Do not add
-// one: if a mark looks wrong, retune its tier's box and re-check the whole tier.
+//   • WEIGHT. Nuldam is a fat rounded wordmark, ONWORD LAB is hairline caps. At
+//     the same height Nuldam reads about twice as big.
+//   • LOCKUPS. aws is letters over a smile, BRAND BOOST is two stacked lines,
+//     싱가포르 한인회 is a crest plus a line of 6pt English. Only part of the box
+//     is the name, so the whole thing reads small at any given box height.
+//   • THE WIDTH CAP. It only bites the widest wordmarks, and when it bites it
+//     drops their height off a cliff — INNOVATE 360 and ONWORD LAB were landing
+//     at 11px and 10px next to 26px neighbours. That cliff was most of the
+//     visible unevenness.
 //
-// `w`/`h` on each item are the trimmed art's INK dimensions and are now used
-// only as the <img> aspect ratio (so the box is reserved before the file loads).
-// They no longer feed any size calculation.
+// Equal AREA was tried before this and abandoned (see the note in
+// opticalHeight): with no tile to sit in, equal area let width run free and the
+// long wordmarks dominated their row. That failure was real, but the diagnosis
+// was half right. Area is the correct axis; a raw bounding box is the wrong
+// thing to measure, because it counts a hairline mark's whitespace as ink.
+//
+// So each mark now carries a measured `mass` — the fraction of its trimmed box
+// it actually paints, as sqrt(ink coverage × silhouette coverage). Ink alone
+// would blow up outlined marks (REmited's pill, L^IFE) that paint almost
+// nothing; silhouette alone would shrink the bold ones too far. The geometric
+// mean behaves on all 18. `mass × aspect` is then the ink a 1px-tall render
+// would lay down, and height solves for a constant target:
+//
+//     h = H0 · (NORM / (aspect × mass)) ^ STRIP_EXP
+//
+// STRIP_EXP damps it: 0.5 is exactly equal ink and swings too hard (aws would
+// be 2.6× the height of ONWORD LAB), 0 is the old fixed height. 0.35 is where
+// a row of these marks reads even.
+// The width wall still exists, but it is now the last step rather than a cliff
+// — the exponent has already pulled the wide marks most of the way down, so
+// the wall trims rather than amputates.
+//
+// This IS per-mark sizing, which the fixed-box note warned against. The
+// difference is that `mass` is measured, not tuned: run
+// `python3 scripts/measure-logo-mass.py <name>` and paste the number. There is
+// still no hand-picked fudge factor, and there should not be one — if a mark
+// looks wrong, re-measure it or move STRIP_EXP and re-check the whole tier.
+//
+// `w`/`h` are the trimmed art's INK dimensions; they give both the aspect ratio
+// used above and the <img> intrinsic size, so the box is reserved before the
+// file lands.
 type StripBox = {
-  h: number;    // ≥sm  fixed box height, px
-  maxW: number; // ≥sm  max box width, px
-  mH: number;   // <sm  fixed box height, px
-  mMaxW: number; // <sm max box width, px
+  h: number;     // ≥sm  base height for a NORM-mass mark, px
+  maxW: number;  // ≥sm  width wall, px
+  mH: number;    // <sm  base height, px
+  mMaxW: number; // <sm  width wall, px
 };
-type StripLogoSpec = { src: string; alt: string; w: number; h: number };
+type StripLogoSpec = {
+  src: string; alt: string; w: number; h: number;
+  // sqrt(ink × silhouette) coverage of the trimmed box — see the script above.
+  mass: number;
+};
 
-// Box aspect is ~3.7:1 in both tiers. Tuned by eye against the real 18 marks at
-// 375px and desktop: wider and the long wordmarks start dominating again;
-// narrower and they letterbox down to hairlines next to the square crests.
-const LEAD_BOX: StripBox = { h: 34, maxW: 126, mH: 26, mMaxW: 96 };
-// 후원 sits one step below 주최·주관 — a ~13% smaller box, not a different rule.
-const SPONSOR_BOX: StripBox = { h: 26, maxW: 98, mH: 21, mMaxW: 78 };
+// The mark that renders at exactly the tier's base height: aspect × mass ≈ 1.45,
+// i.e. a ~4:1 wordmark painting ~36% of its box. That is the middle of this set,
+// and it is a FIXED constant on purpose — deriving it from the current line-up
+// would resize every existing logo the day a sponsor is added.
+const STRIP_NORM = 1.45;
+const STRIP_EXP = 0.35;
+
+// Base heights are set so each tier's total rendered width comes out where the
+// old fixed box had it (~840px for 후원 on desktop) — this evens the marks out
+// without making the strip claim more of the hero, so the wrap points at every
+// breakpoint are unchanged. The scale clamps are guard rails for a future mark
+// far outside this set; nothing in the current line-up reaches them.
+const STRIP_MIN_SCALE = 0.6;
+const STRIP_MAX_SCALE = 1.45;
+const LEAD_BOX: StripBox = { h: 30, maxW: 160, mH: 24, mMaxW: 128 };
+// 후원 sits one step below 주최·주관 — a ~23% smaller base height, same rule.
+const SPONSOR_BOX: StripBox = { h: 23, maxW: 122, mH: 18, mMaxW: 98 };
+
+// Rendered height for one mark inside one tier box, at one breakpoint.
+function stripHeight(spec: StripLogoSpec, base: number, maxW: number) {
+  const aspect = spec.w / spec.h;
+  const h = Math.min(
+    base * STRIP_MAX_SCALE,
+    Math.max(base * STRIP_MIN_SCALE, base * (STRIP_NORM / (aspect * spec.mass)) ** STRIP_EXP),
+  );
+  // Width wall last: a mark wide enough to still overrun it loses height until
+  // it fits, which only pushes it further toward the tier's average mass.
+  return Math.round(Math.min(h, maxW / aspect) * 10) / 10;
+}
 
 const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpec[] }[] = [
   {
@@ -2160,11 +2210,11 @@ const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpe
     label: dict.hero.partnersHost,
     box: LEAD_BOX,
     items: [
-      { src: "/partners/logos/white/trimmed/translink.png",    alt: "Translink Investment", w: 330, h: 91 },
-      { src: "/partners/logos/white/trimmed/wilt.png",         alt: "Wilt Venture Builder", w: 309, h: 148 },
-      { src: "/partners/logos/white/trimmed/codepresso.png",   alt: "Codepresso",           w: 456, h: 91 },
-      { src: "/partners/logos/white/trimmed/popup-studio.png", alt: "Popup Studio",         w: 512, h: 245 },
-      { src: "/partners/logos/white/trimmed/drimaes.png",      alt: "Drimaes",              w: 332, h: 50 },
+      { src: "/partners/logos/white/trimmed/translink.png",    alt: "Translink Investment", w: 330, h: 91,  mass: 0.421 },
+      { src: "/partners/logos/white/trimmed/wilt.png",         alt: "Wilt Venture Builder", w: 309, h: 148, mass: 0.513 },
+      { src: "/partners/logos/white/trimmed/codepresso.png",   alt: "Codepresso",           w: 456, h: 91,  mass: 0.280 },
+      { src: "/partners/logos/white/trimmed/popup-studio.png", alt: "Popup Studio",         w: 512, h: 245, mass: 0.525 },
+      { src: "/partners/logos/white/trimmed/drimaes.png",      alt: "Drimaes",              w: 332, h: 50,  mass: 0.507 },
     ],
   },
   {
@@ -2172,9 +2222,9 @@ const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpe
     label: dict.hero.partnersOrganizers,
     box: LEAD_BOX,
     items: [
-      { src: "/partners/logos/white/trimmed/smu-lion.png", alt: "SMU KSA",           w: 292, h: 173 },
-      { src: "/partners/logos/white/trimmed/nus.png",      alt: "NUS Korea Society", w: 512, h: 512 },
-      { src: "/partners/logos/white/trimmed/ntu-ksa.png",  alt: "NTU KSA",           w: 318, h: 382 },
+      { src: "/partners/logos/white/trimmed/smu-lion.png", alt: "SMU KSA",           w: 292, h: 173, mass: 0.465 },
+      { src: "/partners/logos/white/trimmed/nus.png",      alt: "NUS Korea Society", w: 512, h: 512, mass: 0.424 },
+      { src: "/partners/logos/white/trimmed/ntu-ksa.png",  alt: "NTU KSA",           w: 318, h: 382, mass: 0.670 },
     ],
   },
   {
@@ -2186,16 +2236,16 @@ const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpe
     label: dict.hero.partnersSponsors,
     box: SPONSOR_BOX,
     items: [
-      { src: "/partners/logos/white/trimmed/aws.png",                alt: "AWS",                             w: 512, h: 306 },
-      { src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90 },
-      { src: "/partners/logos/white/trimmed/innovate360.png",        alt: "INNOVATE 360",                    w: 455, h: 54 },
-      { src: "/partners/logos/white/trimmed/life.png",               alt: "L^IFE",                           w: 900, h: 352 },
-      { src: "/partners/logos/white/trimmed/bzcf.png",               alt: "BZCF",                            w: 465, h: 156 },
-      { src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore",  w: 443, h: 90 },
-      { src: "/partners/logos/white/trimmed/onword-lab.png",         alt: "Onword Lab",                      w: 900, h: 92 },
-      { src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105 },
-      { src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81 },
-      { src: "/partners/logos/white/trimmed/nuldam.png",             alt: "Nuldam",                          w: 631, h: 136 },
+      { src: "/partners/logos/white/trimmed/aws.png",                alt: "AWS",                             w: 512, h: 306, mass: 0.491 },
+      { src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90,  mass: 0.499 },
+      { src: "/partners/logos/white/trimmed/innovate360.png",        alt: "INNOVATE 360",                    w: 455, h: 54,  mass: 0.378 },
+      { src: "/partners/logos/white/trimmed/life.png",               alt: "L^IFE",                           w: 900, h: 352, mass: 0.466 },
+      { src: "/partners/logos/white/trimmed/bzcf.png",               alt: "BZCF",                            w: 465, h: 156, mass: 0.553 },
+      { src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore",  w: 443, h: 90,  mass: 0.441 },
+      { src: "/partners/logos/white/trimmed/onword-lab.png",         alt: "Onword Lab",                      w: 900, h: 92,  mass: 0.563 },
+      { src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105, mass: 0.500 },
+      { src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81,  mass: 0.454 },
+      { src: "/partners/logos/white/trimmed/nuldam.png",             alt: "Nuldam",                          w: 631, h: 136, mass: 0.518 },
     ],
   },
 ];
@@ -2215,14 +2265,14 @@ function sortLikeHeroStrip<T extends { src: string }>(rows: T[]): T[] {
   return [...rows].sort((a, b) => rank(a.src) - rank(b.src));
 }
 
-// One logo, letterboxed into its tier's fixed box (see StripBox above). The box
-// is the ONLY thing that decides how big a mark renders here — there is no
-// per-mark tuning, by design.
-function StripLogo({ src, alt, w, h, box }: StripLogoSpec & { box: StripBox }) {
-  // One <img>, two boxes. A CSS variable per breakpoint is what lets the phone
-  // box be genuinely its own size instead of a scaled-down desktop one, without
+// One logo, drawn at the height that gives it the same optical mass as the rest
+// of its tier (see stripHeight above).
+function StripLogo({ src, alt, w, h, mass, box }: StripLogoSpec & { box: StripBox }) {
+  // One <img>, two heights. A CSS variable per breakpoint is what lets the phone
+  // size be genuinely its own instead of a scaled-down desktop one, without
   // a second element in the DOM (these are 18 above-fold images — duplicating
   // them for a media query is not a trade worth making).
+  const spec = { src, alt, w, h, mass };
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
@@ -2243,19 +2293,18 @@ function StripLogo({ src, alt, w, h, box }: StripLogoSpec & { box: StripBox }) {
       fetchPriority="low"
       decoding="async"
       title={alt}
-      // The tier's box, phone value and ≥sm value. `height` is fixed and
-      // `max-width` is the wall; `width: auto` lets a narrow mark take only the
-      // width it needs, so flex-wrap still packs the row naturally.
+      // This mark's own height, phone value and ≥sm value; `width: auto` then
+      // follows the aspect ratio, so flex-wrap still packs the row naturally.
       style={{
-        "--sl-h": `${box.mH}px`,
+        "--sl-h": `${stripHeight(spec, box.mH, box.mMaxW)}px`,
         "--sl-w": `${box.mMaxW}px`,
-        "--sl-h-sm": `${box.h}px`,
+        "--sl-h-sm": `${stripHeight(spec, box.h, box.maxW)}px`,
         "--sl-w-sm": `${box.maxW}px`,
       } as React.CSSProperties}
-      // max-w is now a LAYOUT TOOL, not a backstop — it is the width half of the
-      // tier box, and letterboxing (via object-contain) is exactly the intended
-      // effect on wide wordmarks. That is the reverse of what the previous
-      // equal-area version wanted, where any width cap was a bug.
+      // max-w restates the wall stripHeight() already applied, so it never bites
+      // — it is a backstop for a mark whose `mass` was never measured (a wrong
+      // mass makes one logo the wrong size; a missing wall would let it run
+      // across the row).
       //
       // Opacity raised 50 → 80. At 50 the marks were only legible once the page
       // had scrolled far enough for the strip to sit over the hero scrim's dark
@@ -2296,9 +2345,9 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
   //
   // So the tier stack below is no longer `hidden sm:flex` — it renders at every
   // width, from the same data, through the same StripLogo and the same tier
-  // boxes. Mobile is not a separate layout: it is the same fixed-box rule with
-  // the phone half of each StripBox (mH / mMaxW) and tighter gaps, so the
-  // 주최·주관 > 후원 hierarchy and the within-tier uniformity both survive the
+  // boxes. Mobile is not a separate layout: it is the same optical-mass rule
+  // with the phone half of each StripBox (mH / mMaxW) and tighter gaps, so the
+  // 주최·주관 > 후원 hierarchy and the within-tier evenness both survive the
   // smaller scale.
   //
   // Side effects, both good: no animation means nothing to exempt from
@@ -2356,9 +2405,9 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
           <div key={tier.label.en} className="flex flex-col items-center gap-1">
             <StripTierLabel>{t(tier.label)}</StripTierLabel>
             {/* flex-wrap with one gap for the whole tier. Every mark is capped
-                at the same box width, so no single logo can claim a row to
+                at the same width wall, so no single logo can claim a row to
                 itself the way the widest wordmarks used to (DRIMAES had a line
-                of its own under equal-area sizing). */}
+                of its own under bounding-box area sizing). */}
             <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 sm:gap-x-6">
               {tier.items.map((p) => (
                 <StripLogo key={p.alt} {...p} box={tier.box} />
