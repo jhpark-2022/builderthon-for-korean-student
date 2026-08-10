@@ -126,10 +126,13 @@ export const partnerIntros: Record<string, Phrase> = {
     en: "A business & startup content media brand built around a 320K-subscriber YouTube channel, with founder interviews, industry analysis, and the BZCF Fellowship community. Joining the builderthon as a marketing partner.",
   },
   "Korean Association in Singapore": {
-    // "장소 지원"이 무엇인지 2026-08-04에 구체화됐습니다 — Day 3·4 1:1 멘토링의
-    // 대면 진행이 이 회관에서 열립니다(schedule.ts MENTORING_MODE와 함께 움직일 것).
-    ko: "1963년 설립된 싱가포르 한인 사회의 대표 단체로, 탄종파가에 자체 회관을 두고 장학 사업과 청년 멘토링·네트워킹 프로그램, 연례 한인 행사를 운영합니다. 이번 빌더톤에는 Day 3·4 1:1 멘토링의 대면 장소로 한인회관을 내어주고, 멘토 굿즈백 준비로 함께합니다.",
-    en: "The representative body of Singapore's Korean community since 1963, with its own hall in Tanjong Pagar, running scholarships, young-professionals mentoring and the community's annual events. For the builderthon it opens that hall for the in-person Day 3·4 1:1 mentoring, and prepares goodie bags for the mentors.",
+    // "장소 지원"이 무엇인지 2026-08-04에 구체화됐습니다 — 1:1 멘토링의 대면
+    // 진행이 이 회관에서 열립니다(schedule.ts MENTORING_MODE와 함께 움직일 것).
+    // DECIDED 2026-08-09: 멘토링 Day 3–7 매일·예약제 확정. 웹에서 멘토↔날짜 매핑
+    // 전면 제거(무대 세션 연사 공지는 예외) — 편향 방지. 여기서 "Day 3·4"를 뺀 것도
+    // 그 원칙이고, 대면 운영 범위는 아직 확정 전이라 새 날짜를 쓰지 마세요.
+    ko: "1963년 설립된 싱가포르 한인 사회의 대표 단체로, 탄종파가에 자체 회관을 두고 장학 사업과 청년 멘토링·네트워킹 프로그램, 연례 한인 행사를 운영합니다. 이번 빌더톤에는 1:1 멘토링 기간의 대면 장소로 한인회관을 내어주고, 멘토 굿즈백 준비로 함께합니다.",
+    en: "The representative body of Singapore's Korean community since 1963, with its own hall in Tanjong Pagar, running scholarships, young-professionals mentoring and the community's annual events. For the builderthon it opens that hall as the in-person venue during the 1:1 mentoring, and prepares goodie bags for the mentors.",
   },
   "Onword Lab": {
     ko: "‘We Make Old Businesses Young’을 내건 AI 전환(AX) 스타트업으로, 리테일·커머스의 운영과 마케팅을 AI로 다시 설계합니다. 이커머스 올인원 운영 에이전틱 대시보드를 만들고 있으며, 이번 빌더톤에는 멘토링으로 함께합니다.",
@@ -959,8 +962,10 @@ export const dict = {
     // 묶어 "온라인으로 진행돼요"라고 쓰면 접속해야 할 일정이 하나 더 있는 것처럼
     // 읽힙니다. 같은 이유로 modeNote의 온라인 행에서도 빠졌습니다.
     requirement: {
-      ko: "참가 조건은 하나예요. Day 1(8/22 킥오프)과 Day 8(8/29 결과 공유회)은 싱가포르 현장 필참입니다. 그 사이 현장 일정은 Day 5·7 세션뿐이고(선택), Day 3·4 1:1 멘토링은 온라인이 기본이에요. 나머지 시간은 팀이 각자 편할 때 빌드하면 됩니다.",
-      en: "One condition: Day 1 (22 Aug, kick-off) and Day 8 (29 Aug, the Showcase) are in person in Singapore and required. The only other on-site days are the Day 5 and Day 7 sessions, and those are optional; the Day 3·4 1:1 mentoring is online by default. The rest of the time is your team's to build in, whenever suits you.",
+      // DECIDED 2026-08-09: 멘토링 Day 3–7 매일·예약제 확정. 웹에서 멘토↔날짜 매핑
+      // 전면 제거(무대 세션 연사 공지는 예외) — 편향 방지.
+      ko: "참가 조건은 하나예요. Day 1(8/22 킥오프)과 Day 8(8/29 결과 공유회)은 싱가포르 현장 필참입니다. 그 사이 현장 일정은 Day 5·7 세션뿐이고(선택), Day 3~7 1:1 멘토링은 온라인이 기본이에요. 나머지 시간은 팀이 각자 편할 때 빌드하면 됩니다.",
+      en: "One condition: Day 1 (22 Aug, kick-off) and Day 8 (29 Aug, the Showcase) are in person in Singapore and required. The only other on-site days are the Day 5 and Day 7 sessions, and those are optional; the Day 3–7 1:1 mentoring is online by default. The rest of the time is your team's to build in, whenever suits you.",
     },
     // 준비물 — 참가비가 아니라 각자 준비해 오는 것. requirement(필참 2일) 바로
     // 아래, 등록을 결정하는 자리에 둡니다: 이걸 등록 후에 알게 되면 Day 1에 와서
@@ -1212,8 +1217,10 @@ export const dict = {
           duration: { ko: "5분", en: "5 min" },
           title: { ko: "중간 체크인", en: "Mid-point check-in" },
           body: {
-            ko: "무엇을 풀기로 했는지 한 문장으로 고정하고, 막힌 팀을 Day 5–7 오피스아워로 연결합니다.",
-            en: "Pins down what you've decided to solve in one sentence, and routes stuck teams into the Day 5–7 office hours.",
+            // 날짜를 뺐습니다 (DECIDED 2026-08-09): 오피스아워를 특정 날짜와 묶어
+            // 적으면 기업 멘토↔날짜 매핑이 되고, 그건 웹에서 전면 제거하는 표기입니다.
+            ko: "무엇을 풀기로 했는지 한 문장으로 고정하고, 막힌 팀을 오피스아워로 연결합니다.",
+            en: "Pins down what you've decided to solve in one sentence, and routes stuck teams into the office hours.",
           },
         },
         {
@@ -1315,12 +1322,15 @@ export const dict = {
           // 되고, 그건 바로 위 lead("8일 내내 붙어 있는 일정이 아니에요")를
           // 스스로 뒤집습니다. 다시 넣지 마세요.
           // 1:1에만 "(온라인 기본)"이 붙는 이유: 멘토에 따라 한인회관 대면이
-          // 있습니다. 조건(누가·어디서)은 여기 적지 않습니다 — Day 3·4 세션
+          // 있습니다. 조건(누가·어디서)은 여기 적지 않습니다 — 1:1 멘토링 세션
           // 카드와 그 모달의 장소 행이 이미 전부 말합니다.
+          // DECIDED 2026-08-09: 멘토링 Day 3–7 매일·예약제 확정. 이 행이 "이틀짜리
+          // 온라인 일정"으로 읽히지 않도록 기간을 적되, 운영 시간대(09–22시 같은
+          // 숫자)는 쓰지 않습니다 — 바뀔 수 있는 운영 정보라 예약 시스템이 갖습니다.
           label: { ko: "온라인", en: "Online" },
           body: {
-            ko: "크래시코스 · 1:1 멘토링(온라인 기본)",
-            en: "Crash course · 1:1 mentoring (online by default)",
+            ko: "크래시코스 · 1:1 멘토링 — Day 3~7 매일, 팀이 고른 시간에 (온라인 기본)",
+            en: "Crash course · 1:1 mentoring — every day from Day 3 to 7, at times your team picks (online by default)",
           },
         },
       ],
@@ -1412,6 +1422,27 @@ export const dict = {
         en: "Each of the other six stops gives you a reason to get off. That's what they were designed for.",
       },
       ariaLabel: { ko: "8일 노선도", en: "The 8-day route" },
+      // ── Day 3–7 멘토링 밴드 (2026-08-09) ────────────────────────────────
+      // DECIDED 2026-08-09: 멘토링 Day 3–7 매일·예약제 확정. 웹에서 멘토↔날짜
+      // 매핑 전면 제거(무대 세션 연사 공지는 예외) — 편향 방지.
+      //
+      // 노선도가 Day 3·4에만 "1:1 멘토링" 키워드를 달고 있어서 멘토링이 이틀짜리로
+      // 읽혔습니다. 다섯 날 카드에 같은 문장을 다섯 번 적는 대신, 구조로 말합니다 —
+      // Day 3 노드에서 Day 7 노드까지 이어지는 가는 보조 레일 하나.
+      //
+      // 범례에 넣지 않습니다. 범례(필참·선택·놓치면 아까운)는 정거장의 층을
+      // 설명하는 축이고, 이건 정거장이 아니라 구간이라 자기 라벨로 스스로를
+      // 설명합니다. 날짜는 밴드가 스팬하는 노드가 보여주므로 라벨에 적지 않습니다.
+      mentoringBand: {
+        ko: "1:1 멘토링 · 매일 열려 있어요",
+        en: "1:1 mentoring · open every day",
+      },
+      // 밴드는 시각 요소라 aria-hidden이고, 스크린리더가 얻는 정보는 이 문장이
+      // 전부입니다 — 그래서 라벨과 달리 구간(Day 3~7)을 말로 적습니다.
+      mentoringBandAria: {
+        ko: "Day 3부터 Day 7까지 1:1 멘토링이 매일 열립니다",
+        en: "1:1 mentoring is open every day from Day 3 to Day 7",
+      },
     },
     // Sits in the same slot as the ★필참 pill and must stay quieter than it —
     // the point is "you may skip this", not "this day is filler". Neutral tone,
@@ -1551,7 +1582,7 @@ export const dict = {
           // 줄만 보이므로 새 포인트를 추가하면 접혀서 안 보입니다.
           { ko: "Codex 기반 beginner-friendly 크래시 코스, 이후 빌드 툴은 자유", en: "A Codex-based, beginner-friendly crash course, and your own build isn't tied to it" },
           // NOT "주최사 FDE". FDEs are Popup Studio's, and their only slot here is
-          // the Day 5–7 office hours — the Crash Course is Codepresso's, and its
+          // the FDE office hours — the Crash Course is Codepresso's, and its
           // body is a live build of one simple tool that the room follows along
           // with. Naming the company instead of a job title also keeps this line
           // out of the way of who is actually on the mic (schedule.ts
@@ -1861,8 +1892,9 @@ export const dict = {
     // affordance to discover: 만들 때 돕는 사람 / 팔 때 돕는 사람.
     //
     // `stages` on each group is the JOIN KEY back to `mentors[].stages`
-    // (1 = Day 3·4, 2 = Day 5–7, 3 = Day 7). Nothing counts people: add or
-    // remove a mentor and they land in the right box on their own. A mentor with
+    // (1 = 1:1 빌드 멘토링, 2 = FDE 오피스아워, 3 = Day 7 피치 세션 — 사람이 아니라
+    // 도움의 종류입니다). Nothing counts people: add or remove a mentor and they
+    // land in the right box on their own. A mentor with
     // an empty `stages` (Day 1·2) belongs to neither box and appears in the
     // warm-up strip above them.
     //
@@ -1882,7 +1914,12 @@ export const dict = {
       {
         id: "build",
         stages: [1, 2],
-        dayRange: { ko: "Day 3–6", en: "Day 3–6" },
+        // DECIDED 2026-08-09: 멘토링 Day 3–7 매일·예약제 확정 — 1:1은 Day 7
+        // 저녁까지 열려 있으므로 이 칩이 구간을 그대로 말합니다. Day 7이 아래
+        // pitch 박스와 겹치는 것은 사실 그대로입니다(현장 최종 점검은 그 박스,
+        // 예약제 1:1은 이 박스). 사람 카드에는 날짜를 붙이지 않습니다 — 이
+        // 칩 하나가 이 섹션에서 날짜를 말하는 유일한 자리입니다.
+        dayRange: { ko: "Day 3–7", en: "Day 3–7" },
         title: { ko: "빌드 멘토링", en: "Build mentoring" },
         theme: { ko: "만들 때 돕는 사람들", en: "The people who help you build" },
         // Two-verb contract (2026-08-02): stage 1 = help them BUILD the thing
@@ -1904,8 +1941,17 @@ export const dict = {
         // where a team reads it before booking, not after they ask to move.
         sub: {
           // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-          ko: "아직 방향을 바꿀 수 있는 구간의 멘토링입니다. 제품을 직접 만들어 온 창업가·현업 엔지니어와 함께 여러 병목 중 하나를 고르고, 버릴 것을 정하고, 그 선택을 제공 데이터로 뒷받침합니다. 같은 문제를 놓고 ‘나라면 이렇게 했을 수도’를 나누는 대화에 가깝고, 빌드가 막히면 팝업스튜디오 엔지니어(FDE 오피스아워)와 함께 풀어요. 1:1 슬롯은 한 번 확정되면 이후 변경하지 않으니, 신청 전에 팀 일정을 맞춰 주세요.",
-          en: "This is mentoring while the direction can still change. With founders and working engineers who have built and shipped products themselves, you pick one bottleneck, decide what NOT to solve, and back that choice with the provided data. It's closer to a ‘here's how I might have done it’ conversation over the same problem, and when the build gets stuck, Popup Studio's engineers (FDE office hours) work through it with you. Once a 1:1 slot is confirmed it stays as booked, so settle your team's schedule before you request one.",
+          // EDIT 2026-08-09 (2): "빌드가 막히면 팝업스튜디오 엔지니어(FDE
+          // 오피스아워)와 함께 풀어요"를 고쳤습니다. 막힌 빌드를 푸는 자리는
+          // 팝업스튜디오 전용이 아닙니다 — 1:1은 배정제라 누가 들어오든 그 자리에서
+          // 같이 봅니다. 원래 문장은 "막히면 저기로 가세요"로 읽혀서, 배정된 멘토에게
+          // 꺼낼 수 있는 이야기를 스스로 좁히게 만들었습니다.
+          // 오피스아워를 "따로 있다"고 덧붙이지 않습니다: 이 문단이 말하는 것은
+          // 1:1에서 무엇을 하는가이고, 두 번째 창구를 여기서 안내하면 방금 지운
+          // "막히면 저쪽"이 형태만 바꿔 돌아옵니다. 오피스아워는 프로그램의 자기
+          // 세션 카드(schedule.ts d5/d6/d7-fde-office-hour)가 안내합니다.
+          ko: "아직 방향을 바꿀 수 있는 구간의 멘토링입니다. 제품을 직접 만들어 온 창업가·현업 엔지니어와 함께 여러 병목 중 하나를 고르고, 버릴 것을 정하고, 그 선택을 제공 데이터로 뒷받침합니다. 같은 문제를 놓고 ‘나라면 이렇게 했을 수도’를 나누는 대화에 가깝고, 빌드가 막힌 지점도 누가 배정되든 그 1:1에서 함께 봅니다. 1:1 슬롯은 한 번 확정되면 이후 변경하지 않으니, 신청 전에 팀 일정을 맞춰 주세요.",
+          en: "This is mentoring while the direction can still change. With founders and working engineers who have built and shipped products themselves, you pick one bottleneck, decide what NOT to solve, and back that choice with the provided data. It's closer to a ‘here's how I might have done it’ conversation over the same problem, and whoever your team is matched with, a stuck build is something you work through in that same 1:1. Once a 1:1 slot is confirmed it stays as booked, so settle your team's schedule before you request one.",
         },
         // "메인 멘토링 파트너" is load-bearing, not decoration: NONE of the cards in
         // this box belong to either mark since the two Onword founders came out
@@ -2032,8 +2078,11 @@ export const dict = {
       title: { ko: "멘토 매칭은 이렇게 배정돼요", en: "How mentor matching works" },
       body: {
         // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-        ko: "멘토를 지정해서 신청하는 대신, 운영진이 배정합니다. 행사 전 팀이 제출한 가능 시간과 멘토의 가능 시간이 **겹치는 구간**이 기준이에요. Day 5–7의 팝업스튜디오 오피스아워도 같은 방식입니다. 누구와 만나든, 모든 멘토는 여러분이 푸는 그 문제를 미리 보고 들어옵니다.",
-        en: "Instead of requesting a specific mentor, you get one assigned. The organizers place sessions where your team's submitted availability **overlaps** with a mentor's. Popup Studio's Day 5–7 office hours work the same way. And whoever you meet, every mentor comes in having already seen the problem you're solving.",
+        // DECIDED 2026-08-09: 오피스아워에서 날짜를 뗐습니다 — 기업 멘토를 특정
+        // 날짜와 묶는 표기는 웹에서 쓰지 않습니다(누가 언제인지는 예약 시스템이
+        // 전날 공개하는 정보입니다).
+        ko: "멘토를 지정해서 신청하는 대신, 운영진이 배정합니다. 행사 전 팀이 제출한 가능 시간과 멘토의 가능 시간이 **겹치는 구간**이 기준이에요. 팝업스튜디오 FDE 오피스아워도 같은 방식입니다. 누구와 만나든, 모든 멘토는 여러분이 푸는 그 문제를 미리 보고 들어옵니다.",
+        en: "Instead of requesting a specific mentor, you get one assigned. The organizers place sessions where your team's submitted availability **overlaps** with a mentor's. Popup Studio's FDE office hours work the same way. And whoever you meet, every mentor comes in having already seen the problem you're solving.",
       },
     },
     // ── 확정 멘토 그리드 (덱 p12) ──────────────────────────────────────────────
@@ -2048,10 +2097,19 @@ export const dict = {
     // taken verbatim from their own LinkedIn profiles (not invented).
     // LinkedIn URLs are the mentors' public profiles.
     //
-    // ORDER = the day they are with you (Day 1 → 2 → 3·4 → 7). This is the
-    // order a participant meets them, which is the only ordering that means
-    // anything on a page they read before the event. If a mentor's `days` change,
-    // move the entry too — the grid renders the array as-is.
+    // ORDER = the order a participant meets them (Day 1 session → Day 2 session →
+    // the 1:1 mentors → the Day 7 pitch mentors), which is the only ordering that
+    // means anything on a page they read before the event. The grid renders the
+    // array as-is, so move an entry rather than re-sorting.
+    //
+    // ⛔ NO DAY ON A PERSON (DECIDED 2026-08-09). 멘토링은 Day 3–7 닷새 매일
+    // 예약제로 돌아가고, 누가 언제 들어오는지는 예약 시스템이 멘토링 전날 공개하는
+    // 정보입니다 — 마케팅 사이트가 미리 약속하는 정보가 아닙니다. 참가자가 특정
+    // 멘토를 좇거나 피해서 날짜를 고르는 편향을 막기 위해, 1:1 멘토 카드에는 날짜
+    // 칩을 렌더하지 않습니다(Journey.tsx). 그래서 아래 `days`는 stage가 있는
+    // 사람에게 빈 문자열입니다. 무대 세션 연사만 예외 — 한장환(Day 1 AWS 세션)과
+    // 김지훈(Day 2 크래시코스)은 세션 공지라 워밍업 스트립에서 날짜를 그대로
+    // 말합니다. 1:1 멘토에게 날짜를 다시 채워 넣지 마세요.
     //
     // `intro` is one line of NEW information, sourced from that person's own
     // LinkedIn (headline + experience) and nothing else. Rules that keep it
@@ -2064,18 +2122,20 @@ export const dict = {
     // university line invites students to rank the room by admissions instead.
     // Academic POSTS are career (한정필's professorship stays); degrees are not. If a profile can't be verified, leave `intro`
     // empty — the card drops the line rather than guessing.
-    // `stages` decides WHICH BOX a mentor's card appears in (1 = Day 3·4,
-    // 2 = Day 5–7, 3 = Day 7; see `groups` above, whose own `stages` is the join
-    // key). It is DERIVED from `days`/`daysPending` — never set it to a stage the
-    // day pills don't already claim, or a card lands in a box its own badge
-    // denies. Empty array = neither box: those mentors run the Day 1·2 sessions
-    // and show up in the warm-up strip instead. Nobody carries stage 2 today,
-    // which is why the build box ends with the FDE placeholder card rather than
-    // a name — Popup Studio sends FDEs, not an assigned mentor.
-    // daysPending marks a day that is confirmed-in-principle but not locked —
-    // rendered as a separate amber pill. Nobody carries one right now (한장환 held
-    // a pending Day 7 until it was dropped and he became Day 1 only); the field
-    // and its pill stay, since this is the normal state for a newly added day.
+    // `stages` decides WHICH BOX a mentor's card appears in (1 = the 1:1 build
+    // mentoring, 2 = the FDE office hours, 3 = the Day 7 pitch session; see
+    // `groups` above, whose own `stages` is the join key). It is the KIND of help
+    // a person gives, not a date — it used to be described as a day range, and
+    // that framing is what put day chips on people in the first place. Empty
+    // array = neither box: those mentors run the Day 1·2 sessions and show up in
+    // the warm-up strip instead. Nobody carries stage 2 today — Popup Studio
+    // sends FDEs on rotation, not an assigned mentor.
+    // daysPending marks a SESSION day that is confirmed-in-principle but not
+    // locked — rendered as a separate amber pill in the warm-up strip, the only
+    // place a day is still printed next to a person. Nobody carries one right now
+    // (한장환 held a pending Day 7 until it was dropped and he became Day 1 only);
+    // the field and its pill stay, since this is the normal state for a newly
+    // added session day.
     // TODO: confirm public naming — verify each named mentor may be shown publicly.
     // Label over the whole mentor roster. It read "확정 멘토 · Confirmed" until
     // 2026-08-10; every mentor listed is confirmed (an unsettled DAY still gets
@@ -2100,9 +2160,9 @@ export const dict = {
       },
       // ── Day 2 · 크래시코스 ───────────────────────────────────────────────────
       // Codepresso — runs the Day 2 Crash Course (see schedule.ts d2-crash-course,
-      // where she is also the `speaker`). Day 2 is the day she is confirmed for, so
-      // that is what the pill says; do not widen it to the 1:1 mentoring days
-      // (Day 3·4·7) unless she is actually booked for them.
+      // where she is also the `speaker`). Day 2 is the session day she is confirmed
+      // for, and a SESSION day is the one kind of day still printed next to a
+      // person here — do not turn it into a mentoring day pill.
       // Title verbatim from his LinkedIn ("Director at Codepresso") — not inferred.
       // He replaced a colleague here when the Crash Course instructor changed;
       // if it changes again, this card and every 크래시코스 mention in
@@ -2120,7 +2180,7 @@ export const dict = {
         },
         days: "Day 2", daysPending: "", stages: [], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jihoon-kim-613878134",
       },
-      // ── Day 3·4 · 자율 빌드 1:1 ─────────────────────────────────────────────
+      // ── 1:1 빌드 멘토링 (stage 1) ───────────────────────────────────────────
       // Onword Lab's two founders (김진호 CEO · 김시훈 CTO) stood at the head of this
       // block until 2026-08-05, when their names came out. The company stays a
       // 메인 멘토링 파트너 in the box header — what is gone is the pair of named
@@ -2144,7 +2204,7 @@ export const dict = {
           ko: "Google for Startups Accelerator 2026 선정 · Antler Entrepreneur in Residence.",
           en: "Google for Startups Accelerator 2026 · Entrepreneur in Residence at Antler.",
         },
-        days: "Day 3·4", daysPending: "", stages: [1], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/brian-bae-ba638a131",
+        days: "", daysPending: "", stages: [1], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/brian-bae-ba638a131",
       },
       // YMX (XR·디지털 트윈 스타트업, 싱가포르) — 사업개발 총괄로 참여. Facts below are
       // from his own LinkedIn: Head of Business Development at YMX.INC since Jan
@@ -2162,7 +2222,7 @@ export const dict = {
           ko: "XR·디지털 트윈 스타트업 · 싱가포르 근무. 디지털 포렌식 16년+ · KITRI BoB 멘토.",
           en: "An XR & digital-twin startup, based in Singapore. 16+ yrs in digital forensics · KITRI BoB mentor.",
         },
-        days: "Day 3·4", daysPending: "", stages: [1], img: "/partners/people/joseph-jonghyun-kim.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/joseph-jonghyun-kim-009b244a",
+        days: "", daysPending: "", stages: [1], img: "/partners/people/joseph-jonghyun-kim.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/joseph-jonghyun-kim-009b244a",
       },
       // 황영준 · 이유택 were "Day 3·4·7" until their Day 7 was dropped — both are
       // stage-1 mentors only now, which is why there is no longer a Day 3·4·7
@@ -2174,7 +2234,7 @@ export const dict = {
           ko: "컴퓨터 비전·NLP 3년+. VLM 문서 처리·검색엔진 고도화.",
           en: "3+ yrs in computer vision & NLP. VLM document processing, search.",
         },
-        days: "Day 3·4", daysPending: "", stages: [1], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620",
+        days: "", daysPending: "", stages: [1], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620",
       },
       {
         name: { ko: "이유택", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" },
@@ -2182,9 +2242,9 @@ export const dict = {
           ko: "SW 엔지니어 5년. LLM 코드리뷰 봇·사내 RAG 구축.",
           en: "5 yrs as a software engineer. LLM code-review bots, internal RAG.",
         },
-        days: "Day 3·4", daysPending: "", stages: [1], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek",
+        days: "", daysPending: "", stages: [1], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek",
       },
-      // Day 5–7 stage-2 mentoring is Popup Studio's, but it has NO card here:
+      // Stage-2 mentoring is Popup Studio's, but it has NO card here:
       // this grid is named people you may be matched with 1:1, and Popup Studio
       // sends FDEs rather than a named mentor. It stays described in the section
       // intro above and as its own sessions in the programme (schedule.ts
@@ -2196,7 +2256,7 @@ export const dict = {
           ko: "GenAI 커뮤니케이션·CX APJC 총괄 · 7년+. 前 삼성전자 북미 5G 사업개발.",
           en: "Head of GenAI Communications & CX, APJC · 7+ yrs. Ex-Samsung Electronics 5G BD, North America.",
         },
-        days: "Day 7", daysPending: "", stages: [3], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/donghyukshin",
+        days: "", daysPending: "", stages: [3], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/donghyukshin",
       },
       {
         name: { ko: "이화영", en: "Lee Hwa-young" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "Sales", en: "Sales" },
@@ -2204,7 +2264,7 @@ export const dict = {
           ko: "싱가포르 근무. 前 브로드컴 어카운트 디렉터 · VMware 5년+.",
           en: "Based in Singapore. Ex-Broadcom account director; 5+ yrs at VMware.",
         },
-        days: "Day 7", daysPending: "", stages: [3], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hwayoung-lee-bbb79a134",
+        days: "", daysPending: "", stages: [3], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hwayoung-lee-bbb79a134",
       },
       {
         name: { ko: "임석건", en: "Lim Seok-geon" }, org: { ko: "NetApp", en: "NetApp" }, role: { ko: "APAC", en: "APAC" },
@@ -2212,7 +2272,7 @@ export const dict = {
           ko: "AWS 세일즈 스페셜리스트 4년+. 前 Rescale.",
           en: "AWS Sales Specialist, 4+ yrs. Ex-Rescale.",
         },
-        days: "Day 7", daysPending: "", stages: [3], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sugkun-lim",
+        days: "", daysPending: "", stages: [3], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/sugkun-lim",
       },
       // Codepresso — the two below are ALSO on the Day 8 feedback panel
       // (dict.judges.people; the key stays `judges` because components read it).
@@ -2220,7 +2280,7 @@ export const dict = {
       // panel and the mentoring are run separately, so a Day 7 mentor may sit on
       // the panel while the mentoring hours themselves stay outside it. Keep name,
       // org, role and LinkedIn identical to their panel cards — one person, two
-      // surfaces. Nobody on the panel appears among the Day 3·4 mentors; re-check
+      // surfaces. Nobody on the panel appears among the 1:1 build mentors; re-check
       // that whenever a mentor or panellist is added.
       {
         name: { ko: "이동훈", en: "Lee Dong-hoon" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "대표 · CEO", en: "CEO" },
@@ -2230,7 +2290,7 @@ export const dict = {
           ko: "AI 코딩·역량진단 교육 플랫폼 운영. 前 스마일게이트 · LG전자 소프트웨어 엔지니어.",
           en: "Runs an AI-coding & skills-assessment education platform. Ex-Smilegate · LG Electronics engineer.",
         },
-        days: "Day 7", daysPending: "", stages: [3], img: "/partners/people/lee-dong-hoon.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/donghun-lee-8888a13a",
+        days: "", daysPending: "", stages: [3], img: "/partners/people/lee-dong-hoon.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/donghun-lee-8888a13a",
       },
       // 황현진: LinkedIn headline is "Co-founder & Director & Content R&D Lead at
       // Codepresso" — the card prints ONE role segment, so 공동창업자 · 이사 goes here
@@ -2243,10 +2303,10 @@ export const dict = {
           ko: "콘텐츠 R&D 총괄. 前 LG전자 소프트웨어 엔지니어 9년.",
           en: "Content R&D lead. Ex-LG Electronics software engineer, 9 yrs.",
         },
-        days: "Day 7", daysPending: "", stages: [3], img: "/partners/people/hwang-hyun-jin.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697",
+        days: "", daysPending: "", stages: [3], img: "/partners/people/hwang-hyun-jin.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697",
       },
       // 정요천: Popup Studio 총괄. Popup Studio already appears in the BUILD box as
-      // a mentoring partner (its FDEs run the Day 5–7 drop-in office hours) — this
+      // a mentoring partner (its FDEs run the drop-in office hours) — this
       // is a different thing: he comes on Day 7 in person as a named mentor, so he
       // belongs to the pitch group like the other Day 7 seniors. He is also on the
       // Day 8 feedback panel (dict.judges.people); name, org, role and LinkedIn are
@@ -2259,7 +2319,7 @@ export const dict = {
           ko: "前 Brie 대표(CEO 겸 CTO), 웹·AI 풀스택. 前 워프벤처스 CEO/CTO · 산업은행(KDB).",
           en: "Ex-CEO/CTO of Brie, a full-stack web·AI studio. Ex-Warp Ventures CEO/CTO · KDB.",
         },
-        days: "Day 7", daysPending: "", stages: [3], img: "/partners/people/jeong-yo-cheon.webp", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/%EC%9A%94%EC%B2%9C-%EC%A0%95-8245a94b/",
+        days: "", daysPending: "", stages: [3], img: "/partners/people/jeong-yo-cheon.webp", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/%EC%9A%94%EC%B2%9C-%EC%A0%95-8245a94b/",
       },
     ],
   },
@@ -2457,7 +2517,7 @@ export const dict = {
       {
         // Brie is PAST, not present: he led it as CEO/CTO and no longer does.
         // The org/role line therefore carries the current post — Popup Studio,
-        // which is also the company running the Day 5–7 FDE office hours — and
+        // which is also the company running the FDE office hours — and
         // Brie moves into the bio with the rest of the career history. Do not
         // put "Brie · 대표" back on the card without checking with him first.
         name: { ko: "정요천", en: "Jeong Yo-cheon" },

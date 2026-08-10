@@ -1075,8 +1075,8 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
 // `days[].stopLabel` overrides the derivation where the head of the theme isn't
 // the reason to get off. Day 3·4's theme is "자율 빌드 · 멘토링", so the derived
 // keyword was 자율 빌드 — but self-paced build is not something you turn up for;
-// the 1:1 mentoring is. Day 6 keeps the derived value because there really is
-// nothing but the build that day.
+// the 1:1 mentoring is. Day 6 carries the same override since the mentoring went
+// daily across Day 3–7 (2026-08-09).
 const stopKeyword = (theme: string) =>
   theme.split("·")[0].replace(/\([^)]*\)/g, "").trim();
 
@@ -1112,7 +1112,12 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
         )}
         <ol
           aria-label={rowIdx === 0 ? t(r.ariaLabel) : undefined}
-          className="relative flex flex-1 items-start"
+          // pb-9: the mentoring band below lives in this padding. It is padding
+          // rather than a sibling block because the band has to be positioned
+          // against the SAME box the nodes are (percentages of a four-up row),
+          // and on desktop both rows stretch to one height so the two halves of
+          // the band land on one line.
+          className="relative flex flex-1 items-start pb-9"
         >
           {/* The rail. Ends are inset by half a column (12.5% of a four-up row) so
               it runs node-centre to node-centre. On desktop the INNER ends run to
@@ -1126,6 +1131,61 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                 : "left-[12.5%] right-[12.5%] sm:left-0"
             }`}
           />
+          {/* ── Day 3–7 멘토링 밴드 ────────────────────────────────────────
+              DECIDED 2026-08-09: 멘토링은 Day 3–7 닷새 매일, 팀 단위 1시간 예약제로
+              열립니다. 노선도는 Day 3·4 노드에만 "1:1 멘토링" 키워드를 달고 있어서
+              멘토링이 이틀짜리로 읽혔는데, 다섯 날 카드에 같은 문장을 다섯 번 적는
+              대신 구조로 말합니다 — Day 3 노드에서 Day 7 노드까지 이어지는 보조 레일.
+
+              기하: 한 행은 네 칸이고 노드 중심은 12.5% · 37.5% · 62.5% · 87.5%입니다.
+              그래서 Day 3 = 첫 행의 62.5%, Day 7 = 둘째 행의 62.5%(= right 37.5%).
+              모바일에서는 두 행이 위아래로 끊기므로 각 조각이 자기 행의 마지막/첫
+              노드 중심까지만 가고, 데스크톱(sm+)에서는 위 레일과 같은 규칙으로 안쪽
+              끝을 행 가장자리까지 늘려 두 조각이 한 줄로 이어집니다.
+
+              메인 레일보다 얇고(h-[3px] vs h-px지만 색이 훨씬 진합니다) 색이 다릅니다 —
+              emerald는 이 사이트에서 멘토링 섹션의 색이라, 범례의 rose(필참)·
+              violet(스포트라이트)와 층이 겹치지 않습니다. 범례에 넣지 않는 이유는
+              dict.program.route.mentoringBand 주석에 있습니다. */}
+          <span
+            aria-hidden
+            // 안쪽 끝의 라운딩은 데스크톱에서 뗍니다 — 둥근 끝 두 개가 행 경계에서
+            // 맞닿으면 이어진 레일에 잘록한 이음매가 생깁니다.
+            className={`pointer-events-none absolute bottom-7 h-[5px] rounded-full bg-emerald-400/60 ${
+              rowIdx === 0
+                ? "left-[62.5%] right-[12.5%] sm:right-0 sm:rounded-r-none"
+                : "left-[12.5%] right-[37.5%] sm:left-0 sm:rounded-l-none"
+            }`}
+          />
+          {/* 라벨은 둘째 행 조각에만 답니다. 첫 행 조각은 데스크톱에서 폭이 한 칸
+              반(62.5%→100%), 모바일에서는 한 칸(Day 3→4)뿐이라 이 문장이 들어갈
+              자리가 없습니다 — 같은 색 레일이 이어지는 것으로 충분하고, 스크린리더는
+              아래 aria-label이 구간을 말로 받습니다. */}
+          {rowIdx === 1 && (
+            <span
+              role="img"
+              aria-label={t(r.mentoringBandAria)}
+              // 두 폭 모두 "밴드와 같은 중심"을 만들려고 잡은 값이지, 밴드와 같은
+              // 구간이 아닙니다.
+              //  · 모바일: 이 행의 밴드는 12.5%→62.5%, 중심은 37.5%. 컨테이너를
+              //    0→75%로 두면 중심이 같고 칩이 조각보다 넓어도(영문 라벨이 그렇습니다)
+              //    잘리거나 줄바꿈되지 않습니다.
+              //  · 데스크톱: 밴드가 두 행에 걸쳐 있는데 라벨은 한 행 안에서만 위치를
+              //    잡을 수 있어서, 왼쪽으로 37.5%(= 첫 행에 있는 조각의 폭)만큼 넘겨
+              //    컨테이너를 밴드 전체와 같은 구간으로 만듭니다. 그래야 라벨이 오른쪽
+              //    3분의 1이 아니라 진짜 중앙(Day 5 언저리)에 섭니다.
+              className="pointer-events-none absolute bottom-0 left-0 right-[25%] flex justify-center sm:left-[-37.5%] sm:right-[37.5%]"
+            >
+              {/* whitespace-nowrap + justify-center: 칩이 조각보다 넓어지면 양쪽으로
+                  똑같이 넘칩니다. 줄바꿈되어 밴드 아래 두 줄이 되는 것보다 낫습니다. */}
+              {/* 범례(0.66rem)·정거장 이름(0.68rem)보다 한 급 큽니다. 이 줄은
+                  범례 항목이 아니라 다섯 날을 덮는 사실 하나라, 주변 잔글씨와
+                  같은 크기면 각주로 읽힙니다. */}
+              <span className="whitespace-nowrap rounded-full border border-emerald-400/30 bg-emerald-400/[0.1] px-2.5 py-1 text-[0.72rem] font-semibold leading-none text-emerald-100">
+                {t(r.mentoringBand)}
+              </span>
+            </span>
+          )}
           {row.map((d) => {
             const anchor = d.mandatory === true;
             // 세 번째 층이 아니라 두 번째입니다: 필참(anchor) → 스포트라이트 →
@@ -1212,8 +1272,16 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                   >
                     {d.stopLabel ? t(d.stopLabel) : stopKeyword(t(d.theme))}
                   </span>
+                  {/* 필참 배지는 흐름에서 빠져 있습니다 (absolute, 2026-08-09).
+                      보이는 자리는 전과 같지만 — 정거장 이름 바로 아래 —
+                      행 높이에는 더하지 않습니다. 이 배지를 다는 날은 Day 1·8
+                      둘뿐인데, 흐름 안에 있으면 그 두 칸이 행 전체를 24px 키우고,
+                      행 바닥에 붙는 Day 3–7 멘토링 밴드가 정거장 이름에서
+                      그만큼 멀어져 허공에 뜬 선처럼 보였습니다. 배지가 넘치는
+                      구간(Day 1·8 칸)과 밴드·라벨이 지나는 구간(Day 3–7)은
+                      가로로 겹치지 않아, 넘쳐도 부딪히지 않습니다. */}
                   {anchor && (
-                    <span className="rounded-full border border-rose-400/30 bg-rose-400/10 px-1.5 py-0.5 text-[0.58rem] font-bold leading-none text-rose-200">
+                    <span className="absolute left-1/2 top-full mt-0.5 -translate-x-1/2 whitespace-nowrap rounded-full border border-rose-400/30 bg-rose-400/10 px-1.5 py-0.5 text-[0.58rem] font-bold leading-none text-rose-200">
                       {t(dict.program.mandatoryBadge)}
                     </span>
                   )}
@@ -1226,29 +1294,36 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
         ))}
       </div>
 
-      {/* Legend left, destination right — right-aligned so it sits under the
-          terminus it describes. Stacks on mobile, where "under Day 8" stops
-          meaning anything anyway. */}
-      <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
-          <span className="flex items-center gap-1.5 text-[0.66rem] text-rose-200/85">
-            <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-[0.42rem] text-rose-100">★</span>
-            {t(r.legendMandatory)}
+      {/* 범례와 행선지가 한 줄입니다 (2026-08-09).
+          두 번의 배치를 거쳤습니다. (1) 좌우 양끝 정렬: Day 3–7 밴드가 생기자
+          행선지가 밴드 오른쪽 끝 바로 아래에 서고, 앞의 화살표까지 오른쪽을
+          가리켜서 밴드가 그리로 이어지는 것처럼 읽혔습니다. (2) 오른쪽 정렬로
+          한 줄 아래: 이번엔 넓은 빈 자리에 이 문장만 혼자 떠서 툭 튀어나왔습니다.
+          지금은 범례 뒤에 이어 붙입니다 — 노선도 아래 잔글씨는 한 줄이고,
+          행선지는 그 줄의 끝에서 세로 구분선 하나로 갈라집니다. 범례 항목처럼
+          보이지 않게 색(rose)과 굵기는 유지합니다. */}
+      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
+        <span className="flex items-center gap-1.5 text-[0.66rem] text-rose-200/85">
+          <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-[0.42rem] text-rose-100">★</span>
+          {t(r.legendMandatory)}
+        </span>
+        <span className="flex items-center gap-1.5 text-[0.66rem] text-white/50">
+          <span aria-hidden className="h-2 w-2 rounded-full border border-white/35" />
+          {t(r.legendOptional)}
+        </span>
+        {/* 세 번째 모양. 스와치는 노선도의 스포트라이트 노드를 그대로 줄인 것이라
+            둘이 같은 것임이 눈으로 이어집니다. */}
+        <span className="flex items-center gap-1.5 text-[0.66rem] text-violet-200/85">
+          <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-violet-300/60 bg-violet-400/20">
+            <span className="h-1.5 w-1.5 rounded-full bg-violet-200" />
           </span>
-          <span className="flex items-center gap-1.5 text-[0.66rem] text-white/50">
-            <span aria-hidden className="h-2 w-2 rounded-full border border-white/35" />
-            {t(r.legendOptional)}
-          </span>
-          {/* 세 번째 모양. 스와치는 노선도의 스포트라이트 노드를 그대로 줄인 것이라
-              둘이 같은 것임이 눈으로 이어집니다. */}
-          <span className="flex items-center gap-1.5 text-[0.66rem] text-violet-200/85">
-            <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-violet-300/60 bg-violet-400/20">
-              <span className="h-1.5 w-1.5 rounded-full bg-violet-200" />
-            </span>
-            {t(r.legendSpotlight)}
-          </span>
-        </div>
-        <p className="break-keep text-[0.68rem] font-semibold text-rose-100/80 sm:text-right">
+          {t(r.legendSpotlight)}
+        </span>
+        {/* 구분선. 범례 세 개와 행선지는 다른 종류의 말이라(모양 설명 / 이 노선이
+            가는 곳), 같은 줄에 그냥 이어 붙이면 네 번째 범례로 읽힙니다.
+            줄바꿈된 뒤에는 의미가 없어서 sm 이상에서만 보입니다. */}
+        <span aria-hidden className="hidden h-3 w-px bg-white/15 sm:block" />
+        <p className="break-keep text-[0.68rem] font-semibold text-rose-100/80">
           <span aria-hidden className="mr-1 text-rose-300/70">→</span>
           {t(r.destination)}
         </p>
@@ -3443,7 +3518,20 @@ export default function Journey() {
                   <span key={i} className="inline-flex items-center gap-1.5 break-keep text-xs text-white/75">
                     <span className="font-bold text-white">{t(m.name)}</span>
                     <span className="text-white/50">{t(m.org)}</span>
-                    <span className="rounded-full border border-white/12 bg-white/[0.04] px-1.5 py-0.5 text-[0.6rem] font-semibold text-white/55">{m.days}</span>
+                    {/* 사람 옆에 날짜가 남아 있는 유일한 자리입니다. 이 두 분은
+                        1:1 멘토가 아니라 무대 세션의 연사(Day 1 AWS · Day 2
+                        크래시코스)라, 날짜가 배정 예고가 아니라 세션 공지입니다.
+                        아래 멘토 카드에는 같은 이유로 칩이 없습니다. */}
+                    {m.days && (
+                      <span className="rounded-full border border-white/12 bg-white/[0.04] px-1.5 py-0.5 text-[0.6rem] font-semibold text-white/55">{m.days}</span>
+                    )}
+                    {/* 확정 원칙이지만 날짜가 아직 안 잠긴 세션. 지금은 해당자가
+                        없습니다 — 새 세션 연사가 들어올 때를 위한 자리입니다. */}
+                    {m.daysPending && (
+                      <span className="rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-1.5 py-0.5 text-[0.6rem] font-semibold text-amber-200/90">
+                        {m.daysPending} · {t(dict.mentoring.dayPendingLabel)}
+                      </span>
+                    )}
                     {m.linkedin && <LinkedInLink url={m.linkedin} label={t(m.name)} />}
                   </span>
                 ))}
@@ -3566,17 +3654,17 @@ export default function Journey() {
                           {intro && (
                             <p className="mt-2 break-keep text-xs leading-relaxed text-white/50 sm:line-clamp-3">{intro}</p>
                           )}
-                          <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-3">
-                            <span className="inline-flex items-center rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.62rem] font-semibold text-white/60">
-                              {m.days}
-                            </span>
-                            {/* A day confirmed-in-principle but not locked. */}
-                            {m.daysPending && (
-                              <span className="inline-flex items-center rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-2 py-0.5 text-[0.62rem] font-semibold text-amber-200/90">
-                                {m.daysPending} · {t(dict.mentoring.dayPendingLabel)}
-                              </span>
-                            )}
-                          </div>
+                          {/* ⛔ NO DAY CHIP (DECIDED 2026-08-09). 이 자리에는
+                              "Day 3·4" / "Day 7" 칩이 있었습니다. 멘토링이 Day 3–7
+                              닷새 매일 예약제로 돌아가면서, 누가 언제 들어오는지는
+                              예약 시스템이 멘토링 전날 공개하는 정보가 됐습니다 —
+                              사이트가 미리 약속하는 정보가 아닙니다. 칩을 두면
+                              참가자가 특정 멘토를 좇거나 피해서 날짜를 고르게 되고,
+                              그건 배정 방식(가능 시간 겹침) 자체를 무너뜨립니다.
+                              구간은 박스 헤더의 dayRange 칩 하나가 말합니다.
+                              사람 카드에 날짜를 다시 붙이지 마세요. 무대 세션
+                              연사(Day 1 AWS · Day 2 크래시코스)만 예외이고, 그건
+                              위 워밍업 스트립에서 렌더됩니다. */}
                         </div>
                       );
                     })}

@@ -187,7 +187,8 @@ export interface DayMeta {
   // 노선도 정거장 키워드 override. 기본값은 theme의 머리(stopKeyword)인데,
   // Day 3·4는 theme이 "자율 빌드 · 멘토링"이라 머리가 "자율 빌드"가 됩니다 —
   // 그날 내려설 이유는 자율 빌드가 아니라 1:1 멘토링이므로 여기서 덮습니다.
-  // Day 6은 정말 자율 빌드뿐이라 파생값 그대로 둡니다.
+  // Day 6도 2026-08-09부터 같습니다(멘토링 Day 3–7 상시화). 자율 빌드는 어디서나
+  // 할 수 있는 일이라 정거장에 내려설 이유가 못 됩니다.
   stopLabel?: Bilingual;
   // "pending" = meant to be on-site but venue isn't locked (Zoom fallback).
   // "mixed"   = both halves in the same day and neither badge alone is honest.
@@ -502,9 +503,14 @@ export const days: DayMeta[] = [
     weekday: { ko: "목", en: "Thu" },
     phase: LAB2,
     theme: { ko: "자율 빌드", en: "Self-paced build" },
+    // 멘토링 줄이 이 요약에 있는 이유 (DECIDED 2026-08-09): 이 날의 유일한 이벤트인
+    // d6-open-build는 selfPaced라 세션 목록에서 아예 숨겨집니다 — 그 description에
+    // 적으면 아무도 읽지 못합니다. Day 5·7은 현장 세션 카드가 있어서 그쪽
+    // description이 읽히지만, Day 6은 이 요약이 카드와 모달에서 유일하게 보이는
+    // 자리입니다. 여기서 빼지 마세요.
     summary: {
-      ko: "필요하면 팝업스튜디오 FDE 오피스아워(온라인)에 드롭인하세요. 예약도 출석도 없습니다.",
-      en: "Drop in to Popup Studio's FDE office hours (online) if you need them. No booking, no attendance.",
+      ko: "필요하면 팝업스튜디오 FDE 오피스아워(온라인)에 드롭인하세요. 예약도 출석도 없습니다. 1:1 멘토링도 하루 종일 열려 있는 날입니다. 막힌 지점이 있으면 예약하고 풀고 가세요.",
+      en: "Drop in to Popup Studio's FDE office hours (online) if you need them. No booking, no attendance. 1:1 mentoring runs all day too. If you're stuck, book a slot and get unstuck.",
     },
     // 없는 이유를 지어내지 않습니다. 이 날은 정말 아무 일정이 없고, 그 사실이
     // 이 줄의 내용입니다. 요약에서 "정해진 일정이 하나도 없는 날"을 뺀 것도
@@ -513,6 +519,12 @@ export const days: DayMeta[] = [
       ko: "정해진 것 없음. 온전히 팀의 빌드 시간",
       en: "Nothing scheduled. The day belongs to your team's build",
     },
+    // DECIDED 2026-08-09: 멘토링이 Day 3–7 닷새 매일 열리면서 이 날의 파생 키워드
+    // ("자율 빌드")가 틀린 말이 됐습니다 — 노선도에서 내려설 이유는 이 날도
+    // 1:1 멘토링이지, 아무 데서나 할 수 있는 자율 빌드가 아닙니다. Day 3·4와 같은
+    // 이유로 덮습니다. theme("자율 빌드")은 그대로 둡니다: 그건 이 날의 기본 성격이고,
+    // 멘토링이 열려 있다는 사실은 카드 요약과 노선도의 Day 3–7 밴드가 말합니다.
+    stopLabel: { ko: "1:1 멘토링", en: "1:1 mentoring" },
     dayMode: "online",
     // The FDE office hour is a drop-in, so the day is still free-form.
     selfPacedDay: true,
@@ -751,10 +763,14 @@ const AWS_OFFICE: Bilingual = {
   ko: "AWS 오피스, 싱가포르 · 현장",
   en: "AWS office, Singapore · in person",
 };
-// Days 3–4's 1:1 mentoring is arranged MENTOR BY MENTOR, and the default is
-// ONLINE. In person is what an individual mentor may offer, not what the
-// programme promises — enough of them can only make an online slot that leading
-// with F2F would be the wrong way round.
+// The 1:1 mentoring is arranged MENTOR BY MENTOR, and the default is ONLINE.
+// In person is what an individual mentor may offer, not what the programme
+// promises — enough of them can only make an online slot that leading with F2F
+// would be the wrong way round.
+//
+// DECIDED 2026-08-09: 멘토링 Day 3–7 매일·예약제 확정. 웹에서 멘토↔날짜 매핑 전면
+// 제거(무대 세션 연사 공지는 예외) — 편향 방지. 대면 운영 범위(어느 날 회관이 열리는지)는
+// 확정 전이라 이 문자열에 날짜를 새로 쓰지 마세요.
 //
 // THE F2F VENUE IS THE KOREAN ASSOCIATION HALL (2026-08-04), not NUS. Every
 // "NUS 대면" on this page came from the deck's original plan; the sessions are
@@ -780,16 +796,20 @@ const CODEPRESSO_ORG = {
 // (2026-08-03). OpenAI is not a partner of this event — do not add it back as
 // one without an agreement.
 
-// Popup Studio runs the stage-2 mentoring: online FDE office hours across
-// Day 5–7. The programme itself is agreed; only the time slots are open, which
-// is why the events carry neither a "확정" nor a "TBC" badge — a TBC badge would
-// read as "this might not happen", which is not what is unsettled here.
+// Popup Studio runs the stage-2 mentoring: the online FDE office hours. The
+// programme itself is agreed; only the time slots are open, which is why the
+// events carry neither a "확정" nor a "TBC" badge — a TBC badge would read as
+// "this might not happen", which is not what is unsettled here.
+//
+// DECIDED 2026-08-09: 이 소개문에서 날짜("Day 5–7 동안")를 뺐습니다 — 기업 멘토를
+// 특정 날짜와 묶는 표기는 웹에서 쓰지 않습니다. 오피스아워가 어느 날 열리는지는
+// 세션 카드가 그 날짜의 카드로 서 있다는 사실이 이미 말합니다.
 const POPUP_STUDIO_ORG = {
   name: "Popup Studio",
   url: "https://popupstudio.ai",
   desc: {
-    ko: "팝업스튜디오는 AI 전환(AX)을 업으로 하는 싱가포르 본사 기업으로, Day 5–7 동안 FDE 온라인 오피스아워를 열어 팀별 문제 정의·워크플로·구현 방향을 함께 점검합니다.",
-    en: "Popup Studio is a Singapore-headquartered AI-transformation (AX) company. Across Day 5–7 its FDEs hold online office hours to review each team's problem definition, workflow and implementation direction.",
+    ko: "팝업스튜디오는 AI 전환(AX)을 업으로 하는 싱가포르 본사 기업으로, FDE 온라인 오피스아워를 열어 팀별 문제 정의·워크플로·구현 방향을 함께 점검합니다.",
+    en: "Popup Studio is a Singapore-headquartered AI-transformation (AX) company. Its FDEs hold online office hours to review each team's problem definition, workflow and implementation direction.",
   },
 } as const;
 
@@ -870,9 +890,12 @@ const FDE_OFFICE_HOUR = {
     en: "Online drop-in to check your problem definition, workflow and build direction with FDEs (times TBA).",
   },
   description: {
-    ko: "기초 멘토링(Day 3·4)을 지난 팀을 위한 실전 2단계입니다. AI 전환을 업으로 하는 팝업스튜디오의 FDE(Forward-Deployed Engineer)들이 Day 5–7 동안 온라인 오피스아워를 열어 둡니다. 원하는 팀이 원하는 때 드롭인해서 문제 정의, 워크플로 분석, 구현 방향을 점검받으세요. 예약·출석 의무가 없고, 시간대는 추후 안내됩니다. 멘토 지정 없이 열려 있는 시간이라는 점은 다른 멘토링과 같아요.",
+    // EDIT 2026-08-09: 날짜 표기 제거 — 1:1 멘토링을 "Day 3·4 기초"로, 오피스아워를
+    // "Day 5–7 실전"으로 갈라 적으면 사람·기업이 특정 날짜에 묶입니다. 두 트랙은
+    // 날짜가 아니라 도움의 종류로 갈립니다(예약제 1:1 / 드롭인 오피스아워).
+    ko: "빌드가 막히는 지점을 현업 엔지니어와 함께 푸는 실전 2단계입니다. AI 전환을 업으로 하는 팝업스튜디오의 FDE(Forward-Deployed Engineer)들이 온라인 오피스아워를 열어 둡니다. 원하는 팀이 원하는 때 드롭인해서 문제 정의, 워크플로 분석, 구현 방향을 점검받으세요. 예약·출석 의무가 없고, 시간대는 추후 안내됩니다. 멘토 지정 없이 열려 있는 시간이라는 점은 다른 멘토링과 같아요.",
     // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-    en: "Stage two, for teams past the foundational mentoring on Day 3·4. Popup Studio, an AI-transformation company, keeps online office hours open across Day 5–7 with its FDEs (Forward-Deployed Engineers): drop in whenever your team wants and get a read on your problem definition, workflow analysis and implementation direction. There's no booking and no attendance obligation, and the time slots will be announced. Like the rest of the mentoring, it's open time you drop into, not a mentor you pick.",
+    en: "Stage two: working through what's blocking the build with engineers who do it for a living. Popup Studio, an AI-transformation company, keeps online office hours open with its FDEs (Forward-Deployed Engineers): drop in whenever your team wants and get a read on your problem definition, workflow analysis and implementation direction. There's no booking and no attendance obligation, and the time slots will be announced. Like the rest of the mentoring, it's open time you drop into, not a mentor you pick.",
   },
   location: ONLINE,
   org: POPUP_STUDIO_ORG,
@@ -1273,8 +1296,13 @@ export const schedule: BEvent[] = [
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
       // 멘토 포지셔닝 문장("정답을 주는 심사자가 아니라")은 유지, 배정 설명의
       // 부정 대구만 정리했습니다.
-      ko: "Day 3–6은 근거를 만드는 시간입니다. 범위도 방향도 아직 고칠 수 있는 구간이라, 멘토와 함께 아이디어에서 가장 뾰족한 지점을 찾아 그게 데모에서 제일 잘 드러나게 만듭니다. 멘토링 1단계로, 정해진 시간표 대신 팀의 필요에 맞춰 진행돼요. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표입니다. 멘토진(기업 2곳 · 현직 시니어 9인)은 멘토링 섹션에 있고, 슬롯은 가능 시간이 겹치는 구간을 기준으로 배정됩니다. Day 5–7에는 팝업스튜디오 FDE의 실전 멘토링이 2단계로 이어집니다.",
-      en: "Day 3–6 is where the evidence gets built. Scope and direction can still genuinely change, so this is when you and a mentor find the sharpest point in your idea and make sure that's what the demo shows. It's stage one of mentoring, following each team's needs instead of a fixed timetable. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes. The line-up (two companies · nine working seniors) is in the mentoring section, and slots land wherever your team's availability and a mentor's overlap. Stage two, Popup Studio's FDE mentoring, follows on Day 5–7.",
+      // DECIDED 2026-08-09: 멘토링 Day 3–7 매일·예약제 확정. 웹에서 멘토↔날짜 매핑
+      // 전면 제거(무대 세션 연사 공지는 예외) — 편향 방지. 그래서 "Day 5–7에는
+      // 팝업스튜디오 FDE가…" 같은 누가-언제 문장이 "Day 7까지 매일"로 바뀌었습니다.
+      // 예약 방식(전날 오픈 · 팀 단위 1시간)은 사이트에서 여기 한 곳에만 적습니다 —
+      // 운영 시간대나 슬롯표 같은 숫자는 예약 시스템과 참가자 카톡방의 정보입니다.
+      ko: "Day 3–6은 근거를 만드는 시간입니다. 범위도 방향도 아직 고칠 수 있는 구간이라, 멘토와 함께 아이디어에서 가장 뾰족한 지점을 찾아 그게 데모에서 제일 잘 드러나게 만듭니다. 멘토링 1단계로, 정해진 시간표 대신 팀의 필요에 맞춰 진행돼요. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표입니다. 확정 멘토진은 멘토링 섹션에 있고, 슬롯은 가능 시간이 겹치는 구간을 기준으로 배정됩니다. 멘토링은 전날 예약이 열리고, 팀 단위로 1시간씩 신청해요. 멘토링은 Day 7까지 매일 이어집니다.",
+      en: "Day 3–6 is where the evidence gets built. Scope and direction can still genuinely change, so this is when you and a mentor find the sharpest point in your idea and make sure that's what the demo shows. It's stage one of mentoring, following each team's needs instead of a fixed timetable. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes. The confirmed line-up is in the mentoring section, and slots land wherever your team's availability and a mentor's overlap. Booking opens the day before; teams book one-hour slots. Mentoring then runs every day through Day 7.",
     },
     location: MENTORING_MODE,
     checkpoints: SCORE_BUILDING_CHECKS,
@@ -1286,12 +1314,10 @@ export const schedule: BEvent[] = [
     // 이유택·신동혁·이화영·임석건·이동훈·황현진·정요천) are from the internal deck; verify
     // their names may be shown publicly before surfacing. Full roster lives in
     // dict.mentoring.mentors.
-    // The count is every individually named 1:1 mentor — NOT everyone in that grid:
-    // 한장환 (Day 1 speaker) and 김지훈 (Day 2 크래시코스) run sessions, not 1:1s, so
-    // they are outside it. 한장환 was in the count until his pending Day 7 was
-    // dropped; if a mentoring day is added back for him, the number moves too.
-    // 이동훈·황현진·정요천 joined the Day 7 career session (all three also sit on the
-    // Day 8 feedback panel), and 김종현 the Day 3·4 round — hence 9인 / "nine" above.
+    // 멘토 수("기업 2곳 · 현직 시니어 9인")를 이 문장에서 뺐습니다 (2026-08-09).
+    // 숫자는 사람이 하나 늘고 줄 때마다 여기서 손으로 세어야 하는 값이었고, 정작
+    // 그 명단은 바로 아래 멘토링 섹션이 카드로 보여줍니다 — 세는 곳과 보여주는 곳이
+    // 둘이면 반드시 갈라집니다. 다시 넣지 마세요.
   },
 
   // ─── DAY 4 · Self-paced build · Mentoring (08.25) ─────────────────────────────────
@@ -1366,8 +1392,11 @@ export const schedule: BEvent[] = [
     },
     description: {
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-      ko: "온라인으로 이어지던 8일 중, 전원이 처음으로 *SCAPE L^IFE Jungle에 모이는 날입니다(10AM–2PM). 이날의 목적은 사람을 만나는 것 하나입니다. 화면 너머로만 함께 빌드하던 동료를 직접 만나고, 다른 트랙에서 같은 8일을 풀고 있는 팀들과 섞이는 자리예요. 시간과 장소는 확정됐고, 세부 프로그램은 학생 간 네트워킹에 초점을 맞춰 해시드(Hashed)와 함께 설계하는 중이고, 정해지는 대로 이 페이지에 올립니다. 참여는 선택이에요(필참은 Day 1·8뿐). 같은 기간 열리는 팝업스튜디오 FDE 온라인 오피스아워는 별개 트랙이라, 빌드를 점검받고 싶은 팀은 따로 드롭인하면 됩니다.",
-      en: "The first day everyone gathers in person at *SCAPE L^IFE Jungle after a week that ran online, 10AM–2PM. The whole point of the day is meeting people: the teammates you'd only built alongside on-screen, and the teams working the same eight days in another track. The time and the venue are set; what we're still designing, together with Hashed, is the programme itself, built around student-to-student networking, and it goes up here once it's settled. Attending is your choice (only Day 1 and Day 8 are required). Popup Studio's online FDE office hours run over the same stretch but are a separate track, so drop in there if your team wants a read on the build.",
+      // 마지막 줄 (DECIDED 2026-08-09): 1:1 멘토링은 Day 3–7 닷새 매일 열립니다.
+      // 현장 일정이 있는 날이라 "오늘은 멘토링이 없는 날"로 읽히기 쉬워서, 이 날
+      // 카드에도 한 줄로 적습니다. 누가 오는지는 적지 않습니다 — 멘토↔날짜 매핑 금지.
+      ko: "온라인으로 이어지던 8일 중, 전원이 처음으로 *SCAPE L^IFE Jungle에 모이는 날입니다(10AM–2PM). 이날의 목적은 사람을 만나는 것 하나입니다. 화면 너머로만 함께 빌드하던 동료를 직접 만나고, 다른 트랙에서 같은 8일을 풀고 있는 팀들과 섞이는 자리예요. 시간과 장소는 확정됐고, 세부 프로그램은 학생 간 네트워킹에 초점을 맞춰 해시드(Hashed)와 함께 설계하는 중이고, 정해지는 대로 이 페이지에 올립니다. 참여는 선택이에요(필참은 Day 1·8뿐). 같은 기간 열리는 팝업스튜디오 FDE 온라인 오피스아워는 별개 트랙이라, 빌드를 점검받고 싶은 팀은 따로 드롭인하면 됩니다. 이날도 1:1 멘토링은 열려 있어요. 현장 일정이 끝난 오후부터, 팀이 예약한 시간에.",
+      en: "The first day everyone gathers in person at *SCAPE L^IFE Jungle after a week that ran online, 10AM–2PM. The whole point of the day is meeting people: the teammates you'd only built alongside on-screen, and the teams working the same eight days in another track. The time and the venue are set; what we're still designing, together with Hashed, is the programme itself, built around student-to-student networking, and it goes up here once it's settled. Attending is your choice (only Day 1 and Day 8 are required). Popup Studio's online FDE office hours run over the same stretch but are a separate track, so drop in there if your team wants a read on the build. 1:1 mentoring stays open today too, from the afternoon after the on-site programme, at whatever slot your team booked.",
     },
     location: ONSITE,
     org: HASHED_ORG,
@@ -1391,8 +1420,11 @@ export const schedule: BEvent[] = [
     },
     description: {
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-      ko: "정해진 세션이 하나도 없는 자율 빌드 데이입니다. 출석 개념이 없고 접속해야 할 곳도 없습니다. 각 팀이 편한 시간·장소에서 자기 페이스로 프로덕트를 완성해 갑니다. 하루를 팀이 원하는 대로 쓸 수 있다는 뜻이에요. 하루 종일 붙어 있으실 필요는 없습니다. Day 5–7에는 팝업스튜디오 FDE의 온라인 오피스아워가 열려 있어, 필요한 팀은 문제 정의·워크플로·구현 방향을 점검받을 수 있습니다(시간대는 추후 안내).",
-      en: "An open build day with no scheduled sessions at all. There's no attendance and nothing to join: each team pushes its product toward completion at its own pace, whenever and wherever suits them. The day is yours to use as the team wants, and nobody expects you glued to it from morning to night. Popup Studio's FDE office hours run online across Day 5–7, so any team that wants a check on its problem definition, workflow or implementation direction can take one (times to be announced).",
+      // 오피스아워에서 날짜("Day 5–7에는")를 뺐습니다 (DECIDED 2026-08-09).
+      // 1:1 멘토링 줄은 여기가 아니라 days[5].summary에 있습니다 — 이 이벤트는
+      // selfPaced라 세션 목록에서 숨겨져서, 여기 적으면 읽히지 않습니다.
+      ko: "정해진 세션이 하나도 없는 자율 빌드 데이입니다. 출석 개념이 없고 접속해야 할 곳도 없습니다. 각 팀이 편한 시간·장소에서 자기 페이스로 프로덕트를 완성해 갑니다. 하루를 팀이 원하는 대로 쓸 수 있다는 뜻이에요. 하루 종일 붙어 있으실 필요는 없습니다. 팝업스튜디오 FDE의 온라인 오피스아워가 열려 있어, 필요한 팀은 문제 정의·워크플로·구현 방향을 점검받을 수 있습니다(시간대는 추후 안내).",
+      en: "An open build day with no scheduled sessions at all. There's no attendance and nothing to join: each team pushes its product toward completion at its own pace, whenever and wherever suits them. The day is yours to use as the team wants, and nobody expects you glued to it from morning to night. Popup Studio's FDE office hours run online, so any team that wants a check on its problem definition, workflow or implementation direction can take one (times to be announced).",
     },
     location: ONLINE,
   },
@@ -1425,8 +1457,10 @@ export const schedule: BEvent[] = [
     },
     description: {
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-      ko: "Day 7은 사전 제출물 마감 당일입니다. 새 기능이나 방향 전환은 여기서 멈추고, 이미 만든 결과를 발표와 이어지는 Q&A 안에서 명확히 증명하는 데 시간을 씁니다. 오늘 지켜야 할 건 이미 손에 있는 것들이에요. 멘토와 함께 무엇을 보는지는 아래 목록에 있습니다(무엇을 내는지는 이 날 카드의 제출물 안내를 보세요). AWS 오피스에서 열리며, Day 5에 이은 두 번째 현장 집결입니다. 팝업스튜디오 FDE의 온라인 오피스아워도 오늘까지 이어집니다.",
-      en: "Day 7 is the submission deadline. New features and changes of direction stop here; the time goes into proving what you already built, making it stand up inside the pitch and the Q&A that follows. The session protects what's already in your hands. What you go through with a mentor is listed below (what the package contains is in this day's submission box). It runs at the AWS office, the second in-person gathering after Day 5, and Popup Studio's online FDE office hours run through today too.",
+      // 마지막 줄 (DECIDED 2026-08-09): 예약제 1:1이 열려 있는 마지막 날입니다.
+      // 이 카드가 말하는 현장 최종 점검(9:10–11:30)과는 다른 트랙이라 따로 적습니다.
+      ko: "Day 7은 사전 제출물 마감 당일입니다. 새 기능이나 방향 전환은 여기서 멈추고, 이미 만든 결과를 발표와 이어지는 Q&A 안에서 명확히 증명하는 데 시간을 씁니다. 오늘 지켜야 할 건 이미 손에 있는 것들이에요. 멘토와 함께 무엇을 보는지는 아래 목록에 있습니다(무엇을 내는지는 이 날 카드의 제출물 안내를 보세요). AWS 오피스에서 열리며, Day 5에 이은 두 번째 현장 집결입니다. 팝업스튜디오 FDE의 온라인 오피스아워도 오늘까지 이어집니다. 저녁까지 1:1 멘토링이 열려 있는 마지막 날이에요. 제출 전 마지막 점검에 쓰세요.",
+      en: "Day 7 is the submission deadline. New features and changes of direction stop here; the time goes into proving what you already built, making it stand up inside the pitch and the Q&A that follows. The session protects what's already in your hands. What you go through with a mentor is listed below (what the package contains is in this day's submission box). It runs at the AWS office, the second in-person gathering after Day 5, and Popup Studio's online FDE office hours run through today too. It's the last day 1:1 mentoring is open, into the evening. Use it for a final check before the submission closes.",
     },
     location: AWS_OFFICE,
     checkpoints: SCORE_KEEPING_CHECKS,
