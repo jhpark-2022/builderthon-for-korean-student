@@ -615,12 +615,16 @@ export const dict = {
     ctaProgram: { ko: "8일의 여정 둘러보기", en: "Explore the 8-day journey" },
     ctaPartner: { ko: "파트너십 문의", en: "Partner with us" },
     scroll: { ko: "스크롤", en: "Scroll" },
-    // Label above the hero's confirmed-partner logo strip (mirrors the deck's
-    // "CONFIRMED PARTNERS" cover band). Only partners already confirmed appear
-    // there — see `confirmedPartners` in Journey.tsx.
-    partnersLabel: { ko: "확정 파트너 · CONFIRMED PARTNERS", en: "Confirmed Partners" },
+    // Label above the hero's partner logo strip. The HONESTY RULE it used to
+    // announce ("확정 파트너 · CONFIRMED PARTNERS") still holds — only partners
+    // whose participation is settled may appear here, see `confirmedPartners`
+    // in Journey.tsx — but the word came off the label on 2026-08-10: every
+    // partner on the page is confirmed, so a "확정" badge on the one place a
+    // reader can already see them all implies somewhere else holds the
+    // unconfirmed ones. It is a rule for us, not a caption for them.
+    partnersLabel: { ko: "파트너 · PARTNERS", en: "Partners" },
     // Accessible name for the strip, which links to the full partner section.
-    partnersAria: { ko: "확정 파트너 전체 보기", en: "See all confirmed partners" },
+    partnersAria: { ko: "파트너 전체 보기", en: "See all partners" },
     // Tier captions inside the strip. Deliberately shorter than the partner
     // section's own labels ("주최 · HOST", "주관 · 운영", "후원 · SPONSORS") —
     // at 0.55rem in a hairline band the full forms crowd out the logos.
@@ -2073,7 +2077,12 @@ export const dict = {
     // a pending Day 7 until it was dropped and he became Day 1 only); the field
     // and its pill stay, since this is the normal state for a newly added day.
     // TODO: confirm public naming — verify each named mentor may be shown publicly.
-    gridLabel: { ko: "확정 멘토 · Confirmed", en: "Confirmed mentors" },
+    // Label over the whole mentor roster. It read "확정 멘토 · Confirmed" until
+    // 2026-08-10; every mentor listed is confirmed (an unsettled DAY still gets
+    // its own amber 협의 중 pill via daysPending, which is the distinction that
+    // actually exists), so the word only invited the question of where the
+    // unconfirmed ones were.
+    gridLabel: { ko: "멘토 · MENTORS", en: "Mentors" },
     dayPendingLabel: { ko: "협의 중", en: "TBC" },
     mentors: [
       // ── Day 1 ────────────────────────────────────────────────────────────────
@@ -2530,7 +2539,13 @@ export const dict = {
     // One confirmed row, captioned by the role each sponsor plays — mirrors the
     // deck's partner slide. Role captions below.
     sponsorsLabel: { ko: "후원 · SPONSORS", en: "Sponsors" },
-    sponsorConfirmedLabel: { ko: "확정 (Confirmed)", en: "Confirmed" },
+    // REMOVED 2026-08-10: sponsorConfirmedLabel ("확정 (Confirmed)"), the green
+    // pill over this grid. Every sponsor on the page is confirmed — the 협의 중
+    // tier was folded away long ago — so the badge labelled the only state that
+    // exists, and a "확정" chip reads as a contrast with an unconfirmed group
+    // that isn't there. Do not re-add it unless an in-discussion tier comes
+    // back and needs telling apart. Same edit removed the 확정 pill in the
+    // partner-intro modal and the 확정 wording in the hero strip label.
     catVenue: { ko: "장소", en: "Venue" },
     catMarketing: { ko: "마케팅", en: "Marketing" },
     catMentoring: { ko: "멘토링", en: "Mentoring" },
@@ -2549,8 +2564,10 @@ export const dict = {
     // truth alone.
     catVenueGoods: { ko: "장소 · 굿즈", en: "Venue · Goods" },
     catOverall: { ko: "종합 지원", en: "Overall support" },
-    // Neutral stage pill shown inside the company-intro modal.
-    stageConfirmed: { ko: "확정", en: "Confirmed" },
+    // REMOVED 2026-08-10: stageConfirmed ("확정"), the pill next to the company
+    // name in the intro modal. It was the only value ever passed, so it said
+    // nothing a reader didn't already know — see the note on the sponsor badge
+    // above. PartnerModal's `stage` prop went with it.
     stageNote: {
       ko: "* 파트너 구성은 2026년 7월 기준이며, 변동될 수 있습니다. 추가되는 후원·파트너십은 확정 시 안내됩니다.",
       en: "* The partner line-up is as of July 2026 and may change; further sponsorships/partnerships will be announced once confirmed.",

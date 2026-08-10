@@ -295,8 +295,12 @@ export const days: DayMeta[] = [
     // 붙어 있어 카드에서 한 번은 보여야 합니다. 상세 순서는 runOfShow가 맡으므로
     // 요약은 짧게 유지하세요.
     summary: {
-      ko: "The Foundry(The Refinery 홀) 현장 · 12:40 입장(선착순 굿즈) · 원대로 오프닝 키노트 · 해시드 인사말 · 문제 공개 · AWS 연사 한장환 님(확정).",
-      en: "In person at The Foundry (The Refinery hall) · doors 12:40 (first-come goods) · Won's opening keynote · a word from Hashed · problem release · AWS talk by Han Jang-whan (confirmed).",
+      // "(확정)" trailed the AWS speaker here until 2026-08-10. Nothing else in
+      // this summary is hedged, so the tag only asked why the speaker alone
+      // needed vouching for; the card's own 확정 badge (confirmed: true) still
+      // marks which SESSIONS are locked, which is the distinction that exists.
+      ko: "The Foundry(The Refinery 홀) 현장 · 12:40 입장(선착순 굿즈) · 원대로 오프닝 키노트 · 해시드 인사말 · 문제 공개 · AWS 연사 한장환 님.",
+      en: "In person at The Foundry (The Refinery hall) · doors 12:40 (first-come goods) · Won's opening keynote · a word from Hashed · problem release · AWS talk by Han Jang-whan.",
     },
     // Venue booked: The Foundry — The Refinery hall, 11 Prinsep Link, 22 Aug 2026
     // (2026-08-03). On-site was already confirmed under the previous booking (SMU
@@ -526,8 +530,12 @@ export const days: DayMeta[] = [
     // 프로그램이 아닙니다. 아래 시간표에도 같은 시간대가 "휴식"으로 남아 있습니다.
     // 끝의 "저녁: 사전 제출물 마감"은 시간대이지 식사가 아닙니다 — 건드리지 마세요.
     summary: {
-      ko: "AWS 오피스(확정) · 멘토와 함께하는 최종 점검 · 박희덕 커리어 간담회 · FDE 오피스아워(온라인) · 저녁: 사전 제출물 마감(필수).",
-      en: "AWS office (confirmed) · final check with mentors · Park Hee-deok career session · FDE office hours (online) · Evening: submission deadline (required).",
+      // "(확정)" sat on the venue while this day was moving between rooms. The
+      // AWS office is booked and every other day names its venue flat, so the
+      // tag came off on 2026-08-10 rather than making this one venue look like
+      // the only one anybody had checked.
+      ko: "AWS 오피스 · 멘토와 함께하는 최종 점검 · 박희덕 커리어 간담회 · FDE 오피스아워(온라인) · 저녁: 사전 제출물 마감(필수).",
+      en: "AWS office · final check with mentors · Park Hee-deok career session · FDE office hours (online) · Evening: submission deadline (required).",
     },
     whyStop: {
       ko: "전문가들이 던질 질문을 무대에 서기 하루 전에 미리 받아보는 자리",
@@ -1025,9 +1033,12 @@ export const schedule: BEvent[] = [
       en: "Amazon's AI problem-definition & approach methodology.",
     },
     description: {
-      ko: "AWS 연사 한장환 님이 진행하는 확정 세션입니다. Amazon이 실제로 AI 문제를 어떻게 정의하고, 어떤 방법론으로 접근하는지를 다룹니다. 문제를 ‘어떻게 풀까’ 이전에 ‘무엇을, 왜 푸는가’를 잡는 관점입니다. 순서상 과제가 공개된 바로 다음 시간이라, 방금 손에 쥔 진짜 문제를 어떤 눈으로 뜯어볼지 배운 걸 그 자리에서 바로 얹어볼 수 있습니다.",
+      // "확정 세션입니다" opened this until 2026-08-10 — the card above it
+      // already carries the 확정 badge, so the first sentence of the copy spent
+      // itself repeating a pill the reader just tapped through.
+      ko: "AWS 연사 한장환 님이 진행합니다. Amazon이 실제로 AI 문제를 어떻게 정의하고, 어떤 방법론으로 접근하는지를 다룹니다. 문제를 ‘어떻게 풀까’ 이전에 ‘무엇을, 왜 푸는가’를 잡는 관점입니다. 순서상 과제가 공개된 바로 다음 시간이라, 방금 손에 쥔 진짜 문제를 어떤 눈으로 뜯어볼지 배운 걸 그 자리에서 바로 얹어볼 수 있습니다.",
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-      en: "A confirmed session led by AWS speaker Han Jang-whan on how Amazon defines AI problems and the methodology it uses to approach them. It's the ‘what and why’ before the ‘how’, and it comes immediately after the problems are released, so the lens lands on the real brief already in your hands.",
+      en: "A session led by AWS speaker Han Jang-whan on how Amazon defines AI problems and the methodology it uses to approach them. It's the ‘what and why’ before the ‘how’, and it comes immediately after the problems are released, so the lens lands on the real brief already in your hands.",
     },
     location: FOUNDRY_REFINERY,
     locationUrl: FOUNDRY_URL,
@@ -1262,8 +1273,8 @@ export const schedule: BEvent[] = [
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
       // 멘토 포지셔닝 문장("정답을 주는 심사자가 아니라")은 유지, 배정 설명의
       // 부정 대구만 정리했습니다.
-      ko: "Day 3–6은 근거를 만드는 시간입니다. 범위도 방향도 아직 고칠 수 있는 구간이라, 멘토와 함께 아이디어에서 가장 뾰족한 지점을 찾아 그게 데모에서 제일 잘 드러나게 만듭니다. 멘토링 1단계로, 정해진 시간표 대신 팀의 필요에 맞춰 진행돼요. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표입니다. 확정 멘토진(기업 2곳 · 현직 시니어 9인)은 멘토링 섹션에 있고, 슬롯은 가능 시간이 겹치는 구간을 기준으로 배정됩니다. Day 5–7에는 팝업스튜디오 FDE의 실전 멘토링이 2단계로 이어집니다.",
-      en: "Day 3–6 is where the evidence gets built. Scope and direction can still genuinely change, so this is when you and a mentor find the sharpest point in your idea and make sure that's what the demo shows. It's stage one of mentoring, following each team's needs instead of a fixed timetable. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes. The confirmed line-up (two companies · nine working seniors) is in the mentoring section, and slots land wherever your team's availability and a mentor's overlap. Stage two, Popup Studio's FDE mentoring, follows on Day 5–7.",
+      ko: "Day 3–6은 근거를 만드는 시간입니다. 범위도 방향도 아직 고칠 수 있는 구간이라, 멘토와 함께 아이디어에서 가장 뾰족한 지점을 찾아 그게 데모에서 제일 잘 드러나게 만듭니다. 멘토링 1단계로, 정해진 시간표 대신 팀의 필요에 맞춰 진행돼요. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표입니다. 멘토진(기업 2곳 · 현직 시니어 9인)은 멘토링 섹션에 있고, 슬롯은 가능 시간이 겹치는 구간을 기준으로 배정됩니다. Day 5–7에는 팝업스튜디오 FDE의 실전 멘토링이 2단계로 이어집니다.",
+      en: "Day 3–6 is where the evidence gets built. Scope and direction can still genuinely change, so this is when you and a mentor find the sharpest point in your idea and make sure that's what the demo shows. It's stage one of mentoring, following each team's needs instead of a fixed timetable. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes. The line-up (two companies · nine working seniors) is in the mentoring section, and slots land wherever your team's availability and a mentor's overlap. Stage two, Popup Studio's FDE mentoring, follows on Day 5–7.",
     },
     location: MENTORING_MODE,
     checkpoints: SCORE_BUILDING_CHECKS,

@@ -8,12 +8,16 @@ import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 import { dict, type Phrase, type PartnerArticle } from "@/data/dictionary";
 
 // A sponsor/mentor whose logo was clicked. `desc` is the company intro shown in
-// the modal; `stage` is an optional pill (e.g. "확정" / "협의 중") mirroring the
-// tile's group.
+// the modal.
+//
+// A `stage` pill next to the name (e.g. "확정" / "협의 중") went away on
+// 2026-08-10: the 협의 중 tier had already been folded away, so every caller was
+// passing 확정 and the pill only ever said the one thing that was true of all of
+// them. If an in-discussion tier ever returns, bring the field back with it —
+// it earns its place only when there are two values to tell apart.
 export interface PartnerInfo {
   name: string;
   desc: Phrase;
-  stage?: Phrase;
   // The company's own site. Host-tier tiles used to link straight out; they now
   // open this modal instead, so the link lives here rather than being lost.
   url?: string;
@@ -171,11 +175,6 @@ export default function PartnerModal({
                 >
                   {partner.name}
                 </h3>
-                {partner.stage && (
-                  <span className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-bold text-white/70">
-                    {t(partner.stage)}
-                  </span>
-                )}
               </div>
 
               <p className="mt-6 text-[15px] leading-7 text-white/75 sm:text-base sm:leading-8">

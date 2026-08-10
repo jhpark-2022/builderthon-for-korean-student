@@ -126,14 +126,24 @@ function opticalHeight(w: number, h: number, area: number, min: number, max: num
 // makes it a link; `badge` shows a small role/stage pill; `big` gives square
 // marks more presence.
 function LogoTile({
-  src, alt, w, h, url, badge, onOpen,
+  src, alt, w, h, url, badge, onOpen, area = 2000,
 }: {
   src: string; alt: string; w: number; h: number;
   url?: string; badge?: string;
+  // Target bounding-box area in px², the axis opticalHeight sizes on. The
+  // default is right for a mark that is ONE line of ink. A STACKED lockup
+  // splits the same box across two rows, so at equal area each of its rows is
+  // drawn at roughly half the height of a single-line neighbour and the mark
+  // reads small no matter how much area you give the box — that is exactly what
+  // happened to Brand Boost (BRAND over BOOST) in this grid. Raising `area` for
+  // those marks is the fix, and it is the ONLY thing this prop is for: it is
+  // not a knob for "this one looks a bit small". If a single-line mark looks
+  // wrong here, the rule itself is wrong.
+  area?: number;
   onOpen?: (el: HTMLElement) => void;
 }) {
   // Tile is h-20 (80px); 44px max leaves the mark breathing room inside it.
-  const boxH = opticalHeight(w, h, 2000, 24, 44);
+  const boxH = opticalHeight(w, h, area, 24, 44);
   const inner = (
     <>
       <Image
@@ -2719,9 +2729,11 @@ export default function Journey() {
   const partnerTriggerRef = useRef<HTMLElement | null>(null);
   // Open the company-intro modal for a logo tile. `name` is the tile's `alt`;
   // copy comes from partnerIntros, falling back to the "coming soon" blurb.
-  const openPartner = (name: string, stage: Phrase, el?: HTMLElement | null, url?: string) => {
+  // A `stage` argument used to sit between them, and every caller passed the
+  // same 확정 — see the note on partners.stageConfirmed in dictionary.ts.
+  const openPartner = (name: string, el?: HTMLElement | null, url?: string) => {
     partnerTriggerRef.current = el ?? null;
-    setActivePartner({ name, desc: partnerIntros[name] ?? partnerIntroTBC, stage, url, articles: partnerArticles[name] });
+    setActivePartner({ name, desc: partnerIntros[name] ?? partnerIntroTBC, url, articles: partnerArticles[name] });
   };
   const selectEvent = (ev: BEvent, el?: HTMLElement | null) => {
     triggerRef.current = el ?? null;
@@ -3402,7 +3414,12 @@ export default function Journey() {
             each group's own `stages` — no counts, no name lists here. Add or drop
             a mentor in data/dictionary.ts and the boxes rearrange themselves. */}
         <div className="mt-8 text-left">
-          <p className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-emerald-200">
+          {/* Plain section label, not the emerald pill it used to be. The pill's
+              green was carrying the word 확정; with that word gone (see
+              mentoring.gridLabel) a status colour with no status left to report
+              read as a badge whose meaning had been cut out. This matches the
+              partner wall's tier labels. */}
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">
             {t(dict.mentoring.gridLabel)}
           </p>
 
@@ -3712,7 +3729,7 @@ export default function Journey() {
               {/* Umbrella header — click opens the AXMOS intro modal. */}
               <button
                 type="button"
-                onClick={(e) => openPartner("AXMOS", dict.partners.stageConfirmed, e.currentTarget)}
+                onClick={(e) => openPartner("AXMOS", e.currentTarget)}
                 // No aria-label: it was "AXMOS" while the button's visible text is the
                 // consortium tagline, so the accessible name didn't contain the label
                 // (WCAG 2.5.3). Without it the name comes from the wordmark's alt plus
@@ -3743,7 +3760,7 @@ export default function Journey() {
                   <LogoTile
                     key={l.alt}
                     {...l}
-                    onOpen={(el) => openPartner(l.alt, dict.partners.stageConfirmed, el, url)}
+                    onOpen={(el) => openPartner(l.alt, el, url)}
                   />
                 ))}
               </div>
@@ -3777,10 +3794,12 @@ export default function Journey() {
           <div className="mt-8 border-t border-white/10 pt-8 text-left">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.sponsorsLabel)}</p>
 
-            <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/[0.06] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-emerald-200">
-              {t(dict.partners.sponsorConfirmedLabel)}
-            </p>
-            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {/* A green "확정 (CONFIRMED)" pill sat here between the label and the
+                grid. Removed 2026-08-10 — every sponsor below is confirmed, so
+                see the note on dict.partners.sponsorConfirmedLabel. The grid
+                keeps the pill's own top margin so the block below the 후원 label
+                sits exactly where it did. */}
+            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
               {/* ORDER FOLLOWS THE HERO STRIP — sorted below against
                   `confirmedPartnerTiers`, not hand-ordered here, so the two
                   lists cannot drift apart again. Seeing AWS·Hashed lead the
@@ -3824,11 +3843,19 @@ export default function Journey() {
                 { cat: t(dict.partners.catAwards),    src: "/partners/logos/white/trimmed/nuldam.png",             alt: "Nuldam",                          w: 631, h: 136, url: "https://nuldam.com/" },
                 { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/onword-lab.png",             alt: "Onword Lab",                      w: 900, h: 92,  url: "https://www.onwordlab.com/" },
                 { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105, url: "https://teamremited.com/" },
-                { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81,  url: "https://www.brandboost.kr/" },
+                // area 4000 (default 2000) — BRAND over BOOST is two stacked
+                // lines, so the default box drew each line at ~13px next to
+                // single-line neighbours running 22–24px, and the mark read as
+                // the smallest thing in the grid at nominally the second-tallest
+                // box. Doubling the area takes it to ~40×101px, which puts its
+                // per-line ink and its width in the same range as the marks that
+                // reach the tile's width wall (Nuldam, REmited, 한인회). See the
+                // `area` note on LogoTile before adding a second one of these.
+                { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81,  area: 4000, url: "https://www.brandboost.kr/" },
                 { cat: t(dict.partners.catOverall),   src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90,  url: "https://www.hashed.com/" },
               ]).map(({ cat, url, ...l }) => (
                 <div key={l.alt} className="flex flex-col gap-1.5">
-                  <LogoTile {...l} onOpen={(el) => openPartner(l.alt, dict.partners.stageConfirmed, el, url)} />
+                  <LogoTile {...l} onOpen={(el) => openPartner(l.alt, el, url)} />
                   <span className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-white/55">{cat}</span>
                 </div>
               ))}
