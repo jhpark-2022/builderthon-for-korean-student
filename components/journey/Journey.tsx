@@ -3642,22 +3642,63 @@ export default function Journey() {
             session joined the keynote), and a 3-column grid left one card orphaned
             on its own row. 4-across keeps them on one line at lg and pairs them
             evenly below that. Revisit if a fifth card ever lands here. */}
-        <div className="mt-10 grid gap-5 text-left sm:grid-cols-2 lg:grid-cols-4">
+        {/* 카드를 가로로 줄 세우는 일은 subgrid가 합니다 — 제목이 끝나는 줄,
+            불릿이 시작하는 줄, 푸터 구분선이 앉는 줄.
+
+            카드마다 ① 제목 줄 수(1–4줄, 언어와 폭에 따라) ② 불릿 개수(3–4개)
+            ③ 푸터의 소속 줄 수(‘AWS 솔루션 아키텍트 · Well-Architected Solution
+            Innovation’은 다른 카드보다 한 줄 더 씁니다)가 다릅니다. 그래서 카드
+            안에서만 정렬하는 방법(min-height·mt-auto)으로는 셋 중 하나만 맞출 수
+            있습니다. mt-auto는 푸터의 '바닥'을 붙이지 '구분선'을 붙이지 않아서,
+            푸터가 한 줄 더 높은 카드는 구분선이 혼자 위로 올라갑니다.
+
+            그래서 각 카드가 부모 그리드의 행 셋을 그대로 물려받습니다
+            (row-span-3 + grid-rows-subgrid). 행 높이는 그 줄에 선 카드들 중
+            가장 큰 것으로 정해지고, 나머지 카드는 같은 선에 맞춰집니다. 언어를
+            바꾸든 폭이 줄어 제목이 네 줄이 되든 자동으로 다시 맞으니, 여기에
+            제목 높이나 푸터 높이를 숫자로 박아 넣지 마세요 — 그 숫자는 KO에서
+            맞추면 EN에서, 1440px에서 맞추면 1024px에서 어긋납니다.
+
+            1열(모바일)에서는 카드 하나가 곧 한 줄이라 행 높이가 제 내용대로
+            잡힙니다. 즉 정렬 규칙이 데스크톱에서만 일하고 모바일에서는 카드를
+            불필요하게 늘이지 않습니다 — 브레이크포인트 분기가 따로 필요 없는
+            이유입니다.
+
+            gap-y-4는 부모의 gap-5를 카드 안에서만 덮어씁니다. subgrid는 부모의
+            간격을 물려받는데, 카드 사이 간격(20px)과 카드 안 블록 사이 간격은
+            같아야 할 이유가 없습니다(원래 값은 mt-4 = 16px였습니다).
+
+            subgrid를 모르는 브라우저에서는 규칙이 통째로 무시되고 카드가 각자
+            3행 그리드가 됩니다 — 예전처럼 카드끼리 어긋날 뿐, 깨지지 않습니다. */}
+        <div className="mt-10 grid items-stretch gap-5 text-left sm:grid-cols-2 lg:grid-cols-4">
           {/* keyed by index, not `img` — one speaker can hold two sessions
               (박희덕: Day 7 간담회 + Day 8 키노트) and so reuse the same photo */}
           {dict.speakers.people.map((s, si) => (
-            <div key={si} className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-400/25 hover:bg-white/[0.05]">
-              <span className="text-xs font-bold uppercase tracking-wide text-violet-300/80">{t(s.day)}</span>
-              <p className="mt-4 text-base font-semibold leading-snug text-white">{t(s.topic)}</p>
-              <ul className="mt-4 space-y-2">
+            <div key={si} className="row-span-3 grid grid-rows-subgrid gap-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-400/25 hover:bg-white/[0.05]">
+              {/* 라벨과 제목이 한 행입니다 — 줄 세워야 하는 것은 제목의 시작이
+                  아니라 끝(=첫 불릿이 앉는 자리)이라, 둘을 묶어야 그 끝이 하나의
+                  행 경계가 됩니다. */}
+              <div>
+                <span className="block text-xs font-bold uppercase tracking-wide text-violet-300/80">{t(s.day)}</span>
+                <p className="mt-4 break-keep text-base font-semibold leading-snug text-white">{t(s.topic)}</p>
+              </div>
+              <ul className="space-y-2">
                 {s.points.map((p, i) => (
+                  // 마커와 텍스트가 각자의 열입니다. 예전에는 텍스트가 li의
+                  // 익명 자식이라 줄바꿈된 둘째 줄이 카드마다 다르게 앉아
+                  // 보였습니다. span으로 묶어 둘째 줄이 마커가 아니라 텍스트
+                  // 시작선에 붙습니다(행잉 인덴트).
                   <li key={i} className="flex items-start gap-2 text-[13px] leading-relaxed text-white/70">
                     <span aria-hidden className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-violet-300/70" />
-                    {t(p)}
+                    <span className="min-w-0 break-keep">{t(p)}</span>
                   </li>
                 ))}
               </ul>
-              <div className="mt-auto flex items-center gap-3 border-t border-white/10 pt-4">
+              {/* 구분선이 곧 세 번째 행의 시작선이라, 이 블록은 카드 바닥이
+                  아니라 '같은 줄'에 걸립니다. mt-auto는 그래서 뺐습니다 —
+                  subgrid가 이미 자리를 잡아주는데 mt-auto를 함께 두면 푸터가
+                  행 안에서 한 번 더 아래로 밀립니다. */}
+              <div className="flex items-center gap-3 border-t border-white/10 pt-4">
                 <Image src={s.img} alt={t(s.name)} width={200} height={200} className="h-14 w-14 shrink-0 rounded-full object-cover ring-1 ring-white/15" />
                 <div className="min-w-0">
                   <p className="break-keep text-sm font-bold text-white">{t(s.name)}</p>
