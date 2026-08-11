@@ -332,14 +332,22 @@ export const dict = {
     // No trailing arrow: the card draws its own (and animates it on hover), so
     // one baked into the string rendered as "내 결과 다시 보기 → →".
     hookQuizCtaReturn: { ko: "내 결과 다시 보기", en: "Back to my result" },
-    // The four things that stop people from registering, answered in one line.
+    // The five things that stop people from registering, answered in one line.
     // Rendered under the register CTA everywhere the hook cards appear (hero +
     // both mid-page bands) from this single key, so the answer can never drift
     // between placements. Every clause is a confirmed fact stated elsewhere on
     // the site — nothing here is new promise.
+    //
+    // "당일 결정 OK"는 2026-08-11에 붙었습니다. 주최 방침이 "1일 차에는 그냥
+    // 와서 현장에서 결정해도 된다"이고, 사이트가 그 말을 어디에서도 하지 않아
+    // 마감 시각만 보고 물러서는 사람이 생겼습니다. 같은 사실을 말하는 자리가
+    // 셋입니다: 여기(가장 짧은 신호) · hero.countdownSameDay(단서 한 줄) ·
+    // FAQ "일단 1일 차에 가 보고 결정해도 되나요?"(전문). 셋은 함께 움직이고,
+    // 늦은 사인업의 팀 매칭 단서는 여기 말고 뒤의 두 곳이 답니다 — 이 줄은
+    // 조건을 나열하는 자리지 단서를 다는 자리가 아닙니다.
     reassure: {
-      ko: "참가비 무료 · 스크리닝 없음 · 코딩 몰라도 OK · 솔로 환영",
-      en: "Free to join · No screening · No coding needed · Solo welcome",
+      ko: "참가비 무료 · 스크리닝 없음 · 코딩 몰라도 OK · 솔로 환영 · 당일 결정 OK",
+      en: "Free to join · No screening · No coding needed · Solo welcome · Decide on the day",
     },
     // "How long will this take" — the other silent objection. Sits as a chip on
     // the hook CTA and is restated at the top of the modal, where it's checkable
@@ -688,6 +696,27 @@ export const dict = {
     countdownUrgency: {
       ko: "등록자부터 참가자 단톡방 초대 · 트랙 사전 안내 · 팀 매칭이 시작돼요.",
       en: "Registered builders get the participants' chat invite, track previews and team matching first.",
+    },
+    // 바로 위 줄 다음에 같은 톤·같은 크기로 붙습니다. 위 줄이 "일찍 등록하면
+    // 뭐가 좋은가"를 말하고 나면, 읽는 사람 머리에는 반대쪽 질문이 남습니다 —
+    // "그럼 지금 안 하면 못 오는 건가". 마감 시각(오후 4시)만 크게 걸려 있으면
+    // 그렇게 읽힙니다. 실제 방침은 당일 현장 등록도 오후 4시까지 열려 있다는
+    // 것이라, 그 사실을 마감 바로 옆에서 말합니다.
+    //
+    // 뒤 절(팀 구성)은 완화가 아니라 정직입니다. 늦게 오면 남는 사람이 없을 수
+    // 있다는 건 실제로 그렇고, 이 단서가 없으면 "아무 때나 와도 팀은 만들어
+    // 준다"는 약속이 됩니다. 다만 "일찍 오세요"라는 압박으로 쓰지 마세요 —
+    // 문장의 무게는 앞 절(열려 있다)에 실려 있어야 합니다.
+    //
+    // 같은 사실을 말하는 나머지 두 곳: register.reassure("당일 결정 OK") ·
+    // FAQ "일단 1일 차에 가 보고 결정해도 되나요?"(전문 + 팀 등록 예외).
+    //
+    // EN의 두 절은 마침표로 끊습니다 — 원안은 em dash였는데, 이 사이트는
+    // 2026-08-09 편집에서 산문의 em dash를 걷어냈고(problemRegistrationOpen 주석
+    // 참고) 여기만 남기면 그 규칙이 무너집니다. 뜻은 그대로입니다.
+    countdownSameDay: {
+      ko: "당일 현장 등록도 열려 있어요. 다만 마감 직전엔 함께 팀을 구성할 분이 안 남아 있을 수 있어요.",
+      en: "Same-day sign-up is open too. Just note that if you register right before the deadline, there may be no one left to team you up with.",
     },
     // 카운트다운이 끝난 뒤(이미 시작한 시점) 노출되는 문구.
     countdownStarted: { ko: "빌더톤이 시작되었습니다.", en: "The builderthon has begun." },
@@ -2789,6 +2818,27 @@ export const dict = {
         a: {
           ko: "됩니다. 솔로로 등록하면 1인 팀으로 출전할 수 있어요. 원하면 팀 매칭도 신청할 수 있고(AI 유형 테스트 + Day 1 현장 그룹핑), 이미 팀이 있다면 2–3인 팀 등록으로 대표 1명이 한 번에 등록하면 됩니다.",
           en: "Yes. Register solo and you compete as a one-person team. You can also opt into team matching (the AI personality test plus on-site grouping on Day 1), and if you already have a team, one person registers the whole 2–3 person group in one go.",
+        },
+      },
+      // 솔로/팀 질문 바로 다음이 자리입니다 — 같은 사람이 이어서 묻는 질문이고
+      // (혼자 가도 되나 → 가서 정해도 되나), 답의 단서도 같은 것을 가리킵니다:
+      // 현장 팀 매칭에 남는 사람이 있느냐.
+      //
+      // 이 답이 이 사실의 전문본입니다(2026-08-11 주최 메시지 원문 기준). 나머지
+      // 두 곳은 신호만 냅니다 — register.reassure의 "당일 결정 OK"와
+      // hero.countdownSameDay의 한 줄. 셋을 함께 움직이되, 세 곳에 전문을
+      // 반복하지는 마세요.
+      //
+      // 마지막 괄호(팀 등록 예외)는 전문에만 답니다. 짧은 두 곳에 넣으면
+      // 단서가 단서를 낳아 문장이 안내가 아니라 약관처럼 읽힙니다.
+      //
+      // 시각(오후 4시)은 hero.countdownDeadline · problemRegistrationOpen ·
+      // REGISTRATION_CLOSES_AT과 같은 값이어야 합니다. 여기서만 고치지 마세요.
+      {
+        q: { ko: "일단 1일 차에 가 보고 결정해도 되나요?", en: "Can I just show up on Day 1 and decide there?" },
+        a: {
+          ko: "네! 1일 차에는 당일 참석만 해주셔도 정말 감사하고요, 참여 여부는 현장에서 결정하셔도 됩니다. 사인업은 당일 오후 4시까지 열려 있어요. 다만 너무 늦게 사인업하시면 상황에 따라 함께 팀을 구성해드릴 수 있는 분이 없을 수도 있는 점만 참고해 주세요. (이미 팀으로 오시는 분들은 해당 없어요.)",
+          en: "Of course, showing up on Day 1 already means a lot, and you can decide on the spot. Sign-up stays open until 4PM that day. One heads-up: if you sign up very late in the day, we may not have anyone left to match you with a team. (Doesn't apply if you're registering as a team.)",
         },
       },
       // Mentor requests were the most common pre-event ask — answered next to the

@@ -827,6 +827,14 @@ function CountdownView({ t }: { t: Tfn }) {
       <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-white/55">
         {t(dict.hero.countdownUrgency)}
       </p>
+      {/* 위 줄이 "일찍 등록하면 뭐가 좋은가"를 말하고 나면 반대쪽 질문이 남습니다:
+          "그럼 지금 안 하면 못 오나". 마감 배지만 크게 걸려 있으면 그렇게 읽히는데
+          실제로는 당일 현장 등록이 오후 4시까지 열려 있습니다. 그래서 마감 바로
+          아래, 위 줄과 같은 크기·같은 톤으로 답니다 — 한 단계 낮추면 단서가 아니라
+          각주가 되고, 올리면 마감보다 커집니다. 문구 배경은 dictionary 쪽 주석 참고. */}
+      <p className="mx-auto mt-1.5 max-w-md break-keep text-xs leading-relaxed text-white/55">
+        {t(dict.hero.countdownSameDay)}
+      </p>
     </div>
   );
 }
