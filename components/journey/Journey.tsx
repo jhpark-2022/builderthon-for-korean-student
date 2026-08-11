@@ -2454,7 +2454,7 @@ function stripHeight(spec: StripLogoSpec, base: number, maxW: number) {
 
 const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpec[] }[] = [
   {
-    // 주최 · HOST — the AXMOS collective.
+    // 주최 — the AXMOS collective.
     label: dict.hero.partnersHost,
     box: LEAD_BOX,
     items: [
@@ -2466,7 +2466,7 @@ const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpe
     ],
   },
   {
-    // 주관 · 운영 — the student associations actually running the event.
+    // 주관 — the student associations actually running the event.
     label: dict.hero.partnersOrganizers,
     box: LEAD_BOX,
     items: [
@@ -2476,7 +2476,7 @@ const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpe
     ],
   },
   {
-    // 후원 · SPONSORS — confirmed only; the deck lists no in-discussion sponsors.
+    // 후원 — confirmed only; the deck lists no in-discussion sponsors.
     // AWS and Hashed lead: they are the two marks a visitor recognises without
     // being told, so they do the most work in a first-screen band. The rest keep
     // the partner section's order. (Only the hero strip is ordered this way —
@@ -4047,7 +4047,7 @@ export default function Journey() {
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-sm leading-relaxed text-white/75">{t(dict.partners.note)}</p>
 
-          {/* ── Tier 1 · 주최 · HOST (the AXMOS consortium) ──────────────────
+          {/* ── Tier 1 · 주최 (the AXMOS consortium) ─────────────────────────
               AXMOS is NOT a sixth company — it's the AX consortium the five host
               companies formed. So the five marks are wrapped in one umbrella
               CARD whose header carries the AXMOS wordmark + one-liner; the header
@@ -4102,7 +4102,7 @@ export default function Journey() {
             </div>
           </div>
 
-          {/* ── Tier 2 · 주관 · 운영 · ORGANIZERS (the student associations) ── */}
+          {/* ── Tier 2 · 주관 (the student associations) ─────────────────── */}
           <div className="mt-8 text-left">
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.organizersLabel)}</p>
@@ -4131,7 +4131,7 @@ export default function Journey() {
             </div>
           </div>
 
-          {/* ── Tier 3 · 후원 · SPONSORS ──────────────────────────────────
+          {/* ── Tier 3 · 후원 ─────────────────────────────────────────────
               Mirrors the deck's partner slide exactly: one confirmed row, each
               logo captioned with what that sponsor actually provides. The old
               "협의 중" tier and the separate 멘토사 tier were folded away — the

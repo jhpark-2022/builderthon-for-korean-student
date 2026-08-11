@@ -74,7 +74,7 @@ export const partnerIntros: Record<string, Phrase> = {
     en: "A leading blockchain and Web3 venture capital firm, investing across stablecoins, RWA and AI infrastructure. In 2026 it launched Hashed Vibe Labs, an accelerator for the AI-coding era of company building, the very frontier this builderthon plays on.",
   },
 
-  // ── 주최 · HOST ────────────────────────────────────────────────────────────
+  // ── 주최 (HOST) ────────────────────────────────────────────────────────────
   // CORRECTED 2026-08-05: 과제를 내는 것은 AXMOS가 아니라 구성사인 코드프레소입니다.
   // 코드프레소가 AXMOS 소속인 것은 맞지만, "AXMOS가 과제를 준다"는 사실이 아닙니다 —
   // 컨소시엄 이름으로 뭉뚱그리면 나머지 네 회사도 과제를 낸다는 뜻이 됩니다.
@@ -112,7 +112,7 @@ export const partnerIntros: Record<string, Phrase> = {
     en: "An AI-transformation (AX) company with its HQ in Singapore and a dev hub in Korea, where forward-deployed engineers embed working AI directly inside client teams. Also builds Bkend, a conversational backend-as-a-service, and the builder community bkamp. Vibe coding, as an actual business.",
   },
 
-  // ── 후원 · SPONSORS ────────────────────────────────────────────────────────
+  // ── 후원 (SPONSORS) ────────────────────────────────────────────────────────
   "INNOVATE 360": {
     ko: "싱가포르 최초의 푸드테크 액셀러레이터로, 공유 R&D 랩·인증 주방·생산 공간 등 약 20만 sq ft의 시설과 VC 펀드를 함께 운영하며 230개 이상의 스타트업을 지원해 왔습니다. Enterprise Singapore StartupSG 공인 멘토 파트너이며, 이번 행사에는 장소로 함께합니다.",
     en: "Singapore's first food-tech accelerator, running ~200,000 sq ft of facilities (shared R&D labs, certified kitchens, production space) alongside a VC fund, with 230+ startups supported. An accredited StartupSG mentor partner, joining this event as a venue sponsor.",
@@ -393,8 +393,12 @@ export const dict = {
     // Trust signals — who's asking, what happens to the data, and what happens
     // next. All three restate facts already true elsewhere on the site; none of
     // them promises anything new.
+    // EDIT 2026-08-11: KO 가운데의 ·를 조사로 풀었습니다. 그 자리의 ·는 나열이
+    // 아니라 주체가 다른 두 사실("누가 주관하는가" · "누가 폼을 읽는가")을 붙여
+    // 놓은 접착제였고, 붙여 두면 학생회가 폼을 확인하는 것처럼도 읽혔습니다.
+    // EN은 원래 두 문장이라 그대로. 학교 이름 사이의 ·는 나열이므로 유지.
     trustOrganizer: {
-      ko: "SMU · NUS · NTU 한인 학생회 주관 · Zero100 AI 빌더톤 운영진이 직접 확인합니다.",
+      ko: "SMU · NUS · NTU 한인 학생회가 주관하고, Zero100 AI 빌더톤 운영진이 직접 확인합니다.",
       en: "Organized by the SMU · NUS · NTU Korean student associations. The Zero100 AI Builderthon team reads every entry.",
     },
     trustPrivacy: {
@@ -633,13 +637,18 @@ export const dict = {
     // partner on the page is confirmed, so a "확정" badge on the one place a
     // reader can already see them all implies somewhere else holds the
     // unconfirmed ones. It is a rule for us, not a caption for them.
-    partnersLabel: { ko: "파트너 · PARTNERS", en: "Partners" },
+    //
+    // EDIT 2026-08-11: 한/영 이중 표기("파트너 · PARTNERS")를 걷어냈습니다. 이
+    // 자리의 ·는 나열이 아니라 같은 말을 두 번 하는 접착제였고, EN 쪽은 애초에
+    // "Partners" 한 단어라 KO만 두 배로 길었습니다. 같은 이유로 아래 티어 캡션과
+    // 파트너 섹션의 세 라벨도 함께 정리했습니다.
+    partnersLabel: { ko: "파트너", en: "Partners" },
     // Accessible name for the strip, which links to the full partner section.
     partnersAria: { ko: "파트너 전체 보기", en: "See all partners" },
     // Tier captions inside the strip. Deliberately shorter than the partner
-    // section's own labels ("주최 · HOST", "주관 · 운영", "후원 · SPONSORS") —
-    // at 0.55rem in a hairline band the full forms crowd out the logos.
-    partnersHost: { ko: "주최 · AXMOS", en: "Host · AXMOS" },
+    // section's own labels ("주최", "주관", "후원" + 로고) — at 0.55rem in a
+    // hairline band anything longer crowds out the logos. 문장으로 늘리지 마세요.
+    partnersHost: { ko: "주최 AXMOS", en: "Hosted by AXMOS" },
     partnersOrganizers: { ko: "주관", en: "Organizers" },
     partnersSponsors: { ko: "후원", en: "Sponsors" },
     statParticipants: { ko: "한인 학생", en: "Korean students" },
@@ -2635,30 +2644,50 @@ export const dict = {
   partners: {
     tag: { ko: "Partners", en: "Partners" },
     heading: { ko: "함께 만드는 사람들", en: "Built together" },
+    // EDIT 2026-08-11: KO를 역할별 문장 셋으로 다시 썼습니다. 예전 문장은 세
+    // 주체를 쉼표로 이어 붙인 한 덩어리라("…AXMOS(…), …한인 학생회의 주관·운영,
+    // 그리고 …후원사가 함께합니다"), 주어가 셋인데 서술어가 하나였습니다. 누가
+    // 무엇을 하는지가 명사구 안('주관·운영')에 접혀 있었고, 그 명사구를 붙이는
+    // ·는 나열이 아니라 두 동사를 억지로 한 단어로 만든 접착제였습니다.
+    // EN은 원래부터 문장형("organized and run by …")이라 그대로 둡니다.
+    // 사실은 하나도 바뀌지 않았습니다 — 주체·역할·순서 모두 그대로입니다.
     note: {
-      ko: "주최 컨소시엄 AXMOS(5개 사, 실제 기업 과제는 구성사인 코드프레소가 냅니다), SMU·NUS·NTU 한인 학생회의 주관·운영, 그리고 장소·마케팅·멘토링·굿즈를 맡아주는 후원사가 함께합니다. 각 파트너가 맡은 역할을 그대로 표기합니다.",
+      ko: "주최는 5개 사가 결성한 컨소시엄 AXMOS입니다(실제 기업 과제는 구성사인 코드프레소가 냅니다). 행사는 SMU·NUS·NTU 한인 학생회가 주관하고 운영하며, 장소·마케팅·멘토링·굿즈는 후원사들이 맡아 함께합니다. 각 파트너가 맡은 역할을 그대로 표기합니다.",
       en: "Built with AXMOS, the host consortium of five companies (the real company problem comes from Codepresso, one of them), organized and run by the SMU · NUS · NTU Korean student associations, and supported by sponsors covering venue, marketing, mentoring and goods. Each partner is labelled with the role they actually play.",
     },
-    // ── Tier 1 · 주최 · HOST (the AXMOS consortium) ──────────────────────────
-    hostLabel: { ko: "주최 · HOST", en: "Host" },
+    // ── Tier 1 · 주최 (the AXMOS consortium) ─────────────────────────────────
+    // EDIT 2026-08-11: 세 티어 라벨에서 한/영 이중 표기를 걷어냈습니다
+    // ("주최 · HOST" → "주최", "후원 · SPONSORS" → "후원"). EN 라벨이 이미 그
+    // 영어 단어를 말하고 있어서, KO에만 영어를 덧붙이면 언어 토글이 있는 사이트
+    // 에서 KO 쪽만 두 언어를 동시에 쓰는 셈이었습니다. 되돌리지 마세요.
+    hostLabel: { ko: "주최", en: "Host" },
     // Header line inside the AXMOS umbrella container (the wordmark "AXMOS"
     // renders separately, so the copy starts after the em-dash — no double name).
+    // EDIT 2026-08-11: 가운뎃점을 접속으로 풀었습니다. 이 ·는 나열이 아니라
+    // 두 절("무엇인가" · "무엇을 하는가")을 잇는 자리라, 한 문장으로 읽히는 게
+    // 맞습니다.
     axmosTagline: {
-      ko: "5개 사가 결성한 AX 컨소시엄 · 실제 기업 과제를 함께 제공합니다",
+      ko: "5개 사가 결성한 AX 컨소시엄으로, 실제 기업 과제를 함께 제공합니다.",
       en: "an AX consortium of the five companies below, providing the real company problems",
     },
-    // ── Tier 2 · 주관 · 운영 · ORGANIZERS (student associations) ─────────────
-    organizersLabel: { ko: "주관 · 운영", en: "Organizers" },
+    // ── Tier 2 · 주관 (student associations) ─────────────────────────────────
+    // EDIT 2026-08-11: "주관 · 운영" → "주관". 라벨이 역할 두 개를 ·로 붙여
+    // 이고 있었는데, 기획과 운영의 실체는 바로 아래 organizersNote 문장이 이미
+    // 나릅니다("SMU · NUS · NTU 한인 학생회가 기획하고 운영합니다"). 라벨은 티어
+    // 이름이지 역할 목록이 아니니 한 단어로 충분합니다.
+    organizersLabel: { ko: "주관", en: "Organizers" },
     organizersNote: {
       ko: "SMU · NUS · NTU 한인 학생회가 기획하고 운영합니다.",
       en: "Planned & run by the SMU · NUS · NTU Korean student associations.",
     },
-    roleLead: { ko: "기획 · 운영", en: "Lead · Ops" },
+    // 역할 칩. ·를 조사로 풀었습니다 (2026-08-11) — 두 역할을 한 사람이 함께
+    // 맡는다는 뜻이라, 나열보다 접속이 사실에 가깝습니다.
+    roleLead: { ko: "기획과 운영", en: "Lead & Ops" },
     roleOps: { ko: "운영", en: "Ops" },
-    // ── Tier 3 · 후원 · SPONSORS ─────────────────────────────────────────────
+    // ── Tier 3 · 후원 ────────────────────────────────────────────────────────
     // One confirmed row, captioned by the role each sponsor plays — mirrors the
     // deck's partner slide. Role captions below.
-    sponsorsLabel: { ko: "후원 · SPONSORS", en: "Sponsors" },
+    sponsorsLabel: { ko: "후원", en: "Sponsors" },
     // REMOVED 2026-08-10: sponsorConfirmedLabel ("확정 (Confirmed)"), the green
     // pill over this grid. Every sponsor on the page is confirmed — the 협의 중
     // tier was folded away long ago — so the badge labelled the only state that
@@ -2682,7 +2711,9 @@ export const dict = {
     // and nobody on the Day 8 feedback panel comes through it. Two roles in one
     // caption because the tile takes a single label and neither half tells the
     // truth alone.
-    catVenueGoods: { ko: "장소 · 굿즈", en: "Venue · Goods" },
+    // 한 후원사가 두 역할을 함께 맡는다는 뜻이라 ·를 조사로 풀었습니다
+    // (2026-08-11). 한 단어짜리 캡션(장소 · 마케팅 · 멘토링 · 굿즈 …)은 그대로.
+    catVenueGoods: { ko: "장소와 굿즈", en: "Venue & Goods" },
     catOverall: { ko: "종합 지원", en: "Overall support" },
     // REMOVED 2026-08-10: stageConfirmed ("확정"), the pill next to the company
     // name in the intro modal. It was the only value ever passed, so it said
@@ -3111,9 +3142,18 @@ export const dict = {
     },
     copy: { ko: "복사", en: "Copy" },
     copied: { ko: "복사됨 ✓", en: "Copied ✓" },
+    // EDIT 2026-08-11: 두 겹의 ·를 문장으로 풀었습니다. 예전 표기는 학교 이름을
+    // 잇는 ·와 두 주체를 잇는 ·가 한 줄에 섞여 있어서, 굵은 여백(스페이스 두 칸)
+    // 으로만 구분되던 경계가 좁은 화면에서 줄바꿈되면 사라졌습니다. 그러면
+    // "한인 학생회 · Zero100 빌더 네트워크"가 한 덩어리로 읽히고, Zero100
+    // 네트워크가 주관 주체로 올라섭니다.
+    //
+    // 그래서 "함께합니다 / together with"입니다. 주관은 학생회이고 Zero100
+    // 네트워크는 이 빌더톤이 자라 나온 곳이지 주관자가 아닙니다 — 이 수위를
+    // 올리지 마세요(footer.blurb·partners.note와 같은 계약).
     hostedBy: {
-      ko: "주관 SMU · NUS · NTU 한인 학생회  ·  Zero100 빌더 네트워크",
-      en: "Organized by the SMU · NUS · NTU Korean Student Associations  ·  Zero100 builder network",
+      ko: "SMU · NUS · NTU 한인 학생회가 주관하고, Zero100 빌더 네트워크가 함께합니다.",
+      en: "Organized by the SMU · NUS · NTU Korean Student Associations, together with the Zero100 builder network.",
     },
     rights: {
       ko: "Zero100 AI Builderthon. All rights reserved.",
