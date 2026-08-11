@@ -289,6 +289,19 @@ const VENUE_FOUNDRY = { src: "/partners/logos/white/trimmed/foundry.png", name: 
 const VENUE_LIFE = { src: "/partners/logos/white/trimmed/life.png", name: "*SCAPE L^IFE Jungle" };
 const VENUE_AWS = { src: "/partners/logos/white/trimmed/aws.png", name: "AWS office" };
 
+// Day 8 두 트랙 발표 슬롯(11:10–12:30 · 12:30–1:50)이 함께 쓰는 note입니다.
+// 상수인 이유 둘:
+//   · 두 슬롯은 트랙만 다른 같은 세션입니다. 슬롯마다 다른 문장을 달면 첫 슬롯에만
+//     포맷이, 둘째 슬롯에만 오고 갈 자유가 적혀 반쪽짜리 안내가 둘 생깁니다.
+//   · 발표/Q&A 배분이 아직 미확정이라 총량(8분)만 적습니다. 포맷이 확정되면 여기
+//     한 곳만 고치면 두 슬롯이 같이 따라옵니다.
+// ⚠️ 세부 배분("발표 3분 + 피드백 5분")을 되살리지 마세요 — 참가자가 잘못된 길이로
+// 준비해 오는 종류의 숫자라, 확정 전에는 총량과 헤지만 노출합니다.
+const D8_TRACK_PITCH_NOTE: Bilingual = {
+  ko: "팀당 8분(잠정) — 발표·Q&A 시간 구성은 확정되는 대로 안내해요. 자기 트랙 발표 외 시간은 자유롭게 쓰시면 돼요 — 남아서 다른 팀을 봐도, *SCAPE를 둘러봐도 됩니다.",
+  en: "Eight minutes per team (provisional) — we'll confirm how that splits between the presentation and Q&A once it's settled. Outside your own track the time is yours: stay and watch other teams, or wander *SCAPE.",
+};
+
 // Day theme labels + one-line summaries (Opening → the Showcase)
 export const days: DayMeta[] = [
   {
@@ -659,14 +672,13 @@ export const days: DayMeta[] = [
       {
         time: "11:10AM–12:30PM",
         label: { ko: "첫 번째 트랙 발표", en: "First track pitches" },
-        note: { ko: "팀당 8분: 발표 3분 + Q&A 포함 전문가 피드백 5분 (잠정, 확정 시 안내)", en: "8 minutes per team: a 3-minute presentation, then 5 minutes of expert feedback including Q&A (provisional, we'll confirm)" },
+        note: D8_TRACK_PITCH_NOTE,
         eventId: "d8-judging",
       },
       {
         time: "12:30PM–1:50PM",
         label: { ko: "두 번째 트랙 발표", en: "Second track pitches" },
-        // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-        note: { ko: "자기 트랙 발표 외 시간은 자유롭게 쓰시면 돼요. 남아서 봐도, *SCAPE를 둘러봐도 됩니다", en: "Outside your own track you're free to stay and watch, or wander *SCAPE" },
+        note: D8_TRACK_PITCH_NOTE,
         eventId: "d8-judging",
       },
       {
@@ -1561,15 +1573,17 @@ export const schedule: BEvent[] = [
     timeOfDay: "PM",
     time: "11:10AM–1:50PM",
     title: { ko: "공유회 발표 · 전문가 피드백", en: "Showcase Presentations · Expert Feedback" },
-    // 발표 길이가 "팀당 5분"에서 "팀당 8분 = 발표 3분 + Q&A 포함 피드백 5분"으로
-    // 바뀌었습니다. 참가자가 잘못된 길이로 준비해 오면 현장에서 그대로 사고가
-    // 나는 종류의 숫자라, 이 값이 나오는 모든 곳을 함께 고쳤습니다.
+    // 발표 길이는 "팀당 8분"입니다. 참가자가 잘못된 길이로 준비해 오면 현장에서
+    // 그대로 사고가 나는 종류의 숫자라, 이 값이 나오는 모든 곳을 함께 고쳤습니다.
     //
     // ⚠️ 아직 잠정입니다 (2026-08-04) — 바뀔 수 있어서 표기마다 "잠정"을 답니다.
-    // 숫자가 사는 곳은 Day 8 세 군데뿐입니다: days[7].summary · runOfShow의 첫
-    // 트랙 발표 note · 이 카드의 summary와 description. 확정되면 이 셋과 헤지를
-    // 함께 고치세요. (2026-08-05 결과 공유회 전환으로 "심사 5분"이 "피드백 5분"이
-    // 됐을 뿐, 8분이라는 잠정 숫자와 그 헤지는 그대로입니다.)
+    // 8분 안에서 발표와 Q&A를 어떻게 나눌지는 미확정이라, 이제 웹에는 총량만
+    // 적습니다 (EDIT 2026-08-10). 확정 전 세부 배분을 적으면 잠정 숫자 위에 또
+    // 잠정 숫자가 얹혀 사고 위험만 커집니다.
+    // 숫자가 사는 곳은 Day 8 세 군데뿐입니다: days[7].summary · 두 트랙 발표 슬롯이
+    // 공유하는 D8_TRACK_PITCH_NOTE · 이 카드의 summary와 description. 확정되면 이
+    // 셋과 헤지를 함께 고치세요. (2026-08-05 결과 공유회 전환으로 "심사"가
+    // "피드백"이 됐을 뿐, 8분이라는 잠정 숫자와 그 헤지는 그대로입니다.)
     // Day 7 멘토링 카피에서는 숫자를 일부러 뺐습니다("발표와 Q&A") — 그쪽까지
     // 숫자를 퍼뜨리면 바뀔 때마다 다섯 곳을 쫓아다녀야 합니다.
     // 길이 정리 (2026-08-05). 일곱 문장이던 description을 넷으로 줄였습니다. 덜어낸
@@ -1583,13 +1597,13 @@ export const schedule: BEvent[] = [
     // 남긴 넷: 이게 무슨 자리인가 · 형식(8분·잠정) · 오고 갈 자유 · 누가 어떤
     // 성격의 피드백을 주는가. 덜어낸 문장을 여기로 되돌리지 마세요.
     summary: {
-      ko: "문제를 낸 코드프레소와 업계 전문가 앞에서 팀당 8분: 발표 3분 + Q&A 포함 피드백 5분 (잠정).",
-      en: "Eight minutes per team in front of Codepresso, who set the problem, and industry experts: a 3-minute presentation, then 5 minutes of feedback with Q&A (provisional).",
+      ko: "문제를 낸 코드프레소와 업계 전문가 앞에서 팀당 8분(잠정).",
+      en: "Eight minutes per team (provisional) in front of Codepresso, who set the problem, and industry experts.",
     },
     description: {
-      ko: "8일의 마지막이자, 문제를 낸 코드프레소와 업계 전문가 앞에서 ‘내 아이디어가 돌아간다’를 검증받는 자리입니다. 같은 공간에서 트랙별로 순차 진행하며, 팀당 8분으로 발표 3분에 이어 Q&A를 포함한 피드백 5분입니다(잠정, 확정되면 업데이트합니다). 자기 트랙 발표에는 참석하시고, 그 외 시간은 자유롭게 쓰셔도 됩니다. 피드백은 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다. 순위를 가리는 대신, 각 팀 결과물에 전문적인 시각과 다음 가능성을 제안합니다.",
+      ko: "8일의 마지막이자, 문제를 낸 코드프레소와 업계 전문가 앞에서 ‘내 아이디어가 돌아간다’를 검증받는 자리입니다. 같은 공간에서 트랙별로 순차 진행하며, 팀당 8분입니다(잠정). 발표와 Q&A를 어떻게 나눌지는 확정되는 대로 안내합니다. 자기 트랙 발표에는 참석하시고, 그 외 시간은 자유롭게 쓰셔도 됩니다. 피드백은 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다. 순위를 가리는 대신, 각 팀 결과물에 전문적인 시각과 다음 가능성을 제안합니다.",
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-      en: "The end of the eight days, and the moment your idea gets validated in front of Codepresso, who set the problem, and industry experts. Tracks run in sequence in one space, eight minutes per team: a 3-minute presentation, then 5 minutes of feedback including Q&A (provisional; we'll update this page once it's settled). Attend your own track's presentations; the rest of the time is yours. The feedback comes from working leaders who have solved real problems in industry. Instead of ranking the teams, each one gets an expert read on its work and a sense of what could come next.",
+      en: "The end of the eight days, and the moment your idea gets validated in front of Codepresso, who set the problem, and industry experts. Tracks run in sequence in one space, eight minutes per team (provisional); we'll confirm how that splits between the presentation and Q&A once it's settled. Attend your own track's presentations; the rest of the time is yours. The feedback comes from working leaders who have solved real problems in industry. Instead of ranking the teams, each one gets an expert read on its work and a sense of what could come next.",
     },
     location: ONSITE,
   },
