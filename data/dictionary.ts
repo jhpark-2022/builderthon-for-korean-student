@@ -1692,7 +1692,9 @@ export const dict = {
           // The spine, said once more where the "성공" claim is actually made —
           // this card used to describe a feeling and stop there.
           { ko: "문제를 낸 기업과 업계 전문가 앞에서 검증받고, 데모·피칭·수료증으로 남습니다", en: "Validated in front of the company that set the problem and industry experts, and it stays with you as a demo, a pitch and a certificate" },
-          { ko: "군 입대 전 첫 성공 · 전역 후 재도전 동력", en: "A first win before enlistment · momentum to return after service" },
+          // 두 절을 ·로 붙여 두었더니 나열로 읽혔습니다 (2026-08-11). 실제로는
+          // 앞이 뒤의 이유라, 접속으로 이어야 뜻이 섭니다.
+          { ko: "군 입대 전 첫 성공이자, 전역 후 재도전의 동력", en: "A first win before enlistment, and momentum to return after service" },
         ],
       },
       {
@@ -1716,7 +1718,21 @@ export const dict = {
           // 기존 세 줄(대표·경력자 현장 교류 / 연사 세션 / 패널·공유 세션)을 한 줄로
           // 압축했습니다. 셋 다 같은 이야기(선배와의 수직 교류)였고, 또래를 위에
           // 세우려면 그 자리를 만들어야 했습니다.
-          { ko: "대표·현직 경력자와의 현장 교류와 연사·패널 세션 (Day 1·5·7·8)", en: "In-person exchange with founders and working seniors, plus speaker and panel sessions (Days 1·5·7·8)" },
+          //
+          // FIXED 2026-08-11: 날짜가 두 주장에 하나만 붙어 있었습니다. 압축 전에는
+          // "(Day 1·5·7·8)"이 현장 교류 줄에 달려 있었는데, 세 줄을 하나로 접으면서
+          // 문장 끝으로 밀려 연사·패널 세션까지 그 날짜를 뒤집어썼습니다. 그래서
+          // 이 카드만 Day 5에 연사·패널 세션이 있다고 말하고 있었습니다.
+          //
+          // Day 5에는 연사도 패널도 없습니다. schedule.ts의 d5-networking-day는
+          // "이날의 목적은 사람을 만나는 것 하나"이고 세부 프로그램은 해시드와
+          // 기획 중이며, speakers 섹션은 2026-08-03에 Day 5를 뺀 뒤 "Day 5 stays
+          // out" 주석까지 달아 두었습니다. 현장 교류는 Day 5에도 사실입니다
+          // (오히려 네트워킹 데이가 되면서 더 정확해졌습니다).
+          //
+          // 그래서 주장마다 자기 날짜를 답니다. 하나로 합치지 마세요 — 합치는
+          // 순간 넓은 쪽(현장 교류)의 날짜가 좁은 쪽(연사 세션)까지 덮습니다.
+          { ko: "대표·현직 경력자와의 현장 교류는 Day 1·5·7·8, 연사·패널 세션은 Day 1·7·8", en: "In-person exchange with founders and working seniors on Days 1·5·7·8, and speaker and panel sessions on Days 1·7·8" },
           // REMOVED: "Day 5 참가자 AI 유스케이스 발표 · QR 인기투표 (검토 중)" 및
           // "지속되는 한–싱 빌더 커뮤니티의 시작 멤버". 후자는 확정된 약속이 아니고,
           // 전자의 세션은 2026-08-03 Day 5가 네트워킹 데이로 재정의되며 아예
@@ -1725,7 +1741,8 @@ export const dict = {
           // 놓이면 확정된 혜택으로 읽힙니다). 참가 인원 숫자도 쓰지 않습니다 —
           // 사이트 전체가 규모 숫자를 의도적으로 피합니다.
           // "Day 1·5·7·8 현장 교류"는 유지: Day 5가 네트워킹 날이 되면서 오히려 더
-          // 정확해진 문장이라, 압축된 셋째 줄이 그대로 물려받았습니다.
+          // 정확해진 문장이라, 압축된 셋째 줄이 그대로 물려받았습니다. 다만 그
+          // 날짜가 연사·패널 세션까지 덮은 것은 사고였습니다 — 위 FIXED 주석 참고.
         ],
       },
       {
@@ -1749,16 +1766,27 @@ export const dict = {
           // 그 두 줄이 수료증 두 장이어야 합니다 — 발급 주체·활용처를 위로 올리지
           // 마세요.
           // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-          // 리스트 줄이라 구분자는 가운뎃점으로 통일(em dash 제거).
-          { ko: "크래시코스 수료증 · 전 시간 참석 시 · 마지막 날 PDF로 발송", en: "The Crash Course certificate, for attending the full Crash Course: a PDF sent on the final day" },
-          { ko: "완주 수료증 · 공유회 발표까지 마치면 · Day 8 현장에서 실물로", en: "The completion certificate, for going all the way through your Showcase pitch: printed and handed to you on Day 8" },
+          //
+          // EDIT 2026-08-11: 그때 "리스트 줄이라 구분자는 가운뎃점으로 통일"이라고
+          // 적어 두었는데, 이 두 줄은 리스트가 아니었습니다. 셋을 나열한 게 아니라
+          // 하나(수료증)에 조건과 전달 방식이 딸린 것이라, ·로 끊어 놓으니 수료증이
+          // 세 개인 것처럼 보였습니다. EN은 원래부터 콜론으로 그 관계를 말하고
+          // 있었고요. KO도 콜론으로 맞춥니다.
+          //
+          // 기준 문구("전 시간 참석" · "공유회 발표까지")는 글자 그대로 유지해야
+          // 합니다 — FAQ 수료증 답변·spine·schedule.ts와 같은 말이어야 하고,
+          // 특히 "전 시간"을 "참여"로 무르게 바꾸면 기준이 내려갑니다.
+          { ko: "크래시코스 수료증: 전 시간 참석하면 마지막 날 PDF로 발송", en: "The Crash Course certificate, for attending the full Crash Course: a PDF sent on the final day" },
+          { ko: "완주 수료증: 공유회 발표까지 마치면 Day 8 현장에서 실물로", en: "The completion certificate, for going all the way through your Showcase pitch: printed and handed to you on Day 8" },
           { ko: "둘 다 Zero100 명의로 발급", en: "Both issued by Zero100" },
           { ko: "링크드인 · 포트폴리오 · 이력에 활용", en: "Use them on LinkedIn, in your portfolio and CV" },
         ],
       },
       {
         num: "06",
-        title: { ko: "인턴십 · 어워드", en: "Internships & awards" },
+        // 제목의 ·를 조사로 (2026-08-11). EN이 이미 "&"로 잇고 있어서 KO만 나열
+        // 기호를 쓰고 있었습니다.
+        title: { ko: "인턴십과 어워드", en: "Internships & awards" },
         // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회. 순위형
         // 시상 폐지·테마형 어워드(부문 pending)·인턴십 전원 개방.
         // DECIDED 2026-08-06: 테마형 어워드 4부문 확정(비욘드 브리프·비즈니스 포텐셜·
@@ -1796,14 +1824,21 @@ export const dict = {
           // CONFIRMED 2026-08-05: AXMOS(코드프레소·WVB) 실명 표기 가능 — 바뀐 것은
           // 대상 범위(1위 팀 → 전원)이지 인턴십을 여는 회사가 아닙니다. 실명은 FAQ
           // 인턴십 답변과 여기 두 곳에만 두세요.
-          { ko: "테마형 어워드 4부문 · 8팀: 비욘드 브리프(출제사 픽) · 비즈니스 포텐셜(VC 픽) · 빌더스 초이스(참가자 투표) · 0→100(운영진 선정)", en: "Four thematic awards, eight teams: Beyond the Brief (problem owner's pick) · Business Potential (VC pick) · Builder's Choice (participant vote) · Zero to Hundred (organizers' pick)" },
+          // 앞의 "4부문 · 8팀"만 쉼표로 바꿨습니다 (2026-08-11) — 그 둘은 나열이
+          // 아니라 같은 시상에 대한 두 숫자라, 뒤따르는 진짜 나열(부문 넷)과 같은
+          // 기호를 쓰면 부문이 여섯 개로 보였습니다. EN은 원래 쉼표였습니다.
+          // 부문 이름 사이의 ·는 나열이므로 그대로 둡니다.
+          { ko: "테마형 어워드 4부문, 8팀: 비욘드 브리프(출제사 픽) · 비즈니스 포텐셜(VC 픽) · 빌더스 초이스(참가자 투표) · 0→100(운영진 선정)", en: "Four thematic awards, eight teams: Beyond the Brief (problem owner's pick) · Business Potential (VC pick) · Builder's Choice (participant vote) · Zero to Hundred (organizers' pick)" },
           // DECIDED 2026-08-05: 식사 언급 전면 제거 — 제공 안내도, 미제공 안내도 쓰지
           // 않는다. (식사 미제공 정책 자체는 2026-08-04 결정 그대로) 어느 방향으로든
           // 다시 넣지 마세요. 바우처는 "널담 바우처"로만 적고 식사·디저트 같은 단어를
           // 붙이지 않습니다 — 그 한 단어가 사이트에서 유일하게 식사가 나온다고 읽힐
           // 여지를 만듭니다.
           { ko: "1·2·3위 순위는 없고, 부상은 부문별로 현금 또는 널담 바우처입니다", en: "No 1st–3rd ranking; each award carries a cash prize or a Nuldam voucher" },
-          { ko: "AXMOS(코드프레소·WVB) 유급 인턴십 기회는 수상과 무관하게 모든 참가자에게 열려 있습니다 · 주최사가 행사 과정과 제출물을 바탕으로 직접 검토", en: "A paid internship with AXMOS (Codepresso · WVB), open to every participant, awards or not · the hosts review interest on the strength of your work across the event" },
+          // 문장 두 개를 ·로 붙여 두었던 자리입니다 (2026-08-11에 분리). 앞은
+          // 누구에게 열려 있는가, 뒤는 무엇을 보고 검토하는가로 주어가 다릅니다.
+          // 회사 이름 사이의 ·(코드프레소·WVB)는 나열이라 그대로.
+          { ko: "AXMOS(코드프레소·WVB) 유급 인턴십 기회는 수상과 무관하게 모든 참가자에게 열려 있습니다. 주최사가 행사 과정과 제출물을 바탕으로 직접 검토해요", en: "A paid internship with AXMOS (Codepresso · WVB), open to every participant, awards or not. The hosts review interest on the strength of your work across the event" },
           // CONFIRMED 2026-08-03 (브랜드부스트 미팅): 후드+캡 세트 60개, Day 1 전
           // 도착 확정, 현장 선착순. 이전 줄("굿즈 (pen·notes) 등 · 검토 중")은
           // 품목도 진행 여부도 미정이던 시절의 표기라 헤지가 붙어 있었습니다 —
@@ -1825,9 +1860,12 @@ export const dict = {
     // "시상은 상위 팀"으로 끝나면서 앞의 세 스텝을 예선처럼 읽히게 만들었습니다.
     // 어워드가 순위를 매기지 않으니 대조 자체가 성립하지 않습니다 — 전원 vs 상위
     // 팀이 아니라, 전원 vs 각 팀의 강점입니다.
+    // 가운데 ·를 마침표로 (2026-08-11). 한 줄에 두 종류의 ·가 섞여 있어서, 앞의
+    // 나열(네트워크·경험·성장)과 두 절을 잇는 ·가 같은 무게로 보였습니다. 나열은
+    // 그대로 두고 절 경계만 문장으로 끊습니다.
     flowNote: {
-      ko: "네트워크·경험·성장은 참가자 전원 · 어워드는 순위가 아니라 각 팀의 강점에.",
-      en: "Network, experience and growth for everyone · awards go to strengths, not rankings.",
+      ko: "네트워크·경험·성장은 참가자 전원에게. 어워드는 순위가 아니라 각 팀의 강점에.",
+      en: "Network, experience and growth for everyone. Awards go to strengths, not rankings.",
     },
   },
 
