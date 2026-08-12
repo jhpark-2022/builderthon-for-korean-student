@@ -650,9 +650,22 @@ export const days: DayMeta[] = [
     // 시상 폐지·테마형 어워드(부문 pending)·인턴십 전원 개방. 이벤트 id는 그대로
     // 둡니다 — 바뀐 것은 카피뿐입니다.
     theme: { ko: "결과 공유회 · 최종 발표", en: "Showcase · Final Presentations" },
+    // EDIT 2026-08-12: 산문에서 트랙 "수"를 뺐습니다("두 트랙 팀 발표" → "트랙별
+    // 팀 발표"). 세 곳이 같은 편집을 받았습니다: 이 summary · d8-opening-keynote
+    // description · d8-closing description.
+    //
+    // 이유는 자기모순이었습니다. Day 1 description과 FAQ는 "트랙 구성은 아직 확정
+    // 전이며(메인 트랙 2개로 좁혀 논의 중), 확정되는 대로 안내합니다"라고 헤지하는데,
+    // Day 8 산문만 두 트랙을 이미 정해진 사실로 서술하고 있었습니다. 트랙 수가
+    // 바뀌는 순간 헤지한 쪽이 아니라 확정형으로 쓴 이쪽이 거짓이 됩니다.
+    //
+    // runOfShow의 두 발표 슬롯(11:10–12:30 · 12:30–1:50)과 그것을 설명하는 주석들은
+    // 그대로 둡니다. 저건 이미 잡힌 대관 시간표이지 트랙 라인업에 대한 약속이
+    // 아니고, 트랙 수가 바뀌면 시간표 자체를 다시 짜야 하는 자리입니다. 산문은
+    // 반대로, 지금 확정된 것만 말하면 되는 자리라 수를 뺍니다.
     summary: {
-      ko: "*SCAPE 현장 · 두 트랙 팀 발표(팀당 8분·잠정) · 박희덕 연사 · 테마별 어워드 발표 · 완주 수료증과 단체 사진.",
-      en: "In person at *SCAPE · team presentations across two tracks (8 min each, provisional) · Park Hee-deok · thematic awards · completion certificates and a group photo.",
+      ko: "*SCAPE 현장 · 트랙별 팀 발표(팀당 8분·잠정) · 박희덕 연사 · 테마별 어워드 발표 · 완주 수료증과 단체 사진.",
+      en: "In person at *SCAPE · team presentations by track (8 min each, provisional) · Park Hee-deok · thematic awards · completion certificates and a group photo.",
     },
     hours: "11AM–3PM",
     // 확정 진행 순서 (2026-08-04). 10:40 입장은 hours(11AM–)보다 이르지만 프로그램
@@ -1558,9 +1571,9 @@ export const schedule: BEvent[] = [
       en: "After every pitch, 40 minutes before the awards: ‘The Real Meaning of Zero100’.",
     },
     description: {
-      ko: "두 트랙의 발표가 모두 끝나고 어워드 발표를 앞둔 40분, 트랜스링크 인베스트먼트의 박희덕 대표님이 ‘제로백의 진짜 의미’를 주제로 이야기합니다. 창업가가 0에서 100으로 가기 위한 핵심 요소, 즉 협업·가치·실행·글로벌 스탠다드의 중요성과 협업의 힘, 그리고 왜 지금, 왜 싱가포르의 한인 학생인지. 8일을 막 끝낸 사람들에게, 오늘이 무엇의 시작인지를 짚어줍니다.",
+      ko: "트랙별 발표가 모두 끝나고 어워드 발표를 앞둔 40분, 트랜스링크 인베스트먼트의 박희덕 대표님이 ‘제로백의 진짜 의미’를 주제로 이야기합니다. 창업가가 0에서 100으로 가기 위한 핵심 요소, 즉 협업·가치·실행·글로벌 스탠다드의 중요성과 협업의 힘, 그리고 왜 지금, 왜 싱가포르의 한인 학생인지. 8일을 막 끝낸 사람들에게, 오늘이 무엇의 시작인지를 짚어줍니다.",
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-      en: "With both tracks done pitching and the awards still ahead, Park Hee-deok (CEO · General Partner, Translink Investment) takes 40 minutes on ‘The Real Meaning of Zero100’ and what actually carries a founder from zero to a hundred: collaboration, value, execution, global standards, and why now, why Korean students in Singapore. Spoken to people who have just finished the eight days, about what today is the start of.",
+      en: "With every track done pitching and the awards still ahead, Park Hee-deok (CEO · General Partner, Translink Investment) takes 40 minutes on ‘The Real Meaning of Zero100’ and what actually carries a founder from zero to a hundred: collaboration, value, execution, global standards, and why now, why Korean students in Singapore. Spoken to people who have just finished the eight days, about what today is the start of.",
     },
     location: ONSITE,
   },
@@ -1633,9 +1646,9 @@ export const schedule: BEvent[] = [
     // 공개를 보류한 상태라(WITHHELD 2026-08-07, 같은 주석 참고) "추후 안내"류의
     // 헤지도 붙이지 않습니다. runOfShow 라벨과 summary는 그대로 둡니다.
     description: {
-      ko: "8일간의 빌드를 마무리하는 30분입니다. 두 트랙 발표와 박희덕 대표님의 이야기가 끝나면 테마별 어워드 발표와 사진 촬영이 이어집니다(2:30~). 어워드는 순위 대신 각 팀의 강점을 조명하는 4개 부문이고, 어떤 부문이 있고 누가 뽑는지는 이 날 카드에 정리돼 있습니다. 이어서 앞으로 무엇이 남아 있는지를 짧게 안내합니다(2:45~). 마지막 2:50에는 완주 수료증을 손에 들고 다 함께 단체 사진을 찍으며 끝나요. 완주 수료증은 공유회 발표까지 마친 분들께 이 자리에서 실물로 드리고, 크래시코스 수료증은 크래시코스 전 시간을 참석한 분들께 이날 PDF로 발송됩니다. 전원이 *SCAPE L^IFE Jungle 현장에 모여, ‘데모로 끝나지 않는 성공의 경험’으로 8일을 함께 마칩니다.",
+      ko: "8일간의 빌드를 마무리하는 30분입니다. 트랙별 발표와 박희덕 대표님의 이야기가 끝나면 테마별 어워드 발표와 사진 촬영이 이어집니다(2:30~). 어워드는 순위 대신 각 팀의 강점을 조명하는 4개 부문이고, 어떤 부문이 있고 누가 뽑는지는 이 날 카드에 정리돼 있습니다. 이어서 앞으로 무엇이 남아 있는지를 짧게 안내합니다(2:45~). 마지막 2:50에는 완주 수료증을 손에 들고 다 함께 단체 사진을 찍으며 끝나요. 완주 수료증은 공유회 발표까지 마친 분들께 이 자리에서 실물로 드리고, 크래시코스 수료증은 크래시코스 전 시간을 참석한 분들께 이날 PDF로 발송됩니다. 전원이 *SCAPE L^IFE Jungle 현장에 모여, ‘데모로 끝나지 않는 성공의 경험’으로 8일을 함께 마칩니다.",
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-      en: "Thirty minutes to close out eight days of building. Once both tracks have presented and Park Hee-deok has spoken, the thematic awards are announced with photos (from 2:30). They're four categories that spotlight each team's strengths instead of ranking 1st to 3rd, and what each one looks for is laid out on this day's card. Then comes a short word on what comes next (from 2:45). At 2:50 everyone gathers for a group photo, completion certificate in hand. That one is printed and handed to you here for going all the way through your Showcase pitch, while the Crash Course certificate goes out the same day as a PDF to everyone who attended the full Crash Course. The whole cohort is at *SCAPE L^IFE Jungle to finish the eight days on a success that goes beyond a demo.",
+      en: "Thirty minutes to close out eight days of building. Once every track has presented and Park Hee-deok has spoken, the thematic awards are announced with photos (from 2:30). They're four categories that spotlight each team's strengths instead of ranking 1st to 3rd, and what each one looks for is laid out on this day's card. Then comes a short word on what comes next (from 2:45). At 2:50 everyone gathers for a group photo, completion certificate in hand. That one is printed and handed to you here for going all the way through your Showcase pitch, while the Crash Course certificate goes out the same day as a PDF to everyone who attended the full Crash Course. The whole cohort is at *SCAPE L^IFE Jungle to finish the eight days on a success that goes beyond a demo.",
     },
     location: ONSITE,
   },

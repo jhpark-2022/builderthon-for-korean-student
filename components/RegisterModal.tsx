@@ -719,7 +719,17 @@ export default function RegisterModal({
             animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.985 }}
             transition={{ duration: reduce ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 flex max-h-[92vh] w-full max-w-[560px] flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-[#0c0a18] shadow-2xl sm:rounded-3xl"
+            // dvh, NOT vh. iOS Safari의 vh는 주소창이 접힌 상태를 기준으로 하는
+            // 고정값이라, 주소창이 펼쳐진 상태(=랜딩 직후, 스크롤 전)에서는 시트가
+            // 실제 보이는 높이보다 커집니다. 그러면 시트 위쪽이 화면 밖으로 밀려
+            // 나가는데, 그 위쪽이 하필 닫기 버튼입니다. 백드롭도 함께 가려지고
+            // 스크롤 락 때문에 주소창을 줄일 수도 없어서, 등록 폼에 들어온 사람에게
+            // 남는 선택지가 "뒤로 가기 아니면 제출"뿐이었습니다.
+            //
+            // dvh는 그 순간의 실제 뷰포트를 따라갑니다. 이 시트만이 아니라 바텀시트
+            // 네 개(등록·이벤트·파트너·멘토) 모두 같은 이유로 dvh입니다 — 하나만
+            // vh로 되돌리지 마세요.
+            className="relative z-10 flex max-h-[88dvh] w-full max-w-[560px] flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-[#0c0a18] shadow-2xl sm:rounded-3xl"
           >
             <span
               aria-hidden

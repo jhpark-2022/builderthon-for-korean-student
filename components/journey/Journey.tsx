@@ -898,6 +898,30 @@ function HeroLaunchPanel({ t, reduce }: { t: Tfn; reduce: boolean }) {
     setView(Date.now() >= LAUNCH_AT ? "problem" : "countdown");
   }, []);
 
+  // 시작 시각이 되면 스스로 넘어갑니다.
+  //
+  // 위 effect는 마운트 때 딱 한 번 판단합니다. 그래서 시작 전에 페이지를 열어둔
+  // 사람에게는 시계가 0에 닿아도 화면이 그대로 멈춰 있었습니다 — CountdownView가
+  // "빌더톤이 시작되었습니다" 한 줄로 바뀐 채, 새로고침하기 전까지 Problem 뷰로
+  // 넘어가지 않았습니다. 8월 22일 오후 1시에 반드시 일어나는 장면이고, 하필 그
+  // 순간이 이 패널이 가장 많이 열려 있을 때입니다.
+  //
+  // 1초 타이머 대신 남은 시간만큼의 타임아웃 하나를 겁니다. 이 패널은 시계를
+  // 이미 CountdownView 안에서 돌리고 있어서, 여기서 또 초당 렌더를 만들 이유가
+  // 없습니다.
+  //
+  // 32비트 상한(약 24.8일)을 넘는 지연은 setTimeout이 즉시 실행으로 접어버립니다.
+  // 지금은 열흘 남짓이라 걸릴 일이 없지만, 이 코드가 그보다 이른 시점에 배포될
+  // 수도 있으니 상한을 넘으면 예약하지 않습니다(그렇게 오래 열어두는 세션은
+  // 어차피 없고, 마운트 시 판단이 그 경우를 이미 덮습니다).
+  useEffect(() => {
+    if (!mounted || view !== "countdown") return;
+    const delay = LAUNCH_AT - Date.now();
+    if (delay <= 0 || delay > 2_147_483_647) return;
+    const id = setTimeout(() => setView("problem"), delay);
+    return () => clearTimeout(id);
+  }, [mounted, view]);
+
   const tabs: { key: LaunchView; label: string }[] = [
     { key: "countdown", label: t(dict.hero.countdownTabLabel) },
     { key: "problem", label: t(dict.hero.problemTabLabel) },
@@ -1879,7 +1903,10 @@ function DayModal({
             animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.985 }}
             transition={{ duration: reduce ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 flex max-h-[85vh] w-full max-w-[720px] flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-[#0c0a18] shadow-2xl sm:rounded-3xl"
+            // dvh, NOT vh — iOS Safari에서 주소창이 펼쳐진 상태의 vh는 실제 보이는
+            // 높이보다 커서 시트 위쪽(=닫기 버튼)이 화면 밖으로 밀려납니다.
+            // 바텀시트 네 개가 같은 이유로 dvh입니다(RegisterModal 주석 참고).
+            className="relative z-10 flex max-h-[88dvh] w-full max-w-[720px] flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-[#0c0a18] shadow-2xl sm:rounded-3xl"
           >
             <span aria-hidden className="h-[2px] w-full shrink-0 bg-gradient-to-r from-accent to-accent-strong" />
             <button

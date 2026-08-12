@@ -607,7 +607,16 @@ export const dict = {
     titleLine1: { ko: "싱가포르,", en: "Build" },
     titleLine2: { ko: "빌드의 무대", en: "in Singapore." },
     dates: { ko: "2026.08.22 – 08.29 · 8일", en: "22–29 Aug 2026 · 8 days" },
-    location: { ko: "싱가포르 · *SCAPE L^IFE Jungle & AWS 오피스", en: "Singapore · *SCAPE L^IFE Jungle & AWS office" },
+    // REMOVED 2026-08-12: `location` ("싱가포르 · *SCAPE L^IFE Jungle & AWS 오피스").
+    // 렌더되는 곳이 한 군데도 없는 문자열이었는데, 내용까지 낡아 있었습니다 —
+    // 2026-08-03에 Day 1(유일한 필참 현장)이 The Foundry로 잡히면서 장소가 셋이
+    // 됐는데 이 줄만 둘로 남아 있었습니다.
+    //
+    // 값을 고치는 대신 지웁니다. 장소는 날마다 다르고(Day 1 The Foundry ·
+    // Day 5·8 *SCAPE · Day 7 AWS 오피스), 그 정본은 schedule.ts의 장소 상수와
+    // 각 이벤트의 location입니다. 히어로에 장소를 한 줄로 요약해 박아두는 순간
+    // 정본이 둘이 되고, 이번처럼 조용히 갈라집니다. 히어로에 장소를 다시 넣어야
+    // 한다면 schedule에서 읽어 만드세요.
     // Q1 spine (2026-08-01): the one thing these eight days leave you is a real
     // company's real problem SOLVED and VALIDATED in front of that company and
     // working leaders — plus the artefacts that prove it. The old last sentence
