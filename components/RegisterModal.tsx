@@ -1293,13 +1293,30 @@ export default function RegisterModal({
                                     <p className="text-[13px] leading-relaxed text-white/75">
                                       {t(dict.register.aiNoneMsg)}
                                     </p>
+                                    {/* GHOST, not the gradient (2026-08-12).
+                                        이 버튼은 폼을 떠나 14문항으로 보내는
+                                        링크인데, 제출 버튼과 같은 그라디언트로
+                                        서 있어서 이 모달에서 두 번째 프라이머리
+                                        처럼 보였습니다. 폼 안에서 가장 무거운
+                                        버튼은 제출 하나여야 합니다 — 하물며 그
+                                        무게를 이탈 경로가 가져가면 안 됩니다.
+                                        같은 화면의 aiRetake 버튼과 같은 고스트
+                                        처리로 맞춥니다. */}
                                     <button
                                       type="button"
                                       onClick={goToQuiz}
-                                      className="mt-3 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-2.5 text-sm font-bold text-white transition hover:-translate-y-0.5"
+                                      className="mt-3 inline-flex items-center justify-center rounded-xl border border-white/12 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-white/75 transition hover:bg-white/[0.08]"
                                     >
                                       {t(dict.register.aiGoTest)}
                                     </button>
+                                    {/* 유형 첨부가 선택이라는 사실. 버튼 아래에
+                                        두는 이유는, 이 문장을 읽기 전에 버튼을
+                                        누르는 사람이 이미 떠난 사람이기
+                                        때문입니다 — 위가 아니라 바로 옆에서
+                                        붙잡습니다. */}
+                                    <p className="mt-2.5 break-keep text-[12px] leading-relaxed text-white/55">
+                                      {t(dict.register.aiOptionalNote)}
+                                    </p>
                                   </>
                                 )}
                               </div>

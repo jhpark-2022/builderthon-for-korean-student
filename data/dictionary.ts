@@ -353,6 +353,36 @@ export const dict = {
     // the hook CTA and is restated at the top of the modal, where it's checkable
     // (the form really does have three required fields).
     hookRegisterMinutes: { ko: "3분", en: "3 min" },
+    // ── 본문 중간의 한 줄 등록 문 ──────────────────────────────────────────
+    // ADDED 2026-08-12. benefits 밴드의 마지막 CTA 이후 program → speakers →
+    // mentoring → builders → companions → faq까지 여섯 챕터에 인페이지 등록
+    // 통로가 하나도 없었습니다. 그런데 마음이 정해지는 지점은 정확히 그 안에
+    // 있습니다: "필참은 이틀뿐"을 확인한 직후(program), 누가 붙는지 확인한
+    // 직후(mentoring), 반론이 다 떨어진 직후(FAQ).
+    //
+    // 세 줄 모두 방금 읽은 것을 받아 한 걸음만 권합니다. 새 약속을 만들지
+    // 않습니다 — 각 줄이 근거로 삼는 사실은 바로 위 블록이 이미 말한 것입니다.
+    //
+    // 훅 카드(HookCards)를 여기에 다시 띄우지 마세요. 같은 카드가 세 번째로
+    // 나타나는 순간 페이지가 같은 자리를 맴도는 것처럼 읽힙니다. 이 자리는
+    // 한 줄과 알약 하나면 됩니다. 렌더는 Journey.tsx의 InlineRegisterCta.
+    inlineProgramLine: {
+      ko: "이 일정이 감당되겠다 싶으면, 자리는 지금 잡아둘 수 있어요.",
+      en: "If those two days work for you, you can take your spot now.",
+    },
+    // 멘토 배정이 등록에서 시작된다는 것은 countdownUrgency("등록자부터 …
+    // 팀 매칭이 시작돼요")와 같은 사실입니다. 특정 멘토를 약속하지 마세요 —
+    // 멘토 지정은 받지 않는다는 것이 matchNote와 FAQ의 확정 답입니다.
+    inlineMentoringLine: {
+      ko: "멘토링도 팀 매칭도 등록한 분들부터 배정이 시작돼요.",
+      en: "Mentoring slots and team matching are assigned starting from the people who've registered.",
+    },
+    // FAQ 리스트 바로 아래. 반론이 소진된 자리라 설득하지 않고 문만 엽니다.
+    // "3분"은 hookRegisterMinutes · modalSubtitle과 같은 숫자입니다.
+    inlineFaqLine: {
+      ko: "궁금한 게 풀렸다면, 자리 잡는 데는 3분이면 돼요.",
+      en: "If that cleared things up, taking your spot is a three-minute job.",
+    },
     // ── Open-chat third CTA ────────────────────────────────────────────────
     // The low-commitment exit for someone who isn't ready to register. Rendered
     // as a TEXT LINK everywhere, never a button: it sits next to the register
@@ -538,6 +568,19 @@ export const dict = {
       en: "Looks like you haven't taken the test. It takes 3 minutes",
     },
     aiGoTest: { ko: "테스트 하러 가기 →", en: "Take the test →" },
+    // ADDED 2026-08-12. 이 상태(테스트 결과가 없는 첫 방문자)에서 "테스트 하러
+    // 가기"는 폼을 떠나 14문항으로 가는 링크입니다. 그런데 그 버튼이 제출 버튼과
+    // 같은 보라 그라디언트로 서 있었고, 유형 첨부가 선택이라는 말은 어디에도
+    // 없었습니다. "팀 매칭 받기"로 모달을 연 사람에게는 테스트가 매칭의 전제
+    // 조건처럼 읽히는 배치였습니다.
+    //
+    // 사실은 반대입니다: 유형은 매칭을 돕는 보조 재료이고, 팀이 없는 사람은
+    // Day 1 현장 그룹핑으로도 팀에 들어갑니다(FAQ 솔로 답변과 같은 사실).
+    // 이 줄이 그 사실을 말하고, 버튼은 고스트로 한 단계 내렸습니다.
+    aiOptionalNote: {
+      ko: "테스트는 선택이에요. 없어도 등록과 팀 매칭에는 지장 없어요 (Day 1 현장 그룹핑으로도 팀에 들어갈 수 있어요).",
+      en: "The test is optional. Registering and team matching work fine without it, and on-site grouping on Day 1 gets you into a team either way.",
+    },
     // Submit + states.
     submit: { ko: "등록하기", en: "Register" },
     submitting: { ko: "등록 중…", en: "Registering…" },
@@ -1886,9 +1929,24 @@ export const dict = {
     // tbcNote, whose panelists were never arranged. That panel is gone for good
     // now (2026-08-03: Day 5 became a networking day), so Day 5 stays out.
     heading: { ko: "Day 1 · 7 · 8 스피커 & 공유 세션", en: "Day 1 · 7 · 8 speaker & sharing sessions" },
+    // REWRITTEN 2026-08-12. 예전 문장은 "이 시간을 따로 두는 이유는 Zero100의
+    // 앙트레프레너십 정체성을 지키기 위해서입니다."였습니다. 주최자가 스스로에게
+    // 하는 설명이고, '앙트레프레너십 정체성'은 이 페이지에서 정의된 적 없는 내부
+    // 용어라, program의 밀도를 통과한 독자가 여기서 처음 갖는 질문("그래서 누구를
+    // 만나나")에 답하지 않았습니다. 참가자가 무엇을 얻는지로 바꿉니다.
+    //
+    // 네 장의 카드를 다 덮는 문장이어야 합니다 — 키노트(취업과 창업 사이) ·
+    // AWS 세션(실무에서 AI를 어떻게 쓰는가) · Day 7 커리어 간담회 · Day 8 키노트.
+    // 한 카드의 제목을 대표로 올리지 마세요.
+    //
+    // 괄호("연사 라인업은 확정되는 대로 안내됩니다")는 뺐습니다. 바로 아래에
+    // 이름·소속·링크드인이 붙은 카드 넷이 서 있어서, 아무것도 안 정해진 것처럼
+    // 읽히게 만드는 문장이었습니다. 세션 구성이 조정될 수 있다는 유보는 그리드
+    // 아래 tbcNote가 이미 답니다. 연사가 추가되면 카드를 늘리면 됩니다 —
+    // 그건 약속을 어기는 일이 아닙니다.
     intro: {
-      ko: "이 시간을 따로 두는 이유는 Zero100의 앙트레프레너십 정체성을 지키기 위해서입니다. (연사 라인업은 확정되는 대로 안내됩니다.)",
-      en: "We set this time aside to protect Zero100's entrepreneurial identity. (Speaker line-up announced as confirmed.)",
+      ko: "먼저 길을 낸 사람들이 Day 1·7·8에 직접 옵니다. 취업과 창업 사이에서 무엇을 골랐는지, 실무에서 AI를 어떻게 쓰는지, 0에서 100까지 무엇이 필요한지를 각자의 자리에서 이야기합니다.",
+      en: "People who have already cut a path show up in person on Days 1, 7 and 8: what they chose between a job and founding, how AI is actually used at work, and what it takes to get from zero to a hundred.",
     },
     people: [
       {
@@ -2770,10 +2828,19 @@ export const dict = {
       ko: "* 파트너 구성은 2026년 7월 기준이며, 변동될 수 있습니다. 추가되는 후원·파트너십은 확정 시 안내됩니다.",
       en: "* The partner line-up is as of July 2026 and may change; further sponsorships/partnerships will be announced once confirmed.",
     },
-    companionsHeading: { ko: "함께하는 빌더 네트워크", en: "Builder network" },
+    // RETITLED 2026-08-12. "함께하는 빌더 네트워크"는 바로 위 파트너 섹션의
+    // "함께 만드는 사람들"과 헤딩·소재·메시지가 사실상 같아서, 로고 벽이 두 번
+    // 재생되는 것처럼 읽혔습니다(멘토 13명 + 피드백 패널 10명의 얼굴 벽 직후라
+    // 피로가 가장 쌓인 지점이기도 합니다).
+    //
+    // 두 섹션은 사실 다른 이야기를 합니다. 위는 "이번 행사를 누가 만드는가",
+    // 여기는 "이 행사가 어디에서 자라 나왔는가"입니다. 헤딩이 그 차이를 지게
+    // 해서 같은 챕터의 재방송이 아니게 만듭니다. 다시 "함께 …" 계열로 되돌리면
+    // 두 섹션이 또 겹칩니다.
+    companionsHeading: { ko: "이 빌더톤이 자라 나온 곳", en: "Where this builderthon grew from" },
     companionsSub: {
-      ko: "이 빌더톤의 시작점이 된 Zero100 빌더 네트워크와 이번 빌더톤의 파트너",
-      en: "The Zero100 builder network this builderthon grew from, and this builderthon's own partners",
+      ko: "Zero100 빌더 네트워크, 그리고 이번 8일에 함께 이름을 올린 파트너들",
+      en: "The Zero100 builder network, and the partners who put their name on these eight days",
     },
   },
 
@@ -3171,14 +3238,28 @@ export const dict = {
   },
 
   footer: {
+    // REWRITTEN 2026-08-12 (heading · blurb).
+    //
+    // 헤딩은 "싱가포르 한인 학생을 위한 8일간의 AI 빌더 여정."이었습니다. 행사를
+    // 한 줄로 설명하는 문장이라, 여기까지 스크롤한 사람에게는 이미 아는 것을 다시
+    // 듣는 자리였습니다. 마지막 화면은 설명하는 자리가 아니라 히어로가 건 약속을
+    // 회수하는 자리입니다 — 첫 화면이 "빌드의 무대"라고 했으니, 마지막 화면은 그
+    // 무대를 당신에게 넘깁니다. hero.titleLine2와 짝이니 한쪽을 바꾸면 다른
+    // 쪽도 함께 보세요.
+    //
+    // blurb의 마지막 문장은 "8일간의 전체 일정은 프로그램 섹션에서 확인하세요"로,
+    // 페이지 끝에 도달한 독자를 다시 위로 돌려보내고 있었습니다. 여기서 필요한
+    // 것은 되감기가 아니라 등록 다음에 무엇이 오는지입니다. 새 약속이 아니라
+    // countdownUrgency·successOpenChatTitle이 이미 말하는 사실(등록자는 참가자
+    // 단톡방으로 초대된다)을 마지막에 한 번 더 말하는 것뿐입니다.
     heading: {
-      ko: "싱가포르 한인 학생을 위한 8일간의 AI 빌더 여정.",
-      en: "An 8-day AI builder journey for Korean students in Singapore.",
+      ko: "무대는 준비됐습니다. 이제 당신이 오를 차례.",
+      en: "The stage is set. Your turn to step onto it.",
     },
     blurb: {
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-      ko: "여기가 ‘초입’입니다. 일회성 행사를 넘어, 지속가능한 한–싱 빌더 커뮤니티를 함께 만들어 갑니다. 8일간의 전체 일정은 프로그램 섹션에서 확인하세요.",
-      en: "This is the entry point. Beyond a single event, we're building a lasting Korea–Singapore builder community. Explore the full 8-day schedule in the program section.",
+      ko: "여기가 ‘초입’입니다. 일회성 행사를 넘어, 지속가능한 한–싱 빌더 커뮤니티를 함께 만들어 갑니다. 등록하시면 참가자 단톡방에서 만나요.",
+      en: "This is the entry point. Beyond a single event, we're building a lasting Korea–Singapore builder community. Register and we'll see you in the participants' chat.",
     },
     ctaProgram: { ko: "프로그램 보기", en: "View Program" },
     // Shown under the partnership CTA: `mailto:` does nothing when the visitor

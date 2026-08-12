@@ -272,6 +272,61 @@ function OpenChatLink({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// INLINE REGISTER CTA — one line of copy + one pill, dropped into the middle of
+// the page.
+//
+// The page used to hand the reader a register door in the hero and in the two
+// hook bands, and then nothing at all through program → speakers → mentoring →
+// builders → companions → faq. Six chapters, and the three moments where
+// someone actually decides sit inside them: right after "only two days are
+// required" (program), right after seeing who is on the other side of the table
+// (mentoring), and right after the last objection runs out (faq).
+//
+// Deliberately NOT the hook cards. Those carry a quiz, a chat link and a
+// reassurance list; a third and fourth appearance of that block makes the page
+// feel like it is looping back to where the reader already was. This is the
+// smallest thing that still counts as a door: a sentence that picks up whatever
+// was just read, and a pill.
+//
+// It also stays a tier under the section CTAs around it — no gradient, no
+// shadow. It should read as a door held open in passing, not as the page
+// stopping to ask again.
+// ─────────────────────────────────────────────────────────────────────────────
+function InlineRegisterCta({
+  t,
+  line,
+  openRegister,
+  registered,
+  className = "",
+}: {
+  t: Tfn;
+  line: Phrase;
+  openRegister: (preset?: RegisterPreset) => void;
+  registered: boolean;
+  className?: string;
+}) {
+  return (
+    <div className={`flex flex-col items-center gap-3 sm:flex-row sm:justify-center ${className}`}>
+      <p className="max-w-md break-keep text-center text-sm leading-relaxed text-white/70 sm:text-left">
+        {t(line)}
+      </p>
+      <button
+        type="button"
+        onClick={() => openRegister()}
+        className="group inline-flex shrink-0 items-center gap-2 rounded-full border border-violet-400/40 bg-violet-500/15 px-5 py-2.5 text-sm font-bold text-violet-50 transition hover:-translate-y-0.5 hover:border-violet-400/70 hover:bg-violet-500/25"
+      >
+        {t(registered ? dict.register.navRegistered : dict.nav.register)}
+        {!registered && (
+          <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
+            →
+          </span>
+        )}
+      </button>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // MOBILE STICKY BAR — open chat + register. Phone only.
 //
 // Appears once the hero is behind you (~120vh) and hides again over the closing
@@ -3211,6 +3266,21 @@ export default function Journey() {
                 answers "who is behind this" before it asks for a signup. Nothing
                 moved on desktop: that copy is `lg:hidden` and lg+ uses the
                 right-column instance, which is untouched. */}
+
+            {/* 마감 한 줄 — 모바일 전용 (ADDED 2026-08-12).
+                폰에서 첫 1.5스크린이 요청 쪽으로 심하게 기울어 있었습니다: CTA 셋 →
+                파트너 스트립 → 훅 카드 둘(두 번째 등록 요청). 정작 "왜 지금인가"의
+                근거인 마감 시각은 세 스크린 아래 카운트다운 안에 있어서, 요청이
+                근거보다 먼저 도착했습니다.
+                근거를 통째로 올리는 대신(=카운트다운 패널 이동, 히어로가 다시
+                길어집니다) 한 줄만 올립니다. 문구는 dict.hero.countdownDeadline을
+                그대로 씁니다 — 사본을 만들면 시각이 갈라집니다.
+                lg:hidden: 데스크톱은 같은 화면 오른쪽에 카운트다운 패널이 이미
+                떠 있어서 같은 말을 두 번 하게 됩니다. */}
+            <p className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/[0.08] px-3.5 py-1.5 text-[0.7rem] font-semibold leading-relaxed text-amber-100 lg:hidden">
+              <span aria-hidden className="text-amber-300/80">◷</span>
+              {t(dict.hero.countdownDeadline)}
+            </p>
           </motion.div>
 
           {/* RIGHT — hook cards ABOVE the Countdown ↔ Problem Statement panel,
@@ -3584,6 +3654,16 @@ export default function Journey() {
                 ))}
               </dl>
             </div>
+            {/* 이 박스가 "며칠이나 나가야 하나"에 답을 끝낸 자리입니다. 그 답을
+                받아들인 사람에게 다음 한 걸음이 없으면, 여기서부터 FAQ까지 여섯
+                챕터를 등록 통로 없이 지나갑니다. */}
+            <InlineRegisterCta
+              t={t}
+              line={dict.register.inlineProgramLine}
+              openRegister={openRegister}
+              registered={registered}
+              className="mt-6"
+            />
           </div>
 
           {/* The route, immediately above the grid it describes: the eight cards
@@ -3974,6 +4054,16 @@ export default function Journey() {
             <Emph text={t(dict.mentoring.matchNote.body)} className="font-bold text-white" />
           </p>
         </div>
+        {/* 멘토 얼굴과 배정 방식까지 확인한 직후 — "그래서 나는 어떻게 배정받나"의
+            답이 등록인 자리입니다. 박스 안이 아니라 밖에 둡니다: 저 박스는 매칭
+            규칙을 말하는 자리고, 이건 그 규칙에 들어가는 문입니다. */}
+        <InlineRegisterCta
+          t={t}
+          line={dict.register.inlineMentoringLine}
+          openRegister={openRegister}
+          registered={registered}
+          className="mt-6"
+        />
 
         {/* ── Judges subsection (deck p13) · no new nav item ────────────────
             Judge cards, all with face photos. LinkedIn icon only where a
@@ -4267,11 +4357,24 @@ export default function Journey() {
         <Glass className="mt-8 text-left">
           <FAQList />
         </Glass>
-        {/* A second CTA band (register + quiz hook cards) used to close this
+        {/* A second CTA BAND (register + quiz hook cards) used to close this
             chapter. Removed: it was byte-for-byte the band already sitting at the
             end of 혜택 (CH 2), and with the 혜택 band now carrying the mini-quiz
-            the repeat read as the page looping rather than as a fresh ask. The
-            nav 등록하기 button and the footer CTA are both still one tap away. */}
+            the repeat read as the page looping rather than as a fresh ask.
+            그 판단은 그대로입니다 — 밴드를 되살리지 마세요.
+
+            대신 2026-08-12에 한 줄짜리 문을 답니다. 밴드가 아니라 문장 하나와
+            알약 하나이고, 훅 카드도 오픈채팅 링크도 없습니다. 밴드를 뺐던 이유가
+            "같은 블록의 재방송"이었지 "여기에 등록 통로가 있으면 안 된다"가
+            아니었고, 여기는 반론이 다 떨어진 자리라 페이지에서 등록이 가장 자연
+            스러운 지점입니다. 다시 카드로 부풀리지만 마세요. */}
+        <InlineRegisterCta
+          t={t}
+          line={dict.register.inlineFaqLine}
+          openRegister={openRegister}
+          registered={registered}
+          className="mt-8"
+        />
       </Chapter>
 
       {/* ── CH 5.5 · VISION FUNNEL ─────────────────────────────────────
