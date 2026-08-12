@@ -24,8 +24,10 @@
 //   • Day 1 — big Opening (1PM–4:30PM at The Foundry, The Refinery hall): 원대로
 //     opening keynote + AWS speaker session + the AX problems are released and
 //     tracks are chosen. MANDATORY (필참).
-//   • Day 2 — one concentrated Crash Course (vibe-coding intro, 5–6h), then team
-//     building right after. (A live per-track briefing by the client contacts
+//   • Day 2 — one concentrated Crash Course (vibe-coding intro, 5–6h, online),
+//     then a team-building session right after for the solo participants who
+//     were matched into teams on Day 1 (2026-08-12; in person, time and place
+//     still being arranged). (A live per-track briefing by the client contacts
 //     used to sit here; it was pulled because the format is undecided.)
 //   • Day 3–4 — online self-build + 1:1 mentoring, ONLINE-FIRST as of Aug 2026
 //     (was "in person by default"): most mentors need to take theirs online, so
@@ -197,15 +199,24 @@ export interface DayMeta {
   //             online, so both days are plain "online" again. Kept because the
   //             badge still renders (Journey.tsx) and the next partly-on-site day
   //             will want it.
-  // "online-default" = online unless a specific mentor offers otherwise. Day 3·4
-  //             (2026-08-08): plain "online" was reading as a promise that the
-  //             day is entirely online, and some mentors do take their 1:1 in
-  //             person at the Korean Association hall. NOT "mixed" — "mixed" is a
-  //             day with an on-site half for EVERYONE, which would send people
-  //             planning a trip they probably don't need. The badge says only
-  //             "온라인 기본"; WHO gets F2F and WHERE stays on the 1:1 session
-  //             card (mode "mixed") and its modal 장소 row (MENTORING_MODE),
-  //             which is the one place that can carry the condition in full.
+  // "online-default" = the day's programme is online for everyone, but SOME
+  //             people have somewhere to be. Day 3·4 (2026-08-08): plain
+  //             "online" was reading as a promise that the day is entirely
+  //             online, and some mentors do take their 1:1 in person at the
+  //             Korean Association hall. NOT "mixed" — "mixed" is a day with an
+  //             on-site half for EVERYONE, which would send people planning a
+  //             trip they probably don't need. The badge says only "온라인 기본";
+  //             WHO gets F2F and WHERE stays on the 1:1 session card (mode
+  //             "mixed") and its modal 장소 row (MENTORING_MODE), which is the
+  //             one place that can carry the condition in full.
+  //             DAY 2 JOINED THIS (2026-08-12) for the same shape, a different
+  //             reason: the Crash Course is online for the whole cohort, and the
+  //             team-building session after it is in person for the solo
+  //             participants matched into teams on Day 1 — a subset, not the
+  //             room. "mixed" would tell teams who registered together to plan a
+  //             trip they have no part in, and its amber 현장 treatment would
+  //             assert a venue that is not decided yet. Who it is for and where
+  //             it lands stays on the d2-team-building card.
   dayMode: "online" | "offline" | "pending" | "mixed" | "online-default";
   // 노선도의 현장 마커. 원래 이 자리에는 지도 핀 아이콘이 있었는데, 핀은 "현장"
   // 하나만 말합니다 — 그건 바로 아래 카드의 뱃지가 이미 하는 말이고, 정작 궁금한
@@ -402,7 +413,10 @@ export const days: DayMeta[] = [
       {
         time: "3:10PM–4PM",
         label: { ko: "네트워킹 · 문제 브레인스토밍 · 팀 매칭", en: "Networking · brainstorming the problem · team matching" },
-        note: { ko: "원하는 팀은 이때부터 바로 빌드를 시작해도 됩니다 · 팀 없이 오신 분은 이 시간에 즉석 매칭", en: "Teams can start building right here if they want · anyone who came solo gets matched during this slot" },
+        // 마지막 절이 Day 2로 넘기는 다리입니다 (2026-08-12). 현장 매칭이 끝나는
+        // 자리가 이 줄이라, 그 다음이 무엇인지도 여기서 말해야 합니다 — 즉석으로
+        // 팀이 된 사람에게는 "그래서 이제 어떻게 되나"가 바로 다음 질문입니다.
+        note: { ko: "원하는 팀은 이때부터 바로 빌드를 시작해도 됩니다 · 팀 없이 오신 분은 이 시간에 즉석 매칭 · 매칭된 팀은 Day 2 크래시코스 후 팀 빌딩 시간으로 이어집니다", en: "Teams can start building right here if they want · anyone who came solo gets matched during this slot · matched teams carry into a team-building session after the Day 2 Crash Course" },
       },
       {
         time: "4PM–4:30PM",
@@ -419,15 +433,22 @@ export const days: DayMeta[] = [
     weekday: { ko: "일", en: "Sun" },
     phase: LAB1,
     theme: { ko: "크래시코스 (집중)", en: "Crash Course" },
+    // 둘째 문장이 팀 빌딩입니다 (2026-08-12). 누구에게 해당하는지를 문장 안에
+    // 박아 둔 것이 요점이에요 — 이 줄은 데이 칩("온라인 기본") 바로 옆에서
+    // 읽히므로, 대상을 적지 않으면 팀으로 등록한 사람까지 어딘가로 가야 하는 줄
+    // 압니다. 시각·장소는 여기 쓰지 않습니다(카드가 맡습니다).
     summary: {
-      ko: "바이브 코딩 입문 집중 5–6시간(비개발자 OK) · 코드프레소 김지훈 이사님 진행.",
-      en: "A focused 5–6h vibe-coding intro (beginners OK) · led by Jihoon Kim, Director at Codepresso.",
+      ko: "바이브 코딩 입문 집중 5–6시간(비개발자 OK) · 코드프레소 김지훈 이사님 진행. 크래시코스 후에는 Day 1 매칭 팀들의 팀 빌딩 시간이 이어져요.",
+      en: "A focused 5–6h vibe-coding intro (beginners OK) · led by Jihoon Kim, Director at Codepresso. After the course, teams matched on Day 1 continue into a team-building session.",
     },
     whyStop: {
       ko: "혼자 헤매며 배울 몇 주를, 출발선 맞추는 하루로 압축",
       en: "Weeks of solo trial-and-error, compressed into one day",
     },
-    dayMode: "online",
+    // "online" → "online-default" (2026-08-12). 크래시코스는 전원 온라인이지만
+    // 그 뒤 팀 빌딩은 대면이라, "온라인" 칩이 하루 전체를 온라인으로 단정하게
+    // 됐습니다. "mixed"가 아닌 이유는 dayMode 주석에 있습니다.
+    dayMode: "online-default",
   },
   {
     day: 3,
@@ -1284,18 +1305,87 @@ export const schedule: BEvent[] = [
       },
     ],
   },
-  // Day 2 is the Crash Course and nothing else.
+  // ─── DAY 2 · 팀 빌딩 타임 (08.23) ──────────────────────────────────────────
+  // DECIDED 2026-08-12 (주최). Day 1에 현장 매칭으로 팀이 된 솔로 참가자들을 위해,
+  // 크래시코스가 끝난 뒤 주관 학생회가 함께하는 팀 빌딩 시간을 따로 엽니다.
   //
-  // Two slots have been removed from this day. The per-track LIVE BRIEFING by the
-  // client contacts went first (how the company contacts would run it was never
-  // worked out); the problems still drop on Day 1. (The deep-dive that used to
-  // walk through them moved to Day 1 as `d1-problem-deep-dive` and is now
-  // shelved there — the confirmed Day-1 run-of-show has no slot for it.)
-  // TEAM BUILDING
-  // followed: teams are matched from registration (AI-type test) and grouped
-  // on-site on Day 1, so a separate Day-2 slot was describing a step that had
-  // already happened. Nothing downstream depends on it — the FAQ solo answer
-  // points at registration + Day 1, not at this day.
+  // 이 카드는 예전에 있던 Day-2 팀 빌딩 슬롯의 부활이 아닙니다. 그 슬롯은 "팀을
+  // 만드는" 자리였고 — 그건 Day 1 현장 매칭이 이미 하는 일이라 같은 단계를 두 번
+  // 적고 있었습니다 — 이 카드는 "이미 만들어진 팀이 서로 알아가는" 자리입니다.
+  // 그래서 대상도 다릅니다: 전원이 아니라 매칭 참가자들입니다.
+  //
+  // 카피에 절대 넣지 말 것 (같은 결정의 일부):
+  //   · 식사·밥·식당 — 내부 논의에 아이디어가 있어도 사이트는 식사를 어느
+  //     방향으로도 언급하지 않습니다 (2026-08-05 정책, dictionary.ts의 상금 답변
+  //     주석 참고). "팀 빌딩 시간"·"모임"까지만 씁니다.
+  //   · Day 1 현장 매칭을 깎아내리는 프레임("급조된 팀은 케미가 안 나서") —
+  //     이 시간은 매칭이 부족해서가 아니라 그 위에 얹는 추가 케어입니다.
+  //   · 운영 세부(임원진 인원 등). 주체 표기는 "주관 학생회" 하나입니다.
+  //
+  // 시각을 쓰지 않는 이유: 시간·장소가 조율 중이라 아직 없습니다. `time` 필드를
+  // 채우지 마세요(그 필드 주석의 규칙이 그대로 적용됩니다) — 안내 경로는 매칭 때
+  // 만든 팀 카톡방이고, 그 사실까지만 적습니다. `confirmed`도 세우지 않습니다.
+  {
+    id: "d2-team-building",
+    day: 2,
+    date: "08.23",
+    category: "network",
+    // 크래시코스는 온라인이지만 이 모임은 대면입니다. 카드의 amber "현장" 배지가
+    // 이 하루에서 유일하게 "갈 곳이 있다"고 말하는 자리예요 — 데이 칩은
+    // "온라인 기본"까지만 말하므로(Day 2 dayMode 주석 참고), 대면이라는 사실은
+    // 이 카드가 책임집니다.
+    mode: "offline",
+    timeOfDay: "PM",
+    title: { ko: "팀 빌딩 타임", en: "Team building" },
+    // 연사가 아니라 주최 주체입니다. 이 필드를 비우면 모달의 연사 행이 "추후
+    // 안내"로 떨어지는데(EventModal), 그건 아직 못 정한 연사가 있다는 뜻이라
+    // 사실이 아닙니다 — 이 자리는 처음부터 학생회가 함께하는 모임입니다.
+    // 개인 이름·인원은 쓰지 않습니다 (운영 세부 비노출).
+    speaker: { ko: "주관 학생회", en: "The organizing student associations" },
+    // 요약 첫 절이 대상입니다. 카드가 크래시코스 카드 옆에 나란히 서기 때문에,
+    // 대상을 뒤에 두면 전원 참석 세션 두 개로 읽힙니다.
+    summary: {
+      ko: "Day 1에 현장 매칭으로 팀이 된 분들을 위한 시간입니다 · 주관 학생회와 함께 · 대면, 시간·장소는 팀 카톡방으로 안내.",
+      en: "For those matched into teams on Day 1 · with the organizing student associations · in person, with time and place going out in the team chat.",
+    },
+    description: {
+      ko: "Day 1에 현장 매칭으로 팀을 이룬 솔로 참가자들을 위한 시간입니다. 크래시코스가 끝난 뒤 주관 학생회가 함께 모여, 즉석에서 만난 팀도 본격 빌드에 들어가기 전에 서로 알아가고 호흡을 맞춥니다. 시간과 장소는 매칭 때 만든 팀 카톡방으로 안내드려요.",
+      en: "For solo participants matched into teams on Day 1. After the Crash Course wraps, the organizing student associations bring everyone together so teams formed on the spot can get to know each other and find their rhythm before the real building starts. Time and place go out through the team KakaoTalk room created at matching.",
+    },
+    // 장소 행이 두 가지를 한 번에 말합니다: 대면이라는 것과, 어디인지는 아직
+    // 공개 전이라는 것. "추후 안내"는 이 레포의 미확정 어휘 중 뒤쪽 계열입니다
+    // (하기로 정해졌고 세부만 공개 전 — dictionary.ts pendingLabel 주석 참고).
+    // 새 라벨을 짓지 마세요.
+    location: {
+      ko: "현장 · 장소는 추후 안내 (팀 카톡방)",
+      en: "In person · venue TBA (via the team chat)",
+    },
+    // 매칭 참가자 대상이라는 것, 그리고 그 외에는 이 시간이 자율 빌드라는 것까지
+    // 여기서 한 번 더 말합니다. 요약·설명이 이미 말하지만, 이 목록은 "그래서 내가
+    // 얻는 게 뭔가"를 읽는 자리라 대상이 다시 서 있어야 오해가 남지 않습니다.
+    opportunities: [
+      {
+        ko: "처음 만난 팀원과 빌드 전에 서로의 강점·페이스를 맞춰 보기",
+        en: "Line up strengths and working pace with brand-new teammates before the build starts.",
+      },
+      {
+        ko: "주관 학생회가 함께해, 팀 안에서 막히는 것을 그 자리에서 물어보기",
+        en: "The organizing student associations are there, so anything stuck inside the team can be asked on the spot.",
+      },
+      {
+        ko: "Day 1 매칭 참가자 대상입니다. 팀으로 등록하신 분들은 이 시간에 자율 빌드를 이어가시면 돼요",
+        en: "For Day 1 matching participants. If you registered as a team, this slot is yours to keep building in.",
+      },
+    ],
+  },
+  // Day 2 is the Crash Course plus the team-building session above, and nothing
+  // else.
+  //
+  // The per-track LIVE BRIEFING by the client contacts was removed from this day
+  // (how the company contacts would run it was never worked out); the problems
+  // still drop on Day 1. (The deep-dive that used to walk through them moved to
+  // Day 1 as `d1-problem-deep-dive` and is now shelved there — the confirmed
+  // Day-1 run-of-show has no slot for it.)
   // Do not re-add a briefing slot here: Day 1 is where the problem work happens.
 
   // ─── DAY 3 · Self-paced build · Mentoring (08.24) ─────────────────────────────────

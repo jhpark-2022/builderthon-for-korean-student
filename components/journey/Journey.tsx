@@ -3631,17 +3631,14 @@ export default function Journey() {
                 this is settled — read before the cards, it stops eight tidy day
                 boxes being taken for a finished timetable. Second: how little of
                 it you actually have to attend. */}
-            {/* Cross-link: the quiz already recommends sessions by type, and
-                nothing on the home page said so. Ghost chip — a step under the
-                section's own content, two under any register CTA. */}
-            <a
-              href="/quiz"
-              onClick={() => track("quiz_click", { src: "program_chip" })}
-              className="group mx-auto mt-5 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/[0.08] px-4 py-2.5 text-xs font-semibold text-violet-100/90 transition hover:border-violet-300/45 hover:bg-violet-500/15 hover:text-white"
-            >
-              <span aria-hidden>✦</span>
-              <span className="break-keep">{t(dict.programQuizChip)}</span>
-            </a>
+            {/* REMOVED 2026-08-12 — the "유형 테스트 결과로 맞춤 세션 추천받기"
+                ghost chip (dict.programQuizChip, quiz_click src "program_chip").
+                It promised a feature that does not exist: the quiz result card
+                shows the model, axes and a role, and has never recommended
+                sessions. The quiz keeps its two permanent entrances (the nav ✦
+                chip and the 혜택 band hook card), so nothing lost a door.
+                Do not put a session-recommendation chip back unless the result
+                page actually recommends sessions. */}
             <p className="mx-auto mt-6 max-w-2xl text-xs leading-relaxed text-white/50">
               {t(dict.program.pendingNote)}
             </p>

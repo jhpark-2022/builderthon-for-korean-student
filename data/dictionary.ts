@@ -278,12 +278,13 @@ export const dict = {
     cta: { ko: "질문 없이 바로 시작하기 →", en: "Skip ahead and just start →" },
   },
 
-  // Program-section cross-link — the quiz already recommends sessions by type,
-  // which nothing on the home page said out loud.
-  programQuizChip: {
-    ko: "유형 테스트 결과로 맞춤 세션 추천받기 →",
-    en: "Get session picks from your type →",
-  },
+  // REMOVED 2026-08-12: programQuizChip ("유형 테스트 결과로 맞춤 세션 추천받기 →"
+  // / "Get session picks from your type →"), the ghost chip under the programme
+  // section. The quiz has never recommended sessions — the result card carries
+  // the model, the axes and a role, and that is all — so the chip was selling a
+  // feature that isn't there. The claim was removed from /quiz's metadata in the
+  // same pass. Bring this key back only alongside a result page that actually
+  // does the recommending.
 
   // Toast shown by the undocumented ?reset=1 QA helper (see components/ResetHandler).
   resetToast: {
@@ -1650,13 +1651,16 @@ export const dict = {
     // UNUSED right now: Day 3·4 carried it while their mentoring defaulted to
     // in-person F2F, and both went back to plain 온라인 when that default flipped.
     mixedLabel: { ko: "온라인 · 현장", en: "Online · in person" },
-    // dayMode "online-default" — Day 3·4. The day badge's whole job is to stop
+    // dayMode "online-default" — Day 2·3·4. The day badge's whole job is to stop
     // "온라인" from reading as a guarantee that nothing that day is in person;
     // it does NOT try to explain the exception. Deliberately shorter than the
     // session badge below (byMentorLabel): the day card already carries 선택 ·
     // 자율 진행 next to it, and "(멘토별)" here would be a third qualifier in a
     // row of pills. Who gets F2F and where lives on the 1:1 session card and its
     // modal 장소 row — one condition, stated once, where there is room for it.
+    // Day 2 joined on 2026-08-12 and the same restraint applies: the label does
+    // not say the exception is the team-building session or that it is only for
+    // the Day-1 matching participants. That lives on the d2-team-building card.
     onlineDefaultLabel: { ko: "온라인 기본", en: "Online by default" },
     // ── Self-paced (category "build") ──────────────────────────────────────
     // Build events carry mode "online" in the data because they have to carry
@@ -3082,8 +3086,13 @@ export const dict = {
       {
         q: { ko: "혼자(1인) 참가해도 되나요?", en: "Can I take part solo?" },
         a: {
-          ko: "됩니다. 솔로로 등록하면 1인 팀으로 출전할 수 있어요. 원하면 팀 매칭도 신청할 수 있고(AI 유형 테스트 + Day 1 현장 그룹핑), 이미 팀이 있다면 2–3인 팀 등록으로 대표 1명이 한 번에 등록하면 됩니다.",
-          en: "Yes. Register solo and you compete as a one-person team. You can also opt into team matching (the AI personality test plus on-site grouping on Day 1), and if you already have a team, one person registers the whole 2–3 person group in one go.",
+          // 마지막 두 문장이 2026-08-12에 붙었습니다. 이 답은 매칭 절차만 말하고
+          // 매칭 다음을 말하지 않아서, "붙여만 주고 끝"으로 읽힐 여지가 있었어요.
+          // 프레임은 추가 케어입니다 — 현장 매칭이 부실해서 보완한다는 뉘앙스로
+          // 쓰지 마세요. 시각·장소는 여기 쓰지 않습니다(schedule.ts
+          // d2-team-building이 안내 경로까지 맡습니다).
+          ko: "됩니다. 솔로로 등록하면 1인 팀으로 출전할 수 있어요. 원하면 팀 매칭도 신청할 수 있고(AI 유형 테스트 + Day 1 현장 그룹핑), 이미 팀이 있다면 2–3인 팀 등록으로 대표 1명이 한 번에 등록하면 됩니다. 이렇게 매칭된 팀은 다음 날 크래시코스가 끝난 뒤 주관 학생회가 함께하는 팀 빌딩 시간으로 이어져요. 즉석에서 만난 팀도 빌드를 시작하기 전에 서로 알아갈 시간을 따로 만들어 드립니다.",
+          en: "Yes. Register solo and you compete as a one-person team. You can also opt into team matching (the AI personality test plus on-site grouping on Day 1), and if you already have a team, one person registers the whole 2–3 person group in one go. Teams matched this way carry into a team-building session after the Day 2 Crash Course, together with the organizing student associations, so a team formed on the spot gets time to gel before the building starts.",
         },
       },
       // 솔로/팀 질문 바로 다음이 자리입니다 — 같은 사람이 이어서 묻는 질문이고
@@ -3112,10 +3121,15 @@ export const dict = {
         //
         // 사실은 하나도 바뀌지 않았습니다: 당일 와서 정해도 된다 · 오후 4시까지
         // 열려 있다 · 늦으면 매칭할 사람이 없을 수 있다 · 팀 등록은 해당 없다.
+        //
+        // EDIT 2026-08-12 (2차): 팀 빌딩 연결 한 문장 추가. 자리는 등록 마감과
+        // 매칭 경고 사이입니다 — 앞은 "와도 된다", 뒤는 "늦으면 못 붙는다"라,
+        // "붙으면 그 다음이 있다"가 둘 사이에 와야 경고가 마지막 인상이 되지
+        // 않습니다. 위 세 곳 신호 계약은 그대로입니다(전문은 여기 하나).
         q: { ko: "일단 Day 1에 가 보고 결정해도 되나요?", en: "Can I just show up on Day 1 and decide there?" },
         a: {
-          ko: "네, Day 1에 와서 결정하셔도 됩니다. 등록은 당일 오후 4시까지 열려 있어요. 다만 너무 늦게 등록하시면 함께 팀을 구성할 분이 남아 있지 않을 수 있어요. (이미 팀으로 오시는 분들은 해당 없어요.)",
-          en: "Yes, come to Day 1 and decide there. Registration stays open until 4PM that day. Just note that if you register very late, there may be no one left to team you up with. (Doesn't apply if you're registering as a team.)",
+          ko: "네, Day 1에 와서 결정하셔도 됩니다. 등록은 당일 오후 4시까지 열려 있어요. 현장에서 매칭된 팀은 다음 날 팀 빌딩 시간으로 이어서 챙겨 드립니다. 다만 너무 늦게 등록하시면 함께 팀을 구성할 분이 남아 있지 않을 수 있어요. (이미 팀으로 오시는 분들은 해당 없어요.)",
+          en: "Yes, come to Day 1 and decide there. Registration stays open until 4PM that day. Teams matched on site carry into a team-building session the next day. Just note that if you register very late, there may be no one left to team you up with. (Doesn't apply if you're registering as a team.)",
         },
       },
       // Mentor requests were the most common pre-event ask — answered next to the

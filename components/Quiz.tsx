@@ -618,7 +618,10 @@ function ResultView({
       </span>
 
       {/* Stacked: the shareable result card spans the full width on top, then
-          the apply CTA + session recommendations + actions sit below it. */}
+          the apply CTA + the match section + actions sit below it. (This said
+          "session recommendations" until 2026-08-12 — there are none and there
+          never were; the claim was removed from the home-page chip and /quiz's
+          metadata in the same pass.) */}
       <div className="flex w-full flex-col gap-6">
         {/* full-width shareable result card */}
         <div

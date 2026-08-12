@@ -4,13 +4,19 @@ import Quiz from "@/components/Quiz";
 import ResetHandler from "@/components/ResetHandler";
 import QuizIntroShell from "./QuizIntroShell";
 
+// REMOVED 2026-08-12: the "맞춤 세션 추천" claim from all three descriptions
+// below. The result card shows the model, the per-axis gauges, a builderthon
+// role and a match — it does not recommend sessions and never has. The matching
+// chip on the home page (dict.programQuizChip) went in the same pass. What
+// replaced it here is what the result actually carries, so a shared link and
+// the page agree.
 export const metadata: Metadata = {
   title: "당신의 AI 모델은? · Zero100 AI Builderthon",
   description:
-    "14개의 질문으로 알아보는 나의 빌더 유형. 결과는 16개 AI 모델 중 하나로. 결과에 맞춰 빌더톤에서 참여하면 좋을 세션까지 추천. / A 14-question AI personality test for the Singapore Korean-student builderthon: get your AI model and the sessions worth joining.",
+    "14개의 질문으로 알아보는 나의 빌더 유형. 결과는 16개 AI 모델 중 하나로. 강점·약점과 빌더톤 추천 역할까지. / A 14-question AI personality test for the Singapore Korean-student builderthon: get your AI model, your strengths and the role you'd play.",
   openGraph: {
     title: "당신의 AI 모델은? · Which AI model are you?",
-    description: "14문항으로 알아보는 나의 빌더 유형 + 결과 맞춤 세션 추천.",
+    description: "14문항으로 알아보는 나의 빌더 유형 + 강점·약점 + 빌더톤 추천 역할.",
     type: "website",
   },
   // Without this the page inherited the root layout's twitter card, so a shared
@@ -19,7 +25,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "당신의 AI 모델은? · Which AI model are you?",
-    description: "14문항으로 알아보는 나의 빌더 유형 + 결과 맞춤 세션 추천.",
+    description: "14문항으로 알아보는 나의 빌더 유형 + 강점·약점 + 빌더톤 추천 역할.",
   },
 };
 
