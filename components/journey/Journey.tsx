@@ -271,6 +271,18 @@ function OpenChatLink({
   );
 }
 
+// CHAPTER HEADING SIZE — text-[clamp(2rem,5.5vw,3.75rem)], all nine of them.
+//
+// Unified 2026-08-12. Six chapters were on this clamp and three had drifted
+// smaller (join at 1.8/3.25, speakers and mentoring at 1.9/3.5), which read as a
+// hierarchy the page does not actually have — those three are peer chapters, not
+// sub-sections. Scrolling past them, the headings breathed in and out.
+//
+// The smaller clamps further down (1.6/2.5, 1.5/2.5, 1.5/2.25) are h3s inside a
+// chapter — the judges block, the mentor stages — and they stay smaller on
+// purpose. Only the nine <h2>s share this value.
+// ─────────────────────────────────────────────────────────────────────────────
+
 // ─────────────────────────────────────────────────────────────────────────────
 // INLINE REGISTER CTA — one line of copy + one pill, dropped into the middle of
 // the page.
@@ -459,7 +471,14 @@ function QuizEmojiStack({ compact = false }: { compact?: boolean }) {
   );
 }
 
-// The teaser line: one REAL variant name at a time, swapped every 2.5s. Uses the
+// 3s는 아래 PeekCard의 교체 주기(setInterval 3000 + quizPeekFade 3s)와 같은
+// 값입니다. 예전에는 이름이 2.5s, 카드가 3s로 돌아서 두 루프의 위상이 매 번
+// 어긋났고, 한 카드 안에서 서로 다른 박자로 두 군데가 깜빡이는 것처럼 보였습니다.
+// 하나를 바꾸면 다른 하나도 함께 바꾸세요 — CSS 애니메이션과 JS 인터벌 넷이
+// 같은 숫자를 공유합니다.
+const NAME_SWAP_MS = 3000;
+
+// The teaser line: one REAL variant name at a time, swapped every 3s. Uses the
 // same names the result screen prints, so nothing here can be a name a taker
 // will never see. Static under reduced motion.
 function QuizTypeShuffle({ t }: { t: Tfn }) {
@@ -471,7 +490,7 @@ function QuizTypeShuffle({ t }: { t: Tfn }) {
   const [i, setI] = useState(0);
   useEffect(() => {
     if (reduce) return;
-    const id = setInterval(() => setI((n) => (n + 1) % names.length), 2500);
+    const id = setInterval(() => setI((n) => (n + 1) % names.length), NAME_SWAP_MS);
     return () => clearInterval(id);
   }, [reduce, names.length]);
   return (
@@ -479,7 +498,7 @@ function QuizTypeShuffle({ t }: { t: Tfn }) {
       {t(dict.register.hookQuizShufflePrefix)}{" "}
       <span
         key={reduce ? "static" : i}
-        className="font-semibold text-violet-200/90 motion-safe:animate-[quizNameSwap_2.5s_ease-in-out_infinite]"
+        className="font-semibold text-violet-200/90 motion-safe:animate-[quizNameSwap_3s_ease-in-out_infinite]"
       >
         {names[reduce ? 0 : i]}
       </span>
@@ -1413,7 +1432,7 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                   </span>
                   <span
                     className={`text-[0.62rem] font-bold leading-none ${
-                      anchor ? "text-rose-200" : spot ? "text-violet-200" : "text-white/45"
+                      anchor ? "text-rose-200" : spot ? "text-violet-200" : "text-white/55"
                     }`}
                   >
                     {t(dict.program.dayLabel)} {d.day}
@@ -1688,7 +1707,7 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
           /* Same slot as the 필참 pill, deliberately quieter: borderless and
              low-contrast so it registers as a fact about the day rather than
              competing with the two anchors. */
-          <span className="inline-flex items-center rounded-full bg-white/[0.06] px-2 py-0.5 text-[0.68rem] font-semibold text-white/45">
+          <span className="inline-flex items-center rounded-full bg-white/[0.06] px-2 py-0.5 text-[0.68rem] font-semibold text-white/55">
             {t(dict.program.optionalBadge)}
           </span>
         )}
@@ -3445,7 +3464,7 @@ export default function Journey() {
       <Chapter id="join" align="center">
         <div className="text-center">
           <Eyebrow color="emerald">{t(dict.whoWhat.tag)}</Eyebrow>
-          <h2 className="text-[clamp(1.8rem,5vw,3.25rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+          <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
             {t(dict.whoWhat.heading)}
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/70">
@@ -3715,7 +3734,7 @@ export default function Journey() {
                     <span className="rounded-full border border-violet-400/25 bg-violet-500/12 px-2 py-0.5 text-[0.62rem] font-bold text-violet-200">
                       {t(f.when)}
                     </span>
-                    <span className="text-[0.62rem] font-semibold text-white/45">{t(f.duration)}</span>
+                    <span className="text-[0.62rem] font-semibold text-white/55">{t(f.duration)}</span>
                   </div>
                   <p className="mt-2 text-sm font-bold leading-snug text-white">{t(f.title)}</p>
                   <p className="mt-1.5 break-keep text-xs leading-relaxed text-white/70">{t(f.body)}</p>
@@ -3741,7 +3760,7 @@ export default function Journey() {
           naming/likeness to be confirmed with the user (flagged in the handoff). */}
       <Chapter id="speakers" align="center">
         <Eyebrow>{t(dict.speakers.tag)}</Eyebrow>
-        <h2 className="text-[clamp(1.9rem,5vw,3.5rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
           {t(dict.speakers.heading)}
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.speakers.intro)}</p>
@@ -3822,7 +3841,7 @@ export default function Journey() {
       {/* ── CH 3.3 · MENTORING PHILOSOPHY ──────────────────────────── */}
       <Chapter id="mentoring" align="center">
         <Eyebrow color="emerald">{t(dict.mentoring.tag)}</Eyebrow>
-        <h2 className="text-[clamp(1.9rem,5vw,3.5rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
           {t(dict.mentoring.heading)}
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.mentoring.intro)}</p>
@@ -3865,7 +3884,7 @@ export default function Journey() {
                 <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/60">
                   {t(dict.mentoring.warmup.label)}
                 </span>
-                <span className="break-keep text-xs text-white/45">{t(dict.mentoring.warmup.note)}</span>
+                <span className="break-keep text-xs text-white/55">{t(dict.mentoring.warmup.note)}</span>
               </div>
               <div className="mt-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5">
                 {warmupMentors.map((m, i) => (

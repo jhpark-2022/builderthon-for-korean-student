@@ -117,9 +117,20 @@ export const partnerIntros: Record<string, Phrase> = {
     ko: "싱가포르 최초의 푸드테크 액셀러레이터로, 공유 R&D 랩·인증 주방·생산 공간 등 약 20만 sq ft의 시설과 VC 펀드를 함께 운영하며 230개 이상의 스타트업을 지원해 왔습니다. Enterprise Singapore StartupSG 공인 멘토 파트너이며, 이번 행사에는 장소로 함께합니다.",
     en: "Singapore's first food-tech accelerator, running ~200,000 sq ft of facilities (shared R&D labs, certified kitchens, production space) alongside a VC fund, with 230+ startups supported. An accredited StartupSG mentor partner, joining this event as a venue sponsor.",
   },
+  // FIXED 2026-08-12, 두 가지.
+  //
+  // ① 표기: "L^ife Jungle" → "L^IFE Jungle". 사이트의 다른 모든 자리(schedule.ts
+  //    장소 상수 포함)가 대문자 L^IFE입니다. 이 한 줄만 소문자였습니다. 이건
+  //    표기를 평범한 영어로 되돌리는 게 아니라, 갈라진 하나를 표준으로 되돌리는
+  //    것입니다 — L^IFE / *SCAPE 표기 자체는 그대로 둡니다.
+  //
+  // ② 사실: "현장 일정이 열리는"은 넷 중 둘에만 참입니다. 현장 4일 중 Day 1은
+  //    The Foundry, Day 7은 AWS 오피스이고, L^IFE Jungle이 여는 것은 Day 5와
+  //    Day 8입니다. 장소는 날마다 다르고 정본은 schedule.ts이니, 파트너 소개가
+  //    전체를 대표하게 두지 마세요.
   "L^IFE": {
-    ko: "*SCAPE 오차드에 자리한 2층 규모의 체험형 리테일·이벤트 공간으로, Innovate 360가 운영합니다. 싱가포르 신진 브랜드들이 입점한 리테일 층과 크리에이터·라이브커머스 스튜디오, 정기 커뮤니티 프로그램이 함께 돌아갑니다. 빌더톤의 현장 일정이 열리는 L^ife Jungle이 바로 이곳입니다.",
-    en: "A two-storey experiential retail & event space at *SCAPE Orchard, run by Innovate 360, with a floor of emerging Singapore brands plus creator and live-commerce studios and regular community programming. This is L^ife Jungle, home of the builderthon's on-site days.",
+    ko: "*SCAPE 오차드에 자리한 2층 규모의 체험형 리테일·이벤트 공간으로, Innovate 360가 운영합니다. 싱가포르 신진 브랜드들이 입점한 리테일 층과 크리에이터·라이브커머스 스튜디오, 정기 커뮤니티 프로그램이 함께 돌아갑니다. 빌더톤의 Day 5 네트워킹 데이와 Day 8 결과 공유회가 열리는 L^IFE Jungle이 바로 이곳입니다.",
+    en: "A two-storey experiential retail & event space at *SCAPE Orchard, run by Innovate 360, with a floor of emerging Singapore brands plus creator and live-commerce studios and regular community programming. This is L^IFE Jungle, where the builderthon's Day 5 networking day and Day 8 Showcase take place.",
   },
   BZCF: {
     ko: "구독자 32만의 유튜브 채널을 중심으로 한 비즈니스·창업 콘텐츠 미디어입니다. 창업가 인터뷰와 산업 분석 콘텐츠를 만들고 창업가 커뮤니티 ‘BZCF Fellowship’을 운영하며, 이번 빌더톤에는 마케팅 파트너로 함께합니다.",
@@ -342,12 +353,12 @@ export const dict = {
     // between placements. Every clause is a confirmed fact stated elsewhere on
     // the site — nothing here is new promise.
     //
-    // "당일 결정 OK"는 2026-08-11에 붙었습니다. 주최 방침이 "1일 차에는 그냥
+    // "당일 결정 OK"는 2026-08-11에 붙었습니다. 주최 방침이 "Day 1에는 그냥
     // 와서 현장에서 결정해도 된다"이고, 사이트가 그 말을 어디에서도 하지 않아
     // 마감 시각만 보고 물러서는 사람이 생겼습니다. 같은 사실을 말하는 자리가
     // 셋입니다: 여기(가장 짧은 신호) · hero.countdownSameDay(단서 한 줄) ·
-    // FAQ "일단 1일 차에 가 보고 결정해도 되나요?"(전문). 셋은 함께 움직이고,
-    // 늦은 사인업의 팀 매칭 단서는 여기 말고 뒤의 두 곳이 답니다 — 이 줄은
+    // FAQ "일단 Day 1에 가 보고 결정해도 되나요?"(전문). 셋은 함께 움직이고,
+    // 늦은 등록의 팀 매칭 단서는 여기 말고 뒤의 두 곳이 답니다 — 이 줄은
     // 조건을 나열하는 자리지 단서를 다는 자리가 아닙니다.
     reassure: {
       ko: "참가비 무료 · 스크리닝 없음 · 코딩 몰라도 OK · 솔로 환영 · 당일 결정 OK",
@@ -807,7 +818,7 @@ export const dict = {
     // 문장의 무게는 앞 절(열려 있다)에 실려 있어야 합니다.
     //
     // 같은 사실을 말하는 나머지 두 곳: register.reassure("당일 결정 OK") ·
-    // FAQ "일단 1일 차에 가 보고 결정해도 되나요?"(전문 + 팀 등록 예외).
+    // FAQ "일단 Day 1에 가 보고 결정해도 되나요?"(전문 + 팀 등록 예외).
     //
     // EN의 두 절은 마침표로 끊습니다 — 원안은 em dash였는데, 이 사이트는
     // 2026-08-09 편집에서 산문의 em dash를 걷어냈고(problemRegistrationOpen 주석
@@ -1117,7 +1128,12 @@ export const dict = {
   },
 
   program: {
-    tag: { ko: "Program", en: "Program" },
+    // KO 태그가 영문이던 두 곳 중 하나였습니다 (2026-08-12에 정리). 나머지
+    // 챕터는 전부 한국어 태그(취지 · 참가 대상 · 참가 혜택 · 멘토링 · 피드백 패널)라,
+    // 한국어로 읽는 사람에게 이 둘만 영어로 튀었습니다. 네비의 레일 칩이 이미
+    // "프로그램"이라고 부르고 있어 이름도 그쪽에 맞춥니다.
+    // FAQ는 예외로 둡니다 — 한국어에서도 그대로 FAQ라고 씁니다.
+    tag: { ko: "프로그램", en: "Program" },
     heading: { ko: "8일, zero에서 MVP까지", en: "8 days, from zero to MVP" },
     // ── 최종 아웃풋 (프로그램 머리) ──────────────────────────────────────────
     // The page said what happens on each day and never said what a team hands in
@@ -1244,9 +1260,14 @@ export const dict = {
         ko: "순위 대신, 네 가지 다른 잘함에 상을 줍니다",
         en: "No ranking, four different ways to be good",
       },
+      // 이름에 "어워드"/"Award"를 붙이지 않습니다 (2026-08-12). 예전에는 KO 넷 중
+      // 셋만, EN 넷 중 하나만 접미가 붙어 있어서 같은 목록 안에서 서로 다른 규칙을
+      // 따르는 것처럼 보였습니다. 바로 위 tag가 이미 "테마형 어워드"라고 말하고
+      // countBadge가 "4부문 · 8팀"이라, 카드마다 접미를 다시 다는 것은 같은 단어를
+      // 다섯 번 말하는 일입니다. 혜택 06 카드의 나열도 원래부터 접미가 없었습니다.
       items: [
         {
-          // DECIDED 2026-08-07: ko는 "답지 너머 어워드" → "비욘드 브리프 어워드".
+          // DECIDED 2026-08-07: ko는 "답지 너머 어워드" → "비욘드 브리프".
           // 나머지 셋이 비즈니스 포텐셜·빌더스 초이스·0→100이라 외래어·숫자
           // 계열인데 이것만 순우리말 비유여서, 넷을 나란히 놓으면 이 하나가
           // 가볍게 읽혔습니다. 영문명과도 1:1이 됩니다.
@@ -1257,7 +1278,7 @@ export const dict = {
           // 문구("회사에는 ‘답지’가 있지만, 답지에 없던 접근을 가장 반깁니다")를
           // 받는 콜백이기도 합니다. desc에서 답지를 빼면 이 상은 이름도 설명도
           // 뜻이 없어집니다.
-          name: { ko: "비욘드 브리프 어워드", en: "Beyond the Brief" },
+          name: { ko: "비욘드 브리프", en: "Beyond the Brief" },
           meta: {
             ko: "출제사 코드프레소 지명 · 트랙당 1팀 · 현금 부상",
             en: "Named by Codepresso, the problem owner · one per track · cash prize",
@@ -1268,7 +1289,7 @@ export const dict = {
           },
         },
         {
-          name: { ko: "비즈니스 포텐셜 어워드", en: "Business Potential Award" },
+          name: { ko: "비즈니스 포텐셜", en: "Business Potential" },
           meta: {
             ko: "VC 패널 지목 · 트랙당 1팀 · 현금 부상",
             en: "The VC panel's pick · one per track · cash prize",
@@ -1290,7 +1311,7 @@ export const dict = {
           },
         },
         {
-          name: { ko: "0→100 어워드", en: "Zero to Hundred" },
+          name: { ko: "0→100", en: "Zero to Hundred" },
           meta: {
             ko: "운영진 선정 · 트랙 무관 2팀 · 널담 바우처",
             en: "The organizers' pick · two teams, any track · Nuldam voucher",
@@ -1529,9 +1550,18 @@ export const dict = {
       // making, said once where the structure can back it up. "정거장" is the
       // load-bearing word — a stop you choose to get off at, not a day you
       // failed to attend. Keep it.
+      // TRIMMED 2026-08-12: 꼬리의 "시간을 비워야 하는 날은 Day 1·8 이틀뿐"을
+      // 뗐습니다. 같은 사실이 이 한 밴드 안에서 네 번 나오고 있었습니다 — 스탯
+      // 타일(2일 필참 / 6일 선택), 그 아래 rule.note("현장 4일 중 …Day 1·8
+      // 이틀뿐"), modeNote의 '필참 2일' 행, 그리고 이 줄. 네 번째쯤 되면 안심이
+      // 아니라 변명처럼 들립니다.
+      //
+      // 이 문장이 원래 맡은 일은 따로 있습니다: 하루하루가 '정거장'이라는 것과,
+      // 어디에서 내릴지는 읽는 사람이 고른다는 것. 그 둘만 남깁니다. 날짜를
+      // 다시 붙이고 싶어지면 그건 이 줄이 아니라 rule.note를 고칠 신호입니다.
       principle: {
-        ko: "하루하루는 기업·업계 전문가 앞에서 검증받는 무대, 결과 공유회로 나아가는 정거장입니다. 방문은 당신의 선택이고, 시간을 비워야 하는 날은 Day 1·8 이틀뿐.",
-        en: "Each day is a stop on the way to the Showcase, where what you built goes in front of the companies and the experts. Which ones you get off at is your call, and only Day 1 and Day 8 need blocking out.",
+        ko: "하루하루는 기업·업계 전문가 앞에서 검증받는 무대, 결과 공유회로 나아가는 정거장입니다. 어디에서 내릴지는 당신의 선택이에요.",
+        en: "Each day is a stop on the way to the Showcase, where what you built goes in front of the companies and the experts. Which ones you get off at is your call.",
       },
       // The other half of the principle, and the guardrail on it. Saying six of
       // eight days are optional, and stopping there, invites the reading that
@@ -1656,7 +1686,25 @@ export const dict = {
       ko: "자율 빌드입니다. 정해진 세션도, 출석도, 접속도 없어요. 팀이 각자 비는 시간에 원하는 만큼만 이어가면 돼요.",
       en: "Self-paced build. No scheduled session, no attendance, nothing to join. Teams pick it up in whatever free time they have, for as long as they want.",
     },
-    pendingLabel: { ko: "현장 (미정)", en: "On-site (TBC)" },
+    // ── 미확정을 말하는 두 가지 방식 (정리 2026-08-12) ────────────────────────
+    // 사이트에는 "아직 안 정해졌다"를 뜻하는 라벨이 네 계열로 흩어져 있었습니다:
+    // 협의 중 / TBC · 미정 · 추후 안내 · Coming soon. 읽는 사람에게 그 넷은
+    // 구분되지 않고, 같은 상태가 자리마다 다른 이름을 갖는 것처럼 보입니다.
+    //
+    // 두 가지만 씁니다. 어느 쪽인지는 "누가 결정을 쥐고 있는가"로 갈립니다.
+    //
+    //   협의 중 / TBC        — 상대가 아직 확답하지 않음. 우리 손을 떠난 것.
+    //                          (judges.dayPendingLabel · partners.pendingLabel)
+    //   추후 안내 / TBA      — 하기로 정해졌고 세부만 공개 전. 우리 손에 있는 것.
+    //                          (modal.tbc · 이 라벨 · schedule의 "시간 추후 안내")
+    //
+    // 이 라벨은 "그 날 현장에서 하는 건 맞고 장소·시간이 아직 공개 전"이라
+    // 뒤쪽입니다. KO만 '미정'을 쓰고 EN은 TBC를 쓰고 있어서 한 라벨 안에서
+    // 두 계열이 섞여 있었습니다.
+    //
+    // 참고: 지금 dayMode: "pending"인 날은 없어서 이 배지는 렌더되지 않습니다.
+    // 일정이 밀리면 그때 켜질 자리이니, 그때 문구를 새로 짓지 마세요.
+    pendingLabel: { ko: "현장 (추후 안내)", en: "On-site (TBA)" },
     // 1:1 mentoring is arranged mentor by mentor, and the DEFAULT is now online
     // (Aug 2026 — enough mentors can only make an online slot). The badge led
     // with "대면 기본" while that was the promise; leading with the wrong
@@ -1686,7 +1734,9 @@ export const dict = {
 
   // ── 참가 혜택 · WHY JOIN (6 benefits) + 참여 플로우 + 인센티브 ──────────────
   benefits: {
-    tag: { ko: "참가 혜택", en: "Why Join" },
+    // EN은 문장형 대문자(sentence case)로 통일합니다 — Why this exists ·
+    // Who should join · Speaker sessions · Feedback panel과 같은 규칙 (2026-08-12).
+    tag: { ko: "참가 혜택", en: "Why join" },
     heading: { ko: "참가하면 무엇을 얻나요?", en: "What you get by joining" },
     // MOBILE ONLY. The six cards carry 3–5 bullets each, and fully expanded they
     // were the second-longest block on a phone. Collapsed to two bullets, a card
@@ -2784,7 +2834,8 @@ export const dict = {
   },
 
   partners: {
-    tag: { ko: "Partners", en: "Partners" },
+    // program.tag와 같은 정리 (2026-08-12). 네비 칩의 이름과 맞춥니다.
+    tag: { ko: "파트너", en: "Partners" },
     heading: { ko: "함께 만드는 사람들", en: "Built together" },
     // EDIT 2026-08-11: KO를 역할별 문장 셋으로 다시 썼습니다. 예전 문장은 세
     // 주체를 쉼표로 이어 붙인 한 덩어리라("…AXMOS(…), …한인 학생회의 주관·운영,
@@ -3050,10 +3101,21 @@ export const dict = {
       // 시각(오후 4시)은 hero.countdownDeadline · problemRegistrationOpen ·
       // REGISTRATION_CLOSES_AT과 같은 값이어야 합니다. 여기서만 고치지 마세요.
       {
-        q: { ko: "일단 1일 차에 가 보고 결정해도 되나요?", en: "Can I just show up on Day 1 and decide there?" },
+        // EDIT 2026-08-12: 용어와 톤을 사이트 표준으로 되돌렸습니다.
+        //
+        // 이 답은 주최 메시지 원문을 거의 그대로 옮겨 온 것이라, 원문의 말투가
+        // 함께 딸려 왔습니다. "1일 차"(사이트 표준은 Day 1 — 103곳 대 5곳)와
+        // "사인업"(표준은 등록 — 54곳 대 3곳)이 이 답변에만 남아 있었고, 톤도
+        // 유독 저자세였습니다("정말 감사하고요", "참고해 주세요"). 카톡으로 받은
+        // 안내라면 자연스럽지만, 같은 목록의 다른 열세 답변과 나란히 놓이면 이
+        // 하나만 다른 사람이 쓴 것처럼 읽힙니다.
+        //
+        // 사실은 하나도 바뀌지 않았습니다: 당일 와서 정해도 된다 · 오후 4시까지
+        // 열려 있다 · 늦으면 매칭할 사람이 없을 수 있다 · 팀 등록은 해당 없다.
+        q: { ko: "일단 Day 1에 가 보고 결정해도 되나요?", en: "Can I just show up on Day 1 and decide there?" },
         a: {
-          ko: "네! 1일 차에는 당일 참석만 해주셔도 정말 감사하고요, 참여 여부는 현장에서 결정하셔도 됩니다. 사인업은 당일 오후 4시까지 열려 있어요. 다만 너무 늦게 사인업하시면 상황에 따라 함께 팀을 구성해드릴 수 있는 분이 없을 수도 있는 점만 참고해 주세요. (이미 팀으로 오시는 분들은 해당 없어요.)",
-          en: "Of course, showing up on Day 1 already means a lot, and you can decide on the spot. Sign-up stays open until 4PM that day. One heads-up: if you sign up very late in the day, we may not have anyone left to match you with a team. (Doesn't apply if you're registering as a team.)",
+          ko: "네, Day 1에 와서 결정하셔도 됩니다. 등록은 당일 오후 4시까지 열려 있어요. 다만 너무 늦게 등록하시면 함께 팀을 구성할 분이 남아 있지 않을 수 있어요. (이미 팀으로 오시는 분들은 해당 없어요.)",
+          en: "Yes, come to Day 1 and decide there. Registration stays open until 4PM that day. Just note that if you register very late, there may be no one left to team you up with. (Doesn't apply if you're registering as a team.)",
         },
       },
       // Mentor requests were the most common pre-event ask — answered next to the
