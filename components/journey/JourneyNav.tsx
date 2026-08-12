@@ -25,11 +25,63 @@ const anchors = [
   { id: "faq",      label: dict.nav.faq },
 ];
 
+// ─────────────────────────────────────────────────────────────────────────────
+// WHERE AM I — the id of the anchor section currently occupying the viewport.
+//
+// The rail is the only wayfinding on a phone, and its chips used to look
+// identical whether you were in 취지 or in FAQ. That was survivable while an
+// anchor tap animated you there (the travel itself told you where you went);
+// with jumps now instant below `lg` (globals.css), nothing at all reports
+// position. This gives the chips something true to show.
+//
+// rootMargin pins the decision line near the top of the viewport rather than
+// its middle: chapters here are full-screen-tall, so a middle line flips the
+// active chip a half screen after you have visibly arrived. -45% at the bottom
+// keeps exactly one section qualifying at a time on tall screens.
+// ─────────────────────────────────────────────────────────────────────────────
+function useActiveSection(enabled: boolean) {
+  const [active, setActive] = useState<string | null>(null);
+  useEffect(() => {
+    if (!enabled || typeof IntersectionObserver === "undefined") return;
+    const nodes = anchors
+      .map((a) => document.getElementById(a.id))
+      .filter((n): n is HTMLElement => !!n);
+    if (!nodes.length) return;
+    // Track ratios rather than reacting to each entry: with several sections in
+    // view during a fast flick, "last one that fired" is whichever the browser
+    // reported last, not the one on screen.
+    const visible = new Map<string, number>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) visible.set(e.target.id, e.intersectionRatio);
+          else visible.delete(e.target.id);
+        });
+        let best: string | null = null;
+        let bestRatio = 0;
+        visible.forEach((ratio, id) => {
+          if (ratio >= bestRatio) { bestRatio = ratio; best = id; }
+        });
+        // Keep the last known section when scrolling through a gap (the hero and
+        // the closing screen are not anchors) — blanking there reads as a bug.
+        if (best) setActive(best);
+      },
+      { rootMargin: "-96px 0px -45% 0px", threshold: [0, 0.15, 0.4, 0.75] }
+    );
+    nodes.forEach((n) => io.observe(n));
+    return () => io.disconnect();
+  }, [enabled]);
+  return active;
+}
+
 export default function JourneyNav() {
   const { t, locale } = useLocale();
   const reduce = useReducedMotion();
   const { openRegister, registered } = useRegister();
   const [scrolled, setScrolled] = useState(false);
+  // Only observe once the rail exists — before that there is nothing to mark,
+  // and the observer would run through the whole hero for nobody.
+  const activeSection = useActiveSection(scrolled);
   // Reveal the register button as soon as the visitor leaves the hero — the same
   // scrollY > 40 threshold that tints the bar. It used to wait on an
   // IntersectionObserver over #about, which broke the most likely first action on
@@ -203,13 +255,20 @@ export default function JourneyNav() {
               header's minimalism is the point, and one more sheet to open is one
               more reason not to. Tracks the anchor row's breakpoint: if that
               moves, this moves with it or the quiz loses its only header route. */}
+          {/* 2026-08-12: ✦ 하나만 있던 칩에 글자를 붙였습니다. 세로는 이미
+              min-h-[44px]였지만 가로가 px-3 + 글리프 하나라 40px 남짓이었고,
+              무엇보다 ✦만으로는 눌러야 할 이유가 전달되지 않았습니다 — 폰에서
+              헤더에 있는 유일한 퀴즈 통로인데 라벨이 aria에만 있었습니다.
+              전체 라벨("유형 테스트 ✦")은 좁은 헤더에서 다른 칩을 밀어내므로
+              짧은 라벨을 따로 둡니다. */}
           <a
             href="/quiz"
             onClick={() => track("quiz_click", { src: "nav_mobile" })}
             aria-label={t(dict.nav.quizNav)}
-            className="inline-flex min-h-[44px] shrink-0 items-center gap-1 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 text-xs font-bold text-violet-100/90 transition hover:border-violet-300/50 hover:bg-violet-500/20 hover:text-white xl:hidden"
+            className="inline-flex min-h-[44px] shrink-0 items-center gap-1 rounded-full border border-violet-400/30 bg-violet-500/10 px-3.5 text-xs font-bold text-violet-100/90 transition hover:border-violet-300/50 hover:bg-violet-500/20 hover:text-white xl:hidden"
           >
             <span aria-hidden>✦</span>
+            <span aria-hidden>{t(dict.nav.quizNavShort)}</span>
           </a>
           {links.openChat && (
             <a
@@ -300,17 +359,32 @@ export default function JourneyNav() {
       {scrolled && (
         <div className="xl:hidden">
           <div className="flex gap-2 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]{display:none}">
-            {anchors.map((a) => (
-              <a
-                key={a.id}
-                href={`#${a.id}`}
-                // min-h stays 44px — the row got shorter by losing padding around
-                // it, never by shrinking the thing a thumb has to hit.
-                className="inline-flex min-h-[44px] shrink-0 items-center whitespace-nowrap rounded-full border border-white/12 bg-white/[0.06] px-3 text-[0.7rem] font-semibold text-white/75 backdrop-blur transition active:scale-[0.97]"
-              >
-                {t(a.label)}
-              </a>
-            ))}
+            {anchors.map((a) => {
+              const here = a.id === activeSection;
+              return (
+                <a
+                  key={a.id}
+                  href={`#${a.id}`}
+                  // aria-current, not just colour: the chip's meaning has to
+                  // survive for someone who can't see the tint.
+                  aria-current={here ? "true" : undefined}
+                  // min-h stays 44px — the row got shorter by losing padding around
+                  // it, never by shrinking the thing a thumb has to hit.
+                  //
+                  // 현위치 표시는 테두리+글자색까지만 (2026-08-12). 칩을 채우면
+                  // 헤더에서 등록 버튼 다음으로 무거운 요소가 되어, 읽고 있는
+                  // 챕터가 행동을 부르는 것처럼 보입니다. 이건 표지판이지
+                  // 버튼이 아닙니다.
+                  className={`inline-flex min-h-[44px] shrink-0 items-center whitespace-nowrap rounded-full border px-3 text-[0.7rem] font-semibold backdrop-blur transition active:scale-[0.97] ${
+                    here
+                      ? "border-violet-400/45 bg-violet-500/15 text-white"
+                      : "border-white/12 bg-white/[0.06] text-white/75"
+                  }`}
+                >
+                  {t(a.label)}
+                </a>
+              );
+            })}
           </div>
         </div>
       )}

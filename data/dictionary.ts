@@ -219,6 +219,10 @@ export const dict = {
     // same weight as the section anchors — a step below the open-chat ghost
     // button, two below the register pill.
     quizNav: { ko: "유형 테스트 ✦", en: "Type test ✦" },
+    // 폰 헤더의 퀴즈 칩에 붙는 짧은 라벨 (2026-08-12). 위의 전체 라벨은 좁은
+    // 헤더에서 오픈채팅·등록 칩을 밀어냅니다. 그 칩의 접근성 이름은 여전히
+    // quizNav이니(aria-label), 이 문자열은 눈으로 읽는 쪽만 담당합니다.
+    quizNavShort: { ko: "퀴즈", en: "Quiz" },
     // Shown instead of `quiz` once a visitor has taken the test (links to their saved result).
     quizResult: { ko: "내 결과 보기", en: "View my result" },
     viewProgram: { ko: "프로그램 보기", en: "View Program" },
@@ -406,19 +410,46 @@ export const dict = {
       en: "Join the open chat too. Announcements land there first",
     },
     successOpenChatCta: { ko: "오픈채팅 들어가기", en: "Open the chat" },
+    // ── 등록 직후의 친구 부르기 ────────────────────────────────────────────
+    // ADDED 2026-08-12. 이 화면이 친구를 부르기에 가장 좋은 (그리고 사실상
+    // 유일한) 타이밍입니다: 방금 등록을 마쳐서 확신이 최고조이고, 행사는 아직
+    // 남아 있어 같이 올 사람을 부를 시간이 있습니다. 그 뒤로는 이 사람이 이
+    // 페이지에 다시 올 이유가 없습니다.
+    //
+    // "팀원"이라고 못 박지 않습니다 — 솔로로 등록한 사람도, 이미 팀으로 온
+    // 사람도 같은 화면을 봅니다. 팀이 없어도 괜찮다는 것은 사이트 전체의
+    // 약속이라, 여기서 팀 구성을 숙제처럼 만들면 그 약속과 어긋납니다.
+    successShareTitle: {
+      ko: "같이 올 사람이 있나요? 지금이 부르기 좋은 타이밍이에요",
+      en: "Someone you'd want here with you? Now's the moment to ask",
+    },
+    successShareCta: { ko: "친구에게 링크 보내기", en: "Send a friend the link" },
+    successShareCopied: { ko: "링크 복사됨 ✓", en: "Link copied ✓" },
+    // 공유 시트에 실리는 문구. 링크만 보내면 받는 사람은 맥락 없이 URL만
+    // 봅니다. 사실만 씁니다 — 날짜와 무료.
+    successShareText: {
+      ko: "싱가포르 한인 학생 AI 빌더톤, 8/22–29. 참가비 무료야. 같이 할래?",
+      en: "AI Builderthon for Korean students in Singapore, 22–29 Aug. Free to join. Want in?",
+    },
     // Nav scroll-revealed button + its post-registration label.
     navRegistered: { ko: "등록 완료 ✓", en: "Registered ✓" },
     // Modal chrome.
     modalTitle: { ko: "빌더톤 등록", en: "Register for the Builderthon" },
-    // Leads with the effort estimate, then the original subtitle unchanged: the
-    // question someone has with the form already open is "how long is this".
+    // Leads with the effort estimate: the question someone has with the form
+    // already open is "how long is this".
+    //
     // COUNT THIS AGAINST THE FORM before editing — it's a claim the visitor can
     // check in one glance. Solo path has four `required` Fields (name, email,
-    // joinType, contact); picking 팀 adds the team name, so "4" is the floor,
-    // not the average. Bump it if a required field is ever added.
+    // joinType, contact). 팀을 고르면 팀명이 붙고, 추가 팀원마다 이름·이메일·
+    // 연락처 셋이 더 붙습니다 — 팀원 한 명이면 여덟 칸입니다.
+    //
+    // FIXED 2026-08-12: 예전 문장은 "필수는 4칸"이라고만 했습니다. 솔로에게는
+    // 사실이지만 팀을 고르는 순간 화면이 그 말을 즉시 반증했습니다. 숫자를
+    // 지우는 대신 어느 경로의 숫자인지 밝히고, 팀이 무엇을 더 받는지 그 자리에서
+    // 말합니다 — 셈이 맞는 편이 짧은 것보다 낫습니다.
     modalSubtitle: {
-      ko: "필수는 4칸, 3분이면 끝나요. 몇 가지만 알려주시면 운영진이 카카오톡으로 다음 절차를 안내드려요. 이미 팀이 있다면 한 명이 팀 전체를 등록할 수 있어요.",
-      en: "Only 4 required fields, done in 3 minutes. A few details and our team will reach out on KakaoTalk. Have a team already? One person can register everyone.",
+      ko: "솔로는 필수 4칸, 3분이면 끝나요. 이미 팀이 있다면 한 명이 팀 전체를 등록할 수 있고, 팀명과 팀원의 이름·이메일·연락처를 더 받습니다. 몇 가지만 알려주시면 운영진이 카카오톡으로 다음 절차를 안내드려요.",
+      en: "Solo is four required fields, done in 3 minutes. If you already have a team, one person can register everyone: we'll also ask for the team name and each teammate's name, email and contact. A few details and our team will reach out on KakaoTalk.",
     },
     // Trust signals — who's asking, what happens to the data, and what happens
     // next. All three restate facts already true elsewhere on the site; none of
@@ -629,9 +660,15 @@ export const dict = {
     },
     // Shown when the submit itself fails (network down / server error). The
     // form stays filled in so the visitor can just press the button again.
+    // EDIT 2026-08-12: 입력값이 남아 있다는 사실을 말합니다. 제출 실패 경로는
+    // 에러만 세우고 status를 idle로 되돌릴 뿐 필드를 하나도 비우지 않는데
+    // (RegisterModal의 submit catch), 정작 그 말을 안 해서 읽는 사람은 "다시
+    // 시도"를 "처음부터 다시 입력"으로 읽었습니다. 긴 폼에서 그 오해는 곧
+    // 이탈입니다. 코드가 이미 하고 있는 일을 문장이 따라잡는 것뿐이니,
+    // 저 catch가 필드를 비우도록 바뀌면 이 문장도 함께 고쳐야 합니다.
     errSubmit: {
-      ko: "등록에 실패했어요. 잠시 후 다시 시도해 주세요.",
-      en: "Registration failed. Please try again in a moment.",
+      ko: "등록에 실패했어요. 쓰신 내용은 그대로 있으니 한 번만 다시 눌러주세요.",
+      en: "That didn't go through. Everything you typed is still here, so just hit register once more.",
     },
     // 429 from the per-IP / global throttle. Separate from errSubmit because
     // the remedy differs: this one really is "wait", not "retry now", and a

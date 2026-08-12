@@ -52,6 +52,22 @@ html { font-size: 112.5%; scroll-behavior: smooth; scroll-padding-top: 96px; }
   html { scroll-padding-top: 120px; }
 }
 
+/* Anchor jumps land instantly below `lg`.
+   This page is ~18,000px tall, and the section rail can send you most of that
+   in one tap: measured, a rail jump from the top to #faq travels 14,779px, and
+   Chrome animates it for ~1.8s. On a phone that is nearly two seconds of the
+   whole page smearing past at speed, on top of the three.js field that is
+   already asking for those frames — the two together drop frames and read as
+   motion sickness rather than as orientation.
+   Desktop keeps smooth: shorter effective distances, more headroom, and a
+   mouse user gets real spatial feedback from it.
+   The `prefers-reduced-motion` block further down already turns smooth off
+   everywhere; this is the separate, motion-tolerant-but-small-screen case.
+   The rail's active chip (JourneyNav) is what replaces the sense of travel. */
+@media (max-width: 1023px) {
+  html { scroll-behavior: auto; }
+}
+
 /* ── Horizontal-overflow guard ────────────────────────────────────────────────
    THE ROOT CAUSES ARE FIXED AT THE SECTION LEVEL. As of 2026-08-03 the two real
    offenders are gone: the hero confirmed-partner marquee (replaced by a static

@@ -76,11 +76,19 @@ export default function OpenChatNudge({
                 {t(dict.register.successOpenChatCta)} →
               </a>
             </p>
+            {/* 보이는 크기는 그대로, 누르는 넓이만 키웁니다 (2026-08-12).
+                아이콘 12px에 p-1.5라 실제 타깃이 24px 남짓이었습니다. 이 토스트는
+                6초 뒤 스스로 사라지고, 바로 왼쪽이 카카오 오픈채팅 링크입니다 —
+                작은 X를 급하게 겨냥하다 빗나가면 새 탭이 열립니다. 닫으려던
+                사람에게 그건 최악의 결과입니다.
+                버튼 상자를 키우지 않고 before 의사요소로 히트 영역만 넓히는 이유는
+                레이아웃 때문입니다. 이 줄은 flex items-start라, 44px 상자를 두면
+                토스트가 그만큼 두꺼워집니다. -inset-[11px]이면 약 46px입니다. */}
             <button
               type="button"
               onClick={onClose}
               aria-label={t(dict.modal.close)}
-              className="-mr-1 -mt-1 shrink-0 rounded-full p-1.5 text-white/55 transition hover:bg-white/10 hover:text-white/80"
+              className="relative -mr-1 -mt-1 shrink-0 rounded-full p-1.5 text-white/55 transition before:absolute before:-inset-[11px] before:content-[''] hover:bg-white/10 hover:text-white/80"
             >
               <svg width="12" height="12" viewBox="0 0 15 15" fill="none" aria-hidden>
                 <path d="M1 1l13 13M14 1L1 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />

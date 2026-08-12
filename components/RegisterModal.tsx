@@ -44,6 +44,7 @@ import { parseResultId } from "@/lib/quizScore";
 import { loadOwnResult } from "@/lib/quizResult";
 import { REGISTER_DRAFT_KEY as DRAFT_KEY } from "@/lib/storage";
 import type { RegisterPreset } from "@/lib/RegisterContext";
+import Confetti from "@/components/Confetti";
 
 interface RegisterModalProps {
   open: boolean;
@@ -359,6 +360,9 @@ export default function RegisterModal({
   // Set when the visitor clicks through the already-registered panel to the
   // form anyway (shared device, registering a teammate, cleared-flag edge case).
   const [bypassRegistered, setBypassRegistered] = useState(false);
+  // Success-screen share: null = untouched, "copied" = the clipboard fallback ran.
+  // The native share sheet needs no state — the OS shows its own confirmation.
+  const [shareState, setShareState] = useState<null | "copied">(null);
   // Show the notice, not the form — but never after a submit lands in this same
   // open, or the success screen would be replaced by "you're already registered".
   const showAlready = alreadyRegistered && !bypassRegistered && status !== "success";
@@ -514,6 +518,39 @@ export default function RegisterModal({
       /* storage blocked — the round-trip just won't restore fields */
     }
     window.location.href = "/quiz?return=register";
+  }
+
+  // Success-screen share. Native sheet where it exists (every phone this event
+  // is read on), clipboard everywhere else.
+  //
+  // The URL is the site root, not the current href: this modal can be open at
+  // ?register=1&ref=quiz-return, and sending a friend a link that pops a
+  // half-filled form is a worse first impression than the home page.
+  //
+  // A cancelled share sheet throws AbortError. That is the visitor changing
+  // their mind, not a failure — swallow it and leave the button as it was, so
+  // nothing claims a link was sent when it wasn't.
+  async function shareInvite() {
+    const url = `${window.location.origin}/`;
+    const text = t(dict.register.successShareText);
+    analytics("share_click", { src: "success" });
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        // No `title`: iOS ignores it for most targets and Android appends it to
+        // `text`, which would send the event name twice in one message.
+        await navigator.share({ text, url });
+        return;
+      } catch {
+        return; // cancelled (or the sheet failed) — say nothing
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(`${text} ${url}`);
+      setShareState("copied");
+    } catch {
+      /* clipboard blocked (insecure context / permissions) — the button just
+         does nothing rather than lying about a copy that didn't happen */
+    }
   }
 
   // Move the visitor to the first thing that needs fixing. Without this a
@@ -807,7 +844,15 @@ export default function RegisterModal({
                 </div>
               ) : status === "success" ? (
                 // ── Success state ─────────────────────────────────────────────
-                <div className="py-6 text-center">
+                // `relative` is what the confetti pins to — it fans from the top
+                // of this box, i.e. from the check mark down across the title.
+                // 이 화면이 사이트에서 가장 밋밋한 순간이었습니다: 보조 장치인
+                // 퀴즈 결과에는 컨페티가 터지는데, 정작 전환이 완료되는 프레임은
+                // 정적인 체크 아이콘 하나였습니다. 같은 버스트를 재사용합니다
+                // (components/Confetti) — 두 번째 구현을 쓰면 둘이 갈라집니다.
+                // reduced-motion에서는 CSS가 통째로 지웁니다.
+                <div className="relative py-6 text-center">
+                  <Confetti />
                   <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/10">
                     <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-300">
                       <path d="M4 12.5l5 5L20 6.5" />
@@ -842,6 +887,24 @@ export default function RegisterModal({
                       {t(dict.register.successQuizCta)}
                       <span aria-hidden>→</span>
                     </a>
+                  </div>
+
+                  {/* 친구 부르기. 이 화면 다음에 이 사람이 이 페이지로 돌아올
+                      이유는 없습니다 — 부를 사람이 있다면 지금이 유일한
+                      타이밍입니다. 고스트 한 단계로 두는 이유는 위의 퀴즈
+                      블록과 같습니다: 등록은 이미 끝났고, 이건 덤입니다. */}
+                  <div className="mx-auto mt-4 max-w-sm rounded-2xl border border-white/12 bg-white/[0.04] px-5 py-4">
+                    <p className="break-keep text-sm leading-relaxed text-white/75">
+                      {t(dict.register.successShareTitle)}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={shareInvite}
+                      className="mt-3 inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] px-5 py-2.5 text-sm font-bold text-white/85 transition hover:border-white/35 hover:bg-white/10 hover:text-white"
+                    >
+                      {t(shareState === "copied" ? dict.register.successShareCopied : dict.register.successShareCta)}
+                      {shareState !== "copied" && <span aria-hidden>→</span>}
+                    </button>
                   </div>
 
                   {links.openChat && (
@@ -1064,11 +1127,19 @@ export default function RegisterModal({
                                       <span className="text-sm font-bold text-white/85">
                                         {t(dict.register.memberLabel)} {i + 2}
                                       </span>
+                                      {/* 히트 영역만 44px로 (2026-08-12). 상자는
+                                          h-7(28px)이라 폰에서 겨냥이 빗나가기
+                                          쉬운데, 이 버튼은 확인 없이 즉시
+                                          지웁니다 — 방금 입력한 팀원의 이름·
+                                          이메일·연락처가 한 번에 사라집니다.
+                                          보이는 크기를 키우면 팀원 카드의
+                                          헤더에서 X가 라벨보다 무거워지므로,
+                                          before로 누르는 넓이만 넓힙니다. */}
                                       <button
                                         type="button"
                                         onClick={() => removeMember(m.id)}
                                         aria-label={`${t(dict.register.removeMember)} (${t(dict.register.memberLabel)} ${i + 2})`}
-                                        className="flex h-7 w-7 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/60 transition hover:bg-white/10 hover:text-white active:scale-95"
+                                        className="relative flex h-7 w-7 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/60 transition before:absolute before:-inset-2 before:content-[''] hover:bg-white/10 hover:text-white active:scale-95"
                                       >
                                         <svg width="12" height="12" viewBox="0 0 15 15" fill="none" aria-hidden>
                                           <path d="M1 1l13 13M14 1L1 14" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
