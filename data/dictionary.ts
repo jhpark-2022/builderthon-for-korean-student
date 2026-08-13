@@ -129,8 +129,11 @@ export const partnerIntros: Record<string, Phrase> = {
   //    Day 8입니다. 장소는 날마다 다르고 정본은 schedule.ts이니, 파트너 소개가
   //    전체를 대표하게 두지 마세요.
   "L^IFE": {
-    ko: "*SCAPE 오차드에 자리한 2층 규모의 체험형 리테일·이벤트 공간으로, Innovate 360가 운영합니다. 싱가포르 신진 브랜드들이 입점한 리테일 층과 크리에이터·라이브커머스 스튜디오, 정기 커뮤니티 프로그램이 함께 돌아갑니다. 빌더톤의 Day 5 네트워킹 데이와 Day 8 결과 공유회가 열리는 L^IFE Jungle이 바로 이곳입니다.",
-    en: "A two-storey experiential retail & event space at *SCAPE Orchard, run by Innovate 360, with a floor of emerging Singapore brands plus creator and live-commerce studios and regular community programming. This is L^IFE Jungle, where the builderthon's Day 5 networking day and Day 8 Showcase take place.",
+    // DECIDED 2026-08-13: Day 5는 더 이상 "네트워킹 데이"가 아닙니다(집중 빌드 ·
+    // 중간 점검). 이 카드는 장소를 소개하는 자리라 그날의 프로그램 이름을 다시
+    // 적지 않습니다 — 이름은 schedule.ts가 갖고, 여기는 날짜만 가리킵니다.
+    ko: "*SCAPE 오차드에 자리한 2층 규모의 체험형 리테일·이벤트 공간으로, Innovate 360가 운영합니다. 싱가포르 신진 브랜드들이 입점한 리테일 층과 크리에이터·라이브커머스 스튜디오, 정기 커뮤니티 프로그램이 함께 돌아갑니다. 빌더톤의 Day 5 현장 일정과 Day 8 결과 공유회가 열리는 L^IFE Jungle이 바로 이곳입니다.",
+    en: "A two-storey experiential retail & event space at *SCAPE Orchard, run by Innovate 360, with a floor of emerging Singapore brands plus creator and live-commerce studios and regular community programming. This is L^IFE Jungle, where the builderthon's Day 5 on-site programme and Day 8 Showcase take place.",
   },
   BZCF: {
     ko: "구독자 32만의 유튜브 채널을 중심으로 한 비즈니스·창업 콘텐츠 미디어입니다. 창업가 인터뷰와 산업 분석 콘텐츠를 만들고 창업가 커뮤니티 ‘BZCF Fellowship’을 운영하며, 이번 빌더톤에는 마케팅 파트너로 함께합니다.",
@@ -169,9 +172,9 @@ export const partnerIntros: Record<string, Phrase> = {
   // Link)을 "한국 밖 첫 지점"으로 적고 있고, 미래의 나에게 편지를 써서 우편함에
   // 넣어두면 몇 달 뒤 받는 컨셉도 거기서 나옵니다.
   //
-  // *SCAPE는 우연이 아니라 이 타일에서 가장 할 말이 많은 지점입니다 — Day 5
-  // 네트워킹 데이와 Day 8 결과 공유회가 열리는 바로 그 건물이라, 부상 바우처를
-  // 받는 곳과 쓰는 곳이 같습니다. 그래서 그 사실을 마지막 문장에 둡니다.
+  // *SCAPE는 우연이 아니라 이 타일에서 가장 할 말이 많은 지점입니다 — Day 5와
+  // Day 8 결과 공유회가 열리는 바로 그 건물이라, 부상 바우처를 받는 곳과 쓰는 곳이
+  // 같습니다. 그래서 그 사실을 마지막 문장에 둡니다.
   //
   // 본사 표기는 넣지 않았습니다. 자동 요약이 "전북"을 North Korea로 옮겨 놓는
   // 것을 봤고, 지명 하나 때문에 사실관계가 뒤집힐 자리를 만들 이유가 없습니다.
@@ -972,10 +975,28 @@ export const dict = {
       },
       {
         num: "2",
+        // DECIDED 2026-08-13: Day 5 = 집중 빌드·LAP Time 공유·즉석 인기 투표(빌더스
+        // 초이스 가산)·출석(0→100 가산). 해시드·OpenAI 글로벌 해커톤은 행사 후 별도
+        // 행사로 이동(협의 중).
+        //
+        // 그 해커톤이 별도 step이 아니라 여기 세 번째 문장으로 들어간 이유:
+        //  · 이 퍼널은 참가자 시점입니다(visionIntro 위 주석). step 하나를 늘리면
+        //    "우리가 다음에 할 일" 목록이 되고, 그건 이 섹션이 리서치 결과로
+        //    걷어낸 로드맵 스피크입니다.
+        //  · 참가자가 실제로 묻는 것은 "8일 다음에 뭐가 있나"이고, 그 자리는 이미
+        //    step 2("이어지는 리듬")입니다. 첫 모임이 무엇인지가 그 답입니다.
+        //
+        // 헤지는 "협의 중"입니다(상대 미확답 계열). 일정도 지원도 확정된 것이
+        // 없으니 "예정"·"열립니다"로 바꾸지 마세요. 회사명이 들어가 있는 만큼
+        // 헤지가 같은 문장 안에 있어야 합니다 — 문장을 쪼개면 회사명만 남습니다.
+        // 그리고 이 해커톤은 이 빌더톤이 아니라 "행사 후 별도 행사"입니다:
+        // schedule.ts는 "OpenAI is not a partner of this event"를 지키고 있고,
+        // 그 규칙과 이 문장이 충돌하지 않는 이유가 '별도'라는 낱말입니다.
+        // 사이트에서 이 이야기를 하는 자리는 여기 하나입니다(HASHED_ORG 주석 참고).
         title: { ko: "이어지는 리듬", en: "A rhythm that continues" },
         body: {
-          ko: "한 번 하고 끝나지 않습니다. 기업 문제를 해부하고, 만든 것을 서로 발표하는 정기 빌더 세션. 소수정예 코어로 시작합니다.",
-          en: "Not a one-off. Regular builder sessions where a small core dissects real company problems and demos what they built.",
+          ko: "한 번 하고 끝나지 않습니다. 기업 문제를 해부하고, 만든 것을 서로 발표하는 정기 빌더 세션. 소수정예 코어로 시작합니다. 8일이 끝난 뒤 열리는 별도 글로벌 해커톤도 첫 모임으로 협의 중이에요 (해시드·OpenAI 지원 · 일정 TBC · Zero100 참가자 우선).",
+          en: "Not a one-off. Regular builder sessions where a small core dissects real company problems and demos what they built. A separate global hackathon after the eight days is in discussion as the first of those gatherings (support from Hashed and OpenAI, dates TBC, Zero100 participants first).",
         },
       },
       {
@@ -1302,9 +1323,17 @@ export const dict = {
         },
         {
           name: { ko: "빌더스 초이스", en: "Builder's Choice" },
+          // DECIDED 2026-08-13: Day 5 = 집중 빌드·LAP Time 공유·즉석 인기 투표(빌더스
+          // 초이스 가산)·출석(0→100 가산). 해시드·OpenAI 글로벌 해커톤은 행사 후 별도
+          // 행사로 이동(협의 중).
+          //
+          // 가산 사실은 meta에만 붙입니다. meta는 사실 줄(선정 주체 · 팀 수 · 부상)이고
+          // desc는 유머 줄이라, desc에 넣으면 농담 안에 규칙이 숨습니다.
+          // 같은 사실이 schedule.ts의 Day 5(runOfShow 투표 줄 · 카드 description)에도
+          // 있습니다. 함께 움직이세요. 배점 숫자는 어디에도 쓰지 않습니다.
           meta: {
-            ko: "참가자 투표 · 트랙당 1팀 · 널담 바우처",
-            en: "Voted by the participants · one per track · Nuldam voucher",
+            ko: "참가자 투표 · 트랙당 1팀 · 널담 바우처 · Day 5 즉석 투표 결과 합산",
+            en: "Voted by the participants · one per track · Nuldam voucher · the Day 5 vote carries into it",
           },
           desc: {
             ko: "발표가 다 끝났는데도 자꾸 생각나는, 빌더들이 뽑은 최애의 팀.",
@@ -1313,9 +1342,13 @@ export const dict = {
         },
         {
           name: { ko: "0→100", en: "Zero to Hundred" },
+          // DECIDED 2026-08-13: Day 5 출석은 이 부문에 반영됩니다 (빌더스 초이스 쪽
+          // 주석 참고). 운영진이 보는 과정 기록의 일부라 이 부문에만 붙습니다 —
+          // 다른 세 부문으로 넓히지 마세요. 체크인 폼의 과정 기록 문구와 같은
+          // 계약입니다: 숫자 없이, 무엇이 반영되는지만.
           meta: {
-            ko: "운영진 선정 · 트랙 무관 2팀 · 널담 바우처",
-            en: "The organizers' pick · two teams, any track · Nuldam voucher",
+            ko: "운영진 선정 · 트랙 무관 2팀 · 널담 바우처 · Day 5 출석 반영",
+            en: "The organizers' pick · two teams, any track · Nuldam voucher · Day 5 attendance counts",
           },
           desc: {
             ko: "첫날엔 ‘제가요? 이걸요?’였다가 마지막 날 ‘제가 만들었는데요’가 된, 출발선에서 가장 먼 거리를 온 팀.",
@@ -1457,9 +1490,17 @@ export const dict = {
         {
           id: "onsite",
           label: { ko: "현장", en: "On-site" },
+          // DECIDED 2026-08-13: Day 5 = 집중 빌드·LAP Time 공유·즉석 인기 투표(빌더스
+          // 초이스 가산)·출석(0→100 가산). 해시드·OpenAI 글로벌 해커톤은 행사 후 별도
+          // 행사로 이동(협의 중).
+          //
+          // 이 행은 그날의 이름만 부릅니다. 세 줄짜리 표라 한 항목이 길어지면 표가
+          // 문단이 되고, 그건 이 블록이 고치려던 문제 자체입니다. Day 5의 세부(진행
+          // 순서·투표·가산)는 노선도 카드와 데이 모달이 말합니다.
+          // 이름은 schedule.ts days[4].theme의 머리 조각과 같은 말이어야 합니다.
           body: {
-            ko: "Day 5 네트워킹 데이 · Day 7 파이널 리허설, 참여는 선택",
-            en: "Day 5 Networking Day · Day 7 final rehearsal, both optional",
+            ko: "Day 5 집중 빌드 · Day 7 파이널 리허설, 참여는 선택",
+            en: "Day 5 focused build · Day 7 final rehearsal, both optional",
           },
         },
         {
@@ -1846,18 +1887,30 @@ export const dict = {
         // 또래가 첫 줄인 이유 (2026-08-03 피드백): 이 카드의 세 포인트가 전부
         // 대표·경력자·연사와의 수직 네트워킹이었고, 정작 이 행사의 핵심 혜택인
         // 학생 간(수평) 네트워킹은 혜택 섹션 어디에도 없었습니다. 같은 피드백으로
-        // Day 5가 네트워킹 데이로 재편됐으니(schedule.ts) 순서도 그 결론을 따릅니다:
+        // Day 5가 현장 집결일로 재편됐으니(schedule.ts) 순서도 그 결론을 따릅니다:
         // 또래 → Day 5 → 선배. 모바일에서는 앞의 두 줄만 보이고 나머지는 '더 보기'로
         // 접히므로(BenefitCard: i > 1 && !open), 접힌 채로 읽히는 두 줄이 또래와
         // Day 5여야 합니다. 순서를 되돌려 선배 교류를 위로 올리지 마세요.
         points: [
           { ko: "NUS·NTU·SMU에 흩어져 있던 또래 한인 빌더들을 팀으로 만나 8일을 함께 만듭니다", en: "The Korean student builders scattered across NUS, NTU and SMU: you meet them as a team and build the eight days together" },
-          // Day 5의 상태 표기는 schedule.ts(네트워킹 데이 (기획 중) · 해시드와 함께
-          // 기획 중)와 반드시 같이 움직여야 합니다. 확정 전까지 '기획 중'을 떼지 마세요.
-          // "전원이 처음 한자리에 모이는 날"이었습니다 — 사실이 아닙니다. Day 1이
-          // 필참 현장이라 전원은 첫날 이미 만납니다. Day 5의 값은 '처음'이 아니라
-          // 하루를 통째로 학생 간 교류에만 쓴다는 것입니다.
-          { ko: "Day 5는 통째로 네트워킹 데이. 학생끼리 교류하는 데만 하루를 쓰는 날로, 해시드와 함께 기획 중", en: "Day 5 is a networking day end to end: a whole day given to students connecting with each other, being planned together with Hashed" },
+          // 이 줄은 schedule.ts의 Day 5 표기(days[4].theme·summary·whyStop과
+          // d5-networking-day 카드)와 반드시 같이 움직입니다. 한쪽만 고치지 마세요.
+          //
+          // DECIDED 2026-08-13: Day 5 = 집중 빌드·LAP Time 공유·즉석 인기 투표(빌더스
+          // 초이스 가산)·출석(0→100 가산). 해시드·OpenAI 글로벌 해커톤은 행사 후 별도
+          // 행사로 이동(협의 중). 그래서 "네트워킹 데이"라는 이름과 "해시드와 함께
+          // 기획 중" 헤지가 둘 다 빠졌습니다 — 프로그램이 정해졌으니 새 헤지를
+          // 붙이지도 마세요.
+          //
+          // 이 카드(네트워킹)에 Day 5가 남아 있는 이유: 하루의 이름은 바뀌었어도
+          // 또래를 만나는 밀도는 그대로입니다. 다만 이제 '교류만 하는 날'이 아니므로
+          // 빌드·공유·교류 셋을 함께 적습니다. 접힌 채 보이는 두 줄 중 하나이므로
+          // (BenefitCard: i > 1 && !open) 순서를 내리지 마세요.
+          //
+          // 가산 두 가지는 여기 적지 않습니다. 이 카드는 네트워킹 혜택을 말하는
+          // 자리이고, 가산의 정본은 dict.program.awards의 meta입니다 — 어워드 규칙을
+          // 두 곳에서 관리하면 한쪽이 반드시 낡습니다.
+          { ko: "Day 5는 현장에 모여 함께 빌드하고, 만든 것을 또래 앞에 공유하고, 트랙을 섞어 교류하는 하루", en: "Day 5 brings everyone on-site to build together, share what you've made with the room and mix across tracks" },
           // 기존 세 줄(대표·경력자 현장 교류 / 연사 세션 / 패널·공유 세션)을 한 줄로
           // 압축했습니다. 셋 다 같은 이야기(선배와의 수직 교류)였고, 또래를 위에
           // 세우려면 그 자리를 만들어야 했습니다.
@@ -1867,11 +1920,11 @@ export const dict = {
           // 문장 끝으로 밀려 연사·패널 세션까지 그 날짜를 뒤집어썼습니다. 그래서
           // 이 카드만 Day 5에 연사·패널 세션이 있다고 말하고 있었습니다.
           //
-          // Day 5에는 연사도 패널도 없습니다. schedule.ts의 d5-networking-day는
-          // "이날의 목적은 사람을 만나는 것 하나"이고 세부 프로그램은 해시드와
-          // 기획 중이며, speakers 섹션은 2026-08-03에 Day 5를 뺀 뒤 "Day 5 stays
-          // out" 주석까지 달아 두었습니다. 현장 교류는 Day 5에도 사실입니다
-          // (오히려 네트워킹 데이가 되면서 더 정확해졌습니다).
+          // Day 5에는 연사도 패널도 없습니다. speakers 섹션은 2026-08-03에 Day 5를
+          // 뺀 뒤 "Day 5 stays out" 주석까지 달아 두었고, 2026-08-13 재편으로도
+          // 그대로입니다 — 그날 확정된 것은 빌드 공간·LAP Time 공유·투표·밋업이고,
+          // 공유는 참가자끼리 하는 것이지 연사 세션이 아닙니다. 현장 교류는 Day 5에도
+          // 사실입니다.
           //
           // 그래서 주장마다 자기 날짜를 답니다. 하나로 합치지 마세요 — 합치는
           // 순간 넓은 쪽(현장 교류)의 날짜가 좁은 쪽(연사 세션)까지 덮습니다.
@@ -2018,7 +2071,10 @@ export const dict = {
     // Days listed here must match the cards in `people` below. Day 5 was in the
     // heading with no card to back it — its only content was the panel in
     // tbcNote, whose panelists were never arranged. That panel is gone for good
-    // now (2026-08-03: Day 5 became a networking day), so Day 5 stays out.
+    // (2026-08-03) and the 2026-08-13 Day-5 decision keeps it that way: the day
+    // is a build room, a peer share and a meetup, with no speaker session. The
+    // LAP Time share is participants talking to each other, not a card that
+    // belongs here. Day 5 stays out.
     heading: { ko: "Day 1 · 7 · 8 스피커 & 공유 세션", en: "Day 1 · 7 · 8 speaker & sharing sessions" },
     // REWRITTEN 2026-08-12. 예전 문장은 "이 시간을 따로 두는 이유는 Zero100의
     // 앙트레프레너십 정체성을 지키기 위해서입니다."였습니다. 주최자가 스스로에게
@@ -2346,8 +2402,12 @@ export const dict = {
         // DECIDED 2026-08-09: 오피스아워에서 날짜를 뗐습니다 — 기업 멘토를 특정
         // 날짜와 묶는 표기는 웹에서 쓰지 않습니다(누가 언제인지는 예약 시스템이
         // 전날 공개하는 정보입니다).
-        ko: "멘토를 지정해서 신청하는 대신, 운영진이 배정합니다. 행사 전 팀이 제출한 가능 시간과 멘토의 가능 시간이 **겹치는 구간**이 기준이에요. 팝업스튜디오 FDE 오피스아워도 같은 방식입니다. 누구와 만나든, 모든 멘토는 여러분이 푸는 그 문제를 미리 보고 들어옵니다.",
-        en: "Instead of requesting a specific mentor, you get one assigned. The organizers place sessions where your team's submitted availability **overlaps** with a mentor's. Popup Studio's FDE office hours work the same way. And whoever you meet, every mentor comes in having already seen the problem you're solving.",
+        // DECIDED 2026-08-13, 두 단계: ① 회사명을 뺐습니다("팝업스튜디오 FDE
+        // 오피스아워도 같은 방식"). ② 1:1 멘토링을 우산 키워드로 올렸으니, 여기서도
+        // 오피스아워를 그 형태 중 하나로 부릅니다. schedule.ts의 FDE_OFFICE_HOUR 위
+        // 주석이 정본이고, 함께 움직이는 자리입니다.
+        ko: "멘토를 지정해서 신청하는 대신, 운영진이 배정합니다. 행사 전 팀이 제출한 가능 시간과 멘토의 가능 시간이 **겹치는 구간**이 기준이에요. 드롭인 형태인 FDE 오피스아워도 같은 방식입니다. 누구와 만나든, 모든 멘토는 여러분이 푸는 그 문제를 미리 보고 들어옵니다.",
+        en: "Instead of requesting a specific mentor, you get one assigned. The organizers place sessions where your team's submitted availability **overlaps** with a mentor's. The drop-in form, the FDE office hours, works the same way. And whoever you meet, every mentor comes in having already seen the problem you're solving.",
       },
     },
     // ── 확정 멘토 그리드 (덱 p12) ──────────────────────────────────────────────
