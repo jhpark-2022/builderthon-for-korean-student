@@ -3795,7 +3795,7 @@ export default function Journey() {
             3행 그리드가 됩니다 — 예전처럼 카드끼리 어긋날 뿐, 깨지지 않습니다. */}
         <div className="mt-10 grid items-stretch gap-5 text-left sm:grid-cols-2 lg:grid-cols-4">
           {/* keyed by index, not `img` — one speaker can hold two sessions
-              (박희덕: Day 7 간담회 + Day 8 키노트) and so reuse the same photo */}
+              (박희덕: Day 7 조언 세션 + Day 8 간담회) and so reuse the same photo */}
           {dict.speakers.people.map((s, si) => (
             <div key={si} className="row-span-3 grid grid-rows-subgrid gap-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-400/25 hover:bg-white/[0.05]">
               {/* 라벨과 제목이 한 행입니다 — 줄 세워야 하는 것은 제목의 시작이

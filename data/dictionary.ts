@@ -85,8 +85,8 @@ export const partnerIntros: Record<string, Phrase> = {
     en: "AXMOS is an AX (AI-transformation) consortium formed by Translink Investment, Wilt Venture Builder, Codepresso, Popup Studio and DRIMAES. It joins this builderthon with mentoring and expert feedback; the real company problem comes from Codepresso, one of its member companies.",
   },
   "Translink Investment": {
-    ko: "실리콘밸리 트랜스링크캐피탈과 합작해 2016년 출범한 벤처캐피탈로, SaaS·딥테크 중심으로 7개 조합·누적 약 1,900억 원 규모를 운용합니다. 마켓컬리 초기 투자사로 알려져 있으며, 포트폴리오사의 글로벌 진출 지원이 강점입니다. 클로징 키노트를 맡은 박희덕 대표님이 이끄는 하우스입니다.",
-    en: "A venture capital firm launched in 2016 with Silicon Valley's TransLink Capital, running seven funds (~KRW 190B) focused on SaaS and deep tech. An early investor in Market Kurly, known for helping portfolios expand globally. Led by Hee-Duk Park, our closing-keynote speaker.",
+    ko: "실리콘밸리 트랜스링크캐피탈과 합작해 2016년 출범한 벤처캐피탈로, SaaS·딥테크 중심으로 7개 조합·누적 약 1,900억 원 규모를 운용합니다. 마켓컬리 초기 투자사로 알려져 있으며, 포트폴리오사의 글로벌 진출 지원이 강점입니다. Day 8 커리어 간담회를 맡은 박희덕 대표님이 이끄는 하우스입니다.",
+    en: "A venture capital firm launched in 2016 with Silicon Valley's TransLink Capital, running seven funds (~KRW 190B) focused on SaaS and deep tech. An early investor in Market Kurly, known for helping portfolios expand globally. Led by Hee-Duk Park, who leads the Day 8 career session.",
   },
   "Wilt Venture Builder": {
     ko: "싱가포르에 본사를 둔 한–싱 크로스보더 벤처빌더로, 초기 아이디어부터 시리즈 A까지 창업자와 ‘공동 창업’ 방식으로 회사를 함께 만듭니다. AI·콘텐츠·F&B·B2B SaaS 영역에서 한국 브랜드의 동남아 진출을 빌드해 왔으며, 이 빌더톤을 만든 Zero100 프로그램의 모조직입니다.",
@@ -100,8 +100,8 @@ export const partnerIntros: Record<string, Phrase> = {
   // If any of the three changes, dict.mentoring.mentors (김지훈 · 이동훈 · 황현진)
   // and schedule.ts d2-crash-course are the other places that name them.
   Codepresso: {
-    ko: "‘AI 리터러시의 표준화’를 내건 AI 역량 평가·교육 기업입니다. 채용용 AI 역량 평가(SkillCertify)와 비개발자 대상 AI 활용 교육(AI Fluent)을 운영하며, 현대오토에버·현대모비스 등 대기업 프로그램을 진행해 왔습니다. 이번 빌더톤에서는 실제 기업 과제를 내는 문제 제공사이자 Day 2 크래시코스를 주관하고, Day 7 커리어 세션 멘토링에도 함께합니다.",
-    en: "An AI competency assessment & education company working to standardize AI literacy, running skill assessments (SkillCertify) and AI-fluency training (AI Fluent) used by companies like Hyundai AutoEver and Hyundai Mobis. Here it sets one of the real company problems, runs the Day-2 Crash Course, and mentors at the Day 7 career session.",
+    ko: "‘AI 리터러시의 표준화’를 내건 AI 역량 평가·교육 기업입니다. 채용용 AI 역량 평가(SkillCertify)와 비개발자 대상 AI 활용 교육(AI Fluent)을 운영하며, 현대오토에버·현대모비스 등 대기업 프로그램을 진행해 왔습니다. 이번 빌더톤에서는 실제 기업 과제를 내는 문제 제공사이자 Day 2 크래시코스를 주관하고, Day 7 파이널 리허설 멘토링에도 함께합니다.",
+    en: "An AI competency assessment & education company working to standardize AI literacy, running skill assessments (SkillCertify) and AI-fluency training (AI Fluent) used by companies like Hyundai AutoEver and Hyundai Mobis. Here it sets one of the real company problems, runs the Day-2 Crash Course, and mentors at the Day 7 final rehearsal.",
   },
   Drimaes: {
     ko: "SDV(소프트웨어 정의 차량)·차량용 인포테인먼트(IVI)를 만드는 모빌리티 소프트웨어 기업입니다. 독자 리눅스 기반 OS와 가상화 기술로 차량의 여러 화면을 하나의 칩으로 통합하며, CES에서 퀄컴·텔레칩스와의 협업을 선보였고 2025년 국가 SW R&D 우수성과에 선정됐습니다.",
@@ -2083,7 +2083,8 @@ export const dict = {
     // 만나나")에 답하지 않았습니다. 참가자가 무엇을 얻는지로 바꿉니다.
     //
     // 네 장의 카드를 다 덮는 문장이어야 합니다 — 키노트(취업과 창업 사이) ·
-    // AWS 세션(실무에서 AI를 어떻게 쓰는가) · Day 7 커리어 간담회 · Day 8 키노트.
+    // AWS 세션(실무에서 AI를 어떻게 쓰는가) · Day 7 조언 세션 · Day 8 커리어 간담회.
+    // (DECIDED 2026-08-13: 박희덕 대표님의 두 세션이 자리를 맞바꿨습니다.)
     // 한 카드의 제목을 대표로 올리지 마세요.
     //
     // 괄호("연사 라인업은 확정되는 대로 안내됩니다")는 뺐습니다. 바로 아래에
@@ -2147,41 +2148,50 @@ export const dict = {
         ],
       },
       {
-        // Same speaker as the Day 8 keynote — the career session is a separate
-        // session on a separate day, so it gets its own card (see d7-speaker-session).
-        day: { ko: "Day 7 · 커리어 간담회", en: "Day 7 · Career session" },
-        name: { ko: "박희덕", en: "Park Hee-deok" },
-        role: { ko: "트랜스링크인베스트먼트 대표 · GP", en: "CEO · General Partner, Translink Investment (VC)" },
-        topic: { ko: "‘FDE로 일한다는 것’ 커리어 간담회", en: "“Working as an FDE”, a career session" },
-        img: "/partners/logos/speaker-park.jpeg",
-        linkedin: "https://www.linkedin.com/in/hee-duk-park-304079bb",
-        points: [
-          // 시각을 여기서 뺐습니다 (2026-08-04). schedule.ts의 d7-speaker-session
-          // `time`과 Day 7 runOfShow에 이미 있는데, 세 번째 사본이던 이 줄만
-          // 12:30–14:00으로 남아 실제로 어긋났습니다 — 간담회는 13:40에 끝나고
-          // 뒤 20분은 촬영입니다. 이 섹션은 "무슨 이야기를 하는가"를 말하는 자리이니
-          // 시각은 프로그램 쪽 한 곳에만 둡니다. 다시 넣지 마세요.
-          { ko: "자사 FDE 사업에 관심 있는 학생·졸업생 대상", en: "For students & grads interested in the firm's FDE business" },
-          { ko: "어떤 일을 하는 자리인지, 어떤 사람을 찾는지 직접 듣기", en: "What the work actually is, and who they're looking for, first-hand" },
-          { ko: "인턴 · 채용 pool로 이어지는 실질적 연결", en: "A genuine connection into the internship & hiring pool" },
-          { ko: "후속 1:1 면담·멘토링(희망자)은 8/29 행사 종료 후", en: "Follow-up 1:1s & mentoring (opt-in) after the event closes on 29 Aug" },
-        ],
-      },
-      {
-        day: { ko: "Day 8 · 결과 공유회", en: "Day 8 · Showcase" },
+        // Same speaker as the Day 8 career session — this is a separate session on
+        // a separate day, so it gets its own card (see d7-speaker-session).
+        //
+        // DECIDED 2026-08-13: 박희덕 대표님의 두 세션이 자리를 맞바꿨습니다. 주제
+        // ('제로백의 진짜 의미')는 Day 8 카드에서 여기로 왔지만 형식은 다릅니다 —
+        // 무대 강연이 아니라 리허설 현장의 조언과 Q&A입니다. 이 카드에 "키노트"라는
+        // 말을 쓰지 마세요. Day 8 카드의 위치 줄("모든 발표가 끝난 뒤 · 어워드 발표
+        // 직전 40분")도 여기로 옮기지 마세요 — 그건 Day 8의 사실입니다.
+        day: { ko: "Day 7 · 조언 세션", en: "Day 7 · Advice session" },
         name: { ko: "박희덕", en: "Park Hee-deok" },
         role: { ko: "트랜스링크인베스트먼트 대표 · GP", en: "CEO · General Partner, Translink Investment (VC)" },
         topic: { ko: "‘제로백의 진짜 의미’", en: "“The Real Meaning of Zero100”" },
         img: "/partners/logos/speaker-park.jpeg",
         linkedin: "https://www.linkedin.com/in/hee-duk-park-304079bb",
         points: [
+          // 시각을 여기서 뺐습니다 (2026-08-04). schedule.ts의 d7-speaker-session
+          // `time`과 Day 7 runOfShow에 이미 있는데, 세 번째 사본이던 이 줄만
+          // 12:30–14:00으로 남아 실제로 어긋났습니다 — 세션은 13:40에 끝나고
+          // 뒤 20분은 촬영입니다. 이 섹션은 "무슨 이야기를 하는가"를 말하는 자리이니
+          // 시각은 프로그램 쪽 한 곳에만 둡니다. 다시 넣지 마세요.
           { ko: "0 → 100의 핵심: 협업 · 가치 · 실행 · 글로벌 스탠다드", en: "The core of 0 → 100: collaboration · value · execution · global standards" },
           { ko: "협업의 힘 · 커뮤니티의 중요성", en: "The power of collaboration · why community matters" },
           { ko: "왜 지금, 왜 싱가포르의 한인 학생인가", en: "Why now, and why Korean students in Singapore" },
-          // 위치·길이 정정 (2026-08-04): 확정 진행 순서에서 이 키노트는 여는
-          // 순서가 아니라 두 트랙 발표가 끝난 뒤 어워드 발표 직전 40분입니다. 이 줄이
+          { ko: "형식 없는 조언과 Q&A, 리허설 현장에서", en: "Advice and Q&A with no format, right there at the rehearsal" },
+        ],
+      },
+      {
+        // DECIDED 2026-08-13: 자리 맞바꿈으로 이 카드가 커리어 간담회가 됐습니다.
+        // points 네 줄은 Day 7 카드에서 왔고, 마지막 위치 줄만 이 카드의 것입니다.
+        day: { ko: "Day 8 · 커리어 간담회", en: "Day 8 · Career session" },
+        name: { ko: "박희덕", en: "Park Hee-deok" },
+        role: { ko: "트랜스링크인베스트먼트 대표 · GP", en: "CEO · General Partner, Translink Investment (VC)" },
+        topic: { ko: "‘FDE로 일한다는 것’", en: "“Working as an FDE”" },
+        img: "/partners/logos/speaker-park.jpeg",
+        linkedin: "https://www.linkedin.com/in/hee-duk-park-304079bb",
+        points: [
+          { ko: "자사 FDE 사업에 관심 있는 학생·졸업생 대상", en: "For students & grads interested in the firm's FDE business" },
+          { ko: "어떤 일을 하는 자리인지, 어떤 사람을 찾는지 직접 듣기", en: "What the work actually is, and who they're looking for, first-hand" },
+          { ko: "인턴 · 채용 pool로 이어지는 연결, 후속 1:1 면담·멘토링(희망자)은 행사 종료 후", en: "A route into the internship & hiring pool, with follow-up 1:1s & mentoring (opt-in) after the event closes" },
+          // 위치·길이 (2026-08-14): 확정 진행 순서에서 이 자리는 공유회를 여는
+          // 첫 한 시간(11AM–12PM)이고, 트랙 발표보다 앞입니다. 이 줄이
           // schedule.ts d8-opening-keynote와 같은 사실을 말해야 합니다.
-          { ko: "모든 발표가 끝난 뒤 · 어워드 발표 직전 40분", en: "After every pitch · 40 minutes before the awards" },
+          // 시각(11시 등)은 여기 다시 넣지 마세요 — 정본은 schedule.ts입니다.
+          { ko: "공유회를 여는 첫 한 시간 · 트랙 발표 시작 전", en: "The first hour of the Showcase · before the pitches start" },
         ],
       },
     ],
@@ -2552,7 +2562,8 @@ export const dict = {
       // 황영준 · 이유택 were "Day 3·4·7" until their Day 7 was dropped — both are
       // stage-1 mentors only now, which is why there is no longer a Day 3·4·7
       // group between this block and the Day 7 one. Re-add the day (and move the
-      // cards back out) only if they are actually booked for the career session.
+      // cards back out) only if they are actually booked for the Day 7 pitch &
+      // sales mentoring.
       {
         name: { ko: "황영준", en: "Hwang Young-jun" }, org: { ko: "T3Q", en: "T3Q" }, role: { ko: "AI", en: "AI" },
         intro: {
@@ -2574,7 +2585,7 @@ export const dict = {
       // sends FDEs rather than a named mentor. It stays described in the section
       // intro above and as its own sessions in the programme (schedule.ts
       // d5/d6/d7-fde-office-hour) — do not re-add a card for it.
-      // ── Day 7 · 커리어 세션 ─────────────────────────────────────────────────
+      // ── Day 7 · 피치·세일즈 멘토링 ──────────────────────────────────────────
       {
         name: { ko: "신동혁", en: "Shin Dong-hyuk" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "GTM", en: "GTM" },
         intro: {
@@ -3106,7 +3117,7 @@ export const dict = {
           // 받았습니다. 두 질문은 사실상 같은 질문이었는데 FAQ 중반과 후반에
           // 떨어져 있어서, 뒤엣것이 앞엣것의 메아리로 읽혔습니다.
           //
-          // Day 7 커리어 세션은 여기 넣지 마세요. 인턴십 답변과 멘토 답변이 이미
+          // Day 8 커리어 간담회는 여기 넣지 마세요. 인턴십 답변과 멘토 답변이 이미
           // 그 세션을 말합니다 — 세 번째 사본을 만들면 이 답이 다시 목록이 됩니다.
           // 첫 문장의 "세 가지"는 실물(benefits.spine.tangibles)만 세는 숫자이고,
           // 마지막 문장은 실물 밖의 것이라 그 숫자에 들어가지 않습니다.
@@ -3139,8 +3150,9 @@ export const dict = {
           // 문장이라 실명이 있어야 답이 섭니다.
           // benefits 06 카드의 인턴십 줄과 같은 사실이니 함께 움직여 주세요.
           // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-          ko: "네, 지금 추진 중인 유급 인턴십입니다. AXMOS(코드프레소·WVB)의 인턴 기회이고, 수상 여부와 무관하게 열려 있습니다. 행사에서 잘하는 것과 현장에서 잘하는 것은 다를 수 있어서, 주최사가 관심 있는 참가자를 행사 과정과 제출 자료를 바탕으로 직접 검토해요. 8일 전체가 사실상 포트폴리오가 되는 구조입니다. 구체적인 조건은 행사가 끝난 뒤 회사와 학생이 학기 일정에 맞춰 이야기해 정합니다. Day 7 커리어 간담회도 인턴·채용 풀로 이어지는 별도 연결 통로예요.",
-          en: "Yes, a paid internship already in motion, with AXMOS (Codepresso · WVB), open regardless of whether your team wins anything. Doing well at an event and doing well on the job can be two different things, so the hosts review interested participants directly, on the strength of their work across the event and what they submit. The whole eight days effectively become your portfolio. Specific terms get settled after the event, between the company and the student around their term dates. The Day 7 career session is a separate route into the internship & hiring pool too.",
+          // DECIDED 2026-08-13: 커리어 간담회가 Day 7 → Day 8로 옮겨졌습니다.
+          ko: "네, 지금 추진 중인 유급 인턴십입니다. AXMOS(코드프레소·WVB)의 인턴 기회이고, 수상 여부와 무관하게 열려 있습니다. 행사에서 잘하는 것과 현장에서 잘하는 것은 다를 수 있어서, 주최사가 관심 있는 참가자를 행사 과정과 제출 자료를 바탕으로 직접 검토해요. 8일 전체가 사실상 포트폴리오가 되는 구조입니다. 구체적인 조건은 행사가 끝난 뒤 회사와 학생이 학기 일정에 맞춰 이야기해 정합니다. Day 8 커리어 간담회도 인턴·채용 풀로 이어지는 별도 연결 통로예요.",
+          en: "Yes, a paid internship already in motion, with AXMOS (Codepresso · WVB), open regardless of whether your team wins anything. Doing well at an event and doing well on the job can be two different things, so the hosts review interested participants directly, on the strength of their work across the event and what they submit. The whole eight days effectively become your portfolio. Specific terms get settled after the event, between the company and the student around their term dates. The Day 8 career session is a separate route into the internship & hiring pool too.",
         },
       },
       {
@@ -3198,8 +3210,12 @@ export const dict = {
       {
         q: { ko: "멘토를 직접 고를 수 있나요?", en: "Can I choose my mentor?" },
         a: {
-          ko: "멘토 지정은 받지 않아요. 팀이 제출한 가능 시간과 멘토의 가능 시간이 겹치는 구간으로 운영진이 배정합니다. 대신 모든 멘토가 여러분 트랙의 문제를 미리 보고 들어오고, Day 7 커리어 세션에서는 시니어 리더들과 만나는 시간이 따로 있어요.",
-          en: "We don't take mentor requests. The organizers assign sessions where your team's submitted availability overlaps with a mentor's. Every mentor comes in having seen your track's problem, and Day 7 has its own career session with senior leaders.",
+          // DECIDED 2026-08-13: 커리어 간담회가 Day 8로 가면서 "Day 7 커리어 세션"이
+          // 가리키는 대상이 어긋났습니다. Day 7에 남는 것은 피치·세일즈 멘토링과
+          // 조언 세션이고, 시니어 리더들과 만난다는 사실 자체는 그대로 참이라
+          // 이름만 고쳤습니다.
+          ko: "멘토 지정은 받지 않아요. 팀이 제출한 가능 시간과 멘토의 가능 시간이 겹치는 구간으로 운영진이 배정합니다. 대신 모든 멘토가 여러분 트랙의 문제를 미리 보고 들어오고, Day 7 파이널 리허설에서는 현업 시니어들과 직접 만나는 시간이 따로 있어요.",
+          en: "We don't take mentor requests. The organizers assign sessions where your team's submitted availability overlaps with a mentor's. Every mentor comes in having seen your track's problem, and Day 7's final rehearsal puts you in the room with senior leaders.",
         },
       },
       {
@@ -3337,7 +3353,7 @@ export const dict = {
       // 다른 말로 물었을 뿐인데 여덟 항목 뒤에 떨어져 있어서, 앞엣것을 읽고 온
       // 사람에게는 메아리로 읽혔습니다. 그 답에만 있던 두 가지(1:1 멘토링 ·
       // 행사 후 커뮤니티)는 "8일이 끝나면…" 답의 마지막 문장으로 옮겼습니다.
-      // Day 7 커리어 세션은 옮기지 않았습니다 — 인턴십 답변과 멘토 답변이 이미
+      // Day 8 커리어 간담회는 옮기지 않았습니다 — 인턴십 답변과 멘토 답변이 이미
       // 말하고 있어서, 세 번째 사본이 될 자리였습니다.
       {
         q: { ko: "피드백과 어워드는 어떤 기준인가요? 기술이 완벽해야 하나요?", en: "What's the feedback based on? Does it need to be technically polished?" },

@@ -302,7 +302,7 @@ const VENUE_FOUNDRY = { src: "/partners/logos/white/trimmed/foundry.png", name: 
 const VENUE_LIFE = { src: "/partners/logos/white/trimmed/life.png", name: "*SCAPE L^IFE Jungle" };
 const VENUE_AWS = { src: "/partners/logos/white/trimmed/aws.png", name: "AWS office" };
 
-// Day 8 두 트랙 발표 슬롯(11:10–12:30 · 12:30–1:50)이 함께 쓰는 note입니다.
+// Day 8 두 트랙 발표 슬롯(12PM–1:15 · 1:15–2:30)이 함께 쓰는 note입니다.
 // 상수인 이유 둘:
 //   · 두 슬롯은 트랙만 다른 같은 세션입니다. 슬롯마다 다른 문장을 달면 첫 슬롯에만
 //     포맷이, 둘째 슬롯에만 오고 갈 자유가 적혀 반쪽짜리 안내가 둘 생깁니다.
@@ -663,8 +663,10 @@ export const days: DayMeta[] = [
       // AWS office is booked and every other day names its venue flat, so the
       // tag came off on 2026-08-10 rather than making this one venue look like
       // the only one anybody had checked.
-      ko: "AWS 오피스 · 멘토와 함께하는 최종 점검 · 박희덕 커리어 간담회 · 1:1 멘토링(온라인) · 저녁: 사전 제출물 마감(필수).",
-      en: "AWS office · final check with mentors · Park Hee-deok career session · 1:1 mentoring (online) · Evening: submission deadline (required).",
+      // DECIDED 2026-08-13: 박희덕 대표님의 커리어 간담회는 Day 8로 갔고, 이 날
+      // 오후 슬롯은 조언 세션입니다.
+      ko: "AWS 오피스 · 멘토와 함께하는 최종 점검 · 박희덕 조언 세션 · 1:1 멘토링(온라인) · 저녁: 사전 제출물 마감(필수).",
+      en: "AWS office · final check with mentors · Park Hee-deok's advice session · 1:1 mentoring (online) · Evening: submission deadline (required).",
     },
     whyStop: {
       ko: "전문가들이 던질 질문을 무대에 서기 하루 전에 미리 받아보는 자리",
@@ -701,11 +703,13 @@ export const days: DayMeta[] = [
       },
       {
         time: "12:30PM–1:40PM",
-        label: { ko: "커리어 간담회 · 박희덕", en: "Career session · Park Hee-deok" },
+        // DECIDED 2026-08-13: 커리어 간담회 → 조언 세션 (Day 8과 자리 맞바꿈).
+        // eventId·시간 슬롯은 그대로입니다.
+        label: { ko: "조언 세션 · 박희덕", en: "Advice session · Park Hee-deok" },
         eventId: "d7-speaker-session",
       },
-      // 12:30–2PM 한 줄이었는데 쪼갰습니다 (2026-08-04). 간담회는 1시간 10분이고
-      // 남은 20분은 촬영입니다 — 합쳐두면 간담회가 90분인 것으로 읽히고, 그 20분에
+      // 12:30–2PM 한 줄이었는데 쪼갰습니다 (2026-08-04). 세션은 1시간 10분이고
+      // 남은 20분은 촬영입니다 — 합쳐두면 세션이 90분인 것으로 읽히고, 그 20분에
       // 자리를 뜬 사람은 사진에서 빠집니다. 아직 잠정이라 note에 그렇게 적었습니다.
       {
         time: "1:40PM–2PM",
@@ -752,13 +756,17 @@ export const days: DayMeta[] = [
     // Day 8 산문만 두 트랙을 이미 정해진 사실로 서술하고 있었습니다. 트랙 수가
     // 바뀌는 순간 헤지한 쪽이 아니라 확정형으로 쓴 이쪽이 거짓이 됩니다.
     //
-    // runOfShow의 두 발표 슬롯(11:10–12:30 · 12:30–1:50)과 그것을 설명하는 주석들은
+    // runOfShow의 두 발표 슬롯(12PM–1:15 · 1:15–2:30)과 그것을 설명하는 주석들은
     // 그대로 둡니다. 저건 이미 잡힌 대관 시간표이지 트랙 라인업에 대한 약속이
     // 아니고, 트랙 수가 바뀌면 시간표 자체를 다시 짜야 하는 자리입니다. 산문은
     // 반대로, 지금 확정된 것만 말하면 되는 자리라 수를 뺍니다.
     summary: {
-      ko: "*SCAPE 현장 · 트랙별 팀 발표(팀당 8분·잠정) · 박희덕 연사 · 테마별 어워드 발표 · 완주 수료증과 단체 사진.",
-      en: "In person at *SCAPE · team presentations by track (8 min each, provisional) · Park Hee-deok · thematic awards · completion certificates and a group photo.",
+      // DECIDED 2026-08-13: 박희덕 대표님의 커리어 간담회가 Day 7에서 이 날로
+      // 왔습니다 ("박희덕 연사" → "박희덕 커리어 간담회").
+      // DECIDED 2026-08-14: 그 간담회가 첫 순서(11AM–12PM)가 되면서 이 나열에서도
+      // 트랙 발표 앞으로 옮겼습니다 — 이 줄은 하루가 흐르는 차례대로 읽힙니다.
+      ko: "*SCAPE 현장 · 박희덕 커리어 간담회 · 트랙별 팀 발표(팀당 8분·잠정) · 테마별 어워드 발표 · 완주 수료증과 단체 사진.",
+      en: "In person at *SCAPE · Park Hee-deok career session · team presentations by track (8 min each, provisional) · thematic awards · completion certificates and a group photo.",
     },
     hours: "11AM–3PM",
     // 확정 진행 순서 (2026-08-04). 10:40 입장은 hours(11AM–)보다 이르지만 프로그램
@@ -771,26 +779,32 @@ export const days: DayMeta[] = [
         label: { ko: "입장", en: "Doors open" },
         note: { ko: "발표 순서는 이날 아침 오픈 카톡방으로 미리 공지됩니다", en: "The running order goes out that morning in the open chat" },
       },
+      // DECIDED 2026-08-14: 커리어 간담회가 오후 1:50 슬롯에서 이 날의 첫 한 시간
+      // (11AM–12PM)으로 올라왔습니다. 40분에서 60분이 되었고, 입장 다음 순서입니다.
+      //
+      // "지금까지의 여정 정리 · 공유회 시작"(11–11:10) 줄은 이 이동으로 지웠습니다.
+      // 간담회가 11시 정각에 열리려면 그 10분이 갈 곳이 없고, 여는 인사는 간담회
+      // 앞머리가 받습니다. 다시 넣으려면 간담회 시작을 11:10으로 미뤄야 합니다 —
+      // 두 줄을 다 세우려다 간담회를 40분으로 되돌리지 마세요.
+      //
+      // 두 트랙 발표는 그래서 12PM–1:15 · 1:15–2:30으로 다시 잡혔습니다. 슬롯당
+      // 80분이 75분이 됐고, 어워드가 2:30에 시작하는 것은 그대로입니다.
       {
-        time: "11AM–11:10AM",
-        label: { ko: "지금까지의 여정 정리 · 공유회 시작", en: "Looking back at the eight days · the Showcase begins" },
+        time: "11AM–12PM",
+        label: { ko: "커리어 간담회 · 박희덕", en: "Career session · Park Hee-deok" },
+        eventId: "d8-opening-keynote",
       },
       {
-        time: "11:10AM–12:30PM",
+        time: "12PM–1:15PM",
         label: { ko: "첫 번째 트랙 발표", en: "First track pitches" },
         note: D8_TRACK_PITCH_NOTE,
         eventId: "d8-judging",
       },
       {
-        time: "12:30PM–1:50PM",
+        time: "1:15PM–2:30PM",
         label: { ko: "두 번째 트랙 발표", en: "Second track pitches" },
         note: D8_TRACK_PITCH_NOTE,
         eventId: "d8-judging",
-      },
-      {
-        time: "1:50PM–2:30PM",
-        label: { ko: "박희덕 연사", en: "Park Hee-deok speaks" },
-        eventId: "d8-opening-keynote",
       },
       {
         time: "2:30PM–2:45PM",
@@ -1713,7 +1727,7 @@ export const schedule: BEvent[] = [
     // 성격이고 노선도 키워드가 여기서 파생됩니다.
     //
     // SPEAKER 필드를 지웠습니다: `박희덕`으로 돼 있었는데 그분은 같은 날 오후
-    // 커리어 간담회(d7-speaker-session) 연사입니다. 이 시간은 특정 연사가 아니라
+    // 조언 세션(d7-speaker-session) 연사입니다. 이 시간은 특정 연사가 아니라
     // 멘토진이 진행합니다 — Day 1 오리엔테이션과 같은 종류의 복사 오염이었습니다.
     title: { ko: "최종 점검 멘토링 (현장)", en: "Final-check Mentoring (on-site)" },
     summary: {
@@ -1731,28 +1745,36 @@ export const schedule: BEvent[] = [
     checkpoints: SCORE_KEEPING_CHECKS,
   },
   {
+    // DECIDED 2026-08-13: 박희덕 대표님의 두 세션이 자리를 맞바꿨습니다. 이 슬롯에
+    // 있던 커리어 간담회('FDE로 일한다는 것')는 Day 8의 d8-opening-keynote로
+    // 갔고(그쪽은 2026-08-14에 다시 11AM–12PM으로 옮겨졌습니다. 이 카드와는
+    // 무관합니다), 그 자리에 있던 주제('제로백의 진짜 의미')가
+    // 여기로 왔습니다. 다만 형식이 다릅니다 — Day 8의 그 자리는 무대 강연이었지만
+    // 여기는 리허설 현장에서 팀들에게 편하게 건네는 조언과 Q&A입니다. 이 카드의
+    // 카피에 "키노트"라는 말을 쓰지 마세요. 시간 슬롯·id·runOfShow 구조는 어느
+    // 쪽도 바뀌지 않았습니다. 바뀐 것은 카피뿐입니다.
     id: "d7-speaker-session",
     day: 7,
     date: "08.28",
     category: "network",
     mode: "offline",
     timeOfDay: "PM",
-    // 2PM이 아니라 1:40PM입니다 — 뒤 20분은 간담회가 아니라 기념촬영·단체 사진이고,
+    // 2PM이 아니라 1:40PM입니다 — 뒤 20분은 조언 세션이 아니라 기념촬영·단체 사진이고,
     // 그 줄은 runOfShow에 따로 있습니다 (2026-08-04). 이 세션 카드가 말하는 시각은
-    // 간담회 자체의 길이여야 합니다.
+    // 세션 자체의 길이여야 합니다.
     time: "12:30PM–1:40PM",
     // TODO: confirm public naming — speaker (박희덕) from the internal deck.
     speaker: { ko: "박희덕", en: "Park Hee-deok" },
-    title: { ko: "커리어 간담회 · ‘FDE로 일한다는 것’", en: "Career Session · “Working as an FDE”" },
+    title: { ko: "조언 세션 · ‘제로백의 진짜 의미’", en: "Advice Session · “The Real Meaning of Zero100”" },
     // 시각은 `time`이 갖습니다 — 요약과 설명 앞머리에 박혀 있던 "12:30–14:00"을
     // 뺐습니다. 같은 정보가 세 군데 있으면 하나가 바뀔 때 나머지가 어긋납니다.
     summary: {
-      ko: "박희덕 대표님의 ‘FDE로 일한다는 것’. FDE 사업에 관심 있는 학생·졸업생 대상입니다.",
-      en: "Park Hee-deok on “Working as an FDE”, for students & grads interested in the FDE business.",
+      ko: "리허설 한가운데, 형식 없는 조언과 Q&A. 박희덕 대표님의 ‘제로백의 진짜 의미’.",
+      en: "Advice and Q&A with no format, in the middle of rehearsal day: Park Hee-deok on “The Real Meaning of Zero100”.",
     },
     description: {
-      ko: "파이널 리허설 일정의 마무리로 마련된 커리어 간담회입니다. 트랜스링크 인베스트먼트의 박희덕 대표님이 ‘FDE로 일한다는 것’을 주제로, 자사 FDE 사업에 관심 있는 학생·졸업생에게 어떤 일을 하는 자리인지, 어떤 사람을 찾는지를 직접 이야기하며, 인턴·채용 pool로 이어지는 실질적 연결의 시간입니다. 간담회 후속 1:1 면담·멘토링(희망자)은 8/29 행사 종료(3PM) 후 현장 또는 널담에서 진행됩니다.",
-      en: "A career session closing out the final-rehearsal day. Under the theme “Working as an FDE,” Park Hee-deok (CEO · General Partner, Translink Investment) talks directly with students and graduates interested in the firm's FDE business: what the work actually is and who they're looking for, and a genuine connection into the internship and hiring pool. Follow-up 1:1 conversations and mentoring (for those who want them) run after the event closes on 29 Aug (3PM), either on-site or at Nuldam.",
+      ko: "파이널 리허설 한가운데 놓인 가벼운 자리입니다. 트랜스링크 인베스트먼트의 박희덕 대표님이 무대 형식 없이 팀들에게 편하게 조언을 건네고 질문을 받습니다. ‘제로백의 진짜 의미’, 창업가가 0에서 100으로 가기 위한 핵심 요소, 즉 협업·가치·실행·글로벌 스탠다드의 중요성과 협업의 힘, 그리고 왜 지금, 왜 싱가포르의 한인 학생인지를 묻고 답하며 이야기합니다. 지금 만들고 있는 것을 그대로 들고 와서 물어보면 되는 시간이에요.",
+      en: "A relaxed hour in the middle of the final-rehearsal day. Park Hee-deok (CEO · General Partner, Translink Investment) sits with the teams without a stage format, offering advice and taking questions. ‘The Real Meaning of Zero100’: what actually carries a founder from zero to a hundred, collaboration, value, execution and global standards, the power of working together, and why now, why Korean students in Singapore. Bring whatever you are building and ask.",
     },
     location: AWS_OFFICE,
   },
@@ -1768,31 +1790,40 @@ export const schedule: BEvent[] = [
   // 둡니다(d8-opening-keynote · d8-judging · d8-final-pitch) — 이 파일에는 이미
   // "id로 위치를 짐작하지 말라"는 선례가 있고, 바뀐 것은 카피뿐입니다.
   {
-    // ⚠️ id가 "d8-OPENING-keynote"지만 더 이상 여는 순서가 아닙니다 — 확정된 진행
-    // 순서에서 이 키노트는 두 트랙 발표가 모두 끝난 뒤(1:50PM), 어워드 발표 직전에
-    // 놓입니다. id는 다른 곳에서 참조될 수 있어 그대로 두었으니, 위치를 id로
-    // 짐작하지 마세요.
-    // 제목도 "데모데이 키노트"에서 "클로징 키노트"로 바꿨습니다: 행사의 대표
-    // 강연이라는 무게는 유지하되, 여는 강연이라는 잘못된 위치를 지웠습니다.
+    // ⚠️ id가 "d8-opening-keynote"지만 키노트가 아닙니다 — 커리어 간담회입니다.
+    // (여는 순서라는 것만은 2026-08-14 이후 다시 맞습니다. 우연입니다. id로 형식을
+    // 짐작하지 마세요.) id는 다른 곳에서 참조될 수 있어 그대로 둡니다.
+    //
+    // DECIDED 2026-08-13: 박희덕 대표님의 두 세션이 자리를 맞바꿨습니다. 여기 있던
+    // 클로징 키노트('제로백의 진짜 의미')는 Day 7 12:30PM 슬롯(d7-speaker-session)
+    // 으로 갔고, 그 자리에 있던 커리어 간담회('FDE로 일한다는 것')가 여기로
+    // 왔습니다.
+    //
+    // DECIDED 2026-08-14: 그 간담회를 오후 1:50 슬롯에서 이 날의 첫 한 시간
+    // (11AM–12PM)으로 올렸습니다. 40분 → 60분. 그래서 "모든 발표가 끝난 뒤 ·
+    // 어워드 발표 직전 40분"이라고 쓰던 위치 문장이 전부 뒤집혔습니다 — 이제
+    // 발표 전이고, 하루를 여는 자리입니다. 같은 사실을 말해야 하는 곳이 셋 더
+    // 있습니다: Day 8 runOfShow · days[7].summary · dictionary speakers 카드의
+    // 마지막 point. 시각을 고칠 일이 생기면 넷을 함께 고치세요.
     id: "d8-opening-keynote",
     day: 8,
     date: "08.29",
     category: "main",
     mode: "offline",
-    timeOfDay: "PM",
-    time: "1:50PM–2:30PM",
+    timeOfDay: "AM",
+    time: "11AM–12PM",
     confirmed: true,
-    title: { ko: "클로징 키노트 · 박희덕", en: "Closing Keynote · Park Hee-deok" },
+    title: { ko: "커리어 간담회 · ‘FDE로 일한다는 것’", en: "Career Session · “Working as an FDE”" },
     // TODO: confirm — speaker name is from the internal deck; confirm public naming is OK.
     speaker: { ko: "박희덕", en: "Park Hee-deok" },
     summary: {
-      ko: "모든 발표가 끝난 뒤, 어워드 발표 직전 40분, ‘제로백의 진짜 의미’.",
-      en: "After every pitch, 40 minutes before the awards: ‘The Real Meaning of Zero100’.",
+      ko: "공유회를 여는 첫 한 시간, 발표가 시작되기 전에 ‘FDE로 일한다는 것’.",
+      en: "The first hour of the Showcase, before any team pitches: “Working as an FDE”.",
     },
     description: {
-      ko: "트랙별 발표가 모두 끝나고 어워드 발표를 앞둔 40분, 트랜스링크 인베스트먼트의 박희덕 대표님이 ‘제로백의 진짜 의미’를 주제로 이야기합니다. 창업가가 0에서 100으로 가기 위한 핵심 요소, 즉 협업·가치·실행·글로벌 스탠다드의 중요성과 협업의 힘, 그리고 왜 지금, 왜 싱가포르의 한인 학생인지. 8일을 막 끝낸 사람들에게, 오늘이 무엇의 시작인지를 짚어줍니다.",
+      ko: "결과 공유회의 문을 여는 한 시간입니다. 트랙 발표가 시작되기 전에, 트랜스링크 인베스트먼트의 박희덕 대표님이 ‘FDE로 일한다는 것’을 주제로 이야기합니다. 자사 FDE 사업에 관심 있는 학생·졸업생에게 어떤 일을 하는 자리인지, 어떤 사람을 찾는지를 직접 전하고, 인턴·채용 pool로 이어지는 실질적 연결의 시간입니다. 후속 1:1 면담·멘토링(희망자)은 당일 행사 종료(3PM) 후 현장 또는 널담에서 진행됩니다.",
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-      en: "With every track done pitching and the awards still ahead, Park Hee-deok (CEO · General Partner, Translink Investment) takes 40 minutes on ‘The Real Meaning of Zero100’ and what actually carries a founder from zero to a hundred: collaboration, value, execution, global standards, and why now, why Korean students in Singapore. Spoken to people who have just finished the eight days, about what today is the start of.",
+      en: "The hour that opens the Showcase, before the track pitches begin. Under the theme “Working as an FDE,” Park Hee-deok (CEO · General Partner, Translink Investment) talks directly with students and graduates interested in the firm's FDE business: what the work actually is and who they're looking for, and a genuine connection into the internship and hiring pool. Follow-up 1:1 conversations and mentoring (for those who want them) run after the event closes that day (3PM), either on-site or at Nuldam.",
     },
     location: ONSITE,
   },
@@ -1803,7 +1834,9 @@ export const schedule: BEvent[] = [
     category: "main",
     mode: "offline",
     timeOfDay: "PM",
-    time: "11:10AM–1:50PM",
+    // DECIDED 2026-08-14: 간담회가 11AM–12PM으로 올라오면서 두 트랙 발표가
+    // 12PM–1:15 · 1:15–2:30으로 밀렸습니다 (슬롯당 80분 → 75분).
+    time: "12PM–2:30PM",
     title: { ko: "공유회 발표 · 전문가 피드백", en: "Showcase Presentations · Expert Feedback" },
     // 발표 길이는 "팀당 8분"입니다. 참가자가 잘못된 길이로 준비해 오면 현장에서
     // 그대로 사고가 나는 종류의 숫자라, 이 값이 나오는 모든 곳을 함께 고쳤습니다.
@@ -1821,7 +1854,7 @@ export const schedule: BEvent[] = [
     // 길이 정리 (2026-08-05). 일곱 문장이던 description을 넷으로 줄였습니다. 덜어낸
     // 것은 전부 이 모달 안에서 이미 다른 줄이 말하고 있던 내용입니다:
     //   · "발표 순서는 이날 아침 오픈 카톡방으로…" → runOfShow 첫 줄(입장)의 note
-    //   · "(트랙마다 약 1시간 20분)" → runOfShow의 11:10–12:30 / 12:30–1:50이 보여줌
+    //   · "(트랙마다 약 1시간 15분)" → runOfShow의 12PM–1:15 / 1:15–2:30이 보여줌
     //   · "남아서 다른 트랙을 봐도 좋고 자리를 지킬 의무는 없어요"
     //      → 앞 문장 "그 외 시간은 자유롭게"와 같은 말
     //   · "Day 3·4 기초 멘토링은 피드백 패널에 서지 않는 선배들이…"
@@ -1865,9 +1898,9 @@ export const schedule: BEvent[] = [
     // 공개를 보류한 상태라(WITHHELD 2026-08-07, 같은 주석 참고) "추후 안내"류의
     // 헤지도 붙이지 않습니다. runOfShow 라벨과 summary는 그대로 둡니다.
     description: {
-      ko: "8일간의 빌드를 마무리하는 30분입니다. 트랙별 발표와 박희덕 대표님의 이야기가 끝나면 테마별 어워드 발표와 사진 촬영이 이어집니다(2:30~). 어워드는 순위 대신 각 팀의 강점을 조명하는 4개 부문이고, 어떤 부문이 있고 누가 뽑는지는 이 날 카드에 정리돼 있습니다. 이어서 앞으로 무엇이 남아 있는지를 짧게 안내합니다(2:45~). 마지막 2:50에는 완주 수료증을 손에 들고 다 함께 단체 사진을 찍으며 끝나요. 완주 수료증은 공유회 발표까지 마친 분들께 이 자리에서 실물로 드리고, 크래시코스 수료증은 크래시코스 전 시간을 참석한 분들께 이날 PDF로 발송됩니다. 전원이 *SCAPE L^IFE Jungle 현장에 모여, ‘데모로 끝나지 않는 성공의 경험’으로 8일을 함께 마칩니다.",
+      ko: "8일간의 빌드를 마무리하는 30분입니다. 트랙별 발표가 모두 끝나면 테마별 어워드 발표와 사진 촬영이 이어집니다(2:30~). 어워드는 순위 대신 각 팀의 강점을 조명하는 4개 부문이고, 어떤 부문이 있고 누가 뽑는지는 이 날 카드에 정리돼 있습니다. 이어서 앞으로 무엇이 남아 있는지를 짧게 안내합니다(2:45~). 마지막 2:50에는 완주 수료증을 손에 들고 다 함께 단체 사진을 찍으며 끝나요. 완주 수료증은 공유회 발표까지 마친 분들께 이 자리에서 실물로 드리고, 크래시코스 수료증은 크래시코스 전 시간을 참석한 분들께 이날 PDF로 발송됩니다. 전원이 *SCAPE L^IFE Jungle 현장에 모여, ‘데모로 끝나지 않는 성공의 경험’으로 8일을 함께 마칩니다.",
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-      en: "Thirty minutes to close out eight days of building. Once every track has presented and Park Hee-deok has spoken, the thematic awards are announced with photos (from 2:30). They're four categories that spotlight each team's strengths instead of ranking 1st to 3rd, and what each one looks for is laid out on this day's card. Then comes a short word on what comes next (from 2:45). At 2:50 everyone gathers for a group photo, completion certificate in hand. That one is printed and handed to you here for going all the way through your Showcase pitch, while the Crash Course certificate goes out the same day as a PDF to everyone who attended the full Crash Course. The whole cohort is at *SCAPE L^IFE Jungle to finish the eight days on a success that goes beyond a demo.",
+      en: "Thirty minutes to close out eight days of building. Once every track has presented, the thematic awards are announced with photos (from 2:30). They're four categories that spotlight each team's strengths instead of ranking 1st to 3rd, and what each one looks for is laid out on this day's card. Then comes a short word on what comes next (from 2:45). At 2:50 everyone gathers for a group photo, completion certificate in hand. That one is printed and handed to you here for going all the way through your Showcase pitch, while the Crash Course certificate goes out the same day as a PDF to everyone who attended the full Crash Course. The whole cohort is at *SCAPE L^IFE Jungle to finish the eight days on a success that goes beyond a demo.",
     },
     location: ONSITE,
   },
