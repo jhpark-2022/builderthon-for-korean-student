@@ -2041,7 +2041,13 @@ export const dict = {
           // 문장 두 개를 ·로 붙여 두었던 자리입니다 (2026-08-11에 분리). 앞은
           // 누구에게 열려 있는가, 뒤는 무엇을 보고 검토하는가로 주어가 다릅니다.
           // 회사 이름 사이의 ·(코드프레소·WVB)는 나열이라 그대로.
-          { ko: "AXMOS(코드프레소·WVB) 유급 인턴십 기회는 수상과 무관하게 모든 참가자에게 열려 있습니다. 주최사가 행사 과정과 제출물을 바탕으로 직접 검토해요", en: "A paid internship with AXMOS (Codepresso · WVB), open to every participant, awards or not. The hosts review interest on the strength of your work across the event" },
+          //
+          // DECIDED 2026-08-14 (원대로 대표, 텔레그램): 근무 지역 한 절을 이 포인트
+          // 안에 넣었습니다. 새 포인트로 떼지 마세요 — 카드는 모바일에서 앞 두 줄만
+          // 보이므로 늘어난 포인트는 접혀서 읽히지 않습니다. "열릴 수 있어요"의
+          // 가능성 표현을 확정형으로 바꾸지 마세요(원문이 "포함할 수 있습니다").
+          // 조건의 정본은 FAQ 인턴십 답변이고 이 줄은 요약이니 함께 움직이세요.
+          { ko: "AXMOS(코드프레소·WVB) 유급 인턴십 기회는 수상과 무관하게 모든 참가자에게 열려 있습니다. 지역은 싱가포르에 더해 한국 · 미국도 포함될 수 있어요. 주최사가 행사 과정과 제출물을 바탕으로 직접 검토해요", en: "A paid internship with AXMOS (Codepresso · WVB), open to every participant, awards or not. The location can reach beyond Singapore to Korea and the US. The hosts review interest on the strength of your work across the event" },
           // CONFIRMED 2026-08-03 (브랜드부스트 미팅): 후드+캡 세트 60개, Day 1 전
           // 도착 확정, 현장 선착순. 이전 줄("굿즈 (pen·notes) 등 · 검토 중")은
           // 품목도 진행 여부도 미정이던 시절의 표기라 헤지가 붙어 있었습니다 —
@@ -3175,8 +3181,15 @@ export const dict = {
           // benefits 06 카드의 인턴십 줄과 같은 사실이니 함께 움직여 주세요.
           // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
           // DECIDED 2026-08-13: 커리어 간담회가 Day 7 → Day 8로 옮겨졌습니다.
-          ko: "네, 지금 추진 중인 유급 인턴십입니다. AXMOS(코드프레소·WVB)의 인턴 기회이고, 수상 여부와 무관하게 열려 있습니다. 행사에서 잘하는 것과 현장에서 잘하는 것은 다를 수 있어서, 주최사가 관심 있는 참가자를 행사 과정과 제출 자료를 바탕으로 직접 검토해요. 8일 전체가 사실상 포트폴리오가 되는 구조입니다. 구체적인 조건은 행사가 끝난 뒤 회사와 학생이 학기 일정에 맞춰 이야기해 정합니다. Day 8 커리어 간담회도 인턴·채용 풀로 이어지는 별도 연결 통로예요.",
-          en: "Yes, a paid internship already in motion, with AXMOS (Codepresso · WVB), open regardless of whether your team wins anything. Doing well at an event and doing well on the job can be two different things, so the hosts review interested participants directly, on the strength of their work across the event and what they submit. The whole eight days effectively become your portfolio. Specific terms get settled after the event, between the company and the student around their term dates. The Day 8 career session is a separate route into the internship & hiring pool too.",
+          //
+          // DECIDED 2026-08-14 (원대로 대표, 텔레그램): 근무 지역이 싱가포르에
+          // 한정되지 않습니다. 한국·미국의 기회가 포함될 수 있습니다. 원문이
+          // "포함할 수 있습니다"이므로 가능성 표현을 유지하세요. "한국·미국에서
+          // 근무합니다" 같은 확정형이나 특정 국가의 특정 포지션을 약속하는 문장으로
+          // 바꾸지 마세요. 지역은 아래 "구체적인 조건"에 걸리는 항목이기도 해서,
+          // 그 문장 앞에 둡니다.
+          ko: "네, 지금 추진 중인 유급 인턴십입니다. AXMOS(코드프레소·WVB)의 인턴 기회이고, 수상 여부와 무관하게 열려 있습니다. 근무 지역도 싱가포르에 한정되지 않고, 한국과 미국의 기회가 포함될 수 있어요. 행사에서 잘하는 것과 현장에서 잘하는 것은 다를 수 있어서, 주최사가 관심 있는 참가자를 행사 과정과 제출 자료를 바탕으로 직접 검토해요. 8일 전체가 사실상 포트폴리오가 되는 구조입니다. 구체적인 조건은 행사가 끝난 뒤 회사와 학생이 학기 일정에 맞춰 이야기해 정합니다. Day 8 커리어 간담회도 인턴·채용 풀로 이어지는 별도 연결 통로예요.",
+          en: "Yes, a paid internship already in motion, with AXMOS (Codepresso · WVB), open regardless of whether your team wins anything. The location isn't limited to Singapore either; opportunities in Korea and the US can be part of it. Doing well at an event and doing well on the job can be two different things, so the hosts review interested participants directly, on the strength of their work across the event and what they submit. The whole eight days effectively become your portfolio. Specific terms get settled after the event, between the company and the student around their term dates. The Day 8 career session is a separate route into the internship & hiring pool too.",
         },
       },
       {
