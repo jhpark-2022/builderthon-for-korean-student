@@ -1738,8 +1738,20 @@ export const schedule: BEvent[] = [
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
       // 마지막 줄 (DECIDED 2026-08-09): 예약제 1:1이 열려 있는 마지막 날입니다.
       // 이 카드가 말하는 현장 최종 점검(9:10–11:30)과는 다른 트랙이라 따로 적습니다.
-      ko: "Day 7은 사전 제출물 마감 당일입니다. 새 기능이나 방향 전환은 여기서 멈추고, 이미 만든 결과를 발표와 이어지는 Q&A 안에서 명확히 증명하는 데 시간을 씁니다. 오늘 지켜야 할 건 이미 손에 있는 것들이에요. 멘토와 함께 무엇을 보는지는 아래 목록에 있습니다(무엇을 내는지는 이 날 카드의 제출물 안내를 보세요). AWS 오피스에서 열리며, Day 5에 이은 두 번째 현장 집결입니다. 1:1 멘토링이 저녁까지 열려 있는 마지막 날이고, 예약 없이 들어오는 FDE 온라인 오피스아워도 오늘까지 이어집니다. 제출 전 마지막 점검에 쓰세요.",
-      en: "Day 7 is the submission deadline. New features and changes of direction stop here; the time goes into proving what you already built, making it stand up inside the pitch and the Q&A that follows. The session protects what's already in your hands. What you go through with a mentor is listed below (what the package contains is in this day's submission box). It runs at the AWS office, the second in-person gathering after Day 5, and it's the last day 1:1 mentoring is open, into the evening, with the online FDE office hours running through today too. Use it for a final check before the submission closes.",
+      //
+      // DECIDED 2026-08-14 (코드프레소 협의): 이 시간이 담당자 인터뷰를 겸합니다.
+      // 참가자가 과제 담당자를 만나는 접점은 여기 하나이고, 예약제 인터뷰 슬롯은
+      // 형평성·가용 시간 때문에 열지 않기로 했습니다. 사이트에는 하는 것만 씁니다:
+      // "별도 슬롯은 없습니다" 같은 문장을 넣지 마세요.
+      // 직급을 씁니다(대표·공동창업자): 두 분(이동훈 · 황현진)은 이미 멘토링 섹션의
+      // Day 7 피치·세일즈 박스에 이름·직급·소속이 카드로 공개돼 있어서, 여기서만
+      // 익명으로 뭉뚱그리면 같은 사람을 두 이름으로 부르게 됩니다. 다만 이름은 그
+      // 카드가 갖습니다. 위 주석대로 SPEAKER 필드는 되살리지 마세요. 이 시간의
+      // 진행자는 여전히 멘토진이고, 두 분의 참석은 산문으로만 말합니다.
+      // 같은 사실을 dictionary.ts의 mentoring.groups[pitch].sub도 말합니다. 함께
+      // 움직이세요.
+      ko: "Day 7은 사전 제출물 마감 당일입니다. 새 기능이나 방향 전환은 여기서 멈추고, 이미 만든 결과를 발표와 이어지는 Q&A 안에서 명확히 증명하는 데 시간을 씁니다. 오늘 지켜야 할 건 이미 손에 있는 것들이에요. 멘토와 함께 무엇을 보는지는 아래 목록에 있습니다(무엇을 내는지는 이 날 카드의 제출물 안내를 보세요). AWS 오피스에서 열리며, Day 5에 이은 두 번째 현장 집결입니다. 1:1 멘토링이 저녁까지 열려 있는 마지막 날이고, 예약 없이 들어오는 FDE 온라인 오피스아워도 오늘까지 이어집니다. 제출 전 마지막 점검에 쓰세요. 과제를 낸 코드프레소의 대표·공동창업자도 현장에 함께합니다. 무대에 서기 전 담당자에게 과제를 직접 묻고 확인하는 시간을 겸해요.",
+      en: "Day 7 is the submission deadline. New features and changes of direction stop here; the time goes into proving what you already built, making it stand up inside the pitch and the Q&A that follows. The session protects what's already in your hands. What you go through with a mentor is listed below (what the package contains is in this day's submission box). It runs at the AWS office, the second in-person gathering after Day 5, and it's the last day 1:1 mentoring is open, into the evening, with the online FDE office hours running through today too. Use it for a final check before the submission closes. Codepresso's CEO and co-founder, who set the problems, are on site too, so it doubles as your chance to question the problem owner about the brief before you go on stage.",
     },
     location: AWS_OFFICE,
     checkpoints: SCORE_KEEPING_CHECKS,

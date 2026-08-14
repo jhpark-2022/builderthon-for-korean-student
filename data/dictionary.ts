@@ -1853,10 +1853,17 @@ export const dict = {
           { ko: "파트너사가 지금 겪는 AX 문제 + 담당 직원의 피드백", en: "A partner's live AX problem, plus feedback from the people doing the job" },
           // WHAT the brief actually contains. "실제 기업의 진짜 문제" was a claim
           // with nothing behind it — a reader had no way to picture what lands on
-          // Day 1. These three items (워크플로우 · 페인포인트 · 맥락과 데이터) are
+          // Day 1. These three items (워크플로우 · 페인포인트 · 맥락) are
           // what makes the 주니어 컨설턴트 framing above possible; without them it
           // is a prompt with a nicer name. Same fact as the 테마 FAQ answer.
-          { ko: "문제는 ‘AX 의뢰서’로 나옵니다. 실제 업무 워크플로우, 담당자의 페인포인트, 맥락과 데이터가 함께 Day 1에 공개", en: "The problem arrives as an AX brief: the real workflow, the owner's pain points, plus context and data, released on Day 1" },
+          //
+          // DECIDED 2026-08-14 (코드프레소 협의): '데이터'가 Day 1 공개 목록에서
+          // 빠졌습니다. 과제는 공개 자료로도 풀리는 형태로 나오고, 특정 자료·데이터가
+          // 필요해지면 그때 운영진을 통해 코드프레소가 전달합니다. Day 1에 데이터가
+          // 함께 나온다고 다시 쓰지 마세요. 요청 기반이라는 사실을 새 포인트로 떼지
+          // 않고 같은 줄에 붙인 이유는 위 주석대로입니다: 카드는 모바일에서 앞 두
+          // 줄만 보이므로 네 번째 포인트는 접혀서 읽히지 않습니다.
+          { ko: "문제는 ‘AX 의뢰서’로 나옵니다. 실제 업무 워크플로우, 담당자의 페인포인트, 맥락이 Day 1에 공개. 필요한 자료·데이터는 진행 중 요청하면 전달돼요", en: "The problem arrives as an AX brief: the real workflow, the owner's pain points and the context, released on Day 1. Data and materials come on request as you build" },
           // REMOVED: "트랙 구성 미확정 — 재무·영업·마케팅 3트랙으로 논의 중(잠정) ·
           // AWS 방법론으로 접근 · 클라이언트 사명도 조율 중". 트랙/클라이언트가 확정되기
           // 전까지는 표기하지 않습니다.
@@ -2281,8 +2288,11 @@ export const dict = {
           // 1:1에서 무엇을 하는가이고, 두 번째 창구를 여기서 안내하면 방금 지운
           // "막히면 저쪽"이 형태만 바꿔 돌아옵니다. 오피스아워는 프로그램의 자기
           // 세션 카드(schedule.ts d5/d6/d7-fde-office-hour)가 안내합니다.
-          ko: "아직 방향을 바꿀 수 있는 구간의 멘토링입니다. 제품을 직접 만들어 온 창업가·현업 엔지니어와 함께 여러 병목 중 하나를 고르고, 버릴 것을 정하고, 그 선택을 제공 데이터로 뒷받침합니다. 같은 문제를 놓고 ‘나라면 이렇게 했을 수도’를 나누는 대화에 가깝고, 빌드가 막힌 지점도 누가 배정되든 그 1:1에서 함께 봅니다. 1:1 슬롯은 한 번 확정되면 이후 변경하지 않으니, 신청 전에 팀 일정을 맞춰 주세요.",
-          en: "This is mentoring while the direction can still change. With founders and working engineers who have built and shipped products themselves, you pick one bottleneck, decide what NOT to solve, and back that choice with the provided data. It's closer to a ‘here's how I might have done it’ conversation over the same problem, and whoever your team is matched with, a stuck build is something you work through in that same 1:1. Once a 1:1 slot is confirmed it stays as booked, so settle your team's schedule before you request one.",
+          // DECIDED 2026-08-14 (코드프레소 협의): "제공 데이터"를 "근거"로 바꿨습니다.
+          // 데이터는 기본 제공물이 아니라 요청하면 전달되는 것이라(program 카드 02와
+          // 테마 FAQ 참조), 나눠주는 데이터가 있다는 전제로 읽히는 말을 뒀습니다.
+          ko: "아직 방향을 바꿀 수 있는 구간의 멘토링입니다. 제품을 직접 만들어 온 창업가·현업 엔지니어와 함께 여러 병목 중 하나를 고르고, 버릴 것을 정하고, 그 선택을 근거로 뒷받침합니다. 같은 문제를 놓고 ‘나라면 이렇게 했을 수도’를 나누는 대화에 가깝고, 빌드가 막힌 지점도 누가 배정되든 그 1:1에서 함께 봅니다. 1:1 슬롯은 한 번 확정되면 이후 변경하지 않으니, 신청 전에 팀 일정을 맞춰 주세요.",
+          en: "This is mentoring while the direction can still change. With founders and working engineers who have built and shipped products themselves, you pick one bottleneck, decide what NOT to solve, and back that choice with evidence. It's closer to a ‘here's how I might have done it’ conversation over the same problem, and whoever your team is matched with, a stuck build is something you work through in that same 1:1. Once a 1:1 slot is confirmed it stays as booked, so settle your team's schedule before you request one.",
         },
         // "메인 멘토링 파트너" is load-bearing, not decoration: NONE of the cards in
         // this box belong to either mark since the two Onword founders came out
@@ -2358,6 +2368,15 @@ export const dict = {
         // will ask, final submission check — direction is frozen). Keep the verbs
         // distinct; do not let build-stage advice language leak into the Day 7
         // blurb or vice versa.
+        //
+        // DECIDED 2026-08-14 (코드프레소 협의): Day 7 최종 점검이 과제 담당자에게
+        // 직접 묻는 인터뷰를 겸합니다. 별도 인터뷰 슬롯(예약제)은 형평성·가용 시간
+        // 때문에 열지 않으니, 안 하는 것을 쓰지 마세요. 이 사실이 sub에 들어간 이유는
+        // 자리 때문입니다: 과제를 낸 코드프레소의 두 사람(이동훈 · 황현진)이 바로
+        // 아래 그리드에 얼굴로 있어서, 담당자에게 물을 수 있다는 말이 읽히는 곳이
+        // 여기입니다. 같은 사실을 schedule.ts의 d7-final-rehearsal description도
+        // 말합니다(일정 모달과 멘토링 섹션은 서로 다른 화면입니다). 두 곳까지이고,
+        // 세 번째 사본을 만들지 마세요. 한쪽을 고치면 다른 쪽도 함께 고칩니다.
         sub: {
           // 인용문을 풀어 쓴 이유 (2026-08-04): 원래 "프롬프트 한 줄로 한 것과 뭐가
           // 다르죠?"였는데, 패널에 서는 전문가(정요천 님)조차 이 축약형의 의미를
@@ -2368,8 +2387,8 @@ export const dict = {
           // 대상을 문장 안에 넣지 않으면 뜻이 서지 않습니다.
           // 같은 인용이 FAQ("결과물이 실제로 쓰일 수도 있나요?")에도 있습니다 —
           // 함께 움직이세요. 축약형으로 되돌리지 말 것.
-          ko: "빌드는 끝났고, 남은 것은 증명입니다. 공유회 전날, AWS의 GTM·세일즈 시니어를 비롯해 현업에서 제품을 직접 파는 사람들과 함께 발표와 이어지는 Q&A 안에서 ‘어떤 병목을 왜 골랐고, 근거는 무엇이고, 실제로 돌아가는가’가 서는지 점검하고, 전문가들이 던질 질문(“담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”)을 미리 받아봅니다. 그날 저녁 마감되는 사전 제출물의 마지막 점검 자리이기도 해요.",
-          en: "The build is done; what's left is the proof. The day before the Showcase, with AWS GTM & sales seniors and people who sell products for a living, you pressure-test whether ‘which bottleneck, why, on what evidence, and does it actually run’ stands up in the pitch and the Q&A that follows, and field the questions the experts will ask (“how is this different from what the problem owner would get by just asking a general LLM?”). It's also the last check before the submission package closes that evening.",
+          ko: "빌드는 끝났고, 남은 것은 증명입니다. 공유회 전날, AWS의 GTM·세일즈 시니어를 비롯해 현업에서 제품을 직접 파는 사람들과 함께 발표와 이어지는 Q&A 안에서 ‘어떤 병목을 왜 골랐고, 근거는 무엇이고, 실제로 돌아가는가’가 서는지 점검하고, 전문가들이 던질 질문(“담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”)을 미리 받아봅니다. 과제를 낸 코드프레소의 대표·공동창업자도 같은 자리에 있어, 무대에 서기 전 담당자에게 직접 물어볼 수 있습니다. 그날 저녁 마감되는 사전 제출물의 마지막 점검 자리이기도 해요.",
+          en: "The build is done; what's left is the proof. The day before the Showcase, with AWS GTM & sales seniors and people who sell products for a living, you pressure-test whether ‘which bottleneck, why, on what evidence, and does it actually run’ stands up in the pitch and the Q&A that follows, and field the questions the experts will ask (“how is this different from what the problem owner would get by just asking a general LLM?”). Codepresso's CEO and co-founder, who set the problem, are in the same room, so you can put your questions to the problem owner directly before you go on stage. It's also the last check before the submission package closes that evening.",
         },
         // No partner logos here on purpose. AWS is where several of these mentors
         // work, and it sponsors the Day 7 venue — but it has never been named a
@@ -3052,8 +3071,13 @@ export const dict = {
           // 정리해야 합니다(문제가 Day 1에 공개된다는 나머지 부분은 그대로 사실).
           // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
           // 앞의 구체 예시('회사 돈이 어디서…')가 이미 '가상이 아님'을 증명합니다.
-          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다. 예를 들어 ‘회사 돈이 어디서 새는지 눈에 안 보인다’ 같은 실무 문제요. Day 1에 문제가 공개되고, 과제를 낸 코드프레소가 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자·형식은 조율 중). 의뢰서에는 그 회사의 업무 워크플로우와 담당자의 페인포인트, 관련 맥락·데이터가 담깁니다. 트랙 구성은 메인 트랙 2개로 좁혀 논의 중이며 확정되는 대로 안내합니다.",
-          en: "You take on the AX (AI-transformation) problems a Korean company is facing right now, one set per track, practical things like “we can't see where the company's money is leaking.” They come as briefs: the problems drop on Day 1 and Codepresso, which set them, walks through the background first-hand (presenter and format still being arranged). Each brief carries the company's real workflow, the pain points of the person who owns it, and the context and data around it. The line-up has been narrowed to two main tracks, and we'll announce them once settled.",
+          //
+          // DECIDED 2026-08-14 (코드프레소 협의): 의뢰서 내용물에서 '데이터'를 빼고
+          // 요청 경로를 한 문장으로 붙였습니다. 과제는 내부 데이터 없이도, 공개된
+          // 자료로 풀 수 있는 형태로 나옵니다. 이 답과 program 카드 02는 같은 사실을
+          // 말해야 하므로(위 계약) 한쪽만 고치지 마세요.
+          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다. 예를 들어 ‘회사 돈이 어디서 새는지 눈에 안 보인다’ 같은 실무 문제요. Day 1에 문제가 공개되고, 과제를 낸 코드프레소가 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자·형식은 조율 중). 의뢰서에는 그 회사의 업무 워크플로우와 담당자의 페인포인트, 관련 맥락이 담깁니다. 진행 중 특정 자료·데이터가 필요해지면 운영진에게 문의해 주세요. 문제를 낸 코드프레소가 필요한 만큼 전달합니다. 트랙 구성은 메인 트랙 2개로 좁혀 논의 중이며 확정되는 대로 안내합니다.",
+          en: "You take on the AX (AI-transformation) problems a Korean company is facing right now, one set per track, practical things like “we can't see where the company's money is leaking.” They come as briefs: the problems drop on Day 1 and Codepresso, which set them, walks through the background first-hand (presenter and format still being arranged). Each brief carries the company's real workflow, the pain points of the person who owns it, and the context around it. If your team needs particular materials or data along the way, ask the organizers, and Codepresso, which set the problems, will send over what you need. The line-up has been narrowed to two main tracks, and we'll announce them once settled.",
         },
       },
       // MERGED 2026-08-11: 두 항목이 하나가 됐습니다 — "문과인데 이과생들에게
