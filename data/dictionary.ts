@@ -2716,9 +2716,14 @@ export const dict = {
     // 그건 등수가 사라진 뒤에도 그대로 남는 값입니다. 인물 카드·순서·pending
     // 규칙(확정 전 인물은 amber pill)은 그대로입니다.
     heading: { ko: "당신의 결과물에 피드백을 줄 사람들", en: "The people who'll give you feedback on your work" },
+    // CONFIRMED 2026-08-15: 한정필 교수 확정으로 패널이 전원 확정됐고, 그 사실을
+    // 마지막 문장에 넣었습니다(덱도 같은 문장). 이 문장은 아래 `people` 배열과
+    // 묶여 있습니다 — 열 명이라는 수와 '모두 확정'이라는 말 둘 다 배열을 보고
+    // 쓴 것이라, 사람을 더하거나 빼거나 누군가 pending으로 돌아오면 이 문장부터
+    // 고쳐야 합니다.
     sub: {
-      ko: "순위를 매기는 심사가 아니라, 전문적인 시각의 피드백입니다. 문제를 낸 기업과, 실제 산업에서 문제를 풀어온 시니어 리더들이 결과 공유회에서 각자의 관점으로 피드백과 다음 가능성을 제안합니다.",
-      en: "Not a ranking exercise, but expert feedback. The company that set the problem and senior leaders who have solved real ones in industry look at your Showcase work and, each from their own vantage point, offer feedback and what could come next.",
+      ko: "순위를 매기는 심사가 아니라, 전문적인 시각의 피드백입니다. 문제를 낸 기업과, 실제 산업에서 문제를 풀어온 시니어 리더들이 결과 공유회에서 각자의 관점으로 피드백과 다음 가능성을 제안합니다. 열 분 모두 참여가 확정됐습니다.",
+      en: "Not a ranking exercise, but expert feedback. The company that set the problem and senior leaders who have solved real ones in industry look at your Showcase work and, each from their own vantage point, offer feedback and what could come next. All ten have confirmed.",
     },
     people: [
       {
@@ -2760,6 +2765,9 @@ export const dict = {
         },
         linkedin: "https://www.linkedin.com/in/danielbyungillee",
       },
+      // CONFIRMED 2026-08-15: 참여 확정. pending을 false로 내렸습니다(키는 위
+      // 주석대로 남깁니다). 바로 아래 문단은 확정 전 상태를 적어둔 기록입니다.
+      //
       // 한정필 (Jungpil Hahn) — `pending: true`, so the card carries an amber
       // dashed "협의 중" pill next to its topic tag. Flip `pending` to false the
       // moment he confirms; nothing else on the card changes. He sits 4th because
@@ -2790,7 +2798,7 @@ export const dict = {
         role: { ko: "석좌교수", en: "Provost's Chair Professor" },
         tag: { ko: "AI 거버넌스 · 핀테크", en: "AI governance · FinTech" },
         img: "/partners/people/hahn-jungpil.jpg",
-        pending: true,
+        pending: false,
         bio: {
           ko: "NUS 정보시스템·분석학과 석좌교수 · NUS 핀테크랩 디렉터 · NUS TRAIL(기술·로봇·AI·법 센터) 부센터장. Fyreflyz 공동창업자. 前 퍼듀대 교수.",
           en: "Director of the NUS FinTech Lab · Deputy Director of NUS TRAIL (technology, robotics, AI & the law). Co-founder, Fyreflyz. Ex-Purdue.",
