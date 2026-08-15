@@ -513,9 +513,11 @@ export const days: DayMeta[] = [
     // this line directly above the on-site card, and with one session carrying
     // the whole day the two were saying the same sentence twice. This one gives
     // the frame (온라인 구간을 지나 현장으로 · 선택), the card gives the programme.
+    // DECIDED 2026-08-15: 나열 순서가 진행 순서(공유 → 빌드 → 성과 공유 → 투표)를
+    // 따라갑니다. 빌드를 앞으로 되돌리지 마세요 — runOfShow와 어긋납니다.
     summary: {
-      ko: "온라인 구간을 지나 다시 현장으로 갑니다. *SCAPE에 자리를 열어 팀끼리 모여 빌드하고, 중간까지 만든 것을 또래 앞에 공유합니다 · 1:1 멘토링(온라인).",
-      en: "Back in person after the online stretch. A room at *SCAPE where teams sit together and build, then share what they have so far with the room · 1:1 mentoring (online).",
+      ko: "온라인 구간을 지나 다시 현장으로 갑니다. *SCAPE에 자리를 열어 지금까지 만든 것을 또래 앞에 공유하고, 모여서 빌드하고, 오늘 나아간 것을 다시 공유합니다 · 1:1 멘토링(온라인).",
+      en: "Back in person after the online stretch. A room at *SCAPE where you share what you have so far with the room, sit together and build, then share again what moved forward today · 1:1 mentoring (online).",
     },
     // DECIDED 2026-08-13: 내려설 이유가 '교류' 하나에서 '중간 점검 + 가산'으로
     // 옮겨왔습니다. 빌드는 어디서나 할 수 있지만, 또래 앞에 한 번 서보는 자리와
@@ -559,30 +561,23 @@ export const days: DayMeta[] = [
     // 밋업 줄에 음식·점심을 쓰지 마세요 (2026-08-05 결정: 식사 언급 전면 금지,
     // 제공 안내도 미제공 안내도). Day 7 "점심시간" 줄의 주석에 같은 규칙이 있습니다.
     //
-    // 운영을 가볍게 간다는 것이 합의 사항입니다. 이 여섯 줄에 세션·연사·무대를
+    // 운영을 가볍게 간다는 것이 합의 사항입니다. 이 일곱 줄에 세션·연사·무대를
     // 덧붙이지 마세요.
+    //
+    // DECIDED 2026-08-15: 진행 순서를 다시 짰습니다. 도착하자마자 지금까지 만든
+    // 것을 공유하고(LAP Time), 그 위에서 집중 빌드를 하고, 오후에 오늘 나아간
+    // 것을 다시 공유한 뒤 투표합니다. 공유가 하루를 여닫는 구조라, 두 공유 줄은
+    // 짝입니다 — 한쪽만 옮기거나 지우지 마세요.
     runOfShow: [
       {
         time: "10AM–10:20AM",
         label: { ko: "입장 · 체크인 · 자리 잡기", en: "Doors · check-in · find a spot" },
       },
       {
-        time: "10:20AM–12PM",
-        label: { ko: "집중 빌드", en: "Focused build" },
-        // "멘토 없음"을 적는 이유: 현장에 모이는 날이라 멘토가 붙는 시간으로 읽기
-        // 쉽습니다. 1:1 멘토링과 FDE 오피스아워는 이 날도 열려 있지만 별개 트랙이라,
-        // 그 둘은 각자의 카드가 말합니다.
-        note: { ko: "팀 자율로 진행하는 시간이에요. 이 시간에 멘토가 따로 붙지는 않습니다.", en: "Your team's own time. No mentor is attached to this block." },
-        eventId: "d5-networking-day",
-      },
-      {
-        time: "12PM–12:40PM",
-        label: { ko: "캐주얼 밋업", en: "Casual meetup" },
-        note: { ko: "트랙을 섞어 편하게 교류하는 시간입니다.", en: "Time to mix across tracks and talk." },
-      },
-      {
-        time: "12:40PM–1:30PM",
-        label: { ko: "LAP Time 공유", en: "LAP Time share" },
+        // DECIDED 2026-08-15: 오후에 있던 LAP Time 공유가 하루를 여는 자리로
+        // 올라왔습니다. 카피는 그대로 따라 올라옵니다 — 아래 두 주석의 규칙도
+        // 같이 살아 있습니다.
+        //
         // DECIDED 2026-08-13: 팀당 시간 제한 없음. 처음 잡았던 "팀당 2~3분(잠정)"을
         // 뺐습니다 — 이 자리에서만 유일하게 잠정이던 값이라, 이제 Day 5 진행 순서에
         // 잠정은 하나도 없습니다.
@@ -591,12 +586,43 @@ export const days: DayMeta[] = [
         // 문장에 있고, 셋은 같은 말을 하고 있습니다: 여기는 겨루는 자리가 아니라
         // Day 8 전에 한 번 서보는 자리라는 것. 타이머가 붙는 순간 그게 무너집니다.
         // 무대에서 시간을 재는 발표는 Day 8입니다(팀당 8분·잠정, d8 runOfShow).
+        time: "10:20AM–11AM",
+        label: { ko: "LAP Time 공유", en: "LAP Time share" },
         note: { ko: "지금까지 만든 것을 또래 앞에서 가볍게 공유해요. 팀당 시간 제한은 없고, 점수도 기록도 순위도 없습니다.", en: "A light share of what you've built so far, in front of the room. No time limit per team, and no scores, no records, no ranking." },
       },
       {
+        time: "11AM–12PM",
+        label: { ko: "집중 빌드", en: "Focused build" },
+        // "멘토 없음"을 적는 이유: 현장에 모이는 날이라 멘토가 붙는 시간으로 읽기
+        // 쉽습니다. 1:1 멘토링과 FDE 오피스아워는 이 날도 열려 있지만 별개 트랙이라,
+        // 그 둘은 각자의 카드가 말합니다.
+        note: { ko: "팀 자율로 진행하는 시간이에요. 이 시간에 멘토가 따로 붙지는 않습니다.", en: "Your team's own time. No mentor is attached to this block." },
+        eventId: "d5-networking-day",
+      },
+      {
+        // DECIDED 2026-08-15: 캐주얼 밋업이 점심시간을 겸합니다. 시간대의 이름일
+        // 뿐이라 Day 7 "점심시간" 줄과 같은 규칙을 따릅니다 — DECIDED 2026-08-05:
+        // 식사 언급 전면 제거, 제공 안내도 미제공 안내도 쓰지 않는다. 어느 방향으로든
+        // 다시 넣지 마세요. note에는 무엇을 해도 되는 시간인지만 씁니다.
+        time: "12PM–12:40PM",
+        label: { ko: "점심시간 · 캐주얼 밋업", en: "Lunch break · casual meetup" },
+        note: { ko: "자유 시간이에요. 트랙을 섞어 편하게 이야기해도 좋고, 나갔다 와도 좋습니다.", en: "Free time. Mix across tracks and talk, or step out and come back." },
+      },
+      {
+        // DECIDED 2026-08-15: 새 줄. 아침에 연 LAP Time 공유와 짝이라, 같은 결로
+        // 씁니다 — "발표"·"평가"·"심사"로 읽히는 낱말을 쓰지 마세요. 무대 형식으로
+        // 올리는 자리는 Day 8 하나뿐입니다.
+        time: "12:40PM–1:30PM",
+        label: { ko: "빌드 성과 공유", en: "Build progress share" },
+        note: { ko: "오전 빌드에서 나아간 것을 또래 앞에 다시 공유해요. 하루를 연 공유와 짝이 되는 자리입니다.", en: "Share what moved forward in the morning build, again in front of the room. It pairs with the share that opened the day." },
+      },
+      {
+        // DECIDED 2026-08-15: 투표의 질문이 "오늘 가장 많이 나아간 팀"으로
+        // 분명해졌습니다. Day 8 '빌더스 초이스' 최종 집계에 반영된다는 연결은
+        // 그대로입니다(dict.program.awards의 meta와 함께 움직일 것).
         time: "1:30PM–1:45PM",
         label: { ko: "즉석 인기 투표 · 결과 공개", en: "On-the-spot vote · results" },
-        note: { ko: "참가자가 뽑는 투표의 중간 라운드예요. 결과는 Day 8 ‘빌더스 초이스’ 최종 집계에 반영됩니다.", en: "The mid-way round of the participants' vote. The result carries into the final Builder's Choice count on Day 8." },
+        note: { ko: "오늘 가장 많이 나아간 팀에게 참가자가 투표해요. 결과는 그 자리에서 공개하고, Day 8 ‘빌더스 초이스’ 최종 집계에 반영됩니다.", en: "Participants vote for the team that moved furthest today. The result is read out there and then, and it carries into the final Builder's Choice count on Day 8." },
       },
       {
         time: "1:45PM–2PM",
@@ -1649,9 +1675,12 @@ export const schedule: BEvent[] = [
     // ("Day 5 · 08.26 · AM")이 이제 맞는 말입니다.
     timeOfDay: "AM",
     title: { ko: "집중 빌드 · 중간 점검", en: "Focused Build · Mid-point Check" },
+    // DECIDED 2026-08-15: 하루의 아크가 바뀌었습니다 — 공유로 열고, 빌드하고,
+    // 오늘 나아간 것을 다시 공유하고, 가장 많이 나아간 팀에게 투표합니다.
+    // 제목과 이벤트 id는 그대로입니다.
     summary: {
-      ko: "*SCAPE 현장 · 팀끼리 모여 집중해서 빌드하는 자리입니다. 중간까지 만든 것을 또래 앞에 공유하고, 그 자리에서 즉석 인기 투표까지 합니다.",
-      en: "On-site at *SCAPE · a room where teams sit together and build. You share what you have so far with the room, and there's an on-the-spot vote right after.",
+      ko: "*SCAPE 현장 · 도착하면 먼저 지금까지 만든 것을 또래 앞에 공유하고, 그 위에서 모여 빌드합니다. 오후에는 오늘 나아간 것을 다시 공유하고, 가장 많이 나아간 팀에게 투표해요.",
+      en: "On-site at *SCAPE · you open by sharing what you have so far with the room, then sit together and build on it. In the afternoon you share again what moved forward today, and vote for the team that got furthest.",
     },
     description: {
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
@@ -1671,8 +1700,11 @@ export const schedule: BEvent[] = [
       // 가산은 "어워드 두 부문에 반영"까지만 씁니다. 배점 숫자 금지, 총점·순위를
       // 암시하는 낱말 금지 — 부문 이름과 선정 주체는 dict.program.awards가 정본이고,
       // 여기서는 그 부문을 가리키기만 합니다.
-      ko: "온라인으로 이어지던 8일 한가운데, *SCAPE L^IFE Jungle에 자리를 열어 둡니다. 팀이 한 방에 모여 집중해서 빌드할 수 있는 날이에요. 오전은 팀 자율 빌드에 쓰고, 트랙을 섞어 교류하는 캐주얼 밋업을 지나, 오후에는 지금까지 만든 것을 또래 앞에 공유하는 LAP Time이 있습니다. 점수도 기록도 순위도 없어요. Day 8 무대에 서기 전에 사람들 앞에서 한 번 말해 보는 것이 목적입니다. 마지막 날이 덜 떨리도록. 공유가 끝나면 그 자리에서 즉석 인기 투표를 하고 결과를 바로 공개합니다. 이 투표는 참가자가 뽑는 ‘빌더스 초이스’의 중간 라운드라 Day 8 최종 집계에 반영되고, 이날 현장에 온 것 자체는 ‘0→100’ 부문에 반영됩니다. 참여는 선택이에요(필참은 Day 1·8뿐). 이날도 1:1 멘토링은 열려 있어요. 현장 일정이 끝난 오후부터 팀이 예약한 시간에 진행하고, 예약 없이 들어오는 FDE 온라인 오피스아워도 같은 기간 열려 있습니다.",
-      en: "Right in the middle of a stretch that runs online, we keep a room open at *SCAPE L^IFE Jungle: a day when your team can sit down together and build. The morning is your team's own build time; then a casual meetup that mixes the tracks; then, in the afternoon, LAP Time, where you share what you have so far with the room. No scores, no records, no ranking. The point is to have stood in front of people once before the Day 8 stage, so the last day feels less daunting. Straight after the share there's an on-the-spot vote, with the result read out there and then. That vote is the mid-way round of Builder's Choice, the award participants vote for, so it carries into the final count on Day 8, and simply being in the room today counts toward the Zero to Hundred award. Attending is your choice (only Day 1 and Day 8 are required). 1:1 mentoring stays open today too: from the afternoon after the on-site programme, at whatever time your team booked, and the online FDE office hours run over the same stretch for teams who would rather just walk in.",
+      // DECIDED 2026-08-15: 진행 순서 재편 — 공유로 열고, 빌드하고, 오늘 나아간
+      // 것을 다시 공유하고, 가장 많이 나아간 팀에게 투표합니다. 이 문단의 서술
+      // 순서는 days[4].runOfShow와 같아야 합니다(시각은 여기 적지 않습니다).
+      ko: "온라인으로 이어지던 8일 한가운데, *SCAPE L^IFE Jungle에 자리를 열어 둡니다. 팀이 한 방에 모여 집중해서 빌드할 수 있는 날이에요. 도착하면 먼저 지금까지 만든 것을 또래 앞에 공유하는 LAP Time으로 하루를 엽니다. 점수도 기록도 순위도 없어요. Day 8 무대에 서기 전에 사람들 앞에서 한 번 말해 보는 것이 목적입니다. 마지막 날이 덜 떨리도록. 그다음은 팀 자율 빌드에 쓰고, 트랙을 섞어 교류하는 캐주얼 밋업을 지나, 오후에는 오늘 나아간 것을 다시 또래 앞에 공유합니다. 그 자리에서 오늘 가장 많이 나아간 팀에게 즉석 인기 투표를 하고 결과를 바로 공개해요. 이 투표는 참가자가 뽑는 ‘빌더스 초이스’의 중간 라운드라 Day 8 최종 집계에 반영되고, 이날 현장에 온 것 자체는 ‘0→100’ 부문에 반영됩니다. 참여는 선택이에요(필참은 Day 1·8뿐). 이날도 1:1 멘토링은 열려 있어요. 현장 일정이 끝난 오후부터 팀이 예약한 시간에 진행하고, 예약 없이 들어오는 FDE 온라인 오피스아워도 같은 기간 열려 있습니다.",
+      en: "Right in the middle of a stretch that runs online, we keep a room open at *SCAPE L^IFE Jungle: a day when your team can sit down together and build. You open the day with LAP Time, sharing what you have so far with the room. No scores, no records, no ranking. The point is to have stood in front of people once before the Day 8 stage, so the last day feels less daunting. After that comes your team's own build time; then a casual meetup that mixes the tracks; then, in the afternoon, you share again what moved forward today. Right there you vote for the team that got furthest today, and the result is read out on the spot. That vote is the mid-way round of Builder's Choice, the award participants vote for, so it carries into the final count on Day 8, and simply being in the room today counts toward the Zero to Hundred award. Attending is your choice (only Day 1 and Day 8 are required). 1:1 mentoring stays open today too: from the afternoon after the on-site programme, at whatever time your team booked, and the online FDE office hours run over the same stretch for teams who would rather just walk in.",
     },
     location: ONSITE,
     // org(HASHED_ORG)를 뗐습니다 (DECIDED 2026-08-13): 해시드는 더 이상 이 날의

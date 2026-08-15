@@ -1917,7 +1917,9 @@ export const dict = {
           // 가산 두 가지는 여기 적지 않습니다. 이 카드는 네트워킹 혜택을 말하는
           // 자리이고, 가산의 정본은 dict.program.awards의 meta입니다 — 어워드 규칙을
           // 두 곳에서 관리하면 한쪽이 반드시 낡습니다.
-          { ko: "Day 5는 현장에 모여 함께 빌드하고, 만든 것을 또래 앞에 공유하고, 트랙을 섞어 교류하는 하루", en: "Day 5 brings everyone on-site to build together, share what you've made with the room and mix across tracks" },
+          // DECIDED 2026-08-15: Day 5 진행 순서 재편(공유 → 빌드 → 성과 공유 →
+          // 투표). 나열 순서를 그 아크에 맞췄습니다 — 빌드를 앞으로 되돌리지 마세요.
+          { ko: "Day 5는 현장에 모여 만든 것을 또래 앞에 공유하고, 그 위에서 함께 빌드하고, 트랙을 섞어 교류하는 하루", en: "Day 5 brings everyone on-site to share what you've made with the room, build together on top of it and mix across tracks" },
           // 기존 세 줄(대표·경력자 현장 교류 / 연사 세션 / 패널·공유 세션)을 한 줄로
           // 압축했습니다. 셋 다 같은 이야기(선배와의 수직 교류)였고, 또래를 위에
           // 세우려면 그 자리를 만들어야 했습니다.
