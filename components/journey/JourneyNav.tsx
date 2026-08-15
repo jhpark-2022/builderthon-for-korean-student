@@ -13,16 +13,25 @@ import LocaleToggle from "@/components/LocaleToggle";
 import ChatGlyph from "@/components/ChatGlyph";
 import ReturningGreeting from "./ReturningGreeting";
 
+// The one list every anchor UI reads: the desktop anchor row, the mobile/side
+// section rail, and useActiveSection's IntersectionObserver all map over it, so
+// a change here propagates everywhere. There is no second hardcoded list.
+//
+// DECIDED 2026-08-13 (안 A): nav 앵커 연사→멘토링 교체 — 참가자 클릭 가치 기준.
+// 링크 8개 폭 예산 유지. 멘토링 챕터(3단계 멘토링 · 멘토진 · 피드백 패널)는 이
+// 페이지에서 가장 큰 챕터인데 앵커가 없었고, #speakers는 프로그램 바로 다음이라
+// 프로그램 앵커로 닿으며 연사 정보는 Day 카드에도 반복됩니다. #speakers 섹션은
+// 그대로 있습니다 — 사라진 것은 앵커뿐입니다.
 const anchors = [
-  { id: "about",    label: dict.nav.about },
-  { id: "join",     label: dict.nav.join },
-  { id: "benefits", label: dict.nav.benefits },
-  { id: "program",  label: dict.nav.program },
-  { id: "speakers", label: dict.nav.speakers },
+  { id: "about",     label: dict.nav.about },
+  { id: "join",      label: dict.nav.join },
+  { id: "benefits",  label: dict.nav.benefits },
+  { id: "program",   label: dict.nav.program },
+  { id: "mentoring", label: dict.nav.mentoring },
   // The "For partners" pitch chapter (#why-partner) was removed, so this now
   // lands directly on the partner/logo wall.
-  { id: "builders", label: dict.nav.builders },
-  { id: "faq",      label: dict.nav.faq },
+  { id: "builders",  label: dict.nav.builders },
+  { id: "faq",       label: dict.nav.faq },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────

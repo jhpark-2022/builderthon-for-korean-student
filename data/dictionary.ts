@@ -225,7 +225,12 @@ export const dict = {
     join: { ko: "참가 대상", en: "Who" },
     benefits: { ko: "혜택", en: "Benefits" },
     program: { ko: "프로그램", en: "Program" },
+    // DECIDED 2026-08-13 (안 A): nav 앵커 연사→멘토링 교체 — 참가자 클릭 가치
+    // 기준. 링크 8개 폭 예산 유지. `speakers`는 nav에서 빠졌지만(현재 참조 없음)
+    // 라벨 키는 보존합니다. #speakers 섹션 자체는 그대로 있고, 앵커를 되살릴 때
+    // 번역을 다시 쓰지 않아도 되게 두는 편이 쌉니다.
     speakers: { ko: "연사", en: "Speakers" },
+    mentoring: { ko: "멘토링", en: "Mentoring" },
     builders: { ko: "파트너", en: "Partners" },
     faq: { ko: "FAQ", en: "FAQ" },
     quiz: { ko: "성격 테스트", en: "Personality Test" },
