@@ -4398,9 +4398,12 @@ export default function Journey() {
           which lands better as the last thing read before the closing CTA than
           as a coda inside the chapter that opens the page. */}
       <Chapter id="vision" align="center">
-        {/* Vision funnel — how the eight days keep going, from a participant's
-            seat: the event, the rhythm after it, the ladder up, and where that
-            leads. Step 1 is highlighted as the "START". */}
+        {/* Vision roadmap — how the eight days keep going, from a participant's
+            seat. DECIDED 2026-08-15: five concept cards became a five-stop
+            TIMELINE, so each card leads with its `when` (Aug 2026 Singapore →
+            right after the event → autumn → Dec 2026 Seoul → Mar 2027) and the
+            order on screen is chronological. Step 1 keeps the "START" badge,
+            which is why its `when` carries the date only. */}
         <div className="mt-14 rounded-3xl border border-violet-400/15 bg-violet-950/20 p-6 sm:p-8">
           <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
             {t(dict.about.visionTag)}
@@ -4435,7 +4438,14 @@ export default function Journey() {
                       {t(dict.about.visionStartBadge)}
                     </span>
                   )}
-                  <p className="mt-2 text-sm font-bold leading-snug text-white">{t(s.title)}</p>
+                  {/* The timeline stamp. Reads above the title because the
+                      question this section answers is "when does that happen",
+                      and violet-200 keeps it legible on the dark card while
+                      still sitting apart from the white title. */}
+                  <p className="mt-2 text-[0.68rem] font-semibold leading-snug tracking-wide text-violet-200">
+                    {t(s.when)}
+                  </p>
+                  <p className="mt-1 text-sm font-bold leading-snug text-white">{t(s.title)}</p>
                   <p className="mt-1 text-xs leading-relaxed text-white/65">{t(s.body)}</p>
                 </li>
               );

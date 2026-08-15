@@ -961,21 +961,50 @@ export const dict = {
     // (what happens after the eight days, and how you move up), not an
     // organizer's multi-year roadmap. Research flagged roadmap-speak and soft
     // "grow together" phrasing as trust-killers, so both are out.
+    //
+    // DECIDED 2026-08-15: 이 섹션은 행사 소개 덱 21장을 정본으로 다시 씁니다.
+    // 예외적인 결정입니다 — 평소에는 사이트가 스스로의 정본이지만, 이번 로드맵은
+    // 덱에서 먼저 확정됐습니다. 개념 다섯 개를 나열하던 퍼널이 시점이 붙은 5단
+    // 타임라인이 되고, 그 위에 "한인 학생 빌더의 목적지가 된다"는 메시지가
+    // 얹힙니다(visionNote).
+    //
+    // 위 문단의 "로드맵 스피크 금지"와 충돌하는 것처럼 보이지만 아닙니다. 리서치가
+    // 걸러낸 것은 시점 없이 좋은 말만 늘어놓는 로드맵이었고, 이번 것은 날짜와
+    // 장소가 붙어 검증 가능한 로드맵입니다. 시점을 떼는 순간 그때 그 로드맵으로
+    // 되돌아갑니다 — when을 지우지 마세요.
+    //
+    // 덱의 '깔때기의 입구'는 내부 용어라 사이트에서는 '입구'로 씁니다. 깔때기
+    // 은유 자체는 위 shift 카드 02가 한 번만 쓴다는 규칙이 그대로 살아 있습니다.
     visionIntro: {
-      ko: "기회는 많은데 ‘내 기회’는 아니었던 싱가포르에서, 행사가 끝나도 다음 모임이 잡혀 있도록 8일의 경험이 정기 세션과 성장 사다리로 이어지게 설계하고 있습니다.",
-      en: "In a Singapore full of opportunities that never quite felt like ours, we're designing the eight days to continue: regular builder sessions and a growth ladder, so there's always a next gathering after the event ends.",
+      ko: "행사는 입구입니다. 참여 팀을 인큐베이팅해 서울로, 그리고 더 큰 무대로 이어갑니다.",
+      en: "The event is the entrance. We incubate the teams that take part, carry them to Seoul, and on to a bigger stage.",
     },
     // 퍼널 1번 칸에 붙는 배지. 하드코딩된 "★ START"였고, 한국어 모드에서도 영어로
     // 나왔습니다. 이 페이지에서 눈에 보이는 배지는 전부 번역되므로(필참 · 선택 ·
     // 자율 진행) 이것만 예외로 둘 이유가 없습니다.
     visionStartBadge: { ko: "★ 시작", en: "★ START" },
+    // DECIDED 2026-08-15: 덱 21장의 5단 로드맵. 각 칸에 시점(`when`)이 붙습니다.
+    //
+    // when은 다섯 칸 모두에 있어야 합니다. 하나라도 비면 그 칸만 시점 없는 개념
+    // 카드로 읽히고, 타임라인이라는 사실 자체가 흐려집니다. 값이 아직 없으면 칸을
+    // 빼는 편이 낫습니다.
+    //
+    // 1번의 when에는 "★ 시작"을 넣지 않습니다. 그 배지는 visionStartBadge가 이미
+    // 1번 칸에만 그리고 있어서, when에 또 적으면 같은 말이 카드 안에 두 번 섭니다.
+    // 덱에서 "★ 시작 · 2026.08 싱가포르"로 보이는 한 줄은 사이트에서 배지 + when
+    // 두 조각으로 나뉘어 같은 결과를 냅니다.
+    //
+    // 본문(body)에는 가운뎃점을 쓰지 않습니다. 이 페이지의 다른 데이터는 ·로 항목을
+    // 잇지만, 이 다섯 문장은 나열이 아니라 산문이라 쉼표와 조사로 씁니다. when은
+    // 라벨이라 ·를 써도 됩니다.
     visionSteps: [
       {
         num: "1",
+        when: { ko: "2026.08 싱가포르", en: "Aug 2026 · Singapore" },
         title: { ko: "Zero100 AI 빌더톤", en: "Zero100 AI Builderthon" },
         body: {
-          ko: "8일의 성공 경험. 여기서 만나는 동료·멘토·기업이 전부의 시작점입니다.",
-          en: "8 days of real success. The peers, mentors and companies you meet here start everything.",
+          ko: "8일의 성공 경험. 여기서 만나는 동료와 멘토, 기업이 전부의 시작점입니다.",
+          en: "Eight days of shipping something real. The peers, mentors, and companies you meet here are where everything starts.",
         },
       },
       {
@@ -984,56 +1013,73 @@ export const dict = {
         // 초이스 가산)·출석(0→100 가산). 해시드·OpenAI 글로벌 해커톤은 행사 후 별도
         // 행사로 이동(협의 중).
         //
-        // 그 해커톤이 별도 step이 아니라 여기 세 번째 문장으로 들어간 이유:
-        //  · 이 퍼널은 참가자 시점입니다(visionIntro 위 주석). step 하나를 늘리면
-        //    "우리가 다음에 할 일" 목록이 되고, 그건 이 섹션이 리서치 결과로
-        //    걷어낸 로드맵 스피크입니다.
-        //  · 참가자가 실제로 묻는 것은 "8일 다음에 뭐가 있나"이고, 그 자리는 이미
-        //    step 2("이어지는 리듬")입니다. 첫 모임이 무엇인지가 그 답입니다.
+        // DECIDED 2026-08-15: 이 해커톤이 세 번째 문장에서 한 칸으로 올라왔습니다.
+        // 전에는 일부러 문장이었습니다 — 칸을 늘리면 "우리가 다음에 할 일" 목록이
+        // 되고 그게 리서치가 걸러낸 로드맵 스피크라서요. 시점이 붙은 타임라인이 된
+        // 지금은 그 걱정이 사라졌습니다. 시점 없는 로드맵이 문제였지 순서 자체가
+        // 문제가 아니었고, 이 칸의 시점은 "행사 직후"입니다.
         //
         // 헤지는 "협의 중"입니다(상대 미확답 계열). 일정도 지원도 확정된 것이
         // 없으니 "예정"·"열립니다"로 바꾸지 마세요. 회사명이 들어가 있는 만큼
         // 헤지가 같은 문장 안에 있어야 합니다 — 문장을 쪼개면 회사명만 남습니다.
+        // 칸으로 올라오면서 헤지를 둘로 겁니다: when의 "협의 중"과 body의
+        // "논의 중인". when만 남기고 body를 확정형으로 고치지 마세요. 제목
+        // ("글로벌 해커톤")은 그 자체로 확정형이라 헤지를 붙일 자리가 없습니다.
+        //
         // 그리고 이 해커톤은 이 빌더톤이 아니라 "행사 후 별도 행사"입니다:
         // schedule.ts는 "OpenAI is not a partner of this event"를 지키고 있고,
         // 그 규칙과 이 문장이 충돌하지 않는 이유가 '별도'라는 낱말입니다.
         // 사이트에서 이 이야기를 하는 자리는 여기 하나입니다(HASHED_ORG 주석 참고).
-        title: { ko: "이어지는 리듬", en: "A rhythm that continues" },
+        when: { ko: "행사 직후 · 협의 중", en: "Right after the event · In talks" },
+        title: { ko: "글로벌 해커톤", en: "Global hackathon" },
         body: {
-          ko: "한 번 하고 끝나지 않습니다. 기업 문제를 해부하고, 만든 것을 서로 발표하는 정기 빌더 세션. 소수정예 코어로 시작합니다. 8일이 끝난 뒤 열리는 별도 글로벌 해커톤도 첫 모임으로 협의 중이에요 (해시드·OpenAI 지원 · 일정 TBC · Zero100 참가자 우선).",
-          en: "Not a one-off. Regular builder sessions where a small core dissects real company problems and demos what they built. A separate global hackathon after the eight days is in discussion as the first of those gatherings (support from Hashed and OpenAI, dates TBC, Zero100 participants first).",
+          ko: "해시드와 OpenAI 지원을 논의 중인 별도 해커톤. Zero100 참가자 우선권, 로컬 학생 커뮤니티와 함께.",
+          en: "A separate hackathon in talks with Hashed and OpenAI. Zero100 participants get priority, alongside local student communities.",
         },
       },
+      // 옛 2번 카드의 정기 빌더 세션 상세(기업 문제 해부 · 소수정예 코어)가 여기로
+      // 흡수됐습니다. 별도 칸으로 되살리지 마세요 — 이 칸이 하는 말과 같습니다.
       {
         num: "3",
-        title: { ko: "성장 사다리", en: "A growth ladder" },
+        when: { ko: "2026 가을", en: "Autumn 2026" },
+        title: { ko: "인큐베이션", en: "Incubation" },
         body: {
-          ko: "참가자 → 코어 멤버 → 기업 프로젝트 TF. 스터디와 미니 스프린트를 거쳐 실제 기업 프로젝트를 이어받는 구조가 1차 목표입니다.",
-          en: "Participant → core member → company-project TF: through studies and mini-sprints to owning a real company project. That ladder is goal #1.",
+          ko: "참여 팀의 결과물을 실제 상품 수준까지. 정기 빌더 세션과 멘토링으로 계속 빌드업합니다.",
+          en: "Taking what the teams built up to an actual product. Regular builder sessions and mentoring keep the build going.",
         },
       },
       {
         num: "4",
-        title: { ko: "한–싱 Cross-border", en: "Korea–SG cross-border" },
+        when: { ko: "2026.12 서울 강남", en: "Dec 2026 · Gangnam, Seoul" },
+        title: { ko: "강남 쇼케이스", en: "Gangnam showcase" },
         body: {
-          // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-          ko: "학생이 공고에 지원하는 대신, 실력을 증명한 학생을 기업이 찾아오게 만드는 다리입니다. 해마다 싱가포르를 오가는 수백 개의 한국 기업이 그 상대입니다.",
-          en: "A bridge that gets companies looking for proven builders instead of the other way round, among the hundreds of Korean companies moving through Singapore each year.",
+          ko: "인큐베이팅을 거친 팀들이 강남에서, 한국 기업과 투자자 앞에 다시 섭니다.",
+          en: "Teams that came through incubation stand up again in Gangnam, in front of Korean companies and investors.",
         },
       },
       {
         num: "5",
-        title: { ko: "목적지가 되는 것", en: "Becoming the destination" },
+        when: { ko: "2027.03", en: "Mar 2027" },
+        title: { ko: "더 큰 무대", en: "A bigger stage" },
         body: {
-          ko: "‘이걸 하러 싱가포르에 온다’. 한인 학생 빌더의 목적지가 될 때까지.",
-          en: "“You come to Singapore to do this”, until this is the destination for Korean student builders.",
+          ko: "다음 시즌은 더 크게. 팀도, 무대도, 파트너도 키워서 돌아옵니다.",
+          en: "The next season goes bigger. More teams, a bigger stage, more partners.",
         },
       },
     ],
     // Continuity note — the single most-cited worry in the interviews.
+    //
+    // DECIDED 2026-08-15: 덱의 목적지 문장이 앞에 섭니다. 옛 5번 칸("목적지가 되는
+    // 것")이 타임라인으로 바뀌며 자리를 잃었는데, 그 문장은 로드맵의 한 단계가
+    // 아니라 로드맵 전체가 향하는 곳이라 여기가 원래 자리입니다. 다섯 칸을 읽고
+    // 나서 "그래서 어디까지 가려는 건데"에 답하는 줄입니다.
+    //
+    // 뒤 절(군 복무·교환)은 사이트에만 있던 문장이고 덱에는 없습니다. 인터뷰에서
+    // 가장 많이 나온 걱정이라 지우지 않고 뒤에 붙여 살립니다. 앞뒤를 바꾸지
+    // 마세요 — 목적지가 먼저고, 연속성은 그 목적지가 성립하는 조건입니다.
     visionNote: {
-      ko: "군 복무나 교환을 다녀와도 연결이 끊기지 않는 커뮤니티를 목표로 합니다.",
-      en: "A community where the connection survives military service and exchange terms.",
+      ko: "‘이걸 하러 싱가포르에 온다’. 한인 학생 빌더의 목적지가 될 때까지, 군 복무나 교환을 다녀와도 연결이 끊기지 않는 커뮤니티를 만듭니다.",
+      en: "“You come to Singapore to do this.” Until this is the destination for Korean student builders, we're building a community where the connection survives military service and exchange terms.",
     },
     // Bridge into the closing register CTA that sits directly below this
     // section — higher in the hierarchy than visionNote for that reason.
