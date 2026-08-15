@@ -804,10 +804,21 @@ export const days: DayMeta[] = [
     // 두 트랙 발표(3·4번 줄)가 같은 카드(d8-judging)를 가리킵니다. 하나의 세션이
     // 두 블록으로 나뉘어 도는 것이고, 카드를 둘로 쪼개면 같은 설명이 두 번 생깁니다.
     runOfShow: [
+      // DECIDED 2026-08-15: 발표 순서는 무작위 추첨입니다. 제출 순서와 무관하다는
+      // 말을 굳이 붙이는 이유는, 같은 날 마감된 사전 제출물에 가산이 걸려 있어서
+      // 빨리 낸 팀이 먼저 발표한다고 읽힐 여지가 생겼기 때문입니다. 추첨이라는
+      // 사실만 적고 무관하다는 말을 빼면 그 오해가 그대로 남습니다.
+      //
+      // 발표 순서가 사는 곳은 여기 한 곳입니다. d8-judging 카드의 description은
+      // 2026-08-05에 이 문장을 일부러 덜어내고 이 note로 넘겼습니다 — 사본을
+      // 다시 만들지 마세요.
       {
         time: "10:40AM–11AM",
         label: { ko: "입장", en: "Doors open" },
-        note: { ko: "발표 순서는 이날 아침 오픈 카톡방으로 미리 공지됩니다", en: "The running order goes out that morning in the open chat" },
+        note: {
+          ko: "발표 순서는 무작위 추첨으로 정하고, 이날 아침 오픈 카톡방으로 공지됩니다. 제출 순서와는 무관해요.",
+          en: "The running order is drawn at random and goes out that morning in the open chat. It has nothing to do with the order you submitted in.",
+        },
       },
       // DECIDED 2026-08-14: 커리어 간담회가 오후 1:50 슬롯에서 이 날의 첫 한 시간
       // (11AM–12PM)으로 올라왔습니다. 40분에서 60분이 되었고, 입장 다음 순서입니다.
