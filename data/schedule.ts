@@ -620,9 +620,13 @@ export const days: DayMeta[] = [
         // DECIDED 2026-08-15: 투표의 질문이 "오늘 가장 많이 나아간 팀"으로
         // 분명해졌습니다. Day 8 '빌더스 초이스' 최종 집계에 반영된다는 연결은
         // 그대로입니다(dict.program.awards의 meta와 함께 움직일 것).
+        //
+        // DECIDED 2026-08-15: 결과 공개는 최다 득표 3팀입니다. 묶음으로 부르는
+        // 것이지 1·2·3등이 아닙니다 — 이 행사는 2026-08-05에 순위형 시상을
+        // 폐지했습니다. "1위"·"순위"·"등수"를 쓰지 마세요. 득표수도 적지 않습니다.
         time: "1:30PM–1:45PM",
         label: { ko: "즉석 인기 투표 · 결과 공개", en: "On-the-spot vote · results" },
-        note: { ko: "오늘 가장 많이 나아간 팀에게 참가자가 투표해요. 결과는 그 자리에서 공개하고, Day 8 ‘빌더스 초이스’ 최종 집계에 반영됩니다.", en: "Participants vote for the team that moved furthest today. The result is read out there and then, and it carries into the final Builder's Choice count on Day 8." },
+        note: { ko: "오늘 가장 많이 나아간 팀에게 참가자가 투표해요. 최다 득표 3팀을 그 자리에서 공개하고, Day 8 ‘빌더스 초이스’ 최종 집계에 반영됩니다.", en: "Participants vote for the team that moved furthest today. The three most-voted teams are revealed on the spot, and the votes carry into the final Builder's Choice count on Day 8." },
       },
       {
         time: "1:45PM–2PM",
@@ -1703,8 +1707,12 @@ export const schedule: BEvent[] = [
       // DECIDED 2026-08-15: 진행 순서 재편 — 공유로 열고, 빌드하고, 오늘 나아간
       // 것을 다시 공유하고, 가장 많이 나아간 팀에게 투표합니다. 이 문단의 서술
       // 순서는 days[4].runOfShow와 같아야 합니다(시각은 여기 적지 않습니다).
-      ko: "온라인으로 이어지던 8일 한가운데, *SCAPE L^IFE Jungle에 자리를 열어 둡니다. 팀이 한 방에 모여 집중해서 빌드할 수 있는 날이에요. 도착하면 먼저 지금까지 만든 것을 또래 앞에 공유하는 LAP Time으로 하루를 엽니다. 점수도 기록도 순위도 없어요. Day 8 무대에 서기 전에 사람들 앞에서 한 번 말해 보는 것이 목적입니다. 마지막 날이 덜 떨리도록. 그다음은 팀 자율 빌드에 쓰고, 트랙을 섞어 교류하는 캐주얼 밋업을 지나, 오후에는 오늘 나아간 것을 다시 또래 앞에 공유합니다. 그 자리에서 오늘 가장 많이 나아간 팀에게 즉석 인기 투표를 하고 결과를 바로 공개해요. 이 투표는 참가자가 뽑는 ‘빌더스 초이스’의 중간 라운드라 Day 8 최종 집계에 반영되고, 이날 현장에 온 것 자체는 ‘0→100’ 부문에 반영됩니다. 참여는 선택이에요(필참은 Day 1·8뿐). 이날도 1:1 멘토링은 열려 있어요. 현장 일정이 끝난 오후부터 팀이 예약한 시간에 진행하고, 예약 없이 들어오는 FDE 온라인 오피스아워도 같은 기간 열려 있습니다.",
-      en: "Right in the middle of a stretch that runs online, we keep a room open at *SCAPE L^IFE Jungle: a day when your team can sit down together and build. You open the day with LAP Time, sharing what you have so far with the room. No scores, no records, no ranking. The point is to have stood in front of people once before the Day 8 stage, so the last day feels less daunting. After that comes your team's own build time; then a casual meetup that mixes the tracks; then, in the afternoon, you share again what moved forward today. Right there you vote for the team that got furthest today, and the result is read out on the spot. That vote is the mid-way round of Builder's Choice, the award participants vote for, so it carries into the final count on Day 8, and simply being in the room today counts toward the Zero to Hundred award. Attending is your choice (only Day 1 and Day 8 are required). 1:1 mentoring stays open today too: from the afternoon after the on-site programme, at whatever time your team booked, and the online FDE office hours run over the same stretch for teams who would rather just walk in.",
+      //
+      // DECIDED 2026-08-15: 결과 공개는 최다 득표 3팀입니다. 같은 사실이 그날
+      // runOfShow의 투표 줄에도 있으니 함께 움직이세요. 묶음으로 부르는 것이지
+      // 1·2·3등이 아닙니다 — 순위형 시상은 2026-08-05에 폐지했습니다.
+      ko: "온라인으로 이어지던 8일 한가운데, *SCAPE L^IFE Jungle에 자리를 열어 둡니다. 팀이 한 방에 모여 집중해서 빌드할 수 있는 날이에요. 도착하면 먼저 지금까지 만든 것을 또래 앞에 공유하는 LAP Time으로 하루를 엽니다. 점수도 기록도 순위도 없어요. Day 8 무대에 서기 전에 사람들 앞에서 한 번 말해 보는 것이 목적입니다. 마지막 날이 덜 떨리도록. 그다음은 팀 자율 빌드에 쓰고, 트랙을 섞어 교류하는 캐주얼 밋업을 지나, 오후에는 오늘 나아간 것을 다시 또래 앞에 공유합니다. 그 자리에서 오늘 가장 많이 나아간 팀에게 즉석 인기 투표를 하고, 최다 득표 3팀을 바로 공개해요. 이 투표는 참가자가 뽑는 ‘빌더스 초이스’의 중간 라운드라 Day 8 최종 집계에 반영되고, 이날 현장에 온 것 자체는 ‘0→100’ 부문에 반영됩니다. 참여는 선택이에요(필참은 Day 1·8뿐). 이날도 1:1 멘토링은 열려 있어요. 현장 일정이 끝난 오후부터 팀이 예약한 시간에 진행하고, 예약 없이 들어오는 FDE 온라인 오피스아워도 같은 기간 열려 있습니다.",
+      en: "Right in the middle of a stretch that runs online, we keep a room open at *SCAPE L^IFE Jungle: a day when your team can sit down together and build. You open the day with LAP Time, sharing what you have so far with the room. No scores, no records, no ranking. The point is to have stood in front of people once before the Day 8 stage, so the last day feels less daunting. After that comes your team's own build time; then a casual meetup that mixes the tracks; then, in the afternoon, you share again what moved forward today. Right there you vote for the team that got furthest today, and the three most-voted teams are revealed on the spot. That vote is the mid-way round of Builder's Choice, the award participants vote for, so it carries into the final count on Day 8, and simply being in the room today counts toward the Zero to Hundred award. Attending is your choice (only Day 1 and Day 8 are required). 1:1 mentoring stays open today too: from the afternoon after the on-site programme, at whatever time your team booked, and the online FDE office hours run over the same stretch for teams who would rather just walk in.",
     },
     location: ONSITE,
     // org(HASHED_ORG)를 뗐습니다 (DECIDED 2026-08-13): 해시드는 더 이상 이 날의
