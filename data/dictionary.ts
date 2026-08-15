@@ -1222,6 +1222,20 @@ export const dict = {
     // 차갑게 심사받는다". 순위가 없는 자리에서는 그 협박이 성립하지 않고, 실제로
     // 잃는 것은 다른 겁니다: 사전에 읽고 온 사람만이 줄 수 있는 깊이의 피드백.
     // 공포가 아니라 손실로 씁니다.
+    //
+    // DECIDED 2026-08-15: 정시 제출에 가산이 붙습니다. 손실만 적어 두니 이번에는
+    // 반대쪽 문제가 생겼습니다 — 내나 안 내나 같아 보여서 마감이 마감으로 읽히지
+    // 않았습니다. 그래서 세 사실을 함께 적습니다: 정시는 이득(가산) · 지각은
+    // 무손해(감점 없음) · 그럼에도 실제로 잃는 것(사전 리뷰 없는 피드백의 깊이).
+    // 셋 중 하나만 쓰면 문장이 무너집니다. 가산만 쓰면 감점 없다는 사실이 사라져
+    // 협박으로 읽히고, 손실만 쓰면 무의미해집니다.
+    //
+    // 가산은 Day 5(LAP Time 공유 · 출석)와 같은 규칙으로 씁니다: "점수"·"순위"로
+    // 읽히면 안 되고 배점 숫자도 쓰지 않습니다. 다만 Day 5와 달리 어느 부문에
+    // 얹히는지가 아직 미정이라 부문 이름에 매핑하지 않고 "수상 집계"까지만
+    // 씁니다. 정해지면 Day 5의 whyStop처럼 부문 수를 적을 수 있습니다.
+    //
+    // 마감 시각(Day 7 저녁)은 이 결정으로 바뀌지 않았습니다.
     submission: {
       tag: { ko: "사전 제출물", en: "Submission package" },
       mustBadge: { ko: "필수", en: "Required" },
@@ -1248,8 +1262,8 @@ export const dict = {
         },
       ],
       warning: {
-        ko: "내지 않아도 감점은 없습니다. 다만 피드백을 주시는 전문가들이 사전 리뷰 없이 무대에서 처음 보게 되어, 받을 수 있는 피드백의 깊이가 그만큼 얕아져요.",
-        en: "Miss it and there's no penalty, but the experts arrive without having reviewed anything, and the feedback you get on stage is only as deep as what they can take in cold.",
+        ko: "마감 내 제출은 수상 집계에 가산이 됩니다. 늦게 내도 감점은 없어요. 다만 전문가들이 무대 전에 자료를 미리 보지 못하면, 여러분의 피드백 시간을 깊게 쓰기 어렵습니다.",
+        en: "Submitting on time earns you a bonus in the awards tally. Being late costs you nothing. But if the experts can't read your materials before you go on stage, your feedback time won't go as deep.",
       },
     },
     // ── Day 8 테마형 어워드 4부문 ───────────────────────────────────────────
