@@ -87,7 +87,7 @@ function LinkedInLink({ url, label, className = "" }: { url: string; label: stri
       target="_blank"
       rel="noopener noreferrer"
       onClick={(e) => e.stopPropagation()}
-      aria-label={`${label} · LinkedIn`}
+      aria-label={`${label} LinkedIn`}
       className={`relative inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] text-white/60 transition after:absolute after:-inset-2 after:content-[''] hover:border-[#0a66c2]/60 hover:bg-[#0a66c2]/15 hover:text-[#7cb8f5] ${className}`}
     >
       <LinkedInIcon className="h-3.5 w-3.5" />
@@ -894,7 +894,7 @@ function CountdownView({ t }: { t: Tfn }) {
         {/* Short label on mobile ("Begins in"), full line from sm up. */}
         <span className="sm:hidden">{t(dict.hero.countdownEyebrowShort)}</span>
         <span className="hidden sm:inline">{t(dict.hero.countdownEyebrow)}</span>
-        <span className="text-white/55">· {t(dict.hero.countdownLive)}</span>
+        <span className="text-white/55"> {t(dict.hero.countdownLive)}</span>
       </p>
       <div className="mx-auto grid w-fit grid-cols-4 gap-1.5 sm:gap-2.5">
         {units.map((u, i) => (
@@ -1271,8 +1271,14 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
 // keyword was 자율 빌드 — but self-paced build is not something you turn up for;
 // the 1:1 mentoring is. Day 6 carries the same override since the mentoring went
 // daily across Day 3–7 (2026-08-09).
+// EDIT 2026-08-16: splits on the EM SPACE (U+2003), not "·". The middot was
+// removed from every user-facing string in the site that day; where it had been
+// separating the two halves of a chip or label it became a wide space, and this
+// parser reads exactly such a label. A normal space would not do as the split
+// token — "오프닝 문제 공개" has one inside each half — which is the reason the
+// replacement is a distinct character rather than " ".
 const stopKeyword = (theme: string) =>
-  theme.split("·")[0].replace(/\([^)]*\)/g, "").trim();
+  theme.split(" ")[0].replace(/\([^)]*\)/g, "").trim();
 
 // ── 멘토링 점 마커 ────────────────────────────────────────────────────────────
 // 어느 날에 점이 붙는지(mentoringOpenOn)와 구간(MENTORING_DAY_RANGE)은
@@ -1428,7 +1434,7 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                   className="group flex w-full flex-col items-center gap-1.5 px-1 py-1 text-center"
                   // 마커는 aria-hidden이라 스크린리더에는 안 보입니다. 눈으로 읽는
                   // 사람이 얻는 정보를 여기서 말로 채웁니다.
-                  aria-label={`Day ${d.day} · ${t(d.theme)}${onSite ? ` · ${t(dict.program.offlineLabel)}` : ""}${onSite && d.venueLogo ? ` · ${d.venueLogo.name}` : ""}`}
+                  aria-label={`Day ${d.day}, ${t(d.theme)}${onSite ? `, ${t(dict.program.offlineLabel)}` : ""}${onSite && d.venueLogo ? `, ${d.venueLogo.name}` : ""}`}
                 >
                   {/* Fixed-height row so both node sizes share one centreline and
                       the rail passes through every node at the same height. */}
@@ -1730,7 +1736,7 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
           <span className="text-[0.6rem] font-bold uppercase tracking-wider text-violet-300/70">{t(dict.program.dayLabel)}</span>
           <span className="text-2xl font-black leading-none text-white">{day.day}</span>
         </span>
-        <span className="text-[0.7rem] text-white/55">{day.date} · {t(day.weekday)}</span>
+        <span className="text-[0.7rem] text-white/55">{day.date} {t(day.weekday)}</span>
       </div>
       {/* ── 정거장의 층, 노선도와 같은 세 가지 (2026-08-10) ──────────────────
           여기는 오래 필참/선택 두 가지였습니다. 노선도가 Day 5·7을 ◉로 강조하는
@@ -2056,8 +2062,8 @@ function DayModal({
                     chip would split one answer across two. Appended only when
                     the day has hours; online days keep the chip as it was. */}
                 <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/70">
-                  {t(dict.program.dayLabel)} {day.day} · {day.date} · {t(day.weekday)}
-                  {day.hours ? ` · ${day.hours}` : ""}
+                  {t(dict.program.dayLabel)} {day.day} {day.date} {t(day.weekday)}
+                  {day.hours ? `, ${day.hours}` : ""}
                 </span>
                 {dayEmphasis(day) === "must" && (
                   <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/30 bg-rose-400/10 px-2.5 py-1 text-xs font-bold text-rose-200">
@@ -3965,7 +3971,7 @@ export default function Journey() {
                         없습니다 — 새 세션 연사가 들어올 때를 위한 자리입니다. */}
                     {m.daysPending && (
                       <span className="rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-1.5 py-0.5 text-[0.6rem] font-semibold text-amber-200/90">
-                        {m.daysPending} · {t(dict.mentoring.dayPendingLabel)}
+                        {m.daysPending} {t(dict.mentoring.dayPendingLabel)}
                       </span>
                     )}
                     {m.linkedin && <LinkedInLink url={m.linkedin} label={t(m.name)} />}
@@ -4081,7 +4087,7 @@ export default function Journey() {
                             {m.linkedin && <LinkedInLink url={m.linkedin} label={name} />}
                           </div>
                           <p className="mt-0.5 break-keep text-xs leading-snug text-white/60">
-                            {t(m.org)}{role ? ` · ${role}` : ""}
+                            {t(m.org)}{role ? ` ${role}` : ""}
                           </p>
                           {/* One line from the person's own LinkedIn. Clamped from
                               `sm` up only: on a phone the cards are one per row and
@@ -4194,7 +4200,7 @@ export default function Journey() {
                         <p className="min-w-0 break-keep text-sm font-bold leading-snug text-white">{name}</p>
                         {j.linkedin && <LinkedInLink url={j.linkedin} label={name} />}
                       </div>
-                      <p className="mt-0.5 break-keep text-xs leading-snug text-white/60">{t(j.org)} · {t(j.role)}</p>
+                      <p className="mt-0.5 break-keep text-xs leading-snug text-white/60">{t(j.org)} {t(j.role)}</p>
                     </div>
                   </div>
                   <div className="mt-4 flex flex-wrap items-center gap-1.5">

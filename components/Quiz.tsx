@@ -485,7 +485,7 @@ function Landing({
         >
           <span className="text-white/60">{t(quizLandingHint.lead)}</span>
           <span className="font-bold text-violet-200">{t(ownVariantName)}</span>
-          <span aria-hidden className="text-white/30">·</span>
+          <span aria-hidden className="text-white/30"> </span>
           <span className="text-violet-300">{t(quizLandingHint.cta)} →</span>
         </motion.a>
       )}
@@ -649,14 +649,14 @@ function ResultView({
               </div>
               <p className="mt-6 text-sm font-semibold text-white/55">{t(quizUI.youAre)}</p>
               <h2 className="mt-1 text-[1.7rem] font-black leading-tight tracking-tight sm:text-[2rem]">{t(variant.name)}</h2>
-              <p className="mt-1 text-sm font-bold text-fuchsia-200">{data.model} · {result.resultId}</p>
+              <p className="mt-1 text-sm font-bold text-fuchsia-200">{data.model} {result.resultId}</p>
               <p className="mt-4 text-[15px] font-semibold leading-relaxed text-white/90">“{t(data.phrase)}”</p>
               <p className="mt-3 text-sm leading-relaxed text-white/65">{t(data.desc)}</p>
               <p className="mt-3 text-sm italic leading-relaxed text-white/55">{t(variant.line)}</p>
 
               {/* Why this model — the research-backed reason the type maps here. */}
               <div className="mt-4 rounded-2xl border border-fuchsia-400/15 bg-fuchsia-500/[0.05] p-3.5">
-                <p className="text-[0.7rem] font-bold uppercase tracking-wider text-fuchsia-200/70">{t(quizUI.whyModel)} · {data.model}</p>
+                <p className="text-[0.7rem] font-bold uppercase tracking-wider text-fuchsia-200/70">{t(quizUI.whyModel)} {data.model}</p>
                 <p className="mt-1 text-sm leading-relaxed text-white/75">{t(data.whyModel)}</p>
               </div>
             </div>
@@ -799,7 +799,7 @@ function ResultView({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={holdImage}
-              alt={`${t(variant.name)} · ${result.resultId}`}
+              alt={`${t(variant.name)}, ${result.resultId}`}
               className="max-h-[70vh] w-auto max-w-full rounded-2xl border border-white/15 object-contain"
             />
             <button
@@ -944,7 +944,7 @@ const StoryCard = forwardRef<
           </div>
           <p style={{ margin: "24px 0 0", fontSize: 30, fontWeight: 600, color: "rgba(255,255,255,0.55)" }}>{t(quizUI.youAre)}</p>
           <h2 style={{ margin: "6px 0 0", fontSize: 68, fontWeight: 900, lineHeight: 1.1, color: "#fff" }}>{t(variant.name)}</h2>
-          <p style={{ margin: "10px 0 0", fontSize: 33, fontWeight: 700, color: "rgb(245,208,254)" }}>{data.model} · {result.resultId}</p>
+          <p style={{ margin: "10px 0 0", fontSize: 33, fontWeight: 700, color: "rgb(245,208,254)" }}>{data.model} {result.resultId}</p>
           <p style={{ margin: "18px auto 0", maxWidth: 820, fontSize: 33, fontWeight: 600, lineHeight: 1.4, color: "rgba(255,255,255,0.9)" }}>“{t(data.phrase)}”</p>
 
           {/* mini axis gauges */}
@@ -1014,7 +1014,7 @@ const StoryCard = forwardRef<
               two-card version with reasons; at story scale a name is all that
               survives being shrunk into someone's feed. */}
           <p style={{ margin: "0 0 22px", fontSize: 27, fontWeight: 700, color: "rgba(255,255,255,0.65)" }}>
-            {t(quizUI.storyMatch)} · <span style={{ color: "rgb(245,208,254)" }}>{RESULTS[data.match[0]].model} · {data.match[0]}</span>
+            {t(quizUI.storyMatch)} <span style={{ color: "rgb(245,208,254)" }}>{RESULTS[data.match[0]].model} {data.match[0]}</span>
           </p>
 
           <p style={{ margin: 0, fontSize: 38, fontWeight: 800, color: "#fff" }}>{t(quizUI.storyRetake)} →</p>

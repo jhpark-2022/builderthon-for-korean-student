@@ -14,7 +14,7 @@ import { ImageResponse } from "next/og";
 // the event billing.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const alt = "당신의 AI 모델은? · Which AI model are you?";
+export const alt = "당신의 AI 모델은? Which AI model are you?";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -82,7 +82,7 @@ export default function QuizOpengraphImage() {
             color: "rgba(255,255,255,0.62)",
           }}
         >
-          14문항 · 3분 · 16개 AI 모델 중 하나 · 환상의 짝꿍까지
+          14문항 3분 16개 AI 모델 중 하나 환상의 짝꿍까지
         </div>
         <div
           style={{
@@ -112,7 +112,7 @@ export default function QuizOpengraphImage() {
               color: "rgba(255,255,255,0.45)",
             }}
           >
-            2026.08.22 – 08.29 · Singapore
+            2026.08.22 – 08.29 Singapore
           </div>
         </div>
       </div>

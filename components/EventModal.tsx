@@ -119,7 +119,7 @@ export default function EventModal({
     ? null
     : event.dayLabel
       ? t(event.dayLabel)
-      : `${t(dict.program.dayLabel)} ${event.day} · ${event.date} · ${event.time ?? event.timeOfDay}`;
+      : `${t(dict.program.dayLabel)} ${event.day}, ${event.date}, ${event.time ?? event.timeOfDay}`;
 
   if (!mounted) return null;
 
@@ -284,7 +284,7 @@ export default function EventModal({
                             href={event.speakerProfile.linkedin}
                             target="_blank"
                             rel="noopener noreferrer"
-                            aria-label={`${t(event.speakerProfile.name)} · LinkedIn`}
+                            aria-label={`${t(event.speakerProfile.name)}, LinkedIn`}
                             className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] text-white/60 transition hover:border-[#0a66c2]/60 hover:bg-[#0a66c2]/15 hover:text-[#7cb8f5]"
                           >
                             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className="h-3.5 w-3.5">
