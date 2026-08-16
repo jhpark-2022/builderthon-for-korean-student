@@ -337,8 +337,11 @@ export const days: DayMeta[] = [
       // this summary is hedged, so the tag only asked why the speaker alone
       // needed vouching for; the card's own 확정 badge (confirmed: true) still
       // marks which SESSIONS are locked, which is the distinction that exists.
-      ko: "The Foundry(The Refinery 홀) 현장, 12:40 입장(선착순 굿즈), 원대로 오프닝 키노트, 해시드 인사말, 문제 공개, AWS 연사 한장환 님.",
-      en: "In person at The Foundry (The Refinery hall), doors 12:40 (first-come goods), Won's opening keynote, a word from Hashed, problem release, AWS talk by Han Jang-whan.",
+      // DECIDED 2026-08-16: 해시드 인사말이 이 나열의 끝으로 갔습니다. 이 줄은 하루가
+      // 흐르는 차례대로 읽히고(Day 8 summary와 같은 규칙), 인사말이 AWS 세션 뒤로
+      // 옮겨졌으니 순서도 따라갑니다. 시각은 여기 적지 않습니다 — 정본은 runOfShow.
+      ko: "The Foundry(The Refinery 홀) 현장, 12:40 입장(선착순 굿즈), 원대로 오프닝 키노트, 문제 공개, AWS 연사 한장환 님, 해시드 인사말.",
+      en: "In person at The Foundry (The Refinery hall), doors 12:40 (first-come goods), Won's opening keynote, problem release, AWS talk by Han Jang-whan, a word from Hashed.",
     },
     // Venue booked: The Foundry — The Refinery hall, 11 Prinsep Link, 22 Aug 2026
     // (2026-08-03). On-site was already confirmed under the previous booking (SMU
@@ -352,7 +355,7 @@ export const days: DayMeta[] = [
     hours: "1PM–4:30PM",
     // 확정 진행 순서 (2026-08-04). 9줄 전부 — 카드가 없는 줄(입장·휴식·네트워킹·
     // 정리)이 절반이라 이벤트 배열로는 표현되지 않습니다.
-    // 팀 매칭이 두 번 나오는데(1:50 성향 테스트 · 3:10 즉석 매칭) 둘 다 "팀 없이
+    // 팀 매칭이 두 번 나오는데(1:50 성향 테스트, 3:20 즉석 매칭) 둘 다 "팀 없이
     // 온 분"만 해당합니다 — 사이트에서 팀을 만들어 신청한 사람은 해당 없음을
     // 두 줄 모두에 적었습니다. 이걸 빼면 이미 팀이 있는 사람이 자기도 뭔가
     // 해야 하는 줄 압니다.
@@ -362,7 +365,7 @@ export const days: DayMeta[] = [
         label: { ko: "입장 이름표 수령 선착순 굿즈", en: "Doors open name tags first-come goods" },
         // 굿즈 안내가 여기 다 들어 있습니다 — 오리엔테이션 설명에 있던 것을
         // 옮겨왔습니다(2026-08-04). 나눠주는 시점이 이 줄이니 읽는 자리도 이 줄이어야
-        // 하고, 오리엔테이션(2:10PM) 설명에서 "굿즈는 12:40에 드려요"라고 말하는 건
+        // 하고, 오리엔테이션(2PM) 설명에서 "굿즈는 12:40에 드려요"라고 말하는 건
         // 이미 지나간 일을 뒤늦게 알려주는 셈이었습니다.
         // 사이즈 이야기를 미리 하는 게 현장 불만을 줄입니다. "전원 제공"으로
         // 읽히는 표현은 금지 — 60세트가 사실입니다.
@@ -387,17 +390,21 @@ export const days: DayMeta[] = [
         // "AI 유형 테스트 + Day 1 현장 그룹핑"으로 이미 설명하고 있어 같은 흐름입니다.
         href: "/quiz",
       },
+      // DECIDED 2026-08-16: 해시드 인사말이 이 자리(2PM–2:10)에서 AWS 세션 직후
+      // (3:10–3:20)로 내려갔습니다. 김성호 파트너의 당일 도착 일정이 2PM 슬롯과
+      // 맞지 않아 해시드와 합의한 이동입니다. 이동 사유(도착 일정)는 내부 사정이라
+      // 사이트 어디에도 쓰지 않습니다. 공개되는 사실은 바뀐 시간뿐입니다.
+      //
+      // 비는 10분은 진행 안내 블록이 흡수해 2PM에 시작하고 30분이 됐습니다. 문제
+      // 공개와 트랙 선택이 함께 걸린 이 날 가장 밀도 높은 자리라, 앞당겨 생긴 여유를
+      // 그리로 보내는 편이 낫습니다. 인사말을 되돌린다면 이 블록도 2:10 시작 20분으로
+      // 함께 되돌려야 합니다.
       {
-        time: "2PM–2:10PM",
-        label: { ko: "해시드 파트너 인사말", en: "A word from Hashed" },
-        eventId: "d1-hashed-greeting",
-      },
-      {
-        time: "2:10PM–2:30PM",
+        time: "2PM–2:30PM",
         label: { ko: "7일 진행 안내 멘토링 안내", en: "How the next 7 days run mentoring" },
         eventId: "d1-orientation",
       },
-      // 같은 20분 블록의 마지막 순서. time을 비우면 시간 열에 ↳가 찍혀 위 줄에
+      // 같은 30분 블록의 마지막 순서. time을 비우면 시간 열에 ↳가 찍혀 위 줄에
       // 이어지는 항목으로 읽힙니다 — 없는 시각을 쪼개 만들지 않으면서도 문제 공개가
       // 자기 카드로 이어질 수 있게 하는 유일한 방법입니다. 시간표가 세션 카드를
       // 대체하므로, 여기 걸리지 않은 세션은 열 방법이 사라집니다.
@@ -413,7 +420,12 @@ export const days: DayMeta[] = [
         eventId: "d1-aws-session",
       },
       {
-        time: "3:10PM–4PM",
+        time: "3:10PM–3:20PM",
+        label: { ko: "해시드 파트너 인사말", en: "A word from Hashed" },
+        eventId: "d1-hashed-greeting",
+      },
+      {
+        time: "3:20PM–4PM",
         label: { ko: "네트워킹 문제 브레인스토밍 팀 매칭", en: "Networking brainstorming the problem team matching" },
         // 마지막 절이 Day 2로 넘기는 다리입니다 (2026-08-12). 현장 매칭이 끝나는
         // 자리가 이 줄이라, 그 다음이 무엇인지도 여기서 말해야 합니다 — 즉석으로
@@ -1239,7 +1251,10 @@ export const schedule: BEvent[] = [
     category: "network",
     mode: "offline",
     timeOfDay: "PM",
-    time: "2:10PM–2:30PM",
+    // DECIDED 2026-08-16: 2:10 시작이 2PM으로 당겨지고 20분이 30분이 됐습니다.
+    // 해시드 인사말이 AWS 세션 뒤로 옮겨지며 비는 10분을 이 블록이 흡수했습니다.
+    // 정본은 days[0].runOfShow이고 이 값은 그 사본입니다. 한쪽만 고치지 마세요.
+    time: "2PM–2:30PM",
     title: { ko: "오리엔테이션", en: "Orientation" },
     // SPEAKER 필드를 지웠습니다 (2026-08-04). `한장환 (AWS)`로 돼 있었는데 그분은
     // 바로 다음 순서인 AWS 세션 연사입니다 — 오리엔테이션 진행자일 리 없어 복사
@@ -1296,9 +1311,10 @@ export const schedule: BEvent[] = [
     category: "main",
     mode: "offline",
     timeOfDay: "PM",
-    // 오리엔테이션과 같은 20분 블록입니다 — 문제 공개가 그 블록의 마지막 순서라,
+    // 오리엔테이션과 같은 30분 블록입니다 — 문제 공개가 그 블록의 마지막 순서라,
     // 두 카드가 같은 시각을 갖는 게 맞습니다(중복이 아니라 사실).
-    time: "2:10PM–2:30PM",
+    // DECIDED 2026-08-16: 블록이 2PM 시작 30분으로 바뀌면서 함께 옮겼습니다.
+    time: "2PM–2:30PM",
     title: { ko: "문제 공개 트랙 선택", en: "Problem Release Track Selection" },
     summary: {
       ko: "실제 기업의 AX 과제가 공개되고, 트랙을 고르며 8일 빌드 시계가 시작됩니다 (트랙 구성은 확정 전).",
@@ -1328,7 +1344,10 @@ export const schedule: BEvent[] = [
     category: "network",
     mode: "offline",
     timeOfDay: "PM",
-    time: "2PM–2:10PM",
+    // DECIDED 2026-08-16: AWS 세션 직후로 옮겼습니다. 김성호 파트너의 당일 도착
+    // 일정이 기존 2PM 슬롯과 맞지 않아 해시드와 합의한 이동입니다. 사유는 내부
+    // 사정이라 카피 어디에도 쓰지 않습니다. 정본은 days[0].runOfShow.
+    time: "3:10PM–3:20PM",
     title: { ko: "해시드 파트너 인사말", en: "A word from Hashed" },
     speaker: { ko: "김성호 (해시드)", en: "Sungho Kim (Hashed)" },
     speakerProfile: {
