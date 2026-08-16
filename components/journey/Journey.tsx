@@ -121,6 +121,44 @@ function opticalHeight(w: number, h: number, area: number, min: number, max: num
   return Math.round(Math.min(max, Math.max(min, Math.sqrt(area / (w / h)))));
 }
 
+// ── Measured sizing, for tiles whose mark has a `mass` ───────────────────────
+// FIXED 2026-08-16: the 후원 grid sized by bounding-box area and its ten marks
+// came out 2.8× apart in perceived size (Brand Boost 1854 vs INNOVATE 360 660,
+// measured on screen). Equal box area is not equal apparent size, for the two
+// reasons the paragraph above already half-admits:
+//
+//   · The floor did the sizing, not the rule. √(2000/aspect) lands under 24px
+//     for anything wider than ~3.5:1, so six of the ten marks were pinned to the
+//     clamp and their size was then decided by ink density alone.
+//   · `max-w-full` letterboxing is not "further toward equal area". It shrinks
+//     the PAINTED height silently below the floor while the box keeps its
+//     declared height: INNOVATE 360 asked for 24px and painted 14.5px.
+//
+// What the eye equalises is the ink a mark paints, tempered by the silhouette it
+// occupies. That is exactly the `mass` the hero strip already measures, and the
+// relation is closed-form: a mark of aspect r and mass m drawn at height h has
+// perceived size m·r·h². So equal perceived size is
+//
+//     h = √(TARGET / (mass × aspect))
+//
+// and there is no exponent to tune (the strip's 0.35 is a deliberate partial
+// correction, because a strip has no tile to bound width; here the tile does).
+// Verified against the live grid before and after: the model predicts measured
+// perceived size to within 3%.
+//
+// TARGET is set just under the width ceiling of the second-widest mark, so nine
+// of ten marks reach it exactly and only INNOVATE 360 — too wide and too thin to
+// ever match inside a tile this size — sits at its wall, 15% under. Raising
+// TARGET buys nothing: it only pushes more marks into the wall, where they
+// letterbox back down.
+const GRID_TARGET = 1050;
+const GRID_MIN_H = 12;
+const GRID_MAX_H = 44;
+function massHeight(w: number, h: number, mass: number) {
+  const px = Math.sqrt(GRID_TARGET / (mass * (w / h)));
+  return Math.round(Math.min(GRID_MAX_H, Math.max(GRID_MIN_H, px)) * 10) / 10;
+}
+
 // A single partner logo on a clean white chip. Full-colour marks (crests,
 // gradients) read best on a light tile against the dark section, and a missing
 // file just shows an empty white chip rather than a broken-image icon.
@@ -129,10 +167,16 @@ function opticalHeight(w: number, h: number, area: number, min: number, max: num
 // makes it a link; `badge` shows a small role/stage pill; `big` gives square
 // marks more presence.
 function LogoTile({
-  src, alt, w, h, url, badge, onOpen, area = 2000,
+  src, alt, w, h, url, badge, onOpen, area = 2000, mass,
 }: {
   src: string; alt: string; w: number; h: number;
   url?: string; badge?: string;
+  // Measured sqrt(ink × silhouette) coverage. When present it sizes the mark
+  // (see massHeight) and `area` is ignored — a measured number beats a box.
+  // Only the 후원 grid passes it, because only its marks have been measured;
+  // the two grids that haven't still size by area. Do not hand-pick a value
+  // here: run `python3 scripts/measure-logo-mass.py` and paste what it prints.
+  mass?: number;
   // Target bounding-box area in px², the axis opticalHeight sizes on. The
   // default is right for a mark that is ONE line of ink at ordinary density.
   // Two things break that assumption, and this prop exists for those two only:
@@ -157,7 +201,7 @@ function LogoTile({
   onOpen?: (el: HTMLElement) => void;
 }) {
   // Tile is h-20 (80px); 44px max leaves the mark breathing room inside it.
-  const boxH = opticalHeight(w, h, area, 24, 44);
+  const boxH = mass ? massHeight(w, h, mass) : opticalHeight(w, h, area, 24, 44);
   const inner = (
     <>
       <Image
@@ -183,8 +227,14 @@ function LogoTile({
   // Uniform dark card that matches the rest of the site's glass cards — the logos
   // are pre-rendered as white silhouettes (transparent bg), so they read cleanly
   // on this dark tile with no background block behind them.
+  // px-3 rather than px-5 for measured tiles: those marks are sized against the
+  // tile's inner width, so every px of padding is a px the widest wordmarks lose
+  // twice over (width is linear in height, perceived size goes as height²).
+  // Pulling the wall out by 8px is what lets the row settle at TARGET 1050
+  // instead of ~850, which is the difference between "even" and "even but
+  // noticeably smaller than before".
   const cls =
-    "group relative flex h-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] px-5 transition duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.07]";
+    `group relative flex h-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] ${mass ? "px-3" : "px-5"} transition duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.07]`;
   if (onOpen) {
     return (
       <button
@@ -2614,6 +2664,22 @@ function sortLikeHeroStrip<T extends { src: string }>(rows: T[]): T[] {
   return [...rows].sort((a, b) => rank(a.src) - rank(b.src));
 }
 
+// The measured mass of a sponsor mark, read off the hero strip's roster so the
+// 후원 grid cannot drift from it. Same reasoning as sortLikeHeroStrip: the two
+// lists describe the same ten marks, and every time they have held their own
+// copy of something they have disagreed. Throws rather than defaulting — a
+// silent fallback would size the new mark wrong and look like a design choice.
+// Throwing is safe here precisely because it is loud: the home page is
+// statically prerendered, so an unmeasured mark fails `next build` and can
+// never reach a visitor. Do not soften this into a default.
+function sponsorMass(src: string): number {
+  const item = confirmedPartnerTiers
+    .find((tier) => tier.label === dict.hero.partnersSponsors)!
+    .items.find((i) => i.src === src);
+  if (!item) throw new Error(`sponsorMass: no measured mass for ${src}. Run scripts/measure-logo-mass.py and add it to confirmedPartnerTiers.`);
+  return item.mass;
+}
+
 // One logo, drawn at the height that gives it the same optical mass as the rest
 // of its tier (see stripHeight above).
 function StripLogo({ src, alt, w, h, mass, box }: StripLogoSpec & { box: StripBox }) {
@@ -4322,19 +4388,20 @@ export default function Journey() {
                 { cat: t(dict.partners.catAwards),    src: "/partners/logos/white/trimmed/nuldam.png",             alt: "Nuldam",                          w: 631, h: 136, url: "https://nuldam.com/" },
                 { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/onword-lab.png",             alt: "Onword Lab",                      w: 900, h: 92,  url: "https://www.onwordlab.com/" },
                 { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105, url: "https://teamremited.com/" },
-                // area 4000 (default 2000) — BRAND over BOOST is two stacked
-                // lines, so the default box drew each line at ~13px next to
-                // single-line neighbours running 22–24px, and the mark read as
-                // the smallest thing in the grid at nominally the second-tallest
-                // box. Doubling the area takes it to ~40×101px, which puts its
-                // per-line ink and its width in the same range as the marks that
-                // reach the tile's width wall (Nuldam, REmited, 한인회). See the
-                // `area` note on LogoTile before adding a second one of these.
-                { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81,  area: 4000, url: "https://www.brandboost.kr/" },
+                // The `area: 4000` fudge that used to sit here is gone
+                // (2026-08-16). It was doubling the box to rescue a stacked
+                // lockup from a rule that measured boxes, and it overshot: this
+                // became the LARGEST mark in the grid, 2.8× the smallest. The
+                // mass rule needs no exception, because the silhouette it
+                // measures fills the gap between BRAND and BOOST — the stacking
+                // is already in the number.
+                { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81,  url: "https://www.brandboost.kr/" },
                 { cat: t(dict.partners.catOverall),   src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90,  url: "https://www.hashed.com/" },
               ]).map(({ cat, url, ...l }) => (
                 <div key={l.alt} className="flex flex-col gap-1.5">
-                  <LogoTile {...l} onOpen={(el) => openPartner(l.alt, el, url)} />
+                  {/* mass comes from the strip's roster, never from this list —
+                      see sponsorMass. */}
+                  <LogoTile {...l} mass={sponsorMass(l.src)} onOpen={(el) => openPartner(l.alt, el, url)} />
                   <span className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-white/55">{cat}</span>
                 </div>
               ))}
