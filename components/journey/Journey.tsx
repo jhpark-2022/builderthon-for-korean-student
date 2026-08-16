@@ -2106,7 +2106,7 @@ function DayModal({
                   {/* 시간표에 걸리지 않은 세션만 카드로 남깁니다. 시간표에 있는 걸
                       또 카드로 보여주면 같은 세션을 두 번 읽게 되고, 반대로 아무
                       카드도 안 두면 시간표에 없는 세션은 열 방법이 사라집니다.
-                      Day 7의 FDE 오피스아워가 그 경우예요 — 온라인 드롭인이라
+                      Day 7의 드롭인 1:1 멘토링이 그 경우예요 — 온라인 드롭인이라
                       시각이 없어서 현장 시간표에 넣을 수 없습니다. Day 1은 모든
                       세션이 시간표에 걸려 있어 이 목록이 비고, 아무것도 렌더되지
                       않습니다. */}
@@ -4010,7 +4010,7 @@ export default function Journey() {
                       an org chart without it. White trimmed silhouettes — the same
                       assets the hero strip and partner wall use, so no tile is
                       needed on this dark panel. Marks only: each used to carry a
-                      day-span chip ("Day 3·4 아이디에이션" / "Day 5–7 FDE 오피스아워"),
+                      day-span chip ("Day 3·4 아이디에이션" / "Day 5–7 드롭인 멘토링"),
                       which repeated what the box heading and the programme already
                       say and turned a two-logo credit into a third schedule. */}
                   {g.partners.length > 0 && (
@@ -4110,11 +4110,11 @@ export default function Journey() {
                         </div>
                       );
                     })}
-                    {/* A dashed "FDE 오피스아워 · 멘토 명단 공개 예정" card used to close
+                    {/* A dashed "드롭인 멘토링 · 멘토 명단 공개 예정" card used to close
                         this row (desktop) with a full-width twin below it
                         (mobile) — it stood in for Popup Studio, who send FDEs on
                         rotation rather than an assigned mentor. Both are gone with
-                        the `placeholder` field (2026-08-05): the office hours are
+                        the `placeholder` field (2026-08-05): the drop-in sessions are
                         still described in the box blurb above and scheduled in the
                         programme, so what the card contributed was an empty slot
                         among cards that are otherwise all people. */}

@@ -1481,10 +1481,10 @@ export const dict = {
           duration: { ko: "5분", en: "5 min" },
           title: { ko: "중간 체크인", en: "Mid-point check-in" },
           body: {
-            // 날짜를 뺐습니다 (DECIDED 2026-08-09): 오피스아워를 특정 날짜와 묶어
+            // 날짜를 뺐습니다 (DECIDED 2026-08-09): 드롭인 멘토링을 특정 날짜와 묶어
             // 적으면 기업 멘토↔날짜 매핑이 되고, 그건 웹에서 전면 제거하는 표기입니다.
-            ko: "무엇을 풀기로 했는지 한 문장으로 고정하고, 막힌 팀을 오피스아워로 연결합니다.",
-            en: "Pins down what you've decided to solve in one sentence, and routes stuck teams into the office hours.",
+            ko: "무엇을 풀기로 했는지 한 문장으로 고정하고, 막힌 팀을 1:1 멘토링으로 연결합니다.",
+            en: "Pins down what you've decided to solve in one sentence, and routes stuck teams into the 1:1 mentoring.",
           },
         },
         {
@@ -1516,8 +1516,8 @@ export const dict = {
       bonusLabel: { ko: "과정이 기록됩니다", en: "Your process counts" },
       bonus: {
         // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-        ko: "세 번의 응답과 오피스아워 참여는 과정 기록으로 남아, 전문가 피드백과 주최사의 인턴십 검토에서 그대로 참고됩니다. 과정을 남겼는지를 봅니다. 답을 잘 쓸 필요는 없어요.",
-        en: "Responding to the three forms and showing up to office hours leaves a trail of your process, one the experts' feedback and the hosts' internship review draw on directly. What counts is the trail. The answers don't have to be polished.",
+        ko: "세 번의 응답과 1:1 멘토링 참여는 과정 기록으로 남아, 전문가 피드백과 주최사의 인턴십 검토에서 그대로 참고됩니다. 과정을 남겼는지를 봅니다. 답을 잘 쓸 필요는 없어요.",
+        en: "Responding to the three forms and showing up to the 1:1 mentoring leaves a trail of your process, one the experts' feedback and the hosts' internship review draw on directly. What counts is the trail. The answers don't have to be polished.",
       },
     },
     // Second sentence is the one that changes behaviour: teams assume a hidden
@@ -1917,7 +1917,7 @@ export const dict = {
           // 줄만 보이므로 새 포인트를 추가하면 접혀서 안 보입니다.
           { ko: "Codex 기반 beginner-friendly 크래시 코스, 이후 빌드 툴은 자유", en: "A Codex-based, beginner-friendly crash course, and your own build isn't tied to it" },
           // NOT "주최사 FDE". FDEs are Popup Studio's, and their only slot here is
-          // the FDE office hours — the Crash Course is Codepresso's, and its
+          // the drop-in mentoring — the Crash Course is Codepresso's, and its
           // body is a live build of one simple tool that the room follows along
           // with. Naming the company instead of a job title also keeps this line
           // out of the way of who is actually on the mic (schedule.ts
@@ -2331,7 +2331,7 @@ export const dict = {
     // affordance to discover: 만들 때 돕는 사람 / 팔 때 돕는 사람.
     //
     // `stages` on each group is the JOIN KEY back to `mentors[].stages`
-    // (1 = 1:1 빌드 멘토링, 2 = FDE 오피스아워, 3 = Day 7 피치 세션 — 사람이 아니라
+    // (1 = 예약제 1:1 빌드 멘토링, 2 = 드롭인 1:1 멘토링, 3 = Day 7 피치 세션 — 사람이 아니라
     // 도움의 종류입니다). Nothing counts people: add or remove a mentor and they
     // land in the right box on their own. A mentor with
     // an empty `stages` (Day 1·2) belongs to neither box and appears in the
@@ -2380,15 +2380,15 @@ export const dict = {
         // where a team reads it before booking, not after they ask to move.
         sub: {
           // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-          // EDIT 2026-08-09 (2): "빌드가 막히면 팝업스튜디오 엔지니어(FDE
-          // 오피스아워)와 함께 풀어요"를 고쳤습니다. 막힌 빌드를 푸는 자리는
+          // EDIT 2026-08-09 (2): "빌드가 막히면 팝업스튜디오 엔지니어(드롭인
+          // 멘토링)와 함께 풀어요"를 고쳤습니다. 막힌 빌드를 푸는 자리는
           // 팝업스튜디오 전용이 아닙니다 — 1:1은 배정제라 누가 들어오든 그 자리에서
           // 같이 봅니다. 원래 문장은 "막히면 저기로 가세요"로 읽혀서, 배정된 멘토에게
           // 꺼낼 수 있는 이야기를 스스로 좁히게 만들었습니다.
-          // 오피스아워를 "따로 있다"고 덧붙이지 않습니다: 이 문단이 말하는 것은
+          // 드롭인을 "따로 있다"고 덧붙이지 않습니다: 이 문단이 말하는 것은
           // 1:1에서 무엇을 하는가이고, 두 번째 창구를 여기서 안내하면 방금 지운
-          // "막히면 저쪽"이 형태만 바꿔 돌아옵니다. 오피스아워는 프로그램의 자기
-          // 세션 카드(schedule.ts d5/d6/d7-fde-office-hour)가 안내합니다.
+          // "막히면 저쪽"이 형태만 바꿔 돌아옵니다. 드롭인은 프로그램의 자기
+          // 세션 카드(schedule.ts d5/d6/d7-dropin-mentoring)가 안내합니다.
           // DECIDED 2026-08-14 (코드프레소 협의): "제공 데이터"를 "근거"로 바꿨습니다.
           // 데이터는 기본 제공물이 아니라 요청하면 전달되는 것이라(program 카드 02와
           // 테마 FAQ 참조), 나눠주는 데이터가 있다는 전제로 읽히는 말을 뒀습니다.
@@ -2409,7 +2409,7 @@ export const dict = {
         // brings the two to similar visual weight — the same reasoning the hero
         // partner strip applies with its area-based sizing.
         // No `chip` here on purpose. Each mark used to carry its day span
-        // ("Day 3·4 아이디에이션" / "Day 5–7 FDE 오피스아워"), which said again what
+        // ("Day 3·4 아이디에이션" / "Day 5–7 드롭인 멘토링"), which said again what
         // this box's own heading and the programme below already say — a credit
         // panel reading as a third schedule. If a partner's span ever needs
         // stating, the session it runs is where it belongs.
@@ -2445,11 +2445,11 @@ export const dict = {
             en: "The mentors below join in a personal capacity, separately from the companies they work at.",
           },
         },
-        // The dashed "FDE 오피스아워 · 멘토 명단 공개 예정" card that used to close this
+        // The dashed "드롭인 멘토링 · 멘토 명단 공개 예정" card that used to close this
         // grid was removed on 2026-08-05, along with the `placeholder` field and
-        // the JSX that rendered it in Journey.tsx. The office hours themselves are
+        // the JSX that rendered it in Journey.tsx. The drop-in sessions themselves are
         // unchanged — they are described in this box's `sub` above and run as their
-        // own sessions in the programme (schedule.ts d5/d6/d7-fde-office-hour).
+        // own sessions in the programme (schedule.ts d5/d6/d7-dropin-mentoring).
         // What the card added was a slot with no name in it, on a page where every
         // other card is a person.
       },
@@ -2529,15 +2529,17 @@ export const dict = {
       title: { ko: "멘토 매칭은 이렇게 배정돼요", en: "How mentor matching works" },
       body: {
         // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-        // DECIDED 2026-08-09: 오피스아워에서 날짜를 뗐습니다 — 기업 멘토를 특정
+        // DECIDED 2026-08-09: 드롭인 멘토링에서 날짜를 뗐습니다 — 기업 멘토를 특정
         // 날짜와 묶는 표기는 웹에서 쓰지 않습니다(누가 언제인지는 예약 시스템이
         // 전날 공개하는 정보입니다).
         // DECIDED 2026-08-13, 두 단계: ① 회사명을 뺐습니다("팝업스튜디오 FDE
         // 오피스아워도 같은 방식"). ② 1:1 멘토링을 우산 키워드로 올렸으니, 여기서도
-        // 오피스아워를 그 형태 중 하나로 부릅니다. schedule.ts의 FDE_OFFICE_HOUR 위
+        // 드롭인을 그 형태 중 하나로 불렀고, ③ 2026-08-17에 "오피스아워"라는 낱말
+        // 자체를 사이트에서 없앴습니다 (schedule.ts DROPIN_MENTORING 주석).
+        // 드롭인을 그 형태 중 하나로 부릅니다. schedule.ts의 DROPIN_MENTORING 위
         // 주석이 정본이고, 함께 움직이는 자리입니다.
-        ko: "멘토를 지정해서 신청하는 대신, 운영진이 배정합니다. 행사 전 팀이 제출한 가능 시간과 멘토의 가능 시간이 **겹치는 구간**이 기준이에요. 드롭인 형태인 FDE 오피스아워도 같은 방식입니다. 누구와 만나든, 모든 멘토는 여러분이 푸는 그 문제를 미리 보고 들어옵니다.",
-        en: "Instead of requesting a specific mentor, you get one assigned. The organizers place sessions where your team's submitted availability **overlaps** with a mentor's. The drop-in form, the FDE office hours, works the same way. And whoever you meet, every mentor comes in having already seen the problem you're solving.",
+        ko: "멘토를 지정해서 신청하는 대신, 운영진이 배정합니다. 행사 전 팀이 제출한 가능 시간과 멘토의 가능 시간이 **겹치는 구간**이 기준이에요. 예약 없이 들어오는 드롭인도 같은 방식입니다. 누구와 만나든, 모든 멘토는 여러분이 푸는 그 문제를 미리 보고 들어옵니다.",
+        en: "Instead of requesting a specific mentor, you get one assigned. The organizers place sessions where your team's submitted availability **overlaps** with a mentor's. The drop-in form of the 1:1 mentoring works the same way. And whoever you meet, every mentor comes in having already seen the problem you're solving.",
       },
     },
     // ── 확정 멘토 그리드 (덱 p12) ──────────────────────────────────────────────
@@ -2578,7 +2580,7 @@ export const dict = {
     // Academic POSTS are career (한정필's professorship stays); degrees are not. If a profile can't be verified, leave `intro`
     // empty — the card drops the line rather than guessing.
     // `stages` decides WHICH BOX a mentor's card appears in (1 = the 1:1 build
-    // mentoring, 2 = the FDE office hours, 3 = the Day 7 pitch session; see
+    // mentoring, 2 = the drop-in 1:1 mentoring, 3 = the Day 7 pitch session; see
     // `groups` above, whose own `stages` is the join key). It is the KIND of help
     // a person gives, not a date — it used to be described as a day range, and
     // that framing is what put day chips on people in the first place. Empty
@@ -2626,7 +2628,7 @@ export const dict = {
       // which days AXMOS runs is gone (the stage cards now say who is on each
       // day), so nothing above this grid needs re-checking when an AXMOS name is
       // added here — but the stage-2 card must keep naming POPUP STUDIO, not
-      // AXMOS, as the FDE office-hours host.
+      // AXMOS, as the drop-in mentoring host.
       {
         name: { ko: "김지훈", en: "Jihoon Kim" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "이사 Director", en: "Director" },
         intro: {
@@ -2704,7 +2706,7 @@ export const dict = {
       // this grid is named people you may be matched with 1:1, and Popup Studio
       // sends FDEs rather than a named mentor. It stays described in the section
       // intro above and as its own sessions in the programme (schedule.ts
-      // d5/d6/d7-fde-office-hour) — do not re-add a card for it.
+      // d5/d6/d7-dropin-mentoring) — do not re-add a card for it.
       // ── Day 7 · 피치·세일즈 멘토링 ──────────────────────────────────────────
       {
         name: { ko: "신동혁", en: "Shin Dong-hyuk" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "GTM", en: "GTM" },
@@ -2762,7 +2764,7 @@ export const dict = {
         days: "", daysPending: "", stages: [3], img: "/partners/people/hwang-hyun-jin.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697",
       },
       // 정요천: Popup Studio 총괄. Popup Studio already appears in the BUILD box as
-      // a mentoring partner (its FDEs run the drop-in office hours) — this
+      // a mentoring partner (its engineers run the drop-in mentoring) — this
       // is a different thing: he comes on Day 7 in person as a named mentor, so he
       // belongs to the pitch group like the other Day 7 seniors. He is also on the
       // Day 8 feedback panel (dict.judges.people); name, org, role and LinkedIn are
@@ -2981,7 +2983,7 @@ export const dict = {
       {
         // Brie is PAST, not present: he led it as CEO/CTO and no longer does.
         // The org/role line therefore carries the current post — Popup Studio,
-        // which is also the company running the FDE office hours — and
+        // which is also the company running the drop-in mentoring — and
         // Brie moves into the bio with the rest of the career history. Do not
         // put "Brie · 대표" back on the card without checking with him first.
         name: { ko: "정요천", en: "Jeong Yo-cheon" },
@@ -3559,8 +3561,8 @@ export const dict = {
         // 과정 기록의 행선지가 순위가 아니라 피드백·인턴십 검토로 바뀌었습니다
         // (2026-08-05) — dict.program.checkins.bonus와 같은 논리이니 함께 움직이세요.
         aTail: {
-          ko: "체크인 응답과 오피스아워 참여는 과정 기록으로 남아, 전문가 피드백과 주최사의 인턴십 검토에서 그대로 참고돼요. 피드백은 실제 산업에서 문제를 풀어온 현업 리더분들이 직접 주십니다(피드백 패널 섹션 참조).",
-          en: "Responding to the check-in forms and using the office hours leaves a trail of your process, which the experts' feedback and the hosts' internship review draw on. The feedback itself comes first-hand from leaders who have solved these problems in industry (see the feedback panel section).",
+          ko: "체크인 응답과 1:1 멘토링 참여는 과정 기록으로 남아, 전문가 피드백과 주최사의 인턴십 검토에서 그대로 참고돼요. 피드백은 실제 산업에서 문제를 풀어온 현업 리더분들이 직접 주십니다(피드백 패널 섹션 참조).",
+          en: "Responding to the check-in forms and using the 1:1 mentoring leaves a trail of your process, which the experts' feedback and the hosts' internship review draw on. The feedback itself comes first-hand from leaders who have solved these problems in industry (see the feedback panel section).",
         },
       },
     ],
