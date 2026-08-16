@@ -992,9 +992,13 @@ export const dict = {
     //
     // 덱의 '깔때기의 입구'는 내부 용어라 사이트에서는 '입구'로 씁니다. 깔때기
     // 은유 자체는 위 shift 카드 02가 한 번만 쓴다는 규칙이 그대로 살아 있습니다.
+    // DECIDED 2026-08-16 (정체성 얼라인, 공모전): "참여 팀을" → "수상팀을".
+    // 인큐베이션은 참가자 전원에게 열린 것이 아니라 어워드가 만든 쇼트리스트가
+    // 들어가는 자리입니다. 전원형으로 되돌리면 로드맵 전체가 "참여하면 다 해준다"가
+    // 되고, 어워드가 무엇을 위한 것인지도 같이 사라집니다.
     visionIntro: {
-      ko: "행사는 입구입니다. 참여 팀을 인큐베이팅해 서울로, 그리고 더 큰 무대로 이어갑니다.",
-      en: "The event is the entrance. We incubate the teams that take part, carry them to Seoul, and on to a bigger stage.",
+      ko: "행사는 입구입니다. 수상팀을 인큐베이팅해 서울로, 그리고 더 큰 무대로 이어갑니다.",
+      en: "The event is the entrance. We incubate the teams that win, carry them to Seoul, and on to a bigger stage.",
     },
     // 퍼널 1번 칸에 붙는 배지. 하드코딩된 "★ START"였고, 한국어 모드에서도 영어로
     // 나왔습니다. 이 페이지에서 눈에 보이는 배지는 전부 번역되므로(필참 · 선택 ·
@@ -1060,9 +1064,16 @@ export const dict = {
         num: "3",
         when: { ko: "2026 가을", en: "Autumn 2026" },
         title: { ko: "인큐베이션", en: "Incubation" },
+        // DECIDED 2026-08-16 (정체성 얼라인, 공모전): "참여 팀의" → "수상팀의",
+        // 그리고 선발 문장 한 줄. 이 칸이 어워드와 12월 쇼케이스를 잇는 이음매라,
+        // 여기서 선발이 안 보이면 4번 칸의 "인큐베이팅을 거친 팀들"이 어떻게 정해진
+        // 팀인지 알 길이 없어집니다.
+        //
+        // 세부 운영(킥오프 날짜, 주간 리듬, 담당자 이름)은 비공개입니다. 확정돼
+        // 있더라도 이 칸에 적지 마세요.
         body: {
-          ko: "참여 팀의 결과물을 실제 상품 수준까지. 정기 빌더 세션과 멘토링으로 계속 빌드업합니다.",
-          en: "Taking what the teams built up to an actual product. Regular builder sessions and mentoring keep the build going.",
+          ko: "수상팀의 결과물을 실제 상품 수준까지. 어워드가 곧 선발입니다. 정기 빌더 세션과 멘토링으로 계속 빌드업합니다.",
+          en: "Taking what the winning teams built up to an actual product. The awards are the selection. Regular builder sessions and mentoring keep the build going.",
         },
       },
       {
@@ -1360,9 +1371,23 @@ export const dict = {
     awards: {
       tag: { ko: "테마형 어워드", en: "Thematic awards" },
       countBadge: { ko: "4부문 8팀", en: "4 awards 8 teams" },
+      // DECIDED 2026-08-16 (박주형, 외부 피드백 반영 — 정체성 얼라인, 공모전):
+      // 이 행사의 정체성은 공모전입니다. 좋은 결과물을 뽑고, 어워드로 쇼트리스트를
+      // 만들고, 수상팀에게 행사 뒤 실제 어드밴티지가 이어지는 구조. 옛 제목
+      // ("순위 대신, 네 가지 다른 잘함에 상을 줍니다")은 어워드를 그 자체로 끝나는
+      // 칭찬으로 읽히게 했습니다 — 무엇이 뒤따르는지가 없었으니까요. 제목은 관문
+      // 프레임으로 올리고, 순위를 세우지 않는다는 사실은 sub가 한 번만 말합니다.
+      //
+      // 순위형은 되살리지 마세요 (2026-08-05 결정). 아래 sub의 "1위, 2위, 3위"는
+      // 부정문 안에서만 쓰이는 표기이고, 그래서 note에 있던 같은 말은 걷어냈습니다 —
+      // 한 박스 안에서 두 번 부정하면 그 자체가 화제가 됩니다.
       heading: {
-        ko: "순위 대신, 네 가지 다른 잘함에 상을 줍니다",
-        en: "No ranking, four different ways to be good",
+        ko: "어워드 4부문, 다음 무대로 가는 관문",
+        en: "Four awards, the gateway to the next stage",
+      },
+      sub: {
+        ko: "1위, 2위, 3위 대신 부문으로 뽑습니다. 수상팀에게는 행사 뒤 실제 어드밴티지가 이어집니다.",
+        en: "Teams are picked by award instead of being placed 1st, 2nd, 3rd. For the teams that win, a real advantage follows the event.",
       },
       // 이름에 "어워드"/"Award"를 붙이지 않습니다 (2026-08-12). 예전에는 KO 넷 중
       // 셋만, EN 넷 중 하나만 접미가 붙어 있어서 같은 목록 안에서 서로 다른 규칙을
@@ -1438,9 +1463,33 @@ export const dict = {
           },
         },
       ],
+      // 첫 문장("1, 2, 3위로 줄 세우지 않습니다")은 2026-08-16에 sub로 올라갔습니다.
+      // 여기로 되돌리지 마세요 — 같은 박스에서 두 번 말하게 됩니다.
       note: {
-        ko: "1, 2, 3위로 줄 세우지 않습니다. 네 부문은 각각 다른 것을 보고, 보는 사람도 출제사와 VC, 참가자, 운영진으로 다 다릅니다.",
-        en: "Nobody gets lined up 1st to 3rd. Each award looks for something different, and so does each set of eyes: the problem owner, the VC panel, your fellow builders, the organizers.",
+        ko: "네 부문은 각각 다른 것을 보고, 보는 사람도 출제사와 VC, 참가자, 운영진으로 다 다릅니다.",
+        en: "Each award looks for something different, and so does each set of eyes: the problem owner, the VC panel, your fellow builders, the organizers.",
+      },
+      // DECIDED 2026-08-16 (정체성 얼라인, 공모전): 어워드 목록 아래 두 블록.
+      // 나란히 서는 것이 요점입니다 — next는 수상팀에게만 따라오는 어드밴티지,
+      // openToAll은 수상과 무관하게 전원에게 열린 인턴십. 둘 중 하나만 두면
+      // "수상해야 뭔가 있다"로 읽히고, 그건 인턴십 전원 개방(2026-08-05)과
+      // 어긋납니다. 인턴십을 수상팀 전용으로 바꾸지 마세요.
+      //
+      // 인큐베이션 세부 운영(킥오프 날짜, 주간 리듬, 담당자)은 비공개입니다.
+      // 여기에 적지 마세요 — 같은 사실이 비전 섹션 3번 칸에도 있습니다.
+      next: {
+        label: { ko: "수상팀에게 이어지는 것", en: "What a win leads to" },
+        body: {
+          ko: "가을 인큐베이션에 우선 선발되어 결과물을 상품 수준까지 끌어올리고, 12월 서울 강남 쇼케이스 무대에 다시 섭니다.",
+          en: "They are picked first for the autumn incubation, take the build up to product level, and stand on the December showcase stage in Gangnam, Seoul.",
+        },
+      },
+      openToAll: {
+        label: { ko: "수상과 무관하게 전원에게", en: "Open to everyone, awards or not" },
+        body: {
+          ko: "AXMOS(코드프레소와 WVB) 유급 인턴십은 참가자 전원에게 열려 있습니다. 검토는 등수가 아니라 8일의 과정과 제출물을 봅니다.",
+          en: "The paid AXMOS (Codepresso, WVB) internship is open to every participant. What gets reviewed is your eight days and your submission, not a placing.",
+        },
       },
     },
     // ── 체크인 폼 3종 ─────────────────────────────────────────────────────
@@ -2158,7 +2207,12 @@ export const dict = {
       { ko: "참가 신청", en: "Apply" },
       { ko: "8일 빌더톤", en: "8-day builderthon" },
       { ko: "결과 공유회", en: "Showcase" },
-      { ko: "네트워크 경험 성장", en: "Network experience growth" },
+      // DECIDED 2026-08-16 (정체성 얼라인, 공모전): 마지막 칸이 "네트워크 경험 성장"
+      // 이었습니다. 앞의 세 칸이 신청 → 빌드 → 공유회로 흘러오는데 끝이 교육
+      // 프로그램의 결론이라, 참여 여정 전체가 "좋은 경험을 하고 끝난다"로 닫혔습니다.
+      // 네트워크와 경험이 사라진 것은 아닙니다 — 바로 아래 flowNote가 그것들을
+      // 전원에게 돌아가는 몫으로 계속 말합니다.
+      { ko: "어워드와 다음 무대", en: "Awards and the next stage" },
     ],
     // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회. 이 줄은
     // "시상은 상위 팀"으로 끝나면서 앞의 세 스텝을 예선처럼 읽히게 만들었습니다.
@@ -2167,9 +2221,13 @@ export const dict = {
     // 가운데 ·를 마침표로 (2026-08-11). 한 줄에 두 종류의 ·가 섞여 있어서, 앞의
     // 나열(네트워크·경험·성장)과 두 절을 잇는 ·가 같은 무게로 보였습니다. 나열은
     // 그대로 두고 절 경계만 문장으로 끊습니다.
+    // DECIDED 2026-08-16 (정체성 얼라인, 공모전): 결론 자리를 공모전 결로 옮겼습니다.
+    // 전원에게 돌아가는 몫은 그대로 앞 절에 두되, 문장이 거기서 끝나지 않고 수상팀에게
+    // 이어지는 것까지 갑니다. "순위가 아니라"는 뺐습니다 — 순위형은 이미 없고,
+    // 그 사실은 어워드 박스의 sub가 한 번 말합니다.
     flowNote: {
-      ko: "네트워크와 경험, 성장은 참가자 전원에게. 어워드는 순위가 아니라 각 팀의 강점에.",
-      en: "Network, experience and growth for everyone. Awards go to strengths, not rankings.",
+      ko: "네트워크와 경험은 참가자 전원에게. 어워드는 각 팀의 강점에, 그리고 수상팀은 가을 인큐베이션과 12월 서울 쇼케이스로 이어집니다.",
+      en: "Network and experience for everyone. Awards go to each team's strengths, and the teams that win carry on into the autumn incubation and the December showcase in Seoul.",
     },
   },
 
@@ -2816,9 +2874,15 @@ export const dict = {
     // 묶여 있습니다 — 열 명이라는 수와 '모두 확정'이라는 말 둘 다 배열을 보고
     // 쓴 것이라, 사람을 더하거나 빼거나 누군가 pending으로 돌아오면 이 문장부터
     // 고쳐야 합니다.
+    // DECIDED 2026-08-16 (정체성 얼라인, 공모전): 패널의 선발 역할 한 문장 추가.
+    // 헤드라인("심사가 아니라 피드백")과 무대의 프레임은 그대로입니다 — 선발은
+    // 무대에서 일어나지 않고 어워드에서 일어나며, 그 어워드의 두 부문을 지명하는
+    // 사람이 바로 이 패널이라는 사실이 빠져 있었습니다. 그래서 이 섹션이 "좋은
+    // 말을 들려주는 자리"로만 읽혔습니다. 어느 부문인지는 dict.program.awards의
+    // meta가 부문별로 들고 있으니 여기서 다시 나열하지 마세요.
     sub: {
-      ko: "순위를 매기는 심사가 아니라, 전문적인 시각의 피드백입니다. 문제를 낸 기업과, 실제 산업에서 문제를 풀어온 시니어 리더들이 결과 공유회에서 각자의 관점으로 피드백과 다음 가능성을 제안합니다. 열 분 모두 참여가 확정됐습니다.",
-      en: "Not a ranking exercise, but expert feedback. The company that set the problem and senior leaders who have solved real ones in industry look at your Showcase work and, each from their own vantage point, offer feedback and what could come next. All ten have confirmed.",
+      ko: "순위를 매기는 심사가 아니라, 전문적인 시각의 피드백입니다. 문제를 낸 기업과, 실제 산업에서 문제를 풀어온 시니어 리더들이 결과 공유회에서 각자의 관점으로 피드백과 다음 가능성을 제안합니다. 그리고 출제 기업과 VC 패널은 여기서 어워드 수상팀을 직접 지명합니다. 열 분 모두 참여가 확정됐습니다.",
+      en: "Not a ranking exercise, but expert feedback. The company that set the problem and senior leaders who have solved real ones in industry look at your Showcase work and, each from their own vantage point, offer feedback and what could come next. The problem owner and the VC panel also name the award-winning teams themselves. All ten have confirmed.",
     },
     people: [
       {
@@ -3413,8 +3477,11 @@ export const dict = {
           // 괄호가 그래서 빠졌습니다. 안 준다는 안내조차 식사를 화제로 만들고, 이
           // 답변은 상금을 묻는 자리지 끼니를 묻는 자리가 아닙니다.
           // benefits 06 카드와 같은 사실을 말하는 자리이니 함께 움직여 주세요.
-          ko: "네, 다만 팀을 1, 2, 3위로 세우지 않습니다. 시상은 테마형 어워드 4부문이고 여덟 팀이 받아 가요. 부상은 부문에 따라 현금 또는 널담 바우처입니다. 어떤 부문이 있고 누가 뽑는지는 프로그램의 Day 8 카드에 정리해 뒀습니다. 참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드와 캡 세트는 Day 1 현장에서 선착순 60세트로 드립니다.",
-          en: "Yes, but nobody gets lined up 1st-2nd-3rd. There are four thematic awards and eight teams take one home, each carrying either a cash prize or a Nuldam voucher. Which awards there are and who picks them is laid out on the Day 8 card in the programme. Entry is free and the networking goes to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come.",
+          // DECIDED 2026-08-16 (정체성 얼라인, 공모전): 상금 뒤에 무엇이 이어지는지
+          // 한 문장. 이 답은 "얼마"에서 끝나 있었는데, 수상의 실제 값은 부상보다
+          // 그 뒤에 붙는 자리입니다(정본은 dict.program.awards의 next).
+          ko: "네, 다만 팀을 1, 2, 3위로 세우지 않습니다. 시상은 테마형 어워드 4부문이고 여덟 팀이 받아 가요. 부상은 부문에 따라 현금 또는 널담 바우처입니다. 수상팀은 가을 인큐베이션과 12월 서울 쇼케이스로 이어져요. 어떤 부문이 있고 누가 뽑는지는 프로그램의 Day 8 카드에 정리해 뒀습니다. 참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드와 캡 세트는 Day 1 현장에서 선착순 60세트로 드립니다.",
+          en: "Yes, but nobody gets lined up 1st-2nd-3rd. There are four thematic awards and eight teams take one home, each carrying either a cash prize or a Nuldam voucher. The teams that win carry on into the autumn incubation and the December showcase in Seoul. Which awards there are and who picks them is laid out on the Day 8 card in the programme. Entry is free and the networking goes to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come.",
         },
       },
       {

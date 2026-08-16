@@ -2287,6 +2287,11 @@ function AwardsBox({ t }: { t: Tfn }) {
         <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-amber-200/80">{t(a.tag)}</span>
       </div>
       <p className="mt-2.5 break-keep text-sm font-bold leading-snug text-white">{t(a.heading)}</p>
+      {/* DECIDED 2026-08-16 (정체성 얼라인, 공모전): 제목 아래 부제 한 줄. 제목이
+          관문 프레임으로 올라가면서 "그런데 순위는 없는 거지?"가 제목만으로는
+          답이 안 되는 상태가 됐습니다. 순위를 세우지 않는다는 사실은 이 줄에서
+          한 번만 말합니다 (note에서는 걷어냈습니다). */}
+      <p className="mt-1.5 break-keep text-xs leading-relaxed text-amber-100/70">{t(a.sub)}</p>
       <ul className="mt-3 space-y-3">
         {a.items.map((item, i) => (
           <li key={i} className="flex gap-2.5">
@@ -2307,6 +2312,20 @@ function AwardsBox({ t }: { t: Tfn }) {
       <p className="mt-3.5 break-keep border-t border-amber-300/15 pt-3 text-xs leading-relaxed text-amber-100/75">
         {t(a.note)}
       </p>
+      {/* DECIDED 2026-08-16 (정체성 얼라인, 공모전): 어워드가 상으로 끝나지 않고
+          다음 무대로 가는 관문이라, 무엇이 이어지는지를 목록 바로 아래에 둡니다.
+          두 블록이 나란히 서는 것이 요점입니다 — 왼쪽은 수상팀에게만 따라오는
+          어드밴티지, 오른쪽은 수상과 무관하게 전원에게 열린 인턴십. 하나만 남기면
+          "수상해야 뭔가 있다"로 읽히고, 그건 인턴십 전원 개방 결정과 어긋납니다.
+          카피는 dict.program.awards의 next/openToAll이 정본입니다. */}
+      <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
+        {[a.next, a.openToAll].map((b, i) => (
+          <div key={i} className="rounded-xl border border-amber-300/15 bg-amber-400/[0.05] px-3.5 py-3">
+            <p className="break-keep text-[0.62rem] font-bold uppercase tracking-[0.1em] text-amber-200/85">{t(b.label)}</p>
+            <p className="mt-1.5 break-keep text-xs leading-relaxed text-amber-50/85">{t(b.body)}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
