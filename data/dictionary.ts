@@ -2087,7 +2087,19 @@ export const dict = {
         // 부문 헤지가 살던 세 곳(이 카드, FAQ 상금 답변, schedule.ts d8-final-pitch
         // description)은 2026-08-06 확정 반영으로 전부 헤지가 사라졌습니다. 부문
         // 이름·금액을 새로 퍼뜨리는 네 번째 자리는 만들지 마세요 — 바뀌면 또
-        // 쫓아다녀야 합니다. 여기는 이름과 선정 주체만, 유머 설명은 FAQ 한 곳에만.
+        // 쫓아다녀야 합니다. 유머 설명은 FAQ 한 곳에만.
+        //
+        // TRIMMED 2026-08-17: 이 카드가 혼자 길어서 둘째 행 전체를 끌어내리고 있었습니다
+        // (목록 309px, 같은 행의 04·05는 172·181px, 행 높이가 첫 행보다 137px 높았습니다).
+        // 카드 높이는 그 행에서 가장 긴 카드가 정하므로, 고칠 자리는 레이아웃이 아니라
+        // 이 네 줄입니다. 사실은 하나도 버리지 않고 문장만 조였습니다 — 지금 KO·EN 모두
+        // 다른 카드와 9px 안입니다.
+        //
+        // 그 과정에서 부문별 선정 주체(출제사 픽 · VC 픽 · 참가자 투표 · 운영진 선정)를
+        // 이 카드에서 뺐습니다. 세 줄을 두 줄로 만드는 유일한 방법이었고, 사이트에서
+        // 사라지는 정보는 없습니다 — 선정 주체와 부상은 dict.program.awards의 meta가
+        // 부문별로 전부 들고 있고 그쪽이 정본입니다. 여기는 이제 부문 '이름'만입니다.
+        // 되돌리려면 다른 줄에서 두 줄을 만들어 오세요. 그냥 되돌리면 행이 다시 깨집니다.
         //
         // 우산 명칭 "성장 어워드"는 파트너 확인 전이라 웹에 쓰지 않습니다 —
         // 표기는 "테마형 어워드 4부문". 정본 docx의 유머명(답지 찢었상 등)은
@@ -2111,17 +2123,16 @@ export const dict = {
           // CONFIRMED 2026-08-05: AXMOS(코드프레소·WVB) 실명 표기 가능 — 바뀐 것은
           // 대상 범위(1위 팀 → 전원)이지 인턴십을 여는 회사가 아닙니다. 실명은 FAQ
           // 인턴십 답변과 여기 두 곳에만 두세요.
-          // 앞의 "4부문 · 8팀"만 쉼표로 바꿨습니다 (2026-08-11) — 그 둘은 나열이
-          // 아니라 같은 시상에 대한 두 숫자라, 뒤따르는 진짜 나열(부문 넷)과 같은
-          // 기호를 쓰면 부문이 여섯 개로 보였습니다. EN은 원래 쉼표였습니다.
-          // 부문 이름 사이의 ·는 나열이므로 그대로 둡니다.
-          { ko: "테마형 어워드 4부문, 8팀: 비욘드 브리프(출제사 픽) 비즈니스 포텐셜(VC 픽) 빌더스 초이스(참가자 투표) 0→100(운영진 선정)", en: "Four thematic awards, eight teams: Beyond the Brief (problem owner's pick) Business Potential (VC pick) Builder's Choice (participant vote) Zero to Hundred (organizers' pick)" },
+          // 부문 넷은 쉼표로 나열합니다. "4부문 8팀"은 나열이 아니라 같은 시상에 대한
+          // 두 숫자라 그 사이는 붙여 둡니다 — 여기에도 쉼표를 넣으면 부문이 여섯 개로
+          // 보입니다 (2026-08-11에 한 번 그렇게 읽혔습니다).
+          { ko: "테마형 어워드 4부문 8팀: 비욘드 브리프, 비즈니스 포텐셜, 빌더스 초이스, 0→100", en: "Four thematic awards, eight teams: Beyond the Brief, Business Potential, Builder's Choice, Zero to Hundred" },
           // DECIDED 2026-08-05: 식사 언급 전면 제거 — 제공 안내도, 미제공 안내도 쓰지
           // 않는다. (식사 미제공 정책 자체는 2026-08-04 결정 그대로) 어느 방향으로든
           // 다시 넣지 마세요. 바우처는 "널담 바우처"로만 적고 식사·디저트 같은 단어를
           // 붙이지 않습니다 — 그 한 단어가 사이트에서 유일하게 식사가 나온다고 읽힐
           // 여지를 만듭니다.
-          { ko: "1, 2, 3위 순위는 없고, 부상은 부문별로 현금 또는 널담 바우처입니다", en: "No 1st–3rd ranking; each award carries a cash prize or a Nuldam voucher" },
+          { ko: "순위는 없고, 부상은 현금 또는 널담 바우처", en: "No ranking; cash or Nuldam vouchers" },
           // 문장 두 개를 ·로 붙여 두었던 자리입니다 (2026-08-11에 분리). 앞은
           // 누구에게 열려 있는가, 뒤는 무엇을 보고 검토하는가로 주어가 다릅니다.
           // 회사 이름 사이의 ·(코드프레소·WVB)는 나열이라 그대로.
@@ -2131,14 +2142,14 @@ export const dict = {
           // 보이므로 늘어난 포인트는 접혀서 읽히지 않습니다. "열릴 수 있어요"의
           // 가능성 표현을 확정형으로 바꾸지 마세요(원문이 "포함할 수 있습니다").
           // 조건의 정본은 FAQ 인턴십 답변이고 이 줄은 요약이니 함께 움직이세요.
-          { ko: "AXMOS(코드프레소와 WVB) 유급 인턴십 기회는 수상과 무관하게 모든 참가자에게 열려 있습니다. 지역은 싱가포르에 더해 한국, 미국도 포함될 수 있어요. 주최사가 행사 과정과 제출물을 바탕으로 직접 검토해요", en: "A paid internship with AXMOS (Codepresso, WVB), open to every participant, awards or not. The location can reach beyond Singapore to Korea and the US. The hosts review interest on the strength of your work across the event" },
+          { ko: "AXMOS(코드프레소와 WVB) 유급 인턴십, 수상 무관 전원 대상. 싱가포르 밖 한국과 미국도 가능", en: "A paid AXMOS (Codepresso, WVB) internship, open to all regardless of awards. Korea and the US are possible too" },
           // CONFIRMED 2026-08-03 (브랜드부스트 미팅): 후드+캡 세트 60개, Day 1 전
           // 도착 확정, 현장 선착순. 이전 줄("굿즈 (pen·notes) 등 · 검토 중")은
           // 품목도 진행 여부도 미정이던 시절의 표기라 헤지가 붙어 있었습니다 —
           // 확정된 지금은 헤지를 붙이지 않습니다. 수량(60)과 '선착순'은 세트로
           // 유지하세요: 이 카드의 다른 줄과 달리 여기는 전원에게 가지 않습니다.
           // 배송·비용 등 물류 정보는 사이트에 쓰지 않습니다.
-          { ko: "브랜드부스트 굿즈: 후드와 캡 세트, Day 1 현장 선착순 60세트", en: "Brand Boost goods: a hoodie + cap set, 60 sets on a first-come basis on Day 1" },
+          { ko: "브랜드부스트 후드와 캡 세트 60개, Day 1 현장 선착순", en: "60 Brand Boost hoodie and cap sets, first come first served on Day 1" },
         ],
       },
     ],
