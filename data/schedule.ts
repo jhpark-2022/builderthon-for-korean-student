@@ -649,7 +649,21 @@ export const days: DayMeta[] = [
         // 폐지했습니다. "1위"·"순위"·"등수"를 쓰지 마세요. 득표수도 적지 않습니다.
         time: "1:30PM–1:45PM",
         label: { ko: "즉석 인기 투표 결과 공개", en: "On-the-spot vote results" },
-        note: { ko: "오늘 가장 많이 나아간 팀에게 참가자가 투표해요. 최다 득표 3팀을 그 자리에서 공개하고, Day 8 ‘빌더스 초이스’ 최종 집계에 반영됩니다.", en: "Participants vote for the team that moved furthest today. The three most-voted teams are revealed on the spot, and the votes carry into the final Builder's Choice count on Day 8." },
+        // DECIDED 2026-08-16 (원대로 대표 지시 + 박주형 합의): 해녀의 부엌이 이
+        // 투표의 부상을 후원합니다. 기존 두 문장(그 자리 공개 + Day 8 최종 집계
+        // 반영)은 그대로 두고 한 문장만 뒤에 붙였습니다.
+        //
+        // 표기 규칙 — 어기지 마세요:
+        //  · "음료 바우처"까지만 씁니다. 종류를 나열하지 마세요(가격 상한이 있는
+        //    조건이라 열거하면 과약속이 되고, 주류 단어는 특히 금지).
+        //  · 총 장수와 금액은 쓰지 않습니다. 참가자가 알아야 하는 것은 "우리 팀이
+        //    뽑히면 팀원당 한 장"까지입니다(금액 비공개는 기존 정책).
+        //  · 식사 무언급 정책(2026-08-05)은 그대로입니다. 이건 후원사 부상이라
+        //    예외이고, 이 문장을 근거로 일정 카피에 식사 문장을 새로 쓰지 마세요.
+        //  · 사용 시점을 적어야 하면 "행사 후 저녁에 사용"까지. 영업시간과 위치는
+        //    쓰지 않습니다.
+        //  · "최다 득표 3팀"은 묶음 공개입니다. 1·2·3등이 아닙니다(위 주석 참고).
+        note: { ko: "오늘 가장 많이 나아간 팀에게 참가자가 투표해요. 최다 득표 3팀을 그 자리에서 공개하고, Day 8 ‘빌더스 초이스’ 최종 집계에 반영됩니다. 최다 득표 3팀에는 해녀의 부엌 음료 바우처가 팀원당 한 장씩 돌아갑니다.", en: "Participants vote for the team that moved furthest today. The three most-voted teams are revealed on the spot, and the votes carry into the final Builder's Choice count on Day 8. Each member of those three teams gets a drink voucher, sponsored by Haenyeo's Kitchen." },
       },
       {
         time: "1:45PM–2PM",

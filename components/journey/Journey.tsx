@@ -2458,7 +2458,7 @@ const companions: { src?: string; alt?: string; w?: number; h?: number }[] = [
   { src: "/partners/zero100/18-yj.webp", alt: "YJ", w: 98, h: 100 },
   { src: "/partners/zero100/20-habit-factory.webp", alt: "Habit Factory", w: 560, h: 75 },
   { src: "/partners/zero100/21-nuldam.webp", alt: "Nuldam", w: 443, h: 100 },
-  { src: "/partners/zero100/22-hanyeo.webp", alt: "Haenyeo Kitchen", w: 329, h: 100 },
+  { src: "/partners/zero100/22-hanyeo.webp", alt: "Haenyeo's Kitchen", w: 329, h: 100 },
   { src: "/partners/zero100/23-twigfarm.webp", alt: "Twigfarm", w: 370, h: 100 },
   { src: "/partners/zero100/24-kowork.webp", alt: "Kowork", w: 478, h: 100 },
   { src: "/partners/zero100/25-one-dgree-labs.webp", alt: "One Degree Labs", w: 122, h: 100 },
@@ -2828,7 +2828,7 @@ const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpe
       // 아트워크는 zero100 밴드용 파일(316x72)이 유일한 소스라 다른 마크(장변 900px)
       // 보다 작습니다. 원본을 받으면 scripts/process-partner-logos.py로 다시 뽑고
       // 이 줄의 w/h/mass를 함께 갱신하세요.
-      { src: "/partners/logos/white/trimmed/haenyeo-kitchen.png",    alt: "Haenyeo Kitchen",                 w: 316, h: 72,  mass: 0.316 },
+      { src: "/partners/logos/white/trimmed/haenyeo-kitchen.png",    alt: "Haenyeo's Kitchen",               w: 316, h: 72,  mass: 0.316 },
     ],
   },
 ];
@@ -4584,12 +4584,15 @@ export default function Journey() {
                 // review — that is a source for the *SCAPE outlet, not a partner's
                 // own page, and every other tile here links to the company itself.
                 { cat: t(dict.partners.catAwards),    src: "/partners/logos/white/trimmed/nuldam.png",             alt: "Nuldam",                          w: 631, h: 136, url: "https://nuldam.com/" },
-                // 해녀의 부엌, 2026-08-17 확정 — 수상팀에게 돌아가는 부상을 후원합니다.
-                // 널담과 같은 catAwards 캡션이고, 스트립 순서 덕에 그 옆에 섭니다.
+                // 해녀의 부엌. DECIDED 2026-08-16으로 후원 내용이 확정됐습니다 —
+                // Day 5 즉석 인기 투표에서 최다 득표 3팀에게 가는 음료 바우처입니다.
+                // 캡션을 catAwards에서 catDay5Prize로 고쳤습니다: 처음 넣을 때는
+                // 내용을 몰라 "어워드 부상"으로 달았는데, 그건 Day 8 어워드의 부상이라
+                // 같은 캡션을 달면 널담과 같은 것을 후원한다고 말하게 됩니다.
                 // url은 아직 비워 둡니다: 확인되지 않은 도메인을 넣으면 죽은 링크가
                 // 나가고, 이 그리드에는 실제로 그런 사고가 한 번 있었습니다(위 주석).
                 // 공식 사이트를 확인하면 그때 넣으세요.
-                { cat: t(dict.partners.catAwards),    src: "/partners/logos/white/trimmed/haenyeo-kitchen.png",    alt: "Haenyeo Kitchen",                 w: 316, h: 72,  url: undefined },
+                { cat: t(dict.partners.catDay5Prize), src: "/partners/logos/white/trimmed/haenyeo-kitchen.png",    alt: "Haenyeo's Kitchen",               w: 316, h: 72,  url: undefined },
                 { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/onword-lab.png",             alt: "Onword Lab",                      w: 900, h: 92,  url: "https://www.onwordlab.com/" },
                 { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105, url: "https://teamremited.com/" },
                 // The `area: 4000` fudge that used to sit here is gone

@@ -217,9 +217,13 @@ export const partnerIntros: Record<string, Phrase> = {
   // Journey.tsx 후원 그리드의 url(현재 undefined)도 함께 채우세요.
   //
   // 부상을 "식사 바우처"로 부르지 않습니다 — 널담 주석과 같은 규칙입니다.
-  "Haenyeo Kitchen": {
-    ko: "제주 해녀 문화를 다이닝으로 풀어내는 한국 브랜드로, 싱가포르에도 자리를 두고 있습니다. 이번 빌더톤에는 수상팀에게 돌아가는 어워드 부상을 후원합니다.",
-    en: "A Korean brand that brings Jeju's haenyeo culture to the table, with a place in Singapore too. It sponsors the award prizes that go to the winning teams at this builderthon.",
+  "Haenyeo's Kitchen": {
+    // DECIDED 2026-08-16: 후원 내용이 확정됐습니다 — Day 5 즉석 인기 투표에서
+    // 최다 득표 3팀에게 가는 음료 바우처입니다. 처음 넣을 때는 내용을 몰라
+    // "어워드 부상"으로 적었는데, 그건 Day 8 어워드의 부상이라 사실이 아닙니다.
+    // 종류·장수·금액은 쓰지 않습니다(schedule.ts Day 5 투표 줄 위 주석의 규칙).
+    ko: "제주 해녀 문화를 다이닝으로 풀어내는 한국 브랜드로, 싱가포르에도 자리를 두고 있습니다. 이번 빌더톤에는 Day 5 즉석 인기 투표에서 최다 득표 3팀에게 가는 음료 바우처를 후원합니다.",
+    en: "A Korean brand that brings Jeju's haenyeo culture to the table, with a place in Singapore too. It sponsors the drink vouchers that go to the three most-voted teams in the Day 5 on-the-spot vote.",
   },
 
 };
@@ -1415,6 +1419,10 @@ export const dict = {
     // 부상) 담고 농담을 섞지 않습니다 — 참가자가 조건을 확인하러 오는 줄입니다.
     // 우산 명칭 "성장 어워드"는 파트너 확인 전이라 쓰지 않고, 정본 docx의
     // 유머명(답지 찢었상 등)은 내부·무대용이라 웹에 올리지 않습니다.
+    // PENDING 2026-08-16: 완주 취지 상 논의 중, 미공개. 아이디어 단계입니다.
+    // 부문을 다섯으로 늘리지 마세요 — 아래 countBadge("4부문 8팀")와 benefits 06
+    // 카드, FAQ 상금 답변이 모두 넷을 세고 있고, 확정 전에 하나만 늘리면 세 곳이
+    // 조용히 갈라집니다. 확정되면 그 네 곳을 함께 고치세요.
     awards: {
       tag: { ko: "테마형 어워드", en: "Thematic awards" },
       countBadge: { ko: "4부문 8팀", en: "4 awards 8 teams" },
@@ -2212,6 +2220,10 @@ export const dict = {
           { ko: "크래시코스 수료증: 전 시간 참석하면 마지막 날 PDF로 발송", en: "The Crash Course certificate, for attending the full Crash Course: a PDF sent on the final day" },
           { ko: "완주 수료증: 공유회 발표까지 마치면 Day 8 현장에서 실물로", en: "The completion certificate, for going all the way through your Showcase pitch: printed and handed to you on Day 8" },
           { ko: "둘 다 Zero100 명의로 발급", en: "Both issued by Zero100" },
+          // PENDING 2026-08-16: 널담 수료증 20% 할인 요청 중, 확정 시 공개.
+          // 요청 단계이고 승인 대기입니다. 승인 전에 카피로 올리지 마세요 —
+          // 수료증이 할인권처럼 읽히는 순간 발급 조건("전 시간 참석"·"공유회
+          // 발표까지")보다 혜택이 먼저 도착합니다.
           { ko: "링크드인 포트폴리오 이력에 활용", en: "Use them on LinkedIn, in your portfolio and CV" },
         ],
       },
@@ -3285,6 +3297,12 @@ export const dict = {
     catMarketing: { ko: "마케팅", en: "Marketing" },
     catMentoring: { ko: "멘토링", en: "Mentoring" },
     catGoods: { ko: "굿즈", en: "Goods" },
+    // 해녀의 부엌 전용 (DECIDED 2026-08-16). catAwards("어워드 부상")를 같이 쓰지
+    // 마세요 — 그건 Day 8 테마형 어워드의 부상이고, 이쪽은 Day 5 즉석 인기 투표에서
+    // 최다 득표 3팀에게 가는 부상입니다. 두 부상은 뽑는 자리도 받는 팀도 다릅니다.
+    // Day 5 투표가 빌더스 초이스의 중간 라운드라 헷갈리기 쉬운데, 바우처는 그날
+    // 최다 득표 3팀에게 가고 Day 8 수상 여부와 무관합니다.
+    catDay5Prize: { ko: "Day 5 부상", en: "Day 5 prize" },
     // 널담 only (2026-08-07). 캡션은 "부상"까지만 말하고 금액은 말하지 않습니다 —
     // 액수 비공개는 dict.program.awards의 WITHHELD 주석에 있는 결정이고, 파트너
     // 타일은 그 결정이 새는 네 번째 자리가 되기 쉬운 곳입니다.
