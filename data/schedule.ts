@@ -24,7 +24,7 @@
 //   • Day 1 — big Opening (1PM–4:30PM at The Foundry, The Refinery hall): 원대로
 //     opening keynote + AWS speaker session + the AX problems are released and
 //     tracks are chosen. MANDATORY (필참).
-//   • Day 2 — one concentrated Crash Course (vibe-coding intro, 5–6h, online),
+//   • Day 2 — one concentrated Crash Course (vibe-coding intro, 9AM–12PM, online),
 //     then a team-building session right after for the solo participants who
 //     were matched into teams on Day 1 (2026-08-12; in person, time and place
 //     still being arranged). (A live per-track briefing by the client contacts
@@ -474,12 +474,19 @@ export const days: DayMeta[] = [
     // 읽히므로, 대상을 적지 않으면 팀으로 등록한 사람까지 어딘가로 가야 하는 줄
     // 압니다. 시각·장소는 여기 쓰지 않습니다(카드가 맡습니다).
     summary: {
-      ko: "바이브 코딩 입문 집중 5–6시간(비개발자 OK), 코드프레소 김지훈 이사님 진행. 크래시코스 후에는 Day 1 매칭 팀들의 팀 빌딩 시간이 이어져요.",
-      en: "A focused 5–6h vibe-coding intro (beginners OK), led by Jihoon Kim, Director at Codepresso. After the course, teams matched on Day 1 continue into a team-building session.",
+      // DECIDED 2026-08-17: 크래시코스 9AM–12PM 확정, 오후는 팀 빌딩. "집중 5–6시간"
+      // 이라는 어림 표기를 확정 시각으로 바꿨습니다. 시각의 정본은 d2-crash-course의
+      // time 필드이고 이 줄은 카드에서 읽히는 사본이니 함께 움직이세요.
+      // 표기는 days[].hours와 같은 컨벤션(12시간제 대문자 AM/PM, en-dash, ko/en
+      // 동일 문자열) — 데이 카드가 이미 그 형태의 칩을 보여주고 있습니다.
+      ko: "바이브 코딩 입문 9AM–12PM(비개발자 OK), 코드프레소 김지훈 이사님 진행. 오후에는 Day 1 매칭 팀들의 팀 빌딩 시간이 이어져요.",
+      en: "A vibe-coding intro, 9AM–12PM (beginners OK), led by Jihoon Kim, Director at Codepresso. In the afternoon, teams matched on Day 1 continue into a team-building session.",
     },
     whyStop: {
-      ko: "혼자 헤매며 배울 몇 주를, 출발선 맞추는 하루로 압축",
-      en: "Weeks of solo trial-and-error, compressed into one day",
+      // "하루로 압축" → "한나절로" (2026-08-17, 9AM–12PM 확정). 세 시간짜리를
+      // 하루라고 부르면 카드가 그날을 통째로 비워야 하는 날로 읽힙니다.
+      ko: "혼자 헤매며 배울 몇 주를, 출발선 맞추는 한나절로 압축",
+      en: "Weeks of solo trial-and-error, compressed into one morning",
     },
     // "online" → "online-default" (2026-08-12). 크래시코스는 전원 온라인이지만
     // 그 뒤 팀 빌딩은 대면이라, "온라인" 칩이 하루 전체를 온라인으로 단정하게
@@ -1484,6 +1491,11 @@ export const schedule: BEvent[] = [
     category: "workshop",
     mode: "online",
     timeOfDay: "AM",
+    // 확정 시각 (DECIDED 2026-08-17). 이 필드가 시각의 정본이고, 모달의 시간 행이
+    // AM/PM 대신 이 값을 보여줍니다. Day 1만 채워져 있던 필드인데 Day 2도 확정돼
+    // 들어왔습니다. days[].hours는 비워 둡니다 — 그건 현장 대관 창이고 이 세션은
+    // 온라인입니다(DayMeta.hours 주석).
+    time: "9AM–12PM",
     confirmed: true,
     title: { ko: "크래시코스 바이브 코딩 입문", en: "Crash Course Vibe Coding Intro" },
     // Confirmed instructor. Title from her own LinkedIn headline — "Co-founder &
@@ -1500,9 +1512,10 @@ export const schedule: BEvent[] = [
     //   · "코드프레소가 주관 · 김지훈 이사님이 진행" → speaker · speakerProfile ·
     //     org 세 곳이 말하고 있었습니다(문단까지 네 번째)
     //   · "전 시간 참석 시 수료증, Day 8 PDF 발송" → opportunities 세 번째 항목
-    //   · "집중 5–6시간 · 비개발자도 따라올 수 있게" → summary
+    //   · "집중 5–6시간 · 비개발자도 따라올 수 있게" → summary (그 5–6시간은
+    //     2026-08-17에 9AM–12PM 확정으로 대체됐습니다 — 위 time 필드가 정본)
     //   · "작동하는 프로토타입을 만드는 기본기" → opportunities 첫·둘째 항목
-    // 남은 문단은 이 카드에서만 말하는 것뿐입니다: 왜 하루에 몰아서 하는지,
+    // 남은 문단은 이 카드에서만 말하는 것뿐입니다: 왜 한 번에 몰아서 하는지,
     // 라이브 빌드라는 진행 방식, 그리고 Codex 기준이되 툴은 자유라는 정책.
     speakerProfile: {
       name: { ko: "김지훈 이사님", en: "Jihoon Kim" },
@@ -1515,13 +1528,13 @@ export const schedule: BEvent[] = [
       linkedin: "https://www.linkedin.com/in/jihoon-kim-613878134",
     },
     summary: {
-      ko: "집중 5–6시간의 바이브 코딩 입문. 비개발자도 OK, 코드프레소 김지훈 이사님 진행.",
-      en: "A focused 5–6h vibe-coding intro. Non-developers welcome, led by Jihoon Kim of Codepresso.",
+      ko: "바이브 코딩 입문 9AM–12PM. 비개발자도 OK, 코드프레소 김지훈 이사님 진행.",
+      en: "A vibe-coding intro, 9AM–12PM. Non-developers welcome, led by Jihoon Kim of Codepresso.",
     },
     description: {
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-      ko: "참가자의 약 60%가 바이브 코딩이 처음이라, 여러 번 나누지 않고 하루에 몰아서 출발선을 맞춥니다. 슬라이드 대신, 강사가 간단한 툴 하나를 바이브 코딩으로 처음부터 만드는 라이브 빌드를 다 함께 따라갑니다. 기술 장벽을 여기서 걷어내고 아이디어만 한계로 남기려고요. 강의는 Codex를 기준으로 진행하되, 도구는 자유예요. 배우는 건 방식이라, 이후 팀 빌드와 공유회 결과물은 Claude Code든 커서든 손에 맞는 도구로 만들면 돼요.",
-      en: "About 60% of participants are trying vibe coding for the first time, so the course runs in a single concentrated day. Instead of slides, the instructor vibe-codes one simple tool from scratch, live, and the room follows along, clearing the technical barrier so your ideas are the only limit left. The class runs on Codex, though the tool is up to you: what you take away is the method, and your own team build and Showcase work can run on Claude Code, Cursor or whatever fits your hand.",
+      ko: "참가자의 약 60%가 바이브 코딩이 처음이라, 여러 번 나누지 않고 오전 한 번에 몰아서 출발선을 맞춥니다. 슬라이드 대신, 강사가 간단한 툴 하나를 바이브 코딩으로 처음부터 만드는 라이브 빌드를 다 함께 따라갑니다. 기술 장벽을 여기서 걷어내고 아이디어만 한계로 남기려고요. 강의는 Codex를 기준으로 진행하되, 도구는 자유예요. 배우는 건 방식이라, 이후 팀 빌드와 공유회 결과물은 Claude Code든 커서든 손에 맞는 도구로 만들면 돼요.",
+      en: "About 60% of participants are trying vibe coding for the first time, so the course runs in one concentrated morning. Instead of slides, the instructor vibe-codes one simple tool from scratch, live, and the room follows along, clearing the technical barrier so your ideas are the only limit left. The class runs on Codex, though the tool is up to you: what you take away is the method, and your own team build and Showcase work can run on Claude Code, Cursor or whatever fits your hand.",
     },
     location: ONLINE,
     org: CODEPRESSO_ORG,
@@ -1580,12 +1593,15 @@ export const schedule: BEvent[] = [
     // 요약 첫 절이 대상입니다. 카드가 크래시코스 카드 옆에 나란히 서기 때문에,
     // 대상을 뒤에 두면 전원 참석 세션 두 개로 읽힙니다.
     summary: {
-      ko: "Day 1에 현장 매칭으로 팀이 된 분들을 위한 시간입니다. 주관 학생회와 함께 대면으로 진행하고, 시간과 장소는 팀 카톡방으로 안내합니다.",
-      en: "For those matched into teams on Day 1, with the organizing student associations, in person, with time and place going out in the team chat.",
+      // DECIDED 2026-08-17: 오후로 확정. 크래시코스가 12PM에 끝나고 그 뒤가 이
+      // 시간입니다. 전에는 "시간과 장소"를 함께 미정으로 두었는데, 이제 시간대는
+      // 정해졌고 미정은 정확한 시각과 장소뿐입니다. 그 둘을 다시 묶지 마세요.
+      ko: "Day 1에 현장 매칭으로 팀이 된 분들을 위한 시간입니다. 크래시코스가 끝난 오후에 주관 학생회와 함께 대면으로 진행하고, 정확한 시각과 장소는 팀 카톡방으로 안내합니다.",
+      en: "For those matched into teams on Day 1. It runs in the afternoon after the Crash Course, in person with the organizing student associations; the exact time and place go out in the team chat.",
     },
     description: {
-      ko: "Day 1에 현장 매칭으로 팀을 이룬 솔로 참가자들을 위한 시간입니다. 크래시코스가 끝난 뒤 주관 학생회가 함께 모여, 즉석에서 만난 팀도 본격 빌드에 들어가기 전에 서로 알아가고 호흡을 맞춥니다. 시간과 장소는 매칭 때 만든 팀 카톡방으로 안내드려요.",
-      en: "For solo participants matched into teams on Day 1. After the Crash Course wraps, the organizing student associations bring everyone together so teams formed on the spot can get to know each other and find their rhythm before the real building starts. Time and place go out through the team KakaoTalk room created at matching.",
+      ko: "Day 1에 현장 매칭으로 팀을 이룬 솔로 참가자들을 위한 시간입니다. 크래시코스가 12PM에 끝나면 오후에 주관 학생회가 함께 모여, 즉석에서 만난 팀도 본격 빌드에 들어가기 전에 서로 알아가고 호흡을 맞춥니다. 정확한 시각과 장소는 매칭 때 만든 팀 카톡방으로 안내드려요.",
+      en: "For solo participants matched into teams on Day 1. The Crash Course wraps at 12PM, and in the afternoon the organizing student associations bring everyone together so teams formed on the spot can get to know each other and find their rhythm before the real building starts. The exact time and place go out through the team KakaoTalk room created at matching.",
     },
     // 장소 행이 두 가지를 한 번에 말합니다: 대면이라는 것과, 어디인지는 아직
     // 공개 전이라는 것. "추후 안내"는 이 레포의 미확정 어휘 중 뒤쪽 계열입니다
