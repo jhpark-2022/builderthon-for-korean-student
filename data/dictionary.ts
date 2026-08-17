@@ -1245,9 +1245,22 @@ export const dict = {
     // 않기 때문에(피드백 문서 — 프로세스 중심, 완성도·발표력은 보지 않음) API
     // 크레딧이나 상위 플랜이 필요하지 않습니다. 배점 수치는 아직 파트너 조율
     // 중이라 여기에 퍼센트를 쓰지 않습니다.
+    // DECIDED 2026-08-17: 준비물을 강조합니다. 필참 조건 문단과 같은 타이포·같은
+    // 회색이라 두 문단이 구분 없이 이어져 읽혔고, 정작 이쪽이 등록 전에 확인해야
+    // 하는 유일한 항목입니다(계정이 없으면 Day 1에 와도 만들 것이 없습니다).
+    // 앞 문단과 "한 덩어리로 붙인다"던 2026-08-08 배치를 뒤집는 것이므로,
+    // 되돌리려면 무엇을 잃는지 먼저 보세요.
+    //
+    // 색은 앰버입니다. 로즈는 이 페이지에서 "빼먹으면 안 되는 의무"이고, 준비물을
+    // 그 층에 올리면 자격 조건처럼 읽혀 아래 주석의 원칙(스크리닝 없음 · 자격이
+    // 아니라 준비물)과 부딪힙니다. 앰버는 "지금 눈여겨볼 것"이라 그 사이입니다.
+    //
+    // 라벨을 문장에서 떼어 prepLabel로 옮겼습니다. 체크인 블록의 bonusLabel과
+    // 같은 형태(굵은 색 라벨 + 콜론 + 본문)입니다.
+    prepLabel: { ko: "준비물은 하나예요", en: "One thing to bring" },
     prep: {
-      ko: "준비물은 하나예요. AI 코딩 도구를 쓸 수 있는 계정입니다. Claude나 ChatGPT의 기본 유료 플랜 정도면 8일 내내 충분하고, 그 이상은 필요 없습니다. 크래시코스는 Codex를 기준으로 진행하지만 팀 빌드와 데모에 쓰는 도구는 자유예요.",
-      en: "One thing to bring: an account you can vibe-code with. A basic paid plan on Claude or ChatGPT covers the whole eight days, and nothing beyond that is needed. The crash course runs on Codex, but the tool you build and demo with is yours to choose.",
+      ko: "**AI 코딩 도구를 쓸 수 있는 계정**. Claude나 ChatGPT의 기본 유료 플랜 정도면 8일 내내 충분하고, 그 이상은 필요 없습니다. 크래시코스는 Codex를 기준으로 진행하지만 팀 빌드와 데모에 쓰는 도구는 자유예요.",
+      en: "**an account you can vibe-code with**. A basic paid plan on Claude or ChatGPT covers the whole eight days, and nothing beyond that is needed. The crash course runs on Codex, but the tool you build and demo with is yours to choose.",
     },
     disclaimer: {
       ko: "* 일부 혜택(인센티브와 멘토 라인업 등)은 파트너와 논의 중이며 확정 시 안내됩니다.",

@@ -3746,10 +3746,22 @@ export default function Journey() {
           {/* 준비물 — 조건 바로 다음, 같은 박스 안. 이 페이지에서 유일하게 돈이
               드는 항목이라 등록을 결정하는 그 자리에 있어야 하고, 조건과 같은
               시선 안에 들어와야 "참가비 무료"와 나란히 정직하게 읽힙니다.
-              같은 타이포·같은 구분선을 쓰되 mt만 좁혀 한 덩어리로 붙입니다. */}
-          <p className="mt-3 text-sm leading-relaxed text-white/60">
-            {t(dict.whoWhat.prep)}
-          </p>
+
+              DECIDED 2026-08-17: 앞 문단과 같은 타이포·같은 회색으로 "한 덩어리로
+              붙였던" 것을 앰버 틴트 박스로 띄웁니다. 붙여 두니 필참 조건 문단의
+              꼬리처럼 읽혀서, 등록 전에 확인해야 하는 유일한 항목이 아무 무게도
+              갖지 못했습니다. 계정이 없으면 Day 1에 와도 만들 것이 없습니다.
+              라벨과 본문 구조는 체크인 블록의 bonusLabel과 같은 형태이고, 핵심
+              구절은 dict 쪽 ** 마커를 Emph가 굵게 칠합니다.
+              로즈로 올리지 마세요 — 그 층은 의무이고, 준비물이 자격 조건처럼
+              읽히기 시작합니다(dict.whoWhat.prep 위 주석). */}
+          <div className="mt-4 rounded-xl border border-amber-400/20 bg-amber-400/[0.06] px-4 py-3">
+            <p className="break-keep text-sm leading-relaxed text-amber-50/85">
+              <span className="font-bold text-amber-200">{t(dict.whoWhat.prepLabel)}</span>
+              {": "}
+              <Emph text={t(dict.whoWhat.prep)} className="font-semibold text-white" />
+            </p>
+          </div>
         </Glass>
         <p className="mt-5 text-center text-xs text-white/65">{t(dict.whoWhat.disclaimer)}</p>
       </Chapter>
