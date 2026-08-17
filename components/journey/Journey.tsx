@@ -456,7 +456,12 @@ function MobileStickyBar({
   useEffect(() => {
     const end = document.getElementById("closing") ?? document.querySelector("footer");
     if (!end) return;
-    const io = new IntersectionObserver(([e]) => setAtEnd(e.isIntersecting), { rootMargin: "0px 0px -20% 0px" });
+    // rootMargin 0 / threshold 0 = 클로징이 뷰포트에 닿는 순간 (DECIDED 2026-08-17).
+    // -20%였습니다: 클로징이 화면 아래 20%를 지나 올라와야 바가 비켜섰는데, 그
+    // 사이 구간에서 알약 바가 "우리가 있었으면 했던 다리를" 헤드라인을 그대로
+    // 덮었습니다. 관찰자를 닿는 즉시로 당깁니다. 바가 조금 일찍 사라지는 쪽이
+    // 헤드라인을 가리는 것보다 낫습니다 — 클로징에는 같은 CTA가 이미 있습니다.
+    const io = new IntersectionObserver(([e]) => setAtEnd(e.isIntersecting), { rootMargin: "0px", threshold: 0 });
     io.observe(end);
     return () => io.disconnect();
   }, []);
@@ -3046,7 +3051,12 @@ function MobileRegisterBar() {
   useEffect(() => {
     const end = document.getElementById("closing") ?? document.querySelector("footer");
     if (!end) return;
-    const io = new IntersectionObserver(([e]) => setAtEnd(e.isIntersecting), { rootMargin: "0px 0px -20% 0px" });
+    // rootMargin 0 / threshold 0 = 클로징이 뷰포트에 닿는 순간 (DECIDED 2026-08-17).
+    // -20%였습니다: 클로징이 화면 아래 20%를 지나 올라와야 바가 비켜섰는데, 그
+    // 사이 구간에서 알약 바가 "우리가 있었으면 했던 다리를" 헤드라인을 그대로
+    // 덮었습니다. 관찰자를 닿는 즉시로 당깁니다. 바가 조금 일찍 사라지는 쪽이
+    // 헤드라인을 가리는 것보다 낫습니다 — 클로징에는 같은 CTA가 이미 있습니다.
+    const io = new IntersectionObserver(([e]) => setAtEnd(e.isIntersecting), { rootMargin: "0px", threshold: 0 });
     io.observe(end);
     return () => io.disconnect();
   }, []);

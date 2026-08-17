@@ -103,6 +103,12 @@ export default function JourneyNav() {
   // was taking a quarter of an in-app browser's viewport. Scrolling DOWN — the
   // gesture that means "show me more page" — slides it out; scrolling up brings
   // it straight back. Desktop is untouched: the translate only applies below lg.
+  //
+  // DECIDED 2026-08-17: 여기에 "멈추면 돌아온다"가 더해졌습니다. 스크롤이 0.9초
+  // 멎으면 훅이 스스로 false로 돌아오므로, 읽으려고 멈춘 사람이 등록 버튼을
+  // 다시 보려고 위로 긁을 필요가 없습니다. 그 규칙은 훅이 갖고 있고 이 컴포넌트는
+  // 그대로 구독만 합니다 — 여기에 별도 타이머를 만들지 마세요. 네 표면이 한 몸으로
+  // 움직이는 이유가 신호가 하나라는 점입니다.
   const chromeHidden = useScrollDirection();
 
   useEffect(() => {
