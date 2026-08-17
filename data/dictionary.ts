@@ -2220,10 +2220,20 @@ export const dict = {
           { ko: "크래시코스 수료증: 전 시간 참석하면 마지막 날 PDF로 발송", en: "The Crash Course certificate, for attending the full Crash Course: a PDF sent on the final day" },
           { ko: "완주 수료증: 공유회 발표까지 마치면 Day 8 현장에서 실물로", en: "The completion certificate, for going all the way through your Showcase pitch: printed and handed to you on Day 8" },
           { ko: "둘 다 Zero100 명의로 발급", en: "Both issued by Zero100" },
-          // PENDING 2026-08-16: 널담 수료증 20% 할인 요청 중, 확정 시 공개.
-          // 요청 단계이고 승인 대기입니다. 승인 전에 카피로 올리지 마세요 —
-          // 수료증이 할인권처럼 읽히는 순간 발급 조건("전 시간 참석"·"공유회
-          // 발표까지")보다 혜택이 먼저 도착합니다.
+          // DECIDED 2026-08-16 (원대로 대표 지시 + 박주형 합의): 널담 구매 할인 확정.
+          // 이 자리에는 8월 16일 요청 단계에 PENDING 주석만 두었습니다.
+          //
+          // 공개 범위는 "할인을 받는다"까지입니다. 할인율은 쓰지 마세요 — 사용 기한,
+          // 대상 상품, 온라인과 오프라인 구분이 아직 정해지지 않았고, 숫자를 먼저
+          // 박아두면 조건이 붙는 순간 사이트가 틀린 말을 하게 됩니다.
+          //
+          // 굿즈 카드가 아니라 수료증 카드에 있는 이유: 할인의 조건이 수료증입니다.
+          // 굿즈로 옮기면 "받는 물건" 목록이 되고 무엇을 해야 받는지가 사라집니다.
+          //
+          // 앞 두 줄 뒤인 이유: 모바일에서 펼쳐진 채 보이는 두 줄은 수료증 두 장이어야
+          // 합니다(위 주석). 할인을 위로 올리면 발급 조건보다 혜택이 먼저 도착하고,
+          // 수료증이 할인권처럼 읽힙니다.
+          { ko: "완주 수료증을 보여주면 널담에서 구매 시 할인을 받을 수 있어요", en: "Show your completion certificate at Nuldam for a discount on your purchase" },
           { ko: "링크드인 포트폴리오 이력에 활용", en: "Use them on LinkedIn, in your portfolio and CV" },
         ],
       },
