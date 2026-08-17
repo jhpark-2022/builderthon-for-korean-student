@@ -2739,7 +2739,7 @@ function stripHeight(spec: StripLogoSpec, base: number, maxW: number) {
 // 티어별로만 겁니다 — 주최(5)와 주관(3)은 한 줄이 자연스러운 길이라 손대지
 // 않습니다. 후원이 열둘, 열셋으로 늘면 이 값을 다시 보세요(줄당 대여섯 개가
 // 기준입니다). 모바일에는 걸지 않습니다: 거기서는 이미 폭이 좁아 알아서 접힙니다.
-const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpec[]; rowMax?: string }[] = [
+const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpec[]; rowMax?: string; rowGap?: string }[] = [
   {
     // 주최 — the AXMOS collective.
     label: dict.hero.partnersHost,
@@ -2773,6 +2773,18 @@ const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpe
     // 후원이 열한 곳이 되면서 한 줄이 화면을 가로질렀습니다 (2026-08-17).
     // 6 + 5 두 줄로 접습니다 — 위 rowMax 주석 참고.
     //
+    // EDIT 2026-08-17 (2차): 두 줄로 접고 나니 이번엔 로고들이 화면 가운데
+    // 뭉쳐 보였습니다. 이 티어만 마크 사이를 넓힙니다(sm:gap-x-6 → 12, 27px →
+    // 54px). 줄의 실제 폭을 정하는 건 rowMax가 아니라 마크 폭 + 간격입니다 —
+    // rowMax는 어디서 접히는지만 정하고, 남는 폭은 가운데 정렬로 그냥 비어
+    // 있습니다. 그래서 "더 넓게 퍼뜨린다"의 손잡이는 간격 쪽입니다.
+    // 결과: 첫 줄 608 → 743px, 둘째 줄 567 → 675px.
+    //
+    // 주최·주관은 한 줄이라 그대로 둡니다. 간격을 여기서 더 벌리면 마크들이
+    // 한 덩어리로 안 읽히기 시작하니, 다음에 넓힐 일이 생기면 간격보다 마크
+    // 크기(SPONSOR_BOX)를 먼저 보세요.
+    rowGap: "sm:gap-x-12",
+    //
     // 단위는 rem이 아니라 px입니다. 이 사이트는 루트 폰트가 18px이라 46rem이
     // 828px로 계산돼(= 일곱 개가 그대로 들어감) 처음 걸었을 때 아무 일도
     // 일어나지 않았습니다. 줄바꿈 지점은 마크의 실측 px 폭으로 정해지는 값이니
@@ -2782,7 +2794,9 @@ const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpe
     // 700px은 그 사이라 여섯에서 끊기고, 양쪽으로 44px과 102px 여유가 있어
     // 마크 하나가 조금 바뀌어도 줄이 튀지 않습니다. 로고를 더하거나 아트워크를
     // 갈면 이 숫자를 다시 재세요.
-    rowMax: "sm:max-w-[700px]",
+    // 700 → 800 (간격을 넓히면서 같이 올렸습니다). 여섯 개가 743px, 일곱 번째까지면
+    // 919px이라 800은 그 사이입니다. 양쪽으로 57px과 119px 여유가 있습니다.
+    rowMax: "sm:max-w-[800px]",
     items: [
       { src: "/partners/logos/white/trimmed/aws.png",                alt: "AWS",                             w: 512, h: 306, mass: 0.491 },
       { src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90,  mass: 0.499 },
@@ -2981,7 +2995,7 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
                 at the same width wall, so no single logo can claim a row to
                 itself the way the widest wordmarks used to (DRIMAES had a line
                 of its own under bounding-box area sizing). */}
-            <div className={`flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 sm:gap-x-6 ${tier.rowMax ?? ""}`}>
+            <div className={`flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 ${tier.rowGap ?? "sm:gap-x-6"} ${tier.rowMax ?? ""}`}>
               {tier.items.map((p) => (
                 <StripLogo key={p.alt} {...p} box={tier.box} />
               ))}
