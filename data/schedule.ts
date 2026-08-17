@@ -272,6 +272,14 @@ export interface DayMeta {
   // required-deliverable box in the day modal. Copy lives in
   // dict.program.submission — this is a switch, not content.
   deliverableDue?: boolean;
+  // Day 7 only: the AWS office needs its visitor list three working days ahead,
+  // so attendance closes on 24 Aug. Turns on the entry-notice box, which sits
+  // ABOVE everything else in the day modal — you have to be able to get into the
+  // building before any of the rest of that day applies to you. Copy lives in
+  // dict.program.entryNotice — this is a switch, not content.
+  //
+  // Do not put this on Day 5 or Day 8: *SCAPE is a public venue with no list.
+  entryNotice?: boolean;
   // Day 8 only: turns on the thematic-awards box in the day modal, the same
   // shape as Day 7's deliverable box. Copy lives in dict.program.awards — this
   // is a switch, not content. The four categories are described THERE and
@@ -707,8 +715,11 @@ export const days: DayMeta[] = [
       // the only one anybody had checked.
       // DECIDED 2026-08-13: 박희덕 대표님의 커리어 간담회는 Day 8로 갔고, 이 날
       // 오후 슬롯은 조언 세션입니다.
-      ko: "AWS 오피스, 멘토와 함께하는 최종 점검, 박희덕 조언 세션, 1:1 멘토링(온라인), 저녁: 사전 제출물 마감(필수).",
-      en: "AWS office, final check with mentors, Park Hee-deok's advice session, 1:1 mentoring (online), Evening: submission deadline (required).",
+      // DECIDED 2026-08-17: 장소 뒤에 입장 명단 마감을 한 조각 붙였습니다. 전문은
+      // dict.program.entryNotice(데이 모달)에 있고, 이 줄은 카드에서 보이는 유일한
+      // 표면이라 날짜만 실어 나릅니다. 여기서 문장으로 늘리지 마세요.
+      ko: "AWS 오피스(입장 명단 8/24 마감), 멘토와 함께하는 최종 점검, 박희덕 조언 세션, 1:1 멘토링(온라인), 저녁: 사전 제출물 마감(필수).",
+      en: "AWS office (entry list closes 24 Aug), final check with mentors, Park Hee-deok's advice session, 1:1 mentoring (online), Evening: submission deadline (required).",
     },
     whyStop: {
       ko: "전문가들이 던질 질문을 무대에 서기 하루 전에 미리 받아보는 자리",
@@ -779,6 +790,9 @@ export const days: DayMeta[] = [
     // parses. The modal renders it as its own bordered box instead (see
     // dict.program.submission) — this flag is what turns that box on.
     deliverableDue: true,
+    // AWS 오피스 방문자 명단이 3영업일 전에 마감됩니다 (DECIDED 2026-08-17).
+    // 박스 카피와 그 이유는 dict.program.entryNotice에 있습니다.
+    entryNotice: true,
   },
   {
     day: 8,

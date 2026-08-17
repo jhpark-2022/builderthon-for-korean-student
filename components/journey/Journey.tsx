@@ -2092,6 +2092,9 @@ function DayModal({
               </div>
               <h3 id="day-modal-title" className="mt-5 text-[24px] font-bold leading-tight text-white sm:text-[30px]">{t(day.theme)}</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/70">{t(day.summary)}</p>
+              {/* 입장 안내가 먼저입니다 — 건물에 못 들어가면 그날의 나머지는
+                  읽을 이유가 없습니다. 제출물 박스보다 아래로 내리지 마세요. */}
+              {day.entryNotice && <EntryNoticeBox t={t} />}
               {day.deliverableDue && <SubmissionBox t={t} />}
               {day.awardsBox && <AwardsBox t={t} />}
               {/* 진행 순서가 있으면 그것이 세션 목록을 대신합니다 — 둘 다 두면
@@ -2224,6 +2227,33 @@ function RunOfShow({
           );
         })}
       </ol>
+    </div>
+  );
+}
+
+// The Day 7 AWS-office entry notice. Rose for the same reason SubmissionBox is
+// rose: there is a hard consequence attached, and this page has one colour for
+// that. Deliberately the FIRST thing in the Day 7 modal, above the deliverable
+// box — you have to be able to get into the building before anything else on
+// that day applies to you.
+//
+// It is one line of label and one short paragraph, not a list. The deadline is
+// a single date and a single channel; a bordered list would give it the weight
+// of the four-part submission package, which it does not have.
+//
+// DECIDED 2026-08-17 (박주형): 이 박스가 필요한 이유는 Day 7이 "선택 참여"인데
+// 그 선택이 당일에 행사할 수 있는 선택이 아니기 때문입니다. 사이트는 선택일을
+// "그날 마음대로" 오는 날로 가르쳐 왔고(Day 5·6은 실제로 그렇습니다), Day 7만
+// 나흘 전에 닫힙니다. 카피는 dict.program.entryNotice가 정본입니다.
+function EntryNoticeBox({ t }: { t: Tfn }) {
+  const e = dict.program.entryNotice;
+  return (
+    <div className="mt-5 rounded-2xl border border-rose-400/30 bg-rose-400/[0.09] px-5 py-4">
+      <p className="flex flex-wrap items-center gap-1.5 text-sm font-bold leading-snug text-rose-50">
+        <span aria-hidden>★</span>
+        {t(e.label)}
+      </p>
+      <p className="mt-2 break-keep text-xs leading-relaxed text-rose-50/85">{t(e.body)}</p>
     </div>
   );
 }

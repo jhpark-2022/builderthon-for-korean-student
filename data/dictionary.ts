@@ -1501,6 +1501,31 @@ export const dict = {
         },
       },
     },
+    // ── Day 7 · AWS 오피스 입장 사전 등록 ─────────────────────────────────
+    // DECIDED 2026-08-17 (박주형): Day 7 현장은 AWS 오피스입니다. 보안 규정상
+    // 방문자 명단이 행사 3영업일 전에 확정돼야 해서, 참석 여부를 8월 24일(월)까지
+    // 받습니다. 이 날짜가 지나면 오고 싶어도 들어갈 수 없습니다.
+    //
+    // 이 사실은 사이트에서 가장 강한 취급을 받아야 하는 축에 듭니다. Day 7은
+    // 선택 참여인데, 그 "선택"이 당일에 행사할 수 있는 선택이 아니라 나흘 전에
+    // 끝나는 선택이라서요. 참가자는 선택일을 당일에 정해도 되는 날로 읽습니다
+    // (실제로 사이트가 그렇게 안내해 왔고, Day 5·6은 그게 맞습니다).
+    //
+    // 그래서 두 곳에만 둡니다: 정본은 이 박스(데이 모달 맨 위), 카드에는 장소
+    // 뒤에 짧은 포인터 한 조각(schedule.ts Day 7 summary). 세 번째 자리를 만들면
+    // 날짜가 바뀔 때 갈라집니다.
+    //
+    // 신청 창구는 오픈채팅입니다. 사이트에 폼 링크를 새로 만들지 마세요 — 명단은
+    // 운영진이 한 곳에서 관리해야 AWS에 넘길 수 있습니다.
+    //
+    // 날짜를 고칠 일이 생기면 이 박스와 Day 7 summary를 함께 고치세요.
+    entryNotice: {
+      label: { ko: "8월 24일(월) 입장 명단 마감", en: "Entry list closes Mon 24 Aug" },
+      body: {
+        ko: "Day 7은 AWS 오피스에서 열립니다. 보안 규정상 방문자 명단을 미리 넘겨야 해서, 참석 여부를 8월 24일(월)까지 받아요. 신청은 오픈채팅 공지로 받습니다. 명단에 없으면 당일 현장 등록은 안 되니, 오기로 했다면 이 날짜만은 지켜 주세요. 참석 자체는 선택입니다.",
+        en: "Day 7 runs at the AWS office, and their security needs the visitor list ahead of time, so we collect attendance by Mon 24 Aug. Sign up through the open chat announcement. If you're not on the list you can't register at the door, so if you're coming, this is the one date to keep. Attending itself is optional.",
+      },
+    },
     // ── 체크인 폼 3종 ─────────────────────────────────────────────────────
     // Sits AFTER the eight day cards on purpose: the reader has just seen Day 4,
     // 6 and 7 go past, so "a form lands that evening" attaches to a day they
@@ -1582,10 +1607,25 @@ export const dict = {
       // 인턴십 검토)으로. 인턴십이 전원에게 열리면서 오히려 더 강한 문장이 됐습니다.
       // 오픈챗 티저(faq aTail)도 같은 논리로 맞춰져 있으니 함께 움직이세요.
       bonusLabel: { ko: "과정이 기록됩니다", en: "Your process counts" },
+      // DECIDED 2026-08-17 (박주형): 체크인의 계약을 두 층으로 명시합니다.
+      //  ① 안 써도 불이익 없음 (바닥)
+      //  ② 세 번 다 채우고 진행 상황을 계속 알려주면 수상 집계에 가산 (천장)
+      //  ③ 그 기록이 멘토링의 질을 올린다 (이게 참가자에게 제일 실질적인 이유)
+      // 옛 문장은 ①과 ②를 둘 다 빼고 "기록으로 남는다"까지만 말해서, 왜 굳이
+      // 써야 하는지가 없었습니다. 순서를 바꾸지 마세요 — 벌점 없음을 먼저 말해야
+      // 남은 문장이 협박이 아니라 제안으로 읽힙니다.
+      //
+      // "가산"의 표현은 사전 제출물 경고문(dict.program.submission.warning)과
+      // 같은 낱말을 씁니다: "수상 집계에 가산이 됩니다". 두 자리가 같은 규칙을
+      // 말하므로 한쪽만 고치지 마세요.
+      //
+      // 숫자는 여전히 쓰지 않습니다 (위 주석의 계약). 배점은 피드백 문서가
+      // 들고 있고, 여기에 비율이나 점수를 적으면 바로 낡습니다.
+      // FAQ의 aTail이 같은 사실을 말하니 함께 움직이세요.
       bonus: {
         // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-        ko: "세 번의 응답과 1:1 멘토링 참여는 과정 기록으로 남아, 전문가 피드백과 주최사의 인턴십 검토에서 그대로 참고됩니다. 과정을 남겼는지를 봅니다. 답을 잘 쓸 필요는 없어요.",
-        en: "Responding to the three forms and showing up to the 1:1 mentoring leaves a trail of your process, one the experts' feedback and the hosts' internship review draw on directly. What counts is the trail. The answers don't have to be polished.",
+        ko: "안 써도 불이익은 없어요. 다만 세 번을 채우고 진행 상황을 계속 알려주면 수상 집계에 가산이 됩니다. 답이 매끄러울 필요는 없고, 어디까지 왔는지만 보이면 돼요. 그 기록이 있으면 멘토가 팀을 미리 읽고 들어와서 멘토링도 깊어지고, 전문가 피드백과 주최사의 인턴십 검토에도 그대로 참고됩니다.",
+        en: "Skipping them costs you nothing. But filling all three in and keeping us posted on your progress earns a bonus in the awards tally. The answers don't have to be polished; what matters is that we can see how far you've got. That trail also lets a mentor read your team before walking in, so the mentoring goes deeper, and the experts' feedback and the hosts' internship review draw on it directly.",
       },
     },
     // Second sentence is the one that changes behaviour: teams assume a hidden
@@ -3647,8 +3687,8 @@ export const dict = {
         // 과정 기록의 행선지가 순위가 아니라 피드백·인턴십 검토로 바뀌었습니다
         // (2026-08-05) — dict.program.checkins.bonus와 같은 논리이니 함께 움직이세요.
         aTail: {
-          ko: "체크인 응답과 1:1 멘토링 참여는 과정 기록으로 남아, 전문가 피드백과 주최사의 인턴십 검토에서 그대로 참고돼요. 피드백은 실제 산업에서 문제를 풀어온 현업 리더분들이 직접 주십니다(피드백 패널 섹션 참조).",
-          en: "Responding to the check-in forms and using the 1:1 mentoring leaves a trail of your process, which the experts' feedback and the hosts' internship review draw on. The feedback itself comes first-hand from leaders who have solved these problems in industry (see the feedback panel section).",
+          ko: "체크인은 안 써도 불이익이 없지만, 세 번을 채우고 진행 상황을 알려주면 수상 집계에 가산이 되고 멘토가 팀을 미리 읽고 들어옵니다. 그 기록은 전문가 피드백과 주최사의 인턴십 검토에서도 그대로 참고돼요. 피드백은 실제 산업에서 문제를 풀어온 현업 리더분들이 직접 주십니다(피드백 패널 섹션 참조).",
+          en: "Skipping the check-in forms costs you nothing, but filling all three in and keeping us posted earns a bonus in the awards tally, and it lets a mentor read your team before walking in. That trail is also what the experts' feedback and the hosts' internship review draw on. The feedback itself comes first-hand from leaders who have solved these problems in industry (see the feedback panel section).",
         },
       },
     ],
