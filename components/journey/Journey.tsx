@@ -233,8 +233,18 @@ function LogoTile({
   // Pulling the wall out by 8px is what lets the row settle at TARGET 1050
   // instead of ~850, which is the difference between "even" and "even but
   // noticeably smaller than before".
+  // w-full: 이 타일의 루트는 <button>인데, 버튼은 display:flex여도 부모 폭을
+  // 자동으로 채우지 않고 내용 크기로 줄어듭니다. 그리드 칸에 직접 놓였을 때는
+  // justify-self:stretch가 대신 늘려 줘서 문제가 없었는데, 2026-08-17에 파트너
+  // 줄을 flex-wrap + basis로 바꾸면서 타일이 한 겹 안으로 들어갔습니다. 그때
+  // 주최 줄만 감싼 div가 블록이라 버튼이 늘어날 근거가 사라졌고, 칸 다섯은
+  // 균등한데 보이는 상자만 로고 폭대로 들쭉날쭉해졌습니다.
+  //
+  // 세 그리드 모두에 겁니다. 나머지 둘은 이미 늘어나 있어서(주관은 그리드 칸,
+  // 후원은 flex-col의 stretch) 결과가 같고, 다음에 타일을 또 감쌀 때 같은 일이
+  // 반복되지 않습니다.
   const cls =
-    `group relative flex h-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] ${mass ? "px-3" : "px-5"} transition duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.07]`;
+    `group relative flex h-20 w-full items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] ${mass ? "px-3" : "px-5"} transition duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.07]`;
   if (onOpen) {
     return (
       <button
