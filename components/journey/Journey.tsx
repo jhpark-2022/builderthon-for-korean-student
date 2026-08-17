@@ -966,12 +966,16 @@ function CountdownView({ t }: { t: Tfn }) {
         {t(dict.hero.countdownStartsAt)}
       </p>
       {/* 등록 마감. 시계는 "시작까지"만 세고 있어서, 언제까지 등록해야 하는지는
-          이 줄이 없으면 사이트 어디에도 없습니다. 시작 시각 바로 아래에 두되
-          알약 배지로 한 단계 띄웁니다 — 위 줄은 달력에 넣을 정보이고, 이 줄은
-          지금 행동해야 하는 정보라 무게가 달라야 합니다.
-          마감(오후 4시)이 시작(오후 1시)보다 늦은 이유는 dictionary 쪽 주석 참고. */}
-      <p className="mt-2.5 inline-flex items-center gap-1.5 rounded-full border border-violet-400/25 bg-violet-400/10 px-3 py-1 text-[0.7rem] font-semibold text-violet-100">
-        {t(dict.hero.countdownDeadline)}
+          이 줄이 없으면 사이트 어디에도 없습니다.
+          마감(오후 4시)이 시작(오후 1시)보다 늦은 이유는 dictionary 쪽 주석 참고.
+          DECIDED 2026-08-17: 등록 마감 배지 제거 — 고아 요소였음. 시작/마감을 한
+          시각 스택으로 통합. 알약이었던 이유는 "지금 행동해야 하는 정보라 무게가
+          달라야 한다"였는데, 테두리와 채움까지 두르니 시각 정보가 아니라 버튼처럼
+          보였습니다. 무게 차이는 색으로만 냅니다: 위 줄과 같은 크기·정렬에 밝기를
+          한 단계 낮추고, 실제로 지켜야 하는 조각(오후 4시)만 앰버로. 알약으로
+          되돌리지 마세요. */}
+      <p className="mt-1 text-xs font-semibold text-white/55">
+        <Emph text={t(dict.hero.countdownDeadline)} className="text-amber-200" />
       </p>
       {/* What the ticking clock actually costs you — deliberately about what
           registering gets you sooner, not about seats running out. The line
@@ -3537,30 +3541,15 @@ export default function Journey() {
                 moved on desktop: that copy is `lg:hidden` and lg+ uses the
                 right-column instance, which is untouched. */}
 
-            {/* 마감 한 줄 — 모바일 전용 (ADDED 2026-08-12).
-                폰에서 첫 1.5스크린이 요청 쪽으로 심하게 기울어 있었습니다: CTA 셋 →
-                파트너 스트립 → 훅 카드 둘(두 번째 등록 요청). 정작 "왜 지금인가"의
-                근거인 마감 시각은 세 스크린 아래 카운트다운 안에 있어서, 요청이
-                근거보다 먼저 도착했습니다.
-                근거를 통째로 올리는 대신(=카운트다운 패널 이동, 히어로가 다시
-                길어집니다) 한 줄만 올립니다. 문구는 dict.hero.countdownDeadline을
-                그대로 씁니다 — 사본을 만들면 시각이 갈라집니다.
-                lg:hidden: 데스크톱은 같은 화면 오른쪽에 카운트다운 패널이 이미
-                떠 있어서 같은 말을 두 번 하게 됩니다. */}
-            {/* DECIDED 2026-08-17: 배경을 불투명 단색으로. 8% 반투명이라 뒤의 블러
-                배경 경계가 필을 관통해서, 알약이 가운데서 잘린 것처럼 보였습니다.
-                실측하면 왼쪽 절반은 #19130b, 오른쪽 절반은 #2c2d35 — 히어로의
-                글로가 필 안에서 갈리고 있었습니다.
-                #1d1710은 그 어두운 쪽 값에 앰버 틴트를 미리 합성한 색입니다
-                (= 8% amber over 페이지 배경 #06040f 근처). 이제 배경이 무엇이든
-                알약은 한 덩어리로 읽힙니다.
-                backdrop-blur-sm은 남깁니다 — 테두리가 여전히 반투명(/25)이라
-                그 아래로는 블러가 보입니다. 채움이 불투명해도 무의미하지 않습니다.
-                투명도를 다시 낮추지 마세요. 씸이 그대로 돌아옵니다. */}
-            <p className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-[#1d1710] px-3.5 py-1.5 text-[0.7rem] font-semibold leading-relaxed text-amber-100 backdrop-blur-sm lg:hidden">
-              <span aria-hidden className="text-amber-300/80">◷</span>
-              {t(dict.hero.countdownDeadline)}
-            </p>
+            {/* REMOVED 2026-08-17: 모바일 전용 마감 배지가 여기 있었습니다
+                (ADDED 2026-08-12 — 폰에서 마감 시각이 CTA보다 세 스크린 아래에
+                있어서 "요청이 근거보다 먼저 도착한다"는 이유로 한 줄만 올린
+                것이었습니다).
+                배지째 지웁니다: 스택 없이 혼자 떠 있는 알약이라 고아 요소로
+                읽혔고, 같은 문구가 아래 카운트다운에서 이제 시작 시각과 한
+                묶음으로 나옵니다.
+                되살리려면 배지가 아니라 그 시각 스택 자체를 올리는 쪽을 보세요 —
+                고아 배지를 다시 만드는 것이 아니라. */}
           </motion.div>
 
           {/* RIGHT — hook cards ABOVE the Countdown ↔ Problem Statement panel,

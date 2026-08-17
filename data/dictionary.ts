@@ -839,9 +839,17 @@ export const dict = {
     // 시간대는 바로 위 줄이 이미 "싱가포르 현지 시각"이라고 말하지만, 이 줄만
     // 스크린샷으로 잘려 돌아다니는 경우가 실제로 있어서 (현지 시각)을 다시
     // 답니다. KST로 읽으면 한 시간이 틀어집니다(= 한국 시각 오후 5시).
+    // DECIDED 2026-08-17: 등록 마감 배지 제거 — 고아 요소였음. 시작/마감을 한 시각
+    // 스택으로 통합. 배지에서 캡션 한 줄로 내려오면서 날짜와 시간대 표기를 뺐습니다 —
+    // 바로 위 countdownStartsAt이 "8월 22일 (토)"와 "싱가포르 현지 시각"을 이미
+    // 말하므로, 같은 스택에서 두 번 읽을 이유가 없습니다. 배지였을 때는 혼자 떠
+    // 있어서 자기 안에 날짜와 시간대를 다 들고 있어야 했습니다.
+    //
+    // 구분 기호는 가운뎃점이 아니라 em space입니다 (2026-08-14 규칙: 사이트에서
+    // 가운뎃점을 쓰지 않습니다). **오후 4시**는 Emph가 앰버로 칠하는 자리입니다.
     countdownDeadline: {
-      ko: "등록 마감 8월 22일 (토) 오후 4시 (현지 시각)",
-      en: "Registration closes Sat 22 Aug, 4PM (Singapore time)",
+      ko: "등록 마감 같은 날 **오후 4시**",
+      en: "Registration closes same day, **4PM**",
     },
     // Sits under the countdown grid. Says what registering early actually gets
     // you — NOT that seats are running out. The deadline above is a date, not a
