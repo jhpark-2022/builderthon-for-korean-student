@@ -217,7 +217,7 @@ export const partnerIntros: Record<string, Phrase> = {
   // Journey.tsx 후원 그리드의 url(현재 undefined)도 함께 채우세요.
   //
   // 부상을 "식사 바우처"로 부르지 않습니다 — 널담 주석과 같은 규칙입니다.
-  "Haenyeo's Kitchen": {
+  "Jeju Haenyeo": {
     // DECIDED 2026-08-16: 후원 내용이 확정됐습니다 — Day 5 즉석 인기 투표에서
     // 최다 득표 3팀에게 가는 음료 바우처입니다. 처음 넣을 때는 내용을 몰라
     // "어워드 부상"으로 적었는데, 그건 Day 8 어워드의 부상이라 사실이 아닙니다.
@@ -233,6 +233,22 @@ export const partnerIntros: Record<string, Phrase> = {
 // (not an invented headline) so the link is honest about where it points. URLs
 // are supplied verbatim by the user.
 export type PartnerArticle = { url: string; label: Phrase };
+
+// 혜택 카드 하단에 붙는 한 줄 + 짧은 외부 링크 (DECIDED 2026-08-16, 후원사 매장
+// 위치). schedule.ts의 NoteAside와 같은 모양입니다 — 시간표 줄과 혜택 카드가
+// 같은 사실을 같은 형태로 말하도록.
+//
+// points가 아니라 별도 필드인 이유: points는 그 혜택이 무엇인지 세는 목록이고,
+// 이건 그 혜택을 어디서 쓰는지입니다. 목록에 섞으면 수료증이 세 장으로 보입니다.
+// 게다가 모바일에서 points는 앞 두 줄만 펼쳐지는데(BenefitCard), 위치는 접히면
+// 안 되는 정보라 목록 밖에 있어야 합니다.
+export type BenefitFootnote = { text: Phrase; linkLabel: Phrase; url: string };
+export type BenefitItem = {
+  num: string;
+  title: Phrase;
+  points: Phrase[];
+  footnote?: BenefitFootnote;
+};
 
 // 언론 인용 한 줄 (dict.about.press). `logo`는 선택입니다 — 이 사이트의 로고는
 // 전부 흰색으로 트림한 자산이라, 그 처리를 거치지 않은 매체까지 이미지로 넣으려면
@@ -2059,6 +2075,9 @@ export const dict = {
       ko: "크래시코스, 멘토링, 수료증, 네트워킹. 아래의 모든 것은 이 하나의 경험을 누구나 가질 수 있게 만드는 장치입니다. 사전 심사나 평가 없이, 개발 경험이 없어도 환영합니다.",
       en: "The crash course, the mentoring, the certificate, the network: everything below exists to put that one experience within anyone's reach. No screening, no pre-assessment, and no dev experience needed.",
     },
+    // as BenefitItem[]: 카드 하나만 footnote를 갖기 때문입니다. 배열 리터럴에
+    // 맡기면 원소 타입이 유니온으로 추론돼 BenefitCard에서 item.footnote를 읽을 수
+    // 없습니다. press의 `as PressItem[]`과 같은 방식입니다.
     items: [
       {
         num: "01",
@@ -2236,6 +2255,15 @@ export const dict = {
           { ko: "완주 수료증을 보여주면 널담에서 구매 시 할인을 받을 수 있어요", en: "Show your completion certificate at Nuldam for a discount on your purchase" },
           { ko: "링크드인 포트폴리오 이력에 활용", en: "Use them on LinkedIn, in your portfolio and CV" },
         ],
+        // 매장 한 줄 (DECIDED 2026-08-16). 널담이 결과 공유회와 같은 건물이라는
+        // 점을 앞세웁니다 — Day 5와 Day 8에 온 사람이 그 자리에서 바로 쓸 수 있다는
+        // 게 이 혜택의 실질입니다. 주소 전문과 영업시간은 쓰지 않고 지도 링크가
+        // 대신합니다. 유닛 번호는 구글 지도 등록값과 대조했습니다(#02-14/15).
+        footnote: {
+          text: { ko: "결과 공유회가 열리는 *SCAPE 2층(#02-14/15)에 있어요.", en: "On Level 2 of *SCAPE (#02-14/15), the same building as the showcase." },
+          linkLabel: { ko: "지도", en: "Map" },
+          url: "https://share.google/4thBZlSCNPoqxo8AH",
+        },
       },
       {
         num: "06",
@@ -2325,7 +2353,7 @@ export const dict = {
           { ko: "브랜드부스트 후드와 캡 세트 60개, Day 1 현장 선착순", en: "60 Brand Boost hoodie and cap sets, first come first served on Day 1" },
         ],
       },
-    ],
+    ] as BenefitItem[],
     flowTitle: { ko: "참여 플로우", en: "How it flows" },
     flow: [
       { ko: "참가 신청", en: "Apply" },

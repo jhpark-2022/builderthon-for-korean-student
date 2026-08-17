@@ -147,6 +147,10 @@ export interface BEvent {
   checkpoints?: Bilingual[];
 }
 
+// 시간표 줄과 혜택 카드가 같이 쓰는 모양: 한 줄 설명 + 짧은 외부 링크.
+// dictionary.ts의 BenefitItem.footnote도 같은 필드 이름을 씁니다.
+export type NoteAside = { text: Bilingual; linkLabel: Bilingual; url: string };
+
 export interface DayMeta {
   day: number;
   date: string; // "08.22"
@@ -176,7 +180,14 @@ export interface DayMeta {
   // 앞당기지 않습니다 — 대신 시간표 첫 줄이 일찍 올 이유를 보여줍니다.
   // href: 세션 카드가 아니라 사이트 안의 다른 페이지로 가는 줄(현재는 /quiz).
   // eventId와 함께 쓰지 마세요 — 한 줄에 목적지는 하나입니다.
-  runOfShow?: { time: string; label: Bilingual; note?: Bilingual; eventId?: string; href?: string }[];
+  // noteAside: note 아래에 붙는 한 줄 + 짧은 외부 링크 (DECIDED 2026-08-16,
+  // 후원사 매장 위치). 위치 문구는 text가, 링크는 linkLabel("지도")이 맡습니다 —
+  // 주소를 링크 텍스트에 통째로 넣지 마세요. 주소 전문도 본문에 쓰지 않고 지도
+  // 링크가 대신합니다. 영업시간은 쓰지 않습니다(바뀌기 쉽고 확인 책임이 생깁니다).
+  //
+  // eventId나 href가 있는 행에는 쓰지 마세요. 그 행은 전체가 하나의 링크/버튼이라
+  // 안에 <a>를 또 넣으면 잘못된 HTML이 됩니다(RunOfShow의 렌더 가드가 막습니다).
+  runOfShow?: { time: string; label: Bilingual; note?: Bilingual; noteAside?: NoteAside; eventId?: string; href?: string }[];
   // 이 날 들르면 무엇을 얻는가 — 일정 서술이 아니라 '올 이유' 한 줄.
   //
   // 노선도 아래에서 "하나하나 내려설 이유가 있도록 설계했습니다"라고 주장하는데,
@@ -663,7 +674,15 @@ export const days: DayMeta[] = [
         //  · 사용 시점을 적어야 하면 "행사 후 저녁에 사용"까지. 영업시간과 위치는
         //    쓰지 않습니다.
         //  · "최다 득표 3팀"은 묶음 공개입니다. 1·2·3등이 아닙니다(위 주석 참고).
-        note: { ko: "오늘 가장 많이 나아간 팀에게 참가자가 투표해요. 최다 득표 3팀을 그 자리에서 공개하고, Day 8 ‘빌더스 초이스’ 최종 집계에 반영됩니다. 최다 득표 3팀에는 해녀의 부엌 음료 바우처가 팀원당 한 장씩 돌아갑니다.", en: "Participants vote for the team that moved furthest today. The three most-voted teams are revealed on the spot, and the votes carry into the final Builder's Choice count on Day 8. Each member of those three teams gets a drink voucher, sponsored by Haenyeo's Kitchen." },
+        note: { ko: "오늘 가장 많이 나아간 팀에게 참가자가 투표해요. 최다 득표 3팀을 그 자리에서 공개하고, Day 8 ‘빌더스 초이스’ 최종 집계에 반영됩니다. 최다 득표 3팀에는 해녀의 부엌 음료 바우처가 팀원당 한 장씩 돌아갑니다.", en: "Participants vote for the team that moved furthest today. The three most-voted teams are revealed on the spot, and the votes carry into the final Builder's Choice count on Day 8. Each member of those three teams gets a drink voucher, sponsored by Jeju Haenyeo." },
+        // 매장 한 줄 (DECIDED 2026-08-16). 주소 전문은 본문에 쓰지 않고 지도 링크가
+        // 대신합니다. 영업시간은 쓰지 마세요 — 바뀌기 쉽고 확인 책임이 생깁니다.
+        // 유닛 번호는 구글 지도 등록값과 대조했습니다(#01-04, The Arts House Annex).
+        noteAside: {
+          text: { ko: "해녀의 부엌은 The Arts House 별관(#01-04, 1 Old Parliament Lane)에 있어요.", en: "Jeju Haenyeo is at The Arts House Annex (#01-04, 1 Old Parliament Lane)." },
+          linkLabel: { ko: "지도", en: "Map" },
+          url: "https://share.google/8cBhjKUYDEVzi2D2k",
+        },
       },
       {
         time: "1:45PM–2PM",
