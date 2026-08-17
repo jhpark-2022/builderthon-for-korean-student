@@ -91,6 +91,9 @@ export interface BEvent {
   title: Bilingual;
   summary: Bilingual; // short, shown on the card
   description: Bilingual; // full, shown in the modal
+  // 한국어는 존칭을 붙여 씁니다 (박희덕 대표님 · 한장환 님). 규칙 전문은
+  // dict.mentoring.mentors 위 '호칭 규칙' 주석에 있고, 이 파일의 title과
+  // runOfShow label도 같은 규칙을 따릅니다. 영문은 이름 그대로 둡니다.
   speaker?: Bilingual;
   // A fuller "who is running this" card for the modal, for sessions where the
   // person is the reason to turn up. `speaker` stays the one-line meta row.
@@ -348,7 +351,7 @@ export const days: DayMeta[] = [
       // DECIDED 2026-08-16: 해시드 인사말이 이 나열의 끝으로 갔습니다. 이 줄은 하루가
       // 흐르는 차례대로 읽히고(Day 8 summary와 같은 규칙), 인사말이 AWS 세션 뒤로
       // 옮겨졌으니 순서도 따라갑니다. 시각은 여기 적지 않습니다 — 정본은 runOfShow.
-      ko: "The Foundry(The Refinery 홀) 현장, 12:40 입장(선착순 굿즈), 원대로 오프닝 키노트, 문제 공개, AWS 연사 한장환 님, 해시드 인사말.",
+      ko: "The Foundry(The Refinery 홀) 현장, 12:40 입장(선착순 굿즈), 원대로 대표님 오프닝 키노트, 문제 공개, AWS 연사 한장환 님, 해시드 인사말.",
       en: "In person at The Foundry (The Refinery hall), doors 12:40 (first-come goods), Won's opening keynote, problem release, AWS talk by Han Jang-whan, a word from Hashed.",
     },
     // Venue booked: The Foundry — The Refinery hall, 11 Prinsep Link, 22 Aug 2026
@@ -387,7 +390,7 @@ export const days: DayMeta[] = [
       },
       {
         time: "1:10PM–1:50PM",
-        label: { ko: "오프닝 키노트 원대로", en: "Opening keynote Won Dae-ro" },
+        label: { ko: "오프닝 키노트 원대로 대표님", en: "Opening keynote Won Dae-ro" },
         eventId: "d1-opening-keynote",
       },
       {
@@ -424,7 +427,7 @@ export const days: DayMeta[] = [
       },
       {
         time: "2:30PM–3:10PM",
-        label: { ko: "AWS 세션 한장환", en: "AWS session Han Jang-whan" },
+        label: { ko: "AWS 세션 한장환 님", en: "AWS session Han Jang-whan" },
         eventId: "d1-aws-session",
       },
       {
@@ -718,7 +721,7 @@ export const days: DayMeta[] = [
       // DECIDED 2026-08-17: 장소 뒤에 입장 명단 마감을 한 조각 붙였습니다. 전문은
       // dict.program.entryNotice(데이 모달)에 있고, 이 줄은 카드에서 보이는 유일한
       // 표면이라 날짜만 실어 나릅니다. 여기서 문장으로 늘리지 마세요.
-      ko: "AWS 오피스(입장 명단 8/24 마감), 멘토와 함께하는 최종 점검, 박희덕 조언 세션, 1:1 멘토링(온라인), 저녁: 사전 제출물 마감(필수).",
+      ko: "AWS 오피스(입장 명단 8/24 마감), 멘토와 함께하는 최종 점검, 박희덕 대표님 조언 세션, 1:1 멘토링(온라인), 저녁: 사전 제출물 마감(필수).",
       en: "AWS office (entry list closes 24 Aug), final check with mentors, Park Hee-deok's advice session, 1:1 mentoring (online), Evening: submission deadline (required).",
     },
     whyStop: {
@@ -758,7 +761,7 @@ export const days: DayMeta[] = [
         time: "12:30PM–1:40PM",
         // DECIDED 2026-08-13: 커리어 간담회 → 조언 세션 (Day 8과 자리 맞바꿈).
         // eventId·시간 슬롯은 그대로입니다.
-        label: { ko: "조언 세션 박희덕", en: "Advice session Park Hee-deok" },
+        label: { ko: "조언 세션 박희덕 대표님", en: "Advice session Park Hee-deok" },
         eventId: "d7-speaker-session",
       },
       // 12:30–2PM 한 줄이었는데 쪼갰습니다 (2026-08-04). 세션은 1시간 10분이고
@@ -821,7 +824,7 @@ export const days: DayMeta[] = [
       // 왔습니다 ("박희덕 연사" → "박희덕 커리어 간담회").
       // DECIDED 2026-08-14: 그 간담회가 첫 순서(11AM–12PM)가 되면서 이 나열에서도
       // 트랙 발표 앞으로 옮겼습니다 — 이 줄은 하루가 흐르는 차례대로 읽힙니다.
-      ko: "*SCAPE 현장, 박희덕 커리어 간담회, 트랙별 팀 발표(팀당 8분, 잠정), 테마별 어워드 발표, 완주 수료증과 단체 사진.",
+      ko: "*SCAPE 현장, 박희덕 대표님 커리어 간담회, 트랙별 팀 발표(팀당 8분, 잠정), 테마별 어워드 발표, 완주 수료증과 단체 사진.",
       en: "In person at *SCAPE, Park Hee-deok career session, team presentations by track (8 min each, provisional), thematic awards, completion certificates and a group photo.",
     },
     hours: "11AM–3PM",
@@ -858,7 +861,7 @@ export const days: DayMeta[] = [
       // 80분이 75분이 됐고, 어워드가 2:30에 시작하는 것은 그대로입니다.
       {
         time: "11AM–12PM",
-        label: { ko: "커리어 간담회 박희덕", en: "Career session Park Hee-deok" },
+        label: { ko: "커리어 간담회 박희덕 대표님", en: "Career session Park Hee-deok" },
         eventId: "d8-opening-keynote",
       },
       {
@@ -1250,9 +1253,9 @@ export const schedule: BEvent[] = [
     timeOfDay: "PM",
     time: "1:10PM–1:50PM",
     confirmed: true,
-    title: { ko: "오프닝 키노트 원대로", en: "Opening Keynote Won Dae-ro" },
+    title: { ko: "오프닝 키노트 원대로 대표님", en: "Opening Keynote Won Dae-ro" },
     // TODO: confirm — speaker name is from the internal deck; confirm public naming is OK.
-    speaker: { ko: "원대로", en: "Won Dae-ro" },
+    speaker: { ko: "원대로 대표님", en: "Won Dae-ro" },
     summary: {
       ko: "‘취업과 창업의 사이’, 8일의 ‘왜’를 여는 오프닝 키노트.",
       en: "“Between Employment and Founding”, the keynote that opens the 8-day ‘why’.",
@@ -1308,7 +1311,7 @@ export const schedule: BEvent[] = [
     title: { ko: "AWS 연사 세션", en: "AWS Speaker Session" },
     // TODO: confirm public naming — speaker (한장환 · AWS) is confirmed in the internal
     // deck; verify the public name may be shown before surfacing it in the UI.
-    speaker: { ko: "한장환 (AWS)", en: "Han Jang-whan (AWS)" },
+    speaker: { ko: "한장환 님 (AWS)", en: "Han Jang-whan (AWS)" },
     summary: {
       ko: "Amazon의 AI 문제 정의, 접근 방법론.",
       en: "Amazon's AI problem-definition & approach methodology.",
@@ -1469,7 +1472,7 @@ export const schedule: BEvent[] = [
     // 남은 문단은 이 카드에서만 말하는 것뿐입니다: 왜 하루에 몰아서 하는지,
     // 라이브 빌드라는 진행 방식, 그리고 Codex 기준이되 툴은 자유라는 정책.
     speakerProfile: {
-      name: { ko: "김지훈", en: "Jihoon Kim" },
+      name: { ko: "김지훈 이사님", en: "Jihoon Kim" },
       role: { ko: "코드프레소 이사", en: "Director, Codepresso" },
       img: "/partners/people/kim-ji-hoon.jpg",
       bio: {
@@ -1866,7 +1869,7 @@ export const schedule: BEvent[] = [
     // 세션 자체의 길이여야 합니다.
     time: "12:30PM–1:40PM",
     // TODO: confirm public naming — speaker (박희덕) from the internal deck.
-    speaker: { ko: "박희덕", en: "Park Hee-deok" },
+    speaker: { ko: "박희덕 대표님", en: "Park Hee-deok" },
     title: { ko: "조언 세션 ‘제로백의 진짜 의미’", en: "Advice Session “The Real Meaning of Zero100”" },
     // 시각은 `time`이 갖습니다 — 요약과 설명 앞머리에 박혀 있던 "12:30–14:00"을
     // 뺐습니다. 같은 정보가 세 군데 있으면 하나가 바뀔 때 나머지가 어긋납니다.
@@ -1917,7 +1920,7 @@ export const schedule: BEvent[] = [
     confirmed: true,
     title: { ko: "커리어 간담회 ‘FDE로 일한다는 것’", en: "Career Session “Working as an FDE”" },
     // TODO: confirm — speaker name is from the internal deck; confirm public naming is OK.
-    speaker: { ko: "박희덕", en: "Park Hee-deok" },
+    speaker: { ko: "박희덕 대표님", en: "Park Hee-deok" },
     summary: {
       ko: "공유회를 여는 첫 한 시간, 발표가 시작되기 전에 ‘FDE로 일한다는 것’.",
       en: "The first hour of the Showcase, before any team pitches: “Working as an FDE”.",

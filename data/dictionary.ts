@@ -2343,10 +2343,11 @@ export const dict = {
       ko: "먼저 길을 낸 사람들이 Day 1, 7, 8에 직접 옵니다. 취업과 창업 사이에서 무엇을 골랐는지, 실무에서 AI를 어떻게 쓰는지, 0에서 100까지 무엇이 필요한지를 각자의 자리에서 이야기합니다.",
       en: "People who have already cut a path show up in person on Days 1, 7 and 8: what they chose between a job and founding, how AI is actually used at work, and what it takes to get from zero to a hundred.",
     },
+    // 이름에는 존칭을 붙입니다 — 규칙은 dict.mentoring.mentors 위 '호칭 규칙' 주석.
     people: [
       {
         day: { ko: "Day 1 오프닝 키노트", en: "Day 1 Opening keynote" },
-        name: { ko: "원대로", en: "Won Dae-ro" },
+        name: { ko: "원대로 대표님", en: "Won Dae-ro" },
         role: { ko: "Wilt Venture Builder 대표 (싱가포르)", en: "Managing Director, Wilt Venture Builder (SG)" },
         topic: { ko: "‘취업과 창업의 사이’", en: "“Between employment and founding”" },
         img: "/partners/logos/speaker-won.jpeg",
@@ -2383,7 +2384,7 @@ export const dict = {
         // into a workshop. Same rule as the sibling cards: what will I take away,
         // in one line.
         day: { ko: "Day 1 AWS 세션", en: "Day 1 AWS session" },
-        name: { ko: "한장환", en: "Jang Whan Han" },
+        name: { ko: "한장환 님", en: "Jang Whan Han" },
         role: { ko: "AWS 솔루션 아키텍트 Well-Architected Solution Innovation", en: "Well-Architected Solution Innovation SA, AWS" },
         topic: { ko: "‘AI-DLC’: AI가 주도하는 개발 라이프사이클", en: "“AI-DLC”: the AI-Driven Development Lifecycle" },
         img: "/partners/logos/speaker-han.jpeg",
@@ -2404,7 +2405,7 @@ export const dict = {
         // 말을 쓰지 마세요. Day 8 카드의 위치 줄("모든 발표가 끝난 뒤 · 어워드 발표
         // 직전 40분")도 여기로 옮기지 마세요 — 그건 Day 8의 사실입니다.
         day: { ko: "Day 7 조언 세션", en: "Day 7 Advice session" },
-        name: { ko: "박희덕", en: "Park Hee-deok" },
+        name: { ko: "박희덕 대표님", en: "Park Hee-deok" },
         role: { ko: "트랜스링크인베스트먼트 대표 GP", en: "CEO General Partner, Translink Investment (VC)" },
         topic: { ko: "‘제로백의 진짜 의미’", en: "“The Real Meaning of Zero100”" },
         img: "/partners/logos/speaker-park.jpeg",
@@ -2425,7 +2426,7 @@ export const dict = {
         // DECIDED 2026-08-13: 자리 맞바꿈으로 이 카드가 커리어 간담회가 됐습니다.
         // points 네 줄은 Day 7 카드에서 왔고, 마지막 위치 줄만 이 카드의 것입니다.
         day: { ko: "Day 8 커리어 간담회", en: "Day 8 Career session" },
-        name: { ko: "박희덕", en: "Park Hee-deok" },
+        name: { ko: "박희덕 대표님", en: "Park Hee-deok" },
         role: { ko: "트랜스링크인베스트먼트 대표 GP", en: "CEO General Partner, Translink Investment (VC)" },
         topic: { ko: "‘FDE로 일한다는 것’", en: "“Working as an FDE”" },
         img: "/partners/logos/speaker-park.jpeg",
@@ -2740,6 +2741,26 @@ export const dict = {
     // unconfirmed ones were.
     gridLabel: { ko: "멘토 MENTORS", en: "Mentors" },
     dayPendingLabel: { ko: "협의 중", en: "TBC" },
+    // ── 호칭 규칙 (DECIDED 2026-08-17, 박주형) ────────────────────────────────
+    // 한국어 카피에서 사람 이름을 맨이름으로 쓰지 않습니다. 이름 칸이든 문장
+    // 안이든 존칭을 붙입니다.
+    //
+    //   · 한국어 직함이 있는 분 → 이름 + 직함 + 님 (박희덕 대표님, 김지훈 이사님,
+    //     한정필 교수님, 정요천 총괄님). '님'은 직함에 붙여 씁니다(접미사).
+    //   · 직함이 영문 약어인 분(SA·GTM·Sales·APAC) → 이름 + 님 (한장환 님).
+    //     "SA님"은 한국어로 성립하지 않아서 약어를 존칭에 끌어오지 않습니다.
+    //     '님'은 이름과 띄어 씁니다(의존명사).
+    //
+    // 한 사람은 사이트 어디서나 같은 존칭입니다. 카드의 role 줄이 무엇이라고
+    // 적혀 있든 그 사람의 실제 직함을 따르세요 — 신동혁 총괄님은 멘토 카드에서
+    // role이 "GTM"뿐이지만 피드백 패널의 "APJC GTM 스케일링 총괄"이 실제 직함입니다.
+    //
+    // 영문(en)은 그대로 둡니다. 영어는 이름 아래 role 줄이 경어 역할을 하고,
+    // "Mr." 같은 표기는 이런 페이지에서 오히려 어색합니다. 이 파일은 한국어와
+    // 영어가 일부러 다른 낱말을 쓰는 자리가 이미 있습니다("폼"/form 주석 참고).
+    //
+    // 사람을 추가할 때 이 규칙을 같이 적용하세요. schedule.ts의 speaker·title·
+    // runOfShow label도 같은 규칙을 따릅니다.
     mentors: [
       // ── Day 1 ────────────────────────────────────────────────────────────────
       // 한장환: Day 1 ONLY. He used to also carry a pending Day 7 (daysPending);
@@ -2747,7 +2768,7 @@ export const dict = {
       // speaker and nothing else. Do not re-add a Day 7 unless he is booked for it
       // again; the Day 3 event copy counts the mentoring seniors and moves with it.
       {
-        name: { ko: "한장환", en: "Han Jang-whan" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "SA", en: "SA" },
+        name: { ko: "한장환 님", en: "Han Jang-whan" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "SA", en: "SA" },
         intro: {
           ko: "싱가포르 근무, 클라우드와 인프라 18년+. 前 오라클 JAPAC, Dell EMC.",
           en: "Based in Singapore, 18+ yrs in cloud & infrastructure. Ex-Oracle JAPAC, Dell EMC.",
@@ -2769,7 +2790,7 @@ export const dict = {
       // added here — but the stage-2 card must keep naming POPUP STUDIO, not
       // AXMOS, as the drop-in mentoring host.
       {
-        name: { ko: "김지훈", en: "Jihoon Kim" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "이사 Director", en: "Director" },
+        name: { ko: "김지훈 이사님", en: "Jihoon Kim" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "이사 Director", en: "Director" },
         intro: {
           ko: "추천 시스템, 스마트팩토리 데이터 7년+. 前 스마일게이트, LG CNS.",
           en: "7+ yrs on recommender systems & smart-factory data. Ex-Smilegate, LG CNS.",
@@ -2791,7 +2812,7 @@ export const dict = {
       // label's copy has to stop covering "이 박스의 모든 분").
       // REmited (Team Remited) — CEO, joining personally.
       {
-        name: { ko: "Brian Bae", en: "Brian Bae" }, org: { ko: "REmited", en: "REmited" }, role: { ko: "CEO", en: "CEO" },
+        name: { ko: "Brian Bae 대표님", en: "Brian Bae" }, org: { ko: "REmited", en: "REmited" }, role: { ko: "CEO", en: "CEO" },
         // NOT "前 Antler" — he is an Entrepreneur in Residence AT Antler, which is
         // a current standing, not a past employment. "공동창업자" was dropped: the
         // card already prints "REmited · CEO" directly above, so it spent a line
@@ -2813,7 +2834,7 @@ export const dict = {
       // NOTE: the Korean name is a transliteration of "JongHyun Kim" — confirm the
       // spelling with him before this goes out.
       {
-        name: { ko: "김종현", en: "Joseph JongHyun Kim" }, org: { ko: "YMX", en: "YMX" }, role: { ko: "사업개발 총괄", en: "Head of Business Development" },
+        name: { ko: "김종현 총괄님", en: "Joseph JongHyun Kim" }, org: { ko: "YMX", en: "YMX" }, role: { ko: "사업개발 총괄", en: "Head of Business Development" },
         intro: {
           ko: "XR과 디지털 트윈 스타트업, 싱가포르 근무. 디지털 포렌식 16년+, KITRI BoB 멘토.",
           en: "An XR & digital-twin startup, based in Singapore. 16+ yrs in digital forensics, KITRI BoB mentor.",
@@ -2826,7 +2847,7 @@ export const dict = {
       // cards back out) only if they are actually booked for the Day 7 pitch &
       // sales mentoring.
       {
-        name: { ko: "황영준", en: "Hwang Young-jun" }, org: { ko: "T3Q", en: "T3Q" }, role: { ko: "AI", en: "AI" },
+        name: { ko: "황영준 님", en: "Hwang Young-jun" }, org: { ko: "T3Q", en: "T3Q" }, role: { ko: "AI", en: "AI" },
         intro: {
           ko: "컴퓨터 비전과 NLP 3년+. VLM 문서 처리와 검색엔진 고도화.",
           en: "3+ yrs in computer vision & NLP. VLM document processing, search.",
@@ -2834,7 +2855,7 @@ export const dict = {
         days: "", daysPending: "", stages: [1], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620",
       },
       {
-        name: { ko: "이유택", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" },
+        name: { ko: "이유택 님", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" },
         intro: {
           ko: "SW 엔지니어 5년. LLM 코드리뷰 봇과 사내 RAG 구축.",
           en: "5 yrs as a software engineer. LLM code-review bots, internal RAG.",
@@ -2848,7 +2869,7 @@ export const dict = {
       // d5/d6/d7-dropin-mentoring) — do not re-add a card for it.
       // ── Day 7 · 피치·세일즈 멘토링 ──────────────────────────────────────────
       {
-        name: { ko: "신동혁", en: "Shin Dong-hyuk" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "GTM", en: "GTM" },
+        name: { ko: "신동혁 총괄님", en: "Shin Dong-hyuk" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "GTM", en: "GTM" },
         intro: {
           ko: "GenAI 커뮤니케이션과 CX APJC 총괄, 7년+. 前 삼성전자 북미 5G 사업개발.",
           en: "Head of GenAI Communications & CX, APJC, 7+ yrs. Ex-Samsung Electronics 5G BD, North America.",
@@ -2856,7 +2877,7 @@ export const dict = {
         days: "", daysPending: "", stages: [3], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/donghyukshin",
       },
       {
-        name: { ko: "이화영", en: "Lee Hwa-young" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "Sales", en: "Sales" },
+        name: { ko: "이화영 님", en: "Lee Hwa-young" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "Sales", en: "Sales" },
         intro: {
           ko: "싱가포르 근무. 前 브로드컴 어카운트 디렉터, VMware 5년+.",
           en: "Based in Singapore. Ex-Broadcom account director; 5+ yrs at VMware.",
@@ -2864,7 +2885,7 @@ export const dict = {
         days: "", daysPending: "", stages: [3], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hwayoung-lee-bbb79a134",
       },
       {
-        name: { ko: "임석건", en: "Lim Seok-geon" }, org: { ko: "NetApp", en: "NetApp" }, role: { ko: "APAC", en: "APAC" },
+        name: { ko: "임석건 님", en: "Lim Seok-geon" }, org: { ko: "NetApp", en: "NetApp" }, role: { ko: "APAC", en: "APAC" },
         intro: {
           ko: "AWS 세일즈 스페셜리스트 4년+. 前 Rescale.",
           en: "AWS Sales Specialist, 4+ yrs. Ex-Rescale.",
@@ -2880,7 +2901,7 @@ export const dict = {
       // surfaces. Nobody on the panel appears among the 1:1 build mentors; re-check
       // that whenever a mentor or panellist is added.
       {
-        name: { ko: "이동훈", en: "Lee Dong-hoon" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "대표 CEO", en: "CEO" },
+        name: { ko: "이동훈 대표님", en: "Lee Dong-hoon" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "대표 CEO", en: "CEO" },
         // The panel card carries the full bio; this line keeps only what a team
         // meeting him 1:1 needs, without repeating "Codepresso · 대표" above it.
         intro: {
@@ -2895,7 +2916,7 @@ export const dict = {
       // before that 9 years as an LG Electronics software engineer. 서강대.
       // NOTE: Korean name transliterated from "Hyunjin Hwang" — confirm the spelling.
       {
-        name: { ko: "황현진", en: "Hyunjin Hwang" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "공동창업자 이사", en: "Co-founder Director" },
+        name: { ko: "황현진 이사님", en: "Hyunjin Hwang" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "공동창업자 이사", en: "Co-founder Director" },
         intro: {
           ko: "콘텐츠 R&D 총괄. 前 LG전자 소프트웨어 엔지니어 9년.",
           en: "Content R&D lead. Ex-LG Electronics software engineer, 9 yrs.",
@@ -2909,7 +2930,7 @@ export const dict = {
       // Day 8 feedback panel (dict.judges.people); name, org, role and LinkedIn are
       // kept identical across both cards — one person, two surfaces.
       {
-        name: { ko: "정요천", en: "Jeong Yo-cheon" }, org: { ko: "Popup Studio", en: "Popup Studio" }, role: { ko: "총괄", en: "Head" },
+        name: { ko: "정요천 총괄님", en: "Jeong Yo-cheon" }, org: { ko: "Popup Studio", en: "Popup Studio" }, role: { ko: "총괄", en: "Head" },
         // The panel card carries the full history; this keeps what a team meeting
         // him on Day 7 would want, minus anything the org line already says.
         intro: {
@@ -2965,9 +2986,10 @@ export const dict = {
       ko: "순위를 매기는 심사가 아니라, 전문적인 시각의 피드백입니다. 문제를 낸 기업과, 실제 산업에서 문제를 풀어온 시니어 리더들이 결과 공유회에서 각자의 관점으로 피드백과 다음 가능성을 제안합니다. 그리고 출제 기업과 VC 패널은 여기서 어워드 수상팀을 직접 지명합니다. 열 분 모두 참여가 확정됐습니다.",
       en: "Not a ranking exercise, but expert feedback. The company that set the problem and senior leaders who have solved real ones in industry look at your Showcase work and, each from their own vantage point, offer feedback and what could come next. The problem owner and the VC panel also name the award-winning teams themselves. All ten have confirmed.",
     },
+    // 이름에는 존칭을 붙입니다 — 규칙은 dict.mentoring.mentors 위 '호칭 규칙' 주석.
     people: [
       {
-        name: { ko: "박희덕", en: "Park Hee-deok" },
+        name: { ko: "박희덕 대표님", en: "Park Hee-deok" },
         org: { ko: "Translink Investment", en: "Translink Investment" },
         role: { ko: "대표 General Partner", en: "CEO General Partner" },
         tag: { ko: "한미 크로스보더 VC", en: "US–Korea cross-border VC" },
@@ -2980,7 +3002,7 @@ export const dict = {
         linkedin: "https://www.linkedin.com/in/hee-duk-park-304079bb",
       },
       {
-        name: { ko: "원대로", en: "Won Dae-ro" },
+        name: { ko: "원대로 대표님", en: "Won Dae-ro" },
         org: { ko: "Wilt Venture Builder", en: "Wilt Venture Builder" },
         role: { ko: "대표 Managing Director", en: "CEO Managing Director" },
         tag: { ko: "싱가포르 벤처스튜디오", en: "Singapore venture studio" },
@@ -2993,7 +3015,7 @@ export const dict = {
         linkedin: "https://www.linkedin.com/in/wondaero",
       },
       {
-        name: { ko: "이병일", en: "Lee Byung-il" },
+        name: { ko: "이병일 대표님", en: "Lee Byung-il" },
         org: { ko: "Wilt Venture Builder", en: "Wilt Venture Builder" },
         role: { ko: "Venture Partner 한국대표", en: "Venture Partner Korea Head" },
         tag: { ko: "헬스케어 바이오", en: "Healthcare Bio" },
@@ -3029,7 +3051,7 @@ export const dict = {
       // and nothing about him changed — but if it ever needs defending, this is
       // where the support used to be and no longer is.
       {
-        name: { ko: "한정필", en: "Jungpil Hahn" },
+        name: { ko: "한정필 교수님", en: "Jungpil Hahn" },
         org: { ko: "NUS Computing", en: "NUS Computing" },
         // The card prints "{org} · {role}", so keep the role to ONE segment — an
         // internal "·" here rendered as "NUS Computing · 석좌교수 · Provost's Chair"
@@ -3046,7 +3068,7 @@ export const dict = {
         linkedin: "https://www.linkedin.com/in/jungpil/",
       },
       {
-        name: { ko: "이동훈", en: "Lee Dong-hoon" },
+        name: { ko: "이동훈 대표님", en: "Lee Dong-hoon" },
         org: { ko: "Codepresso", en: "Codepresso" },
         role: { ko: "대표 CEO", en: "CEO" },
         tag: { ko: "AI 코딩 교육 플랫폼", en: "AI coding education platform" },
@@ -3065,7 +3087,7 @@ export const dict = {
       // Feb 2011 – Jan 2020, 서강대). The AXMOS clause is the same one 이동훈's bio
       // carries — it is the consortium her company belongs to, not a claim of her own.
       {
-        name: { ko: "황현진", en: "Hyunjin Hwang" },
+        name: { ko: "황현진 이사님", en: "Hyunjin Hwang" },
         org: { ko: "Codepresso", en: "Codepresso" },
         role: { ko: "공동창업자 이사", en: "Co-founder Director" },
         tag: { ko: "AI 코딩 교육 콘텐츠 R&D", en: "AI coding education content R&D" },
@@ -3078,7 +3100,7 @@ export const dict = {
         linkedin: "https://www.linkedin.com/in/hyunjin-hwang-40892697",
       },
       {
-        name: { ko: "신상길", en: "Shin Sang-gil" },
+        name: { ko: "신상길 님", en: "Shin Sang-gil" },
         org: { ko: "FUJIFILM BI Singapore", en: "FUJIFILM BI Singapore" },
         role: { ko: "고객성공 DX/AI", en: "Customer Success DX/AI" },
         tag: { ko: "DX AI 컨설팅", en: "DX AI consulting" },
@@ -3091,7 +3113,7 @@ export const dict = {
         linkedin: "https://www.linkedin.com/in/steveskshin",
       },
       {
-        name: { ko: "신동혁", en: "Shin Dong-hyuk" },
+        name: { ko: "신동혁 총괄님", en: "Shin Dong-hyuk" },
         org: { ko: "AWS", en: "AWS" },
         role: { ko: "APJC GTM 스케일링 총괄", en: "Head of GTM Scaling APJC" },
         tag: { ko: "생성형 AI GTM", en: "GenAI GTM" },
@@ -3113,7 +3135,7 @@ export const dict = {
         // The GTM/partnerships title stays in `role` and is not repeated here.
         // Her headline is a description, not a formal title — "GTM · 파트너십 총괄"
         // renders it without inventing a rank.
-        name: { ko: "백민정", en: "MJ Baek" },
+        name: { ko: "백민정 총괄님", en: "MJ Baek" },
         org: { ko: "Codepresso", en: "Codepresso" },
         role: { ko: "GTM 파트너십 총괄", en: "Go-to-Market & Partnerships" },
         tag: { ko: "AI 리터러시 빌더 커뮤니티", en: "AI literacy builder community" },
@@ -3131,7 +3153,7 @@ export const dict = {
         // which is also the company running the drop-in mentoring — and
         // Brie moves into the bio with the rest of the career history. Do not
         // put "Brie · 대표" back on the card without checking with him first.
-        name: { ko: "정요천", en: "Jeong Yo-cheon" },
+        name: { ko: "정요천 총괄님", en: "Jeong Yo-cheon" },
         org: { ko: "Popup Studio", en: "Popup Studio" },
         // "Head of Popup Studio" rendered as "Popup Studio · Head of Popup Studio"
         // — the card already prints the org, so the role stays a bare title.
