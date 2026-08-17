@@ -2658,7 +2658,16 @@ function stripHeight(spec: StripLogoSpec, base: number, maxW: number) {
   return Math.round(Math.min(h, maxW / aspect) * 10) / 10;
 }
 
-const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpec[] }[] = [
+// `rowMax`는 그 티어의 마크 줄이 몇 줄로 접힐지를 정하는 유일한 손잡이입니다.
+// 넓은 화면에서는 flex-wrap이 접을 이유가 없어서 티어가 아무리 길어져도 한 줄로
+// 늘어서는데, 마크가 열 개를 넘으면 그 한 줄이 히어로를 가로지르는 띠가 되고
+// 로고 하나하나는 알아볼 수 없게 작아 보입니다. 폭을 묶어 두면 같은 마크가
+// 두 줄로 접히면서 크기는 그대로, 읽기만 나아집니다.
+//
+// 티어별로만 겁니다 — 주최(5)와 주관(3)은 한 줄이 자연스러운 길이라 손대지
+// 않습니다. 후원이 열둘, 열셋으로 늘면 이 값을 다시 보세요(줄당 대여섯 개가
+// 기준입니다). 모바일에는 걸지 않습니다: 거기서는 이미 폭이 좁아 알아서 접힙니다.
+const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpec[]; rowMax?: string }[] = [
   {
     // 주최 — the AXMOS collective.
     label: dict.hero.partnersHost,
@@ -2689,6 +2698,19 @@ const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpe
     // the section itself stays grouped by what each sponsor provides.)
     label: dict.hero.partnersSponsors,
     box: SPONSOR_BOX,
+    // 후원이 열한 곳이 되면서 한 줄이 화면을 가로질렀습니다 (2026-08-17).
+    // 6 + 5 두 줄로 접습니다 — 위 rowMax 주석 참고.
+    //
+    // 단위는 rem이 아니라 px입니다. 이 사이트는 루트 폰트가 18px이라 46rem이
+    // 828px로 계산돼(= 일곱 개가 그대로 들어감) 처음 걸었을 때 아무 일도
+    // 일어나지 않았습니다. 줄바꿈 지점은 마크의 실측 px 폭으로 정해지는 값이니
+    // px로 적습니다.
+    //
+    // 계산 근거: 앞 여섯 개가 598px(gap 24 포함), 일곱 번째까지면 744px입니다.
+    // 700px은 그 사이라 여섯에서 끊기고, 양쪽으로 44px과 102px 여유가 있어
+    // 마크 하나가 조금 바뀌어도 줄이 튀지 않습니다. 로고를 더하거나 아트워크를
+    // 갈면 이 숫자를 다시 재세요.
+    rowMax: "sm:max-w-[700px]",
     items: [
       { src: "/partners/logos/white/trimmed/aws.png",                alt: "AWS",                             w: 512, h: 306, mass: 0.491 },
       { src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90,  mass: 0.499 },
@@ -2887,7 +2909,7 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
                 at the same width wall, so no single logo can claim a row to
                 itself the way the widest wordmarks used to (DRIMAES had a line
                 of its own under bounding-box area sizing). */}
-            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 sm:gap-x-6">
+            <div className={`flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 sm:gap-x-6 ${tier.rowMax ?? ""}`}>
               {tier.items.map((p) => (
                 <StripLogo key={p.alt} {...p} box={tier.box} />
               ))}
@@ -4408,7 +4430,12 @@ export default function Journey() {
                 see the note on dict.partners.sponsorConfirmedLabel. The grid
                 keeps the pill's own top margin so the block below the 후원 label
                 sits exactly where it did. */}
-            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {/* lg에서 5열이 아니라 4열입니다 (2026-08-17). 후원이 열한 곳이 되면서
+                5열은 5+5+1로 끝나 마지막 한 칸이 혼자 남았습니다. 4열이면 4+4+3이라
+                빈자리가 하나뿐이고, 타일도 넓어져 가로로 긴 워드마크가 편해집니다.
+                열둘이 되면 4+4+4로 딱 맞습니다. 다시 5열로 돌리려면 그때 개수를
+                보고 판단하세요 — 이 값은 지금 로스터에 맞춘 것입니다. */}
+            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
               {/* ORDER FOLLOWS THE HERO STRIP — sorted below against
                   `confirmedPartnerTiers`, not hand-ordered here, so the two
                   lists cannot drift apart again. Seeing AWS·Hashed lead the
