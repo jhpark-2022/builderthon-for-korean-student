@@ -2651,7 +2651,25 @@ type StripLogoSpec = {
 // and it is a FIXED constant on purpose — deriving it from the current line-up
 // would resize every existing logo the day a sponsor is added.
 const STRIP_NORM = 1.45;
-const STRIP_EXP = 0.35;
+// EDIT 2026-08-17: 0.35 → 0.5. 드리마스가 주최 줄에서 혼자 커 보인다는 지적이
+// 있었고, 재보니 눈이 맞았습니다 — 그 마크가 칠하는 잉크가 같은 줄 중앙값보다
+// 30% 많았습니다(1079 vs 829, 모바일 기준). mass는 다시 재도 같은 값이라 데이터가
+// 아니라 이 지수가 원인이었습니다.
+//
+// 0.35는 잉크를 (aspect × mass)^0.3에 비례하게 남깁니다. 넓고 진한 마크일수록
+// 보정이 덜 되고, 드리마스는 이 줄에서 aspect × mass가 가장 큽니다(3.37, 다음이
+// 1.53). 그래서 잔차가 그 하나에 몰렸습니다.
+//
+// 0.5는 잉크를 정확히 맞춥니다. 이 값을 처음에 버린 이유는 "aws가 ONWORD LAB의
+// 2.6배 높이가 된다"였는데, 그 뒤에 들어온 폭 상한이 그 극단을 이미 붙잡고
+// 있습니다 — ONWORD LAB은 지수와 무관하게 상한(98px)에 걸려 10px로 고정이고,
+// 지수를 올려도 더 작아지지 않습니다. 실제 비는 2.2배에서 2.4배로만 움직입니다.
+// 원래 반대의 근거가 사라진 값이라 다시 씁니다.
+//
+// 결과(모바일): 주최 줄의 잉크 편차 1.41배 → 1.00배, 드리마스 폭 119px → 105px.
+// 후원 줄은 폭 상한이 이미 잡고 있어 마크당 ±6% 안에서만 움직입니다.
+// 이 값을 다시 만지면 두 줄을 다 보세요 — 한 마크만 보고 옮기면 다른 줄이 틀어집니다.
+const STRIP_EXP = 0.5;
 
 // Base heights are set so each tier's total rendered width comes out where the
 // old fixed box had it (~840px for 후원 on desktop) — this evens the marks out
