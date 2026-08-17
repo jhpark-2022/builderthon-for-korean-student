@@ -1854,6 +1854,32 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
           </span>
         </p>
       )}
+      {/* ── 어워드 칩 (2026-08-17) ────────────────────────────────────────────
+          Day 8 카드만 눈에 띄게 비어 있었습니다. 필참일이라 whyStop이 렌더되지
+          않고(위 가드), 멘토링도 그날은 끝나 있어서 다른 카드가 두 줄로 채우는
+          자리가 통째로 비었습니다. 카드 높이는 격자가 맞추므로 그 빈칸이 그대로
+          구멍으로 보입니다.
+
+          빈칸을 메우려고 없는 말을 지어내지 않았습니다. Day 8이 가진 것 중 카드가
+          아직 말하지 않은 사실 하나가 어워드의 규모입니다.
+
+          글자는 dict.program.awards.countBadge를 그대로 읽습니다 — 새로 쓰지
+          마세요. 어워드 박스가 쓰는 바로 그 상수라, 부문 수나 팀 수가 바뀌면 두
+          표면이 같이 움직입니다. "4부문 8팀"이 사는 자리를 넷으로 늘리지 말라는
+          규칙(dict.program.awards 주석)과도 어긋나지 않습니다: 사본이 아니라
+          같은 값을 두 번 그리는 것이라 갈라질 수가 없습니다.
+
+          색은 앰버입니다. 이 페이지에서 상은 앰버, 멘토링은 에메랄드이고, 같은
+          자리에 서는 두 칩이 색으로 갈립니다. day.awardsBox는 "이 날 어워드 박스가
+          열린다"는 뜻이라 그대로 조건으로 씁니다 — 새 플래그를 만들지 마세요. */}
+      {day.awardsBox && (
+        <p className="mt-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/[0.09] px-2 py-0.5 text-[0.68rem] font-semibold text-amber-100/90">
+            <span aria-hidden className="text-amber-300/90">★</span>
+            {t(dict.program.awards.countBadge)}
+          </span>
+        </p>
+      )}
       {/* 세션 개수는 뺐습니다 (되돌리지 마세요).
           여덟 장이 격자로 놓인 자리에서 숫자는 점수로 읽힙니다. Day 1이 5, Day 3이
           1이면 "Day 1이 다섯 배 값어치"로 보이는데, 바로 위 문단이 주장하는 것은
