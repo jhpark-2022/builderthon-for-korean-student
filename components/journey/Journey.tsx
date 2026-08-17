@@ -2392,7 +2392,7 @@ const companions: { src?: string; alt?: string; w?: number; h?: number }[] = [
   { src: "/partners/zero100/18-yj.webp", alt: "YJ", w: 98, h: 100 },
   { src: "/partners/zero100/20-habit-factory.webp", alt: "Habit Factory", w: 560, h: 75 },
   { src: "/partners/zero100/21-nuldam.webp", alt: "Nuldam", w: 443, h: 100 },
-  { src: "/partners/zero100/22-hanyeo.webp", alt: "Hanyeo", w: 329, h: 100 },
+  { src: "/partners/zero100/22-hanyeo.webp", alt: "Haenyeo Kitchen", w: 329, h: 100 },
   { src: "/partners/zero100/23-twigfarm.webp", alt: "Twigfarm", w: 370, h: 100 },
   { src: "/partners/zero100/24-kowork.webp", alt: "Kowork", w: 478, h: 100 },
   { src: "/partners/zero100/25-one-dgree-labs.webp", alt: "One Degree Labs", w: 122, h: 100 },
@@ -2700,6 +2700,15 @@ const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpe
       { src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105, mass: 0.500 },
       { src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81,  mass: 0.454 },
       { src: "/partners/logos/white/trimmed/nuldam.png",             alt: "Nuldam",                          w: 631, h: 136, mass: 0.518 },
+      // 해녀의 부엌, 2026-08-17 확정. 널담 바로 뒤에 둡니다 — 둘 다 어워드 부상이고,
+      // 아래 후원 그리드는 이 스트립 순서를 그대로 따르므로(sortLikeHeroStrip) 여기
+      // 순서가 곧 그리드에서 두 마크가 나란히 서는 이유가 됩니다.
+      //
+      // mass 0.316은 measure-logo-mass.py가 잰 값입니다(눈대중으로 고치지 마세요).
+      // 아트워크는 zero100 밴드용 파일(316x72)이 유일한 소스라 다른 마크(장변 900px)
+      // 보다 작습니다. 원본을 받으면 scripts/process-partner-logos.py로 다시 뽑고
+      // 이 줄의 w/h/mass를 함께 갱신하세요.
+      { src: "/partners/logos/white/trimmed/haenyeo-kitchen.png",    alt: "Haenyeo Kitchen",                 w: 316, h: 72,  mass: 0.316 },
     ],
   },
 ];
@@ -4441,6 +4450,12 @@ export default function Journey() {
                 // review — that is a source for the *SCAPE outlet, not a partner's
                 // own page, and every other tile here links to the company itself.
                 { cat: t(dict.partners.catAwards),    src: "/partners/logos/white/trimmed/nuldam.png",             alt: "Nuldam",                          w: 631, h: 136, url: "https://nuldam.com/" },
+                // 해녀의 부엌, 2026-08-17 확정 — 수상팀에게 돌아가는 부상을 후원합니다.
+                // 널담과 같은 catAwards 캡션이고, 스트립 순서 덕에 그 옆에 섭니다.
+                // url은 아직 비워 둡니다: 확인되지 않은 도메인을 넣으면 죽은 링크가
+                // 나가고, 이 그리드에는 실제로 그런 사고가 한 번 있었습니다(위 주석).
+                // 공식 사이트를 확인하면 그때 넣으세요.
+                { cat: t(dict.partners.catAwards),    src: "/partners/logos/white/trimmed/haenyeo-kitchen.png",    alt: "Haenyeo Kitchen",                 w: 316, h: 72,  url: undefined },
                 { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/onword-lab.png",             alt: "Onword Lab",                      w: 900, h: 92,  url: "https://www.onwordlab.com/" },
                 { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105, url: "https://teamremited.com/" },
                 // The `area: 4000` fudge that used to sit here is gone

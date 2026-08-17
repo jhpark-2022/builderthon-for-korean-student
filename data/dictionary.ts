@@ -205,6 +205,23 @@ export const partnerIntros: Record<string, Phrase> = {
     en: "A Korean dessert and bakery brand built around nutrition, high protein, low sugar, fibre and vegan options. Its café brand, Nuldam Space, is known for letting you write a letter to your future self and post it in a mailbox that delivers months later; its first outlet outside Korea is at *SCAPE in Singapore. It sponsors the award vouchers for this builderthon, in the same building where Day 5 and Day 8 take place.",
   },
 
+  // CONFIRMED 2026-08-17 (박주형): 해녀의 부엌이 수상팀 부상을 후원합니다.
+  //
+  // 이 브랜드는 2026-07-21에 인센티브에서 한 번 빠졌던 이름입니다(당시 Day 5
+  // 인기투표 Top 3 부상으로 검토되다 Day 5가 재정의되며 함께 사라졌습니다).
+  // 지금 돌아온 것은 그 자리가 아니라 어워드 부상 후원사 자리입니다 — 옛 문구를
+  // 되살리지 마세요. dict.benefits 06 카드 위 주석도 이 사실에 맞춰 고쳤습니다.
+  //
+  // HONESTY RULE(위 partnerIntroTBC 주석): 아래 첫 문장은 최소한만 말합니다.
+  // TODO: 브랜드 소개를 한 줄 받으면 널담 수준으로 늘리고, 공식 사이트가 확인되면
+  // Journey.tsx 후원 그리드의 url(현재 undefined)도 함께 채우세요.
+  //
+  // 부상을 "식사 바우처"로 부르지 않습니다 — 널담 주석과 같은 규칙입니다.
+  "Haenyeo Kitchen": {
+    ko: "제주 해녀 문화를 다이닝으로 풀어내는 한국 브랜드로, 싱가포르에도 자리를 두고 있습니다. 이번 빌더톤에는 수상팀에게 돌아가는 어워드 부상을 후원합니다.",
+    en: "A Korean brand that brings Jeju's haenyeo culture to the table, with a place in Singapore too. It sponsors the award prizes that go to the winning teams at this builderthon.",
+  },
+
 };
 
 // Press coverage shown as outbound links in a company's intro modal, keyed by the
@@ -2214,9 +2231,14 @@ export const dict = {
         // 내부·무대용이고, 웹은 포멀명입니다. 두 층위가 공존하는 것이 의도입니다.
         //
         // 널담 바우처는 3위 시상이 사라지며 자리를 잃었다가 빌더스 초이스·0→100의
-        // 부상으로 돌아왔습니다. (해녀의 부엌 바우처는 그 전에
-        // 인센티브에서 빠졌고, "Day 5 AI Use Case Top 3 · 널담 바우처"는 2026-08-03
-        // Day 5가 네트워킹 데이로 재정의되며 삭제됐습니다 — 둘 다 되살리지 마세요.)
+        // 부상으로 돌아왔습니다. ("Day 5 AI Use Case Top 3 · 널담 바우처"는 2026-08-03
+        // Day 5가 네트워킹 데이로 재정의되며 삭제됐습니다 — 이건 되살리지 마세요.)
+        //
+        // UPDATED 2026-08-17: 해녀의 부엌도 같은 길을 갔다가 돌아왔습니다. 옛 자리
+        // (Day 5 인기투표 Top 3 부상)는 그대로 없어진 채이고, 지금은 어워드 부상
+        // 후원사입니다(파트너 섹션 catAwards). 이 줄들은 부상의 종류를 말하는
+        // 자리가 아니니 여기에 브랜드를 나열하지 마세요 — 부문별 부상의 정본은
+        // dict.program.awards의 meta입니다.
         // Mirrored in the FAQ internship + award items; change them together.
         points: [
           // NOT "FDE 인턴십". The internship itself is confirmed; what the intern
@@ -3241,8 +3263,11 @@ export const dict = {
     // nothing a reader didn't already know — see the note on the sponsor badge
     // above. PartnerModal's `stage` prop went with it.
     stageNote: {
-      ko: "* 파트너 구성은 2026년 7월 기준이며, 변동될 수 있습니다. 추가되는 후원과 파트너십은 확정 시 안내됩니다.",
-      en: "* The partner line-up is as of July 2026 and may change; further sponsorships/partnerships will be announced once confirmed.",
+      // 기준월은 마지막으로 파트너가 들고 난 달입니다. 파트너를 더하거나 뺄 때
+      // 이 줄도 같이 옮기세요 — 안 옮기면 "7월 기준"이라고 적힌 화면에 8월에 들어온
+      // 로고가 서 있게 됩니다 (2026-08-17 해녀의 부엌 추가로 실제로 그랬습니다).
+      ko: "* 파트너 구성은 2026년 8월 기준이며, 변동될 수 있습니다. 추가되는 후원과 파트너십은 확정 시 안내됩니다.",
+      en: "* The partner line-up is as of August 2026 and may change; further sponsorships/partnerships will be announced once confirmed.",
     },
     // RETITLED 2026-08-12. "함께하는 빌더 네트워크"는 바로 위 파트너 섹션의
     // "함께 만드는 사람들"과 헤딩·소재·메시지가 사실상 같아서, 로고 벽이 두 번
