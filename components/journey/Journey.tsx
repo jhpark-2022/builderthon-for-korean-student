@@ -4626,19 +4626,21 @@ export default function Journey() {
                 // review — that is a source for the *SCAPE outlet, not a partner's
                 // own page, and every other tile here links to the company itself.
                 { cat: t(dict.partners.catAwards),    src: "/partners/logos/white/trimmed/nuldam.png",             alt: "Nuldam",                          w: 631, h: 136, url: "https://sg.nuldam.com/" },
-                // 해녀의 부엌. DECIDED 2026-08-16으로 후원 내용이 확정됐습니다 —
-                // Day 5 즉석 인기 투표에서 최다 득표 3팀에게 가는 음료 바우처입니다.
-                // 캡션을 catAwards에서 catDay5Prize로 고쳤습니다: 처음 넣을 때는
-                // 내용을 몰라 "어워드 부상"으로 달았는데, 그건 Day 8 어워드의 부상이라
-                // 같은 캡션을 달면 널담과 같은 것을 후원한다고 말하게 됩니다.
-                // url은 아직 비워 둡니다: 확인되지 않은 도메인을 넣으면 죽은 링크가
-                // 나가고, 이 그리드에는 실제로 그런 사고가 한 번 있었습니다(위 주석).
-                // 공식 사이트를 확인하면 그때 넣으세요.
+                // 해녀의 부엌이 후원하는 것은 Day 5 즉석 인기 투표에서 최다 득표
+                // 3팀에게 가는 음료 바우처입니다 (DECIDED 2026-08-16).
+                //
+                // DECIDED 2026-08-17 (박주형): 캡션은 널담과 같은 "어워드 부상"입니다.
+                // 한때 catDay5Prize("Day 5 부상")로 갈라 두었는데 되돌렸습니다 —
+                // 캡션은 후원사가 무엇을 대는지 한 낱말로 부르는 자리이고, 참가자에게는
+                // 둘 다 "상으로 받는 것"입니다. 어느 날 뽑히는지까지 캡션이 말하면
+                // 열한 개 타일 중 이 하나만 다른 층위로 읽힙니다. 정확한 내용은 타일을
+                // 눌러 열리는 소개문과 Day 5 시간표가 말합니다.
+                //
                 // DECIDED 2026-08-16: en 표기는 "Jeju Haenyeo"입니다. 싱가포르 매장이
                 // 자기 사이트에서 쓰는 영문 브랜드라 그쪽을 따릅니다.
                 // "Haenyeo's Kitchen"으로 되돌리지 마세요 — 직역이고, 그 이름으로는
                 // 검색해도 이 매장이 나오지 않습니다. 구글 지도 등록명도 JEJU HAENYEO입니다.
-                { cat: t(dict.partners.catDay5Prize), src: "/partners/logos/white/trimmed/haenyeo-kitchen.png",    alt: "Jeju Haenyeo",                     w: 316, h: 72,  url: "https://www.jejuhaenyeosg.com/" },
+                { cat: t(dict.partners.catAwards),    src: "/partners/logos/white/trimmed/haenyeo-kitchen.png",    alt: "Jeju Haenyeo",                     w: 316, h: 72,  url: "https://www.jejuhaenyeosg.com/" },
                 { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/onword-lab.png",             alt: "Onword Lab",                      w: 900, h: 92,  url: "https://www.onwordlab.com/" },
                 { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105, url: "https://teamremited.com/" },
                 // The `area: 4000` fudge that used to sit here is gone

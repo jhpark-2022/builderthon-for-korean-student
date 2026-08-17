@@ -3335,12 +3335,6 @@ export const dict = {
     catMarketing: { ko: "마케팅", en: "Marketing" },
     catMentoring: { ko: "멘토링", en: "Mentoring" },
     catGoods: { ko: "굿즈", en: "Goods" },
-    // 해녀의 부엌 전용 (DECIDED 2026-08-16). catAwards("어워드 부상")를 같이 쓰지
-    // 마세요 — 그건 Day 8 테마형 어워드의 부상이고, 이쪽은 Day 5 즉석 인기 투표에서
-    // 최다 득표 3팀에게 가는 부상입니다. 두 부상은 뽑는 자리도 받는 팀도 다릅니다.
-    // Day 5 투표가 빌더스 초이스의 중간 라운드라 헷갈리기 쉬운데, 바우처는 그날
-    // 최다 득표 3팀에게 가고 Day 8 수상 여부와 무관합니다.
-    catDay5Prize: { ko: "Day 5 부상", en: "Day 5 prize" },
     // 널담 only (2026-08-07). 캡션은 "부상"까지만 말하고 금액은 말하지 않습니다 —
     // 액수 비공개는 dict.program.awards의 WITHHELD 주석에 있는 결정이고, 파트너
     // 타일은 그 결정이 새는 네 번째 자리가 되기 쉬운 곳입니다.
