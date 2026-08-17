@@ -1059,7 +1059,7 @@ const SCORE_BUILDING_CHECKS: Bilingual[] = [
 // 방향을 트는 날이 아닙니다. 남은 일은 이미 만든 것을 증명하는 것뿐.
 const SCORE_KEEPING_CHECKS: Bilingual[] = [
   {
-    ko: "발표 구조: 병목 → 근거 → 데모 → 위험과 대응의 흐름이 서 있는지, 베이스라인 비교 자료가 필요한 자리에 놓였는지",
+    ko: "발표 구조: 병목 → 근거 → 데모 → 위험과 대응의 흐름이 서 있는지, AI 없이 했을 때와 비교한 자료가 필요한 자리에 놓였는지",
     en: "The pitch structure: does bottleneck → evidence → demo → risk-and-response hold up, and is the baseline comparison where it needs to be",
   },
   {
@@ -1201,7 +1201,7 @@ export const schedule: BEvent[] = [
     // 지우면 정보가 사라집니다.
     description: {
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-      ko: "빌더톤이 시작되기 전, 기업 현장에서 AI를 설계하고 배포해 온 사람이 직접 이야기합니다. 데모는 2초면 되지만 프로덕션까지는 몇 달이 걸리는 이유, 엔터프라이즈 AI 에이전트가 보기보다 어려운 지점을 다룹니다. 빌더톤 등록 여부와 무관하게 NUS and NTU, SMU 한인 학생이면 누구나 올 수 있습니다.",
+      ko: "빌더톤이 시작되기 전, 기업 현장에서 AI를 설계하고 배포해 온 사람이 직접 이야기합니다. 데모는 2초면 되지만 실제 서비스까지는 몇 달이 걸리는 이유, 엔터프라이즈 AI 에이전트가 보기보다 어려운 지점을 다룹니다. 빌더톤 등록 여부와 무관하게 NUS and NTU, SMU 한인 학생이면 누구나 올 수 있습니다.",
       en: "Before the builderthon starts, an evening with someone who designs and ships enterprise AI for a living: why a 2-second demo takes months to reach production, and where enterprise AI agents turn out to be harder than they look. Open to any Korean student at NUS, NTU or SMU, whether or not you register for the builderthon.",
     },
     // This is the ONLY SMU venue left in the schedule. Day 1 used to share the
@@ -1222,7 +1222,7 @@ export const schedule: BEvent[] = [
     opportunities: [
       { ko: "챗봇과 에이전트의 차이: 신원과 권한, 툴, 승인, 감사까지 붙어야 일이 된다", en: "What separates a chatbot from an agent: identity, permissions, tools, approval, audit" },
       { ko: "기업 에이전트가 어려운 6가지 이유와, 실제 구축된 회계 자동화 에이전트 사례", en: "The six reasons enterprise agents are hard, and a real accounts-payable agent that works" },
-      { ko: "빌더톤 과제를 풀 때 바로 쓸 수 있는 아키텍처 관점", en: "An architecture lens you can take straight into the builderthon problems" },
+      { ko: "빌더톤 과제를 풀 때 바로 쓸 수 있는 설계 관점", en: "An architecture lens you can take straight into the builderthon problems" },
       { ko: "사전 질문을 받아 세션에 반영합니다. 오픈채팅으로 보내면 돼요", en: "Questions collected in advance and worked into the session, so send them via the open chat" },
     ],
   },
@@ -1622,7 +1622,7 @@ export const schedule: BEvent[] = [
       // 팝업스튜디오 FDE가…" 같은 누가-언제 문장이 "Day 7까지 매일"로 바뀌었습니다.
       // 예약 방식(전날 오픈 · 팀 단위 1시간)은 사이트에서 여기 한 곳에만 적습니다 —
       // 운영 시간대나 슬롯표 같은 숫자는 예약 시스템과 참가자 카톡방의 정보입니다.
-      ko: "Day 3–6은 근거를 만드는 시간입니다. 범위도 방향도 아직 고칠 수 있는 구간이라, 멘토와 함께 아이디어에서 가장 뾰족한 지점을 찾아 그게 데모에서 제일 잘 드러나게 만듭니다. 멘토링 1단계로, 정해진 시간표 대신 팀의 필요에 맞춰 진행돼요. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표입니다. 확정 멘토진은 멘토링 섹션에 있고, 슬롯은 가능 시간이 겹치는 구간을 기준으로 배정됩니다. 멘토링은 전날 예약이 열리고, 팀 단위로 1시간씩 신청해요. 멘토링은 Day 7까지 매일 이어집니다.",
+      ko: "Day 3–6은 근거를 만드는 시간입니다. 범위도 방향도 아직 고칠 수 있는 구간이라, 멘토와 함께 아이디어에서 가장 뾰족한 지점을 찾아 그게 데모에서 제일 잘 드러나게 만듭니다. 멘토링 1단계로, 정해진 시간표 대신 팀의 필요에 맞춰 진행돼요. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표입니다. 확정 멘토진은 멘토링 섹션에 있고, 시간대는 가능 시간이 겹치는 구간을 기준으로 배정됩니다. 멘토링은 전날 예약이 열리고, 팀 단위로 1시간씩 신청해요. 멘토링은 Day 7까지 매일 이어집니다.",
       en: "Day 3–6 is where the evidence gets built. Scope and direction can still genuinely change, so this is when you and a mentor find the sharpest point in your idea and make sure that's what the demo shows. It's stage one of mentoring, following each team's needs instead of a fixed timetable. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes. The confirmed line-up is in the mentoring section, and slots land wherever your team's availability and a mentor's overlap. Booking opens the day before; teams book one-hour slots. Mentoring then runs every day through Day 7.",
     },
     location: MENTORING_MODE,

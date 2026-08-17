@@ -313,8 +313,10 @@ export const dict = {
 
   // Toast shown by the undocumented ?reset=1 QA helper (see components/ResetHandler).
   resetToast: {
-    ko: "저장된 로컬 데이터를 지웠어요. 새 사용자 상태예요",
-    en: "Local data cleared. You're a fresh user now",
+    // EDIT 2026-08-17: "로컬 데이터"·"새 사용자 상태"를 걷어냈습니다. QA용
+    // 헬퍼라 참가자가 볼 일은 드물지만, 보이는 순간 개발자 말이 그대로 뜹니다.
+    ko: "이 브라우저에 저장된 기록을 지웠어요. 처음 온 것과 같은 상태예요",
+    en: "Saved data cleared. You're starting fresh",
   },
 
   // ── Registration — hero question hooks, nav button, and the register modal ──
@@ -387,7 +389,7 @@ export const dict = {
     // 늦은 등록의 팀 매칭 단서는 여기 말고 뒤의 두 곳이 답니다 — 이 줄은
     // 조건을 나열하는 자리지 단서를 다는 자리가 아닙니다.
     reassure: {
-      ko: "참가비 무료 스크리닝 없음 코딩 몰라도 OK 솔로 환영 당일 결정 OK",
+      ko: "참가비 무료 사전 심사 없음 코딩 몰라도 OK 솔로 환영 당일 결정 OK",
       en: "Free to join No screening No coding needed Solo welcome Decide on the day",
     },
     // "How long will this take" — the other silent objection. Sits as a chip on
@@ -1331,7 +1333,14 @@ export const dict = {
           en: "One-page design summary: what makes the owner trust it, and what happens when it's wrong",
         },
         {
-          ko: "베이스라인 비교 컷 1장 + 레포와 배포 링크",
+          // EDIT 2026-08-17: 개발자 어휘를 걷어냈습니다. "레포"(repo)·"배포"·
+          // "베이스라인"이 한 줄에 셋이었는데, 이 목록은 전원이 따라야 하는
+          // 지시라 못 알아들으면 제출물이 빕니다. 참가자 절반이 코딩이 처음인
+          // 행사에서 제출 목록만큼은 낱말로 걸리면 안 됩니다.
+          // 뜻은 그대로입니다: 비교 대상은 여전히 AI 없이 했을 때이고, 링크도
+          // 코드와 돌아가는 화면 둘입니다. schedule.ts의 Day 7 점검 항목이 같은
+          // 자료를 가리키니 함께 움직이세요. EN은 repo가 맞는 낱말이라 남깁니다.
+          ko: "비교 화면 1장(AI 없이 했을 때와 나란히) + 코드와 실행 링크",
           en: "One baseline comparison shot + repo / deployment links",
         },
       ],
@@ -1961,7 +1970,7 @@ export const dict = {
     // never built anything. The no-screening promise stays — it is the first
     // barrier this section removes.
     intro: {
-      ko: "크래시코스, 멘토링, 수료증, 네트워킹. 아래의 모든 것은 이 하나의 경험을 누구나 가질 수 있게 만드는 장치입니다. 스크리닝과 사전 평가 없이, 개발 경험이 없어도 환영합니다.",
+      ko: "크래시코스, 멘토링, 수료증, 네트워킹. 아래의 모든 것은 이 하나의 경험을 누구나 가질 수 있게 만드는 장치입니다. 사전 심사나 평가 없이, 개발 경험이 없어도 환영합니다.",
       en: "The crash course, the mentoring, the certificate, the network: everything below exists to put that one experience within anyone's reach. No screening, no pre-assessment, and no dev experience needed.",
     },
     items: [
@@ -2004,7 +2013,7 @@ export const dict = {
           // 함께 나온다고 다시 쓰지 마세요. 요청 기반이라는 사실을 새 포인트로 떼지
           // 않고 같은 줄에 붙인 이유는 위 주석대로입니다: 카드는 모바일에서 앞 두
           // 줄만 보이므로 네 번째 포인트는 접혀서 읽히지 않습니다.
-          { ko: "문제는 ‘AX 의뢰서’로 나옵니다. 실제 업무 워크플로우, 담당자의 페인포인트, 맥락이 Day 1에 공개. 필요한 자료와 데이터는 진행 중 요청하면 전달돼요", en: "The problem arrives as an AX brief: the real workflow, the owner's pain points and the context, released on Day 1. Data and materials come on request as you build" },
+          { ko: "문제는 ‘AX 의뢰서’로 나옵니다. 실제 업무 워크플로우, 담당자가 겪는 불편, 맥락이 Day 1에 공개. 필요한 자료와 데이터는 진행 중 요청하면 전달돼요", en: "The problem arrives as an AX brief: the real workflow, the owner's pain points and the context, released on Day 1. Data and materials come on request as you build" },
           // REMOVED: "트랙 구성 미확정 — 재무·영업·마케팅 3트랙으로 논의 중(잠정) ·
           // AWS 방법론으로 접근 · 클라이언트 사명도 조율 중". 트랙/클라이언트가 확정되기
           // 전까지는 표기하지 않습니다.
@@ -2460,7 +2469,7 @@ export const dict = {
           // DECIDED 2026-08-14 (코드프레소 협의): "제공 데이터"를 "근거"로 바꿨습니다.
           // 데이터는 기본 제공물이 아니라 요청하면 전달되는 것이라(program 카드 02와
           // 테마 FAQ 참조), 나눠주는 데이터가 있다는 전제로 읽히는 말을 뒀습니다.
-          ko: "아직 방향을 바꿀 수 있는 구간의 멘토링입니다. 제품을 직접 만들어 온 창업가, 현업 엔지니어와 함께 여러 병목 중 하나를 고르고, 버릴 것을 정하고, 그 선택을 근거로 뒷받침합니다. 같은 문제를 놓고 ‘나라면 이렇게 했을 수도’를 나누는 대화에 가깝고, 빌드가 막힌 지점도 누가 배정되든 그 1:1에서 함께 봅니다. 1:1 슬롯은 한 번 확정되면 이후 변경하지 않으니, 신청 전에 팀 일정을 맞춰 주세요.",
+          ko: "아직 방향을 바꿀 수 있는 구간의 멘토링입니다. 제품을 직접 만들어 온 창업가, 현업 엔지니어와 함께 여러 병목 중 하나를 고르고, 버릴 것을 정하고, 그 선택을 근거로 뒷받침합니다. 같은 문제를 놓고 ‘나라면 이렇게 했을 수도’를 나누는 대화에 가깝고, 빌드가 막힌 지점도 누가 배정되든 그 1:1에서 함께 봅니다. 1:1 시간은 한 번 확정되면 이후 변경하지 않으니, 신청 전에 팀 일정을 맞춰 주세요.",
           en: "This is mentoring while the direction can still change. With founders and working engineers who have built and shipped products themselves, you pick one bottleneck, decide what NOT to solve, and back that choice with evidence. It's closer to a ‘here's how I might have done it’ conversation over the same problem, and whoever your team is matched with, a stuck build is something you work through in that same 1:1. Once a 1:1 slot is confirmed it stays as booked, so settle your team's schedule before you request one.",
         },
         // "메인 멘토링 파트너" is load-bearing, not decoration: NONE of the cards in
@@ -3261,7 +3270,7 @@ export const dict = {
           // 요청 경로를 한 문장으로 붙였습니다. 과제는 내부 데이터 없이도, 공개된
           // 자료로 풀 수 있는 형태로 나옵니다. 이 답과 program 카드 02는 같은 사실을
           // 말해야 하므로(위 계약) 한쪽만 고치지 마세요.
-          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다. 예를 들어 ‘회사 돈이 어디서 새는지 눈에 안 보인다’ 같은 실무 문제요. Day 1에 문제가 공개되고, 과제를 낸 코드프레소가 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자와 형식은 조율 중). 의뢰서에는 그 회사의 업무 워크플로우와 담당자의 페인포인트, 관련 맥락이 담깁니다. 진행 중 특정 자료와 데이터가 필요해지면 운영진에게 문의해 주세요. 문제를 낸 코드프레소가 필요한 만큼 전달합니다. 트랙 구성은 메인 트랙 2개로 좁혀 논의 중이며 확정되는 대로 안내합니다.",
+          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다. 예를 들어 ‘회사 돈이 어디서 새는지 눈에 안 보인다’ 같은 실무 문제요. Day 1에 문제가 공개되고, 과제를 낸 코드프레소가 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자와 형식은 조율 중). 의뢰서에는 그 회사의 업무 워크플로우와 담당자가 겪는 불편, 관련 맥락이 담깁니다. 진행 중 특정 자료와 데이터가 필요해지면 운영진에게 문의해 주세요. 문제를 낸 코드프레소가 필요한 만큼 전달합니다. 트랙 구성은 메인 트랙 2개로 좁혀 논의 중이며 확정되는 대로 안내합니다.",
           en: "You take on the AX (AI-transformation) problems a Korean company is facing right now, one set per track, practical things like “we can't see where the company's money is leaking.” They come as briefs: the problems drop on Day 1 and Codepresso, which set them, walks through the background first-hand (presenter and format still being arranged). Each brief carries the company's real workflow, the pain points of the person who owns it, and the context around it. If your team needs particular materials or data along the way, ask the organizers, and Codepresso, which set the problems, will send over what you need. The line-up has been narrowed to two main tracks, and we'll announce them once settled.",
         },
       },
