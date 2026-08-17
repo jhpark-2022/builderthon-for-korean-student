@@ -256,6 +256,24 @@ function LogoTile({
   );
 }
 
+// 파트너 타일 줄의 폭. grid가 아니라 flex-wrap을 쓰는 이유는 마지막 줄 때문입니다
+// (2026-08-17). 파트너 수는 열 수로 딱 나누어떨어지지 않기 마련이고(주최 5,
+// 후원 11), CSS 그리드는 남는 타일을 줄 왼쪽에 붙여 놓습니다. 그러면 마크 하나가
+// 혼자 튀어나온 것처럼 보이는데, 실제로 그렇게 읽혔습니다.
+//
+// basis를 열 수만큼 계산해 두면 꽉 찬 줄은 그리드와 픽셀 단위로 같고 남는 줄만
+// 가운데로 모입니다. 로고가 하나 늘고 줄어도 저절로 맞으므로, 파트너가 바뀔 때마다
+// 열 수를 손보던 일이 없어집니다.
+//
+// 빼는 값은 gap-3(0.75rem) × 칸 사이 수에 0.03rem씩 여유를 더한 것입니다. 딱 맞게
+// 계산하면 소수점 반올림 때문에 마지막 하나가 다음 줄로 튈 수 있습니다.
+// shrink는 기본값(1) 그대로 둡니다 — 넘칠 일은 없지만, 넘치더라도 줄이 깨지는
+// 것보다 타일이 조금 좁아지는 편이 낫습니다.
+const TILE_BASIS_2_3_5 =
+  "basis-[calc((100%_-_0.78rem)/2)] sm:basis-[calc((100%_-_1.56rem)/3)] lg:basis-[calc((100%_-_3.12rem)/5)]";
+const TILE_BASIS_2_3_4 =
+  "basis-[calc((100%_-_0.78rem)/2)] sm:basis-[calc((100%_-_1.56rem)/3)] lg:basis-[calc((100%_-_2.34rem)/4)]";
+
 type Tfn = (p: Phrase) => string;
 
 // Read off links.partnership so the address can never drift from the mailto.
@@ -4369,7 +4387,7 @@ export default function Journey() {
                 <span aria-hidden className="ml-auto hidden shrink-0 text-white/30 transition group-hover:text-white/70 sm:inline">↗</span>
               </button>
               {/* The five member companies inside the umbrella. */}
-              <div className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-3 lg:grid-cols-5">
+              <div className="flex flex-wrap justify-center gap-3 p-4">
                 {[
                   { src: "/partners/logos/white/trimmed/translink.png",    alt: "Translink Investment", w: 330, h: 91,  url: "https://translinkinvestment.com" as string | undefined },
                   { src: "/partners/logos/white/trimmed/wilt.png",         alt: "Wilt Venture Builder", w: 309, h: 148, url: "https://www.wiltvb.com/" as string | undefined },
@@ -4377,11 +4395,9 @@ export default function Journey() {
                   { src: "/partners/logos/white/trimmed/popup-studio.png", alt: "Popup Studio",         w: 512, h: 245, url: "https://popupstudio.ai" },
                   { src: "/partners/logos/white/trimmed/drimaes.png",      alt: "Drimaes",              w: 332, h: 50,  url: "https://www.drimaes.com" },
                 ].map(({ url, ...l }) => (
-                  <LogoTile
-                    key={l.alt}
-                    {...l}
-                    onOpen={(el) => openPartner(l.alt, el, url)}
-                  />
+                  <div key={l.alt} className={TILE_BASIS_2_3_5}>
+                    <LogoTile {...l} onOpen={(el) => openPartner(l.alt, el, url)} />
+                  </div>
                 ))}
               </div>
             </div>
@@ -4431,11 +4447,10 @@ export default function Journey() {
                 keeps the pill's own top margin so the block below the 후원 label
                 sits exactly where it did. */}
             {/* lg에서 5열이 아니라 4열입니다 (2026-08-17). 후원이 열한 곳이 되면서
-                5열은 5+5+1로 끝나 마지막 한 칸이 혼자 남았습니다. 4열이면 4+4+3이라
-                빈자리가 하나뿐이고, 타일도 넓어져 가로로 긴 워드마크가 편해집니다.
-                열둘이 되면 4+4+4로 딱 맞습니다. 다시 5열로 돌리려면 그때 개수를
-                보고 판단하세요 — 이 값은 지금 로스터에 맞춘 것입니다. */}
-            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                5열은 5+5+1로 끝났고, 4열이면 4+4+3이라 널담과 해녀의 부엌이 같은
+                어워드 부상 캡션을 달고 나란히 섭니다. 타일도 넓어져 가로로 긴
+                워드마크가 편해집니다. 남는 줄은 TILE_BASIS가 가운데로 모읍니다. */}
+            <div className="mt-4 flex flex-wrap justify-center gap-3">
               {/* ORDER FOLLOWS THE HERO STRIP — sorted below against
                   `confirmedPartnerTiers`, not hand-ordered here, so the two
                   lists cannot drift apart again. Seeing AWS·Hashed lead the
@@ -4495,7 +4510,7 @@ export default function Journey() {
                 { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81,  url: "https://www.brandboost.kr/" },
                 { cat: t(dict.partners.catOverall),   src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90,  url: "https://www.hashed.com/" },
               ]).map(({ cat, url, ...l }) => (
-                <div key={l.alt} className="flex flex-col gap-1.5">
+                <div key={l.alt} className={`flex flex-col gap-1.5 ${TILE_BASIS_2_3_4}`}>
                   {/* mass comes from the strip's roster, never from this list —
                       see sponsorMass. */}
                   <LogoTile {...l} mass={sponsorMass(l.src)} onOpen={(el) => openPartner(l.alt, el, url)} />
@@ -4778,7 +4793,14 @@ function FAQList() {
                       lists someone LOOKS UP rather than reads — the judging answer
                       does, and as prose it read as a wall. `a` becomes the lead in
                       that case; the shape is otherwise unchanged. */}
-                  <div className="pb-5 pr-8">
+                  {/* pr-8은 sm부터입니다 (2026-08-17). 이 오른쪽 여백은 질문 줄의
+                      +/× 토글과 답변의 오른쪽 끝을 맞춰 두려고 넣은 것인데, 답변
+                      줄에는 비켜갈 버튼이 없습니다. 390px 화면에서는 그 36px이
+                      본문 폭의 13%였고, 카드 자체의 p-7(31.5px 양쪽)까지 겹쳐
+                      답변이 235px 안에서 줄바꿈했습니다 — 한 줄에 한국어 13~14자,
+                      질문보다 좁은 단입니다. 모바일에서만 걷어내면 271px이 되고,
+                      데스크톱의 정렬은 그대로 남습니다. */}
+                  <div className="pb-5 sm:pr-8">
                     <p className="text-sm leading-relaxed text-white/70">{t(item.a)}</p>
                     {/* items-start, not stretch: groups rarely hold the same
                         number of rows, and a box padded out with dead space to

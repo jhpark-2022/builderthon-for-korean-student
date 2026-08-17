@@ -299,7 +299,10 @@ export default function Quiz() {
 
       {/* header — widens on the result screen so it lines up with the 2-col layout */}
       <header className={`relative z-10 mx-auto flex h-20 items-center justify-between px-6 ${phase === "result" ? "max-w-5xl" : "max-w-2xl"}`}>
-        <a href="/" className="text-sm font-semibold text-white/60 transition hover:text-white">
+        {/* -my-3 py-3: 터치 면적을 44px로 키우면서 글자 위치는 그대로 둡니다
+            (2026-08-17). 그전에는 두 링크 다 높이가 23px이라 손가락으로는
+            빗나가기 쉬웠습니다. 아래 '이전' 버튼도 같은 처리입니다. */}
+        <a href="/" className="-my-3 inline-flex min-h-[44px] items-center py-3 text-sm font-semibold text-white/60 transition hover:text-white">
           ← {t(quizUI.back)}
         </a>
         <LocaleToggle />
@@ -312,7 +315,7 @@ export default function Quiz() {
           <div className="flex flex-1 flex-col pt-4">
             {/* progress */}
             <div className="mb-3 flex items-center justify-between">
-              <button type="button" onClick={goBack} className="inline-flex items-center gap-1 text-sm font-semibold text-white/50 transition hover:text-white/90">
+              <button type="button" onClick={goBack} className="-my-3 inline-flex min-h-[44px] items-center gap-1 py-3 pr-3 text-sm font-semibold text-white/50 transition hover:text-white/90">
                 ← {t(quizUI.prev)}
               </button>
               <span className="font-mono text-sm font-bold text-white">
