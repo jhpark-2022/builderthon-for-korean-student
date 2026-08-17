@@ -1520,8 +1520,18 @@ export const dict = {
       },
       intro: {
         // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-        ko: "질문이 ‘생각’에서 ‘증빙’으로 한 칸씩 옮겨갑니다. 앞서 쓴 답이 다음 폼으로 이월되니, 두 번째부터는 v1을 최종본으로 다듬는 셈이에요.",
-        en: "The questions move a step at a time, from what you're thinking to what you can show. Each form carries your previous answers forward, so from the second one on you're sharpening a v1 into the final.",
+        //
+        // EDIT 2026-08-17: 꼬리절("두 번째부터는 v1을 최종본으로 다듬는 셈이에요")을
+        // 뺐습니다. v1은 첫 체크인에 쓴 답을 초안이라고 부른 말인데, 버전 번호는
+        // 개발자 어휘라 참가자 절반이 코딩이 처음인 이 행사에서는 뜻이 안 옵니다.
+        // 그 절이 하려던 말("앞 답을 이어서 다듬는다")은 앞 문장이 이미 합니다.
+        // 버전 표기를 다시 넣지 마세요.
+        //
+        // 같은 편집에서 "다음 폼으로"를 "다음 체크인으로" 고쳤습니다 — 위
+        // 2026-08-04 규칙(한국어 카피에서 "폼"을 쓰지 않는다)이 이 줄만 비켜가고
+        // 있었습니다. EN은 form이 맞는 단어라 그대로입니다.
+        ko: "질문이 ‘생각’에서 ‘증빙’으로 한 칸씩 옮겨갑니다. 앞서 쓴 답은 다음 체크인으로 이월돼요.",
+        en: "The questions move a step at a time, from what you're thinking to what you can show. Each form carries your previous answers forward.",
       },
       forms: [
         {
