@@ -390,7 +390,21 @@ export default function JourneyNav() {
                   // 헤더에서 등록 버튼 다음으로 무거운 요소가 되어, 읽고 있는
                   // 챕터가 행동을 부르는 것처럼 보입니다. 이건 표지판이지
                   // 버튼이 아닙니다.
-                  className={`inline-flex min-h-[44px] shrink-0 items-center whitespace-nowrap rounded-full border px-3 text-[0.7rem] font-semibold backdrop-blur transition active:scale-[0.97] ${
+                  // DECIDED 2026-08-17: 레일 칩 폭 통일 — 라벨 길이 무관 동일 폭.
+                  // 폭이 라벨을 따라가서 "혜택"(51px)과 "참가 대상"(76px)이 나란히
+                  // 서면 레일이 들쭉날쭉했습니다. 칩은 표지판이라 크기가 정보가 되면
+                  // 안 됩니다 — 긴 이름의 챕터가 더 중요한 챕터로 보입니다.
+                  //
+                  // 5.25rem(94.5px)은 두 로케일의 최장 라벨을 실측해 고른 최소값입니다:
+                  // ko "참가 대상" 75.9px, en "Mentoring" 89.9px. 5rem은 90px이라
+                  // Mentoring과 0.1px 차이여서 폰트 렌더링이 조금만 달라도 넘칩니다.
+                  // 라벨을 더 긴 것으로 바꾸면 이 값을 다시 재세요 — 하나라도 min-w를
+                  // 넘기면 그 칩만 넓어져서 통일이 깨집니다.
+                  //
+                  // 대가: 레일 총 길이가 늘어 한 화면에 보이는 칩이 줄어듭니다.
+                  // 원래부터 가로 스크롤 레일이라 감당하는 쪽을 골랐습니다.
+                  // 상단 행의 퀴즈 칩(✦)은 이 레일이 아니라 첫 행에 있어 대상이 아닙니다.
+                  className={`inline-flex min-h-[44px] min-w-[5.25rem] shrink-0 items-center justify-center whitespace-nowrap rounded-full border px-3 text-[0.7rem] font-semibold backdrop-blur transition active:scale-[0.97] ${
                     here
                       ? "border-violet-400/45 bg-violet-500/15 text-white"
                       : "border-white/12 bg-white/[0.06] text-white/75"

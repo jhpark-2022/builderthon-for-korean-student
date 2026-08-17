@@ -1009,8 +1009,11 @@ function ProblemView({ t }: { t: Tfn }) {
       {/* 문제 카드 위에 붙는 마감 밴드. 바이올렛이 아니라 앰버인 건 아래
           Eyebrow·"공개 예정" 배지가 이미 바이올렛이기 때문입니다. 같은 색을
           세 번 쓰면 어느 것이 시간에 쫓기는 정보인지 구분이 사라집니다. */}
+      {/* 배경은 히어로 마감 필과 같은 불투명 단색입니다 (2026-08-17). 이 필은
+          행사가 열린 뒤에만 렌더돼서 지금 화면에는 없지만, 같은 반투명 앰버라
+          Day 1에 같은 씸이 나타납니다. 그때 발견하는 것보다 지금 맞춰 둡니다. */}
       {registrationOpen && (
-        <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-[0.7rem] font-semibold text-amber-100">
+        <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-[#1d1710] px-3 py-1 text-[0.7rem] font-semibold text-amber-100 backdrop-blur-sm">
           <span className="relative flex h-1.5 w-1.5">
             <span className="absolute inline-flex h-full w-full animate-[softPulse_2.4s_ease-in-out_infinite] rounded-full bg-amber-300/60" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-amber-300" />
@@ -3544,7 +3547,17 @@ export default function Journey() {
                 그대로 씁니다 — 사본을 만들면 시각이 갈라집니다.
                 lg:hidden: 데스크톱은 같은 화면 오른쪽에 카운트다운 패널이 이미
                 떠 있어서 같은 말을 두 번 하게 됩니다. */}
-            <p className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/[0.08] px-3.5 py-1.5 text-[0.7rem] font-semibold leading-relaxed text-amber-100 lg:hidden">
+            {/* DECIDED 2026-08-17: 배경을 불투명 단색으로. 8% 반투명이라 뒤의 블러
+                배경 경계가 필을 관통해서, 알약이 가운데서 잘린 것처럼 보였습니다.
+                실측하면 왼쪽 절반은 #19130b, 오른쪽 절반은 #2c2d35 — 히어로의
+                글로가 필 안에서 갈리고 있었습니다.
+                #1d1710은 그 어두운 쪽 값에 앰버 틴트를 미리 합성한 색입니다
+                (= 8% amber over 페이지 배경 #06040f 근처). 이제 배경이 무엇이든
+                알약은 한 덩어리로 읽힙니다.
+                backdrop-blur-sm은 남깁니다 — 테두리가 여전히 반투명(/25)이라
+                그 아래로는 블러가 보입니다. 채움이 불투명해도 무의미하지 않습니다.
+                투명도를 다시 낮추지 마세요. 씸이 그대로 돌아옵니다. */}
+            <p className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-[#1d1710] px-3.5 py-1.5 text-[0.7rem] font-semibold leading-relaxed text-amber-100 backdrop-blur-sm lg:hidden">
               <span aria-hidden className="text-amber-300/80">◷</span>
               {t(dict.hero.countdownDeadline)}
             </p>
