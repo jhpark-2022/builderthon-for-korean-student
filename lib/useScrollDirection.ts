@@ -36,6 +36,9 @@ import { isScrollLocked } from "./useBodyScrollLock";
  * in Safari, and this hook's whole audience is mobile Safari and the KakaoTalk
  * in-app browser.
  *
+ * 900은 굼떠서 450으로 (2026-08-17). 300 밑으로 내리면 드래그 중 정지 시 팝핑
+ * 생김 — 조정은 300~600 사이에서.
+ *
  * The timer is not armed while the scroll lock is held — the chrome is already
  * pinned visible there, and arming it would fire a redundant state write behind
  * an open modal.
@@ -65,7 +68,7 @@ import { isScrollLocked } from "./useBodyScrollLock";
  *
  * @returns true when the chrome should slide out of view.
  */
-export function useScrollDirection({ threshold = 24, topZone = 80, idleReveal = 900 } = {}) {
+export function useScrollDirection({ threshold = 24, topZone = 80, idleReveal = 450 } = {}) {
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
