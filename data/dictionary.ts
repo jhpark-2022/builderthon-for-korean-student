@@ -852,7 +852,7 @@ export const dict = {
     },
     // 등록 마감. 시작 시각(countdownStartsAt) 바로 아래에 붙습니다.
     //
-    // 마감이 시작(오후 1시)보다 늦은 오후 4시인 건 오타가 아닙니다. Day 1
+    // 마감이 시작(오후 1시)보다 늦은 오후 2시 15분인 건 오타가 아닙니다. Day 1
     // 오프닝이 1PM–4:30PM이라, 그 자리에 온 사람도 오후 4시까지는 등록할 수
     // 있습니다. 그래서 "시작 전까지"가 아니라 날짜와 시각을 그대로 적습니다.
     //
@@ -866,10 +866,10 @@ export const dict = {
     // 있어서 자기 안에 날짜와 시간대를 다 들고 있어야 했습니다.
     //
     // 구분 기호는 가운뎃점이 아니라 em space입니다 (2026-08-14 규칙: 사이트에서
-    // 가운뎃점을 쓰지 않습니다). **오후 4시**는 Emph가 앰버로 칠하는 자리입니다.
+    // 가운뎃점을 쓰지 않습니다). **오후 2시 15분**은 Emph가 앰버로 칠하는 자리입니다.
     countdownDeadline: {
-      ko: "등록 마감 같은 날 **오후 4시**",
-      en: "Registration closes same day, **4PM**",
+      ko: "등록 마감 같은 날 **오후 2시 15분**",
+      en: "Registration closes same day, **2:15PM**",
     },
     // Sits under the countdown grid. Says what registering early actually gets
     // you — NOT that seats are running out. The deadline above is a date, not a
@@ -881,8 +881,8 @@ export const dict = {
     },
     // 바로 위 줄 다음에 같은 톤·같은 크기로 붙습니다. 위 줄이 "일찍 등록하면
     // 뭐가 좋은가"를 말하고 나면, 읽는 사람 머리에는 반대쪽 질문이 남습니다 —
-    // "그럼 지금 안 하면 못 오는 건가". 마감 시각(오후 4시)만 크게 걸려 있으면
-    // 그렇게 읽힙니다. 실제 방침은 당일 현장 등록도 오후 4시까지 열려 있다는
+    // "그럼 지금 안 하면 못 오는 건가". 마감 시각(오후 2시 15분)만 크게 걸려 있으면
+    // 그렇게 읽힙니다. 실제 방침은 당일 현장 등록도 마감 시각까지 열려 있다는
     // 것이라, 그 사실을 마감 바로 옆에서 말합니다.
     //
     // 뒤 절(팀 구성)은 완화가 아니라 정직입니다. 늦게 오면 남는 사람이 없을 수
@@ -904,14 +904,14 @@ export const dict = {
     countdownStarted: { ko: "빌더톤이 시작되었습니다.", en: "The builderthon has begun." },
 
     // Problem 뷰 맨 위 밴드. 오프닝(오후 1시)이 열려 카운트다운이 사라진 뒤에도
-    // 등록은 오후 4시까지 열려 있어서, 그 세 시간 동안 마감을 대신 말합니다.
-    // 오후 4시가 지나면 밴드 자체가 사라지므로 "오늘"은 항상 8월 22일입니다.
+    // 등록은 오후 2시 15분까지 열려 있어서, 그 1시간 15분 동안 마감을 대신 말합니다.
+    // 마감이 지나면 밴드 자체가 사라지므로 "오늘"은 항상 8월 22일입니다.
     // 시각은 REGISTRATION_CLOSES_AT / countdownDeadline과 반드시 같아야 합니다.
     problemRegistrationOpen: {
-      ko: "아직 등록할 수 있어요, 오늘 오후 4시 마감 (현지 시각)",
+      ko: "아직 등록할 수 있어요, 오늘 오후 2시 15분 마감 (현지 시각)",
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
       // 구분자는 ko와 같은 가운뎃점으로(em dash 제거).
-      en: "You can still register, closes 4PM today (Singapore time)",
+      en: "You can still register, closes 2:15PM today (Singapore time)",
     },
 
     problemEyebrow: { ko: "이번 라운드의 과제", en: "This round's challenge" },
@@ -3529,7 +3529,7 @@ export const dict = {
       // 마지막 괄호(팀 등록 예외)는 전문에만 답니다. 짧은 두 곳에 넣으면
       // 단서가 단서를 낳아 문장이 안내가 아니라 약관처럼 읽힙니다.
       //
-      // 시각(오후 4시)은 hero.countdownDeadline · problemRegistrationOpen ·
+      // 시각(오후 2시 15분)은 hero.countdownDeadline · problemRegistrationOpen ·
       // REGISTRATION_CLOSES_AT과 같은 값이어야 합니다. 여기서만 고치지 마세요.
       {
         // EDIT 2026-08-12: 용어와 톤을 사이트 표준으로 되돌렸습니다.
@@ -3541,7 +3541,7 @@ export const dict = {
         // 안내라면 자연스럽지만, 같은 목록의 다른 열세 답변과 나란히 놓이면 이
         // 하나만 다른 사람이 쓴 것처럼 읽힙니다.
         //
-        // 사실은 하나도 바뀌지 않았습니다: 당일 와서 정해도 된다 · 오후 4시까지
+        // 사실은 하나도 바뀌지 않았습니다: 당일 와서 정해도 된다 · 마감 시각까지
         // 열려 있다 · 늦으면 매칭할 사람이 없을 수 있다 · 팀 등록은 해당 없다.
         //
         // EDIT 2026-08-12 (2차): 팀 빌딩 연결 한 문장 추가. 자리는 등록 마감과
@@ -3550,8 +3550,8 @@ export const dict = {
         // 않습니다. 위 세 곳 신호 계약은 그대로입니다(전문은 여기 하나).
         q: { ko: "일단 Day 1에 가 보고 결정해도 되나요?", en: "Can I just show up on Day 1 and decide there?" },
         a: {
-          ko: "네, Day 1에 와서 결정하셔도 됩니다. 등록은 당일 오후 4시까지 열려 있어요. 현장에서 매칭된 팀은 다음 날 팀 빌딩 시간으로 이어서 챙겨 드립니다. 다만 너무 늦게 등록하시면 함께 팀을 구성할 분이 남아 있지 않을 수 있어요. (이미 팀으로 오시는 분들은 해당 없어요.)",
-          en: "Yes, come to Day 1 and decide there. Registration stays open until 4PM that day. Teams matched on site carry into a team-building session the next day. Just note that if you register very late, there may be no one left to team you up with. (Doesn't apply if you're registering as a team.)",
+          ko: "네, Day 1에 와서 결정하셔도 됩니다. 등록은 당일 오후 2시 15분까지 열려 있어요. 현장에서 매칭된 팀은 다음 날 팀 빌딩 시간으로 이어서 챙겨 드립니다. 다만 너무 늦게 등록하시면 함께 팀을 구성할 분이 남아 있지 않을 수 있어요. (이미 팀으로 오시는 분들은 해당 없어요.)",
+          en: "Yes, come to Day 1 and decide there. Registration stays open until 2:15PM that day. Teams matched on site carry into a team-building session the next day. Just note that if you register very late, there may be no one left to team you up with. (Doesn't apply if you're registering as a team.)",
         },
       },
       // Mentor requests were the most common pre-event ask — answered next to the
