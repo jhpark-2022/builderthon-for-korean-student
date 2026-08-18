@@ -2671,9 +2671,9 @@ export const dict = {
         title: { ko: "피치 세일즈 멘토링", en: "Pitch & sales mentoring" },
         theme: { ko: "팔 때 돕는 사람들", en: "The people who help you sell it" },
         // "AWS 등 현직 GTM·세일즈 시니어" alone stopped being true as this box filled
-        // up: it now also holds an AI-education platform's founders (이동훈 · 황현진)
-        // and a studio head (정요천). What they share isn't a job title, it's that
-        // they sell something for a living — say that instead of listing one role.
+        // up: it also holds an AI-education platform's founders (이동훈 · 황현진).
+        // What they share isn't a job title, it's that they sell something for a
+        // living — say that instead of listing one role.
         // Two-verb contract (2026-08-02): stage 1 = help them BUILD the thing
         // (scope, evidence, unblock — direction can still change), stage 3 = help
         // them PROVE it (3-min pitch structure, the questions the Day 8 experts
@@ -2912,11 +2912,10 @@ export const dict = {
         },
         days: "", daysPending: "", stages: [1], img: "/partners/people/joseph-jonghyun-kim.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/joseph-jonghyun-kim-009b244a",
       },
-      // 황영준 · 이유택 were "Day 3·4·7" until their Day 7 was dropped — both are
-      // stage-1 mentors only now, which is why there is no longer a Day 3·4·7
-      // group between this block and the Day 7 one. Re-add the day (and move the
-      // cards back out) only if they are actually booked for the Day 7 pitch &
-      // sales mentoring.
+      // 황영준 · 이유택 were "Day 3·4·7" until their Day 7 was dropped. 이유택's
+      // Day 7 came back on 2026-08-18 (stages [1, 3]); 황영준 is still stage-1
+      // only. There is no separate Day 3·4·7 group — a mentor who does both
+      // simply carries both stages and appears in both boxes.
       {
         name: { ko: "황영준 님", en: "Hwang Young-jun" }, org: { ko: "T3Q", en: "T3Q" }, role: { ko: "AI", en: "AI" },
         intro: {
@@ -2931,7 +2930,11 @@ export const dict = {
           ko: "SW 엔지니어 5년. LLM 코드리뷰 봇과 사내 RAG 구축.",
           en: "5 yrs as a software engineer. LLM code-review bots, internal RAG.",
         },
-        days: "", daysPending: "", stages: [1], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek",
+        // DECIDED 2026-08-18: Day 7 피치 세션 참석이 확정돼 stages에 3이 붙었습니다.
+        // 두 stage를 가진 첫 멘토라 카드가 두 박스에 모두 섭니다 — 조인이 원래
+        // 그렇게 설계돼 있고(사람을 세지 않습니다), 실제로 두 가지를 다 도우니
+        // 맞는 표시입니다. Day 7에 안 오시면 3을 빼면 그만입니다.
+        days: "", daysPending: "", stages: [1, 3], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek",
       },
       // Stage-2 mentoring is Popup Studio's, but it has NO card here:
       // this grid is named people you may be matched with 1:1, and Popup Studio
@@ -3000,16 +3003,6 @@ export const dict = {
       // belongs to the pitch group like the other Day 7 seniors. He is also on the
       // Day 8 feedback panel (dict.judges.people); name, org, role and LinkedIn are
       // kept identical across both cards — one person, two surfaces.
-      {
-        name: { ko: "정요천 총괄님", en: "Jeong Yo-cheon" }, org: { ko: "Popup Studio", en: "Popup Studio" }, role: { ko: "총괄", en: "Head" },
-        // The panel card carries the full history; this keeps what a team meeting
-        // him on Day 7 would want, minus anything the org line already says.
-        intro: {
-          ko: "前 Brie 대표(CEO 겸 CTO), 웹과 AI 풀스택. 前 워프벤처스 CEO/CTO, 산업은행(KDB).",
-          en: "Ex-CEO/CTO of Brie, a full-stack web and AI studio. Ex-Warp Ventures CEO/CTO, KDB.",
-        },
-        days: "", daysPending: "", stages: [3], img: "/partners/people/jeong-yo-cheon.webp", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/%EC%9A%94%EC%B2%9C-%EC%A0%95-8245a94b/",
-      },
     ],
   },
 
@@ -3054,8 +3047,8 @@ export const dict = {
     // 말을 들려주는 자리"로만 읽혔습니다. 어느 부문인지는 dict.program.awards의
     // meta가 부문별로 들고 있으니 여기서 다시 나열하지 마세요.
     sub: {
-      ko: "순위를 매기는 심사가 아니라, 전문적인 시각의 피드백입니다. 문제를 낸 기업과, 실제 산업에서 문제를 풀어온 시니어 리더들이 결과 공유회에서 각자의 관점으로 피드백과 다음 가능성을 제안합니다. 그리고 출제 기업과 VC 패널은 여기서 어워드 수상팀을 직접 지명합니다. 열 분 모두 참여가 확정됐습니다.",
-      en: "Not a ranking exercise, but expert feedback. The company that set the problem and senior leaders who have solved real ones in industry look at your Showcase work and, each from their own vantage point, offer feedback and what could come next. The problem owner and the VC panel also name the award-winning teams themselves. All ten have confirmed.",
+      ko: "순위를 매기는 심사가 아니라, 전문적인 시각의 피드백입니다. 문제를 낸 기업과, 실제 산업에서 문제를 풀어온 시니어 리더들이 결과 공유회에서 각자의 관점으로 피드백과 다음 가능성을 제안합니다. 그리고 출제 기업과 VC 패널은 여기서 어워드 수상팀을 직접 지명합니다. 여덟 분 모두 참여가 확정됐습니다.",
+      en: "Not a ranking exercise, but expert feedback. The company that set the problem and senior leaders who have solved real ones in industry look at your Showcase work and, each from their own vantage point, offer feedback and what could come next. The problem owner and the VC panel also name the award-winning teams themselves. All eight have confirmed.",
     },
     // 이름에는 존칭을 붙입니다 — 규칙은 dict.mentoring.mentors 위 '호칭 규칙' 주석.
     people: [
@@ -3084,19 +3077,6 @@ export const dict = {
           en: "MD, Wilt VB, d·camp global advisor. Korea–Singapore startup building, SEA cross-border investing. Ex-KB Asset Management COO, KTB Asia MD. 25+ yrs.",
         },
         linkedin: "https://www.linkedin.com/in/wondaero",
-      },
-      {
-        name: { ko: "이병일 대표님", en: "Lee Byung-il" },
-        org: { ko: "Wilt Venture Builder", en: "Wilt Venture Builder" },
-        role: { ko: "Venture Partner 한국대표", en: "Venture Partner Korea Head" },
-        tag: { ko: "헬스케어 바이오", en: "Healthcare Bio" },
-        img: "/partners/people/lee-byung-il.jpg",
-        pending: false,
-        bio: {
-          ko: "헬스케어와 바이오 창업가, 글로벌 오픈이노베이션 전문가. 前 MUST 액셀러레이터 파트너, AllLive Healthcare 창업(국내 1호 규제샌드박스).",
-          en: "Healthcare and bio founder, global open-innovation specialist. Ex-MUST Accelerator partner, founder, AllLive Healthcare (Korea's first regulatory-sandbox case).",
-        },
-        linkedin: "https://www.linkedin.com/in/danielbyungillee",
       },
       // CONFIRMED 2026-08-15: 참여 확정. pending을 false로 내렸습니다(키는 위
       // 주석대로 남깁니다). 바로 아래 문단은 확정 전 상태를 적어둔 기록입니다.
@@ -3217,28 +3197,6 @@ export const dict = {
           en: "GTM, partnerships, Codepresso. Co-founder, Women in Vibe Coding, 4 countries (KR, SG, VN, LU). Three cohorts, AI intro course for non-developers.",
         },
         linkedin: "https://www.linkedin.com/in/mjbaek",
-      },
-      {
-        // Brie is PAST, not present: he led it as CEO/CTO and no longer does.
-        // The org/role line therefore carries the current post — Popup Studio,
-        // which is also the company running the drop-in mentoring — and
-        // Brie moves into the bio with the rest of the career history. Do not
-        // put "Brie · 대표" back on the card without checking with him first.
-        name: { ko: "정요천 총괄님", en: "Jeong Yo-cheon" },
-        org: { ko: "Popup Studio", en: "Popup Studio" },
-        // "Head of Popup Studio" rendered as "Popup Studio · Head of Popup Studio"
-        // — the card already prints the org, so the role stays a bare title.
-        role: { ko: "총괄", en: "Head" },
-        tag: { ko: "웹 AI 풀스택", en: "Web AI full-stack" },
-        img: "/partners/people/jeong-yo-cheon.webp",
-        pending: false,
-        bio: {
-          ko: "前 Brie 대표(CEO 겸 CTO), 웹과 AI 풀스택 개발사. 前 워프벤처스 CEO/CTO, 건축 매칭 플랫폼, 딥러닝 추천. 前 산업은행(KDB) 기업금융.",
-          en: "Ex-CEO/CTO of Brie, a full-stack web and AI studio. Ex-Warp Ventures CEO/CTO, on a construction matching platform, deep-learning recommendations. Earlier KDB corporate finance.",
-        },
-        // Korean-slug profile URL — keep it percent-encoded exactly as LinkedIn
-        // serves it; the decoded form (/in/요천-정-…) 404s in some clients.
-        linkedin: "https://www.linkedin.com/in/%EC%9A%94%EC%B2%9C-%EC%A0%95-8245a94b/",
       },
     ],
     // Amber dashed pill on a panellist whose participation is agreed in principle but
