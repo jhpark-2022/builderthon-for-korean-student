@@ -1440,7 +1440,7 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                  컨테이너를 Day 3~7 전체와 같은 구간으로 만듭니다. 그래야 필이
                  오른쪽 3분의 1이 아니라 진짜 중앙(Day 5 언저리)에 섭니다. */}
           {rowIdx === 1 && (
-            <span className="pointer-events-none absolute bottom-0 left-0 right-[25%] flex justify-center sm:left-[-37.5%] sm:right-[37.5%]">
+            <span className="pointer-events-none absolute bottom-0 left-0 right-0 flex justify-center sm:left-[-37.5%] sm:right-[37.5%]">
               {/* whitespace-nowrap + justify-center: 필이 컨테이너보다 넓어지면
                   양쪽으로 똑같이 넘칩니다. 줄바꿈되어 두 줄이 되는 것보다 낫습니다. */}
               {/* 범례(0.66rem)·정거장 이름(0.68rem)보다 한 급 큽니다. 이 줄은
@@ -3000,7 +3000,12 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
     // dark end of that gradient. This gives the strip its own constant backdrop
     // so legibility no longer depends on scroll position or on which frame of
     // the video happens to be playing. The background scene itself is untouched.
-    <div className="group relative mt-4 block w-full rounded-2xl py-1.5 sm:mt-5">
+    // mt-11 on phones (2026-08-18). 이 스트립 바로 위에 모바일 전용 오픈채팅
+    // 칩이 있는데(lg:hidden), 아래 글로가 -inset-y-6만큼 위로 번지면서 그 칩의
+    // 밑동을 애매하게 물고 있었습니다. 버튼이 글로 안에 반쯤 잠긴 것처럼 보여서
+    // 둘 사이를 벌립니다. sm 이상은 종전 값 그대로입니다 — 그 폭에서는 위에
+    // 칩이 없습니다.
+    <div className="group relative mt-11 block w-full rounded-2xl py-1.5 sm:mt-5">
       <div
         aria-hidden
         // No rounding and a long falloff that runs PAST the container on every
@@ -3016,6 +3021,10 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
         // glow reaches exactly the screen edge and no further. The gradient is
         // already ~0 alpha out there, so nothing visible changed; from sm up the
         // rail pads by 40px and the original bleed still fits.
+        // 위쪽 번짐을 -3으로 줄여봤다가 되돌렸습니다(2026-08-18). 세로 폭이 좁아지니
+        // 그라디언트가 위 모서리에 닿기 전에 투명해지지 못해 직선 경계가 생겼고,
+        // 위 주석이 경고하는 "그림자가 아니라 패널"이 그대로 나왔습니다. 오픈채팅
+        // 칩과의 간격은 이 레이어가 아니라 컨테이너의 mt로 벌립니다.
         className="pointer-events-none absolute -inset-x-6 -inset-y-6 -z-10 sm:-inset-x-10"
         style={{
           background:
@@ -4229,7 +4238,15 @@ export default function Journey() {
                       two-thirds of the way across and read as a ragged column
                       floating inside a wider card. These blurbs are three
                       sentences now, so the cap was visible on every line. */}
-                  <p className="mt-2 break-keep text-xs leading-relaxed text-white/70">{t(g.sub)}</p>
+                  {/* 두 문단입니다 (2026-08-18). 한 덩어리로 두면 폰에서 열
+                      줄 가까이 이어져 어디서 화제가 바뀌는지 안 보였습니다.
+                      문단 경계는 사전의 `\n\n`이 정하고, 이 자리는 그것을
+                      나눠 그리기만 합니다 — 문구는 건드리지 않았습니다. */}
+                  {t(g.sub).split("\n\n").map((para, i) => (
+                    <p key={i} className={`break-keep text-xs leading-relaxed text-white/70 ${i === 0 ? "mt-2" : "mt-2.5"}`}>
+                      {para}
+                    </p>
+                  ))}
 
                   {/* Partner logos. The label above them is not decoration: most of
                       the cards below belong to other companies (REmited · YMX ·
