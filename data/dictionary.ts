@@ -3428,8 +3428,17 @@ export const dict = {
           // 요청 경로를 한 문장으로 붙였습니다. 과제는 내부 데이터 없이도, 공개된
           // 자료로 풀 수 있는 형태로 나옵니다. 이 답과 program 카드 02는 같은 사실을
           // 말해야 하므로(위 계약) 한쪽만 고치지 마세요.
-          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다. 예를 들어 ‘회사 돈이 어디서 새는지 눈에 안 보인다’ 같은 실무 문제요. Day 1에 문제가 공개되고, 과제를 낸 코드프레소가 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자와 형식은 조율 중). 의뢰서에는 그 회사의 업무 워크플로우와 담당자가 겪는 불편, 관련 맥락이 담깁니다. 진행 중 특정 자료와 데이터가 필요해지면 운영진에게 문의해 주세요. 문제를 낸 코드프레소가 필요한 만큼 전달합니다. 트랙 구성은 메인 트랙 2개로 좁혀 논의 중이며 확정되는 대로 안내합니다.",
-          en: "You take on the AX (AI-transformation) problems a Korean company is facing right now, one set per track, practical things like “we can't see where the company's money is leaking.” They come as briefs: the problems drop on Day 1 and Codepresso, which set them, walks through the background first-hand (presenter and format still being arranged). Each brief carries the company's real workflow, the pain points of the person who owns it, and the context around it. If your team needs particular materials or data along the way, ask the organizers, and Codepresso, which set the problems, will send over what you need. The line-up has been narrowed to two main tracks, and we'll announce them once settled.",
+          //
+          // DECIDED 2026-08-18: 마지막 문장이 트랙 선택 마감입니다(Day 2 종료 전).
+          // 트랙 "구성"이 언제 정해지는지 바로 앞에서 말하니, 참가자가 언제까지
+          // "선택"해야 하는지도 같은 자리에서 답하는 것이 맞습니다. 마감의 정본은
+          // schedule.ts의 d1-problem-release.description이고 이 줄은 사본입니다.
+          // 제출 창구는 운영진 이메일입니다(2026-08-18 확정). 주소는 links.*의
+          // mailto와 위 kakaoInvite 답변이 이미 쓰고 있는 것과 같은 주소라, 새 상수를
+          // 만들지 않고 같은 문자열을 씁니다 — 주소가 바뀌면 이 파일 안의 세 자리와
+          // schedule.ts의 d1-problem-release를 함께 고치세요.
+          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다. 예를 들어 ‘회사 돈이 어디서 새는지 눈에 안 보인다’ 같은 실무 문제요. Day 1에 문제가 공개되고, 과제를 낸 코드프레소가 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자와 형식은 조율 중). 의뢰서에는 그 회사의 업무 워크플로우와 담당자가 겪는 불편, 관련 맥락이 담깁니다. 진행 중 특정 자료와 데이터가 필요해지면 운영진에게 문의해 주세요. 문제를 낸 코드프레소가 필요한 만큼 전달합니다. 트랙 구성은 메인 트랙 2개로 좁혀 논의 중이며 확정되는 대로 안내합니다. 트랙 선택은 Day 2(8월 23일 일요일)가 끝나기 전까지 정해 pjh030924@gmail.com 으로 알려주시면 됩니다.",
+          en: "You take on the AX (AI-transformation) problems a Korean company is facing right now, one set per track, practical things like “we can't see where the company's money is leaking.” They come as briefs: the problems drop on Day 1 and Codepresso, which set them, walks through the background first-hand (presenter and format still being arranged). Each brief carries the company's real workflow, the pain points of the person who owns it, and the context around it. If your team needs particular materials or data along the way, ask the organizers, and Codepresso, which set the problems, will send over what you need. The line-up has been narrowed to two main tracks, and we'll announce them once settled. Your track choice is due by the end of Day 2 (Sunday 23 August): email it to pjh030924@gmail.com.",
         },
       },
       // MERGED 2026-08-11: 두 항목이 하나가 됐습니다 — "문과인데 이과생들에게

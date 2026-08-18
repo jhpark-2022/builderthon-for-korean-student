@@ -433,7 +433,16 @@ export const days: DayMeta[] = [
       {
         time: "",
         label: { ko: "문제 공개 트랙 선택", en: "Problem release track selection" },
-        note: { ko: "이 블록의 마지막 순서입니다", en: "The last item in that block" },
+        // DECIDED 2026-08-18: 마감이 note에 붙었습니다. 이 줄은 "지금 이 자리에서
+        // 고른다"로만 읽혀서, 현장에서 못 정한 사람이 언제까지 여유가 있는지를 알
+        // 방법이 없었습니다. 마감의 정본은 d1-problem-release.description이고 이
+        // 줄과 days[1].summary, FAQ 답변이 그 사본입니다 — 함께 움직이세요.
+        //
+        // 이메일 주소는 이 줄에 쓰지 않습니다. 시간표 한 줄에 주소까지 넣으면 줄이
+        // 두 배가 되는데, 이 행은 통째로 d1-problem-release 카드를 여는 링크라
+        // 주소는 한 번의 클릭 거리에 있습니다. 주소가 사는 곳은 그 카드 본문과
+        // FAQ 답변 두 곳입니다.
+        note: { ko: "이 블록의 마지막 순서입니다. 트랙은 Day 2(일요일)가 끝나기 전까지 정해 운영진 이메일로 알려주세요", en: "The last item in that block. Pick your track by the end of Day 2 (Sunday) and email it to the organizers" },
         eventId: "d1-problem-release",
       },
       {
@@ -479,8 +488,12 @@ export const days: DayMeta[] = [
       // time 필드이고 이 줄은 카드에서 읽히는 사본이니 함께 움직이세요.
       // 표기는 days[].hours와 같은 컨벤션(12시간제 대문자 AM/PM, en-dash, ko/en
       // 동일 문자열) — 데이 카드가 이미 그 형태의 칩을 보여주고 있습니다.
-      ko: "바이브 코딩 입문 9AM–12PM(비개발자 OK), 코드프레소 김지훈 이사님 진행. 오후에는 Day 1 매칭 팀들의 팀 빌딩 시간이 이어져요.",
-      en: "A vibe-coding intro, 9AM–12PM (beginners OK), led by Jihoon Kim, Director at Codepresso. In the afternoon, teams matched on Day 1 continue into a team-building session.",
+      // DECIDED 2026-08-18: 셋째 절이 트랙 선택 마감입니다. 마감이 걸린 날이
+      // 여기라서, 이 날 카드가 그 사실을 말하지 않으면 참가자는 Day 1 카드를 다시
+      // 열어봐야 알 수 있습니다. 마감의 정본은 d1-problem-release.description이고
+      // 이 줄은 사본이니 한쪽만 고치지 마세요.
+      ko: "바이브 코딩 입문 9AM–12PM(비개발자 OK), 코드프레소 김지훈 이사님 진행. 오후에는 Day 1 매칭 팀들의 팀 빌딩 시간이 이어져요. 트랙 선택은 이 날이 끝나기 전까지 정해 운영진 이메일로 알려주세요.",
+      en: "A vibe-coding intro, 9AM–12PM (beginners OK), led by Jihoon Kim, Director at Codepresso. In the afternoon, teams matched on Day 1 continue into a team-building session. Track choices are due by the end of this day, emailed to the organizers.",
     },
     whyStop: {
       // "하루로 압축" → "한나절로" (2026-08-17, 9AM–12PM 확정). 세 시간짜리를
@@ -1386,8 +1399,8 @@ export const schedule: BEvent[] = [
     description: {
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
       // "파트너 기업이 지금 겪고 있는" 자체가 '가상이 아님'을 증명하므로 부정 절 삭제.
-      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 공개는 오리엔테이션의 마지막 순서로 이뤄집니다. 앞으로 7일이 어떻게 굴러가는지를 듣고 난 직후에 진짜 과제를 받는 흐름이에요. 트랙 구성은 아직 확정 전이며(메인 트랙 2개로 좁혀 논의 중), 확정되는 대로 안내합니다. 바로 다음 순서인 AWS 세션이 이 문제를 어떤 방법론으로 뜯어볼지를 다루고, 이어지는 네트워킹 시간부터는 원하는 팀은 그 자리에서 빌드를 시작해도 됩니다. 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 공유회까지 이어집니다. Day 1은 필참이며 The Foundry의 The Refinery 홀(11 Prinsep Link) 현장에서 1PM–4:30PM 진행합니다.",
-      en: "Day 1 is the real kick-off. The actual AX (AI-transformation) problems partner companies are facing right now get released by track, and this is where you choose yours. The release lands as the final item of the orientation block: you hear how the next seven days work, then get the real brief. The track line-up isn't confirmed yet (narrowed to two main tracks, still under discussion) and we'll announce it once settled. The AWS session immediately after gives you a methodology to take the problem apart, and from the networking slot that follows any team can start building on the spot, with no start whistle to wait for and each team at its own pace through to the Showcase. Day 1 is mandatory and runs on-site at The Foundry's The Refinery hall, 11 Prinsep Link, 1PM–4:30PM.",
+      ko: "Day 1은 이 빌더톤의 실질적 킥오프입니다. 파트너 기업이 지금 겪고 있는 실제 AX(AI 전환) 문제가 트랙별로 공개되고, 참가자는 이 자리에서 자신의 트랙을 고릅니다. 그 자리에서 바로 정해도 되고, 팀과 더 이야기해 보고 싶다면 Day 2(8월 23일 일요일)가 끝나기 전까지 정하면 됩니다. 정한 트랙은 그때까지 pjh030924@gmail.com 으로 알려주세요. 공개는 오리엔테이션의 마지막 순서로 이뤄집니다. 앞으로 7일이 어떻게 굴러가는지를 듣고 난 직후에 진짜 과제를 받는 흐름이에요. 트랙 구성은 아직 확정 전이며(메인 트랙 2개로 좁혀 논의 중), 확정되는 대로 안내합니다. 바로 다음 순서인 AWS 세션이 이 문제를 어떤 방법론으로 뜯어볼지를 다루고, 이어지는 네트워킹 시간부터는 원하는 팀은 그 자리에서 빌드를 시작해도 됩니다. 정해진 ‘시작 버튼’을 기다릴 필요 없이 각 팀의 페이스로 공유회까지 이어집니다. Day 1은 필참이며 The Foundry의 The Refinery 홀(11 Prinsep Link) 현장에서 1PM–4:30PM 진행합니다.",
+      en: "Day 1 is the real kick-off. The actual AX (AI-transformation) problems partner companies are facing right now get released by track, and this is where you choose yours. You can settle it on the spot, or take it back to your team and lock it in any time before the end of Day 2 (Sunday 23 August). Either way, email your track to pjh030924@gmail.com by then. The release lands as the final item of the orientation block: you hear how the next seven days work, then get the real brief. The track line-up isn't confirmed yet (narrowed to two main tracks, still under discussion) and we'll announce it once settled. The AWS session immediately after gives you a methodology to take the problem apart, and from the networking slot that follows any team can start building on the spot, with no start whistle to wait for and each team at its own pace through to the Showcase. Day 1 is mandatory and runs on-site at The Foundry's The Refinery hall, 11 Prinsep Link, 1PM–4:30PM.",
     },
     location: FOUNDRY_REFINERY,
     locationUrl: FOUNDRY_URL,
