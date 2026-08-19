@@ -1085,8 +1085,8 @@ const SCAPE_LIFE: Bilingual = {
 // 8/13 프리이벤트가 열린 SMU 법학대학원(YPHSL)과는 다른 건물입니다. 두 이름을
 // 뭉뚱그려 "SMU"로 쓰지 마세요.
 const SMU_LKCSB: Bilingual = {
-  ko: "SMU 리콩치안 경영대학(LKCSB) 클래스룸 2-1",
-  en: "SMU Lee Kong Chian School of Business (LKCSB) Classroom 2-1",
+  ko: "SMU 리콩치안 경영대학(LKCSB) 클래스룸 2‑1",
+  en: "SMU Lee Kong Chian School of Business (LKCSB) Classroom 2‑1",
 };
 // Day 1 kickoff venue — The Foundry's The Refinery hall, booked 2026-08-03 for
 // 22 Aug. This REPLACED SMU YPHSL B2-03: that room was the Day-1 booking until
@@ -1369,8 +1369,8 @@ export const schedule: BEvent[] = [
     // 의심합니다. 한국어로 뜻이 바로 통하는 "법학대학원"을 앞에 두고 괄호로
     // 예약·안내판의 표기를 답니다. summary의 표기도 같이 맞췄습니다.
     location: {
-      ko: "SMU 법학대학원(YPHSL) 세미나룸 2-01",
-      en: "SMU Yong Pung How School of Law (YPHSL), Seminar Room 2-01",
+      ko: "SMU 법학대학원(YPHSL) 세미나룸 2‑01",
+      en: "SMU Yong Pung How School of Law (YPHSL), Seminar Room 2‑01",
     },
     opportunities: [
       { ko: "챗봇과 에이전트의 차이: 신원과 권한, 툴, 승인, 감사까지 붙어야 일이 된다", en: "What separates a chatbot from an agent: identity, permissions, tools, approval, audit" },
