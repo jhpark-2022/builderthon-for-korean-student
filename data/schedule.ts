@@ -929,8 +929,8 @@ export const days: DayMeta[] = [
       // 이 줄은 "어디서"로 시작하므로 건물 이름이 정확해야 합니다 — 정본은
       // SMU_LKCSB 상수이고, 요약은 캠퍼스 이름까지만 말합니다(방 번호는 카드의
       // 장소 행이 집니다).
-      ko: "SMU 현장, 트랙별 팀 발표(팀당 10분), 박희덕 대표님 커리어 간담회, 테마별 어워드 발표, 완주 수료증과 단체 사진.",
-      en: "In person at SMU, team presentations by track (10 min each), Park Hee-deok career session, thematic awards, completion certificates and a group photo.",
+      ko: "SMU 현장, 트랙별 팀 발표(팀당 10분), 커리어 간담회(3인 패널), 테마별 어워드 발표, 완주 수료증과 단체 사진.",
+      en: "In person at SMU, team presentations by track (10 min each), a three-person career panel, thematic awards, completion certificates and a group photo.",
     },
     // 참가자 프로그램 시간입니다. SMU 대관 10AM–4PM을 그대로 씁니다 — 철수는
     // 그 뒤에 따로 잡혀 있어서 프로그램이 4PM 정각까지 갑니다(DECIDED 2026-08-19).
@@ -995,7 +995,7 @@ export const days: DayMeta[] = [
       },
       {
         time: "3PM–3:40PM",
-        label: { ko: "커리어 간담회 박희덕 대표님", en: "Career session Park Hee-deok" },
+        label: { ko: "커리어 간담회 3인 패널", en: "Career session panel of three" },
         eventId: "d8-opening-keynote",
       },
       {
@@ -2071,16 +2071,23 @@ export const schedule: BEvent[] = [
     time: "3PM–3:40PM",
     confirmed: true,
     title: { ko: "커리어 간담회 ‘FDE로 일한다는 것’", en: "Career Session “Working as an FDE”" },
-    // TODO: confirm — speaker name is from the internal deck; confirm public naming is OK.
-    speaker: { ko: "박희덕 대표님", en: "Park Hee-deok" },
+    // DECIDED 2026-08-19 (주최 진행안): 1인 강연에서 3인 패널 토의가 됐습니다.
+    // 박희덕·이동훈 대표님이 패널, 원대로 대표님이 모더레이터 겸 패널입니다.
+    //
+    // speakerProfile을 세 장 만들지 않았습니다. 세 분 다 이 사이트에 이미 있습니다 —
+    // Day 8 피드백 패널(dict.judges.people)에 사진과 이력이 있고, 원대로 대표님은
+    // Day 1 키노트 카드도 갖고 있습니다. 여기에 또 넣으면 같은 프로필의 네 번째
+    // 사본이 되고 모달만 길어집니다. 이 줄이 누가 나오는지를 말하고, 본문이 각자
+    // 무엇을 맡는지를 말합니다.
+    speaker: { ko: "박희덕 대표님, 이동훈 대표님, 원대로 대표님(진행)", en: "Park Hee-deok, Lee Dong-hoon, Won Dae-ro (moderator)" },
     summary: {
-      ko: "공유회를 여는 첫 한 시간, 발표가 시작되기 전에 ‘FDE로 일한다는 것’.",
-      en: "The first hour of the Showcase, before any team pitches: “Working as an FDE”.",
+      ko: "세 대표님이 나란히 앉는 패널 토의 ‘FDE로 일한다는 것’.",
+      en: "A three-person panel “Working as an FDE”.",
     },
     description: {
-      ko: "트랙별 팀 발표가 모두 끝난 뒤, 어워드로 넘어가기 전 40분입니다. 트랜스링크 인베스트먼트의 박희덕 대표님이 ‘FDE로 일한다는 것’을 주제로 이야기합니다. 자사 FDE 사업에 관심 있는 학생과 졸업생에게 어떤 일을 하는 자리인지, 어떤 사람을 찾는지를 직접 전하고, 인턴과 채용 pool로 이어지는 실질적 연결의 시간입니다. 후속 1:1 면담과 멘토링(희망자)은 당일 행사가 끝난 뒤에 진행됩니다.",
+      ko: "트랙별 팀 발표가 모두 끝난 뒤, 어워드로 넘어가기 전 40분입니다. 세 분이 나란히 앉아 ‘FDE로 일한다는 것’을 이야기합니다. 트랜스링크 인베스트먼트 박희덕 대표님은 자본과 시장의 눈으로, 코드프레소 이동훈 대표님은 현장과 교육의 눈으로 답하고, Wilt Venture Builder 원대로 대표님이 진행을 맡습니다. FDE가 실제로 어떤 일인지, 어떤 사람을 뽑는지, 비전공자에게도 열려 있는지를 차례로 다루고 플로어에서 직접 묻는 시간으로 마칩니다. 인턴과 채용 pool로 이어지는 자리이고, 후속 1:1 면담과 멘토링(희망자)은 당일 행사가 끝난 뒤에 진행됩니다.",
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-      en: "Forty minutes after every track has pitched, before the awards begin. Under the theme “Working as an FDE,” Park Hee-deok (CEO, General Partner, Translink Investment) talks directly with students and graduates interested in the firm's FDE business: what the work actually is and who they're looking for, and a genuine connection into the internship and hiring pool. Follow-up 1:1 conversations and mentoring (for those who want them) run once the event closes that day.",
+      en: "Forty minutes after every track has pitched, before the awards begin. Three of them sit down together on “Working as an FDE”: Park Hee-deok (Translink Investment) answering from the capital and market side, Lee Dong-hoon (Codepresso) from the shop floor and teaching side, with Won Dae-ro (Wilt Venture Builder) moderating. What the work actually is, who they hire, whether it is open to non-CS majors, and then the floor gets to ask. It is a genuine route into the internship and hiring pool, and follow-up 1:1 conversations and mentoring (for those who want them) run once the event closes that day.",
     },
     location: SMU_LKCSB,
   },
@@ -2153,9 +2160,9 @@ export const schedule: BEvent[] = [
     // 공개를 보류한 상태라(WITHHELD 2026-08-07, 같은 주석 참고) "추후 안내"류의
     // 헤지도 붙이지 않습니다. runOfShow 라벨과 summary는 그대로 둡니다.
     description: {
-      ko: "8일간의 빌드를 마무리하는 30분입니다. 트랙별 발표가 모두 끝나면 테마별 어워드 발표와 사진 촬영이 이어집니다. 어워드는 순위 대신 각 팀의 강점을 조명하는 4개 부문이에요. 이어서 앞으로 무엇이 남아 있는지를 짧게 안내하고, 완주 수료증을 손에 들고 다 함께 단체 사진을 찍으며 끝납니다. 완주 수료증은 공유회 발표까지 마친 분들께 이 자리에서 실물로 드리고, 크래시코스 수료증은 전 시간을 참석한 분들께 이날 PDF로 발송됩니다.",
+      ko: "8일간의 빌드를 마무리하는 20분입니다. 트랙별 발표가 모두 끝나면 테마별 어워드 발표와 사진 촬영이 이어집니다. 어워드는 순위 대신 각 팀의 강점을 조명하는 4개 부문이에요. 이어서 앞으로 무엇이 남아 있는지를 짧게 안내하고, 완주 수료증을 손에 들고 다 함께 단체 사진을 찍으며 끝납니다. 완주 수료증은 공유회 발표까지 마친 분들께 이 자리에서 실물로 드리고, 크래시코스 수료증은 전 시간을 참석한 분들께 이날 PDF로 발송됩니다.",
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-      en: "Thirty minutes to close out eight days of building. Once every track has presented, the thematic awards are announced with photos. They're four categories that spotlight each team's strengths instead of ranking 1st to 3rd. Then comes a short word on what comes next, and everyone gathers for a group photo, completion certificate in hand. That one is printed and handed to you here for going all the way through your Showcase pitch, while the Crash Course certificate goes out the same day as a PDF to everyone who attended in full.",
+      en: "Twenty minutes to close out eight days of building. Once every track has presented, the thematic awards are announced with photos. They're four categories that spotlight each team's strengths instead of ranking 1st to 3rd. Then comes a short word on what comes next, and everyone gathers for a group photo, completion certificate in hand. That one is printed and handed to you here for going all the way through your Showcase pitch, while the Crash Course certificate goes out the same day as a PDF to everyone who attended in full.",
     },
     location: SMU_LKCSB,
   },

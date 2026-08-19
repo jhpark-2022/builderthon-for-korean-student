@@ -2530,7 +2530,19 @@ export const dict = {
       },
       {
         // DECIDED 2026-08-13: 자리 맞바꿈으로 이 카드가 커리어 간담회가 됐습니다.
-        // points 네 줄은 Day 7 카드에서 왔고, 마지막 위치 줄만 이 카드의 것입니다.
+        //
+        // DECIDED 2026-08-19 (주최 진행안): 1인 강연에서 3인 패널이 됐습니다 —
+        // 박희덕·이동훈 대표님이 패널, 원대로 대표님이 진행입니다. 이 섹션의 카드는
+        // 1인 구조(name·role·img·linkedin이 단수)라 세 분을 카드 셋으로 늘리면 같은
+        // 세션이 세 번 서고, 이동훈·원대로 대표님은 이미 다른 카드와 그리드에
+        // 있습니다. 그래서 카드는 박희덕 대표님으로 두고 형식은 points가 말합니다.
+        // 세션의 정본은 schedule.ts의 d8-opening-keynote입니다.
+        //
+        // points는 넷으로 유지하세요. 이 섹션의 카드는 같은 줄에 나란히 서고 높이를
+        // 공유해서, 한 장만 다섯 줄이 되면 나머지 세 장까지 그만큼 늘어납니다.
+        // 3인 패널 줄을 넣으면서 "자사 FDE 사업에 관심 있는 학생과 졸업생 대상"을
+        // 뺐습니다 — 패널이 세 회사가 되면서 "자사"가 어느 회사인지 애매해졌고,
+        // 바로 다음 줄이 같은 것을 더 정확히 말합니다.
         day: { ko: "Day 8 커리어 간담회", en: "Day 8 Career session" },
         name: { ko: "박희덕 대표님", en: "Park Hee-deok" },
         role: { ko: "트랜스링크인베스트먼트 대표 GP", en: "CEO General Partner, Translink Investment (VC)" },
@@ -2538,7 +2550,7 @@ export const dict = {
         img: "/partners/logos/speaker-park.jpeg",
         linkedin: "https://www.linkedin.com/in/hee-duk-park-304079bb",
         points: [
-          { ko: "자사 FDE 사업에 관심 있는 학생과 졸업생 대상", en: "For students & grads interested in the firm's FDE business" },
+          { ko: "이동훈, 원대로 대표님과 함께 앉는 3인 패널 토의", en: "A three-person panel, with Lee Dong-hoon and Won Dae-ro" },
           { ko: "어떤 일을 하는 자리인지, 어떤 사람을 찾는지 직접 듣기", en: "What the work actually is, and who they're looking for, first-hand" },
           { ko: "인턴과 채용 pool로 이어지는 연결, 후속 1:1 면담과 멘토링(희망자)은 행사 종료 후", en: "A route into the internship & hiring pool, with follow-up 1:1s & mentoring (opt-in) after the event closes" },
           // 위치·길이 (2026-08-18): 트랙 발표가 모두 끝난 뒤 어워드 직전 40분
