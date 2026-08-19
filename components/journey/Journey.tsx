@@ -1511,7 +1511,13 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                         src={d.venueLogo.src}
                         alt=""
                         aria-hidden
-                        className="pointer-events-none absolute -top-5 left-1/2 h-4 w-14 max-w-none -translate-x-1/2 object-contain opacity-45 transition group-hover:opacity-90"
+                        // tall은 세로로 긴 마크만 씁니다(DayMeta.venueLogo 주석).
+                        // 박스가 16px에서 24px이 되고 top이 그만큼 올라가 아래 끝은
+                        // 다른 마커와 같은 자리에 남습니다 — 정렬 기준은 위가 아니라
+                        // 아래입니다. 위를 맞추면 큰 마크만 노드 쪽으로 내려옵니다.
+                        className={`pointer-events-none absolute left-1/2 w-14 max-w-none -translate-x-1/2 object-contain opacity-45 transition group-hover:opacity-90 ${
+                          d.venueLogo.tall ? "-top-7 h-6" : "-top-5 h-4"
+                        }`}
                       />
                     )}
                     {anchor ? (
