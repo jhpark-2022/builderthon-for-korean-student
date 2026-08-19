@@ -1516,7 +1516,7 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                         // 다른 마커와 같은 자리에 남습니다 — 정렬 기준은 위가 아니라
                         // 아래입니다. 위를 맞추면 큰 마크만 노드 쪽으로 내려옵니다.
                         className={`pointer-events-none absolute left-1/2 w-14 max-w-none -translate-x-1/2 object-contain opacity-45 transition group-hover:opacity-90 ${
-                          d.venueLogo.tall ? "-top-7 h-6" : "-top-5 h-4"
+                          d.venueLogo.tall ? "-top-8 h-7" : "-top-5 h-4"
                         }`}
                       />
                     )}

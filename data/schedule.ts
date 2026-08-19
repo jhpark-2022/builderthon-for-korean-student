@@ -250,9 +250,9 @@ export interface DayMeta {
   // 마커 박스는 h-4 × w-14이고 object-contain이라 가로로 긴 워드마크도 잘리지
   // 않습니다.
   // `tall`: 세로로 긴 마크에만 씁니다. 마커 박스는 가로형(56×16)이라 세로 마크는
-  // 높이 제한에 걸려 폭이 10px까지 줄어듭니다 — SMU 사자가 그렇습니다. tall이면
-  // 박스를 24px로 키우고 top을 그만큼 올려 아래 끝을 다른 마커와 맞춥니다.
-  // 광학 무게는 그래도 aws와 비슷합니다(측정값 142 대 145) — 이 플래그는 마크를
+  // 높이 제한에 걸려 폭이 10px대까지 줄어듭니다 — SMU 로크업이 그렇습니다.
+  // tall이면 박스를 28px로 키우고 top을 그만큼 올려 아래 끝을 다른 마커와 맞춥니다.
+  // 광학 무게는 그래도 aws와 비슷합니다(측정값 134 대 145) — 이 플래그는 마크를
   // 크게 만드는 게 아니라, 가로형 박스에서 부당하게 작아진 것을 되돌립니다.
   venueLogo?: { src: string; name: string; tall?: boolean };
   mandatory?: boolean; // 필참 — required attendance (Day 1 & Day 8)
@@ -335,14 +335,17 @@ const LAB2: Bilingual = { ko: "Lab 2 실전", en: "Lab 2 In action" };
 const VENUE_FOUNDRY = { src: "/partners/logos/white/trimmed/foundry.png", name: "The Foundry" };
 const VENUE_LIFE = { src: "/partners/logos/white/trimmed/life.png", name: "*SCAPE L^IFE Jungle" };
 const VENUE_AWS = { src: "/partners/logos/white/trimmed/aws.png", name: "AWS office" };
-// SMU는 사자 엠블럼(싱가포르 지도 위 사자)을 씁니다. FOUNDRY와 반대 선택인데
-// 사정이 다릅니다 — 그쪽 심볼은 통짜 말풍선이라 흰색 모노에서 형태가 남지 않지만,
-// 이쪽은 사자가 이 학교를 알아보게 하는 그림 자체입니다.
+// SMU는 공식 로크업 전체(지도 위 사자 + SMU 워드마크)를 씁니다. FOUNDRY와 반대
+// 선택인데 사정이 다릅니다 — 그쪽 심볼은 통짜 말풍선이라 흰색 모노에서 형태가
+// 남지 않지만, 이쪽은 사자가 이 학교를 알아보게 하는 그림입니다.
 //
-// 워드마크를 먼저 써봤다가 뺐습니다(2026-08-19). 세리프 대문자 세 글자가 폭을
-// 45px까지 먹어 옆의 aws(27px)나 L^IFE(41px)보다 눈에 띄게 무거웠습니다.
-// 사자는 세로로 길어 가로형 박스에서 10px까지 줄어들므로 tall로 되돌립니다.
-const VENUE_SMU = { src: "/partners/logos/white/trimmed/smu.png", name: "SMU", tall: true };
+// 2026-08-19에 세 판을 거쳤습니다: 워드마크만(세리프 대문자가 폭 45px를 먹어
+// 옆 마크보다 무거웠음) → 사자만(세로 비율 탓에 폭 10px로 줄어 형태가 안 남음)
+// → 로크업 전체. 세로로 길어서 tall로 받습니다.
+//
+// 파일명이 smu.png가 아닌 이유는 캐시입니다. 같은 이름으로 아트워크만 갈았더니
+// 브라우저가 옛 이미지를 계속 서빙했습니다(스크립트 JOB 주석 참고).
+const VENUE_SMU = { src: "/partners/logos/white/trimmed/smu-lockup.png", name: "SMU", tall: true };
 
 // Day 8 두 트랙 발표 슬롯이 함께 쓰는 note입니다. 상수인 이유는 두 슬롯이 트랙만
 // 다른 같은 세션이기 때문입니다 — 슬롯마다 다른 문장을 달면 첫 슬롯에만 포맷이,
