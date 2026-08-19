@@ -1377,29 +1377,51 @@ export const dict = {
         ko: "Day 7 저녁까지 네 가지를 올립니다",
         en: "Four things to upload, due Day 7 evening",
       },
+      // 순서는 내는 순서가 아니라 만드는 순서입니다 (2026-08-19, 주최 제출물
+      // 표 반영): 무엇을 푸는지 정하고(1) 어떻게 풀지 설계하고(2) 그것이 도는
+      // 화면을 찍고(3) 범용 LLM과 나란히 세웁니다(4). 예전에는 데모 영상이
+      // 맨 위였는데, 팀이 실제로 밟는 차례와 반대라 목록이 체크리스트가 아니라
+      // 나열로 읽혔습니다.
+      //
+      // `format`은 분량과 파일 형식입니다. 없으면 팀마다 다른 것을 내고, 그
+      // 편차를 마감 뒤에 조정할 방법이 없습니다.
+      //
+      // 1과 2는 같은 문자열("1과 2 합쳐 A4 1장")을 씁니다. 원 표에서 병합 셀
+      // 하나였던 것을 두 줄로 편 자리라, 줄마다 자기 몫만 적으면("A4 1장")
+      // 합이 두 장으로 읽힙니다. 한쪽만 고치지 마세요.
       items: [
         {
-          ko: "데모 영상 1–2분: 실제 입력→처리→출력 화면",
-          en: "1–2 min demo video: real input → processing → output on screen",
+          name: { ko: "문제 정의 카드", en: "Problem-definition card" },
+          // 빈칸 문장은 주최 표의 것을 그대로 씁니다. 예시로 바꾸지 마세요 —
+          // 빈칸이 남아 있어야 팀이 자기 문장을 채워 넣습니다.
+          ko: "‘우리는 ___가 ___해서 생기는 ___ 문제를 푼다’ + 뒷받침 숫자와 출처, 이번에 풀지 않을 범위, 성공의 정의",
+          en: "“We solve the ___ problem caused by ___ doing ___” plus the numbers behind it and where they came from, the scope you are NOT solving this time, and your definition of success",
+          format: { ko: "1과 2 합쳐 A4 1장", en: "1 and 2 on one A4 page" },
         },
         {
-          ko: "문제 정의 카드: 병목 한 문장 + 근거 숫자와 출처 + 풀지 않은 것 + 성공의 정의",
-          en: "Problem-definition card: the bottleneck in one sentence, evidence numbers and their source, what you didn't solve, your definition of success",
+          name: { ko: "설계 요약", en: "Design summary" },
+          ko: "자동 처리와 사람 개입의 경계와 그 기준, 도입 전후로 담당자의 하루가 어떻게 달라지는가, 결과를 믿게 만드는 장치(판단 기록과 추적), 예상 위험과 대응",
+          en: "Where automation ends and a person steps in, and on what rule; how the owner's day changes before and after; what makes the output trustworthy (decision logs, traceability); the risks you expect and what you do about them",
+          format: { ko: "1과 2 합쳐 A4 1장", en: "1 and 2 on one A4 page" },
         },
         {
-          ko: "설계요약 1장: 담당자가 믿게 만드는 장치와 오판 대응",
-          en: "One-page design summary: what makes the owner trust it, and what happens when it's wrong",
+          name: { ko: "데모 영상", en: "Demo video" },
+          ko: "입력에서 처리, 출력까지 실제 화면. 홍보물이 아니라 작동 증명이 목적이라 편집은 최소로 합니다",
+          en: "Input, processing and output on the real screen. It exists to prove the thing runs, not to sell it, so keep the editing minimal",
+          format: { ko: "1–2분 mp4", en: "1–2 min mp4" },
         },
         {
           // EDIT 2026-08-17: 개발자 어휘를 걷어냈습니다. "레포"(repo)·"배포"·
           // "베이스라인"이 한 줄에 셋이었는데, 이 목록은 전원이 따라야 하는
           // 지시라 못 알아들으면 제출물이 빕니다. 참가자 절반이 코딩이 처음인
           // 행사에서 제출 목록만큼은 낱말로 걸리면 안 됩니다.
-          // 뜻은 그대로입니다: 비교 대상은 여전히 AI 없이 했을 때이고, 링크도
-          // 코드와 돌아가는 화면 둘입니다. schedule.ts의 Day 7 점검 항목이 같은
-          // 자료를 가리키니 함께 움직이세요. EN은 repo가 맞는 낱말이라 남깁니다.
-          ko: "비교 화면 1장(AI 없이 했을 때와 나란히) + 코드와 실행 링크",
-          en: "One baseline comparison shot + repo / deployment links",
+          // 2026-08-19: 주최 표는 이 항목을 "베이스라인 비교 1컷"이라 부르지만
+          // 그 이름은 여기 옮기지 않습니다 — 위 규칙 그대로입니다. 내용은 표를
+          // 따랐습니다(같은 입력, 범용 LLM, 나란히, 보는 것은 출력의 차이).
+          name: { ko: "비교 화면 1컷", en: "Comparison shot" },
+          ko: "같은 입력을 범용 LLM(ChatGPT 등)에 그대로 넣은 출력과 팀 시스템의 출력을 한 화면에 나란히. 보는 것은 ‘만들었다’가 아니라 출력의 차이입니다",
+          en: "The same input dropped straight into a general LLM (ChatGPT and the like), side by side with your system's output in one frame. What gets read is the difference in output, not that you built something",
+          format: { ko: "이미지 1장", en: "1 image" },
         },
       ],
       warning: {

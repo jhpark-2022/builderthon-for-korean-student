@@ -2382,7 +2382,14 @@ function SubmissionBox({ t }: { t: Tfn }) {
         <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-rose-200/80">{t(s.tag)}</span>
       </div>
       <p className="mt-2.5 break-keep text-sm font-bold leading-snug text-white">{t(s.heading)}</p>
-      <ul className="mt-3 space-y-2">
+      {/* 한 줄이던 항목이 이름 · 형식 · 본문 세 조각이 됐습니다 (2026-08-19,
+          주최 제출물 표). 이름과 형식이 한 행에 서고 본문이 그 아래로 내려가는
+          이유는 스캔 순서입니다 — 팀이 마감 전에 다시 열어 보는 것은 "무엇을,
+          몇 장으로"이고, 본문은 처음 읽을 때만 필요합니다. 셋을 한 문장에
+          이어 붙이면 그 두 가지가 산문 속에 묻힙니다.
+          형식 칩은 분량을 말할 뿐이라 테두리를 주지 않습니다. 이 박스에서
+          테두리가 있는 것은 필수 배지 하나여야 합니다. */}
+      <ul className="mt-3 space-y-2.5">
         {s.items.map((item, i) => (
           <li key={i} className="flex gap-2.5 text-xs leading-relaxed text-rose-50/85">
             <span
@@ -2391,7 +2398,13 @@ function SubmissionBox({ t }: { t: Tfn }) {
             >
               {i + 1}
             </span>
-            <span className="break-keep">{t(item)}</span>
+            <span className="min-w-0 break-keep">
+              <span className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                <span className="font-bold text-rose-50">{t(item.name)}</span>
+                <span className="text-[0.68rem] font-semibold text-rose-200/70">{t(item.format)}</span>
+              </span>
+              <span className="mt-0.5 block">{t(item)}</span>
+            </span>
           </li>
         ))}
       </ul>
