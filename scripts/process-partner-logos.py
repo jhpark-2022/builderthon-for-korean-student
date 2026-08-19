@@ -7,9 +7,15 @@ matching the files already in public/partners/logos/white/.
 Three source shapes are handled:
   • "dark"  — a dark mark on a white/transparent sheet (L^IFE). Alpha comes
               straight from darkness, so outlines and counters survive.
-  • "color" — a multicolour mark on a flat light background (싱가포르 한인회).
+  • "color" — a multicolour mark on a flat light background (마이크로소프트).
               Alpha comes from each pixel's colour distance to the sampled
               background, then everything surviving is flattened to white.
+              Only for marks that are FLAT — see "shaded" for the other kind.
+  • "shaded"— a colour mark with DRAWING INSIDE IT (싱가포르 한인회's emblem).
+              Same silhouette as "color", but brightness inside that silhouette
+              becomes opacity instead of everything going solid, so the emblem
+              keeps its rosette and ring of type rather than filling in as a
+              disc.
   • "alpha" — a solid-colour mark ALREADY cut out on transparency. The shape is
               exactly the source alpha, so use it as-is and just repaint the ink
               white. Running such a file through "dark" instead would scale
@@ -56,6 +62,12 @@ TRIMMED = OUT / "trimmed"
 
 MAX_EDGE = 900
 LO, HI = 40, 110  # colour-distance → alpha ramp, for the "color" mode
+# "shaded" mode. LO/HI cut the silhouette out of the sheet; PAPER/INK map
+# brightness to density inside it; GAIN lifts the whole thing so the mark is
+# not grey beside its pure-white neighbours. See from_shaded.
+SHADED_LO, SHADED_HI = 30, 80
+SHADED_PAPER, SHADED_INK = 243, 78
+SHADED_GAIN = 1.3
 
 # Every white-mono mark gets a trimmed copy. Both the marquee band and the
 # partner wall read from trimmed/: sizing there normalises each logo by its
@@ -72,7 +84,10 @@ LO, HI = 40, 110  # colour-distance → alpha ramp, for the "color" mode
 #            result has a soft edge rather than a staircase.
 JOBS = [
     ("life_logo.png", "life.png", "dark"),
-    ("싱가포르 한인회.jpg", "korean-association.png", "color"),
+    # "color" → "shaded" (2026-08-19). 이 마크는 원 안에 그림이 있습니다 —
+    # 링의 활자, 무궁화 로제트, 삼태극. color 모드는 그 셋을 전부 불투명하게
+    # 칠해 흰 원반 하나로 만들었습니다. from_shaded 주석에 자세히 적었습니다.
+    ("싱가포르 한인회.jpg", "korean-association.png", "shaded"),
     # Microsoft: the stacked lockup (four squares over the wordmark) is the only
     # art we have. It is used small — a 16px-tall mark on the pre-event band —
     # and the stacked form survives that better than a horizontal one would,
@@ -127,6 +142,39 @@ def from_color(im):
     bg = np.median(corners, axis=0)
     dist = np.sqrt(((a - bg) ** 2).sum(axis=2))
     return np.clip((dist - LO) / (HI - LO), 0.0, 1.0) * 255.0
+
+
+def from_shaded(im):
+    """Colour mark whose INSIDE has to survive → shape from the background
+    distance, DENSITY from luminance.
+
+    "color" answers one question — is this pixel the sheet or the mark — and
+    every non-sheet pixel comes out fully opaque. That is right for a flat mark
+    and wrong for one with drawing inside it: 싱가포르 한인회's emblem is a ring
+    of type around a mugunghwa rosette around a taegeuk, all of it mid-to-dark
+    colour, so "color" returned a featureless white disc. Nothing was lost in
+    the downscale; the alpha was solid before it ever got there.
+
+    Here the sheet still decides the SILHOUETTE (colour distance, which is what
+    separates ink from paper reliably), and brightness inside it decides how
+    opaque each pixel is. The rosette's pale petals go translucent, the dark
+    ring and type stay solid, and the emblem reads as an emblem.
+
+    GAIN exists because the result would otherwise sit grey next to the pure
+    white marks it shares a row with. 1.3 lifts the type and the ring to white
+    while the petals keep enough falloff to stay separate. Raising it further
+    collapses the emblem back into the disc this mode was written to avoid —
+    at 2.0 it is indistinguishable from "color". Re-check it against a real
+    render, not the full-size file: this mark ships ~34px tall.
+    """
+    a = np.asarray(im.convert("RGB")).astype(int)
+    h, w, _ = a.shape
+    corners = np.array([a[0, 0], a[0, w - 1], a[h - 1, 0], a[h - 1, w - 1]])
+    bg = np.median(corners, axis=0)
+    dist = np.sqrt(((a - bg) ** 2).sum(axis=2))
+    shape = np.clip((dist - SHADED_LO) / (SHADED_HI - SHADED_LO), 0.0, 1.0)
+    ink = np.clip((SHADED_PAPER - a.mean(axis=2)) / (SHADED_PAPER - SHADED_INK), 0.0, 1.0)
+    return shape * np.clip(ink * SHADED_GAIN, 0.0, 1.0) * 255.0
 
 
 def from_light(im):
@@ -188,6 +236,7 @@ def main():
         alpha = {
             "dark": from_dark,
             "color": from_color,
+            "shaded": from_shaded,
             "alpha": from_alpha,
             "light": from_light,
             "chroma": from_chroma,
