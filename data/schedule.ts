@@ -316,13 +316,13 @@ export interface DayMeta {
 
 // Two "Labs" across the 8 days (matches the deck):
 //   Lab 1 · Warm-up (Day 1–4) → Lab 2 · In action (Day 5–8)
-const LAB1: Bilingual = { ko: "Lab 1 워밍업", en: "Lab 1 Warm-up" };
+const LAB1: Bilingual = { ko: "Lab 1 워밍업", en: "Lab 1 Warm-up" };
 // EN ONLY diverges from KR here. KR "실전"의 짝으로 "Builderthon"이 붙어 있었는데,
 // 그건 행사 이름 자체라 페이즈 라벨로 쓰면 "빌더톤 안의 빌더톤"이 됩니다 — 무엇이
 // 달라지는 구간인지도 말해주지 못하고요. "In action"은 KR "실전"의 뜻(이제 실제로
 // 한다)을 그대로 옮기면서 "Warm-up"과 같은 급의 짧은 상태 표현이라 짝이 맞습니다.
 // KR은 건드리지 않습니다.
-const LAB2: Bilingual = { ko: "Lab 2 실전", en: "Lab 2 In action" };
+const LAB2: Bilingual = { ko: "Lab 2 실전", en: "Lab 2 In action" };
 
 // 노선도 현장 마커에 쓰는 장소 로고 (DayMeta.venueLogo 참고). 상수로 두는 이유는
 // L^IFE Jungle이 Day 5와 Day 8 두 곳에 붙기 때문입니다 — 장소가 바뀌면 고칠 곳이
@@ -373,7 +373,7 @@ export const days: DayMeta[] = [
     date: "08.22",
     weekday: { ko: "토", en: "Sat" },
     phase: LAB1,
-    theme: { ko: "오프닝 문제 공개", en: "Opening Problem Release" },
+    theme: { ko: "오프닝 문제 공개", en: "Opening Problem Release" },
     // 마지막 절만 굿즈입니다. 이 요약은 이미 길어서 확정 내용(브랜드부스트 후드·캡
     // 세트 60개)은 오리엔테이션 세션 설명이 맡고, 카드에는 일찍 올 이유가 되는
     // 부분 — 선착순이라는 사실 — 만 남깁니다.
@@ -414,7 +414,7 @@ export const days: DayMeta[] = [
     runOfShow: [
       {
         time: "12:40PM–1PM",
-        label: { ko: "입장 이름표 수령 선착순 굿즈", en: "Doors open name tags first-come goods" },
+        label: { ko: "입장 이름표 수령 선착순 굿즈", en: "Doors open name tags first-come goods" },
         // 굿즈 안내가 여기 다 들어 있습니다 — 오리엔테이션 설명에 있던 것을
         // 옮겨왔습니다(2026-08-04). 나눠주는 시점이 이 줄이니 읽는 자리도 이 줄이어야
         // 하고, 오리엔테이션(2PM) 설명에서 "굿즈는 12:40에 드려요"라고 말하는 건
@@ -431,11 +431,11 @@ export const days: DayMeta[] = [
       // 건드리지 않았습니다 — 그 둘이 이 날 시간표의 못입니다.
       {
         time: "1PM–1:20PM",
-        label: { ko: "환영 인사 이벤트 설명과 여는 이유", en: "Welcome what this event is and why" },
+        label: { ko: "환영 인사 이벤트 설명과 여는 이유", en: "Welcome what this event is and why" },
       },
       {
         time: "1:20PM–2:05PM",
-        label: { ko: "오프닝 키노트 원대로 대표님", en: "Opening keynote Won Dae-ro" },
+        label: { ko: "오프닝 키노트 원대로 대표님", en: "Opening keynote Won Dae-ro" },
         eventId: "d1-opening-keynote",
       },
       // DECIDED 2026-08-18: 10분은 그대로, 자리만 1:50에서 2:05로 밀렸습니다
@@ -466,7 +466,7 @@ export const days: DayMeta[] = [
       // 순서로 가리키고 있습니다.
       {
         time: "2:15PM–2:30PM",
-        label: { ko: "문제 공개 트랙 선택", en: "Problem release track selection" },
+        label: { ko: "문제 공개 트랙 선택", en: "Problem release track selection" },
         // DECIDED 2026-08-18: 마감이 note에 붙었습니다. 이 줄은 "지금 이 자리에서
         // 고른다"로만 읽혀서, 현장에서 못 정한 사람이 언제까지 여유가 있는지를 알
         // 방법이 없었습니다. 마감의 정본은 d1-problem-release.description이고 이
@@ -485,13 +485,13 @@ export const days: DayMeta[] = [
       // 대체하므로, 여기 걸리지 않은 세션은 열 방법이 사라집니다.
       {
         time: "",
-        label: { ko: "문제를 풀 준비 7일 진행과 멘토링 안내", en: "What we've set up how the 7 days and mentoring run" },
+        label: { ko: "문제를 풀 준비 7일 진행과 멘토링 안내", en: "What we've set up how the 7 days and mentoring run" },
         note: { ko: "문제 공개에 이어지는 순서입니다", en: "Follows straight on from the release" },
         eventId: "d1-orientation",
       },
       {
         time: "2:30PM–3:10PM",
-        label: { ko: "AWS 세션 한장환 님", en: "AWS session Han Jang-whan" },
+        label: { ko: "AWS 세션 한장환 님", en: "AWS session Han Jang-whan" },
         eventId: "d1-aws-session",
       },
       {
@@ -501,7 +501,7 @@ export const days: DayMeta[] = [
       },
       {
         time: "3:20PM–4PM",
-        label: { ko: "네트워킹 문제 브레인스토밍 팀 매칭", en: "Networking brainstorming the problem team matching" },
+        label: { ko: "네트워킹 문제 브레인스토밍 팀 매칭", en: "Networking brainstorming the problem team matching" },
         // 마지막 절이 Day 2로 넘기는 다리입니다 (2026-08-12). 현장 매칭이 끝나는
         // 자리가 이 줄이라, 그 다음이 무엇인지도 여기서 말해야 합니다 — 즉석으로
         // 팀이 된 사람에게는 "그래서 이제 어떻게 되나"가 바로 다음 질문입니다.
@@ -509,7 +509,7 @@ export const days: DayMeta[] = [
       },
       {
         time: "4PM–4:30PM",
-        label: { ko: "마무리 정리", en: "Wrap-up" },
+        label: { ko: "마무리 정리", en: "Wrap-up" },
       },
     ],
     dayMode: "offline",
@@ -555,7 +555,7 @@ export const days: DayMeta[] = [
     date: "08.24",
     weekday: { ko: "월", en: "Mon" },
     phase: LAB1,
-    theme: { ko: "자율 빌드 멘토링", en: "Self-paced build Mentoring" },
+    theme: { ko: "자율 빌드 멘토링", en: "Self-paced build Mentoring" },
     // Leads with "정해진 일정은 …뿐" rather than the task list. The old version
     // opened with what teams should get done, which reads as assigned work on a
     // day whose only fixed item is an optional 1:1 slot.
@@ -577,7 +577,7 @@ export const days: DayMeta[] = [
     date: "08.25",
     weekday: { ko: "화", en: "Tue" },
     phase: LAB1,
-    theme: { ko: "자율 빌드 멘토링", en: "Self-paced build Mentoring" },
+    theme: { ko: "자율 빌드 멘토링", en: "Self-paced build Mentoring" },
     summary: {
       ko: "정해진 일정은 오후 1:1 멘토링(온라인 기본)뿐이고, 나머지는 각자 비는 시간에 원하는 만큼 빌드하면 됩니다.",
       en: "The only fixed thing is a PM 1:1 mentoring slot (online by default), and the rest is yours to build in whatever free time you have.",
@@ -601,7 +601,7 @@ export const days: DayMeta[] = [
     //
     // 헤지가 사라진 이유: "기획 중"이 붙어 있던 것은 프로그램이 미정이어서였고,
     // 이제 컨셉과 진행 순서가 정해졌습니다. 새 헤지를 붙이지 마세요.
-    theme: { ko: "집중 빌드 중간 점검", en: "Focused build Mid-point check" },
+    theme: { ko: "집중 빌드 중간 점검", en: "Focused build Mid-point check" },
     // 10AM–2PM is the *SCAPE EVENT window — set-up (9AM) and teardown (3PM) are
     // booked separately OUTSIDE it, so unlike Day 1 there is nothing to subtract:
     // this is already pure programme time. Do not trim it "for consistency" with
@@ -669,7 +669,7 @@ export const days: DayMeta[] = [
     runOfShow: [
       {
         time: "10AM–10:20AM",
-        label: { ko: "입장 체크인 자리 잡기", en: "Doors check-in find a spot" },
+        label: { ko: "입장 체크인 자리 잡기", en: "Doors check-in find a spot" },
       },
       {
         // DECIDED 2026-08-15: 오후에 있던 LAP Time 공유가 하루를 여는 자리로
@@ -703,7 +703,7 @@ export const days: DayMeta[] = [
         // 식사 언급 전면 제거, 제공 안내도 미제공 안내도 쓰지 않는다. 어느 방향으로든
         // 다시 넣지 마세요. note에는 무엇을 해도 되는 시간인지만 씁니다.
         time: "12PM–12:40PM",
-        label: { ko: "점심시간 캐주얼 밋업", en: "Lunch break casual meetup" },
+        label: { ko: "점심시간 캐주얼 밋업", en: "Lunch break casual meetup" },
         note: { ko: "자유 시간이에요. 트랙을 섞어 편하게 이야기해도 좋고, 나갔다 와도 좋습니다.", en: "Free time. Mix across tracks and talk, or step out and come back." },
       },
       {
@@ -723,7 +723,7 @@ export const days: DayMeta[] = [
         // 것이지 1·2·3등이 아닙니다 — 이 행사는 2026-08-05에 순위형 시상을
         // 폐지했습니다. "1위"·"순위"·"등수"를 쓰지 마세요. 득표수도 적지 않습니다.
         time: "1:30PM–1:45PM",
-        label: { ko: "즉석 인기 투표 결과 공개", en: "On-the-spot vote results" },
+        label: { ko: "즉석 인기 투표 결과 공개", en: "On-the-spot vote results" },
         // DECIDED 2026-08-16 (원대로 대표 지시 + 박주형 합의): 해녀의 부엌이 이
         // 투표의 부상을 후원합니다. 기존 두 문장(그 자리 공개 + Day 8 최종 집계
         // 반영)은 그대로 두고 한 문장만 뒤에 붙였습니다.
@@ -750,7 +750,7 @@ export const days: DayMeta[] = [
       },
       {
         time: "1:45PM–2PM",
-        label: { ko: "클로징 남은 3일 안내", en: "Closing what's left of the eight days" },
+        label: { ko: "클로징 남은 3일 안내", en: "Closing what's left of the eight days" },
       },
     ],
     dayMode: "offline",
@@ -832,11 +832,11 @@ export const days: DayMeta[] = [
     runOfShow: [
       {
         time: "9AM–9:10AM",
-        label: { ko: "인트로 멘토 소개", en: "Intro meet the mentors" },
+        label: { ko: "인트로 멘토 소개", en: "Intro meet the mentors" },
       },
       {
         time: "9:10AM–11:30AM",
-        label: { ko: "멘토링 최종 점검", en: "Mentoring final check" },
+        label: { ko: "멘토링 최종 점검", en: "Mentoring final check" },
         eventId: "d7-final-rehearsal",
       },
       {
@@ -860,7 +860,7 @@ export const days: DayMeta[] = [
         // 내려가 그 자리가 촬영과 네트워킹을 함께 갖습니다. 2PM(현장 종료)은
         // 그대로라, 이 세션을 늘린다면 늘어나는 만큼 아래에서 빼야 합니다.
         time: "12:30PM–1:10PM",
-        label: { ko: "조언 세션 박희덕 대표님", en: "Advice session Park Hee-deok" },
+        label: { ko: "조언 세션 박희덕 대표님", en: "Advice session Park Hee-deok" },
         eventId: "d7-speaker-session",
       },
       // 12:30–2PM 한 줄이었는데 쪼갰습니다 (2026-08-04). 합쳐두면 조언 세션이
@@ -870,7 +870,7 @@ export const days: DayMeta[] = [
       // 빈 시간을 이름 없이 두면 "여기서 끝난 건가"로 읽힙니다.
       {
         time: "1:10PM–2PM",
-        label: { ko: "기념촬영 네트워킹", en: "Photos networking" },
+        label: { ko: "기념촬영 네트워킹", en: "Photos networking" },
         note: {
           ko: "주최사와 주관 학생회 임원진 기념촬영, 이어서 단체 사진 (잠정, 확정 시 안내). 남는 시간은 자유롭게 네트워킹으로 쓰시면 돼요.",
           en: "Commemorative photos with the host companies and the student council executives, then a group shot (provisional, we'll confirm). The rest of the slot is yours to network in.",
@@ -906,7 +906,7 @@ export const days: DayMeta[] = [
     // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회. 순위형
     // 시상 폐지·테마형 어워드(부문 pending)·인턴십 전원 개방. 이벤트 id는 그대로
     // 둡니다 — 바뀐 것은 카피뿐입니다.
-    theme: { ko: "결과 공유회 최종 발표", en: "Showcase Final Presentations" },
+    theme: { ko: "결과 공유회 최종 발표", en: "Showcase Final Presentations" },
     // EDIT 2026-08-12: 산문에서 트랙 "수"를 뺐습니다("두 트랙 팀 발표" → "트랙별
     // 팀 발표"). 세 곳이 같은 편집을 받았습니다: 이 summary · d8-opening-keynote
     // description · d8-closing description.
@@ -973,7 +973,7 @@ export const days: DayMeta[] = [
       // 수가 바로 줄어듭니다.
       {
         time: "10:10AM–10:20AM",
-        label: { ko: "오프닝 오늘의 순서 안내", en: "Opening what today looks like" },
+        label: { ko: "오프닝 오늘의 순서 안내", en: "Opening what today looks like" },
       },
       {
         time: "10:20AM–12:20PM",
@@ -995,12 +995,12 @@ export const days: DayMeta[] = [
       },
       {
         time: "3PM–3:40PM",
-        label: { ko: "커리어 간담회 박희덕 대표님", en: "Career session Park Hee-deok" },
+        label: { ko: "커리어 간담회 박희덕 대표님", en: "Career session Park Hee-deok" },
         eventId: "d8-opening-keynote",
       },
       {
         time: "3:40PM–3:50PM",
-        label: { ko: "테마별 어워드 발표 사진", en: "Thematic awards photos" },
+        label: { ko: "테마별 어워드 발표 사진", en: "Thematic awards photos" },
         eventId: "d8-final-pitch",
       },
       {
@@ -1009,7 +1009,7 @@ export const days: DayMeta[] = [
         // 실물로 드리는 그 한 장. 크래시코스 수료증은 PDF로 나가므로 이 사진에
         // 등장하지 않습니다. 둘을 "수료증"으로 뭉뚱그리면 PDF도 현장에서 받는
         // 것처럼 읽힙니다.
-        label: { ko: "What's next 안내 완주 수료증과 함께 단체 사진", en: "What's next group photo with your completion certificate" },
+        label: { ko: "What's next 안내 완주 수료증과 함께 단체 사진", en: "What's next group photo with your completion certificate" },
       },
     ],
     dayMode: "offline",
@@ -1074,8 +1074,8 @@ const ONLINE: Bilingual = { ko: "온라인", en: "Online" };
 // SMU로 옮겨가면서 "현장"이 두 곳이 됐고, 그 상태에서 ONSITE라는 이름은 어느
 // 현장인지 말하지 못합니다. Day 8은 아래 SMU_LKCSB를 씁니다.
 const SCAPE_LIFE: Bilingual = {
-  ko: "*SCAPE L^IFE Jungle 싱가포르 현장 집결",
-  en: "*SCAPE L^IFE Jungle Singapore in person",
+  ko: "*SCAPE L^IFE Jungle 싱가포르 현장 집결",
+  en: "*SCAPE L^IFE Jungle Singapore in person",
 };
 // Day 8 결과 공유회 (2026-08-19 확정, 예약 BK-20260819-000293).
 // 방 번호까지 적는 이유는 캠퍼스이기 때문입니다 — "SMU"만으로는 어느 건물인지
@@ -1085,8 +1085,8 @@ const SCAPE_LIFE: Bilingual = {
 // 8/13 프리이벤트가 열린 SMU 법학대학원(YPHSL)과는 다른 건물입니다. 두 이름을
 // 뭉뚱그려 "SMU"로 쓰지 마세요.
 const SMU_LKCSB: Bilingual = {
-  ko: "SMU 리콩치안 경영대학(LKCSB) 클래스룸 2-1",
-  en: "SMU Lee Kong Chian School of Business (LKCSB) Classroom 2-1",
+  ko: "SMU 리콩치안 경영대학(LKCSB) 클래스룸 2-1",
+  en: "SMU Lee Kong Chian School of Business (LKCSB) Classroom 2-1",
 };
 // Day 1 kickoff venue — The Foundry's The Refinery hall, booked 2026-08-03 for
 // 22 Aug. This REPLACED SMU YPHSL B2-03: that room was the Day-1 booking until
@@ -1101,16 +1101,16 @@ const SMU_LKCSB: Bilingual = {
 // Only Day 1 uses this — Day 5 is at *SCAPE (SCAPE_LIFE), the Showcase (Day 8)
 // at SMU (SMU_LKCSB), Day 7 at the AWS office.
 const FOUNDRY_REFINERY: Bilingual = {
-  ko: "The Foundry (The Refinery 홀) 11 Prinsep Link",
-  en: "The Foundry (The Refinery hall) 11 Prinsep Link",
+  ko: "The Foundry (The Refinery 홀) 11 Prinsep Link",
+  en: "The Foundry (The Refinery hall) 11 Prinsep Link",
 };
 // The venue's own site, shown as a link on the modal's 장소 row (see
 // BEvent.locationUrl). Booking terms and costs stay OUT of the site.
 const FOUNDRY_URL = "https://foundry.sg";
 // Day 7's new venue — the Final Rehearsal moves to the AWS office (confirmed).
 const AWS_OFFICE: Bilingual = {
-  ko: "AWS 오피스, 싱가포르 현장",
-  en: "AWS office, Singapore in person",
+  ko: "AWS 오피스, 싱가포르 현장",
+  en: "AWS office, Singapore in person",
 };
 // The 1:1 mentoring is arranged MENTOR BY MENTOR, and the default is ONLINE.
 // In person is what an individual mentor may offer, not what the programme
@@ -1331,7 +1331,7 @@ export const schedule: BEvent[] = [
     // 창) 실제 창보다 좁게 안내됐습니다. 되돌려 버퍼를 빼지 마세요.
     // 시각을 말하는 곳은 이제 여기 하나입니다. description에도 같은 창이 적혀 있어
     // 둘을 맞춰 두어야 했는데, 한쪽만 고쳐지면 조용히 어긋나므로 뺐습니다.
-    dayLabel: { ko: "사전 세션 08.13 (목) 18:00–20:00", en: "Pre-event Thu 13 Aug, 18:00–20:00" },
+    dayLabel: { ko: "사전 세션 08.13 (목) 18:00–20:00", en: "Pre-event Thu 13 Aug, 18:00–20:00" },
     title: { ko: "Enterprise Tech Deep Dive: How to Build", en: "Enterprise Tech Deep Dive: How to Build" },
     // Just the role — no "(성함 비공개)" tag. Saying out loud that a name is being
     // withheld draws attention to the absence and reads as something hidden; the
@@ -1393,7 +1393,7 @@ export const schedule: BEvent[] = [
     // 정본은 days[0].runOfShow이고 이 값은 사본입니다.
     time: "1:20PM–2:05PM",
     confirmed: true,
-    title: { ko: "오프닝 키노트 원대로 대표님", en: "Opening Keynote Won Dae-ro" },
+    title: { ko: "오프닝 키노트 원대로 대표님", en: "Opening Keynote Won Dae-ro" },
     // TODO: confirm — speaker name is from the internal deck; confirm public naming is OK.
     speaker: { ko: "원대로 대표님", en: "Won Dae-ro" },
     summary: {
@@ -1478,7 +1478,7 @@ export const schedule: BEvent[] = [
     // 두 카드가 같은 시각을 갖는 게 맞습니다(중복이 아니라 사실).
     // DECIDED 2026-08-16: 블록이 2PM 시작 30분으로 바뀌면서 함께 옮겼습니다.
     time: "2:15PM–2:30PM",
-    title: { ko: "문제 공개 트랙 선택", en: "Problem Release Track Selection" },
+    title: { ko: "문제 공개 트랙 선택", en: "Problem Release Track Selection" },
     summary: {
       ko: "실제 기업의 AX 과제가 공개되고, 트랙을 고르며 8일 빌드 시계가 시작됩니다 (트랙 구성은 확정 전).",
       en: "Real companies' AX problems drop, you pick a track, and the 8-day build clock starts (track line-up not final yet).",
@@ -1517,7 +1517,7 @@ export const schedule: BEvent[] = [
       name: { ko: "김성호", en: "Sungho Kim" },
       // 공개 프로필이 말하는 만큼만: 소속과 하는 일. 정확한 직함(파트너 등)은
       // 확인되면 여기에 넣으세요 — 추측해서 붙이지 않았습니다.
-      role: { ko: "해시드 벤처 투자자 (싱가포르)", en: "Venture investor, Hashed (Singapore)" },
+      role: { ko: "해시드 벤처 투자자 (싱가포르)", en: "Venture investor, Hashed (Singapore)" },
       img: "/partners/people/kim-sung-ho.jpg",
       bio: {
         ko: "Web3 and AI 투자. AI 에이전트 인프라와 신뢰 구조, 아시아의 스테이블코인과 크로스보더 결제를 봅니다. KAIST.",
@@ -1597,7 +1597,7 @@ export const schedule: BEvent[] = [
     // 온라인입니다(DayMeta.hours 주석).
     time: "9AM–12PM",
     confirmed: true,
-    title: { ko: "크래시코스 바이브 코딩 입문", en: "Crash Course Vibe Coding Intro" },
+    title: { ko: "크래시코스 바이브 코딩 입문", en: "Crash Course Vibe Coding Intro" },
     // Confirmed instructor. Title from her own LinkedIn headline — "Co-founder &
     // Director & Content R&D Lead at Codepresso". She runs Codepresso's content
     // R&D, which is exactly what this session is, so the credential is worth
@@ -1708,8 +1708,8 @@ export const schedule: BEvent[] = [
     // (하기로 정해졌고 세부만 공개 전 — dictionary.ts pendingLabel 주석 참고).
     // 새 라벨을 짓지 마세요.
     location: {
-      ko: "현장 장소는 추후 안내 (팀 카톡방)",
-      en: "In person venue TBA (via the team chat)",
+      ko: "현장 장소는 추후 안내 (팀 카톡방)",
+      en: "In person venue TBA (via the team chat)",
     },
     // 매칭 참가자 대상이라는 것, 그리고 그 외에는 이 시간이 자율 빌드라는 것까지
     // 여기서 한 번 더 말합니다. 요약·설명이 이미 말하지만, 이 목록은 "그래서 내가
@@ -1880,7 +1880,7 @@ export const schedule: BEvent[] = [
     // 동안 모달 칩을 덮어쓰던 dayLabel은 그래서 제거했습니다: 기본 형식
     // ("Day 5 · 08.26 · AM")이 이제 맞는 말입니다.
     timeOfDay: "AM",
-    title: { ko: "집중 빌드 중간 점검", en: "Focused Build Mid-point Check" },
+    title: { ko: "집중 빌드 중간 점검", en: "Focused Build Mid-point Check" },
     // DECIDED 2026-08-15: 하루의 아크가 바뀌었습니다 — 공유로 열고, 빌드하고,
     // 오늘 나아간 것을 다시 공유하고, 가장 많이 나아간 팀에게 투표합니다.
     // 제목과 이벤트 id는 그대로입니다.
@@ -2019,7 +2019,7 @@ export const schedule: BEvent[] = [
     time: "12:30PM–1:10PM",
     // TODO: confirm public naming — speaker (박희덕) from the internal deck.
     speaker: { ko: "박희덕 대표님", en: "Park Hee-deok" },
-    title: { ko: "조언 세션 ‘제로백의 진짜 의미’", en: "Advice Session “The Real Meaning of Zero100”" },
+    title: { ko: "조언 세션 ‘제로백의 진짜 의미’", en: "Advice Session “The Real Meaning of Zero100”" },
     // 시각은 `time`이 갖습니다 — 요약과 설명 앞머리에 박혀 있던 "12:30–14:00"을
     // 뺐습니다. 같은 정보가 세 군데 있으면 하나가 바뀔 때 나머지가 어긋납니다.
     summary: {
@@ -2067,7 +2067,7 @@ export const schedule: BEvent[] = [
     timeOfDay: "AM",
     time: "3PM–3:40PM",
     confirmed: true,
-    title: { ko: "커리어 간담회 ‘FDE로 일한다는 것’", en: "Career Session “Working as an FDE”" },
+    title: { ko: "커리어 간담회 ‘FDE로 일한다는 것’", en: "Career Session “Working as an FDE”" },
     // TODO: confirm — speaker name is from the internal deck; confirm public naming is OK.
     speaker: { ko: "박희덕 대표님", en: "Park Hee-deok" },
     summary: {
@@ -2092,7 +2092,7 @@ export const schedule: BEvent[] = [
     // 됐습니다. 이 카드의 time은 두 슬롯을 합친 구간이라 사이의 점심시간까지
     // 포함합니다(그래서 description이 점심을 한 마디 말합니다).
     time: "10:20AM–3PM",
-    title: { ko: "공유회 발표 전문가 피드백", en: "Showcase Presentations Expert Feedback" },
+    title: { ko: "공유회 발표 전문가 피드백", en: "Showcase Presentations Expert Feedback" },
     // 발표 길이는 "팀당 10분"입니다(발표 5분 + Q&A와 심사 5분, 2026-08-19 확정).
     // 참가자가 잘못된 길이로 준비해 오면 현장에서 그대로 사고가 나는 종류의
     // 숫자라, 이 값이 나오는 모든 곳을 함께 고쳤습니다.
@@ -2132,7 +2132,7 @@ export const schedule: BEvent[] = [
     mode: "offline",
     timeOfDay: "PM",
     time: "3:40PM–4PM",
-    title: { ko: "어워드 클로징", en: "Awards & Closing" },
+    title: { ko: "어워드 클로징", en: "Awards & Closing" },
     summary: {
       ko: "테마별 어워드 발표, 사진 → 앞으로의 안내 → 완주 수료증과 함께 단체 사진.",
       en: "Thematic awards and photos → what comes next → a group photo with your completion certificate.",

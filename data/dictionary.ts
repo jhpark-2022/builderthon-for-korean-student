@@ -14,15 +14,21 @@
 //   읽는 문장 → 쉼표나 조사.  "데모·피칭·수료증" → "데모와 피칭, 수료증"
 //                              "NUS · NTU · SMU" → "NUS, NTU, SMU"
 //                              "입대 전·전역 후" → "입대 전이거나 전역 후"
-//   칩·라벨·필·푸터 → 넓은 공백 U+2003 한 글자. "취지 · WHY" → "취지 WHY"
+//   칩·라벨·필·푸터 → 반각 공백 U+2002 한 글자. "취지 · WHY" → "취지 WHY"
 //
-// 넓은 공백은 일반 공백이 아니라 U+2003이어야 합니다. 일반 공백은 HTML이
-// 접어버려서 한 칸으로 줄고, 낱말 사이 공백과 구분이 안 됩니다. 이 파일의
-// 라벨에 이미 들어가 있는 그 글자를 복사해 쓰세요.
+// 일반 공백이 아니라 U+2002여야 합니다. 일반 공백은 HTML이 접어버려서 한 칸으로
+// 줄고, 낱말 사이 공백과 구분이 안 됩니다. 이 파일의 라벨에 이미 들어가 있는 그
+// 글자를 복사해 쓰세요.
+//
+// CHANGED 2026-08-19: U+2003(EM SPACE, 1em) → U+2002(EN SPACE, 0.5em). 1em은 한
+// 칸을 통째로 비워서 "AWS  GTM" 같은 짧은 라벨이 두 조각으로 갈라져 보였습니다.
+// 절반 폭이면 낱말 사이 공백과는 여전히 확실히 구분되면서 그렇게까지 벌어지지는
+// 않습니다. 더 좁히지 마세요 — U+2005 이하는 일반 공백과 눈으로 구분되지 않아
+// 구분자 역할 자체를 잃습니다.
 //
 // 예외는 고유명사뿐입니다 — d·camp처럼 이름 자체에 ·가 든 경우.
 // 이 규칙을 아는 코드가 하나 있습니다: Journey.tsx의 stopKeyword가 days[].theme을
-// U+2003으로 쪼갭니다. theme 라벨의 구분자를 바꾸면 그 함수도 함께 고쳐야 합니다.
+// U+2002로 쪼갭니다. theme 라벨의 구분자를 바꾸면 그 함수도 함께 고쳐야 합니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type Locale = "ko" | "en";
@@ -316,7 +322,7 @@ export const dict = {
 
   // Secondary CTA on the hero/footer that sends visitors to the /quiz mini-site.
   quizCta: {
-    eyebrow: { ko: "✦ AI 성격 테스트 환상의 궁합", en: "✦ AI test dream teammates" },
+    eyebrow: { ko: "✦ AI 성격 테스트 환상의 궁합", en: "✦ AI test dream teammates" },
     button: { ko: "내 AI 모델 알아보기", en: "Find your AI model" },
   },
 
@@ -393,7 +399,7 @@ export const dict = {
       en: "16 AI models. Which one are you?",
     },
     hookQuizCtaBig: { ko: "내 유형 보기", en: "See my type" },
-    hookQuizMeta: { ko: "14문항 약 3분", en: "14 questions ~3 min" },
+    hookQuizMeta: { ko: "14문항 약 3분", en: "14 questions ~3 min" },
     // Rotating teaser under the question — REAL variant names from data/quiz.ts,
     // resolved at runtime from RESULTS so they can never drift from the data.
     hookQuizShufflePrefix: { ko: "예를 들면", en: "For instance" },
@@ -430,8 +436,8 @@ export const dict = {
     // 늦은 등록의 팀 매칭 단서는 여기 말고 뒤의 두 곳이 답니다 — 이 줄은
     // 조건을 나열하는 자리지 단서를 다는 자리가 아닙니다.
     reassure: {
-      ko: "참가비 무료 사전 심사 없음 코딩 몰라도 OK 솔로 환영 당일 결정 OK",
-      en: "Free to join No screening No coding needed Solo welcome Decide on the day",
+      ko: "참가비 무료 사전 심사 없음 코딩 몰라도 OK 솔로 환영 당일 결정 OK",
+      en: "Free to join No screening No coding needed Solo welcome Decide on the day",
     },
     // "How long will this take" — the other silent objection. Sits as a chip on
     // the hook CTA and is restated at the top of the modal, where it's checkable
@@ -656,10 +662,10 @@ export const dict = {
     // marketing keys: any row carrying those came in under the old question and
     // should stay distinguishable from answers to this one.
     trackOptions: [
-      { value: "ops_automation", label: { ko: "업무 자동화 반복작업 줄이기", en: "Ops automation cutting repetitive work" } },
-      { value: "data_analytics", label: { ko: "데이터 분석", en: "Data & analytics" } },
-      { value: "customer_marketing", label: { ko: "고객 마케팅", en: "Customers & marketing" } },
-      { value: "engineering", label: { ko: "개발 엔지니어링", en: "Engineering" } },
+      { value: "ops_automation", label: { ko: "업무 자동화 반복작업 줄이기", en: "Ops automation cutting repetitive work" } },
+      { value: "data_analytics", label: { ko: "데이터 분석", en: "Data & analytics" } },
+      { value: "customer_marketing", label: { ko: "고객 마케팅", en: "Customers & marketing" } },
+      { value: "engineering", label: { ko: "개발 엔지니어링", en: "Engineering" } },
       { value: "unsure", label: { ko: "아직 모르겠어요", en: "Not sure yet" } },
     ],
     // AI-type block — shown ONLY for solo applicants who opted into matching.
@@ -766,7 +772,7 @@ export const dict = {
     },
     titleLine1: { ko: "싱가포르,", en: "Build" },
     titleLine2: { ko: "빌드의 무대", en: "in Singapore." },
-    dates: { ko: "2026.08.22 – 08.29 8일", en: "22–29 Aug 2026 8 days" },
+    dates: { ko: "2026.08.22 – 08.29 8일", en: "22–29 Aug 2026 8 days" },
     // REMOVED 2026-08-12: `location` ("싱가포르 · *SCAPE L^IFE Jungle & AWS 오피스").
     // 렌더되는 곳이 한 군데도 없는 문자열이었는데, 내용까지 낡아 있었습니다 —
     // 2026-08-03에 Day 1(유일한 필참 현장)이 The Foundry로 잡히면서 장소가 셋이
@@ -851,8 +857,8 @@ export const dict = {
     // 값은 Journey.tsx의 LAUNCH_AT과 반드시 같아야 합니다. 둘이 갈라지면
     // 시계와 글이 서로 다른 시각을 가리키게 됩니다.
     countdownStartsAt: {
-      ko: "8월 22일 (토) 오후 1시 싱가포르 현지 시각",
-      en: "Sat 22 Aug, 1PM Singapore time",
+      ko: "8월 22일 (토) 오후 1시 싱가포르 현지 시각",
+      en: "Sat 22 Aug, 1PM Singapore time",
     },
     // 등록 마감. 시작 시각(countdownStartsAt) 바로 아래에 붙습니다.
     //
@@ -872,8 +878,8 @@ export const dict = {
     // 구분 기호는 가운뎃점이 아니라 em space입니다 (2026-08-14 규칙: 사이트에서
     // 가운뎃점을 쓰지 않습니다). **오후 2시 15분**은 Emph가 앰버로 칠하는 자리입니다.
     countdownDeadline: {
-      ko: "등록 마감 같은 날 **오후 2시 15분**",
-      en: "Registration closes same day, **2:15PM**",
+      ko: "등록 마감 같은 날 **오후 2시 15분**",
+      en: "Registration closes same day, **2:15PM**",
     },
     // Sits under the countdown grid. Says what registering early actually gets
     // you — NOT that seats are running out. The deadline above is a date, not a
@@ -1072,7 +1078,7 @@ export const dict = {
     visionSteps: [
       {
         num: "1",
-        when: { ko: "2026.08 싱가포르", en: "Aug 2026 Singapore" },
+        when: { ko: "2026.08 싱가포르", en: "Aug 2026 Singapore" },
         title: { ko: "Zero100 AI 빌더톤", en: "Zero100 AI Builderthon" },
         body: {
           ko: "8일의 성공 경험. 여기서 만나는 동료와 멘토, 기업이 전부의 시작점입니다.",
@@ -1102,7 +1108,7 @@ export const dict = {
         // schedule.ts는 "OpenAI is not a partner of this event"를 지키고 있고,
         // 그 규칙과 이 문장이 충돌하지 않는 이유가 '별도'라는 낱말입니다.
         // 사이트에서 이 이야기를 하는 자리는 여기 하나입니다(HASHED_ORG 주석 참고).
-        when: { ko: "행사 직후 협의 중", en: "Right after the event In talks" },
+        when: { ko: "행사 직후 협의 중", en: "Right after the event In talks" },
         title: { ko: "글로벌 해커톤", en: "Global hackathon" },
         body: {
           ko: "해시드와 OpenAI 지원을 논의 중인 별도 해커톤. Zero100 참가자 우선권, 로컬 학생 커뮤니티와 함께.",
@@ -1129,7 +1135,7 @@ export const dict = {
       },
       {
         num: "4",
-        when: { ko: "2026.12 서울 강남", en: "Dec 2026 Gangnam, Seoul" },
+        when: { ko: "2026.12 서울 강남", en: "Dec 2026 Gangnam, Seoul" },
         title: { ko: "강남 쇼케이스", en: "Gangnam showcase" },
         body: {
           ko: "인큐베이팅을 거친 팀들이 강남에서, 한국 기업과 투자자 앞에 다시 섭니다.",
@@ -1196,7 +1202,7 @@ export const dict = {
         url: "https://www.kyeongin.com/article/1768469",
       },
       {
-        outlet: { ko: "BZCF 비즈까페", en: "BZCF" },
+        outlet: { ko: "BZCF 비즈까페", en: "BZCF" },
         date: { ko: "2026.07.05", en: "5 Jul 2026" },
         title: {
           ko: "「세계는 넓고 할 일은 많다」",
@@ -1412,7 +1418,7 @@ export const dict = {
           name: { ko: "데모 영상", en: "Demo video" },
           ko: "입력에서 처리, 출력까지 실제 화면. 홍보물이 아니라 작동 증명이 목적이라 편집은 최소로 합니다",
           en: "Input, processing and output on the real screen. It exists to prove the thing runs, not to sell it, so keep the editing minimal",
-          format: { ko: "1–2분 mp4", en: "1–2 min mp4" },
+          format: { ko: "1–2분 mp4", en: "1–2 min mp4" },
         },
         {
           // EDIT 2026-08-17: 개발자 어휘를 걷어냈습니다. "레포"(repo)·"배포"·
@@ -1467,7 +1473,7 @@ export const dict = {
     // 조용히 갈라집니다. 확정되면 그 네 곳을 함께 고치세요.
     awards: {
       tag: { ko: "테마형 어워드", en: "Thematic awards" },
-      countBadge: { ko: "4부문 8팀", en: "4 awards 8 teams" },
+      countBadge: { ko: "4부문 8팀", en: "4 awards 8 teams" },
       // DECIDED 2026-08-16 (박주형, 외부 피드백 반영 — 정체성 얼라인, 공모전):
       // 이 행사의 정체성은 공모전입니다. 좋은 결과물을 뽑고, 어워드로 쇼트리스트를
       // 만들고, 수상팀에게 행사 뒤 실제 어드밴티지가 이어지는 구조. 옛 제목
@@ -1506,8 +1512,8 @@ export const dict = {
           // 뜻이 없어집니다.
           name: { ko: "비욘드 브리프", en: "Beyond the Brief" },
           meta: {
-            ko: "출제사 코드프레소 지명 트랙당 1팀 현금 부상",
-            en: "Named by Codepresso, the problem owner one per track cash prize",
+            ko: "출제사 코드프레소 지명 트랙당 1팀 현금 부상",
+            en: "Named by Codepresso, the problem owner one per track cash prize",
           },
           desc: {
             ko: "‘어… 이건 우리 답지에 없던 접근인데요?’ 소리가 나오게 한 팀.",
@@ -1517,8 +1523,8 @@ export const dict = {
         {
           name: { ko: "비즈니스 포텐셜", en: "Business Potential" },
           meta: {
-            ko: "VC 패널 지목 트랙당 1팀 현금 부상",
-            en: "The VC panel's pick one per track cash prize",
+            ko: "VC 패널 지목 트랙당 1팀 현금 부상",
+            en: "The VC panel's pick one per track cash prize",
           },
           desc: {
             ko: "발표를 듣다가 ‘이거 되겠는데?’ 하고 지갑이 먼저 반응한 팀.",
@@ -1536,8 +1542,8 @@ export const dict = {
           // 같은 사실이 schedule.ts의 Day 5(runOfShow 투표 줄 · 카드 description)에도
           // 있습니다. 함께 움직이세요. 배점 숫자는 어디에도 쓰지 않습니다.
           meta: {
-            ko: "참가자 투표 트랙당 1팀 널담 바우처 Day 5 즉석 투표 결과 합산",
-            en: "Voted by the participants one per track Nuldam voucher the Day 5 vote carries into it",
+            ko: "참가자 투표 트랙당 1팀 널담 바우처 Day 5 즉석 투표 결과 합산",
+            en: "Voted by the participants one per track Nuldam voucher the Day 5 vote carries into it",
           },
           desc: {
             ko: "발표가 다 끝났는데도 자꾸 생각나는, 빌더들이 뽑은 최애의 팀.",
@@ -1551,8 +1557,8 @@ export const dict = {
           // 다른 세 부문으로 넓히지 마세요. 체크인 폼의 과정 기록 문구와 같은
           // 계약입니다: 숫자 없이, 무엇이 반영되는지만.
           meta: {
-            ko: "운영진 선정 트랙 무관 2팀 널담 바우처 Day 5 출석 반영",
-            en: "The organizers' pick two teams, any track Nuldam voucher Day 5 attendance counts",
+            ko: "운영진 선정 트랙 무관 2팀 널담 바우처 Day 5 출석 반영",
+            en: "The organizers' pick two teams, any track Nuldam voucher Day 5 attendance counts",
           },
           desc: {
             ko: "첫날엔 ‘제가요? 이걸요?’였다가 마지막 날 ‘제가 만들었는데요’가 된, 출발선에서 가장 먼 거리를 온 팀.",
@@ -1761,8 +1767,8 @@ export const dict = {
           id: "required",
           label: { ko: "필참 2일", en: "Required" },
           body: {
-            ko: "Day 1 오프닝 Day 8 결과 공유회, 싱가포르 현장",
-            en: "Day 1 opening Day 8 Showcase, in person in Singapore",
+            ko: "Day 1 오프닝 Day 8 결과 공유회, 싱가포르 현장",
+            en: "Day 1 opening Day 8 Showcase, in person in Singapore",
           },
         },
         {
@@ -1777,8 +1783,8 @@ export const dict = {
           // 순서·투표·가산)는 노선도 카드와 데이 모달이 말합니다.
           // 이름은 schedule.ts days[4].theme의 머리 조각과 같은 말이어야 합니다.
           body: {
-            ko: "Day 5 집중 빌드 Day 7 파이널 리허설, 참여는 선택",
-            en: "Day 5 focused build Day 7 final rehearsal, both optional",
+            ko: "Day 5 집중 빌드 Day 7 파이널 리허설, 참여는 선택",
+            en: "Day 5 focused build Day 7 final rehearsal, both optional",
           },
         },
         {
@@ -1797,8 +1803,8 @@ export const dict = {
           // 숫자)는 쓰지 않습니다 — 바뀔 수 있는 운영 정보라 예약 시스템이 갖습니다.
           label: { ko: "온라인", en: "Online" },
           body: {
-            ko: "크래시코스 1:1 멘토링 — Day 3~7 매일, 팀이 고른 시간에 (온라인 기본)",
-            en: "Crash course 1:1 mentoring — every day from Day 3 to 7, at times your team picks (online by default)",
+            ko: "크래시코스 1:1 멘토링 — Day 3~7 매일, 팀이 고른 시간에 (온라인 기본)",
+            en: "Crash course 1:1 mentoring — every day from Day 3 to 7, at times your team picks (online by default)",
           },
         },
       ],
@@ -1927,8 +1933,8 @@ export const dict = {
       // 예전의 mentoringBandAria(밴드 전용 대사)는 지웠습니다 — 눈으로 읽는
       // 사람과 같은 정보를 이 필이 그대로 말하고 있어서 중복이었습니다.
       mentoringBand: {
-        ko: "1:1 멘토링 Day {from}~{to} 매일 열려 있어요",
-        en: "1:1 mentoring open every day, Day {from}–{to}",
+        ko: "1:1 멘토링 Day {from}~{to} 매일 열려 있어요",
+        en: "1:1 mentoring open every day, Day {from}–{to}",
       },
     },
     // Sits in the same slot as the ★필참 pill and must stay quieter than it —
@@ -1960,7 +1966,7 @@ export const dict = {
     dayLabel: { ko: "Day", en: "Day" },
     // Label on the wide band above Lab 1. "사전" rather than "Day 0" — the
     // session is a prologue to the eight days, not a day of them.
-    preEventTag: { ko: "사전 세션 8/13", en: "Pre-event 13 Aug" },
+    preEventTag: { ko: "사전 세션 8/13", en: "Pre-event 13 Aug" },
     tapHint: { ko: "자세히 보기", en: "View details" },
     confirmedBadge: { ko: "확정", en: "Confirmed" },
     mandatoryBadge: { ko: "필참", en: "Required" },
@@ -1969,7 +1975,7 @@ export const dict = {
     // dayMode "mixed" — a day that is genuinely half online, half on-site.
     // UNUSED right now: Day 3·4 carried it while their mentoring defaulted to
     // in-person F2F, and both went back to plain 온라인 when that default flipped.
-    mixedLabel: { ko: "온라인 현장", en: "Online in person" },
+    mixedLabel: { ko: "온라인 현장", en: "Online in person" },
     // dayMode "online-default" — Day 2·3·4. The day badge's whole job is to stop
     // "온라인" from reading as a guarantee that nothing that day is in person;
     // it does NOT try to explain the exception. Deliberately shorter than the
@@ -1997,8 +2003,8 @@ export const dict = {
     selfPacedLabel: { ko: "자율 진행", en: "Self-paced" },
     // The event modal's "진행 방식" row, where there's space to say why.
     selfPacedMode: {
-      ko: "자율 진행 정해진 시간과 접속 없음",
-      en: "Self-paced no set time, nothing to join",
+      ko: "자율 진행 정해진 시간과 접속 없음",
+      en: "Self-paced no set time, nothing to join",
     },
     // Replaces the "N 세션" count on a day whose events are ALL self-paced —
     // counting sessions on a day with no sessions is the same misread again.
@@ -2279,7 +2285,7 @@ export const dict = {
           // 합니다(위 주석). 할인을 위로 올리면 발급 조건보다 혜택이 먼저 도착하고,
           // 수료증이 할인권처럼 읽힙니다.
           { ko: "완주 수료증을 보여주면 널담에서 구매 시 할인을 받을 수 있어요", en: "Show your completion certificate at Nuldam for a discount on your purchase" },
-          { ko: "링크드인 포트폴리오 이력에 활용", en: "Use them on LinkedIn, in your portfolio and CV" },
+          { ko: "링크드인 포트폴리오 이력에 활용", en: "Use them on LinkedIn, in your portfolio and CV" },
         ],
         // 매장 한 줄 (DECIDED 2026-08-16). 널담이 Day 5 현장과 같은 건물이라는
         // 점을 앞세웁니다 — 그날 온 사람이 그 자리에서 바로 들를 수 있다는 게 이
@@ -2414,7 +2420,7 @@ export const dict = {
 
   // ── 연사 · 공유 세션 (Day 1·7·8) ────────────────────────────────────────────
   speakers: {
-    tag: { ko: "연사 공유 세션", en: "Speaker sessions" },
+    tag: { ko: "연사 공유 세션", en: "Speaker sessions" },
     // Days listed here must match the cards in `people` below. Day 5 was in the
     // heading with no card to back it — its only content was the panel in
     // tbcNote, whose panelists were never arranged. That panel is gone for good
@@ -2446,7 +2452,7 @@ export const dict = {
     // 이름에는 존칭을 붙입니다 — 규칙은 dict.mentoring.mentors 위 '호칭 규칙' 주석.
     people: [
       {
-        day: { ko: "Day 1 오프닝 키노트", en: "Day 1 Opening keynote" },
+        day: { ko: "Day 1 오프닝 키노트", en: "Day 1 Opening keynote" },
         name: { ko: "원대로 대표님", en: "Won Dae-ro" },
         role: { ko: "Wilt Venture Builder 대표 (싱가포르)", en: "Managing Director, Wilt Venture Builder (SG)" },
         topic: { ko: "‘취업과 창업의 사이’", en: "“Between employment and founding”" },
@@ -2456,7 +2462,7 @@ export const dict = {
           { ko: "정형화된 ‘취업 vs 창업’ 이분법에서 벗어나기", en: "Stepping past the tidy ‘employment vs. founding’ binary" },
           { ko: "벤처빌더가 본 다양한 진로와 커리어 경로 탐색", en: "The many career paths a venture builder has seen" },
           { ko: "학생과 비개발자도 시작할 수 있는 여러 갈래", en: "Routes even students and non-developers can start from" },
-          { ko: "Q&A 포함 약 1시간, ‘처음이어도 된다’ 동기부여", en: "About an hour with Q&A, a ‘first-timers welcome’ nudge" },
+          { ko: "Q&A 포함 약 1시간, ‘처음이어도 된다’ 동기부여", en: "About an hour with Q&A, a ‘first-timers welcome’ nudge" },
         ],
       },
       {
@@ -2483,9 +2489,9 @@ export const dict = {
         // method, not the session's promise; keep it out unless the session grows
         // into a workshop. Same rule as the sibling cards: what will I take away,
         // in one line.
-        day: { ko: "Day 1 AWS 세션", en: "Day 1 AWS session" },
+        day: { ko: "Day 1 AWS 세션", en: "Day 1 AWS session" },
         name: { ko: "한장환 님", en: "Jang Whan Han" },
-        role: { ko: "AWS 솔루션 아키텍트 Well-Architected Solution Innovation", en: "Well-Architected Solution Innovation SA, AWS" },
+        role: { ko: "AWS 솔루션 아키텍트 Well-Architected Solution Innovation", en: "Well-Architected Solution Innovation SA, AWS" },
         topic: { ko: "‘AI-DLC’: AI가 주도하는 개발 라이프사이클", en: "“AI-DLC”: the AI-Driven Development Lifecycle" },
         img: "/partners/logos/speaker-han.jpeg",
         linkedin: "https://www.linkedin.com/in/jangwhan/",
@@ -2504,9 +2510,9 @@ export const dict = {
         // 무대 강연이 아니라 리허설 현장의 조언과 Q&A입니다. 이 카드에 "키노트"라는
         // 말을 쓰지 마세요. Day 8 카드의 위치 줄("모든 발표가 끝난 뒤 · 어워드 발표
         // 직전 40분")도 여기로 옮기지 마세요 — 그건 Day 8의 사실입니다.
-        day: { ko: "Day 7 조언 세션", en: "Day 7 Advice session" },
+        day: { ko: "Day 7 조언 세션", en: "Day 7 Advice session" },
         name: { ko: "박희덕 대표님", en: "Park Hee-deok" },
-        role: { ko: "트랜스링크인베스트먼트 대표 GP", en: "CEO General Partner, Translink Investment (VC)" },
+        role: { ko: "트랜스링크인베스트먼트 대표 GP", en: "CEO General Partner, Translink Investment (VC)" },
         topic: { ko: "‘제로백의 진짜 의미’", en: "“The Real Meaning of Zero100”" },
         img: "/partners/logos/speaker-park.jpeg",
         linkedin: "https://www.linkedin.com/in/hee-duk-park-304079bb",
@@ -2517,7 +2523,7 @@ export const dict = {
           // 뒤 20분은 촬영입니다. 이 섹션은 "무슨 이야기를 하는가"를 말하는 자리이니
           // 시각은 프로그램 쪽 한 곳에만 둡니다. 다시 넣지 마세요.
           { ko: "0 → 100의 핵심: 협업, 가치, 실행, 글로벌 스탠다드", en: "The core of 0 → 100: collaboration, value, execution, global standards" },
-          { ko: "협업의 힘 커뮤니티의 중요성", en: "The power of collaboration why community matters" },
+          { ko: "협업의 힘 커뮤니티의 중요성", en: "The power of collaboration why community matters" },
           { ko: "왜 지금, 왜 싱가포르의 한인 학생인가", en: "Why now, and why Korean students in Singapore" },
           { ko: "형식 없는 조언과 Q&A, 리허설 현장에서", en: "Advice and Q&A with no format, right there at the rehearsal" },
         ],
@@ -2525,9 +2531,9 @@ export const dict = {
       {
         // DECIDED 2026-08-13: 자리 맞바꿈으로 이 카드가 커리어 간담회가 됐습니다.
         // points 네 줄은 Day 7 카드에서 왔고, 마지막 위치 줄만 이 카드의 것입니다.
-        day: { ko: "Day 8 커리어 간담회", en: "Day 8 Career session" },
+        day: { ko: "Day 8 커리어 간담회", en: "Day 8 Career session" },
         name: { ko: "박희덕 대표님", en: "Park Hee-deok" },
-        role: { ko: "트랜스링크인베스트먼트 대표 GP", en: "CEO General Partner, Translink Investment (VC)" },
+        role: { ko: "트랜스링크인베스트먼트 대표 GP", en: "CEO General Partner, Translink Investment (VC)" },
         topic: { ko: "‘FDE로 일한다는 것’", en: "“Working as an FDE”" },
         img: "/partners/logos/speaker-park.jpeg",
         linkedin: "https://www.linkedin.com/in/hee-duk-park-304079bb",
@@ -2539,7 +2545,7 @@ export const dict = {
           // 입니다. 2026-08-14에 하루를 여는 자리로 올라갔다가 되돌아왔습니다.
           // 이 줄이 schedule.ts d8-opening-keynote와 같은 사실을 말해야 합니다.
           // 시각은 여기 다시 넣지 마세요 — 정본은 schedule.ts입니다.
-          { ko: "트랙 발표가 모두 끝난 뒤 어워드 직전 40분", en: "After every track has pitched the 40 minutes before the awards" },
+          { ko: "트랙 발표가 모두 끝난 뒤 어워드 직전 40분", en: "After every track has pitched the 40 minutes before the awards" },
         ],
       },
     ],
@@ -2580,7 +2586,7 @@ export const dict = {
     // The persona/role copy from the old cards is not thrown away — it carries
     // over as each group's `sub`/`note`, which is where it now does its work.
     warmup: {
-      label: { ko: "워밍업 Day 1–2", en: "Warm-up Day 1–2" },
+      label: { ko: "워밍업 Day 1–2", en: "Warm-up Day 1–2" },
       // A strip, not a box: these two run sessions (Day 1 AWS talk, Day 2
       // 크래시코스) rather than 1:1 mentoring, so giving them a box the size of
       // the other two would overstate what they are here to do.
@@ -2697,7 +2703,7 @@ export const dict = {
         id: "pitch",
         stages: [3],
         dayRange: { ko: "Day 7", en: "Day 7" },
-        title: { ko: "피치 세일즈 멘토링", en: "Pitch & sales mentoring" },
+        title: { ko: "피치 세일즈 멘토링", en: "Pitch & sales mentoring" },
         theme: { ko: "팔 때 돕는 사람들", en: "The people who help you sell it" },
         // "AWS 등 현직 GTM·세일즈 시니어" alone stopped being true as this box filled
         // up: it also holds an AI-education platform's founders (이동훈 · 황현진).
@@ -2839,7 +2845,7 @@ export const dict = {
     // its own amber 협의 중 pill via daysPending, which is the distinction that
     // actually exists), so the word only invited the question of where the
     // unconfirmed ones were.
-    gridLabel: { ko: "멘토 MENTORS", en: "Mentors" },
+    gridLabel: { ko: "멘토 MENTORS", en: "Mentors" },
     dayPendingLabel: { ko: "협의 중", en: "TBC" },
     // ── 호칭 규칙 (DECIDED 2026-08-17, 박주형) ────────────────────────────────
     // 한국어 카피에서 사람 이름을 맨이름으로 쓰지 않습니다. 이름 칸이든 문장
@@ -2890,7 +2896,7 @@ export const dict = {
       // added here — but the stage-2 card must keep naming POPUP STUDIO, not
       // AXMOS, as the drop-in mentoring host.
       {
-        name: { ko: "김지훈 이사님", en: "Jihoon Kim" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "이사 Director", en: "Director" },
+        name: { ko: "김지훈 이사님", en: "Jihoon Kim" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "이사 Director", en: "Director" },
         intro: {
           ko: "추천 시스템, 스마트팩토리 데이터 7년+. 前 스마일게이트, LG CNS.",
           en: "7+ yrs on recommender systems & smart-factory data. Ex-Smilegate, LG CNS.",
@@ -3004,7 +3010,7 @@ export const dict = {
       // surfaces. Nobody on the panel appears among the 1:1 build mentors; re-check
       // that whenever a mentor or panellist is added.
       {
-        name: { ko: "이동훈 대표님", en: "Lee Dong-hoon" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "대표 CEO", en: "CEO" },
+        name: { ko: "이동훈 대표님", en: "Lee Dong-hoon" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "대표 CEO", en: "CEO" },
         // The panel card carries the full bio; this line keeps only what a team
         // meeting him 1:1 needs, without repeating "Codepresso · 대표" above it.
         intro: {
@@ -3019,7 +3025,7 @@ export const dict = {
       // before that 9 years as an LG Electronics software engineer. 서강대.
       // NOTE: Korean name transliterated from "Hyunjin Hwang" — confirm the spelling.
       {
-        name: { ko: "황현진 이사님", en: "Hyunjin Hwang" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "공동창업자 이사", en: "Co-founder Director" },
+        name: { ko: "황현진 이사님", en: "Hyunjin Hwang" }, org: { ko: "Codepresso", en: "Codepresso" }, role: { ko: "공동창업자 이사", en: "Co-founder Director" },
         intro: {
           ko: "콘텐츠 R&D 총괄. 前 LG전자 소프트웨어 엔지니어 9년.",
           en: "Content R&D lead. Ex-LG Electronics software engineer, 9 yrs.",
@@ -3084,7 +3090,7 @@ export const dict = {
       {
         name: { ko: "박희덕 대표님", en: "Park Hee-deok" },
         org: { ko: "Translink Investment", en: "Translink Investment" },
-        role: { ko: "대표 General Partner", en: "CEO General Partner" },
+        role: { ko: "대표 General Partner", en: "CEO General Partner" },
         tag: { ko: "한미 크로스보더 VC", en: "US–Korea cross-border VC" },
         img: "/partners/people/park-hee-deok.jpg",
         pending: false,
@@ -3097,7 +3103,7 @@ export const dict = {
       {
         name: { ko: "원대로 대표님", en: "Won Dae-ro" },
         org: { ko: "Wilt Venture Builder", en: "Wilt Venture Builder" },
-        role: { ko: "대표 Managing Director", en: "CEO Managing Director" },
+        role: { ko: "대표 Managing Director", en: "CEO Managing Director" },
         tag: { ko: "싱가포르 벤처스튜디오", en: "Singapore venture studio" },
         img: "/partners/people/won-dae-ro.jpg",
         pending: false,
@@ -3138,7 +3144,7 @@ export const dict = {
         // and read like three separate affiliations. The full English title is in
         // the bio's first clause, which is where it belongs.
         role: { ko: "석좌교수", en: "Provost's Chair Professor" },
-        tag: { ko: "AI 거버넌스 핀테크", en: "AI governance FinTech" },
+        tag: { ko: "AI 거버넌스 핀테크", en: "AI governance FinTech" },
         img: "/partners/people/hahn-jungpil.jpg",
         pending: false,
         bio: {
@@ -3150,8 +3156,8 @@ export const dict = {
       {
         name: { ko: "이동훈 대표님", en: "Lee Dong-hoon" },
         org: { ko: "Codepresso", en: "Codepresso" },
-        role: { ko: "대표 CEO", en: "CEO" },
-        tag: { ko: "AI 코딩 교육 플랫폼", en: "AI coding education platform" },
+        role: { ko: "대표 CEO", en: "CEO" },
+        tag: { ko: "AI 코딩 교육 플랫폼", en: "AI coding education platform" },
         img: "/partners/people/lee-dong-hoon.jpg",
         pending: false,
         bio: {
@@ -3169,8 +3175,8 @@ export const dict = {
       {
         name: { ko: "황현진 이사님", en: "Hyunjin Hwang" },
         org: { ko: "Codepresso", en: "Codepresso" },
-        role: { ko: "공동창업자 이사", en: "Co-founder Director" },
-        tag: { ko: "AI 코딩 교육 콘텐츠 R&D", en: "AI coding education content R&D" },
+        role: { ko: "공동창업자 이사", en: "Co-founder Director" },
+        tag: { ko: "AI 코딩 교육 콘텐츠 R&D", en: "AI coding education content R&D" },
         img: "/partners/people/hwang-hyun-jin.jpg",
         pending: false,
         bio: {
@@ -3182,8 +3188,8 @@ export const dict = {
       {
         name: { ko: "신상길 님", en: "Shin Sang-gil" },
         org: { ko: "FUJIFILM BI Singapore", en: "FUJIFILM BI Singapore" },
-        role: { ko: "고객성공 DX/AI", en: "Customer Success DX/AI" },
-        tag: { ko: "DX AI 컨설팅", en: "DX AI consulting" },
+        role: { ko: "고객성공 DX/AI", en: "Customer Success DX/AI" },
+        tag: { ko: "DX AI 컨설팅", en: "DX AI consulting" },
         img: "/partners/people/shin-sang-gil.jpg",
         pending: false,
         bio: {
@@ -3195,8 +3201,8 @@ export const dict = {
       {
         name: { ko: "신동혁 총괄님", en: "Shin Dong-hyuk" },
         org: { ko: "AWS", en: "AWS" },
-        role: { ko: "APJC GTM 스케일링 총괄", en: "Head of GTM Scaling APJC" },
-        tag: { ko: "생성형 AI GTM", en: "GenAI GTM" },
+        role: { ko: "APJC GTM 스케일링 총괄", en: "Head of GTM Scaling APJC" },
+        tag: { ko: "생성형 AI GTM", en: "GenAI GTM" },
         img: "/partners/people/shin-dong-hyuk.jpg",
         pending: false,
         bio: {
@@ -3217,8 +3223,8 @@ export const dict = {
         // renders it without inventing a rank.
         name: { ko: "백민정 총괄님", en: "MJ Baek" },
         org: { ko: "Codepresso", en: "Codepresso" },
-        role: { ko: "GTM 파트너십 총괄", en: "Go-to-Market & Partnerships" },
-        tag: { ko: "AI 리터러시 빌더 커뮤니티", en: "AI literacy builder community" },
+        role: { ko: "GTM 파트너십 총괄", en: "Go-to-Market & Partnerships" },
+        tag: { ko: "AI 리터러시 빌더 커뮤니티", en: "AI literacy builder community" },
         img: "/partners/people/baek-min-joung.jpg",
         pending: false,
         bio: {
@@ -3770,7 +3776,7 @@ export const dict = {
           {
             label: { ko: "보지 않는 것", en: "What isn't looked at" },
             items: [
-              { ko: "발표력 영어 화면의 세련됨", en: "Delivery English visual polish" },
+              { ko: "발표력 영어 화면의 세련됨", en: "Delivery English visual polish" },
               {
                 ko: "무대에서 데모가 터지는 것. 작동 판정은 사전 제출 영상 기준입니다",
                 en: "A demo failing live. Running is judged on the submitted video",
