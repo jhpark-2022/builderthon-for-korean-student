@@ -141,16 +141,16 @@ export const partnerIntros: Record<string, Phrase> = {
   //    표기를 평범한 영어로 되돌리는 게 아니라, 갈라진 하나를 표준으로 되돌리는
   //    것입니다 — L^IFE / *SCAPE 표기 자체는 그대로 둡니다.
   //
-  // ② 사실: "현장 일정이 열리는"은 넷 중 둘에만 참입니다. 현장 4일 중 Day 1은
-  //    The Foundry, Day 7은 AWS 오피스이고, L^IFE Jungle이 여는 것은 Day 5와
-  //    Day 8입니다. 장소는 날마다 다르고 정본은 schedule.ts이니, 파트너 소개가
-  //    전체를 대표하게 두지 마세요.
+  // ② 사실: "현장 일정이 열리는"은 넷 중 하나에만 참입니다. 현장 4일 중 Day 1은
+  //    The Foundry, Day 7은 AWS 오피스, Day 8은 SMU이고, L^IFE Jungle이 여는 것은
+  //    Day 5뿐입니다(2026-08-19까지는 Day 8도 여기였습니다). 장소는 날마다 다르고
+  //    정본은 schedule.ts이니, 파트너 소개가 전체를 대표하게 두지 마세요.
   "L^IFE": {
     // DECIDED 2026-08-13: Day 5는 더 이상 "네트워킹 데이"가 아닙니다(집중 빌드 ·
     // 중간 점검). 이 카드는 장소를 소개하는 자리라 그날의 프로그램 이름을 다시
     // 적지 않습니다 — 이름은 schedule.ts가 갖고, 여기는 날짜만 가리킵니다.
-    ko: "*SCAPE 오차드에 자리한 2층 규모의 체험형 리테일과 이벤트 공간으로, Innovate 360가 운영합니다. 싱가포르 신진 브랜드들이 입점한 리테일 층, 크리에이터와 라이브커머스 스튜디오, 정기 커뮤니티 프로그램이 함께 돌아갑니다. 빌더톤의 Day 5 현장 일정과 Day 8 결과 공유회가 열리는 L^IFE Jungle이 바로 이곳입니다.",
-    en: "A two-storey experiential retail & event space at *SCAPE Orchard, run by Innovate 360, with a floor of emerging Singapore brands plus creator and live-commerce studios and regular community programming. This is L^IFE Jungle, where the builderthon's Day 5 on-site programme and Day 8 Showcase take place.",
+    ko: "*SCAPE 오차드에 자리한 2층 규모의 체험형 리테일과 이벤트 공간으로, Innovate 360가 운영합니다. 싱가포르 신진 브랜드들이 입점한 리테일 층, 크리에이터와 라이브커머스 스튜디오, 정기 커뮤니티 프로그램이 함께 돌아갑니다. 빌더톤의 Day 5 현장 일정이 열리는 L^IFE Jungle이 바로 이곳입니다.",
+    en: "A two-storey experiential retail & event space at *SCAPE Orchard, run by Innovate 360, with a floor of emerging Singapore brands plus creator and live-commerce studios and regular community programming. This is L^IFE Jungle, where the builderthon's Day 5 on-site programme takes place.",
   },
   BZCF: {
     ko: "구독자 32만의 유튜브 채널을 중심으로 한 비즈니스와 창업 콘텐츠 미디어입니다. 창업가 인터뷰와 산업 분석 콘텐츠를 만들고 창업가 커뮤니티 ‘BZCF Fellowship’을 운영하며, 이번 빌더톤에는 마케팅 파트너로 함께합니다.",
@@ -189,9 +189,13 @@ export const partnerIntros: Record<string, Phrase> = {
   // Link)을 "한국 밖 첫 지점"으로 적고 있고, 미래의 나에게 편지를 써서 우편함에
   // 넣어두면 몇 달 뒤 받는 컨셉도 거기서 나옵니다.
   //
-  // *SCAPE는 우연이 아니라 이 타일에서 가장 할 말이 많은 지점입니다 — Day 5와
-  // Day 8 결과 공유회가 열리는 바로 그 건물이라, 부상 바우처를 받는 곳과 쓰는 곳이
-  // 같습니다. 그래서 그 사실을 마지막 문장에 둡니다.
+  // *SCAPE는 이 타일에서 가장 할 말이 많은 지점입니다 — Day 5가 열리는 바로 그
+  // 건물이라, 부상 바우처를 그날 그 자리에서 쓸 수 있습니다. 그래서 마지막 문장에
+  // 둡니다.
+  //
+  // 2026-08-19: Day 8이 SMU로 옮겨가면서 "받는 곳과 쓰는 곳이 같다"는 말이
+  // 반만 참이 됐습니다(바우처는 Day 8에 시상). Day 5 하나만 걸어 둡니다 —
+  // 두 날을 다시 묶지 마세요.
   //
   // 본사 표기는 넣지 않았습니다. 자동 요약이 "전북"을 North Korea로 옮겨 놓는
   // 것을 봤고, 지명 하나 때문에 사실관계가 뒤집힐 자리를 만들 이유가 없습니다.
@@ -201,8 +205,8 @@ export const partnerIntros: Record<string, Phrase> = {
   // 부상을 "식사 바우처"·"디저트 바우처"로 부르는 것입니다 — 어워드 카피에서는
   // 지금도 "널담 바우처"까지만 씁니다. 두 규칙은 충돌하지 않습니다.
   Nuldam: {
-    ko: "고단백과 저당, 식이섬유, 비건 등 영양 설계를 앞세운 한국의 디저트와 베이커리 브랜드입니다. 카페 브랜드 ‘널담 스페이스’는 미래의 나에게 편지를 써서 우편함에 넣어두면 몇 달 뒤 받아보는 컨셉으로 알려져 있고, 한국 밖 첫 지점이 싱가포르 *SCAPE에 있습니다. 이번 빌더톤에는 어워드 부상 바우처를 후원합니다. Day 5와 Day 8이 열리는 바로 그 건물이라, 받는 자리와 쓰는 자리가 같아요.",
-    en: "A Korean dessert and bakery brand built around nutrition, high protein, low sugar, fibre and vegan options. Its café brand, Nuldam Space, is known for letting you write a letter to your future self and post it in a mailbox that delivers months later; its first outlet outside Korea is at *SCAPE in Singapore. It sponsors the award vouchers for this builderthon, in the same building where Day 5 and Day 8 take place.",
+    ko: "고단백과 저당, 식이섬유, 비건 등 영양 설계를 앞세운 한국의 디저트와 베이커리 브랜드입니다. 카페 브랜드 ‘널담 스페이스’는 미래의 나에게 편지를 써서 우편함에 넣어두면 몇 달 뒤 받아보는 컨셉으로 알려져 있고, 한국 밖 첫 지점이 싱가포르 *SCAPE에 있습니다. 이번 빌더톤에는 어워드 부상 바우처를 후원합니다. Day 5 현장이 열리는 바로 그 건물이라, 그날 바로 들러 볼 수 있어요.",
+    en: "A Korean dessert and bakery brand built around nutrition, high protein, low sugar, fibre and vegan options. Its café brand, Nuldam Space, is known for letting you write a letter to your future self and post it in a mailbox that delivers months later; its first outlet outside Korea is at *SCAPE in Singapore. It sponsors the award vouchers for this builderthon, in the same building as the Day 5 on-site programme.",
   },
 
   // CONFIRMED 2026-08-17 (박주형): 해녀의 부엌이 수상팀 부상을 후원합니다.
@@ -769,7 +773,7 @@ export const dict = {
     // 됐는데 이 줄만 둘로 남아 있었습니다.
     //
     // 값을 고치는 대신 지웁니다. 장소는 날마다 다르고(Day 1 The Foundry ·
-    // Day 5·8 *SCAPE · Day 7 AWS 오피스), 그 정본은 schedule.ts의 장소 상수와
+    // Day 5 *SCAPE · Day 7 AWS 오피스 · Day 8 SMU), 그 정본은 schedule.ts의 장소 상수와
     // 각 이벤트의 location입니다. 히어로에 장소를 한 줄로 요약해 박아두는 순간
     // 정본이 둘이 되고, 이번처럼 조용히 갈라집니다. 히어로에 장소를 다시 넣어야
     // 한다면 schedule에서 읽어 만드세요.
@@ -2277,12 +2281,15 @@ export const dict = {
           { ko: "완주 수료증을 보여주면 널담에서 구매 시 할인을 받을 수 있어요", en: "Show your completion certificate at Nuldam for a discount on your purchase" },
           { ko: "링크드인 포트폴리오 이력에 활용", en: "Use them on LinkedIn, in your portfolio and CV" },
         ],
-        // 매장 한 줄 (DECIDED 2026-08-16). 널담이 결과 공유회와 같은 건물이라는
-        // 점을 앞세웁니다 — Day 5와 Day 8에 온 사람이 그 자리에서 바로 쓸 수 있다는
-        // 게 이 혜택의 실질입니다. 주소 전문과 영업시간은 쓰지 않고 지도 링크가
+        // 매장 한 줄 (DECIDED 2026-08-16). 널담이 Day 5 현장과 같은 건물이라는
+        // 점을 앞세웁니다 — 그날 온 사람이 그 자리에서 바로 들를 수 있다는 게 이
+        // 혜택의 실질입니다. 주소 전문과 영업시간은 쓰지 않고 지도 링크가
         // 대신합니다. 유닛 번호는 구글 지도 등록값과 대조했습니다(#02-14/15).
+        //
+        // 2026-08-19: "결과 공유회가 열리는"이었는데 Day 8이 SMU로 옮겨가 틀린
+        // 말이 됐습니다. 이 각주가 가리키는 날은 이제 Day 5뿐입니다.
         footnote: {
-          text: { ko: "결과 공유회가 열리는 *SCAPE 2층(#02-14/15)에 있어요.", en: "On Level 2 of *SCAPE (#02-14/15), the same building as the showcase." },
+          text: { ko: "Day 5 현장이 열리는 *SCAPE 2층(#02-14/15)에 있어요.", en: "On Level 2 of *SCAPE (#02-14/15), the same building as the Day 5 programme." },
           linkLabel: { ko: "지도", en: "Map" },
           url: "https://share.google/4thBZlSCNPoqxo8AH",
         },
@@ -2528,11 +2535,11 @@ export const dict = {
           { ko: "자사 FDE 사업에 관심 있는 학생과 졸업생 대상", en: "For students & grads interested in the firm's FDE business" },
           { ko: "어떤 일을 하는 자리인지, 어떤 사람을 찾는지 직접 듣기", en: "What the work actually is, and who they're looking for, first-hand" },
           { ko: "인턴과 채용 pool로 이어지는 연결, 후속 1:1 면담과 멘토링(희망자)은 행사 종료 후", en: "A route into the internship & hiring pool, with follow-up 1:1s & mentoring (opt-in) after the event closes" },
-          // 위치·길이 (2026-08-14): 확정 진행 순서에서 이 자리는 공유회를 여는
-          // 첫 한 시간(11AM–12PM)이고, 트랙 발표보다 앞입니다. 이 줄이
-          // schedule.ts d8-opening-keynote와 같은 사실을 말해야 합니다.
-          // 시각(11시 등)은 여기 다시 넣지 마세요 — 정본은 schedule.ts입니다.
-          { ko: "공유회를 여는 첫 한 시간 트랙 발표 시작 전", en: "The first hour of the Showcase before the pitches start" },
+          // 위치·길이 (2026-08-18): 트랙 발표가 모두 끝난 뒤 어워드 직전 40분
+          // 입니다. 2026-08-14에 하루를 여는 자리로 올라갔다가 되돌아왔습니다.
+          // 이 줄이 schedule.ts d8-opening-keynote와 같은 사실을 말해야 합니다.
+          // 시각은 여기 다시 넣지 마세요 — 정본은 schedule.ts입니다.
+          { ko: "트랙 발표가 모두 끝난 뒤 어워드 직전 40분", en: "After every track has pitched the 40 minutes before the awards" },
         ],
       },
     ],

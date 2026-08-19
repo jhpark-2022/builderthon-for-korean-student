@@ -115,6 +115,19 @@ JOBS = [
     # the change was invisible on the live site for a whole round of review, and
     # the logo got "fixed" a second time on the strength of a stale image. Any
     # future ARTWORK swap must land on a NEW filename for the same reason.
+    # SMU: Day 8 결과 공유회가 이 캠퍼스로 옮겨오면서(2026-08-19) 노선도의 장소
+    # 마커로 씁니다. 소스는 CI/SMU.jpg — 공식 세로 로크업(싱가포르 지도 위 사자,
+    # 그 아래 "SMU" 워드마크)입니다.
+    #
+    # 워드마크만 크롭하는 이유는 The Foundry와 같습니다. 마커 박스가 h-4(16px)인데
+    # 세로 로크업을 그 높이에 맞추면 글자가 5px도 안 됩니다 — 16px에서 실제로
+    # 읽어보면 지도도 사자도 글자도 아닌 얼룩입니다. 워드마크만 넣으면 세 글자가
+    # 16px를 다 쓰고 또렷하게 읽힙니다. 마커의 일은 "어느 문으로 가느냐"를 말하는
+    # 것이므로 이름이 읽히는 쪽을 택합니다.
+    #
+    # 크롭은 로크업 아래쪽 밴드입니다(y 575–745). 위 블록과의 간격이 y 558–579라
+    # 그 사이를 지납니다. 소스를 갈면 이 좌표부터 다시 재세요.
+    ("SMU.jpg", "smu.png", "color", {"crop": (0, 575, 900, 745)}),
     ("onword new logo.png", "onword-lab.png", "alpha"),
     # 널담(Nuldam): a solid blue "Nuldam" wordmark already cut out on
     # transparency, so "alpha" — the source alpha IS the shape and we only
