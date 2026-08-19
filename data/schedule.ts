@@ -1515,9 +1515,12 @@ export const schedule: BEvent[] = [
     speaker: { ko: "김성호 (해시드)", en: "Sungho Kim (Hashed)" },
     speakerProfile: {
       name: { ko: "김성호", en: "Sungho Kim" },
-      // 공개 프로필이 말하는 만큼만: 소속과 하는 일. 정확한 직함(파트너 등)은
-      // 확인되면 여기에 넣으세요 — 추측해서 붙이지 않았습니다.
-      role: { ko: "해시드 벤처 투자자 (싱가포르)", en: "Venture investor, Hashed (Singapore)" },
+      // 직함 확인 완료 (2026-08-19). 그전에는 공개 프로필이 말하는 만큼만 적어
+      // "해시드 벤처 투자자"로 두고, 정확한 직함은 확인되면 넣으라고 남겨 둔
+      // 자리였습니다. 추측으로 붙인 적은 없습니다.
+      // (싱가포르)는 근무지입니다 — 해시드는 한국 회사이고 이분은 현지에 있어
+      // 직함과 함께 읽혀야 뜻이 섭니다. 직함만 바꾸고 이 괄호는 그대로 둡니다.
+      role: { ko: "해시드 파운딩 파트너 (싱가포르)", en: "Founding Partner, Hashed (Singapore)" },
       img: "/partners/people/kim-sung-ho.jpg",
       bio: {
         ko: "Web3 and AI 투자. AI 에이전트 인프라와 신뢰 구조, 아시아의 스테이블코인과 크로스보더 결제를 봅니다. KAIST.",
