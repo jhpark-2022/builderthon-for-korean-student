@@ -1848,15 +1848,26 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
             {t(dict.program.selfPacedLabel)}
           </span>
         )}
-        {/* The booked on-site window, ONLY on days that have one (see
-            DayMeta.hours). Same pill as the self-paced badge on purpose — this
-            is one more fact about the day, not a new kind of thing, so it gets
-            no colour of its own. A day without hours renders NOTHING here: an
-            online day has no time to be at, and printing "미정" would invent a
-            gap that doesn't exist. `hours` is one string for both locales, so
-            only the sr-only label is translated. */}
+        {/* 그날 시간을 비워야 하는 창 (DayMeta.hours). 없는 날은 아무것도 그리지
+            않습니다 — 시간이 없는 게 그 날의 성격이고, "미정"을 찍으면 있지도 않은
+            공백을 만듭니다. `hours`는 두 로케일이 같은 문자열이라 sr-only 라벨만
+            번역합니다.
+
+            DECIDED 2026-08-20: 시간 칩을 상태 칩보다 한 단계 위로 올립니다.
+            같은 줄의 다른 칩들과 똑같은 모양이라 "이 날 언제 가야 하나"가 참여
+            방식(필참·현장·온라인) 사이에 묻혀 있었는데, 카드를 스캔할 때 먼저
+            찾는 것은 시간입니다. 승격은 무채색 밝기로만 합니다 — 채움을 한 단계
+            올리고(bg-white/10) 글자를 굵고 밝게(font-bold, white/90), 크기를 반
+            단계 키웁니다(0.68 → 0.72rem).
+
+            유채색을 쓰지 마세요. rose는 필참, violet은 "놓치면 아까운", amber는
+            어워드로 이미 각자의 뜻이 있어서, 시간에 색을 주면 네 번째 축이 생기고
+            그 축들의 자리를 침범합니다. 상태 칩의 스타일도 건드리지 마세요 —
+            승격은 둘 사이의 대비로 성립합니다.
+
+            shrink-0: 좁은 폭에서 칩 줄이 접힐 때 이 칩만은 줄어들어 잘리지 않게. */}
         {day.hours && (
-          <span className="rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
+          <span className="shrink-0 rounded-full border border-white/20 bg-white/10 px-2.5 py-0.5 text-[0.72rem] font-bold text-white/90">
             <span className="sr-only">{t(dict.program.hoursLabel)} </span>
             {day.hours}
           </span>
@@ -2153,10 +2164,20 @@ function DayModal({
                 {/* The booked window rides in the same chip as the date — it
                     answers the same question ("when do I turn up") and a second
                     chip would split one answer across two. Appended only when
-                    the day has hours; online days keep the chip as it was. */}
+                    the day has hours; online days keep the chip as it was.
+
+                    DECIDED 2026-08-20: 카드의 시간 칩을 승격하면서 여기도 맞췄습니다.
+                    다만 칩을 쪼개지는 않습니다(위 문단의 결정) — 한 칩 안에서 시간만
+                    굵고 밝게 씁니다. 카드와 같은 무채색 승격이고 날짜는 그대로 둡니다.
+                    날짜까지 밝히면 칩 전체가 올라와 대비가 사라집니다. */}
                 <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/70">
                   {t(dict.program.dayLabel)} {day.day} {day.date} {t(day.weekday)}
-                  {day.hours ? `, ${day.hours}` : ""}
+                  {day.hours && (
+                    <>
+                      {", "}
+                      <span className="font-bold text-white/90">{day.hours}</span>
+                    </>
+                  )}
                 </span>
                 {dayEmphasis(day) === "must" && (
                   <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/30 bg-rose-400/10 px-2.5 py-1 text-xs font-bold text-rose-200">

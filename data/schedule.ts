@@ -9,8 +9,9 @@
 // `// TODO: confirm` note — please do not invent these.
 //
 // HOURS: the on-site days carry their PARTICIPANT-FACING window in
-// `days[].hours` (Day 1 1PM–4:30PM · Day 5 10AM–2PM · Day 7 9AM–2PM ·
-// Day 8 11AM–3PM). That field is the single source — nothing else computes it.
+// `days[].hours` (Day 1 1PM–4:30PM, Day 2 9AM–12PM, Day 5 10AM–2PM,
+// Day 7 9AM–2PM, Day 8 10AM–4PM). That field is the single source — nothing
+// else computes it.
 //
 // It is NOT the booking. Whether set-up/teardown sits inside or outside the
 // booked slot differs by venue, so the subtraction differs by day: the Foundry
@@ -18,8 +19,14 @@
 // around the event window; SMU (Day 8) books 10AM–4PM and the last hour is the
 // teardown, so hours stops at 3PM. Operational clock times — booked slots, set-up,
 // teardown, buffers — are NEVER published; only the numbers above are.
-// Online / self-paced days have no hours by design. Per-session clock times do
-// not exist yet: do not invent them.
+// DECIDED 2026-08-20: Day 2도 hours를 갖습니다(9AM–12PM). 현장 대관 창이 아니라
+// 실시간 온라인 세션의 시작과 끝입니다 — 그 시간에 접속해 있어야 하므로
+// 참가자에게는 같은 질문("언제 시간을 비워야 하나")에 대한 답입니다.
+// 나머지 온라인 날은 여전히 비어 있고, 그것도 설계입니다: Day 3·4·7의 1:1은
+// 팀마다 다른 예약 시간이고 Day 6은 자율이라, 하나의 창으로 말할 수 있는 시간이
+// 없습니다. 없는 것을 지어내지 마세요 — 기준은 "온라인인가"가 아니라
+// "모두에게 같은 시간 창이 있는가"입니다.
+// 세션별 시각은 BEvent.time이 갖습니다(그쪽은 확정된 세션만).
 //
 // THE 8-DAY SHAPE (per the deck, which is authoritative):
 //   • Day 1 — big Opening (1PM–4:30PM at The Foundry, The Refinery hall): 원대로
@@ -160,9 +167,12 @@ export interface DayMeta {
   phase: Bilingual; // which of the two Labs this day belongs to
   theme: Bilingual; // day theme label
   summary: Bilingual; // one-line day summary shown on the clean day card
-  // 그날 현장에 열려 있는 시간(대관 창). 세션별 시각이 아니라 "언제 가면 되는지"다.
-  // 온라인·자율 빌드 날은 비워 둔다 — 시간이 없는 게 그 날의 성격이다.
-  // 셋업/철수 시간은 여기 넣지 않는다(비공개).
+  // 그날 참가자가 시간을 비워야 하는 창. 세션별 시각이 아니라 "언제 가면 되는지",
+  // 온라인 날이면 "언제 접속해 있어야 하는지"다.
+  // 현장 날은 대관 창에서 셋업/철수를 뺀 값이고(그 시각은 비공개), Day 2는 실시간
+  // 온라인 세션의 시작과 끝이다 (DECIDED 2026-08-20).
+  // 비어 있는 날은 시간이 없는 게 그 날의 성격이다 — 예약제 1:1(Day 3·4·7)과
+  // 자율 빌드(Day 6)는 사람마다 시간이 달라 하나의 창으로 말할 수 없다.
   //
   // 표기: 12시간제 + 대문자 AM/PM, en-dash `–`, 공백 없음. ko/en 동일 문자열이라
   // Bilingual이 아니라 plain string이다.
@@ -527,18 +537,24 @@ export const days: DayMeta[] = [
     // 읽히므로, 대상을 적지 않으면 팀으로 등록한 사람까지 어딘가로 가야 하는 줄
     // 압니다. 시각·장소는 여기 쓰지 않습니다(카드가 맡습니다).
     summary: {
-      // DECIDED 2026-08-17: 크래시코스 9AM–12PM 확정, 오후는 팀 빌딩. "집중 5–6시간"
-      // 이라는 어림 표기를 확정 시각으로 바꿨습니다. 시각의 정본은 d2-crash-course의
-      // time 필드이고 이 줄은 카드에서 읽히는 사본이니 함께 움직이세요.
-      // 표기는 days[].hours와 같은 컨벤션(12시간제 대문자 AM/PM, en-dash, ko/en
-      // 동일 문자열) — 데이 카드가 이미 그 형태의 칩을 보여주고 있습니다.
+      // DECIDED 2026-08-17: 크래시코스 9AM–12PM 확정, 오후는 팀 빌딩.
+      // DECIDED 2026-08-20: 그 시각을 이 산문에서 뺐습니다. 같은 날 hours가 생겨
+      // 카드의 시간 칩이 9AM–12PM을 말하는데, 바로 아래 요약이 같은 숫자를 다시
+      // 말하고 있었습니다. 시각의 단일 출처는 hours입니다(Day 1·5·7·8과 같은 규칙).
+      // 되돌리지 마세요 — 되돌리면 한 카드에서 같은 시각을 두 번 읽습니다.
       // DECIDED 2026-08-18: 셋째 절이 트랙 선택 마감입니다. 마감이 걸린 날이
       // 여기라서, 이 날 카드가 그 사실을 말하지 않으면 참가자는 Day 1 카드를 다시
       // 열어봐야 알 수 있습니다. 마감의 정본은 d1-problem-release.description이고
       // 이 줄은 사본이니 한쪽만 고치지 마세요.
-      ko: "바이브 코딩 입문 9AM–12PM(비개발자 OK), 코드프레소 김지훈 이사님 진행. 오후에는 Day 1 매칭 팀들의 팀 빌딩 시간이 이어져요. 트랙 선택은 이 날이 끝나기 전까지 정해 운영진 이메일로 알려주세요.",
-      en: "A vibe-coding intro, 9AM–12PM (beginners OK), led by Jihoon Kim, Director at Codepresso. In the afternoon, teams matched on Day 1 continue into a team-building session. Track choices are due by the end of this day, emailed to the organizers.",
+      ko: "바이브 코딩 입문(비개발자 OK), 코드프레소 김지훈 이사님 진행. 오후에는 Day 1 매칭 팀들의 팀 빌딩 시간이 이어져요. 트랙 선택은 이 날이 끝나기 전까지 정해 운영진 이메일로 알려주세요.",
+      en: "A vibe-coding intro (beginners OK), led by Jihoon Kim, Director at Codepresso. In the afternoon, teams matched on Day 1 continue into a team-building session. Track choices are due by the end of this day, emailed to the organizers.",
     },
+    // DECIDED 2026-08-20: 이 날도 hours를 답니다. 현장 대관 창이 아니라 실시간
+    // 온라인 세션의 창입니다 — 크래시코스가 9AM에 시작해 12PM에 끝나고, 참가자는
+    // 그 시간에 접속해 있어야 합니다. 오후 팀 빌딩은 매칭된 팀만 해당하고 시각도
+    // 미정이라 이 창에 넣지 않습니다(d2-team-building 카드가 맡습니다).
+    // 정본은 d2-crash-course의 time이고 이 값은 그 사본입니다.
+    hours: "9AM–12PM",
     whyStop: {
       // "하루로 압축" → "한나절로" (2026-08-17, 9AM–12PM 확정). 세 시간짜리를
       // 하루라고 부르면 카드가 그날을 통째로 비워야 하는 날로 읽힙니다.

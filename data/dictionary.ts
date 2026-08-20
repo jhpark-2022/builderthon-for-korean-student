@@ -2055,7 +2055,11 @@ export const dict = {
     // label a screen reader announces a bare time next to two other pills. The
     // VALUE is not translated: `days[].hours` is one string for both locales
     // (see DayMeta.hours), so only this prefix is bilingual.
-    hoursLabel: { ko: "현장 시간", en: "On-site hours" },
+    // 시간 칩의 스크린리더 라벨입니다(칩 자체는 시각만 보여줍니다).
+    // DECIDED 2026-08-20: "현장 시간" → "진행 시간". Day 2에 hours가 붙으면서
+    // 온라인 날에도 이 라벨이 읽히게 됐는데, 크래시코스는 현장이 아닙니다.
+    // 현장 여부는 같은 줄의 모드 칩이 이미 말하므로 이 라벨은 시간만 말합니다.
+    hoursLabel: { ko: "진행 시간", en: "Session hours" },
     // 데이 모달의 진행 순서 블록 (days[].runOfShow). 확정된 날에만 렌더되므로
     // "추후 안내" 같은 빈 상태 문구는 없습니다 — 없으면 블록 자체가 없습니다.
     runOfShowTitle: { ko: "진행 순서", en: "Run of show" },
