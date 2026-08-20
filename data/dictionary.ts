@@ -2446,13 +2446,14 @@ export const dict = {
     // 용어라, program의 밀도를 통과한 독자가 여기서 처음 갖는 질문("그래서 누구를
     // 만나나")에 답하지 않았습니다. 참가자가 무엇을 얻는지로 바꿉니다.
     //
-    // 네 장의 카드를 다 덮는 문장이어야 합니다 — 키노트(취업과 창업 사이) ·
-    // AWS 세션(실무에서 AI를 어떻게 쓰는가) · Day 7 조언 세션 · Day 8 커리어 간담회.
-    // (DECIDED 2026-08-13: 박희덕 대표님의 두 세션이 자리를 맞바꿨습니다.)
-    // 한 카드의 제목을 대표로 올리지 마세요.
+    // 이 섹션의 자리 넷을 다 덮는 문장이어야 합니다 — 카드 셋(키노트: 취업과
+    // 창업 사이 · AWS 세션: 실무에서 AI를 어떻게 쓰는가 · Day 7 조언 세션)과
+    // 그 아래 Day 8 커리어 간담회 밴드. 한 카드의 제목을 대표로 올리지 마세요.
+    // (DECIDED 2026-08-13: 박희덕 대표님의 두 세션이 자리를 맞바꿨습니다.
+    //  DECIDED 2026-08-20: Day 8이 카드에서 3인 패널 밴드로 빠졌습니다.)
     //
     // 괄호("연사 라인업은 확정되는 대로 안내됩니다")는 뺐습니다. 바로 아래에
-    // 이름·소속·링크드인이 붙은 카드 넷이 서 있어서, 아무것도 안 정해진 것처럼
+    // 이름·소속·링크드인이 붙은 얼굴들이 서 있어서, 아무것도 안 정해진 것처럼
     // 읽히게 만드는 문장이었습니다. 세션 구성이 조정될 수 있다는 유보는 그리드
     // 아래 tbcNote가 이미 답니다. 연사가 추가되면 카드를 늘리면 됩니다 —
     // 그건 약속을 어기는 일이 아닙니다.
@@ -2539,39 +2540,69 @@ export const dict = {
           { ko: "형식 없는 조언과 Q&A, 리허설 현장에서", en: "Advice and Q&A with no format, right there at the rehearsal" },
         ],
       },
-      {
-        // DECIDED 2026-08-13: 자리 맞바꿈으로 이 카드가 커리어 간담회가 됐습니다.
-        //
-        // DECIDED 2026-08-19 (주최 진행안): 1인 강연에서 3인 패널이 됐습니다 —
-        // 박희덕·이동훈 대표님이 패널, 원대로 대표님이 진행입니다. 이 섹션의 카드는
-        // 1인 구조(name·role·img·linkedin이 단수)라 세 분을 카드 셋으로 늘리면 같은
-        // 세션이 세 번 서고, 이동훈·원대로 대표님은 이미 다른 카드와 그리드에
-        // 있습니다. 그래서 카드는 박희덕 대표님으로 두고 형식은 points가 말합니다.
-        // 세션의 정본은 schedule.ts의 d8-opening-keynote입니다.
-        //
-        // points는 넷으로 유지하세요. 이 섹션의 카드는 같은 줄에 나란히 서고 높이를
-        // 공유해서, 한 장만 다섯 줄이 되면 나머지 세 장까지 그만큼 늘어납니다.
-        // 3인 패널 줄을 넣으면서 "자사 FDE 사업에 관심 있는 학생과 졸업생 대상"을
-        // 뺐습니다 — 패널이 세 회사가 되면서 "자사"가 어느 회사인지 애매해졌고,
-        // 바로 다음 줄이 같은 것을 더 정확히 말합니다.
-        day: { ko: "Day 8 커리어 간담회", en: "Day 8 Career session" },
-        name: { ko: "박희덕 대표님", en: "Park Hee-deok" },
-        role: { ko: "트랜스링크인베스트먼트 대표 GP", en: "CEO General Partner, Translink Investment (VC)" },
-        topic: { ko: "‘FDE로 일한다는 것’", en: "“Working as an FDE”" },
-        img: "/partners/logos/speaker-park.jpeg",
-        linkedin: "https://www.linkedin.com/in/hee-duk-park-304079bb",
-        points: [
-          { ko: "이동훈, 원대로 대표님과 함께 앉는 3인 패널 토의", en: "A three-person panel, with Lee Dong-hoon and Won Dae-ro" },
-          { ko: "어떤 일을 하는 자리인지, 어떤 사람을 찾는지 직접 듣기", en: "What the work actually is, and who they're looking for, first-hand" },
-          { ko: "인턴과 채용 pool로 이어지는 연결, 후속 1:1 면담과 멘토링(희망자)은 행사 종료 후", en: "A route into the internship & hiring pool, with follow-up 1:1s & mentoring (opt-in) after the event closes" },
-          // 위치·길이 (2026-08-18): 트랙 발표가 모두 끝난 뒤 어워드 직전 40분
-          // 입니다. 2026-08-14에 하루를 여는 자리로 올라갔다가 되돌아왔습니다.
-          // 이 줄이 schedule.ts d8-opening-keynote와 같은 사실을 말해야 합니다.
-          // 시각은 여기 다시 넣지 마세요 — 정본은 schedule.ts입니다.
-          { ko: "트랙 발표가 모두 끝난 뒤 어워드 직전 40분", en: "After every track has pitched the 40 minutes before the awards" },
-        ],
-      },
     ],
+    // ── Day 8 커리어 간담회 · 3인 패널 피처 밴드 ────────────────────────────
+    // DECIDED 2026-08-20: Day 8 커리어 간담회를 3인 패널 피처 밴드로 분리 —
+    // 1인 카드의 사실 불일치 해소, Day 7 카드와의 동일 인물 반복 해소.
+    // 사진은 people/ 기존 파일 재사용(저해상도면 ../CI 원본 재처리).
+    //
+    // 위 그리드의 카드는 1인 구조(name·role·img가 단수)라, 세 사람이 한 무대에
+    // 서는 세션을 박희덕 대표님 카드 하나가 대표하고 있었습니다. 게다가 바로
+    // 왼쪽 Day 7 카드가 같은 얼굴이라 넷 중 둘이 같은 사람이었습니다.
+    // 밴드로 빼면 셋을 나란히 세울 수 있고, 그리드는 서로 다른 세 세션이 됩니다.
+    //
+    // 역할 분담: 이 밴드는 사람과 취지를 말하고, 순서와 시각은 프로그램 카드
+    // (schedule.ts d8-opening-keynote)가 말합니다. 시계 시각을 여기 쓰지 마세요 —
+    // 시각의 단일 출처는 schedule.ts입니다. 무대용 통계(FDE 공고 증가율 등)도
+    // 웹에 싣지 않습니다. 그건 그날 무대에서 하는 이야기입니다.
+    panel: {
+      label: { ko: "DAY 8 커리어 간담회", en: "Day 8 Career Panel" },
+      title: { ko: "‘FDE로 일한다는 것’", en: "“Working as an FDE”" },
+      lead: {
+        ko: "세 회사의 대표가 한 무대에 오릅니다. 가르치러가 아니라, 함께 일할 사람을 찾으러.",
+        en: "Three CEOs share one stage. Not to lecture, but to find people they want to work with.",
+      },
+      // note는 "이 사람이 이 세션에서 무엇을 맡는가"까지만 씁니다.
+      // "이번 크래시코스와 멘토링을 만든 분", "세션을 설계한 분" 같은 공로 표기는
+      // 뺐습니다 (2026-08-20) — 읽는 사람이 여기서 궁금한 것은 무대에서 무엇을
+      // 듣게 되느냐이지 누가 무엇을 준비했느냐가 아닙니다.
+      // 원대로 대표님 줄이 짧은 것은 진행자라 다룰 주제가 따로 없어서입니다.
+      // 길이를 맞추려고 없는 역할을 지어내지 마세요.
+      //
+      // 링크드인 URL은 위 people과 judges에서 쓰는 것과 같은 값입니다.
+      // 사진도 people/의 기존 파일이라, 여기서 좋아지면 Day 7 카드와 피드백
+      // 패널도 함께 좋아집니다.
+      people: [
+        {
+          name: { ko: "박희덕 대표님", en: "Park Hee-deok" },
+          role: { ko: "트랜스링크인베스트먼트 대표 GP", en: "CEO, General Partner, Translink Investment" },
+          note: { ko: "자본과 시장의 눈. 왜 지금 이 일에 돈이 몰리는가", en: "The capital view: why money is moving into this work now" },
+          img: "/partners/people/park-hee-deok.jpg",
+          linkedin: "https://www.linkedin.com/in/hee-duk-park-304079bb",
+        },
+        {
+          name: { ko: "이동훈 대표님", en: "Lee Dong-hoon" },
+          role: { ko: "코드프레소 대표", en: "CEO, Codepresso" },
+          note: { ko: "현장과 교육의 눈. 실제로 무슨 일을 하고, 비전공자도 되는가", en: "The field view: what the work actually is, and whether non-CS majors can do it" },
+          img: "/partners/people/lee-dong-hoon.jpg",
+          linkedin: "https://www.linkedin.com/in/donghun-lee-8888a13a",
+        },
+        {
+          name: { ko: "원대로 대표님", en: "Won Dae-ro" },
+          role: { ko: "Wilt Venture Builder 대표", en: "Managing Director, Wilt Venture Builder" },
+          note: { ko: "모더레이터 겸 패널", en: "Moderator and panelist" },
+          img: "/partners/people/won-dae-ro.jpg",
+          linkedin: "https://www.linkedin.com/in/wondaero",
+        },
+      ],
+      // 인턴십 전원 개방은 Day 8 어워드 박스도 말합니다(dict.program.awards).
+      // 여기서 다시 말하는 이유는 자리가 다르기 때문입니다 — 그쪽은 상을 설명하는
+      // 자리이고, 이 줄은 상과 무관하다는 사실이 필요한 자리입니다.
+      footer: {
+        ko: "발표가 모두 끝난 뒤 40분, 어워드 직전입니다. 유급 인턴십은 수상과 무관하게 전원에게 열려 있고, 관심 있는 분은 행사 종료 후 1:1 면담으로 이어집니다.",
+        en: "Forty minutes after all the pitches, right before the awards. The paid internship is open to everyone regardless of awards, and anyone interested moves on to 1:1 conversations after the event closes.",
+      },
+    },
     tbcNote: {
       ko: "* 세션 시간과 구성은 조정될 수 있습니다.",
       en: "* Session times and format may still change.",

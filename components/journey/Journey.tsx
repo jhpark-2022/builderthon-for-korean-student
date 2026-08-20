@@ -4112,10 +4112,10 @@ export default function Journey() {
           {t(dict.speakers.heading)}
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.speakers.intro)}</p>
-        {/* 2-up then 4-up, not 3-up: there are four cards now (한장환's Day 1 AWS
-            session joined the keynote), and a 3-column grid left one card orphaned
-            on its own row. 4-across keeps them on one line at lg and pairs them
-            evenly below that. Revisit if a fifth card ever lands here. */}
+        {/* 2-up then 3-up (DECIDED 2026-08-20). 오래 4열이었는데 Day 8 커리어
+            간담회가 아래 피처 밴드로 빠지면서 카드가 셋이 됐습니다. 3열이면 lg에서
+            한 줄에 정확히 들어가고, sm에서는 2+1로 접힙니다. 카드가 넷이 되면
+            4열로 되돌리세요 — 3열에 넷을 두면 한 장이 다음 줄에 혼자 남습니다. */}
         {/* 카드를 가로로 줄 세우는 일은 subgrid가 합니다 — 제목이 끝나는 줄,
             불릿이 시작하는 줄, 푸터 구분선이 앉는 줄.
 
@@ -4144,7 +4144,7 @@ export default function Journey() {
 
             subgrid를 모르는 브라우저에서는 규칙이 통째로 무시되고 카드가 각자
             3행 그리드가 됩니다 — 예전처럼 카드끼리 어긋날 뿐, 깨지지 않습니다. */}
-        <div className="mt-10 grid items-stretch gap-5 text-left sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid items-stretch gap-5 text-left sm:grid-cols-2 lg:grid-cols-3">
           {/* keyed by index, not `img` — one speaker can hold two sessions
               (박희덕: Day 7 조언 세션 + Day 8 간담회) and so reuse the same photo */}
           {dict.speakers.people.map((s, si) => (
@@ -4182,6 +4182,45 @@ export default function Journey() {
               </div>
             </div>
           ))}
+        </div>
+        {/* ── Day 8 커리어 간담회 · 3인 패널 피처 밴드 ────────────────────────
+            위 그리드가 1인 세션 셋이라면 이 자리는 세 사람이 한 무대에 서는
+            세션 하나입니다. 카드로 두면 그 사실이 안 보입니다 — 카드는 1인
+            구조라 셋 중 하나만 얼굴을 갖고, 나머지 둘은 글자로만 남습니다.
+            데이터와 결정 이력은 dict.speakers.panel 주석에 있습니다.
+
+            승격은 폭과 테두리 한 단계로만 합니다. 카드가 border-white/10인
+            자리에서 이 밴드는 border-white/15에 배경을 한 단계 올립니다.
+            새 유채색을 쓰지 마세요 — 이 섹션은 violet 하나로 도는 자리이고,
+            여기에 색을 더하면 밴드가 섹션 밖에서 온 것처럼 보입니다. */}
+        <div className="mt-5 rounded-2xl border border-white/15 bg-white/[0.05] p-6 text-left sm:p-8">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span className="text-xs font-bold uppercase tracking-wide text-violet-300/80">{t(dict.speakers.panel.label)}</span>
+            <p className="break-keep text-base font-semibold text-white sm:text-lg">{t(dict.speakers.panel.title)}</p>
+          </div>
+          <p className="mt-3 max-w-3xl break-keep text-sm leading-relaxed text-white/75">{t(dict.speakers.panel.lead)}</p>
+          {/* 셋이 가로로 나란히 서는 것이 이 밴드의 요점입니다(모바일은 세로 스택).
+              사진은 카드의 h-14보다 한 단계 큰 h-16 — 이 자리에서 사람이 주인공인
+              만큼은 올리되, 밴드가 사진 갤러리로 보이지 않는 선에서 멈춥니다.
+              소스는 400x400이라 이 크기의 2배(retina)를 충분히 넘습니다. */}
+          <div className="mt-6 grid gap-5 sm:grid-cols-3">
+            {dict.speakers.panel.people.map((p, i) => (
+              <div key={i} className="flex items-start gap-3">
+                <Image src={p.img} alt={t(p.name)} width={200} height={200} className="h-16 w-16 shrink-0 rounded-full object-cover ring-1 ring-white/15" />
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                    <p className="break-keep text-sm font-bold text-white">{t(p.name)}</p>
+                    {p.linkedin && <LinkedInLink url={p.linkedin} label={t(p.name)} />}
+                  </div>
+                  <p className="mt-0.5 break-keep text-xs leading-snug text-white/60">{t(p.role)}</p>
+                  <p className="mt-2 break-keep text-[13px] leading-relaxed text-white/75">{t(p.note)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-6 break-keep border-t border-white/10 pt-4 text-xs leading-relaxed text-white/60">
+            {t(dict.speakers.panel.footer)}
+          </p>
         </div>
         <p className="mt-6 text-xs text-white/55">{t(dict.speakers.tbcNote)}</p>
       </Chapter>
