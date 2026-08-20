@@ -1798,12 +1798,27 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
           : "border-white/[0.08] bg-white/[0.03]"
       }`}
     >
-      <div className="flex items-center justify-between">
+      {/* FIX 2026-08-20: 모바일에서 DAY 숫자와 날짜가 붙어 보이던 것 — 헤더 행
+          우측 정렬로 분리.
+
+          justify-between은 이미 있었고 360·390px 실측에서도 날짜는 우측 패딩
+          라인에 붙어 있었습니다(간격 165px+). 그래서 이번에 바꾼 것은 둘입니다:
+
+          ① gap-3: justify-between은 남는 공간을 벌릴 뿐 최소 간격을 보장하지
+             않습니다. 지금은 여유가 크지만 날짜 형식이 길어지거나 폭이 더 좁아지면
+             두 블록이 맞닿습니다. 그 경우에도 12px는 남깁니다.
+          ② items-baseline: 행이 items-center였습니다. 24px 숫자와 11px 날짜를
+             가운데로 맞추면 날짜가 숫자 중앙에 떠서 두 블록이 각자 다른 줄에 선
+             것처럼 읽힙니다. 베이스라인을 공유하면 "DAY 1"과 "08.22 토"가 한 줄로
+             앉습니다. 왼쪽 블록이 이미 items-baseline이라 규칙도 하나로 통일됩니다.
+             전 브레이크포인트 동일 — 분기 없습니다. */}
+      <div className="flex items-baseline justify-between gap-3">
         <span className="flex items-baseline gap-1.5">
           <span className="text-[0.6rem] font-bold uppercase tracking-wider text-violet-300/70">{t(dict.program.dayLabel)}</span>
           <span className="text-2xl font-black leading-none text-white">{day.day}</span>
         </span>
-        <span className="text-[0.7rem] text-white/55">{day.date} {t(day.weekday)}</span>
+        {/* shrink-0: 날짜는 줄바꿈되면 안 되는 한 덩어리입니다. */}
+        <span className="shrink-0 text-[0.7rem] text-white/55">{day.date} {t(day.weekday)}</span>
       </div>
       {/* ── 정거장의 층, 노선도와 같은 세 가지 (2026-08-10) ──────────────────
           여기는 오래 필참/선택 두 가지였습니다. 노선도가 Day 5·7을 ◉로 강조하는
