@@ -1043,6 +1043,8 @@ export const dict = {
     // organizer's multi-year roadmap. Research flagged roadmap-speak and soft
     // "grow together" phrasing as trust-killers, so both are out.
     //
+    // DECIDED 2026-08-21: 가을 칸은 운영진 브리핑(8/21)이 덱 21장보다 나중 결정 —
+    // 이 파일이 최신. 덱은 추후 싱크.
     // DECIDED 2026-08-15: 이 섹션은 행사 소개 덱 21장을 정본으로 다시 씁니다.
     // 예외적인 결정입니다 — 평소에는 사이트가 스스로의 정본이지만, 이번 로드맵은
     // 덱에서 먼저 확정됐습니다. 개념 다섯 개를 나열하던 퍼널이 시점이 붙은 5단
@@ -1060,9 +1062,17 @@ export const dict = {
     // 인큐베이션은 참가자 전원에게 열린 것이 아니라 어워드가 만든 쇼트리스트가
     // 들어가는 자리입니다. 전원형으로 되돌리면 로드맵 전체가 "참여하면 다 해준다"가
     // 되고, 어워드가 무엇을 위한 것인지도 같이 사라집니다.
+    //
+    // DECIDED 2026-08-21 (운영진 브리핑): 가을 = 인큐베이션 → 빌더 커리큘럼
+    // (솔루션 아키텍트 역량, 참가자 전원, 준비 중 헤지). 어워드의 다음 = 12월
+    // 쇼케이스 우선 초청. 협력사명과 기간 숫자는 비공개.
+    // 그래서 이 줄은 전원형으로 되돌아갑니다 — 가을 단계가 더 이상 쇼트리스트의
+    // 자리가 아니기 때문입니다. 위 2026-08-16 결정이 지키려던 것(어워드가 무엇을
+    // 위한 것인가)은 사라지지 않았고, 자리를 옮겼습니다: 수상팀 몫은 어워드 박스의
+    // next(12월 무대 우선 초청)가 말합니다.
     visionIntro: {
-      ko: "행사는 입구입니다. 수상팀을 인큐베이팅해 서울로, 그리고 더 큰 무대로 이어갑니다.",
-      en: "The event is the entrance. We incubate the teams that win, carry them to Seoul, and on to a bigger stage.",
+      ko: "행사는 입구입니다. 여기서 시작한 빌더들이 커리큘럼을 지나 서울로, 그리고 더 큰 무대로 이어집니다.",
+      en: "The event is the entrance. The builders who start here carry on through the curriculum, to Seoul, and on to a bigger stage.",
     },
     // 퍼널 1번 칸에 붙는 배지. 하드코딩된 "★ START"였고, 한국어 모드에서도 영어로
     // 나왔습니다. 이 페이지에서 눈에 보이는 배지는 전부 번역되므로(필참 · 선택 ·
@@ -1117,9 +1127,14 @@ export const dict = {
         // 사이트에서 이 이야기를 하는 자리는 여기 하나입니다(HASHED_ORG 주석 참고).
         when: { ko: "행사 직후 협의 중", en: "Right after the event In talks" },
         title: { ko: "글로벌 해커톤", en: "Global hackathon" },
+        // DECIDED 2026-08-21: body에 "이번 8일의 압축판"과 "한 번 해 본 사람으로
+        // 들어갑니다"를 넣었습니다. 등록을 고민하는 학생에게 지금 참가할 이유가 되는
+        // 문장이라 카드에 올릴 값이 있습니다.
+        // 이중 헤지는 그대로입니다 — when의 "협의 중"과 body의 "논의 중"에 더해
+        // "성사되면"이 body 쪽 헤지를 한 번 더 잇습니다. 셋 중 하나라도 빼지 마세요.
         body: {
-          ko: "해시드와 OpenAI 지원을 논의 중인 별도 해커톤. Zero100 참가자 우선권, 로컬 학생 커뮤니티와 함께.",
-          en: "A separate hackathon in talks with Hashed and OpenAI. Zero100 participants get priority, alongside local student communities.",
+          ko: "해시드와 OpenAI 지원을 논의 중인 별도 해커톤. 성사되면 이번 8일의 압축판을 로컬 학생 커뮤니티와 함께 엽니다. Zero100 참가자는 우선권을 갖고, 한 번 해 본 사람으로 들어갑니다.",
+          en: "A separate hackathon in talks with Hashed and OpenAI. If it lands, it's a compressed run of these eight days, together with local student communities. Zero100 participants get priority, and walk in having done this once already.",
         },
       },
       // 옛 2번 카드의 정기 빌더 세션 상세(기업 문제 해부 · 소수정예 코어)가 여기로
@@ -1127,17 +1142,23 @@ export const dict = {
       {
         num: "3",
         when: { ko: "2026 가을", en: "Autumn 2026" },
-        title: { ko: "인큐베이션", en: "Incubation" },
-        // DECIDED 2026-08-16 (정체성 얼라인, 공모전): "참여 팀의" → "수상팀의",
-        // 그리고 선발 문장 한 줄. 이 칸이 어워드와 12월 쇼케이스를 잇는 이음매라,
-        // 여기서 선발이 안 보이면 4번 칸의 "인큐베이팅을 거친 팀들"이 어떻게 정해진
-        // 팀인지 알 길이 없어집니다.
+        title: { ko: "빌더 커리큘럼", en: "Builder curriculum" },
+        // DECIDED 2026-08-21 (운영진 브리핑): 이 칸이 인큐베이션에서 빌더
+        // 커리큘럼으로 바뀌었습니다. 앱을 만드는 일 자체는 쉬워졌고, 빌더톤과
+        // 12월 사이를 메우는 것은 만든 것을 서비스로 띄우고 운영하는 역량입니다.
         //
-        // 세부 운영(킥오프 날짜, 주간 리듬, 담당자 이름)은 비공개입니다. 확정돼
-        // 있더라도 이 칸에 적지 마세요.
+        // ⚠️ 대상 구분을 흐리지 마세요. 커리큘럼은 참가자 전원, 12월 무대 우선
+        // 초청은 수상팀입니다. 커리큘럼을 수상팀 전용으로 좁히거나 우선 초청을
+        // 전원으로 넓히는 편집을 하지 마세요 — 둘은 다른 것에 대한 답이고, 하나로
+        // 합치면 어워드가 무엇을 위한 것인지와 커리큘럼이 누구 것인지가 함께
+        // 무너집니다. 수상팀 몫은 dict.program.awards.next가 말합니다.
+        //
+        // 세부 운영(커리큘럼 주차, 협력사, 담당자)은 확정돼도 비공개입니다.
+        // 협력 논의 중인 회사 이름을 이 칸에 올리지 마세요.
+        // "준비 중" 헤지를 빼지 마세요 — 아직 열린 커리큘럼이 아닙니다.
         body: {
-          ko: "수상팀의 결과물을 실제 상품 수준까지. 어워드가 곧 선발입니다. 정기 빌더 세션과 멘토링으로 계속 빌드업합니다.",
-          en: "Taking what the winning teams built up to an actual product. The awards are the selection. Regular builder sessions and mentoring keep the build going.",
+          ko: "앱을 만드는 일은 쉬워졌습니다. 만든 것을 서비스로 띄우고 운영하는 솔루션 아키텍트 역량을 기르는 커리큘럼을 준비 중입니다. 참가자 전원이 12월까지 이어 달립니다.",
+          en: "Building an app got easy. What we're preparing is a curriculum for the harder part, the solution-architect skills of putting your build live and keeping it running. Every participant carries it through to December.",
         },
       },
       {
@@ -1145,8 +1166,8 @@ export const dict = {
         when: { ko: "2026.12 서울 강남", en: "Dec 2026 Gangnam, Seoul" },
         title: { ko: "강남 쇼케이스", en: "Gangnam showcase" },
         body: {
-          ko: "인큐베이팅을 거친 팀들이 강남에서, 한국 기업과 투자자 앞에 다시 섭니다.",
-          en: "Teams that came through incubation stand up again in Gangnam, in front of Korean companies and investors.",
+          ko: "싱가포르에서 시작한 팀들이 한국의 학생 빌더들과 함께, 강남에서 한국 기업과 투자자 앞에 다시 섭니다.",
+          en: "Teams that started in Singapore stand up again in Gangnam, together with student builders in Korea, in front of Korean companies and investors.",
         },
       },
       {
@@ -1585,13 +1606,18 @@ export const dict = {
       // "수상해야 뭔가 있다"로 읽히고, 그건 인턴십 전원 개방(2026-08-05)과
       // 어긋납니다. 인턴십을 수상팀 전용으로 바꾸지 마세요.
       //
-      // 인큐베이션 세부 운영(킥오프 날짜, 주간 리듬, 담당자)은 비공개입니다.
+      // DECIDED 2026-08-21 (운영진 브리핑): 가을이 인큐베이션에서 빌더 커리큘럼으로
+      // 바뀌면서, 수상팀에게 따라오는 것을 12월 쇼케이스 무대 우선 초청으로 다시
+      // 정의합니다. 커리큘럼은 참가자 전원 몫이라 이 자리의 답이 될 수 없습니다 —
+      // 그걸 여기 쓰면 위 균형(next = 수상팀, openToAll = 전원)이 무너집니다.
+      //
+      // 커리큘럼 세부 운영(주차, 협력사, 담당자)은 확정돼도 비공개입니다.
       // 여기에 적지 마세요 — 같은 사실이 비전 섹션 3번 칸에도 있습니다.
       next: {
         label: { ko: "수상팀에게 이어지는 것", en: "What a win leads to" },
         body: {
-          ko: "가을 인큐베이션에 우선 선발되어 결과물을 상품 수준까지 끌어올리고, 12월 서울 강남 쇼케이스 무대에 다시 섭니다.",
-          en: "They are picked first for the autumn incubation, take the build up to product level, and stand on the December showcase stage in Gangnam, Seoul.",
+          ko: "가을 동안 결과물을 상품 수준까지 끌어올려, 12월 서울 강남 쇼케이스 무대에 우선 초청됩니다.",
+          en: "Over the autumn they take the build up to product level, and get first call for the December showcase stage in Gangnam, Seoul.",
         },
       },
       openToAll: {
@@ -2424,8 +2450,8 @@ export const dict = {
     // 이어지는 것까지 갑니다. "순위가 아니라"는 뺐습니다 — 순위형은 이미 없고,
     // 그 사실은 어워드 박스의 sub가 한 번 말합니다.
     flowNote: {
-      ko: "네트워크와 경험은 참가자 전원에게. 어워드는 각 팀의 강점에, 그리고 수상팀은 가을 인큐베이션과 12월 서울 쇼케이스로 이어집니다.",
-      en: "Network and experience for everyone. Awards go to each team's strengths, and the teams that win carry on into the autumn incubation and the December showcase in Seoul.",
+      ko: "네트워크와 경험은 참가자 전원에게. 어워드는 각 팀의 강점에, 그리고 여정은 가을 빌더 커리큘럼과 12월 서울 쇼케이스로 이어집니다.",
+      en: "Network and experience for everyone. Awards go to each team's strengths, and the journey carries on into the autumn builder curriculum and the December showcase in Seoul.",
     },
   },
 
@@ -3713,8 +3739,8 @@ export const dict = {
           // DECIDED 2026-08-16 (정체성 얼라인, 공모전): 상금 뒤에 무엇이 이어지는지
           // 한 문장. 이 답은 "얼마"에서 끝나 있었는데, 수상의 실제 값은 부상보다
           // 그 뒤에 붙는 자리입니다(정본은 dict.program.awards의 next).
-          ko: "네, 다만 팀을 1, 2, 3위로 세우지 않습니다. 시상은 테마형 어워드 4부문이고 여덟 팀이 받아 가요. 부상은 부문에 따라 현금 또는 널담 바우처입니다. 수상팀은 가을 인큐베이션과 12월 서울 쇼케이스로 이어져요. 어떤 부문이 있고 누가 뽑는지는 프로그램의 Day 8 카드에 정리해 뒀습니다. 참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드와 캡 세트는 Day 1 현장에서 선착순 60세트로 드립니다.",
-          en: "Yes, but nobody gets lined up 1st-2nd-3rd. There are four thematic awards and eight teams take one home, each carrying either a cash prize or a Nuldam voucher. The teams that win carry on into the autumn incubation and the December showcase in Seoul. Which awards there are and who picks them is laid out on the Day 8 card in the programme. Entry is free and the networking goes to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come.",
+          ko: "네, 다만 팀을 1, 2, 3위로 세우지 않습니다. 시상은 테마형 어워드 4부문이고 여덟 팀이 받아 가요. 부상은 부문에 따라 현금 또는 널담 바우처입니다. 수상팀은 12월 서울 쇼케이스 무대에 우선 초청되고, 가을에는 참가자 전원이 이어 갈 빌더 커리큘럼이 준비되고 있어요. 어떤 부문이 있고 누가 뽑는지는 프로그램의 Day 8 카드에 정리해 뒀습니다. 참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드와 캡 세트는 Day 1 현장에서 선착순 60세트로 드립니다.",
+          en: "Yes, but nobody gets lined up 1st-2nd-3rd. There are four thematic awards and eight teams take one home, each carrying either a cash prize or a Nuldam voucher. Winning teams get first call for the December showcase stage in Seoul, and an autumn builder curriculum for every participant is in the works. Which awards there are and who picks them is laid out on the Day 8 card in the programme. Entry is free and the networking goes to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come.",
         },
       },
       {
