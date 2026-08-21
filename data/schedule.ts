@@ -831,11 +831,16 @@ export const days: DayMeta[] = [
       // the only one anybody had checked.
       // DECIDED 2026-08-13: 박희덕 대표님의 커리어 간담회는 Day 8로 갔고, 이 날
       // 오후 슬롯은 조언 세션입니다.
+      // DECIDED 2026-08-21 (운영 브리핑): Day 7 현장 멘토링 = 라운드테이블
+      // 로테이션(약 30분 간격). 멘토 수·테이블 수 등 배치 숫자는 웹에 싣지 않음.
+      // 이 줄에서는 "멘토와 함께하는 최종 점검"이 "멘토 테이블을 옮겨가는
+      // 라운드테이블 점검"이 됐습니다 — 나열 한 조각이라 형식만 말하고, 무엇을
+      // 어떻게 하는지는 d7-final-rehearsal이 맡습니다.
       // DECIDED 2026-08-17: 장소 뒤에 입장 명단 마감을 한 조각 붙였습니다. 전문은
       // dict.program.entryNotice(데이 모달)에 있고, 이 줄은 카드에서 보이는 유일한
       // 표면이라 날짜만 실어 나릅니다. 여기서 문장으로 늘리지 마세요.
-      ko: "AWS 오피스(입장 명단 8/24 마감), 멘토와 함께하는 최종 점검, 박희덕 대표님 조언 세션, 1:1 멘토링(온라인), 저녁: 사전 제출물 마감(필수).",
-      en: "AWS office (entry list closes 24 Aug), final check with mentors, Park Hee-deok's advice session, 1:1 mentoring (online), Evening: submission deadline (required).",
+      ko: "AWS 오피스(입장 명단 8/24 마감), 멘토 테이블을 옮겨가는 라운드테이블 점검, 박희덕 대표님 조언 세션, 1:1 멘토링(온라인), 저녁: 사전 제출물 마감(필수).",
+      en: "AWS office (entry list closes 24 Aug), a roundtable check moving between mentor tables, Park Hee-deok's advice session, 1:1 mentoring (online), Evening: submission deadline (required).",
     },
     whyStop: {
       ko: "전문가들이 던질 질문을 무대에 서기 하루 전에 미리 받아보는 자리",
@@ -853,6 +858,9 @@ export const days: DayMeta[] = [
       {
         time: "9:10AM–11:30AM",
         label: { ko: "멘토링 최종 점검", en: "Mentoring final check" },
+        // 형식의 핵심만 한 줄로 (DECIDED 2026-08-21). 멘토 수와 테이블 수는
+        // 여기에도, 어디에도 쓰지 않습니다 — 그 숫자는 당일 배치의 문제입니다.
+        note: { ko: "멘토 테이블을 약 30분씩 옮겨가는 라운드테이블", en: "Roundtable format, moving tables about every 30 minutes" },
         eventId: "d7-final-rehearsal",
       },
       {
@@ -2000,6 +2008,15 @@ export const schedule: BEvent[] = [
       // 마지막 줄 (DECIDED 2026-08-09): 예약제 1:1이 열려 있는 마지막 날입니다.
       // 이 카드가 말하는 현장 최종 점검(9:10–11:30)과는 다른 트랙이라 따로 적습니다.
       //
+      // DECIDED 2026-08-21 (운영 브리핑): Day 7 현장 멘토링 = 라운드테이블
+      // 로테이션(약 30분 간격). 멘토 수·테이블 수 등 배치 숫자는 웹에 싣지 않음.
+      // 진행 방식 세 문장이 둘째 자리에 들어갔습니다 — 무엇을 하는 날인지 말한
+      // 다음, 누가 함께 있는지 말하기 전이 방식이 놓일 자리입니다.
+      // "제출 전 마지막 점검에 쓰세요"는 뺐습니다: 새 문장이 그 시간에 무엇을
+      // 하는지를 이미 구체적으로 말해서, 같은 지시가 두 번 남았습니다.
+      // 약 30분이라는 간격만 씁니다. 그게 참가자가 준비에 반영할 수 있는 유일한
+      // 숫자이고, 테이블이 몇 개인지는 당일 배치의 문제입니다.
+      //
       // DECIDED 2026-08-14 (코드프레소 협의): 이 시간이 담당자 인터뷰를 겸합니다.
       // 참가자가 과제 담당자를 만나는 접점은 여기 하나이고, 예약제 인터뷰 슬롯은
       // 형평성·가용 시간 때문에 열지 않기로 했습니다. 사이트에는 하는 것만 씁니다:
@@ -2011,8 +2028,8 @@ export const schedule: BEvent[] = [
       // 진행자는 여전히 멘토진이고, 두 분의 참석은 산문으로만 말합니다.
       // 같은 사실을 dictionary.ts의 mentoring.groups[pitch].sub도 말합니다. 함께
       // 움직이세요.
-      ko: "Day 7은 사전 제출물 마감 당일입니다. 새 기능이나 방향 전환은 여기서 멈추고, 이미 만든 결과를 발표와 이어지는 Q&A 안에서 명확히 증명하는 데 시간을 씁니다. Day 5에 이은 두 번째 현장 집결이고, 1:1 멘토링이 저녁까지 열려 있는 마지막 날이에요(온라인 드롭인도 오늘까지). 제출 전 마지막 점검에 쓰세요. 과제를 낸 코드프레소의 대표와 공동창업자도 현장에 함께해, 무대에 서기 전 담당자에게 과제를 직접 묻고 확인하는 시간을 겸합니다.",
-      en: "Day 7 is the submission deadline. New features and changes of direction stop here; the time goes into proving what you already built, making it stand up inside the pitch and the Q&A that follows. It's the second in-person gathering after Day 5, and the last day 1:1 mentoring is open, into the evening, with the online drop-in running through today too. Use it for a final check before the submission closes. Codepresso's CEO and co-founder, who set the problems, are on site too, so it doubles as your chance to question the problem owner about the brief before you go on stage.",
+      ko: "Day 7은 사전 제출물 마감 당일입니다. 새 기능이나 방향 전환은 여기서 멈추고, 이미 만든 결과를 발표와 이어지는 Q&A 안에서 명확히 증명하는 데 시간을 씁니다. 진행은 라운드테이블입니다. 멘토마다 테이블을 하나씩 맡고, 팀이 약 30분씩 테이블을 옮겨가며 같은 발표를 다른 시각 앞에서 다시 세워봅니다. 한 분의 조언에 머무르지 않고, 무대에서 만날 여러 관점을 하루 전에 미리 통과해 보는 구조예요. Day 5에 이은 두 번째 현장 집결이고, 1:1 멘토링이 저녁까지 열려 있는 마지막 날이에요(온라인 드롭인도 오늘까지). 과제를 낸 코드프레소의 대표와 공동창업자도 현장에 함께해, 무대에 서기 전 담당자에게 과제를 직접 묻고 확인하는 시간을 겸합니다.",
+      en: "Day 7 is the submission deadline. New features and changes of direction stop here; the time goes into proving what you already built, making it stand up inside the pitch and the Q&A that follows. It runs as a roundtable: each mentor takes a table and teams move on about every half hour, putting the same pitch in front of a different pair of eyes each time. Instead of one person's read, you pass through several of the perspectives waiting for you on stage, a day early. It's the second in-person gathering after Day 5, and the last day 1:1 mentoring is open, into the evening, with the online drop-in running through today too. Codepresso's CEO and co-founder, who set the problems, are on site too, so it doubles as your chance to question the problem owner about the brief before you go on stage.",
     },
     location: AWS_OFFICE,
     checkpoints: SCORE_KEEPING_CHECKS,
