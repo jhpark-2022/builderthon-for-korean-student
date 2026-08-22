@@ -327,6 +327,14 @@ export const dict = {
     // which is scroll-revealed): the whole point is to give someone who isn't
     // ready to register a door that is already open when they land.
     openChat: { ko: "오픈채팅", en: "Open Chat" },
+    // DECIDED 2026-08-22 (마감 후 청산): 등록 진입점 전면 제거 — 비활성 버튼을
+    // 남기지 않는다. 1순위 액션은 오픈채팅, 히어로 1순위는 트랙. 등록 코드
+    // (모달·API·registered 상태)는 삭제하지 않고 진입점만 끊는다.
+    //
+    // 위 openChat은 nav와 바의 짧은 라벨이고, 이건 등록 버튼이 있던 자리(클로징
+    // 섹션과 비전 브리지)를 받는 긴 라벨입니다. 같은 문을 여는 같은 링크지만,
+    // 페이지의 마지막 CTA 자리에 "오픈채팅" 넉 자만 서면 이름표처럼 읽힙니다.
+    openChatJoin: { ko: "오픈채팅으로 함께하기", en: "Join the open chat" },
     openChatAria: { ko: "카카오톡 오픈채팅방 열기", en: "Open the KakaoTalk open chat" },
     // Brand suffix beside the Zero100 wordmark in the nav.
     brandSuffix: { ko: "AI 빌더톤", en: "AI Builderthon" },
@@ -472,6 +480,9 @@ export const dict = {
     // 훅 카드(HookCards)를 여기에 다시 띄우지 마세요. 같은 카드가 세 번째로
     // 나타나는 순간 페이지가 같은 자리를 맴도는 것처럼 읽힙니다. 이 자리는
     // 한 줄과 알약 하나면 됩니다. 렌더는 Journey.tsx의 InlineRegisterCta.
+    // 2026-08-22 마감 후 청산: 아래 inline* 세 줄과 InlineRegisterCta 렌더가
+    // 함께 빠졌습니다. 셋 다 "자리를 지금 잡으라"는 유도형이라 마감 뒤에는 사실이
+    // 아닙니다. 키는 보존합니다.
     inlineProgramLine: {
       ko: "이 일정이 감당되겠다 싶으면, 자리는 지금 잡아둘 수 있어요.",
       en: "If those two days work for you, you can take your spot now.",
@@ -489,14 +500,17 @@ export const dict = {
       ko: "궁금한 게 풀렸다면, 자리 잡는 데는 3분이면 돼요.",
       en: "If that cleared things up, taking your spot is a three-minute job.",
     },
-    // ── Open-chat third CTA ────────────────────────────────────────────────
-    // The low-commitment exit for someone who isn't ready to register. Rendered
-    // as a TEXT LINK everywhere, never a button: it sits next to the register
-    // CTA and the moment it competes visually it starts cannibalising the
-    // conversion it's meant to catch. See OpenChatLink in Journey.tsx.
+    // ── Open-chat CTA (혜택 밴드의 텍스트 링크) ─────────────────────────────
+    // 등록을 망설이는 사람을 위한 낮은 문턱의 출구였습니다. 등록 CTA 옆에 서면서도
+    // 시각적으로 경쟁하지 않도록 어디서나 텍스트 링크로만 렌더합니다.
+    //
+    // EDIT 2026-08-22 (마감 후 청산): "아직 고민 중이라면"이 무엇을 고민한다는
+    // 것인지 가리킬 대상이 없어졌습니다(등록 CTA가 옆에서 사라졌으니까). 지금 이
+    // 링크가 하는 일은 망설이는 사람을 붙잡는 것이 아니라 다음 소식으로 잇는
+    // 것이라, 문장이 그쪽을 봅니다. 텍스트 링크로 두는 규칙은 그대로입니다.
     openChatCta: {
-      ko: "아직 고민 중이라면, 오픈채팅에서 소식만 받아보세요",
-      en: "Not sure yet? Just follow along in our open chat",
+      ko: "다음 소식은 오픈채팅에서 먼저 알려드려요",
+      en: "News lands in the open chat first",
     },
     // Shown once per session when the register modal is dismissed WITHOUT
     // submitting. Not a second modal — a bottom toast that self-dismisses, so it
@@ -539,6 +553,10 @@ export const dict = {
     // button becomes this disabled label instead of opening the form. The API
     // enforces the same cutoff, so this is the visible half of a closed door.
     // See lib/registrationWindow.ts.
+    // 2026-08-22 마감 후 청산으로 이 키를 읽는 렌더 경로가 없습니다. 비활성
+    // "신청 마감" 버튼을 곳곳에 남기는 대신 진입점 자체를 걷어냈어요. 키는
+    // 보존합니다 — 등록 모달과 API는 그대로 살아 있고, 다음 라운드에 다시
+    // 필요합니다.
     closed: { ko: "신청 마감", en: "Registration closed" },
     // Modal chrome.
     modalTitle: { ko: "빌더톤 등록", en: "Register for the Builderthon" },
@@ -830,6 +848,10 @@ export const dict = {
       ko: "실제 기업의 AI 전환(AX) 과제를 바이브 코딩으로 풉니다. 필참은 첫날과 마지막 날 이틀뿐이고, 나머지는 팀이 편한 시간에 빌드해요. 마지막 날, 문제를 낸 기업과 현업 리더 앞에서 ‘내 아이디어가 돌아간다’를 증명하고 데모와 피칭, 수료증으로 남깁니다.",
       en: "Solve a real company's AI-transformation (AX) problem with vibe coding. Only day one and day eight are required. The rest is your team's own time. On the last day you show it running to the company that set the problem and to working leaders, and keep the demo, the pitch and the certificate."
     },
+    // DECIDED 2026-08-22 (마감 후 청산): 히어로 1순위가 등록에서 트랙으로
+    // 넘어왔습니다. 등록이 마감된 뒤로 첫 화면에서 할 수 있는 가장 중요한 일이
+    // "무슨 문제를 푸는지 보는 것"이라서요. 아래 ctaProgram은 2순위로 그대로입니다.
+    ctaTracks: { ko: "트랙 보기", en: "See the tracks" },
     ctaProgram: { ko: "8일의 여정 둘러보기", en: "Explore the 8-day journey" },
     ctaPartner: { ko: "파트너십 문의", en: "Partner with us" },
     scroll: { ko: "스크롤", en: "Scroll" },
@@ -1226,9 +1248,11 @@ export const dict = {
     // isn't settled, and a figure printed under a register button reads as a
     // cap ("only 100 spots") rather than an ambition. "첫 빌더들" says the same
     // thing — you'd be at the start of this — without a number to be wrong about.
+    // EDIT 2026-08-22: "모입니다" → "모였습니다". 행사가 시작됐습니다. 한 낱말만
+    // 고칩니다 — 이 줄이 하는 일(비전과 이번 8일을 잇는 다리)은 그대로입니다.
     visionBridge: {
-      ko: "그 시작점의 첫 빌더들이 이번 8월에 모입니다.",
-      en: "The first builders of that starting point gather this August.",
+      ko: "그 시작점의 첫 빌더들이 이번 8월에 모였습니다.",
+      en: "The first builders of that starting point have gathered this August.",
     },
     // ── Press ────────────────────────────────────────────────────────────────
     // Outside coverage of the gap described just above, rendered as a slim
@@ -3969,10 +3993,10 @@ export const dict = {
         // 매칭 경고 사이입니다 — 앞은 "와도 된다", 뒤는 "늦으면 못 붙는다"라,
         // "붙으면 그 다음이 있다"가 둘 사이에 와야 경고가 마지막 인상이 되지
         // 않습니다. 위 세 곳 신호 계약은 그대로입니다(전문은 여기 하나).
-        q: { ko: "일단 Day 1에 가 보고 결정해도 되나요?", en: "Can I just show up on Day 1 and decide there?" },
+        q: { ko: "지금도 등록할 수 있나요?", en: "Can I still register?" },
         a: {
-          ko: "네, Day 1에 와서 결정하셔도 됩니다. 등록은 당일 오후 2시 15분까지 열려 있어요. 현장에서 매칭된 팀은 다음 날 팀 빌딩 시간으로 이어서 챙겨 드립니다. 다만 너무 늦게 등록하시면 함께 팀을 구성할 분이 남아 있지 않을 수 있어요. (이미 팀으로 오시는 분들은 해당 없어요.)",
-          en: "Yes, come to Day 1 and decide there. Registration stays open until 2:15PM that day. Teams matched on site carry into a team-building session the next day. Just note that if you register very late, there may be no one left to team you up with. (Doesn't apply if you're registering as a team.)",
+          ko: "등록은 8월 22일 오후 2시 15분에 마감됐어요. 참가 관련 안내는 참가자 오픈채팅에서 이어집니다. 현장에서 매칭된 팀은 다음 날 팀 빌딩 시간으로 이어서 챙겨 드립니다. (이미 팀으로 오신 분들은 해당 없어요.)",
+          en: "Registration closed at 2:15PM on 22 August. Everything for participants continues in the open chat. Teams matched on site carry into a team-building session the next day. (Doesn't apply if you came as a team.)",
         },
       },
       // Mentor requests were the most common pre-event ask — answered next to the
@@ -4221,8 +4245,12 @@ export const dict = {
     },
     blurb: {
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-      ko: "여기가 ‘초입’입니다. 일회성 행사를 넘어, 지속가능한 한–싱 빌더 커뮤니티를 함께 만들어 갑니다. 등록하시면 참가자 단톡방에서 만나요.",
-      en: "This is the entry point. Beyond a single event, we're building a lasting Korea–Singapore builder community. Register and we'll see you in the participants' chat.",
+      // EDIT 2026-08-22 (마감 후 청산): 마지막 문장이 "등록하시면 참가자 단톡방에서
+      // 만나요"였습니다. 바로 아래 버튼이 이제 오픈채팅이라 문장과 버튼이 다른 곳을
+      // 가리키고 있었어요. 앞의 두 문장(커뮤니티를 만든다)은 마감과 무관한 사실이라
+      // 그대로입니다.
+      ko: "여기가 ‘초입’입니다. 일회성 행사를 넘어, 지속가능한 한–싱 빌더 커뮤니티를 함께 만들어 갑니다. 오픈채팅에서 다음 소식을 먼저 받아보세요.",
+      en: "This is the entry point. Beyond a single event, we're building a lasting Korea–Singapore builder community. Follow the open chat to hear what comes next first.",
     },
     ctaProgram: { ko: "프로그램 보기", en: "View Program" },
     // Shown under the partnership CTA: `mailto:` does nothing when the visitor

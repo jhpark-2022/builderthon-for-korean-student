@@ -715,12 +715,15 @@ function ResultView({
         )}
 
         {/* apply CTA — sits between the personality card and the match section.
-            Links to the main page's register modal (/?register=1&ref=quiz); the
-            AI type is sourced from this device's saved result, not the URL. */}
+            2026-08-22 (마감 후 청산): /?register=1&ref=quiz로 등록 모달을 열던
+            자리입니다. 등록이 닫혔으니 홈의 #tracks로 보냅니다 — 결과를 본 사람에게
+            지금 내밀 수 있는 다음 걸음. 위의 returnToRegister 배너는 등록 모달에서
+            건너온 왕복 경로라 이제 켜지지 않지만, 모달 자체는 살아 있어서 그대로
+            둡니다. */}
         <div className="mx-auto w-full max-w-xl rounded-[24px] border border-white/10 bg-white/[0.04] p-6 text-center">
           <p className="text-[15px] font-bold leading-relaxed text-white/85">{ctaLead}</p>
           <a
-            href="/?register=1&ref=quiz"
+            href="/#tracks"
             className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
           >
             {t(quizUI.ctaApply)} →

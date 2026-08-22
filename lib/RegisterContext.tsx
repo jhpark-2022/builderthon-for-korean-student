@@ -91,13 +91,20 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
     }
 
     // Auto-open from the /quiz result CTA: /?register=1&ref=quiz[-return].
+    //
+    // DECIDED 2026-08-22 (마감 후 청산): 이 경로로는 더 이상 모달을 열지 않습니다.
+    // 페이지의 등록 진입점을 전부 걷어냈는데 URL 하나가 살아 있으면, 예전 링크나
+    // 북마크를 타고 온 사람에게만 아무 데서도 닿을 수 없는 모달이 튀어나옵니다.
+    // 쿼리를 지우는 것은 그대로 둡니다 — 주소창에 죽은 파라미터를 남길 이유가
+    // 없어요. `ref`는 계속 읽습니다(유입 출처는 여전히 유효한 정보).
+    // 모달 자체와 openRegister()는 살아 있습니다. 다음 라운드에 되살릴 때는
+    // 아래 setOpen(true) 한 줄만 돌려놓으면 됩니다.
     const params = new URLSearchParams(window.location.search);
     const ref = params.get("ref");
     if (ref) setUrlRef(ref);
     if (params.get("register") === "1") {
-      setOpen(true);
-      // Strip the query so a refresh doesn't reopen; the captured type/ref stay
-      // in state. Keep the hash (deep-link anchors) intact.
+      // Strip the query so the dead parameter doesn't linger in the address bar.
+      // Keep the hash (deep-link anchors) intact.
       window.history.replaceState(
         null,
         "",

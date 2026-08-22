@@ -24,7 +24,9 @@ import ChatGlyph from "@/components/ChatGlyph";
 import { loadOwnResult } from "@/lib/quizResult";
 import { parseResultId } from "@/lib/quizScore";
 import { RESULTS, QUESTIONS, type MbtiKey } from "@/data/quiz";
-import { useRegister, type RegisterPreset } from "@/lib/RegisterContext";
+// RegisterPreset은 등록 진입점과 함께 2026-08-22에 이 파일에서 빠졌습니다.
+// 타입 자체는 RegisterContext에 그대로 있고, 모달도 살아 있습니다.
+import { useRegister } from "@/lib/RegisterContext";
 import { useScrollDirection } from "@/lib/useScrollDirection";
 import { useBodyScrollLock, isScrollLocked } from "@/lib/useBodyScrollLock";
 
@@ -362,68 +364,13 @@ function OpenChatLink({
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ─────────────────────────────────────────────────────────────────────────────
-// INLINE REGISTER CTA — one line of copy + one pill, dropped into the middle of
-// the page.
+// InlineRegisterCta는 2026-08-22 마감 후 청산으로 제거됐습니다.
 //
-// The page used to hand the reader a register door in the hero and in the two
-// hook bands, and then nothing at all through program → speakers → mentoring →
-// builders → companions → faq. Six chapters, and the three moments where
-// someone actually decides sit inside them: right after "only two days are
-// required" (program), right after seeing who is on the other side of the table
-// (mentoring), and right after the last objection runs out (faq).
-//
-// Deliberately NOT the hook cards. Those carry a quiz, a chat link and a
-// reassurance list; a third and fourth appearance of that block makes the page
-// feel like it is looping back to where the reader already was. This is the
-// smallest thing that still counts as a door: a sentence that picks up whatever
-// was just read, and a pill.
-//
-// It also stays a tier under the section CTAs around it — no gradient, no
-// shadow. It should read as a door held open in passing, not as the page
-// stopping to ask again.
+// program·mentoring·faq 세 자리에 "자리는 지금 잡아둘 수 있어요" 류의 한 줄과
+// 알약을 두던 컴포넌트였습니다. 세 줄 모두 등록을 권하는 유도형이라 마감 뒤에는
+// 사실이 아니고, 비활성 알약으로 남기는 것은 이번 청산이 하지 않기로 한 바로 그
+// 것입니다. 문구 키(register.inline*)는 dictionary에 보존돼 있습니다.
 // ─────────────────────────────────────────────────────────────────────────────
-function InlineRegisterCta({
-  t,
-  line,
-  openRegister,
-  registered,
-  className = "",
-}: {
-  t: Tfn;
-  line: Phrase;
-  openRegister: (preset?: RegisterPreset) => void;
-  registered: boolean;
-  className?: string;
-}) {
-  // Deadline flag straight from context, so it doesn't have to thread through
-  // every InlineRegisterCta placement. Once closed the button is a disabled
-  // 신청 마감. See lib/registrationWindow.ts.
-  const { closed } = useRegister();
-  return (
-    <div className={`flex flex-col items-center gap-3 sm:flex-row sm:justify-center ${className}`}>
-      <p className="max-w-md break-keep text-center text-sm leading-relaxed text-white/70 sm:text-left">
-        {t(line)}
-      </p>
-      <button
-        type="button"
-        onClick={() => openRegister()}
-        disabled={closed && !registered}
-        className={
-          closed && !registered
-            ? "group inline-flex shrink-0 cursor-not-allowed items-center gap-2 rounded-full border border-white/12 bg-white/5 px-5 py-2.5 text-sm font-bold text-white/45"
-            : "group inline-flex shrink-0 items-center gap-2 rounded-full border border-violet-400/40 bg-violet-500/15 px-5 py-2.5 text-sm font-bold text-violet-50 transition hover:-translate-y-0.5 hover:border-violet-400/70 hover:bg-violet-500/25"
-        }
-      >
-        {t(registered ? dict.register.navRegistered : closed ? dict.register.closed : dict.nav.register)}
-        {!registered && !closed && (
-          <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
-            →
-          </span>
-        )}
-      </button>
-    </div>
-  );
-}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MOBILE STICKY BAR — open chat + register. Phone only.
@@ -435,14 +382,13 @@ function InlineRegisterCta({
 // ─────────────────────────────────────────────────────────────────────────────
 function MobileStickyBar({
   t,
-  openRegister,
   registerOpen,
 }: {
   t: Tfn;
-  openRegister: (preset?: RegisterPreset) => void;
+  // 모달이 열려 있는 동안 바를 숨기는 조건입니다. 등록 진입점은 2026-08-22에
+  // 걷어냈지만 모달 자체는 살아 있어서, 이 가드는 그대로 둡니다.
   registerOpen: boolean;
 }) {
-  const { closed } = useRegister();
   const [past, setPast] = useState(false);
   const [atEnd, setAtEnd] = useState(false);
   // Same signal the header and the FAB use — the three move as one surface, so
@@ -506,6 +452,12 @@ function MobileStickyBar({
             ICON + LABEL, never icon alone: a bare speech bubble in a dark pill is
             not a recognisable KakaoTalk affordance, and this is the one CTA a
             hesitant visitor is looking for by name. */}
+        {/* DECIDED 2026-08-22 (마감 후 청산): 옆에 있던 등록 버튼을 걷어내고
+            오픈채팅이 이 바의 단독 액션이 됐습니다. flex-1로 폭을 넘겨받아
+            그라디언트 필이 있던 자리를 채웁니다 — 짝을 잃은 알약이 왼쪽에 작게
+            붙어 있으면 바가 무언가 빠진 것처럼 보입니다.
+            바 자체는 그대로 둡니다. 행사 중에 참가자가 가장 자주 여는 문이고,
+            등장 조건과 chromeHidden 로직은 하나도 건드리지 않았습니다. */}
         {links.openChat && (
           <a
             href={links.openChat}
@@ -513,24 +465,12 @@ function MobileStickyBar({
             rel="noopener noreferrer"
             aria-label={t(dict.nav.openChatAria)}
             onClick={() => track("openchat_click", { src: "sticky" })}
-            className="flex h-12 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/35 bg-violet-500/10 px-3.5 text-xs font-bold text-violet-100"
+            className="flex h-12 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/35 bg-violet-500/10 px-4 text-sm font-bold text-violet-100"
           >
             <ChatGlyph className="h-4 w-4 shrink-0" />
             {t(dict.nav.openChat)}
           </a>
         )}
-        <button
-          type="button"
-          onClick={() => openRegister()}
-          disabled={closed}
-          className={
-            closed
-              ? "flex h-12 flex-1 cursor-not-allowed items-center justify-center gap-1.5 rounded-full border border-white/12 bg-white/5 px-4 text-sm font-bold text-white/45"
-              : "flex h-12 flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-4 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)]"
-          }
-        >
-          {closed ? t(dict.register.closed) : t(dict.stickyBar.register)}
-        </button>
       </div>
     </div>
   );
@@ -644,16 +584,13 @@ function QuizResultPeek({ mbti, className = "" }: { mbti?: MbtiKey; className?: 
 function HookCards({
   t,
   ownResultId,
-  openRegister,
   className = "",
   chatSrc,
   stacked = false,
   withQuestion = false,
-  trackCard = false,
 }: {
   t: Tfn;
   ownResultId: string | null;
-  openRegister: (preset?: RegisterPreset) => void;
   className?: string;
   // Which placement this instance is, for the open-chat link's funnel tag.
   // `null` renders no open-chat link at all — used by the hero, where the nav
@@ -670,21 +607,12 @@ function HookCards({
   // Ignored for a returning visitor — they have a result; re-asking Q1 as the
   // headline of their card would be a step backwards.
   withQuestion?: boolean;
-  // DECIDED 2026-08-22 (Day 1): 등록이 마감되면서 히어로의 등록 카드는 죽은
-  // CTA가 됐고, 그 자리를 트랙 카드가 받습니다. 카드 1을 등록에서 트랙으로
-  // 바꾸는 스위치입니다 — 히어로의 두 인스턴스(데스크톱 우측 열, 모바일 스택)만
-  // 켭니다. 혜택 밴드의 인스턴스는 그대로 등록 카드를 렌더하고, 마감 상태에서는
-  // 이미 "신청 마감"으로 떨어집니다.
-  trackCard?: boolean;
 }) {
   // The hero is the one place the register CTA must be unambiguously the
   // biggest thing on screen, and there the two cards sit one above the other.
   // `compact` strips the quiz card's two tallest ornaments there and nowhere
   // else. If this ever stops tracking `stacked`, re-measure both cards.
   const compact = stacked;
-  // Deadline flag from context — reused across every HookCards placement (hero +
-  // both mid-page bands) so the register card can't read as open after 2:15.
-  const { closed } = useRegister();
   // Q1 answered inline. Handing the choice to /quiz via ?q1= means the bar
   // starts at 1/14 instead of throwing the answer away and asking again.
   const reduce = useReducedMotion();
@@ -711,21 +639,19 @@ function HookCards({
   return (
     <div className={className}>
       {/* items-start only in the question variant. Folding Q1 in roughly doubles
-          the quiz card's height, and a stretched grid row would blow the
-          register card up to match it — leaving the page's primary CTA as a
-          box that is half empty space, which reads as the weaker of the two.
-          Letting each card keep its own height costs a ragged bottom edge and
-          buys back the hierarchy. */}
+          the quiz card's height, and a stretched grid row would blow card 1 up to
+          match it — leaving the page's primary CTA as a box that is half empty
+          space, which reads as the weaker of the two. Letting each card keep its
+          own height costs a ragged bottom edge and buys back the hierarchy. */}
       <div className={`grid gap-3 ${stacked ? "" : "sm:grid-cols-2"} ${askQ ? "items-start" : ""}`}>
-        {/* Card 1 — the page's primary action. Until 2026-08-22 that was always
-            registration; with registration closed the hero renders the TRACK
-            card here instead (trackCard), and it inherits the violet gradient
-            pill for exactly that reason: the pill marks whatever the first
-            action on the page is, and that moved from 등록 to 트랙.
-            The whole card is one control in both variants — an <a> for the
-            track card (it is a jump to #tracks, same as the quiz card's link)
-            and a <button> for register (it opens a modal). */}
-        {trackCard ? (
+        {/* Card 1 — the page's primary action.
+            2026-08-22까지는 언제나 등록이었습니다. 등록이 마감되면서 세 배치가 전부
+            트랙 카드가 됐고, 분기가 필요 없어져 등록 쪽 가지를 걷어냈습니다.
+            (마감 후 청산: 비활성 버튼을 남기지 않는다. 등록 모달과 API는 그대로
+            살아 있고, 여기서 끊긴 것은 진입점뿐입니다.)
+            바이올렛 그라데이션 필을 그대로 쓰는 이유: 이 필은 "등록"의 표식이
+            아니라 "페이지의 1순위 행동"의 표식이고, 그 자리가 등록에서 트랙으로
+            넘어왔을 뿐입니다. */}
         <a
           href="#tracks"
           className="group flex flex-col items-start gap-2 rounded-2xl border border-violet-400/25 bg-violet-400/[0.07] p-4 text-left transition hover:border-violet-400/45 hover:bg-violet-400/[0.11]"
@@ -747,44 +673,6 @@ function HookCards({
             <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </span>
         </a>
-        ) : (
-        <button
-          type="button"
-          onClick={() => openRegister({ joinType: "solo", wantsMatching: true })}
-          disabled={closed}
-          className={
-            closed
-              ? "group flex cursor-not-allowed flex-col items-start gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left"
-              : "group flex flex-col items-start gap-2 rounded-2xl border border-violet-400/25 bg-violet-400/[0.07] p-4 text-left transition hover:border-violet-400/45 hover:bg-violet-400/[0.11]"
-          }
-        >
-          <p className="text-xs font-medium text-white/60">{t(dict.register.hookRegisterQ)}</p>
-          {closed ? (
-            // Deadline passed: drop the gradient/glow and the effort chip, and
-            // just state 신청 마감 so the card can't read as still open.
-            <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-white/12 bg-white/5 px-5 py-2.5 text-sm font-bold text-white/45">
-              {t(dict.register.closed)}
-            </span>
-          ) : (
-            /* Same gradient + glow as the nav register button, so the primary
-               action looks identical wherever it appears. */
-            <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition group-hover:-translate-y-0.5 group-hover:shadow-[0_0_28px_rgba(124,92,255,0.6)]">
-              {t(dict.register.hookRegisterCta)}
-              {/* Effort estimate as a chip rather than words in the label — the
-                  label is already the longest thing in the card, and "3분" reads
-                  faster as a badge than as a clause. */}
-              <span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[0.6rem] font-bold tracking-wide">
-                {t(dict.register.hookRegisterMinutes)}
-              </span>
-              <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-            </span>
-          )}
-          {/* The four objections, immediately under the button that acts on them.
-              One key, so the hero card and both mid-page bands always agree. */}
-          <p className="text-xs leading-relaxed text-white/60">{t(dict.register.reassure)}</p>
-          <p className="text-[11px] leading-relaxed text-white/60">{t(dict.register.hookRegisterSub)}</p>
-        </button>
-        )}
         {/* Card 2 — the quiz. Promoted from a text link inside a dead panel to a
             whole-card link: the tap target was ~20px and the copy read as a
             disclaimer, which is most of why 6 of 115 weekly visitors tried it.
@@ -2675,14 +2563,21 @@ const HERO_VIDEO = {
   poster: "/hero/metal-human-poster.jpg",
 };
 
-// 모집 국면별 히어로 모드 — "journey"=둘러보고 등록(모집 초기), "register"=곧장
-// 등록(마감 임박, 8/10 전환). 되돌릴 땐 이 한 줄만.
+// 국면별 히어로 모드 — "journey"=둘러보기(모집 초기), "register"=곧장 등록(마감
+// 임박, 8/10 전환), "tracks"=트랙 보기(마감 후, 8/22 전환). 되돌릴 땐 이 한 줄만.
 //
-// 전환 이유: 모바일 첫 화면에 등록 진입점이 아예 없었습니다. 주 CTA가 "8일의 여정
-// 둘러보기"였고, 등록 버튼을 가진 스티키 바는 히어로 구간에서 숨겨집니다(그 구간의
-// CTA는 히어로 자신이 맡는다는 전제였는데, 그 CTA가 등록이 아니었습니다).
+// "register"로 갔던 이유: 모바일 첫 화면에 등록 진입점이 아예 없었습니다. 주 CTA가
+// "8일의 여정 둘러보기"였고, 등록 버튼을 가진 스티키 바는 히어로 구간에서
+// 숨겨집니다(그 구간의 CTA는 히어로 자신이 맡는다는 전제였는데, 그 CTA가 등록이
+// 아니었습니다).
+//
+// DECIDED 2026-08-22 (마감 후 청산): "tracks"로 넘어갑니다. 등록이 닫힌 뒤 첫
+// 화면에서 할 수 있는 가장 중요한 일은 무슨 문제를 푸는지 보는 것이고, 이 페이지의
+// 1순위 독자도 등록을 고민하는 사람에서 이미 들어온 참가자로 바뀌었습니다.
+// "register" 가지는 지웠습니다 — 눌리지 않는 버튼을 조건부로 남겨 두면 다음 라운드에
+// 그대로 되살아납니다. 되살릴 때는 등록 모달이 그대로 있으니 가지를 다시 쓰세요.
 // 스티키 바와 네비의 동작은 이 스위치와 무관하게 그대로입니다.
-const HERO_PRIMARY: "journey" | "register" = "register";
+const HERO_PRIMARY: "journey" | "tracks" = "tracks";
 
 function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
   if (!HERO_VIDEO.enabled) return null; // placeholder: keep the WebGL background
@@ -3130,13 +3025,16 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
   );
 }
 
-// Mobile-only sticky register bar. Below lg the nav's register button is easy to
-// miss once the visitor is deep in the page, so registration gets a permanent
-// bottom rail from the moment #about scrolls past. Latched on: once shown it
-// stays, so it can't flicker on scroll-up.
-function MobileRegisterBar() {
+// Tablet-only sticky bar (sm ~ lg). Below lg the nav's actions are easy to miss
+// once the visitor is deep in the page, so the page keeps a permanent bottom rail
+// from the moment #about scrolls past. Latched on: once shown it stays, so it
+// can't flicker on scroll-up.
+//
+// RENAMED 2026-08-22 (마감 후 청산): MobileRegisterBar였습니다. 등록 진입점을
+// 걷어내면서 이 바가 나르는 것이 오픈채팅 하나가 됐으니, 이름이 더 이상 사실이
+// 아니었습니다. 바 자체와 등장 조건은 그대로입니다.
+function MobileChatBar() {
   const reduce = useReducedMotion();
-  const { openRegister, registered, closed } = useRegister();
   const { t } = useLocale();
   const [visible, setVisible] = useState(false);
   const [atEnd, setAtEnd] = useState(false);
@@ -3200,39 +3098,13 @@ function MobileRegisterBar() {
           className="fixed inset-x-0 bottom-0 z-40 hidden border-t border-white/10 bg-[#06040f]/90 px-4 pt-2 backdrop-blur sm:block lg:hidden"
           style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)" }}
         >
-          {/* Register keeps the full remaining width (flex-1); the chat icon is
-              a fixed 48px square beside it, so adding it costs the primary CTA
-              nothing but its own width. The row still sits inside pr-20, which
-              is what keeps both clear of the ScrollToTop button. */}
+          {/* DECIDED 2026-08-22 (마감 후 청산): 등록 버튼이 빠지고 오픈채팅이
+              이 바의 단독 액션이 됐습니다. 폭도 넘겨받습니다(flex-1).
+              라벨을 유지하는 이유는 그대로입니다: 맨 말풍선 하나는 어느 서비스를
+              여는지 방문자가 짐작해야 하고, 오픈채팅은 지금 이 페이지에서 유일하게
+              살아 있는 문이라 이름으로 찾는 대상입니다. aria-label은 더 긴
+              "카카오톡 오픈채팅방 열기"로 그대로 둡니다. */}
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => openRegister()}
-              disabled={closed && !registered}
-              // Same role swap as the nav: once registered this is a status,
-              // not the next action, so the chat icon beside it carries the fill.
-              // Past the deadline it becomes a muted, non-clickable 신청 마감.
-              className={
-                registered
-                  ? "inline-flex flex-1 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/[0.08] px-5 py-3 text-sm font-semibold text-emerald-200/90 transition active:scale-[0.99]"
-                  : closed
-                    ? "inline-flex flex-1 cursor-not-allowed items-center justify-center rounded-full border border-white/12 bg-white/5 px-5 py-3 text-sm font-semibold text-white/45"
-                    : "inline-flex flex-1 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition active:scale-[0.99]"
-              }
-            >
-              {registered
-                ? t(dict.register.navRegistered)
-                : closed
-                  ? t(dict.register.closed)
-                  : t(dict.nav.register)}
-            </button>
-            {/* No longer icon-only: a bare speech bubble asks the visitor to guess
-                which service it opens, and open chat is the funnel's low-friction
-                entrance — the thing a hesitant reader looks for BY NAME. The label
-                comes from dict.nav.openChat, the same string the desktop nav
-                button uses, so the two are recognisably one door. aria-label stays
-                for the fuller "카카오톡 오픈채팅방 열기". Promoted to the violet
-                fill once registered, matching the nav's role swap. */}
             {links.openChat && (
               <a
                 href={links.openChat}
@@ -3240,11 +3112,7 @@ function MobileRegisterBar() {
                 rel="noopener noreferrer"
                 aria-label={t(dict.nav.openChatAria)}
                 onClick={() => track("openchat_click", { src: "mobile-bar" })}
-                className={
-                  registered
-                    ? "inline-flex h-12 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-4 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition active:scale-95"
-                    : "inline-flex h-12 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/45 bg-violet-500/15 px-4 text-sm font-semibold text-violet-100 shadow-[0_0_18px_rgba(124,92,255,0.28)] transition active:scale-95"
-                }
+                className="inline-flex h-12 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/45 bg-violet-500/15 px-4 text-sm font-bold text-violet-100 shadow-[0_0_18px_rgba(124,92,255,0.28)] transition active:scale-95"
               >
                 <ChatGlyph className="h-5 w-5 shrink-0" />
                 {t(dict.nav.openChat)}
@@ -3423,7 +3291,10 @@ function ScrollToTop() {
 
 export default function Journey() {
   const { t } = useLocale();
-  const { openRegister, registered, registerOpen, closed } = useRegister();
+  // 2026-08-22 마감 후 청산: openRegister와 closed는 이 컴포넌트에서 더 이상
+  // 읽지 않습니다. registered는 ReturningGreeting류가, registerOpen은 스티키 바의
+  // 숨김 조건이 씁니다.
+  const { registered, registerOpen } = useRegister();
   const reduce = useReducedMotion();
   const [active, setActive] = useState<BEvent | null>(null);
   const [activeDay, setActiveDay] = useState<number | null>(null); // day detail modal
@@ -3513,7 +3384,7 @@ export default function Journey() {
   return (
     <main className="relative z-10">
       <ScrollToTop />
-      <MobileRegisterBar />
+      <MobileChatBar />
       {/* ── CH 0 · HERO ─────────────────────────────────────────────── */}
       <Chapter
         id="top"
@@ -3577,40 +3448,25 @@ export default function Journey() {
                   HERO_PRIMARY가 무엇이 이 자리에 서는지를 정합니다(파일 상단).
                   두 모드가 같은 시각 위계(보라 그라디언트 필 하나)를 쓰고, 바뀌는
                   것은 그 자리에 오는 행동뿐입니다. */}
-              {HERO_PRIMARY === "register" ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    track("register_click", { src: "hero" });
-                    openRegister();
-                  }}
-                  disabled={closed && !registered}
-                  // 네비·푸터와 같은 관례: 이미 등록한 방문자에게 이 버튼은 행동이
-                  // 아니라 상태입니다. 라벨이 바뀌고 화살표는 빠집니다(갈 곳이
-                  // 없으니까). 클릭은 그대로 열립니다 — 등록 정보를 다시 보려는
-                  // 사람에게 문을 잠글 이유가 없습니다. 마감(오후 2시 15분) 후에는
-                  // 눌리지 않는 신청 마감 상태가 됩니다.
-                  className={
-                    closed && !registered
-                      ? "group inline-flex cursor-not-allowed items-center gap-2 rounded-full border border-white/12 bg-white/5 px-5 py-3 text-sm font-bold text-white/45 sm:px-8 sm:py-4 sm:text-base"
-                      : "group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)] sm:px-8 sm:py-4 sm:text-base"
-                  }
+              {HERO_PRIMARY === "tracks" ? (
+                <a
+                  href="#tracks"
+                  onClick={() => track("tracks_click", { src: "hero" })}
+                  className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)] sm:px-8 sm:py-4 sm:text-base"
                 >
-                  {t(registered ? dict.register.navRegistered : closed ? dict.register.closed : dict.nav.register)}
-                  {!registered && !closed && (
-                    <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                  )}
-                </button>
+                  {t(dict.hero.ctaTracks)}
+                  <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </a>
               ) : (
                 <a href={links.program} className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)] sm:px-8 sm:py-4 sm:text-base">
                   {t(dict.hero.ctaProgram)}
                   <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                 </a>
               )}
-              {/* 보조: 여정 둘러보기. register 모드에서만 이 자리에 있습니다 —
-                  journey 모드에서는 위의 주 CTA가 같은 링크라 두 번 걸릴 이유가
-                  없습니다. 고스트 필이라 주 CTA와 경쟁하지 않습니다. */}
-              {HERO_PRIMARY === "register" && (
+              {/* 보조: 여정 둘러보기. journey 모드에서는 위의 주 CTA가 같은 링크라
+                  두 번 걸릴 이유가 없어서 빠집니다. 고스트 필이라 주 CTA와
+                  경쟁하지 않습니다. */}
+              {HERO_PRIMARY === "tracks" && (
                 <a
                   href={links.program}
                   className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10 sm:px-8 sm:py-4 sm:text-base"
@@ -3687,10 +3543,8 @@ export default function Journey() {
               <HookCards
                 t={t}
                 ownResultId={ownResultId}
-                openRegister={openRegister}
                 chatSrc={null}
                 stacked
-                trackCard
               />
             </div>
           </motion.div>
@@ -3718,10 +3572,8 @@ export default function Journey() {
           <HookCards
             t={t}
             ownResultId={ownResultId}
-            openRegister={openRegister}
             className="mx-auto mt-6 max-w-xl lg:hidden"
             chatSrc={null}
-            trackCard
           />
         </div>
       </Chapter>
@@ -3940,7 +3792,6 @@ export default function Journey() {
           <HookCards
             t={t}
             ownResultId={ownResultId}
-            openRegister={openRegister}
             className="mx-auto mt-10 max-w-xl"
             chatSrc="band"
             withQuestion
@@ -4099,16 +3950,6 @@ export default function Journey() {
                 ))}
               </dl>
             </div>
-            {/* 이 박스가 "며칠이나 나가야 하나"에 답을 끝낸 자리입니다. 그 답을
-                받아들인 사람에게 다음 한 걸음이 없으면, 여기서부터 FAQ까지 여섯
-                챕터를 등록 통로 없이 지나갑니다. */}
-            <InlineRegisterCta
-              t={t}
-              line={dict.register.inlineProgramLine}
-              openRegister={openRegister}
-              registered={registered}
-              className="mt-6"
-            />
           </div>
 
           {/* The route, immediately above the grid it describes: the eight cards
@@ -4546,16 +4387,6 @@ export default function Journey() {
             <Emph text={t(dict.mentoring.matchNote.body)} className="font-bold text-white" />
           </p>
         </div>
-        {/* 멘토 얼굴과 배정 방식까지 확인한 직후 — "그래서 나는 어떻게 배정받나"의
-            답이 등록인 자리입니다. 박스 안이 아니라 밖에 둡니다: 저 박스는 매칭
-            규칙을 말하는 자리고, 이건 그 규칙에 들어가는 문입니다. */}
-        <InlineRegisterCta
-          t={t}
-          line={dict.register.inlineMentoringLine}
-          openRegister={openRegister}
-          registered={registered}
-          className="mt-6"
-        />
 
         {/* ── Judges subsection (deck p13) · no new nav item ────────────────
             Judge cards, all with face photos. LinkedIn icon only where a
@@ -4872,24 +4703,6 @@ export default function Journey() {
         <Glass className="mt-8 text-left">
           <FAQList />
         </Glass>
-        {/* A second CTA BAND (register + quiz hook cards) used to close this
-            chapter. Removed: it was byte-for-byte the band already sitting at the
-            end of 혜택 (CH 2), and with the 혜택 band now carrying the mini-quiz
-            the repeat read as the page looping rather than as a fresh ask.
-            그 판단은 그대로입니다 — 밴드를 되살리지 마세요.
-
-            대신 2026-08-12에 한 줄짜리 문을 답니다. 밴드가 아니라 문장 하나와
-            알약 하나이고, 훅 카드도 오픈채팅 링크도 없습니다. 밴드를 뺐던 이유가
-            "같은 블록의 재방송"이었지 "여기에 등록 통로가 있으면 안 된다"가
-            아니었고, 여기는 반론이 다 떨어진 자리라 페이지에서 등록이 가장 자연
-            스러운 지점입니다. 다시 카드로 부풀리지만 마세요. */}
-        <InlineRegisterCta
-          t={t}
-          line={dict.register.inlineFaqLine}
-          openRegister={openRegister}
-          registered={registered}
-          className="mt-8"
-        />
       </Chapter>
 
       {/* ── CH 5.5 · VISION FUNNEL ─────────────────────────────────────
@@ -4951,10 +4764,14 @@ export default function Journey() {
             })}
           </ol>
 
-          {/* Continuity note (small), then the bridge into the closing register
-              CTA that follows immediately below — hence the bridge outranks the
-              note typographically. The button reuses the nav/footer pill style
-              rather than introducing another CTA treatment. */}
+          {/* Continuity note (small), then the bridge into the CTA that follows
+              immediately below — hence the bridge outranks the note
+              typographically. The button reuses the nav/footer pill style rather
+              than introducing another CTA treatment.
+
+              2026-08-22 (마감 후 청산): 등록 버튼이 오픈채팅으로 바뀌었습니다.
+              이 자리가 하던 일(비전을 읽은 직후의 한 걸음)은 그대로이고, 지금
+              열려 있는 문이 오픈채팅뿐이라 그 문을 겁니다. */}
           <p className="mx-auto mt-8 max-w-2xl text-center text-xs leading-relaxed text-white/55">
             {t(dict.about.visionNote)}
           </p>
@@ -4962,21 +4779,18 @@ export default function Journey() {
             <p className="max-w-2xl text-center text-base font-bold leading-snug text-white sm:text-lg">
               {t(dict.about.visionBridge)}
             </p>
-            <button
-              type="button"
-              onClick={() => openRegister()}
-              disabled={closed && !registered}
-              className={
-                closed && !registered
-                  ? "inline-flex shrink-0 cursor-not-allowed items-center gap-2 rounded-full border border-white/12 bg-white/5 px-6 py-3 text-sm font-semibold text-white/45"
-                  : "inline-flex shrink-0 items-center gap-2 rounded-full bg-violet-600/90 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-violet-500"
-              }
-            >
-              {t(registered ? dict.register.navRegistered : closed ? dict.register.closed : dict.nav.register)}
-              {!registered && !closed && (
-                <span aria-hidden className="transition-transform duration-300 hover:translate-x-1">→</span>
-              )}
-            </button>
+            {links.openChat && (
+              <a
+                href={links.openChat}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => track("openchat_click", { src: "vision" })}
+                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-violet-600/90 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-violet-500"
+              >
+                <ChatGlyph className="h-4 w-4 shrink-0" />
+                {t(dict.nav.openChatJoin)}
+              </a>
+            )}
           </div>
         </div>
       </Chapter>
@@ -4999,32 +4813,29 @@ export default function Journey() {
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/65">{t(dict.footer.blurb)}</p>
           <div className="mt-10 flex flex-wrap justify-center gap-3">
-            {/* Primary CTA → opens the register modal (it used to be href="#",
-                a dead link that silently swallowed the page's last CTA). Mirrors
-                the nav button's registered-label swap. */}
-            <button
-              type="button"
-              onClick={() => openRegister()}
-              disabled={closed && !registered}
-              className={
-                closed && !registered
-                  ? "group inline-flex cursor-not-allowed items-center gap-2 rounded-full border border-white/12 bg-white/5 px-9 py-4 text-base font-bold text-white/45"
-                  : "group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
-              }
-            >
-              {t(registered ? dict.register.navRegistered : closed ? dict.register.closed : dict.nav.register)}
-              {!registered && !closed && (
+            {/* Primary CTA. 2026-08-22 (마감 후 청산): 등록 모달을 열던 자리를
+                오픈채팅이 받습니다. 페이지의 마지막 CTA라 그라디언트 필은 그대로
+                두고 행동만 바꿉니다 — 여기까지 읽고 내려온 사람에게 내밀 수 있는
+                문이 지금은 이것 하나뿐입니다.
+                아래 OpenChatLink(텍스트 링크)는 함께 뺐습니다. 같은 문이 같은
+                화면에서 두 번 열리면 둘 다 약해집니다. */}
+            {links.openChat && (
+              <a
+                href={links.openChat}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => track("openchat_click", { src: "footer" })}
+                className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
+              >
+                <ChatGlyph className="h-5 w-5 shrink-0" />
+                {t(dict.nav.openChatJoin)}
                 <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-              )}
-            </button>
+              </a>
+            )}
             <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-9 py-4 text-base font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10">
               {t(dict.nav.partner)}
             </a>
           </div>
-
-          {/* Third CTA — the page's last chance to keep someone who scrolled all
-              the way here without registering. Still a text link. */}
-          <OpenChatLink t={t} src="footer" className="mt-5" />
 
           {/* mailto: only opens whatever mail client the visitor's device has
               configured — on a desktop without one, or inside some in-app
@@ -5045,7 +4856,7 @@ export default function Journey() {
       <DayModal dayNum={activeDay} onClose={() => setActiveDay(null)} onSelectEvent={selectEvent} eventOpen={active != null} t={t} />
       <EventModal event={active} onClose={() => setActive(null)} triggerRef={triggerRef} />
       <PartnerModal partner={activePartner} onClose={() => setActivePartner(null)} triggerRef={partnerTriggerRef} />
-      <MobileStickyBar t={t} openRegister={openRegister} registerOpen={registerOpen} />
+      <MobileStickyBar t={t} registerOpen={registerOpen} />
     </main>
   );
 }

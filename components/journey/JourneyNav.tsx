@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+// AnimatePresence와 motion은 등록 필이 있던 동안만 쓰였습니다 (2026-08-22 청산).
+// useReducedMotion은 헤더 자체의 전환에 여전히 필요합니다.
+import { useReducedMotion } from "framer-motion";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
 import { dict, links } from "@/data/dictionary";
@@ -93,18 +95,13 @@ function useActiveSection(enabled: boolean) {
 export default function JourneyNav() {
   const { t, locale } = useLocale();
   const reduce = useReducedMotion();
-  const { openRegister, registered, closed } = useRegister();
+  // `registered`만 남습니다 — 등록 진입점은 2026-08-22에 걷어냈지만, 이미 등록한
+  // 방문자에게 인사하는 ReturningGreeting은 그대로 살아 있습니다.
+  const { registered } = useRegister();
   const [scrolled, setScrolled] = useState(false);
   // Only observe once the rail exists — before that there is nothing to mark,
   // and the observer would run through the whole hero for nobody.
   const activeSection = useActiveSection(scrolled);
-  // Reveal the register button as soon as the visitor leaves the hero — the same
-  // scrollY > 40 threshold that tints the bar. It used to wait on an
-  // IntersectionObserver over #about, which broke the most likely first action on
-  // the page: the hero's primary CTA jumps straight to #program, so #about is
-  // never scrolled through and the register button never appeared at all. Once
-  // shown it stays shown (latched below), so it never flickers on scroll-up.
-  const [showRegister, setShowRegister] = useState(false);
   // Shared with the bottom bars and the back-to-top button (lib/useScrollDirection):
   // on a phone this header is two rows tall and, together with the bottom rail,
   // was taking a quarter of an in-app browser's viewport. Scrolling DOWN — the
@@ -125,9 +122,7 @@ export default function JourneyNav() {
       // strip the header back to its top-of-page styling behind the backdrop and
       // then snap it back on close. Hold the last real reading instead.
       if (isScrollLocked()) return;
-      const past = window.scrollY > 40;
-      setScrolled(past);
-      if (past) setShowRegister(true);
+      setScrolled(window.scrollY > 40);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -309,48 +304,19 @@ export default function JourneyNav() {
               {t(dict.nav.openChat)}
             </a>
           )}
-          {/* Scroll-revealed register CTA — fades/slides in once the hero is
-              scrolled past, then persists. Opens the shared register modal. */}
-          <AnimatePresence>
-            {showRegister && (
-              <motion.button
-                type="button"
-                onClick={() => openRegister()}
-                disabled={closed && !registered}
-                initial={reduce ? false : { opacity: 0, x: 12 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={reduce ? undefined : { opacity: 0, x: 12 }}
-                transition={{ duration: reduce ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
-                // Unregistered: the bar's single top-level action — gradient fill
-                // + soft violet glow so it outranks everything else here.
-                //
-                // Registered: it stops being an action and becomes a STATUS.
-                // Promoting open chat while leaving this a matching violet pill
-                // produced two identical primaries and swapped nothing, so this
-                // recedes to a quiet outline. It stays clickable (it opens the
-                // "how do I change my details" panel) — it just no longer claims
-                // to be the thing to do next.
-                // Hidden below lg: on mobile the sticky bottom register bar
-                // already carries this action, so a second one in the nav is
-                // redundant. Shows from lg up, where there's no bottom bar.
-                className={
-                  registered
-                    ? "hidden shrink-0 items-center rounded-full border border-emerald-400/30 bg-emerald-400/[0.08] px-3.5 py-2 text-xs font-semibold text-emerald-200/90 transition hover:bg-emerald-400/15 sm:px-5 sm:py-2.5 sm:text-sm lg:inline-flex"
-                    : closed
-                      ? "hidden shrink-0 cursor-not-allowed items-center rounded-full border border-white/12 bg-white/5 px-3.5 py-2 text-xs font-semibold text-white/45 sm:px-5 sm:py-2.5 sm:text-sm lg:inline-flex"
-                      : "hidden shrink-0 items-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-3.5 py-2 text-xs font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(124,92,255,0.6)] sm:px-5 sm:py-2.5 sm:text-sm lg:inline-flex"
-                }
-              >
-                {registered
-                  ? t(dict.register.navRegistered)
-                  : closed
-                    ? t(dict.register.closed)
-                    : t(dict.nav.register)}
-              </motion.button>
-            )}
-          </AnimatePresence>
+          {/* DECIDED 2026-08-22 (마감 후 청산): 스크롤로 나타나던 등록 필을
+              걷어냈습니다. 등록 진입점 전면 제거 — 비활성 버튼을 남기지 않는다.
+              1순위 액션은 오픈채팅, 히어로 1순위는 트랙. 등록 코드(모달·API·
+              registered 상태)는 삭제하지 않고 진입점만 끊습니다.
+
+              누를 수 없는 버튼을 회색으로 남기는 쪽이 더 나빴습니다. 참가자가 이
+              페이지에서 지금 할 수 있는 일은 오픈채팅에 들어오는 것 하나뿐인데,
+              그 옆에 죽은 버튼이 서 있으면 어느 쪽이 살아 있는지를 매번 읽어야
+              합니다. 위의 오픈채팅 버튼이 이제 이 바의 유일한 액션입니다 —
+              스타일은 올리지 않았습니다. 경쟁 상대가 없어졌으니 고스트 톤으로
+              충분하고, 그라디언트로 올리면 마감 전과 같은 압력이 됩니다. */}
           {/* Language last — it's a setting, not an action, so it sits after
-              both CTAs rather than between the brand and them. */}
+              the CTA rather than between the brand and it. */}
           <LocaleToggle />
         </div>
       </nav>

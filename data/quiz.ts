@@ -698,7 +698,9 @@ export const quizUI = {
     ko: "이 성격이면 빌더톤에서 {role} 포지션으로 빛나요 ✦",
     en: "With this type, you'll shine in the {role} role at the builderthon ✦",
   },
-  ctaApply: { ko: "빌더톤 신청하러 가기", en: "Go apply to the builderthon" },
+  // 2026-08-22 마감 후 청산: 신청 → 트랙. 결과 카드의 다음 걸음이 등록이었는데
+  // 등록이 닫혔습니다. 홈의 #tracks로 보냅니다 — 지금 이 사람이 볼 만한 것.
+  ctaApply: { ko: "트랙 구경하기", en: "See the tracks" },
   // Shown after a genuine completion that came from the register modal's
   // round-trip (/quiz?return=register) — links back to the modal, which restores
   // the saved draft and attaches this freshly-saved type. Never auto-redirects.
