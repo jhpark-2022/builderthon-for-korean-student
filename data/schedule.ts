@@ -2319,3 +2319,61 @@ export const MENTORING_DAY_RANGE =
   MENTORING_DAYS.size > 0
     ? { from: Math.min(...MENTORING_DAYS), to: Math.max(...MENTORING_DAYS) }
     : null;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 진행 상태 — 오늘이 며칠차인가, 하나의 시계.
+//
+// DECIDED 2026-08-23 (Day 2): 진행 상태 3상 시각화 — 노선도 지나온 레일·현재역
+// 펄스, 데이 카드 완료·오늘 상태, 섹션 라이브 칩. SG 시간 기준, 행사 종료 후
+// 전부 꺼짐(아카이브 복귀).
+//
+// 시간대는 방문자의 로컬이 아니라 행사지(싱가포르, +08:00) 기준입니다.
+// REGISTRATION_CLOSES_AT과 같은 원칙이에요 — 서울에서 자정을 넘긴 사람에게
+// 싱가포르가 아직 Day 2인데 Day 3으로 보이면 안 됩니다. 오프셋을 문자열에
+// 박아두면 이 코드를 읽는 곳의 시간대와 무관하게 같은 순간을 가리킵니다.
+//
+// 하루 경계는 SG 자정입니다. "그날 프로그램이 끝나면 바로 지난 날로" 처리하려면
+// 여기에 종료 시각 맵을 얹으면 되고, 소비처는 손대지 않아도 됩니다.
+//
+// 이 함수가 세 소비처(노선도, 데이 카드, 프로그램 섹션 라이브 칩)의 유일한
+// 시계입니다. 컴포넌트 안에서 Date를 따로 읽지 마세요 — 세 표면이 자정 언저리에
+// 서로 다른 날을 말하게 됩니다.
+//
+// days[].date("08.22"~"08.29")가 날짜의 정본이라 여기서 파생합니다. 일수를
+// 손으로 적지 않는 이유도 같습니다: 날짜가 밀리면 이 함수가 따라옵니다.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** 행사 연도. days[].date가 "MM.DD"라 연도만 여기 있습니다. */
+const EVENT_YEAR = 2026;
+
+/** days[] 각 날의 SG 자정 (epoch ms). 배열 순서 = Day 1..8. */
+const DAY_STARTS_SGT: number[] = days.map((d) => {
+  const [mm, dd] = d.date.split(".");
+  return new Date(`${EVENT_YEAR}-${mm}-${dd}T00:00:00+08:00`).getTime();
+});
+
+/** 마지막 날(Day 8)이 끝나는 순간 = 그 다음 SG 자정. */
+const EVENT_ENDS_AT = DAY_STARTS_SGT[DAY_STARTS_SGT.length - 1] + 24 * 60 * 60 * 1000;
+
+export type EventPhase = "before" | "during" | "after";
+
+/**
+ * `now` 시점의 행사 진행 상태 (싱가포르 기준).
+ *
+ * - before: Day 1 이전 — current null
+ * - during: Day 1~8 — current 1..8
+ * - after:  Day 8이 끝난 뒤 — current null
+ *
+ * before와 after가 똑같이 current null인 것은 의도입니다. 두 시점 모두 화면에
+ * 진행 표시가 없어야 하고(행사 전에는 아직, 후에는 다시 시간 없는 아카이브),
+ * 소비처는 phase를 보고 렌더 여부만 정하면 됩니다.
+ */
+export function getEventDayState(now: number): { current: number | null; phase: EventPhase } {
+  if (now < DAY_STARTS_SGT[0]) return { current: null, phase: "before" };
+  if (now >= EVENT_ENDS_AT) return { current: null, phase: "after" };
+  // 뒤에서부터 찾습니다: now가 속한 날은 "시작 시각이 now보다 작거나 같은 마지막 날".
+  for (let i = DAY_STARTS_SGT.length - 1; i >= 0; i--) {
+    if (now >= DAY_STARTS_SGT[i]) return { current: days[i].day, phase: "during" };
+  }
+  return { current: null, phase: "before" };
+}

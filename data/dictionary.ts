@@ -2052,6 +2052,23 @@ export const dict = {
     // 것은 노선도 아래 필의 몫입니다.
     mentoringChip: { ko: "1:1 멘토링", en: "1:1 mentoring" },
     dayLabel: { ko: "Day", en: "Day" },
+    // ── 진행 상태 라벨 ────────────────────────────────────────────────────
+    // DECIDED 2026-08-23 (Day 2): 진행 상태 3상 시각화 — 노선도 지나온 레일·현재역
+    // 펄스, 데이 카드 완료·오늘 상태, 섹션 라이브 칩. SG 시간 기준, 행사 종료 후
+    // 전부 꺼짐(아카이브 복귀).
+    //
+    // 셋 다 행사 중(phase "during")에만 렌더됩니다. 시계는 schedule.ts의
+    // getEventDayState 하나뿐이에요.
+    //
+    // dayDone은 눈에 보이지 않습니다 — 지난 카드에는 ✓ 글리프만 서고 이 문자열은
+    // sr-only입니다. 글자로 적으면 카드마다 "지난 일정"이 네 번 반복되면서, 아직
+    // 읽을 가치가 있는 카드를 폐기물처럼 보이게 합니다. 낭독에는 이름이 필요해서
+    // 남깁니다.
+    dayDone: { ko: "지난 일정", en: "Done" },
+    dayToday: { ko: "오늘", en: "Today" },
+    // 프로그램 섹션 헤더의 라이브 칩. {n}은 렌더에서 치환합니다 — 숫자를 문자열에
+    // 박으면 날마다 사전을 고쳐야 합니다.
+    dayLive: { ko: "Day {n} 진행 중", en: "Day {n} live" },
     // Label on the wide band above Lab 1. "사전" rather than "Day 0" — the
     // session is a prologue to the eight days, not a day of them.
     preEventTag: { ko: "사전 세션 8/13", en: "Pre-event 13 Aug" },

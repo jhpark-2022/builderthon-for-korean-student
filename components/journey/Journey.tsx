@@ -11,11 +11,13 @@ import {
   categoryMeta,
   dayEmphasis,
   days,
+  getEventDayState,
   mentoringOpenOn,
   schedule,
   MENTORING_DAY_RANGE,
   type BEvent,
   type DayMeta,
+  type EventPhase,
 } from "@/data/schedule";
 import Chapter from "./Chapter";
 import EventModal from "@/components/EventModal";
@@ -30,6 +32,51 @@ import { useRegister } from "@/lib/RegisterContext";
 import { useScrollDirection } from "@/lib/useScrollDirection";
 import { useBodyScrollLock, isScrollLocked } from "@/lib/useBodyScrollLock";
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 진행 상태 — 페이지 전체가 공유하는 시계 하나.
+//
+// DECIDED 2026-08-23 (Day 2): 진행 상태 3상 시각화 — 노선도 지나온 레일·현재역
+// 펄스, 데이 카드 완료·오늘 상태, 섹션 라이브 칩. SG 시간 기준, 행사 종료 후
+// 전부 꺼짐(아카이브 복귀).
+//
+// 판정은 schedule.ts의 getEventDayState가 전부 합니다. 여기 있는 것은 그 값을
+// 하이드레이션 안전하게 들여오는 껍데기뿐이에요.
+//
+// 서버는 항상 NEUTRAL로 그립니다. 서버에는 방문자의 "지금"이 없고, 서버 시각으로
+// 그렸다가 클라이언트에서 다른 날이 나오면 하이드레이션이 어긋납니다. 그래서 첫
+// 페인트는 행사 전과 똑같은 화면이고, 마운트 직후 진행 상태가 얹힙니다 —
+// 바뀌는 것이 투명도·테두리·펄스뿐이라 레이아웃은 움직이지 않습니다.
+//
+// 자정을 넘겨 열어둔 탭은 새로고침 전까지 어제를 가리킵니다. 타이머를 걸지 않은
+// 것은 의도입니다: 8일 내내 도는 인터벌을 페이지에 심을 값이, 자정에 탭을 열어둔
+// 사람이 보는 하루 오차보다 크지 않습니다.
+//
+// 이 훅은 Journey()에서 한 번만 부르고 값을 내려보냅니다. 소비처(노선도, 데이
+// 카드, 섹션 칩)에서 각자 부르면 세 번의 Date.now()가 자정 언저리에 서로 다른
+// 날을 말할 수 있습니다.
+// ─────────────────────────────────────────────────────────────────────────────
+type EventDayState = { current: number | null; phase: EventPhase };
+const NEUTRAL_EVENT_DAY: EventDayState = { current: null, phase: "before" };
+
+function useEventDay(): EventDayState {
+  const [state, setState] = useState<EventDayState>(NEUTRAL_EVENT_DAY);
+  useEffect(() => {
+    setState(getEventDayState(Date.now()));
+  }, []);
+  return state;
+}
+
+// 노선도와 데이 카드가 같은 낱말로 상태를 말하게 하는 판정 하나.
+// "past"는 오늘보다 앞선 날, "today"는 오늘, 나머지는 전부 "future"입니다.
+// 행사 전·후(phase !== "during")에는 전부 "future" — 즉 아무 효과도 없습니다.
+type DayProgress = "past" | "today" | "future";
+function dayProgress(day: number, ev: EventDayState): DayProgress {
+  if (ev.phase !== "during" || ev.current === null) return "future";
+  if (day < ev.current) return "past";
+  if (day === ev.current) return "today";
+  return "future";
+}
 
 // glass panel wrapper
 function Glass({ children, className = "" }: { children: React.ReactNode; className?: string }) {
@@ -1225,8 +1272,40 @@ const stopKeyword = (theme: string) =>
 // 어긋납니다. 판정이 그리로 올라간 이유는 그 파일의 주석에 있습니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
-function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
+// ── 지나온 레일의 기하 ────────────────────────────────────────────────────────
+// 한 행은 네 칸이고 노드는 각 칸의 한가운데(12.5% · 37.5% · 62.5% · 87.5%)에
+// 섭니다. 베이스 레일은 그 첫 노드에서 마지막 노드까지 그어지는데, 데스크톱에서는
+// 두 행이 이어져 보이도록 안쪽 끝만 행 가장자리까지 나갑니다(위 레일 주석).
+//
+// 그래서 "레일의 몇 %까지 채우는가"는 브레이크포인트마다 다릅니다. 같은 노드인데
+// 기준이 되는 레일 길이가 다르니까요:
+//   행 0 모바일  레일 12.5%→87.5% (길이 75)   · 노드 k까지 = 25k / 75
+//   행 0 데스크톱 레일 12.5%→100%  (길이 87.5) · 노드 k까지 = 25k / 87.5
+//   행 1 모바일  레일 12.5%→87.5% (길이 75)   · 노드 k까지 = 25k / 75
+//   행 1 데스크톱 레일 0%→87.5%   (길이 87.5) · 노드 k까지 = (12.5 + 25k) / 87.5
+//
+// 두 값을 CSS 변수로 넘기고 클래스에서 골라 쓰면(w-[var(--p-m)] sm:w-[var(--p-d)])
+// 스팬이 접힘과 무관하게 정확합니다. 퍼센트를 마크업에 두 번 적지 않으려고 이
+// 함수 하나에 모아 뒀습니다 — 칸 수(4)가 적히는 자리는 여기뿐입니다.
+function railFill(rowIdx: number, current: number): { m: string; d: string } {
+  const firstDay = rowIdx * 4 + 1;
+  const pct = (v: number) => `${Math.round(Math.min(1, Math.max(0, v)) * 1000) / 10}%`;
+  // 아직 이 행에 닿지 않았으면 0입니다. 데스크톱 둘째 행의 레일은 행 왼쪽
+  // 가장자리(0%)에서 시작해 첫 노드(12.5%)까지 이어지는 도입부를 갖는데, 그
+  // 도입부는 "앞 행에서 넘어온 구간"이라 현재 날이 앞 행에 있으면 그려지면
+  // 안 됩니다. 이 가드가 없으면 Day 2에 서 있는데 Day 4~5 사이에 정체불명의
+  // 밝은 토막이 뜹니다(2026-08-23에 실제로 그랬습니다).
+  if (current < firstDay) return { m: "0%", d: "0%" };
+  // 이 행에서 몇 번째 노드까지 지나왔는가 (0..3). 현재 날이 이 행보다 뒤면 끝까지.
+  const k = Math.min(3, current - firstDay);
+  const mobile = (25 * k) / 75;
+  const desktop = rowIdx === 0 ? (25 * k) / 87.5 : (12.5 + 25 * k) / 87.5;
+  return { m: pct(mobile), d: pct(desktop) };
+}
+
+function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: EventDayState }) {
   const r = dict.program.route;
+  const live = ev.phase === "during" && ev.current !== null;
   // 필 문구의 {from}·{to}를 파생값으로 채웁니다. 사전 계산해 두는 것은 두 행이
   // 각각 렌더될 때 같은 문자열을 두 번 만들지 않게 하려는 것뿐입니다.
   const mentoringPill = MENTORING_DAY_RANGE
@@ -1286,6 +1365,31 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                 : "left-[12.5%] right-[12.5%] sm:left-0"
             }`}
           />
+          {/* 지나온 구간. 베이스 레일과 완전히 같은 자리에 겹쳐 그리고, 그 안에서
+              현재역까지만 폭을 채웁니다 — 위치를 두 번 계산하지 않으려는 것이라
+              inset 클래스는 위와 한 글자도 다르지 않아야 합니다.
+              베이스보다 한 픽셀 두껍습니다(h-px → h-[2px], -top-px로 중심 유지).
+              같은 두께로 색만 바꾸면 어두운 배경에서 "지나온 곳"이 아니라 렌더
+              잡티로 보입니다. 그 이상 두껍게는 마세요 — 레일이 노드보다 세지면
+              노선도가 아니라 진행 바가 됩니다. */}
+          {live && (
+            <span
+              aria-hidden
+              style={{
+                // CSS 변수로 넘기는 이유는 railFill 주석에 있습니다: 채움 비율이
+                // 브레이크포인트마다 달라서 클래스 하나로는 표현되지 않습니다.
+                ["--p-m" as string]: railFill(rowIdx, ev.current!).m,
+                ["--p-d" as string]: railFill(rowIdx, ev.current!).d,
+              }}
+              className={`pointer-events-none absolute top-4 -mt-px h-[2px] ${
+                rowIdx === 0
+                  ? "left-[12.5%] right-[12.5%] sm:right-0"
+                  : "left-[12.5%] right-[12.5%] sm:left-0"
+              }`}
+            >
+              <span className="block h-full w-[var(--p-m)] rounded-full bg-gradient-to-r from-violet-400/70 to-violet-300/70 sm:w-[var(--p-d)]" />
+            </span>
+          )}
           {/* ── 멘토링 점 마커 ──────────────────────────────────────────────
               멘토링이 열리는 날(현재 Day 3·4·5·6·7)의 노드 아래에 에메랄드 점을
               하나씩 찍습니다. 날짜는 MENTORING_DAYS가 스케줄에서 셉니다 —
@@ -1364,6 +1468,12 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
             // 제외합니다 — 마커는 "여기로 오세요"라는 약속인데, 아직 어디로 갈지
             // 모르는 날에 그 약속을 하면 안 됩니다. 지금은 해당 날이 없습니다.
             const onSite = d.dayMode === "offline";
+            // 시간의 층. 정거장의 층(필참·놓치면 아까운·선택)과 다른 축이라
+            // 서로 덮어쓰지 않고 겹쳐 얹힙니다 — 다만 이름의 밝기에서는 시간이
+            // 이깁니다(아래). 이미 지나간 필참일은 더 이상 행동 안내가 아니니까요.
+            const prog = dayProgress(d.day, ev);
+            const passed = prog === "past";
+            const today = prog === "today";
             return (
               <li key={d.day} className="relative flex-1">
                 <button
@@ -1371,8 +1481,9 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                   onClick={() => onOpen(d.day)}
                   className="group flex w-full flex-col items-center gap-1.5 px-1 py-1 text-center"
                   // 마커는 aria-hidden이라 스크린리더에는 안 보입니다. 눈으로 읽는
-                  // 사람이 얻는 정보를 여기서 말로 채웁니다.
-                  aria-label={`Day ${d.day}, ${t(d.theme)}${onSite ? `, ${t(dict.program.offlineLabel)}` : ""}${onSite && d.venueLogo ? `, ${d.venueLogo.name}` : ""}`}
+                  // 사람이 얻는 정보를 여기서 말로 채웁니다. 진행 상태도 같은 이유로
+                  // 여기 붙습니다 — 펄스와 감쇠는 눈으로만 읽히니까요.
+                  aria-label={`Day ${d.day}, ${t(d.theme)}${onSite ? `, ${t(dict.program.offlineLabel)}` : ""}${onSite && d.venueLogo ? `, ${d.venueLogo.name}` : ""}${today ? `, ${t(dict.program.dayToday)}` : passed ? `, ${t(dict.program.dayDone)}` : ""}`}
                 >
                   {/* Fixed-height row so both node sizes share one centreline and
                       the rail passes through every node at the same height. */}
@@ -1415,24 +1526,59 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                         }`}
                       />
                     )}
+                    {/* 현재역. 노드 뒤에 링 하나와 펄스 하나를 깔아 둡니다 —
+                        노드 자체의 모양(★ / ◉ / ○)은 그대로 두는 것이 핵심입니다.
+                        오늘이라고 해서 그 날의 층이 바뀌지는 않으니까요.
+                        펄스는 등록 밴드가 쓰던 softPulse 어휘 그대로이고 색만
+                        바이올렛입니다. scale(2.2)까지 커지므로 시작 크기는 노드와
+                        같아야 합니다 — 더 크게 잡으면 옆 칸까지 번집니다. */}
+                    {today && (
+                      <>
+                        <span
+                          aria-hidden
+                          className="pointer-events-none absolute h-9 w-9 rounded-full border border-violet-300/60"
+                        />
+                        <span
+                          aria-hidden
+                          className="pointer-events-none absolute h-7 w-7 rounded-full bg-violet-400/40 animate-[softPulse_2.4s_ease-in-out_infinite] motion-reduce:animate-none"
+                        />
+                      </>
+                    )}
                     {anchor ? (
-                      <span className="flex h-7 w-7 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-[0.6rem] text-rose-100 shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:bg-rose-400/40">
+                      <span className={`relative flex h-7 w-7 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-[0.6rem] text-rose-100 shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:bg-rose-400/40 ${passed ? "opacity-55" : ""}`}>
                         <span aria-hidden>★</span>
                       </span>
                     ) : spot ? (
                       // 필참보다 한 치수 작고 점보다 두 치수 큽니다. ★를 쓰지 않고
                       // 색도 rose가 아닌 violet인 것은 의도적입니다 — ★와 rose는
                       // 노선도에서 오직 "필참"만 뜻해야 하고, 이 날은 선택일입니다.
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full border border-violet-300/60 bg-violet-400/20 shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:bg-violet-400/40">
+                      <span className={`relative flex h-6 w-6 items-center justify-center rounded-full border border-violet-300/60 bg-violet-400/20 shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:bg-violet-400/40 ${passed ? "opacity-55" : ""}`}>
                         <span aria-hidden className="h-2 w-2 rounded-full bg-violet-200" />
                       </span>
                     ) : (
-                      <span className="h-3 w-3 rounded-full border border-white/35 bg-[#0a0614] shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:border-violet-300/70 group-hover:bg-violet-400/30" />
+                      // 지나온 선택일만 속이 찹니다. 빈 원은 "아직 들르지 않은
+                      // 정거장"이라, 지나온 날에는 채워져 있는 편이 노선도의
+                      // 관례에 맞습니다. 채움은 흰색 한 톤 낮게 — 오늘보다 세지면
+                      // 현재역이 묻힙니다.
+                      <span className={`relative h-3 w-3 rounded-full shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:border-violet-300/70 group-hover:bg-violet-400/30 ${
+                        passed ? "border border-white/40 bg-white/40" : "border border-white/35 bg-[#0a0614]"
+                      }`} />
                     )}
                   </span>
+                  {/* 시간의 층이 정거장의 층을 이기는 유일한 자리입니다. 지나온
+                      날의 "Day 1"이 여전히 rose로 빛나면, 이미 끝난 필참일이 아직
+                      가야 할 곳처럼 읽힙니다. 오늘은 반대로 최고 밝기입니다. */}
                   <span
                     className={`text-[0.62rem] font-bold leading-none ${
-                      anchor ? "text-rose-200" : spot ? "text-violet-200" : "text-white/55"
+                      passed
+                        ? "text-white/35"
+                        : today
+                          ? "text-violet-100"
+                          : anchor
+                            ? "text-rose-200"
+                            : spot
+                              ? "text-violet-200"
+                              : "text-white/55"
                     }`}
                   >
                     {t(dict.program.dayLabel)} {d.day}
@@ -1449,9 +1595,13 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                       없었습니다. 작은 화면에서 0.68rem·/60은 읽히지 않습니다. */}
                   <span
                     className={`break-keep text-[0.68rem] leading-tight transition ${
-                      anchor || spot
-                        ? "font-bold text-white"
-                        : "text-white/75 group-hover:text-white"
+                      passed
+                        ? "text-white/40 group-hover:text-white/75"
+                        : today
+                          ? "font-bold text-white"
+                          : anchor || spot
+                            ? "font-bold text-white"
+                            : "text-white/75 group-hover:text-white"
                     }`}
                   >
                     {d.stopLabel ? t(d.stopLabel) : stopKeyword(t(d.theme))}
@@ -1668,11 +1818,14 @@ function ProgramStats({ t }: { t: Tfn }) {
 
 // One clean summary card per day (deck-style). Opens the day detail modal on
 // click rather than exploding every session inline — keeps the arc scannable.
-function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number) => void }) {
+function DayCard({ day, t, onOpen, ev }: { day: DayMeta; t: Tfn; onOpen: (n: number) => void; ev: EventDayState }) {
   const allSelfPaced = dayIsSelfPaced(day.day);
   // 노선도의 노드 모양을 결정하는 그 함수입니다. 카드가 자기만의 판정을 갖지
   // 않아야 두 표면이 함께 움직입니다.
   const emphasis = dayEmphasis(day);
+  // 시간의 층. 노선도의 노드와 같은 함수를 읽습니다 — 여기서 Date를 다시 읽으면
+  // 자정 언저리에 노선도와 카드가 서로 다른 날을 가리킬 수 있습니다.
+  const prog = dayProgress(day.day, ev);
   return (
     <button
       type="button"
@@ -1687,10 +1840,26 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
       // 접었습니다). 카드 테두리는 "격자에서 먼저 읽히는 것"이라는 축이고, 그
       // 축은 필참 둘에만 있어야 합니다. 층은 안쪽 배지가 이미 말하고 있어서,
       // 테두리까지 세 단계로 나누면 여덟 장이 3등급으로 줄 세워집니다.
+      // ── 시간의 층 (2026-08-23) ────────────────────────────────────────────
+      // 여덟 장이 나란히 있을 때 지나온 넉 장이 가라앉고 한 장이 빛나면, 그리드
+      // 자체가 진행 바가 됩니다. 새 장치를 만들지 않고 투명도와 테두리만 씁니다.
+      //
+      // 지난 날: 감쇠하되 숨기지 않습니다. hover와 키보드 포커스에서 원래 밝기로
+      //   돌아와요 — 지난 날 카드는 여전히 아카이브로 읽혀야 하고, 모달도 그대로
+      //   열립니다. focus-visible이 아니라 focus-within인 것은 카드가 <button>
+      //   자신이라 둘 다 걸리지만, 안쪽에 포커서블이 생겨도 따라오게 하려는 것.
+      // 오늘: 비전 섹션 ★시작 카드가 이미 쓰는 어법(border-violet-400/50 +
+      //   bg-violet-500/10)입니다. 새 색을 만들지 않았어요. 필참 테두리(rose)보다
+      //   우선합니다 — Day 1은 필참이면서 이미 지나간 날이고, 지금 서 있어야 할
+      //   카드는 오늘 하나뿐입니다.
       className={`group relative flex h-full flex-col rounded-2xl border p-5 text-left transition duration-300 hover:-translate-y-1 hover:border-violet-400/30 hover:bg-white/[0.06] ${
-        emphasis === "must"
-          ? "border-rose-400/25 bg-white/[0.055]"
-          : "border-white/[0.08] bg-white/[0.03]"
+        prog === "past" ? "opacity-[0.68] transition-opacity hover:opacity-100 focus-within:opacity-100 focus:opacity-100" : ""
+      } ${
+        prog === "today"
+          ? "border-violet-400/50 bg-violet-500/10"
+          : emphasis === "must"
+            ? "border-rose-400/25 bg-white/[0.055]"
+            : "border-white/[0.08] bg-white/[0.03]"
       }`}
     >
       {/* FIX 2026-08-20: 모바일에서 DAY 숫자와 날짜가 붙어 보이던 것 — 헤더 행
@@ -1711,6 +1880,26 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
         <span className="flex items-baseline gap-1.5">
           <span className="text-[0.6rem] font-bold uppercase tracking-wider text-violet-300/70">{t(dict.program.dayLabel)}</span>
           <span className="text-2xl font-black leading-none text-white">{day.day}</span>
+          {/* ✓ 하나. 글자를 붙이지 않는 이유는 dict.program.dayDone 주석에
+              있습니다 — 넉 장에 "지난 일정"이 반복되면 아카이브가 폐기물로
+              읽힙니다. 낭독에는 sr-only로 이름이 갑니다. */}
+          {prog === "past" && (
+            <span className="inline-flex items-center rounded-full border border-white/15 bg-white/[0.05] px-1.5 py-0.5 text-[0.6rem] font-bold leading-none text-white/60">
+              <span aria-hidden>✓</span>
+              <span className="sr-only">{t(dict.program.dayDone)}</span>
+            </span>
+          )}
+          {/* 오늘 필. 점은 등록 밴드와 같은 softPulse 어휘이고, 링이 퍼져 나가는
+              동안 가운데 점은 그대로 있어야 해서 두 겹입니다. */}
+          {prog === "today" && (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/40 bg-violet-500/15 px-2 py-0.5 text-[0.6rem] font-bold leading-none text-violet-100">
+              <span aria-hidden className="relative flex h-[6px] w-[6px] shrink-0">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-violet-300/70 animate-[softPulse_2.4s_ease-in-out_infinite] motion-reduce:animate-none" />
+                <span className="relative inline-flex h-full w-full rounded-full bg-violet-200" />
+              </span>
+              {t(dict.program.dayToday)}
+            </span>
+          )}
         </span>
         {/* shrink-0: 날짜는 줄바꿈되면 안 되는 한 덩어리입니다. */}
         <span className="shrink-0 text-[0.7rem] text-white/55">{day.date} {t(day.weekday)}</span>
@@ -3295,6 +3484,9 @@ export default function Journey() {
   // 읽지 않습니다. registered는 ReturningGreeting류가, registerOpen은 스티키 바의
   // 숨김 조건이 씁니다.
   const { registered, registerOpen } = useRegister();
+  // 페이지 전체가 공유하는 시계 하나 (useEventDay 주석 참고). 여기서 한 번만
+  // 부르고 노선도와 데이 카드에 값을 내려보냅니다.
+  const eventDay = useEventDay();
   const reduce = useReducedMotion();
   const [active, setActive] = useState<BEvent | null>(null);
   const [activeDay, setActiveDay] = useState<number | null>(null); // day detail modal
@@ -3866,8 +4058,31 @@ export default function Journey() {
         <BandFades />
         <div className="relative mx-auto w-full max-w-[1700px] px-6 sm:px-10">
           <div className="text-center">
-            <Eyebrow>{t(dict.program.tag)}</Eyebrow>
-            <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+            {/* Eyebrow 옆에 라이브 칩 하나. 섹션에 들어서자마자 이 페이지가 지금
+                살아 움직인다는 신호를 줍니다 — 아래 노선도와 카드가 말하는 것과
+                같은 사실이지만, 저 둘은 읽어야 알고 이건 보면 압니다.
+                행사 중에만 렌더되고, 끝나면 이 줄부터 사라져 섹션이 다시 시간
+                없는 아카이브로 돌아갑니다. 숫자시계(카운트다운)는 넣지 않습니다. */}
+            {/* !mb-0: Eyebrow는 자기 클래스에 mb-4를 갖고 있고, 여기서 넘기는
+                className은 뒤에 붙을 뿐 우선순위를 갖지 않습니다(같은 특이도라
+                Tailwind가 스타일시트에 찍은 순서가 이깁니다 — mb-4가 이겼습니다).
+                그 상태에서는 칩이 아이브로보다 14px 내려앉아 두 요소가 다른 줄에
+                선 것처럼 보였습니다. important 수식어가 그 충돌을 끝냅니다.
+                아래로 벌어지던 16px은 h2의 mt-4가 그대로 받습니다 — 세로 리듬은
+                이 변경 전과 같습니다. */}
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <Eyebrow className="!mb-0">{t(dict.program.tag)}</Eyebrow>
+              {eventDay.phase === "during" && eventDay.current !== null && (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/35 bg-violet-500/12 px-3 py-1 text-[0.7rem] font-bold leading-none text-violet-100">
+                  <span aria-hidden className="relative flex h-[7px] w-[7px] shrink-0">
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-violet-300/70 animate-[softPulse_2.4s_ease-in-out_infinite] motion-reduce:animate-none" />
+                    <span className="relative inline-flex h-full w-full rounded-full bg-violet-200" />
+                  </span>
+                  {t(dict.program.dayLive).replace("{n}", String(eventDay.current))}
+                </span>
+              )}
+            </div>
+            <h2 className="mt-4 text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
               {t(dict.program.heading)}
             </h2>
             {/* Three numbers before anything else: the first question this section
@@ -3954,7 +4169,7 @@ export default function Journey() {
 
           {/* The route, immediately above the grid it describes: the eight cards
               are read through it rather than as eight equal obligations. */}
-          <RouteMap t={t} onOpen={setActiveDay} />
+          <RouteMap t={t} onOpen={setActiveDay} ev={eventDay} />
 
           {/* Two Labs, four clean day cards each. Tapping a card opens the day
               detail modal (that day's sessions) instead of exploding all ~18
@@ -3970,7 +4185,7 @@ export default function Journey() {
                 </div>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                   {group.map((day) => (
-                    <DayCard key={day.day} day={day} t={t} onOpen={setActiveDay} />
+                    <DayCard key={day.day} day={day} t={t} onOpen={setActiveDay} ev={eventDay} />
                   ))}
                 </div>
               </div>
