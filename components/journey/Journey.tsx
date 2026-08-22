@@ -25,7 +25,6 @@ import { loadOwnResult } from "@/lib/quizResult";
 import { parseResultId } from "@/lib/quizScore";
 import { RESULTS, QUESTIONS, type MbtiKey } from "@/data/quiz";
 import { useRegister, type RegisterPreset } from "@/lib/RegisterContext";
-import { REGISTRATION_CLOSES_AT } from "@/lib/registrationWindow";
 import { useScrollDirection } from "@/lib/useScrollDirection";
 import { useBodyScrollLock, isScrollLocked } from "@/lib/useBodyScrollLock";
 
@@ -863,296 +862,6 @@ function HookCards({
           <OpenChatLink t={t} src={chatSrc} />
         </div>
       )}
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// HERO LAUNCH PANEL — Countdown ↔ Problem Statement 전환 탭
-//
-// 행사 시작(LAUNCH_AT, 2026-08-22 KST) 전:  실시간 D-day 카운트다운을 보여준다.
-// 행사 시작 후:                             같은 자리에서 Problem Statement 로 전환.
-//
-// 지금은 기획 단계라 두 뷰를 모두 만들어 시각 확인이 가능하도록 수동 토글 탭을 노출한다
-// (`PREVIEW_TABS = true`). 실제 퍼블리시 시점에는 `PREVIEW_TABS = false` 로만 바꾸면
-// 탭이 사라지고, LAUNCH_AT 을 기준으로 카운트다운 → Problem 이 자동 전환된다.
-// ─────────────────────────────────────────────────────────────────────────────
-
-// 빌더톤이 실제로 시작하는 순간. Day 1 오프닝이 열리는 8/22 오후 1시,
-// 싱가포르 현지 시각입니다(SGT=UTC+8 → 08/22 05:00 UTC).
-//
-// 직전 값은 "2026-08-22T00:00:00+09:00", 즉 한국 시각 자정이었습니다. 두 군데가
-// 틀렸습니다: 행사는 싱가포르에서 열리므로 기준 시간대가 KST가 아니라 SGT이고,
-// 시작은 자정이 아니라 오후 1시입니다(schedule.ts Day 1의 hours "1PM–4:30PM",
-// 입장 12:40). 결과적으로 시계가 실제보다 14시간 이르게 0을 찍었습니다.
-//
-// 오프셋을 문자열에 박아두는 것이 핵심입니다. 오프셋 없이 쓰면 이 코드를 읽는
-// 브라우저의 시간대로 해석되어, 서울에서 보는 시계와 싱가포르에서 보는 시계가
-// 서로 다른 순간을 가리킵니다.
-//
-// dict.hero.countdownStartsAt이 같은 시각을 글로 말합니다. 하나를 고치면
-// 반드시 다른 하나도 고치세요.
-const LAUNCH_AT = new Date("2026-08-22T13:00:00+08:00").getTime();
-// 등록 마감(오후 2시 15분)은 이제 lib/registrationWindow.ts에 있습니다. 시각을
-// 보여주기만 하던 히어로 카운트다운·Problem 밴드 외에, 서버(app/api/register)와
-// 등록 CTA들이 같은 값을 봐야 실제로 마감이 걸리기 때문입니다. 왜 2:15인지(Day 1
-// 쉬는 시간과의 연동), 왜 오프셋을 박아두는지는 그 파일의 주석에 있습니다.
-// 여기서 값을 고치지 마세요 — 그 파일 한 곳에서만.
-// 기획/디자인 컨펌 단계에서만 true. 퍼블리시 시 false 로 바꾸면 탭이 숨겨지고
-// 날짜(LAUNCH_AT)에 따라서만 뷰가 결정된다.
-const PREVIEW_TABS = false;
-
-type LaunchView = "countdown" | "problem";
-
-function useCountdown(target: number) {
-  // SSR/첫 렌더에서 hydration mismatch 를 피하려고 0 으로 시작, 마운트 후 실제 값으로.
-  const [remaining, setRemaining] = useState<number | null>(null);
-  useEffect(() => {
-    const tick = () => setRemaining(Math.max(0, target - Date.now()));
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, [target]);
-  const done = remaining !== null && remaining <= 0;
-  const total = remaining ?? 0;
-  const days = Math.floor(total / 86_400_000);
-  const hours = Math.floor((total % 86_400_000) / 3_600_000);
-  const minutes = Math.floor((total % 3_600_000) / 60_000);
-  const seconds = Math.floor((total % 60_000) / 1000);
-  return { ready: remaining !== null, done, days, hours, minutes, seconds };
-}
-
-function CountdownView({ t }: { t: Tfn }) {
-  const { ready, done, days, hours, minutes, seconds } = useCountdown(LAUNCH_AT);
-  const pad = (n: number) => String(n).padStart(2, "0");
-  const units = [
-    { v: days, label: t(dict.hero.countdownUnitDays) },
-    { v: hours, label: t(dict.hero.countdownUnitHours) },
-    { v: minutes, label: t(dict.hero.countdownUnitMinutes) },
-    { v: seconds, label: t(dict.hero.countdownUnitSeconds) },
-  ];
-
-  if (done) {
-    return (
-      <Glass className="text-center">
-        <p className="text-lg font-bold text-white">{t(dict.hero.countdownStarted)}</p>
-      </Glass>
-    );
-  }
-
-  return (
-    <div className="text-center">
-      <p className="mb-5 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/70">
-        {/* Gentle, slow pulse (~2.4s) instead of animate-ping's snappy 1s scale,
-            which read as too fast / twitchy on mobile. */}
-        <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-[softPulse_2.4s_ease-in-out_infinite] rounded-full bg-violet-400/60" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-violet-400" />
-        </span>
-        {/* Short label on mobile ("Begins in"), full line from sm up. */}
-        <span className="sm:hidden">{t(dict.hero.countdownEyebrowShort)}</span>
-        <span className="hidden sm:inline">{t(dict.hero.countdownEyebrow)}</span>
-        <span className="text-white/55"> {t(dict.hero.countdownLive)}</span>
-      </p>
-      <div className="mx-auto grid w-fit grid-cols-4 gap-1.5 sm:gap-2.5">
-        {units.map((u, i) => (
-          <div
-            key={u.label}
-            className="w-14 rounded-xl border border-white/10 bg-white/[0.04] px-1 py-2.5 sm:w-16 sm:py-3.5"
-          >
-            {/* whitespace-nowrap과 좁은 px는 장식이 아니라 버그 수정입니다.
-                "00"은 나올 수 있는 두 자리 중 가장 넓은 조합이고(비례폭 서체에서
-                1은 좁고 0은 넓습니다), 예전 여백(px-1.5 sm:px-2)으로는 폭이
-                딱 맞아떨어져서 조금만 넓은 서체를 만나면 넘쳤습니다. 넘치면
-                줄바꿈이 일어나 두 자리가 세로로 쌓입니다. 그래서 다른 숫자는
-                멀쩡한데 00에서만 무너져 보였습니다.
-
-                Pretendard가 아직 안 왔을 때(font-display: swap) 쓰이는 폴백이나
-                브라우저 최소 글꼴 크기 설정처럼, 글자만 커지고 타일은 그대로인
-                상황이 실제로 있습니다. 그래서 두 겹으로 막습니다: nowrap이
-                세로 쌓임 자체를 불가능하게 하고, 넓어진 안쪽 폭이 애초에
-                넘칠 일을 없앱니다. tabular-nums는 숫자가 바뀔 때 폭이
-                출렁이지 않게 하는 별개의 장치이니 함께 두세요. */}
-            <div className="whitespace-nowrap bg-gradient-to-b from-white to-white/60 bg-clip-text font-black tabular-nums text-transparent text-[clamp(1.4rem,5vw,2.25rem)] leading-none">
-              {/* 첫 칸(days)은 자릿수 그대로, 나머지는 2자리 고정 */}
-              {ready ? (i === 0 ? u.v : pad(u.v)) : "—"}
-            </div>
-            <div className="mt-1.5 text-[0.6rem] uppercase tracking-[0.2em] text-white/50 sm:text-[0.65rem]">
-              {u.label}
-            </div>
-          </div>
-        ))}
-      </div>
-      {/* 시계가 가리키는 순간을 글로. 카운트다운은 "얼마나 남았나"만 말하고
-          "언제인가"는 말하지 않아서, 달력에 넣으려는 사람은 Day 1 카드까지
-          내려가야 했습니다. 위 히어로의 날짜 줄은 8일 기간(08.22–08.29)이라
-          시작 시각을 대신하지 못합니다. */}
-      <p className="mt-3.5 text-xs font-semibold text-white/75">
-        {t(dict.hero.countdownStartsAt)}
-      </p>
-      {/* 등록 마감. 시계는 "시작까지"만 세고 있어서, 언제까지 등록해야 하는지는
-          이 줄이 없으면 사이트 어디에도 없습니다.
-          마감(오후 2시 15분)이 시작(오후 1시)보다 늦은 이유는 dictionary 쪽 주석 참고.
-          DECIDED 2026-08-17: 등록 마감 배지 제거 — 고아 요소였음. 시작/마감을 한
-          시각 스택으로 통합. 알약이었던 이유는 "지금 행동해야 하는 정보라 무게가
-          달라야 한다"였는데, 테두리와 채움까지 두르니 시각 정보가 아니라 버튼처럼
-          보였습니다. 무게 차이는 색으로만 냅니다: 위 줄과 같은 크기·정렬에 밝기를
-          한 단계 낮추고, 실제로 지켜야 하는 조각(오후 2시 15분)만 앰버로. 알약으로
-          되돌리지 마세요. */}
-      <p className="mt-1 text-xs font-semibold text-white/55">
-        <Emph text={t(dict.hero.countdownDeadline)} className="text-amber-200" />
-      </p>
-      {/* What the ticking clock actually costs you — deliberately about what
-          registering gets you sooner, not about seats running out. The line
-          above is a date, not a scarcity device: there is no cap, so
-          "선착순 / 마감 임박 / 잔여석" would still be an invented pressure;
-          every clause below is something we already do.
-          Static text: it must not animate alongside the seconds.
-          TODO: 매칭 '등록 순서' 운영 방침 확정 시 "일찍 등록할수록 매칭 풀이
-          넓어요"로 강화 가능 */}
-      <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-white/55">
-        {t(dict.hero.countdownUrgency)}
-      </p>
-      {/* 위 줄이 "일찍 등록하면 뭐가 좋은가"를 말하고 나면 반대쪽 질문이 남습니다:
-          "그럼 지금 안 하면 못 오나". 마감 배지만 크게 걸려 있으면 그렇게 읽히는데
-          실제로는 당일 현장 등록이 마감 시각까지 열려 있습니다. 그래서 마감 바로
-          아래, 위 줄과 같은 크기·같은 톤으로 답니다 — 한 단계 낮추면 단서가 아니라
-          각주가 되고, 올리면 마감보다 커집니다. 문구 배경은 dictionary 쪽 주석 참고. */}
-      <p className="mx-auto mt-1.5 max-w-md break-keep text-xs leading-relaxed text-white/55">
-        {t(dict.hero.countdownSameDay)}
-      </p>
-    </div>
-  );
-}
-
-function ProblemView({ t }: { t: Tfn }) {
-  // 오프닝이 열린 뒤(=이 뷰가 보이기 시작한 뒤)에도 등록은 오후 2시 15분까지 열려
-  // 있습니다. 시계를 그대로 재사용해 마감이 지나면 밴드가 스스로 사라지게 합니다
-  // — 새로고침을 기다리지 않고 그 초에 내려갑니다. ready는 SSR/첫 렌더에서
-  // false라 hydration mismatch도 막아줍니다.
-  const { ready, done } = useCountdown(REGISTRATION_CLOSES_AT);
-  const registrationOpen = ready && !done;
-
-  return (
-    <Glass className="text-left">
-      {/* 문제 카드 위에 붙는 마감 밴드. 바이올렛이 아니라 앰버인 건 아래
-          Eyebrow·"공개 예정" 배지가 이미 바이올렛이기 때문입니다. 같은 색을
-          세 번 쓰면 어느 것이 시간에 쫓기는 정보인지 구분이 사라집니다. */}
-      {/* 배경은 히어로 마감 필과 같은 불투명 단색입니다 (2026-08-17). 이 필은
-          행사가 열린 뒤에만 렌더돼서 지금 화면에는 없지만, 같은 반투명 앰버라
-          Day 1에 같은 씸이 나타납니다. 그때 발견하는 것보다 지금 맞춰 둡니다. */}
-      {registrationOpen && (
-        <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-[#1d1710] px-3 py-1 text-[0.7rem] font-semibold text-amber-100 backdrop-blur-sm">
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-[softPulse_2.4s_ease-in-out_infinite] rounded-full bg-amber-300/60" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-amber-300" />
-          </span>
-          {t(dict.hero.problemRegistrationOpen)}
-        </p>
-      )}
-      <div className="flex items-center justify-between gap-3">
-        <Eyebrow color="violet">✦ {t(dict.hero.problemEyebrow)}</Eyebrow>
-        <span className="rounded-full border border-violet-400/30 bg-violet-400/10 px-3 py-1 text-[0.7rem] font-bold uppercase tracking-widest text-violet-200">
-          {t(dict.hero.problemPlaceholderBadge)}
-        </span>
-      </div>
-      <h3 className="text-[clamp(1.35rem,3.5vw,2rem)] font-bold leading-tight tracking-tight text-white">
-        {t(dict.hero.problemHeading)}
-      </h3>
-      <p className="mt-4 text-sm leading-relaxed text-white/75 sm:text-base">
-        {t(dict.hero.problemBody)}
-      </p>
-      {/* 실제 문제 카드가 들어갈 자리 — 확정 시 채워질 플레이스홀더 슬롯 3개 */}
-      <div className="mt-6 grid gap-3 sm:grid-cols-3">
-        {[0, 1, 2].map((i) => (
-          <div
-            key={i}
-            className="h-24 rounded-xl border border-dashed border-white/12 bg-white/[0.02]"
-            aria-hidden
-          />
-        ))}
-      </div>
-    </Glass>
-  );
-}
-
-// The hero slot that swaps between Countdown and Problem Statement.
-function HeroLaunchPanel({ t, reduce }: { t: Tfn; reduce: boolean }) {
-  // 기본 뷰는 날짜로 결정: 시작 전이면 countdown, 시작 후면 problem.
-  // 마운트 후에만 Date.now() 를 읽어 hydration mismatch 를 피한다.
-  const [view, setView] = useState<LaunchView>("countdown");
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-    setView(Date.now() >= LAUNCH_AT ? "problem" : "countdown");
-  }, []);
-
-  // 시작 시각이 되면 스스로 넘어갑니다.
-  //
-  // 위 effect는 마운트 때 딱 한 번 판단합니다. 그래서 시작 전에 페이지를 열어둔
-  // 사람에게는 시계가 0에 닿아도 화면이 그대로 멈춰 있었습니다 — CountdownView가
-  // "빌더톤이 시작되었습니다" 한 줄로 바뀐 채, 새로고침하기 전까지 Problem 뷰로
-  // 넘어가지 않았습니다. 8월 22일 오후 1시에 반드시 일어나는 장면이고, 하필 그
-  // 순간이 이 패널이 가장 많이 열려 있을 때입니다.
-  //
-  // 1초 타이머 대신 남은 시간만큼의 타임아웃 하나를 겁니다. 이 패널은 시계를
-  // 이미 CountdownView 안에서 돌리고 있어서, 여기서 또 초당 렌더를 만들 이유가
-  // 없습니다.
-  //
-  // 32비트 상한(약 24.8일)을 넘는 지연은 setTimeout이 즉시 실행으로 접어버립니다.
-  // 지금은 열흘 남짓이라 걸릴 일이 없지만, 이 코드가 그보다 이른 시점에 배포될
-  // 수도 있으니 상한을 넘으면 예약하지 않습니다(그렇게 오래 열어두는 세션은
-  // 어차피 없고, 마운트 시 판단이 그 경우를 이미 덮습니다).
-  useEffect(() => {
-    if (!mounted || view !== "countdown") return;
-    const delay = LAUNCH_AT - Date.now();
-    if (delay <= 0 || delay > 2_147_483_647) return;
-    const id = setTimeout(() => setView("problem"), delay);
-    return () => clearTimeout(id);
-  }, [mounted, view]);
-
-  const tabs: { key: LaunchView; label: string }[] = [
-    { key: "countdown", label: t(dict.hero.countdownTabLabel) },
-    { key: "problem", label: t(dict.hero.problemTabLabel) },
-  ];
-
-  return (
-    // Centred/limited on mobile; fills the right column from lg up.
-    <div className="mx-auto w-full max-w-xl lg:max-w-none">
-      {/* 미리보기 탭 — 퍼블리시 시 PREVIEW_TABS=false 로 숨김 */}
-      {PREVIEW_TABS && (
-        <div className="mb-6 inline-flex rounded-full border border-white/10 bg-white/[0.04] p-1 text-sm">
-          {tabs.map((tab) => {
-            const active = view === tab.key;
-            return (
-              <button
-                key={tab.key}
-                type="button"
-                onClick={() => setView(tab.key)}
-                aria-pressed={active}
-                className={`rounded-full px-4 py-2 font-semibold transition ${
-                  active ? "bg-white/90 text-[#0a0814]" : "text-white/60 hover:text-white"
-                }`}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
-      )}
-
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={view}
-          initial={reduce ? false : { opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={reduce ? undefined : { opacity: 0, y: -12 }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-        >
-          {/* mounted 전에는 SSR 기본값(countdown)만 렌더 → hydration 안정 */}
-          {view === "countdown" || !mounted ? <CountdownView t={t} /> : <ProblemView t={t} />}
-        </motion.div>
-      </AnimatePresence>
     </div>
   );
 }
@@ -3684,34 +3393,28 @@ export default function Journey() {
             {/* REMOVED 2026-08-17: 모바일 전용 마감 배지가 여기 있었습니다
                 (ADDED 2026-08-12 — 폰에서 마감 시각이 CTA보다 세 스크린 아래에
                 있어서 "요청이 근거보다 먼저 도착한다"는 이유로 한 줄만 올린
-                것이었습니다).
-                배지째 지웁니다: 스택 없이 혼자 떠 있는 알약이라 고아 요소로
-                읽혔고, 같은 문구가 아래 카운트다운에서 이제 시작 시각과 한
-                묶음으로 나옵니다.
-                되살리려면 배지가 아니라 그 시각 스택 자체를 올리는 쪽을 보세요 —
-                고아 배지를 다시 만드는 것이 아니라. */}
+                것이었습니다). 스택 없이 혼자 떠 있는 알약이라 고아 요소로 읽혀
+                지웠습니다. (2026-08-22: 마감 시각을 함께 보여주던 히어로
+                카운트다운/Problem 패널도 이후 제거됐습니다.) */}
           </motion.div>
 
-          {/* RIGHT — hook cards ABOVE the Countdown ↔ Problem Statement panel,
-              pushed to the right edge. Slides right (opposite the left column) as
-              the hero scrolls out. Desktop only: on mobile these are pulled out
-              (hook cards into the left stack above; the panel into #launch below)
-              so the stacked hero doesn't get too tall / buried under the fade. */}
+          {/* RIGHT — hook cards only, pushed to the right edge. Slides right
+              (opposite the left column) as the hero scrolls out. Desktop only:
+              on mobile these are pulled out into the left stack above so the
+              stacked hero doesn't get too tall / buried under the fade. */}
           <motion.div style={{ x: splitX ? rightX : undefined, opacity: heroFade }} className="hidden lg:block lg:pr-10 xl:pr-16">
-            {/* One shared-width, right-aligned column: the hook cards and the
-                countdown/problem panel line up to the same max-width so the
-                stack reads as a single unit rather than mismatched widths. */}
+            {/* Right-aligned column holding the hook cards, capped to the same
+                max-width the launch panel used to share so the stack still lines
+                up under the headline. */}
             <div className="ml-auto w-full max-w-sm">
               {/* Stacked (not 2-up) in the narrower right column. */}
               <HookCards
                 t={t}
                 ownResultId={ownResultId}
                 openRegister={openRegister}
-                className="mb-5"
                 chatSrc={null}
                 stacked
               />
-              <HeroLaunchPanel t={t} reduce={!!reduce} />
             </div>
           </motion.div>
         </div>
@@ -3744,19 +3447,6 @@ export default function Journey() {
           />
         </div>
       </Chapter>
-
-      {/* ── Countdown ↔ Problem Statement · MOBILE-ONLY standalone section ──
-          On desktop the panel lives in the hero's right column (above); on
-          mobile it gets its own section between the hero and About so it's
-          readable and not buried in a tall stacked hero. */}
-      {/* pb-4 rather than py-12: this section is `lg:hidden`, so it is a mobile
-          block by definition and its bottom padding stacked on top of the About
-          chapter's own py-14 — 104px of nothing between the countdown and the
-          first line of copy. Top padding is untouched; the gap under the hero is
-          doing real work. Desktop never renders this. */}
-      <section id="launch" className="w-full px-6 pb-4 pt-12 lg:hidden">
-        <HeroLaunchPanel t={t} reduce={!!reduce} />
-      </section>
 
       {/* ── CH 1 · ABOUT ───────────────────────────────────────────── */}
       <Chapter id="about" align="center">
