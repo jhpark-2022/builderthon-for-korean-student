@@ -932,110 +932,228 @@ const dayIsSelfPaced = (dayNum: number) =>
 // 여섯에서 여덟 줄로 제일 길어서 상황과 나란히 놓아야 높이가 맞고, 모바일에서는
 // 그대로 접혀 상황 → 흐름 → 목표 → 제약 순서로 읽힙니다. 읽는 순서가 곧 문제를
 // 이해하는 순서라 이 넷의 앞뒤를 바꾸지 마세요.
+//
+// DECIDED 2026-08-22 (UI 감사): 접힌 카드 밀도(내부 2단 + 흐름 칩) + 펼침
+// 상호작용(하단 접기·포커스·애니메이션) + a11y(헤딩·리스트 시맨틱·대비).
+//
+// 접힌 카드가 허술해 보이던 진단이 하나였습니다: 콘텐츠는 768px에서 끝나는데
+// 패널은 1250px이라 오른쪽 40%가 그냥 비어 있었습니다. 읽기 폭 제한을 건 것은
+// 맞지만 남는 칸을 버린 것이 틀렸어요. 그래서 접힌 내부를 lg에서 2단으로 가르고
+// (왼쪽 = 정체성, 오른쪽 = 흐름 칩 + 액션), 칼럼 폭이 곧 읽기 폭이 되므로
+// max-w-3xl은 뗍니다.
+//
+// 패널을 세로로 쌓는 것 자체는 그대로입니다. 2단으로 나란히 놓으면 한쪽을 펼쳤을
+// 때 반대쪽에 그만큼 구멍이 나고, 좁아진 칼럼 안에서 상세의 2단이 무너집니다.
 // ─────────────────────────────────────────────────────────────────────────────
 function TrackPanel({ tr, t, idx }: { tr: (typeof dict.tracks.items)[number]; t: Tfn; idx: number }) {
   const [open, setOpen] = useState(false);
   const detailId = `track-detail-${idx}`;
+  const panelId = `track-panel-${idx}`;
+  // 두 트랙뿐이라 "다른 쪽"은 항상 나머지 하나입니다. 셋이 되면 이 줄이 아니라
+  // 컨트롤 행 자체를 다시 설계해야 합니다.
+  const otherPanelId = `track-panel-${idx === 0 ? 1 : 0}`;
+  // 하단 접기가 포커스를 되돌려 줄 상대. 상단 토글은 접어도 언마운트되지 않아서
+  // 안전하게 받을 수 있고, 뷰포트도 패널 머리로 따라옵니다. 이게 없으면 포커스가
+  // body로 떨어져 세 화면 아래에서 탭 순서가 처음부터 다시 시작됩니다(WCAG 2.4.3).
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const detailRef = useRef<HTMLDivElement>(null);
+
+  // 상세는 항상 mount된 채로 높이만 여닫습니다(grid-rows 트릭). 대신 닫혀 있는
+  // 동안에는 탭 순서와 보조기술에서 빼야 해요 — `inert`를 DOM 속성으로 직접
+  // 겁니다. React 18은 JSX prop으로 받지 않아서 ref로 세웁니다.
+  useEffect(() => {
+    const el = detailRef.current;
+    if (el) (el as HTMLElement & { inert?: boolean }).inert = !open;
+  }, [open]);
+
   // 소제목은 넷이 같은 모양이어야 한 패널 안의 같은 층위로 읽힙니다.
-  const subhead = "text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/45";
+  // white/45 → white/60: 대비 기준 미달이었습니다. 크기와 자간은 그대로예요.
+  const subhead = "text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/60";
+  // 상단 토글과 하단 접기가 같은 모양이어야 같은 일을 한다고 읽힙니다.
+  const ctrl =
+    "inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/[0.06] px-5 py-2.5 text-sm font-bold text-emerald-100/90 transition hover:border-emerald-400/55 hover:bg-emerald-400/[0.12] hover:text-white";
+
   return (
-    <Glass>
-      {/* 접혀 있어도 늘 보이는 부분 — 트랙을 고르는 데 필요한 전부입니다. */}
-      <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-emerald-200/90">
-        {t(tr.kicker)}
-      </p>
-      <p className="mt-3 break-keep text-[clamp(1.35rem,2.8vw,1.75rem)] font-bold leading-snug text-white">
-        {t(tr.title)}
-      </p>
-      {/* 병목 한 줄이 이 패널에서 가장 강한 문장입니다 — 트랙을 고르는 기준이
-          이름이 아니라 병목이라는 것이 이 섹션의 논지라서요.
+    <Glass className={`scroll-mt-24`}>
+      <div id={panelId} className="scroll-mt-24 lg:grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start lg:gap-10">
+        {/* LEFT — 정체성. 접혀 있어도 늘 보이는 부분입니다. */}
+        <div>
+          {/* 번호를 사각 칩으로 세웁니다. 펼친 상태의 단계 숫자 칩과 같은 어법이라
+              한 패널 안에서 두 번호가 같은 종류로 읽혀요. */}
+          <p className="flex items-center gap-2 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-emerald-200/90">
+            <span
+              aria-hidden
+              className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-emerald-400/25 bg-emerald-400/[0.08] text-[0.6rem] font-black text-emerald-200"
+            >
+              {tr.num}
+            </span>
+            {t(tr.kicker)}
+          </p>
+          {/* 패널의 제목이라 h3입니다. 섹션 헤딩(h2) 아래 층이고, 상세의 소제목이
+              그 아래 h4예요. 클래스는 그대로라 보이는 것은 안 바뀝니다. */}
+          <h3 className="mt-3 break-keep text-[clamp(1.5rem,3vw,2.1rem)] font-bold leading-snug text-white">
+            {t(tr.title)}
+          </h3>
+          {/* 병목 한 줄이 이 패널에서 가장 강한 문장입니다 — 트랙을 고르는 기준이
+              이름이 아니라 병목이라는 것이 이 섹션의 논지라서요. 그런데 본문과
+              같은 크기의 회색조 상자라 비활성 입력 필드처럼 보였습니다. 크기를
+              올리고 왼쪽에 에메랄드 선을 세워 인용처럼 읽히게 합니다(배경과 색
+              어휘는 그대로). */}
+          <p className="mt-3 break-keep rounded-xl border border-emerald-400/25 border-l-2 border-l-emerald-400/60 bg-emerald-400/[0.07] px-4 py-3 text-[clamp(0.95rem,1.6vw,1.1rem)] font-bold leading-relaxed text-emerald-50/95">
+            {t(tr.bottleneck)}
+          </p>
+          <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">{t(tr.body)}</p>
+        </div>
 
-          max-w-3xl은 읽는 길이 때문입니다. 접힌 패널은 폭을 나눌 상대가 없어서
-          그냥 두면 이 두 줄이 1000px을 넘어가고, 한 줄을 다 읽고 다음 줄 앞으로
-          돌아오는 눈의 이동이 그만큼 길어집니다. 펼친 뒤의 본문은 2단으로 갈라져
-          이미 이 폭 안이라 따로 걸지 않습니다. */}
-      <p className="mt-3 max-w-3xl break-keep rounded-xl border border-emerald-400/25 bg-emerald-400/[0.07] px-4 py-3 text-sm font-semibold leading-relaxed text-emerald-50/95">
-        {t(tr.bottleneck)}
-      </p>
-      <p className="mt-3 max-w-3xl break-keep text-sm leading-relaxed text-white/70">{t(tr.body)}</p>
+        {/* RIGHT — 흐름 칩 + 액션. lg에서만 옆 칸이고 그 아래에서는 그냥 다음
+            블록입니다. */}
+        <div className="mt-7 lg:mt-0">
+          {/* 흐름 칩 스트립. 접힌 상태에 상시 노출입니다.
+              이유가 셋인데 한 수로 풀립니다. (1) 밀도 — 비어 있던 오른쪽 칸이
+              찹니다. (2) 차별화 — 저지먼트 6개, 오토메이션 8개라 두 트랙의 얼굴이
+              달라집니다. (3) 논지 — 오토메이션의 병목 문장은 "여덟 단계"라고
+              주장하는데 정작 여덟 단계를 하나도 안 보여주고 있었습니다. 고르는 데
+              필요한 증거가 전부 접혀 있던 셈이에요.
+              여기는 label만 씁니다. text까지 오면 접은 의미가 없어집니다. */}
+          <h4 className={subhead}>{t(dict.tracks.flowTitle)}</h4>
+          {/* role="list" — Tailwind preflight가 list-style을 지우면 Safari/VoiceOver가
+              목록 시맨틱까지 함께 잃습니다. 아래 목표 <ul>도 같은 이유. */}
+          <ol role="list" className="mt-3 flex flex-wrap gap-2">
+            {tr.flow.map((step, i) => (
+              <li
+                key={i}
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[0.72rem] font-semibold text-white/75"
+              >
+                <span aria-hidden className="text-[0.6rem] font-black text-emerald-300/80">
+                  {i + 1}
+                </span>
+                {t(step.label)}
+              </li>
+            ))}
+          </ol>
 
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        aria-controls={detailId}
-        className="mt-5 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-5 py-2.5 text-xs font-bold text-white/80 transition hover:border-emerald-400/40 hover:bg-emerald-400/[0.08] hover:text-white"
+          <button
+            ref={toggleRef}
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls={detailId}
+            /* w-full은 폰에서만 — 한 손으로 쥔 상태의 타깃이 카드 폭 전체가
+               됩니다. sm부터는 내용 폭으로 돌아갑니다. */
+            className={`mt-5 w-full sm:w-auto ${ctrl}`}
+          >
+            {t(open ? dict.tracks.collapse : dict.tracks.expand)}
+            {/* 두 패널의 토글이 접근성 이름까지 똑같으면(“문제 자세히 보기” 둘)
+                버튼 목록에서 구분이 안 됩니다. 화면에는 안 보이는 트랙 이름을
+                붙여 "문제 자세히 보기 저지먼트 트랙"으로 읽히게 합니다. */}
+            <span className="sr-only"> {t(tr.title)}</span>
+            <span
+              aria-hidden
+              className={`transition-transform duration-300 motion-reduce:transition-none ${open ? "rotate-180" : ""}`}
+            >
+              ▾
+            </span>
+          </button>
+        </div>
+      </div>
+
+      {/* 상세. 항상 렌더하고 grid-rows로 높이만 여닫습니다 — 조건부 렌더는 열고
+          닫을 때 툭 끊기고, aria-controls가 없는 id를 가리키는 순간이 생깁니다. */}
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 motion-reduce:transition-none ${
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
       >
-        {t(open ? dict.tracks.collapse : dict.tracks.expand)}
-        <span
-          aria-hidden
-          className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`}
-        >
-          ▾
-        </span>
-      </button>
-
-      {open && (
-        <div id={detailId} className="mt-7 flex flex-col gap-7 border-t border-white/10 pt-7">
-          <div className="grid gap-7 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-10">
-            <div>
-              <p className={subhead}>{t(dict.tracks.situationTitle)}</p>
-              <p className="mt-3 break-keep text-sm leading-relaxed text-white/65">
-                {t(tr.situation)}
-              </p>
+        <div ref={detailRef} id={detailId} aria-hidden={!open} className="min-h-0 overflow-hidden">
+          <div className="mt-7 flex flex-col gap-7 border-t border-white/10 pt-7">
+            <div className="grid gap-7 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-10">
+              <div>
+                <h4 className={subhead}>{t(dict.tracks.situationTitle)}</h4>
+                <p className="mt-3 break-keep text-sm leading-relaxed text-white/65">
+                  {t(tr.situation)}
+                </p>
+              </div>
+              <div>
+                <h4 className={subhead}>{t(dict.tracks.flowTitle)}</h4>
+                {/* 번호는 <ol>이 의미로 갖고, 눈에 보이는 숫자 칩은 장식이라
+                    aria-hidden입니다. 스크린리더가 "1. 1. 공고 게시"로 읽지 않게
+                    하려는 것 — 목록 자체가 이미 순서를 말합니다. */}
+                <ol role="list" className="mt-3 flex flex-col gap-2.5">
+                  {tr.flow.map((step, i) => (
+                    <li key={i} className="flex gap-3">
+                      <span
+                        aria-hidden
+                        className="mt-[1px] flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-emerald-400/25 bg-emerald-400/[0.08] text-[0.6rem] font-black text-emerald-200/90"
+                      >
+                        {i + 1}
+                      </span>
+                      {/* 폰에서는 본문 크기(text-sm)로, 2단이 시작되는 lg에서만
+                          원래 밀도로 돌아갑니다. 0.8rem은 좁은 화면에서 너무 작아요. */}
+                      <span className="break-keep text-sm leading-relaxed text-white/70 lg:text-[0.8rem]">
+                        {/* 단계 이름과 설명은 별개의 키입니다(dictionary의 flow 주석
+                            참고). 사이를 잇는 시각 구분자를 넣지 마세요 — 굵기
+                            차이가 이미 경계를 만듭니다. sr-only 마침표는 눈에는
+                            안 보이고 낭독에만 쉼을 만듭니다. */}
+                        <span className="font-bold text-white/90">{t(step.label)}</span>
+                        <span className="sr-only">.</span>{" "}
+                        {t(step.text)}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
             </div>
-            <div>
-              <p className={subhead}>{t(dict.tracks.flowTitle)}</p>
-              {/* 번호는 <ol>이 의미로 갖고, 눈에 보이는 숫자 칩은 장식이라
-                  aria-hidden입니다. 스크린리더가 "1. 1. 공고 게시"로 읽지 않게
-                  하려는 것 — 목록 자체가 이미 순서를 말합니다. */}
-              <ol className="mt-3 flex flex-col gap-2.5">
-                {tr.flow.map((step, i) => (
-                  <li key={i} className="flex gap-3">
-                    <span
-                      aria-hidden
-                      className="mt-[1px] flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-emerald-400/25 bg-emerald-400/[0.08] text-[0.6rem] font-black text-emerald-200/90"
-                    >
-                      {i + 1}
-                    </span>
-                    <span className="break-keep text-[0.8rem] leading-relaxed text-white/70">
-                      {/* 단계 이름과 설명은 별개의 키입니다(dictionary의 flow 주석
-                          참고). 사이를 잇는 구분자를 여기에 넣지 마세요 — 굵기
-                          차이가 이미 경계를 만듭니다. */}
-                      <span className="font-bold text-white/90">{t(step.label)}</span>{" "}
-                      {t(step.text)}
-                    </span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
 
-          <div className="grid gap-7 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-10">
-            <div>
-              <p className={subhead}>{t(dict.tracks.goalTitle)}</p>
-              <ul className="mt-3 flex flex-col gap-2">
-                {tr.goals.map((g, i) => (
-                  <li key={i} className="flex gap-2.5">
-                    <span aria-hidden className="mt-[2px] shrink-0 text-emerald-300/70">✓</span>
-                    <span className="break-keep text-sm font-medium leading-relaxed text-white/80">
-                      {t(g)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            {/* 제약 조건. 목표 옆이고 톤이 한 단 낮습니다 — 팀이 무엇을 만들지
-                정한 직후에 읽어야 하는 줄이라서요.
+            <div className="grid gap-7 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-10">
+              <div>
+                <h4 className={subhead}>{t(dict.tracks.goalTitle)}</h4>
+                <ul role="list" className="mt-3 flex flex-col gap-2">
+                  {tr.goals.map((g, i) => (
+                    <li key={i} className="flex gap-2.5">
+                      <span aria-hidden className="mt-[2px] shrink-0 text-emerald-300/70">✓</span>
+                      <span className="break-keep text-sm font-medium leading-relaxed text-white/80">
+                        {t(g)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              {/* 제약 조건. 목표 옆이고 톤이 한 단 낮습니다 — 팀이 무엇을 만들지
+                  정한 직후에 읽어야 하는 줄이라서요. 눈에 보이는 라벨을 세우면
+                  목표와 대등해 보이므로 헤딩은 sr-only로만 둡니다.
 
-                self-start가 없으면 그리드가 이 <p>를 옆 칸(목표 3줄) 높이까지
-                늘려서, 두 문장짜리 상자 아래에 빈 칸이 그만큼 남습니다. */}
-            <p className="self-start break-keep rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-[0.8rem] leading-relaxed text-white/60">
-              {t(tr.constraint)}
-            </p>
+                  self-start가 없으면 그리드가 이 상자를 옆 칸(목표 3줄) 높이까지
+                  늘려서, 두 문장짜리 상자 아래에 빈 칸이 그만큼 남습니다. */}
+              <div className="self-start rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
+                <h4 className="sr-only">{t(dict.tracks.constraintTitle)}</h4>
+                <p className="break-keep text-sm leading-relaxed text-white/60 lg:text-[0.8rem]">
+                  {t(tr.constraint)}
+                </p>
+              </div>
+            </div>
+
+            {/* 하단 컨트롤 행. 펼친 상세는 폰에서 서너 화면이라, 다 읽은 사람이
+                접거나 다른 트랙으로 가려면 그만큼 되스크롤해야 했습니다. 읽기가
+                끝나는 자리에 같은 두 선택지를 다시 둡니다. */}
+            <div className="flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row">
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  toggleRef.current?.focus();
+                }}
+                className={`w-full sm:w-auto ${ctrl}`}
+              >
+                {t(dict.tracks.collapse)}
+                <span className="sr-only"> {t(tr.title)}</span>
+              </button>
+              <a href={`#${otherPanelId}`} className={`w-full sm:w-auto ${ctrl}`}>
+                {t(dict.tracks.otherTrack)}
+              </a>
+            </div>
           </div>
         </div>
-      )}
+      </div>
     </Glass>
   );
 }
@@ -3866,9 +3984,26 @@ export default function Journey() {
           ))}
         </div>
 
-        <p className="mx-auto mt-6 break-keep rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 text-left text-sm leading-relaxed text-white/65">
+        {/* max-w-3xl이 있어야 mx-auto가 의미를 갖습니다. 없으면 레일 전체 폭이라
+            가운데 정렬할 것이 없고, 한 줄이 1250px을 흐릅니다. */}
+        <p className="mx-auto mt-6 max-w-3xl break-keep rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 text-left text-sm leading-relaxed text-white/65">
           {t(dict.tracks.note)}
         </p>
+
+        {/* DECIDED 2026-08-22 (UI 감사): 결정하는 자리에 행동을 둡니다. 트랙 선택
+            마감과 제출 경로가 섹션 꼭대기 intro에만 있어서, 정작 두 문제를 다 읽고
+            고르는 지점(여기)에는 다음 할 일이 없었습니다.
+            어법은 패널의 컨트롤과 같은 에메랄드 필입니다. 주소는 links.*의 mailto와
+            FAQ가 쓰는 것과 같은 주소라 새 상수를 만들지 않았습니다. */}
+        <div className="mt-5 flex justify-center">
+          <a
+            href="mailto:pjh030924@gmail.com?subject=Zero100%20AI%20Builderthon%20%ED%8A%B8%EB%9E%99%20%EC%84%A0%ED%83%9D"
+            className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/[0.06] px-6 py-2.5 text-sm font-bold text-emerald-100/90 transition hover:border-emerald-400/55 hover:bg-emerald-400/[0.12] hover:text-white"
+          >
+            {t(dict.tracks.pickCta)}
+            <span aria-hidden>→</span>
+          </a>
+        </div>
 
       </Chapter>
 

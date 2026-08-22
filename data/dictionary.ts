@@ -2520,6 +2520,10 @@ export const dict = {
     situationTitle: { ko: "상황", en: "The situation" },
     flowTitle: { ko: "지금은 이렇게 흐릅니다", en: "How the work flows today" },
     goalTitle: { ko: "코드프레소가 풀고 싶은 것", en: "What Codepresso wants solved" },
+    // 제약 상자에는 눈에 보이는 소제목이 없습니다. 목표 옆에서 톤이 한 단 낮은
+    // 것이 그 자체로 위계라, 라벨을 세우면 목표와 대등해 보입니다. 대신 낭독에는
+    // 이름이 있어야 해서 sr-only 헤딩으로만 씁니다.
+    constraintTitle: { ko: "제약", en: "Constraint" },
     // 상세(상황, 흐름, 목표, 제약)를 펼치고 접는 버튼. 기본은 접힌 상태입니다 —
     // 두 트랙을 다 펼치면 이 섹션 하나가 화면 네 개 높이가 되고, 트랙을 "고르는"
     // 자리여야 할 곳이 읽어내려가는 자리가 됩니다. 접힌 상태에서 보이는 것(이름,
@@ -2528,9 +2532,20 @@ export const dict = {
     // 열리는지 말해야 누를지 말지가 정해집니다.
     expand: { ko: "문제 자세히 보기", en: "See the full problem" },
     collapse: { ko: "접기", en: "Show less" },
+    // 상세 맨 아래의 컨트롤 행. 펼친 상세는 폰에서 서너 화면이라, 다 읽은 사람이
+    // 접거나 다른 트랙으로 가려면 그만큼 되스크롤해야 했습니다. 읽기가 끝나는
+    // 자리에 같은 두 선택지를 다시 둡니다.
+    otherTrack: { ko: "다른 트랙 보기", en: "See the other track" },
+    // note 아래 필. 주소는 links.*의 mailto와 FAQ가 이미 쓰는 것과 같은 주소라
+    // 새 상수를 만들지 않습니다.
+    pickCta: { ko: "트랙 선택 보내기", en: "Send your pick" },
     items: [
       {
-        kicker: { ko: "문제 01 채용", en: "Problem 01 Hiring" },
+        // DECIDED 2026-08-22 (UI 감사): kicker를 둘로 나눴습니다. "01"은 펼친
+        // 상태의 단계 숫자 칩과 같은 사각 칩으로 서고, 나머지가 텍스트로 옆에
+        // 붙습니다. num은 두 로케일이 같아서 Phrase가 아니라 문자열입니다.
+        num: "01",
+        kicker: { ko: "문제 채용", en: "Problem Hiring" },
         title: { ko: "저지먼트 트랙", en: "Judgment track" },
         bottleneck: {
           ko: "판단할 시간도, 근거로 남는 기록도 없다",
@@ -2612,7 +2627,8 @@ export const dict = {
         },
       },
       {
-        kicker: { ko: "문제 02 마케팅 콘텐츠", en: "Problem 02 Marketing content" },
+        num: "02",
+        kicker: { ko: "문제 마케팅 콘텐츠", en: "Problem Marketing content" },
         title: { ko: "오토메이션 트랙", en: "Automation track" },
         bottleneck: {
           ko: "여덟 단계가 사람 손을 거치지 않고 돌아가야 한다",
@@ -2709,9 +2725,14 @@ export const dict = {
     // 두 카드 아래 한 줄 박스. 자료 요청 경로는 FAQ의 같은 문장과 한 몸입니다
     // (DECIDED 2026-08-14, 코드프레소 협의) — 한쪽만 고치지 마세요.
 
+    // DECIDED 2026-08-22 (UI 감사): 마감과 제출 경로를 이 줄에도 답니다. 지금까지
+    // 이 사실은 섹션 꼭대기 intro에만 있었는데, 정작 다 읽고 결정하는 지점은
+    // 아래입니다. 마감 문구의 정본은 schedule.ts의 d1-problem-release.description이고,
+    // 사본은 이제 셋입니다: FAQ "무슨 문제를 푸나요" · tracks.intro · 이 note.
+    // 마감이 바뀌면 넷을 함께 고치세요.
     note: {
-      ko: "무엇을 어디까지 어떻게 풀지는 팀이 정합니다. 의뢰서 전문(실무자들의 이야기와 내부 수치까지)은 참가자에게 전달되고, 필요한 자료와 데이터는 운영진에게 문의하면 됩니다.",
-      en: "What to solve, how far, and how is your team's call. The full brief (down to what the people doing the work say, and the internal numbers) goes to participants, and you can ask the organizers for the materials and data you need.",
+      ko: "무엇을 어디까지 어떻게 풀지는 팀이 정합니다. 의뢰서 전문(실무자들의 이야기와 내부 수치까지)은 참가자에게 전달되고, 필요한 자료와 데이터는 운영진에게 문의하면 됩니다. 트랙 선택은 Day 2가 끝나기 전까지 운영진 이메일로 보내 주세요.",
+      en: "What to solve, how far, and how is your team's call. The full brief (down to what the people doing the work say, and the internal numbers) goes to participants, and you can ask the organizers for the materials and data you need. Send your track pick to the organizers by email before Day 2 ends.",
     },
 
     // ── 히어로 훅 카드 ────────────────────────────────────────────────────────
