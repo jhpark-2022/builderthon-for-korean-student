@@ -28,14 +28,27 @@ import ReturningGreeting from "./ReturningGreeting";
 // DECIDED 2026-08-22 (Day 1): 트랙 공개 — 저지먼트, 오토메이션, 출제 기업
 // 코드프레소. nav 앵커 참가 대상(#join) → 트랙(#tracks). 등록이 마감된 뒤로
 // "참가 대상"은 클릭 가치가 다했고, 지금 이 페이지의 1순위 독자는 이미 들어온
-// 참가자입니다. 링크 8개 폭 예산은 그대로입니다(교체지 추가가 아님). 배열 순서는
-// 페이지 순서를 따라야 하므로 tracks는 benefits 뒤, program 앞에 옵니다 —
-// #tracks 섹션이 바로 그 사이에 있습니다. #join 섹션은 그대로 있습니다.
+// 참가자입니다. 배열 순서는 페이지 순서를 따라야 하므로 tracks는 benefits 뒤,
+// program 앞에 옵니다 — #tracks 섹션이 바로 그 사이에 있습니다.
+//
+// DECIDED 2026-08-23: 참가자 국면으로 세트를 다시 짭니다. 취지와 혜택이 빠지고
+// 연사가 들어왔습니다. 링크 8개 → 7개.
+//
+// 취지와 혜택은 둘 다 "등록할까"를 고민하는 사람을 설득하는 챕터입니다. 등록이
+// 마감된 지금 그 독자는 존재하지 않고, 남은 독자(참가자)에게 저 둘은 이미 읽었거나
+// 읽을 이유가 없는 자리예요. 8/13의 연사→멘토링, 8/22의 참가 대상→트랙과 같은
+// 기준입니다: 클릭 가치.
+//
+// 연사가 돌아온 이유는 그 기준이 뒤집혔기 때문입니다. 8/13에는 "프로그램 앵커로
+// 닿고 Day 카드에도 반복된다"가 이유였는데, 지금은 Day 1이 지나고 Day 7·8 세션이
+// 남아 있어 "누가 언제 오는지"가 실제로 찾는 정보가 됐습니다.
+//
+// #about과 #benefits 섹션은 그대로 있습니다. 사라진 것은 앵커뿐이고, 라벨 키도
+// dict.nav에 보존돼 있습니다.
 const anchors = [
-  { id: "about",     label: dict.nav.about },
-  { id: "benefits",  label: dict.nav.benefits },
   { id: "tracks",    label: dict.nav.tracks },
   { id: "program",   label: dict.nav.program },
+  { id: "speakers",  label: dict.nav.speakers },
   { id: "mentoring", label: dict.nav.mentoring },
   // The "For partners" pitch chapter (#why-partner) was removed, so this now
   // lands directly on the partner/logo wall.
@@ -204,19 +217,35 @@ export default function JourneyNav() {
               next to the brand and the two CTAs in either locale, and flex
               silently crushed the brand to make room. */}
           <div className="hidden items-center gap-5 xl:ml-10 xl:flex">
-            {anchors.map((a) => (
-              <a
-                key={a.id}
-                href={`#${a.id}`}
-                // whitespace-nowrap: a nav label is a single target and must stay
-                // on one line. The Korean labels are the longer set and were
-                // breaking apart at the narrow end of `lg` — "참가 대상" split at
-                // its space and the row turned into two ragged lines of syllables.
-                className="relative whitespace-nowrap text-sm font-medium text-white/70 transition hover:text-white after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-violet-400/70 after:transition-transform after:duration-300 hover:after:scale-x-100 focus-visible:after:scale-x-100"
-              >
-                {t(a.label)}
-              </a>
-            ))}
+            {anchors.map((a) => {
+              // DECIDED 2026-08-23: 데스크톱 앵커에도 현위치 표시를 답니다.
+              // useActiveSection은 원래 폰의 섹션 레일만 쓰고 있었는데, 위치를
+              // 알려줄 필요는 화면이 넓다고 없어지지 않습니다. 이 페이지는
+              // 1440px에서도 27,000px짜리 한 장이라 앵커 행이 유일한 지도예요.
+              //
+              // 표시는 레일 칩과 같은 원칙입니다(그쪽 주석 참고): 밝기와 밑줄까지만,
+              // 채우지 않습니다. 이건 표지판이지 버튼이 아닙니다.
+              // 호버 밑줄과 같은 선을 그대로 켜 두는 방식이라 새 시각 요소가 없어요.
+              const here = a.id === activeSection;
+              return (
+                <a
+                  key={a.id}
+                  href={`#${a.id}`}
+                  // aria-current, not just colour: the marker's meaning has to
+                  // survive for someone who can't see the tint.
+                  aria-current={here ? "true" : undefined}
+                  // whitespace-nowrap: a nav label is a single target and must stay
+                  // on one line. The Korean labels are the longer set and were
+                  // breaking apart at the narrow end of `lg` — "참가 대상" split at
+                  // its space and the row turned into two ragged lines of syllables.
+                  className={`relative whitespace-nowrap text-sm font-medium transition after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:bg-violet-400/70 after:transition-transform after:duration-300 hover:text-white hover:after:scale-x-100 focus-visible:after:scale-x-100 ${
+                    here ? "text-white after:scale-x-100" : "text-white/70 after:scale-x-0"
+                  }`}
+                >
+                  {t(a.label)}
+                </a>
+              );
+            })}
             {/* Quiz — an anchor-weight text link after FAQ, not a button. It has
                 to be reachable from the nav (there was no path at all), but it
                 sits under the open-chat ghost button and two under the register
@@ -376,7 +405,9 @@ export default function JourneyNav() {
                   // 안 됩니다 — 긴 이름의 챕터가 더 중요한 챕터로 보입니다.
                   //
                   // 5.25rem(94.5px)은 두 로케일의 최장 라벨을 실측해 고른 최소값입니다:
-                  // ko "참가 대상" 75.9px, en "Mentoring" 89.9px. 5rem은 90px이라
+                  // ko "참가 대상" 75.9px, en "Mentoring" 89.9px. (2026-08-23에
+                  // "참가 대상"이 세트에서 빠졌지만 폭을 정한 것은 en "Mentoring"이고
+                  // 그건 그대로라, 이 값은 손대지 않습니다.) 5rem은 90px이라
                   // Mentoring과 0.1px 차이여서 폰트 렌더링이 조금만 달라도 넘칩니다.
                   // 라벨을 더 긴 것으로 바꾸면 이 값을 다시 재세요 — 하나라도 min-w를
                   // 넘기면 그 칩만 넓어져서 통일이 깨집니다.
