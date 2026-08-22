@@ -25,6 +25,7 @@ import { loadOwnResult } from "@/lib/quizResult";
 import { parseResultId } from "@/lib/quizScore";
 import { RESULTS, QUESTIONS, type MbtiKey } from "@/data/quiz";
 import { useRegister, type RegisterPreset } from "@/lib/RegisterContext";
+import { REGISTRATION_CLOSES_AT } from "@/lib/registrationWindow";
 import { useScrollDirection } from "@/lib/useScrollDirection";
 import { useBodyScrollLock, isScrollLocked } from "@/lib/useBodyScrollLock";
 
@@ -395,6 +396,10 @@ function InlineRegisterCta({
   registered: boolean;
   className?: string;
 }) {
+  // Deadline flag straight from context, so it doesn't have to thread through
+  // every InlineRegisterCta placement. Once closed the button is a disabled
+  // 신청 마감. See lib/registrationWindow.ts.
+  const { closed } = useRegister();
   return (
     <div className={`flex flex-col items-center gap-3 sm:flex-row sm:justify-center ${className}`}>
       <p className="max-w-md break-keep text-center text-sm leading-relaxed text-white/70 sm:text-left">
@@ -403,10 +408,15 @@ function InlineRegisterCta({
       <button
         type="button"
         onClick={() => openRegister()}
-        className="group inline-flex shrink-0 items-center gap-2 rounded-full border border-violet-400/40 bg-violet-500/15 px-5 py-2.5 text-sm font-bold text-violet-50 transition hover:-translate-y-0.5 hover:border-violet-400/70 hover:bg-violet-500/25"
+        disabled={closed && !registered}
+        className={
+          closed && !registered
+            ? "group inline-flex shrink-0 cursor-not-allowed items-center gap-2 rounded-full border border-white/12 bg-white/5 px-5 py-2.5 text-sm font-bold text-white/45"
+            : "group inline-flex shrink-0 items-center gap-2 rounded-full border border-violet-400/40 bg-violet-500/15 px-5 py-2.5 text-sm font-bold text-violet-50 transition hover:-translate-y-0.5 hover:border-violet-400/70 hover:bg-violet-500/25"
+        }
       >
-        {t(registered ? dict.register.navRegistered : dict.nav.register)}
-        {!registered && (
+        {t(registered ? dict.register.navRegistered : closed ? dict.register.closed : dict.nav.register)}
+        {!registered && !closed && (
           <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
             →
           </span>
@@ -433,6 +443,7 @@ function MobileStickyBar({
   openRegister: (preset?: RegisterPreset) => void;
   registerOpen: boolean;
 }) {
+  const { closed } = useRegister();
   const [past, setPast] = useState(false);
   const [atEnd, setAtEnd] = useState(false);
   // Same signal the header and the FAB use — the three move as one surface, so
@@ -512,9 +523,14 @@ function MobileStickyBar({
         <button
           type="button"
           onClick={() => openRegister()}
-          className="flex h-12 flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-4 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)]"
+          disabled={closed}
+          className={
+            closed
+              ? "flex h-12 flex-1 cursor-not-allowed items-center justify-center gap-1.5 rounded-full border border-white/12 bg-white/5 px-4 text-sm font-bold text-white/45"
+              : "flex h-12 flex-1 items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-4 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)]"
+          }
         >
-          {t(dict.stickyBar.register)}
+          {closed ? t(dict.register.closed) : t(dict.stickyBar.register)}
         </button>
       </div>
     </div>
@@ -660,6 +676,9 @@ function HookCards({
   // `compact` strips the quiz card's two tallest ornaments there and nowhere
   // else. If this ever stops tracking `stacked`, re-measure both cards.
   const compact = stacked;
+  // Deadline flag from context — reused across every HookCards placement (hero +
+  // both mid-page bands) so the register card can't read as open after 2:15.
+  const { closed } = useRegister();
   // Q1 answered inline. Handing the choice to /quiz via ?q1= means the bar
   // starts at 1/14 instead of throwing the answer away and asking again.
   const reduce = useReducedMotion();
@@ -699,21 +718,34 @@ function HookCards({
         <button
           type="button"
           onClick={() => openRegister({ joinType: "solo", wantsMatching: true })}
-          className="group flex flex-col items-start gap-2 rounded-2xl border border-violet-400/25 bg-violet-400/[0.07] p-4 text-left transition hover:border-violet-400/45 hover:bg-violet-400/[0.11]"
+          disabled={closed}
+          className={
+            closed
+              ? "group flex cursor-not-allowed flex-col items-start gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left"
+              : "group flex flex-col items-start gap-2 rounded-2xl border border-violet-400/25 bg-violet-400/[0.07] p-4 text-left transition hover:border-violet-400/45 hover:bg-violet-400/[0.11]"
+          }
         >
           <p className="text-xs font-medium text-white/60">{t(dict.register.hookRegisterQ)}</p>
-          {/* Same gradient + glow as the nav register button, so the primary
-              action looks identical wherever it appears. */}
-          <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition group-hover:-translate-y-0.5 group-hover:shadow-[0_0_28px_rgba(124,92,255,0.6)]">
-            {t(dict.register.hookRegisterCta)}
-            {/* Effort estimate as a chip rather than words in the label — the
-                label is already the longest thing in the card, and "3분" reads
-                faster as a badge than as a clause. */}
-            <span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[0.6rem] font-bold tracking-wide">
-              {t(dict.register.hookRegisterMinutes)}
+          {closed ? (
+            // Deadline passed: drop the gradient/glow and the effort chip, and
+            // just state 신청 마감 so the card can't read as still open.
+            <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-white/12 bg-white/5 px-5 py-2.5 text-sm font-bold text-white/45">
+              {t(dict.register.closed)}
             </span>
-            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </span>
+          ) : (
+            /* Same gradient + glow as the nav register button, so the primary
+               action looks identical wherever it appears. */
+            <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition group-hover:-translate-y-0.5 group-hover:shadow-[0_0_28px_rgba(124,92,255,0.6)]">
+              {t(dict.register.hookRegisterCta)}
+              {/* Effort estimate as a chip rather than words in the label — the
+                  label is already the longest thing in the card, and "3분" reads
+                  faster as a badge than as a clause. */}
+              <span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[0.6rem] font-bold tracking-wide">
+                {t(dict.register.hookRegisterMinutes)}
+              </span>
+              <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+            </span>
+          )}
           {/* The four objections, immediately under the button that acts on them.
               One key, so the hero card and both mid-page bands always agree. */}
           <p className="text-xs leading-relaxed text-white/60">{t(dict.register.reassure)}</p>
@@ -861,21 +893,11 @@ function HookCards({
 // dict.hero.countdownStartsAt이 같은 시각을 글로 말합니다. 하나를 고치면
 // 반드시 다른 하나도 고치세요.
 const LAUNCH_AT = new Date("2026-08-22T13:00:00+08:00").getTime();
-// 등록 마감. 시작(오후 1시)보다 1시간 15분 늦은 오후 2시 15분입니다.
-// DECIDED 2026-08-18: 오후 4시에서 당겼습니다. Day 1 쉬는 시간이 2:05–2:15이고
-// 그 직후가 문제 공개라, 과제를 보고 나서 등록하는 창을 열어두지 않습니다.
-// 마감은 그 쉬는 시간이 끝나는 시각과 같습니다 — days[0].runOfShow의 쉬는 시간
-// 줄을 옮기면 이 값도 함께 옮겨야 합니다.
-//
-// 이 1시간 15분 때문에 상수가 따로 필요합니다. 패널은 LAUNCH_AT에 카운트다운에서
-// Problem 뷰로 넘어가는데, 카운트다운에만 마감 안내를 두면 정작 마감 직전
-// 그 시간 동안 안내가 사라집니다. 그래서 Problem 뷰가 이 값을 보고 "아직
-// 등록할 수 있어요" 밴드를 띄우고, 마감이 지나면 스스로 내립니다.
-//
-// dict.hero.countdownDeadline / problemRegistrationOpen과 FAQ("일단 Day 1에 가
-// 보고…")가 이 시각을 글로 말합니다. 하나를 고치면 반드시 함께 고치세요.
-// LAUNCH_AT과 마찬가지로 오프셋(+08:00)을 문자열에 박아둡니다.
-const REGISTRATION_CLOSES_AT = new Date("2026-08-22T14:15:00+08:00").getTime();
+// 등록 마감(오후 2시 15분)은 이제 lib/registrationWindow.ts에 있습니다. 시각을
+// 보여주기만 하던 히어로 카운트다운·Problem 밴드 외에, 서버(app/api/register)와
+// 등록 CTA들이 같은 값을 봐야 실제로 마감이 걸리기 때문입니다. 왜 2:15인지(Day 1
+// 쉬는 시간과의 연동), 왜 오프셋을 박아두는지는 그 파일의 주석에 있습니다.
+// 여기서 값을 고치지 마세요 — 그 파일 한 곳에서만.
 // 기획/디자인 컨펌 단계에서만 true. 퍼블리시 시 false 로 바꾸면 탭이 숨겨지고
 // 날짜(LAUNCH_AT)에 따라서만 뷰가 결정된다.
 const PREVIEW_TABS = false;
@@ -3129,7 +3151,7 @@ function HeroPartnerStrip({ t }: { t: Tfn }) {
 // stays, so it can't flicker on scroll-up.
 function MobileRegisterBar() {
   const reduce = useReducedMotion();
-  const { openRegister, registered } = useRegister();
+  const { openRegister, registered, closed } = useRegister();
   const { t } = useLocale();
   const [visible, setVisible] = useState(false);
   const [atEnd, setAtEnd] = useState(false);
@@ -3201,15 +3223,23 @@ function MobileRegisterBar() {
             <button
               type="button"
               onClick={() => openRegister()}
+              disabled={closed && !registered}
               // Same role swap as the nav: once registered this is a status,
               // not the next action, so the chat icon beside it carries the fill.
+              // Past the deadline it becomes a muted, non-clickable 신청 마감.
               className={
                 registered
                   ? "inline-flex flex-1 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/[0.08] px-5 py-3 text-sm font-semibold text-emerald-200/90 transition active:scale-[0.99]"
-                  : "inline-flex flex-1 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition active:scale-[0.99]"
+                  : closed
+                    ? "inline-flex flex-1 cursor-not-allowed items-center justify-center rounded-full border border-white/12 bg-white/5 px-5 py-3 text-sm font-semibold text-white/45"
+                    : "inline-flex flex-1 items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition active:scale-[0.99]"
               }
             >
-              {registered ? t(dict.register.navRegistered) : t(dict.nav.register)}
+              {registered
+                ? t(dict.register.navRegistered)
+                : closed
+                  ? t(dict.register.closed)
+                  : t(dict.nav.register)}
             </button>
             {/* No longer icon-only: a bare speech bubble asks the visitor to guess
                 which service it opens, and open chat is the funnel's low-friction
@@ -3408,7 +3438,7 @@ function ScrollToTop() {
 
 export default function Journey() {
   const { t } = useLocale();
-  const { openRegister, registered, registerOpen } = useRegister();
+  const { openRegister, registered, registerOpen, closed } = useRegister();
   const reduce = useReducedMotion();
   const [active, setActive] = useState<BEvent | null>(null);
   const [activeDay, setActiveDay] = useState<number | null>(null); // day detail modal
@@ -3569,14 +3599,20 @@ export default function Journey() {
                     track("register_click", { src: "hero" });
                     openRegister();
                   }}
+                  disabled={closed && !registered}
                   // 네비·푸터와 같은 관례: 이미 등록한 방문자에게 이 버튼은 행동이
                   // 아니라 상태입니다. 라벨이 바뀌고 화살표는 빠집니다(갈 곳이
                   // 없으니까). 클릭은 그대로 열립니다 — 등록 정보를 다시 보려는
-                  // 사람에게 문을 잠글 이유가 없습니다.
-                  className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)] sm:px-8 sm:py-4 sm:text-base"
+                  // 사람에게 문을 잠글 이유가 없습니다. 마감(오후 2시 15분) 후에는
+                  // 눌리지 않는 신청 마감 상태가 됩니다.
+                  className={
+                    closed && !registered
+                      ? "group inline-flex cursor-not-allowed items-center gap-2 rounded-full border border-white/12 bg-white/5 px-5 py-3 text-sm font-bold text-white/45 sm:px-8 sm:py-4 sm:text-base"
+                      : "group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)] sm:px-8 sm:py-4 sm:text-base"
+                  }
                 >
-                  {t(registered ? dict.register.navRegistered : dict.nav.register)}
-                  {!registered && (
+                  {t(registered ? dict.register.navRegistered : closed ? dict.register.closed : dict.nav.register)}
+                  {!registered && !closed && (
                     <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                   )}
                 </button>
@@ -4902,10 +4938,15 @@ export default function Journey() {
             <button
               type="button"
               onClick={() => openRegister()}
-              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-violet-600/90 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-violet-500"
+              disabled={closed && !registered}
+              className={
+                closed && !registered
+                  ? "inline-flex shrink-0 cursor-not-allowed items-center gap-2 rounded-full border border-white/12 bg-white/5 px-6 py-3 text-sm font-semibold text-white/45"
+                  : "inline-flex shrink-0 items-center gap-2 rounded-full bg-violet-600/90 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-violet-500"
+              }
             >
-              {t(registered ? dict.register.navRegistered : dict.nav.register)}
-              {!registered && (
+              {t(registered ? dict.register.navRegistered : closed ? dict.register.closed : dict.nav.register)}
+              {!registered && !closed && (
                 <span aria-hidden className="transition-transform duration-300 hover:translate-x-1">→</span>
               )}
             </button>
@@ -4937,10 +4978,15 @@ export default function Journey() {
             <button
               type="button"
               onClick={() => openRegister()}
-              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
+              disabled={closed && !registered}
+              className={
+                closed && !registered
+                  ? "group inline-flex cursor-not-allowed items-center gap-2 rounded-full border border-white/12 bg-white/5 px-9 py-4 text-base font-bold text-white/45"
+                  : "group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
+              }
             >
-              {t(registered ? dict.register.navRegistered : dict.nav.register)}
-              {!registered && (
+              {t(registered ? dict.register.navRegistered : closed ? dict.register.closed : dict.nav.register)}
+              {!registered && !closed && (
                 <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
               )}
             </button>

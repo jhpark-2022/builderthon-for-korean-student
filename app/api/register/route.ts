@@ -12,6 +12,7 @@ import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { normalizeKakaoId } from "@/lib/kakao";
+import { isRegistrationClosed } from "@/lib/registrationWindow";
 
 // Uses a secret + a live DB → must not be statically evaluated at build time.
 export const dynamic = "force-dynamic";
@@ -92,6 +93,15 @@ const sinceIso = (minutes: number) =>
   new Date(Date.now() - minutes * 60_000).toISOString();
 
 export async function POST(req: Request) {
+  // ── Deadline ─────────────────────────────────────────────────────────────
+  // The real gate. The hero countdown and the "still open" band only DISPLAY
+  // the 2:15 PM SGT cutoff; without this a tab left open past 2:15, a replay, or
+  // a hand-rolled POST would still write a row. Server clock is the authority.
+  // Same instant everyone else reads — see lib/registrationWindow.ts.
+  if (isRegistrationClosed()) {
+    return NextResponse.json({ error: "registration_closed" }, { status: 403 });
+  }
+
   const supabase = getSupabaseAdmin();
   // Read directly rather than exporting it from supabaseAdmin: this is the only
   // consumer, and the value is used here purely as hash salt (see hashIp).

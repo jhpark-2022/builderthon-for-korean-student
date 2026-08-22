@@ -697,6 +697,14 @@ export default function RegisterModal({
           setStatus("idle");
           return;
         }
+        if (res.status === 403) {
+          // Deadline gate (lib/registrationWindow.ts): the form opened before
+          // 오후 2시 15분 and is being submitted after. Retrying can't succeed,
+          // so say closed rather than "try again".
+          setErrors({ submit: t(dict.register.errClosed) });
+          setStatus("idle");
+          return;
+        }
         if (!res.ok) throw new Error(`submit failed: ${res.status}`);
       } else {
         console.info("[register] payload (no endpoint configured):", payload);

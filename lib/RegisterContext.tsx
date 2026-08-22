@@ -18,11 +18,13 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import RegisterModal from "@/components/RegisterModal";
 import OpenChatNudge from "@/components/OpenChatNudge";
 import { OPENCHAT_NUDGE_KEY, REGISTERED_KEY } from "@/lib/storage";
+import { REGISTRATION_CLOSES_AT, isRegistrationClosed } from "@/lib/registrationWindow";
 
 // Optional starting state for the modal, so a CTA can express what it promised.
 // The hero's "팀이 없어도 괜찮아요 → 등록하고 팀 매칭 받기" card opens the form
@@ -39,6 +41,10 @@ interface RegisterContextValue {
   // Whether the modal is currently open — the mobile sticky bar has to hide
   // while it is, or it sits on top of the form it just opened.
   registerOpen: boolean;
+  // True once the deadline (2:15 PM SGT) has passed. Every register CTA reads
+  // this to render a disabled "신청 마감" state; openRegister() becomes a no-op.
+  // The API enforces the same cutoff independently — this is the UX half.
+  closed: boolean;
 }
 
 const RegisterContext = createContext<RegisterContextValue | null>(null);
@@ -52,6 +58,12 @@ export function useRegister(): RegisterContextValue {
 export function RegisterProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const [registered, setRegistered] = useState(false);
+  // Starts false to match the server's first paint (same pattern as
+  // `registered`), then corrected on mount and flipped live by a timer if the
+  // tab is open across the deadline. The API is the real gate; this drives UI.
+  const [closed, setClosed] = useState(false);
+  // Holds the pending deadline-flip timeout so the mount effect can clear it.
+  const deadlineTimer = useRef<number | undefined>(undefined);
   // Referrer captured from the URL on the auto-open path ("quiz" | "quiz-return").
   // The AI type is NEVER passed via the URL — it's read from this device's saved
   // result inside the modal (localStorage), so there's no cross-device leak.
@@ -65,6 +77,17 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
       if (window.localStorage.getItem(REGISTERED_KEY)) setRegistered(true);
     } catch {
       /* storage blocked — treat as not registered */
+    }
+
+    // Deadline: correct the flag on mount, then schedule the exact flip if the
+    // tab loaded before 2:15 and stays open — so a long-open page closes itself
+    // to the second instead of waiting for a refresh. setTimeout's ~24.8-day cap
+    // is far beyond this hours-away deadline.
+    if (isRegistrationClosed()) {
+      setClosed(true);
+    } else {
+      const ms = REGISTRATION_CLOSES_AT - Date.now();
+      deadlineTimer.current = window.setTimeout(() => setClosed(true), ms);
     }
 
     // Auto-open from the /quiz result CTA: /?register=1&ref=quiz[-return].
@@ -81,9 +104,22 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
         window.location.pathname + window.location.hash
       );
     }
+
+    return () => {
+      if (deadlineTimer.current !== undefined) {
+        window.clearTimeout(deadlineTimer.current);
+      }
+    };
   }, []);
 
   const openRegister = useCallback((next?: RegisterPreset) => {
+    // Past the deadline the form no longer opens — the CTAs are already in their
+    // disabled "신청 마감" state and the API would reject the POST anyway. Guard
+    // here too so a stale in-page trigger can't reopen it.
+    if (isRegistrationClosed()) {
+      setClosed(true);
+      return;
+    }
     setPreset(next ?? null);
     setOpen(true);
   }, []);
@@ -115,7 +151,7 @@ export function RegisterProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <RegisterContext.Provider value={{ openRegister, registered, registerOpen: open }}>
+    <RegisterContext.Provider value={{ openRegister, registered, registerOpen: open, closed }}>
       {children}
       <RegisterModal
         open={open}

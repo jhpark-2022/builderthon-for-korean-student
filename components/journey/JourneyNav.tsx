@@ -86,7 +86,7 @@ function useActiveSection(enabled: boolean) {
 export default function JourneyNav() {
   const { t, locale } = useLocale();
   const reduce = useReducedMotion();
-  const { openRegister, registered } = useRegister();
+  const { openRegister, registered, closed } = useRegister();
   const [scrolled, setScrolled] = useState(false);
   // Only observe once the rail exists — before that there is nothing to mark,
   // and the observer would run through the whole hero for nobody.
@@ -309,6 +309,7 @@ export default function JourneyNav() {
               <motion.button
                 type="button"
                 onClick={() => openRegister()}
+                disabled={closed && !registered}
                 initial={reduce ? false : { opacity: 0, x: 12 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={reduce ? undefined : { opacity: 0, x: 12 }}
@@ -328,10 +329,16 @@ export default function JourneyNav() {
                 className={
                   registered
                     ? "hidden shrink-0 items-center rounded-full border border-emerald-400/30 bg-emerald-400/[0.08] px-3.5 py-2 text-xs font-semibold text-emerald-200/90 transition hover:bg-emerald-400/15 sm:px-5 sm:py-2.5 sm:text-sm lg:inline-flex"
-                    : "hidden shrink-0 items-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-3.5 py-2 text-xs font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(124,92,255,0.6)] sm:px-5 sm:py-2.5 sm:text-sm lg:inline-flex"
+                    : closed
+                      ? "hidden shrink-0 cursor-not-allowed items-center rounded-full border border-white/12 bg-white/5 px-3.5 py-2 text-xs font-semibold text-white/45 sm:px-5 sm:py-2.5 sm:text-sm lg:inline-flex"
+                      : "hidden shrink-0 items-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-3.5 py-2 text-xs font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(124,92,255,0.6)] sm:px-5 sm:py-2.5 sm:text-sm lg:inline-flex"
                 }
               >
-                {registered ? t(dict.register.navRegistered) : t(dict.nav.register)}
+                {registered
+                  ? t(dict.register.navRegistered)
+                  : closed
+                    ? t(dict.register.closed)
+                    : t(dict.nav.register)}
               </motion.button>
             )}
           </AnimatePresence>

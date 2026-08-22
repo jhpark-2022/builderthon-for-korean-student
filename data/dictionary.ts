@@ -526,6 +526,11 @@ export const dict = {
     },
     // Nav scroll-revealed button + its post-registration label.
     navRegistered: { ko: "등록 완료 ✓", en: "Registered ✓" },
+    // Shown on every register CTA once the deadline (오후 2시 15분) passes — the
+    // button becomes this disabled label instead of opening the form. The API
+    // enforces the same cutoff, so this is the visible half of a closed door.
+    // See lib/registrationWindow.ts.
+    closed: { ko: "신청 마감", en: "Registration closed" },
     // Modal chrome.
     modalTitle: { ko: "빌더톤 등록", en: "Register for the Builderthon" },
     // Leads with the effort estimate: the question someone has with the form
@@ -769,6 +774,13 @@ export const dict = {
     errRateLimited: {
       ko: "요청이 너무 몰리고 있어요. 잠시 후 다시 시도해 주세요.",
       en: "Too many requests right now. Please try again in a moment.",
+    },
+    // 403 from the deadline gate — a modal opened before 오후 2시 15분 and
+    // submitted after. Retrying can't help, so the copy says it's closed rather
+    // than "try again". See lib/registrationWindow.ts.
+    errClosed: {
+      ko: "신청이 마감되었어요. 오픈채팅에서 다음 소식을 받아보세요.",
+      en: "Registration has closed. Follow our open chat for what's next.",
     },
   },
 
