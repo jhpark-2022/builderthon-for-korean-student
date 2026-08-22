@@ -293,8 +293,13 @@ export const partnerArticles: Record<string, PartnerArticle[]> = {
 export const dict = {
   nav: {
     about: { ko: "취지", en: "Why" },
+    // DECIDED 2026-08-22 (Day 1): nav 앵커 참가 대상 → 트랙. 등록이 마감된 뒤로
+    // "참가 대상"은 클릭 가치가 다했습니다 — 이제 와서 자격을 확인할 사람이
+    // 없습니다. 8/13 speakers와 같은 방식으로 라벨 키는 보존합니다. #join 섹션
+    // 자체는 그대로 있고, 앵커만 빠졌습니다.
     join: { ko: "참가 대상", en: "Who" },
     benefits: { ko: "혜택", en: "Benefits" },
+    tracks: { ko: "트랙", en: "Tracks" },
     program: { ko: "프로그램", en: "Program" },
     // DECIDED 2026-08-13 (안 A): nav 앵커 연사→멘토링 교체 — 참가자 클릭 가치
     // 기준. 링크 8개 폭 예산 유지. `speakers`는 nav에서 빠졌지만(현재 참조 없음)
@@ -381,6 +386,10 @@ export const dict = {
     // is the quiz, framed as an optional bit of fun, not as the way in — it used
     // to be the lead card, which sent people who wanted to register into a
     // 14-question personality test instead.
+    // 2026-08-22: 등록 마감으로 히어로에서 빠졌습니다 — 히어로의 두 훅 카드
+    // 인스턴스는 이제 dict.tracks의 트랙 카드를 렌더합니다(HookCards trackCard).
+    // 혜택 밴드의 인스턴스는 이 키들을 계속 씁니다(마감 상태에서는 CTA 자리가
+    // register.closed로 떨어집니다). 키를 지우지 마세요.
     hookRegisterQ: { ko: "팀이 없어도 괜찮아요", en: "No team? No problem." },
     hookRegisterSub: {
       ko: "이미 팀이 있다면 대표 1명이 팀 전체를 등록하면 돼요.",
@@ -943,8 +952,13 @@ export const dict = {
       en: "You can still register, closes 2:15PM today (Singapore time)",
     },
 
+    // ── 아래 problem* 키는 현재 참조가 없습니다 (2026-08-22) ──────────────
+    // 히어로의 카운트다운/Problem 패널이 제거되면서 렌더 지점이 사라졌습니다.
+    // 실제 과제 공개는 이제 #tracks 섹션(dict.tracks)이 담당하고, 이 키들이 말하던
+    // "공개 예정" 플레이스홀더는 사실로도 지났습니다. 되살릴 일이 있으면
+    // dict.tracks를 읽으세요 — 이 문자열을 그대로 다시 걸면 이미 공개된 것을
+    // 공개 예정이라고 말하게 됩니다.
     problemEyebrow: { ko: "이번 라운드의 과제", en: "This round's challenge" },
-    // TODO: confirm — 실제 문제가 확정되면 교체할 플레이스홀더.
     problemHeading: {
       ko: "실제 기업의 AX 과제가 여기서 공개됩니다.",
       en: "Real companies' AX problems are revealed here.",
@@ -2467,6 +2481,259 @@ export const dict = {
     },
   },
 
+  // ── 트랙 (Day 1 공개) ──────────────────────────────────────────────────────
+  // DECIDED 2026-08-22 (Day 1): 트랙 공개 — 저지먼트, 오토메이션, 출제 기업 코드프레소.
+  // 등록 마감으로 히어로의 등록 카드 자리를 트랙 카드로 교체, #tracks 섹션 신설,
+  // nav 참가 대상 → 트랙.
+  //
+  // ── 공개 수위 (위반 금지) ────────────────────────────────────────────────
+  // 출제 문제지 PDF는 대외비 문서입니다 (표지와 매 페이지 머리글에 표기가 있고,
+  // 2026-08-22에 공개 여부를 검토했다가 되돌렸습니다). public/에 두지도, 링크를
+  // 걸지도 마세요 — 전문은 참가자 채널로만 갑니다.
+  //
+  // 대신 웹에는 팀이 트랙을 고르는 데 필요한 만큼을 직접 씁니다. 실을 수 있는
+  // 것은 트랙 이름, 병목 정의, 대상 업무, 조직 상황, 업무가 흘러가는 단계,
+  // 회사가 풀고 싶은 것, 그리고 품질·승인 같은 제약 조건까지입니다.
+  //
+  // 실으면 안 되는 것은 셋입니다. 어기지 마세요:
+  //  · 내부 수치 — 채용 목표 인원, 공고당 접수 건수와 미검토 비율, 접수에서 면접
+  //    안내까지 걸리는 일수, 타사 이탈 건수. 병목의 존재는 단계 설명이 이미
+  //    증명하므로 숫자가 없어도 문장이 성립합니다.
+  //  · 실무자 인용문 — 직함이 붙은 실제 발언입니다. 옮기면 특정 개인이 자기 조직을
+  //    두고 한 말이 공개 페이지에 남습니다.
+  //  · 문제지 파일 자체와 그 링크.
+  //
+  // 두 카드의 body 첫 문장이 부정 대구처럼 보이는 것은 의도입니다. 트랙의
+  // 포지셔닝 문장이라 예외로 두는 것이고, 여기서 같은 어법을 늘리지 마세요.
+  tracks: {
+    tag: { ko: "트랙", en: "Tracks" },
+    heading: { ko: "트랙은 병목으로 나눴습니다", en: "Tracks are split by bottleneck" },
+    // 트랙 선택 마감(Day 2 종료 전)과 제출 창구(운영진 이메일)는 이미
+    // schedule.ts의 d1-problem-release.description이 정본이고, FAQ의 같은 문장이
+    // 사본입니다. 이 줄은 세 번째 사본이니 마감이 바뀌면 셋을 함께 고치세요.
+    intro: {
+      ko: "채용이냐 마케팅이냐가 아니라, 어느 병목을 풀고 싶은지로 고르면 됩니다. 두 문제 모두 출제 기업 코드프레소가 지금 실제로 겪고 있는 문제이고, 팀은 Day 2가 끝나기 전까지 하나를 골라 운영진 이메일로 알려주세요.",
+      en: "Not hiring versus marketing. You pick by which bottleneck you want to solve. Both problems are ones Codepresso, the company that set them, is living with right now. Pick one before Day 2 ends and email the organizers.",
+    },
+    // 아래 세 라벨은 두 트랙이 공유합니다. 트랙마다 다르게 부르면 서로 다른 종류의
+    // 문제처럼 읽힙니다 — 같은 틀에 담긴 두 문제여야 합니다.
+    situationTitle: { ko: "상황", en: "The situation" },
+    flowTitle: { ko: "지금은 이렇게 흐릅니다", en: "How the work flows today" },
+    goalTitle: { ko: "코드프레소가 풀고 싶은 것", en: "What Codepresso wants solved" },
+    // 상세(상황, 흐름, 목표, 제약)를 펼치고 접는 버튼. 기본은 접힌 상태입니다 —
+    // 두 트랙을 다 펼치면 이 섹션 하나가 화면 네 개 높이가 되고, 트랙을 "고르는"
+    // 자리여야 할 곳이 읽어내려가는 자리가 됩니다. 접힌 상태에서 보이는 것(이름,
+    // 병목 한 줄, 소개)만으로 고르는 판단이 서야 하고, 상세는 고른 다음 읽는
+    // 것입니다. 그래서 라벨이 "더 보기"가 아니라 "문제 자세히 보기"예요 — 무엇이
+    // 열리는지 말해야 누를지 말지가 정해집니다.
+    expand: { ko: "문제 자세히 보기", en: "See the full problem" },
+    collapse: { ko: "접기", en: "Show less" },
+    items: [
+      {
+        kicker: { ko: "문제 01 채용", en: "Problem 01 Hiring" },
+        title: { ko: "저지먼트 트랙", en: "Judgment track" },
+        bottleneck: {
+          ko: "판단할 시간도, 근거로 남는 기록도 없다",
+          en: "No time to judge, and no record to judge by",
+        },
+        body: {
+          ko: "최종 판단은 사람이 합니다. 문제는 그 판단에 쓸 시간도, 근거로 남는 기록도 없다는 것. 코드프레소의 채용 업무가 대상이에요. 판단을 기계에 넘기자는 이야기가 아닙니다. 사람이 판단에 시간을 쓸 수 있게 만드는 일이에요.",
+          en: "The final call stays with people. The problem: there is no time for that call, and no record it leaves behind. The case is Codepresso's hiring. This is not about handing the decision to a machine. It is about giving people back the time to decide.",
+        },
+        situation: {
+          ko: "코드프레소는 사업 확대에 맞춰 개발, 교육 기획, B2B 세일즈 직군을 채용하고 있습니다. 채용을 전담하는 인력은 한 명이고, 그 담당자가 급여와 총무 업무를 겸합니다. 별도의 채용 시스템은 없어요. 채용 플랫폼 두 곳과 자사 홈페이지 지원 폼, 엑셀, 슬랙, 구글 캘린더로 돌리고 있습니다.",
+          en: "Codepresso is hiring for engineering, curriculum and B2B sales as the business grows. One person owns hiring, and that person also handles payroll and general affairs. There is no applicant tracking system. It runs on two hiring platforms, the company's own application form, a spreadsheet, Slack and Google Calendar.",
+        },
+        // 백엔드 개발자 공고 한 건이 흘러가는 여섯 단계.
+        //
+        // label과 text를 나눈 이유가 두 가지입니다. 하나는 렌더 — 단계 이름이 굵게
+        // 서야 여섯 줄이 목록으로 읽힙니다. 다른 하나는 이 파일의 규칙입니다. 한
+        // 문자열에 담으면 이름과 설명 사이에 구분자가 필요하고, 이 사이트는 산문에
+        // em dash도 가운뎃점도 쓰지 않습니다. 구분이 필요하면 문자열을 나누세요.
+        //
+        // text는 "지금 하는 방식"에서 끝내지 말고 "그래서 벌어지는 일"까지 갑니다.
+        // 단계 이름만 나열하면 어디가 막혀 있는지가 안 보이고, 그게 이 트랙에서
+        // 유일하게 중요한 정보입니다.
+        flow: [
+          {
+            label: { ko: "공고 게시", en: "Posting" },
+            text: {
+              ko: "현업 리더가 쓴 직무기술서를 담당자가 공고문으로 옮겨 플랫폼 두 곳과 홈페이지에 올립니다. 담당자는 개발 직무를 잘 몰라 문서를 손보지 못하고 그대로 씁니다.",
+              en: "The hiring owner turns a team lead's job description into a listing and puts it on two platforms and the website. Not knowing the engineering role well, they post it as written.",
+            },
+          },
+          {
+            label: { ko: "지원 접수", en: "Applications" },
+            text: {
+              ko: "플랫폼 두 곳, 홈페이지 폼, 메일함으로 나뉘어 들어옵니다. 담당자가 매일 아침 세 곳을 열어 지원자를 엑셀로 옮겨 적어요.",
+              en: "They arrive split across two platforms, the web form and an inbox. Every morning the owner opens all three and copies applicants into a spreadsheet.",
+            },
+          },
+          {
+            label: { ko: "서류 검토", en: "Screening" },
+            text: {
+              ko: "이력서를 접수순으로 하나씩 열어봅니다. 다른 업무를 하면서 낼 수 있는 시간이 정해져 있어서, 늦게 지원한 사람은 아무리 뛰어나도 검토될 확률이 낮습니다.",
+              en: "Résumés are opened one by one in the order received. With only so much time to spare between other work, a late applicant is unlikely to be read at all, however strong.",
+            },
+          },
+          {
+            label: { ko: "현업 리더 검토", en: "Team-lead review" },
+            text: {
+              ko: "통과한 이력서를 슬랙 DM으로 전달합니다. 리더가 바빠 답이 늦게 오고, 답은 대개 한 줄이라 왜 아닌지가 적히지 않아요. 그래서 다음에도 같은 유형의 후보를 또 올리게 됩니다.",
+              en: "Shortlisted résumés go out as Slack DMs. Leads are busy, so replies come late and usually run to one line with no reason attached. The same kind of candidate gets sent up again next time.",
+            },
+          },
+          {
+            label: { ko: "면접 조율", en: "Scheduling" },
+            text: {
+              ko: "담당자가 지원자와 면접관 세 명의 일정을 메일로 맞춥니다. 이 사이에 “다른 회사에 합류하게 됐습니다”라는 답장이 반복해서 옵니다.",
+              en: "The owner lines up the candidate and three interviewers over email. During this stretch, “I've accepted another offer” comes back again and again.",
+            },
+          },
+          {
+            label: { ko: "면접과 최종 결정", en: "Interview and decision" },
+            text: {
+              ko: "면접관들이 슬랙 채널에 자유롭게 소감을 남기고, 주간 회의에서 구두로 결정합니다. 소감이 “좋았음” 수준이라 왜 뽑았고 왜 떨어뜨렸는지가 어디에도 남지 않아요. 탈락 통보는 전원 같은 문구입니다.",
+              en: "Interviewers drop impressions into a Slack channel and the call is made out loud in the weekly meeting. Impressions run to “good,” so why someone was picked or passed over is recorded nowhere. Rejections all go out in the same wording.",
+            },
+          },
+        ],
+        goals: [
+          { ko: "들어온 지원자를 다 열어보지 못한 채 채용이 끝나지 않을 것", en: "Hiring should not finish with most applicants never opened" },
+          { ko: "접수에서 면접 안내까지의 속도가 그대로 채용 경쟁력이 될 것", en: "The speed from application to first interview is the company's competitiveness" },
+          { ko: "누구를 왜 뽑았고 왜 떨어뜨렸는지가 조직에 남아, 채용을 거듭할수록 나아질 것", en: "Why someone was picked or passed over should stay with the organization, so hiring improves each round" },
+        ],
+        // 범위 밖을 명시하는 줄. body의 "판단을 기계에 넘기자는 이야기가 아닙니다"와
+        // 같은 말이지만, 저긴 소개고 여긴 제약 조건입니다 — 팀이 설계를 시작하는
+        // 자리에 있어야 해서 한 번 더 씁니다.
+        constraint: {
+          ko: "뽑고 떨어뜨리는 최종 판단을 기계에 맡기는 것은 범위 밖입니다. 사람이 해야 하는 판단에 시간과 근거를 되돌려주는 것이 과제예요.",
+          en: "Handing the final hire-or-pass decision to a machine is out of scope. The task is to give the human decision back its time and its evidence.",
+        },
+      },
+      {
+        kicker: { ko: "문제 02 마케팅 콘텐츠", en: "Problem 02 Marketing content" },
+        title: { ko: "오토메이션 트랙", en: "Automation track" },
+        bottleneck: {
+          ko: "여덟 단계가 사람 손을 거치지 않고 돌아가야 한다",
+          en: "Eight steps should run without human hands",
+        },
+        body: {
+          ko: "손으로 돌리고 있는 여덟 단계를 시스템에 넘기는 문제입니다. 단, 나온 결과물이 사람이 쓴 것과 구분되지 않아야 해요. 코드프레소의 마케팅 콘텐츠 운영이 대상입니다.",
+          en: "Eight steps currently run by hand move into a system. The catch: the output must be indistinguishable from what a person wrote. The case is Codepresso's marketing content operation.",
+        },
+        situation: {
+          ko: "마케팅 조직은 세 명입니다. 유튜브, 블로그(한국어와 영어), 링크드인, 뉴스레터, 언론 PR, 오프라인 세미나와 웨비나까지 여섯 채널을 이 인원으로 돌립니다. 이 회사에서 마케팅의 목표는 브랜딩이 아니라 기업 담당자의 문의예요. 조회수가 잘 나와도 문의로 이어지지 않으면 성과로 치지 않습니다.",
+          en: "The marketing team is three people. Between them they run six channels: YouTube, the blog in Korean and English, LinkedIn, the newsletter, press, and offline seminars and webinars. Marketing here is measured in enquiries from corporate buyers, not in branding. Views that never turn into an enquiry do not count as a result.",
+        },
+        // 콘텐츠 한 건이 아이디어에서 데이터로 남기까지의 여덟 단계. 이 여덟이
+        // 트랙 이름이자 병목 문장의 "여덟"입니다. 단계를 줄이거나 합치지 마세요.
+        //
+        // 여덟 번째의 text가 "없습니다"로 시작하는 것도 그대로 두세요. 마지막 칸이
+        // 비어 있다는 것이 이 문제의 핵심이라, 그럴듯한 내용으로 채우면 문제 자체가
+        // 사라집니다.
+        //
+        // label/text를 나눈 이유는 저지먼트 트랙 flow의 주석과 같습니다.
+        flow: [
+          {
+            label: { ko: "아이디어", en: "Ideas" },
+            text: {
+              ko: "담당자가 평소 본 업계 이슈나 회의 중에 나온 이야기에서 소재를 잡습니다. 어떤 주제가 실제 문의로 이어졌는지 데이터가 없어 소재 선정은 결국 각자의 감이에요.",
+              en: "Writers pick topics from industry news they happened to see or something raised in a meeting. With no data on which topics ever led to an enquiry, the choice comes down to instinct.",
+            },
+          },
+          {
+            label: { ko: "기획", en: "Planning" },
+            text: {
+              ko: "주간 회의에서 이번 주 주제와 채널, 일정을 말로 정합니다. 근거 자료 없이 진행되고, 정한 내용은 회의록 없이 각자 기억합니다.",
+              en: "The week's topics, channels and schedule are settled out loud in the weekly meeting. Nothing is evidenced, nothing is minuted, everyone remembers their own version.",
+            },
+          },
+          {
+            label: { ko: "원고 작성", en: "Drafting" },
+            text: {
+              ko: "빈 문서에서 시작합니다. 회사 소개 같은 반복 문단도 매번 새로 쓰거나 예전 글을 뒤져 복사해요. 쓰는 사람마다 문체와 용어가 다르고, 같은 제품을 글마다 다르게 부른 적도 있습니다.",
+              en: "From a blank document. Even boilerplate like the company description gets rewritten or hunted down in an old post. Voice and terminology vary by writer, and the same product has been named differently across posts.",
+            },
+          },
+          {
+            label: { ko: "편집", en: "Editing" },
+            text: {
+              ko: "교정, 이미지와 썸네일 제작, 영상 편집까지 각자 알아서 합니다. 편집 퀄리티가 개인 역량에 좌우되고 썸네일 스타일도 사람마다 제각각이에요.",
+              en: "Proofing, images, thumbnails and video are each person's own job. Quality tracks whoever did it, and thumbnail styles differ person to person.",
+            },
+          },
+          {
+            label: { ko: "업로드", en: "Publishing" },
+            text: {
+              ko: "채널별 관리 툴에 하나하나 접속해 등록합니다. 제목과 요약, 태그를 채널 형식에 맞게 고치는 것이 전부 수작업입니다.",
+              en: "Each channel's tool is opened one at a time. Reworking the title, summary and tags to each channel's format is all done by hand.",
+            },
+          },
+          {
+            label: { ko: "SNS 확산", en: "Amplification" },
+            text: {
+              ko: "발행한 글을 링크드인 등에 다시 올리는 2차 작업입니다. 일이 밀리면 제일 먼저 생략되는 단계라, 공들여 쓴 글이 한 채널에만 올라가고 묻히는 일이 많아요.",
+              en: "Reposting what shipped onto LinkedIn and elsewhere. It is the first step dropped when work piles up, so a piece someone laboured over often lands on one channel and dies there.",
+            },
+          },
+          {
+            label: { ko: "성과 취합", en: "Reporting" },
+            text: {
+              ko: "매주 채널 툴 네 곳에 들어가 숫자를 스프레드시트로 옮겨 적습니다. 취합한 숫자는 보고하고 나면 끝입니다.",
+              en: "Every week, four channel dashboards are opened and the numbers copied into a spreadsheet. Once reported, that is the end of them.",
+            },
+          },
+          {
+            label: { ko: "데이터 축적", en: "Accumulation" },
+            text: {
+              ko: "없습니다. 쌓인 성과가 다음 주 아이디어로 돌아가지 않아요. 어떤 콘텐츠가 문의를 만들었는지 추적이 안 돼서, 마케팅 성과를 숫자로 증명할 방법이 없습니다.",
+              en: "There is none. Results never travel back into next week's ideas. Because no one can trace which piece produced an enquiry, there is no way to prove marketing's results in numbers.",
+            },
+          },
+        ],
+        goals: [
+          { ko: "여덟 단계가 사람 손을 거치지 않고 돌아갈 것", en: "The eight steps should run without passing through human hands" },
+          { ko: "사람이 개입하는 지점은 두 곳. 각 단계 결과물을 확인하고 승인하는 것, 그리고 쌓인 데이터로 성과를 해석해 다음 방향을 정하는 것", en: "People step in at two points: approving each step's output, and reading the accumulated data to set the next direction" },
+          { ko: "쌓인 데이터가 버려지지 않고 다음 콘텐츠 기획에 다시 반영될 것", en: "The data that accumulates should feed back into planning instead of being discarded" },
+        ],
+        // 이 트랙의 제약이 저지먼트 트랙보다 긴 이유: 품질 기준과 승인 절차가 둘 다
+        // 설계를 바꿉니다. "무난한 글을 많이"가 이 회사 기준에서 실패라는 것을
+        // 빼면, 팀이 만들 수 있는 가장 쉬운 답이 곧 오답이 됩니다.
+        constraint: {
+          ko: "전제 조건은 품질입니다. 자동으로 만들어진 결과물이 경력 있는 마케터가 직접 쓴 것과 구분되지 않아야 하고, 코드프레소의 톤과 코드프레소만 할 수 있는 이야기가 살아 있어야 해요. 무난한 글이 대량으로 쏟아지는 것은 이 회사 기준에서 자동화가 아니라 사고입니다. 여기에 더해, 고객사명과 가격, 계약 조건이 잘못 나가면 사고이기 때문에 모든 콘텐츠는 발행 전에 경영진 컨펌을 거칩니다.",
+          en: "Quality is the precondition. What comes out automatically has to be indistinguishable from an experienced marketer's own writing, and it has to keep Codepresso's voice and the things only Codepresso can say. Bland copy at volume is not automation by this company's standard, it is an incident. On top of that, every piece is signed off by leadership before it ships, because getting a client name, a price or a contract term wrong is an incident too.",
+        },
+      },
+    ],
+    // 두 카드 아래 한 줄 박스. 자료 요청 경로는 FAQ의 같은 문장과 한 몸입니다
+    // (DECIDED 2026-08-14, 코드프레소 협의) — 한쪽만 고치지 마세요.
+
+    note: {
+      ko: "무엇을 어디까지 어떻게 풀지는 팀이 정합니다. 의뢰서 전문(실무자들의 이야기와 내부 수치까지)은 참가자에게 전달되고, 필요한 자료와 데이터는 운영진에게 문의하면 됩니다.",
+      en: "What to solve, how far, and how is your team's call. The full brief (down to what the people doing the work say, and the internal numbers) goes to participants, and you can ask the organizers for the materials and data you need.",
+    },
+
+    // ── 히어로 훅 카드 ────────────────────────────────────────────────────────
+    // 2026-08-22부터 히어로에서 등록 카드가 있던 자리입니다. 등록이 마감돼
+    // 페이지의 1순위 액션이 등록에서 트랙으로 넘어왔으므로, 등록 카드가 쓰던
+    // 바이올렛 그라데이션 필을 그대로 물려받습니다. 카드 전체가 버튼이고 #tracks로
+    // 스크롤합니다.
+    hookLabel: { ko: "트랙이 공개됐어요", en: "The tracks are out" },
+    // 라벨 줄이라 구분자는 이 파일의 U+2002입니다 (·가 아니라).
+    hookLines: [
+      {
+        ko: "저지먼트 판단할 시간도, 근거로 남는 기록도 없다",
+        en: "Judgment no time to judge, no record to judge by",
+      },
+      {
+        ko: "오토메이션 여덟 단계가 사람 손 없이 돌아가야 한다",
+        en: "Automation eight steps, no human hands",
+      },
+    ],
+    hookCta: { ko: "트랙 자세히 보기", en: "See the tracks" },
+  },
+
   // ── 연사 · 공유 세션 (Day 1·7·8) ────────────────────────────────────────────
   speakers: {
     tag: { ko: "연사 공유 세션", en: "Speaker sessions" },
@@ -3507,7 +3774,13 @@ export const dict = {
           // 그 세션에 걸려 있습니다. 딥다이브를 되살리지 않기로 하면 이 절을 함께
           // 정리해야 합니다(문제가 Day 1에 공개된다는 나머지 부분은 그대로 사실).
           // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-          // 앞의 구체 예시('회사 돈이 어디서…')가 이미 '가상이 아님'을 증명합니다.
+          // 앞의 구체 예시가 이미 '가상이 아님'을 증명합니다.
+          //
+          // DECIDED 2026-08-22 (Day 1): 트랙 헤지 청산. "메인 트랙 2개로 좁혀
+          // 논의 중"이 확정 서술로 바뀌었고, 예시도 가상의 '회사 돈이 어디서 새는지'
+          // 대신 실제 병목(저지먼트 트랙의 한 줄)을 씁니다 — 진짜 문제가 공개된
+          // 마당에 지어낸 예시를 옆에 두면 그쪽이 더 커 보입니다. 병목 문장의
+          // 정본은 dict.tracks.items[0].bottleneck이고 이 줄은 사본입니다.
           //
           // DECIDED 2026-08-14 (코드프레소 협의): 의뢰서 내용물에서 '데이터'를 빼고
           // 요청 경로를 한 문장으로 붙였습니다. 과제는 내부 데이터 없이도, 공개된
@@ -3522,8 +3795,8 @@ export const dict = {
           // mailto와 위 kakaoInvite 답변이 이미 쓰고 있는 것과 같은 주소라, 새 상수를
           // 만들지 않고 같은 문자열을 씁니다 — 주소가 바뀌면 이 파일 안의 세 자리와
           // schedule.ts의 d1-problem-release를 함께 고치세요.
-          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다. 예를 들어 ‘회사 돈이 어디서 새는지 눈에 안 보인다’ 같은 실무 문제요. Day 1에 문제가 공개되고, 과제를 낸 코드프레소가 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자와 형식은 조율 중). 의뢰서에는 그 회사의 업무 워크플로우와 담당자가 겪는 불편, 관련 맥락이 담깁니다. 진행 중 특정 자료와 데이터가 필요해지면 운영진에게 문의해 주세요. 문제를 낸 코드프레소가 필요한 만큼 전달합니다. 트랙 구성은 메인 트랙 2개로 좁혀 논의 중이며 확정되는 대로 안내합니다. 트랙 선택은 Day 2(8월 23일 일요일)가 끝나기 전까지 정해 pjh030924@gmail.com 으로 알려주시면 됩니다.",
-          en: "You take on the AX (AI-transformation) problems a Korean company is facing right now, one set per track, practical things like “we can't see where the company's money is leaking.” They come as briefs: the problems drop on Day 1 and Codepresso, which set them, walks through the background first-hand (presenter and format still being arranged). Each brief carries the company's real workflow, the pain points of the person who owns it, and the context around it. If your team needs particular materials or data along the way, ask the organizers, and Codepresso, which set the problems, will send over what you need. The line-up has been narrowed to two main tracks, and we'll announce them once settled. Your track choice is due by the end of Day 2 (Sunday 23 August): email it to pjh030924@gmail.com.",
+          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다. 예를 들어 ‘판단할 시간도, 근거로 남는 기록도 없다’ 같은 실무 문제요. Day 1에 문제가 공개되고, 과제를 낸 코드프레소가 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자와 형식은 조율 중). 의뢰서에는 그 회사의 업무 워크플로우와 담당자가 겪는 불편, 관련 맥락이 담깁니다. 진행 중 특정 자료와 데이터가 필요해지면 운영진에게 문의해 주세요. 문제를 낸 코드프레소가 필요한 만큼 전달합니다. 트랙은 저지먼트와 오토메이션 두 개입니다. 어떤 병목인지는 트랙 섹션에 정리해 뒀어요. 트랙 선택은 Day 2(8월 23일 일요일)가 끝나기 전까지 정해 pjh030924@gmail.com 으로 알려주시면 됩니다.",
+          en: "You take on the AX (AI-transformation) problems a Korean company is facing right now, one set per track, practical things like “there is no time to judge, and no record to judge by.” They come as briefs: the problems drop on Day 1 and Codepresso, which set them, walks through the background first-hand (presenter and format still being arranged). Each brief carries the company's real workflow, the pain points of the person who owns it, and the context around it. If your team needs particular materials or data along the way, ask the organizers, and Codepresso, which set the problems, will send over what you need. There are two tracks, Judgment and Automation. The tracks section lays out which bottleneck each one is. Your track choice is due by the end of Day 2 (Sunday 23 August): email it to pjh030924@gmail.com.",
         },
       },
       // MERGED 2026-08-11: 두 항목이 하나가 됐습니다 — "문과인데 이과생들에게

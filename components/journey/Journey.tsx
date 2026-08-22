@@ -649,6 +649,7 @@ function HookCards({
   chatSrc,
   stacked = false,
   withQuestion = false,
+  trackCard = false,
 }: {
   t: Tfn;
   ownResultId: string | null;
@@ -669,6 +670,12 @@ function HookCards({
   // Ignored for a returning visitor — they have a result; re-asking Q1 as the
   // headline of their card would be a step backwards.
   withQuestion?: boolean;
+  // DECIDED 2026-08-22 (Day 1): 등록이 마감되면서 히어로의 등록 카드는 죽은
+  // CTA가 됐고, 그 자리를 트랙 카드가 받습니다. 카드 1을 등록에서 트랙으로
+  // 바꾸는 스위치입니다 — 히어로의 두 인스턴스(데스크톱 우측 열, 모바일 스택)만
+  // 켭니다. 혜택 밴드의 인스턴스는 그대로 등록 카드를 렌더하고, 마감 상태에서는
+  // 이미 "신청 마감"으로 떨어집니다.
+  trackCard?: boolean;
 }) {
   // The hero is the one place the register CTA must be unambiguously the
   // biggest thing on screen, and there the two cards sit one above the other.
@@ -710,10 +717,37 @@ function HookCards({
           Letting each card keep its own height costs a ragged bottom edge and
           buys back the hierarchy. */}
       <div className={`grid gap-3 ${stacked ? "" : "sm:grid-cols-2"} ${askQ ? "items-start" : ""}`}>
-        {/* The WHOLE card is the button — the CTA used to be a text link inside a
-            dead card, so the obvious tap target (the card) did nothing. One
-            <button> keeps it a single tab stop and rules out nested interactives;
-            the pill inside is a styled span, not another control. */}
+        {/* Card 1 — the page's primary action. Until 2026-08-22 that was always
+            registration; with registration closed the hero renders the TRACK
+            card here instead (trackCard), and it inherits the violet gradient
+            pill for exactly that reason: the pill marks whatever the first
+            action on the page is, and that moved from 등록 to 트랙.
+            The whole card is one control in both variants — an <a> for the
+            track card (it is a jump to #tracks, same as the quiz card's link)
+            and a <button> for register (it opens a modal). */}
+        {trackCard ? (
+        <a
+          href="#tracks"
+          className="group flex flex-col items-start gap-2 rounded-2xl border border-violet-400/25 bg-violet-400/[0.07] p-4 text-left transition hover:border-violet-400/45 hover:bg-violet-400/[0.11]"
+        >
+          <p className="text-xs font-medium text-white/60">{t(dict.tracks.hookLabel)}</p>
+          {/* 트랙명과 병목 한 줄. 카드에서 유일하게 사실을 나르는 부분이라
+              CTA 위에 둡니다 — 필은 "더 보기"고, 이 두 줄이 "무엇을". */}
+          <div className="flex w-full flex-col gap-1">
+            {dict.tracks.hookLines.map((line) => (
+              <p key={line.en} className="break-keep text-xs leading-relaxed text-white/75">
+                {t(line)}
+              </p>
+            ))}
+          </div>
+          {/* 등록 카드가 쓰던 그라데이션 + 글로우 그대로. nav의 등록 버튼과
+              같은 모양이 페이지의 1순위 액션을 표시합니다. */}
+          <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition group-hover:-translate-y-0.5 group-hover:shadow-[0_0_28px_rgba(124,92,255,0.6)]">
+            {t(dict.tracks.hookCta)}
+            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </span>
+        </a>
+        ) : (
         <button
           type="button"
           onClick={() => openRegister({ joinType: "solo", wantsMatching: true })}
@@ -750,6 +784,7 @@ function HookCards({
           <p className="text-xs leading-relaxed text-white/60">{t(dict.register.reassure)}</p>
           <p className="text-[11px] leading-relaxed text-white/60">{t(dict.register.hookRegisterSub)}</p>
         </button>
+        )}
         {/* Card 2 — the quiz. Promoted from a text link inside a dead panel to a
             whole-card link: the tap target was ~20px and the copy read as a
             disclaimer, which is most of why 6 of 115 weekly visitors tried it.
@@ -881,6 +916,129 @@ const dayHasSelfPaced = (dayNum: number) =>
 // in-person mode to report either.
 const dayIsSelfPaced = (dayNum: number) =>
   dayHasSelfPaced(dayNum) && realSessions(dayNum).length === 0;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TRACK PANEL — one of the two problems, with its detail behind a toggle.
+//
+// DECIDED 2026-08-22: 상세를 접었습니다. 처음엔 상황·흐름·목표·제약을 전부 펼친
+// 채로 뒀는데, 두 트랙을 합치면 이 섹션 하나가 화면 네 개 높이였습니다. 트랙
+// 섹션의 일은 "고르게 하는 것"이고 상세는 고른 다음에 읽는 것이라, 접힌 상태에
+// 고르는 데 필요한 것만 남깁니다: 이름, 병목 한 줄, 소개 세 문장.
+//
+// 접힌 것이 기본입니다. 하나를 열어두면 그 트랙이 추천처럼 읽히는데, 이 섹션의
+// 논지는 두 트랙이 대등하다는 것입니다.
+//
+// 펼친 뒤의 배치: 위 줄은 상황 | 흐름(2단), 아래 줄은 목표 | 제약(2단). 흐름이
+// 여섯에서 여덟 줄로 제일 길어서 상황과 나란히 놓아야 높이가 맞고, 모바일에서는
+// 그대로 접혀 상황 → 흐름 → 목표 → 제약 순서로 읽힙니다. 읽는 순서가 곧 문제를
+// 이해하는 순서라 이 넷의 앞뒤를 바꾸지 마세요.
+// ─────────────────────────────────────────────────────────────────────────────
+function TrackPanel({ tr, t, idx }: { tr: (typeof dict.tracks.items)[number]; t: Tfn; idx: number }) {
+  const [open, setOpen] = useState(false);
+  const detailId = `track-detail-${idx}`;
+  // 소제목은 넷이 같은 모양이어야 한 패널 안의 같은 층위로 읽힙니다.
+  const subhead = "text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/45";
+  return (
+    <Glass>
+      {/* 접혀 있어도 늘 보이는 부분 — 트랙을 고르는 데 필요한 전부입니다. */}
+      <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-emerald-200/90">
+        {t(tr.kicker)}
+      </p>
+      <p className="mt-3 break-keep text-[clamp(1.35rem,2.8vw,1.75rem)] font-bold leading-snug text-white">
+        {t(tr.title)}
+      </p>
+      {/* 병목 한 줄이 이 패널에서 가장 강한 문장입니다 — 트랙을 고르는 기준이
+          이름이 아니라 병목이라는 것이 이 섹션의 논지라서요.
+
+          max-w-3xl은 읽는 길이 때문입니다. 접힌 패널은 폭을 나눌 상대가 없어서
+          그냥 두면 이 두 줄이 1000px을 넘어가고, 한 줄을 다 읽고 다음 줄 앞으로
+          돌아오는 눈의 이동이 그만큼 길어집니다. 펼친 뒤의 본문은 2단으로 갈라져
+          이미 이 폭 안이라 따로 걸지 않습니다. */}
+      <p className="mt-3 max-w-3xl break-keep rounded-xl border border-emerald-400/25 bg-emerald-400/[0.07] px-4 py-3 text-sm font-semibold leading-relaxed text-emerald-50/95">
+        {t(tr.bottleneck)}
+      </p>
+      <p className="mt-3 max-w-3xl break-keep text-sm leading-relaxed text-white/70">{t(tr.body)}</p>
+
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls={detailId}
+        className="mt-5 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-5 py-2.5 text-xs font-bold text-white/80 transition hover:border-emerald-400/40 hover:bg-emerald-400/[0.08] hover:text-white"
+      >
+        {t(open ? dict.tracks.collapse : dict.tracks.expand)}
+        <span
+          aria-hidden
+          className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+        >
+          ▾
+        </span>
+      </button>
+
+      {open && (
+        <div id={detailId} className="mt-7 flex flex-col gap-7 border-t border-white/10 pt-7">
+          <div className="grid gap-7 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-10">
+            <div>
+              <p className={subhead}>{t(dict.tracks.situationTitle)}</p>
+              <p className="mt-3 break-keep text-sm leading-relaxed text-white/65">
+                {t(tr.situation)}
+              </p>
+            </div>
+            <div>
+              <p className={subhead}>{t(dict.tracks.flowTitle)}</p>
+              {/* 번호는 <ol>이 의미로 갖고, 눈에 보이는 숫자 칩은 장식이라
+                  aria-hidden입니다. 스크린리더가 "1. 1. 공고 게시"로 읽지 않게
+                  하려는 것 — 목록 자체가 이미 순서를 말합니다. */}
+              <ol className="mt-3 flex flex-col gap-2.5">
+                {tr.flow.map((step, i) => (
+                  <li key={i} className="flex gap-3">
+                    <span
+                      aria-hidden
+                      className="mt-[1px] flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-emerald-400/25 bg-emerald-400/[0.08] text-[0.6rem] font-black text-emerald-200/90"
+                    >
+                      {i + 1}
+                    </span>
+                    <span className="break-keep text-[0.8rem] leading-relaxed text-white/70">
+                      {/* 단계 이름과 설명은 별개의 키입니다(dictionary의 flow 주석
+                          참고). 사이를 잇는 구분자를 여기에 넣지 마세요 — 굵기
+                          차이가 이미 경계를 만듭니다. */}
+                      <span className="font-bold text-white/90">{t(step.label)}</span>{" "}
+                      {t(step.text)}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+
+          <div className="grid gap-7 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-10">
+            <div>
+              <p className={subhead}>{t(dict.tracks.goalTitle)}</p>
+              <ul className="mt-3 flex flex-col gap-2">
+                {tr.goals.map((g, i) => (
+                  <li key={i} className="flex gap-2.5">
+                    <span aria-hidden className="mt-[2px] shrink-0 text-emerald-300/70">✓</span>
+                    <span className="break-keep text-sm font-medium leading-relaxed text-white/80">
+                      {t(g)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* 제약 조건. 목표 옆이고 톤이 한 단 낮습니다 — 팀이 무엇을 만들지
+                정한 직후에 읽어야 하는 줄이라서요.
+
+                self-start가 없으면 그리드가 이 <p>를 옆 칸(목표 3줄) 높이까지
+                늘려서, 두 문장짜리 상자 아래에 빈 칸이 그만큼 남습니다. */}
+            <p className="self-start break-keep rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-[0.8rem] leading-relaxed text-white/60">
+              {t(tr.constraint)}
+            </p>
+          </div>
+        </div>
+      )}
+    </Glass>
+  );
+}
 
 // Self-paced build as a quiet, NON-INTERACTIVE line — no badge, no
 // "자세히 보기", nothing to click. Rendered as a session card it read as one
@@ -3414,6 +3572,7 @@ export default function Journey() {
                 openRegister={openRegister}
                 chatSrc={null}
                 stacked
+                trackCard
               />
             </div>
           </motion.div>
@@ -3444,6 +3603,7 @@ export default function Journey() {
             openRegister={openRegister}
             className="mx-auto mt-6 max-w-xl lg:hidden"
             chatSrc={null}
+            trackCard
           />
         </div>
       </Chapter>
@@ -3668,6 +3828,48 @@ export default function Journey() {
             withQuestion
           />
         </div>
+      </Chapter>
+
+      {/* ── CH 2.7 · TRACKS ────────────────────────────────────────── */}
+      {/* DECIDED 2026-08-22 (Day 1): 트랙 공개 — 저지먼트, 오토메이션, 출제 기업
+          코드프레소. 등록 마감으로 히어로의 등록 카드 자리를 트랙 카드로 교체하고,
+          이 섹션을 신설했으며, nav는 참가 대상 대신 트랙을 가리킵니다.
+
+          자리는 혜택 다음, 프로그램 앞입니다. "무엇을 얻나"를 읽은 직후에 오는
+          질문이 "그래서 뭘 푸나"이고, 노선도(프로그램)는 그 답을 이미 아는 사람이
+          보는 것이기 때문입니다.
+
+          어법은 기존 섹션 그대로입니다 — Eyebrow 태그, 헤딩, 글래스 카드 그리드.
+          트랙에만 쓰는 새 시각 언어를 만들지 마세요. 카드가 두 장뿐이라 세 장짜리
+          그리드와 달리 sm에서 바로 2열로 갑니다.
+
+          공개 수위: 출제 문제지 PDF는 대외비입니다. 여기 렌더되는 것은 dict.tracks의
+          문자열뿐이고, 그 블록의 주석이 무엇을 실을 수 있고 무엇을 실을 수 없는지
+          갖고 있습니다. 문제지 파일을 public/에 두거나 링크를 걸지 마세요. */}
+      <Chapter id="tracks" align="center">
+        <Eyebrow color="emerald">{t(dict.tracks.tag)}</Eyebrow>
+        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+          {t(dict.tracks.heading)}
+        </h2>
+        <p className="mx-auto mt-5 max-w-2xl break-keep text-base leading-relaxed text-white/70">
+          {t(dict.tracks.intro)}
+        </p>
+
+        {/* 두 트랙은 위아래로 쌓입니다. 상세를 펼치면 한 트랙이 화면 하나를 넘게
+            쓰기 때문에, 2단으로 나란히 놓으면 한쪽을 펼쳤을 때 반대쪽에 빈 칸이
+            그만큼 생깁니다. 접고 펴는 것은 각 패널이 알아서 합니다(TrackPanel).
+            여기서 하나만 열리게 묶지 마세요 — 두 문제를 비교하려면 둘 다 펼친
+            상태로 오갈 수 있어야 합니다. */}
+        <div className="mt-10 flex flex-col gap-5 text-left">
+          {dict.tracks.items.map((tr, i) => (
+            <TrackPanel key={tr.title.en} tr={tr} t={t} idx={i} />
+          ))}
+        </div>
+
+        <p className="mx-auto mt-6 break-keep rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 text-left text-sm leading-relaxed text-white/65">
+          {t(dict.tracks.note)}
+        </p>
+
       </Chapter>
 
       {/* ── CH 3 · PROGRAM ─────────────────────────────────────────── */}

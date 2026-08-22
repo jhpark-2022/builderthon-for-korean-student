@@ -22,10 +22,17 @@ import ReturningGreeting from "./ReturningGreeting";
 // 페이지에서 가장 큰 챕터인데 앵커가 없었고, #speakers는 프로그램 바로 다음이라
 // 프로그램 앵커로 닿으며 연사 정보는 Day 카드에도 반복됩니다. #speakers 섹션은
 // 그대로 있습니다 — 사라진 것은 앵커뿐입니다.
+//
+// DECIDED 2026-08-22 (Day 1): 트랙 공개 — 저지먼트, 오토메이션, 출제 기업
+// 코드프레소. nav 앵커 참가 대상(#join) → 트랙(#tracks). 등록이 마감된 뒤로
+// "참가 대상"은 클릭 가치가 다했고, 지금 이 페이지의 1순위 독자는 이미 들어온
+// 참가자입니다. 링크 8개 폭 예산은 그대로입니다(교체지 추가가 아님). 배열 순서는
+// 페이지 순서를 따라야 하므로 tracks는 benefits 뒤, program 앞에 옵니다 —
+// #tracks 섹션이 바로 그 사이에 있습니다. #join 섹션은 그대로 있습니다.
 const anchors = [
   { id: "about",     label: dict.nav.about },
-  { id: "join",      label: dict.nav.join },
   { id: "benefits",  label: dict.nav.benefits },
+  { id: "tracks",    label: dict.nav.tracks },
   { id: "program",   label: dict.nav.program },
   { id: "mentoring", label: dict.nav.mentoring },
   // The "For partners" pitch chapter (#why-partner) was removed, so this now
