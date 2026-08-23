@@ -1456,14 +1456,25 @@ export const schedule: BEvent[] = [
     },
     // 모달이 스스로 말하는 것은 여기서 반복하지 않습니다: 연사 소속은 연사 행,
     // 시각은 시간 행, 강의실은 장소 행, 그리고 신원·권한·툴·승인·감사 · 회계
-    // 자동화 사례 · 사전 질문은 바로 아래 opportunities에 이미 그대로 있습니다.
-    // 남은 두 문장은 다른 어디에도 없는 것뿐입니다 — 왜 들을 만한지, 그리고 누가
-    // 올 수 있는지. 특히 "등록 무관, 세 학교 누구나"는 이 문장이 유일한 출처라
-    // 지우면 정보가 사라집니다.
+    // 자동화 사례는 바로 아래 opportunities에 이미 그대로 있습니다.
+    //
+    // // DECIDED 2026-08-23 (모바일 감사 2차): ko 카피 속 영어 and 제거, 지난 사전
+    // 세션 과거형 전환, 중간 밴드 카드 중복 해소, 하단 바 컴팩트화, 트랙 kicker 정리.
+    //
+    // 이 세션은 8/13에 이미 열렸습니다. 배지는 "지난 사전 세션"인데 열어 보면
+    // "~직접 이야기합니다 / 누구나 올 수 있습니다"라 아직 열릴 것처럼 말하고
+    // 있었어요. 과거형 기록으로 바꿉니다.
+    //
+    // "등록 무관, 세 학교 누구나"는 이 문장이 유일한 출처였는데, 이제 참가 자격이
+    // 아니라 누가 왔었는지를 말하는 사실입니다. 그래서 남기되 시제만 옮겼어요 —
+    // 지우면 이 세션이 빌더톤 참가자 전용이었던 것처럼 읽힙니다.
+    //
+    // ko 문장 안에 있던 영어 "and"("NUS and NTU, SMU")도 여기서 함께 사라집니다.
+    // 한국어 나열은 쉼표로 붙입니다 (dictionary.ts 하우스 스타일).
     description: {
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-      ko: "빌더톤이 시작되기 전, 기업 현장에서 AI를 설계하고 배포해 온 사람이 직접 이야기합니다. 데모는 2초면 되지만 실제 서비스까지는 몇 달이 걸리는 이유, 엔터프라이즈 AI 에이전트가 보기보다 어려운 지점을 다룹니다. 빌더톤 등록 여부와 무관하게 NUS and NTU, SMU 한인 학생이면 누구나 올 수 있습니다.",
-      en: "Before the builderthon starts, an evening with someone who designs and ships enterprise AI for a living: why a 2-second demo takes months to reach production, and where enterprise AI agents turn out to be harder than they look. Open to any Korean student at NUS, NTU or SMU, whether or not you register for the builderthon.",
+      ko: "빌더톤이 시작되기 아흐레 전, 기업 현장에서 AI를 설계하고 배포해 온 사람이 직접 이야기한 세션입니다. 데모는 2초면 되지만 실제 서비스까지는 몇 달이 걸리는 이유, 엔터프라이즈 AI 에이전트가 보기보다 어려운 지점을 다뤘어요. 빌더톤 등록 여부와 무관하게 NUS, NTU, SMU 한인 학생이면 누구나 올 수 있는 자리였습니다.",
+      en: "Nine days before the builderthon, an evening with someone who designs and ships enterprise AI for a living: why a 2-second demo takes months to reach production, and where enterprise AI agents turned out to be harder than they look. It was open to any Korean student at NUS, NTU or SMU, whether or not they were taking part in the builderthon.",
     },
     // This is the ONLY SMU venue left in the schedule. Day 1 used to share the
     // same law school ("SMU YPHSL B2-03") and this note asked for the two to be
@@ -1484,7 +1495,9 @@ export const schedule: BEvent[] = [
       { ko: "챗봇과 에이전트의 차이: 신원과 권한, 툴, 승인, 감사까지 붙어야 일이 된다", en: "What separates a chatbot from an agent: identity, permissions, tools, approval, audit" },
       { ko: "기업 에이전트가 어려운 6가지 이유와, 실제 구축된 회계 자동화 에이전트 사례", en: "The six reasons enterprise agents are hard, and a real accounts-payable agent that works" },
       { ko: "빌더톤 과제를 풀 때 바로 쓸 수 있는 설계 관점", en: "An architecture lens you can take straight into the builderthon problems" },
-      { ko: "사전 질문을 받아 세션에 반영합니다. 오픈채팅으로 보내면 돼요", en: "Questions collected in advance and worked into the session, so send them via the open chat" },
+      // 2026-08-23: "사전 질문을 받아 세션에 반영합니다. 오픈채팅으로 보내면 돼요"가
+      // 빠졌습니다. 세션이 이미 끝나서 받을 질문이 없습니다. 나머지 셋은 무엇을
+      // 다뤘는지를 말하는 줄이라 그대로 둡니다 — 지금도 유효한 정보예요.
     ],
   },
   // ─── DAY 1 · Opening · Problem Release (08.22) ──────────────────────────────

@@ -476,7 +476,11 @@ function MobileStickyBar({
   return (
     <div
       aria-label={t(dict.stickyBar.aria)}
-      className={`fixed inset-x-0 bottom-0 z-40 sm:hidden ${shown ? "pointer-events-auto" : "pointer-events-none"}`}
+      // 2026-08-23: 컨테이너는 언제나 pointer-events-none이고, 클릭을 받는 것은
+      // 알약 자신뿐입니다. 바가 풀폭일 때는 컨테이너가 곧 알약이라 상관없었는데,
+      // 내용 폭으로 줄이면서 알약 양옆의 빈 자리가 남았습니다 — 거기서 탭이
+      // 먹히면 아래 본문을 누를 수 없습니다.
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 sm:hidden"
       style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
     >
       <div
@@ -484,7 +488,8 @@ function MobileStickyBar({
         // touching either button, both of which stay at h-12 (48px).
         // focus-within overrides the hidden transform so tabbing into the bar
         // can never scroll it away from under the keyboard.
-        className={`mx-3 flex items-center gap-2 rounded-full border border-white/12 bg-[#0b0817]/92 p-1 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.9)] backdrop-blur-md transition duration-300 focus-within:translate-y-0 focus-within:opacity-100 ${
+        // 2026-08-23: mx-3(풀폭) → justify-center. 알약은 자기 내용 폭만 씁니다.
+        className={`mx-3 flex items-center justify-center gap-2 transition duration-300 focus-within:translate-y-0 focus-within:opacity-100 ${
           shown ? "translate-y-0 opacity-100" : "translate-y-24 opacity-0"
         }`}
       >
@@ -512,7 +517,9 @@ function MobileStickyBar({
             rel="noopener noreferrer"
             aria-label={t(dict.nav.openChatAria)}
             onClick={() => track("openchat_click", { src: "sticky" })}
-            className="flex h-12 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/35 bg-violet-500/10 px-4 text-sm font-bold text-violet-100"
+            className={`inline-flex h-12 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/35 bg-[#0b0817]/92 px-6 text-sm font-bold text-violet-100 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.9)] backdrop-blur-md ${
+              shown ? "pointer-events-auto" : "pointer-events-none"
+            }`}
           >
             <ChatGlyph className="h-4 w-4 shrink-0" />
             {t(dict.nav.openChat)}
@@ -635,6 +642,7 @@ function HookCards({
   chatSrc,
   stacked = false,
   withQuestion = false,
+  withTrackCard = true,
 }: {
   t: Tfn;
   ownResultId: string | null;
@@ -654,6 +662,15 @@ function HookCards({
   // Ignored for a returning visitor — they have a result; re-asking Q1 as the
   // headline of their card would be a step backwards.
   withQuestion?: boolean;
+  // DECIDED 2026-08-23 (모바일 감사 2차): 혜택 밴드에서 트랙 카드를 뺍니다.
+  // 히어로의 트랙+퀴즈 페어가 혜택 밴드에 통째로 한 번 더 있어서, 폰에서 몇 화면
+  // 간격으로 똑같은 카드 두 장을 다시 보게 됐습니다. 히어로가 먼저 나오고 그쪽이
+  // 페이지의 1순위 액션 자리라, 중복을 걷어내는 쪽은 밴드입니다.
+  //
+  // 퀴즈 카드는 남깁니다. 밴드의 퀴즈는 Q1이 접혀 들어간 변형이라(withQuestion)
+  // 히어로 쪽과 모양이 달라 반복으로 읽히지 않고, 트랙과 달리 이 자리에서만
+  // 할 수 있는 행동입니다.
+  withTrackCard?: boolean;
 }) {
   // The hero is the one place the register CTA must be unambiguously the
   // biggest thing on screen, and there the two cards sit one above the other.
@@ -690,7 +707,7 @@ function HookCards({
           match it — leaving the page's primary CTA as a box that is half empty
           space, which reads as the weaker of the two. Letting each card keep its
           own height costs a ragged bottom edge and buys back the hierarchy. */}
-      <div className={`grid gap-3 ${stacked ? "" : "sm:grid-cols-2"} ${askQ ? "items-start" : ""}`}>
+      <div className={`grid gap-3 ${stacked || !withTrackCard ? "" : "sm:grid-cols-2"} ${askQ ? "items-start" : ""}`}>
         {/* Card 1 — the page's primary action.
             2026-08-22까지는 언제나 등록이었습니다. 등록이 마감되면서 세 배치가 전부
             트랙 카드가 됐고, 분기가 필요 없어져 등록 쪽 가지를 걷어냈습니다.
@@ -699,6 +716,7 @@ function HookCards({
             바이올렛 그라데이션 필을 그대로 쓰는 이유: 이 필은 "등록"의 표식이
             아니라 "페이지의 1순위 행동"의 표식이고, 그 자리가 등록에서 트랙으로
             넘어왔을 뿐입니다. */}
+        {withTrackCard && (
         <a
           href="#tracks"
           className="group flex flex-col items-start gap-2 rounded-2xl border border-violet-400/25 bg-violet-400/[0.07] p-4 text-left transition hover:border-violet-400/45 hover:bg-violet-400/[0.11]"
@@ -720,6 +738,7 @@ function HookCards({
             <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </span>
         </a>
+        )}
         {/* Card 2 — the quiz. Promoted from a text link inside a dead panel to a
             whole-card link: the tap target was ~20px and the copy read as a
             disclaimer, which is most of why 6 of 115 weekly visitors tried it.
@@ -943,29 +962,39 @@ function TrackPanel({ tr, t, idx }: { tr: (typeof dict.tracks.items)[number]; t:
         {/* RIGHT — 흐름 칩 + 액션. lg에서만 옆 칸이고 그 아래에서는 그냥 다음
             블록입니다. */}
         <div className="mt-7 lg:mt-0">
-          {/* 흐름 칩 스트립. 접힌 상태에 상시 노출입니다.
+          {/* 흐름 칩 스트립. 접힌 상태에만 나옵니다.
               이유가 셋인데 한 수로 풀립니다. (1) 밀도 — 비어 있던 오른쪽 칸이
               찹니다. (2) 차별화 — 저지먼트 6개, 오토메이션 8개라 두 트랙의 얼굴이
               달라집니다. (3) 논지 — 오토메이션의 병목 문장은 "여덟 단계"라고
               주장하는데 정작 여덟 단계를 하나도 안 보여주고 있었습니다. 고르는 데
               필요한 증거가 전부 접혀 있던 셈이에요.
-              여기는 label만 씁니다. text까지 오면 접은 의미가 없어집니다. */}
-          <h4 className={subhead}>{t(dict.tracks.flowTitle)}</h4>
-          {/* role="list" — Tailwind preflight가 list-style을 지우면 Safari/VoiceOver가
-              목록 시맨틱까지 함께 잃습니다. 아래 목표 <ul>도 같은 이유. */}
-          <ol role="list" className="mt-3 flex flex-wrap gap-2">
-            {tr.flow.map((step, i) => (
-              <li
-                key={i}
-                className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[0.72rem] font-semibold text-white/75"
-              >
-                <span aria-hidden className="text-[0.6rem] font-black text-emerald-300/80">
-                  {i + 1}
-                </span>
-                {t(step.label)}
-              </li>
-            ))}
-          </ol>
+              여기는 label만 씁니다. text까지 오면 접은 의미가 없어집니다.
+
+              DECIDED 2026-08-23 (모바일 감사 2차): 펼치면 숨깁니다. 상세에 같은
+              소제목("지금은 이렇게 흐릅니다")과 같은 단계가 전문으로 다시 서서,
+              펼친 순간 화면에 같은 목록이 두 번 있었습니다. 칩 스트립의 일은
+              "접힌 채로 고를 수 있게 하는 것"이라 펼친 뒤에는 할 일이 없어요.
+              접으면 그대로 돌아옵니다. */}
+          {!open && (
+            <>
+              <h4 className={subhead}>{t(dict.tracks.flowTitle)}</h4>
+              {/* role="list" — Tailwind preflight가 list-style을 지우면 Safari/VoiceOver가
+                  목록 시맨틱까지 함께 잃습니다. 아래 목표 <ul>도 같은 이유. */}
+              <ol role="list" className="mt-3 flex flex-wrap gap-2">
+                {tr.flow.map((step, i) => (
+                  <li
+                    key={i}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[0.72rem] font-semibold text-white/75"
+                  >
+                    <span aria-hidden className="text-[0.6rem] font-black text-emerald-300/80">
+                      {i + 1}
+                    </span>
+                    {t(step.label)}
+                  </li>
+                ))}
+              </ol>
+            </>
+          )}
 
           <button
             ref={toggleRef}
@@ -975,7 +1004,7 @@ function TrackPanel({ tr, t, idx }: { tr: (typeof dict.tracks.items)[number]; t:
             aria-controls={detailId}
             /* w-full은 폰에서만 — 한 손으로 쥔 상태의 타깃이 카드 폭 전체가
                됩니다. sm부터는 내용 폭으로 돌아갑니다. */
-            className={`mt-5 w-full sm:w-auto ${ctrl}`}
+            className={`${open ? "" : "mt-5"} w-full sm:w-auto ${ctrl}`}
           >
             {t(open ? dict.tracks.collapse : dict.tracks.expand)}
             {/* 두 패널의 토글이 접근성 이름까지 똑같으면(“문제 자세히 보기” 둘)
@@ -3400,7 +3429,7 @@ function MobileChatBar() {
           // `sm:hidden`): two fixed bars at bottom-0, two register buttons, and
           // after this change two open-chat buttons as well. The phone rail is the
           // pill bar; this one starts where that one stops.
-          className="fixed inset-x-0 bottom-0 z-40 hidden border-t border-white/10 bg-[#06040f]/90 px-4 pt-2 backdrop-blur sm:block lg:hidden"
+          className="pointer-events-none fixed inset-x-0 bottom-0 z-40 hidden px-4 pt-2 sm:block lg:hidden"
           style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)" }}
         >
           {/* DECIDED 2026-08-22 (마감 후 청산): 등록 버튼이 빠지고 오픈채팅이
@@ -3409,7 +3438,13 @@ function MobileChatBar() {
               여는지 방문자가 짐작해야 하고, 오픈채팅은 지금 이 페이지에서 유일하게
               살아 있는 문이라 이름으로 찾는 대상입니다. aria-label은 더 긴
               "카카오톡 오픈채팅방 열기"로 그대로 둡니다. */}
-          <div className="flex items-center gap-2">
+            {/* DECIDED 2026-08-23 (모바일 감사 2차): 풀폭 바에서 내용 폭 필로.
+                오픈채팅 바와 바로 위 맨위로 FAB이 정지 상태마다 하단 180px 남짓을
+                점유하면서 본문 한 줄을 덮고 있었습니다. 오픈채팅은 지금 이 페이지에서
+                유일하게 살아 있는 문이지만 그래도 보조 액션이라, 화면 폭 전체를
+                가로지를 이유는 없어요. 색과 보더는 그대로 두고 폭만 내용에 맞춥니다.
+                등장 조건, chromeHidden, 스크롤 동작은 하나도 건드리지 않았습니다. */}
+          <div className="flex items-center justify-center gap-2">
             {links.openChat && (
               <a
                 href={links.openChat}
@@ -3417,7 +3452,7 @@ function MobileChatBar() {
                 rel="noopener noreferrer"
                 aria-label={t(dict.nav.openChatAria)}
                 onClick={() => track("openchat_click", { src: "mobile-bar" })}
-                className="inline-flex h-12 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/45 bg-violet-500/15 px-4 text-sm font-bold text-violet-100 shadow-[0_0_18px_rgba(124,92,255,0.28)] transition active:scale-95"
+                className="pointer-events-auto inline-flex h-12 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/45 bg-[#06040f]/92 px-6 text-sm font-bold text-violet-100 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.9)] backdrop-blur transition active:scale-95"
               >
                 <ChatGlyph className="h-5 w-5 shrink-0" />
                 {t(dict.nav.openChat)}
@@ -4111,9 +4146,10 @@ export default function Journey() {
           <HookCards
             t={t}
             ownResultId={ownResultId}
-            className="mx-auto mt-10 max-w-xl"
+            className="mx-auto mt-10 max-w-md"
             chatSrc="band"
             withQuestion
+            withTrackCard={false}
           />
         </div>
       </Chapter>

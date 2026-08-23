@@ -2620,7 +2620,11 @@ export const dict = {
         // 상태의 단계 숫자 칩과 같은 사각 칩으로 서고, 나머지가 텍스트로 옆에
         // 붙습니다. num은 두 로케일이 같아서 Phrase가 아니라 문자열입니다.
         num: "01",
-        kicker: { ko: "문제 채용", en: "Problem Hiring" },
+        // DECIDED 2026-08-23 (모바일 감사 2차): kicker에서 "문제"를 뗐습니다.
+        // 번호를 칩으로 분리하면서 "문제 채용" "문제 마케팅 콘텐츠"라는 어색한
+        // 명사구가 남아 있었어요. 01/02 칩이 이미 "몇 번 문제인가"를 말하니
+        // 텍스트는 대상 업무만 부르면 됩니다.
+        kicker: { ko: "채용", en: "Hiring" },
         title: { ko: "저지먼트 트랙", en: "Judgment track" },
         bottleneck: {
           ko: "판단할 시간도, 근거로 남는 기록도 없다",
@@ -2703,7 +2707,7 @@ export const dict = {
       },
       {
         num: "02",
-        kicker: { ko: "문제 마케팅 콘텐츠", en: "Problem Marketing content" },
+        kicker: { ko: "마케팅 콘텐츠", en: "Marketing content" },
         title: { ko: "오토메이션 트랙", en: "Automation track" },
         bottleneck: {
           ko: "여덟 단계가 사람 손을 거치지 않고 돌아가야 한다",
@@ -3736,7 +3740,7 @@ export const dict = {
     // EN은 원래부터 문장형("organized and run by …")이라 그대로 둡니다.
     // 사실은 하나도 바뀌지 않았습니다 — 주체·역할·순서 모두 그대로입니다.
     note: {
-      ko: "주최는 5개 사가 결성한 컨소시엄 AXMOS입니다(실제 기업 과제는 구성사인 코드프레소가 냅니다). 행사는 SMU and NUS, NTU 한인 학생회가 주관하고 운영하며, 장소와 마케팅, 멘토링, 굿즈는 후원사들이 맡아 함께합니다. 각 파트너가 맡은 역할을 그대로 표기합니다.",
+      ko: "주최는 5개 사가 결성한 컨소시엄 AXMOS입니다(실제 기업 과제는 구성사인 코드프레소가 냅니다). 행사는 SMU, NUS, NTU 한인 학생회가 주관하고 운영하며, 장소와 마케팅, 멘토링, 굿즈는 후원사들이 맡아 함께합니다. 각 파트너가 맡은 역할을 그대로 표기합니다.",
       en: "Built with AXMOS, the host consortium of five companies (the real company problem comes from Codepresso, one of them), organized and run by the SMU, NUS, NTU Korean student associations, and supported by sponsors covering venue, marketing, mentoring and goods. Each partner is labelled with the role they actually play.",
     },
     // ── Tier 1 · 주최 (the AXMOS consortium) ─────────────────────────────────
@@ -3839,21 +3843,17 @@ export const dict = {
     tag: { ko: "FAQ", en: "FAQ" },
     heading: { ko: "자주 묻는 질문", en: "Frequently asked" },
     items: [
-      {
-        // EDIT 2026-08-11: 질문 톤 소프트닝. 옛 질문은 "왜 8일이나 하나요?
-        // 해커톤치고 길지 않나요?"였습니다 — 읽는 사람의 걱정을 대신 말해주는
-        // 대신 행사를 변호하게 만드는 형태라, 걱정 그대로("길게 느껴져요")와
-        // 그 걱정이 실제로 묻는 것("매일 나가야 하나")으로 바꿨습니다. 답의 첫
-        // 문장(=필참은 이틀)이 새 질문의 직답으로 그대로 섭니다.
-        q: { ko: "8일 일정이 길게 느껴져요. 매일 참여해야 하나요?", en: "Eight days sounds like a lot. Do I need to be there every day?" },
-        a: {
-          // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-          // 앞 문장의 "필참은 이틀"이 이미 '매일 안 나와도 된다'를 증명하므로
-          // 부정 절을 덜어냈습니다.
-          ko: "시간을 통으로 내야 하는 날은 사실 이틀입니다. 필참은 Day 1(오프닝)과 Day 8(8/29 결과 공유회)뿐이고, 나머지는 각자 편한 시간에 하는 자율 빌드와 선택 참여 세션입니다. 8일로 늘린 건 학기 중에도 크래시 코스로 배우고 → 만들고 → 발표까지 가는 호흡을 만들기 위해서예요.",
-          en: "Only two days actually need blocking out: Day 1 (opening) and Day 8 (29 Aug, the Showcase) are the only required ones. Everything else is self-paced building on your own time, plus optional sessions. Stretching it to eight days is what makes room, mid-semester, for the full arc of learning at the crash course → building → presenting.",
-        },
-      },
+      // DECIDED 2026-08-23 (모바일 감사 2차): 순서를 참가자 우선으로 다시
+      // 짰습니다. 항목도 답변도 건드리지 않았고 배열 순서만 바꿨습니다.
+      //
+      // 앞줄이 아직 모집 시절이었습니다 — "코딩도 발표도 자신이 없어요",
+      // "혼자 참가해도 되나요", "지금도 등록할 수 있나요"가 위에 있고, 지금
+      // 참가자가 실제로 찾는 것(무슨 문제를 푸나, 어떤 툴을 쓰나, 멘토는 어떻게
+      // 배정되나, 어워드 기준은)이 아래에 묻혀 있었어요. 모집형 셋은 지우지
+      // 않고 맨 뒤로 보냅니다 — 늦게 알게 된 사람에게는 여전히 답이 필요합니다.
+      //
+      // 이 목록은 인덱스로만 렌더됩니다(Journey.tsx의 items.map). 순서에 기대는
+      // 코드는 없으니 다음에도 자유롭게 다시 짜세요.
       {
         // EDIT 2026-08-11: 질문 톤 소프트닝. 옛 질문은 "테마가 뭔가요? 너무
         // 막연해요."였는데, 뒷절이 불만이라 답이 해명처럼 읽혔습니다. 정작
@@ -3895,275 +3895,18 @@ export const dict = {
           en: "You take on the AX (AI-transformation) problems a Korean company is facing right now, one set per track, practical things like “there is no time to judge, and no record to judge by.” They come as briefs: the problems drop on Day 1 and Codepresso, which set them, walks through the background first-hand (presenter and format still being arranged). Each brief carries the company's real workflow, the pain points of the person who owns it, and the context around it. If your team needs particular materials or data along the way, ask the organizers, and Codepresso, which set the problems, will send over what you need. There are two tracks, Judgment and Automation. The tracks section lays out which bottleneck each one is. Your track choice is due by the end of Day 2 (Sunday 23 August): email it to pjh030924@gmail.com.",
         },
       },
-      // MERGED 2026-08-11: 두 항목이 하나가 됐습니다 — "문과인데 이과생들에게
-      // 밀리지 않을까요?"와 "‘해커톤’이라는 말이 부담돼요. 영어 발표도 자신
-      // 없어요." 서로 다른 질문처럼 보이지만 독자가 같은 사람입니다: 내가 여기
-      // 낄 자격이 되나. 둘을 나란히 두면 같은 사람이 같은 걱정을 두 번 물어보고
-      // 두 번 안심받는 모양이 되고, 그 사이에 놓인 항목들이 밀려납니다. 자리는
-      // 원래 '문과' 항목의 자리(세 번째)를 씁니다 — 이 걱정은 일정·주제를 확인한
-      // 직후에 오지, FAQ 중반에 오지 않습니다.
-      //
-      // DECIDED 2026-08-04: all presentations incl. the Showcase pitches are in
-      // KOREAN. This is final — do not reintroduce "choose your language" hedging
-      // here or anywhere else. If an English-speaking participant ever needs an
-      // exception, that's handled by the organizers case-by-case, not promised on
-      // the site. (병합 전 '해커톤' 항목에 붙어 있던 결정입니다. 항목이 사라져도
-      // 결정은 살아 있으므로 병합본이 그대로 받습니다.)
+      // 툴 질문은 바로 위 "크래시코스를 건너뛰어도 되나요" 옆이 자리입니다 — 같은 사람이
+      // 연달아 묻는 두 질문이고(경험자·도구), 초보는 "Codex를 사야 하나"를 여기서
+      // 확인합니다. 답의 순서가 곧 요지: ① 강의만 Codex 기준 ② 빌드는 자유
+      // ③ 그래서 기본 플랜이면 충분 — ③의 근거는 무엇을 보느냐입니다.
+      // 배점(프로세스 대 작동의 비율)은 파트너 조율 중이라 숫자를 쓰지 않고,
+      // 피드백 문서가 확정적으로 말하는 것만 씁니다: 완성도·발표력은 보지 않음.
       {
-        q: { ko: "코딩도 발표도 자신이 없어요. 괜찮을까요?", en: "I'm not confident about coding or presenting. Is that okay?" },
-        a: {
-          // 배점 숫자는 여기에도 쓰지 않습니다 — 아래 "피드백과 어워드는 어떤
-          // 기준인가요?" 답변과 같은 계약입니다. 피드백 문서 자체는 2026-08-04
-          // 결정으로 참가자에게 사전 공개하지만, 배점은 아직 파트너 조율 중이라
-          // 카피에 숫자를 박으면 곧 낡습니다. 숫자는 피드백 문서가 나르게 두고,
-          // 여기서는 무게가 실리는 '방향'만.
-          // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-          //
-          // "화면의 세련됨은 보지 않습니다"는 병합하면서 뺐습니다. 같은 말이
-          // 네 곳에 있었고, 그 문장의 집은 기준 항목("피드백과 어워드는 어떤
-          // 기준인가요?")의 '보지 않는 것' 목록입니다. 여기서는 와이어프레임
-          // 수준이어도 된다는 앞 문장이 이미 같은 일을 합니다.
-          ko: "네, 괜찮습니다. 코드 실력을 겨루는 대회가 아니에요. 피드백의 무게는 문제를 얼마나 정확히 이해했는가, 그 위에 세운 아이디어가 적절한가, 데모가 그 아이디어를 실제로 증명하는가에 실려 있어요. 프로토타입은 와이어프레임 수준이어도 됩니다. 발표는 전부 한국어예요. 참가자도, 피드백을 주시는 전문가분들도 한인 커뮤니티 기반이라 영어 걱정은 내려놓으셔도 돼요. 8일에 걸쳐 만드는 빌더톤이라 밤을 새울 일도 없고, 코딩 기본기는 Day 2 크래시코스에서 맞춰 드립니다. 산업 맥락을 아는 사람이 오히려 유리한 구조예요.",
-          en: "Yes, you'll be fine. This isn't a contest of coding ability. The weight of the feedback sits on how accurately you understand the problem, whether the idea you build on it is the right one, and whether the demo actually proves that idea. A wireframe-level prototype is fine. Presentations are all in Korean, and both the participants and the experts giving feedback come from the Korean community here, so you can put the English worry down. It's a builderthon built over eight days, so there's no all-nighter, and the Day 2 Crash Course levels the coding basics for everyone. If anything, the structure favours people who understand the industry context.",
-        },
-      },
-      {
-        // EDIT 2026-08-11: 질문 톤 소프트닝. 옛 질문은 "수료증을 주나요? 의미가
-        // 있나요?"였습니다 — 뒷절이 수료증의 가치를 먼저 깎아놓고 시작해서, 답의
-        // 마지막 문장(경험자에겐 멘토링이 더 크다)이 그 의심을 인정하는 말이
-        // 아니라 변명처럼 읽혔습니다. 묻는 것만 묻게 두고, 무게에 대한 판단은
-        // 답이 스스로 하게 둡니다.
-        q: { ko: "수료증도 받을 수 있나요?", en: "Do we get certificates?" },
-        a: {
-          ko: "네, 두 장입니다. 크래시코스 전 시간을 참석하면 크래시코스 수료증을 마지막 날 PDF로 보내드리고, 공유회 발표까지 마치면 완주 수료증을 Day 8 현장에서 실물로 드립니다. 둘 다 Zero100 명의로 발급되고, 링크드인과 이력서에 올릴 수 있어요. 이미 개발 경험이 있다면 수료증보다 멘토링과 네트워킹이 더 큰 수확일 거예요.",
-          en: "Yes, two of them. Attend the full Crash Course and the Crash Course certificate reaches you as a PDF on the final day; go all the way through your Showcase pitch and you're handed a printed completion certificate on Day 8. Both are issued by Zero100 and ready for LinkedIn and your CV. If you already build, the mentoring and network will matter more than the paper.",
-        },
-      },
-      // Q1 spine (2026-08-01), placed straight after the certificate question —
-      // that is where a reader is already thinking about what they keep. The three
-      // artefacts are the same three in benefits.spine.tangibles, and the
-      // certificate's conditions are worded exactly as they are on benefits card
-      // 05 and in the certificate FAQ above ("크래시코스 전 시간 참석" · "공유회
-      // 발표까지"): four places, one sentence, no drift.
-      {
-        q: { ko: "8일이 끝나면 저에게 뭐가 남나요?", en: "What do I walk away with after the 8 days?" },
+        q: { ko: "어떤 AI 툴을 써야 하나요? Codex를 꼭 써야 하나요?", en: "Which AI tool do I need? Do I have to use Codex?" },
         a: {
           // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-          // 꼬리의 "가상 과제가 아니라…" 문장을 첫 항목 안으로 접었습니다.
-          //
-          // ABSORBED 2026-08-11: "제가 여기서 얻는 게 뭔가요?" 항목을 지우면서
-          // 그 답에만 있던 두 가지(1:1 멘토링·행사 후 커뮤니티)를 마지막 문장으로
-          // 받았습니다. 두 질문은 사실상 같은 질문이었는데 FAQ 중반과 후반에
-          // 떨어져 있어서, 뒤엣것이 앞엣것의 메아리로 읽혔습니다.
-          //
-          // Day 8 커리어 간담회는 여기 넣지 마세요. 인턴십 답변과 멘토 답변이 이미
-          // 그 세션을 말합니다 — 세 번째 사본을 만들면 이 답이 다시 목록이 됩니다.
-          // 첫 문장의 "세 가지"는 실물(benefits.spine.tangibles)만 세는 숫자이고,
-          // 마지막 문장은 실물 밖의 것이라 그 숫자에 들어가지 않습니다.
-          ko: "세 가지가 실물로 남습니다. 실제 기업이 낸 문제를 풀어 돌아가는 데모, 기업과 업계 전문가 앞에서 피칭한 경험(사진으로 남는), 그리고 수료증 두 장(크래시코스 전 시간 참석 시 크래시코스 수료증, 공유회 발표까지 마치면 완주 수료증). 실물 밖으로는 현직 선배들과의 1:1 멘토링, 그리고 행사 후에도 이어지는 커뮤니티가 남고요.",
-          en: "Three things you can actually show: a demo that runs on a real company's problem, the experience of pitching it to that company and to industry experts (photos included), and two certificates (one for attending the full Crash Course, one for going all the way through your Showcase pitch). Beyond the tangibles, you keep the 1:1 mentoring with people already working in the field, and a community that carries on after the event.",
-        },
-      },
-      {
-        // EDIT 2026-08-11: 질문 톤 소프트닝. 옛 질문은 "인턴십이 진짜인가요?
-        // 유급인가요?"였습니다 — 우리가 대신 써 준 의심이라, 사이트가 스스로
-        // 미덥지 않다고 말하는 자리가 됐습니다. 유급 여부는 실제로 많이 묻는
-        // 것이라 그대로 두고, 앞절만 "어떻게 연결되나"로 바꿉니다. 그 편이
-        // 답의 실제 내용(누가·무엇을 보고 검토하는가)과도 맞습니다.
-        q: { ko: "인턴십은 어떻게 연결되나요? 유급인가요?", en: "How does the internship work? Is it paid?" },
-        a: {
-          // The internship is real and paid — that part is settled. The ROLE is
-          // not: it used to say "FDE 인턴", which named a job nobody has agreed to
-          // yet. The answer says what is decided and leaves the job description
-          // out, which is also what a reader is really asking. NOT "FDE 인턴십" —
-          // that rule still holds.
-          //
-          // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회. 순위형
-          // 시상 폐지·테마형 어워드(부문 pending)·인턴십 전원 개방. 이 답의 옛 논리는
-          // "1위 한정"이었습니다 — 이제 등수와 무관하게 전원에게 열려 있고, 검토
-          // 기준은 행사 과정과 제출 자료입니다(그래서 8일 전체가 포트폴리오가 됩니다).
-          //
-          // CONFIRMED 2026-08-05: AXMOS(코드프레소·WVB) 실명 표기 가능. 옛 약속의
-          // 형태("1위 팀에게")는 바뀌었지만 인턴십을 여는 회사는 그대로라, 개방형
-          // 문구에도 실명이 남습니다 — 오히려 "누가 검토하는가"가 등수를 대신하는
-          // 문장이라 실명이 있어야 답이 섭니다.
-          // benefits 06 카드의 인턴십 줄과 같은 사실이니 함께 움직여 주세요.
-          // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-          // DECIDED 2026-08-13: 커리어 간담회가 Day 7 → Day 8로 옮겨졌습니다.
-          //
-          // DECIDED 2026-08-14 (원대로 대표, 텔레그램): 근무 지역이 싱가포르에
-          // 한정되지 않습니다. 한국·미국의 기회가 포함될 수 있습니다. 원문이
-          // "포함할 수 있습니다"이므로 가능성 표현을 유지하세요. "한국·미국에서
-          // 근무합니다" 같은 확정형이나 특정 국가의 특정 포지션을 약속하는 문장으로
-          // 바꾸지 마세요. 지역은 아래 "구체적인 조건"에 걸리는 항목이기도 해서,
-          // 그 문장 앞에 둡니다.
-          ko: "네, 지금 추진 중인 유급 인턴십입니다. AXMOS(코드프레소와 WVB)의 인턴 기회이고, 수상 여부와 무관하게 열려 있습니다. 근무 지역도 싱가포르에 한정되지 않고, 한국과 미국의 기회가 포함될 수 있어요. 행사에서 잘하는 것과 현장에서 잘하는 것은 다를 수 있어서, 주최사가 관심 있는 참가자를 행사 과정과 제출 자료를 바탕으로 직접 검토해요. 8일 전체가 사실상 포트폴리오가 되는 구조입니다. 구체적인 조건은 행사가 끝난 뒤 회사와 학생이 학기 일정에 맞춰 이야기해 정합니다. Day 8 커리어 간담회도 인턴과 채용 풀로 이어지는 별도 연결 통로예요.",
-          en: "Yes, a paid internship already in motion, with AXMOS (Codepresso, WVB), open regardless of whether your team wins anything. The location isn't limited to Singapore either; opportunities in Korea and the US can be part of it. Doing well at an event and doing well on the job can be two different things, so the hosts review interested participants directly, on the strength of their work across the event and what they submit. The whole eight days effectively become your portfolio. Specific terms get settled after the event, between the company and the student around their term dates. The Day 8 career session is a separate route into the internship & hiring pool too.",
-        },
-      },
-      {
-        q: { ko: "혼자(1인) 참가해도 되나요?", en: "Can I take part solo?" },
-        a: {
-          // 마지막 두 문장이 2026-08-12에 붙었습니다. 이 답은 매칭 절차만 말하고
-          // 매칭 다음을 말하지 않아서, "붙여만 주고 끝"으로 읽힐 여지가 있었어요.
-          // 프레임은 추가 케어입니다 — 현장 매칭이 부실해서 보완한다는 뉘앙스로
-          // 쓰지 마세요. 시각·장소는 여기 쓰지 않습니다(schedule.ts
-          // d2-team-building이 안내 경로까지 맡습니다).
-          ko: "됩니다. 솔로로 등록하면 1인 팀으로 출전할 수 있어요. 원하면 팀 매칭도 신청할 수 있고(AI 유형 테스트 + Day 1 현장 그룹핑), 이미 팀이 있다면 2–3인 팀 등록으로 대표 1명이 한 번에 등록하면 됩니다. 이렇게 매칭된 팀은 다음 날 크래시코스가 끝난 뒤 주관 학생회가 함께하는 팀 빌딩 시간으로 이어져요. 즉석에서 만난 팀도 빌드를 시작하기 전에 서로 알아갈 시간을 따로 만들어 드립니다.",
-          en: "Yes. Register solo and you compete as a one-person team. You can also opt into team matching (the AI personality test plus on-site grouping on Day 1), and if you already have a team, one person registers the whole 2–3 person group in one go. Teams matched this way carry into a team-building session after the Day 2 Crash Course, together with the organizing student associations, so a team formed on the spot gets time to gel before the building starts.",
-        },
-      },
-      // 솔로/팀 질문 바로 다음이 자리입니다 — 같은 사람이 이어서 묻는 질문이고
-      // (혼자 가도 되나 → 가서 정해도 되나), 답의 단서도 같은 것을 가리킵니다:
-      // 현장 팀 매칭에 남는 사람이 있느냐.
-      //
-      // 이 답이 이 사실의 전문본입니다(2026-08-11 주최 메시지 원문 기준). 나머지
-      // 두 곳은 신호만 냅니다 — register.reassure의 "당일 결정 OK"와
-      // hero.countdownSameDay의 한 줄. 셋을 함께 움직이되, 세 곳에 전문을
-      // 반복하지는 마세요.
-      //
-      // 마지막 괄호(팀 등록 예외)는 전문에만 답니다. 짧은 두 곳에 넣으면
-      // 단서가 단서를 낳아 문장이 안내가 아니라 약관처럼 읽힙니다.
-      //
-      // 시각(오후 2시 15분)은 hero.countdownDeadline · problemRegistrationOpen ·
-      // REGISTRATION_CLOSES_AT과 같은 값이어야 합니다. 여기서만 고치지 마세요.
-      {
-        // EDIT 2026-08-12: 용어와 톤을 사이트 표준으로 되돌렸습니다.
-        //
-        // 이 답은 주최 메시지 원문을 거의 그대로 옮겨 온 것이라, 원문의 말투가
-        // 함께 딸려 왔습니다. "1일 차"(사이트 표준은 Day 1 — 103곳 대 5곳)와
-        // "사인업"(표준은 등록 — 54곳 대 3곳)이 이 답변에만 남아 있었고, 톤도
-        // 유독 저자세였습니다("정말 감사하고요", "참고해 주세요"). 카톡으로 받은
-        // 안내라면 자연스럽지만, 같은 목록의 다른 열세 답변과 나란히 놓이면 이
-        // 하나만 다른 사람이 쓴 것처럼 읽힙니다.
-        //
-        // 사실은 하나도 바뀌지 않았습니다: 당일 와서 정해도 된다 · 마감 시각까지
-        // 열려 있다 · 늦으면 매칭할 사람이 없을 수 있다 · 팀 등록은 해당 없다.
-        //
-        // EDIT 2026-08-12 (2차): 팀 빌딩 연결 한 문장 추가. 자리는 등록 마감과
-        // 매칭 경고 사이입니다 — 앞은 "와도 된다", 뒤는 "늦으면 못 붙는다"라,
-        // "붙으면 그 다음이 있다"가 둘 사이에 와야 경고가 마지막 인상이 되지
-        // 않습니다. 위 세 곳 신호 계약은 그대로입니다(전문은 여기 하나).
-        q: { ko: "지금도 등록할 수 있나요?", en: "Can I still register?" },
-        a: {
-          ko: "등록은 8월 22일 오후 2시 15분에 마감됐어요. 참가 관련 안내는 참가자 오픈채팅에서 이어집니다. 현장에서 매칭된 팀은 다음 날 팀 빌딩 시간으로 이어서 챙겨 드립니다. (이미 팀으로 오신 분들은 해당 없어요.)",
-          en: "Registration closed at 2:15PM on 22 August. Everything for participants continues in the open chat. Teams matched on site carry into a team-building session the next day. (Doesn't apply if you came as a team.)",
-        },
-      },
-      // Mentor requests were the most common pre-event ask — answered next to the
-      // solo/team question since both are about how you get placed.
-      // TODO: 가용시간 수집 방식 확정 시 구체화 (제출 채널·시점은 아직 미정).
-      {
-        q: { ko: "멘토를 직접 고를 수 있나요?", en: "Can I choose my mentor?" },
-        a: {
-          // DECIDED 2026-08-13: 커리어 간담회가 Day 8로 가면서 "Day 7 커리어 세션"이
-          // 가리키는 대상이 어긋났습니다. Day 7에 남는 것은 피치·세일즈 멘토링과
-          // 조언 세션이고, 시니어 리더들과 만난다는 사실 자체는 그대로 참이라
-          // 이름만 고쳤습니다.
-          ko: "멘토 지정은 받지 않아요. 팀이 제출한 가능 시간과 멘토의 가능 시간이 겹치는 구간으로 운영진이 배정합니다. 대신 모든 멘토가 여러분 트랙의 문제를 미리 보고 들어오고, Day 7 파이널 리허설에서는 현업 시니어들과 직접 만나는 시간이 따로 있어요.",
-          en: "We don't take mentor requests. The organizers assign sessions where your team's submitted availability overlaps with a mentor's. Every mentor comes in having seen your track's problem, and Day 7's final rehearsal puts you in the room with senior leaders.",
-        },
-      },
-      {
-        q: { ko: "상금이나 현금 지원이 있나요?", en: "Are there prizes or cash?" },
-        a: {
-          // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회. 순위형
-          // 시상 폐지·테마형 어워드(부문 pending)·인턴십 전원 개방.
-          //
-          // 답의 첫 문장이 "네 — 다만 …"인 이유: 질문은 돈이 있느냐이고 답은 예스인데,
-          // 바로 뒤에 오는 사실("1·2·3위가 아니다")이 예스의 모양을 바꿉니다. 부정을
-          // 먼저 꺼내면 상금이 없다고 읽힙니다.
-          //
-          // DECIDED 2026-08-06: 테마형 어워드 4부문 확정(비욘드 브리프·비즈니스 포텐셜·
-          // 빌더스 초이스·0→100). 이름은 포멀·설명은 유머 원칙. 금액 확정
-          // S$100/75/50 — 헤지("확정되는 대로 안내"·"규모 확정 전") 제거.
-          //
-          // 부문 헤지가 살던 세 곳(benefits 06 카드, 이 답변, schedule.ts
-          // d8-final-pitch description) 중 하나였고, 2026-08-06 확정 반영으로
-          // 헤지는 소멸했습니다.
-          //
-          // 이 답변은 부문을 하나씩 소개하지 않습니다. 한 번 그렇게 써봤더니
-          // ①~④가 문단이 되면서 답 하나가 화면을 넘어갔어요 — 목록으로 읽어야
-          // 할 것을 산문으로 읽히게 만든 셈입니다. 부문별 설명은 Day 8 데이
-          // 모달의 어워드 박스(dict.program.awards)로 옮겼고, 여기는 질문에만
-          // 답합니다: 돈이 있느냐(예), 무엇으로 받느냐(현금 / 널담 바우처),
-          // 몇 팀이냐(8팀). 부문을 다시 나열하고 싶어지면 그건 이 답이 아니라
-          // 저 박스를 고칠 신호입니다.
-          //
-          // WITHHELD 2026-08-07: 금액은 확정돼 있지만 웹에 쓰지 않습니다
-          // (dict.program.awards의 WITHHELD 주석 참고). 그래서 이 답은 "얼마"가
-          // 아니라 "무엇으로"까지만 말합니다 — 상금이 있느냐는 질문에는 답이
-          // 되면서 액수는 말하지 않는 선입니다. 여기에 "금액은 추후 안내" 같은
-          // 말을 붙이지 마세요: 미정이 아니라 비공개이고, 그 문장은 방금 걷어낸
-          // 헤지를 이 답변에 되돌려 놓습니다.
-          //
-          // 수료증은 이 답에 없습니다. 예전에는 마지막 문장이 발급 기준까지
-          // 붙여 말했는데(크래시코스 전 시간 참석 · 공유회 발표까지 완주),
-          // 2026-08-11에 그 문장을 지웠습니다: 질문은 돈을 묻는데 답이 수료증
-          // 조건까지 훑고 있었고, 같은 사실이 세 항목 위 전담 질문("수료증도
-          // 받을 수 있나요?")과 "8일이 끝나면…"에 이미 두 번 있습니다. 여기서
-          // 다시 꺼내지 마세요 — 조건이 딸린 항목이라, 전원이 받는 것들과
-          // 나란히 놓이는 순간 그 조건이 오해됩니다.
-          // "Day 5 AI Use Case Top 3의 널담 바우처도 논의 중" 문장은 2026-08-03에
-          // 빠졌습니다 — Day 5가 네트워킹 데이로 바뀌며 그 세션이 없어졌습니다.
-          // DECIDED 2026-08-04: NO meals are provided at any point. What IS free:
-          // entry, networking, and the Brand Boost hoodie+cap sets (Day 1 on-site,
-          // 60 sets first-come). Do not reintroduce food promises here or in any
-          // benefit/schedule copy.
-          // DECIDED 2026-08-05: 식사 언급 전면 제거 — 제공 안내도, 미제공 안내도 쓰지
-          // 않는다. (식사 미제공 정책 자체는 2026-08-04 결정 그대로) 어느 방향으로든
-          // 다시 넣지 마세요. 정책은 그대로이고 바뀐 것은 그 사실을 사이트에 쓰지
-          // 않는다는 점입니다 — 이 답변에 있던 "(식사는 제공되지 않아요 — 각자 해결)"
-          // 괄호가 그래서 빠졌습니다. 안 준다는 안내조차 식사를 화제로 만들고, 이
-          // 답변은 상금을 묻는 자리지 끼니를 묻는 자리가 아닙니다.
-          // benefits 06 카드와 같은 사실을 말하는 자리이니 함께 움직여 주세요.
-          // DECIDED 2026-08-16 (정체성 얼라인, 공모전): 상금 뒤에 무엇이 이어지는지
-          // 한 문장. 이 답은 "얼마"에서 끝나 있었는데, 수상의 실제 값은 부상보다
-          // 그 뒤에 붙는 자리입니다(정본은 dict.program.awards의 next).
-          ko: "네, 다만 팀을 1, 2, 3위로 세우지 않습니다. 시상은 테마형 어워드 4부문이고 여덟 팀이 받아 가요. 부상은 부문에 따라 현금 또는 널담 바우처입니다. 수상팀은 12월 서울 쇼케이스 무대에 우선 초청되고, 가을에는 참가자 전원이 이어 갈 빌더 커리큘럼이 준비되고 있어요. 어떤 부문이 있고 누가 뽑는지는 프로그램의 Day 8 카드에 정리해 뒀습니다. 참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드와 캡 세트는 Day 1 현장에서 선착순 60세트로 드립니다.",
-          en: "Yes, but nobody gets lined up 1st-2nd-3rd. There are four thematic awards and eight teams take one home, each carrying either a cash prize or a Nuldam voucher. Winning teams get first call for the December showcase stage in Seoul, and an autumn builder curriculum for every participant is in the works. Which awards there are and who picks them is laid out on the Day 8 card in the programme. Entry is free and the networking goes to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come.",
-        },
-      },
-      {
-        // EDIT 2026-08-11: 질문 톤 소프트닝. 옛 질문은 "결과물이 실제로 쓰이나요?
-        // AI로 대충 만들면 어떡하죠?"였습니다. 뒷절을 뗀 건 순한 말로 바꾸려던
-        // 게 아니라, 그 절이 묻는 사람을 바꿔놓기 때문입니다 — 앞절은 참가를
-        // 고민하는 사람의 질문인데 뒷절은 남의 산출물을 걱정하는 심사자의
-        // 질문이라, 한 항목이 두 사람을 섞어 부르고 있었습니다. 'AI로 대충'에
-        // 대한 답은 본문에 그대로 남아 있고(전문가 피드백에서 드러난다), 그
-        // 대목이야말로 참가자가 알아야 할 기준입니다.
-        q: { ko: "결과물이 실제로 쓰일 수도 있나요?", en: "Could what we build actually get used?" },
-        a: {
-          // 퍼센트를 뺐습니다 (2026-08-03). 여기 있던 "도입 가능성 15%"와 "데모
-          // 30%"는 트랙별 옛 채점표의 숫자로, 현재 피드백 문서의 5축 구성에는 그 이름의
-          // 항목이 없습니다. 게다가 배점 자체가 파트너 조율 중이라("배점은 파트너
-          // 조율에 따라 확정 전" — 피드백 문서 각주) 새 숫자로 갈아끼우면 또 낡습니다.
-          // 그래서 확정적으로 말할 수 있는 것만 서술로 씁니다.
-          //
-          // "무대에서 실제로 돌아가는지"도 함께 고쳤습니다 — 피드백 문서는 반대로
-          // 말합니다: 작동 판정은 사전 제출 영상 기준이고 라이브 실패는 감점이
-          // 아닙니다. 학생이 무대 사고를 치명적으로 오해하게 두면 안 됩니다.
-          // 숫자를 다시 넣지 마세요. 배점이 확정되면 피드백 문서를 정본으로 삼되,
-          // 이 답변은 서술로 두는 편이 오래갑니다.
-          //
-          // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회.
-          // 두 절이 바뀌었습니다 — ① 인턴 기회의 대상이 우승팀에서 "관심 있는
-          // 참가자"로 열렸고, ② 'AI로 대충'을 걸러내는 주체가 심사가 아니라 전문가
-          // 피드백입니다(순위를 매기는 자리가 아니어도 전문가 앞에서는 그대로
-          // 드러납니다). "요구사항 미충족"과 라이브 시연 문장은 그대로 둡니다 —
-          // 영상 기준 원칙은 전환과 무관하게 살아 있습니다.
-          // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-          //
-          // EDIT 2026-08-11: 인턴십 절을 두 문장에서 한 문장으로 줄이고 위
-          // 인턴십 답변을 가리키게 했습니다. 조건(수상 무관 · 행사 과정 기준)을
-          // 여기서 다시 풀어 쓰면 그 답변의 사본이 되고, 사본은 한쪽만 고쳐질
-          // 때 어긋납니다. 조건이 바뀌면 인턴십 답변 한 곳만 고치면 됩니다.
-          //
-          // 라이브 시연 문장("무대에서 삐끗해도 괜찮다 · 영상 기준")은 기준
-          // 항목의 '보지 않는 것' 목록과 겹치지만 그대로 둡니다. 중복을 줄이는
-          // 것보다 학생이 무대 사고를 치명적으로 오해하지 않는 편이 중요합니다.
-          ko: "기업이 도입을 약속하는 건 아니에요. ‘담당자가 다음 주 월요일부터 쓸 수 있는가’를 보긴 하지만, 그건 도입 확정과는 다릅니다. 대신 관심 있는 참가자가 인턴으로 그 문제를 실무에서 이어갈 길은 열려 있어요. 위 인턴십 답변 그대로요. ‘AI로 대충’은 전문가 피드백에서 그대로 드러납니다. 전문가들이 현장에서 “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”를 묻고, 근거 없이 결과만 내놓는 산출물은 요구사항 미충족으로 처리됩니다. 목업과 슬라이드만 있는 경우도 마찬가지고요. 반대로 무대에서 라이브 시연이 삐끗하는 건 괜찮습니다. 작동 여부는 사전에 제출한 데모 영상 기준으로 봅니다.",
-          en: "No company commits to adopting what you build. The question “could the owner use this from next Monday?” does get asked, but that isn't the same as a decision to adopt. What does stay open is the chance to carry the problem into real work as an intern, exactly as the internship answer above says. And “AI slop” shows up plainly in the expert feedback: the experts ask out loud, “how is this different from what the problem owner would get by just asking a general LLM?”, and output that returns results with no reasoning behind them counts as a failed requirement. Mockups or slides alone go the same way. A live demo stumbling on stage, on the other hand, costs nothing: whether it runs is judged on the demo video you submit beforehand.",
+          ko: "크래시코스는 Codex를 기준으로 진행해요. 강사와 같은 화면을 따라 하기 좋게 하나로 맞춘 것뿐입니다. 팀 빌드와 공유회 결과물에는 툴 제한이 없어요. Claude Code든 커서든 ChatGPT든 손에 맞는 걸 쓰면 됩니다. 다만 계정은 필요해요. Claude나 ChatGPT의 기본 유료 플랜 정도면 8일 내내 충분하고, 그 이상은 필요 없습니다. 피드백이 보는 건 어떤 병목을 왜 골랐고 그 판단의 근거가 무엇인지거든요. 기술 완성도나 화면의 세련됨은 보지 않고요.",
+          en: "The crash course runs on Codex so everyone can follow the same screen. It isn't a rule about what you build with. There's no tool restriction on your team's build or your Showcase work: Claude Code, Cursor, ChatGPT, whatever fits your hand. You do need an account, though. A basic paid plan on Claude or ChatGPT covers the whole eight days, and nothing beyond that is needed. The feedback looks at which bottleneck you picked, why, and what backs that call. Technical polish and how slick the screen looks don't come into it.",
         },
       },
       {
@@ -4183,18 +3926,18 @@ export const dict = {
           en: "Yes, the Crash Course is optional. Skip it and start building the moment the problems drop on Day 1.",
         },
       },
-      // 툴 질문은 바로 위 "크래시코스를 건너뛰어도 되나요" 옆이 자리입니다 — 같은 사람이
-      // 연달아 묻는 두 질문이고(경험자·도구), 초보는 "Codex를 사야 하나"를 여기서
-      // 확인합니다. 답의 순서가 곧 요지: ① 강의만 Codex 기준 ② 빌드는 자유
-      // ③ 그래서 기본 플랜이면 충분 — ③의 근거는 무엇을 보느냐입니다.
-      // 배점(프로세스 대 작동의 비율)은 파트너 조율 중이라 숫자를 쓰지 않고,
-      // 피드백 문서가 확정적으로 말하는 것만 씁니다: 완성도·발표력은 보지 않음.
+      // Mentor requests were the most common pre-event ask — answered next to the
+      // solo/team question since both are about how you get placed.
+      // TODO: 가용시간 수집 방식 확정 시 구체화 (제출 채널·시점은 아직 미정).
       {
-        q: { ko: "어떤 AI 툴을 써야 하나요? Codex를 꼭 써야 하나요?", en: "Which AI tool do I need? Do I have to use Codex?" },
+        q: { ko: "멘토를 직접 고를 수 있나요?", en: "Can I choose my mentor?" },
         a: {
-          // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-          ko: "크래시코스는 Codex를 기준으로 진행해요. 강사와 같은 화면을 따라 하기 좋게 하나로 맞춘 것뿐입니다. 팀 빌드와 공유회 결과물에는 툴 제한이 없어요. Claude Code든 커서든 ChatGPT든 손에 맞는 걸 쓰면 됩니다. 다만 계정은 필요해요. Claude나 ChatGPT의 기본 유료 플랜 정도면 8일 내내 충분하고, 그 이상은 필요 없습니다. 피드백이 보는 건 어떤 병목을 왜 골랐고 그 판단의 근거가 무엇인지거든요. 기술 완성도나 화면의 세련됨은 보지 않고요.",
-          en: "The crash course runs on Codex so everyone can follow the same screen. It isn't a rule about what you build with. There's no tool restriction on your team's build or your Showcase work: Claude Code, Cursor, ChatGPT, whatever fits your hand. You do need an account, though. A basic paid plan on Claude or ChatGPT covers the whole eight days, and nothing beyond that is needed. The feedback looks at which bottleneck you picked, why, and what backs that call. Technical polish and how slick the screen looks don't come into it.",
+          // DECIDED 2026-08-13: 커리어 간담회가 Day 8로 가면서 "Day 7 커리어 세션"이
+          // 가리키는 대상이 어긋났습니다. Day 7에 남는 것은 피치·세일즈 멘토링과
+          // 조언 세션이고, 시니어 리더들과 만난다는 사실 자체는 그대로 참이라
+          // 이름만 고쳤습니다.
+          ko: "멘토 지정은 받지 않아요. 팀이 제출한 가능 시간과 멘토의 가능 시간이 겹치는 구간으로 운영진이 배정합니다. 대신 모든 멘토가 여러분 트랙의 문제를 미리 보고 들어오고, Day 7 파이널 리허설에서는 현업 시니어들과 직접 만나는 시간이 따로 있어요.",
+          en: "We don't take mentor requests. The organizers assign sessions where your team's submitted availability overlaps with a mentor's. Every mentor comes in having seen your track's problem, and Day 7's final rehearsal puts you in the room with senior leaders.",
         },
       },
       // REMOVED 2026-08-11: "제가 여기서 얻는 게 뭔가요?" ("What do I actually get
@@ -4270,6 +4013,278 @@ export const dict = {
         aTail: {
           ko: "체크인은 안 써도 불이익이 없지만, 세 번을 채우고 진행 상황을 알려주면 수상 집계에 가산이 되고 멘토가 팀을 미리 읽고 들어옵니다. 그 기록은 전문가 피드백과 주최사의 인턴십 검토에서도 그대로 참고돼요. 피드백은 실제 산업에서 문제를 풀어온 현업 리더분들이 직접 주십니다(피드백 패널 섹션 참조).",
           en: "Skipping the check-in forms costs you nothing, but filling all three in and keeping us posted earns a bonus in the awards tally, and it lets a mentor read your team before walking in. That trail is also what the experts' feedback and the hosts' internship review draw on. The feedback itself comes first-hand from leaders who have solved these problems in industry (see the feedback panel section).",
+        },
+      },
+      {
+        q: { ko: "상금이나 현금 지원이 있나요?", en: "Are there prizes or cash?" },
+        a: {
+          // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회. 순위형
+          // 시상 폐지·테마형 어워드(부문 pending)·인턴십 전원 개방.
+          //
+          // 답의 첫 문장이 "네 — 다만 …"인 이유: 질문은 돈이 있느냐이고 답은 예스인데,
+          // 바로 뒤에 오는 사실("1·2·3위가 아니다")이 예스의 모양을 바꿉니다. 부정을
+          // 먼저 꺼내면 상금이 없다고 읽힙니다.
+          //
+          // DECIDED 2026-08-06: 테마형 어워드 4부문 확정(비욘드 브리프·비즈니스 포텐셜·
+          // 빌더스 초이스·0→100). 이름은 포멀·설명은 유머 원칙. 금액 확정
+          // S$100/75/50 — 헤지("확정되는 대로 안내"·"규모 확정 전") 제거.
+          //
+          // 부문 헤지가 살던 세 곳(benefits 06 카드, 이 답변, schedule.ts
+          // d8-final-pitch description) 중 하나였고, 2026-08-06 확정 반영으로
+          // 헤지는 소멸했습니다.
+          //
+          // 이 답변은 부문을 하나씩 소개하지 않습니다. 한 번 그렇게 써봤더니
+          // ①~④가 문단이 되면서 답 하나가 화면을 넘어갔어요 — 목록으로 읽어야
+          // 할 것을 산문으로 읽히게 만든 셈입니다. 부문별 설명은 Day 8 데이
+          // 모달의 어워드 박스(dict.program.awards)로 옮겼고, 여기는 질문에만
+          // 답합니다: 돈이 있느냐(예), 무엇으로 받느냐(현금 / 널담 바우처),
+          // 몇 팀이냐(8팀). 부문을 다시 나열하고 싶어지면 그건 이 답이 아니라
+          // 저 박스를 고칠 신호입니다.
+          //
+          // WITHHELD 2026-08-07: 금액은 확정돼 있지만 웹에 쓰지 않습니다
+          // (dict.program.awards의 WITHHELD 주석 참고). 그래서 이 답은 "얼마"가
+          // 아니라 "무엇으로"까지만 말합니다 — 상금이 있느냐는 질문에는 답이
+          // 되면서 액수는 말하지 않는 선입니다. 여기에 "금액은 추후 안내" 같은
+          // 말을 붙이지 마세요: 미정이 아니라 비공개이고, 그 문장은 방금 걷어낸
+          // 헤지를 이 답변에 되돌려 놓습니다.
+          //
+          // 수료증은 이 답에 없습니다. 예전에는 마지막 문장이 발급 기준까지
+          // 붙여 말했는데(크래시코스 전 시간 참석 · 공유회 발표까지 완주),
+          // 2026-08-11에 그 문장을 지웠습니다: 질문은 돈을 묻는데 답이 수료증
+          // 조건까지 훑고 있었고, 같은 사실이 세 항목 위 전담 질문("수료증도
+          // 받을 수 있나요?")과 "8일이 끝나면…"에 이미 두 번 있습니다. 여기서
+          // 다시 꺼내지 마세요 — 조건이 딸린 항목이라, 전원이 받는 것들과
+          // 나란히 놓이는 순간 그 조건이 오해됩니다.
+          // "Day 5 AI Use Case Top 3의 널담 바우처도 논의 중" 문장은 2026-08-03에
+          // 빠졌습니다 — Day 5가 네트워킹 데이로 바뀌며 그 세션이 없어졌습니다.
+          // DECIDED 2026-08-04: NO meals are provided at any point. What IS free:
+          // entry, networking, and the Brand Boost hoodie+cap sets (Day 1 on-site,
+          // 60 sets first-come). Do not reintroduce food promises here or in any
+          // benefit/schedule copy.
+          // DECIDED 2026-08-05: 식사 언급 전면 제거 — 제공 안내도, 미제공 안내도 쓰지
+          // 않는다. (식사 미제공 정책 자체는 2026-08-04 결정 그대로) 어느 방향으로든
+          // 다시 넣지 마세요. 정책은 그대로이고 바뀐 것은 그 사실을 사이트에 쓰지
+          // 않는다는 점입니다 — 이 답변에 있던 "(식사는 제공되지 않아요 — 각자 해결)"
+          // 괄호가 그래서 빠졌습니다. 안 준다는 안내조차 식사를 화제로 만들고, 이
+          // 답변은 상금을 묻는 자리지 끼니를 묻는 자리가 아닙니다.
+          // benefits 06 카드와 같은 사실을 말하는 자리이니 함께 움직여 주세요.
+          // DECIDED 2026-08-16 (정체성 얼라인, 공모전): 상금 뒤에 무엇이 이어지는지
+          // 한 문장. 이 답은 "얼마"에서 끝나 있었는데, 수상의 실제 값은 부상보다
+          // 그 뒤에 붙는 자리입니다(정본은 dict.program.awards의 next).
+          ko: "네, 다만 팀을 1, 2, 3위로 세우지 않습니다. 시상은 테마형 어워드 4부문이고 여덟 팀이 받아 가요. 부상은 부문에 따라 현금 또는 널담 바우처입니다. 수상팀은 12월 서울 쇼케이스 무대에 우선 초청되고, 가을에는 참가자 전원이 이어 갈 빌더 커리큘럼이 준비되고 있어요. 어떤 부문이 있고 누가 뽑는지는 프로그램의 Day 8 카드에 정리해 뒀습니다. 참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드와 캡 세트는 Day 1 현장에서 선착순 60세트로 드립니다.",
+          en: "Yes, but nobody gets lined up 1st-2nd-3rd. There are four thematic awards and eight teams take one home, each carrying either a cash prize or a Nuldam voucher. Winning teams get first call for the December showcase stage in Seoul, and an autumn builder curriculum for every participant is in the works. Which awards there are and who picks them is laid out on the Day 8 card in the programme. Entry is free and the networking goes to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come.",
+        },
+      },
+      {
+        // EDIT 2026-08-11: 질문 톤 소프트닝. 옛 질문은 "수료증을 주나요? 의미가
+        // 있나요?"였습니다 — 뒷절이 수료증의 가치를 먼저 깎아놓고 시작해서, 답의
+        // 마지막 문장(경험자에겐 멘토링이 더 크다)이 그 의심을 인정하는 말이
+        // 아니라 변명처럼 읽혔습니다. 묻는 것만 묻게 두고, 무게에 대한 판단은
+        // 답이 스스로 하게 둡니다.
+        q: { ko: "수료증도 받을 수 있나요?", en: "Do we get certificates?" },
+        a: {
+          ko: "네, 두 장입니다. 크래시코스 전 시간을 참석하면 크래시코스 수료증을 마지막 날 PDF로 보내드리고, 공유회 발표까지 마치면 완주 수료증을 Day 8 현장에서 실물로 드립니다. 둘 다 Zero100 명의로 발급되고, 링크드인과 이력서에 올릴 수 있어요. 이미 개발 경험이 있다면 수료증보다 멘토링과 네트워킹이 더 큰 수확일 거예요.",
+          en: "Yes, two of them. Attend the full Crash Course and the Crash Course certificate reaches you as a PDF on the final day; go all the way through your Showcase pitch and you're handed a printed completion certificate on Day 8. Both are issued by Zero100 and ready for LinkedIn and your CV. If you already build, the mentoring and network will matter more than the paper.",
+        },
+      },
+      {
+        // EDIT 2026-08-11: 질문 톤 소프트닝. 옛 질문은 "인턴십이 진짜인가요?
+        // 유급인가요?"였습니다 — 우리가 대신 써 준 의심이라, 사이트가 스스로
+        // 미덥지 않다고 말하는 자리가 됐습니다. 유급 여부는 실제로 많이 묻는
+        // 것이라 그대로 두고, 앞절만 "어떻게 연결되나"로 바꿉니다. 그 편이
+        // 답의 실제 내용(누가·무엇을 보고 검토하는가)과도 맞습니다.
+        q: { ko: "인턴십은 어떻게 연결되나요? 유급인가요?", en: "How does the internship work? Is it paid?" },
+        a: {
+          // The internship is real and paid — that part is settled. The ROLE is
+          // not: it used to say "FDE 인턴", which named a job nobody has agreed to
+          // yet. The answer says what is decided and leaves the job description
+          // out, which is also what a reader is really asking. NOT "FDE 인턴십" —
+          // that rule still holds.
+          //
+          // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회. 순위형
+          // 시상 폐지·테마형 어워드(부문 pending)·인턴십 전원 개방. 이 답의 옛 논리는
+          // "1위 한정"이었습니다 — 이제 등수와 무관하게 전원에게 열려 있고, 검토
+          // 기준은 행사 과정과 제출 자료입니다(그래서 8일 전체가 포트폴리오가 됩니다).
+          //
+          // CONFIRMED 2026-08-05: AXMOS(코드프레소·WVB) 실명 표기 가능. 옛 약속의
+          // 형태("1위 팀에게")는 바뀌었지만 인턴십을 여는 회사는 그대로라, 개방형
+          // 문구에도 실명이 남습니다 — 오히려 "누가 검토하는가"가 등수를 대신하는
+          // 문장이라 실명이 있어야 답이 섭니다.
+          // benefits 06 카드의 인턴십 줄과 같은 사실이니 함께 움직여 주세요.
+          // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
+          // DECIDED 2026-08-13: 커리어 간담회가 Day 7 → Day 8로 옮겨졌습니다.
+          //
+          // DECIDED 2026-08-14 (원대로 대표, 텔레그램): 근무 지역이 싱가포르에
+          // 한정되지 않습니다. 한국·미국의 기회가 포함될 수 있습니다. 원문이
+          // "포함할 수 있습니다"이므로 가능성 표현을 유지하세요. "한국·미국에서
+          // 근무합니다" 같은 확정형이나 특정 국가의 특정 포지션을 약속하는 문장으로
+          // 바꾸지 마세요. 지역은 아래 "구체적인 조건"에 걸리는 항목이기도 해서,
+          // 그 문장 앞에 둡니다.
+          ko: "네, 지금 추진 중인 유급 인턴십입니다. AXMOS(코드프레소와 WVB)의 인턴 기회이고, 수상 여부와 무관하게 열려 있습니다. 근무 지역도 싱가포르에 한정되지 않고, 한국과 미국의 기회가 포함될 수 있어요. 행사에서 잘하는 것과 현장에서 잘하는 것은 다를 수 있어서, 주최사가 관심 있는 참가자를 행사 과정과 제출 자료를 바탕으로 직접 검토해요. 8일 전체가 사실상 포트폴리오가 되는 구조입니다. 구체적인 조건은 행사가 끝난 뒤 회사와 학생이 학기 일정에 맞춰 이야기해 정합니다. Day 8 커리어 간담회도 인턴과 채용 풀로 이어지는 별도 연결 통로예요.",
+          en: "Yes, a paid internship already in motion, with AXMOS (Codepresso, WVB), open regardless of whether your team wins anything. The location isn't limited to Singapore either; opportunities in Korea and the US can be part of it. Doing well at an event and doing well on the job can be two different things, so the hosts review interested participants directly, on the strength of their work across the event and what they submit. The whole eight days effectively become your portfolio. Specific terms get settled after the event, between the company and the student around their term dates. The Day 8 career session is a separate route into the internship & hiring pool too.",
+        },
+      },
+      {
+        // EDIT 2026-08-11: 질문 톤 소프트닝. 옛 질문은 "결과물이 실제로 쓰이나요?
+        // AI로 대충 만들면 어떡하죠?"였습니다. 뒷절을 뗀 건 순한 말로 바꾸려던
+        // 게 아니라, 그 절이 묻는 사람을 바꿔놓기 때문입니다 — 앞절은 참가를
+        // 고민하는 사람의 질문인데 뒷절은 남의 산출물을 걱정하는 심사자의
+        // 질문이라, 한 항목이 두 사람을 섞어 부르고 있었습니다. 'AI로 대충'에
+        // 대한 답은 본문에 그대로 남아 있고(전문가 피드백에서 드러난다), 그
+        // 대목이야말로 참가자가 알아야 할 기준입니다.
+        q: { ko: "결과물이 실제로 쓰일 수도 있나요?", en: "Could what we build actually get used?" },
+        a: {
+          // 퍼센트를 뺐습니다 (2026-08-03). 여기 있던 "도입 가능성 15%"와 "데모
+          // 30%"는 트랙별 옛 채점표의 숫자로, 현재 피드백 문서의 5축 구성에는 그 이름의
+          // 항목이 없습니다. 게다가 배점 자체가 파트너 조율 중이라("배점은 파트너
+          // 조율에 따라 확정 전" — 피드백 문서 각주) 새 숫자로 갈아끼우면 또 낡습니다.
+          // 그래서 확정적으로 말할 수 있는 것만 서술로 씁니다.
+          //
+          // "무대에서 실제로 돌아가는지"도 함께 고쳤습니다 — 피드백 문서는 반대로
+          // 말합니다: 작동 판정은 사전 제출 영상 기준이고 라이브 실패는 감점이
+          // 아닙니다. 학생이 무대 사고를 치명적으로 오해하게 두면 안 됩니다.
+          // 숫자를 다시 넣지 마세요. 배점이 확정되면 피드백 문서를 정본으로 삼되,
+          // 이 답변은 서술로 두는 편이 오래갑니다.
+          //
+          // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회.
+          // 두 절이 바뀌었습니다 — ① 인턴 기회의 대상이 우승팀에서 "관심 있는
+          // 참가자"로 열렸고, ② 'AI로 대충'을 걸러내는 주체가 심사가 아니라 전문가
+          // 피드백입니다(순위를 매기는 자리가 아니어도 전문가 앞에서는 그대로
+          // 드러납니다). "요구사항 미충족"과 라이브 시연 문장은 그대로 둡니다 —
+          // 영상 기준 원칙은 전환과 무관하게 살아 있습니다.
+          // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
+          //
+          // EDIT 2026-08-11: 인턴십 절을 두 문장에서 한 문장으로 줄이고 위
+          // 인턴십 답변을 가리키게 했습니다. 조건(수상 무관 · 행사 과정 기준)을
+          // 여기서 다시 풀어 쓰면 그 답변의 사본이 되고, 사본은 한쪽만 고쳐질
+          // 때 어긋납니다. 조건이 바뀌면 인턴십 답변 한 곳만 고치면 됩니다.
+          //
+          // 라이브 시연 문장("무대에서 삐끗해도 괜찮다 · 영상 기준")은 기준
+          // 항목의 '보지 않는 것' 목록과 겹치지만 그대로 둡니다. 중복을 줄이는
+          // 것보다 학생이 무대 사고를 치명적으로 오해하지 않는 편이 중요합니다.
+          ko: "기업이 도입을 약속하는 건 아니에요. ‘담당자가 다음 주 월요일부터 쓸 수 있는가’를 보긴 하지만, 그건 도입 확정과는 다릅니다. 대신 관심 있는 참가자가 인턴으로 그 문제를 실무에서 이어갈 길은 열려 있어요. 위 인턴십 답변 그대로요. ‘AI로 대충’은 전문가 피드백에서 그대로 드러납니다. 전문가들이 현장에서 “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”를 묻고, 근거 없이 결과만 내놓는 산출물은 요구사항 미충족으로 처리됩니다. 목업과 슬라이드만 있는 경우도 마찬가지고요. 반대로 무대에서 라이브 시연이 삐끗하는 건 괜찮습니다. 작동 여부는 사전에 제출한 데모 영상 기준으로 봅니다.",
+          en: "No company commits to adopting what you build. The question “could the owner use this from next Monday?” does get asked, but that isn't the same as a decision to adopt. What does stay open is the chance to carry the problem into real work as an intern, exactly as the internship answer above says. And “AI slop” shows up plainly in the expert feedback: the experts ask out loud, “how is this different from what the problem owner would get by just asking a general LLM?”, and output that returns results with no reasoning behind them counts as a failed requirement. Mockups or slides alone go the same way. A live demo stumbling on stage, on the other hand, costs nothing: whether it runs is judged on the demo video you submit beforehand.",
+        },
+      },
+      // Q1 spine (2026-08-01), placed straight after the certificate question —
+      // that is where a reader is already thinking about what they keep. The three
+      // artefacts are the same three in benefits.spine.tangibles, and the
+      // certificate's conditions are worded exactly as they are on benefits card
+      // 05 and in the certificate FAQ above ("크래시코스 전 시간 참석" · "공유회
+      // 발표까지"): four places, one sentence, no drift.
+      {
+        q: { ko: "8일이 끝나면 저에게 뭐가 남나요?", en: "What do I walk away with after the 8 days?" },
+        a: {
+          // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
+          // 꼬리의 "가상 과제가 아니라…" 문장을 첫 항목 안으로 접었습니다.
+          //
+          // ABSORBED 2026-08-11: "제가 여기서 얻는 게 뭔가요?" 항목을 지우면서
+          // 그 답에만 있던 두 가지(1:1 멘토링·행사 후 커뮤니티)를 마지막 문장으로
+          // 받았습니다. 두 질문은 사실상 같은 질문이었는데 FAQ 중반과 후반에
+          // 떨어져 있어서, 뒤엣것이 앞엣것의 메아리로 읽혔습니다.
+          //
+          // Day 8 커리어 간담회는 여기 넣지 마세요. 인턴십 답변과 멘토 답변이 이미
+          // 그 세션을 말합니다 — 세 번째 사본을 만들면 이 답이 다시 목록이 됩니다.
+          // 첫 문장의 "세 가지"는 실물(benefits.spine.tangibles)만 세는 숫자이고,
+          // 마지막 문장은 실물 밖의 것이라 그 숫자에 들어가지 않습니다.
+          ko: "세 가지가 실물로 남습니다. 실제 기업이 낸 문제를 풀어 돌아가는 데모, 기업과 업계 전문가 앞에서 피칭한 경험(사진으로 남는), 그리고 수료증 두 장(크래시코스 전 시간 참석 시 크래시코스 수료증, 공유회 발표까지 마치면 완주 수료증). 실물 밖으로는 현직 선배들과의 1:1 멘토링, 그리고 행사 후에도 이어지는 커뮤니티가 남고요.",
+          en: "Three things you can actually show: a demo that runs on a real company's problem, the experience of pitching it to that company and to industry experts (photos included), and two certificates (one for attending the full Crash Course, one for going all the way through your Showcase pitch). Beyond the tangibles, you keep the 1:1 mentoring with people already working in the field, and a community that carries on after the event.",
+        },
+      },
+      {
+        // EDIT 2026-08-11: 질문 톤 소프트닝. 옛 질문은 "왜 8일이나 하나요?
+        // 해커톤치고 길지 않나요?"였습니다 — 읽는 사람의 걱정을 대신 말해주는
+        // 대신 행사를 변호하게 만드는 형태라, 걱정 그대로("길게 느껴져요")와
+        // 그 걱정이 실제로 묻는 것("매일 나가야 하나")으로 바꿨습니다. 답의 첫
+        // 문장(=필참은 이틀)이 새 질문의 직답으로 그대로 섭니다.
+        q: { ko: "8일 일정이 길게 느껴져요. 매일 참여해야 하나요?", en: "Eight days sounds like a lot. Do I need to be there every day?" },
+        a: {
+          // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
+          // 앞 문장의 "필참은 이틀"이 이미 '매일 안 나와도 된다'를 증명하므로
+          // 부정 절을 덜어냈습니다.
+          ko: "시간을 통으로 내야 하는 날은 사실 이틀입니다. 필참은 Day 1(오프닝)과 Day 8(8/29 결과 공유회)뿐이고, 나머지는 각자 편한 시간에 하는 자율 빌드와 선택 참여 세션입니다. 8일로 늘린 건 학기 중에도 크래시 코스로 배우고 → 만들고 → 발표까지 가는 호흡을 만들기 위해서예요.",
+          en: "Only two days actually need blocking out: Day 1 (opening) and Day 8 (29 Aug, the Showcase) are the only required ones. Everything else is self-paced building on your own time, plus optional sessions. Stretching it to eight days is what makes room, mid-semester, for the full arc of learning at the crash course → building → presenting.",
+        },
+      },
+      // MERGED 2026-08-11: 두 항목이 하나가 됐습니다 — "문과인데 이과생들에게
+      // 밀리지 않을까요?"와 "‘해커톤’이라는 말이 부담돼요. 영어 발표도 자신
+      // 없어요." 서로 다른 질문처럼 보이지만 독자가 같은 사람입니다: 내가 여기
+      // 낄 자격이 되나. 둘을 나란히 두면 같은 사람이 같은 걱정을 두 번 물어보고
+      // 두 번 안심받는 모양이 되고, 그 사이에 놓인 항목들이 밀려납니다. 자리는
+      // 원래 '문과' 항목의 자리(세 번째)를 씁니다 — 이 걱정은 일정·주제를 확인한
+      // 직후에 오지, FAQ 중반에 오지 않습니다.
+      //
+      // DECIDED 2026-08-04: all presentations incl. the Showcase pitches are in
+      // KOREAN. This is final — do not reintroduce "choose your language" hedging
+      // here or anywhere else. If an English-speaking participant ever needs an
+      // exception, that's handled by the organizers case-by-case, not promised on
+      // the site. (병합 전 '해커톤' 항목에 붙어 있던 결정입니다. 항목이 사라져도
+      // 결정은 살아 있으므로 병합본이 그대로 받습니다.)
+      {
+        q: { ko: "코딩도 발표도 자신이 없어요. 괜찮을까요?", en: "I'm not confident about coding or presenting. Is that okay?" },
+        a: {
+          // 배점 숫자는 여기에도 쓰지 않습니다 — 아래 "피드백과 어워드는 어떤
+          // 기준인가요?" 답변과 같은 계약입니다. 피드백 문서 자체는 2026-08-04
+          // 결정으로 참가자에게 사전 공개하지만, 배점은 아직 파트너 조율 중이라
+          // 카피에 숫자를 박으면 곧 낡습니다. 숫자는 피드백 문서가 나르게 두고,
+          // 여기서는 무게가 실리는 '방향'만.
+          // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
+          //
+          // "화면의 세련됨은 보지 않습니다"는 병합하면서 뺐습니다. 같은 말이
+          // 네 곳에 있었고, 그 문장의 집은 기준 항목("피드백과 어워드는 어떤
+          // 기준인가요?")의 '보지 않는 것' 목록입니다. 여기서는 와이어프레임
+          // 수준이어도 된다는 앞 문장이 이미 같은 일을 합니다.
+          ko: "네, 괜찮습니다. 코드 실력을 겨루는 대회가 아니에요. 피드백의 무게는 문제를 얼마나 정확히 이해했는가, 그 위에 세운 아이디어가 적절한가, 데모가 그 아이디어를 실제로 증명하는가에 실려 있어요. 프로토타입은 와이어프레임 수준이어도 됩니다. 발표는 전부 한국어예요. 참가자도, 피드백을 주시는 전문가분들도 한인 커뮤니티 기반이라 영어 걱정은 내려놓으셔도 돼요. 8일에 걸쳐 만드는 빌더톤이라 밤을 새울 일도 없고, 코딩 기본기는 Day 2 크래시코스에서 맞춰 드립니다. 산업 맥락을 아는 사람이 오히려 유리한 구조예요.",
+          en: "Yes, you'll be fine. This isn't a contest of coding ability. The weight of the feedback sits on how accurately you understand the problem, whether the idea you build on it is the right one, and whether the demo actually proves that idea. A wireframe-level prototype is fine. Presentations are all in Korean, and both the participants and the experts giving feedback come from the Korean community here, so you can put the English worry down. It's a builderthon built over eight days, so there's no all-nighter, and the Day 2 Crash Course levels the coding basics for everyone. If anything, the structure favours people who understand the industry context.",
+        },
+      },
+      {
+        q: { ko: "혼자(1인) 참가해도 되나요?", en: "Can I take part solo?" },
+        a: {
+          // 마지막 두 문장이 2026-08-12에 붙었습니다. 이 답은 매칭 절차만 말하고
+          // 매칭 다음을 말하지 않아서, "붙여만 주고 끝"으로 읽힐 여지가 있었어요.
+          // 프레임은 추가 케어입니다 — 현장 매칭이 부실해서 보완한다는 뉘앙스로
+          // 쓰지 마세요. 시각·장소는 여기 쓰지 않습니다(schedule.ts
+          // d2-team-building이 안내 경로까지 맡습니다).
+          ko: "됩니다. 솔로로 등록하면 1인 팀으로 출전할 수 있어요. 원하면 팀 매칭도 신청할 수 있고(AI 유형 테스트 + Day 1 현장 그룹핑), 이미 팀이 있다면 2–3인 팀 등록으로 대표 1명이 한 번에 등록하면 됩니다. 이렇게 매칭된 팀은 다음 날 크래시코스가 끝난 뒤 주관 학생회가 함께하는 팀 빌딩 시간으로 이어져요. 즉석에서 만난 팀도 빌드를 시작하기 전에 서로 알아갈 시간을 따로 만들어 드립니다.",
+          en: "Yes. Register solo and you compete as a one-person team. You can also opt into team matching (the AI personality test plus on-site grouping on Day 1), and if you already have a team, one person registers the whole 2–3 person group in one go. Teams matched this way carry into a team-building session after the Day 2 Crash Course, together with the organizing student associations, so a team formed on the spot gets time to gel before the building starts.",
+        },
+      },
+      // 솔로/팀 질문 바로 다음이 자리입니다 — 같은 사람이 이어서 묻는 질문이고
+      // (혼자 가도 되나 → 가서 정해도 되나), 답의 단서도 같은 것을 가리킵니다:
+      // 현장 팀 매칭에 남는 사람이 있느냐.
+      //
+      // 이 답이 이 사실의 전문본입니다(2026-08-11 주최 메시지 원문 기준). 나머지
+      // 두 곳은 신호만 냅니다 — register.reassure의 "당일 결정 OK"와
+      // hero.countdownSameDay의 한 줄. 셋을 함께 움직이되, 세 곳에 전문을
+      // 반복하지는 마세요.
+      //
+      // 마지막 괄호(팀 등록 예외)는 전문에만 답니다. 짧은 두 곳에 넣으면
+      // 단서가 단서를 낳아 문장이 안내가 아니라 약관처럼 읽힙니다.
+      //
+      // 시각(오후 2시 15분)은 hero.countdownDeadline · problemRegistrationOpen ·
+      // REGISTRATION_CLOSES_AT과 같은 값이어야 합니다. 여기서만 고치지 마세요.
+      {
+        // EDIT 2026-08-12: 용어와 톤을 사이트 표준으로 되돌렸습니다.
+        //
+        // 이 답은 주최 메시지 원문을 거의 그대로 옮겨 온 것이라, 원문의 말투가
+        // 함께 딸려 왔습니다. "1일 차"(사이트 표준은 Day 1 — 103곳 대 5곳)와
+        // "사인업"(표준은 등록 — 54곳 대 3곳)이 이 답변에만 남아 있었고, 톤도
+        // 유독 저자세였습니다("정말 감사하고요", "참고해 주세요"). 카톡으로 받은
+        // 안내라면 자연스럽지만, 같은 목록의 다른 열세 답변과 나란히 놓이면 이
+        // 하나만 다른 사람이 쓴 것처럼 읽힙니다.
+        //
+        // 사실은 하나도 바뀌지 않았습니다: 당일 와서 정해도 된다 · 마감 시각까지
+        // 열려 있다 · 늦으면 매칭할 사람이 없을 수 있다 · 팀 등록은 해당 없다.
+        //
+        // EDIT 2026-08-12 (2차): 팀 빌딩 연결 한 문장 추가. 자리는 등록 마감과
+        // 매칭 경고 사이입니다 — 앞은 "와도 된다", 뒤는 "늦으면 못 붙는다"라,
+        // "붙으면 그 다음이 있다"가 둘 사이에 와야 경고가 마지막 인상이 되지
+        // 않습니다. 위 세 곳 신호 계약은 그대로입니다(전문은 여기 하나).
+        q: { ko: "지금도 등록할 수 있나요?", en: "Can I still register?" },
+        a: {
+          ko: "등록은 8월 22일 오후 2시 15분에 마감됐어요. 참가 관련 안내는 참가자 오픈채팅에서 이어집니다. 현장에서 매칭된 팀은 다음 날 팀 빌딩 시간으로 이어서 챙겨 드립니다. (이미 팀으로 오신 분들은 해당 없어요.)",
+          en: "Registration closed at 2:15PM on 22 August. Everything for participants continues in the open chat. Teams matched on site carry into a team-building session the next day. (Doesn't apply if you came as a team.)",
         },
       },
     ],
