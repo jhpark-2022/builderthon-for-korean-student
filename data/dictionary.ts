@@ -423,7 +423,18 @@ export const dict = {
       ko: "조급한 Mistral? 여유로운 Pi? 너 뭔데",
       en: "Impatient Mistral? Easygoing Pi? Which one are you",
     },
-    // ── Quiz hook card, promoted ────────────────────────────────────────────
+    // ── Quiz hook card ──────────────────────────────────────────────────────
+    // 2026-08-23 프로모션 노출 제거로 미렌더(nav 칩·/quiz는 유지).
+    //
+    // DECIDED 2026-08-23 (박주형): 행사 국면에서 퀴즈는 더 이상 밀지 않는다 —
+    // 프로모션 카드 전부 제거, 남는 문은 nav ✦ 퀴즈 칩 하나.
+    //
+    // 아래 hookQuiz* 키는 히어로와 혜택 밴드의 퀴즈 카드가 읽던 문자열입니다.
+    // 그 카드들이 통째로 빠지면서 읽는 곳이 없어졌어요. 키는 보존합니다 — 다음
+    // 라운드에 되살릴 때 번역을 다시 쓰지 않아도 되고, /quiz 페이지와 nav의 ✦
+    // 칩은 지금도 그대로 살아 있습니다.
+    //
+    // 아래는 그때의 이력입니다.
     // The old card was a text link at text-xs/white-60 inside a dead panel: it
     // read as a disclaimer and its tap target was ~20px. These keys drive the
     // promoted version. The effort label deliberately differs from the register
@@ -3899,8 +3910,8 @@ export const dict = {
           // mailto와 위 kakaoInvite 답변이 이미 쓰고 있는 것과 같은 주소라, 새 상수를
           // 만들지 않고 같은 문자열을 씁니다 — 주소가 바뀌면 이 파일 안의 세 자리와
           // schedule.ts의 d1-problem-release를 함께 고치세요.
-          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다. 예를 들어 ‘판단할 시간도, 근거로 남는 기록도 없다’ 같은 실무 문제요. Day 1에 문제가 공개되고, 과제를 낸 코드프레소가 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자와 형식은 조율 중). 의뢰서에는 그 회사의 업무 워크플로우와 담당자가 겪는 불편, 관련 맥락이 담깁니다. 진행 중 특정 자료와 데이터가 필요해지면 운영진에게 문의해 주세요. 문제를 낸 코드프레소가 필요한 만큼 전달합니다. 트랙은 저지먼트와 오토메이션 두 개입니다. 어떤 병목인지는 트랙 섹션에 정리해 뒀어요. 트랙 선택은 Day 2(8월 23일 일요일)가 끝나기 전까지 정해 pjh030924@gmail.com 으로 알려주시면 됩니다.",
-          en: "You take on the AX (AI-transformation) problems a Korean company is facing right now, one set per track, practical things like “there is no time to judge, and no record to judge by.” They come as briefs: the problems drop on Day 1 and Codepresso, which set them, walks through the background first-hand (presenter and format still being arranged). Each brief carries the company's real workflow, the pain points of the person who owns it, and the context around it. If your team needs particular materials or data along the way, ask the organizers, and Codepresso, which set the problems, will send over what you need. There are two tracks, Judgment and Automation. The tracks section lays out which bottleneck each one is. Your track choice is due by the end of Day 2 (Sunday 23 August): email it to pjh030924@gmail.com.",
+          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다. 예를 들어 ‘판단할 시간도, 근거로 남는 기록도 없다’ 같은 실무 문제요.\n\nDay 1에 문제가 공개되고, 과제를 낸 코드프레소가 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자와 형식은 조율 중). 의뢰서에는 그 회사의 업무 워크플로우와 담당자가 겪는 불편, 관련 맥락이 담깁니다. 진행 중 특정 자료와 데이터가 필요해지면 운영진에게 문의해 주세요. 문제를 낸 코드프레소가 필요한 만큼 전달합니다.\n\n트랙은 저지먼트와 오토메이션 두 개입니다. 어떤 병목인지는 트랙 섹션에 정리해 뒀어요. 트랙 선택은 Day 2(8월 23일 일요일)가 끝나기 전까지 정해 pjh030924@gmail.com 으로 알려주시면 됩니다.",
+          en: "You take on the AX (AI-transformation) problems a Korean company is facing right now, one set per track, practical things like “there is no time to judge, and no record to judge by.”\n\nThey come as briefs: the problems drop on Day 1 and Codepresso, which set them, walks through the background first-hand (presenter and format still being arranged). Each brief carries the company's real workflow, the pain points of the person who owns it, and the context around it. If your team needs particular materials or data along the way, ask the organizers, and Codepresso, which set the problems, will send over what you need.\n\nThere are two tracks, Judgment and Automation. The tracks section lays out which bottleneck each one is. Your track choice is due by the end of Day 2 (Sunday 23 August): email it to pjh030924@gmail.com.",
         },
       },
       // 툴 질문은 바로 위 "크래시코스를 건너뛰어도 되나요" 옆이 자리입니다 — 같은 사람이
@@ -3913,8 +3924,8 @@ export const dict = {
         q: { ko: "어떤 AI 툴을 써야 하나요? Codex를 꼭 써야 하나요?", en: "Which AI tool do I need? Do I have to use Codex?" },
         a: {
           // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
-          ko: "크래시코스는 Codex를 기준으로 진행해요. 강사와 같은 화면을 따라 하기 좋게 하나로 맞춘 것뿐입니다. 팀 빌드와 공유회 결과물에는 툴 제한이 없어요. Claude Code든 커서든 ChatGPT든 손에 맞는 걸 쓰면 됩니다. 다만 계정은 필요해요. Claude나 ChatGPT의 기본 유료 플랜 정도면 8일 내내 충분하고, 그 이상은 필요 없습니다. 피드백이 보는 건 어떤 병목을 왜 골랐고 그 판단의 근거가 무엇인지거든요. 기술 완성도나 화면의 세련됨은 보지 않고요.",
-          en: "The crash course runs on Codex so everyone can follow the same screen. It isn't a rule about what you build with. There's no tool restriction on your team's build or your Showcase work: Claude Code, Cursor, ChatGPT, whatever fits your hand. You do need an account, though. A basic paid plan on Claude or ChatGPT covers the whole eight days, and nothing beyond that is needed. The feedback looks at which bottleneck you picked, why, and what backs that call. Technical polish and how slick the screen looks don't come into it.",
+          ko: "크래시코스는 Codex를 기준으로 진행해요. 강사와 같은 화면을 따라 하기 좋게 하나로 맞춘 것뿐입니다. 팀 빌드와 공유회 결과물에는 툴 제한이 없어요. Claude Code든 커서든 ChatGPT든 손에 맞는 걸 쓰면 됩니다.\n\n다만 계정은 필요해요. Claude나 ChatGPT의 기본 유료 플랜 정도면 8일 내내 충분하고, 그 이상은 필요 없습니다.\n\n피드백이 보는 건 어떤 병목을 왜 골랐고 그 판단의 근거가 무엇인지거든요. 기술 완성도나 화면의 세련됨은 보지 않고요.",
+          en: "The crash course runs on Codex so everyone can follow the same screen. It isn't a rule about what you build with. There's no tool restriction on your team's build or your Showcase work: Claude Code, Cursor, ChatGPT, whatever fits your hand.\n\nYou do need an account, though. A basic paid plan on Claude or ChatGPT covers the whole eight days, and nothing beyond that is needed.\n\nThe feedback looks at which bottleneck you picked, why, and what backs that call. Technical polish and how slick the screen looks don't come into it.",
         },
       },
       {
@@ -3981,8 +3992,8 @@ export const dict = {
         a: {
           // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
           // 첫 문장의 부정은 질문 직답이라 유지, 뒤의 두 대구만 정리했습니다.
-          ko: "기술 완성도는 보는 기준이 아닙니다. 크게 보면 무게는 결과물보다 거기까지 간 과정에 실려 있어요. 어떤 근거로 그 문제를 골랐는지, 그리고 그게 실제로 돌아가는지입니다. 무엇을 보고 피드백을 드리는지는 피드백 문서로 대회 전에 그대로 공개하니, 무엇을 준비해야 하는지 모르는 채 무대에 서실 일은 없어요.",
-          en: "Technical polish isn't one of the things looked at. Broadly, the weight is on your process more than the final finish: what evidence you chose the problem from, and whether the thing actually runs. What the feedback is based on goes out to participants before the event as a feedback document, exactly as it stands, so you'll never be preparing without knowing.",
+          ko: "기술 완성도는 보는 기준이 아닙니다. 크게 보면 무게는 결과물보다 거기까지 간 과정에 실려 있어요. 어떤 근거로 그 문제를 골랐는지, 그리고 그게 실제로 돌아가는지입니다.\n\n무엇을 보고 피드백을 드리는지는 피드백 문서로 대회 전에 그대로 공개하니, 무엇을 준비해야 하는지 모르는 채 무대에 서실 일은 없어요.",
+          en: "Technical polish isn't one of the things looked at. Broadly, the weight is on your process more than the final finish: what evidence you chose the problem from, and whether the thing actually runs.\n\nWhat the feedback is based on goes out to participants before the event as a feedback document, exactly as it stands, so you'll never be preparing without knowing.",
         },
         aGroups: [
           {
@@ -4079,8 +4090,8 @@ export const dict = {
           // DECIDED 2026-08-16 (정체성 얼라인, 공모전): 상금 뒤에 무엇이 이어지는지
           // 한 문장. 이 답은 "얼마"에서 끝나 있었는데, 수상의 실제 값은 부상보다
           // 그 뒤에 붙는 자리입니다(정본은 dict.program.awards의 next).
-          ko: "네, 다만 팀을 1, 2, 3위로 세우지 않습니다. 시상은 테마형 어워드 4부문이고 여덟 팀이 받아 가요. 부상은 부문에 따라 현금 또는 널담 바우처입니다. 수상팀은 12월 서울 쇼케이스 무대에 우선 초청되고, 가을에는 참가자 전원이 이어 갈 빌더 커리큘럼이 준비되고 있어요. 어떤 부문이 있고 누가 뽑는지는 프로그램의 Day 8 카드에 정리해 뒀습니다. 참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드와 캡 세트는 Day 1 현장에서 선착순 60세트로 드립니다.",
-          en: "Yes, but nobody gets lined up 1st-2nd-3rd. There are four thematic awards and eight teams take one home, each carrying either a cash prize or a Nuldam voucher. Winning teams get first call for the December showcase stage in Seoul, and an autumn builder curriculum for every participant is in the works. Which awards there are and who picks them is laid out on the Day 8 card in the programme. Entry is free and the networking goes to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come.",
+          ko: "네, 다만 팀을 1, 2, 3위로 세우지 않습니다. 시상은 테마형 어워드 4부문이고 여덟 팀이 받아 가요. 부상은 부문에 따라 현금 또는 널담 바우처입니다.\n\n수상팀은 12월 서울 쇼케이스 무대에 우선 초청되고, 가을에는 참가자 전원이 이어 갈 빌더 커리큘럼이 준비되고 있어요. 어떤 부문이 있고 누가 뽑는지는 프로그램의 Day 8 카드에 정리해 뒀습니다.\n\n참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드와 캡 세트는 Day 1 현장에서 선착순 60세트로 드립니다.",
+          en: "Yes, but nobody gets lined up 1st-2nd-3rd. There are four thematic awards and eight teams take one home, each carrying either a cash prize or a Nuldam voucher.\n\nWinning teams get first call for the December showcase stage in Seoul, and an autumn builder curriculum for every participant is in the works. Which awards there are and who picks them is laid out on the Day 8 card in the programme.\n\nEntry is free and the networking goes to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come.",
         },
       },
       {
@@ -4091,8 +4102,8 @@ export const dict = {
         // 답이 스스로 하게 둡니다.
         q: { ko: "수료증도 받을 수 있나요?", en: "Do we get certificates?" },
         a: {
-          ko: "네, 두 장입니다. 크래시코스 전 시간을 참석하면 크래시코스 수료증을 마지막 날 PDF로 보내드리고, 공유회 발표까지 마치면 완주 수료증을 Day 8 현장에서 실물로 드립니다. 둘 다 Zero100 명의로 발급되고, 링크드인과 이력서에 올릴 수 있어요. 이미 개발 경험이 있다면 수료증보다 멘토링과 네트워킹이 더 큰 수확일 거예요.",
-          en: "Yes, two of them. Attend the full Crash Course and the Crash Course certificate reaches you as a PDF on the final day; go all the way through your Showcase pitch and you're handed a printed completion certificate on Day 8. Both are issued by Zero100 and ready for LinkedIn and your CV. If you already build, the mentoring and network will matter more than the paper.",
+          ko: "네, 두 장입니다. 크래시코스 전 시간을 참석하면 크래시코스 수료증을 마지막 날 PDF로 보내드리고, 공유회 발표까지 마치면 완주 수료증을 Day 8 현장에서 실물로 드립니다.\n\n둘 다 Zero100 명의로 발급되고, 링크드인과 이력서에 올릴 수 있어요. 이미 개발 경험이 있다면 수료증보다 멘토링과 네트워킹이 더 큰 수확일 거예요.",
+          en: "Yes, two of them. Attend the full Crash Course and the Crash Course certificate reaches you as a PDF on the final day; go all the way through your Showcase pitch and you're handed a printed completion certificate on Day 8.\n\nBoth are issued by Zero100 and ready for LinkedIn and your CV. If you already build, the mentoring and network will matter more than the paper.",
         },
       },
       {
@@ -4128,8 +4139,8 @@ export const dict = {
           // 근무합니다" 같은 확정형이나 특정 국가의 특정 포지션을 약속하는 문장으로
           // 바꾸지 마세요. 지역은 아래 "구체적인 조건"에 걸리는 항목이기도 해서,
           // 그 문장 앞에 둡니다.
-          ko: "네, 지금 추진 중인 유급 인턴십입니다. AXMOS(코드프레소와 WVB)의 인턴 기회이고, 수상 여부와 무관하게 열려 있습니다. 근무 지역도 싱가포르에 한정되지 않고, 한국과 미국의 기회가 포함될 수 있어요. 행사에서 잘하는 것과 현장에서 잘하는 것은 다를 수 있어서, 주최사가 관심 있는 참가자를 행사 과정과 제출 자료를 바탕으로 직접 검토해요. 8일 전체가 사실상 포트폴리오가 되는 구조입니다. 구체적인 조건은 행사가 끝난 뒤 회사와 학생이 학기 일정에 맞춰 이야기해 정합니다. Day 8 커리어 간담회도 인턴과 채용 풀로 이어지는 별도 연결 통로예요.",
-          en: "Yes, a paid internship already in motion, with AXMOS (Codepresso, WVB), open regardless of whether your team wins anything. The location isn't limited to Singapore either; opportunities in Korea and the US can be part of it. Doing well at an event and doing well on the job can be two different things, so the hosts review interested participants directly, on the strength of their work across the event and what they submit. The whole eight days effectively become your portfolio. Specific terms get settled after the event, between the company and the student around their term dates. The Day 8 career session is a separate route into the internship & hiring pool too.",
+          ko: "네, 지금 추진 중인 유급 인턴십입니다. AXMOS(코드프레소와 WVB)의 인턴 기회이고, 수상 여부와 무관하게 열려 있습니다. 근무 지역도 싱가포르에 한정되지 않고, 한국과 미국의 기회가 포함될 수 있어요.\n\n행사에서 잘하는 것과 현장에서 잘하는 것은 다를 수 있어서, 주최사가 관심 있는 참가자를 행사 과정과 제출 자료를 바탕으로 직접 검토해요. 8일 전체가 사실상 포트폴리오가 되는 구조입니다.\n\n구체적인 조건은 행사가 끝난 뒤 회사와 학생이 학기 일정에 맞춰 이야기해 정합니다. Day 8 커리어 간담회도 인턴과 채용 풀로 이어지는 별도 연결 통로예요.",
+          en: "Yes, a paid internship already in motion, with AXMOS (Codepresso, WVB), open regardless of whether your team wins anything. The location isn't limited to Singapore either; opportunities in Korea and the US can be part of it.\n\nDoing well at an event and doing well on the job can be two different things, so the hosts review interested participants directly, on the strength of their work across the event and what they submit. The whole eight days effectively become your portfolio.\n\nSpecific terms get settled after the event, between the company and the student around their term dates. The Day 8 career session is a separate route into the internship & hiring pool too.",
         },
       },
       {
@@ -4170,8 +4181,8 @@ export const dict = {
           // 라이브 시연 문장("무대에서 삐끗해도 괜찮다 · 영상 기준")은 기준
           // 항목의 '보지 않는 것' 목록과 겹치지만 그대로 둡니다. 중복을 줄이는
           // 것보다 학생이 무대 사고를 치명적으로 오해하지 않는 편이 중요합니다.
-          ko: "기업이 도입을 약속하는 건 아니에요. ‘담당자가 다음 주 월요일부터 쓸 수 있는가’를 보긴 하지만, 그건 도입 확정과는 다릅니다. 대신 관심 있는 참가자가 인턴으로 그 문제를 실무에서 이어갈 길은 열려 있어요. 위 인턴십 답변 그대로요. ‘AI로 대충’은 전문가 피드백에서 그대로 드러납니다. 전문가들이 현장에서 “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”를 묻고, 근거 없이 결과만 내놓는 산출물은 요구사항 미충족으로 처리됩니다. 목업과 슬라이드만 있는 경우도 마찬가지고요. 반대로 무대에서 라이브 시연이 삐끗하는 건 괜찮습니다. 작동 여부는 사전에 제출한 데모 영상 기준으로 봅니다.",
-          en: "No company commits to adopting what you build. The question “could the owner use this from next Monday?” does get asked, but that isn't the same as a decision to adopt. What does stay open is the chance to carry the problem into real work as an intern, exactly as the internship answer above says. And “AI slop” shows up plainly in the expert feedback: the experts ask out loud, “how is this different from what the problem owner would get by just asking a general LLM?”, and output that returns results with no reasoning behind them counts as a failed requirement. Mockups or slides alone go the same way. A live demo stumbling on stage, on the other hand, costs nothing: whether it runs is judged on the demo video you submit beforehand.",
+          ko: "기업이 도입을 약속하는 건 아니에요. ‘담당자가 다음 주 월요일부터 쓸 수 있는가’를 보긴 하지만, 그건 도입 확정과는 다릅니다. 대신 관심 있는 참가자가 인턴으로 그 문제를 실무에서 이어갈 길은 열려 있어요. 위 인턴십 답변 그대로요.\n\n‘AI로 대충’은 전문가 피드백에서 그대로 드러납니다. 전문가들이 현장에서 “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”를 묻고, 근거 없이 결과만 내놓는 산출물은 요구사항 미충족으로 처리됩니다. 목업과 슬라이드만 있는 경우도 마찬가지고요.\n\n반대로 무대에서 라이브 시연이 삐끗하는 건 괜찮습니다. 작동 여부는 사전에 제출한 데모 영상 기준으로 봅니다.",
+          en: "No company commits to adopting what you build. The question “could the owner use this from next Monday?” does get asked, but that isn't the same as a decision to adopt. What does stay open is the chance to carry the problem into real work as an intern, exactly as the internship answer above says.\n\nAnd “AI slop” shows up plainly in the expert feedback: the experts ask out loud, “how is this different from what the problem owner would get by just asking a general LLM?”, and output that returns results with no reasoning behind them counts as a failed requirement. Mockups or slides alone go the same way.\n\nA live demo stumbling on stage, on the other hand, costs nothing: whether it runs is judged on the demo video you submit beforehand.",
         },
       },
       // Q1 spine (2026-08-01), placed straight after the certificate question —
@@ -4242,8 +4253,8 @@ export const dict = {
           // 네 곳에 있었고, 그 문장의 집은 기준 항목("피드백과 어워드는 어떤
           // 기준인가요?")의 '보지 않는 것' 목록입니다. 여기서는 와이어프레임
           // 수준이어도 된다는 앞 문장이 이미 같은 일을 합니다.
-          ko: "네, 괜찮습니다. 코드 실력을 겨루는 대회가 아니에요. 피드백의 무게는 문제를 얼마나 정확히 이해했는가, 그 위에 세운 아이디어가 적절한가, 데모가 그 아이디어를 실제로 증명하는가에 실려 있어요. 프로토타입은 와이어프레임 수준이어도 됩니다. 발표는 전부 한국어예요. 참가자도, 피드백을 주시는 전문가분들도 한인 커뮤니티 기반이라 영어 걱정은 내려놓으셔도 돼요. 8일에 걸쳐 만드는 빌더톤이라 밤을 새울 일도 없고, 코딩 기본기는 Day 2 크래시코스에서 맞춰 드립니다. 산업 맥락을 아는 사람이 오히려 유리한 구조예요.",
-          en: "Yes, you'll be fine. This isn't a contest of coding ability. The weight of the feedback sits on how accurately you understand the problem, whether the idea you build on it is the right one, and whether the demo actually proves that idea. A wireframe-level prototype is fine. Presentations are all in Korean, and both the participants and the experts giving feedback come from the Korean community here, so you can put the English worry down. It's a builderthon built over eight days, so there's no all-nighter, and the Day 2 Crash Course levels the coding basics for everyone. If anything, the structure favours people who understand the industry context.",
+          ko: "네, 괜찮습니다. 코드 실력을 겨루는 대회가 아니에요. 피드백의 무게는 문제를 얼마나 정확히 이해했는가, 그 위에 세운 아이디어가 적절한가, 데모가 그 아이디어를 실제로 증명하는가에 실려 있어요. 프로토타입은 와이어프레임 수준이어도 됩니다.\n\n발표는 전부 한국어예요. 참가자도, 피드백을 주시는 전문가분들도 한인 커뮤니티 기반이라 영어 걱정은 내려놓으셔도 돼요.\n\n8일에 걸쳐 만드는 빌더톤이라 밤을 새울 일도 없고, 코딩 기본기는 Day 2 크래시코스에서 맞춰 드립니다. 산업 맥락을 아는 사람이 오히려 유리한 구조예요.",
+          en: "Yes, you'll be fine. This isn't a contest of coding ability. The weight of the feedback sits on how accurately you understand the problem, whether the idea you build on it is the right one, and whether the demo actually proves that idea. A wireframe-level prototype is fine.\n\nPresentations are all in Korean, and both the participants and the experts giving feedback come from the Korean community here, so you can put the English worry down.\n\nIt's a builderthon built over eight days, so there's no all-nighter, and the Day 2 Crash Course levels the coding basics for everyone. If anything, the structure favours people who understand the industry context.",
         },
       },
       {
@@ -4254,8 +4265,8 @@ export const dict = {
           // 프레임은 추가 케어입니다 — 현장 매칭이 부실해서 보완한다는 뉘앙스로
           // 쓰지 마세요. 시각·장소는 여기 쓰지 않습니다(schedule.ts
           // d2-team-building이 안내 경로까지 맡습니다).
-          ko: "됩니다. 솔로로 등록하면 1인 팀으로 출전할 수 있어요. 원하면 팀 매칭도 신청할 수 있고(AI 유형 테스트 + Day 1 현장 그룹핑), 이미 팀이 있다면 2–3인 팀 등록으로 대표 1명이 한 번에 등록하면 됩니다. 이렇게 매칭된 팀은 다음 날 크래시코스가 끝난 뒤 주관 학생회가 함께하는 팀 빌딩 시간으로 이어져요. 즉석에서 만난 팀도 빌드를 시작하기 전에 서로 알아갈 시간을 따로 만들어 드립니다.",
-          en: "Yes. Register solo and you compete as a one-person team. You can also opt into team matching (the AI personality test plus on-site grouping on Day 1), and if you already have a team, one person registers the whole 2–3 person group in one go. Teams matched this way carry into a team-building session after the Day 2 Crash Course, together with the organizing student associations, so a team formed on the spot gets time to gel before the building starts.",
+          ko: "됩니다. 솔로로 등록하면 1인 팀으로 출전할 수 있어요. 원하면 팀 매칭도 신청할 수 있고(AI 유형 테스트 + Day 1 현장 그룹핑), 이미 팀이 있다면 2–3인 팀 등록으로 대표 1명이 한 번에 등록하면 됩니다.\n\n이렇게 매칭된 팀은 다음 날 크래시코스가 끝난 뒤 주관 학생회가 함께하는 팀 빌딩 시간으로 이어져요. 즉석에서 만난 팀도 빌드를 시작하기 전에 서로 알아갈 시간을 따로 만들어 드립니다.",
+          en: "Yes. Register solo and you compete as a one-person team. You can also opt into team matching (the AI personality test plus on-site grouping on Day 1), and if you already have a team, one person registers the whole 2–3 person group in one go.\n\nTeams matched this way carry into a team-building session after the Day 2 Crash Course, together with the organizing student associations, so a team formed on the spot gets time to gel before the building starts.",
         },
       },
       // 솔로/팀 질문 바로 다음이 자리입니다 — 같은 사람이 이어서 묻는 질문이고

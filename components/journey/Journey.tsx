@@ -23,9 +23,9 @@ import Chapter from "./Chapter";
 import EventModal from "@/components/EventModal";
 import PartnerModal, { type PartnerInfo } from "@/components/PartnerModal";
 import ChatGlyph from "@/components/ChatGlyph";
-import { loadOwnResult } from "@/lib/quizResult";
-import { parseResultId } from "@/lib/quizScore";
-import { RESULTS, QUESTIONS, type MbtiKey } from "@/data/quiz";
+// 2026-08-23: 퀴즈 프로모션 카드가 빠지면서 이 파일에서 퀴즈 데이터를 읽을 일이
+// 없어졌습니다(loadOwnResult · parseResultId · RESULTS · QUESTIONS · MbtiKey).
+// /quiz 페이지와 헤더의 ReturningGreeting은 각자 import 하므로 영향 없습니다.
 // RegisterPreset은 등록 진입점과 함께 2026-08-22에 이 파일에서 빠졌습니다.
 // 타입 자체는 RegisterContext에 그대로 있고, 모달도 살아 있습니다.
 import { useRegister } from "@/lib/RegisterContext";
@@ -531,329 +531,55 @@ function MobileStickyBar({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// QUIZ HOOK PARTS — all three read from data/quiz.ts. Nothing here invents a
-// type name, an emoji or a gradient: if the quiz data changes these follow.
+// HERO TRACK CARD — 히어로 오른쪽(데스크톱)과 히어로 아래(모바일)에 서는 카드 하나.
+//
+// DECIDED 2026-08-23 (박주형): 행사 국면에서 퀴즈는 더 이상 밀지 않는다 —
+// 프로모션 카드 전부 제거, 남는 문은 nav ✦ 퀴즈 칩 하나. 히어로 로고 월과 트랙
+// 카드 사이 숨 쉴 간격. FAQ 답변은 모바일에서 문단으로.
+//
+// 여기 있던 것은 HookCards였습니다: 카드 두 장(트랙 + 퀴즈)을 나란히 놓고, 퀴즈
+// 쪽은 배치마다 세 가지 변형(히어로용 compact, 밴드용 Q1 접힘, 재방문자용 인사)을
+// 골라 쓰던 컴포넌트예요. 퀴즈 프로모션이 사라지면서 카드가 한 장이 됐고, 그
+// 변형 장치(QuizEmojiStack · QuizTypeShuffle · QuizResultPeek)도 읽는 곳이 없어져
+// 함께 걷어냈습니다. 이름도 실제로 하는 일로 바꿉니다 — "훅 카드들"이 아니라
+// 트랙 카드 하나입니다.
+//
+// 퀴즈로 가는 문은 남아 있습니다: nav의 ✦ 칩(데스크톱 앵커 행 · 모바일 헤더)과
+// /quiz 직접 방문. 데이터와 페이지는 하나도 건드리지 않았습니다.
+//
+// 문자열 키(dict.register.hookQuiz*)도 보존돼 있습니다 — 그쪽 주석 참고.
 // ─────────────────────────────────────────────────────────────────────────────
-
-// Five type glyphs in an overlapping stack, last tile a "?" — the curiosity gap
-// the old card had no way to show. Fans out on hover (stagger 40ms); under
-// prefers-reduced-motion the transforms simply never apply.
-const PEEK_TYPES: MbtiKey[] = ["ENTP", "INFP", "ISTJ", "ESFP"];
-
-function QuizEmojiStack({ compact = false }: { compact?: boolean }) {
-  const size = compact ? "h-6 w-6 text-[0.7rem]" : "h-7 w-7 text-[0.8rem]";
-  return (
-    <span aria-hidden className="flex items-center">
-      {PEEK_TYPES.map((k, i) => (
-        <span
-          key={k}
-          style={{ marginLeft: i === 0 ? 0 : -8, transitionDelay: `${i * 40}ms` }}
-          className={`inline-flex ${size} items-center justify-center rounded-full border border-white/15 bg-[#120d22] shadow-[0_2px_8px_rgba(0,0,0,0.5)] transition-transform duration-300 motion-safe:group-hover:translate-x-[var(--fan)]`}
-        >
-          {RESULTS[k].emoji}
-        </span>
-      ))}
-      <span
-        style={{ marginLeft: -8, transitionDelay: `${PEEK_TYPES.length * 40}ms` }}
-        className={`inline-flex ${size} items-center justify-center rounded-full border border-violet-400/40 bg-violet-500/20 font-black text-violet-100 transition-transform duration-300 motion-safe:group-hover:translate-x-[var(--fan)]`}
-      >
-        ?
-      </span>
-    </span>
-  );
-}
-
-// 3s는 아래 PeekCard의 교체 주기(setInterval 3000 + quizPeekFade 3s)와 같은
-// 값입니다. 예전에는 이름이 2.5s, 카드가 3s로 돌아서 두 루프의 위상이 매 번
-// 어긋났고, 한 카드 안에서 서로 다른 박자로 두 군데가 깜빡이는 것처럼 보였습니다.
-// 하나를 바꾸면 다른 하나도 함께 바꾸세요 — CSS 애니메이션과 JS 인터벌 넷이
-// 같은 숫자를 공유합니다.
-const NAME_SWAP_MS = 3000;
-
-// The teaser line: one REAL variant name at a time, swapped every 3s. Uses the
-// same names the result screen prints, so nothing here can be a name a taker
-// will never see. Static under reduced motion.
-function QuizTypeShuffle({ t }: { t: Tfn }) {
-  const reduce = useReducedMotion();
-  const names = useMemo(
-    () => PEEK_TYPES.map((k) => t(RESULTS[k].variants.T.name)),
-    [t],
-  );
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    if (reduce) return;
-    const id = setInterval(() => setI((n) => (n + 1) % names.length), NAME_SWAP_MS);
-    return () => clearInterval(id);
-  }, [reduce, names.length]);
-  return (
-    <p className="mt-1 text-xs text-white/50">
-      {t(dict.register.hookQuizShufflePrefix)}{" "}
-      <span
-        key={reduce ? "static" : i}
-        className="font-semibold text-violet-200/90 motion-safe:animate-[quizNameSwap_3s_ease-in-out_infinite]"
-      >
-        {names[reduce ? 0 : i]}
-      </span>
-    </p>
-  );
-}
-
-// A ~72px 9:16 mock of the shareable result card, tilted -4°. Built from the
-// type's own accent gradient + emoji rather than an image, so it costs no
-// request and cannot go stale against the real card.
-function QuizResultPeek({ mbti, className = "" }: { mbti?: MbtiKey; className?: string }) {
-  const reduce = useReducedMotion();
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    // A visitor with a saved result gets THEIR card, held still. Rotating
-    // sample types next to "무대 체질 Suno님, …" showed a Grok card beside a
-    // greeting naming Suno — the one place this mock must not be decorative.
-    if (reduce || mbti) return;
-    const id = setInterval(() => setI((n) => (n + 1) % PEEK_TYPES.length), 3000);
-    return () => clearInterval(id);
-  }, [reduce, mbti]);
-  const r = RESULTS[mbti ?? PEEK_TYPES[reduce ? 0 : i]];
-  return (
-    <span
-      aria-hidden
-      className={`relative block w-[72px] shrink-0 -rotate-[4deg] overflow-hidden rounded-lg border border-white/15 bg-[#0c0a18] shadow-[0_6px_18px_-6px_rgba(0,0,0,0.8)] ${className}`}
-      style={{ aspectRatio: "9 / 16" }}
-    >
-      <span
-        key={r.mbti}
-        className={`absolute inset-0 flex flex-col items-center justify-center gap-1 px-1 ${
-          mbti ? "" : "motion-safe:animate-[quizPeekFade_3s_ease-in-out_infinite]"
-        }`}
-      >
-        <span className={`flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br text-sm ${r.accent}`}>
-          {r.emoji}
-        </span>
-        <span className="text-[0.4rem] font-bold leading-tight text-white/85">{r.model}</span>
-        <span className="text-[0.35rem] font-semibold tracking-wider text-white/55">{r.mbti}</span>
-      </span>
-    </span>
-  );
-}
-
-function HookCards({
-  t,
-  ownResultId,
-  className = "",
-  chatSrc,
-  stacked = false,
-  withQuestion = false,
-  withTrackCard = true,
-}: {
-  t: Tfn;
-  ownResultId: string | null;
-  className?: string;
-  // Which placement this instance is, for the open-chat link's funnel tag.
-  // `null` renders no open-chat link at all — used by the hero, where the nav
-  // now carries a permanent open-chat button in the same viewport and a second
-  // link two hundred pixels below it was the same offer twice.
-  chatSrc: "band" | null;
-  // Force a single vertical column (no 2-up grid) — used in the hero's narrow
-  // right column, where two cards side by side would be too cramped.
-  stacked?: boolean;
-  // Fold the quiz's real Q1 INTO the quiz card, so the question and the card
-  // are one thing rather than a card followed by a separate question block
-  // further down the page. Only the 혜택 band uses it: the hero has no room and
-  // repeating the same question in three placements would read as a loop.
-  // Ignored for a returning visitor — they have a result; re-asking Q1 as the
-  // headline of their card would be a step backwards.
-  withQuestion?: boolean;
-  // DECIDED 2026-08-23 (모바일 감사 2차): 혜택 밴드에서 트랙 카드를 뺍니다.
-  // 히어로의 트랙+퀴즈 페어가 혜택 밴드에 통째로 한 번 더 있어서, 폰에서 몇 화면
-  // 간격으로 똑같은 카드 두 장을 다시 보게 됐습니다. 히어로가 먼저 나오고 그쪽이
-  // 페이지의 1순위 액션 자리라, 중복을 걷어내는 쪽은 밴드입니다.
-  //
-  // 퀴즈 카드는 남깁니다. 밴드의 퀴즈는 Q1이 접혀 들어간 변형이라(withQuestion)
-  // 히어로 쪽과 모양이 달라 반복으로 읽히지 않고, 트랙과 달리 이 자리에서만
-  // 할 수 있는 행동입니다.
-  withTrackCard?: boolean;
-}) {
-  // The hero is the one place the register CTA must be unambiguously the
-  // biggest thing on screen, and there the two cards sit one above the other.
-  // `compact` strips the quiz card's two tallest ornaments there and nowhere
-  // else. If this ever stops tracking `stacked`, re-measure both cards.
-  const compact = stacked;
-  // Q1 answered inline. Handing the choice to /quiz via ?q1= means the bar
-  // starts at 1/14 instead of throwing the answer away and asking again.
-  const reduce = useReducedMotion();
-  const [picked, setPicked] = useState<"a" | "b" | null>(null);
-  const q1 = QUESTIONS[0];
-  const askQ = withQuestion && !ownResultId;
-  const choose = (side: "a" | "b") => {
-    if (picked) return;
-    setPicked(side);
-    track("quiz_click", { src: "hook_q1" });
-    const go = () => { window.location.href = `/quiz?q1=${side}`; };
-    if (reduce) go(); else window.setTimeout(go, 300);
-  };
-  // "조급한 Mistral" for a visitor who already took the test. Derived from the
-  // same saved id the CTA links to, so the greeting can never name a different
-  // type than the link opens. Unparseable/unknown ids fall back to first-visit
-  // copy rather than greeting someone as "undefined".
-  const parsed = ownResultId ? parseResultId(ownResultId) : null;
-  const ownName =
-    parsed && RESULTS[parsed.mbti]
-      ? t(RESULTS[parsed.mbti].variants[parsed.identity].name)
-      : null;
-
+function HeroTrackCard({ t, className = "" }: { t: Tfn; className?: string }) {
   return (
     <div className={className}>
-      {/* items-start only in the question variant. Folding Q1 in roughly doubles
-          the quiz card's height, and a stretched grid row would blow card 1 up to
-          match it — leaving the page's primary CTA as a box that is half empty
-          space, which reads as the weaker of the two. Letting each card keep its
-          own height costs a ragged bottom edge and buys back the hierarchy. */}
-      <div className={`grid gap-3 ${stacked || !withTrackCard ? "" : "sm:grid-cols-2"} ${askQ ? "items-start" : ""}`}>
-        {/* Card 1 — the page's primary action.
-            2026-08-22까지는 언제나 등록이었습니다. 등록이 마감되면서 세 배치가 전부
-            트랙 카드가 됐고, 분기가 필요 없어져 등록 쪽 가지를 걷어냈습니다.
-            (마감 후 청산: 비활성 버튼을 남기지 않는다. 등록 모달과 API는 그대로
-            살아 있고, 여기서 끊긴 것은 진입점뿐입니다.)
-            바이올렛 그라데이션 필을 그대로 쓰는 이유: 이 필은 "등록"의 표식이
-            아니라 "페이지의 1순위 행동"의 표식이고, 그 자리가 등록에서 트랙으로
-            넘어왔을 뿐입니다. */}
-        {withTrackCard && (
-        <a
-          href="#tracks"
-          className="group flex flex-col items-start gap-2 rounded-2xl border border-violet-400/25 bg-violet-400/[0.07] p-4 text-left transition hover:border-violet-400/45 hover:bg-violet-400/[0.11]"
-        >
-          <p className="text-xs font-medium text-white/60">{t(dict.tracks.hookLabel)}</p>
-          {/* 트랙명과 병목 한 줄. 카드에서 유일하게 사실을 나르는 부분이라
-              CTA 위에 둡니다 — 필은 "더 보기"고, 이 두 줄이 "무엇을". */}
-          <div className="flex w-full flex-col gap-1">
-            {dict.tracks.hookLines.map((line) => (
-              <p key={line.en} className="break-keep text-xs leading-relaxed text-white/75">
-                {t(line)}
-              </p>
-            ))}
-          </div>
-          {/* 등록 카드가 쓰던 그라데이션 + 글로우 그대로. nav의 등록 버튼과
-              같은 모양이 페이지의 1순위 액션을 표시합니다. */}
-          <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition group-hover:-translate-y-0.5 group-hover:shadow-[0_0_28px_rgba(124,92,255,0.6)]">
-            {t(dict.tracks.hookCta)}
-            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </span>
-        </a>
-        )}
-        {/* Card 2 — the quiz. Promoted from a text link inside a dead panel to a
-            whole-card link: the tap target was ~20px and the copy read as a
-            disclaimer, which is most of why 6 of 115 weekly visitors tried it.
-            It is still a clear step below the register card — outline and glass
-            only, never the violet gradient + glow, which stays the register
-            button's alone. `ownName` is null until after mount (loadOwnResult is
-            client-only), so the first render always matches the server's. */}
-        {askQ ? (
-        // Question variant: the card holds real controls, so it cannot itself be
-        // a link (a <button> inside an <a> is invalid and unusable by keyboard).
-        <div className="flex min-h-[56px] flex-col gap-2 rounded-2xl border border-white/12 bg-white/[0.04] p-4 text-left">
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0 flex-1">
-              <p className="break-keep text-sm font-bold leading-snug text-white">
-                {t(dict.register.hookQuizQBig)}
-              </p>
-              <QuizTypeShuffle t={t} />
-            </div>
-            <QuizResultPeek className="hidden shrink-0 sm:block" />
-          </div>
-          <QuizEmojiStack />
-          {/* The question itself — this is the whole point of the variant. */}
-          <p className="mt-1 break-keep text-xs font-semibold leading-relaxed text-white/85">{t(q1.text)}</p>
-          <div className="grid gap-2">
-            {(["a", "b"] as const).map((side) => (
-              <button
-                key={side}
-                type="button"
-                onClick={() => choose(side)}
-                aria-pressed={picked === side}
-                className={`flex min-h-[44px] items-center gap-2.5 rounded-xl border p-2.5 text-left transition ${
-                  picked === side
-                    ? "border-violet-400/60 bg-violet-500/15"
-                    : "border-white/12 bg-white/[0.03] hover:border-violet-400/35 hover:bg-white/[0.06]"
-                }`}
-              >
-                <span
-                  aria-hidden
-                  className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-[0.6rem] font-black transition ${
-                    picked === side ? "border-violet-300 bg-violet-400 text-[#120d22]" : "border-white/25 text-white/50"
-                  }`}
-                >
-                  {picked === side ? "✓" : side.toUpperCase()}
-                </span>
-                <span className="break-keep text-xs leading-relaxed text-white/80">{t(q1[side].label)}</span>
-              </button>
-            ))}
-          </div>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <a
-              href="/quiz"
-              onClick={() => track("quiz_click", { src: "hook_skip" })}
-              // -my-3 py-3: 44px of touch height without moving the line visually.
-              className="-my-3 inline-flex min-h-[44px] items-center py-3 text-xs font-semibold text-violet-200/80 underline-offset-4 transition hover:text-violet-100 hover:underline"
-            >
-              {t(dict.miniQuiz.cta)}
-            </a>
-            <span className="text-[11px] text-white/55">{t(dict.register.hookQuizMeta)}</span>
-          </div>
-          <p className="text-xs leading-relaxed text-white/55">{t(dict.register.hookQuizNote)}</p>
+      {/* 페이지의 1순위 행동입니다. 바이올렛 그라데이션 필은 "등록"의 표식이 아니라
+          "지금 이 페이지에서 가장 먼저 할 일"의 표식이고, 그 자리가 등록에서 트랙으로
+          넘어왔을 뿐이에요(2026-08-22 마감 후 청산).
+          카드 전체가 하나의 링크입니다 — 예전에 CTA만 링크였을 때는 눌러야 할 것처럼
+          보이는 면(카드)이 아무 일도 하지 않았습니다. */}
+      <a
+        href="#tracks"
+        className="group flex flex-col items-start gap-2 rounded-2xl border border-violet-400/25 bg-violet-400/[0.07] p-4 text-left transition hover:border-violet-400/45 hover:bg-violet-400/[0.11]"
+      >
+        <p className="text-xs font-medium text-white/60">{t(dict.tracks.hookLabel)}</p>
+        {/* 트랙명과 병목 한 줄. 카드에서 유일하게 사실을 나르는 부분이라 CTA 위에
+            둡니다 — 필은 "더 보기"고, 이 두 줄이 "무엇을". */}
+        <div className="flex w-full flex-col gap-1">
+          {dict.tracks.hookLines.map((line) => (
+            <p key={line.en} className="break-keep text-xs leading-relaxed text-white/75">
+              {t(line)}
+            </p>
+          ))}
         </div>
-        ) : (
-        <a
-          href={ownResultId ? `/quiz?r=${ownResultId}` : "/quiz"}
-          onClick={() => track("quiz_click", { src: "hook_card" })}
-          className={`group flex min-h-[56px] flex-col rounded-2xl border border-white/12 bg-white/[0.04] p-4 text-left transition hover:border-violet-400/35 hover:bg-white/[0.07] active:scale-[0.99] ${compact ? "gap-1.5" : "gap-2"}`}
-        >
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0 flex-1">
-              <p className="break-keep text-sm font-bold leading-snug text-white">
-                {ownName
-                  ? t(dict.register.hookQuizQReturn).replace("{name}", ownName)
-                  : t(dict.register.hookQuizQBig)}
-              </p>
-              {/* Rotating REAL variant names — the single most concrete thing the
-                  quiz has, and it was nowhere on the home page. */}
-              {!ownName && !compact && <QuizTypeShuffle t={t} />}
-            </div>
-            {/* 9:16 story-card mock, rebuilt from the same type data the real
-                result card uses — no new asset.
-                NOT in the hero: with the peek and the teaser line this card came
-                out 300px tall against the register card's 172, and in the hero
-                the two are stacked, so the aside was physically the bigger of
-                the two. The mid-page bands lay them side by side and have the
-                room, so that is where the visual assets earn their space. */}
-            {!compact && <QuizResultPeek mbti={parsed?.mbti} className="hidden shrink-0 sm:block" />}
-          </div>
-          <QuizEmojiStack compact={compact} />
-          <span className={`inline-flex w-fit items-center gap-1.5 rounded-full border border-violet-400/40 bg-violet-500/10 px-4 text-sm font-bold text-violet-100 transition group-hover:border-violet-300/60 group-hover:bg-violet-500/20 group-hover:text-white ${compact ? "py-1.5" : "py-2"}`}>
-            {t(ownName ? dict.register.hookQuizCtaReturn : dict.register.hookQuizCtaBig)}
-            {!ownName && (
-              <span className="rounded-full bg-white/15 px-1.5 py-0.5 text-[0.6rem] font-bold tracking-wide">
-                {t(dict.register.hookQuizMeta)}
-              </span>
-            )}
-            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </span>
-          {/* First-visit only — a returning visitor has already seen the joke
-              and is here for their result, not the disclaimer. */}
-          {!ownName && (
-            <p className="text-xs leading-relaxed text-white/55">{t(dict.register.hookQuizNote)}</p>
-          )}
-        </a>
-        )}
-      </div>
-      {/* Third CTA — under both cards, quieter than either. Absent in the hero:
-          the nav's open-chat button is already on screen there. */}
-      {chatSrc && (
-        <div className="mt-3 text-center">
-          <OpenChatLink t={t} src={chatSrc} />
-        </div>
-      )}
+        <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition group-hover:-translate-y-0.5 group-hover:shadow-[0_0_28px_rgba(124,92,255,0.6)]">
+          {t(dict.tracks.hookCta)}
+          <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+        </span>
+      </a>
     </div>
   );
 }
+
 
 // Self-paced build is not a session: no start time, nowhere to be, nothing to
 // attend. Read off the explicit data flag rather than category === "build" —
@@ -1399,6 +1125,7 @@ function HeroLiveStrip({
           <span className="shrink-0 text-[0.65rem] font-semibold text-white/50">{nextOnsite.date}</span>
         </button>
       )}
+
     </div>
   );
 }
@@ -3742,14 +3469,9 @@ export default function Journey() {
     setActive(ev);
   };
 
-  // Returning quiz-taker? Load their durable result post-mount (null on SSR +
-  // first render so the CTA label matches the server output → no hydration
-  // mismatch; it just swaps to "내 결과 보기" once read).
-  const [ownResultId, setOwnResultId] = useState<string | null>(null);
-  useEffect(() => {
-    const r = loadOwnResult();
-    if (r) setOwnResultId(r.resultId);
-  }, []);
+  // 2026-08-23: 저장된 퀴즈 결과를 읽던 상태(ownResultId)가 빠졌습니다. 훅 카드의
+  // 재방문 변형("{name}님, 환상의 짝꿍은 확인하셨어요?")만 쓰던 값이고, 그 카드가
+  // 사라졌어요. 헤더의 ReturningGreeting은 자기 파일에서 따로 읽으므로 영향 없습니다.
 
   // Desktop grid: tallest day determines the shared row count so every column
   // gets the same number of card slots and rows line up across all six days.
@@ -3969,12 +3691,7 @@ export default function Journey() {
                 up under the headline. */}
             <div className="ml-auto w-full max-w-sm">
               {/* Stacked (not 2-up) in the narrower right column. */}
-              <HookCards
-                t={t}
-                ownResultId={ownResultId}
-                chatSrc={null}
-                stacked
-              />
+              <HeroTrackCard t={t} />
             </div>
           </motion.div>
         </div>
@@ -3998,12 +3715,13 @@ export default function Journey() {
               before showing any reason to give it. On lg+ this copy is hidden and
               the right column's instance renders instead — desktop composition is
               unchanged. */}
-          <HookCards
-            t={t}
-            ownResultId={ownResultId}
-            className="mx-auto mt-6 max-w-xl lg:hidden"
-            chatSrc={null}
-          />
+          {/* DECIDED 2026-08-23 (박주형): mt-6 → mt-12. 폰에서 후원 로고 마지막
+              줄과 이 카드가 거의 붙어 있어서, 로고 월이 히어로의 끝이라는 것도
+              카드가 다음 이야기의 시작이라는 것도 읽히지 않았습니다. 24px은 같은
+              블록 안의 간격으로 보이고, 48px부터 두 덩어리로 갈립니다.
+              데스크톱은 이 인스턴스가 렌더되지 않습니다(lg:hidden) — 그쪽은 카드가
+              히어로 오른쪽 열에 있어서 로고 월과 애초에 붙지 않습니다. */}
+          <HeroTrackCard t={t} className="mx-auto mt-12 max-w-xl lg:hidden" />
         </div>
       </Chapter>
 
@@ -4213,19 +3931,16 @@ export default function Journey() {
 
         {/* The incentives block (certificate + perks, every line hedged) used to
             sit here. It doubled the 수료증 card above and read as a wall of
-            "협의 중"; the CTA band below is what it was really holding up. */}
-        <div className="mt-10 text-left">
-          {/* Mid-page CTA band — the same hook cards as the hero. Someone who
-              has just read what they get shouldn't have to scroll back to the
-              top (or all the way to the footer) to act on it. */}
-          <HookCards
-            t={t}
-            ownResultId={ownResultId}
-            className="mx-auto mt-10 max-w-md"
-            chatSrc="band"
-            withQuestion
-            withTrackCard={false}
-          />
+            "협의 중"; the CTA band below is what it was really holding up.
+
+            DECIDED 2026-08-23 (박주형): 카드 밴드가 통째로 빠지고 오픈채팅 한 줄만
+            남았습니다. 히어로와 같은 훅 카드 두 장을 여기 다시 놓던 자리인데,
+            8/23에 트랙 카드가 빠지고(히어로와 중복) 이번에 퀴즈 카드까지 빠지면서
+            담을 것이 없어졌어요.
+            링크는 남깁니다 — 무엇을 얻는지 다 읽은 직후가 이 페이지에서 오픈채팅이
+            가장 자연스러운 지점이고, 그 문은 지금도 열려 있는 유일한 문입니다. */}
+        <div className="mt-10 flex justify-center">
+          <OpenChatLink t={t} src="band" />
         </div>
       </Chapter>
 
@@ -5410,7 +5125,22 @@ function FAQList() {
                       질문보다 좁은 단입니다. 모바일에서만 걷어내면 271px이 되고,
                       데스크톱의 정렬은 그대로 남습니다. */}
                   <div className="pb-5 sm:pr-8">
-                    <p className="text-sm leading-relaxed text-white/70">{t(item.a)}</p>
+                    {/* DECIDED 2026-08-23 (박주형): FAQ 답변은 모바일에서 문단으로.
+                        긴 답변이 한 덩어리라 폰에서 벽처럼 읽혔습니다. 사전의
+                        빈 줄(\n\n)을 문단 경계로 읽습니다 — 문장은 하나도 바꾸지
+                        않고 끊는 자리만 데이터가 정합니다.
+                        space-y-3: 문단 사이 간격은 본문 행간(leading-relaxed,
+                        약 20px)보다 크고 항목 사이 간격(py-5)보다 작아야 합니다.
+                        그래야 한 답변 안의 문단으로 읽히지, 다음 질문으로
+                        넘어간 것처럼 보이지 않습니다.
+                        빈 줄이 없는 답변은 문단 하나라 지금과 똑같이 렌더됩니다. */}
+                    <div className="space-y-3">
+                      {t(item.a).split("\n\n").map((para, pi) => (
+                        <p key={pi} className="text-sm leading-relaxed text-white/70">
+                          {para}
+                        </p>
+                      ))}
+                    </div>
                     {/* items-start, not stretch: groups rarely hold the same
                         number of rows, and a box padded out with dead space to
                         match its neighbour reads as a missing item. Two columns

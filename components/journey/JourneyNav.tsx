@@ -161,7 +161,16 @@ export default function JourneyNav() {
       // fixed in place no matter what the scroll signal says.
       className={`fixed inset-x-0 top-0 z-50 focus-within:translate-y-0 lg:!translate-y-0 ${
         reduce ? "" : "transition-all duration-300 lg:duration-500"
-      } ${scrolled ? "bg-[#06040f]/85 backdrop-blur-md" : "bg-transparent"} ${
+      // DECIDED 2026-08-23 (박주형): /85 → /95. 스크롤하면 헤더 뒤로 본문이 —
+      // 특히 파트너 로고 월이 — 비쳐 보였습니다. 15%가 통과하고 있었어요.
+      //
+      // backdrop-blur에만 기대면 안 됩니다. blur는 뒤를 흐릴 뿐 가리지 않아서,
+      // 로고처럼 대비가 큰 것은 흐려진 채로 그대로 읽힙니다. 어두운 단색이 기본이고
+      // blur는 보조입니다.
+      //
+      // 두 줄(로고 줄 + 섹션 레일)은 이미 이 배경 하나를 함께 씁니다 — 실측 105px =
+      // nav 52 + 레일 53이라 줄 사이에 빈 틈이 없습니다. 여기서 갈라 두지 마세요.
+      } ${scrolled ? "bg-[#06040f]/95 backdrop-blur-md" : "bg-transparent"} ${
         chromeHidden ? "-translate-y-full" : "translate-y-0"
       }`}
     >
