@@ -633,9 +633,23 @@ export const days: DayMeta[] = [
     // DECIDED 2026-08-22: 성과 공유 뒤에 코드프레소를 만나는 한 문장이 붙었습니다.
     // 폐지 2026-08-23 (원대로 대표님 지시): 나열의 끝이던 투표가 빠졌습니다. 순서는
     // 이제 공유 → 빌드 → 성과 공유(피드백 교환) → 코드프레소입니다.
+    //
+    // TRIMMED 2026-08-23: 165자 → 95자. 여덟 장 중 압도적으로 길었습니다(평균 83자,
+    // 다음이 Day 2의 109자). 이 줄의 일은 프레임 한 줄이고 프로그램은 모달이 맡는데,
+    // 8/22의 코드프레소 문장과 8/23의 피드백 절이 얹히면서 카드가 다섯 줄이 됐어요.
+    //
+    // 뺀 것 셋:
+    //  · "*SCAPE에 자리를 열어" — 장소는 모달의 장소 행과 노선도의 L^IFE 마크가 말합니다.
+    //  · "오늘 나아간 것을 다시 공유하며" — 앞의 "또래 앞에 공유하고"와 같은 행위를
+    //    두 번 세는 자리였습니다. 하루에 두 번이라는 사실은 모달의 진행 순서가 말해요.
+    //  · "1:1 멘토링은 온라인으로 이어집니다" — 카드에 이미 "● 1:1 멘토링" 칩이
+    //    붙어 있고, "온라인으로"라는 단서는 모달 description이 그대로 갖고 있습니다.
+    //
+    // 다시 문장을 얹지 마세요. 새 사실이 생기면 모달(d5-networking-day description)로
+    // 가야 합니다 — 이 줄이 길어지는 것이 카드가 길어지는 유일한 경로였습니다.
     summary: {
-      ko: "온라인 구간을 지나 다시 현장으로 갑니다. *SCAPE에 자리를 열어 지금까지 만든 것을 또래 앞에 공유하고, 모여서 빌드하고, 오늘 나아간 것을 다시 공유하며 서로 피드백을 주고받습니다. 출제 기업 코드프레소의 이동훈 대표님을 직접 만나는 시간도 있어요. 1:1 멘토링은 온라인으로 이어집니다.",
-      en: "Back in person after the online stretch. A room at *SCAPE where you share what you have so far with the room, sit together and build, then share again what moved forward today and trade feedback across teams. You also get to meet Lee Dong-hoon, CEO of Codepresso, the company that set the problems. The 1:1 mentoring carries on online.",
+      ko: "온라인 구간을 지나 다시 현장으로 갑니다. 지금까지 만든 것을 또래 앞에 공유하고, 함께 빌드하고, 서로 피드백을 주고받아요. 출제 기업 코드프레소의 이동훈 대표님을 만나는 시간도 있습니다.",
+      en: "Back in person after the online stretch. You share what you have so far with the room, build together, and trade feedback across teams. You also get to meet Lee Dong-hoon, CEO of Codepresso, which set the problems.",
     },
     // DECIDED 2026-08-13: 내려설 이유가 '교류' 하나에서 '중간 점검 + 가산'으로
     // 옮겨왔습니다. 빌드는 어디서나 할 수 있지만, 또래 앞에 한 번 서보는 자리는
@@ -658,9 +672,14 @@ export const days: DayMeta[] = [
     // 가까운 자리)이고, 이 날은 가벼운 공유입니다. 무게를 실어 주는 낱말
     // ("평가"·"심사"·"발표회")을 쓰면 두 날이 같은 날이 되고, 이 날의 목적
     // (Day 8 무대의 부담을 미리 빼 두기) 자체가 무너집니다.
+    // TRIMMED 2026-08-23: 34자 → 26자. 8/23에 투표를 걷어내며 다시 쓴 문장이
+    // 390px에서 두 줄로 접혔습니다 — 이 줄은 카드에서 화살표 하나가 끄는 한 줄이라
+    // 두 줄이 되면 요약과 무게가 같아집니다. 다른 날의 whyStop은 22~28자예요.
+    // 뜻은 그대로입니다: "먼저"(Day 8 무대 전에 미리)와 피드백 양방향, 둘 다 남았고
+    // "한 번"과 "의 빌드에"만 빠졌습니다.
     whyStop: {
-      ko: "또래 앞에 먼저 한 번 서보고, 서로의 빌드에 피드백을 주고받는 날",
-      en: "A first turn in front of peers, giving and taking feedback on each other's builds",
+      ko: "또래 앞에 먼저 서보고, 서로 피드백을 주고받는 날",
+      en: "A first turn in front of peers, trading feedback both ways",
     },
     // 노선도 키워드를 theme 머리에서 덮습니다 (Day 3·4·6과 같은 이유). theme 머리는
     // "집중 빌드"인데, 빌드는 어디서나 할 수 있는 일이라 정거장에 내려설 이유가
