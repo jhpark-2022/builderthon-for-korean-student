@@ -1851,12 +1851,30 @@ function DayCard({ day, t, onOpen, ev }: { day: DayMeta; t: Tfn; onOpen: (n: num
       // 오늘: 비전 섹션 ★시작 카드가 이미 쓰는 어법(border-violet-400/50 +
       //   bg-violet-500/10)입니다. 새 색을 만들지 않았어요. 필참 테두리(rose)보다
       //   우선합니다 — Day 1은 필참이면서 이미 지나간 날이고, 지금 서 있어야 할
-      //   카드는 오늘 하나뿐입니다.
+      //   카드는 오늘 하나뿐입니다. 8/29에는 Day 8이 필참이면서 동시에 오늘이
+      //   되는데, 그때도 같은 규칙으로 오늘이 이깁니다.
+      //
+      // DECIDED 2026-08-23: 카드 진행 효과를 노선도와 같은 강도로 — 오늘 카드
+      // 글로우(등록 필의 보라 글로우 어법), 지난 카드 깊은 감쇠 + 노드형 완료
+      // 배지, 지난 그룹 헤더 감쇠.
+      //
+      // 처음 얹었을 때 노선도는 레일이 채워지고 현재역이 빛나는데 카드 쪽은 작은
+      // ✓와 얇은 테두리뿐이라, 같은 사실을 두 층위가 다른 온도로 말하고 있었습니다.
+      // 판정 로직은 그대로 두고 표현만 키웁니다.
+      //
+      // 지난 카드의 saturate: 투명도만 더 내리면 글자가 먼저 읽히지 않게 됩니다.
+      //   채도를 함께 빼면 밝기를 덜 깎고도 "지나간 것"이 읽혀요. 복원에는 filter도
+      //   같이 돌아와야 해서 transition-[opacity,filter]입니다.
+      // 오늘 카드의 글로우: nav 등록 필이 쓰던 보라 글로우 어법 그대로입니다.
+      //   상시 글로우이고 애니메이션은 걸지 않았습니다 — 움직임은 "● 오늘" 필의
+      //   펄스 점 하나로 충분하고, 카드 전체가 숨쉬면 격자에서 혼자 튑니다.
       className={`group relative flex h-full flex-col rounded-2xl border p-5 text-left transition duration-300 hover:-translate-y-1 hover:border-violet-400/30 hover:bg-white/[0.06] ${
-        prog === "past" ? "opacity-[0.68] transition-opacity hover:opacity-100 focus-within:opacity-100 focus:opacity-100" : ""
+        prog === "past"
+          ? "opacity-[0.55] saturate-[0.85] transition-[opacity,filter] duration-300 hover:opacity-100 hover:saturate-100 focus-within:opacity-100 focus-within:saturate-100 focus:opacity-100 focus:saturate-100"
+          : ""
       } ${
         prog === "today"
-          ? "border-violet-400/50 bg-violet-500/10"
+          ? "border-violet-400/50 bg-violet-500/10 shadow-[0_0_30px_rgba(124,92,255,0.28)]"
           : emphasis === "must"
             ? "border-rose-400/25 bg-white/[0.055]"
             : "border-white/[0.08] bg-white/[0.03]"
@@ -1879,12 +1897,20 @@ function DayCard({ day, t, onOpen, ev }: { day: DayMeta; t: Tfn; onOpen: (n: num
       <div className="flex items-baseline justify-between gap-3">
         <span className="flex items-baseline gap-1.5">
           <span className="text-[0.6rem] font-bold uppercase tracking-wider text-violet-300/70">{t(dict.program.dayLabel)}</span>
-          <span className="text-2xl font-black leading-none text-white">{day.day}</span>
+          {/* 오늘 카드에서만 숫자가 보라로 섭니다. 노선도의 현재역 이름이 최고
+              밝기를 갖는 것과 같은 규칙이에요 — 두 층위가 같은 자리를 같은
+              방식으로 가리켜야 합니다. */}
+          <span className={`text-2xl font-black leading-none ${prog === "today" ? "text-violet-200" : "text-white"}`}>{day.day}</span>
           {/* ✓ 하나. 글자를 붙이지 않는 이유는 dict.program.dayDone 주석에
               있습니다 — 넉 장에 "지난 일정"이 반복되면 아카이브가 폐기물로
-              읽힙니다. 낭독에는 sr-only로 이름이 갑니다. */}
+              읽힙니다. 낭독에는 sr-only로 이름이 갑니다.
+
+              2026-08-23: 흐릿한 링 배지에서 채워진 원으로. 노선도의 지나온 노드가
+              속이 차는 것과 같은 어법입니다 — 두 표면이 "지나왔다"를 다른 모양으로
+              말하고 있었습니다. 카드 전체가 감쇠된 상태라 배지 자체는 오히려
+              또렷해야 눈에 걸립니다. */}
           {prog === "past" && (
-            <span className="inline-flex items-center rounded-full border border-white/15 bg-white/[0.05] px-1.5 py-0.5 text-[0.6rem] font-bold leading-none text-white/60">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-[0.65rem] font-black leading-none text-white/80">
               <span aria-hidden>✓</span>
               <span className="sr-only">{t(dict.program.dayDone)}</span>
             </span>
@@ -4177,9 +4203,17 @@ export default function Journey() {
           <div className="mt-12 space-y-8">
             {/* Prologue row — before Lab 1, outside the eight days. */}
             <PreEventBand t={t} onOpen={selectEvent} />
-            {[days.slice(0, 4), days.slice(4, 8)].map((group) => (
+            {[days.slice(0, 4), days.slice(4, 8)].map((group) => {
+              // 그룹도 시간의 층에 들어갑니다: 이 Lab의 마지막 날까지 지나갔으면
+              // 라벨과 구분선이 함께 가라앉습니다. 카드만 감쇠하고 머리글이 그대로
+              // 밝으면, 다 지나간 Lab이 아직 진행 중인 구간처럼 남습니다.
+              //
+              // 판정은 마지막 날 하나로. 그룹 안에 오늘이 있으면 당연히 마지막
+              // 날은 아직 안 지났고, 그 경우 머리글은 그대로입니다.
+              const groupPast = dayProgress(group[group.length - 1].day, eventDay) === "past";
+              return (
               <div key={group[0].day}>
-                <div className="mb-4 flex items-center gap-3">
+                <div className={`mb-4 flex items-center gap-3 transition-opacity duration-300 ${groupPast ? "opacity-60" : ""}`}>
                   <span className="text-sm font-bold uppercase tracking-[0.14em] text-violet-200">{t(group[0].phase)}</span>
                   <span aria-hidden className="h-px flex-1 bg-white/10" />
                 </div>
@@ -4189,7 +4223,8 @@ export default function Journey() {
                   ))}
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* ── 체크인 3종 ───────────────────────────────────────────────
