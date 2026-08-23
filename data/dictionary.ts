@@ -4374,8 +4374,16 @@ export const dict = {
       // 만나요"였습니다. 바로 아래 버튼이 이제 오픈채팅이라 문장과 버튼이 다른 곳을
       // 가리키고 있었어요. 앞의 두 문장(커뮤니티를 만든다)은 마감과 무관한 사실이라
       // 그대로입니다.
-      ko: "여기가 ‘초입’입니다. 일회성 행사를 넘어, 지속가능한 한–싱 빌더 커뮤니티를 함께 만들어 갑니다. 오픈채팅에서 다음 소식을 먼저 받아보세요.",
-      en: "This is the entry point. Beyond a single event, we're building a lasting Korea–Singapore builder community. Follow the open chat to hear what comes next first.",
+      //
+      // EDIT 2026-08-24 (브리지 CTA 라벨 분리의 뒷정리): 마지막 문장이 "오픈채팅에서
+      // 다음 소식을 먼저 받아보세요"였습니다. 소식은 방금 비전 브리지에 넘긴 역할인데
+      // (dict.about.visionChatCta), 여기 블러브가 그 말을 그대로 하고 있으니 바로 아래
+      // 버튼("오픈채팅으로 함께하기")과 문장이 서로 다른 것을 권하고 있었어요.
+      // 클로징이 받는 것은 합류입니다. 문장도 그리로 맞춥니다 — 방이 이미 열려 있다는
+      // 사실 하나만 말하고, 문을 여는 일은 버튼에 넘깁니다.
+      // 앞의 두 문장은 그대로입니다.
+      ko: "여기가 ‘초입’입니다. 일회성 행사를 넘어, 지속가능한 한–싱 빌더 커뮤니티를 함께 만들어 갑니다. 그 커뮤니티가 모여 있는 방은 이미 열려 있어요.",
+      en: "This is the entry point. Beyond a single event, we're building a lasting Korea–Singapore builder community. The room where that community gathers is already open.",
     },
     ctaProgram: { ko: "프로그램 보기", en: "View Program" },
     // Shown under the partnership CTA: `mailto:` does nothing when the visitor
