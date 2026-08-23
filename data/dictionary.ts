@@ -2106,6 +2106,21 @@ export const dict = {
     // 칩과 데이터로 말합니다. 문장을 쓰기 시작하면 날마다 사전을 고쳐야 합니다.
     liveNow: { ko: "오늘", en: "Today" },
     liveNextOnsite: { ko: "다음 현장", en: "Next on-site" },
+    // ── 마감 줄 ────────────────────────────────────────────────────────────
+    // DECIDED 2026-08-24: 참가자 도구화 3종 — 라이브 스트립 마감 줄(데이터 기반,
+    // 지나면 다음 마감으로), ?day=N 딥링크(카톡 공지 연동), 노선도 정거장 = 그 날
+    // 모달을 여는 버튼. 시계는 getEventDayState 하나.
+    //
+    // 여기도 라벨과 칩뿐입니다. 마감 항목의 이름과 날짜는 schedule.ts의
+    // DEADLINES에서 오고, 이 파일에는 그 앞에 붙는 낱말만 있습니다.
+    //
+    // 상대 칩은 오늘·내일 두 개뿐이고 모레부터는 날짜를 적습니다. "3일 뒤"까지
+    // 만들면 방문자가 머릿속에서 날짜로 되돌려야 하는데, 그 계산이 필요한 거리에서는
+    // 날짜가 더 짧은 길입니다. 영문이 소문자인 것은 칩이 라벨 뒤에 붙는 꼬리라서예요
+    // ("Submission package due (evening) · today").
+    liveDue: { ko: "마감", en: "Due" },
+    dueToday: { ko: "오늘까지", en: "today" },
+    dueTomorrow: { ko: "내일까지", en: "tomorrow" },
     // Label on the wide band above Lab 1. "사전" rather than "Day 0" — the
     // session is a prologue to the eight days, not a day of them.
     // 2026-08-23: "지난"이 붙었습니다. 행사가 시작된 뒤로 이 밴드는 다가올

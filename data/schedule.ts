@@ -2387,14 +2387,28 @@ export const MENTORING_DAY_RANGE =
 /** 행사 연도. days[].date가 "MM.DD"라 연도만 여기 있습니다. */
 const EVENT_YEAR = 2026;
 
-/** days[] 각 날의 SG 자정 (epoch ms). 배열 순서 = Day 1..8. */
-const DAY_STARTS_SGT: number[] = days.map((d) => {
-  const [mm, dd] = d.date.split(".");
+/** 하루. 아래 세 군데가 같은 상수를 봅니다. */
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** 싱가포르 오프셋. "지금이 SG 기준 며칠인가"를 셀 때 씁니다. */
+const SGT_OFFSET_MS = 8 * 60 * 60 * 1000;
+
+/**
+ * "MM.DD" → 그 날의 SG 자정 (epoch ms).
+ *
+ * 오프셋을 문자열에 박아 두는 것이 핵심입니다 — 이 코드가 서울에서 돌든
+ * Vercel의 UTC 컨테이너에서 돌든 같은 순간을 가리킵니다.
+ */
+const sgtMidnight = (mmdd: string): number => {
+  const [mm, dd] = mmdd.split(".");
   return new Date(`${EVENT_YEAR}-${mm}-${dd}T00:00:00+08:00`).getTime();
-});
+};
+
+/** days[] 각 날의 SG 자정 (epoch ms). 배열 순서 = Day 1..8. */
+const DAY_STARTS_SGT: number[] = days.map((d) => sgtMidnight(d.date));
 
 /** 마지막 날(Day 8)이 끝나는 순간 = 그 다음 SG 자정. */
-const EVENT_ENDS_AT = DAY_STARTS_SGT[DAY_STARTS_SGT.length - 1] + 24 * 60 * 60 * 1000;
+const EVENT_ENDS_AT = DAY_STARTS_SGT[DAY_STARTS_SGT.length - 1] + DAY_MS;
 
 export type EventPhase = "before" | "during" | "after";
 
@@ -2417,4 +2431,88 @@ export function getEventDayState(now: number): { current: number | null; phase: 
     if (now >= DAY_STARTS_SGT[i]) return { current: days[i].day, phase: "during" };
   }
   return { current: null, phase: "before" };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 마감 — 참가자가 "언제까지 뭘 내야 하지"를 확인하는 자리.
+//
+// DECIDED 2026-08-24: 참가자 도구화 3종 — 라이브 스트립 마감 줄(데이터 기반,
+// 지나면 다음 마감으로), ?day=N 딥링크(카톡 공지 연동), 노선도 정거장 = 그 날
+// 모달을 여는 버튼. 시계는 getEventDayState 하나.
+//
+// 마감 줄은 항상 최대 한 건입니다. 남은 마감을 전부 늘어놓으면 히어로가 할 일
+// 목록이 되고, 첫 화면에서 가장 급한 것 하나가 묻힙니다. 지나간 마감은 조용히
+// 빠지고 다음 것이 올라옵니다 — 사람이 손대는 자리가 없습니다.
+//
+// 시각은 공개된 것만 적습니다. due는 날짜 수준(MM.DD)까지이고, 정확한 시각이
+// 카피에 없는 마감(명단·제출물)에 시각을 지어내지 마세요. 사전 제출물의
+// "저녁"은 이미 공개된 표현이라 label에 그대로 둡니다.
+//
+// 시각까지 공개하기로 한 마감이 생기면 due에 시각을 더하고 sgtMidnight 대신
+// 그 시각을 파싱하도록 아래 한 곳만 고치면 됩니다 — 소비처는 그대로입니다.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * 마감 줄을 누르면 가는 곳.
+ *
+ * - anchor: 페이지 안의 섹션 id로 스크롤 (예: "tracks")
+ * - day:    그 날의 모달을 연다 (openDayModal)
+ */
+export type DeadlineAction =
+  | { type: "anchor"; target: string }
+  | { type: "day"; target: number };
+
+export interface Deadline {
+  id: string;
+  /** "MM.DD" — days[].date와 같은 표기. 마감일 당일 자정까지 유효합니다. */
+  due: string;
+  label: Bilingual;
+  action: DeadlineAction;
+}
+
+/**
+ * 마감 목록. **due 오름차순으로 유지하세요** — nextDeadline이 위에서부터
+ * 훑으며 첫 유효 항목을 집습니다.
+ */
+export const DEADLINES: readonly Deadline[] = [
+  {
+    id: "track-pick",
+    due: "08.23",
+    label: { ko: "트랙 선택 제출", en: "Track pick due" },
+    action: { type: "anchor", target: "tracks" },
+  },
+  {
+    id: "aws-roster",
+    due: "08.24",
+    label: { ko: "AWS 입장 명단 신청", en: "AWS entry list closes" },
+    action: { type: "day", target: 7 },
+  },
+  {
+    id: "submission",
+    due: "08.28",
+    label: { ko: "사전 제출물 마감 (저녁)", en: "Submission package due (evening)" },
+    action: { type: "day", target: 7 },
+  },
+];
+
+/**
+ * `now` 시점에서 아직 지나지 않은 첫 마감 (싱가포르 기준). 마감일 당일은 아직
+ * 남은 것으로 셉니다 — 오늘이 마감인 사람에게 "지났다"고 말하면 안 됩니다.
+ *
+ * daysAway는 SG 날짜 차이입니다: 0 = 오늘, 1 = 내일, 그 이상은 날짜로 적습니다.
+ * 이 함수는 시각을 모릅니다(due가 날짜 수준이라) — "3시간 남음" 같은 카운트다운을
+ * 여기서 만들지 마세요.
+ *
+ * 전부 지났으면 null이고, 소비처는 줄을 통째로 렌더하지 않습니다.
+ */
+export function nextDeadline(now: number): { deadline: Deadline; daysAway: number } | null {
+  // 지금이 SG 기준 며칠인가 → 그 날의 SG 자정. 오프셋이 고정(+08:00, DST 없음)이라
+  // 나눗셈으로 정확합니다.
+  const todayStart = Math.floor((now + SGT_OFFSET_MS) / DAY_MS) * DAY_MS - SGT_OFFSET_MS;
+  for (const deadline of DEADLINES) {
+    const dueStart = sgtMidnight(deadline.due);
+    if (dueStart < todayStart) continue; // 어제까지의 마감
+    return { deadline, daysAway: Math.round((dueStart - todayStart) / DAY_MS) };
+  }
+  return null;
 }

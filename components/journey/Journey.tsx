@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { track } from "@vercel/analytics";
@@ -13,6 +13,7 @@ import {
   days,
   getEventDayState,
   mentoringOpenOn,
+  nextDeadline,
   schedule,
   MENTORING_DAY_RANGE,
   type BEvent,
@@ -56,13 +57,20 @@ import { useBodyScrollLock, isScrollLocked } from "@/lib/useBodyScrollLock";
 // 카드, 섹션 칩)에서 각자 부르면 세 번의 Date.now()가 자정 언저리에 서로 다른
 // 날을 말할 수 있습니다.
 // ─────────────────────────────────────────────────────────────────────────────
-type EventDayState = { current: number | null; phase: EventPhase };
-const NEUTRAL_EVENT_DAY: EventDayState = { current: null, phase: "before" };
+//
+// now가 함께 실려 오는 이유 (2026-08-24): 마감 줄이 "오늘까지 / 내일까지 / 날짜"를
+// 고르려면 며칠차인지가 아니라 지금 시각이 필요합니다. 소비처에서 Date.now()를
+// 다시 읽으면 그 순간 시계가 둘이 되고, 자정 언저리에 라이브 필과 마감 칩이 서로
+// 다른 날을 말할 수 있습니다. 한 번 읽어 같이 내려보냅니다.
+// SSR·첫 렌더에서는 null입니다 — 서버에는 방문자의 "지금"이 없습니다.
+type EventDayState = { current: number | null; phase: EventPhase; now: number | null };
+const NEUTRAL_EVENT_DAY: EventDayState = { current: null, phase: "before", now: null };
 
 function useEventDay(): EventDayState {
   const [state, setState] = useState<EventDayState>(NEUTRAL_EVENT_DAY);
   useEffect(() => {
-    setState(getEventDayState(Date.now()));
+    const now = Date.now();
+    setState({ ...getEventDayState(now), now });
   }, []);
   return state;
 }
@@ -1058,6 +1066,17 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
 //
 // 행사 전·후에는 아무것도 렌더하지 않습니다. 시계는 Journey()가 한 번 읽어
 // 내려보내는 그 값 하나입니다.
+//
+// DECIDED 2026-08-24: 참가자 도구화 3종 — 라이브 스트립 마감 줄(데이터 기반,
+// 지나면 다음 마감으로), ?day=N 딥링크(카톡 공지 연동), 노선도 정거장 = 그 날
+// 모달을 여는 버튼. 시계는 getEventDayState 하나.
+//
+// 셋째 줄이 마감입니다. 행사 주간의 1번 사용자는 매일 들어와 "오늘 뭐지, 언제까지
+// 뭐 내야 하지"를 확인하는 참가자예요. 앞의 두 줄이 첫 물음에 답하고, 이 줄이
+// 두 번째에 답합니다.
+//
+// 최대 한 건입니다(schedule.ts의 nextDeadline이 하나만 돌려줍니다). 남은 마감을
+// 전부 늘어놓으면 히어로가 할 일 목록이 되고, 스트립은 넉 줄을 넘지 않아야 합니다.
 // ─────────────────────────────────────────────────────────────────────────────
 // 라이브 필만 따로. 날짜 줄 안에 인라인으로 들어갑니다 — "8월 22일부터 29일까지"를
 // 읽은 자리에서 바로 "지금 Day 2"가 붙는 것이 가장 짧은 경로예요.
@@ -1082,6 +1101,17 @@ function HeroLivePill({ t, ev }: { t: Tfn; ev: EventDayState }) {
   );
 }
 
+// 마감까지의 거리. 오늘·내일만 낱말이고 모레부터는 날짜입니다 — 사전 주석 참고.
+// 날짜 표기는 days[]에서 가져옵니다("08.28 금"). 데이 카드가 쓰는 표기 그대로예요:
+// 같은 날짜가 두 자리에서 다른 모양으로 적히면 방문자는 다른 날로 셉니다.
+// 마감일이 days[]에 없는 날이면(행사 밖의 마감) 원본 문자열로 떨어집니다.
+function deadlineWhen(due: string, daysAway: number, t: Tfn): string {
+  if (daysAway === 0) return t(dict.program.dueToday);
+  if (daysAway === 1) return t(dict.program.dueTomorrow);
+  const d = days.find((x) => x.date === due);
+  return d ? `${d.date} ${t(d.weekday)}` : due;
+}
+
 function HeroLiveStrip({
   t,
   ev,
@@ -1097,6 +1127,8 @@ function HeroLiveStrip({
   // 오늘 이후의 첫 현장일. 마지막 현장일(Day 8)에 서 있으면 없고, 그때는 줄이
   // 통째로 빠집니다 — "다음 현장"이라 해 놓고 오늘을 가리키면 안 되니까요.
   const nextOnsite = days.find((d) => d.day > ev.current! && d.dayMode === "offline");
+  // 아직 지나지 않은 첫 마감. 전부 지났으면 null이고 줄이 통째로 빠집니다.
+  const upcoming = ev.now === null ? null : nextDeadline(ev.now);
   const row =
     "flex flex-wrap items-center gap-x-2 gap-y-1 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-left transition hover:border-violet-400/30 hover:bg-white/[0.07]";
   const label = "shrink-0 text-[0.6rem] font-bold uppercase tracking-[0.14em] text-white/45";
@@ -1126,6 +1158,44 @@ function HeroLiveStrip({
         </button>
       )}
 
+      {/* 마감 줄. 앞의 두 줄과 같은 어법입니다 — 라벨 하나, 이름 하나, 칩 하나.
+          문장을 쓰지 마세요.
+
+          앰버는 칩에만 붙습니다. 이 줄에서 급한 것은 "언제까지"이지 "무엇을"이
+          아니고, 라벨까지 물들이면 세 줄의 라벨 층계가 깨집니다. 색은 새로 만들지
+          않고 현장 칩이 쓰던 amber-400/30 · amber-400/10 · amber-200 그대로입니다.
+          펄스는 넣지 않습니다 — 첫 화면에서 뛰는 것은 라이브 필 하나로 충분합니다.
+
+          가는 곳이 두 종류라 태그가 갈립니다. 섹션이면 그냥 앵커 링크예요 —
+          이 페이지의 다른 앵커와 같은 문을 쓰면 스크롤 동작(scroll-margin, 부드러운
+          스크롤)을 여기서 다시 구현하지 않아도 됩니다. 그 날의 모달이면 버튼입니다. */}
+      {upcoming && (() => {
+        const { deadline, daysAway } = upcoming;
+        // action을 const로 꺼내야 아래 삼항의 좁히기가 onClick 클로저 안까지
+        // 따라옵니다. deadline.action처럼 프로퍼티 접근으로 두면 TS가 콜백 안에서
+        // 다시 유니온으로 되돌립니다.
+        const action = deadline.action;
+        const inner = (
+          <>
+            <span className={label}>{t(dict.program.liveDue)}</span>
+            <span className="break-keep text-[0.8rem] font-semibold leading-snug text-white/85">
+              {t(deadline.label)}
+            </span>
+            <span className="shrink-0 rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[0.65rem] font-bold text-amber-200">
+              {deadlineWhen(deadline.due, daysAway, t)}
+            </span>
+          </>
+        );
+        return action.type === "anchor" ? (
+          <a href={`#${action.target}`} className={row}>
+            {inner}
+          </a>
+        ) : (
+          <button type="button" onClick={() => onOpen(action.target)} className={row}>
+            {inner}
+          </button>
+        );
+      })()}
     </div>
   );
 }
@@ -1370,14 +1440,29 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
             const today = prog === "today";
             return (
               <li key={d.day} className="relative flex-1">
+                {/* 정거장 하나가 버튼 하나입니다 — 노드와 이름을 함께 감쌉니다.
+                    노드만 누르게 하면 모바일에서 탭 타깃이 12~28px짜리 원이 됩니다.
+
+                    py-2.5는 터치 영역용입니다(시각 크기는 그대로). 노드 줄 h-8에
+                    위아래 10px씩 더해 48px을 넘기고, 이름 줄까지 합치면 한 칸이
+                    통째로 눌립니다. cursor-pointer는 명시합니다 — Tailwind
+                    preflight가 버튼의 커서를 default로 되돌려 놓기 때문에, 없으면
+                    데스크톱에서 누를 수 있다는 신호가 hover 밝기 하나뿐입니다.
+
+                    모양·색은 새로 만들지 않았습니다. hover에서 올라가는 것은 이미
+                    있던 밝기 층계뿐이에요(아래 이름 span의 group-hover). */}
                 <button
                   type="button"
                   onClick={() => onOpen(d.day)}
-                  className="group flex w-full flex-col items-center gap-1.5 px-1 py-1 text-center"
+                  className="group flex w-full cursor-pointer flex-col items-center gap-1.5 px-1 py-2.5 text-center"
                   // 마커는 aria-hidden이라 스크린리더에는 안 보입니다. 눈으로 읽는
                   // 사람이 얻는 정보를 여기서 말로 채웁니다. 진행 상태도 같은 이유로
                   // 여기 붙습니다 — 펄스와 감쇠는 눈으로만 읽히니까요.
-                  aria-label={`Day ${d.day}, ${t(d.theme)}${onSite ? `, ${t(dict.program.offlineLabel)}` : ""}${onSite && d.venueLogo ? `, ${d.venueLogo.name}` : ""}${today ? `, ${t(dict.program.dayToday)}` : passed ? `, ${t(dict.program.dayDone)}` : ""}`}
+                  //
+                  // 끝의 tapHint("자세히 보기")는 이 버튼이 무엇을 하는지 말합니다.
+                  // 데이 카드의 같은 버튼이 쓰는 문자열 그대로예요 — 두 자리가 같은
+                  // 모달을 여는데 이름이 다르면 두 기능으로 들립니다.
+                  aria-label={`Day ${d.day}, ${t(d.theme)}${onSite ? `, ${t(dict.program.offlineLabel)}` : ""}${onSite && d.venueLogo ? `, ${d.venueLogo.name}` : ""}${today ? `, ${t(dict.program.dayToday)}` : passed ? `, ${t(dict.program.dayDone)}` : ""}, ${t(dict.program.tapHint)}`}
                 >
                   {/* Fixed-height row so both node sizes share one centreline and
                       the rail passes through every node at the same height. */}
@@ -3473,6 +3558,41 @@ export default function Journey() {
   // 재방문 변형("{name}님, 환상의 짝꿍은 확인하셨어요?")만 쓰던 값이고, 그 카드가
   // 사라졌어요. 헤더의 ReturningGreeting은 자기 파일에서 따로 읽으므로 영향 없습니다.
 
+  // ── 데이 모달을 여는 문 하나 ─────────────────────────────────────────────
+  // DECIDED 2026-08-24: 참가자 도구화 3종 — 라이브 스트립 마감 줄(데이터 기반,
+  // 지나면 다음 마감으로), ?day=N 딥링크(카톡 공지 연동), 노선도 정거장 = 그 날
+  // 모달을 여는 버튼. 시계는 getEventDayState 하나.
+  //
+  // 네 곳이 이 함수를 부릅니다: 데이 카드의 자세히 보기, 노선도 정거장, 히어로
+  // 스트립의 세 줄, URL 딥링크. 스크롤 락·포커스 복귀는 DayModal이 그대로 합니다 —
+  // 여는 쪽에서 할 일은 날 번호를 넘기는 것뿐이에요.
+  const openDayModal = useCallback((day: number) => setActiveDay(day), []);
+
+  // ── ?day=N 딥링크 ────────────────────────────────────────────────────────
+  // 단톡 공지에 `builderthon-for-korean-student.vercel.app/?day=5`처럼 쓰면 그 날
+  // 모달이 열린 채로 열립니다. 행사 주간에 "오늘 뭐 하는지" 링크 하나로 보내는 것이
+  // 이 파라미터의 용도예요.
+  //
+  // 마운트 후에 읽습니다. 서버에는 이 쿼리가 있어도 모달을 열 방법이 없고, 첫
+  // 페인트에서 열었다가 하이드레이션에서 닫히면 화면이 깜빡입니다.
+  //
+  // 연 뒤 URL은 그대로 둡니다. 지우면 그 주소를 다시 여는 사람에게는 아무 일도
+  // 일어나지 않고, 그러면 딥링크가 아니라 일회용 트리거입니다. 닫기·Escape·뒤로가기는
+  // 기존 모달 동작 그대로고, 새로고침하면 다시 열립니다 — 그게 공유 가능한 상태의 뜻입니다.
+  //
+  // days[]에 있는 날만 통과시킵니다. ?day=9·?day=abc는 조용히 무시해요 — 잘못된
+  // 링크를 타고 온 사람에게 오류를 보여줄 이유가 없고, 보여줄 화면도 없습니다.
+  //
+  // RegisterContext도 마운트 시 쿼리를 읽습니다(ref · register=1). 그쪽은 register=1일
+  // 때만 쿼리를 지우는데, 이 효과가 먼저 돕니다 — 리액트는 자식(Journey)의 효과를
+  // 부모(RegisterProvider)보다 먼저 흘립니다. /?day=5&register=1도 안전합니다.
+  useEffect(() => {
+    const raw = new URLSearchParams(window.location.search).get("day");
+    if (raw === null) return;
+    const n = Number(raw);
+    if (Number.isInteger(n) && days.some((d) => d.day === n)) openDayModal(n);
+  }, [openDayModal]);
+
   // Desktop grid: tallest day determines the shared row count so every column
   // gets the same number of card slots and rows line up across all six days.
 
@@ -3585,7 +3705,7 @@ export default function Journey() {
                 읽은 눈이 곧장 "그래서 오늘은?"으로 가고, 그 답이 다음 줄에 있습니다.
                 행사 전·후에는 아무것도 렌더되지 않아 히어로가 지금과 같습니다. */}
             <div className="flex justify-center lg:justify-start">
-              <HeroLiveStrip t={t} ev={eventDay} onOpen={setActiveDay} />
+              <HeroLiveStrip t={t} ev={eventDay} onOpen={openDayModal} />
             </div>
             {/* break-keep — without it Korean breaks between syllables and the
                 paragraph ended "…남깁니" / "다." with a single orphaned syllable
@@ -4122,7 +4242,7 @@ export default function Journey() {
 
           {/* The route, immediately above the grid it describes: the eight cards
               are read through it rather than as eight equal obligations. */}
-          <RouteMap t={t} onOpen={setActiveDay} ev={eventDay} />
+          <RouteMap t={t} onOpen={openDayModal} ev={eventDay} />
 
           {/* Two Labs, four clean day cards each. Tapping a card opens the day
               detail modal (that day's sessions) instead of exploding all ~18
@@ -4146,7 +4266,7 @@ export default function Journey() {
                 </div>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                   {group.map((day) => (
-                    <DayCard key={day.day} day={day} t={t} onOpen={setActiveDay} ev={eventDay} />
+                    <DayCard key={day.day} day={day} t={t} onOpen={openDayModal} ev={eventDay} />
                   ))}
                 </div>
               </div>
