@@ -303,8 +303,8 @@ export interface DayMeta {
   // required-deliverable box in the day modal. Copy lives in
   // dict.program.submission — this is a switch, not content.
   deliverableDue?: boolean;
-  // Day 7 only: the AWS office needs its visitor list three working days ahead,
-  // so attendance closes on 24 Aug. Turns on the entry-notice box, which sits
+  // Day 7 only: the AWS office needs its visitor list ahead of time, so
+  // attendance closes 25 Aug at 12:00. Turns on the entry-notice box, which sits
   // ABOVE everything else in the day modal — you have to be able to get into the
   // building before any of the rest of that day applies to you. Copy lives in
   // dict.program.entryNotice — this is a switch, not content.
@@ -888,8 +888,8 @@ export const days: DayMeta[] = [
       // DECIDED 2026-08-17: 장소 뒤에 입장 명단 마감을 한 조각 붙였습니다. 전문은
       // dict.program.entryNotice(데이 모달)에 있고, 이 줄은 카드에서 보이는 유일한
       // 표면이라 날짜만 실어 나릅니다. 여기서 문장으로 늘리지 마세요.
-      ko: "AWS 오피스(입장 명단 8/24 마감), 멘토 테이블을 옮겨가는 라운드테이블 점검, 박희덕 대표님 조언 세션, 1:1 멘토링(온라인), 저녁: 사전 제출물 마감(필수).",
-      en: "AWS office (entry list closes 24 Aug), a roundtable check moving between mentor tables, Park Hee-deok's advice session, 1:1 mentoring (online), Evening: submission deadline (required).",
+      ko: "AWS 오피스(입장 명단 8/25 12시 마감), 멘토 테이블을 옮겨가는 라운드테이블 점검, 박희덕 대표님 조언 세션, 1:1 멘토링(온라인), 저녁: 사전 제출물 마감(필수).",
+      en: "AWS office (entry list closes 25 Aug, 12:00), a roundtable check moving between mentor tables, Park Hee-deok's advice session, 1:1 mentoring (online), Evening: submission deadline (required).",
     },
     whyStop: {
       ko: "전문가들이 던질 질문을 무대에 서기 하루 전에 미리 받아보는 자리",
@@ -997,7 +997,7 @@ export const days: DayMeta[] = [
     // parses. The modal renders it as its own bordered box instead (see
     // dict.program.submission) — this flag is what turns that box on.
     deliverableDue: true,
-    // AWS 오피스 방문자 명단이 3영업일 전에 마감됩니다 (DECIDED 2026-08-17).
+    // AWS 오피스 방문자 명단이 8/25 낮 12시에 마감됩니다 (DECIDED 2026-08-24).
     // 박스 카피와 그 이유는 dict.program.entryNotice에 있습니다.
     entryNotice: true,
   },
@@ -2394,15 +2394,18 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 const SGT_OFFSET_MS = 8 * 60 * 60 * 1000;
 
 /**
- * "MM.DD" → 그 날의 SG 자정 (epoch ms).
+ * "MM.DD" + "HH:MM" → SG 기준 그 순간 (epoch ms).
  *
  * 오프셋을 문자열에 박아 두는 것이 핵심입니다 — 이 코드가 서울에서 돌든
  * Vercel의 UTC 컨테이너에서 돌든 같은 순간을 가리킵니다.
  */
-const sgtMidnight = (mmdd: string): number => {
+const sgtAt = (mmdd: string, hhmm: string): number => {
   const [mm, dd] = mmdd.split(".");
-  return new Date(`${EVENT_YEAR}-${mm}-${dd}T00:00:00+08:00`).getTime();
+  return new Date(`${EVENT_YEAR}-${mm}-${dd}T${hhmm}:00+08:00`).getTime();
 };
+
+/** "MM.DD" → 그 날의 SG 자정 (epoch ms). */
+const sgtMidnight = (mmdd: string): number => sgtAt(mmdd, "00:00");
 
 /** days[] 각 날의 SG 자정 (epoch ms). 배열 순서 = Day 1..8. */
 const DAY_STARTS_SGT: number[] = days.map((d) => sgtMidnight(d.date));
@@ -2444,12 +2447,14 @@ export function getEventDayState(now: number): { current: number | null; phase: 
 // 목록이 되고, 첫 화면에서 가장 급한 것 하나가 묻힙니다. 지나간 마감은 조용히
 // 빠지고 다음 것이 올라옵니다 — 사람이 손대는 자리가 없습니다.
 //
-// 시각은 공개된 것만 적습니다. due는 날짜 수준(MM.DD)까지이고, 정확한 시각이
-// 카피에 없는 마감(명단·제출물)에 시각을 지어내지 마세요. 사전 제출물의
-// "저녁"은 이미 공개된 표현이라 label에 그대로 둡니다.
+// 시각은 공개된 것만 적습니다. 공개된 마감 시각이 있으면 dueTime("HH:MM", SG)에
+// 넣고, 없으면 비워 두세요 — 비면 그 날 자정까지입니다. 정확한 시각이 카피에 없는
+// 마감에 시각을 지어내지 마세요. 사전 제출물의 "저녁"은 이미 공개된 표현이라
+// label에 그대로 둡니다.
 //
-// 시각까지 공개하기로 한 마감이 생기면 due에 시각을 더하고 sgtMidnight 대신
-// 그 시각을 파싱하도록 아래 한 곳만 고치면 됩니다 — 소비처는 그대로입니다.
+// dueTime이 붙으면 그 마감은 시각에 정확히 끝나고(그 순간 다음 마감으로 넘어갑니다),
+// 칩도 "오늘 12:00까지"로 시각을 함께 적습니다 — 마감이 낮이면 "오늘까지"만 보여
+// 주는 쪽이 하루를 통째로 오해하게 만듭니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
@@ -2464,8 +2469,10 @@ export type DeadlineAction =
 
 export interface Deadline {
   id: string;
-  /** "MM.DD" — days[].date와 같은 표기. 마감일 당일 자정까지 유효합니다. */
+  /** "MM.DD" — days[].date와 같은 표기. dueTime이 없으면 그 날 자정까지입니다. */
   due: string;
+  /** "HH:MM" (SG). 공개된 마감 시각이 있을 때만 — 그 순간에 정확히 끝납니다. */
+  dueTime?: string;
   label: Bilingual;
   action: DeadlineAction;
 }
@@ -2482,8 +2489,12 @@ export const DEADLINES: readonly Deadline[] = [
     action: { type: "anchor", target: "tracks" },
   },
   {
+    // DECIDED 2026-08-24 (박주형): AWS가 명단을 8/25 낮 12시까지 받기로 해서 하루
+    // 늦춰졌습니다. 시각이 공개된 첫 마감이라 dueTime이 붙습니다 — 이 날짜를 고칠
+    // 때는 dict.program.entryNotice와 Day 7 summary도 함께 고치세요(세 곳입니다).
     id: "aws-roster",
-    due: "08.24",
+    due: "08.25",
+    dueTime: "12:00",
     label: { ko: "AWS 입장 명단 신청", en: "AWS entry list closes" },
     action: { type: "day", target: 7 },
   },
@@ -2498,10 +2509,11 @@ export const DEADLINES: readonly Deadline[] = [
 /**
  * `now` 시점에서 아직 지나지 않은 첫 마감 (싱가포르 기준). 마감일 당일은 아직
  * 남은 것으로 셉니다 — 오늘이 마감인 사람에게 "지났다"고 말하면 안 됩니다.
+ * dueTime이 있는 마감은 그 시각에 정확히 빠집니다.
  *
  * daysAway는 SG 날짜 차이입니다: 0 = 오늘, 1 = 내일, 그 이상은 날짜로 적습니다.
- * 이 함수는 시각을 모릅니다(due가 날짜 수준이라) — "3시간 남음" 같은 카운트다운을
- * 여기서 만들지 마세요.
+ * 남은 시간이 아니라 남은 날수예요 — "3시간 남음" 같은 카운트다운을 여기서
+ * 만들지 마세요. 시각은 dueTime을 그대로 적는 것으로 충분합니다.
  *
  * 전부 지났으면 null이고, 소비처는 줄을 통째로 렌더하지 않습니다.
  */
@@ -2511,7 +2523,9 @@ export function nextDeadline(now: number): { deadline: Deadline; daysAway: numbe
   const todayStart = Math.floor((now + SGT_OFFSET_MS) / DAY_MS) * DAY_MS - SGT_OFFSET_MS;
   for (const deadline of DEADLINES) {
     const dueStart = sgtMidnight(deadline.due);
-    if (dueStart < todayStart) continue; // 어제까지의 마감
+    // 마감이 실제로 끝나는 순간. 시각이 없으면 그 날 자정(= 다음 날 0시)입니다.
+    const endsAt = deadline.dueTime ? sgtAt(deadline.due, deadline.dueTime) : dueStart + DAY_MS;
+    if (endsAt <= now) continue; // 이미 지난 마감
     return { deadline, daysAway: Math.round((dueStart - todayStart) / DAY_MS) };
   }
   return null;

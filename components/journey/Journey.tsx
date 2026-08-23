@@ -17,6 +17,7 @@ import {
   schedule,
   MENTORING_DAY_RANGE,
   type BEvent,
+  type Deadline,
   type DayMeta,
   type EventPhase,
 } from "@/data/schedule";
@@ -1130,11 +1131,22 @@ function HeroLivePill({ t, ev }: { t: Tfn; ev: EventDayState }) {
 // 날짜 표기는 days[]에서 가져옵니다("08.28 금"). 데이 카드가 쓰는 표기 그대로예요:
 // 같은 날짜가 두 자리에서 다른 모양으로 적히면 방문자는 다른 날로 셉니다.
 // 마감일이 days[]에 없는 날이면(행사 밖의 마감) 원본 문자열로 떨어집니다.
-function deadlineWhen(due: string, daysAway: number, t: Tfn): string {
-  if (daysAway === 0) return t(dict.program.dueToday);
-  if (daysAway === 1) return t(dict.program.dueTomorrow);
+//
+// 마감 시각이 공개된 항목(dueTime)은 칩에 시각까지 붙습니다 — "오늘 12:00까지".
+// 낮에 끝나는 마감을 "오늘까지"라고만 적으면 저녁까지 여유가 있는 것으로 읽힙니다.
+function deadlineWhen(deadline: Deadline, daysAway: number, t: Tfn): string {
+  const { due, dueTime } = deadline;
+  if (daysAway === 0)
+    return dueTime
+      ? t(dict.program.dueTodayAt).replace("{time}", dueTime)
+      : t(dict.program.dueToday);
+  if (daysAway === 1)
+    return dueTime
+      ? t(dict.program.dueTomorrowAt).replace("{time}", dueTime)
+      : t(dict.program.dueTomorrow);
   const d = days.find((x) => x.date === due);
-  return d ? `${d.date} ${t(d.weekday)}` : due;
+  const when = d ? `${d.date} ${t(d.weekday)}` : due;
+  return dueTime ? `${when} ${dueTime}` : when;
 }
 
 function HeroLiveStrip({
@@ -1207,7 +1219,7 @@ function HeroLiveStrip({
               {t(deadline.label)}
             </span>
             <span className="shrink-0 rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[0.65rem] font-bold text-amber-200">
-              {deadlineWhen(deadline.due, daysAway, t)}
+              {deadlineWhen(deadline, daysAway, t)}
             </span>
           </>
         );

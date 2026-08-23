@@ -1735,8 +1735,12 @@ export const dict = {
     },
     // ── Day 7 · AWS 오피스 입장 사전 등록 ─────────────────────────────────
     // DECIDED 2026-08-17 (박주형): Day 7 현장은 AWS 오피스입니다. 보안 규정상
-    // 방문자 명단이 행사 3영업일 전에 확정돼야 해서, 참석 여부를 8월 24일(월)까지
-    // 받습니다. 이 날짜가 지나면 오고 싶어도 들어갈 수 없습니다.
+    // 방문자 명단을 미리 넘겨야 해서, 참석 여부를 마감일까지 받습니다. 이 시각이
+    // 지나면 오고 싶어도 들어갈 수 없습니다.
+    //
+    // 2026-08-24 변경: AWS가 8월 25일(화) 낮 12시까지 받기로 했습니다. 날짜 수준이
+    // 아니라 시각까지 공개된 마감이라 낮 12시를 카피에 그대로 적습니다 — "8월
+    // 25일까지"만 적으면 그 날 저녁까지 여유가 있는 것으로 읽힙니다.
     //
     // 이 사실은 사이트에서 가장 강한 취급을 받아야 하는 축에 듭니다. Day 7은
     // 선택 참여인데, 그 "선택"이 당일에 행사할 수 있는 선택이 아니라 나흘 전에
@@ -1750,12 +1754,13 @@ export const dict = {
     // 신청 창구는 오픈채팅입니다. 사이트에 폼 링크를 새로 만들지 마세요 — 명단은
     // 운영진이 한 곳에서 관리해야 AWS에 넘길 수 있습니다.
     //
-    // 날짜를 고칠 일이 생기면 이 박스와 Day 7 summary를 함께 고치세요.
+    // 날짜를 고칠 일이 생기면 이 박스와 Day 7 summary, 그리고 히어로 마감 줄이
+    // 읽는 schedule.ts의 DEADLINES("aws-roster")를 함께 고치세요.
     entryNotice: {
-      label: { ko: "8월 24일(월) 입장 명단 마감", en: "Entry list closes Mon 24 Aug" },
+      label: { ko: "8월 25일(화) 12시 입장 명단 마감", en: "Entry list closes Tue 25 Aug, 12:00" },
       body: {
-        ko: "Day 7은 AWS 오피스에서 열립니다. 보안 규정상 방문자 명단을 미리 넘겨야 해서, 참석 여부를 8월 24일(월)까지 받아요. 신청은 오픈채팅 공지로 받습니다. 명단에 없으면 당일 현장 등록은 안 되니, 오기로 했다면 이 날짜만은 지켜 주세요. 참석 자체는 선택입니다.",
-        en: "Day 7 runs at the AWS office, and their security needs the visitor list ahead of time, so we collect attendance by Mon 24 Aug. Sign up through the open chat announcement. If you're not on the list you can't register at the door, so if you're coming, this is the one date to keep. Attending itself is optional.",
+        ko: "Day 7은 AWS 오피스에서 열립니다. 보안 규정상 방문자 명단을 미리 넘겨야 해서, 참석 여부를 8월 25일(화) 낮 12시까지 받아요. 신청은 오픈채팅 공지로 받습니다. 명단에 없으면 당일 현장 등록은 안 되니, 오기로 했다면 이 시각만은 지켜 주세요. 참석 자체는 선택입니다.",
+        en: "Day 7 runs at the AWS office, and their security needs the visitor list ahead of time, so we collect attendance until 12:00 on Tue 25 Aug. Sign up through the open chat announcement. If you're not on the list you can't register at the door, so if you're coming, this is the one deadline to keep. Attending itself is optional.",
       },
     },
     // ── 체크인 폼 3종 ─────────────────────────────────────────────────────
@@ -2143,9 +2148,16 @@ export const dict = {
     // 만들면 방문자가 머릿속에서 날짜로 되돌려야 하는데, 그 계산이 필요한 거리에서는
     // 날짜가 더 짧은 길입니다. 영문이 소문자인 것은 칩이 라벨 뒤에 붙는 꼬리라서예요
     // ("Submission package due (evening) · today").
+    //
+    // 2026-08-24: 시각까지 공개된 마감(AWS 입장 명단, 8/25 12시)이 생기면서 …At
+    // 변형이 붙었습니다. 마감이 낮이면 "오늘까지"만 적는 쪽이 더 위험합니다 —
+    // 저녁까지 여유가 있는 것으로 읽고 늦게 들어오니까요. 시각이 없는 마감은
+    // 그대로 앞의 두 개를 씁니다.
     liveDue: { ko: "마감", en: "Due" },
     dueToday: { ko: "오늘까지", en: "today" },
     dueTomorrow: { ko: "내일까지", en: "tomorrow" },
+    dueTodayAt: { ko: "오늘 {time}까지", en: "today {time}" },
+    dueTomorrowAt: { ko: "내일 {time}까지", en: "tomorrow {time}" },
     // Label on the wide band above Lab 1. "사전" rather than "Day 0" — the
     // session is a prologue to the eight days, not a day of them.
     // 2026-08-23: "지난"이 붙었습니다. 행사가 시작된 뒤로 이 밴드는 다가올
