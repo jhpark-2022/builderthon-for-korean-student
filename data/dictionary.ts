@@ -341,9 +341,15 @@ export const dict = {
     // 남기지 않는다. 1순위 액션은 오픈채팅, 히어로 1순위는 트랙. 등록 코드
     // (모달·API·registered 상태)는 삭제하지 않고 진입점만 끊는다.
     //
-    // 위 openChat은 nav와 바의 짧은 라벨이고, 이건 등록 버튼이 있던 자리(클로징
-    // 섹션과 비전 브리지)를 받는 긴 라벨입니다. 같은 문을 여는 같은 링크지만,
-    // 페이지의 마지막 CTA 자리에 "오픈채팅" 넉 자만 서면 이름표처럼 읽힙니다.
+    // 위 openChat은 nav와 바의 짧은 라벨이고, 이건 등록 버튼이 있던 자리를 받는
+    // 긴 라벨입니다. 같은 문을 여는 같은 링크지만, 페이지의 마지막 CTA 자리에
+    // "오픈채팅" 넉 자만 서면 이름표처럼 읽힙니다.
+    //
+    // DECIDED 2026-08-24: 브리지 CTA 라벨 분리 — 클로징과 같은 문구가 모바일에서
+    // 연달아 반복되어 역할을 나눔(브리지=소식, 클로징=합류).
+    // 이제 이 키를 읽는 곳은 클로징 하나뿐입니다. 비전 브리지는 자기 라벨
+    // (dict.about.visionChatCta)을 갖고 갔어요 — 되돌리려면 그 키를 지우고 여기로
+    // 다시 부르면 됩니다.
     openChatJoin: { ko: "오픈채팅으로 함께하기", en: "Join the open chat" },
     openChatAria: { ko: "카카오톡 오픈채팅방 열기", en: "Open the KakaoTalk open chat" },
     // Brand suffix beside the Zero100 wordmark in the nav.
@@ -1279,6 +1285,25 @@ export const dict = {
     visionBridge: {
       ko: "그 시작점의 첫 빌더들이 이번 8월에 모였습니다.",
       en: "The first builders of that starting point have gathered this August.",
+    },
+    // 이 브리지 바로 아래 오픈채팅 버튼의 라벨.
+    //
+    // DECIDED 2026-08-24: 브리지 CTA 라벨 분리 — 클로징과 같은 문구가 모바일에서
+    // 연달아 반복되어 역할을 나눔(브리지=소식, 클로징=합류).
+    //
+    // 두 자리가 dict.nav.openChatJoin("오픈채팅으로 함께하기")을 함께 읽고
+    // 있었습니다. 데스크톱에서는 사이에 화면 하나가 들어가 눈에 띄지 않았는데,
+    // 폰에서는 한두 화면 간격으로 같은 문장이 두 번 서서 두 번째가 첫 번째의
+    // 메아리로 읽혔어요.
+    //
+    // 문은 같습니다 — 링크도 트래킹 이벤트(src: "vision")도 그대로예요. 바뀌는
+    // 것은 무엇을 하러 누르는가입니다. 비전을 막 읽은 사람에게 지금 필요한 것은
+    // 합류 결심이 아니라 다음 소식이고, 합류는 페이지 맨 아래 클로징이 받습니다.
+    // 클로징 라벨은 건드리지 마세요 — 그쪽이 여전히 "함께하기"여야 이 분업이
+    // 성립합니다.
+    visionChatCta: {
+      ko: "다음 소식 먼저 받기",
+      en: "Hear the news first",
     },
     // ── Press ────────────────────────────────────────────────────────────────
     // Outside coverage of the gap described just above, rendered as a slim

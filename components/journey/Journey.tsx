@@ -5074,7 +5074,13 @@ export default function Journey() {
 
               2026-08-22 (마감 후 청산): 등록 버튼이 오픈채팅으로 바뀌었습니다.
               이 자리가 하던 일(비전을 읽은 직후의 한 걸음)은 그대로이고, 지금
-              열려 있는 문이 오픈채팅뿐이라 그 문을 겁니다. */}
+              열려 있는 문이 오픈채팅뿐이라 그 문을 겁니다.
+
+              DECIDED 2026-08-24: 브리지 CTA 라벨 분리 — 클로징과 같은 문구가
+              모바일에서 연달아 반복되어 역할을 나눔(브리지=소식, 클로징=합류).
+              라벨만 dict.about.visionChatCta로 갈라졌고 링크·트래킹·스타일은
+              그대로입니다. 두 버튼이 같은 방으로 가는 것은 변함이 없어요 —
+              다른 것은 누르는 이유입니다. */}
           <p className="mx-auto mt-8 max-w-2xl text-center text-xs leading-relaxed text-white/55">
             {t(dict.about.visionNote)}
           </p>
@@ -5091,7 +5097,7 @@ export default function Journey() {
                 className="inline-flex shrink-0 items-center gap-2 rounded-full bg-violet-600/90 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-violet-500"
               >
                 <ChatGlyph className="h-4 w-4 shrink-0" />
-                {t(dict.nav.openChatJoin)}
+                {t(dict.about.visionChatCta)}
               </a>
             )}
           </div>
