@@ -2263,14 +2263,41 @@ function DayCard({ day, t, onOpen, ev }: { day: DayMeta; t: Tfn; onOpen: (n: num
 // what it is and when. The detail lives behind a tap, in the same EventModal the
 // day sessions use.
 // ─────────────────────────────────────────────────────────────────────────────
-function PreEventBand({ t, onOpen }: { t: Tfn; onOpen: (e: BEvent, el: HTMLElement) => void }) {
+function PreEventBand({
+  t,
+  onOpen,
+  eventDay,
+}: {
+  t: Tfn;
+  onOpen: (e: BEvent, el: HTMLElement) => void;
+  eventDay: EventDayState;
+}) {
   const ev = schedule.find((e) => e.day === 0);
   if (!ev) return null;
+  // DECIDED 2026-08-23: 이 밴드도 시간의 층에 넣습니다. 8/13은 Day 1보다도 먼저
+  // 지났는데 밴드만 혼자 밝게 서 있어서, 바로 아래 Day 1 카드가 가라앉은 것과
+  // 어긋났습니다. 배지가 "지난 사전 세션"이라고 말하고 있는데 시각은 아니라고
+  // 말하고 있던 셈이에요.
+  //
+  // 조건이 "행사 중"인 것은 데이 카드와 같은 규칙이기 때문입니다. 행사 전에는
+  // 진행 표시가 없고, 행사가 끝나면(8/29 이후) 페이지 전체가 다시 시간 없는
+  // 아카이브로 돌아가면서 이 감쇠도 함께 꺼집니다 — 그때는 여덟 날과 사전 세션이
+  // 모두 같은 무게의 기록입니다.
+  //
+  // ✓ 배지는 달지 않습니다. 데이 카드는 숫자만 있어서 글리프가 필요했지만, 이
+  // 밴드의 칩은 이미 "지난"으로 시작합니다. 같은 말을 두 번 하는 자리예요.
+  const past = eventDay.phase === "during";
   return (
     <button
       type="button"
       onClick={(e) => onOpen(ev, e.currentTarget)}
-      className="group flex w-full flex-col gap-3 rounded-2xl border border-violet-400/20 bg-violet-500/[0.05] px-5 py-4 text-left transition hover:border-violet-400/40 hover:bg-violet-500/[0.09] sm:flex-row sm:items-center sm:gap-5"
+      // 감쇠 값과 복원 방식은 데이 카드의 지난 상태와 한 글자도 다르지 않습니다.
+      // 두 표면이 같은 사실을 말하니 같은 세기여야 합니다.
+      className={`group flex w-full flex-col gap-3 rounded-2xl border border-violet-400/20 bg-violet-500/[0.05] px-5 py-4 text-left transition hover:border-violet-400/40 hover:bg-violet-500/[0.09] sm:flex-row sm:items-center sm:gap-5 ${
+        past
+          ? "opacity-[0.55] saturate-[0.85] transition-[opacity,filter] duration-300 hover:opacity-100 hover:saturate-100 focus-within:opacity-100 focus-within:saturate-100 focus:opacity-100 focus:saturate-100"
+          : ""
+      }`}
     >
       {/* 칩과 연사 소속 로고를 한 묶음으로 둡니다. 모바일에서 밴드가 세로로
           쌓이는데(flex-col), 둘을 따로 두면 로고가 자기 줄을 차지하면서 제목보다
@@ -4387,7 +4414,7 @@ export default function Journey() {
               sessions inline — the 8-day arc stays scannable. */}
           <div className="mt-12 space-y-8">
             {/* Prologue row — before Lab 1, outside the eight days. */}
-            <PreEventBand t={t} onOpen={selectEvent} />
+            <PreEventBand t={t} onOpen={selectEvent} eventDay={eventDay} />
             {[days.slice(0, 4), days.slice(4, 8)].map((group) => {
               // 그룹도 시간의 층에 들어갑니다: 이 Lab의 마지막 날까지 지나갔으면
               // 라벨과 구분선이 함께 가라앉습니다. 카드만 감쇠하고 머리글이 그대로
