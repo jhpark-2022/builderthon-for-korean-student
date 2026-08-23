@@ -903,9 +903,9 @@ function TrackPanel({ tr, t, idx }: { tr: (typeof dict.tracks.items)[number]; t:
   const [open, setOpen] = useState(false);
   const detailId = `track-detail-${idx}`;
   const panelId = `track-panel-${idx}`;
-  // 두 트랙뿐이라 "다른 쪽"은 항상 나머지 하나입니다. 셋이 되면 이 줄이 아니라
-  // 컨트롤 행 자체를 다시 설계해야 합니다.
-  const otherPanelId = `track-panel-${idx === 0 ? 1 : 0}`;
+  // 위로 돌아갈 대상. 아래로 가는 길은 스크롤이 이미 데려다주므로 버튼은 위쪽만
+  // 맡습니다(컨트롤 행 주석 참고). 첫 패널에서는 렌더되지 않아 값이 쓰이지 않아요.
+  const otherPanelId = `track-panel-${idx - 1}`;
   // 하단 접기가 포커스를 되돌려 줄 상대. 상단 토글은 접어도 언마운트되지 않아서
   // 안전하게 받을 수 있고, 뷰포트도 패널 머리로 따라옵니다. 이게 없으면 포커스가
   // body로 떨어져 세 화면 아래에서 탭 순서가 처음부터 다시 시작됩니다(WCAG 2.4.3).
@@ -929,9 +929,27 @@ function TrackPanel({ tr, t, idx }: { tr: (typeof dict.tracks.items)[number]; t:
 
   return (
     <Glass className={`scroll-mt-24`}>
-      <div id={panelId} className="scroll-mt-24 lg:grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start lg:gap-10">
+      {/* DECIDED 2026-08-23: 토글을 오른쪽 칸에서 꺼내 두 칸 아래로 내렸습니다.
+          그리고 펼치면 2단 자체를 풉니다.
+
+          오른쪽 칸에 있을 때 버튼이 두 번 어색했습니다. 접힌 상태에서는 칩 아래
+          허공에 떠서 왼쪽 본문보다 한참 위에서 끝났고, 펼치면 칩이 사라지면서
+          (8/23 중복 제거) 제목 옆 빈 칸에 버튼 하나만 남았습니다. 오른쪽 칸의
+          내용물이 상태에 따라 사라지는데 버튼이 거기 얹혀 있던 것이 원인이에요.
+
+          이제 버튼은 두 칸 어느 쪽에도 속하지 않고, 헤더 블록 전체의 다음 줄에
+          섭니다 — 상태가 바뀌어도 자리가 움직이지 않습니다.
+
+          펼친 뒤 2단을 푸는 이유: 오른쪽 칸이 빌 이유가 없습니다. 왼쪽 정체성
+          블록이 폭을 넓게 쓰되 읽는 길이는 max-w-3xl로 잡습니다. */}
+      <div
+        id={panelId}
+        className={`scroll-mt-24 ${
+          open ? "" : "lg:grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start lg:gap-10"
+        }`}
+      >
         {/* LEFT — 정체성. 접혀 있어도 늘 보이는 부분입니다. */}
-        <div>
+        <div className={open ? "max-w-3xl" : ""}>
           {/* 번호를 사각 칩으로 세웁니다. 펼친 상태의 단계 숫자 칩과 같은 어법이라
               한 패널 안에서 두 번호가 같은 종류로 읽혀요. */}
           <p className="flex items-center gap-2 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-emerald-200/90">
@@ -959,8 +977,10 @@ function TrackPanel({ tr, t, idx }: { tr: (typeof dict.tracks.items)[number]; t:
           <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">{t(tr.body)}</p>
         </div>
 
-        {/* RIGHT — 흐름 칩 + 액션. lg에서만 옆 칸이고 그 아래에서는 그냥 다음
-            블록입니다. */}
+        {/* RIGHT — 흐름 요약. lg에서만 옆 칸이고 그 아래에서는 그냥 다음 블록입니다.
+            폰에서는 소제목 + 단계 수 배지 한 줄이고, lg부터 칩 스트립이 붙습니다.
+            펼치면 통째로 사라지고, 그때는 위의 그리드도 함께 풀립니다. */}
+        {!open && (
         <div className="mt-7 lg:mt-0">
           {/* 흐름 칩 스트립. 접힌 상태에만 나옵니다.
               이유가 셋인데 한 수로 풀립니다. (1) 밀도 — 비어 있던 오른쪽 칸이
@@ -975,50 +995,69 @@ function TrackPanel({ tr, t, idx }: { tr: (typeof dict.tracks.items)[number]; t:
               펼친 순간 화면에 같은 목록이 두 번 있었습니다. 칩 스트립의 일은
               "접힌 채로 고를 수 있게 하는 것"이라 펼친 뒤에는 할 일이 없어요.
               접으면 그대로 돌아옵니다. */}
-          {!open && (
-            <>
-              <h4 className={subhead}>{t(dict.tracks.flowTitle)}</h4>
-              {/* role="list" — Tailwind preflight가 list-style을 지우면 Safari/VoiceOver가
-                  목록 시맨틱까지 함께 잃습니다. 아래 목표 <ul>도 같은 이유. */}
-              <ol role="list" className="mt-3 flex flex-wrap gap-2">
-                {tr.flow.map((step, i) => (
-                  <li
-                    key={i}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[0.72rem] font-semibold text-white/75"
-                  >
-                    <span aria-hidden className="text-[0.6rem] font-black text-emerald-300/80">
-                      {i + 1}
-                    </span>
-                    {t(step.label)}
-                  </li>
-                ))}
-              </ol>
-            </>
-          )}
-
-          <button
-            ref={toggleRef}
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-controls={detailId}
-            /* w-full은 폰에서만 — 한 손으로 쥔 상태의 타깃이 카드 폭 전체가
-               됩니다. sm부터는 내용 폭으로 돌아갑니다. */
-            className={`${open ? "" : "mt-5"} w-full sm:w-auto ${ctrl}`}
-          >
-            {t(open ? dict.tracks.collapse : dict.tracks.expand)}
-            {/* 두 패널의 토글이 접근성 이름까지 똑같으면(“문제 자세히 보기” 둘)
-                버튼 목록에서 구분이 안 됩니다. 화면에는 안 보이는 트랙 이름을
-                붙여 "문제 자세히 보기 저지먼트 트랙"으로 읽히게 합니다. */}
-            <span className="sr-only"> {t(tr.title)}</span>
-            <span
-              aria-hidden
-              className={`transition-transform duration-300 motion-reduce:transition-none ${open ? "rotate-180" : ""}`}
-            >
-              ▾
+          {/* DECIDED 2026-08-23 (모바일 감사 3차): 소제목 옆에 단계 수 배지.
+              칩 스트립이 겸하던 "6개 대 8개" 신호가 폰에서 죽어 있었습니다 — 칩 폭이
+              라벨 길이를 따라가서 6개도 8개도 똑같이 세 줄로 접혔거든요. 세는 대신
+              말합니다. 높이를 하나도 쓰지 않고, 로케일과 폭에 상관없이 맞습니다.
+              숫자는 tr.flow.length에서 옵니다 — 손으로 적지 마세요. */}
+          <h4 className={`flex items-center gap-2 ${subhead}`}>
+            {t(dict.tracks.flowTitle)}
+            <span className="rounded-full border border-emerald-400/25 bg-emerald-400/[0.08] px-2 py-0.5 text-[0.6rem] font-black tracking-normal text-emerald-200/90">
+              {t(dict.tracks.flowCount).replace("{n}", String(tr.flow.length))}
             </span>
-          </button>
+          </h4>
+          {/* 칩 스트립은 lg부터입니다.
+              폰에서 이 목록은 123px에 세 줄을 먹었는데, 칩을 넣은 세 이유 중 둘이
+              거기서는 성립하지 않습니다. (1) 밀도 — 비어 있는 오른쪽 칸을 채우려던
+              것인데 폰에는 그 칸 자체가 없습니다. (2) 차별화 — 위 배지가 대신합니다.
+              남는 (3) 논지("여덟 단계"라고 주장하면서 여덟을 안 보여준다)는 배지의
+              숫자가 받고, 단계 이름은 한 번의 탭 뒤 상세에 전문으로 있습니다.
+              lg에서는 그대로 둡니다 — 거기서는 셋 다 성립합니다.
+
+              role="list" — Tailwind preflight가 list-style을 지우면 Safari/VoiceOver가
+              목록 시맨틱까지 함께 잃습니다. 아래 목표 <ul>도 같은 이유. */}
+          <ol role="list" className="mt-3 hidden flex-wrap gap-2 lg:flex">
+            {tr.flow.map((step, i) => (
+              <li
+                key={i}
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[0.72rem] font-semibold text-white/75"
+              >
+                <span aria-hidden className="text-[0.6rem] font-black text-emerald-300/80">
+                  {i + 1}
+                </span>
+                {t(step.label)}
+              </li>
+            ))}
+          </ol>
         </div>
+        )}
+      </div>
+
+      {/* 토글. 두 칸 아래, 헤더 블록 전체의 다음 줄입니다 — 접히든 펼치든 같은
+          자리에 섭니다. */}
+      <div className="mt-6">
+        <button
+          ref={toggleRef}
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-controls={detailId}
+          /* w-full은 폰에서만 — 한 손으로 쥔 상태의 타깃이 카드 폭 전체가
+             됩니다. sm부터는 내용 폭으로 돌아갑니다. */
+          className={`w-full sm:w-auto ${ctrl}`}
+        >
+          {t(open ? dict.tracks.collapse : dict.tracks.expand)}
+          {/* 두 패널의 토글이 접근성 이름까지 똑같으면(“문제 자세히 보기” 둘)
+              버튼 목록에서 구분이 안 됩니다. 화면에는 안 보이는 트랙 이름을
+              붙여 "문제 자세히 보기 저지먼트 트랙"으로 읽히게 합니다. */}
+          <span className="sr-only"> {t(tr.title)}</span>
+          <span
+            aria-hidden
+            className={`transition-transform duration-300 motion-reduce:transition-none ${open ? "rotate-180" : ""}`}
+          >
+            ▾
+          </span>
+        </button>
       </div>
 
       {/* 상세. 항상 렌더하고 grid-rows로 높이만 여닫습니다 — 조건부 렌더는 열고
@@ -1111,9 +1150,18 @@ function TrackPanel({ tr, t, idx }: { tr: (typeof dict.tracks.items)[number]; t:
                 {t(dict.tracks.collapse)}
                 <span className="sr-only"> {t(tr.title)}</span>
               </button>
-              <a href={`#${otherPanelId}`} className={`w-full sm:w-auto ${ctrl}`}>
-                {t(dict.tracks.otherTrack)}
-              </a>
+              {/* DECIDED 2026-08-23 (모바일 감사 3차): 대상이 위에 있을 때만 답니다.
+                  패널은 세로로 쌓이고 이 컨트롤 행은 상세의 맨 끝이라, 첫 패널에서
+                  "다른 트랙"은 바로 다음에 보이는 블록입니다 — 스크롤 한 번이면
+                  될 것을 버튼으로 만든 셈이었어요. 반대로 마지막 패널에서는 긴 상세를
+                  거슬러 올라가야 해서 버튼이 실제로 일을 합니다.
+                  트랙이 셋 이상이 되어도 같은 규칙입니다: 아래에 있는 것은 스크롤이
+                  데려다주고, 버튼은 위로 돌아가는 길만 맡습니다. */}
+              {idx > 0 && (
+                <a href={`#${otherPanelId}`} className={`w-full sm:w-auto ${ctrl}`}>
+                  {t(dict.tracks.otherTrack)}
+                </a>
+              )}
             </div>
           </div>
         </div>
