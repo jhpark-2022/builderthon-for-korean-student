@@ -20,6 +20,23 @@ const pretendard = localFont({
 // TODO: swap to the real custom domain once connected.
 const SITE_URL = "https://builderthon-for-korean-student.vercel.app";
 
+// ── 공유 카드 문자열 ─────────────────────────────────────────────────────────
+// DECIDED 2026-08-23: 라이브 신호를 첫 화면으로 승격 — 히어로 오늘/다음 스트립,
+// OG 메타데이터 국면 전환. 시계는 getEventDayState 하나.
+//
+// 이 파일은 그 "하나의 시계"를 쓸 수 없습니다. 홈은 정적 생성이라 여기 metadata는
+// 빌드 시점에 한 번 굳고 요청 시각을 볼 수 없어요. 날짜를 보는 문구로 바꾸려면
+// generateMetadata + 동적 렌더링이 필요하고, 그건 홈을 정적에서 내리는 값입니다.
+//
+// 그래서 "진행 중"이라고 쓰지 않습니다. 대신 어느 국면에서 읽어도 맞는 문장을
+// 씁니다: 날짜는 그대로 박아 두고, 서술만 안내형에서 무엇을 하고 있는가로
+// 옮겼습니다. 행사 중에는 지금 벌어지는 일로, 끝난 뒤에는 기록으로 읽힙니다.
+//
+// 모집형 문구(등록·신청·지원하세요)는 원래 없었습니다 — 2026-08-23 전수 확인.
+// 다시 넣지 마세요.
+const OG_DESCRIPTION =
+  "Singapore's first AI builderthon for Korean students, taking on real companies' AI-transformation problems. 22–29 Aug 2026, 8 days.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Zero100 AI Builderthon Build in Singapore",
@@ -28,7 +45,7 @@ export const metadata: Metadata = {
   keywords: ["Builderthon", "Zero100", "Singapore", "Korean students", "AI", "vibe coding", "hackathon", "NUS", "NTU", "SMU"],
   openGraph: {
     title: "Zero100 AI Builderthon",
-    description: "Singapore's first AI builderthon for Korean students, 22–29 Aug 2026 8 days.",
+    description: OG_DESCRIPTION,
     url: SITE_URL,
     siteName: "Zero100 AI Builderthon",
     type: "website",
@@ -36,7 +53,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Zero100 AI Builderthon",
-    description: "Singapore's first AI builderthon for Korean students, 22–29 Aug 2026 8 days.",
+    description: OG_DESCRIPTION,
   },
 };
 

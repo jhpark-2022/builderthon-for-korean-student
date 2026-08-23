@@ -440,6 +440,11 @@ export const dict = {
     // ── Post-registration ───────────────────────────────────────────────────
     // The one moment a visitor is guaranteed to be receptive: they just finished
     // the form and there is nothing else to do until the event.
+    //
+    // 2026-08-23 확인: 이 줄을 읽는 곳은 RegisterModal의 제출 완료 화면 하나이고,
+    // 그 모달은 2026-08-22 청산으로 열리는 문이 없습니다. "행사 전까지"가 이제
+    // 사실이 아니지만 렌더되지 않으므로 문구는 그대로 둡니다 — 다음 라운드에
+    // 등록을 다시 열면 그때는 다시 맞는 말이 됩니다. 고치는 순간 오히려 어긋나요.
     successQuizTitle: {
       ko: "등록 완료! 행사 전까지 내 AI 모델 알아보고 스토리에 공유하기",
       en: "You're in! While you wait, find your AI model & share it",
@@ -2078,9 +2083,24 @@ export const dict = {
     // 프로그램 섹션 헤더의 라이브 칩. {n}은 렌더에서 치환합니다 — 숫자를 문자열에
     // 박으면 날마다 사전을 고쳐야 합니다.
     dayLive: { ko: "Day {n} 진행 중", en: "Day {n} live" },
+    // ── 히어로 라이브 스트립 라벨 ──────────────────────────────────────────
+    // DECIDED 2026-08-23: 라이브 신호를 첫 화면으로 승격 — 히어로 오늘/다음
+    // 스트립(행사 중에만), OG 메타데이터 국면 전환. 시계는 getEventDayState 하나.
+    //
+    // 진행 중이라는 사실이 프로그램 챕터까지 스크롤해야 처음 나왔습니다. 첫 화면만
+    // 보고 떠나는 사람(참가자의 가족, 파트너사, 링크에서 넘어온 사람)에게 이 페이지는
+    // 시간이 멈춘 포스터였어요.
+    //
+    // 라벨은 이 둘뿐입니다. 문장을 만들지 마세요 — 나머지는 전부 days[]에서 파생해
+    // 칩과 데이터로 말합니다. 문장을 쓰기 시작하면 날마다 사전을 고쳐야 합니다.
+    liveNow: { ko: "오늘", en: "Today" },
+    liveNextOnsite: { ko: "다음 현장", en: "Next on-site" },
     // Label on the wide band above Lab 1. "사전" rather than "Day 0" — the
     // session is a prologue to the eight days, not a day of them.
-    preEventTag: { ko: "사전 세션 8/13", en: "Pre-event 13 Aug" },
+    // 2026-08-23: "지난"이 붙었습니다. 행사가 시작된 뒤로 이 밴드는 다가올
+    // 세션이 아니라 이력입니다 — 8/13은 본 행사 9일 전이었어요. 카드 본문은
+    // 그대로 둡니다(이제 기록 가치라 지울 이유가 없습니다).
+    preEventTag: { ko: "지난 사전 세션 8/13", en: "Pre-event 13 Aug held" },
     tapHint: { ko: "자세히 보기", en: "View details" },
     confirmedBadge: { ko: "확정", en: "Confirmed" },
     mandatoryBadge: { ko: "필참", en: "Required" },

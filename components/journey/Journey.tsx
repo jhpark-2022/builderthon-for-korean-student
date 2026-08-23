@@ -1237,6 +1237,96 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// HERO LIVE STRIP — 첫 화면에서 "지금 진행 중"을 말하는 두 줄.
+//
+// DECIDED 2026-08-23: 라이브 신호를 첫 화면으로 승격 — 히어로 오늘/다음
+// 스트립(행사 중에만), OG 메타데이터 국면 전환. 시계는 getEventDayState 하나.
+//
+// 진행 중이라는 신호가 프로그램 챕터에만 있었습니다(노선도, 카드 3상태, 헤더 칩).
+// 그런데 첫 화면만 보고 떠나는 방문자에게 이 페이지는 행사 전과 똑같은 포스터예요.
+// 날짜 범위 옆에 오늘이 며칠차인지, 오늘 무엇을 하는지, 다음에 어디로 모이는지를
+// 둡니다.
+//
+// 문자열을 새로 쓰지 않는 것이 이 컴포넌트의 규칙입니다. 라이브 필은 프로그램
+// 헤더와 같은 dict.program.dayLive를 읽고(같은 모양이어야 같은 사실로 읽힙니다),
+// 오늘 줄과 다음 현장 줄은 days[]에서 파생하며, 모드 칩은 데이 카드가 쓰는
+// DayModeBadge를 그대로 씁니다. 여기서 날짜나 세션 이름을 손으로 적지 마세요 —
+// 스케줄이 바뀌면 첫 화면만 거짓말을 하게 됩니다.
+//
+// 행사 전·후에는 아무것도 렌더하지 않습니다. 시계는 Journey()가 한 번 읽어
+// 내려보내는 그 값 하나입니다.
+// ─────────────────────────────────────────────────────────────────────────────
+// 라이브 필만 따로. 날짜 줄 안에 인라인으로 들어갑니다 — "8월 22일부터 29일까지"를
+// 읽은 자리에서 바로 "지금 Day 2"가 붙는 것이 가장 짧은 경로예요.
+//
+// 스트립에서 이 필을 뺀 이유는 하이드레이션 이동량입니다. 스트립이 세 줄일 때
+// 마운트 직후 아래 본문과 CTA가 126px 밀렸습니다. 필을 이미 존재하는 날짜 줄 안에
+// 넣으면 그 줄의 높이가 변하지 않아(한 줄 안에 들어갑니다) 이동량이 두 줄치로
+// 줄어듭니다. 첫 화면에서 CTA가 눈에 띄게 내려앉는 것보다 낫습니다.
+//
+// 모양은 프로그램 헤더 칩과 같아야 합니다. 두 자리가 같은 사실을 말하는데 모양이
+// 다르면 방문자는 다른 두 가지로 셉니다.
+function HeroLivePill({ t, ev }: { t: Tfn; ev: EventDayState }) {
+  if (ev.phase !== "during" || ev.current === null) return null;
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/35 bg-violet-500/12 px-3 py-1 text-[0.7rem] font-bold leading-none text-violet-100">
+      <span aria-hidden className="relative flex h-[7px] w-[7px] shrink-0">
+        <span className="absolute inline-flex h-full w-full rounded-full bg-violet-300/70 animate-[softPulse_2.4s_ease-in-out_infinite] motion-reduce:animate-none" />
+        <span className="relative inline-flex h-full w-full rounded-full bg-violet-200" />
+      </span>
+      {t(dict.program.dayLive).replace("{n}", String(ev.current))}
+    </span>
+  );
+}
+
+function HeroLiveStrip({
+  t,
+  ev,
+  onOpen,
+}: {
+  t: Tfn;
+  ev: EventDayState;
+  onOpen: (n: number) => void;
+}) {
+  if (ev.phase !== "during" || ev.current === null) return null;
+  const today = days.find((d) => d.day === ev.current);
+  if (!today) return null;
+  // 오늘 이후의 첫 현장일. 마지막 현장일(Day 8)에 서 있으면 없고, 그때는 줄이
+  // 통째로 빠집니다 — "다음 현장"이라 해 놓고 오늘을 가리키면 안 되니까요.
+  const nextOnsite = days.find((d) => d.day > ev.current! && d.dayMode === "offline");
+  const row =
+    "flex flex-wrap items-center gap-x-2 gap-y-1 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-left transition hover:border-violet-400/30 hover:bg-white/[0.07]";
+  const label = "shrink-0 text-[0.6rem] font-bold uppercase tracking-[0.14em] text-white/45";
+  return (
+    <div className="mt-4 flex max-w-md flex-col gap-2 lg:mx-0">
+      {/* 오늘 줄. 누르면 그 날의 모달이 열립니다 — 데이 카드와 같은 문을 씁니다. */}
+      <button type="button" onClick={() => onOpen(today.day)} className={row}>
+        <span className={label}>{t(dict.program.liveNow)}</span>
+        <span className="break-keep text-[0.8rem] font-bold leading-snug text-white">
+          {t(today.theme)}
+        </span>
+        {today.hours && (
+          <span className="shrink-0 rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.65rem] font-semibold text-white/60">
+            {today.hours}
+          </span>
+        )}
+        <DayModeBadge day={today} t={t} selfPaced={dayIsSelfPaced(today.day)} />
+      </button>
+
+      {nextOnsite && (
+        <button type="button" onClick={() => onOpen(nextOnsite.day)} className={row}>
+          <span className={label}>{t(dict.program.liveNextOnsite)}</span>
+          <span className="break-keep text-[0.8rem] font-semibold leading-snug text-white/85">
+            {t(dict.program.dayLabel)} {nextOnsite.day} {t(nextOnsite.theme)}
+          </span>
+          <span className="shrink-0 text-[0.65rem] font-semibold text-white/50">{nextOnsite.date}</span>
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // 정거장 원칙 — the 8-day arc as a route, not a calendar.
 //
 // The grid below shows eight cards of equal weight, which reads as eight days of
@@ -3651,9 +3741,20 @@ export default function Journey() {
                 {t(dict.hero.titleLine2)}
               </span>
             </h1>
-            <p className="mt-8 flex items-center justify-center gap-2 whitespace-nowrap text-[0.65rem] text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:gap-3 sm:text-base lg:justify-start">
+            {/* flex-wrap이 붙었습니다 (2026-08-23): 라이브 필이 이 줄에 합류하면서
+                좁은 폭에서는 두 줄로 접혀야 합니다. whitespace-nowrap은 각 조각이
+                자기 안에서 쪼개지지 않게 하는 것이고, 조각들 사이의 줄바꿈은
+                허용해야 해요 — 없으면 390px에서 가로로 넘칩니다. */}
+            <p className="mt-8 flex flex-wrap items-center justify-center gap-2 whitespace-nowrap text-[0.65rem] text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:gap-3 sm:text-base lg:justify-start">
               <span className="font-semibold">{t(dict.hero.dates)}</span>
+              <HeroLivePill t={t} ev={eventDay} />
             </p>
+            {/* 날짜 범위 바로 아래. 이 순서가 요점입니다 — "8월 22일부터 29일까지"를
+                읽은 눈이 곧장 "그래서 오늘은?"으로 가고, 그 답이 다음 줄에 있습니다.
+                행사 전·후에는 아무것도 렌더되지 않아 히어로가 지금과 같습니다. */}
+            <div className="flex justify-center lg:justify-start">
+              <HeroLiveStrip t={t} ev={eventDay} onOpen={setActiveDay} />
+            </div>
             {/* break-keep — without it Korean breaks between syllables and the
                 paragraph ended "…남깁니" / "다." with a single orphaned syllable
                 on its own line. Wrapping still happens, but only at word
