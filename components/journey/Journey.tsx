@@ -62,12 +62,33 @@ import { useBodyScrollLock, isScrollLocked } from "@/lib/useBodyScrollLock";
 // 고르려면 며칠차인지가 아니라 지금 시각이 필요합니다. 소비처에서 Date.now()를
 // 다시 읽으면 그 순간 시계가 둘이 되고, 자정 언저리에 라이브 필과 마감 칩이 서로
 // 다른 날을 말할 수 있습니다. 한 번 읽어 같이 내려보냅니다.
-// SSR·첫 렌더에서는 null입니다 — 서버에는 방문자의 "지금"이 없습니다.
+//
+// ── DECIDED 2026-08-24: 히어로 라이브 스트립 하이드레이션 밀림 제거 — 서버가
+// 자기 시각을 내려보내고(serverNow) 클라이언트가 그대로 그린 뒤 보정한다.
+// / 는 정적 프리렌더에서 ISR(revalidate 300)로 바뀐다. ──────────────────────
+//
+// 첫 렌더가 NEUTRAL(행사 전과 같은 화면)이었습니다. 서버에 방문자의 "지금"이
+// 없으니 그리지 않는 것이 맞다고 봤는데, 대가가 컸어요: 마운트 직후 히어로에
+// 스트립 세 줄이 끼어들면서 폰에서 아래 본문과 CTA가 165px 내려앉았습니다.
+// 첫 화면에서 누르려던 버튼이 손가락 밑에서 움직입니다.
+//
+// 이제 서버가 자기 시각을 prop으로 실어 보냅니다(app/page.tsx). 서버 HTML과
+// 클라이언트의 첫 렌더가 같은 숫자를 보므로 마크업이 일치하고 — 하이드레이션
+// 불일치도 밀림도 없습니다 — 그 다음 useEffect가 방문자의 진짜 시각으로 보정해요.
+//
+// serverNow는 최대 5분 낡을 수 있습니다(ISR). 하루 단위 신호라 SG 자정 직후 5분이
+// 유일하게 틀릴 수 있는 창이고, 그마저 아래 effect가 곧바로 고칩니다. 보정 폭이
+// 하루 경계에 걸리면 그때는 한 줄만 바뀌지, 세 줄이 통째로 생기지 않습니다.
+//
+// serverNow를 인자로 받는 것이 이 훅의 계약입니다. 안에서 Date.now()를 초기값으로
+// 읽으면 서버(빌드 시각)와 클라이언트(방문 시각)가 갈려 다시 어긋납니다.
 type EventDayState = { current: number | null; phase: EventPhase; now: number | null };
-const NEUTRAL_EVENT_DAY: EventDayState = { current: null, phase: "before", now: null };
 
-function useEventDay(): EventDayState {
-  const [state, setState] = useState<EventDayState>(NEUTRAL_EVENT_DAY);
+function useEventDay(serverNow: number): EventDayState {
+  const [state, setState] = useState<EventDayState>(() => ({
+    ...getEventDayState(serverNow),
+    now: serverNow,
+  }));
   useEffect(() => {
     const now = Date.now();
     setState({ ...getEventDayState(now), now });
@@ -3523,15 +3544,16 @@ function ScrollToTop() {
   );
 }
 
-export default function Journey() {
+export default function Journey({ serverNow }: { serverNow: number }) {
   const { t } = useLocale();
   // 2026-08-22 마감 후 청산: openRegister와 closed는 이 컴포넌트에서 더 이상
   // 읽지 않습니다. registered는 ReturningGreeting류가, registerOpen은 스티키 바의
   // 숨김 조건이 씁니다.
   const { registered, registerOpen } = useRegister();
   // 페이지 전체가 공유하는 시계 하나 (useEventDay 주석 참고). 여기서 한 번만
-  // 부르고 노선도와 데이 카드에 값을 내려보냅니다.
-  const eventDay = useEventDay();
+  // 부르고 노선도와 데이 카드에 값을 내려보냅니다. 초기값은 서버가 준 시각이라
+  // 첫 페인트부터 진행 상태가 서 있습니다.
+  const eventDay = useEventDay(serverNow);
   const reduce = useReducedMotion();
   const [active, setActive] = useState<BEvent | null>(null);
   const [activeDay, setActiveDay] = useState<number | null>(null); // day detail modal
