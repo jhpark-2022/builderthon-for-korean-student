@@ -448,7 +448,11 @@ function MobileStickyBar({
   const [atEnd, setAtEnd] = useState(false);
   // Same signal the header and the FAB use — the three move as one surface, so
   // the page never settles at a height that only some of them agreed on.
-  const chromeHidden = useScrollDirection();
+  //
+  // DECIDED 2026-08-24: 하단 바는 idle reveal에서 뺍니다(idleReveal: false). 폰에서
+  // 읽으려고 멈추면 450ms 뒤에 알약이 본문 한 줄 가운데를 덮었어요. 방향 판정은
+  // 그대로라 위로 조금만 밀면 다시 나옵니다. 자세한 사정은 훅 주석에 있습니다.
+  const chromeHidden = useScrollDirection({ idleReveal: false });
 
   useEffect(() => {
     // `isScrollLocked` guard: a frozen page reports scrollY 0, which would pull
@@ -3260,7 +3264,10 @@ function MobileChatBar() {
   const [visible, setVisible] = useState(false);
   const [atEnd, setAtEnd] = useState(false);
   // Shared with the header and the FAB (lib/useScrollDirection).
-  const chromeHidden = useScrollDirection();
+  // idleReveal: false — 아래 폰 바와 같은 이유입니다(훅 주석 참고). 두 바가 같은
+  // 자리를 다른 브레이크포인트에서 맡고 있어서, 한쪽만 멈춤 복귀를 하면 화면 폭에
+  // 따라 다르게 동작합니다.
+  const chromeHidden = useScrollDirection({ idleReveal: false });
 
   useEffect(() => {
     const onScroll = () => {
