@@ -235,12 +235,17 @@ export const partnerIntros: Record<string, Phrase> = {
   //
   // 부상을 "식사 바우처"로 부르지 않습니다 — 널담 주석과 같은 규칙입니다.
   "Jeju Haenyeo": {
-    // DECIDED 2026-08-16: 후원 내용이 확정됐습니다 — Day 5 즉석 인기 투표에서
-    // 최다 득표 3팀에게 가는 음료 바우처입니다. 처음 넣을 때는 내용을 몰라
-    // "어워드 부상"으로 적었는데, 그건 Day 8 어워드의 부상이라 사실이 아닙니다.
-    // 종류·장수·금액은 쓰지 않습니다(schedule.ts Day 5 투표 줄 위 주석의 규칙).
-    ko: "제주 해녀 문화를 다이닝으로 풀어내는 한국 브랜드로, 싱가포르에도 자리를 두고 있습니다. 이번 빌더톤에는 Day 5 즉석 인기 투표에서 최다 득표 3팀에게 가는 음료 바우처를 후원합니다.",
-    en: "A Korean brand that brings Jeju's haenyeo culture to the table, with a place in Singapore too. It sponsors the drink vouchers that go to the three most-voted teams in the Day 5 on-the-spot vote.",
+    // 폐지 2026-08-23 (원대로 대표님 지시): Day 5 투표가 없어지면서 이 문장이
+    // 가리키던 부상도 함께 내려갔습니다 — 아래는 이력.
+    //   DECIDED 2026-08-16: 후원 내용 = Day 5 즉석 인기 투표 최다 득표 3팀에게
+    //   가는 음료 바우처. 종류·장수·금액은 쓰지 않는다는 규칙이 딸려 있었습니다.
+    //
+    // 후원 관계 자체는 유효합니다. 로고는 파트너 월에 그대로 있고, 여기서도
+    // 회사 소개는 그대로 둡니다. 내려간 것은 "무엇을 후원하는가" 한 문장뿐이에요 —
+    // 바우처를 어디로 돌릴지는 해녀의 부엌 쪽과 정리된 뒤에 다시 씁니다.
+    // 정해지지 않은 것을 웹에 미리 적지 마세요.
+    ko: "제주 해녀 문화를 다이닝으로 풀어내는 한국 브랜드로, 싱가포르에도 자리를 두고 있습니다. 이번 빌더톤의 후원사로 함께합니다.",
+    en: "A Korean brand that brings Jeju's haenyeo culture to the table, with a place in Singapore too. It joins this builderthon as a sponsor.",
   },
 
 };
@@ -1616,17 +1621,21 @@ export const dict = {
         },
         {
           name: { ko: "빌더스 초이스", en: "Builder's Choice" },
-          // DECIDED 2026-08-13: Day 5 = 집중 빌드·LAP Time 공유·즉석 인기 투표(빌더스
-          // 초이스 가산)·출석(0→100 가산). 해시드·OpenAI 글로벌 해커톤은 행사 후 별도
-          // 행사로 이동(협의 중).
+          // 폐지 2026-08-23 (원대로 대표님 지시): Day 5 중간 라운드 제거 — 아래는 이력.
+          //   DECIDED 2026-08-13: Day 5 즉석 인기 투표가 이 부문에 가산됐습니다.
+          //
+          // 중간 시점(수요일) 결과에 투표로 상을 걸면 완성도를 높이려는 경쟁이
+          // 됩니다. 이 부문은 Day 8 단일 라운드로 돌아갔습니다 — 참가자가 발표를
+          // 다 보고 한 번 뽑습니다. 되살리지 마세요.
+          //
+          // 0→100의 "Day 5 출석 반영"은 그대로입니다. 출석 가산은 투표와 별개이고
+          // 이번 폐지의 대상이 아니었어요.
           //
           // 가산 사실은 meta에만 붙입니다. meta는 사실 줄(선정 주체 · 팀 수 · 부상)이고
           // desc는 유머 줄이라, desc에 넣으면 농담 안에 규칙이 숨습니다.
-          // 같은 사실이 schedule.ts의 Day 5(runOfShow 투표 줄 · 카드 description)에도
-          // 있습니다. 함께 움직이세요. 배점 숫자는 어디에도 쓰지 않습니다.
           meta: {
-            ko: "참가자 투표 트랙당 1팀 널담 바우처 Day 5 즉석 투표 결과 합산",
-            en: "Voted by the participants one per track Nuldam voucher the Day 5 vote carries into it",
+            ko: "참가자 투표 트랙당 1팀 널담 바우처",
+            en: "Voted by the participants one per track Nuldam voucher",
           },
           desc: {
             ko: "발표가 다 끝났는데도 자꾸 생각나는, 빌더들이 뽑은 최애의 팀.",

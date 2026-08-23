@@ -611,7 +611,8 @@ export const days: DayMeta[] = [
     date: "08.26",
     weekday: { ko: "수", en: "Wed" },
     phase: LAB2,
-    // DECIDED 2026-08-13: Day 5 = 집중 빌드·LAP Time 공유·즉석 인기 투표(빌더스
+    // 폐지 2026-08-23: 아래의 즉석 인기 투표는 제거됐습니다 (원대로 대표님 지시).
+// DECIDED 2026-08-13: Day 5 = 집중 빌드·LAP Time 공유·즉석 인기 투표(빌더스
     // 초이스 가산)·출석(0→100 가산). 해시드·OpenAI 글로벌 해커톤은 행사 후 별도
     // 행사로 이동(협의 중).
     //
@@ -627,17 +628,25 @@ export const days: DayMeta[] = [
     // this line directly above the on-site card, and with one session carrying
     // the whole day the two were saying the same sentence twice. This one gives
     // the frame (온라인 구간을 지나 현장으로 · 선택), the card gives the programme.
-    // DECIDED 2026-08-15: 나열 순서가 진행 순서(공유 → 빌드 → 성과 공유 → 투표)를
-    // 따라갑니다. 빌드를 앞으로 되돌리지 마세요 — runOfShow와 어긋납니다.
+    // DECIDED 2026-08-15: 나열 순서가 진행 순서를 따라갑니다. 빌드를 앞으로
+    // 되돌리지 마세요 — runOfShow와 어긋납니다.
     // DECIDED 2026-08-22: 성과 공유 뒤에 코드프레소를 만나는 한 문장이 붙었습니다.
-    // 회사 소개가 성과 공유와 투표 사이에 들어왔으니 이 줄에서도 그 자리입니다.
+    // 폐지 2026-08-23 (원대로 대표님 지시): 나열의 끝이던 투표가 빠졌습니다. 순서는
+    // 이제 공유 → 빌드 → 성과 공유(피드백 교환) → 코드프레소입니다.
     summary: {
-      ko: "온라인 구간을 지나 다시 현장으로 갑니다. *SCAPE에 자리를 열어 지금까지 만든 것을 또래 앞에 공유하고, 모여서 빌드하고, 오늘 나아간 것을 다시 공유합니다. 출제 기업 코드프레소를 직접 만나는 시간도 있어요. 1:1 멘토링은 온라인으로 이어집니다.",
-      en: "Back in person after the online stretch. A room at *SCAPE where you share what you have so far with the room, sit together and build, then share again what moved forward today. You also get to meet Codepresso, the company that set the problems, in person. The 1:1 mentoring carries on online.",
+      ko: "온라인 구간을 지나 다시 현장으로 갑니다. *SCAPE에 자리를 열어 지금까지 만든 것을 또래 앞에 공유하고, 모여서 빌드하고, 오늘 나아간 것을 다시 공유하며 서로 피드백을 주고받습니다. 출제 기업 코드프레소의 이동훈 대표님을 직접 만나는 시간도 있어요. 1:1 멘토링은 온라인으로 이어집니다.",
+      en: "Back in person after the online stretch. A room at *SCAPE where you share what you have so far with the room, sit together and build, then share again what moved forward today and trade feedback across teams. You also get to meet Lee Dong-hoon, CEO of Codepresso, the company that set the problems. The 1:1 mentoring carries on online.",
     },
     // DECIDED 2026-08-13: 내려설 이유가 '교류' 하나에서 '중간 점검 + 가산'으로
-    // 옮겨왔습니다. 빌드는 어디서나 할 수 있지만, 또래 앞에 한 번 서보는 자리와
-    // 그 자리에서만 열리는 투표는 혼자서 못 만듭니다.
+    // 옮겨왔습니다. 빌드는 어디서나 할 수 있지만, 또래 앞에 한 번 서보는 자리는
+    // 혼자서 못 만듭니다.
+    //
+    // // 폐지 2026-08-23 (원대로 대표님 지시): Day 5 투표·부상 전면 제거 — 아래는 이력.
+    // 원문은 "또래 앞에 한 번 서보는 자리와 그 자리에서만 열리는 투표는 혼자서 못
+    // 만듭니다"였고, whyStop도 "어워드 두 부문에도 반영됩니다"로 끝났습니다.
+    // 투표가 없어졌으니 내려설 이유도 가산이 아니라 그 자리에서만 가능한 것 —
+    // 서로의 빌드에 피드백을 주고받는 일 — 으로 돌아갑니다. 0→100 출석 가산은
+    // 그대로지만, 그건 내려설 이유로 앞세울 만한 것이 아닙니다.
     //
     // 가산을 적는 방식에 규칙이 있습니다. "점수"·"순위"로 읽히면 안 됩니다 —
     // 이 행사는 2026-08-05에 순위형 시상을 폐지했고, LAP Time 공유 자체에는 점수도
@@ -650,12 +659,15 @@ export const days: DayMeta[] = [
     // ("평가"·"심사"·"발표회")을 쓰면 두 날이 같은 날이 되고, 이 날의 목적
     // (Day 8 무대의 부담을 미리 빼 두기) 자체가 무너집니다.
     whyStop: {
-      ko: "또래 앞에서 먼저 한 번 서보는 날. 어워드 두 부문에도 반영됩니다",
-      en: "A first turn in front of peers, and it counts toward two of the awards",
+      ko: "또래 앞에 먼저 한 번 서보고, 서로의 빌드에 피드백을 주고받는 날",
+      en: "A first turn in front of peers, giving and taking feedback on each other's builds",
     },
     // 노선도 키워드를 theme 머리에서 덮습니다 (Day 3·4·6과 같은 이유). theme 머리는
     // "집중 빌드"인데, 빌드는 어디서나 할 수 있는 일이라 정거장에 내려설 이유가
     // 못 됩니다. 이 날만 열리는 것은 LAP Time 공유와 거기 붙는 투표입니다.
+    //
+    // (2026-08-23: "거기 붙는 투표"는 폐지됐습니다. 이 날만 열리는 것은 LAP Time
+    // 공유와 서로의 빌드에 피드백을 주고받는 자리입니다.)
     //
     // "중간 점검"을 키워드로 쓰지 않은 이유: 체크인 섹션의 첫 폼이 "중간 체크인 /
     // Mid-point check-in"입니다(Day 4 저녁 발송). 노선도에 "중간 점검 / Mid-point
@@ -741,54 +753,46 @@ export const days: DayMeta[] = [
         // 아침 LAP Time 공유와 짝이라는 자리는 그대로입니다.
         time: "12:30PM–1PM",
         label: { ko: "빌드 성과 공유", en: "Build progress share" },
-        note: { ko: "오전 빌드에서 나아간 것을 또래 앞에 다시 공유해요. 하루를 연 공유와 짝이 되는 자리입니다.", en: "Share what moved forward in the morning build, again in front of the room. It pairs with the share that opened the day." },
+        note: { ko: "오전 빌드에서 나아간 것을 또래 앞에 다시 공유해요. 같은 팀이 아니어도 서로의 빌드에 피드백을 주고받는 자리입니다.", en: "Share what moved forward in the morning build, again in front of the room. You give and take feedback across teams, not just inside your own." },
       },
       {
         // DECIDED 2026-08-22: 새 줄. 문제를 낸 코드프레소가 현장에 옵니다.
         //
-        // 성함은 아직 확정 전이라 직함으로만 씁니다("대표님", "이사님"). 무대에
-        // 서는 세션이니 성함을 웹에 올려도 되는 것이 확정되면 실명 + 존칭으로
-        // 바꿔도 됩니다 — Day 2의 "코드프레소 김지훈 이사님"이 같은 표기입니다.
+        // DECIDED 2026-08-23: 이동훈 대표님으로 확정. 무대에 서는 세션이라 실명 +
+        // 존칭으로 씁니다 — Day 2의 "코드프레소 김지훈 이사님"과 같은 표기예요.
+        // 이사님 동반 언급은 뺐습니다: 확정된 것은 대표님 한 분입니다.
         //
         // 게스트 에스코트, 픽업, 리허설 같은 내부 운영은 여기 쓰지 마세요. 이
         // 줄은 참가자가 그 시간에 무엇을 하는지만 말합니다.
         time: "1PM–1:30PM",
         label: { ko: "코드프레소 회사 소개", en: "Codepresso company intro" },
-        note: { ko: "문제를 낸 코드프레소의 대표님과 이사님이 직접 회사와 문제의 배경을 이야기해요. 즉석 인기 투표는 이 세션 동안 마감됩니다.", en: "The CEO and a director of Codepresso, the company that set the problems, talk about the company and where the problems come from. The on-the-spot vote closes during this session." },
+        note: { ko: "문제를 낸 코드프레소의 이동훈 대표님이 직접 회사와 문제의 배경을 이야기해요.", en: "Lee Dong-hoon, CEO of Codepresso, the company that set the problems, talks about the company and where the problems come from." },
       },
       {
-        // DECIDED 2026-08-15: 투표의 질문이 "오늘 가장 많이 나아간 팀"으로
-        // 분명해졌습니다. Day 8 '빌더스 초이스' 최종 집계에 반영된다는 연결은
-        // 그대로입니다(dict.program.awards의 meta와 함께 움직일 것).
+        // 폐지 2026-08-23 (원대로 대표님 지시): Day 5 투표·부상 전면 제거 —
+        // 아래는 이력.
         //
-        // DECIDED 2026-08-15: 결과 공개는 최다 득표 3팀입니다. 묶음으로 부르는
-        // 것이지 1·2·3등이 아닙니다 — 이 행사는 2026-08-05에 순위형 시상을
-        // 폐지했습니다. "1위"·"순위"·"등수"를 쓰지 마세요. 득표수도 적지 않습니다.
+        //   DECIDED 2026-08-15: 투표의 질문이 "오늘 가장 많이 나아간 팀"으로
+        //   분명해졌습니다. Day 8 '빌더스 초이스' 최종 집계에 반영된다는 연결.
+        //   DECIDED 2026-08-15: 결과 공개는 최다 득표 3팀(묶음, 1·2·3등 아님).
+        //   DECIDED 2026-08-16 (원대로 대표 지시 + 박주형 합의): 해녀의 부엌이
+        //   이 투표의 부상(음료 바우처)을 후원. 표기 규칙 여섯 줄이 딸려 있었고,
+        //   매장 위치 한 줄과 지도 링크(noteAside)도 이 줄에 붙어 있었습니다.
+        //
+        // 폐지 이유: 중간 시점(수요일) 결과에 투표로 상을 걸면 완성도를 높이려는
+        // 경쟁이 됩니다. 이 날의 목적은 겨루기가 아니라 같은 팀이 아니어도 다른
+        // 팀을 도와주고 서로 피드백을 주고받는 것이고, 투표는 그 취지와 정면으로
+        // 어긋났습니다. 빌더스 초이스는 Day 8 단일 라운드로 돌아갑니다.
+        //
+        // 되살리지 마세요. 되살린다면 그건 이 날의 성격을 바꾸는 결정이지 줄
+        // 하나를 되돌리는 일이 아닙니다.
+        //
+        // 투표가 있던 자리는 피드백과 교류가 이어받습니다. 앞의 성과 공유에서
+        // 다 못 준 피드백을 마저 주고받는 시간이에요 — 새 순서를 만든 것이
+        // 아니라, 앞 순서를 끝까지 가게 두는 것입니다.
         time: "1:30PM–1:45PM",
-        label: { ko: "즉석 인기 투표 결과 공개", en: "On-the-spot vote results" },
-        // DECIDED 2026-08-16 (원대로 대표 지시 + 박주형 합의): 해녀의 부엌이 이
-        // 투표의 부상을 후원합니다. 기존 두 문장(그 자리 공개 + Day 8 최종 집계
-        // 반영)은 그대로 두고 한 문장만 뒤에 붙였습니다.
-        //
-        // 표기 규칙 — 어기지 마세요:
-        //  · "음료 바우처"까지만 씁니다. 종류를 나열하지 마세요(가격 상한이 있는
-        //    조건이라 열거하면 과약속이 되고, 주류 단어는 특히 금지).
-        //  · 총 장수와 금액은 쓰지 않습니다. 참가자가 알아야 하는 것은 "우리 팀이
-        //    뽑히면 팀원당 한 장"까지입니다(금액 비공개는 기존 정책).
-        //  · 식사 무언급 정책(2026-08-05)은 그대로입니다. 이건 후원사 부상이라
-        //    예외이고, 이 문장을 근거로 일정 카피에 식사 문장을 새로 쓰지 마세요.
-        //  · 사용 시점을 적어야 하면 "행사 후 저녁에 사용"까지. 영업시간과 위치는
-        //    쓰지 않습니다.
-        //  · "최다 득표 3팀"은 묶음 공개입니다. 1·2·3등이 아닙니다(위 주석 참고).
-        note: { ko: "오늘 가장 많이 나아간 팀에게 참가자가 투표해요. 최다 득표 3팀을 그 자리에서 공개하고, Day 8 ‘빌더스 초이스’ 최종 집계에 반영됩니다. 최다 득표 3팀에는 해녀의 부엌 음료 바우처가 팀원당 한 장씩 돌아갑니다.", en: "Participants vote for the team that moved furthest today. The three most-voted teams are revealed on the spot, and the votes carry into the final Builder's Choice count on Day 8. Each member of those three teams gets a drink voucher, sponsored by Jeju Haenyeo." },
-        // 매장 한 줄 (DECIDED 2026-08-16). 주소 전문은 본문에 쓰지 않고 지도 링크가
-        // 대신합니다. 영업시간은 쓰지 마세요 — 바뀌기 쉽고 확인 책임이 생깁니다.
-        // 유닛 번호는 구글 지도 등록값과 대조했습니다(#01-04, The Arts House Annex).
-        noteAside: {
-          text: { ko: "해녀의 부엌은 The Arts House 별관(#01-04, 1 Old Parliament Lane)에 있어요.", en: "Jeju Haenyeo is at The Arts House Annex (#01-04, 1 Old Parliament Lane)." },
-          linkLabel: { ko: "지도", en: "Map" },
-          url: "https://share.google/8cBhjKUYDEVzi2D2k",
-        },
+        label: { ko: "피드백 이어가기 자유 교류", en: "More feedback open mingling" },
+        note: { ko: "남은 피드백을 마저 주고받는 시간이에요. 다른 팀을 도와주러 가도 좋습니다.", en: "Time to finish the feedback you didn't get to. Wandering over to help another team is encouraged." },
       },
       {
         time: "1:45PM–2PM",
@@ -1365,6 +1369,7 @@ const DROPIN_MENTORING = {
   checkpoints: SCORE_BUILDING_CHECKS,
 };
 
+// 폐지 2026-08-23: 아래의 즉석 인기 투표는 제거됐습니다 (원대로 대표님 지시).
 // DECIDED 2026-08-13: Day 5 = 집중 빌드·LAP Time 공유·즉석 인기 투표(빌더스 초이스
 // 가산)·출석(0→100 가산). 해시드·OpenAI 글로벌 해커톤은 행사 후 별도 행사로
 // 이동(협의 중). 그래서 이 블러브에서 Day 5 공동 기획
@@ -1939,7 +1944,8 @@ export const schedule: BEvent[] = [
   },
 
   // ─── DAY 5 · 집중 빌드 · 중간 점검 (08.26 · OFFLINE · *SCAPE) ────────────────
-  // DECIDED 2026-08-13: Day 5 = 집중 빌드·LAP Time 공유·즉석 인기 투표(빌더스
+  // 폐지 2026-08-23: 아래의 즉석 인기 투표는 제거됐습니다 (원대로 대표님 지시).
+// DECIDED 2026-08-13: Day 5 = 집중 빌드·LAP Time 공유·즉석 인기 투표(빌더스
   // 초이스 가산)·출석(0→100 가산). 해시드·OpenAI 글로벌 해커톤은 행사 후 별도
   // 행사로 이동(협의 중).
   //
@@ -2000,16 +2006,19 @@ export const schedule: BEvent[] = [
       // 것을 다시 공유하고, 가장 많이 나아간 팀에게 투표합니다. 이 문단의 서술
       // 순서는 days[4].runOfShow와 같아야 합니다(시각은 여기 적지 않습니다).
       //
-      // DECIDED 2026-08-15: 결과 공개는 최다 득표 3팀입니다. 같은 사실이 그날
-      // runOfShow의 투표 줄에도 있으니 함께 움직이세요. 묶음으로 부르는 것이지
-      // 1·2·3등이 아닙니다 — 순위형 시상은 2026-08-05에 폐지했습니다.
+      // // 폐지 2026-08-23 (원대로 대표님 지시): Day 5 투표·부상 전면 제거 — 아래는 이력.
+      //   DECIDED 2026-08-15: 결과 공개는 최다 득표 3팀(묶음, 1·2·3등 아님).
+      // 투표 세 문장(즉석 인기 투표 · 최다 득표 3팀 공개 · 빌더스 초이스 중간
+      // 라운드 반영)이 이 산문에서 함께 빠졌습니다. 그 자리는 피드백 교환이
+      // 이어받습니다. "이날 현장에 온 것 자체는 0→100 부문에 반영됩니다"와
+      // 멘토링 문장은 폐지 대상이 아니라 그대로입니다.
       //
       // DECIDED 2026-08-22: 오후 아크에 코드프레소 회사 소개가 들어갔습니다.
       // 자리는 성과 공유와 투표 사이 — 이 산문은 runOfShow와 같은 순서로 읽혀야
       // 한다는 것이 기존 규칙이라, 시각이 바뀌면 두 곳을 함께 고치세요.
       // 성함은 확정 전이라 직함으로만 씁니다(runOfShow의 같은 줄과 같은 표기).
-      ko: "온라인으로 이어지던 8일 한가운데, 팀이 한 방에 모여 집중해서 빌드하는 날입니다. 도착하면 지금까지 만든 것을 또래 앞에 공유하는 LAP Time으로 하루를 엽니다. 점수도 기록도 순위도 없어요. Day 8 무대에 서기 전에 한 번 서보는 자리입니다. 그다음은 팀 자율 빌드, 트랙을 섞는 캐주얼 밋업을 지나, 오후에는 오늘 나아간 것을 다시 공유하고, 문제를 낸 코드프레소의 대표님과 이사님에게 회사 이야기를 직접 듣고, 가장 많이 나아간 팀에게 즉석 인기 투표를 합니다. 최다 득표 3팀은 그 자리에서 공개해요. 이 투표는 참가자가 뽑는 ‘빌더스 초이스’의 중간 라운드라 Day 8 최종 집계에 반영되고, 이날 현장에 온 것 자체는 ‘0→100’ 부문에 반영됩니다. 참여는 선택이고, 1:1 멘토링과 온라인 드롭인은 이날도 열려 있습니다.",
-      en: "Right in the middle of a stretch that runs online, a day when your team can sit down together and build. You open with LAP Time, sharing what you have so far with the room. No scores, no records, no ranking. The point is to have stood in front of people once before the Day 8 stage. Then comes your team's own build time, a casual meetup that mixes the tracks, and in the afternoon you share again what moved forward today, hear the company first-hand from the CEO and a director of Codepresso, which set the problems, and vote for the team that got furthest. The three most-voted teams are revealed on the spot. That vote is the mid-way round of Builder's Choice, the award participants vote for, so it carries into the final count on Day 8, and simply being in the room today counts toward the Zero to Hundred award. Attending is your choice, and 1:1 mentoring and the online drop-in stay open today too.",
+      ko: "온라인으로 이어지던 8일 한가운데, 팀이 한 방에 모여 집중해서 빌드하는 날입니다. 도착하면 지금까지 만든 것을 또래 앞에 공유하는 LAP Time으로 하루를 엽니다. 점수도 기록도 순위도 없어요. Day 8 무대에 서기 전에 한 번 서보는 자리입니다. 그다음은 팀 자율 빌드, 트랙을 섞는 캐주얼 밋업을 지나, 오후에는 오늘 나아간 것을 다시 공유하고, 같은 팀이 아니어도 서로 피드백을 주고받아요. 문제를 낸 코드프레소의 이동훈 대표님에게 회사 이야기를 직접 듣는 시간도 있습니다. 이날 현장에 온 것 자체는 ‘0→100’ 부문에 반영돼요. 참여는 선택이고, 1:1 멘토링과 온라인 드롭인은 이날도 열려 있습니다.",
+      en: "Right in the middle of a stretch that runs online, a day when your team can sit down together and build. You open with LAP Time, sharing what you have so far with the room. No scores, no records, no ranking. The point is to have stood in front of people once before the Day 8 stage. Then comes your team's own build time, a casual meetup that mixes the tracks, and in the afternoon you share again what moved forward today and trade feedback across teams, not just inside your own. You also hear the company first-hand from Lee Dong-hoon, CEO of Codepresso, which set the problems. Simply being in the room today counts toward the Zero to Hundred award. Attending is your choice, and 1:1 mentoring and the online drop-in stay open today too.",
     },
     location: SCAPE_LIFE,
     // org(HASHED_ORG)를 뗐습니다 (DECIDED 2026-08-13): 해시드는 더 이상 이 날의

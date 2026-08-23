@@ -4884,8 +4884,14 @@ export default function Journey() {
                 // review — that is a source for the *SCAPE outlet, not a partner's
                 // own page, and every other tile here links to the company itself.
                 { cat: t(dict.partners.catAwards),    src: "/partners/logos/white/trimmed/nuldam.png",             alt: "Nuldam",                          w: 631, h: 136, url: "https://sg.nuldam.com/" },
-                // 해녀의 부엌이 후원하는 것은 Day 5 즉석 인기 투표에서 최다 득표
-                // 3팀에게 가는 음료 바우처입니다 (DECIDED 2026-08-16).
+                // 폐지 2026-08-23 (원대로 대표님 지시): Day 5 투표·부상 전면 제거 —
+                // 아래는 이력.
+                //   DECIDED 2026-08-16: 해녀의 부엌이 후원하는 것은 Day 5 즉석 인기
+                //   투표에서 최다 득표 3팀에게 가는 음료 바우처.
+                //
+                // 타일은 그대로 둡니다. 후원 관계는 유효하고 사라진 것은 부상이
+                // 걸려 있던 자리뿐이에요. 캡션("어워드 부상")도 그대로입니다 —
+                // 바우처를 어디로 돌릴지가 정리되면 그때 다시 봅니다.
                 //
                 // DECIDED 2026-08-17 (박주형): 캡션은 널담과 같은 "어워드 부상"입니다.
                 // 한때 catDay5Prize("Day 5 부상")로 갈라 두었는데 되돌렸습니다 —
