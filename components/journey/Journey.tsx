@@ -705,7 +705,9 @@ function TrackPanel({ tr, t, idx }: { tr: (typeof dict.tracks.items)[number]; t:
       <div
         id={panelId}
         className={`scroll-mt-24 ${
-          open ? "" : "lg:grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start lg:gap-10"
+          open
+            ? ""
+            : "lg:grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start lg:gap-x-10 lg:gap-y-0"
         }`}
       >
         {/* LEFT — 정체성. 접혀 있어도 늘 보이는 부분입니다. */}
@@ -741,7 +743,7 @@ function TrackPanel({ tr, t, idx }: { tr: (typeof dict.tracks.items)[number]; t:
             폰에서는 소제목 + 단계 수 배지 한 줄이고, lg부터 칩 스트립이 붙습니다.
             펼치면 통째로 사라지고, 그때는 위의 그리드도 함께 풀립니다. */}
         {!open && (
-        <div className="mt-7 lg:mt-0">
+        <div className="mt-7 lg:row-span-2 lg:mt-0">
           {/* 흐름 칩 스트립. 접힌 상태에만 나옵니다.
               이유가 셋인데 한 수로 풀립니다. (1) 밀도 — 비어 있던 오른쪽 칸이
               찹니다. (2) 차별화 — 저지먼트 6개, 오토메이션 8개라 두 트랙의 얼굴이
@@ -789,35 +791,74 @@ function TrackPanel({ tr, t, idx }: { tr: (typeof dict.tracks.items)[number]; t:
               </li>
             ))}
           </ol>
+          {/* 목표 미리보기. lg 전용이고, 칩 스트립과 같은 이유로 여기 있습니다.
+              DECIDED 2026-08-24: 오른쪽 칸이 칩 두 줄에서 끝나 카드 아래 절반이
+              비어 있었습니다(왼쪽 253px 대 오른쪽 115px). 빈 자리를 장식으로
+              메우는 대신, 접힌 상태에서 고르는 데 실제로 필요한 마지막 조각을
+              넣습니다 — 지금 어떻게 흐르는가(칩) 옆에 무엇이 풀리면 되는가(목표).
+              두 칼럼이 253 대 276으로 맞고, 카드가 트랙을 고르는 데 필요한 것을
+              펼치지 않고도 다 담습니다.
+
+              펼치면 이 블록은 통째로 사라집니다(칩과 같은 !open 안입니다).
+              상세에 같은 목록이 전문으로 서 있어서, 남겨 두면 한 화면에 같은
+              목록이 두 번 생깁니다.
+
+              폰에서는 나오지 않습니다. 칩 스트립을 lg 전용으로 둔 결정과 같은
+              이유예요 — 접힌 카드가 폰에서 세 화면이 되면 "고르는 자리"가 아니라
+              "읽어내려가는 자리"가 됩니다. 목표 전문은 한 번의 탭 뒤에 있습니다. */}
+          <div className="mt-6 hidden lg:block">
+            <h4 className={subhead}>{t(dict.tracks.goalTitle)}</h4>
+            <ul role="list" className="mt-3 flex flex-col gap-2">
+              {tr.goals.map((g, i) => (
+                <li key={i} className="flex gap-2.5">
+                  <span aria-hidden className="mt-[2px] shrink-0 text-emerald-300/70">✓</span>
+                  <span className="break-keep text-[0.8rem] font-medium leading-relaxed text-white/80">
+                    {t(g)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
         )}
-      </div>
 
-      {/* 토글. 두 칸 아래, 헤더 블록 전체의 다음 줄입니다 — 접히든 펼치든 같은
-          자리에 섭니다. */}
-      <div className="mt-6">
-        <button
-          ref={toggleRef}
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-controls={detailId}
-          /* w-full은 폰에서만 — 한 손으로 쥔 상태의 타깃이 카드 폭 전체가
-             됩니다. sm부터는 내용 폭으로 돌아갑니다. */
-          className={`w-full sm:w-auto ${ctrl}`}
-        >
-          {t(open ? dict.tracks.collapse : dict.tracks.expand)}
-          {/* 두 패널의 토글이 접근성 이름까지 똑같으면(“문제 자세히 보기” 둘)
-              버튼 목록에서 구분이 안 됩니다. 화면에는 안 보이는 트랙 이름을
-              붙여 "문제 자세히 보기 저지먼트 트랙"으로 읽히게 합니다. */}
-          <span className="sr-only"> {t(tr.title)}</span>
-          <span
-            aria-hidden
-            className={`transition-transform duration-300 motion-reduce:transition-none ${open ? "rotate-180" : ""}`}
+        {/* 토글. DOM 순서는 왼쪽 → 오른쪽 → 버튼 그대로입니다 — 폰에서는 흐름
+            블록 다음에 버튼이 와야 하니까요.
+
+            lg에서는 그리드의 세 번째 아이템이라 자동으로 2행 1열에 앉습니다.
+            오른쪽 칸이 lg:row-span-2로 두 행을 가로지르기 때문에 1행의 높이는
+            왼쪽 내용만으로 정해지고, 버튼이 본문 바로 아래로 올라옵니다.
+            (2026-08-24: 그 전에는 버튼이 그리드 바깥 다음 줄이라, 오른쪽 칸이
+            길어질수록 왼쪽 본문에서 100px 가까이 떨어져 혼자 내려가 있었습니다.)
+
+            행 간격은 lg:gap-y-0으로 죽이고 버튼 자신의 mt-6만 씁니다 — 안 그러면
+            열 간격 2.5rem이 행에도 걸려 버튼이 다시 내려갑니다.
+
+            펼치면 그리드가 통째로 풀려서 본문 다음 줄에 그대로 섭니다. */}
+        <div className="mt-6">
+          <button
+            ref={toggleRef}
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls={detailId}
+            /* w-full은 폰에서만 — 한 손으로 쥔 상태의 타깃이 카드 폭 전체가
+               됩니다. sm부터는 내용 폭으로 돌아갑니다. */
+            className={`w-full sm:w-auto ${ctrl}`}
           >
-            ▾
-          </span>
-        </button>
+            {t(open ? dict.tracks.collapse : dict.tracks.expand)}
+            {/* 두 패널의 토글이 접근성 이름까지 똑같으면(“문제 자세히 보기” 둘)
+                버튼 목록에서 구분이 안 됩니다. 화면에는 안 보이는 트랙 이름을
+                붙여 "문제 자세히 보기 저지먼트 트랙"으로 읽히게 합니다. */}
+            <span className="sr-only"> {t(tr.title)}</span>
+            <span
+              aria-hidden
+              className={`transition-transform duration-300 motion-reduce:transition-none ${open ? "rotate-180" : ""}`}
+            >
+              ▾
+            </span>
+          </button>
+        </div>
       </div>
 
       {/* 상세. 항상 렌더하고 grid-rows로 높이만 여닫습니다 — 조건부 렌더는 열고
@@ -1755,7 +1796,11 @@ function BenefitCard({
             href={item.footnote.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-semibold text-cyan-200/80 underline decoration-cyan-200/30 underline-offset-2 transition hover:text-cyan-100"
+            /* relative + after:-inset-2 — 글자는 그대로 두고 탭 영역만 8px씩
+               넓힙니다. "지도"는 두 글자라 실측 23x16px이고, 폰에서 손가락으로
+               정확히 짚기 어렵습니다. 멘토 카드의 LinkedIn 아이콘이 쓰는 것과
+               같은 수법이에요(모양을 키우면 문장 속 링크가 버튼처럼 보입니다). */
+            className="relative font-semibold text-cyan-200/80 underline decoration-cyan-200/30 underline-offset-2 transition after:absolute after:-inset-2 after:content-[''] hover:text-cyan-100"
           >
             {t(item.footnote.linkLabel)}
           </a>
@@ -2497,7 +2542,8 @@ function RunOfShow({
                       href={row.noteAside.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-semibold text-violet-300/80 underline decoration-violet-300/30 underline-offset-2 transition hover:text-violet-200"
+                      /* 위 footnote의 지도 링크와 같은 이유로 탭 영역을 넓힙니다. */
+                      className="relative font-semibold text-violet-300/80 underline decoration-violet-300/30 underline-offset-2 transition after:absolute after:-inset-2 after:content-[''] hover:text-violet-200"
                     >
                       {t(row.noteAside.linkLabel)}
                     </a>
@@ -3178,9 +3224,12 @@ function StripLogo({ src, alt, w, h, mass, box }: StripLogoSpec & { box: StripBo
 }
 
 // The small 주최 / 주관 / 후원 caption that leads each tier.
+// 0.55rem → 0.65rem (2026-08-24 모바일 감사): 히어로 아이브로와 같은 이유입니다.
+// 이 캡션은 whitespace-nowrap이라 줄이 접힐 위험이 없고, 폰의 마퀴 행에서도
+// 여백이 남습니다(320px에서 "주최 AXMOS"가 66px, 칸이 266px).
 function StripTierLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="shrink-0 whitespace-nowrap text-[0.55rem] font-bold uppercase tracking-[0.16em] text-violet-200/85 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)]">
+    <span className="shrink-0 whitespace-nowrap text-[0.65rem] font-bold uppercase tracking-[0.16em] text-violet-200/85 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)]">
       {children}
     </span>
   );
@@ -3724,8 +3773,12 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                 off mobile entirely and never shows twice on desktop. */}
             <div className="mt-10 sm:mt-12 lg:mt-0">
               {/* Smaller on phones so the long eyebrow line doesn't crowd the
-                  narrow column; back to the default size from sm up. */}
-              <Eyebrow className="!text-[0.55rem] sm:!text-xs">{t(dict.hero.eyebrow)}</Eyebrow>
+                  narrow column; back to the default size from sm up.
+                  0.55rem → 0.65rem (2026-08-24 모바일 감사): 루트가 18px이라
+                  0.55rem은 9.9px이었고 페이지에서 가장 작은 글자였습니다. 320px
+                  에서 이 줄의 실측 폭이 250px, 칸이 266px이라 한 줄을 유지합니다
+                  — 더 올리면(0.68rem = 260px) 두 줄로 접힙니다. */}
+              <Eyebrow className="!text-[0.65rem] sm:!text-xs">{t(dict.hero.eyebrow)}</Eyebrow>
             </div>
             {/* clamp caps trimmed (8rem->7.1rem, 3rem->2.65rem) so the 18px root
                 bump doesn't enlarge the hero headline — it stays ~its current size
@@ -4890,7 +4943,12 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.organizersLabel)}</p>
               <p className="text-xs text-white/50">{t(dict.partners.organizersNote)}</p>
             </div>
-            <div className="mt-3 grid grid-cols-3 gap-3">
+            {/* 폰에서 2열입니다 (2026-08-24 모바일 감사). grid-cols-3 고정이라
+                320px에서 한 칸이 55px까지 줄었고, 그 안에서 역할 배지("기획과
+                운영")가 두 줄로 접히면서 정작 로고가 20px짜리로 눌렸습니다. 이
+                섹션의 다른 타일 줄(TILE_BASIS_*)은 전부 폰에서 2열이라, 여기만
+                예외였던 셈이에요. sm부터는 그대로 3열입니다. */}
+            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
               {[
                 // area 2000 → 1450 (SMU만, 2026-08-10). 높이로는 34px → 29px,
                 // 약 15% 작아집니다. 이 세 칸에서만 두는 예외이고, 이유는 잉크
