@@ -1357,10 +1357,16 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
           {/* The rail. Ends are inset by half a column (12.5% of a four-up row) so
               it runs node-centre to node-centre. On desktop the INNER ends run to
               the edge instead, so row 1's rail meets row 2's and the eight stops
-              read as one unbroken line. top-4 is the centre of the h-8 node row. */}
+              read as one unbroken line.
+
+              top-[1.625rem]은 노드 줄의 중심입니다: 버튼의 py-2.5(0.625rem)에
+              h-8의 절반(1rem)을 더한 값이에요. 한때 top-4였는데, 터치 영역을 위해
+              버튼에 py-2.5가 붙으면서 노드만 0.625rem 내려가고 레일은 그대로 남아
+              선이 원을 관통하지 않고 위를 스쳤습니다. 버튼의 세로 패딩이나 노드
+              줄 높이를 건드리면 이 값도 같이 고쳐야 합니다. */}
           <span
             aria-hidden
-            className={`pointer-events-none absolute top-4 h-px bg-gradient-to-r from-rose-300/40 via-white/15 to-rose-300/40 ${
+            className={`pointer-events-none absolute top-[1.625rem] h-px bg-gradient-to-r from-rose-300/40 via-white/15 to-rose-300/40 ${
               rowIdx === 0
                 ? "left-[12.5%] right-[12.5%] sm:right-0"
                 : "left-[12.5%] right-[12.5%] sm:left-0"
@@ -1382,7 +1388,7 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
                 ["--p-m" as string]: railFill(rowIdx, ev.current!).m,
                 ["--p-d" as string]: railFill(rowIdx, ev.current!).d,
               }}
-              className={`pointer-events-none absolute top-4 -mt-px h-[2px] ${
+              className={`pointer-events-none absolute top-[1.625rem] -mt-px h-[2px] ${
                 rowIdx === 0
                   ? "left-[12.5%] right-[12.5%] sm:right-0"
                   : "left-[12.5%] right-[12.5%] sm:left-0"
@@ -1505,7 +1511,7 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
                       the rail passes through every node at the same height. */}
                   <span className="relative flex h-8 items-center justify-center">
                     {/* 현장 마커. ABSOLUTE인 것이 핵심입니다 — 흐름에 넣으면 모든
-                        노드가 아래로 밀리는데, 레일은 <ol> 기준 top-4에 절대
+                        노드가 아래로 밀리는데, 레일은 <ol> 기준 top-[1.625rem]에 절대
                         배치돼 있어서 함께 내려오지 않습니다. 레일이 노드를 관통하는
                         정렬이 깨지느니 마커를 띄웁니다.
 
