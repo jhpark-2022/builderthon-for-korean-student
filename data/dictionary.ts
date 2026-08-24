@@ -3144,8 +3144,8 @@ export const dict = {
         // build-stage advice language leak into the Day 7 blurb or vice versa.
         //
         // NO PEER/AGE CLAIM (2026-08-03). This said "또래 창업가·주니어 엔지니어"
-        // and the cards below contradict it: 김종현 is 16년+ in digital forensics
-        // and a KITRI BoB mentor, and three of the six are founders/CEO/CTO. The
+        // and the cards below contradict it: 김종현 is 20년+ in security incident
+        // response and a BoB mentor, and three of the six are founders/CEO/CTO. The
         // group's shared trait is having shipped product, not being the same age
         // as the students — describe them by that. Re-check this line whenever a
         // stage-1 mentor is added.
@@ -3459,21 +3459,31 @@ export const dict = {
         },
         days: "", daysPending: "", stages: [1], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/brian-bae-ba638a131",
       },
-      // YMX (XR·디지털 트윈 스타트업, 싱가포르) — 사업개발 총괄로 참여. Facts below are
-      // from his own LinkedIn: Head of Business Development at YMX.INC since Jan
-      // 2023 (also its PDPC Data Protection Officer — one title per card, so the
-      // DPO role is not printed), KITRI Best-of-the-Best faculty mentor in digital
-      // forensics & incident response since 2012, and 2006–2022 in forensics
-      // (Douzon BizOn chief forensic analyst · Duzon ISS). Korea University.
+      // YMX (XR·디지털 트윈 스타트업, 싱가포르) — 해외사업개발과 싱가포르 법인장으로
+      // 참여. 2026-08-24에 본인이 보내온 프로필로 갱신했습니다(그 전 문구는 LinkedIn
+      // 에서 옮겨 온 것이었고, 직함·연차·前 직장이 모두 달라져 있었습니다).
+      //
+      // 바뀐 것: 사업개발 총괄 → 해외사업개발 · 싱가포르 법인장, 디지털 포렌식 16년+
+      // → 정보보호 침해사고대응 20년+, 前 더존비즈온 보안사업부문 수석이 새로 들어오고
+      // BoB는 KISA/KITRI 차세대보안리더양성프로그램으로 제 이름을 찾았습니다.
+      // 한글 이름은 본인 표기라 더 이상 확인 대상이 아닙니다.
+      //
+      // 카드는 org 줄에 직함, intro에 도메인과 이력을 나눠 싣습니다 — 두 줄이 같은
+      // 말을 하지 않도록 intro에서 "사업개발"을 빼세요(Brian Bae 카드와 같은 이유).
+      // 그가 겸하는 PDPC Data Protection Officer는 여전히 적지 않습니다: 카드 한 장에
+      // 직함 하나입니다.
+      //
+      // 길이: intro는 sm 이상에서 3줄로 잘립니다. 이 카드가 멘토 카드 중 가장 긴
+      // 문장이라 2단(sm)에서 카드 폭이 265px쯤일 때를 재 보고 맞췄습니다 — 영문에서
+      // "principal"(수석)이 한 줄을 더 만들어서 뺐습니다. 여기에 무엇을 더할 때는
+      // 그 폭에서 3줄을 넘지 않는지 확인하세요.
       // `img` is set even though the mentor card doesn't render a photo — the
       // file is on hand, so the field is ready if the avatar ever returns.
-      // NOTE: the Korean name is a transliteration of "JongHyun Kim" — confirm the
-      // spelling with him before this goes out.
       {
-        name: { ko: "김종현 총괄님", en: "Joseph JongHyun Kim" }, org: { ko: "YMX", en: "YMX" }, role: { ko: "사업개발 총괄", en: "Head of Business Development" },
+        name: { ko: "김종현 님", en: "Joseph JongHyun Kim" }, org: { ko: "YMX", en: "YMX" }, role: { ko: "해외사업개발 · 싱가포르 법인장", en: "Overseas BD · Singapore Country Head" },
         intro: {
-          ko: "XR과 디지털 트윈 스타트업, 싱가포르 근무. 디지털 포렌식 16년+, KITRI BoB 멘토.",
-          en: "An XR & digital-twin startup, based in Singapore. 16+ yrs in digital forensics, KITRI BoB mentor.",
+          ko: "산업 XR·디지털 트윈. 정보보호 침해사고대응 20년+, 前 더존비즈온 보안 수석. KISA/KITRI BoB 멘토.",
+          en: "Industrial XR & digital twin. 20+ yrs in security incident response, ex-Douzone Bizon. KISA/KITRI BoB mentor.",
         },
         days: "", daysPending: "", stages: [1], img: "/partners/people/joseph-jonghyun-kim.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/joseph-jonghyun-kim-009b244a",
       },
