@@ -2646,12 +2646,17 @@ export const dict = {
   tracks: {
     tag: { ko: "트랙", en: "Tracks" },
     heading: { ko: "트랙은 병목으로 나눴습니다", en: "Tracks are split by bottleneck" },
-    // 트랙 선택 마감(Day 2 종료 전)과 제출 창구(운영진 이메일)는 이미
+    // 트랙 선택 마감(Day 2 종료)과 제출 창구(운영진 이메일)는 이미
     // schedule.ts의 d1-problem-release.description이 정본이고, FAQ의 같은 문장이
     // 사본입니다. 이 줄은 세 번째 사본이니 마감이 바뀌면 셋을 함께 고치세요.
+    //
+    // 2026-08-24: 마감이 지나서 네 자리를 모두 과거형으로 돌렸습니다. "끝나기
+    // 전까지 알려주세요"가 8/24에도 그대로 서 있어서, 이미 지난 날짜를 아직
+    // 남은 것처럼 읽히게 하고 있었습니다. 지난 마감을 현재형으로 두지 마세요 —
+    // 히어로 마감 줄은 시계를 보고 스스로 빠지지만 이 문장들은 손으로 고칩니다.
     intro: {
-      ko: "채용이냐 마케팅이냐가 아니라, 어느 병목을 풀고 싶은지로 고르면 됩니다. 두 문제 모두 출제 기업 코드프레소가 지금 실제로 겪고 있는 문제이고, 팀은 Day 2가 끝나기 전까지 하나를 골라 운영진 이메일로 알려주세요.",
-      en: "Not hiring versus marketing. You pick by which bottleneck you want to solve. Both problems are ones Codepresso, the company that set them, is living with right now. Pick one before Day 2 ends and email the organizers.",
+      ko: "채용이냐 마케팅이냐가 아니라, 어느 병목을 풀고 싶은지로 고르면 됩니다. 두 문제 모두 출제 기업 코드프레소가 지금 실제로 겪고 있는 문제입니다. 트랙 선택은 Day 2(8월 23일) 종료로 마감됐고, 아직 알리지 않은 팀은 운영진 이메일로 문의해 주세요.",
+      en: "Not hiring versus marketing. You pick by which bottleneck you want to solve. Both problems are ones Codepresso, the company that set them, is living with right now. Track picks closed at the end of Day 2 (23 Aug). If your team has not sent one, email the organizers.",
     },
     // 아래 세 라벨은 두 트랙이 공유합니다. 트랙마다 다르게 부르면 서로 다른 종류의
     // 문제처럼 읽힙니다 — 같은 틀에 담긴 두 문제여야 합니다.
@@ -2881,8 +2886,8 @@ export const dict = {
     // 사본은 이제 셋입니다: FAQ "무슨 문제를 푸나요" · tracks.intro · 이 note.
     // 마감이 바뀌면 넷을 함께 고치세요.
     note: {
-      ko: "무엇을 어디까지 어떻게 풀지는 팀이 정합니다. 의뢰서 전문(실무자들의 이야기와 내부 수치까지)은 참가자에게 전달되고, 필요한 자료와 데이터는 운영진에게 문의하면 됩니다. 트랙 선택은 Day 2가 끝나기 전까지 운영진 이메일로 보내 주세요.",
-      en: "What to solve, how far, and how is your team's call. The full brief (down to what the people doing the work say, and the internal numbers) goes to participants, and you can ask the organizers for the materials and data you need. Send your track pick to the organizers by email before Day 2 ends.",
+      ko: "무엇을 어디까지 어떻게 풀지는 팀이 정합니다. 의뢰서 전문(실무자들의 이야기와 내부 수치까지)은 참가자에게 전달되고, 필요한 자료와 데이터는 운영진에게 문의하면 됩니다. 트랙 선택은 Day 2(8월 23일) 종료로 마감됐습니다. 아직 보내지 않았다면 운영진 이메일로 문의해 주세요.",
+      en: "What to solve, how far, and how is your team's call. The full brief (down to what the people doing the work say, and the internal numbers) goes to participants, and you can ask the organizers for the materials and data you need. Track picks closed at the end of Day 2 (23 Aug). If you have not sent yours, email the organizers.",
     },
 
     // ── 히어로 훅 카드 ────────────────────────────────────────────────────────
@@ -3972,8 +3977,8 @@ export const dict = {
           // mailto와 위 kakaoInvite 답변이 이미 쓰고 있는 것과 같은 주소라, 새 상수를
           // 만들지 않고 같은 문자열을 씁니다 — 주소가 바뀌면 이 파일 안의 세 자리와
           // schedule.ts의 d1-problem-release를 함께 고치세요.
-          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다. 예를 들어 ‘판단할 시간도, 근거로 남는 기록도 없다’ 같은 실무 문제요.\n\nDay 1에 문제가 공개되고, 과제를 낸 코드프레소가 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자와 형식은 조율 중). 의뢰서에는 그 회사의 업무 워크플로우와 담당자가 겪는 불편, 관련 맥락이 담깁니다. 진행 중 특정 자료와 데이터가 필요해지면 운영진에게 문의해 주세요. 문제를 낸 코드프레소가 필요한 만큼 전달합니다.\n\n트랙은 저지먼트와 오토메이션 두 개입니다. 어떤 병목인지는 트랙 섹션에 정리해 뒀어요. 트랙 선택은 Day 2(8월 23일 일요일)가 끝나기 전까지 정해 pjh030924@gmail.com 으로 알려주시면 됩니다.",
-          en: "You take on the AX (AI-transformation) problems a Korean company is facing right now, one set per track, practical things like “there is no time to judge, and no record to judge by.”\n\nThey come as briefs: the problems drop on Day 1 and Codepresso, which set them, walks through the background first-hand (presenter and format still being arranged). Each brief carries the company's real workflow, the pain points of the person who owns it, and the context around it. If your team needs particular materials or data along the way, ask the organizers, and Codepresso, which set the problems, will send over what you need.\n\nThere are two tracks, Judgment and Automation. The tracks section lays out which bottleneck each one is. Your track choice is due by the end of Day 2 (Sunday 23 August): email it to pjh030924@gmail.com.",
+          ko: "실제 한국 기업이 지금 겪고 있는 AX(AI 전환) 문제를 트랙별로 받아서 풉니다. 예를 들어 ‘판단할 시간도, 근거로 남는 기록도 없다’ 같은 실무 문제요.\n\nDay 1에 문제가 공개되고, 과제를 낸 코드프레소가 배경을 직접 브리핑하는 ‘의뢰’입니다(진행자와 형식은 조율 중). 의뢰서에는 그 회사의 업무 워크플로우와 담당자가 겪는 불편, 관련 맥락이 담깁니다. 진행 중 특정 자료와 데이터가 필요해지면 운영진에게 문의해 주세요. 문제를 낸 코드프레소가 필요한 만큼 전달합니다.\n\n트랙은 저지먼트와 오토메이션 두 개입니다. 어떤 병목인지는 트랙 섹션에 정리해 뒀어요. 트랙 선택은 Day 2(8월 23일 일요일) 종료로 마감됐습니다. 아직 알리지 않은 팀은 pjh030924@gmail.com 으로 문의해 주세요.",
+          en: "You take on the AX (AI-transformation) problems a Korean company is facing right now, one set per track, practical things like “there is no time to judge, and no record to judge by.”\n\nThey come as briefs: the problems drop on Day 1 and Codepresso, which set them, walks through the background first-hand (presenter and format still being arranged). Each brief carries the company's real workflow, the pain points of the person who owns it, and the context around it. If your team needs particular materials or data along the way, ask the organizers, and Codepresso, which set the problems, will send over what you need.\n\nThere are two tracks, Judgment and Automation. The tracks section lays out which bottleneck each one is. Track picks closed at the end of Day 2 (Sunday 23 August). If your team has not sent one, email pjh030924@gmail.com.",
         },
       },
       // 툴 질문은 바로 위 "크래시코스를 건너뛰어도 되나요" 옆이 자리입니다 — 같은 사람이
