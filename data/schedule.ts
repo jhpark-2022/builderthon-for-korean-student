@@ -896,6 +896,11 @@ export const days: DayMeta[] = [
     // 무엇이 열리는지를 말하는 줄이고, 참가자가 알아서 먹는 시간은 행사가 여는
     // 프로그램이 아닙니다. 아래 시간표에도 같은 시간대가 "휴식"으로 남아 있습니다.
     // 끝의 "저녁: 사전 제출물 마감"은 시간대이지 식사가 아닙니다 — 건드리지 마세요.
+    //
+    // 2026-08-26: 위 금지가 이 요약 줄에서는 그대로입니다. 해제된 것은 아래
+    // runOfShow의 점심 줄 하나뿐이고(당일 진행덱이 정본), 이유는 그 줄의 주석에
+    // 있습니다. 요약에 식사를 다시 얹지 마세요 — 카드에서 보이는 줄이라 그날
+    // 열리는 프로그램만 실어야 합니다.
     summary: {
       // "(확정)" sat on the venue while this day was moving between rooms. The
       // AWS office is booked and every other day names its venue flat, so the
@@ -928,25 +933,42 @@ export const days: DayMeta[] = [
       // 셈이라 현장에서 둘 다 쫓기는 구성이었습니다. 입장에 20분을 주고, 멘토
       // 소개를 자기 10분으로 떼고, 라운드테이블이 9:30에 시작합니다.
       // 끝의 11:30(점심)은 그대로라 로테이션이 120분을 온전히 씁니다.
+      // 2026-08-26 (당일 진행덱 싱크): 이름만 있던 두 줄에 note가 붙었습니다.
+      // 진행덱의 오른쪽 한 줄과 같은 사실이에요 — 현장에서 스크린으로 읽는 것과
+      // 웹에서 읽는 것이 어긋나면 안 됩니다.
+      //
+      // DECIDED 2026-08-26 (박주형: 진행덱이 정본): 멘토 인원수를 웹에도 적습니다.
+      // 2026-08-21에 "배치 숫자를 웹에 싣지 않는다"고 정한 것은 그 숫자가 아직
+      // 유동적이던 때의 판단이었습니다. 당일 진행덱이 여섯을 확정해 현장 스크린에
+      // 띄우는 이상, 웹만 뭉뚱그리면 두 표면이 다른 말을 합니다.
+      //
+      // 여전히 적지 않는 것은 테이블 수와 팀당 배정입니다 — 그건 당일 배치의 문제이고
+      // 진행덱에도 없습니다. 멘토가 누구인지는 멘토링 섹션의 카드가 말합니다.
+      // 인원이 바뀌면 이 줄과 진행덱을 함께 고치세요.
       {
         time: "9AM–9:20AM",
         label: { ko: "입장", en: "Doors open" },
+        note: { ko: "AWS 오피스에 도착해 이름표를 받고 자리를 잡습니다.", en: "Arrive at the AWS office, pick up your name tag and find a seat." },
       },
       {
         time: "9:20AM–9:30AM",
         label: { ko: "멘토 소개", en: "Meet the mentors" },
+        note: { ko: "오늘 함께할 여섯 분을 먼저 만납니다.", en: "You meet the six mentors you'll be sitting with today." },
       },
       {
-        time: "9:30AM–10:30AM",
-        label: { ko: "멘토링 최종 점검", en: "Mentoring final check" },
-        // 형식의 핵심만 한 줄로 (DECIDED 2026-08-21). 멘토 수와 테이블 수는
-        // 여기에도, 어디에도 쓰지 않습니다 — 그 숫자는 당일 배치의 문제입니다.
+        // 2026-08-26 (당일 진행덱 싱크): 이름이 "멘토링 최종 점검"에서 "최종 점검
+        // 라운드테이블 1 / 2"가 됐습니다. 현장 스크린이 번호로 부르는데 웹만 두 줄을
+        // 같은 이름으로 두면, 참가자는 같은 줄이 두 번 적힌 것으로 읽습니다.
         //
-        // 두 블록이 같은 note와 같은 카드(d7-final-rehearsal)를 가리킵니다.
-        // 한 세션이 쉬는 시간을 사이에 두고 이어지는 것이라, 슬롯마다 다른 문장을
-        // 달면 첫 블록에만 형식이 적힌 반쪽짜리 안내가 둘 생깁니다.
-        // (Day 8 두 트랙 발표가 D8_TRACK_PITCH_NOTE를 공유하는 것과 같은 규칙.)
-        note: { ko: "멘토 테이블을 약 30분씩 옮겨가는 라운드테이블", en: "Roundtable format, moving tables about every 30 minutes" },
+        // 멘토 수와 테이블 수는 여기에도, 어디에도 쓰지 않습니다 (DECIDED 2026-08-21)
+        // — 그 숫자는 당일 배치의 문제입니다.
+        //
+        // 같은 note를 두 블록이 나눠 쓰던 규칙은 여기서 끝납니다. 번호가 붙어 순서로
+        // 읽히니 1이 형식을 말하고 2가 그 위에 남은 것을 얹으면 됩니다. 형식(로테이션)은
+        // 반드시 1에 있어야 해요 — 2에만 두면 첫 블록이 형식 없는 줄이 됩니다.
+        time: "9:30AM–10:30AM",
+        label: { ko: "최종 점검 라운드테이블 1", en: "Final-check roundtable 1" },
+        note: { ko: "한 팀씩 테이블에 앉고, 운영진 신호에 맞춰 다음 테이블로 옮깁니다. 약 30분씩 도는 로테이션이에요.", en: "One team per table, moving on when the organizers signal. The rotation runs about every 30 minutes." },
         eventId: "d7-final-rehearsal",
       },
       // DECIDED 2026-08-21: 라운드테이블 두 시간 사이에 10분을 넣었습니다.
@@ -961,8 +983,12 @@ export const days: DayMeta[] = [
       },
       {
         time: "10:40AM–11:30AM",
-        label: { ko: "멘토링 최종 점검", en: "Mentoring final check" },
-        note: { ko: "멘토 테이블을 약 30분씩 옮겨가는 라운드테이블", en: "Roundtable format, moving tables about every 30 minutes" },
+        label: { ko: "최종 점검 라운드테이블 2", en: "Final-check roundtable 2" },
+        // 비는 시간 안내는 진행덱의 라운드테이블 슬라이드에도 같은 문장으로 있습니다.
+        // 오늘 저녁이 제출물 마감이라, 테이블을 기다리는 시간이 그날의 마지막 작업
+        // 시간입니다. 제출물이 무엇인지는 모달의 제출물 박스(dict.program.submission)가
+        // 말하므로 여기서 4종을 나열하지 마세요.
+        note: { ko: "남은 테이블을 마저 돕니다. 비는 시간에는 오늘 저녁 마감인 제출물을 다듬으세요.", en: "You finish the tables you haven't sat at yet. In the gaps, polish the submission due this evening." },
         eventId: "d7-final-rehearsal",
       },
       {
@@ -976,17 +1002,31 @@ export const days: DayMeta[] = [
         // 모릅니다. "점심시간"은 그 시간대의 이름일 뿐, 끼니를 준다는 말이 아닙니다.
         // note에는 무엇을 해도 되는 시간인지만 씁니다 — 식판도, 각자 해결하라는
         // 안내도 넣지 마세요.
+        // DECIDED 2026-08-26 (박주형: 진행덱이 정본): 이 줄에 한해 식사 미제공을
+        // 적습니다. 2026-08-05의 "제공 안내도 미제공 안내도 쓰지 않는다"를 Day 7
+        // 진행 순서에서 해제하는 결정이에요 — 당일 진행덱이 이 줄에 그 문장을
+        // 달고 현장 스크린에 띄우기 때문입니다. 웹이 침묵하면 아침에 웹을 보고 온
+        // 사람과 현장 스크린을 본 사람이 다른 준비를 하게 됩니다.
+        //
+        // 해제 범위는 이 한 줄입니다. Day 5의 점심 밋업 줄과 days[6].summary는
+        // 그대로 무언급이고, 그 두 자리의 주석에 있는 금지 규칙도 그대로입니다.
+        // 다른 날로 이 문장을 복사하려면 그 날의 진행덱을 근거로 다시 정하세요.
+        //
+        // 이름에 자유 네트워킹이 붙은 것도 진행덱 표기입니다.
         time: "11:30AM–12:30PM",
-        label: { ko: "점심시간", en: "Lunch break" },
-        note: { ko: "자유 시간이에요. 그대로 나가서 네트워킹을 이어가거나, 멘토와 이야기를 이어가도 좋아요.", en: "Free time. Head out and keep networking, or carry on the conversation with a mentor." },
+        label: { ko: "점심시간 자유 네트워킹", en: "Lunch break open networking" },
+        note: { ko: "식사는 따로 제공되지 않습니다. 자유롭게 다녀오셔도 좋고, 남아서 멘토와 이야기를 이어가도 좋아요.", en: "Meals are not provided. Head out on your own, or stay and carry on the conversation with a mentor." },
       },
       {
         // DECIDED 2026-08-13: 커리어 간담회 → 조언 세션 (Day 8과 자리 맞바꿈).
         // DECIDED 2026-08-18: 70분 → 40분. 줄어든 30분은 아래 기념촬영 줄로
         // 내려가 그 자리가 촬영과 네트워킹을 함께 갖습니다. 2PM(현장 종료)은
         // 그대로라, 이 세션을 늘린다면 늘어나는 만큼 아래에서 빼야 합니다.
+        // 2026-08-26 (당일 진행덱 싱크): 주제 한 줄이 note로 붙었습니다. 전문은
+        // d7-speaker-session이 갖고, 이 줄은 시간표에서 무엇을 듣는 시간인지만 말합니다.
         time: "12:30PM–1:10PM",
         label: { ko: "조언 세션 박희덕 대표님", en: "Advice session Park Hee-deok" },
+        note: { ko: "‘Zero100의 진짜 의미’. 무대 형식 없이 건네는 조언과 Q&A입니다.", en: "‘The Real Meaning of Zero100’: advice and Q&A with no stage format." },
         eventId: "d7-speaker-session",
       },
       // 12:30–2PM 한 줄이었는데 쪼갰습니다 (2026-08-04). 합쳐두면 조언 세션이
@@ -995,11 +1035,15 @@ export const days: DayMeta[] = [
       // 촬영만으로 채우는 시간이 아니므로 네트워킹을 이름에 함께 적었습니다 —
       // 빈 시간을 이름 없이 두면 "여기서 끝난 건가"로 읽힙니다.
       {
+        // 2026-08-26 (당일 진행덱 싱크): "(잠정, 확정 시 안내)"가 빠졌습니다. 당일
+        // 진행덱이 단체 사진을 그대로 싣고 있으니 더는 잠정이 아닙니다. 임원진 기념촬영
+        // 절도 함께 뺐어요 — 진행덱은 단체 사진 한 줄이고, 참가자에게 필요한 것도
+        // 그것입니다(누가 앞줄에 서는지는 당일 운영의 문제입니다).
         time: "1:10PM–2PM",
         label: { ko: "기념촬영 네트워킹", en: "Photos networking" },
         note: {
-          ko: "주최사와 주관 학생회 임원진 기념촬영, 이어서 단체 사진 (잠정, 확정 시 안내). 남는 시간은 자유롭게 네트워킹으로 쓰시면 돼요.",
-          en: "Commemorative photos with the host companies and the student council executives, then a group shot (provisional, we'll confirm). The rest of the slot is yours to network in.",
+          ko: "단체 사진을 찍고, 남는 시간은 자유롭게 네트워킹으로 쓰시면 돼요.",
+          en: "A group photo, and the rest of the slot is yours to network in.",
         },
       },
     ],
@@ -2182,8 +2226,8 @@ export const schedule: BEvent[] = [
       // 진행자는 여전히 멘토진이고, 두 분의 참석은 산문으로만 말합니다.
       // 같은 사실을 dictionary.ts의 mentoring.groups[pitch].sub도 말합니다. 함께
       // 움직이세요.
-      ko: "Day 7은 사전 제출물 마감 당일입니다. 새 기능이나 방향 전환은 여기서 멈추고, 이미 만든 결과를 발표와 이어지는 Q&A 안에서 명확히 증명하는 데 시간을 씁니다. 진행은 라운드테이블입니다. 멘토마다 테이블을 하나씩 맡고, 팀이 약 30분씩 테이블을 옮겨가며 같은 발표를 다른 시각 앞에서 다시 세워봅니다. 한 분의 조언에 머무르지 않고, 무대에서 만날 여러 관점을 하루 전에 미리 통과해 보는 구조예요. Day 5에 이은 두 번째 현장 집결이고, 1:1 멘토링이 저녁까지 열려 있는 마지막 날이에요(온라인 드롭인도 오늘까지). 과제를 낸 코드프레소의 대표와 공동창업자도 현장에 함께해, 무대에 서기 전 담당자에게 과제를 직접 묻고 확인하는 시간을 겸합니다.",
-      en: "Day 7 is the submission deadline. New features and changes of direction stop here; the time goes into proving what you already built, making it stand up inside the pitch and the Q&A that follows. It runs as a roundtable: each mentor takes a table and teams move on about every half hour, putting the same pitch in front of a different pair of eyes each time. Instead of one person's read, you pass through several of the perspectives waiting for you on stage, a day early. It's the second in-person gathering after Day 5, and the last day 1:1 mentoring is open, into the evening, with the online drop-in running through today too. Codepresso's CEO and co-founder, who set the problems, are on site too, so it doubles as your chance to question the problem owner about the brief before you go on stage.",
+      ko: "Day 7은 사전 제출물 마감 당일입니다. 새 기능이나 방향 전환은 여기서 멈추고, 이미 만든 결과를 발표와 이어지는 Q&A 안에서 명확히 증명하는 데 시간을 씁니다. 진행은 라운드테이블입니다. 멘토마다 테이블을 하나씩 맡고, 팀이 약 30분씩 테이블을 옮겨가며 같은 발표를 다른 시각 앞에서 다시 세워봅니다. 한 분의 조언에 머무르지 않고, 무대에서 만날 여러 관점을 하루 전에 미리 통과해 보는 구조예요. Day 5에 이은 두 번째 현장 집결이고, 1:1 멘토링이 저녁까지 열려 있는 마지막 날이에요(온라인 드롭인도 오늘까지). 과제를 낸 코드프레소의 공동창업자와 GTM 총괄도 멘토 테이블에 함께해, 무대에 서기 전 담당자에게 과제를 직접 묻고 확인하는 시간을 겸합니다.",
+      en: "Day 7 is the submission deadline. New features and changes of direction stop here; the time goes into proving what you already built, making it stand up inside the pitch and the Q&A that follows. It runs as a roundtable: each mentor takes a table and teams move on about every half hour, putting the same pitch in front of a different pair of eyes each time. Instead of one person's read, you pass through several of the perspectives waiting for you on stage, a day early. It's the second in-person gathering after Day 5, and the last day 1:1 mentoring is open, into the evening, with the online drop-in running through today too. Codepresso's co-founder and GTM lead, from the company that set the problems, take tables too, so it doubles as your chance to question the problem owner about the brief before you go on stage.",
     },
     location: AWS_OFFICE,
     checkpoints: SCORE_KEEPING_CHECKS,
@@ -2209,15 +2253,19 @@ export const schedule: BEvent[] = [
     time: "12:30PM–1:10PM",
     // TODO: confirm public naming — speaker (박희덕) from the internal deck.
     speaker: { ko: "박희덕 대표님", en: "Park Hee-deok" },
-    title: { ko: "조언 세션 ‘제로백의 진짜 의미’", en: "Advice Session “The Real Meaning of Zero100”" },
+    // 2026-08-26: 국문 주제를 ‘제로백의 진짜 의미’에서 ‘Zero100의 진짜 의미’로
+    // 바꿉니다. 당일 진행덱과 조언 세션 슬라이드가 쓰는 표기이고, 현장 스크린에
+    // 뜨는 제목과 웹의 제목이 다르면 다른 세션으로 읽힙니다. 영문은 원래
+    // "The Real Meaning of Zero100"이라 바뀐 것이 없습니다.
+    title: { ko: "조언 세션 ‘Zero100의 진짜 의미’", en: "Advice Session “The Real Meaning of Zero100”" },
     // 시각은 `time`이 갖습니다 — 요약과 설명 앞머리에 박혀 있던 "12:30–14:00"을
     // 뺐습니다. 같은 정보가 세 군데 있으면 하나가 바뀔 때 나머지가 어긋납니다.
     summary: {
-      ko: "리허설 한가운데, 형식 없는 조언과 Q&A. 박희덕 대표님의 ‘제로백의 진짜 의미’.",
+      ko: "리허설 한가운데, 형식 없는 조언과 Q&A. 박희덕 대표님의 ‘Zero100의 진짜 의미’.",
       en: "Advice and Q&A with no format, in the middle of rehearsal day: Park Hee-deok on “The Real Meaning of Zero100”.",
     },
     description: {
-      ko: "파이널 리허설 한가운데 놓인 가벼운 자리입니다. 트랜스링크 인베스트먼트의 박희덕 대표님이 무대 형식 없이 팀들에게 편하게 조언을 건네고 질문을 받습니다. ‘제로백의 진짜 의미’를 주제로, 창업가가 0에서 100으로 가는 데 무엇이 필요한지와 왜 지금 싱가포르의 한인 학생인지를 함께 이야기합니다. 지금 만들고 있는 것을 그대로 들고 와서 물어보면 되는 시간이에요.",
+      ko: "파이널 리허설 한가운데 놓인 가벼운 자리입니다. 트랜스링크 인베스트먼트의 박희덕 대표님이 무대 형식 없이 팀들에게 편하게 조언을 건네고 질문을 받습니다. ‘Zero100의 진짜 의미’를 주제로, 창업가가 0에서 100으로 가는 데 무엇이 필요한지와 왜 지금 싱가포르의 한인 학생인지를 함께 이야기합니다. 지금 만들고 있는 것을 그대로 들고 와서 물어보면 되는 시간이에요.",
       en: "A relaxed hour in the middle of the final-rehearsal day. Park Hee-deok (CEO, General Partner, Translink Investment) sits with the teams without a stage format, offering advice and taking questions. ‘The Real Meaning of Zero100’: what actually carries a founder from zero to a hundred, and why now, why Korean students in Singapore. Bring whatever you are building and ask.",
     },
     location: AWS_OFFICE,

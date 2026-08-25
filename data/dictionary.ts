@@ -3006,7 +3006,9 @@ export const dict = {
         day: { ko: "Day 7 조언 세션", en: "Day 7 Advice session" },
         name: { ko: "박희덕 대표님", en: "Park Hee-deok" },
         role: { ko: "트랜스링크인베스트먼트 대표 GP", en: "CEO General Partner, Translink Investment (VC)" },
-        topic: { ko: "‘제로백의 진짜 의미’", en: "“The Real Meaning of Zero100”" },
+        // 2026-08-26: ‘제로백’ → ‘Zero100’. 당일 진행덱의 표기이고, schedule.ts의
+        // d7-speaker-session과 같은 말이어야 합니다.
+        topic: { ko: "‘Zero100의 진짜 의미’", en: "“The Real Meaning of Zero100”" },
         img: "/partners/logos/speaker-park.jpeg",
         linkedin: "https://www.linkedin.com/in/hee-duk-park-304079bb",
         points: [
