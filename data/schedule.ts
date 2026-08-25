@@ -2201,6 +2201,18 @@ export const schedule: BEvent[] = [
       ko: "이미 만든 것을 발표와 Q&A 안에서 증명하도록, 멘토와 함께하는 마지막 점검.",
       en: "Making what you already built stand up in the pitch and the Q&A. The last check, with mentors.",
     },
+    // TRIMMED 2026-08-26: 378자 → 240자 (영문 824 → 571). 이 파일의 description은
+    // 중간값이 200자 언저리인데 d7은 d1-problem-release 다음으로 길었습니다.
+    // 진행 순서가 진행덱 싱크로 촘촘해지면서, 이 산문이 그 표를 한 번 더 풀어
+    // 쓰고 있었어요. 뺀 것은 전부 runOfShow가 이미 말하는 것들입니다:
+    //  · "진행은 라운드테이블입니다. 멘토마다 테이블을 하나씩 맡고, 팀이 약 30분씩
+    //    테이블을 옮겨가며" — 라운드테이블 1 줄의 note가 그대로 말합니다.
+    //  · "Day 5에 이은 두 번째 현장 집결" — 노선도와 데이 카드가 말하는 사실이고
+    //    이 세션의 내용이 아닙니다.
+    //  · "무대에 서기 전" 같은 되풀이 절.
+    // 남긴 것은 이 산문만 할 수 있는 일입니다: 이 날의 계약(새 기능은 멈추고
+    // 증명한다), 라운드테이블이 왜 여러 관점인지, 멘토링 마지막 날, 출제사 담당자를
+    // 직접 만난다는 것. 시간표로 되돌아갈 문장을 다시 얹지 마세요.
     description: {
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
       // 마지막 줄 (DECIDED 2026-08-09): 예약제 1:1이 열려 있는 마지막 날입니다.
@@ -2226,8 +2238,8 @@ export const schedule: BEvent[] = [
       // 진행자는 여전히 멘토진이고, 두 분의 참석은 산문으로만 말합니다.
       // 같은 사실을 dictionary.ts의 mentoring.groups[pitch].sub도 말합니다. 함께
       // 움직이세요.
-      ko: "Day 7은 사전 제출물 마감 당일입니다. 새 기능이나 방향 전환은 여기서 멈추고, 이미 만든 결과를 발표와 이어지는 Q&A 안에서 명확히 증명하는 데 시간을 씁니다. 진행은 라운드테이블입니다. 멘토마다 테이블을 하나씩 맡고, 팀이 약 30분씩 테이블을 옮겨가며 같은 발표를 다른 시각 앞에서 다시 세워봅니다. 한 분의 조언에 머무르지 않고, 무대에서 만날 여러 관점을 하루 전에 미리 통과해 보는 구조예요. Day 5에 이은 두 번째 현장 집결이고, 1:1 멘토링이 저녁까지 열려 있는 마지막 날이에요(온라인 드롭인도 오늘까지). 과제를 낸 코드프레소의 공동창업자와 GTM 총괄도 멘토 테이블에 함께해, 무대에 서기 전 담당자에게 과제를 직접 묻고 확인하는 시간을 겸합니다.",
-      en: "Day 7 is the submission deadline. New features and changes of direction stop here; the time goes into proving what you already built, making it stand up inside the pitch and the Q&A that follows. It runs as a roundtable: each mentor takes a table and teams move on about every half hour, putting the same pitch in front of a different pair of eyes each time. Instead of one person's read, you pass through several of the perspectives waiting for you on stage, a day early. It's the second in-person gathering after Day 5, and the last day 1:1 mentoring is open, into the evening, with the online drop-in running through today too. Codepresso's co-founder and GTM lead, from the company that set the problems, take tables too, so it doubles as your chance to question the problem owner about the brief before you go on stage.",
+      ko: "사전 제출물 마감 당일입니다. 새 기능이나 방향 전환은 멈추고, 이미 만든 결과를 발표와 Q&A 안에서 증명하는 데 시간을 씁니다. 테이블마다 다른 시각 앞에서 같은 발표를 다시 세워보니, 무대에서 만날 관점들을 하루 전에 미리 통과하는 셈이에요. 1:1 멘토링이 저녁까지 열려 있는 마지막 날이고, 온라인 드롭인도 오늘까지입니다. 코드프레소의 공동창업자와 GTM 총괄도 테이블을 맡아, 담당자에게 과제를 직접 물어볼 수 있어요.",
+      en: "Day 7 is the submission deadline. New features and changes of direction stop here; the time goes into proving what you already built, inside the pitch and the Q&A that follows. Putting the same pitch in front of a different pair of eyes at each table, you pass through several of the perspectives waiting for you on stage, a day early. It's the last day 1:1 mentoring is open, into the evening, and the online drop-in runs through today too. Codepresso's co-founder and GTM lead take tables as well, so you can put questions about the brief to the problem owner directly.",
     },
     location: AWS_OFFICE,
     checkpoints: SCORE_KEEPING_CHECKS,
