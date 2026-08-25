@@ -2077,14 +2077,25 @@ export const schedule: BEvent[] = [
       // 자리는 성과 공유와 투표 사이 — 이 산문은 runOfShow와 같은 순서로 읽혀야
       // 한다는 것이 기존 규칙이라, 시각이 바뀌면 두 곳을 함께 고치세요.
       //
-      // DECIDED 2026-08-26 (당일 확정): 5블록 단순화. 오후의 두 번째 공유가 아침
-      // LAP Time으로 흡수돼서, 이 산문에서도 "다시 공유" 절이 빠지고 피드백 절이
-      // LAP Time 문장으로 올라갔습니다. 하루의 끝은 코드프레소 대표님과 묻고 답하는
-      // 시간이고, 그 줄이 클로징을 겸합니다 — 별도의 클로징 문장을 만들지 마세요.
-      // "이날 현장에 온 것 자체는 ‘0→100’ 부문에 반영돼요"와 멘토링 문장은 이번에도
-      // 폐지 대상이 아니라 그대로입니다.
-      ko: "온라인으로 이어지던 8일 한가운데, 팀이 한 방에 모여 집중해서 빌드하는 날입니다. 도착하면 지금까지 만든 것을 또래 앞에 공유하는 LAP Time으로 하루를 엽니다. 같은 팀이 아니어도 서로 피드백을 주고받고, 점수도 기록도 순위도 없어요. Day 8 무대에 서기 전에 한 번 서보는 자리입니다. 그다음은 팀 자율 빌드, 트랙을 섞는 캐주얼 밋업을 지나, 문제를 낸 코드프레소의 이동훈 대표님에게 회사와 문제의 배경을 직접 듣고 자유롭게 묻는 시간으로 하루를 닫습니다. 이날 현장에 온 것 자체는 ‘0→100’ 부문에 반영돼요. 참여는 선택이고, 1:1 멘토링과 온라인 드롭인은 이날도 열려 있습니다.",
-      en: "Right in the middle of a stretch that runs online, a day when your team can sit down together and build. You open with LAP Time, sharing what you have so far with the room. You give and take feedback across teams, not just inside your own, and there are no scores, no records, no ranking. The point is to have stood in front of people once before the Day 8 stage. Then comes your team's own build time and a casual meetup that mixes the tracks, and the day closes with Lee Dong-hoon, CEO of Codepresso, which set the problems, talking through the company and where the problems come from and taking your questions. Simply being in the room today counts toward the Zero to Hundred award. Attending is your choice, and 1:1 mentoring and the online drop-in stay open today too.",
+      // DECIDED 2026-08-26 (당일 확정): 5블록 단순화. 하루의 끝은 코드프레소
+      // 대표님과 묻고 답하는 시간이고, 그 줄이 클로징을 겸합니다 — 별도의 클로징
+      // 문장을 만들지 마세요.
+      //
+      // TRIMMED 2026-08-26: 337자 → 233자. 이 파일의 description은 중간값이 200자
+      // 언저리인데 d5는 d1-problem-release 다음으로 길었습니다. 바로 위 진행 순서가
+      // 다섯 줄을 note까지 달아 보여주는데, 이 산문이 같은 순서를 한 번 더 읊고
+      // 있었어요. 뺀 것은 전부 runOfShow가 이미 말하는 것들입니다:
+      //  · "같은 팀이 아니어도 서로 피드백을 주고받고" — LAP Time 줄의 note.
+      //  · "그다음은 팀 자율 빌드, 트랙을 섞는 캐주얼 밋업을 지나" — 세 줄의 이름
+      //    그 자체입니다. 산문이 시간표를 대신할 이유가 없습니다.
+      //  · "회사와 문제의 배경을 직접 듣고" — 코드프레소 줄의 note.
+      //  · "도착하면 지금까지 만든 것을 또래 앞에 공유하는" — LAP Time 줄이 이름과
+      //    note로 이미 말합니다. 산문에는 여닫는 한 문장만 남깁니다.
+      // 남긴 것은 이 산문만 할 수 있는 일입니다: 하루의 프레임(온라인 한가운데의
+      // 현장일), 이 자리의 정의("점수도 기록도 순위도 없어요" + Day 8 전에 한 번
+      // 서보는 자리), 가산, 멘토링. 시간표로 되돌아갈 문장을 다시 얹지 마세요.
+      ko: "온라인으로 이어지던 8일 한가운데, 팀이 한 방에 모여 집중해서 빌드하는 날입니다. 하루는 LAP Time 공유로 열고, 코드프레소 이동훈 대표님과 묻고 답하는 시간으로 닫습니다. LAP Time에는 점수도 기록도 순위도 없어요. Day 8 무대에 서기 전에 한 번 서보는 자리입니다. 이날 현장에 온 것 자체는 ‘0→100’ 부문에 반영돼요. 참여는 선택이고, 1:1 멘토링과 온라인 드롭인은 이날도 열려 있습니다.",
+      en: "Right in the middle of a stretch that runs online, a day when your team can sit down together and build. It opens with the LAP Time share and closes with Lee Dong-hoon, CEO of Codepresso, taking your questions. LAP Time has no scores, no records, no ranking: the point is to have stood in front of people once before the Day 8 stage. Simply being in the room today counts toward the Zero to Hundred award. Attending is your choice, and 1:1 mentoring and the online drop-in stay open today too.",
     },
     location: SCAPE_LIFE,
     // org(HASHED_ORG)를 뗐습니다 (DECIDED 2026-08-13): 해시드는 더 이상 이 날의
