@@ -357,24 +357,20 @@ const VENUE_AWS = { src: "/partners/logos/white/trimmed/aws.png", name: "AWS off
 // 브라우저가 옛 이미지를 계속 서빙했습니다(스크립트 JOB 주석 참고).
 const VENUE_SMU = { src: "/partners/logos/white/trimmed/smu-lockup.png", name: "SMU", tall: true };
 
-// Day 8 두 트랙 발표 슬롯이 함께 쓰는 note입니다. 상수인 이유는 두 슬롯이 트랙만
-// 다른 같은 세션이기 때문입니다 — 슬롯마다 다른 문장을 달면 첫 슬롯에만 포맷이,
-// 둘째 슬롯에만 다른 안내가 적혀 반쪽짜리 안내가 둘 생깁니다.
+// Day 8 두 트랙 발표 슬롯은 2026-08-26까지 note 하나(D8_TRACK_PITCH_NOTE)를
+// 함께 썼습니다. 트랙만 다른 같은 세션이라 문장을 나눠 쓰면 반쪽짜리 안내가 둘
+// 생긴다는 이유였는데, 발표 순서가 확정되면서 두 슬롯이 실제로 달라졌습니다 —
+// 팀 수도(14 대 8), 휴식 시각도 다릅니다. 그래서 상수를 걷고 각 줄이 자기 note를
+// 갖습니다. 규격(팀당 10분 = 발표 5분 + Q&A·피드백 5분, 전환 2분)은 두 줄에
+// 모두 적습니다. 한쪽에만 적으면 다시 반쪽짜리가 됩니다.
 //
-// DECIDED 2026-08-19: 팀당 10분 확정(발표 5분 + Q&A와 심사 5분). 오래 "8분(잠정)"에
-// 배분 미정 헤지를 달고 있었는데, SMU 대관이 4PM까지로 늘면서 발표에 240분이 생겨
-// 10분씩 24팀이 들어갑니다. 잠정 표시와 헤지를 함께 뗍니다.
+// DECIDED 2026-08-19: 팀당 10분 확정(발표 5분 + Q&A 5분). 오래 "8분(잠정)"에
+// 배분 미정 헤지를 달고 있었는데, SMU 대관이 4PM까지로 늘면서 그 배분이 확정됐고
+// 잠정 표시와 헤지를 함께 뗐습니다.
 //
 // 이 숫자는 참가자가 그 길이에 맞춰 준비해 오는 종류입니다. 바꿀 일이 생기면
-// 여기 한 곳만 고치면 두 슬롯이 따라오지만, days[7].summary와 d8-judging의
-// summary·description도 같은 숫자를 들고 있으니 함께 고치세요.
-const D8_TRACK_PITCH_NOTE: Bilingual = {
-  // DECIDED 2026-08-18: "자기 트랙 발표 외 시간은 자유롭게" 절을 뺐습니다.
-  // 자리를 비워도 되는 시간으로 읽혀서, 다른 트랙 발표가 빈 객석 앞에서 도는
-  // 결과가 됩니다. 되살리지 마세요 — 남는 것은 팀당 시간뿐입니다.
-  ko: "팀당 10분 — 발표 5분, Q&A와 심사 5분.",
-  en: "Ten minutes per team: a 5-minute pitch, then 5 minutes of Q&A and review.",
-};
+// days[7].runOfShow의 두 줄과 days[7].summary, d8-judging의 summary·description을
+// 함께 고치세요.
 
 // Day theme labels + one-line summaries (Opening → the Showcase)
 export const days: DayMeta[] = [
@@ -1086,7 +1082,7 @@ export const days: DayMeta[] = [
     // Day 8 산문만 두 트랙을 이미 정해진 사실로 서술하고 있었습니다. 트랙 수가
     // 바뀌는 순간 헤지한 쪽이 아니라 확정형으로 쓴 이쪽이 거짓이 됩니다.
     //
-    // runOfShow의 두 발표 슬롯(12PM–1:15 · 1:15–2:30)과 그것을 설명하는 주석들은
+    // runOfShow의 두 발표 슬롯(10:10AM–12:59PM · 1:39PM–3:16PM)과 그것을 설명하는 주석들은
     // 그대로 둡니다. 저건 이미 잡힌 대관 시간표이지 트랙 라인업에 대한 약속이
     // 아니고, 트랙 수가 바뀌면 시간표 자체를 다시 짜야 하는 자리입니다. 산문은
     // 반대로, 지금 확정된 것만 말하면 되는 자리라 수를 뺍니다.
@@ -1125,60 +1121,73 @@ export const days: DayMeta[] = [
       // 2026-08-05에 이 문장을 일부러 덜어내고 이 note로 넘겼습니다 — 사본을
       // 다시 만들지 마세요.
       {
+        // 2026-08-26: 입장과 오프닝이 한 줄이 됐습니다. 둘 다 10분이었고 실제로는
+        // 문을 열면서 그날의 순서를 안내하는 하나의 블록이라, 22팀 발표에 필요한
+        // 10분을 여기서 만들었습니다.
         time: "10AM–10:10AM",
-        label: { ko: "입장", en: "Doors open" },
+        label: { ko: "입장 오프닝", en: "Doors open Opening" },
         note: {
           ko: "발표 순서는 무작위 추첨으로 정하고, 이날 아침 오픈 카톡방으로 공지됩니다. 제출 순서와는 무관해요.",
           en: "The running order is drawn at random and goes out that morning in the open chat. It has nothing to do with the order you submitted in.",
         },
       },
-      // DECIDED 2026-08-18: 하루를 다시 짰습니다. 입장이 10시로 당겨져 10분이 되고,
-      // 여는 순서가 자기 줄을 되찾았으며(10분), 커리어 간담회는 이 날의 첫 순서에서
-      // 트랙 발표 뒤로 내려갔습니다.
+      // DECIDED 2026-08-18: 하루를 다시 짰습니다. 입장이 10시로 당겨지고, 커리어
+      // 간담회는 이 날의 첫 순서에서 트랙 발표 뒤로 내려갔습니다.
       // DECIDED 2026-08-19: 장소가 SMU로 바뀌며 대관이 4PM까지 늘었고, 그 60분을
-      // 전부 발표에 줬습니다(슬롯당 90분 → 120분).
+      // 전부 발표에 줬습니다.
       //
-      // 산술에 여유가 없습니다: 10:20 + 120 + 40(점심) + 120 + 40(간담회) + 20 이
-      // 정확히 4PM입니다. 한 줄을 늘리면 다른 줄에서 그만큼 빼야 합니다.
+      // DECIDED 2026-08-26 (Day8_발표순서.docx = 발표 순서 정본): 발표가 22팀으로
+      // 확정되면서 시각을 전부 다시 잡았습니다. 트랙 1이 14팀, 트랙 2가 8팀입니다.
+      // 이전 배치(슬롯당 120분, 트랙당 12팀 기준)에는 저지먼트 14팀이 들어가지
+      // 않았습니다. 여는 순서는 입장 줄과 합쳐 10분을 내줬습니다.
       //
-      // 발표 240분은 팀당 10분으로 24팀입니다. 이 숫자가 이 배치의 이유예요 —
-      // 신청 현황(팀 16 + 솔로 21)에서 솔로를 3인으로 묶으면 23팀이라, 이전
-      // 180분(18팀)으로는 다섯 팀이 넘쳤습니다. 발표 슬롯을 줄이면 들어가는 팀
-      // 수가 바로 줄어듭니다.
+      // 산술은 팀 수에서 나옵니다. 팀당 10분에 팀 사이 전환 2분, 트랙 중간에 5분
+      // 휴식이고, 휴식이 들어가는 자리의 전환 2분은 휴식이 대신합니다:
+      //   트랙 1 = 14×10 + 12×2 + 5 = 169분 (10:10AM–12:59PM)
+      //   트랙 2 =  8×10 +  6×2 + 5 =  97분 (1:39PM–3:16PM)
+      // 나머지는 입장·오프닝 10분, 점심 40분, 간담회 30분, 어워드 5분, 클로징 5분이고
+      // 3:16–3:20의 4분은 발표에서 간담회로 넘어가는 전환입니다. 합이 정확히 4PM이라
+      // 한 줄을 늘리면 다른 줄에서 그만큼 빼야 합니다.
+      //
+      // 팀 수가 바뀌면 여기서 계산을 다시 하세요 — 위 두 식이 시각의 근거입니다.
       {
-        time: "10:10AM–10:20AM",
-        label: { ko: "오프닝 오늘의 순서 안내", en: "Opening what today looks like" },
-      },
-      {
-        time: "10:20AM–12:20PM",
+        time: "10:10AM–12:59PM",
         label: { ko: "첫 번째 트랙 발표", en: "First track pitches" },
-        note: D8_TRACK_PITCH_NOTE,
+        // 두 발표 줄의 note는 이제 서로 다릅니다(팀 수와 휴식 시각). 규격은 양쪽에
+        // 모두 적습니다 — 상수를 걷은 이유는 D8_TRACK_PITCH_NOTE가 있던 자리의 주석에.
+        note: {
+          ko: "14팀 팀당 10분(발표 5분 + Q&A·피드백 5분), 팀 사이 전환 2분. 중간 11:32AM–11:37AM 5분 휴식.",
+          en: "14 teams 10 min each (5 min pitch + 5 min Q&A), 2 min changeover. 5 min break at 11:32AM.",
+        },
         eventId: "d8-judging",
       },
       // 점심 줄에 식사 제공을 쓰지 않습니다 (2026-08-05 결정: 식사 무언급).
       // Day 7 점심시간 줄과 같은 규칙입니다.
       {
-        time: "12:20PM–1PM",
+        time: "12:59PM–1:39PM",
         label: { ko: "점심시간", en: "Lunch break" },
       },
       {
-        time: "1PM–3PM",
+        time: "1:39PM–3:16PM",
         label: { ko: "두 번째 트랙 발표", en: "Second track pitches" },
-        note: D8_TRACK_PITCH_NOTE,
+        note: {
+          ko: "8팀 같은 규격. 중간 2:25PM–2:30PM 5분 휴식.",
+          en: "8 teams same format. 5 min break at 2:25PM.",
+        },
         eventId: "d8-judging",
       },
       {
-        time: "3PM–3:40PM",
+        time: "3:20PM–3:50PM",
         label: { ko: "커리어 간담회 3인 패널", en: "Career session panel of three" },
         eventId: "d8-opening-keynote",
       },
       {
-        time: "3:40PM–3:50PM",
+        time: "3:50PM–3:55PM",
         label: { ko: "테마별 어워드 발표 사진", en: "Thematic awards photos" },
         eventId: "d8-final-pitch",
       },
       {
-        time: "3:50PM–4PM",
+        time: "3:55PM–4PM",
         // 손에 드는 것은 완주 수료증입니다 — 공유회 발표까지 마친 분들께 이 자리에서
         // 실물로 드리는 그 한 장. 크래시코스 수료증은 PDF로 나가므로 이 사진에
         // 등장하지 않습니다. 둘을 "수료증"으로 뭉뚱그리면 PDF도 현장에서 받는
@@ -2315,7 +2324,7 @@ export const schedule: BEvent[] = [
     category: "main",
     mode: "offline",
     timeOfDay: "AM",
-    time: "3PM–3:40PM",
+    time: "3:20PM–3:50PM",
     confirmed: true,
     title: { ko: "커리어 간담회 ‘FDE로 일한다는 것’", en: "Career Session “Working as an FDE”" },
     // DECIDED 2026-08-19 (주최 진행안): 1인 강연에서 3인 패널 토의가 됐습니다.
@@ -2332,7 +2341,7 @@ export const schedule: BEvent[] = [
       en: "A three-person panel “Working as an FDE”.",
     },
     description: {
-      ko: "트랙별 팀 발표가 모두 끝난 뒤, 어워드로 넘어가기 전 40분입니다. 세 분이 나란히 앉아 ‘FDE로 일한다는 것’을 이야기합니다. 트랜스링크 인베스트먼트 박희덕 대표님은 자본과 시장의 눈으로, 코드프레소 이동훈 대표님은 현장과 교육의 눈으로 답하고, Wilt Venture Builder 원대로 대표님이 진행을 맡습니다. FDE가 실제로 어떤 일인지, 어떤 사람을 뽑는지, 비전공자에게도 열려 있는지를 차례로 다루고 플로어에서 직접 묻는 시간으로 마칩니다. 인턴과 채용 pool로 이어지는 자리이고, 후속 1:1 면담과 멘토링(희망자)은 당일 행사가 끝난 뒤에 진행됩니다.",
+      ko: "트랙별 팀 발표가 모두 끝난 뒤, 어워드로 넘어가기 전 30분입니다. 세 분이 나란히 앉아 ‘FDE로 일한다는 것’을 이야기합니다. 트랜스링크 인베스트먼트 박희덕 대표님은 자본과 시장의 눈으로, 코드프레소 이동훈 대표님은 현장과 교육의 눈으로 답하고, Wilt Venture Builder 원대로 대표님이 진행을 맡습니다. FDE가 실제로 어떤 일인지, 어떤 사람을 뽑는지, 비전공자에게도 열려 있는지를 차례로 다루고 플로어에서 직접 묻는 시간으로 마칩니다. 인턴과 채용 pool로 이어지는 자리이고, 후속 1:1 면담과 멘토링(희망자)은 당일 행사가 끝난 뒤에 진행됩니다.",
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
       en: "Forty minutes after every track has pitched, before the awards begin. Three of them sit down together on “Working as an FDE”: Park Hee-deok (Translink Investment) answering from the capital and market side, Lee Dong-hoon (Codepresso) from the shop floor and teaching side, with Won Dae-ro (Wilt Venture Builder) moderating. What the work actually is, who they hire, whether it is open to non-CS majors, and then the floor gets to ask. It is a genuine route into the internship and hiring pool, and follow-up 1:1 conversations and mentoring (for those who want them) run once the event closes that day.",
     },
@@ -2348,16 +2357,17 @@ export const schedule: BEvent[] = [
     // DECIDED 2026-08-19: SMU 대관이 10AM–4PM으로 확정되며 두 슬롯이 120분씩이
     // 됐습니다. 이 카드의 time은 두 슬롯을 합친 구간이라 사이의 점심시간까지
     // 포함합니다(그래서 description이 점심을 한 마디 말합니다).
-    time: "10:20AM–3PM",
+    time: "10:10AM–3:16PM",
     title: { ko: "공유회 발표 전문가 피드백", en: "Showcase Presentations Expert Feedback" },
     // 발표 길이는 "팀당 10분"입니다(발표 5분 + Q&A와 심사 5분, 2026-08-19 확정).
     // 참가자가 잘못된 길이로 준비해 오면 현장에서 그대로 사고가 나는 종류의
     // 숫자라, 이 값이 나오는 모든 곳을 함께 고쳤습니다.
     //
-    // 숫자가 사는 곳은 Day 8 세 군데뿐입니다: days[7].summary · 두 트랙 발표 슬롯이
-    // 공유하는 D8_TRACK_PITCH_NOTE · 이 카드의 summary와 description. 바뀌면 셋을
-    // 함께 고치세요. 오래 "8분(잠정)"에 배분 미정 헤지를 달고 있었는데, 대관이
-    // 4PM까지로 늘어 240분이 생기면서 10분으로 확정됐고 헤지도 함께 뗐습니다.
+    // 숫자가 사는 곳은 Day 8 네 군데입니다: days[7].summary · 두 트랙 발표 슬롯의
+    // note 둘 · 이 카드의 summary와 description. 바뀌면 함께 고치세요. 2026-08-26에
+    // 두 슬롯이 공유하던 상수(D8_TRACK_PITCH_NOTE)를 걷었습니다 — 팀 수와 휴식
+    // 시각이 슬롯마다 달라졌거든요. 오래 "8분(잠정)"에 배분 미정 헤지를 달고
+    // 있었는데, 대관이 4PM까지로 늘면서 10분으로 확정됐고 헤지도 함께 뗐습니다.
     // Day 7 멘토링 카피에서는 숫자를 일부러 뺐습니다("발표와 Q&A") — 그쪽까지
     // 숫자를 퍼뜨리면 바뀔 때마다 다섯 곳을 쫓아다녀야 합니다.
     // 길이 정리 (2026-08-05). 일곱 문장이던 description을 넷으로 줄였습니다. 덜어낸
@@ -2375,7 +2385,7 @@ export const schedule: BEvent[] = [
       en: "Ten minutes per team in front of Codepresso, who set the problem, and industry experts.",
     },
     description: {
-      ko: "8일의 마지막이자, 문제를 낸 코드프레소와 업계 전문가 앞에서 ‘내 아이디어가 돌아간다’를 검증받는 자리입니다. 같은 공간에서 트랙별로 순차 진행하며, 팀당 10분입니다 — 발표 5분에 Q&A와 심사 5분. 두 트랙 사이에는 점심시간이 있어요. 피드백은 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다. 순위를 가리는 대신, 각 팀 결과물에 전문적인 시각과 다음 가능성을 제안합니다.",
+      ko: "8일의 마지막이자, 문제를 낸 코드프레소와 업계 전문가 앞에서 ‘내 아이디어가 돌아간다’를 검증받는 자리입니다. 같은 공간에서 트랙별로 순차 진행하며, 팀당 10분입니다 — 발표 5분에 Q&A와 심사 5분. 팀 사이에는 전환 2분, 트랙 중간에는 5분 휴식이 있습니다. 두 트랙 사이에는 점심시간이 있어요. 피드백은 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다. 순위를 가리는 대신, 각 팀 결과물에 전문적인 시각과 다음 가능성을 제안합니다.",
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
       en: "The end of the eight days, and the moment your idea gets validated in front of Codepresso, who set the problem, and industry experts. Tracks run in sequence in one space, ten minutes per team: a 5-minute pitch, then 5 minutes of Q&A and review, with lunch between the two. The feedback comes from working leaders who have solved real problems in industry. Instead of ranking the teams, each one gets an expert read on its work and a sense of what could come next.",
     },
@@ -2388,7 +2398,7 @@ export const schedule: BEvent[] = [
     category: "main",
     mode: "offline",
     timeOfDay: "PM",
-    time: "3:40PM–4PM",
+    time: "3:50PM–4PM",
     title: { ko: "어워드 클로징", en: "Awards & Closing" },
     summary: {
       ko: "테마별 어워드 발표, 사진 → 앞으로의 안내 → 완주 수료증과 함께 단체 사진.",
@@ -2407,7 +2417,7 @@ export const schedule: BEvent[] = [
     // 공개를 보류한 상태라(WITHHELD 2026-08-07, 같은 주석 참고) "추후 안내"류의
     // 헤지도 붙이지 않습니다. runOfShow 라벨과 summary는 그대로 둡니다.
     description: {
-      ko: "8일간의 빌드를 마무리하는 20분입니다. 트랙별 발표가 모두 끝나면 테마별 어워드 발표와 사진 촬영이 이어집니다. 어워드는 순위 대신 각 팀의 강점을 조명하는 4개 부문이에요. 이어서 앞으로 무엇이 남아 있는지를 짧게 안내하고, 완주 수료증을 손에 들고 다 함께 단체 사진을 찍으며 끝납니다. 완주 수료증은 공유회 발표까지 마친 분들께 이 자리에서 실물로 드리고, 크래시코스 수료증은 전 시간을 참석한 분들께 이날 PDF로 발송됩니다.",
+      ko: "8일간의 빌드를 마무리하는 10분입니다. 트랙별 발표가 모두 끝나면 테마별 어워드 발표와 사진 촬영이 이어집니다. 어워드는 순위 대신 각 팀의 강점을 조명하는 4개 부문이에요. 이어서 앞으로 무엇이 남아 있는지를 짧게 안내하고, 완주 수료증을 손에 들고 다 함께 단체 사진을 찍으며 끝납니다. 완주 수료증은 공유회 발표까지 마친 분들께 이 자리에서 실물로 드리고, 크래시코스 수료증은 전 시간을 참석한 분들께 이날 PDF로 발송됩니다.",
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
       en: "Twenty minutes to close out eight days of building. Once every track has presented, the thematic awards are announced with photos. They're four categories that spotlight each team's strengths instead of ranking 1st to 3rd. Then comes a short word on what comes next, and everyone gathers for a group photo, completion certificate in hand. That one is printed and handed to you here for going all the way through your Showcase pitch, while the Crash Course certificate goes out the same day as a PDF to everyone who attended in full.",
     },
