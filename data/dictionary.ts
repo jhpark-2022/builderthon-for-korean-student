@@ -1693,16 +1693,25 @@ export const dict = {
           // DECIDED 2026-08-28: 투표를 사이트에서 받습니다. 트랙 1에서 2팀, 트랙
           // 2에서 1팀이라 이 부문만 3팀이 됩니다.
           //
-          // "참가자 투표"가 아니라 "현장 무기명 투표"입니다. 관객으로 온 사람도
-          // 한 표를 갖고, 그 표는 참가자 표와 똑같이 셉니다(내 팀 드롭다운의
-          // "참가팀이 아니에요 (관객)" 선택지). 표기를 참가자로 좁히지 마세요 -
-          // 화면은 관객에게 투표하라고 말하는데 어워드 설명만 아니라고 하게 됩니다. 트랙 1이 두 표인 것은 발표팀이
+          // 표기는 "참가자 무기명 투표"입니다 (2026-08-28, 진행덱 정본 + 박주형 확인).
+          // 여기서 핵심어는 "무기명"이에요 - 행사 현장에서 참가자가 이름을 남기지
+          // 않고 찍는다는 뜻입니다. 덱도 같은 말을 씁니다: 슬라이드 5 "참가자 투표",
+          // 슬라이드 6 "빌더들의 무기명 투표로 뽑는 최애의 팀".
+          //
+          // 한때 "현장 무기명 투표"로 넓혔다가 되돌렸습니다. 넓힌 이유는 화면에
+          // 관객 선택지가 있어서였는데, 무대에서 읽는 말과 사이트 표기가 갈리는
+          // 쪽이 더 나쁩니다. 관객 선택지("참가팀이 아니에요 (관객)")는 그대로 살아
+          // 있고 그 표도 똑같이 셉니다 - 참가팀이 아닌 분에게 문을 닫지 않되,
+          // 부문 표기는 덱을 따릅니다.
+          //
+          // 관객 표를 집계에서 빼기로 하면 SQL에 voter_team <> 'NONE'을 더하세요.
+          // 데이터에 구분이 남아 있어 나중에도 가를 수 있습니다. 트랙 1이 두 표인 것은 발표팀이
           // 트랙 2의 두 배(14 대 7)라서예요. 무기명이고 자기 팀은 고를 수 없습니다.
           // 규칙의 구현은 lib/day8Vote.ts, 화면은 components/journey/Day8Vote.tsx,
           // 카피는 dict.vote입니다. 이 meta의 숫자를 고치면 저 세 곳도 함께 고치세요.
           meta: {
-            ko: "현장 무기명 투표 트랙 1에서 2팀, 트랙 2에서 1팀 널담 바우처 S$50",
-            en: "An anonymous vote on the day two teams in track 1, one in track 2 Nuldam voucher S$50",
+            ko: "참가자 무기명 투표 트랙 1에서 2팀, 트랙 2에서 1팀 널담 바우처 S$50",
+            en: "An anonymous participant vote two teams in track 1, one in track 2 Nuldam voucher S$50",
           },
           desc: {
             ko: "발표가 다 끝났는데도 자꾸 생각나는, 빌더들이 뽑은 최애의 팀.",
@@ -3821,8 +3830,8 @@ export const dict = {
     // 말을 들려주는 자리"로만 읽혔습니다. 어느 부문인지는 dict.program.awards의
     // meta가 부문별로 들고 있으니 여기서 다시 나열하지 마세요.
     sub: {
-      ko: "순위를 매기는 심사가 아니라, 전문적인 시각의 피드백입니다. 문제를 낸 기업과, 실제 산업에서 문제를 풀어온 시니어 리더들이 결과 공유회에서 각자의 관점으로 피드백과 다음 가능성을 제안합니다. 그리고 출제 기업과 VC 패널은 여기서 어워드 수상팀을 직접 지명합니다. 여덟 분 모두 참여가 확정됐습니다.",
-      en: "Not a ranking exercise, but expert feedback. The company that set the problem and senior leaders who have solved real ones in industry look at your Showcase work and, each from their own vantage point, offer feedback and what could come next. The problem owner and the VC panel also name the award-winning teams themselves. All eight have confirmed.",
+      ko: "순위를 매기는 심사가 아니라, 전문적인 시각의 피드백입니다. 문제를 낸 기업과, 실제 산업에서 문제를 풀어온 시니어 리더들이 결과 공유회에서 각자의 관점으로 피드백과 다음 가능성을 제안합니다. 그리고 출제 기업과 VC 패널은 여기서 어워드 수상팀을 직접 지명합니다. 여덟 분 모두 참여가 확정됐습니다. 여덟 분 중 다섯 분은 두 트랙에 모두 앉고, 저지먼트에는 한정필 교수님이, 오토메이션에는 신상길 님과 신동혁 총괄님이 함께합니다.",
+      en: "Not a ranking exercise, but expert feedback. The company that set the problem and senior leaders who have solved real ones in industry look at your Showcase work and, each from their own vantage point, offer feedback and what could come next. The problem owner and the VC panel also name the award-winning teams themselves. All eight have confirmed. Five of the eight sit for both tracks; Jungpil Hahn joins Judgment, and Shin Sang-gil and Shin Dong-hyuk join Automation.",
     },
     // 이름에는 존칭을 붙입니다 — 규칙은 dict.mentoring.mentors 위 '호칭 규칙' 주석.
     people: [
