@@ -1577,10 +1577,21 @@ export const dict = {
     // S$100/75/50은 2026-08-06에 확정됐고 그 사실은 바로 위 줄에 남아 있습니다.
     // 공개만 보류하는 것이니 "미정"·"확정 전"·"추후 안내" 같은 헤지를 대신
     // 채워 넣지 마세요. 틀린 말이 되고, 방금 걷어낸 헤지가 되돌아옵니다.
-    // 남기는 것은 부상의 종류(현금 / 널담 바우처)까지입니다: 상금이 있느냐는
+    // 남기는 것은 부상의 종류(현금 / 널담 바우처 / 해녀의 부엌 이용권)까지입니다: 상금이 있느냐는
     // 질문에는 답해야 하고, 종류는 얼마인지를 말하지 않으면서 답합니다.
     // 다시 공개하기로 하면 고칠 곳은 세 군데입니다 — 아래 items의 meta 넷,
     // benefits 06 카드의 부상 줄, FAQ 상금 답변.
+    //
+    // UPDATED 2026-08-28 (박주형): 바우처 두 부문만 금액을 공개합니다. 비즈니스
+    // 포텐셜이 현금에서 널담 바우처 S$75가 됐고, 빌더스 초이스는 S$50입니다.
+    // 바우처는 액면가가 곧 상품 이름이라 금액을 빼면 무엇을 받는지가 말해지지
+    // 않습니다. 비욘드 브리프의 현금 액수는 여전히 비공개예요 — 위 WITHHELD가
+    // 그 한 부문에 대해 그대로 유효합니다. 0→100은 해녀의 부엌 이용권 팀당
+    // 3장으로 바뀌면서 애초에 액수를 말할 것이 없어졌습니다.
+    //
+    // 팀 수도 함께 움직였습니다: 빌더스 초이스가 트랙당 1팀에서 트랙 1의 2팀 +
+    // 트랙 2의 1팀이 되면서 총 8팀이 9팀이 됐습니다. countBadge와 benefits 06
+    // 카드, FAQ 상금 답변이 그 숫자를 함께 셉니다.
     //
     // 부문별 설명이 사는 유일한 곳입니다. 원래는 FAQ 상금 답변이 ①~④를 문단으로
     // 늘어놓았는데, 상 넷을 각각 소개하면 답이 화면 한 장을 넘어갔습니다 —
@@ -1589,7 +1600,7 @@ export const dict = {
     // FAQ는 "몇 부문·몇 팀·무엇을"만 답하고 여기로 보냅니다.
     //
     // 세 곳의 역할 분담을 지켜주세요: benefits 06 카드 = 이름과 선정 주체만,
-    // FAQ 상금 답변 = 규모(4부문 8팀 · 부상 종류)만, 여기 = 부문별 전체.
+    // FAQ 상금 답변 = 규모(4부문 9팀 · 부상 종류)만, 여기 = 부문별 전체.
     // 네 번째 자리를 만들면 바뀔 때 또 쫓아다니게 됩니다.
     //
     // 톤 규칙: name은 포멀하게, desc는 웃기게. meta는 사실만(선정 주체 · 인원 ·
@@ -1597,12 +1608,12 @@ export const dict = {
     // 우산 명칭 "성장 어워드"는 파트너 확인 전이라 쓰지 않고, 정본 docx의
     // 유머명(답지 찢었상 등)은 내부·무대용이라 웹에 올리지 않습니다.
     // PENDING 2026-08-16: 완주 취지 상 논의 중, 미공개. 아이디어 단계입니다.
-    // 부문을 다섯으로 늘리지 마세요 — 아래 countBadge("4부문 8팀")와 benefits 06
+    // 부문을 다섯으로 늘리지 마세요 — 아래 countBadge("4부문 9팀")와 benefits 06
     // 카드, FAQ 상금 답변이 모두 넷을 세고 있고, 확정 전에 하나만 늘리면 세 곳이
     // 조용히 갈라집니다. 확정되면 그 네 곳을 함께 고치세요.
     awards: {
       tag: { ko: "테마형 어워드", en: "Thematic awards" },
-      countBadge: { ko: "4부문 8팀", en: "4 awards 8 teams" },
+      countBadge: { ko: "4부문 9팀", en: "4 awards 9 teams" },
       // DECIDED 2026-08-16 (박주형, 외부 피드백 반영 — 정체성 얼라인, 공모전):
       // 이 행사의 정체성은 공모전입니다. 좋은 결과물을 뽑고, 어워드로 쇼트리스트를
       // 만들고, 수상팀에게 행사 뒤 실제 어드밴티지가 이어지는 구조. 옛 제목
@@ -1624,7 +1635,7 @@ export const dict = {
       // 이름에 "어워드"/"Award"를 붙이지 않습니다 (2026-08-12). 예전에는 KO 넷 중
       // 셋만, EN 넷 중 하나만 접미가 붙어 있어서 같은 목록 안에서 서로 다른 규칙을
       // 따르는 것처럼 보였습니다. 바로 위 tag가 이미 "테마형 어워드"라고 말하고
-      // countBadge가 "4부문 · 8팀"이라, 카드마다 접미를 다시 다는 것은 같은 단어를
+      // countBadge가 "4부문 · 9팀"이라, 카드마다 접미를 다시 다는 것은 같은 단어를
       // 다섯 번 말하는 일입니다. 혜택 06 카드의 나열도 원래부터 접미가 없었습니다.
       items: [
         {
@@ -1652,8 +1663,8 @@ export const dict = {
         {
           name: { ko: "비즈니스 포텐셜", en: "Business Potential" },
           meta: {
-            ko: "VC 패널 지목 트랙당 1팀 현금 부상",
-            en: "The VC panel's pick one per track cash prize",
+            ko: "VC 패널 지목 트랙당 1팀 널담 바우처 S$75",
+            en: "The VC panel's pick one per track Nuldam voucher S$75",
           },
           desc: {
             ko: "발표를 듣다가 ‘이거 되겠는데?’ 하고 지갑이 먼저 반응한 팀.",
@@ -1674,9 +1685,15 @@ export const dict = {
           //
           // 가산 사실은 meta에만 붙입니다. meta는 사실 줄(선정 주체 · 팀 수 · 부상)이고
           // desc는 유머 줄이라, desc에 넣으면 농담 안에 규칙이 숨습니다.
+          //
+          // DECIDED 2026-08-28: 투표를 사이트에서 받습니다. 트랙 1에서 2팀, 트랙
+          // 2에서 1팀이라 이 부문만 3팀이 됩니다. 트랙 1이 두 표인 것은 발표팀이
+          // 트랙 2의 두 배(14 대 7)라서예요. 무기명이고 자기 팀은 고를 수 없습니다.
+          // 규칙의 구현은 lib/day8Vote.ts, 화면은 components/journey/Day8Vote.tsx,
+          // 카피는 dict.vote입니다. 이 meta의 숫자를 고치면 저 세 곳도 함께 고치세요.
           meta: {
-            ko: "참가자 투표 트랙당 1팀 널담 바우처",
-            en: "Voted by the participants one per track Nuldam voucher",
+            ko: "참가자 무기명 투표 트랙 1에서 2팀, 트랙 2에서 1팀 널담 바우처 S$50",
+            en: "An anonymous participant vote two teams in track 1, one in track 2 Nuldam voucher S$50",
           },
           desc: {
             ko: "발표가 다 끝났는데도 자꾸 생각나는, 빌더들이 뽑은 최애의 팀.",
@@ -1690,8 +1707,8 @@ export const dict = {
           // 다른 세 부문으로 넓히지 마세요. 체크인 폼의 과정 기록 문구와 같은
           // 계약입니다: 숫자 없이, 무엇이 반영되는지만.
           meta: {
-            ko: "운영진 선정 트랙 무관 2팀 널담 바우처 Day 5 출석 반영",
-            en: "The organizers' pick two teams, any track Nuldam voucher Day 5 attendance counts",
+            ko: "운영진 선정 트랙 무관 2팀 해녀의 부엌 이용권 팀당 3장 Day 5 출석 반영",
+            en: "The organizers' pick two teams, any track three Haenyeo Kitchen passes per team Day 5 attendance counts",
           },
           desc: {
             ko: "첫날엔 ‘제가요? 이걸요?’였다가 마지막 날 ‘제가 만들었는데요’가 된, 출발선에서 가장 먼 거리를 온 팀.",
@@ -2563,13 +2580,13 @@ export const dict = {
           // 부문 넷은 쉼표로 나열합니다. "4부문 8팀"은 나열이 아니라 같은 시상에 대한
           // 두 숫자라 그 사이는 붙여 둡니다 — 여기에도 쉼표를 넣으면 부문이 여섯 개로
           // 보입니다 (2026-08-11에 한 번 그렇게 읽혔습니다).
-          { ko: "테마형 어워드 4부문 8팀: 비욘드 브리프, 비즈니스 포텐셜, 빌더스 초이스, 0→100", en: "Four thematic awards, eight teams: Beyond the Brief, Business Potential, Builder's Choice, Zero to Hundred" },
+          { ko: "테마형 어워드 4부문 9팀: 비욘드 브리프, 비즈니스 포텐셜, 빌더스 초이스, 0→100", en: "Four thematic awards, nine teams: Beyond the Brief, Business Potential, Builder's Choice, Zero to Hundred" },
           // DECIDED 2026-08-05: 식사 언급 전면 제거 — 제공 안내도, 미제공 안내도 쓰지
           // 않는다. (식사 미제공 정책 자체는 2026-08-04 결정 그대로) 어느 방향으로든
           // 다시 넣지 마세요. 바우처는 "널담 바우처"로만 적고 식사·디저트 같은 단어를
           // 붙이지 않습니다 — 그 한 단어가 사이트에서 유일하게 식사가 나온다고 읽힐
           // 여지를 만듭니다.
-          { ko: "순위는 없고, 부상은 현금 또는 널담 바우처", en: "No ranking; cash or Nuldam vouchers" },
+          { ko: "순위는 없고, 부상은 현금, 널담 바우처 또는 해녀의 부엌 이용권", en: "No ranking; cash, Nuldam vouchers or Haenyeo Kitchen passes" },
           // 문장 두 개를 ·로 붙여 두었던 자리입니다 (2026-08-11에 분리). 앞은
           // 누구에게 열려 있는가, 뒤는 무엇을 보고 검토하는가로 주어가 다릅니다.
           // 회사 이름 사이의 ·(코드프레소·WVB)는 나열이라 그대로.
@@ -2908,6 +2925,151 @@ export const dict = {
       },
     ],
     hookCta: { ko: "트랙 자세히 보기", en: "See the tracks" },
+  },
+
+  // ── Day 8 빌더스 초이스 투표 ────────────────────────────────────────────────
+  // DECIDED 2026-08-28: Day 8 결과 공유회에서 참가자가 직접 뽑는 투표입니다.
+  // 화면은 트랙 섹션(#tracks)이 있던 자리를 그대로 씁니다. 그 자리에 있던 문제
+  // 상세(상황·흐름·목표·제약)는 8/29에 할 일이 아니라서 걷었고, 두 패널의 머리
+  // (01 채용 저지먼트 / 02 마케팅 콘텐츠 오토메이션)만 남겨 본문을 투표로
+  // 바꿨습니다. 트랙 정체성은 이미 지난 8일이 만들어 놨으니 다시 설명할 이유가
+  // 없고, 폰에서 스크롤 없이 팀 목록에 닿는 것이 이 날의 유일한 요구입니다.
+  //
+  // "심사"라는 낱말을 쓰지 않습니다 (사이트 규칙). 이름은 빌더스 초이스 투표이고,
+  // 참가자가 뽑는다는 사실은 dict.program.awards의 빌더스 초이스 meta가 정본입니다.
+  // 부문 규칙(트랙1 2팀 · 트랙2 1팀 · 자기 팀 제외)이 바뀌면 저 meta와 이 블록의
+  // note를 함께 고치세요.
+  //
+  // 시각과 명단은 여기 없습니다. lib/day8Vote.ts가 정본이고, 이 블록의 {time}은
+  // 그 상수를 Intl로 포맷해 채웁니다. 진행이 밀려 오픈 시각을 옮겨도 카피는
+  // 저절로 따라옵니다. 사전에 "12시 50분"을 박아 넣지 마세요.
+  vote: {
+    tag: { ko: "빌더스 초이스 투표", en: "Builder's Choice vote" },
+    heading: {
+      ko: "가장 좋았던 팀을 뽑아 주세요",
+      en: "Pick the teams you keep thinking about",
+    },
+    intro: {
+      ko: "어워드 네 부문 중 빌더스 초이스는 참가자가 뽑습니다. 무기명이라 이름도 이메일도 받지 않아요. 트랙마다 열리는 시각이 다르고, 한 기기에서 트랙당 한 번만 보낼 수 있습니다. 잘못 골랐다면 마감 전까지는 취소하고 다시 보낼 수 있어요.",
+      en: "Builder's Choice is the one award you pick. It is anonymous, so no name and no email. Each track opens at its own time and each device votes once per track. If you picked wrong, you can cancel and vote again any time before voting closes.",
+    },
+    // ── 내 팀 ───────────────────────────────────────────────────────────────
+    // 무기명인데 팀을 묻는 이유를 한 줄로 답해 둡니다. 이 줄이 없으면 "이름은 안
+    // 받는다면서 소속은 왜 묻나"가 첫 질문이 되고, 그 질문은 투표를 멈춰 세웁니다.
+    myTeamLabel: { ko: "내 팀", en: "Your team" },
+    myTeamHelp: {
+      ko: "자기 팀에는 투표할 수 없어서 먼저 고릅니다. 팀 이름 말고는 아무것도 받지 않아요.",
+      en: "You pick this first because you cannot vote for your own team. Nothing else about you is collected.",
+    },
+    myTeamPlaceholder: { ko: "팀을 골라 주세요", en: "Choose your team" },
+    myTeamNone: { ko: "참가팀이 아니에요", en: "I'm not on a team" },
+    myTeamLocked: {
+      ko: "표를 보낸 뒤라 내 팀은 바꿀 수 없어요. 바꾸려면 아래에서 투표를 취소해 주세요.",
+      en: "Your vote is in, so your team is fixed. To change it, cancel your vote below.",
+    },
+    needTeam: { ko: "먼저 내 팀을 골라 주세요.", en: "Choose your team first." },
+    ownTeam: { ko: "내 팀", en: "Your team" },
+    // ── 패널 ────────────────────────────────────────────────────────────────
+    // {n}은 lib/day8Vote.ts의 VOTE_PICKS에서 옵니다. 트랙 1이 2팀인 것은 팀 수가
+    // 트랙 2의 두 배(14 대 7)라서예요. 숫자를 사전에 박지 마세요.
+    pickHint: { ko: "{n}팀을 골라 주세요", en: "Pick {n} of these teams" },
+    pickCount: { ko: "{picked}/{n} 선택", en: "{picked}/{n} picked" },
+    submit: { ko: "투표 보내기", en: "Send my vote" },
+    submitting: { ko: "보내는 중", en: "Sending" },
+    lockedTitle: { ko: "아직 열리지 않았어요", en: "Not open yet" },
+    lockedBody: {
+      ko: "{time}에 열립니다. 이 화면을 열어 두면 그때 여기서 바로 투표할 수 있어요.",
+      en: "Opens at {time}. Keep this page open and you can vote right here.",
+    },
+    // ── 마감 시각 ───────────────────────────────────────────────────────────
+    // DECIDED 2026-08-28: 트랙별 마감이 생기면서 창이 40분으로 좁아졌습니다
+    // (트랙1 12:50~1:30, 트랙2 2:50~3:30). 좁은 창을 말 없이 닫으면 점심 먹으러
+    // 나갔다 온 사람의 표가 그냥 사라져요. 화면에 적습니다.
+    //
+    // {time}은 lib/day8Vote.ts의 VOTE_CLOSES_AT에서 옵니다. 여기에 시각을 박지
+    // 마세요 — 진행이 밀려 상수를 옮기면 이 문구도 함께 움직여야 합니다.
+    closesAt: { ko: "{time} 마감", en: "closes {time}" },
+    lockedClose: { ko: "{time}에 닫혀요.", en: "It closes at {time}." },
+    closedTitle: { ko: "투표가 마감됐어요", en: "Voting has closed" },
+    closedBody: {
+      ko: "결과는 어워드 발표에서 알려 드립니다.",
+      en: "The result comes at the awards.",
+    },
+    doneTitle: { ko: "투표를 받았어요", en: "Your vote is in" },
+    doneBody: {
+      ko: "마감 전까지는 취소하고 다시 투표할 수 있어요. 결과는 어워드 발표에서 알려 드립니다.",
+      en: "You can cancel and vote again until voting closes. The result comes at the awards.",
+    },
+    // 마감 뒤의 완료 패널. 위 문장을 그대로 두면 취소 버튼이 사라진 화면에서
+    // "취소할 수 있어요"라고 말하게 됩니다. 국면이 바뀌면 문장도 바뀌어야 해요.
+    doneBodyClosed: {
+      ko: "투표가 마감됐어요. 결과는 어워드 발표에서 알려 드립니다.",
+      en: "Voting has closed. The result comes at the awards.",
+    },
+    doneChoices: { ko: "고른 팀", en: "You picked" },
+    // ── 취소 ────────────────────────────────────────────────────────────────
+    // DECIDED 2026-08-28: "첫 제출이 최종"을 접었습니다. 내 팀을 잘못 고르고
+    // 제출한 사람에게 복구 경로가 없었어요. 자기 팀 배제가 그 값으로 판정되니
+    // 잘못 고른 사람은 자기 팀에 투표한 표를 남긴 채 아무것도 할 수 없었습니다.
+    //
+    // 실수로 눌리면 안 되는 버튼이라 한 단계를 둡니다. 누르면 바로 지우지 않고
+    // 같은 자리에서 확인을 한 번 받아요. 모달을 띄우지 않는 것은 폰에서 모달이
+    // 이 패널 하나를 덮어버리기 때문입니다.
+    cancel: { ko: "취소하고 다시 투표", en: "Cancel and vote again" },
+    cancelAsk: { ko: "정말 취소할까요?", en: "Cancel this vote?" },
+    cancelYes: { ko: "취소", en: "Cancel it" },
+    cancelNo: { ko: "그대로 두기", en: "Keep it" },
+    cancelling: { ko: "취소하는 중", en: "Cancelling" },
+    errCancelClosed: {
+      ko: "마감되어 취소할 수 없어요.",
+      en: "Voting has closed, so this cannot be cancelled.",
+    },
+    // ── 오류 ────────────────────────────────────────────────────────────────
+    // 전부 서버가 돌려준 상태를 그대로 옮긴 것입니다. 무엇이 잘못됐는지와 지금
+    // 무엇을 하면 되는지까지 한 문장에 담습니다.
+    errAlready: {
+      ko: "이 기기에서는 이미 투표하셨어요.",
+      en: "This device has already voted in this track.",
+    },
+    errNotOpen: { ko: "아직 투표가 열리지 않았어요.", en: "Voting is not open yet." },
+    errClosed: { ko: "투표가 마감됐어요.", en: "Voting has closed." },
+    errRate: {
+      ko: "요청이 너무 많아요. 잠시 뒤에 다시 눌러 주세요.",
+      en: "Too many requests just now. Try again in a moment.",
+    },
+    errGeneric: {
+      ko: "보내지 못했어요. 잠시 뒤에 다시 눌러 주세요.",
+      en: "That did not go through. Try again in a moment.",
+    },
+    // ── 히어로와 nav (2026-08-28) ───────────────────────────────────────────
+    // #tracks 자리가 투표가 되면서, 그 주소를 가리키던 카피가 전부 거짓말이
+    // 됐습니다. 히어로는 "트랙 보기"라고 적힌 보라 버튼을 내밀고 있었고, 누르면
+    // 투표 패널이 나왔어요. nav도 "트랙"이었습니다.
+    //
+    // dict.hero와 dict.nav의 옛 키(ctaTracks · nav.tracks)와 dict.tracks의
+    // hookLabel · hookLines · hookCta는 그대로 둡니다. 행사가 끝나고 이 자리를
+    // 트랙 설명으로 되돌릴 때 번역을 다시 쓰지 않아도 되게요. 그때 고칠 곳은
+    // Journey.tsx에서 아래 다섯 키를 읽는 자리와 JourneyNav의 라벨 한 줄입니다.
+    //
+    // 문구가 오픈 전에도 참이어야 합니다. 8/29 12:50까지는 눌러도 잠금 화면이라
+    // "지금 투표하세요"라고 쓸 수 없어요. 부문 이름으로 부르고, 언제 열리는지는
+    // 도착한 패널이 말합니다. 여기에 시각을 적지 마세요 — 상수는 lib/day8Vote.ts
+    // 하나이고, 카피에 박는 순간 진행이 밀릴 때 갈라집니다.
+    navLabel: { ko: "투표", en: "Vote" },
+    heroCta: { ko: "빌더스 초이스 투표", en: "Builder's Choice vote" },
+    cardLabel: { ko: "오늘 최애 팀을 뽑아요", en: "Pick today's favourites" },
+    // 라벨 줄이라 구분자는 이 파일의 U+2002입니다 (·가 아니라).
+    // 옛 hookLines가 병목 문장을 날랐다면, 이 두 줄은 규칙을 나릅니다 — 첫 화면에서
+    // 알아야 하는 것이 "무슨 문제인가"에서 "몇 팀을 고르는가"로 바뀌었어요.
+    cardLines: [
+      { ko: "저지먼트 14팀 중 두 팀", en: "Judgment two of fourteen" },
+      { ko: "오토메이션 7팀 중 한 팀", en: "Automation one of seven" },
+    ],
+    cardCta: { ko: "투표하러 가기", en: "Go and vote" },
+    note: {
+      ko: "무기명 투표입니다. 이름과 이메일은 받지 않고, 기기 기준으로 트랙당 한 번만 셉니다. 트랙 1에서 두 팀을 고르는 것은 발표팀이 트랙 2의 두 배이기 때문이에요. 취소는 표를 보낸 그 기기에서만 됩니다.",
+      en: "The vote is anonymous. No name, no email, and each device counts once per track. Track 1 gets two picks because it has twice as many teams as track 2. A vote can only be cancelled from the device that cast it.",
+    },
   },
 
   // ── 연사 · 공유 세션 (Day 1·7·8) ────────────────────────────────────────────
@@ -4159,8 +4321,8 @@ export const dict = {
           // DECIDED 2026-08-16 (정체성 얼라인, 공모전): 상금 뒤에 무엇이 이어지는지
           // 한 문장. 이 답은 "얼마"에서 끝나 있었는데, 수상의 실제 값은 부상보다
           // 그 뒤에 붙는 자리입니다(정본은 dict.program.awards의 next).
-          ko: "네, 다만 팀을 1, 2, 3위로 세우지 않습니다. 시상은 테마형 어워드 4부문이고 여덟 팀이 받아 가요. 부상은 부문에 따라 현금 또는 널담 바우처입니다.\n\n수상팀은 12월 서울 쇼케이스 무대에 우선 초청되고, 가을에는 참가자 전원이 이어 갈 빌더 커리큘럼이 준비되고 있어요. 어떤 부문이 있고 누가 뽑는지는 프로그램의 Day 8 카드에 정리해 뒀습니다.\n\n참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드와 캡 세트는 Day 1 현장에서 선착순 60세트로 드립니다.",
-          en: "Yes, but nobody gets lined up 1st-2nd-3rd. There are four thematic awards and eight teams take one home, each carrying either a cash prize or a Nuldam voucher.\n\nWinning teams get first call for the December showcase stage in Seoul, and an autumn builder curriculum for every participant is in the works. Which awards there are and who picks them is laid out on the Day 8 card in the programme.\n\nEntry is free and the networking goes to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come.",
+          ko: "네, 다만 팀을 1, 2, 3위로 세우지 않습니다. 시상은 테마형 어워드 4부문이고 아홉 팀이 받아 가요. 부상은 부문에 따라 현금, 널담 바우처 또는 해녀의 부엌 이용권입니다.\n\n수상팀은 12월 서울 쇼케이스 무대에 우선 초청되고, 가을에는 참가자 전원이 이어 갈 빌더 커리큘럼이 준비되고 있어요. 어떤 부문이 있고 누가 뽑는지는 프로그램의 Day 8 카드에 정리해 뒀습니다.\n\n참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드와 캡 세트는 Day 1 현장에서 선착순 60세트로 드립니다.",
+          en: "Yes, but nobody gets lined up 1st-2nd-3rd. There are four thematic awards and nine teams take one home, each carrying a cash prize, a Nuldam voucher or Haenyeo Kitchen passes.\n\nWinning teams get first call for the December showcase stage in Seoul, and an autumn builder curriculum for every participant is in the works. Which awards there are and who picks them is laid out on the Day 8 card in the programme.\n\nEntry is free and the networking goes to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come.",
         },
       },
       {

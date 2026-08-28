@@ -45,8 +45,18 @@ import ReturningGreeting from "./ReturningGreeting";
 //
 // #about과 #benefits 섹션은 그대로 있습니다. 사라진 것은 앵커뿐이고, 라벨 키도
 // dict.nav에 보존돼 있습니다.
+// DECIDED 2026-08-28 (Day 8): 트랙 → 투표. 라벨과 id를 함께 바꿉니다.
+//
+// 이 배열의 id는 두 가지 일을 합니다: href(`#${id}`)이자, useActiveSection이
+// getElementById로 관찰할 대상이에요. 그래서 섹션 id와 반드시 같아야 합니다
+// (Journey.tsx의 Chapter id="vote"). 한쪽만 바꾸면 링크는 되는데 현위치 표시가
+// 죽거나, 그 반대가 됩니다.
+//
+// 이 한 줄이 실제로 하는 일: QR을 놓친 사람이 사이트에서 투표를 스스로 찾는 길입니다.
+// "트랙"으로 두면 화면 어디에도 "투표"라는 단어가 없어서, 저 자리에 있다는 것을
+// 알 방법이 없습니다. dict.nav.tracks는 지우지 않았으니 되돌릴 때 그대로 쓰세요.
 const anchors = [
-  { id: "tracks",    label: dict.nav.tracks },
+  { id: "vote",      label: dict.vote.navLabel },
   { id: "program",   label: dict.nav.program },
   { id: "speakers",  label: dict.nav.speakers },
   { id: "mentoring", label: dict.nav.mentoring },
