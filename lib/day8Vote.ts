@@ -31,7 +31,7 @@ export const VOTE_TRACKS: readonly VoteTrack[] = [1, 2];
  * Intl로 포맷해서 만들기 때문에 따로 고칠 카피가 없습니다.
  */
 export const VOTE_OPENS_AT: Record<VoteTrack, number> = {
-  1: new Date("2026-08-29T12:50:00+08:00").getTime(),
+  1: new Date("2026-08-29T06:56:02+08:00").getTime(),
   2: new Date("2026-08-29T14:50:00+08:00").getTime(),
 };
 
@@ -57,7 +57,7 @@ export const VOTE_OPENS_AT: Record<VoteTrack, number> = {
  * (data/schedule.ts days[7].runOfShow가 이 시각들의 근거입니다.)
  */
 export const VOTE_CLOSES_AT: Record<VoteTrack, number> = {
-  1: new Date("2026-08-29T13:30:00+08:00").getTime(),
+  1: new Date("2026-08-29T07:05:02+08:00").getTime(),
   2: new Date("2026-08-29T15:20:00+08:00").getTime(),
 };
 
