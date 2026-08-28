@@ -10,14 +10,14 @@
 //
 // HOURS: the on-site days carry their PARTICIPANT-FACING window in
 // `days[].hours` (Day 1 1PM–4:30PM, Day 2 9AM–12PM, Day 5 10AM–2PM,
-// Day 7 9AM–2PM, Day 8 10AM–4:30PM). That field is the single source — nothing
+// Day 7 9AM–2PM, Day 8 10AM–4:40PM). That field is the single source — nothing
 // else computes it.
 //
 // It is NOT the booking. Whether set-up/teardown sits inside or outside the
 // booked slot differs by venue, so the subtraction differs by day: the Foundry
 // (Day 1) includes both inside its slot; *SCAPE (Day 5) books them separately
 // around the event window; SMU (Day 8) is booked to 5PM with the teardown after
-// the programme, so hours stops at 4:30PM, when the last item ends. Operational clock times — booked slots, set-up,
+// the programme, so hours stops at 4:40PM, when the last item ends. Operational clock times — booked slots, set-up,
 // teardown, buffers — are NEVER published; only the numbers above are.
 // DECIDED 2026-08-20: Day 2도 hours를 갖습니다(9AM–12PM). 현장 대관 창이 아니라
 // 실시간 온라인 세션의 시작과 끝입니다 — 그 시간에 접속해 있어야 하므로
@@ -52,7 +52,7 @@
 //     sessions, speakers or a stage — see the DAY 5 block below.
 //   • Day 6 — open build (online, self-paced).
 //   • Day 7 — Final Rehearsal on-site at the AWS office (9AM–2PM, new venue).
-//   • Day 8 — the Showcase at SMU LKCSB Classroom 2-1 (10AM–4:30PM, new venue as
+//   • Day 8 — the Showcase at SMU LKCSB Classroom 2-1 (10AM–4:40PM, new venue as
 //     of 2026-08-19; booking runs to 5PM). MANDATORY (필참).
 //   • Self-paced team build runs continuously from the Day-1 problem release all
 //     the way to the Day-8 pitch. In person on Days 1 / 5 / 7 / 8.
@@ -408,7 +408,7 @@ export const days: DayMeta[] = [
     // 1PM–4:30PM이 참가자 기준 실제 프로그램 시간입니다. *SCAPE(Day 5)는 반대로
     // 셋업/철수가 이벤트 시간 밖에 따로 잡혀 있어 10AM–2PM이 이미 순수 프로그램
     // 시간이므로 깎지 않습니다. SMU(Day 8)는 5PM까지 대관하고 철수가 프로그램 뒤에
-    // 들어가 있어, 마지막 순서가 끝나는 10AM–4:30PM을 씁니다 — 장소마다 계약 구조가 달라 날마다
+    // 들어가 있어, 마지막 순서가 끝나는 10AM–4:40PM을 씁니다 — 장소마다 계약 구조가 달라 날마다
     // 계산이 다릅니다. 운영 시각(대관 창·셋업·철수)은 사이트 어디에도 쓰지 않습니다.
     hours: "1PM–4:30PM",
     // 확정 진행 순서 (2026-08-04). 9줄 전부 — 카드가 없는 줄(입장·휴식·네트워킹·
@@ -1107,9 +1107,10 @@ export const days: DayMeta[] = [
     // 순서가 끝나는 시각입니다. Day 5와는 계산이 다릅니다: 그쪽은 대관 9AM–3PM 안에
     // 셋업·철수가 들어 있어 hours가 10AM–2PM으로 줄어듭니다.
     //
-    // 2026-08-26: 4PM → 4:30PM. 간담회가 한 시간이 되면서 뒤가 30분 밀렸습니다.
+    // 2026-08-26: 4PM → 4:40PM. 간담회가 한 시간이 되고 어워드·클로징이 20분을
+    // 되찾으면서 뒤가 40분 밀렸습니다.
     // 운영 시각(대관 창 5PM)은 사이트 어디에도 쓰지 않습니다 — 파일 상단 HOURS 규칙.
-    hours: "10AM–4:30PM",
+    hours: "10AM–4:40PM",
     // 확정 진행 순서 (2026-08-04). 10AM 입장이 hours와 같은 시각인 것은 이 날만
     // 그렇습니다 — Day 1은 12:40 입장이 프로그램(1PM)보다 이릅니다.
     // 두 트랙 발표(3·4번 줄)가 같은 카드(d8-judging)를 가리킵니다. 하나의 세션이
@@ -1148,15 +1149,17 @@ export const days: DayMeta[] = [
       // 휴식이고, 휴식이 들어가는 자리의 전환 2분은 휴식이 대신합니다:
       //   트랙 1 = 14×10 + 12×2 + 5 = 169분 (10:10AM–12:59PM)
       //   트랙 2 =  8×10 +  6×2 + 5 =  97분 (1:39PM–3:16PM)
-      // 나머지는 입장·오프닝 10분, 점심 40분, 간담회 60분, 어워드 5분, 클로징 5분이고
-      // 3:16–3:20의 4분은 발표에서 간담회로 넘어가는 전환입니다. 합이 4:30PM입니다.
+      // 나머지는 입장·오프닝 10분, 점심 40분, 간담회 60분, 어워드 10분, 클로징 10분이고
+      // 3:16–3:20의 4분은 발표에서 간담회로 넘어가는 전환입니다. 합이 4:40PM입니다.
       //
       // DECIDED 2026-08-26 (박주형 확정): 커리어 간담회가 30분에서 한 시간이 됐고,
       // 수상과 사진이 그 뒤로 갑니다. 대관이 5PM까지라 뒤로 늘릴 자리가 있었어요 —
       // 발표와 점심은 22팀 확정본 그대로 두고 뒤만 늘렸습니다.
       //
-      // 어워드·클로징은 8/26에 20분에서 10분으로 줄인 압축을 그대로 둡니다. 대관에
-      // 30분이 남아 있으니 되돌릴 여지는 있지만, 그건 별도 결정입니다.
+      // 같은 결정으로 어워드·클로징이 20분을 되찾았습니다(각 10분). 22팀 시간표를
+      // 짜면서 10분으로 눌러 뒀던 것인데, 그건 4PM 종료를 맞추려던 압축이었고 이제
+      // 그 제약이 없습니다. 이 두 줄을 다시 5분으로 줄이지 마세요 — 어워드 네 부문
+      // 호명과 수료증을 든 단체 사진이 실제로 그 시간을 씁니다.
       //
       // 팀 수가 바뀌면 여기서 계산을 다시 하세요 — 위 두 식이 시각의 근거입니다.
       {
@@ -1191,12 +1194,12 @@ export const days: DayMeta[] = [
         eventId: "d8-opening-keynote",
       },
       {
-        time: "4:20PM–4:25PM",
+        time: "4:20PM–4:30PM",
         label: { ko: "테마별 어워드 발표 사진", en: "Thematic awards photos" },
         eventId: "d8-final-pitch",
       },
       {
-        time: "4:25PM–4:30PM",
+        time: "4:30PM–4:40PM",
         // 손에 드는 것은 완주 수료증입니다 — 공유회 발표까지 마친 분들께 이 자리에서
         // 실물로 드리는 그 한 장. 크래시코스 수료증은 PDF로 나가므로 이 사진에
         // 등장하지 않습니다. 둘을 "수료증"으로 뭉뚱그리면 PDF도 현장에서 받는
@@ -2407,7 +2410,7 @@ export const schedule: BEvent[] = [
     category: "main",
     mode: "offline",
     timeOfDay: "PM",
-    time: "4:20PM–4:30PM",
+    time: "4:20PM–4:40PM",
     title: { ko: "어워드 클로징", en: "Awards & Closing" },
     summary: {
       ko: "테마별 어워드 발표, 사진 → 앞으로의 안내 → 완주 수료증과 함께 단체 사진.",
@@ -2426,7 +2429,7 @@ export const schedule: BEvent[] = [
     // 공개를 보류한 상태라(WITHHELD 2026-08-07, 같은 주석 참고) "추후 안내"류의
     // 헤지도 붙이지 않습니다. runOfShow 라벨과 summary는 그대로 둡니다.
     description: {
-      ko: "8일간의 빌드를 마무리하는 10분입니다. 트랙별 발표가 모두 끝나면 테마별 어워드 발표와 사진 촬영이 이어집니다. 어워드는 순위 대신 각 팀의 강점을 조명하는 4개 부문이에요. 이어서 앞으로 무엇이 남아 있는지를 짧게 안내하고, 완주 수료증을 손에 들고 다 함께 단체 사진을 찍으며 끝납니다. 완주 수료증은 공유회 발표까지 마친 분들께 이 자리에서 실물로 드리고, 크래시코스 수료증은 전 시간을 참석한 분들께 이날 PDF로 발송됩니다.",
+      ko: "8일간의 빌드를 마무리하는 20분입니다. 트랙별 발표가 모두 끝나면 테마별 어워드 발표와 사진 촬영이 이어집니다. 어워드는 순위 대신 각 팀의 강점을 조명하는 4개 부문이에요. 이어서 앞으로 무엇이 남아 있는지를 짧게 안내하고, 완주 수료증을 손에 들고 다 함께 단체 사진을 찍으며 끝납니다. 완주 수료증은 공유회 발표까지 마친 분들께 이 자리에서 실물로 드리고, 크래시코스 수료증은 전 시간을 참석한 분들께 이날 PDF로 발송됩니다.",
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
       en: "Twenty minutes to close out eight days of building. Once every track has presented, the thematic awards are announced with photos. They're four categories that spotlight each team's strengths instead of ranking 1st to 3rd. Then comes a short word on what comes next, and everyone gathers for a group photo, completion certificate in hand. That one is printed and handed to you here for going all the way through your Showcase pitch, while the Crash Course certificate goes out the same day as a PDF to everyone who attended in full.",
     },
