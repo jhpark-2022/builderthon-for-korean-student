@@ -440,6 +440,40 @@ function VotePanel({
   const need = VOTE_PICKS[track];
   const teams = VOTE_TEAMS[track];
   const full = picked.length >= need;
+
+  // ── 다 골랐을 때 제출 버튼으로 데려가기 ────────────────────────────────────
+  // DECIDED 2026-08-28 (모바일 감사): 트랙 1 패널이 폰에서 1199px입니다. 카운터와
+  // "2팀을 골라 주세요"는 목록 맨 위에, 제출 버튼은 14팀 아래에 있어서 둘 사이가
+  // 991px이에요. 목록 위쪽 두 팀을 고른 사람은 제출 버튼이 화면 밖 533px에
+  // 있는데, 화면에는 "이제 아래로 내려가라"는 말이 어디에도 없습니다.
+  //
+  // 하단 고정 제출 바를 만들지 않은 이유: 같은 날 오픈채팅 알약과 맨 위로 버튼을
+  // 팀 버튼을 덮는다는 이유로 걷어냈습니다. 그 자리에 다시 뭔가를 띄우면 방금
+  // 만든 공간을 스스로 도로 가져가는 셈이에요.
+  //
+  // 정원이 "막 찬" 순간에만 한 번 움직입니다. full을 조건으로 걸면 정원이 찬 뒤
+  // 스크롤할 때마다 다시 끌려갑니다. reduced-motion이면 즉시 이동합니다.
+  const submitRef = useRef<HTMLButtonElement>(null);
+  const wasFull = useRef(false);
+  useEffect(() => {
+    if (full && !wasFull.current && state === "open") {
+      const el = submitRef.current;
+      // 이미 화면 안이면 건드리지 않습니다. 아래쪽 팀을 고른 사람에게는 버튼이
+      // 이미 보이고, 그 상태에서 화면이 움직이면 그게 더 놀랍습니다.
+      if (el) {
+        const r = el.getBoundingClientRect();
+        if (r.bottom > window.innerHeight || r.top < 0) {
+          el.scrollIntoView({
+            block: "center",
+            behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+              ? "auto"
+              : "smooth",
+          });
+        }
+      }
+    }
+    wasFull.current = full;
+  }, [full, state]);
   const openTime = useMemo(() => formatVoteTime(VOTE_OPENS_AT[track], locale), [track, locale]);
   const closeTime = useMemo(() => formatVoteTime(VOTE_CLOSES_AT[track], locale), [track, locale]);
 
@@ -624,11 +658,23 @@ function VotePanel({
             </p>
           )}
 
+          {/* 고른 팀 요약. 정원이 차면 화면이 제출 버튼으로 내려오는데(위 스크롤
+              주석 참고), 목록 위쪽 팀을 고른 사람은 그 순간 자기가 고른 팀이
+              화면 밖으로 나갑니다. 도착지에서 무엇을 보내려는지 다시 보여줍니다.
+              완료 패널의 "고른 팀"과 같은 어법이라 읽는 사람에게는 같은 줄입니다. */}
+          {picked.length > 0 && (
+            <p className="mt-5 break-keep text-sm leading-relaxed text-white/80">
+              <span className="text-white/50">{t(dict.vote.doneChoices)}</span>{" "}
+              <span className="font-bold">{picked.join(", ")}</span>
+            </p>
+          )}
+
           <button
+            ref={submitRef}
             type="button"
             onClick={() => onSubmit(track)}
             disabled={!myTeam || !full || busy}
-            className="mt-5 inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/[0.10] px-6 py-3 text-base font-bold text-emerald-100 transition hover:border-emerald-400/60 hover:bg-emerald-400/[0.18] hover:text-white disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
+            className="mt-4 inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/[0.10] px-6 py-3 text-base font-bold text-emerald-100 transition hover:border-emerald-400/60 hover:bg-emerald-400/[0.18] hover:text-white disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
           >
             {t(busy ? dict.vote.submitting : dict.vote.submit)}
             <span className="sr-only"> {t(meta.title)}</span>

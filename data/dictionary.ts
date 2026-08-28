@@ -1687,13 +1687,18 @@ export const dict = {
           // desc는 유머 줄이라, desc에 넣으면 농담 안에 규칙이 숨습니다.
           //
           // DECIDED 2026-08-28: 투표를 사이트에서 받습니다. 트랙 1에서 2팀, 트랙
-          // 2에서 1팀이라 이 부문만 3팀이 됩니다. 트랙 1이 두 표인 것은 발표팀이
+          // 2에서 1팀이라 이 부문만 3팀이 됩니다.
+          //
+          // "참가자 투표"가 아니라 "현장 무기명 투표"입니다. 관객으로 온 사람도
+          // 한 표를 갖고, 그 표는 참가자 표와 똑같이 셉니다(내 팀 드롭다운의
+          // "참가팀이 아니에요 (관객)" 선택지). 표기를 참가자로 좁히지 마세요 -
+          // 화면은 관객에게 투표하라고 말하는데 어워드 설명만 아니라고 하게 됩니다. 트랙 1이 두 표인 것은 발표팀이
           // 트랙 2의 두 배(14 대 7)라서예요. 무기명이고 자기 팀은 고를 수 없습니다.
           // 규칙의 구현은 lib/day8Vote.ts, 화면은 components/journey/Day8Vote.tsx,
           // 카피는 dict.vote입니다. 이 meta의 숫자를 고치면 저 세 곳도 함께 고치세요.
           meta: {
-            ko: "참가자 무기명 투표 트랙 1에서 2팀, 트랙 2에서 1팀 널담 바우처 S$50",
-            en: "An anonymous participant vote two teams in track 1, one in track 2 Nuldam voucher S$50",
+            ko: "현장 무기명 투표 트랙 1에서 2팀, 트랙 2에서 1팀 널담 바우처 S$50",
+            en: "An anonymous vote on the day two teams in track 1, one in track 2 Nuldam voucher S$50",
           },
           desc: {
             ko: "발표가 다 끝났는데도 자꾸 생각나는, 빌더들이 뽑은 최애의 팀.",
@@ -2949,20 +2954,39 @@ export const dict = {
       ko: "가장 좋았던 팀을 뽑아 주세요",
       en: "Pick the teams you keep thinking about",
     },
+    // DECIDED 2026-08-28 (모바일 감사): 네 문장을 두 문장으로 줄였습니다.
+    //
+    // 폰에서 섹션 머리부터 첫 팀 버튼까지 974px, 1.5화면이었습니다. 그 사이를 채우던
+    // 것이 규칙 설명(트랙별 오픈 시각 · 기기당 1회 · 취소 가능)인데, 셋 다 아래
+    // note가 이미 같은 말을 하고 있었어요. 같은 사실을 투표 전에 한 번, 투표 후에
+    // 또 한 번 읽히게 하면서 정작 투표를 1.5화면 뒤로 밀고 있었습니다.
+    //
+    // 위에 남긴 것은 "누가 뽑는가"뿐입니다. 관객이 자기가 대상인지 판단하는 데
+    // 필요한 유일한 문장이고, 나머지는 다 찍고 나서 궁금해지는 것들입니다.
+    // 규칙을 다시 여기로 올리지 마세요 - 올리는 만큼 투표가 밀립니다.
     intro: {
-      ko: "어워드 네 부문 중 빌더스 초이스는 참가자가 뽑습니다. 무기명이라 이름도 이메일도 받지 않아요. 트랙마다 열리는 시각이 다르고, 한 기기에서 트랙당 한 번만 보낼 수 있습니다. 잘못 골랐다면 마감 전까지는 취소하고 다시 보낼 수 있어요.",
-      en: "Builder's Choice is the one award you pick. It is anonymous, so no name and no email. Each track opens at its own time and each device votes once per track. If you picked wrong, you can cancel and vote again any time before voting closes.",
+      ko: "어워드 네 부문 중 빌더스 초이스는 발표를 본 분들이 직접 뽑습니다. 참가팀이든 관객이든 한 표씩이고, 무기명이에요.",
+      en: "Builder's Choice is picked by the people who watched the pitches. Team or audience, everyone gets one vote, and it is anonymous.",
     },
     // ── 내 팀 ───────────────────────────────────────────────────────────────
     // 무기명인데 팀을 묻는 이유를 한 줄로 답해 둡니다. 이 줄이 없으면 "이름은 안
     // 받는다면서 소속은 왜 묻나"가 첫 질문이 되고, 그 질문은 투표를 멈춰 세웁니다.
     myTeamLabel: { ko: "내 팀", en: "Your team" },
+    // DECIDED 2026-08-28: 관객을 첫 문장에서 부릅니다. "자기 팀에는 투표할 수
+    // 없어서"로 시작하면 이 줄이 참가자한테만 말을 걸고, 발표를 보러 온 사람은
+    // 자기가 투표 대상이 아니라고 읽습니다. 실제로 그렇게 읽혔어요 - 관객 옵션을
+    // 고른 뒤 (시각 때문에) 잠긴 패널을 보고 거부당했다고 이해했습니다.
+    // 마지막 문장("팀 이름 말고는 아무것도 받지 않아요")은 2026-08-28에 뺐습니다.
+    // 아래 note의 "이름과 이메일은 받지 않고"가 같은 말이고, 이 카드는 투표로 가는
+    // 길목이라 한 줄이라도 짧은 편이 낫습니다.
     myTeamHelp: {
-      ko: "자기 팀에는 투표할 수 없어서 먼저 고릅니다. 팀 이름 말고는 아무것도 받지 않아요.",
-      en: "You pick this first because you cannot vote for your own team. Nothing else about you is collected.",
+      ko: "관객으로 오신 분도 투표할 수 있어요. 참가자는 자기 팀에 투표할 수 없어서 먼저 고릅니다.",
+      en: "You can vote as an audience member too. Participants pick their team first because you cannot vote for your own.",
     },
     myTeamPlaceholder: { ko: "팀을 골라 주세요", en: "Choose your team" },
-    myTeamNone: { ko: "참가팀이 아니에요", en: "I'm not on a team" },
+    // 관객·운영진·멘토를 전부 담는 선택지입니다. 괄호가 있는 이유는 이 줄을 보고
+    // 자기 자리를 찾아야 하는 사람이 관객이기 때문이에요.
+    myTeamNone: { ko: "참가팀이 아니에요 (관객)", en: "Audience, not on a team" },
     myTeamLocked: {
       ko: "표를 보낸 뒤라 내 팀은 바꿀 수 없어요. 바꾸려면 아래에서 투표를 취소해 주세요.",
       en: "Your vote is in, so your team is fixed. To change it, cancel your vote below.",
@@ -3067,8 +3091,8 @@ export const dict = {
     ],
     cardCta: { ko: "투표하러 가기", en: "Go and vote" },
     note: {
-      ko: "무기명 투표입니다. 이름과 이메일은 받지 않고, 기기 기준으로 트랙당 한 번만 셉니다. 트랙 1에서 두 팀을 고르는 것은 발표팀이 트랙 2의 두 배이기 때문이에요. 취소는 표를 보낸 그 기기에서만 됩니다.",
-      en: "The vote is anonymous. No name, no email, and each device counts once per track. Track 1 gets two picks because it has twice as many teams as track 2. A vote can only be cancelled from the device that cast it.",
+      ko: "이름과 이메일은 받지 않고, 기기 기준으로 트랙당 한 번만 셉니다. 트랙마다 열리는 시각이 다르고, 트랙 1에서 두 팀을 고르는 것은 발표팀이 트랙 2의 두 배이기 때문이에요. 잘못 골랐다면 마감 전까지 취소하고 다시 보낼 수 있고, 취소는 표를 보낸 그 기기에서만 됩니다.",
+      en: "No name, no email, and each device counts once per track. Each track opens at its own time, and track 1 gets two picks because it has twice as many teams as track 2. If you picked wrong you can cancel and vote again before it closes, and a vote can only be cancelled from the device that cast it.",
     },
   },
 

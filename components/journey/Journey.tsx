@@ -469,6 +469,7 @@ function MobileStickyBar({
 }) {
   const [past, setPast] = useState(false);
   const [atEnd, setAtEnd] = useState(false);
+  const [atVote, setAtVote] = useState(false);
   // Same signal the header and the FAB use — the three move as one surface, so
   // the page never settles at a height that only some of them agreed on.
   //
@@ -504,9 +505,30 @@ function MobileStickyBar({
     return () => io.disconnect();
   }, []);
 
+  // DECIDED 2026-08-28 (Day 8): 투표 섹션에서는 비켜섭니다.
+  //
+  // 클로징에 쓴 것과 같은 이유이고 같은 장치입니다. 다른 점은 가리는 것이
+  // 헤드라인이 아니라 탭 타깃이라는 것 — 폰에서 팀 목록은 한 줄에 한 팀씩 화면
+  // 폭을 다 쓰고, 알약은 그 위에 떠 있습니다. 손가락이 알약에 먼저 닿으면 투표
+  // 대신 카톡이 열려요. 8/29에 이 화면에서 할 일은 하나뿐이라, 그 하나를 가리는
+  // 것은 어떤 CTA여도 비켜서는 편이 맞습니다.
+  //
+  // 오픈채팅 자체는 그대로입니다. 페이지의 다른 구간에서는 나오고, 데스크톱
+  // 헤더의 오픈채팅 버튼도 건드리지 않았습니다.
+  useEffect(() => {
+    const vote = document.getElementById("vote");
+    if (!vote) return;
+    const io = new IntersectionObserver(([e]) => setAtVote(e.isIntersecting), {
+      rootMargin: "0px",
+      threshold: 0,
+    });
+    io.observe(vote);
+    return () => io.disconnect();
+  }, []);
+
   // `chromeHidden` is the only condition that comes back on its own (scroll up);
-  // the other three are states of the page, not of the gesture.
-  const shown = past && !atEnd && !registerOpen && !chromeHidden;
+  // the others are states of the page, not of the gesture.
+  const shown = past && !atEnd && !atVote && !registerOpen && !chromeHidden;
 
   return (
     <div
@@ -3230,6 +3252,7 @@ function ScrollToTop() {
   const { t } = useLocale();
   const reduce = useReducedMotion();
   const [visible, setVisible] = useState(false);
+  const [atVote, setAtVote] = useState(false);
 
   // Rides the same scroll signal as the bars. Two reasons: on a phone this button
   // sits directly above the register rail, so a rail that slides away leaving the
@@ -3246,6 +3269,29 @@ function ScrollToTop() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // DECIDED 2026-08-28 (Day 8, 모바일 감사): 투표 섹션에서는 내려갑니다.
+  //
+  // 재보니 이 원반(50x50 히트 영역)이 팀 버튼의 오른쪽 끝을 22px 덮고 있었습니다.
+  // 폰에서 팀 목록은 한 줄에 한 팀씩 화면 폭을 다 쓰기 때문에, 어느 스크롤
+  // 위치에서든 두 팀쯤이 이 버튼 아래에 깔립니다(측정 당시 "마일로"와 "스무스무").
+  // 줄 끝을 누르면 투표 대신 페이지가 맨 위로 튀고, 찍던 자리를 잃어요.
+  //
+  // 하단 알약(MobileStickyBar)과 같은 이유이지만 장치가 다릅니다. 저쪽은 폰 전용
+  // 컴포넌트라 통째로 숨기면 되고, 이 버튼은 데스크톱에도 서 있어요. 데스크톱은
+  // 콘텐츠 레일이 max-w-6xl로 가운데 있고 이 버튼은 그 바깥 여백에 있어서 겹칠
+  // 일이 없습니다. 그래서 chromeHidden과 같은 max-lg 클래스로 폰에서만 내립니다 -
+  // 데스크톱 렌더 경로는 그대로입니다.
+  useEffect(() => {
+    const vote = document.getElementById("vote");
+    if (!vote) return;
+    const io = new IntersectionObserver(([e]) => setAtVote(e.isIntersecting), {
+      rootMargin: "0px",
+      threshold: 0,
+    });
+    io.observe(vote);
+    return () => io.disconnect();
   }, []);
 
   const toTop = () =>
@@ -3287,7 +3333,7 @@ function ScrollToTop() {
           // top of the body copy the whole way down the page and merely stopped
           // responding to taps. `!important` is the one thing that outranks an
           // inline style, and it is why this is the only `!` in the file.
-          className={`${chromeHidden ? "max-lg:pointer-events-none max-lg:!opacity-0" : ""} group fixed bottom-[calc(env(safe-area-inset-bottom,0px)+5.25rem)] right-6 z-50 flex h-11 w-11 items-center justify-center transition-opacity duration-200 sm:right-8 lg:bottom-8 lg:h-12 lg:w-12`}
+          className={`${chromeHidden || atVote ? "max-lg:pointer-events-none max-lg:!opacity-0" : ""} group fixed bottom-[calc(env(safe-area-inset-bottom,0px)+5.25rem)] right-6 z-50 flex h-11 w-11 items-center justify-center transition-opacity duration-200 sm:right-8 lg:bottom-8 lg:h-12 lg:w-12`}
         >
           <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/[0.07] text-white/65 backdrop-blur-sm transition group-hover:-translate-y-0.5 group-hover:border-white/35 group-hover:text-white lg:h-12 lg:w-12 lg:border-violet-400/40 lg:bg-violet-600/85 lg:text-violet-100 lg:shadow-[0_6px_24px_rgba(124,58,237,0.3)] lg:group-hover:border-violet-400/60 lg:group-hover:bg-violet-500 lg:group-hover:text-white">
             {/* upward chevron */}
