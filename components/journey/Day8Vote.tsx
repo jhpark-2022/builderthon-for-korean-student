@@ -73,8 +73,6 @@ function errorPhrase(code: unknown): Phrase {
       return dict.vote.errClosed;
     case "rate_limited":
       return dict.vote.errRate;
-    case "cancel_closed":
-      return dict.vote.errCancelClosed;
     default:
       return dict.vote.errGeneric;
   }
@@ -150,9 +148,6 @@ export default function Day8Vote({ serverNow }: { serverNow: number }) {
   const [error, setError] = useState<Partial<Record<VoteTrack, Phrase>>>({});
   // 내 팀을 안 고르고 팀을 누른 순간에만 뜨는 힌트. 패널마다 따로 뜹니다.
   const [needTeam, setNeedTeam] = useState<Partial<Record<VoteTrack, boolean>>>({});
-  // 취소 버튼을 눌러 확인 문구가 떠 있는 트랙. 실수 탭으로 표가 사라지지 않게
-  // 한 단계를 둡니다.
-  const [confirming, setConfirming] = useState<Partial<Record<VoteTrack, boolean>>>({});
 
   // 저장소 복원. 완료 상태가 재방문에도 남는 자리가 여기입니다.
   useEffect(() => {
@@ -267,47 +262,6 @@ export default function Day8Vote({ serverNow }: { serverNow: number }) {
     [busy, device, done, myTeam, persistDone, picks]
   );
 
-  const cancel = useCallback(
-    async (track: VoteTrack) => {
-      if (!device || busy) return;
-      setBusy(track);
-      setError((prev) => ({ ...prev, [track]: undefined }));
-      try {
-        const res = await fetch("/api/vote", {
-          method: "DELETE",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ track, deviceToken: device }),
-        });
-        const data = (await res.json().catch(() => ({}))) as { error?: string };
-
-        // 404는 오류가 아닙니다. 서버에 표가 없으니 화면이 말하던 완료 상태가
-        // 틀린 것이고, 하려던 일(투표 화면으로 돌아가기)은 이미 이뤄져 있습니다.
-        if (res.ok || data.error === "not_found") {
-          const next = { ...done };
-          delete next[track];
-          persistDone(next);
-          setPicks((prev) => ({ ...prev, [track]: [] }));
-          setConfirming((prev) => ({ ...prev, [track]: false }));
-          return;
-        }
-
-        // 마감 뒤 취소만 별도 문구입니다. 서버는 POST와 같은 vote_closed를
-        // 돌려주지만, 이 자리에서 그 말은 "투표가 마감됐어요"가 아니라
-        // "취소할 수 없어요"여야 뜻이 맞습니다.
-        setError((prev) => ({
-          ...prev,
-          [track]: errorPhrase(data.error === "vote_closed" ? "cancel_closed" : data.error),
-        }));
-        setConfirming((prev) => ({ ...prev, [track]: false }));
-      } catch {
-        setError((prev) => ({ ...prev, [track]: dict.vote.errGeneric }));
-      } finally {
-        setBusy(null);
-      }
-    },
-    [busy, device, done, persistDone]
-  );
-
   return (
     <div className="mt-10 flex flex-col gap-5 text-left">
       <MyTeamCard
@@ -329,11 +283,8 @@ export default function Day8Vote({ serverNow }: { serverNow: number }) {
           busy={busy === track}
           error={error[track]}
           needTeam={needTeam[track] === true}
-          confirming={confirming[track] === true}
           onToggle={toggle}
           onSubmit={submit}
-          onAskCancel={(tr, on) => setConfirming((prev) => ({ ...prev, [tr]: on }))}
-          onCancel={cancel}
         />
       ))}
     </div>
@@ -413,11 +364,8 @@ function VotePanel({
   busy,
   error,
   needTeam,
-  confirming,
   onToggle,
   onSubmit,
-  onAskCancel,
-  onCancel,
 }: {
   track: VoteTrack;
   now: number;
@@ -429,11 +377,8 @@ function VotePanel({
   busy: boolean;
   error: Phrase | undefined;
   needTeam: boolean;
-  confirming: boolean;
   onToggle: (track: VoteTrack, team: string) => void;
   onSubmit: (track: VoteTrack) => void;
-  onAskCancel: (track: VoteTrack, on: boolean) => void;
-  onCancel: (track: VoteTrack) => void;
 }) {
   const meta = dict.tracks.items[track - 1];
   const state = voteWindowState(track, now);
@@ -506,48 +451,6 @@ function VotePanel({
           <p className="mt-2 break-keep text-sm leading-relaxed text-white/60">
             {t(state === "closed" ? dict.vote.doneBodyClosed : dict.vote.doneBody)}
           </p>
-
-          {/* 취소. 마감 뒤에는 버튼 자체를 내립니다. 누를 수 없는 버튼을 남겨
-              두면 눌러 보고 나서야 안 된다는 것을 알게 되고, 그때는 이미
-              "왜 안 되지"가 됩니다. 서버도 같은 시각으로 거절합니다. */}
-          {state === "open" &&
-            (confirming ? (
-              <div className="mt-4 border-t border-emerald-400/20 pt-4">
-                <p className="break-keep text-sm font-bold text-white/85">
-                  {t(dict.vote.cancelAsk)}
-                </p>
-                <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-                  {/* 파괴적인 쪽을 두 번째에 둡니다. 폰에서 엄지가 먼저 닿는
-                      자리에 "그대로 두기"가 오게 하려는 것이고, 이 확인 문구를
-                      띄운 사람의 절반은 잘못 눌러서 온 사람입니다. */}
-                  <button
-                    type="button"
-                    onClick={() => onAskCancel(track, false)}
-                    disabled={busy}
-                    className="min-h-[44px] w-full rounded-full border border-white/20 bg-white/[0.06] px-5 text-sm font-bold text-white/85 transition hover:border-white/35 hover:text-white disabled:opacity-40 sm:w-auto"
-                  >
-                    {t(dict.vote.cancelNo)}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onCancel(track)}
-                    disabled={busy}
-                    className="min-h-[44px] w-full rounded-full border border-amber-300/35 px-5 text-sm font-bold text-amber-100/90 transition hover:border-amber-300/60 hover:bg-amber-300/[0.08] disabled:opacity-40 sm:w-auto"
-                  >
-                    {t(busy ? dict.vote.cancelling : dict.vote.cancelYes)}
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => onAskCancel(track, true)}
-                className="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/15 px-5 text-sm font-semibold text-white/60 transition hover:border-white/30 hover:text-white/85"
-              >
-                {t(dict.vote.cancel)}
-                <span className="sr-only"> {t(meta.title)}</span>
-              </button>
-            ))}
 
           {error && (
             <p role="alert" className="mt-3 break-keep text-sm font-semibold text-amber-200/90">
