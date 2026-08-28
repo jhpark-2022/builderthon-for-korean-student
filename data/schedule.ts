@@ -10,14 +10,14 @@
 //
 // HOURS: the on-site days carry their PARTICIPANT-FACING window in
 // `days[].hours` (Day 1 1PM–4:30PM, Day 2 9AM–12PM, Day 5 10AM–2PM,
-// Day 7 9AM–2PM, Day 8 10AM–4PM). That field is the single source — nothing
+// Day 7 9AM–2PM, Day 8 10AM–4:30PM). That field is the single source — nothing
 // else computes it.
 //
 // It is NOT the booking. Whether set-up/teardown sits inside or outside the
 // booked slot differs by venue, so the subtraction differs by day: the Foundry
 // (Day 1) includes both inside its slot; *SCAPE (Day 5) books them separately
-// around the event window; SMU (Day 8) books 10AM–4PM and the last hour is the
-// teardown, so hours stops at 3PM. Operational clock times — booked slots, set-up,
+// around the event window; SMU (Day 8) is booked to 5PM with the teardown after
+// the programme, so hours stops at 4:30PM, when the last item ends. Operational clock times — booked slots, set-up,
 // teardown, buffers — are NEVER published; only the numbers above are.
 // DECIDED 2026-08-20: Day 2도 hours를 갖습니다(9AM–12PM). 현장 대관 창이 아니라
 // 실시간 온라인 세션의 시작과 끝입니다 — 그 시간에 접속해 있어야 하므로
@@ -52,8 +52,8 @@
 //     sessions, speakers or a stage — see the DAY 5 block below.
 //   • Day 6 — open build (online, self-paced).
 //   • Day 7 — Final Rehearsal on-site at the AWS office (9AM–2PM, new venue).
-//   • Day 8 — the Showcase at SMU LKCSB Classroom 2-1 (10AM–3PM, new venue as of
-//     2026-08-19; booking runs to 4PM). MANDATORY (필참).
+//   • Day 8 — the Showcase at SMU LKCSB Classroom 2-1 (10AM–4:30PM, new venue as
+//     of 2026-08-19; booking runs to 5PM). MANDATORY (필참).
 //   • Self-paced team build runs continuously from the Day-1 problem release all
 //     the way to the Day-8 pitch. In person on Days 1 / 5 / 7 / 8.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -407,8 +407,8 @@ export const days: DayMeta[] = [
     // (12–5PM 슬롯, 17:00 완전 퇴장), 앞의 셋업·등록 1시간과 뒤의 철수 30분을 뺀
     // 1PM–4:30PM이 참가자 기준 실제 프로그램 시간입니다. *SCAPE(Day 5)는 반대로
     // 셋업/철수가 이벤트 시간 밖에 따로 잡혀 있어 10AM–2PM이 이미 순수 프로그램
-    // 시간이므로 깎지 않습니다. SMU(Day 8)는 10AM–4PM 대관 안에 철수가 들어 있어
-    // 뒤 한 시간을 빼고 10AM–3PM을 씁니다 — 장소마다 계약 구조가 달라 날마다
+    // 시간이므로 깎지 않습니다. SMU(Day 8)는 5PM까지 대관하고 철수가 프로그램 뒤에
+    // 들어가 있어, 마지막 순서가 끝나는 10AM–4:30PM을 씁니다 — 장소마다 계약 구조가 달라 날마다
     // 계산이 다릅니다. 운영 시각(대관 창·셋업·철수)은 사이트 어디에도 쓰지 않습니다.
     hours: "1PM–4:30PM",
     // 확정 진행 순서 (2026-08-04). 9줄 전부 — 카드가 없는 줄(입장·휴식·네트워킹·
@@ -1102,11 +1102,14 @@ export const days: DayMeta[] = [
       ko: "SMU 현장, 트랙별 팀 발표(팀당 10분), 커리어 간담회(3인 패널), 테마별 어워드 발표, 완주 수료증과 단체 사진.",
       en: "In person at SMU, team presentations by track (10 min each), a three-person career panel, thematic awards, completion certificates and a group photo.",
     },
-    // 참가자 프로그램 시간입니다. SMU 대관 10AM–4PM을 그대로 씁니다 — 철수는
-    // 그 뒤에 따로 잡혀 있어서 프로그램이 4PM 정각까지 갑니다(DECIDED 2026-08-19).
-    // Day 5와는 계산이 다릅니다: 그쪽은 대관 9AM–3PM 안에 셋업·철수가 들어 있어
-    // hours가 10AM–2PM으로 줄어듭니다.
-    hours: "10AM–4PM",
+    // 참가자 프로그램 시간입니다. SMU 대관은 5PM까지이고(2026-08-26 확인), 철수는
+    // 프로그램이 끝난 뒤 그 안에서 합니다 — 그래서 hours는 대관 창이 아니라 마지막
+    // 순서가 끝나는 시각입니다. Day 5와는 계산이 다릅니다: 그쪽은 대관 9AM–3PM 안에
+    // 셋업·철수가 들어 있어 hours가 10AM–2PM으로 줄어듭니다.
+    //
+    // 2026-08-26: 4PM → 4:30PM. 간담회가 한 시간이 되면서 뒤가 30분 밀렸습니다.
+    // 운영 시각(대관 창 5PM)은 사이트 어디에도 쓰지 않습니다 — 파일 상단 HOURS 규칙.
+    hours: "10AM–4:30PM",
     // 확정 진행 순서 (2026-08-04). 10AM 입장이 hours와 같은 시각인 것은 이 날만
     // 그렇습니다 — Day 1은 12:40 입장이 프로그램(1PM)보다 이릅니다.
     // 두 트랙 발표(3·4번 줄)가 같은 카드(d8-judging)를 가리킵니다. 하나의 세션이
@@ -1145,9 +1148,15 @@ export const days: DayMeta[] = [
       // 휴식이고, 휴식이 들어가는 자리의 전환 2분은 휴식이 대신합니다:
       //   트랙 1 = 14×10 + 12×2 + 5 = 169분 (10:10AM–12:59PM)
       //   트랙 2 =  8×10 +  6×2 + 5 =  97분 (1:39PM–3:16PM)
-      // 나머지는 입장·오프닝 10분, 점심 40분, 간담회 30분, 어워드 5분, 클로징 5분이고
-      // 3:16–3:20의 4분은 발표에서 간담회로 넘어가는 전환입니다. 합이 정확히 4PM이라
-      // 한 줄을 늘리면 다른 줄에서 그만큼 빼야 합니다.
+      // 나머지는 입장·오프닝 10분, 점심 40분, 간담회 60분, 어워드 5분, 클로징 5분이고
+      // 3:16–3:20의 4분은 발표에서 간담회로 넘어가는 전환입니다. 합이 4:30PM입니다.
+      //
+      // DECIDED 2026-08-26 (박주형 확정): 커리어 간담회가 30분에서 한 시간이 됐고,
+      // 수상과 사진이 그 뒤로 갑니다. 대관이 5PM까지라 뒤로 늘릴 자리가 있었어요 —
+      // 발표와 점심은 22팀 확정본 그대로 두고 뒤만 늘렸습니다.
+      //
+      // 어워드·클로징은 8/26에 20분에서 10분으로 줄인 압축을 그대로 둡니다. 대관에
+      // 30분이 남아 있으니 되돌릴 여지는 있지만, 그건 별도 결정입니다.
       //
       // 팀 수가 바뀌면 여기서 계산을 다시 하세요 — 위 두 식이 시각의 근거입니다.
       {
@@ -1177,17 +1186,17 @@ export const days: DayMeta[] = [
         eventId: "d8-judging",
       },
       {
-        time: "3:20PM–3:50PM",
+        time: "3:20PM–4:20PM",
         label: { ko: "커리어 간담회 3인 패널", en: "Career session panel of three" },
         eventId: "d8-opening-keynote",
       },
       {
-        time: "3:50PM–3:55PM",
+        time: "4:20PM–4:25PM",
         label: { ko: "테마별 어워드 발표 사진", en: "Thematic awards photos" },
         eventId: "d8-final-pitch",
       },
       {
-        time: "3:55PM–4PM",
+        time: "4:25PM–4:30PM",
         // 손에 드는 것은 완주 수료증입니다 — 공유회 발표까지 마친 분들께 이 자리에서
         // 실물로 드리는 그 한 장. 크래시코스 수료증은 PDF로 나가므로 이 사진에
         // 등장하지 않습니다. 둘을 "수료증"으로 뭉뚱그리면 PDF도 현장에서 받는
@@ -2324,7 +2333,7 @@ export const schedule: BEvent[] = [
     category: "main",
     mode: "offline",
     timeOfDay: "AM",
-    time: "3:20PM–3:50PM",
+    time: "3:20PM–4:20PM",
     confirmed: true,
     title: { ko: "커리어 간담회 ‘FDE로 일한다는 것’", en: "Career Session “Working as an FDE”" },
     // DECIDED 2026-08-19 (주최 진행안): 1인 강연에서 3인 패널 토의가 됐습니다.
@@ -2341,7 +2350,7 @@ export const schedule: BEvent[] = [
       en: "A three-person panel “Working as an FDE”.",
     },
     description: {
-      ko: "트랙별 팀 발표가 모두 끝난 뒤, 어워드로 넘어가기 전 30분입니다. 세 분이 나란히 앉아 ‘FDE로 일한다는 것’을 이야기합니다. 트랜스링크 인베스트먼트 박희덕 대표님은 자본과 시장의 눈으로, 코드프레소 이동훈 대표님은 현장과 교육의 눈으로 답하고, Wilt Venture Builder 원대로 대표님이 진행을 맡습니다. FDE가 실제로 어떤 일인지, 어떤 사람을 뽑는지, 비전공자에게도 열려 있는지를 차례로 다루고 플로어에서 직접 묻는 시간으로 마칩니다. 인턴과 채용 pool로 이어지는 자리이고, 후속 1:1 면담과 멘토링(희망자)은 당일 행사가 끝난 뒤에 진행됩니다.",
+      ko: "트랙별 팀 발표가 모두 끝난 뒤, 어워드로 넘어가기 전 한 시간입니다. 세 분이 나란히 앉아 ‘FDE로 일한다는 것’을 이야기합니다. 트랜스링크 인베스트먼트 박희덕 대표님은 자본과 시장의 눈으로, 코드프레소 이동훈 대표님은 현장과 교육의 눈으로 답하고, Wilt Venture Builder 원대로 대표님이 진행을 맡습니다. FDE가 실제로 어떤 일인지, 어떤 사람을 뽑는지, 비전공자에게도 열려 있는지를 차례로 다루고 플로어에서 직접 묻는 시간으로 마칩니다. 인턴과 채용 pool로 이어지는 자리이고, 후속 1:1 면담과 멘토링(희망자)은 당일 행사가 끝난 뒤에 진행됩니다.",
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
       en: "Forty minutes after every track has pitched, before the awards begin. Three of them sit down together on “Working as an FDE”: Park Hee-deok (Translink Investment) answering from the capital and market side, Lee Dong-hoon (Codepresso) from the shop floor and teaching side, with Won Dae-ro (Wilt Venture Builder) moderating. What the work actually is, who they hire, whether it is open to non-CS majors, and then the floor gets to ask. It is a genuine route into the internship and hiring pool, and follow-up 1:1 conversations and mentoring (for those who want them) run once the event closes that day.",
     },
@@ -2354,9 +2363,9 @@ export const schedule: BEvent[] = [
     category: "main",
     mode: "offline",
     timeOfDay: "PM",
-    // DECIDED 2026-08-19: SMU 대관이 10AM–4PM으로 확정되며 두 슬롯이 120분씩이
-    // 됐습니다. 이 카드의 time은 두 슬롯을 합친 구간이라 사이의 점심시간까지
-    // 포함합니다(그래서 description이 점심을 한 마디 말합니다).
+    // 이 카드의 time은 두 발표 슬롯을 합친 구간이라 사이의 점심시간까지 포함합니다
+    // (그래서 description이 점심을 한 마디 말합니다). 슬롯 길이는 2026-08-26에
+    // 22팀 확정본을 따라 다시 잡혔습니다 — days[7].runOfShow의 계산식이 정본입니다.
     time: "10:10AM–3:16PM",
     title: { ko: "공유회 발표 전문가 피드백", en: "Showcase Presentations Expert Feedback" },
     // 발표 길이는 "팀당 10분"입니다(발표 5분 + Q&A와 심사 5분, 2026-08-19 확정).
@@ -2398,7 +2407,7 @@ export const schedule: BEvent[] = [
     category: "main",
     mode: "offline",
     timeOfDay: "PM",
-    time: "3:50PM–4PM",
+    time: "4:20PM–4:30PM",
     title: { ko: "어워드 클로징", en: "Awards & Closing" },
     summary: {
       ko: "테마별 어워드 발표, 사진 → 앞으로의 안내 → 완주 수료증과 함께 단체 사진.",
