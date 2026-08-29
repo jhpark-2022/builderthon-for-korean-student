@@ -24,7 +24,7 @@ export const VOTE_TRACKS: readonly VoteTrack[] = [1, 2];
  *
  * UPDATED 2026-08-29 아침 (박주형): 당일 진행에 맞춰 두 창을 오후로 옮겼습니다.
  *   트랙 1  2:25 PM ~ 3:00 PM (35분)
- *   트랙 2  3:00 PM ~ 3:40 PM (40분)
+ *   트랙 2  4:00 PM ~ 4:40 PM (40분)
  *
  * 이전에는 각 트랙 발표가 끝나는 자리(12:50, 2:50)에 맞춰 열었는데, 당일 진행이
  * 그 배치와 달라졌습니다. 지금은 두 창이 등을 맞대고 붙어 있습니다. 트랙 1이
@@ -37,7 +37,7 @@ export const VOTE_TRACKS: readonly VoteTrack[] = [1, 2];
  */
 export const VOTE_OPENS_AT: Record<VoteTrack, number> = {
   1: new Date("2026-08-29T14:25:00+08:00").getTime(),
-  2: new Date("2026-08-29T15:00:00+08:00").getTime(),
+  2: new Date("2026-08-29T16:00:00+08:00").getTime(),
 };
 
 /**
@@ -63,7 +63,7 @@ export const VOTE_OPENS_AT: Record<VoteTrack, number> = {
  */
 export const VOTE_CLOSES_AT: Record<VoteTrack, number> = {
   1: new Date("2026-08-29T15:00:00+08:00").getTime(),
-  2: new Date("2026-08-29T15:40:00+08:00").getTime(),
+  2: new Date("2026-08-29T16:40:00+08:00").getTime(),
 };
 
 /** 두 트랙 중 가장 늦은 마감. "이제 볼 것이 없다"를 판정할 때만 씁니다. */
