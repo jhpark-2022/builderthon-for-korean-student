@@ -23,7 +23,7 @@ export const VOTE_TRACKS: readonly VoteTrack[] = [1, 2];
  * 트랙별 오픈 시각 (epoch ms).
  *
  * UPDATED 2026-08-29 아침 (박주형): 당일 진행에 맞춰 두 창을 오후로 옮겼습니다.
- *   트랙 1  2:10 PM ~ 3:00 PM (50분)
+ *   트랙 1  2:25 PM ~ 3:00 PM (35분)
  *   트랙 2  3:00 PM ~ 3:40 PM (40분)
  *
  * 이전에는 각 트랙 발표가 끝나는 자리(12:50, 2:50)에 맞춰 열었는데, 당일 진행이
@@ -36,7 +36,7 @@ export const VOTE_TRACKS: readonly VoteTrack[] = [1, 2];
  * 화면의 안내 문구는 이 상수를 포맷해서 만들기 때문에 따로 고칠 카피가 없습니다.
  */
 export const VOTE_OPENS_AT: Record<VoteTrack, number> = {
-  1: new Date("2026-08-29T14:10:00+08:00").getTime(),
+  1: new Date("2026-08-29T14:25:00+08:00").getTime(),
   2: new Date("2026-08-29T15:00:00+08:00").getTime(),
 };
 
