@@ -2945,6 +2945,56 @@ export const dict = {
     hookCta: { ko: "트랙 자세히 보기", en: "See the tracks" },
   },
 
+  // ── 행사 마무리 (2026-08-30) ────────────────────────────────────────────────
+  // 8일이 끝났습니다. 페이지 맨 위에서 투표가 있던 자리를 이 섹션이 물려받습니다.
+  //
+  // 이 자리는 8/22 트랙 공개 → 8/29 빌더스 초이스 투표 → 지금 마무리로 세 번째
+  // 주인이 바뀌었습니다. 규칙은 매번 같았어요: 이 페이지를 여는 사람이 지금 가장
+  // 알고 싶은 것 하나를 맨 위에 둡니다. 오늘 그것은 "끝났다, 그리고 다음이 있다"
+  // 입니다.
+  //
+  // 과거형으로 씁니다. 사이트 전체가 아직 "무대는 준비됐습니다" 같은 미래형을
+  // 곳곳에 갖고 있는데, 그건 이 섹션이 감당할 몫이 아니라 각자 자리에서 고칠
+  // 일입니다. 여기서는 이 섹션만 정확하면 됩니다.
+  //
+  // 수상팀은 싣지 않습니다. 공식 발표 경로는 오픈채팅이고, 사이트가 먼저 말하면
+  // 그 자리가 김빠집니다. 나중에 싣기로 하면 여기 아래에 한 블록 더하세요.
+  wrap: {
+    tag: { ko: "8일이 끝났습니다", en: "That's a wrap" },
+    heading: {
+      ko: "여덟 날, 끝까지 왔습니다",
+      en: "Eight days, all the way through",
+    },
+    body: {
+      ko: "2026년 8월 22일부터 29일까지, 싱가포르에서 첫 한인 학생 AI 빌더톤이 열렸습니다. 스물한 팀이 코드프레소의 실제 문제를 들고 마지막 날 무대에 섰어요. 처음 코드를 써 본 분도, 8일 만에 데모를 돌린 분도 모두 같은 무대에서 끝냈습니다.",
+      en: "From 22 to 29 August 2026, Singapore hosted its first Korean student AI builderthon. Twenty-one teams took Codepresso's real problems to the stage on the final day. Whether it was your first line of code or your first demo in eight days, everyone finished on the same stage.",
+    },
+    thanks: {
+      ko: "함께해 주신 참가자와 멘토, 피드백 패널, 그리고 파트너사에 감사드립니다.",
+      en: "Thank you to every participant, mentor, panelist, and partner who made it happen.",
+    },
+    // "stay tuned" 자리. 무엇을 기다리라는 것인지까지 말해야 기다릴 수 있습니다 —
+    // 두 가지가 이미 확정돼 있고(가을 빌더 커리큘럼, 12월 서울 쇼케이스) 그
+    // 사실은 dict.program.awards의 next/openToAll가 정본입니다. 바뀌면 함께 고치세요.
+    nextLabel: { ko: "다음 소식", en: "What's next" },
+    // ── 히어로와 nav ─────────────────────────────────────────────────────────
+    // 투표가 있던 자리를 그대로 물려받습니다(dict.vote의 같은 키들 참고).
+    // 옛 키(dict.vote.heroCta 등)는 지우지 않았으니 다음 회차에 되살릴 때
+    // 번역을 다시 쓰지 않아도 됩니다.
+    navLabel: { ko: "마무리", en: "Wrap" },
+    heroCta: { ko: "8일의 마무리", en: "How it ended" },
+    cardLabel: { ko: "8일이 끝났습니다", en: "That's a wrap" },
+    cardLines: [
+      { ko: "8월 22일~29일 스물한 팀이 무대에 섰습니다", en: "22~29 Aug twenty-one teams took the stage" },
+      { ko: "다음은 가을 커리큘럼과 12월 서울 쇼케이스", en: "Next: autumn curriculum, December Seoul showcase" },
+    ],
+    cardCta: { ko: "마무리 보기", en: "See how it ended" },
+    next: {
+      ko: "여기서 끝이 아닙니다. 가을에는 참가자 전원이 이어 갈 빌더 커리큘럼이, 12월에는 서울 강남 쇼케이스 무대가 기다립니다. 소식은 오픈채팅에서 가장 먼저 전해 드려요.",
+      en: "This is not the end of it. An autumn builder curriculum for every participant comes next, and a December showcase stage in Gangnam, Seoul after that. The open chat hears about it first.",
+    },
+  },
+
   // ── Day 8 빌더스 초이스 투표 ────────────────────────────────────────────────
   // DECIDED 2026-08-28: Day 8 결과 공유회에서 참가자가 직접 뽑는 투표입니다.
   // 화면은 트랙 섹션(#tracks)이 있던 자리를 그대로 씁니다. 그 자리에 있던 문제
@@ -4595,8 +4645,8 @@ export const dict = {
     // countdownUrgency·successOpenChatTitle이 이미 말하는 사실(등록자는 참가자
     // 단톡방으로 초대된다)을 마지막에 한 번 더 말하는 것뿐입니다.
     heading: {
-      ko: "무대는 준비됐습니다. 이제 당신이 오를 차례.",
-      en: "The stage is set. Your turn to step onto it.",
+      ko: "무대는 끝났습니다. 다음 무대에서 또 만나요.",
+      en: "The stage is done. See you at the next one.",
     },
     blurb: {
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
@@ -4612,8 +4662,8 @@ export const dict = {
       // 클로징이 받는 것은 합류입니다. 문장도 그리로 맞춥니다 — 방이 이미 열려 있다는
       // 사실 하나만 말하고, 문을 여는 일은 버튼에 넘깁니다.
       // 앞의 두 문장은 그대로입니다.
-      ko: "여기가 ‘초입’입니다. 일회성 행사를 넘어, 지속가능한 한–싱 빌더 커뮤니티를 함께 만들어 갑니다. 그 커뮤니티가 모여 있는 방은 이미 열려 있어요.",
-      en: "This is the entry point. Beyond a single event, we're building a lasting Korea–Singapore builder community. The room where that community gathers is already open.",
+      ko: "여덟 날은 끝났지만 여기가 여전히 ‘초입’입니다. 일회성 행사를 넘어, 지속가능한 한–싱 빌더 커뮤니티를 함께 만들어 갑니다. 그 커뮤니티가 모여 있는 방은 계속 열려 있어요.",
+      en: "The eight days are done, and this is still the entry point. Beyond a single event, we're building a lasting Korea–Singapore builder community. The room where that community gathers stays open.",
     },
     ctaProgram: { ko: "프로그램 보기", en: "View Program" },
     // Shown under the partnership CTA: `mailto:` does nothing when the visitor

@@ -22,7 +22,6 @@ import {
   type EventPhase,
 } from "@/data/schedule";
 import Chapter from "./Chapter";
-import Day8Vote from "./Day8Vote";
 import EventModal from "@/components/EventModal";
 import PartnerModal, { type PartnerInfo } from "@/components/PartnerModal";
 import ChatGlyph from "@/components/ChatGlyph";
@@ -402,7 +401,9 @@ function OpenChatLink({
   className = "",
 }: {
   t: Tfn;
-  src: "band" | "footer";
+  // "wrap" = 행사 마무리 섹션 (2026-08-30). analytics에서 어느 자리의 오픈채팅
+  // 링크가 눌렸는지 가르는 값이라, 자리를 새로 만들면 여기에 이름을 더합니다.
+  src: "band" | "footer" | "wrap";
   className?: string;
 }) {
   if (!links.openChat) return null;
@@ -627,21 +628,21 @@ function HeroTrackCard({ t, className = "" }: { t: Tfn; className?: string }) {
           카드 전체가 하나의 링크입니다 — 예전에 CTA만 링크였을 때는 눌러야 할 것처럼
           보이는 면(카드)이 아무 일도 하지 않았습니다. */}
       <a
-        href="#vote"
+        href="#wrap"
         className="group flex flex-col items-start gap-2 rounded-2xl border border-violet-400/25 bg-violet-400/[0.07] p-4 text-left transition hover:border-violet-400/45 hover:bg-violet-400/[0.11]"
       >
-        <p className="text-xs font-medium text-white/60">{t(dict.vote.cardLabel)}</p>
+        <p className="text-xs font-medium text-white/60">{t(dict.wrap.cardLabel)}</p>
         {/* 트랙별 투표 규칙 두 줄. 카드에서 유일하게 사실을 나르는 부분이라 CTA 위에
             둡니다 — 필은 "가기"고, 이 두 줄이 "무엇을". */}
         <div className="flex w-full flex-col gap-1">
-          {dict.vote.cardLines.map((line) => (
+          {dict.wrap.cardLines.map((line) => (
             <p key={line.en} className="break-keep text-xs leading-relaxed text-white/75">
               {t(line)}
             </p>
           ))}
         </div>
         <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition group-hover:-translate-y-0.5 group-hover:shadow-[0_0_28px_rgba(124,92,255,0.6)]">
-          {t(dict.vote.cardCta)}
+          {t(dict.wrap.cardCta)}
           <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
         </span>
       </a>
@@ -3477,72 +3478,48 @@ export default function Journey({ serverNow }: { serverNow: number }) {
     <main className="relative z-10">
       <ScrollToTop />
       <MobileChatBar />
-      {/* ── CH 0.5 · 빌더스 초이스 투표 ─────────────────────────────── */}
-      {/* DECIDED 2026-08-22 (Day 1): 이 자리는 트랙 공개 섹션이었습니다. 저지먼트와
-          오토메이션 두 문제를 아코디언으로 펼쳐 읽고 트랙을 고르는 화면.
+      {/* ── CH 0.5 · 행사 마무리 ────────────────────────────────────── */}
+      {/* 이 자리는 세 번 주인이 바뀌었습니다.
+            8/22  트랙 공개 (저지먼트 · 오토메이션 문제 아코디언)
+            8/29  빌더스 초이스 투표 (Day8Vote)
+            8/30  행사 마무리 ← 지금
 
-          DECIDED 2026-08-28 (Day 8): 같은 자리가 투표가 됩니다. 트랙 선택은 Day 2에
-          끝났고, 문제 상세는 8일 내내 팀이 손에 들고 있던 것이라 8/29에 이 자리에서
-          다시 읽을 사람이 없습니다. 그날 이 자리가 해야 하는 일은 발표를 다 본
-          사람이 폰으로 팀을 뽑는 것 하나예요.
+          규칙은 매번 같습니다: 이 페이지를 여는 사람이 지금 가장 알고 싶은 것
+          하나를 맨 위에 둡니다. 오늘 그것은 "끝났다, 그리고 다음이 있다"입니다.
 
-          DECIDED 2026-08-28 (3차): 히어로 바로 다음으로 올립니다. 원래 자리는
-          혜택 다음, 프로그램 앞(CH 2.7)이었어요. 그 자리는 "무엇을 얻나"를 읽은
-          사람에게 "그래서 뭘 푸나"를 답하는 순서였는데, 8/29에 이 페이지의 첫
-          독자는 무대 앞에서 폰을 꺼낸 사람이고 그 사람이 할 일은 하나뿐입니다.
-          QR은 #vote로 바로 떨어지지만 주소만 치고 들어오는 사람도 있고, 그 사람이
-          취지와 참가 대상과 혜택을 지나 네 화면을 내려가야 투표를 만나는 것은
-          이 날 하루만큼은 틀린 순서입니다.
-          행사가 끝나면 CH 2.7 자리로 돌려보내세요.
+          투표 코드는 지우지 않았습니다. components/journey/Day8Vote.tsx,
+          lib/day8Vote.ts, app/api/vote/route.ts가 그대로 있고 Supabase의
+          day8_votes에 결과가 남아 있습니다. 화면에서만 내려온 것이라, 다음 회차에
+          되살릴 때는 명단과 시각(lib/day8Vote.ts)만 갈아 끼우면 됩니다.
+          서버 게이트가 이미 마감이라 라우트가 살아 있어도 표는 들어오지 않습니다.
 
-          DECIDED 2026-08-28 (2차): 섹션 id도 #vote로 바꿉니다. 처음엔 #tracks를 두고
-          안에 #vote 앵커만 세웠는데, 그러면 nav가 가리키는 id와 사람이 읽는 라벨이
-          갈라집니다 ("투표"라고 적힌 칩이 tracks를 가리키는 상태). 주소는 그 자리가
-          무엇인지 말해야 하고, 지금 이 자리는 투표입니다.
-
-          #tracks는 아래에 별칭 앵커로 남깁니다. 지우면 8일 동안 공유된 링크와
-          /quiz 결과 CTA, 그리고 지난 트랙 선택 마감 줄(schedule.ts DEADLINES의
-          track-pick, action.target이 "tracks")이 전부 아무 데도 닿지 않습니다.
-
-          패널의 시각 구조는 그대로 물려받습니다 — 01 채용 저지먼트 / 02 마케팅
-          콘텐츠 오토메이션. 투표에만 쓰는 새 시각 언어를 만들지 마세요. 상태와
-          제출은 Day8Vote가 전부 갖고, 이 자리는 머리글과 한 줄 안내만 답니다. */}
-      {/* scroll-mt를 걸지 마세요. globals.css의 html에 scroll-padding-top: 120px이
-          이미 있어서 고정 헤더만큼은 그쪽이 뺍니다. 여기에 scroll-mt-24를 더하면
-          두 값이 겹쳐 착지점이 228px까지 내려가고, 화면 위 3분의 1이 빈 채로
-          앞 섹션 꼬리가 남습니다(2026-08-28에 한 번 그랬습니다).
-          다른 섹션(#program 등)도 전부 scroll-padding만 쓰고 있어요. */}
-      {/* pt-32: 이 섹션이 페이지 맨 위로 오면서 생긴 여백입니다. 고정 헤더가
-          105px인데 Chapter 기본 py-14(56px)로는 아이브로가 헤더 밑에 깔립니다.
-          히어로는 min-h-screen에 세로 중앙 정렬이라 이 문제가 없었어요.
-          브레이크포인트마다 적는 이유: Chapter가 py-14 sm:py-20 lg:py-24를 갖고
-          있어서, lg를 안 적으면 데스크톱에서 lg:py-24(96px)가 이겨 헤더와 18px까지
-          붙습니다.
-          행사 뒤 이 섹션을 CH 2.7 자리로 되돌리면 이 클래스도 함께 빼세요. */}
-      <Chapter id="vote" align="center" className="pt-32 sm:pt-36 lg:pt-40">
-        {/* 옛 주소를 살려두는 별칭 앵커. 8/22~8/28에 공유된 #tracks 링크와 /quiz
-            결과 CTA, schedule.ts의 지난 트랙 선택 마감 줄이 이 id를 찾습니다.
-            눈에 보이는 것은 없고, 여기로 오면 #vote와 거의 같은 자리에 떨어집니다.
-            행사가 끝나 이 섹션이 트랙 설명으로 돌아가면 둘을 맞바꾸세요. */}
-        <span id="tracks" aria-hidden className="block" />
-        <Eyebrow color="emerald">{t(dict.vote.tag)}</Eyebrow>
+          pt-*는 맨 위 섹션이라 고정 헤더를 피하려는 여백입니다(투표 때와 같은
+          이유). 이 섹션을 아래로 옮기면 함께 빼세요. */}
+      <Chapter id="wrap" align="center" className="pt-32 sm:pt-36 lg:pt-40">
+        <Eyebrow color="emerald">{t(dict.wrap.tag)}</Eyebrow>
         <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
-          {t(dict.vote.heading)}
+          {t(dict.wrap.heading)}
         </h2>
-        <p className="mx-auto mt-5 max-w-2xl break-keep text-base leading-relaxed text-white/70">
-          {t(dict.vote.intro)}
+        <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
+          {t(dict.wrap.body)}
+        </p>
+        <p className="mx-auto mt-4 max-w-2xl break-keep text-base leading-relaxed text-white/60">
+          {t(dict.wrap.thanks)}
         </p>
 
-        {/* serverNow를 내려보내는 이유: 첫 렌더가 서버 HTML과 같은 시각을 봐야
-            하이드레이션이 어긋나지 않습니다. 패널 안에서 Date.now()를 초기값으로
-            읽으면 그 자리만 서버와 다른 국면(잠금 대 열림)을 그릴 수 있어요. */}
-        <Day8Vote serverNow={serverNow} />
+        {/* 다음 소식. 감사 인사에서 끝내면 페이지가 닫힌 문이 됩니다 - 무엇을
+            기다리면 되는지까지 말해야 다시 올 이유가 생겨요. 어법은 어워드
+            박스의 next 블록과 같은 라벨 + 본문입니다. */}
+        <div className="mx-auto mt-10 max-w-2xl break-keep rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-6 py-5 text-left">
+          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-emerald-200/90">
+            {t(dict.wrap.nextLabel)}
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-white/80">{t(dict.wrap.next)}</p>
+        </div>
 
-        {/* max-w-3xl이 있어야 mx-auto가 의미를 갖습니다. 없으면 레일 전체 폭이라
-            가운데 정렬할 것이 없고, 한 줄이 1250px을 흐릅니다. */}
-        <p className="mx-auto mt-6 max-w-3xl break-keep rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 text-left text-sm leading-relaxed text-white/65">
-          {t(dict.vote.note)}
-        </p>
+        <div className="mt-8 flex justify-center">
+          <OpenChatLink t={t} src="wrap" />
+        </div>
       </Chapter>
 
       {/* ── CH 0 · HERO ─────────────────────────────────────────────── */}
@@ -3629,11 +3606,11 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                      슬라이드 QR이 쓰는 앵커와 같은 자리에 떨어집니다.
                      analytics 이벤트 이름은 tracks_click 그대로 둡니다 — 8/22부터
                      쌓인 계열이라, 여기서 이름을 바꾸면 시리즈가 둘로 갈라집니다. */
-                  href="#vote"
+                  href="#wrap"
                   onClick={() => track("tracks_click", { src: "hero" })}
                   className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)] sm:px-8 sm:py-4 sm:text-base"
                 >
-                  {t(dict.vote.heroCta)}
+                  {t(dict.wrap.heroCta)}
                   <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                 </a>
               ) : (
