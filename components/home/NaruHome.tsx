@@ -10,6 +10,8 @@ import Chapter from "@/components/journey/Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
 import RecordTabs from "./RecordTabs";
+import { H2, H3 } from "@/components/ui/typography";
+import MotionToggle from "@/components/ui/MotionToggle";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 나루 홈 (/).
@@ -59,7 +61,8 @@ import RecordTabs from "./RecordTabs";
 // 챕터 <h2>의 크기. 8월 페이지가 아홉 개의 h2에 쓰는 값과 같습니다
 // (Journey.tsx의 CHAPTER HEADING SIZE 주석). 두 페이지의 제목이 같은 크기로
 // 읽혀야 한 사이트입니다.
-const H2 = "text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white";
+// 제목 스케일은 components/ui/typography.ts가 갖습니다. RecordTabs가 같은 값을
+// 읽어야 하는데 이 파일이 그쪽을 import 하고 있어서, 여기 두면 순환이 됩니다.
 
 // 카드 한 장. 8월의 Glass와 같은 값이지만, 그 컴포넌트는 Journey.tsx 안에
 // 있습니다. 두 줄짜리 래퍼를 꺼내려고 5,157줄 파일을 건드리지 않았습니다.
@@ -170,7 +173,7 @@ export default function NaruHome() {
           <p className="mt-3 text-sm leading-relaxed text-white/75">{t(naru.why.noteBody)}</p>
         </div>
 
-        <div className="mx-auto mt-10 max-w-3xl text-left">
+        <div className="mx-auto mt-10 max-w-4xl text-left">
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
             {t(naru.why.agendaLabel)}
           </p>
@@ -179,7 +182,10 @@ export default function NaruHome() {
       </Chapter>
 
       {/* ── CH2 · 8월의 기록 ─────────────────────────────────────────────── */}
-      <Chapter id="record" align="center">
+      {/* pt를 줄여 #why에 붙입니다. 이 챕터는 앞 챕터의 근거라 같은 호흡이어야
+          합니다. Chapter의 py-24가 모든 이음매를 216px로 만들고 있었는데, 뜻이
+          다른 이음매가 같은 공백을 쓰면 공백이 아무 말도 하지 않습니다. */}
+      <Chapter id="record" align="center" className="pt-8 sm:pt-10 lg:pt-12">
         <Eyebrow color="plum">{t(naru.record.eyebrow)}</Eyebrow>
         <h2 className={H2}>{t(naru.record.heading)}</h2>
         <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
@@ -223,7 +229,7 @@ export default function NaruHome() {
         {/* 사진 세 장. 4:3 원본 비율 그대로입니다. aspect 박스를 씌우거나
             object-cover로 자르지 않습니다. 단체 사진의 양 끝 사람이 잘리면
             그 사람은 그 기록에 없는 것이 됩니다. */}
-        <div className="mt-14 grid gap-5 sm:grid-cols-3">
+        <div className="mx-auto mt-14 grid max-w-5xl gap-5 sm:grid-cols-3">
           {naru.record.photos.map((photo) => (
             <figure key={photo.src} className="text-left">
               <Image
@@ -252,14 +258,12 @@ export default function NaruHome() {
 
         {/* 아쉬웠던 네 가지. 자랑 뒤에 바로 옵니다. 이 순서가 요점입니다.
             잘된 것만 적으면 다음 이벤트를 여는 이유가 없어 보입니다. */}
-        <div className="mx-auto mt-16 max-w-4xl text-left">
+        <div className="mx-auto mt-16 max-w-5xl border-t border-white/10 pt-10 text-left">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <h3 className="break-keep text-lg font-bold text-white sm:text-xl">
-              {t(naru.record.gapsLabel)}
-            </h3>
+            <h3 className={H3}>{t(naru.record.gapsLabel)}</h3>
             <span className="break-keep text-sm text-white/70">{t(naru.record.gapsNote)}</span>
           </div>
-          <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
             {naru.record.gaps.map((gap) => (
               <li key={gap.title.en} className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4">
                 <p className="break-keep text-sm font-semibold leading-snug text-white">{t(gap.title)}</p>
@@ -297,7 +301,7 @@ export default function NaruHome() {
       </Chapter>
 
       {/* ── CH3 · 어떻게 일하는가 ────────────────────────────────────────── */}
-      <Chapter id="how" align="center">
+      <Chapter id="how" align="center" className="pt-8 sm:pt-12 lg:pt-14">
         <Eyebrow color="purple">{t(naru.how.eyebrow)}</Eyebrow>
         <h2 className={H2}>{t(naru.how.heading)}</h2>
         <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
@@ -366,7 +370,9 @@ export default function NaruHome() {
       </Chapter>
 
       {/* ── CH4 · 다음 이벤트 ────────────────────────────────────────────── */}
-      <Chapter id="december" align="center">
+      {/* 반대로 벌립니다. 여기서 과거가 끝나고 미래가 시작합니다. 공백 자체가
+          "장이 바뀐다"를 말하게 두는 유일한 이음매입니다. */}
+      <Chapter id="december" align="center" className="pt-20 sm:pt-28 lg:pt-36">
         <Eyebrow color="orange">{t(naru.december.eyebrow)}</Eyebrow>
         {/* 날짜 문자열은 lib/naruDates.ts에서만 옵니다. 여기에 "12월 9일"을
             직접 쓰지 마세요. 확정 전의 값이라 반드시 한 번 이상 바뀝니다. */}
@@ -395,7 +401,7 @@ export default function NaruHome() {
           {t(naru.december.lead)}
         </p>
 
-        <div className="mx-auto mt-12 max-w-3xl space-y-4 text-left">
+        <div className="mx-auto mt-12 max-w-4xl space-y-4 text-left">
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
             {t(naru.december.changesLabel)}
           </p>
@@ -485,7 +491,7 @@ export default function NaruHome() {
           {t(naru.join.lead)}
         </p>
 
-        <div className="mt-12 grid gap-4 text-left md:grid-cols-2">
+        <div className="mx-auto mt-12 grid max-w-5xl gap-4 text-left md:grid-cols-2">
           {naru.join.cards.map((card) => (
             <Card key={card.who.en} className="flex flex-col">
               <h3 className="break-keep text-lg font-bold text-white">{t(card.who)}</h3>
@@ -515,7 +521,7 @@ export default function NaruHome() {
         </div>
         {/* 8월을 건넌 분께. 카드 넷 아래 폭 전체를 쓰는 띠 하나입니다.
             이유는 data/naru.ts의 alumni 주석에 있습니다. */}
-        <div className="mx-auto mt-6 rounded-3xl border border-accent/25 bg-accent/[0.06] px-6 py-7 text-left sm:px-8">
+        <div className="mx-auto mt-6 max-w-5xl rounded-3xl border border-accent/25 bg-accent/[0.06] px-6 py-7 text-left sm:px-8">
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
             {t(naru.join.alumni.label)}
           </p>
@@ -584,10 +590,10 @@ export default function NaruHome() {
       <footer id="closing" className="relative w-full border-t border-white/10 px-6 py-14 sm:px-10">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
           <Image
-            src="/naru/naru-lockup-rev.png"
+            src="/naru/naru-name-rev.png"
             alt={t(naru.footer.logoAlt)}
-            width={627}
-            height={202}
+            width={604}
+            height={168}
             className="h-10 w-auto sm:h-12"
           />
           <p className="break-keep text-xs leading-relaxed text-white/60">{t(naru.footer.credits)}</p>
@@ -608,6 +614,9 @@ export default function NaruHome() {
             </Link>
           </div>
           <p className="text-xs text-white/55">{t(naru.footer.rights)}</p>
+          {/* 배경 움직임 끄기. WCAG 2.2.2. 자리가 푸터인 이유는 컴포넌트 주석에
+              있습니다. */}
+          <MotionToggle className="mt-2" />
         </div>
       </footer>
     </>
@@ -668,7 +677,7 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
   );
 
   return (
-    <div className="mx-auto mt-12 max-w-4xl">
+    <div className="mx-auto mt-12 max-w-5xl">
       {/* 서로 닿지 않는다는 선. 데스크톱에서만 그립니다. 세로로 선 모바일
           에서는 "양옆"이라는 배치 자체가 없어서 선이 뜻을 잃습니다.
           모바일에서는 같은 말을 아래 한 줄이 글로 합니다. */}

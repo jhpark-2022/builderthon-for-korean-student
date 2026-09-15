@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { BackgroundScene, type BackgroundVariant } from "@/lib/background/scene/BackgroundScene";
+import { MOTION_KEY } from "@/lib/motionPreference";
 
 /**
  * Mounts the interactive Three.js background behind page content. Client-only,
@@ -35,7 +36,17 @@ export default function Background({ variant = "field" }: { variant?: Background
         if (cancelled) return;
         try {
           scene = new BackgroundScene(canvas, variant);
+          // 토글이 붙잡을 손잡이. 컨텍스트로 내려보내지 않는 이유는 소비처가
+          // 헤더도 푸터도 아닌 어디든 될 수 있고, 그때마다 프로바이더를 한 겹
+          // 더 씌우는 값이 이 한 줄보다 크기 때문입니다. 값은 함수 하나입니다.
+          window.__naruSetBackgroundPaused = (p: boolean) => scene?.setPaused(p);
           scene.start();
+          // 새로고침해도 꺼 둔 상태가 유지됩니다.
+          try {
+            if (window.localStorage.getItem(MOTION_KEY) === "off") scene.setPaused(true);
+          } catch {
+            /* storage blocked */
+          }
         } catch (e) {
           console.error("[Background] init failed, using CSS fallback", e);
           scene?.dispose();
@@ -49,6 +60,7 @@ export default function Background({ variant = "field" }: { variant?: Background
       : window.setTimeout(init, 200);
 
     return () => {
+      delete window.__naruSetBackgroundPaused;
       cancelled = true;
       if (window.cancelIdleCallback) window.cancelIdleCallback(idleId);
       else clearTimeout(idleId);

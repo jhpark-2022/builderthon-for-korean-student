@@ -25,6 +25,7 @@ import Chapter from "./Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
 import LinkedInLink from "@/components/ui/LinkedInLink";
+import MotionToggle from "@/components/ui/MotionToggle";
 import EventModal from "@/components/EventModal";
 import PartnerModal, { type PartnerInfo } from "@/components/PartnerModal";
 import ChatGlyph from "@/components/ChatGlyph";
@@ -4922,6 +4923,12 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           <p className="text-sm font-bold tracking-widest text-white">ZERO100 AI BUILDERTHON</p>
           <p className="mt-2 text-xs text-white/65">{t(dict.footer.hostedBy)}</p>
           <p className="mt-4 text-xs text-white/55">© 2026 {t(dict.footer.rights)}</p>
+          {/* 배경 움직임 끄기 (2026-09-15). WCAG 2.2.2는 이 페이지에도 적용되고,
+              배경 필드는 여기서도 무한히 돕니다. 이 한 줄이 이 파일에 더해진
+              전부입니다. */}
+          <div className="mt-4 flex justify-center">
+            <MotionToggle />
+          </div>
         </div>
       </section>
 

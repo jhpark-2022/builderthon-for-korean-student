@@ -58,6 +58,11 @@ export class BackgroundScene {
   private reduced = false;
   private scroll = 0;
   private visible = true;
+  // 방문자가 직접 끈 상태. prefers-reduced-motion과 별개입니다.
+  // WCAG 2.2.2는 5초를 넘겨 자동으로 시작하는 움직임에 "일시정지, 정지, 또는
+  // 숨김 수단"을 요구합니다. OS 설정을 그 수단으로 인정할지는 감사자에 따라
+  // 갈리므로, 페이지 안에도 손잡이를 둡니다(components/ui/MotionToggle.tsx).
+  private paused = false;
 
   // world-space focal point the field converges to (matches ParticleField uHole)
   private readonly focusWorld = new THREE.Vector3(0, 0, -46);
@@ -188,6 +193,7 @@ export class BackgroundScene {
     if (!this.running) return;
     this.rafId = requestAnimationFrame(this.loop);
     if (!this.visible) return; // pause work in background tabs
+    if (this.paused) return; // 방문자가 껐습니다
 
     const dt = Math.min(this.clock.getDelta(), 0.05);
     const t = this.clock.elapsedTime;
@@ -231,6 +237,14 @@ export class BackgroundScene {
 
     this.post.render(dt);
   };
+
+  /** 방문자가 배경을 껐는가. 끄면 다음 프레임부터 그리지 않습니다. */
+  setPaused(paused: boolean) {
+    this.paused = paused;
+    // 켤 때 시계의 빈 구간을 삼킵니다. 그러지 않으면 꺼 둔 시간만큼 fieldTime이
+    // 한 프레임에 뛰어 배경이 순간이동합니다.
+    if (!paused) this.clock.getDelta();
+  }
 
   /** Rolling FPS estimate → step DPR down once if we're below ~45fps sustained. */
   private adaptedDown = false;

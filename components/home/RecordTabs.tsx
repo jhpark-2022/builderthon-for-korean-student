@@ -1,12 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { dict, type Phrase } from "@/data/dictionary";
 import LinkedInLink from "@/components/ui/LinkedInLink";
 import { days } from "@/data/schedule";
 import { naru } from "@/data/naru";
 import { useLocale } from "@/lib/LocaleContext";
+import { H3 } from "@/components/ui/typography";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 제로백 빌더톤이 무엇이었는지 설명하는 탭 블록. #record 안에 삽니다.
@@ -121,7 +122,7 @@ function Person({
   linkedin?: string;
 }) {
   return (
-    <li className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4">
+    <li className="flex flex-col rounded-2xl bg-white/[0.05] px-4 py-4">
       <div className="flex items-start gap-3">
         <Avatar src={img} />
         <div className="min-w-0 flex-1">
@@ -145,7 +146,14 @@ function Person({
           </span>
         </p>
       )}
-      {bio && <p className="mt-3 break-keep text-xs leading-relaxed text-white/60">{bio}</p>}
+      {/* line-clamp-3: 폰에서 멘토 열한 장이 1열로 쌓이면 1,800px 가까이
+          됩니다. 소개를 세 줄로 자르면 장당 20~30px씩 줄고, sm부터는 풀어
+          전문을 보여 줍니다. */}
+      {bio && (
+        <p className="mt-3 line-clamp-3 break-keep text-xs leading-relaxed text-white/60 sm:line-clamp-none">
+          {bio}
+        </p>
+      )}
       {chips.length > 0 && (
         <p className="mt-3 flex flex-wrap gap-1.5">
           {chips.map((c) => (
@@ -162,12 +170,58 @@ function Person({
   );
 }
 
+// h4입니다. 이 블록 전체의 이름이 h3이고(headingId), 여기는 그 안의 구획이라서요.
+// 원래 <p>였는데, 그러면 "날마다 무엇이 있었나", "문제 둘", "부문 넷", "멘토",
+// "연사", "Day 8 커리어 간담회", "피드백 패널" 일곱 개가 heading 목록에서 통째로
+// 사라집니다. 그 목록이 스크린리더 사용자가 이 탭 안을 훑는 유일한 수단인데,
+// #record의 heading은 h2 하나와 h3 하나뿐이고 그 사이에 멘토 11명, 연사, 패널
+// 8명, 8일 일정, 트랙 2, 부문 4가 heading 없이 들어 있었습니다.
+//
+// 크기와 색은 그대로입니다. heading이라는 것은 역할이지 글자 크기가 아닙니다.
 function SectionLabel({ children, count }: { children: React.ReactNode; count?: number }) {
   return (
-    <p className="mb-3 flex items-baseline gap-2 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/55">
+    <h4 className="mb-3 flex items-baseline gap-2 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/55">
       {children}
       {count !== undefined && <span className="text-accent">{count}</span>}
-    </p>
+    </h4>
+  );
+}
+
+// ── 탭 패널 ──────────────────────────────────────────────────────────────────
+// 셋을 모두 렌더하고 선택되지 않은 것은 hidden으로 감춥니다. 언마운트하면 안 되는
+// 이유는 aria-controls입니다. 탭 셋이 각자 자기 패널 id를 가리키는데 그중 둘이
+// DOM에 없으면 깨진 IDREF이고, 스크린리더의 "제어 대상으로 이동"이 아무 데도
+// 가지 않습니다.
+//
+// tabIndex=0이 필요한 이유는 '8일의 형식' 패널입니다. 그 패널에는 포커스 가능한
+// 자식이 하나도 없어서(전부 p와 li), 탭 버튼에서 Tab을 누르면 패널을 건너뛰고 그
+// 아래 안내 문장으로 갑니다. 안에 무엇이 있는지 키보드로 닿을 방법이 없어요.
+//
+// className을 active일 때만 주는 것은 의도입니다. Tailwind의 display 유틸리티가
+// className에 섞이면 [hidden]의 display:none을 이깁니다. 여기서는 hidden일 때
+// 클래스가 아예 없으므로 UA 스타일시트가 그대로 이깁니다.
+function TabPanel({
+  uid,
+  id,
+  active,
+  children,
+}: {
+  uid: string;
+  id: TabId;
+  active: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      role="tabpanel"
+      id={`${uid}-panel-${id}`}
+      aria-labelledby={`${uid}-tab-${id}`}
+      hidden={!active}
+      tabIndex={0}
+      className={active ? "mt-6 focus:outline-none" : undefined}
+    >
+      {children}
+    </div>
   );
 }
 
@@ -176,6 +230,8 @@ export default function RecordTabs() {
   const [tab, setTab] = useState<TabId>("format");
   const uid = useId();
   const tabs = naru.record.tabs;
+  const headingId = `${uid}-tabs-heading`;
+  const tabRefs = useRef(new Map<TabId, HTMLButtonElement>());
 
   const TABS: { id: TabId; label: Phrase }[] = [
     { id: "format", label: tabs.format.label },
@@ -183,30 +239,78 @@ export default function RecordTabs() {
     { id: "people", label: tabs.people.label },
   ];
 
+  // ── 키보드 ───────────────────────────────────────────────────────────────
+  // APG Tabs, 자동 활성화입니다. 화살표가 포커스를 옮기면 그 자리에서 패널도
+  // 바뀝니다. 수동 활성화(화살표로 옮기고 Enter로 열기)를 고르지 않은 것은
+  // 패널 셋이 이미 전부 DOM에 있어서 여는 데 드는 비용이 없기 때문입니다.
+  // 비용이 없으면 조작을 한 번 더 시킬 이유가 없습니다.
+  //
+  // 양 끝에서 감깁니다. 마지막 탭에서 오른쪽을 누르면 첫 탭입니다.
+  const select = (id: TabId, moveFocus = false) => {
+    setTab(id);
+    if (moveFocus) tabRefs.current.get(id)?.focus();
+  };
+
+  const onTabKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, i: number) => {
+    const last = TABS.length - 1;
+    let next: number;
+    switch (e.key) {
+      case "ArrowRight": next = i === last ? 0 : i + 1; break;
+      case "ArrowLeft": next = i === 0 ? last : i - 1; break;
+      case "Home": next = 0; break;
+      case "End": next = last; break;
+      default: return;
+    }
+    // 화살표는 이 가로 스크롤 레일을, Home/End는 페이지 전체를 움직입니다.
+    // 둘 다 막지 않으면 포커스는 옮겨 가는데 화면이 같이 튑니다.
+    e.preventDefault();
+    select(TABS[next].id, true);
+  };
+
   return (
-    <div className="mx-auto mt-16 max-w-5xl text-left">
-      <SectionLabel>{t(tabs.label)}</SectionLabel>
+    <div className="mx-auto mt-16 max-w-5xl border-t border-white/10 pt-10 text-left">
+      <h3 id={headingId} className={H3}>
+        {t(tabs.label)}
+      </h3>
 
       {/* 가로 스크롤 레일. 탭 셋의 라벨이 en에서 길어(Speakers and the panel)
           390px에 세 개가 나란히 들어가지 않습니다. 줄바꿈 대신 스크롤을 고른
           것은 헤더의 섹션 레일과 같은 이유입니다. 탭은 한 줄에 있어야 탭으로
           읽힙니다. */}
+      {/* 탭 줄과 패널을 한 덩어리로 감쌉니다. 이 챕터는 기본 상태에서 테두리
+          상자가 서른 개였고 전부 같은 값이라, 탭 블록이 "다른 층위"로 보이지
+          않았습니다. 바깥에 면을 한 겹 두고 안쪽 상자의 테두리를 걷으면 이중
+          프레임이 사라지고 이 블록이 하나의 오브젝트가 됩니다. */}
+      <div className="mt-6 rounded-3xl border border-white/10 bg-white/[0.02] p-5 sm:p-7">
       <div
         role="tablist"
-        aria-label={t(tabs.label)}
-        className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        // aria-label이 아니라 aria-labelledby입니다. 위 h3가 이미 눈에 보이는 같은
+        // 문자열이라, aria-label로 복사해 두면 한쪽만 고쳐질 수 있습니다.
+        aria-labelledby={headingId}
+        // py-1.5: pb-1만 있으면 focus-visible 링의 outline-offset 3px 위쪽이
+        // 잘립니다.
+        className="flex gap-2 overflow-x-auto py-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {TABS.map((x) => {
+        {TABS.map((x, i) => {
           const on = x.id === tab;
           return (
             <button
               key={x.id}
+              ref={(n) => {
+                if (n) tabRefs.current.set(x.id, n);
+                else tabRefs.current.delete(x.id);
+              }}
               type="button"
               role="tab"
               id={`${uid}-tab-${x.id}`}
               aria-selected={on}
               aria-controls={`${uid}-panel-${x.id}`}
-              onClick={() => setTab(x.id)}
+              // roving tabindex. 탭 목록 전체가 Tab 한 번으로 들어오고 한 번으로
+              // 나갑니다. 셋 다 0이면 role=tab이 "3개 중 1개"라고 알려 준 뒤에도
+              // 빠져나가는 데 Tab을 세 번 눌러야 합니다.
+              tabIndex={on ? 0 : -1}
+              onClick={() => select(x.id)}
+              onKeyDown={(e) => onTabKeyDown(e, i)}
               // min-h 44px는 엄지가 닿아야 하는 것이면 언제나 지키는 값입니다.
               className={`inline-flex min-h-[44px] shrink-0 items-center whitespace-nowrap rounded-full border px-4 text-sm font-semibold transition ${
                 on
@@ -226,12 +330,12 @@ export default function RecordTabs() {
       </div>
 
       {/* ── 탭 1 · 8일의 형식 ───────────────────────────────────────────── */}
-      {tab === "format" && (
-        <div role="tabpanel" id={`${uid}-panel-format`} aria-labelledby={`${uid}-tab-format`} className="mt-6">
+      <TabPanel uid={uid} id="format" active={tab === "format"}>
+        <div>
           <p className="break-keep text-sm leading-relaxed text-white/70">{t(tabs.format.intro)}</p>
           <ul className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
             {tabs.format.facts.map((f) => (
-              <li key={f.value.en} className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4">
+              <li key={f.value.en} className="rounded-2xl bg-white/[0.05] px-4 py-4">
                 <p className="break-keep text-sm font-bold leading-snug text-white">{t(f.value)}</p>
                 <p className="mt-1.5 break-keep text-xs leading-snug text-white/50">{t(f.label)}</p>
               </li>
@@ -244,11 +348,15 @@ export default function RecordTabs() {
               하는 날이었는지(theme)와 날짜면 충분합니다. */}
           <div className="mt-8">
             <SectionLabel>{t(tabs.format.railLabel)}</SectionLabel>
-            <ol className="grid gap-2 sm:grid-cols-2">
+            {/* 상자가 아니라 행입니다. 여덟 개가 전부 "DAY n + 테마 + 날짜"인
+                동형 데이터라 카드일 이유가 없고, 카드로 두면 이 패널에서만
+                상자가 여덟 개 늡니다. 폰에서도 2열입니다. 한 행이 두 줄짜리라
+                375px에서도 버팁니다. */}
+            <ol className="grid grid-cols-2 gap-x-6">
               {days.map((d) => (
                 <li
                   key={d.day}
-                  className="flex items-baseline gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3"
+                  className="flex items-baseline gap-2.5 border-b border-white/[0.07] py-3 sm:gap-3"
                 >
                   <span className="shrink-0 text-[0.68rem] font-black tracking-[0.12em] text-accent">
                     DAY {d.day}
@@ -278,7 +386,7 @@ export default function RecordTabs() {
             </p>
             <ul className="grid gap-3 lg:grid-cols-2">
               {dict.tracks.items.map((tr) => (
-                <li key={tr.num} className="rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4">
+                <li key={tr.num} className="rounded-2xl bg-white/[0.05] px-5 py-4">
                   <p className="flex items-center gap-2">
                     <span className="inline-flex rounded-md border border-white/12 px-1.5 py-0.5 text-[0.62rem] font-black text-white/50">
                       {tr.num}
@@ -313,7 +421,7 @@ export default function RecordTabs() {
             </p>
             <ul className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
               {dict.program.awards.items.map((aw) => (
-                <li key={aw.name.en} className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4">
+                <li key={aw.name.en} className="rounded-2xl bg-white/[0.05] px-4 py-4">
                   <p className="break-keep text-sm font-bold leading-snug text-white">{t(aw.name)}</p>
                   <p className="mt-1.5 break-keep text-[0.68rem] leading-snug text-accent">
                     {t(aw.meta)}
@@ -324,11 +432,11 @@ export default function RecordTabs() {
             </ul>
           </div>
         </div>
-      )}
+      </TabPanel>
 
       {/* ── 탭 2 · 멘토 ─────────────────────────────────────────────────── */}
-      {tab === "mentors" && (
-        <div role="tabpanel" id={`${uid}-panel-mentors`} aria-labelledby={`${uid}-tab-mentors`} className="mt-6">
+      <TabPanel uid={uid} id="mentors" active={tab === "mentors"}>
+        <div>
           <p className="break-keep text-sm leading-relaxed text-white/70">{t(tabs.mentors.intro)}</p>
           <div className="mt-6">
             <SectionLabel count={dict.mentoring.mentors.length}>
@@ -349,11 +457,11 @@ export default function RecordTabs() {
             </ul>
           </div>
         </div>
-      )}
+      </TabPanel>
 
       {/* ── 탭 3 · 연사와 피드백 패널 ───────────────────────────────────── */}
-      {tab === "people" && (
-        <div role="tabpanel" id={`${uid}-panel-people`} aria-labelledby={`${uid}-tab-people`} className="mt-6">
+      <TabPanel uid={uid} id="people" active={tab === "people"}>
+        <div>
           <p className="break-keep text-sm leading-relaxed text-white/70">{t(tabs.people.intro)}</p>
 
           <div className="mt-6">
@@ -362,7 +470,7 @@ export default function RecordTabs() {
             </SectionLabel>
             <ul className="grid gap-2.5 sm:grid-cols-2">
               {dict.speakers.people.map((p) => (
-                <li key={p.name.en + p.day.en} className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4">
+                <li key={p.name.en + p.day.en} className="rounded-2xl bg-white/[0.05] px-4 py-4">
                   <div className="flex items-start gap-3">
                     <div className="min-w-0 flex-1">
                       <p className="text-[0.62rem] font-bold uppercase tracking-[0.14em] text-accent">
@@ -424,6 +532,11 @@ export default function RecordTabs() {
             <p className="mb-3 break-keep text-sm leading-relaxed text-white/70">
               {t(tabs.people.judgesNote)}
             </p>
+            {/* 폰에서는 1열입니다. 2열을 시도했다가 되돌렸습니다(2026-09-15).
+                이 카드에는 48px 아바타가 있어서, 375px에서 2열이면 글자 칸이
+                90px 남짓으로 줄고 이름이 음절 단위로 세로로 쪼개집니다.
+                통계 타일이 같은 폭에서 서는 것은 그쪽에 아바타가 없기 때문입니다.
+                길이는 Person의 bio line-clamp-3이 대신 줄입니다. */}
             <ul className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
               {dict.judges.people.map((p) => (
                 <Person
@@ -440,9 +553,11 @@ export default function RecordTabs() {
             </ul>
           </div>
         </div>
-      )}
+      </TabPanel>
 
-      <p className="mt-6 break-keep text-xs leading-relaxed text-white/55">
+      </div>
+
+      <p className="mt-5 break-keep text-xs leading-relaxed text-white/55">
         {t(tabs.archiveNote)}
       </p>
     </div>

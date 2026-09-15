@@ -224,17 +224,25 @@ export default function JourneyNav({
         {/* LEFT group — brand logo + anchor links, kept together on the left edge. */}
         <div className="flex items-center">
           {brand === "naru" ? (
-            /* 나루 가로 락업(반전). 어두운 바탕 전용이고 이 사이트는 바탕이
-               남색 검정이라 반전이 기본입니다. 로고 가이드: 비율·색·회전·그림자
-               금지. w-auto로 높이만 정합니다. 마스터(원형 배지)를 여기 쓰지
-               않는 이유는 최소 가로 120px 규칙 때문입니다. 52px 바에 들어가는
-               배지는 그 아래로 내려갑니다. */
+            /* 나루 가로 락업(이름만, 반전). 어두운 바탕 전용이고 이 사이트는
+               바탕이 남색 검정이라 반전이 기본입니다. 로고 가이드: 비율·색·회전·
+               그림자 금지. w-auto로 높이만 정합니다. 마스터(원형 배지)를 여기
+               쓰지 않는 이유는 최소 가로 120px 규칙 때문입니다. 52px 바에
+               들어가는 배지는 그 아래로 내려갑니다.
+
+               DECIDED 2026-09-15: SINGAPORE가 붙은 락업(naru-lockup-rev)에서
+               이름만 버전으로 바꿉니다. 실측하니 h-8에서 그 락업 안의
+               SINGAPORE 대문자 높이가 3.8px이었습니다. 자간이 넓은 3.8px짜리
+               대문자는 글자가 아니라 로고 옆에 낀 회색 때로 보입니다.
+               12월 이벤트가 서울이라는 점도 있습니다. 모든 화면 상단에
+               SINGAPORE가 박혀 있는 것은 지금 브랜드가 하려는 말과 어긋납니다.
+               히어로와 OG의 원형 배지는 288px / 300px이라 그대로 둡니다. */
             <a href="#top" className="flex items-center leading-none">
               <Image
-                src="/naru/naru-lockup-rev.png"
+                src="/naru/naru-name-rev.png"
                 alt="나루 NARU"
-                width={627}
-                height={202}
+                width={604}
+                height={168}
                 priority
                 className="h-8 w-auto sm:h-9"
               />
