@@ -8,7 +8,9 @@
 // 원본 문서. 문장을 고칠 때는 아래를 먼저 보세요.
 //   나루_Overview.pdf        정체성, 3층 구조, 층별 하는 것과 얻는 것, 후원의 단계
 //   매니페스토_나루.pdf       코어 2축, 문체의 기준
-//   빌더톤_2회차_원페이저.pdf  12월 회차 기획 (내부 공유용, 확정 아님)
+//   빌더톤_2회차_원페이저.pdf  12월 이벤트 기획 (내부 공유용, 확정 아님)
+//                            문서 안의 "2회차", "빌더톤 서울" 표기는 웹에
+//                            가져오지 않습니다. 아래 용어 위계 참고.
 //
 // ── 문체 ────────────────────────────────────────────────────────────────────
 // 평서체 선언문. 주어는 "우리". "나"는 쓰지 않습니다. 문장은 짧게. 광고 문구
@@ -33,8 +35,21 @@
 // 쉼표와 마침표로 끊습니다. 이 주석 블록도 같은 규칙을 따릅니다.
 //
 // ── 용어 위계 ────────────────────────────────────────────────────────────────
-// 이벤트 > 회차 > 빌더톤. 8월은 "1회차", 12월은 "2회차" 또는 "다음 회차".
-// 제로백 빌더톤은 나루가 여는 이벤트 중 하나이지 나루 자신이 아닙니다.
+// 이벤트 > 회차 > 빌더톤.
+//
+// 8월 = 제로백 빌더톤. 나루의 첫 이벤트이고, 그 이름은 그 이벤트의 것입니다.
+// 12월 = 다음 이벤트. 이름이 아직 없습니다(lib/naruDates.ts).
+//
+// **12월을 제로백, 2회차, 빌더톤이라고 부르지 않습니다.** 제로백의 속편이 되면
+// 12월에 오는 사람은 8월을 모르면 늦었다고 느끼고, 기업은 같은 문제를 또 여는
+// 자리로 읽습니다. 12월은 제로백에서 나온 코어 2개를 잇는 다른 이벤트입니다.
+// 형식이 빌더톤일지도 아직 정해지지 않았어요.
+//
+// "회차"는 한 이벤트의 개별 실행을 가리키는 일반어로만 씁니다. "들어오는 길은
+// 회차 하나다" 같은 문장이 그 쓰임입니다. 12월을 "다음 회차"라고 부르면 안
+// 됩니다. 그건 제로백의 다음 회차라는 뜻이 됩니다.
+//
+// 제로백 빌더톤은 나루가 여는 이벤트 중 하나였지 나루 자신이 아닙니다.
 //
 // ── 구분자 ───────────────────────────────────────────────────────────────────
 // 칩과 라벨, 푸터 크레딧의 구분자는 가운뎃점(·)이 아니라 U+2002(EN SPACE)입니다.
@@ -47,27 +62,27 @@ import type { Phrase } from "./dictionary";
 // ─────────────────────────────────────────────────────────────────────────────
 // 문의 창구.
 //
-// TODO: confirm. 나루 전용 주소가 생기면 갈아 끼웁니다. 지금은 8월 회차가 쓰던
+// TODO: confirm. 나루 전용 주소가 생기면 갈아 끼웁니다. 지금은 제로백 빌더톤이 쓰던
 // 개인 주소를 그대로 씁니다(dictionary.ts의 links.partnership과 같은 주소).
 // 학교 주소를 쓰지 않는 이유도 같습니다: 파트너 스레드는 .edu 계정보다 오래
 // 갑니다.
 //
-// 제목만 나루의 것으로 바꿉니다. 받는 쪽 편지함에서 8월 회차의 스레드와 섞이지
-// 않아야, 어느 회차 이야기인지 열어 보지 않고 압니다.
+// 제목만 나루의 것으로 바꿉니다. 받는 쪽 편지함에서 제로백 빌더톤의 스레드와
+// 섞이지 않아야, 어느 이벤트 이야기인지 열어 보지 않고 압니다.
 // ─────────────────────────────────────────────────────────────────────────────
 const CONTACT = "pjh030924@gmail.com";
 
 export const naruLinks = {
   contact: CONTACT,
-  /** 12월 회차 일반 문의 (출제사, 후원). */
-  december: `mailto:${CONTACT}?subject=${encodeURIComponent("나루 12월 회차 문의")}`,
+  /** 12월 이벤트 일반 문의 (출제사, 후원). */
+  december: `mailto:${CONTACT}?subject=${encodeURIComponent("나루 12월 이벤트 문의")}`,
   /** 학생회 주관 문의. */
   organiser: `mailto:${CONTACT}?subject=${encodeURIComponent("나루 학생회 주관 문의")}`,
   /** 기업 후원 문의. */
   sponsor: `mailto:${CONTACT}?subject=${encodeURIComponent("나루 후원 문의")}`,
   /** 운영진 관심. */
   crew: `mailto:${CONTACT}?subject=${encodeURIComponent("나루 운영진 문의")}`,
-  /** 8월 회차의 기록. */
+  /** 제로백 빌더톤(8월)의 기록. */
   archive: "/2026-08",
 } as const;
 
@@ -125,7 +140,7 @@ export interface JoinCard {
 }
 
 /**
- * 8월 회차에서 나온 사람의 이야기.
+ * 제로백 빌더톤에서 나온 사람의 이야기.
  *
  * 비어 있으면 #people 챕터 자체가 렌더되지 않습니다(NaruHome 참고).
  *
@@ -165,11 +180,11 @@ export const naru = {
     titleLine2: { ko: "자리는 우리가 만든다.", en: "We make the place." },
     // 숫자 둘과 날짜 하나. 전부 확정된 사실입니다.
     sub: {
-      ko: "2026년 8월, 싱가포르에서 59명이 8일을 건넜습니다. 다음 회차는 12월 9일 서울에서 시작합니다.",
-      en: "In August 2026, fifty-nine people crossed eight days in Singapore. The next round starts in Seoul on 9 December.",
+      ko: "2026년 8월, 싱가포르에서 59명이 8일을 건넜습니다. 다음 이벤트는 12월 9일 서울에서 시작합니다.",
+      en: "In August 2026, fifty-nine people crossed eight days in Singapore. The next event starts in Seoul on 9 December.",
     },
-    ctaDecember: { ko: "12월 회차 알아보기", en: "About the December round" },
-    ctaArchive: { ko: "8월의 기록", en: "The August record" },
+    ctaDecember: { ko: "12월 이벤트 알아보기", en: "About the December event" },
+    ctaArchive: { ko: "제로백 빌더톤의 기록", en: "The Zero100 builderthon record" },
     // 로고의 대체 텍스트. 스크린리더가 읽는 이름이라 브랜드 표기 규칙을 그대로
     // 따릅니다: 한글이 주, 영문이 보조.
     logoAlt: { ko: "나루 NARU", en: "나루 NARU" },
@@ -230,20 +245,30 @@ export const naru = {
     },
     agendaLabel: { ko: "방법은 바뀝니다", en: "The method changes" },
     agenda: {
-      ko: "AI도, 빌더톤도, 8일이라는 길이도 방법입니다. 어젠다는 상황을 따라 바뀌고, 8일이 4일이 되어도 됩니다. 바뀌면 안 되는 것은 위의 두 개뿐입니다.",
-      en: "AI, the builderthon format, the eight days: all of them are method. The agenda follows the times, and eight days may become four. Only the two above cannot change.",
+      ko: "AI도, 8일이라는 길이도, 지금의 형식도 방법입니다. 어젠다는 상황을 따라 바뀌고, 8일이 4일이 되어도 됩니다. 바뀌면 안 되는 것은 위의 두 개뿐입니다.",
+      en: "AI, the eight days, the format we use now: all of them are method. The agenda follows the times, and eight days may become four. Only the two above cannot change.",
     },
   },
 
   // ── CH2 · 8월의 기록 ──────────────────────────────────────────────────────
   // 숫자는 전부 실측입니다. 하나라도 어림하지 마세요. 이 숫자들이 기업에 우리를
-  // 설명하는 근거이고, 한 번 부풀리면 다음 회차의 모든 숫자가 의심받습니다.
+  // 설명하는 근거이고, 한 번 부풀리면 다음 이벤트의 모든 숫자가 의심받습니다.
   record: {
-    eyebrow: { ko: "1회차 2026.08 싱가포르", en: "Round 1 Aug 2026, Singapore" },
+    // 8월 이벤트의 이름이 여기에 있습니다. 홈에서 "제로백 빌더톤"이라는 말이
+    // 나오는 자리는 이 챕터와 아카이브로 가는 링크뿐입니다. december 블록에
+    // 이 낱말이 하나라도 들어가면 잘못된 것입니다.
+    eyebrow: { ko: "제로백 빌더톤 2026.08 싱가포르", en: "Zero100 builderthon Aug 2026, Singapore" },
     heading: { ko: "8월에 있었던 일", en: "What happened in August" },
     lead: {
-      ko: "2026년 8월 22일부터 29일까지, 싱가포르에서 8일이 있었습니다. 나루라는 이름은 이 회차 뒤에 정해졌습니다.",
-      en: "From 22 to 29 August 2026, eight days happened in Singapore. The name NARU was chosen after this round.",
+      ko: "제로백 빌더톤은 나루의 첫 이벤트였습니다. 2026년 8월 22일부터 29일까지, 싱가포르에서 8일이었습니다.",
+      en: "The Zero100 builderthon was NARU's first event. Eight days in Singapore, from 22 to 29 August 2026.",
+    },
+    // 이 줄이 CH2를 CH1과 묶습니다. 8월이 자랑거리라서 여기 있는 것이 아니라,
+    // 코어 2개가 거기서 나왔기 때문에 있습니다. 순서가 반대였어요. 먼저 해 보고
+    // 나서 무엇이 바뀌면 안 되는지를 알았습니다.
+    lead2: {
+      ko: "실제 기업의 문제를 스크리닝 없이 받아 8일 동안 풀고, 마지막 날 앞에서 증명했습니다. 이 이벤트에서 코어 2개가 나왔습니다.",
+      en: "Real company problems, handed out with no screening, worked on for eight days and proved out front on the last day. The two cores came out of this event.",
     },
     stats: [
       { value: { ko: "74명", en: "74" }, label: { ko: "신청", en: "applied" } },
@@ -268,7 +293,7 @@ export const naru = {
     // 사진만으로는 알 수 없습니다.
     //
     // 그래서 흐름을 사진에 맞췄습니다: 모였다 → 증명했다 → 그리고 물었다.
-    // 마지막 장이 CH4의 "회차가 끝난 뒤에 할 일"로 이어지는 것이 덤입니다.
+    // 마지막 장이 CH4의 "이벤트가 끝난 뒤에 할 일"로 이어지는 것이 덤입니다.
     // 없는 장면에 맞는 캡션을 붙이는 것보다, 있는 장면에 맞는 흐름을 짜는 쪽이
     // 낫습니다. 더 맞는 사진이 나오면 캡션과 함께 바꾸세요.
     //
@@ -311,7 +336,7 @@ export const naru = {
       },
     ] as RecordPhoto[],
     gapsLabel: { ko: "8월에 아쉬웠던 네 가지", en: "Four things August missed" },
-    gapsNote: { ko: "그래서 12월이 있습니다", en: "This is why December exists" },
+    gapsNote: { ko: "그래서 12월 이벤트가 있습니다", en: "This is why the December event exists" },
     gaps: [
       {
         title: {
@@ -358,14 +383,14 @@ export const naru = {
     // 빠져 로고 행이 들쭉날쭉해집니다. 그 파일을 리팩토링하는 것은 이번 작업이
     // 하지 않기로 한 일입니다.
     //
-    // 둘. 라벨을 아무리 정확히 써도("8월 회차를 함께한 곳") 홈에 있는 로고 월은
+    // 둘. 라벨을 아무리 정확히 써도("제로백 빌더톤을 함께한 곳") 홈에 있는 로고 월은
     // 나루의 후원사로 읽힙니다. 나루는 아직 법인격이 없어 후원 계약의 주체가 될
     // 수 없습니다. 로고를 보고 싶은 사람은 아래 CTA로 8월 페이지에 가면 되고,
     // 거기에는 티어와 소개까지 붙은 제대로 된 벽이 있습니다.
     //
     // 넣기로 한다면 라벨 문자열은 이것입니다. 나루의 후원사라고 쓰지 마세요.
-    partnersLabel: { ko: "8월 회차를 함께한 곳", en: "Who was with us in August" },
-    cta: { ko: "8월의 기록 전체 보기", en: "Read the full August record" },
+    partnersLabel: { ko: "제로백 빌더톤을 함께한 곳", en: "Who was with us on the Zero100 builderthon" },
+    cta: { ko: "제로백 빌더톤 기록 전체 보기", en: "Read the full Zero100 builderthon record" },
   },
 
   // ── CH3 · 어떻게 일하는가 ─────────────────────────────────────────────────
@@ -374,8 +399,8 @@ export const naru = {
     eyebrow: { ko: "세 층", en: "Three layers" },
     heading: { ko: "어떻게 일하는가", en: "How we work" },
     lead: {
-      ko: "학생회와 기업은 서로 직접 만나지 않습니다. 나루를 거쳐 만납니다. 이벤트는 지금 그 둘을 잇는 방식이고, 제로백 빌더톤은 그중 하나입니다.",
-      en: "Student associations and companies never meet each other directly. They meet through NARU. An event is how the two are connected for now, and the Zero100 builderthon is one of them.",
+      ko: "학생회와 기업은 서로 직접 만나지 않습니다. 나루를 거쳐 만납니다. 이벤트는 지금 그 둘을 잇는 방식이고, 방식은 바뀔 수 있습니다.",
+      en: "Student associations and companies never meet each other directly. They meet through NARU. An event is how the two are connected for now, and how can change.",
     },
     diagramNote: {
       ko: "서로 직접 만나지 않습니다",
@@ -452,27 +477,41 @@ export const naru = {
     ],
   },
 
-  // ── CH4 · 다음 회차 ───────────────────────────────────────────────────────
+  // ── CH4 · 다음 이벤트 ─────────────────────────────────────────────────────
   // 확정된 사실만 싣습니다. 장소와 일정표, 출제사, 멘토, 등록 마감은 여기 없어요.
-  // 11월까지 확정되고, 그때 /seoul 라우트가 붙습니다(2단계).
+  // 11월까지 확정되고, 그때 상세 라우트가 붙습니다(2단계).
   //
-  // 날짜 문자열은 이 파일에 없습니다. lib/naruDates.ts에서만 옵니다.
+  // 이름과 날짜 문자열은 이 파일에 없습니다. lib/naruDates.ts에서만 옵니다.
+  //
+  // **이 블록에 "제로백", "Zero100", "빌더톤", "2회차"가 하나라도 들어가면
+  // 잘못된 것입니다.** 12월은 제로백의 속편이 아니라 그 이벤트에서 나온 코어
+  // 2개를 잇는 다른 이벤트입니다. 파일 맨 위의 용어 위계를 보세요.
   december: {
-    eyebrow: { ko: "2회차 2026.12 서울", en: "Round 2 Dec 2026, Seoul" },
-    // 회차의 공식 이름은 아직 없습니다.
-    // TODO: confirm. "제로백 빌더톤 2회차"인지 "빌더톤 서울"인지. 그때까지는
-    // 그룹의 표기인 "나루 2회차"를 쓰고, 빌더톤이라는 낱말은 본문에서만 씁니다.
-    roundName: { ko: "나루 2회차", en: "NARU Round 2" },
-    headingPrefix: { ko: "", en: "" },
+    eyebrow: { ko: "다음 이벤트 2026.12 서울", en: "Next event Dec 2026, Seoul" },
     headingSuffix: { ko: ", 서울에서 시작합니다.", en: ", Seoul." },
+    // 첫 문장이 부정으로 시작하는 것은 의도입니다. 8월을 아는 사람은 이 자리에서
+    // 반드시 "2회차인가"를 묻고, 그 오해를 그대로 두면 나머지 문장이 전부 그
+    // 전제 위에서 읽힙니다. 먼저 끊고 시작합니다.
+    notSequel: {
+      ko: "제로백 빌더톤의 2회차가 아닙니다. 그 이벤트에서 나온 코어 2개를 그대로 잇는, 나루의 다음 이벤트입니다.",
+      en: "This is not a second run of the Zero100 builderthon. It is NARU's next event, carrying the two cores that came out of that one.",
+    },
+    // 이름이 아직 없다는 사실을 화면에서 말합니다. 비워 두면 "왜 이름이 없지"가
+    // 읽는 사람의 질문으로 남고, 그 질문은 "아직 안 정해진 행사인가"로 갑니다.
+    // 먼저 말해 두면 그건 그냥 아직 오지 않은 한 줄이 됩니다.
+    // DECEMBER_EVENT_NAME이 채워지면 이 줄 대신 이름이 그려집니다.
+    nameTbd: {
+      ko: "이벤트 이름은 아직 없습니다. 정해지면 여기에 적습니다.",
+      en: "The event does not have a name yet. It goes here when it does.",
+    },
     lead: {
-      ko: "코어는 그대로 두고 무대만 한국으로 옮깁니다. 한 회차로는 사례가 되지 않고, 두 번째부터 선례가 됩니다.",
-      en: "The core stays as it is and only the stage moves to Korea. One round is an anecdote. From the second, it is a precedent.",
+      ko: "코어는 그대로 두고 무대를 한국으로 옮깁니다. 한 번으로는 사례가 되지 않고, 두 번째부터 선례가 됩니다.",
+      en: "The core stays as it is and the stage moves to Korea. Once is an anecdote. From the second, it is a precedent.",
     },
     changesLabel: { ko: "무엇이 달라지는가", en: "What changes" },
     changes: [
       {
-        ko: "8월은 기업이 정제한 문제를 받았습니다. 12월은 raw data에서 문제를 찾아 정의하는 구간부터 참가자에게 엽니다.",
+        ko: "8월에는 기업이 정제한 문제를 받았습니다. 12월은 raw data에서 문제를 찾아 정의하는 구간부터 참가자에게 엽니다.",
         en: "In August the problems arrived already cleaned by the company. In December the stretch where you find and define a problem out of raw data opens to participants too.",
       },
       {
@@ -486,22 +525,22 @@ export const naru = {
       ko: "한국 대학생과, 싱가포르에서 8월을 건넌 사람들이 같은 무대에 섭니다.",
       en: "Korean university students, and the people who crossed August in Singapore, stand on the same stage.",
     },
-    // ── 회차가 끝난 뒤에 할 일 ──────────────────────────────────────────────
-    // 이 블록은 반드시 있어야 합니다. 8월에 이걸 쓰지 않아서, 회차 뒤에 멘토에게
+    // ── 이벤트가 끝난 뒤에 할 일 ────────────────────────────────────────────
+    // 이 블록은 반드시 있어야 합니다. 8월에 이걸 쓰지 않아서, 이벤트 뒤에 멘토에게
     // 먼저 연락한 팀이 한 팀이었습니다(Overview 06). 병목은 의지가 아니라 판단
     // 재료였습니다. 내 강점이 그 자리에 쓸모가 있는지 스스로 판단할 수 없었어요.
     // 그래서 무엇을 하면 되는지를 글로 적습니다.
-    afterLabel: { ko: "회차가 끝난 뒤에 할 일", en: "What to do after the round ends" },
+    afterLabel: { ko: "이벤트가 끝난 뒤에 할 일", en: "What to do after the event ends" },
     afterNote: {
-      ko: "8월에는 이 문단이 없었습니다. 그래서 회차 뒤에 멘토에게 먼저 연락한 팀이 한 팀이었습니다.",
+      ko: "8월에는 이 문단이 없었습니다. 그래서 이벤트 뒤에 멘토에게 먼저 연락한 팀이 한 팀이었습니다.",
       en: "In August this paragraph did not exist. Afterwards, exactly one team reached out to a mentor on their own.",
     },
     after: [
       {
         title: { ko: "멘토에게 먼저 연락합니다", en: "Message the mentor first" },
         body: {
-          ko: "회차 안에서 받은 피드백은 회차 밖에서도 유효합니다.",
-          en: "Feedback you were given inside the round still holds outside it.",
+          ko: "이벤트 안에서 받은 피드백은 이벤트 밖에서도 유효합니다.",
+          en: "Feedback you were given inside the event still holds outside it.",
         },
       },
       {
@@ -515,7 +554,7 @@ export const naru = {
         },
       },
       {
-        title: { ko: "다음 회차에 멘토로 돌아옵니다", en: "Come back as a mentor" },
+        title: { ko: "다음 이벤트에 멘토로 돌아옵니다", en: "Come back as a mentor" },
         body: {
           ko: "받은 사람이 돌려주는 모습이 보일 때 문화가 됩니다.",
           en: "It becomes a culture at the moment someone is seen giving back what they were given.",
@@ -541,11 +580,11 @@ export const naru = {
         who: { ko: "참가자", en: "Participants" },
         lines: [
           {
-            ko: "따로 들어오는 절차가 없습니다. 회차에 오면 됩니다.",
-            en: "There is no process to join. You come to a round.",
+            ko: "따로 들어오는 절차가 없습니다. 이벤트에 오면 됩니다.",
+            en: "There is no process to join. You come to an event.",
           },
           {
-            ko: "12월 회차 등록은 아직 열리지 않았습니다. 열리는 날은 오픈채팅에서 가장 먼저 알려 드립니다.",
+            ko: "12월 이벤트 등록은 아직 열리지 않았습니다. 열리는 날은 오픈채팅에서 가장 먼저 알려 드립니다.",
             en: "December registration is not open yet. The open chat hears the day it is, first.",
           },
         ],
@@ -605,12 +644,12 @@ export const naru = {
   people: {
     eyebrow: { ko: "여기서 나온 사람", en: "People who came out of it" },
     heading: {
-      ko: "한 회차가 남기는 것은 결과물이 아니라 사람의 이야기입니다",
-      en: "What a round leaves behind is not the builds. It is a person's story",
+      ko: "한 이벤트가 남기는 것은 결과물이 아니라 사람의 이야기입니다",
+      en: "What an event leaves behind is not the builds. It is a person's story",
     },
     lead: {
-      ko: "결과 공유회에서 나온 결과물은 그 자리에서 소비되고 대부분 잊힙니다. 남는 것은 그 회차에서 나온 첫 롤모델의 이야기입니다.",
-      en: "What gets shown at the closing session is consumed there and mostly forgotten. What stays is the story of the first role model that round produced.",
+      ko: "결과 공유회에서 나온 결과물은 그 자리에서 소비되고 대부분 잊힙니다. 남는 것은 그 이벤트에서 나온 첫 롤모델의 이야기입니다.",
+      en: "What gets shown at the closing session is consumed there and mostly forgotten. What stays is the story of the first role model that event produced.",
     },
     // 비어 있으면 챕터가 통째로 렌더되지 않습니다. 지어내지 마세요.
     stories: [] as Story[],
@@ -620,14 +659,14 @@ export const naru = {
   // 크레딧 표기 순서는 언제나 주최 → 주관 → 후원입니다.
   //
   // 8월 푸터의 "SMU, NUS, NTU 한인 학생회가 주관하고 Zero100 빌더 네트워크가
-  // 함께합니다"는 여기로 가져오지 않습니다. 그건 1회차의 크레딧이고, 나루가 여는
-  // 다음 회차의 주관은 아직 정해지지 않았습니다.
+  // 함께합니다"는 여기로 가져오지 않습니다. 그건 제로백 빌더톤의 크레딧이고,
+  // 12월 이벤트의 주관은 아직 정해지지 않았습니다.
   footer: {
     credits: {
       ko: "주최 나루 주관 각 학교 한인 학생 단체 후원 참여 기업",
       en: "Hosted by NARU Organised by each school's Korean student association Supported by participating companies",
     },
-    archive: { ko: "8월의 기록", en: "The August record" },
+    archive: { ko: "제로백 빌더톤의 기록", en: "The Zero100 builderthon record" },
     contact: { ko: "문의", en: "Contact" },
     rights: { ko: "© 2026 나루 NARU", en: "© 2026 나루 NARU" },
     logoAlt: { ko: "나루 NARU", en: "나루 NARU" },

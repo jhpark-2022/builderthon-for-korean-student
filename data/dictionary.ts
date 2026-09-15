@@ -2975,10 +2975,16 @@ export const dict = {
     },
     // "stay tuned" 자리. 무엇을 기다리라는 것인지까지 말해야 기다릴 수 있습니다.
     //
-    // DECIDED 2026-09-15 (나루 런칭): 12월은 쇼케이스가 아니라 나루의 다음
-    // 회차입니다. 8월에 "12월 서울 강남 쇼케이스"라고 쓴 것은 그때의 계획이었고,
-    // 지금 확정된 것은 12월 9일 서울에서 2회차가 열린다는 사실입니다. 이 문단은
-    // 8월 페이지에서 유일하게 미래를 말하는 자리라, 여기만 현재 사실로 고칩니다.
+    // DECIDED 2026-09-15 (나루 런칭): 12월은 쇼케이스도, 제로백의 2회차도
+    // 아닙니다. 나루의 다음 이벤트이고, 제로백 빌더톤에서 나온 코어 2개를
+    // 잇습니다. 이름은 아직 없어요. 8월에 "12월 서울 강남 쇼케이스"라고 쓴 것은
+    // 그때의 계획이었고, 지금 확정된 것은 12월 9일 서울에서 시작한다는 사실
+    // 하나입니다. 이 문단은 8월 페이지에서 유일하게 미래를 말하는 자리라,
+    // 여기만 현재 사실로 고칩니다.
+    //
+    // "제로백 빌더톤은 여기서 끝났지만"으로 시작하는 것이 요점입니다. 이 페이지를
+    // 읽는 사람은 제로백 참가자이고, 다음 이벤트를 제로백의 속편으로 읽으면
+    // 12월이 자기 것이라고 생각합니다. 같은 코어를 잇지만 같은 이벤트가 아닙니다.
     //
     // 가을 빌더 커리큘럼 언급은 뺐습니다. TODO: confirm. 유지 여부가 확정되지
     // 않았습니다. 없는 일을 기다리게 하는 쪽이 아무 말도 안 하는 쪽보다 나쁩니다.
@@ -2997,12 +3003,12 @@ export const dict = {
     cardLabel: { ko: "8일이 끝났습니다", en: "That's a wrap" },
     cardLines: [
       { ko: "8월 22일~29일 스물한 팀이 무대에 섰습니다", en: "22~29 Aug twenty-one teams took the stage" },
-      { ko: "다음 회차는 12월 9일 서울입니다", en: "The next round is 9 December, Seoul" },
+      { ko: "나루의 다음 이벤트는 12월 9일 서울입니다", en: "NARU's next event is 9 December, Seoul" },
     ],
     cardCta: { ko: "마무리 보기", en: "See how it ended" },
     next: {
-      ko: "여기서 끝이 아닙니다. 다음 회차는 2026년 12월 9일 서울에서 열립니다. 나루 홈에서 자세히 볼 수 있어요. 소식은 오픈채팅에서 가장 먼저 전해 드려요.",
-      en: "This is not the end of it. The next round opens in Seoul on 9 December 2026. You can read more on the NARU home page. The open chat hears about it first.",
+      ko: "제로백 빌더톤은 여기서 끝났지만, 같은 코어를 잇는 나루의 다음 이벤트가 2026년 12월 9일 서울에서 시작합니다. 나루 홈에서 자세히 볼 수 있어요. 소식은 오픈채팅에서 가장 먼저 전해 드려요.",
+      en: "The Zero100 builderthon ends here, but NARU's next event, carrying the same two cores, starts in Seoul on 9 December 2026. You can read more on the NARU home page. The open chat hears about it first.",
     },
   },
 

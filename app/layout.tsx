@@ -22,7 +22,7 @@ const SITE_URL = "https://builderthon-for-korean-student.vercel.app";
 
 // ── 공유 카드 문자열 ─────────────────────────────────────────────────────────
 // DECIDED 2026-09-15 (나루 런칭): 레이아웃의 metadata는 이제 나루를 말합니다.
-// 여기 있던 8월 회차 문구는 app/2026-08/page.tsx로 내려갔습니다 — 한 글자도
+// 여기 있던 제로백 빌더톤 문구는 app/2026-08/page.tsx로 내려갔습니다. 한 글자도
 // 바뀌지 않았고, 사는 곳만 옮겼어요.
 //
 // title.template이 요점입니다. 레이아웃이 기본 제목을 들고, 각 페이지가 자기
@@ -33,11 +33,12 @@ const SITE_URL = "https://builderthon-for-korean-student.vercel.app";
 // 한 번 굳고 요청 시각을 볼 수 없어요(8월 페이지에서 배운 것과 같은 제약).
 // 그래서 어느 국면에서 읽어도 맞는 문장을 씁니다.
 //
-// TODO: confirm — 12월 종료일이 확정되면 설명의 "2026년 12월 9일"을 기간으로
-// 바꿀지 결정합니다. 날짜 문자열의 정본은 lib/naruDates.ts입니다.
+// TODO: confirm. 12월 종료일과 이벤트 이름이 확정되면 설명을 다시 봅니다.
+// 이름과 날짜의 정본은 lib/naruDates.ts입니다. 지금은 이름이 없어서 "다음
+// 이벤트"라고만 씁니다. 제로백이나 2회차라고 쓰지 마세요.
 const SITE_NAME = "나루 NARU";
 const SITE_DESCRIPTION =
-  "싱가포르 한인 학생 빌더 커뮤니티. 안전하게 도전할 자리와 자기 가치를 증명할 경험을 만듭니다. 다음 회차는 2026년 12월 9일 서울에서 시작합니다.";
+  "싱가포르 한인 학생 빌더 커뮤니티. 안전하게 도전할 자리와 자기 가치를 증명할 경험을 만듭니다. 다음 이벤트는 2026년 12월 9일 서울에서 시작합니다.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

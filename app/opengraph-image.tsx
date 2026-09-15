@@ -25,6 +25,9 @@ export const contentType = "image/png";
 // 날짜를 이 파일에 직접 씁니다. lib/naruDates.ts를 import 하고 싶겠지만,
 // 이 카드는 빌드 시점에 한 번 굳는 그림이고 문자열 하나뿐이라 포맷 함수를 들일
 // 값이 없습니다. TODO: 12월 날짜가 바뀌면 이 줄도 함께 고치세요.
+//
+// "Next event"이지 "Next round"가 아닙니다. 12월은 제로백 빌더톤의 2회차가
+// 아니라 다른 이벤트입니다. 이름이 정해지면 이 줄에 넣으세요.
 // ─────────────────────────────────────────────────────────────────────────────
 export default async function OpengraphImage() {
   // ImageResponse는 /public의 상대 경로를 가져오지 못하므로 파일을 읽어
@@ -89,7 +92,7 @@ export default async function OpengraphImage() {
               color: "#ffffff",
             }}
           >
-            Next round&nbsp;&nbsp;9 Dec 2026&nbsp;&nbsp;Seoul
+            Next event&nbsp;&nbsp;9 Dec 2026&nbsp;&nbsp;Seoul
           </div>
         </div>
       </div>

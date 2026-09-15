@@ -5,7 +5,7 @@ import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
 import { naru, naruLinks, type Layer } from "@/data/naru";
-import { formatDecemberStartShort } from "@/lib/naruDates";
+import { DECEMBER_EVENT_NAME, decemberEventLabel, formatDecemberStartShort } from "@/lib/naruDates";
 import Chapter from "@/components/journey/Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
@@ -15,7 +15,7 @@ import OpenChatLink from "@/components/ui/OpenChatLink";
 //
 // DECIDED 2026-09-15: 홈은 이벤트가 아니라 그룹입니다.
 //
-// 8월까지 이 자리에는 제로백 빌더톤 한 회차가 있었습니다. 그건 나루가 학생회와
+// 8월까지 이 자리에는 제로백 빌더톤이 있었습니다. 그건 나루가 학생회와
 // 기업을 잇는 "지금의 방식"이고, 방식은 바뀝니다(매니페스토 IV). 홈이 회차
 // 하나이면, 그 회차가 끝나는 날 홈도 같이 끝납니다. 8월 페이지는 /2026-08로
 // 내려가 기록으로 남았고, 이 자리는 나루가 무엇이고 왜 존재하는지를 말합니다.
@@ -23,20 +23,28 @@ import OpenChatLink from "@/components/ui/OpenChatLink";
 // ── 이 페이지에 없는 것 셋, 그리고 그 이유 ─────────────────────────────────
 //
 // 1. 등록이 없습니다.
-//    12월 회차의 등록은 아직 열리지 않았고, 나루는 가입 폼 자체를 두지
+//    12월 이벤트의 등록은 아직 열리지 않았고, 나루는 가입 폼 자체를 두지
 //    않습니다(Overview 06). 들어오는 길은 회차 하나예요. 그래서 이 파일은
 //    RegisterProvider를 쓰지 않고, 홈의 CTA는 셋뿐입니다: 회차 알아보기,
 //    소식 받기(오픈채팅), 문의(메일). 8월 페이지가 마감 뒤에 배운 것을 그대로
 //    따릅니다. 누를 수 없는 버튼을 회색으로 남기지 않습니다.
 //
-// 2. 12월 상세가 없습니다.
+// 2. 12월을 "제로백 빌더톤 2회차"라고 부르지 않습니다.
+//    제로백 빌더톤은 2026년 8월 싱가포르에서 한 이벤트의 이름입니다. 12월은
+//    그 이벤트에서 나온 코어 2개를 잇는 다른 이벤트이고, 이름이 아직 없어요.
+//    속편으로 부르면 12월에 오는 사람은 8월을 모르면 늦었다고 느끼고, 기업은
+//    같은 문제를 또 여는 자리로 읽습니다. 둘 다 사실이 아닙니다.
+//    #december 챕터의 첫 문장이 그 오해를 먼저 끊는 이유입니다. 이름은
+//    lib/naruDates.ts의 DECEMBER_EVENT_NAME에서만 옵니다.
+//
+// 3. 12월 상세가 없습니다.
 //    장소, 일정표, 출제사, 멘토, 등록 마감은 11월까지 확정됩니다. 지금 여기에
 //    쓰면 전부 다시 고쳐야 하고, 참가자는 고치기 전의 문장을 보고 항공권을
 //    끊습니다. 홈은 확정된 사실만 싣고, 상세는 확정된 뒤 /seoul로 붙입니다.
 //    이 페이지의 12월 챕터가 말하는 것은 날짜 하나, 달라지는 것 둘, 그리고
-//    회차가 끝난 뒤에 할 일 셋입니다.
+//    이벤트가 끝난 뒤에 할 일 셋입니다.
 //
-// 3. 다리(bridge) 은유가 없습니다.
+// 4. 다리(bridge) 은유가 없습니다.
 //    8월 사이트의 "우리가 있었으면 했던 다리를 직접 만듭니다"는 아카이브에
 //    그대로 있습니다. 여기서는 나루터만 씁니다. 다리는 건너는 일을 대신해
 //    주지만, 나루는 그러지 않아요. 건너는 건 각자가 합니다.
@@ -169,6 +177,11 @@ export default function NaruHome() {
         <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
           {t(naru.record.lead)}
         </p>
+        {/* 코어 2개가 여기서 나왔다는 한 줄. CH1을 읽고 내려온 사람에게 이
+            챕터가 자랑이 아니라 근거라는 것을 말합니다. */}
+        <p className="mx-auto mt-4 max-w-2xl break-keep text-base leading-relaxed text-white/60">
+          {t(naru.record.lead2)}
+        </p>
 
         {/* 숫자 다섯. 마지막 하나만 설명 줄을 답니다. "9팀이 출제사에 직접
             자료를 요청했다"는 숫자만으로는 무슨 뜻인지 알 수 없고, 그 뜻이
@@ -222,7 +235,7 @@ export default function NaruHome() {
         </div>
 
         {/* 아쉬웠던 네 가지. 자랑 뒤에 바로 옵니다. 이 순서가 요점입니다.
-            잘된 것만 적으면 다음 회차를 여는 이유가 없어 보입니다. */}
+            잘된 것만 적으면 다음 이벤트를 여는 이유가 없어 보입니다. */}
         <div className="mx-auto mt-16 max-w-4xl text-left">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <h3 className="break-keep text-lg font-bold text-white sm:text-xl">
@@ -321,7 +334,7 @@ export default function NaruHome() {
         </div>
       </Chapter>
 
-      {/* ── CH4 · 다음 회차 ──────────────────────────────────────────────── */}
+      {/* ── CH4 · 다음 이벤트 ────────────────────────────────────────────── */}
       <Chapter id="december" align="center">
         <Eyebrow color="orange">{t(naru.december.eyebrow)}</Eyebrow>
         {/* 날짜 문자열은 lib/naruDates.ts에서만 옵니다. 여기에 "12월 9일"을
@@ -330,7 +343,24 @@ export default function NaruHome() {
           {formatDecemberStartShort(locale)}
           {t(naru.december.headingSuffix)}
         </h2>
-        <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
+        {/* 이름이 서는 자리. DECEMBER_EVENT_NAME이 채워지면 이름이, 아직
+            null이면 "이름은 아직 없습니다"가 옵니다. 둘 중 하나는 반드시
+            있어야 해요. 아무것도 없으면 읽는 사람이 이름을 찾다가 못 찾고,
+            못 찾은 것은 "아직 안 정해진 행사"로 읽힙니다. */}
+        {DECEMBER_EVENT_NAME ? (
+          <p className="mt-5 text-lg font-bold tracking-tight text-[#F2B183] sm:text-xl">
+            {decemberEventLabel(locale)}
+          </p>
+        ) : (
+          <p className="mt-5 break-keep text-sm text-white/50">{t(naru.december.nameTbd)}</p>
+        )}
+        {/* 첫 문장이 부정입니다. 8월을 아는 사람은 이 자리에서 반드시
+            "2회차인가"를 묻고, 그 오해를 그대로 두면 아래 문장이 전부 그 전제
+            위에서 읽힙니다. */}
+        <p className="mx-auto mt-6 max-w-2xl break-keep text-base font-semibold leading-relaxed text-white/85">
+          {t(naru.december.notSequel)}
+        </p>
+        <p className="mx-auto mt-4 max-w-2xl break-keep text-base leading-relaxed text-white/70">
           {t(naru.december.lead)}
         </p>
 
@@ -351,8 +381,8 @@ export default function NaruHome() {
           </div>
         </div>
 
-        {/* ── 회차가 끝난 뒤에 할 일 ─────────────────────────────────────
-            이 블록은 반드시 있어야 합니다. 8월에 이걸 쓰지 않아서, 회차 뒤에
+        {/* ── 이벤트가 끝난 뒤에 할 일 ───────────────────────────────────
+            이 블록은 반드시 있어야 합니다. 8월에 이걸 쓰지 않아서, 이벤트 뒤에
             멘토에게 먼저 연락한 팀이 한 팀이었습니다. 병목은 의지가 아니라
             판단 재료였어요. 내 강점이 그 자리에 쓸모가 있는지를 스스로
             판단할 수 없었습니다. 그래서 무엇을 하면 되는지를 글로 적습니다.
@@ -462,8 +492,8 @@ export default function NaruHome() {
       {/* ── 푸터 ─────────────────────────────────────────────────────────
           크레딧 표기 순서는 언제나 주최 → 주관 → 후원입니다.
           8월 푸터의 "SMU, NUS, NTU 한인 학생회가 주관하고" 줄은 가져오지
-          않았습니다. 그건 1회차의 크레딧이고, 다음 회차의 주관은 아직
-          정해지지 않았습니다. */}
+          않았습니다. 그건 제로백 빌더톤의 크레딧이고, 12월 이벤트의 주관은
+          아직 정해지지 않았습니다. */}
       <footer id="closing" className="relative w-full border-t border-white/10 px-6 py-14 sm:px-10">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
           <Image
