@@ -9,6 +9,7 @@ import { DECEMBER_EVENT_NAME, decemberEventLabel, formatDecemberStartShort } fro
 import Chapter from "@/components/journey/Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
+import RecordTabs from "./RecordTabs";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 나루 홈 (/).
@@ -233,6 +234,12 @@ export default function NaruHome() {
             </figure>
           ))}
         </div>
+
+        {/* 무엇을 어떻게 했나, 누가 왔나. 사진 뒤, 아쉬웠던 것 앞입니다.
+            먼저 있었던 일을 다 보여 주고 나서 부족했던 것을 말해야, 그 고백이
+            변명이 아니라 다음 이벤트의 이유로 읽힙니다.
+            내용은 전부 8월 정본에서 직접 읽습니다(RecordTabs 주석 참고). */}
+        <RecordTabs />
 
         {/* 아쉬웠던 네 가지. 자랑 뒤에 바로 옵니다. 이 순서가 요점입니다.
             잘된 것만 적으면 다음 이벤트를 여는 이유가 없어 보입니다. */}

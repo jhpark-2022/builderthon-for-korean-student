@@ -335,6 +335,68 @@ export const naru = {
         },
       },
     ] as RecordPhoto[],
+    // ── 탭 블록 ────────────────────────────────────────────────────────────
+    // DECIDED 2026-09-15: 숫자와 사진만으로는 제로백이 무엇이었는지 설명되지
+    // 않습니다. 74명이 신청했다는 사실은 신뢰를 주지만, 처음 오는 사람에게
+    // "그래서 8일 동안 뭘 한 거냐"와 "누가 왔느냐"는 여전히 답이 없어요.
+    // 그 둘이 이 이벤트를 설명하는 진짜 재료이고, 기업에 우리를 설명할 때도
+    // 같은 둘을 씁니다.
+    //
+    // 탭인 이유는 길이입니다. 8일 + 멘토 열셋 + 연사와 패널을 한 번에 펼치면
+    // 이 챕터가 페이지의 절반이 됩니다. 한 번에 하나만 보이면 깊이는 그대로
+    // 두고 길이만 줄일 수 있어요.
+    //
+    // **내용을 여기에 옮겨 적지 않습니다.** 사람과 일정은 전부 8월 정본
+    // (data/schedule.ts의 days, data/dictionary.ts의 mentoring·speakers·judges)
+    // 에서 그대로 읽습니다. 복사해 두면 한쪽만 고쳐지기 시작하고, 사람 이름이
+    // 어긋나는 것은 이 사이트가 저지를 수 있는 가장 나쁜 오류입니다.
+    // 이 블록에는 라벨과 안내 문장만 있습니다.
+    tabs: {
+      label: { ko: "무엇을 어떻게 했나", en: "What it was, and who was there" },
+      format: {
+        label: { ko: "8일의 형식", en: "The eight days" },
+        intro: {
+          ko: "팀으로 참가해 실제 기업의 문제를 받고, 8일 뒤 마지막 날 앞에서 증명했습니다. 문제를 낸 곳은 코드프레소였습니다.",
+          en: "You came as a team, took a real company's problem, and proved it out front on the eighth day. The problem came from Codepresso.",
+        },
+        facts: [
+          { value: { ko: "8일", en: "8 days" }, label: { ko: "2026.08.22 ~ 08.29", en: "22 to 29 Aug 2026" } },
+          { value: { ko: "스크리닝 없음", en: "No screening" }, label: { ko: "오면 참가입니다", en: "Showing up is the entry" } },
+          { value: { ko: "실제 기업 문제", en: "A real problem" }, label: { ko: "출제사 코드프레소", en: "Set by Codepresso" } },
+          { value: { ko: "무순위 4부문", en: "Four categories" }, label: { ko: "10팀 수상", en: "Ten teams recognised" } },
+        ],
+        railLabel: { ko: "날마다 무엇이 있었나", en: "Day by day" },
+      },
+      mentors: {
+        label: { ko: "멘토", en: "Mentors" },
+        intro: {
+          ko: "단계마다 다른 멘토가 붙었습니다. 아이디어를 형태로 만들 때, 빌드가 막힐 때, 무대에서 팔아야 할 때. 필요한 사람이 매번 달랐어요.",
+          en: "A different kind of mentor at each stage. Shaping the idea, unblocking the build, selling it on stage: each needed a different person in the room.",
+        },
+        countLabel: { ko: "멘토", en: "mentors" },
+        stageWarmup: { ko: "출발선 세션", en: "Start-line session" },
+        stageBuild: { ko: "빌드 멘토링", en: "Build mentoring" },
+        stagePitch: { ko: "Day 7 피치 세션", en: "Day 7 pitch session" },
+      },
+      people: {
+        label: { ko: "연사와 피드백 패널", en: "Speakers and the panel" },
+        intro: {
+          ko: "먼저 길을 낸 사람들이 직접 왔습니다. 취업과 창업 사이에서 무엇을 골랐는지, 실무에서 AI를 어떻게 쓰는지, 0에서 100까지 무엇이 필요한지를 각자의 자리에서 이야기했습니다.",
+          en: "People who had already cut a path showed up in person: what they chose between a job and founding, how AI is actually used at work, and what it takes to get from zero to a hundred.",
+        },
+        speakersLabel: { ko: "연사", en: "Speakers" },
+        panelLabel: { ko: "Day 8 커리어 간담회", en: "Day 8 career panel" },
+        judgesLabel: { ko: "피드백 패널", en: "Feedback panel" },
+        judgesNote: {
+          ko: "순위를 매기는 자리가 아니었습니다. 문제를 낸 기업과, 실제 산업에서 문제를 풀어온 시니어들이 각자의 관점으로 피드백과 다음 가능성을 이야기했습니다.",
+          en: "Not a ranking exercise. The company that set the problem and seniors who have solved real ones in industry each offered feedback, and what could come next.",
+        },
+      },
+      archiveNote: {
+        ko: "각 세션의 시각과 장소, 멘토 소개, FAQ까지 전부 8월 페이지에 그대로 있습니다.",
+        en: "Session times and venues, mentor introductions, the FAQ: all of it is still on the August page.",
+      },
+    },
     gapsLabel: { ko: "8월에 아쉬웠던 네 가지", en: "Four things August missed" },
     gapsNote: { ko: "그래서 12월 이벤트가 있습니다", en: "This is why the December event exists" },
     gaps: [
