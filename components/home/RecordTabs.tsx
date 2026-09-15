@@ -67,12 +67,24 @@ function stageChips(stages: readonly number[], t: (p: Phrase) => string): string
   return out;
 }
 
+// ── 사진은 피드백 패널에만 (DECIDED 2026-09-15) ────────────────────────────
+// 멘토와 연사와 Day 8 간담회에서는 뺐습니다.
+//
+// 이 자리에서 사진이 하는 일은 "누구인지 알아보게 하는 것"이 아니라 "이 사람이
+// 무게가 있다"를 말하는 것입니다. 그런데 정본에 얼굴이 있는 사람과 없는 사람이
+// 섞여 있어서, 멘토 열하나 중 셋만 얼굴이 붙으면 그 셋이 더 중요한 사람처럼
+// 보입니다. 사진이 정보가 아니라 순서가 되는 거예요. 이름과 소개와 링크드인은
+// 열하나 모두가 똑같이 갖고 있으니, 그것만 남기면 카드가 고르게 섭니다.
+//
+// 피드백 패널만 예외인 이유는 여덟 명 전원이 얼굴을 갖고 있기 때문입니다.
+// 빠지는 사람이 없으니 사진이 순서를 만들지 않고, 결과 공유회에서 앞에 앉아
+// 있던 얼굴들이라 이 이벤트의 무게를 가장 직접적으로 말하는 자리이기도 합니다.
+//
+// 다시 붙일 생각이면 그 그룹 전원에게 얼굴이 있는지 먼저 확인하세요.
+// 한 명이라도 비면 붙이지 않는 편이 낫습니다.
 function Avatar({ src, alt }: { src?: string; alt: string }) {
   if (!src) return null;
   return (
-    // 사진이 있는 사람만 그립니다. 없는 사람 자리에 이니셜 원을 만들지
-    // 않았습니다. 그러면 사진이 있는 사람과 없는 사람이 같은 무게로 보여서,
-    // 정보가 아니라 장식이 됩니다. 없는 것은 없는 대로 둡니다.
     <Image
       src={src}
       alt={alt}
@@ -321,7 +333,6 @@ export default function RecordTabs() {
                   role={t(m.role)}
                   bio={t(m.intro)}
                   chips={stageChips(m.stages, t)}
-                  img={m.img || undefined}
                   linkedin={m.linkedin || undefined}
                 />
               ))}
@@ -343,7 +354,6 @@ export default function RecordTabs() {
               {dict.speakers.people.map((p) => (
                 <li key={p.name.en + p.day.en} className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4">
                   <div className="flex items-start gap-3">
-                    <Avatar src={p.img} alt={t(p.name)} />
                     <div className="min-w-0 flex-1">
                       <p className="text-[0.62rem] font-bold uppercase tracking-[0.14em] text-[#A99AD6]">
                         {t(p.day)}
@@ -391,7 +401,6 @@ export default function RecordTabs() {
                   name={t(p.name)}
                   role={t(p.role)}
                   bio={t(p.note)}
-                  img={p.img}
                   linkedin={p.linkedin}
                 />
               ))}
