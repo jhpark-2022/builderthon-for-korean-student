@@ -1077,7 +1077,7 @@ export const dict = {
         title: { ko: "연습 문제에서 실무 문제로", en: "From practice problems to real ones" },
         body: {
           ko: "파트너 기업이 지금 겪는 실제 AX 과제를 바이브 코딩으로 풉니다. 데모로 끝나지 않는, ‘해냈다’는 성공의 경험을 남깁니다.",
-          en: "Teams solve the actual AX problems partner companies face right now, leaving a real sense of “we did it,” not just a demo.",
+          en: "Teams solve the actual AX problems partner companies face right now. It doesn't stop at a demo: what you keep is having pulled it off.",
         },
       },
       {
@@ -3207,7 +3207,7 @@ export const dict = {
         linkedin: "https://www.linkedin.com/in/wondaero",
         points: [
           { ko: "정형화된 ‘취업 vs 창업’ 이분법에서 벗어나기", en: "Stepping past the tidy ‘employment vs. founding’ binary" },
-          { ko: "벤처빌더가 본 다양한 진로와 커리어 경로 탐색", en: "The many career paths a venture builder has seen" },
+          { ko: "벤처빌더가 본 여러 갈래의 커리어 경로", en: "The many career paths a venture builder has seen" },
           { ko: "학생과 비개발자도 시작할 수 있는 여러 갈래", en: "Routes even students and non-developers can start from" },
           { ko: "Q&A 포함 약 1시간, ‘처음이어도 된다’ 동기부여", en: "About an hour with Q&A, a ‘first-timers welcome’ nudge" },
         ],

@@ -260,7 +260,7 @@ export const naru = {
           },
           {
             ko: "그 앞에서 자기 판단으로 무언가를 만들고, 그 경험을 증명하는 실물을 손에 쥐고 나갑니다.",
-            en: "In front of that you build something by your own judgement, and you leave holding the thing that proves it.",
+            en: "Standing in front of that, you build something on your own judgement, and you leave holding something real that proves it.",
           },
         ],
       },
@@ -276,7 +276,7 @@ export const naru = {
     agendaLabel: { ko: "방법은 바뀝니다", en: "The method changes" },
     agenda: {
       ko: "AI도, 8일이라는 길이도, 지금의 형식도 방법입니다. 어젠다는 상황을 따라 바뀌고, 8일이 4일이 되어도 됩니다. 바뀌면 안 되는 것은 위의 두 개뿐입니다.",
-      en: "AI, the eight days, the format we use now: all of them are method. The agenda follows the times, and eight days may become four. Only the two above cannot change.",
+      en: "AI, the eight days, the format we use now: all of them are method. The agenda changes as the situation does, and eight days may become four. Only the two above cannot change.",
     },
   },
 
@@ -298,7 +298,7 @@ export const naru = {
     // 나서 무엇이 바뀌면 안 되는지를 알았습니다.
     lead2: {
       ko: "실제 기업의 문제를 스크리닝 없이 받아 8일 동안 풀고, 마지막 날 앞에서 증명했습니다. 이 이벤트에서 코어 2개가 나왔습니다.",
-      en: "Real company problems, handed out with no screening, worked on for eight days and proved out front on the last day. The two cores came out of this event.",
+      en: "Teams took a real company's problem with no screening, worked it for eight days, and proved it out front on the last day. The two cores came out of this event.",
     },
     stats: [
       { value: { ko: "74명", en: "74" }, label: { ko: "신청", en: "applied" } },
@@ -492,7 +492,7 @@ export const naru = {
         },
         body: {
           ko: "열심히 해 주었는데, 함께 자란다고 느낄 자리를 만들지 못했습니다.",
-          en: "They worked hard for it, and we never built them a place where that felt like growth of their own.",
+          en: "They worked hard for it, and we never made a place where they could feel they were growing too.",
         },
         // TODO: confirm. 답이 아직 없습니다. 지어내지 마세요.
         answer: null,
@@ -525,7 +525,7 @@ export const naru = {
     heading: { ko: "어떻게 일하는가", en: "How we work" },
     lead: {
       ko: "학생회와 기업은 서로 직접 만나지 않습니다. 나루를 거쳐 만납니다. 이벤트는 지금 그 둘을 잇는 방식이고, 방식은 바뀔 수 있습니다.",
-      en: "Student associations and companies never meet each other directly. They meet through NARU. An event is how the two are connected for now, and how can change.",
+      en: "Student associations and companies never meet each other directly. They meet through NARU. An event is how the two are connected for now, and that can change.",
     },
     diagramNote: {
       ko: "서로 직접 만나지 않습니다",
@@ -553,7 +553,7 @@ export const naru = {
         brings: { ko: "소속 학생, 공간, 학교 안의 명의", en: "Students, space, standing inside the school" },
         does: {
           ko: "소속 학생 모집. 학교 안의 공간과 자원, 필요한 명의. 운영 협조.",
-          en: "Bringing their students in. Space and resources inside the school, and the standing it takes. Hands on the day.",
+          en: "Recruiting their own students. Space and resources inside the school, and the standing it takes. Hands on the day.",
         },
         gets: {
           ko: "학생에게 열어 줄 자리. 임기를 마친 임원이 이어서 일할 자리.",
@@ -570,7 +570,7 @@ export const naru = {
         },
         gets: {
           ko: "한인 학생과의 접점. 채용 연계. 회차 크레딧.",
-          en: "A way to reach Korean students. Hiring pipeline. Credit on the round.",
+          en: "A way to reach Korean students. A hiring pipeline. Credit on the round.",
         },
       },
     ] as Layer[],
@@ -580,7 +580,7 @@ export const naru = {
     nameLines: [
       {
         ko: "하나는 사람입니다. 한 사람이 누군가의 나루가 되어 줄 수는 있지만, 그 사람은 졸업하고 떠납니다. 그래서 사람이 바뀌어도 언제나 누군가의 나루가 되어 주는 그룹을 만듭니다.",
-        en: "One is about people. A person can be someone's landing, and then that person graduates and leaves. So we build a group that stays someone's landing even as the people change.",
+        en: "One is about people. A person can be someone's landing, but that person graduates and leaves. So we build a group that stays someone's landing even as the people change.",
       },
       {
         ko: "다른 하나는 구조입니다. 주관으로 들어온 학생회와 후원으로 들어오는 기업을 이어 주는 나루터, 그 자리가 이 그룹입니다.",
@@ -689,7 +689,7 @@ export const naru = {
     why: [
       {
         ko: "한 번으로는 사례가 되지 않습니다. 두 번째부터 선례가 되고, 그 선례가 싱가포르를 넘어야 다음이 있습니다.",
-        en: "Once is an anecdote. From the second it is a precedent, and the precedent has to travel past Singapore for there to be a next one.",
+        en: "Once is an anecdote. The second time it becomes a precedent, and the precedent has to travel past Singapore for there to be a next one.",
       },
       {
         ko: "안전하게 도전하고 자기 가치를 증명할 자리는 어느 나라의 학교 안에도 없습니다. 그래서 학교 밖에, 나라 밖에 만듭니다.",
@@ -894,7 +894,7 @@ export const naru = {
     },
     lead: {
       ko: "결과 공유회에서 나온 결과물은 그 자리에서 소비되고 대부분 잊힙니다. 남는 것은 그 이벤트에서 나온 첫 롤모델의 이야기입니다.",
-      en: "What gets shown at the closing session is consumed there and mostly forgotten. What stays is the story of the first role model that event produced.",
+      en: "What gets shown at the closing session is used up in the room and mostly forgotten. What stays is the story of the first role model that event produced.",
     },
     // 비어 있으면 챕터가 통째로 렌더되지 않습니다. 지어내지 마세요.
     stories: [] as Story[],

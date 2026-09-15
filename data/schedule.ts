@@ -1632,7 +1632,7 @@ export const schedule: BEvent[] = [
       en: "“Between Employment and Founding”, the keynote that opens the 8-day ‘why’.",
     },
     description: {
-      ko: "빌더톤의 문을 여는 오프닝 키노트입니다. Wilt Venture Builder(SG)의 원대로 대표님이 ‘취업과 창업의 사이’를 주제로, 정형화된 ‘취업 vs 창업’ 이분법에서 벗어나 벤처빌더가 본 다양한 진로와 커리어 경로와 비개발자도 시작할 수 있는 여러 갈래를 45분 동안 Q&A와 함께 풀어냅니다. ‘처음이어도 괜찮다’는 톤으로 8일의 ‘왜’를 세우며 출발선을 엽니다.",
+      ko: "빌더톤의 문을 여는 오프닝 키노트입니다. Wilt Venture Builder(SG)의 원대로 대표님이 ‘취업과 창업의 사이’를 주제로, 정형화된 ‘취업 vs 창업’ 이분법에서 벗어나 벤처빌더가 본 여러 갈래의 커리어와 비개발자도 시작할 수 있는 길들을 45분 동안 Q&A와 함께 풀어냅니다. ‘처음이어도 괜찮다’는 톤으로 8일의 ‘왜’를 세우며 출발선을 엽니다.",
       en: "The keynote that opens the builderthon. Won Dae-ro (Managing Director, Wilt Venture Builder SG) speaks on “Between Employment and Founding” for 45 minutes, with Q&A, stepping past the tidy ‘employment vs. founding’ binary to the many career paths a venture builder has seen, and the routes even non-developers can start from. It sets the 8-day ‘why’ in a ‘first-timers welcome’ tone.",
     },
     location: FOUNDRY_REFINERY,
@@ -1871,7 +1871,7 @@ export const schedule: BEvent[] = [
     description: {
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
       ko: "참가자의 약 60%가 바이브 코딩이 처음이라, 여러 번 나누지 않고 오전 한 번에 몰아서 출발선을 맞춥니다. 슬라이드 대신, 강사가 간단한 툴 하나를 바이브 코딩으로 처음부터 만드는 라이브 빌드를 다 함께 따라갑니다. 기술 장벽을 여기서 걷어내고 아이디어만 한계로 남기려고요. 강의는 Codex를 기준으로 진행하되, 도구는 자유예요. 배우는 건 방식이라, 이후 팀 빌드와 공유회 결과물은 Claude Code든 커서든 손에 맞는 도구로 만들면 돼요.",
-      en: "About 60% of participants are trying vibe coding for the first time, so the course runs in one concentrated morning. Instead of slides, the instructor vibe-codes one simple tool from scratch, live, and the room follows along, clearing the technical barrier so your ideas are the only limit left. The class runs on Codex, though the tool is up to you: what you take away is the method, and your own team build and Showcase work can run on Claude Code, Cursor or whatever fits your hand.",
+      en: "About 60% of participants are trying vibe coding for the first time, so the course runs in one concentrated morning. Instead of slides, the instructor vibe-codes one simple tool from scratch, live, and the room follows along. The technical barrier comes down here, so your ideas are the only limit left. The class runs on Codex, though the tool is up to you: what you take away is the method, and your own team build and Showcase work can run on Claude Code, Cursor or whatever fits your hand.",
     },
     location: ONLINE,
     org: CODEPRESSO_ORG,
@@ -1993,7 +1993,7 @@ export const schedule: BEvent[] = [
     description: {
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
       ko: "팀이 스스로 방향을 설정하고 문제 해결에 착수하는 자율 빌드 시간입니다. 공개된 AX 과제를 어떻게 풀지 정하고, 첫 구현으로 들어갑니다. 정해진 시간도, 접속해야 할 곳도 없습니다. 운영진이 여는 세션 없이, 팀이 각자 편한 때에 진행하시면 돼요.",
-      en: "Self-paced build time where teams set their own direction and start solving the problem, deciding how to tackle the released AX problem and moving into a first implementation. There is no set time and nothing to join. Nobody hosts this one: your team takes it whenever suits you.",
+      en: "Self-paced build time. Your team sets its own direction, decides how to tackle the released AX problem, and moves into a first implementation. There is no set time and nothing to join. Nobody hosts this one: your team takes it whenever suits you.",
     },
     location: ONLINE,
   },
@@ -2056,12 +2056,12 @@ export const schedule: BEvent[] = [
     title: { ko: "자율 빌드", en: "Self-paced build" },
     summary: {
       ko: "프로토타입을 빌드하고 완성도를 높입니다.",
-      en: "Build the prototype and raise its completeness.",
+      en: "Build the prototype and push it closer to done.",
     },
     description: {
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
       ko: "전날 잡은 방향 위에서 프로토타입을 빌드하고 완성도를 끌어올리는 자율 빌드 시간입니다. 핵심 흐름이 작동하게 만들고, 부족한 부분을 채워가며 공유회를 향한 토대를 다집니다. 정해진 시간도, 접속해야 할 곳도 없습니다.",
-      en: "Self-paced build time to actually build the prototype and raise its completeness on top of the direction set the day before, getting the core flow working and filling the gaps that lay the foundation toward the Showcase. There is no set time and nothing to join.",
+      en: "Self-paced build time. On the direction you set the day before, you build the prototype out and push it closer to done: get the core flow running, fill in what is missing, and bring the Showcase within reach. There is no set time and nothing to join.",
     },
     location: ONLINE,
   },
