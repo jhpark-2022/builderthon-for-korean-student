@@ -30,9 +30,15 @@ type Tfn = (p: Phrase) => string;
 export default function OpenChatLink({
   t,
   src,
+  label,
   className = "",
 }: {
   t: Tfn;
+  // 자리마다 누르는 이유가 다릅니다. 기본값(dict.register.openChatCta)은 8월
+  // 정본이 들고 있는 문장형 라벨이라, 문을 열어 주기는 하지만 무엇을 언제 받는지
+  // 말하지 않습니다. 나루 홈은 data/naru.ts의 openChatLabels를 넘깁니다.
+  // 넘기지 않으면 지금까지처럼 동작하므로 /2026-08은 한 글자도 바뀌지 않습니다.
+  label?: Phrase;
   // "wrap" = 행사 마무리 섹션 (2026-08-30). analytics에서 어느 자리의 오픈채팅
   // 링크가 눌렸는지 가르는 값이라, 자리를 새로 만들면 여기에 이름을 더합니다.
   // naru-* = 나루 홈의 자리들 (2026-09-15). 8월 페이지의 계열과 섞이지 않도록
@@ -58,7 +64,7 @@ export default function OpenChatLink({
       className={`inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2.5 text-sm font-medium leading-relaxed text-white/75 transition hover:border-white/35 hover:bg-white/10 hover:text-white ${className}`}
     >
       <ChatGlyph className="h-4 w-4 shrink-0" />
-      {t(dict.register.openChatCta)}
+      {t(label ?? dict.register.openChatCta)}
       <span aria-hidden className="text-white/50">→</span>
     </a>
   );

@@ -31,7 +31,10 @@ import { naruNav } from "@/data/naru";
 export default function Home() {
   return (
     <>
-      <BackgroundMount />
+      {/* 나루터 수면. 밤의 강과 건너편 등불 하나입니다.
+          8월의 입자 필드는 그 회차의 것이라 /2026-08에 그대로 남습니다
+          (lib/background/scene/BackgroundScene.ts의 variant 주석 참고). */}
+      <BackgroundMount variant="water" />
       {/* 앵커 목록과 로고를 나루의 것으로 넘깁니다. 기본값은 8월 페이지의
           것이라, /2026-08은 <JourneyNav /> 그대로 두고 아무것도 바뀌지
           않습니다. */}

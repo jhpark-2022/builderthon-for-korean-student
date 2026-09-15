@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { BackgroundScene } from "@/lib/background/scene/BackgroundScene";
+import { BackgroundScene, type BackgroundVariant } from "@/lib/background/scene/BackgroundScene";
 
 /**
  * Mounts the interactive Three.js background behind page content. Client-only,
  * full-viewport, fixed. Falls back to a branded CSS gradient if WebGL is
  * unavailable or initialization throws.
  */
-export default function Background() {
+export default function Background({ variant = "field" }: { variant?: BackgroundVariant }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [failed, setFailed] = useState(false);
 
@@ -34,7 +34,7 @@ export default function Background() {
       requestAnimationFrame(() => {
         if (cancelled) return;
         try {
-          scene = new BackgroundScene(canvas);
+          scene = new BackgroundScene(canvas, variant);
           scene.start();
         } catch (e) {
           console.error("[Background] init failed, using CSS fallback", e);

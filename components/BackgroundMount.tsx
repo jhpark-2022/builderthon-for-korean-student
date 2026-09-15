@@ -15,6 +15,10 @@ import dynamic from "next/dynamic";
 // 자식으로 들어갑니다.
 const Background = dynamic(() => import("@/components/Background"), { ssr: false });
 
-export default function BackgroundMount() {
-  return <Background />;
+// 8월 페이지는 기본값(입자 필드)을 씁니다. 그 배경은 그 회차의 것입니다.
+// 나루 홈은 "water"를 넘겨 나루터 수면을 받습니다.
+export type { BackgroundVariant } from "@/lib/background/scene/BackgroundScene";
+
+export default function BackgroundMount({ variant }: { variant?: "field" | "water" }) {
+  return <Background variant={variant} />;
 }

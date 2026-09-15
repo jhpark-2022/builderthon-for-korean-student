@@ -82,6 +82,8 @@ export const naruLinks = {
   sponsor: `mailto:${CONTACT}?subject=${encodeURIComponent("나루 후원 문의")}`,
   /** 운영진 관심. */
   crew: `mailto:${CONTACT}?subject=${encodeURIComponent("나루 운영진 문의")}`,
+  /** 8월 알럼이 자기 이야기를 보내는 자리. #people 챕터의 유일한 공급원입니다. */
+  alumni: `mailto:${CONTACT}?subject=${encodeURIComponent("제로백 빌더톤 이야기")}`,
   /** 제로백 빌더톤(8월)의 기록. */
   archive: "/2026-08",
 } as const;
@@ -96,6 +98,25 @@ export const naruLinks = {
 // 챕터 자체가 렌더되지 않아서, 앵커만 남으면 아무 데도 가지 않는 칩이 됩니다.
 // TODO: 스토리가 들어오면 #people을 #december 앞에 더하세요.
 // ─────────────────────────────────────────────────────────────────────────────
+// ── P3. 오픈채팅 라벨 (DECIDED 2026-09-15) ─────────────────────────────────
+// OpenChatLink는 기본 라벨을 dict.register.openChatCta에서 읽습니다. 그 문장은
+// "다음 소식은 오픈채팅에서 먼저 알려드려요"이고, 8월 등록 마감 뒤에 급히 고친
+// 것입니다. 문제가 셋이었습니다.
+//
+//   1. 문장형이라 버튼이 행동으로 읽히지 않습니다.
+//   2. 홈에서 세 자리에 같은 문장이 나오는데 누르는 이유가 자리마다 다릅니다.
+//      #join 참가자 카드에서는 바로 위 본문과 같은 말이 두 줄 간격으로 두 번
+//      나왔습니다.
+//   3. 이 파일 맨 위가 선언한 "8월 정본과 섞지 않는다"를 그 한 줄이 깨고 있었어요.
+//
+// 무엇을 언제 받는지를 말하게 합니다. 막연한 구독이 아니라 날짜가 있는 약속이
+// 되어야, 미정 목록(december.tbd)과 이어집니다.
+export const openChatLabels = {
+  december: { ko: "등록이 열리면 가장 먼저 알기", en: "Know the day registration opens" },
+  join: { ko: "오픈채팅에서 소식 받기", en: "Get news in the open chat" },
+  footer: { ko: "오픈채팅", en: "Open chat" },
+} as const;
+
 export const naruNav: { id: string; label: Phrase }[] = [
   { id: "top", label: { ko: "나루", en: "NARU" } },
   { id: "why", label: { ko: "왜", en: "Why" } },
@@ -409,6 +430,16 @@ export const naru = {
     },
     gapsLabel: { ko: "8월에 아쉬웠던 네 가지", en: "Four things August missed" },
     gapsNote: { ko: "그래서 12월 이벤트가 있습니다", en: "This is why the December event exists" },
+    // ── 각 항목에 12월의 답을 답니다 (DECIDED 2026-09-15) ──────────────────
+    // 고백 넷과 답 둘이 챕터 두 개 떨어져 있어서 서로 모르고 있었습니다. 그러면
+    // 고백이 변명으로 읽히고, "그래서 12월 이벤트가 있습니다"라는 주장이 근거
+    // 없이 뜹니다. 나란히 두면 그 줄이 로드맵이 됩니다.
+    //
+    // **넷 중 둘만 답이 있습니다. 나머지 둘은 answer가 null이고, 화면은 "아직"
+    // 이라고 씁니다.** 없는 대책을 지어내 채우지 마세요. 넷 다 답한 척하면
+    // 나머지 문장의 신뢰가 같이 떨어집니다. 확정되면 여기를 채우면 됩니다.
+    answerLabel: { ko: "12월", en: "December" },
+    answerPending: { ko: "아직 답이 없습니다", en: "No answer yet" },
     gaps: [
       {
         title: {
@@ -419,12 +450,20 @@ export const naru = {
           ko: "문제와 데이터가 이미 정제돼 있어서, 발견하는 구간이 통째로 빠졌습니다.",
           en: "The problem and the data arrived already cleaned, so the discovery stretch was missing entirely.",
         },
+        answer: {
+          ko: "raw data에서 문제를 찾아 정의하는 구간부터 참가자에게 엽니다.",
+          en: "The stretch where you find and define a problem out of raw data opens to participants.",
+        },
       },
       {
         title: { ko: "멘토링을 충분히 쓰지 못했습니다", en: "Mentoring went underused" },
         body: {
           ko: "슬롯은 넉넉했는데 한 번도 쓰지 않은 팀이 있었습니다.",
           en: "There were plenty of slots, and there were teams that never booked one.",
+        },
+        answer: {
+          ko: "전 기간 상시 예약제로 열고, 횟수를 제한하지 않습니다.",
+          en: "Open by booking the whole way through, with no cap on how many times.",
         },
       },
       {
@@ -433,6 +472,8 @@ export const naru = {
           ko: "팀 안에서는 붙었지만 팀과 팀은 섞이지 않았습니다.",
           en: "People bonded inside their team. Between teams, nothing.",
         },
+        // TODO: confirm. 기획 초안에 사전 대면 팀 본딩이 있지만 확정이 아닙니다.
+        answer: null,
       },
       {
         title: {
@@ -443,8 +484,10 @@ export const naru = {
           ko: "열심히 해 주었는데, 함께 자란다고 느낄 자리를 만들지 못했습니다.",
           en: "They worked hard for it, and we never built them a place where that felt like growth of their own.",
         },
+        // TODO: confirm. 답이 아직 없습니다. 지어내지 마세요.
+        answer: null,
       },
-    ],
+    ] as { title: Phrase; body: Phrase; answer: Phrase | null }[],
     // ── 로고 스트립은 넣지 않았습니다 (DECIDED 2026-09-15) ────────────────
     // 브리프에서 선택 항목이었고, 넣지 않는 쪽을 골랐습니다. 이유는 둘입니다.
     //
@@ -633,6 +676,36 @@ export const naru = {
         },
       },
     ],
+    // ── P2. 아직 정해지지 않은 것 (DECIDED 2026-09-15) ────────────────────
+    // 지금 이 챕터에 없는 것은 "12월 정보"가 아니라 "12월이 관리되고 있다는
+    // 증거"입니다. 미정 항목이 일곱인데 화면이 아직 없다고 말하는 것은 이름
+    // 하나뿐이었고, 나머지 여섯은 그냥 없었습니다. **없는 것은 미정이 아니라
+    // 부실로 읽힙니다.**
+    //
+    // 이 레포는 이미 같은 원리를 두 번 적어 놓았습니다(lib/naruDates.ts의
+    // DECEMBER_ENDS_AT, 위 nameTbd). 그 원리를 한 항목에만 적용하고 있었어요.
+    //
+    // 지어내지 않으면서 이 챕터에 실을 수 있는 가장 큰 덩어리이고, 약점을
+    // 신뢰로 바꿉니다. 매니페스토 VII-02("계산식을 숨기지 않는다")와 같은
+    // 태도이기도 하고요. 그리고 이 목록이 오픈채팅 버튼에 실제 직무를 줍니다.
+    //
+    // **달을 쓰지 않았습니다.** 내부 일정은 11월까지지만, 화면에 쓰는 순간
+    // 공개 약속이 됩니다. 지키지 못하면 이 블록이 하려던 일이 정확히 반대로
+    // 작동합니다. 채워지는 순서만 말하고 날짜는 말하지 않습니다.
+    tbdLabel: { ko: "아직 정해지지 않은 것", en: "Not settled yet" },
+    tbd: [
+      { ko: "이벤트 이름", en: "The name of the event" },
+      { ko: "기간과 마지막 날", en: "How long, and the last day" },
+      { ko: "장소", en: "The venue" },
+      { ko: "일정표", en: "The schedule" },
+      { ko: "문제를 여는 회사", en: "The companies opening problems" },
+      { ko: "멘토", en: "The mentors" },
+      { ko: "등록이 열리는 날", en: "The day registration opens" },
+    ],
+    tbdNote: {
+      ko: "이 목록은 한 줄씩 채워집니다. 채워지는 날은 오픈채팅이 가장 먼저 압니다.",
+      en: "This list gets filled in one line at a time. The open chat hears each one first.",
+    },
     ctaNote: { ko: "등록은 아직 열리지 않았습니다.", en: "Registration is not open yet." },
     ctaMail: { ko: "출제사 및 후원 문의", en: "Problem owners and sponsors" },
   },
@@ -647,6 +720,40 @@ export const naru = {
       ko: "들어오는 길은 자리마다 다릅니다. 참가자에게는 회차 하나뿐이고, 나머지 셋은 먼저 말을 걸어 주시면 됩니다.",
       en: "The way in depends on where you stand. For a participant it is a round and nothing else. For the other three, say hello first.",
     },
+    // ── P4. 8월을 건넌 분께 (DECIDED 2026-09-15) ──────────────────────────
+    // 홈에 알럼을 2인칭으로 부르는 문장이 한 줄도 없었습니다. 59명, 이 그룹이
+    // 가진 유일한 따뜻한 리스트인데요. december.who는 그들을 3인칭으로 언급할
+    // 뿐이고("싱가포르에서 8월을 건넌 사람들이"), #join의 카드 넷 중 어느 것도
+    // 그들이 자기라고 인식할 카드가 아닙니다.
+    //
+    // 특히 december.after의 "다음 이벤트에 멘토로 돌아옵니다"는 미래의 12월
+    // 참가자에게 주는 조언으로 쓰여 있는데, **지금 당장 그걸 할 수 있는 사람은
+    // 8월 알럼뿐입니다.** 가장 값진 전환(받은 사람이 돌려주러 오는 것)을 말해
+    // 놓고 그 말을 할 수 있는 사람에게 말하지 않고 있었습니다.
+    //
+    // 카드를 다섯 장으로 늘리지 않은 것은 그리드 때문입니다(2열이라 마지막 한
+    // 장이 혼자 남습니다). 카드 아래 폭 전체를 쓰는 띠 하나로 둡니다.
+    //
+    // 세 번째 요청("그때의 이야기를 보내 주세요")이 비어 있는 #people 챕터를
+    // 채우는 유일한 공급원입니다. people.stories 주석과 함께 보세요.
+    alumni: {
+      label: { ko: "8월을 건넌 분께", en: "If you crossed August" },
+      lines: [
+        {
+          ko: "제로백 빌더톤에 왔던 분이라면, 12월에 할 수 있는 일이 셋입니다. 참가자로 오거나, 멘토로 돌아오거나, 그때의 이야기를 보내 주는 것.",
+          en: "If you were at the Zero100 builderthon, there are three things you can do in December. Come as a participant, come back as a mentor, or send us your story from back then.",
+        },
+        {
+          ko: "받은 사람이 돌려주는 모습이 보일 때 문화가 됩니다. 지금 그걸 할 수 있는 사람은 8월을 건넌 분들뿐입니다.",
+          en: "It becomes a culture at the moment someone is seen giving back what they were given. Right now you are the only people who can do that.",
+        },
+      ],
+      storyNote: {
+        ko: "이야기를 보내 주시면 이 사이트에 자리를 만듭니다. 본인이 쓴 문장과 동의가 있어야 싣습니다.",
+        en: "Send us a story and it gets a place on this site. We publish only your own words, with your consent.",
+      },
+      mailLabel: { ko: "메일로 보내기", en: "Send it by email" },
+    },
     cards: [
       {
         who: { ko: "참가자", en: "Participants" },
@@ -656,8 +763,8 @@ export const naru = {
             en: "There is no process to join. You come to an event.",
           },
           {
-            ko: "12월 이벤트 등록은 아직 열리지 않았습니다. 열리는 날은 오픈채팅에서 가장 먼저 알려 드립니다.",
-            en: "December registration is not open yet. The open chat hears the day it is, first.",
+            ko: "12월 이벤트 등록은 아직 열리지 않았습니다.",
+            en: "December registration is not open yet.",
           },
         ],
         doorLabel: { ko: "오픈채팅", en: "Open chat" },

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
-import { naru, naruLinks, type Layer } from "@/data/naru";
+import { naru, naruLinks, openChatLabels, type Layer } from "@/data/naru";
 import { DECEMBER_EVENT_NAME, decemberEventLabel, formatDecemberStartShort } from "@/lib/naruDates";
 import Chapter from "@/components/journey/Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
@@ -261,9 +261,24 @@ export default function NaruHome() {
           </div>
           <ul className="mt-5 grid gap-3 sm:grid-cols-2">
             {naru.record.gaps.map((gap) => (
-              <li key={gap.title.en} className="rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4">
+              <li key={gap.title.en} className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4">
                 <p className="break-keep text-sm font-semibold leading-snug text-white">{t(gap.title)}</p>
-                <p className="mt-2 break-keep text-sm leading-relaxed text-white/60">{t(gap.body)}</p>
+                <p className="mt-2 flex-1 break-keep text-sm leading-relaxed text-white/60">{t(gap.body)}</p>
+                {/* 12월의 답. 넷 중 둘만 있습니다. 나머지 둘은 "아직"이라고
+                    씁니다. 없는 대책을 지어내 채우면 나머지 문장의 신뢰가
+                    같이 떨어집니다. */}
+                <p className="mt-4 flex items-baseline gap-2 border-t border-white/[0.07] pt-3">
+                  <span
+                    className={`shrink-0 text-[0.62rem] font-bold uppercase tracking-[0.16em] ${
+                      gap.answer ? "text-accent" : "text-white/55"
+                    }`}
+                  >
+                    {t(naru.record.answerLabel)}
+                  </span>
+                  <span className="break-keep text-sm leading-relaxed text-white/75">
+                    {gap.answer ? t(gap.answer) : t(naru.record.answerPending)}
+                  </span>
+                </p>
               </li>
             ))}
           </ul>
@@ -425,9 +440,32 @@ export default function NaruHome() {
           </ol>
         </div>
 
+        {/* 아직 정해지지 않은 것. 이 챕터에서 가장 정직하고 가장 값이 큰
+            블록입니다. 자세한 이유는 data/naru.ts의 tbdLabel 주석에 있습니다.
+            시각적 무게는 after 블록보다 가볍게 둡니다. 여기는 목록이지
+            주장이 아닙니다. */}
+        <div className="mx-auto mt-12 max-w-3xl rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-6 text-left">
+          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/55">
+            {t(naru.december.tbdLabel)}
+          </p>
+          <ul className="mt-4 flex flex-wrap gap-2">
+            {naru.december.tbd.map((item) => (
+              <li
+                key={item.en}
+                className="inline-flex rounded-full border border-white/12 bg-white/[0.04] px-3 py-1.5 text-xs text-white/70"
+              >
+                {t(item)}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-4 break-keep text-sm leading-relaxed text-white/70">
+            {t(naru.december.tbdNote)}
+          </p>
+        </div>
+
         <p className="mt-10 text-sm text-white/55">{t(naru.december.ctaNote)}</p>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-          <OpenChatLink t={t} src="naru-december" />
+          <OpenChatLink t={t} src="naru-december" label={openChatLabels.december} />
           <a
             href={naruLinks.december}
             onClick={() => track("naru_mail", { src: "december" })}
@@ -460,7 +498,7 @@ export default function NaruHome() {
               </div>
               <div className="mt-6">
                 {card.openChat ? (
-                  <OpenChatLink t={t} src="naru-join" />
+                  <OpenChatLink t={t} src="naru-join" label={openChatLabels.join} />
                 ) : (
                   <a
                     href={card.door}
@@ -474,6 +512,34 @@ export default function NaruHome() {
               </div>
             </Card>
           ))}
+        </div>
+        {/* 8월을 건넌 분께. 카드 넷 아래 폭 전체를 쓰는 띠 하나입니다.
+            이유는 data/naru.ts의 alumni 주석에 있습니다. */}
+        <div className="mx-auto mt-6 rounded-3xl border border-accent/25 bg-accent/[0.06] px-6 py-7 text-left sm:px-8">
+          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
+            {t(naru.join.alumni.label)}
+          </p>
+          <div className="mt-3 space-y-3">
+            {naru.join.alumni.lines.map((line, i) => (
+              <p key={i} className="break-keep text-sm leading-relaxed text-white/80">
+                {t(line)}
+              </p>
+            ))}
+          </div>
+          <p className="mt-4 break-keep text-sm leading-relaxed text-white/60">
+            {t(naru.join.alumni.storyNote)}
+          </p>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <OpenChatLink t={t} src="naru-join" label={openChatLabels.join} />
+            <a
+              href={naruLinks.alumni}
+              onClick={() => track("naru_mail", { src: "alumni" })}
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2.5 text-sm font-medium text-white/75 transition hover:border-white/35 hover:bg-white/10 hover:text-white"
+            >
+              {t(naru.join.alumni.mailLabel)}
+              <span aria-hidden className="text-white/50">→</span>
+            </a>
+          </div>
         </div>
       </Chapter>
 
@@ -526,7 +592,7 @@ export default function NaruHome() {
           />
           <p className="break-keep text-xs leading-relaxed text-white/60">{t(naru.footer.credits)}</p>
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs">
-            <OpenChatLink t={t} src="naru-footer" className="!px-3.5 !py-2 !text-xs" />
+            <OpenChatLink t={t} src="naru-footer" label={openChatLabels.footer} className="!px-3.5 !py-2 !text-xs" />
             <a
               href={naruLinks.december}
               onClick={() => track("naru_mail", { src: "footer" })}

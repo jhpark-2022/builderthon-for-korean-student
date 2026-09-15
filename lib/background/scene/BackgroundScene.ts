@@ -5,6 +5,7 @@ import { CameraController } from "../camera/CameraController";
 import { Pointer } from "../interactions/Pointer";
 import { ParticleField } from "../particles/ParticleField";
 import { Atmosphere } from "../particles/Atmosphere";
+import { WaterSurface } from "../water/WaterSurface";
 import { PostFX } from "../renderer/PostFX";
 import { computePhases } from "../utils/phases";
 import { clamp } from "../utils/math";
@@ -15,10 +16,21 @@ import { isScrollLocked } from "../../useBodyScrollLock";
  * loop. Public API: constructor(canvas) → start() → dispose(). Handles resize,
  * scroll, reduced-motion, visibility throttling, and adaptive frame-skipping.
  *
- * Layer composition (back → front), each at a different parallax speed:
- *   Atmosphere  — drifting nebula gradient (slowest)
- *   ParticleField — hero flow-field particles (fastest, interactive)
+ * Layer composition depends on `variant`.
+ *
+ *   "field" (8월 회차, /2026-08의 기본값)
+ *     Atmosphere    드리프트하는 성운 그라데이션 (가장 느림)
+ *     ParticleField 흐름장 입자 (가장 빠름, 상호작용)
+ *
+ *   "water" (나루 홈)
+ *     WaterSurface  하늘과 수면을 한 셰이더로. 이 하나가 배경 전부입니다.
+ *
+ * DECIDED 2026-09-15: variant를 둔 이유는 두 페이지가 서로 다른 것을 말하기
+ * 때문입니다. 8월 페이지의 입자 필드는 그 회차의 것이라 그대로 둡니다.
+ * 나루 홈은 나루터를 말해야 하고, 그건 강과 등불입니다.
  */
+export type BackgroundVariant = "field" | "water";
+
 export class BackgroundScene {
   private readonly scene = new THREE.Scene();
   private readonly renderer: Renderer;
@@ -26,8 +38,18 @@ export class BackgroundScene {
   private readonly pointer = new Pointer();
   private readonly quality: QualityTier;
 
-  private readonly atmosphere: Atmosphere;
-  private readonly particles: ParticleField;
+  private readonly variant: BackgroundVariant;
+  // field 변형에서만 만듭니다. water에서는 둘 다 null입니다.
+  private readonly atmosphere: Atmosphere | null;
+  private readonly particles: ParticleField | null;
+  // water 변형에서만 만듭니다.
+  private readonly water: WaterSurface | null;
+  // 포인터의 화면 uv. water 셰이더가 파문을 여기에 놓습니다.
+  private readonly pointerUv = new THREE.Vector2(0.5, 0.5);
+  // 필드의 자체 시간. 벽시계와 분리합니다. motionScale이 0이면 이 값이 더 이상
+  // 늘지 않아 배경이 "그 자리에" 얼어붙습니다. uTime에 0을 곱하면 t=0의 배치로
+  // 튀어서, 정지가 아니라 점프로 보입니다.
+  private fieldTime = 0;
   private readonly post: PostFX;
 
   private readonly clock = new THREE.Clock();
@@ -46,7 +68,8 @@ export class BackgroundScene {
   private frameCount = 0;
   private motionScale = 1; // dialed down under reduced-motion
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, variant: BackgroundVariant = "field") {
+    this.variant = variant;
     this.quality = pickQuality();
     this.renderer = new Renderer(canvas, this.quality);
     this.cam = new CameraController();
@@ -57,16 +80,23 @@ export class BackgroundScene {
     rim.position.set(-18, 12, 20);
     this.scene.add(rim);
 
-    this.atmosphere = new Atmosphere();
-    this.particles = new ParticleField(this.quality, 1.0);
-
-    // NOTE: there is intentionally NO portal object in the scene. The phenomenon
-    // is expressed only through particle convergence + screen-space lensing +
-    // density-driven bloom — never a rendered disc/sphere with a visible edge.
-    this.scene.add(
-      this.atmosphere.mesh,
-      this.particles.points
-    );
+    if (variant === "water") {
+      this.atmosphere = null;
+      this.particles = null;
+      this.water = new WaterSurface();
+      this.scene.add(this.water.mesh);
+    } else {
+      this.water = null;
+      this.atmosphere = new Atmosphere();
+      this.particles = new ParticleField(this.quality, 1.0);
+      // NOTE: there is intentionally NO portal object in the scene. The phenomenon
+      // is expressed only through particle convergence + screen-space lensing +
+      // density-driven bloom — never a rendered disc/sphere with a visible edge.
+      this.scene.add(
+        this.atmosphere.mesh,
+        this.particles.points
+      );
+    }
 
     // post-processing stack (bloom only on capable tiers)
     this.post = new PostFX(this.renderer.gl, this.scene, this.cam.camera, this.quality.bloom);
@@ -100,8 +130,9 @@ export class BackgroundScene {
     document.removeEventListener("visibilitychange", this.onVisibility);
     this.mql.removeEventListener("change", this.onReducedChange);
 
-    this.atmosphere.dispose();
-    this.particles.dispose();
+    this.atmosphere?.dispose();
+    this.particles?.dispose();
+    this.water?.dispose();
     this.post.dispose();
     this.scene.traverse((o) => {
       const l = o as THREE.Light;
@@ -116,7 +147,8 @@ export class BackgroundScene {
   private onResize = () => {
     this.renderer.resize();
     this.cam.resize();
-    this.atmosphere.resize();
+    this.atmosphere?.resize();
+    this.water?.resize();
     this.post.setSize(window.innerWidth, window.innerHeight);
     this.syncPixelRatio();
   };
@@ -138,13 +170,17 @@ export class BackgroundScene {
   private applyReducedMotion(reduced: boolean) {
     this.reduced = reduced;
     this.cam.setReducedMotion(reduced);
-    // Keep the field alive but near-static under reduced-motion: very slow
-    // particle/line drift (the camera scroll travel and lens are damped too).
-    this.motionScale = reduced ? 0.1 : 1;
+    // DECIDED 2026-09-15: 0.1이 아니라 0입니다. WCAG 2.2.2가 요구하는 것은
+    // 감속이 아니라 정지이고, prefers-reduced-motion을 그 "수단"으로 쓰려면
+    // 실제로 멈춰야 합니다. 10% 속도도 전정기관에는 움직임입니다.
+    // fieldTime이 누산기라 값이 t=0으로 튀지 않고 그 자리에 섭니다.
+    // 스크롤 연동 이동은 남깁니다. 그건 자동으로 시작되는 움직임이 아니라
+    // 사용자가 손가락으로 만든 것이고, 2.2.2의 대상이 아닙니다.
+    this.motionScale = reduced ? 0 : 1;
   }
 
   private syncPixelRatio() {
-    this.particles.setPixelRatio(this.renderer.pixelRatio);
+    this.particles?.setPixelRatio(this.renderer.pixelRatio);
   }
 
   // ── render loop ─────────────────────────────────────────────────────────────
@@ -174,8 +210,21 @@ export class BackgroundScene {
       this.focusProjected.y * 0.5 + 0.5
     );
 
-    this.atmosphere.update(t, this.scroll, phases.reveal);
-    this.particles.update(t, this.pointer.world, this.scroll, this.motionScale, phases);
+    this.fieldTime += dt * this.motionScale;
+
+    if (this.water) {
+      // 포인터 ndc(-1..1)를 화면 uv(0..1)로. 셰이더가 파문을 여기에 놓습니다.
+      this.pointerUv.set(
+        this.pointer.ndc.x * 0.5 + 0.5,
+        this.pointer.ndc.y * 0.5 + 0.5
+      );
+      // 모션 민감 설정에서는 파문도 끕니다. 커서를 따라오는 물결은 자동으로
+      // 시작되는 움직임은 아니지만, 정지를 고른 사람에게 줄 이유도 없습니다.
+      this.water.update(this.fieldTime, this.scroll, this.pointerUv, this.reduced ? 0 : 1);
+    } else {
+      this.atmosphere?.update(this.fieldTime, this.scroll, phases.reveal);
+      this.particles?.update(this.fieldTime, this.pointer.world, this.scroll, this.motionScale, phases);
+    }
     // under reduced-motion, damp the flashy portal/white-out so the crossing
     // stays calm and the footer text never washes out
     this.post.setPhase(phases, this.reduced ? 0.3 : 1);
