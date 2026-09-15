@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-export const alt = "나루 NARU, Korean student builders in Singapore";
+export const alt = "나루 NARU, Korean student builders in Singapore. CROSSING SEOUL, 9 Dec 2026.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -82,17 +82,23 @@ export default async function OpengraphImage() {
           <div style={{ display: "flex", marginTop: 26, fontSize: 27, color: "#B9C0DE" }}>
             Korean student builders in Singapore
           </div>
+          {/* 이벤트 이름과 날짜. 그 아래 작은 줄이 포지션입니다. 위의
+              "Korean student builders in Singapore"는 나루 정체성 줄이라
+              그대로이고, 이 줄은 12월이 어떤 자리인지를 말합니다. */}
           <div
             style={{
               display: "flex",
-              marginTop: 30,
-              fontSize: 24,
+              marginTop: 28,
+              fontSize: 26,
               fontWeight: 700,
               letterSpacing: 1,
               color: "#ffffff",
             }}
           >
-            Next event&nbsp;&nbsp;9 Dec 2026&nbsp;&nbsp;Seoul
+            CROSSING SEOUL&nbsp;&nbsp;9 Dec 2026
+          </div>
+          <div style={{ display: "flex", marginTop: 10, fontSize: 21, color: "#B9C0DE" }}>
+            Korean student builders, wherever they study
           </div>
         </div>
       </div>

@@ -188,6 +188,10 @@ export const naru = {
   hero: {
     // 로고가 바로 위에 있으므로 이름을 한 번 더 말하지 않습니다. 이 줄은 나루가
     // 무엇인지를 한 줄로 말하는 자리입니다.
+    // TODO: confirm. 12월이 국경을 여니 "싱가포르에서 시작한 한인 학생 빌더
+    // 커뮤니티"가 후보입니다. 지금은 바꾸지 않습니다. 나루의 정체성 문구는
+    // Overview와 로고 링의 SINGAPORE에 묶여 있고, 그건 이벤트 포지션이 아니라
+    // 그룹의 정의라 사용자가 정할 일입니다.
     eyebrow: {
       ko: "싱가포르 한인 학생 빌더 커뮤니티",
       en: "Korean student builders in Singapore",
@@ -201,8 +205,13 @@ export const naru = {
     titleLine2: { ko: "자리는 우리가 만든다.", en: "We make the place." },
     // 숫자 둘과 날짜 하나. 전부 확정된 사실입니다.
     sub: {
-      ko: "2026년 8월, 싱가포르에서 59명이 8일을 건넜습니다. 다음 이벤트 크로싱 서울은 12월 9일에 시작합니다.",
-      en: "In August 2026, fifty-nine people crossed eight days in Singapore. The next one, CROSSING SEOUL, starts on 9 December.",
+      // 날짜와 이름은 lib/naruDates.ts에서 조립해 넣습니다. 이 문자열에 "12월
+      // 9일"이나 "크로싱 서울"을 직접 쓰지 마세요(NaruHome의 히어로 렌더 참고).
+      // {date}와 {name} 자리를 그대로 두면 렌더가 채웁니다.
+      // 이름에 "서울"이 이미 있어서 날짜 뒤에 도시를 한 번 더 쓰지 않습니다.
+      // "12월 9일 서울, 크로싱 서울에서는"이 되어 서울이 연달아 두 번 나옵니다.
+      ko: "2026년 8월, 싱가포르에서 59명이 8일을 건넜습니다. {date}, {name}에서는 국경과 상관없이 만납니다.",
+      en: "In August 2026, fifty-nine people crossed eight days in Singapore. On {date}, {name} brings them together whichever country they study in.",
     },
     ctaDecember: { ko: "크로싱 서울 알아보기", en: "About CROSSING SEOUL" },
     ctaArchive: { ko: "제로백 빌더톤의 기록", en: "The Zero100 builderthon record" },
@@ -281,8 +290,8 @@ export const naru = {
     eyebrow: { ko: "제로백 빌더톤 2026.08 싱가포르", en: "Zero100 builderthon Aug 2026, Singapore" },
     heading: { ko: "8월에 있었던 일", en: "What happened in August" },
     lead: {
-      ko: "제로백 빌더톤은 나루의 첫 이벤트였습니다. 2026년 8월 22일부터 29일까지, 싱가포르에서 8일이었습니다.",
-      en: "The Zero100 builderthon was NARU's first event. Eight days in Singapore, from 22 to 29 August 2026.",
+      ko: "제로백 빌더톤은 나루의 첫 이벤트였습니다. 2026년 8월 22일부터 29일까지, 싱가포르 안에서 8일이었습니다.",
+      en: "The Zero100 builderthon was NARU's first event. Eight days inside Singapore, from 22 to 29 August 2026.",
     },
     // 이 줄이 CH2를 CH1과 묶습니다. 8월이 자랑거리라서 여기 있는 것이 아니라,
     // 코어 2개가 거기서 나왔기 때문에 있습니다. 순서가 반대였어요. 먼저 해 보고
@@ -429,7 +438,8 @@ export const naru = {
       },
     },
     gapsLabel: { ko: "8월에 아쉬웠던 네 가지", en: "Four things August missed" },
-    gapsNote: { ko: "그래서 12월 이벤트가 있습니다", en: "This is why the December event exists" },
+    // {name}은 렌더가 decemberEventLabel로 채웁니다.
+    gapsNote: { ko: "그래서 {name}이 있습니다", en: "This is why {name} exists" },
     // ── 각 항목에 12월의 답을 답니다 (DECIDED 2026-09-15) ──────────────────
     // 고백 넷과 답 둘이 챕터 두 개 떨어져 있어서 서로 모르고 있었습니다. 그러면
     // 고백이 변명으로 읽히고, "그래서 12월 이벤트가 있습니다"라는 주장이 근거
@@ -537,6 +547,8 @@ export const naru = {
       },
       {
         role: { ko: "주관 ORGANISER", en: "ORGANISER" },
+        // TODO: confirm. 한국 안의 학교에서 누가 주관 자리에 서는지는 아직
+        // 정해지지 않았습니다. 창업학회 같은 주체를 지어내 쓰지 마세요.
         who: { ko: "각 학교 한인 학생회", en: "Each school's Korean student association" },
         brings: { ko: "소속 학생, 공간, 학교 안의 명의", en: "Students, space, standing inside the school" },
         does: {
@@ -602,8 +614,23 @@ export const naru = {
   // 잘못된 것입니다.** 12월은 제로백의 속편이 아니라 그 이벤트에서 나온 코어
   // 2개를 잇는 다른 이벤트입니다. 파일 맨 위의 용어 위계를 보세요.
   december: {
-    eyebrow: { ko: "다음 이벤트 2026.12", en: "Next event Dec 2026" },
-    headingSuffix: { ko: ", 서울에서 시작합니다.", en: ", Seoul." },
+    // 아이브로는 세 조각으로 조립됩니다. 접두어 + 이름 + 달과 도시.
+    // 이름은 decemberEventLabel, 달과 도시는 naruDates가 줍니다. 이름이 다시
+    // null이 되어도(다음 크로싱이 이름 없이 시작할 때) 깨지지 않습니다.
+    eyebrowPrefix: { ko: "다음 이벤트", en: "Next event" },
+
+    // ── 제목이 포지션을 말합니다 (DECIDED 2026-09-15) ──────────────────────
+    // 전에는 H2가 날짜였습니다("12월 9일, 서울에서 시작합니다"). 그러면 이
+    // 챕터가 가장 큰 글씨로 "언제"를 말하는데, 이 이벤트에서 설명이 필요한 것은
+    // 언제가 아니라 무엇입니다. 날짜는 아래 한 줄로 내려갔습니다.
+    heading: {
+      ko: "국경과 상관없이, 한인 학생 빌더가 만나는 자리.",
+      // 브리프의 초안은 "Where Korean student builders meet, whichever country
+      // they study in."이었는데 375px에서 다섯 줄이 됐습니다(실측). 뜻을 유지한
+      // 채 줄였습니다. "Korean"은 빼지 않습니다. 국경을 여는 것이지 한인이라는
+      // 범위를 여는 것이 아닙니다.
+      en: "Korean student builders meet here, wherever they study.",
+    },
     // 첫 문장이 부정으로 시작하는 것은 의도입니다. 8월을 아는 사람은 이 자리에서
     // 반드시 "2회차인가"를 묻고, 그 오해를 그대로 두면 나머지 문장이 전부 그
     // 전제 위에서 읽힙니다. 먼저 끊고 시작합니다.
@@ -622,12 +649,28 @@ export const naru = {
       ko: "이벤트 이름은 아직 없습니다. 정해지면 여기에 적습니다.",
       en: "The event does not have a name yet. It goes here when it does.",
     },
+    // ── 왜 옛 문장을 버렸는가 ───────────────────────────────────────────
+    // 전에는 "코어는 그대로 두고 무대만 옮깁니다"였습니다. 그 문장이 서울 개최를 "한국 이벤트"로 읽히게 만들었습니다. 그러면 한국
+    // 밖에서 공부하는 한인 유학생이 자기 자리를 못 찾고, 8월과의 서사도
+    // 끊깁니다. 8월은 싱가포르 안에서 열렸고 12월은 그 안이 아닌 자리입니다.
+    // 넓어지는 것은 판이지 코어가 아닙니다.
     lead: {
-      ko: "코어는 그대로 두고 무대를 한국으로 옮깁니다. 한 번으로는 사례가 되지 않고, 두 번째부터 선례가 됩니다.",
-      en: "The core stays as it is and the stage moves to Korea. Once is an anecdote. From the second, it is a precedent.",
+      ko: "8월은 싱가포르 안에서 열렸습니다. 12월은 한국의 대학생과 해외의 한인 유학생이 같은 문제 앞에 섭니다. 학교도 나라도 다르지만 같은 자리입니다. 코어는 둘 그대로이고, 넓어지는 것은 판입니다.",
+      en: "August happened inside Singapore. In December, students at Korean universities and Korean students studying abroad stand in front of the same problem. Different schools, different countries, one place. The two cores are unchanged. What widens is the room.",
     },
     changesLabel: { ko: "무엇이 달라지는가", en: "What changes" },
+    // 첫 항목이 국경입니다. 나머지 둘(문제 정의 개방, 코어 유지)은 그대로예요.
+    //
+    // TODO: confirm. 기획 초안에는 크로스보더 문제 각도가 있습니다. 동남아
+    // 진출 한국 기업이 문제를 열고, 한국 학생은 한국 시장의 눈으로, 싱가포르
+    // 학생은 싱가포르 시장의 눈으로 본다는 것. 확정되면 이 포지션의 가장
+    // 구체적인 증거가 되니 여기 한 항목으로 들어갈 자리입니다. 출제사가
+    // 정해지기 전에는 쓰지 않습니다.
     changes: [
+      {
+        ko: "8월은 싱가포르 세 학교 안이었습니다. 12월은 어느 나라에서 공부하든 옵니다.",
+        en: "August ran inside three Singapore universities. In December you come whichever country you study in.",
+      },
       {
         ko: "8월에는 기업이 정제한 문제를 받았습니다. 12월은 raw data에서 문제를 찾아 정의하는 구간부터 참가자에게 엽니다.",
         en: "In August the problems arrived already cleaned by the company. In December the stretch where you find and define a problem out of raw data opens to participants too.",
@@ -637,11 +680,28 @@ export const naru = {
         en: "The core is unchanged. No screening, awards by category with no ranking, mentoring on call the whole way through.",
       },
     ],
+    // ── 왜 국경을 여는가 ────────────────────────────────────────────────
+    // 두 줄입니다. 세 번째로 쓰려던 줄("12월은 흩어져 있던 사람들이 한곳에
+    // 모이는 시기")은 넣지 않았습니다.
+    // TODO: confirm. 유학생 귀국 규모가 검증되지 않았습니다. 그 줄이 사실이면
+    // 이 블록에서 가장 실용적인 근거가 되지만, 지금은 짐작입니다.
+    whyLabel: { ko: "왜 국경을 여는가", en: "Why the borders open" },
+    why: [
+      {
+        ko: "한 번으로는 사례가 되지 않습니다. 두 번째부터 선례가 되고, 그 선례가 싱가포르를 넘어야 다음이 있습니다.",
+        en: "Once is an anecdote. From the second it is a precedent, and the precedent has to travel past Singapore for there to be a next one.",
+      },
+      {
+        ko: "안전하게 도전하고 자기 가치를 증명할 자리는 어느 나라의 학교 안에도 없습니다. 그래서 학교 밖에, 나라 밖에 만듭니다.",
+        en: "A place to try safely and prove your own worth does not exist inside any country's universities. So we build it outside the school, and outside the country.",
+      },
+    ],
     whoLabel: { ko: "누가 오는가", en: "Who comes" },
-    // TODO: confirm. 알럼 참여 규모가 검증되지 않았습니다. 인원을 쓰지 마세요.
+    // TODO: confirm. 알럼 참여 규모가 검증되지 않았습니다. 인원도 비율도 쓰지
+    // 마세요. 셋을 나열만 하고 크기를 말하지 않는 것이 지금 쓸 수 있는 전부입니다.
     who: {
-      ko: "한국 대학생과, 싱가포르에서 8월을 건넌 사람들이 같은 무대에 섭니다.",
-      en: "Korean university students, and the people who crossed August in Singapore, stand on the same stage.",
+      ko: "한국의 대학생, 해외의 한인 유학생, 그리고 8월을 싱가포르에서 건넌 사람들.",
+      en: "Students at Korean universities, Korean students studying abroad, and the people who crossed August in Singapore.",
     },
     // ── 이벤트가 끝난 뒤에 할 일 ────────────────────────────────────────────
     // 이 블록은 반드시 있어야 합니다. 8월에 이걸 쓰지 않아서, 이벤트 뒤에 멘토에게
@@ -765,8 +825,8 @@ export const naru = {
         who: { ko: "참가자", en: "Participants" },
         lines: [
           {
-            ko: "따로 들어오는 절차가 없습니다. 이벤트에 오면 됩니다.",
-            en: "There is no process to join. You come to an event.",
+            ko: "따로 들어오는 절차가 없습니다. 어느 나라에서 공부하든, 이벤트에 오면 됩니다.",
+            en: "There is no process to join. Whichever country you study in, you come to an event.",
           },
           {
             ko: "크로싱 서울 등록은 아직 열리지 않았습니다.",

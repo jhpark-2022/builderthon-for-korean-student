@@ -137,3 +137,34 @@ export function decemberEventLabel(locale: Locale): string {
   // 시작할 때 다시 쓰입니다. 지우지 마세요.
   return locale === "ko" ? "12월 이벤트" : "the December event";
 }
+
+/**
+ * 아이브로에 들어가는 달. "2026.12" / "Dec 2026".
+ *
+ * 날짜 문자열은 이 파일에서만 나옵니다. 아이브로에 "2026.12"를 직접 쓰면
+ * DECEMBER_STARTS_AT을 고쳐도 그 줄만 남습니다.
+ */
+export function formatDecemberMonth(locale: Locale): string {
+  const [y, m] = parts(DECEMBER_STARTS_AT);
+  return locale === "ko" ? `${y}.${String(m).padStart(2, "0")}` : `${EN_MONTHS[m - 1].slice(0, 3)} ${y}`;
+}
+
+/**
+ * 제목 아래 날짜 한 줄. "2026년 12월 9일부터, 서울." / "From 9 December 2026, Seoul."
+ *
+ * DECIDED 2026-09-15 (포지션 반영): 날짜가 H2에서 내려왔습니다. 제목이 이제
+ * 포지션을 말하고("국경과 상관없이, 한인 학생 빌더가 만나는 자리") 날짜는 그
+ * 아래 한 줄입니다. 날짜가 제목이던 동안은 12월 챕터가 "언제"만 말했는데,
+ * 이 이벤트에서 설명이 필요한 것은 언제가 아니라 무엇이었습니다.
+ *
+ * 종료일이 없으면 formatDecemberRange가 "부터"까지만 돌려주므로 이 줄도 자동으로
+ * "2026년 12월 9일부터, 서울."이 됩니다. 종료일이 채워지면 기간으로 바뀝니다.
+ */
+export function formatDecemberDateLine(locale: Locale): string {
+  const range = formatDecemberRange(locale);
+  const city = DECEMBER_CITY[locale];
+  if (locale === "ko") return `${range}, ${city}.`;
+  // 영문은 문장 첫 글자를 올립니다. formatDecemberRange가 "from ..."으로
+  // 시작하는데 여기서는 그 조각이 문장의 처음입니다.
+  return `${range.charAt(0).toUpperCase()}${range.slice(1)}, ${city}.`;
+}

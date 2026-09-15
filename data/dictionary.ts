@@ -1223,8 +1223,8 @@ export const dict = {
         when: { ko: "2026.12 서울", en: "Dec 2026 Seoul" },
         title: { ko: "크로싱 서울", en: "CROSSING SEOUL" },
         body: {
-          ko: "같은 코어를 잇는 다음 이벤트입니다. 이번에는 정제된 문제가 아니라 raw data에서 시작해, 무엇이 문제인지 찾는 데서부터 엽니다.",
-          en: "The next event, carrying the same two cores. This time it starts from raw data rather than a cleaned brief, opening at the point where you work out what the problem even is.",
+          ko: "같은 코어를 잇는 다음 이벤트입니다. 이번에는 raw data에서 시작해 무엇이 문제인지 찾는 데서부터 열고, 한국의 대학생과 해외의 한인 유학생이 국경과 상관없이 만납니다.",
+          en: "The next event, carrying the same two cores. This time it opens at the point where you work out what the problem even is, out of raw data, and Korean students meet there whichever country they study in.",
         },
       },
       {
@@ -2993,8 +2993,8 @@ export const dict = {
     ],
     cardCta: { ko: "마무리 보기", en: "See how it ended" },
     next: {
-      ko: "제로백 빌더톤은 여기서 끝났지만, 같은 코어를 잇는 나루의 다음 이벤트가 2026년 12월 9일 서울에서 시작합니다. 나루 홈에서 자세히 볼 수 있어요. 소식은 오픈채팅에서 가장 먼저 전해 드려요.",
-      en: "The Zero100 builderthon ends here, but NARU's next event, carrying the same two cores, starts in Seoul on 9 December 2026. You can read more on the NARU home page. The open chat hears about it first.",
+      ko: "제로백 빌더톤은 여기서 끝났지만, 같은 코어를 잇는 나루의 다음 이벤트가 2026년 12월 9일 서울에서 시작합니다. 이번에는 국경과 상관없이 만나요. 나루 홈에서 자세히 볼 수 있어요. 소식은 오픈채팅에서 가장 먼저 전해 드려요.",
+      en: "The Zero100 builderthon ends here, but NARU's next event, carrying the same two cores, starts in Seoul on 9 December 2026. This time everyone meets there whichever country they study in. You can read more on the NARU home page. The open chat hears about it first.",
     },
   },
 

@@ -5,6 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { LocaleProvider } from "@/lib/LocaleContext";
 import SkipLink from "@/components/SkipLink";
+import { DECEMBER_EVENT_NAME } from "@/lib/naruDates";
 
 // Self-hosted Pretendard (variable) — served same-origin from the Vercel edge,
 // preloaded, with a metric-matched fallback (no CLS). Replaces the old
@@ -33,12 +34,18 @@ const SITE_URL = "https://builderthon-for-korean-student.vercel.app";
 // 한 번 굳고 요청 시각을 볼 수 없어요(8월 페이지에서 배운 것과 같은 제약).
 // 그래서 어느 국면에서 읽어도 맞는 문장을 씁니다.
 //
-// TODO: confirm. 12월 종료일과 이벤트 이름이 확정되면 설명을 다시 봅니다.
-// 이름과 날짜의 정본은 lib/naruDates.ts입니다. 지금은 이름이 없어서 "다음
-// 이벤트"라고만 씁니다. 제로백이나 2회차라고 쓰지 마세요.
+// 이름과 날짜의 정본은 lib/naruDates.ts입니다. 여기서 문자열로 조립하는 이유는
+// metadata가 빌드 시점에 한 번 굳는 값이라 훅이나 로케일을 쓸 수 없기
+// 때문입니다. 상수에서 읽으니 이름이 바뀌면 여기도 따라옵니다.
+//
+// 마지막 문장이 포지션입니다(DECIDED 2026-09-15). 검색 결과와 공유 카드에서
+// 이 사이트가 무엇인지 말하는 유일한 줄이라, "12월 9일 서울"까지만 쓰면
+// 한국에서 열리는 행사로만 읽힙니다.
+//
+// TODO: confirm. 12월 종료일이 확정되면 "12월 9일"을 기간으로 바꿀지 봅니다.
 const SITE_NAME = "나루 NARU";
 const SITE_DESCRIPTION =
-  "싱가포르 한인 학생 빌더 커뮤니티. 안전하게 도전할 자리와 자기 가치를 증명할 경험을 만듭니다. 다음 이벤트는 2026년 12월 9일 서울에서 시작합니다.";
+  `싱가포르 한인 학생 빌더 커뮤니티. 안전하게 도전할 자리와 자기 가치를 증명할 경험을 만듭니다. 다음 이벤트 ${DECEMBER_EVENT_NAME?.ko ?? "크로싱 서울"}은 2026년 12월 9일 서울에서 시작합니다. 한국의 대학생과 해외의 한인 유학생이 국경과 상관없이 만나는 자리입니다.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -50,6 +57,7 @@ export const metadata: Metadata = {
   keywords: [
     "나루", "NARU", "싱가포르 한인 학생", "빌더 커뮤니티", "빌더톤", "Builderthon",
     "Zero100", "Singapore", "Korean students", "AI", "NUS", "NTU", "SMU", "서울",
+    "크로싱 서울", "CROSSING SEOUL", "한인 유학생",
   ],
   openGraph: {
     title: SITE_NAME,

@@ -5,7 +5,11 @@ import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
 import { naru, naruLinks, openChatLabels, type Layer } from "@/data/naru";
-import { DECEMBER_EVENT_NAME, decemberEventLabel, formatDecemberStartShort } from "@/lib/naruDates";
+import {
+  decemberEventLabel,
+  formatDecemberDateLine,
+  formatDecemberStartShort,
+} from "@/lib/naruDates";
 import Chapter from "@/components/journey/Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
@@ -116,8 +120,13 @@ export default function NaruHome() {
             {t(naru.hero.titleLine2)}
           </span>
         </h1>
+        {/* {date}와 {name}은 lib/naruDates.ts에서 옵니다. 카피에 날짜와 이름을
+            박아 두면 DECEMBER_STARTS_AT이나 DECEMBER_EVENT_NAME을 고쳐도 이
+            문장만 남습니다. 둘 다 확정 전의 값이라 반드시 한 번 이상 바뀝니다. */}
         <p className="mx-auto mt-7 max-w-xl break-keep text-sm leading-relaxed text-white/80 sm:text-base">
-          {t(naru.hero.sub)}
+          {t(naru.hero.sub)
+            .replace("{date}", formatDecemberStartShort(locale))
+            .replace("{name}", decemberEventLabel(locale))}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3 sm:mt-9">
           {/* 주 CTA. 주황은 이 사이트에서 이 버튼과 12월 챕터의 아이브로,
@@ -261,7 +270,9 @@ export default function NaruHome() {
         <div className="mx-auto mt-16 max-w-5xl border-t border-white/10 pt-10 text-left">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <h3 className={H3}>{t(naru.record.gapsLabel)}</h3>
-            <span className="break-keep text-sm text-white/70">{t(naru.record.gapsNote)}</span>
+            <span className="break-keep text-sm text-white/70">
+              {t(naru.record.gapsNote).replace("{name}", decemberEventLabel(locale))}
+            </span>
           </div>
           <ul className="mt-6 grid gap-3 sm:grid-cols-2">
             {naru.record.gaps.map((gap) => (
@@ -373,24 +384,29 @@ export default function NaruHome() {
       {/* 반대로 벌립니다. 여기서 과거가 끝나고 미래가 시작합니다. 공백 자체가
           "장이 바뀐다"를 말하게 두는 유일한 이음매입니다. */}
       <Chapter id="december" align="center" className="pt-20 sm:pt-28 lg:pt-36">
-        <Eyebrow color="orange">{t(naru.december.eyebrow)}</Eyebrow>
-        {/* 날짜 문자열은 lib/naruDates.ts에서만 옵니다. 여기에 "12월 9일"을
-            직접 쓰지 마세요. 확정 전의 값이라 반드시 한 번 이상 바뀝니다. */}
-        <h2 className={H2}>
-          {formatDecemberStartShort(locale)}
-          {t(naru.december.headingSuffix)}
-        </h2>
-        {/* 이름이 서는 자리. DECEMBER_EVENT_NAME이 채워지면 이름이, 아직
-            null이면 "이름은 아직 없습니다"가 옵니다. 둘 중 하나는 반드시
-            있어야 해요. 아무것도 없으면 읽는 사람이 이름을 찾다가 못 찾고,
-            못 찾은 것은 "아직 안 정해진 행사"로 읽힙니다. */}
-        {DECEMBER_EVENT_NAME ? (
-          <p className="mt-5 text-lg font-bold tracking-tight text-[#F2B183] sm:text-xl">
-            {decemberEventLabel(locale)}
-          </p>
-        ) : (
-          <p className="mt-5 break-keep text-sm text-white/50">{t(naru.december.nameTbd)}</p>
-        )}
+        {/* 아이브로가 이름을 답니다. 이름이 별도의 줄이었을 때는 제목이 날짜라
+            이름이 갈 곳이 그 아래뿐이었는데, 제목이 포지션으로 바뀌면서 이름은
+            라벨 자리로 올라가는 편이 맞습니다.
+            이름과 달은 lib/naruDates.ts에서 조립합니다. DECEMBER_EVENT_NAME이
+            다시 null이 되어도 decemberEventLabel이 "12월 이벤트"를 돌려주므로
+            이 줄은 깨지지 않습니다(그 경우 naru.december.nameTbd를 다시
+            쓰세요. 키는 지우지 않았습니다). */}
+        {/* 달과 도시는 빼고 접두어 + 이름만 답니다. 브리프의 기준은 "2026.12
+            서울"까지 넣는 것이었는데, 375px에서 재 보니 두 줄로 접혔습니다
+            (실측 2026-09-15). 바로 아래 날짜 줄이 "2026년 12월 9일부터,
+            서울."을 이미 말하므로 여기서 한 번 더 말할 값이 없습니다.
+            formatDecemberMonth는 남겨 둡니다. 나중에 아이브로가 넓어질 자리가
+            생기거나 다른 곳에서 달만 필요할 때 쓸 값입니다. */}
+        <Eyebrow color="orange">
+          {`${t(naru.december.eyebrowPrefix)}\u2002${decemberEventLabel(locale)}`}
+        </Eyebrow>
+        {/* 제목이 포지션을 말합니다. 전에는 날짜였는데, 이 이벤트에서 설명이
+            필요한 것은 언제가 아니라 무엇입니다. 날짜는 바로 아래 한 줄로
+            내려갔고 그 문자열도 naruDates가 만듭니다. */}
+        <h2 className={H2}>{t(naru.december.heading)}</h2>
+        <p className="mt-5 text-base font-semibold tracking-tight text-[#F2B183] sm:text-lg">
+          {formatDecemberDateLine(locale)}
+        </p>
         {/* 첫 문장이 부정입니다. 8월을 아는 사람은 이 자리에서 반드시
             "2회차인가"를 묻고, 그 오해를 그대로 두면 아래 문장이 전부 그 전제
             위에서 읽힙니다. */}
@@ -410,6 +426,22 @@ export default function NaruHome() {
               {t(line)}
             </p>
           ))}
+          {/* 왜 국경을 여는가. 두 줄입니다. 셋째 줄로 쓰려던 "12월은 흩어져
+              있던 사람들이 한곳에 모이는 시기"는 유학생 귀국 규모가 검증되지
+              않아 넣지 않았습니다(data/naru.ts의 TODO 참고). */}
+          <div className="pt-4">
+            <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
+              {t(naru.december.whyLabel)}
+            </p>
+            <ul className="mt-2 space-y-2">
+              {naru.december.why.map((line, i) => (
+                <li key={i} className="flex gap-2.5 break-keep text-sm leading-relaxed text-white/80">
+                  <span aria-hidden className="mt-[0.6em] h-1 w-1 shrink-0 rounded-full bg-accent/60" />
+                  {t(line)}
+                </li>
+              ))}
+            </ul>
+          </div>
           <div className="pt-4">
             <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
               {t(naru.december.whoLabel)}
