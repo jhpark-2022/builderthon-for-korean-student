@@ -38,7 +38,11 @@ export default function Home() {
       {/* 앵커 목록과 로고를 나루의 것으로 넘깁니다. 기본값은 8월 페이지의
           것이라, /2026-08은 <JourneyNav /> 그대로 두고 아무것도 바뀌지
           않습니다. */}
-      <JourneyNav anchors={naruNav} brand="naru" />
+      {/* showQuiz={false}: 유형 테스트는 8월 Day 1의 팀 매칭용 도구입니다.
+          끝난 이벤트의 것이고 12월 이벤트와 관계가 없어요. 그 자리를 비우면
+          폰에서 헤더에 액션이 하나도 없게 되므로, JourneyNav가 오픈채팅을
+          lg 아래에서도 보이게 바꿉니다. /2026-08은 기본값(true)이라 그대로입니다. */}
+      <JourneyNav anchors={naruNav} brand="naru" showQuiz={false} />
       <NaruHome />
     </>
   );

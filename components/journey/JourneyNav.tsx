@@ -130,6 +130,7 @@ function useActiveSection(enabled: boolean, anchors: NavAnchor[]) {
 export default function JourneyNav({
   anchors = DEFAULT_ANCHORS,
   brand = "zero100",
+  showQuiz = true,
 }: {
   anchors?: NavAnchor[];
   // 어느 이름표를 다는가. 8월 페이지는 Zero100 락업(그 회차의 주최 표기가 그것이라
@@ -140,6 +141,22 @@ export default function JourneyNav({
   // 그려집니다. 로고 가이드가 금지한 "형태를 건드리는 일"이 방문자 기기에서
   // 저절로 일어나는 셈이라, 글자가 든 로고는 PNG로 씁니다.
   brand?: "zero100" | "naru";
+  // 유형 테스트(/quiz) 진입점을 그릴 것인가.
+  //
+  // DECIDED 2026-09-15: 나루 홈에서 뺍니다. 그 퀴즈는 8월 Day 1의 팀 매칭용
+  // AI 유형 테스트입니다. 끝난 이벤트의 도구이고, 12월 이벤트와는 아무 관계가
+  // 없어요. 그런데 이 헤더가 두 페이지를 함께 쓰는 바람에 나루 홈에도 따라와
+  // 있었고, 오픈채팅 버튼이 lg 아래에서 숨으므로 **폰에서 나루 홈 헤더의 유일한
+  // 액션이 8월 퀴즈**였습니다.
+  //
+  // 이 레포는 같은 판단을 두 번 했습니다. 등록 마감 후 "누를 수 없는 버튼을
+  // 회색으로 남기지 않는다"(아래 2026-08-22 결정), 그리고 "파트너십 문의는 이
+  // 바에서 가장 값비싼 자리를 작은 독자에게 쓰고 있었다"(2026-08-23). 기준은
+  // 클릭 가치입니다.
+  //
+  // 기본값이 true라 /2026-08은 한 글자도 바뀌지 않습니다. 퀴즈는 그 페이지의
+  // 것이고 거기서는 여전히 클릭 가치가 있습니다.
+  showQuiz?: boolean;
 }) {
   const { t, locale } = useLocale();
   const reduce = useReducedMotion();
@@ -321,6 +338,7 @@ export default function JourneyNav({
                 to be reachable from the nav (there was no path at all), but it
                 sits under the open-chat ghost button and two under the register
                 pill, which is the order these three should always be in. */}
+            {showQuiz && (
             <a
               href="/quiz"
               onClick={() => track("quiz_click", { src: "nav" })}
@@ -328,6 +346,7 @@ export default function JourneyNav({
             >
               {t(dict.nav.quizNav)}
             </a>
+            )}
           </div>
         </div>
         {/* RIGHT group — open chat + EN/KR toggle, with the register button
@@ -352,9 +371,14 @@ export default function JourneyNav({
               width, 1920 at 125% scaling — the row fits only exactly: the FAQ
               link ends at the pixel the pill starts. This is the width where the
               two groups stop touching. */}
-          <span className="hidden min-[1700px]:inline-flex">
-            <ReturningGreeting compact />
-          </span>
+          {/* 퀴즈를 본 적 있는 방문자에게 이름으로 인사하는 필. 퀴즈와 같은
+              기능이라 같은 스위치를 탑니다. 나루 홈에서 8월 퀴즈 결과로 인사하면
+              그 사람은 자기가 어느 페이지에 있는지 헷갈립니다. */}
+          {showQuiz && (
+            <span className="hidden min-[1700px]:inline-flex">
+              <ReturningGreeting compact />
+            </span>
+          )}
           {/* Open chat — visible from first paint, NOT scroll-revealed. Someone
               who lands and isn't ready to register should find the low-commitment
               door immediately, not after proving they'll scroll.
@@ -378,6 +402,7 @@ export default function JourneyNav({
               헤더에 있는 유일한 퀴즈 통로인데 라벨이 aria에만 있었습니다.
               전체 라벨("유형 테스트 ✦")은 좁은 헤더에서 다른 칩을 밀어내므로
               짧은 라벨을 따로 둡니다. */}
+          {showQuiz && (
           <a
             href="/quiz"
             onClick={() => track("quiz_click", { src: "nav_mobile" })}
@@ -387,6 +412,7 @@ export default function JourneyNav({
             <span aria-hidden>✦</span>
             <span aria-hidden>{t(dict.nav.quizNavShort)}</span>
           </a>
+          )}
           {links.openChat && (
             <a
               href={links.openChat}
@@ -397,7 +423,15 @@ export default function JourneyNav({
               className={
                 registered
                   ? "hidden shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(124,92,255,0.6)] lg:inline-flex"
-                  : "hidden shrink-0 items-center gap-1.5 rounded-full border border-accent/40 bg-accent/12 px-4 py-2 text-sm font-semibold text-accent transition hover:-translate-y-0.5 hover:border-accent/60 hover:bg-accent/20 hover:text-white lg:inline-flex"
+                  // showQuiz가 false면 lg 아래에서도 보입니다. 퀴즈 칩을 뺀
+                  // 자리가 비면 폰에서 헤더에 액션이 하나도 없게 되는데, 이
+                  // 페이지에서 지금 할 수 있는 일이 이것 하나입니다. 좁은 폭에서는
+                  // 패딩과 글자를 줄이고 min-h로 터치 타깃 44px을 지킵니다.
+                  : `shrink-0 items-center gap-1.5 rounded-full border border-accent/40 bg-accent/12 font-semibold text-accent transition hover:-translate-y-0.5 hover:border-accent/60 hover:bg-accent/20 hover:text-white ${
+                      showQuiz
+                        ? "hidden px-4 py-2 text-sm lg:inline-flex"
+                        : "inline-flex min-h-[44px] px-3.5 text-xs sm:px-4 sm:text-sm"
+                    }`
               }
             >
               <ChatGlyph className="h-4 w-4" />
