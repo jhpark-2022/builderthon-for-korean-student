@@ -305,8 +305,37 @@ body {
    reservation stays FIXED rather than following the bar's hide/show — the bar
    now slides away on scroll-down, and reclaiming its space each time would make
    the page height breathe under the reader's thumb. */
+/* 8월 페이지에만 겁니다. 이 규칙은 그 페이지의 모바일 스티키 바 자리를
+   예약하는 것인데, 루트가 18px이라 4rem이 72px입니다. 나루 홈에는 스티키 바가
+   없어서(app/page.tsx) 모든 폰에서 푸터 아래 72px이 빈 채로 남았습니다.
+   app/2026-08/page.tsx가 <body>에 data-sticky를 심습니다. */
 @media (max-width: 639px) {
-  body { padding-bottom: calc(4rem + env(safe-area-inset-bottom)); }
+  body[data-sticky] { padding-bottom: calc(4rem + env(safe-area-inset-bottom)); }
+}
+
+/* ── Chapter 리빌 안전망 ─────────────────────────────────────────────────────
+   components/journey/Chapter.tsx가 서버 마크업에 style="opacity:0"을 실어
+   보냅니다(프로덕션 HTML에서 실측 6개). 그 컴포넌트가 홈의 모든 문단을 감싸고
+   있으므로, 번들이 못 내려오거나(배포 직후 청크 불일치, CSP, 확장 프로그램)
+   하이드레이션이 깨지면 방문자가 보는 것은 배경과 헤더뿐입니다. 본문 전체가
+   손실입니다.
+
+   CSS 애니메이션은 애니메이션되는 속성에 한해 인라인 스타일을 이깁니다. 그래서
+   1.5초 뒤 fill:forwards로 보이는 상태를 한 번 굳혀 둡니다. React가 살아 있으면
+   그 전에 이미 리빌돼 있고(IntersectionObserver 또는 Chapter 안의 1200ms 폴백),
+   죽어 있으면 이 규칙이 대신 보여 줍니다. 먼저 오는 쪽이 이깁니다.
+
+   ── 지우기 전에 읽으세요 ──
+   Chapter의 리빌을 @keyframes + animation-fill-mode:forwards로 바꾸지 마세요.
+   그렇게 바꾼 뒤 누군가 위 prefers-reduced-motion 블록을
+   `animation: none !important`라는 흔한 관용구로 고치면, 그날 모션 민감
+   방문자에게 본문이 통째로 사라집니다. 지금 방식(인라인 style + transition)이
+   안전한 이유는 보이는 최종 상태가 애니메이션이 아니라 인라인 스타일에 있어서,
+   전환 시간이 0이 되면 즉시 도착하기 때문입니다.                            */
+@keyframes chapterFailsafe { to { opacity: 1; transform: none; } }
+[data-chapter-reveal] { animation: chapterFailsafe 1ms linear 1.5s forwards; }
+@media (prefers-reduced-motion: reduce) {
+  [data-chapter-reveal] { transform: none !important; }
 }
 
 /* ── Pre-hydration language swap (server-rendered copy only) ─────────────────

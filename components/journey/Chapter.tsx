@@ -99,6 +99,11 @@ export default function Chapter({
           on mobile and let it drop away once there's room (sm+). */}
       <div className={`relative z-10 w-full ${wide ? "" : "mx-auto max-w-6xl"} ${footer ? "pb-24 sm:pb-0" : ""}`}>
         <div
+          // data-chapter-reveal: globals.css의 안전망이 잡는 손잡이입니다.
+          // 이 div는 서버 마크업에 style="opacity:0"을 실어 보내고, 그 안에
+          // 페이지의 모든 문단이 들어 있습니다. 자세한 사정은 globals.css의
+          // "Chapter 리빌 안전망" 블록을 보세요.
+          data-chapter-reveal
           className={`w-full transition-all duration-700 ease-out ${textCls} ${offsetCls}`}
           style={{
             opacity: shown ? 1 : 0,

@@ -82,12 +82,17 @@ function stageChips(stages: readonly number[], t: (p: Phrase) => string): string
 //
 // 다시 붙일 생각이면 그 그룹 전원에게 얼굴이 있는지 먼저 확인하세요.
 // 한 명이라도 비면 붙이지 않는 편이 낫습니다.
-function Avatar({ src, alt }: { src?: string; alt: string }) {
+// alt는 빈 문자열입니다. 이름이 바로 옆에 텍스트로 있어서, alt에 같은 이름을
+// 넣으면 스크린리더가 두 번 읽습니다. 위 주석대로 이 초상이 하는 일은
+// "누구인지 알아보게 하는 것"이 아니라 "무게가 있다"를 말하는 것이고, 그건
+// 시각적으로만 하는 일입니다.
+function Avatar({ src }: { src?: string }) {
   if (!src) return null;
   return (
     <Image
       src={src}
-      alt={alt}
+      alt=""
+      aria-hidden
       width={96}
       height={96}
       sizes="48px"
@@ -118,7 +123,7 @@ function Person({
   return (
     <li className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4">
       <div className="flex items-start gap-3">
-        <Avatar src={img} alt={name} />
+        <Avatar src={img} />
         <div className="min-w-0 flex-1">
           <p className="break-keep text-sm font-semibold leading-snug text-white">{name}</p>
           {/* 소속과 직함을 한 줄에 잇지 않습니다. 가운뎃점은 하우스 스타일이
@@ -126,7 +131,7 @@ function Person({
               U+2002을 품고 있어서("이사 Director") 경계가 보이지 않습니다.
               두 줄이면 구분자가 필요 없습니다. */}
           {org && <p className="mt-1 break-keep text-xs leading-snug text-white/65">{org}</p>}
-          {role && <p className="mt-0.5 break-keep text-xs leading-snug text-white/45">{role}</p>}
+          {role && <p className="mt-0.5 break-keep text-xs leading-snug text-white/55">{role}</p>}
         </div>
         {/* 링크드인은 카드 오른쪽 위 고정입니다. 카드마다 본문 길이가 달라서
             아래에 두면 줄이 들쭉날쭉해지고, 무엇보다 이름 옆에 있어야 "이
@@ -135,7 +140,7 @@ function Person({
       </div>
       {tag && (
         <p className="mt-3">
-          <span className="inline-flex rounded-full border border-[#A99AD6]/25 bg-[#A99AD6]/10 px-2.5 py-0.5 text-[0.62rem] font-semibold text-[#C0B4E4]">
+          <span className="inline-flex rounded-full border border-[#A99AD6]/25 bg-[#A99AD6]/10 px-2.5 py-0.5 text-[0.62rem] font-semibold text-accent">
             {tag}
           </span>
         </p>
@@ -159,9 +164,9 @@ function Person({
 
 function SectionLabel({ children, count }: { children: React.ReactNode; count?: number }) {
   return (
-    <p className="mb-3 flex items-baseline gap-2 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/45">
+    <p className="mb-3 flex items-baseline gap-2 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/55">
       {children}
-      {count !== undefined && <span className="text-[#A99AD6]">{count}</span>}
+      {count !== undefined && <span className="text-accent">{count}</span>}
     </p>
   );
 }
@@ -205,7 +210,12 @@ export default function RecordTabs() {
               // min-h 44px는 엄지가 닿아야 하는 것이면 언제나 지키는 값입니다.
               className={`inline-flex min-h-[44px] shrink-0 items-center whitespace-nowrap rounded-full border px-4 text-sm font-semibold transition ${
                 on
-                  ? "border-naru-orange/40 bg-naru-orange/10 text-white"
+                  // 테두리 /60, 바탕 /20. 이전 값(orange/40, /10)은 선택과
+                  // 비선택 채움의 대비가 1.04:1이라 저시력 사용자에게
+                  // 구분되지 않았습니다(1.4.11). 주황에서 accent로 바꾼 것은
+                  // 별개 이유입니다. 탭 선택은 상태 표시이지 브랜드 강조가
+                  // 아니고, 가장 아끼는 색을 UI 상태에 쓰면 의미를 잃습니다.
+                  ? "border-accent/60 bg-accent/20 text-white"
                   : "border-white/12 bg-white/[0.04] text-white/65 hover:border-white/25 hover:text-white"
               }`}
             >
@@ -240,14 +250,14 @@ export default function RecordTabs() {
                   key={d.day}
                   className="flex items-baseline gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3"
                 >
-                  <span className="shrink-0 text-[0.68rem] font-black tracking-[0.12em] text-[#A99AD6]">
+                  <span className="shrink-0 text-[0.68rem] font-black tracking-[0.12em] text-accent">
                     DAY {d.day}
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block break-keep text-sm font-semibold leading-snug text-white">
                       {t(d.theme)}
                     </span>
-                    <span className="mt-0.5 block text-xs text-white/45">
+                    <span className="mt-0.5 block text-xs text-white/55">
                       {d.date} {t(d.weekday)}
                       {/* 구분자는 U+2002. 가운뎃점을 쓰지 않습니다. */}
                       {d.hours ? ` ${d.hours}` : ""}
@@ -273,7 +283,7 @@ export default function RecordTabs() {
                     <span className="inline-flex rounded-md border border-white/12 px-1.5 py-0.5 text-[0.62rem] font-black text-white/50">
                       {tr.num}
                     </span>
-                    <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[#A99AD6]">
+                    <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-accent">
                       {t(tr.kicker)}
                     </span>
                   </p>
@@ -305,7 +315,7 @@ export default function RecordTabs() {
               {dict.program.awards.items.map((aw) => (
                 <li key={aw.name.en} className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4">
                   <p className="break-keep text-sm font-bold leading-snug text-white">{t(aw.name)}</p>
-                  <p className="mt-1.5 break-keep text-[0.68rem] leading-snug text-[#A99AD6]">
+                  <p className="mt-1.5 break-keep text-[0.68rem] leading-snug text-accent">
                     {t(aw.meta)}
                   </p>
                   <p className="mt-2.5 break-keep text-xs leading-relaxed text-white/60">{t(aw.desc)}</p>
@@ -355,13 +365,13 @@ export default function RecordTabs() {
                 <li key={p.name.en + p.day.en} className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4">
                   <div className="flex items-start gap-3">
                     <div className="min-w-0 flex-1">
-                      <p className="text-[0.62rem] font-bold uppercase tracking-[0.14em] text-[#A99AD6]">
+                      <p className="text-[0.62rem] font-bold uppercase tracking-[0.14em] text-accent">
                         {t(p.day)}
                       </p>
                       <p className="mt-1.5 break-keep text-sm font-semibold leading-snug text-white">
                         {t(p.name)}
                       </p>
-                      <p className="mt-1 break-keep text-xs leading-snug text-white/45">{t(p.role)}</p>
+                      <p className="mt-1 break-keep text-xs leading-snug text-white/55">{t(p.role)}</p>
                     </div>
                     {p.linkedin && <LinkedInLink url={p.linkedin} label={t(p.name)} />}
                   </div>
@@ -432,7 +442,7 @@ export default function RecordTabs() {
         </div>
       )}
 
-      <p className="mt-6 break-keep text-xs leading-relaxed text-white/45">
+      <p className="mt-6 break-keep text-xs leading-relaxed text-white/55">
         {t(tabs.archiveNote)}
       </p>
     </div>

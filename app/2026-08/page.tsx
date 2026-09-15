@@ -5,6 +5,7 @@ import ResetHandler from "@/components/ResetHandler";
 import BackgroundMount from "@/components/BackgroundMount";
 import ArchiveBanner from "@/components/archive/ArchiveBanner";
 import { RegisterProvider } from "@/lib/RegisterContext";
+import StickyBarSpace from "@/components/archive/StickyBarSpace";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // /2026-08: 제로백 빌더톤(2026년 8월, 싱가포르)의 기록. 나루의 첫 이벤트입니다.
@@ -94,6 +95,10 @@ export default function August2026Archive() {
     // 컨텍스트를 읽습니다. 8월 페이지의 동작을 바꾸지 않는 것이 이 이동의
     // 조건이라, 살아 있는 배선은 건드리지 않았습니다.
     <RegisterProvider>
+      {/* 모바일 스티키 바의 자리(72px)를 예약하는 CSS가 <body>의 data-sticky를
+          봅니다(app/globals.css). 나루 홈에는 스티키 바가 없어서 전역으로 걸면
+          그 페이지 푸터 아래가 빈 채로 남습니다. 이 페이지만 켭니다. */}
+      <StickyBarSpace />
       {/* First child: the ?reset=1 sweep runs before greeting/register read storage. */}
       <ResetHandler />
       <BackgroundMount />

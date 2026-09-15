@@ -13,14 +13,28 @@
 // 강조점에만 점처럼 쓰는 색이라(로고 가이드의 "나루 점"), 챕터 하나에만 붙습니다.
 // 지금은 다음 회차(#december)입니다. 전부 주황으로 칠하면 강조가 강조가 아닙니다.
 // 글자색을 #EE8A4F가 아니라 한 단계 밝은 #F2B183으로 둔 것은 대비 때문입니다:
-// 바탕 #070B1F 위에서 10.5:1이고, 원색 그대로면 5.9:1로 떨어집니다.
+// 바탕 #070B1F 위에서 10.58:1입니다. 원색 #EE8A4F도 7.79:1로 AA는
+// 통과하지만(2026-09-15 재측정, 이전 주석의 5.9:1은 틀린 값이었습니다)
+// 여유가 크고 주황을 점으로 아끼는 규칙과도 맞아 틴트를 씁니다.
 // ─────────────────────────────────────────────────────────────────────────────
-export default function Eyebrow({ children, color = "violet", className = "" }: { children: React.ReactNode; color?: "violet" | "cyan" | "emerald" | "orange"; className?: string }) {
+export default function Eyebrow({ children, color = "violet", className = "" }: { children: React.ReactNode; color?: "violet" | "cyan" | "emerald" | "purple" | "plum" | "orange"; className?: string }) {
   const map = {
+    // ── 8월 회차 전용. Journey.tsx만 부릅니다 ────────────────────────────
+    // 나루 화면에서 쓰지 마세요. Tailwind 기본 violet은 색상이 나루 보라와
+    // 같은 255도지만 채도가 92%입니다(나루 보라는 41%). 나란히 두면 하나는
+    // 네온, 하나는 먼지 낀 보라로 명백히 다른 색입니다. cyan은 색상 187도라
+    // 나루 4색 어디에서도 나올 수 없고, 대비 15.6:1이라 화면에서 가장 밝은
+    // 요소가 되어 주황 CTA보다 튑니다.
     violet: "border-violet-400/30 bg-violet-400/10 text-violet-200",
     cyan: "border-cyan-400/30 bg-cyan-400/10 text-cyan-200",
     emerald: "border-emerald-400/30 bg-emerald-400/10 text-emerald-200",
-    orange: "border-naru-orange/35 bg-naru-orange/10 text-[#F2B183]",
+    // ── 나루 4색에서 나온 것만 ───────────────────────────────────────────
+    // 원색을 글자로 쓸 수 없어서(어두운 바탕 위 보라 2.12:1, 남색 1.38:1)
+    // 같은 색상환 위치에서 명도만 올린 틴트를 씁니다. 옆 숫자는 바탕
+    // #070B1F 위 대비입니다.
+    purple: "border-accent/30 bg-accent/10 text-accent",              // #A99AD6  7.69:1
+    plum: "border-[#C79BB4]/30 bg-[#C79BB4]/10 text-[#C79BB4]",       // #C79BB4  8.15:1
+    orange: "border-naru-orange/35 bg-naru-orange/10 text-[#F2B183]", // #F2B183 10.58:1
   } as const;
   return (
     <span className={`mb-4 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] ${map[color]} ${className}`}>

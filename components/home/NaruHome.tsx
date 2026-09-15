@@ -75,7 +75,10 @@ export default function NaruHome() {
   const { t, locale } = useLocale();
 
   return (
-    <main id="main">
+    <>
+    {/* tabIndex=-1: skip link가 여기로 보낼 때 브라우저가 실제로 포커스를
+        옮기도록 합니다. Tab 순서에는 들어가지 않습니다. */}
+    <main id="main" tabIndex={-1} className="focus:outline-none">
       {/* ── CH0 · 히어로 ─────────────────────────────────────────────────
           로고는 배경 위에 얹히지 않습니다. 로고 가이드가 사진과 영상 위에
           로고를 올리는 것을 금지하고 있어서, 8월 히어로의 메탈 휴먼 영상 대신
@@ -84,7 +87,7 @@ export default function NaruHome() {
 
           pt-*는 고정 헤더를 피하는 여백입니다. 헤더가 맨 위에서는 투명해서
           없어도 겹쳐 보이지는 않지만, 로고 상단이 바 뒤로 들어갑니다. */}
-      <Chapter id="top" align="center" className="pt-28 sm:pt-32">
+      <Chapter id="top" align="center" className="pt-20 sm:pt-32">
         {/* 마스터 반전. 최소 가로 120px 규칙을 지키려고 모바일에서도 176px
             아래로 내려가지 않게 둡니다. PNG인 이유는 public/naru/README.md. */}
         <Image
@@ -93,14 +96,18 @@ export default function NaruHome() {
           width={900}
           height={900}
           priority
-          className="mx-auto h-auto w-44 sm:w-52 lg:w-60"
+          className="mx-auto h-auto w-40 sm:w-56 lg:w-64"
         />
+        {/* DECIDED 2026-09-15: 아이브로를 주황에서 보라로 내립니다. 히어로에
+            주황이 둘(이 알약 + 아래 CTA)이면 "점처럼 쓴다"는 규칙이 첫 화면에서
+            이미 깨지고, 위에서 주황 테두리를 먼저 쓴 만큼 아래 CTA의 당김이
+            줄어듭니다. 이 사이트에서 주황 면은 그 버튼 하나뿐이어야 합니다. */}
         <div className="mt-8">
-          <Eyebrow color="orange">{t(naru.hero.eyebrow)}</Eyebrow>
+          <Eyebrow color="purple">{t(naru.hero.eyebrow)}</Eyebrow>
         </div>
         {/* 태그라인. 두 줄로 고정합니다. 한 줄로 흘리면 좁은 폭에서 네 줄까지
             꺾이고, 두 문장이 한 덩어리로 읽힙니다. 이건 두 개의 선언입니다. */}
-        <h1 className="text-[clamp(1.9rem,6.4vw,3.6rem)] font-black leading-[1.15] tracking-tight text-white">
+        <h1 className="text-[clamp(2.05rem,6.4vw,4.25rem)] font-black leading-[1.15] tracking-tight text-white">
           <span className="block break-keep">{t(naru.hero.titleLine1)}</span>
           <span className="block break-keep bg-gradient-to-r from-[#A99AD6] via-[#C79BB4] to-[#EE8A4F] bg-clip-text pb-[0.14em] text-transparent">
             {t(naru.hero.titleLine2)}
@@ -109,12 +116,12 @@ export default function NaruHome() {
         <p className="mx-auto mt-7 max-w-xl break-keep text-sm leading-relaxed text-white/80 sm:text-base">
           {t(naru.hero.sub)}
         </p>
-        <div className="mt-9 flex flex-wrap justify-center gap-3">
+        <div className="mt-6 flex flex-wrap justify-center gap-3 sm:mt-9">
           {/* 주 CTA. 주황은 이 사이트에서 이 버튼과 12월 챕터의 아이브로,
               그리고 배경 필드의 가장 뜨거운 입자에만 있습니다. 더 늘리지
               마세요. 늘리면 로고 한가운데의 나루 점이 눈에 띄지 않습니다.
               글자를 남색으로 두는 것은 대비 때문입니다(주황 위 흰 글자는
-              2.3:1, 남색 글자는 5.7:1). */}
+              2.50:1, 남색 글자는 5.63:1. 실측 2026-09-15). */}
           <a
             href="#december"
             onClick={() => track("naru_cta", { src: "hero", to: "december" })}
@@ -135,13 +142,13 @@ export default function NaruHome() {
 
       {/* ── CH1 · 왜 존재하는가 ──────────────────────────────────────────── */}
       <Chapter id="why" align="center">
-        <Eyebrow>{t(naru.why.eyebrow)}</Eyebrow>
+        <Eyebrow color="purple">{t(naru.why.eyebrow)}</Eyebrow>
         <h2 className={H2}>{t(naru.why.heading)}</h2>
 
         <div className="mx-auto mt-12 grid max-w-4xl gap-5 text-left md:grid-cols-2">
           {naru.why.cores.map((core) => (
             <Card key={core.index} className="flex flex-col">
-              <span className="text-xs font-black tracking-[0.3em] text-[#A99AD6]">{core.index}</span>
+              <span className="text-xs font-black tracking-[0.3em] text-accent">{core.index}</span>
               <h3 className="mt-3 break-keep text-lg font-bold leading-snug text-white sm:text-xl">
                 {t(core.title)}
               </h3>
@@ -158,7 +165,7 @@ export default function NaruHome() {
 
         {/* 두 개가 함께 있어야 하는 이유. 카드 아래에 두는 것이 순서입니다.
             먼저 각각을 읽고, 그 다음에 둘이 한 쌍인 이유를 읽습니다. */}
-        <div className="mx-auto mt-6 max-w-4xl break-keep rounded-2xl border border-[#A99AD6]/25 bg-[#A99AD6]/[0.06] px-6 py-5 text-left">
+        <div className="mx-auto mt-6 max-w-4xl break-keep rounded-2xl border border-accent/25 bg-accent/[0.06] px-6 py-5 text-left">
           <p className="text-base font-bold leading-snug text-white sm:text-lg">{t(naru.why.note)}</p>
           <p className="mt-3 text-sm leading-relaxed text-white/75">{t(naru.why.noteBody)}</p>
         </div>
@@ -173,7 +180,7 @@ export default function NaruHome() {
 
       {/* ── CH2 · 8월의 기록 ─────────────────────────────────────────────── */}
       <Chapter id="record" align="center">
-        <Eyebrow color="cyan">{t(naru.record.eyebrow)}</Eyebrow>
+        <Eyebrow color="plum">{t(naru.record.eyebrow)}</Eyebrow>
         <h2 className={H2}>{t(naru.record.heading)}</h2>
         <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
           {t(naru.record.lead)}
@@ -198,11 +205,13 @@ export default function NaruHome() {
                 <span className="block text-2xl font-black tracking-tight text-white sm:text-3xl">
                   {t(stat.value)}
                 </span>
-                <span className="mt-2 block break-keep text-xs leading-snug text-white/60">
+                {/* aria-hidden: 같은 문자열이 위 sr-only dt에 이미 있습니다.
+                    빼지 않으면 "74명 신청, 74명 신청"으로 두 번 읽힙니다. */}
+                <span aria-hidden className="mt-2 block break-keep text-xs leading-snug text-white/60">
                   {t(stat.label)}
                 </span>
                 {stat.note && (
-                  <span className="mt-2 block break-keep text-[0.68rem] font-semibold leading-snug text-[#F2B183]">
+                  <span className="mt-2 block break-keep text-[0.68rem] font-semibold leading-snug text-accent">
                     {t(stat.note)}
                   </span>
                 )}
@@ -226,7 +235,7 @@ export default function NaruHome() {
                 className="h-auto w-full rounded-2xl border border-white/10"
               />
               <figcaption className="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[#A99AD6]">
+                <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-accent">
                   {t(photo.day)}
                 </span>
                 <span className="break-keep text-sm leading-snug text-white/75">{t(photo.caption)}</span>
@@ -248,7 +257,7 @@ export default function NaruHome() {
             <h3 className="break-keep text-lg font-bold text-white sm:text-xl">
               {t(naru.record.gapsLabel)}
             </h3>
-            <span className="break-keep text-sm text-[#F2B183]">{t(naru.record.gapsNote)}</span>
+            <span className="break-keep text-sm text-white/70">{t(naru.record.gapsNote)}</span>
           </div>
           <ul className="mt-5 grid gap-3 sm:grid-cols-2">
             {naru.record.gaps.map((gap) => (
@@ -274,7 +283,7 @@ export default function NaruHome() {
 
       {/* ── CH3 · 어떻게 일하는가 ────────────────────────────────────────── */}
       <Chapter id="how" align="center">
-        <Eyebrow>{t(naru.how.eyebrow)}</Eyebrow>
+        <Eyebrow color="purple">{t(naru.how.eyebrow)}</Eyebrow>
         <h2 className={H2}>{t(naru.how.heading)}</h2>
         <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
           {t(naru.how.lead)}
@@ -288,19 +297,19 @@ export default function NaruHome() {
         <div className="mx-auto mt-12 grid max-w-5xl gap-4 text-left lg:grid-cols-3">
           {naru.how.layers.map((layer) => (
             <Card key={layer.role.en}>
-              <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[#A99AD6]">
+              <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
                 {t(layer.role)}
               </p>
               <p className="mt-2 break-keep text-lg font-bold text-white">{t(layer.who)}</p>
               <dl className="mt-5 space-y-4">
                 <div>
-                  <dt className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/45">
+                  <dt className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/55">
                     {t(naru.how.doesLabel)}
                   </dt>
                   <dd className="mt-1.5 break-keep text-sm leading-relaxed text-white/75">{t(layer.does)}</dd>
                 </div>
                 <div>
-                  <dt className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/45">
+                  <dt className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/55">
                     {t(naru.how.getsLabel)}
                   </dt>
                   <dd className="mt-1.5 break-keep text-sm leading-relaxed text-white/75">{t(layer.gets)}</dd>
@@ -394,8 +403,8 @@ export default function NaruHome() {
             판단 재료였어요. 내 강점이 그 자리에 쓸모가 있는지를 스스로
             판단할 수 없었습니다. 그래서 무엇을 하면 되는지를 글로 적습니다.
             주황 테두리를 쓰는 유일한 블록입니다. */}
-        <div className="mx-auto mt-14 max-w-4xl rounded-3xl border border-naru-orange/30 bg-naru-orange/[0.05] px-6 py-7 text-left sm:px-8">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[#F2B183]">
+        <div className="mx-auto mt-14 max-w-4xl rounded-3xl border border-accent/25 bg-accent/[0.06] px-6 py-7 text-left sm:px-8">
+          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
             {t(naru.december.afterLabel)}
           </p>
           <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">
@@ -404,7 +413,7 @@ export default function NaruHome() {
           <ol className="mt-6 grid gap-4 sm:grid-cols-3">
             {naru.december.after.map((step, i) => (
               <li key={step.title.en}>
-                <span className="text-xs font-black tracking-[0.3em] text-[#F2B183]">
+                <span className="text-xs font-black tracking-[0.3em] text-accent">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <p className="mt-2 break-keep text-sm font-semibold leading-snug text-white">
@@ -432,7 +441,7 @@ export default function NaruHome() {
 
       {/* ── CH5 · 함께하는 길 ────────────────────────────────────────────── */}
       <Chapter id="join" align="center">
-        <Eyebrow>{t(naru.join.eyebrow)}</Eyebrow>
+        <Eyebrow color="purple">{t(naru.join.eyebrow)}</Eyebrow>
         <h2 className={H2}>{t(naru.join.heading)}</h2>
         <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
           {t(naru.join.lead)}
@@ -476,7 +485,7 @@ export default function NaruHome() {
           인용문을 지어내지 마세요(data/naru.ts의 Story 주석). */}
       {naru.people.stories.length > 0 && (
         <Chapter id="people" align="center">
-          <Eyebrow color="cyan">{t(naru.people.eyebrow)}</Eyebrow>
+          <Eyebrow color="plum">{t(naru.people.eyebrow)}</Eyebrow>
           <h2 className={H2}>{t(naru.people.heading)}</h2>
           <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
             {t(naru.people.lead)}
@@ -496,7 +505,12 @@ export default function NaruHome() {
         </Chapter>
       )}
 
+      </main>
+
       {/* ── 푸터 ─────────────────────────────────────────────────────────
+          main 밖입니다. 안에 두면 contentinfo 랜드마크가 main 랜드마크 안에
+          중첩되고, 랜드마크로 페이지를 훑는 사람이 본문을 빠져나가지 않은 채
+          푸터에 도착합니다.
           크레딧 표기 순서는 언제나 주최 → 주관 → 후원입니다.
           8월 푸터의 "SMU, NUS, NTU 한인 학생회가 주관하고" 줄은 가져오지
           않았습니다. 그건 제로백 빌더톤의 크레딧이고, 12월 이벤트의 주관은
@@ -527,10 +541,10 @@ export default function NaruHome() {
               {t(naru.footer.archive)}
             </Link>
           </div>
-          <p className="text-xs text-white/45">{t(naru.footer.rights)}</p>
+          <p className="text-xs text-white/55">{t(naru.footer.rights)}</p>
         </div>
       </footer>
-    </main>
+    </>
   );
 }
 
@@ -564,7 +578,7 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
     >
       <p
         className={`text-[0.62rem] font-bold uppercase tracking-[0.16em] ${
-          center ? "text-[#F2B183]" : "text-white/45"
+          center ? "text-[#F2B183]" : "text-white/55"
         }`}
       >
         {t(layer.role)}
@@ -594,7 +608,7 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
           모바일에서는 같은 말을 아래 한 줄이 글로 합니다. */}
       <div className="hidden items-center gap-3 px-6 md:flex">
         <span aria-hidden className="h-px flex-1 border-t border-dashed border-white/15" />
-        <span className="break-keep text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/40">
+        <span className="break-keep text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/55">
           {t(naru.how.diagramNote)}
         </span>
         <span aria-hidden className="h-px flex-1 border-t border-dashed border-white/15" />
@@ -606,7 +620,7 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
         {arrow("right")}
         {box(sponsor)}
       </div>
-      <p className="mt-4 break-keep text-center text-xs text-white/45 md:hidden">
+      <p className="mt-4 break-keep text-center text-xs text-white/55 md:hidden">
         {t(naru.how.diagramNote)}
       </p>
     </div>

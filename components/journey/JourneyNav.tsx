@@ -233,8 +233,8 @@ export default function JourneyNav({
               <Image
                 src="/naru/naru-lockup-rev.png"
                 alt="나루 NARU"
-                width={860}
-                height={400}
+                width={627}
+                height={202}
                 priority
                 className="h-8 w-auto sm:h-9"
               />
@@ -301,7 +301,7 @@ export default function JourneyNav({
                   // on one line. The Korean labels are the longer set and were
                   // breaking apart at the narrow end of `lg` — "참가 대상" split at
                   // its space and the row turned into two ragged lines of syllables.
-                  className={`relative whitespace-nowrap text-sm font-medium transition after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:bg-violet-400/70 after:transition-transform after:duration-300 hover:text-white hover:after:scale-x-100 focus-visible:after:scale-x-100 ${
+                  className={`relative whitespace-nowrap text-sm font-medium transition after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:bg-accent/70 after:transition-transform after:duration-300 hover:text-white hover:after:scale-x-100 focus-visible:after:scale-x-100 ${
                     here ? "text-white after:scale-x-100" : "text-white/70 after:scale-x-0"
                   }`}
                 >
@@ -316,7 +316,7 @@ export default function JourneyNav({
             <a
               href="/quiz"
               onClick={() => track("quiz_click", { src: "nav" })}
-              className="relative whitespace-nowrap text-sm font-medium text-violet-200/80 transition hover:text-violet-100 after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-violet-400/70 after:transition-transform after:duration-300 hover:after:scale-x-100 focus-visible:after:scale-x-100"
+              className="relative whitespace-nowrap text-sm font-medium text-accent/85 transition hover:text-white after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-accent/70 after:transition-transform after:duration-300 hover:after:scale-x-100 focus-visible:after:scale-x-100"
             >
               {t(dict.nav.quizNav)}
             </a>
@@ -374,7 +374,7 @@ export default function JourneyNav({
             href="/quiz"
             onClick={() => track("quiz_click", { src: "nav_mobile" })}
             aria-label={t(dict.nav.quizNav)}
-            className="inline-flex min-h-[44px] shrink-0 items-center gap-1 rounded-full border border-violet-400/30 bg-violet-500/10 px-3.5 text-xs font-bold text-violet-100/90 transition hover:border-violet-300/50 hover:bg-violet-500/20 hover:text-white xl:hidden"
+            className="inline-flex min-h-[44px] shrink-0 items-center gap-1 rounded-full border border-accent/30 bg-accent/10 px-3.5 text-xs font-bold text-accent transition hover:border-accent/50 hover:bg-accent/20 hover:text-white xl:hidden"
           >
             <span aria-hidden>✦</span>
             <span aria-hidden>{t(dict.nav.quizNavShort)}</span>
@@ -389,7 +389,7 @@ export default function JourneyNav({
               className={
                 registered
                   ? "hidden shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(124,92,255,0.6)] lg:inline-flex"
-                  : "hidden shrink-0 items-center gap-1.5 rounded-full border border-violet-400/45 bg-violet-500/15 px-4 py-2 text-sm font-semibold text-violet-100 shadow-[0_0_18px_rgba(124,92,255,0.28)] transition hover:-translate-y-0.5 hover:border-violet-300/70 hover:bg-violet-500/25 hover:text-white hover:shadow-[0_0_26px_rgba(124,92,255,0.45)] lg:inline-flex"
+                  : "hidden shrink-0 items-center gap-1.5 rounded-full border border-accent/40 bg-accent/12 px-4 py-2 text-sm font-semibold text-accent transition hover:-translate-y-0.5 hover:border-accent/60 hover:bg-accent/20 hover:text-white lg:inline-flex"
               }
             >
               <ChatGlyph className="h-4 w-4" />
@@ -480,7 +480,7 @@ export default function JourneyNav({
                   // 상단 행의 퀴즈 칩(✦)은 이 레일이 아니라 첫 행에 있어 대상이 아닙니다.
                   className={`inline-flex min-h-[44px] min-w-[5.25rem] shrink-0 items-center justify-center whitespace-nowrap rounded-full border px-3 text-[0.7rem] font-semibold backdrop-blur transition active:scale-[0.97] ${
                     here
-                      ? "border-violet-400/45 bg-violet-500/15 text-white"
+                      ? "border-accent/40 bg-accent/12 text-white"
                       : "border-white/12 bg-white/[0.06] text-white/75"
                   }`}
                 >
