@@ -10,23 +10,50 @@
     -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif;
 
+  /* ── 나루 팔레트 (DECIDED 2026-09-15) ──────────────────────────────────
+     정본은 로고 가이드입니다: 남색 #12246B, 보라 #4B3A8C, 자주 #9A5A82,
+     주황 #EE8A4F. 로고 그라데이션이 왼쪽 위 남색에서 오른쪽 아래 주황으로
+     흐르고, 주황 점 하나가 나루 자리입니다.
+
+     바탕이 보라 검정(#080810)에서 남색 검정(#070B1F)으로 옮겨 갑니다. 8월
+     사이트는 일렉트릭 바이올렛이 기본색이었는데, 나루의 기준색은 남색이에요.
+     완전한 검정으로 가지 않은 것은 로고가 남색 계열 바탕을 전제로 하기
+     때문입니다(반전 로고의 조건: "배경색은 남색 계열을 쓴다").
+
+     /2026-08 아카이브도 이 토큰을 함께 읽습니다. 의도입니다. 한 사이트이고,
+     8월 페이지는 나루의 1회차 기록이지 별개의 사이트가 아닙니다. 다만 8월
+     페이지의 컴포넌트가 쓰는 Tailwind 기본 violet 계열(violet-400 등)은
+     토큰이 아니라 그대로 남습니다. 5,157줄짜리 파일의 색을 일괄 치환하는 것은
+     이번 작업의 범위가 아니고, 그 페이지는 그때의 모습으로 남는 편이 맞습니다.
+
+     주황은 아껴 씁니다. CTA와 강조점에만 점처럼 쓰세요. 면으로 칠하면
+     로고 안의 나루 점이 더 이상 눈에 띄지 않습니다.                          */
+
   /* Core palette */
-  --bg:          #080810;
-  --surface:     #0f0f1a;
-  --surface-2:   #13131f;
+  --bg:          #070B1F;
+  --surface:     #0C1230;
+  --surface-2:   #111A3A;
   --border:      rgba(255,255,255,0.07);
   --border-2:    rgba(255,255,255,0.12);
 
   /* Text */
-  --text:        #f0eeff;
-  --text-muted:  #7c7a9a;
-  --text-faint:  #3e3c5a;
+  --text:        #EEF0FA;
+  --text-muted:  #8288AE;
+  --text-faint:  #3A4066;
 
-  /* Accent — electric violet + cyan */
-  --violet:      #7c3aed;
-  --violet-soft: #a78bfa;
-  --cyan:        #06b6d4;
-  --cyan-soft:   #67e8f9;
+  /* Accent: 나루 4색 */
+  --navy:        #12246B;
+  --purple:      #4B3A8C;
+  --plum:        #9A5A82;
+  --orange:      #EE8A4F;
+
+  /* 아래 네 이름은 이 파일 안에서만 쓰입니다(포커스 링, 그리드 배경).
+     이름은 그대로 두고 값만 나루로 옮겼습니다. 원색 #4B3A8C를 포커스 링에
+     쓰면 어두운 바탕에서 링이 보이지 않아, 링에는 밝은 쪽(#9A8CC9)을 씁니다. */
+  --violet:      #4B3A8C;
+  --violet-soft: #9A8CC9;
+  --cyan:        #6E7FC4;
+  --cyan-soft:   #A7B4E4;
   --green:       #10b981;
 
   --radius-pill: 999px;
@@ -160,7 +187,7 @@ body {
 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: #2a2840; border-radius: 999px; }
+::-webkit-scrollbar-thumb { background: #2B3360; border-radius: 999px; }
 
 :focus-visible { outline: 2px solid var(--violet-soft); outline-offset: 3px; border-radius: 4px; }
 
@@ -173,8 +200,11 @@ body {
 }
 
 /* ── TEXT CONTRAST FLOOR: text-white/55 ──────────────────────────────────────
-   Measured 2026-08-12 against the three real backdrops (--bg #080810, --surface
-   #0f0f1a, --surface-2 #13131f), white at alpha:
+   Measured 2026-08-12 against the three real backdrops, then re-checked
+   2026-09-15 against the 나루 palette (--bg #070B1F, --surface #0C1230,
+   --surface-2 #111A3A). The new grounds are very slightly LIGHTER than the old
+   ones, so every ratio below moved down by about 0.1, and /55 still measures
+   6.1:1 and the floor holds. White at alpha:
 
      /45 → 4.48 : 1  (fails AA on --bg by a hair, 4.52 on card surfaces)
      /50 → 5.36 : 1
@@ -229,8 +259,8 @@ body {
 /* ── Animated grid background ──────────────────────────────────────────────── */
 .grid-bg {
   background-image:
-    linear-gradient(rgba(124,58,237,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(124,58,237,0.06) 1px, transparent 1px);
+    linear-gradient(rgba(75,58,140,0.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(75,58,140,0.10) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 

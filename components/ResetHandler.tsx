@@ -59,7 +59,7 @@ export default function ResetHandler() {
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
-            className="rounded-full border border-white/15 bg-[#13131f] px-5 py-3 text-center text-sm font-semibold text-white shadow-xl"
+            className="rounded-full border border-white/15 bg-[#111A3A] px-5 py-3 text-center text-sm font-semibold text-white shadow-xl"
           >
             {t(dict.resetToast)}
           </motion.div>

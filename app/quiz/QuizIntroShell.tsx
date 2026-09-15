@@ -4,7 +4,7 @@ import { quizUI } from "@/data/quiz";
 // SERVER-RENDERED INTRO SHELL — what /quiz paints before any JS runs.
 //
 // Quiz reads useSearchParams (the ?r= deep link), which opts its whole subtree
-// out of server rendering. The Suspense fallback was `min-h-screen bg-[#06040f]`,
+// out of server rendering. The Suspense fallback was `min-h-screen bg-[#070B1F]`,
 // i.e. a black rectangle: someone tapping through from the home page got a blank
 // screen until the bundle landed, which is a hard place to lose a visitor who
 // was only mildly curious in the first place.
@@ -44,7 +44,7 @@ function Both({ phrase }: { phrase: { ko: string; en: string } }) {
 
 export default function QuizIntroShell() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#06040f] text-white">
+    <main className="relative min-h-screen overflow-hidden bg-[#070B1F] text-white">
       <div aria-hidden className="grid-bg pointer-events-none absolute inset-0 opacity-50" />
       <div className="relative z-10 mx-auto flex min-h-screen max-w-2xl flex-col px-6 pb-12">
         <div className="h-20 shrink-0" />

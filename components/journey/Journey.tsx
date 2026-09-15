@@ -22,6 +22,8 @@ import {
   type EventPhase,
 } from "@/data/schedule";
 import Chapter from "./Chapter";
+import Eyebrow from "@/components/ui/Eyebrow";
+import OpenChatLink from "@/components/ui/OpenChatLink";
 import EventModal from "@/components/EventModal";
 import PartnerModal, { type PartnerInfo } from "@/components/PartnerModal";
 import ChatGlyph from "@/components/ChatGlyph";
@@ -117,18 +119,10 @@ function Glass({ children, className = "" }: { children: React.ReactNode; classN
   );
 }
 
-function Eyebrow({ children, color = "violet", className = "" }: { children: React.ReactNode; color?: "violet" | "cyan" | "emerald"; className?: string }) {
-  const map = {
-    violet: "border-violet-400/30 bg-violet-400/10 text-violet-200",
-    cyan: "border-cyan-400/30 bg-cyan-400/10 text-cyan-200",
-    emerald: "border-emerald-400/30 bg-emerald-400/10 text-emerald-200",
-  } as const;
-  return (
-    <span className={`mb-4 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] ${map[color]} ${className}`}>
-      {children}
-    </span>
-  );
-}
+// Eyebrow는 components/ui/Eyebrow.tsx로 옮겼습니다 (2026-09-15, 나루 런칭).
+// 나루 홈이 같은 칩을 쓰기 때문입니다. 정의만 옮겼고 이 파일의 사용처는
+// 그대로입니다. color에 orange가 하나 늘었을 뿐, violet/cyan/emerald의 값은
+// 한 글자도 바뀌지 않았습니다.
 
 // Renders `**…**` spans in a dictionary string as emphasized text. Copy that
 // needs one emphasized phrase per locale would otherwise have to be split into
@@ -385,50 +379,9 @@ const FOCUSABLE =
 // The register card carries `register.reassure` under its CTA — the same line in
 // all three placements, from one key.
 // ─────────────────────────────────────────────────────────────────────────────
-// ─────────────────────────────────────────────────────────────────────────────
-// OPEN-CHAT LINK — the third CTA, for the visitor who isn't ready to register.
-//
-// Deliberately the lowest-hierarchy element wherever it appears: no border, no
-// fill, no pill. It sits directly under a register CTA, and the moment it reads
-// as a peer it starts taking clicks from the conversion it exists to catch. If
-// this ever looks like a button, that's the bug.
-//
-// `src` tags where the click came from so the funnel can be read per placement.
-// ─────────────────────────────────────────────────────────────────────────────
-function OpenChatLink({
-  t,
-  src,
-  className = "",
-}: {
-  t: Tfn;
-  // "wrap" = 행사 마무리 섹션 (2026-08-30). analytics에서 어느 자리의 오픈채팅
-  // 링크가 눌렸는지 가르는 값이라, 자리를 새로 만들면 여기에 이름을 더합니다.
-  src: "band" | "footer" | "wrap";
-  className?: string;
-}) {
-  if (!links.openChat) return null;
-  return (
-    // Ghost CHIP, not a bare underlined line. At text-white/60 with a hairline
-    // underline this read as a footnote and was skipped — which defeats the
-    // point, since this is the only offer on the page for someone who has read
-    // everything and still isn't ready to register. Same ghost treatment as the
-    // nav's open-chat button, so the two are recognisably the same door.
-    //
-    // Still deliberately NOT a fill: it sits under the violet register pill and
-    // must stay a clear step below it. Border + brighter text is the ceiling.
-    <a
-      href={links.openChat}
-      target="_blank"
-      rel="noopener noreferrer"
-      onClick={() => track("openchat_click", { src })}
-      className={`inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2.5 text-sm font-medium leading-relaxed text-white/75 transition hover:border-white/35 hover:bg-white/10 hover:text-white ${className}`}
-    >
-      <ChatGlyph className="h-4 w-4 shrink-0" />
-      {t(dict.register.openChatCta)}
-      <span aria-hidden className="text-white/50">→</span>
-    </a>
-  );
-}
+// OpenChatLink는 components/ui/OpenChatLink.tsx로 옮겼습니다 (2026-09-15).
+// 나루 홈에 오픈채팅 자리가 세 군데 생겼고, 그 셋이 이 파일의 버전과 같은 칩이어야
+// 합니다. `src`의 목록에 naru-* 세 개가 늘었을 뿐 나머지는 그대로입니다.
 
 // CHAPTER HEADING SIZE — text-[clamp(2rem,5.5vw,3.75rem)], all nine of them.
 //
@@ -3147,7 +3100,7 @@ function MobileChatBar() {
                 rel="noopener noreferrer"
                 aria-label={t(dict.nav.openChatAria)}
                 onClick={() => track("openchat_click", { src: "mobile-bar" })}
-                className="pointer-events-auto inline-flex h-12 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/45 bg-[#06040f]/92 px-6 text-sm font-bold text-violet-100 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.9)] backdrop-blur transition active:scale-95"
+                className="pointer-events-auto inline-flex h-12 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/45 bg-[#070B1F]/92 px-6 text-sm font-bold text-violet-100 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.9)] backdrop-blur transition active:scale-95"
               >
                 <ChatGlyph className="h-5 w-5 shrink-0" />
                 {t(dict.nav.openChat)}
@@ -4943,7 +4896,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           className="pointer-events-none absolute inset-0 -z-[1]"
           style={{
             background:
-              "radial-gradient(60% 55% at 50% 45%, rgba(7,6,18,0.82) 0%, rgba(7,6,18,0.5) 42%, rgba(7,6,18,0) 78%)",
+              "radial-gradient(60% 55% at 50% 45%, rgba(7,11,31,0.82) 0%, rgba(7,11,31,0.5) 42%, rgba(7,11,31,0) 78%)",
           }}
         />
         {/* hero CTA block — vertically centred */}

@@ -76,7 +76,7 @@ function CssFallback() {
       className="pointer-events-none fixed inset-0 -z-10"
       style={{
         background:
-          "radial-gradient(120% 90% at 50% 30%, #1a1235 0%, #0f172a 45%, #09090b 75%, #050505 100%)",
+          "radial-gradient(120% 90% at 50% 30%, #1A1740 0%, #0E1740 45%, #070B1F 75%, #03050F 100%)",
       }}
     >
       <div

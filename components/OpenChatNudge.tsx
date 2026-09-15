@@ -57,7 +57,7 @@ export default function OpenChatNudge({
           transition={{ duration: reduce ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] }}
           // Sits above the sticky register bar (z-40) but below the modal layer
           // (z-50+), and clears the iOS home indicator.
-          className="fixed inset-x-3 z-[45] mx-auto max-w-md rounded-2xl border border-white/15 bg-[#13131f]/95 px-4 py-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] backdrop-blur sm:inset-x-6"
+          className="fixed inset-x-3 z-[45] mx-auto max-w-md rounded-2xl border border-white/15 bg-[#111A3A]/95 px-4 py-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] backdrop-blur sm:inset-x-6"
           style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 5.5rem)" }}
         >
           <div className="flex items-start gap-3">
