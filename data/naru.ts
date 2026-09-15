@@ -366,6 +366,16 @@ export const naru = {
           { value: { ko: "무순위 4부문", en: "Four categories" }, label: { ko: "10팀 수상", en: "Ten teams recognised" } },
         ],
         railLabel: { ko: "날마다 무엇이 있었나", en: "Day by day" },
+        tracksLabel: { ko: "문제 둘", en: "Two problems" },
+        tracksNote: {
+          ko: "채용이냐 마케팅이냐가 아니라, 어느 병목을 풀고 싶은지로 골랐습니다. 둘 다 출제사가 그때 실제로 겪고 있던 문제였어요.",
+          en: "Not hiring versus marketing. You picked by which bottleneck you wanted to solve. Both were problems the company was living with at the time.",
+        },
+        awardsLabel: { ko: "부문 넷", en: "Four categories" },
+        awardsNote: {
+          ko: "등수가 없습니다. 네 부문이 각각 다른 것을 보고, 보는 사람도 출제사와 VC, 참가자, 운영진으로 다 다릅니다.",
+          en: "No placings. Each of the four looks for something different, and so does each set of eyes: the problem owner, the VC panel, fellow builders, the organizers.",
+        },
       },
       mentors: {
         label: { ko: "멘토", en: "Mentors" },

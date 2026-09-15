@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useId, useState } from "react";
 import { dict, type Phrase } from "@/data/dictionary";
+import LinkedInLink from "@/components/ui/LinkedInLink";
 import { days } from "@/data/schedule";
 import { naru } from "@/data/naru";
 import { useLocale } from "@/lib/LocaleContext";
@@ -27,10 +29,17 @@ import { useLocale } from "@/lib/LocaleContext";
 // 소속이 바뀌면 이 블록도 같이 바뀝니다. data/naru.ts의 record.tabs에는 라벨과
 // 안내 문장만 있습니다.
 //
-// 그래서 여기에는 "확정/미확정" 배지도, 링크드인 링크도, 예약 안내도 없습니다.
-// 그건 진행 중인 이벤트 페이지가 하는 일이고, 이 자리는 끝난 이벤트의 요약이라
-// 누가 있었는가까지만 말합니다. 더 보고 싶은 사람은 아래 링크로 8월 페이지에
-// 가면 되고, 거기에는 소개와 링크와 FAQ가 전부 있습니다.
+// 링크드인은 반드시 살립니다. 8월 페이지의 모든 인물 카드가 달고 있던 것이고,
+// 이 자리에서 가장 값이 큰 요소예요. 매니페스토 VIII이 말하는 대로 커뮤니티의
+// 이야기는 제도가 아니라 사람으로 전달되는데, 이름만 적어 두면 그 사람이 누구인지
+// 확인할 방법이 없습니다. 링크 하나가 "실명이 박힌 진짜 사람들이 왔다"를 증명하고,
+// 그게 이 페이지가 기업과 다음 참가자에게 하려는 말의 전부입니다.
+// 소개 한 줄(intro·bio·note·points)과 얼굴 사진도 같은 이유로 그립니다.
+// 정본에 있는 것을 화면에서 빼 두면 그냥 이름 목록이 됩니다.
+//
+// 다만 "확정/미확정" 배지와 예약 안내는 없습니다. 그건 진행 중인 이벤트 페이지가
+// 하는 일이고, 이 자리는 끝난 이벤트의 요약입니다. 세션의 시각과 장소, FAQ는
+// 아래 링크로 8월 페이지에 가면 전부 있습니다.
 //
 // ── 왜 탭인가 ────────────────────────────────────────────────────────────────
 // 길이 때문입니다. 8일 + 멘토 열셋 + 연사와 패널 열이 넘는 사람을 한 번에
@@ -58,28 +67,70 @@ function stageChips(stages: readonly number[], t: (p: Phrase) => string): string
   return out;
 }
 
+function Avatar({ src, alt }: { src?: string; alt: string }) {
+  if (!src) return null;
+  return (
+    // 사진이 있는 사람만 그립니다. 없는 사람 자리에 이니셜 원을 만들지
+    // 않았습니다. 그러면 사진이 있는 사람과 없는 사람이 같은 무게로 보여서,
+    // 정보가 아니라 장식이 됩니다. 없는 것은 없는 대로 둡니다.
+    <Image
+      src={src}
+      alt={alt}
+      width={96}
+      height={96}
+      sizes="48px"
+      className="h-12 w-12 shrink-0 rounded-full border border-white/12 object-cover"
+    />
+  );
+}
+
 function Person({
   name,
   org,
   role,
+  bio,
+  tag,
   chips = [],
+  img,
+  linkedin,
 }: {
   name: string;
   org?: string;
   role?: string;
+  bio?: string;
+  tag?: string;
   chips?: string[];
+  img?: string;
+  linkedin?: string;
 }) {
   return (
-    <li className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3.5">
-      <p className="break-keep text-sm font-semibold leading-snug text-white">{name}</p>
-      {/* 소속과 직함을 한 줄에 잇지 않습니다. 가운뎃점은 하우스 스타일이
-          금지하고(dictionary.ts 상단), U+2002으로 이으면 직함 자체가 이미
-          U+2002을 품고 있어서("이사 Director") 경계가 보이지 않습니다.
-          두 줄이면 구분자가 필요 없습니다. */}
-      {org && <p className="mt-1 break-keep text-xs leading-snug text-white/65">{org}</p>}
-      {role && <p className="mt-0.5 break-keep text-xs leading-snug text-white/45">{role}</p>}
+    <li className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4">
+      <div className="flex items-start gap-3">
+        <Avatar src={img} alt={name} />
+        <div className="min-w-0 flex-1">
+          <p className="break-keep text-sm font-semibold leading-snug text-white">{name}</p>
+          {/* 소속과 직함을 한 줄에 잇지 않습니다. 가운뎃점은 하우스 스타일이
+              금지하고(dictionary.ts 상단), U+2002으로 이으면 직함 자체가 이미
+              U+2002을 품고 있어서("이사 Director") 경계가 보이지 않습니다.
+              두 줄이면 구분자가 필요 없습니다. */}
+          {org && <p className="mt-1 break-keep text-xs leading-snug text-white/65">{org}</p>}
+          {role && <p className="mt-0.5 break-keep text-xs leading-snug text-white/45">{role}</p>}
+        </div>
+        {/* 링크드인은 카드 오른쪽 위 고정입니다. 카드마다 본문 길이가 달라서
+            아래에 두면 줄이 들쭉날쭉해지고, 무엇보다 이름 옆에 있어야 "이
+            사람"의 링크로 읽힙니다. */}
+        {linkedin && <LinkedInLink url={linkedin} label={name} />}
+      </div>
+      {tag && (
+        <p className="mt-3">
+          <span className="inline-flex rounded-full border border-[#A99AD6]/25 bg-[#A99AD6]/10 px-2.5 py-0.5 text-[0.62rem] font-semibold text-[#C0B4E4]">
+            {tag}
+          </span>
+        </p>
+      )}
+      {bio && <p className="mt-3 break-keep text-xs leading-relaxed text-white/60">{bio}</p>}
       {chips.length > 0 && (
-        <p className="mt-2 flex flex-wrap gap-1.5">
+        <p className="mt-3 flex flex-wrap gap-1.5">
           {chips.map((c) => (
             <span
               key={c}
@@ -194,6 +245,62 @@ export default function RecordTabs() {
               ))}
             </ol>
           </div>
+
+          {/* 트랙 둘. 8월 정본(dict.tracks.items)에서 읽습니다. 이 이벤트가
+              "실제 기업 문제"였다는 주장을 증명하는 자리라, 트랙 이름만 적고
+              넘어가면 주장만 남습니다. 병목 한 줄과 상황 한 문단이 그 증거예요. */}
+          <div className="mt-8">
+            <SectionLabel>{t(tabs.format.tracksLabel)}</SectionLabel>
+            <p className="mb-3 break-keep text-sm leading-relaxed text-white/70">
+              {t(tabs.format.tracksNote)}
+            </p>
+            <ul className="grid gap-3 lg:grid-cols-2">
+              {dict.tracks.items.map((tr) => (
+                <li key={tr.num} className="rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4">
+                  <p className="flex items-center gap-2">
+                    <span className="inline-flex rounded-md border border-white/12 px-1.5 py-0.5 text-[0.62rem] font-black text-white/50">
+                      {tr.num}
+                    </span>
+                    <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[#A99AD6]">
+                      {t(tr.kicker)}
+                    </span>
+                  </p>
+                  <p className="mt-2 break-keep text-base font-bold leading-snug text-white">
+                    {t(tr.title)}
+                  </p>
+                  <p className="mt-1.5 break-keep text-sm leading-snug text-[#F2B183]">
+                    {t(tr.bottleneck)}
+                  </p>
+                  <p className="mt-3 break-keep text-xs leading-relaxed text-white/60">
+                    {t(tr.situation)}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* 부문 넷. 무순위라는 말은 위 칩에 이미 있지만, 그 말만으로는 "그럼
+              뭘 보고 주는데"가 남습니다. 네 부문의 이름과 누가 지명하는지가
+              그 답이고, 8월 정본이 그대로 들고 있습니다. */}
+          <div className="mt-8">
+            <SectionLabel count={dict.program.awards.items.length}>
+              {t(tabs.format.awardsLabel)}
+            </SectionLabel>
+            <p className="mb-3 break-keep text-sm leading-relaxed text-white/70">
+              {t(tabs.format.awardsNote)}
+            </p>
+            <ul className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+              {dict.program.awards.items.map((aw) => (
+                <li key={aw.name.en} className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4">
+                  <p className="break-keep text-sm font-bold leading-snug text-white">{t(aw.name)}</p>
+                  <p className="mt-1.5 break-keep text-[0.68rem] leading-snug text-[#A99AD6]">
+                    {t(aw.meta)}
+                  </p>
+                  <p className="mt-2.5 break-keep text-xs leading-relaxed text-white/60">{t(aw.desc)}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
 
@@ -212,7 +319,10 @@ export default function RecordTabs() {
                   name={t(m.name)}
                   org={t(m.org)}
                   role={t(m.role)}
+                  bio={t(m.intro)}
                   chips={stageChips(m.stages, t)}
+                  img={m.img || undefined}
+                  linkedin={m.linkedin || undefined}
                 />
               ))}
             </ul>
@@ -231,13 +341,34 @@ export default function RecordTabs() {
             </SectionLabel>
             <ul className="grid gap-2.5 sm:grid-cols-2">
               {dict.speakers.people.map((p) => (
-                <li key={p.name.en + p.day.en} className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3.5">
-                  <p className="text-[0.62rem] font-bold uppercase tracking-[0.14em] text-[#A99AD6]">
-                    {t(p.day)}
+                <li key={p.name.en + p.day.en} className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4">
+                  <div className="flex items-start gap-3">
+                    <Avatar src={p.img} alt={t(p.name)} />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[0.62rem] font-bold uppercase tracking-[0.14em] text-[#A99AD6]">
+                        {t(p.day)}
+                      </p>
+                      <p className="mt-1.5 break-keep text-sm font-semibold leading-snug text-white">
+                        {t(p.name)}
+                      </p>
+                      <p className="mt-1 break-keep text-xs leading-snug text-white/45">{t(p.role)}</p>
+                    </div>
+                    {p.linkedin && <LinkedInLink url={p.linkedin} label={t(p.name)} />}
+                  </div>
+                  {/* 세션 제목과 그 안에서 무슨 이야기가 나왔는지. 제목만 두면
+                      "무슨 얘기였는데"가 남고, 그 답이 정본의 points에 이미
+                      있습니다. 그대로 읽습니다. */}
+                  <p className="mt-3 break-keep text-sm font-semibold leading-snug text-white/90">
+                    {t(p.topic)}
                   </p>
-                  <p className="mt-1.5 break-keep text-sm font-semibold leading-snug text-white">{t(p.name)}</p>
-                  <p className="mt-1 break-keep text-xs leading-snug text-white/55">{t(p.role)}</p>
-                  <p className="mt-2 break-keep text-xs leading-snug text-white/70">{t(p.topic)}</p>
+                  <ul className="mt-2.5 space-y-1.5">
+                    {p.points.map((pt, i) => (
+                      <li key={i} className="flex gap-2 break-keep text-xs leading-relaxed text-white/60">
+                        <span aria-hidden className="mt-[0.5em] h-1 w-1 shrink-0 rounded-full bg-white/30" />
+                        {t(pt)}
+                      </li>
+                    ))}
+                  </ul>
                 </li>
               ))}
             </ul>
@@ -255,7 +386,14 @@ export default function RecordTabs() {
             </p>
             <ul className="grid gap-2.5 sm:grid-cols-3">
               {dict.speakers.panel.people.map((p) => (
-                <Person key={p.name.en} name={t(p.name)} role={t(p.role)} />
+                <Person
+                  key={p.name.en}
+                  name={t(p.name)}
+                  role={t(p.role)}
+                  bio={t(p.note)}
+                  img={p.img}
+                  linkedin={p.linkedin}
+                />
               ))}
             </ul>
           </div>
@@ -269,7 +407,16 @@ export default function RecordTabs() {
             </p>
             <ul className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
               {dict.judges.people.map((p) => (
-                <Person key={p.name.en} name={t(p.name)} org={t(p.org)} role={t(p.role)} />
+                <Person
+                  key={p.name.en}
+                  name={t(p.name)}
+                  org={t(p.org)}
+                  role={t(p.role)}
+                  tag={t(p.tag)}
+                  bio={t(p.bio)}
+                  img={p.img}
+                  linkedin={p.linkedin}
+                />
               ))}
             </ul>
           </div>
