@@ -1,23 +1,34 @@
 /**
  * Central configuration for the interactive background.
  *
- * "The invisible infrastructure of intelligence" — a violet flow-field of
- * GPU-driven particles drifting through volumetric depth. All tunable constants
- * live here so the scene reads from a single source of truth.
+ * "The invisible infrastructure of intelligence" — a flow-field of GPU-driven
+ * particles drifting through volumetric depth. All tunable constants live here
+ * so the scene reads from a single source of truth.
  */
 
+// ── DECIDED 2026-09-15 (나루 런칭): 필드를 나루 팔레트로 옮깁니다 ───────────
+// 8월의 필드는 일렉트릭 바이올렛에서 마젠타로 타올랐습니다. 나루의 기준색은
+// 남색이고, 로고의 그라데이션은 왼쪽 위 남색에서 오른쪽 아래 주황으로 흐릅니다.
+// 이 필드가 그 흐름을 공간으로 옮긴 것입니다: 안개는 남색, 입자의 몸통은 보라에서
+// 자주로, 가장 뜨거운 심만 주황.
+//
+// hi1이 주황인 것이 이 팔레트의 요점입니다. 로고 한가운데 찍힌 주황 점 하나가
+// 나루 자리이고, 화면에서 주황은 그 점만큼만 있어야 합니다. 셰이더에서 hi1은
+// 가장 밝은 소수의 입자에만 닿으므로, 넓은 남색 위에 드문드문 찍히는 점이 됩니다.
+// 여기 있는 어느 값이든 주황 쪽으로 더 밀지 마세요. 밀면 면이 되고, 면이 되면
+// 로고의 점이 더 이상 눈에 띄지 않습니다.
 export const PALETTE = {
   // Base (background / fog)
-  base0: "#050505",
-  base1: "#09090b",
-  base2: "#0f172a",
+  base0: "#03050F",
+  base1: "#070B1F",
+  base2: "#12246B",
   // Accent (mid-tone particle body)
-  accent0: "#7c3aed",
-  accent1: "#8b5cf6",
-  accent2: "#a855f7",
+  accent0: "#4B3A8C",
+  accent1: "#6B4E9E",
+  accent2: "#9A5A82",
   // Highlight (hot core / fresnel)
-  hi0: "#c084fc",
-  hi1: "#e879f9",
+  hi0: "#C79BB4",
+  hi1: "#EE8A4F",
 } as const;
 
 /** Responsive particle budget. Picked at init from viewport + device tier. */

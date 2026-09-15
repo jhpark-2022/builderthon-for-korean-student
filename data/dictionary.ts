@@ -2973,9 +2973,20 @@ export const dict = {
       ko: "함께해 주신 참가자와 멘토, 피드백 패널, 그리고 파트너사에 감사드립니다.",
       en: "Thank you to every participant, mentor, panelist, and partner who made it happen.",
     },
-    // "stay tuned" 자리. 무엇을 기다리라는 것인지까지 말해야 기다릴 수 있습니다 —
-    // 두 가지가 이미 확정돼 있고(가을 빌더 커리큘럼, 12월 서울 쇼케이스) 그
-    // 사실은 dict.program.awards의 next/openToAll가 정본입니다. 바뀌면 함께 고치세요.
+    // "stay tuned" 자리. 무엇을 기다리라는 것인지까지 말해야 기다릴 수 있습니다.
+    //
+    // DECIDED 2026-09-15 (나루 런칭): 12월은 쇼케이스가 아니라 나루의 다음
+    // 회차입니다. 8월에 "12월 서울 강남 쇼케이스"라고 쓴 것은 그때의 계획이었고,
+    // 지금 확정된 것은 12월 9일 서울에서 2회차가 열린다는 사실입니다. 이 문단은
+    // 8월 페이지에서 유일하게 미래를 말하는 자리라, 여기만 현재 사실로 고칩니다.
+    //
+    // 가을 빌더 커리큘럼 언급은 뺐습니다. TODO: confirm. 유지 여부가 확정되지
+    // 않았습니다. 없는 일을 기다리게 하는 쪽이 아무 말도 안 하는 쪽보다 나쁩니다.
+    // 되살릴 때는 아래 문장에 한 절을 더하면 됩니다.
+    //
+    // dict.program.awards.next는 아직 "12월 서울 강남 쇼케이스 무대 우선 초청"
+    // 이라고 말합니다. 그 자리는 수상팀에게 약속된 것이라 8월의 기록 그대로
+    // 두었습니다. 12월 회차의 형식이 확정되면 함께 보세요.
     nextLabel: { ko: "다음 소식", en: "What's next" },
     // ── 히어로와 nav ─────────────────────────────────────────────────────────
     // 투표가 있던 자리를 그대로 물려받습니다(dict.vote의 같은 키들 참고).
@@ -2986,12 +2997,12 @@ export const dict = {
     cardLabel: { ko: "8일이 끝났습니다", en: "That's a wrap" },
     cardLines: [
       { ko: "8월 22일~29일 스물한 팀이 무대에 섰습니다", en: "22~29 Aug twenty-one teams took the stage" },
-      { ko: "다음은 가을 커리큘럼과 12월 서울 쇼케이스", en: "Next: autumn curriculum, December Seoul showcase" },
+      { ko: "다음 회차는 12월 9일 서울입니다", en: "The next round is 9 December, Seoul" },
     ],
     cardCta: { ko: "마무리 보기", en: "See how it ended" },
     next: {
-      ko: "여기서 끝이 아닙니다. 가을에는 참가자 전원이 이어 갈 빌더 커리큘럼이, 12월에는 서울 강남 쇼케이스 무대가 기다립니다. 소식은 오픈채팅에서 가장 먼저 전해 드려요.",
-      en: "This is not the end of it. An autumn builder curriculum for every participant comes next, and a December showcase stage in Gangnam, Seoul after that. The open chat hears about it first.",
+      ko: "여기서 끝이 아닙니다. 다음 회차는 2026년 12월 9일 서울에서 열립니다. 나루 홈에서 자세히 볼 수 있어요. 소식은 오픈채팅에서 가장 먼저 전해 드려요.",
+      en: "This is not the end of it. The next round opens in Seoul on 9 December 2026. You can read more on the NARU home page. The open chat hears about it first.",
     },
   },
 

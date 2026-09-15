@@ -55,6 +55,25 @@ export function useRegister(): RegisterContextValue {
   return ctx;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// 프로바이더가 없어도 되는 소비처를 위한 문 (2026-09-15, 나루 런칭).
+//
+// JourneyNav는 이제 두 페이지가 함께 씁니다: /2026-08(RegisterProvider 있음)과
+// /(없음). 나루 홈에는 등록이 없습니다. 12월 등록이 아직 열리지 않았고, 나루는
+// 가입 폼 자체를 두지 않기로 했기 때문입니다(Overview 06). 그래서 홈에
+// RegisterProvider를 붙이는 것은 "쓰지 않을 모달과 그 API 상태를 페이지마다
+// 마운트한다"는 뜻이고, 그건 없는 기능을 있는 것처럼 실어 나르는 일입니다.
+//
+// useRegister()는 프로바이더가 없으면 throw 합니다. 그 계약을 느슨하게 만들지
+// 않은 것은 의도입니다. 등록 CTA가 프로바이더 밖에서 조용히 죽는 쪽이 더
+// 나쁩니다. 대신 "없으면 없는 대로 그린다"가 맞는 소비처만 이 함수를 씁니다.
+// 지금 이 문을 쓰는 곳은 JourneyNav 하나이고, 거기서 쓰는 값은 registered
+// 하나뿐입니다(오픈채팅 버튼의 톤을 정하는 플래그).
+// ─────────────────────────────────────────────────────────────────────────────
+export function useRegisterOptional(): RegisterContextValue | null {
+  return useContext(RegisterContext);
+}
+
 export function RegisterProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const [registered, setRegistered] = useState(false);

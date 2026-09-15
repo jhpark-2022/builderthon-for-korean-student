@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
-import { dict, links } from "@/data/dictionary";
-import { useRegister } from "@/lib/RegisterContext";
+import { dict, links, type Phrase } from "@/data/dictionary";
+import { useRegisterOptional } from "@/lib/RegisterContext";
 import { useScrollDirection } from "@/lib/useScrollDirection";
 import { isScrollLocked } from "@/lib/useBodyScrollLock";
 import LocaleToggle from "@/components/LocaleToggle";
@@ -58,7 +58,16 @@ import ReturningGreeting from "./ReturningGreeting";
 // 이 한 줄이 실제로 하는 일: QR을 놓친 사람이 사이트에서 투표를 스스로 찾는 길입니다.
 // "트랙"으로 두면 화면 어디에도 "투표"라는 단어가 없어서, 저 자리에 있다는 것을
 // 알 방법이 없습니다. dict.nav.tracks는 지우지 않았으니 되돌릴 때 그대로 쓰세요.
-const anchors = [
+// ── DECIDED 2026-09-15 (나루 런칭): 목록이 prop이 됩니다 ────────────────────
+// 이 헤더를 이제 두 페이지가 씁니다. /2026-08은 아래 기본 목록을, /는 나루 홈의
+// 여섯 챕터를 넘깁니다(data/naru.ts의 nav).
+//
+// 기본값을 남긴 것이 요점입니다: 아카이브 쪽 호출부(app/2026-08/page.tsx)는
+// <JourneyNav /> 그대로라 8월 페이지의 동작이 한 글자도 바뀌지 않습니다.
+// 아래 결정 기록은 전부 이 기본 목록에 대한 것이고, 그대로 유효합니다.
+export type NavAnchor = { id: string; label: Phrase };
+
+const DEFAULT_ANCHORS: NavAnchor[] = [
   { id: "wrap",      label: dict.wrap.navLabel },
   { id: "program",   label: dict.nav.program },
   { id: "speakers",  label: dict.nav.speakers },
@@ -83,7 +92,7 @@ const anchors = [
 // active chip a half screen after you have visibly arrived. -45% at the bottom
 // keeps exactly one section qualifying at a time on tall screens.
 // ─────────────────────────────────────────────────────────────────────────────
-function useActiveSection(enabled: boolean) {
+function useActiveSection(enabled: boolean, anchors: NavAnchor[]) {
   const [active, setActive] = useState<string | null>(null);
   useEffect(() => {
     if (!enabled || typeof IntersectionObserver === "undefined") return;
@@ -114,20 +123,34 @@ function useActiveSection(enabled: boolean) {
     );
     nodes.forEach((n) => io.observe(n));
     return () => io.disconnect();
-  }, [enabled]);
+  }, [enabled, anchors]);
   return active;
 }
 
-export default function JourneyNav() {
+export default function JourneyNav({
+  anchors = DEFAULT_ANCHORS,
+  brand = "zero100",
+}: {
+  anchors?: NavAnchor[];
+  // 어느 이름표를 다는가. 8월 페이지는 Zero100 락업(그 회차의 주최 표기가 그것이라
+  // 역사입니다), 나루 홈은 나루 가로 락업입니다.
+  // DECIDED 2026-09-15: 홈의 락업은 SVG가 아니라 PNG입니다. 납품된 SVG에는 영문
+  // Montserrat만 임베드돼 있고 한글 "나루"는 시스템의 Noto Sans CJK KR을
+  // 부릅니다. 그 서체가 없는 기기(대부분의 macOS·Windows)에서는 다른 글자꼴로
+  // 그려집니다. 로고 가이드가 금지한 "형태를 건드리는 일"이 방문자 기기에서
+  // 저절로 일어나는 셈이라, 글자가 든 로고는 PNG로 씁니다.
+  brand?: "zero100" | "naru";
+}) {
   const { t, locale } = useLocale();
   const reduce = useReducedMotion();
   // `registered`만 남습니다 — 등록 진입점은 2026-08-22에 걷어냈지만, 이미 등록한
   // 방문자에게 인사하는 ReturningGreeting은 그대로 살아 있습니다.
-  const { registered } = useRegister();
+  // 나루 홈에는 RegisterProvider가 없으므로(등록 없음) null이 올 수 있습니다.
+  const registered = useRegisterOptional()?.registered ?? false;
   const [scrolled, setScrolled] = useState(false);
   // Only observe once the rail exists — before that there is nothing to mark,
   // and the observer would run through the whole hero for nobody.
-  const activeSection = useActiveSection(scrolled);
+  const activeSection = useActiveSection(scrolled, anchors);
   // Shared with the bottom bars and the back-to-top button (lib/useScrollDirection):
   // on a phone this header is two rows tall and, together with the bottom rail,
   // was taking a quarter of an in-app browser's viewport. Scrolling DOWN — the
@@ -183,7 +206,7 @@ export default function JourneyNav() {
       //
       // 두 줄(로고 줄 + 섹션 레일)은 이미 이 배경 하나를 함께 씁니다 — 실측 105px =
       // nav 52 + 레일 53이라 줄 사이에 빈 틈이 없습니다. 여기서 갈라 두지 마세요.
-      } ${scrolled ? "bg-[#06040f]/95 backdrop-blur-md" : "bg-transparent"} ${
+      } ${scrolled ? "bg-[#070B1F]/95 backdrop-blur-md" : "bg-transparent"} ${
         chromeHidden ? "-translate-y-full" : "translate-y-0"
       }`}
     >
@@ -200,40 +223,58 @@ export default function JourneyNav() {
       <nav className="flex h-[52px] w-full items-center justify-between px-6 sm:px-10 xl:h-20">
         {/* LEFT group — brand logo + anchor links, kept together on the left edge. */}
         <div className="flex items-center">
-          <a href="#top" className="flex items-center gap-2.5 leading-none">
-            {/* Official Zero100 lockup (icon + wordmark) leads the brand; the event
-                is "Zero100 AI Builderthon". The "AI Builderthon" suffix is hidden
-                on the narrowest screens so the brand, EN/KR toggle and View Program
-                CTA all fit, and returns from the sm breakpoint up. */}
-            <Image
-              src="/partners/zero100-wordmark.png"
-              alt="Zero100"
-              width={602}
-              height={127}
-              priority
-              className="h-7 w-auto opacity-90 brightness-0 invert sm:h-8"
-            />
-            {/* items-center centres the text box, but Hangul glyphs sit high in
-                that box (no descenders) so "AI 빌더톤" reads as floating above the
-                Zero100 wordmark. Nudge it down only for Korean; Latin already
-                lines up. */}
-            {/* The suffix is part of a lockup, so it must never wrap
-                (whitespace-nowrap) and it yields whenever the bar is tight
-                rather than pushing anything off-screen.
-                It drops below `sm` in both locales, and ENGLISH drops it again
-                from `xl` to 1500px. That second band is where the anchor row
-                appears, and the EN labels are the longer set — "AI Builderthon"
-                is 163px against "AI 빌더톤"'s 89px, and the EN anchor row is
-                577px against 509px. Measured with the suffix forced on: at 1400
-                the two nav groups touch (0px between them) and the lockup still
-                overflows its own flex item by 18px, at 1440 the gap is 15px, at
-                1500 it is 75px. Below that the lockup printed on top of the first
-                two links; the zero100 wordmark alone carries the brand there.
-                KR fits from `xl` with 42px to spare, so it needs no second band.
-                Re-measure before touching 1500 — it is the EN row width, not a
-                round number. */}
-            <span className={`hidden items-center whitespace-nowrap text-lg font-black leading-none tracking-wide text-white/90 sm:inline-flex sm:text-xl ${locale === "ko" ? "translate-y-[2px]" : "xl:hidden min-[1500px]:inline-flex"}`}>{t(dict.nav.brandSuffix)}</span>
-          </a>
+          {brand === "naru" ? (
+            /* 나루 가로 락업(반전). 어두운 바탕 전용이고 이 사이트는 바탕이
+               남색 검정이라 반전이 기본입니다. 로고 가이드: 비율·색·회전·그림자
+               금지. w-auto로 높이만 정합니다. 마스터(원형 배지)를 여기 쓰지
+               않는 이유는 최소 가로 120px 규칙 때문입니다. 52px 바에 들어가는
+               배지는 그 아래로 내려갑니다. */
+            <a href="#top" className="flex items-center leading-none">
+              <Image
+                src="/naru/naru-lockup-rev.png"
+                alt="나루 NARU"
+                width={860}
+                height={400}
+                priority
+                className="h-8 w-auto sm:h-9"
+              />
+            </a>
+          ) : (
+            <a href="#top" className="flex items-center gap-2.5 leading-none">
+              {/* Official Zero100 lockup (icon + wordmark) leads the brand; the event
+                  is "Zero100 AI Builderthon". The "AI Builderthon" suffix is hidden
+                  on the narrowest screens so the brand, EN/KR toggle and View Program
+                  CTA all fit, and returns from the sm breakpoint up. */}
+              <Image
+                src="/partners/zero100-wordmark.png"
+                alt="Zero100"
+                width={602}
+                height={127}
+                priority
+                className="h-7 w-auto opacity-90 brightness-0 invert sm:h-8"
+              />
+              {/* items-center centres the text box, but Hangul glyphs sit high in
+                  that box (no descenders) so "AI 빌더톤" reads as floating above the
+                  Zero100 wordmark. Nudge it down only for Korean; Latin already
+                  lines up. */}
+              {/* The suffix is part of a lockup, so it must never wrap
+                  (whitespace-nowrap) and it yields whenever the bar is tight
+                  rather than pushing anything off-screen.
+                  It drops below `sm` in both locales, and ENGLISH drops it again
+                  from `xl` to 1500px. That second band is where the anchor row
+                  appears, and the EN labels are the longer set — "AI Builderthon"
+                  is 163px against "AI 빌더톤"'s 89px, and the EN anchor row is
+                  577px against 509px. Measured with the suffix forced on: at 1400
+                  the two nav groups touch (0px between them) and the lockup still
+                  overflows its own flex item by 18px, at 1440 the gap is 15px, at
+                  1500 it is 75px. Below that the lockup printed on top of the first
+                  two links; the zero100 wordmark alone carries the brand there.
+                  KR fits from `xl` with 42px to spare, so it needs no second band.
+                  Re-measure before touching 1500 — it is the EN row width, not a
+                  round number. */}
+              <span className={`hidden items-center whitespace-nowrap text-lg font-black leading-none tracking-wide text-white/90 sm:inline-flex sm:text-xl ${locale === "ko" ? "translate-y-[2px]" : "xl:hidden min-[1500px]:inline-flex"}`}>{t(dict.nav.brandSuffix)}</span>
+            </a>
+          )}
           {/* ANCHOR ROW — `xl` (1280), not `lg` (1024). See the note on the
               section rail below: between 1024 and 1279 this row does not fit
               next to the brand and the two CTAs in either locale, and flex

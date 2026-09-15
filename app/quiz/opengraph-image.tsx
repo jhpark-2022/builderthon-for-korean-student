@@ -30,7 +30,7 @@ export default function QuizOpengraphImage() {
           justifyContent: "center",
           padding: "84px",
           background:
-            "radial-gradient(120% 90% at 50% 22%, #1a1235 0%, #0f172a 46%, #06040f 82%)",
+            "radial-gradient(120% 90% at 50% 22%, #1A1740 0%, #0E1740 46%, #070B1F 82%)",
           color: "#fff",
           fontFamily: "sans-serif",
         }}

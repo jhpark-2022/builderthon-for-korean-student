@@ -291,7 +291,7 @@ export default function Quiz() {
   }, [phase, index, reduce]);
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#06040f] text-white">
+    <main className="relative min-h-screen overflow-hidden bg-[#070B1F] text-white">
       {/* decorative field — same tokens as the main site */}
       <div aria-hidden className="grid-bg pointer-events-none absolute inset-0 opacity-50" />
       <div aria-hidden className="orb" style={{ left: "-12%", top: "-10%", width: "42vh", height: "42vh", background: "rgba(124,58,237,0.4)" }} />
@@ -549,7 +549,7 @@ function ResultView({
       if (typeof document !== "undefined" && document.fonts?.ready) {
         await document.fonts.ready;
       }
-      const opts = { width: 1080, height: 1920, pixelRatio: 1, cacheBust: true, backgroundColor: "#06040f" };
+      const opts = { width: 1080, height: 1920, pixelRatio: 1, cacheBust: true, backgroundColor: "#070B1F" };
       // iOS Safari drops fonts/images on the FIRST html-to-image pass — render
       // twice and keep the second blob. Logos are self-hosted (/logos), so no
       // CORS taint; the double pass is purely for font/image warm-up.
@@ -832,7 +832,7 @@ function ResultView({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 16 }}
-            className="fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full border border-white/15 bg-[#13131f] px-5 py-3 text-sm font-semibold text-white shadow-xl"
+            className="fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full border border-white/15 bg-[#111A3A] px-5 py-3 text-sm font-semibold text-white shadow-xl"
           >
             {toast}
           </motion.div>
@@ -923,7 +923,7 @@ const StoryCard = forwardRef<
         height: 1920,
         position: "relative",
         overflow: "hidden",
-        background: "#06040f",
+        background: "#070B1F",
         color: "#fff",
         fontFamily: '"Pretendard Variable", Pretendard, -apple-system, sans-serif',
       }}
