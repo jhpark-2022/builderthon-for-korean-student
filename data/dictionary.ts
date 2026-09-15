@@ -1145,14 +1145,14 @@ export const dict = {
     //
     // DECIDED 2026-08-21 (운영진 브리핑): 가을 = 인큐베이션 → 빌더 커리큘럼
     // (솔루션 아키텍트 역량, 참가자 전원, 준비 중 헤지). 어워드의 다음 = 12월
-    // 쇼케이스 우선 초청. 협력사명과 기간 숫자는 비공개.
+    // 크로싱 서울 자리 먼저 안내. 협력사명과 기간 숫자는 비공개.
     // 그래서 이 줄은 전원형으로 되돌아갑니다 — 가을 단계가 더 이상 쇼트리스트의
     // 자리가 아니기 때문입니다. 위 2026-08-16 결정이 지키려던 것(어워드가 무엇을
     // 위한 것인가)은 사라지지 않았고, 자리를 옮겼습니다: 수상팀 몫은 어워드 박스의
     // next(12월 무대 우선 초청)가 말합니다.
     visionIntro: {
-      ko: "행사는 입구입니다. 여기서 시작한 빌더들이 커리큘럼을 지나 서울로, 그리고 더 큰 무대로 이어집니다.",
-      en: "The event is the entrance. The builders who start here carry on through the curriculum, to Seoul, and on to a bigger stage.",
+      ko: "이 행사는 입구입니다. 여기서 시작한 빌더들이 12월의 크로싱 서울로 이어 갑니다.",
+      en: "This event is the entrance. The builders who start here carry on into CROSSING SEOUL in December.",
     },
     // 퍼널 1번 칸에 붙는 배지. 하드코딩된 "★ START"였고, 한국어 모드에서도 영어로
     // 나왔습니다. 이 페이지에서 눈에 보이는 배지는 전부 번역되므로(필참 · 선택 ·
@@ -1237,26 +1237,26 @@ export const dict = {
         // 협력 논의 중인 회사 이름을 이 칸에 올리지 마세요.
         // "준비 중" 헤지를 빼지 마세요 — 아직 열린 커리큘럼이 아닙니다.
         body: {
-          ko: "앱을 만드는 일은 쉬워졌습니다. 만든 것을 서비스로 띄우고 운영하는 솔루션 아키텍트 역량을 기르는 커리큘럼을 준비 중입니다. 참가자 전원이 12월까지 이어 달립니다.",
-          en: "Building an app got easy. What we're preparing is a curriculum for the harder part, the solution-architect skills of putting your build live and keeping it running. Every participant carries it through to December.",
+          ko: "앱을 만드는 일은 쉬워졌습니다. 만든 것을 서비스로 띄우고 운영하는 솔루션 아키텍트 역량을 기르는 커리큘럼을 준비 중입니다.",
+          en: "Building an app got easy. What we're preparing is a curriculum for the harder part, the solution-architect skills of putting your build live and keeping it running.",
         },
       },
       {
         num: "4",
-        when: { ko: "2026.12 서울 강남", en: "Dec 2026 Gangnam, Seoul" },
-        title: { ko: "강남 쇼케이스", en: "Gangnam showcase" },
+        when: { ko: "2026.12 서울", en: "Dec 2026 Seoul" },
+        title: { ko: "크로싱 서울", en: "CROSSING SEOUL" },
         body: {
-          ko: "싱가포르에서 시작한 팀들이 한국의 학생 빌더들과 함께, 강남에서 한국 기업과 투자자 앞에 다시 섭니다.",
-          en: "Teams that started in Singapore stand up again in Gangnam, together with student builders in Korea, in front of Korean companies and investors.",
+          ko: "같은 코어를 잇는 다음 이벤트입니다. 이번에는 정제된 문제가 아니라 raw data에서 시작해, 무엇이 문제인지 찾는 데서부터 엽니다.",
+          en: "The next event, carrying the same two cores. This time it starts from raw data rather than a cleaned brief, opening at the point where you work out what the problem even is.",
         },
       },
       {
         num: "5",
-        when: { ko: "2027.03", en: "Mar 2027" },
-        title: { ko: "더 큰 무대", en: "A bigger stage" },
+        when: { ko: "그다음", en: "After that" },
+        title: { ko: "다음 크로싱", en: "The next crossing" },
         body: {
-          ko: "다음 시즌은 더 크게. 팀도, 무대도, 파트너도 키워서 돌아옵니다.",
-          en: "The next season goes bigger. More teams, a bigger stage, more partners.",
+          ko: "이벤트는 이어집니다. 어디서 열릴지는 그때의 학생회와 기업이 정합니다.",
+          en: "The events continue. Where the next one opens is decided by the student associations and companies of that round.",
         },
       },
     ],
@@ -1748,7 +1748,11 @@ export const dict = {
       //
       // DECIDED 2026-08-21 (운영진 브리핑): 가을이 인큐베이션에서 빌더 커리큘럼으로
       // 바뀌면서, 수상팀에게 따라오는 것을 12월 쇼케이스 무대 우선 초청으로 다시
-      // 정의합니다. 커리큘럼은 참가자 전원 몫이라 이 자리의 답이 될 수 없습니다 —
+      // 정의합니다.
+      //
+      // DECIDED 2026-09-15 (나루 런칭): 12월은 쇼케이스가 아니라 크로싱 서울이고,
+      // 무대가 아니라 이벤트입니다. "우선 초청"도 "먼저 안내"로 내렸습니다.
+      // 초청은 자리를 보장하는 말인데 지금 보장할 수 있는 것은 순서뿐입니다. 커리큘럼은 참가자 전원 몫이라 이 자리의 답이 될 수 없습니다 —
       // 그걸 여기 쓰면 위 균형(next = 수상팀, openToAll = 전원)이 무너집니다.
       //
       // 커리큘럼 세부 운영(주차, 협력사, 담당자)은 확정돼도 비공개입니다.
@@ -1756,8 +1760,8 @@ export const dict = {
       next: {
         label: { ko: "수상팀에게 이어지는 것", en: "What a win leads to" },
         body: {
-          ko: "가을 동안 결과물을 상품 수준까지 끌어올려, 12월 서울 강남 쇼케이스 무대에 우선 초청됩니다.",
-          en: "Over the autumn they take the build up to product level, and get first call for the December showcase stage in Gangnam, Seoul.",
+          ko: "12월에 열리는 크로싱 서울의 자리를 수상팀에게 먼저 안내합니다. 등록이 열리는 날, 링크가 가장 먼저 갑니다.",
+          en: "Award-winning teams hear about a place at CROSSING SEOUL in December first. The day registration opens, the link goes to them first.",
         },
       },
       openToAll: {
@@ -2649,8 +2653,8 @@ export const dict = {
     // 이어지는 것까지 갑니다. "순위가 아니라"는 뺐습니다 — 순위형은 이미 없고,
     // 그 사실은 어워드 박스의 sub가 한 번 말합니다.
     flowNote: {
-      ko: "네트워크와 경험은 참가자 전원에게. 어워드는 각 팀의 강점에, 그리고 여정은 가을 빌더 커리큘럼과 12월 서울 쇼케이스로 이어집니다.",
-      en: "Network and experience for everyone. Awards go to each team's strengths, and the journey carries on into the autumn builder curriculum and the December showcase in Seoul.",
+      ko: "네트워크와 경험은 참가자 전원에게. 어워드는 각 팀의 강점에, 그리고 다음 자리는 12월의 크로싱 서울로 이어집니다.",
+      en: "Network and experience for everyone. Awards go to each team's strengths, and the next place is CROSSING SEOUL in December.",
     },
   },
 
@@ -2977,10 +2981,14 @@ export const dict = {
     //
     // DECIDED 2026-09-15 (나루 런칭): 12월은 쇼케이스도, 제로백의 2회차도
     // 아닙니다. 나루의 다음 이벤트이고, 제로백 빌더톤에서 나온 코어 2개를
-    // 잇습니다. 이름은 아직 없어요. 8월에 "12월 서울 강남 쇼케이스"라고 쓴 것은
-    // 그때의 계획이었고, 지금 확정된 것은 12월 9일 서울에서 시작한다는 사실
-    // 하나입니다. 이 문단은 8월 페이지에서 유일하게 미래를 말하는 자리라,
-    // 여기만 현재 사실로 고칩니다.
+    // 잇습니다. 8월에 "12월 서울 강남 쇼케이스"라고 쓴 것은 그때의 계획이었고,
+    // 지금 확정된 것은 12월 9일 서울에서 시작한다는 사실입니다. 이 문단은 8월
+    // 페이지에서 유일하게 미래를 말하는 자리라, 여기만 현재 사실로 고칩니다.
+    //
+    // DECIDED 2026-09-15 (2차): 이름이 정해졌습니다. 크로싱 서울 CROSSING SEOUL.
+    // 이 페이지의 12월 서술 네 곳(about.visionIntro, about.visionSteps[3][4],
+    // program.awards.next, benefits, faq)이 전부 그 이름으로 갔습니다.
+    // 정본은 lib/naruDates.ts의 DECEMBER_EVENT_NAME입니다.
     //
     // "제로백 빌더톤은 여기서 끝났지만"으로 시작하는 것이 요점입니다. 이 페이지를
     // 읽는 사람은 제로백 참가자이고, 다음 이벤트를 제로백의 속편으로 읽으면
@@ -2990,9 +2998,10 @@ export const dict = {
     // 않았습니다. 없는 일을 기다리게 하는 쪽이 아무 말도 안 하는 쪽보다 나쁩니다.
     // 되살릴 때는 아래 문장에 한 절을 더하면 됩니다.
     //
-    // dict.program.awards.next는 아직 "12월 서울 강남 쇼케이스 무대 우선 초청"
-    // 이라고 말합니다. 그 자리는 수상팀에게 약속된 것이라 8월의 기록 그대로
-    // 두었습니다. 12월 회차의 형식이 확정되면 함께 보세요.
+    // dict.program.awards.next도 함께 고쳤습니다(2026-09-15 2차). "우선 초청"이
+    // "먼저 안내"로 바뀐 것이 요점입니다. 초청은 자리를 보장하는 말인데 12월에는
+    // 무대가 없고, 먼저 안내하는 것은 지금 구조로 실제로 지킬 수 있습니다.
+    // 10팀에게 한 약속을 무르지 않으면서 사실에 맞춥니다.
     nextLabel: { ko: "다음 소식", en: "What's next" },
     // ── 히어로와 nav ─────────────────────────────────────────────────────────
     // 투표가 있던 자리를 그대로 물려받습니다(dict.vote의 같은 키들 참고).
@@ -4427,8 +4436,8 @@ export const dict = {
           // DECIDED 2026-08-16 (정체성 얼라인, 공모전): 상금 뒤에 무엇이 이어지는지
           // 한 문장. 이 답은 "얼마"에서 끝나 있었는데, 수상의 실제 값은 부상보다
           // 그 뒤에 붙는 자리입니다(정본은 dict.program.awards의 next).
-          ko: "네, 다만 팀을 1, 2, 3위로 세우지 않습니다. 시상은 테마형 어워드 4부문이고 열 팀이 받아 가요. 부상은 부문에 따라 현금, 널담 바우처 또는 해녀의 부엌 이용권입니다.\n\n수상팀은 12월 서울 쇼케이스 무대에 우선 초청되고, 가을에는 참가자 전원이 이어 갈 빌더 커리큘럼이 준비되고 있어요. 어떤 부문이 있고 누가 뽑는지는 프로그램의 Day 8 카드에 정리해 뒀습니다.\n\n참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드와 캡 세트는 Day 1 현장에서 선착순 60세트로 드립니다.",
-          en: "Yes, but nobody gets lined up 1st-2nd-3rd. There are four thematic awards and ten teams take one home, each carrying a cash prize, a Nuldam voucher or Haenyeo Kitchen passes.\n\nWinning teams get first call for the December showcase stage in Seoul, and an autumn builder curriculum for every participant is in the works. Which awards there are and who picks them is laid out on the Day 8 card in the programme.\n\nEntry is free and the networking goes to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come.",
+          ko: "네, 다만 팀을 1, 2, 3위로 세우지 않습니다. 시상은 테마형 어워드 4부문이고 열 팀이 받아 가요. 부상은 부문에 따라 현금, 널담 바우처 또는 해녀의 부엌 이용권입니다.\n\n수상팀에게는 12월에 열리는 크로싱 서울의 자리를 먼저 안내합니다. 어떤 부문이 있고 누가 뽑는지는 프로그램의 Day 8 카드에 정리해 뒀습니다.\n\n참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드와 캡 세트는 Day 1 현장에서 선착순 60세트로 드립니다.",
+          en: "Yes, but nobody gets lined up 1st-2nd-3rd. There are four thematic awards and ten teams take one home, each carrying a cash prize, a Nuldam voucher or Haenyeo Kitchen passes.\n\nAward-winning teams hear about a place at CROSSING SEOUL in December first. Which awards there are and who picks them is laid out on the Day 8 card in the programme.\n\nEntry is free and the networking goes to everyone. The Brand Boost hoodie + cap sets go out on Day 1 on site, 60 sets first-come.",
         },
       },
       {

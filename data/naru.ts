@@ -38,7 +38,7 @@
 // 이벤트 > 회차 > 빌더톤.
 //
 // 8월 = 제로백 빌더톤. 나루의 첫 이벤트이고, 그 이름은 그 이벤트의 것입니다.
-// 12월 = 다음 이벤트. 이름이 아직 없습니다(lib/naruDates.ts).
+// 12월 = 크로싱 서울 CROSSING SEOUL (2026-09-15 확정, lib/naruDates.ts).
 //
 // **12월을 제로백, 2회차, 빌더톤이라고 부르지 않습니다.** 제로백의 속편이 되면
 // 12월에 오는 사람은 8월을 모르면 늦었다고 느끼고, 기업은 같은 문제를 또 여는
@@ -75,7 +75,7 @@ const CONTACT = "pjh030924@gmail.com";
 export const naruLinks = {
   contact: CONTACT,
   /** 12월 이벤트 일반 문의 (출제사, 후원). */
-  december: `mailto:${CONTACT}?subject=${encodeURIComponent("나루 12월 이벤트 문의")}`,
+  december: `mailto:${CONTACT}?subject=${encodeURIComponent("크로싱 서울 문의")}`,
   /** 학생회 주관 문의. */
   organiser: `mailto:${CONTACT}?subject=${encodeURIComponent("나루 학생회 주관 문의")}`,
   /** 기업 후원 문의. */
@@ -201,10 +201,10 @@ export const naru = {
     titleLine2: { ko: "자리는 우리가 만든다.", en: "We make the place." },
     // 숫자 둘과 날짜 하나. 전부 확정된 사실입니다.
     sub: {
-      ko: "2026년 8월, 싱가포르에서 59명이 8일을 건넜습니다. 다음 이벤트는 12월 9일 서울에서 시작합니다.",
-      en: "In August 2026, fifty-nine people crossed eight days in Singapore. The next event starts in Seoul on 9 December.",
+      ko: "2026년 8월, 싱가포르에서 59명이 8일을 건넜습니다. 다음 이벤트 크로싱 서울은 12월 9일에 시작합니다.",
+      en: "In August 2026, fifty-nine people crossed eight days in Singapore. The next one, CROSSING SEOUL, starts on 9 December.",
     },
-    ctaDecember: { ko: "12월 이벤트 알아보기", en: "About the December event" },
+    ctaDecember: { ko: "크로싱 서울 알아보기", en: "About CROSSING SEOUL" },
     ctaArchive: { ko: "제로백 빌더톤의 기록", en: "The Zero100 builderthon record" },
     // 로고의 대체 텍스트. 스크린리더가 읽는 이름이라 브랜드 표기 규칙을 그대로
     // 따릅니다: 한글이 주, 영문이 보조.
@@ -602,7 +602,7 @@ export const naru = {
   // 잘못된 것입니다.** 12월은 제로백의 속편이 아니라 그 이벤트에서 나온 코어
   // 2개를 잇는 다른 이벤트입니다. 파일 맨 위의 용어 위계를 보세요.
   december: {
-    eyebrow: { ko: "다음 이벤트 2026.12 서울", en: "Next event Dec 2026, Seoul" },
+    eyebrow: { ko: "다음 이벤트 2026.12", en: "Next event Dec 2026" },
     headingSuffix: { ko: ", 서울에서 시작합니다.", en: ", Seoul." },
     // 첫 문장이 부정으로 시작하는 것은 의도입니다. 8월을 아는 사람은 이 자리에서
     // 반드시 "2회차인가"를 묻고, 그 오해를 그대로 두면 나머지 문장이 전부 그
@@ -611,10 +611,13 @@ export const naru = {
       ko: "제로백 빌더톤의 2회차가 아닙니다. 그 이벤트에서 나온 코어 2개를 그대로 잇는, 나루의 다음 이벤트입니다.",
       en: "This is not a second run of the Zero100 builderthon. It is NARU's next event, carrying the two cores that came out of that one.",
     },
-    // 이름이 아직 없다는 사실을 화면에서 말합니다. 비워 두면 "왜 이름이 없지"가
-    // 읽는 사람의 질문으로 남고, 그 질문은 "아직 안 정해진 행사인가"로 갑니다.
-    // 먼저 말해 두면 그건 그냥 아직 오지 않은 한 줄이 됩니다.
-    // DECEMBER_EVENT_NAME이 채워지면 이 줄 대신 이름이 그려집니다.
+    // **지금은 쓰이지 않습니다.** DECEMBER_EVENT_NAME이 채워져서(크로싱 서울,
+    // 2026-09-15) NaruHome이 이 줄 대신 이름을 그립니다.
+    //
+    // 지우지 않은 이유: 다음 이벤트가 이름 없이 시작할 때 그대로 다시 쓰입니다.
+    // 비워 두면 "왜 이름이 없지"가 읽는 사람의 질문으로 남고, 그 질문은 "아직
+    // 안 정해진 행사인가"로 갑니다. 먼저 말해 두면 그건 그냥 아직 오지 않은
+    // 한 줄이 됩니다.
     nameTbd: {
       ko: "이벤트 이름은 아직 없습니다. 정해지면 여기에 적습니다.",
       en: "The event does not have a name yet. It goes here when it does.",
@@ -693,8 +696,11 @@ export const naru = {
     // 공개 약속이 됩니다. 지키지 못하면 이 블록이 하려던 일이 정확히 반대로
     // 작동합니다. 채워지는 순서만 말하고 날짜는 말하지 않습니다.
     tbdLabel: { ko: "아직 정해지지 않은 것", en: "Not settled yet" },
+    // 2026-09-15: "이벤트 이름"이 이 목록에서 빠졌습니다. 크로싱 서울로
+    // 정해졌기 때문입니다. 바로 아래 tbdNote가 "이 목록은 한 줄씩 채워집니다"
+    // 라고 말하는데, 그 말이 지켜진 첫 사례입니다. 다음에 무엇이 정해지든
+    // 같은 방식으로 여기서 한 줄 빼세요.
     tbd: [
-      { ko: "이벤트 이름", en: "The name of the event" },
       { ko: "기간과 마지막 날", en: "How long, and the last day" },
       { ko: "장소", en: "The venue" },
       { ko: "일정표", en: "The schedule" },
@@ -740,8 +746,8 @@ export const naru = {
       label: { ko: "8월을 건넌 분께", en: "If you crossed August" },
       lines: [
         {
-          ko: "제로백 빌더톤에 왔던 분이라면, 12월에 할 수 있는 일이 셋입니다. 참가자로 오거나, 멘토로 돌아오거나, 그때의 이야기를 보내 주는 것.",
-          en: "If you were at the Zero100 builderthon, there are three things you can do in December. Come as a participant, come back as a mentor, or send us your story from back then.",
+          ko: "제로백 빌더톤에 왔던 분이라면, 크로싱 서울에서 할 수 있는 일이 셋입니다. 참가자로 오거나, 멘토로 돌아오거나, 그때의 이야기를 보내 주는 것.",
+          en: "If you were at the Zero100 builderthon, there are three things you can do at CROSSING SEOUL. Come as a participant, come back as a mentor, or send us your story from back then.",
         },
         {
           ko: "받은 사람이 돌려주는 모습이 보일 때 문화가 됩니다. 지금 그걸 할 수 있는 사람은 8월을 건넌 분들뿐입니다.",
@@ -763,8 +769,8 @@ export const naru = {
             en: "There is no process to join. You come to an event.",
           },
           {
-            ko: "12월 이벤트 등록은 아직 열리지 않았습니다.",
-            en: "December registration is not open yet.",
+            ko: "크로싱 서울 등록은 아직 열리지 않았습니다.",
+            en: "Registration for CROSSING SEOUL is not open yet.",
           },
         ],
         doorLabel: { ko: "오픈채팅", en: "Open chat" },
