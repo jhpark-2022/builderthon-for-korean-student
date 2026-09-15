@@ -1182,45 +1182,22 @@ export const dict = {
           en: "Eight days of shipping something real. The peers, mentors, and companies you meet here are where everything starts.",
         },
       },
-      {
-        num: "2",
-        // DECIDED 2026-08-13: Day 5 = 집중 빌드·LAP Time 공유·즉석 인기 투표(빌더스
-        // 초이스 가산)·출석(0→100 가산). 해시드·OpenAI 글로벌 해커톤은 행사 후 별도
-        // 행사로 이동(협의 중).
-        //
-        // DECIDED 2026-08-15: 이 해커톤이 세 번째 문장에서 한 칸으로 올라왔습니다.
-        // 전에는 일부러 문장이었습니다 — 칸을 늘리면 "우리가 다음에 할 일" 목록이
-        // 되고 그게 리서치가 걸러낸 로드맵 스피크라서요. 시점이 붙은 타임라인이 된
-        // 지금은 그 걱정이 사라졌습니다. 시점 없는 로드맵이 문제였지 순서 자체가
-        // 문제가 아니었고, 이 칸의 시점은 "행사 직후"입니다.
-        //
-        // 헤지는 "협의 중"입니다(상대 미확답 계열). 일정도 지원도 확정된 것이
-        // 없으니 "예정"·"열립니다"로 바꾸지 마세요. 회사명이 들어가 있는 만큼
-        // 헤지가 같은 문장 안에 있어야 합니다 — 문장을 쪼개면 회사명만 남습니다.
-        // 칸으로 올라오면서 헤지를 둘로 겁니다: when의 "협의 중"과 body의
-        // "논의 중인". when만 남기고 body를 확정형으로 고치지 마세요. 제목
-        // ("글로벌 해커톤")은 그 자체로 확정형이라 헤지를 붙일 자리가 없습니다.
-        //
-        // 그리고 이 해커톤은 이 빌더톤이 아니라 "행사 후 별도 행사"입니다:
-        // schedule.ts는 "OpenAI is not a partner of this event"를 지키고 있고,
-        // 그 규칙과 이 문장이 충돌하지 않는 이유가 '별도'라는 낱말입니다.
-        // 사이트에서 이 이야기를 하는 자리는 여기 하나입니다(HASHED_ORG 주석 참고).
-        when: { ko: "행사 직후 협의 중", en: "Right after the event In talks" },
-        title: { ko: "글로벌 해커톤", en: "Global hackathon" },
-        // DECIDED 2026-08-21: body에 "이번 8일의 압축판"과 "한 번 해 본 사람으로
-        // 들어갑니다"를 넣었습니다. 등록을 고민하는 학생에게 지금 참가할 이유가 되는
-        // 문장이라 카드에 올릴 값이 있습니다.
-        // 이중 헤지는 그대로입니다 — when의 "협의 중"과 body의 "논의 중"에 더해
-        // "성사되면"이 body 쪽 헤지를 한 번 더 잇습니다. 셋 중 하나라도 빼지 마세요.
-        body: {
-          ko: "해시드와 OpenAI 지원을 논의 중인 별도 해커톤. 성사되면 이번 8일의 압축판을 로컬 학생 커뮤니티와 함께 엽니다. Zero100 참가자는 우선권을 갖고, 한 번 해 본 사람으로 들어갑니다.",
-          en: "A separate hackathon in talks with Hashed and OpenAI. If it lands, it's a compressed run of these eight days, together with local student communities. Zero100 participants get priority, and walk in having done this once already.",
-        },
-      },
+      // ── 글로벌 해커톤 칸은 삭제됐습니다 (DECIDED 2026-09-15) ──────────────
+      // 해시드·OpenAI와 논의하던 별도 해커톤이 무산됐습니다.
+      //
+      // 이 칸의 원래 설계는 이중 헤지였습니다. when의 "협의 중", body의 "논의
+      // 중인", 그리고 "성사되면". 셋을 걸어 두고 회사명을 실은 칸이었어요.
+      // 헤지가 아무리 촘촘해도 무산된 일은 화면에 남을 이유가 없습니다.
+      // 끝난 이벤트의 기록에서 "논의 중"은 시간이 지날수록 거짓말에 가까워지고,
+      // 무엇보다 회사 두 곳의 이름이 성사되지 않은 일에 붙어 있습니다.
+      //
+      // 이 배열의 규칙("값이 아직 없으면 칸을 빼는 편이 낫다")을 그대로 따른
+      // 것이기도 합니다. 다시 살릴 일이 생기면 새로 쓰세요. 옛 문장을 되살리면
+      // 헤지 셋까지 같이 돌아옵니다.
       // 옛 2번 카드의 정기 빌더 세션 상세(기업 문제 해부 · 소수정예 코어)가 여기로
       // 흡수됐습니다. 별도 칸으로 되살리지 마세요 — 이 칸이 하는 말과 같습니다.
       {
-        num: "3",
+        num: "2",
         when: { ko: "2026 가을", en: "Autumn 2026" },
         title: { ko: "빌더 커리큘럼", en: "Builder curriculum" },
         // DECIDED 2026-08-21 (운영진 브리핑): 이 칸이 인큐베이션에서 빌더
@@ -1242,7 +1219,7 @@ export const dict = {
         },
       },
       {
-        num: "4",
+        num: "3",
         when: { ko: "2026.12 서울", en: "Dec 2026 Seoul" },
         title: { ko: "크로싱 서울", en: "CROSSING SEOUL" },
         body: {
@@ -1251,7 +1228,7 @@ export const dict = {
         },
       },
       {
-        num: "5",
+        num: "4",
         when: { ko: "그다음", en: "After that" },
         title: { ko: "다음 크로싱", en: "The next crossing" },
         body: {
