@@ -663,13 +663,19 @@ export default function NaruHome() {
              헤어라인을 두고 섭니다. 12월 기획 슬라이드의 코어 장과 같은
              배치(왼쪽 약속, 오른쪽 지켜지는 지점)를 이번엔 실제로 그렸습니다.
           2. 문장은 가운데로 돌아옵니다. 경첩(note), 재는 것(measure),
-             마지막 줄(agenda)은 챕터 제목과 같은 축에 H3 크기로 섭니다.
+             마지막 줄(agenda)은 챕터 제목과 같은 축에 섭니다. 크기는
+             text-xl sm:text-2xl(2차에서 H3에서 내림. 아래 주석).
              왼쪽 정렬은 판 안쪽과 exec 두 열에만 남습니다.
           3. 이 챕터에서 text-sm을 쓰지 않습니다. 결론의 본문이 페이지에서
              가장 작은 글씨였습니다. 바닥은 text-base(18px)입니다.
 
           여전히 하지 않은 것: 상자, 주황 면, 두 번째 그라데이션 선. 판을 나누는
-          것은 1px 흰 헤어라인뿐이고, 서명 헤어라인은 제목 아래 한 번입니다. */}
+          것은 1px 흰 헤어라인뿐이고, 서명 헤어라인은 제목 아래 한 번입니다.
+
+          2026-09-17 (2차): 전부 한 단 내렸습니다. 사용자가 "또 너무 큰데"라고
+          했습니다. STATEMENT 51.75 → 38px, 첫 줄 2xl → xl, 경첩과 재는 것
+          H3 → 2xl, exec 제목 2xl → xl, 판 세로 여백 16 → 12. 판형은 그대로.
+          크기가 아니라 배치가 이 챕터를 결론으로 만든다는 것이 2차의 교훈입니다. */}
       <Chapter id="why" align="center" className="pt-24 sm:pt-32 lg:pt-44">
         <Eyebrow color="purple">{t(naru.why.eyebrow)}</Eyebrow>
         <h2 className={H2}>{t(naru.why.heading)}</h2>
@@ -692,18 +698,18 @@ export default function NaruHome() {
           {naru.why.cores.map((core, i) => (
             <li
               key={core.index}
-              className={`grid gap-8 py-10 sm:py-12 md:grid-cols-[1.4fr_1fr] md:gap-14 lg:py-16 ${
+              className={`grid gap-8 py-8 sm:py-10 md:grid-cols-[1.4fr_1fr] md:gap-14 lg:py-12 ${
                 i > 0 ? "border-t border-white/10" : ""
               }`}
             >
               <div>
                 <h3 className={`flex items-start gap-4 ${STATEMENT}`}>
-                  <NaruMark className="mt-[0.25em] h-[0.65em] w-[0.65em]" />
+                  <NaruMark className="mt-[0.2em] h-[0.75em] w-[0.75em]" />
                   <span>{t(core.title)}</span>
                 </h3>
                 {/* 첫 줄은 그 자체가 코어의 문장입니다("스크리닝이 없고, 순위가
                     없습니다. 못해도 되는 자리입니다."). 제목 다음으로 큽니다. */}
-                <p className="mt-8 break-keep text-xl font-medium leading-snug text-white/90 sm:text-2xl">
+                <p className="mt-6 break-keep text-lg font-medium leading-snug text-white/90 sm:text-xl">
                   {t(core.lines[0])}
                 </p>
                 <p className="mt-4 max-w-xl break-keep text-base leading-relaxed text-white/70">
@@ -723,8 +729,10 @@ export default function NaruHome() {
         {/* 경첩. 두 개가 함께 있어야 하는 이유. 판 두 장을 닫는 헤어라인
             아래, 챕터 제목과 같은 축에 H3로 섭니다. 먼저 각각을 읽고, 그
             다음에 둘이 한 쌍인 이유를 읽습니다. */}
-        <div className="mx-auto max-w-5xl border-t border-white/10 pt-12 lg:pt-16">
-          <p className={`mx-auto max-w-3xl ${H3}`}>{t(naru.why.note)}</p>
+        <div className="mx-auto max-w-5xl border-t border-white/10 pt-12">
+          <p className="mx-auto max-w-3xl break-keep text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl">
+            {t(naru.why.note)}
+          </p>
           <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/70">
             {t(naru.why.noteBody)}
           </p>
@@ -747,7 +755,7 @@ export default function NaruHome() {
           <ol role="list" className="mt-12 grid gap-10 text-left md:grid-cols-2 md:gap-14">
             {naru.why.exec.map((item) => (
               <li key={item.index} className="border-t border-white/10 pt-6">
-                <h4 className="break-keep text-xl font-bold leading-snug text-white sm:text-2xl">
+                <h4 className="break-keep text-lg font-bold leading-snug text-white sm:text-xl">
                   {t(item.title)}
                 </h4>
                 <p className="mt-4 break-keep text-base leading-relaxed text-white/70">{t(item.body)}</p>
@@ -758,11 +766,13 @@ export default function NaruHome() {
               때 실제로 붙잡는 줄입니다. 라벨 : 문장이라 dl. 문장은 경첩과 같은
               H3, 같은 축. 숫자를 지어내지 마세요. 8월의 실측은 #record에 있고
               여기서는 무엇을 보는지만 말합니다. */}
-          <dl className="mt-12 border-t border-white/10 pt-12 lg:pt-16">
+          <dl className="mt-12 border-t border-white/10 pt-12">
             <dt className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
               {t(naru.why.measureLabel)}
             </dt>
-            <dd className={`mx-auto mt-4 max-w-3xl ${H3}`}>{t(naru.why.measure)}</dd>
+            <dd className="mx-auto mt-4 max-w-3xl break-keep text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl">
+              {t(naru.why.measure)}
+            </dd>
           </dl>
         </div>
 

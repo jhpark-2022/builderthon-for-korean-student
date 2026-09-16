@@ -58,8 +58,12 @@ export const LABEL_HEADING =
  * 페이지에서 가장 중요한 두 문장이 카드 제목으로 읽혔습니다. 약속의 내용이
  * 약속(H2, 최대 67.5px)보다 작으면 안 되지만, 같으면 제목이 둘이 됩니다.
  *
+ * 2026-09-17 (2차): clamp(1.75rem,3.8vw,2.875rem)에서 한 단 내렸습니다. 27~38px.
+ * 첫 판형은 51.75px까지 갔는데 사용자가 "또 너무 큰데"라고 했고, 실제로 H2
+ * (67.5px)와 겨루는 크기였습니다. 판형은 유지하고 크기만 H3 바로 위로 둡니다.
+ *
  * leading이 1.15인 이유: 두 줄로 접히는 한글 제목이 tracking-tight에서 줄 사이가
  * 벌어져 보이지 않게. H2는 globals.css의 heading 규칙이 같은 값을 줍니다.
  */
 export const STATEMENT =
-  "break-keep text-[clamp(1.75rem,3.8vw,2.875rem)] font-bold leading-[1.15] tracking-tight text-white";
+  "break-keep text-[clamp(1.5rem,2.8vw,2.125rem)] font-bold leading-[1.15] tracking-tight text-white";

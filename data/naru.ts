@@ -547,13 +547,18 @@ export const naru = {
           en: "Day 8: the room during the career session",
         },
       },
+      // 2026-09-17: 이 자리에 있던 day8-panel.webp는 바로 아래 day8-career와 같은
+      // 순간을 찍은 컷이었습니다(현직자 세 명이 앉은 패널, 각도만 다름). 같은
+      // 사진을 두 번 걸지 않습니다. Automation 트랙 공유회의 발표 컷으로 바꿨고,
+      // 그래서 발표 사진이 트랙마다 하나씩(day8-prove, 여기) 있습니다.
+      // 원본 Photo/Day 8/Automation Track Sharing/IMG_2621.HEIC, 4:3.
       {
-        src: "/record/day8-panel.webp",
+        src: "/record/day8-automation.webp",
         width: 1200,
         height: 900,
         alt: {
-          ko: "Day 8 커리어 간담회, 현직자가 앞에 서서 이야기하고 참가자들이 듣는 모습",
-          en: "Day 8 career session: someone doing the work talking, the room listening",
+          ko: "Day 8 Automation 트랙 공유회, 세 명이 강단에 서서 슬라이드를 앞에 두고 발표하는 모습",
+          en: "Day 8 Automation track sharing: a team of three at the lectern presenting their slide",
         },
       },
       {

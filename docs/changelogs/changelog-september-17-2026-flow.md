@@ -216,3 +216,54 @@ presented 되어 있어. 사실 나에게는 여기가 가장 중요한데."
 
 `npx tsc --noEmit` 통과. `#why` 블록 안에 `text-sm` 0건. 스크린샷은 세션
 스크래치패드 `why/`(before, after, after-en, 각 390과 1440).
+
+---
+
+## 추가 (같은 날) · #why 한 단 축소, 사진 벽의 중복 하나 교체
+
+사용자: "또 너무 큰데? 그리고 for the photowall, do not use the same photo twice."
+
+### #why
+
+판형은 그대로, 크기만 전부 한 단 내렸습니다. 첫 판형의 코어 제목은 51.75px까지
+갔는데 H2(67.5px)와 겨루는 크기였습니다.
+
+| | 1차 | 2차 |
+| --- | --- | --- |
+| 코어 제목 `STATEMENT` | clamp 31.5~51.75px | clamp 27~38px |
+| 코어 첫 줄 | `text-xl sm:text-2xl` | `text-lg sm:text-xl` |
+| 경첩, 재는 것 | `H3` (24~34px) | `text-xl sm:text-2xl` |
+| exec 제목 | `text-xl sm:text-2xl` | `text-lg sm:text-xl` |
+| 판 세로 여백 | `py-10 sm:py-12 lg:py-16` | `py-8 sm:py-10 lg:py-12` |
+| 챕터 높이 (390 / 1440) | 2,991 / 2,377px | 2,867 / 2,156px |
+
+나루 점은 제목이 작아진 만큼 0.65em → 0.75em으로 올려 하한 18px을 지킵니다.
+크기가 아니라 배치가 이 챕터를 결론으로 만든다는 것이 2차의 교훈입니다.
+
+### 사진 벽
+
+`day8-panel.webp`와 `day8-career.webp`가 같은 순간이었습니다(현직자 세 명이 앉은
+커리어 간담회 패널, 각도만 다름). 9/16에 열 장을 열두 장으로 채우면서 같은
+폴더에서 한 장 더 꺼낸 결과였어요. 같은 사진을 두 번 걸지 않습니다.
+
+`day8-panel`을 빼고 그 자리에 `day8-automation.webp`를 넣었습니다. Automation
+트랙 공유회의 발표 컷(세 명이 강단에서 슬라이드를 앞에 두고 발표). 벽의 다른
+발표 컷 `day8-prove`는 Judgement 트랙이라 이제 트랙마다 하나씩입니다. 장수는
+열두 장 그대로(6의 배수 규칙). 원본
+`Photo/Day 8/Automation Track Sharing/IMG_2621.HEIC`, 5712×4284, 4:3.
+긴 변 1200px webp q76.
+
+후보로 본 것: Day 7 열다섯 장은 전부 같은 서명 장면이라 벽에 맞지 않았고,
+Day 5 열 장은 이미 있는 `day5-session`과 같은 세션이었습니다.
+
+### 바뀐 파일
+
+- `components/ui/typography.ts`: `STATEMENT` 값.
+- `components/home/NaruHome.tsx`: `#why` 크기 클래스.
+- `data/naru.ts`: `record.photos[10]` (panel → automation).
+- `public/record/day8-panel.webp` 삭제, `public/record/day8-automation.webp` 추가.
+
+### 확인 방법
+
+`npx tsc --noEmit` 통과. `md5 public/record/*`로 파일 중복 없음, 눈으로 열두 장의
+장면 중복 없음(스크래치패드 `why/contact.png`, `why/after2-1440-record.png`).
