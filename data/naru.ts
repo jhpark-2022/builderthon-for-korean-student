@@ -141,11 +141,19 @@ export interface Stat {
 
 export interface RecordPhoto {
   src: string;
-  /** 원본 비율 그대로 둡니다. 자르거나 늘리지 않습니다. */
+  /**
+   * **전부 4:3이어야 합니다.** 화면은 4:3 칸에 채우고(NaruHome의 PhotoWall),
+   * 4:3이 아닌 원본을 넣으면 그 자리에서 잘립니다. 자를 자리는 런타임이 아니라
+   * 사람이 고르세요 - export 단계에서 4:3으로 자른 뒤 여기 넣습니다.
+   *
+   * 지금 이 값은 화면이 읽지 않습니다(PhotoWall이 fill을 씁니다). 어떤 원본이
+   * 들어와 있는지를 기록으로 남겨 두는 자리예요. 4:3이 아닌 숫자가 보이면 그
+   * 사진은 잘려서 그려지고 있다는 뜻입니다.
+   */
   width: number;
   height: number;
   /**
-   * 캡션은 몇 장에만 답니다(2026-09-16). 사진 벽이 열 장이라 전부 캡션을
+   * 캡션은 몇 장에만 답니다(2026-09-16). 사진 벽이 열두 장이라 전부 캡션을
    * 달면 사진을 늘린 만큼 글이 늘어납니다. day와 caption은 한 쌍입니다:
    * 하나만 있으면 화면이 반쪽짜리 줄을 그립니다.
    */
@@ -375,27 +383,35 @@ export const naru = {
       },
     ] as Stat[],
     photosLabel: { ko: "8일의 모양", en: "The shape of eight days" },
-    // ── 사진 열 장 ─────────────────────────────────────────────────────────
-    // DECIDED 2026-09-16: 세 장에서 열두 장으로 늘렸다가, 시상식 두 장을 빼고
-    // 열 장이 됐습니다(아래 REMOVED 주석).
+    // ── 사진 열두 장 ───────────────────────────────────────────────────────
+    // DECIDED 2026-09-16: 세 장에서 열두 장. 시상식 두 장을 뺀 자리(아래 REMOVED
+    // 주석)는 같은 날 커리어 간담회와 트랙 공유회 사진으로 채웠습니다.
+    //
+    // 열두 장인 이유는 격자 때문입니다. 데스크톱 3열 · 그 아래 2열이라 12는 둘 다
+    // 딱 떨어지는 유일한 수예요(3x4, 2x6). 열 장이면 3열에서 마지막 줄에 한 장만
+    // 남습니다. 늘리거나 줄일 때 6의 배수로 두세요.
     //
     // 이 챕터에서 글이 빠진 자리를 사진이 받습니다. 8일이 어땠는지는 문단
-    // 다섯 개보다 사진 열 장이 더 정확하게 말하고, 그게 이 챕터가 남는
+    // 다섯 개보다 사진 열두 장이 더 정확하게 말하고, 그게 이 챕터가 남는
     // 이유입니다. 자세한 것을 알고 싶은 사람은 아래 버튼으로 /2026-08에
     // 갑니다.
     //
-    // 세로 사진이 섞여 있습니다. 일부러입니다. 화면은 CSS columns로 쌓고
-    // (NaruHome의 PhotoWall), 그래서 어떤 사진도 잘리지 않습니다. 비율을
-    // 맞추려고 4:3 상자에 밀어 넣으면 단체 사진의 양 끝 사람이 잘리고, 그
-    // 사람은 그 기록에 없는 것이 됩니다.
+    // 열두 장 전부 4:3입니다. 처음에는 세로 사진 셋을 원본 비율 그대로 두고
+    // 화면에서 CSS columns로 쌓았는데, 세로가 가로보다 1.8배 길어서 몇 장이
+    // 아래로 삐져나왔습니다(NaruHome의 PhotoWall 주석에 실측이 있습니다).
+    // 그래서 자르는 자리를 런타임이 아니라 사람이 고르는 쪽으로 바꿨습니다 -
+    // 세로 셋은 Dropbox 원본에서 4:3으로 다시 잘랐어요.
     //
-    // 원본은 Dropbox의 한인 빌더톤/Photo입니다. 긴 변 1200px, webp q76.
+    // 4:3이 아닌 사진을 이 목록에 넣지 마세요. 넣으면 화면에서 잘립니다.
+    //
+    // 원본은 Dropbox의 한인 빌더톤/Photo입니다. 1200x900 webp q78
+    // (day1-start · day8-prove · day8-career는 1600x1200 q80, 9/15에 넣은 것).
     //
     // day/caption은 세 장에만 있습니다(Day 1 · Day 5 · Day 8). 나머지는
     // 벽지처럼 읽히면 됩니다 - 전부 캡션을 달면 사진을 늘린 만큼 글이 늘어나서
     // 이 벽을 만든 이유가 없어집니다.
     //
-    // TODO: confirm. 이 열 장의 웹 공개 여부. 얼굴이 알아볼 수 있게 찍혀
+    // TODO: confirm. 이 열두 장의 웹 공개 여부. 얼굴이 알아볼 수 있게 찍혀
     // 있습니다.
     photos: [
       {
@@ -411,8 +427,8 @@ export const naru = {
       },
       {
         src: "/record/day1-checkin.webp",
-        width: 900,
-        height: 1200,
+        width: 1200,
+        height: 900,
         alt: {
           ko: "Day 1 체크인 테이블에서 이름표를 받는 참가자들",
           en: "Day 1: participants picking up name tags at the check-in table",
@@ -420,8 +436,8 @@ export const naru = {
       },
       {
         src: "/record/day1-listen.webp",
-        width: 900,
-        height: 1200,
+        width: 1200,
+        height: 900,
         alt: {
           ko: "Day 1 오프닝 세션을 듣고 있는 참가자들",
           en: "Day 1: participants listening to the opening session",
@@ -438,8 +454,8 @@ export const naru = {
       },
       {
         src: "/record/day1-crowd.webp",
-        width: 900,
-        height: 1200,
+        width: 1200,
+        height: 900,
         alt: {
           ko: "Day 1 객석을 가득 채운 참가자들",
           en: "Day 1: a full room of participants",
@@ -448,7 +464,7 @@ export const naru = {
       {
         src: "/record/day5-session.webp",
         width: 1200,
-        height: 675,
+        height: 900,
         day: { ko: "Day 5", en: "Day 5" },
         caption: { ko: "중간에 한 번 모였습니다", en: "Halfway through, everyone gathered once" },
         alt: {
@@ -477,12 +493,30 @@ export const naru = {
         },
       },
       {
+        src: "/record/day8-watch.webp",
+        width: 1200,
+        height: 900,
+        alt: {
+          ko: "Day 8, 노트북을 앞에 두고 다른 팀의 발표를 보는 참가자들",
+          en: "Day 8: participants watching another team present, laptops in front of them",
+        },
+      },
+      {
         src: "/record/day8-room.webp",
         width: 1200,
         height: 900,
         alt: {
           ko: "Day 8 커리어 간담회가 열린 강의실 전경",
           en: "Day 8: the room during the career session",
+        },
+      },
+      {
+        src: "/record/day8-panel.webp",
+        width: 1200,
+        height: 900,
+        alt: {
+          ko: "Day 8 커리어 간담회, 현직자가 앞에 서서 이야기하고 참가자들이 듣는 모습",
+          en: "Day 8 career session: someone doing the work talking, the room listening",
         },
       },
       {

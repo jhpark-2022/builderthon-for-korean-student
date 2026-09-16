@@ -697,40 +697,62 @@ function StatRow({
 //
 // DECIDED 2026-09-16: #record의 본문이 글에서 사진으로 바뀌면서 세 장이 열두
 // 장이 됐습니다(시상식 두 장은 이후에 다시 내려갔습니다 - data/naru.ts의
-// REMOVED 주석). 8일이 어땠는지는 문단 다섯 개보다 사진 열 장이 더 정확하게
+// REMOVED 주석). 8일이 어땠는지는 문단 다섯 개보다 사진 열두 장이 더 정확하게
 // 말합니다.
 //
-// grid가 아니라 CSS columns입니다. 이유는 하나뿐이에요: 아무 사진도 자르지
-// 않기 위해서. grid로 쌓으려면 칸의 높이를 맞춰야 하고, 높이를 맞추려면
-// object-cover로 잘라야 합니다. 단체 사진의 양 끝 사람이 잘리면 그 사람은 그
-// 기록에 없는 것이 됩니다(원래의 세 장에 붙어 있던 규칙이고, 열 장이 되어도
-// 그대로입니다). columns는 각 사진이 자기 비율대로 서고 세로 사진과 가로
-// 사진이 섞여도 열이 알아서 채워집니다.
+// ── 왜 CSS columns가 아니라 grid인가 (2026-09-16, 두 번째 판) ────────────────
+// 처음에는 CSS columns였습니다. 어떤 사진도 자르지 않으려고요. 그런데 세로로
+// 찍힌 사진이 섞여 있어서, 열 너비 372px에서 가로 사진은 279px로 서고 세로
+// 사진은 496px로 섰습니다. 1.8배예요.
 //
-// break-inside-avoid: 이게 없으면 열 경계에서 사진 하나가 반으로 잘려 두 열에
-// 걸칩니다. 캡션이 달린 장은 figure 전체가 한 덩어리로 움직여야 해요.
+// columns는 열 높이를 맞추려고 하지만 맞출 수 있는 단위가 사진 한 장이라,
+// 높이가 제각각인 열두 장을 세 열에 나누면 어느 조합으로도 딱 떨어지지 않습니다. 실측하니 가운데
+// 열이 양옆보다 221px 짧았어요(2026-09-16). 벽이 아니라 몇 장이 아래로 삐져나온
+// 것처럼 보였습니다. lazy 로딩 중에는 더 심합니다 - 아직 받지 않은 사진의
+// 높이를 브라우저가 모르는 동안 열 균형이 계속 다시 잡히거든요.
 //
-// 캡션은 세 장에만 있습니다(data/naru.ts의 photos). 전부 달면 사진을
-// 늘린 만큼 글이 늘어나서, 이 벽을 만든 이유가 없어집니다.
+// 그래서 방향을 바꿨습니다: 화면에서 자르는 대신, **원본을 전부 4:3으로
+// 맞춰 두고** 균일한 grid에 넣습니다. 자르는 자리를 런타임의 object-cover가
+// 고르게 두지 않고 사람이 골랐어요(세로 세 장은 Dropbox 원본에서 4:3으로 다시
+// 잘랐습니다. 객석 사진은 아래쪽에 사람이 몰려 있어서 중심을 0.65로 내렸고,
+// 나머지 둘은 가운데입니다).
+//
+// 지금 열두 장 전부가 정확히 4:3입니다(1200x900 또는 1600x1200). 칸도 4:3이라
+// object-cover는 아무것도 자르지 않습니다 - 원본이 4:3에서 벗어나는 사진을
+// 나중에 추가할 때를 대비한 안전망으로만 있습니다. 그런 사진을 넣지 마세요.
+// 넣어야 하면 여기 말고 export 단계에서 4:3으로 자르세요. 단체 사진의 양 끝
+// 사람이 잘리면 그 사람은 그 기록에 없는 것이 됩니다.
+//
+// 이 배치에서는 한 장도 삐져나올 수 없습니다. 모든 칸이 같은 크기예요.
+//
+// 장수는 6의 배수로 두세요. 3열(lg)과 2열(그 아래) 양쪽에서 마지막 줄이 꽉
+// 차는 수가 그것뿐입니다. 열 장이었을 때는 3열에서 마지막 줄에 한 장만 남았어요.
+//
+// 캡션은 세 장에만 있습니다(data/naru.ts의 photos). 전부 달면 사진을 늘린 만큼
+// 글이 늘어나서, 이 벽을 만든 이유가 없어집니다. 캡션 높이가 칸마다 다르지만
+// 사진 자체는 grid 칸에 고정이라(aspect-[4/3]) 줄이 어긋나지 않습니다.
 //
 // loading: 첫 장만 즉시 받고 나머지는 next/image의 기본값(lazy)입니다. 이
-// 챕터는 히어로에서 한 화면 넘게 내려와 있어서 열 장을 한꺼번에 받을 이유가
+// 챕터는 히어로에서 한 화면 넘게 내려와 있어서 열두 장을 한꺼번에 받을 이유가
 // 없습니다.
 // ─────────────────────────────────────────────────────────────────────────────
 function PhotoWall({ photos, t }: { photos: RecordPhoto[]; t: (p: Phrase) => string }) {
   return (
-    <div className="mx-auto mt-12 max-w-5xl gap-4 [column-count:1] sm:[column-count:2] lg:[column-count:3]">
+    <div className="mx-auto mt-12 grid max-w-5xl grid-cols-2 gap-4 lg:grid-cols-3">
       {photos.map((photo, i) => (
-        <figure key={photo.src} className="mb-4 break-inside-avoid text-left">
-          <Image
-            src={photo.src}
-            alt={t(photo.alt)}
-            width={photo.width}
-            height={photo.height}
-            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-            priority={i === 0}
-            className="h-auto w-full rounded-2xl border border-white/10"
-          />
+        <figure key={photo.src} className="text-left">
+          {/* 칸이 4:3이고 원본도 4:3이라 fill + object-cover가 실제로는 아무것도
+              자르지 않습니다. relative는 fill이 기준으로 삼을 상자입니다. */}
+          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10">
+            <Image
+              src={photo.src}
+              alt={t(photo.alt)}
+              fill
+              sizes="(min-width: 1024px) 33vw, 50vw"
+              priority={i === 0}
+              className="object-cover object-center"
+            />
+          </div>
           {photo.day && photo.caption && (
             <figcaption className="mt-2.5 flex flex-wrap items-baseline gap-x-2 gap-y-1">
               <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-accent">
