@@ -49,3 +49,17 @@ export const H3 =
  */
 export const LABEL_HEADING =
   "text-[0.72rem] font-bold uppercase tracking-[0.16em] text-white/75";
+
+/**
+ * 챕터가 존재하는 이유인 문장. H2와 H3 사이의 한 단.
+ *
+ * ADDED 2026-09-17. #why의 코어 둘("안전하게 도전할 수 있는 자리", "자기 가치를
+ * 증명해 보는 경험")이 이 자리입니다. 그 둘이 H3(최대 34px)로 카드 안에 있을 때,
+ * 페이지에서 가장 중요한 두 문장이 카드 제목으로 읽혔습니다. 약속의 내용이
+ * 약속(H2, 최대 67.5px)보다 작으면 안 되지만, 같으면 제목이 둘이 됩니다.
+ *
+ * leading이 1.15인 이유: 두 줄로 접히는 한글 제목이 tracking-tight에서 줄 사이가
+ * 벌어져 보이지 않게. H2는 globals.css의 heading 규칙이 같은 값을 줍니다.
+ */
+export const STATEMENT =
+  "break-keep text-[clamp(1.75rem,3.8vw,2.875rem)] font-bold leading-[1.15] tracking-tight text-white";

@@ -16,7 +16,7 @@ import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
 // RecordTabs는 2026-09-16에 화면에서 내려갔습니다. 파일은 그대로 둡니다 -
 // 8월 정본을 직접 읽는 유일한 컴포넌트이고, 되살릴 자리가 여기 #record입니다.
-import { H2, H3, LABEL_HEADING } from "@/components/ui/typography";
+import { H2, H3, LABEL_HEADING, STATEMENT } from "@/components/ui/typography";
 import NaruMark from "@/components/ui/NaruMark";
 import MotionToggle from "@/components/ui/MotionToggle";
 
@@ -648,6 +648,28 @@ export default function NaruHome() {
           ⚠️ 주황을 여기 더하지 마세요. 나루 점 둘이 더한 주황은 3층
           다이어그램의 주황 워시를 걷어내서 이미 값을 치렀습니다(LayerDiagram
           주석). 페이지의 주황 면은 히어로 CTA와 12월 아이브로 둘뿐입니다. */}
+      {/* ── 판형 (DECIDED 2026-09-17) ────────────────────────────────────
+          위 "강조 장치 다섯" 중 2(카드를 코어 둘에만)와 4(나루 점)는 살아
+          있고, 카드 자체가 없어졌습니다. 사용자가 이 챕터를 "가장 중요한데
+          가장 안 이쁘게 그려진 곳"이라고 했고, 실측 화면이 그 말을 뒷받침했어요.
+          코어 둘은 카드 안 H3에 14px 본문이었고, 그 아래로 왼쪽 정렬된 회색
+          소문자 블록이 하나의 얇은 헤어라인만 사이에 두고 이어졌습니다. 챕터
+          제목은 가운데, 본문은 왼쪽. 결론이 아니라 문서였습니다.
+
+          바꾼 원칙 셋.
+          1. 코어 둘은 카드가 아니라 판입니다. 전면 폭, 세로로 두 장. 제목은
+             STATEMENT(H2와 H3 사이의 단), 첫 줄은 그 자체가 문장이라 큰 글자,
+             둘째 줄이 본문. "그래서 지키는 것"은 md부터 오른쪽 열에 세로
+             헤어라인을 두고 섭니다. 12월 기획 슬라이드의 코어 장과 같은
+             배치(왼쪽 약속, 오른쪽 지켜지는 지점)를 이번엔 실제로 그렸습니다.
+          2. 문장은 가운데로 돌아옵니다. 경첩(note), 재는 것(measure),
+             마지막 줄(agenda)은 챕터 제목과 같은 축에 H3 크기로 섭니다.
+             왼쪽 정렬은 판 안쪽과 exec 두 열에만 남습니다.
+          3. 이 챕터에서 text-sm을 쓰지 않습니다. 결론의 본문이 페이지에서
+             가장 작은 글씨였습니다. 바닥은 text-base(18px)입니다.
+
+          여전히 하지 않은 것: 상자, 주황 면, 두 번째 그라데이션 선. 판을 나누는
+          것은 1px 흰 헤어라인뿐이고, 서명 헤어라인은 제목 아래 한 번입니다. */}
       <Chapter id="why" align="center" className="pt-24 sm:pt-32 lg:pt-44">
         <Eyebrow color="purple">{t(naru.why.eyebrow)}</Eyebrow>
         <h2 className={H2}>{t(naru.why.heading)}</h2>
@@ -658,83 +680,54 @@ export default function NaruHome() {
           className="mx-auto mt-6 h-[2px] w-full max-w-[52rem] bg-gradient-to-r from-accent to-accent-strong"
         />
 
-        {/* 코어 둘. 두 줄 전부 그리고, 그 아래 "그래서 지키는 것"이 붙습니다.
-            이 세 번째 줄이 카드를 선언에서 규칙으로 바꿉니다 - 스크리닝을 두지
-            않는 것과 순위를 지운 것은 태도가 아니라 코어에서 따라 나온 결정
-            입니다.
-
+        {/* 코어 둘. 판 두 장.
             ol인 이유: 순서가 뜻입니다. 01이 문턱이고 02가 증명이며, 바로 아래
-            note가 그 둘이 한 쌍이라고 말합니다. ol이 "둘 중 하나"를 공짜로
-            나릅니다. 번호 자체는 aria-hidden입니다 - ol이 이미 위치를 말하고
-            있어서, 숨기지 않으면 합성기 설정에 따라 "영 일"이나 "일"이 제목
-            앞에 한 번 더 붙습니다.
-
-            keeps가 dl인 이유: 항목 이름과 값이지 제목이 아닙니다. 같은 문자열
-            ("그래서 지키는 것")이 카드 둘에 있어서, 제목으로 올리면 제목
-            목록에 구별되지 않는 항목이 둘 생깁니다. #how의 하는 것/얻는 것이
-            이미 같은 패턴을 씁니다. */}
-        <ol role="list" className="mx-auto mt-12 grid max-w-4xl gap-5 text-left md:grid-cols-2">
-          {naru.why.cores.map((core) => (
+            note가 그 둘이 한 쌍이라고 말합니다. 번호는 그리지 않습니다(9/16
+            2차의 이유 그대로). 나루 점이 제목 첫 글자 앞에 섭니다.
+            점의 크기가 em인 이유: STATEMENT가 clamp(31.5~51.75px)라 px로 박으면
+            좁은 화면에서 점이 제목보다 커집니다. 0.65em이면 20~34px이고 로고
+            가이드의 하한 18px을 지킵니다. mt는 leading 1.15의 첫 줄 한가운데.
+            keeps가 dl인 이유: 항목 이름과 값이지 제목이 아닙니다. */}
+        <ol role="list" className="mx-auto mt-12 max-w-5xl text-left">
+          {naru.why.cores.map((core, i) => (
             <li
               key={core.index}
-              className="flex flex-col rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-8"
+              className={`grid gap-8 py-10 sm:py-12 md:grid-cols-[1.4fr_1fr] md:gap-14 lg:py-16 ${
+                i > 0 ? "border-t border-white/10" : ""
+              }`}
             >
-              {/* H3입니다(2026-09-16). 전에는 text-lg sm:text-xl이라 이 챕터만의
-                  즉석 크기였고, 무엇보다 "두 가지"를 약속하는 h2의 3분의 1
-                  크기였습니다. 페이지 마지막 화면에서 가장 큰 것이 반쪽짜리
-                  문장이었어요. 약속의 내용이 약속보다 작으면 안 됩니다.
-
-                  DECIDED 2026-09-16 (2차): 번호(01/02)를 지우고 나루 점을 제목
-                  줄로 들였습니다.
-
-                  전에는 카드가 네 층이었어요. 번호 줄 / 제목 / 본문 / 지키는 것.
-                  맨 위 줄이 하는 일은 "01"이라고 말하는 것 하나뿐인데 제 몫의
-                  높이를 다 가져갔습니다. 그리고 그 번호는 아무 일도 하지
-                  않았어요. 카드가 둘이고 나란히 있으니 몇 개인지는 보면 알고,
-                  순서는 ol이 이미 나릅니다(번호는 원래 aria-hidden이었습니다).
-                  없어도 되는 것에 줄 하나를 주고 있었습니다.
-
-                  표식은 남깁니다. 그게 로고와 배경을 잇는 선이라서요. 대신
-                  자기 줄을 갖지 않고 제목의 첫 글자 앞에 섭니다.
-
-                  크기가 em인 이유: H3이 clamp라 24.3~34.2px 사이에서 움직입니다.
-                  px로 박으면 좁은 화면에서 점이 제목보다 커져요. 0.75em이면
-                  18.2~25.6px이고, 로고 가이드의 하한 18px을 좁은 쪽 끝에서
-                  정확히 지킵니다. 더 줄이지 마세요 - 링이 지름의 5/26이라 그
-                  아래로는 1x 화면에서 흐린 후광으로 뭉갭니다.
-
-                  mt는 첫 줄의 글자 한가운데에 점을 맞추는 값입니다(leading-snug
-                  기준). H3의 line-height를 바꾸면 여기도 다시 재세요. */}
-              <h3 className={`flex items-start gap-3 ${H3}`}>
-                <NaruMark className="mt-[0.26em] h-[0.75em] w-[0.75em]" />
-                <span>{t(core.title)}</span>
-              </h3>
-              <div className="mt-5 flex-1 space-y-3">
-                {core.lines.map((line, i) => (
-                  <p key={i} className="break-keep text-sm leading-relaxed text-white/75">
-                    {t(line)}
-                  </p>
-                ))}
+              <div>
+                <h3 className={`flex items-start gap-4 ${STATEMENT}`}>
+                  <NaruMark className="mt-[0.25em] h-[0.65em] w-[0.65em]" />
+                  <span>{t(core.title)}</span>
+                </h3>
+                {/* 첫 줄은 그 자체가 코어의 문장입니다("스크리닝이 없고, 순위가
+                    없습니다. 못해도 되는 자리입니다."). 제목 다음으로 큽니다. */}
+                <p className="mt-8 break-keep text-xl font-medium leading-snug text-white/90 sm:text-2xl">
+                  {t(core.lines[0])}
+                </p>
+                <p className="mt-4 max-w-xl break-keep text-base leading-relaxed text-white/70">
+                  {t(core.lines[1])}
+                </p>
               </div>
-              <dl className="mt-6 border-t border-white/10 pt-4">
-                <dt className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
+              <dl className="border-t border-white/10 pt-6 md:border-l md:border-t-0 md:pl-10 md:pt-2">
+                <dt className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
                   {t(naru.why.keepsLabel)}
                 </dt>
-                <dd className="mt-2 break-keep text-sm leading-relaxed text-white/75">
-                  {t(core.keeps)}
-                </dd>
+                <dd className="mt-3 break-keep text-base leading-relaxed text-white/80">{t(core.keeps)}</dd>
               </dl>
             </li>
           ))}
         </ol>
 
-        {/* 두 개가 함께 있어야 하는 이유. 카드 바로 아래가 자리입니다.
-            먼저 각각을 읽고, 그 다음에 둘이 한 쌍인 이유를 읽습니다.
-            상자를 벗겼습니다 - 한 문장 둘레의 상자는 문장 대신 상자가
-            봐 달라고 하는 것입니다. */}
-        <div className="mx-auto mt-6 max-w-4xl break-keep text-left">
-          <p className="text-lg font-bold leading-snug text-white sm:text-xl">{t(naru.why.note)}</p>
-          <p className="mt-3 break-keep text-sm leading-relaxed text-white/75">{t(naru.why.noteBody)}</p>
+        {/* 경첩. 두 개가 함께 있어야 하는 이유. 판 두 장을 닫는 헤어라인
+            아래, 챕터 제목과 같은 축에 H3로 섭니다. 먼저 각각을 읽고, 그
+            다음에 둘이 한 쌍인 이유를 읽습니다. */}
+        <div className="mx-auto max-w-5xl border-t border-white/10 pt-12 lg:pt-16">
+          <p className={`mx-auto max-w-3xl ${H3}`}>{t(naru.why.note)}</p>
+          <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/70">
+            {t(naru.why.noteBody)}
+          </p>
         </div>
 
         {/* ── 약속이 지켜지는 지점 ───────────────────────────────────────
@@ -743,49 +736,42 @@ export default function NaruHome() {
 
             mt-24는 부속으로 내리는 신호입니다. 여기에 선을 하나 더 긋지
             마세요. 위에 이미 서명 헤어라인이 있고, 선이 둘이면 둘째 선은
-            강등이 아니라 또 하나의 괄호로 읽힙니다.
-
-            2026-09-16 정정: 이 자리의 옛 주석은 "재는 것을 주황 띠로 뽑는다"고
-            적고 있었는데, 코드는 처음부터 보라 띠(accent)였습니다. 게다가 그
-            띠는 #join의 콜아웃과 클래스가 한 글자도 다르지 않았어요. 챕터에서
-            가장 중요한 문장을 한 챕터 위에서 이미 쓴 장치로 표시하고 있었던
-            겁니다. 띠를 걷고 글자 무게로 세웁니다. */}
-        <div className="mx-auto mt-24 max-w-4xl text-left sm:mt-32">
+            강등이 아니라 또 하나의 괄호로 읽힙니다. */}
+        <div className="mx-auto mt-24 max-w-5xl sm:mt-32">
           <h3 className={LABEL_HEADING}>{t(naru.why.execLabel)}</h3>
-          <p className="mt-3 break-keep text-sm leading-relaxed text-white/75">
+          <p className="mx-auto mt-3 max-w-2xl break-keep text-base leading-relaxed text-white/70">
             {t(naru.why.execLead)}
           </p>
-          {/* i/ii 번호 줄을 지웠습니다(2026-09-16 2차). 코어 카드와 같은
-              이유입니다 - 둘뿐이고 나란히 있어서 세어 줄 필요가 없고, 순서는
-              ol이 나릅니다. item.index 키는 data/naru.ts에 그대로 있으니
-              되살릴 때 쓰세요. */}
-          <ol role="list" className="mt-6 grid gap-6 md:grid-cols-2">
+          {/* 둘뿐이고 나란히 있어서 번호는 세어 주지 않습니다. 순서는 ol이
+              나릅니다. item.index 키는 data/naru.ts에 그대로 있습니다. */}
+          <ol role="list" className="mt-12 grid gap-10 text-left md:grid-cols-2 md:gap-14">
             {naru.why.exec.map((item) => (
-              <li key={item.index} className="border-t border-white/10 pt-5">
-                <h4 className="break-keep text-base font-bold leading-snug text-white">
+              <li key={item.index} className="border-t border-white/10 pt-6">
+                <h4 className="break-keep text-xl font-bold leading-snug text-white sm:text-2xl">
                   {t(item.title)}
                 </h4>
-                <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">{t(item.body)}</p>
+                <p className="mt-4 break-keep text-base leading-relaxed text-white/70">{t(item.body)}</p>
               </li>
             ))}
           </ol>
-          {/* 라벨 : 문장. 제목이 아니라 항목 이름이라 dl입니다. */}
-          <dl className="mt-8 flex flex-col gap-2 border-t border-white/10 pt-6 sm:flex-row sm:items-baseline sm:gap-5">
-            <dt className="shrink-0 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
+          {/* 재는 것. 이 챕터에서 가장 검증 가능한 문장이고, 기업이 우리를 읽을
+              때 실제로 붙잡는 줄입니다. 라벨 : 문장이라 dl. 문장은 경첩과 같은
+              H3, 같은 축. 숫자를 지어내지 마세요. 8월의 실측은 #record에 있고
+              여기서는 무엇을 보는지만 말합니다. */}
+          <dl className="mt-12 border-t border-white/10 pt-12 lg:pt-16">
+            <dt className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
               {t(naru.why.measureLabel)}
             </dt>
-            <dd className="break-keep text-base font-semibold leading-relaxed text-white/85">
-              {t(naru.why.measure)}
-            </dd>
+            <dd className={`mx-auto mt-4 max-w-3xl ${H3}`}>{t(naru.why.measure)}</dd>
           </dl>
         </div>
 
-        {/* 마지막 줄. 페이지 전체가 여기서 끝납니다 - 위의 두 개를 빼면 전부
+        {/* 마지막 줄. 페이지 전체가 여기서 끝납니다. 위의 두 개를 빼면 전부
             방법이고, 방법은 바뀝니다(매니페스토 IV). 이 문장이 8일이 4일이 되는
             12월을 미리 설명합니다. */}
-        <div className="mx-auto mt-12 max-w-4xl text-left">
+        <div className="mx-auto mt-12 max-w-2xl">
           <h3 className={LABEL_HEADING}>{t(naru.why.agendaLabel)}</h3>
-          <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">{t(naru.why.agenda)}</p>
+          <p className="mt-3 break-keep text-base leading-relaxed text-white/75">{t(naru.why.agenda)}</p>
         </div>
       </Chapter>
 
