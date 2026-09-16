@@ -145,7 +145,7 @@ export interface RecordPhoto {
   width: number;
   height: number;
   /**
-   * 캡션은 몇 장에만 답니다(2026-09-16). 사진 벽이 열두 장이라 전부 캡션을
+   * 캡션은 몇 장에만 답니다(2026-09-16). 사진 벽이 열 장이라 전부 캡션을
    * 달면 사진을 늘린 만큼 글이 늘어납니다. day와 caption은 한 쌍입니다:
    * 하나만 있으면 화면이 반쪽짜리 줄을 그립니다.
    */
@@ -375,11 +375,12 @@ export const naru = {
       },
     ] as Stat[],
     photosLabel: { ko: "8일의 모양", en: "The shape of eight days" },
-    // ── 사진 열두 장 ───────────────────────────────────────────────────────
-    // DECIDED 2026-09-16: 세 장에서 열두 장으로 늘립니다.
+    // ── 사진 열 장 ─────────────────────────────────────────────────────────
+    // DECIDED 2026-09-16: 세 장에서 열두 장으로 늘렸다가, 시상식 두 장을 빼고
+    // 열 장이 됐습니다(아래 REMOVED 주석).
     //
     // 이 챕터에서 글이 빠진 자리를 사진이 받습니다. 8일이 어땠는지는 문단
-    // 다섯 개보다 사진 열두 장이 더 정확하게 말하고, 그게 이 챕터가 남는
+    // 다섯 개보다 사진 열 장이 더 정확하게 말하고, 그게 이 챕터가 남는
     // 이유입니다. 자세한 것을 알고 싶은 사람은 아래 버튼으로 /2026-08에
     // 갑니다.
     //
@@ -390,10 +391,11 @@ export const naru = {
     //
     // 원본은 Dropbox의 한인 빌더톤/Photo입니다. 긴 변 1200px, webp q76.
     //
-    // day/caption은 앞 세 장에만 있습니다. 나머지는 벽지처럼 읽히면 됩니다 -
-    // 열두 장에 전부 캡션을 달면 사진을 줄여서 글을 늘린 셈이 됩니다.
+    // day/caption은 세 장에만 있습니다(Day 1 · Day 5 · Day 8). 나머지는
+    // 벽지처럼 읽히면 됩니다 - 전부 캡션을 달면 사진을 늘린 만큼 글이 늘어나서
+    // 이 벽을 만든 이유가 없어집니다.
     //
-    // TODO: confirm. 이 열두 장의 웹 공개 여부. 얼굴이 알아볼 수 있게 찍혀
+    // TODO: confirm. 이 열 장의 웹 공개 여부. 얼굴이 알아볼 수 있게 찍혀
     // 있습니다.
     photos: [
       {
@@ -492,26 +494,19 @@ export const naru = {
           en: "Day 8 career session: three working professionals taking questions from the room",
         },
       },
-      {
-        src: "/record/day8-award.webp",
-        width: 1200,
-        height: 900,
-        day: { ko: "Day 8", en: "Day 8" },
-        caption: { ko: "등수 없이, 네 부문에서 열 팀", en: "No placings. Ten teams across four categories" },
-        alt: {
-          ko: "Day 8 시상식, 수상한 팀이 출제사와 함께 선 모습",
-          en: "Day 8 awards: a recognised team standing with the problem owner",
-        },
-      },
-      {
-        src: "/record/day8-award2.webp",
-        width: 1200,
-        height: 900,
-        alt: {
-          ko: "Day 8 시상식, 또 다른 수상 팀의 기념 사진",
-          en: "Day 8 awards: another recognised team",
-        },
-      },
+      // REMOVED 2026-09-16: 시상식 사진 둘(day8-award · day8-award2). 파일도
+      // 함께 지웠습니다.
+      //
+      // 그 두 장에는 수상한 팀이 상패를 들고 출제사와 나란히 서 있었습니다.
+      // 이 사이트에서 등수를 매기지 않는다고 말하는 챕터 한가운데에, 무대에서
+      // 상을 받은 사람들의 기념 사진만 두 장이 있었어요. 나머지 열 장은 전부
+      // 그냥 그 자리에 있던 사람들입니다.
+      //
+      // 수상팀 명단은 원래도 싣지 않습니다(발표 경로는 오픈채팅입니다 -
+      // data/dictionary.ts의 wrap 주석). 사진으로 그걸 되돌리지 않습니다.
+      //
+      // "등수 없이, 네 부문에서 열 팀"이라는 캡션도 함께 내려갔습니다. 그
+      // 사실은 8월 페이지의 어워드 섹션에 정본이 있습니다.
     ] as RecordPhoto[],
     // ── 탭 블록 ────────────────────────────────────────────────────────────
     // DECIDED 2026-09-15: 숫자와 사진만으로는 제로백이 무엇이었는지 설명되지
