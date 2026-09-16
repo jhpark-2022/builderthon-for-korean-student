@@ -261,7 +261,10 @@ export default function NaruHome() {
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
             {t(naru.how.notDoingLabel)}
           </p>
-          <ul className="mt-3 grid gap-2.5 sm:grid-cols-3">
+          {/* role="list"입니다. Preflight가 모든 ul/ol에 list-style:none을
+              걸고, Safari + VoiceOver는 그 목록에서 리스트 의미를 통째로
+              떼어냅니다. 역할을 명시해야 "3개 중 1번"이 살아납니다. */}
+          <ul role="list" className="mt-3 grid gap-2.5 sm:grid-cols-3">
             {naru.how.notDoing.map((line, i) => (
               <li key={i} className="flex gap-2.5 break-keep text-sm leading-relaxed text-white/75">
                 <span aria-hidden className="mt-[0.55em] h-1 w-1 shrink-0 rounded-full bg-white/35" />
@@ -326,7 +329,10 @@ export default function NaruHome() {
         </p>
 
         <StatRow stats={naru.december.shape} t={t} className="mt-12 lg:grid-cols-6" />
-        <p className="mt-4 text-xs text-white/45">{t(naru.december.draftNote)}</p>
+        {/* /55입니다. /45는 실제 배경 위에서 4.38:1이라 AA를 넘지 못합니다
+            (globals.css의 하한 주석). 하필 "이 숫자는 확정이 아니다"라는
+            고지가 페이지에서 가장 안 읽히는 색이었습니다. */}
+        <p className="mt-4 text-xs text-white/55">{t(naru.december.draftNote)}</p>
 
         {/* 스테이지 다섯. 날짜가 아니라 순서입니다 - 초안의 12/10~12/14와 확정된
             시작일 12월 9일이 아직 맞지 않아서(lib/naruDates.ts), 달력을 두 번
@@ -335,15 +341,22 @@ export default function NaruHome() {
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
             {t(naru.december.stagesLabel)}
           </p>
-          <ol className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {/* role="list": 위 notDoing과 같은 이유입니다. */}
+          <ol role="list" className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {naru.december.stages.map((stage, i) => (
               <li
                 key={stage.name.en}
                 className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4"
               >
                 {/* 순서 번호는 첫 칸(Team Bonding)만 비웁니다. 그건 본 일정
-                    전에 있는 일이라 1일차가 아니에요. */}
-                <span className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
+                    전에 있는 일이라 1일차가 아니에요.
+
+                    aria-hidden인 이유(2026-09-16): 화면은 00~04를 세는데 <ol>은
+                    1~5를 셉니다. 그대로 두면 VoiceOver가 "2 of 5"라고 읽는 칸에
+                    눈에는 01이 보여요. 번호를 숨기면 보조기술은 ol의 순서만
+                    듣고, "본 일정 전"이라는 사실은 바로 아래 stage.when이 글로
+                    말합니다. 그게 원래 그 문장이 있어야 할 자리입니다. */}
+                <span aria-hidden className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
                   {i === 0 ? "00" : String(i).padStart(2, "0")}
                 </span>
                 <p className="mt-2 text-sm font-bold text-white">{t(stage.name)}</p>
@@ -362,11 +375,18 @@ export default function NaruHome() {
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/55">
             {t(naru.december.tbdLabel)}
           </p>
-          <ul className="mt-4 flex flex-wrap gap-2">
+          <ul role="list" className="mt-4 flex flex-wrap gap-2">
             {naru.december.tbd.map((item) => (
               <li
                 key={item.en}
-                className="inline-flex rounded-full border border-white/12 bg-white/[0.04] px-3 py-1.5 text-xs text-white/70"
+                /* border-white/10입니다. /12가 아니라(2026-09-16).
+                   Tailwind v3의 불투명도 수식어는 opacity 스케일(5의 배수)이나
+                   대괄호 임의값만 받습니다. border-white/12는 그 둘 다 아니라서
+                   CSS가 한 줄도 만들어지지 않고, 그러면 border 폭만 남아 색이
+                   Preflight 기본값 #e5e7eb로 떨어집니다. 의도한 1.3:1 대신
+                   14.2:1짜리 거의 흰 테두리가 그려지고 있었어요.
+                   대괄호로 쓰고 싶으면 border-white/[0.12]입니다. */
+                className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-white/70"
               >
                 {t(item)}
               </li>
@@ -562,7 +582,7 @@ export default function NaruHome() {
                 key={item.index}
                 className="rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-5"
               >
-                <span className="text-xs font-black lowercase tracking-[0.3em] text-white/45">
+                <span aria-hidden className="text-xs font-black lowercase tracking-[0.3em] text-white/55">
                   {item.index}
                 </span>
                 <p className="mt-2 break-keep text-base font-bold leading-snug text-white">
@@ -792,7 +812,8 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
       className={`flex-1 rounded-2xl border px-4 py-5 text-center ${
         center
           ? "border-naru-orange/35 bg-naru-orange/[0.07]"
-          : "border-white/12 bg-white/[0.04]"
+          // /12는 CSS를 만들지 않습니다(위 tbd 칩의 주석 참고).
+          : "border-white/10 bg-white/[0.04]"
       }`}
     >
       <p
