@@ -521,67 +521,6 @@ function MobileStickyBar({
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// HERO TRACK CARD — 히어로 오른쪽(데스크톱)과 히어로 아래(모바일)에 서는 카드 하나.
-//
-// DECIDED 2026-08-23 (박주형): 행사 국면에서 퀴즈는 더 이상 밀지 않는다 —
-// 프로모션 카드 전부 제거, 남는 문은 nav ✦ 퀴즈 칩 하나. 히어로 로고 월과 트랙
-// 카드 사이 숨 쉴 간격. FAQ 답변은 모바일에서 문단으로.
-//
-// 여기 있던 것은 HookCards였습니다: 카드 두 장(트랙 + 퀴즈)을 나란히 놓고, 퀴즈
-// 쪽은 배치마다 세 가지 변형(히어로용 compact, 밴드용 Q1 접힘, 재방문자용 인사)을
-// 골라 쓰던 컴포넌트예요. 퀴즈 프로모션이 사라지면서 카드가 한 장이 됐고, 그
-// 변형 장치(QuizEmojiStack · QuizTypeShuffle · QuizResultPeek)도 읽는 곳이 없어져
-// 함께 걷어냈습니다. 이름도 실제로 하는 일로 바꿉니다 — "훅 카드들"이 아니라
-// 트랙 카드 하나입니다.
-//
-// 퀴즈로 가는 문은 남아 있습니다: nav의 ✦ 칩(데스크톱 앵커 행 · 모바일 헤더)과
-// /quiz 직접 방문. 데이터와 페이지는 하나도 건드리지 않았습니다.
-//
-// 문자열 키(dict.register.hookQuiz*)도 보존돼 있습니다 — 그쪽 주석 참고.
-//
-// DECIDED 2026-08-28 (Day 8): 카드가 나르는 것이 트랙에서 투표로 바뀌었습니다.
-// #tracks 자리가 빌더스 초이스 투표가 됐는데 이 카드는 "트랙이 공개됐어요 /
-// 트랙 자세히 보기"라고 적힌 채 그 주소를 가리키고 있었어요. 첫 화면에서 약속한
-// 것과 도착지가 달랐습니다.
-//
-// 함수 이름은 그대로 둡니다. 이 카드가 서는 자리(히어로 오른쪽 · 모바일 히어로
-// 아래)와 시각 언어(바이올렛 필, 카드 전체가 링크)는 하나도 안 바뀌었고, 행사가
-// 끝나면 트랙으로 되돌아올 자리입니다. 바뀐 것은 문자열과 링크 대상뿐이에요.
-//
-// 문자열은 dict.vote에 모여 있습니다(cardLabel · cardLines · cardCta). 옛
-// dict.tracks.hook* 셋은 지우지 않았으니 되돌릴 때 그대로 쓰면 됩니다.
-// ─────────────────────────────────────────────────────────────────────────────
-function HeroTrackCard({ t, className = "" }: { t: Tfn; className?: string }) {
-  return (
-    <div className={className}>
-      {/* 페이지의 1순위 행동입니다. 바이올렛 그라데이션 필은 "등록"의 표식이 아니라
-          "지금 이 페이지에서 가장 먼저 할 일"의 표식이고, 그 자리가 등록에서 트랙으로
-          넘어왔을 뿐이에요(2026-08-22 마감 후 청산).
-          카드 전체가 하나의 링크입니다 — 예전에 CTA만 링크였을 때는 눌러야 할 것처럼
-          보이는 면(카드)이 아무 일도 하지 않았습니다. */}
-      <a
-        href="#wrap"
-        className="group flex flex-col items-start gap-2 rounded-2xl border border-violet-400/25 bg-violet-400/[0.07] p-4 text-left transition hover:border-violet-400/45 hover:bg-violet-400/[0.11]"
-      >
-        <p className="text-xs font-medium text-white/60">{t(dict.wrap.cardLabel)}</p>
-        {/* 트랙별 투표 규칙 두 줄. 카드에서 유일하게 사실을 나르는 부분이라 CTA 위에
-            둡니다 — 필은 "가기"고, 이 두 줄이 "무엇을". */}
-        <div className="flex w-full flex-col gap-1">
-          {dict.wrap.cardLines.map((line) => (
-            <p key={line.en} className="break-keep text-xs leading-relaxed text-white/75">
-              {t(line)}
-            </p>
-          ))}
-        </div>
-        <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition group-hover:-translate-y-0.5 group-hover:shadow-[0_0_28px_rgba(124,92,255,0.6)]">
-          {t(dict.wrap.cardCta)}
-          <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-        </span>
-      </a>
-    </div>
-  );
-}
 
 
 // Self-paced build is not a session: no start time, nowhere to be, nothing to
@@ -2533,7 +2472,13 @@ const HERO_VIDEO = {
 // "register" 가지는 지웠습니다 — 눌리지 않는 버튼을 조건부로 남겨 두면 다음 라운드에
 // 그대로 되살아납니다. 되살릴 때는 등록 모달이 그대로 있으니 가지를 다시 쓰세요.
 // 스티키 바와 네비의 동작은 이 스위치와 무관하게 그대로입니다.
-const HERO_PRIMARY: "journey" | "tracks" = "tracks";
+//
+// DECIDED 2026-09-16: 다시 "journey"입니다. "tracks" 가지의 주 CTA가 #wrap을
+// 가리키고 있었는데 그 챕터가 내려갔습니다(같은 날짜의 Journey/JourneyNav 주석).
+// 이 페이지는 이제 기록이라, 첫 화면에서 할 수 있는 가장 중요한 일은 8일이
+// 어떻게 흘렀는지 보는 것입니다. "tracks" 가지는 지우지 않았습니다 — 다음 회차에
+// 트랙이 공개되면 대상 앵커만 새 섹션으로 바꿔 되살리세요.
+const HERO_PRIMARY: "journey" | "tracks" = "journey";
 
 function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
   if (!HERO_VIDEO.enabled) return null; // placeholder: keep the WebGL background
@@ -3411,49 +3356,18 @@ export default function Journey({ serverNow }: { serverNow: number }) {
     <main className="relative z-10">
       <ScrollToTop />
       <MobileChatBar />
-      {/* ── CH 0.5 · 행사 마무리 ────────────────────────────────────── */}
-      {/* 이 자리는 세 번 주인이 바뀌었습니다.
-            8/22  트랙 공개 (저지먼트 · 오토메이션 문제 아코디언)
-            8/29  빌더스 초이스 투표 (Day8Vote)
-            8/30  행사 마무리 ← 지금
+      {/* REMOVED 2026-09-16: 맨 위에 있던 #wrap(행사 마무리) 챕터를 걷었습니다.
 
-          규칙은 매번 같습니다: 이 페이지를 여는 사람이 지금 가장 알고 싶은 것
-          하나를 맨 위에 둡니다. 오늘 그것은 "끝났다, 그리고 다음이 있다"입니다.
+          그 자리가 하던 일은 셋이었는데 지금은 셋 다 다른 데서 합니다. "지난
+          이벤트다"는 맨 위 ArchiveBanner 한 줄이, "8일에 무슨 일이 있었나"는
+          나루 홈의 #record가, "다음은 12월"은 홈의 #december가 말합니다. 같은
+          말을 세 곳에서 하면 어느 쪽도 정본이 아니게 되고, 이 페이지는 기록이라
+          미래를 말하는 문단이 남아 있을 자리가 아닙니다.
 
-          투표 코드는 지우지 않았습니다. components/journey/Day8Vote.tsx,
-          lib/day8Vote.ts, app/api/vote/route.ts가 그대로 있고 Supabase의
-          day8_votes에 결과가 남아 있습니다. 화면에서만 내려온 것이라, 다음 회차에
-          되살릴 때는 명단과 시각(lib/day8Vote.ts)만 갈아 끼우면 됩니다.
-          서버 게이트가 이미 마감이라 라우트가 살아 있어도 표는 들어오지 않습니다.
-
-          pt-*는 맨 위 섹션이라 고정 헤더를 피하려는 여백입니다(투표 때와 같은
-          이유). 이 섹션을 아래로 옮기면 함께 빼세요. */}
-      <Chapter id="wrap" align="center" className="pt-32 sm:pt-36 lg:pt-40">
-        <Eyebrow color="emerald">{t(dict.wrap.tag)}</Eyebrow>
-        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
-          {t(dict.wrap.heading)}
-        </h2>
-        <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
-          {t(dict.wrap.body)}
-        </p>
-        <p className="mx-auto mt-4 max-w-2xl break-keep text-base leading-relaxed text-white/60">
-          {t(dict.wrap.thanks)}
-        </p>
-
-        {/* 다음 소식. 감사 인사에서 끝내면 페이지가 닫힌 문이 됩니다 - 무엇을
-            기다리면 되는지까지 말해야 다시 올 이유가 생겨요. 어법은 어워드
-            박스의 next 블록과 같은 라벨 + 본문입니다. */}
-        <div className="mx-auto mt-10 max-w-2xl break-keep rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-6 py-5 text-left">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-emerald-200/90">
-            {t(dict.wrap.nextLabel)}
-          </p>
-          <p className="mt-3 text-sm leading-relaxed text-white/80">{t(dict.wrap.next)}</p>
-        </div>
-
-        <div className="mt-8 flex justify-center">
-          <OpenChatLink t={t} src="wrap" />
-        </div>
-      </Chapter>
+          문자열은 dict.wrap에 그대로 있습니다(heading · body · thanks · next ·
+          cardLabel · cardLines · cardCta · navLabel). 지우지 않았으니 되살릴 때
+          번역을 다시 쓸 일은 없습니다. 함께 내려간 것은 히어로의 HeroTrackCard와
+          JourneyNav의 wrap 앵커입니다. */}
 
       {/* ── CH 0 · HERO ─────────────────────────────────────────────── */}
       <Chapter
@@ -3627,10 +3541,6 @@ export default function Journey({ serverNow }: { serverNow: number }) {
             {/* Right-aligned column holding the hook cards, capped to the same
                 max-width the launch panel used to share so the stack still lines
                 up under the headline. */}
-            <div className="ml-auto w-full max-w-sm">
-              {/* Stacked (not 2-up) in the narrower right column. */}
-              <HeroTrackCard t={t} />
-            </div>
           </motion.div>
         </div>
 
@@ -3646,20 +3556,6 @@ export default function Journey({ serverNow }: { serverNow: number }) {
             repaint path. */}
         <div className="px-6 sm:px-10 lg:px-10 xl:px-16">
           <HeroPartnerStrip t={t} />
-          {/* Mobile only — moved here from directly under the hero CTAs so the
-              logo wall comes FIRST. On a phone the hero is a vertical stack and
-              whatever sits highest is what the first swipe reveals; putting the
-              signup hooks above the confirmed partners asked for commitment
-              before showing any reason to give it. On lg+ this copy is hidden and
-              the right column's instance renders instead — desktop composition is
-              unchanged. */}
-          {/* DECIDED 2026-08-23 (박주형): mt-6 → mt-12. 폰에서 후원 로고 마지막
-              줄과 이 카드가 거의 붙어 있어서, 로고 월이 히어로의 끝이라는 것도
-              카드가 다음 이야기의 시작이라는 것도 읽히지 않았습니다. 24px은 같은
-              블록 안의 간격으로 보이고, 48px부터 두 덩어리로 갈립니다.
-              데스크톱은 이 인스턴스가 렌더되지 않습니다(lg:hidden) — 그쪽은 카드가
-              히어로 오른쪽 열에 있어서 로고 월과 애초에 붙지 않습니다. */}
-          <HeroTrackCard t={t} className="mx-auto mt-12 max-w-xl lg:hidden" />
         </div>
       </Chapter>
 

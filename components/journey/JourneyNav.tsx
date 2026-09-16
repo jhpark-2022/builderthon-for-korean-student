@@ -67,8 +67,11 @@ import ReturningGreeting from "./ReturningGreeting";
 // 아래 결정 기록은 전부 이 기본 목록에 대한 것이고, 그대로 유효합니다.
 export type NavAnchor = { id: string; label: Phrase };
 
+// REMOVED 2026-09-16: { id: "wrap", label: dict.wrap.navLabel }. 그 챕터가
+// 페이지에서 내려갔습니다(Journey.tsx의 같은 날짜 주석). 앵커 id는 섹션 id와
+// 반드시 짝이라, 섹션 없이 남으면 링크는 아무 데도 가지 않고 현위치 표시가
+// 영영 켜지지 않습니다. 라벨 키는 dict.wrap.navLabel에 그대로 있습니다.
 const DEFAULT_ANCHORS: NavAnchor[] = [
-  { id: "wrap",      label: dict.wrap.navLabel },
   { id: "program",   label: dict.nav.program },
   { id: "speakers",  label: dict.nav.speakers },
   { id: "mentoring", label: dict.nav.mentoring },

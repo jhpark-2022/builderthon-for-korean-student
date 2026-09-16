@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
-import { naru, naruLinks, openChatLabels, type Layer } from "@/data/naru";
+import { naru, naruLinks, openChatLabels, type Layer, type Stat, type RecordPhoto } from "@/data/naru";
+import type { Phrase } from "@/data/dictionary";
 import {
   decemberEventLabel,
   formatDecemberDateLine,
@@ -13,7 +14,8 @@ import {
 import Chapter from "@/components/journey/Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
-import RecordTabs from "./RecordTabs";
+// RecordTabs는 2026-09-16에 화면에서 내려갔습니다. 파일은 그대로 둡니다 -
+// 8월 정본을 직접 읽는 유일한 컴포넌트이고, 되살릴 자리가 여기 #record입니다.
 import { H2, H3 } from "@/components/ui/typography";
 import MotionToggle from "@/components/ui/MotionToggle";
 
@@ -55,6 +57,26 @@ import MotionToggle from "@/components/ui/MotionToggle";
 //    8월 사이트의 "우리가 있었으면 했던 다리를 직접 만듭니다"는 아카이브에
 //    그대로 있습니다. 여기서는 나루터만 씁니다. 다리는 건너는 일을 대신해
 //    주지만, 나루는 그러지 않아요. 건너는 건 각자가 합니다.
+//
+// ── DECIDED 2026-09-16: 코어만 남깁니다 ─────────────────────────────────────
+// 글이 너무 많았습니다. 이 페이지를 처음 여는 사람이 나루가 무엇인지 알기까지
+// 문단 서른 개를 읽어야 했고, 그건 열린 페이지가 아니라 잘 쓴 문서입니다.
+//
+// 규칙 하나로 걷었습니다: 챕터마다 그 챕터가 아니면 말할 수 없는 것 하나만
+// 남기고 나머지는 근거가 있는 곳으로 보냅니다.
+//
+//  · #record 8월을 설명하지 않습니다. 숫자 다섯과 사진 열둘, 그리고 /2026-08로
+//    가는 버튼 하나. 형식·멘토·연사 탭(RecordTabs)과 아쉬웠던 네 가지는
+//    내려갔습니다. 전자는 8월 페이지에 정본이 있고, 후자는 12월의 근거라
+//    그쪽에서 "모양"으로 다시 나타납니다.
+//  · #why 코어 카드가 두 줄에서 한 줄로. 두 번째 줄은 첫 줄의 부연이었습니다.
+//  · #how "이름의 두 겹" 두 문단이 내려갔습니다. 로고 가이드에 있습니다.
+//  · #december 문단 여덟 개 → 숫자 여섯 + 스테이지 다섯(data/naru.ts의 shape,
+//    stages). 12월 기획 초안의 엑기스입니다.
+//  · #join 카드마다 두 줄에서 한 줄로.
+//
+// 키는 하나도 지우지 않았습니다. 화면에서만 내려온 것이라, 되살릴 때
+// data/naru.ts에서 그대로 꺼내 쓰면 됩니다.
 //
 // ── 재사용 ───────────────────────────────────────────────────────────────────
 // Chapter, Eyebrow, OpenChatLink, BackgroundMount, JourneyNav를 8월 페이지와
@@ -164,30 +186,27 @@ export default function NaruHome() {
               <h3 className="mt-3 break-keep text-lg font-bold leading-snug text-white sm:text-xl">
                 {t(core.title)}
               </h3>
-              <div className="mt-4 space-y-3">
-                {core.lines.map((line, i) => (
-                  <p key={i} className="break-keep text-sm leading-relaxed text-white/70">
-                    {t(line)}
-                  </p>
-                ))}
-              </div>
+              {/* 첫 줄만 그립니다(2026-09-16). 둘째 줄은 첫 줄의 부연이고,
+                  이 카드가 해야 하는 일은 코어를 한 번에 알아듣게 하는 것
+                  하나입니다. lines[1]은 data/naru.ts에 그대로 있습니다. */}
+              <p className="mt-4 break-keep text-sm leading-relaxed text-white/70">
+                {t(core.lines[0])}
+              </p>
             </Card>
           ))}
         </div>
 
-        {/* 두 개가 함께 있어야 하는 이유. 카드 아래에 두는 것이 순서입니다.
-            먼저 각각을 읽고, 그 다음에 둘이 한 쌍인 이유를 읽습니다. */}
+        {/* 두 개가 함께 있어야 하는 이유, 그리고 나머지는 전부 방법이라는 것.
+            2026-09-16: 두 블록이 한 줄씩으로 줄었습니다. noteBody와 agenda 본문은
+            이 두 문장의 해설이었고, 해설이 선언보다 길면 선언이 묻힙니다.
+            두 문장 다 data/naru.ts에 전문이 있습니다. */}
         <div className="mx-auto mt-6 max-w-4xl break-keep rounded-2xl border border-accent/25 bg-accent/[0.06] px-6 py-5 text-left">
           <p className="text-base font-bold leading-snug text-white sm:text-lg">{t(naru.why.note)}</p>
-          <p className="mt-3 text-sm leading-relaxed text-white/75">{t(naru.why.noteBody)}</p>
         </div>
-
-        <div className="mx-auto mt-10 max-w-4xl text-left">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
-            {t(naru.why.agendaLabel)}
-          </p>
-          <p className="mt-3 break-keep text-sm leading-relaxed text-white/65">{t(naru.why.agenda)}</p>
-        </div>
+        <p className="mx-auto mt-6 max-w-2xl break-keep text-sm leading-relaxed text-white/55">
+          <span className="font-bold text-white/70">{t(naru.why.agendaLabel)}.</span>{" "}
+          {t(naru.why.agenda)}
+        </p>
       </Chapter>
 
       {/* ── CH2 · 8월의 기록 ─────────────────────────────────────────────── */}
@@ -200,113 +219,31 @@ export default function NaruHome() {
         <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
           {t(naru.record.lead)}
         </p>
-        {/* 코어 2개가 여기서 나왔다는 한 줄. CH1을 읽고 내려온 사람에게 이
-            챕터가 자랑이 아니라 근거라는 것을 말합니다. */}
-        <p className="mx-auto mt-4 max-w-2xl break-keep text-base leading-relaxed text-white/60">
-          {t(naru.record.lead2)}
-        </p>
-
         {/* 숫자 다섯. 마지막 하나만 설명 줄을 답니다. "9팀이 출제사에 직접
             자료를 요청했다"는 숫자만으로는 무슨 뜻인지 알 수 없고, 그 뜻이
             이 회차에서 가장 중요한 신호입니다. 시키지 않았는데 했어요. */}
-        <dl className="mx-auto mt-12 grid max-w-4xl grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-          {naru.record.stats.map((stat) => (
-            <div
-              key={stat.label.en}
-              className="rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-5 text-center"
-            >
-              <dt className="sr-only">{t(stat.label)}</dt>
-              <dd>
-                <span className="block text-2xl font-black tracking-tight text-white sm:text-3xl">
-                  {t(stat.value)}
-                </span>
-                {/* aria-hidden: 같은 문자열이 위 sr-only dt에 이미 있습니다.
-                    빼지 않으면 "74명 신청, 74명 신청"으로 두 번 읽힙니다. */}
-                <span aria-hidden className="mt-2 block break-keep text-xs leading-snug text-white/60">
-                  {t(stat.label)}
-                </span>
-                {stat.note && (
-                  <span className="mt-2 block break-keep text-[0.68rem] font-semibold leading-snug text-accent">
-                    {t(stat.note)}
-                  </span>
-                )}
-              </dd>
-            </div>
-          ))}
-        </dl>
+        <StatRow stats={naru.record.stats} t={t} className="mt-12 lg:grid-cols-5" />
 
-        {/* 사진 세 장. 4:3 원본 비율 그대로입니다. aspect 박스를 씌우거나
-            object-cover로 자르지 않습니다. 단체 사진의 양 끝 사람이 잘리면
-            그 사람은 그 기록에 없는 것이 됩니다. */}
-        <div className="mx-auto mt-14 grid max-w-5xl gap-5 sm:grid-cols-3">
-          {naru.record.photos.map((photo) => (
-            <figure key={photo.src} className="text-left">
-              <Image
-                src={photo.src}
-                alt={t(photo.alt)}
-                width={photo.width}
-                height={photo.height}
-                sizes="(min-width: 640px) 33vw, 100vw"
-                className="h-auto w-full rounded-2xl border border-white/10"
-              />
-              <figcaption className="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-accent">
-                  {t(photo.day)}
-                </span>
-                <span className="break-keep text-sm leading-snug text-white/75">{t(photo.caption)}</span>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
+        {/* 사진 열두 장. 이 챕터의 본문입니다.
+            2026-09-16: 여기 있던 lead2 한 줄, RecordTabs(형식·멘토·연사 탭),
+            "8월에 아쉬웠던 네 가지" 카드 넷이 내려갔습니다. 셋 다 맞는
+            내용이었지만 셋 다 8월을 설명하는 글이었고, 설명은 아래 버튼 하나로
+            /2026-08에 갑니다. 아쉬웠던 넷은 12월 챕터의 "모양"이 대신 말합니다.
+            gaps·tabs 키는 data/naru.ts에 그대로 있습니다. */}
+        <PhotoWall photos={naru.record.photos} t={t} />
 
-        {/* 무엇을 어떻게 했나, 누가 왔나. 사진 뒤, 아쉬웠던 것 앞입니다.
-            먼저 있었던 일을 다 보여 주고 나서 부족했던 것을 말해야, 그 고백이
-            변명이 아니라 다음 이벤트의 이유로 읽힙니다.
-            내용은 전부 8월 정본에서 직접 읽습니다(RecordTabs 주석 참고). */}
-        <RecordTabs />
-
-        {/* 아쉬웠던 네 가지. 자랑 뒤에 바로 옵니다. 이 순서가 요점입니다.
-            잘된 것만 적으면 다음 이벤트를 여는 이유가 없어 보입니다. */}
-        <div className="mx-auto mt-16 max-w-5xl border-t border-white/10 pt-10 text-left">
-          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <h3 className={H3}>{t(naru.record.gapsLabel)}</h3>
-            <span className="break-keep text-sm text-white/70">
-              {t(naru.record.gapsNote).replace("{name}", decemberEventLabel(locale))}
-            </span>
-          </div>
-          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-            {naru.record.gaps.map((gap) => (
-              <li key={gap.title.en} className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4">
-                <p className="break-keep text-sm font-semibold leading-snug text-white">{t(gap.title)}</p>
-                <p className="mt-2 flex-1 break-keep text-sm leading-relaxed text-white/60">{t(gap.body)}</p>
-                {/* 12월의 답. 넷 중 둘만 있습니다. 나머지 둘은 "아직"이라고
-                    씁니다. 없는 대책을 지어내 채우면 나머지 문장의 신뢰가
-                    같이 떨어집니다. */}
-                <p className="mt-4 flex items-baseline gap-2 border-t border-white/[0.07] pt-3">
-                  <span
-                    className={`shrink-0 text-[0.62rem] font-bold uppercase tracking-[0.16em] ${
-                      gap.answer ? "text-accent" : "text-white/55"
-                    }`}
-                  >
-                    {t(naru.record.answerLabel)}
-                  </span>
-                  <span className="break-keep text-sm leading-relaxed text-white/75">
-                    {gap.answer ? t(gap.answer) : t(naru.record.answerPending)}
-                  </span>
-                </p>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="mt-10 flex justify-center">
+        {/* 이 챕터의 유일한 행동입니다. 2026-09-16에 유령 버튼에서 실린 버튼으로
+            올렸습니다 - 8월의 설명이 전부 저쪽으로 갔으니, 더 알고 싶은 사람에게
+            이 버튼은 선택지가 아니라 다음 문장입니다. 주황은 히어로의 주 CTA가
+            이미 쓰고 있어서 흰 면을 씁니다(색 규칙은 히어로 주석 참고). */}
+        <div className="mt-12 flex justify-center">
           <Link
             href={naruLinks.archive}
             onClick={() => track("naru_cta", { src: "record", to: "archive" })}
-            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-5 py-3 text-sm font-semibold text-white/85 transition hover:border-white/35 hover:bg-white/10 hover:text-white"
+            className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-bold text-naru-navy transition hover:-translate-y-0.5 hover:bg-white/90 sm:px-8 sm:text-base"
           >
             {t(naru.record.cta)}
-            <span aria-hidden className="text-white/50">→</span>
+            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </Link>
         </div>
       </Chapter>
@@ -349,34 +286,24 @@ export default function NaruHome() {
           ))}
         </div>
 
-        <div className="mx-auto mt-12 grid max-w-5xl gap-4 text-left lg:grid-cols-2">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-5">
-            <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
-              {t(naru.how.nameLabel)}
-            </p>
-            <div className="mt-3 space-y-3">
-              {naru.how.nameLines.map((line, i) => (
-                <p key={i} className="break-keep text-sm leading-relaxed text-white/75">
-                  {t(line)}
-                </p>
-              ))}
-            </div>
-          </div>
-          {/* 하지 않는 것. 짧게, 목록으로. 이 블록이 있어야 "그럼 어떻게
-              들어가나"라는 질문이 바로 다음 챕터로 넘어갑니다. */}
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-5">
-            <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
-              {t(naru.how.notDoingLabel)}
-            </p>
-            <ul className="mt-3 space-y-2.5">
-              {naru.how.notDoing.map((line, i) => (
-                <li key={i} className="flex gap-2.5 break-keep text-sm leading-relaxed text-white/75">
-                  <span aria-hidden className="mt-[0.55em] h-1 w-1 shrink-0 rounded-full bg-white/35" />
-                  {t(line)}
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* 하지 않는 것. 짧게, 목록으로. 이 블록이 있어야 "그럼 어떻게
+            들어가나"라는 질문이 바로 다음 챕터로 넘어갑니다.
+            2026-09-16: 옆에 있던 "이름의 두 겹" 두 문단이 내려갔습니다. 그건
+            로고 가이드가 말하는 것이고, 이 챕터가 대답해야 하는 질문("어떻게
+            일하는가")과는 다른 질문의 답이었습니다. nameLines 키는 그대로
+            있습니다. 남은 블록 하나가 폭을 다 씁니다. */}
+        <div className="mx-auto mt-12 max-w-5xl rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-5 text-left">
+          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
+            {t(naru.how.notDoingLabel)}
+          </p>
+          <ul className="mt-3 grid gap-2.5 sm:grid-cols-3">
+            {naru.how.notDoing.map((line, i) => (
+              <li key={i} className="flex gap-2.5 break-keep text-sm leading-relaxed text-white/75">
+                <span aria-hidden className="mt-[0.55em] h-1 w-1 shrink-0 rounded-full bg-white/35" />
+                {t(line)}
+              </li>
+            ))}
+          </ul>
         </div>
       </Chapter>
 
@@ -413,66 +340,50 @@ export default function NaruHome() {
         <p className="mx-auto mt-6 max-w-2xl break-keep text-base font-semibold leading-relaxed text-white/85">
           {t(naru.december.notSequel)}
         </p>
-        <p className="mx-auto mt-4 max-w-2xl break-keep text-base leading-relaxed text-white/70">
-          {t(naru.december.lead)}
+        {/* ── 이번 회차의 모양 ─────────────────────────────────────────
+            2026-09-16: 여기 있던 것은 문단 여덟 개였습니다 - lead, 달라지는 것
+            셋, 왜 국경을 여는가 둘, 누가 오는가, 그리고 "이벤트가 끝난 뒤에 할
+            일" 세 단계. 전부 맞는 말이었고 전부 글이었어요. 12월을 모르는
+            사람이 그 여덟 문단을 다 읽어야 12월이 무엇인지 알 수 있었습니다.
+
+            12월 기획 초안(원페이저 v1, 2026-09-10)이 실제로 말하는 것은 한
+            줄입니다: raw data에서 문제를 찾는 것부터 증명까지, 한 사이클을
+            닷새로 압축한다. 그 한 줄과 그것의 모양만 싣습니다.
+
+            키는 전부 data/naru.ts에 있습니다(changes · why · who · after ·
+            afterNote). 확정된 뒤 /seoul 상세 페이지가 생기면 그쪽이 받을
+            내용이에요.
+
+            ⚠️ draftNote를 이 블록에서 떼지 마세요. 아래 숫자 중 확정된 것은
+            하나도 없습니다. */}
+        <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
+          {t(naru.december.shapeLead)}
         </p>
 
-        <div className="mx-auto mt-12 max-w-4xl space-y-4 text-left">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
-            {t(naru.december.changesLabel)}
-          </p>
-          {naru.december.changes.map((line, i) => (
-            <p key={i} className="break-keep text-sm leading-relaxed text-white/80">
-              {t(line)}
-            </p>
-          ))}
-          {/* 왜 국경을 여는가. 두 줄입니다. 셋째 줄로 쓰려던 "12월은 흩어져
-              있던 사람들이 한곳에 모이는 시기"는 유학생 귀국 규모가 검증되지
-              않아 넣지 않았습니다(data/naru.ts의 TODO 참고). */}
-          <div className="pt-4">
-            <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
-              {t(naru.december.whyLabel)}
-            </p>
-            <ul className="mt-2 space-y-2">
-              {naru.december.why.map((line, i) => (
-                <li key={i} className="flex gap-2.5 break-keep text-sm leading-relaxed text-white/80">
-                  <span aria-hidden className="mt-[0.6em] h-1 w-1 shrink-0 rounded-full bg-accent/60" />
-                  {t(line)}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="pt-4">
-            <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
-              {t(naru.december.whoLabel)}
-            </p>
-            <p className="mt-2 break-keep text-sm leading-relaxed text-white/80">{t(naru.december.who)}</p>
-          </div>
-        </div>
+        <StatRow stats={naru.december.shape} t={t} className="mt-12 lg:grid-cols-6" />
+        <p className="mt-4 text-xs text-white/45">{t(naru.december.draftNote)}</p>
 
-        {/* ── 이벤트가 끝난 뒤에 할 일 ───────────────────────────────────
-            이 블록은 반드시 있어야 합니다. 8월에 이걸 쓰지 않아서, 이벤트 뒤에
-            멘토에게 먼저 연락한 팀이 한 팀이었습니다. 병목은 의지가 아니라
-            판단 재료였어요. 내 강점이 그 자리에 쓸모가 있는지를 스스로
-            판단할 수 없었습니다. 그래서 무엇을 하면 되는지를 글로 적습니다.
-            주황 테두리를 쓰는 유일한 블록입니다. */}
-        <div className="mx-auto mt-14 max-w-4xl rounded-3xl border border-accent/25 bg-accent/[0.06] px-6 py-7 text-left sm:px-8">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
-            {t(naru.december.afterLabel)}
+        {/* 스테이지 다섯. 날짜가 아니라 순서입니다 - 초안의 12/10~12/14와 확정된
+            시작일 12월 9일이 아직 맞지 않아서(lib/naruDates.ts), 달력을 두 번
+            말하면 바로 위 날짜 줄과 싸웁니다. */}
+        <div className="mx-auto mt-14 max-w-5xl text-left">
+          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
+            {t(naru.december.stagesLabel)}
           </p>
-          <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">
-            {t(naru.december.afterNote)}
-          </p>
-          <ol className="mt-6 grid gap-4 sm:grid-cols-3">
-            {naru.december.after.map((step, i) => (
-              <li key={step.title.en}>
-                <span className="text-xs font-black tracking-[0.3em] text-accent">
-                  {String(i + 1).padStart(2, "0")}
+          <ol className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            {naru.december.stages.map((stage, i) => (
+              <li
+                key={stage.name.en}
+                className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4"
+              >
+                {/* 순서 번호는 첫 칸(Team Bonding)만 비웁니다. 그건 본 일정
+                    전에 있는 일이라 1일차가 아니에요. */}
+                <span className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
+                  {i === 0 ? "00" : String(i).padStart(2, "0")}
                 </span>
-                <p className="mt-2 break-keep text-sm font-semibold leading-snug text-white">
-                  {t(step.title)}
-                </p>
-                <p className="mt-2 break-keep text-sm leading-relaxed text-white/65">{t(step.body)}</p>
+                <p className="mt-2 text-sm font-bold text-white">{t(stage.name)}</p>
+                <p className="mt-0.5 text-xs text-white/50">{t(stage.when)}</p>
+                <p className="mt-3 break-keep text-sm leading-relaxed text-white/65">{t(stage.body)}</p>
               </li>
             ))}
           </ol>
@@ -527,13 +438,12 @@ export default function NaruHome() {
           {naru.join.cards.map((card) => (
             <Card key={card.who.en} className="flex flex-col">
               <h3 className="break-keep text-lg font-bold text-white">{t(card.who)}</h3>
-              <div className="mt-4 flex-1 space-y-3">
-                {card.lines.map((line, i) => (
-                  <p key={i} className="break-keep text-sm leading-relaxed text-white/70">
-                    {t(line)}
-                  </p>
-                ))}
-              </div>
+              {/* 첫 줄만 그립니다(2026-09-16). 둘째 줄은 전부 첫 줄의 조건과
+                  다음 단계였고, 그건 메일을 보낸 뒤에 나눌 이야기입니다.
+                  lines[1]은 data/naru.ts에 그대로 있습니다. */}
+              <p className="mt-4 flex-1 break-keep text-sm leading-relaxed text-white/70">
+                {t(card.lines[0])}
+              </p>
               <div className="mt-6">
                 {card.openChat ? (
                   <OpenChatLink t={t} src="naru-join" label={openChatLabels.join} />
@@ -557,14 +467,13 @@ export default function NaruHome() {
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
             {t(naru.join.alumni.label)}
           </p>
-          <div className="mt-3 space-y-3">
-            {naru.join.alumni.lines.map((line, i) => (
-              <p key={i} className="break-keep text-sm leading-relaxed text-white/80">
-                {t(line)}
-              </p>
-            ))}
-          </div>
-          <p className="mt-4 break-keep text-sm leading-relaxed text-white/60">
+          {/* 첫 줄과 이야기 안내만. 둘째 줄("받은 사람이 돌려주는 모습이 보일
+              때 문화가 됩니다")은 12월 챕터의 after 블록과 같은 문장이었는데 그
+              블록이 내려갔으니 이 자리에서도 뺍니다. 키는 그대로 있습니다. */}
+          <p className="mt-3 break-keep text-sm leading-relaxed text-white/80">
+            {t(naru.join.alumni.lines[0])}
+          </p>
+          <p className="mt-3 break-keep text-sm leading-relaxed text-white/60">
             {t(naru.join.alumni.storyNote)}
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -652,6 +561,104 @@ export default function NaruHome() {
         </div>
       </footer>
     </>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 숫자 줄.
+//
+// 두 챕터가 같은 모양을 씁니다: #record의 8월 숫자 다섯, #december의 12월 모양
+// 여섯. 같은 일을 하는 마크업이 둘이 되면 한쪽만 고쳐지기 시작해서, 처음부터
+// 하나로 둡니다. 열 수는 className으로 넘깁니다.
+//
+// dt가 sr-only이고 dd 안의 라벨이 aria-hidden인 이유: 같은 문자열이 둘 다에
+// 있어서, 빼지 않으면 스크린리더가 "74명 신청, 74명 신청"으로 두 번 읽습니다.
+// ─────────────────────────────────────────────────────────────────────────────
+function StatRow({
+  stats,
+  t,
+  className = "",
+}: {
+  stats: Stat[];
+  t: (p: Phrase) => string;
+  className?: string;
+}) {
+  return (
+    <dl className={`mx-auto grid max-w-5xl grid-cols-2 gap-3 sm:grid-cols-3 ${className}`}>
+      {stats.map((stat) => (
+        <div
+          key={stat.label.en}
+          className="rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-5 text-center"
+        >
+          <dt className="sr-only">{t(stat.label)}</dt>
+          <dd>
+            <span className="block break-keep text-2xl font-black tracking-tight text-white sm:text-3xl">
+              {t(stat.value)}
+            </span>
+            <span aria-hidden className="mt-2 block break-keep text-xs leading-snug text-white/60">
+              {t(stat.label)}
+            </span>
+            {stat.note && (
+              <span className="mt-2 block break-keep text-[0.68rem] font-semibold leading-snug text-accent">
+                {t(stat.note)}
+              </span>
+            )}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 사진 벽.
+//
+// DECIDED 2026-09-16: #record의 본문이 글에서 사진으로 바뀌면서 세 장이 열두
+// 장이 됐습니다. 8일이 어땠는지는 문단 다섯 개보다 사진 열두 장이 더 정확하게
+// 말합니다.
+//
+// grid가 아니라 CSS columns입니다. 이유는 하나뿐이에요: 아무 사진도 자르지
+// 않기 위해서. grid로 쌓으려면 칸의 높이를 맞춰야 하고, 높이를 맞추려면
+// object-cover로 잘라야 합니다. 단체 사진의 양 끝 사람이 잘리면 그 사람은 그
+// 기록에 없는 것이 됩니다(원래의 세 장에 붙어 있던 규칙이고, 열두 장이 되어도
+// 그대로입니다). columns는 각 사진이 자기 비율대로 서고 세로 사진과 가로
+// 사진이 섞여도 열이 알아서 채워집니다.
+//
+// break-inside-avoid: 이게 없으면 열 경계에서 사진 하나가 반으로 잘려 두 열에
+// 걸칩니다. 캡션이 달린 장은 figure 전체가 한 덩어리로 움직여야 해요.
+//
+// 캡션은 몇 장에만 있습니다(data/naru.ts의 photos). 열두 장에 전부 달면 사진을
+// 늘린 만큼 글이 늘어나서, 이 벽을 만든 이유가 없어집니다.
+//
+// loading: 첫 장만 즉시 받고 나머지는 next/image의 기본값(lazy)입니다. 이
+// 챕터는 히어로에서 한 화면 넘게 내려와 있어서 열두 장을 한꺼번에 받을 이유가
+// 없습니다.
+// ─────────────────────────────────────────────────────────────────────────────
+function PhotoWall({ photos, t }: { photos: RecordPhoto[]; t: (p: Phrase) => string }) {
+  return (
+    <div className="mx-auto mt-12 max-w-5xl gap-4 [column-count:1] sm:[column-count:2] lg:[column-count:3]">
+      {photos.map((photo, i) => (
+        <figure key={photo.src} className="mb-4 break-inside-avoid text-left">
+          <Image
+            src={photo.src}
+            alt={t(photo.alt)}
+            width={photo.width}
+            height={photo.height}
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            priority={i === 0}
+            className="h-auto w-full rounded-2xl border border-white/10"
+          />
+          {photo.day && photo.caption && (
+            <figcaption className="mt-2.5 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+              <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-accent">
+                {t(photo.day)}
+              </span>
+              <span className="break-keep text-sm leading-snug text-white/75">{t(photo.caption)}</span>
+            </figcaption>
+          )}
+        </figure>
+      ))}
+    </div>
   );
 }
 

@@ -700,7 +700,9 @@ export const quizUI = {
   },
   // 2026-08-22 마감 후 청산: 신청 → 트랙. 결과 카드의 다음 걸음이 등록이었는데
   // 등록이 닫혔습니다. 홈의 #tracks로 보냅니다 — 지금 이 사람이 볼 만한 것.
-  ctaApply: { ko: "트랙 구경하기", en: "See the tracks" },
+  // 2026-09-16: 트랙은 8월 회차의 것이고 그 섹션은 이제 없습니다. 이 버튼은
+  // 나루 홈의 12월 챕터로 갑니다(components/Quiz.tsx의 같은 날짜 주석).
+  ctaApply: { ko: "다음 이벤트 보기", en: "See the next event" },
   // Shown after a genuine completion that came from the register modal's
   // round-trip (/quiz?return=register) — links back to the modal, which restores
   // the saved draft and attaches this freshly-saved type. Never auto-redirects.

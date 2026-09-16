@@ -719,14 +719,16 @@ function ResultView({
             자리입니다. 등록이 닫혔으니 홈의 #wrap으로 보냅니다 — 결과를 본 사람에게
             지금 내밀 수 있는 다음 걸음. (2026-08-28: 그 섹션이 트랙에서 Day 8
             빌더스 초이스 투표가 되면서 #vote로 옮겼고, 행사가 끝난 8/30에
-            마무리 섹션 #wrap이 됐습니다.)
-            지금 내밀 수 있는 다음 걸음. 위의 returnToRegister 배너는 등록 모달에서
-            건너온 왕복 경로라 이제 켜지지 않지만, 모달 자체는 살아 있어서 그대로
-            둡니다. */}
+            마무리 섹션 #wrap이 됐습니다. 2026-09-16: 그 섹션이 8월 페이지에서
+            내려갔고, 애초에 `/`는 이제 나루 홈이라 이 링크는 아무 데도 닿지 않는
+            앵커였습니다. 나루 홈의 #december로 보냅니다 — 유형 테스트를 막 끝낸
+            사람에게 지금 내밀 수 있는 다음 걸음은 다음 이벤트입니다.)
+            위의 returnToRegister 배너는 등록 모달에서 건너온 왕복 경로라 이제
+            켜지지 않지만, 모달 자체는 살아 있어서 그대로 둡니다. */}
         <div className="mx-auto w-full max-w-xl rounded-[24px] border border-white/10 bg-white/[0.04] p-6 text-center">
           <p className="text-[15px] font-bold leading-relaxed text-white/85">{ctaLead}</p>
           <a
-            href="/#wrap"
+            href="/#december"
             className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
           >
             {t(quizUI.ctaApply)} →

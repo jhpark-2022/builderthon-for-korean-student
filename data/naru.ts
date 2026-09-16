@@ -135,11 +135,16 @@ export interface Stat {
 
 export interface RecordPhoto {
   src: string;
-  /** 원본 비율 그대로 둡니다(4:3). 자르거나 늘리지 않습니다. */
+  /** 원본 비율 그대로 둡니다. 자르거나 늘리지 않습니다. */
   width: number;
   height: number;
-  day: Phrase;
-  caption: Phrase;
+  /**
+   * 캡션은 몇 장에만 답니다(2026-09-16). 사진 벽이 열두 장이라 전부 캡션을
+   * 달면 사진을 늘린 만큼 글이 늘어납니다. day와 caption은 한 쌍입니다:
+   * 하나만 있으면 화면이 반쪽짜리 줄을 그립니다.
+   */
+  day?: Phrase;
+  caption?: Phrase;
   alt: Phrase;
 }
 
@@ -289,9 +294,13 @@ export const naru = {
     // 이 낱말이 하나라도 들어가면 잘못된 것입니다.
     eyebrow: { ko: "제로백 빌더톤 2026.08 싱가포르", en: "Zero100 builderthon Aug 2026, Singapore" },
     heading: { ko: "8월에 있었던 일", en: "What happened in August" },
+    // DECIDED 2026-09-16: 한 문장입니다. 이 챕터가 하는 일은 8월을 설명하는 것이
+    // 아니라 8월이 있었다는 것을 보여 주는 것으로 바뀌었습니다. 설명은 전부
+    // /2026-08에 그대로 있고, 여기서는 숫자 다섯과 사진 열둘, 그리고 그쪽으로
+    // 가는 버튼 하나만 남깁니다. lead2는 더 이상 화면에 없지만 키는 둡니다.
     lead: {
-      ko: "제로백 빌더톤은 나루의 첫 이벤트였습니다. 2026년 8월 22일부터 29일까지, 싱가포르 안에서 8일이었습니다.",
-      en: "The Zero100 builderthon was NARU's first event. Eight days inside Singapore, from 22 to 29 August 2026.",
+      ko: "나루의 첫 이벤트. 2026년 8월 22일부터 29일까지, 싱가포르에서 8일이었습니다.",
+      en: "NARU's first event. Eight days in Singapore, 22 to 29 August 2026.",
     },
     // 이 줄이 CH2를 CH1과 묶습니다. 8월이 자랑거리라서 여기 있는 것이 아니라,
     // 코어 2개가 거기서 나왔기 때문에 있습니다. 순서가 반대였어요. 먼저 해 보고
@@ -312,23 +321,25 @@ export const naru = {
       },
     ] as Stat[],
     photosLabel: { ko: "8일의 모양", en: "The shape of eight days" },
-    // ── 사진 세 장 ─────────────────────────────────────────────────────────
-    // 전부 4:3 원본입니다. 자르거나 늘리지 않습니다.
+    // ── 사진 열두 장 ───────────────────────────────────────────────────────
+    // DECIDED 2026-09-16: 세 장에서 열두 장으로 늘립니다.
     //
-    // DECIDED 2026-09-15: 캡션은 사진에 실제로 찍힌 것만 말합니다.
-    // 원래 계획한 흐름은 "기업이 문제를 연다 → 멘토와 다듬는다 → 앞에서
-    // 증명한다"였습니다. 그런데 사진 폴더 전체를 훑어보니 1:1 멘토링 장면도,
-    // 출제사가 문제를 여는 순간도 확인할 수 있는 사진이 없었습니다. Day 7
-    // 폴더는 전부 피드백 패널 테이블이고, Day 1의 연단 사진은 어느 세션인지
-    // 사진만으로는 알 수 없습니다.
+    // 이 챕터에서 글이 빠진 자리를 사진이 받습니다. 8일이 어땠는지는 문단
+    // 다섯 개보다 사진 열두 장이 더 정확하게 말하고, 그게 이 챕터가 남는
+    // 이유입니다. 자세한 것을 알고 싶은 사람은 아래 버튼으로 /2026-08에
+    // 갑니다.
     //
-    // 그래서 흐름을 사진에 맞췄습니다: 모였다 → 증명했다 → 그리고 물었다.
-    // 마지막 장이 CH4의 "이벤트가 끝난 뒤에 할 일"로 이어지는 것이 덤입니다.
-    // 없는 장면에 맞는 캡션을 붙이는 것보다, 있는 장면에 맞는 흐름을 짜는 쪽이
-    // 낫습니다. 더 맞는 사진이 나오면 캡션과 함께 바꾸세요.
+    // 세로 사진이 섞여 있습니다. 일부러입니다. 화면은 CSS columns로 쌓고
+    // (NaruHome의 PhotoWall), 그래서 어떤 사진도 잘리지 않습니다. 비율을
+    // 맞추려고 4:3 상자에 밀어 넣으면 단체 사진의 양 끝 사람이 잘리고, 그
+    // 사람은 그 기록에 없는 것이 됩니다.
     //
-    // TODO: confirm. 이 세 장의 웹 공개 여부. 이미 발표 덱에 쓴 사진이지만
-    // 덱은 닫힌 자리이고 웹은 열린 자리입니다. 얼굴이 알아볼 수 있게 찍혀
+    // 원본은 Dropbox의 한인 빌더톤/Photo입니다. 긴 변 1200px, webp q76.
+    //
+    // day/caption은 앞 세 장에만 있습니다. 나머지는 벽지처럼 읽히면 됩니다 -
+    // 열두 장에 전부 캡션을 달면 사진을 줄여서 글을 늘린 셈이 됩니다.
+    //
+    // TODO: confirm. 이 열두 장의 웹 공개 여부. 얼굴이 알아볼 수 있게 찍혀
     // 있습니다.
     photos: [
       {
@@ -343,6 +354,53 @@ export const naru = {
         },
       },
       {
+        src: "/record/day1-checkin.webp",
+        width: 900,
+        height: 1200,
+        alt: {
+          ko: "Day 1 체크인 테이블에서 이름표를 받는 참가자들",
+          en: "Day 1: participants picking up name tags at the check-in table",
+        },
+      },
+      {
+        src: "/record/day1-listen.webp",
+        width: 900,
+        height: 1200,
+        alt: {
+          ko: "Day 1 오프닝 세션을 듣고 있는 참가자들",
+          en: "Day 1: participants listening to the opening session",
+        },
+      },
+      {
+        src: "/record/day1-hall.webp",
+        width: 1200,
+        height: 900,
+        alt: {
+          ko: "Day 1, 파운드리 홀에 앉은 참가자들과 무대 스크린",
+          en: "Day 1: the Foundry hall, participants seated in front of the stage screen",
+        },
+      },
+      {
+        src: "/record/day1-crowd.webp",
+        width: 900,
+        height: 1200,
+        alt: {
+          ko: "Day 1 객석을 가득 채운 참가자들",
+          en: "Day 1: a full room of participants",
+        },
+      },
+      {
+        src: "/record/day5-session.webp",
+        width: 1200,
+        height: 675,
+        day: { ko: "Day 5", en: "Day 5" },
+        caption: { ko: "중간에 한 번 모였습니다", en: "Halfway through, everyone gathered once" },
+        alt: {
+          ko: "Day 5 세션, 앉아서 발표를 듣고 있는 참가자들",
+          en: "Day 5 session: participants seated and listening",
+        },
+      },
+      {
         src: "/record/day8-prove.webp",
         width: 1600,
         height: 1200,
@@ -354,14 +412,50 @@ export const naru = {
         },
       },
       {
+        src: "/record/day8-share.webp",
+        width: 1200,
+        height: 900,
+        alt: {
+          ko: "Day 8 트랙 공유회, 발표를 보고 있는 참가자들",
+          en: "Day 8 track sharing: the room watching a presentation",
+        },
+      },
+      {
+        src: "/record/day8-room.webp",
+        width: 1200,
+        height: 900,
+        alt: {
+          ko: "Day 8 커리어 간담회가 열린 강의실 전경",
+          en: "Day 8: the room during the career session",
+        },
+      },
+      {
         src: "/record/day8-career.webp",
         width: 1600,
         height: 1200,
-        day: { ko: "Day 8", en: "Day 8" },
-        caption: { ko: "그리고 현직자에게 직접 물었습니다", en: "And then they asked the people doing the work" },
         alt: {
           ko: "Day 8 커리어 간담회, 현직자 세 명이 앞에 앉아 참가자들의 질문에 답하는 모습",
           en: "Day 8 career session: three working professionals taking questions from the room",
+        },
+      },
+      {
+        src: "/record/day8-award.webp",
+        width: 1200,
+        height: 900,
+        day: { ko: "Day 8", en: "Day 8" },
+        caption: { ko: "등수 없이, 네 부문에서 열 팀", en: "No placings. Ten teams across four categories" },
+        alt: {
+          ko: "Day 8 시상식, 수상한 팀이 출제사와 함께 선 모습",
+          en: "Day 8 awards: a recognised team standing with the problem owner",
+        },
+      },
+      {
+        src: "/record/day8-award2.webp",
+        width: 1200,
+        height: 900,
+        alt: {
+          ko: "Day 8 시상식, 또 다른 수상 팀의 기념 사진",
+          en: "Day 8 awards: another recognised team",
         },
       },
     ] as RecordPhoto[],
@@ -755,6 +849,111 @@ export const naru = {
     // **달을 쓰지 않았습니다.** 내부 일정은 11월까지지만, 화면에 쓰는 순간
     // 공개 약속이 됩니다. 지키지 못하면 이 블록이 하려던 일이 정확히 반대로
     // 작동합니다. 채워지는 순서만 말하고 날짜는 말하지 않습니다.
+    // ── 기획 초안의 엑기스 ─────────────────────────────────────────────────
+    // DECIDED 2026-09-16: 12월 챕터가 문단 여덟 개에서 숫자 여섯 + 스테이지
+    // 다섯으로 바뀝니다.
+    //
+    // 출처는 12월 빌더톤/이벤트 기획의 원페이저(v1, 2026-09-10)와 기획 슬라이드
+    // 다섯 장입니다. 그 문서가 실제로 말하는 것은 "raw data에서 문제를 찾는
+    // 것부터 증명까지 한 사이클을 5일로 압축한다" 한 줄이고, 나머지는 그 한
+    // 줄의 근거와 모양이에요. 화면에는 그 한 줄과 모양만 싣습니다.
+    //
+    // 이 자리에 있던 것(changes · why · who · after)은 키를 지우지 않았습니다.
+    // 전부 맞는 말이었지만 여덟 문단이었고, 여덟 문단을 읽고 나서야 12월이
+    // 무엇인지 알 수 있는 페이지는 12월을 모르는 사람에게 닫혀 있습니다.
+    //
+    // ⚠️ 초안입니다. draftNote가 반드시 이 블록과 함께 그려져야 합니다. 아래
+    // 숫자 중 확정된 것은 하나도 없고, 참가자는 확정되지 않은 숫자를 보고
+    // 일정을 비웁니다. 확정되면 그때 이 주석과 draftNote를 함께 걷으세요.
+    //
+    // 날짜를 숫자에 넣지 않은 것이 요점입니다. 초안은 12/10~12/14로 적고
+    // 있는데 확정된 시작일은 12월 9일이라(lib/naruDates.ts) 둘을 한 화면에
+    // 나란히 놓으면 바로 위 날짜 줄과 싸웁니다. 기간은 "실질 4일 + 사전 팀
+    // 본딩"까지만 말하고, 달력은 naruDates 하나가 갖습니다.
+    shapeLabel: { ko: "이번 회차의 모양", en: "The shape of this round" },
+    shapeLead: {
+      ko: "raw data에서 문제를 찾는 것부터 증명까지, 한 사이클을 닷새로 압축합니다.",
+      en: "From finding a problem in raw data to proving it out front: one full cycle, compressed into five days.",
+    },
+    draftNote: {
+      ko: "기획 초안입니다. 확정되면 이 자리에서 바로 고칩니다.",
+      en: "This is the working draft. It gets corrected here the moment it is settled.",
+    },
+    shape: [
+      {
+        value: { ko: "5일", en: "5 days" },
+        label: { ko: "실질 4일 + 사전 팀 본딩", en: "Four working days, bonding before" },
+      },
+      {
+        value: { ko: "3곳", en: "3" },
+        label: { ko: "문제를 여는 회사", en: "companies opening a problem" },
+        note: { ko: "raw data와 담당자까지", en: "raw data and the person who owns it" },
+      },
+      {
+        value: { ko: "60명+", en: "60+" },
+        label: { ko: "참가 규모", en: "participants" },
+        note: { ko: "알럼과 한국 대학생", en: "Alumni and students in Korea" },
+      },
+      {
+        value: { ko: "2회", en: "2" },
+        label: { ko: "중간 제출 지점", en: "submission checkpoints" },
+        note: { ko: "정의서와 결과물", en: "The problem statement, then the build" },
+      },
+      {
+        value: { ko: "무순위", en: "No ranking" },
+        label: { ko: "부문별 시상", en: "Awards by category" },
+        note: { ko: "과정에 무게를 둡니다", en: "Weighted on the process" },
+      },
+      {
+        value: { ko: "상시", en: "Always on" },
+        label: { ko: "멘토링", en: "Mentoring" },
+        note: { ko: "예약제, 횟수 제한 없음", en: "By booking, no cap" },
+      },
+    ] as Stat[],
+    // 스테이지 다섯. 날짜 대신 순서입니다(위 주석 참고).
+    stagesLabel: { ko: "닷새의 스테이지", en: "Five days, five stages" },
+    stages: [
+      {
+        name: { ko: "Team Bonding", en: "Team Bonding" },
+        when: { ko: "본 일정 전", en: "Before it starts" },
+        body: {
+          ko: "사전 매칭된 팀이 대면으로 먼저 만납니다. 첫날의 아이스브레이킹 시간이 사라집니다.",
+          en: "Matched teams meet in person first, so day one does not start with icebreakers.",
+        },
+      },
+      {
+        name: { ko: "Discovery", en: "Discovery" },
+        when: { ko: "1일차", en: "Day 1" },
+        body: {
+          ko: "데이터를 열고, 그 데이터에서 문제를 찾아 정의합니다. 요구 강도가 가장 높은 날입니다.",
+          en: "The data opens. You find the problem inside it and define it. The hardest day.",
+        },
+      },
+      {
+        name: { ko: "Build", en: "Build" },
+        when: { ko: "2일차", en: "Day 2" },
+        body: {
+          ko: "정의한 문제를 실제로 풉니다. PO 세션이 빌드 도중에 들어옵니다.",
+          en: "You actually solve what you defined. The PO session lands mid-build.",
+        },
+      },
+      {
+        name: { ko: "Refine", en: "Refine" },
+        when: { ko: "3일차", en: "Day 3" },
+        body: {
+          ko: "검증받을 수 있는 상태로 다듬습니다. 이 시점부터 새 방향은 제안하지 않습니다.",
+          en: "You get it to a state that can be verified. From here, no new directions.",
+        },
+      },
+      {
+        name: { ko: "Pitch", en: "Pitch" },
+        when: { ko: "4일차", en: "Day 4" },
+        body: {
+          ko: "만든 것을 앞에서 증명합니다. 발표 5분, 질의 5분. 시상과 클로징까지 이 날입니다.",
+          en: "You prove it out front. Five minutes to present, five to answer. Awards and closing the same day.",
+        },
+      },
+    ] as { name: Phrase; when: Phrase; body: Phrase }[],
     tbdLabel: { ko: "아직 정해지지 않은 것", en: "Not settled yet" },
     // 2026-09-15: "이벤트 이름"이 이 목록에서 빠졌습니다. 크로싱 서울로
     // 정해졌기 때문입니다. 바로 아래 tbdNote가 "이 목록은 한 줄씩 채워집니다"
