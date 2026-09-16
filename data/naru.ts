@@ -117,13 +117,19 @@ export const openChatLabels = {
   footer: { ko: "오픈채팅", en: "Open chat" },
 } as const;
 
+// DECIDED 2026-09-16: #why가 맨 아래로 갑니다. 목록의 순서는 페이지의 순서와
+// 반드시 같아야 합니다 — 여기가 화면 순서와 어긋나면, 앵커를 눌러 내려간 사람이
+// 한 칸 위로 튀어 오르고 현위치 표시가 목록을 거꾸로 훑습니다.
+//
+// 순서가 바뀐 이유는 챕터 쪽에 적어 두었습니다(NaruHome.tsx의 CH5 · 왜 존재하는가).
+// 한 줄로 줄이면: 프로그램이 좋아야 메시지에 값이 생깁니다.
 export const naruNav: { id: string; label: Phrase }[] = [
   { id: "top", label: { ko: "나루", en: "NARU" } },
-  { id: "why", label: { ko: "왜", en: "Why" } },
   { id: "record", label: { ko: "8월의 기록", en: "August" } },
   { id: "how", label: { ko: "세 층", en: "Three layers" } },
   { id: "december", label: { ko: "12월", en: "December" } },
   { id: "join", label: { ko: "함께", en: "Join" } },
+  { id: "why", label: { ko: "왜", en: "Why" } },
 ];
 
 export interface Stat {
@@ -251,6 +257,10 @@ export const naru = {
             en: "Nothing you do poorly here is recorded anywhere. What stays is that you went all the way through.",
           },
         ],
+        keeps: {
+          ko: "스크리닝 없이 전원에게 진짜 기업 문제를 줍니다. 순위 대신 부문별로 시상하고, 평가는 결과물보다 과정에 무게를 둡니다.",
+          en: "Everyone gets a real company problem, with no screening. Awards go by category instead of placing, and the weight sits on the process rather than the artefact.",
+        },
       },
       {
         index: "02",
@@ -268,8 +278,52 @@ export const naru = {
             en: "Standing in front of that, you build something on your own judgement, and you leave holding something real that proves it.",
           },
         ],
+        keeps: {
+          ko: "학점도 이력서도 보지 않습니다. 실명이 박힌 기업의 문제 하나가 전부이고, 증명은 마지막 날 그 기업 앞에서 합니다.",
+          en: "We do not look at your grades or your CV. One problem from a named company is the whole of it, and you prove it in front of that company on the last day.",
+        },
       },
     ],
+    keepsLabel: { ko: "그래서 지키는 것", en: "So this is what we hold" },
+    // ── 약속이 지켜지는 지점 ───────────────────────────────────────────────
+    // ADDED 2026-09-16. 출처는 12월 기획 슬라이드의 코어 장(02)입니다. 그 장은
+    // 왼쪽에 약속을, 오른쪽에 그 약속이 실제로 지켜지는 지점을 놓습니다.
+    //
+    // 이 블록이 없으면 위의 코어 둘은 구호입니다. 안전한 자리와 증명할 기회는
+    // 누구나 말할 수 있고, 말만으로는 아무 값이 없어요. 값은 "그래서 무엇을
+    // 재느냐"에서 나옵니다. 몇 명이 왔느냐가 아니라 몇 팀이 끝까지 갔느냐를
+    // 본다는 문장이, 위의 두 문장을 검증 가능한 것으로 만듭니다.
+    //
+    // measure의 숫자를 지어내지 마세요. 8월의 실측은 #record의 stats에 있고,
+    // 여기서는 무엇을 보는지만 말합니다.
+    execLabel: { ko: "약속이 지켜지는 지점", en: "Where the promise is kept" },
+    execLead: {
+      ko: "위의 둘은 우리가 약속하는 것입니다. 약속은 프로그램 안의 어느 한 시간에서 지켜지거나 깨집니다.",
+      en: "The two above are what we promise. A promise is kept or broken inside one particular hour of the programme.",
+    },
+    exec: [
+      {
+        index: "i",
+        title: { ko: "멘토링 한 시간의 밀도", en: "The density of one hour of mentoring" },
+        body: {
+          ko: "코어가 지켜지느냐 아니냐는 결국 여기서 갈립니다. 슬롯을 늘리는 것과 그 한 시간이 밀도 있는 것은 다른 일이고, 8월에 부족했던 것은 슬롯이 아니라 그 한 시간을 쓰게 만드는 설계였습니다.",
+          en: "This is where the core holds or gives. Adding slots and making one hour dense are different jobs, and what August lacked was not slots but a design that got people to use them.",
+        },
+      },
+      {
+        index: "ii",
+        title: { ko: "내 가치를 들어주는 사람", en: "Who is listening" },
+        body: {
+          ko: "누가 듣느냐, 그리고 그들이 얼마나 진심이었느냐가 참가자가 실제로 기억하는 전부입니다. 상금은 8월 참가 동기에서 언급조차 되지 않았고, 꼽힌 것은 평소 만날 수 없는 대표와 멘토였습니다.",
+          en: "Who listens, and how much they meant it, is the whole of what a participant actually remembers. In August prize money went unmentioned as a reason to come. What people named were the founders and mentors they could not otherwise meet.",
+        },
+      },
+    ] as { index: string; title: Phrase; body: Phrase }[],
+    measureLabel: { ko: "그래서 재는 것", en: "So this is what we count" },
+    measure: {
+      ko: "몇 명이 왔느냐가 아닙니다. 몇 팀이 끝까지 갔느냐, 그리고 멘토링을 한 번이라도 받은 팀이 몇이냐를 봅니다.",
+      en: "Not how many came. How many teams went all the way through, and how many booked mentoring even once.",
+    },
     note: {
       ko: "문턱이 낮아야 커지고, 롤모델이 있어야 자랍니다.",
       en: "A low doorway is what makes it grow. Role models are what make it grow up.",

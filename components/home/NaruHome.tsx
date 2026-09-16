@@ -174,42 +174,7 @@ export default function NaruHome() {
         </div>
       </Chapter>
 
-      {/* ── CH1 · 왜 존재하는가 ──────────────────────────────────────────── */}
-      <Chapter id="why" align="center">
-        <Eyebrow color="purple">{t(naru.why.eyebrow)}</Eyebrow>
-        <h2 className={H2}>{t(naru.why.heading)}</h2>
-
-        <div className="mx-auto mt-12 grid max-w-4xl gap-5 text-left md:grid-cols-2">
-          {naru.why.cores.map((core) => (
-            <Card key={core.index} className="flex flex-col">
-              <span className="text-xs font-black tracking-[0.3em] text-accent">{core.index}</span>
-              <h3 className="mt-3 break-keep text-lg font-bold leading-snug text-white sm:text-xl">
-                {t(core.title)}
-              </h3>
-              {/* 첫 줄만 그립니다(2026-09-16). 둘째 줄은 첫 줄의 부연이고,
-                  이 카드가 해야 하는 일은 코어를 한 번에 알아듣게 하는 것
-                  하나입니다. lines[1]은 data/naru.ts에 그대로 있습니다. */}
-              <p className="mt-4 break-keep text-sm leading-relaxed text-white/70">
-                {t(core.lines[0])}
-              </p>
-            </Card>
-          ))}
-        </div>
-
-        {/* 두 개가 함께 있어야 하는 이유, 그리고 나머지는 전부 방법이라는 것.
-            2026-09-16: 두 블록이 한 줄씩으로 줄었습니다. noteBody와 agenda 본문은
-            이 두 문장의 해설이었고, 해설이 선언보다 길면 선언이 묻힙니다.
-            두 문장 다 data/naru.ts에 전문이 있습니다. */}
-        <div className="mx-auto mt-6 max-w-4xl break-keep rounded-2xl border border-accent/25 bg-accent/[0.06] px-6 py-5 text-left">
-          <p className="text-base font-bold leading-snug text-white sm:text-lg">{t(naru.why.note)}</p>
-        </div>
-        <p className="mx-auto mt-6 max-w-2xl break-keep text-sm leading-relaxed text-white/55">
-          <span className="font-bold text-white/70">{t(naru.why.agendaLabel)}.</span>{" "}
-          {t(naru.why.agenda)}
-        </p>
-      </Chapter>
-
-      {/* ── CH2 · 8월의 기록 ─────────────────────────────────────────────── */}
+      {/* ── CH1 · 8월의 기록 ─────────────────────────────────────────────── */}
       {/* pt를 줄여 #why에 붙입니다. 이 챕터는 앞 챕터의 근거라 같은 호흡이어야
           합니다. Chapter의 py-24가 모든 이음매를 216px로 만들고 있었는데, 뜻이
           다른 이음매가 같은 공백을 쓰면 공백이 아무 말도 하지 않습니다. */}
@@ -248,7 +213,7 @@ export default function NaruHome() {
         </div>
       </Chapter>
 
-      {/* ── CH3 · 어떻게 일하는가 ────────────────────────────────────────── */}
+      {/* ── CH2 · 어떻게 일하는가 ────────────────────────────────────────── */}
       <Chapter id="how" align="center" className="pt-8 sm:pt-12 lg:pt-14">
         <Eyebrow color="purple">{t(naru.how.eyebrow)}</Eyebrow>
         <h2 className={H2}>{t(naru.how.heading)}</h2>
@@ -307,7 +272,7 @@ export default function NaruHome() {
         </div>
       </Chapter>
 
-      {/* ── CH4 · 다음 이벤트 ────────────────────────────────────────────── */}
+      {/* ── CH3 · 다음 이벤트 ────────────────────────────────────────────── */}
       {/* 반대로 벌립니다. 여기서 과거가 끝나고 미래가 시작합니다. 공백 자체가
           "장이 바뀐다"를 말하게 두는 유일한 이음매입니다. */}
       <Chapter id="december" align="center" className="pt-20 sm:pt-28 lg:pt-36">
@@ -426,7 +391,7 @@ export default function NaruHome() {
         </div>
       </Chapter>
 
-      {/* ── CH5 · 함께하는 길 ────────────────────────────────────────────── */}
+      {/* ── CH4 · 함께하는 길 ────────────────────────────────────────────── */}
       <Chapter id="join" align="center">
         <Eyebrow color="purple">{t(naru.join.eyebrow)}</Eyebrow>
         <h2 className={H2}>{t(naru.join.heading)}</h2>
@@ -490,7 +455,7 @@ export default function NaruHome() {
         </div>
       </Chapter>
 
-      {/* ── CH6 · 여기서 나온 사람 (조건부) ──────────────────────────────
+      {/* ── CH5 · 여기서 나온 사람 (조건부) ──────────────────────────────
           stories가 비어 있으면 챕터 자체를 그리지 않습니다. 제목만 있고 안이
           빈 섹션은 "아직 아무도 없다"로 읽히는데, 8월에 스물한 팀이 발표했으니
           그건 사실이 아닙니다. 사실은 아직 이야기를 받아 두지 못했다는 것이고,
@@ -517,6 +482,123 @@ export default function NaruHome() {
           </div>
         </Chapter>
       )}
+
+      {/* ── CH6 · 왜 존재하는가 ──────────────────────────────────────────
+          DECIDED 2026-09-16: 맨 위에서 맨 아래로 내려왔습니다.
+
+          이 챕터는 이 페이지에서 가장 중요한 두 문장을 갖고 있는데, 맨 위에
+          있을 때 그 두 문장은 구호로 읽혔습니다. 안전하게 도전할 자리와 자기
+          가치를 증명할 기회는 누구나 말할 수 있고, 아직 아무것도 보여 주지
+          않은 페이지의 첫 화면에서 하는 그 말은 값이 없습니다.
+
+          프로그램이 먼저 좋아야 메시지에 값이 생깁니다. 8월에 실제로 있었던
+          일(#record)과 12월에 실제로 할 일(#december)을 보고 내려온 사람에게,
+          이 두 문장은 같은 문장이 아닙니다. 그때는 선언이 아니라 방금 본
+          것들의 이유가 돼요.
+
+          그래서 여기서는 길어져도 됩니다. 페이지의 다른 챕터가 전부 짧아진
+          것과 반대 방향인데, 같은 규칙의 결과입니다: 그 자리가 아니면 말할 수
+          없는 것을 말합니다. 여기가 그것을 말하는 유일한 자리예요.
+
+          구조는 12월 기획 슬라이드의 코어 장을 그대로 씁니다. 왼쪽이 약속,
+          오른쪽이 그 약속이 지켜지는 지점. 약속만 있으면 구호이고, 재는 것이
+          붙어야 검증 가능한 문장이 됩니다.
+
+          #people(조건부)보다도 아래입니다. 그 챕터가 채워지면 사람의 이야기가
+          이 두 문장 바로 앞에 서고, 그게 이 페이지가 끝나는 가장 좋은 방법
+          입니다. */}
+      <Chapter id="why" align="center">
+        <Eyebrow color="purple">{t(naru.why.eyebrow)}</Eyebrow>
+        <h2 className={H2}>{t(naru.why.heading)}</h2>
+
+        {/* 코어 둘. 두 줄 전부 그리고, 그 아래 "그래서 지키는 것"이 붙습니다.
+            이 세 번째 줄이 카드를 선언에서 규칙으로 바꿉니다 - 스크리닝을 두지
+            않는 것과 순위를 지운 것은 태도가 아니라 코어에서 따라 나온 결정
+            입니다. 카드 안에서 위 여백으로 갈라 두어 눈이 "약속 / 그래서"를
+            나눠 읽게 합니다. */}
+        <div className="mx-auto mt-12 grid max-w-4xl gap-5 text-left md:grid-cols-2">
+          {naru.why.cores.map((core) => (
+            <Card key={core.index} className="flex flex-col">
+              <span className="text-xs font-black tracking-[0.3em] text-accent">{core.index}</span>
+              <h3 className="mt-3 break-keep text-lg font-bold leading-snug text-white sm:text-xl">
+                {t(core.title)}
+              </h3>
+              <div className="mt-4 flex-1 space-y-3">
+                {core.lines.map((line, i) => (
+                  <p key={i} className="break-keep text-sm leading-relaxed text-white/70">
+                    {t(line)}
+                  </p>
+                ))}
+              </div>
+              <div className="mt-6 border-t border-white/[0.07] pt-4">
+                <p className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
+                  {t(naru.why.keepsLabel)}
+                </p>
+                <p className="mt-2 break-keep text-sm leading-relaxed text-white/75">
+                  {t(core.keeps)}
+                </p>
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        {/* ── 약속이 지켜지는 지점 ───────────────────────────────────────
+            위 둘이 약속이고 여기가 그 약속이 깨지거나 지켜지는 자리입니다.
+            멘토링 한 시간과 듣는 사람, 그리고 그래서 무엇을 재느냐.
+
+            재는 것을 주황 띠로 따로 뽑습니다. 이 챕터에서 가장 검증 가능한
+            문장이고, 기업이 우리를 읽을 때 실제로 붙잡는 줄입니다. 주황 면은
+            히어로 CTA와 12월 아이브로, 그리고 여기까지 셋뿐이어야 합니다. */}
+        <div className="mx-auto mt-10 max-w-4xl text-left">
+          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
+            {t(naru.why.execLabel)}
+          </p>
+          <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">
+            {t(naru.why.execLead)}
+          </p>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            {naru.why.exec.map((item) => (
+              <div
+                key={item.index}
+                className="rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-5"
+              >
+                <span className="text-xs font-black lowercase tracking-[0.3em] text-white/45">
+                  {item.index}
+                </span>
+                <p className="mt-2 break-keep text-base font-bold leading-snug text-white">
+                  {t(item.title)}
+                </p>
+                <p className="mt-3 break-keep text-sm leading-relaxed text-white/65">{t(item.body)}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 flex flex-col gap-2 rounded-2xl border border-accent/25 bg-accent/[0.06] px-6 py-5 sm:flex-row sm:items-baseline sm:gap-5">
+            <p className="shrink-0 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
+              {t(naru.why.measureLabel)}
+            </p>
+            <p className="break-keep text-sm leading-relaxed text-white/85 sm:text-base">
+              {t(naru.why.measure)}
+            </p>
+          </div>
+        </div>
+
+        {/* 두 개가 함께 있어야 하는 이유. 카드 아래에 두는 것이 순서입니다.
+            먼저 각각을 읽고, 그 다음에 둘이 한 쌍인 이유를 읽습니다. */}
+        <div className="mx-auto mt-10 max-w-4xl break-keep rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-6 text-left">
+          <p className="text-base font-bold leading-snug text-white sm:text-lg">{t(naru.why.note)}</p>
+          <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">{t(naru.why.noteBody)}</p>
+        </div>
+
+        {/* 마지막 줄. 페이지 전체가 여기서 끝납니다 - 위의 두 개를 빼면 전부
+            방법이고, 방법은 바뀝니다(매니페스토 IV). 이 문장이 8일이 4일이 되는
+            12월을 미리 설명합니다. */}
+        <div className="mx-auto mt-10 max-w-4xl text-left">
+          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
+            {t(naru.why.agendaLabel)}
+          </p>
+          <p className="mt-3 break-keep text-sm leading-relaxed text-white/65">{t(naru.why.agenda)}</p>
+        </div>
+      </Chapter>
 
       </main>
 
