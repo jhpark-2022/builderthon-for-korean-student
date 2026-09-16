@@ -599,11 +599,11 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
             </span>
           )}
           {selfPaced ? (
-            <span className="rounded-full border border-white/12 bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/60">
+            <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/60">
               {t(dict.program.selfPacedLabel)}
             </span>
           ) : byMentor ? (
-            <span className="rounded-full border border-white/12 bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/60">
+            <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/60">
               {t(dict.program.byMentorLabel)}
             </span>
           ) : offline ? (
@@ -611,7 +611,7 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
               <span aria-hidden>●</span>{t(dict.program.offlineLabel)}
             </span>
           ) : (
-            <span className="rounded-full border border-white/12 bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/60">
+            <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/60">
               {t(dict.program.onlineLabel)}
             </span>
           )}
@@ -656,7 +656,7 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
   // data, and that badge is the misleading one being replaced.
   if (selfPaced)
     return (
-      <span className="rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
+      <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
         {t(dict.program.selfPacedLabel)}
       </span>
     );
@@ -688,12 +688,12 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
   // which is exactly the size of the correction.
   if (day.dayMode === "online-default")
     return (
-      <span className="rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
+      <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
         {t(dict.program.onlineDefaultLabel)}
       </span>
     );
   return (
-    <span className="rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
+    <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
       {t(dict.program.onlineLabel)}
     </span>
   );
@@ -743,7 +743,7 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
 function HeroLivePill({ t, ev }: { t: Tfn; ev: EventDayState }) {
   if (ev.phase !== "during" || ev.current === null) return null;
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/35 bg-violet-500/12 px-3 py-1 text-[0.7rem] font-bold leading-none text-violet-100">
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/35 bg-violet-500/[0.12] px-3 py-1 text-[0.7rem] font-bold leading-none text-violet-100">
       <span aria-hidden className="relative flex h-[7px] w-[7px] shrink-0">
         <span className="absolute inline-flex h-full w-full rounded-full bg-violet-300/70 animate-[softPulse_2.4s_ease-in-out_infinite] motion-reduce:animate-none" />
         <span className="relative inline-flex h-full w-full rounded-full bg-violet-200" />
@@ -804,7 +804,7 @@ function HeroLiveStrip({
           {t(today.theme)}
         </span>
         {today.hours && (
-          <span className="shrink-0 rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.65rem] font-semibold text-white/60">
+          <span className="shrink-0 rounded-full border border-white/[0.12] bg-white/[0.04] px-2 py-0.5 text-[0.65rem] font-semibold text-white/60">
             {today.hours}
           </span>
         )}
@@ -1447,7 +1447,7 @@ function ProgramStats({ t }: { t: Tfn }) {
       <dl className="flex items-stretch justify-center">
         {rows.map((row, i) => (
           <Fragment key={row.key}>
-            {/* Bracket opacity, not bg-white/12: the repo's fine alphas are all
+            {/* Bracket opacity, not bg-white/[0.12]: the repo's fine alphas are all
                 arbitrary values and /12 is off Tailwind's default scale, so it
                 compiled to nothing and the rule read as three floating numbers. */}
             {i > 0 && <span aria-hidden className="mx-5 h-9 w-px self-center bg-white/[0.14] sm:mx-9" />}
@@ -1621,7 +1621,7 @@ function DayCard({ day, t, onOpen, ev }: { day: DayMeta; t: Tfn; onOpen: (n: num
             it up. Only Days 3·4·6 have self-paced entries, so this stays rare
             enough to mean something. */}
         {dayHasSelfPaced(day.day) && !(day.selfPacedDay ?? allSelfPaced) && (
-          <span className="rounded-full border border-white/12 bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
+          <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
             {t(dict.program.selfPacedLabel)}
           </span>
         )}
@@ -1962,7 +1962,7 @@ function DayModal({
                 instead of scrolling the page behind the modal. */}
             <div className="overflow-y-auto overscroll-contain px-6 pt-8 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:px-9 sm:py-9">
               <div className="flex flex-wrap items-center gap-2 pr-12">
-                <span className="rounded-full border border-violet-400/25 bg-violet-500/12 px-3 py-1 text-xs font-bold text-violet-200">
+                <span className="rounded-full border border-violet-400/25 bg-violet-500/[0.12] px-3 py-1 text-xs font-bold text-violet-200">
                   {t(day.phase)}
                 </span>
                 {/* The booked window rides in the same chip as the date — it
@@ -2208,7 +2208,7 @@ function SubmissionBox({ t }: { t: Tfn }) {
   return (
     <div className="mt-5 rounded-2xl border border-rose-400/25 bg-rose-400/[0.07] px-5 py-4">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/35 bg-rose-400/12 px-2.5 py-1 text-[0.68rem] font-bold text-rose-100">
+        <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/35 bg-rose-400/[0.12] px-2.5 py-1 text-[0.68rem] font-bold text-rose-100">
           <span aria-hidden>★</span>{t(s.mustBadge)}
         </span>
         <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-rose-200/80">{t(s.tag)}</span>
@@ -2262,7 +2262,7 @@ function AwardsBox({ t }: { t: Tfn }) {
   return (
     <div className="mt-5 rounded-2xl border border-amber-400/25 bg-amber-400/[0.07] px-5 py-4">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/35 bg-amber-400/12 px-2.5 py-1 text-[0.68rem] font-bold text-amber-100">
+        <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/35 bg-amber-400/[0.12] px-2.5 py-1 text-[0.68rem] font-bold text-amber-100">
           <span aria-hidden>★</span>{t(a.countBadge)}
         </span>
         <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-amber-200/80">{t(a.tag)}</span>
@@ -3417,7 +3417,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                   box; with the tight leading the box cut off g/p descenders, so they
                   rendered transparent ("Singapore." looked clipped). The padding
                   extends the paint box below the baseline. */}
-              <span className="block bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text pb-[0.15em] text-transparent">
+              <span className="gradient-text gradient-text--zero100 block bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text pb-[0.15em] text-transparent">
                 {t(dict.hero.titleLine2)}
               </span>
             </h1>
@@ -3801,7 +3801,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
             <div className="flex flex-wrap items-center justify-center gap-2">
               <Eyebrow className="!mb-0">{t(dict.program.tag)}</Eyebrow>
               {eventDay.phase === "during" && eventDay.current !== null && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/35 bg-violet-500/12 px-3 py-1 text-[0.7rem] font-bold leading-none text-violet-100">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/35 bg-violet-500/[0.12] px-3 py-1 text-[0.7rem] font-bold leading-none text-violet-100">
                   <span aria-hidden className="relative flex h-[7px] w-[7px] shrink-0">
                     <span className="absolute inline-flex h-full w-full rounded-full bg-violet-300/70 animate-[softPulse_2.4s_ease-in-out_infinite] motion-reduce:animate-none" />
                     <span className="relative inline-flex h-full w-full rounded-full bg-violet-200" />
@@ -3948,9 +3948,9 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               className="mt-5 text-left"
               items={dict.program.checkins.forms}
               render={(f) => (
-                <div className="flex h-full w-full flex-col rounded-xl border border-white/12 bg-white/[0.04] px-4 py-3.5">
+                <div className="flex h-full w-full flex-col rounded-xl border border-white/[0.12] bg-white/[0.04] px-4 py-3.5">
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="rounded-full border border-violet-400/25 bg-violet-500/12 px-2 py-0.5 text-[0.62rem] font-bold text-violet-200">
+                    <span className="rounded-full border border-violet-400/25 bg-violet-500/[0.12] px-2 py-0.5 text-[0.62rem] font-bold text-violet-200">
                       {t(f.when)}
                     </span>
                     <span className="text-[0.62rem] font-semibold text-white/55">{t(f.duration)}</span>
@@ -4154,7 +4154,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                         크래시코스)라, 날짜가 배정 예고가 아니라 세션 공지입니다.
                         아래 멘토 카드에는 같은 이유로 칩이 없습니다. */}
                     {m.days && (
-                      <span className="rounded-full border border-white/12 bg-white/[0.04] px-1.5 py-0.5 text-[0.6rem] font-semibold text-white/55">{m.days}</span>
+                      <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-1.5 py-0.5 text-[0.6rem] font-semibold text-white/55">{m.days}</span>
                     )}
                     {/* 확정 원칙이지만 날짜가 아직 안 잠긴 세션. 지금은 해당자가
                         없습니다 — 새 세션 연사가 들어올 때를 위한 자리입니다. */}
@@ -4452,7 +4452,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               browser can't serve the earlier colour version from cache. */}
           <div className="mt-9 text-left">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.hostLabel)}</p>
-            <div className="mt-3 overflow-hidden rounded-2xl border border-white/12 bg-white/[0.02]">
+            <div className="mt-3 overflow-hidden rounded-2xl border border-white/[0.12] bg-white/[0.02]">
               {/* Umbrella header — click opens the AXMOS intro modal. */}
               <button
                 type="button"

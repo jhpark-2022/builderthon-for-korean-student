@@ -97,7 +97,7 @@ function Avatar({ src }: { src?: string }) {
       width={96}
       height={96}
       sizes="48px"
-      className="h-12 w-12 shrink-0 rounded-full border border-white/12 object-cover"
+      className="h-12 w-12 shrink-0 rounded-full border border-white/[0.12] object-cover"
     />
   );
 }
@@ -159,7 +159,7 @@ function Person({
           {chips.map((c) => (
             <span
               key={c}
-              className="inline-flex rounded-full border border-white/12 px-2 py-0.5 text-[0.62rem] font-semibold text-white/50"
+              className="inline-flex rounded-full border border-white/[0.12] px-2 py-0.5 text-[0.62rem] font-semibold text-white/50"
             >
               {c}
             </span>
@@ -320,7 +320,7 @@ export default function RecordTabs() {
                   // 별개 이유입니다. 탭 선택은 상태 표시이지 브랜드 강조가
                   // 아니고, 가장 아끼는 색을 UI 상태에 쓰면 의미를 잃습니다.
                   ? "border-accent/60 bg-accent/20 text-white"
-                  : "border-white/12 bg-white/[0.04] text-white/65 hover:border-white/25 hover:text-white"
+                  : "border-white/[0.12] bg-white/[0.04] text-white/65 hover:border-white/25 hover:text-white"
               }`}
             >
               {t(x.label)}
@@ -388,7 +388,7 @@ export default function RecordTabs() {
               {dict.tracks.items.map((tr) => (
                 <li key={tr.num} className="rounded-2xl bg-white/[0.05] px-5 py-4">
                   <p className="flex items-center gap-2">
-                    <span className="inline-flex rounded-md border border-white/12 px-1.5 py-0.5 text-[0.62rem] font-black text-white/50">
+                    <span className="inline-flex rounded-md border border-white/[0.12] px-1.5 py-0.5 text-[0.62rem] font-black text-white/50">
                       {tr.num}
                     </span>
                     <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-accent">

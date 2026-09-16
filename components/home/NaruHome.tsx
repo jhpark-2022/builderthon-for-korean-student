@@ -139,7 +139,7 @@ export default function NaruHome() {
             꺾이고, 두 문장이 한 덩어리로 읽힙니다. 이건 두 개의 선언입니다. */}
         <h1 className="text-[clamp(2.05rem,6.4vw,4.25rem)] font-black leading-[1.15] tracking-tight text-white">
           <span className="block break-keep">{t(naru.hero.titleLine1)}</span>
-          <span className="block break-keep bg-gradient-to-r from-[#A99AD6] via-[#C79BB4] to-[#EE8A4F] bg-clip-text pb-[0.14em] text-transparent">
+          <span className="gradient-text block break-keep bg-gradient-to-r from-[#A99AD6] via-[#C79BB4] to-[#EE8A4F] bg-clip-text pb-[0.14em] text-transparent">
             {t(naru.hero.titleLine2)}
           </span>
         </h1>

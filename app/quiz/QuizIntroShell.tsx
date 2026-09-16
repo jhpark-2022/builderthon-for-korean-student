@@ -53,7 +53,7 @@ export default function QuizIntroShell() {
             ✦ <Both phrase={quizUI.eyebrow} />
           </span>
           <h1 className="text-[2.6rem] font-black leading-[1.05] tracking-tight sm:text-[3rem]">
-            <span className="bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text pb-[0.12em] text-transparent">
+            <span className="gradient-text gradient-text--zero100 bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text pb-[0.12em] text-transparent">
               <Both phrase={quizUI.title} />
             </span>
           </h1>

@@ -448,7 +448,7 @@ function Landing({
         ✦ {t(quizUI.eyebrow)}
       </span>
       <h1 className="text-[2.6rem] font-black leading-[1.05] tracking-tight sm:text-[3rem]">
-        <span className="bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text pb-[0.12em] text-transparent">
+        <span className="gradient-text gradient-text--zero100 bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text pb-[0.12em] text-transparent">
           {t(quizUI.title)}
         </span>
       </h1>
@@ -628,7 +628,7 @@ function ResultView({
       <div className="flex w-full flex-col gap-6">
         {/* full-width shareable result card */}
         <div
-          className="relative w-full overflow-hidden rounded-[28px] border border-white/12 bg-[#0c0a18] p-7 text-left sm:p-9"
+          className="relative w-full overflow-hidden rounded-[28px] border border-white/[0.12] bg-[#0c0a18] p-7 text-left sm:p-9"
           style={{ boxShadow: "0 30px 70px -28px rgba(217,70,239,0.42)" }}
         >
           <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-fuchsia-500/20 to-transparent" />
@@ -1073,7 +1073,7 @@ function DreamTeammates({
           return (
             <div
               key={m}
-              className="flex flex-col rounded-[24px] border border-white/12 bg-[#0c0a18] p-6 text-left"
+              className="flex flex-col rounded-[24px] border border-white/[0.12] bg-[#0c0a18] p-6 text-left"
             >
               <div className="flex items-center gap-3">
                 <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${mate.accent} shadow-lg`}>

@@ -430,7 +430,7 @@ export default function JourneyNav({
                   // 자리가 비면 폰에서 헤더에 액션이 하나도 없게 되는데, 이
                   // 페이지에서 지금 할 수 있는 일이 이것 하나입니다. 좁은 폭에서는
                   // 패딩과 글자를 줄이고 min-h로 터치 타깃 44px을 지킵니다.
-                  : `shrink-0 items-center gap-1.5 rounded-full border border-accent/40 bg-accent/12 font-semibold text-accent transition hover:-translate-y-0.5 hover:border-accent/60 hover:bg-accent/20 hover:text-white ${
+                  : `shrink-0 items-center gap-1.5 rounded-full border border-accent/40 bg-accent/[0.12] font-semibold text-accent transition hover:-translate-y-0.5 hover:border-accent/60 hover:bg-accent/20 hover:text-white ${
                       showQuiz
                         ? "hidden px-4 py-2 text-sm lg:inline-flex"
                         : "inline-flex min-h-[44px] px-3.5 text-xs sm:px-4 sm:text-sm"
@@ -525,8 +525,8 @@ export default function JourneyNav({
                   // 상단 행의 퀴즈 칩(✦)은 이 레일이 아니라 첫 행에 있어 대상이 아닙니다.
                   className={`inline-flex min-h-[44px] min-w-[5.25rem] shrink-0 items-center justify-center whitespace-nowrap rounded-full border px-3 text-[0.7rem] font-semibold backdrop-blur transition active:scale-[0.97] ${
                     here
-                      ? "border-accent/40 bg-accent/12 text-white"
-                      : "border-white/12 bg-white/[0.06] text-white/75"
+                      ? "border-accent/40 bg-accent/[0.12] text-white"
+                      : "border-white/[0.12] bg-white/[0.06] text-white/75"
                   }`}
                 >
                   {t(a.label)}

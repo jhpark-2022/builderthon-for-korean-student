@@ -71,7 +71,7 @@ const FOCUSABLE =
 // focused input's font-size is under 16px, and the visitor then has to pinch
 // back out mid-form.
 const FIELD =
-  "w-full rounded-xl border border-white/12 bg-white/[0.04] px-4 py-3 text-base text-white placeholder:text-white/35 outline-none transition focus:border-violet-400/50 focus:bg-white/[0.06]";
+  "w-full rounded-xl border border-white/[0.12] bg-white/[0.04] px-4 py-3 text-base text-white placeholder:text-white/35 outline-none transition focus:border-violet-400/50 focus:bg-white/[0.06]";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // Teams are strictly 1–3 people → at most 2 members beyond the registrant.
@@ -219,7 +219,7 @@ function SelectField({
             animate={{ opacity: 1, y: 0 }}
             exit={reduce ? undefined : { opacity: 0, y: -6 }}
             transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute z-20 mt-2 max-h-60 w-full overflow-auto rounded-xl border border-white/12 bg-[#0c0a18] p-1 shadow-[0_12px_40px_rgba(0,0,0,0.5)]"
+            className="absolute z-20 mt-2 max-h-60 w-full overflow-auto rounded-xl border border-white/[0.12] bg-[#0c0a18] p-1 shadow-[0_12px_40px_rgba(0,0,0,0.5)]"
           >
             {options.map((o, i) => {
               const isSelected = o.value === value;
@@ -901,7 +901,7 @@ export default function RegisterModal({
                       이유는 없습니다 — 부를 사람이 있다면 지금이 유일한
                       타이밍입니다. 고스트 한 단계로 두는 이유는 위의 퀴즈
                       블록과 같습니다: 등록은 이미 끝났고, 이건 덤입니다. */}
-                  <div className="mx-auto mt-4 max-w-sm rounded-2xl border border-white/12 bg-white/[0.04] px-5 py-4">
+                  <div className="mx-auto mt-4 max-w-sm rounded-2xl border border-white/[0.12] bg-white/[0.04] px-5 py-4">
                     <p className="break-keep text-sm leading-relaxed text-white/75">
                       {t(dict.register.successShareTitle)}
                     </p>
@@ -916,7 +916,7 @@ export default function RegisterModal({
                   </div>
 
                   {links.openChat && (
-                    <div className="mx-auto mt-4 max-w-sm rounded-2xl border border-white/12 bg-white/[0.04] px-5 py-4">
+                    <div className="mx-auto mt-4 max-w-sm rounded-2xl border border-white/[0.12] bg-white/[0.04] px-5 py-4">
                       <p className="text-sm leading-relaxed text-white/75">
                         {t(dict.register.successOpenChatTitle)}
                       </p>
@@ -1358,7 +1358,7 @@ export default function RegisterModal({
                                           <button
                                             type="button"
                                             onClick={goToQuiz}
-                                            className="inline-flex items-center justify-center rounded-xl border border-white/12 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-white/75 transition hover:bg-white/[0.08]"
+                                            className="inline-flex items-center justify-center rounded-xl border border-white/[0.12] bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-white/75 transition hover:bg-white/[0.08]"
                                           >
                                             {t(dict.register.aiRetake)}
                                           </button>
@@ -1384,7 +1384,7 @@ export default function RegisterModal({
                                     <button
                                       type="button"
                                       onClick={goToQuiz}
-                                      className="mt-3 inline-flex items-center justify-center rounded-xl border border-white/12 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-white/75 transition hover:bg-white/[0.08]"
+                                      className="mt-3 inline-flex items-center justify-center rounded-xl border border-white/[0.12] bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-white/75 transition hover:bg-white/[0.08]"
                                     >
                                       {t(dict.register.aiGoTest)}
                                     </button>

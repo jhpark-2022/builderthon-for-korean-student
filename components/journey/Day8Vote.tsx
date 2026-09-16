@@ -459,7 +459,7 @@ function VotePanel({
           )}
         </div>
       ) : state === "before" ? (
-        <div className="mt-6 rounded-2xl border border-white/12 bg-white/[0.03] px-5 py-4">
+        <div className="mt-6 rounded-2xl border border-white/[0.12] bg-white/[0.03] px-5 py-4">
           <p className="text-sm font-bold text-white/85">{t(dict.vote.lockedTitle)}</p>
           <p className="mt-2 break-keep text-sm leading-relaxed text-white/60">
             {t(dict.vote.lockedBody).replace("{time}", openTime)}{" "}
@@ -471,7 +471,7 @@ function VotePanel({
           </p>
         </div>
       ) : state === "closed" ? (
-        <div className="mt-6 rounded-2xl border border-white/12 bg-white/[0.03] px-5 py-4">
+        <div className="mt-6 rounded-2xl border border-white/[0.12] bg-white/[0.03] px-5 py-4">
           <p className="text-sm font-bold text-white/85">{t(dict.vote.closedTitle)}</p>
           <p className="mt-2 break-keep text-sm leading-relaxed text-white/60">
             {t(dict.vote.closedBody)}
@@ -531,7 +531,7 @@ function VotePanel({
                       className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border text-[0.62rem] font-black ${
                         isPicked
                           ? "border-emerald-400/50 bg-emerald-400/20 text-emerald-100"
-                          : "border-white/12 bg-white/[0.05] text-white/55"
+                          : "border-white/[0.12] bg-white/[0.05] text-white/55"
                       }`}
                     >
                       {i + 1}
