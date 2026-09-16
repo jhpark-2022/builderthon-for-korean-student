@@ -91,6 +91,34 @@ import MotionToggle from "@/components/ui/MotionToggle";
 // 제목 스케일은 components/ui/typography.ts가 갖습니다. RecordTabs가 같은 값을
 // 읽어야 하는데 이 파일이 그쪽을 import 하고 있어서, 여기 두면 순환이 됩니다.
 
+// ─────────────────────────────────────────────────────────────────────────────
+// 세로 리듬. 이 페이지의 모든 간격은 여기 있는 값 중 하나여야 합니다.
+//
+// DECIDED 2026-09-16. 그 전에는 블록 간격에 mt-4·5·6·7·10·12·14·16·24·32 열
+// 가지가 쓰이고 있었습니다. 하는 일은 셋뿐인데요. 챕터 이음매도 162px과 171px이
+// 나란히 있었는데, 9px 차이는 아무도 알아보지 못하면서 "여기는 다르다"고
+// 주장만 합니다. 뜻이 없는 차이는 리듬을 만들지 않고 리듬을 지웁니다.
+//
+// root가 18px이라 Tailwind 한 칸은 4.5px입니다.
+//
+// ── 챕터 이음매 (Chapter의 기본 py-24 = 108px 위에 얹습니다) ────────────────
+//   (오버라이드 없음)              216px  기본. 다음 이야기로 넘어갑니다.
+//   pt-20 sm:pt-28 lg:pt-36      270px  장이 바뀝니다. #december 하나뿐.
+//   pt-24 sm:pt-32 lg:pt-44      306px  결론. #why 하나뿐. 페이지에서 가장 큽니다.
+//
+// 세 단계 말고 네 번째를 만들지 마세요. 이음매의 크기가 뜻을 나르려면 서로
+// 명백히 달라야 하고, 세 개가 그 조건을 만족하는 최대입니다.
+//
+// ── 챕터 안 (Chapter의 직계 자식) ──────────────────────────────────────────
+//   mt-4    18px  바로 위 블록에 딸린 주석 한 줄. 붙어 있어야 뜻이 통합니다.
+//   mt-6    27px  제목 → 리드 문장. 그리고 앞 블록에 붙는 띠.
+//   mt-12   54px  블록 → 블록. 기본값입니다. 의심스러우면 이것.
+//   mt-24 sm:mt-32  108/144px  부속으로 강등. #why의 exec 하나뿐.
+//
+// 카드나 다이어그램 **안쪽**의 간격은 이 스케일을 따르지 않아도 됩니다. 저긴
+// 한 덩어리의 내부 조판이고, 여기 있는 값은 덩어리와 덩어리 사이의 것입니다.
+// ─────────────────────────────────────────────────────────────────────────────
+
 // 카드 한 장. 8월의 Glass와 같은 값이지만, 그 컴포넌트는 Journey.tsx 안에
 // 있습니다. 두 줄짜리 래퍼를 꺼내려고 5,157줄 파일을 건드리지 않았습니다.
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
@@ -132,7 +160,8 @@ export default function NaruHome() {
             주황이 둘(이 알약 + 아래 CTA)이면 "점처럼 쓴다"는 규칙이 첫 화면에서
             이미 깨지고, 위에서 주황 테두리를 먼저 쓴 만큼 아래 CTA의 당김이
             줄어듭니다. 이 사이트에서 주황 면은 그 버튼 하나뿐이어야 합니다. */}
-        <div className="mt-8">
+        {/* 로고 → 아이브로. 스케일의 mt-6입니다(파일 위 리듬 주석). */}
+        <div className="mt-6">
           <Eyebrow color="purple">{t(naru.hero.eyebrow)}</Eyebrow>
         </div>
         {/* 태그라인. 두 줄로 고정합니다. 한 줄로 흘리면 좁은 폭에서 네 줄까지
@@ -146,12 +175,12 @@ export default function NaruHome() {
         {/* {date}와 {name}은 lib/naruDates.ts에서 옵니다. 카피에 날짜와 이름을
             박아 두면 DECEMBER_STARTS_AT이나 DECEMBER_EVENT_NAME을 고쳐도 이
             문장만 남습니다. 둘 다 확정 전의 값이라 반드시 한 번 이상 바뀝니다. */}
-        <p className="mx-auto mt-7 max-w-xl break-keep text-sm leading-relaxed text-white/80 sm:text-base">
+        <p className="mx-auto mt-6 max-w-xl break-keep text-sm leading-relaxed text-white/80 sm:text-base">
           {t(naru.hero.sub)
             .replace("{date}", formatDecemberStartShort(locale))
             .replace("{name}", decemberEventLabel(locale))}
         </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-3 sm:mt-9">
+        <div className="mt-12 flex flex-wrap justify-center gap-3">
           {/* 주 CTA. 주황 원장(2026-09-16 실측 후 갱신):
                 면  이 버튼, 12월 아이브로. 둘뿐입니다.
                 점  #why 코어 둘의 나루 표식(NaruMark), 배경 깊은 물의 점.
@@ -179,10 +208,12 @@ export default function NaruHome() {
       </Chapter>
 
       {/* ── CH1 · 8월의 기록 ─────────────────────────────────────────────── */}
-      {/* pt를 줄여 #why에 붙입니다. 이 챕터는 앞 챕터의 근거라 같은 호흡이어야
-          합니다. Chapter의 py-24가 모든 이음매를 216px로 만들고 있었는데, 뜻이
-          다른 이음매가 같은 공백을 쓰면 공백이 아무 말도 하지 않습니다. */}
-      <Chapter id="record" align="center" className="pt-8 sm:pt-10 lg:pt-12">
+      {/* 기본 이음매(216px)입니다. 여기 있던 pt-8 sm:pt-10 lg:pt-12는 "#why에
+          붙인다"는 주석을 달고 있었는데, 그 챕터는 9/16에 맨 아래로 내려갔습니다.
+          지금 이 챕터 앞에 있는 것은 히어로이고, 히어로는 자기 화면 하나를
+          온전히 쓰는 것이 맞습니다. 근거로 삼을 앞 챕터가 없으니 붙일 이유도
+          없어요(리듬 스케일은 파일 위 주석). */}
+      <Chapter id="record" align="center">
         <Eyebrow color="plum">{t(naru.record.eyebrow)}</Eyebrow>
         <h2 className={H2}>{t(naru.record.heading)}</h2>
         <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
@@ -218,7 +249,9 @@ export default function NaruHome() {
       </Chapter>
 
       {/* ── CH2 · 어떻게 일하는가 ────────────────────────────────────────── */}
-      <Chapter id="how" align="center" className="pt-8 sm:pt-12 lg:pt-14">
+      {/* 기본 이음매. 전에는 171px이었는데 바로 위 #record가 162px이었습니다.
+          9px 차이는 아무도 알아보지 못하면서 "여기는 다르다"고 주장만 합니다. */}
+      <Chapter id="how" align="center">
         <Eyebrow color="purple">{t(naru.how.eyebrow)}</Eyebrow>
         <h2 className={H2}>{t(naru.how.heading)}</h2>
         <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
@@ -303,7 +336,7 @@ export default function NaruHome() {
             필요한 것은 언제가 아니라 무엇입니다. 날짜는 바로 아래 한 줄로
             내려갔고 그 문자열도 naruDates가 만듭니다. */}
         <h2 className={H2}>{t(naru.december.heading)}</h2>
-        <p className="mt-5 text-base font-semibold tracking-tight text-[#F2B183] sm:text-lg">
+        <p className="mt-6 text-base font-semibold tracking-tight text-[#F2B183] sm:text-lg">
           {formatDecemberDateLine(locale)}
         </p>
         {/* 첫 문장이 부정입니다. 8월을 아는 사람은 이 자리에서 반드시
@@ -341,7 +374,7 @@ export default function NaruHome() {
         {/* 스테이지 다섯. 날짜가 아니라 순서입니다 - 초안의 12/10~12/14와 확정된
             시작일 12월 9일이 아직 맞지 않아서(lib/naruDates.ts), 달력을 두 번
             말하면 바로 위 날짜 줄과 싸웁니다. */}
-        <div className="mx-auto mt-14 max-w-5xl text-left">
+        <div className="mx-auto mt-12 max-w-5xl text-left">
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
             {t(naru.december.stagesLabel)}
           </p>
@@ -401,7 +434,7 @@ export default function NaruHome() {
           </p>
         </div>
 
-        <p className="mt-10 text-sm text-white/55">{t(naru.december.ctaNote)}</p>
+        <p className="mt-12 text-sm text-white/55">{t(naru.december.ctaNote)}</p>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
           <OpenChatLink t={t} src="naru-december" label={openChatLabels.december} />
           <a
@@ -567,7 +600,7 @@ export default function NaruHome() {
             장식이라 1.4.11의 대상이 아닙니다. 빛 번짐을 더하지 마세요. */}
         <div
           aria-hidden
-          className="mx-auto mt-8 h-[2px] w-full max-w-[52rem] bg-gradient-to-r from-accent to-accent-strong"
+          className="mx-auto mt-6 h-[2px] w-full max-w-[52rem] bg-gradient-to-r from-accent to-accent-strong"
         />
 
         {/* 코어 둘. 두 줄 전부 그리고, 그 아래 "그래서 지키는 것"이 붙습니다.
@@ -585,7 +618,7 @@ export default function NaruHome() {
             ("그래서 지키는 것")이 카드 둘에 있어서, 제목으로 올리면 제목
             목록에 구별되지 않는 항목이 둘 생깁니다. #how의 하는 것/얻는 것이
             이미 같은 패턴을 씁니다. */}
-        <ol role="list" className="mx-auto mt-14 grid max-w-4xl gap-5 text-left sm:mt-16 md:grid-cols-2">
+        <ol role="list" className="mx-auto mt-12 grid max-w-4xl gap-5 text-left md:grid-cols-2">
           {naru.why.cores.map((core) => (
             <li
               key={core.index}
@@ -629,7 +662,7 @@ export default function NaruHome() {
             먼저 각각을 읽고, 그 다음에 둘이 한 쌍인 이유를 읽습니다.
             상자를 벗겼습니다 - 한 문장 둘레의 상자는 문장 대신 상자가
             봐 달라고 하는 것입니다. */}
-        <div className="mx-auto mt-10 max-w-4xl break-keep text-left">
+        <div className="mx-auto mt-6 max-w-4xl break-keep text-left">
           <p className="text-lg font-bold leading-snug text-white sm:text-xl">{t(naru.why.note)}</p>
           <p className="mt-3 break-keep text-sm leading-relaxed text-white/75">{t(naru.why.noteBody)}</p>
         </div>
@@ -679,7 +712,7 @@ export default function NaruHome() {
         {/* 마지막 줄. 페이지 전체가 여기서 끝납니다 - 위의 두 개를 빼면 전부
             방법이고, 방법은 바뀝니다(매니페스토 IV). 이 문장이 8일이 4일이 되는
             12월을 미리 설명합니다. */}
-        <div className="mx-auto mt-14 max-w-4xl text-left">
+        <div className="mx-auto mt-12 max-w-4xl text-left">
           <h3 className={LABEL_HEADING}>{t(naru.why.agendaLabel)}</h3>
           <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">{t(naru.why.agenda)}</p>
         </div>
