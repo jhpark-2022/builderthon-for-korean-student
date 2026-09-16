@@ -121,11 +121,31 @@ import MotionToggle from "@/components/ui/MotionToggle";
 
 // 카드 한 장. 8월의 Glass와 같은 값이지만, 그 컴포넌트는 Journey.tsx 안에
 // 있습니다. 두 줄짜리 래퍼를 꺼내려고 5,157줄 파일을 건드리지 않았습니다.
-function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+function Card({ children, className = "", id }: { children: React.ReactNode; className?: string; id?: string }) {
   return (
-    <div className={`rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-8 ${className}`}>
+    <div id={id} className={`rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-8 ${className}`}>
       {children}
     </div>
+  );
+}
+
+// 문장 안의 한 구절을 앵커로. notSequel의 "변하지 않는 두 개"가 #why로 갑니다.
+// 구절이 문장에 없으면(번역이 어긋나면) 링크 없이 문장만 그립니다. 깨진 링크보다
+// 링크 없는 문장이 낫습니다.
+function TermLink({ text, term, href }: { text: string; term: string; href: string }) {
+  const i = text.indexOf(term);
+  if (i < 0) return <>{text}</>;
+  return (
+    <>
+      {text.slice(0, i)}
+      <a
+        href={href}
+        className="underline decoration-white/30 underline-offset-4 transition hover:decoration-white"
+      >
+        {term}
+      </a>
+      {text.slice(i + term.length)}
+    </>
   );
 }
 
@@ -248,73 +268,16 @@ export default function NaruHome() {
         </div>
       </Chapter>
 
-      {/* ── CH2 · 어떻게 일하는가 ────────────────────────────────────────── */}
-      {/* 기본 이음매. 전에는 171px이었는데 바로 위 #record가 162px이었습니다.
-          9px 차이는 아무도 알아보지 못하면서 "여기는 다르다"고 주장만 합니다. */}
-      <Chapter id="how" align="center">
-        <Eyebrow color="purple">{t(naru.how.eyebrow)}</Eyebrow>
-        <h2 className={H2}>{t(naru.how.heading)}</h2>
-        <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
-          {t(naru.how.lead)}
-        </p>
-
-        <LayerDiagram t={t} />
-
-        {/* Overview 02의 표. 모바일에서는 카드 석 장으로 떨어집니다. 세 열
-            짜리 표를 390px에 밀어 넣으면 글자가 세로로 서고, 그러면 읽는
-            사람이 표를 가로로 긁어야 합니다. */}
-        <div className="mx-auto mt-12 grid max-w-5xl gap-4 text-left lg:grid-cols-3">
-          {naru.how.layers.map((layer) => (
-            <Card key={layer.role.en}>
-              <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
-                {t(layer.role)}
-              </p>
-              <p className="mt-2 break-keep text-lg font-bold text-white">{t(layer.who)}</p>
-              <dl className="mt-5 space-y-4">
-                <div>
-                  <dt className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/55">
-                    {t(naru.how.doesLabel)}
-                  </dt>
-                  <dd className="mt-1.5 break-keep text-sm leading-relaxed text-white/75">{t(layer.does)}</dd>
-                </div>
-                <div>
-                  <dt className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/55">
-                    {t(naru.how.getsLabel)}
-                  </dt>
-                  <dd className="mt-1.5 break-keep text-sm leading-relaxed text-white/75">{t(layer.gets)}</dd>
-                </div>
-              </dl>
-            </Card>
-          ))}
-        </div>
-
-        {/* 하지 않는 것. 짧게, 목록으로. 이 블록이 있어야 "그럼 어떻게
-            들어가나"라는 질문이 바로 다음 챕터로 넘어갑니다.
-            2026-09-16: 옆에 있던 "이름의 두 겹" 두 문단이 내려갔습니다. 그건
-            로고 가이드가 말하는 것이고, 이 챕터가 대답해야 하는 질문("어떻게
-            일하는가")과는 다른 질문의 답이었습니다. nameLines 키는 그대로
-            있습니다. 남은 블록 하나가 폭을 다 씁니다. */}
-        <div className="mx-auto mt-12 max-w-5xl rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-5 text-left">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
-            {t(naru.how.notDoingLabel)}
-          </p>
-          {/* role="list"입니다. Preflight가 모든 ul/ol에 list-style:none을
-              걸고, Safari + VoiceOver는 그 목록에서 리스트 의미를 통째로
-              떼어냅니다. 역할을 명시해야 "3개 중 1번"이 살아납니다. */}
-          <ul role="list" className="mt-3 grid gap-2.5 sm:grid-cols-3">
-            {naru.how.notDoing.map((line, i) => (
-              <li key={i} className="flex gap-2.5 break-keep text-sm leading-relaxed text-white/75">
-                <span aria-hidden className="mt-[0.55em] h-1 w-1 shrink-0 rounded-full bg-white/35" />
-                {t(line)}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Chapter>
-
-      {/* ── CH3 · 다음 이벤트 ────────────────────────────────────────────── */}
+      {/* ── CH2 · 다음 이벤트 ────────────────────────────────────────────── */}
       {/* 반대로 벌립니다. 여기서 과거가 끝나고 미래가 시작합니다. 공백 자체가
-          "장이 바뀐다"를 말하게 두는 유일한 이음매입니다. */}
+          "장이 바뀐다"를 말하게 두는 유일한 이음매입니다.
+
+          DECIDED 2026-09-17: #record 바로 뒤로 올라왔습니다. 위 문장이 처음으로
+          말 그대로가 됐어요. 전에는 그 사이에 #how가 있어서 과거(8월 실측)와
+          미래(12월 초안) 사이에 조직도가 끼어 있었고, 폰에서 12월 제목은
+          5.9화면, 본문의 첫 행동은 8.6화면이었습니다. 12월의 숫자는 전부
+          초안이라 8월의 실측에서 신뢰를 빌려야 하는데, 그 거리가 가장 짧은
+          자리가 여기입니다. 순서 근거는 data/naru.ts의 naruNav 주석에도. */}
       <Chapter id="december" align="center" className="pt-20 sm:pt-28 lg:pt-36">
         {/* 아이브로가 이름을 답니다. 이름이 별도의 줄이었을 때는 제목이 날짜라
             이름이 갈 곳이 그 아래뿐이었는데, 제목이 포지션으로 바뀌면서 이름은
@@ -343,8 +306,20 @@ export default function NaruHome() {
             "2회차인가"를 묻고, 그 오해를 그대로 두면 아래 문장이 전부 그 전제
             위에서 읽힙니다. */}
         <p className="mx-auto mt-6 max-w-2xl break-keep text-base font-semibold leading-relaxed text-white/85">
-          {t(naru.december.notSequel)}
+          <TermLink text={t(naru.december.notSequel)} term={t(naru.december.notSequelTerm)} href="#why" />
         </p>
+
+        {/* ── 이 챕터의 주 행동 (DECIDED 2026-09-17) ───────────────────────
+            전에는 챕터 맨 끝, 미정 목록 아래에 메일 링크와 같은 고스트로 나란히
+            있었습니다. 히어로의 주 CTA를 눌러 여기 착지한 사람은 제목만 보고
+            3화면을 더 내려가야 누를 것을 만났고, 만나서는 "소식 받기"와
+            "출제사 문의"를 같은 무게로 봤어요. 등록이 없는 페이지에서 이 버튼이
+            참가자의 유일한 문입니다. 제목 바로 아래, 흰 면으로 둡니다.
+            ctaNote가 참가 조건(스크리닝 없음)을 버튼 바로 위에서 말합니다. */}
+        <p className="mx-auto mt-12 max-w-2xl break-keep text-sm text-white/55">{t(naru.december.ctaNote)}</p>
+        <div className="mt-4 flex justify-center">
+          <OpenChatLink t={t} src="naru-december" label={openChatLabels.december} variant="primary" />
+        </div>
         {/* ── 이번 회차의 모양 ─────────────────────────────────────────
             2026-09-16: 여기 있던 것은 문단 여덟 개였습니다 - lead, 달라지는 것
             셋, 왜 국경을 여는가 둘, 누가 오는가, 그리고 "이벤트가 끝난 뒤에 할
@@ -361,7 +336,7 @@ export default function NaruHome() {
 
             ⚠️ draftNote를 이 블록에서 떼지 마세요. 아래 숫자 중 확정된 것은
             하나도 없습니다. */}
-        <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
+        <p className="mx-auto mt-12 max-w-2xl break-keep text-base leading-relaxed text-white/75">
           {t(naru.december.shapeLead)}
         </p>
 
@@ -434,17 +409,97 @@ export default function NaruHome() {
           </p>
         </div>
 
-        <p className="mt-12 text-sm text-white/55">{t(naru.december.ctaNote)}</p>
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-          <OpenChatLink t={t} src="naru-december" label={openChatLabels.december} />
+        {/* 출제사와 후원의 문. 참가자의 문(위 흰 버튼)보다 한 단계 아래라
+            텍스트 링크입니다. 메일 제목은 #join 기업 카드와 같습니다
+            (naruLinks.sponsor 주석). */}
+        <p className="mt-12 text-sm">
           <a
-            href={naruLinks.december}
+            href={naruLinks.sponsor}
             onClick={() => track("naru_mail", { src: "december" })}
-            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2.5 text-sm font-medium text-white/75 transition hover:border-white/35 hover:bg-white/10 hover:text-white"
+            className="inline-flex items-center gap-1.5 font-medium text-white/75 underline-offset-4 transition hover:text-white hover:underline"
           >
             {t(naru.december.ctaMail)}
-            <span aria-hidden className="text-white/50">→</span>
+            <span aria-hidden>→</span>
           </a>
+        </p>
+      </Chapter>
+
+      {/* ── CH3 · 어떻게 일하는가 ────────────────────────────────────────── */}
+      {/* DECIDED 2026-09-17: #december 뒤로 내려왔습니다(전에는 #record와
+          #december 사이). 이 챕터의 독자는 학생회 임원, 기업 담당자, 운영진,
+          곧 바로 아래 #join의 독자입니다. 12월을 예비하는 문장은 한 줄도 없었고,
+          그런데도 12월 앞에 서서 폰에서 2,140px를 쓰고 있었어요. 여기 있으면
+          "누가 이 자리를 만드는가"가 "그래서 각자의 문은 어디인가"로 바로
+          이어지고, "가입 폼 없음"을 두 챕터 떨어져 세 번 말하던 것도 붙습니다.
+          기본 이음매(216px)입니다. */}
+      <Chapter id="how" align="center">
+        <Eyebrow color="purple">{t(naru.how.eyebrow)}</Eyebrow>
+        <h2 className={H2}>{t(naru.how.heading)}</h2>
+        <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
+          {t(naru.how.lead)}
+        </p>
+
+        <LayerDiagram t={t} />
+
+        {/* Overview 02의 표. 모바일에서는 카드 석 장으로 떨어집니다. 세 열
+            짜리 표를 390px에 밀어 넣으면 글자가 세로로 서고, 그러면 읽는
+            사람이 표를 가로로 긁어야 합니다. */}
+        <div className="mx-auto mt-12 grid max-w-5xl gap-4 text-left lg:grid-cols-3">
+          {naru.how.layers.map((layer) => (
+            <Card key={layer.role.en}>
+              <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
+                {t(layer.role)}
+              </p>
+              <p className="mt-2 break-keep text-lg font-bold text-white">{t(layer.who)}</p>
+              <dl className="mt-5 space-y-4">
+                <div>
+                  <dt className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/55">
+                    {t(naru.how.doesLabel)}
+                  </dt>
+                  <dd className="mt-1.5 break-keep text-sm leading-relaxed text-white/75">{t(layer.does)}</dd>
+                </div>
+                <div>
+                  <dt className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/55">
+                    {t(naru.how.getsLabel)}
+                  </dt>
+                  <dd className="mt-1.5 break-keep text-sm leading-relaxed text-white/75">{t(layer.gets)}</dd>
+                </div>
+              </dl>
+              {/* 이 층의 문. #join의 해당 카드로 가는 앵커입니다(2026-09-17).
+                  새 목적지가 아니라 이정표라 텍스트 링크로 둡니다. */}
+              <a
+                href={`#${layer.join.id}`}
+                onClick={() => track("naru_cta", { src: "how", to: layer.join.id })}
+                className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-accent transition hover:text-white"
+              >
+                {t(layer.join.label)}
+                <span aria-hidden>→</span>
+              </a>
+            </Card>
+          ))}
+        </div>
+
+        {/* 하지 않는 것. 짧게, 목록으로. 이 블록이 있어야 "그럼 어떻게
+            들어가나"라는 질문이 바로 다음 챕터로 넘어갑니다.
+            2026-09-16: 옆에 있던 "이름의 두 겹" 두 문단이 내려갔습니다. 그건
+            로고 가이드가 말하는 것이고, 이 챕터가 대답해야 하는 질문("어떻게
+            일하는가")과는 다른 질문의 답이었습니다. nameLines 키는 그대로
+            있습니다. 남은 블록 하나가 폭을 다 씁니다. */}
+        <div className="mx-auto mt-12 max-w-5xl rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-5 text-left">
+          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
+            {t(naru.how.notDoingLabel)}
+          </p>
+          {/* role="list"입니다. Preflight가 모든 ul/ol에 list-style:none을
+              걸고, Safari + VoiceOver는 그 목록에서 리스트 의미를 통째로
+              떼어냅니다. 역할을 명시해야 "3개 중 1번"이 살아납니다. */}
+          <ul role="list" className="mt-3 grid gap-2.5 sm:grid-cols-3">
+            {naru.how.notDoing.map((line, i) => (
+              <li key={i} className="flex gap-2.5 break-keep text-sm leading-relaxed text-white/75">
+                <span aria-hidden className="mt-[0.55em] h-1 w-1 shrink-0 rounded-full bg-white/35" />
+                {t(line)}
+              </li>
+            ))}
+          </ul>
         </div>
       </Chapter>
 
@@ -458,7 +513,7 @@ export default function NaruHome() {
 
         <div className="mx-auto mt-12 grid max-w-5xl gap-4 text-left md:grid-cols-2">
           {naru.join.cards.map((card) => (
-            <Card key={card.who.en} className="flex flex-col">
+            <Card key={card.id} id={card.id} className="flex flex-col">
               <h3 className="break-keep text-lg font-bold text-white">{t(card.who)}</h3>
               {/* 첫 줄만 그립니다(2026-09-16). 둘째 줄은 전부 첫 줄의 조건과
                   다음 단계였고, 그건 메일을 보낸 뒤에 나눌 이야기입니다.
@@ -472,7 +527,7 @@ export default function NaruHome() {
                 ) : (
                   <a
                     href={card.door}
-                    onClick={() => track("naru_mail", { src: `join_${card.who.en}` })}
+                    onClick={() => track("naru_mail", { src: `join_${card.id}` })}
                     className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2.5 text-sm font-medium text-white/75 transition hover:border-white/35 hover:bg-white/10 hover:text-white"
                   >
                     {t(card.doorLabel)}
@@ -757,7 +812,7 @@ export default function NaruHome() {
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs">
             <OpenChatLink t={t} src="naru-footer" label={openChatLabels.footer} className="!px-3.5 !py-2 !text-xs" />
             <a
-              href={naruLinks.december}
+              href={naruLinks.general}
               onClick={() => track("naru_mail", { src: "footer" })}
               className="text-white/65 underline-offset-4 transition hover:text-white hover:underline"
             >

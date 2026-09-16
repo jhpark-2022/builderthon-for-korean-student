@@ -32,6 +32,7 @@ export default function OpenChatLink({
   src,
   label,
   className = "",
+  variant = "ghost",
 }: {
   t: Tfn;
   // 자리마다 누르는 이유가 다릅니다. 기본값(dict.register.openChatCta)은 8월
@@ -45,8 +46,31 @@ export default function OpenChatLink({
   // 접두사를 답니다. 두 페이지의 퍼널은 따로 읽어야 합니다.
   src: "band" | "footer" | "wrap" | "naru-december" | "naru-join" | "naru-footer";
   className?: string;
+  // DECIDED 2026-09-17: "primary"가 생겼습니다. 위 주석의 "이 칩은 어디에 있든
+  // 같은 무게"는 등록 버튼이 있는 페이지의 규칙이었습니다. 나루 홈 #december에는
+  // 등록이 없고, 이 링크가 그 챕터의 유일한 문인데 옆의 메일 링크와 같은
+  // 고스트로 나란히 서서 "소식 받기"와 "출제사 문의"가 동급으로 읽혔습니다.
+  // 히어로 주 CTA를 눌러 착지한 사람이 3화면을 더 내려가야 이 칩을 만나기도
+  // 했고요. 그 한 자리만 흰 면입니다(#record의 아카이브 버튼과 같은 면. 주황은
+  // 히어로의 원장이 막습니다). /2026-08과 나머지 자리는 기본값(ghost) 그대로.
+  variant?: "ghost" | "primary";
 }) {
   if (!links.openChat) return null;
+  if (variant === "primary") {
+    return (
+      <a
+        href={links.openChat}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => track("openchat_click", { src })}
+        className={`group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-bold text-naru-navy transition hover:-translate-y-0.5 hover:bg-white/90 sm:px-8 sm:text-base ${className}`}
+      >
+        <ChatGlyph className="h-4 w-4 shrink-0" />
+        {t(label ?? dict.register.openChatCta)}
+        <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+      </a>
+    );
+  }
   return (
     // Ghost CHIP, not a bare underlined line. At text-white/60 with a hairline
     // underline this read as a footnote and was skipped — which defeats the

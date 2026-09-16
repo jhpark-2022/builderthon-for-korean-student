@@ -74,12 +74,19 @@ const CONTACT = "pjh030924@gmail.com";
 
 export const naruLinks = {
   contact: CONTACT,
-  /** 12월 이벤트 일반 문의 (출제사, 후원). */
-  december: `mailto:${CONTACT}?subject=${encodeURIComponent("크로싱 서울 문의")}`,
+  /** 자리를 가리지 않는 일반 문의. 푸터가 씁니다. */
+  general: `mailto:${CONTACT}?subject=${encodeURIComponent("나루 문의")}`,
   /** 학생회 주관 문의. */
   organiser: `mailto:${CONTACT}?subject=${encodeURIComponent("나루 학생회 주관 문의")}`,
-  /** 기업 후원 문의. */
-  sponsor: `mailto:${CONTACT}?subject=${encodeURIComponent("나루 후원 문의")}`,
+  /**
+   * 출제사와 후원 문의. #december의 메일과 #join 기업 카드가 같은 문입니다.
+   *
+   * DECIDED 2026-09-17: 전에는 #december가 "크로싱 서울 문의", 기업 카드가
+   * "나루 후원 문의"로 갈라져 있었습니다. 같은 사람이 어디서 눌렀느냐에 따라
+   * 편지함의 스레드 제목이 달라졌고, #december의 라벨은 "출제사 및 후원"인데
+   * 제목에는 그 말이 없었어요. 문은 하나이고 제목은 라벨과 같은 말을 합니다.
+   */
+  sponsor: `mailto:${CONTACT}?subject=${encodeURIComponent("나루 출제사 및 후원 문의")}`,
   /** 운영진 관심. */
   crew: `mailto:${CONTACT}?subject=${encodeURIComponent("나루 운영진 문의")}`,
   /** 8월 알럼이 자기 이야기를 보내는 자리. #people 챕터의 유일한 공급원입니다. */
@@ -96,7 +103,8 @@ export const naruLinks = {
 // 여섯 개인 이유: 홈은 8월 페이지와 달리 한 화면에 다 들어가는 길이라, 앵커가
 // 챕터 수를 넘지 않습니다. #people은 목록에 없습니다. 스토리가 비어 있으면
 // 챕터 자체가 렌더되지 않아서, 앵커만 남으면 아무 데도 가지 않는 칩이 됩니다.
-// TODO: 스토리가 들어오면 #people을 #december 앞에 더하세요.
+// TODO: 스토리가 들어오면 #people을 #join 뒤, #why 앞에 더하세요. NaruHome이
+// 그 자리에 그립니다(2026-09-17에 주석과 렌더가 어긋나 있던 것을 맞췄습니다).
 // ─────────────────────────────────────────────────────────────────────────────
 // ── P3. 오픈채팅 라벨 (DECIDED 2026-09-15) ─────────────────────────────────
 // OpenChatLink는 기본 라벨을 dict.register.openChatCta에서 읽습니다. 그 문장은
@@ -118,16 +126,27 @@ export const openChatLabels = {
 } as const;
 
 // DECIDED 2026-09-16: #why가 맨 아래로 갑니다. 목록의 순서는 페이지의 순서와
-// 반드시 같아야 합니다 — 여기가 화면 순서와 어긋나면, 앵커를 눌러 내려간 사람이
+// 반드시 같아야 합니다. 여기가 화면 순서와 어긋나면, 앵커를 눌러 내려간 사람이
 // 한 칸 위로 튀어 오르고 현위치 표시가 목록을 거꾸로 훑습니다.
 //
-// 순서가 바뀐 이유는 챕터 쪽에 적어 두었습니다(NaruHome.tsx의 CH5 · 왜 존재하는가).
+// 순서가 바뀐 이유는 챕터 쪽에 적어 두었습니다(NaruHome.tsx의 CH6 · 왜 존재하는가).
 // 한 줄로 줄이면: 프로그램이 좋아야 메시지에 값이 생깁니다.
+//
+// DECIDED 2026-09-17: #december가 #how 앞으로 갑니다.
+// 실측(390px, ko)에서 12월 제목이 5.9화면, 본문의 첫 행동이 8.6화면에 있었습니다.
+// 그 사이에 있던 #how는 학생회와 기업, 운영진이 읽는 챕터이고, 12월을 예비하는
+// 문장은 한 줄도 없었습니다. 이벤트 줄(8월 → 12월)을 먼저 끝내고, 조직 줄
+// (세 층 → 문 → 이유)을 통째로 뒤에 둡니다. 히어로 서브의 두 문장 순서와
+// 챕터 순서가 같아집니다. 자세한 근거는 NaruHome.tsx의 CH3 주석.
+//
+// "세 층"이 "학생회와 기업"이 된 이유: 그 챕터를 읽어야 하는 사람(학생회 임원,
+// 기업 담당자)이 헤더에서 자기 자리를 찾지 못했습니다. 층이라는 말은 읽고 난
+// 뒤에야 뜻이 통하는 이름이고, 헤더는 읽기 전에 고르는 자리입니다.
 export const naruNav: { id: string; label: Phrase }[] = [
   { id: "top", label: { ko: "나루", en: "NARU" } },
   { id: "record", label: { ko: "8월의 기록", en: "August" } },
-  { id: "how", label: { ko: "세 층", en: "Three layers" } },
   { id: "december", label: { ko: "12월", en: "December" } },
+  { id: "how", label: { ko: "학생회와 기업", en: "Councils and companies" } },
   { id: "join", label: { ko: "함께", en: "Join" } },
   { id: "why", label: { ko: "왜", en: "Why" } },
 ];
@@ -168,9 +187,18 @@ export interface Layer {
   brings: Phrase;
   does: Phrase;
   gets: Phrase;
+  /**
+   * 이 층의 사람이 문의하는 문. #join의 카드 id와 그 링크의 라벨입니다.
+   * 2026-09-17: #how에서 #join으로 가는 길이 없어서, 학생회 임원과 기업 담당자가
+   * 헤더의 "함께"를 눌러야 한다는 것을 스스로 알아내야 했습니다. 새 목적지는
+   * 없고 앵커만 답니다.
+   */
+  join: { id: string; label: Phrase };
 }
 
 export interface JoinCard {
+  /** 앵커 id. #how의 층 카드가 여기로 옵니다. 바꾸면 Layer.join.id도 같이. */
+  id: string;
   who: Phrase;
   lines: [Phrase, Phrase];
   doorLabel: Phrase;
@@ -709,9 +737,11 @@ export const naru = {
   how: {
     eyebrow: { ko: "세 층", en: "Three layers" },
     heading: { ko: "어떻게 일하는가", en: "How we work" },
+    // 첫 문장은 2026-09-17에 붙었습니다. 이 챕터가 #december 뒤로 오면서, 왜
+    // 12월 다음에 조직도가 나오는지를 첫 줄이 말해야 했습니다.
     lead: {
-      ko: "학생회와 기업은 서로 직접 만나지 않습니다. 나루를 거쳐 만납니다. 이벤트는 지금 그 둘을 잇는 방식이고, 방식은 바뀔 수 있습니다.",
-      en: "Student associations and companies never meet each other directly. They meet through NARU. An event is how the two are connected for now, and that can change.",
+      ko: "8월의 자리도 12월의 자리도 같은 세 층이 만듭니다. 학생회와 기업은 서로 직접 만나지 않습니다. 나루를 거쳐 만납니다. 이벤트는 지금 그 둘을 잇는 방식이고, 방식은 바뀔 수 있습니다.",
+      en: "August's place and December's are made by the same three layers. Student associations and companies never meet each other directly. They meet through NARU. An event is how the two are connected for now, and that can change.",
     },
     diagramNote: {
       ko: "서로 직접 만나지 않습니다",
@@ -730,6 +760,7 @@ export const naru = {
           ko: "회차의 책임과 이름. 다음 판을 깔 사람.",
           en: "The responsibility and the name of the round. The people who will set up the next one.",
         },
+        join: { id: "join-crew", label: { ko: "운영진으로 함께하기", en: "Join the crew" } },
       },
       {
         role: { ko: "주관 ORGANISER", en: "ORGANISER" },
@@ -745,6 +776,7 @@ export const naru = {
           ko: "학생에게 열어 줄 자리. 임기를 마친 임원이 이어서 일할 자리.",
           en: "Something real to open up for their students. A place for officers to keep working after their term ends.",
         },
+        join: { id: "join-organiser", label: { ko: "학생회로 문의하기", en: "As an association" } },
       },
       {
         role: { ko: "후원 SPONSOR", en: "SPONSOR" },
@@ -758,6 +790,7 @@ export const naru = {
           ko: "한인 학생과의 접점. 채용 연계. 회차 크레딧.",
           en: "A way to reach Korean students. A hiring pipeline. Credit on the round.",
         },
+        join: { id: "join-company", label: { ko: "기업으로 문의하기", en: "As a company" } },
       },
     ] as Layer[],
     doesLabel: { ko: "하는 것", en: "What they do" },
@@ -820,10 +853,18 @@ export const naru = {
     // 첫 문장이 부정으로 시작하는 것은 의도입니다. 8월을 아는 사람은 이 자리에서
     // 반드시 "2회차인가"를 묻고, 그 오해를 그대로 두면 나머지 문장이 전부 그
     // 전제 위에서 읽힙니다. 먼저 끊고 시작합니다.
+    //
+    // 2026-09-17: "코어 2개"가 "변하지 않는 두 개"가 됐습니다. 같은 것을 이 페이지가
+    // 낱말 넷으로 불렀습니다(코어 2개, 변하지 않는 두 개, 두 가지, 위의 두 개).
+    // 처음 읽는 사람은 같은 것인지 모릅니다. #why의 아이브로와 같은 말로 묶고,
+    // NaruHome이 그 구절을 #why로 가는 링크로 그립니다(notSequelTerm이 그 구절).
+    // 두 챕터 뒤에서 풀리는 전방 참조가 이름 있는 앵커가 됩니다.
     notSequel: {
-      ko: "제로백 빌더톤의 2회차가 아닙니다. 그 이벤트에서 나온 코어 2개를 그대로 잇는, 나루의 다음 이벤트입니다.",
-      en: "This is not a second run of the Zero100 builderthon. It is NARU's next event, carrying the two cores that came out of that one.",
+      ko: "제로백 빌더톤의 2회차가 아닙니다. 그 8일에서 나온 변하지 않는 두 개를 그대로 잇는, 나루의 다음 이벤트입니다.",
+      en: "This is not a second run of the Zero100 builderthon. It is NARU's next event, carrying the two things that do not change, both of which came out of those eight days.",
     },
+    /** notSequel 안에서 #why로 링크되는 구절. notSequel의 문자열에 그대로 들어 있어야 합니다. */
+    notSequelTerm: { ko: "변하지 않는 두 개", en: "the two things that do not change" },
     // **지금은 쓰이지 않습니다.** DECEMBER_EVENT_NAME이 채워져서(크로싱 서울,
     // 2026-09-15) NaruHome이 이 줄 대신 이름을 그립니다.
     //
@@ -963,9 +1004,12 @@ export const naru = {
     // 나란히 놓으면 바로 위 날짜 줄과 싸웁니다. 기간은 "실질 4일 + 사전 팀
     // 본딩"까지만 말하고, 달력은 naruDates 하나가 갖습니다.
     shapeLabel: { ko: "이번 회차의 모양", en: "The shape of this round" },
+    // 첫 문장은 2026-09-17에 changes[1]에서 한 문장만 빌려 왔습니다. #record가
+    // 바로 앞에 오면서 8월과 12월을 잇는 경첩이 필요했고, "왜 raw data인가"의
+    // 근거이기도 합니다. changes 블록 전체를 되살린 것은 아닙니다.
     shapeLead: {
-      ko: "raw data에서 문제를 찾는 것부터 증명까지, 한 사이클을 닷새로 압축합니다.",
-      en: "From finding a problem in raw data to proving it out front: one full cycle, compressed into five days.",
+      ko: "8월에는 기업이 정제한 문제를 받았습니다. 12월은 raw data에서 문제를 찾는 것부터 증명까지, 한 사이클을 닷새로 압축합니다.",
+      en: "In August the problem arrived already cleaned by the company. In December, from finding a problem in raw data to proving it out front: one full cycle, compressed into five days.",
     },
     draftNote: {
       ko: "기획 초안입니다. 확정되면 이 자리에서 바로 고칩니다.",
@@ -979,12 +1023,19 @@ export const naru = {
       {
         value: { ko: "3곳", en: "3" },
         label: { ko: "문제를 여는 회사", en: "companies opening a problem" },
-        note: { ko: "raw data와 담당자까지", en: "raw data and the person who owns it" },
+        // "목표"가 붙은 이유(2026-09-17): 같은 항목이 아래 tbd 목록에도 "문제를
+        // 여는 회사"로 있습니다. 한 화면에서 숫자이자 미정이면 초안 고지로는
+        // 가려지지 않습니다. 숫자는 목표라고 말하고, 미정은 미정 목록이 말합니다.
+        note: { ko: "목표. raw data와 담당자까지", en: "Target. Raw data and the person who owns it" },
       },
       {
         value: { ko: "60명+", en: "60+" },
         label: { ko: "참가 규모", en: "participants" },
-        note: { ko: "알럼과 한국 대학생", en: "Alumni and students in Korea" },
+        // 2026-09-17: "알럼과 한국 대학생"이었습니다. 9/16에 lead와 who가 화면에서
+        // 내려간 뒤 이 여덟 글자가 12월 블록에 남은 유일한 참가 대상 문구였고,
+        // 싱가포르 밖에서 공부하는 한인 유학생을 정확히 제외했습니다. 포지션
+        // 브리프 §2가 금지한 바로 그 문장이었어요. 인원과 비율은 여전히 쓰지 않습니다.
+        note: { ko: "한국의 대학생과 해외의 한인 유학생", en: "Students in Korea and Korean students abroad" },
       },
       {
         value: { ko: "2회", en: "2" },
@@ -1057,13 +1108,27 @@ export const naru = {
       { ko: "일정표", en: "The schedule" },
       { ko: "문제를 여는 회사", en: "The companies opening problems" },
       { ko: "멘토", en: "The mentors" },
+      // TODO: confirm. 한국 안의 학교에서 누가 주관 자리에 서는지는 미정입니다
+      // (how.layers[1]의 같은 TODO). 2026-09-17까지는 코드 주석에만 있었는데,
+      // 이 레포의 원칙은 미정을 화면에 적는 것입니다. 없는 것은 미정이 아니라
+      // 부실로 읽힙니다. 학생회 임원이 "우리 학교도 되나"를 물으러 와서 답을
+      // 찾지 못하고 있었습니다.
+      { ko: "주관 학생회", en: "The organising associations" },
       { ko: "등록이 열리는 날", en: "The day registration opens" },
     ],
     tbdNote: {
       ko: "이 목록은 한 줄씩 채워집니다. 채워지는 날은 오픈채팅이 가장 먼저 압니다.",
       en: "This list gets filled in one line at a time. The open chat hears each one first.",
     },
-    ctaNote: { ko: "등록은 아직 열리지 않았습니다.", en: "Registration is not open yet." },
+    // 둘째 문장은 2026-09-17에 붙었습니다. 참가 조건("스크리닝 없음")이 12월
+    // 블록에 한 번도 없었습니다. changes[2]에 셋이 나란히 있었는데 9/16에
+    // 내려가면서 무순위와 상시 멘토링은 shape 칸으로 살아남고 첫 항목만
+    // 떨어졌어요. 결정 지점(등록 안내와 오픈채팅 버튼) 바로 옆이 그 조건이
+    // 있어야 하는 자리입니다.
+    ctaNote: {
+      ko: "등록은 아직 열리지 않았습니다. 열리면 스크리닝 없이, 오는 사람이 참가자입니다.",
+      en: "Registration is not open yet. When it opens there is no screening. If you come, you are in.",
+    },
     ctaMail: { ko: "출제사 및 후원 문의", en: "Problem owners and sponsors" },
   },
 
@@ -1113,6 +1178,7 @@ export const naru = {
     },
     cards: [
       {
+        id: "join-participant",
         who: { ko: "참가자", en: "Participants" },
         lines: [
           {
@@ -1129,6 +1195,7 @@ export const naru = {
         openChat: true,
       },
       {
+        id: "join-organiser",
         who: { ko: "학생회", en: "Student associations" },
         lines: [
           {
@@ -1144,6 +1211,7 @@ export const naru = {
         door: naruLinks.organiser,
       },
       {
+        id: "join-company",
         who: { ko: "기업", en: "Companies" },
         lines: [
           {
@@ -1159,6 +1227,7 @@ export const naru = {
         door: naruLinks.sponsor,
       },
       {
+        id: "join-crew",
         who: { ko: "운영진", en: "Crew" },
         lines: [
           {
