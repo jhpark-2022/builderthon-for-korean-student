@@ -378,26 +378,26 @@ export default function NaruHome() {
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
             {t(naru.december.stagesLabel)}
           </p>
-          {/* role="list": 위 notDoing과 같은 이유입니다. */}
+          {/* role="list": 위 notDoing과 같은 이유입니다.
+
+              REMOVED 2026-09-16 (2차): 칸 맨 위의 00~04 번호 줄.
+
+              그 줄이 하는 일이 없었습니다. 순서는 바로 아래 when("본 일정 전",
+              "1일차"...)이 글로 말하고, 그게 원래 그 사실이 있어야 할 자리예요.
+              게다가 화면은 00부터 세는데 <ol>은 1부터 세서, VoiceOver가
+              "2 of 5"라고 읽는 칸에 눈에는 01이 보였습니다. aria-hidden으로
+              가려 두고 있었는데, 가려야 하는 것은 대개 없어도 되는 것입니다.
+
+              이제 칸은 이름 / 언제 / 무슨 일 셋입니다. 번호가 쓰던 줄 하나가
+              그대로 사라졌어요. */}
           <ol role="list" className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-            {naru.december.stages.map((stage, i) => (
+            {naru.december.stages.map((stage) => (
               <li
                 key={stage.name.en}
                 className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4"
               >
-                {/* 순서 번호는 첫 칸(Team Bonding)만 비웁니다. 그건 본 일정
-                    전에 있는 일이라 1일차가 아니에요.
-
-                    aria-hidden인 이유(2026-09-16): 화면은 00~04를 세는데 <ol>은
-                    1~5를 셉니다. 그대로 두면 VoiceOver가 "2 of 5"라고 읽는 칸에
-                    눈에는 01이 보여요. 번호를 숨기면 보조기술은 ol의 순서만
-                    듣고, "본 일정 전"이라는 사실은 바로 아래 stage.when이 글로
-                    말합니다. 그게 원래 그 문장이 있어야 할 자리입니다. */}
-                <span aria-hidden className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
-                  {i === 0 ? "00" : String(i).padStart(2, "0")}
-                </span>
-                <p className="mt-2 text-sm font-bold text-white">{t(stage.name)}</p>
-                <p className="mt-0.5 text-xs text-white/50">{t(stage.when)}</p>
+                <p className="text-sm font-bold text-white">{t(stage.name)}</p>
+                <p className="mt-0.5 text-xs text-accent">{t(stage.when)}</p>
                 <p className="mt-3 break-keep text-sm leading-relaxed text-white/65">{t(stage.body)}</p>
               </li>
             ))}
@@ -624,21 +624,36 @@ export default function NaruHome() {
               key={core.index}
               className="flex flex-col rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-8"
             >
-              <div className="flex items-center gap-3">
-                <NaruMark className="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
-                {/* 번호가 accent에서 white/55로 내려온 것은, 12px 옆에 주황
-                    점이 있는데 숫자까지 보라면 한 뜻짜리 표식이 두 색 덩어리가
-                    되기 때문입니다. 이 줄에서 색을 가진 것은 점 하나뿐이어야
-                    합니다. */}
-                <span aria-hidden className="text-xs font-black tracking-[0.3em] text-white/55">
-                  {core.index}
-                </span>
-              </div>
               {/* H3입니다(2026-09-16). 전에는 text-lg sm:text-xl이라 이 챕터만의
                   즉석 크기였고, 무엇보다 "두 가지"를 약속하는 h2의 3분의 1
                   크기였습니다. 페이지 마지막 화면에서 가장 큰 것이 반쪽짜리
-                  문장이었어요. 약속의 내용이 약속보다 작으면 안 됩니다. */}
-              <h3 className={`mt-4 ${H3}`}>{t(core.title)}</h3>
+                  문장이었어요. 약속의 내용이 약속보다 작으면 안 됩니다.
+
+                  DECIDED 2026-09-16 (2차): 번호(01/02)를 지우고 나루 점을 제목
+                  줄로 들였습니다.
+
+                  전에는 카드가 네 층이었어요. 번호 줄 / 제목 / 본문 / 지키는 것.
+                  맨 위 줄이 하는 일은 "01"이라고 말하는 것 하나뿐인데 제 몫의
+                  높이를 다 가져갔습니다. 그리고 그 번호는 아무 일도 하지
+                  않았어요. 카드가 둘이고 나란히 있으니 몇 개인지는 보면 알고,
+                  순서는 ol이 이미 나릅니다(번호는 원래 aria-hidden이었습니다).
+                  없어도 되는 것에 줄 하나를 주고 있었습니다.
+
+                  표식은 남깁니다. 그게 로고와 배경을 잇는 선이라서요. 대신
+                  자기 줄을 갖지 않고 제목의 첫 글자 앞에 섭니다.
+
+                  크기가 em인 이유: H3이 clamp라 24.3~34.2px 사이에서 움직입니다.
+                  px로 박으면 좁은 화면에서 점이 제목보다 커져요. 0.75em이면
+                  18.2~25.6px이고, 로고 가이드의 하한 18px을 좁은 쪽 끝에서
+                  정확히 지킵니다. 더 줄이지 마세요 - 링이 지름의 5/26이라 그
+                  아래로는 1x 화면에서 흐린 후광으로 뭉갭니다.
+
+                  mt는 첫 줄의 글자 한가운데에 점을 맞추는 값입니다(leading-snug
+                  기준). H3의 line-height를 바꾸면 여기도 다시 재세요. */}
+              <h3 className={`flex items-start gap-3 ${H3}`}>
+                <NaruMark className="mt-[0.26em] h-[0.75em] w-[0.75em]" />
+                <span>{t(core.title)}</span>
+              </h3>
               <div className="mt-5 flex-1 space-y-3">
                 {core.lines.map((line, i) => (
                   <p key={i} className="break-keep text-sm leading-relaxed text-white/75">
@@ -685,13 +700,14 @@ export default function NaruHome() {
           <p className="mt-3 break-keep text-sm leading-relaxed text-white/75">
             {t(naru.why.execLead)}
           </p>
+          {/* i/ii 번호 줄을 지웠습니다(2026-09-16 2차). 코어 카드와 같은
+              이유입니다 - 둘뿐이고 나란히 있어서 세어 줄 필요가 없고, 순서는
+              ol이 나릅니다. item.index 키는 data/naru.ts에 그대로 있으니
+              되살릴 때 쓰세요. */}
           <ol role="list" className="mt-6 grid gap-6 md:grid-cols-2">
             {naru.why.exec.map((item) => (
               <li key={item.index} className="border-t border-white/10 pt-5">
-                <span aria-hidden className="text-xs font-black lowercase tracking-[0.3em] text-white/55">
-                  {item.index}
-                </span>
-                <h4 className="mt-2 break-keep text-base font-bold leading-snug text-white">
+                <h4 className="break-keep text-base font-bold leading-snug text-white">
                   {t(item.title)}
                 </h4>
                 <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">{t(item.body)}</p>
