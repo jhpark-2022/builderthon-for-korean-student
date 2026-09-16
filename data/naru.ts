@@ -466,10 +466,19 @@ export const naru = {
         width: 1200,
         height: 900,
         day: { ko: "Day 5", en: "Day 5" },
-        caption: { ko: "중간에 한 번 모였습니다", en: "Halfway through, everyone gathered once" },
+        // 캡션 셋의 아크는 시작 → 물음 → 증명입니다(2026-09-16).
+        // "중간에 한 번 모였습니다"였는데, 그건 모인 사실만 말하고 거기서 무슨
+        // 일이 있었는지는 말하지 않았습니다. Day 5는 *SCAPE 현장에서 서로
+        // 앞에 공유하고, 트랙을 섞어 이야기하고, 문제를 낸 코드프레소 대표와의
+        // 시간으로 닫은 날입니다(data/schedule.ts의 d5-networking-day).
+        // 이 사진도 앞에 앉은 두 사람과 객석이 주고받는 자리예요.
+        caption: {
+          ko: "궁금한 건 그 자리에서 바로 물었습니다",
+          en: "Whatever you wanted to know, you asked right there",
+        },
         alt: {
-          ko: "Day 5 세션, 앉아서 발표를 듣고 있는 참가자들",
-          en: "Day 5 session: participants seated and listening",
+          ko: "Day 5 *SCAPE 현장, 앞에 앉은 두 사람과 이야기를 주고받는 참가자들",
+          en: "Day 5 at *SCAPE: two people seated at the front, the room talking with them",
         },
       },
       {

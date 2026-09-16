@@ -35,6 +35,8 @@ export class WaterSurface {
         uAspect: { value: 1 },
         uPointer: { value: new THREE.Vector2(0.5, 0.5) },
         uPointerOn: { value: 0 },
+        // 스크롤 속도 0..1. 깊은 물의 물살을 늘이고 링을 빠르게 합니다.
+        uFlow: { value: 0 },
         // 밤하늘 꼭대기. 남색보다 더 어둡게 떨어뜨립니다.
         uSkyTop: { value: new THREE.Color("#03050F") },
         // 지평선의 남색. 로고 가이드의 #12246B를 그대로 쓰면 화면 가운데가
@@ -90,13 +92,19 @@ export class WaterSurface {
    *              더 이상 늘지 않아 수면이 그 자리에 얼어붙습니다.
    * @param pointer  화면 uv (0..1). y는 위가 1입니다.
    * @param on  포인터가 화면 안에 있는가. 터치 기기에서는 0으로 둡니다.
+   * @param flow  스크롤 속도 0..1. 깊은 물의 물살이 여기에 반응합니다.
+   *              모션 민감 설정에서도 끄지 않습니다 - 이건 자동으로 시작되는
+   *              움직임이 아니라 손가락이 만든 것이라, WCAG 2.2.2의 대상이
+   *              아닙니다(BackgroundScene의 applyReducedMotion 주석과 같은
+   *              기준입니다).
    */
-  update(time: number, scroll: number, pointer: THREE.Vector2, on: number) {
+  update(time: number, scroll: number, pointer: THREE.Vector2, on: number, flow = 0) {
     const u = this.material.uniforms;
     u.uTime.value = time;
     u.uScroll.value = scroll;
     u.uPointer.value.copy(pointer);
     u.uPointerOn.value = on;
+    u.uFlow.value = flow;
   }
 
   dispose() {

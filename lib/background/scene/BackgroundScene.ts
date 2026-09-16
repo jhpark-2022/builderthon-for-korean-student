@@ -57,6 +57,11 @@ export class BackgroundScene {
   private running = false;
   private reduced = false;
   private scroll = 0;
+  // 스크롤 속도 0..1. 깊은 물의 물살이 여기에 반응합니다(shaders/water.ts의
+  // uFlow). 원시 값을 그대로 넘기면 프레임마다 튀어서, 아래 loop에서 지수
+  // 감쇠로 부드럽게 합니다. 올라갈 때는 빠르게, 잦아들 때는 천천히.
+  private flow = 0;
+  private prevScroll = 0;
   private visible = true;
   // 방문자가 직접 끈 상태. prefers-reduced-motion과 별개입니다.
   // WCAG 2.2.2는 5초를 넘겨 자동으로 시작하는 움직임에 "일시정지, 정지, 또는
@@ -218,6 +223,16 @@ export class BackgroundScene {
 
     this.fieldTime += dt * this.motionScale;
 
+    // 스크롤 속도. 초당 진행률을 0.6(한 화면을 빠르게 넘기는 속도)으로 나눠
+    // 0..1로 봅니다. 감쇠 계수가 비대칭인 것이 요점입니다: 손가락이 움직이면
+    // 즉시 반응하고(12), 멈추면 물살이 서서히 잦아듭니다(1.8). 대칭이면
+    // 스크롤을 멈춘 순간 배경도 같이 뚝 멈춰서, 물이 아니라 스위치로 보여요.
+    const perSec = Math.abs(this.scroll - this.prevScroll) / Math.max(dt, 1e-3);
+    this.prevScroll = this.scroll;
+    const target = clamp(perSec / 0.6, 0, 1);
+    const k = target > this.flow ? 12 : 1.8;
+    this.flow += (target - this.flow) * Math.min(1, k * dt);
+
     if (this.water) {
       // 포인터 ndc(-1..1)를 화면 uv(0..1)로. 셰이더가 파문을 여기에 놓습니다.
       this.pointerUv.set(
@@ -226,7 +241,7 @@ export class BackgroundScene {
       );
       // 모션 민감 설정에서는 파문도 끕니다. 커서를 따라오는 물결은 자동으로
       // 시작되는 움직임은 아니지만, 정지를 고른 사람에게 줄 이유도 없습니다.
-      this.water.update(this.fieldTime, this.scroll, this.pointerUv, this.reduced ? 0 : 1);
+      this.water.update(this.fieldTime, this.scroll, this.pointerUv, this.reduced ? 0 : 1, this.flow);
     } else {
       this.atmosphere?.update(this.fieldTime, this.scroll, phases.reveal);
       this.particles?.update(this.fieldTime, this.pointer.world, this.scroll, this.motionScale, phases);
