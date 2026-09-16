@@ -16,7 +16,8 @@ import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
 // RecordTabs는 2026-09-16에 화면에서 내려갔습니다. 파일은 그대로 둡니다 -
 // 8월 정본을 직접 읽는 유일한 컴포넌트이고, 되살릴 자리가 여기 #record입니다.
-import { H2, H3 } from "@/components/ui/typography";
+import { H2, H3, LABEL_HEADING } from "@/components/ui/typography";
+import NaruMark from "@/components/ui/NaruMark";
 import MotionToggle from "@/components/ui/MotionToggle";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -151,9 +152,12 @@ export default function NaruHome() {
             .replace("{name}", decemberEventLabel(locale))}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3 sm:mt-9">
-          {/* 주 CTA. 주황은 이 사이트에서 이 버튼과 12월 챕터의 아이브로,
-              그리고 배경 필드의 가장 뜨거운 입자에만 있습니다. 더 늘리지
-              마세요. 늘리면 로고 한가운데의 나루 점이 눈에 띄지 않습니다.
+          {/* 주 CTA. 주황 원장(2026-09-16 실측 후 갱신):
+                면  이 버튼, 12월 아이브로. 둘뿐입니다.
+                점  #why 코어 둘의 나루 표식(NaruMark), 배경 깊은 물의 점.
+                글자 12월 날짜 줄과 아이브로의 #F2B183 틴트.
+              늘리지 마세요. 늘리면 로고 한가운데의 나루 점이 눈에 띄지 않습니다.
+              3층 다이어그램의 주황 워시는 같은 날 걷었습니다(LayerDiagram 주석).
               글자를 남색으로 두는 것은 대비 때문입니다(주황 위 흰 글자는
               2.50:1, 남색 글자는 5.63:1. 실측 2026-09-15). */}
           <a
@@ -527,96 +531,157 @@ export default function NaruHome() {
           #people(조건부)보다도 아래입니다. 그 챕터가 채워지면 사람의 이야기가
           이 두 문장 바로 앞에 서고, 그게 이 페이지가 끝나는 가장 좋은 방법
           입니다. */}
-      <Chapter id="why" align="center">
+      {/* ── 강조 장치 (2026-09-16) ──────────────────────────────────────
+          이 챕터는 페이지의 결론인데 여느 챕터처럼 읽혔습니다. 원인은 크기가
+          아니라 위계였어요. 안에 비슷한 무게의 블록이 여섯 개 있었고, 전부
+          페이지의 다른 곳에서 네 번에서 아홉 번씩 쓰는 어휘였습니다. 챕터가
+          표시되지 않았고, 챕터 안에서도 아무것도 표시되지 않았습니다.
+
+          고친 것 다섯.
+
+          1. 다가가는 공백. lg에서 이음매가 306px입니다. 12월(270px)보다 크고
+             페이지에서 가장 큽니다. 공백은 대비도 팔레트도 쓰지 않는 유일한
+             강조 수단이고, 결론에는 멈춤 뒤에 도착하는 것이 맞습니다.
+          2. 카드를 코어 둘에만 남깁니다. exec·measure·note에서 상자를 걷고
+             헤어라인과 여백으로 나눴습니다. 변하지 않는 두 개가 챕터에서
+             면을 가진 유일한 물체가 되고, 그게 주장을 배치로 그린 것입니다.
+          3. 서명 헤어라인. from-accent to-accent-strong 2px입니다. 이미
+             모달들이 쓰는 장치인데 홈에서는 한 번도 쓰지 않았어요. 보라에서
+             자주로 흐르는 방향이 로고 그라데이션과 같습니다. 이 페이지에서
+             여기 한 번만 씁니다. 다른 챕터로 복사하지 마세요.
+          4. 나루 점. 코어 번호 자리에 링과 점(components/ui/NaruMark.tsx).
+             배경의 깊은 물이 이미 같은 표식을 그리고 있어서, 머리의 로고 →
+             물속의 점 → 여기로 고리가 닫힙니다.
+          5. 순서를 되돌립니다. 코어 → note → [긴 공백] → exec → agenda.
+             note("문턱이 낮아야 커지고...")는 코어 둘이 한 쌍인 이유를
+             말하는 문장이라 그 둘 바로 아래에 있어야 합니다. 9/16 오전에
+             exec를 끼워 넣으면서 사이가 벌어져 있었어요.
+
+          ⚠️ 주황을 여기 더하지 마세요. 나루 점 둘이 더한 주황은 3층
+          다이어그램의 주황 워시를 걷어내서 이미 값을 치렀습니다(LayerDiagram
+          주석). 페이지의 주황 면은 히어로 CTA와 12월 아이브로 둘뿐입니다. */}
+      <Chapter id="why" align="center" className="pt-24 sm:pt-32 lg:pt-44">
         <Eyebrow color="purple">{t(naru.why.eyebrow)}</Eyebrow>
         <h2 className={H2}>{t(naru.why.heading)}</h2>
+        {/* 서명 헤어라인. max-w는 H2의 것과 같아야 합니다(typography.ts).
+            장식이라 1.4.11의 대상이 아닙니다. 빛 번짐을 더하지 마세요. */}
+        <div
+          aria-hidden
+          className="mx-auto mt-8 h-[2px] w-full max-w-[52rem] bg-gradient-to-r from-accent to-accent-strong"
+        />
 
         {/* 코어 둘. 두 줄 전부 그리고, 그 아래 "그래서 지키는 것"이 붙습니다.
             이 세 번째 줄이 카드를 선언에서 규칙으로 바꿉니다 - 스크리닝을 두지
             않는 것과 순위를 지운 것은 태도가 아니라 코어에서 따라 나온 결정
-            입니다. 카드 안에서 위 여백으로 갈라 두어 눈이 "약속 / 그래서"를
-            나눠 읽게 합니다. */}
-        <div className="mx-auto mt-12 grid max-w-4xl gap-5 text-left md:grid-cols-2">
+            입니다.
+
+            ol인 이유: 순서가 뜻입니다. 01이 문턱이고 02가 증명이며, 바로 아래
+            note가 그 둘이 한 쌍이라고 말합니다. ol이 "둘 중 하나"를 공짜로
+            나릅니다. 번호 자체는 aria-hidden입니다 - ol이 이미 위치를 말하고
+            있어서, 숨기지 않으면 합성기 설정에 따라 "영 일"이나 "일"이 제목
+            앞에 한 번 더 붙습니다.
+
+            keeps가 dl인 이유: 항목 이름과 값이지 제목이 아닙니다. 같은 문자열
+            ("그래서 지키는 것")이 카드 둘에 있어서, 제목으로 올리면 제목
+            목록에 구별되지 않는 항목이 둘 생깁니다. #how의 하는 것/얻는 것이
+            이미 같은 패턴을 씁니다. */}
+        <ol role="list" className="mx-auto mt-14 grid max-w-4xl gap-5 text-left sm:mt-16 md:grid-cols-2">
           {naru.why.cores.map((core) => (
-            <Card key={core.index} className="flex flex-col">
-              <span className="text-xs font-black tracking-[0.3em] text-accent">{core.index}</span>
-              <h3 className="mt-3 break-keep text-lg font-bold leading-snug text-white sm:text-xl">
-                {t(core.title)}
-              </h3>
-              <div className="mt-4 flex-1 space-y-3">
+            <li
+              key={core.index}
+              className="flex flex-col rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-8"
+            >
+              <div className="flex items-center gap-3">
+                <NaruMark className="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
+                {/* 번호가 accent에서 white/55로 내려온 것은, 12px 옆에 주황
+                    점이 있는데 숫자까지 보라면 한 뜻짜리 표식이 두 색 덩어리가
+                    되기 때문입니다. 이 줄에서 색을 가진 것은 점 하나뿐이어야
+                    합니다. */}
+                <span aria-hidden className="text-xs font-black tracking-[0.3em] text-white/55">
+                  {core.index}
+                </span>
+              </div>
+              {/* H3입니다(2026-09-16). 전에는 text-lg sm:text-xl이라 이 챕터만의
+                  즉석 크기였고, 무엇보다 "두 가지"를 약속하는 h2의 3분의 1
+                  크기였습니다. 페이지 마지막 화면에서 가장 큰 것이 반쪽짜리
+                  문장이었어요. 약속의 내용이 약속보다 작으면 안 됩니다. */}
+              <h3 className={`mt-4 ${H3}`}>{t(core.title)}</h3>
+              <div className="mt-5 flex-1 space-y-3">
                 {core.lines.map((line, i) => (
-                  <p key={i} className="break-keep text-sm leading-relaxed text-white/70">
+                  <p key={i} className="break-keep text-sm leading-relaxed text-white/75">
                     {t(line)}
                   </p>
                 ))}
               </div>
-              <div className="mt-6 border-t border-white/[0.07] pt-4">
-                <p className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
+              <dl className="mt-6 border-t border-white/10 pt-4">
+                <dt className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
                   {t(naru.why.keepsLabel)}
-                </p>
-                <p className="mt-2 break-keep text-sm leading-relaxed text-white/75">
+                </dt>
+                <dd className="mt-2 break-keep text-sm leading-relaxed text-white/75">
                   {t(core.keeps)}
-                </p>
-              </div>
-            </Card>
+                </dd>
+              </dl>
+            </li>
           ))}
+        </ol>
+
+        {/* 두 개가 함께 있어야 하는 이유. 카드 바로 아래가 자리입니다.
+            먼저 각각을 읽고, 그 다음에 둘이 한 쌍인 이유를 읽습니다.
+            상자를 벗겼습니다 - 한 문장 둘레의 상자는 문장 대신 상자가
+            봐 달라고 하는 것입니다. */}
+        <div className="mx-auto mt-10 max-w-4xl break-keep text-left">
+          <p className="text-lg font-bold leading-snug text-white sm:text-xl">{t(naru.why.note)}</p>
+          <p className="mt-3 break-keep text-sm leading-relaxed text-white/75">{t(naru.why.noteBody)}</p>
         </div>
 
         {/* ── 약속이 지켜지는 지점 ───────────────────────────────────────
             위 둘이 약속이고 여기가 그 약속이 깨지거나 지켜지는 자리입니다.
             멘토링 한 시간과 듣는 사람, 그리고 그래서 무엇을 재느냐.
 
-            재는 것을 주황 띠로 따로 뽑습니다. 이 챕터에서 가장 검증 가능한
-            문장이고, 기업이 우리를 읽을 때 실제로 붙잡는 줄입니다. 주황 면은
-            히어로 CTA와 12월 아이브로, 그리고 여기까지 셋뿐이어야 합니다. */}
-        <div className="mx-auto mt-10 max-w-4xl text-left">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
-            {t(naru.why.execLabel)}
-          </p>
-          <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">
+            mt-24는 부속으로 내리는 신호입니다. 여기에 선을 하나 더 긋지
+            마세요. 위에 이미 서명 헤어라인이 있고, 선이 둘이면 둘째 선은
+            강등이 아니라 또 하나의 괄호로 읽힙니다.
+
+            2026-09-16 정정: 이 자리의 옛 주석은 "재는 것을 주황 띠로 뽑는다"고
+            적고 있었는데, 코드는 처음부터 보라 띠(accent)였습니다. 게다가 그
+            띠는 #join의 콜아웃과 클래스가 한 글자도 다르지 않았어요. 챕터에서
+            가장 중요한 문장을 한 챕터 위에서 이미 쓴 장치로 표시하고 있었던
+            겁니다. 띠를 걷고 글자 무게로 세웁니다. */}
+        <div className="mx-auto mt-24 max-w-4xl text-left sm:mt-32">
+          <h3 className={LABEL_HEADING}>{t(naru.why.execLabel)}</h3>
+          <p className="mt-3 break-keep text-sm leading-relaxed text-white/75">
             {t(naru.why.execLead)}
           </p>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <ol role="list" className="mt-6 grid gap-6 md:grid-cols-2">
             {naru.why.exec.map((item) => (
-              <div
-                key={item.index}
-                className="rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-5"
-              >
+              <li key={item.index} className="border-t border-white/10 pt-5">
                 <span aria-hidden className="text-xs font-black lowercase tracking-[0.3em] text-white/55">
                   {item.index}
                 </span>
-                <p className="mt-2 break-keep text-base font-bold leading-snug text-white">
+                <h4 className="mt-2 break-keep text-base font-bold leading-snug text-white">
                   {t(item.title)}
-                </p>
-                <p className="mt-3 break-keep text-sm leading-relaxed text-white/65">{t(item.body)}</p>
-              </div>
+                </h4>
+                <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">{t(item.body)}</p>
+              </li>
             ))}
-          </div>
-          <div className="mt-4 flex flex-col gap-2 rounded-2xl border border-accent/25 bg-accent/[0.06] px-6 py-5 sm:flex-row sm:items-baseline sm:gap-5">
-            <p className="shrink-0 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
+          </ol>
+          {/* 라벨 : 문장. 제목이 아니라 항목 이름이라 dl입니다. */}
+          <dl className="mt-8 flex flex-col gap-2 border-t border-white/10 pt-6 sm:flex-row sm:items-baseline sm:gap-5">
+            <dt className="shrink-0 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
               {t(naru.why.measureLabel)}
-            </p>
-            <p className="break-keep text-sm leading-relaxed text-white/85 sm:text-base">
+            </dt>
+            <dd className="break-keep text-base font-semibold leading-relaxed text-white/85">
               {t(naru.why.measure)}
-            </p>
-          </div>
-        </div>
-
-        {/* 두 개가 함께 있어야 하는 이유. 카드 아래에 두는 것이 순서입니다.
-            먼저 각각을 읽고, 그 다음에 둘이 한 쌍인 이유를 읽습니다. */}
-        <div className="mx-auto mt-10 max-w-4xl break-keep rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-6 text-left">
-          <p className="text-base font-bold leading-snug text-white sm:text-lg">{t(naru.why.note)}</p>
-          <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">{t(naru.why.noteBody)}</p>
+            </dd>
+          </dl>
         </div>
 
         {/* 마지막 줄. 페이지 전체가 여기서 끝납니다 - 위의 두 개를 빼면 전부
             방법이고, 방법은 바뀝니다(매니페스토 IV). 이 문장이 8일이 4일이 되는
             12월을 미리 설명합니다. */}
-        <div className="mx-auto mt-10 max-w-4xl text-left">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
-            {t(naru.why.agendaLabel)}
-          </p>
-          <p className="mt-3 break-keep text-sm leading-relaxed text-white/65">{t(naru.why.agenda)}</p>
+        <div className="mx-auto mt-14 max-w-4xl text-left">
+          <h3 className={LABEL_HEADING}>{t(naru.why.agendaLabel)}</h3>
+          <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">{t(naru.why.agenda)}</p>
         </div>
       </Chapter>
 
@@ -809,16 +874,32 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
 
   const box = (layer: Layer, center = false) => (
     <div
+      // DECIDED 2026-09-16: 가운데 상자에서 주황을 걷습니다.
+      //
+      // 이유 둘입니다. 하나, 면적으로 이 워시가 페이지에서 가장 큰 주황
+      // 영역이었습니다. 상자 하나가 7% 알파로 약 370x110px이라 히어로 CTA의
+      // 두 배가 넘어요. "주황은 점이지 면이 아니다"라는 규칙이 아무도 주황
+      // 챕터라고 생각하지 않는 여기서 가장 크게 깨지고 있었습니다.
+      // 둘, 강조가 애초에 뒤집혀 있었습니다. 양옆 상자가 border-white/12를
+      // 쓰고 있었고 그건 CSS를 만들지 않아 Preflight의 #e5e7eb로 떨어졌어요.
+      // 그래서 강조하려던 가운데는 1.4:1 테두리, 양옆은 14:1 테두리였습니다.
+      // 다이어그램에서 가장 조용한 상자가 주인공이었던 셈입니다.
+      //
+      // 이제 가운데는 색이 아니라 높이로 표시합니다. 테두리 한 단계(/20),
+      // 면 한 단계(0.06). 구조를 말하는 그림에는 그쪽이 맞습니다.
+      //
+      // 여기서 걷은 주황이 #why의 나루 점 둘 값을 치릅니다. 페이지 전체의
+      // 주황 면적은 오히려 줄었고, 주황 면은 히어로 CTA와 12월 아이브로
+      // 둘로 내려갔습니다.
       className={`flex-1 rounded-2xl border px-4 py-5 text-center ${
         center
-          ? "border-naru-orange/35 bg-naru-orange/[0.07]"
-          // /12는 CSS를 만들지 않습니다(위 tbd 칩의 주석 참고).
+          ? "border-white/20 bg-white/[0.06]"
           : "border-white/10 bg-white/[0.04]"
       }`}
     >
       <p
         className={`text-[0.62rem] font-bold uppercase tracking-[0.16em] ${
-          center ? "text-[#F2B183]" : "text-white/55"
+          center ? "text-white/70" : "text-white/55"
         }`}
       >
         {t(layer.role)}
