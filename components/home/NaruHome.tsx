@@ -25,6 +25,7 @@ import FlowStrip from "@/components/shared/FlowStrip";
 import MobileChatBar from "@/components/shared/MobileChatBar";
 import { BAND_TINT, BandFades } from "@/components/shared/Band";
 import { useHeroSplit } from "@/components/shared/useHeroSplit";
+import { computeShapeLayout, readShapeAnchors } from "@/lib/background/utils/shapeLayout";
 import Chapter from "@/components/journey/Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
@@ -214,7 +215,10 @@ function CountdownPanel({ t, locale }: { t: (p: Phrase) => string; locale: "ko" 
       : [{ v: "--", u: units.days }, { v: "--", u: units.hours }, { v: "--", u: units.minutes }];
   const tbd = naru.december.tbd.filter((_, i, arr) => i < 2 || i === arr.length - 1);
   return (
-    <Glass className="ml-auto max-w-md text-left">
+    // data-shape-anchor: 배경의 서울 형상이 이 카드 아래 빈 띠에 섭니다
+    // (lib/background/utils/shapeLayout.ts). Glass는 속성을 받지 않아 한 겹 감쌌습니다.
+    <div data-shape-anchor="panel" className="ml-auto max-w-md">
+    <Glass className="text-left">
       <p className="text-[0.68rem] font-bold uppercase tracking-[0.2em] text-[#F2B183]">{t(naru.eventHero.countdownLabel)}</p>
       <div className="mt-4 flex h-16 items-end gap-5">
         {left === "started" ? (
@@ -238,6 +242,53 @@ function CountdownPanel({ t, locale }: { t: (p: Phrase) => string; locale: "ko" 
         </div>
       </div>
     </Glass>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 기슭 형상의 라벨 (2026-09-17, 배경 형상 브리프).
+//
+// 배경 캔버스(fixed)의 두 형상 아래에 SINGAPORE / SEOUL. DOM 텍스트입니다(캔버스에
+// 그리지 않음). 자리는 config.SHAPES와 형상의 세로 비율에서 같은 식으로 계산하고,
+// 형상이 18° 눕혀져 있으니 높이에 cos(18°)를 곱합니다. banks 국면에서만 보이고
+// 스크롤이 반 화면을 지나면 사라집니다(그때 gather가 시작합니다).
+// z-index는 캔버스(-10)와 본문 사이. 본문 글자 위에 얹히지 않습니다.
+// ─────────────────────────────────────────────────────────────────────────────
+function ShapeLabels({ t }: { t: (p: Phrase) => string }) {
+  const [style, setStyle] = useState<{ l: React.CSSProperties; r: React.CSSProperties; opacity: number } | null>(null);
+  useEffect(() => {
+    const place = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      // 자리는 배경과 같은 함수에서(lib/background/utils/shapeLayout.ts).
+      const L = computeShapeLayout(w, h, readShapeAnchors());
+      const under = (p: { cx: number; cy: number; w: number; h: number }): React.CSSProperties => {
+        if (L.mode === "anchored" || h <= w) {
+          // 형상 아래 10px, 가운데 맞춤. 형상은 라벨 자리를 비워 두고 섭니다.
+          return { left: `${p.cx}px`, top: `${p.cy + p.h / 2 + 10}px`, transform: "translateX(-50%)" };
+        }
+        // 앵커가 없는 세로 화면(behind): 형상 바운딩 박스의 오른쪽 아래 모서리 안쪽,
+        // 오른쪽 맞춤. 두 형상 모두 박스의 모서리는 비어 있어 점을 가리지 않습니다.
+        return { left: `${p.cx + p.w / 2}px`, top: `${p.cy + p.h / 2 - 16}px`, transform: "translateX(-100%)" };
+      };
+      const opacity = 1 - Math.min(1, window.scrollY / (h * 0.5));
+      setStyle({ l: under(L.left), r: under(L.right), opacity });
+    };
+    place();
+    // 폰트·패널이 그려진 뒤 한 번 더(앵커 사각형이 첫 프레임과 다를 수 있음).
+    const late = window.setTimeout(place, 600);
+    window.addEventListener("resize", place);
+    window.addEventListener("scroll", place, { passive: true });
+    return () => { window.clearTimeout(late); window.removeEventListener("resize", place); window.removeEventListener("scroll", place); };
+  }, []);
+  if (!style || style.opacity <= 0) return null;
+  const cls = "pointer-events-none fixed z-[-5] text-[11px] font-semibold uppercase tracking-[0.22em] text-white/40";
+  return (
+    <>
+      <span aria-hidden className={cls} style={{ ...style.l, opacity: style.opacity }}>{t(naru.eventHero.shapeLabels.singapore)}</span>
+      <span aria-hidden className={cls} style={{ ...style.r, opacity: style.opacity }}>{t(naru.eventHero.shapeLabels.seoul)}</span>
+    </>
   );
 }
 
@@ -254,6 +305,7 @@ export default function NaruHome() {
       {/* 하단 오픈채팅 바(8월과 같은 것). #record가 지나면 나타나고 푸터가 보이면
           물러납니다. 홈에는 폰 전용 바가 없어서 폰까지 맡습니다(phone). */}
       <MobileChatBar afterId="record" endId="closing" phone />
+      <ShapeLabels t={t} />
       {/* ── CH0 · 크로싱 서울 히어로 (DECIDED 2026-09-17 2차) ──────────────
           홈의 첫 화면이 그룹에서 이벤트로 바뀌었습니다. 8월 사이트의 히어로가
           8월 이벤트였듯이, 여기는 크로싱 서울입니다. 나루 로고는 헤더에만 있고
@@ -310,7 +362,9 @@ export default function NaruHome() {
             <p className="mx-auto mt-3 max-w-xl break-keep text-sm leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base lg:mx-0">
               {t(naru.eventHero.sub)}
             </p>
-            <div className="mt-10 flex flex-wrap justify-center gap-3 lg:justify-start">
+            {/* data-shape-anchor: 배경의 싱가포르 형상이 이 줄 아래 빈 띠에 섭니다
+                (lib/background/utils/shapeLayout.ts). */}
+            <div data-shape-anchor="copy" className="mt-10 flex flex-wrap justify-center gap-3 lg:justify-start">
               <OpenChatLink t={t} src="naru-hero" label={openChatLabels.december} variant="hero" />
               <a
                 href="#december"
@@ -329,6 +383,12 @@ export default function NaruHome() {
             <CountdownPanel t={t} locale={locale} />
           </motion.div>
         </div>
+        {/* DECIDED 2026-09-17 (사용자): 폰의 형상 띠. lg 아래에서만 있는 빈 150px.
+            배경의 싱가포르·서울 형상이 여기 나란히 서고 라벨이 그 아래 붙습니다
+            (lib/background/utils/shapeLayout.ts, band 모드). 브리프의 "카피 뒤에
+            쌓기"는 폰에서 형상이 보이지 않아 버렸습니다. 폰 페이지가 약 160px
+            길어져 길이 상한(12,500)을 넘는 것을 감수한 결정입니다. */}
+        <div data-shape-anchor="band" aria-hidden className="mt-2 h-[150px] lg:hidden" />
       </Chapter>
 
       {/* ── CH1 · 8월의 기록 ─────────────────────────────────────────────── */}

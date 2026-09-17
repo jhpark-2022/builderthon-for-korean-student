@@ -41,13 +41,24 @@ uniform vec3  uLantern;   // 등불의 월드 좌표
 uniform float uGather;    // 기슭 → 강가 0..1
 uniform float uCrossing;  // 강을 건너는 국면 0..1
 uniform float uArrived;   // 건너편에 닿은 뒤 0..1
+// ── 기슭 형상 (2026-09-17) ───────────────────────────────────────────────────
+// crossing에서 aSeed는 월드 좌표가 아니라 형상의 정규화 좌표(x, y ∈ [-1,1], z = 두께)
+// 입니다. 아래 uniform이 그것을 월드로 놓습니다. xy = 중심, z = 반너비(월드).
+uniform vec3  uShapeL;    // 왼쪽 기슭(싱가포르)
+uniform vec3  uShapeR;    // 오른쪽 기슭(서울)
+uniform float uTilt;      // x축 기울기(라디안)
+uniform vec4  uDimA;      // 감광 사각형(uv, y 아래가 0): 히어로 카피
+uniform vec4  uDimB;      // 감광 사각형: 카운트다운 패널
+uniform float uDimFactor; // 그 안의 밝기
 
 attribute vec3  aSeed;
 attribute float aScale;
 attribute float aSpeed;
 attribute float aOffset;
 attribute float aBank;    // crossing: -1 왼쪽 기슭 / +1 오른쪽. field에서는 0.
+attribute float aRank;    // crossing: 1 = 형상의 가장자리 점(마지막에 떠남), 0 = 속. field에서는 0.
 
+varying float vDim;       // crossing: 감광 사각형 안이면 uDimFactor, 아니면 1
 varying float vDepth;
 varying float vGlow;
 varying float vPointer;
@@ -71,18 +82,30 @@ void crossingMain(){
   float prog = clamp((uCrossing - lead * 0.55) / 0.45, 0.0, 1.0);
   prog = prog * prog * (3.0 - 2.0 * prog);
 
-  // 기슭에서: 씨앗 자리 + 느린 컬 드리프트 + 작은 숨
+  // ── 기슭: 형상 (2026-09-17) ──────────────────────────────────────────────
+  // aSeed(정규화 xy, 두께 z)를 자기 기슭의 자리에 놓고 x축으로 uTilt만큼 눕힙니다.
+  vec3 shape = aBank < 0.0 ? uShapeL : uShapeR;
+  float hw = shape.z;
+  vec3 local = aSeed * hw;
+  float ct = cos(uTilt);
+  float st = sin(uTilt);
+  vec3 origin = vec3(shape.x, shape.y, 0.0) + vec3(local.x, local.y * ct - local.z * st, local.y * st + local.z * ct);
+  // 숨: 전(2.5, 0.4)의 30%. 형상이 흐트러지면 안 됩니다. 컬 노이즈는 이웃이 같이
+  // 움직이는 매끈한 장이라 윤곽이 번지지 않고 살짝 일렁입니다.
   float t = uTime * uFlowSpeed * aSpeed + aOffset;
-  vec3 drift = curlNoise(aSeed * uSpaceScale + vec3(0.0, 0.0, t * 0.5)) * uCurl;
-  vec3 bankPos = aSeed + drift * 2.5 + vec3(0.0, sin(t * 0.7) * 0.4, 0.0);
+  vec3 drift = curlNoise(origin * uSpaceScale + vec3(0.0, 0.0, t * 0.5)) * uCurl;
+  vec3 bankPos = origin + drift * 0.75 + vec3(0.0, sin(t * 0.7) * 0.12, 0.0);
 
-  // 강가로: x는 자기 기슭의 물가로, y는 지평선 쪽으로. 전부 같은 만큼 모이지는
-  // 않습니다(0.55~1.0). 줄을 서는 것이 아니라 물가에 흩어져 서는 것입니다.
-  // 물가는 그 깊이에서 보이는 화면 폭의 40% 자리입니다(ParticleField의 씨앗과 같은 기준).
-  float halfW = (30.0 - aSeed.z) * 0.577 * 1.6;
+  // 강가로: 속의 점이 먼저 떠나고 가장자리 점(aRank 1)이 마지막에 떠납니다.
+  // 윤곽이 마지막까지 남아야 읽힙니다(브리프 4).
+  float lag = aRank * 0.55 + hash1(aOffset * 2.9) * 0.15;
+  float g = clamp((uGather - lag) / max(1.0 - lag, 0.05), 0.0, 1.0);
+  g = g * g * (3.0 - 2.0 * g);
+  // 물가는 그 깊이에서 보이는 화면 폭의 40% 자리입니다.
+  float halfW = (30.0 - origin.z) * 0.577 * 1.6;
   float edgeX = aBank * halfW * (0.40 + hash1(aOffset) * 0.06);
   vec3 shore = vec3(edgeX, mix(bankPos.y, uLantern.y + 4.0 + hash1(aOffset * 3.1) * 8.0, 0.6), bankPos.z);
-  vec3 gathered = mix(bankPos, shore, uGather * (0.55 + 0.45 * hash1(aOffset * 2.3)));
+  vec3 gathered = mix(bankPos, shore, g * (0.55 + 0.45 * hash1(aOffset * 2.3)));
 
   // 건너편의 자리: 등불 둘레의 성좌. 반지름 3~10, 등불보다 조금 위.
   float rad = 3.0 + hash1(aOffset * 5.7) * 7.0;
@@ -109,17 +132,24 @@ void crossingMain(){
 
   vec4 mv = modelViewMatrix * vec4(pos, 1.0);
   gl_Position = projectionMatrix * mv;
+  // 감광: 히어로 카피·패널 뒤(uv 사각형 안)의 점은 어둡게. 모이기가 진행되면 풉니다
+  // (그때는 히어로가 이미 화면 밖입니다).
+  vec2 uvp = gl_Position.xy / max(gl_Position.w, 1e-4) * 0.5 + 0.5;
+  float inA = step(uDimA.x, uvp.x) * step(uvp.x, uDimA.z) * step(uDimA.y, uvp.y) * step(uvp.y, uDimA.w);
+  float inB = step(uDimB.x, uvp.x) * step(uvp.x, uDimB.z) * step(uDimB.y, uvp.y) * step(uvp.y, uDimB.w);
+  vDim = mix(1.0, uDimFactor, max(inA, inB) * (1.0 - uGather));
   float zCam = -mv.z;
   vDepth = clamp((zCam - 6.0) / 60.0, 0.0, 1.0);
   // 8월보다 1.6배. 입자 수가 두 기슭에 나뉘고 강 가운데가 비어서, 같은 크기면
   // 필드가 아니라 먼지로 읽힙니다.
-  float size = aScale * 1.6 * (1.0 + arc * 0.5);
+  float size = aScale * 1.9 * (1.0 + arc * 0.5);
   size *= (1.0 + vSpeed * 0.6);
   gl_PointSize = min(size * uPixelRatio * (130.0 / max(zCam, 0.001)), 22.0 * uPixelRatio);
 }
 
 void main(){
   if (uMode > 0.5) { crossingMain(); return; }
+  vDim = 1.0; // field 경로는 감광이 없습니다(읽지도 않습니다). varying을 비워 두지 않으려는 것뿐.
   vec3 pos = aSeed;
 
   // per-particle parallax weight: bright/large leaders sit "nearer" and react more

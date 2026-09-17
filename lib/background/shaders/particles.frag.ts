@@ -19,6 +19,7 @@ uniform float uPortal;
 uniform float uWhiteout;
 uniform float uMode;      // 0 = field, 1 = crossing (2026-09-17)
 
+varying float vDim;       // crossing: 카피 뒤 감광
 varying float vDepth;
 varying float vGlow;
 varying float vPointer;
@@ -43,7 +44,7 @@ void crossingFrag(){
   vec3 bank = mix(uAccent, uAccent2, vRand);
   vec3 col = mix(bank, uHighlight, clamp(vNear * 0.85 + vGlow * 0.12, 0.0, 1.0));
   col = mix(col, uFog, vDepth * 0.85);
-  alpha *= (1.0 - vDepth * 0.7) * uOpacity;
+  alpha *= (1.0 - vDepth * 0.7) * uOpacity * vDim;
   alpha = mix(alpha, alpha * 1.25 + 0.06, vSpeed);
   gl_FragColor = vec4(col, clamp(alpha, 0.0, 1.0));
 }
