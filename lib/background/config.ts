@@ -97,3 +97,25 @@ export const FIELD = {
   bounds: 26,                 // half-extent of the particle volume (X/Y)
   depth: 34,                  // half-extent along Z
 } as const;
+
+/**
+ * "건너는 점들" (crossing) 변형의 상수. DECIDED 2026-09-17 (배경 브리프).
+ *
+ * 월드 좌표는 8월 필드와 같은 카메라(z=30, fov 60)를 기준으로 합니다. z=0 평면에서
+ * 화면 반폭이 약 27.7(1440×900)이라, 가운데 40%가 강(±11)이고 양옆 30%씩이
+ * 기슭(11~26)입니다. 등불은 강 건너편(z 먼 쪽) 가운데 조금 왼쪽입니다. 가운데에
+ * 두면 반사 기둥이 헤드라인과 CTA 뒤를 세로로 지나갑니다(shaders/water.ts의
+ * 등불 자리 주석과 같은 이유).
+ */
+export const CROSSING = {
+  riverHalf: 11,                 // 강의 반폭(월드, z=0 기준)
+  bankSigmaY: 11,                // 기슭 입자의 세로 분포(가우시안 표준편차)
+  bankCenterY: -2,               // 그 중심. 지평선(등불 y) 조금 위
+  lantern: { x: 4, y: -15, z: -40 },   // 가로 화면. 세로 화면은 BackgroundScene.placeLantern이 x를 -15로
+  lanternSize: 7,                // 스프라이트 한 변(월드)
+  bloomThreshold: 0.7,           // 등불의 흰 심만 넘습니다. 입자(hi0 휘도 ≈ 0.65)는 못 넘습니다.
+  bandHeight: 0.14,              // 반사 띠의 높이(뷰포트 비율). 브리프 12~15%
+  // 앵커를 못 읽었을 때의 국면 경계(스크롤 비율). 실제 값은 BackgroundScene이
+  // #record, #december, #naru의 offsetTop에서 읽습니다.
+  fallbackAnchors: { record: 0.06, december: 0.2, naru: 0.55 },
+} as const;

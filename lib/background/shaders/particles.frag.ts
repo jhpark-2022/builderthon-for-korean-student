@@ -17,6 +17,7 @@ uniform float uOpacity;
 uniform float uScroll;
 uniform float uPortal;
 uniform float uWhiteout;
+uniform float uMode;      // 0 = field, 1 = crossing (2026-09-17)
 
 varying float vDepth;
 varying float vGlow;
@@ -27,7 +28,28 @@ varying float vRand;
 
 const vec3 WHITE = vec3(0.95, 0.92, 1.0);
 
+// ── 건너는 점들의 색 ─────────────────────────────────────────────────────────
+// 기슭에서는 보라(uAccent = accent0)에서 자주(uAccent2 = accent2) 사이, 왼쪽 기슭이
+// 보라 쪽, 오른쪽이 자주 쪽(vRand). 건너는 도중(vNear)에 연자주(uHighlight = hi0)로
+// 밝아지고, 닿으면 다시 가라앉습니다. 주황이 되지 않습니다. 화면의 주황은 등불과
+// 그 반사뿐입니다.
+void crossingFrag(){
+  vec2 uv = gl_PointCoord - 0.5;
+  float r = length(uv) * 2.0;
+  if (r > 1.0) discard;
+  float core = smoothstep(1.0, 0.0, r);
+  float halo = pow(1.0 - r, 3.2);
+  float alpha = (core * 0.62 + halo * 0.25);
+  vec3 bank = mix(uAccent, uAccent2, vRand);
+  vec3 col = mix(bank, uHighlight, clamp(vNear * 0.85 + vGlow * 0.12, 0.0, 1.0));
+  col = mix(col, uFog, vDepth * 0.85);
+  alpha *= (1.0 - vDepth * 0.7) * uOpacity;
+  alpha = mix(alpha, alpha * 1.25 + 0.06, vSpeed);
+  gl_FragColor = vec4(col, clamp(alpha, 0.0, 1.0));
+}
+
 void main(){
+  if (uMode > 0.5) { crossingFrag(); return; }
   vec2 uv = gl_PointCoord - 0.5;
   float r = length(uv) * 2.0;
   if (r > 1.0) discard;

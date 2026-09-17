@@ -47,6 +47,18 @@ export class Atmosphere {
     this.mesh.scale.set(s * Math.max(1, window.innerWidth / window.innerHeight), s, 1);
   }
 
+  /**
+   * crossing 변형의 하늘(2026-09-17). 8월 필드의 그라데이션은 아래가 base0, 위가
+   * base2(남색 원색)라 위쪽이 밝습니다. 나루 홈에서는 위가 거의 검정이고 아래
+   * (지평선·강 쪽)가 옅은 남색이어야 본문 뒤가 어둡습니다. 셰이더는 그대로 두고
+   * 색만 바꿉니다. base는 아래, mid는 위입니다.
+   */
+  setPalette(base: string, mid: string, accent: string) {
+    this.material.uniforms.uBase.value.set(base);
+    this.material.uniforms.uMid.value.set(mid);
+    this.material.uniforms.uAccent.value.set(accent);
+  }
+
   update(time: number, scroll: number, reveal: number) {
     this.material.uniforms.uTime.value = time;
     this.material.uniforms.uScroll.value = scroll;

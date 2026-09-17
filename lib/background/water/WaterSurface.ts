@@ -22,14 +22,23 @@ export class WaterSurface {
   private readonly geometry: THREE.PlaneGeometry;
   private readonly material: THREE.ShaderMaterial;
 
-  constructor() {
+  /**
+   * @param band  띠 모드(2026-09-17, crossing 변형). 하늘·등불·깊은 물 없이 등불
+   *              아래의 반사 띠 하나만 그리고 나머지는 투명입니다. 기본값 false라
+   *              water 변형은 그대로입니다.
+   */
+  constructor(band = false) {
     this.geometry = new THREE.PlaneGeometry(2, 2);
     this.material = new THREE.ShaderMaterial({
       vertexShader: WATER_VERT,
       fragmentShader: WATER_FRAG,
       depthWrite: false,
       depthTest: false,
+      transparent: band,
       uniforms: {
+        uBand: { value: band ? 1 : 0 },
+        uLampUv: { value: new THREE.Vector2(0.42, 0.3) },
+        uBandH: { value: 0.14 },
         uTime: { value: 0 },
         uScroll: { value: 0 },
         uAspect: { value: 1 },
@@ -105,6 +114,12 @@ export class WaterSurface {
     u.uPointer.value.copy(pointer);
     u.uPointerOn.value = on;
     u.uFlow.value = flow;
+  }
+
+  /** 띠 모드: 등불의 화면 uv(0..1, y는 위가 1)와 띠 높이. 매 프레임 스프라이트를 투영해 넘깁니다. */
+  setLamp(x: number, y: number, bandH: number) {
+    this.material.uniforms.uLampUv.value.set(x, y);
+    this.material.uniforms.uBandH.value = bandH;
   }
 
   dispose() {

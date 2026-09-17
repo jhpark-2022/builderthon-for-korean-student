@@ -121,7 +121,10 @@ export class PostFX {
     renderer: THREE.WebGLRenderer,
     scene: THREE.Scene,
     camera: THREE.Camera,
-    useBloom: boolean
+    useBloom: boolean,
+    // 2026-09-17: crossing 변형은 등불의 흰 심만 블룸이 잡도록 임계값을 올립니다.
+    // 기본값은 8월 필드의 값 그대로입니다.
+    bloomThreshold = 0.28
   ) {
     this.composer = new EffectComposer(renderer, {
       frameBufferType: THREE.HalfFloatType,
@@ -136,7 +139,7 @@ export class PostFX {
     if (useBloom) {
       this.bloom = new BloomEffect({
         intensity: 0.6,
-        luminanceThreshold: 0.28,
+        luminanceThreshold: bloomThreshold,
         luminanceSmoothing: 0.95,
         mipmapBlur: true,
         radius: 0.7,

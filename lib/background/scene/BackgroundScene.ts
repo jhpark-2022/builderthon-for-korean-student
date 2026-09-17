@@ -1,13 +1,14 @@
 import * as THREE from "three";
-import { pickQuality, type QualityTier } from "../config";
+import { CROSSING, pickQuality, type QualityTier } from "../config";
 import { Renderer } from "../renderer/Renderer";
 import { CameraController } from "../camera/CameraController";
 import { Pointer } from "../interactions/Pointer";
 import { ParticleField } from "../particles/ParticleField";
 import { Atmosphere } from "../particles/Atmosphere";
 import { WaterSurface } from "../water/WaterSurface";
+import { Lantern } from "../particles/Lantern";
 import { PostFX } from "../renderer/PostFX";
-import { computePhases } from "../utils/phases";
+import { computePhases, computeCrossingPhases, crossingToPhases, type CrossingAnchors } from "../utils/phases";
 import { clamp } from "../utils/math";
 import { isScrollLocked } from "../../useBodyScrollLock";
 
@@ -29,7 +30,15 @@ import { isScrollLocked } from "../../useBodyScrollLock";
  * 때문입니다. 8월 페이지의 입자 필드는 그 회차의 것이라 그대로 둡니다.
  * 나루 홈은 나루터를 말해야 하고, 그건 강과 등불입니다.
  */
-export type BackgroundVariant = "field" | "water";
+//
+// "crossing" (나루 홈, 2026-09-17 배경 브리프)
+//   Atmosphere    하늘(8월과 같은 성운 그라데이션, 남색)
+//   WaterSurface  띠 모드. 등불 아래의 얇은 반사 띠만
+//   ParticleField crossing 분포. 두 기슭 → 강가 → 건너기 → 등불 둘레의 성좌
+//   Lantern       등불 한 점(스프라이트). 화면의 유일한 주황
+// 8월의 엔진(입자·블룸·카메라·국면·품질 티어)을 그대로 쓰고 이야기만 바꿨습니다.
+// 국면 경계는 #record, #december, #naru의 실제 스크롤 위치에서 읽습니다.
+export type BackgroundVariant = "field" | "water" | "crossing";
 
 export class BackgroundScene {
   private readonly scene = new THREE.Scene();
@@ -42,8 +51,13 @@ export class BackgroundScene {
   // field 변형에서만 만듭니다. water에서는 둘 다 null입니다.
   private readonly atmosphere: Atmosphere | null;
   private readonly particles: ParticleField | null;
-  // water 변형에서만 만듭니다.
+  // water·crossing 변형에서 만듭니다.
   private readonly water: WaterSurface | null;
+  // crossing 변형에서만.
+  private readonly lantern: Lantern | null;
+  private anchors: CrossingAnchors = { ...CROSSING.fallbackAnchors };
+  private anchorTimer = 0;
+  private readonly lanternProjected = new THREE.Vector3();
   // 포인터의 화면 uv. water 셰이더가 파문을 여기에 놓습니다.
   private readonly pointerUv = new THREE.Vector2(0.5, 0.5);
   // 필드의 자체 시간. 벽시계와 분리합니다. motionScale이 0이면 이 값이 더 이상
@@ -93,10 +107,21 @@ export class BackgroundScene {
     if (variant === "water") {
       this.atmosphere = null;
       this.particles = null;
+      this.lantern = null;
       this.water = new WaterSurface();
       this.scene.add(this.water.mesh);
+    } else if (variant === "crossing") {
+      this.atmosphere = new Atmosphere();
+      this.atmosphere.mesh.renderOrder = -2; // 하늘이 맨 뒤, 그 위에 반사 띠
+      // 위는 거의 검정, 아래(강 쪽)는 옅은 남색. water 변형의 하늘과 같은 값입니다.
+      this.atmosphere.setPalette("#0B1540", "#03050F", "#2A2260");
+      this.water = new WaterSurface(true);
+      this.particles = new ParticleField(this.quality, 1.0, "crossing");
+      this.lantern = new Lantern();
+      this.scene.add(this.atmosphere.mesh, this.water.mesh, this.particles.points, this.lantern.sprite);
     } else {
       this.water = null;
+      this.lantern = null;
       this.atmosphere = new Atmosphere();
       this.particles = new ParticleField(this.quality, 1.0);
       // NOTE: there is intentionally NO portal object in the scene. The phenomenon
@@ -109,13 +134,37 @@ export class BackgroundScene {
     }
 
     // post-processing stack (bloom only on capable tiers)
-    this.post = new PostFX(this.renderer.gl, this.scene, this.cam.camera, this.quality.bloom);
+    this.post = new PostFX(
+      this.renderer.gl,
+      this.scene,
+      this.cam.camera,
+      this.quality.bloom,
+      variant === "crossing" ? CROSSING.bloomThreshold : undefined
+    );
     this.post.setSize(window.innerWidth, window.innerHeight);
 
     this.applyReducedMotion(
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
     );
     this.syncPixelRatio();
+    this.placeLantern();
+  }
+
+  /**
+   * 등불의 자리. 가로 화면에서는 가운데 조금 오른쪽(히어로 두 단 사이의 틈,
+   * uv x ≈ 0.53), 세로 화면에서는 왼쪽(uv x ≈ 0.2)입니다. 폰에서는 CTA 버튼이
+   * 화면 가로의 대부분을 차지해서 가운데에 두면 기둥이 그 버튼 한가운데를 지납니다
+   * (shaders/water.ts의 등불 자리 주석과 같은 이유).
+   */
+  private placeLantern() {
+    if (!this.lantern || !this.particles) return;
+    const portrait = window.innerHeight > window.innerWidth;
+    const x = portrait ? -15 : CROSSING.lantern.x;
+    // 세로 화면은 fov가 75라 같은 y가 화면에서 더 높이 잡힙니다. 히어로의 CTA
+    // 아래(uv y ≈ 0.22)에 놓이도록 더 내립니다.
+    const y = portrait ? -28 : CROSSING.lantern.y;
+    this.lantern.setPosition(x, y, CROSSING.lantern.z);
+    this.particles.setLantern(x, y, CROSSING.lantern.z);
   }
 
   // ── lifecycle ──────────────────────────────────────────────────────────────
@@ -127,8 +176,31 @@ export class BackgroundScene {
     window.addEventListener("scroll", this.onScroll, { passive: true });
     document.addEventListener("visibilitychange", this.onVisibility);
     this.mql.addEventListener("change", this.onReducedChange);
+    this.readAnchors();
     this.clock.start();
     this.loop();
+  }
+
+  /**
+   * crossing 변형의 국면 경계. #record, #december, #naru의 offsetTop을 스크롤
+   * 비율로 바꿉니다. 상수로 박지 않는 이유는 페이지 길이가 바뀌어도 "프로그램에서
+   * 건넌다"가 유지되어야 하기 때문입니다. 시작·리사이즈, 그리고 2초마다 다시
+   * 읽습니다(이미지가 늦게 실려 문서 높이가 바뀌는 경우).
+   */
+  private readAnchors() {
+    if (this.variant !== "crossing") return;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    if (max <= 0) return;
+    const top = (id: string) => {
+      const el = document.getElementById(id);
+      return el ? clamp(el.getBoundingClientRect().top + window.scrollY, 0, max) / max : null;
+    };
+    const record = top("record");
+    const december = top("december");
+    const naru = top("naru");
+    if (record !== null && december !== null && naru !== null && record < december && december < naru) {
+      this.anchors = { record, december, naru };
+    }
   }
 
   dispose() {
@@ -143,6 +215,7 @@ export class BackgroundScene {
     this.atmosphere?.dispose();
     this.particles?.dispose();
     this.water?.dispose();
+    this.lantern?.dispose();
     this.post.dispose();
     this.scene.traverse((o) => {
       const l = o as THREE.Light;
@@ -161,6 +234,8 @@ export class BackgroundScene {
     this.water?.resize();
     this.post.setSize(window.innerWidth, window.innerHeight);
     this.syncPixelRatio();
+    this.readAnchors();
+    this.placeLantern();
   };
   private onScroll = () => {
     // While a modal holds the scroll lock the page is parked at
@@ -232,6 +307,27 @@ export class BackgroundScene {
     const target = clamp(perSec / 0.6, 0, 1);
     const k = target > this.flow ? 12 : 1.8;
     this.flow += (target - this.flow) * Math.min(1, k * dt);
+
+    if (this.variant === "crossing" && this.water && this.particles && this.lantern && this.atmosphere) {
+      this.anchorTimer += dt;
+      if (this.anchorTimer > 2) { this.anchorTimer = 0; this.readAnchors(); }
+      const cp = computeCrossingPhases(this.scroll, this.anchors);
+      const ph = crossingToPhases(cp);
+      // 등불의 화면 uv. 반사 띠의 지평선이 여기서 시작하고, 렌즈의 초점도 여기입니다.
+      this.lanternProjected.copy(this.lantern.sprite.position).project(this.cam.camera);
+      const lx = this.lanternProjected.x * 0.5 + 0.5;
+      const ly = this.lanternProjected.y * 0.5 + 0.5;
+      this.post.setFocus(lx, ly);
+      this.water.setLamp(lx, ly, CROSSING.bandHeight);
+      this.atmosphere.update(this.fieldTime, this.scroll, 0);
+      // uFlow 자리에 건너기 국면을 넘깁니다. 건너는 동안 반사 띠가 흔들립니다.
+      this.water.update(this.fieldTime, this.scroll, this.pointerUv, 0, cp.crossing);
+      this.particles.updateCrossing(this.fieldTime, this.scroll, this.motionScale, cp);
+      this.lantern.update(this.fieldTime, cp.gather, cp.arrived);
+      this.post.setPhase(ph, this.reduced ? 0.3 : 1);
+      this.post.render(dt);
+      return;
+    }
 
     if (this.water) {
       // 포인터 ndc(-1..1)를 화면 uv(0..1)로. 셰이더가 파문을 여기에 놓습니다.

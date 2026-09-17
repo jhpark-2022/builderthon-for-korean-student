@@ -63,6 +63,14 @@ uniform vec3  uSkyHorizon;
 uniform vec3  uDeep;
 uniform vec3  uGlint;
 uniform vec3  uLamp;
+// ── 띠 모드 (2026-09-17, crossing 변형) ──────────────────────────────────────
+// uBand가 1이면 이 셰이더는 하늘도 등불도 깊은 물도 그리지 않고, 등불의 화면 위치
+// (uLampUv) 아래로 uBandH 높이의 반사 띠 하나만 그립니다. 나머지는 알파 0.
+// 등불 자체는 3D 스프라이트(particles/Lantern.ts)가 그립니다. 0이면 아래 원문이
+// 그대로 돕니다(water 변형).
+uniform float uBand;
+uniform vec2  uLampUv;    // 등불의 화면 uv. y가 지평선.
+uniform float uBandH;     // 띠의 높이(뷰포트 비율)
 
 varying vec2 vUv;
 
@@ -74,6 +82,34 @@ float depthAt(float d){ return 0.055 / (d + 0.02); }
 
 void main(){
   vec2 p = vUv;
+
+  if (uBand > 0.5) {
+    float H = uLampUv.y;
+    // 0에서 자릅니다. 아래 원문의 NaN 주석과 같은 이유입니다.
+    float d = max(H - p.y, 0.0);
+    float t = uTime * 0.11;
+    float z = depthAt(d);
+    vec2 w = vec2((p.x - 0.5) * uAspect * z, z);
+    float n1 = snoise(vec3(w * 1.3, t));
+    float n2 = snoise(vec3(w * 3.3 + 7.0, t * 1.5));
+    float h  = n1 * 0.62 + n2 * 0.38;
+    float far = 1.0 - smoothstep(0.0, uBandH, d);
+    vec3 water = mix(uDeep, uSkyHorizon * 0.95, far);
+    float glint = smoothstep(0.58, 0.93, h) * far;
+    water += uGlint * glint * 0.42;
+    // 반사 기둥. 등불의 x 아래. 건너는 동안(uFlow) 흔들림이 커집니다.
+    float dx = (p.x - uLampUv.x) * uAspect;
+    float colW = (0.010 + d * 0.20) * mix(0.62, 1.0, smoothstep(0.75, 1.3, uAspect));
+    float column = exp(-abs(dx) / colW);
+    float shimmer = 0.55 + 0.45 * snoise(vec3(w * 2.0, t * (2.2 + uFlow * 3.0)));
+    water += uLamp * column * shimmer * (0.6 - smoothstep(0.0, uBandH, d) * 0.35) * (0.7 + uFlow * 0.5);
+    // 지평선 자체의 옅은 빛. 건너편이 거기 있다는 표시입니다.
+    water += uSkyHorizon * exp(-d * 130.0) * 0.30;
+    // 위는 지평선에서 얇게, 아래는 띠 높이의 절반부터 서서히 사라집니다.
+    float alpha = step(p.y, H) * (1.0 - smoothstep(uBandH * 0.55, uBandH, d));
+    gl_FragColor = vec4(water, alpha);
+    return;
+  }
 
   // 지평선. 화면 아래쪽 1/3 언저리입니다.
   //

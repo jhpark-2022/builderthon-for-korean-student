@@ -19,6 +19,6 @@ const Background = dynamic(() => import("@/components/Background"), { ssr: false
 // 나루 홈은 "water"를 넘겨 나루터 수면을 받습니다.
 export type { BackgroundVariant } from "@/lib/background/scene/BackgroundScene";
 
-export default function BackgroundMount({ variant }: { variant?: "field" | "water" }) {
+export default function BackgroundMount({ variant }: { variant?: "field" | "water" | "crossing" }) {
   return <Background variant={variant} />;
 }

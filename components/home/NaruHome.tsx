@@ -279,7 +279,9 @@ export default function NaruHome() {
           보라 → 자주 그라데이션 필입니다. 남은 주황은 점(로고, #naru 코어 표식),
           그라데이션의 끝, 12월 아이브로 글자색, 기간 줄 틴트뿐입니다. */}
       <Chapter id="top" align="center" wide className="pt-16 sm:pt-24 lg:pt-20">
-        <div ref={heroRef} className="grid items-center gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
+        {/* relative: useScroll의 target은 offsetParent가 positioned여야 합니다.
+            없으면 framer-motion이 콘솔에 경고를 냅니다(2026-09-17 배경 검증에서 발견). */}
+        <div ref={heroRef} className="relative grid items-center gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
           <motion.div style={{ x: splitX ? leftX : undefined, opacity: heroFade }} className="text-center lg:pl-10 lg:text-left xl:pl-16">
             <Eyebrow color="purple" className="!text-[0.65rem] sm:!text-xs">{t(naru.eventHero.eyebrow)}</Eyebrow>
             {/* 8월 H1과 같은 clamp. 2행은 그라데이션 토큰(GRADIENT_TEXT). ko는
