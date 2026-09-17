@@ -318,6 +318,28 @@ export const naru = {
     // 같은 사진을 두 번 쓰지 않습니다: 여기 넷은 record.wall의 열둘과 겹치지 않고,
     // 원본 파일도 다릅니다(원본 이름은 각 항목의 주석). 전부 4:3, 1200×900 webp.
     photos: [
+      // DECIDED 2026-09-17 (사용자 지정): 이 넷. 순서대로 2×2.
+      {
+        // 원본 Photo/Day 1/현장 사진/IMG_2092.JPG. 8월의 기록 벽의 day1-start 자리에
+        // 있던 사진이라, 그 자리는 Day 1/AWS/IMG_2044로 바꿨습니다(같은 사진 두 번 금지).
+        src: "/record/hero-day1-group.webp",
+        width: 1200,
+        height: 900,
+        alt: {
+          ko: "2026년 8월 22일 Day 1, 싱가포르 파운드리에 모인 참가자 단체 사진",
+          en: "Day 1, 22 August 2026: everyone gathered at Foundry in Singapore",
+        },
+      },
+      {
+        // 원본 Photo/Day 1/AWS/IMG_2028.HEIC
+        src: "/record/hero-day1-hall.webp",
+        width: 1200,
+        height: 900,
+        alt: {
+          ko: "Day 1 파운드리 홀, 무대의 AWS 세션을 듣는 참가자들",
+          en: "Day 1 at Foundry: participants listening to the AWS session on stage",
+        },
+      },
       {
         // 원본 Photo/Day 8/시상식/IMG_2680.HEIC
         src: "/record/hero-day8-group.webp",
@@ -329,33 +351,13 @@ export const naru = {
         },
       },
       {
-        // 원본 Photo/Day 1/AWS/IMG_2044.HEIC
-        src: "/record/hero-day1-audience.webp",
+        // 원본 Photo/Day 8/Judgement Track Sharing/IMG_2513.HEIC (세로 원본. 아래쪽 4:3)
+        src: "/record/hero-day8-judgement-room.webp",
         width: 1200,
         height: 900,
         alt: {
-          ko: "Day 1 파운드리 홀을 가득 채운 참가자들이 무대의 세션을 듣는 모습",
-          en: "Day 1: a full Foundry hall listening to a session on stage",
-        },
-      },
-      {
-        // 원본 Photo/Day 8/커리어 간담회/IMG_8119.heic
-        src: "/record/hero-day8-career-room.webp",
-        width: 1200,
-        height: 900,
-        alt: {
-          ko: "Day 8 커리어 간담회, 긴 책상에 둘러앉은 참가자들",
-          en: "Day 8 career talk: participants around the long tables",
-        },
-      },
-      {
-        // 원본 Photo/Day 8/Judgement Track Sharing/IMG_8037.HEIC
-        src: "/record/hero-day8-judgement.webp",
-        width: 1200,
-        height: 900,
-        alt: {
-          ko: "Day 8 저지먼트 트랙 공유회, 팀의 발표를 지켜보는 참가자들",
-          en: "Day 8 judgement-track sharing: the room watching a team present",
+          ko: "Day 8 저지먼트 트랙 공유회, 책상에 앉아 발표를 듣는 참가자들",
+          en: "Day 8 judgement-track sharing: participants at their tables, listening",
         },
       },
     ] as RecordPhoto[],
@@ -595,14 +597,16 @@ export const naru = {
     // 있습니다.
     photos: [
       {
-        src: "/record/day1-start.webp",
-        width: 1600,
-        height: 1200,
+        // DECIDED 2026-09-17: 단체 사진(IMG_2092)이 히어로로 올라가서, 이 자리는 같은
+        // 날 홀을 가득 채운 청중(Photo/Day 1/AWS/IMG_2044.HEIC)으로. 캡션은 그대로.
+        src: "/record/day1-full-hall.webp",
+        width: 1200,
+        height: 900,
         day: { ko: "Day 1", en: "Day 1" },
         caption: { ko: "쉰아홉 명으로 시작했습니다", en: "It started with fifty-nine people" },
         alt: {
-          ko: "2026년 8월 22일 Day 1, 싱가포르 파운드리에 모인 참가자 단체 사진",
-          en: "Day 1, 22 August 2026: everyone gathered at Foundry in Singapore",
+          ko: "2026년 8월 22일 Day 1, 싱가포르 파운드리 홀을 가득 채운 참가자들",
+          en: "Day 1, 22 August 2026: a full hall at Foundry in Singapore",
         },
       },
       {
@@ -901,7 +905,7 @@ export const naru = {
     // (기록), 여기 있는 순서대로 골라 겁니다. 6의 배수 규칙은 그대로.
     // 캡션이 있는 셋(Day 1, Day 5, Day 8)은 반드시 들어갑니다.
     wall: [
-      "/record/day1-start.webp",
+      "/record/day1-full-hall.webp",
       "/record/day1-checkin.webp",
       "/record/day5-session.webp",
       "/record/day8-prove.webp",

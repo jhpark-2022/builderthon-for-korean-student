@@ -46,3 +46,19 @@
 - `npx tsc --noEmit`, `npm run build` 통과. 프로덕션 콘솔 오류 0(1440·390).
 - 페이지 길이: 홈 1440 ko 9,610 / en 10,194(변화 없음), 390 ko 13,318 / en 14,645(+92).
 - 사진 넷 용량 합 583 KB.
+
+## 5. 2차 (같은 날, 사용자 지정)
+
+사용자가 넷을 직접 골랐습니다. 순서대로 2×2.
+
+| 파일 | 원본 | 장면 |
+| --- | --- | --- |
+| `hero-day1-group.webp` | Day 1/현장 사진/IMG_2092.JPG | Day 1 단체 사진 |
+| `hero-day1-hall.webp` | Day 1/AWS/IMG_2028.HEIC | Day 1 홀, AWS 세션 |
+| `hero-day8-group.webp` | Day 8/시상식/IMG_2680.HEIC | 시상식 뒤 단체 사진 |
+| `hero-day8-judgement-room.webp` | Day 8/Judgement Track Sharing/IMG_2513.HEIC | 세로 원본, 아래쪽 4:3 |
+
+IMG_2092는 8월의 기록 벽의 `day1-start` 자리에 있던 사진이라(같은 사진 두 번 금지)
+그 자리를 Day 1/AWS/IMG_2044(홀을 가득 채운 청중, `day1-full-hall.webp`)로 바꾸고 캡션은
+그대로 두었습니다. 1차의 `hero-day1-audience`(=IMG_2044)는 그 파일로 이름을 바꿨고,
+`hero-day8-career-room`, `hero-day8-judgement`, `day1-start`는 지웠습니다.
