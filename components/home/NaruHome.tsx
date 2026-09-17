@@ -690,9 +690,10 @@ export default function NaruHome() {
             ol인 이유: 순서가 뜻입니다. 01이 문턱이고 02가 증명이며, 바로 아래
             note가 그 둘이 한 쌍이라고 말합니다. 번호는 그리지 않습니다(9/16
             2차의 이유 그대로). 나루 점이 제목 첫 글자 앞에 섭니다.
-            점의 크기가 em인 이유: STATEMENT가 clamp(31.5~51.75px)라 px로 박으면
-            좁은 화면에서 점이 제목보다 커집니다. 0.65em이면 20~34px이고 로고
-            가이드의 하한 18px을 지킵니다. mt는 leading 1.15의 첫 줄 한가운데.
+            점의 크기가 em인 이유: STATEMENT가 clamp(22.5~29px, 3차)라 px로 박으면
+            좁은 화면에서 점이 제목보다 커집니다. 0.8em이면 18~23px이고 로고
+            가이드의 하한 18px을 좁은 쪽 끝에서 정확히 지킵니다. mt는 leading
+            1.2의 첫 줄 한가운데.
             keeps가 dl인 이유: 항목 이름과 값이지 제목이 아닙니다. */}
         <ol role="list" className="mx-auto mt-12 max-w-5xl text-left">
           {naru.why.cores.map((core, i) => (
@@ -704,7 +705,7 @@ export default function NaruHome() {
             >
               <div>
                 <h3 className={`flex items-start gap-4 ${STATEMENT}`}>
-                  <NaruMark className="mt-[0.2em] h-[0.75em] w-[0.75em]" />
+                  <NaruMark className="mt-[0.2em] h-[0.8em] w-[0.8em]" />
                   <span>{t(core.title)}</span>
                 </h3>
                 {/* 첫 줄은 그 자체가 코어의 문장입니다("스크리닝이 없고, 순위가

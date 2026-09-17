@@ -60,10 +60,15 @@ export const LABEL_HEADING =
  *
  * 2026-09-17 (2차): clamp(1.75rem,3.8vw,2.875rem)에서 한 단 내렸습니다. 27~38px.
  * 첫 판형은 51.75px까지 갔는데 사용자가 "또 너무 큰데"라고 했고, 실제로 H2
- * (67.5px)와 겨루는 크기였습니다. 판형은 유지하고 크기만 H3 바로 위로 둡니다.
+ * (67.5px)와 겨루는 크기였습니다.
+ *
+ * 2026-09-17 (3차): 22.5~29px. 사용자가 코어 제목 둘을 짚어 "font가 너무 크다"고
+ * 했습니다. 이제 H3(24~34px)보다 작습니다. 이 토큰이 하는 일은 "크다"가 아니라
+ * "판의 첫 줄"이라는 자리 표시이고, 판의 무게는 제목이 아니라 그 아래 첫 줄과
+ * 오른쪽 열의 배치가 나릅니다. 더 줄이면 첫 줄(text-lg sm:text-xl)과 겹칩니다.
  *
  * leading이 1.15인 이유: 두 줄로 접히는 한글 제목이 tracking-tight에서 줄 사이가
  * 벌어져 보이지 않게. H2는 globals.css의 heading 규칙이 같은 값을 줍니다.
  */
 export const STATEMENT =
-  "break-keep text-[clamp(1.5rem,2.8vw,2.125rem)] font-bold leading-[1.15] tracking-tight text-white";
+  "break-keep text-[clamp(1.25rem,2vw,1.625rem)] font-bold leading-[1.2] tracking-tight text-white";
