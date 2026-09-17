@@ -26,7 +26,7 @@ import MobileChatBar from "@/components/shared/MobileChatBar";
 import PressRows from "@/components/shared/PressRows";
 import { BAND_TINT, BandFades } from "@/components/shared/Band";
 import { useHeroSplit } from "@/components/shared/useHeroSplit";
-import { computeShapeLayout, readShapeAnchors } from "@/lib/background/utils/shapeLayout";
+import { computeStageLayout, readStageRect, findStageElement, STAGE } from "@/lib/background/utils/shapeLayout";
 import Chapter from "@/components/journey/Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
@@ -196,7 +196,7 @@ function TermLink({ text, term, href }: { text: string; term: string; href: stri
 // 0이 되면 "시작했습니다". 아래 미정 칩 셋은 tbd 목록의 앞 둘과 마지막(등록이
 // 열리는 날)입니다. 나머지는 프로그램 챕터의 목록이 갖습니다.
 // ─────────────────────────────────────────────────────────────────────────────
-function CountdownPanel({ t, locale }: { t: (p: Phrase) => string; locale: "ko" | "en" }) {
+function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => string; locale: "ko" | "en"; className?: string }) {
   const [left, setLeft] = useState<{ d: number; h: number; m: number } | null | "started">(null);
   useEffect(() => {
     const tick = () => {
@@ -215,34 +215,31 @@ function CountdownPanel({ t, locale }: { t: (p: Phrase) => string; locale: "ko" 
       ? [{ v: String(left.d), u: units.days }, { v: String(left.h).padStart(2, "0"), u: units.hours }, { v: String(left.m).padStart(2, "0"), u: units.minutes }]
       : [{ v: "--", u: units.days }, { v: "--", u: units.hours }, { v: "--", u: units.minutes }];
   const tbd = naru.december.tbd.filter((_, i, arr) => i < 2 || i === arr.length - 1);
+  // DECIDED 2026-09-17 (배경 수정 브리프): 유리 카드에서 한 줄짜리 얇은 패널로. 오른쪽
+  // 단은 형상의 무대가 됐고, 그 위에 카드가 있으면 형상이 또 가려집니다. 숫자 셋과
+  // "아직 정해지지 않은 것" 칩 셋만 한 줄에. 기간 줄은 바로 위 카피가 이미 말합니다.
   return (
-    // data-shape-anchor: 배경의 서울 형상이 이 카드 아래 빈 띠에 섭니다
-    // (lib/background/utils/shapeLayout.ts). Glass는 속성을 받지 않아 한 겹 감쌌습니다.
-    <div data-shape-anchor="panel" className="ml-auto max-w-md">
-    <Glass className="text-left">
-      <p className="text-[0.68rem] font-bold uppercase tracking-[0.2em] text-[#F2B183]">{t(naru.eventHero.countdownLabel)}</p>
-      <div className="mt-4 flex h-16 items-end gap-5">
+    <div className={`flex flex-wrap items-center gap-x-5 gap-y-3 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-3.5 text-left ${className}`}>
+      <p className="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-[#F2B183]">{t(naru.eventHero.countdownLabel)}</p>
+      <div className="flex items-baseline gap-3.5">
         {left === "started" ? (
-          <p className="text-2xl font-black text-white">{t(naru.eventHero.started)}</p>
+          <p className="text-lg font-black text-white">{t(naru.eventHero.started)}</p>
         ) : (
           cells.map((c, i) => (
             <div key={i} className="flex items-baseline gap-1">
-              <span className="text-[2.6rem] font-black leading-none tabular-nums text-white">{c.v}</span>
-              <span className="text-xs font-semibold text-white/55">{t(c.u)}</span>
+              <span className="text-2xl font-black leading-none tabular-nums text-white">{c.v}</span>
+              <span className="text-[0.65rem] font-semibold text-white/55">{t(c.u)}</span>
             </div>
           ))
         )}
       </div>
-      <p className="mt-3 text-sm font-semibold text-white/80">{formatDecemberDateLine(locale)}</p>
-      <div className="mt-5 border-t border-white/10 pt-4">
-        <p className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-white/50">{t(naru.december.tbdLabel)}</p>
-        <div className="mt-2 flex flex-wrap gap-1.5">
-          {tbd.map((item) => (
-            <Chip key={item.en} tone="pending"><span aria-hidden className="text-amber-300/70">●</span>{t(item)}</Chip>
-          ))}
-        </div>
+      <div aria-hidden className="hidden h-5 w-px bg-white/10 sm:block" />
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span className="mr-1 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-white/50">{t(naru.december.tbdLabel)}</span>
+        {tbd.map((item) => (
+          <Chip key={item.en} tone="pending"><span aria-hidden className="text-amber-300/70">●</span>{t(item)}</Chip>
+        ))}
       </div>
-    </Glass>
     </div>
   );
 }
@@ -269,31 +266,29 @@ function ShapeLabels({ t }: { t: (p: Phrase) => string }) {
   }, []);
   useEffect(() => {
     const place = () => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      // 자리는 배경과 같은 함수에서(lib/background/utils/shapeLayout.ts).
-      const L = computeShapeLayout(w, h, readShapeAnchors());
-      const under = (p: { cx: number; cy: number; w: number; h: number }): React.CSSProperties => {
-        if (L.mode === "anchored" || h <= w) {
-          // 형상 아래 10px, 가운데 맞춤. 형상은 라벨 자리를 비워 두고 섭니다.
-          return { left: `${p.cx}px`, top: `${p.cy + p.h / 2 + 10}px`, transform: "translateX(-50%)" };
-        }
-        // 앵커가 없는 세로 화면(behind): 형상 바운딩 박스의 오른쪽 아래 모서리 안쪽,
-        // 오른쪽 맞춤. 두 형상 모두 박스의 모서리는 비어 있어 점을 가리지 않습니다.
-        return { left: `${p.cx + p.w / 2}px`, top: `${p.cy + p.h / 2 - 16}px`, transform: "translateX(-100%)" };
-      };
-      const opacity = 1 - Math.min(1, window.scrollY / (h * 0.5));
+      // 자리는 배경과 같은 함수에서(lib/background/utils/shapeLayout.ts). 무대 사각형은
+      // 스크롤 0 기준이라 라벨은 무대와 함께 스크롤됩니다(absolute, 문서 좌표).
+      const L = computeStageLayout(window.innerWidth, window.innerHeight, readStageRect());
+      if (!L) { setStyle(null); return; }
+      const under = (p: { cx: number; cy: number; h: number }): React.CSSProperties => ({
+        left: `${p.cx}px`, top: `${p.cy + p.h / 2 + STAGE.labelGap}px`, transform: "translateX(-50%)",
+      });
+      const opacity = 1 - Math.min(1, window.scrollY / (window.innerHeight * 0.6));
       setStyle({ l: under(L.left), r: under(L.right), opacity });
     };
     place();
-    // 폰트·패널이 그려진 뒤 한 번 더(앵커 사각형이 첫 프레임과 다를 수 있음).
-    const late = window.setTimeout(place, 600);
+    // 폰트·레이아웃이 자리 잡은 뒤 다시(무대 사각형이 첫 프레임과 다를 수 있음).
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(place) : null;
+    const stage = findStageElement();
+    if (ro && stage) ro.observe(stage);
+    if (ro) ro.observe(document.body);
+    document.fonts?.ready.then(place).catch(() => {});
     window.addEventListener("resize", place);
     window.addEventListener("scroll", place, { passive: true });
-    return () => { window.clearTimeout(late); window.removeEventListener("resize", place); window.removeEventListener("scroll", place); };
+    return () => { ro?.disconnect(); window.removeEventListener("resize", place); window.removeEventListener("scroll", place); };
   }, []);
   if (!style || style.opacity <= 0) return null;
-  const cls = "pointer-events-none fixed z-[-5] text-[11px] font-semibold uppercase tracking-[0.22em] text-white/40 transition-opacity duration-700";
+  const cls = "pointer-events-none absolute z-[-5] text-[11px] font-semibold uppercase tracking-[0.22em] text-white/40 transition-opacity duration-700";
   const op = bgReady ? style.opacity : 0;
   return (
     <>
@@ -373,9 +368,7 @@ export default function NaruHome() {
             <p className="mx-auto mt-3 max-w-xl break-keep text-sm leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base lg:mx-0">
               {t(naru.eventHero.sub)}
             </p>
-            {/* data-shape-anchor: 배경의 싱가포르 형상이 이 줄 아래 빈 띠에 섭니다
-                (lib/background/utils/shapeLayout.ts). */}
-            <div data-shape-anchor="copy" className="mt-10 flex flex-wrap justify-center gap-3 lg:justify-start">
+            <div className="mt-10 flex flex-wrap justify-center gap-3 lg:justify-start">
               <OpenChatLink t={t} src="naru-hero" label={openChatLabels.december} variant="hero" />
               {/* 오픈채팅이 막혀 있으면(links.openChat 빈 문자열, 2026-09-17) 이 앵커가
                   히어로의 유일한 문이라 주 CTA의 면(그라데이션 필)을 받습니다. 히어로의
@@ -389,22 +382,24 @@ export default function NaruHome() {
                 <span aria-hidden className={links.openChat ? "text-white/50" : ARROW_CLASS}>↓</span>
               </a>
             </div>
+            {/* 카운트다운(얇은 한 줄). lg부터 여기, 그 아래 폭에서는 무대 다음에. */}
+            <CountdownPanel t={t} locale={locale} className="mt-8 hidden lg:flex" />
           </motion.div>
-          {/* 오른쪽 단. 8월의 카운트다운 패널 자리. lg부터만 그립니다. 그 아래
-              폭에서는 히어로가 한 단으로 쌓여 패널이 접히는 지점에서 길이만
-              늘립니다(8월도 같은 이유로 오른쪽 단을 폰에서 숨겼습니다). */}
+          {/* 오른쪽 단 = 형상의 무대 (DECIDED 2026-09-17, 배경 수정 브리프). 8월
+              히어로의 메탈 휴먼 자리입니다. 배경 캔버스의 싱가포르·서울 형상이 이
+              사각형 안에 서고(lib/background/utils/shapeLayout.ts), 라벨이 그 아래
+              붙습니다. DOM에는 아무것도 그리지 않습니다. 세로 중심 = 히어로의 세로
+              중심 = 첫 화면의 세로 중심. lg부터만. */}
           <motion.div style={{ x: splitX ? rightX : undefined, opacity: heroFade }} className="hidden lg:block lg:pr-10 xl:pr-16">
-            <CountdownPanel t={t} locale={locale} />
+            <div data-shape-anchor="stage" aria-hidden className="aspect-[4/3] w-full" />
           </motion.div>
         </div>
-        {/* DECIDED 2026-09-17 (3차): 형상 띠. 배경의 싱가포르·서울 형상이 여기 서고
-            라벨이 그 아래 붙습니다(lib/background/utils/shapeLayout.ts). 폰은 150px에
-            나란히, 데스크톱은 min(20vw, 24vh)에 카피 단 아래·패널 아래. 띠가
-            레이아웃에 있어야 히어로(카피 + 패널 + 형상)가 한 덩어리로 가운데 잡힙니다.
-            띠 없이 남는 공간에 놓았을 때 큰 화면에서 형상만 바닥에 붙었습니다.
-            폰 페이지가 약 160px 길어져 길이 상한(12,500)을 넘는 것을 감수한
-            결정입니다(사용자). */}
-        <div data-shape-anchor="band" aria-hidden className="mt-2 h-[150px] lg:mt-4 lg:h-[min(20vw,24vh)]" />
+        {/* 폰(lg 아래): 카피 바로 다음에 무대 한 단(너비 100%, 높이 44vw), 그 아래
+            카운트다운. 첫 화면 안에 들어오지 않아도 되지만 카피 바로 다음이어야 합니다. */}
+        <div className="px-6 sm:px-10 lg:hidden">
+          <div data-shape-anchor="stage" aria-hidden className="mt-6 h-[44vw] w-full" />
+          <CountdownPanel t={t} locale={locale} className="mt-6 justify-center" />
+        </div>
       </Chapter>
 
       {/* ── CH1 · 8월의 기록 ─────────────────────────────────────────────── */}

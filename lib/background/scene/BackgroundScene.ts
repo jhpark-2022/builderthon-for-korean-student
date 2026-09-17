@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { CROSSING, pickQuality, type QualityTier } from "../config";
-import { computeShapeLayout, readShapeAnchors } from "../utils/shapeLayout";
+import { computeStageLayout, readStageRect, findStageElement, type StageLayout } from "../utils/shapeLayout";
 import { Renderer } from "../renderer/Renderer";
 import { CameraController } from "../camera/CameraController";
 import { Pointer } from "../interactions/Pointer";
@@ -153,10 +153,12 @@ export class BackgroundScene {
   }
 
   /**
-   * 기슭 형상의 자리(2026-09-17). config.SHAPES의 뷰포트 비율을 z=0 평면(카메라에서
-   * 30)의 월드 좌표로 바꿉니다. 가로 화면은 좌우(22% / 78%), 세로 화면은 위아래
-   * (35% / 70%)로 쌓습니다. 각 형상의 너비는 뷰포트 너비의 24% / 55%.
+   * 기슭 형상의 자리(2026-09-17, 배경 수정 브리프). 히어로 오른쪽 단(폰은 카피 아래
+   * 한 단)의 무대 사각형을 재서(utils/shapeLayout.ts) z = 0 평면의 월드 좌표로
+   * 바꿉니다. 등불과 반사 띠도 같은 무대에서 나옵니다. 무대가 없으면(다른 페이지)
+   * 화면 오른쪽 반을 무대로 칩니다.
    */
+  private stageLayout: StageLayout | null = null;
   private placeShapes() {
     if (!this.particles || this.variant !== "crossing") return;
     const w = window.innerWidth;
@@ -165,36 +167,42 @@ export class BackgroundScene {
     const fov = portrait ? 75 : 60;
     const halfH = 30 * Math.tan((fov * Math.PI) / 360);
     const halfW = halfH * (w / h);
-    // 자리는 utils/shapeLayout.ts가 정합니다(데스크톱: 카피·패널 아래의 빈 띠, 폰:
-    // CTA 아래의 띠, 앵커가 없으면 브리프의 자리). 뷰포트 px → z = 0 평면의 월드 좌표.
-    const L = computeShapeLayout(w, h, readShapeAnchors());
+    const stage = readStageRect() ?? { left: w * 0.5, top: h * 0.3, right: w, bottom: h * 0.7 };
+    const L = computeStageLayout(w, h, stage);
+    if (!L) return;
+    this.stageLayout = L;
     const toWorld = (p: { cx: number; cy: number; w: number }) => ({
       x: (p.cx / w * 2 - 1) * halfW,
       y: (1 - p.cy / h * 2) * halfH,
       hw: (p.w / w) * halfW,
     });
-    this.particles.setShapes(toWorld(L.left), toWorld(L.right), L.dimA, L.dimB);
+    this.particles.setShapes(toWorld(L.left), toWorld(L.right), [0, 0, 0, 0], [0, 0, 0, 0]);
+    // 등불은 z = −40(카메라에서 70). 그 깊이의 화면 반폭은 z = 0의 70/30배입니다.
+    const k = (30 - CROSSING.lantern.z) / 30;
+    const lx = (L.lantern.cx / w * 2 - 1) * halfW * k;
+    const ly = (1 - L.lantern.cy / h * 2) * halfH * k;
+    this.lantern?.setPosition(lx, ly, CROSSING.lantern.z);
+    this.particles.setLantern(lx, ly, CROSSING.lantern.z);
+    this.water?.setBandX(L.band.x0 / w, L.band.x1 / w);
   }
 
-  /**
-   * 등불의 자리. 가로 화면에서는 가운데 조금 오른쪽(히어로 두 단 사이의 틈,
-   * uv x ≈ 0.53)입니다.
-   *
-   * DECIDED 2026-09-17 (형상 띠): 세로 화면은 가운데(uv x 0.5). 형상 이전에는 왼쪽
-   * (x −15, uv ≈ 0.2)이었는데, CTA 아래 띠에 두 형상이 나란히 서면서 그 자리가
-   * 싱가포르 섬의 서쪽 끝과 겹쳤습니다. 가운데는 두 형상 사이의 틈(강)이고, 등불의
-   * 높이(uv y ≈ 0.23)가 CTA 버튼보다 아래라 반사 기둥이 버튼을 지나지 않습니다
-   * (옛 걱정: 가운데 두면 기둥이 CTA 버튼 한가운데를 지난다. 지금은 아님).
-   */
+  /** 무대 요소와 문서 크기를 지켜봅니다. 2초 폴링 대신(브리프 1.1). */
+  private stageObserver: ResizeObserver | null = null;
+  private observeStage() {
+    if (this.variant !== "crossing" || typeof ResizeObserver === "undefined") return;
+    this.stageObserver?.disconnect();
+    this.stageObserver = new ResizeObserver(() => { this.readAnchors(); this.placeShapes(); });
+    const stage = findStageElement();
+    if (stage) this.stageObserver.observe(stage);
+    this.stageObserver.observe(document.body);
+    document.fonts?.ready.then(() => { this.readAnchors(); this.placeShapes(); }).catch(() => {});
+  }
+
+  /** 등불의 기본 자리(무대를 읽기 전). 실제 자리는 placeShapes가 무대에서 정합니다. */
   private placeLantern() {
     if (!this.lantern || !this.particles) return;
-    const portrait = window.innerHeight > window.innerWidth;
-    const x = portrait ? 0 : CROSSING.lantern.x;
-    // 세로 화면은 fov가 75라 같은 y가 화면에서 더 높이 잡힙니다. 히어로의 CTA
-    // 아래(uv y ≈ 0.22)에 놓이도록 더 내립니다.
-    const y = portrait ? -28 : CROSSING.lantern.y;
-    this.lantern.setPosition(x, y, CROSSING.lantern.z);
-    this.particles.setLantern(x, y, CROSSING.lantern.z);
+    this.lantern.setPosition(CROSSING.lantern.x, CROSSING.lantern.y, CROSSING.lantern.z);
+    this.particles.setLantern(CROSSING.lantern.x, CROSSING.lantern.y, CROSSING.lantern.z);
   }
 
   // ── lifecycle ──────────────────────────────────────────────────────────────
@@ -207,6 +215,8 @@ export class BackgroundScene {
     document.addEventListener("visibilitychange", this.onVisibility);
     this.mql.addEventListener("change", this.onReducedChange);
     this.readAnchors();
+    this.placeShapes();
+    this.observeStage();
     this.clock.start();
     this.loop();
   }
@@ -236,6 +246,7 @@ export class BackgroundScene {
   dispose() {
     this.running = false;
     cancelAnimationFrame(this.rafId);
+    this.stageObserver?.disconnect();
     this.pointer.detach();
     window.removeEventListener("resize", this.onResize);
     window.removeEventListener("scroll", this.onScroll);
@@ -341,7 +352,7 @@ export class BackgroundScene {
 
     if (this.variant === "crossing" && this.water && this.particles && this.lantern && this.atmosphere) {
       this.anchorTimer += dt;
-      if (this.anchorTimer > 2) { this.anchorTimer = 0; this.readAnchors(); this.placeShapes(); }
+      if (this.anchorTimer > 2) { this.anchorTimer = 0; this.readAnchors(); }
       const cp = computeCrossingPhases(this.scroll, this.anchors);
       const ph = crossingToPhases(cp);
       // 등불의 화면 uv. 반사 띠의 지평선이 여기서 시작하고, 렌즈의 초점도 여기입니다.
@@ -349,7 +360,7 @@ export class BackgroundScene {
       const lx = this.lanternProjected.x * 0.5 + 0.5;
       const ly = this.lanternProjected.y * 0.5 + 0.5;
       this.post.setFocus(lx, ly);
-      this.water.setLamp(lx, ly, CROSSING.bandHeight);
+      this.water.setLamp(lx, ly, this.stageLayout ? this.stageLayout.band.h / window.innerHeight : CROSSING.bandHeight);
       this.atmosphere.update(this.fieldTime, this.scroll, 0);
       // uFlow 자리에 건너기 국면을 넘깁니다. 건너는 동안 반사 띠가 흔들립니다.
       this.water.update(this.fieldTime, this.scroll, this.pointerUv, 0, cp.crossing);

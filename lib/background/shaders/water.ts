@@ -71,6 +71,8 @@ uniform vec3  uLamp;
 uniform float uBand;
 uniform vec2  uLampUv;    // 등불의 화면 uv. y가 지평선.
 uniform float uBandH;     // 띠의 높이(뷰포트 비율)
+uniform vec2  uBandX;     // 띠의 x 범위(uv). 무대 폭 안에서만 (2026-09-17 수정 브리프)
+uniform float uBandFade;  // 전체 알파. 히어로가 나가면 0
 
 varying vec2 vUv;
 
@@ -103,10 +105,15 @@ void main(){
     float column = exp(-abs(dx) / colW);
     float shimmer = 0.55 + 0.45 * snoise(vec3(w * 2.0, t * (2.2 + uFlow * 3.0)));
     water += uLamp * column * shimmer * (0.6 - smoothstep(0.0, uBandH, d) * 0.35) * (0.7 + uFlow * 0.5);
-    // 지평선 자체의 옅은 빛. 건너편이 거기 있다는 표시입니다.
-    water += uSkyHorizon * exp(-d * 130.0) * 0.30;
+    // 지평선 자체의 옅은 빛. 건너편이 거기 있다는 표시입니다. 2026-09-17: 0.30 → 0.10,
+    // 폭 130 → 60. 화면을 가르는 밝은 줄로 읽히지 않을 만큼만.
+    water += uSkyHorizon * exp(-d * 60.0) * 0.10;
     // 위는 지평선에서 얇게, 아래는 띠 높이의 절반부터 서서히 사라집니다.
     float alpha = step(p.y, H) * (1.0 - smoothstep(uBandH * 0.55, uBandH, d));
+    // 무대 폭 안에서만. 양 끝은 무대 너비의 8%에 걸쳐 사라집니다.
+    float bw = max(uBandX.y - uBandX.x, 1e-3);
+    alpha *= smoothstep(uBandX.x, uBandX.x + bw * 0.08, p.x) * (1.0 - smoothstep(uBandX.y - bw * 0.08, uBandX.y, p.x));
+    alpha *= uBandFade;
     gl_FragColor = vec4(water, alpha);
     return;
   }

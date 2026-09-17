@@ -39,6 +39,8 @@ export class WaterSurface {
         uBand: { value: band ? 1 : 0 },
         uLampUv: { value: new THREE.Vector2(0.42, 0.3) },
         uBandH: { value: 0.14 },
+        uBandX: { value: new THREE.Vector2(0, 1) },  // 띠의 x 범위(uv). 무대 폭 안에서만(2026-09-17)
+        uBandFade: { value: 1 },                     // 히어로가 나가면 0으로
         uTime: { value: 0 },
         uScroll: { value: 0 },
         uAspect: { value: 1 },
@@ -114,6 +116,15 @@ export class WaterSurface {
     u.uPointer.value.copy(pointer);
     u.uPointerOn.value = on;
     u.uFlow.value = flow;
+  }
+
+  /** 띠 모드: 띠가 그려지는 x 범위(uv 0..1). 무대의 좌우. */
+  setBandX(x0: number, x1: number) {
+    this.material.uniforms.uBandX.value.set(x0, x1);
+  }
+  /** 띠 모드: 전체 알파. 히어로가 화면에서 나가면 0.6화면에 걸쳐 0으로. */
+  setBandFade(f: number) {
+    this.material.uniforms.uBandFade.value = f;
   }
 
   /** 띠 모드: 등불의 화면 uv(0..1, y는 위가 1)와 띠 높이. 매 프레임 스프라이트를 투영해 넘깁니다. */
