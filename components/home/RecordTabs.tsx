@@ -225,19 +225,26 @@ function TabPanel({
   );
 }
 
-export default function RecordTabs() {
+/**
+ * @param only  켤 탭. DECIDED 2026-09-17 (홈 흐름 재배치): 홈은 멘토 · 연사와 피드백
+ *              패널 둘만 켭니다. "8일의 형식"은 아카이브가 정본이고 여기서는 길이만
+ *              늘립니다. 안 넘기면 셋 다(그 전의 동작).
+ */
+export default function RecordTabs({ only }: { only?: TabId[] } = {}) {
   const { t } = useLocale();
-  const [tab, setTab] = useState<TabId>("format");
   const uid = useId();
   const tabs = naru.record.tabs;
   const headingId = `${uid}-tabs-heading`;
   const tabRefs = useRef(new Map<TabId, HTMLButtonElement>());
 
-  const TABS: { id: TabId; label: Phrase }[] = [
+  const ALL: { id: TabId; label: Phrase }[] = [
     { id: "format", label: tabs.format.label },
     { id: "mentors", label: tabs.mentors.label },
     { id: "people", label: tabs.people.label },
   ];
+  const TABS = only ? ALL.filter((x) => only.includes(x.id)) : ALL;
+  const [tab, setTab] = useState<TabId>(TABS[0]?.id ?? "format");
+  const has = (id: TabId) => TABS.some((x) => x.id === id);
 
   // ── 키보드 ───────────────────────────────────────────────────────────────
   // APG Tabs, 자동 활성화입니다. 화살표가 포커스를 옮기면 그 자리에서 패널도
@@ -330,7 +337,7 @@ export default function RecordTabs() {
       </div>
 
       {/* ── 탭 1 · 8일의 형식 ───────────────────────────────────────────── */}
-      <TabPanel uid={uid} id="format" active={tab === "format"}>
+      {has("format") && <TabPanel uid={uid} id="format" active={tab === "format"}>
         <div>
           <p className="break-keep text-sm leading-relaxed text-white/70">{t(tabs.format.intro)}</p>
           <ul className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -432,10 +439,10 @@ export default function RecordTabs() {
             </ul>
           </div>
         </div>
-      </TabPanel>
+      </TabPanel>}
 
       {/* ── 탭 2 · 멘토 ─────────────────────────────────────────────────── */}
-      <TabPanel uid={uid} id="mentors" active={tab === "mentors"}>
+      {has("mentors") && <TabPanel uid={uid} id="mentors" active={tab === "mentors"}>
         <div>
           <p className="break-keep text-sm leading-relaxed text-white/70">{t(tabs.mentors.intro)}</p>
           <div className="mt-6">
@@ -457,10 +464,10 @@ export default function RecordTabs() {
             </ul>
           </div>
         </div>
-      </TabPanel>
+      </TabPanel>}
 
       {/* ── 탭 3 · 연사와 피드백 패널 ───────────────────────────────────── */}
-      <TabPanel uid={uid} id="people" active={tab === "people"}>
+      {has("people") && <TabPanel uid={uid} id="people" active={tab === "people"}>
         <div>
           <p className="break-keep text-sm leading-relaxed text-white/70">{t(tabs.people.intro)}</p>
 
@@ -553,7 +560,7 @@ export default function RecordTabs() {
             </ul>
           </div>
         </div>
-      </TabPanel>
+      </TabPanel>}
 
       </div>
 

@@ -29,8 +29,7 @@ import { useHeroSplit } from "@/components/shared/useHeroSplit";
 import Chapter from "@/components/journey/Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
-// RecordTabs는 2026-09-16에 화면에서 내려갔습니다. 파일은 그대로 둡니다 -
-// 8월 정본을 직접 읽는 유일한 컴포넌트이고, 되살릴 자리가 여기 #record입니다.
+import RecordTabs from "@/components/home/RecordTabs";
 import { H2, H3, LABEL_HEADING, STATEMENT, GRADIENT_TEXT } from "@/components/ui/typography";
 import NaruMark from "@/components/ui/NaruMark";
 import MotionToggle from "@/components/ui/MotionToggle";
@@ -636,24 +635,18 @@ export default function NaruHome() {
             이 회차에서 가장 중요한 신호입니다. 시키지 않았는데 했어요. */}
         <StatRow stats={naru.record.stats} t={t} className="mt-12 lg:grid-cols-5" />
 
-        {/* 사진 열 장. 이 챕터의 본문입니다.
-            2026-09-16: 여기 있던 lead2 한 줄, RecordTabs(형식·멘토·연사 탭),
-            "8월에 아쉬웠던 네 가지" 카드 넷이 내려갔습니다. 셋 다 맞는
-            내용이었지만 셋 다 8월을 설명하는 글이었고, 설명은 아래 버튼 하나로
-            /2026-08에 갑니다. 아쉬웠던 넷은 12월 챕터의 "모양"이 대신 말합니다.
-            gaps·tabs 키는 data/naru.ts에 그대로 있습니다. */}
-        {/* 여섯 장(2026-09-17 3차). 목록과 순서는 data/naru.ts의 record.wall. */}
-        <PhotoWall
-          photos={naru.record.wall
-            .map((src) => naru.record.photos.find((p) => p.src === src))
-            .filter((p): p is RecordPhoto => Boolean(p))}
-          t={t}
-        />
+        {/* 사람(DECIDED 2026-09-17, 홈 흐름 재배치). 9/16에 내려갔던 RecordTabs를
+            멘토 · 연사와 피드백 패널 둘만 켜서 되살립니다. 8월 정본을 직접 읽습니다
+            (이름이 어긋나는 것이 이 사이트의 가장 나쁜 오류). "8일의 형식" 탭은
+            아카이브가 정본이라 켜지 않습니다. 사진 벽(PhotoWall, record.wall)은 이
+            챕터에서 뺐습니다. 사진은 히어로가 합니다. 같은 사진을 두 번 걸지 않습니다.
+            이 챕터가 하는 말은 "실명이 박힌 진짜 사람들이 왔다"입니다. */}
+        <RecordTabs only={["mentors", "people"]} />
 
-        {/* 언론 넷(DECIDED 2026-09-17). 8월 페이지의 press 블록과 같은 줄(shared/
-            PressRows). 위 둘은 행사 뒤 싱가포르 현지 매체, 아래 둘은 8월 페이지에
-            있던 기사입니다. 사진 벽 아래에 두는 이유: 사진이 "있었던 일"이고 기사는
-            그것을 밖에서 본 눈이라, 순서가 안에서 밖입니다. */}
+        {/* 언론(DECIDED 2026-09-17). 8월 페이지의 press 블록과 같은 줄(shared/
+            PressRows). 위는 행사 뒤 싱가포르 현지 매체, 아래 둘은 8월 페이지에
+            있던 기사입니다. 사람 아래에 두는 이유: 사람이 "안"이고 기사는 그것을
+            밖에서 본 눈이라, 순서가 안에서 밖입니다. */}
         <PressRows
           items={naru.record.press}
           tag={naru.record.pressTag}
@@ -1037,7 +1030,8 @@ function StatRow({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 사진 벽.
+// 사진 벽. 2026-09-17 홈 흐름 재배치로 화면에서 내려갔습니다(사진은 히어로가
+// 합니다). 함수와 record.wall·photos 키는 그대로 둡니다.
 //
 // DECIDED 2026-09-16: #record의 본문이 글에서 사진으로 바뀌면서 세 장이 열두
 // 장이 됐습니다(시상식 두 장은 이후에 다시 내려갔습니다 - data/naru.ts의
