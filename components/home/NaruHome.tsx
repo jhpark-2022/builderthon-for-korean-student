@@ -31,7 +31,7 @@ import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
 // RecordTabs는 2026-09-16에 화면에서 내려갔습니다. 파일은 그대로 둡니다 -
 // 8월 정본을 직접 읽는 유일한 컴포넌트이고, 되살릴 자리가 여기 #record입니다.
-import { H2, LABEL_HEADING, STATEMENT, GRADIENT_TEXT } from "@/components/ui/typography";
+import { H2, H3, LABEL_HEADING, STATEMENT, GRADIENT_TEXT } from "@/components/ui/typography";
 import NaruMark from "@/components/ui/NaruMark";
 import MotionToggle from "@/components/ui/MotionToggle";
 
@@ -597,6 +597,28 @@ export default function NaruHome() {
             <span aria-hidden>→</span>
           </a>
         </div>
+      </Chapter>
+
+      {/* ── CH2 · 오면 무엇이 남는가 (DECIDED 2026-09-17, 홈 흐름 재배치 브리프) ──
+          8월 사이트의 "참가하면 무엇을 얻나요?" 자리. 카드 다섯, 제목만(8월 BenefitCard의
+          번호 배지 + 제목 문법, 본문 없음). 데스크톱 한 줄 다섯(숫자 스탯 행과 같은
+          그리드), 폰은 두 열 + 마지막 한 장 전폭. 아래 한 줄이 "왜 제목뿐인가"의 답.
+          8월 참가 혜택 필과 같은 emerald. 기본 이음매. */}
+      <Chapter id="gains" align="center">
+        <Eyebrow color="emerald">{t(naru.gains.eyebrow)}</Eyebrow>
+        <h2 className={H2}><Halo tone="violet">{t(naru.gains.heading)}</Halo></h2>
+        <ol className="mx-auto mt-12 grid max-w-5xl grid-cols-2 gap-3 lg:grid-cols-5">
+          {naru.gains.items.map((item, i, arr) => (
+            <li
+              key={item.num}
+              className={`flex flex-col items-start rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-left ${i === arr.length - 1 ? "col-span-2 lg:col-span-1" : ""}`}
+            >
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-400/15 text-sm font-black text-emerald-200">{item.num}</span>
+              <h3 className={`${H3} mt-4`}>{t(item.title)}</h3>
+            </li>
+          ))}
+        </ol>
+        <p className="mx-auto mt-6 max-w-2xl break-keep text-sm text-white/50">{t(naru.gains.note)}</p>
       </Chapter>
 
       {/* ── CH3 · 8월이 남긴 것 (DECIDED 2026-09-17, 홈 흐름 재배치 브리프) ──

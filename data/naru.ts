@@ -485,6 +485,24 @@ export const naru = {
   // ── CH2 · 8월의 기록 ──────────────────────────────────────────────────────
   // 숫자는 전부 실측입니다. 하나라도 어림하지 마세요. 이 숫자들이 기업에 우리를
   // 설명하는 근거이고, 한 번 부풀리면 다음 이벤트의 모든 숫자가 의심받습니다.
+  // ── CH2 · 오면 무엇이 남는가 (DECIDED 2026-09-17, 홈 흐름 재배치 브리프) ─────
+  // 8월 사이트의 "참가하면 무엇을 얻나요?" 자리. 카드 다섯, 제목만. 본문도 불릿도
+  // 수치도 기업 이름도 없습니다(사용자: 제목만 쓴다). 디테일은 확정되는 대로 이
+  // 자리에서 공개한다는 한 줄이 "왜 제목뿐인가"의 답입니다. 한글이 정본이고 영문은
+  // 초안입니다. TODO: confirm 영문 다섯 줄.
+  gains: {
+    eyebrow: { ko: "참가 혜택", en: "What you get" },
+    heading: { ko: "오면 무엇이 남는가", en: "What you leave with" },
+    items: [
+      { num: "01", title: { ko: "실명 기업의 진짜 문제", en: "A real problem from a named company" } },
+      { num: "02", title: { ko: "멘토", en: "Mentors" } },
+      { num: "03", title: { ko: "앞에서 증명", en: "Proving it out front" } },
+      { num: "04", title: { ko: "무순위 어워드", en: "Awards with no ranking" } },
+      { num: "05", title: { ko: "국경 너머의 동료", en: "Peers from across the border" } },
+    ] as { num: string; title: Phrase }[],
+    note: { ko: "디테일은 확정되는 대로 이 자리에서 공개합니다.", en: "Details go here as they are confirmed." },
+  },
+
   record: {
     // 8월 이벤트의 이름이 여기에 있습니다. 홈에서 "제로백 빌더톤"이라는 말이
     // 나오는 자리는 이 챕터와 아카이브로 가는 링크뿐입니다. december 블록에
