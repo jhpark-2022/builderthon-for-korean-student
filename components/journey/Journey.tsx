@@ -26,6 +26,14 @@ import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
 import LinkedInLink from "@/components/ui/LinkedInLink";
 import MotionToggle from "@/components/ui/MotionToggle";
+import Glass from "@/components/ui/Glass";
+import Chip from "@/components/ui/Chip";
+import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
+import HeroPartnerStrip, { sortLikeHeroStrip, sponsorMass } from "@/components/shared/HeroPartnerStrip";
+import MobileChatBar from "@/components/shared/MobileChatBar";
+import { BAND_TINT, BandFades } from "@/components/shared/Band";
+import FlowStrip from "@/components/shared/FlowStrip";
+import { useHeroSplit } from "@/components/shared/useHeroSplit";
 import EventModal from "@/components/EventModal";
 import PartnerModal, { type PartnerInfo } from "@/components/PartnerModal";
 import ChatGlyph from "@/components/ChatGlyph";
@@ -113,13 +121,7 @@ function dayProgress(day: number, ev: EventDayState): DayProgress {
 }
 
 // glass panel wrapper
-function Glass({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div className={`rounded-3xl border border-white/10 bg-white/[0.04] p-7 sm:p-9 ${className}`}>
-      {children}
-    </div>
-  );
-}
+// Glass는 components/ui/Glass.tsx로 옮겼습니다 (2026-09-17, 8월 문법 브리프).
 
 // Eyebrow는 components/ui/Eyebrow.tsx로 옮겼습니다 (2026-09-15, 나루 런칭).
 // 나루 홈이 같은 칩을 쓰기 때문입니다. 정의만 옮겼고 이 파일의 사용처는
@@ -654,49 +656,32 @@ function MentoringDot() {
 function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; selfPaced?: boolean }) {
   // Checked before dayMode: a fully self-paced day's dayMode is "online" in the
   // data, and that badge is the misleading one being replaced.
-  if (selfPaced)
-    return (
-      <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
-        {t(dict.program.selfPacedLabel)}
-      </span>
-    );
+  // 2026-09-17: 칩 클래스는 components/ui/Chip.tsx로 옮겼습니다. 톤마다 문자열이
+  // 옮기기 전과 같습니다(8월 페이지 픽셀 회귀 0 확인).
+  if (selfPaced) return <Chip tone="neutral">{t(dict.program.selfPacedLabel)}</Chip>;
   if (day.dayMode === "offline")
     return (
-      <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[0.68rem] font-bold text-amber-200">
+      <Chip tone="amber">
         <span aria-hidden>●</span>{t(dict.program.offlineLabel)}
-      </span>
+      </Chip>
     );
-  if (day.dayMode === "pending")
-    return (
-      <span className="inline-flex items-center gap-1 rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-2 py-0.5 text-[0.68rem] font-bold text-amber-200/90">
-        {t(dict.program.pendingLabel)}
-      </span>
-    );
+  if (day.dayMode === "pending") return <Chip tone="pending">{t(dict.program.pendingLabel)}</Chip>;
   // A half-on-site day: carries the amber dot the in-person days use, at a
   // lighter weight — the day has an on-site half, it just isn't an on-site day.
   // No day is "mixed" at the moment (Day 3·4 were, until their mentoring went
   // online-first); kept for the next one that is.
   if (day.dayMode === "mixed")
     return (
-      <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/20 bg-amber-400/[0.06] px-2 py-0.5 text-[0.68rem] font-semibold text-amber-100/80">
+      <Chip tone="amberSoft">
         <span aria-hidden className="text-amber-300/70">●</span>{t(dict.program.mixedLabel)}
-      </span>
+      </Chip>
     );
   // Day 3·4: online unless your mentor offers F2F. Same neutral pill as 온라인,
   // no amber and no dot — the amber treatments above are "there is somewhere to
   // be", and here there isn't one for most people. Only the wording changes,
   // which is exactly the size of the correction.
-  if (day.dayMode === "online-default")
-    return (
-      <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
-        {t(dict.program.onlineDefaultLabel)}
-      </span>
-    );
-  return (
-    <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
-      {t(dict.program.onlineLabel)}
-    </span>
-  );
+  if (day.dayMode === "online-default") return <Chip tone="neutral">{t(dict.program.onlineDefaultLabel)}</Chip>;
+  return <Chip tone="neutral">{t(dict.program.onlineLabel)}</Chip>;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1808,7 +1793,7 @@ function PreEventBand({
       </span>
       <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-xs font-semibold text-violet-200/80 transition group-hover:text-violet-100">
         {t(dict.program.tapHint)}
-        <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+        <span aria-hidden className={ARROW_CLASS}>→</span>
       </span>
     </button>
   );
@@ -2516,613 +2501,15 @@ function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// HERO CONFIRMED-PARTNER STRIP — the deck cover's "CONFIRMED PARTNERS" band.
-//
-// HONESTY RULE (same as the partner wall): only partners whose participation is
-// CONFIRMED may appear here. The Zero100 network marquee stays out — those are
-// network companions, not partners of this event — as does anything still in
-// discussion.
-//
-// STRUCTURE: the strip mirrors the partner section's own 주최 → 주관 → 후원
-// tiering rather than dumping every mark into one anonymous row, so the hero
-// answers "who is running this" and "who is backing it" as separate questions —
-// which is the whole point of showing logos this early.
-//
-// Assets are the same trimmed white silhouettes the partner wall uses — no new
-// files. They're above the fold, so they load eagerly (never lazily).
-// ─────────────────────────────────────────────────────────────────────────────
-// ── SIZING: equal OPTICAL MASS, with a width wall ────────────────────────────
-// WHY NOT ONE FIXED HEIGHT PER TIER (2026-08-10).
-//
-// The previous rule drew every mark in a tier at the same box height, capped by
-// the same max width. It is the obvious rule and it looks wrong, because a
-// logo's apparent size is not its bounding box:
-//
-//   • WEIGHT. Nuldam is a fat rounded wordmark, ONWORD LAB is hairline caps. At
-//     the same height Nuldam reads about twice as big.
-//   • LOCKUPS. aws is letters over a smile, BRAND BOOST is two stacked lines,
-//     싱가포르 한인회 is a crest plus a line of 6pt English. Only part of the box
-//     is the name, so the whole thing reads small at any given box height.
-//   • THE WIDTH CAP. It only bites the widest wordmarks, and when it bites it
-//     drops their height off a cliff — INNOVATE 360 and ONWORD LAB were landing
-//     at 11px and 10px next to 26px neighbours. That cliff was most of the
-//     visible unevenness.
-//
-// Equal AREA was tried before this and abandoned (see the note in
-// opticalHeight): with no tile to sit in, equal area let width run free and the
-// long wordmarks dominated their row. That failure was real, but the diagnosis
-// was half right. Area is the correct axis; a raw bounding box is the wrong
-// thing to measure, because it counts a hairline mark's whitespace as ink.
-//
-// So each mark now carries a measured `mass` — the fraction of its trimmed box
-// it actually paints, as sqrt(ink coverage × silhouette coverage). Ink alone
-// would blow up outlined marks (REmited's pill, L^IFE) that paint almost
-// nothing; silhouette alone would shrink the bold ones too far. The geometric
-// mean behaves on all 18. `mass × aspect` is then the ink a 1px-tall render
-// would lay down, and height solves for a constant target:
-//
-//     h = H0 · (NORM / (aspect × mass)) ^ STRIP_EXP
-//
-// STRIP_EXP damps it: 0.5 is exactly equal ink and swings too hard (aws would
-// be 2.6× the height of ONWORD LAB), 0 is the old fixed height. 0.35 is where
-// a row of these marks reads even.
-// The width wall still exists, but it is now the last step rather than a cliff
-// — the exponent has already pulled the wide marks most of the way down, so
-// the wall trims rather than amputates.
-//
-// This IS per-mark sizing, which the fixed-box note warned against. The
-// difference is that `mass` is measured, not tuned: run
-// `python3 scripts/measure-logo-mass.py <name>` and paste the number. There is
-// still no hand-picked fudge factor, and there should not be one — if a mark
-// looks wrong, re-measure it or move STRIP_EXP and re-check the whole tier.
-//
-// `w`/`h` are the trimmed art's INK dimensions; they give both the aspect ratio
-// used above and the <img> intrinsic size, so the box is reserved before the
-// file lands.
-type StripBox = {
-  h: number;     // ≥sm  base height for a NORM-mass mark, px
-  maxW: number;  // ≥sm  width wall, px
-  mH: number;    // <sm  base height, px
-  mMaxW: number; // <sm  width wall, px
-};
-type StripLogoSpec = {
-  src: string; alt: string; w: number; h: number;
-  // sqrt(ink × silhouette) coverage of the trimmed box — see the script above.
-  mass: number;
-};
+// 파트너 스트립(StripBox·StripLogoSpec·confirmedPartnerTiers·stripHeight·
+// sortLikeHeroStrip·sponsorMass·StripLogo·StripTierLabel·HeroPartnerStrip)은
+// components/shared/HeroPartnerStrip.tsx로 옮겼습니다 (2026-09-17).
 
-// The mark that renders at exactly the tier's base height: aspect × mass ≈ 1.45,
-// i.e. a ~4:1 wordmark painting ~36% of its box. That is the middle of this set,
-// and it is a FIXED constant on purpose — deriving it from the current line-up
-// would resize every existing logo the day a sponsor is added.
-const STRIP_NORM = 1.45;
-// EDIT 2026-08-17: 0.35 → 0.5. 드리마스가 주최 줄에서 혼자 커 보인다는 지적이
-// 있었고, 재보니 눈이 맞았습니다 — 그 마크가 칠하는 잉크가 같은 줄 중앙값보다
-// 30% 많았습니다(1079 vs 829, 모바일 기준). mass는 다시 재도 같은 값이라 데이터가
-// 아니라 이 지수가 원인이었습니다.
-//
-// 0.35는 잉크를 (aspect × mass)^0.3에 비례하게 남깁니다. 넓고 진한 마크일수록
-// 보정이 덜 되고, 드리마스는 이 줄에서 aspect × mass가 가장 큽니다(3.37, 다음이
-// 1.53). 그래서 잔차가 그 하나에 몰렸습니다.
-//
-// 0.5는 잉크를 정확히 맞춥니다. 이 값을 처음에 버린 이유는 "aws가 ONWORD LAB의
-// 2.6배 높이가 된다"였는데, 그 뒤에 들어온 폭 상한이 그 극단을 이미 붙잡고
-// 있습니다 — ONWORD LAB은 지수와 무관하게 상한(98px)에 걸려 10px로 고정이고,
-// 지수를 올려도 더 작아지지 않습니다. 실제 비는 2.2배에서 2.4배로만 움직입니다.
-// 원래 반대의 근거가 사라진 값이라 다시 씁니다.
-//
-// 결과(모바일): 주최 줄의 잉크 편차 1.41배 → 1.00배, 드리마스 폭 119px → 105px.
-// 후원 줄은 폭 상한이 이미 잡고 있어 마크당 ±6% 안에서만 움직입니다.
-// 이 값을 다시 만지면 두 줄을 다 보세요 — 한 마크만 보고 옮기면 다른 줄이 틀어집니다.
-const STRIP_EXP = 0.5;
+// MobileChatBar는 components/shared/MobileChatBar.tsx로 옮겼습니다 (2026-09-17).
 
-// Base heights are set so each tier's total rendered width comes out where the
-// old fixed box had it (~840px for 후원 on desktop) — this evens the marks out
-// without making the strip claim more of the hero, so the wrap points at every
-// breakpoint are unchanged. The scale clamps are guard rails for a future mark
-// far outside this set; nothing in the current line-up reaches them.
-const STRIP_MIN_SCALE = 0.6;
-const STRIP_MAX_SCALE = 1.45;
-const LEAD_BOX: StripBox = { h: 30, maxW: 160, mH: 24, mMaxW: 128 };
-// 후원 sits one step below 주최·주관 — a ~23% smaller base height, same rule.
-const SPONSOR_BOX: StripBox = { h: 23, maxW: 122, mH: 18, mMaxW: 98 };
+// BAND_TINT·BandFades는 components/shared/Band.tsx로 옮겼습니다 (2026-09-17).
 
-// Rendered height for one mark inside one tier box, at one breakpoint.
-function stripHeight(spec: StripLogoSpec, base: number, maxW: number) {
-  const aspect = spec.w / spec.h;
-  const h = Math.min(
-    base * STRIP_MAX_SCALE,
-    Math.max(base * STRIP_MIN_SCALE, base * (STRIP_NORM / (aspect * spec.mass)) ** STRIP_EXP),
-  );
-  // Width wall last: a mark wide enough to still overrun it loses height until
-  // it fits, which only pushes it further toward the tier's average mass.
-  return Math.round(Math.min(h, maxW / aspect) * 10) / 10;
-}
-
-// `rowMax`는 그 티어의 마크 줄이 몇 줄로 접힐지를 정하는 유일한 손잡이입니다.
-// 넓은 화면에서는 flex-wrap이 접을 이유가 없어서 티어가 아무리 길어져도 한 줄로
-// 늘어서는데, 마크가 열 개를 넘으면 그 한 줄이 히어로를 가로지르는 띠가 되고
-// 로고 하나하나는 알아볼 수 없게 작아 보입니다. 폭을 묶어 두면 같은 마크가
-// 두 줄로 접히면서 크기는 그대로, 읽기만 나아집니다.
-//
-// 티어별로만 겁니다 — 주최(5)와 주관(3)은 한 줄이 자연스러운 길이라 손대지
-// 않습니다. 후원이 열둘, 열셋으로 늘면 이 값을 다시 보세요(줄당 대여섯 개가
-// 기준입니다). 모바일에는 걸지 않습니다: 거기서는 이미 폭이 좁아 알아서 접힙니다.
-const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpec[]; rowMax?: string; rowGap?: string }[] = [
-  {
-    // 주최 — the AXMOS collective.
-    label: dict.hero.partnersHost,
-    box: LEAD_BOX,
-    items: [
-      { src: "/partners/logos/white/trimmed/translink.png",    alt: "Translink Investment", w: 330, h: 91,  mass: 0.421 },
-      { src: "/partners/logos/white/trimmed/wilt.png",         alt: "Wilt Venture Builder", w: 309, h: 148, mass: 0.513 },
-      { src: "/partners/logos/white/trimmed/codepresso.png",   alt: "Codepresso",           w: 456, h: 91,  mass: 0.280 },
-      { src: "/partners/logos/white/trimmed/popup-studio.png", alt: "Popup Studio",         w: 512, h: 245, mass: 0.525 },
-      { src: "/partners/logos/white/trimmed/drimaes.png",      alt: "Drimaes",              w: 332, h: 50,  mass: 0.507 },
-    ],
-  },
-  {
-    // 주관 — the student associations actually running the event.
-    label: dict.hero.partnersOrganizers,
-    box: LEAD_BOX,
-    items: [
-      { src: "/partners/logos/white/trimmed/smu-lion.png", alt: "SMU KSA",           w: 292, h: 173, mass: 0.465 },
-      { src: "/partners/logos/white/trimmed/nus.png",      alt: "NUS Korea Society", w: 512, h: 512, mass: 0.424 },
-      { src: "/partners/logos/white/trimmed/ntu-ksa.png",  alt: "NTU KSA",           w: 318, h: 382, mass: 0.670 },
-    ],
-  },
-  {
-    // 후원 — confirmed only; the deck lists no in-discussion sponsors.
-    // AWS and Hashed lead: they are the two marks a visitor recognises without
-    // being told, so they do the most work in a first-screen band. The rest keep
-    // the partner section's order. (Only the hero strip is ordered this way —
-    // the section itself stays grouped by what each sponsor provides.)
-    label: dict.hero.partnersSponsors,
-    box: SPONSOR_BOX,
-    // 후원이 열한 곳이 되면서 한 줄이 화면을 가로질렀습니다 (2026-08-17).
-    // 6 + 5 두 줄로 접습니다 — 위 rowMax 주석 참고.
-    //
-    // EDIT 2026-08-17 (2차): 두 줄로 접고 나니 이번엔 로고들이 화면 가운데
-    // 뭉쳐 보였습니다. 이 티어만 마크 사이를 넓힙니다(sm:gap-x-6 → 12, 27px →
-    // 54px). 줄의 실제 폭을 정하는 건 rowMax가 아니라 마크 폭 + 간격입니다 —
-    // rowMax는 어디서 접히는지만 정하고, 남는 폭은 가운데 정렬로 그냥 비어
-    // 있습니다. 그래서 "더 넓게 퍼뜨린다"의 손잡이는 간격 쪽입니다.
-    // 결과: 첫 줄 608 → 743px, 둘째 줄 567 → 675px.
-    //
-    // 주최·주관은 한 줄이라 그대로 둡니다. 간격을 여기서 더 벌리면 마크들이
-    // 한 덩어리로 안 읽히기 시작하니, 다음에 넓힐 일이 생기면 간격보다 마크
-    // 크기(SPONSOR_BOX)를 먼저 보세요.
-    rowGap: "sm:gap-x-12",
-    //
-    // 단위는 rem이 아니라 px입니다. 이 사이트는 루트 폰트가 18px이라 46rem이
-    // 828px로 계산돼(= 일곱 개가 그대로 들어감) 처음 걸었을 때 아무 일도
-    // 일어나지 않았습니다. 줄바꿈 지점은 마크의 실측 px 폭으로 정해지는 값이니
-    // px로 적습니다.
-    //
-    // 계산 근거: 앞 여섯 개가 598px(gap 24 포함), 일곱 번째까지면 744px입니다.
-    // 700px은 그 사이라 여섯에서 끊기고, 양쪽으로 44px과 102px 여유가 있어
-    // 마크 하나가 조금 바뀌어도 줄이 튀지 않습니다. 로고를 더하거나 아트워크를
-    // 갈면 이 숫자를 다시 재세요.
-    // 700 → 800 (간격을 넓히면서 같이 올렸습니다). 여섯 개가 743px, 일곱 번째까지면
-    // 919px이라 800은 그 사이입니다. 양쪽으로 57px과 119px 여유가 있습니다.
-    rowMax: "sm:max-w-[800px]",
-    items: [
-      { src: "/partners/logos/white/trimmed/aws.png",                alt: "AWS",                             w: 512, h: 306, mass: 0.491 },
-      { src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90,  mass: 0.499 },
-      { src: "/partners/logos/white/trimmed/innovate360.png",        alt: "INNOVATE 360",                    w: 455, h: 54,  mass: 0.378 },
-      { src: "/partners/logos/white/trimmed/life.png",               alt: "L^IFE",                           w: 900, h: 352, mass: 0.466 },
-      { src: "/partners/logos/white/trimmed/bzcf.png",               alt: "BZCF",                            w: 465, h: 156, mass: 0.553 },
-      { src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore",  w: 443, h: 90,  mass: 0.409 },
-      { src: "/partners/logos/white/trimmed/onword-lab.png",         alt: "Onword Lab",                      w: 900, h: 92,  mass: 0.563 },
-      { src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105, mass: 0.500 },
-      { src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81,  mass: 0.454 },
-      { src: "/partners/logos/white/trimmed/nuldam.png",             alt: "Nuldam",                          w: 631, h: 136, mass: 0.518 },
-      // 해녀의 부엌, 2026-08-17 확정. 널담 바로 뒤에 둡니다 — 둘 다 어워드 부상이고,
-      // 아래 후원 그리드는 이 스트립 순서를 그대로 따르므로(sortLikeHeroStrip) 여기
-      // 순서가 곧 그리드에서 두 마크가 나란히 서는 이유가 됩니다.
-      //
-      // mass 0.316은 measure-logo-mass.py가 잰 값입니다(눈대중으로 고치지 마세요).
-      // 아트워크는 zero100 밴드용 파일(316x72)이 유일한 소스라 다른 마크(장변 900px)
-      // 보다 작습니다. 원본을 받으면 scripts/process-partner-logos.py로 다시 뽑고
-      // 이 줄의 w/h/mass를 함께 갱신하세요.
-      { src: "/partners/logos/white/trimmed/haenyeo-kitchen.png",    alt: "Jeju Haenyeo",                     w: 316, h: 72,  mass: 0.316 },
-    ],
-  },
-];
-
-// Sort any sponsor list into the hero strip's order. The strip is the single
-// source of truth for sponsor sequence (AWS and Hashed lead it — the two marks
-// a visitor recognises without being told); anything the strip doesn't list
-// keeps its relative position at the end rather than being dropped.
-function sortLikeHeroStrip<T extends { src: string }>(rows: T[]): T[] {
-  const order = confirmedPartnerTiers
-    .find((tier) => tier.label === dict.hero.partnersSponsors)!
-    .items.map((i) => i.src);
-  const rank = (src: string) => {
-    const i = order.indexOf(src);
-    return i === -1 ? Number.MAX_SAFE_INTEGER : i;
-  };
-  return [...rows].sort((a, b) => rank(a.src) - rank(b.src));
-}
-
-// The measured mass of a sponsor mark, read off the hero strip's roster so the
-// 후원 grid cannot drift from it. Same reasoning as sortLikeHeroStrip: the two
-// lists describe the same ten marks, and every time they have held their own
-// copy of something they have disagreed. Throws rather than defaulting — a
-// silent fallback would size the new mark wrong and look like a design choice.
-// Throwing is safe here precisely because it is loud: the home page is
-// statically prerendered, so an unmeasured mark fails `next build` and can
-// never reach a visitor. Do not soften this into a default.
-function sponsorMass(src: string): number {
-  const item = confirmedPartnerTiers
-    .find((tier) => tier.label === dict.hero.partnersSponsors)!
-    .items.find((i) => i.src === src);
-  if (!item) throw new Error(`sponsorMass: no measured mass for ${src}. Run scripts/measure-logo-mass.py and add it to confirmedPartnerTiers.`);
-  return item.mass;
-}
-
-// One logo, drawn at the height that gives it the same optical mass as the rest
-// of its tier (see stripHeight above).
-function StripLogo({ src, alt, w, h, mass, box }: StripLogoSpec & { box: StripBox }) {
-  // One <img>, two heights. A CSS variable per breakpoint is what lets the phone
-  // size be genuinely its own instead of a scaled-down desktop one, without
-  // a second element in the DOM (these are 18 above-fold images — duplicating
-  // them for a media query is not a trade worth making).
-  const spec = { src, alt, w, h, mass };
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={src}
-      alt=""
-      aria-hidden
-      // INK dimensions, for the aspect ratio only — CSS below owns the size.
-      // Present so the browser reserves the right box before the file lands.
-      width={w}
-      height={h}
-      // Above the fold: never lazy-load. These are the same small pre-shrunk
-      // static marks the partner wall uses, so there's nothing to optimize.
-      // fetchPriority="low" is the counterweight: 14 eager images at default
-      // priority pushed hero LCP from ~0.97s to ~1.56s on throttled Slow 4G /
-      // 4x CPU by crowding the critical path. Low priority keeps them eager (no
-      // pop-in on fast connections) but yields the pipe to the hero itself.
-      loading="eager"
-      fetchPriority="low"
-      decoding="async"
-      title={alt}
-      // This mark's own height, phone value and ≥sm value; `width: auto` then
-      // follows the aspect ratio, so flex-wrap still packs the row naturally.
-      style={{
-        "--sl-h": `${stripHeight(spec, box.mH, box.mMaxW)}px`,
-        "--sl-w": `${box.mMaxW}px`,
-        "--sl-h-sm": `${stripHeight(spec, box.h, box.maxW)}px`,
-        "--sl-w-sm": `${box.maxW}px`,
-      } as React.CSSProperties}
-      // max-w restates the wall stripHeight() already applied, so it never bites
-      // — it is a backstop for a mark whose `mass` was never measured (a wrong
-      // mass makes one logo the wrong size; a missing wall would let it run
-      // across the row).
-      //
-      // Opacity raised 50 → 80. At 50 the marks were only legible once the page
-      // had scrolled far enough for the strip to sit over the hero scrim's dark
-      // end — brightness was an accident of scroll position, not a design, so
-      // they looked muddy exactly where they matter most (at rest, first view).
-      // The scrim added behind the strip is what makes 80 safe on the bright
-      // part of the video; the drop-shadow still carries the thin wordmarks.
-      className="h-[var(--sl-h)] w-auto max-w-[var(--sl-w)] shrink-0 object-contain opacity-80 grayscale drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] transition duration-300 group-hover:opacity-100 sm:h-[var(--sl-h-sm)] sm:max-w-[var(--sl-w-sm)]"
-    />
-  );
-}
-
-// The small 주최 / 주관 / 후원 caption that leads each tier.
-// 0.55rem → 0.65rem (2026-08-24 모바일 감사): 히어로 아이브로와 같은 이유입니다.
-// 이 캡션은 whitespace-nowrap이라 줄이 접힐 위험이 없고, 폰의 마퀴 행에서도
-// 여백이 남습니다(320px에서 "주최 AXMOS"가 66px, 칸이 266px).
-function StripTierLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="shrink-0 whitespace-nowrap text-[0.65rem] font-bold uppercase tracking-[0.16em] text-violet-200/85 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)]">
-      {children}
-    </span>
-  );
-}
-
-// Thin confirmed-partner logo band at the bottom of the hero, above the scroll
-// hint — grouped 주최 → 주관 → 후원 like the partner section. Desktop lays the
-// tiers out inline and lets them wrap; below sm it reuses the site's marquee
-// animation as a slow auto-scroll (17 marks can't fit a phone width) with the
-// tier captions riding inline in the same track. Tapping anywhere jumps to the
-// full partner section — individual intro modals stay there, not here.
-function HeroPartnerStrip({ t }: { t: Tfn }) {
-  // ONE STATIC LAYOUT AT EVERY WIDTH (2026-08-03).
-  //
-  // Mobile used to render this as a single-line auto-scroll marquee, on the
-  // reasoning that 18 marks can't fit a phone width. They can — they just have to
-  // wrap. And the marquee cost the thing the strip exists for: a logo wall earns
-  // trust by being SEEN AT ONCE. Three marks sliding past one at a time is a
-  // ticker; it reads as decoration, and a visitor who looks away has no idea
-  // whether they saw two sponsors or twenty. Sequential exposure is a weak trust
-  // signal no matter how many logos are in the queue.
-  //
-  // So the tier stack below is no longer `hidden sm:flex` — it renders at every
-  // width, from the same data, through the same StripLogo and the same tier
-  // boxes. Mobile is not a separate layout: it is the same optical-mass rule
-  // with the phone half of each StripBox (mH / mMaxW) and tighter gaps, so the
-  // 주최·주관 > 후원 hierarchy and the within-tier evenness both survive the
-  // smaller scale.
-  //
-  // Side effects, both good: no animation means nothing to exempt from
-  // prefers-reduced-motion (the old marquee deliberately ignored it, because a
-  // frozen ticker hides half its content), and the duplicated marquee track is
-  // gone so the above-fold image count drops back to one copy.
-  return (
-    // Non-clickable: kept the `group` wrapper so the hover highlight still plays,
-    // but it's a div (not a link) so the strip no longer jumps to #builders.
-    // `relative` + the scrim below. The hero's own legibility scrim fades to
-    // TRANSPARENT at its bottom edge, which is exactly where this strip sits —
-    // so the brightest part of the video was showing through the marks at full
-    // strength, and they only sharpened once scrolling carried them up into the
-    // dark end of that gradient. This gives the strip its own constant backdrop
-    // so legibility no longer depends on scroll position or on which frame of
-    // the video happens to be playing. The background scene itself is untouched.
-    // mt-11 on phones (2026-08-18). 이 스트립 바로 위에 모바일 전용 오픈채팅
-    // 칩이 있는데(lg:hidden), 아래 글로가 -inset-y-6만큼 위로 번지면서 그 칩의
-    // 밑동을 애매하게 물고 있었습니다. 버튼이 글로 안에 반쯤 잠긴 것처럼 보여서
-    // 둘 사이를 벌립니다. sm 이상은 종전 값 그대로입니다 — 그 폭에서는 위에
-    // 칩이 없습니다.
-    <div className="group relative mt-11 block w-full rounded-2xl py-1.5 sm:mt-5">
-      <div
-        aria-hidden
-        // No rounding and a long falloff that runs PAST the container on every
-        // side: with a tight radius this read as a dark card floating over the
-        // video — fine behind the tall three-tier desktop stack, obviously a box
-        // behind the single-line mobile marquee. Bleeding the gradient outside
-        // the element and fading to transparent well before its edge keeps it a
-        // shadow rather than a panel.
-        // -inset-x-6 on mobile, not -inset-x-10. The hero rail pads the strip in
-        // by px-6 (24px), so a 40px horizontal bleed put this layer 16px past the
-        // viewport on each side — that was one of the two sources of the 18px
-        // horizontal document overflow (see the overflow changelog). At -6 the
-        // glow reaches exactly the screen edge and no further. The gradient is
-        // already ~0 alpha out there, so nothing visible changed; from sm up the
-        // rail pads by 40px and the original bleed still fits.
-        // 위쪽 번짐을 -3으로 줄여봤다가 되돌렸습니다(2026-08-18). 세로 폭이 좁아지니
-        // 그라디언트가 위 모서리에 닿기 전에 투명해지지 못해 직선 경계가 생겼고,
-        // 위 주석이 경고하는 "그림자가 아니라 패널"이 그대로 나왔습니다. 오픈채팅
-        // 칩과의 간격은 이 레이어가 아니라 컨테이너의 mt로 벌립니다.
-        className="pointer-events-none absolute -inset-x-6 -inset-y-6 -z-10 sm:-inset-x-10"
-        style={{
-          background:
-            "radial-gradient(75% 130% at 50% 50%, rgba(6,4,15,0.7) 0%, rgba(6,4,15,0.5) 42%, rgba(6,4,15,0.22) 68%, transparent 88%)",
-        }}
-      />
-      <p className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-white/75 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)] transition group-hover:text-white/90">
-        {t(dict.hero.partnersLabel)}
-      </p>
-      {/* ≥sm — one row per tier, caption centred above its own marks. The tiers
-          used to run inline (caption, then marks, then the next caption) which
-          read as one long undifferentiated line: the whole point of the tiering
-          is that 주최 / 주관 / 후원 are answers to different questions, and a
-          vertical stack is what makes them read that way. */}
-      {/* Gaps are deliberately tight: stacking three tiers and enlarging the
-          marks already added ~160px to a hero that overflows a laptop viewport,
-          so every row here is spaced to the minimum that still separates them. */}
-      {/* Gaps are deliberately tight on mobile: three tiers of wrapped marks in a
-          hero that is already stacked will run long otherwise. gap-x-3 + the
-          phone box widths (mMaxW) is what lands ~3–4 marks per row at 375px. */}
-      <div className="mt-2.5 flex flex-col items-center gap-2">
-        {confirmedPartnerTiers.map((tier) => (
-          <div key={tier.label.en} className="flex flex-col items-center gap-1">
-            <StripTierLabel>{t(tier.label)}</StripTierLabel>
-            {/* flex-wrap with one gap for the whole tier. Every mark is capped
-                at the same width wall, so no single logo can claim a row to
-                itself the way the widest wordmarks used to (DRIMAES had a line
-                of its own under bounding-box area sizing). */}
-            <div className={`flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 ${tier.rowGap ?? "sm:gap-x-6"} ${tier.rowMax ?? ""}`}>
-              {tier.items.map((p) => (
-                <StripLogo key={p.alt} {...p} box={tier.box} />
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// Tablet-only sticky bar (sm ~ lg). Below lg the nav's actions are easy to miss
-// once the visitor is deep in the page, so the page keeps a permanent bottom rail
-// from the moment #about scrolls past. Latched on: once shown it stays, so it
-// can't flicker on scroll-up.
-//
-// RENAMED 2026-08-22 (마감 후 청산): MobileRegisterBar였습니다. 등록 진입점을
-// 걷어내면서 이 바가 나르는 것이 오픈채팅 하나가 됐으니, 이름이 더 이상 사실이
-// 아니었습니다. 바 자체와 등장 조건은 그대로입니다.
-function MobileChatBar() {
-  const reduce = useReducedMotion();
-  const { t } = useLocale();
-  const [visible, setVisible] = useState(false);
-  const [atEnd, setAtEnd] = useState(false);
-  // Shared with the header and the FAB (lib/useScrollDirection).
-  // idleReveal: false — 아래 폰 바와 같은 이유입니다(훅 주석 참고). 두 바가 같은
-  // 자리를 다른 브레이크포인트에서 맡고 있어서, 한쪽만 멈춤 복귀를 하면 화면 폭에
-  // 따라 다르게 동작합니다.
-  const chromeHidden = useScrollDirection({ idleReveal: false });
-
-  useEffect(() => {
-    const onScroll = () => {
-      const about = document.getElementById("about");
-      // Fires once #about's TOP has passed the top of the viewport — i.e. the
-      // visitor is reading the "why" and has left the hero for good. Waiting for
-      // its BOTTOM would be far too late: on a phone #about is ~2400px tall, so
-      // the bar wouldn't show until three screens of scrolling in. If the section
-      // isn't in the DOM for any reason, fall back to a plain scroll depth so the
-      // bar can never be permanently missing.
-      const past = about
-        ? about.getBoundingClientRect().top < 0
-        : window.scrollY > window.innerHeight;
-      if (past) setVisible(true);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // The closing section carries its own register CTA. Two identical buttons, one
-  // fixed over the other, is the kind of duplication a visitor reads as a bug —
-  // so this bar stands down while that section is on screen. Same observer the
-  // phone-width bar already used; this one never had it.
-  useEffect(() => {
-    const end = document.getElementById("closing") ?? document.querySelector("footer");
-    if (!end) return;
-    // rootMargin 0 / threshold 0 = 클로징이 뷰포트에 닿는 순간 (DECIDED 2026-08-17).
-    // -20%였습니다: 클로징이 화면 아래 20%를 지나 올라와야 바가 비켜섰는데, 그
-    // 사이 구간에서 알약 바가 "우리가 있었으면 했던 다리를" 헤드라인을 그대로
-    // 덮었습니다. 관찰자를 닿는 즉시로 당깁니다. 바가 조금 일찍 사라지는 쪽이
-    // 헤드라인을 가리는 것보다 낫습니다 — 클로징에는 같은 CTA가 이미 있습니다.
-    const io = new IntersectionObserver(([e]) => setAtEnd(e.isIntersecting), { rootMargin: "0px", threshold: 0 });
-    io.observe(end);
-    return () => io.disconnect();
-  }, []);
-
-  return (
-    <AnimatePresence>
-      {visible && !atEnd && !chromeHidden && (
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={reduce ? undefined : { opacity: 0, y: 24 }}
-          transition={{ duration: reduce ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
-          // z-40 keeps it under the ScrollToTop button (z-50), which is offset
-          // ~5.25rem UP on this breakpoint (a vertical band above the bar), so
-          // the bar can use the full screen width — no right-side reservation.
-          // pt-2 / pb 0.5rem + safe area: the bar lost ~10px of padding without
-          // touching the buttons inside it, which stay at 44px+.
-          // `hidden sm:block lg:hidden` — TABLET ONLY. This was `lg:hidden` alone,
-          // which meant that below sm it rendered on top of MobileStickyBar (also
-          // `sm:hidden`): two fixed bars at bottom-0, two register buttons, and
-          // after this change two open-chat buttons as well. The phone rail is the
-          // pill bar; this one starts where that one stops.
-          className="pointer-events-none fixed inset-x-0 bottom-0 z-40 hidden px-4 pt-2 sm:block lg:hidden"
-          style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)" }}
-        >
-          {/* DECIDED 2026-08-22 (마감 후 청산): 등록 버튼이 빠지고 오픈채팅이
-              이 바의 단독 액션이 됐습니다. 폭도 넘겨받습니다(flex-1).
-              라벨을 유지하는 이유는 그대로입니다: 맨 말풍선 하나는 어느 서비스를
-              여는지 방문자가 짐작해야 하고, 오픈채팅은 지금 이 페이지에서 유일하게
-              살아 있는 문이라 이름으로 찾는 대상입니다. aria-label은 더 긴
-              "카카오톡 오픈채팅방 열기"로 그대로 둡니다. */}
-            {/* DECIDED 2026-08-23 (모바일 감사 2차): 풀폭 바에서 내용 폭 필로.
-                오픈채팅 바와 바로 위 맨위로 FAB이 정지 상태마다 하단 180px 남짓을
-                점유하면서 본문 한 줄을 덮고 있었습니다. 오픈채팅은 지금 이 페이지에서
-                유일하게 살아 있는 문이지만 그래도 보조 액션이라, 화면 폭 전체를
-                가로지를 이유는 없어요. 색과 보더는 그대로 두고 폭만 내용에 맞춥니다.
-                등장 조건, chromeHidden, 스크롤 동작은 하나도 건드리지 않았습니다. */}
-          <div className="flex items-center justify-center gap-2">
-            {links.openChat && (
-              <a
-                href={links.openChat}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={t(dict.nav.openChatAria)}
-                onClick={() => track("openchat_click", { src: "mobile-bar" })}
-                className="pointer-events-auto inline-flex h-12 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/45 bg-[#070B1F]/92 px-6 text-sm font-bold text-violet-100 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.9)] backdrop-blur transition active:scale-95"
-              >
-                <ChatGlyph className="h-5 w-5 shrink-0" />
-                {t(dict.nav.openChat)}
-              </a>
-            )}
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// SECTION BACKGROUND TINT — two steps, one token, nothing in between.
-//
-// INVENTORY (before this was unified), section-level tints only:
-//   #program     bg-[#0a0814]/45 + h-24 top/bottom fades
-//   #companions  bg-[#0a0814]/55 + h-20 top/bottom fades
-//   everything else (Chapter: about · join · benefits · speakers · mentoring ·
-//                    builders · faq · vision)  — no tint at all
-// Two bands, two opacities, two fade heights. Scrolling from a /45 band into an
-// untinted chapter and later into a /55 one produced three different background
-// levels, and the eye reads the third as an error rather than a rhythm.
-//
-// Now: BASE (no tint, WebGL field as-is) or BAND (this one value). 45 and 55
-// both collapse into 50 — the midpoint, so neither section moves much — and
-// every band gets the SAME fade height, so no band can announce its edge.
-// Any new section picks one of the two; a third opacity is the bug.
-// The band tint FADES ITSELF at both ends instead of being a flat fill with two
-// dark gradients laid over its edges.
-//
-// The old shape was `bg-[#0a0814]/50` on the whole section plus a `/50`
-// top-to-transparent gradient at each edge. That does the opposite of blending:
-// at the very edge you get tint AND fade (0.5 over 0.5 ≈ 0.75 alpha), and one
-// pixel outside the section you get 0. The edge was the DARKEST part of the band
-// and the discontinuity was maximal — which is why the seam was still visible
-// entering the speakers chapter, and why simply making the fade taller only made
-// the dark strip taller without touching the step.
-//
-// A single vertical gradient has no step at all: transparent at the boundary,
-// full tint 10rem in, held flat through the body, back to transparent. Both band
-// sections (#program, #companions) share it, so no edge can drift from another.
-const BAND_TINT =
-  "bg-[linear-gradient(to_bottom,transparent,rgba(10,8,20,0.5)_10rem,rgba(10,8,20,0.5)_calc(100%_-_10rem),transparent)]";
-/**
- * Kept as a no-op so every band section keeps one obvious place to opt into edge
- * treatment, and so the two call sites don't have to change shape. The fading now
- * lives in BAND_TINT itself — see the note there for why overlay gradients could
- * not soften an edge they were painted on top of.
- */
-function BandFades() {
-  return null;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// FLOW STRIP — a row of boxes joined by arrows (참여 플로우, 최종 아웃풋).
-//
-// The arrows used to live INSIDE each box's own flex row: [box →][box →][box].
-// Horizontally that looks right, but stacked on a phone it puts the arrow beside
-// the box instead of between boxes — and because the arrow takes width, the two
-// boxes that carry one end up narrower than the third. Boxes in a column that
-// don't share a width read as a rendering bug, which is what this was.
-//
-// So the children are FLAT: [box, arrow, box, arrow, box]. In a column every box
-// is full width and each arrow is its own centred row; in a row from `sm` the
-// same elements line up horizontally with the arrows between them, exactly as
-// before. One glyph, rotated 90° on phones — a second glyph conditionally
-// rendered would be two things to keep in step for no gain.
-// ─────────────────────────────────────────────────────────────────────────────
-function FlowStrip<T>({
-  items,
-  render,
-  align = "stretch",
-  className = "",
-}: {
-  items: readonly T[];
-  render: (item: T, i: number) => React.ReactNode;
-  // "stretch" = boxes in a row match the tallest (the output cards carry two
-  // lines of copy); "center" = single-line pills that shouldn't grow.
-  align?: "stretch" | "center";
-  className?: string;
-}) {
-  return (
-    <div className={`flex flex-col gap-2 sm:flex-row ${align === "center" ? "sm:items-center" : "sm:items-stretch"} ${className}`}>
-      {items.map((item, i) => (
-        <Fragment key={i}>
-          <div className="w-full sm:flex-1">{render(item, i)}</div>
-          {i < items.length - 1 && (
-            <span aria-hidden className="shrink-0 self-center rotate-90 leading-none text-white/30 sm:rotate-0">
-              →
-            </span>
-          )}
-        </Fragment>
-      ))}
-    </div>
-  );
-}
+// FlowStrip은 components/shared/FlowStrip.tsx로 옮겼습니다 (2026-09-17).
 
 // Fixed bottom-right "back to top" button. Hidden near the top of the page and
 // fades in once the visitor has scrolled down ~1.5 viewports. Respects
@@ -3307,50 +2694,9 @@ export default function Journey({ serverNow }: { serverNow: number }) {
   // Desktop grid: tallest day determines the shared row count so every column
   // gets the same number of card slots and rows line up across all six days.
 
-  // Hero split — as the hero scrolls out, the two columns fly apart to the
-  // left/right screen edges and fade, so the screen "opens" onto what's below.
-  const heroRef = useRef<HTMLDivElement | null>(null);
-  const { scrollYProgress: heroProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-  // Columns fly apart from the first scroll (0) but slide out slowly, over the
-  // first 35% of the hero, so the motion is gentle. Fade tracks alongside.
-  const leftX = useTransform(heroProgress, [0, 0.35], [0, -500]);
-  const rightX = useTransform(heroProgress, [0, 0.35], [0, 500]);
-  const heroFadeWide = useTransform(heroProgress, [0, 0.35], [1, 0]);
-  // The ±500px horizontal fly-apart only makes sense in the lg+ two-up layout,
-  // where the columns actually sit side by side. Below lg they stack into one
-  // centred column, so translating them left/right just throws the content off
-  // both screen edges and overlaps them (it looked broken on phones). Gate the
-  // x-shift on the desktop layout; mobile keeps only the gentle opacity fade.
-  const [isWide, setIsWide] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const sync = () => setIsWide(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-  // Apply the horizontal split on the wide (two-up) layout only — it stays on
-  // even under reduced-motion (by explicit request), so this is NOT gated on
-  // `reduce`. Below lg the columns stack, so no horizontal shift there.
-  const splitX = isWide;
-  // Background video blurs early — in step with the columns flying apart — so the
-  // whole hero softens as soon as the visitor starts scrolling.
-  // NOTE: this scroll-linked `filter: blur()` on the (playing) hero video repaints
-  // the video every frame and can cause scroll jank on weaker devices. It was
-  // removed once for that reason, then restored by request. By request it also
-  // stays on under reduced-motion (not gated on `reduce`).
-  const bgBlur = useTransform(heroProgress, [0, 0.15], ["blur(0px)", "blur(10px)"]);
-  // The scroll-linked opacity FADE is a DESKTOP effect (it plays as the two
-  // columns fly apart). On mobile the hero stacks into one tall column with the
-  // Countdown/Problem panel at the bottom — so scrolling to reach it is exactly
-  // what the fade reacts to, dimming the panel before you can read it. Gate the
-  // fade on the wide layout so mobile keeps the hero fully opaque and readable.
-  // The background blur stays on everywhere (kept on mobile by request) — it's
-  // behind the content, so it doesn't hurt readability.
-  const heroFade = isWide ? heroFadeWide : undefined;
+  // Hero split. 값 여섯은 components/shared/useHeroSplit.ts에서 옵니다
+  // (2026-09-17). 이름은 그대로라 아래 JSX는 바뀌지 않았습니다.
+  const { heroRef, leftX, rightX, splitX, heroFade, bgBlur } = useHeroSplit();
 
   return (
     <main className="relative z-10">
@@ -3455,15 +2801,15 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                      쌓인 계열이라, 여기서 이름을 바꾸면 시리즈가 둘로 갈라집니다. */
                   href="#wrap"
                   onClick={() => track("tracks_click", { src: "hero" })}
-                  className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)] sm:px-8 sm:py-4 sm:text-base"
+                  className={buttonClass("primary", "zero100")}
                 >
                   {t(dict.wrap.heroCta)}
-                  <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  <span aria-hidden className={ARROW_CLASS}>→</span>
                 </a>
               ) : (
-                <a href={links.program} className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)] sm:px-8 sm:py-4 sm:text-base">
+                <a href={links.program} className={buttonClass("primary", "zero100")}>
                   {t(dict.hero.ctaProgram)}
-                  <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  <span aria-hidden className={ARROW_CLASS}>→</span>
                 </a>
               )}
               {/* 보조: 여정 둘러보기. journey 모드에서는 위의 주 CTA가 같은 링크라
@@ -3472,7 +2818,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               {HERO_PRIMARY === "tracks" && (
                 <a
                   href={links.program}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10 sm:px-8 sm:py-4 sm:text-base"
+                  className={buttonClass("secondary")}
                 >
                   {t(dict.hero.ctaProgram)}
                 </a>
@@ -3492,7 +2838,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                   기업용 문의 창구가 사라지는 것은 아닙니다 — 클로징 섹션과 푸터가
                   같은 링크를 그대로 갖고 있습니다. */}
               {HERO_PRIMARY === "journey" && (
-                <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10 sm:px-8 sm:py-4 sm:text-base md:hidden">
+                <a href={links.partnership} className={`${buttonClass("secondary")} md:hidden`}>
                   {t(dict.hero.ctaPartner)}
                 </a>
               )}
@@ -4798,7 +4144,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               >
                 <ChatGlyph className="h-5 w-5 shrink-0" />
                 {t(dict.nav.openChatJoin)}
-                <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                <span aria-hidden className={ARROW_CLASS}>→</span>
               </a>
             )}
             <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-9 py-4 text-base font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10">
