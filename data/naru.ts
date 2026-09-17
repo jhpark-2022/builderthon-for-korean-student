@@ -774,6 +774,18 @@ export const naru = {
     // 넣기로 한다면 라벨 문자열은 이것입니다. 나루의 후원사라고 쓰지 마세요.
     partnersLabel: { ko: "제로백 빌더톤을 함께한 곳", en: "Who was with us on the Zero100 builderthon" },
     cta: { ko: "제로백 빌더톤 기록 전체 보기", en: "Read the full Zero100 builderthon record" },
+    // DECIDED 2026-09-17 (3차): 벽에 거는 것은 여섯 장입니다. 사용자가 "너무 길다"고
+    // 했고, 폰에서 열두 장은 800px이었습니다. photos 목록은 열두 장 그대로 두고
+    // (기록), 여기 있는 순서대로 골라 겁니다. 6의 배수 규칙은 그대로.
+    // 캡션이 있는 셋(Day 1, Day 5, Day 8)은 반드시 들어갑니다.
+    wall: [
+      "/record/day1-start.webp",
+      "/record/day1-checkin.webp",
+      "/record/day5-session.webp",
+      "/record/day8-prove.webp",
+      "/record/day8-automation.webp",
+      "/record/day8-career.webp",
+    ] as string[],
   },
 
   // ── CH3 · 어떻게 일하는가 ─────────────────────────────────────────────────
@@ -935,6 +947,9 @@ export const naru = {
       en: "Each stage comes with a three-hour workshop matched to that day's agenda.",
     },
     submitLabel: { ko: "제출", en: "Submission" },
+    // 2026-09-17 (3차): reasons(왜 서울인가)와 why.exec는 화면에서 내려갔습니다.
+    // 페이지가 너무 길었고, 둘 다 이 챕터가 아니어도 할 수 있는 말이었습니다.
+    // 키는 그대로. 재는 것(why.measure)만 멘토링 아래 한 줄로 남습니다.
     mentoringLabel: { ko: "멘토링", en: "Mentoring" },
     mentoringHeading: { ko: "General Mentoring, 전 기간 상시", en: "General Mentoring, on call the whole way" },
     mentoringLead: {

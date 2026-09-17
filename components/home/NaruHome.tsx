@@ -255,7 +255,13 @@ export default function NaruHome() {
             내용이었지만 셋 다 8월을 설명하는 글이었고, 설명은 아래 버튼 하나로
             /2026-08에 갑니다. 아쉬웠던 넷은 12월 챕터의 "모양"이 대신 말합니다.
             gaps·tabs 키는 data/naru.ts에 그대로 있습니다. */}
-        <PhotoWall photos={naru.record.photos} t={t} />
+        {/* 여섯 장(2026-09-17 3차). 목록과 순서는 data/naru.ts의 record.wall. */}
+        <PhotoWall
+          photos={naru.record.wall
+            .map((src) => naru.record.photos.find((p) => p.src === src))
+            .filter((p): p is RecordPhoto => Boolean(p))}
+          t={t}
+        />
 
         {/* 이 챕터의 유일한 행동입니다. 2026-09-16에 유령 버튼에서 실린 버튼으로
             올렸습니다 - 8월의 설명이 전부 저쪽으로 갔으니, 더 알고 싶은 사람에게
@@ -301,49 +307,25 @@ export default function NaruHome() {
         <StatRow stats={naru.december.shape} t={t} className="mt-12 lg:grid-cols-6" />
         <p className="mt-4 text-xs text-white/55">{t(naru.december.draftNote)}</p>
 
-        {/* 왜 서울인가. 기획 03의 셋. */}
-        <div className="mx-auto mt-12 max-w-5xl text-left">
-          <h3 className={LABEL_HEADING}>{t(naru.december.reasonsLabel)}</h3>
-          <ol role="list" className="mt-5 grid gap-4 md:grid-cols-3">
-            {naru.december.reasons.map((r) => (
-              <li key={r.title.en} className="rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-5">
-                <h4 className="break-keep text-base font-bold leading-snug text-white">{t(r.title)}</h4>
-                <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">{t(r.body)}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-
         {/* 8월에 아쉬웠던 넷과 12월의 답. record.gaps를 읽습니다(8월의 관찰이라
-            정본이 거기 있습니다). 9/16에 내려갔던 카드가 답이 붙어 돌아왔습니다. */}
+            정본이 거기 있습니다). 카드 넷이 아니라 줄 넷입니다(2026-09-17 3차):
+            제목, 그리고 12월의 답 한 줄. 8월에 무엇이 없었는지는 제목이 이미
+            말합니다. */}
         <div className="mx-auto mt-12 max-w-5xl text-left">
           <h3 className={LABEL_HEADING}>{t(naru.december.gapsHeading)}</h3>
-          <p className="mt-3 max-w-2xl break-keep text-sm leading-relaxed text-white/70">
-            {t(naru.december.gapsLead)}
-          </p>
-          <ol role="list" className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <dl className="mt-5 grid gap-x-10 gap-y-4 md:grid-cols-2">
             {naru.record.gaps.map((gap) => (
-              <li key={gap.title.en} className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-5">
-                <h4 className="break-keep text-base font-bold leading-snug text-white">{t(gap.title)}</h4>
-                <dl className="mt-4 flex flex-1 flex-col gap-3">
-                  <div>
-                    <dt className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-white/50">
-                      {t(naru.december.augustLabel)}
-                    </dt>
-                    <dd className="mt-1 break-keep text-sm leading-relaxed text-white/65">{t(gap.body)}</dd>
-                  </div>
-                  <div className="border-t border-white/10 pt-3">
-                    <dt className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#F2B183]">
-                      {t(naru.december.decemberLabel)}
-                    </dt>
-                    <dd className="mt-1 break-keep text-sm leading-relaxed text-white/80">
-                      {gap.answer ? t(gap.answer) : t(naru.record.answerPending)}
-                    </dd>
-                  </div>
-                </dl>
-              </li>
+              <div key={gap.title.en} className="border-t border-white/10 pt-4">
+                <dt className="break-keep text-sm font-bold leading-snug text-white">{t(gap.title)}</dt>
+                <dd className="mt-1.5 flex gap-2 break-keep text-sm leading-relaxed text-white/75">
+                  <span className="shrink-0 text-[0.62rem] font-bold uppercase leading-[1.9] tracking-[0.16em] text-[#F2B183]">
+                    {t(naru.december.decemberLabel)}
+                  </span>
+                  <span>{gap.answer ? t(gap.answer) : t(naru.record.answerPending)}</span>
+                </dd>
+              </div>
             ))}
-          </ol>
+          </dl>
         </div>
 
         {/* 일정. 스테이지 다섯, 날짜는 naruDates에서 셉니다. 제출 지점 둘과
@@ -395,47 +377,24 @@ export default function NaruHome() {
           <p className="mt-3 max-w-2xl break-keep text-sm leading-relaxed text-white/70">
             {t(naru.december.mentoringLead)}
           </p>
-          <ul role="list" className="mt-5 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+          <ul role="list" className="mt-4 flex flex-wrap gap-2">
             {naru.december.mentoringRules.map((rule, i) => (
-              <li key={i} className="flex gap-2.5 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 break-keep text-sm leading-relaxed text-white/80">
-                <span aria-hidden className="mt-[0.55em] h-1 w-1 shrink-0 rounded-full bg-[#F2B183]" />
+              <li key={i} className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 break-keep text-xs text-white/75">
                 {t(rule)}
               </li>
             ))}
           </ul>
-        </div>
-        <div className="mx-auto mt-12 max-w-5xl border-t border-white/10 pt-12">
-          <h3 className={LABEL_HEADING}>{t(naru.why.execLabel)}</h3>
-          <p className="mx-auto mt-3 max-w-2xl break-keep text-base leading-relaxed text-white/70">
-            {t(naru.why.execLead)}
-          </p>
-          {/* 둘뿐이고 나란히 있어서 번호는 세어 주지 않습니다. 순서는 ol이
-              나릅니다. item.index 키는 data/naru.ts에 그대로 있습니다. */}
-          <ol role="list" className="mt-12 grid gap-10 text-left md:grid-cols-2 md:gap-14">
-            {naru.why.exec.map((item) => (
-              <li key={item.index} className="border-t border-white/10 pt-6">
-                <h4 className="break-keep text-lg font-bold leading-snug text-white sm:text-xl">
-                  {t(item.title)}
-                </h4>
-                <p className="mt-4 break-keep text-base leading-relaxed text-white/70">{t(item.body)}</p>
-              </li>
-            ))}
-          </ol>
-          {/* 재는 것. 이 챕터에서 가장 검증 가능한 문장이고, 기업이 우리를 읽을
-              때 실제로 붙잡는 줄입니다. 라벨 : 문장이라 dl. 문장은 경첩과 같은
-              H3, 같은 축. 숫자를 지어내지 마세요. 8월의 실측은 #record에 있고
-              여기서는 무엇을 보는지만 말합니다. */}
-          <dl className="mt-12 border-t border-white/10 pt-12">
-            <dt className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
+          {/* 재는 것. 기획 02 EXECUTION의 마지막 줄이자 이 챕터에서 가장 검증
+              가능한 문장. exec 두 항목은 내려갔습니다(3차). */}
+          <dl className="mt-6 border-t border-white/10 pt-5 sm:flex sm:items-baseline sm:gap-5">
+            <dt className="shrink-0 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
               {t(naru.why.measureLabel)}
             </dt>
-            <dd className="mx-auto mt-4 max-w-3xl break-keep text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl">
+            <dd className="mt-2 break-keep text-base font-semibold leading-relaxed text-white/85 sm:mt-0">
               {t(naru.why.measure)}
             </dd>
           </dl>
         </div>
-
-
         {/* 아직 정해지지 않은 것. 이 챕터에서 가장 정직하고 가장 값이 큰
             블록입니다. 자세한 이유는 data/naru.ts의 tbdLabel 주석에 있습니다. */}
         <div className="mx-auto mt-12 max-w-3xl rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-6 text-left">
@@ -505,14 +464,12 @@ export default function NaruHome() {
           aria-hidden
           className="mx-auto mt-12 h-[2px] w-full max-w-[52rem] bg-gradient-to-r from-accent to-accent-strong"
         />
+        {/* 라벨만. "우리는 두 가지를 만들려고 모였습니다" 제목은 내려갔습니다
+            (2026-09-17 3차). 태그라인이 바로 위에 H2로 있고, lead가 "바뀌지 않는
+            것은 아래 두 개"라고 이미 말합니다. 같은 챕터에 큰 제목 둘은 길이만
+            늘립니다. why.heading 키는 그대로. */}
         <div id="why" className="mt-12">
           <Eyebrow color="purple">{t(naru.why.eyebrow)}</Eyebrow>
-          {/* H2 토큰의 clamp와 같이 쓰면 CSS 순서상 어느 쪽이 이길지 정해져
-              있지 않아서(둘 다 임의값 클래스), 크기는 따로 씁니다. 태그라인이
-              이미 H2라 이 제목은 한 단 아래입니다. */}
-          <h3 className="mx-auto max-w-[52rem] break-keep text-[clamp(1.5rem,3.2vw,2.25rem)] font-bold tracking-tight text-white">
-            {t(naru.why.heading)}
-          </h3>
         </div>
         {/* 코어 둘. 판 두 장.
             ol인 이유: 순서가 뜻입니다. 01이 문턱이고 02가 증명이며, 바로 아래
@@ -523,11 +480,11 @@ export default function NaruHome() {
             가이드의 하한 18px을 좁은 쪽 끝에서 정확히 지킵니다. mt는 leading
             1.2의 첫 줄 한가운데.
             keeps가 dl인 이유: 항목 이름과 값이지 제목이 아닙니다. */}
-        <ol role="list" className="mx-auto mt-12 max-w-5xl text-left">
+        <ol role="list" className="mx-auto max-w-5xl text-left">
           {naru.why.cores.map((core, i) => (
             <li
               key={core.index}
-              className={`grid gap-8 py-8 sm:py-10 md:grid-cols-[1.4fr_1fr] md:gap-14 lg:py-12 ${
+              className={`grid gap-6 py-8 md:grid-cols-[1.4fr_1fr] md:gap-14 lg:py-10 ${
                 i > 0 ? "border-t border-white/10" : ""
               }`}
             >
@@ -593,41 +550,22 @@ export default function NaruHome() {
 
         <LayerDiagram t={t} />
 
-        {/* Overview 02의 표. 모바일에서는 카드 석 장으로 떨어집니다. 세 열
-            짜리 표를 390px에 밀어 넣으면 글자가 세로로 서고, 그러면 읽는
-            사람이 표를 가로로 긁어야 합니다. */}
-        <div className="mx-auto mt-12 grid max-w-5xl gap-4 text-left lg:grid-cols-3">
+        {/* 층마다 문 하나. 2026-09-17 3차: 여기 있던 "하는 것 / 얻는 것" 카드
+            셋이 내려갔습니다. 다이어그램이 이미 세 층을 그리고, 카드 셋은 같은
+            세 주체를 한 번 더 세로로 세워 폰에서 800px을 썼습니다. 무엇을 주고
+            받는지는 #join의 카드가 문 옆에서 말합니다. layers[].does/gets 키는
+            그대로 있습니다. */}
+        <div className="mx-auto mt-6 flex max-w-5xl flex-wrap justify-center gap-x-8 gap-y-2">
           {naru.how.layers.map((layer) => (
-            <Card key={layer.role.en}>
-              <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
-                {t(layer.role)}
-              </p>
-              <p className="mt-2 break-keep text-lg font-bold text-white">{t(layer.who)}</p>
-              <dl className="mt-5 space-y-4">
-                <div>
-                  <dt className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/55">
-                    {t(naru.how.doesLabel)}
-                  </dt>
-                  <dd className="mt-1.5 break-keep text-sm leading-relaxed text-white/75">{t(layer.does)}</dd>
-                </div>
-                <div>
-                  <dt className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/55">
-                    {t(naru.how.getsLabel)}
-                  </dt>
-                  <dd className="mt-1.5 break-keep text-sm leading-relaxed text-white/75">{t(layer.gets)}</dd>
-                </div>
-              </dl>
-              {/* 이 층의 문. #join의 해당 카드로 가는 앵커입니다(2026-09-17).
-                  새 목적지가 아니라 이정표라 텍스트 링크로 둡니다. */}
-              <a
-                href={`#${layer.join.id}`}
-                onClick={() => track("naru_cta", { src: "how", to: layer.join.id })}
-                className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-accent transition hover:text-white"
-              >
-                {t(layer.join.label)}
-                <span aria-hidden>→</span>
-              </a>
-            </Card>
+            <a
+              key={layer.join.id}
+              href={`#${layer.join.id}`}
+              onClick={() => track("naru_cta", { src: "how", to: layer.join.id })}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-accent transition hover:text-white"
+            >
+              {t(layer.join.label)}
+              <span aria-hidden>→</span>
+            </a>
           ))}
         </div>
 
