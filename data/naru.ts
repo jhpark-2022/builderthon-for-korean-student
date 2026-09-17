@@ -58,6 +58,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { Phrase } from "./dictionary";
+import type { PressEntry } from "../components/shared/PressRows";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 문의 창구.
@@ -462,6 +463,56 @@ export const naru = {
       },
     ] as Stat[],
     photosLabel: { ko: "8일의 모양", en: "The shape of eight days" },
+    // ── 언론 (DECIDED 2026-09-17) ─────────────────────────────────────────
+    // 사용자 요청: 8월 페이지에 있는 기사 둘을 여기서도 보여 주고, 행사 뒤 싱가포르
+    // 현지 주류 매체(CNA, The Straits Times)에도 실렸다는 것을 더한다.
+    // 최신순(8월 페이지의 규칙과 같음). 새 기사는 맨 위에.
+    // 아래 둘(경인일보, BZCF)은 data/dictionary.ts의 dict.about.press와 같은 내용을
+    // 옮겨 적은 것입니다. 홈이 dictionary.ts 전체를 번들에 끌어오지 않도록 참조
+    // 대신 복사했습니다. 한쪽을 고치면 다른 쪽도 고치세요.
+    // CNA와 ST의 제목은 두 매체가 실은 제목 그대로(9/15). 두 글은 매체의 보도자료
+    // 면(CNA "media release", ST "paid press releases")에 실린 것이라, 제호만 쓰고
+    // "보도"나 "취재"라는 말은 카피에 넣지 않았습니다. 같은 글이라 한 줄에 링크 둘.
+    pressTag: { ko: "언론에 소개된 이야기", en: "In the press" },
+    pressLead: {
+      ko: "행사가 끝난 뒤 싱가포르의 주요 매체 두 곳에도 실렸습니다.",
+      en: "After the event, it also ran in two of Singapore's main outlets.",
+    },
+    press: [
+      // 한 보도자료가 두 매체에 실렸습니다. 제목을 두 줄에 두 번 쓰지 않고 한 줄에
+      // 링크 둘(PressGroup). 제목은 두 매체가 실은 그대로.
+      {
+        title: {
+          ko: "Codepresso Successfully Concludes 'Zero100 AI Builderthon' in Singapore, Forging Strategic Ties with Top Universities",
+          en: "Codepresso Successfully Concludes 'Zero100 AI Builderthon' in Singapore, Forging Strategic Ties with Top Universities",
+        },
+        date: { ko: "2026.09.15", en: "15 Sep 2026" },
+        links: [
+          { outlet: { ko: "CNA", en: "CNA" }, url: "https://www.channelnewsasia.com/media-release/codepresso-successfully-concludes-zero100-ai-builderthon-in-singapore-forging-strategic-ties-top-universities-6385241" },
+          { outlet: { ko: "The Straits Times", en: "The Straits Times" }, url: "https://www.straitstimes.com/paid-press-releases/codepresso-successfully-concludes-zero100-ai-builderthon-in-singapore-forging-strategic-ties-with-top-universities-20260915" },
+        ],
+      },
+      {
+        outlet: { ko: "경인일보", en: "Kyeongin Ilbo" },
+        date: { ko: "2026.08.04", en: "4 Aug 2026" },
+        title: {
+          ko: "「‘취업 안되면 만든다’ 스물세살의 바이브 코딩」",
+          en: "“If I can't get hired, I'll build it”: vibe coding at 23",
+        },
+        url: "https://www.kyeongin.com/article/1768469",
+      },
+      {
+        outlet: { ko: "BZCF 비즈까페", en: "BZCF" },
+        date: { ko: "2026.07.05", en: "5 Jul 2026" },
+        title: {
+          ko: "「세계는 넓고 할 일은 많다」",
+          en: "“The world is wide, and there's much to do”",
+        },
+        url: "https://bzcf.io/segyeneun-neolbgo-hal-ileun-manhda/",
+        logo: "/partners/logos/white/trimmed/bzcf.png",
+      },
+    ] as PressEntry[],
+    pressCta: { ko: "원문 보기", en: "Read the article" },
     // ── 사진 열두 장 ───────────────────────────────────────────────────────
     // DECIDED 2026-09-16: 세 장에서 열두 장. 시상식 두 장을 뺀 자리(아래 REMOVED
     // 주석)는 같은 날 커리어 간담회와 트랙 공유회 사진으로 채웠습니다.

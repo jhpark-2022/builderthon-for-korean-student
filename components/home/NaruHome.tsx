@@ -23,6 +23,7 @@ import { buttonClass } from "@/components/ui/Button";
 import RouteMap from "@/components/shared/RouteMap";
 import FlowStrip from "@/components/shared/FlowStrip";
 import MobileChatBar from "@/components/shared/MobileChatBar";
+import PressRows from "@/components/shared/PressRows";
 import { BAND_TINT, BandFades } from "@/components/shared/Band";
 import { useHeroSplit } from "@/components/shared/useHeroSplit";
 import { computeShapeLayout, readShapeAnchors } from "@/lib/background/utils/shapeLayout";
@@ -420,6 +421,19 @@ export default function NaruHome() {
             .map((src) => naru.record.photos.find((p) => p.src === src))
             .filter((p): p is RecordPhoto => Boolean(p))}
           t={t}
+        />
+
+        {/* 언론 넷(DECIDED 2026-09-17). 8월 페이지의 press 블록과 같은 줄(shared/
+            PressRows). 위 둘은 행사 뒤 싱가포르 현지 매체, 아래 둘은 8월 페이지에
+            있던 기사입니다. 사진 벽 아래에 두는 이유: 사진이 "있었던 일"이고 기사는
+            그것을 밖에서 본 눈이라, 순서가 안에서 밖입니다. */}
+        <PressRows
+          items={naru.record.press}
+          tag={naru.record.pressTag}
+          lead={naru.record.pressLead}
+          cta={naru.record.pressCta}
+          t={t}
+          className="mt-12"
         />
 
         {/* 이 챕터의 유일한 행동입니다. 2026-09-16에 유령 버튼에서 실린 버튼으로
