@@ -191,3 +191,27 @@ export function formatDecemberDay(locale: Locale, offset: number): string {
   const dd = date.getUTCDate();
   return locale === "ko" ? `${mm}월 ${dd}일` : `${dd} ${EN_MONTHS[mm - 1].slice(0, 3)}`;
 }
+
+const KO_WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
+const EN_WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+/**
+ * 시작일에서 n일 뒤, 요일까지. "12.10 목" / "Dec 10 Thu". 8월 데이 카드의
+ * "08.22 토" 자리입니다(2026-09-17, 8월 문법 브리프).
+ */
+export function formatDecemberDayWithWeekday(locale: Locale, offset: number): string {
+  const [y, m, d] = parts(DECEMBER_STARTS_AT);
+  const date = new Date(Date.UTC(y, m - 1, d + offset));
+  const mm = date.getUTCMonth() + 1;
+  const dd = date.getUTCDate();
+  const wd = date.getUTCDay();
+  return locale === "ko"
+    ? `${String(mm).padStart(2, "0")}.${String(dd).padStart(2, "0")} ${KO_WEEKDAYS[wd]}`
+    : `${EN_MONTHS[mm - 1].slice(0, 3)} ${dd} ${EN_WEEKDAYS[wd]}`;
+}
+
+/**
+ * 카운트다운의 기준 시각. 시작일 0시, 한국 시간. 서울에서 열리므로 +09:00입니다.
+ * 문자열에 시간대를 박아 두는 것이 핵심입니다(registrationWindow.ts의 같은 규칙).
+ */
+export const DECEMBER_STARTS_AT_MS = new Date(`${DECEMBER_STARTS_AT}T00:00:00+09:00`).getTime();

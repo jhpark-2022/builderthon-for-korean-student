@@ -3,6 +3,7 @@
 import { track } from "@vercel/analytics";
 import { dict, links, type Phrase } from "@/data/dictionary";
 import ChatGlyph from "@/components/ChatGlyph";
+import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 
 type Tfn = (p: Phrase) => string;
 
@@ -56,21 +57,25 @@ export default function OpenChatLink({
   // "hero" (2026-09-17 2차): 홈 첫 화면의 주 CTA. 히어로가 크로싱 서울이 되면서
   // 이 자리의 행동이 앵커에서 오픈채팅으로 바뀌었고, 히어로 주황 면은 그대로
   // 이 버튼 하나입니다(주황 원장은 NaruHome 히어로 주석).
-  variant?: "ghost" | "primary" | "hero";
+  // 2026-09-17 (8월 문법 브리프): "hero"가 주황 면에서 그라데이션 필(보라 → 자주,
+  // 발광)로 바뀌었습니다. 8월 히어로의 주 CTA와 같은 기하이고, 주황은 면이 아니라
+  // 점이라는 원칙에 따라 버튼 면에서 뺐습니다. "secondary"는 8월의 유령 필(같은
+  // 크기). #december의 문이 이것을 씁니다. 페이지의 그라데이션 필은 히어로 하나.
+  variant?: "ghost" | "primary" | "hero" | "secondary";
 }) {
   if (!links.openChat) return null;
-  if (variant === "hero") {
+  if (variant === "hero" || variant === "secondary") {
     return (
       <a
         href={links.openChat}
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => track("openchat_click", { src })}
-        className={`group inline-flex items-center gap-2 rounded-full bg-naru-orange px-6 py-3.5 text-sm font-bold text-naru-navy transition hover:-translate-y-0.5 hover:bg-[#F29B67] sm:px-8 sm:text-base ${className}`}
+        className={`${buttonClass(variant === "hero" ? "primary" : "secondary", "naru")} ${className}`}
       >
         <ChatGlyph className="h-4 w-4 shrink-0" />
         {t(label ?? dict.register.openChatCta)}
-        <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+        <span aria-hidden className={variant === "hero" ? ARROW_CLASS : "text-white/50"}>→</span>
       </a>
     );
   }

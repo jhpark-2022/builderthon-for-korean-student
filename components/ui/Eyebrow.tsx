@@ -34,7 +34,8 @@ export default function Eyebrow({ children, color = "violet", className = "" }: 
     // #070B1F 위 대비입니다.
     purple: "border-accent/30 bg-accent/10 text-accent",              // #A99AD6  7.69:1
     plum: "border-[#C79BB4]/30 bg-[#C79BB4]/10 text-[#C79BB4]",       // #C79BB4  8.15:1
-    orange: "border-naru-orange/35 bg-naru-orange/10 text-[#F2B183]", // #F2B183 10.58:1
+    // 2026-09-17 (8월 문법 브리프): 면을 뺐습니다. 주황은 글자색과 테두리만. 주황은 면이 아니라 점입니다.
+    orange: "border-naru-orange/35 bg-transparent text-[#F2B183]", // #F2B183 10.58:1
   } as const;
   return (
     <span className={`mb-4 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] ${map[color]} ${className}`}>

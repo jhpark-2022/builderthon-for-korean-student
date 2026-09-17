@@ -290,6 +290,16 @@ export const naru = {
       en: "Students at Korean universities and Korean students abroad stand in front of the same problem. From finding it in raw data to proving it out front, in five days.",
     },
     ctaProgram: { ko: "프로그램 보기", en: "See the programme" },
+    // ── 카운트다운 패널 (2026-09-17, 8월 문법 브리프) ─────────────────────
+    // 8월 히어로의 오른쪽 단(Glass 패널)에 있던 카운트다운의 자리입니다. 숫자는
+    // 마운트 뒤에 채우고 패널 높이는 고정입니다(하이드레이션 밀림 방지).
+    countdownLabel: { ko: "크로싱 서울까지", en: "Until CROSSING SEOUL" },
+    countdownUnits: {
+      days: { ko: "일", en: "days" },
+      hours: { ko: "시간", en: "hrs" },
+      minutes: { ko: "분", en: "min" },
+    },
+    started: { ko: "시작했습니다", en: "It has started" },
   },
 
   // ── CH3 · 나루 (그룹) ─────────────────────────────────────────────────────
@@ -950,6 +960,20 @@ export const naru = {
     // 2026-09-17 (3차): reasons(왜 서울인가)와 why.exec는 화면에서 내려갔습니다.
     // 페이지가 너무 길었고, 둘 다 이 챕터가 아니어도 할 수 있는 말이었습니다.
     // 키는 그대로. 재는 것(why.measure)만 멘토링 아래 한 줄로 남습니다.
+    // ── 8월 문법 (2026-09-17) ─────────────────────────────────────────────
+    // 노선도 범례, 데이 카드 라벨, 플로우 스트립. 새 문자열은 라벨뿐입니다.
+    routeAria: { ko: "크로싱 서울 닷새의 노선도", en: "The five-day route of CROSSING SEOUL" },
+    routeLegendSubmit: { ko: "제출이 있는 날", en: "Submission day" },
+    routeLegendStage: { ko: "스테이지", en: "Stage" },
+    dayLabel: { ko: "DAY", en: "DAY" },
+    beforeLabel: { ko: "BEFORE", en: "BEFORE" },
+    flowLabel: { ko: "참여 플로우", en: "How it flows" },
+    flow: [
+      { ko: "등록", en: "Register" },
+      { ko: "팀 본딩", en: "Team bonding" },
+      { ko: "닷새", en: "Five days" },
+      { ko: "결과 공유회", en: "Sharing session" },
+    ] as Phrase[],
     mentoringLabel: { ko: "멘토링", en: "Mentoring" },
     mentoringHeading: { ko: "General Mentoring, 전 기간 상시", en: "General Mentoring, on call the whole way" },
     // 가로 상자의 이름 아래 한 줄(5차). 이름은 고유명사라 그대로 "General Mentoring".
@@ -1192,18 +1216,25 @@ export const naru = {
         when: { ko: "본 일정 전", en: "Before it starts" },
         dayOffset: null,
         body: {
-          ko: "사전 매칭된 팀이 대면으로 먼저 만납니다. 첫날의 아이스브레이킹 시간이 사라집니다.",
-          en: "Matched teams meet in person first, so day one does not start with icebreakers.",
+          ko: "사전 매칭된 팀이 대면으로 먼저 만납니다.",
+          en: "Matched teams meet in person first.",
         },
+        line: {
+          ko: "첫날의 아이스브레이킹 시간이 사라집니다.",
+          en: "Day one does not start with icebreakers.",
+        },
+        chips: [{ ko: "대면", en: "In person" }],
       },
       {
         name: { ko: "Discovery", en: "Discovery" },
         when: { ko: "1일차", en: "Day 1" },
         dayOffset: 0,
         body: {
-          ko: "데이터를 열고, 그 데이터에서 문제를 찾아 정의합니다. 요구 강도가 가장 높은 날입니다.",
-          en: "The data opens. You find the problem inside it and define it. The hardest day.",
+          ko: "데이터를 열고, 그 데이터에서 문제를 찾아 정의합니다.",
+          en: "The data opens. You find the problem inside it and define it.",
         },
+        line: { ko: "요구 강도가 가장 높은 날입니다.", en: "The hardest day." },
+        chips: [{ ko: "요구 강도 최고", en: "Hardest day" }],
         workshop: {
           title: { ko: "Problem Discovery", en: "Problem Discovery" },
           body: { ko: "워크플로우를 분해해 병목 짚는 법", en: "Taking a workflow apart to find the bottleneck" },
@@ -1215,9 +1246,11 @@ export const naru = {
         when: { ko: "2일차", en: "Day 2" },
         dayOffset: 1,
         body: {
-          ko: "정의한 문제를 실제로 풉니다. PO 세션이 빌드 도중에 들어옵니다.",
-          en: "You actually solve what you defined. The PO session lands mid-build.",
+          ko: "정의한 문제를 실제로 풉니다.",
+          en: "You actually solve what you defined.",
         },
+        line: { ko: "PO 세션이 빌드 도중에 들어옵니다.", en: "The PO session lands mid-build." },
+        chips: [{ ko: "PO 세션", en: "PO session" }],
         workshop: {
           title: { ko: "PO session", en: "PO session" },
           body: { ko: "정의를 기능으로 옮기는 판단 기준", en: "How a definition turns into a feature" },
@@ -1228,9 +1261,11 @@ export const naru = {
         when: { ko: "3일차", en: "Day 3" },
         dayOffset: 2,
         body: {
-          ko: "검증받을 수 있는 상태로 다듬습니다. 이 시점부터 새 방향은 제안하지 않습니다.",
-          en: "You get it to a state that can be verified. From here, no new directions.",
+          ko: "검증받을 수 있는 상태로 다듬습니다.",
+          en: "You get it to a state that can be verified.",
         },
+        line: { ko: "이 시점부터 새 방향은 제안하지 않습니다.", en: "From here, no new directions." },
+        chips: [{ ko: "새 방향 금지", en: "No new directions" }],
         workshop: {
           title: { ko: "Pitching session", en: "Pitching session" },
           body: { ko: "무엇을 증명할지와 발표 구조", en: "What to prove, and how to structure the pitch" },
@@ -1242,15 +1277,21 @@ export const naru = {
         when: { ko: "4일차", en: "Day 4" },
         dayOffset: 3,
         body: {
-          ko: "만든 것을 앞에서 증명합니다. 발표 5분, 질의 5분. 시상과 클로징까지 이 날입니다.",
-          en: "You prove it out front. Five minutes to present, five to answer. Awards and closing the same day.",
+          ko: "만든 것을 앞에서 증명합니다. 발표 5분, 질의 5분.",
+          en: "You prove it out front. Five minutes to present, five to answer.",
         },
+        line: { ko: "시상과 클로징까지 이 날입니다.", en: "Awards and closing the same day." },
+        chips: [{ ko: "발표 5분 + 질의 5분", en: "5 min + 5 min" }, { ko: "시상", en: "Awards" }],
       },
     ] as {
       name: Phrase;
       when: Phrase;
       dayOffset: number | null;
       body: Phrase;
+      /** 본문의 마지막 문장. 8월 데이 카드의 "→ 그날의 한 줄" 자리 (2026-09-17). 새로 쓴 문장이 아니라 body에서 떼어 낸 것입니다. */
+      line: Phrase;
+      /** 칩 줄. 8월 데이 카드의 필참·현장·시간 칩 자리. 본문에서 나온 낱말만 씁니다. */
+      chips: Phrase[];
       workshop?: { title: Phrase; body: Phrase };
       submit?: Phrase;
     }[],

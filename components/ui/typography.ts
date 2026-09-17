@@ -72,3 +72,14 @@ export const LABEL_HEADING =
  */
 export const STATEMENT =
   "break-keep text-[clamp(1.25rem,2vw,1.625rem)] font-bold leading-[1.2] tracking-tight text-white";
+
+/**
+ * 그라데이션 글자. 보라 틴트 → 자주 틴트 → 주황. 로고 링의 방향과 같습니다.
+ *
+ * ADDED 2026-09-17 (8월 문법 브리프). #naru 태그라인 2행이 쓰던 값을 토큰으로
+ * 묶고 히어로 H1 2행이 같은 값을 씁니다. 8월 페이지의 2행 그라데이션
+ * (violet-300 → fuchsia-300 → cyan-300)은 그쪽 팔레트라 여기 들여오지 않습니다.
+ * 8월의 쓰임새(2행만 그라데이션, pb로 디센더 보호)만 같습니다.
+ */
+export const GRADIENT_TEXT =
+  "gradient-text bg-gradient-to-r from-[#A99AD6] via-[#C79BB4] to-[#EE8A4F] bg-clip-text pb-[0.14em] text-transparent";
