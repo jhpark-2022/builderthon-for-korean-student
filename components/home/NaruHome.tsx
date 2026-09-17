@@ -26,7 +26,6 @@ import MobileChatBar from "@/components/shared/MobileChatBar";
 import PressRows from "@/components/shared/PressRows";
 import { BAND_TINT, BandFades } from "@/components/shared/Band";
 import { useHeroSplit } from "@/components/shared/useHeroSplit";
-import { computeStageLayout, readStageRect, findStageElement, STAGE } from "@/lib/background/utils/shapeLayout";
 import Chapter from "@/components/journey/Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
@@ -245,56 +244,24 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 기슭 형상의 라벨 (2026-09-17, 배경 형상 브리프).
-//
-// 배경 캔버스(fixed)의 두 형상 아래에 SINGAPORE / SEOUL. DOM 텍스트입니다(캔버스에
-// 그리지 않음). 자리는 config.SHAPES와 형상의 세로 비율에서 같은 식으로 계산하고,
-// 형상이 18° 눕혀져 있으니 높이에 cos(18°)를 곱합니다. banks 국면에서만 보이고
-// 스크롤이 반 화면을 지나면 사라집니다(그때 gather가 시작합니다).
-// z-index는 캔버스(-10)와 본문 사이. 본문 글자 위에 얹히지 않습니다.
+// 히어로 사진 넷 (DECIDED 2026-09-17, 사용자). 오른쪽 단(폰은 카피 아래)에 8월 행사
+// 사진을 2×2로. 형상 무대(싱가포르·서울 점)는 이날 걷었습니다. 사진은 전부 4:3이라
+// 칸도 4:3, fill + cover가 실제로는 아무것도 자르지 않습니다(PhotoWall과 같음).
+// 오른쪽 열을 조금 내려(lg:mt-10) 한 덩어리로 읽히게 합니다.
 // ─────────────────────────────────────────────────────────────────────────────
-function ShapeLabels({ t }: { t: (p: Phrase) => string }) {
-  const [style, setStyle] = useState<{ l: React.CSSProperties; r: React.CSSProperties; opacity: number } | null>(null);
-  // 배경(WebGL)이 뜬 뒤에만 보입니다. 배경은 idle 콜백 + 청크 로드 뒤에 시작해서
-  // 라벨만 먼저 나오면 "형상이 늦게 뜬다"로 읽힙니다(사용자, 2026-09-17). 같이 뜹니다.
-  const [bgReady, setBgReady] = useState(false);
-  useEffect(() => {
-    if (window.__naruBackgroundStarted) { setBgReady(true); return; }
-    const on = () => setBgReady(true);
-    window.addEventListener("naru:bg-ready", on);
-    return () => window.removeEventListener("naru:bg-ready", on);
-  }, []);
-  useEffect(() => {
-    const place = () => {
-      // 자리는 배경과 같은 함수에서(lib/background/utils/shapeLayout.ts). 무대 사각형은
-      // 스크롤 0 기준이라 라벨은 무대와 함께 스크롤됩니다(absolute, 문서 좌표).
-      const L = computeStageLayout(window.innerWidth, window.innerHeight, readStageRect());
-      if (!L) { setStyle(null); return; }
-      const under = (p: { cx: number; cy: number; h: number }): React.CSSProperties => ({
-        left: `${p.cx}px`, top: `${p.cy + p.h / 2 + STAGE.labelGap}px`, transform: "translateX(-50%)",
-      });
-      const opacity = 1 - Math.min(1, window.scrollY / (window.innerHeight * 0.6));
-      setStyle({ l: under(L.left), r: under(L.right), opacity });
-    };
-    place();
-    // 폰트·레이아웃이 자리 잡은 뒤 다시(무대 사각형이 첫 프레임과 다를 수 있음).
-    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(place) : null;
-    const stage = findStageElement();
-    if (ro && stage) ro.observe(stage);
-    if (ro) ro.observe(document.body);
-    document.fonts?.ready.then(place).catch(() => {});
-    window.addEventListener("resize", place);
-    window.addEventListener("scroll", place, { passive: true });
-    return () => { ro?.disconnect(); window.removeEventListener("resize", place); window.removeEventListener("scroll", place); };
-  }, []);
-  if (!style || style.opacity <= 0) return null;
-  const cls = "pointer-events-none absolute z-[-5] text-[11px] font-semibold uppercase tracking-[0.22em] text-white/40 transition-opacity duration-700";
-  const op = bgReady ? style.opacity : 0;
+function HeroPhotos({ photos, t, className = "" }: { photos: RecordPhoto[]; t: (p: Phrase) => string; className?: string }) {
+  if (photos.length === 0) return null;
   return (
-    <>
-      <span aria-hidden className={cls} style={{ ...style.l, opacity: op }}>{t(naru.eventHero.shapeLabels.singapore)}</span>
-      <span aria-hidden className={cls} style={{ ...style.r, opacity: op }}>{t(naru.eventHero.shapeLabels.seoul)}</span>
-    </>
+    <div className={`grid grid-cols-2 gap-3 sm:gap-4 ${className}`}>
+      {photos.slice(0, 4).map((photo, i) => (
+        <div
+          key={photo.src}
+          className={`relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.9)] ${i % 2 === 1 ? "lg:translate-y-8" : ""}`}
+        >
+          <Image src={photo.src} alt={t(photo.alt)} fill sizes="(min-width: 1024px) 24vw, 45vw" priority={i < 2} className="object-cover object-center" />
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -311,7 +278,6 @@ export default function NaruHome() {
       {/* 하단 오픈채팅 바(8월과 같은 것). #record가 지나면 나타나고 푸터가 보이면
           물러납니다. 홈에는 폰 전용 바가 없어서 폰까지 맡습니다(phone). */}
       <MobileChatBar afterId="record" endId="closing" phone />
-      <ShapeLabels t={t} />
       {/* ── CH0 · 크로싱 서울 히어로 (DECIDED 2026-09-17 2차) ──────────────
           홈의 첫 화면이 그룹에서 이벤트로 바뀌었습니다. 8월 사이트의 히어로가
           8월 이벤트였듯이, 여기는 크로싱 서울입니다. 나루 로고는 헤더에만 있고
@@ -385,19 +351,17 @@ export default function NaruHome() {
             {/* 카운트다운(얇은 한 줄). lg부터 여기, 그 아래 폭에서는 무대 다음에. */}
             <CountdownPanel t={t} locale={locale} className="mt-8 hidden lg:flex" />
           </motion.div>
-          {/* 오른쪽 단 = 형상의 무대 (DECIDED 2026-09-17, 배경 수정 브리프). 8월
-              히어로의 메탈 휴먼 자리입니다. 배경 캔버스의 싱가포르·서울 형상이 이
-              사각형 안에 서고(lib/background/utils/shapeLayout.ts), 라벨이 그 아래
-              붙습니다. DOM에는 아무것도 그리지 않습니다. 세로 중심 = 히어로의 세로
-              중심 = 첫 화면의 세로 중심. lg부터만. */}
+          {/* 오른쪽 단 = 8월 행사 사진 넷 (DECIDED 2026-09-17, 사용자). 8월 히어로의
+              메탈 휴먼 자리입니다. 사람이 많이 나온 장면만, 같은 사진은 사이트에 한 번.
+              그 전의 형상 무대(싱가포르·서울 점, 배경 수정 브리프)는 같은 날 걷었습니다.
+              lg부터만. */}
           <motion.div style={{ x: splitX ? rightX : undefined, opacity: heroFade }} className="hidden lg:block lg:pr-10 xl:pr-16">
-            <div data-shape-anchor="stage" aria-hidden className="aspect-[4/3] w-full" />
+            <HeroPhotos photos={naru.eventHero.photos} t={t} />
           </motion.div>
         </div>
-        {/* 폰(lg 아래): 카피 바로 다음에 무대 한 단(너비 100%, 높이 44vw), 그 아래
-            카운트다운. 첫 화면 안에 들어오지 않아도 되지만 카피 바로 다음이어야 합니다. */}
+        {/* 폰(lg 아래): 카피 바로 다음에 사진 넷(2×2), 그 아래 카운트다운. */}
         <div className="px-6 sm:px-10 lg:hidden">
-          <div data-shape-anchor="stage" aria-hidden className="mt-6 h-[44vw] w-full" />
+          <HeroPhotos photos={naru.eventHero.photos} t={t} className="mt-8" />
           <CountdownPanel t={t} locale={locale} className="mt-6 justify-center" />
         </div>
       </Chapter>

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { CROSSING, pickQuality, type QualityTier } from "../config";
+import { CROSSING, SHAPES, pickQuality, type QualityTier } from "../config";
 import { computeStageLayout, readStageRect, findStageElement, type StageLayout } from "../utils/shapeLayout";
 import { Renderer } from "../renderer/Renderer";
 import { CameraController } from "../camera/CameraController";
@@ -117,10 +117,17 @@ export class BackgroundScene {
       this.atmosphere.mesh.renderOrder = -2; // 하늘이 맨 뒤, 그 위에 반사 띠
       // 위는 거의 검정, 아래(강 쪽)는 옅은 남색. water 변형의 하늘과 같은 값입니다.
       this.atmosphere.setPalette("#0B1540", "#03050F", "#2A2260");
-      this.water = new WaterSurface(true);
       this.particles = new ParticleField(this.quality, 1.0, "crossing");
-      this.lantern = new Lantern();
-      this.scene.add(this.atmosphere.mesh, this.water.mesh, this.particles.points, this.lantern.sprite);
+      if (SHAPES.enabled) {
+        this.water = new WaterSurface(true);
+        this.lantern = new Lantern();
+        this.scene.add(this.atmosphere.mesh, this.water.mesh, this.particles.points, this.lantern.sprite);
+      } else {
+        // 형상을 걷은 상태(2026-09-17): 하늘 + 깊이 층만. 등불도 반사 띠도 없습니다.
+        this.water = null;
+        this.lantern = null;
+        this.scene.add(this.atmosphere.mesh, this.particles.points);
+      }
     } else {
       this.water = null;
       this.lantern = null;
@@ -362,6 +369,17 @@ export class BackgroundScene {
     const k = target > this.flow ? 12 : 1.8;
     this.flow += (target - this.flow) * Math.min(1, k * dt);
 
+    if (this.variant === "crossing" && this.particles && this.atmosphere && !SHAPES.enabled) {
+      // 형상 없음: 깊이 층만. 국면은 calm(그룹 챕터의 잔잔함)만 씁니다.
+      this.anchorTimer += dt;
+      if (this.anchorTimer > 2) { this.anchorTimer = 0; this.readAnchors(); }
+      const cp = computeCrossingPhases(this.scrollY, window.innerHeight, this.scroll, this.anchors);
+      this.atmosphere.update(this.fieldTime, this.scroll, 0);
+      this.particles.updateCrossing(this.fieldTime, this.scroll, this.motionScale, cp, 0);
+      this.post.setPhase(crossingToPhases(cp), this.reduced ? 0.3 : 1);
+      this.post.render(dt);
+      return;
+    }
     if (this.variant === "crossing" && this.water && this.particles && this.lantern && this.atmosphere) {
       this.anchorTimer += dt;
       if (this.anchorTimer > 2) { this.anchorTimer = 0; this.readAnchors(); }

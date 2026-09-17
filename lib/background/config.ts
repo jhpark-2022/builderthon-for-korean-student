@@ -124,7 +124,7 @@ export const CROSSING = {
   far: { x: 0, y: 2, z: -18 },
   // 깊이 층(1.4): 8월 필드를 밀도 35%(점 예산에서), 밝기 25%로. 그룹 챕터에서는
   // 드리프트 50%, 밝기 15%.
-  depthBright: 0.25,
+  depthBright: 0.4,       // 형상이 없는 동안 0.25 → 0.4(2026-09-17). 배경이 이 층뿐입니다.
   depthCalmBright: 0.6,   // 0.25 × 0.6 = 0.15
   depthCalmSpeed: 0.5,
   depthDollyZ: 6,         // 스크롤에 따라 z 6 단위
@@ -139,7 +139,12 @@ export const CROSSING = {
  * 점 예산: 데스크톱 티어(2,800)에서 형상 둘에 1,800(각 900), 나머지는 깊이 층.
  * 폰(900)은 형상 600(각 300), 깊이 층 300.
  */
+const SHAPES_ENABLED = false;
 export const SHAPES = {
+  // DECIDED 2026-09-17 (사용자): 형상을 걷었습니다. 히어로 오른쪽 단은 행사 사진 넷.
+  // false면 crossing 변형은 깊이 층만 그립니다(등불·반사 띠도 없음). 형상 코드는
+  // 그대로 두어 true로 되돌리면 다시 섭니다.
+  enabled: false,
   edgePx: 2.8,
   innerPx: 1.4,
   edgeBright: 1.0,
@@ -147,5 +152,8 @@ export const SHAPES = {
   wavePeriod: 12,     // 초
   waveAmp: 0.3,
   breath: 0.3,        // 숨 진폭: crossing 브리프 값의 30%
-  shapePoints: (tier: number) => (tier <= 900 ? 600 : Math.min(1800, tier - Math.round(tier * 0.35))),
+  shapePoints: (tier: number): number => {
+    if (!SHAPES_ENABLED) return 0;
+    return tier <= 900 ? 600 : Math.min(1800, tier - Math.round(tier * 0.35));
+  },
 } as const;

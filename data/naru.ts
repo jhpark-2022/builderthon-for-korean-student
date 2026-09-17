@@ -312,6 +312,53 @@ export const naru = {
       singapore: { ko: "SINGAPORE", en: "SINGAPORE" },
       seoul: { ko: "SEOUL", en: "SEOUL" },
     },
+    // ── 히어로 사진 넷 (DECIDED 2026-09-17, 사용자) ─────────────────────────
+    // "한국이랑 싱가폴 이미지 말고, 행사 이미지나 많이 보여주는 식으로." 오른쪽
+    // 단의 형상 무대가 8월 행사 사진 넷으로 바뀌었습니다. 사람이 많이 나온 장면만.
+    // 같은 사진을 두 번 쓰지 않습니다: 여기 넷은 record.wall의 열둘과 겹치지 않고,
+    // 원본 파일도 다릅니다(원본 이름은 각 항목의 주석). 전부 4:3, 1200×900 webp.
+    photos: [
+      {
+        // 원본 Photo/Day 8/시상식/IMG_2680.HEIC
+        src: "/record/hero-day8-group.webp",
+        width: 1200,
+        height: 900,
+        alt: {
+          ko: "Day 8 시상식이 끝난 뒤 참가자와 멘토, 운영진이 함께 찍은 단체 사진",
+          en: "Day 8: participants, mentors and organisers together after the awards",
+        },
+      },
+      {
+        // 원본 Photo/Day 1/AWS/IMG_2044.HEIC
+        src: "/record/hero-day1-audience.webp",
+        width: 1200,
+        height: 900,
+        alt: {
+          ko: "Day 1 파운드리 홀을 가득 채운 참가자들이 무대의 세션을 듣는 모습",
+          en: "Day 1: a full Foundry hall listening to a session on stage",
+        },
+      },
+      {
+        // 원본 Photo/Day 8/커리어 간담회/IMG_8119.heic
+        src: "/record/hero-day8-career-room.webp",
+        width: 1200,
+        height: 900,
+        alt: {
+          ko: "Day 8 커리어 간담회, 긴 책상에 둘러앉은 참가자들",
+          en: "Day 8 career talk: participants around the long tables",
+        },
+      },
+      {
+        // 원본 Photo/Day 8/Judgement Track Sharing/IMG_8037.HEIC
+        src: "/record/hero-day8-judgement.webp",
+        width: 1200,
+        height: 900,
+        alt: {
+          ko: "Day 8 저지먼트 트랙 공유회, 팀의 발표를 지켜보는 참가자들",
+          en: "Day 8 judgement-track sharing: the room watching a team present",
+        },
+      },
+    ] as RecordPhoto[],
   },
 
   // ── CH3 · 나루 (그룹) ─────────────────────────────────────────────────────
