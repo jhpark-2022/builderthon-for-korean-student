@@ -5,7 +5,7 @@ import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
 import { naru, naruLinks, openChatLabels, type Layer, type Stat, type RecordPhoto } from "@/data/naru";
-import type { Phrase } from "@/data/dictionary";
+import { links, type Phrase } from "@/data/dictionary";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -19,7 +19,7 @@ import {
 import Glass from "@/components/ui/Glass";
 import Halo from "@/components/ui/Halo";
 import Chip, { ChipDot } from "@/components/ui/Chip";
-import { buttonClass } from "@/components/ui/Button";
+import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 import RouteMap from "@/components/shared/RouteMap";
 import FlowStrip from "@/components/shared/FlowStrip";
 import MobileChatBar from "@/components/shared/MobileChatBar";
@@ -377,13 +377,16 @@ export default function NaruHome() {
                 (lib/background/utils/shapeLayout.ts). */}
             <div data-shape-anchor="copy" className="mt-10 flex flex-wrap justify-center gap-3 lg:justify-start">
               <OpenChatLink t={t} src="naru-hero" label={openChatLabels.december} variant="hero" />
+              {/* 오픈채팅이 막혀 있으면(links.openChat 빈 문자열, 2026-09-17) 이 앵커가
+                  히어로의 유일한 문이라 주 CTA의 면(그라데이션 필)을 받습니다. 히어로의
+                  주 CTA는 언제나 하나입니다. */}
               <a
                 href="#december"
                 onClick={() => track("naru_cta", { src: "hero", to: "december" })}
-                className={buttonClass("secondary")}
+                className={links.openChat ? buttonClass("secondary") : `group ${buttonClass("primary", "naru")}`}
               >
                 {t(naru.eventHero.ctaProgram)}
-                <span aria-hidden className="text-white/50">↓</span>
+                <span aria-hidden className={links.openChat ? "text-white/50" : ARROW_CLASS}>↓</span>
               </a>
             </div>
           </motion.div>
@@ -881,7 +884,11 @@ export default function NaruHome() {
                 {t(card.lines[0])}
               </p>
               <div className="mt-6">
-                {card.openChat ? (
+                {card.openChat && !links.openChat ? (
+                  // 오픈채팅이 막혀 있는 동안(2026-09-17) 참가자 카드에는 문이 없습니다.
+                  // 버튼 자리에 둘째 줄("등록은 아직 열리지 않았습니다")을 보입니다.
+                  <p className="break-keep text-sm text-white/55">{t(card.lines[1])}</p>
+                ) : card.openChat ? (
                   <OpenChatLink t={t} src="naru-join" label={openChatLabels.join} />
                 ) : (
                   <a

@@ -35,6 +35,9 @@ export default function MobileChatBar({ afterId = "about", endId = "closing", ph
   // 자리를 다른 브레이크포인트에서 맡고 있어서, 한쪽만 멈춤 복귀를 하면 화면 폭에
   // 따라 다르게 동작합니다.
   const chromeHidden = useScrollDirection({ idleReveal: false });
+  // 오픈채팅이 막혀 있으면(links.openChat 빈 문자열, 2026-09-17) 이 바는 할 일이
+  // 없습니다. 빈 바를 띄우지 않습니다. 훅은 위에서 이미 다 불렀으니 여기서 나갑니다.
+  const off = !links.openChat;
 
   useEffect(() => {
     const onScroll = () => {
@@ -72,6 +75,7 @@ export default function MobileChatBar({ afterId = "about", endId = "closing", ph
     return () => io.disconnect();
   }, [endId]);
 
+  if (off) return null;
   return (
     <AnimatePresence>
       {visible && !atEnd && !chromeHidden && (

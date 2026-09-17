@@ -62,7 +62,13 @@ export const links = {
   // Public builderthon group chat — KakaoTalk 오픈채팅 "싱가폴 한인 학생 AI 빌더톤".
   // This is the open room anyone can join to ask a question; the participant
   // room registrants are invited to is a separate, private one.
-  openChat: "https://open.kakao.com/o/g6msvcFi",
+  // DECIDED 2026-09-17 (사용자): "일단 지금은 오픈톡방 막아줘. 나중에 그런건 추가해도
+  // 됨." 빈 문자열이면 사이트의 모든 오픈채팅 문(헤더 버튼, 폰 하단 바, 홈 히어로 주
+  // CTA, #december의 문, 참가자 카드, 8월을 건넌 분께, 푸터, /2026-08의 자리들,
+  // 등록 모달의 안내)이 스스로 숨습니다. 전부 `links.openChat &&`로 지키고 있었습니다.
+  // 다시 열 때는 아래 openChatArchived의 주소를 여기로 되돌리면 됩니다.
+  openChat: "",
+  openChatArchived: "https://open.kakao.com/o/g6msvcFi",
 };
 
 // Registration submit target — our own route handler, which validates the
