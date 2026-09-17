@@ -370,3 +370,9 @@ null → **12/14**. 새 `formatDecemberDay(locale, offset)`로 스테이지 날�
 
 내려간 키(`december.reasons`, `why.exec`, `how.layers[].does/gets`, `why.heading`,
 `record.photos`의 여섯 장)는 전부 그대로 있습니다.
+
+### 4차 · 프로그램의 숫자 여섯 칸을 뺍니다
+
+사용자 지시. `december.shape` 여섯 칸(5일, 3곳, 60명+, 2회, 무순위, 상시)과 그
+아래 초안 안내 줄이 화면에서 내려갔습니다. 키는 그대로. `draftNote`는 일정
+아래 워크샵 안내 줄에 붙여 두었습니다. 스테이지가 초안인 것은 그대로라서요.

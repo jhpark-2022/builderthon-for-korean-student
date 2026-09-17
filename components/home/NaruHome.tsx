@@ -304,8 +304,9 @@ export default function NaruHome() {
           <TermLink text={t(naru.december.notSequel)} term={t(naru.december.notSequelTerm)} href="#why" />
         </p>
 
-        <StatRow stats={naru.december.shape} t={t} className="mt-12 lg:grid-cols-6" />
-        <p className="mt-4 text-xs text-white/55">{t(naru.december.draftNote)}</p>
+        {/* 숫자 여섯 칸(december.shape)은 2026-09-17 4차에 내려갔습니다. 사용자
+            지시. 키는 그대로. draftNote는 일정 아래로 옮겼습니다. 스테이지가
+            초안인 것은 그대로라서요. */}
 
         {/* 8월에 아쉬웠던 넷과 12월의 답. record.gaps를 읽습니다(8월의 관찰이라
             정본이 거기 있습니다). 카드 넷이 아니라 줄 넷입니다(2026-09-17 3차):
@@ -363,7 +364,9 @@ export default function NaruHome() {
               </li>
             ))}
           </ol>
-          <p className="mt-4 break-keep text-xs text-white/55">{t(naru.december.workshopNote)}</p>
+          <p className="mt-4 break-keep text-xs text-white/55">
+            {`${t(naru.december.workshopNote)} ${t(naru.december.draftNote)}`}
+          </p>
         </div>
 
         {/* 멘토링. 규칙 넷(기획 04 General Mentoring), 그리고 코어가 지켜지는
