@@ -19,7 +19,8 @@ uniform float uPortal;
 uniform float uWhiteout;
 uniform float uMode;      // 0 = field, 1 = crossing (2026-09-17)
 
-varying float vDim;       // crossing: 카피 뒤 감광
+varying float vBright;    // crossing: 점의 밝기
+varying float vEdge;      // crossing: 가장자리 1 / 속 0
 varying float vDepth;
 varying float vGlow;
 varying float vPointer;
@@ -29,11 +30,10 @@ varying float vRand;
 
 const vec3 WHITE = vec3(0.95, 0.92, 1.0);
 
-// ── 건너는 점들의 색 ─────────────────────────────────────────────────────────
-// 기슭에서는 보라(uAccent = accent0)에서 자주(uAccent2 = accent2) 사이, 왼쪽 기슭이
-// 보라 쪽, 오른쪽이 자주 쪽(vRand). 건너는 도중(vNear)에 연자주(uHighlight = hi0)로
-// 밝아지고, 닿으면 다시 가라앉습니다. 주황이 되지 않습니다. 화면의 주황은 등불과
-// 그 반사뿐입니다.
+// ── 건너는 점들의 색 (2026-09-17 수정 브리프) ────────────────────────────────
+// 형상의 속 점은 uAccent(accent1), 가장자리 점은 uHighlight(hi0). 건너는 도중(vNear)에
+// hi0로 밝아지고, 닿으면 다시 가라앉습니다. 주황이 되지 않습니다. 화면의 주황은
+// 등불과 그 반사뿐입니다. 밝기(vBright)는 버텍스가 정합니다(가장자리의 파도).
 void crossingFrag(){
   vec2 uv = gl_PointCoord - 0.5;
   float r = length(uv) * 2.0;
@@ -41,10 +41,9 @@ void crossingFrag(){
   float core = smoothstep(1.0, 0.0, r);
   float halo = pow(1.0 - r, 3.2);
   float alpha = (core * 0.62 + halo * 0.25);
-  vec3 bank = mix(uAccent, uAccent2, vRand);
-  vec3 col = mix(bank, uHighlight, clamp(vNear * 0.85 + vGlow * 0.12, 0.0, 1.0));
+  vec3 col = mix(uAccent, uHighlight, clamp(vEdge + vNear * 0.85, 0.0, 1.0));
   col = mix(col, uFog, vDepth * 0.85);
-  alpha *= (1.0 - vDepth * 0.7) * uOpacity * vDim;
+  alpha *= (1.0 - vDepth * 0.7) * uOpacity * vBright;
   alpha = mix(alpha, alpha * 1.25 + 0.06, vSpeed);
   gl_FragColor = vec4(col, clamp(alpha, 0.0, 1.0));
 }

@@ -12,7 +12,7 @@
                                               서울 피처 하나만 떼어 둔 파일(7,700 꼭짓점).
                                               출처·라이선스는 lib/background/shapes/README.md.
 출력
-  lib/background/shapes/singapore.ts, seoul.ts   Float32Array [x, y, edge] × 2,000.
+  lib/background/shapes/singapore.ts, seoul.ts   Float32Array [x, y, edge, phase] × 2,000.
                                               x·y는 형상의 바운딩 박스 너비를 [-1, 1]에 맞춘 값(북쪽이 +y),
                                               edge는 가장자리 점이면 1, 속이면 0.
                                               순서는 가장자리 먼저(섞음), 그다음 속(섞음). 런타임은 앞에서부터
@@ -44,8 +44,11 @@ OUT = ROOT / "lib/background/shapes"
 N_POINTS = 2000
 CANVAS = 512
 MARGIN = 0.06
-EDGE_FRAC = 0.06      # 바운딩 박스 너비 대비 가장자리 띠
-EDGE_DENSITY = 3.0    # 가장자리 밀도 배수
+# DECIDED 2026-09-17 (배경 수정 브리프): 띠 폭 6% → 3%, 가장자리 점 비율 75%. 6%에서는
+# 두꺼운 테두리로 보였고 선처럼 읽히려면 띠가 좁아야 합니다. 밀도 배수는 상수가
+# 아니라 띠 넓이에서 역산합니다(띠가 좁을수록 밀도가 높아야 75%가 나옵니다).
+EDGE_FRAC = 0.03      # 바운딩 박스 너비 대비 가장자리 띠
+EDGE_SHARE = 0.75     # 전체 점 중 가장자리 점의 비율(어느 접두사를 잘라도 같게 섞음)
 DP_TARGET = (60, 90)  # 서울 단순화 꼭짓점 범위
 SEED = 20260917
 
@@ -186,9 +189,14 @@ def sample(mask, eroded, rng):
     m = mask.load(); e = eroded.load()
     inside = lambda x, y: m[int(x), int(y)] > 0
     is_edge = lambda x, y: e[int(x), int(y)] == 0
+    # 띠와 속의 넓이에서 밀도 배수를 역산합니다. 점 밀도 ∝ 1/r².
+    area_all = sum(1 for v in mask.getdata() if v)
+    area_in = sum(1 for v in eroded.getdata() if v)
+    area_edge = max(area_all - area_in, 1)
+    density_ratio = (EDGE_SHARE / area_edge) / ((1 - EDGE_SHARE) / max(area_in, 1))
 
     def run(r_edge):
-        r_in = r_edge * math.sqrt(EDGE_DENSITY)
+        r_in = r_edge * math.sqrt(density_ratio)
         radius_of = lambda x, y: r_edge if is_edge(x, y) else r_in
         return poisson(inside, radius_of, rng)
 
@@ -205,14 +213,41 @@ def sample(mask, eroded, rng):
         else:
             hi = r
         best = pts
-    # 가장자리 먼저(섞음), 속(섞음). 앞에서부터 잘라 써도 윤곽이 남습니다.
     edge = [p for p in best if is_edge(*p)]
     inner = [p for p in best if not is_edge(*p)]
     rng.seed(SEED + 1); rng.shuffle(edge); rng.shuffle(inner)
     return edge, inner
 
 
-def normalize(pts, edge_flag, scale, off_x, off_y, bbox):
+def arc_phase(ring):
+    """가장자리 점의 위상: 단순화한 고리를 따라 간 호 길이 비율(0..1). 윤곽을 따라
+    흐르는 빛(셰이더)이 이 값을 씁니다. 속 점은 중심 기준 각도 비율."""
+    pts = ring[:-1] if ring[0] == ring[-1] else ring
+    segs = []
+    total = 0.0
+    for i in range(len(pts)):
+        a, b = pts[i], pts[(i + 1) % len(pts)]
+        L = math.hypot(b[0] - a[0], b[1] - a[1])
+        segs.append((a, b, total, L)); total += L
+    cx = sum(p[0] for p in pts) / len(pts); cy = sum(p[1] for p in pts) / len(pts)
+
+    def of(p, edge):
+        if not edge:
+            return (math.atan2(p[1] - cy, p[0] - cx) / (2 * math.pi)) % 1.0
+        best = None
+        for a, b, s0, L in segs:
+            if L == 0:
+                continue
+            t = max(0.0, min(1.0, ((p[0] - a[0]) * (b[0] - a[0]) + (p[1] - a[1]) * (b[1] - a[1])) / (L * L)))
+            q = (a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1]))
+            d = math.hypot(p[0] - q[0], p[1] - q[1])
+            if best is None or d < best[0]:
+                best = (d, (s0 + t * L) / total)
+        return best[1]
+    return of
+
+
+def normalize(pts, edge_flag, scale, off_x, off_y, bbox, phase_of):
     minx, maxx, miny, maxy = bbox
     w = maxx - minx
     cx_px = off_x + w * scale / 2
@@ -220,19 +255,36 @@ def normalize(pts, edge_flag, scale, off_x, off_y, bbox):
     half = w * scale / 2
     out = []
     for x, y in pts:
-        out.append(((x - cx_px) / half, -(y - cy_px) / half, edge_flag))
+        nx, ny = (x - cx_px) / half, -(y - cy_px) / half
+        out.append((nx, ny, edge_flag, phase_of((nx, ny), edge_flag)))
+    return out
+
+
+def interleave(edge, inner, share):
+    """어느 접두사를 잘라 써도 가장자리 비율이 share가 되도록 섞습니다(폰은 앞 300점,
+    데스크톱은 앞 900점만 씁니다)."""
+    out = []
+    ei = ii = 0
+    while ei < len(edge) or ii < len(inner):
+        want_edge = (len(out) + 1) * share > ei
+        if (want_edge and ei < len(edge)) or ii >= len(inner):
+            out.append(edge[ei]); ei += 1
+        else:
+            out.append(inner[ii]); ii += 1
     return out
 
 
 def emit(name: str, label: str, tris, aspect: float, meta: str):
     flat = []
-    for x, y, e in tris:
-        flat += [round(x, 3), round(y, 3), float(e)]
+    for x, y, e, ph in tris:
+        flat += [round(x, 3), round(y, 3), float(e), round(ph, 3)]
     body = ",".join(f"{v:g}" for v in flat)
     ts = f'''// 자동 생성. 손으로 고치지 마세요. scripts/build-shape-points.py가 만듭니다.
 // {meta}
-// [x, y, edge] × {len(tris)}. x·y는 너비를 [-1, 1]에 맞춘 값, 북쪽이 +y. edge 1 = 가장자리.
-// 순서: 가장자리 먼저, 그다음 속. 앞에서부터 잘라 써도 윤곽이 남습니다.
+// [x, y, edge, phase] × {len(tris)}. x·y는 너비를 [-1, 1]에 맞춘 값, 북쪽이 +y. edge 1 = 가장자리.
+// phase: 가장자리 점은 윤곽을 따라 간 호 길이 비율(0..1), 속 점은 중심 기준 각도 비율.
+// 순서: 가장자리 {int(EDGE_SHARE * 100)}% · 속 {int((1 - EDGE_SHARE) * 100)}%가 어느 접두사에서도 유지되게 섞음.
+export const {name}_STRIDE = 4;
 export const {name}_ASPECT = {aspect:.4f}; // 높이 / 너비
 export const {name}_POINTS = new Float32Array([{body}]);
 '''
@@ -246,7 +298,10 @@ def build(label, name, ring, meta):
     band = int(EDGE_FRAC * (bbox[1] - bbox[0]) * scale)
     _, eroded = edge_mask(mask, band)
     edge, inner = sample(mask, eroded, rng)
-    tris = normalize(edge, 1, scale, off_x, off_y, bbox) + normalize(inner, 0, scale, off_x, off_y, bbox)
+    # 위상은 정규화 좌표계의 고리에서 잽니다.
+    ring_n = normalize([(off_x + (x - bbox[0]) * scale, CANVAS - (off_y + (y - bbox[2]) * scale)) for x, y in ring], 1, scale, off_x, off_y, bbox, lambda p, e: 0.0)
+    phase_of = arc_phase([(p[0], p[1]) for p in ring_n])
+    tris = interleave(normalize(edge, 1, scale, off_x, off_y, bbox, phase_of), normalize(inner, 0, scale, off_x, off_y, bbox, phase_of), EDGE_SHARE)
     tris = tris[:N_POINTS]
     aspect = (bbox[3] - bbox[2]) / (bbox[1] - bbox[0])
     print(f"{label}: ring {len(ring)} vertices, edge band {band}px, edge {len(edge)} / inner {len(inner)}")
@@ -254,7 +309,7 @@ def build(label, name, ring, meta):
     # 확인용 PNG
     prev = Image.new("RGB", (CANVAS, CANVAS), (7, 11, 31))
     d = ImageDraw.Draw(prev)
-    for x, y, e in tris:
+    for x, y, e, _ph in tris:
         px = off_x + (bbox[1] - bbox[0]) * scale / 2 + x * (bbox[1] - bbox[0]) * scale / 2
         py = CANVAS - (off_y + (bbox[3] - bbox[2]) * scale / 2) - y * (bbox[1] - bbox[0]) * scale / 2
         c = (201, 155, 180) if e else (107, 78, 158)

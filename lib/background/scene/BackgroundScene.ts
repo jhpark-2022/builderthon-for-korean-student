@@ -176,7 +176,7 @@ export class BackgroundScene {
       y: (1 - p.cy / h * 2) * halfH,
       hw: (p.w / w) * halfW,
     });
-    this.particles.setShapes(toWorld(L.left), toWorld(L.right), [0, 0, 0, 0], [0, 0, 0, 0]);
+    this.particles.setShapes(toWorld(L.left), toWorld(L.right));
     // 등불은 z = −40(카메라에서 70). 그 깊이의 화면 반폭은 z = 0의 70/30배입니다.
     const k = (30 - CROSSING.lantern.z) / 30;
     const lx = (L.lantern.cx / w * 2 - 1) * halfW * k;

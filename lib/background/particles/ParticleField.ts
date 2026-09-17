@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { CROSSING, FIELD, PALETTE, SHAPES, type QualityTier } from "../config";
-import { SINGAPORE_POINTS } from "../shapes/singapore";
-import { SEOUL_POINTS } from "../shapes/seoul";
+import { SINGAPORE_POINTS, SINGAPORE_STRIDE } from "../shapes/singapore";
+import { SEOUL_POINTS, SEOUL_STRIDE } from "../shapes/seoul";
 import { PARTICLES_VERT } from "../shaders/particles.vert";
 import { PARTICLES_FRAG } from "../shaders/particles.frag";
 import { disposeMaterial } from "../utils/Disposable";
@@ -39,26 +39,27 @@ export class ParticleField {
     const speeds = new Float32Array(count);
     const offsets = new Float32Array(count);
     const banks = new Float32Array(count); // field에서는 전부 0
-    const ranks = new Float32Array(count); // crossing: 가장자리 1 / 속 0. field에서는 0
+    const edges = new Float32Array(count); // crossing: 가장자리 1 / 속 0. field에서는 0
+    const phases = new Float32Array(count); // crossing: 윤곽을 따라 간 위상 0..1. field에서는 0
 
     for (let i = 0; i < count; i++) {
       if (variant === "crossing") {
-        // DECIDED 2026-09-17 (형상 브리프): 두 기슭은 형상입니다. 짝수 인덱스가
-        // 싱가포르(왼쪽), 홀수가 서울(오른쪽). 수는 같습니다. 씨앗은 굽힌 점의
-        // 정규화 xy(형상 너비를 [-1,1]에)와 얕은 두께 z. 월드 자리는 셰이더의
-        // uShapeL/uShapeR가 정합니다(BackgroundScene.placeShapes). 점은 앞에서부터
-        // 씁니다. 가장자리 먼저 구워져 있어서 폰의 450점으로도 윤곽이 남습니다.
-        // 전의 이봉 가우시안 분포(깊이별 화면 폭)는 이 형상으로 대체됐습니다.
+        // DECIDED 2026-09-17 (배경 수정 브리프): 두 기슭은 형상입니다. 짝수 인덱스가
+        // 싱가포르(왼쪽), 홀수가 서울(오른쪽). 씨앗은 굽힌 점의 정규화 xy(형상 너비를
+        // [-1,1]에), z는 0(정면, 두께 없음. 3° 패럴랙스는 평행 이동만). 월드 자리는
+        // 셰이더의 uShapeL/uShapeR가 정합니다(BackgroundScene.placeShapes). 구운 순서가
+        // 가장자리 75%·속 25%를 어느 접두사에서도 지키므로 앞에서부터 잘라 씁니다.
         const bank = i % 2 === 0 ? -1 : 1;
         banks[i] = bank;
         const src = bank < 0 ? SINGAPORE_POINTS : SEOUL_POINTS;
-        const k = (i >> 1) % (src.length / 3);
-        seeds[i * 3 + 0] = src[k * 3];
-        seeds[i * 3 + 1] = src[k * 3 + 1];
-        seeds[i * 3 + 2] = (Math.random() * 2 - 1) * SHAPES.thickness;
-        ranks[i] = src[k * 3 + 2];
-        const tier = Math.random();
-        scales[i] = tier < 0.93 ? 0.45 + Math.random() * 0.55 : 1.0 + Math.random() * 0.7;
+        const stride = bank < 0 ? SINGAPORE_STRIDE : SEOUL_STRIDE;
+        const k = (i >> 1) % (src.length / stride);
+        seeds[i * 3 + 0] = src[k * stride];
+        seeds[i * 3 + 1] = src[k * stride + 1];
+        seeds[i * 3 + 2] = 0;
+        edges[i] = src[k * stride + 2];
+        phases[i] = src[k * stride + 3];
+        scales[i] = 1;
         // 속도 편차 ±40%. 먼저 건너는 점과 늦게 건너는 점.
         speeds[i] = 0.6 + Math.random() * 0.8;
         offsets[i] = Math.random() * 100;
@@ -83,7 +84,8 @@ export class ParticleField {
     this.geometry.setAttribute("aSpeed", new THREE.BufferAttribute(speeds, 1));
     this.geometry.setAttribute("aOffset", new THREE.BufferAttribute(offsets, 1));
     this.geometry.setAttribute("aBank", new THREE.BufferAttribute(banks, 1));
-    this.geometry.setAttribute("aRank", new THREE.BufferAttribute(ranks, 1));
+    this.geometry.setAttribute("aEdge", new THREE.BufferAttribute(edges, 1));
+    this.geometry.setAttribute("aPhase", new THREE.BufferAttribute(phases, 1));
     // dummy position attribute (shader ignores it but Three expects one)
     this.geometry.setAttribute("position", new THREE.BufferAttribute(seeds, 3));
     this.geometry.boundingSphere = new THREE.Sphere(
@@ -130,17 +132,19 @@ export class ParticleField {
         // 기슭 형상의 자리(2026-09-17). placeShapes가 채웁니다.
         uShapeL: { value: new THREE.Vector3(-14, -2, 6) },
         uShapeR: { value: new THREE.Vector3(14, -2, 6) },
-        uTilt: { value: (SHAPES.tiltDeg * Math.PI) / 180 },
-        uDimA: { value: new THREE.Vector4(0, 0, 0, 0) },
-        uDimB: { value: new THREE.Vector4(0, 0, 0, 0) },
-        uDimFactor: { value: SHAPES.dimFactor },
+        uEdgePx: { value: SHAPES.edgePx },
+        uInnerPx: { value: SHAPES.innerPx },
+        uEdgeBright: { value: SHAPES.edgeBright },
+        uInnerBright: { value: SHAPES.innerBright },
+        uWave: { value: new THREE.Vector2(SHAPES.wavePeriod, SHAPES.waveAmp) },
+        uBreath: { value: SHAPES.breath },
       },
     });
     if (variant === "crossing") {
-      // 나루 팔레트. 기슭은 보라(accent0) → 자주(accent2), 건너는 동안 연자주(hi0).
-      // 주황(hi1)은 여기 없습니다. 등불이 갖습니다.
+      // 나루 팔레트(2026-09-17 수정 브리프). 형상의 속 점은 accent1, 가장자리 점은
+      // hi0. 건너는 동안 hi0로 밝아집니다. 주황(hi1)은 여기 없습니다. 등불이 갖습니다.
       const u = this.material.uniforms;
-      u.uAccent.value.set(PALETTE.accent0);
+      u.uAccent.value.set(PALETTE.accent1);
       u.uAccent2.value.set(PALETTE.accent2);
       u.uHighlight.value.set(PALETTE.hi0);
       u.uHighlight2.value.set(PALETTE.hi0);
@@ -191,18 +195,11 @@ export class ParticleField {
     u.uOpacity.value = op * this.intensity;
   }
 
-  /** crossing: 기슭 형상의 자리. 중심 xy(월드)와 반너비. 감광 사각형은 uv(y 아래가 0). */
-  setShapes(
-    left: { x: number; y: number; hw: number },
-    right: { x: number; y: number; hw: number },
-    dimA: readonly number[],
-    dimB: readonly number[]
-  ) {
+  /** crossing: 기슭 형상의 자리. 중심 xy(월드)와 반너비. */
+  setShapes(left: { x: number; y: number; hw: number }, right: { x: number; y: number; hw: number }) {
     const u = this.material.uniforms;
     u.uShapeL.value.set(left.x, left.y, left.hw);
     u.uShapeR.value.set(right.x, right.y, right.hw);
-    u.uDimA.value.set(dimA[0], dimA[1], dimA[2], dimA[3]);
-    u.uDimB.value.set(dimB[0], dimB[1], dimB[2], dimB[3]);
   }
 
   /** crossing: 등불의 월드 좌표. 세로 화면에서는 왼쪽으로 물러납니다(BackgroundScene). */
