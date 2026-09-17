@@ -34,11 +34,13 @@ export default function Home() {
       {/* 나루터 수면. 밤의 강과 건너편 등불 하나입니다.
           8월의 입자 필드는 그 회차의 것이라 /2026-08에 그대로 남습니다
           (lib/background/scene/BackgroundScene.ts의 variant 주석 참고). */}
-      {/* DECIDED 2026-09-17 (배경 브리프): "건너는 점들". 8월의 입자 엔진으로,
-          양쪽 기슭의 점들이 스크롤에 따라 강을 건너 등불 하나 쪽으로 모입니다.
-          수면 셰이더는 등불 아래 얇은 반사 띠로만 남았습니다. "water"는 그대로
-          있습니다(lib/background/scene/BackgroundScene.ts). */}
-      <BackgroundMount variant="crossing" />
+      {/* DECIDED 2026-09-17 (배경 브리프): "건너는 점들"(crossing). 8월의 입자 엔진으로
+          양쪽 기슭의 점들이 강을 건너 등불로 모이는 장면이었고, 이어서 기슭이
+          싱가포르·서울 형상이 됐다가, 히어로에 행사 사진이 들어오며 형상을 껐습니다.
+          DECIDED 2026-09-17 (사용자, 그날 저녁): 형상을 끄니 8월 필드의 잔잔한 입자
+          층만 남아 "8월 거랑 너무 똑같다". 9/15의 강과 등불(water)로 돌아갑니다.
+          crossing 변형과 형상 코드는 lib/background에 그대로 있습니다. */}
+      <BackgroundMount variant="water" />
       {/* 앵커 목록과 로고를 나루의 것으로 넘깁니다. 기본값은 8월 페이지의
           것이라, /2026-08은 <JourneyNav /> 그대로 두고 아무것도 바뀌지
           않습니다. */}
