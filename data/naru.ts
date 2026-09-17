@@ -287,8 +287,11 @@ export const naru = {
     eyebrow: { ko: "나루의 다음 이벤트", en: "NARU's next event" },
     // 이름 아래 한 줄. 포지션은 december.heading이 그대로 맡습니다.
     sub: {
-      ko: "한국의 대학생과 해외의 한인 유학생이 같은 문제 앞에 섭니다. raw data에서 문제를 찾는 것부터 앞에서 증명하기까지, 닷새.",
-      en: "Students at Korean universities and Korean students abroad stand in front of the same problem. From finding it in raw data to proving it out front, in five days.",
+      // DECIDED 2026-09-17 (사용자): "raw data"라는 말을 쓰지 않습니다. 이번 회차가
+      // 말하려는 것은 "데이터에서 시작한다"입니다. 다른 자리(programHeading,
+      // gaps[0].answer, shapeLead, shape[1].note, partners)도 같은 날 같이 바꿨습니다.
+      ko: "한국의 대학생과 해외의 한인 유학생이 같은 문제 앞에 섭니다. 이번에는 데이터에서 시작합니다. 문제를 찾아내는 것부터 앞에서 증명하기까지, 닷새.",
+      en: "Students at Korean universities and Korean students abroad stand in front of the same problem. This time it starts from the data. From finding the problem to proving it out front, in five days.",
     },
     ctaProgram: { ko: "프로그램 보기", en: "See the programme" },
     // ── 카운트다운 패널 (2026-09-17, 8월 문법 브리프) ─────────────────────
@@ -782,8 +785,8 @@ export const naru = {
           en: "The problem and the data arrived already cleaned, so the discovery stretch was missing entirely.",
         },
         answer: {
-          ko: "raw data에서 문제를 찾아 정의하는 구간부터 참가자에게 엽니다.",
-          en: "The stretch where you find and define a problem out of raw data opens to participants.",
+          ko: "데이터에서 문제를 찾아 정의하는 구간부터 참가자에게 엽니다.",
+          en: "The stretch where you find and define the problem in the data opens to participants.",
         },
       },
       {
@@ -792,9 +795,11 @@ export const naru = {
           ko: "슬롯은 넉넉했는데 한 번도 쓰지 않은 팀이 있었습니다.",
           en: "There were plenty of slots, and there were teams that never booked one.",
         },
+        // DECIDED 2026-09-17 (사용자): "상시 예약제, 횟수 제한 없음"에서 바꿈. 12월의
+        // 답은 멘토링이 무엇인지 사전에 더 자세히 알려 주는 것입니다.
         answer: {
-          ko: "전 기간 상시 예약제로 열고, 횟수를 제한하지 않습니다.",
-          en: "Open by booking the whole way through, with no cap on how many times.",
+          ko: "멘토링의 디테일을 사전에 더 많이 공유합니다.",
+          en: "More of the mentoring details are shared in advance.",
         },
       },
       {
@@ -803,10 +808,11 @@ export const naru = {
           ko: "팀 안에서는 붙었지만 팀과 팀은 섞이지 않았습니다.",
           en: "People bonded inside their team. Between teams, nothing.",
         },
-        // 2026-09-17: 기획 03에서 채움. 본 일정 전 팀 본딩, 중간 공유. 초안입니다.
+        // DECIDED 2026-09-17 (사용자): "팀 본딩, 중간 공유"에서 바꿈. 12월의 답은 모든
+        // 활동을 대면으로 하는 것입니다. 팀 본딩·중간 공유는 일정 블록이 말합니다.
         answer: {
-          ko: "본 일정 전에 팀 본딩을 두고, 중간 공유로 서로의 진행을 보게 합니다.",
-          en: "Team bonding before the main schedule, and mid-point sharing so teams see each other's progress.",
+          ko: "이번에는 모든 활동을 대면으로 합니다.",
+          en: "This time every activity is in person.",
         },
       },
       {
@@ -973,7 +979,7 @@ export const naru = {
     // 것이라 why.exec/measure를 이 챕터의 멘토링 블록이 읽습니다.
     // 전부 초안입니다. draftNote가 이 챕터에 붙어 있어야 합니다.
     programEyebrow: { ko: "프로그램", en: "Programme" },
-    programHeading: { ko: "raw data에서 증명까지, 닷새", en: "From raw data to proof, in five days" },
+    programHeading: { ko: "데이터에서 증명까지, 닷새", en: "From data to proof, in five days" },
     reasonsLabel: { ko: "왜 서울인가", en: "Why Seoul" },
     reasons: [
       {
@@ -1109,8 +1115,8 @@ export const naru = {
         en: "August ran inside three Singapore universities. In December you come whichever country you study in.",
       },
       {
-        ko: "8월에는 기업이 정제한 문제를 받았습니다. 12월은 raw data에서 문제를 찾아 정의하는 구간부터 참가자에게 엽니다.",
-        en: "In August the problems arrived already cleaned by the company. In December the stretch where you find and define a problem out of raw data opens to participants too.",
+        ko: "8월에는 기업이 정제한 문제를 받았습니다. 12월은 데이터에서 문제를 찾아 정의하는 구간부터 참가자에게 엽니다.",
+        en: "In August the problems arrived already cleaned by the company. In December the stretch where you find and define the problem in the data opens to participants too.",
       },
       {
         ko: "코어는 그대로입니다. 스크리닝 없음, 무순위 부문별 시상, 전 기간 상시 멘토링.",
@@ -1217,9 +1223,12 @@ export const naru = {
     // 첫 문장은 2026-09-17에 changes[1]에서 한 문장만 빌려 왔습니다. #record가
     // 바로 앞에 오면서 8월과 12월을 잇는 경첩이 필요했고, "왜 raw data인가"의
     // 근거이기도 합니다. changes 블록 전체를 되살린 것은 아닙니다.
+    // DECIDED 2026-09-17 (사용자): 12월이 8월에서 무엇을 넓히는지를 AI의 쓰임 셋으로
+    // 말합니다. 아이디어를 코드로, 복잡한 비즈니스 프로세스의 이해, 많은 데이터의
+    // 분석. 8월은 첫 번째에만 집중했고 12월은 나머지 둘로 넓힙니다.
     shapeLead: {
-      ko: "8월에는 기업이 정제한 문제를 받았습니다. 12월은 raw data에서 문제를 찾는 것부터 증명까지, 한 사이클을 닷새로 압축합니다.",
-      en: "In August the problem arrived already cleaned by the company. In December, from finding a problem in raw data to proving it out front: one full cycle, compressed into five days.",
+      ko: "AI가 잘하는 일은 셋입니다. 아이디어를 코드로 만드는 것, 복잡한 비즈니스 프로세스를 이해하는 것, 많은 데이터를 분석하는 것. 8월은 첫 번째에 집중했습니다. 12월은 나머지 둘로 넓힙니다. 데이터에서 문제를 찾는 것부터 앞에서 증명하기까지, 한 사이클을 닷새로.",
+      en: "AI is good at three things: turning an idea into code, understanding a complex business process, and analysing a lot of data. August focused on the first. December widens to the other two: from finding the problem in the data to proving it out front, one full cycle in five days.",
     },
     draftNote: {
       ko: "기획 초안입니다. 확정되면 이 자리에서 바로 고칩니다.",
@@ -1236,7 +1245,7 @@ export const naru = {
         // "목표"가 붙은 이유(2026-09-17): 같은 항목이 아래 tbd 목록에도 "문제를
         // 여는 회사"로 있습니다. 한 화면에서 숫자이자 미정이면 초안 고지로는
         // 가려지지 않습니다. 숫자는 목표라고 말하고, 미정은 미정 목록이 말합니다.
-        note: { ko: "목표. raw data와 담당자까지", en: "Target. Raw data and the person who owns it" },
+        note: { ko: "목표. 데이터와 담당자까지", en: "Target. The data and the person who owns it" },
       },
       {
         value: { ko: "60명+", en: "60+" },
@@ -1472,8 +1481,8 @@ export const naru = {
         who: { ko: "기업", en: "Companies" },
         lines: [
           {
-            ko: "행사 비용은 병목이 아닙니다. 자금보다 먼저 물어볼 것은 문제와 raw data, 멘토로 들어오는 시간, 채용의 실제 기준입니다.",
-            en: "The cost of the event is not the bottleneck. Before money we ask about the problem and the raw data, the hours you can give as a mentor, and what you actually hire on.",
+            ko: "행사 비용은 병목이 아닙니다. 자금보다 먼저 물어볼 것은 문제와 데이터, 멘토로 들어오는 시간, 채용의 실제 기준입니다.",
+            en: "The cost of the event is not the bottleneck. Before money we ask about the problem and the data, the hours you can give as a mentor, and what you actually hire on.",
           },
           {
             ko: "후원사에서 시작해 채용 경로, 발주자, 팀의 첫 파트너까지 갈 수 있습니다. 어디까지 가느냐는 각 단계의 성립 조건이 결정합니다.",

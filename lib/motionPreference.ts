@@ -21,6 +21,9 @@ declare global {
     /** components/Background.tsx가 씬을 띄우면서 심습니다. 없으면 배경이 아직
      *  뜨지 않았거나 WebGL이 실패한 것이고, 토글은 조용히 아무 일도 안 합니다. */
     __naruSetBackgroundPaused?: (paused: boolean) => void;
+    /** 씬이 start()한 뒤 true. 같은 때 "naru:bg-ready" 이벤트도 갑니다. 홈의 형상
+     *  라벨(ShapeLabels)이 배경과 같이 뜨기 위해 봅니다. */
+    __naruBackgroundStarted?: boolean;
   }
 }
 

@@ -41,6 +41,9 @@ export default function Background({ variant = "field" }: { variant?: Background
           // 더 씌우는 값이 이 한 줄보다 크기 때문입니다. 값은 함수 하나입니다.
           window.__naruSetBackgroundPaused = (p: boolean) => scene?.setPaused(p);
           scene.start();
+          // 형상 라벨(NaruHome의 ShapeLabels)이 배경과 같이 뜨도록 알립니다.
+          window.__naruBackgroundStarted = true;
+          window.dispatchEvent(new Event("naru:bg-ready"));
           // 새로고침해도 꺼 둔 상태가 유지됩니다.
           try {
             if (window.localStorage.getItem(MOTION_KEY) === "off") scene.setPaused(true);
@@ -55,9 +58,12 @@ export default function Background({ variant = "field" }: { variant?: Background
         }
       });
     };
+    // DECIDED 2026-09-17: idle 대기 상한 1500 → 400ms. 홈의 히어로는 배경의 형상
+    // (싱가포르·서울)이 내용의 일부라 1.5초 뒤에 뜨면 늦게 뜨는 것으로 보입니다.
+    // 하이드레이션이 끝나면 바로 시작하고, 바쁘면 400ms 안에는 시작합니다.
     const idleId: number = window.requestIdleCallback
-      ? window.requestIdleCallback(init, { timeout: 1500 })
-      : window.setTimeout(init, 200);
+      ? window.requestIdleCallback(init, { timeout: 400 })
+      : window.setTimeout(init, 100);
 
     return () => {
       delete window.__naruSetBackgroundPaused;

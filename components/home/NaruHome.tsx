@@ -258,6 +258,15 @@ function CountdownPanel({ t, locale }: { t: (p: Phrase) => string; locale: "ko" 
 // ─────────────────────────────────────────────────────────────────────────────
 function ShapeLabels({ t }: { t: (p: Phrase) => string }) {
   const [style, setStyle] = useState<{ l: React.CSSProperties; r: React.CSSProperties; opacity: number } | null>(null);
+  // 배경(WebGL)이 뜬 뒤에만 보입니다. 배경은 idle 콜백 + 청크 로드 뒤에 시작해서
+  // 라벨만 먼저 나오면 "형상이 늦게 뜬다"로 읽힙니다(사용자, 2026-09-17). 같이 뜹니다.
+  const [bgReady, setBgReady] = useState(false);
+  useEffect(() => {
+    if (window.__naruBackgroundStarted) { setBgReady(true); return; }
+    const on = () => setBgReady(true);
+    window.addEventListener("naru:bg-ready", on);
+    return () => window.removeEventListener("naru:bg-ready", on);
+  }, []);
   useEffect(() => {
     const place = () => {
       const w = window.innerWidth;
@@ -284,11 +293,12 @@ function ShapeLabels({ t }: { t: (p: Phrase) => string }) {
     return () => { window.clearTimeout(late); window.removeEventListener("resize", place); window.removeEventListener("scroll", place); };
   }, []);
   if (!style || style.opacity <= 0) return null;
-  const cls = "pointer-events-none fixed z-[-5] text-[11px] font-semibold uppercase tracking-[0.22em] text-white/40";
+  const cls = "pointer-events-none fixed z-[-5] text-[11px] font-semibold uppercase tracking-[0.22em] text-white/40 transition-opacity duration-700";
+  const op = bgReady ? style.opacity : 0;
   return (
     <>
-      <span aria-hidden className={cls} style={{ ...style.l, opacity: style.opacity }}>{t(naru.eventHero.shapeLabels.singapore)}</span>
-      <span aria-hidden className={cls} style={{ ...style.r, opacity: style.opacity }}>{t(naru.eventHero.shapeLabels.seoul)}</span>
+      <span aria-hidden className={cls} style={{ ...style.l, opacity: op }}>{t(naru.eventHero.shapeLabels.singapore)}</span>
+      <span aria-hidden className={cls} style={{ ...style.r, opacity: op }}>{t(naru.eventHero.shapeLabels.seoul)}</span>
     </>
   );
 }
@@ -384,12 +394,14 @@ export default function NaruHome() {
             <CountdownPanel t={t} locale={locale} />
           </motion.div>
         </div>
-        {/* DECIDED 2026-09-17 (사용자): 폰의 형상 띠. lg 아래에서만 있는 빈 150px.
-            배경의 싱가포르·서울 형상이 여기 나란히 서고 라벨이 그 아래 붙습니다
-            (lib/background/utils/shapeLayout.ts, band 모드). 브리프의 "카피 뒤에
-            쌓기"는 폰에서 형상이 보이지 않아 버렸습니다. 폰 페이지가 약 160px
-            길어져 길이 상한(12,500)을 넘는 것을 감수한 결정입니다. */}
-        <div data-shape-anchor="band" aria-hidden className="mt-2 h-[150px] lg:hidden" />
+        {/* DECIDED 2026-09-17 (3차): 형상 띠. 배경의 싱가포르·서울 형상이 여기 서고
+            라벨이 그 아래 붙습니다(lib/background/utils/shapeLayout.ts). 폰은 150px에
+            나란히, 데스크톱은 min(20vw, 24vh)에 카피 단 아래·패널 아래. 띠가
+            레이아웃에 있어야 히어로(카피 + 패널 + 형상)가 한 덩어리로 가운데 잡힙니다.
+            띠 없이 남는 공간에 놓았을 때 큰 화면에서 형상만 바닥에 붙었습니다.
+            폰 페이지가 약 160px 길어져 길이 상한(12,500)을 넘는 것을 감수한
+            결정입니다(사용자). */}
+        <div data-shape-anchor="band" aria-hidden className="mt-2 h-[150px] lg:mt-4 lg:h-[min(20vw,24vh)]" />
       </Chapter>
 
       {/* ── CH1 · 8월의 기록 ─────────────────────────────────────────────── */}
