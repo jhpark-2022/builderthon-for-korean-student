@@ -29,7 +29,7 @@ import { useHeroSplit } from "@/components/shared/useHeroSplit";
 import Chapter from "@/components/journey/Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
-import RecordTabs from "@/components/home/RecordTabs";
+// RecordTabs는 화면에 없습니다(2026-09-17, 사용자: 8월 챕터는 바로 아카이브로 보낸다).
 import { H2, H3, LABEL_HEADING, STATEMENT, GRADIENT_TEXT } from "@/components/ui/typography";
 import NaruMark from "@/components/ui/NaruMark";
 import MotionToggle from "@/components/ui/MotionToggle";
@@ -635,13 +635,11 @@ export default function NaruHome() {
             이 회차에서 가장 중요한 신호입니다. 시키지 않았는데 했어요. */}
         <StatRow stats={naru.record.stats} t={t} className="mt-12 lg:grid-cols-5" />
 
-        {/* 사람(DECIDED 2026-09-17, 홈 흐름 재배치). 9/16에 내려갔던 RecordTabs를
-            멘토 · 연사와 피드백 패널 둘만 켜서 되살립니다. 8월 정본을 직접 읽습니다
-            (이름이 어긋나는 것이 이 사이트의 가장 나쁜 오류). "8일의 형식" 탭은
-            아카이브가 정본이라 켜지 않습니다. 사진 벽(PhotoWall, record.wall)은 이
-            챕터에서 뺐습니다. 사진은 히어로가 합니다. 같은 사진을 두 번 걸지 않습니다.
-            이 챕터가 하는 말은 "실명이 박힌 진짜 사람들이 왔다"입니다. */}
-        <RecordTabs only={["mentors", "people"]} />
+        {/* DECIDED 2026-09-17 (사용자): 사람 탭(RecordTabs)은 넣지 않습니다. "이런 식으로
+            너무 디테일하게 넣지는 말고, 이 챕터는 그냥 바로 8월로 보내줘." 이 챕터는
+            숫자 다섯과 언론 줄, 그리고 아카이브 버튼 하나입니다. 멘토·연사·패널은
+            /2026-08이 정본이고 거기서 봅니다. 사진 벽도 화면에 없습니다(사진은 히어로).
+            RecordTabs 파일과 record.tabs 키는 그대로 둡니다. */}
 
         {/* 언론(DECIDED 2026-09-17). 8월 페이지의 press 블록과 같은 줄(shared/
             PressRows). 위는 행사 뒤 싱가포르 현지 매체, 아래 둘은 8월 페이지에
