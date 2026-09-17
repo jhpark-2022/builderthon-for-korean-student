@@ -376,3 +376,17 @@ null → **12/14**. 새 `formatDecemberDay(locale, offset)`로 스테이지 날�
 사용자 지시. `december.shape` 여섯 칸(5일, 3곳, 60명+, 2회, 무순위, 상시)과 그
 아래 초안 안내 줄이 화면에서 내려갔습니다. 키는 그대로. `draftNote`는 일정
 아래 워크샵 안내 줄에 붙여 두었습니다. 스테이지가 초안인 것은 그대로라서요.
+
+### 5차 · 일정 카드의 줄 맞춤, General Mentoring 가로 상자
+
+사용자: "general mentoring, put it in the long box under the calendar. 그리고 줄 at
+the boxes of the calendar is aligned 하게."
+
+기획 04의 배치 그대로가 됐습니다. 위에 스테이지 카드 다섯(grid라 같은 높이,
+날짜·이름은 위, 제출 칩은 `mt-auto`로 바닥), 그 아래 워크샵 상자 셋이 해당
+스테이지 밑에(첫 칸은 안내 문장), 맨 아래 General Mentoring 가로 상자(이름과
+"전 기간 상시", 규칙 넷). 워크샵을 카드 밖으로 뺀 이유: 카드 안에 있을 때 본문
+길이 차이만큼 워크샵 줄이 오르내려 줄이 맞지 않았습니다. lg 아래에서는 워크샵
+상자가 한 열로 서므로 상자 안에 스테이지 이름을 같이 씁니다.
+`mentoringLead`는 화면에서 내려갔고(아쉬웠던 넷의 둘째 줄이 같은 말), 새 키
+`mentoringAlways`.

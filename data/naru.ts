@@ -952,6 +952,8 @@ export const naru = {
     // 키는 그대로. 재는 것(why.measure)만 멘토링 아래 한 줄로 남습니다.
     mentoringLabel: { ko: "멘토링", en: "Mentoring" },
     mentoringHeading: { ko: "General Mentoring, 전 기간 상시", en: "General Mentoring, on call the whole way" },
+    // 가로 상자의 이름 아래 한 줄(5차). 이름은 고유명사라 그대로 "General Mentoring".
+    mentoringAlways: { ko: "전 기간 상시", en: "On call the whole way through" },
     mentoringLead: {
       ko: "8월에는 슬롯이 넉넉했는데 한 번도 쓰지 않은 팀이 있었습니다. 12월은 예약하지 않은 팀을 이탈 신호로 봅니다.",
       en: "In August there were plenty of slots and teams that never booked one. In December a team that has not booked is read as a warning sign.",

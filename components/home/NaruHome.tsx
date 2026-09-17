@@ -329,8 +329,17 @@ export default function NaruHome() {
           </dl>
         </div>
 
-        {/* 일정. 스테이지 다섯, 날짜는 naruDates에서 셉니다. 제출 지점 둘과
-            워크샵 셋이 칸 안에 붙습니다(기획 04). */}
+        {/* 일정. 기획 04의 배치 그대로(2026-09-17 5차): 위에 스테이지 카드
+            다섯, 그 아래 워크샵 상자가 해당 스테이지 밑에, 맨 아래 General
+            Mentoring 가로 상자. 날짜는 naruDates에서 셉니다.
+
+            줄 맞춤: 카드는 grid 안에서 같은 높이로 늘어나고(align-items 기본값),
+            안은 flex-col이라 날짜·이름은 위에, 제출 칩은 mt-auto로 바닥에
+            붙습니다. 본문 길이가 달라도 위아래 줄이 카드마다 같은 자리입니다.
+            워크샵은 카드 안이 아니라 별도 줄입니다. 카드 안에 넣으면 본문 길이
+            차이만큼 워크샵 줄이 오르내려서 줄이 맞지 않았습니다(4차 화면).
+            lg 아래에서는 워크샵 줄이 한 열로 서므로 어느 스테이지의 것인지
+            상자 안에 스테이지 이름을 같이 씁니다. */}
         <div className="mx-auto mt-12 max-w-5xl text-left">
           <h3 className={LABEL_HEADING}>{t(naru.december.scheduleLabel)}</h3>
           <p className="mt-3 max-w-2xl break-keep text-sm leading-relaxed text-white/70">
@@ -346,50 +355,63 @@ export default function NaruHome() {
                   {stage.dayOffset === null ? t(stage.when) : formatDecemberDay(locale, stage.dayOffset)}
                 </p>
                 <p className="mt-1 text-base font-bold text-white">{t(stage.name)}</p>
-                <p className="mt-3 flex-1 break-keep text-sm leading-relaxed text-white/65">{t(stage.body)}</p>
-                {stage.workshop && (
-                  <div className="mt-4 border-t border-white/10 pt-3">
-                    <p className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
-                      {t(naru.december.workshopLabel)}
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-white/85">{t(stage.workshop.title)}</p>
-                    <p className="mt-0.5 break-keep text-xs leading-snug text-white/55">{t(stage.workshop.body)}</p>
-                  </div>
-                )}
+                <p className="mt-3 break-keep text-sm leading-relaxed text-white/65">{t(stage.body)}</p>
                 {stage.submit && (
-                  <p className="mt-3 inline-flex w-fit rounded-full border border-[#F2B183]/35 bg-naru-orange/10 px-2.5 py-1 text-[0.68rem] font-semibold text-[#F2B183]">
-                    {`${t(naru.december.submitLabel)}\u2002${t(stage.submit)}`}
+                  <p className="mt-auto pt-4">
+                    <span className="inline-flex rounded-full border border-[#F2B183]/35 bg-naru-orange/10 px-2.5 py-1 text-[0.68rem] font-semibold text-[#F2B183]">
+                      {`${t(naru.december.submitLabel)}\u2002${t(stage.submit)}`}
+                    </span>
                   </p>
                 )}
               </li>
             ))}
           </ol>
-          <p className="mt-4 break-keep text-xs text-white/55">
-            {`${t(naru.december.workshopNote)} ${t(naru.december.draftNote)}`}
-          </p>
-        </div>
+          {/* 워크샵 줄. lg에서는 다섯 칸 중 스테이지 자리에만 상자가 서고,
+              첫 칸은 안내 문장이 씁니다. 그 아래에서는 상자 셋만 한 열로. */}
+          <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            <p className="hidden break-keep text-xs leading-relaxed text-white/55 lg:block lg:self-center lg:pr-2">
+              {t(naru.december.workshopNote)}
+            </p>
+            {naru.december.stages.map((stage) =>
+              stage.workshop ? (
+                <div
+                  key={stage.name.en}
+                  className="rounded-2xl border border-accent/25 bg-accent/[0.06] px-5 py-3"
+                >
+                  <p className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
+                    {t(naru.december.workshopLabel)}
+                    <span className="lg:hidden">{`\u2002${t(stage.name)}`}</span>
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-white/90">{t(stage.workshop.title)}</p>
+                  <p className="mt-0.5 break-keep text-xs leading-snug text-white/55">{t(stage.workshop.body)}</p>
+                </div>
+              ) : stage.dayOffset === null ? null : (
+                <div key={stage.name.en} aria-hidden className="hidden lg:block" />
+              ),
+            )}
+          </div>
+          <p className="mt-3 break-keep text-xs text-white/55 lg:hidden">{t(naru.december.workshopNote)}</p>
 
-        {/* 멘토링. 규칙 넷(기획 04 General Mentoring), 그리고 코어가 지켜지는
-            지점(기획 02 EXECUTION). 후자는 why.exec/measure를 그대로 읽습니다.
-            그 문장들은 이벤트의 실행에 관한 것이라 그룹이 아니라 여기입니다. */}
-        <div className="mx-auto mt-12 max-w-5xl text-left">
-          <h3 className={LABEL_HEADING}>{t(naru.december.mentoringLabel)}</h3>
-          <p className="mt-3 break-keep text-lg font-bold leading-snug text-white sm:text-xl">
-            {t(naru.december.mentoringHeading)}
-          </p>
-          <p className="mt-3 max-w-2xl break-keep text-sm leading-relaxed text-white/70">
-            {t(naru.december.mentoringLead)}
-          </p>
-          <ul role="list" className="mt-4 flex flex-wrap gap-2">
-            {naru.december.mentoringRules.map((rule, i) => (
-              <li key={i} className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 break-keep text-xs text-white/75">
-                {t(rule)}
-              </li>
-            ))}
-          </ul>
+          {/* General Mentoring. 기획 04 맨 아래의 가로 띠. 왼쪽 이름과 "전 기간
+              상시", 오른쪽 규칙 넷. 사용자 지시(5차): 달력 아래 긴 상자. */}
+          <div className="mt-3 flex flex-col gap-4 rounded-2xl border border-white/15 bg-white/[0.06] px-5 py-5 lg:flex-row lg:items-center lg:gap-8 lg:px-7">
+            <div className="shrink-0 lg:w-56">
+              <p className="text-base font-bold text-white">General Mentoring</p>
+              <p className="mt-0.5 text-xs font-semibold text-[#F2B183]">{t(naru.december.mentoringAlways)}</p>
+            </div>
+            <ul role="list" className="grid flex-1 gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-4">
+              {naru.december.mentoringRules.map((rule, i) => (
+                <li key={i} className="flex gap-2.5 break-keep border-l-2 border-[#F2B183]/60 pl-3 text-sm leading-snug text-white/85">
+                  {t(rule)}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <p className="mt-3 break-keep text-xs text-white/55">{t(naru.december.draftNote)}</p>
+
           {/* 재는 것. 기획 02 EXECUTION의 마지막 줄이자 이 챕터에서 가장 검증
-              가능한 문장. exec 두 항목은 내려갔습니다(3차). */}
-          <dl className="mt-6 border-t border-white/10 pt-5 sm:flex sm:items-baseline sm:gap-5">
+              가능한 문장. */}
+          <dl className="mt-8 border-t border-white/10 pt-5 sm:flex sm:items-baseline sm:gap-5">
             <dt className="shrink-0 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
               {t(naru.why.measureLabel)}
             </dt>
@@ -398,6 +420,7 @@ export default function NaruHome() {
             </dd>
           </dl>
         </div>
+
         {/* 아직 정해지지 않은 것. 이 챕터에서 가장 정직하고 가장 값이 큰
             블록입니다. 자세한 이유는 data/naru.ts의 tbdLabel 주석에 있습니다. */}
         <div className="mx-auto mt-12 max-w-3xl rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-6 text-left">
