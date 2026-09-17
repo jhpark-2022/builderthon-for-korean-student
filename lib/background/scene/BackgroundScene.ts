@@ -234,8 +234,8 @@ export class BackgroundScene {
   }
 
   /**
-   * crossing 변형의 국면 경계(문서 px). 히어로 하단(무대가 든 section의 아래),
-   * #record 시작, #december 중반, #naru 시작. 상수로 박지 않는 이유는 페이지 길이가
+   * crossing 변형의 국면 경계(문서 px). 히어로 하단, #december 시작, #gains 시작,
+   * #record 시작, #naru 시작. 상수로 박지 않는 이유는 페이지 길이가
    * 바뀌어도 "8월의 기록에서 건넌다"가 유지되어야 하기 때문입니다. 시작·리사이즈·
    * 무대 ResizeObserver, 그리고 2초마다 다시 읽습니다(이미지가 늦게 실리는 경우).
    */
@@ -246,17 +246,18 @@ export class BackgroundScene {
       const el = document.getElementById(id);
       return el ? el.getBoundingClientRect().top + sy : null;
     };
+    // DECIDED 2026-09-17 (홈 흐름 재배치): 순서가 #december → #gains → #record → #naru.
+    // #gains가 없으면(다른 구성) #record를 crossing의 끝으로 씁니다.
+    const december = top("december");
+    const gains = top("gains") ?? top("record");
     const record = top("record");
-    const december = document.getElementById("december");
     const naru = top("naru");
     const stage = findStageElement();
     const hero = stage?.closest("section");
-    const heroEnd = hero ? hero.getBoundingClientRect().bottom + sy : record;
-    if (record !== null && december && naru !== null && heroEnd !== null) {
-      const db = december.getBoundingClientRect();
-      const decemberMid = db.top + sy + db.height * 0.5;
-      if (heroEnd <= record + 1 && record < decemberMid && decemberMid < naru) {
-        this.anchors = { heroEnd, record, decemberMid, naru };
+    const heroEnd = hero ? hero.getBoundingClientRect().bottom + sy : december;
+    if (december !== null && gains !== null && record !== null && naru !== null && heroEnd !== null) {
+      if (heroEnd <= december + 1 && december < gains && gains <= record && record < naru) {
+        this.anchors = { heroEnd, crossStart: december, crossEnd: gains, arrivedAt: record, naru };
       }
     }
   }

@@ -63,10 +63,12 @@ export function computePhases(scroll: number): Phases {
 // 쓰지 않습니다.
 // ─────────────────────────────────────────────────────────────────────────────
 export interface CrossingAnchors {
-  /** 전부 문서 px(스크롤 0 기준) */
+  /** 전부 문서 px(스크롤 0 기준). DECIDED 2026-09-17 (홈 흐름 재배치): banks = 히어로,
+   *  gather = #december 시작, crossing = #december 본문 ~ #gains, arrived = #record부터. */
   heroEnd: number;
-  record: number;
-  decemberMid: number;
+  crossStart: number;
+  crossEnd: number;
+  arrivedAt: number;
   naru: number;
 }
 export interface CrossingPhases {
@@ -84,8 +86,8 @@ export interface CrossingPhases {
 export function computeCrossingPhases(scrollY: number, vh: number, scroll: number, a: CrossingAnchors): CrossingPhases {
   const y = Math.max(0, scrollY);
   const gather = ease(seg(y, a.heroEnd, a.heroEnd + 0.4 * vh));
-  const crossing = ease(seg(y, a.record, a.decemberMid));
-  const arrived = ease(seg(y, a.decemberMid, a.decemberMid + 0.6 * vh));
+  const crossing = ease(seg(y, a.crossStart, a.crossEnd));
+  const arrived = ease(seg(y, a.arrivedAt, a.arrivedAt + 0.6 * vh));
   const calm = ease(seg(y, a.naru - 0.5 * vh, a.naru + 0.5 * vh));
   const fade = 1 - ease(seg(y, a.heroEnd, a.heroEnd + 0.6 * vh));
   const pull = gather * 0.35 + crossing * 0.65;

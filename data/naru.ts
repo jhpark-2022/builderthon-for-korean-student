@@ -150,9 +150,12 @@ export const openChatLabels = {
 // #why 앵커는 없어졌습니다. 코어 둘은 #naru 안에 있고, 안쪽 앵커 id="why"가
 // 남아 있어 옛 링크(/#why, notSequel의 링크)는 그대로 닿습니다.
 export const naruNav: { id: string; label: Phrase }[] = [
+  // DECIDED 2026-09-17 (홈 흐름 재배치 브리프): 크로싱 서울 · 프로그램 · 얻는 것 ·
+  // 8월 · 나루 · 학생회와 기업 · 함께. 순서는 화면 순서와 같아야 합니다.
   { id: "top", label: { ko: "크로싱 서울", en: "CROSSING SEOUL" } },
-  { id: "record", label: { ko: "8월의 기록", en: "August" } },
-  { id: "december", label: { ko: "프로그램", en: "Programme" } },
+  { id: "december", label: { ko: "프로그램", en: "Program" } },
+  { id: "gains", label: { ko: "얻는 것", en: "What you get" } },
+  { id: "record", label: { ko: "8월", en: "August" } },
   { id: "naru", label: { ko: "나루", en: "NARU" } },
   { id: "how", label: { ko: "학생회와 기업", en: "Councils and companies" } },
   { id: "join", label: { ko: "함께", en: "Join" } },

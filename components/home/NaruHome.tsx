@@ -366,67 +366,10 @@ export default function NaruHome() {
         </div>
       </Chapter>
 
-      {/* ── CH1 · 8월의 기록 ─────────────────────────────────────────────── */}
-      {/* 기본 이음매(216px)입니다. 여기 있던 pt-8 sm:pt-10 lg:pt-12는 "#why에
-          붙인다"는 주석을 달고 있었는데, 그 챕터는 9/16에 맨 아래로 내려갔습니다.
-          지금 이 챕터 앞에 있는 것은 히어로이고, 히어로는 자기 화면 하나를
-          온전히 쓰는 것이 맞습니다. 근거로 삼을 앞 챕터가 없으니 붙일 이유도
-          없어요(리듬 스케일은 파일 위 주석). */}
-      <Chapter id="record" align="center">
-        <Eyebrow color="violet">{t(naru.record.eyebrow)}</Eyebrow>
-        <h2 className={H2}><Halo tone="violet">{t(naru.record.heading)}</Halo></h2>
-        <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
-          {t(naru.record.lead)}
-        </p>
-        {/* 숫자 다섯. 마지막 하나만 설명 줄을 답니다. "9팀이 출제사에 직접
-            자료를 요청했다"는 숫자만으로는 무슨 뜻인지 알 수 없고, 그 뜻이
-            이 회차에서 가장 중요한 신호입니다. 시키지 않았는데 했어요. */}
-        <StatRow stats={naru.record.stats} t={t} className="mt-12 lg:grid-cols-5" />
-
-        {/* 사진 열 장. 이 챕터의 본문입니다.
-            2026-09-16: 여기 있던 lead2 한 줄, RecordTabs(형식·멘토·연사 탭),
-            "8월에 아쉬웠던 네 가지" 카드 넷이 내려갔습니다. 셋 다 맞는
-            내용이었지만 셋 다 8월을 설명하는 글이었고, 설명은 아래 버튼 하나로
-            /2026-08에 갑니다. 아쉬웠던 넷은 12월 챕터의 "모양"이 대신 말합니다.
-            gaps·tabs 키는 data/naru.ts에 그대로 있습니다. */}
-        {/* 여섯 장(2026-09-17 3차). 목록과 순서는 data/naru.ts의 record.wall. */}
-        <PhotoWall
-          photos={naru.record.wall
-            .map((src) => naru.record.photos.find((p) => p.src === src))
-            .filter((p): p is RecordPhoto => Boolean(p))}
-          t={t}
-        />
-
-        {/* 언론 넷(DECIDED 2026-09-17). 8월 페이지의 press 블록과 같은 줄(shared/
-            PressRows). 위 둘은 행사 뒤 싱가포르 현지 매체, 아래 둘은 8월 페이지에
-            있던 기사입니다. 사진 벽 아래에 두는 이유: 사진이 "있었던 일"이고 기사는
-            그것을 밖에서 본 눈이라, 순서가 안에서 밖입니다. */}
-        <PressRows
-          items={naru.record.press}
-          tag={naru.record.pressTag}
-          lead={naru.record.pressLead}
-          cta={naru.record.pressCta}
-          t={t}
-          className="mt-12"
-        />
-
-        {/* 이 챕터의 유일한 행동입니다. 2026-09-16에 유령 버튼에서 실린 버튼으로
-            올렸습니다 - 8월의 설명이 전부 저쪽으로 갔으니, 더 알고 싶은 사람에게
-            이 버튼은 선택지가 아니라 다음 문장입니다. 주황은 히어로의 주 CTA가
-            이미 쓰고 있어서 흰 면을 씁니다(색 규칙은 히어로 주석 참고). */}
-        <div className="mt-12 flex justify-center">
-          <Link
-            href={naruLinks.archive}
-            onClick={() => track("naru_cta", { src: "record", to: "archive" })}
-            className={buttonClass("secondary")}
-          >
-            {t(naru.record.cta)}
-            <span aria-hidden className="text-white/50">→</span>
-          </Link>
-        </div>
-      </Chapter>
-
-      {/* ── CH2 · 프로그램 (DECIDED 2026-09-17 2차) ────────────────────────
+      {/* ── CH1 · 닷새의 모양 (DECIDED 2026-09-17, 홈 흐름 재배치 브리프) ──
+          히어로 바로 아래로 올라왔습니다. 히어로의 주 CTA "프로그램 보기"가 여기에
+          착지합니다. 내용과 순서는 그대로, 자리만 바뀌었습니다. 아래는 그 전의 주석.
+          ── CH2 · 프로그램 (DECIDED 2026-09-17 2차) ────────────────────────
           12월 상세. 8월 사이트의 격식(프로그램 · 멘토링 · 달라지는 것)을
           따릅니다. 출처는 빌더톤_2회차_기획.pdf. 카피 위치와 출처 매핑은
           data/naru.ts의 december 블록 주석에 있습니다.
@@ -436,7 +379,7 @@ export default function NaruHome() {
           소개 → 프로그램 → 멘토링 → FAQ 순이었던 것과 같은 호흡입니다.
 
           ⚠️ draftNote를 떼지 마세요. 확정된 것은 이름, 기간, 도시뿐입니다.
-          기본 이음매(216px). 장이 바뀌는 자리는 이제 #naru입니다. */}
+          기본 이음매(216px). 장이 바뀌는 자리는 #naru입니다. */}
       {/* 8월 프로그램 챕터의 격식(2026-09-17, 8월 문법 브리프): 섹션 띠(BAND_TINT),
           주황 글자 아이브로 + 발광 H2 + 리드, 숫자 둘, 노선도, 데이 카드 다섯,
           강조 상자(초록·호박), 번호 배지 카드, 플로우 스트립, CTA. 내용과 순서는
@@ -653,6 +596,64 @@ export default function NaruHome() {
             {t(naru.december.ctaMail)}
             <span aria-hidden>→</span>
           </a>
+        </div>
+      </Chapter>
+
+      {/* ── CH3 · 8월이 남긴 것 (DECIDED 2026-09-17, 홈 흐름 재배치 브리프) ──
+          히어로 바로 아래에 있던 챕터가 프로그램과 얻는 것 뒤로 내려왔습니다.
+          히어로를 본 사람이 묻는 순서: 무엇을 하는가(#december) → 무엇이 남는가
+          (#gains) → 그게 진짜인가(여기) → 누가 만드는가(#naru 이후). 기본 이음매. */}
+      <Chapter id="record" align="center">
+        <Eyebrow color="violet">{t(naru.record.eyebrow)}</Eyebrow>
+        <h2 className={H2}><Halo tone="violet">{t(naru.record.heading)}</Halo></h2>
+        <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
+          {t(naru.record.lead)}
+        </p>
+        {/* 숫자 다섯. 마지막 하나만 설명 줄을 답니다. "9팀이 출제사에 직접
+            자료를 요청했다"는 숫자만으로는 무슨 뜻인지 알 수 없고, 그 뜻이
+            이 회차에서 가장 중요한 신호입니다. 시키지 않았는데 했어요. */}
+        <StatRow stats={naru.record.stats} t={t} className="mt-12 lg:grid-cols-5" />
+
+        {/* 사진 열 장. 이 챕터의 본문입니다.
+            2026-09-16: 여기 있던 lead2 한 줄, RecordTabs(형식·멘토·연사 탭),
+            "8월에 아쉬웠던 네 가지" 카드 넷이 내려갔습니다. 셋 다 맞는
+            내용이었지만 셋 다 8월을 설명하는 글이었고, 설명은 아래 버튼 하나로
+            /2026-08에 갑니다. 아쉬웠던 넷은 12월 챕터의 "모양"이 대신 말합니다.
+            gaps·tabs 키는 data/naru.ts에 그대로 있습니다. */}
+        {/* 여섯 장(2026-09-17 3차). 목록과 순서는 data/naru.ts의 record.wall. */}
+        <PhotoWall
+          photos={naru.record.wall
+            .map((src) => naru.record.photos.find((p) => p.src === src))
+            .filter((p): p is RecordPhoto => Boolean(p))}
+          t={t}
+        />
+
+        {/* 언론 넷(DECIDED 2026-09-17). 8월 페이지의 press 블록과 같은 줄(shared/
+            PressRows). 위 둘은 행사 뒤 싱가포르 현지 매체, 아래 둘은 8월 페이지에
+            있던 기사입니다. 사진 벽 아래에 두는 이유: 사진이 "있었던 일"이고 기사는
+            그것을 밖에서 본 눈이라, 순서가 안에서 밖입니다. */}
+        <PressRows
+          items={naru.record.press}
+          tag={naru.record.pressTag}
+          lead={naru.record.pressLead}
+          cta={naru.record.pressCta}
+          t={t}
+          className="mt-12"
+        />
+
+        {/* 이 챕터의 유일한 행동입니다. 2026-09-16에 유령 버튼에서 실린 버튼으로
+            올렸습니다 - 8월의 설명이 전부 저쪽으로 갔으니, 더 알고 싶은 사람에게
+            이 버튼은 선택지가 아니라 다음 문장입니다. 주황은 히어로의 주 CTA가
+            이미 쓰고 있어서 흰 면을 씁니다(색 규칙은 히어로 주석 참고). */}
+        <div className="mt-12 flex justify-center">
+          <Link
+            href={naruLinks.archive}
+            onClick={() => track("naru_cta", { src: "record", to: "archive" })}
+            className={buttonClass("secondary")}
+          >
+            {t(naru.record.cta)}
+            <span aria-hidden className="text-white/50">→</span>
+          </Link>
         </div>
       </Chapter>
 
