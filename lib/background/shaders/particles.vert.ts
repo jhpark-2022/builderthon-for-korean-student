@@ -54,6 +54,12 @@ uniform float uEdgeBright;
 uniform float uInnerBright;
 uniform vec2  uWave;
 uniform float uBreath;    // 숨 진폭 배수
+// ── 깊이 층과 국면 (2026-09-17 수정 브리프 1.3~1.5) ─────────────────────────
+uniform vec3  uFar;        // 건너는 점들의 목적지. 깊이 층 안의 먼 점
+uniform float uShift;      // 형상을 히어로와 같이 스크롤시키는 월드 y 오프셋
+uniform float uCalm;       // 그룹 챕터 0..1
+uniform vec2  uDepthCalm;  // 깊이 층: (드리프트 속도 배수, 밝기 배수) in calm
+uniform float uDepthDolly; // 깊이 층: 스크롤에 따라 z 이동량
 
 attribute vec3  aSeed;
 attribute float aScale;
@@ -65,6 +71,7 @@ attribute float aPhase;   // crossing: 윤곽을 따라 간 위상 0..1. field�
 
 varying float vBright;    // crossing: 점의 밝기(가장자리 1.0 × 파도, 속 0.35)
 varying float vEdge;      // crossing: 가장자리 1 / 속 0
+varying float vShape;     // crossing: 형상 점 1 / 깊이 층 0
 varying float vDepth;
 varying float vGlow;
 varying float vPointer;
@@ -83,7 +90,38 @@ float hash1(float n){ return fract(sin(n) * 43758.5453); }
 // 성좌(arrived). 각 입자는 자기 지연(lead)을 가져서 먼저 건너는 점과 늦게 건너는
 // 점이 화면에 같이 보입니다. 속도 편차는 aSpeed(0.6~1.4)가 만듭니다.
 // 포인터 자력은 쓰지 않습니다(브리프 5: 8월도 3° 패럴랙스뿐).
+// ── 깊이 층 (2026-09-17 수정 브리프 1.4) ──────────────────────────────────
+// 8월 필드의 입자를 화면 전체에 깝니다: 같은 컬 노이즈 드리프트, 같은 볼륨 랩,
+// 얕은 돌리(스크롤에 따라 z uDepthDolly). 형상은 그 앞에 섭니다. 그룹 챕터(uCalm)
+// 에서는 느리고 어둡습니다. 어느 스크롤 위치에서도 배경이 "빈 남색"이 아닙니다.
+void depthMain(){
+  vec3 pos = aSeed;
+  float parallax = mix(0.6, 1.4, aScale * 0.5);
+  float speed = mix(1.0, uDepthCalm.x, uCalm);
+  float t = uTime * uFlowSpeed * aSpeed * speed + aOffset;
+  vec3 flow = curlNoise(pos * uSpaceScale + vec3(0.0, 0.0, t)) * uCurl;
+  pos += flow * (t * 2.0);
+  pos.y += t * 0.4;
+  pos.x = wrap(pos.x, uBounds.x);
+  pos.y = wrap(pos.y, uBounds.y);
+  pos.z = wrap(pos.z, uBounds.z);
+  pos.z -= uScroll * uDepthDolly * parallax;
+  pos.z = wrap(pos.z, uBounds.z);
+
+  vPointer = 0.0; vSpeed = 0.0; vNear = 0.0; vEdge = 0.0; vShape = 0.0;
+  vRand = fract(aOffset * 0.1234 + aSpeed);
+  vGlow = aScale;
+  vBright = mix(1.0, uDepthCalm.y, uCalm);
+
+  vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+  gl_Position = projectionMatrix * mv;
+  float zCam = -mv.z;
+  vDepth = clamp((zCam - 6.0) / 60.0, 0.0, 1.0);
+  gl_PointSize = min(aScale * uPixelRatio * (130.0 / max(zCam, 0.001)), 22.0 * uPixelRatio);
+}
+
 void crossingMain(){
+  if (abs(aBank) < 0.5) { depthMain(); return; }
   float lead = hash1(aOffset * 1.7 + aSpeed);
   float prog = clamp((uCrossing - lead * 0.55) / 0.45, 0.0, 1.0);
   prog = prog * prog * (3.0 - 2.0 * prog);
@@ -96,24 +134,25 @@ void crossingMain(){
   // 매끈한 장이라 윤곽이 번지지 않고 살짝 일렁입니다.
   float t = uTime * uFlowSpeed * aSpeed + aOffset;
   vec3 drift = curlNoise(origin * uSpaceScale + vec3(0.0, 0.0, t * 0.5)) * uCurl;
-  vec3 bankPos = origin + (drift * 0.75 + vec3(0.0, sin(t * 0.7) * 0.12, 0.0)) * uBreath;
+  // uShift: 히어로가 스크롤로 올라가면 형상도 같이 올라갑니다(형상은 히어로의 시각물).
+  // 풀리면(gather) 무대 자리(뷰포트 고정)로 돌아와 느슨해지고, 거기서 먼 점으로 건넙니다.
+  // 그래야 건너는 장면이 #record 본문의 여백에서 보입니다(위에서 시작하면 화면 밖).
+  vec3 bankPos = origin + vec3(0.0, uShift, 0.0) + (drift * 0.75 + vec3(0.0, sin(t * 0.7) * 0.12, 0.0)) * uBreath;
 
   // 강가로: 속의 점이 먼저 떠나고 가장자리 점(aEdge 1)이 마지막에 떠납니다.
   // 윤곽이 마지막까지 남아야 읽힙니다(브리프 4).
   float lag = mix(hash1(aOffset * 2.9) * 0.3, 0.55 + hash1(aOffset * 2.9) * 0.15, aEdge);
   float g = clamp((uGather - lag) / max(1.0 - lag, 0.05), 0.0, 1.0);
   g = g * g * (3.0 - 2.0 * g);
-  // 물가는 그 깊이에서 보이는 화면 폭의 40% 자리입니다.
-  float halfW = (30.0 - origin.z) * 0.577 * 1.6;
-  float edgeX = aBank * halfW * (0.40 + hash1(aOffset) * 0.06);
-  vec3 shore = vec3(edgeX, mix(bankPos.y, uLantern.y + 4.0 + hash1(aOffset * 3.1) * 8.0, 0.6), bankPos.z);
-  vec3 gathered = mix(bankPos, shore, g * (0.55 + 0.45 * hash1(aOffset * 2.3)));
+  // 풀리기: 제자리에서 느슨해지며 먼 점 쪽으로 조금 기웁니다.
+  vec3 loosened = mix(origin, uFar, 0.15) + drift * 2.0;
+  vec3 gathered = mix(bankPos, loosened, g);
 
-  // 건너편의 자리: 등불 둘레의 성좌. 반지름 3~10, 등불보다 조금 위.
+  // 건너편의 자리: 먼 점 둘레의 성좌. 반지름 3~10.
   float rad = 3.0 + hash1(aOffset * 5.7) * 7.0;
   float ang = hash1(aOffset * 9.1) * 6.2831853;
   float el  = (hash1(aOffset * 4.4) - 0.3) * 1.2;
-  vec3 seat = uLantern + vec3(cos(ang) * rad, sin(el) * rad * 0.7 + 2.0, sin(ang) * rad * 0.6);
+  vec3 seat = uFar + vec3(cos(ang) * rad, sin(el) * rad * 0.7, sin(ang) * rad * 0.6);
 
   // 건너기: 호를 그리며, 컬 노이즈로 조금 흔들리며.
   float arc = sin(prog * 3.14159265);
@@ -132,6 +171,7 @@ void crossingMain(){
   vRand = hash1(aOffset * 6.1);
   vGlow = aScale;
   vEdge = aEdge;
+  vShape = 1.0;
   // 밝기. 가장자리는 1.0에 윤곽을 따라 도는 파도(±uWave.y, 한 바퀴 uWave.x초), 속은 0.35.
   float wave = 1.0 + uWave.y * sin(6.2831853 * (aPhase - uTime / uWave.x));
   vBright = mix(uInnerBright, uEdgeBright * wave, aEdge);
@@ -147,7 +187,7 @@ void crossingMain(){
 
 void main(){
   if (uMode > 0.5) { crossingMain(); return; }
-  vBright = 1.0; vEdge = 0.0; // field 경로는 읽지 않습니다. varying을 비워 두지 않으려는 것뿐.
+  vBright = 1.0; vEdge = 0.0; vShape = 0.0; // field 경로는 읽지 않습니다. varying을 비워 두지 않으려는 것뿐.
   vec3 pos = aSeed;
 
   // per-particle parallax weight: bright/large leaders sit "nearer" and react more

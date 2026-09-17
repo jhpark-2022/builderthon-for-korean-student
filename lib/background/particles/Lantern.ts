@@ -63,14 +63,16 @@ export class Lantern {
     this.sprite.position.set(x, y, z);
   }
 
-  update(time: number, gather: number, arrived: number) {
+  /** @param fade 히어로가 화면에서 나가면 0.6화면에 걸쳐 0으로(2026-09-17 수정 브리프 1.3). */
+  update(time: number, gather: number, arrived: number, fade = 1) {
     // 아주 느린 숨. 움직임이 아니라 살아 있다는 표시 정도입니다. 진폭 4%.
     const breathe = 1 + Math.sin(time * 0.9) * 0.04;
     const s = CROSSING.lanternSize * breathe;
     this.sprite.scale.set(s, s, 1);
     // 모이는 동안 또렷해지고, 닿은 뒤에는 오히려 한 단 가라앉습니다. 그 구간의
     // 본문(코어 판 두 장)이 등불 위에 앉기 때문입니다(브리프 6, 대비).
-    this.material.opacity = 0.5 + gather * 0.4 - arrived * 0.3;
+    this.material.opacity = (0.5 + gather * 0.4 - arrived * 0.3) * fade;
+    this.sprite.visible = fade > 0.001;
   }
 
   dispose() {

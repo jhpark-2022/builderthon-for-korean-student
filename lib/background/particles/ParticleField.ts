@@ -42,8 +42,11 @@ export class ParticleField {
     const edges = new Float32Array(count); // crossing: 가장자리 1 / 속 0. field에서는 0
     const phases = new Float32Array(count); // crossing: 윤곽을 따라 간 위상 0..1. field에서는 0
 
+    // crossing: 점 예산(2026-09-17 수정 브리프 1.2). 앞쪽은 형상 둘, 나머지는 깊이 층.
+    const shapeCount = variant === "crossing" ? SHAPES.shapePoints(count) : 0;
+
     for (let i = 0; i < count; i++) {
-      if (variant === "crossing") {
+      if (variant === "crossing" && i < shapeCount) {
         // DECIDED 2026-09-17 (배경 수정 브리프): 두 기슭은 형상입니다. 짝수 인덱스가
         // 싱가포르(왼쪽), 홀수가 서울(오른쪽). 씨앗은 굽힌 점의 정규화 xy(형상 너비를
         // [-1,1]에), z는 0(정면, 두께 없음. 3° 패럴랙스는 평행 이동만). 월드 자리는
@@ -65,6 +68,7 @@ export class ParticleField {
         offsets[i] = Math.random() * 100;
         continue;
       }
+      // field, 그리고 crossing의 깊이 층(aBank 0): 8월 필드와 같은 분포입니다.
       // distribute through the volume; bias slightly toward centre depth
       seeds[i * 3 + 0] = (Math.random() * 2 - 1) * FIELD.bounds;
       seeds[i * 3 + 1] = (Math.random() * 2 - 1) * FIELD.bounds;
@@ -138,6 +142,14 @@ export class ParticleField {
         uInnerBright: { value: SHAPES.innerBright },
         uWave: { value: new THREE.Vector2(SHAPES.wavePeriod, SHAPES.waveAmp) },
         uBreath: { value: SHAPES.breath },
+        // 깊이 층과 국면(2026-09-17 수정 브리프)
+        uFar: { value: new THREE.Vector3(CROSSING.far.x, CROSSING.far.y, CROSSING.far.z) },
+        uShift: { value: 0 },          // 형상을 히어로와 같이 스크롤시키는 월드 y 오프셋
+        uCalm: { value: 0 },
+        uShapeOpacity: { value: 1 },
+        uDepthOpacity: { value: CROSSING.depthBright },
+        uDepthCalm: { value: new THREE.Vector2(CROSSING.depthCalmSpeed, CROSSING.depthCalmBright) },
+        uDepthDolly: { value: CROSSING.depthDollyZ },
       },
     });
     if (variant === "crossing") {
@@ -145,7 +157,7 @@ export class ParticleField {
       // hi0. 건너는 동안 hi0로 밝아집니다. 주황(hi1)은 여기 없습니다. 등불이 갖습니다.
       const u = this.material.uniforms;
       u.uAccent.value.set(PALETTE.accent1);
-      u.uAccent2.value.set(PALETTE.accent2);
+      u.uAccent2.value.set(PALETTE.accent0); // 깊이 층의 색
       u.uHighlight.value.set(PALETTE.hi0);
       u.uHighlight2.value.set(PALETTE.hi0);
       u.uFog.value.set(PALETTE.base1);
@@ -208,15 +220,18 @@ export class ParticleField {
   }
 
   /**
-   * crossing 변형의 프레임 갱신. 국면 셋과 스크롤을 넘깁니다.
-   * 불투명도: 히어로 0.72 → 강가로 모이면서 0.46 → 닿은 뒤 0.28. 그룹 챕터(코어
-   * 판 두 장) 뒤에서는 배경이 거의 정지에 가깝게 잔잔해야 합니다.
+   * crossing 변형의 프레임 갱신. 국면과 스크롤을 넘깁니다.
+   * 형상 불투명도: 히어로 1.0 → 모이면서 0.55·티어 → 닿은 뒤 0.3·티어. 깊이 층은
+   * 따로(uDepthOpacity)라 모든 스크롤 위치에서 같은 밝기이고, 그룹 챕터(calm)에서만
+   * 60%로 잦아듭니다.
+   * @param shift  형상을 히어로와 같이 스크롤시키는 월드 y 오프셋(z = 0 평면)
    */
   updateCrossing(
     time: number,
     scroll: number,
     motionScale: number,
-    p: { gather: number; crossing: number; arrived: number }
+    p: { gather: number; crossing: number; arrived: number; calm: number },
+    shift: number
   ) {
     const u = this.material.uniforms;
     u.uTime.value = time * motionScale;
@@ -224,11 +239,13 @@ export class ParticleField {
     u.uGather.value = p.gather;
     u.uCrossing.value = p.crossing;
     u.uArrived.value = p.arrived;
-    // 기슭(형상) 상태에서는 티어 강도를 곱하지 않습니다(2026-09-17 형상 브리프).
-    // 폰은 강도 0.6에 감광 0.4까지 겹쳐 450점의 윤곽이 보이지 않았습니다. 형상은
-    // 첫 화면에서 읽혀야 하는 것이라 밝기를 지키고, 모이기부터 티어 강도를 따릅니다.
+    u.uCalm.value = p.calm;
+    u.uShift.value = shift;
+    // 기슭(형상) 상태에서는 티어 강도를 곱하지 않습니다. 형상은 첫 화면에서 읽혀야
+    // 하는 것이라 밝기를 지키고, 모이기부터 티어 강도를 따릅니다.
     let op = 1.0 + (0.55 * this.intensity - 1.0) * p.gather;
     op += (0.3 * this.intensity - op) * p.arrived;
+    u.uShapeOpacity.value = op;
     u.uOpacity.value = op;
   }
 

@@ -18,9 +18,12 @@ uniform float uScroll;
 uniform float uPortal;
 uniform float uWhiteout;
 uniform float uMode;      // 0 = field, 1 = crossing (2026-09-17)
+uniform float uShapeOpacity; // crossing: 형상 점의 불투명도(국면에 따라)
+uniform float uDepthOpacity; // crossing: 깊이 층의 불투명도(늘 같음. 8월의 25%)
 
 varying float vBright;    // crossing: 점의 밝기
 varying float vEdge;      // crossing: 가장자리 1 / 속 0
+varying float vShape;     // crossing: 형상 점 1 / 깊이 층 0
 varying float vDepth;
 varying float vGlow;
 varying float vPointer;
@@ -41,9 +44,13 @@ void crossingFrag(){
   float core = smoothstep(1.0, 0.0, r);
   float halo = pow(1.0 - r, 3.2);
   float alpha = (core * 0.62 + halo * 0.25);
-  vec3 col = mix(uAccent, uHighlight, clamp(vEdge + vNear * 0.85, 0.0, 1.0));
-  col = mix(col, uFog, vDepth * 0.85);
-  alpha *= (1.0 - vDepth * 0.7) * uOpacity * vBright;
+  // 깊이 층은 accent0(보라)에서 조금만 밝게, 형상은 accent1 → hi0.
+  vec3 deep = mix(uAccent2, uHighlight, vGlow * 0.3);
+  vec3 col = mix(deep, mix(uAccent, uHighlight, clamp(vEdge + vNear * 0.85, 0.0, 1.0)), vShape);
+  // 안개: 깊이 층은 8월과 같게, 형상 점은 절반만(건너서 뒤로 가도 보여야 합니다).
+  float fog = vDepth * mix(1.0, 0.5, vShape);
+  col = mix(col, uFog, fog * 0.85);
+  alpha *= (1.0 - fog * 0.7) * mix(uDepthOpacity, uShapeOpacity, vShape) * vBright;
   alpha = mix(alpha, alpha * 1.25 + 0.06, vSpeed);
   gl_FragColor = vec4(col, clamp(alpha, 0.0, 1.0));
 }

@@ -72,6 +72,7 @@ export class BackgroundScene {
   private running = false;
   private reduced = false;
   private scroll = 0;
+  private scrollY = 0; // crossing의 국면은 px로 잽니다(utils/phases.ts).
   // 스크롤 속도 0..1. 깊은 물의 물살이 여기에 반응합니다(shaders/water.ts의
   // uFlow). 원시 값을 그대로 넘기면 프레임마다 튀어서, 아래 loop에서 지수
   // 감쇠로 부드럽게 합니다. 올라갈 때는 빠르게, 잦아들 때는 천천히.
@@ -159,6 +160,7 @@ export class BackgroundScene {
    * 화면 오른쪽 반을 무대로 칩니다.
    */
   private stageLayout: StageLayout | null = null;
+  private lanternBaseY: number = CROSSING.lantern.y;
   private placeShapes() {
     if (!this.particles || this.variant !== "crossing") return;
     const w = window.innerWidth;
@@ -181,6 +183,7 @@ export class BackgroundScene {
     const k = (30 - CROSSING.lantern.z) / 30;
     const lx = (L.lantern.cx / w * 2 - 1) * halfW * k;
     const ly = (1 - L.lantern.cy / h * 2) * halfH * k;
+    this.lanternBaseY = ly;
     this.lantern?.setPosition(lx, ly, CROSSING.lantern.z);
     this.particles.setLantern(lx, ly, CROSSING.lantern.z);
     this.water?.setBandX(L.band.x0 / w, L.band.x1 / w);
@@ -201,6 +204,7 @@ export class BackgroundScene {
   /** 등불의 기본 자리(무대를 읽기 전). 실제 자리는 placeShapes가 무대에서 정합니다. */
   private placeLantern() {
     if (!this.lantern || !this.particles) return;
+    this.lanternBaseY = CROSSING.lantern.y;
     this.lantern.setPosition(CROSSING.lantern.x, CROSSING.lantern.y, CROSSING.lantern.z);
     this.particles.setLantern(CROSSING.lantern.x, CROSSING.lantern.y, CROSSING.lantern.z);
   }
@@ -214,6 +218,7 @@ export class BackgroundScene {
     window.addEventListener("scroll", this.onScroll, { passive: true });
     document.addEventListener("visibilitychange", this.onVisibility);
     this.mql.addEventListener("change", this.onReducedChange);
+    this.scrollY = window.scrollY;
     this.readAnchors();
     this.placeShapes();
     this.observeStage();
@@ -222,24 +227,30 @@ export class BackgroundScene {
   }
 
   /**
-   * crossing 변형의 국면 경계. #record, #december, #naru의 offsetTop을 스크롤
-   * 비율로 바꿉니다. 상수로 박지 않는 이유는 페이지 길이가 바뀌어도 "프로그램에서
-   * 건넌다"가 유지되어야 하기 때문입니다. 시작·리사이즈, 그리고 2초마다 다시
-   * 읽습니다(이미지가 늦게 실려 문서 높이가 바뀌는 경우).
+   * crossing 변형의 국면 경계(문서 px). 히어로 하단(무대가 든 section의 아래),
+   * #record 시작, #december 중반, #naru 시작. 상수로 박지 않는 이유는 페이지 길이가
+   * 바뀌어도 "8월의 기록에서 건넌다"가 유지되어야 하기 때문입니다. 시작·리사이즈·
+   * 무대 ResizeObserver, 그리고 2초마다 다시 읽습니다(이미지가 늦게 실리는 경우).
    */
   private readAnchors() {
     if (this.variant !== "crossing") return;
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    if (max <= 0) return;
+    const sy = window.scrollY;
     const top = (id: string) => {
       const el = document.getElementById(id);
-      return el ? clamp(el.getBoundingClientRect().top + window.scrollY, 0, max) / max : null;
+      return el ? el.getBoundingClientRect().top + sy : null;
     };
     const record = top("record");
-    const december = top("december");
+    const december = document.getElementById("december");
     const naru = top("naru");
-    if (record !== null && december !== null && naru !== null && record < december && december < naru) {
-      this.anchors = { record, december, naru };
+    const stage = findStageElement();
+    const hero = stage?.closest("section");
+    const heroEnd = hero ? hero.getBoundingClientRect().bottom + sy : record;
+    if (record !== null && december && naru !== null && heroEnd !== null) {
+      const db = december.getBoundingClientRect();
+      const decemberMid = db.top + sy + db.height * 0.5;
+      if (heroEnd <= record + 1 && record < decemberMid && decemberMid < naru) {
+        this.anchors = { heroEnd, record, decemberMid, naru };
+      }
     }
   }
 
@@ -288,6 +299,7 @@ export class BackgroundScene {
     if (isScrollLocked()) return;
     const max = document.documentElement.scrollHeight - window.innerHeight;
     this.scroll = max > 0 ? clamp(window.scrollY / max, 0, 1) : 0;
+    this.scrollY = window.scrollY;
   };
   private onVisibility = () => {
     this.visible = document.visibilityState === "visible";
@@ -353,8 +365,16 @@ export class BackgroundScene {
     if (this.variant === "crossing" && this.water && this.particles && this.lantern && this.atmosphere) {
       this.anchorTimer += dt;
       if (this.anchorTimer > 2) { this.anchorTimer = 0; this.readAnchors(); }
-      const cp = computeCrossingPhases(this.scroll, this.anchors);
+      const vh = window.innerHeight;
+      const cp = computeCrossingPhases(this.scrollY, vh, this.scroll, this.anchors);
       const ph = crossingToPhases(cp);
+      // 형상과 등불은 히어로의 시각물이라 히어로와 같이 스크롤됩니다. px → z = 0 평면의
+      // 월드 단위(fov에 따라). 카메라 돌리가 조금 어긋나게 하지만 배경이라 괜찮습니다.
+      const portrait = vh > window.innerWidth;
+      const halfH = 30 * Math.tan(((portrait ? 75 : 60) * Math.PI) / 360);
+      const shift = (this.scrollY / vh) * 2 * halfH;
+      const k = (30 - CROSSING.lantern.z) / 30;
+      this.lantern.sprite.position.y = this.lanternBaseY + shift * k;
       // 등불의 화면 uv. 반사 띠의 지평선이 여기서 시작하고, 렌즈의 초점도 여기입니다.
       this.lanternProjected.copy(this.lantern.sprite.position).project(this.cam.camera);
       const lx = this.lanternProjected.x * 0.5 + 0.5;
@@ -363,9 +383,10 @@ export class BackgroundScene {
       this.water.setLamp(lx, ly, this.stageLayout ? this.stageLayout.band.h / window.innerHeight : CROSSING.bandHeight);
       this.atmosphere.update(this.fieldTime, this.scroll, 0);
       // uFlow 자리에 건너기 국면을 넘깁니다. 건너는 동안 반사 띠가 흔들립니다.
+      this.water.setBandFade(cp.fade);
       this.water.update(this.fieldTime, this.scroll, this.pointerUv, 0, cp.crossing);
-      this.particles.updateCrossing(this.fieldTime, this.scroll, this.motionScale, cp);
-      this.lantern.update(this.fieldTime, cp.gather, cp.arrived);
+      this.particles.updateCrossing(this.fieldTime, this.scroll, this.motionScale, cp, shift);
+      this.lantern.update(this.fieldTime, cp.gather, cp.arrived, cp.fade);
       this.post.setPhase(ph, this.reduced ? 0.3 : 1);
       this.post.render(dt);
       return;

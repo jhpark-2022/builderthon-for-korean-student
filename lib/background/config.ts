@@ -115,9 +115,19 @@ export const CROSSING = {
   lanternSize: 7,                // 스프라이트 한 변(월드)
   bloomThreshold: 0.9,           // 등불의 흰 심만 넘습니다. 형상 점(hi0 휘도 ≈ 0.65, 파도 +30%까지 0.85)은 못 넘습니다. 형상은 선명해야 합니다.
   bandHeight: 0.14,              // 반사 띠의 높이(뷰포트 비율). 브리프 12~15%
-  // 앵커를 못 읽었을 때의 국면 경계(스크롤 비율). 실제 값은 BackgroundScene이
-  // #record, #december, #naru의 offsetTop에서 읽습니다.
-  fallbackAnchors: { record: 0.06, december: 0.2, naru: 0.55 },
+  // 앵커를 못 읽었을 때의 국면 경계(문서 px). 실제 값은 BackgroundScene이 히어로
+  // 하단, #record, #december, #naru의 offsetTop에서 읽습니다.
+  fallbackAnchors: { heroEnd: 900, record: 1000, decemberMid: 3200, naru: 6000 },
+  // 건너는 점들의 목적지(2026-09-17 수정 브리프 1.3): 화면 y가 아니라 깊이 층 안의
+  // 먼 점. z 뒤쪽, 화면 중심 근처. 건너간 점들은 여기 둘레에서 성좌가 됩니다.
+  // z −18: 처음 −35로 두니 안개(vDepth)에 묻혀 건너는 점이 보이지 않았습니다(실측).
+  far: { x: 0, y: 2, z: -18 },
+  // 깊이 층(1.4): 8월 필드를 밀도 35%(점 예산에서), 밝기 25%로. 그룹 챕터에서는
+  // 드리프트 50%, 밝기 15%.
+  depthBright: 0.25,
+  depthCalmBright: 0.6,   // 0.25 × 0.6 = 0.15
+  depthCalmSpeed: 0.5,
+  depthDollyZ: 6,         // 스크롤에 따라 z 6 단위
 } as const;
 
 /**
