@@ -142,13 +142,19 @@ export const openChatLabels = {
 // "세 층"이 "학생회와 기업"이 된 이유: 그 챕터를 읽어야 하는 사람(학생회 임원,
 // 기업 담당자)이 헤더에서 자기 자리를 찾지 못했습니다. 층이라는 말은 읽고 난
 // 뒤에야 뜻이 통하는 이름이고, 헤더는 읽기 전에 고르는 자리입니다.
+// DECIDED 2026-09-17 (2차): 이벤트와 그룹을 나눕니다. 위가 이벤트(크로싱 서울
+// 히어로 → 8월의 기록 → 프로그램), 아래가 그룹(나루 → 학생회와 기업 → 함께).
+// 사용자의 지시: "이벤트와 그룹 설명은 분리. 맨 아래에 그룹 로고와 존재 목적,
+// 그 위에 8월 recap과 12월 설명. 12월 설명은 8월 사이트와 같은 격식으로."
+// #why 앵커는 없어졌습니다. 코어 둘은 #naru 안에 있고, 안쪽 앵커 id="why"가
+// 남아 있어 옛 링크(/#why, notSequel의 링크)는 그대로 닿습니다.
 export const naruNav: { id: string; label: Phrase }[] = [
-  { id: "top", label: { ko: "나루", en: "NARU" } },
+  { id: "top", label: { ko: "크로싱 서울", en: "CROSSING SEOUL" } },
   { id: "record", label: { ko: "8월의 기록", en: "August" } },
-  { id: "december", label: { ko: "12월", en: "December" } },
+  { id: "december", label: { ko: "프로그램", en: "Programme" } },
+  { id: "naru", label: { ko: "나루", en: "NARU" } },
   { id: "how", label: { ko: "학생회와 기업", en: "Councils and companies" } },
   { id: "join", label: { ko: "함께", en: "Join" } },
-  { id: "why", label: { ko: "왜", en: "Why" } },
 ];
 
 export interface Stat {
@@ -270,6 +276,33 @@ export const naru = {
   // ── CH1 · 왜 존재하는가 ───────────────────────────────────────────────────
   // 매니페스토 II를 그대로 옮깁니다. 여기서 문장을 무르게 만들지 마세요.
   // 이 두 개를 바꾸는 결정은 매니페스토를 고쳐 쓰는 일과 같습니다(매니페스토 IX).
+  // ── CH0 · 이벤트 히어로 (DECIDED 2026-09-17) ──────────────────────────────
+  // 홈의 첫 화면이 그룹에서 이벤트로 바뀝니다. 8월 사이트의 히어로가 8월
+  // 이벤트였듯이, 이 히어로는 크로싱 서울입니다. 이름과 날짜, 도시는 전부
+  // lib/naruDates.ts에서 옵니다. 여기에는 문장만 있습니다.
+  // 나루 로고는 헤더에만 작게 있고, 큰 로고와 존재 목적은 맨 아래 #naru로
+  // 내려갔습니다. 위의 hero 블록(태그라인)은 그쪽이 씁니다.
+  eventHero: {
+    eyebrow: { ko: "나루의 다음 이벤트", en: "NARU's next event" },
+    // 이름 아래 한 줄. 포지션은 december.heading이 그대로 맡습니다.
+    sub: {
+      ko: "한국의 대학생과 해외의 한인 유학생이 같은 문제 앞에 섭니다. raw data에서 문제를 찾는 것부터 앞에서 증명하기까지, 닷새.",
+      en: "Students at Korean universities and Korean students abroad stand in front of the same problem. From finding it in raw data to proving it out front, in five days.",
+    },
+    ctaProgram: { ko: "프로그램 보기", en: "See the programme" },
+  },
+
+  // ── CH3 · 나루 (그룹) ─────────────────────────────────────────────────────
+  // 맨 아래. 로고, 태그라인, 그리고 존재 목적(변하지 않는 두 개). 이벤트 위에
+  // 그룹이 있는 것이 아니라, 이벤트 아래에 그룹이 서명하는 구조입니다.
+  group: {
+    eyebrow: { ko: "나루 NARU", en: "나루 NARU" },
+    lead: {
+      ko: "이벤트는 나루가 학생회와 기업을 잇는 지금의 방식입니다. 방식은 바뀝니다. 바뀌지 않는 것은 아래 두 개입니다.",
+      en: "An event is how NARU connects student associations and companies for now. The method changes. What does not change is the two things below.",
+    },
+  },
+
   why: {
     eyebrow: { ko: "변하지 않는 두 개", en: "The two that do not change" },
     heading: {
@@ -701,8 +734,11 @@ export const naru = {
           ko: "팀 안에서는 붙었지만 팀과 팀은 섞이지 않았습니다.",
           en: "People bonded inside their team. Between teams, nothing.",
         },
-        // TODO: confirm. 기획 초안에 사전 대면 팀 본딩이 있지만 확정이 아닙니다.
-        answer: null,
+        // 2026-09-17: 기획 03에서 채움. 본 일정 전 팀 본딩, 중간 공유. 초안입니다.
+        answer: {
+          ko: "본 일정 전에 팀 본딩을 두고, 중간 공유로 서로의 진행을 보게 합니다.",
+          en: "Team bonding before the main schedule, and mid-point sharing so teams see each other's progress.",
+        },
       },
       {
         title: {
@@ -713,8 +749,11 @@ export const naru = {
           ko: "열심히 해 주었는데, 함께 자란다고 느낄 자리를 만들지 못했습니다.",
           en: "They worked hard for it, and we never made a place where they could feel they were growing too.",
         },
-        // TODO: confirm. 답이 아직 없습니다. 지어내지 마세요.
-        answer: null,
+        // 2026-09-17: 기획 03에서 채움. 초안입니다.
+        answer: {
+          ko: "주관 학생도 피칭할 수 있게 열고, 시상은 운영 기여도 기준의 별도 트랙으로 둡니다.",
+          en: "Organising students can pitch too, and there is a separate award track judged on what they put into running it.",
+        },
       },
     ] as { title: Phrase; body: Phrase; answer: Phrase | null }[],
     // ── 로고 스트립은 넣지 않았습니다 (DECIDED 2026-09-15) ────────────────
@@ -842,6 +881,72 @@ export const naru = {
     // 이름은 decemberEventLabel, 달과 도시는 naruDates가 줍니다. 이름이 다시
     // null이 되어도(다음 크로싱이 이름 없이 시작할 때) 깨지지 않습니다.
     eyebrowPrefix: { ko: "다음 이벤트", en: "Next event" },
+
+    // ── 프로그램 (DECIDED 2026-09-17) ─────────────────────────────────────
+    // 8월 사이트의 격식을 따릅니다: 프로그램(일정), 멘토링, 무엇이 달라지는가.
+    // 출처는 빌더톤_2회차_기획.pdf 다섯 장(성과, 코어, 제안, 일정, 실행).
+    // 05 실행(팀이 알아볼 세 곳)은 내부용이라 싣지 않습니다. 03 제안의 "왜
+    // 서울인가" 셋과 "8월에 아쉬웠던 넷 → 12월의 답"이 여기, 04 일정의
+    // 스테이지·워크샵·General Mentoring이 아래 stages와 mentoring입니다.
+    // 02 코어의 EXECUTION 열(멘토링의 퀄리티, 들어주는 사람, 재는 것)은 이벤트의
+    // 것이라 why.exec/measure를 이 챕터의 멘토링 블록이 읽습니다.
+    // 전부 초안입니다. draftNote가 이 챕터에 붙어 있어야 합니다.
+    programEyebrow: { ko: "프로그램", en: "Programme" },
+    programHeading: { ko: "raw data에서 증명까지, 닷새", en: "From raw data to proof, in five days" },
+    reasonsLabel: { ko: "왜 서울인가", en: "Why Seoul" },
+    reasons: [
+      {
+        title: { ko: "코어가 한국에서도 유효합니다", en: "The core holds in Korea too" },
+        body: {
+          ko: "안전한 도전 공간과 자기 가치를 증명할 기회라는 두 축은 한국 대학생에게 그대로 적용됩니다. 바꿔야 하는 것은 코어가 아니라 그것을 부르는 이름입니다.",
+          en: "A safe place to try and a chance to prove your worth apply to students in Korea exactly as they are. What had to change was not the core but the name it goes by.",
+        },
+      },
+      {
+        title: { ko: "커뮤니티에는 이벤트가 필요합니다", en: "A community needs an event" },
+        body: {
+          ko: "연속성 있는 커뮤니티를 만들려면 사람이 다시 모이는 계기가 있어야 합니다. 정기적으로 굴러가면 자연히 살고, 단발성으로 끝나면 흩어집니다.",
+          en: "A community with continuity needs a reason for people to gather again. Run regularly, it lives on its own. Run once, it scatters.",
+        },
+      },
+      {
+        title: { ko: "메시지가 싱가포르를 넘어야 합니다", en: "The message has to travel past Singapore" },
+        body: {
+          ko: "한 번으로는 사례가 되지 않고, 두 번째부터 선례가 됩니다. 이 이벤트가 그 선례가 싱가포르 밖으로 퍼져 나가는 시작점입니다.",
+          en: "Once is an anecdote. From the second time it is a precedent, and this event is where that precedent starts travelling beyond Singapore.",
+        },
+      },
+    ] as { title: Phrase; body: Phrase }[],
+    gapsHeading: { ko: "8월에 아쉬웠던 넷, 그리고 12월의 답", en: "Four things August missed, and December's answer" },
+    gapsLead: {
+      ko: "이 네 가지를 메우려면 한 번 더 해야 합니다. 각각 8월에 무엇이 없었고 12월에 무엇을 넣는지입니다.",
+      en: "Filling these four takes doing it once more. For each, what August lacked and what December puts in.",
+    },
+    augustLabel: { ko: "8월", en: "August" },
+    decemberLabel: { ko: "12월", en: "December" },
+    scheduleLabel: { ko: "일정", en: "Schedule" },
+    scheduleLead: {
+      ko: "본 일정 전에 팀 본딩을 두고, Discovery에서 Pitch까지 하루에 한 스테이지씩 넘어갑니다. 전 일정 한 공간에서 합니다.",
+      en: "Team bonding comes before the main schedule, then one stage a day from Discovery to Pitch. The whole thing happens in one space.",
+    },
+    workshopLabel: { ko: "워크샵", en: "Workshop" },
+    workshopNote: {
+      ko: "스테이지마다 그날의 어젠다에 맞는 3시간짜리 워크샵이 붙습니다.",
+      en: "Each stage comes with a three-hour workshop matched to that day's agenda.",
+    },
+    submitLabel: { ko: "제출", en: "Submission" },
+    mentoringLabel: { ko: "멘토링", en: "Mentoring" },
+    mentoringHeading: { ko: "General Mentoring, 전 기간 상시", en: "General Mentoring, on call the whole way" },
+    mentoringLead: {
+      ko: "8월에는 슬롯이 넉넉했는데 한 번도 쓰지 않은 팀이 있었습니다. 12월은 예약하지 않은 팀을 이탈 신호로 봅니다.",
+      en: "In August there were plenty of slots and teams that never booked one. In December a team that has not booked is read as a warning sign.",
+    },
+    mentoringRules: [
+      { ko: "예약제, 30분 슬롯", en: "By booking, 30-minute slots" },
+      { ko: "질문은 몇 시간 전에 제출", en: "Questions submitted a few hours ahead" },
+      { ko: "슬롯 횟수 제한 없음", en: "No cap on how many slots" },
+      { ko: "마지막 날에는 새 방향을 제안하지 않음", en: "No new directions on the last day" },
+    ] as Phrase[],
 
     // ── 제목이 포지션을 말합니다 (DECIDED 2026-09-15) ──────────────────────
     // 전에는 H2가 날짜였습니다("12월 9일, 서울에서 시작합니다"). 그러면 이
@@ -1060,10 +1165,15 @@ export const naru = {
     ] as Stat[],
     // 스테이지 다섯. 날짜 대신 순서입니다(위 주석 참고).
     stagesLabel: { ko: "닷새의 스테이지", en: "Five days, five stages" },
+    // dayOffset: DECEMBER_STARTS_AT에서 며칠 뒤인지. null이면 본 일정 전.
+    // 날짜 문자열을 여기 쓰지 않습니다(naruDates.formatDecemberDay가 셉니다).
+    // submit: 그 스테이지가 끝나며 받는 제출물. workshop: 그날 붙는 3시간 워크샵.
+    // 출처 빌더톤_2회차_기획.pdf 04.
     stages: [
       {
         name: { ko: "Team Bonding", en: "Team Bonding" },
         when: { ko: "본 일정 전", en: "Before it starts" },
+        dayOffset: null,
         body: {
           ko: "사전 매칭된 팀이 대면으로 먼저 만납니다. 첫날의 아이스브레이킹 시간이 사라집니다.",
           en: "Matched teams meet in person first, so day one does not start with icebreakers.",
@@ -1072,43 +1182,68 @@ export const naru = {
       {
         name: { ko: "Discovery", en: "Discovery" },
         when: { ko: "1일차", en: "Day 1" },
+        dayOffset: 0,
         body: {
           ko: "데이터를 열고, 그 데이터에서 문제를 찾아 정의합니다. 요구 강도가 가장 높은 날입니다.",
           en: "The data opens. You find the problem inside it and define it. The hardest day.",
         },
+        workshop: {
+          title: { ko: "Problem Discovery", en: "Problem Discovery" },
+          body: { ko: "워크플로우를 분해해 병목 짚는 법", en: "Taking a workflow apart to find the bottleneck" },
+        },
+        submit: { ko: "정의서", en: "The problem statement" },
       },
       {
         name: { ko: "Build", en: "Build" },
         when: { ko: "2일차", en: "Day 2" },
+        dayOffset: 1,
         body: {
           ko: "정의한 문제를 실제로 풉니다. PO 세션이 빌드 도중에 들어옵니다.",
           en: "You actually solve what you defined. The PO session lands mid-build.",
+        },
+        workshop: {
+          title: { ko: "PO session", en: "PO session" },
+          body: { ko: "정의를 기능으로 옮기는 판단 기준", en: "How a definition turns into a feature" },
         },
       },
       {
         name: { ko: "Refine", en: "Refine" },
         when: { ko: "3일차", en: "Day 3" },
+        dayOffset: 2,
         body: {
           ko: "검증받을 수 있는 상태로 다듬습니다. 이 시점부터 새 방향은 제안하지 않습니다.",
           en: "You get it to a state that can be verified. From here, no new directions.",
         },
+        workshop: {
+          title: { ko: "Pitching session", en: "Pitching session" },
+          body: { ko: "무엇을 증명할지와 발표 구조", en: "What to prove, and how to structure the pitch" },
+        },
+        submit: { ko: "결과물", en: "The build" },
       },
       {
         name: { ko: "Pitch", en: "Pitch" },
         when: { ko: "4일차", en: "Day 4" },
+        dayOffset: 3,
         body: {
           ko: "만든 것을 앞에서 증명합니다. 발표 5분, 질의 5분. 시상과 클로징까지 이 날입니다.",
           en: "You prove it out front. Five minutes to present, five to answer. Awards and closing the same day.",
         },
       },
-    ] as { name: Phrase; when: Phrase; body: Phrase }[],
+    ] as {
+      name: Phrase;
+      when: Phrase;
+      dayOffset: number | null;
+      body: Phrase;
+      workshop?: { title: Phrase; body: Phrase };
+      submit?: Phrase;
+    }[],
     tbdLabel: { ko: "아직 정해지지 않은 것", en: "Not settled yet" },
     // 2026-09-15: "이벤트 이름"이 이 목록에서 빠졌습니다. 크로싱 서울로
     // 정해졌기 때문입니다. 바로 아래 tbdNote가 "이 목록은 한 줄씩 채워집니다"
     // 라고 말하는데, 그 말이 지켜진 첫 사례입니다. 다음에 무엇이 정해지든
     // 같은 방식으로 여기서 한 줄 빼세요.
     tbd: [
-      { ko: "기간과 마지막 날", en: "How long, and the last day" },
+      // 2026-09-17: "기간과 마지막 날"이 빠졌습니다. 12/10~12/14로 확정(naruDates).
       { ko: "장소", en: "The venue" },
       { ko: "일정표", en: "The schedule" },
       { ko: "문제를 여는 회사", en: "The companies opening problems" },

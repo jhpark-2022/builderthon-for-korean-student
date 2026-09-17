@@ -7,21 +7,41 @@ import { useLocale } from "@/lib/LocaleContext";
 import { naru, naruLinks, openChatLabels, type Layer, type Stat, type RecordPhoto } from "@/data/naru";
 import type { Phrase } from "@/data/dictionary";
 import {
+  DECEMBER_EVENT_NAME,
   decemberEventLabel,
   formatDecemberDateLine,
-  formatDecemberStartShort,
+  formatDecemberDay,
 } from "@/lib/naruDates";
 import Chapter from "@/components/journey/Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
 // RecordTabs는 2026-09-16에 화면에서 내려갔습니다. 파일은 그대로 둡니다 -
 // 8월 정본을 직접 읽는 유일한 컴포넌트이고, 되살릴 자리가 여기 #record입니다.
-import { H2, H3, LABEL_HEADING, STATEMENT } from "@/components/ui/typography";
+import { H2, LABEL_HEADING, STATEMENT } from "@/components/ui/typography";
 import NaruMark from "@/components/ui/NaruMark";
 import MotionToggle from "@/components/ui/MotionToggle";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 나루 홈 (/).
+//
+// DECIDED 2026-09-17 (2차): 이벤트와 그룹을 나눕니다.
+//
+// 사용자의 지시: "이벤트와 그룹 설명은 분리. 맨 아래에 그룹 로고와 존재 목적,
+// 그 위에는 8월 이벤트 recap과 12월 이벤트 설명. 12월은 8월 사이트와 같은
+// 격식으로(빌더톤_2회차_기획.pdf)."
+//
+//   #top       크로싱 서울 히어로 (이름, 기간, 도시, 포지션, 오픈채팅)
+//   #record    8월의 기록 (숫자 다섯, 사진 열둘)
+//   #december  프로그램 (모양, 왜 서울인가, 아쉬웠던 넷과 답, 일정, 멘토링, 미정)
+//   #naru      나루 (로고, 태그라인, 변하지 않는 두 개)   ← 그룹은 여기서 시작
+//   #how       학생회와 기업 (세 층)
+//   #join      함께하는 길
+//   #people    (조건부)
+//
+// 아래 2026-09-15 주석의 "홈은 이벤트가 아니라 그룹"은 이제 반만 맞습니다.
+// 홈은 이벤트로 열고 그룹으로 닫습니다. 그래도 그 주석을 지우지 않은 이유는
+// 1~4번(등록 없음, 2회차 아님, 다리 은유 없음)이 여전히 유효하기 때문입니다.
+// 3번(12월 상세 없음)만 뒤집혔습니다: 기획이 나와서 초안 표시를 달고 싣습니다.
 //
 // DECIDED 2026-09-15: 홈은 이벤트가 아니라 그룹입니다.
 //
@@ -103,8 +123,10 @@ import MotionToggle from "@/components/ui/MotionToggle";
 //
 // ── 챕터 이음매 (Chapter의 기본 py-24 = 108px 위에 얹습니다) ────────────────
 //   (오버라이드 없음)              216px  기본. 다음 이야기로 넘어갑니다.
-//   pt-20 sm:pt-28 lg:pt-36      270px  장이 바뀝니다. #december 하나뿐.
-//   pt-24 sm:pt-32 lg:pt-44      306px  결론. #why 하나뿐. 페이지에서 가장 큽니다.
+//   pt-20 sm:pt-28 lg:pt-36      270px  장이 바뀝니다. #naru 하나뿐(이벤트 → 그룹).
+//   pt-24 sm:pt-32 lg:pt-44      306px  (2026-09-17 2차: 비어 있습니다. #why가
+//                                       #naru 안으로 들어가면서 결론 이음매가
+//                                       270px 자리와 합쳐졌습니다. 필요하면 씁니다.)
 //
 // 세 단계 말고 네 번째를 만들지 마세요. 이음매의 크기가 뜻을 나르려면 서로
 // 명백히 달라야 하고, 세 개가 그 조건을 만족하는 최대입니다.
@@ -157,73 +179,56 @@ export default function NaruHome() {
     {/* tabIndex=-1: skip link가 여기로 보낼 때 브라우저가 실제로 포커스를
         옮기도록 합니다. Tab 순서에는 들어가지 않습니다. */}
     <main id="main" tabIndex={-1} className="focus:outline-none">
-      {/* ── CH0 · 히어로 ─────────────────────────────────────────────────
-          로고는 배경 위에 얹히지 않습니다. 로고 가이드가 사진과 영상 위에
-          로고를 올리는 것을 금지하고 있어서, 8월 히어로의 메탈 휴먼 영상 대신
-          WebGL 필드만 뒤에 둡니다(app/page.tsx의 BackgroundMount). 필드는
-          나루 팔레트로 옮겨져 있습니다(lib/background/config.ts).
+      {/* ── CH0 · 크로싱 서울 히어로 (DECIDED 2026-09-17 2차) ──────────────
+          홈의 첫 화면이 그룹에서 이벤트로 바뀌었습니다. 8월 사이트의 히어로가
+          8월 이벤트였듯이, 여기는 크로싱 서울입니다. 나루 로고는 헤더에만 있고
+          큰 로고는 맨 아래 #naru로 내려갔습니다(로고 가이드: 배경 위에 얹지
+          않는다는 규칙은 그대로, WebGL 필드 위에는 글자만 있습니다).
 
-          pt-*는 고정 헤더를 피하는 여백입니다. 헤더가 맨 위에서는 투명해서
-          없어도 겹쳐 보이지는 않지만, 로고 상단이 바 뒤로 들어갑니다. */}
+          이름, 기간, 도시는 전부 lib/naruDates.ts에서 옵니다. 이 파일에 날짜를
+          쓰지 마세요.
+
+          주황 원장(2026-09-17 2차 갱신):
+            면  이 버튼(오픈채팅) 하나. 12월 아이브로의 주황 테두리는 #december로
+                내려가 그대로입니다.
+            점  #naru 코어 둘의 나루 표식, 배경 깊은 물의 점.
+            글자 기간 줄의 #F2B183 틴트.
+          늘리지 마세요. */}
       <Chapter id="top" align="center" className="pt-20 sm:pt-32">
-        {/* 마스터 반전. 최소 가로 120px 규칙을 지키려고 모바일에서도 176px
-            아래로 내려가지 않게 둡니다. PNG인 이유는 public/naru/README.md. */}
-        <Image
-          src="/naru/naru-master-rev.png"
-          alt={t(naru.hero.logoAlt)}
-          width={900}
-          height={900}
-          priority
-          className="mx-auto h-auto w-40 sm:w-56 lg:w-64"
-        />
-        {/* DECIDED 2026-09-15: 아이브로를 주황에서 보라로 내립니다. 히어로에
-            주황이 둘(이 알약 + 아래 CTA)이면 "점처럼 쓴다"는 규칙이 첫 화면에서
-            이미 깨지고, 위에서 주황 테두리를 먼저 쓴 만큼 아래 CTA의 당김이
-            줄어듭니다. 이 사이트에서 주황 면은 그 버튼 하나뿐이어야 합니다. */}
-        {/* 로고 → 아이브로. 스케일의 mt-6입니다(파일 위 리듬 주석). */}
-        <div className="mt-6">
-          <Eyebrow color="purple">{t(naru.hero.eyebrow)}</Eyebrow>
-        </div>
-        {/* 태그라인. 두 줄로 고정합니다. 한 줄로 흘리면 좁은 폭에서 네 줄까지
-            꺾이고, 두 문장이 한 덩어리로 읽힙니다. 이건 두 개의 선언입니다. */}
-        <h1 className="text-[clamp(2.05rem,6.4vw,4.25rem)] font-black leading-[1.15] tracking-tight text-white">
-          <span className="block break-keep">{t(naru.hero.titleLine1)}</span>
-          <span className="gradient-text block break-keep bg-gradient-to-r from-[#A99AD6] via-[#C79BB4] to-[#EE8A4F] bg-clip-text pb-[0.14em] text-transparent">
-            {t(naru.hero.titleLine2)}
-          </span>
+        {/* 보라입니다. 히어로에 주황이 둘(알약 + 버튼)이면 "점처럼 쓴다"는
+            규칙이 첫 화면에서 깨집니다(2026-09-15의 같은 결정). */}
+        <Eyebrow color="purple">{t(naru.eventHero.eyebrow)}</Eyebrow>
+        {/* 이름이 H1입니다. ko에서는 아래에 영문 표기를 한 줄 더 답니다.
+            en에서는 이름 자체가 영문이라 한 줄입니다. */}
+        <h1 className="text-[clamp(2.4rem,7vw,4.75rem)] font-black leading-[1.05] tracking-tight text-white">
+          <span className="block break-keep">{decemberEventLabel(locale)}</span>
+          {locale === "ko" && DECEMBER_EVENT_NAME && (
+            <span className="gradient-text mt-2 block bg-gradient-to-r from-[#A99AD6] via-[#C79BB4] to-[#EE8A4F] bg-clip-text pb-[0.14em] text-[0.42em] font-bold tracking-[0.12em] text-transparent">
+              {DECEMBER_EVENT_NAME.en}
+            </span>
+          )}
         </h1>
-        {/* {date}와 {name}은 lib/naruDates.ts에서 옵니다. 카피에 날짜와 이름을
-            박아 두면 DECEMBER_STARTS_AT이나 DECEMBER_EVENT_NAME을 고쳐도 이
-            문장만 남습니다. 둘 다 확정 전의 값이라 반드시 한 번 이상 바뀝니다. */}
-        <p className="mx-auto mt-6 max-w-xl break-keep text-sm leading-relaxed text-white/80 sm:text-base">
-          {t(naru.hero.sub)
-            .replace("{date}", formatDecemberStartShort(locale))
-            .replace("{name}", decemberEventLabel(locale))}
+        <p className="mt-6 text-base font-semibold tracking-tight text-[#F2B183] sm:text-lg">
+          {formatDecemberDateLine(locale)}
+        </p>
+        {/* 포지션 한 줄. 12월 챕터의 제목이던 문장입니다. 히어로에서는 이름
+            아래 두 번째로 큰 글자입니다. */}
+        <p className="mx-auto mt-6 max-w-2xl break-keep text-lg font-semibold leading-snug text-white sm:text-xl">
+          {t(naru.december.heading)}
+        </p>
+        <p className="mx-auto mt-4 max-w-xl break-keep text-sm leading-relaxed text-white/75 sm:text-base">
+          {t(naru.eventHero.sub)}
         </p>
         <div className="mt-12 flex flex-wrap justify-center gap-3">
-          {/* 주 CTA. 주황 원장(2026-09-16 실측 후 갱신):
-                면  이 버튼, 12월 아이브로. 둘뿐입니다.
-                점  #why 코어 둘의 나루 표식(NaruMark), 배경 깊은 물의 점.
-                글자 12월 날짜 줄과 아이브로의 #F2B183 틴트.
-              늘리지 마세요. 늘리면 로고 한가운데의 나루 점이 눈에 띄지 않습니다.
-              3층 다이어그램의 주황 워시는 같은 날 걷었습니다(LayerDiagram 주석).
-              글자를 남색으로 두는 것은 대비 때문입니다(주황 위 흰 글자는
-              2.50:1, 남색 글자는 5.63:1. 실측 2026-09-15). */}
+          <OpenChatLink t={t} src="naru-hero" label={openChatLabels.december} variant="hero" />
           <a
             href="#december"
             onClick={() => track("naru_cta", { src: "hero", to: "december" })}
-            className="group inline-flex items-center gap-2 rounded-full bg-naru-orange px-6 py-3.5 text-sm font-bold text-naru-navy transition hover:-translate-y-0.5 hover:bg-[#F29B67] sm:px-8 sm:text-base"
-          >
-            {t(naru.hero.ctaDecember)}
-            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </a>
-          <Link
-            href={naruLinks.archive}
-            onClick={() => track("naru_cta", { src: "hero", to: "archive" })}
             className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-6 py-3.5 text-sm font-semibold text-white/85 transition hover:-translate-y-0.5 hover:border-white/35 hover:bg-white/10 hover:text-white sm:px-8 sm:text-base"
           >
-            {t(naru.hero.ctaArchive)}
-          </Link>
+            {t(naru.eventHero.ctaProgram)}
+            <span aria-hidden className="text-white/50">↓</span>
+          </a>
         </div>
       </Chapter>
 
@@ -268,136 +273,177 @@ export default function NaruHome() {
         </div>
       </Chapter>
 
-      {/* ── CH2 · 다음 이벤트 ────────────────────────────────────────────── */}
-      {/* 반대로 벌립니다. 여기서 과거가 끝나고 미래가 시작합니다. 공백 자체가
-          "장이 바뀐다"를 말하게 두는 유일한 이음매입니다.
+      {/* ── CH2 · 프로그램 (DECIDED 2026-09-17 2차) ────────────────────────
+          12월 상세. 8월 사이트의 격식(프로그램 · 멘토링 · 달라지는 것)을
+          따릅니다. 출처는 빌더톤_2회차_기획.pdf. 카피 위치와 출처 매핑은
+          data/naru.ts의 december 블록 주석에 있습니다.
 
-          DECIDED 2026-09-17: #record 바로 뒤로 올라왔습니다. 위 문장이 처음으로
-          말 그대로가 됐어요. 전에는 그 사이에 #how가 있어서 과거(8월 실측)와
-          미래(12월 초안) 사이에 조직도가 끼어 있었고, 폰에서 12월 제목은
-          5.9화면, 본문의 첫 행동은 8.6화면이었습니다. 12월의 숫자는 전부
-          초안이라 8월의 실측에서 신뢰를 빌려야 하는데, 그 거리가 가장 짧은
-          자리가 여기입니다. 순서 근거는 data/naru.ts의 naruNav 주석에도. */}
-      <Chapter id="december" align="center" className="pt-20 sm:pt-28 lg:pt-36">
-        {/* 아이브로가 이름을 답니다. 이름이 별도의 줄이었을 때는 제목이 날짜라
-            이름이 갈 곳이 그 아래뿐이었는데, 제목이 포지션으로 바뀌면서 이름은
-            라벨 자리로 올라가는 편이 맞습니다.
-            이름과 달은 lib/naruDates.ts에서 조립합니다. DECEMBER_EVENT_NAME이
-            다시 null이 되어도 decemberEventLabel이 "12월 이벤트"를 돌려주므로
-            이 줄은 깨지지 않습니다(그 경우 naru.december.nameTbd를 다시
-            쓰세요. 키는 지우지 않았습니다). */}
-        {/* 달과 도시는 빼고 접두어 + 이름만 답니다. 브리프의 기준은 "2026.12
-            서울"까지 넣는 것이었는데, 375px에서 재 보니 두 줄로 접혔습니다
-            (실측 2026-09-15). 바로 아래 날짜 줄이 "2026년 12월 9일부터,
-            서울."을 이미 말하므로 여기서 한 번 더 말할 값이 없습니다.
-            formatDecemberMonth는 남겨 둡니다. 나중에 아이브로가 넓어질 자리가
-            생기거나 다른 곳에서 달만 필요할 때 쓸 값입니다. */}
+          순서: 모양(숫자 여섯) → 왜 서울인가 → 아쉬웠던 넷과 답 → 일정 →
+          멘토링(+ 약속이 지켜지는 지점, 재는 것) → 미정 → 문. 8월 사이트가
+          소개 → 프로그램 → 멘토링 → FAQ 순이었던 것과 같은 호흡입니다.
+
+          ⚠️ draftNote를 떼지 마세요. 확정된 것은 이름, 기간, 도시뿐입니다.
+          기본 이음매(216px). 장이 바뀌는 자리는 이제 #naru입니다. */}
+      <Chapter id="december" align="center">
         <Eyebrow color="orange">
           {`${t(naru.december.eyebrowPrefix)}\u2002${decemberEventLabel(locale)}`}
         </Eyebrow>
-        {/* 제목이 포지션을 말합니다. 전에는 날짜였는데, 이 이벤트에서 설명이
-            필요한 것은 언제가 아니라 무엇입니다. 날짜는 바로 아래 한 줄로
-            내려갔고 그 문자열도 naruDates가 만듭니다. */}
-        <h2 className={H2}>{t(naru.december.heading)}</h2>
-        <p className="mt-6 text-base font-semibold tracking-tight text-[#F2B183] sm:text-lg">
-          {formatDecemberDateLine(locale)}
+        <h2 className={H2}>{t(naru.december.programHeading)}</h2>
+        <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
+          {t(naru.december.shapeLead)}
         </p>
-        {/* 첫 문장이 부정입니다. 8월을 아는 사람은 이 자리에서 반드시
-            "2회차인가"를 묻고, 그 오해를 그대로 두면 아래 문장이 전부 그 전제
-            위에서 읽힙니다. */}
-        <p className="mx-auto mt-6 max-w-2xl break-keep text-base font-semibold leading-relaxed text-white/85">
+        {/* 8월을 아는 사람이 한 번은 묻는 것. 리드 바로 아래 작은 줄입니다.
+            "변하지 않는 두 개"가 #naru 안의 #why로 갑니다. */}
+        <p className="mx-auto mt-4 max-w-2xl break-keep text-sm leading-relaxed text-white/55">
           <TermLink text={t(naru.december.notSequel)} term={t(naru.december.notSequelTerm)} href="#why" />
         </p>
 
-        {/* ── 이 챕터의 주 행동 (DECIDED 2026-09-17) ───────────────────────
-            전에는 챕터 맨 끝, 미정 목록 아래에 메일 링크와 같은 고스트로 나란히
-            있었습니다. 히어로의 주 CTA를 눌러 여기 착지한 사람은 제목만 보고
-            3화면을 더 내려가야 누를 것을 만났고, 만나서는 "소식 받기"와
-            "출제사 문의"를 같은 무게로 봤어요. 등록이 없는 페이지에서 이 버튼이
-            참가자의 유일한 문입니다. 제목 바로 아래, 흰 면으로 둡니다.
-            ctaNote가 참가 조건(스크리닝 없음)을 버튼 바로 위에서 말합니다. */}
-        <p className="mx-auto mt-12 max-w-2xl break-keep text-sm text-white/55">{t(naru.december.ctaNote)}</p>
-        <div className="mt-4 flex justify-center">
-          <OpenChatLink t={t} src="naru-december" label={openChatLabels.december} variant="primary" />
-        </div>
-        {/* ── 이번 회차의 모양 ─────────────────────────────────────────
-            2026-09-16: 여기 있던 것은 문단 여덟 개였습니다 - lead, 달라지는 것
-            셋, 왜 국경을 여는가 둘, 누가 오는가, 그리고 "이벤트가 끝난 뒤에 할
-            일" 세 단계. 전부 맞는 말이었고 전부 글이었어요. 12월을 모르는
-            사람이 그 여덟 문단을 다 읽어야 12월이 무엇인지 알 수 있었습니다.
-
-            12월 기획 초안(원페이저 v1, 2026-09-10)이 실제로 말하는 것은 한
-            줄입니다: raw data에서 문제를 찾는 것부터 증명까지, 한 사이클을
-            닷새로 압축한다. 그 한 줄과 그것의 모양만 싣습니다.
-
-            키는 전부 data/naru.ts에 있습니다(changes · why · who · after ·
-            afterNote). 확정된 뒤 /seoul 상세 페이지가 생기면 그쪽이 받을
-            내용이에요.
-
-            ⚠️ draftNote를 이 블록에서 떼지 마세요. 아래 숫자 중 확정된 것은
-            하나도 없습니다. */}
-        <p className="mx-auto mt-12 max-w-2xl break-keep text-base leading-relaxed text-white/75">
-          {t(naru.december.shapeLead)}
-        </p>
-
         <StatRow stats={naru.december.shape} t={t} className="mt-12 lg:grid-cols-6" />
-        {/* /55입니다. /45는 실제 배경 위에서 4.38:1이라 AA를 넘지 못합니다
-            (globals.css의 하한 주석). 하필 "이 숫자는 확정이 아니다"라는
-            고지가 페이지에서 가장 안 읽히는 색이었습니다. */}
         <p className="mt-4 text-xs text-white/55">{t(naru.december.draftNote)}</p>
 
-        {/* 스테이지 다섯. 날짜가 아니라 순서입니다 - 초안의 12/10~12/14와 확정된
-            시작일 12월 9일이 아직 맞지 않아서(lib/naruDates.ts), 달력을 두 번
-            말하면 바로 위 날짜 줄과 싸웁니다. */}
+        {/* 왜 서울인가. 기획 03의 셋. */}
         <div className="mx-auto mt-12 max-w-5xl text-left">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
-            {t(naru.december.stagesLabel)}
+          <h3 className={LABEL_HEADING}>{t(naru.december.reasonsLabel)}</h3>
+          <ol role="list" className="mt-5 grid gap-4 md:grid-cols-3">
+            {naru.december.reasons.map((r) => (
+              <li key={r.title.en} className="rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-5">
+                <h4 className="break-keep text-base font-bold leading-snug text-white">{t(r.title)}</h4>
+                <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">{t(r.body)}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        {/* 8월에 아쉬웠던 넷과 12월의 답. record.gaps를 읽습니다(8월의 관찰이라
+            정본이 거기 있습니다). 9/16에 내려갔던 카드가 답이 붙어 돌아왔습니다. */}
+        <div className="mx-auto mt-12 max-w-5xl text-left">
+          <h3 className={LABEL_HEADING}>{t(naru.december.gapsHeading)}</h3>
+          <p className="mt-3 max-w-2xl break-keep text-sm leading-relaxed text-white/70">
+            {t(naru.december.gapsLead)}
           </p>
-          {/* role="list": 위 notDoing과 같은 이유입니다.
+          <ol role="list" className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {naru.record.gaps.map((gap) => (
+              <li key={gap.title.en} className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-5">
+                <h4 className="break-keep text-base font-bold leading-snug text-white">{t(gap.title)}</h4>
+                <dl className="mt-4 flex flex-1 flex-col gap-3">
+                  <div>
+                    <dt className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-white/50">
+                      {t(naru.december.augustLabel)}
+                    </dt>
+                    <dd className="mt-1 break-keep text-sm leading-relaxed text-white/65">{t(gap.body)}</dd>
+                  </div>
+                  <div className="border-t border-white/10 pt-3">
+                    <dt className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#F2B183]">
+                      {t(naru.december.decemberLabel)}
+                    </dt>
+                    <dd className="mt-1 break-keep text-sm leading-relaxed text-white/80">
+                      {gap.answer ? t(gap.answer) : t(naru.record.answerPending)}
+                    </dd>
+                  </div>
+                </dl>
+              </li>
+            ))}
+          </ol>
+        </div>
 
-              REMOVED 2026-09-16 (2차): 칸 맨 위의 00~04 번호 줄.
-
-              그 줄이 하는 일이 없었습니다. 순서는 바로 아래 when("본 일정 전",
-              "1일차"...)이 글로 말하고, 그게 원래 그 사실이 있어야 할 자리예요.
-              게다가 화면은 00부터 세는데 <ol>은 1부터 세서, VoiceOver가
-              "2 of 5"라고 읽는 칸에 눈에는 01이 보였습니다. aria-hidden으로
-              가려 두고 있었는데, 가려야 하는 것은 대개 없어도 되는 것입니다.
-
-              이제 칸은 이름 / 언제 / 무슨 일 셋입니다. 번호가 쓰던 줄 하나가
-              그대로 사라졌어요. */}
+        {/* 일정. 스테이지 다섯, 날짜는 naruDates에서 셉니다. 제출 지점 둘과
+            워크샵 셋이 칸 안에 붙습니다(기획 04). */}
+        <div className="mx-auto mt-12 max-w-5xl text-left">
+          <h3 className={LABEL_HEADING}>{t(naru.december.scheduleLabel)}</h3>
+          <p className="mt-3 max-w-2xl break-keep text-sm leading-relaxed text-white/70">
+            {t(naru.december.scheduleLead)}
+          </p>
           <ol role="list" className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {naru.december.stages.map((stage) => (
               <li
                 key={stage.name.en}
                 className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4"
               >
-                <p className="text-sm font-bold text-white">{t(stage.name)}</p>
-                <p className="mt-0.5 text-xs text-accent">{t(stage.when)}</p>
-                <p className="mt-3 break-keep text-sm leading-relaxed text-white/65">{t(stage.body)}</p>
+                <p className="text-xs font-semibold text-[#F2B183]">
+                  {stage.dayOffset === null ? t(stage.when) : formatDecemberDay(locale, stage.dayOffset)}
+                </p>
+                <p className="mt-1 text-base font-bold text-white">{t(stage.name)}</p>
+                <p className="mt-3 flex-1 break-keep text-sm leading-relaxed text-white/65">{t(stage.body)}</p>
+                {stage.workshop && (
+                  <div className="mt-4 border-t border-white/10 pt-3">
+                    <p className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
+                      {t(naru.december.workshopLabel)}
+                    </p>
+                    <p className="mt-1 text-sm font-semibold text-white/85">{t(stage.workshop.title)}</p>
+                    <p className="mt-0.5 break-keep text-xs leading-snug text-white/55">{t(stage.workshop.body)}</p>
+                  </div>
+                )}
+                {stage.submit && (
+                  <p className="mt-3 inline-flex w-fit rounded-full border border-[#F2B183]/35 bg-naru-orange/10 px-2.5 py-1 text-[0.68rem] font-semibold text-[#F2B183]">
+                    {`${t(naru.december.submitLabel)}\u2002${t(stage.submit)}`}
+                  </p>
+                )}
               </li>
             ))}
           </ol>
+          <p className="mt-4 break-keep text-xs text-white/55">{t(naru.december.workshopNote)}</p>
         </div>
 
-        {/* 아직 정해지지 않은 것. 이 챕터에서 가장 정직하고 가장 값이 큰
-            블록입니다. 자세한 이유는 data/naru.ts의 tbdLabel 주석에 있습니다.
-            시각적 무게는 after 블록보다 가볍게 둡니다. 여기는 목록이지
-            주장이 아닙니다. */}
-        <div className="mx-auto mt-12 max-w-3xl rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-6 text-left">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/55">
-            {t(naru.december.tbdLabel)}
+        {/* 멘토링. 규칙 넷(기획 04 General Mentoring), 그리고 코어가 지켜지는
+            지점(기획 02 EXECUTION). 후자는 why.exec/measure를 그대로 읽습니다.
+            그 문장들은 이벤트의 실행에 관한 것이라 그룹이 아니라 여기입니다. */}
+        <div className="mx-auto mt-12 max-w-5xl text-left">
+          <h3 className={LABEL_HEADING}>{t(naru.december.mentoringLabel)}</h3>
+          <p className="mt-3 break-keep text-lg font-bold leading-snug text-white sm:text-xl">
+            {t(naru.december.mentoringHeading)}
           </p>
+          <p className="mt-3 max-w-2xl break-keep text-sm leading-relaxed text-white/70">
+            {t(naru.december.mentoringLead)}
+          </p>
+          <ul role="list" className="mt-5 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+            {naru.december.mentoringRules.map((rule, i) => (
+              <li key={i} className="flex gap-2.5 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 break-keep text-sm leading-relaxed text-white/80">
+                <span aria-hidden className="mt-[0.55em] h-1 w-1 shrink-0 rounded-full bg-[#F2B183]" />
+                {t(rule)}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="mx-auto mt-12 max-w-5xl border-t border-white/10 pt-12">
+          <h3 className={LABEL_HEADING}>{t(naru.why.execLabel)}</h3>
+          <p className="mx-auto mt-3 max-w-2xl break-keep text-base leading-relaxed text-white/70">
+            {t(naru.why.execLead)}
+          </p>
+          {/* 둘뿐이고 나란히 있어서 번호는 세어 주지 않습니다. 순서는 ol이
+              나릅니다. item.index 키는 data/naru.ts에 그대로 있습니다. */}
+          <ol role="list" className="mt-12 grid gap-10 text-left md:grid-cols-2 md:gap-14">
+            {naru.why.exec.map((item) => (
+              <li key={item.index} className="border-t border-white/10 pt-6">
+                <h4 className="break-keep text-lg font-bold leading-snug text-white sm:text-xl">
+                  {t(item.title)}
+                </h4>
+                <p className="mt-4 break-keep text-base leading-relaxed text-white/70">{t(item.body)}</p>
+              </li>
+            ))}
+          </ol>
+          {/* 재는 것. 이 챕터에서 가장 검증 가능한 문장이고, 기업이 우리를 읽을
+              때 실제로 붙잡는 줄입니다. 라벨 : 문장이라 dl. 문장은 경첩과 같은
+              H3, 같은 축. 숫자를 지어내지 마세요. 8월의 실측은 #record에 있고
+              여기서는 무엇을 보는지만 말합니다. */}
+          <dl className="mt-12 border-t border-white/10 pt-12">
+            <dt className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
+              {t(naru.why.measureLabel)}
+            </dt>
+            <dd className="mx-auto mt-4 max-w-3xl break-keep text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl">
+              {t(naru.why.measure)}
+            </dd>
+          </dl>
+        </div>
+
+
+        {/* 아직 정해지지 않은 것. 이 챕터에서 가장 정직하고 가장 값이 큰
+            블록입니다. 자세한 이유는 data/naru.ts의 tbdLabel 주석에 있습니다. */}
+        <div className="mx-auto mt-12 max-w-3xl rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-6 text-left">
+          <h3 className={LABEL_HEADING}>{t(naru.december.tbdLabel)}</h3>
           <ul role="list" className="mt-4 flex flex-wrap gap-2">
             {naru.december.tbd.map((item) => (
               <li
                 key={item.en}
-                /* border-white/10입니다. /12가 아니라(2026-09-16).
-                   Tailwind v3의 불투명도 수식어는 opacity 스케일(5의 배수)이나
-                   대괄호 임의값만 받습니다. border-white/12는 그 둘 다 아니라서
-                   CSS가 한 줄도 만들어지지 않고, 그러면 border 폭만 남아 색이
-                   Preflight 기본값 #e5e7eb로 떨어집니다. 의도한 1.3:1 대신
-                   14.2:1짜리 거의 흰 테두리가 그려지고 있었어요.
-                   대괄호로 쓰고 싶으면 border-white/[0.12]입니다. */
                 className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-white/70"
               >
                 {t(item)}
@@ -409,22 +455,128 @@ export default function NaruHome() {
           </p>
         </div>
 
-        {/* 출제사와 후원의 문. 참가자의 문(위 흰 버튼)보다 한 단계 아래라
-            텍스트 링크입니다. 메일 제목은 #join 기업 카드와 같습니다
-            (naruLinks.sponsor 주석). */}
-        <p className="mt-12 text-sm">
+        {/* 이 챕터의 문. 참가자는 오픈채팅(흰 면), 출제사와 후원은 메일(텍스트).
+            히어로에서 이미 주황으로 한 번 열었으니 여기는 흰 면입니다. */}
+        <p className="mx-auto mt-12 max-w-2xl break-keep text-sm text-white/55">{t(naru.december.ctaNote)}</p>
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
+          <OpenChatLink t={t} src="naru-december" label={openChatLabels.december} variant="primary" />
           <a
             href={naruLinks.sponsor}
             onClick={() => track("naru_mail", { src: "december" })}
-            className="inline-flex items-center gap-1.5 font-medium text-white/75 underline-offset-4 transition hover:text-white hover:underline"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-white/75 underline-offset-4 transition hover:text-white hover:underline"
           >
             {t(naru.december.ctaMail)}
             <span aria-hidden>→</span>
           </a>
-        </p>
+        </div>
       </Chapter>
 
-      {/* ── CH3 · 어떻게 일하는가 ────────────────────────────────────────── */}
+      {/* ── CH3 · 나루 (DECIDED 2026-09-17 2차) ─────────────────────────────
+          여기서 이벤트가 끝나고 그룹이 시작합니다. 270px 이음매가 그 말을 합니다.
+          로고(마스터 반전, 배경 위가 아니라 글자 위 여백에), 아이브로, 태그라인,
+          그리고 존재 목적: 변하지 않는 두 개. 판 둘의 판형과 크기는 2026-09-17
+          1~3차 그대로입니다(그때의 주석은 data/naru.ts와 체인지로그에).
+          #why 앵커는 코어 판 목록에 남겨 옛 링크와 notSequel의 링크가 닿습니다.
+          exec와 measure는 #december의 멘토링 블록으로 갔습니다. 이벤트의
+          실행에 관한 문장이라서요. 여기 남은 것은 코어 둘, 경첩, 마지막 줄. */}
+      <Chapter id="naru" align="center" className="pt-20 sm:pt-28 lg:pt-36">
+        <Image
+          src="/naru/naru-master-rev.png"
+          alt={t(naru.hero.logoAlt)}
+          width={900}
+          height={900}
+          className="mx-auto h-auto w-40 sm:w-52"
+        />
+        <div className="mt-6">
+          <Eyebrow color="purple">{t(naru.hero.eyebrow)}</Eyebrow>
+        </div>
+        {/* 태그라인. 두 줄 고정(히어로에 있던 때의 이유 그대로: 두 개의 선언). */}
+        <h2 className={H2}>
+          <span className="block break-keep">{t(naru.hero.titleLine1)}</span>
+          <span className="gradient-text block break-keep bg-gradient-to-r from-[#A99AD6] via-[#C79BB4] to-[#EE8A4F] bg-clip-text pb-[0.14em] text-transparent">
+            {t(naru.hero.titleLine2)}
+          </span>
+        </h2>
+        <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
+          {t(naru.group.lead)}
+        </p>
+        {/* 서명 헤어라인. 이 페이지에서 한 번. */}
+        <div
+          aria-hidden
+          className="mx-auto mt-12 h-[2px] w-full max-w-[52rem] bg-gradient-to-r from-accent to-accent-strong"
+        />
+        <div id="why" className="mt-12">
+          <Eyebrow color="purple">{t(naru.why.eyebrow)}</Eyebrow>
+          {/* H2 토큰의 clamp와 같이 쓰면 CSS 순서상 어느 쪽이 이길지 정해져
+              있지 않아서(둘 다 임의값 클래스), 크기는 따로 씁니다. 태그라인이
+              이미 H2라 이 제목은 한 단 아래입니다. */}
+          <h3 className="mx-auto max-w-[52rem] break-keep text-[clamp(1.5rem,3.2vw,2.25rem)] font-bold tracking-tight text-white">
+            {t(naru.why.heading)}
+          </h3>
+        </div>
+        {/* 코어 둘. 판 두 장.
+            ol인 이유: 순서가 뜻입니다. 01이 문턱이고 02가 증명이며, 바로 아래
+            note가 그 둘이 한 쌍이라고 말합니다. 번호는 그리지 않습니다(9/16
+            2차의 이유 그대로). 나루 점이 제목 첫 글자 앞에 섭니다.
+            점의 크기가 em인 이유: STATEMENT가 clamp(22.5~29px, 3차)라 px로 박으면
+            좁은 화면에서 점이 제목보다 커집니다. 0.8em이면 18~23px이고 로고
+            가이드의 하한 18px을 좁은 쪽 끝에서 정확히 지킵니다. mt는 leading
+            1.2의 첫 줄 한가운데.
+            keeps가 dl인 이유: 항목 이름과 값이지 제목이 아닙니다. */}
+        <ol role="list" className="mx-auto mt-12 max-w-5xl text-left">
+          {naru.why.cores.map((core, i) => (
+            <li
+              key={core.index}
+              className={`grid gap-8 py-8 sm:py-10 md:grid-cols-[1.4fr_1fr] md:gap-14 lg:py-12 ${
+                i > 0 ? "border-t border-white/10" : ""
+              }`}
+            >
+              <div>
+                <h3 className={`flex items-start gap-4 ${STATEMENT}`}>
+                  <NaruMark className="mt-[0.2em] h-[0.8em] w-[0.8em]" />
+                  <span>{t(core.title)}</span>
+                </h3>
+                {/* 첫 줄은 그 자체가 코어의 문장입니다("스크리닝이 없고, 순위가
+                    없습니다. 못해도 되는 자리입니다."). 제목 다음으로 큽니다. */}
+                <p className="mt-6 break-keep text-lg font-medium leading-snug text-white/90 sm:text-xl">
+                  {t(core.lines[0])}
+                </p>
+                <p className="mt-4 max-w-xl break-keep text-base leading-relaxed text-white/70">
+                  {t(core.lines[1])}
+                </p>
+              </div>
+              <dl className="border-t border-white/10 pt-6 md:border-l md:border-t-0 md:pl-10 md:pt-2">
+                <dt className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
+                  {t(naru.why.keepsLabel)}
+                </dt>
+                <dd className="mt-3 break-keep text-base leading-relaxed text-white/80">{t(core.keeps)}</dd>
+              </dl>
+            </li>
+          ))}
+        </ol>
+
+        {/* 경첩. 두 개가 함께 있어야 하는 이유. 판 두 장을 닫는 헤어라인
+            아래, 챕터 제목과 같은 축에 H3로 섭니다. 먼저 각각을 읽고, 그
+            다음에 둘이 한 쌍인 이유를 읽습니다. */}
+        <div className="mx-auto max-w-5xl border-t border-white/10 pt-12">
+          <p className="mx-auto max-w-3xl break-keep text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl">
+            {t(naru.why.note)}
+          </p>
+          <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/70">
+            {t(naru.why.noteBody)}
+          </p>
+        </div>
+
+        {/* 마지막 줄. 페이지 전체가 여기서 끝납니다. 위의 두 개를 빼면 전부
+            방법이고, 방법은 바뀝니다(매니페스토 IV). 이 문장이 8일이 4일이 되는
+            12월을 미리 설명합니다. */}
+        <div className="mx-auto mt-12 max-w-2xl">
+          <h3 className={LABEL_HEADING}>{t(naru.why.agendaLabel)}</h3>
+          <p className="mt-3 break-keep text-base leading-relaxed text-white/75">{t(naru.why.agenda)}</p>
+        </div>
+      </Chapter>
+
+      {/* ── CH4 · 어떻게 일하는가 ────────────────────────────────────────── */}
       {/* DECIDED 2026-09-17: #december 뒤로 내려왔습니다(전에는 #record와
           #december 사이). 이 챕터의 독자는 학생회 임원, 기업 담당자, 운영진,
           곧 바로 아래 #join의 독자입니다. 12월을 예비하는 문장은 한 줄도 없었고,
@@ -503,7 +655,7 @@ export default function NaruHome() {
         </div>
       </Chapter>
 
-      {/* ── CH4 · 함께하는 길 ────────────────────────────────────────────── */}
+      {/* ── CH5 · 함께하는 길 ────────────────────────────────────────────── */}
       <Chapter id="join" align="center">
         <Eyebrow color="purple">{t(naru.join.eyebrow)}</Eyebrow>
         <h2 className={H2}>{t(naru.join.heading)}</h2>
@@ -567,7 +719,7 @@ export default function NaruHome() {
         </div>
       </Chapter>
 
-      {/* ── CH5 · 여기서 나온 사람 (조건부) ──────────────────────────────
+      {/* ── CH6 · 여기서 나온 사람 (조건부) ──────────────────────────────
           stories가 비어 있으면 챕터 자체를 그리지 않습니다. 제목만 있고 안이
           빈 섹션은 "아직 아무도 없다"로 읽히는데, 8월에 스물한 팀이 발표했으니
           그건 사실이 아닙니다. 사실은 아직 이야기를 받아 두지 못했다는 것이고,
@@ -594,197 +746,6 @@ export default function NaruHome() {
           </div>
         </Chapter>
       )}
-
-      {/* ── CH6 · 왜 존재하는가 ──────────────────────────────────────────
-          DECIDED 2026-09-16: 맨 위에서 맨 아래로 내려왔습니다.
-
-          이 챕터는 이 페이지에서 가장 중요한 두 문장을 갖고 있는데, 맨 위에
-          있을 때 그 두 문장은 구호로 읽혔습니다. 안전하게 도전할 자리와 자기
-          가치를 증명할 기회는 누구나 말할 수 있고, 아직 아무것도 보여 주지
-          않은 페이지의 첫 화면에서 하는 그 말은 값이 없습니다.
-
-          프로그램이 먼저 좋아야 메시지에 값이 생깁니다. 8월에 실제로 있었던
-          일(#record)과 12월에 실제로 할 일(#december)을 보고 내려온 사람에게,
-          이 두 문장은 같은 문장이 아닙니다. 그때는 선언이 아니라 방금 본
-          것들의 이유가 돼요.
-
-          그래서 여기서는 길어져도 됩니다. 페이지의 다른 챕터가 전부 짧아진
-          것과 반대 방향인데, 같은 규칙의 결과입니다: 그 자리가 아니면 말할 수
-          없는 것을 말합니다. 여기가 그것을 말하는 유일한 자리예요.
-
-          구조는 12월 기획 슬라이드의 코어 장을 그대로 씁니다. 왼쪽이 약속,
-          오른쪽이 그 약속이 지켜지는 지점. 약속만 있으면 구호이고, 재는 것이
-          붙어야 검증 가능한 문장이 됩니다.
-
-          #people(조건부)보다도 아래입니다. 그 챕터가 채워지면 사람의 이야기가
-          이 두 문장 바로 앞에 서고, 그게 이 페이지가 끝나는 가장 좋은 방법
-          입니다. */}
-      {/* ── 강조 장치 (2026-09-16) ──────────────────────────────────────
-          이 챕터는 페이지의 결론인데 여느 챕터처럼 읽혔습니다. 원인은 크기가
-          아니라 위계였어요. 안에 비슷한 무게의 블록이 여섯 개 있었고, 전부
-          페이지의 다른 곳에서 네 번에서 아홉 번씩 쓰는 어휘였습니다. 챕터가
-          표시되지 않았고, 챕터 안에서도 아무것도 표시되지 않았습니다.
-
-          고친 것 다섯.
-
-          1. 다가가는 공백. lg에서 이음매가 306px입니다. 12월(270px)보다 크고
-             페이지에서 가장 큽니다. 공백은 대비도 팔레트도 쓰지 않는 유일한
-             강조 수단이고, 결론에는 멈춤 뒤에 도착하는 것이 맞습니다.
-          2. 카드를 코어 둘에만 남깁니다. exec·measure·note에서 상자를 걷고
-             헤어라인과 여백으로 나눴습니다. 변하지 않는 두 개가 챕터에서
-             면을 가진 유일한 물체가 되고, 그게 주장을 배치로 그린 것입니다.
-          3. 서명 헤어라인. from-accent to-accent-strong 2px입니다. 이미
-             모달들이 쓰는 장치인데 홈에서는 한 번도 쓰지 않았어요. 보라에서
-             자주로 흐르는 방향이 로고 그라데이션과 같습니다. 이 페이지에서
-             여기 한 번만 씁니다. 다른 챕터로 복사하지 마세요.
-          4. 나루 점. 코어 번호 자리에 링과 점(components/ui/NaruMark.tsx).
-             배경의 깊은 물이 이미 같은 표식을 그리고 있어서, 머리의 로고 →
-             물속의 점 → 여기로 고리가 닫힙니다.
-          5. 순서를 되돌립니다. 코어 → note → [긴 공백] → exec → agenda.
-             note("문턱이 낮아야 커지고...")는 코어 둘이 한 쌍인 이유를
-             말하는 문장이라 그 둘 바로 아래에 있어야 합니다. 9/16 오전에
-             exec를 끼워 넣으면서 사이가 벌어져 있었어요.
-
-          ⚠️ 주황을 여기 더하지 마세요. 나루 점 둘이 더한 주황은 3층
-          다이어그램의 주황 워시를 걷어내서 이미 값을 치렀습니다(LayerDiagram
-          주석). 페이지의 주황 면은 히어로 CTA와 12월 아이브로 둘뿐입니다. */}
-      {/* ── 판형 (DECIDED 2026-09-17) ────────────────────────────────────
-          위 "강조 장치 다섯" 중 2(카드를 코어 둘에만)와 4(나루 점)는 살아
-          있고, 카드 자체가 없어졌습니다. 사용자가 이 챕터를 "가장 중요한데
-          가장 안 이쁘게 그려진 곳"이라고 했고, 실측 화면이 그 말을 뒷받침했어요.
-          코어 둘은 카드 안 H3에 14px 본문이었고, 그 아래로 왼쪽 정렬된 회색
-          소문자 블록이 하나의 얇은 헤어라인만 사이에 두고 이어졌습니다. 챕터
-          제목은 가운데, 본문은 왼쪽. 결론이 아니라 문서였습니다.
-
-          바꾼 원칙 셋.
-          1. 코어 둘은 카드가 아니라 판입니다. 전면 폭, 세로로 두 장. 제목은
-             STATEMENT(H2와 H3 사이의 단), 첫 줄은 그 자체가 문장이라 큰 글자,
-             둘째 줄이 본문. "그래서 지키는 것"은 md부터 오른쪽 열에 세로
-             헤어라인을 두고 섭니다. 12월 기획 슬라이드의 코어 장과 같은
-             배치(왼쪽 약속, 오른쪽 지켜지는 지점)를 이번엔 실제로 그렸습니다.
-          2. 문장은 가운데로 돌아옵니다. 경첩(note), 재는 것(measure),
-             마지막 줄(agenda)은 챕터 제목과 같은 축에 섭니다. 크기는
-             text-xl sm:text-2xl(2차에서 H3에서 내림. 아래 주석).
-             왼쪽 정렬은 판 안쪽과 exec 두 열에만 남습니다.
-          3. 이 챕터에서 text-sm을 쓰지 않습니다. 결론의 본문이 페이지에서
-             가장 작은 글씨였습니다. 바닥은 text-base(18px)입니다.
-
-          여전히 하지 않은 것: 상자, 주황 면, 두 번째 그라데이션 선. 판을 나누는
-          것은 1px 흰 헤어라인뿐이고, 서명 헤어라인은 제목 아래 한 번입니다.
-
-          2026-09-17 (2차): 전부 한 단 내렸습니다. 사용자가 "또 너무 큰데"라고
-          했습니다. STATEMENT 51.75 → 38px, 첫 줄 2xl → xl, 경첩과 재는 것
-          H3 → 2xl, exec 제목 2xl → xl, 판 세로 여백 16 → 12. 판형은 그대로.
-          크기가 아니라 배치가 이 챕터를 결론으로 만든다는 것이 2차의 교훈입니다. */}
-      <Chapter id="why" align="center" className="pt-24 sm:pt-32 lg:pt-44">
-        <Eyebrow color="purple">{t(naru.why.eyebrow)}</Eyebrow>
-        <h2 className={H2}>{t(naru.why.heading)}</h2>
-        {/* 서명 헤어라인. max-w는 H2의 것과 같아야 합니다(typography.ts).
-            장식이라 1.4.11의 대상이 아닙니다. 빛 번짐을 더하지 마세요. */}
-        <div
-          aria-hidden
-          className="mx-auto mt-6 h-[2px] w-full max-w-[52rem] bg-gradient-to-r from-accent to-accent-strong"
-        />
-
-        {/* 코어 둘. 판 두 장.
-            ol인 이유: 순서가 뜻입니다. 01이 문턱이고 02가 증명이며, 바로 아래
-            note가 그 둘이 한 쌍이라고 말합니다. 번호는 그리지 않습니다(9/16
-            2차의 이유 그대로). 나루 점이 제목 첫 글자 앞에 섭니다.
-            점의 크기가 em인 이유: STATEMENT가 clamp(22.5~29px, 3차)라 px로 박으면
-            좁은 화면에서 점이 제목보다 커집니다. 0.8em이면 18~23px이고 로고
-            가이드의 하한 18px을 좁은 쪽 끝에서 정확히 지킵니다. mt는 leading
-            1.2의 첫 줄 한가운데.
-            keeps가 dl인 이유: 항목 이름과 값이지 제목이 아닙니다. */}
-        <ol role="list" className="mx-auto mt-12 max-w-5xl text-left">
-          {naru.why.cores.map((core, i) => (
-            <li
-              key={core.index}
-              className={`grid gap-8 py-8 sm:py-10 md:grid-cols-[1.4fr_1fr] md:gap-14 lg:py-12 ${
-                i > 0 ? "border-t border-white/10" : ""
-              }`}
-            >
-              <div>
-                <h3 className={`flex items-start gap-4 ${STATEMENT}`}>
-                  <NaruMark className="mt-[0.2em] h-[0.8em] w-[0.8em]" />
-                  <span>{t(core.title)}</span>
-                </h3>
-                {/* 첫 줄은 그 자체가 코어의 문장입니다("스크리닝이 없고, 순위가
-                    없습니다. 못해도 되는 자리입니다."). 제목 다음으로 큽니다. */}
-                <p className="mt-6 break-keep text-lg font-medium leading-snug text-white/90 sm:text-xl">
-                  {t(core.lines[0])}
-                </p>
-                <p className="mt-4 max-w-xl break-keep text-base leading-relaxed text-white/70">
-                  {t(core.lines[1])}
-                </p>
-              </div>
-              <dl className="border-t border-white/10 pt-6 md:border-l md:border-t-0 md:pl-10 md:pt-2">
-                <dt className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
-                  {t(naru.why.keepsLabel)}
-                </dt>
-                <dd className="mt-3 break-keep text-base leading-relaxed text-white/80">{t(core.keeps)}</dd>
-              </dl>
-            </li>
-          ))}
-        </ol>
-
-        {/* 경첩. 두 개가 함께 있어야 하는 이유. 판 두 장을 닫는 헤어라인
-            아래, 챕터 제목과 같은 축에 H3로 섭니다. 먼저 각각을 읽고, 그
-            다음에 둘이 한 쌍인 이유를 읽습니다. */}
-        <div className="mx-auto max-w-5xl border-t border-white/10 pt-12">
-          <p className="mx-auto max-w-3xl break-keep text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl">
-            {t(naru.why.note)}
-          </p>
-          <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/70">
-            {t(naru.why.noteBody)}
-          </p>
-        </div>
-
-        {/* ── 약속이 지켜지는 지점 ───────────────────────────────────────
-            위 둘이 약속이고 여기가 그 약속이 깨지거나 지켜지는 자리입니다.
-            멘토링 한 시간과 듣는 사람, 그리고 그래서 무엇을 재느냐.
-
-            mt-24는 부속으로 내리는 신호입니다. 여기에 선을 하나 더 긋지
-            마세요. 위에 이미 서명 헤어라인이 있고, 선이 둘이면 둘째 선은
-            강등이 아니라 또 하나의 괄호로 읽힙니다. */}
-        <div className="mx-auto mt-24 max-w-5xl sm:mt-32">
-          <h3 className={LABEL_HEADING}>{t(naru.why.execLabel)}</h3>
-          <p className="mx-auto mt-3 max-w-2xl break-keep text-base leading-relaxed text-white/70">
-            {t(naru.why.execLead)}
-          </p>
-          {/* 둘뿐이고 나란히 있어서 번호는 세어 주지 않습니다. 순서는 ol이
-              나릅니다. item.index 키는 data/naru.ts에 그대로 있습니다. */}
-          <ol role="list" className="mt-12 grid gap-10 text-left md:grid-cols-2 md:gap-14">
-            {naru.why.exec.map((item) => (
-              <li key={item.index} className="border-t border-white/10 pt-6">
-                <h4 className="break-keep text-lg font-bold leading-snug text-white sm:text-xl">
-                  {t(item.title)}
-                </h4>
-                <p className="mt-4 break-keep text-base leading-relaxed text-white/70">{t(item.body)}</p>
-              </li>
-            ))}
-          </ol>
-          {/* 재는 것. 이 챕터에서 가장 검증 가능한 문장이고, 기업이 우리를 읽을
-              때 실제로 붙잡는 줄입니다. 라벨 : 문장이라 dl. 문장은 경첩과 같은
-              H3, 같은 축. 숫자를 지어내지 마세요. 8월의 실측은 #record에 있고
-              여기서는 무엇을 보는지만 말합니다. */}
-          <dl className="mt-12 border-t border-white/10 pt-12">
-            <dt className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
-              {t(naru.why.measureLabel)}
-            </dt>
-            <dd className="mx-auto mt-4 max-w-3xl break-keep text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl">
-              {t(naru.why.measure)}
-            </dd>
-          </dl>
-        </div>
-
-        {/* 마지막 줄. 페이지 전체가 여기서 끝납니다. 위의 두 개를 빼면 전부
-            방법이고, 방법은 바뀝니다(매니페스토 IV). 이 문장이 8일이 4일이 되는
-            12월을 미리 설명합니다. */}
-        <div className="mx-auto mt-12 max-w-2xl">
-          <h3 className={LABEL_HEADING}>{t(naru.why.agendaLabel)}</h3>
-          <p className="mt-3 break-keep text-base leading-relaxed text-white/75">{t(naru.why.agenda)}</p>
-        </div>
-      </Chapter>
 
       </main>
 

@@ -44,7 +44,7 @@ export default function OpenChatLink({
   // 링크가 눌렸는지 가르는 값이라, 자리를 새로 만들면 여기에 이름을 더합니다.
   // naru-* = 나루 홈의 자리들 (2026-09-15). 8월 페이지의 계열과 섞이지 않도록
   // 접두사를 답니다. 두 페이지의 퍼널은 따로 읽어야 합니다.
-  src: "band" | "footer" | "wrap" | "naru-december" | "naru-join" | "naru-footer";
+  src: "band" | "footer" | "wrap" | "naru-hero" | "naru-december" | "naru-join" | "naru-footer";
   className?: string;
   // DECIDED 2026-09-17: "primary"가 생겼습니다. 위 주석의 "이 칩은 어디에 있든
   // 같은 무게"는 등록 버튼이 있는 페이지의 규칙이었습니다. 나루 홈 #december에는
@@ -53,9 +53,27 @@ export default function OpenChatLink({
   // 히어로 주 CTA를 눌러 착지한 사람이 3화면을 더 내려가야 이 칩을 만나기도
   // 했고요. 그 한 자리만 흰 면입니다(#record의 아카이브 버튼과 같은 면. 주황은
   // 히어로의 원장이 막습니다). /2026-08과 나머지 자리는 기본값(ghost) 그대로.
-  variant?: "ghost" | "primary";
+  // "hero" (2026-09-17 2차): 홈 첫 화면의 주 CTA. 히어로가 크로싱 서울이 되면서
+  // 이 자리의 행동이 앵커에서 오픈채팅으로 바뀌었고, 히어로 주황 면은 그대로
+  // 이 버튼 하나입니다(주황 원장은 NaruHome 히어로 주석).
+  variant?: "ghost" | "primary" | "hero";
 }) {
   if (!links.openChat) return null;
+  if (variant === "hero") {
+    return (
+      <a
+        href={links.openChat}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => track("openchat_click", { src })}
+        className={`group inline-flex items-center gap-2 rounded-full bg-naru-orange px-6 py-3.5 text-sm font-bold text-naru-navy transition hover:-translate-y-0.5 hover:bg-[#F29B67] sm:px-8 sm:text-base ${className}`}
+      >
+        <ChatGlyph className="h-4 w-4 shrink-0" />
+        {t(label ?? dict.register.openChatCta)}
+        <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+      </a>
+    );
+  }
   if (variant === "primary") {
     return (
       <a

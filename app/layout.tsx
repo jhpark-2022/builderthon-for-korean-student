@@ -42,10 +42,10 @@ const SITE_URL = "https://builderthon-for-korean-student.vercel.app";
 // 이 사이트가 무엇인지 말하는 유일한 줄이라, "12월 9일 서울"까지만 쓰면
 // 한국에서 열리는 행사로만 읽힙니다.
 //
-// TODO: confirm. 12월 종료일이 확정되면 "12월 9일"을 기간으로 바꿀지 봅니다.
+// 2026-09-17: 기간이 확정되어(12/10~12/14) 기간으로 바꿨습니다.
 const SITE_NAME = "나루 NARU";
 const SITE_DESCRIPTION =
-  `싱가포르 한인 학생 빌더 커뮤니티. 안전하게 도전할 자리와 자기 가치를 증명할 경험을 만듭니다. 다음 이벤트 ${DECEMBER_EVENT_NAME?.ko ?? "크로싱 서울"}은 2026년 12월 9일 서울에서 시작합니다. 한국의 대학생과 해외의 한인 유학생이 국경과 상관없이 만나는 자리입니다.`;
+  `싱가포르 한인 학생 빌더 커뮤니티. 안전하게 도전할 자리와 자기 가치를 증명할 경험을 만듭니다. 다음 이벤트 ${DECEMBER_EVENT_NAME?.ko ?? "크로싱 서울"}은 2026년 12월 10일부터 14일까지 서울에서 열립니다. 한국의 대학생과 해외의 한인 유학생이 국경과 상관없이 만나는 자리입니다.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

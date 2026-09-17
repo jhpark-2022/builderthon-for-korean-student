@@ -275,3 +275,83 @@ Day 5 열 장은 이미 있는 `day5-session`과 같은 세션이었습니다.
 아래 첫 줄(`text-lg sm:text-xl`, 20~22.5px)보다 한 단 큽니다. 나루 점은 0.8em으로
 올려 좁은 쪽 끝에서 하한 18px을 정확히 지킵니다. 판형과 나머지 크기는 2차
 그대로. 챕터 높이 390 / 1440: 2,797 / 2,137px.
+
+---
+
+## 추가 (같은 날) · 이벤트와 그룹을 나눕니다
+
+사용자: "이벤트와 그룹 설명은 분리해 주어야 함. 맨 아래에 그룹 로고랑 존재
+목적이 있고, 그 위에는 원래처럼 8월 이벤트 recap과 12월 이벤트 설명. 12월은 8월
+이벤트 사이트와 같은 격식으로(빌더톤_2회차_기획.pdf)."
+
+확인한 결정 셋: 히어로는 12월 이벤트. 12월 상세는 기획 PDF 전부(초안 표시).
+날짜는 12/10~12/14로 확정.
+
+### 구조
+
+```
+전                                   후
+#top       나루 로고 + 태그라인         #top       크로싱 서울 (이름, 기간, 도시, 포지션, 오픈채팅)
+#record    8월의 기록                  #record    8월의 기록 (그대로)
+#december  12월 (숫자 6 + 스테이지 5)   #december  프로그램 (모양, 왜 서울인가, 아쉬웠던 넷과 답,
+#how       세 층                                  일정, 멘토링, 약속이 지켜지는 지점, 미정, 문)
+#join      함께                        #naru      나루 (로고, 태그라인, 변하지 않는 두 개, 경첩, 방법은 바뀝니다)
+#why       변하지 않는 두 개            #how       학생회와 기업 (그대로)
+                                      #join      함께 (그대로)
+```
+
+위 셋이 이벤트, 아래 셋이 그룹. 270px 이음매가 `#december`에서 `#naru`로 옮겨
+가 "여기서 이벤트가 끝나고 그룹이 시작한다"를 말합니다. `#why` 챕터는 없어졌고
+코어 판 둘은 `#naru` 안에 있습니다. 안쪽 앵커 `id="why"`가 남아 옛 링크와
+notSequel의 링크는 그대로 닿습니다. 헤더 앵커: 크로싱 서울 · 8월의 기록 ·
+프로그램 · 나루 · 학생회와 기업 · 함께.
+
+### 히어로
+
+8월 사이트의 히어로가 8월 이벤트였듯이, 크로싱 서울입니다. H1이 이름(ko에서는
+영문 표기 한 줄 더), 기간 줄, 포지션("국경과 상관없이…"), 한 줄 설명, 그리고
+오픈채팅(주황 면, `OpenChatLink variant="hero"`)과 "프로그램 보기 ↓". 나루 로고는
+헤더에만 있습니다. 아이브로는 보라(히어로에 주황 둘 금지, 9/15 결정 그대로).
+
+### 프로그램 (`#december`), 기획 PDF 매핑
+
+| 기획 | 화면 |
+| --- | --- |
+| 01 성과 | `#record` (전부터 있음) |
+| 02 코어 VISION & MISSION | `#naru`의 코어 둘 |
+| 02 코어 EXECUTION (멘토링 퀄리티, 들어주는 사람, 재는 것) | `#december` 멘토링 아래 "약속이 지켜지는 지점" (`why.exec`, `why.measure`를 그대로 읽음) |
+| 03 제안 (왜 셋) | "왜 서울인가" 카드 셋 (`december.reasons`) |
+| 03 아쉬웠던 넷 → 12월 | "8월에 아쉬웠던 넷, 그리고 12월의 답" (`record.gaps`, 답 둘을 기획에서 채움) |
+| 04 일정 (스테이지 5, 워크샵 3, 제출 2, General Mentoring) | 일정 카드 5 (`stages[].dayOffset/workshop/submit`), 멘토링 규칙 4 (`december.mentoringRules`) |
+| 05 실행 (팀이 알아볼 세 곳) | 내부용. 싣지 않음 |
+
+전부 초안 표시(`draftNote`)와 미정 목록이 붙어 있습니다. 미정 목록에서 "기간과
+마지막 날"이 빠졌습니다(확정).
+
+### 날짜
+
+`lib/naruDates.ts`: `DECEMBER_STARTS_AT` 12/09 → **12/10**, `DECEMBER_ENDS_AT`
+null → **12/14**. 새 `formatDecemberDay(locale, offset)`로 스테이지 날짜를 셉니다
+(카피에 날짜 문자열 없음). 따라 바뀐 곳: `app/layout.tsx` 설명, `app/opengraph-image.tsx`
+(10–14 Dec 2026), `data/dictionary.ts`의 `wrap.next`와 `wrap.cardLines`(아카이브가
+12월을 말하는 유일한 자리, 런칭 브리프가 허용한 예외).
+
+> TODO: confirm. 기획의 스테이지는 12/13 Pitch에서 끝나는데 기간은 12/14까지
+> 입니다. 하루가 비어 있습니다. 14일이 무엇인지(예비일, 클로징, 이동일) 정해질
+> 때까지 화면은 기간만 말하고 14일에 무엇이 있다고 쓰지 않습니다.
+
+### 바뀐 파일
+
+- `data/naru.ts`: `naruNav`, `eventHero`, `group`, `december.program*`/`reasons`/
+  `gaps*`/`schedule*`/`workshop*`/`submitLabel`/`mentoring*`, `stages`(오프셋·워크샵·
+  제출), `tbd`, `record.gaps[2..3].answer`.
+- `components/home/NaruHome.tsx`: 히어로·프로그램·나루 챕터 새로 씀. `#record`,
+  `#how`, `#join`, `#people`, 푸터는 그대로. `#why` 챕터 제거(판은 `#naru`로).
+- `components/ui/OpenChatLink.tsx`: `variant="hero"`, src `naru-hero`.
+- `lib/naruDates.ts`, `app/layout.tsx`, `app/opengraph-image.tsx`, `data/dictionary.ts`.
+
+### 확인 방법
+
+`npx tsc --noEmit` 통과. 가로 넘침 0(390, 1440). ko/en 전체 페이지 스크린샷은
+세션 스크래치패드 `split/`. 문서 길이 390: 16,072px, 1440: 11,307px. `#december`가
+폰에서 6,436px로 가장 깁니다. 8월 사이트의 프로그램 챕터와 같은 사정입니다.

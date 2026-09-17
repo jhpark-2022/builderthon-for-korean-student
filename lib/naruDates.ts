@@ -55,7 +55,10 @@ export const DECEMBER_EVENT_NAME: { ko: string; en: string } | null = {
  * 있습니다. 그 문서는 내부 공유용 초안이고, 확정된 것은 12월 9일 시작이라는
  * 사실뿐입니다. TODO: confirm. 초안과 확정 사이의 차이를 기획 팀과 맞출 것.
  */
-export const DECEMBER_STARTS_AT = "2026-12-09";
+// DECIDED 2026-09-17: 12월 10일. 기획(빌더톤_2회차_기획.pdf 04 일정)의 12/10~12/14를
+// 사용자가 확정했습니다. 그 전까지는 12/9 시작만 확정이었고 초안과 어긋나
+// 있었어요(아래 옛 주석). 스테이지 날짜는 이 값에서 formatDecemberDay로 셉니다.
+export const DECEMBER_STARTS_AT = "2026-12-10";
 
 /**
  * 12월 이벤트 종료일. **아직 확정되지 않았습니다.**
@@ -64,7 +67,12 @@ export const DECEMBER_STARTS_AT = "2026-12-09";
  * 아닙니다. null인 동안 화면은 "12월 9일부터"까지만 그립니다. 없는 날짜를
  * 지어내 채우지 마세요. 참가자가 항공권을 그 날짜로 끊습니다.
  */
-export const DECEMBER_ENDS_AT: string | null = null;
+// DECIDED 2026-09-17: 12월 14일. 위와 같은 결정입니다. null로 돌아가면 화면은
+// 다시 "부터"까지만 그립니다.
+// TODO: confirm. 기획의 스테이지는 12/13 Pitch에서 끝나는데 기간은 12/14까지입니다.
+// 하루가 비어 있습니다. 14일에 무엇이 있는지(예비일, 클로징, 이동일) 기획 팀과
+// 맞추기 전까지 화면은 기간만 말하고 14일에 무엇이 있다고 쓰지 않습니다.
+export const DECEMBER_ENDS_AT: string | null = "2026-12-14";
 
 /** 열리는 도시. 확정. */
 export const DECEMBER_CITY = { ko: "서울", en: "Seoul" } as const;
@@ -167,4 +175,19 @@ export function formatDecemberDateLine(locale: Locale): string {
   // 영문은 문장 첫 글자를 올립니다. formatDecemberRange가 "from ..."으로
   // 시작하는데 여기서는 그 조각이 문장의 처음입니다.
   return `${range.charAt(0).toUpperCase()}${range.slice(1)}, ${city}.`;
+}
+
+/**
+ * 시작일에서 n일 뒤의 날짜. 스테이지 칸의 "12월 10일" / "10 Dec".
+ *
+ * ADDED 2026-09-17. 스테이지마다 날짜를 카피에 박아 두면 DECEMBER_STARTS_AT을
+ * 고쳐도 그 다섯 줄만 남습니다. 오프셋으로 셉니다. 월을 넘어가면 그대로
+ * 넘어갑니다(12월 30일 + 3 = 1월 2일).
+ */
+export function formatDecemberDay(locale: Locale, offset: number): string {
+  const [y, m, d] = parts(DECEMBER_STARTS_AT);
+  const date = new Date(Date.UTC(y, m - 1, d + offset));
+  const mm = date.getUTCMonth() + 1;
+  const dd = date.getUTCDate();
+  return locale === "ko" ? `${mm}월 ${dd}일` : `${dd} ${EN_MONTHS[mm - 1].slice(0, 3)}`;
 }
