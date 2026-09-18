@@ -252,6 +252,8 @@ export interface JoinCard {
   id: string;
   who: Phrase;
   lines: [Phrase, Phrase];
+  /** 이 자리가 얻는 것. 기업 카드만(2026-09-18). 있으면 lines[0] 아래 작은 목록으로. */
+  gets?: Phrase[];
   doorLabel: Phrase;
   door: string;
   /** 오픈채팅이 창구인 카드는 href 대신 이 플래그를 켭니다. */
@@ -597,6 +599,10 @@ export const naru = {
       },
     ] as Stat[],
     photosLabel: { ko: "8일의 모양", en: "The shape of eight days" },
+    // 깔때기 한 줄의 aria-label(감사 반영 브리프 5.1). 값은 stats에서 읽고 이 문장은 낭독용.
+    funnelAria: { ko: "8월의 깔때기: 신청 74명, Day 1 참석 59명, 시작 25팀, 발표 21팀, 출제사에 직접 자료 요청 9팀", en: "The August funnel: 74 applied, 59 showed up on Day 1, 25 teams started, 21 presented, 9 asked the problem owner for data" },
+    // 8월 챕터 끝, 아카이브 버튼 옆 텍스트 링크(감사 반영 브리프 5.4). #join-alumni로 갑니다.
+    alumniLink: { ko: "8월에 오셨던 분은", en: "If you were there in August" },
     // ── 언론 (DECIDED 2026-09-17) ─────────────────────────────────────────
     // 사용자 요청: 8월 페이지에 있는 기사 둘을 여기서도 보여 주고, 행사 뒤 싱가포르
     // 현지 주류 매체(CNA, The Straits Times)에도 실렸다는 것을 더한다.
@@ -1061,6 +1067,9 @@ export const naru = {
     ] as Layer[],
     doesLabel: { ko: "하는 것", en: "What they do" },
     getsLabel: { ko: "얻는 것", en: "What they get" },
+    // 3층 다이어그램 상자 안의 "얻는 것" 라벨(2026-09-18). 후원 상자에 얻는 것이 없다는 것이
+    // ux-researcher의 P1이었습니다. 세 상자 모두에 같은 줄을 둡니다.
+    getsShort: { ko: "얻는 것", en: "Gets" },
     nameLabel: { ko: "이름의 두 겹", en: "Two meanings in the name" },
     nameLines: [
       {
@@ -1643,6 +1652,17 @@ export const naru = {
           {
             ko: "후원사에서 시작해 채용 경로, 발주자, 팀의 첫 파트너까지 갈 수 있습니다. 어디까지 가느냐는 각 단계의 성립 조건이 결정합니다.",
             en: "You can start as a sponsor and go on to a hiring channel, a client with a real brief, a team's first partner. How far it goes is decided by what each step requires.",
+          },
+        ],
+        // 얻는 것 두 줄(감사 반영 브리프 7.1). 8월 사실만. 지어내지 않습니다.
+        gets: [
+          {
+            ko: "8월 출제사는 9팀에게 직접 자료 요청을 받았고, CNA와 The Straits Times에 실렸습니다.",
+            en: "In August the problem owner had nine teams ask it directly for data, and it ran in CNA and The Straits Times.",
+          },
+          {
+            ko: "문제와 데이터를 여는 회사가 참가자를 가장 먼저 만납니다.",
+            en: "The company that opens a problem and its data is the first to meet the participants.",
           },
         ],
         doorLabel: { ko: "메일로 문의", en: "Email us" },

@@ -29,7 +29,9 @@ import { useHeroSplit } from "@/components/shared/useHeroSplit";
 import Chapter from "@/components/journey/Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
-// RecordTabs는 화면에 없습니다(2026-09-17, 사용자: 8월 챕터는 바로 아카이브로 보낸다).
+// RecordTabs: 2026-09-17에 뺐다가(사용자: 바로 아카이브로) 2026-09-18 감사 반영 브리프 5.2로
+// 다시 넣었습니다. 멘토 / 연사와 피드백 패널 둘만.
+import RecordTabs from "@/components/home/RecordTabs";
 import { H2, H3, LABEL_HEADING, GRADIENT_TEXT } from "@/components/ui/typography";
 import NaruMark from "@/components/ui/NaruMark";
 import MotionToggle from "@/components/ui/MotionToggle";
@@ -676,7 +678,14 @@ export default function NaruHome() {
         {/* 숫자 다섯. 마지막 하나만 설명 줄을 답니다. "9팀이 출제사에 직접
             자료를 요청했다"는 숫자만으로는 무슨 뜻인지 알 수 없고, 그 뜻이
             이 회차에서 가장 중요한 신호입니다. 시키지 않았는데 했어요. */}
-        <StatRow stats={naru.record.stats} t={t} className="mt-12 lg:grid-cols-5" />
+        {/* 2026-09-18 (감사 반영 브리프 5.1): 같은 크기 타일 다섯 → 스텝 차트 한 줄(74 → 59 → 25 →
+            21 → 9). 핵심인 "9팀 · 시키지 않았습니다"는 아래 큰 숫자로 따로. StatRow는 그대로 둡니다. */}
+        <Funnel stats={naru.record.stats} t={t} aria={t(naru.record.funnelAria)} className="mt-12" />
+
+        {/* 사람(감사 반영 브리프 5.2, 모바일 브리프 3): 멘토 / 연사와 피드백 패널. 2026-09-17에 사용자가
+            "바로 아카이브로"라며 뺐던 것을 2026-09-18 브리프가 다시 넣으라고 했습니다. 더 최근의
+            지시를 따릅니다. 링크드인은 8월 정본(dictionary.ts)에서 직접 읽습니다. */}
+        <RecordTabs only={["mentors", "people"]} compact />
 
         {/* DECIDED 2026-09-17 (사용자): 사람 탭(RecordTabs)은 넣지 않습니다. "이런 식으로
             너무 디테일하게 넣지는 말고, 이 챕터는 그냥 바로 8월로 보내줘." 이 챕터는
@@ -1217,20 +1226,31 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
       // 여기서 걷은 주황이 #why의 나루 점 둘 값을 치릅니다. 페이지 전체의
       // 주황 면적은 오히려 줄었고, 주황 면은 히어로 CTA와 12월 아이브로
       // 둘로 내려갔습니다.
-      className={`flex-1 rounded-2xl border px-4 py-5 text-center ${
+      className={`flex-1 rounded-2xl border px-4 py-3 text-left md:py-5 md:text-center ${
         center
           ? "border-white/20 bg-white/[0.06]"
           : "border-white/10 bg-white/[0.04]"
       }`}
     >
       {/* 역할 라벨은 8월 칩 문법(2026-09-17). 가운데(주최)만 한 단 밝은 칩. */}
-      <p>
-        <Chip tone={center ? "violet" : "neutral"} className="!text-xs uppercase tracking-[0.14em] lg:!text-[0.62rem]">{t(layer.role)}</Chip>
+      {/* 역할 라벨은 "한글 주 + 영문 소문자 보조"(감사 반영 브리프 8, 영문 라벨 규칙). 대문자 자간
+          라벨은 아이브로에만. */}
+      {/* 폰은 칩과 이름을 한 줄에, 내는 것은 숨기고 얻는 것만(나루 챕터 길이 목표). md부터 그 전 그대로. */}
+      <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 md:block">
+        <p>
+          <Chip tone="outline" className={`!text-xs tracking-[0.02em] lg:!text-[0.62rem] ${center ? "!border-accent/40 !text-accent" : ""}`}><RoleLabel text={t(layer.role)} /></Chip>
+        </p>
+        <p className="break-keep text-sm font-bold leading-snug text-white sm:text-base md:mt-1.5">
+          {t(layer.who)}
+        </p>
+      </div>
+      <p className="mt-2 hidden break-keep text-xs leading-snug text-white/55 md:block">{t(layer.brings)}</p>
+      {/* 얻는 것 한 줄(2026-09-18). 후원 상자에 내는 것만 있고 얻는 것이 없었습니다(ux-researcher P1). */}
+      <p className="mt-2 break-keep text-xs leading-snug text-white/70">
+        <span className="font-bold text-accent">{t(naru.how.getsShort)}</span>
+        {"\u2002"}
+        {t(layer.gets)}
       </p>
-      <p className="mt-1.5 break-keep text-sm font-bold leading-snug text-white sm:text-base">
-        {t(layer.who)}
-      </p>
-      <p className="mt-2 break-keep text-xs leading-snug text-white/55">{t(layer.brings)}</p>
     </div>
   );
 
