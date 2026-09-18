@@ -308,8 +308,9 @@ export const naru = {
       seconds: { ko: "초", en: "sec" },
     },
     // 카운트다운 두 줄(2026-09-18, 사용자): 서울 0시 기준과 싱가포르 0시 기준.
+    // 2026-09-18 저녁(모바일 수정 브리프 2): 서울 기준 한 줄만 씁니다. singapore 키는 둡니다.
     countdownRows: {
-      seoul: { ko: "서울 기준 KST", en: "Seoul KST" },
+      seoul: { ko: "서울 기준", en: "Seoul time" },
       singapore: { ko: "싱가포르 기준 SGT", en: "Singapore SGT" },
     },
     started: { ko: "시작했습니다", en: "It has started" },

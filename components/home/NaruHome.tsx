@@ -11,7 +11,6 @@ import { motion } from "framer-motion";
 import {
   DECEMBER_EVENT_NAME,
   DECEMBER_STARTS_AT_MS,
-  DECEMBER_STARTS_AT_SG_MS,
   decemberEventLabel,
   formatDecemberDateLine,
   formatDecemberDay,
@@ -196,59 +195,47 @@ function TermLink({ text, term, href }: { text: string; term: string; href: stri
 // 열리는 날)입니다. 나머지는 프로그램 챕터의 목록이 갖습니다.
 // ─────────────────────────────────────────────────────────────────────────────
 function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => string; locale: "ko" | "en"; className?: string }) {
-  type Left = { d: number; h: number; m: number; s: number } | "started";
-  const [left, setLeft] = useState<{ seoul: Left; sg: Left } | null>(null);
+  type Left = { d: number; h: number; m: number } | "started";
+  const [left, setLeft] = useState<Left | null>(null);
   useEffect(() => {
-    const calc = (target: number): Left => {
-      const ms = target - Date.now();
-      if (ms <= 0) return "started";
-      const secs = Math.floor(ms / 1000);
-      return { d: Math.floor(secs / 86400), h: Math.floor((secs % 86400) / 3600), m: Math.floor((secs % 3600) / 60), s: secs % 60 };
+    const tick = () => {
+      const ms = DECEMBER_STARTS_AT_MS - Date.now();
+      if (ms <= 0) { setLeft("started"); return; }
+      const mins = Math.floor(ms / 60000);
+      setLeft({ d: Math.floor(mins / 1440), h: Math.floor((mins % 1440) / 60), m: mins % 60 });
     };
-    const tick = () => setLeft({ seoul: calc(DECEMBER_STARTS_AT_MS), sg: calc(DECEMBER_STARTS_AT_SG_MS) });
     tick();
-    const id = window.setInterval(tick, 1000);
+    const id = window.setInterval(tick, 30000);
     return () => window.clearInterval(id);
   }, []);
   void locale;
   const units = naru.eventHero.countdownUnits;
   const pad = (n: number) => String(n).padStart(2, "0");
-  const cells = (v: Left | undefined): { v: string; u: Phrase }[] =>
-    v && v !== "started"
-      ? [{ v: String(v.d), u: units.days }, { v: pad(v.h), u: units.hours }, { v: pad(v.m), u: units.minutes }, { v: pad(v.s), u: units.seconds }]
-      : [{ v: "--", u: units.days }, { v: "--", u: units.hours }, { v: "--", u: units.minutes }, { v: "--", u: units.seconds }];
-  // DECIDED 2026-09-18 (사용자): 상자를 꽉 채우고, 서울 기준과 싱가포르 기준 두 줄.
-  // 시작 시각은 12월 10일 0시. 서울(+9)과 싱가포르(+8)에서 그 0시가 한 시간 다릅니다.
-  // 숫자 넷이 상자 폭을 나눠 갖습니다(grid). tabular-nums라 매초 흔들리지 않습니다.
-  const rows: { key: "seoul" | "sg"; label: Phrase }[] = [
-    { key: "seoul", label: naru.eventHero.countdownRows.seoul },
-    { key: "sg", label: naru.eventHero.countdownRows.singapore },
-  ];
+  // DECIDED 2026-09-18 (모바일 수정 브리프 2): 한 줄. 서울 기준만(싱가포르 줄은 시차 한 시간에
+  // 날짜가 같아 뺌). 초는 뺐고, 폰은 일만, sm부터 일·시간·분. 이날 아침의 두 줄·초 단위는
+  // 닷새짜리 이벤트에 과했습니다.
+  const cells: { v: string; u: Phrase; phone: boolean }[] =
+    left && left !== "started"
+      ? [{ v: String(left.d), u: units.days, phone: true }, { v: pad(left.h), u: units.hours, phone: false }, { v: pad(left.m), u: units.minutes, phone: false }]
+      : [{ v: "--", u: units.days, phone: true }, { v: "--", u: units.hours, phone: false }, { v: "--", u: units.minutes, phone: false }];
   return (
-    <div className={`w-full rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4 text-left sm:px-6 ${className}`}>
-      <p className="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-[#F2B183]">{t(naru.eventHero.countdownLabel)}</p>
-      <div className="mt-3 divide-y divide-white/10">
-        {rows.map((row) => {
-          const v = left?.[row.key];
-          return (
-            <div key={row.key} className="grid gap-y-1.5 py-2.5 first:pt-0 last:pb-0 sm:grid-cols-[minmax(0,7.5rem)_1fr] sm:items-center sm:gap-x-4">
-              <span className="break-keep text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-white/55">{t(row.label)}</span>
-              {v === "started" ? (
-                <p className="text-xl font-black text-white">{t(naru.eventHero.started)}</p>
-              ) : (
-                <div className="grid grid-cols-4 gap-2">
-                  {cells(v).map((c, i) => (
-                    <div key={i} className="flex items-baseline gap-1">
-                      <span className="text-[1.6rem] font-black leading-none tabular-nums text-white sm:text-[2.2rem]">{c.v}</span>
-                      <span className="text-[0.65rem] font-semibold text-white/55">{t(c.u)}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+    <div className={`flex w-full flex-wrap items-center gap-x-5 gap-y-2 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-3.5 text-left ${className}`}>
+      <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#F2B183]">
+        {t(naru.eventHero.countdownLabel)}
+        <span className="text-white/45">{` · ${t(naru.eventHero.countdownRows.seoul)}`}</span>
+      </p>
+      {left === "started" ? (
+        <p className="text-xl font-black text-white">{t(naru.eventHero.started)}</p>
+      ) : (
+        <div className="flex items-baseline gap-4">
+          {cells.map((c, i) => (
+            <div key={i} className={`items-baseline gap-1 ${c.phone ? "flex" : "hidden sm:flex"}`}>
+              <span className="text-[2rem] font-black leading-none tabular-nums text-white">{c.v}</span>
+              <span className="text-xs font-semibold text-white/55">{t(c.u)}</span>
             </div>
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -370,9 +357,11 @@ export default function NaruHome() {
           </motion.div>
         </div>
         {/* 폰(lg 아래): 카피 바로 다음에 사진 넷(2×2), 그 아래 카운트다운. */}
+        {/* 폰(lg 아래): CTA → 카운트다운 한 줄 → 사진 넷. 데스크톱(왼쪽 단 CTA 아래)과 같은
+            순서(모바일 수정 브리프 2). */}
         <div className="px-6 sm:px-10 lg:hidden">
-          <HeroPhotos photos={naru.eventHero.photos} t={t} className="mt-8" />
-          <CountdownPanel t={t} locale={locale} className="mt-6" />
+          <CountdownPanel t={t} locale={locale} className="mt-8" />
+          <HeroPhotos photos={naru.eventHero.photos} t={t} className="mt-6" />
         </div>
       </Chapter>
 
@@ -483,16 +472,25 @@ export default function NaruHome() {
                   ))}
                 </div>
                 <h4 className="mt-3 text-[15px] font-bold leading-snug text-white">{t(stage.name)}</h4>
-                <p className="mt-1.5 break-keep text-[13px] leading-relaxed text-white/65">{t(stage.body)}</p>
+                {/* 폰(lg 아래)에서는 두 줄까지(모바일 수정 브리프 1.4). "→ 그날의 한 줄"은 그대로. */}
+                <p className="mt-1.5 line-clamp-2 break-keep text-[13px] leading-relaxed text-white/65 lg:line-clamp-none">{t(stage.body)}</p>
                 <p className="mt-2 flex gap-1.5 break-keep text-[12.5px] font-semibold leading-snug text-emerald-200/85">
                   <span aria-hidden className="text-emerald-300/70">→</span>
                   {t(stage.line)}
                 </p>
+                {/* 폰: 워크샵을 카드 안 한 줄로(라벨 + 이름). 상자 셋은 lg부터(모바일 수정 브리프 1.1). */}
+                {stage.workshop && (
+                  <p className="mt-2 flex flex-wrap items-baseline gap-x-1.5 text-xs text-white/70 lg:hidden">
+                    <span className="font-bold uppercase tracking-[0.14em] text-accent">{t(naru.december.workshopLabel)}</span>
+                    <span className="font-semibold text-white/85">{t(stage.workshop.title)}</span>
+                  </p>
+                )}
               </li>
             ))}
           </ol>
-          {/* 워크샵 줄(5차 배치 그대로). 상자는 8월 Glass 계열의 연보라 테두리. */}
-          <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {/* 워크샵 줄(5차 배치 그대로). 상자는 8월 Glass 계열의 연보라 테두리. lg부터만
+              (폰에서는 Day 카드 안의 한 줄이 대신합니다). */}
+          <div className="mt-3 hidden gap-3 lg:grid lg:grid-cols-5">
             <p className="hidden break-keep text-xs leading-relaxed text-white/55 lg:block lg:self-center lg:pr-2">
               {t(naru.december.workshopNote)}
             </p>
@@ -511,7 +509,6 @@ export default function NaruHome() {
               ),
             )}
           </div>
-          <p className="mt-3 break-keep text-xs text-white/55 lg:hidden">{t(naru.december.workshopNote)}</p>
           {/* General Mentoring. 초록 테두리 강조 상자(8월 "과정이 기록됩니다" 문법). */}
           <div className="mt-3 flex flex-col gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-4 lg:flex-row lg:items-center lg:gap-8 lg:px-7">
             <div className="shrink-0 lg:w-56">
@@ -544,15 +541,17 @@ export default function NaruHome() {
             제목이 아쉬웠던 것, 본문이 12월의 답. */}
         <div className="mx-auto mt-12 max-w-5xl text-left">
           <h3 className={LABEL_HEADING}>{t(naru.december.gapsHeading)}</h3>
-          {/* 폰에서도 2열입니다(길이 상한 때문에, 2026-09-17). 카드가 배지·제목·
-              한 줄이라 160px 폭에서도 읽힙니다. */}
-          <ol role="list" className="mt-5 grid grid-cols-2 gap-3 sm:gap-4">
+          {/* 폰은 1열(모바일 수정 브리프 1.3). 2열이면 150px 폭에서 "12월" 답이 서너 글자씩
+              끊겼습니다. 폰에서는 번호 배지가 제목 왼쪽에 인라인. sm부터 2열, 배지 위. */}
+          <ol role="list" className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
             {naru.record.gaps.map((gap, i) => (
               <li key={gap.title.en} className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-3.5 transition hover:border-accent/30 hover:bg-white/[0.05] sm:p-4">
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15 text-sm font-black text-accent">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h4 className="mt-2.5 break-keep text-[15px] font-bold leading-snug text-white sm:text-base">{t(gap.title)}</h4>
+                <div className="flex items-center gap-2.5 sm:block">
+                  <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent/15 text-xs font-black text-accent sm:h-8 sm:w-8 sm:text-sm">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h4 className="break-keep text-[15px] font-bold leading-snug text-white sm:mt-2.5 sm:text-base">{t(gap.title)}</h4>
+                </div>
                 <p className="mt-2 flex items-start gap-2 break-keep text-sm leading-relaxed text-white/75">
                   <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#F2B183]/80" />
                   <span>
@@ -569,8 +568,9 @@ export default function NaruHome() {
             대신 위 draftNote 한 줄("새로 정해지는 것은 이 자리에 업데이트합니다")이 그 말을
             합니다. december.tbd 키는 그대로. */}
 
-        {/* 플로우 스트립. 8월 "참여 플로우"의 문법. */}
-        <div className="mx-auto mt-12 max-w-5xl text-left">
+        {/* 플로우 스트립. 8월 "참여 플로우"의 문법. lg부터만(모바일 수정 브리프 1.2: 폰에서는
+            세로 상자 넷 + 화살표 셋 350px에 정보가 없음). */}
+        <div className="mx-auto mt-12 hidden max-w-5xl text-left lg:block">
           <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/70">{t(naru.december.flowLabel)}</p>
           <FlowStrip
             className="mt-4"
