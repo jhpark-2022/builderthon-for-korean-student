@@ -111,6 +111,7 @@ function Person({
   chips = [],
   img,
   linkedin,
+  compact = false,
 }: {
   name: string;
   org?: string;
@@ -120,7 +121,27 @@ function Person({
   chips?: string[];
   img?: string;
   linkedin?: string;
+  /** 한 줄 행(2026-09-18, 감사 반영 브리프 5.2 + 길이 목표). 이름, 소속·직함, 링크드인만. */
+  compact?: boolean;
 }) {
+  if (compact) {
+    return (
+      <li className="flex min-h-[56px] items-center gap-2 rounded-xl bg-white/[0.05] px-3 py-2 sm:gap-3 sm:px-4">
+        <div className="min-w-0 flex-1">
+          {/* 이름은 자르지 않고 접습니다(폰 2열에서 "김지훈 이…"가 됐습니다). 소속·직함만 한 줄. */}
+          <p className="break-keep text-sm font-semibold leading-snug text-white">{name}</p>
+          {(org || role) && (
+            <p className="truncate text-xs leading-snug text-white/55">
+              {org}
+              {org && role ? <span className="hidden sm:inline">{"\u2002"}</span> : null}
+              {role && <span className={org ? "hidden sm:inline" : ""}>{role}</span>}
+            </p>
+          )}
+        </div>
+        {linkedin && <LinkedInLink url={linkedin} label={name} />}
+      </li>
+    );
+  }
   return (
     <li className="flex flex-col rounded-2xl bg-white/[0.05] px-4 py-4">
       <div className="flex items-start gap-3">
@@ -230,7 +251,12 @@ function TabPanel({
  *              패널 둘만 켭니다. "8일의 형식"은 아카이브가 정본이고 여기서는 길이만
  *              늘립니다. 안 넘기면 셋 다(그 전의 동작).
  */
-export default function RecordTabs({ only }: { only?: TabId[] } = {}) {
+/**
+ * @param compact 사람을 한 줄 행으로(2026-09-18, 감사 반영 브리프 5.2). 소개·칩·세션 요약을 빼고
+ *                이름, 소속·직함, 링크드인만. 홈의 길이 목표(폰 ≤ 10,800, 데스크톱 ≤ 9,300) 안에서
+ *                사람을 넣는 방법입니다. 전문은 /2026-08이 정본.
+ */
+export default function RecordTabs({ only, compact = false }: { only?: TabId[]; compact?: boolean } = {}) {
   const { t } = useLocale();
   const uid = useId();
   const tabs = naru.record.tabs;
@@ -275,7 +301,7 @@ export default function RecordTabs({ only }: { only?: TabId[] } = {}) {
   };
 
   return (
-    <div className="mx-auto mt-16 max-w-5xl border-t border-white/10 pt-10 text-left">
+    <div className={`mx-auto max-w-5xl border-t border-white/10 text-left ${compact ? "mt-12 pt-8" : "mt-16 pt-10"}`}>
       <h3 id={headingId} className={H3}>
         {t(tabs.label)}
       </h3>
@@ -449,7 +475,7 @@ export default function RecordTabs({ only }: { only?: TabId[] } = {}) {
             <SectionLabel count={dict.mentoring.mentors.length}>
               {t(tabs.mentors.countLabel)}
             </SectionLabel>
-            <ul className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className={`grid sm:grid-cols-2 lg:grid-cols-3 ${compact ? "grid-cols-2 gap-2" : "gap-2.5"}`}>
               {dict.mentoring.mentors.map((m) => (
                 <Person
                   key={m.name.en}
@@ -459,6 +485,7 @@ export default function RecordTabs({ only }: { only?: TabId[] } = {}) {
                   bio={t(m.intro)}
                   chips={stageChips(m.stages, t)}
                   linkedin={m.linkedin || undefined}
+                  compact={compact}
                 />
               ))}
             </ul>
@@ -475,6 +502,13 @@ export default function RecordTabs({ only }: { only?: TabId[] } = {}) {
             <SectionLabel count={dict.speakers.people.length}>
               {t(tabs.people.speakersLabel)}
             </SectionLabel>
+            {compact ? (
+              <ul className="grid grid-cols-2 gap-2 lg:grid-cols-3">
+                {dict.speakers.people.map((p) => (
+                  <Person key={p.name.en + p.day.en} name={t(p.name)} org={t(p.day)} role={t(p.role)} linkedin={p.linkedin || undefined} compact />
+                ))}
+              </ul>
+            ) : (
             <ul className="grid gap-2.5 sm:grid-cols-2">
               {dict.speakers.people.map((p) => (
                 <li key={p.name.en + p.day.en} className="rounded-2xl bg-white/[0.05] px-4 py-4">
@@ -519,7 +553,7 @@ export default function RecordTabs({ only }: { only?: TabId[] } = {}) {
             <p className="mb-3 break-keep text-sm leading-relaxed text-white/70">
               {t(dict.speakers.panel.title)}
             </p>
-            <ul className="grid gap-2.5 sm:grid-cols-3">
+            <ul className={`grid sm:grid-cols-3 ${compact ? "grid-cols-2 gap-2" : "gap-2.5"}`}>
               {dict.speakers.panel.people.map((p) => (
                 <Person
                   key={p.name.en}
@@ -527,6 +561,7 @@ export default function RecordTabs({ only }: { only?: TabId[] } = {}) {
                   role={t(p.role)}
                   bio={t(p.note)}
                   linkedin={p.linkedin}
+                  compact={compact}
                 />
               ))}
             </ul>
@@ -544,7 +579,7 @@ export default function RecordTabs({ only }: { only?: TabId[] } = {}) {
                 90px 남짓으로 줄고 이름이 음절 단위로 세로로 쪼개집니다.
                 통계 타일이 같은 폭에서 서는 것은 그쪽에 아바타가 없기 때문입니다.
                 길이는 Person의 bio line-clamp-3이 대신 줄입니다. */}
-            <ul className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+            <ul className={`grid sm:grid-cols-2 ${compact ? "grid-cols-2 gap-2 lg:grid-cols-3" : "gap-2.5 lg:grid-cols-4"}`}>
               {dict.judges.people.map((p) => (
                 <Person
                   key={p.name.en}
@@ -555,6 +590,7 @@ export default function RecordTabs({ only }: { only?: TabId[] } = {}) {
                   bio={t(p.bio)}
                   img={p.img}
                   linkedin={p.linkedin}
+                  compact={compact}
                 />
               ))}
             </ul>

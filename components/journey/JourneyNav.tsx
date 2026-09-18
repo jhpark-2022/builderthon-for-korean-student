@@ -194,7 +194,59 @@ export default function JourneyNav({
   // 다시 보려고 위로 긁을 필요가 없습니다. 그 규칙은 훅이 갖고 있고 이 컴포넌트는
   // 그대로 구독만 합니다 — 여기에 별도 타이머를 만들지 마세요. 네 표면이 한 몸으로
   // 움직이는 이유가 신호가 하나라는 점입니다.
-  const chromeHidden = useScrollDirection();
+  // 나루 홈(감사 반영 브리프 2.1): 아래로 스크롤하면 로고 줄(52px)만 접고 칩 레일은 남깁니다. 위로
+  // 스크롤해야 돌아오고, 멈춰 있다고 돌아오지 않습니다(idleReveal false). 8월 페이지는 그 전
+  // 그대로(헤더 전체 숨김 + 정지 시 복귀).
+  const naru = brand === "naru";
+  const chromeHidden = useScrollDirection({ idleReveal: naru ? false : 450 });
+  const headerRef = useRef<HTMLElement | null>(null);
+  // 헤더 실높이를 scroll-padding-top으로(감사 반영 브리프 2.1). 접힌 상태에서는 레일 높이만큼만
+  // 밀어야 앵커 착지가 헤더 아래 잘리지 않습니다. 나루 홈만. 8월 페이지는 globals.css의 고정값.
+  useEffect(() => {
+    if (!naru) return;
+    const root = document.documentElement;
+    let raf = 0;
+    const apply = () => {
+      raf = 0;
+      const h = headerRef.current;
+      if (!h) return;
+      const bottom = Math.max(0, h.getBoundingClientRect().bottom);
+      root.style.scrollPaddingTop = `${Math.round(bottom) + 12}px`;
+    };
+    const schedule = () => { if (!raf) raf = requestAnimationFrame(apply); };
+    const timer = window.setTimeout(apply, 350);
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(schedule) : null;
+    if (headerRef.current && ro) ro.observe(headerRef.current);
+    window.addEventListener("resize", schedule, { passive: true });
+    window.addEventListener("scroll", schedule, { passive: true });
+    return () => {
+      window.clearTimeout(timer);
+      ro?.disconnect();
+      window.removeEventListener("resize", schedule);
+      window.removeEventListener("scroll", schedule);
+      if (raf) cancelAnimationFrame(raf);
+      root.style.scrollPaddingTop = "";
+    };
+  }, [naru]);
+  // 앵커 클릭의 부드러운 스크롤(감사 반영 브리프 9.4). html { scroll-behavior: smooth }를 뺐으므로
+  // 여기서 scrollIntoView로 합니다. prefers-reduced-motion이면 auto. 나루 홈만.
+  useEffect(() => {
+    if (!naru) return;
+    const onClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = (e.target as Element | null)?.closest<HTMLAnchorElement>('a[href^="#"]');
+      if (!a) return;
+      const id = decodeURIComponent(a.getAttribute("href")!.slice(1));
+      const target = id ? document.getElementById(id) : null;
+      if (!target) return;
+      e.preventDefault();
+      const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      target.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+      window.history.pushState(null, "", `#${id}`);
+    };
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, [naru]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -224,6 +276,7 @@ export default function JourneyNav({
   // making it a solid slab.
   return (
     <header
+      ref={headerRef}
       // focus-within pins it open: a keyboard user tabbing into the nav must not
       // have it slide away under them. `lg:!translate-y-0` keeps the desktop bar
       // fixed in place no matter what the scroll signal says.
@@ -239,7 +292,9 @@ export default function JourneyNav({
       // 두 줄(로고 줄 + 섹션 레일)은 이미 이 배경 하나를 함께 씁니다 — 실측 105px =
       // nav 52 + 레일 53이라 줄 사이에 빈 틈이 없습니다. 여기서 갈라 두지 마세요.
       } ${scrolled ? "bg-[#070B1F]/95 backdrop-blur-md" : "bg-transparent"} ${
-        chromeHidden ? "-translate-y-full" : "translate-y-0"
+        // 나루 홈: 로고 줄(52px)만 접고 레일은 남깁니다(감사 반영 브리프 2.1). 레일이 없는 첫 화면
+        // 근처(scrolled false)에서는 topZone이 먼저 막아 hidden이 되지 않습니다.
+        chromeHidden ? (naru && scrolled ? "-translate-y-[52px]" : "-translate-y-full") : "translate-y-0"
       }`}
     >
       {/* 52px in the two-row band, h-20 from xl: the tall bar was designed for a
@@ -464,9 +519,11 @@ export default function JourneyNav({
               합니다. 위의 오픈채팅 버튼이 이제 이 바의 유일한 액션입니다 —
               스타일은 올리지 않았습니다. 경쟁 상대가 없어졌으니 고스트 톤으로
               충분하고, 그라디언트로 올리면 마감 전과 같은 압력이 됩니다. */}
+          {/* 배경 정지 토글, 헤더에도(감사 반영 브리프 2.4). 푸터 것은 그대로. 나루 홈만. */}
+          {naru && <MotionToggle compact />}
           {/* Language last — it's a setting, not an action, so it sits after
               the CTA rather than between the brand and it. */}
-          <LocaleToggle />
+          <LocaleToggle variant={brand} />
         </div>
       </nav>
       {/* ── Section rail (below `xl` only) ────────────────────────────────────
@@ -502,7 +559,9 @@ export default function JourneyNav({
           this breakpoint, so an anchor jump doesn't park a heading underneath. */}
       {scrolled && (
         <div className="xl:hidden">
-          <div ref={railRef} className="flex gap-2 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]{display:none}">
+          {/* 나루: 우측 24px 페이드 마스크 + snap(감사 반영 브리프 2.2). "8월"에서 잘려 뒤에 더 있는지
+              알 수 없었습니다. */}
+          <div ref={railRef} className={`flex gap-2 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]{display:none} ${naru ? "snap-x snap-mandatory [mask-image:linear-gradient(to_right,#000_calc(100%-24px),transparent)]" : ""}`}>
             {anchors.map((a) => {
               const here = a.id === activeSection;
               return (

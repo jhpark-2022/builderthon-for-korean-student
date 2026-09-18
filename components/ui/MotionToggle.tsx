@@ -26,13 +26,18 @@ const COPY = {
   play: { ko: "배경 움직임 켜기", en: "Start the background" },
 } as const;
 
-export default function MotionToggle({ className = "" }: { className?: string }) {
+// compact: 아이콘만(44px), 라벨은 aria-label. 헤더용(2026-09-18, 감사 반영 브리프 2.4). 푸터 것은
+// 그대로 글자 버튼입니다. 둘이 같은 저장값을 읽고 씁니다.
+export default function MotionToggle({ className = "", compact = false }: { className?: string; compact?: boolean }) {
   const { t } = useLocale();
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
+    // prefers-reduced-motion이면 배경은 이미 멈춰 있으므로(BackgroundScene motionScale 0) 초기 표시도
+    // "멈춤"(감사 반영 브리프 2.4). 저장값이 있으면 저장값.
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const saved = readMotionPaused();
-    setPaused(saved);
+    setPaused(saved || reduce);
     // 배경은 requestIdleCallback 뒤에 뜹니다(components/Background.tsx). 이
     // 컴포넌트가 먼저 마운트되면 그 시점에는 손잡이가 아직 없어서, 저장된 "꺼짐"이
     // 적용되지 않습니다. 그래서 Background 쪽도 자기가 뜰 때 저장값을 한 번
@@ -50,10 +55,15 @@ export default function MotionToggle({ className = "" }: { className?: string })
         setPaused(next);
         writeMotionPaused(next);
       }}
-      className={`inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1.5 text-xs text-white/55 transition hover:border-white/30 hover:text-white ${className}`}
+      aria-label={compact ? t(paused ? COPY.play : COPY.pause) : undefined}
+      className={
+        compact
+          ? `inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 text-xs text-white/70 transition hover:border-white/30 hover:text-white ${className}`
+          : `inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1.5 text-xs text-white/55 transition hover:border-white/30 hover:text-white ${className}`
+      }
     >
       <span aria-hidden className="text-[0.7rem]">{paused ? "▶" : "❙❙"}</span>
-      {t(paused ? COPY.play : COPY.pause)}
+      {!compact && t(paused ? COPY.play : COPY.pause)}
     </button>
   );
 }

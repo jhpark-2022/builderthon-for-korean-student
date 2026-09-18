@@ -306,6 +306,10 @@ export default function NaruHome() {
   const regState = reg?.state ?? "not_open";
   // 8월 히어로의 패럴랙스 값 여섯. 두 단이 스크롤에 따라 양옆으로 벌어지며 사라집니다.
   const { heroRef, leftX, rightX, splitX, heroFade } = useHeroSplit();
+  // 폰 Day 카드 아코디언의 열린 칸(감사 반영 브리프 3.1). 첫 카드만 기본 펼침. lg부터는 무시.
+  const [openDay, setOpenDay] = useState(0);
+  // 노선도의 현재 위치 점(감사 반영 브리프 3.6): 데스크톱은 호버·포커스한 카드, 폰은 열린 칸.
+  const [hoverDay, setHoverDay] = useState<number | null>(null);
 
   return (
     <>
@@ -454,9 +458,9 @@ export default function NaruHome() {
         </p>
         {/* 초안 고지(DECIDED 2026-09-18, 사용자): 세부 내용이 바뀔 수 있다는 것을 챕터 머리에서
             확실하게. 호박색 점선 상자(pending 칩과 같은 계열). 8월 문법의 강조 상자 크기. */}
-        <div role="note" className="mx-auto mt-6 flex max-w-2xl items-start gap-3 rounded-xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] px-4 py-3 text-left">
-          <span className="mt-0.5 shrink-0 rounded-full border border-amber-400/40 bg-amber-400/10 px-2 py-0.5 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-amber-200">{t(naru.december.draftLabel)}</span>
-          <p className="break-keep text-sm leading-relaxed text-amber-50/90">{t(naru.december.draftNote)}</p>
+        <div role="note" className="mx-auto mt-6 max-w-2xl rounded-xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] px-4 py-3 text-left sm:flex sm:items-start sm:gap-3">
+          <span className="mr-2 inline-block shrink-0 rounded-full border border-amber-400/40 bg-amber-400/10 px-2 py-0.5 align-[2px] text-[0.68rem] font-bold uppercase tracking-[0.14em] text-amber-200 sm:mr-0 sm:mt-0.5">{t(naru.december.draftLabel)}</span>
+          <p className="inline break-keep text-sm leading-relaxed text-amber-50/90 sm:block">{t(naru.december.draftNote)}</p>
         </div>
         {/* 숫자 둘. 8월 ProgramStats("2일 필참 / 6일 선택")의 문법. shape에 이미 있는
             값 둘(5일, 2회)만 씁니다. 4차에서 여섯 칸을 뺐으니 늘리지 않습니다. */}
@@ -484,12 +488,13 @@ export default function NaruHome() {
             stations={naru.december.stages.map((s) => ({
               key: s.name.en,
               sub: s.dayOffset === null ? t(naru.december.beforeLabel) : `${t(naru.december.dayLabel)} ${s.dayOffset + 1}`,
-              label: t(s.name),
+              label: t(s.title),
               kind: s.submit ? "anchor" : "plain",
               badge: s.submit ? `${t(naru.december.submitLabel)}\u2002${t(s.submit)}` : undefined,
             }))}
             pill={t(naru.december.mentoringHeading)}
             legend={{ anchor: t(naru.december.routeLegendSubmit), plain: t(naru.december.routeLegendStage) }}
+            current={hoverDay ?? (openDay >= 0 ? openDay : 0)}
           />
         </div>
 
@@ -500,55 +505,22 @@ export default function NaruHome() {
           <p className="mt-3 max-w-2xl break-keep text-sm leading-relaxed text-white/70">
             {t(naru.december.scheduleLead)}
           </p>
+          {/* 폰에서는 아코디언(감사 반영 브리프 3.1): 제목+날짜 56px 행, 탭하면 펼침, 첫 카드만
+              기본 펼침. lg부터는 그 전과 같은 정적 카드 다섯. 마크업은 DayCard 하나이고 헤더만
+              폰용 버튼과 데스크톱용 정적 행 둘을 두어 CSS로 고릅니다(하이드레이션 뒤 접히는
+              점프가 없습니다). */}
           <ol role="list" className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-            {naru.december.stages.map((stage) => (
-              <li
+            {naru.december.stages.map((stage, i) => (
+              <DayCard
                 key={stage.name.en}
-                className={`relative flex h-full flex-col rounded-2xl border p-4 text-left sm:p-5 ${
-                  stage.submit ? "border-rose-400/25 bg-white/[0.055]" : "border-white/[0.08] bg-white/[0.03]"
-                }`}
-              >
-                <div className="flex items-baseline justify-between gap-3">
-                  <span className="flex items-baseline gap-1.5">
-                    <span className="text-[0.6rem] font-bold uppercase tracking-wider text-accent/80">
-                      {stage.dayOffset === null ? t(naru.december.beforeLabel) : t(naru.december.dayLabel)}
-                    </span>
-                    {stage.dayOffset !== null && (
-                      <span className="text-2xl font-black leading-none text-white">{stage.dayOffset + 1}</span>
-                    )}
-                  </span>
-                  <span className="shrink-0 text-[0.7rem] text-white/55">
-                    {stage.dayOffset === null ? t(stage.when) : formatDecemberDayWithWeekday(locale, stage.dayOffset)}
-                  </span>
-                </div>
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {stage.submit && (
-                    <Chip tone="rose">
-                      <span aria-hidden>★</span>{`${t(naru.december.submitLabel)}\u2002${t(stage.submit)}`}
-                    </Chip>
-                  )}
-                  {stage.chips.map((c, i) => (
-                    <Chip key={i} tone={stage.dayOffset === null ? "amber" : "neutral"}>
-                      {stage.dayOffset === null && <span aria-hidden>●</span>}
-                      {t(c)}
-                    </Chip>
-                  ))}
-                </div>
-                <h4 className="mt-3 text-[15px] font-bold leading-snug text-white">{t(stage.name)}</h4>
-                {/* 폰(lg 아래)에서는 두 줄까지(모바일 수정 브리프 1.4). "→ 그날의 한 줄"은 그대로. */}
-                <p className="mt-1.5 line-clamp-2 break-keep text-[13px] leading-relaxed text-white/65 lg:line-clamp-none">{t(stage.body)}</p>
-                <p className="mt-2 flex gap-1.5 break-keep text-[12.5px] font-semibold leading-snug text-emerald-200/85">
-                  <span aria-hidden className="text-emerald-300/70">→</span>
-                  {t(stage.line)}
-                </p>
-                {/* 폰: 워크샵을 카드 안 한 줄로(라벨 + 이름). 상자 셋은 lg부터(모바일 수정 브리프 1.1). */}
-                {stage.workshop && (
-                  <p className="mt-2 flex flex-wrap items-baseline gap-x-1.5 text-xs text-white/70 lg:hidden">
-                    <span className="font-bold uppercase tracking-[0.14em] text-accent">{t(naru.december.workshopLabel)}</span>
-                    <span className="font-semibold text-white/85">{t(stage.workshop.title)}</span>
-                  </p>
-                )}
-              </li>
+                stage={stage}
+                t={t}
+                locale={locale}
+                open={openDay === i}
+                onToggle={() => setOpenDay(openDay === i ? -1 : i)}
+                onFocus={() => setHoverDay(i)}
+                onBlur={() => setHoverDay(null)}
+              />
             ))}
           </ol>
           {/* 워크샵 줄(5차 배치 그대로). 상자는 8월 Glass 계열의 연보라 테두리. lg부터만
@@ -602,13 +574,14 @@ export default function NaruHome() {
 
         {/* 8월에 아쉬웠던 넷과 12월의 답. 번호 배지 카드 넷(8월 BenefitCard 문법), 2×2.
             제목이 아쉬웠던 것, 본문이 12월의 답. */}
-        <div className="mx-auto mt-12 max-w-5xl text-left">
+        <div className="mx-auto mt-8 max-w-5xl text-left lg:mt-12">
           <h3 className={LABEL_HEADING}>{t(naru.december.gapsHeading)}</h3>
           {/* 폰은 1열(모바일 수정 브리프 1.3). 2열이면 150px 폭에서 "12월" 답이 서너 글자씩
               끊겼습니다. 폰에서는 번호 배지가 제목 왼쪽에 인라인. sm부터 2열, 배지 위. */}
-          <ol role="list" className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+          {/* 폰은 상자 없이 행(구분선만). sm부터 카드 2열. */}
+          <ol role="list" className="mt-3 grid grid-cols-1 sm:mt-5 sm:grid-cols-2 sm:gap-4">
             {naru.record.gaps.map((gap, i) => (
-              <li key={gap.title.en} className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-3.5 transition hover:border-accent/30 hover:bg-white/[0.05] sm:p-4">
+              <li key={gap.title.en} className="relative border-b border-white/10 py-3 last:border-b-0 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-4 sm:transition sm:hover:border-accent/30 sm:hover:bg-white/[0.05]">
                 <div className="flex items-center gap-2.5 sm:block">
                   <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent/15 text-xs font-black text-accent sm:h-8 sm:w-8 sm:text-sm">
                     {String(i + 1).padStart(2, "0")}
@@ -807,7 +780,7 @@ export default function NaruHome() {
           {naru.why.cores.map((core, i) => (
             <li
               key={core.index}
-              className={`grid gap-6 py-7 md:grid-cols-[1.4fr_1fr] md:gap-14 lg:py-8 ${
+              className={`grid gap-3 py-5 md:grid-cols-[1.4fr_1fr] md:gap-14 md:py-7 lg:py-8 ${
                 i > 0 ? "border-t border-white/10" : ""
               }`}
             >
@@ -822,16 +795,13 @@ export default function NaruHome() {
                 <p className="mt-4 max-w-xl break-keep text-base leading-relaxed text-white/80">
                   {t(core.lines[0])}
                 </p>
-                <p className="mt-2 max-w-xl break-keep text-base leading-relaxed text-white/65">
+                {/* 폰에서는 코어가 제목 + 한 문장(감사 반영 브리프 6, 나루 챕터 4.4화면). 둘째 줄은
+                    lg부터. 키는 그대로. */}
+                <p className="mt-2 hidden max-w-xl break-keep text-base leading-relaxed text-white/65 lg:block">
                   {t(core.lines[1])}
                 </p>
               </div>
-              <dl className="border-t border-white/10 pt-6 md:border-l md:border-t-0 md:pl-10 md:pt-2">
-                <dt className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
-                  {t(naru.why.keepsLabel)}
-                </dt>
-                <dd className="mt-3 break-keep text-sm leading-relaxed text-white/75">{t(core.keeps)}</dd>
-              </dl>
+              <KeepsPanel label={t(naru.why.keepsLabel)} body={t(core.keeps)} />
             </li>
           ))}
         </ol>
@@ -839,11 +809,12 @@ export default function NaruHome() {
         {/* 경첩. 두 개가 함께 있어야 하는 이유. 판 두 장을 닫는 헤어라인
             아래, 챕터 제목과 같은 축에 H3로 섭니다. 먼저 각각을 읽고, 그
             다음에 둘이 한 쌍인 이유를 읽습니다. */}
-        <div className="mx-auto max-w-5xl border-t border-white/10 pt-12">
-          <p className="mx-auto max-w-3xl break-keep text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl">
+        <div className="mx-auto max-w-5xl border-t border-white/10 pt-8 lg:pt-12">
+          <p className="mx-auto max-w-3xl break-keep text-left text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl lg:text-center">
             {t(naru.why.note)}
           </p>
-          <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/70">
+          {/* 폰에서는 경첩의 부연을 접습니다(나루 챕터 길이 목표 2,200). 굵은 한 문장만. */}
+          <p className="mx-auto mt-6 hidden max-w-2xl break-keep text-left text-base leading-relaxed text-white/70 lg:block lg:text-center">
             {t(naru.why.noteBody)}
           </p>
         </div>
@@ -896,17 +867,18 @@ export default function NaruHome() {
             로고 가이드가 말하는 것이고, 이 챕터가 대답해야 하는 질문("어떻게
             일하는가")과는 다른 질문의 답이었습니다. nameLines 키는 그대로
             있습니다. 남은 블록 하나가 폭을 다 씁니다. */}
-        <div className="mx-auto mt-12 max-w-5xl rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-5 text-left">
+        {/* 폰에서는 상자 없이 각주(감사 반영 브리프 6, 다이어그램에 "하지 않는 것"을 각주로). lg부터 상자. */}
+        <div className="mx-auto mt-8 max-w-5xl text-left lg:mt-12 lg:rounded-2xl lg:border lg:border-white/10 lg:bg-white/[0.03] lg:px-6 lg:py-5">
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
             {t(naru.how.notDoingLabel)}
           </p>
           {/* role="list"입니다. Preflight가 모든 ul/ol에 list-style:none을
               걸고, Safari + VoiceOver는 그 목록에서 리스트 의미를 통째로
               떼어냅니다. 역할을 명시해야 "3개 중 1번"이 살아납니다. */}
-          <ul role="list" className="mt-3 grid gap-2.5 sm:grid-cols-3">
+          <ul role="list" className="mt-3 grid gap-2 sm:grid-cols-3 lg:gap-2.5">
             {naru.how.notDoing.map((line, i) => (
-              <li key={i} className="flex gap-2.5 break-keep text-sm leading-relaxed text-white/75">
-                <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300/70" />
+              <li key={i} className="flex gap-2.5 break-keep text-xs leading-relaxed text-white/70 lg:text-sm lg:text-white/75">
+                <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent/70" />
                 {t(line)}
               </li>
             ))}
@@ -1274,7 +1246,7 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
   );
 
   return (
-    <div className="mx-auto mt-12 max-w-5xl">
+    <div className="mx-auto mt-8 max-w-5xl lg:mt-12">
       {/* 서로 닿지 않는다는 선. 데스크톱에서만 그립니다. 세로로 선 모바일
           에서는 "양옆"이라는 배치 자체가 없어서 선이 뜻을 잃습니다.
           모바일에서는 같은 말을 아래 한 줄이 글로 합니다. */}
