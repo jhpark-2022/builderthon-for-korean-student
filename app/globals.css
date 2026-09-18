@@ -395,3 +395,14 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
     -webkit-text-fill-color: #F0ABFC;
   }
 }
+
+/* ── 나루 홈 폰 글자 하한 (2026-09-18, 모바일 수정 브리프 4) ──────────────────────
+   lg 아래에서 12px 미만 유틸리티(0.42~0.66rem, root 18px 기준 7.6~11.9px)를 12px로.
+   Chip·RouteMap은 8월 페이지와 같은 파일이라 컴포넌트 값을 바꾸면 /2026-08이 같이
+   바뀝니다. 그래서 홈의 <main class="naru-min12"> 안에서만, 폰에서만 겁니다.
+   aria-hidden(★·● 같은 장식 글리프)은 제외합니다. */
+@media (max-width: 1023.98px) {
+  .naru-min12 :is([class*="text-[0.42rem]"], [class*="text-[0.58rem]"], [class*="text-[0.6rem]"], [class*="text-[0.62rem]"], [class*="text-[0.65rem]"], [class*="text-[0.66rem]"]):not([aria-hidden]) {
+    font-size: 12px;
+  }
+}

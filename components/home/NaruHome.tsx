@@ -175,7 +175,8 @@ function TermLink({ text, term, href }: { text: string; term: string; href: stri
       {text.slice(0, i)}
       <a
         href={href}
-        className="underline decoration-white/30 underline-offset-4 transition hover:decoration-white"
+        // py-2.5 -my-2.5: 히트 영역만 44px(모바일 수정 브리프 5). 레이아웃은 그대로.
+        className="-my-2.5 inline-block py-2.5 underline decoration-white/30 underline-offset-4 transition hover:decoration-white"
       >
         {term}
       </a>
@@ -271,7 +272,8 @@ export default function NaruHome() {
     <>
     {/* tabIndex=-1: skip link가 여기로 보낼 때 브라우저가 실제로 포커스를
         옮기도록 합니다. Tab 순서에는 들어가지 않습니다. */}
-    <main id="main" tabIndex={-1} className="focus:outline-none">
+    {/* naru-min12: 폰 글자 하한 12px(app/globals.css). */}
+    <main id="main" tabIndex={-1} className="naru-min12 focus:outline-none">
       {/* 하단 오픈채팅 바(8월과 같은 것). #record가 지나면 나타나고 푸터가 보이면
           물러납니다. 홈에는 폰 전용 바가 없어서 폰까지 맡습니다(phone). */}
       <MobileChatBar afterId="record" endId="closing" phone />
@@ -304,7 +306,7 @@ export default function NaruHome() {
             없으면 framer-motion이 콘솔에 경고를 냅니다(2026-09-17 배경 검증에서 발견). */}
         <div ref={heroRef} className="relative grid items-center gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
           <motion.div style={{ x: splitX ? leftX : undefined, opacity: heroFade }} className="text-center lg:pl-10 lg:text-left xl:pl-16">
-            <Eyebrow color="purple" className="!text-[0.65rem] sm:!text-xs">{t(naru.eventHero.eyebrow)}</Eyebrow>
+            <Eyebrow color="purple">{t(naru.eventHero.eyebrow)}</Eyebrow>
             {/* 8월 H1과 같은 clamp. 2행은 그라데이션 토큰(GRADIENT_TEXT). ko는
                 "크로싱 서울" / "CROSSING SEOUL", en은 "CROSSING" / "SEOUL".
                 390px에서 각 줄이 한 줄에 들어갑니다(2행은 0.82em, 실측 2026-09-17). */}
@@ -590,7 +592,7 @@ export default function NaruHome() {
           <a
             href={naruLinks.sponsor}
             onClick={() => track("naru_mail", { src: "december" })}
-            className={buttonClass("text")}
+            className={`${buttonClass("text")} -my-2.5 min-h-[44px] py-2.5`}
           >
             {t(naru.december.ctaMail)}
             <span aria-hidden>→</span>
@@ -802,7 +804,7 @@ export default function NaruHome() {
               key={layer.join.id}
               href={`#${layer.join.id}`}
               onClick={() => track("naru_cta", { src: "how", to: layer.join.id })}
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-accent transition hover:text-white"
+              className="-my-2.5 inline-flex min-h-[44px] items-center gap-1.5 py-2.5 text-sm font-medium text-accent transition hover:text-white"
             >
               {t(layer.join.label)}
               <span aria-hidden>→</span>
@@ -960,13 +962,13 @@ export default function NaruHome() {
             <a
               href={naruLinks.general}
               onClick={() => track("naru_mail", { src: "footer" })}
-              className="text-white/65 underline-offset-4 transition hover:text-white hover:underline"
+              className="-my-2.5 inline-block py-2.5 text-white/65 underline-offset-4 transition hover:text-white hover:underline"
             >
               {t(naru.footer.contact)}
             </a>
             <Link
               href={naruLinks.archive}
-              className="text-white/65 underline-offset-4 transition hover:text-white hover:underline"
+              className="-my-2.5 inline-block py-2.5 text-white/65 underline-offset-4 transition hover:text-white hover:underline"
             >
               {t(naru.footer.archive)}
             </Link>
@@ -974,7 +976,7 @@ export default function NaruHome() {
           <p className="text-xs text-white/55">{t(naru.footer.rights)}</p>
           {/* 배경 움직임 끄기. WCAG 2.2.2. 자리가 푸터인 이유는 컴포넌트 주석에
               있습니다. */}
-          <MotionToggle className="mt-2" />
+          <MotionToggle className="min-h-[44px] mt-2" />
         </div>
       </footer>
     </>
