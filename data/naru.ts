@@ -943,11 +943,13 @@ export const naru = {
   how: {
     eyebrow: { ko: "세 층", en: "Three layers" },
     heading: { ko: "어떻게 일하는가", en: "How we work" },
-    // 첫 문장은 2026-09-17에 붙었습니다. 이 챕터가 #december 뒤로 오면서, 왜
-    // 12월 다음에 조직도가 나오는지를 첫 줄이 말해야 했습니다.
+    // DECIDED 2026-09-18 (사용자): 나루_Constitution.docx(제9조·제10조)와 나루_Overview.pdf
+    // (01·02)를 다시 읽고 아주 짧게. 세 문장. 누가 무엇을 내고 누가 무엇을 하는지만.
+    // 그 전 네 문장에서 뺀 것: "8월의 자리도 12월의 자리도"(앞 챕터가 이미 말함),
+    // "방식은 바뀔 수 있습니다"(hedge. humanizer 23).
     lead: {
-      ko: "8월의 자리도 12월의 자리도 같은 세 층이 만듭니다. 학생회와 기업은 서로 직접 만나지 않습니다. 나루를 거쳐 만납니다. 이벤트는 지금 그 둘을 잇는 방식이고, 방식은 바뀔 수 있습니다.",
-      en: "August's place and December's are made by the same three layers. Student associations and companies never meet each other directly. They meet through NARU. An event is how the two are connected for now, and that can change.",
+      ko: "학생회와 기업은 서로 직접 만나지 않습니다. 나루를 거쳐 만납니다. 학생회는 학생과 공간을 내고, 기업은 문제와 자금을 내고, 나루가 회차를 열고 책임집니다.",
+      en: "Student associations and companies never meet each other directly. They meet through NARU. Associations bring students and space, companies bring problems and funding, and NARU runs the round and answers for it.",
     },
     diagramNote: {
       ko: "서로 직접 만나지 않습니다",
@@ -957,7 +959,7 @@ export const naru = {
       {
         role: { ko: "주최 HOST", en: "HOST" },
         who: { ko: "나루", en: "NARU" },
-        brings: { ko: "학생이 만드는 그룹", en: "A group students make" },
+        brings: { ko: "회차를 열고 책임진다", en: "Runs the round, answers for it" },
         does: {
           ko: "회차의 기획과 실행. 출제사와 멘토, 후원사와의 관계. 기록과 회차 사이의 연속성.",
           en: "Planning and running each round. The relationships with problem owners, mentors and sponsors. The record, and the continuity between rounds.",
@@ -1016,15 +1018,20 @@ export const naru = {
     // 금지어 검사에 걸리는 세 줄입니다. 의도된 것입니다. 이 낱말들을 쓰지 않는
     // 규칙은 그것을 제안하지 말라는 뜻이고, 여기서는 하지 않는다고 말합니다.
     // 낱말을 빼면 문장이 없어집니다. 파일 맨 위의 예외 항목을 보세요.
+    // DECIDED 2026-09-18 (사용자): Constitution 제3조 1항, 제7조 4항, 제8조 2항, 제9조 2항에서
+    // 한 줄씩. 세 줄 그대로, 문장은 더 짧게.
     notDoing: [
-      { ko: "회비를 받지 않습니다.", en: "We do not collect dues." },
       {
-        ko: "가입 폼을 두지 않습니다. 들어오는 길은 회차 하나입니다.",
-        en: "There is no sign-up form. The way in is a round.",
+        ko: "회비도 가입 폼도 없습니다. 들어오는 길은 회차 하나입니다.",
+        en: "No dues, no sign-up form. The way in is a round.",
       },
       {
-        ko: "운영진에게 보수를 주지 않고, 자리를 보장하지도 않습니다.",
-        en: "We do not pay the crew, and we do not promise anyone a seat.",
+        ko: "후원 계약은 나루가 맺습니다. 법인격을 갖추기 전에는 돈을 직접 받지 않습니다.",
+        en: "NARU signs with sponsors. Until it is a legal entity it takes no money directly.",
+      },
+      {
+        ko: "운영진에게 보수를 주지 않습니다. 실비만 정산합니다.",
+        en: "The crew is not paid. Only receipts are reimbursed.",
       },
     ],
   },
