@@ -157,3 +157,23 @@ export const SHAPES = {
     return tier <= 900 ? 600 : Math.min(1800, tier - Math.round(tier * 0.35));
   },
 } as const;
+
+/**
+ * 서울 워터마크 (2026-09-18, 사용자: "scroll 하면 서울의 모습이 나왔으면").
+ * water 변형(밤의 강과 등불) 위에 얹는 입자 층 하나. 히어로에서는 없고, 히어로가 화면에서
+ * 나가면(강이 가라앉는 구간) 서울특별시 경계(lib/background/shapes/seoul.ts)가 뷰포트
+ * 가운데에 점으로 떠오릅니다. 그 뒤로는 본문 뒤에 희미하게 서 있습니다(카드가 가립니다).
+ * 밝기는 워터마크 값(가장자리 0.45, 속 0.15). 정면, 카메라에 붙어 있어 돌리·패럴랙스가
+ * 없습니다(형상이 커지거나 기울지 않습니다).
+ */
+export const SEOUL_WATERMARK = {
+  cx: 0.5,
+  cy: 0.5,
+  landscapeW: 0.58,   // 뷰포트 너비 대비
+  portraitW: 0.98,
+  edgeBright: 0.6,    // 워터마크 값 0.45는 캡처에서 너무 희미했습니다(2026-09-18 실측)
+  innerBright: 0.2,
+  revealVh: 0.8,      // 히어로 하단이 뷰포트 상단을 지난 뒤 이만큼(뷰포트 높이 배)에 걸쳐 떠오름
+  points: { phone: 500, desktop: 1400 },
+  calmBright: 0.6,    // #naru부터 이 배수로
+} as const;

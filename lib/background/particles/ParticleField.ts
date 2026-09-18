@@ -29,7 +29,11 @@ export class ParticleField {
   private readonly intensity: number; // device-tier energy/opacity scale
   private readonly variant: ParticleVariant;
 
-  constructor(quality: QualityTier, parallax: number, variant: ParticleVariant = "field") {
+  /**
+   * @param only  crossing에서 형상 하나만("seoul"). 점 전부가 그 형상이고 깊이 층은 없습니다
+   *              (water 변형의 서울 워터마크, 2026-09-18). 기본값은 둘(짝수 싱가포르, 홀수 서울).
+   */
+  constructor(quality: QualityTier, parallax: number, variant: ParticleVariant = "field", only?: "seoul") {
     const count = quality.particles;
     this.intensity = quality.intensity;
     this.variant = variant;
@@ -43,7 +47,7 @@ export class ParticleField {
     const phases = new Float32Array(count); // crossing: 윤곽을 따라 간 위상 0..1. field에서는 0
 
     // crossing: 점 예산(2026-09-17 수정 브리프 1.2). 앞쪽은 형상 둘, 나머지는 깊이 층.
-    const shapeCount = variant === "crossing" ? SHAPES.shapePoints(count) : 0;
+    const shapeCount = variant === "crossing" ? (only ? count : SHAPES.shapePoints(count)) : 0;
 
     for (let i = 0; i < count; i++) {
       if (variant === "crossing" && i < shapeCount) {
@@ -52,11 +56,11 @@ export class ParticleField {
         // [-1,1]에), z는 0(정면, 두께 없음. 3° 패럴랙스는 평행 이동만). 월드 자리는
         // 셰이더의 uShapeL/uShapeR가 정합니다(BackgroundScene.placeShapes). 구운 순서가
         // 가장자리 75%·속 25%를 어느 접두사에서도 지키므로 앞에서부터 잘라 씁니다.
-        const bank = i % 2 === 0 ? -1 : 1;
+        const bank = only === "seoul" ? 1 : i % 2 === 0 ? -1 : 1;
         banks[i] = bank;
         const src = bank < 0 ? SINGAPORE_POINTS : SEOUL_POINTS;
         const stride = bank < 0 ? SINGAPORE_STRIDE : SEOUL_STRIDE;
-        const k = (i >> 1) % (src.length / stride);
+        const k = (only ? i : i >> 1) % (src.length / stride);
         seeds[i * 3 + 0] = src[k * stride];
         seeds[i * 3 + 1] = src[k * stride + 1];
         seeds[i * 3 + 2] = 0;
@@ -212,6 +216,15 @@ export class ParticleField {
     const u = this.material.uniforms;
     u.uShapeL.value.set(left.x, left.y, left.hw);
     u.uShapeR.value.set(right.x, right.y, right.hw);
+  }
+
+  /** crossing: 점의 밝기(가장자리, 속)와 전체 불투명도를 바깥에서. water 변형의 서울 워터마크가 씁니다. */
+  setShapeLook(edgeBright: number, innerBright: number, opacity: number) {
+    const u = this.material.uniforms;
+    u.uEdgeBright.value = edgeBright;
+    u.uInnerBright.value = innerBright;
+    u.uShapeOpacity.value = opacity;
+    u.uOpacity.value = opacity;
   }
 
   /** crossing: 등불의 월드 좌표. 세로 화면에서는 왼쪽으로 물러납니다(BackgroundScene). */

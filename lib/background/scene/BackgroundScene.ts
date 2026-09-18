@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { CROSSING, SHAPES, pickQuality, type QualityTier } from "../config";
+import { CROSSING, SHAPES, SEOUL_WATERMARK, pickQuality, type QualityTier } from "../config";
 import { computeStageLayout, readStageRect, findStageElement, type StageLayout } from "../utils/shapeLayout";
 import { Renderer } from "../renderer/Renderer";
 import { CameraController } from "../camera/CameraController";
@@ -108,10 +108,18 @@ export class BackgroundScene {
 
     if (variant === "water") {
       this.atmosphere = null;
-      this.particles = null;
       this.lantern = null;
       this.water = new WaterSurface();
       this.scene.add(this.water.mesh);
+      // 서울 워터마크(2026-09-18). 카메라의 자식으로 z = −30에 두어 스크롤 돌리·포인터
+      // 패럴랙스에 흔들리지 않습니다(water 변형은 카메라를 쓰지 않던 것과 같은 결과).
+      // 카메라가 씬에 있어야 자식이 그려집니다.
+      const n = this.quality.particles <= 900 ? SEOUL_WATERMARK.points.phone : SEOUL_WATERMARK.points.desktop;
+      this.particles = new ParticleField({ ...this.quality, particles: n }, 1.0, "crossing", "seoul");
+      this.particles.points.position.set(0, 0, -30);
+      this.particles.points.frustumCulled = false;
+      this.cam.camera.add(this.particles.points);
+      this.scene.add(this.cam.camera);
     } else if (variant === "crossing") {
       this.atmosphere = new Atmosphere();
       this.atmosphere.mesh.renderOrder = -2; // 하늘이 맨 뒤, 그 위에 반사 띠
@@ -168,7 +176,23 @@ export class BackgroundScene {
    */
   private stageLayout: StageLayout | null = null;
   private lanternBaseY: number = CROSSING.lantern.y;
+  /** water 변형: 서울 워터마크의 자리. 카메라 자식(z = −30)이라 뷰포트 비율을 그 평면의 월드로. */
+  private placeSeoul() {
+    if (!this.particles || this.variant !== "water") return;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const portrait = h > w;
+    const fov = portrait ? 75 : 60;
+    const halfH = 30 * Math.tan((fov * Math.PI) / 360);
+    const halfW = halfH * (w / h);
+    const W = SEOUL_WATERMARK;
+    const hw = (portrait ? W.portraitW : W.landscapeW) * halfW;
+    const sym = { x: (W.cx * 2 - 1) * halfW, y: (1 - W.cy * 2) * halfH, hw };
+    this.particles.setShapes(sym, sym);
+  }
+
   private placeShapes() {
+    if (this.variant === "water") { this.placeSeoul(); return; }
     if (!this.particles || this.variant !== "crossing") return;
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -239,7 +263,16 @@ export class BackgroundScene {
    * 바뀌어도 "8월의 기록에서 건넌다"가 유지되어야 하기 때문입니다. 시작·리사이즈·
    * 무대 ResizeObserver, 그리고 2초마다 다시 읽습니다(이미지가 늦게 실리는 경우).
    */
+  private heroEnd = 900; // water 변형의 서울 워터마크가 씁니다(히어로 section의 아래, 문서 px)
+  private naruTop = Infinity;
   private readAnchors() {
+    if (this.variant === "water") {
+      const hero = document.getElementById("top");
+      if (hero) this.heroEnd = hero.getBoundingClientRect().bottom + window.scrollY;
+      const naru = document.getElementById("naru");
+      if (naru) this.naruTop = naru.getBoundingClientRect().top + window.scrollY;
+      return;
+    }
     if (this.variant !== "crossing") return;
     const sy = window.scrollY;
     const top = (id: string) => {
@@ -411,7 +444,20 @@ export class BackgroundScene {
       return;
     }
 
-    if (this.water) {
+    if (this.water && this.variant === "water") {
+      // 서울 워터마크(2026-09-18): 히어로 하단이 뷰포트 상단을 지나면 revealVh에 걸쳐
+      // 떠오르고, 그 뒤로는 서 있습니다. #naru부터 조금 더 어둡게. 국면 uniform은 전부 0
+      // (banks 자세). uShift 0: 카메라 자식이라 뷰포트 고정입니다.
+      this.anchorTimer += dt;
+      if (this.anchorTimer > 2) { this.anchorTimer = 0; this.readAnchors(); }
+      const vh = window.innerHeight;
+      const r = clamp((this.scrollY - this.heroEnd) / (SEOUL_WATERMARK.revealVh * vh), 0, 1);
+      const reveal = r * r * (3 - 2 * r);
+      const c = clamp((this.scrollY - (this.naruTop - 0.5 * vh)) / vh, 0, 1);
+      const calm = c * c * (3 - 2 * c);
+      this.particles?.updateCrossing(this.fieldTime, this.scroll, this.motionScale, { gather: 0, crossing: 0, arrived: 0, calm }, 0);
+      this.particles?.setShapeLook(SEOUL_WATERMARK.edgeBright, SEOUL_WATERMARK.innerBright, reveal * (1 - calm * (1 - SEOUL_WATERMARK.calmBright)));
+      if (this.particles) this.particles.points.visible = reveal > 0.001;
       // 포인터 ndc(-1..1)를 화면 uv(0..1)로. 셰이더가 파문을 여기에 놓습니다.
       this.pointerUv.set(
         this.pointer.ndc.x * 0.5 + 0.5,
