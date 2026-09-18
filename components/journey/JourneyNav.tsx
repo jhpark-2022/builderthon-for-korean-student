@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // AnimatePresence와 motion은 등록 필이 있던 동안만 쓰였습니다 (2026-08-22 청산).
 // useReducedMotion은 헤더 자체의 전환에 여전히 필요합니다.
 import { useReducedMotion } from "framer-motion";
@@ -171,6 +171,18 @@ export default function JourneyNav({
   // Only observe once the rail exists — before that there is nothing to mark,
   // and the observer would run through the whole hero for nobody.
   const activeSection = useActiveSection(scrolled, anchors);
+  // 나루 홈(2026-09-18, 모바일 수정 브리프 7): 칩 일곱이 390px에 들어가지 않아 현위치 칩이
+  // 레일 밖에 있을 수 있습니다. 현위치가 바뀌면 그 칩을 레일 가운데로 스크롤합니다(레일만,
+  // 페이지는 움직이지 않음). 8월 페이지는 그대로(brand 조건).
+  const railRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (brand !== "naru" || !activeSection || !railRef.current) return;
+    const chip = railRef.current.querySelector<HTMLElement>(`a[href="#${activeSection}"]`);
+    if (!chip) return;
+    const rail = railRef.current;
+    const left = chip.offsetLeft - (rail.clientWidth - chip.offsetWidth) / 2;
+    rail.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
+  }, [activeSection, brand]);
   // Shared with the bottom bars and the back-to-top button (lib/useScrollDirection):
   // on a phone this header is two rows tall and, together with the bottom rail,
   // was taking a quarter of an in-app browser's viewport. Scrolling DOWN — the
@@ -490,7 +502,7 @@ export default function JourneyNav({
           this breakpoint, so an anchor jump doesn't park a heading underneath. */}
       {scrolled && (
         <div className="xl:hidden">
-          <div className="flex gap-2 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]{display:none}">
+          <div ref={railRef} className="flex gap-2 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]{display:none}">
             {anchors.map((a) => {
               const here = a.id === activeSection;
               return (

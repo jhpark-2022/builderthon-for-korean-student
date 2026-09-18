@@ -1541,9 +1541,11 @@ export const naru = {
             ko: "따로 들어오는 절차가 없습니다. 어느 나라에서 공부하든, 이벤트에 오면 됩니다.",
             en: "There is no process to join. Whichever country you study in, you come to an event.",
           },
+          // 2026-09-18 (모바일 수정 브리프 8): "등록은 아직 열리지 않았습니다"가 #december의
+          // CTA 안내와 겹쳐서 이쪽을 줄였습니다.
           {
-            ko: "크로싱 서울 등록은 아직 열리지 않았습니다.",
-            en: "Registration for CROSSING SEOUL is not open yet.",
+            ko: "등록이 열리면 이 자리에서 알립니다.",
+            en: "When registration opens, it opens here.",
           },
         ],
         doorLabel: { ko: "오픈채팅", en: "Open chat" },

@@ -256,7 +256,7 @@ function HeroPhotos({ photos, t, className = "" }: { photos: RecordPhoto[]; t: (
           key={photo.src}
           className={`relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.9)] ${i % 2 === 1 ? "lg:translate-y-8" : ""}`}
         >
-          <Image src={photo.src} alt={t(photo.alt)} fill sizes="(min-width: 1024px) 24vw, 45vw" priority={i < 2} className="object-cover object-center" />
+          <Image src={photo.src} alt={t(photo.alt)} fill sizes="(max-width: 1024px) 45vw, 22vw" priority={i < 2} className="object-cover object-center" />
         </div>
       ))}
     </div>
@@ -1003,11 +1003,13 @@ function StatRow({
   className?: string;
 }) {
   return (
-    <dl className={`mx-auto grid max-w-5xl grid-cols-2 gap-3 sm:grid-cols-3 ${className}`}>
-      {stats.map((stat) => (
+    // 폰: 6칸 그리드에 첫 셋은 2칸씩(한 줄 셋), 나머지 둘은 3칸씩(둘째 줄 둘). "9팀"이
+    // 왼쪽에 혼자 남지 않습니다(모바일 수정 브리프 3). sm부터는 이전 그대로.
+    <dl className={`mx-auto grid max-w-5xl grid-cols-6 gap-3 sm:grid-cols-3 ${className}`}>
+      {stats.map((stat, i) => (
         <div
           key={stat.label.en}
-          className="rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-5 text-center"
+          className={`rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-5 text-center sm:col-span-1 ${i < 3 ? "col-span-2" : "col-span-3"}`}
         >
           <dt className="sr-only">{t(stat.label)}</dt>
           <dd>

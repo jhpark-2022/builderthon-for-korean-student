@@ -19,7 +19,8 @@ const isGroup = (p: PressEntry): p is PressGroup => "links" in p;
 
 const ROW = "mt-3 grid grid-cols-1 gap-x-5 gap-y-1.5 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-3.5 text-left sm:grid-cols-[9rem_1fr_5.5rem_5.5rem] sm:items-center";
 const OUTLET = "text-sm font-semibold tracking-tight text-white/70";
-const TITLE = "break-keep text-sm font-semibold leading-snug text-white/90";
+// 폰에서 두 줄까지(모바일 수정 브리프 3). 전체 제목은 title 속성으로. sm부터 제한 없음.
+const TITLE = "line-clamp-2 break-keep text-sm font-semibold leading-snug text-white/90 sm:line-clamp-none";
 const DATE = "text-xs tabular-nums text-white/55";
 // -my-2.5 py-2.5: 히트 영역 44px, 레이아웃 불변(2026-09-18 모바일 수정 브리프 5).
 const LINK = "-my-2.5 inline-flex min-h-[44px] items-center gap-1 py-2.5 text-xs font-semibold text-violet-300 transition hover:text-violet-200";
@@ -56,7 +57,7 @@ export default function PressRows({
                 </a>
               ))}
             </span>
-            <span className={TITLE}>{t(p.title)}</span>
+            <span className={TITLE} title={t(p.title)}>{t(p.title)}</span>
             <span className={DATE}>{t(p.date)}</span>
             <span aria-hidden className="hidden sm:block" />
           </div>
@@ -68,7 +69,7 @@ export default function PressRows({
             ) : (
               <span className={OUTLET}>{t(p.outlet)}</span>
             )}
-            <span className={TITLE}>{t(p.title)}</span>
+            <span className={TITLE} title={t(p.title)}>{t(p.title)}</span>
             <span className={DATE}>{t(p.date)}</span>
             <span className={`${LINK} group-hover:text-violet-200`}>
               {t(cta)}
