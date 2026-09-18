@@ -195,27 +195,29 @@ function TermLink({ text, term, href }: { text: string; term: string; href: stri
 // 열리는 날)입니다. 나머지는 프로그램 챕터의 목록이 갖습니다.
 // ─────────────────────────────────────────────────────────────────────────────
 function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => string; locale: "ko" | "en"; className?: string }) {
-  const [left, setLeft] = useState<{ d: number; h: number; m: number } | null | "started">(null);
+  const [left, setLeft] = useState<{ d: number; h: number; m: number; s: number } | null | "started">(null);
   useEffect(() => {
     const tick = () => {
       const ms = DECEMBER_STARTS_AT_MS - Date.now();
       if (ms <= 0) { setLeft("started"); return; }
-      const mins = Math.floor(ms / 60000);
-      setLeft({ d: Math.floor(mins / 1440), h: Math.floor((mins % 1440) / 60), m: mins % 60 });
+      const secs = Math.floor(ms / 1000);
+      setLeft({ d: Math.floor(secs / 86400), h: Math.floor((secs % 86400) / 3600), m: Math.floor((secs % 3600) / 60), s: secs % 60 });
     };
     tick();
-    const id = window.setInterval(tick, 30000);
+    // DECIDED 2026-09-18 (사용자): 초까지. 1초마다 갱신합니다.
+    const id = window.setInterval(tick, 1000);
     return () => window.clearInterval(id);
   }, []);
   const units = naru.eventHero.countdownUnits;
+  const pad = (n: number) => String(n).padStart(2, "0");
   const cells: { v: string; u: Phrase }[] =
     left && left !== "started"
-      ? [{ v: String(left.d), u: units.days }, { v: String(left.h).padStart(2, "0"), u: units.hours }, { v: String(left.m).padStart(2, "0"), u: units.minutes }]
-      : [{ v: "--", u: units.days }, { v: "--", u: units.hours }, { v: "--", u: units.minutes }];
-  const tbd = naru.december.tbd.filter((_, i, arr) => i < 2 || i === arr.length - 1);
-  // DECIDED 2026-09-17 (배경 수정 브리프): 유리 카드에서 한 줄짜리 얇은 패널로. 오른쪽
-  // 단은 형상의 무대가 됐고, 그 위에 카드가 있으면 형상이 또 가려집니다. 숫자 셋과
-  // "아직 정해지지 않은 것" 칩 셋만 한 줄에. 기간 줄은 바로 위 카피가 이미 말합니다.
+      ? [{ v: String(left.d), u: units.days }, { v: pad(left.h), u: units.hours }, { v: pad(left.m), u: units.minutes }, { v: pad(left.s), u: units.seconds }]
+      : [{ v: "--", u: units.days }, { v: "--", u: units.hours }, { v: "--", u: units.minutes }, { v: "--", u: units.seconds }];
+  // DECIDED 2026-09-17 (배경 수정 브리프): 유리 카드에서 한 줄짜리 얇은 패널로.
+  // DECIDED 2026-09-18 (사용자): "아직 정해지지 않은 것" 칩은 뺍니다(미정 목록은
+  // #december에 그대로). 숫자 넷(일·시간·분·초)만 한 줄에. 초 자리는 tabular-nums라
+  // 매초 바뀌어도 폭이 흔들리지 않습니다.
   return (
     <div className={`flex flex-wrap items-center gap-x-5 gap-y-3 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-3.5 text-left ${className}`}>
       <p className="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-[#F2B183]">{t(naru.eventHero.countdownLabel)}</p>
@@ -230,13 +232,6 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
             </div>
           ))
         )}
-      </div>
-      <div aria-hidden className="hidden h-5 w-px bg-white/10 sm:block" />
-      <div className="flex flex-wrap items-center gap-1.5">
-        <span className="mr-1 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-white/50">{t(naru.december.tbdLabel)}</span>
-        {tbd.map((item) => (
-          <Chip key={item.en} tone="pending"><span aria-hidden className="text-amber-300/70">●</span>{t(item)}</Chip>
-        ))}
       </div>
     </div>
   );

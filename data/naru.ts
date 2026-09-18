@@ -305,6 +305,7 @@ export const naru = {
       days: { ko: "일", en: "days" },
       hours: { ko: "시간", en: "hrs" },
       minutes: { ko: "분", en: "min" },
+      seconds: { ko: "초", en: "sec" },
     },
     started: { ko: "시작했습니다", en: "It has started" },
     // ── 기슭 형상의 라벨 (2026-09-17, 배경 형상 브리프) ────────────────────
