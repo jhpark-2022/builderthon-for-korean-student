@@ -415,6 +415,12 @@ export default function NaruHome() {
         <p className="mx-auto mt-3 max-w-2xl break-keep text-sm leading-relaxed text-white/55">
           <TermLink text={t(naru.december.notSequel)} term={t(naru.december.notSequelTerm)} href="#why" />
         </p>
+        {/* 초안 고지(DECIDED 2026-09-18, 사용자): 세부 내용이 바뀔 수 있다는 것을 챕터 머리에서
+            확실하게. 호박색 점선 상자(pending 칩과 같은 계열). 8월 문법의 강조 상자 크기. */}
+        <div role="note" className="mx-auto mt-6 flex max-w-2xl items-start gap-3 rounded-xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] px-4 py-3 text-left">
+          <span className="mt-0.5 shrink-0 rounded-full border border-amber-400/40 bg-amber-400/10 px-2 py-0.5 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-amber-200">{t(naru.december.draftLabel)}</span>
+          <p className="break-keep text-sm leading-relaxed text-amber-50/90">{t(naru.december.draftNote)}</p>
+        </div>
         {/* 숫자 둘. 8월 ProgramStats("2일 필참 / 6일 선택")의 문법. shape에 이미 있는
             값 둘(5일, 2회)만 씁니다. 4차에서 여섯 칸을 뺐으니 늘리지 않습니다. */}
         <dl className="mx-auto mt-5 flex max-w-2xl items-stretch justify-center">
@@ -546,7 +552,6 @@ export default function NaruHome() {
               ))}
             </ul>
           </div>
-          <p className="mt-3 break-keep text-xs text-white/55">{t(naru.december.draftNote)}</p>
           {/* 재는 것. 호박색 강조 상자(8월 "준비물은 하나예요" 문법). */}
           <div className="mt-6 rounded-xl border border-amber-400/20 bg-amber-400/[0.06] px-4 py-3">
             <p className="break-keep text-sm leading-relaxed text-amber-50/85">

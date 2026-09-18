@@ -1357,10 +1357,13 @@ export const naru = {
     },
     // DECIDED 2026-09-18 (사용자): "아직 정해지지 않은 것" 목록(tbd)을 화면에서 뺐습니다.
     // 미정을 나열하는 대신 이 한 줄만. tbd 키는 그대로 둡니다.
+    // DECIDED 2026-09-18 (사용자): "디테일이 수정될 수 있다는 것을 확실하게 보여줘". 챕터
+    // 리드 바로 아래에 눈에 띄는 상자로 올렸습니다(전에는 일정 아래 작은 한 줄).
     draftNote: {
-      ko: "새로 정해지는 것은 이 자리에 업데이트합니다.",
-      en: "Anything newly settled gets updated here.",
+      ko: "아래 세부 내용은 기획 단계라 바뀔 수 있습니다. 정해지는 대로 이 자리에서 업데이트합니다.",
+      en: "The details below are still being planned and may change. They get updated here as they are settled.",
     },
+    draftLabel: { ko: "초안", en: "Draft" },
     shape: [
       {
         value: { ko: "5일", en: "5 days" },
