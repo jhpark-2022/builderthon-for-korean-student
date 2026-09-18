@@ -31,7 +31,7 @@ import Chapter from "@/components/journey/Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
 // RecordTabs는 화면에 없습니다(2026-09-17, 사용자: 8월 챕터는 바로 아카이브로 보낸다).
-import { H2, H3, LABEL_HEADING, STATEMENT, GRADIENT_TEXT } from "@/components/ui/typography";
+import { H2, H3, LABEL_HEADING, GRADIENT_TEXT } from "@/components/ui/typography";
 import NaruMark from "@/components/ui/NaruMark";
 import MotionToggle from "@/components/ui/MotionToggle";
 
@@ -759,21 +759,22 @@ export default function NaruHome() {
           {naru.why.cores.map((core, i) => (
             <li
               key={core.index}
-              className={`grid gap-6 py-8 md:grid-cols-[1.4fr_1fr] md:gap-14 lg:py-10 ${
+              className={`grid gap-6 py-7 md:grid-cols-[1.4fr_1fr] md:gap-14 lg:py-8 ${
                 i > 0 ? "border-t border-white/10" : ""
               }`}
             >
               <div>
-                <h3 className={`flex items-start gap-4 ${STATEMENT}`}>
-                  <NaruMark className="mt-[0.2em] h-[0.8em] w-[0.8em]" />
+                {/* DECIDED 2026-09-18 (사용자): 글자가 너무 컸고, 첫 줄을 크게 강조하는 것은
+                    "내 스타일이 아님". 제목은 H3 크기(STATEMENT 아님), 두 줄은 같은 본문 크기.
+                    STATEMENT 토큰과 core.lines 키는 그대로 둡니다. */}
+                <h3 className="flex items-start gap-3 text-lg font-bold leading-snug tracking-tight text-white sm:text-xl">
+                  <NaruMark className="mt-[0.25em] h-[0.75em] w-[0.75em]" />
                   <span>{t(core.title)}</span>
                 </h3>
-                {/* 첫 줄은 그 자체가 코어의 문장입니다("스크리닝이 없고, 순위가
-                    없습니다. 못해도 되는 자리입니다."). 제목 다음으로 큽니다. */}
-                <p className="mt-6 break-keep text-lg font-medium leading-snug text-white/90 sm:text-xl">
+                <p className="mt-4 max-w-xl break-keep text-base leading-relaxed text-white/80">
                   {t(core.lines[0])}
                 </p>
-                <p className="mt-4 max-w-xl break-keep text-base leading-relaxed text-white/70">
+                <p className="mt-2 max-w-xl break-keep text-base leading-relaxed text-white/65">
                   {t(core.lines[1])}
                 </p>
               </div>
@@ -781,7 +782,7 @@ export default function NaruHome() {
                 <dt className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
                   {t(naru.why.keepsLabel)}
                 </dt>
-                <dd className="mt-3 break-keep text-base leading-relaxed text-white/80">{t(core.keeps)}</dd>
+                <dd className="mt-3 break-keep text-sm leading-relaxed text-white/75">{t(core.keeps)}</dd>
               </dl>
             </li>
           ))}
