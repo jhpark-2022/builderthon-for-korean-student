@@ -8,89 +8,20 @@
 // The service_role key stays on the server — see lib/supabaseAdmin.ts.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { normalizeKakaoId } from "@/lib/kakao";
 import { isRegistrationClosed } from "@/lib/registrationWindow";
+// 2026-09-18: 허니팟 미리보기, IP 해시, 클라이언트 IP, 스로틀 상수, 문자열 정리를
+// lib/register/shared.ts로 꺼냈습니다(12월 라우트와 공유). 이 라우트의 동작과 응답은
+// 그대로입니다. 리팩토링 전후 curl 응답 diff는 체인지로그에.
+import {
+  EMAIL_RE, MAX_MEMBERS, PER_IP_SHORT, PER_IP_LONG, GLOBAL,
+  type Json, str, optStr, hashIp, clientIp, rawMembersPreview, sinceIso,
+} from "@/lib/register/shared";
 
 // Uses a secret + a live DB → must not be statically evaluated at build time.
 export const dynamic = "force-dynamic";
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MAX_MEMBERS = 3;
-
-// ── Throttle limits ─────────────────────────────────────────────────────────
-// Tuned to be USELESS against a real student and painful for a script. The
-// binding constraint is a campus shared IP: at an info session a whole room can
-// register from one NAT'd address within minutes, and locking that out would
-// cost far more than the spam it prevents. Hence limits an individual will
-// never reach and a flood always will. Adjust here — nothing else reads these.
-const PER_IP_SHORT = { minutes: 10, max: 10 };
-const PER_IP_LONG = { minutes: 60, max: 30 };
-// Circuit breaker across ALL submitters: if the whole table is moving this
-// fast, something automated is running regardless of source address.
-const GLOBAL = { minutes: 10, max: 120 };
-// Generous caps that still stop someone pasting a novel into a text input.
-const MAX_LEN = 200;
-
-type Json = Record<string, unknown>;
-
-/** Trim + length-cap a value that must be a non-empty string. */
-function str(v: unknown): string {
-  return typeof v === "string" ? v.trim().slice(0, MAX_LEN) : "";
-}
-/** Same, but empty → null (for the optional columns). */
-function optStr(v: unknown): string | null {
-  return str(v) || null;
-}
-
-/**
- * Salted, one-way fingerprint of the submitter's IP.
- *
- * The raw address never reaches the database. The salt is derived from
- * SUPABASE_SERVICE_ROLE_KEY rather than a new env var: it is already required
- * for this route to function at all, is server-only, and rotating it (which is
- * what you'd do after a leak) invalidates every stored hash — exactly the
- * behaviour you want. The hash is therefore meaningless outside this
- * deployment and cannot be used to correlate a person across projects.
- */
-function hashIp(ip: string, secret: string): string {
-  return createHash("sha256").update(`${secret}::ip-salt::${ip}`).digest("hex");
-}
-
-/**
- * Best-effort client IP. `x-forwarded-for` is a comma-separated chain appended
- * to by each proxy, so the ORIGINAL client is the first entry. Behind Vercel
- * this header is set by the platform; locally it's usually absent, which is why
- * an unknown IP still gets throttled — under one shared "unknown" bucket. That
- * is deliberate: failing open here would make the limiter trivially bypassable
- * by anyone who can strip a header.
- */
-function clientIp(req: Request): string {
-  const fwd = req.headers.get("x-forwarded-for");
-  if (fwd) {
-    const first = fwd.split(",")[0]?.trim();
-    if (first) return first;
-  }
-  return req.headers.get("x-real-ip")?.trim() || "unknown";
-}
-
-/**
- * Name/email pairs straight off an unvalidated body, for the honeypot log only.
- * Deliberately tolerant: the whole point is to describe a submission we are
- * about to throw away, so it must not throw on a malformed payload.
- */
-function rawMembersPreview(body: Json): { name: string; email: string }[] | null {
-  if (!Array.isArray(body.members)) return null;
-  return body.members.slice(0, MAX_MEMBERS).map((m) => {
-    const src = (m ?? {}) as Json;
-    return { name: str(src.name), email: str(src.email) };
-  });
-}
-
-const sinceIso = (minutes: number) =>
-  new Date(Date.now() - minutes * 60_000).toISOString();
 
 export async function POST(req: Request) {
   // ── Deadline ─────────────────────────────────────────────────────────────
