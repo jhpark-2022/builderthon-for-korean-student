@@ -51,10 +51,17 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   // the first client render still produces Korean to match the server HTML, and
   // this swaps it in the same frame, so the hydration mismatch is never visible.
   useIsomorphicLayoutEffect(() => {
-    const saved =
-      typeof window !== "undefined"
-        ? (window.localStorage.getItem(STORAGE_KEY) as Locale | null)
-        : null;
+    if (typeof window === "undefined") return;
+    // ?lang=en|ko가 저장값보다 먼저입니다(app/layout.tsx의 alternates.languages, 2026-09-18). 값은
+    // 저장해 두어 다음 방문에도 이어집니다.
+    const q = new URLSearchParams(window.location.search).get("lang");
+    if (q === "ko" || q === "en") {
+      setLocaleState(q);
+      try { window.localStorage.setItem(STORAGE_KEY, q); } catch { /* storage blocked */ }
+      return;
+    }
+    let saved: string | null = null;
+    try { saved = window.localStorage.getItem(STORAGE_KEY); } catch { /* storage blocked */ }
     if (saved === "ko" || saved === "en") setLocaleState(saved);
   }, []);
 

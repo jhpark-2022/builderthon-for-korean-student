@@ -7,7 +7,7 @@ import { useLocale } from "@/lib/LocaleContext";
 import { naru, naruLinks, openChatLabels, register as registerCopy, type Layer, type Stat, type RecordPhoto } from "@/data/naru";
 import { useCrossingRegisterOptional } from "@/components/crossing/RegisterProvider";
 import { links, type Phrase } from "@/data/dictionary";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   DECEMBER_EVENT_NAME,
@@ -210,7 +210,6 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
     const id = window.setInterval(tick, 30000);
     return () => window.clearInterval(id);
   }, []);
-  void locale;
   const units = naru.eventHero.countdownUnits;
   const pad = (n: number) => String(n).padStart(2, "0");
   // DECIDED 2026-09-18 (모바일 수정 브리프 2): 한 줄. 서울 기준만(싱가포르 줄은 시차 한 시간에
@@ -723,7 +722,7 @@ export default function NaruHome() {
             올렸습니다 - 8월의 설명이 전부 저쪽으로 갔으니, 더 알고 싶은 사람에게
             이 버튼은 선택지가 아니라 다음 문장입니다. 주황은 히어로의 주 CTA가
             이미 쓰고 있어서 흰 면을 씁니다(색 규칙은 히어로 주석 참고). */}
-        <div className="mt-12 flex justify-center">
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
           <Link
             href={naruLinks.archive}
             onClick={() => track("naru_cta", { src: "record", to: "archive" })}
@@ -995,7 +994,7 @@ export default function NaruHome() {
             <a
               href={naruLinks.alumni}
               onClick={() => track("naru_mail", { src: "alumni" })}
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2.5 text-sm font-medium text-white/75 transition hover:border-white/35 hover:bg-white/10 hover:text-white"
+              className={buttonClass("secondary")}
             >
               {t(naru.join.alumni.mailLabel)}
               <span aria-hidden className="text-white/50">→</span>

@@ -388,6 +388,7 @@ export const naru = {
         src: "/record/hero-day1-group.webp",
         width: 1200,
         height: 900,
+        day: { ko: "Day 1", en: "Day 1" },
         alt: {
           ko: "2026년 8월 22일 Day 1, 싱가포르 파운드리에 모인 참가자 단체 사진",
           en: "Day 1, 22 August 2026: everyone gathered at Foundry in Singapore",
@@ -398,6 +399,7 @@ export const naru = {
         src: "/record/hero-day1-hall.webp",
         width: 1200,
         height: 900,
+        day: { ko: "Day 1", en: "Day 1" },
         alt: {
           ko: "Day 1 파운드리 홀, 무대의 AWS 세션을 듣는 참가자들",
           en: "Day 1 at Foundry: participants listening to the AWS session on stage",
@@ -408,6 +410,7 @@ export const naru = {
         src: "/record/hero-day8-group.webp",
         width: 1200,
         height: 900,
+        day: { ko: "Day 8", en: "Day 8" },
         alt: {
           ko: "Day 8 시상식이 끝난 뒤 참가자와 멘토, 운영진이 함께 찍은 단체 사진",
           en: "Day 8: participants, mentors and organisers together after the awards",
@@ -418,6 +421,7 @@ export const naru = {
         src: "/record/hero-day8-judgement-room.webp",
         width: 1200,
         height: 900,
+        day: { ko: "Day 8", en: "Day 8" },
         alt: {
           ko: "Day 8 저지먼트 트랙 공유회, 책상에 앉아 발표를 듣는 참가자들",
           en: "Day 8 judgement-track sharing: participants at their tables, listening",
@@ -1518,6 +1522,7 @@ export const naru = {
       },
     ] as {
       name: Phrase;
+      title: Phrase;
       when: Phrase;
       dayOffset: number | null;
       body: Phrase;

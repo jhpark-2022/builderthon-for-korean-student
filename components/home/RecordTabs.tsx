@@ -541,6 +541,7 @@ export default function RecordTabs({ only, compact = false }: { only?: TabId[]; 
                 </li>
               ))}
             </ul>
+            )}
           </div>
 
           <div className="mt-8">

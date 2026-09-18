@@ -44,32 +44,42 @@ const SITE_URL = "https://builderthon-for-korean-student.vercel.app";
 //
 // 2026-09-17: 기간이 확정되어(12/10~12/14) 기간으로 바꿨습니다.
 const SITE_NAME = "나루 NARU";
+// 2026-09-18 (감사 반영 브리프 9.5): 홈의 기본 제목에 이벤트 키워드. 검색 결과에서 "나루 NARU"만으로는
+// 무엇을 하는 사이트인지 없었습니다. 다른 페이지는 template("%s | 나루 NARU")을 그대로 씁니다.
+const HOME_TITLE = `${DECEMBER_EVENT_NAME?.ko ?? "크로싱 서울"} 2026 | ${SITE_NAME}`;
 const SITE_DESCRIPTION =
   `싱가포르 한인 학생 빌더 커뮤니티. 안전하게 도전할 자리와 자기 가치를 증명할 경험을 만듭니다. 다음 이벤트 ${DECEMBER_EVENT_NAME?.ko ?? "크로싱 서울"}은 2026년 12월 10일부터 14일까지 서울에서 열립니다. 한국의 대학생과 해외의 한인 유학생이 국경과 상관없이 만나는 자리입니다.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: SITE_NAME,
+    default: HOME_TITLE,
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
+  // 한 URL에 두 언어(localStorage 로케일)라 언어별 URL이 없습니다. ?lang=en은 LocaleProvider가
+  // 읽어 영어로 엽니다(2026-09-18). 로케일별 description은 정적 생성이라 한 벌뿐입니다. TODO: confirm.
+  alternates: {
+    canonical: "/",
+    languages: { ko: "/", en: "/?lang=en" },
+  },
   keywords: [
     "나루", "NARU", "싱가포르 한인 학생", "빌더 커뮤니티", "빌더톤", "Builderthon",
     "Zero100", "Singapore", "Korean students", "AI", "NUS", "NTU", "SMU", "서울",
     "크로싱 서울", "CROSSING SEOUL", "한인 유학생",
   ],
   openGraph: {
-    title: SITE_NAME,
+    title: HOME_TITLE,
     description: SITE_DESCRIPTION,
     url: SITE_URL,
     siteName: SITE_NAME,
     type: "website",
     locale: "ko_KR",
+    alternateLocale: ["en_US"],
   },
   twitter: {
     card: "summary_large_image",
-    title: SITE_NAME,
+    title: HOME_TITLE,
     description: SITE_DESCRIPTION,
   },
 };
@@ -99,7 +109,8 @@ export const viewport: Viewport = {
 // it would opt every page out of static rendering for one string.
 //
 // Keep the storage key and the "ko" fallback in step with LocaleContext.
-const LOCALE_BOOTSTRAP = `(function(){try{var l=localStorage.getItem("builderthon.locale");if(l!=="ko"&&l!=="en")l="ko";var d=document.documentElement;d.lang=l;d.setAttribute("data-locale",l);}catch(e){}})()`;
+// ?lang=en|ko가 있으면 그것이 이깁니다(alternates.languages의 en URL, 2026-09-18). LocaleProvider도 같은 규칙.
+const LOCALE_BOOTSTRAP = `(function(){try{var q=new URLSearchParams(location.search).get("lang");var l=(q==="ko"||q==="en")?q:localStorage.getItem("builderthon.locale");if(l!=="ko"&&l!=="en")l="ko";var d=document.documentElement;d.lang=l;d.setAttribute("data-locale",l);}catch(e){}})()`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

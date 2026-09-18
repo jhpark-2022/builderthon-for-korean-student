@@ -12,6 +12,7 @@ import { useRegisterOptional } from "@/lib/RegisterContext";
 import { useScrollDirection } from "@/lib/useScrollDirection";
 import { isScrollLocked } from "@/lib/useBodyScrollLock";
 import LocaleToggle from "@/components/LocaleToggle";
+import MotionToggle from "@/components/ui/MotionToggle";
 import ChatGlyph from "@/components/ChatGlyph";
 import ReturningGreeting from "./ReturningGreeting";
 
@@ -179,10 +180,9 @@ export default function JourneyNav({
     if (brand !== "naru" || !activeSection || !railRef.current) return;
     const chip = railRef.current.querySelector<HTMLElement>(`a[href="#${activeSection}"]`);
     if (!chip) return;
-    const rail = railRef.current;
-    const left = chip.offsetLeft - (rail.clientWidth - chip.offsetWidth) / 2;
-    rail.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
-  }, [activeSection, brand]);
+    // 감사 반영 브리프 2.2: 활성 칩을 레일 가운데로. block:nearest라 문서는 움직이지 않습니다.
+    chip.scrollIntoView({ inline: "center", block: "nearest", behavior: reduce ? "auto" : "smooth" });
+  }, [activeSection, brand, reduce]);
   // Shared with the bottom bars and the back-to-top button (lib/useScrollDirection):
   // on a phone this header is two rows tall and, together with the bottom rail,
   // was taking a quarter of an in-app browser's viewport. Scrolling DOWN — the
