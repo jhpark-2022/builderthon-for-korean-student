@@ -307,6 +307,11 @@ export const naru = {
       minutes: { ko: "분", en: "min" },
       seconds: { ko: "초", en: "sec" },
     },
+    // 카운트다운 두 줄(2026-09-18, 사용자): 서울 0시 기준과 싱가포르 0시 기준.
+    countdownRows: {
+      seoul: { ko: "서울 기준 KST", en: "Seoul KST" },
+      singapore: { ko: "싱가포르 기준 SGT", en: "Singapore SGT" },
+    },
     started: { ko: "시작했습니다", en: "It has started" },
     // ── 기슭 형상의 라벨 (2026-09-17, 배경 형상 브리프) ────────────────────
     // 배경의 두 형상 아래에 붙는 작은 대문자 라벨. 로고 링의 글자 문법이라 두
@@ -1312,9 +1317,11 @@ export const naru = {
       ko: "AI가 잘하는 일은 셋입니다. 아이디어를 코드로 만드는 것, 복잡한 비즈니스 프로세스를 이해하는 것, 많은 데이터를 분석하는 것. 8월은 첫 번째에 집중했습니다. 12월은 나머지 둘로 넓힙니다. 데이터에서 문제를 찾는 것부터 앞에서 증명하기까지, 한 사이클을 닷새로.",
       en: "AI is good at three things: turning an idea into code, understanding a complex business process, and analysing a lot of data. August focused on the first. December widens to the other two: from finding the problem in the data to proving it out front, one full cycle in five days.",
     },
+    // DECIDED 2026-09-18 (사용자): "아직 정해지지 않은 것" 목록(tbd)을 화면에서 뺐습니다.
+    // 미정을 나열하는 대신 이 한 줄만. tbd 키는 그대로 둡니다.
     draftNote: {
-      ko: "기획 초안입니다. 확정되면 이 자리에서 바로 고칩니다.",
-      en: "This is the working draft. It gets corrected here the moment it is settled.",
+      ko: "새로 정해지는 것은 이 자리에 업데이트합니다.",
+      en: "Anything newly settled gets updated here.",
     },
     shape: [
       {
@@ -1327,7 +1334,7 @@ export const naru = {
         // "목표"가 붙은 이유(2026-09-17): 같은 항목이 아래 tbd 목록에도 "문제를
         // 여는 회사"로 있습니다. 한 화면에서 숫자이자 미정이면 초안 고지로는
         // 가려지지 않습니다. 숫자는 목표라고 말하고, 미정은 미정 목록이 말합니다.
-        note: { ko: "목표. 데이터와 담당자까지", en: "Target. The data and the person who owns it" },
+        note: { ko: "데이터와 담당자까지", en: "The data and the person who owns it" },
       },
       {
         value: { ko: "60명+", en: "60+" },

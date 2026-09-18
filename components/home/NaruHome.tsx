@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import {
   DECEMBER_EVENT_NAME,
   DECEMBER_STARTS_AT_MS,
+  DECEMBER_STARTS_AT_SG_MS,
   decemberEventLabel,
   formatDecemberDateLine,
   formatDecemberDay,
@@ -195,43 +196,58 @@ function TermLink({ text, term, href }: { text: string; term: string; href: stri
 // 열리는 날)입니다. 나머지는 프로그램 챕터의 목록이 갖습니다.
 // ─────────────────────────────────────────────────────────────────────────────
 function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => string; locale: "ko" | "en"; className?: string }) {
-  const [left, setLeft] = useState<{ d: number; h: number; m: number; s: number } | null | "started">(null);
+  type Left = { d: number; h: number; m: number; s: number } | "started";
+  const [left, setLeft] = useState<{ seoul: Left; sg: Left } | null>(null);
   useEffect(() => {
-    const tick = () => {
-      const ms = DECEMBER_STARTS_AT_MS - Date.now();
-      if (ms <= 0) { setLeft("started"); return; }
+    const calc = (target: number): Left => {
+      const ms = target - Date.now();
+      if (ms <= 0) return "started";
       const secs = Math.floor(ms / 1000);
-      setLeft({ d: Math.floor(secs / 86400), h: Math.floor((secs % 86400) / 3600), m: Math.floor((secs % 3600) / 60), s: secs % 60 });
+      return { d: Math.floor(secs / 86400), h: Math.floor((secs % 86400) / 3600), m: Math.floor((secs % 3600) / 60), s: secs % 60 };
     };
+    const tick = () => setLeft({ seoul: calc(DECEMBER_STARTS_AT_MS), sg: calc(DECEMBER_STARTS_AT_SG_MS) });
     tick();
-    // DECIDED 2026-09-18 (사용자): 초까지. 1초마다 갱신합니다.
     const id = window.setInterval(tick, 1000);
     return () => window.clearInterval(id);
   }, []);
+  void locale;
   const units = naru.eventHero.countdownUnits;
   const pad = (n: number) => String(n).padStart(2, "0");
-  const cells: { v: string; u: Phrase }[] =
-    left && left !== "started"
-      ? [{ v: String(left.d), u: units.days }, { v: pad(left.h), u: units.hours }, { v: pad(left.m), u: units.minutes }, { v: pad(left.s), u: units.seconds }]
+  const cells = (v: Left | undefined): { v: string; u: Phrase }[] =>
+    v && v !== "started"
+      ? [{ v: String(v.d), u: units.days }, { v: pad(v.h), u: units.hours }, { v: pad(v.m), u: units.minutes }, { v: pad(v.s), u: units.seconds }]
       : [{ v: "--", u: units.days }, { v: "--", u: units.hours }, { v: "--", u: units.minutes }, { v: "--", u: units.seconds }];
-  // DECIDED 2026-09-17 (배경 수정 브리프): 유리 카드에서 한 줄짜리 얇은 패널로.
-  // DECIDED 2026-09-18 (사용자): "아직 정해지지 않은 것" 칩은 뺍니다(미정 목록은
-  // #december에 그대로). 숫자 넷(일·시간·분·초)만 한 줄에. 초 자리는 tabular-nums라
-  // 매초 바뀌어도 폭이 흔들리지 않습니다.
+  // DECIDED 2026-09-18 (사용자): 상자를 꽉 채우고, 서울 기준과 싱가포르 기준 두 줄.
+  // 시작 시각은 12월 10일 0시. 서울(+9)과 싱가포르(+8)에서 그 0시가 한 시간 다릅니다.
+  // 숫자 넷이 상자 폭을 나눠 갖습니다(grid). tabular-nums라 매초 흔들리지 않습니다.
+  const rows: { key: "seoul" | "sg"; label: Phrase }[] = [
+    { key: "seoul", label: naru.eventHero.countdownRows.seoul },
+    { key: "sg", label: naru.eventHero.countdownRows.singapore },
+  ];
   return (
-    <div className={`flex flex-wrap items-center gap-x-5 gap-y-3 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-3.5 text-left ${className}`}>
+    <div className={`w-full rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4 text-left sm:px-6 ${className}`}>
       <p className="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-[#F2B183]">{t(naru.eventHero.countdownLabel)}</p>
-      <div className="flex items-baseline gap-3.5">
-        {left === "started" ? (
-          <p className="text-lg font-black text-white">{t(naru.eventHero.started)}</p>
-        ) : (
-          cells.map((c, i) => (
-            <div key={i} className="flex items-baseline gap-1">
-              <span className="text-2xl font-black leading-none tabular-nums text-white">{c.v}</span>
-              <span className="text-[0.65rem] font-semibold text-white/55">{t(c.u)}</span>
+      <div className="mt-3 divide-y divide-white/10">
+        {rows.map((row) => {
+          const v = left?.[row.key];
+          return (
+            <div key={row.key} className="grid gap-y-1.5 py-2.5 first:pt-0 last:pb-0 sm:grid-cols-[minmax(0,7.5rem)_1fr] sm:items-center sm:gap-x-4">
+              <span className="break-keep text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-white/55">{t(row.label)}</span>
+              {v === "started" ? (
+                <p className="text-xl font-black text-white">{t(naru.eventHero.started)}</p>
+              ) : (
+                <div className="grid grid-cols-4 gap-2">
+                  {cells(v).map((c, i) => (
+                    <div key={i} className="flex items-baseline gap-1">
+                      <span className="text-[1.6rem] font-black leading-none tabular-nums text-white sm:text-[2.2rem]">{c.v}</span>
+                      <span className="text-[0.65rem] font-semibold text-white/55">{t(c.u)}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          ))
-        )}
+          );
+        })}
       </div>
     </div>
   );
@@ -343,7 +359,7 @@ export default function NaruHome() {
               </a>
             </div>
             {/* 카운트다운(얇은 한 줄). lg부터 여기, 그 아래 폭에서는 무대 다음에. */}
-            <CountdownPanel t={t} locale={locale} className="mt-8 hidden lg:flex" />
+            <CountdownPanel t={t} locale={locale} className="mt-8 hidden lg:block" />
           </motion.div>
           {/* 오른쪽 단 = 8월 행사 사진 넷 (DECIDED 2026-09-17, 사용자). 8월 히어로의
               메탈 휴먼 자리입니다. 사람이 많이 나온 장면만, 같은 사진은 사이트에 한 번.
@@ -356,7 +372,7 @@ export default function NaruHome() {
         {/* 폰(lg 아래): 카피 바로 다음에 사진 넷(2×2), 그 아래 카운트다운. */}
         <div className="px-6 sm:px-10 lg:hidden">
           <HeroPhotos photos={naru.eventHero.photos} t={t} className="mt-8" />
-          <CountdownPanel t={t} locale={locale} className="mt-6 justify-center" />
+          <CountdownPanel t={t} locale={locale} className="mt-6" />
         </div>
       </Chapter>
 
@@ -549,20 +565,9 @@ export default function NaruHome() {
           </ol>
         </div>
 
-        {/* 아직 정해지지 않은 것. 칩은 8월 문법(색 점 + 라벨). 상자는 그대로. */}
-        <div className="mx-auto mt-12 max-w-3xl rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-5 text-left">
-          <h3 className={LABEL_HEADING}>{t(naru.december.tbdLabel)}</h3>
-          <ul role="list" className="mt-4 flex flex-wrap gap-2">
-            {naru.december.tbd.map((item) => (
-              <li key={item.en}>
-                <Chip tone="pending"><span aria-hidden className="text-amber-300/70">●</span>{t(item)}</Chip>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-4 break-keep text-sm leading-relaxed text-white/70">
-            {t(naru.december.tbdNote)}
-          </p>
-        </div>
+        {/* DECIDED 2026-09-18 (사용자): "아직 정해지지 않은 것" 상자를 뺐습니다. 미정 목록
+            대신 위 draftNote 한 줄("새로 정해지는 것은 이 자리에 업데이트합니다")이 그 말을
+            합니다. december.tbd 키는 그대로. */}
 
         {/* 플로우 스트립. 8월 "참여 플로우"의 문법. */}
         <div className="mx-auto mt-12 max-w-5xl text-left">

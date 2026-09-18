@@ -215,3 +215,5 @@ export function formatDecemberDayWithWeekday(locale: Locale, offset: number): st
  * 문자열에 시간대를 박아 두는 것이 핵심입니다(registrationWindow.ts의 같은 규칙).
  */
 export const DECEMBER_STARTS_AT_MS = new Date(`${DECEMBER_STARTS_AT}T00:00:00+09:00`).getTime();
+/** 같은 날 0시를 싱가포르 시간(+08:00)으로 본 시각. 히어로 카운트다운의 둘째 줄(2026-09-18). */
+export const DECEMBER_STARTS_AT_SG_MS = new Date(`${DECEMBER_STARTS_AT}T00:00:00+08:00`).getTime();
