@@ -352,6 +352,8 @@ export const naru = {
     // 8월 히어로의 오른쪽 단(Glass 패널)에 있던 카운트다운의 자리입니다. 숫자는
     // 마운트 뒤에 채우고 패널 높이는 고정입니다(하이드레이션 밀림 방지).
     countdownLabel: { ko: "크로싱 서울까지", en: "Until CROSSING SEOUL" },
+    // 컨테이너 하나의 aria-label(감사 반영 브리프 1.4). 자식 숫자와 단위는 aria-hidden.
+    countdownAria: { ko: "크로싱 서울까지 {d}일 {h}시간", en: "{d} days {h} hours until CROSSING SEOUL" },
     countdownUnits: {
       days: { ko: "일", en: "days" },
       hours: { ko: "시간", en: "hrs" },

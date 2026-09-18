@@ -220,22 +220,35 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
     left && left !== "started"
       ? [{ v: String(left.d), u: units.days, phone: true }, { v: pad(left.h), u: units.hours, phone: false }, { v: pad(left.m), u: units.minutes, phone: false }]
       : [{ v: "--", u: units.days, phone: true }, { v: "--", u: units.hours, phone: false }, { v: "--", u: units.minutes, phone: false }];
+  // 낭독은 컨테이너의 aria-label 하나로(감사 반영 브리프 1.4, WCAG 4.1.3). 전에는 자식이
+  // 따로 읽혀 "81 일"로 끊겼고, aria-live면 분마다 낭독됐습니다. 아래 자식은 전부 aria-hidden.
+  const aria =
+    left === "started"
+      ? t(naru.eventHero.started)
+      : left
+        ? t(naru.eventHero.countdownAria).replace("{d}", String(left.d)).replace("{h}", String(left.h))
+        : t(naru.eventHero.countdownLabel);
   return (
-    <div className={`flex w-full flex-wrap items-center gap-x-5 gap-y-2 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-3.5 text-left ${className}`}>
-      <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#F2B183]">
+    <div role="group" aria-label={aria} className={`flex w-full flex-wrap items-center gap-x-5 gap-y-2 rounded-2xl border border-white/[0.12] bg-white/[0.04] px-5 py-3.5 text-left ${className}`}>
+      {/* 2026-09-18 (감사 반영 브리프 1.4): 테두리는 --border-2, 라벨은 흰색. 주황은 옆의 점 하나
+          (상태 표시)뿐입니다. 이 점이 주황 허용 목록의 "카운트다운 옆 점"입니다. */}
+      <p aria-hidden className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-white/80">
+        <span className="h-[7px] w-[7px] shrink-0 rounded-full bg-naru-orange" />
         {t(naru.eventHero.countdownLabel)}
         <span className="text-white/45">{` · ${t(naru.eventHero.countdownRows.seoul)}`}</span>
       </p>
       {left === "started" ? (
-        <p className="text-xl font-black text-white">{t(naru.eventHero.started)}</p>
+        <p aria-hidden className="text-xl font-black text-white">{t(naru.eventHero.started)}</p>
       ) : (
-        <div className="flex items-baseline gap-4">
+        <div aria-hidden className="flex items-baseline gap-4">
           {cells.map((c, i) => (
             <div key={i} className={`items-baseline gap-1 ${c.phone ? "flex" : "hidden sm:flex"}`}>
               <span className="text-[2rem] font-black leading-none tabular-nums text-white">{c.v}</span>
               <span className="text-xs font-semibold text-white/55">{t(c.u)}</span>
             </div>
           ))}
+          {/* 폰은 일만 보여서 요일을 보강합니다: "81일 · 12.10 목"(감사 반영 브리프 1.4). */}
+          <span className="text-xs font-semibold text-white/55 sm:hidden">{`· ${formatDecemberDayWithWeekday(locale, 0)}`}</span>
         </div>
       )}
     </div>
@@ -946,10 +959,12 @@ export default function NaruHome() {
                 ) : card.openChat ? (
                   <OpenChatLink t={t} src="naru-join" label={openChatLabels.join} />
                 ) : (
+                  // 텍스트 링크(감사 반영 브리프 7.2): 함께 챕터에 외곽선 버튼이 다섯이었습니다. 보조 버튼은
+                  // 알럼 띠의 "메일로 보내기" 하나. 히트 영역 44px.
                   <a
                     href={card.door}
                     onClick={() => track("naru_mail", { src: `join_${card.id}` })}
-                    className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2.5 text-sm font-medium text-white/75 transition hover:border-white/35 hover:bg-white/10 hover:text-white"
+                    className={`${buttonClass("text")} -my-2.5 min-h-[44px] py-2.5`}
                   >
                     {t(card.doorLabel)}
                     <span aria-hidden className="text-white/50">→</span>

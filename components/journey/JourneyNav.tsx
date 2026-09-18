@@ -594,7 +594,7 @@ export default function JourneyNav({
                   // 대가: 레일 총 길이가 늘어 한 화면에 보이는 칩이 줄어듭니다.
                   // 원래부터 가로 스크롤 레일이라 감당하는 쪽을 골랐습니다.
                   // 상단 행의 퀴즈 칩(✦)은 이 레일이 아니라 첫 행에 있어 대상이 아닙니다.
-                  className={`inline-flex min-h-[44px] min-w-[5.25rem] shrink-0 items-center justify-center whitespace-nowrap rounded-full border px-3 text-[0.7rem] font-semibold backdrop-blur transition active:scale-[0.97] ${
+                  className={`inline-flex min-h-[44px] min-w-[5.25rem] shrink-0 snap-center items-center justify-center whitespace-nowrap rounded-full border px-3 text-[0.7rem] font-semibold backdrop-blur transition active:scale-[0.97] ${
                     here
                       ? "border-accent/40 bg-accent/[0.12] text-white"
                       : "border-white/[0.12] bg-white/[0.06] text-white/75"
