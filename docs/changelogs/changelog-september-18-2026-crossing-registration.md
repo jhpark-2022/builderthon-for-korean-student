@@ -25,10 +25,8 @@
   Postgres가 허용하지 않아서).
 - `crossing_participants` 뷰: 0002와 같은 보안(security_invoker, anon·authenticated revoke).
 - RLS ON, 정책 0. 쓰기는 service_role로만. 전부 멱등. 8월 표에 닿는 문장 0개.
-- **아직 적용하지 않았습니다.** 이 세션에는 DB 자격증명(Supabase 로그인 토큰, DB 비밀번호)이
-  없습니다. 적용: 대시보드 SQL 에디터에 파일 내용을 붙여 넣거나, `supabase login` 뒤
-  `supabase db push`. 적용 전 count: `registrations` **44**, `registration_members` **74**
-  (REST count=exact, 2026-09-18). 적용 뒤 같은지 확인해 아래 §5에 적을 것.
+- 적용됨(2026-09-18 밤, `supabase db push --linked`. 토큰과 DB 비밀번호는 `.env.local`에만).
+  `supabase migration list`: 0001~0004 전부 remote에 있음.
 
 ## 3. 코드
 
@@ -65,12 +63,17 @@
 ## 5. 검증
 
 1. `npx tsc --noEmit`, `npm run build` 통과. 프로덕션 콘솔 오류 0.
-2. 마이그레이션 전후 count: **적용 대기.** 전 44 / 74, `crossing_registrations` 없음(404).
+2. 마이그레이션 전후 count: `registrations` 44 → **44**, `registration_members` 74 → **74**.
+   `crossing_registrations`·`crossing_members` 0(테스트 행 정리 뒤).
 3. 8월 라우트 회귀: 빈 본문·허니팟·유효 본문 curl → 리팩토링 전후 전부 `403 registration_closed`,
    응답 본문 동일.
-4. 12월 라우트: (a) 지금 상태 `403 registration_not_open` 확인. (b)~(g)는 표가 생긴 뒤
-   `CROSSING_WINDOW.opensAt`을 과거로 임시 설정하고(커밋 안 함) `scripts/crossing-route-test.sh`로.
-   **적용 대기.**
+4. 12월 라우트(로컬 빌드, `CROSSING_WINDOW.opensAt`을 과거로 임시 설정 뒤 되돌림, 커밋 안 함):
+   (a) 창 닫힘 `403 registration_not_open` / (b) 유효 본문 `201`, 두 표에 행 하나씩,
+   `event_slug` 둘 다 `crossing-seoul-2026-12`, `consent_at` 채워짐, `ip_hash` 해시 / (c) 같은
+   이메일 재제출 `409 already_registered`, 부모 행 정리되어 고아 0 / (d) 동의 없음
+   `400 consent_required` / (e) 모르는 answers 키(`bogus`, `bogus2`) 버려져 `answers {}` /
+   (f) `eventSlug` 다름 `400 invalid_event` / (g) 허니팟 `201`이지만 행 없음.
+   테스트 행은 `crossing_registrations`의 오늘 행만 DELETE(cascade). 8월 표는 손대지 않음.
 5. 홈·아카이브 스크린샷 전후(같은 로컬 조건, 커밋 2 빌드 vs 커밋 3 빌드): `/2026-08` 1440·390
    전부 0px, 홈 390 0px, 홈 1440 318px(카운트다운 "분" 숫자 자리, 캡처 사이에 분이 바뀜).
 6. 8월 명단 스크립트 회귀: 리팩토링 전후 docx 본문 370줄 동일(추출 시각 제외). 신청 43건 /
@@ -79,4 +82,3 @@
 ## 6. TODO: confirm
 
 - 등록 창 시각(`CROSSING_WINDOW`), 추가 질문(`data/crossingForm.ts`), 동의 문구, 명단 docx 경로.
-- 마이그레이션 적용과 §5.2·§5.4.
