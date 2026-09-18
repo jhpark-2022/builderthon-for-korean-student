@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// POST /api/crossing/register — 크로싱 서울 등록을 Supabase에 씁니다.
+// POST /api/crossing/register. 크로싱 서울 등록을 Supabase에 씁니다.
 // (2026-09-18, Supabase 등록 브리프 2.2). 8월 라우트(/api/register)와 별개이고
 // 공통 로직은 lib/register/shared.ts에서 가져옵니다.
 //
@@ -68,7 +68,7 @@ export async function POST(req: Request) {
   const honeypot = str(body.url_confirm);
   if (honeypot) {
     const who = (rawMembersPreview(body) ?? []).map((m) => `${m.name} <${m.email}>`).join(", ");
-    console.warn(`[crossing/register] honeypot tripped — discarded. field=${JSON.stringify(honeypot.slice(0, 120))} submitter=${who || "(no member data)"}`);
+    console.warn(`[crossing/register] honeypot tripped. discarded. field=${JSON.stringify(honeypot.slice(0, 120))} submitter=${who || "(no member data)"}`);
     return NextResponse.json({ ok: true, id: crypto.randomUUID() }, { status: 201 });
   }
 
@@ -81,7 +81,7 @@ export async function POST(req: Request) {
   ]);
   const verdict = throttleVerdict({ short: shortWindow.count, long: longWindow.count, global: globalWindow.count });
   if (verdict !== "ok") {
-    if (verdict === "global") console.error(`[crossing/register] GLOBAL RATE LIMIT HIT — ${globalWindow.count} in ${GLOBAL.minutes}m.`);
+    if (verdict === "global") console.error(`[crossing/register] GLOBAL RATE LIMIT HIT. ${globalWindow.count} in ${GLOBAL.minutes}m.`);
     return NextResponse.json({ error: "rate_limited" }, { status: 429 });
   }
 
