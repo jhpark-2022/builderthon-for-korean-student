@@ -246,19 +246,55 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
 // 칸도 4:3, fill + cover가 실제로는 아무것도 자르지 않습니다(PhotoWall과 같음).
 // 오른쪽 열을 조금 내려(lg:mt-10) 한 덩어리로 읽히게 합니다.
 // ─────────────────────────────────────────────────────────────────────────────
+// 2026-09-18 (감사 반영 브리프 1.3): 사진 묶음 아래 한 줄 캡션("제로백 빌더톤 · 2026.08 싱가포르").
+// 캡션이 없으면 12월 사진으로 읽혔습니다. 데스크톱은 호버 시 각 사진 하단에 "Day 1" 캡션이
+// 올라옵니다(photos[].day). 폰은 정적 한 줄만. sizes는 실측 렌더 폭(폰 45vw, 데스크톱 약
+// 280px)에 맞춰 dpr 3 기기에서 흐리지 않게(브리프 9.3). src가 없는 사진은 그리지 않습니다.
 function HeroPhotos({ photos, t, className = "" }: { photos: RecordPhoto[]; t: (p: Phrase) => string; className?: string }) {
-  if (photos.length === 0) return null;
+  const shown = photos.filter((p) => !!p.src).slice(0, 4);
+  if (shown.length === 0) return null;
   return (
-    <div className={`grid grid-cols-2 gap-3 sm:gap-4 ${className}`}>
-      {photos.slice(0, 4).map((photo, i) => (
-        <div
-          key={photo.src}
-          className={`relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.9)] ${i % 2 === 1 ? "lg:translate-y-8" : ""}`}
-        >
-          <Image src={photo.src} alt={t(photo.alt)} fill sizes="(max-width: 1024px) 45vw, 22vw" priority={i < 2} className="object-cover object-center" />
-        </div>
-      ))}
-    </div>
+    <figure className={className}>
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
+        {shown.map((photo, i) => (
+          <div
+            key={photo.src}
+            className={`group relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.9)] ${i % 2 === 1 ? "lg:translate-y-8" : ""}`}
+          >
+            <Image src={photo.src} alt={t(photo.alt)} fill sizes="(max-width: 1023px) 45vw, 280px" priority={i < 2} className="object-cover object-center" />
+            {photo.day && (
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 bottom-0 hidden translate-y-full bg-gradient-to-t from-black/75 to-transparent px-3 pb-2 pt-6 text-[12px] font-bold text-white transition-transform duration-300 group-hover:translate-y-0 motion-reduce:transition-none lg:block"
+              >
+                {t(photo.day)}
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
+      {/* lg에서는 홀수 칸이 36px 내려가 있어 그만큼 더 띄웁니다. */}
+      <figcaption className="mt-3 text-center text-[12px] text-white/50 lg:mt-12 lg:text-left">{t(naru.eventHero.photosCaption)}</figcaption>
+    </figure>
+  );
+}
+
+// 창이 열리기 전의 등록 버튼(감사 반영 브리프 1.1). 흐림(opacity) 대신 색으로 비활성을 말합니다:
+// 흰 글자 /70은 바탕 위 9:1이라 4.5:1을 넉넉히 넘습니다. disabled 속성 대신 aria-disabled를
+// 쓰는 이유는 포커스가 닿아야 aria-describedby의 캡션이 읽히기 때문입니다. 누르면 아무 일도
+// 없습니다. 창이 열리면 부르는 쪽의 open 분기가 대신 그립니다.
+function PreparingButton({ t, noteId, className = "" }: { t: (p: Phrase) => string; noteId: string; className?: string }) {
+  return (
+    <button
+      type="button"
+      aria-disabled="true"
+      aria-describedby={noteId}
+      onClick={(e) => e.preventDefault()}
+      className={`inline-flex cursor-not-allowed items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-5 py-3 text-sm font-bold text-white/70 sm:px-8 sm:py-4 sm:text-base ${className}`}
+    >
+      {t(registerCopy.preparing)}
+      <span aria-hidden className="text-white/40">→</span>
+    </button>
   );
 }
 
@@ -346,12 +382,12 @@ export default function NaruHome() {
               ) : regState === "closed" ? (
                 <span className={`${buttonClass("secondary")} cursor-default opacity-70`}>{t(registerCopy.closed)}</span>
               ) : (
-                // 창이 열리기 전: 눌리지 않는 등록 버튼(2026-09-18, 사용자). 주 CTA의 면을 쓰되
-                // 반투명. title이 이유를 말합니다. 열리면 위의 open 분기가 대신 그립니다.
-                <button type="button" disabled aria-disabled="true" title={t(registerCopy.notYet)} className={`${buttonClass("primary", "naru")} cursor-not-allowed opacity-55 hover:translate-y-0`}>
-                  {t(registerCopy.cta)}
-                  <span aria-hidden className="text-white/60">→</span>
-                </button>
+                // 창이 열리기 전: "등록 준비 중" + 바로 아래 12px 캡션(감사 반영 브리프 1.1).
+                // 그 전(2026-09-18 아침)의 반투명 "등록하기"는 이유 없이 죽어 있는 1차 CTA였습니다.
+                <div className="flex flex-col items-center gap-2 lg:items-start">
+                  <PreparingButton t={t} noteId="hero-register-note" />
+                  <p id="hero-register-note" className="text-[12px] leading-snug text-white/60">{t(registerCopy.preparingNote)}</p>
+                </div>
               )}
               {/* 오픈채팅이 막혀 있으면(links.openChat 빈 문자열, 2026-09-17) 이 앵커가
                   히어로의 유일한 문이라 주 CTA의 면(그라데이션 필)을 받습니다. 히어로의
@@ -612,10 +648,8 @@ export default function NaruHome() {
             </button>
           ) : regState === "not_open" ? (
             <>
-              <button type="button" disabled aria-disabled="true" title={t(registerCopy.notYet)} className={`${buttonClass("secondary")} cursor-not-allowed opacity-55`}>
-                {t(registerCopy.cta)}
-                <span aria-hidden className="text-white/50">→</span>
-              </button>
+              {/* 위 ctaNote("등록은 아직 열리지 않았습니다…")가 이 버튼의 캡션입니다. */}
+              <PreparingButton t={t} noteId="december-register-note" />
               <OpenChatLink t={t} src="naru-december" label={openChatLabels.december} variant="secondary" />
             </>
           ) : null}
@@ -703,6 +737,16 @@ export default function NaruHome() {
             {t(naru.record.cta)}
             <span aria-hidden className="text-white/50">→</span>
           </Link>
+          {/* 8월 참가자를 #join의 알럼 띠로(감사 반영 브리프 5.4). 그 띠는 17프레임 중 15번째라
+              여기서 연결하지 않으면 못 찾습니다. */}
+          <a
+            href="#join-alumni"
+            onClick={() => track("naru_cta", { src: "record", to: "join-alumni" })}
+            className={`${buttonClass("text")} -my-2.5 min-h-[44px] py-2.5`}
+          >
+            {t(naru.record.alumniLink)}
+            <span aria-hidden>→</span>
+          </a>
         </div>
       </Chapter>
 

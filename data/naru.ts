@@ -154,6 +154,10 @@ export const openChatLabels = {
 // 껍데기(제목, 버튼, 상태 문장)만. 8월의 dict.register는 건드리지 않습니다.
 export const register = {
   cta: { ko: "등록하기", en: "Register" },
+  // 2026-09-18 (감사 반영 브리프 1.1): 창이 열리기 전의 버튼 라벨과 그 아래 캡션. 비활성
+  // "등록하기"에 이유가 없어 첫 화면에서 이탈한다는 것이 여섯 관점의 P0였습니다.
+  preparing: { ko: "등록 준비 중", en: "Registration opens later" },
+  preparingNote: { ko: "열리면 이 자리에서 알립니다", en: "It opens right here when it does" },
   // 창이 열리기 전에도 버튼은 보입니다(사용자, 2026-09-18: "넣어는 줘. 클릭이 되게 하지는 말고").
   // disabled이고 title로 이 문장을 보여 줍니다.
   notYet: { ko: "등록은 아직 열리지 않았습니다. 열리면 이 버튼이 켜집니다.", en: "Registration is not open yet. This button turns on when it is." },
@@ -325,6 +329,14 @@ export const naru = {
   // 내려갔습니다. 위의 hero 블록(태그라인)은 그쪽이 씁니다.
   eventHero: {
     eyebrow: { ko: "나루의 다음 이벤트", en: "NARU's next event" },
+    // TODO: confirm. 나루를 모르는 사람에게 첫 화면에서 나루가 무엇인지 말하는 한 문장
+    // (감사 반영 브리프 1.2). 나루 정체성 문구는 사용자가 정합니다.
+    naruLine: {
+      ko: "싱가포르에서 시작한 한인 학생 빌더 커뮤니티, 나루의 다음 이벤트입니다.",
+      en: "The next event from NARU, the Korean student builder community that started in Singapore.",
+    },
+    // 사진 넷 아래 한 줄(감사 반영 브리프 1.3). 캡션이 없으면 12월 사진으로 읽힙니다.
+    photosCaption: { ko: "제로백 빌더톤 · 2026.08 싱가포르", en: "Zero100 builderthon · Aug 2026, Singapore" },
     // 이름 아래 한 줄. 포지션은 december.heading이 그대로 맡습니다.
     sub: {
       // DECIDED 2026-09-17 (사용자): "raw data"라는 말을 쓰지 않습니다. 이번 회차가
@@ -1203,9 +1215,11 @@ export const naru = {
     // 처음 읽는 사람은 같은 것인지 모릅니다. #why의 아이브로와 같은 말로 묶고,
     // NaruHome이 그 구절을 #why로 가는 링크로 그립니다(notSequelTerm이 그 구절).
     // 두 챕터 뒤에서 풀리는 전방 참조가 이름 있는 앵커가 됩니다.
+    // 2026-09-18 (감사 반영 브리프 3.5): 8월 챕터의 "나루의 첫 이벤트"와 짝이 맞게 "두 번째
+    // 이벤트"로. 전에는 "2회차가 아닙니다"와 "첫 이벤트"가 순서상 부딪혀 관계가 헷갈렸습니다.
     notSequel: {
-      ko: "제로백 빌더톤의 2회차가 아닙니다. 그 8일에서 나온 변하지 않는 두 개를 그대로 잇는, 나루의 다음 이벤트입니다.",
-      en: "This is not a second run of the Zero100 builderthon. It is NARU's next event, carrying the two things that do not change, both of which came out of those eight days.",
+      ko: "나루의 두 번째 이벤트입니다. 제로백 빌더톤의 속편은 아니고, 그 8일에서 나온 변하지 않는 두 개를 그대로 잇습니다.",
+      en: "NARU's second event. Not a sequel to the Zero100 builderthon, but it carries the two things that do not change, both of which came out of those eight days.",
     },
     /** notSequel 안에서 #why로 링크되는 구절. notSequel의 문자열에 그대로 들어 있어야 합니다. */
     notSequelTerm: { ko: "변하지 않는 두 개", en: "the two things that do not change" },
