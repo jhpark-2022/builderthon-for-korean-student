@@ -10,20 +10,21 @@
 # 자격증명은 website/.env.local의 NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY.
 # service_role 키라 RLS를 우회한다. 절대 브라우저로 넘기지 말 것.
 
-import json
 import os
 import sys
-import subprocess
-from collections import Counter, OrderedDict
-from datetime import datetime, timedelta, timezone
+from collections import OrderedDict
+from datetime import datetime
 from pathlib import Path
 
 from docx import Document
 
-REPO = Path(__file__).resolve().parent.parent
-OUT = REPO.parent / "Execution" / "Tracking" / "빌더톤_신청자_명단.docx"
-KST = timezone(timedelta(hours=9))
-EM = " "  # 전각 공백. 문서 전체가 이걸로 항목을 띄운다.
+# 2026-09-18: 공통 부분(env, REST fetch, KST, 정렬, 표)은 scripts/roster_lib.py로 꺼냈습니다.
+# 12월 스크립트(build-crossing-roster.py)와 같이 씁니다. 이 스크립트의 결과 docx는 그대로입니다.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from roster_lib import REPO, KST, EM, NO_ENTRY, load_env, fetch, kst, ranked, clear_body, add_table  # noqa: E402
+
+# ROSTER_OUT을 주면 그 경로에 씁니다(회귀 확인용). 기본은 Dropbox의 운영 문서.
+OUT = Path(os.environ["ROSTER_OUT"]) if os.environ.get("ROSTER_OUT") else REPO.parent / "Execution" / "Tracking" / "빌더톤_신청자_명단.docx"
 
 TRACK_LABELS = {
     "unsure": "아직 모르겠음",
@@ -35,88 +36,12 @@ TRACK_LABELS = {
     "sales": "영업(구 문항)",
     "marketing": "마케팅(구 문항)",
 }
-NO_ENTRY = "미기재"
-
-
-def load_env():
-    env = {}
-    for line in (REPO / ".env.local").read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        k, v = line.split("=", 1)
-        env[k.strip()] = v.strip()
-    url = env.get("NEXT_PUBLIC_SUPABASE_URL")
-    key = env.get("SUPABASE_SERVICE_ROLE_KEY")
-    if not url or not key:
-        sys.exit(".env.local에 NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY가 필요합니다.")
-    return url.rstrip("/"), key
-
-
-def fetch(url, key, path):
-    # 시스템 파이썬에 CA 번들이 없어 urllib이 Supabase TLS를 검증하지 못하는 경우가 있다.
-    # curl은 macOS 키체인을 쓰므로 그쪽으로 붙는다.
-    out = subprocess.run(
-        [
-            "curl", "-sS", "--fail", f"{url}/rest/v1/{path}",
-            "-H", f"apikey: {key}",
-            "-H", f"Authorization: Bearer {key}",
-        ],
-        capture_output=True,
-        text=True,
-    )
-    if out.returncode != 0:
-        sys.exit(f"Supabase 요청 실패 ({path}): {out.stderr.strip()}")
-    return json.loads(out.stdout)
-
-
-def kst(iso, fmt="%Y-%m-%d %H:%M"):
-    # Supabase는 마이크로초 자리수가 들쭉날쭉해서 fromisoformat에 그대로 넣기 어렵다.
-    # 소수점 이하를 정확히 6자리로 맞춰 준다.
-    s = iso.replace("Z", "+00:00")
-    if "." in s:
-        head, rest = s.split(".", 1)
-        digits = ""
-        while rest and rest[0].isdigit():
-            digits, rest = digits + rest[0], rest[1:]
-        s = f"{head}.{digits[:6].ljust(6, '0')}{rest}"
-    return datetime.fromisoformat(s).astimezone(KST).strftime(fmt)
 
 
 def track_label(track):
     if not track:
         return NO_ENTRY
     return TRACK_LABELS.get(track, track)
-
-
-def ranked(pairs):
-    """(값, 최초등장순번) 목록을 건수 내림차순 → 최초 등장 순으로 정렬한다."""
-    counts = Counter(v for v, _ in pairs)
-    first = {}
-    for v, seq in pairs:
-        first.setdefault(v, seq)
-    return sorted(counts.items(), key=lambda kv: (-kv[1], first[kv[0]]))
-
-
-def clear_body(doc):
-    body = doc.element.body
-    for child in list(body.iterchildren()):
-        if child.tag.endswith("}sectPr"):
-            continue
-        body.remove(child)
-
-
-def add_table(doc, headers, rows):
-    t = doc.add_table(rows=1, cols=len(headers))
-    t.style = "Table Grid"
-    for cell, text in zip(t.rows[0].cells, headers):
-        cell.paragraphs[0].add_run(text).bold = True
-    for row in rows:
-        cells = t.add_row().cells
-        for cell, text in zip(cells, row):
-            cell.text = "" if text is None else str(text)
-    doc.add_paragraph("")
-    return t
 
 
 def main():

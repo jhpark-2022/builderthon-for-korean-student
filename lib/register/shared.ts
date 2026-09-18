@@ -7,7 +7,8 @@
 import { createHash } from "node:crypto";
 
 export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-export const MAX_MEMBERS = 3;
+import { MAX_MEMBERS } from "@/data/crossingForm";
+export { MAX_MEMBERS };
 
 // ── Throttle limits ─────────────────────────────────────────────────────────
 // Tuned to be USELESS against a real student and painful for a script. The

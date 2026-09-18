@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
-import { naru, naruLinks, openChatLabels, type Layer, type Stat, type RecordPhoto } from "@/data/naru";
+import { naru, naruLinks, openChatLabels, register as registerCopy, type Layer, type Stat, type RecordPhoto } from "@/data/naru";
+import { useCrossingRegisterOptional } from "@/components/crossing/RegisterProvider";
 import { links, type Phrase } from "@/data/dictionary";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -264,6 +265,10 @@ function HeroPhotos({ photos, t, className = "" }: { photos: RecordPhoto[]; t: (
 
 export default function NaruHome() {
   const { t, locale } = useLocale();
+  // 크로싱 서울 등록 상태(2026-09-18). 프로바이더가 없거나 창이 닫혀 있으면 "not_open"이고
+  // 화면은 그 전과 같습니다. open이면 CTA 셋이 "등록하기"로, closed면 "등록이 마감됐습니다".
+  const reg = useCrossingRegisterOptional();
+  const regState = reg?.state ?? "not_open";
   // 8월 히어로의 패럴랙스 값 여섯. 두 단이 스크롤에 따라 양옆으로 벌어지며 사라집니다.
   const { heroRef, leftX, rightX, splitX, heroFade } = useHeroSplit();
 
@@ -333,17 +338,26 @@ export default function NaruHome() {
               {t(naru.eventHero.sub)}
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-3 lg:justify-start">
-              <OpenChatLink t={t} src="naru-hero" label={openChatLabels.december} variant="hero" />
+              {regState === "open" ? (
+                <button type="button" onClick={() => { track("naru_cta", { src: "hero", to: "register" }); reg?.openRegister(); }} className={`group ${buttonClass("primary", "naru")}`}>
+                  {t(registerCopy.cta)}
+                  <span aria-hidden className={ARROW_CLASS}>→</span>
+                </button>
+              ) : regState === "closed" ? (
+                <span className={`${buttonClass("secondary")} cursor-default opacity-70`}>{t(registerCopy.closed)}</span>
+              ) : (
+                <OpenChatLink t={t} src="naru-hero" label={openChatLabels.december} variant="hero" />
+              )}
               {/* 오픈채팅이 막혀 있으면(links.openChat 빈 문자열, 2026-09-17) 이 앵커가
                   히어로의 유일한 문이라 주 CTA의 면(그라데이션 필)을 받습니다. 히어로의
-                  주 CTA는 언제나 하나입니다. */}
+                  주 CTA는 언제나 하나입니다. 등록이 열리면(regState open) 등록 버튼이 주 CTA. */}
               <a
                 href="#december"
                 onClick={() => track("naru_cta", { src: "hero", to: "december" })}
-                className={links.openChat ? buttonClass("secondary") : `group ${buttonClass("primary", "naru")}`}
+                className={links.openChat || regState === "open" ? buttonClass("secondary") : `group ${buttonClass("primary", "naru")}`}
               >
                 {t(naru.eventHero.ctaProgram)}
-                <span aria-hidden className={links.openChat ? "text-white/50" : ARROW_CLASS}>↓</span>
+                <span aria-hidden className={links.openChat || regState === "open" ? "text-white/50" : ARROW_CLASS}>↓</span>
               </a>
             </div>
             {/* 카운트다운(얇은 한 줄). lg부터 여기, 그 아래 폭에서는 무대 다음에. */}
@@ -585,9 +599,18 @@ export default function NaruHome() {
 
         {/* 문. 참가자는 오픈채팅(2차 유령 필), 출제사와 후원은 텍스트 링크.
             페이지의 그라데이션 필은 히어로 하나뿐입니다. */}
-        <p className="mx-auto mt-12 max-w-2xl break-keep text-sm text-white/55">{t(naru.december.ctaNote)}</p>
+        <p className="mx-auto mt-12 max-w-2xl break-keep text-sm text-white/55">
+          {regState === "closed" ? t(registerCopy.closed) : t(naru.december.ctaNote)}
+        </p>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
-          <OpenChatLink t={t} src="naru-december" label={openChatLabels.december} variant="secondary" />
+          {regState === "open" ? (
+            <button type="button" onClick={() => { track("naru_cta", { src: "december", to: "register" }); reg?.openRegister(); }} className={`group ${buttonClass("primary", "naru")}`}>
+              {t(registerCopy.cta)}
+              <span aria-hidden className={ARROW_CLASS}>→</span>
+            </button>
+          ) : regState === "not_open" ? (
+            <OpenChatLink t={t} src="naru-december" label={openChatLabels.december} variant="secondary" />
+          ) : null}
           <a
             href={naruLinks.sponsor}
             onClick={() => track("naru_mail", { src: "december" })}
@@ -855,9 +878,16 @@ export default function NaruHome() {
                 {t(card.lines[0])}
               </p>
               <div className="mt-6">
-                {card.openChat && !links.openChat ? (
+                {card.openChat && regState === "open" ? (
+                  <button type="button" onClick={() => { track("naru_cta", { src: "join", to: "register" }); reg?.openRegister(); }} className={buttonClass("secondary")}>
+                    {t(registerCopy.cta)}
+                    <span aria-hidden className="text-white/50">→</span>
+                  </button>
+                ) : card.openChat && regState === "closed" ? (
+                  <p className="break-keep text-sm text-white/55">{t(registerCopy.closed)}</p>
+                ) : card.openChat && !links.openChat ? (
                   // 오픈채팅이 막혀 있는 동안(2026-09-17) 참가자 카드에는 문이 없습니다.
-                  // 버튼 자리에 둘째 줄("등록은 아직 열리지 않았습니다")을 보입니다.
+                  // 버튼 자리에 둘째 줄("등록이 열리면 이 자리에서 알립니다")을 보입니다.
                   <p className="break-keep text-sm text-white/55">{t(card.lines[1])}</p>
                 ) : card.openChat ? (
                   <OpenChatLink t={t} src="naru-join" label={openChatLabels.join} />

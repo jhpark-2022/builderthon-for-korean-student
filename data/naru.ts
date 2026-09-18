@@ -149,6 +149,40 @@ export const openChatLabels = {
 // 그 위에 8월 recap과 12월 설명. 12월 설명은 8월 사이트와 같은 격식으로."
 // #why 앵커는 없어졌습니다. 코어 둘은 #naru 안에 있고, 안쪽 앵커 id="why"가
 // 남아 있어 옛 링크(/#why, notSequel의 링크)는 그대로 닿습니다.
+// ── 크로싱 서울 등록 폼의 카피 (2026-09-18, Supabase 등록 브리프 2.1·2.4) ──────────
+// 질문의 라벨은 data/crossingForm.ts에 있습니다(질문과 라벨이 한 줄에). 여기는 폼의
+// 껍데기(제목, 버튼, 상태 문장)만. 8월의 dict.register는 건드리지 않습니다.
+export const register = {
+  cta: { ko: "등록하기", en: "Register" },
+  closed: { ko: "등록이 마감됐습니다.", en: "Registration has closed." },
+  title: { ko: "크로싱 서울 등록", en: "Register for CROSSING SEOUL" },
+  intro: { ko: "스크리닝은 없습니다. 오는 사람이 참가자입니다.", en: "No screening. If you come, you are in." },
+  memberYou: { ko: "등록하는 사람", en: "You" },
+  memberN: { ko: "팀원 {n}", en: "Member {n}" },
+  addMember: { ko: "팀원 추가", en: "Add a member" },
+  removeMember: { ko: "이 팀원 빼기", en: "Remove this member" },
+  teamSize: { ko: "팀은 2~3명", en: "Teams are 2 to 3" },
+  submit: { ko: "등록 보내기", en: "Send registration" },
+  submitting: { ko: "보내는 중", en: "Sending" },
+  successTitle: { ko: "등록됐습니다.", en: "You are registered." },
+  successBody: { ko: "며칠 안에 안내 메일을 보냅니다.", en: "We will email you within a few days." },
+  successMail: { ko: "문의는 메일로", en: "Questions by email" },
+  close: { ko: "닫기", en: "Close" },
+  errors: {
+    required: { ko: "필수 항목입니다.", en: "Required." },
+    too_long: { ko: "너무 깁니다.", en: "Too long." },
+    invalid_email: { ko: "이메일 형식이 아닙니다.", en: "Not a valid email." },
+    invalid_option: { ko: "목록에서 고르세요.", en: "Pick one from the list." },
+    invalid_country: { ko: "두 글자 나라 코드(예: JP)로 적어 주세요.", en: "Two-letter country code (e.g. JP)." },
+    duplicate_email: { ko: "같은 이메일이 두 번 있습니다.", en: "The same email appears twice." },
+    already_registered: { ko: "이 이메일은 이미 등록돼 있습니다.", en: "This email is already registered." },
+    rate_limited: { ko: "잠시 뒤 다시 시도해 주세요.", en: "Please try again in a moment." },
+    registration_not_open: { ko: "등록이 아직 열리지 않았습니다.", en: "Registration is not open yet." },
+    registration_closed: { ko: "등록이 마감됐습니다.", en: "Registration has closed." },
+    generic: { ko: "보내지 못했습니다. 잠시 뒤 다시 시도해 주세요.", en: "Could not send. Please try again." },
+  },
+} as const;
+
 export const naruNav: { id: string; label: Phrase }[] = [
   // DECIDED 2026-09-17 (홈 흐름 재배치 브리프): 크로싱 서울 · 프로그램 · 얻는 것 ·
   // 8월 · 나루 · 학생회와 기업 · 함께. 순서는 화면 순서와 같아야 합니다.

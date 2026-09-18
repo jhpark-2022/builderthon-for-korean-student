@@ -32,3 +32,33 @@ export const REGISTRATION_CLOSES_AT = new Date("2026-08-22T14:15:00+08:00").getT
 export function isRegistrationClosed(now: number = Date.now()): boolean {
   return now >= REGISTRATION_CLOSES_AT;
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 크로싱 서울 등록 창 (2026-09-18, Supabase 등록 브리프 2.3).
+//
+// 8월 상수와 isRegistrationClosed()는 위에 그대로입니다(/2026-08과 /api/register가
+// 읽습니다). 12월은 회차 슬러그와 창(opensAt / closesAt)을 따로 둡니다. 둘 다 null이면
+// 아직 열지 않은 것입니다. 시각을 채울 때는 KST 오프셋(+09:00)을 문자열에 박으세요.
+// 서버(app/api/crossing/register)와 클라이언트(components/crossing)가 같은 함수를 봅니다.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** 지금 등록을 받는 회차. crossing_registrations.event_slug에 그대로 들어갑니다. */
+export const CURRENT_EVENT = "crossing-seoul-2026-12";
+
+/** TODO: confirm. 등록 창. 예: opensAt "2026-10-20T12:00:00+09:00". 둘 다 null = 아직 안 엶. */
+export const CROSSING_WINDOW: { opensAt: string | null; closesAt: string | null } = {
+  opensAt: null,
+  closesAt: null,
+};
+
+export type RegistrationState = "not_open" | "open" | "closed";
+
+/** `now` 시점의 등록 상태. 모르는 회차는 not_open. */
+export function registrationState(eventSlug: string = CURRENT_EVENT, now: number = Date.now()): RegistrationState {
+  if (eventSlug !== CURRENT_EVENT) return "not_open";
+  const { opensAt, closesAt } = CROSSING_WINDOW;
+  if (!opensAt) return "not_open";
+  if (now < new Date(opensAt).getTime()) return "not_open";
+  if (closesAt && now >= new Date(closesAt).getTime()) return "closed";
+  return "open";
+}
