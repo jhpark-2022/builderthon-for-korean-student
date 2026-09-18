@@ -179,5 +179,8 @@ export const SEOUL_WATERMARK = {
   revealVh: 0.8,      // 히어로 하단이 뷰포트 상단을 지난 뒤 이만큼(뷰포트 높이 배)에 걸쳐 떠오름
   points: { phone: 500, desktop: 1400 },
   calmBright: 0.6,    // #naru부터 이 배수로
+  // 세로 화면(2026-09-18 모바일 수정 브리프 6.1·6.5): 히어로에 110vw로 서 있다가(밝기 80%),
+  // 히어로가 나가면 0.4화면에 걸쳐 풀리고, 본문 뒤에서는 없고, #naru부터 90vw·50%로 다시.
+  portrait: { heroW: 1.10, heroCy: 0.56, heroBright: 0.8, dissolveVh: 0.4, naruW: 0.90, naruCy: 0.5, naruBright: 0.5 },
 
 } as const;

@@ -177,7 +177,7 @@ export class BackgroundScene {
   private stageLayout: StageLayout | null = null;
   private lanternBaseY: number = CROSSING.lantern.y;
   /** water 변형: 서울 워터마크의 자리. 카메라 자식(z = −30)이라 뷰포트 비율을 그 평면의 월드로. */
-  private placeSeoul() {
+  private placeSeoul(widthFrac?: number, cyFrac?: number) {
     if (!this.particles || this.variant !== "water") return;
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -186,8 +186,9 @@ export class BackgroundScene {
     const halfH = 30 * Math.tan((fov * Math.PI) / 360);
     const halfW = halfH * (w / h);
     const W = SEOUL_WATERMARK;
-    const hw = (portrait ? W.portraitW : W.landscapeW) * halfW;
-    const sym = { x: (W.cx * 2 - 1) * halfW, y: (1 - W.cy * 2) * halfH, hw };
+    const hw = (widthFrac ?? (portrait ? W.portrait.heroW : W.landscapeW)) * halfW;
+    const cy = cyFrac ?? (portrait ? W.portrait.heroCy : W.cy);
+    const sym = { x: (W.cx * 2 - 1) * halfW, y: (1 - cy * 2) * halfH, hw };
     this.particles.setShapes(sym, sym);
   }
 
@@ -451,14 +452,25 @@ export class BackgroundScene {
       this.anchorTimer += dt;
       if (this.anchorTimer > 2) { this.anchorTimer = 0; this.readAnchors(); }
       const vh = window.innerHeight;
-      const r = clamp((this.scrollY - this.heroEnd) / (SEOUL_WATERMARK.revealVh * vh), 0, 1);
-      const reveal = r * r * (3 - 2 * r);
+      const ss = (x: number) => x * x * (3 - 2 * x);
+      const W = SEOUL_WATERMARK;
       const c = clamp((this.scrollY - (this.naruTop - 0.5 * vh)) / vh, 0, 1);
-      const calm = c * c * (3 - 2 * c);
+      const calm = ss(c);
+      let opacity: number;
+      if (vh > window.innerWidth) {
+        // 세로 화면: 히어로에 서 있다가 풀리고, 본문 뒤에서는 없고, #naru부터 다시(설정 portrait).
+        const g = ss(clamp((this.scrollY - this.heroEnd) / (W.portrait.dissolveVh * vh), 0, 1));
+        opacity = (1 - g) * W.portrait.heroBright + calm * W.portrait.naruBright;
+        this.placeSeoul(W.portrait.heroW + (W.portrait.naruW - W.portrait.heroW) * calm, W.portrait.heroCy + (W.portrait.naruCy - W.portrait.heroCy) * calm);
+      } else {
+        // 가로 화면: 히어로 하단이 뷰포트 상단을 지나면 revealVh에 걸쳐 떠오르고, 그 뒤로는
+        // 서 있습니다. #naru부터 조금 더 어둡게.
+        const r = clamp((this.scrollY - this.heroEnd) / (W.revealVh * vh), 0, 1);
+        opacity = ss(r) * (1 - calm * (1 - W.calmBright));
+      }
       this.particles?.updateCrossing(this.fieldTime, this.scroll, this.motionScale, { gather: 0, crossing: 0, arrived: 0, calm }, 0);
-      this.particles?.setShapeLook(SEOUL_WATERMARK.edgeBright, SEOUL_WATERMARK.innerBright, reveal * (1 - calm * (1 - SEOUL_WATERMARK.calmBright)), SEOUL_WATERMARK.edgePx, SEOUL_WATERMARK.innerPx);
-
-      if (this.particles) this.particles.points.visible = reveal > 0.001;
+      this.particles?.setShapeLook(W.edgeBright, W.innerBright, opacity, W.edgePx, W.innerPx);
+      if (this.particles) this.particles.points.visible = opacity > 0.001;
       // 포인터 ndc(-1..1)를 화면 uv(0..1)로. 셰이더가 파문을 여기에 놓습니다.
       this.pointerUv.set(
         this.pointer.ndc.x * 0.5 + 0.5,

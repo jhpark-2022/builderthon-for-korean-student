@@ -962,13 +962,13 @@ export default function NaruHome() {
             <a
               href={naruLinks.general}
               onClick={() => track("naru_mail", { src: "footer" })}
-              className="-my-2.5 inline-block py-2.5 text-white/65 underline-offset-4 transition hover:text-white hover:underline"
+              className="-my-3 inline-block py-3 text-white/65 underline-offset-4 transition hover:text-white hover:underline"
             >
               {t(naru.footer.contact)}
             </a>
             <Link
               href={naruLinks.archive}
-              className="-my-2.5 inline-block py-2.5 text-white/65 underline-offset-4 transition hover:text-white hover:underline"
+              className="-my-3 inline-block py-3 text-white/65 underline-offset-4 transition hover:text-white hover:underline"
             >
               {t(naru.footer.archive)}
             </Link>
@@ -1154,7 +1154,7 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
     >
       {/* 역할 라벨은 8월 칩 문법(2026-09-17). 가운데(주최)만 한 단 밝은 칩. */}
       <p>
-        <Chip tone={center ? "violet" : "neutral"} className="!text-[0.62rem] uppercase tracking-[0.14em]">{t(layer.role)}</Chip>
+        <Chip tone={center ? "violet" : "neutral"} className="!text-xs uppercase tracking-[0.14em] lg:!text-[0.62rem]">{t(layer.role)}</Chip>
       </p>
       <p className="mt-1.5 break-keep text-sm font-bold leading-snug text-white sm:text-base">
         {t(layer.who)}

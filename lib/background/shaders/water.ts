@@ -163,7 +163,11 @@ void main(){
   // (왼쪽 카피 + 카운트다운, 오른쪽 사진 넷)이 되면서 0.30은 CTA와 카운트다운
   // 패널 뒤였습니다. 두 단 사이의 틈(1440에서 x 690~750px)이 지금 비어 있는
   // 유일한 세로 띠라 등불과 기둥을 거기에 둡니다.
-  float lx = mix(0.20, 0.50, smoothstep(0.75, 1.3, uAspect))
+  // 세로 화면(2026-09-18 모바일 수정 브리프 6): 등불은 가운데. 0.20은 폰에서 왼쪽 가장자리에
+  // 반쯤 잘려 보였습니다. 수면·수평선·반사 기둥·깊은 물의 링과 점은 세로 화면에서 그리지
+  // 않습니다(아래 portrait). 남는 것은 하늘, 등불의 빛, 물살뿐입니다.
+  float portrait = 1.0 - step(1.0, uAspect);
+  float lx = mix(mix(0.20, 0.50, smoothstep(0.75, 1.3, uAspect)), 0.5, portrait)
            + (uScroll - 0.5) * 0.08
            + sin(uTime * 0.05) * 0.008;
   float dx = (p.x - lx) * uAspect;
@@ -218,11 +222,11 @@ void main(){
   // ── 합치기 ────────────────────────────────────────────────────────────────
   // 지평선은 선이 아니라 아주 얇은 전환입니다. 하드 엣지로 두면 화면을 가르는
   // 자로 읽히고, 그 위에 로고가 앉습니다.
-  float mask = smoothstep(H - 0.004, H + 0.004, p.y);
+  float mask = max(smoothstep(H - 0.004, H + 0.004, p.y), portrait);
   vec3 col = mix(water, sky, mask);
 
-  // 지평선 자체의 옅은 빛. 건너편이 거기 있다는 표시입니다.
-  col += uSkyHorizon * exp(-abs(p.y - H) * 130.0) * 0.30 * alive;
+  // 지평선 자체의 옅은 빛. 건너편이 거기 있다는 표시입니다. 세로 화면에는 없습니다.
+  col += uSkyHorizon * exp(-abs(p.y - H) * 130.0) * 0.30 * alive * (1.0 - portrait);
 
   // ── 깊은 물 ────────────────────────────────────────────────────────────────
   // 수면이 가라앉은 자리를 이 층이 받습니다(위 sink 주석).
@@ -275,10 +279,11 @@ void main(){
     float rings = smoothstep(0.86, 1.0, sin(phase)) * exp(-rr * 2.4);
 
     vec3 dcol = uSkyHorizon * cur * (0.32 + uFlow * 0.24);
-    dcol += uGlint * rings * (0.05 + uFlow * 0.045);
+    // 세로 화면에서는 링과 점을 그리지 않습니다(폰에서 본문 뒤 60~90vw 고리로 보였음).
+    dcol += uGlint * rings * (0.05 + uFlow * 0.045) * (1.0 - portrait);
     // 점 하나와 그 무리. 점은 작게 둡니다 - 크게 만들면 면이 되고, 면이 되면
     // 로고 한가운데의 점이 더 이상 눈에 띄지 않습니다(파일 머리의 색 규칙).
-    dcol += uLamp * (exp(-rr / 0.009) * 0.42 + exp(-rr / 0.10) * 0.055);
+    dcol += uLamp * (exp(-rr / 0.009) * 0.42 + exp(-rr / 0.10) * 0.055) * (1.0 - portrait);
 
     col += dcol * deep;
   }
