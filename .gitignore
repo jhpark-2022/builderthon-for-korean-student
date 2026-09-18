@@ -34,3 +34,7 @@ lib/metal-human.zip
 /Gemini_Generated_Image_*.png
 /public/hero-bg.png
 .shots/
+
+# 명단·백업 산출물은 레포에 두지 않는다 (2026-09-18)
+*.csv
+scripts/data/backup*
