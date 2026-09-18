@@ -405,7 +405,7 @@ export default function RecordTabs({ only }: { only?: TabId[] } = {}) {
                   <p className="mt-2 break-keep text-base font-bold leading-snug text-white">
                     {t(tr.title)}
                   </p>
-                  <p className="mt-1.5 break-keep text-sm leading-snug text-[#F2B183]">
+                  <p className="mt-1.5 break-keep text-sm leading-snug text-accent">
                     {t(tr.bottleneck)}
                   </p>
                   <p className="mt-3 break-keep text-xs leading-relaxed text-white/60">

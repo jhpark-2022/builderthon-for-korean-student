@@ -15,13 +15,12 @@
 // ─────────────────────────────────────────────────────────────────────────────
 import type { ReactNode } from "react";
 
-export type HaloTone = "violet" | "cyan" | "emerald" | "orange" | "purple";
+// 2026-09-18 (감사 반영 브리프 8): cyan·emerald·orange 톤을 뺐습니다. 이 컴포넌트는 나루 홈만
+// 쓰고, 홈의 발광은 보라 둘(violet = 틴트, purple = 원색)뿐입니다.
+export type HaloTone = "violet" | "purple";
 
 const TONE: Record<HaloTone, string> = {
   violet: "rgba(154,140,201,0.34)",  // --violet-soft
-  cyan: "rgba(167,180,228,0.30)",    // --cyan-soft
-  emerald: "rgba(16,185,129,0.26)",  // --green
-  orange: "rgba(238,138,79,0.26)",   // --orange. 면이 아니라 번짐이라 원장에 안 셉니다.
   purple: "rgba(75,58,140,0.55)",    // --purple. 히어로 H1의 발광.
 };
 

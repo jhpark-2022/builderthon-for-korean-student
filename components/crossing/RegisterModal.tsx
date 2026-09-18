@@ -210,8 +210,8 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource }
             <div className="overflow-y-auto overscroll-contain px-6 pt-8 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:px-9 sm:py-9">
               {status === "success" ? (
                 <div className="py-6 text-center">
-                  <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/10">
-                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-300"><path d="M4 12.5l5 5L20 6.5" /></svg>
+                  <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-accent/40 bg-accent/10">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="text-accent"><path d="M4 12.5l5 5L20 6.5" /></svg>
                   </span>
                   <h3 id="crossing-register-title" className="mt-6 text-[24px] font-bold leading-tight text-white sm:text-[28px]">{t(copy.successTitle)}</h3>
                   <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-white/70">{t(copy.successBody)}</p>

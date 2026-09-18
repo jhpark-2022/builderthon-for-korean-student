@@ -537,13 +537,16 @@ export const naru = {
   gains: {
     eyebrow: { ko: "참가 혜택", en: "What you get" },
     heading: { ko: "오면 무엇이 남는가", en: "What you leave with" },
+    // evidence: 카드 아래 8월 근거 한 줄(감사 반영 브리프 4.3). 키만 두고 화면에는 그리지
+    // 않습니다. 사용자의 "제목만" 결정(2026-09-17)과 충돌해서요. TODO: confirm(그릴지).
+    // 지어내지 않았습니다. 05는 근거가 없어 비웁니다.
     items: [
-      { num: "01", title: { ko: "실명 기업의 진짜 문제", en: "A real problem from a named company" } },
-      { num: "02", title: { ko: "멘토", en: "Mentors" } },
-      { num: "03", title: { ko: "앞에서 증명", en: "Proving it out front" } },
-      { num: "04", title: { ko: "무순위 어워드", en: "Awards with no ranking" } },
+      { num: "01", title: { ko: "실명 기업의 진짜 문제", en: "A real problem from a named company" }, evidence: { ko: "8월 코드프레소 출제", en: "August: Codepresso set the problem" } },
+      { num: "02", title: { ko: "멘토", en: "Mentors" }, evidence: { ko: "8월 11명", en: "August: eleven of them" } },
+      { num: "03", title: { ko: "앞에서 증명", en: "Proving it out front" }, evidence: { ko: "8월 21팀 발표", en: "August: 21 teams presented" } },
+      { num: "04", title: { ko: "무순위 어워드", en: "Awards with no ranking" }, evidence: { ko: "8월 4부문 10팀", en: "August: 10 teams across 4 categories" } },
       { num: "05", title: { ko: "국경 너머의 동료", en: "Peers from across the border" } },
-    ] as { num: string; title: Phrase }[],
+    ] as { num: string; title: Phrase; evidence?: Phrase }[],
     note: { ko: "디테일은 확정되는 대로 이 자리에서 공개합니다.", en: "Details go here as they are confirmed." },
   },
 
@@ -1409,8 +1412,11 @@ export const naru = {
     // submit: 그 스테이지가 끝나며 받는 제출물. workshop: 그날 붙는 3시간 워크샵.
     // 출처 빌더톤_2회차_기획.pdf 04.
     stages: [
+      // title: 한글 주 + 영문 소문자 보조(감사 반영 브리프 8, 영문 라벨 규칙). name은 기획서의
+      // 영문 스테이지 이름이고 ko 화면에서 보조 라벨로 작게 붙습니다. TODO: confirm(한글 이름).
       {
         name: { ko: "Team Bonding", en: "Team Bonding" },
+        title: { ko: "팀 본딩", en: "Team Bonding" },
         when: { ko: "본 일정 전", en: "Before it starts" },
         dayOffset: null,
         body: {
@@ -1425,6 +1431,7 @@ export const naru = {
       },
       {
         name: { ko: "Discovery", en: "Discovery" },
+        title: { ko: "문제 발견", en: "Discovery" },
         when: { ko: "1일차", en: "Day 1" },
         dayOffset: 0,
         body: {
@@ -1441,6 +1448,7 @@ export const naru = {
       },
       {
         name: { ko: "Build", en: "Build" },
+        title: { ko: "빌드", en: "Build" },
         when: { ko: "2일차", en: "Day 2" },
         dayOffset: 1,
         body: {
@@ -1456,6 +1464,7 @@ export const naru = {
       },
       {
         name: { ko: "Refine", en: "Refine" },
+        title: { ko: "다듬기", en: "Refine" },
         when: { ko: "3일차", en: "Day 3" },
         dayOffset: 2,
         body: {
@@ -1472,6 +1481,7 @@ export const naru = {
       },
       {
         name: { ko: "Pitch", en: "Pitch" },
+        title: { ko: "피치", en: "Pitch" },
         when: { ko: "4일차", en: "Day 4" },
         dayOffset: 3,
         body: {

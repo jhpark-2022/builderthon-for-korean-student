@@ -81,5 +81,9 @@ export const STATEMENT =
  * (violet-300 → fuchsia-300 → cyan-300)은 그쪽 팔레트라 여기 들여오지 않습니다.
  * 8월의 쓰임새(2행만 그라데이션, pb로 디센더 보호)만 같습니다.
  */
+// DECIDED 2026-09-18 (감사 반영 브리프 0, 사용자): 주황은 점으로만. 그라데이션은 보라 틴트
+// (#A99AD6)에서 자주 틴트(#C79BB4)로 끝납니다. 8월 문법 브리프 3장의 "보라 → 자주 → 주황"을
+// 이 결정이 대체합니다. 원색 --purple·--plum이 아니라 틴트인 이유는 대비입니다(어두운 바탕
+// 위 원색 보라 2.12:1). globals.css의 단색 폴백(#C79BB4)은 이제 끝 색과 같습니다.
 export const GRADIENT_TEXT =
-  "gradient-text bg-gradient-to-r from-[#A99AD6] via-[#C79BB4] to-[#EE8A4F] bg-clip-text pb-[0.14em] text-transparent";
+  "gradient-text bg-gradient-to-r from-[#A99AD6] to-[#C79BB4] bg-clip-text pb-[0.14em] text-transparent";

@@ -22,7 +22,6 @@ import Halo from "@/components/ui/Halo";
 import Chip, { ChipDot } from "@/components/ui/Chip";
 import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 import RouteMap from "@/components/shared/RouteMap";
-import FlowStrip from "@/components/shared/FlowStrip";
 import MobileChatBar from "@/components/shared/MobileChatBar";
 import PressRows from "@/components/shared/PressRows";
 import { BAND_TINT, BandFades } from "@/components/shared/Band";
@@ -290,11 +289,10 @@ export default function NaruHome() {
           이름, 기간, 도시는 전부 lib/naruDates.ts에서 옵니다. 이 파일에 날짜를
           쓰지 마세요.
 
-          주황 원장(2026-09-17 2차 갱신):
-            면  이 버튼(오픈채팅) 하나. 12월 아이브로의 주황 테두리는 #december로
-                내려가 그대로입니다.
-            점  #naru 코어 둘의 나루 표식, 배경 깊은 물의 점.
-            글자 기간 줄의 #F2B183 틴트.
+          주황 원장(2026-09-18, 감사 반영 브리프 0·8, 사용자 결정): 주황은 점으로만.
+            로고의 나루 점(헤더·푸터·#naru 인장), 배경 등불, 노선도의 현재 위치 점,
+            카운트다운 옆 점, #naru 코어 제목 앞 점. 이 다섯뿐입니다.
+            면·줄·글자색·그라데이션 끝의 주황은 전부 뺐습니다(제목 2행은 보라 → 자주).
           늘리지 마세요. */}
       {/* DECIDED 2026-09-17 (8월 문법 브리프): 두 단입니다. 8월 히어로의 그리드와
           같은 클래스이고 패럴랙스도 같은 훅(useHeroSplit)입니다. 왼쪽이 아이브로,
@@ -302,9 +300,8 @@ export default function NaruHome() {
           오른쪽(lg부터)이 카운트다운 패널. 파트너 로고 띠는 12월 출제사·후원사가
           확정될 때까지 두지 않습니다(components/shared/HeroPartnerStrip.tsx의 TODO).
 
-          주황 원장(2026-09-17 3차 갱신): 버튼 면에서 주황이 빠졌습니다. 주 CTA는
-          보라 → 자주 그라데이션 필입니다. 남은 주황은 점(로고, #naru 코어 표식),
-          그라데이션의 끝, 12월 아이브로 글자색, 기간 줄 틴트뿐입니다. */}
+          2026-09-18: 그라데이션 끝·12월 아이브로 글자색·기간 줄 틴트의 주황도 뺐습니다.
+          위의 주황 원장이 정본입니다. */}
       <Chapter id="top" align="center" wide className="pt-16 sm:pt-24 lg:pt-20">
         {/* relative: useScroll의 target은 offsetParent가 positioned여야 합니다.
             없으면 framer-motion이 콘솔에 경고를 냅니다(2026-09-17 배경 검증에서 발견). */}
@@ -328,16 +325,19 @@ export default function NaruHome() {
               )}
             </h1>
             {/* 굵은 기간 줄. 8월의 "2026.08.22 – 08.29 8일" 자리. */}
-            <p className="mt-8 text-sm font-semibold text-[#F2B183] drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base">
+            {/* 2026-09-18 (감사 반영 브리프 1.5): 주황 틴트 → 흰색 볼드. 주황은 점으로만. */}
+            <p className="mt-8 text-sm font-bold text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base">
               {formatDecemberDateLine(locale)}
             </p>
             <p className="mx-auto mt-4 max-w-xl break-keep text-base font-bold leading-snug text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-lg lg:mx-0">
               {t(naru.december.heading)}
             </p>
             <p className="mx-auto mt-3 max-w-xl break-keep text-sm leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base lg:mx-0">
+              {/* 나루 한 문장이 서술 첫 줄(감사 반영 브리프 1.2). TODO: confirm(문구는 사용자가). */}
+              <span className="text-white">{t(naru.eventHero.naruLine)}</span>{" "}
               {t(naru.eventHero.sub)}
             </p>
-            <div className="mt-10 flex flex-wrap justify-center gap-3 lg:justify-start">
+            <div className="mt-10 flex flex-wrap items-start justify-center gap-3 lg:justify-start">
               {regState === "open" ? (
                 <button type="button" onClick={() => { track("naru_cta", { src: "hero", to: "register" }); reg?.openRegister(); }} className={`group ${buttonClass("primary", "naru")}`}>
                   {t(registerCopy.cta)}
@@ -405,10 +405,11 @@ export default function NaruHome() {
           5차 그대로이고 바뀐 것은 보이는 문법입니다. */}
       <Chapter id="december" align="center" className={BAND_TINT}>
         <BandFades />
-        <Eyebrow color="orange">
+        {/* 2026-09-18 (감사 반영 브리프 8): 아이브로는 보라 외곽선 1종. 주황 글자·주황 발광을 뺐습니다. */}
+        <Eyebrow color="purple">
           {`${t(naru.december.eyebrowPrefix)}\u2002${decemberEventLabel(locale)}`}
         </Eyebrow>
-        <h2 className={H2}><Halo tone="orange">{t(naru.december.programHeading)}</Halo></h2>
+        <h2 className={H2}><Halo tone="violet">{t(naru.december.programHeading)}</Halo></h2>
         <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
           {t(naru.december.shapeLead)}
         </p>
@@ -428,10 +429,10 @@ export default function NaruHome() {
             <div key={stat.label.en} className="flex items-stretch">
               {i > 0 && <span aria-hidden className="mx-5 h-9 w-px self-center bg-white/[0.14] sm:mx-9" />}
               <div className="flex flex-col items-center px-1">
-                <dd className={`text-[clamp(1.5rem,4vw,2.25rem)] font-black leading-none ${i === 0 ? "text-[#F2B183]" : "text-white"}`}>
+                <dd className="text-[clamp(1.5rem,4vw,2.25rem)] font-black leading-none text-white">
                   {t(stat.value)}
                 </dd>
-                <dt className={`mt-1.5 break-keep text-center text-[0.68rem] font-bold uppercase tracking-[0.1em] ${i === 0 ? "text-[#F2B183]/80" : "text-white/50"}`}>
+                <dt className="mt-1.5 break-keep text-center text-[0.68rem] font-bold uppercase tracking-[0.1em] text-white/50">
                   {t(stat.label)}
                 </dt>
               </div>
@@ -544,9 +545,10 @@ export default function NaruHome() {
               </p>
               <p className="mt-0.5 text-xs font-semibold text-emerald-200/90">{t(naru.december.mentoringAlways)}</p>
             </div>
-            <ul role="list" className="grid flex-1 gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-4">
+            {/* 폰은 2열·작은 글자(길이 목표, 감사 반영 브리프 3.1). */}
+            <ul role="list" className="grid flex-1 grid-cols-2 gap-x-4 gap-y-1.5 sm:gap-x-6 sm:gap-y-2 lg:grid-cols-4">
               {naru.december.mentoringRules.map((rule, i) => (
-                <li key={i} className="flex gap-2.5 break-keep border-l-2 border-emerald-400/50 pl-3 text-sm leading-snug text-emerald-50/90">
+                <li key={i} className="flex gap-2.5 break-keep border-l-2 border-white/20 pl-3 text-xs leading-snug text-white/85 sm:text-sm">
                   {t(rule)}
                 </li>
               ))}
@@ -578,9 +580,9 @@ export default function NaruHome() {
                   <h4 className="break-keep text-[15px] font-bold leading-snug text-white sm:mt-2.5 sm:text-base">{t(gap.title)}</h4>
                 </div>
                 <p className="mt-2 flex items-start gap-2 break-keep text-sm leading-relaxed text-white/75">
-                  <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#F2B183]/80" />
+                  <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent/80" />
                   <span>
-                    <span className="mr-1.5 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-[#F2B183]">{t(naru.december.decemberLabel)}</span>
+                    <span className="mr-1.5 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">{t(naru.december.decemberLabel)}</span>
                     {gap.answer ? t(gap.answer) : t(naru.record.answerPending)}
                   </span>
                 </p>
@@ -593,23 +595,13 @@ export default function NaruHome() {
             대신 위 draftNote 한 줄("새로 정해지는 것은 이 자리에 업데이트합니다")이 그 말을
             합니다. december.tbd 키는 그대로. */}
 
-        {/* 플로우 스트립. 8월 "참여 플로우"의 문법. lg부터만(모바일 수정 브리프 1.2: 폰에서는
-            세로 상자 넷 + 화살표 셋 350px에 정보가 없음). */}
-        <div className="mx-auto mt-12 hidden max-w-5xl text-left lg:block">
-          <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/70">{t(naru.december.flowLabel)}</p>
-          <FlowStrip
-            className="mt-4"
-            align="center"
-            items={naru.december.flow}
-            render={(f) => (
-              <div className="flex w-full items-center justify-center rounded-xl border border-accent/25 bg-accent/10 px-4 py-2.5 text-center text-sm font-semibold text-white">{t(f)}</div>
-            )}
-          />
-        </div>
+        {/* 참여 플로우 스트립(등록 → 팀 본딩 → 닷새 → 결과 공유회)은 뺐습니다(2026-09-18, 감사 반영
+            브리프 3.2). 노선도가 데스크톱에서 렌더되는 것을 확인했고, 같은 시간축을 두 번 그리고
+            있었습니다. FlowStrip 컴포넌트와 december.flow 키는 그대로. */}
 
         {/* 문. 참가자는 오픈채팅(2차 유령 필), 출제사와 후원은 텍스트 링크.
             페이지의 그라데이션 필은 히어로 하나뿐입니다. */}
-        <p className="mx-auto mt-12 max-w-2xl break-keep text-sm text-white/55">
+        <p id="december-register-note" className="mx-auto mt-8 max-w-2xl break-keep text-sm text-white/55 lg:mt-12">
           {regState === "closed" ? t(registerCopy.closed) : t(naru.december.ctaNote)}
         </p>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
@@ -644,16 +636,20 @@ export default function NaruHome() {
           그리드), 폰은 두 열 + 마지막 한 장 전폭. 아래 한 줄이 "왜 제목뿐인가"의 답.
           8월 참가 혜택 필과 같은 emerald. 기본 이음매. */}
       <Chapter id="gains" align="center">
-        <Eyebrow color="emerald">{t(naru.gains.eyebrow)}</Eyebrow>
+        <Eyebrow color="purple">{t(naru.gains.eyebrow)}</Eyebrow>
         <h2 className={H2}><Halo tone="violet">{t(naru.gains.heading)}</Halo></h2>
-        <ol className="mx-auto mt-12 grid max-w-5xl grid-cols-2 gap-3 lg:grid-cols-5">
-          {naru.gains.items.map((item, i, arr) => (
+        {/* 2026-09-18 (감사 반영 브리프 4.1): 폰은 1열 리스트, 행 64px, 번호 필 왼쪽. 데스크톱은
+            카드 높이를 내용에 맞추고(items-start) 최소 높이만 통일. 전에는 같은 높이 카드 다섯에
+            "멘토" 두 글자가 빈 카드처럼 보였습니다. item.evidence는 그리지 않습니다(4.3, TODO: confirm). */}
+        <ol className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-2 lg:grid-cols-5 lg:items-start lg:gap-3">
+          {naru.gains.items.map((item) => (
             <li
               key={item.num}
-              className={`flex flex-col items-start rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-left ${i === arr.length - 1 ? "col-span-2 lg:col-span-1" : ""}`}
+              className="flex min-h-[64px] items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2 text-left lg:min-h-[8.5rem] lg:flex-col lg:items-start lg:p-5"
             >
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-400/15 text-sm font-black text-emerald-200">{item.num}</span>
-              <h3 className={`${H3} mt-4`}>{t(item.title)}</h3>
+              <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent/15 text-sm font-black text-accent">{item.num}</span>
+              <h3 className={`${H3} lg:mt-4`}>{t(item.title)}</h3>
+              {/* {item.evidence && <p className="mt-2 text-xs text-white/55">{t(item.evidence)}</p>} */}
             </li>
           ))}
         </ol>
@@ -665,7 +661,7 @@ export default function NaruHome() {
           히어로를 본 사람이 묻는 순서: 무엇을 하는가(#december) → 무엇이 남는가
           (#gains) → 그게 진짜인가(여기) → 누가 만드는가(#naru 이후). 기본 이음매. */}
       <Chapter id="record" align="center">
-        <Eyebrow color="violet">{t(naru.record.eyebrow)}</Eyebrow>
+        <Eyebrow color="purple">{t(naru.record.eyebrow)}</Eyebrow>
         <h2 className={H2}><Halo tone="violet">{t(naru.record.heading)}</Halo></h2>
         <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
           {t(naru.record.lead)}
@@ -724,10 +720,12 @@ export default function NaruHome() {
           alt={t(naru.hero.logoAlt)}
           width={900}
           height={900}
-          className="mx-auto h-auto w-40 sm:w-52"
+          // 보조 마크(감사 반영 브리프 6.3): 폰 160px, 데스크톱 220px. 형태는 로고 가이드가 정본이라
+          // 그대로입니다.
+          className="mx-auto h-auto w-[160px] sm:w-[220px]"
         />
         <div className="mt-6">
-          <Eyebrow color="violet">{t(naru.hero.eyebrow)}</Eyebrow>
+          <Eyebrow color="purple">{t(naru.hero.eyebrow)}</Eyebrow>
         </div>
         {/* 태그라인. 두 줄 고정(히어로에 있던 때의 이유 그대로: 두 개의 선언). */}
         <h2 className={H2}>
@@ -736,20 +734,21 @@ export default function NaruHome() {
             <span className={`${GRADIENT_TEXT} block break-keep`}>{t(naru.hero.titleLine2)}</span>
           </Halo>
         </h2>
-        <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
+        {/* 폰에서 3줄을 넘는 문단은 왼쪽 정렬(감사 반영 브리프 6.1). 데스크톱은 가운데 그대로. */}
+        <p className="mx-auto mt-6 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75 lg:text-center">
           {t(naru.group.lead)}
         </p>
         {/* 서명 헤어라인. 이 페이지에서 한 번. */}
         <div
           aria-hidden
-          className="mx-auto mt-12 h-[2px] w-full max-w-[52rem] bg-gradient-to-r from-accent to-accent-strong"
+          className="mx-auto mt-8 h-[2px] w-full max-w-[52rem] bg-gradient-to-r from-accent to-accent-strong lg:mt-12"
         />
         {/* 라벨만. "우리는 두 가지를 만들려고 모였습니다" 제목은 내려갔습니다
             (2026-09-17 3차). 태그라인이 바로 위에 H2로 있고, lead가 "바뀌지 않는
             것은 아래 두 개"라고 이미 말합니다. 같은 챕터에 큰 제목 둘은 길이만
             늘립니다. why.heading 키는 그대로. */}
-        <div id="why" className="mt-12">
-          <Eyebrow color="violet">{t(naru.why.eyebrow)}</Eyebrow>
+        <div id="why" className="mt-8 lg:mt-12">
+          <Eyebrow color="purple">{t(naru.why.eyebrow)}</Eyebrow>
         </div>
         {/* 코어 둘. 판 두 장.
             ol인 이유: 순서가 뜻입니다. 01이 문턱이고 02가 증명이며, 바로 아래
@@ -808,20 +807,21 @@ export default function NaruHome() {
         {/* 마지막 줄. 페이지 전체가 여기서 끝납니다. 위의 두 개를 빼면 전부
             방법이고, 방법은 바뀝니다(매니페스토 IV). 이 문장이 8일이 4일이 되는
             12월을 미리 설명합니다. */}
-        <div className="mx-auto mt-12 max-w-2xl">
+        <div className="mx-auto mt-8 max-w-2xl lg:mt-12">
           <h3 className={LABEL_HEADING}>{t(naru.why.agendaLabel)}</h3>
-          <p className="mt-3 break-keep text-base leading-relaxed text-white/75">{t(naru.why.agenda)}</p>
+          <p className="mt-3 break-keep text-left text-base leading-relaxed text-white/75 lg:text-center">{t(naru.why.agenda)}</p>
         </div>
               {/* ── 어떻게 일하는가 (DECIDED 2026-09-18, 사용자: "나루와 학생회와 기업 내용은 하나의
             챕터로 합쳐져야 함"). 따로 있던 #how 챕터(세 층, 문 셋, 하지 않는 것)가 이 챕터의
             마지막 블록이 됐습니다. 헤어라인 하나로 나뉘고 제목은 H3. 안쪽 앵커 id="how"는
             옛 링크와 층별 문(#join-*)의 출발점을 위해 남깁니다. 카피 키(naru.how.*)는 그대로.
             그 전의 주석: #december 뒤로 내려온 이유(2026-09-17)는 git 이력에. */}
-        <div id="how" className="mx-auto mt-16 max-w-5xl scroll-mt-24 border-t border-white/10 pt-12 text-center">
+        <div id="how" className="mx-auto mt-10 max-w-5xl scroll-mt-24 border-t border-white/10 pt-8 text-center lg:mt-16 lg:pt-12">
 
-          <Eyebrow color="cyan">{t(naru.how.eyebrow)}</Eyebrow>
+          <Eyebrow color="purple">{t(naru.how.eyebrow)}</Eyebrow>
           <h3 className={H3}>{t(naru.how.heading)}</h3>
-        <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
+        {/* 폰에서는 리드를 접습니다. 다이어그램과 그 아래 한 줄("서로 직접 만나지 않습니다")이 같은 말을 합니다. */}
+        <p className="mx-auto mt-6 hidden max-w-2xl break-keep text-left text-base leading-relaxed text-white/75 lg:block lg:text-center">
           {t(naru.how.lead)}
         </p>
 
@@ -874,24 +874,36 @@ export default function NaruHome() {
 
       {/* ── CH5 · 함께하는 길 ────────────────────────────────────────────── */}
       <Chapter id="join" align="center">
-        <Eyebrow color="emerald">{t(naru.join.eyebrow)}</Eyebrow>
-        <h2 className={H2}><Halo tone="emerald">{t(naru.join.heading)}</Halo></h2>
+        <Eyebrow color="purple">{t(naru.join.eyebrow)}</Eyebrow>
+        <h2 className={H2}><Halo tone="violet">{t(naru.join.heading)}</Halo></h2>
         <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
           {t(naru.join.lead)}
         </p>
 
         <div className="mx-auto mt-12 grid max-w-5xl gap-4 text-left md:grid-cols-2">
           {naru.join.cards.map((card, i) => (
-            <Card key={card.id} id={card.id} className="flex flex-col !rounded-2xl !bg-white/[0.03] !p-5 transition hover:border-emerald-400/25 hover:bg-white/[0.05]">
-              {/* 번호 배지. 8월 BenefitCard의 문법(작은 사각, 챕터 색). */}
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-400/15 text-sm font-black text-emerald-200">
+            <Card key={card.id} id={card.id} className="flex flex-col !rounded-2xl !bg-white/[0.03] !p-4 transition hover:border-accent/30 hover:bg-white/[0.05] sm:!p-5">
+              {/* 번호 배지. 8월 BenefitCard의 문법(작은 사각). 2026-09-18: 챕터 색이 아니라 보라 토큰
+                  하나(감사 반영 브리프 8). 번호 배지는 페이지 어디서나 같은 색입니다. */}
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15 text-sm font-black text-accent">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <h3 className="mt-3 break-keep text-lg font-bold text-white">{t(card.who)}</h3>
               {/* 첫 줄만 그립니다(2026-09-16). 둘째 줄은 전부 첫 줄의 조건과
                   다음 단계였고, 그건 메일을 보낸 뒤에 나눌 이야기입니다.
                   lines[1]은 data/naru.ts에 그대로 있습니다. */}
-              <p className="mt-4 flex-1 break-keep text-sm leading-relaxed text-white/70">
+              {/* 얻는 것이 먼저(감사 반영 브리프 7.1): 기업 카드는 내는 것보다 얻는 것을 먼저 봅니다. */}
+              {card.gets && (
+                <ul role="list" className="mt-4 space-y-1.5">
+                  {card.gets.map((g, gi) => (
+                    <li key={gi} className="flex gap-2 break-keep text-sm leading-relaxed text-white/85">
+                      <span aria-hidden className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent/80" />
+                      {t(g)}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <p className={`${card.gets ? "mt-3" : "mt-4"} flex-1 break-keep text-sm leading-relaxed text-white/70`}>
                 {t(card.lines[0])}
               </p>
               <div className="mt-6">
@@ -924,9 +936,9 @@ export default function NaruHome() {
         </div>
         {/* 8월을 건넌 분께. 카드 넷 아래 폭 전체를 쓰는 띠 하나입니다.
             이유는 data/naru.ts의 alumni 주석에 있습니다. */}
-        <div className="mx-auto mt-6 max-w-5xl rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-6 text-left sm:px-7">
-          <p className="flex items-center gap-2 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-emerald-200/90">
-            <ChipDot />
+        <div id="join-alumni" className="mx-auto mt-6 max-w-5xl scroll-mt-28 rounded-2xl border border-accent/30 bg-accent/[0.06] px-5 py-6 text-left sm:px-7">
+          <p className="flex items-center gap-2 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
+            <ChipDot className="bg-accent/80" />
             {t(naru.join.alumni.label)}
           </p>
           {/* 첫 줄과 이야기 안내만. 둘째 줄("받은 사람이 돌려주는 모습이 보일
@@ -960,7 +972,7 @@ export default function NaruHome() {
           인용문을 지어내지 마세요(data/naru.ts의 Story 주석). */}
       {naru.people.stories.length > 0 && (
         <Chapter id="people" align="center">
-          <Eyebrow color="plum">{t(naru.people.eyebrow)}</Eyebrow>
+          <Eyebrow color="purple">{t(naru.people.eyebrow)}</Eyebrow>
           <h2 className={H2}>{t(naru.people.heading)}</h2>
           <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
             {t(naru.people.lead)}
@@ -1240,5 +1252,232 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
         {t(naru.how.diagramNote)}
       </p>
     </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Day 카드 (2026-09-18, 감사 반영 브리프 3.1). 8월 DayCard의 문법(DAY 큰 숫자 + 날짜 요일, 칩 줄,
+// 제목, 본문, "→ 그날의 한 줄")은 그대로이고, 폰에서만 아코디언입니다.
+//
+// 헤더가 둘인 이유: 폰용은 <button aria-expanded>, 데스크톱용은 정적 행. matchMedia로 하나만
+// 그리면 서버 마크업(데스크톱)이 폰에서 하이드레이션 뒤에 접히며 800px이 점프합니다. CSS로
+// 고르면 첫 페인트부터 접혀 있습니다. display:none은 접근성 트리에서도 빠지므로 데스크톱
+// 스크린리더가 눌리지 않는 버튼을 만나지 않습니다.
+// ─────────────────────────────────────────────────────────────────────────────
+type Stage = (typeof naru.december.stages)[number];
+function DayCard({
+  stage,
+  t,
+  locale,
+  open,
+  onToggle,
+  onFocus,
+  onBlur,
+}: {
+  stage: Stage;
+  t: (p: Phrase) => string;
+  locale: "ko" | "en";
+  open: boolean;
+  onToggle: () => void;
+  /** 노선도의 현재 위치 점이 이 카드로 오게(호버·포커스). */
+  onFocus?: () => void;
+  onBlur?: () => void;
+}) {
+  const bodyId = `day-${stage.name.en.toLowerCase().replace(/\s+/g, "-")}-body`;
+  const kicker = stage.dayOffset === null ? t(naru.december.beforeLabel) : t(naru.december.dayLabel);
+  const date = stage.dayOffset === null ? t(stage.when) : formatDecemberDayWithWeekday(locale, stage.dayOffset);
+  // 한글 주 + 영문 소문자 보조(감사 반영 브리프 8). en에서는 이름이 곧 제목이라 보조를 붙이지 않습니다.
+  const sub = locale === "ko" ? stage.name.en.toLowerCase() : null;
+  return (
+    <li
+      onMouseEnter={onFocus}
+      onMouseLeave={onBlur}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      className={`relative flex h-full flex-col rounded-2xl border text-left ${
+        stage.submit ? "border-[#9A5A82]/40 bg-white/[0.055]" : "border-white/[0.08] bg-white/[0.03]"
+      }`}
+    >
+      {/* 폰 헤더: 56px 행, 탭하면 펼침. */}
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={bodyId}
+        onClick={onToggle}
+        className="flex min-h-[56px] w-full items-center justify-between gap-3 px-4 text-left lg:hidden"
+      >
+        <span className="flex min-w-0 items-baseline gap-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-accent/80">{kicker}</span>
+          {stage.dayOffset !== null && <span className="text-xl font-black leading-none text-white">{stage.dayOffset + 1}</span>}
+          <span className="truncate text-[15px] font-bold text-white">{t(stage.title)}</span>
+        </span>
+        <span className="flex shrink-0 items-center gap-2 text-xs text-white/55">
+          {date}
+          <span aria-hidden className={`inline-block text-white/45 transition-transform motion-reduce:transition-none ${open ? "rotate-180" : ""}`}>⌄</span>
+        </span>
+      </button>
+      {/* 데스크톱 헤더: 정적. */}
+      <div className="hidden items-baseline justify-between gap-3 p-4 pb-0 sm:p-5 sm:pb-0 lg:flex">
+        <span className="flex items-baseline gap-1.5">
+          <span className="text-[0.6rem] font-bold uppercase tracking-wider text-accent/80">{kicker}</span>
+          {stage.dayOffset !== null && <span className="text-2xl font-black leading-none text-white">{stage.dayOffset + 1}</span>}
+        </span>
+        <span className="shrink-0 text-[0.7rem] text-white/55">{date}</span>
+      </div>
+      <div id={bodyId} className={`${open ? "block" : "hidden"} px-4 pb-4 sm:px-5 sm:pb-5 lg:block`}>
+        <div className="flex flex-wrap gap-1.5 lg:mt-3">
+          {/* 강조색은 하나(감사 반영 브리프 3.3): "★ 제출" 칩만 자주, 나머지는 --border-2 외곽선. */}
+          {stage.submit && (
+            <Chip tone="plum">
+              <span aria-hidden>★</span>{`${t(naru.december.submitLabel)}\u2002${t(stage.submit)}`}
+            </Chip>
+          )}
+          {stage.chips.map((c, i) => (
+            <Chip key={i} tone="outline">{t(c)}</Chip>
+          ))}
+        </div>
+        <h4 className="mt-3 hidden flex-wrap items-baseline gap-x-2 text-[15px] font-bold leading-snug text-white lg:flex">
+          {t(stage.title)}
+          {sub && <span className="text-xs font-semibold text-white/50">{sub}</span>}
+        </h4>
+        {/* 폰(lg 아래)에서는 두 줄까지(모바일 수정 브리프 1.4). */}
+        <p className="mt-2 line-clamp-2 break-keep text-[13px] leading-relaxed text-white/65 lg:mt-1.5 lg:line-clamp-none">{t(stage.body)}</p>
+        {/* "→ 그날의 한 줄"은 흰색 볼드 하나(감사 반영 브리프 3.3). */}
+        <p className="mt-2 flex gap-1.5 break-keep text-[12.5px] font-bold leading-snug text-white">
+          <span aria-hidden className="text-white/50">→</span>
+          {t(stage.line)}
+        </p>
+        {/* 폰: 워크샵을 카드 안 한 줄로(라벨 + 이름). 상자 셋은 lg부터(모바일 수정 브리프 1.1). */}
+        {stage.workshop && (
+          <p className="mt-2 flex flex-wrap items-baseline gap-x-1.5 text-xs text-white/70 lg:hidden">
+            <span className="font-bold uppercase tracking-[0.14em] text-accent">{t(naru.december.workshopLabel)}</span>
+            <span className="font-semibold text-white/85">{t(stage.workshop.title)}</span>
+          </p>
+        )}
+      </div>
+    </li>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// "그래서 지키는 것" (2026-09-18, 감사 반영 브리프 6.1). 폰에서는 접혀 있고 버튼으로 펼칩니다.
+// lg부터는 그 전과 같은 dl. 데스크톱 판형은 사용자가 정한 자리라 그대로입니다.
+// ─────────────────────────────────────────────────────────────────────────────
+function KeepsPanel({ label, body }: { label: string; body: string }) {
+  const [open, setOpen] = useState(false);
+  const id = `keeps-${label.length}-${body.length}`;
+  return (
+    <div className="border-t border-white/10 pt-3 md:border-l md:border-t-0 md:pl-10 md:pt-2 lg:pt-6 md:lg:pt-2">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={id}
+        onClick={() => setOpen((v) => !v)}
+        className="-mx-1 flex min-h-[44px] items-center gap-2 px-1 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent lg:hidden"
+      >
+        {label}
+        <span aria-hidden className={`inline-block text-white/45 transition-transform motion-reduce:transition-none ${open ? "rotate-180" : ""}`}>⌄</span>
+      </button>
+      <dl>
+        <dt className="hidden text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent lg:block">{label}</dt>
+        <dd id={id} className={`${open ? "block" : "hidden"} break-keep text-sm leading-relaxed text-white/75 lg:mt-3 lg:block`}>{body}</dd>
+      </dl>
+    </div>
+  );
+}
+
+// 역할 라벨 "주최 HOST" → 주최 + host(작게, 소문자). en "HOST" → Host. (감사 반영 브리프 8)
+function RoleLabel({ text }: { text: string }) {
+  const parts = text.trim().split(/\s+/);
+  if (parts.length < 2) return <>{parts[0].charAt(0) + parts[0].slice(1).toLowerCase()}</>;
+  return (
+    <>
+      {parts.slice(0, -1).join(" ")}
+      <span className="ml-1 font-semibold text-white/50">{parts[parts.length - 1].toLowerCase()}</span>
+    </>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 8월의 깔때기 (2026-09-18, 감사 반영 브리프 5.1).
+//
+// 74 → 59 → 25 → 21 → 9는 깔때기인데 같은 크기 타일 다섯으로 나열돼 있었고, 가장 중요한
+// "9팀 · 시키지 않았습니다"가 가장 작았습니다(visual-storyteller). 스텝 차트 한 줄(막대 높이가
+// 줄어드는 5단)과, 아래 큰 숫자 하나.
+//
+// dataviz 원칙: 축 없이 값 라벨만, 단일 색상(보라 원색 면)에 마지막 단만 자주. 글자는 글자
+// 토큰(흰색)이고 색은 막대만 입습니다. 단위가 섞인 깔때기(명 → 팀)라 막대 높이는 값의 비율이
+// 아니라 순서를 말합니다. 폰은 세로 스텝(가로 막대).
+//
+// 카운트업(선택 사항 채택): 뷰포트 진입 시 0 → 값 600ms, 한 번만. prefers-reduced-motion이면
+// 생략. 숫자는 값 문자열에서 뽑고(74명 → 74), 접미사(명·팀)는 그대로 붙입니다.
+// ─────────────────────────────────────────────────────────────────────────────
+function Funnel({ stats, t, aria, className = "" }: { stats: Stat[]; t: (p: Phrase) => string; aria: string; className?: string }) {
+  const ref = useRef<HTMLElement>(null);
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || typeof IntersectionObserver === "undefined") { setProgress(1); return; }
+    let raf = 0;
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      const t0 = performance.now();
+      const step = (now: number) => {
+        const p = Math.min(1, (now - t0) / 600);
+        setProgress(1 - Math.pow(1 - p, 3));
+        if (p < 1) raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    }, { threshold: 0.4 });
+    io.observe(el);
+    return () => { io.disconnect(); cancelAnimationFrame(raf); };
+  }, []);
+  const rows = stats.map((st, i) => {
+    const raw = t(st.value);
+    const n = parseInt(raw.replace(/[^0-9]/g, ""), 10) || 0;
+    return { n, suffix: raw.replace(/[0-9]/g, ""), label: t(st.label), note: st.note ? t(st.note) : null, last: i === stats.length - 1 };
+  });
+  const max = Math.max(1, ...rows.map((r) => r.n));
+  const shown = (n: number) => Math.round(n * progress);
+  const last = rows[rows.length - 1];
+  const bar = (r: (typeof rows)[number]) => (r.last ? "bg-naru-plum" : "bg-naru-purple");
+  return (
+    <figure ref={ref} role="img" aria-label={aria} className={`mx-auto max-w-3xl ${className}`}>
+      {/* sm부터: 세로 막대 다섯, 값은 막대 위, 라벨은 아래. 2px 간격은 dataviz의 인접 면 간격. */}
+      <div aria-hidden className="hidden items-end gap-[2px] sm:flex">
+        {rows.map((r) => (
+          <div key={r.label} className="flex flex-1 flex-col items-center">
+            <span className="text-2xl font-black tabular-nums tracking-tight text-white sm:text-3xl">{shown(r.n)}{r.suffix}</span>
+            <div className="mt-2 flex h-28 w-full items-end">
+              <div className={`w-full rounded-t-[4px] ${bar(r)} transition-[height] duration-100 ease-linear motion-reduce:transition-none`} style={{ height: `${Math.max(10, (shown(r.n) / max) * 100)}%` }} />
+            </div>
+            <span className="mt-2 break-keep px-1 text-center text-xs leading-snug text-white/60">{r.label}</span>
+          </div>
+        ))}
+      </div>
+      {/* 폰: 세로 스텝. 가로 막대의 길이가 줄어듭니다. */}
+      <ol aria-hidden className="space-y-2 sm:hidden">
+        {rows.map((r) => (
+          <li key={r.label} className="grid grid-cols-[4.5rem_1fr] items-center gap-3">
+            <span className="text-right text-xl font-black tabular-nums tracking-tight text-white">{shown(r.n)}{r.suffix}</span>
+            <span className="flex items-center gap-3">
+              <span className={`h-5 rounded-r-[4px] ${bar(r)}`} style={{ width: `${Math.max(8, (shown(r.n) / max) * 100)}%` }} />
+              <span className="break-keep text-xs leading-snug text-white/60">{r.label}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
+      {/* 큰 숫자 한 줄: 이 회차에서 가장 중요한 신호. */}
+      <figcaption aria-hidden className="mt-8 flex flex-wrap items-baseline justify-center gap-x-4 gap-y-1 border-t border-white/10 pt-6">
+        <span className="text-[clamp(2.5rem,6vw,4rem)] font-black leading-none tabular-nums tracking-tight text-white">{shown(last.n)}{last.suffix}</span>
+        <span className="break-keep text-left text-sm font-semibold leading-snug text-white/85 sm:text-base">
+          {last.label}
+          {last.note && <span className="text-[#C79BB4]">{`\u2002·\u2002${last.note}`}</span>}
+        </span>
+      </figcaption>
+    </figure>
   );
 }

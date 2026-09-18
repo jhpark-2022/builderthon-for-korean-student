@@ -18,7 +18,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 import type { ReactNode } from "react";
 
-export type ChipTone = "neutral" | "amber" | "amberSoft" | "pending" | "rose" | "violet" | "emerald" | "time";
+//   outline   나루 홈의 Day 카드 칩(2026-09-18, 감사 반영 브리프 3.3). --border-2 외곽선에
+//             흰 글자 /80. 8월 톤(호박·민트·분홍)은 홈에서 쓰지 않습니다.
+//   plum      나루 홈의 "★ 제출" 칩. 자주 #9A5A82 하나만 색을 갖습니다.
+export type ChipTone = "neutral" | "amber" | "amberSoft" | "pending" | "rose" | "violet" | "emerald" | "time" | "outline" | "plum";
 
 export const CHIP: Record<ChipTone, string> = {
   neutral: "rounded-full border border-white/[0.12] bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60",
@@ -29,6 +32,9 @@ export const CHIP: Record<ChipTone, string> = {
   violet: "inline-flex items-center gap-1 rounded-full border border-violet-400/30 bg-violet-400/10 px-2 py-0.5 text-[0.68rem] font-bold text-violet-200",
   emerald: "inline-flex items-center gap-1.5 rounded-full border border-emerald-400/25 bg-emerald-400/[0.08] px-2 py-0.5 text-[0.68rem] font-semibold text-emerald-100/90",
   time: "shrink-0 rounded-full border border-white/20 bg-white/10 px-2.5 py-0.5 text-[0.72rem] font-bold text-white/90",
+  outline: "inline-flex items-center gap-1 rounded-full border border-white/[0.12] bg-transparent px-2 py-0.5 text-[0.68rem] font-semibold text-white/80",
+  // 글자는 자주 틴트 #C79BB4(바탕 위 8.15:1). 면은 원색 자주 12%.
+  plum: "inline-flex items-center gap-1 rounded-full border border-[#9A5A82]/50 bg-[#9A5A82]/[0.12] px-2 py-0.5 text-[0.68rem] font-bold text-[#C79BB4]",
 };
 
 /** 7px 점. 8월 노선도의 멘토링 마커와 같은 크기입니다. 크기가 다르면 같은 것으로 안 읽힙니다. */

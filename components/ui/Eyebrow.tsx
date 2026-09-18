@@ -32,7 +32,10 @@ export default function Eyebrow({ children, color = "violet", className = "" }: 
     // 원색을 글자로 쓸 수 없어서(어두운 바탕 위 보라 2.12:1, 남색 1.38:1)
     // 같은 색상환 위치에서 명도만 올린 틴트를 씁니다. 옆 숫자는 바탕
     // #070B1F 위 대비입니다.
-    purple: "border-accent/30 bg-accent/10 text-accent",              // #A99AD6  7.69:1
+    // 2026-09-18 (감사 반영 브리프 8): 챕터 아이브로는 이것 하나, 외곽선만(면 없음).
+    // 나루 홈의 모든 챕터가 이 변형을 씁니다. violet·cyan·emerald·orange는 8월 페이지가
+    // 쓰거나 정의만 남은 것이고, 홈에서는 부르지 않습니다.
+    purple: "border-accent/40 bg-transparent text-accent",              // #A99AD6  7.69:1
     plum: "border-[#C79BB4]/30 bg-[#C79BB4]/10 text-[#C79BB4]",       // #C79BB4  8.15:1
     // 2026-09-17 (8월 문법 브리프): 면을 뺐습니다. 주황은 글자색과 테두리만. 주황은 면이 아니라 점입니다.
     orange: "border-naru-orange/35 bg-transparent text-[#F2B183]", // #F2B183 10.58:1
