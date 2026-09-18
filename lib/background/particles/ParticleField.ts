@@ -219,10 +219,12 @@ export class ParticleField {
   }
 
   /** crossing: 점의 밝기(가장자리, 속)와 전체 불투명도를 바깥에서. water 변형의 서울 워터마크가 씁니다. */
-  setShapeLook(edgeBright: number, innerBright: number, opacity: number) {
+  setShapeLook(edgeBright: number, innerBright: number, opacity: number, edgePx?: number, innerPx?: number) {
     const u = this.material.uniforms;
     u.uEdgeBright.value = edgeBright;
     u.uInnerBright.value = innerBright;
+    if (edgePx) u.uEdgePx.value = edgePx;
+    if (innerPx) u.uInnerPx.value = innerPx;
     u.uShapeOpacity.value = opacity;
     u.uOpacity.value = opacity;
   }

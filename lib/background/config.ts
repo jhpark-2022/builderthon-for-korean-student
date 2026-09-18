@@ -171,9 +171,13 @@ export const SEOUL_WATERMARK = {
   cy: 0.5,
   landscapeW: 0.58,   // 뷰포트 너비 대비
   portraitW: 0.98,
-  edgeBright: 0.6,    // 워터마크 값 0.45는 캡처에서 너무 희미했습니다(2026-09-18 실측)
-  innerBright: 0.2,
+  // 2026-09-18 사용자: "너무 희미하게 보임". 0.45 → 0.6 → 1.0. 속 점도 0.15 → 0.4.
+  edgeBright: 1.0,
+  innerBright: 0.4,
+  edgePx: 3.2,        // 수정 브리프의 2.8보다 한 단 굵게
+  innerPx: 1.6,
   revealVh: 0.8,      // 히어로 하단이 뷰포트 상단을 지난 뒤 이만큼(뷰포트 높이 배)에 걸쳐 떠오름
   points: { phone: 500, desktop: 1400 },
   calmBright: 0.6,    // #naru부터 이 배수로
+
 } as const;

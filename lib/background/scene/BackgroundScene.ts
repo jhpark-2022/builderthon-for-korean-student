@@ -456,7 +456,8 @@ export class BackgroundScene {
       const c = clamp((this.scrollY - (this.naruTop - 0.5 * vh)) / vh, 0, 1);
       const calm = c * c * (3 - 2 * c);
       this.particles?.updateCrossing(this.fieldTime, this.scroll, this.motionScale, { gather: 0, crossing: 0, arrived: 0, calm }, 0);
-      this.particles?.setShapeLook(SEOUL_WATERMARK.edgeBright, SEOUL_WATERMARK.innerBright, reveal * (1 - calm * (1 - SEOUL_WATERMARK.calmBright)));
+      this.particles?.setShapeLook(SEOUL_WATERMARK.edgeBright, SEOUL_WATERMARK.innerBright, reveal * (1 - calm * (1 - SEOUL_WATERMARK.calmBright)), SEOUL_WATERMARK.edgePx, SEOUL_WATERMARK.innerPx);
+
       if (this.particles) this.particles.points.visible = reveal > 0.001;
       // 포인터 ndc(-1..1)를 화면 uv(0..1)로. 셰이더가 파문을 여기에 놓습니다.
       this.pointerUv.set(
