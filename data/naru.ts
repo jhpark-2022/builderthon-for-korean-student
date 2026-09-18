@@ -156,8 +156,8 @@ export const naruNav: { id: string; label: Phrase }[] = [
   { id: "december", label: { ko: "프로그램", en: "Program" } },
   { id: "gains", label: { ko: "얻는 것", en: "What you get" } },
   { id: "record", label: { ko: "8월", en: "August" } },
+  // 2026-09-18 (사용자): 학생회와 기업(#how)이 #naru 안으로 합쳐져 항목 하나가 됐습니다.
   { id: "naru", label: { ko: "나루", en: "NARU" } },
-  { id: "how", label: { ko: "학생회와 기업", en: "Councils and companies" } },
   { id: "join", label: { ko: "함께", en: "Join" } },
 ];
 

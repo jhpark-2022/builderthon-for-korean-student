@@ -46,8 +46,7 @@ import MotionToggle from "@/components/ui/MotionToggle";
 //   #top       크로싱 서울 히어로 (이름, 기간, 도시, 포지션, 오픈채팅)
 //   #record    8월의 기록 (숫자 다섯, 사진 열둘)
 //   #december  프로그램 (모양, 왜 서울인가, 아쉬웠던 넷과 답, 일정, 멘토링, 미정)
-//   #naru      나루 (로고, 태그라인, 변하지 않는 두 개)   ← 그룹은 여기서 시작
-//   #how       학생회와 기업 (세 층)
+//   #naru      나루 (로고, 태그라인, 변하지 않는 두 개, 어떻게 일하는가)   ← 그룹은 여기서 시작
 //   #join      함께하는 길
 //   #people    (조건부)
 //
@@ -773,20 +772,15 @@ export default function NaruHome() {
           <h3 className={LABEL_HEADING}>{t(naru.why.agendaLabel)}</h3>
           <p className="mt-3 break-keep text-base leading-relaxed text-white/75">{t(naru.why.agenda)}</p>
         </div>
-      </Chapter>
+              {/* ── 어떻게 일하는가 (DECIDED 2026-09-18, 사용자: "나루와 학생회와 기업 내용은 하나의
+            챕터로 합쳐져야 함"). 따로 있던 #how 챕터(세 층, 문 셋, 하지 않는 것)가 이 챕터의
+            마지막 블록이 됐습니다. 헤어라인 하나로 나뉘고 제목은 H3. 안쪽 앵커 id="how"는
+            옛 링크와 층별 문(#join-*)의 출발점을 위해 남깁니다. 카피 키(naru.how.*)는 그대로.
+            그 전의 주석: #december 뒤로 내려온 이유(2026-09-17)는 git 이력에. */}
+        <div id="how" className="mx-auto mt-16 max-w-5xl scroll-mt-24 border-t border-white/10 pt-12 text-center">
 
-      {/* ── CH4 · 어떻게 일하는가 ────────────────────────────────────────── */}
-      {/* DECIDED 2026-09-17: #december 뒤로 내려왔습니다(전에는 #record와
-          #december 사이). 이 챕터의 독자는 학생회 임원, 기업 담당자, 운영진,
-          곧 바로 아래 #join의 독자입니다. 12월을 예비하는 문장은 한 줄도 없었고,
-          그런데도 12월 앞에 서서 폰에서 2,140px를 쓰고 있었어요. 여기 있으면
-          "누가 이 자리를 만드는가"가 "그래서 각자의 문은 어디인가"로 바로
-          이어지고, "가입 폼 없음"을 두 챕터 떨어져 세 번 말하던 것도 붙습니다.
-          기본 이음매(216px)입니다. */}
-      <Chapter id="how" align="center" className={BAND_TINT}>
-        <BandFades />
-        <Eyebrow color="cyan">{t(naru.how.eyebrow)}</Eyebrow>
-        <h2 className={H2}><Halo tone="cyan">{t(naru.how.heading)}</Halo></h2>
+          <Eyebrow color="cyan">{t(naru.how.eyebrow)}</Eyebrow>
+          <h3 className={H3}>{t(naru.how.heading)}</h3>
         <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
           {t(naru.how.lead)}
         </p>
@@ -834,7 +828,9 @@ export default function NaruHome() {
             ))}
           </ul>
         </div>
+        </div>
       </Chapter>
+
 
       {/* ── CH5 · 함께하는 길 ────────────────────────────────────────────── */}
       <Chapter id="join" align="center">
