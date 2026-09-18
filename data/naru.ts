@@ -154,6 +154,9 @@ export const openChatLabels = {
 // 껍데기(제목, 버튼, 상태 문장)만. 8월의 dict.register는 건드리지 않습니다.
 export const register = {
   cta: { ko: "등록하기", en: "Register" },
+  // 창이 열리기 전에도 버튼은 보입니다(사용자, 2026-09-18: "넣어는 줘. 클릭이 되게 하지는 말고").
+  // disabled이고 title로 이 문장을 보여 줍니다.
+  notYet: { ko: "등록은 아직 열리지 않았습니다. 열리면 이 버튼이 켜집니다.", en: "Registration is not open yet. This button turns on when it is." },
   closed: { ko: "등록이 마감됐습니다.", en: "Registration has closed." },
   title: { ko: "크로싱 서울 등록", en: "Register for CROSSING SEOUL" },
   intro: { ko: "스크리닝은 없습니다. 오는 사람이 참가자입니다.", en: "No screening. If you come, you are in." },

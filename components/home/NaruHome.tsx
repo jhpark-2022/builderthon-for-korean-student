@@ -346,7 +346,12 @@ export default function NaruHome() {
               ) : regState === "closed" ? (
                 <span className={`${buttonClass("secondary")} cursor-default opacity-70`}>{t(registerCopy.closed)}</span>
               ) : (
-                <OpenChatLink t={t} src="naru-hero" label={openChatLabels.december} variant="hero" />
+                // 창이 열리기 전: 눌리지 않는 등록 버튼(2026-09-18, 사용자). 주 CTA의 면을 쓰되
+                // 반투명. title이 이유를 말합니다. 열리면 위의 open 분기가 대신 그립니다.
+                <button type="button" disabled aria-disabled="true" title={t(registerCopy.notYet)} className={`${buttonClass("primary", "naru")} cursor-not-allowed opacity-55 hover:translate-y-0`}>
+                  {t(registerCopy.cta)}
+                  <span aria-hidden className="text-white/60">→</span>
+                </button>
               )}
               {/* 오픈채팅이 막혀 있으면(links.openChat 빈 문자열, 2026-09-17) 이 앵커가
                   히어로의 유일한 문이라 주 CTA의 면(그라데이션 필)을 받습니다. 히어로의
@@ -354,10 +359,10 @@ export default function NaruHome() {
               <a
                 href="#december"
                 onClick={() => track("naru_cta", { src: "hero", to: "december" })}
-                className={links.openChat || regState === "open" ? buttonClass("secondary") : `group ${buttonClass("primary", "naru")}`}
+                className={buttonClass("secondary")}
               >
                 {t(naru.eventHero.ctaProgram)}
-                <span aria-hidden className={links.openChat || regState === "open" ? "text-white/50" : ARROW_CLASS}>↓</span>
+                <span aria-hidden className="text-white/50">↓</span>
               </a>
             </div>
             {/* 카운트다운(얇은 한 줄). lg부터 여기, 그 아래 폭에서는 무대 다음에. */}
@@ -609,7 +614,13 @@ export default function NaruHome() {
               <span aria-hidden className={ARROW_CLASS}>→</span>
             </button>
           ) : regState === "not_open" ? (
-            <OpenChatLink t={t} src="naru-december" label={openChatLabels.december} variant="secondary" />
+            <>
+              <button type="button" disabled aria-disabled="true" title={t(registerCopy.notYet)} className={`${buttonClass("secondary")} cursor-not-allowed opacity-55`}>
+                {t(registerCopy.cta)}
+                <span aria-hidden className="text-white/50">→</span>
+              </button>
+              <OpenChatLink t={t} src="naru-december" label={openChatLabels.december} variant="secondary" />
+            </>
           ) : null}
           <a
             href={naruLinks.sponsor}
