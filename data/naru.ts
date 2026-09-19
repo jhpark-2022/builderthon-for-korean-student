@@ -570,6 +570,9 @@ export const naru = {
       { num: "05", title: { ko: "국경 너머의 동료", en: "Peers from across the border" } },
     ] as { num: string; title: Phrase; evidence?: Phrase }[],
     note: { ko: "디테일은 확정되는 대로 이 자리에서 공개합니다.", en: "Details go here as they are confirmed." },
+    // 2026-09-18 (팔로업 브리프 3.3): 다섯 개가 "받는 것"으로 끝나면 이벤트가
+    // 목적지가 됩니다. 이 한 줄이 #after로 넘깁니다.
+    bridge: { ko: "이걸 들고 어디로 건너가는가", en: "Where you take all this" },
   },
 
   record: {
@@ -1176,7 +1179,7 @@ export const naru = {
     // 3층 다이어그램 상자 안의 "얻는 것" 라벨(2026-09-18). 후원 상자에 얻는 것이 없다는 것이
     // ux-researcher의 P1이었습니다. 세 상자 모두에 같은 줄을 둡니다.
     getsShort: { ko: "얻는 것", en: "Gets" },
-    nameLabel: { ko: "이름의 두 겹", en: "Two meanings in the name" },
+    nameLabel: { ko: "이름의 세 겹", en: "Three meanings in the name" },
     nameLines: [
       {
         ko: "하나는 사람입니다. 한 사람이 누군가의 나루가 되어 줄 수는 있지만, 그 사람은 졸업하고 떠납니다. 그래서 사람이 바뀌어도 언제나 누군가의 나루가 되어 주는 그룹을 만듭니다.",
@@ -1185,6 +1188,13 @@ export const naru = {
       {
         ko: "다른 하나는 구조입니다. 주관으로 들어온 학생회와 후원으로 들어오는 기업을 이어 주는 나루터, 그 자리가 이 그룹입니다.",
         en: "The other is about structure. The landing where the organising associations and the sponsoring companies meet: that place is this group.",
+      },
+      {
+        // 2026-09-18 (팔로업 브리프 3.4): 두 겹 다 나루가 주어였습니다. 세 번째는
+        // 읽는 사람이 주어입니다. #after의 statement와 같은 말이고, 저기서
+        // 먼저 나오고 여기서 이름으로 닫힙니다.
+        ko: "그리고 하나가 더 있습니다. 나루는 우리 이름이지만, 오는 사람에게는 이 이벤트가 나루입니다. 나루터는 도착하는 곳이 아니라 건너기 시작하는 곳입니다.",
+        en: "And there is a third. NARU is our name, but for the people who come, this event is the landing. A landing is not where you arrive. It is where you start crossing.",
       },
     ],
     notDoingLabel: { ko: "나루가 하지 않는 것", en: "What NARU does not do" },

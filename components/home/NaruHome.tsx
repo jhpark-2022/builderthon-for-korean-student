@@ -679,6 +679,17 @@ export default function NaruHome() {
           ))}
         </ol>
         <p className="mx-auto mt-6 max-w-2xl break-keep text-sm text-white/50">{t(naru.gains.note)}</p>
+        {/* 2026-09-18 (팔로업 브리프 3.3): #after로 넘기는 한 줄. 히트 영역 44px은
+            TermLink와 같은 방식(-my-2.5 / py-2.5)입니다. */}
+        <p className="mt-4">
+          <a
+            href="#after"
+            onClick={() => track("naru_cta", { src: "gains", to: "after" })}
+            className="-my-2.5 inline-block py-2.5 text-sm text-white/70 underline decoration-white/30 underline-offset-4 transition hover:text-white hover:decoration-white"
+          >
+            {t(naru.gains.bridge)} →
+          </a>
+        </p>
       </Chapter>
 
       {/* ── CH3 · 8월이 남긴 것 (DECIDED 2026-09-17, 홈 흐름 재배치 브리프) ──
