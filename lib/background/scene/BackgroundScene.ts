@@ -456,17 +456,29 @@ export class BackgroundScene {
       const W = SEOUL_WATERMARK;
       const c = clamp((this.scrollY - (this.naruTop - 0.5 * vh)) / vh, 0, 1);
       const calm = ss(c);
+      // 히어로 하단이 뷰포트 상단을 지나면 revealVh에 걸쳐 떠오르고, 그 뒤로는 서 있습니다.
+      // #naru부터 조금 더 어둡게.
+      //
+      // DECIDED 2026-09-19 (사용자): "모바일도 데스크톱과 같은 배경 효과였으면 좋겠다.
+      // 나루 이미지가 보이고, 내려가면서 서울 윤곽 점들이 빛나는 걸로."
+      // 세로 화면은 9/18의 모바일 브리프대로 **히어로에서부터** 서울 윤곽을 110vw로
+      // 세우고 있었습니다(heroBright 0.8). 그래서 폰에서는 첫 화면이 물과 해가 아니라
+      // 서울 윤곽이었고, 가로 화면과 순서가 반대였어요. 이제 둘 다 같은 순서입니다.
+      //
+      // 세로에 남은 것은 크기와 밝기뿐입니다. 심볼이 110vw → 90vw로 좁아지고(calm),
+      // 밝기는 0.8 → 0.5로 내려갑니다. 폰에서 전체 밝기(1.0)면 카피 뒤가 시끄럽습니다.
+      // W.portrait.dissolveVh는 이제 쓰지 않습니다(키는 둡니다).
+      const portrait = vh > window.innerWidth;
+      const r = ss(clamp((this.scrollY - this.heroEnd) / (W.revealVh * vh), 0, 1));
       let opacity: number;
-      if (vh > window.innerWidth) {
-        // 세로 화면: 히어로에 서 있다가 풀리고, 본문 뒤에서는 없고, #naru부터 다시(설정 portrait).
-        const g = ss(clamp((this.scrollY - this.heroEnd) / (W.portrait.dissolveVh * vh), 0, 1));
-        opacity = (1 - g) * W.portrait.heroBright + calm * W.portrait.naruBright;
-        this.placeSeoul(W.portrait.heroW + (W.portrait.naruW - W.portrait.heroW) * calm, W.portrait.heroCy + (W.portrait.naruCy - W.portrait.heroCy) * calm);
+      if (portrait) {
+        opacity = r * (W.portrait.heroBright + (W.portrait.naruBright - W.portrait.heroBright) * calm);
+        this.placeSeoul(
+          W.portrait.heroW + (W.portrait.naruW - W.portrait.heroW) * calm,
+          W.portrait.heroCy + (W.portrait.naruCy - W.portrait.heroCy) * calm
+        );
       } else {
-        // 가로 화면: 히어로 하단이 뷰포트 상단을 지나면 revealVh에 걸쳐 떠오르고, 그 뒤로는
-        // 서 있습니다. #naru부터 조금 더 어둡게.
-        const r = clamp((this.scrollY - this.heroEnd) / (W.revealVh * vh), 0, 1);
-        opacity = ss(r) * (1 - calm * (1 - W.calmBright));
+        opacity = r * (1 - calm * (1 - W.calmBright));
       }
       this.particles?.updateCrossing(this.fieldTime, this.scroll, this.motionScale, { gather: 0, crossing: 0, arrived: 0, calm }, 0);
       this.particles?.setShapeLook(W.edgeBright, W.innerBright, opacity, W.edgePx, W.innerPx);
