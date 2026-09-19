@@ -4718,6 +4718,41 @@ export const dict = {
       ko: "SMU, NUS, NTU 한인 학생회가 주관하고, Zero100 빌더 네트워크가 함께합니다.",
       en: "Organized by the SMU, NUS, NTU Korean Student Associations, together with the Zero100 builder network.",
     },
+    // ── 고맙습니다 (2026-09-20, 사용자: "이 나루는 제로백 빌더톤을 도와주신 모든
+    // 분들 덕분에 가능했던 것임. 그것에 대한 acknowledgement가 더 있어야 하고,
+    // 8월 이벤트 페이지에도 그걸 추가해 줘") ────────────────────────────────
+    //
+    // 이 자리에 적는 이름은 **전부 이 페이지가 이미 공개한 것**입니다. AXMOS와
+    // 코드프레소는 파트너 섹션에, 세 학생회는 바로 아래 hostedBy에, 한인회는
+    // 파트너 카드에 있습니다. 새 이름을 여기서 만들지 마세요 — 감사는 사실일
+    // 때만 감사입니다. 사람 이름을 적지 않는 것도 같은 이유입니다. 멘토와 연사는
+    // 각자의 섹션에 이름과 소속이 있고, 여기서 다시 나열하면 한 번 빠진 사람이
+    // 빠진 채로 굳습니다. 대신 "이 페이지에 이름이 적힌"으로 가리킵니다.
+    //
+    // 멘토가 "개인 자격"이라는 것은 mentoring.personalNote가 이미 말하는 사실이고,
+    // 이 문단에서 한 번 더 말하는 이유는 그게 가장 갚기 어려운 종류의 도움이기
+    // 때문입니다. 회사가 보낸 것이 아니라 각자 저녁을 낸 것입니다.
+    // 숫자는 naru.record.stats에서 옵니다: 신청 74, Day 1 참석 59, 시작 25팀,
+    // 발표 21팀. "8일을 건너 마지막 날 앞에 선"은 **21팀**입니다. 74는 신청자
+    // 수이지 끝까지 간 사람 수가 아닙니다 — 감사 문단에서 숫자를 올려 잡으면
+    // 고마움이 아니라 홍보가 됩니다. 숫자를 고칠 때 그쪽 stats와 함께 보세요.
+    thanks: {
+      label: { ko: "고맙습니다", en: "Thank you" },
+      heading: {
+        ko: "이 8일은 여러 사람이 시간을 내 주어 가능했습니다",
+        en: "These eight days ran on other people's time",
+      },
+      body: {
+        ko: "AXMOS가 주최하고 코드프레소가 실제 기업 문제를 냈습니다. SMU·NUS·NTU 한인 학생회가 주관했고, 싱가포르 한인회가 1:1 멘토링을 위해 한인회관을 내어주었습니다. 멘토로 오신 분들은 대부분 소속 회사와 별개로 개인 자격으로 저녁 시간을 냈습니다. 무대에 선 연사와 전문가, 후원사, 그리고 8일을 건너 마지막 날 앞에 선 21팀까지 — 이 페이지에 이름이 적힌 모든 분들 덕분입니다.",
+        en: "AXMOS hosted it and Codepresso set the real company problem. The SMU, NUS and NTU Korean Student Associations ran it, and the Korean Association in Singapore opened its hall for the 1:1 mentoring. Most mentors came on their own evenings, separately from where they work. Speakers, expert reviewers, sponsors, and the 21 teams that stood up on the final day — every name on this page.",
+      },
+      // 마지막 줄이 요점입니다. 감사가 예의로 끝나면 각주가 되고, 결과를 말하면
+      // 문장이 됩니다. 12월로 가는 버튼이 바로 위에 있어 이 줄이 그 버튼의 근거가 됩니다.
+      closing: {
+        ko: "나루도, 크로싱 서울도 이 8일에서 나왔습니다.",
+        en: "NARU and CROSSING SEOUL both came out of these eight days.",
+      },
+    },
     rights: {
       ko: "Zero100 AI Builderthon. All rights reserved.",
       en: "Zero100 AI Builderthon. All rights reserved.",

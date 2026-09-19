@@ -4189,8 +4189,38 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           <PartnerEmailFallback t={t} />
         </div>
 
+        {/* ── 고맙습니다 (2026-09-20, 사용자: "제로백 빌더톤을 도와주신 모든 분들
+            덕분에 가능했던 것. 8월 이벤트 페이지에도 그걸 추가해 줘") ──────────
+
+            자리가 여기인 이유: 이 페이지에는 파트너 섹션도, 멘토 그리드도, 연사
+            카드도 이미 있습니다. 없던 것은 **그 전부를 한 번에 받는 문장**이었어요.
+            각 섹션은 누가 무엇을 했는지 말하지만 고맙다고는 말하지 않습니다.
+
+            CTA 아래, 크레딧 위입니다. 크레딧(주최·주관 한 줄)은 사무적인 표기라
+            그 안에 섞으면 같은 종류로 읽힙니다. CTA 블록 안에 넣으면 행동을
+            방해하고요. 마지막 화면을 다 읽고 내려온 사람이 마지막으로 만나는
+            문단이 이것입니다.
+
+            글자 크기는 본문(text-base)이 아니라 한 단 아래입니다. 감사가 페이지의
+            결론인 척하면 오히려 가벼워집니다. 대신 마지막 줄만 흰색으로 올립니다 —
+            그 줄이 12월로 가는 버튼의 근거라서요. */}
+        <div className="mx-auto mt-16 w-full max-w-2xl border-t border-white/10 pt-8 text-left sm:text-center">
+          <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/50">
+            {t(dict.footer.thanks.label)}
+          </p>
+          <h3 className="mt-3 break-keep text-lg font-bold leading-snug text-white sm:text-xl">
+            {t(dict.footer.thanks.heading)}
+          </h3>
+          <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">
+            {t(dict.footer.thanks.body)}
+          </p>
+          <p className="mt-3 break-keep text-sm font-semibold leading-relaxed text-white/90">
+            {t(dict.footer.thanks.closing)}
+          </p>
+        </div>
+
         {/* credits — pinned to the very bottom of the final screen */}
-        <div className="mx-auto w-full max-w-3xl border-t border-white/10 pt-8 text-center">
+        <div className="mx-auto mt-10 w-full max-w-3xl border-t border-white/10 pt-8 text-center">
           <p className="text-sm font-bold tracking-widest text-white">ZERO100 AI BUILDERTHON</p>
           <p className="mt-2 text-xs text-white/65">{t(dict.footer.hostedBy)}</p>
           <p className="mt-4 text-xs text-white/55">© 2026 {t(dict.footer.rights)}</p>

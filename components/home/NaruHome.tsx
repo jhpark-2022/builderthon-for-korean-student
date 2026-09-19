@@ -891,6 +891,13 @@ export default function NaruHome() {
           <p className="mx-auto mt-3 max-w-2xl break-keep text-left text-base font-semibold leading-relaxed text-white/85 lg:text-center">
             {t(naru.record.credit)}
           </p>
+          {/* 누구에게 진 빚인지 (2026-09-20, 사용자). 위 한 줄보다 한 단 작고
+              한 단 어둡습니다 — 앞 문장이 선언이고 이것이 명단이라, 같은 무게로
+              두면 둘 다 읽히지 않습니다. 바로 아래 아카이브 버튼이 실제 이름들로
+              가는 문이고, 이 문단이 그 버튼의 이유가 됩니다. */}
+          <p className="mx-auto mt-3 max-w-2xl break-keep text-left text-sm leading-relaxed text-white/65 lg:text-center">
+            {t(naru.record.creditRoles)}
+          </p>
           <div className="mt-6 flex justify-center">
             <Link
               href={naruLinks.archive}

@@ -711,6 +711,21 @@ export const naru = {
       ko: "제로백 빌더톤이 없었으면 나루도, 크로싱 서울도 없습니다. 그 8일을 만든 사람들에게 빚지고 시작합니다.",
       en: "Without the Zero100 builderthon there is no NARU and no CROSSING SEOUL. We begin owing the people who made those eight days.",
     },
+    // 2026-09-20 (사용자: "제로백 빌더톤을 도와주신 모든 분들 덕분에 가능했던 것.
+    // acknowledgement가 더 있어야 한다"). 위 credit 한 줄이 빚을 말하고, 이 줄이
+    // 누구에게 진 빚인지 말합니다.
+    //
+    // 사람 이름은 적지 않습니다. 멘토와 연사는 /2026-08에 이름과 소속이 있고,
+    // 여기서 다시 나열하면 한 번 빠진 사람이 빠진 채로 굳습니다. 바로 아래
+    // 아카이브 버튼이 그 명단으로 가는 문이라, 이 문단은 역할로 적고 문을 가리킵니다.
+    // 같은 문단이 /2026-08 마지막 화면에도 있습니다(data/dictionary.ts의 footer.thanks).
+    //
+    // 숫자는 바로 아래 stats에서 옵니다. "마지막 날 앞에 선"은 발표한 **21팀**이지
+    // 신청한 74명이 아닙니다. 감사 문단에서 숫자를 올려 잡으면 홍보가 됩니다.
+    creditRoles: {
+      ko: "문제를 낸 기업, 소속과 별개로 개인 자격으로 저녁 시간을 낸 멘토들, 무대에 선 연사와 전문가, 1:1 멘토링을 위해 회관을 내어준 싱가포르 한인회, 각 학교 한인 학생회 운영진, 그리고 8일을 건너 마지막 날 앞에 선 21팀. 그 이름들이 지금의 나루를 만들었습니다.",
+      en: "The company that set the problem. The mentors who gave their own evenings, separately from where they work. The speakers and expert reviewers. The Korean Association in Singapore, which opened its hall for the 1:1 mentoring. The student associations at each school. And the 21 teams that stood up on the final day. Those names are what NARU is made of.",
+    },
     stats: [
       { value: { ko: "74명", en: "74" }, label: { ko: "신청", en: "applied" } },
       { value: { ko: "59명", en: "59" }, label: { ko: "Day 1 참석", en: "showed up on Day 1" } },
