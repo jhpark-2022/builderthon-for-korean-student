@@ -557,17 +557,69 @@ export const naru = {
   gains: {
     eyebrow: { ko: "참가 혜택", en: "What you get" },
     heading: { ko: "오면 무엇이 남는가", en: "What you leave with" },
-    // evidence: 카드 아래 8월 근거 한 줄(감사 반영 브리프 4.3). 키만 두고 화면에는 그리지
-    // 않습니다. 사용자의 "제목만" 결정(2026-09-17)과 충돌해서요. TODO: confirm(그릴지).
-    // 지어내지 않았습니다. 05는 근거가 없어 비웁니다.
+    // DECIDED 2026-09-19 (얻는 것 브리프): 제목만 두던 것을 되돌립니다. 제목 +
+    // 한 줄 설명. 설명은 "무엇인가"만 말하고 "어떻게 운영하는가"는 말하지
+    // 않습니다. 후자는 아직 정해지지 않았고, note가 그렇게 적혀 있습니다.
+    //
+    // evidence는 그대로 둡니다. 화면에 그리지 않습니다. 8월 숫자는 #record가
+    // 갖습니다. 여기에 흩으면 두 챕터가 같은 일을 두 번 합니다.
+    //
+    // 길이 규칙: body는 한국어 36자 이하입니다. 데스크톱에서 다섯 칸이 한 줄에
+    // 들어가야 하고, 한 칸의 본문 폭이 170px 남짓이라 그 위로 가면 카드가
+    // 세로로 무너집니다. 늘리고 싶으면 문장이 아니라 칸 수를 먼저 재세요.
     items: [
-      { num: "01", title: { ko: "실명 기업의 진짜 문제", en: "A real problem from a named company" }, evidence: { ko: "8월 코드프레소 출제", en: "August: Codepresso set the problem" } },
-      { num: "02", title: { ko: "멘토", en: "Mentors" }, evidence: { ko: "8월 11명", en: "August: eleven of them" } },
-      { num: "03", title: { ko: "앞에서 증명", en: "Proving it out front" }, evidence: { ko: "8월 21팀 발표", en: "August: 21 teams presented" } },
-      { num: "04", title: { ko: "무순위 어워드", en: "Awards with no ranking" }, evidence: { ko: "8월 4부문 10팀", en: "August: 10 teams across 4 categories" } },
-      { num: "05", title: { ko: "국경 너머의 동료", en: "Peers from across the border" } },
-    ] as { num: string; title: Phrase; evidence?: Phrase }[],
-    note: { ko: "디테일은 확정되는 대로 이 자리에서 공개합니다.", en: "Details go here as they are confirmed." },
+      {
+        num: "01",
+        title: { ko: "실명 기업의 진짜 문제", en: "A real problem from a named company" },
+        body: {
+          ko: "아직 풀리지 않은 문제를, 출제한 회사 이름과 함께 받습니다.",
+          en: "A problem still unsolved, handed over with the name of the company that set it.",
+        },
+        evidence: { ko: "8월 코드프레소 출제", en: "August: Codepresso set the problem" },
+      },
+      {
+        num: "02",
+        title: { ko: "멘토", en: "Mentors" },
+        body: {
+          ko: "기간 내내 열려 있습니다. 막힐 때마다 다시 갑니다.",
+          en: "Open the whole time. You go back every time you get stuck.",
+        },
+        evidence: { ko: "8월 11명", en: "August: eleven of them" },
+      },
+      {
+        num: "03",
+        title: { ko: "앞에서 증명", en: "Proving it out front" },
+        body: {
+          ko: "마지막 날, 문제를 낸 회사 앞에서 직접 발표합니다.",
+          en: "On the last day you present to the company that set the problem.",
+        },
+        evidence: { ko: "8월 21팀 발표", en: "August: 21 teams presented" },
+      },
+      {
+        num: "04",
+        title: { ko: "무순위 어워드", en: "Awards with no ranking" },
+        body: {
+          ko: "1등을 뽑지 않습니다. 독보적이었던 지점을 적습니다.",
+          en: "No first place. We write down what each team was singular at.",
+        },
+        evidence: { ko: "8월 4부문 10팀", en: "August: 10 teams across 4 categories" },
+      },
+      {
+        num: "05",
+        title: { ko: "국경 너머의 동료", en: "Peers from across the border" },
+        // 포지션만 말하고 편성은 말하지 않습니다. 국경을 섞어 팀을 짜는지는 아직
+        // 기준이 없습니다(브리프 2.1). "같은 팀이 됩니다"로 바꾸지 마세요.
+        body: {
+          ko: "어느 나라에서 공부하든 같은 자리에 섭니다.",
+          en: "Whichever country you study in, you stand in the same room.",
+        },
+      },
+    ] as { num: string; title: Phrase; body: Phrase; evidence?: Phrase }[],
+    // 제목뿐이 아니게 되므로 이 줄이 답하는 질문이 바뀝니다(브리프 2장).
+    note: {
+      ko: "각 항목을 어떻게 운영하는지는 확정되는 대로 이 자리에서 채웁니다.",
+      en: "How each of these runs goes here, as it is confirmed.",
+    },
     // 2026-09-18 (팔로업 브리프 3.3): 다섯 개가 "받는 것"으로 끝나면 이벤트가
     // 목적지가 됩니다. 이 한 줄이 #after로 넘깁니다.
     bridge: { ko: "이걸 들고 어디로 건너가는가", en: "Where you take all this" },
