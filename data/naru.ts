@@ -353,9 +353,13 @@ export const naru = {
     eyebrow: { ko: "나루의 다음 이벤트", en: "NARU's next event" },
     // TODO: confirm. 나루를 모르는 사람에게 첫 화면에서 나루가 무엇인지 말하는 한 문장
     // (감사 반영 브리프 1.2). 나루 정체성 문구는 사용자가 정합니다.
+    // 2026-09-19 (사용자: "같은 단어가 한 스크린에서 자주 반복된다"): 이 줄이 바로 위
+    // 아이브로("나루의 다음 이벤트")와 제목("한인 학생 빌더가 만나는 자리")의 말을 그대로
+    // 다시 했습니다. 첫 화면에서 "나루의 다음 이벤트"가 두 번, "한인 학생 빌더"가 두 번
+    // 나왔어요. 이 줄이 혼자 말해야 하는 것은 나루가 어디서 시작했는가 하나입니다.
     naruLine: {
-      ko: "싱가포르에서 시작한 한인 학생 빌더 커뮤니티, 나루의 다음 이벤트입니다.",
-      en: "The next event from NARU, the Korean student builder community that started in Singapore.",
+      ko: "싱가포르에서 시작한 커뮤니티, 나루가 엽니다.",
+      en: "Run by NARU, a community that started in Singapore.",
     },
     // 사진 넷 아래 한 줄(감사 반영 브리프 1.3). 캡션이 없으면 12월 사진으로 읽힙니다.
     photosCaption: { ko: "제로백 빌더톤 · 2026.08 싱가포르", en: "Zero100 builderthon · Aug 2026, Singapore" },
@@ -549,7 +553,7 @@ export const naru = {
     measureLabel: { ko: "그래서 재는 것", en: "So this is what we count" },
     measure: {
       ko: "몇 명이 왔느냐가 아닙니다. 몇 팀이 끝까지 갔느냐, 그리고 멘토링을 한 번이라도 받은 팀이 몇이냐를 봅니다.",
-      en: "Not how many came. How many teams went all the way through, and how many booked mentoring even once.",
+      en: "Not headcount. How many teams went all the way through, and how many booked mentoring even once.",
     },
     note: {
       ko: "문턱이 낮아야 커지고, 롤모델이 있어야 자랍니다.",
@@ -1355,8 +1359,11 @@ export const naru = {
       // 2026-09-19 (사용자): "한 공간에서 하는 거는 아님. 여러 공간일 수도 있음." 장소 문장을 뺐습니다.
       // DECIDED 2026-09-19 (사용자): 본 일정 전에 있던 것이 팀 본딩에서 데이터 공개로 바뀌었습니다.
       // 팀은 1일차 현장에서 맺습니다. 아래 stages의 첫 두 칸과 같은 사실을 말해야 합니다.
-      ko: "데이터를 먼저 공개해 트랙을 고르고 옵니다. 팀은 1일차 현장에서 맺고, Discovery에서 Pitch까지 하루에 한 스테이지씩 넘어갑니다.",
-      en: "The data opens first, so you arrive with a track chosen. Teams form on site on day one, then one stage a day from Discovery to Pitch.",
+      // 2026-09-19 (사용자): 첫 문장이 바로 아래 BEFORE 카드와 같은 말이었습니다
+      // ("데이터를 먼저 공개합니다. 어느 트랙에서 풀지 고르고 옵니다"). 한 화면에서
+      // 데이터가 네 번, 트랙이 네 번 나왔어요. 카드가 말하는 것은 리드가 말하지 않습니다.
+      ko: "팀은 1일차 현장에서 맺습니다. Discovery에서 Pitch까지 하루에 한 스테이지씩 넘어갑니다.",
+      en: "Teams form on site on day one, then one stage a day from Discovery to Pitch.",
     },
     workshopLabel: { ko: "워크샵", en: "Workshop" },
     workshopNote: {
@@ -1541,9 +1548,13 @@ export const naru = {
     // DECIDED 2026-09-17 (사용자): 12월이 8월에서 무엇을 넓히는지를 AI의 쓰임 셋으로
     // 말합니다. 아이디어를 코드로, 복잡한 비즈니스 프로세스의 이해, 많은 데이터의
     // 분석. 8월은 첫 번째에만 집중했고 12월은 나머지 둘로 넓힙니다.
+    // 2026-09-19 (사용자): 마지막 문장("데이터에서 문제를 찾는 것부터 앞에서 증명하기까지,
+    // 한 사이클을 닷새로")을 뺐습니다. 바로 위 제목이 "데이터에서 증명까지, 닷새"이고
+    // 히어로의 서브도 "문제를 찾아내는 것부터 앞에서 증명하기까지, 닷새"입니다. 같은 공식이
+    // 두 화면에 걸쳐 세 번 나왔어요. 제목이 하는 말을 리드가 다시 하지 않습니다.
     shapeLead: {
-      ko: "AI가 잘하는 일은 셋입니다. 아이디어를 코드로 만드는 것, 복잡한 비즈니스 프로세스를 이해하는 것, 많은 데이터를 분석하는 것. 8월은 첫 번째에 집중했습니다. 12월은 나머지 둘로 넓힙니다. 데이터에서 문제를 찾는 것부터 앞에서 증명하기까지, 한 사이클을 닷새로.",
-      en: "AI is good at three things: turning an idea into code, reading a complex business process, analysing a lot of data. August did the first. December adds the other two. Find the problem in the data, prove it out front: one cycle in five days.",
+      ko: "AI가 잘하는 일은 셋입니다. 아이디어를 코드로 만드는 것, 복잡한 비즈니스 프로세스를 이해하는 것, 많은 데이터를 분석하는 것. 8월은 첫 번째에 집중했습니다. 12월은 나머지 둘로 넓힙니다.",
+      en: "AI is good at three things: turning an idea into code, reading a complex business process, analysing a lot of data. August did the first. December adds the other two.",
     },
     // DECIDED 2026-09-18 (사용자): "아직 정해지지 않은 것" 목록(tbd)을 화면에서 뺐습니다.
     // 미정을 나열하는 대신 이 한 줄만. tbd 키는 그대로 둡니다.
@@ -1751,9 +1762,12 @@ export const naru = {
     // 없는지만 씁니다.
     eyebrow: { ko: "왜 이 그룹인가", en: "Why this group" },
     heading: { ko: "왜 이 자리가 필요한가", en: "Why this has to exist" },
+    // 2026-09-19 (사용자): 둘째 문장이 "그 셋은 서로의 답입니다"였습니다. 한 문장 건너
+    // "서로"가 다시 나왔고, 같은 화면의 3층 다이어그램에도 "서로 직접 만나지 않습니다"가
+    // 있어 한 스크린에 셋이었습니다. 뜻은 그대로 두고 구체적으로 적습니다.
     lead: {
-      ko: "한인 학생은 어디에나 있는데, 서로를 쓰지 못합니다. 없는 것이 지역마다 다르고, 그 셋은 서로의 답입니다.",
-      en: "Korean students are everywhere and cannot reach each other. What is missing differs by place, and the three are each other's answer.",
+      ko: "한인 학생은 어디에나 있는데, 서로를 쓰지 못합니다. 없는 것이 지역마다 다르고, 한 곳의 결핍을 다른 곳이 메웁니다.",
+      en: "Korean students are everywhere and cannot reach each other. What is missing differs by place, and what one place lacks another can fill.",
     },
     // 세 칸. 각 칸은 "없는 것" 한 줄과 "그래서 여는 것" 한 줄입니다. 순서를
     // 바꾸지 마세요. 결핍이 먼저 오고 처방이 나중입니다.
@@ -1771,9 +1785,12 @@ export const naru = {
       },
       {
         place: { ko: "한국에서", en: "In Korea" },
+        // 2026-09-19 (사용자): "기회의 수가 적어서가 아닙니다"였습니다. 같은 화면에서
+        // "…아닙니다"로 끝나는 문장이 셋이었어요(여기, 안전장치 둘). 안전장치 두 줄의
+        // 부정은 브리프가 요구하는 것이라 그대로 두고, 이 줄을 긍정으로 바꿉니다.
         lack: {
-          ko: "기회의 수가 적어서가 아닙니다. 국내에서만 겨루면 자기 위치를 가늠할 기준이 하나뿐입니다.",
-          en: "It is not that there are too few chances. Measure yourself only at home and you have one yardstick.",
+          ko: "국내에도 기회는 많습니다. 다만 국내에서만 겨루면 자기 위치를 가늠할 기준이 하나뿐입니다.",
+          en: "There are plenty of chances at home. But measure yourself only at home and you have one yardstick.",
         },
         opens: {
           ko: "다른 나라에서 공부한 사람과 같은 문제를 풉니다.",
@@ -1782,13 +1799,15 @@ export const naru = {
       },
       {
         place: { ko: "그 밖의 나라에서", en: "Everywhere else" },
+        // 2026-09-19 (사용자): "같은 언어를 쓰는"이 아래 안전장치에도 있어 한 화면에 두 번,
+        // "자리"는 다섯 번이었습니다. 여기서 낱말을 바꿉니다(뜻은 같습니다).
         lack: {
-          ko: "같은 언어를 쓰는 또래가 여러 나라에 흩어져 있는데, 서로의 존재를 모릅니다.",
-          en: "Peers who speak the same language are spread across countries and do not know the others are there.",
+          ko: "한국말을 쓰는 또래가 여러 나라에 흩어져 있는데, 서로의 존재를 모릅니다.",
+          en: "Peers who speak Korean are spread across countries and do not know the others are there.",
         },
         opens: {
-          ko: "한 번 건넌 사람이 다시 돌아와 서는 자리를 같은 곳에 둡니다.",
-          en: "The place where someone comes back after crossing is the same place they crossed from.",
+          ko: "한 번 건넌 사람이 다시 돌아와 설 곳도 여기입니다.",
+          en: "Where someone comes back after crossing is here too.",
         },
       },
     ] as { place: Phrase; lack: Phrase; opens: Phrase }[],
@@ -1796,8 +1815,8 @@ export const naru = {
     // 읽히고, 둘째 줄이 없으면 억울함의 호소로 읽힙니다.
     guards: [
       {
-        ko: "담을 쌓는 모임이 아닙니다. 같은 언어를 쓰는 사람들이 공동의 의제를 만드는 자리이고, 문은 회차마다 열립니다.",
-        en: "This is not a wall. It is a place where people who share a language build a shared agenda, and the door opens every round.",
+        ko: "담을 쌓는 모임이 아닙니다. 같은 언어를 쓰는 사람들이 공동의 의제를 만드는 것은 다른 일이고, 문은 회차마다 열립니다.",
+        en: "This is not a wall. People who share a language building a shared agenda is a different thing, and the door opens every round.",
       },
       {
         ko: "억울함을 증명하려고 모이는 자리도 아닙니다. 제대로 된 무대를 먼저 만들고, 거기서 잘한 사람이 누구였는지는 그다음에 봅니다.",
@@ -1847,13 +1866,17 @@ export const naru = {
     // 근거가 되는 문서이기도 합니다. 파일은 public/naru에 있습니다.
     manifesto: {
       label: { ko: "매니페스토", en: "Manifesto" },
+      // 2026-09-19 (사용자): 작은 상자 하나에 "매니페스토"가 셋이었습니다(라벨, 제목,
+      // 버튼). 그리고 제목과 본문 끝이 같은 말("이 문장들의 정본" / "이 챕터의 문장들은
+      // 거기서 왔습니다")을 두 번 했어요. 제목이 출처를 말하고, 본문은 그 문서가 무엇인지만
+      // 말합니다. 낱말은 라벨과 버튼에만 남습니다.
       title: {
-        ko: "이 문장들의 정본은 매니페스토입니다.",
-        en: "These sentences come from the manifesto.",
+        ko: "이 챕터의 문장들은 여기서 왔습니다.",
+        en: "The sentences in this chapter come from here.",
       },
       body: {
-        ko: "무엇을 위해 모였는지, 그리고 무엇이 바뀌어도 무엇만은 바뀌지 않는지를 적은 문서입니다. 이 챕터의 문장들은 거기서 왔습니다.",
-        en: "It says what we gathered for, and what does not change when everything else does. The sentences in this chapter come from it.",
+        ko: "무엇을 위해 모였는지, 그리고 무엇이 바뀌어도 무엇만은 바뀌지 않는지를 적은 문서입니다.",
+        en: "It says what we gathered for, and what does not change when everything else does.",
       },
       // 2026-09-19 (사용자): 쪽 수와 파일 크기 줄(meta)은 뺐습니다. 받는 것이
       // 무엇인지는 버튼 라벨이 이미 말하고, 그 뒤의 숫자들은 이 자리에서
