@@ -188,10 +188,15 @@ export class BackgroundScene {
     const halfH = 30 * Math.tan((fov * Math.PI) / 360);
     const halfW = halfH * (w / h);
     const W = SEOUL_WATERMARK;
-    const hw = (widthFrac ?? (portrait ? W.portrait.heroW : W.landscapeW)) * halfW;
+    // 2026-09-19 (서울→싱가포르 브리프 2.3): 자리가 둘입니다. 같은 중심, 반너비만
+    // 다르게. L이 도착(싱가포르), R이 출발(서울)입니다. 셰이더가 uMorph로 둘 사이를
+    // 보간하므로 두 형상의 폭이 달라도 됩니다. widthFrac은 서울 쪽에만 적용합니다.
+    const hwSeoul = (widthFrac ?? (portrait ? W.portrait.heroW : W.landscapeW)) * halfW;
+    const hwSg = (portrait ? W.portrait.singaporeW : W.singaporeW) * halfW;
     const cy = cyFrac ?? (portrait ? W.portrait.heroCy : W.cy);
-    const sym = { x: (W.cx * 2 - 1) * halfW, y: (1 - cy * 2) * halfH, hw };
-    this.particles.setShapes(sym, sym);
+    const x = (W.cx * 2 - 1) * halfW;
+    const y = (1 - cy * 2) * halfH;
+    this.particles.setShapes({ x, y, hw: hwSg }, { x, y, hw: hwSeoul });
   }
 
   private placeShapes() {
@@ -456,8 +461,22 @@ export class BackgroundScene {
       const vh = window.innerHeight;
       const ss = (x: number) => x * x * (3 - 2 * x);
       const W = SEOUL_WATERMARK;
-      const c = clamp((this.scrollY - (this.naruTop - 0.5 * vh)) / vh, 0, 1);
+      // ── 서울 → 싱가포르 (2026-09-19, 서울→싱가포르 브리프 2.3) ──────────────
+      // #naru 반 화면 앞에서 시작해 1.5화면에 걸쳐 건넙니다. 이벤트(크로싱 서울)를
+      // 읽는 동안은 서울이고, 그룹(나루)을 읽는 동안은 싱가포르입니다. 그룹이 태어난
+      // 곳이라 자리가 뜻과 맞습니다. 위로 스크롤하면 같은 길로 돌아옵니다.
+      //
+      // calm(어두워짐)은 건너기가 **끝난 뒤에** 시작합니다. 싱가포르가 한 번은 온전한
+      // 밝기로 서야 합니다. 어두워지면서 도착하면 물러나는 것으로 읽힙니다.
+      //
+      // 시간은 쓰지 않습니다. 손가락이 만든 움직임이라 모션 민감 설정과의 관계가
+      // 지금과 같습니다(WCAG 2.2.2의 대상이 아닙니다).
+      const M = W.morph;
+      const morphStart = this.naruTop - M.startVh * vh;
+      const morph = ss(clamp((this.scrollY - morphStart) / (M.spanVh * vh), 0, 1));
+      const c = clamp((this.scrollY - (morphStart + M.spanVh * vh)) / vh, 0, 1);
       const calm = ss(c);
+      this.particles?.setMorph(morph);
       // 히어로 하단이 뷰포트 상단을 지나면 revealVh에 걸쳐 떠오르고, 그 뒤로는 서 있습니다.
       // #naru부터 조금 더 어둡게.
       //

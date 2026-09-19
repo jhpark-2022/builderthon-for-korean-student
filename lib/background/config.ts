@@ -205,6 +205,14 @@ export const SEOUL_WATERMARK = {
   // 접두사에서도 유지하게 섞여 있어, 개수를 늘려도 비율은 같습니다.
   points: { phone: 1100, desktop: 1990 },
   calmBright: 0.6,    // #naru부터 이 배수로
+  // ── 서울 → 싱가포르 (2026-09-19, 서울→싱가포르 브리프 2.4) ──────────────────
+  // 싱가포르 본섬의 폭. 서울(0.52)보다 넓게 둡니다. 싱가포르는 납작해서
+  // (높이/너비 0.455, 서울 0.820) 같은 폭이면 훨씬 작아 보입니다.
+  singaporeW: 0.66,
+  // startVh: #naru 위쪽 몇 화면 앞에서 시작하는가. spanVh: 몇 화면에 걸쳐 건너는가.
+  // 1.5화면이면 폰에서 스크롤 두어 번, 데스크톱에서 휠 몇 번입니다. 더 짧으면
+  // 순간이동으로, 더 길면 무슨 일이 일어나는지 모르게 됩니다.
+  morph: { startVh: 0.5, spanVh: 1.5 },
   // 세로 화면. 2026-09-19 (사용자)부터 **순서는 가로와 같습니다**: 히어로에서는 보이지
   // 않고, 히어로가 나가면 revealVh에 걸쳐 떠오르고, #naru부터 어두워집니다.
   //
@@ -218,6 +226,8 @@ export const SEOUL_WATERMARK = {
   //
   // 밝기도 가로와 같은 값으로 올립니다(1.0 → 0.6). dissolveVh는 쓰이지 않습니다
   // (9/18의 "히어로에서 풀린다"가 사라지면서). 키는 되살릴 때를 위해 둡니다.
-  portrait: { heroW: 0.72, heroCy: 0.5, heroBright: 1.0, dissolveVh: 0.4, naruW: 0.72, naruCy: 0.5, naruBright: 0.6 },
+  // singaporeW: 세로 화면의 싱가포르 폭. 가로(0.66)보다 넓게. 폰은 화면이 좁아
+  // 같은 비율이면 실제 크기가 작아지기 때문입니다(서울의 0.72와 같은 이유).
+  portrait: { heroW: 0.72, heroCy: 0.5, heroBright: 1.0, dissolveVh: 0.4, naruW: 0.72, naruCy: 0.5, naruBright: 0.6, singaporeW: 0.80 },
 
 } as const;
