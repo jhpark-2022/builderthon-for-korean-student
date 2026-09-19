@@ -334,9 +334,19 @@ body {
    손실입니다.
 
    CSS 애니메이션은 애니메이션되는 속성에 한해 인라인 스타일을 이깁니다. 그래서
-   1.5초 뒤 fill:forwards로 보이는 상태를 한 번 굳혀 둡니다. React가 살아 있으면
-   그 전에 이미 리빌돼 있고(IntersectionObserver 또는 Chapter 안의 1200ms 폴백),
-   죽어 있으면 이 규칙이 대신 보여 줍니다. 먼저 오는 쪽이 이깁니다.
+   1.5초 뒤 fill:forwards로 보이는 상태를 한 번 굳혀 둡니다.
+
+   ── 2026-09-19: 안전망이 스크롤 애니메이션을 먹고 있었습니다 ──
+   이 규칙에 조건이 없어서, 화면 밖 1만 7천 픽셀 아래의 챕터도 1.5초가 지나면
+   전부 보이는 상태로 굳었습니다(실측). 그러니까 리빌은 첫 1.5초 안에 화면에
+   들어온 것에만 걸렸고, 스크롤해서 내려가는 동안에는 아무 일도 일어나지
+   않았어요. 안전망이 기능을 대체하고 있었습니다.
+
+   그래서 조건을 답니다. Reveal과 Chapter가 마운트되면 <html>에
+   `js-reveal-ready`를 답니다. 클래스가 있으면(=React가 살아 있으면) 이 규칙은
+   걸리지 않고 관찰자가 제 일을 합니다. 클래스가 없으면(=번들이 죽었으면)
+   1.5초 뒤 이 규칙이 본문을 보여 줍니다. 보호는 그대로이고, 보호가 필요 없는
+   경우에만 비켜섭니다.
 
    ── 지우기 전에 읽으세요 ──
    Chapter의 리빌을 @keyframes + animation-fill-mode:forwards로 바꾸지 마세요.
@@ -346,7 +356,7 @@ body {
    안전한 이유는 보이는 최종 상태가 애니메이션이 아니라 인라인 스타일에 있어서,
    전환 시간이 0이 되면 즉시 도착하기 때문입니다.                            */
 @keyframes chapterFailsafe { to { opacity: 1; transform: none; } }
-[data-chapter-reveal] { animation: chapterFailsafe 1ms linear 1.5s forwards; }
+html:not(.js-reveal-ready) [data-chapter-reveal] { animation: chapterFailsafe 1ms linear 1.5s forwards; }
 @media (prefers-reduced-motion: reduce) {
   [data-chapter-reveal] { transform: none !important; }
 }

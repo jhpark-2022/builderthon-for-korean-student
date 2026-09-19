@@ -25,6 +25,7 @@ import RouteMap from "@/components/shared/RouteMap";
 import MobileChatBar from "@/components/shared/MobileChatBar";
 import { BAND_TINT, BandFades } from "@/components/shared/Band";
 import Chapter from "@/components/journey/Chapter";
+import Reveal from "@/components/shared/Reveal";
 import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
 // RecordTabs: 2026-09-17에 뺐다가(사용자: 바로 아카이브로) 2026-09-18 감사 반영 브리프 5.2로
@@ -225,10 +226,13 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
   // DECIDED 2026-09-18 (모바일 수정 브리프 2): 한 줄. 서울 기준만(싱가포르 줄은 시차 한 시간에
   // 날짜가 같아 뺌). 초는 뺐고, 폰은 일만, sm부터 일·시간·분. 이날 아침의 두 줄·초 단위는
   // 닷새짜리 이벤트에 과했습니다.
+  // 2026-09-19 (사용자: 타이머가 박스를 꽉 채우게): 폰에서도 시간까지 보입니다.
+  // 전에는 일 하나였고, 그 한 칸이 상자의 왼쪽 40%에서 끝났습니다. 분은 여전히
+  // sm부터입니다(폰 390px에서 세 칸이면 숫자가 줄어들어야 합니다).
   const cellsOf = (l: Left | null): { v: string; u: Phrase; phone: boolean }[] =>
     l && l !== "started"
-      ? [{ v: String(l.d), u: units.days, phone: true }, { v: pad(l.h), u: units.hours, phone: false }, { v: pad(l.m), u: units.minutes, phone: false }]
-      : [{ v: "--", u: units.days, phone: true }, { v: "--", u: units.hours, phone: false }, { v: "--", u: units.minutes, phone: false }];
+      ? [{ v: String(l.d), u: units.days, phone: true }, { v: pad(l.h), u: units.hours, phone: true }, { v: pad(l.m), u: units.minutes, phone: false }]
+      : [{ v: "--", u: units.days, phone: true }, { v: "--", u: units.hours, phone: true }, { v: "--", u: units.minutes, phone: false }];
   const rows: { key: Phrase; l: Left | null }[] = [
     { key: naru.eventHero.countdownRows.seoul, l: left },
     { key: naru.eventHero.countdownRows.singapore, l: leftSg },
@@ -242,7 +246,7 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
         ? t(naru.eventHero.countdownAria).replace("{d}", String(left.d)).replace("{h}", String(left.h))
         : t(naru.eventHero.countdownLabel);
   return (
-    <div role="group" aria-label={aria} className={`w-full rounded-2xl border border-white/[0.12] bg-white/[0.04] px-5 py-3.5 text-left ${className}`}>
+    <div role="group" aria-label={aria} className={`w-full rounded-2xl border border-white/[0.12] bg-white/[0.04] px-5 py-4 text-left sm:px-6 sm:py-5 ${className}`}>
       {/* 2026-09-18 (감사 반영 브리프 1.4): 테두리는 --border-2, 라벨은 흰색. 주황은 옆의 점 하나
           (상태 표시)뿐입니다. 이 점이 주황 허용 목록의 "카운트다운 옆 점"입니다.
           2026-09-19 (사용자): 서울·싱가포르 두 줄. 시차 한 시간이라 일은 같고 시간만 다릅니다. */}
@@ -251,16 +255,23 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
         {t(naru.eventHero.countdownLabel)}
         <span className="text-white/45 sm:hidden">{` · ${formatDecemberDayWithWeekday(locale, 0)}`}</span>
       </p>
-      <div aria-hidden className="mt-2 grid gap-y-1.5">
+      {/* 2026-09-19 (사용자: "시간 타이머가 좀 더 박스를 꽉 채워주면 좋겠다"): 칸을 격자로
+          나눕니다. 전에는 flex라 숫자 셋이 왼쪽에 몰리고 상자의 오른쪽 절반이 비어
+          있었습니다. sm부터 라벨 한 칸 + 일·시간·분 세 칸을 같은 너비로 펴고, 숫자도
+          한 단 키웁니다(1.6rem → 2.25rem). 폰은 일만 보이므로 두 칸 그대로입니다. */}
+      <div aria-hidden className="mt-2.5 grid gap-y-2">
         {rows.map((r) => (
-          <div key={r.key.en} className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-            <span className="w-[7.5rem] shrink-0 text-xs font-semibold text-white/55">{t(r.key)}</span>
+          <div
+            key={r.key.en}
+            className="grid grid-cols-[6.5rem_repeat(2,1fr)] items-baseline gap-x-2 sm:grid-cols-[8.5rem_repeat(3,1fr)] sm:gap-x-4"
+          >
+            <span className="text-xs font-semibold text-white/55">{t(r.key)}</span>
             {r.l === "started" ? (
-              <span className="text-xl font-black text-white">{t(naru.eventHero.started)}</span>
+              <span className="col-span-2 text-xl font-black text-white sm:col-span-3">{t(naru.eventHero.started)}</span>
             ) : (
               cellsOf(r.l).map((c, i) => (
-                <span key={i} className={`items-baseline gap-1 ${c.phone ? "flex" : "hidden sm:flex"}`}>
-                  <span className="text-[1.6rem] font-black leading-none tabular-nums text-white">{c.v}</span>
+                <span key={i} className={`items-baseline gap-1.5 ${c.phone ? "flex" : "hidden sm:flex"}`}>
+                  <span className="text-[1.75rem] font-black leading-none tabular-nums text-white sm:text-[2.25rem]">{c.v}</span>
                   <span className="text-xs font-semibold text-white/55">{t(c.u)}</span>
                 </span>
               ))
@@ -497,6 +508,7 @@ export default function NaruHome() {
         </div>
         {/* 숫자 둘. 8월 ProgramStats("2일 필참 / 6일 선택")의 문법. shape에 이미 있는
             값 둘(5일, 2회)만 씁니다. 4차에서 여섯 칸을 뺐으니 늘리지 않습니다. */}
+        <Reveal>
         <dl className="mx-auto mt-5 flex max-w-2xl items-stretch justify-center">
           {[naru.december.shape[0], naru.december.shape[3]].map((stat, i) => (
             <div key={stat.label.en} className="flex items-stretch">
@@ -512,10 +524,11 @@ export default function NaruHome() {
             </div>
           ))}
         </dl>
+        </Reveal>
 
         {/* 노선도. 정거장 다섯, ★는 제출이 있는 날. 레일 아래 초록 필이
             General Mentoring(8월의 "1:1 멘토링 매일" 필 자리). */}
-        <div className="mx-auto mt-8 max-w-5xl text-left">
+        <Reveal className="mx-auto mt-8 max-w-5xl text-left">
           <RouteMap
             ariaLabel={t(naru.december.routeAria)}
             stations={naru.december.stages.map((s) => ({
@@ -529,11 +542,11 @@ export default function NaruHome() {
             legend={{ anchor: t(naru.december.routeLegendSubmit), plain: t(naru.december.routeLegendStage) }}
             current={hoverDay ?? (openDay >= 0 ? openDay : 0)}
           />
-        </div>
+        </Reveal>
 
         {/* 데이 카드 다섯. 8월 DayCard의 문법: DAY 큰 숫자 + 날짜 요일, 칩 줄,
             제목, 본문, "→ 그날의 한 줄". 카드는 grid로 같은 높이. */}
-        <div className="mx-auto mt-10 max-w-5xl text-left">
+        <Reveal className="mx-auto mt-10 max-w-5xl text-left">
           <h3 className={LABEL_HEADING}>{t(naru.december.scheduleLabel)}</h3>
           <p className="mt-3 max-w-2xl break-keep text-sm leading-relaxed text-white/70">
             {t(naru.december.scheduleLead)}
@@ -603,11 +616,11 @@ export default function NaruHome() {
               <span className="font-semibold text-white">{t(naru.why.measure)}</span>
             </p>
           </div>
-        </div>
+        </Reveal>
 
         {/* 8월에 아쉬웠던 넷과 12월의 답. 번호 배지 카드 넷(8월 BenefitCard 문법), 2×2.
             제목이 아쉬웠던 것, 본문이 12월의 답. */}
-        <div className="mx-auto mt-8 max-w-5xl text-left lg:mt-12">
+        <Reveal className="mx-auto mt-8 max-w-5xl text-left lg:mt-12">
           <h3 className={LABEL_HEADING}>{t(naru.december.gapsHeading)}</h3>
           {/* 폰은 1열(모바일 수정 브리프 1.3). 2열이면 150px 폭에서 "12월" 답이 서너 글자씩
               끊겼습니다. 폰에서는 번호 배지가 제목 왼쪽에 인라인. sm부터 2열, 배지 위. */}
@@ -631,13 +644,13 @@ export default function NaruHome() {
               </li>
             ))}
           </ol>
-        </div>
+        </Reveal>
 
         {/* 끝나면 할 일 (DECIDED 2026-09-18, 사용자: "챕터를 만들지는 말고 기존 포맷에 몇 줄 더").
             팔로업 브리프는 #after 챕터를 제안했지만 사용자가 챕터를 원하지 않아, 아쉬웠던 넷과 같은
             행 형식으로 셋만 둡니다. 8월에 이 줄이 없어서 이벤트 뒤에 멘토에게 먼저 연락한 팀이
             한 팀이었습니다. after.lead·statement·cadence·weDo 키는 data/naru.ts에 있고 그리지 않습니다. */}
-        <div className="mx-auto mt-8 max-w-5xl text-left lg:mt-12">
+        <Reveal className="mx-auto mt-8 max-w-5xl text-left lg:mt-12">
           <h3 className={LABEL_HEADING}>{t(naru.after.stepsLabel)}</h3>
           <ol role="list" className="mt-3 grid grid-cols-1 sm:mt-5 sm:grid-cols-3 sm:gap-4">
             {naru.after.steps.map((step) => (
@@ -652,7 +665,7 @@ export default function NaruHome() {
               </li>
             ))}
           </ol>
-        </div>
+        </Reveal>
 
         {/* DECIDED 2026-09-18 (사용자): "아직 정해지지 않은 것" 상자를 뺐습니다. 미정 목록
             대신 위 draftNote 한 줄("새로 정해지는 것은 이 자리에 업데이트합니다")이 그 말을
@@ -706,6 +719,7 @@ export default function NaruHome() {
             않습니다. 번호 배지가 왼쪽, 제목과 본문이 오른쪽에 쌓입니다(끝나면 할 일
             카드와 같은 문법). item.evidence는 그대로 두고 그리지 않습니다. 8월 숫자는
             #record가 갖습니다. 이 주석을 풀지 마세요. */}
+        <Reveal>
         <ol className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-2 lg:grid-cols-5 lg:items-start lg:gap-3">
           {naru.gains.items.map((item) => (
             <li
@@ -721,6 +735,7 @@ export default function NaruHome() {
             </li>
           ))}
         </ol>
+        </Reveal>
         <p className="mx-auto mt-6 max-w-2xl break-keep text-sm text-white/50">{t(naru.gains.note)}</p>
 
       </Chapter>
@@ -772,7 +787,7 @@ export default function NaruHome() {
         {/* ── 8월이 남긴 것 (2026-09-19, 사용자: 8월과 나루를 합침). 코어 둘 바로 앞입니다. lead2가
             "이 이벤트에서 코어 2개가 나왔습니다"로 끝나서 다음 블록(변하지 않는 두 개)으로 이어집니다.
             id="record"는 옛 링크·배경 국면·하단 바(afterId)가 봅니다. 그 전의 챕터 판 주석은 git 이력에. */}
-        <div id="record" className="mx-auto mt-8 max-w-3xl scroll-mt-24 lg:mt-12">
+        <Reveal id="record" className="mx-auto mt-8 max-w-3xl scroll-mt-24 lg:mt-12">
           <Eyebrow color="purple">{t(naru.record.eyebrow)}</Eyebrow>
           <h3 className={H3}>{t(naru.record.heading)}</h3>
           <p className="mx-auto mt-4 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75 lg:text-center">
@@ -791,7 +806,7 @@ export default function NaruHome() {
               <span aria-hidden className="text-white/50">→</span>
             </Link>
           </div>
-        </div>
+        </Reveal>
 
         <div id="why" className="mt-8 border-t border-white/10 pt-8 lg:mt-12 lg:pt-12">
           <Eyebrow color="purple">{t(naru.why.eyebrow)}</Eyebrow>
@@ -805,6 +820,7 @@ export default function NaruHome() {
             가이드의 하한 18px을 좁은 쪽 끝에서 정확히 지킵니다. mt는 leading
             1.2의 첫 줄 한가운데.
             keeps가 dl인 이유: 항목 이름과 값이지 제목이 아닙니다. */}
+        <Reveal>
         <ol role="list" className="mx-auto max-w-5xl text-left">
           {naru.why.cores.map((core, i) => (
             <li
@@ -834,11 +850,12 @@ export default function NaruHome() {
             </li>
           ))}
         </ol>
+        </Reveal>
 
         {/* 경첩. 두 개가 함께 있어야 하는 이유. 판 두 장을 닫는 헤어라인
             아래, 챕터 제목과 같은 축에 H3로 섭니다. 먼저 각각을 읽고, 그
             다음에 둘이 한 쌍인 이유를 읽습니다. */}
-        <div className="mx-auto max-w-5xl border-t border-white/10 pt-8 lg:pt-12">
+        <Reveal className="mx-auto max-w-5xl border-t border-white/10 pt-8 lg:pt-12">
           <p className="mx-auto max-w-3xl break-keep text-left text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl lg:text-center">
             {t(naru.why.note)}
           </p>
@@ -846,15 +863,15 @@ export default function NaruHome() {
           <p className="mx-auto mt-6 hidden max-w-2xl break-keep text-left text-base leading-relaxed text-white/70 lg:block lg:text-center">
             {t(naru.why.noteBody)}
           </p>
-        </div>
+        </Reveal>
 
         {/* 마지막 줄. 페이지 전체가 여기서 끝납니다. 위의 두 개를 빼면 전부
             방법이고, 방법은 바뀝니다(매니페스토 IV). 이 문장이 8일이 4일이 되는
             12월을 미리 설명합니다. */}
-        <div className="mx-auto mt-8 max-w-2xl lg:mt-12">
+        <Reveal className="mx-auto mt-8 max-w-2xl lg:mt-12">
           <h3 className={LABEL_HEADING}>{t(naru.why.agendaLabel)}</h3>
           <p className="mt-3 break-keep text-left text-base leading-relaxed text-white/75 lg:text-center">{t(naru.why.agenda)}</p>
-        </div>
+        </Reveal>
               {/* ── 어떻게 일하는가 (DECIDED 2026-09-18, 사용자: "나루와 학생회와 기업 내용은 하나의
             챕터로 합쳐져야 함"). 따로 있던 #how 챕터(세 층, 문 셋, 하지 않는 것)가 이 챕터의
             마지막 블록이 됐습니다. 헤어라인 하나로 나뉘고 제목은 H3. 안쪽 앵커 id="how"는
@@ -869,14 +886,16 @@ export default function NaruHome() {
           {t(naru.how.lead)}
         </p>
 
+        <Reveal>
         <LayerDiagram t={t} />
+        </Reveal>
 
         {/* 층마다 문 하나. 2026-09-17 3차: 여기 있던 "하는 것 / 얻는 것" 카드
             셋이 내려갔습니다. 다이어그램이 이미 세 층을 그리고, 카드 셋은 같은
             세 주체를 한 번 더 세로로 세워 폰에서 800px을 썼습니다. 무엇을 주고
             받는지는 #join의 카드가 문 옆에서 말합니다. layers[].does/gets 키는
             그대로 있습니다. */}
-        <div className="mx-auto mt-6 flex max-w-5xl flex-wrap justify-center gap-x-8 gap-y-2">
+        <Reveal className="mx-auto mt-6 flex max-w-5xl flex-wrap justify-center gap-x-8 gap-y-2">
           {naru.how.layers.map((layer) => (
             <a
               key={layer.join.id}
@@ -891,7 +910,7 @@ export default function NaruHome() {
               <span aria-hidden>→</span>
             </a>
           ))}
-        </div>
+        </Reveal>
 
         {/* 하지 않는 것(나루가 하지 않는 것, 세 줄)은 화면에서 내려갔습니다
             (DECIDED 2026-09-19, 사용자). 이 챕터가 대답하는 질문은 "어떻게
@@ -924,6 +943,7 @@ export default function NaruHome() {
             세 곳은 동등합니다. #after의 steps가 ol인 것과 다릅니다. 칸 안은
             place → lack(없는 것) → opens(그래서 여는 것) 순서이고, 결핍이 먼저
             오고 처방이 나중입니다. */}
+        <Reveal>
         <ul role="list" className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-4 text-left lg:grid-cols-3">
           {naru.join.needs.map((need) => (
             <li
@@ -939,21 +959,24 @@ export default function NaruHome() {
             </li>
           ))}
         </ul>
+        </Reveal>
 
         {/* 세 곳에 공통된 조건 하나(매니페스토 I장). 장소를 가리지 않습니다.
             같은 I장의 다른 나라 학생과의 비교는 가져오지 않았습니다. */}
+        <Reveal>
         <p className="mx-auto mt-8 max-w-2xl break-keep text-base leading-relaxed text-white/75">
           {t(naru.join.milestones)}
         </p>
+        </Reveal>
 
         {/* 안전장치 두 줄(왜 브리프 2.1). 카드가 아니라 문단입니다. 둘 다 있어야
             합니다. 첫 줄이 없으면 폐쇄적인 모임으로, 둘째 줄이 없으면 억울함의
             호소로 읽힙니다. 한 줄만 그리지 마세요. */}
-        <div className="mx-auto mt-8 max-w-3xl space-y-3 break-keep text-sm leading-relaxed text-white/55">
+        <Reveal className="mx-auto mt-8 max-w-3xl space-y-3 break-keep text-sm leading-relaxed text-white/55">
           {naru.join.guards.map((guard, i) => (
             <p key={i}>{t(guard)}</p>
           ))}
-        </div>
+        </Reveal>
 
         {/* 규모 숫자는 출처가 확인되기 전까지 그리지 않습니다. statTbd 키는
             data/naru.ts에 있습니다. */}
@@ -966,14 +989,14 @@ export default function NaruHome() {
         {/* 챕터를 닫는 자리(DECIDED 2026-09-19, 사용자: "그 공간을 왜 이 자리가
             필요한가에 더 할애"). 매니페스토 표지의 한 줄과 V장입니다. 앞의 세 칸이
             결핍이고, 이 두 문단이 그래서 무엇을 앞당겨 두는지입니다. */}
-        <div className="mx-auto mt-12 max-w-3xl">
+        <Reveal className="mx-auto mt-12 max-w-3xl">
           <p className={STATEMENT}>{t(naru.join.closingStatement)}</p>
           <div className="mx-auto mt-5 max-w-2xl space-y-3 break-keep text-sm leading-relaxed text-white/70">
             {naru.join.closingBody.map((line, i) => (
               <p key={i}>{t(line)}</p>
             ))}
           </div>
-        </div>
+        </Reveal>
 
         {/* 매니페스토 PDF 하나(DECIDED 2026-09-19, 사용자: "그냥 공간에는 매니페스토
             pdf 다운로드 받을 수 있게 해").
@@ -988,7 +1011,7 @@ export default function NaruHome() {
             위한 문입니다. 파일 정보를 라벨 아래 한 줄로 먼저 보입니다. 무엇을 받는지
             모르고 누르게 하지 않습니다. */}
         <div aria-hidden className="mx-auto mt-12 h-px w-full max-w-5xl bg-white/10" />
-        <div id="join-ways" className="mx-auto mt-12 max-w-3xl scroll-mt-28 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-6 text-left sm:px-7">
+        <Reveal id="join-ways" className="mx-auto mt-12 max-w-3xl scroll-mt-28 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-6 text-left sm:px-7">
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
             {t(naru.join.manifesto.label)}
           </p>
@@ -1008,9 +1031,8 @@ export default function NaruHome() {
               {t(naru.join.manifesto.cta)}
               <span aria-hidden className="text-white/50">↓</span>
             </a>
-            <span className="text-xs text-white/45">{t(naru.join.manifesto.meta)}</span>
           </div>
-        </div>
+        </Reveal>
 
       </Chapter>
 

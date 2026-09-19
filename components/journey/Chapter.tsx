@@ -36,6 +36,9 @@ export default function Chapter({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    // React가 살아 있다는 표시. globals.css의 리빌 안전망이 이 클래스를 보고
+    // 비켜섭니다(2026-09-19). 없으면 안전망이 1.5초 뒤 전부 보여 줍니다.
+    document.documentElement.classList.add("js-reveal-ready");
     // Fire as soon as ANY part of the section enters the viewport (threshold 0),
     // not once 25% of it is on screen. A section taller than the viewport — e.g.
     // the About/Vision chapter on a phone — can never show 25% of its area at
@@ -56,7 +59,16 @@ export default function Chapter({
     // Safety net: if the observer somehow never fires (e.g. the element starts
     // already spanning the viewport with no scroll event), reveal after a beat
     // so content can never stay permanently hidden.
-    const fallback = window.setTimeout(() => setShown(true), 1200);
+    //
+    // 2026-09-19: 화면 안에 있는 경우로 좁혔습니다. 조건이 없던 동안에는 화면
+    // 밖 챕터까지 1200ms에 전부 보이게 되어, 스크롤해서 내려갈 때 아무것도
+    // 나타나지 않았습니다(8월 페이지에서 실측: 17,000px 아래 챕터가 스크롤 전에
+    // 이미 opacity 1). 안전망이 하려던 일은 "이미 화면에 있는데 관찰자가 울리지
+    // 않는 경우"이고, 그 경우는 그대로 지킵니다.
+    const fallback = window.setTimeout(() => {
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) setShown(true);
+    }, 1200);
     return () => {
       io.disconnect();
       window.clearTimeout(fallback);

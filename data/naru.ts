@@ -1855,10 +1855,10 @@ export const naru = {
         ko: "무엇을 위해 모였는지, 그리고 무엇이 바뀌어도 무엇만은 바뀌지 않는지를 적은 문서입니다. 이 챕터의 문장들은 거기서 왔습니다.",
         en: "It says what we gathered for, and what does not change when everything else does. The sentences in this chapter come from it.",
       },
+      // 2026-09-19 (사용자): 쪽 수와 파일 크기 줄(meta)은 뺐습니다. 받는 것이
+      // 무엇인지는 버튼 라벨이 이미 말하고, 그 뒤의 숫자들은 이 자리에서
+      // 읽히지 않는 정보였습니다. 형식(PDF)은 버튼 옆 화살표가 말합니다.
       cta: { ko: "매니페스토 내려받기", en: "Download the manifesto" },
-      // 파일 정보는 누르기 전에 압니다. 받는 것이 무엇인지 모르고 누르게 하지
-      // 않습니다. 파일을 바꾸면 이 줄의 크기도 같이 고치세요.
-      meta: { ko: "PDF · 8쪽 · 0.9MB · v1 2026년 9월", en: "PDF · 8 pages · 0.9MB · v1, September 2026" },
     },
     // waysLabel과 waysLead는 화면에서 내려갔습니다(DECIDED 2026-09-19, 사용자:
     // "함께하는 길 이거 없어도 됨. 그 공간을 왜 이 자리가 필요한가에 더 할애").
