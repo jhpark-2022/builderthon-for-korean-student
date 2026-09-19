@@ -693,18 +693,25 @@ export default function NaruHome() {
       <Chapter id="gains" align="center">
         <Eyebrow color="purple">{t(naru.gains.eyebrow)}</Eyebrow>
         <h2 className={H2}><Halo tone="violet">{t(naru.gains.heading)}</Halo></h2>
-        {/* 2026-09-18 (감사 반영 브리프 4.1): 폰은 1열 리스트, 행 64px, 번호 필 왼쪽. 데스크톱은
-            카드 높이를 내용에 맞추고(items-start) 최소 높이만 통일. 전에는 같은 높이 카드 다섯에
-            "멘토" 두 글자가 빈 카드처럼 보였습니다. item.evidence는 그리지 않습니다(4.3, TODO: confirm). */}
-        <ol className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-2 lg:grid-cols-5 lg:items-start lg:gap-3">
+        {/* DECIDED 2026-09-19 (얻는 것 브리프 3장): 다섯 칸에 본문이 붙습니다. 그래서
+            레일이 max-w-6xl이고(한 칸의 본문 폭이 170px 아래로 내려가면 안 됩니다),
+            lg:min-h-[8.5rem]은 지웠습니다. 본문이 생기면 최소 높이가 할 일이 없어요.
+            폰은 64px 리스트 행이 아니라 1열 카드입니다. 본문 두 줄이 행에 들어가지
+            않습니다. 번호 배지가 왼쪽, 제목과 본문이 오른쪽에 쌓입니다(끝나면 할 일
+            카드와 같은 문법). item.evidence는 그대로 두고 그리지 않습니다. 8월 숫자는
+            #record가 갖습니다. 이 주석을 풀지 마세요. */}
+        <ol className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-2 lg:grid-cols-5 lg:items-start lg:gap-3">
           {naru.gains.items.map((item) => (
             <li
               key={item.num}
-              className="flex min-h-[64px] items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2 text-left lg:min-h-[8.5rem] lg:flex-col lg:items-start lg:p-5"
+              className="flex gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left lg:flex-col lg:p-5"
             >
               <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent/15 text-sm font-black text-accent">{item.num}</span>
-              <h3 className={`${H3} lg:mt-4`}>{t(item.title)}</h3>
-              {/* {item.evidence && <p className="mt-2 text-xs text-white/55">{t(item.evidence)}</p>} */}
+              <div className="min-w-0 lg:mt-4">
+                <h3 className={H3}>{t(item.title)}</h3>
+                <p className="mt-2 break-keep text-sm leading-relaxed text-white/70">{t(item.body)}</p>
+                {/* {item.evidence && <p className="mt-2 text-xs text-white/55">{t(item.evidence)}</p>} */}
+              </div>
             </li>
           ))}
         </ol>
