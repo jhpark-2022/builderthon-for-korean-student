@@ -483,7 +483,15 @@ export class BackgroundScene {
         opacity = r * (1 - calm * (1 - W.calmBright));
       }
       this.particles?.updateCrossing(this.fieldTime, this.scroll, this.motionScale, { gather: 0, crossing: 0, arrived: 0, calm }, 0);
-      this.particles?.setShapeLook(W.edgeBright, W.innerBright, opacity, W.edgePx, W.innerPx);
+      // 점 크기는 화면 방향에 따라 다릅니다(2026-09-19). 같은 px이라도 형상이 크면
+      // 비율이 작아져 선이 끊겨 보입니다. 세로는 3.2/1.6, 가로는 4.2/2.0.
+      this.particles?.setShapeLook(
+        W.edgeBright,
+        W.innerBright,
+        opacity,
+        portrait ? W.edgePx : W.edgePxLandscape,
+        portrait ? W.innerPx : W.innerPxLandscape
+      );
       if (this.particles) this.particles.points.visible = opacity > 0.001;
       // 포인터 ndc(-1..1)를 화면 uv(0..1)로. 셰이더가 파문을 여기에 놓습니다.
       this.pointerUv.set(
