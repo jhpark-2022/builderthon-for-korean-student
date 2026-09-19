@@ -8,10 +8,10 @@ import { naru, naruLinks, openChatLabels, register as registerCopy, type Layer, 
 import { useCrossingRegisterOptional } from "@/components/crossing/RegisterProvider";
 import { links, type Phrase } from "@/data/dictionary";
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
 import {
   DECEMBER_EVENT_NAME,
   DECEMBER_STARTS_AT_MS,
+  DECEMBER_STARTS_AT_SG_MS,
   decemberEventLabel,
   formatDecemberDateLine,
   formatDecemberDay,
@@ -23,15 +23,13 @@ import Chip, { ChipDot } from "@/components/ui/Chip";
 import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 import RouteMap from "@/components/shared/RouteMap";
 import MobileChatBar from "@/components/shared/MobileChatBar";
-import PressRows from "@/components/shared/PressRows";
 import { BAND_TINT, BandFades } from "@/components/shared/Band";
-import { useHeroSplit } from "@/components/shared/useHeroSplit";
 import Chapter from "@/components/journey/Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
 // RecordTabs: 2026-09-17에 뺐다가(사용자: 바로 아카이브로) 2026-09-18 감사 반영 브리프 5.2로
 // 다시 넣었습니다. 멘토 / 연사와 피드백 패널 둘만.
-import RecordTabs from "@/components/home/RecordTabs";
+// (2026-09-19: RecordTabs·PressRows·Funnel은 화면에서 내려가 import도 뺐습니다. 파일은 그대로.)
 import { H2, H3, LABEL_HEADING, GRADIENT_TEXT } from "@/components/ui/typography";
 import NaruMark from "@/components/ui/NaruMark";
 import MotionToggle from "@/components/ui/MotionToggle";
@@ -199,12 +197,18 @@ function TermLink({ text, term, href }: { text: string; term: string; href: stri
 function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => string; locale: "ko" | "en"; className?: string }) {
   type Left = { d: number; h: number; m: number } | "started";
   const [left, setLeft] = useState<Left | null>(null);
+  // 싱가포르 기준(+08:00)은 같은 날 0시라 서울보다 한 시간 뒤에 시작합니다(2026-09-19, 사용자: 둘 다 있어야).
+  const [leftSg, setLeftSg] = useState<Left | null>(null);
   useEffect(() => {
-    const tick = () => {
-      const ms = DECEMBER_STARTS_AT_MS - Date.now();
-      if (ms <= 0) { setLeft("started"); return; }
+    const calc = (target: number): Left => {
+      const ms = target - Date.now();
+      if (ms <= 0) return "started";
       const mins = Math.floor(ms / 60000);
-      setLeft({ d: Math.floor(mins / 1440), h: Math.floor((mins % 1440) / 60), m: mins % 60 });
+      return { d: Math.floor(mins / 1440), h: Math.floor((mins % 1440) / 60), m: mins % 60 };
+    };
+    const tick = () => {
+      setLeft(calc(DECEMBER_STARTS_AT_MS));
+      setLeftSg(calc(DECEMBER_STARTS_AT_SG_MS));
     };
     tick();
     const id = window.setInterval(tick, 30000);
@@ -215,10 +219,14 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
   // DECIDED 2026-09-18 (모바일 수정 브리프 2): 한 줄. 서울 기준만(싱가포르 줄은 시차 한 시간에
   // 날짜가 같아 뺌). 초는 뺐고, 폰은 일만, sm부터 일·시간·분. 이날 아침의 두 줄·초 단위는
   // 닷새짜리 이벤트에 과했습니다.
-  const cells: { v: string; u: Phrase; phone: boolean }[] =
-    left && left !== "started"
-      ? [{ v: String(left.d), u: units.days, phone: true }, { v: pad(left.h), u: units.hours, phone: false }, { v: pad(left.m), u: units.minutes, phone: false }]
+  const cellsOf = (l: Left | null): { v: string; u: Phrase; phone: boolean }[] =>
+    l && l !== "started"
+      ? [{ v: String(l.d), u: units.days, phone: true }, { v: pad(l.h), u: units.hours, phone: false }, { v: pad(l.m), u: units.minutes, phone: false }]
       : [{ v: "--", u: units.days, phone: true }, { v: "--", u: units.hours, phone: false }, { v: "--", u: units.minutes, phone: false }];
+  const rows: { key: Phrase; l: Left | null }[] = [
+    { key: naru.eventHero.countdownRows.seoul, l: left },
+    { key: naru.eventHero.countdownRows.singapore, l: leftSg },
+  ];
   // 낭독은 컨테이너의 aria-label 하나로(감사 반영 브리프 1.4, WCAG 4.1.3). 전에는 자식이
   // 따로 읽혀 "81 일"로 끊겼고, aria-live면 분마다 낭독됐습니다. 아래 자식은 전부 aria-hidden.
   const aria =
@@ -228,28 +236,32 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
         ? t(naru.eventHero.countdownAria).replace("{d}", String(left.d)).replace("{h}", String(left.h))
         : t(naru.eventHero.countdownLabel);
   return (
-    <div role="group" aria-label={aria} className={`flex w-full flex-wrap items-center gap-x-5 gap-y-2 rounded-2xl border border-white/[0.12] bg-white/[0.04] px-5 py-3.5 text-left ${className}`}>
+    <div role="group" aria-label={aria} className={`w-full rounded-2xl border border-white/[0.12] bg-white/[0.04] px-5 py-3.5 text-left ${className}`}>
       {/* 2026-09-18 (감사 반영 브리프 1.4): 테두리는 --border-2, 라벨은 흰색. 주황은 옆의 점 하나
-          (상태 표시)뿐입니다. 이 점이 주황 허용 목록의 "카운트다운 옆 점"입니다. */}
+          (상태 표시)뿐입니다. 이 점이 주황 허용 목록의 "카운트다운 옆 점"입니다.
+          2026-09-19 (사용자): 서울·싱가포르 두 줄. 시차 한 시간이라 일은 같고 시간만 다릅니다. */}
       <p aria-hidden className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-white/80">
         <span className="h-[7px] w-[7px] shrink-0 rounded-full bg-naru-orange" />
         {t(naru.eventHero.countdownLabel)}
-        <span className="text-white/45">{` · ${t(naru.eventHero.countdownRows.seoul)}`}</span>
+        <span className="text-white/45 sm:hidden">{` · ${formatDecemberDayWithWeekday(locale, 0)}`}</span>
       </p>
-      {left === "started" ? (
-        <p aria-hidden className="text-xl font-black text-white">{t(naru.eventHero.started)}</p>
-      ) : (
-        <div aria-hidden className="flex items-baseline gap-4">
-          {cells.map((c, i) => (
-            <div key={i} className={`items-baseline gap-1 ${c.phone ? "flex" : "hidden sm:flex"}`}>
-              <span className="text-[2rem] font-black leading-none tabular-nums text-white">{c.v}</span>
-              <span className="text-xs font-semibold text-white/55">{t(c.u)}</span>
-            </div>
-          ))}
-          {/* 폰은 일만 보여서 요일을 보강합니다: "81일 · 12.10 목"(감사 반영 브리프 1.4). */}
-          <span className="text-xs font-semibold text-white/55 sm:hidden">{`· ${formatDecemberDayWithWeekday(locale, 0)}`}</span>
-        </div>
-      )}
+      <div aria-hidden className="mt-2 grid gap-y-1.5">
+        {rows.map((r) => (
+          <div key={r.key.en} className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <span className="w-[7.5rem] shrink-0 text-xs font-semibold text-white/55">{t(r.key)}</span>
+            {r.l === "started" ? (
+              <span className="text-xl font-black text-white">{t(naru.eventHero.started)}</span>
+            ) : (
+              cellsOf(r.l).map((c, i) => (
+                <span key={i} className={`items-baseline gap-1 ${c.phone ? "flex" : "hidden sm:flex"}`}>
+                  <span className="text-[1.6rem] font-black leading-none tabular-nums text-white">{c.v}</span>
+                  <span className="text-xs font-semibold text-white/55">{t(c.u)}</span>
+                </span>
+              ))
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -319,7 +331,8 @@ export default function NaruHome() {
   const reg = useCrossingRegisterOptional();
   const regState = reg?.state ?? "not_open";
   // 8월 히어로의 패럴랙스 값 여섯. 두 단이 스크롤에 따라 양옆으로 벌어지며 사라집니다.
-  const { heroRef, leftX, rightX, splitX, heroFade } = useHeroSplit();
+  // 2026-09-19 (사용자): 8월 히어로의 패럴랙스(두 단이 양옆으로 벌어지며 사라짐, useHeroSplit)를
+  // 뺐습니다. "8월 페이지와 같은 효과, 마음에 안 듦." 히어로는 정지 레이아웃입니다.
   // 폰 Day 카드 아코디언의 열린 칸(감사 반영 브리프 3.1). 첫 카드만 기본 펼침. lg부터는 무시.
   const [openDay, setOpenDay] = useState(0);
   // 노선도의 현재 위치 점(감사 반영 브리프 3.6): 데스크톱은 호버·포커스한 카드, 폰은 열린 칸.
@@ -359,8 +372,8 @@ export default function NaruHome() {
       <Chapter id="top" align="center" wide className="pt-16 sm:pt-24 lg:pt-20">
         {/* relative: useScroll의 target은 offsetParent가 positioned여야 합니다.
             없으면 framer-motion이 콘솔에 경고를 냅니다(2026-09-17 배경 검증에서 발견). */}
-        <div ref={heroRef} className="relative grid items-center gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
-          <motion.div style={{ x: splitX ? leftX : undefined, opacity: heroFade }} className="text-center lg:pl-10 lg:text-left xl:pl-16">
+        <div className="relative grid items-center gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
+          <div className="text-center lg:pl-10 lg:text-left xl:pl-16">
             <Eyebrow color="purple">{t(naru.eventHero.eyebrow)}</Eyebrow>
             {/* 8월 H1과 같은 clamp. 2행은 그라데이션 토큰(GRADIENT_TEXT). ko는
                 "크로싱 서울" / "CROSSING SEOUL", en은 "CROSSING" / "SEOUL".
@@ -421,14 +434,14 @@ export default function NaruHome() {
             </div>
             {/* 카운트다운(얇은 한 줄). lg부터 여기, 그 아래 폭에서는 무대 다음에. */}
             <CountdownPanel t={t} locale={locale} className="mt-8 hidden lg:block" />
-          </motion.div>
+          </div>
           {/* 오른쪽 단 = 8월 행사 사진 넷 (DECIDED 2026-09-17, 사용자). 8월 히어로의
               메탈 휴먼 자리입니다. 사람이 많이 나온 장면만, 같은 사진은 사이트에 한 번.
               그 전의 형상 무대(싱가포르·서울 점, 배경 수정 브리프)는 같은 날 걷었습니다.
               lg부터만. */}
-          <motion.div style={{ x: splitX ? rightX : undefined, opacity: heroFade }} className="hidden lg:block lg:pr-10 xl:pr-16">
+          <div className="hidden lg:block lg:pr-10 xl:pr-16">
             <HeroPhotos photos={naru.eventHero.photos} t={t} />
-          </motion.div>
+          </div>
         </div>
         {/* 폰(lg 아래): 카피 바로 다음에 사진 넷(2×2), 그 아래 카운트다운. */}
         {/* 폰(lg 아래): CTA → 카운트다운 한 줄 → 사진 넷. 데스크톱(왼쪽 단 CTA 아래)과 같은
@@ -712,39 +725,18 @@ export default function NaruHome() {
         {/* 숫자 다섯. 마지막 하나만 설명 줄을 답니다. "9팀이 출제사에 직접
             자료를 요청했다"는 숫자만으로는 무슨 뜻인지 알 수 없고, 그 뜻이
             이 회차에서 가장 중요한 신호입니다. 시키지 않았는데 했어요. */}
-        {/* 2026-09-18 (감사 반영 브리프 5.1): 같은 크기 타일 다섯 → 스텝 차트 한 줄(74 → 59 → 25 →
-            21 → 9). 핵심인 "9팀 · 시키지 않았습니다"는 아래 큰 숫자로 따로. StatRow는 그대로 둡니다. */}
-        <Funnel stats={naru.record.stats} t={t} aria={t(naru.record.funnelAria)} className="mt-12" />
-
-        {/* 사람(감사 반영 브리프 5.2, 모바일 브리프 3): 멘토 / 연사와 피드백 패널. 2026-09-17에 사용자가
-            "바로 아카이브로"라며 뺐던 것을 2026-09-18 브리프가 다시 넣으라고 했습니다. 더 최근의
-            지시를 따릅니다. 링크드인은 8월 정본(dictionary.ts)에서 직접 읽습니다. */}
-        <RecordTabs only={["mentors", "people"]} compact />
-
-        {/* DECIDED 2026-09-17 (사용자): 사람 탭(RecordTabs)은 넣지 않습니다. "이런 식으로
-            너무 디테일하게 넣지는 말고, 이 챕터는 그냥 바로 8월로 보내줘." 이 챕터는
-            숫자 다섯과 언론 줄, 그리고 아카이브 버튼 하나입니다. 멘토·연사·패널은
-            /2026-08이 정본이고 거기서 봅니다. 사진 벽도 화면에 없습니다(사진은 히어로).
-            RecordTabs 파일과 record.tabs 키는 그대로 둡니다. */}
-
-        {/* 언론(DECIDED 2026-09-17). 8월 페이지의 press 블록과 같은 줄(shared/
-            PressRows). 위는 행사 뒤 싱가포르 현지 매체, 아래 둘은 8월 페이지에
-            있던 기사입니다. 사람 아래에 두는 이유: 사람이 "안"이고 기사는 그것을
-            밖에서 본 눈이라, 순서가 안에서 밖입니다. */}
-        <PressRows
-          items={naru.record.press}
-          tag={naru.record.pressTag}
-          lead={naru.record.pressLead}
-          cta={naru.record.pressCta}
-          t={t}
-          className="mt-12"
-        />
+        {/* 2026-09-19 (사용자): "8월이 남긴 것은 그냥 간단하게 설명하고 8월 페이지로 넘어가는 버튼."
+            깔때기(Funnel)·사람 탭(RecordTabs)·언론 줄(PressRows)·알럼 링크를 화면에서 뺐습니다.
+            함수와 키는 그대로. 남은 것은 리드 둘과 아카이브 버튼 하나. */}
+        <p className="mx-auto mt-4 max-w-2xl break-keep text-base leading-relaxed text-white/75">
+          {t(naru.record.lead2)}
+        </p>
 
         {/* 이 챕터의 유일한 행동입니다. 2026-09-16에 유령 버튼에서 실린 버튼으로
             올렸습니다 - 8월의 설명이 전부 저쪽으로 갔으니, 더 알고 싶은 사람에게
             이 버튼은 선택지가 아니라 다음 문장입니다. 주황은 히어로의 주 CTA가
             이미 쓰고 있어서 흰 면을 씁니다(색 규칙은 히어로 주석 참고). */}
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+        <div className="mt-10 flex justify-center">
           <Link
             href={naruLinks.archive}
             onClick={() => track("naru_cta", { src: "record", to: "archive" })}
@@ -753,16 +745,6 @@ export default function NaruHome() {
             {t(naru.record.cta)}
             <span aria-hidden className="text-white/50">→</span>
           </Link>
-          {/* 8월 참가자를 #join의 알럼 띠로(감사 반영 브리프 5.4). 그 띠는 17프레임 중 15번째라
-              여기서 연결하지 않으면 못 찾습니다. */}
-          <a
-            href="#join-alumni"
-            onClick={() => track("naru_cta", { src: "record", to: "join-alumni" })}
-            className={`${buttonClass("text")} -my-2.5 min-h-[44px] py-2.5`}
-          >
-            {t(naru.record.alumniLink)}
-            <span aria-hidden>→</span>
-          </a>
         </div>
       </Chapter>
 

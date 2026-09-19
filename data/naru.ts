@@ -1279,8 +1279,9 @@ export const naru = {
     decemberLabel: { ko: "12월", en: "December" },
     scheduleLabel: { ko: "일정", en: "Schedule" },
     scheduleLead: {
-      ko: "본 일정 전에 팀 본딩을 두고, Discovery에서 Pitch까지 하루에 한 스테이지씩 넘어갑니다. 전 일정 한 공간에서 합니다.",
-      en: "Team bonding comes before the main schedule, then one stage a day from Discovery to Pitch. The whole thing happens in one space.",
+      // 2026-09-19 (사용자): "한 공간에서 하는 거는 아님. 여러 공간일 수도 있음." 장소 문장을 뺐습니다.
+      ko: "본 일정 전에 팀 본딩을 두고, Discovery에서 Pitch까지 하루에 한 스테이지씩 넘어갑니다.",
+      en: "Team bonding comes before the main schedule, then one stage a day from Discovery to Pitch.",
     },
     workshopLabel: { ko: "워크샵", en: "Workshop" },
     workshopNote: {
