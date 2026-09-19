@@ -1167,6 +1167,10 @@ export const naru = {
       en: "A landing is not where you arrive. It is where you start crossing. This event is your landing.",
     },
     stepsLabel: { ko: "끝나면 할 일", en: "What to do when it ends" },
+    // 2026-09-19 (사용자): **화면에는 01만 그립니다.** 02와 03은 여기 그대로 두고
+    // 내렸습니다(components/home/NaruHome.tsx). 지우지 않는 이유는 이 파일의
+    // 규칙입니다 — 되살릴 때 번역을 다시 쓰지 않아도 되게 둡니다. num도 그대로
+    // 둡니다. 다시 셋이 되면 번호가 이어져야 해요.
     steps: [
       {
         num: "01",

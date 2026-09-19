@@ -718,23 +718,29 @@ export default function NaruHome() {
 
         {/* 끝나면 할 일 (DECIDED 2026-09-18, 사용자: "챕터를 만들지는 말고 기존 포맷에 몇 줄 더").
             팔로업 브리프는 #after 챕터를 제안했지만 사용자가 챕터를 원하지 않아, 아쉬웠던 넷과 같은
-            행 형식으로 셋만 둡니다. 8월에 이 줄이 없어서 이벤트 뒤에 멘토에게 먼저 연락한 팀이
-            한 팀이었습니다. after.lead·statement·cadence·weDo 키는 data/naru.ts에 있고 그리지 않습니다. */}
+            행 형식으로 뒀습니다. 8월에 이 줄이 없어서 이벤트 뒤에 멘토에게 먼저 연락한 팀이
+            한 팀이었습니다. after.lead·statement·cadence·weDo 키는 data/naru.ts에 있고 그리지 않습니다.
+
+            2026-09-19 (사용자): **첫 줄 하나만 그립니다.** steps 02(기업이 마지막 날 여는
+            기회)와 03(다음 회차에 멘토로 돌아옵니다)은 data/naru.ts에 그대로 있고 화면에서
+            내렸습니다. 지우지 않은 이유는 이 레포의 규칙입니다 — 되살릴 때 번역을 다시
+            쓰지 않아도 되게 둡니다.
+
+            번호 배지와 ol을 함께 뺐습니다. 항목이 하나면 "01"은 셀 것이 없고, 하나짜리
+            목록은 목록이 아닙니다. 상자 문법(sm부터 테두리 + 면)은 그대로 두되 폭을
+            한 칸이 아니라 전체로 씁니다. 3열 격자에 카드 하나가 남으면 빠진 자리처럼
+            읽힙니다. */}
         <Reveal className="mx-auto mt-8 max-w-5xl text-left lg:mt-12">
           <h3 className={LABEL_HEADING}>{t(naru.after.stepsLabel)}</h3>
-          <ol role="list" className="mt-3 grid grid-cols-1 sm:mt-5 sm:grid-cols-3 sm:gap-4">
-            {naru.after.steps.map((step) => (
-              <li key={step.num} className="relative border-b border-white/10 py-3 last:border-b-0 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-4">
-                <div className="flex items-center gap-2.5 sm:block">
-                  <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent/15 text-xs font-black text-accent sm:h-8 sm:w-8 sm:text-sm">
-                    {step.num}
-                  </span>
-                  <h4 className="break-keep text-[15px] font-bold leading-snug text-white sm:mt-2.5 sm:text-base">{t(step.title)}</h4>
-                </div>
-                <p className="mt-2 break-keep text-sm leading-relaxed text-white/75">{t(step.body)}</p>
-              </li>
-            ))}
-          </ol>
+          {/* 폰에는 아래 테두리가 없습니다. 셋일 때는 행 사이를 가르는 선이었고
+              마지막 행은 last:border-b-0으로 뺐습니다. 하나만 남으면 그 선은
+              가를 것이 없어 떠 있는 줄이 됩니다. */}
+          <div className="mt-3 py-3 sm:mt-5 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-5">
+            <h4 className="break-keep text-[15px] font-bold leading-snug text-white sm:text-base">
+              {t(naru.after.steps[0].title)}
+            </h4>
+            <p className="mt-2 break-keep text-sm leading-relaxed text-white/75">{t(naru.after.steps[0].body)}</p>
+          </div>
         </Reveal>
 
         {/* DECIDED 2026-09-18 (사용자): "아직 정해지지 않은 것" 상자를 뺐습니다. 미정 목록
