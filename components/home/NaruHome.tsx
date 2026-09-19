@@ -25,10 +25,6 @@ import RouteMap from "@/components/shared/RouteMap";
 import MobileChatBar from "@/components/shared/MobileChatBar";
 import PressRows from "@/components/shared/PressRows";
 import { BAND_TINT, BandFades } from "@/components/shared/Band";
-
-// TODO: confirm (팔로업 브리프 3.2). 7일/한 달 주기가 확정되면 true로 바꾸세요.
-// 확정 전에 true로 두면 지키지 못할 기한을 화면이 약속합니다.
-const AFTER_CADENCE_CONFIRMED = false;
 import { useHeroSplit } from "@/components/shared/useHeroSplit";
 import Chapter from "@/components/journey/Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
@@ -618,6 +614,27 @@ export default function NaruHome() {
           </ol>
         </div>
 
+        {/* 끝나면 할 일 (DECIDED 2026-09-18, 사용자: "챕터를 만들지는 말고 기존 포맷에 몇 줄 더").
+            팔로업 브리프는 #after 챕터를 제안했지만 사용자가 챕터를 원하지 않아, 아쉬웠던 넷과 같은
+            행 형식으로 셋만 둡니다. 8월에 이 줄이 없어서 이벤트 뒤에 멘토에게 먼저 연락한 팀이
+            한 팀이었습니다. after.lead·statement·cadence·weDo 키는 data/naru.ts에 있고 그리지 않습니다. */}
+        <div className="mx-auto mt-8 max-w-5xl text-left lg:mt-12">
+          <h3 className={LABEL_HEADING}>{t(naru.after.stepsLabel)}</h3>
+          <ol role="list" className="mt-3 grid grid-cols-1 sm:mt-5 sm:grid-cols-3 sm:gap-4">
+            {naru.after.steps.map((step) => (
+              <li key={step.num} className="relative border-b border-white/10 py-3 last:border-b-0 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-4">
+                <div className="flex items-center gap-2.5 sm:block">
+                  <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent/15 text-xs font-black text-accent sm:h-8 sm:w-8 sm:text-sm">
+                    {step.num}
+                  </span>
+                  <h4 className="break-keep text-[15px] font-bold leading-snug text-white sm:mt-2.5 sm:text-base">{t(step.title)}</h4>
+                </div>
+                <p className="mt-2 break-keep text-sm leading-relaxed text-white/75">{t(step.body)}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+
         {/* DECIDED 2026-09-18 (사용자): "아직 정해지지 않은 것" 상자를 뺐습니다. 미정 목록
             대신 위 draftNote 한 줄("새로 정해지는 것은 이 자리에 업데이트합니다")이 그 말을
             합니다. december.tbd 키는 그대로. */}
@@ -679,17 +696,7 @@ export default function NaruHome() {
           ))}
         </ol>
         <p className="mx-auto mt-6 max-w-2xl break-keep text-sm text-white/50">{t(naru.gains.note)}</p>
-        {/* 2026-09-18 (팔로업 브리프 3.3): #after로 넘기는 한 줄. 히트 영역 44px은
-            TermLink와 같은 방식(-my-2.5 / py-2.5)입니다. */}
-        <p className="mt-4">
-          <a
-            href="#after"
-            onClick={() => track("naru_cta", { src: "gains", to: "after" })}
-            className="-my-2.5 inline-block py-2.5 text-sm text-white/70 underline decoration-white/30 underline-offset-4 transition hover:text-white hover:decoration-white"
-          >
-            {t(naru.gains.bridge)} →
-          </a>
-        </p>
+
       </Chapter>
 
       {/* ── CH3 · 8월이 남긴 것 (DECIDED 2026-09-17, 홈 흐름 재배치 브리프) ──
@@ -757,73 +764,6 @@ export default function NaruHome() {
             <span aria-hidden>→</span>
           </a>
         </div>
-      </Chapter>
-
-      {/* ── CH4 · 이벤트가 끝난 뒤 (DECIDED 2026-09-18, 팔로업 브리프) ──
-          #record 바로 뒤여야 합니다. lead가 앞 챕터의 마지막 숫자("9팀")를
-          받아서 "한 팀"과 대조합니다. 순서를 바꾸면 문장이 무너집니다.
-          기본 이음매. 큰 이음매(270px)는 다음 챕터인 #naru가 갖습니다. */}
-      <Chapter id="after" align="center">
-        <Eyebrow color="purple">{t(naru.after.eyebrow)}</Eyebrow>
-        <h2 className={H2}><Halo tone="violet">{t(naru.after.heading)}</Halo></h2>
-        <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
-          {t(naru.after.lead)}
-        </p>
-        <p className="mx-auto mt-4 max-w-2xl break-keep text-sm text-white/50">
-          {t(naru.after.leadNote)}
-        </p>
-
-        {/* 선언 한 줄. 이 페이지에서 나루라는 낱말이 읽는 사람을 향하는 유일한
-            자리입니다. 카드도 상자도 아니고 헤어라인 두 줄 사이의 문장입니다.
-            #naru의 서명 헤어라인과 구별되게 폭을 좁게 잡습니다(max-w-3xl). */}
-        <div className="mx-auto mt-12 max-w-3xl">
-          <div aria-hidden className="h-px w-full bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
-          <p className="break-keep px-4 py-8 text-center text-[clamp(18px,3.4vw,24px)] font-bold leading-snug text-white">
-            {t(naru.after.statement)}
-          </p>
-          <div aria-hidden className="h-px w-full bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
-        </div>
-
-        {/* 할 일 셋. #gains의 카드 다섯과 같은 번호 배지 문법이되, 여기는 본문이
-            있으므로 1열입니다. 데스크톱도 1열입니다. 3열로 늘리면 본문이 세
-            토막으로 잘리고, 이 셋은 순서가 뜻이라(ol) 가로로 놓을 이유가 없습니다. */}
-        <p className={`${LABEL_HEADING} mx-auto mt-12 max-w-3xl text-left`}>{t(naru.after.stepsLabel)}</p>
-        <ol className="mx-auto mt-4 grid max-w-3xl grid-cols-1 gap-3">
-          {naru.after.steps.map((step) => (
-            <li
-              key={step.num}
-              className="flex gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-left sm:p-6"
-            >
-              <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent/15 text-sm font-black text-accent">
-                {step.num}
-              </span>
-              <div>
-                <h3 className={H3}>{t(step.title)}</h3>
-                <p className="mt-2 break-keep text-sm leading-relaxed text-white/70">{t(step.body)}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-
-        {/* 기한. 카드가 아니라 카드 아래 한 문단입니다. 지시가 아니라 셈법이라서요.
-            TODO: confirm이 걷히기 전에는 cadenceTbd를 그립니다. 파일 위의 상수 하나만
-            바꾸면 전환됩니다. 확정되면 상수와 이 주석을 함께 지우세요. */}
-        <p className={`${LABEL_HEADING} mx-auto mt-12 max-w-3xl text-left`}>{t(naru.after.cadenceLabel)}</p>
-        <p className="mx-auto mt-4 max-w-3xl break-keep text-left text-sm leading-relaxed text-white/70">
-          {t(AFTER_CADENCE_CONFIRMED ? naru.after.cadence : naru.after.cadenceTbd)}
-        </p>
-
-        {/* 나루가 하는 일 셋. 참가자에게 숙제만 주지 않는다는 것이 이 블록의 전부입니다.
-            불릿이 아니라 나루 점입니다(#why의 코어 둘과 같은 점, 0.8em). */}
-        <p className={`${LABEL_HEADING} mx-auto mt-12 max-w-3xl text-left`}>{t(naru.after.weDoLabel)}</p>
-        <ul role="list" className="mx-auto mt-4 max-w-3xl space-y-3 text-left">
-          {naru.after.weDo.map((line, i) => (
-            <li key={i} className="flex gap-3 break-keep text-sm leading-relaxed text-white/70">
-              <span aria-hidden className="mt-[0.45em] inline-block h-[0.55em] w-[0.55em] shrink-0 rounded-full bg-accent" />
-              <span>{t(line)}</span>
-            </li>
-          ))}
-        </ul>
       </Chapter>
 
       {/* ── CH3 · 나루 (DECIDED 2026-09-17 2차) ─────────────────────────────
@@ -1067,16 +1007,6 @@ export default function NaruHome() {
               블록이 내려갔으니 이 자리에서도 뺍니다. 키는 그대로 있습니다. */}
           <p className="mt-3 break-keep text-sm leading-relaxed text-white/80">
             {t(naru.join.alumni.lines[0])}
-          </p>
-          {/* #after로 가는 링크(팔로업 브리프 4.3). 둘째 줄이 그 챕터의 정본으로 옮겨 갔습니다. */}
-          <p className="mt-3">
-            <a
-              href="#after"
-              onClick={() => track("naru_cta", { src: "alumni", to: "after" })}
-              className="-my-2.5 inline-block py-2.5 text-sm text-white/70 underline decoration-white/30 underline-offset-4 transition hover:text-white hover:decoration-white"
-            >
-              {t(naru.join.alumni.afterLink)} →
-            </a>
           </p>
           <p className="mt-3 break-keep text-sm leading-relaxed text-white/60">
             {t(naru.join.alumni.storyNote)}

@@ -197,8 +197,6 @@ export const naruNav: { id: string; label: Phrase }[] = [
   { id: "december", label: { ko: "프로그램", en: "Program" } },
   { id: "gains", label: { ko: "얻는 것", en: "What you get" } },
   { id: "record", label: { ko: "8월", en: "August" } },
-  // 두 글자인 이유는 칩 레일입니다. 390px에서 칩이 일곱 개라 새 항목이 가장 짧아야 합니다(팔로업 브리프 3.6).
-  { id: "after", label: { ko: "끝난 뒤", en: "After" } },
   // 2026-09-18 (사용자): 학생회와 기업(#how)이 #naru 안으로 합쳐져 항목 하나가 됐습니다.
   { id: "naru", label: { ko: "나루", en: "NARU" } },
   { id: "join", label: { ko: "함께", en: "Join" } },
@@ -1016,6 +1014,9 @@ export const naru = {
   // ── CH3 · 어떻게 일하는가 ─────────────────────────────────────────────────
   // Overview 01과 02를 웹에 맞게 옮긴 것입니다.
   // ── 이벤트가 끝난 뒤 (DECIDED 2026-09-18, 팔로업 브리프) ──────────────────
+  // 2026-09-18 (사용자): 챕터로 만들지 않습니다. 화면에는 #december 안에 stepsLabel과 steps 셋만
+  // 아쉬웠던 넷과 같은 행으로 그립니다. 나머지 키(lead·statement·cadence·weDo·bridge·afterLink·
+  // nameLines 셋째 겹)는 그대로 두되 그리지 않습니다.
   // 이 챕터가 있는 이유는 8월에 이게 없었기 때문입니다. 8월 회차가 끝난 뒤
   // 멘토에게 먼저 연락한 팀은 한 팀이었고, 이유는 의지가 아니었습니다.
   // 아무도 하라고 쓰지 않았고, 무엇을 들고 가야 하는지 재료가 없었고,
