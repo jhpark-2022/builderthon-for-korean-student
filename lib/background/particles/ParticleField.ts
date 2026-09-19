@@ -245,6 +245,10 @@ export class ParticleField {
         // ── crossing (2026-09-17). field에서는 uMode 0이라 셰이더가 읽지 않습니다.
         uMode: { value: variant === "crossing" ? 1 : 0 },
         uLantern: { value: new THREE.Vector3(CROSSING.lantern.x, CROSSING.lantern.y, CROSSING.lantern.z) },
+        // 서울 → 싱가포르 건너기(2026-09-19). water 변형(only === "seoul")만 1입니다.
+        // 0이면 셰이더가 이 브리프 이전과 같은 경로를 돕니다.
+        uMorphOn: { value: only === "seoul" ? 1 : 0 },
+        uMorph: { value: 0 },
         uGather: { value: 0 },
         uCrossing: { value: 0 },
         uArrived: { value: 0 },
@@ -338,6 +342,14 @@ export class ParticleField {
     if (innerPx) u.uInnerPx.value = innerPx;
     u.uShapeOpacity.value = opacity;
     u.uOpacity.value = opacity;
+  }
+
+  /**
+   * water 변형: 서울 → 싱가포르 건너기의 진행도. 0이 서울, 1이 싱가포르입니다.
+   * BackgroundScene이 스크롤에서 만듭니다(시간이 아닙니다).
+   */
+  setMorph(v: number) {
+    this.material.uniforms.uMorph.value = v;
   }
 
   /** crossing: 등불의 월드 좌표. 세로 화면에서는 왼쪽으로 물러납니다(BackgroundScene). */

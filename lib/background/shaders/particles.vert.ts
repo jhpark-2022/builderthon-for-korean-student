@@ -46,8 +46,13 @@ uniform float uArrived;   // 건너편에 닿은 뒤 0..1
 // 입니다. 아래 uniform이 그것을 월드로 놓습니다. xy = 중심, z = 반너비(월드).
 // 정면입니다(기울기 없음). 가장자리 점은 두껍고 밝고, 속 점은 작고 어둡습니다.
 // 가장자리를 따라 밝기의 파도가 돕니다(uWave: 주기 초, 진폭).
-uniform vec3  uShapeL;    // 왼쪽 기슭(싱가포르)
-uniform vec3  uShapeR;    // 오른쪽 기슭(서울)
+uniform vec3  uShapeL;    // 왼쪽 기슭(싱가포르). water 변형에서는 건너기의 도착 자리.
+uniform vec3  uShapeR;    // 오른쪽 기슭(서울). water 변형에서는 건너기의 출발 자리.
+// ── 서울 → 싱가포르 (2026-09-19, 서울→싱가포르 브리프) ────────────────────────
+// uMorphOn이 0이면 아래 crossingMain은 이 브리프 이전과 **같은 경로**를 돕니다.
+// 1은 water 변형(서울 워터마크)뿐입니다. crossing(두 기슭)과 field(8월)는 0입니다.
+uniform float uMorphOn;   // 0 = 건너기 없음, 1 = 있음
+uniform float uMorph;     // 0 = 서울, 1 = 싱가포르. BackgroundScene이 스크롤로 넣습니다.
 uniform float uEdgePx;
 uniform float uInnerPx;
 uniform float uEdgeBright;
@@ -67,6 +72,7 @@ attribute float aSpeed;
 attribute float aOffset;
 attribute float aBank;    // crossing: -1 왼쪽 기슭 / +1 오른쪽. field에서는 0.
 attribute float aEdge;    // crossing: 1 = 형상의 가장자리 점(마지막에 떠남), 0 = 속. field에서는 0.
+attribute vec3  aSeed2;   // 짝지어진 싱가포르 점(ParticleField의 pairSeoulToSingapore). 그 외 변형에서는 aSeed와 같음.
 attribute float aPhase;   // crossing: 윤곽을 따라 간 위상 0..1. field에서는 0.
 
 varying float vBright;    // crossing: 점의 밝기(가장자리 1.0 × 파도, 속 0.35)
@@ -130,6 +136,29 @@ void crossingMain(){
   vec3 shape = aBank < 0.0 ? uShapeL : uShapeR;
   float hw = shape.z;
   vec3 origin = vec3(shape.x + aSeed.x * hw, shape.y + aSeed.y * hw, 0.0);
+
+  // ── 서울 → 싱가포르 (2026-09-19, 서울→싱가포르 브리프 2.2) ──────────────
+  // 점마다 출발 시점을 흩뜨립니다(mlead). 전부 같은 순간에 움직이면 도형이 통째로
+  // 늘어나는 트윈으로 보이고, 흩뜨리면 흘러가서 다시 서는 것으로 보입니다.
+  // 가장자리 점을 조금 늦게 보냅니다. 윤곽이 마지막까지 남아야 서울로 읽힙니다
+  // (아래 gather의 lag와 같은 이유).
+  //
+  // uMorph가 0이면 m도 0이고 origin은 위에서 구한 값 그대로입니다. #naru 앞에서
+  // 화면이 이 브리프 이전과 같은 이유입니다.
+  if (uMorphOn > 0.5) {
+    float mlead = mix(hash1(aOffset * 3.1) * 0.35, 0.25 + hash1(aOffset * 3.1) * 0.30, aEdge);
+    float m = clamp((uMorph - mlead) / (1.0 - mlead), 0.0, 1.0);
+    m = m * m * (3.0 - 2.0 * m);
+    // 출발 자리는 서울(uShapeR), 도착 자리는 싱가포르(uShapeL). 자리(중심·반너비)도
+    // 같이 보간되므로 두 형상의 폭이 달라도 됩니다.
+    vec3 fromShape = uShapeR;
+    vec3 toShape   = uShapeL;
+    vec3 originA = vec3(fromShape.x + aSeed.x  * fromShape.z, fromShape.y + aSeed.y  * fromShape.z, 0.0);
+    vec3 originB = vec3(toShape.x   + aSeed2.x * toShape.z,   toShape.y   + aSeed2.y * toShape.z,   0.0);
+    origin = mix(originA, originB, m);
+    // 살짝 들어 올립니다. 직선으로 가면 기계적입니다. 반너비의 6%, 중간에서 최대.
+    origin.y += sin(m * 3.14159265) * 0.06 * fromShape.z;
+  }
   // 숨: 아주 작게. 형상이 흐트러지면 안 됩니다. 컬 노이즈는 이웃이 같이 움직이는
   // 매끈한 장이라 윤곽이 번지지 않고 살짝 일렁입니다.
   float t = uTime * uFlowSpeed * aSpeed + aOffset;
