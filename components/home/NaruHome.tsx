@@ -1068,6 +1068,16 @@ export default function NaruHome() {
           <p className="mt-3 break-keep text-sm leading-relaxed text-white/80">
             {t(naru.join.alumni.lines[0])}
           </p>
+          {/* #after로 가는 링크(팔로업 브리프 4.3). 둘째 줄이 그 챕터의 정본으로 옮겨 갔습니다. */}
+          <p className="mt-3">
+            <a
+              href="#after"
+              onClick={() => track("naru_cta", { src: "alumni", to: "after" })}
+              className="-my-2.5 inline-block py-2.5 text-sm text-white/70 underline decoration-white/30 underline-offset-4 transition hover:text-white hover:decoration-white"
+            >
+              {t(naru.join.alumni.afterLink)} →
+            </a>
+          </p>
           <p className="mt-3 break-keep text-sm leading-relaxed text-white/60">
             {t(naru.join.alumni.storyNote)}
           </p>

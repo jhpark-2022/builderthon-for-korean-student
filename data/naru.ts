@@ -1682,11 +1682,14 @@ export const naru = {
           ko: "제로백 빌더톤에 왔던 분이라면, 크로싱 서울에서 할 수 있는 일이 셋입니다. 참가자로 오거나, 멘토로 돌아오거나, 그때의 이야기를 보내 주는 것.",
           en: "If you were at the Zero100 builderthon, there are three things you can do at CROSSING SEOUL. Come as a participant, come back as a mentor, or send us your story from back then.",
         },
-        {
-          ko: "받은 사람이 돌려주는 모습이 보일 때 문화가 됩니다. 지금 그걸 할 수 있는 사람은 8월을 건넌 분들뿐입니다.",
-          en: "It becomes a culture at the moment someone is seen giving back what they were given. Right now you are the only people who can do that.",
-        },
+        // 2026-09-18 (팔로업 브리프 3.5): 둘째 줄("받은 사람이 돌려주는 모습이 보일 때 문화가
+        // 됩니다…")은 after.steps[2].body가 정본이 되어 여기서 뺐습니다. 같은 문장이 두 자리에
+        // 살면 한쪽만 고쳐집니다. 문장은 아래에 주석으로만 남깁니다.
+        // { ko: "받은 사람이 돌려주는 모습이 보일 때 문화가 됩니다. 지금 그걸 할 수 있는 사람은 8월을 건넌 분들뿐입니다.",
+        //   en: "It becomes a culture at the moment someone is seen giving back what they were given. Right now you are the only people who can do that." },
       ],
+      // 알럼 띠에서 #after로 가는 링크 라벨(팔로업 브리프 3.5).
+      afterLink: { ko: "끝난 뒤에 할 일", en: "What to do after it ends" },
       storyNote: {
         ko: "이야기를 보내 주시면 이 사이트에 자리를 만듭니다. 본인이 쓴 문장과 동의가 있어야 싣습니다.",
         en: "Send us a story and it gets a place on this site. We publish only your own words, with your consent.",
