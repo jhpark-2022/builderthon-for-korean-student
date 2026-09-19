@@ -880,8 +880,11 @@ export default function NaruHome() {
           {naru.how.layers.map((layer) => (
             <a
               key={layer.join.id}
-              href={`#${layer.join.id}`}
-              onClick={() => track("naru_cta", { src: "how", to: layer.join.id })}
+              // 2026-09-19: `#${layer.join.id}`(#join의 카드)였습니다. 카드 넷이
+              // 화면에서 내려가면서 앵커가 갈 곳을 잃었고, 이제 같은 메일로
+              // 곧장 갑니다. 이 세 링크가 학생회·기업·운영진의 유일한 문입니다.
+              href={layer.join.mail}
+              onClick={() => track("naru_mail", { src: `how_${layer.join.id}` })}
               className="-my-2.5 inline-flex min-h-[44px] items-center gap-1.5 py-2.5 text-sm font-medium text-accent transition hover:text-white"
             >
               {t(layer.join.label)}
@@ -972,94 +975,43 @@ export default function NaruHome() {
           </div>
         </div>
 
-        {/* 여기서부터 들어오는 길입니다. 라벨 없이 헤어라인 하나로 끊습니다.
-            waysLabel·waysLead는 data/naru.ts에 그대로 있고 그리지 않습니다.
-            #join-ways 앵커는 카드 넷이 받습니다. */}
+        {/* 매니페스토 PDF 하나(DECIDED 2026-09-19, 사용자: "그냥 공간에는 매니페스토
+            pdf 다운로드 받을 수 있게 해").
+
+            여기 있던 카드 넷(참가자·학생회·기업·운영진)과 8월 알럼 띠는 화면에서
+            내려갔습니다. join.cards·join.alumni·waysLabel·waysLead 키는 data/naru.ts에
+            그대로 있고 그리지 않습니다. 문의 메일이 사라진 것은 아닙니다. #naru의
+            3층 다이어그램 아래 문 셋이 같은 메일로 곧장 가고(2026-09-19에 앵커에서
+            mailto로 바꿨습니다), 푸터의 일반 문의도 그대로입니다.
+
+            버튼이 아니라 링크인 이유: 이 자리는 결정 지점이 아니라 더 읽을 사람을
+            위한 문입니다. 파일 정보를 라벨 아래 한 줄로 먼저 보입니다. 무엇을 받는지
+            모르고 누르게 하지 않습니다. */}
         <div aria-hidden className="mx-auto mt-12 h-px w-full max-w-5xl bg-white/10" />
-        <div id="join-ways" className="mx-auto mt-12 grid max-w-5xl scroll-mt-28 gap-4 text-left md:grid-cols-2">
-          {naru.join.cards.map((card, i) => (
-            <Card key={card.id} id={card.id} className="flex flex-col !rounded-2xl !bg-white/[0.03] !p-4 transition hover:border-accent/30 hover:bg-white/[0.05] sm:!p-5">
-              {/* 번호 배지. 8월 BenefitCard의 문법(작은 사각). 2026-09-18: 챕터 색이 아니라 보라 토큰
-                  하나(감사 반영 브리프 8). 번호 배지는 페이지 어디서나 같은 색입니다. */}
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15 text-sm font-black text-accent">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <h3 className="mt-3 break-keep text-lg font-bold text-white">{t(card.who)}</h3>
-              {/* 첫 줄만 그립니다(2026-09-16). 둘째 줄은 전부 첫 줄의 조건과
-                  다음 단계였고, 그건 메일을 보낸 뒤에 나눌 이야기입니다.
-                  lines[1]은 data/naru.ts에 그대로 있습니다. */}
-              {/* 얻는 것이 먼저(감사 반영 브리프 7.1): 기업 카드는 내는 것보다 얻는 것을 먼저 봅니다. */}
-              {card.gets && (
-                <ul role="list" className="mt-4 space-y-1.5">
-                  {card.gets.map((g, gi) => (
-                    <li key={gi} className="flex gap-2 break-keep text-sm leading-relaxed text-white/85">
-                      <span aria-hidden className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent/80" />
-                      {t(g)}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              <p className={`${card.gets ? "mt-3" : "mt-4"} flex-1 break-keep text-sm leading-relaxed text-white/70`}>
-                {t(card.lines[0])}
-              </p>
-              <div className="mt-6">
-                {card.openChat && regState === "open" ? (
-                  <button type="button" onClick={() => { track("naru_cta", { src: "join", to: "register" }); reg?.openRegister(); }} className={buttonClass("secondary")}>
-                    {t(registerCopy.cta)}
-                    <span aria-hidden className="text-white/50">→</span>
-                  </button>
-                ) : card.openChat && regState === "closed" ? (
-                  <p className="break-keep text-sm text-white/55">{t(registerCopy.closed)}</p>
-                ) : card.openChat && !links.openChat ? (
-                  // 오픈채팅이 막혀 있는 동안(2026-09-17) 참가자 카드에는 문이 없습니다.
-                  // 버튼 자리에 둘째 줄("등록이 열리면 이 자리에서 알립니다")을 보입니다.
-                  <p className="break-keep text-sm text-white/55">{t(card.lines[1])}</p>
-                ) : card.openChat ? (
-                  <OpenChatLink t={t} src="naru-join" label={openChatLabels.join} />
-                ) : (
-                  // 텍스트 링크(감사 반영 브리프 7.2): 함께 챕터에 외곽선 버튼이 다섯이었습니다. 보조 버튼은
-                  // 알럼 띠의 "메일로 보내기" 하나. 히트 영역 44px.
-                  <a
-                    href={card.door}
-                    onClick={() => track("naru_mail", { src: `join_${card.id}` })}
-                    className={`${buttonClass("text")} -my-2.5 min-h-[44px] py-2.5`}
-                  >
-                    {t(card.doorLabel)}
-                    <span aria-hidden className="text-white/50">→</span>
-                  </a>
-                )}
-              </div>
-            </Card>
-          ))}
-        </div>
-        {/* 8월을 건넌 분께. 카드 넷 아래 폭 전체를 쓰는 띠 하나입니다.
-            이유는 data/naru.ts의 alumni 주석에 있습니다. */}
-        <div id="join-alumni" className="mx-auto mt-6 max-w-5xl scroll-mt-28 rounded-2xl border border-accent/30 bg-accent/[0.06] px-5 py-6 text-left sm:px-7">
-          <p className="flex items-center gap-2 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">
-            <ChipDot className="bg-accent/80" />
-            {t(naru.join.alumni.label)}
+        <div id="join-ways" className="mx-auto mt-12 max-w-3xl scroll-mt-28 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-6 text-left sm:px-7">
+          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
+            {t(naru.join.manifesto.label)}
           </p>
-          {/* 첫 줄과 이야기 안내만. 둘째 줄("받은 사람이 돌려주는 모습이 보일
-              때 문화가 됩니다")은 12월 챕터의 after 블록과 같은 문장이었는데 그
-              블록이 내려갔으니 이 자리에서도 뺍니다. 키는 그대로 있습니다. */}
-          <p className="mt-3 break-keep text-sm leading-relaxed text-white/80">
-            {t(naru.join.alumni.lines[0])}
-          </p>
-          <p className="mt-3 break-keep text-sm leading-relaxed text-white/60">
-            {t(naru.join.alumni.storyNote)}
-          </p>
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            <OpenChatLink t={t} src="naru-join" label={openChatLabels.join} />
+          <h3 className="mt-3 break-keep text-lg font-bold text-white">{t(naru.join.manifesto.title)}</h3>
+          <p className="mt-2 break-keep text-sm leading-relaxed text-white/70">{t(naru.join.manifesto.body)}</p>
+          <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
             <a
-              href={naruLinks.alumni}
-              onClick={() => track("naru_mail", { src: "alumni" })}
+              href={naruLinks.manifesto}
+              // 같은 탭에서 열리면 이 페이지가 PDF 뷰어에 덮입니다. 돌아오는 길이
+              // 뒤로 가기뿐이면 읽던 자리를 잃습니다.
+              target="_blank"
+              rel="noopener noreferrer"
+              download
+              onClick={() => track("naru_cta", { src: "join", to: "manifesto" })}
               className={buttonClass("secondary")}
             >
-              {t(naru.join.alumni.mailLabel)}
-              <span aria-hidden className="text-white/50">→</span>
+              {t(naru.join.manifesto.cta)}
+              <span aria-hidden className="text-white/50">↓</span>
             </a>
+            <span className="text-xs text-white/45">{t(naru.join.manifesto.meta)}</span>
           </div>
         </div>
+
       </Chapter>
 
       {/* ── CH6 · 여기서 나온 사람 (조건부) ──────────────────────────────

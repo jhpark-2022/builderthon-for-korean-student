@@ -94,6 +94,14 @@ export const naruLinks = {
   alumni: `mailto:${CONTACT}?subject=${encodeURIComponent("제로백 빌더톤 이야기")}`,
   /** 제로백 빌더톤(8월)의 기록. */
   archive: "/2026-08",
+  /**
+   * 매니페스토 PDF (DECIDED 2026-09-19, 사용자). #join의 마지막 자리입니다.
+   *
+   * 정본은 `12월 빌더톤/그룹 기획/매니페스토_나루.pdf`이고 public/naru의 것은
+   * 사본입니다. 원본을 고치면 여기도 다시 복사하세요. 파일명에 버전과 달을
+   * 박아 둔 것은 v2가 나왔을 때 캐시된 v1이 남지 않게 하기 위해서입니다.
+   */
+  manifesto: "/naru/naru-manifesto-v1-2026-09.pdf",
 } as const;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -247,7 +255,16 @@ export interface Layer {
    * 헤더의 "함께"를 눌러야 한다는 것을 스스로 알아내야 했습니다. 새 목적지는
    * 없고 앵커만 답니다.
    */
-  join: { id: string; label: Phrase };
+  join: {
+    id: string;
+    label: Phrase;
+    /**
+     * 이 문이 실제로 가는 곳. 2026-09-19까지는 `#${id}`(#join의 카드)였는데
+     * 카드 넷이 화면에서 내려가면서 앵커가 갈 곳을 잃었습니다. 이제 메일로
+     * 곧장 갑니다. id는 추적 이름으로만 남습니다.
+     */
+    mail: string;
+  };
 }
 
 export interface JoinCard {
@@ -1198,7 +1215,7 @@ export const naru = {
           ko: "회차의 책임과 이름. 다음 판을 깔 사람.",
           en: "The responsibility and the name of the round. The people who will set up the next one.",
         },
-        join: { id: "join-crew", label: { ko: "운영진으로 함께하기", en: "Join the crew" } },
+        join: { id: "join-crew", label: { ko: "운영진으로 함께하기", en: "Join the crew" }, mail: naruLinks.crew },
       },
       {
         role: { ko: "주관 ORGANISER", en: "ORGANISER" },
@@ -1214,7 +1231,7 @@ export const naru = {
           ko: "학생에게 열어 줄 자리. 임기를 마친 임원이 이어서 일할 자리.",
           en: "Something real to open up for their students. A place for officers to keep working after their term ends.",
         },
-        join: { id: "join-organiser", label: { ko: "학생회로 문의하기", en: "As an association" } },
+        join: { id: "join-organiser", label: { ko: "학생회로 문의하기", en: "As an association" }, mail: naruLinks.organiser },
       },
       {
         role: { ko: "후원 SPONSOR", en: "SPONSOR" },
@@ -1228,7 +1245,7 @@ export const naru = {
           ko: "한인 학생과의 접점. 채용 연계. 회차 크레딧.",
           en: "A way to reach Korean students. A hiring pipeline. Credit on the round.",
         },
-        join: { id: "join-company", label: { ko: "기업으로 문의하기", en: "As a company" } },
+        join: { id: "join-company", label: { ko: "기업으로 문의하기", en: "As a company" }, mail: naruLinks.sponsor },
       },
     ] as Layer[],
     doesLabel: { ko: "하는 것", en: "What they do" },
@@ -1822,6 +1839,27 @@ export const naru = {
         en: "Even if some never use it, the place has to exist. Closing it because a few did not is going back to the state we missed having it in.",
       },
     ] as Phrase[],
+    // 챕터의 마지막 자리(DECIDED 2026-09-19, 사용자: "그냥 공간에는 매니페스토
+    // pdf 다운로드 받을 수 있게 해"). 카드 넷과 알럼 띠가 있던 자리입니다.
+    //
+    // 이 챕터가 말한 "왜"의 정본이 그 PDF입니다. 더 알고 싶은
+    // 사람에게 줄 것이 요약이 아니라 원문이어야 하고, 원문은 우리가 고쳐 쓸 때
+    // 근거가 되는 문서이기도 합니다. 파일은 public/naru에 있습니다.
+    manifesto: {
+      label: { ko: "매니페스토", en: "Manifesto" },
+      title: {
+        ko: "이 문장들의 정본은 매니페스토입니다.",
+        en: "These sentences come from the manifesto.",
+      },
+      body: {
+        ko: "무엇을 위해 모였는지, 그리고 무엇이 바뀌어도 무엇만은 바뀌지 않는지를 적은 문서입니다. 이 챕터의 문장들은 거기서 왔습니다.",
+        en: "It is the document that says what we gathered for, and what does not change when everything else does. The sentences in this chapter come from it.",
+      },
+      cta: { ko: "매니페스토 내려받기", en: "Download the manifesto" },
+      // 파일 정보는 누르기 전에 압니다. 받는 것이 무엇인지 모르고 누르게 하지
+      // 않습니다. 파일을 바꾸면 이 줄의 크기도 같이 고치세요.
+      meta: { ko: "PDF · 8쪽 · 0.9MB · v1 2026년 9월", en: "PDF · 8 pages · 0.9MB · v1, September 2026" },
+    },
     // waysLabel과 waysLead는 화면에서 내려갔습니다(DECIDED 2026-09-19, 사용자:
     // "함께하는 길 이거 없어도 됨. 그 공간을 왜 이 자리가 필요한가에 더 할애").
     // 카드 넷은 헤어라인 하나로 앞의 "왜"와 끊고 라벨 없이 섭니다. 카드가 각자
@@ -1832,6 +1870,15 @@ export const naru = {
       ko: "들어오는 길은 자리마다 다릅니다. 참가자에게는 회차 하나뿐이고, 나머지 셋은 먼저 말을 걸어 주시면 됩니다.",
       en: "The way in depends on where you stand. For a participant it is a round and nothing else. For the other three, say hello first.",
     },
+    // ⚠️ 아래 alumni와 cards는 **화면에 그려지지 않습니다**(DECIDED 2026-09-19,
+    // 사용자). #join은 "왜"만 말하고, 그 아래 자리는 매니페스토 PDF 하나가
+    // 가져갔습니다. 문장을 고쳐도 홈에는 나오지 않습니다.
+    //
+    // 문의 메일은 사라지지 않았습니다. #naru의 3층 다이어그램 아래 문 셋이
+    // 같은 메일로 곧장 가고(how.layers[].join.mail), 푸터의 일반 문의도
+    // 그대로입니다. 알럼이 이야기를 보내는 메일(naruLinks.alumni)은 지금
+    // 화면에 문이 없습니다. #people이 열릴 때 이 블록과 함께 되살리세요.
+    //
     // ── P4. 8월을 건넌 분께 (DECIDED 2026-09-15) ──────────────────────────
     // 홈에 알럼을 2인칭으로 부르는 문장이 한 줄도 없었습니다. 59명, 이 그룹이
     // 가진 유일한 따뜻한 리스트인데요. december.who는 그들을 3인칭으로 언급할
