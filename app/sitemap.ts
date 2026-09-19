@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const SITE_URL = "https://builderthon-for-korean-student.vercel.app";
+const SITE_URL = "https://naru-crossing-seoul.vercel.app";
 
 // 페이지 셋. 홈이 나루, /2026-08이 1회차 기록, /quiz가 유형 테스트입니다.
 // 2단계에서 12월 상세(/seoul)가 붙으면 여기에 더하세요.

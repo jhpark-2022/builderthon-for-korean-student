@@ -2672,7 +2672,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
   const openDayModal = useCallback((day: number) => setActiveDay(day), []);
 
   // ── ?day=N 딥링크 ────────────────────────────────────────────────────────
-  // 단톡 공지에 `builderthon-for-korean-student.vercel.app/?day=5`처럼 쓰면 그 날
+  // 단톡 공지에 `naru-crossing-seoul.vercel.app/?day=5`처럼 쓰면 그 날
   // 모달이 열린 채로 열립니다. 행사 주간에 "오늘 뭐 하는지" 링크 하나로 보내는 것이
   // 이 파라미터의 용도예요.
   //
