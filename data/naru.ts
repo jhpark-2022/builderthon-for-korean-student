@@ -607,11 +607,12 @@ export const naru = {
       {
         num: "05",
         title: { ko: "국경 너머의 동료", en: "Peers from across the border" },
-        // 포지션만 말하고 편성은 말하지 않습니다. 국경을 섞어 팀을 짜는지는 아직
-        // 기준이 없습니다(브리프 2.1). "같은 팀이 됩니다"로 바꾸지 마세요.
+        // 2026-09-19까지는 "같은 자리에 섭니다"였습니다. 국경을 섞어 팀을 짜는 기준이
+        // 없었기 때문입니다. 사용자가 1일차 팀 매칭(한국 <> 싱가포르)을 확정하면서
+        // 편성까지 말할 수 있게 됐습니다(#december의 stages 1일차와 같은 사실입니다).
         body: {
-          ko: "어느 나라에서 공부하든 같은 자리에 섭니다.",
-          en: "Whichever country you study in, you stand in the same room.",
+          ko: "어느 나라에서 공부하든 한 팀이 됩니다.",
+          en: "Whichever country you study in, you end up on the same team.",
         },
       },
     ] as { num: string; title: Phrase; body: Phrase; evidence?: Phrase }[],
@@ -1332,8 +1333,10 @@ export const naru = {
     scheduleLabel: { ko: "일정", en: "Schedule" },
     scheduleLead: {
       // 2026-09-19 (사용자): "한 공간에서 하는 거는 아님. 여러 공간일 수도 있음." 장소 문장을 뺐습니다.
-      ko: "본 일정 전에 팀 본딩을 두고, Discovery에서 Pitch까지 하루에 한 스테이지씩 넘어갑니다.",
-      en: "Team bonding comes before the main schedule, then one stage a day from Discovery to Pitch.",
+      // DECIDED 2026-09-19 (사용자): 본 일정 전에 있던 것이 팀 본딩에서 데이터 공개로 바뀌었습니다.
+      // 팀은 1일차 현장에서 맺습니다. 아래 stages의 첫 두 칸과 같은 사실을 말해야 합니다.
+      ko: "데이터를 먼저 공개해 트랙을 고르고 옵니다. 팀은 1일차 현장에서 맺고, Discovery에서 Pitch까지 하루에 한 스테이지씩 넘어갑니다.",
+      en: "The data opens first, so you arrive with a track chosen. Teams form on site on day one, then one stage a day from Discovery to Pitch.",
     },
     workshopLabel: { ko: "워크샵", en: "Workshop" },
     workshopNote: {
@@ -1354,7 +1357,7 @@ export const naru = {
     flowLabel: { ko: "참여 플로우", en: "How it flows" },
     flow: [
       { ko: "등록", en: "Register" },
-      { ko: "팀 본딩", en: "Team bonding" },
+      { ko: "트랙 선택", en: "Choosing a track" },
       { ko: "닷새", en: "Five days" },
       { ko: "결과 공유회", en: "Sharing session" },
     ] as Phrase[],
@@ -1534,7 +1537,9 @@ export const naru = {
     shape: [
       {
         value: { ko: "5일", en: "5 days" },
-        label: { ko: "실질 4일 + 사전 팀 본딩", en: "Four working days, bonding before" },
+        // 2026-09-19: "실질 4일 + 사전 팀 본딩"에서. 본 일정 앞에 있는 것은 이제 팀 본딩이
+        // 아니라 데이터 공개입니다(stages 첫 칸). 숫자 5일은 12/10~12/14 그대로입니다.
+        label: { ko: "실질 4일 + 사전 데이터 공개", en: "Four working days, data opens before" },
       },
       {
         value: { ko: "3곳", en: "3" },
@@ -1578,32 +1583,38 @@ export const naru = {
     stages: [
       // title: 한글 주 + 영문 소문자 보조(감사 반영 브리프 8, 영문 라벨 규칙). name은 기획서의
       // 영문 스테이지 이름이고 ko 화면에서 보조 라벨로 작게 붙습니다. TODO: confirm(한글 이름).
+      // DECIDED 2026-09-19 (사용자): 본 일정 전은 팀 본딩이 아니라 데이터 공개입니다.
+      // 데이터를 먼저 열어 어느 트랙에서 풀지 고르고 오고, 팀은 1일차 현장에서 맺습니다.
+      // 사전 매칭이 없어졌으므로 "사전 매칭된 팀"이라고 쓰지 마세요.
       {
-        name: { ko: "Team Bonding", en: "Team Bonding" },
-        title: { ko: "팀 본딩", en: "Team Bonding" },
+        name: { ko: "Track Select", en: "Track Select" },
+        title: { ko: "트랙 선택", en: "Choosing a track" },
         when: { ko: "본 일정 전", en: "Before it starts" },
         dayOffset: null,
         body: {
-          ko: "사전 매칭된 팀이 대면으로 먼저 만납니다.",
-          en: "Matched teams meet in person first.",
+          ko: "데이터를 먼저 공개합니다. 어느 트랙에서 풀지 고르고 옵니다.",
+          en: "The data opens first. You pick the track you want before you come.",
         },
         line: {
-          ko: "첫날의 아이스브레이킹 시간이 사라집니다.",
-          en: "Day one does not start with icebreakers.",
+          ko: "1일차는 고른 상태에서 시작합니다.",
+          en: "Day one starts with that choice already made.",
         },
-        chips: [{ ko: "대면", en: "In person" }],
+        chips: [{ ko: "데이터 공개", en: "Data opens" }],
       },
       {
         name: { ko: "Discovery", en: "Discovery" },
         title: { ko: "문제 발견", en: "Discovery" },
         when: { ko: "1일차", en: "Day 1" },
         dayOffset: 0,
+        // DECIDED 2026-09-19 (사용자): 팀 매칭(한국 <> 싱가포르)과 본딩이 이 날 앞머리로
+        // 들어왔습니다. 본딩은 아이스브레이킹으로 하루를 쓰는 것이 아니라 바로 Discovery로
+        // 넘어가기 위한 것입니다. 그래서 이 날의 제출물(정의서)은 그대로입니다.
         body: {
-          ko: "데이터를 열고, 그 데이터에서 문제를 찾아 정의합니다.",
-          en: "The data opens. You find the problem inside it and define it.",
+          ko: "현장에서 한국과 싱가포르를 섞어 팀을 맺습니다. 본딩을 거쳐 바로 고른 트랙의 데이터에서 문제를 찾아 정의합니다.",
+          en: "Teams form on site, Korea mixed with Singapore. You bond, then go straight into the data of the track you chose and define the problem.",
         },
         line: { ko: "요구 강도가 가장 높은 날입니다.", en: "The hardest day." },
-        chips: [{ ko: "요구 강도 최고", en: "Hardest day" }],
+        chips: [{ ko: "팀 매칭", en: "Team matching" }, { ko: "요구 강도 최고", en: "Hardest day" }],
         workshop: {
           title: { ko: "Problem Discovery", en: "Problem Discovery" },
           body: { ko: "워크플로우를 분해해 병목 짚는 법", en: "Taking a workflow apart to find the bottleneck" },
