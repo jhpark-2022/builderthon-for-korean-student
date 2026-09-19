@@ -178,6 +178,9 @@ export default function JourneyNav({
   const railRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (brand !== "naru" || !activeSection || !railRef.current) return;
+    // 2026-09-19: 홈 레일은 접히므로 가로로 넘칠 것이 없습니다. 넘치지 않으면
+    // 아무것도 하지 않습니다(문서를 건드리지 않게).
+    if (railRef.current.scrollWidth <= railRef.current.clientWidth + 1) return;
     const chip = railRef.current.querySelector<HTMLElement>(`a[href="#${activeSection}"]`);
     if (!chip) return;
     // 감사 반영 브리프 2.2: 활성 칩을 레일 가운데로. block:nearest라 문서는 움직이지 않습니다.
@@ -559,9 +562,28 @@ export default function JourneyNav({
           this breakpoint, so an anchor jump doesn't park a heading underneath. */}
       {scrolled && (
         <div className="xl:hidden">
-          {/* 나루: 우측 24px 페이드 마스크 + snap(감사 반영 브리프 2.2). "8월"에서 잘려 뒤에 더 있는지
-              알 수 없었습니다. */}
-          <div ref={railRef} className={`flex gap-2 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]{display:none} ${naru ? "snap-x snap-mandatory [mask-image:linear-gradient(to_right,#000_calc(100%-24px),transparent)]" : ""}`}>
+          {/* 나루(홈): 가로로 굴리지 않고 **접습니다** (2026-09-19, 사용자: "모바일 뷰에서
+              TOC가 한 스크린에 다 들어왔으면"). 전에는 우측 페이드 마스크 + snap으로 "뒤에
+              더 있다"를 알렸는데, 알려 주는 것과 보이는 것은 다릅니다. 다섯 칸짜리 목차는
+              굴릴 것이 아니라 한눈에 있어야 합니다.
+
+              390px에서 실측한 글자 폭(0.7rem semibold): ko 57.8·43.6·36.0·21.8·10.9 = 170.1,
+              en 114.1·51.8·79.1·36.4·26.6 = 308.0. 칩 좌우 여백 2.5rem×5와 칸 사이 8px×4를
+              더하면 ko 302px, en 440px입니다. 가로 여백 24px×2를 뺀 342px 안에 **ko는 한 줄로
+              들어가고 en은 못 들어갑니다.** en을 한 줄에 넣으려면 글자가 9px까지 내려가야 해서
+              (읽을 수 없습니다) 대신 접습니다: en은 3 + 2 두 줄, ko는 한 줄. 로케일 분기가
+              아니라 폭이 스스로 결정합니다. 360px 폰에서도 ko는 한 줄입니다(302 ≤ 312).
+
+              칩 폭 통일(min-w 5.25rem)은 여기서 풉니다. 그 값은 /2026-08 레일의 최장 라벨
+              en "Mentoring"에서 나온 것이고, 굴리는 레일에서 칩이 들쭉날쭉해 보이지 않게
+              하는 장치였습니다. 접는 목차에서는 다섯 칸이 한눈에 함께 보여서 서로가 서로의
+              기준이 되고, 통일하면 오히려 두 줄이 됩니다(ko 94.5×5 + 32 = 505px).
+
+              /2026-08은 그대로 굴러갑니다. 그쪽은 아카이브고 라벨 길이가 달라서, 옮기려면
+              위 주석대로 그 로케일들을 다시 재야 합니다. */}
+          <div ref={railRef} className={naru
+            ? "flex flex-wrap justify-center gap-2 px-6 pb-2"
+            : "flex gap-2 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]{display:none}"}>
             {anchors.map((a) => {
               const here = a.id === activeSection;
               return (
@@ -594,7 +616,9 @@ export default function JourneyNav({
                   // 대가: 레일 총 길이가 늘어 한 화면에 보이는 칩이 줄어듭니다.
                   // 원래부터 가로 스크롤 레일이라 감당하는 쪽을 골랐습니다.
                   // 상단 행의 퀴즈 칩(✦)은 이 레일이 아니라 첫 행에 있어 대상이 아닙니다.
-                  className={`inline-flex min-h-[44px] min-w-[5.25rem] shrink-0 snap-center items-center justify-center whitespace-nowrap rounded-full border px-3 text-[0.7rem] font-semibold backdrop-blur transition active:scale-[0.97] ${
+                  className={`inline-flex min-h-[44px] shrink-0 items-center justify-center whitespace-nowrap rounded-full border text-[0.7rem] font-semibold backdrop-blur transition active:scale-[0.97] ${
+                    naru ? "px-2.5" : "min-w-[5.25rem] snap-center px-3"
+                  } ${
                     here
                       ? "border-accent/40 bg-accent/[0.12] text-white"
                       : "border-white/[0.12] bg-white/[0.06] text-white/75"
