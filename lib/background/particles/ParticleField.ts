@@ -22,6 +22,107 @@ function gauss(mean: number, sigma: number) {
   return mean + sigma * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
 
+/**
+ * 서울 점 하나하나에 싱가포르 점 하나를 짝지어 `out`(aSeed2)에 넣습니다.
+ * 2026-09-19, 서울→싱가포르 브리프 2.1.
+ *
+ * ── 왜 인덱스 순서로 짝지으면 안 되는가 ──────────────────────────────────
+ * 구운 점의 순서는 무작위로 섞여 있습니다(가장자리 75%·속 25%가 어느 접두사에서도
+ * 유지되게). i번째와 i번째를 짝지으면 점 전부가 화면을 가로질러 날아가 뒤엉킵니다.
+ *
+ * ── 열쇠는 phase ───────────────────────────────────────────────────────
+ * 굽는 스크립트가 넣어 둔 phase가 가장자리 점에서는 윤곽을 따라 간 호 길이 비율,
+ * 속 점에서는 중심 기준 각도 비율입니다. 양쪽을 phase로 정렬해 같은 순번끼리 묶으면
+ * 윤곽이 고무줄처럼 늘어나 다른 윤곽이 됩니다.
+ *
+ * ── 오프셋과 방향 ──────────────────────────────────────────────────────
+ * 두 윤곽의 phase = 0이 같은 방위가 아니고, 도는 방향도 다를 수 있습니다. 그래서
+ * 오프셋 32가지 × 방향 2가지 = 64개 후보를 모두 시험해 정규화 좌표에서 이동 거리
+ * 제곱합이 가장 작은 짝을 씁니다. 생성자에서 한 번이고, 매 프레임이 아닙니다.
+ */
+function pairSeoulToSingapore(
+  count: number,
+  seeds: Float32Array,
+  edges: Float32Array,
+  phases: Float32Array,
+  out: Float32Array
+) {
+  const t0 = typeof performance !== "undefined" ? performance.now() : 0;
+  const gStride = SINGAPORE_STRIDE;
+  const gCount = Math.min(count, (SINGAPORE_POINTS.length / gStride) | 0);
+  if (gCount < 8) return;
+
+  // 서울: 파티클 인덱스를 가장자리/속으로 나누고 phase 오름차순.
+  const sEdge: number[] = [];
+  const sInner: number[] = [];
+  for (let i = 0; i < count; i++) (edges[i] > 0.5 ? sEdge : sInner).push(i);
+  const byPhaseS = (a: number, b: number) => phases[a] - phases[b];
+  sEdge.sort(byPhaseS);
+  sInner.sort(byPhaseS);
+
+  // 싱가포르: 굽은 점의 인덱스를 같은 방식으로.
+  const gEdge: number[] = [];
+  const gInner: number[] = [];
+  for (let k = 0; k < gCount; k++) (SINGAPORE_POINTS[k * gStride + 2] > 0.5 ? gEdge : gInner).push(k);
+  const byPhaseG = (a: number, b: number) => SINGAPORE_POINTS[a * gStride + 3] - SINGAPORE_POINTS[b * gStride + 3];
+  gEdge.sort(byPhaseG);
+  gInner.sort(byPhaseG);
+
+  const OFFSETS = 32;
+  let logged = { off: 0, dir: 1, min: 0, max: 0 };
+
+  /** a(서울 인덱스 목록) ↔ b(싱가포르 인덱스 목록). 최적 오프셋·방향으로 out을 채웁니다. */
+  const match = (a: number[], b: number[]) => {
+    const mA = a.length;
+    const mB = b.length;
+    if (mA === 0 || mB === 0) return;
+    const j = (t: number, off: number, dir: number) => {
+      const base = Math.floor((t * mB) / mA);
+      const v = dir > 0 ? base + off : mB - 1 - base + off;
+      return ((v % mB) + mB) % mB;
+    };
+    let bestCost = Infinity;
+    let worstCost = -Infinity;
+    let bestOff = 0;
+    let bestDir = 1;
+    for (let c = 0; c < OFFSETS * 2; c++) {
+      const off = Math.round(((c >> 1) * mB) / OFFSETS);
+      const dir = c & 1 ? -1 : 1;
+      let cost = 0;
+      for (let t = 0; t < mA; t++) {
+        const i = a[t];
+        const k = b[j(t, off, dir)];
+        const dx = seeds[i * 3] - SINGAPORE_POINTS[k * gStride];
+        const dy = seeds[i * 3 + 1] - SINGAPORE_POINTS[k * gStride + 1];
+        cost += dx * dx + dy * dy;
+      }
+      if (cost < bestCost) { bestCost = cost; bestOff = off; bestDir = dir; }
+      if (cost > worstCost) worstCost = cost;
+    }
+    for (let t = 0; t < mA; t++) {
+      const i = a[t];
+      const k = b[j(t, bestOff, bestDir)];
+      out[i * 3] = SINGAPORE_POINTS[k * gStride];
+      out[i * 3 + 1] = SINGAPORE_POINTS[k * gStride + 1];
+      out[i * 3 + 2] = 0;
+    }
+    if (a === sEdge) logged = { off: bestOff, dir: bestDir, min: bestCost, max: worstCost };
+  };
+
+  match(sEdge, gEdge);
+  match(sInner, gInner);
+
+  if (process.env.NODE_ENV !== "production" && typeof console !== "undefined") {
+    const ms = (typeof performance !== "undefined" ? performance.now() : 0) - t0;
+    // 검증 6·9(브리프 4장): 최소값이 최대값의 절반 이하여야 정렬이 효과를 낸 것입니다.
+    console.info(
+      `[naru:bg] 서울→싱가포르 짝짓기 — 점 ${count}, 오프셋 ${logged.off}, 방향 ${logged.dir > 0 ? "+" : "-"}, ` +
+        `거리제곱합 최소 ${logged.min.toFixed(1)} / 최대 ${logged.max.toFixed(1)} ` +
+        `(비 ${(logged.min / Math.max(logged.max, 1e-6)).toFixed(3)}), ${ms.toFixed(1)}ms`
+    );
+  }
+}
+
 export class ParticleField {
   readonly points: THREE.Points;
   private readonly geometry: THREE.BufferGeometry;
@@ -45,6 +146,9 @@ export class ParticleField {
     const banks = new Float32Array(count); // field에서는 전부 0
     const edges = new Float32Array(count); // crossing: 가장자리 1 / 속 0. field에서는 0
     const phases = new Float32Array(count); // crossing: 윤곽을 따라 간 위상 0..1. field에서는 0
+    // 서울 → 싱가포르 건너기의 도착 자리(2026-09-19). only === "seoul"일 때만 채우고,
+    // 나머지 변형에서는 aSeed와 같은 값이라 셰이더가 항등이 됩니다.
+    const seeds2 = new Float32Array(count * 3);
 
     // crossing: 점 예산(2026-09-17 수정 브리프 1.2). 앞쪽은 형상 둘, 나머지는 깊이 층.
     const shapeCount = variant === "crossing" ? (only ? count : SHAPES.shapePoints(count)) : 0;
@@ -86,6 +190,12 @@ export class ParticleField {
       offsets[i] = Math.random() * 100;
     }
 
+    // 기본값: 도착 자리 = 출발 자리. crossing과 field는 이 값을 그대로 씁니다.
+    seeds2.set(seeds);
+    if (variant === "crossing" && only === "seoul") {
+      pairSeoulToSingapore(count, seeds, edges, phases, seeds2);
+    }
+
     this.geometry = new THREE.BufferGeometry();
     this.geometry.setAttribute("aSeed", new THREE.BufferAttribute(seeds, 3));
     this.geometry.setAttribute("aScale", new THREE.BufferAttribute(scales, 1));
@@ -94,6 +204,7 @@ export class ParticleField {
     this.geometry.setAttribute("aBank", new THREE.BufferAttribute(banks, 1));
     this.geometry.setAttribute("aEdge", new THREE.BufferAttribute(edges, 1));
     this.geometry.setAttribute("aPhase", new THREE.BufferAttribute(phases, 1));
+    this.geometry.setAttribute("aSeed2", new THREE.BufferAttribute(seeds2, 3));
     // dummy position attribute (shader ignores it but Three expects one)
     this.geometry.setAttribute("position", new THREE.BufferAttribute(seeds, 3));
     this.geometry.boundingSphere = new THREE.Sphere(
