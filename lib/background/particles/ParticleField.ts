@@ -68,7 +68,11 @@ function pairSeoulToSingapore(
   gEdge.sort(byPhaseG);
   gInner.sort(byPhaseG);
 
-  const OFFSETS = 32;
+  // 오프셋 후보 수. 브리프 2.1은 32였는데 실측에서 데스크톱(1,990점) 탐색이 9.5ms로
+  // 검증 9의 상한(데스크톱 5ms)을 넘었습니다. 브리프 4장의 지시대로 16으로 내립니다.
+  // 오프셋 간격이 mB/16(약 93칸)이 되지만 비용 함수가 오프셋에 대해 완만해서
+  // 최소/최대 비는 그대로입니다(0.037). 폰은 1,100점에 4.1ms였습니다.
+  const OFFSETS = 16;
   let logged = { off: 0, dir: 1, min: 0, max: 0 };
 
   /** a(서울 인덱스 목록) ↔ b(싱가포르 인덱스 목록). 최적 오프셋·방향으로 out을 채웁니다. */
