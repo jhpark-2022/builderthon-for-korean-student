@@ -331,7 +331,7 @@ export const naru = {
       // 이름에 "서울"이 이미 있어서 날짜 뒤에 도시를 한 번 더 쓰지 않습니다.
       // "12월 9일 서울, 크로싱 서울에서는"이 되어 서울이 연달아 두 번 나옵니다.
       ko: "2026년 8월, 싱가포르에서 59명이 8일을 건넜습니다. {date}, {name}에서는 국경과 상관없이 만납니다.",
-      en: "In August 2026, fifty-nine people crossed eight days in Singapore. On {date}, {name} brings them together whichever country they study in.",
+      en: "In August 2026, fifty-nine people crossed eight days in Singapore. On {date}, {name} opens it up, wherever you study.",
     },
     ctaDecember: { ko: "크로싱 서울 알아보기", en: "About CROSSING SEOUL" },
     ctaArchive: { ko: "제로백 빌더톤의 기록", en: "The Zero100 builderthon record" },
@@ -365,7 +365,7 @@ export const naru = {
       // 말하려는 것은 "데이터에서 시작한다"입니다. 다른 자리(programHeading,
       // gaps[0].answer, shapeLead, shape[1].note, partners)도 같은 날 같이 바꿨습니다.
       ko: "한국의 대학생과 해외의 한인 유학생이 같은 문제 앞에 섭니다. 이번에는 데이터에서 시작합니다. 문제를 찾아내는 것부터 앞에서 증명하기까지, 닷새.",
-      en: "Students at Korean universities and Korean students abroad stand in front of the same problem. This time it starts from the data. From finding the problem to proving it out front, in five days.",
+      en: "Students in Korea and Korean students abroad stand in front of the same problem. This time it starts from the data: find the problem, prove it out front, five days.",
     },
     ctaProgram: { ko: "프로그램 보기", en: "See the programme" },
     // ── 카운트다운 패널 (2026-09-17, 8월 문법 브리프) ─────────────────────
@@ -457,7 +457,7 @@ export const naru = {
     eyebrow: { ko: "나루 NARU", en: "나루 NARU" },
     lead: {
       ko: "이벤트는 나루가 학생회와 기업을 잇는 지금의 방식입니다. 방식은 바뀝니다. 바뀌지 않는 것은 아래 두 개입니다.",
-      en: "An event is how NARU connects student associations and companies for now. The method changes. What does not change is the two things below.",
+      en: "An event is how NARU connects associations and companies for now. Methods change. The two things below do not.",
     },
   },
 
@@ -486,7 +486,7 @@ export const naru = {
         ],
         keeps: {
           ko: "스크리닝 없이 전원에게 진짜 기업 문제를 줍니다. 순위 대신 부문별로 시상하고, 평가는 결과물보다 과정에 무게를 둡니다.",
-          en: "Everyone gets a real company problem, with no screening. Awards go by category instead of placing, and the weight sits on the process rather than the artefact.",
+          en: "A real company problem for everyone, no screening. Awards by category, not by placing, and the weight sits on the process.",
         },
       },
       {
@@ -502,12 +502,12 @@ export const naru = {
           },
           {
             ko: "그 앞에서 자기 판단으로 무언가를 만들고, 그 경험을 증명하는 실물을 손에 쥐고 나갑니다.",
-            en: "Standing in front of that, you build something on your own judgement, and you leave holding something real that proves it.",
+            en: "You build something on your own judgement and leave holding proof of it.",
           },
         ],
         keeps: {
           ko: "학점도 이력서도 보지 않습니다. 실명이 박힌 기업의 문제 하나가 전부이고, 증명은 마지막 날 그 기업 앞에서 합니다.",
-          en: "We do not look at your grades or your CV. One problem from a named company is the whole of it, and you prove it in front of that company on the last day.",
+          en: "No grades, no CV. One problem from a named company, proved in front of that company on the last day.",
         },
       },
     ],
@@ -526,7 +526,7 @@ export const naru = {
     execLabel: { ko: "약속이 지켜지는 지점", en: "Where the promise is kept" },
     execLead: {
       ko: "위의 둘은 우리가 약속하는 것입니다. 약속은 프로그램 안의 어느 한 시간에서 지켜지거나 깨집니다.",
-      en: "The two above are what we promise. A promise is kept or broken inside one particular hour of the programme.",
+      en: "Those two are the promise. A promise is kept or broken inside one hour of the programme.",
     },
     exec: [
       {
@@ -534,7 +534,7 @@ export const naru = {
         title: { ko: "멘토링 한 시간의 밀도", en: "The density of one hour of mentoring" },
         body: {
           ko: "코어가 지켜지느냐 아니냐는 결국 여기서 갈립니다. 슬롯을 늘리는 것과 그 한 시간이 밀도 있는 것은 다른 일이고, 8월에 부족했던 것은 슬롯이 아니라 그 한 시간을 쓰게 만드는 설계였습니다.",
-          en: "This is where the core holds or gives. Adding slots and making one hour dense are different jobs, and what August lacked was not slots but a design that got people to use them.",
+          en: "This is where the core holds or gives. More slots and a denser hour are different jobs. August had the slots and no reason to use them.",
         },
       },
       {
@@ -542,7 +542,7 @@ export const naru = {
         title: { ko: "내 가치를 들어주는 사람", en: "Who is listening" },
         body: {
           ko: "누가 듣느냐, 그리고 그들이 얼마나 진심이었느냐가 참가자가 실제로 기억하는 전부입니다. 상금은 8월 참가 동기에서 언급조차 되지 않았고, 꼽힌 것은 평소 만날 수 없는 대표와 멘토였습니다.",
-          en: "Who listens, and how much they meant it, is the whole of what a participant actually remembers. In August prize money went unmentioned as a reason to come. What people named were the founders and mentors they could not otherwise meet.",
+          en: "Who listens, and how much they meant it, is what a participant remembers. In August nobody came for the prize money. They came for founders and mentors they could not otherwise meet.",
         },
       },
     ] as { index: string; title: Phrase; body: Phrase }[],
@@ -557,12 +557,12 @@ export const naru = {
     },
     noteBody: {
       ko: "둘 중 하나만 있으면 친목 모임이거나 소수의 클럽이 됩니다. 둘을 동시에 지키는 것이 이 그룹이 하는 일이고, 부딪힐 때 어느 쪽으로 기울일지 매번 판단하는 것이 실력입니다.",
-      en: "With only one of them you end up as either a social circle or a small elite club. Holding both at once is this group's work, and deciding which way to lean when they collide is the skill.",
+      en: "With only one, you end up a social circle or a small elite club. Holding both is this group's work, and leaning the right way when they collide is the skill.",
     },
     agendaLabel: { ko: "방법은 바뀝니다", en: "The method changes" },
     agenda: {
       ko: "AI도, 8일이라는 길이도, 지금의 형식도 방법입니다. 어젠다는 상황을 따라 바뀌고, 8일이 4일이 되어도 됩니다. 바뀌면 안 되는 것은 위의 두 개뿐입니다.",
-      en: "AI, the eight days, the format we use now: all of them are method. The agenda changes as the situation does, and eight days may become four. Only the two above cannot change.",
+      en: "AI, the eight days, the format: all method. The agenda follows the situation, and eight days may become four. Only the two above cannot change.",
     },
   },
 
@@ -667,7 +667,7 @@ export const naru = {
     // 나서 무엇이 바뀌면 안 되는지를 알았습니다.
     lead2: {
       ko: "실제 기업의 문제를 스크리닝 없이 받아 8일 동안 풀고, 마지막 날 앞에서 증명했습니다. 이 이벤트에서 코어 2개가 나왔습니다.",
-      en: "Teams took a real company's problem with no screening, worked it for eight days, and proved it out front on the last day. The two cores came out of this event.",
+      en: "Teams took a real company's problem with no screening, worked it for eight days, and proved it out front on the last day. The two cores came out of it.",
     },
     stats: [
       { value: { ko: "74명", en: "74" }, label: { ko: "신청", en: "applied" } },
@@ -932,7 +932,7 @@ export const naru = {
         label: { ko: "8일의 형식", en: "The eight days" },
         intro: {
           ko: "팀으로 참가해 실제 기업의 문제를 받고, 8일 뒤 마지막 날 앞에서 증명했습니다. 문제를 낸 곳은 코드프레소였습니다.",
-          en: "You came as a team, took a real company's problem, and proved it out front on the eighth day. The problem came from Codepresso.",
+          en: "You came as a team, took a real company's problem, and proved it on the eighth day. Codepresso set it.",
         },
         facts: [
           { value: { ko: "8일", en: "8 days" }, label: { ko: "2026.08.22 ~ 08.29", en: "22 to 29 Aug 2026" } },
@@ -944,19 +944,19 @@ export const naru = {
         tracksLabel: { ko: "문제 둘", en: "Two problems" },
         tracksNote: {
           ko: "채용이냐 마케팅이냐가 아니라, 어느 병목을 풀고 싶은지로 골랐습니다. 둘 다 출제사가 그때 실제로 겪고 있던 문제였어요.",
-          en: "Not hiring versus marketing. You picked by which bottleneck you wanted to solve. Both were problems the company was living with at the time.",
+          en: "Not hiring versus marketing. You picked the bottleneck you wanted to solve. Both were live problems for the company.",
         },
         awardsLabel: { ko: "부문 넷", en: "Four categories" },
         awardsNote: {
           ko: "등수가 없습니다. 네 부문이 각각 다른 것을 보고, 보는 사람도 출제사와 VC, 참가자, 운영진으로 다 다릅니다.",
-          en: "No placings. Each of the four looks for something different, and so does each set of eyes: the problem owner, the VC panel, fellow builders, the organizers.",
+          en: "No placings. Four categories, four things to look for, four sets of eyes: the problem owner, VCs, fellow builders, organizers.",
         },
       },
       mentors: {
         label: { ko: "멘토", en: "Mentors" },
         intro: {
           ko: "단계마다 다른 멘토가 붙었습니다. 아이디어를 형태로 만들 때, 빌드가 막힐 때, 무대에서 팔아야 할 때. 필요한 사람이 매번 달랐어요.",
-          en: "A different kind of mentor at each stage. Shaping the idea, unblocking the build, selling it on stage: each needed a different person in the room.",
+          en: "A different mentor at each stage. Shaping the idea, unblocking the build, selling it on stage: each needs a different person.",
         },
         countLabel: { ko: "멘토", en: "mentors" },
         stageWarmup: { ko: "출발선 세션", en: "Start-line session" },
@@ -967,14 +967,14 @@ export const naru = {
         label: { ko: "연사와 피드백 패널", en: "Speakers and the panel" },
         intro: {
           ko: "먼저 길을 낸 사람들이 직접 왔습니다. 취업과 창업 사이에서 무엇을 골랐는지, 실무에서 AI를 어떻게 쓰는지, 0에서 100까지 무엇이 필요한지를 각자의 자리에서 이야기했습니다.",
-          en: "People who had already cut a path showed up in person: what they chose between a job and founding, how AI is actually used at work, and what it takes to get from zero to a hundred.",
+          en: "People who had already cut a path came in person. A job or founding, how AI is really used at work, what it takes to go from zero to a hundred.",
         },
         speakersLabel: { ko: "연사", en: "Speakers" },
         panelLabel: { ko: "Day 8 커리어 간담회", en: "Day 8 career panel" },
         judgesLabel: { ko: "피드백 패널", en: "Feedback panel" },
         judgesNote: {
           ko: "순위를 매기는 자리가 아니었습니다. 문제를 낸 기업과, 실제 산업에서 문제를 풀어온 시니어들이 각자의 관점으로 피드백과 다음 가능성을 이야기했습니다.",
-          en: "Not a ranking exercise. The company that set the problem and seniors who have solved real ones in industry each offered feedback, and what could come next.",
+          en: "Not a ranking. The company that set the problem and seniors from industry gave feedback, and said what could come next.",
         },
       },
       archiveNote: {
@@ -1048,7 +1048,7 @@ export const naru = {
         // 2026-09-17: 기획 03에서 채움. 초안입니다.
         answer: {
           ko: "주관 학생도 피칭할 수 있게 열고, 시상은 운영 기여도 기준의 별도 트랙으로 둡니다.",
-          en: "Organising students can pitch too, and there is a separate award track judged on what they put into running it.",
+          en: "Organising students can pitch too, with a separate award for what they put into running it.",
         },
       },
     ] as { title: Phrase; body: Phrase; answer: Phrase | null }[],
@@ -1110,7 +1110,7 @@ export const naru = {
     // 않으면 "이벤트가 끝난 뒤에 먼저 연락한 사람은 거의 없었습니다"로 바꿉니다(브리프 5장).
     lead: {
       ko: "이벤트 안에서는 아홉 팀이 시키지 않았는데 출제사에 직접 자료를 요청했습니다. 이벤트가 끝난 뒤, 멘토에게 먼저 연락한 팀은 한 팀이었습니다.",
-      en: "Inside the event, nine teams asked the companies for data without being told to. After it ended, exactly one team reached out to a mentor.",
+      en: "Inside the event, nine teams asked the company for data unprompted. After it ended, one team reached out to a mentor.",
     },
     // 검증 가능한 문장입니다. 8월 사이트에 이 챕터가 없었다는 것은 아카이브에서
     // 바로 확인됩니다. "한 팀"보다 이쪽이 우리가 책임질 수 있는 사실입니다.
@@ -1131,7 +1131,7 @@ export const naru = {
         title: { ko: "멘토에게 먼저 연락합니다", en: "Message the mentor first" },
         body: {
           ko: "이벤트 안에서 받은 피드백은 이벤트 밖에서도 유효합니다. 제목은 인사가 아니라 결과입니다. 주신 이야기로 무엇을 만들었는지 한 줄이면 됩니다.",
-          en: "Feedback you were given inside the event still holds outside it. Lead with the result, not the greeting. One line on what you built with what they told you is enough.",
+          en: "Feedback you got inside the event still holds outside it. Lead with the result, not the greeting. One line on what you built with it is enough.",
         },
       },
       {
@@ -1142,7 +1142,7 @@ export const naru = {
         },
         body: {
           ko: "말이 아니라 공고 형식으로 엽니다. 어떤 역할을 언제까지 뽑는지, 비전공자가 지원할 수 있는지까지 한 줄로 적혀 있을 것입니다.",
-          en: "Not as talk but as a posting. Which role, by when, and whether someone outside the major can apply, each in one line.",
+          en: "As a posting, not as talk. Which role, by when, and whether non-majors can apply.",
         },
       },
       {
@@ -1150,7 +1150,7 @@ export const naru = {
         title: { ko: "다음 회차에 멘토로 돌아옵니다", en: "Come back as a mentor" },
         body: {
           ko: "받은 사람이 돌려주는 모습이 보일 때 문화가 됩니다. 지금 그걸 할 수 있는 사람은 8월을 건넌 분들뿐입니다.",
-          en: "It becomes a culture at the moment someone is seen giving back what they were given. Right now, only the people who crossed August can do it.",
+          en: "It becomes a culture when someone is seen giving back what they were given. Right now only the people who crossed August can do it.",
         },
       },
     ] as { num: string; title: Phrase; body: Phrase }[],
@@ -1161,7 +1161,7 @@ export const naru = {
     cadenceLabel: { ko: "두 번 보냅니다", en: "Send twice" },
     cadence: {
       ko: "마지막 날부터 7일 안에 한 번, 그리고 한 달 뒤에 한 번 더. 두 번째 연락에는 그 사이에 무엇이 달라졌는지를 적습니다. 한 번은 인사이고, 두 번째부터가 관계입니다.",
-      en: "Once within seven days of the last day, and once more a month later. The second message says what changed in between. The first one is a greeting. The relationship starts with the second.",
+      en: "Once within seven days, once more a month later. The second says what changed in between. The first is a greeting; the second starts the relationship.",
     },
     cadenceTbd: {
       ko: "언제 보내야 하는지까지 적어서 이 자리에 둡니다. 확정되면 여기에 나옵니다.",
@@ -1174,15 +1174,15 @@ export const naru = {
     weDo: [
       {
         ko: "이벤트가 끝나면 멘토 명단과 각자가 열어 둔 연락 방법을 참가자에게 그대로 보냅니다. 연락해도 되는지를 추측하지 않아도 됩니다.",
-        en: "When the event ends, we send every participant the mentor list and the way each mentor has said they can be reached. You will not have to guess whether it is all right to write.",
+        en: "When it ends, every participant gets the mentor list and how each mentor said to reach them. No guessing whether it is all right to write.",
       },
       {
         ko: "기회는 말이 아니라 공고로 엽니다. 마지막 날에 열리고, 열리지 않으면 열리지 않았다고 적습니다.",
-        en: "Opportunities open as postings, not as talk. They open on the final day, and if they do not, we write that they did not.",
+        en: "Openings come as postings, not as talk. On the final day, and if there are none, we say so.",
       },
       {
         ko: "먼저 연락한 사람의 이야기는 다음 회차 화면에 자리를 받습니다. 본인이 쓴 문장과 동의가 있을 때만 싣습니다.",
-        en: "If you reach out first, your story gets a place on the next round's site. Only in your own words, and only with your consent.",
+        en: "Reach out first and your story gets a place on the next round's site. Your own words, your consent.",
       },
     ] as Phrase[],
   },
@@ -1196,7 +1196,7 @@ export const naru = {
     // "방식은 바뀔 수 있습니다"(hedge. humanizer 23).
     lead: {
       ko: "학생회와 기업은 서로 직접 만나지 않습니다. 나루를 거쳐 만납니다. 학생회는 학생과 공간을 내고, 기업은 문제와 자금을 내고, 나루가 회차를 열고 책임집니다.",
-      en: "Student associations and companies never meet each other directly. They meet through NARU. Associations bring students and space, companies bring problems and funding, and NARU runs the round and answers for it.",
+      en: "Associations and companies never meet directly. They meet through NARU. Associations bring students and space, companies bring problems and money, NARU runs the round and answers for it.",
     },
     diagramNote: {
       ko: "서로 직접 만나지 않습니다",
@@ -1209,7 +1209,7 @@ export const naru = {
         brings: { ko: "회차를 열고 책임진다", en: "Runs the round, answers for it" },
         does: {
           ko: "회차의 기획과 실행. 출제사와 멘토, 후원사와의 관계. 기록과 회차 사이의 연속성.",
-          en: "Planning and running each round. The relationships with problem owners, mentors and sponsors. The record, and the continuity between rounds.",
+          en: "Planning and running each round. Relationships with problem owners, mentors, sponsors. The record, and continuity between rounds.",
         },
         gets: {
           ko: "회차의 책임과 이름. 다음 판을 깔 사람.",
@@ -1225,7 +1225,7 @@ export const naru = {
         brings: { ko: "소속 학생, 공간, 학교 안의 명의", en: "Students, space, standing inside the school" },
         does: {
           ko: "소속 학생 모집. 학교 안의 공간과 자원, 필요한 명의. 운영 협조.",
-          en: "Recruiting their own students. Space and resources inside the school, and the standing it takes. Hands on the day.",
+          en: "Recruiting their own students. Space, resources, and the school's standing. Hands on the day.",
         },
         gets: {
           ko: "학생에게 열어 줄 자리. 임기를 마친 임원이 이어서 일할 자리.",
@@ -1257,18 +1257,18 @@ export const naru = {
     nameLines: [
       {
         ko: "하나는 사람입니다. 한 사람이 누군가의 나루가 되어 줄 수는 있지만, 그 사람은 졸업하고 떠납니다. 그래서 사람이 바뀌어도 언제나 누군가의 나루가 되어 주는 그룹을 만듭니다.",
-        en: "One is about people. A person can be someone's landing, but that person graduates and leaves. So we build a group that stays someone's landing even as the people change.",
+        en: "One is about people. A person can be someone's landing, but that person graduates. So we build a group that stays one when the people change.",
       },
       {
         ko: "다른 하나는 구조입니다. 주관으로 들어온 학생회와 후원으로 들어오는 기업을 이어 주는 나루터, 그 자리가 이 그룹입니다.",
-        en: "The other is about structure. The landing where the organising associations and the sponsoring companies meet: that place is this group.",
+        en: "The other is about structure. The landing where organising associations and sponsoring companies meet is this group.",
       },
       {
         // 2026-09-18 (팔로업 브리프 3.4): 두 겹 다 나루가 주어였습니다. 세 번째는
         // 읽는 사람이 주어입니다. #after의 statement와 같은 말이고, 저기서
         // 먼저 나오고 여기서 이름으로 닫힙니다.
         ko: "그리고 하나가 더 있습니다. 나루는 우리 이름이지만, 오는 사람에게는 이 이벤트가 나루입니다. 나루터는 도착하는 곳이 아니라 건너기 시작하는 곳입니다.",
-        en: "And there is a third. NARU is our name, but for the people who come, this event is the landing. A landing is not where you arrive. It is where you start crossing.",
+        en: "And a third. NARU is our name, but to the people who come, this event is the landing. A landing is not where you arrive. It is where you start crossing.",
       },
     ],
     notDoingLabel: { ko: "나루가 하지 않는 것", en: "What NARU does not do" },
@@ -1339,7 +1339,7 @@ export const naru = {
         title: { ko: "메시지가 싱가포르를 넘어야 합니다", en: "The message has to travel past Singapore" },
         body: {
           ko: "한 번으로는 사례가 되지 않고, 두 번째부터 선례가 됩니다. 이 이벤트가 그 선례가 싱가포르 밖으로 퍼져 나가는 시작점입니다.",
-          en: "Once is an anecdote. From the second time it is a precedent, and this event is where that precedent starts travelling beyond Singapore.",
+          en: "Once is an anecdote. The second time it is a precedent, and this is where it starts travelling beyond Singapore.",
         },
       },
     ] as { title: Phrase; body: Phrase }[],
@@ -1387,7 +1387,7 @@ export const naru = {
     mentoringAlways: { ko: "전 기간 상시", en: "On call the whole way through" },
     mentoringLead: {
       ko: "8월에는 슬롯이 넉넉했는데 한 번도 쓰지 않은 팀이 있었습니다. 12월은 예약하지 않은 팀을 이탈 신호로 봅니다.",
-      en: "In August there were plenty of slots and teams that never booked one. In December a team that has not booked is read as a warning sign.",
+      en: "August had plenty of slots and teams that never booked one. In December, a team that has not booked is a warning sign.",
     },
     mentoringRules: [
       { ko: "예약제, 30분 슬롯", en: "By booking, 30-minute slots" },
@@ -1421,7 +1421,7 @@ export const naru = {
     // 이벤트"로. 전에는 "2회차가 아닙니다"와 "첫 이벤트"가 순서상 부딪혀 관계가 헷갈렸습니다.
     notSequel: {
       ko: "나루의 두 번째 이벤트입니다. 제로백 빌더톤의 속편은 아니고, 그 8일에서 나온 변하지 않는 두 개를 그대로 잇습니다.",
-      en: "NARU's second event. Not a sequel to the Zero100 builderthon, but it carries the two things that do not change, both of which came out of those eight days.",
+      en: "NARU's second event. Not a sequel to the Zero100 builderthon, but it carries the two unchanging things that came out of those eight days.",
     },
     /** notSequel 안에서 #why로 링크되는 구절. notSequel의 문자열에 그대로 들어 있어야 합니다. */
     notSequelTerm: { ko: "변하지 않는 두 개", en: "the two things that do not change" },
@@ -1443,7 +1443,7 @@ export const naru = {
     // 넓어지는 것은 판이지 코어가 아닙니다.
     lead: {
       ko: "8월은 싱가포르 안에서 열렸습니다. 12월은 한국의 대학생과 해외의 한인 유학생이 같은 문제 앞에 섭니다. 학교도 나라도 다르지만 같은 자리입니다. 코어는 둘 그대로이고, 넓어지는 것은 판입니다.",
-      en: "August happened inside Singapore. In December, students at Korean universities and Korean students studying abroad stand in front of the same problem. Different schools, different countries, one place. The two cores are unchanged. What widens is the room.",
+      en: "August happened inside Singapore. In December, students in Korea and Korean students abroad stand in front of the same problem. Different schools, different countries, one place. The cores are unchanged; the room widens.",
     },
     changesLabel: { ko: "무엇이 달라지는가", en: "What changes" },
     // 첫 항목이 국경입니다. 나머지 둘(문제 정의 개방, 코어 유지)은 그대로예요.
@@ -1460,7 +1460,7 @@ export const naru = {
       },
       {
         ko: "8월에는 기업이 정제한 문제를 받았습니다. 12월은 데이터에서 문제를 찾아 정의하는 구간부터 참가자에게 엽니다.",
-        en: "In August the problems arrived already cleaned by the company. In December the stretch where you find and define the problem in the data opens to participants too.",
+        en: "In August the problems arrived already cleaned. In December, finding and defining the problem in the data is yours too.",
       },
       {
         ko: "코어는 그대로입니다. 스크리닝 없음, 무순위 부문별 시상, 전 기간 상시 멘토링.",
@@ -1476,11 +1476,11 @@ export const naru = {
     why: [
       {
         ko: "한 번으로는 사례가 되지 않습니다. 두 번째부터 선례가 되고, 그 선례가 싱가포르를 넘어야 다음이 있습니다.",
-        en: "Once is an anecdote. The second time it becomes a precedent, and the precedent has to travel past Singapore for there to be a next one.",
+        en: "Once is an anecdote. The second time it is a precedent, and it has to travel past Singapore for there to be a next one.",
       },
       {
         ko: "안전하게 도전하고 자기 가치를 증명할 자리는 어느 나라의 학교 안에도 없습니다. 그래서 학교 밖에, 나라 밖에 만듭니다.",
-        en: "A place to try safely and prove your own worth does not exist inside any country's universities. So we build it outside the school, and outside the country.",
+        en: "No university in any country has a place to try safely and prove your worth. So we build it outside the school, outside the country.",
       },
     ],
     whoLabel: { ko: "누가 오는가", en: "Who comes" },
@@ -1543,7 +1543,7 @@ export const naru = {
     // 분석. 8월은 첫 번째에만 집중했고 12월은 나머지 둘로 넓힙니다.
     shapeLead: {
       ko: "AI가 잘하는 일은 셋입니다. 아이디어를 코드로 만드는 것, 복잡한 비즈니스 프로세스를 이해하는 것, 많은 데이터를 분석하는 것. 8월은 첫 번째에 집중했습니다. 12월은 나머지 둘로 넓힙니다. 데이터에서 문제를 찾는 것부터 앞에서 증명하기까지, 한 사이클을 닷새로.",
-      en: "AI is good at three things: turning an idea into code, understanding a complex business process, and analysing a lot of data. August focused on the first. December widens to the other two: from finding the problem in the data to proving it out front, one full cycle in five days.",
+      en: "AI is good at three things: turning an idea into code, reading a complex business process, analysing a lot of data. August did the first. December adds the other two. Find the problem in the data, prove it out front: one cycle in five days.",
     },
     // DECIDED 2026-09-18 (사용자): "아직 정해지지 않은 것" 목록(tbd)을 화면에서 뺐습니다.
     // 미정을 나열하는 대신 이 한 줄만. tbd 키는 그대로 둡니다.
@@ -1631,7 +1631,7 @@ export const naru = {
         // 넘어가기 위한 것입니다. 그래서 이 날의 제출물(정의서)은 그대로입니다.
         body: {
           ko: "현장에서 한국과 싱가포르를 섞어 팀을 맺습니다. 본딩을 거쳐 바로 고른 트랙의 데이터에서 문제를 찾아 정의합니다.",
-          en: "Teams form on site, Korea mixed with Singapore. You bond, then go straight into the data of the track you chose and define the problem.",
+          en: "Teams form on site, Korea mixed with Singapore. You bond, then go straight into your track's data and define the problem.",
         },
         line: { ko: "요구 강도가 가장 높은 날입니다.", en: "The hardest day." },
         chips: [{ ko: "팀 매칭", en: "Team matching" }, { ko: "요구 강도 최고", en: "Hardest day" }],
@@ -1753,7 +1753,7 @@ export const naru = {
     heading: { ko: "왜 이 자리가 필요한가", en: "Why this has to exist" },
     lead: {
       ko: "한인 학생은 어디에나 있는데, 서로를 쓰지 못합니다. 없는 것이 지역마다 다르고, 그 셋은 서로의 답입니다.",
-      en: "Korean students are everywhere, and none of them can reach the others. What is missing differs by place, and each of the three is the answer to the others.",
+      en: "Korean students are everywhere and cannot reach each other. What is missing differs by place, and the three are each other's answer.",
     },
     // 세 칸. 각 칸은 "없는 것" 한 줄과 "그래서 여는 것" 한 줄입니다. 순서를
     // 바꾸지 마세요. 결핍이 먼저 오고 처방이 나중입니다.
@@ -1762,7 +1762,7 @@ export const naru = {
         place: { ko: "싱가포르에서", en: "In Singapore" },
         lack: {
           ko: "학교마다 한인 학생이 있지만, 학교를 가로질러 이어 주는 자리가 없었습니다. 선배가 졸업하면 그 사람이 알던 것도 같이 나갑니다.",
-          en: "Every campus has Korean students, and nothing connects them across campuses. When a senior graduates, what they knew leaves with them.",
+          en: "Every campus has Korean students and nothing connects them across campuses. When a senior graduates, what they knew leaves too.",
         },
         opens: {
           ko: "사람이 바뀌어도 남는 자리를 둡니다.",
@@ -1773,7 +1773,7 @@ export const naru = {
         place: { ko: "한국에서", en: "In Korea" },
         lack: {
           ko: "기회의 수가 적어서가 아닙니다. 국내에서만 겨루면 자기 위치를 가늠할 기준이 하나뿐입니다.",
-          en: "It is not that there are too few chances. If you only ever measure yourself at home, you have exactly one yardstick.",
+          en: "It is not that there are too few chances. Measure yourself only at home and you have one yardstick.",
         },
         opens: {
           ko: "다른 나라에서 공부한 사람과 같은 문제를 풉니다.",
@@ -1816,7 +1816,7 @@ export const naru = {
     // 공개 화면에서는 다른 집단에 대한 일반화가 됩니다.
     milestones: {
       ko: "세 곳에 공통된 것이 하나 더 있습니다. 경쟁이 치열할수록 눈앞의 칸부터 채우게 됩니다. 학점, 인턴, 졸업, 오퍼. 칸을 채우는 동안에는 더 큰 질문을 물을 시간이 없습니다. 나는 어디로 나아갈 수 있는가, 내 앞에 놓인 방향은 몇 개인가.",
-      en: "One thing runs through all three. The tighter the competition, the sooner you start filling in the box in front of you. Grades, an internship, graduation, an offer. While you fill them in there is no time for the larger question: where you can go from here, and how many directions are open in front of you.",
+      en: "One thing runs through all three. The tighter the competition, the sooner you fill in the box in front of you. Grades, an internship, graduation, an offer. Filling them leaves no room for the bigger question: where you can go, and how many directions are open.",
     },
     // 챕터를 닫는 자리. 매니페스토 표지의 한 줄과 V장("왜 그럼에도 만드는가")
     // 입니다. 동기는 설계의 근거로 쓰되 마케팅 문구로 쓰지 않는다는 규칙(회고
@@ -1832,11 +1832,11 @@ export const naru = {
     closingBody: [
       {
         ko: "문을 두드리는 법은 대개 절박해진 다음에 배웁니다. 그 전에 배울 수 있었다면 더 좋았을 것이고, 그래서 그 자리를 앞당겨 만듭니다.",
-        en: "Most people learn how to knock on a door only after they have to. It would have been better to learn it before that, so we make the place earlier.",
+        en: "Most people learn how to knock on a door only once they have to. Better to learn it before that, so we make the place earlier.",
       },
       {
         ko: "끝까지 쓰지 않는 사람이 있어도 이 자리는 있어야 합니다. 몇 사람이 쓰지 않는다는 이유로 나머지의 자리를 닫는 것은, 없어서 아쉬웠던 그 상태로 돌아가는 일입니다.",
-        en: "Even if some never use it, the place has to exist. Closing it because a few did not is going back to the state we missed having it in.",
+        en: "Even if some never use it, the place has to exist. Closing it because a few did not is going back to not having it.",
       },
     ] as Phrase[],
     // 챕터의 마지막 자리(DECIDED 2026-09-19, 사용자: "그냥 공간에는 매니페스토
@@ -1853,7 +1853,7 @@ export const naru = {
       },
       body: {
         ko: "무엇을 위해 모였는지, 그리고 무엇이 바뀌어도 무엇만은 바뀌지 않는지를 적은 문서입니다. 이 챕터의 문장들은 거기서 왔습니다.",
-        en: "It is the document that says what we gathered for, and what does not change when everything else does. The sentences in this chapter come from it.",
+        en: "It says what we gathered for, and what does not change when everything else does. The sentences in this chapter come from it.",
       },
       cta: { ko: "매니페스토 내려받기", en: "Download the manifesto" },
       // 파일 정보는 누르기 전에 압니다. 받는 것이 무엇인지 모르고 누르게 하지
