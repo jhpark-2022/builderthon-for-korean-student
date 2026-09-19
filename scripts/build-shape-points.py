@@ -5,8 +5,11 @@
     python3 scripts/build-shape-points.py
 
 입력
-  public/naru/naru-symbol.svg                 싱가포르 본섬. 로고 심볼의 섬 패스(M/L/Z 스물한 꼭짓점).
-                                              남쪽 해안의 주황 점은 가져오지 않습니다.
+  scripts/data/singapore-geoboundaries-2016.geojson
+                                              싱가포르 본섬 해안선. geoBoundaries gbOpen SGP ADM0에서
+                                              면적이 가장 큰 고리 하나만 떼어 둔 파일(4,254 꼭짓점).
+                                              센토사·주롱섬·우빈·테콩은 들어 있지 않습니다.
+                                              출처·라이선스는 lib/background/shapes/README.md.
   scripts/data/seoul-kostat-2013.geojson      서울특별시 행정 경계. 통계청 센서스용 행정구역경계(2013)를
                                               southkorea/southkorea-maps가 GeoJSON으로 정리한 것에서
                                               서울 피처 하나만 떼어 둔 파일(7,700 꼭짓점).
@@ -19,8 +22,9 @@
                                               particles / 2 개만 씁니다. 폰의 450점으로도 윤곽이 남습니다.
 
 방법
-  1. 서울은 Douglas-Peucker로 60~90 꼭짓점까지 단순화(목표 80). 경도에 cos(위도)를 곱해
-     동서 축척을 맞춥니다. 싱가포르는 SVG 좌표 그대로(y는 아래가 +라 뒤집습니다).
+  1. 둘 다 Douglas-Peucker로 단순화합니다. 경도에 cos(위도)를 곱해 동서 축척을 맞추고
+     북쪽이 +y입니다. 목표 꼭짓점은 형상마다 다릅니다: 서울 60~90, 싱가포르 80~96.
+     싱가포르가 더 많은 이유는 해안에 만이 많아서입니다. 64로는 창이와 투아스가 뭉개집니다.
   2. 512×512에 래스터라이즈(여백 6%). 윤곽에서 안쪽으로 바운딩 박스 너비의 6% 이내가
      "가장자리"(MinFilter 침식으로 구함).
   3. 푸아송 디스크(Bridson). 가장자리 반지름 r, 속은 r·√3(밀도 1/3). r은 총 2,000점이
@@ -32,14 +36,15 @@ from __future__ import annotations
 import json
 import math
 import random
-import re
+from collections import deque
 from pathlib import Path
 
+import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 ROOT = Path(__file__).resolve().parents[1]
-SVG = ROOT / "public/naru/naru-symbol.svg"
 SEOUL = ROOT / "scripts/data/seoul-kostat-2013.geojson"
+SINGAPORE = ROOT / "scripts/data/singapore-geoboundaries-2016.geojson"
 OUT = ROOT / "lib/background/shapes"
 N_POINTS = 2000
 CANVAS = 512
@@ -49,22 +54,104 @@ MARGIN = 0.06
 # 아니라 띠 넓이에서 역산합니다(띠가 좁을수록 밀도가 높아야 75%가 나옵니다).
 EDGE_FRAC = 0.03      # 바운딩 박스 너비 대비 가장자리 띠
 EDGE_SHARE = 0.75     # 전체 점 중 가장자리 점의 비율(어느 접두사를 잘라도 같게 섞음)
-DP_TARGET = (60, 90)  # 서울 단순화 꼭짓점 범위
+# 단순화 뒤 꼭짓점 범위. 형상마다 다릅니다. 싱가포르를 더 두는 이유는 해안에 만이
+# 많아서입니다(창이·투아스·항만). 96을 넘기지 마세요. 그 위로는 점 2,000개로 표현이
+# 안 되고 가장자리가 톱니로 보입니다.
+DP_SEOUL = (60, 90)
+DP_SINGAPORE = (80, 96)
+# 싱가포르 해안선만 형태학적 "열기"를 한 번 거칩니다 (2026-09-19). 원자료의 남쪽
+# 해안에는 케펠·파시르판장의 부두와 투아스의 방파제가 폭 200~400m 실처럼 붙어 있고,
+# 서울에는 그런 것이 없습니다. 그대로 구우면 그 실 위에 점이 한 줄로 앉아 화면에서
+# 본섬에서 떨어져 나온 작은 섬처럼 읽힙니다. 2,048px 래스터에서 1px ≈ 24m이므로
+# 24px는 반지름 약 590m. 그보다 가는 것만 지워지고 섬의 몸통은 그대로입니다.
+SG_OPEN_PX = 24
+SG_RASTER_W = 2048
 SEED = 20260917
 
 
 # ── 입력 ─────────────────────────────────────────────────────────────────────
-def singapore_ring() -> list[tuple[float, float]]:
-    d = re.search(r'<path d="([^"]+)"', SVG.read_text()).group(1)
-    nums = [float(v) for v in re.findall(r"-?\d+(?:\.\d+)?", d)]
-    pts = [(nums[i], -nums[i + 1]) for i in range(0, len(nums), 2)]  # SVG y는 아래가 +. 뒤집어 북쪽을 +y로.
-    return pts
+def _ring_area(ring) -> float:
+    s = 0.0
+    for i in range(len(ring) - 1):
+        s += ring[i][0] * ring[i + 1][1] - ring[i + 1][0] * ring[i][1]
+    return abs(s) / 2
 
 
-def seoul_ring() -> list[tuple[float, float]]:
-    g = json.loads(SEOUL.read_text())
+def _open_ring(pts, k=SG_OPEN_PX, w=SG_RASTER_W, pad=24):
+    """고리를 래스터로 굽고 형태학적 열기를 한 뒤 바깥 윤곽을 되찾습니다.
+
+    열기(침식 → 팽창)는 커널보다 가는 돌출부만 지웁니다. 부두와 방파제가 사라지고
+    해안선의 큰 굴곡(창이, 투아스, 주롱 만)은 남습니다. 열기가 섬을 몇 덩어리로
+    가르는 경우를 대비해 가장 큰 덩어리만 씁니다.
+    """
+    xs = [p[0] for p in pts]; ys = [p[1] for p in pts]
+    minx, maxx, miny, maxy = min(xs), max(xs), min(ys), max(ys)
+    s = (w - 2 * pad) / (maxx - minx)
+    h = int((maxy - miny) * s) + 2 * pad
+    im = Image.new("L", (w, h), 0)
+    ImageDraw.Draw(im).polygon([(pad + (x - minx) * s, h - pad - (y - miny) * s) for x, y in pts], fill=255)
+    n = 2 * k + 1
+    im = im.filter(ImageFilter.MinFilter(n)).filter(ImageFilter.MaxFilter(n))
+
+    a = np.array(im) > 127
+    seen = np.zeros_like(a)
+    best, bestn = None, 0
+    for y0, x0 in zip(*np.nonzero(a)):
+        if seen[y0, x0]:
+            continue
+        q = deque([(y0, x0)]); seen[y0, x0] = True; cells = [(y0, x0)]
+        while q:
+            cy, cx = q.popleft()
+            for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                ny, nx = cy + dy, cx + dx
+                if 0 <= ny < a.shape[0] and 0 <= nx < a.shape[1] and a[ny, nx] and not seen[ny, nx]:
+                    seen[ny, nx] = True; q.append((ny, nx)); cells.append((ny, nx))
+        if len(cells) > bestn:
+            bestn, best = len(cells), cells
+    blob = np.zeros_like(a)
+    for cy, cx in best:
+        blob[cy, cx] = True
+
+    # Moore 이웃 경계 추적. 바깥 윤곽 하나.
+    ys_, xs_ = np.nonzero(blob)
+    sy, sx = int(ys_[0]), int(xs_[0])
+    nb = [(-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1)]
+    contour = [(sy, sx)]; cur = (sy, sx); d_prev = 6
+    while len(contour) < 400000:
+        for i in range(8):
+            d = (d_prev + 1 + i) % 8
+            ny, nx = cur[0] + nb[d][0], cur[1] + nb[d][1]
+            if 0 <= ny < blob.shape[0] and 0 <= nx < blob.shape[1] and blob[ny, nx]:
+                contour.append((ny, nx)); d_prev = (d + 5) % 8; cur = (ny, nx); break
+        else:
+            break
+        if cur == (sy, sx) and len(contour) > 3:
+            break
+
+    # 1px 계단을 평활화합니다. 두지 않으면 Douglas-Peucker가 꼭짓점을 계단에 씁니다.
+    m = len(contour)
+    win = 9
+    sm = []
+    for i in range(m):
+        cy = sum(contour[(i + j) % m][0] for j in range(-(win // 2), win // 2 + 1)) / win
+        cx = sum(contour[(i + j) % m][1] for j in range(-(win // 2), win // 2 + 1)) / win
+        sm.append(((cx - pad) / s + minx, (h - pad - cy) / s + miny))
+    print(f"  싱가포르 열기 k={k}px: 덩어리 {bestn}px, 윤곽 {m}점")
+    return sm
+
+
+def geo_ring(path: Path) -> list[tuple[float, float]]:
+    """GeoJSON에서 바깥 고리 하나를 꺼냅니다. MultiPolygon이면 면적이 가장 큰 것.
+
+    경도에 cos(위도)를 곱해 동서 축척을 맞춥니다. 적도에서 멀수록 경도 1도가 짧아지는데
+    그대로 두면 형상이 동서로 늘어납니다(서울에서 특히). 북쪽이 +y입니다.
+    """
+    g = json.loads(path.read_text())
     geom = g["features"][0]["geometry"] if g.get("type") == "FeatureCollection" else g["geometry"]
-    ring = geom["coordinates"][0] if geom["type"] == "Polygon" else geom["coordinates"][0][0]
+    if geom["type"] == "Polygon":
+        ring = geom["coordinates"][0]
+    else:  # MultiPolygon: 부속 섬을 버리고 본섬만 (브리프 2.2)
+        ring = max(geom["coordinates"], key=lambda poly: _ring_area(poly[0]))[0]
     lat0 = sum(p[1] for p in ring) / len(ring)
     k = math.cos(math.radians(lat0))
     return [(p[0] * k, p[1]) for p in ring]
@@ -94,7 +181,7 @@ def dp(points, eps):
     return [a, b]
 
 
-def simplify_closed(ring, target=DP_TARGET):
+def simplify_closed(ring, target):
     # 닫힌 고리는 가장 먼 두 점으로 반을 갈라 각각 단순화합니다.
     if ring[0] == ring[-1]:
         ring = ring[:-1]
@@ -319,10 +406,12 @@ def build(label, name, ring, meta):
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
-    sg = singapore_ring()
-    build("singapore", "SINGAPORE", sg, "출처: public/naru/naru-symbol.svg의 섬 패스(로고 심볼, 21 꼭짓점). 주황 점 제외.")
-    se_raw = seoul_ring()
-    se = simplify_closed(se_raw)
+    sg_raw = geo_ring(SINGAPORE)
+    sg_open = _open_ring(sg_raw)
+    sg = simplify_closed(sg_open, DP_SINGAPORE)
+    build("singapore", "SINGAPORE", sg, f"출처: geoBoundaries gbOpen SGP ADM0 (표현 연도 2016, 2023-12-12 릴리스, CC BY 4.0), 원자료는 URA Master Plan 2014 Subzone Boundary (No Sea) / data.gov.sg. 본섬 고리 하나. 형태학적 열기 {SG_OPEN_PX}px(≈590m)로 부두·방파제 제거, Douglas-Peucker {len(sg_raw)} → {len(sg)} 꼭짓점. 경도에 cos(위도) 보정.")
+    se_raw = geo_ring(SEOUL)
+    se = simplify_closed(se_raw, DP_SEOUL)
     build("seoul", "SEOUL", se, f"출처: 통계청 센서스용 행정구역경계 2013 (southkorea/southkorea-maps GeoJSON), 서울특별시. Douglas-Peucker {len(se_raw)} → {len(se)} 꼭짓점. 경도에 cos(위도) 보정.")
 
 
