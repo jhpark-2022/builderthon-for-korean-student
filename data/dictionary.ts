@@ -303,6 +303,11 @@ export const partnerArticles: Record<string, PartnerArticle[]> = {
 
 export const dict = {
   nav: {
+    // 두 탐색 랜드마크의 이름 (2026-09-19, 접근성 감사 4). 이름 없는 nav가
+    // 둘이면 iOS 로터에 "탐색, 탐색"으로 뜹니다. 하나는 상단 바(xl 이상의
+    // 앵커 행), 하나는 폰·태블릿의 칩 레일입니다.
+    primaryAria: { ko: "주요 탐색", en: "Primary" },
+    sectionsAria: { ko: "챕터 목차", en: "Sections" },
     // ── 앵커에서 빠진 라벨들 (키는 보존) ──────────────────────────────────
     // 이 세 개는 nav 앵커에서 빠졌지만 dict에는 남아 있습니다. 섹션(#about,
     // #join, #benefits)은 전부 그대로 있고 사라진 것은 앵커뿐이에요. 되살릴 때
@@ -4738,5 +4743,14 @@ export const dict = {
     // "EN/KR" with no spaces — that is exactly how the three spans render, and the
     // check compares the literal visible string.
     aria: { ko: "EN/KR: Switch to English", en: "EN/KR: 한국어로 전환" },
+    // naru 변형(버튼 두 개짜리 묶음)의 이름 (2026-09-19, 접근성 감사 8).
+    // 위의 aria는 버튼 **하나**가 다음 언어로 넘기는 zero100 변형용이라
+    // "Switch to English"라는 행동 설명이 맞습니다. 나루 것은 버튼이 둘이고
+    // 각자 자기 이름(EN / KR)과 aria-current를 이미 갖고 있어서, 묶음에
+    // 필요한 것은 행동이 아니라 **이름**입니다. 그리고 한국어 페이지에서
+    // 영어 문장을 읽어 주지 않게 로케일을 따라갑니다(3.1.2).
+    // "EN/KR"은 그대로 답니다 — 눈에 보이는 글자가 그것이라 2.5.3(Label in
+    // Name)이 이름 안에 포함되기를 요구합니다.
+    groupAria: { ko: "EN/KR: 언어 선택", en: "EN/KR: Language" },
   },
 };

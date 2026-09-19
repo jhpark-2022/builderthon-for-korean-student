@@ -41,6 +41,13 @@ export default function Reveal({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    // IntersectionObserver가 없으면 그냥 보여 줍니다 (2026-09-19, 접근성 감사 13).
+    // js-reveal-ready를 먼저 달고 나서 생성자가 던지면 globals.css의 안전망이
+    // 이미 비켜선 뒤라 본문이 통째로 사라집니다. 가드가 클래스보다 먼저입니다.
+    if (typeof IntersectionObserver === "undefined") {
+      setShown(true);
+      return;
+    }
     // React가 살아 있다는 표시. globals.css의 안전망이 이 클래스를 보고 비켜섭니다.
     document.documentElement.classList.add("js-reveal-ready");
     const io = new IntersectionObserver(
@@ -61,9 +68,14 @@ export default function Reveal({
       const r = el.getBoundingClientRect();
       if (r.top < window.innerHeight && r.bottom > 0) setShown(true);
     }, 1200);
+    // 키보드가 먼저 도착하면 즉시 보여 줍니다 (2026-09-19, 접근성 감사 3).
+    // opacity 0은 접근성 트리에서 빠지지 않아, 안 보이는 곳에 포커스가 설 수 있습니다.
+    const onFocusIn = () => setShown(true);
+    el.addEventListener("focusin", onFocusIn);
     return () => {
       io.disconnect();
       window.clearTimeout(fallback);
+      el.removeEventListener("focusin", onFocusIn);
     };
   }, []);
 

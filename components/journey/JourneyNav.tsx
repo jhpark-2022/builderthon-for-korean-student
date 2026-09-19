@@ -81,6 +81,12 @@ export type NavAnchor = {
    * 채로 남습니다(실측).
    */
   railLines?: Phrase;
+  /**
+   * 링크의 접근 가능한 이름 (2026-09-19, 접근성 감사 19). 라벨이 한두 음절이라
+   * 로터의 링크 목록에서 문맥 없이 읽히면 뜻이 없을 때 씁니다("왜" → "왜 이
+   * 자리가 필요한가"). 눈으로 읽는 글자는 label 그대로입니다.
+   */
+  ariaLabel?: Phrase;
 };
 
 // REMOVED 2026-09-16: { id: "wrap", label: dict.wrap.navLabel }. 그 챕터가
@@ -232,6 +238,11 @@ export default function JourneyNav({
       root.style.scrollPaddingTop = `${Math.round(bottom) + 12}px`;
     };
     const schedule = () => { if (!raf) raf = requestAnimationFrame(apply); };
+    // 즉시 한 번 (2026-09-19, 접근성 감사 23). 350ms 타이머만 있으면 그 전에
+    // Tab이나 앵커 점프가 일어났을 때 globals.css의 고정값 120px이 쓰입니다.
+    // 영어 두 줄 헤더는 158px이라 38px이 모자라 착지점이 헤더 뒤로 들어갑니다.
+    // 타이머는 그대로 둡니다 — 서체가 늦게 오면 높이가 한 번 더 바뀝니다.
+    apply();
     const timer = window.setTimeout(apply, 350);
     const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(schedule) : null;
     if (headerRef.current && ro) ro.observe(headerRef.current);
@@ -260,6 +271,16 @@ export default function JourneyNav({
       e.preventDefault();
       const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       target.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+      // 포커스도 옮깁니다 (2026-09-19, 접근성 감사 1). preventDefault()를 하면
+      // 브라우저가 기본 동작에서 해 주던 "순차 포커스 시작점 이동"이 사라집니다.
+      // 그대로 두면 VoiceOver로 목차 칩을 눌러도 커서가 헤더에 남아 스와이프하면
+      // 다시 헤더부터 읽고, "본문으로 건너뛰기"를 눌러도 다음 Tab이 헤더입니다.
+      // 이 페이지의 유일한 우회 수단(2.4.1)이 아무 일도 하지 않게 됩니다.
+      //
+      // preventScroll: 위에서 이미 scrollIntoView로 부드럽게 옮기는 중이라,
+      // focus()가 다시 튀게 두면 그 애니메이션을 잘라먹습니다.
+      if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+      (target as HTMLElement).focus({ preventScroll: true });
       window.history.pushState(null, "", `#${id}`);
     };
     document.addEventListener("click", onClick);
@@ -299,7 +320,10 @@ export default function JourneyNav({
       // focus-within pins it open: a keyboard user tabbing into the nav must not
       // have it slide away under them. `lg:!translate-y-0` keeps the desktop bar
       // fixed in place no matter what the scroll signal says.
-      className={`fixed inset-x-0 top-0 z-50 focus-within:translate-y-0 lg:!translate-y-0 ${
+      // --nav-gutter: 아래 <nav>가 인라인 style로 safe-area를 더해야 해서
+      // px-6 / sm:px-10을 변수로 옮겼습니다. 여기서 인라인 style을 쓰면 sm 분기가
+      // 죽으므로(인라인이 클래스를 이깁니다) 클래스로만 정의합니다.
+      className={`fixed inset-x-0 top-0 z-50 [--nav-gutter:1.5rem] focus-within:translate-y-0 sm:[--nav-gutter:2.5rem] lg:!translate-y-0 ${
         reduce ? "" : "transition-all duration-300 lg:duration-500"
       // DECIDED 2026-08-23 (박주형): /85 → /95. 스크롤하면 헤더 뒤로 본문이 —
       // 특히 파트너 로고 월이 — 비쳐 보였습니다. 15%가 통과하고 있었어요.
@@ -326,7 +350,20 @@ export default function JourneyNav({
           Tracks the anchor row's breakpoint (`lg` → `xl`, 2026-08-03) so the bar
           is tall exactly when it has a row of links to hold — and so
           scroll-padding-top in globals.css only ever needs two bands. */}
-      <nav className="flex h-[52px] w-full items-center justify-between px-6 sm:px-10 xl:h-20">
+      {/* aria-label: 이름 없는 nav가 둘이면 iOS 로터에 "탐색, 탐색"으로 뜹니다
+          (2026-09-19, 접근성 감사 4). 아래 칩 레일이 두 번째입니다.
+          safe-area (모바일 감사 19): 세로 모드에서는 뷰포트가 노치 아래에서
+          시작해 문제가 없지만, 가로 모드에서는 inset-left/right가 44px씩 생겨
+          로고와 언어 토글이 노치 아래로 들어갑니다. px-6/sm:px-10을 그대로 두고
+          거기에 더합니다. */}
+      <nav
+        aria-label={t(dict.nav.primaryAria)}
+        className="flex h-[52px] w-full items-center justify-between xl:h-20"
+        style={{
+          paddingLeft: "calc(env(safe-area-inset-left, 0px) + var(--nav-gutter))",
+          paddingRight: "calc(env(safe-area-inset-right, 0px) + var(--nav-gutter))",
+        }}
+      >
         {/* LEFT group — brand logo + anchor links, kept together on the left edge. */}
         <div className="flex items-center">
           {brand === "naru" ? (
@@ -343,7 +380,11 @@ export default function JourneyNav({
                12월 이벤트가 서울이라는 점도 있습니다. 모든 화면 상단에
                SINGAPORE가 박혀 있는 것은 지금 브랜드가 하려는 말과 어긋납니다.
                히어로와 OG의 원형 배지는 288px / 300px이라 그대로 둡니다. */
-            <a href="#top" className="flex items-center leading-none">
+            // -my-1 py-1: 히트 영역만 44px로 (2026-09-19, 모바일 감사 6).
+            // 이미지가 h-8(36px)뿐이라 맨 위로 돌아가는 관용 동작이 8px 모자랐습니다.
+            // 음수 마진으로 52px 바 안의 세로 정렬은 그대로 둡니다. 로고 가이드의
+            // 비율·색은 건드리지 않습니다 — 상자만 키웁니다.
+            <a href="#top" className="-my-1 flex min-h-[44px] items-center py-1 leading-none">
               <Image
                 src="/naru/naru-name-rev.png"
                 alt="나루 NARU"
@@ -410,7 +451,8 @@ export default function JourneyNav({
                   href={`#${a.id}`}
                   // aria-current, not just colour: the marker's meaning has to
                   // survive for someone who can't see the tint.
-                  aria-current={here ? "true" : undefined}
+                  // "location" (2026-09-19, 접근성 감사 25): 섹션 현위치의 정확한 값.
+                  aria-current={here ? "location" : undefined}
                   // whitespace-nowrap: a nav label is a single target and must stay
                   // on one line. The Korean labels are the longer set and were
                   // breaking apart at the narrow end of `lg` — "참가 대상" split at
@@ -585,7 +627,12 @@ export default function JourneyNav({
           `scroll-padding-top` in globals.css accounts for the extra height on
           this breakpoint, so an anchor jump doesn't park a heading underneath. */}
       {scrolled && (
-        <div className="xl:hidden">
+        // nav 랜드마크입니다 (2026-09-19, 접근성 감사 4). 전에는 </nav> 뒤의
+        // 그냥 <div>였습니다. 그래서 폰에서 navigation 랜드마크 안에는 로고와
+        // 토글 둘뿐이고 **진짜 목차는 랜드마크가 아니었습니다** — iOS 로터의
+        // "랜드마크"로 목차에 닿을 수 없었어요. 폰에서 이 레일이 유일한
+        // 챕터 이동 수단이라는 점을 생각하면 가장 아픈 자리였습니다.
+        <nav aria-label={t(dict.nav.sectionsAria)} className="xl:hidden">
           {/* 나루(홈): 가로로 굴리지 않고 **접습니다** (2026-09-19, 사용자: "모바일 뷰에서
               TOC가 한 스크린에 다 들어왔으면"). 전에는 우측 페이드 마스크 + snap으로 "뒤에
               더 있다"를 알렸는데, 알려 주는 것과 보이는 것은 다릅니다. 다섯 칸짜리 목차는
@@ -623,7 +670,13 @@ export default function JourneyNav({
                   href={`#${a.id}`}
                   // aria-current, not just colour: the chip's meaning has to
                   // survive for someone who can't see the tint.
-                  aria-current={here ? "true" : undefined}
+                  // "location": 스크린리더가 "현재 위치"로 읽습니다. 섹션 현위치에는
+                  // true보다 정확합니다 (2026-09-19, 접근성 감사 25).
+                  aria-current={here ? "location" : undefined}
+                  // 챕터 제목 전문을 이름으로 (접근성 감사 19). "왜" / "Why"는 한
+                  // 음절이라, 로터의 링크 목록에 문맥 없이 나열되면 무엇인지 알 수
+                  // 없습니다. 눈으로 읽는 글자는 그대로 두고 이름만 늘립니다.
+                  aria-label={a.ariaLabel ? t(a.ariaLabel) : undefined}
                   // min-h stays 44px — the row got shorter by losing padding around
                   // it, never by shrinking the thing a thumb has to hit.
                   //
@@ -650,10 +703,19 @@ export default function JourneyNav({
                   className={`inline-flex min-h-[44px] shrink-0 items-center justify-center whitespace-nowrap rounded-full border text-[0.7rem] font-semibold backdrop-blur transition active:scale-[0.97] ${
                     // px-2: 360px에서 ko가 한 줄로 들어가는 값(위 주석의 실측).
                     // leading-[1.15]: 두 줄짜리 칩이 44px 안에 앉게(en "CROSSING / SEOUL").
-                    naru ? "px-2 leading-[1.15]" : "min-w-[5.25rem] snap-center px-3"
+                    // min-w-[44px] (2026-09-19, 감사 반영): 칩 폭을 내용에 맞추자
+                    // "왜"가 30.9px, "나루"가 41.8px이 됐습니다. 세로는 44px인데
+                    // 가로가 그 아래면 엄지로 옆 칩을 누르게 됩니다. px-1.5로
+                    // 조여 그 44px을 만들고도 ko가 360px에서 한 줄에 들어갑니다.
+                    naru ? "min-w-[44px] px-1.5 leading-[1.15]" : "min-w-[5.25rem] snap-center px-3"
                   } ${
+                    // 현위치를 색만으로 말하지 않습니다 (2026-09-19, 접근성 감사 14,
+                    // WCAG 1.4.1). 데스크톱 앵커 행은 활성일 때 밑줄이 함께 켜지는데
+                    // (위의 after:scale-x-100) 이 칩은 틴트만 바뀌어서, 색각 이상이
+                    // 있거나 햇빛 아래에서 보는 사람에게는 다섯이 같아 보였습니다.
+                    // 같은 문제를 LocaleToggle이 이미 밑줄로 풀었습니다.
                     here
-                      ? "border-accent/40 bg-accent/[0.12] text-white"
+                      ? "border-accent/40 bg-accent/[0.12] font-bold text-white underline decoration-accent decoration-2 underline-offset-2"
                       : "border-white/[0.12] bg-white/[0.06] text-white/75"
                   }`}
                 >
@@ -670,7 +732,7 @@ export default function JourneyNav({
               );
             })}
           </div>
-        </div>
+        </nav>
       )}
       </header>
 

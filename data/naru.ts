@@ -204,7 +204,7 @@ export const register = {
   },
 } as const;
 
-export const naruNav: { id: string; label: Phrase; railLines?: Phrase }[] = [
+export const naruNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel?: Phrase }[] = [
   // DECIDED 2026-09-17 (홈 흐름 재배치 브리프): 크로싱 서울 · 프로그램 · 얻는 것 ·
   // 8월 · 나루 · 학생회와 기업 · 함께. 순서는 화면 순서와 같아야 합니다.
   // railLines: 폰 목차에서만 두 줄 (2026-09-19, 사용자: "두 줄로 해 주면 되지 않을까
@@ -224,7 +224,14 @@ export const naruNav: { id: string; label: Phrase; railLines?: Phrase }[] = [
   // 2026-09-19 (왜 브리프 3.1): 챕터 제목이 "어떻게 함께하는가"에서 "왜 이 자리가
   // 필요한가"로 바뀌었습니다. 칩은 제목을 따라갑니다. 들어오는 길 넷은 그 챕터
   // 안의 #join-ways로 내려갔습니다.
-  { id: "join", label: { ko: "왜", en: "Why" } },
+  // ariaLabel (2026-09-19, 접근성 감사 19): "왜" / "Why"는 한 음절이라 로터의
+  // 링크 목록에 문맥 없이 나열되면 무엇인지 알 수 없습니다. 눈으로 읽는 글자는
+  // 그대로 두고 이름만 챕터 제목 전문으로 늘립니다.
+  {
+    id: "join",
+    label: { ko: "왜", en: "Why" },
+    ariaLabel: { ko: "왜 이 자리가 필요한가", en: "Why this place is needed" },
+  },
 ];
 
 export interface Stat {
@@ -391,7 +398,13 @@ export const naru = {
     // 마운트 뒤에 채우고 패널 높이는 고정입니다(하이드레이션 밀림 방지).
     countdownLabel: { ko: "크로싱 서울까지", en: "Until CROSSING SEOUL" },
     // 컨테이너 하나의 aria-label(감사 반영 브리프 1.4). 자식 숫자와 단위는 aria-hidden.
-    countdownAria: { ko: "크로싱 서울까지 {d}일 {h}시간", en: "{d} days {h} hours until CROSSING SEOUL" },
+    // 2026-09-19 (접근성 감사 12): 화면에는 서울·싱가포르 두 줄이 있는데 낭독은
+    // 한 줄만 했습니다. 두 줄을 굳이 그려 놓고 하나만 읽어 주는 것은 어긋납니다.
+    // {d}/{h}는 서울, {d2}/{h2}는 싱가포르.
+    countdownAria: {
+      ko: "크로싱 서울까지 서울 기준 {d}일 {h}시간, 싱가포르 기준 {d2}일 {h2}시간",
+      en: "{d} days {h} hours until CROSSING SEOUL in Seoul time, {d2} days {h2} hours Singapore time",
+    },
     countdownUnits: {
       days: { ko: "일", en: "days" },
       hours: { ko: "시간", en: "hrs" },
@@ -402,7 +415,10 @@ export const naru = {
     // 2026-09-18 저녁(모바일 수정 브리프 2): 서울 기준 한 줄만 씁니다. singapore 키는 둡니다.
     countdownRows: {
       seoul: { ko: "서울 기준", en: "Seoul time" },
-      singapore: { ko: "싱가포르 기준 SGT", en: "Singapore SGT" },
+      // 2026-09-19 (모바일 감사 1): 라벨 트랙을 6.5rem → 4.5rem으로 좁혀 숫자
+      // 칸에 폭을 돌려주면서, 이 줄이 두 줄로 접히지 않게 "기준"을 뺐습니다.
+      // SGT가 이미 "싱가포르 표준시"라 "기준"은 같은 말의 반복이었습니다.
+      singapore: { ko: "싱가포르 SGT", en: "Singapore SGT" },
     },
     started: { ko: "시작했습니다", en: "It has started" },
     // ── 기슭 형상의 라벨 (2026-09-17, 배경 형상 브리프) ────────────────────

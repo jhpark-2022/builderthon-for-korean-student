@@ -13,6 +13,7 @@ export default function Chapter({
   background,
   footer,
   wide = false,
+  labelledBy,
 }: {
   id?: string;
   children: ReactNode;
@@ -29,6 +30,13 @@ export default function Chapter({
   // hint). It sits at the section's bottom edge regardless of how tall the
   // centred content is, so it never pushes the content up.
   footer?: ReactNode;
+  /**
+   * 이 챕터의 제목 요소 id (2026-09-19, 접근성 감사 5). 이름 없는 <section>은
+   * region 랜드마크로 노출되지 않아서, 폰 로터의 랜드마크 목록에 main과
+   * contentinfo만 남았습니다. 18,000px짜리 한 장에서 챕터 단위 이동 수단이
+   * 레일 하나뿐이 됩니다. 제목을 가리키면 그 제목이 랜드마크의 이름이 됩니다.
+   */
+  labelledBy?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
@@ -36,6 +44,14 @@ export default function Chapter({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    // IntersectionObserver가 없는 환경(구형 웹뷰, 일부 인앱 브라우저)을 먼저
+    // 거릅니다 (2026-09-19, 접근성 감사 13). 순서가 중요합니다: js-reveal-ready를
+    // 먼저 달고 나서 생성자가 던지면, globals.css의 안전망은 이미 비켜선 뒤라
+    // 화면에 배경과 헤더만 남습니다. 같은 파일의 Funnel은 이미 이렇게 가드합니다.
+    if (typeof IntersectionObserver === "undefined") {
+      setShown(true);
+      return;
+    }
     // React가 살아 있다는 표시. globals.css의 리빌 안전망이 이 클래스를 보고
     // 비켜섭니다(2026-09-19). 없으면 안전망이 1.5초 뒤 전부 보여 줍니다.
     document.documentElement.classList.add("js-reveal-ready");
@@ -69,9 +85,16 @@ export default function Chapter({
       const r = el.getBoundingClientRect();
       if (r.top < window.innerHeight && r.bottom > 0) setShown(true);
     }, 1200);
+    // 키보드가 먼저 도착하는 경우 (2026-09-19, 접근성 감사 3). opacity 0은
+    // 접근성 트리에서 빠지지 않아서, 아직 나타나지 않은 블록 안의 링크로 Tab이
+    // 들어갈 수 있습니다. 그러면 700ms 동안 포커스는 거기 있는데 화면에는
+    // 아무것도 보이지 않습니다. 포커스가 들어오면 즉시 보여 줍니다.
+    const onFocusIn = () => setShown(true);
+    el.addEventListener("focusin", onFocusIn);
     return () => {
       io.disconnect();
       window.clearTimeout(fallback);
+      el.removeEventListener("focusin", onFocusIn);
     };
   }, []);
 
@@ -94,6 +117,7 @@ export default function Chapter({
     <section
       id={id}
       ref={ref}
+      aria-labelledby={labelledBy}
       // A footer (the scroll hint) is pinned to the section's bottom, so it only
       // lands at the real screen bottom if the section fills the viewport. Force
       // full height at every breakpoint when a footer exists (min-h-screen →

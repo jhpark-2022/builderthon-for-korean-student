@@ -7,7 +7,7 @@ import { useLocale } from "@/lib/LocaleContext";
 import { naru, naruLinks, openChatLabels, register as registerCopy, type Layer, type Stat, type RecordPhoto } from "@/data/naru";
 import { useCrossingRegisterOptional } from "@/components/crossing/RegisterProvider";
 import { links, type Phrase } from "@/data/dictionary";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import {
   DECEMBER_EVENT_NAME,
   DECEMBER_STARTS_AT_MS,
@@ -182,7 +182,11 @@ function TermLink({ text, term, href }: { text: string; term: string; href: stri
       <a
         href={href}
         // py-2.5 -my-2.5: 히트 영역만 44px(모바일 수정 브리프 5). 레이아웃은 그대로.
-        className="-my-2.5 inline-block py-2.5 underline decoration-white/30 underline-offset-4 transition hover:decoration-white"
+        // min-h-[44px] 명시 (2026-09-19, 모바일 감사 22). -my-2.5 + py-2.5 +
+        // 감싼 문단의 leading으로 44.4px이 나오지만, 문단 글자 크기를 한 단만
+        // 내려도 바로 44px 아래로 떨어집니다. 계산에 기대지 않습니다. 같은 파일의
+        // 다른 두 자리가 이미 세 짝(-my-2.5 / min-h-[44px] / py-2.5)을 씁니다.
+        className="-my-2.5 inline-flex min-h-[44px] items-center py-2.5 underline decoration-white/30 underline-offset-4 transition hover:decoration-white"
       >
         {term}
       </a>
@@ -243,7 +247,13 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
     left === "started"
       ? t(naru.eventHero.started)
       : left
-        ? t(naru.eventHero.countdownAria).replace("{d}", String(left.d)).replace("{h}", String(left.h))
+        ? t(naru.eventHero.countdownAria)
+            .replace("{d}", String(left.d))
+            .replace("{h}", String(left.h))
+            // 싱가포르 줄 (2026-09-19, 접근성 감사 12). leftSg가 없거나 이미
+            // 시작했으면 서울 값으로 떨어뜨립니다 — 없는 숫자를 지어내지 않습니다.
+            .replace("{d2}", String(leftSg && leftSg !== "started" ? leftSg.d : left.d))
+            .replace("{h2}", String(leftSg && leftSg !== "started" ? leftSg.h : left.h))
         : t(naru.eventHero.countdownLabel);
   return (
     <div role="group" aria-label={aria} className={`w-full rounded-2xl border border-white/[0.12] bg-white/[0.04] px-5 py-4 text-left sm:px-6 sm:py-5 ${className}`}>
@@ -253,7 +263,12 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
       <p aria-hidden className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-white/80">
         <span className="h-[7px] w-[7px] shrink-0 rounded-full bg-naru-orange" />
         {t(naru.eventHero.countdownLabel)}
-        <span className="text-white/45 sm:hidden">{` · ${formatDecemberDayWithWeekday(locale, 0)}`}</span>
+        {/* /45 → /60 (2026-09-19, 접근성 감사 2). 이 줄은 sm:hidden이라 **폰에서만**
+            보이는데 흰색 45%는 #070B1F 위에서 4.49:1로 AA(4.5:1)에 못 미칩니다.
+            globals.css의 대비 표도 "/45는 --bg에서 간발의 차로 실패"라고 적어 두었어요.
+            폰에서 이벤트 날짜를 읽으려는 사람이 가장 읽기 어려운 글자로 보게 됩니다.
+            /60은 7.25:1입니다. 감싼 <p>가 aria-hidden이라 낭독 대체 경로도 없습니다. */}
+        <span className="text-white/60 sm:hidden">{` · ${formatDecemberDayWithWeekday(locale, 0)}`}</span>
       </p>
       {/* 2026-09-19 (사용자: "시간 타이머가 좀 더 박스를 꽉 채워주면 좋겠다"): 칸을 격자로
           나눕니다. 전에는 flex라 숫자 셋이 왼쪽에 몰리고 상자의 오른쪽 절반이 비어
@@ -263,14 +278,20 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
         {rows.map((r) => (
           <div
             key={r.key.en}
-            className="grid grid-cols-[6.5rem_repeat(2,1fr)] items-baseline gap-x-2 sm:grid-cols-[8.5rem_repeat(3,1fr)] sm:gap-x-4"
+            // 2026-09-19 (모바일 감사 1): 폰 라벨 트랙 6.5rem(117px) → 4.5rem(81px),
+            // 숫자 칸은 1fr → minmax(0,1fr). `1fr`은 minmax(auto,1fr)이라 **내용보다
+            // 작아지지 못합니다.** 영어 단위(days/hrs)가 한글(일/시간)보다 두 배 넓어
+            // 360px에서 숫자 칸이 패널 밖으로 밀렸습니다(계산상 37px 초과).
+            // 81px은 이 트랙이 담는 최장 문자열("Seoul time" 약 72px, "싱가포르 SGT"
+            // 약 78px)이 한 줄로 들어가는 값입니다.
+            className="grid grid-cols-[4.5rem_repeat(2,minmax(0,1fr))] items-baseline gap-x-2 sm:grid-cols-[8.5rem_repeat(3,minmax(0,1fr))] sm:gap-x-4"
           >
-            <span className="text-xs font-semibold text-white/55">{t(r.key)}</span>
+            <span className="min-w-0 whitespace-nowrap text-[11px] font-semibold text-white/55 sm:text-xs">{t(r.key)}</span>
             {r.l === "started" ? (
               <span className="col-span-2 text-xl font-black text-white sm:col-span-3">{t(naru.eventHero.started)}</span>
             ) : (
               cellsOf(r.l).map((c, i) => (
-                <span key={i} className={`items-baseline gap-1.5 ${c.phone ? "flex" : "hidden sm:flex"}`}>
+                <span key={i} className={`min-w-0 items-baseline gap-1.5 ${c.phone ? "flex" : "hidden sm:flex"}`}>
                   <span className="text-[1.75rem] font-black leading-none tabular-nums text-white sm:text-[2.25rem]">{c.v}</span>
                   <span className="text-xs font-semibold text-white/55">{t(c.u)}</span>
                 </span>
@@ -293,7 +314,18 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
 // 캡션이 없으면 12월 사진으로 읽혔습니다. 데스크톱은 호버 시 각 사진 하단에 "Day 1" 캡션이
 // 올라옵니다(photos[].day). 폰은 정적 한 줄만. sizes는 실측 렌더 폭(폰 45vw, 데스크톱 약
 // 280px)에 맞춰 dpr 3 기기에서 흐리지 않게(브리프 9.3). src가 없는 사진은 그리지 않습니다.
-function HeroPhotos({ photos, t, className = "" }: { photos: RecordPhoto[]; t: (p: Phrase) => string; className?: string }) {
+function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
+  photos: RecordPhoto[];
+  t: (p: Phrase) => string;
+  className?: string;
+  /**
+   * 이 묶음이 `hidden lg:block` 안에 있는가 (2026-09-19, 접근성 감사 22).
+   * 그러면 폰은 이것을 그리지 않으므로 priority를 걸지 않습니다. 전에는 같은
+   * 사진 넷이 DOM에 두 번 있고 양쪽 다 priority여서, 폰이 보지도 않을 이미지
+   * 둘을 preload 했습니다. 폰용 묶음(className으로 오는 쪽)이 priority를 맡습니다.
+   */
+  desktopOnly?: boolean;
+}) {
   const shown = photos.filter((p) => !!p.src).slice(0, 4);
   if (shown.length === 0) return null;
   return (
@@ -304,7 +336,7 @@ function HeroPhotos({ photos, t, className = "" }: { photos: RecordPhoto[]; t: (
             key={photo.src}
             className={`group relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.9)] ${i % 2 === 1 ? "lg:translate-y-8" : ""}`}
           >
-            <Image src={photo.src} alt={t(photo.alt)} fill sizes="(max-width: 1023px) 45vw, 280px" priority={i < 2} className="object-cover object-center" />
+            <Image src={photo.src} alt={t(photo.alt)} fill sizes="(max-width: 1023px) 45vw, 280px" priority={!desktopOnly && i < 2} className="object-cover object-center" />
             {photo.day && (
               <span
                 aria-hidden
@@ -361,9 +393,6 @@ export default function NaruHome() {
         옮기도록 합니다. Tab 순서에는 들어가지 않습니다. */}
     {/* naru-min12: 폰 글자 하한 12px(app/globals.css). */}
     <main id="main" tabIndex={-1} className="naru-min12 focus:outline-none">
-      {/* 하단 오픈채팅 바(8월과 같은 것). #record가 지나면 나타나고 푸터가 보이면
-          물러납니다. 홈에는 폰 전용 바가 없어서 폰까지 맡습니다(phone). */}
-      <MobileChatBar afterId="record" endId="closing" phone />
       {/* ── CH0 · 크로싱 서울 히어로 (DECIDED 2026-09-17 2차) ──────────────
           홈의 첫 화면이 그룹에서 이벤트로 바뀌었습니다. 8월 사이트의 히어로가
           8월 이벤트였듯이, 여기는 크로싱 서울입니다. 나루 로고는 헤더에만 있고
@@ -386,7 +415,11 @@ export default function NaruHome() {
 
           2026-09-18: 그라데이션 끝·12월 아이브로 글자색·기간 줄 틴트의 주황도 뺐습니다.
           위의 주황 원장이 정본입니다. */}
-      <Chapter id="top" align="center" wide className="pt-16 sm:pt-24 lg:pt-20">
+      {/* labelledBy (2026-09-19, 접근성 감사 5): 이름 없는 <section>은 region
+          랜드마크로 노출되지 않습니다. 그래서 폰 로터의 랜드마크 목록에 main과
+          contentinfo만 남고, 18,000px짜리 한 장에서 챕터 단위 이동 수단이 레일
+          하나뿐이었습니다. 각 챕터가 자기 제목을 이름으로 씁니다. */}
+      <Chapter id="top" labelledBy="hero-title" align="center" wide className="pt-16 sm:pt-24 lg:pt-20">
         {/* relative: useScroll의 target은 offsetParent가 positioned여야 합니다.
             없으면 framer-motion이 콘솔에 경고를 냅니다(2026-09-17 배경 검증에서 발견). */}
         <div className="relative grid items-center gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
@@ -395,11 +428,17 @@ export default function NaruHome() {
             {/* 8월 H1과 같은 clamp. 2행은 그라데이션 토큰(GRADIENT_TEXT). ko는
                 "크로싱 서울" / "CROSSING SEOUL", en은 "CROSSING" / "SEOUL".
                 390px에서 각 줄이 한 줄에 들어갑니다(2행은 0.82em, 실측 2026-09-17). */}
-            <h1 className="text-[clamp(2.4rem,9.5vw,6.5rem)] font-black leading-[1.05] tracking-tight drop-shadow-[0_4px_40px_rgba(75,58,140,0.5)] lg:text-[clamp(2.65rem,6vw,5.5rem)]">
+            <h1 id="hero-title" className="text-[clamp(2.4rem,9.5vw,6.5rem)] font-black leading-[1.05] tracking-tight drop-shadow-[0_4px_40px_rgba(75,58,140,0.5)] lg:text-[clamp(2.65rem,6vw,5.5rem)]">
               {locale === "ko" && DECEMBER_EVENT_NAME ? (
                 <>
-                  <span className="block break-keep text-white">{DECEMBER_EVENT_NAME.ko}</span>
-                  <span className={`${GRADIENT_TEXT} block text-[0.82em] tracking-[0.02em]`}>{DECEMBER_EVENT_NAME.en}</span>
+                  <span className="block break-keep text-white">{DECEMBER_EVENT_NAME.ko}</span>{" "}
+                  {/* lang="en" (2026-09-19, 접근성 감사 7): <html lang="ko">라
+                      한국어 TTS가 "CROSSING SEOUL"을 한글 음가로 읽습니다. 이
+                      사이트를 처음 듣는 사람이 듣는 **첫 줄**이 그것입니다.
+                      사이의 {" "}는 이름 계산용(감사 17): block span 둘 사이에
+                      텍스트 노드가 없으면 "크로싱 서울CROSSING SEOUL"로 붙어
+                      읽힙니다. block이라 화면에는 영향이 없습니다. */}
+                  <span lang="en" className={`${GRADIENT_TEXT} block text-[0.82em] tracking-[0.02em]`}>{DECEMBER_EVENT_NAME.en}</span>
                 </>
               ) : (
                 <>
@@ -456,8 +495,12 @@ export default function NaruHome() {
               메탈 휴먼 자리입니다. 사람이 많이 나온 장면만, 같은 사진은 사이트에 한 번.
               그 전의 형상 무대(싱가포르·서울 점, 배경 수정 브리프)는 같은 날 걷었습니다.
               lg부터만. */}
+          {/* desktopOnly: 이 묶음은 hidden lg:block이라 폰에서는 그리지 않는데,
+              priority가 걸려 있어 폰이 보지도 않을 이미지 둘을 preload 했습니다
+              (2026-09-19, 접근성 감사 22). 느린 회선에서 히어로가 늦게 뜨면
+              접근성 체감에도 영향이 있습니다. 아래 폰용 묶음이 priority를 맡습니다. */}
           <div className="hidden lg:block lg:pr-10 xl:pr-16">
-            <HeroPhotos photos={naru.eventHero.photos} t={t} />
+            <HeroPhotos photos={naru.eventHero.photos} t={t} desktopOnly />
           </div>
         </div>
         {/* 폰(lg 아래): 카피 바로 다음에 사진 넷(2×2), 그 아래 카운트다운. */}
@@ -487,17 +530,21 @@ export default function NaruHome() {
           주황 글자 아이브로 + 발광 H2 + 리드, 숫자 둘, 노선도, 데이 카드 다섯,
           강조 상자(초록·호박), 번호 배지 카드, 플로우 스트립, CTA. 내용과 순서는
           5차 그대로이고 바뀐 것은 보이는 문법입니다. */}
-      <Chapter id="december" align="center" className={BAND_TINT}>
+      <Chapter id="december" labelledBy="december-title" align="center" className={BAND_TINT}>
         <BandFades />
         {/* 2026-09-18 (감사 반영 브리프 8): 아이브로는 보라 외곽선 1종. 주황 글자·주황 발광을 뺐습니다. */}
         <Eyebrow color="purple">
           {`${t(naru.december.eyebrowPrefix)}\u2002${decemberEventLabel(locale)}`}
         </Eyebrow>
-        <h2 className={H2}><Halo tone="violet">{t(naru.december.programHeading)}</Halo></h2>
-        <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
+        <h2 id="december-title" className={H2}><Halo tone="violet">{t(naru.december.programHeading)}</Halo></h2>
+        {/* 폰에서 3줄을 넘는 문단은 왼쪽 정렬 (2026-09-19, 모바일 감사 8). #naru가
+            이미 쓰던 규칙(감사 반영 브리프 6.1)인데 #december와 #join에는 적용되지
+            않았습니다. 336px 폭에 한글 18자/줄이면 서너 줄 문단이 양쪽 들쭉날쭉한
+            마름모로 서고, 눈이 줄마다 시작점을 다시 찾아야 합니다. */}
+        <p className="mx-auto mt-6 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75 lg:text-center">
           {t(naru.december.shapeLead)}
         </p>
-        <p className="mx-auto mt-3 max-w-2xl break-keep text-sm leading-relaxed text-white/55">
+        <p className="mx-auto mt-3 max-w-2xl break-keep text-left text-sm leading-relaxed text-white/55 lg:text-center">
           <TermLink text={t(naru.december.notSequel)} term={t(naru.december.notSequelTerm)} href="#why" />
         </p>
         {/* 초안 고지(DECIDED 2026-09-18, 사용자): 세부 내용이 바뀔 수 있다는 것을 챕터 머리에서
@@ -509,18 +556,35 @@ export default function NaruHome() {
         {/* 숫자 둘. 8월 ProgramStats("2일 필참 / 6일 선택")의 문법. shape에 이미 있는
             값 둘(5일, 2회)만 씁니다. 4차에서 여섯 칸을 뺐으니 늘리지 않습니다. */}
         <Reveal>
+        {/* 2026-09-19 (접근성 감사 9): <dl>의 콘텐츠 모델은 dt/dd 또는 **한 겹**의
+            div만 허용하고 그 안은 dt가 먼저입니다. 전에는 dl > div > div > dd, dt라
+            구조가 깨져서 VoiceOver가 용어와 정의를 짝지어 주지 못하고 "5일"과
+            "실질 4일 + 사전 데이터 공개"를 관계 없는 두 조각으로 읽었습니다.
+            구분선은 dl 밖으로 낼 수 없어(칸 사이에 있어야 합니다) 허용된 한 겹
+            div의 형제로 두고, 보이는 순서는 order로 뒤집습니다. 화면은 그대로입니다.
+
+            2026-09-19 (모바일 감사 17): 구분선 mx-5 → mx-3. 390px에서 칸 하나가
+            145px뿐이라 영어 라벨("Four working days, data opens before")이 세 줄로
+            접혔습니다. 자간도 폰에서 낮춥니다. 두 칸의 줄 수가 달라 숫자 아래가
+            비대칭으로 보이던 자리입니다. */}
         <dl className="mx-auto mt-5 flex max-w-2xl items-stretch justify-center">
           {[naru.december.shape[0], naru.december.shape[3]].map((stat, i) => (
-            <div key={stat.label.en} className="flex items-stretch">
-              {i > 0 && <span aria-hidden className="mx-5 h-9 w-px self-center bg-white/[0.14] sm:mx-9" />}
-              <div className="flex flex-col items-center px-1">
-                <dd className="text-[clamp(1.5rem,4vw,2.25rem)] font-black leading-none text-white">
-                  {t(stat.value)}
-                </dd>
-                <dt className="mt-1.5 break-keep text-center text-[0.68rem] font-bold uppercase tracking-[0.1em] text-white/50">
-                  {t(stat.label)}
-                </dt>
-              </div>
+            // dl의 직계는 div 한 겹이고 그 안은 dt/dd뿐입니다. 그래서 구분선을
+            // 엘리먼트로 두지 못하고 ::before로 그립니다. 화면은 같습니다.
+            <div
+              key={stat.label.en}
+              className={`relative flex flex-col items-center px-1 ${
+                i > 0
+                  ? "ml-3 pl-3 before:absolute before:left-0 before:top-1/2 before:h-9 before:w-px before:-translate-y-1/2 before:bg-white/[0.14] before:content-[''] sm:ml-9 sm:pl-9"
+                  : ""
+              }`}
+            >
+              <dd className="order-1 text-[clamp(1.5rem,4vw,2.25rem)] font-black leading-none text-white">
+                {t(stat.value)}
+              </dd>
+              <dt className="order-2 mt-1.5 break-keep text-center text-[0.68rem] font-bold uppercase tracking-[0.04em] text-white/50 sm:tracking-[0.1em]">
+                {t(stat.label)}
+              </dt>
             </div>
           ))}
         </dl>
@@ -595,12 +659,18 @@ export default function NaruHome() {
             <div className="shrink-0 lg:w-56">
               <p className="flex items-center gap-2 text-base font-bold text-white">
                 <ChipDot />
-                General Mentoring
+                {/* lang="en" (2026-09-19, 접근성 감사 7): 한국어 문단 속의 영어 고유명사. */}
+                <span lang="en">General Mentoring</span>
               </p>
               <p className="mt-0.5 text-xs font-semibold text-emerald-200/90">{t(naru.december.mentoringAlways)}</p>
             </div>
             {/* 폰은 2열·작은 글자(길이 목표, 감사 반영 브리프 3.1). */}
-            <ul role="list" className="grid flex-1 grid-cols-2 gap-x-4 gap-y-1.5 sm:gap-x-6 sm:gap-y-2 lg:grid-cols-4">
+            {/* 2026-09-19 (모바일 감사 14): 폰에서 2열을 풉니다. 상자 안쪽 291px을
+                둘로 나누면 한 칸의 **글자 폭이 121px**, text-xs로 한글 8.9자/줄입니다.
+                "마지막 날에는 새 방향을 제안하지 않음"(18자)이 세 줄, 영어는 네 줄이
+                됐습니다. 한 줄 길이는 짧아도 문제입니다. 세로가 늘어나는 대가는
+                아래 Day 카드의 clamp 완화와 같은 예산에서 나옵니다. */}
+            <ul role="list" className="grid flex-1 grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4">
               {naru.december.mentoringRules.map((rule, i) => (
                 <li key={i} className="flex gap-2.5 break-keep border-l-2 border-white/20 pl-3 text-xs leading-snug text-white/85 sm:text-sm">
                   {t(rule)}
@@ -677,7 +747,7 @@ export default function NaruHome() {
 
         {/* 문. 참가자는 오픈채팅(2차 유령 필), 출제사와 후원은 텍스트 링크.
             페이지의 그라데이션 필은 히어로 하나뿐입니다. */}
-        <p id="december-register-note" className="mx-auto mt-8 max-w-2xl break-keep text-sm text-white/55 lg:mt-12">
+        <p id="december-register-note" className="mx-auto mt-8 max-w-2xl break-keep text-left text-sm text-white/55 lg:mt-12 lg:text-center">
           {regState === "closed" ? t(registerCopy.closed) : t(naru.december.ctaNote)}
         </p>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
@@ -696,7 +766,15 @@ export default function NaruHome() {
           <a
             href={naruLinks.sponsor}
             onClick={() => track("naru_mail", { src: "december" })}
-            className={`${buttonClass("text")} -my-2.5 min-h-[44px] py-2.5`}
+            // 2026-09-19 (모바일 감사 16): text → secondary. 오픈채팅이 막혀
+            // 있고(links.openChat 빈 문자열) 등록 창도 닫혀 있어, 이 행에 남는
+            // 것은 누를 수 없는 PreparingButton(테두리 + 면)과 이 메일 링크
+            // 둘뿐입니다. 눈이 먼저 가는 쪽이 면을 가진 죽은 버튼이었어요.
+            // 이 파일 맨 위의 원칙("누를 수 없는 버튼을 회색으로 남기지 않습니다")과
+            // 어긋난 상태였습니다. 유령 필로 올려 살아 있는 쪽이 1순위가 되게 합니다.
+            // 음수 마진도 함께 사라집니다(모바일 감사 23: gap-4 안에서 줄이 바뀌면
+            // 행 간격이 −4.5px이 되던 자리).
+            className={buttonClass("secondary", "naru")}
           >
             {t(naru.december.ctaMail)}
             <span aria-hidden>→</span>
@@ -709,9 +787,9 @@ export default function NaruHome() {
           번호 배지 + 제목 문법, 본문 없음). 데스크톱 한 줄 다섯(숫자 스탯 행과 같은
           그리드), 폰은 두 열 + 마지막 한 장 전폭. 아래 한 줄이 "왜 제목뿐인가"의 답.
           8월 참가 혜택 필과 같은 emerald. 기본 이음매. */}
-      <Chapter id="gains" align="center">
+      <Chapter id="gains" labelledBy="gains-title" align="center">
         <Eyebrow color="purple">{t(naru.gains.eyebrow)}</Eyebrow>
-        <h2 className={H2}><Halo tone="violet">{t(naru.gains.heading)}</Halo></h2>
+        <h2 id="gains-title" className={H2}><Halo tone="violet">{t(naru.gains.heading)}</Halo></h2>
         {/* DECIDED 2026-09-19 (얻는 것 브리프 3장): 다섯 칸에 본문이 붙습니다. 그래서
             레일이 max-w-6xl이고(한 칸의 본문 폭이 170px 아래로 내려가면 안 됩니다),
             lg:min-h-[8.5rem]은 지웠습니다. 본문이 생기면 최소 높이가 할 일이 없어요.
@@ -720,7 +798,10 @@ export default function NaruHome() {
             카드와 같은 문법). item.evidence는 그대로 두고 그리지 않습니다. 8월 숫자는
             #record가 갖습니다. 이 주석을 풀지 마세요. */}
         <Reveal>
-        <ol className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-2 lg:grid-cols-5 lg:items-start lg:gap-3">
+        {/* role="list" (2026-09-19, 접근성 감사 10): Tailwind preflight의
+            list-style:none 때문에 Safari/VoiceOver가 목록 역할을 떼어 냅니다.
+            이 파일의 다른 목록들은 이미 달고 있고 여기만 빠져 있었습니다. */}
+        <ol role="list" className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-2 lg:grid-cols-5 lg:items-start lg:gap-3">
           {naru.gains.items.map((item) => (
             <li
               key={item.num}
@@ -736,7 +817,7 @@ export default function NaruHome() {
           ))}
         </ol>
         </Reveal>
-        <p className="mx-auto mt-6 max-w-2xl break-keep text-sm text-white/50">{t(naru.gains.note)}</p>
+        <p className="mx-auto mt-6 max-w-2xl break-keep text-left text-sm text-white/50 lg:text-center">{t(naru.gains.note)}</p>
 
       </Chapter>
 
@@ -751,7 +832,7 @@ export default function NaruHome() {
           #why 앵커는 코어 판 목록에 남겨 옛 링크와 notSequel의 링크가 닿습니다.
           exec와 measure는 #december의 멘토링 블록으로 갔습니다. 이벤트의
           실행에 관한 문장이라서요. 여기 남은 것은 코어 둘, 경첩, 마지막 줄. */}
-      <Chapter id="naru" align="center" className="pt-20 sm:pt-28 lg:pt-36">
+      <Chapter id="naru" labelledBy="naru-title" align="center" className="pt-20 sm:pt-28 lg:pt-36">
         <Image
           src="/naru/naru-master-rev.png"
           alt={t(naru.hero.logoAlt)}
@@ -765,9 +846,11 @@ export default function NaruHome() {
           <Eyebrow color="purple">{t(naru.hero.eyebrow)}</Eyebrow>
         </div>
         {/* 태그라인. 두 줄 고정(히어로에 있던 때의 이유 그대로: 두 개의 선언). */}
-        <h2 className={H2}>
+        <h2 id="naru-title" className={H2}>
           <Halo tone="violet">
-            <span className="block break-keep">{t(naru.hero.titleLine1)}</span>
+            <span className="block break-keep">{t(naru.hero.titleLine1)}</span>{" "}
+            {/* {" "}: block span 둘 사이에 텍스트 노드가 없으면 이름 계산에서
+                "…한다.자리는…"처럼 붙어 읽힙니다 (2026-09-19, 접근성 감사 17). */}
             <span className={`${GRADIENT_TEXT} block break-keep`}>{t(naru.hero.titleLine2)}</span>
           </Halo>
         </h2>
@@ -787,7 +870,7 @@ export default function NaruHome() {
         {/* ── 8월이 남긴 것 (2026-09-19, 사용자: 8월과 나루를 합침). 코어 둘 바로 앞입니다. lead2가
             "이 이벤트에서 코어 2개가 나왔습니다"로 끝나서 다음 블록(변하지 않는 두 개)으로 이어집니다.
             id="record"는 옛 링크·배경 국면·하단 바(afterId)가 봅니다. 그 전의 챕터 판 주석은 git 이력에. */}
-        <Reveal id="record" className="mx-auto mt-8 max-w-3xl scroll-mt-24 lg:mt-12">
+        <Reveal id="record" className="mx-auto mt-8 max-w-3xl lg:mt-12">
           <Eyebrow color="purple">{t(naru.record.eyebrow)}</Eyebrow>
           <h3 className={H3}>{t(naru.record.heading)}</h3>
           <p className="mx-auto mt-4 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75 lg:text-center">
@@ -814,8 +897,21 @@ export default function NaruHome() {
           </div>
         </Reveal>
 
+        {/* 앵커 착지 (2026-09-19, 모바일 감사 4·18): 이 자리에만 scroll-mt가
+            없어서 영어 두 줄 헤더(158px) 아래로 아이브로가 들어갔습니다. 고치면서
+            **장치를 하나로 줄였습니다**: 이 페이지의 네 앵커(#record, #why, #how,
+            #join-ways)에 있던 scroll-mt-24/28을 전부 걷고, JourneyNav가 헤더 실높이를
+            재서 넣는 scroll-padding-top 하나만 씁니다. 둘 다 있으면 값이 더해져
+            제목이 헤더 아래 120px을 더 비우고 서고, 무엇보다 한쪽만 고쳐질 자리가
+            됩니다. #december의 TermLink가 여기로 보냅니다.
+
+            h3 (접근성 감사 18): 전에는 Eyebrow 하나뿐이라, 폰에서 "변하지 않는
+            두 개"를 눌러 도착하면 어디에 왔는지 확인할 문장이 없었습니다.
+            why.heading 키는 전부터 있었고 그리지 않고 있던 것을 되살립니다 —
+            sr-only가 아니라 눈에도 보이게 두는 편이 착지점을 말해 줍니다. */}
         <div id="why" className="mt-8 border-t border-white/10 pt-8 lg:mt-12 lg:pt-12">
           <Eyebrow color="purple">{t(naru.why.eyebrow)}</Eyebrow>
+          <h3 className={H3}>{t(naru.why.heading)}</h3>
         </div>
         {/* 코어 둘. 판 두 장.
             ol인 이유: 순서가 뜻입니다. 01이 문턱이고 02가 증명이며, 바로 아래
@@ -883,7 +979,7 @@ export default function NaruHome() {
             마지막 블록이 됐습니다. 헤어라인 하나로 나뉘고 제목은 H3. 안쪽 앵커 id="how"는
             옛 링크와 층별 문(#join-*)의 출발점을 위해 남깁니다. 카피 키(naru.how.*)는 그대로.
             그 전의 주석: #december 뒤로 내려온 이유(2026-09-17)는 git 이력에. */}
-        <div id="how" className="mx-auto mt-10 max-w-5xl scroll-mt-24 border-t border-white/10 pt-8 text-center lg:mt-16 lg:pt-12">
+        <div id="how" className="mx-auto mt-10 max-w-5xl border-t border-white/10 pt-8 text-center lg:mt-16 lg:pt-12">
 
           <Eyebrow color="purple">{t(naru.how.eyebrow)}</Eyebrow>
           <h3 className={H3}>{t(naru.how.heading)}</h3>
@@ -901,7 +997,13 @@ export default function NaruHome() {
             세 주체를 한 번 더 세로로 세워 폰에서 800px을 썼습니다. 무엇을 주고
             받는지는 #join의 카드가 문 옆에서 말합니다. layers[].does/gets 키는
             그대로 있습니다. */}
-        <Reveal className="mx-auto mt-6 flex max-w-5xl flex-wrap justify-center gap-x-8 gap-y-2">
+        {/* gap-y-6 (2026-09-19, 모바일 감사 7 · 접근성 감사 11): 안쪽 링크가
+            -my-2.5(−11.25px씩)로 히트 영역만 44px로 키우는 관용구를 쓰는데, 줄 간격이
+            gap-y-2(9px)라 줄이 바뀌면 **행 간격이 9 − 22.5 = −13.5px**, 즉 위아래
+            링크의 히트 상자가 겹쳤습니다. 겹친 자리에서 먼저 잡는 쪽은 DOM 순서가
+            아니라 z 순서라, "학생회로 문의하기"를 눌렀는데 옆의 메일이 열릴 수
+            있습니다. 세 링크는 폰에서 반드시 접힙니다. 27 − 22.5 = 4.5px로 띄웁니다. */}
+        <Reveal className="mx-auto mt-6 flex max-w-5xl flex-wrap justify-center gap-x-8 gap-y-6">
           {naru.how.layers.map((layer) => (
             <a
               key={layer.join.id}
@@ -938,10 +1040,10 @@ export default function NaruHome() {
           보고, 그룹이 무엇인지 안 다음에 "그래서 이게 왜 있어야 하는가"가 나옵니다.
           그 순서면 앞의 모든 것이 이 문단의 근거가 됩니다. 앞에 놓으면 근거 없이
           주장부터 하게 됩니다. */}
-      <Chapter id="join" align="center">
+      <Chapter id="join" labelledBy="join-title" align="center">
         <Eyebrow color="purple">{t(naru.join.eyebrow)}</Eyebrow>
-        <h2 className={H2}><Halo tone="violet">{t(naru.join.heading)}</Halo></h2>
-        <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
+        <h2 id="join-title" className={H2}><Halo tone="violet">{t(naru.join.heading)}</Halo></h2>
+        <p className="mx-auto mt-6 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75 lg:text-center">
           {t(naru.join.lead)}
         </p>
 
@@ -970,7 +1072,7 @@ export default function NaruHome() {
         {/* 세 곳에 공통된 조건 하나(매니페스토 I장). 장소를 가리지 않습니다.
             같은 I장의 다른 나라 학생과의 비교는 가져오지 않았습니다. */}
         <Reveal>
-        <p className="mx-auto mt-8 max-w-2xl break-keep text-base leading-relaxed text-white/75">
+        <p className="mx-auto mt-8 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75 lg:text-center">
           {t(naru.join.milestones)}
         </p>
         </Reveal>
@@ -987,7 +1089,7 @@ export default function NaruHome() {
         {/* 규모 숫자는 출처가 확인되기 전까지 그리지 않습니다. statTbd 키는
             data/naru.ts에 있습니다. */}
         {JOIN_STAT_CONFIRMED && (
-          <p className="mx-auto mt-6 max-w-2xl break-keep text-sm leading-relaxed text-white/55">
+          <p className="mx-auto mt-6 max-w-2xl break-keep text-left text-sm leading-relaxed text-white/55 lg:text-center">
             {t(naru.join.statTbd)}
           </p>
         )}
@@ -1017,9 +1119,16 @@ export default function NaruHome() {
             위한 문입니다. 파일 정보를 라벨 아래 한 줄로 먼저 보입니다. 무엇을 받는지
             모르고 누르게 하지 않습니다. */}
         <div aria-hidden className="mx-auto mt-12 h-px w-full max-w-5xl bg-white/10" />
-        <Reveal id="join-ways" className="mx-auto mt-12 max-w-3xl scroll-mt-28 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-6 text-left sm:px-7">
+        <Reveal id="join-ways" className="mx-auto mt-12 max-w-3xl rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-6 text-left sm:px-7">
+          {/* "PDF · 1.0MB" (2026-09-19, 모바일 감사 21). 쪽 수와 파일 크기 줄을
+              뺀 결정(data/naru.ts)은 그대로 존중합니다 — 이건 그 줄을 되살리는 게
+              아니라 라벨 옆의 한 조각입니다. 버튼의 ↓는 **형식을 말하지 않고**,
+              셀룰러에서 1MB는 데스크톱에서와 다른 값입니다. 그 결정의 이유
+              ("무엇을 받는지 모르고 누르게 하지 않습니다")를 셀룰러까지 넓힙니다.
+              파일이 바뀌면 이 숫자도 바꾸세요: public/naru/naru-manifesto-v1-2026-09.pdf */}
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
             {t(naru.join.manifesto.label)}
+            <span className="font-medium normal-case tracking-normal text-white/40">{"\u2002·\u2002PDF 0.9MB"}</span>
           </p>
           <h3 className="mt-3 break-keep text-lg font-bold text-white">{t(naru.join.manifesto.title)}</h3>
           <p className="mt-2 break-keep text-sm leading-relaxed text-white/70">{t(naru.join.manifesto.body)}</p>
@@ -1049,10 +1158,10 @@ export default function NaruHome() {
           그건 화면이 아니라 우리가 할 일입니다.
           인용문을 지어내지 마세요(data/naru.ts의 Story 주석). */}
       {naru.people.stories.length > 0 && (
-        <Chapter id="people" align="center">
+        <Chapter id="people" labelledBy="people-title" align="center">
           <Eyebrow color="purple">{t(naru.people.eyebrow)}</Eyebrow>
-          <h2 className={H2}>{t(naru.people.heading)}</h2>
-          <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
+          <h2 id="people-title" className={H2}>{t(naru.people.heading)}</h2>
+          <p className="mx-auto mt-6 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75 lg:text-center">
             {t(naru.people.lead)}
           </p>
           <div className="mt-12 grid gap-4 text-left md:grid-cols-2">
@@ -1070,6 +1179,15 @@ export default function NaruHome() {
         </Chapter>
       )}
 
+      {/* 하단 오픈채팅 바(8월과 같은 것). #record가 지나면 나타나고 푸터가 보이면
+          물러납니다. 홈에는 폰 전용 바가 없어서 폰까지 맡습니다(phone).
+
+          main의 **끝**입니다 (2026-09-19, 접근성 감사 21). position: fixed로 화면
+          맨 아래에 뜨는 바가 DOM에서는 본문 맨 앞이었습니다. 오픈채팅을 되살리면
+          폰에서 main에 들어선 첫 Tab이 화면 아래 끝의 버튼으로 뜁니다. 보이는
+          순서와 포커스 순서가 어긋나면 안 됩니다(2.4.3). 지금은 links.openChat이
+          빈 문자열이라 렌더되지 않는 잠복 상태였어요. */}
+      <MobileChatBar afterId="record" endId="closing" phone />
       </main>
 
       {/* ── 푸터 ─────────────────────────────────────────────────────────
@@ -1090,18 +1208,28 @@ export default function NaruHome() {
             className="h-10 w-auto sm:h-12"
           />
           <p className="break-keep text-xs leading-relaxed text-white/60">{t(naru.footer.credits)}</p>
-          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs">
+          {/* gap-y-7 (2026-09-19, 모바일 감사 7): 아래 링크가 -my-3(−13.5px씩)이라
+              gap-y-2로는 행 간격이 −18px이었습니다. 지금은 오픈채팅이 막혀 링크가
+              둘뿐이라 한 줄에 들어가지만, 되살리면 즉시 발현하는 잠복 상태였습니다.
+              31.5 − 27 = 4.5px. */}
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-7 text-xs">
             <OpenChatLink t={t} src="naru-footer" label={openChatLabels.footer} className="!px-3.5 !py-2 !text-xs" />
             <a
               href={naruLinks.general}
               onClick={() => track("naru_mail", { src: "footer" })}
-              className="-my-3 inline-block py-3 text-white/65 underline-offset-4 transition hover:text-white hover:underline"
+              // min-w-[44px] (2026-09-19, 감사 반영): "문의"/"Contact"는 글자가
+              // 짧아 가로 23.4px이었습니다. 세로 44px은 -my-3 + py-3이 만들지만
+              // 가로는 아무것도 보장하지 않았어요. 가운데 정렬로 글자 자리는 그대로.
+              className="-my-3 inline-flex min-h-[44px] min-w-[44px] items-center justify-center py-3 text-white/65 underline-offset-4 transition hover:text-white hover:underline"
             >
               {t(naru.footer.contact)}
             </a>
             <Link
               href={naruLinks.archive}
-              className="-my-3 inline-block py-3 text-white/65 underline-offset-4 transition hover:text-white hover:underline"
+              // min-w-[44px] (2026-09-19, 감사 반영): "문의"/"Contact"는 글자가
+              // 짧아 가로 23.4px이었습니다. 세로 44px은 -my-3 + py-3이 만들지만
+              // 가로는 아무것도 보장하지 않았어요. 가운데 정렬로 글자 자리는 그대로.
+              className="-my-3 inline-flex min-h-[44px] min-w-[44px] items-center justify-center py-3 text-white/65 underline-offset-4 transition hover:text-white hover:underline"
             >
               {t(naru.footer.archive)}
             </Link>
@@ -1387,28 +1515,41 @@ function DayCard({
         stage.submit ? "border-[#9A5A82]/40 bg-white/[0.055]" : "border-white/[0.08] bg-white/[0.03]"
       }`}
     >
-      {/* 폰 헤더: 56px 행, 탭하면 펼침. */}
+      {/* 폰 헤더: 56px 행, 탭하면 펼침.
+          h4로 감쌉니다 (2026-09-19, 접근성 감사 15). 아래 데스크톱용 h4는
+          hidden lg:flex라 폰에서는 접근성 트리에서 빠지고, 제목이 버튼 안의
+          span이 됐습니다. 폰 로터의 "제목"으로 일정 다섯 칸 사이를 오갈 수
+          없었어요. 버튼을 감싸면 로터에 뜨고 aria-expanded도 그대로입니다. */}
+      <h4 className="m-0 lg:hidden">
       <button
         type="button"
         aria-expanded={open}
         aria-controls={bodyId}
         onClick={onToggle}
-        className="flex min-h-[56px] w-full items-center justify-between gap-3 px-4 text-left lg:hidden"
+        className="flex min-h-[56px] w-full items-center justify-between gap-3 px-4 text-left"
       >
-        <span className="flex min-w-0 items-baseline gap-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-accent/80">{kicker}</span>
-          {stage.dayOffset !== null && <span className="text-xl font-black leading-none text-white">{stage.dayOffset + 1}</span>}
-          <span className="truncate text-[15px] font-bold text-white">{t(stage.title)}</span>
+        {/* items-center + 두 줄까지 (2026-09-19, 모바일 감사 12): 제목만 truncate라
+            좁은 폭에서 말줄임으로 잘렸습니다. 접힌 목록에서 제목이 잘리면 "무슨
+            날인지" 고르는 단 하나의 단서를 잃습니다. 왼쪽에 남는 폭이 약 109px이라
+            한글 7자, 영어 "Choosing a track"은 확실히 잘렸어요. 두 줄이면
+            14px × 1.25 × 2 = 35px으로 min-h-[56px] 안에 그대로 듭니다. */}
+        <span className="flex min-w-0 items-center gap-2">
+          {/* lang: kicker는 두 로케일 모두 영어("DAY" / "BEFORE")입니다
+              (2026-09-19, 접근성 감사 7). data/naru.ts의 dayLabel·beforeLabel. */}
+          <span lang="en" className="shrink-0 text-xs font-bold uppercase tracking-wider text-accent/80">{kicker}</span>
+          {stage.dayOffset !== null && <span className="shrink-0 text-xl font-black leading-none text-white">{stage.dayOffset + 1}</span>}
+          <span className="line-clamp-2 min-w-0 text-[14px] font-bold leading-tight text-white">{t(stage.title)}</span>
         </span>
         <span className="flex shrink-0 items-center gap-2 text-xs text-white/55">
           {date}
           <span aria-hidden className={`inline-block text-white/45 transition-transform motion-reduce:transition-none ${open ? "rotate-180" : ""}`}>⌄</span>
         </span>
       </button>
+      </h4>
       {/* 데스크톱 헤더: 정적. */}
       <div className="hidden items-baseline justify-between gap-3 p-4 pb-0 sm:p-5 sm:pb-0 lg:flex">
         <span className="flex items-baseline gap-1.5">
-          <span className="text-[0.6rem] font-bold uppercase tracking-wider text-accent/80">{kicker}</span>
+          <span lang="en" className="text-[0.6rem] font-bold uppercase tracking-wider text-accent/80">{kicker}</span>
           {stage.dayOffset !== null && <span className="text-2xl font-black leading-none text-white">{stage.dayOffset + 1}</span>}
         </span>
         <span className="shrink-0 text-[0.7rem] text-white/55">{date}</span>
@@ -1427,12 +1568,22 @@ function DayCard({
         </div>
         <h4 className="mt-3 hidden flex-wrap items-baseline gap-x-2 text-[15px] font-bold leading-snug text-white lg:flex">
           {t(stage.title)}
-          {sub && <span className="text-xs font-semibold text-white/50">{sub}</span>}
+          {/* lang="en": sub는 한국어 로케일에서만 붙는 영문 이름입니다(위 정의). */}
+          {sub && <span lang="en" className="text-xs font-semibold text-white/50">{sub}</span>}
         </h4>
-        {/* 폰(lg 아래)에서는 두 줄까지(모바일 수정 브리프 1.4). */}
-        <p className="mt-2 line-clamp-2 break-keep text-[13px] leading-relaxed text-white/65 lg:mt-1.5 lg:line-clamp-none">{t(stage.body)}</p>
+        {/* 폰(lg 아래)에서는 두 줄까지(모바일 수정 브리프 1.4). **단 접혀 있을
+            때만** (2026-09-19, 모바일 감사 20 · 접근성 감사 16). 전에는 펼쳐도 두
+            줄에서 잘려서, 스크린리더는 전문을 읽고 눈으로 읽는 사람만 못 읽는
+            비대칭이 있었습니다. 글자 크기를 키우면 줄 수는 그대로라 키울수록 더
+            많이 사라졌고요. 펼치는 행동의 보상은 "두 줄 더"가 아니라 "전부"여야
+            합니다. 길이 목표는 접힌 상태가 지킵니다.
+            13px → 13.5px (모바일 감사 13): 이 사이트의 text-xs이고, 읽는 문장이
+            12~13px 구간에 있던 둘 중 하나입니다. 새 임의 값을 만들지 않습니다. */}
+        <p className={`mt-2 break-keep text-[13.5px] leading-relaxed text-white/65 lg:mt-1.5 lg:text-[13px] ${open ? "" : "line-clamp-2 lg:line-clamp-none"}`}>{t(stage.body)}</p>
         {/* "→ 그날의 한 줄"은 흰색 볼드 하나(감사 반영 브리프 3.3). */}
-        <p className="mt-2 flex gap-1.5 break-keep text-[12.5px] font-bold leading-snug text-white">
+        {/* 12.5px → 13.5px (2026-09-19, 모바일 감사 13). 읽는 문장이 12~13px
+            구간에 있던 둘 중 둘째입니다. 나머지 12px대는 라벨이라 그대로 둡니다. */}
+        <p className="mt-2 flex gap-1.5 break-keep text-[13.5px] font-bold leading-snug text-white lg:text-[12.5px]">
           <span aria-hidden className="text-white/50">→</span>
           {t(stage.line)}
         </p>
@@ -1454,7 +1605,11 @@ function DayCard({
 // ─────────────────────────────────────────────────────────────────────────────
 function KeepsPanel({ label, body }: { label: string; body: string }) {
   const [open, setOpen] = useState(false);
-  const id = `keeps-${label.length}-${body.length}`;
+  // useId (2026-09-19, 접근성 감사 20). 전에는 `keeps-${label.length}-${body.length}`
+  // 였습니다. 지금은 우연히 안 겹치지만(keeps-9-67 / keeps-9-65), 두 코어의 본문
+  // 길이가 같아지는 순간 id가 겹치고 aria-controls가 남의 패널을 가리킵니다.
+  // 카피 한 글자에 접근성이 걸려 있으면 안 됩니다.
+  const id = useId();
   return (
     <div className="border-t border-white/10 pt-3 md:border-l md:border-t-0 md:pl-10 md:pt-2 lg:pt-6 md:lg:pt-2">
       <button
@@ -1482,7 +1637,10 @@ function RoleLabel({ text }: { text: string }) {
   return (
     <>
       {parts.slice(0, -1).join(" ")}
-      <span className="ml-1 font-semibold text-white/50">{parts[parts.length - 1].toLowerCase()}</span>
+      {/* lang="en" (2026-09-19, 접근성 감사 7): "주최 host"의 host 쪽. 한국어
+          TTS가 한글 음가로 읽습니다. 영어 로케일에서는 앞뒤가 다 영어라 이
+          속성이 아무 일도 하지 않습니다. */}
+      <span lang="en" className="ml-1 font-semibold text-white/50">{parts[parts.length - 1].toLowerCase()}</span>
     </>
   );
 }

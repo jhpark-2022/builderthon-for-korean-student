@@ -71,7 +71,13 @@ export default function RouteMap({
   const dotLeft = current === undefined ? null : `calc(${inset} + (100% - 2 * ${inset}) * ${n > 1 ? current / (n - 1) : 0})`;
   return (
     <div className={className}>
+      {/* role="list" (2026-09-19, 접근성 감사 10): Tailwind preflight가
+          `ol { list-style: none }`을 걸고, Safari/VoiceOver는 그때 목록 역할을
+          떼어 냅니다. 역할이 generic으로 떨어지면 **aria-label까지 통째로
+          무시되어** 폰에서 노선도가 이름 없는 글자 더미가 됩니다. 이 레포의
+          다른 목록들은 이미 role="list"를 달고 있습니다. */}
       <ol
+        role="list"
         aria-label={ariaLabel}
         className={`relative flex items-start ${pill ? "pb-10" : "pb-2"}`}
       >
@@ -118,8 +124,15 @@ export default function RouteMap({
                 <span className={`break-keep text-[0.68rem] leading-tight ${anchor || spot ? "font-bold text-white" : "text-white/75"}`}>
                   {s.label}
                 </span>
+                {/* 배지는 sm부터 (2026-09-19, 모바일 감사 3). 폰에서 정거장 한 칸이
+                    67px인데 영어 배지는 "Submission The problem statement"(약 186px)와
+                    "Submission The build"(약 120px)이라, 가운데 정렬된 두 배지가
+                    175~194px 구간에서 **서로 겹쳐 글자가 포개졌습니다.** 한국어는
+                    "제출 정의서"(약 85px)라 겹치지 않는 영어 전용 파손이었어요.
+                    같은 뜻은 폰의 Day 카드 안 칩이 이미 말하고, 바로 아래 범례도
+                    같은 이유로 sm부터입니다(규칙이 일관됩니다). 노드의 ★는 남습니다. */}
                 {anchor && s.badge && (
-                  <span className="absolute left-1/2 top-full mt-0.5 -translate-x-1/2 whitespace-nowrap rounded-full border border-[#9A5A82]/50 bg-[#9A5A82]/[0.12] px-1.5 py-0.5 text-[0.58rem] font-bold leading-none text-[#C79BB4]">
+                  <span className="absolute left-1/2 top-full mt-0.5 hidden -translate-x-1/2 whitespace-nowrap rounded-full border border-[#9A5A82]/50 bg-[#9A5A82]/[0.12] px-1.5 py-0.5 text-[0.58rem] font-bold leading-none text-[#C79BB4] sm:inline-flex">
                     {s.badge}
                   </span>
                 )}
@@ -131,7 +144,11 @@ export default function RouteMap({
           <span className="pointer-events-none absolute bottom-0 left-0 right-0 flex justify-center">
             {/* 2026-09-18 (감사 반영 브리프 8): 초록은 General Mentoring 상자의 "전 기간 상시"
                 배지 하나에만 남깁니다. 이 필은 같은 말을 한 번 더 하는 자리라 보라 외곽선. */}
-            <span className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-accent/40 bg-transparent px-2.5 py-1 text-[0.72rem] font-semibold leading-none text-accent">
+            {/* whitespace-nowrap은 sm부터 (2026-09-19, 모바일 감사 11). 영어
+                "General Mentoring, on call the whole way"가 약 296px이라 360px
+                화면(가용 306px)에서 10px 여유뿐이었습니다. 폰에서는 접히게 두고
+                가운데 정렬합니다 — 두 줄이 되어도 ol의 pb-10 안에 듭니다. */}
+            <span className="flex max-w-full items-center gap-1.5 rounded-full border border-accent/40 bg-transparent px-2.5 py-1 text-center text-[0.72rem] font-semibold leading-tight text-accent sm:whitespace-nowrap sm:leading-none">
               <span aria-hidden className="h-[7px] w-[7px] shrink-0 rounded-full bg-accent/80" />
               {pill}
             </span>

@@ -16,14 +16,17 @@ export default function LocaleToggle({ className = "", variant = "zero100" }: { 
           lang={l}
           aria-current={here ? "true" : undefined}
           onClick={() => setLocale(l)}
-          className={`inline-flex min-h-[44px] items-center px-1.5 underline-offset-4 transition ${here ? "font-bold text-white underline decoration-accent decoration-2" : "font-medium text-white/55 hover:text-white"}`}
+          // min-w-[44px] (2026-09-19, 모바일 감사 2): 세로는 44px이었지만 가로가
+          // px-1.5 + "EN" 두 글자로 34px이었고, 두 버튼 사이에는 "/" 한 글자뿐이라
+          // 엄지로 KR을 누르려다 EN이 눌렸습니다. WCAG 2.5.5의 하한이 44px입니다.
+          className={`inline-flex min-h-[44px] min-w-[44px] items-center justify-center px-2 underline-offset-4 transition ${here ? "font-bold text-white underline decoration-accent decoration-2" : "font-medium text-white/55 hover:text-white"}`}
         >
           {label}
         </button>
       );
     };
     return (
-      <div role="group" aria-label={t(dict.toggle.aria)} className={`inline-flex min-h-[44px] shrink-0 items-center rounded-full border border-white/15 bg-white/5 px-1.5 text-xs ${className}`}>
+      <div role="group" aria-label={t(dict.toggle.groupAria)} className={`inline-flex min-h-[44px] shrink-0 items-center rounded-full border border-white/15 bg-white/5 px-1.5 text-xs ${className}`}>
         {item("en", "EN")}
         <span aria-hidden className="text-white/20">/</span>
         {item("ko", "KR")}
