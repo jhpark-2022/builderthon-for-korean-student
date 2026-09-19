@@ -66,7 +66,22 @@ import ReturningGreeting from "./ReturningGreeting";
 // 기본값을 남긴 것이 요점입니다: 아카이브 쪽 호출부(app/2026-08/page.tsx)는
 // <JourneyNav /> 그대로라 8월 페이지의 동작이 한 글자도 바뀌지 않습니다.
 // 아래 결정 기록은 전부 이 기본 목록에 대한 것이고, 그대로 유효합니다.
-export type NavAnchor = { id: string; label: Phrase };
+export type NavAnchor = {
+  id: string;
+  label: Phrase;
+  /**
+   * 폰 목차(레일)에서만 쓰는 줄바꿈 판. `\n`이 있는 자리에서 칩 안의 글자가 두 줄로
+   * 섭니다. 없으면 label을 그대로 한 줄로 씁니다 (2026-09-19, 사용자).
+   *
+   * 왜 필요한가: 영어 "CROSSING SEOUL"은 138.6px이라 칩 하나가 폭 342px짜리 첫 줄의
+   * 40%를 먹었습니다. 두 줄로 세우면 91.7px이 되고(칩 높이는 44px 그대로) 첫 줄이
+   * 321px에서 283px로 내려갑니다. 한국어 "크로싱 서울"은 57.8px이라 판이 비어 있고,
+   * 그래서 한 줄 그대로입니다. 자동 줄바꿈(whitespace-normal + max-width)으로는 안
+   * 됩니다 — flex 아이템의 폭이 max-content에서 정해져, 글자만 접히고 상자는 넓은
+   * 채로 남습니다(실측).
+   */
+  railLines?: Phrase;
+};
 
 // REMOVED 2026-09-16: { id: "wrap", label: dict.wrap.navLabel }. 그 챕터가
 // 페이지에서 내려갔습니다(Journey.tsx의 같은 날짜 주석). 앵커 id는 섹션 id와
@@ -278,7 +293,8 @@ export default function JourneyNav({
   // through between the two rows. The blur separates bar from page without
   // making it a solid slab.
   return (
-    <header
+    <>
+      <header
       ref={headerRef}
       // focus-within pins it open: a keyboard user tabbing into the nav must not
       // have it slide away under them. `lg:!translate-y-0` keeps the desktop bar
@@ -522,8 +538,16 @@ export default function JourneyNav({
               합니다. 위의 오픈채팅 버튼이 이제 이 바의 유일한 액션입니다 —
               스타일은 올리지 않았습니다. 경쟁 상대가 없어졌으니 고스트 톤으로
               충분하고, 그라디언트로 올리면 마감 전과 같은 압력이 됩니다. */}
-          {/* 배경 정지 토글, 헤더에도(감사 반영 브리프 2.4). 푸터 것은 그대로. 나루 홈만. */}
-          {naru && <MotionToggle compact />}
+          {/* 배경 정지 토글, 헤더에도(감사 반영 브리프 2.4). 푸터 것은 그대로. 나루 홈만.
+              xl 아래에서는 여기 두지 않습니다 — 아래로 스크롤하면 이 줄이 52px 접혀 들어가
+              버튼이 화면 밖으로 나갔습니다(실측: 스크롤 뒤 top −51px). 폰·태블릿용은 헤더
+              **바깥**의 고정 자리에 있습니다(이 파일 맨 아래). 두 벌이 동시에 뜨지 않도록
+              이쪽을 display:none으로 지우므로 접근성 트리에도 하나만 남습니다. */}
+          {naru && (
+            <div className="hidden xl:flex">
+              <MotionToggle compact />
+            </div>
+          )}
           {/* Language last — it's a setting, not an action, so it sits after
               the CTA rather than between the brand and it. */}
           <LocaleToggle variant={brand} />
@@ -567,12 +591,19 @@ export default function JourneyNav({
               더 있다"를 알렸는데, 알려 주는 것과 보이는 것은 다릅니다. 다섯 칸짜리 목차는
               굴릴 것이 아니라 한눈에 있어야 합니다.
 
-              390px에서 실측한 글자 폭(0.7rem semibold): ko 57.8·43.6·36.0·21.8·10.9 = 170.1,
-              en 114.1·51.8·79.1·36.4·26.6 = 308.0. 칩 좌우 여백 2.5rem×5와 칸 사이 8px×4를
-              더하면 ko 302px, en 440px입니다. 가로 여백 24px×2를 뺀 342px 안에 **ko는 한 줄로
-              들어가고 en은 못 들어갑니다.** en을 한 줄에 넣으려면 글자가 9px까지 내려가야 해서
-              (읽을 수 없습니다) 대신 접습니다: en은 3 + 2 두 줄, ko는 한 줄. 로케일 분기가
-              아니라 폭이 스스로 결정합니다. 360px 폰에서도 ko는 한 줄입니다(302 ≤ 312).
+              **이 파일의 rem 값은 18px 기준입니다.** globals.css의 `html { font-size: 112.5% }`
+              때문입니다. px-5 = 22.5px, gap-2 = 9px, px-2 = 9px. 16px로 계산하면 전부 틀립니다
+              (2026-09-19에 한 번 틀렸습니다).
+
+              브라우저에서 잰 칩 폭(글자 + 여백 + 테두리): ko 82.3·68.1·60.5·46.3·35.4,
+              en 91.6·71.8·99.1·56.4·46.6. 칸 사이 9px×4 = 36을 더하면 ko 329, en 401입니다.
+              가용 폭은 390px에서 345px, 360px에서 315px. **ko는 두 화면 모두 한 줄이고 en은
+              못 들어갑니다.** en을 한 줄에 넣으려면 글자가 9px까지 내려가야 해서(읽을 수
+              없습니다) 대신 접습니다: en은 두 줄, ko는 한 줄. 로케일 분기가 아니라 폭이
+              스스로 결정합니다.
+
+              여백이 px-6/px-2.5가 아니라 px-5/px-2인 이유가 그 360px입니다. 처음 값으로는
+              ko가 329 대 306으로 23px 모자라 4 + 1로 접혔습니다.
 
               칩 폭 통일(min-w 5.25rem)은 여기서 풉니다. 그 값은 /2026-08 레일의 최장 라벨
               en "Mentoring"에서 나온 것이고, 굴리는 레일에서 칩이 들쭉날쭉해 보이지 않게
@@ -582,7 +613,7 @@ export default function JourneyNav({
               /2026-08은 그대로 굴러갑니다. 그쪽은 아카이브고 라벨 길이가 달라서, 옮기려면
               위 주석대로 그 로케일들을 다시 재야 합니다. */}
           <div ref={railRef} className={naru
-            ? "flex flex-wrap justify-center gap-2 px-6 pb-2"
+            ? "flex flex-wrap justify-center gap-2 px-5 pb-2"
             : "flex gap-2 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]{display:none}"}>
             {anchors.map((a) => {
               const here = a.id === activeSection;
@@ -617,20 +648,64 @@ export default function JourneyNav({
                   // 원래부터 가로 스크롤 레일이라 감당하는 쪽을 골랐습니다.
                   // 상단 행의 퀴즈 칩(✦)은 이 레일이 아니라 첫 행에 있어 대상이 아닙니다.
                   className={`inline-flex min-h-[44px] shrink-0 items-center justify-center whitespace-nowrap rounded-full border text-[0.7rem] font-semibold backdrop-blur transition active:scale-[0.97] ${
-                    naru ? "px-2.5" : "min-w-[5.25rem] snap-center px-3"
+                    // px-2: 360px에서 ko가 한 줄로 들어가는 값(위 주석의 실측).
+                    // leading-[1.15]: 두 줄짜리 칩이 44px 안에 앉게(en "CROSSING / SEOUL").
+                    naru ? "px-2 leading-[1.15]" : "min-w-[5.25rem] snap-center px-3"
                   } ${
                     here
                       ? "border-accent/40 bg-accent/[0.12] text-white"
                       : "border-white/[0.12] bg-white/[0.06] text-white/75"
                   }`}
                 >
-                  {t(a.label)}
+                  {/* railLines가 있으면 그 판의 줄바꿈대로 세웁니다. 없으면 한 줄.
+                      줄마다 <span>을 두면 안 됩니다 — 칩이 inline-flex라 그 span들이
+                      flex 아이템이 되어 <br>을 무시하고 나란히 섭니다(실측 135px).
+                      한 덩어리 안에서 <br>로 끊어야 상자가 긴 쪽 줄의 폭을 가집니다. */}
+                  <span className="text-center">
+                    {t(a.railLines ?? a.label)
+                      .split("\n")
+                      .flatMap((line, i) => (i === 0 ? [line] : [<br key={`br${i}`} />, line]))}
+                  </span>
                 </a>
               );
             })}
           </div>
         </div>
       )}
-    </header>
+      </header>
+
+      {/* ── 배경 정지 버튼, 폰·태블릿에서 항상 ────────────────────────────────
+          2026-09-19 (사용자: "effect를 pause 할 수 있는 버튼이 항상 모바일 뷰에서
+          스크롤할 때 보일 수 있게").
+
+          헤더 안에 두면 안 됩니다. 나루 홈의 헤더는 아래로 스크롤할 때 로고 줄
+          52px을 접어 올리고(위의 chromeHidden), 그 줄에 이 버튼이 타고 있었습니다.
+          실측으로 스크롤 뒤 버튼의 top이 −51px, 즉 화면 밖이었습니다. WCAG 2.2.2는
+          움직임이 도는 동안 멈출 수단이 **있어야** 한다고 말하므로, 배경이 도는
+          내내 닿을 수 있어야 합니다.
+
+          레일(목차) 줄에 넣는 방법도 봤지만 그 줄은 폭이 빠듯합니다. 44px짜리를
+          더하면 한국어 목차가 두 줄로 접혀, 방금 한 줄로 만든 것이 도로 무너집니다.
+          그래서 레이아웃을 차지하지 않는 고정 자리로 갑니다.
+
+          오른쪽 아래인 이유: 이 페이지의 고정 요소는 헤더 하나뿐이고(하단 바는
+          오픈채팅이 막혀 꺼져 있습니다) 오른손 엄지가 닿는 자리입니다. 하단 바가
+          돌아오면 그 바는 가운데 정렬 알약이라 44px 기둥과 겹치지 않지만, 그날
+          다시 재세요.
+
+          z-40: 헤더(z-50) 아래. 앵커로 점프했을 때 헤더가 위를 덮는 관계를
+          유지합니다. 어두운 원반은 감싼 div가 만듭니다 — 버튼 자신의 테두리와
+          호버를 덮어쓰지 않으려고 클래스를 섞지 않았습니다. */}
+      {naru && (
+        <div
+          className="fixed bottom-0 right-0 z-40 p-4 xl:hidden"
+          style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)" }}
+        >
+          <div className="rounded-full bg-[#070B1F]/85 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.9)] backdrop-blur">
+            <MotionToggle compact />
+          </div>
+        </div>
+      )}
+    </>
   );
 }

@@ -204,10 +204,18 @@ export const register = {
   },
 } as const;
 
-export const naruNav: { id: string; label: Phrase }[] = [
+export const naruNav: { id: string; label: Phrase; railLines?: Phrase }[] = [
   // DECIDED 2026-09-17 (홈 흐름 재배치 브리프): 크로싱 서울 · 프로그램 · 얻는 것 ·
   // 8월 · 나루 · 학생회와 기업 · 함께. 순서는 화면 순서와 같아야 합니다.
-  { id: "top", label: { ko: "크로싱 서울", en: "CROSSING SEOUL" } },
+  // railLines: 폰 목차에서만 두 줄 (2026-09-19, 사용자: "두 줄로 해 주면 되지 않을까
+  // crossing seoul로"). 영어 한 줄은 138.6px이라 칩 하나가 첫 줄의 40%를 먹었습니다.
+  // 한국어는 57.8px이라 판이 비어 있고 한 줄 그대로입니다. 상단 인라인 행(xl 이상)과
+  // 본문 제목은 label을 쓰므로 바뀌지 않습니다.
+  {
+    id: "top",
+    label: { ko: "크로싱 서울", en: "CROSSING SEOUL" },
+    railLines: { ko: "크로싱 서울", en: "CROSSING\nSEOUL" },
+  },
   { id: "december", label: { ko: "프로그램", en: "Program" } },
   { id: "gains", label: { ko: "얻는 것", en: "What you get" } },
   // 2026-09-19 (사용자): 8월은 #naru 안으로 합쳐져 항목에서 뺐습니다(안쪽 앵커 #record는 남음).
