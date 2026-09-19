@@ -46,8 +46,12 @@ export class WaterSurface {
         uAspect: { value: 1 },
         uPointer: { value: new THREE.Vector2(0.5, 0.5) },
         uPointerOn: { value: 0 },
-        // 스크롤 속도 0..1. 깊은 물의 물살을 늘이고 링을 빠르게 합니다.
+        // 스크롤 속도 0..1. 깊은 물의 물살을 늘입니다.
         uFlow: { value: 0 },
+        // 파문의 위상(rad). BackgroundScene이 적분해서 넣습니다(2026-09-19).
+        // 셰이더에서 uTime × uFlow로 곱하던 것을 대신합니다. 곱셈이면 uFlow가 바뀔 때
+        // 지나간 시간 전체가 곱해져 위상이 점프합니다.
+        uRingPhase: { value: 0 },
         // 밤하늘 꼭대기. 남색보다 더 어둡게 떨어뜨립니다.
         uSkyTop: { value: new THREE.Color("#03050F") },
         // 지평선의 남색. 로고 가이드의 #12246B를 그대로 쓰면 화면 가운데가
@@ -116,6 +120,11 @@ export class WaterSurface {
     u.uPointer.value.copy(pointer);
     u.uPointerOn.value = on;
     u.uFlow.value = flow;
+  }
+
+  /** 파문의 위상(rad). BackgroundScene이 적분한 값입니다(2026-09-19). */
+  setRingPhase(v: number) {
+    this.material.uniforms.uRingPhase.value = v;
   }
 
   /** 띠 모드: 띠가 그려지는 x 범위(uv 0..1). 무대의 좌우. */

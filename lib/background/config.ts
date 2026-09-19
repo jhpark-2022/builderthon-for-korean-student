@@ -169,6 +169,22 @@ export const SHAPES = {
 } as const;
 
 /**
+ * 파문의 위상 (2026-09-19, 파문 위상 브리프). 셰이더가 uTime × (0.5 + uFlow × 1.6)으로
+ * 계산하던 것을 BackgroundScene이 적분합니다. 곱셈이면 uFlow가 바뀔 때마다 지나간
+ * 시간 전체가 곱해져 위상이 점프했습니다(실측: 페이지를 100초 본 뒤 300px 튕김 한 번에
+ * 16.7rad = 2.7파장이 한 프레임에).
+ *
+ * baseRate·flowGain은 지금 셰이더의 0.5·1.6 그대로입니다. 정지 상태와 데스크톱의
+ * 느낌은 바뀌지 않습니다. maxRate는 폰의 관성 스크롤(uFlow ≈ 1)에서만 걸립니다.
+ * 1.6rad/s면 파문 하나에 3.9초. 데스크톱의 휠(uFlow ≤ 0.3, 0.98rad/s)에는 닿지 않습니다.
+ */
+export const RING = {
+  baseRate: 0.5,
+  flowGain: 1.6,
+  maxRate: 1.6,
+} as const;
+
+/**
  * 서울 워터마크 (2026-09-18, 사용자: "scroll 하면 서울의 모습이 나왔으면").
  * water 변형(밤의 강과 등불) 위에 얹는 입자 층 하나. 히어로에서는 없고, 히어로가 화면에서
  * 나가면(강이 가라앉는 구간) 서울특별시 경계(lib/background/shapes/seoul.ts)가 뷰포트

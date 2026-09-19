@@ -58,6 +58,7 @@ uniform float uAspect;    // width / height
 uniform vec2  uPointer;   // uv 좌표 (0..1). 화면 밖이면 uPointerOn이 0
 uniform float uPointerOn;
 uniform float uFlow;      // 스크롤 속도 0..1. 손을 떼면 서서히 0으로 잦아듭니다.
+uniform float uRingPhase; // BackgroundScene이 적분한 파문 위상(rad). uTime × uFlow의 곱을 대신합니다.
 uniform vec3  uSkyTop;
 uniform vec3  uSkyHorizon;
 uniform vec3  uDeep;
@@ -296,7 +297,11 @@ void main(){
     //   파장 대 범위  (2pi/9K) 대 (2.3/2.4K)      → K가 약분되어 두 화면 모두 1.38개
     //   스크롤 반응   dr/duScroll = 7 / (9K)      → 두 화면 모두 범위의 0.81배
     // 가로 화면은 K = 1.0이라 이 줄은 항등입니다. 데스크톱은 한 픽셀도 바뀌지 않습니다.
-    float phase = rr * 9.0 * K - uTime * (0.5 + uFlow * 1.6) - uScroll * 7.0;
+    // 2026-09-19 (파문 위상 브리프): uTime × (0.5 + uFlow × 1.6) → uRingPhase.
+    // 곱셈이면 uFlow가 바뀔 때 지나간 시간 전체에 곱해져 위상이 점프합니다. 실측으로
+    // 페이지를 100초 본 뒤 300px 튕김 한 번에 16.7rad(2.7파장)이 한 프레임에 움직였습니다.
+    // 적분값은 연속입니다. uScroll 항은 시간과 곱하지 않으므로 그대로 둡니다.
+    float phase = rr * 9.0 * K - uRingPhase - uScroll * 7.0;
     float rings = smoothstep(0.86, 1.0, sin(phase)) * exp(-rr * 2.4 * K);
 
     vec3 dcol = uSkyHorizon * cur * (0.32 + uFlow * 0.24);

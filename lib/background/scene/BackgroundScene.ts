@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { CROSSING, SHAPES, SEOUL_WATERMARK, pickQuality, type QualityTier } from "../config";
+import { CROSSING, RING, SHAPES, SEOUL_WATERMARK, pickQuality, type QualityTier } from "../config";
 import { computeStageLayout, readStageRect, findStageElement, type StageLayout } from "../utils/shapeLayout";
 import { Renderer } from "../renderer/Renderer";
 import { CameraController } from "../camera/CameraController";
@@ -77,6 +77,8 @@ export class BackgroundScene {
   // uFlow). 원시 값을 그대로 넘기면 프레임마다 튀어서, 아래 loop에서 지수
   // 감쇠로 부드럽게 합니다. 올라갈 때는 빠르게, 잦아들 때는 천천히.
   private flow = 0;
+  /** 파문의 위상(rad). 곱셈이 아니라 적분입니다(2026-09-19, 파문 위상 브리프). */
+  private ringPhase = 0;
   private prevScroll = 0;
   private visible = true;
   // 방문자가 직접 끈 상태. prefers-reduced-motion과 별개입니다.
@@ -453,6 +455,15 @@ export class BackgroundScene {
     }
 
     if (this.water && this.variant === "water") {
+      // 파문 위상 적분(2026-09-19, 파문 위상 브리프 1.4). 셰이더의
+      // uTime × (0.5 + uFlow × 1.6)을 대신합니다. 곱셈이면 uFlow가 바뀌는 순간
+      // 페이지를 연 뒤 지나간 시간 전체가 곱해져 위상이 점프했습니다.
+      // motionScale이 0(모션 민감)이면 여기서도 멈춥니다. 셰이더의 uTime이 멈추던 것과
+      // 같은 결과입니다.
+      const ringRate = Math.min(RING.baseRate + this.flow * RING.flowGain, RING.maxRate);
+      this.ringPhase += ringRate * dt * this.motionScale;
+      this.water.setRingPhase(this.ringPhase);
+
       // 서울 워터마크(2026-09-18): 히어로 하단이 뷰포트 상단을 지나면 revealVh에 걸쳐
       // 떠오르고, 그 뒤로는 서 있습니다. #naru부터 조금 더 어둡게. 국면 uniform은 전부 0
       // (banks 자세). uShift 0: 카메라 자식이라 뷰포트 고정입니다.
