@@ -196,7 +196,7 @@ export const naruNav: { id: string; label: Phrase }[] = [
   { id: "top", label: { ko: "크로싱 서울", en: "CROSSING SEOUL" } },
   { id: "december", label: { ko: "프로그램", en: "Program" } },
   { id: "gains", label: { ko: "얻는 것", en: "What you get" } },
-  { id: "record", label: { ko: "8월", en: "August" } },
+  // 2026-09-19 (사용자): 8월은 #naru 안으로 합쳐져 항목에서 뺐습니다(안쪽 앵커 #record는 남음).
   // 2026-09-18 (사용자): 학생회와 기업(#how)이 #naru 안으로 합쳐져 항목 하나가 됐습니다.
   { id: "naru", label: { ko: "나루", en: "NARU" } },
   { id: "join", label: { ko: "함께", en: "Join" } },

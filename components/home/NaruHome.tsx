@@ -712,41 +712,8 @@ export default function NaruHome() {
 
       </Chapter>
 
-      {/* ── CH3 · 8월이 남긴 것 (DECIDED 2026-09-17, 홈 흐름 재배치 브리프) ──
-          히어로 바로 아래에 있던 챕터가 프로그램과 얻는 것 뒤로 내려왔습니다.
-          히어로를 본 사람이 묻는 순서: 무엇을 하는가(#december) → 무엇이 남는가
-          (#gains) → 그게 진짜인가(여기) → 누가 만드는가(#naru 이후). 기본 이음매. */}
-      <Chapter id="record" align="center">
-        <Eyebrow color="purple">{t(naru.record.eyebrow)}</Eyebrow>
-        <h2 className={H2}><Halo tone="violet">{t(naru.record.heading)}</Halo></h2>
-        <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">
-          {t(naru.record.lead)}
-        </p>
-        {/* 숫자 다섯. 마지막 하나만 설명 줄을 답니다. "9팀이 출제사에 직접
-            자료를 요청했다"는 숫자만으로는 무슨 뜻인지 알 수 없고, 그 뜻이
-            이 회차에서 가장 중요한 신호입니다. 시키지 않았는데 했어요. */}
-        {/* 2026-09-19 (사용자): "8월이 남긴 것은 그냥 간단하게 설명하고 8월 페이지로 넘어가는 버튼."
-            깔때기(Funnel)·사람 탭(RecordTabs)·언론 줄(PressRows)·알럼 링크를 화면에서 뺐습니다.
-            함수와 키는 그대로. 남은 것은 리드 둘과 아카이브 버튼 하나. */}
-        <p className="mx-auto mt-4 max-w-2xl break-keep text-base leading-relaxed text-white/75">
-          {t(naru.record.lead2)}
-        </p>
-
-        {/* 이 챕터의 유일한 행동입니다. 2026-09-16에 유령 버튼에서 실린 버튼으로
-            올렸습니다 - 8월의 설명이 전부 저쪽으로 갔으니, 더 알고 싶은 사람에게
-            이 버튼은 선택지가 아니라 다음 문장입니다. 주황은 히어로의 주 CTA가
-            이미 쓰고 있어서 흰 면을 씁니다(색 규칙은 히어로 주석 참고). */}
-        <div className="mt-10 flex justify-center">
-          <Link
-            href={naruLinks.archive}
-            onClick={() => track("naru_cta", { src: "record", to: "archive" })}
-            className={buttonClass("secondary")}
-          >
-            {t(naru.record.cta)}
-            <span aria-hidden className="text-white/50">→</span>
-          </Link>
-        </div>
-      </Chapter>
+      {/* 2026-09-19 (사용자): "8월과 나루는 합칠 수 있음. 나루의 코어가 여기서 나온 거라고." #record
+          챕터는 #naru 안의 첫 블록이 됐습니다(아래 id="record"). 헤더 항목 "8월"도 뺐습니다. */}
 
       {/* ── CH3 · 나루 (DECIDED 2026-09-17 2차) ─────────────────────────────
           여기서 이벤트가 끝나고 그룹이 시작합니다. 270px 이음매가 그 말을 합니다.
@@ -789,7 +756,31 @@ export default function NaruHome() {
             (2026-09-17 3차). 태그라인이 바로 위에 H2로 있고, lead가 "바뀌지 않는
             것은 아래 두 개"라고 이미 말합니다. 같은 챕터에 큰 제목 둘은 길이만
             늘립니다. why.heading 키는 그대로. */}
-        <div id="why" className="mt-8 lg:mt-12">
+        {/* ── 8월이 남긴 것 (2026-09-19, 사용자: 8월과 나루를 합침). 코어 둘 바로 앞입니다. lead2가
+            "이 이벤트에서 코어 2개가 나왔습니다"로 끝나서 다음 블록(변하지 않는 두 개)으로 이어집니다.
+            id="record"는 옛 링크·배경 국면·하단 바(afterId)가 봅니다. 그 전의 챕터 판 주석은 git 이력에. */}
+        <div id="record" className="mx-auto mt-8 max-w-3xl scroll-mt-24 lg:mt-12">
+          <Eyebrow color="purple">{t(naru.record.eyebrow)}</Eyebrow>
+          <h3 className={H3}>{t(naru.record.heading)}</h3>
+          <p className="mx-auto mt-4 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75 lg:text-center">
+            {t(naru.record.lead)}
+          </p>
+          <p className="mx-auto mt-3 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75 lg:text-center">
+            {t(naru.record.lead2)}
+          </p>
+          <div className="mt-6 flex justify-center">
+            <Link
+              href={naruLinks.archive}
+              onClick={() => track("naru_cta", { src: "record", to: "archive" })}
+              className={buttonClass("secondary")}
+            >
+              {t(naru.record.cta)}
+              <span aria-hidden className="text-white/50">→</span>
+            </Link>
+          </div>
+        </div>
+
+        <div id="why" className="mt-8 border-t border-white/10 pt-8 lg:mt-12 lg:pt-12">
           <Eyebrow color="purple">{t(naru.why.eyebrow)}</Eyebrow>
         </div>
         {/* 코어 둘. 판 두 장.
