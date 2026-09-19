@@ -38,6 +38,12 @@ export interface QualityTier {
   bloom: boolean;
   /** Global field energy/opacity scale (lower = calmer). Mobile is quietest. */
   intensity: number;
+  /**
+   * 블룸의 기본 세기. 비우면 PostFX의 기본값(0.6)입니다.
+   * 2026-09-19 (세로 패리티 브리프 3.6): 폰에서만 0.42. 블룸을 켜되 데스크톱과 같은
+   * 세기로 두지는 않습니다. 해와 물비늘의 번짐은 살리고, 본문 뒤가 밝아지는 것은 막습니다.
+   */
+  bloomIntensity?: number;
 }
 
 /**
@@ -57,8 +63,12 @@ export function pickQuality(): QualityTier {
 
   // Mobile / low memory — leanest particle budget, tight DPR cap, and the lowest
   // intensity so the background is quietest on phones (bloom already off here).
+  // 2026-09-19 (세로 패리티 브리프 3.5·3.6): 블룸을 켜고(해와 물비늘의 번짐이 전부
+  // 사라지고 있었습니다) 형상 밝기 배수를 0.6 → 0.85로 올립니다. 3.4에서 올린 밝기가
+  // 여기서 반이 깎이고 있었어요. **particles(900)와 dprMax(1.35)는 올리지 마세요.**
+  // 성능이 걸리는 자리는 이 둘이지 블룸이 아닙니다.
   if (coarse || w < 768 || mem <= 4) {
-    return { particles: 900, dprMax: 1.35, bloom: false, intensity: 0.6 };
+    return { particles: 900, dprMax: 1.35, bloom: true, intensity: 0.85, bloomIntensity: 0.42 };
   }
   // Laptops
   if (w < 1680) {

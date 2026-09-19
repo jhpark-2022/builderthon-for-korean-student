@@ -116,6 +116,8 @@ export class PostFX {
   readonly composer: EffectComposer;
   private readonly bloom?: BloomEffect;
   private readonly lens: LensEffect;
+  /** 블룸의 기본 세기(티어에서 받습니다). setPhase의 가산이 이 값에 얹힙니다. */
+  private readonly bloomBase: number;
 
   constructor(
     renderer: THREE.WebGLRenderer,
@@ -124,8 +126,13 @@ export class PostFX {
     useBloom: boolean,
     // 2026-09-17: crossing 변형은 등불의 흰 심만 블룸이 잡도록 임계값을 올립니다.
     // 기본값은 8월 필드의 값 그대로입니다.
-    bloomThreshold = 0.28
+    bloomThreshold = 0.28,
+    // 2026-09-19 (세로 패리티 브리프 3.6): 블룸의 기본 세기. 티어가 넘기지 않으면 0.6,
+    // 즉 지금까지의 값 그대로입니다. 폰 티어만 0.42를 넘깁니다. setPhase의 동적 가산도
+    // 이 값을 기준으로 삼습니다(전에는 0.6이 두 곳에 박혀 있었습니다).
+    bloomIntensity = 0.6
   ) {
+    this.bloomBase = bloomIntensity;
     this.composer = new EffectComposer(renderer, {
       frameBufferType: THREE.HalfFloatType,
     });
@@ -138,7 +145,7 @@ export class PostFX {
     const second: Effect[] = [];
     if (useBloom) {
       this.bloom = new BloomEffect({
-        intensity: 0.6,
+        intensity: bloomIntensity,
         luminanceThreshold: bloomThreshold,
         luminanceSmoothing: 0.95,
         mipmapBlur: true,
@@ -167,7 +174,7 @@ export class PostFX {
       // coefficient moved bloom 0.60 → 0.78 — a ~30% brightness change between
       // the top of the page and the FAQ/vision stretch, which read as the
       // background "turning on". 0.25 holds the same shape inside ±15%.
-      this.bloom.intensity = 0.6 + (p.portal * 0.25 + p.whiteout * 1.0) * intensity;
+      this.bloom.intensity = this.bloomBase + (p.portal * 0.25 + p.whiteout * 1.0) * intensity;
     }
   }
 

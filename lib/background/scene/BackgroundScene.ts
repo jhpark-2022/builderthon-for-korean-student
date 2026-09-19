@@ -156,7 +156,9 @@ export class BackgroundScene {
       this.scene,
       this.cam.camera,
       this.quality.bloom,
-      variant === "crossing" ? CROSSING.bloomThreshold : undefined
+      variant === "crossing" ? CROSSING.bloomThreshold : undefined,
+      // 폰 티어만 값을 갖습니다. 나머지는 undefined → PostFX의 기본 0.6.
+      this.quality.bloomIntensity
     );
     this.post.setSize(window.innerWidth, window.innerHeight);
 
