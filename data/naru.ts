@@ -567,7 +567,7 @@ export const naru = {
         index: "i",
         title: { ko: "멘토링 한 시간의 밀도", en: "The density of one hour of mentoring" },
         body: {
-          ko: "코어가 지켜지느냐 아니냐는 결국 여기서 갈립니다. 슬롯을 늘리는 것과 그 한 시간이 밀도 있는 것은 다른 일이고, 8월에 부족했던 것은 슬롯이 아니라 그 한 시간을 쓰게 만드는 설계였습니다.",
+          ko: "코어가 지켜지느냐 아니냐는 결국 여기서 갈립니다. 슬롯을 늘리는 것과 그 한 시간이 밀도 있는 것은 다른 일입니다. 8월에 부족했던 것은 슬롯이 아니라 그 한 시간을 쓰게 만드는 설계였습니다.",
           en: "This is where the core holds or gives. More slots and a denser hour are different jobs. August had the slots and no reason to use them.",
         },
       },
@@ -723,7 +723,7 @@ export const naru = {
     // 숫자는 바로 아래 stats에서 옵니다. "마지막 날 앞에 선"은 발표한 **21팀**이지
     // 신청한 74명이 아닙니다. 감사 문단에서 숫자를 올려 잡으면 홍보가 됩니다.
     creditRoles: {
-      ko: "문제를 낸 기업, 소속과 별개로 개인 자격으로 저녁 시간을 낸 멘토들, 무대에 선 연사와 전문가, 1:1 멘토링을 위해 회관을 내어준 싱가포르 한인회, 각 학교 한인 학생회 운영진, 그리고 8일을 건너 마지막 날 앞에 선 21팀. 그 이름들이 지금의 나루를 만들었습니다.",
+      ko: "문제를 낸 기업. 소속과 별개로 개인 자격으로 저녁 시간을 낸 멘토들. 무대에 선 연사와 전문가. 1:1 멘토링을 위해 회관을 내어준 싱가포르 한인회. 각 학교 한인 학생회 운영진. 그리고 8일을 건너 마지막 날 앞에 선 21팀. 그 이름들이 지금의 나루를 만들었습니다.",
       en: "The company that set the problem. The mentors who gave their own evenings, separately from where they work. The speakers and expert reviewers. The Korean Association in Singapore, which opened its hall for the 1:1 mentoring. The student associations at each school. And the 21 teams that stood up on the final day. Those names are what NARU is made of.",
     },
     stats: [
@@ -1023,8 +1023,8 @@ export const naru = {
       people: {
         label: { ko: "연사와 피드백 패널", en: "Speakers and the panel" },
         intro: {
-          ko: "먼저 길을 낸 사람들이 직접 왔습니다. 취업과 창업 사이에서 무엇을 골랐는지, 실무에서 AI를 어떻게 쓰는지, 0에서 100까지 무엇이 필요한지를 각자의 자리에서 이야기했습니다.",
-          en: "People who had already cut a path came in person. A job or founding, how AI is really used at work, what it takes to go from zero to a hundred.",
+          ko: "먼저 길을 낸 사람들이 직접 왔습니다. 취업과 창업 사이에서 무엇을 골랐는지, 실무에서 AI를 어떻게 쓰는지를 각자의 자리에서 이야기했습니다. 0에서 100까지 무엇이 필요한지도요.",
+          en: "People who had already cut a path came in person. A job or founding. How AI is really used at work. What it takes to go from zero to a hundred.",
         },
         speakersLabel: { ko: "연사", en: "Speakers" },
         panelLabel: { ko: "Day 8 커리어 간담회", en: "Day 8 career panel" },

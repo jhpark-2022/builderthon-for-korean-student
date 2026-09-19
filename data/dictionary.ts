@@ -117,15 +117,15 @@ export const partnerIntros: Record<string, Phrase> = {
   // 같은 오류가 있던 곳: 파트너 섹션 인트로 · FAQ 테마 답변 · schedule d8-judging
   // (+ 보류된 d1-problem-deep-dive 주석). 되돌리지 마세요.
   AXMOS: {
-    ko: "AXMOS는 Translink Investment, Wilt Venture Builder, Codepresso, Popup Studio, DRIMAES 5개 사가 결성한 AX(AI 전환) 컨소시엄입니다. 이번 빌더톤에는 멘토링과 전문가 피드백으로 함께하며, 실제 기업 과제는 구성사인 코드프레소가 냅니다.",
+    ko: "AXMOS는 5개 사가 결성한 AX(AI 전환) 컨소시엄입니다. Translink Investment, Wilt Venture Builder, Codepresso, Popup Studio, DRIMAES입니다. 이번 빌더톤에는 멘토링과 전문가 피드백으로 함께하며, 실제 기업 과제는 구성사인 코드프레소가 냅니다.",
     en: "AXMOS is an AX (AI-transformation) consortium formed by Translink Investment, Wilt Venture Builder, Codepresso, Popup Studio and DRIMAES. It joins this builderthon with mentoring and expert feedback; the real company problem comes from Codepresso, one of its member companies.",
   },
   "Translink Investment": {
-    ko: "실리콘밸리 트랜스링크캐피탈과 합작해 2016년 출범한 벤처캐피탈로, SaaS, 딥테크 중심으로 7개 조합과 누적 약 1,900억 원 규모를 운용합니다. 마켓컬리 초기 투자사로 알려져 있으며, 포트폴리오사의 글로벌 진출 지원이 강점입니다. Day 8 커리어 간담회를 맡은 박희덕 대표님이 이끄는 하우스입니다.",
+    ko: "실리콘밸리 트랜스링크캐피탈과 합작해 2016년 출범한 벤처캐피탈입니다. SaaS와 딥테크 중심으로 7개 조합, 누적 약 1,900억 원 규모를 운용합니다. 마켓컬리 초기 투자사로 알려져 있으며, 포트폴리오사의 글로벌 진출 지원이 강점입니다. Day 8 커리어 간담회를 맡은 박희덕 대표님이 이끄는 하우스입니다.",
     en: "A venture capital firm launched in 2016 with Silicon Valley's TransLink Capital, running seven funds (~KRW 190B) focused on SaaS and deep tech. An early investor in Market Kurly, known for helping portfolios expand globally. Led by Hee-Duk Park, who leads the Day 8 career session.",
   },
   "Wilt Venture Builder": {
-    ko: "싱가포르에 본사를 둔 한–싱 크로스보더 벤처빌더로, 초기 아이디어부터 시리즈 A까지 창업자와 ‘공동 창업’ 방식으로 회사를 함께 만듭니다. AI, 콘텐츠, F&B, B2B SaaS 영역에서 한국 브랜드의 동남아 진출을 빌드해 왔으며, 이 빌더톤을 만든 Zero100 프로그램의 모조직입니다.",
+    ko: "싱가포르에 본사를 둔 한–싱 크로스보더 벤처빌더입니다. 초기 아이디어부터 시리즈 A까지, 창업자와 ‘공동 창업’ 방식으로 회사를 함께 만듭니다. AI, 콘텐츠, F&B, B2B SaaS 영역에서 한국 브랜드의 동남아 진출을 빌드해 왔습니다. 이 빌더톤을 만든 Zero100 프로그램의 모조직입니다.",
     en: "A Korea–Singapore cross-border venture builder headquartered in Singapore, co-founding companies with founders from first idea to Series A across AI, content, F&B and B2B SaaS. The parent organization of Zero100, the program behind this builderthon.",
   },
   // The last sentence lists every role Codepresso plays here, and 문제 제공 comes
@@ -136,21 +136,21 @@ export const partnerIntros: Record<string, Phrase> = {
   // If any of the three changes, dict.mentoring.mentors (김지훈 · 이동훈 · 황현진)
   // and schedule.ts d2-crash-course are the other places that name them.
   Codepresso: {
-    ko: "‘AI 리터러시의 표준화’를 내건 AI 역량 평가와 교육 기업입니다. 채용용 AI 역량 평가(SkillCertify)와 비개발자 대상 AI 활용 교육(AI Fluent)을 운영하며, 현대오토에버와 현대모비스 등 대기업 프로그램을 진행해 왔습니다. 이번 빌더톤에서는 실제 기업 과제를 내는 문제 제공사이자 Day 2 크래시코스를 주관하고, Day 7 파이널 리허설 멘토링에도 함께합니다.",
+    ko: "‘AI 리터러시의 표준화’를 내건 AI 역량 평가와 교육 기업입니다. 채용용 AI 역량 평가(SkillCertify)와 비개발자 대상 AI 활용 교육(AI Fluent)을 운영합니다. 현대오토에버와 현대모비스 등 대기업 프로그램을 진행해 왔습니다. 이번 빌더톤에서는 실제 기업 과제를 내는 문제 제공사이자 Day 2 크래시코스를 주관하고, Day 7 파이널 리허설 멘토링에도 함께합니다.",
     en: "An AI competency assessment and education company standardizing AI literacy, with skill assessments (SkillCertify) and AI-fluency training (AI Fluent) used by Hyundai AutoEver and Hyundai Mobis. Here it sets one of the real company problems, runs the Day 2 Crash Course, and mentors at the Day 7 rehearsal.",
   },
   Drimaes: {
-    ko: "SDV(소프트웨어 정의 차량)와 차량용 인포테인먼트(IVI)를 만드는 모빌리티 소프트웨어 기업입니다. 독자 리눅스 기반 OS와 가상화 기술로 차량의 여러 화면을 하나의 칩으로 통합하며, CES에서 퀄컴과 텔레칩스와의 협업을 선보였고 2025년 국가 SW R&D 우수성과에 선정됐습니다.",
+    ko: "SDV(소프트웨어 정의 차량)와 차량용 인포테인먼트(IVI)를 만드는 모빌리티 소프트웨어 기업입니다. 독자 리눅스 기반 OS와 가상화 기술로 차량의 여러 화면을 하나의 칩으로 통합합니다. CES에서 퀄컴, 텔레칩스와의 협업을 선보였고 2025년 국가 SW R&D 우수성과에 선정됐습니다.",
     en: "A mobility-software company building SDV and in-vehicle infotainment tech, where its own Linux-based OS and virtualization stack runs multiple car displays on a single chip. Showcased Qualcomm and Telechips collaborations at CES, and named a national SW R&D standout in 2025.",
   },
   "Popup Studio": {
-    ko: "싱가포르 본사와 한국 개발 허브를 둔 AI 전환(AX) 기업으로, FDE(Forward-Deployed Engineer)가 현장에 직접 들어가 작동하는 AI를 팀 안에 이식하는 방식으로 일합니다. 대화만으로 백엔드를 만드는 Bkend와 빌더 커뮤니티 bkamp도 운영합니다. 이 행사가 다루는 ‘바이브 코딩’을 실제 사업으로 하는 회사입니다.",
+    ko: "싱가포르 본사와 한국 개발 허브를 둔 AI 전환(AX) 기업입니다. FDE(Forward-Deployed Engineer)가 현장에 직접 들어가, 작동하는 AI를 팀 안에 이식하는 방식으로 일합니다. 대화만으로 백엔드를 만드는 Bkend와 빌더 커뮤니티 bkamp도 운영합니다. 이 행사가 다루는 ‘바이브 코딩’을 실제 사업으로 하는 회사입니다.",
     en: "An AI-transformation (AX) company with its HQ in Singapore and a dev hub in Korea, where forward-deployed engineers embed working AI directly inside client teams. Also builds Bkend, a conversational backend-as-a-service, and the builder community bkamp. Vibe coding, as an actual business.",
   },
 
   // ── 후원 (SPONSORS) ────────────────────────────────────────────────────────
   "INNOVATE 360": {
-    ko: "싱가포르 최초의 푸드테크 액셀러레이터로, 공유 R&D 랩과 인증 주방, 생산 공간 등 약 20만 sq ft의 시설과 VC 펀드를 함께 운영하며 230개 이상의 스타트업을 지원해 왔습니다. Enterprise Singapore StartupSG 공인 멘토 파트너이며, 이번 행사에는 장소로 함께합니다.",
+    ko: "싱가포르 최초의 푸드테크 액셀러레이터입니다. 공유 R&D 랩과 인증 주방, 생산 공간 등 약 20만 sq ft의 시설과 VC 펀드를 함께 운영합니다. 230개 이상의 스타트업을 지원해 왔습니다. Enterprise Singapore StartupSG 공인 멘토 파트너이며, 이번 행사에는 장소로 함께합니다.",
     en: "Singapore's first food-tech accelerator, running ~200,000 sq ft of facilities (shared R&D labs, certified kitchens, production space) alongside a VC fund, with 230+ startups supported. An accredited StartupSG mentor partner, joining this event as a venue sponsor.",
   },
   // FIXED 2026-08-12, 두 가지.
@@ -172,7 +172,7 @@ export const partnerIntros: Record<string, Phrase> = {
     en: "A two-storey experiential retail & event space at *SCAPE Orchard, run by Innovate 360, with a floor of emerging Singapore brands plus creator and live-commerce studios and regular community programming. This is L^IFE Jungle, where the builderthon's Day 5 on-site programme takes place.",
   },
   BZCF: {
-    ko: "구독자 32만의 유튜브 채널을 중심으로 한 비즈니스와 창업 콘텐츠 미디어입니다. 창업가 인터뷰와 산업 분석 콘텐츠를 만들고 창업가 커뮤니티 ‘BZCF Fellowship’을 운영하며, 이번 빌더톤에는 마케팅 파트너로 함께합니다.",
+    ko: "구독자 32만의 유튜브 채널을 중심으로 한 비즈니스와 창업 콘텐츠 미디어입니다. 창업가 인터뷰와 산업 분석 콘텐츠를 만들고, 창업가 커뮤니티 ‘BZCF Fellowship’을 운영합니다. 이번 빌더톤에는 마케팅 파트너로 함께합니다.",
     en: "A business & startup content media brand built around a 320K-subscriber YouTube channel, with founder interviews, industry analysis, and the BZCF Fellowship community. Joining the builderthon as a marketing partner.",
   },
   "Korean Association in Singapore": {
@@ -181,15 +181,15 @@ export const partnerIntros: Record<string, Phrase> = {
     // DECIDED 2026-08-09: 멘토링 Day 3–7 매일·예약제 확정. 웹에서 멘토↔날짜 매핑
     // 전면 제거(무대 세션 연사 공지는 예외) — 편향 방지. 여기서 "Day 3·4"를 뺀 것도
     // 그 원칙이고, 대면 운영 범위는 아직 확정 전이라 새 날짜를 쓰지 마세요.
-    ko: "1963년 설립된 싱가포르 한인 사회의 대표 단체로, 탄종파가에 자체 회관을 두고 장학 사업과 청년 멘토링, 네트워킹 프로그램, 연례 한인 행사를 운영합니다. 이번 빌더톤에는 1:1 멘토링 기간의 대면 장소로 한인회관을 내어주고, 멘토 굿즈백 준비로 함께합니다.",
+    ko: "1963년 설립된 싱가포르 한인 사회의 대표 단체입니다. 탄종파가에 자체 회관을 두고 장학 사업과 청년 멘토링, 네트워킹 프로그램, 연례 한인 행사를 운영합니다. 이번 빌더톤에는 1:1 멘토링 기간의 대면 장소로 한인회관을 내어주고, 멘토 굿즈백 준비로 함께합니다.",
     en: "The representative body of Singapore's Korean community since 1963, with its own hall in Tanjong Pagar, running scholarships, young-professionals mentoring and the community's annual events. For the builderthon it opens that hall for the 1:1 mentoring and prepares the mentors' goodie bags.",
   },
   "Onword Lab": {
-    ko: "‘We Make Old Businesses Young’을 내건 AI 전환(AX) 스타트업으로, 리테일과 커머스의 운영과 마케팅을 AI로 다시 설계합니다. 이커머스 올인원 운영 에이전틱 대시보드를 만들고 있으며, 이번 빌더톤에는 멘토링으로 함께합니다.",
+    ko: "‘We Make Old Businesses Young’을 내건 AI 전환(AX) 스타트업입니다. 리테일과 커머스의 운영과 마케팅을 AI로 다시 설계합니다. 이커머스 올인원 운영 에이전틱 대시보드를 만들고 있으며, 이번 빌더톤에는 멘토링으로 함께합니다.",
     en: "An AI-transformation startup whose line is 'We Make Old Businesses Young', redesigning retail and commerce operations and marketing with AI, building an agentic all-in-one e-commerce operations dashboard. Joining the builderthon as a mentoring partner.",
   },
   REmited: {
-    ko: "영수증 리워드 앱으로 2천만 건 이상의 구매 데이터를 모아 브랜드에 초개인화 마케팅 솔루션을 제공하는 AI 커머스 스타트업(팀리미티드)입니다. CJ제일제당, 이랜드리테일과 협업하며 구글과 앤틀러 등의 지원 속에 동남아 진출을 준비 중이고, 이번 빌더톤에는 멘토링으로 함께합니다.",
+    ko: "AI 커머스 스타트업 팀리미티드입니다. 영수증 리워드 앱으로 2천만 건 이상의 구매 데이터를 모아, 브랜드에 초개인화 마케팅 솔루션을 제공합니다. CJ제일제당, 이랜드리테일과 협업하며 구글과 앤틀러 등의 지원 속에 동남아 진출을 준비 중이고, 이번 빌더톤에는 멘토링으로 함께합니다.",
     en: "An AI-commerce startup (Team REmited) whose receipt-reward app has gathered 20M+ purchase records, powering hyper-personalized marketing for brands like CJ CheilJedang and E-Land Retail. Backed by Google for Startups and Antler and eyeing Southeast Asia. Joining as a mentoring partner.",
   },
   // 2026-08-03: 굿즈가 확정되면서 마지막 문장이 "굿즈를 함께 만듭니다"(무엇인지
@@ -197,7 +197,7 @@ export const partnerIntros: Record<string, Phrase> = {
   // 이 카드는 파트너가 누구인지를 설명하는 자리이고, 받는 방법은 혜택 카드와 FAQ,
   // Day 1 일정이 말합니다. 물류(배송지·비용) 정보는 어디에도 쓰지 않습니다.
   "Brand Boost": {
-    ko: "브랜드 굿즈와 판촉물을 기획부터 제작과 패킹까지 원스톱으로 만드는 제작 플랫폼입니다. 아이디어 단계의 구상을 구성과 공정, 단가가 잡힌 제작 플랜으로 바꿔 주는 것이 강점이며, 이번 빌더톤에는 참가자 굿즈(후드와 캡 세트)를 제공하는 굿즈 파트너로 함께합니다.",
+    ko: "브랜드 굿즈와 판촉물을 기획부터 제작과 패킹까지 원스톱으로 만드는 제작 플랫폼입니다. 아이디어 단계의 구상을 구성과 공정, 단가가 잡힌 제작 플랜으로 바꿔 주는 것이 강점입니다. 이번 빌더톤에는 참가자 굿즈(후드와 캡 세트)를 제공하는 굿즈 파트너로 함께합니다.",
     en: "A one-stop platform for branded goods and merch, from planning through production and packing, turning rough ideas into concrete, costed production plans. Joining the builderthon as its goods partner, providing the participant hoodie + cap sets.",
   },
   // 널담(Nuldam) — REPLACED Fyreflyz on the sponsor wall (2026-08-07).
@@ -224,8 +224,8 @@ export const partnerIntros: Record<string, Phrase> = {
   // 부상을 "식사 바우처"·"디저트 바우처"로 부르는 것입니다 — 어워드 카피에서는
   // 지금도 "널담 바우처"까지만 씁니다. 두 규칙은 충돌하지 않습니다.
   Nuldam: {
-    ko: "고단백과 저당, 식이섬유, 비건 등 영양 설계를 앞세운 한국의 디저트와 베이커리 브랜드입니다. 카페 브랜드 ‘널담 스페이스’는 미래의 나에게 편지를 써서 우편함에 넣어두면 몇 달 뒤 받아보는 컨셉으로 알려져 있고, 한국 밖 첫 지점이 싱가포르 *SCAPE에 있습니다. 이번 빌더톤에는 어워드 부상 바우처를 후원합니다. Day 5 현장이 열리는 바로 그 건물이라, 그날 바로 들러 볼 수 있어요.",
-    en: "A Korean dessert and bakery brand built on nutrition: high protein, low sugar, fibre and vegan options. Its café brand, Nuldam Space, is known for letting you write a letter to your future self and post it in a mailbox that delivers months later; its first outlet outside Korea is at *SCAPE in Singapore. It sponsors the award vouchers, in the same building as the Day 5 programme.",
+    ko: "고단백과 저당, 식이섬유, 비건 등 영양 설계를 앞세운 한국의 디저트와 베이커리 브랜드입니다. 카페 브랜드 ‘널담 스페이스’는 미래의 나에게 편지를 써서 우편함에 넣어두면 몇 달 뒤 받아보는 컨셉으로 알려져 있습니다. 한국 밖 첫 지점이 싱가포르 *SCAPE에 있습니다. 이번 빌더톤에는 어워드 부상 바우처를 후원합니다. Day 5 현장이 열리는 바로 그 건물이라, 그날 바로 들러 볼 수 있어요.",
+    en: "A Korean dessert and bakery brand built on nutrition: high protein, low sugar, fibre and vegan options. Its café brand, Nuldam Space, is known for letting you write a letter to your future self and post it in a mailbox that delivers months later. Its first outlet outside Korea is at *SCAPE in Singapore. It sponsors the award vouchers, in the same building as the Day 5 programme.",
   },
 
   // CONFIRMED 2026-08-17 (박주형): 해녀의 부엌이 수상팀 부상을 후원합니다.
@@ -3204,8 +3204,8 @@ export const dict = {
     // 아래 tbcNote가 이미 답니다. 연사가 추가되면 카드를 늘리면 됩니다 —
     // 그건 약속을 어기는 일이 아닙니다.
     intro: {
-      ko: "먼저 길을 낸 사람들이 Day 1, 7, 8에 직접 옵니다. 취업과 창업 사이에서 무엇을 골랐는지, 실무에서 AI를 어떻게 쓰는지, 0에서 100까지 무엇이 필요한지를 각자의 자리에서 이야기합니다.",
-      en: "People who have already cut a path show up in person on Days 1, 7 and 8: what they chose between a job and founding, how AI is actually used at work, and what it takes to get from zero to a hundred.",
+      ko: "먼저 길을 낸 사람들이 Day 1, 7, 8에 직접 옵니다. 취업과 창업 사이에서 무엇을 골랐는지, 실무에서 AI를 어떻게 쓰는지를 각자의 자리에서 이야기합니다. 0에서 100까지 무엇이 필요한지도요.",
+      en: "People who have already cut a path show up in person on Days 1, 7 and 8. What they chose between a job and founding. How AI is actually used at work. What it takes to get from zero to a hundred.",
     },
     // 이름에는 존칭을 붙입니다 — 규칙은 dict.mentoring.mentors 위 '호칭 규칙' 주석.
     people: [
@@ -3441,7 +3441,7 @@ export const dict = {
           // 데이터는 기본 제공물이 아니라 요청하면 전달되는 것이라(program 카드 02와
           // 테마 FAQ 참조), 나눠주는 데이터가 있다는 전제로 읽히는 말을 뒀습니다.
           ko: "아직 방향을 바꿀 수 있는 구간의 멘토링입니다. 제품을 직접 만들어 온 창업가, 현업 엔지니어와 함께 여러 병목 중 하나를 고르고, 버릴 것을 정하고, 그 선택을 근거로 뒷받침합니다. 같은 문제를 놓고 ‘나라면 이렇게 했을 수도’를 나누는 대화에 가깝고, 빌드가 막힌 지점도 누가 배정되든 그 1:1에서 함께 봅니다.\n\n1:1 시간은 한 번 확정되면 이후 변경하지 않으니, 신청 전에 팀 일정을 맞춰 주세요.",
-          en: "Mentoring while the direction can still change. With founders and working engineers who have shipped products themselves, you pick one bottleneck, decide what NOT to solve, and back that choice with evidence. It is closer to a ‘here's how I might have done it’ conversation over the same problem, and a stuck build is something you work through in that same 1:1, whoever your team is matched with.\n\nOnce a 1:1 slot is confirmed it stays as booked, so settle your team's schedule before you request one.",
+          en: "Mentoring while the direction can still change. With founders and working engineers who have shipped products themselves, you pick one bottleneck, decide what NOT to solve, and back that choice with evidence. It is closer to a ‘here's how I might have done it’ conversation over the same problem. A stuck build is something you work through in that same 1:1, whoever your team is matched with.\n\nOnce a 1:1 slot is confirmed it stays as booked, so settle your team's schedule before you request one.",
         },
         // "메인 멘토링 파트너" is load-bearing, not decoration: NONE of the cards in
         // this box belong to either mark since the two Onword founders came out
@@ -3536,8 +3536,8 @@ export const dict = {
           // 대상을 문장 안에 넣지 않으면 뜻이 서지 않습니다.
           // 같은 인용이 FAQ("결과물이 실제로 쓰일 수도 있나요?")에도 있습니다 —
           // 함께 움직이세요. 축약형으로 되돌리지 말 것.
-          ko: "빌드는 끝났고, 남은 것은 증명입니다. 공유회 전날, AWS의 GTM, 세일즈 시니어를 비롯해 현업에서 제품을 직접 파는 사람들과 함께 발표와 이어지는 Q&A 안에서 ‘어떤 병목을 왜 골랐고, 근거는 무엇이고, 실제로 돌아가는가’가 서는지 점검하고, 전문가들이 던질 질문(“담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”)을 미리 받아봅니다.\n\n과제를 낸 코드프레소의 대표와 공동창업자도 같은 자리에 있어, 무대에 서기 전 담당자에게 직접 물어볼 수 있습니다. 그날 저녁 마감되는 사전 제출물의 마지막 점검 자리이기도 해요.",
-          en: "The build is done; what's left is the proof. The day before the Showcase, with AWS GTM and sales seniors and people who sell products for a living, you pressure-test whether ‘which bottleneck, why, on what evidence, and does it run’ holds up in the pitch and the Q&A, and you field the questions the experts will ask (“how is this different from what the problem owner would get by just asking a general LLM?”).\n\nCodepresso's CEO and co-founder, who set the problem, are in the room, so you can ask the problem owner directly before you go on stage. It is also the last check before the submission package closes that evening.",
+          ko: "빌드는 끝났고, 남은 것은 증명입니다. 공유회 전날입니다. AWS의 GTM과 세일즈 시니어를 비롯해, 현업에서 제품을 직접 파는 사람들이 함께합니다. 발표와 이어지는 Q&A 안에서 ‘어떤 병목을 왜 골랐고, 근거는 무엇이고, 실제로 돌아가는가’가 서는지 점검합니다. 전문가들이 던질 질문도 미리 받아봅니다. “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”\n\n과제를 낸 코드프레소의 대표와 공동창업자도 같은 자리에 있어, 무대에 서기 전 담당자에게 직접 물어볼 수 있습니다. 그날 저녁 마감되는 사전 제출물의 마지막 점검 자리이기도 해요.",
+          en: "The build is done; what's left is the proof. This is the day before the Showcase. In the room: AWS GTM and sales seniors, and people who sell products for a living. You pressure-test whether ‘which bottleneck, why, on what evidence, and does it run’ holds up in the pitch and the Q&A. You also field the question the experts will ask: “how is this different from what the problem owner would get by just asking a general LLM?”\n\nCodepresso's CEO and co-founder, who set the problem, are in the room, so you can ask the problem owner directly before you go on stage. It is also the last check before the submission package closes that evening.",
         },
         // No partner logos here on purpose. AWS is where several of these mentors
         // work, and it sponsors the Day 7 venue — but it has never been named a
@@ -3895,7 +3895,7 @@ export const dict = {
     // meta가 부문별로 들고 있으니 여기서 다시 나열하지 마세요.
     sub: {
       ko: "순위를 매기는 심사가 아니라, 전문적인 시각의 피드백입니다. 문제를 낸 기업과, 실제 산업에서 문제를 풀어온 시니어 리더들이 결과 공유회에서 각자의 관점으로 피드백과 다음 가능성을 제안합니다. 그리고 출제 기업과 VC 패널은 여기서 어워드 수상팀을 직접 지명합니다. 여덟 분 모두 참여가 확정됐습니다. 여덟 분 중 다섯 분은 두 트랙에 모두 앉고, 저지먼트에는 한정필 교수님이, 오토메이션에는 신상길 님과 신동혁 총괄님이 함께합니다.",
-      en: "Not a ranking, but expert feedback. The company that set the problem and senior leaders who have solved real ones look at your Showcase work and, each from their own vantage point, say what they think and what could come next. The problem owner and the VC panel also name the award-winning teams. All eight have confirmed. Five sit for both tracks; Jungpil Hahn joins Judgment, Shin Sang-gil and Shin Dong-hyuk join Automation.",
+      en: "Not a ranking, but expert feedback. The company that set the problem and senior leaders who have solved real ones look at your Showcase work. Each says, from their own vantage point, what they think and what could come next. The problem owner and the VC panel also name the award-winning teams. All eight have confirmed. Five sit for both tracks; Jungpil Hahn joins Judgment, Shin Sang-gil and Shin Dong-hyuk join Automation.",
     },
     // 이름에는 존칭을 붙입니다 — 규칙은 dict.mentoring.mentors 위 '호칭 규칙' 주석.
     people: [
@@ -4093,8 +4093,8 @@ export const dict = {
     // EN은 원래부터 문장형("organized and run by …")이라 그대로 둡니다.
     // 사실은 하나도 바뀌지 않았습니다 — 주체·역할·순서 모두 그대로입니다.
     note: {
-      ko: "주최는 5개 사가 결성한 컨소시엄 AXMOS입니다(실제 기업 과제는 구성사인 코드프레소가 냅니다). 행사는 SMU, NUS, NTU 한인 학생회가 주관하고 운영하며, 장소와 마케팅, 멘토링, 굿즈는 후원사들이 맡아 함께합니다. 각 파트너가 맡은 역할을 그대로 표기합니다.",
-      en: "Built with AXMOS, the host consortium of five companies (the company problem comes from Codepresso, one of them), organized and run by the SMU, NUS, NTU Korean student associations, with sponsors covering venue, marketing, mentoring and goods. Each partner is labelled with the role they actually play.",
+      ko: "주최는 5개 사가 결성한 컨소시엄 AXMOS입니다(실제 기업 과제는 구성사인 코드프레소가 냅니다). 행사는 SMU, NUS, NTU 한인 학생회가 주관하고 운영합니다. 장소와 마케팅, 멘토링, 굿즈는 후원사들이 맡아 함께합니다. 각 파트너가 맡은 역할을 그대로 표기합니다.",
+      en: "The host is AXMOS, a consortium of five companies; the company problem comes from Codepresso, one of them. The SMU, NUS and NTU Korean student associations organize and run the event. Sponsors cover venue, marketing, mentoring and goods. Each partner is labelled with the role they actually play.",
     },
     // ── Tier 1 · 주최 (the AXMOS consortium) ─────────────────────────────────
     // EDIT 2026-08-11: 세 티어 라벨에서 한/영 이중 표기를 걷어냈습니다
@@ -4365,7 +4365,7 @@ export const dict = {
         // (2026-08-05) — dict.program.checkins.bonus와 같은 논리이니 함께 움직이세요.
         aTail: {
           ko: "체크인은 안 써도 불이익이 없지만, 세 번을 채우고 진행 상황을 알려주면 수상 집계에 가산이 되고 멘토가 팀을 미리 읽고 들어옵니다. 그 기록은 전문가 피드백과 주최사의 인턴십 검토에서도 그대로 참고돼요. 피드백은 실제 산업에서 문제를 풀어온 현업 리더분들이 직접 주십니다(피드백 패널 섹션 참조).",
-          en: "Skipping the check-in forms costs you nothing, but filling all three in and keeping us posted earns a bonus in the awards tally, and it lets a mentor read your team before walking in. The experts' feedback and the hosts' internship review draw on that trail too. The feedback comes first-hand from leaders who have solved these problems in industry (see the feedback panel section).",
+          en: "Skipping the check-in forms costs you nothing. Filling all three in and keeping us posted earns a bonus in the awards tally. It also lets a mentor read your team before walking in. The experts' feedback and the hosts' internship review draw on that trail too. The feedback comes first-hand from leaders who have solved these problems in industry (see the feedback panel section).",
         },
       },
       {
@@ -4436,8 +4436,8 @@ export const dict = {
         // 답이 스스로 하게 둡니다.
         q: { ko: "수료증도 받을 수 있나요?", en: "Do we get certificates?" },
         a: {
-          ko: "네, 두 장입니다. 크래시코스 전 시간을 참석하면 크래시코스 수료증을 마지막 날 PDF로 보내드리고, 공유회 발표까지 마치면 완주 수료증을 Day 8 현장에서 실물로 드립니다.\n\n둘 다 Zero100 명의로 발급되고, 링크드인과 이력서에 올릴 수 있어요. 이미 개발 경험이 있다면 수료증보다 멘토링과 네트워킹이 더 큰 수확일 거예요.",
-          en: "Yes, two. Attend the full Crash Course and the certificate reaches you as a PDF on the final day; go all the way through your Showcase pitch and you get a printed completion certificate on Day 8.\n\nBoth are issued by Zero100, ready for LinkedIn and your CV. If you already build, the mentoring and network will matter more than the paper.",
+          ko: "네, 두 장입니다. 크래시코스 전 시간을 참석하면 크래시코스 수료증을 마지막 날 PDF로 보내드립니다. 공유회 발표까지 마치면 완주 수료증을 Day 8 현장에서 실물로 드립니다.\n\n둘 다 Zero100 명의로 발급되고, 링크드인과 이력서에 올릴 수 있어요. 이미 개발 경험이 있다면 수료증보다 멘토링과 네트워킹이 더 큰 수확일 거예요.",
+          en: "Yes, two. Attend the full Crash Course and the certificate reaches you as a PDF on the final day. Go all the way through your Showcase pitch and a printed completion certificate is waiting on Day 8.\n\nBoth are issued by Zero100, ready for LinkedIn and your CV. If you already build, the mentoring and network will matter more than the paper.",
         },
       },
       {
@@ -4515,8 +4515,8 @@ export const dict = {
           // 라이브 시연 문장("무대에서 삐끗해도 괜찮다 · 영상 기준")은 기준
           // 항목의 '보지 않는 것' 목록과 겹치지만 그대로 둡니다. 중복을 줄이는
           // 것보다 학생이 무대 사고를 치명적으로 오해하지 않는 편이 중요합니다.
-          ko: "기업이 도입을 약속하는 건 아니에요. ‘담당자가 다음 주 월요일부터 쓸 수 있는가’를 보긴 하지만, 그건 도입 확정과는 다릅니다. 대신 관심 있는 참가자가 인턴으로 그 문제를 실무에서 이어갈 길은 열려 있어요. 위 인턴십 답변 그대로요.\n\n‘AI로 대충’은 전문가 피드백에서 그대로 드러납니다. 전문가들이 현장에서 “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”를 묻고, 근거 없이 결과만 내놓는 산출물은 요구사항 미충족으로 처리됩니다. 목업과 슬라이드만 있는 경우도 마찬가지고요.\n\n반대로 무대에서 라이브 시연이 삐끗하는 건 괜찮습니다. 작동 여부는 사전에 제출한 데모 영상 기준으로 봅니다.",
-          en: "No company commits to adopting what you build. “Could the owner use this from next Monday?” does get asked, but that is not a decision to adopt. What stays open is carrying the problem into real work as an intern, exactly as the internship answer above says.\n\n“AI slop” shows up plainly in the expert feedback. The experts ask out loud, “how is this different from what the problem owner would get by just asking a general LLM?”, and output with no reasoning behind it counts as a failed requirement. Mockups or slides alone go the same way.\n\nA live demo stumbling on stage costs nothing: whether it runs is judged on the demo video you submit beforehand.",
+          ko: "기업이 도입을 약속하는 건 아니에요. ‘담당자가 다음 주 월요일부터 쓸 수 있는가’를 보긴 하지만, 그건 도입 확정과는 다릅니다. 대신 관심 있는 참가자가 인턴으로 그 문제를 실무에서 이어갈 길은 열려 있어요. 위 인턴십 답변 그대로요.\n\n‘AI로 대충’은 전문가 피드백에서 그대로 드러납니다. 전문가들이 현장에서 묻습니다. “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?” 근거 없이 결과만 내놓는 산출물은 요구사항 미충족으로 처리됩니다. 목업과 슬라이드만 있는 경우도 마찬가지고요.\n\n반대로 무대에서 라이브 시연이 삐끗하는 건 괜찮습니다. 작동 여부는 사전에 제출한 데모 영상 기준으로 봅니다.",
+          en: "No company commits to adopting what you build. “Could the owner use this from next Monday?” does get asked, but that is not a decision to adopt. What stays open is carrying the problem into real work as an intern, exactly as the internship answer above says.\n\n“AI slop” shows up plainly in the expert feedback. The experts ask it out loud: “how is this different from what the problem owner would get by just asking a general LLM?” Output with no reasoning behind it counts as a failed requirement. Mockups or slides alone go the same way.\n\nA live demo stumbling on stage costs nothing: whether it runs is judged on the demo video you submit beforehand.",
         },
       },
       // Q1 spine (2026-08-01), placed straight after the certificate question —
@@ -4540,8 +4540,8 @@ export const dict = {
           // 그 세션을 말합니다 — 세 번째 사본을 만들면 이 답이 다시 목록이 됩니다.
           // 첫 문장의 "세 가지"는 실물(benefits.spine.tangibles)만 세는 숫자이고,
           // 마지막 문장은 실물 밖의 것이라 그 숫자에 들어가지 않습니다.
-          ko: "세 가지가 실물로 남습니다. 실제 기업이 낸 문제를 풀어 돌아가는 데모, 기업과 업계 전문가 앞에서 피칭한 경험(사진으로 남는), 그리고 수료증 두 장(크래시코스 전 시간 참석 시 크래시코스 수료증, 공유회 발표까지 마치면 완주 수료증). 실물 밖으로는 현직 선배들과의 1:1 멘토링, 그리고 행사 후에도 이어지는 커뮤니티가 남고요.",
-          en: "Three things you can show: a demo that runs on a real company's problem, the experience of pitching it to that company and to industry experts (photos included), and two certificates (one for attending the full Crash Course, one for going all the way through your Showcase pitch). Beyond those, you keep the 1:1 mentoring with people already in the field, and a community that carries on after the event.",
+          ko: "세 가지가 실물로 남습니다. 실제 기업이 낸 문제를 풀어 돌아가는 데모. 기업과 업계 전문가 앞에서 피칭한 경험, 사진으로 남습니다. 그리고 수료증 두 장. 크래시코스 전 시간을 들으면 크래시코스 수료증, 공유회 발표까지 마치면 완주 수료증입니다. 실물 밖으로는 현직 선배들과의 1:1 멘토링, 그리고 행사 후에도 이어지는 커뮤니티가 남고요.",
+          en: "Three things you can show. A demo that runs on a real company's problem. The experience of pitching it to that company and to industry experts, photos included. And two certificates: one for attending the full Crash Course, one for going all the way through your Showcase pitch. Beyond those, you keep the 1:1 mentoring with people already in the field, and a community that carries on after the event.",
         },
       },
       {
@@ -4600,7 +4600,7 @@ export const dict = {
           // 쓰지 마세요. 시각·장소는 여기 쓰지 않습니다(schedule.ts
           // d2-team-building이 안내 경로까지 맡습니다).
           ko: "됩니다. 솔로로 등록하면 1인 팀으로 출전할 수 있어요. 원하면 팀 매칭도 신청할 수 있고(AI 유형 테스트 + Day 1 현장 그룹핑), 이미 팀이 있다면 2–3인 팀 등록으로 대표 1명이 한 번에 등록하면 됩니다.\n\n이렇게 매칭된 팀은 다음 날 크래시코스가 끝난 뒤 주관 학생회가 함께하는 팀 빌딩 시간으로 이어져요. 즉석에서 만난 팀도 빌드를 시작하기 전에 서로 알아갈 시간을 따로 만들어 드립니다.",
-          en: "Yes. Register solo and you compete as a one-person team. You can also opt into team matching (the AI personality test plus on-site grouping on Day 1), and if you already have a team, one person registers all 2–3 of you at once.\n\nTeams matched this way carry into a team-building session after the Day 2 Crash Course, with the organizing student associations, so a team formed on the spot gets time to gel before the building starts.",
+          en: "Yes. Register solo and you compete as a one-person team. You can also opt into team matching: the AI personality test plus on-site grouping on Day 1. If you already have a team, one person registers all 2–3 of you at once.\n\nTeams matched this way carry into a team-building session after the Day 2 Crash Course, run by the organizing student associations. A team formed on the spot gets time to gel before the building starts.",
         },
       },
       // 솔로/팀 질문 바로 다음이 자리입니다 — 같은 사람이 이어서 묻는 질문이고
