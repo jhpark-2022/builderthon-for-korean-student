@@ -47,8 +47,26 @@ const SITE_NAME = "나루 NARU";
 // 2026-09-18 (감사 반영 브리프 9.5): 홈의 기본 제목에 이벤트 키워드. 검색 결과에서 "나루 NARU"만으로는
 // 무엇을 하는 사이트인지 없었습니다. 다른 페이지는 template("%s | 나루 NARU")을 그대로 씁니다.
 const HOME_TITLE = `${DECEMBER_EVENT_NAME?.ko ?? "크로싱 서울"} 2026 | ${SITE_NAME}`;
+// 검색 결과용. 구글은 155자 남짓을 보여 주므로 이벤트 이름과 날짜, 무엇을 하는
+// 자리인지, 나루가 무엇인지까지 한 벌에 넣습니다.
 const SITE_DESCRIPTION =
-  `싱가포르 한인 학생 빌더 커뮤니티. 안전하게 도전할 자리와 자기 가치를 증명할 경험을 만듭니다. 다음 이벤트 ${DECEMBER_EVENT_NAME?.ko ?? "크로싱 서울"}은 2026년 12월 10일부터 14일까지 서울에서 열립니다. 한국의 대학생과 해외의 한인 유학생이 국경과 상관없이 만나는 자리입니다.`;
+  `${DECEMBER_EVENT_NAME?.ko ?? "크로싱 서울"} 2026년 12월 10~14일, 서울. 한국의 대학생과 해외의 한인 유학생이 데이터에서 문제를 찾아 앞에서 증명하는 닷새입니다. 나루는 싱가포르에서 시작한 한인 학생 빌더 커뮤니티입니다.`;
+
+// ── 공유 카드의 제목과 설명 (DECIDED 2026-09-19, 사용자: "링크를 외부로 공유했을 때
+// 나오는 상자의 설명이 마음에 안 든다") ─────────────────────────────────────────
+// 검색 결과와 공유 카드는 길이 예산이 다릅니다. 텔레그램·카카오의 상자는 설명을
+// 두 줄에서 자르고, 잘린 자리에 말줄임표가 붙습니다. 실제로 "싱가포르 한인 학생
+// 빌더 커뮤니티. 안전하게 도전할 자리와 자기 가…"에서 끊겨서, 무엇을 하는
+// 자리인지도 언제 열리는지도 카드에 남지 않았습니다.
+//
+// 그래서 카드용을 따로 둡니다. 제목이 이벤트와 날짜를 말하고(굵은 줄), 설명은
+// 한 문장으로 누가 오는 자리인지만 말합니다. 둘이 같은 말을 반복하지 않는 것이
+// 요점이에요. 날짜는 제목에만 있습니다.
+//
+// 길이를 늘리지 마세요. 한국어 60자를 넘으면 카드에서 잘립니다.
+const OG_TITLE = `${DECEMBER_EVENT_NAME?.ko ?? "크로싱 서울"} · 2026년 12월 10~14일 서울`;
+const OG_DESCRIPTION =
+  "한국의 대학생과 해외의 한인 유학생이 국경과 상관없이 만나는 자리. 데이터에서 문제를 찾아 앞에서 증명하는 닷새입니다.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -69,8 +87,8 @@ export const metadata: Metadata = {
     "크로싱 서울", "CROSSING SEOUL", "한인 유학생",
   ],
   openGraph: {
-    title: HOME_TITLE,
-    description: SITE_DESCRIPTION,
+    title: OG_TITLE,
+    description: OG_DESCRIPTION,
     url: SITE_URL,
     siteName: SITE_NAME,
     type: "website",
@@ -79,8 +97,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: HOME_TITLE,
-    description: SITE_DESCRIPTION,
+    title: OG_TITLE,
+    description: OG_DESCRIPTION,
   },
 };
 
