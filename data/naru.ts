@@ -199,7 +199,10 @@ export const naruNav: { id: string; label: Phrase }[] = [
   // 2026-09-19 (사용자): 8월은 #naru 안으로 합쳐져 항목에서 뺐습니다(안쪽 앵커 #record는 남음).
   // 2026-09-18 (사용자): 학생회와 기업(#how)이 #naru 안으로 합쳐져 항목 하나가 됐습니다.
   { id: "naru", label: { ko: "나루", en: "NARU" } },
-  { id: "join", label: { ko: "함께", en: "Join" } },
+  // 2026-09-19 (왜 브리프 3.1): 챕터 제목이 "어떻게 함께하는가"에서 "왜 이 자리가
+  // 필요한가"로 바뀌었습니다. 칩은 제목을 따라갑니다. 들어오는 길 넷은 그 챕터
+  // 안의 #join-ways로 내려갔습니다.
+  { id: "join", label: { ko: "왜", en: "Why" } },
 ];
 
 export interface Stat {
@@ -1714,13 +1717,86 @@ export const naru = {
     ctaMail: { ko: "출제사 및 후원 문의", en: "Problem owners and sponsors" },
   },
 
-  // ── CH5 · 함께하는 길 ─────────────────────────────────────────────────────
+  // ── CH5 · 왜 이 자리가 필요한가 (DECIDED 2026-09-19, 왜 브리프) ───────────
   // 각서, MOU, 협약서 같은 말을 쓰지 않습니다. 학생회와의 결합 방식은 미결이고,
   // 미결인 것을 정해진 것처럼 쓰면 첫 통화에서 말을 무르게 됩니다.
   join: {
-    eyebrow: { ko: "함께하는 길", en: "Ways in" },
-    heading: { ko: "어떻게 함께하는가", en: "How to be part of it" },
+    // 페이지의 마지막 큰 질문이 "어떻게 함께하는가"라는 절차였습니다. 이 자리를
+    // 매니페스토 I장("우리가 본 것")이 가져갑니다. 사이트는 II장(코어 둘)부터
+    // 옮겨져 있었고, 결핍을 말하는 I장이 통째로 빠져 있었어요.
+    //
+    // 톤 규칙(회고 자료집 15번 문서): 동기는 설계의 근거로 쓰되 마케팅 문구로
+    // 쓰지 않습니다. 결핍은 관찰로 적고 감정어는 쓰지 않습니다. "각자도생",
+    // "분노" 같은 낱말을 넣지 마세요.
+    //
+    // 다른 나라 학생 공동체와 비교하는 문장을 넣지 마세요. 내부 문서의 관찰이
+    // 공개 화면에서는 다른 집단에 대한 일반화가 됩니다. 우리 쪽에 무엇이
+    // 없는지만 씁니다.
+    eyebrow: { ko: "왜 이 그룹인가", en: "Why this group" },
+    heading: { ko: "왜 이 자리가 필요한가", en: "Why this has to exist" },
     lead: {
+      ko: "한인 학생은 어디에나 있는데, 서로를 쓰지 못합니다. 없는 것이 지역마다 다르고, 그 셋은 서로의 답입니다.",
+      en: "Korean students are everywhere, and none of them can reach the others. What is missing differs by place, and each of the three is the answer to the others.",
+    },
+    // 세 칸. 각 칸은 "없는 것" 한 줄과 "그래서 여는 것" 한 줄입니다. 순서를
+    // 바꾸지 마세요. 결핍이 먼저 오고 처방이 나중입니다.
+    needs: [
+      {
+        place: { ko: "싱가포르에서", en: "In Singapore" },
+        lack: {
+          ko: "학교마다 한인 학생이 있지만, 학교를 가로질러 이어 주는 자리가 없었습니다. 선배가 졸업하면 그 사람이 알던 것도 같이 나갑니다.",
+          en: "Every campus has Korean students, and nothing connects them across campuses. When a senior graduates, what they knew leaves with them.",
+        },
+        opens: {
+          ko: "사람이 바뀌어도 남는 자리를 둡니다.",
+          en: "We keep a place that stays when the people change.",
+        },
+      },
+      {
+        place: { ko: "한국에서", en: "In Korea" },
+        lack: {
+          ko: "기회의 수가 적어서가 아닙니다. 국내에서만 겨루면 자기 위치를 가늠할 기준이 하나뿐입니다.",
+          en: "It is not that there are too few chances. If you only ever measure yourself at home, you have exactly one yardstick.",
+        },
+        opens: {
+          ko: "다른 나라에서 공부한 사람과 같은 문제를 풉니다.",
+          en: "You work the same problem as someone who studies in another country.",
+        },
+      },
+      {
+        place: { ko: "그 밖의 나라에서", en: "Everywhere else" },
+        lack: {
+          ko: "같은 언어를 쓰는 또래가 여러 나라에 흩어져 있는데, 서로의 존재를 모릅니다.",
+          en: "Peers who speak the same language are spread across countries and do not know the others are there.",
+        },
+        opens: {
+          ko: "한 번 건넌 사람이 다시 돌아와 서는 자리를 같은 곳에 둡니다.",
+          en: "The place where someone comes back after crossing is the same place they crossed from.",
+        },
+      },
+    ] as { place: Phrase; lack: Phrase; opens: Phrase }[],
+    // 안전장치 둘. 하나만 넣지 마세요. 첫 줄이 없으면 폐쇄적인 모임으로
+    // 읽히고, 둘째 줄이 없으면 억울함의 호소로 읽힙니다.
+    guards: [
+      {
+        ko: "담을 쌓는 모임이 아닙니다. 같은 언어를 쓰는 사람들이 공동의 의제를 만드는 자리이고, 문은 회차마다 열립니다.",
+        en: "This is not a wall. It is a place where people who share a language build a shared agenda, and the door opens every round.",
+      },
+      {
+        ko: "억울함을 증명하려고 모이는 자리도 아닙니다. 제대로 된 무대를 먼저 만들고, 거기서 잘한 사람이 누구였는지는 그다음에 봅니다.",
+        en: "Nor is it a place to prove a grievance. We build a real stage first, and only then look at who did well on it.",
+      },
+    ] as Phrase[],
+    // TODO: confirm. 숫자를 쓰려면 출처가 있어야 합니다. 확정 전에는 그리지
+    // 않습니다(NaruHome의 JOIN_STAT_CONFIRMED).
+    statTbd: {
+      ko: "규모를 말할 수 있는 숫자는 확인되는 대로 이 자리에 둡니다.",
+      en: "A number for the scale goes here once it is verified.",
+    },
+    // 기존 카드 넷의 머리. 챕터 제목이었던 것이 여기로 내려옵니다. waysLabel은
+    // 옛 eyebrow의 문장이고, waysLead는 옛 lead의 문장 그대로입니다.
+    waysLabel: { ko: "함께하는 길", en: "Ways in" },
+    waysLead: {
       ko: "들어오는 길은 자리마다 다릅니다. 참가자에게는 회차 하나뿐이고, 나머지 셋은 먼저 말을 걸어 주시면 됩니다.",
       en: "The way in depends on where you stand. For a participant it is a round and nothing else. For the other three, say hello first.",
     },
