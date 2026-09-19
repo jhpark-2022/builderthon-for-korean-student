@@ -1,11 +1,16 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
+// 12월 이벤트의 이름과 날짜. 이 페이지가 나루 홈을 가리키는 자리(클로징의 다음
+// 무대 줄)에서만 씁니다. 카피는 data/dictionary.ts가 갖고, 그 안의 {name}·{date}·
+// {city} 자리를 이 셋이 채웁니다. 8월 카피에 12월 날짜를 박지 않기 위해서입니다.
+import { decemberEventLabel, formatDecemberRange, DECEMBER_CITY } from "@/lib/naruDates";
 import { dict, links, partnerIntros, partnerIntroTBC, partnerArticles, type Phrase } from "@/data/dictionary";
 import {
   categoryMeta,
@@ -2614,7 +2619,7 @@ function ScrollToTop() {
 }
 
 export default function Journey({ serverNow }: { serverNow: number }) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   // 2026-08-22 마감 후 청산: openRegister와 closed는 이 컴포넌트에서 더 이상
   // 읽지 않습니다. registered는 ReturningGreeting류가, registerOpen은 스티키 바의
   // 숨김 조건이 씁니다.
@@ -4127,7 +4132,31 @@ export default function Journey({ serverNow }: { serverNow: number }) {
             {t(dict.footer.heading)}
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/65">{t(dict.footer.blurb)}</p>
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
+          {/* 다음 무대 (2026-09-19, 사용자: "여기를 12월 이벤트 페이지랑 연결시켜줘").
+              제목이 "다음 무대에서 또 만나요"인데 그 무대로 가는 문이 이 페이지에
+              한 곳도 없었습니다. 이름과 날짜는 lib/naruDates가 채웁니다.
+
+              버튼이 그라디언트인 것은 지금 이 화면의 첫 CTA이기 때문입니다.
+              오픈채팅이 다시 열리면(links.openChat) 그라디언트가 둘이 됩니다.
+              그때는 둘 중 하나를 외곽선으로 내리세요. 마지막 화면에 같은 무게의
+              버튼이 둘이면 둘 다 약해집니다. */}
+          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/85">
+            {t(dict.footer.nextStage)
+              .replace("{name}", decemberEventLabel(locale))
+              .replace("{date}", formatDecemberRange(locale))
+              .replace("{city}", DECEMBER_CITY[locale])}
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/#december"
+              onClick={() => track("naru_cta", { src: "august_closing", to: "december" })}
+              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
+            >
+              {t(dict.footer.ctaDecember).replace("{name}", decemberEventLabel(locale))}
+              <span aria-hidden className={ARROW_CLASS}>→</span>
+            </Link>
+          </div>
+          <div className="mt-4 flex flex-wrap justify-center gap-3">
             {/* Primary CTA. 2026-08-22 (마감 후 청산): 등록 모달을 열던 자리를
                 오픈채팅이 받습니다. 페이지의 마지막 CTA라 그라디언트 필은 그대로
                 두고 행동만 바꿉니다 — 여기까지 읽고 내려온 사람에게 내밀 수 있는

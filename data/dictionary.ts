@@ -4675,6 +4675,23 @@ export const dict = {
       en: "The eight days are done, and this is still the entry point. Beyond a single event, we're building a lasting Korea–Singapore builder community. The room where that community gathers stays open.",
     },
     ctaProgram: { ko: "프로그램 보기", en: "View Program" },
+    // ── 다음 무대로 가는 문 (2026-09-19, 사용자: "여기를 12월 이벤트 페이지랑
+    // 연결시켜줘") ─────────────────────────────────────────────────────────
+    // 이 페이지에서 나루 홈으로 가는 길이 한 곳도 없었습니다. 제목이 "다음
+    // 무대에서 또 만나요"라고 하는데 그 다음 무대로 가는 문이 없었어요. 홈에서
+    // 이쪽으로 오는 길(#record의 아카이브 버튼)은 있었으니 이제 양쪽이 이어집니다.
+    //
+    // **이름과 날짜를 이 문자열에 박지 마세요.** {name}, {date}, {city}는
+    // lib/naruDates.ts가 채웁니다. 12월의 달력과 이름은 거기가 정본이고, 여기에
+    // "12월 10일"이라고 적으면 날짜가 바뀔 때 이 줄만 남습니다.
+    //
+    // 제로백의 2회차가 아니라 나루의 다음 이벤트입니다(about.next의 같은 계약).
+    // "2회차", "속편"으로 부르지 마세요.
+    nextStage: {
+      ko: "다음 무대는 {name}입니다. {date}, {city}. 이번에는 국경과 상관없이 만납니다.",
+      en: "The next stage is {name}. {date}, {city}. This time everyone meets there whichever country they study in.",
+    },
+    ctaDecember: { ko: "{name} 알아보기", en: "About {name}" },
     // Shown under the partnership CTA: `mailto:` does nothing when the visitor
     // has no mail client configured, so the address is also readable/copyable.
     partnerFallback: {
