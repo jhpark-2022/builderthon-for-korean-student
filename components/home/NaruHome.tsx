@@ -796,6 +796,12 @@ export default function NaruHome() {
           <p className="mx-auto mt-3 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75 lg:text-center">
             {t(naru.record.lead2)}
           </p>
+          {/* 빚을 적는 한 줄(2026-09-19, 사용자: "제로백의 도움이 있었기에 이 모든 게
+              가능했다"). 본문보다 한 단 밝은 흰색입니다. 감사는 각주가 아니라 문장이어야
+              합니다. 아래 아카이브 버튼이 바로 이어지므로, 이 줄이 그 버튼의 이유가 됩니다. */}
+          <p className="mx-auto mt-3 max-w-2xl break-keep text-left text-base font-semibold leading-relaxed text-white/85 lg:text-center">
+            {t(naru.record.credit)}
+          </p>
           <div className="mt-6 flex justify-center">
             <Link
               href={naruLinks.archive}

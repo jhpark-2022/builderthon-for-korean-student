@@ -40,10 +40,16 @@
 // 8월 = 제로백 빌더톤. 나루의 첫 이벤트이고, 그 이름은 그 이벤트의 것입니다.
 // 12월 = 크로싱 서울 CROSSING SEOUL (2026-09-15 확정, lib/naruDates.ts).
 //
-// **12월을 제로백, 2회차, 빌더톤이라고 부르지 않습니다.** 제로백의 속편이 되면
-// 12월에 오는 사람은 8월을 모르면 늦었다고 느끼고, 기업은 같은 문제를 또 여는
-// 자리로 읽습니다. 12월은 제로백에서 나온 코어 2개를 잇는 다른 이벤트입니다.
-// 형식이 빌더톤일지도 아직 정해지지 않았어요.
+// **12월을 제로백, 2회차, 빌더톤이라고 부르지 않습니다.** 12월에 오는 사람이
+// 8월을 모르면 늦었다고 느끼고, 기업은 같은 문제를 또 여는 자리로 읽기
+// 때문입니다. 12월은 제로백에서 나온 코어 2개를 잇는 다른 이벤트이고, 형식이
+// 빌더톤일지도 아직 정해지지 않았어요.
+//
+// **다만 제로백을 부정하는 문장으로 그 구분을 짓지 마세요** (DECIDED 2026-09-19,
+// 사용자: "제로백의 도움이 있었기에 이 모든 게 가능했다. acknowledge 해야 하고
+// appreciate 받아야 한다"). "제로백의 속편은 아니고" 같은 줄이 화면에 있었습니다.
+// 이름을 구분하는 일과 앞선 이벤트를 부정하는 일은 다릅니다. 구분은 이름과
+// 날짜가 이미 합니다. 문장은 무엇을 물려받았는지를 말하세요.
 //
 // "회차"는 한 이벤트의 개별 실행을 가리키는 일반어로만 씁니다. "들어오는 길은
 // 회차 하나다" 같은 문장이 그 쓰임입니다. 12월을 "다음 회차"라고 부르면 안
@@ -672,6 +678,14 @@ export const naru = {
     lead2: {
       ko: "실제 기업의 문제를 스크리닝 없이 받아 8일 동안 풀고, 마지막 날 앞에서 증명했습니다. 이 이벤트에서 코어 2개가 나왔습니다.",
       en: "Teams took a real company's problem with no screening, worked it for eight days, and proved it out front on the last day. The two cores came out of it.",
+    },
+    // ADDED 2026-09-19 (사용자: "제로백의 도움이 있었기에 이 모든 게 가능했다").
+    // 홈은 8월을 숫자와 사진으로만 말하고 있었습니다. 무엇을 빚졌는지는 한 줄도
+    // 없었어요. 이 자리가 그 한 줄입니다. 제로백을 부정하는 문장(옛 notSequel의
+    // "속편은 아니고")을 걷어낸 것과 같은 결정입니다.
+    credit: {
+      ko: "제로백 빌더톤이 없었으면 나루도, 크로싱 서울도 없습니다. 그 8일을 만든 사람들에게 빚지고 시작합니다.",
+      en: "Without the Zero100 builderthon there is no NARU and no CROSSING SEOUL. We begin owing the people who made those eight days.",
     },
     stats: [
       { value: { ko: "74명", en: "74" }, label: { ko: "신청", en: "applied" } },
@@ -1415,9 +1429,11 @@ export const naru = {
       // 범위를 여는 것이 아닙니다.
       en: "Korean student builders meet here, wherever they study.",
     },
-    // 첫 문장이 부정으로 시작하는 것은 의도입니다. 8월을 아는 사람은 이 자리에서
-    // 반드시 "2회차인가"를 묻고, 그 오해를 그대로 두면 나머지 문장이 전부 그
-    // 전제 위에서 읽힙니다. 먼저 끊고 시작합니다.
+    // 8월을 아는 사람은 이 자리에서 "2회차인가"를 묻습니다. 그 답을 **부정 없이**
+    // 합니다(DECIDED 2026-09-19, 사용자). 전에는 "제로백 빌더톤의 속편은 아니고"로
+    // 시작했는데, 12월이 다른 이벤트라는 사실은 이름과 "두 번째 이벤트"가 이미
+    // 말합니다. 그 위에 부정을 얹으면 앞선 이벤트를 밀어내는 문장이 됩니다.
+    // 제로백이 없었으면 이 페이지도 없습니다. 물려받은 것을 적는 쪽이 맞습니다.
     //
     // 2026-09-17: "코어 2개"가 "변하지 않는 두 개"가 됐습니다. 같은 것을 이 페이지가
     // 낱말 넷으로 불렀습니다(코어 2개, 변하지 않는 두 개, 두 가지, 위의 두 개).
@@ -1427,8 +1443,8 @@ export const naru = {
     // 2026-09-18 (감사 반영 브리프 3.5): 8월 챕터의 "나루의 첫 이벤트"와 짝이 맞게 "두 번째
     // 이벤트"로. 전에는 "2회차가 아닙니다"와 "첫 이벤트"가 순서상 부딪혀 관계가 헷갈렸습니다.
     notSequel: {
-      ko: "나루의 두 번째 이벤트입니다. 제로백 빌더톤의 속편은 아니고, 그 8일에서 나온 변하지 않는 두 개를 그대로 잇습니다.",
-      en: "NARU's second event. Not a sequel to the Zero100 builderthon, but it carries the two unchanging things that came out of those eight days.",
+      ko: "나루의 두 번째 이벤트입니다. 제로백 빌더톤이 열어 준 8일에서 나온 변하지 않는 두 개를 그대로 잇습니다.",
+      en: "NARU's second event. It carries the two unchanging things that came out of the eight days the Zero100 builderthon opened.",
     },
     /** notSequel 안에서 #why로 링크되는 구절. notSequel의 문자열에 그대로 들어 있어야 합니다. */
     notSequelTerm: { ko: "변하지 않는 두 개", en: "the two things that do not change" },
