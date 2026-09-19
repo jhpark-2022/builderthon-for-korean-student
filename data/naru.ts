@@ -1010,6 +1010,104 @@ export const naru = {
 
   // ── CH3 · 어떻게 일하는가 ─────────────────────────────────────────────────
   // Overview 01과 02를 웹에 맞게 옮긴 것입니다.
+  // ── 이벤트가 끝난 뒤 (DECIDED 2026-09-18, 팔로업 브리프) ──────────────────
+  // 이 챕터가 있는 이유는 8월에 이게 없었기 때문입니다. 8월 회차가 끝난 뒤
+  // 멘토에게 먼저 연락한 팀은 한 팀이었고, 이유는 의지가 아니었습니다.
+  // 아무도 하라고 쓰지 않았고, 무엇을 들고 가야 하는지 재료가 없었고,
+  // 연락해도 되는 자리인지 아무도 확인해 주지 않았습니다.
+  //
+  // 그래서 이 챕터는 감정에 호소하지 않습니다. 할 일, 기한, 나루가 대신
+  // 하는 일. 셋 다 검증 가능한 문장이어야 합니다.
+  after: {
+    eyebrow: { ko: "이벤트가 끝난 뒤", en: "After the event" },
+    heading: {
+      ko: "가치 증명은 마지막 날부터 시작합니다",
+      en: "Proving your value starts on the last day",
+    },
+    // 앞 챕터(#record)의 마지막 숫자를 그대로 받습니다. 이 문장이 성립하려면
+    // #record의 "9팀"과 이 줄의 "한 팀"이 한 화면 거리 안에 있어야 합니다.
+    // 순서를 바꾸지 마세요.
+    // TODO: confirm. "한 팀"의 근거는 주최자와 참가자의 기억이지 집계가 아닙니다. 확인되지
+    // 않으면 "이벤트가 끝난 뒤에 먼저 연락한 사람은 거의 없었습니다"로 바꿉니다(브리프 5장).
+    lead: {
+      ko: "이벤트 안에서는 아홉 팀이 시키지 않았는데 출제사에 직접 자료를 요청했습니다. 이벤트가 끝난 뒤, 멘토에게 먼저 연락한 팀은 한 팀이었습니다.",
+      en: "Inside the event, nine teams asked the companies for data without being told to. After it ended, exactly one team reached out to a mentor.",
+    },
+    // 검증 가능한 문장입니다. 8월 사이트에 이 챕터가 없었다는 것은 아카이브에서
+    // 바로 확인됩니다. "한 팀"보다 이쪽이 우리가 책임질 수 있는 사실입니다.
+    leadNote: {
+      ko: "8월 사이트에는 이 챕터가 없었습니다.",
+      en: "The August site did not have this chapter.",
+    },
+    // 나루라는 이름을 처음으로 읽는 사람 쪽으로 돌립니다. how.nameLines의
+    // 세 번째 겹과 같은 말이고, 여기서 먼저 나옵니다.
+    statement: {
+      ko: "나루터는 도착하는 곳이 아니라 건너기 시작하는 곳입니다. 이 이벤트가 여러분의 나루입니다.",
+      en: "A landing is not where you arrive. It is where you start crossing. This event is your landing.",
+    },
+    stepsLabel: { ko: "끝나면 할 일", en: "What to do when it ends" },
+    steps: [
+      {
+        num: "01",
+        title: { ko: "멘토에게 먼저 연락합니다", en: "Message the mentor first" },
+        body: {
+          ko: "이벤트 안에서 받은 피드백은 이벤트 밖에서도 유효합니다. 제목은 인사가 아니라 결과입니다. 주신 이야기로 무엇을 만들었는지 한 줄이면 됩니다.",
+          en: "Feedback you were given inside the event still holds outside it. Lead with the result, not the greeting. One line on what you built with what they told you is enough.",
+        },
+      },
+      {
+        num: "02",
+        title: {
+          ko: "기업이 마지막 날 여는 기회를 봅니다",
+          en: "Read what the companies open on the final day",
+        },
+        body: {
+          ko: "말이 아니라 공고 형식으로 엽니다. 어떤 역할을 언제까지 뽑는지, 비전공자가 지원할 수 있는지까지 한 줄로 적혀 있을 것입니다.",
+          en: "Not as talk but as a posting. Which role, by when, and whether someone outside the major can apply, each in one line.",
+        },
+      },
+      {
+        num: "03",
+        title: { ko: "다음 회차에 멘토로 돌아옵니다", en: "Come back as a mentor" },
+        body: {
+          ko: "받은 사람이 돌려주는 모습이 보일 때 문화가 됩니다. 지금 그걸 할 수 있는 사람은 8월을 건넌 분들뿐입니다.",
+          en: "It becomes a culture at the moment someone is seen giving back what they were given. Right now, only the people who crossed August can do it.",
+        },
+      },
+    ] as { num: string; title: Phrase; body: Phrase }[],
+    // 한 번은 연락이고 두 번째가 팔로업입니다. 숫자를 쓴 이유는 "언젠가"가
+    // "하지 말라"와 같은 말이기 때문입니다.
+    // TODO: confirm. 7일과 한 달은 아직 사용자가 확정하지 않았습니다. 확정 전에는
+    // cadenceTbd를 그립니다(NaruHome의 AFTER_CADENCE_CONFIRMED 주석 참고).
+    cadenceLabel: { ko: "두 번 보냅니다", en: "Send twice" },
+    cadence: {
+      ko: "마지막 날부터 7일 안에 한 번, 그리고 한 달 뒤에 한 번 더. 두 번째 연락에는 그 사이에 무엇이 달라졌는지를 적습니다. 한 번은 인사이고, 두 번째부터가 관계입니다.",
+      en: "Once within seven days of the last day, and once more a month later. The second message says what changed in between. The first one is a greeting. The relationship starts with the second.",
+    },
+    cadenceTbd: {
+      ko: "언제 보내야 하는지까지 적어서 이 자리에 둡니다. 확정되면 여기에 나옵니다.",
+      en: "The timing goes here in writing, as soon as it is fixed.",
+    },
+    // 참가자에게 숙제만 주고 끝내지 않습니다. 넷째 항목(증거)이 여기 있습니다.
+    // TODO: confirm. 셋 다 운영 약속입니다. 지키지 못하면 이 블록이 하려던 일이
+    // 정확히 반대로 작동합니다. 팔로업 브리프 9.2의 확인 목록을 보세요.
+    weDoLabel: { ko: "그래서 나루가 하는 일", en: "What NARU does for that" },
+    weDo: [
+      {
+        ko: "이벤트가 끝나면 멘토 명단과 각자가 열어 둔 연락 방법을 참가자에게 그대로 보냅니다. 연락해도 되는지를 추측하지 않아도 됩니다.",
+        en: "When the event ends, we send every participant the mentor list and the way each mentor has said they can be reached. You will not have to guess whether it is all right to write.",
+      },
+      {
+        ko: "기회는 말이 아니라 공고로 엽니다. 마지막 날에 열리고, 열리지 않으면 열리지 않았다고 적습니다.",
+        en: "Opportunities open as postings, not as talk. They open on the final day, and if they do not, we write that they did not.",
+      },
+      {
+        ko: "먼저 연락한 사람의 이야기는 다음 회차 화면에 자리를 받습니다. 본인이 쓴 문장과 동의가 있을 때만 싣습니다.",
+        en: "If you reach out first, your story gets a place on the next round's site. Only in your own words, and only with your consent.",
+      },
+    ] as Phrase[],
+  },
+
   how: {
     eyebrow: { ko: "세 층", en: "Three layers" },
     heading: { ko: "어떻게 일하는가", en: "How we work" },
@@ -1308,37 +1406,8 @@ export const naru = {
     // 먼저 연락한 팀이 한 팀이었습니다(Overview 06). 병목은 의지가 아니라 판단
     // 재료였습니다. 내 강점이 그 자리에 쓸모가 있는지 스스로 판단할 수 없었어요.
     // 그래서 무엇을 하면 되는지를 글로 적습니다.
-    afterLabel: { ko: "이벤트가 끝난 뒤에 할 일", en: "What to do after the event ends" },
-    afterNote: {
-      ko: "8월에는 이 문단이 없었습니다. 그래서 이벤트 뒤에 멘토에게 먼저 연락한 팀이 한 팀이었습니다.",
-      en: "In August this paragraph did not exist. Afterwards, exactly one team reached out to a mentor on their own.",
-    },
-    after: [
-      {
-        title: { ko: "멘토에게 먼저 연락합니다", en: "Message the mentor first" },
-        body: {
-          ko: "이벤트 안에서 받은 피드백은 이벤트 밖에서도 유효합니다.",
-          en: "Feedback you were given inside the event still holds outside it.",
-        },
-      },
-      {
-        title: {
-          ko: "기업이 마지막 날 여는 기회를 봅니다",
-          en: "Read what the companies open on the final day",
-        },
-        body: {
-          ko: "말이 아니라 공고 형식으로 엽니다. 비전공자 가능 여부까지 한 줄로 적혀 있을 것입니다.",
-          en: "Not as talk but as a posting. It will say in one line whether a non-major can apply.",
-        },
-      },
-      {
-        title: { ko: "다음 이벤트에 멘토로 돌아옵니다", en: "Come back as a mentor" },
-        body: {
-          ko: "받은 사람이 돌려주는 모습이 보일 때 문화가 됩니다.",
-          en: "It becomes a culture at the moment someone is seen giving back what they were given.",
-        },
-      },
-    ],
+    // 2026-09-18 (팔로업 브리프 3.1): afterLabel · afterNote · after는 최상위 naru.after로
+    // 옮겼습니다. 프로그램의 부속이 아니라 챕터가 됐습니다. 여기서 찾지 마세요.
     // ── P2. 아직 정해지지 않은 것 (DECIDED 2026-09-15) ────────────────────
     // 지금 이 챕터에 없는 것은 "12월 정보"가 아니라 "12월이 관리되고 있다는
     // 증거"입니다. 미정 항목이 일곱인데 화면이 아직 없다고 말하는 것은 이름
