@@ -884,29 +884,12 @@ export default function NaruHome() {
           ))}
         </div>
 
-        {/* 하지 않는 것. 짧게, 목록으로. 이 블록이 있어야 "그럼 어떻게
-            들어가나"라는 질문이 바로 다음 챕터로 넘어갑니다.
-            2026-09-16: 옆에 있던 "이름의 두 겹" 두 문단이 내려갔습니다. 그건
-            로고 가이드가 말하는 것이고, 이 챕터가 대답해야 하는 질문("어떻게
-            일하는가")과는 다른 질문의 답이었습니다. nameLines 키는 그대로
-            있습니다. 남은 블록 하나가 폭을 다 씁니다. */}
-        {/* 폰에서는 상자 없이 각주(감사 반영 브리프 6, 다이어그램에 "하지 않는 것"을 각주로). lg부터 상자. */}
-        <div className="mx-auto mt-8 max-w-5xl text-left lg:mt-12 lg:rounded-2xl lg:border lg:border-white/10 lg:bg-white/[0.03] lg:px-6 lg:py-5">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">
-            {t(naru.how.notDoingLabel)}
-          </p>
-          {/* role="list"입니다. Preflight가 모든 ul/ol에 list-style:none을
-              걸고, Safari + VoiceOver는 그 목록에서 리스트 의미를 통째로
-              떼어냅니다. 역할을 명시해야 "3개 중 1번"이 살아납니다. */}
-          <ul role="list" className="mt-3 grid gap-2 sm:grid-cols-3 lg:gap-2.5">
-            {naru.how.notDoing.map((line, i) => (
-              <li key={i} className="flex gap-2.5 break-keep text-xs leading-relaxed text-white/70 lg:text-sm lg:text-white/75">
-                <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent/70" />
-                {t(line)}
-              </li>
-            ))}
-          </ul>
-        </div>
+        {/* 하지 않는 것(나루가 하지 않는 것, 세 줄)은 화면에서 내려갔습니다
+            (DECIDED 2026-09-19, 사용자). 이 챕터가 대답하는 질문은 "어떻게
+            일하는가"이고 그 답은 위의 세 층과 문 셋이 이미 합니다. 레일 맨
+            아래에서 마지막으로 남는 인상이 회비·후원 계약·보수일 이유가
+            없었습니다. notDoingLabel과 notDoing 키는 data/naru.ts에 그대로
+            있습니다. 물어보는 사람에게 답할 문장이지 먼저 꺼낼 문장이 아닙니다. */}
         </div>
       </Chapter>
 
