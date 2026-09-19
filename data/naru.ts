@@ -197,6 +197,8 @@ export const naruNav: { id: string; label: Phrase }[] = [
   { id: "december", label: { ko: "프로그램", en: "Program" } },
   { id: "gains", label: { ko: "얻는 것", en: "What you get" } },
   { id: "record", label: { ko: "8월", en: "August" } },
+  // 두 글자인 이유는 칩 레일입니다. 390px에서 칩이 일곱 개라 새 항목이 가장 짧아야 합니다(팔로업 브리프 3.6).
+  { id: "after", label: { ko: "끝난 뒤", en: "After" } },
   // 2026-09-18 (사용자): 학생회와 기업(#how)이 #naru 안으로 합쳐져 항목 하나가 됐습니다.
   { id: "naru", label: { ko: "나루", en: "NARU" } },
   { id: "join", label: { ko: "함께", en: "Join" } },
