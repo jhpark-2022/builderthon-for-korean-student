@@ -47,7 +47,7 @@ import MotionToggle from "@/components/ui/MotionToggle";
 //   #record    8월의 기록 (숫자 다섯, 사진 열둘)
 //   #december  프로그램 (모양, 왜 서울인가, 아쉬웠던 넷과 답, 일정, 멘토링, 미정)
 //   #naru      나루 (로고, 태그라인, 변하지 않는 두 개, 어떻게 일하는가)   ← 그룹은 여기서 시작
-//   #join      함께하는 길
+//   #join      왜 이 자리가 필요한가 (세 곳의 결핍, 안전장치 둘, 들어오는 길 #join-ways)
 //   #people    (조건부)
 //
 // 아래 2026-09-15 주석의 "홈은 이벤트가 아니라 그룹"은 이제 반만 맞습니다.
@@ -152,6 +152,12 @@ import MotionToggle from "@/components/ui/MotionToggle";
 // 카드나 다이어그램 **안쪽**의 간격은 이 스케일을 따르지 않아도 됩니다. 저긴
 // 한 덩어리의 내부 조판이고, 여기 있는 값은 덩어리와 덩어리 사이의 것입니다.
 // ─────────────────────────────────────────────────────────────────────────────
+
+// TODO: confirm (왜 브리프 9장). #join의 규모 숫자입니다. 쓰려면 "싱가포르의 한인
+// 유학생 수"와 "이들을 가로질러 이어 온 학생 단체 수"의 출처가 있어야 합니다.
+// 출처가 확인되면 값을 채우고 true로. false인 동안 statTbd도 그리지 않습니다.
+// 공개 숫자는 근거를 댈 수 있어야 합니다. 매니페스토에 있다는 것은 근거가 아닙니다.
+const JOIN_STAT_CONFIRMED: boolean = false;
 
 // 카드 한 장. 8월의 Glass와 같은 값이지만, 그 컴포넌트는 Journey.tsx 안에
 // 있습니다. 두 줄짜리 래퍼를 꺼내려고 5,157줄 파일을 건드리지 않았습니다.
@@ -894,7 +900,16 @@ export default function NaruHome() {
       </Chapter>
 
 
-      {/* ── CH5 · 함께하는 길 ────────────────────────────────────────────── */}
+      {/* ── CH5 · 왜 이 자리가 필요한가 (DECIDED 2026-09-19, 왜 브리프) ────────
+          페이지의 마지막 큰 질문이 절차("어떻게 함께하는가")였습니다. 이 자리를
+          매니페스토 I장이 가져갑니다. 결핍을 말하는 I장이 사이트에 통째로 빠져
+          있었어요. 들어오는 길 넷은 그대로 두되 챕터의 머리글이 아니라 그 아래
+          라벨(#join-ways)이 됩니다.
+
+          이 챕터가 마지막에 있는 이유: 이벤트를 보고, 8월이 실제로 있었다는 증거를
+          보고, 그룹이 무엇인지 안 다음에 "그래서 이게 왜 있어야 하는가"가 나옵니다.
+          그 순서면 앞의 모든 것이 이 문단의 근거가 됩니다. 앞에 놓으면 근거 없이
+          주장부터 하게 됩니다. */}
       <Chapter id="join" align="center">
         <Eyebrow color="purple">{t(naru.join.eyebrow)}</Eyebrow>
         <h2 className={H2}><Halo tone="violet">{t(naru.join.heading)}</Halo></h2>
@@ -902,7 +917,54 @@ export default function NaruHome() {
           {t(naru.join.lead)}
         </p>
 
-        <div className="mx-auto mt-12 grid max-w-5xl gap-4 text-left md:grid-cols-2">
+        {/* 세 곳의 결핍. ul role="list"입니다(왜 브리프 7장). 순서에 뜻이 없어요.
+            세 곳은 동등합니다. #after의 steps가 ol인 것과 다릅니다. 칸 안은
+            place → lack(없는 것) → opens(그래서 여는 것) 순서이고, 결핍이 먼저
+            오고 처방이 나중입니다. */}
+        <ul role="list" className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-4 text-left lg:grid-cols-3">
+          {naru.join.needs.map((need) => (
+            <li
+              key={need.place.en}
+              className="border-b border-white/10 py-4 last:border-b-0 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-5"
+            >
+              <h3 className={H3}>{t(need.place)}</h3>
+              <p className="mt-2 break-keep text-sm leading-relaxed text-white/70">{t(need.lack)}</p>
+              <p className="mt-3 flex gap-2 break-keep text-sm leading-relaxed text-white/85">
+                <span aria-hidden className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent/80" />
+                {t(need.opens)}
+              </p>
+            </li>
+          ))}
+        </ul>
+
+        {/* 안전장치 두 줄(왜 브리프 2.1). 카드가 아니라 문단입니다. 둘 다 있어야
+            합니다. 첫 줄이 없으면 폐쇄적인 모임으로, 둘째 줄이 없으면 억울함의
+            호소로 읽힙니다. 한 줄만 그리지 마세요. */}
+        <div className="mx-auto mt-8 max-w-3xl space-y-3 break-keep text-sm leading-relaxed text-white/55">
+          {naru.join.guards.map((guard, i) => (
+            <p key={i}>{t(guard)}</p>
+          ))}
+        </div>
+
+        {/* 규모 숫자는 출처가 확인되기 전까지 그리지 않습니다. statTbd 키는
+            data/naru.ts에 있습니다. */}
+        {JOIN_STAT_CONFIRMED && (
+          <p className="mx-auto mt-6 max-w-2xl break-keep text-sm leading-relaxed text-white/55">
+            {t(naru.join.statTbd)}
+          </p>
+        )}
+
+        {/* 여기서부터 들어오는 길입니다. 챕터 제목이었던 "함께하는 길"이 이 라벨로
+            내려왔습니다. 헤어라인 하나로 앞의 "왜"와 끊습니다. */}
+        <div aria-hidden className="mx-auto mt-12 h-px w-full max-w-5xl bg-white/10" />
+        <div id="join-ways" className="mx-auto mt-12 max-w-5xl scroll-mt-28 text-left">
+          <h3 className={LABEL_HEADING}>{t(naru.join.waysLabel)}</h3>
+          <p className="mt-3 max-w-2xl break-keep text-sm leading-relaxed text-white/70">
+            {t(naru.join.waysLead)}
+          </p>
+        </div>
+
+        <div className="mx-auto mt-5 grid max-w-5xl gap-4 text-left md:grid-cols-2">
           {naru.join.cards.map((card, i) => (
             <Card key={card.id} id={card.id} className="flex flex-col !rounded-2xl !bg-white/[0.03] !p-4 transition hover:border-accent/30 hover:bg-white/[0.05] sm:!p-5">
               {/* 번호 배지. 8월 BenefitCard의 문법(작은 사각). 2026-09-18: 챕터 색이 아니라 보라 토큰
