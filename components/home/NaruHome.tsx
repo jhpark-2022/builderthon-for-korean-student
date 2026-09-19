@@ -30,7 +30,7 @@ import OpenChatLink from "@/components/ui/OpenChatLink";
 // RecordTabs: 2026-09-17에 뺐다가(사용자: 바로 아카이브로) 2026-09-18 감사 반영 브리프 5.2로
 // 다시 넣었습니다. 멘토 / 연사와 피드백 패널 둘만.
 // (2026-09-19: RecordTabs·PressRows·Funnel은 화면에서 내려가 import도 뺐습니다. 파일은 그대로.)
-import { H2, H3, LABEL_HEADING, GRADIENT_TEXT } from "@/components/ui/typography";
+import { H2, H3, LABEL_HEADING, STATEMENT, GRADIENT_TEXT } from "@/components/ui/typography";
 import NaruMark from "@/components/ui/NaruMark";
 import MotionToggle from "@/components/ui/MotionToggle";
 
@@ -937,6 +937,12 @@ export default function NaruHome() {
           ))}
         </ul>
 
+        {/* 세 곳에 공통된 조건 하나(매니페스토 I장). 장소를 가리지 않습니다.
+            같은 I장의 다른 나라 학생과의 비교는 가져오지 않았습니다. */}
+        <p className="mx-auto mt-8 max-w-2xl break-keep text-base leading-relaxed text-white/75">
+          {t(naru.join.milestones)}
+        </p>
+
         {/* 안전장치 두 줄(왜 브리프 2.1). 카드가 아니라 문단입니다. 둘 다 있어야
             합니다. 첫 줄이 없으면 폐쇄적인 모임으로, 둘째 줄이 없으면 억울함의
             호소로 읽힙니다. 한 줄만 그리지 마세요. */}
@@ -954,17 +960,23 @@ export default function NaruHome() {
           </p>
         )}
 
-        {/* 여기서부터 들어오는 길입니다. 챕터 제목이었던 "함께하는 길"이 이 라벨로
-            내려왔습니다. 헤어라인 하나로 앞의 "왜"와 끊습니다. */}
-        <div aria-hidden className="mx-auto mt-12 h-px w-full max-w-5xl bg-white/10" />
-        <div id="join-ways" className="mx-auto mt-12 max-w-5xl scroll-mt-28 text-left">
-          <h3 className={LABEL_HEADING}>{t(naru.join.waysLabel)}</h3>
-          <p className="mt-3 max-w-2xl break-keep text-sm leading-relaxed text-white/70">
-            {t(naru.join.waysLead)}
-          </p>
+        {/* 챕터를 닫는 자리(DECIDED 2026-09-19, 사용자: "그 공간을 왜 이 자리가
+            필요한가에 더 할애"). 매니페스토 표지의 한 줄과 V장입니다. 앞의 세 칸이
+            결핍이고, 이 두 문단이 그래서 무엇을 앞당겨 두는지입니다. */}
+        <div className="mx-auto mt-12 max-w-3xl">
+          <p className={STATEMENT}>{t(naru.join.closingStatement)}</p>
+          <div className="mx-auto mt-5 max-w-2xl space-y-3 break-keep text-sm leading-relaxed text-white/70">
+            {naru.join.closingBody.map((line, i) => (
+              <p key={i}>{t(line)}</p>
+            ))}
+          </div>
         </div>
 
-        <div className="mx-auto mt-5 grid max-w-5xl gap-4 text-left md:grid-cols-2">
+        {/* 여기서부터 들어오는 길입니다. 라벨 없이 헤어라인 하나로 끊습니다.
+            waysLabel·waysLead는 data/naru.ts에 그대로 있고 그리지 않습니다.
+            #join-ways 앵커는 카드 넷이 받습니다. */}
+        <div aria-hidden className="mx-auto mt-12 h-px w-full max-w-5xl bg-white/10" />
+        <div id="join-ways" className="mx-auto mt-12 grid max-w-5xl scroll-mt-28 gap-4 text-left md:grid-cols-2">
           {naru.join.cards.map((card, i) => (
             <Card key={card.id} id={card.id} className="flex flex-col !rounded-2xl !bg-white/[0.03] !p-4 transition hover:border-accent/30 hover:bg-white/[0.05] sm:!p-5">
               {/* 번호 배지. 8월 BenefitCard의 문법(작은 사각). 2026-09-18: 챕터 색이 아니라 보라 토큰

@@ -1793,8 +1793,40 @@ export const naru = {
       ko: "규모를 말할 수 있는 숫자는 확인되는 대로 이 자리에 둡니다.",
       en: "A number for the scale goes here once it is verified.",
     },
-    // 기존 카드 넷의 머리. 챕터 제목이었던 것이 여기로 내려옵니다. waysLabel은
-    // 옛 eyebrow의 문장이고, waysLead는 옛 lead의 문장 그대로입니다.
+    // 세 곳에 공통된 조건 하나. 매니페스토 I장의 마지막 문단입니다. 세 칸이
+    // "어디에 무엇이 없는가"를 말하고 이 문단이 "왜 그것이 지금 문제인가"를
+    // 말합니다. 같은 I장에 있는 다른 나라 학생과의 비교는 가져오지 않습니다.
+    // 공개 화면에서는 다른 집단에 대한 일반화가 됩니다.
+    milestones: {
+      ko: "세 곳에 공통된 것이 하나 더 있습니다. 경쟁이 치열할수록 눈앞의 칸부터 채우게 됩니다. 학점, 인턴, 졸업, 오퍼. 칸을 채우는 동안에는 더 큰 질문을 물을 시간이 없습니다. 나는 어디로 나아갈 수 있는가, 내 앞에 놓인 방향은 몇 개인가.",
+      en: "One thing runs through all three. The tighter the competition, the sooner you start filling in the box in front of you. Grades, an internship, graduation, an offer. While you fill them in there is no time for the larger question: where you can go from here, and how many directions are open in front of you.",
+    },
+    // 챕터를 닫는 자리. 매니페스토 표지의 한 줄과 V장("왜 그럼에도 만드는가")
+    // 입니다. 동기는 설계의 근거로 쓰되 마케팅 문구로 쓰지 않는다는 규칙(회고
+    // 자료집 15번)을 지키는 선이 여기입니다. 결핍이 왜 분했는지가 아니라,
+    // 그래서 무엇을 앞당겨 두는지만 말합니다.
+    //
+    // I장의 마지막 문장("있었으면 했던 다리를 우리가 직접 놓는다")은 그대로
+    // 쓰지 않았습니다. 이 레포는 다리 은유를 쓰지 않습니다(파일 맨 위 목록).
+    closingStatement: {
+      ko: "절박하지 않아도 시작할 수 있도록.",
+      en: "So you can start before you have to.",
+    },
+    closingBody: [
+      {
+        ko: "문을 두드리는 법은 대개 절박해진 다음에 배웁니다. 그 전에 배울 수 있었다면 더 좋았을 것이고, 그래서 그 자리를 앞당겨 만듭니다.",
+        en: "Most people learn how to knock on a door only after they have to. It would have been better to learn it before that, so we make the place earlier.",
+      },
+      {
+        ko: "끝까지 쓰지 않는 사람이 있어도 이 자리는 있어야 합니다. 몇 사람이 쓰지 않는다는 이유로 나머지의 자리를 닫는 것은, 없어서 아쉬웠던 그 상태로 돌아가는 일입니다.",
+        en: "Even if some never use it, the place has to exist. Closing it because a few did not is going back to the state we missed having it in.",
+      },
+    ] as Phrase[],
+    // waysLabel과 waysLead는 화면에서 내려갔습니다(DECIDED 2026-09-19, 사용자:
+    // "함께하는 길 이거 없어도 됨. 그 공간을 왜 이 자리가 필요한가에 더 할애").
+    // 카드 넷은 헤어라인 하나로 앞의 "왜"와 끊고 라벨 없이 섭니다. 카드가 각자
+    // 참가자·학생회·기업·운영진이라고 말하므로 그 위에 이름이 한 번 더 필요하지
+    // 않았고, 그 자리는 milestones와 closing이 가져갔습니다. 키는 그대로 둡니다.
     waysLabel: { ko: "함께하는 길", en: "Ways in" },
     waysLead: {
       ko: "들어오는 길은 자리마다 다릅니다. 참가자에게는 회차 하나뿐이고, 나머지 셋은 먼저 말을 걸어 주시면 됩니다.",
