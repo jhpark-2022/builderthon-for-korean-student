@@ -419,13 +419,19 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
   }
 }
 
-/* ── 나루 홈 폰 글자 하한 (2026-09-18, 모바일 수정 브리프 4) ──────────────────────
-   lg 아래에서 12px 미만 유틸리티(0.42~0.66rem, root 18px 기준 7.6~11.9px)를 12px로.
+/* ── 나루 홈 글자 하한 (2026-09-18, 모바일 수정 브리프 4) ──────────────────────
+   12px 미만 유틸리티(0.42~0.66rem, root 18px 기준 7.6~11.9px)를 본문 최소 단으로.
    Chip·RouteMap은 8월 페이지와 같은 파일이라 컴포넌트 값을 바꾸면 /2026-08이 같이
-   바뀝니다. 그래서 홈의 <main class="naru-min12"> 안에서만, 폰에서만 겁니다.
-   aria-hidden(★·● 같은 장식 글리프)은 제외합니다. */
-@media (max-width: 1023.98px) {
-  .naru-min12 :is([class*="text-[0.42rem]"], [class*="text-[0.58rem]"], [class*="text-[0.6rem]"], [class*="text-[0.62rem]"], [class*="text-[0.65rem]"], [class*="text-[0.66rem]"]):not([aria-hidden]) {
-    font-size: 12px;
-  }
+   바뀝니다. 그래서 홈의 <main class="naru-min12"> 안에서만 겁니다.
+   aria-hidden(★·● 같은 장식 글리프)은 제외합니다.
+
+   2026-09-20 (표현 방식 브리프 7): 폰 전용이던 것을 모든 폭으로 넓히고, 값도
+   12px이 아니라 0.68rem으로 바꿨습니다. 두 가지 이유입니다.
+   1) 데스크톱 본문에 10~11px 단이 남아 있었습니다. 하한은 화면 폭의 문제가
+      아니라 읽는 사람의 문제입니다.
+   2) 12px은 0.68rem(12.24px)과 1/4픽셀 차이인 다섯째 단이었습니다. 본문 계열을
+      12.24 / 13.5 / 15.75 / 18 넷으로 줄이는 것이 이 브리프의 7장이라, 하한이
+      그중 첫 단에 정확히 얹혀야 합니다. */
+.naru-min12 :is([class*="text-[0.42rem]"], [class*="text-[0.58rem]"], [class*="text-[0.6rem]"], [class*="text-[0.62rem]"], [class*="text-[0.65rem]"], [class*="text-[0.66rem]"]):not([aria-hidden]) {
+  font-size: 0.68rem;
 }

@@ -173,7 +173,7 @@ const JOIN_STAT_CONFIRMED: boolean = false;
 // 있습니다. 두 줄짜리 래퍼를 꺼내려고 5,157줄 파일을 건드리지 않았습니다.
 function Card({ children, className = "", id }: { children: React.ReactNode; className?: string; id?: string }) {
   return (
-    <div id={id} className={`rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-8 ${className}`}>
+    <div id={id} className={`rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-8 ${className}`}>
       {children}
     </div>
   );
@@ -295,7 +295,7 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
             // 약 78px)이 한 줄로 들어가는 값입니다.
             className="grid grid-cols-[4.5rem_repeat(2,minmax(0,1fr))] items-baseline gap-x-2 sm:grid-cols-[8.5rem_repeat(3,minmax(0,1fr))] sm:gap-x-4"
           >
-            <span className="min-w-0 whitespace-nowrap text-[11px] font-semibold text-white/55 sm:text-xs">{t(r.key)}</span>
+            <span className="min-w-0 whitespace-nowrap text-[0.68rem] font-semibold text-white/55 sm:text-xs">{t(r.key)}</span>
             {r.l === "started" ? (
               <span className="col-span-2 text-xl font-black text-white sm:col-span-3">{t(naru.eventHero.started)}</span>
             ) : (
@@ -349,7 +349,7 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
             {photo.day && (
               <span
                 aria-hidden
-                className="pointer-events-none absolute inset-x-0 bottom-0 hidden translate-y-full bg-gradient-to-t from-black/75 to-transparent px-3 pb-2 pt-6 text-[12px] font-bold text-white transition-transform duration-300 group-hover:translate-y-0 motion-reduce:transition-none lg:block"
+                className="pointer-events-none absolute inset-x-0 bottom-0 hidden translate-y-full bg-gradient-to-t from-black/75 to-transparent px-3 pb-2 pt-6 text-[0.68rem] font-bold text-white transition-transform duration-300 group-hover:translate-y-0 motion-reduce:transition-none lg:block"
               >
                 {t(photo.day)}
               </span>
@@ -358,7 +358,7 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
         ))}
       </div>
       {/* lg에서는 홀수 칸이 36px 내려가 있어 그만큼 더 띄웁니다. */}
-      <figcaption className="mt-3 text-center text-[12px] text-white/50 lg:mt-12 lg:text-left">{t(naru.eventHero.photosCaption)}</figcaption>
+      <figcaption className="mt-3 text-center text-[0.68rem] text-white/50 lg:mt-12 lg:text-left">{t(naru.eventHero.photosCaption)}</figcaption>
     </figure>
   );
 }
@@ -461,7 +461,7 @@ export default function NaruHome() {
             <p className="mt-8 text-sm font-bold text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base">
               {formatDecemberDateLine(locale)}
             </p>
-            <p className="mx-auto mt-4 max-w-xl break-keep text-base font-bold leading-snug text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-lg lg:mx-0">
+            <p className="mx-auto mt-4 max-w-xl break-keep text-base font-bold leading-snug text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] lg:mx-0">
               {t(naru.december.heading)}
             </p>
             <p className="mx-auto mt-3 max-w-xl break-keep text-sm leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base lg:mx-0">
@@ -482,7 +482,7 @@ export default function NaruHome() {
                 // 그 전(2026-09-18 아침)의 반투명 "등록하기"는 이유 없이 죽어 있는 1차 CTA였습니다.
                 <div className="flex flex-col items-center gap-2 lg:items-start">
                   <PreparingButton t={t} noteId="hero-register-note" />
-                  <p id="hero-register-note" className="text-[12px] leading-snug text-white/60">{t(registerCopy.preparingNote)}</p>
+                  <p id="hero-register-note" className="text-[0.68rem] leading-snug text-white/60">{t(registerCopy.preparingNote)}</p>
                 </div>
               )}
               {/* 오픈채팅이 막혀 있으면(links.openChat 빈 문자열, 2026-09-17) 이 앵커가
@@ -558,7 +558,7 @@ export default function NaruHome() {
         </p>
         {/* 초안 고지(DECIDED 2026-09-18, 사용자): 세부 내용이 바뀔 수 있다는 것을 챕터 머리에서
             확실하게. 호박색 점선 상자(pending 칩과 같은 계열). 8월 문법의 강조 상자 크기. */}
-        <div role="note" className="mx-auto mt-6 max-w-2xl rounded-xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] px-4 py-3 text-left sm:flex sm:items-start sm:gap-3">
+        <div role="note" className="mx-auto mt-6 max-w-2xl rounded-2xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] px-4 py-3 text-left sm:flex sm:items-start sm:gap-3">
           <span className="mr-2 inline-block shrink-0 rounded-full border border-amber-400/40 bg-amber-400/10 px-2 py-0.5 align-[2px] text-[0.68rem] font-bold uppercase tracking-[0.14em] text-amber-200 sm:mr-0 sm:mt-0.5">{t(naru.december.draftLabel)}</span>
           <p className="inline break-keep text-sm leading-relaxed text-amber-50/90 sm:block">{t(naru.december.draftNote)}</p>
         </div>
@@ -734,7 +734,7 @@ export default function NaruHome() {
               처음에는 이 자리에 "84%" 같은 수치를 크게 세우려고 했는데 걷었습니다.
               퍼센트를 한 번 적으면 그 수치가 목표가 되고, 다음 회차는 그 수치를
               지키려고 설계하게 됩니다(data/naru.ts의 measure 주석). */}
-          <div className="mt-6 rounded-xl border border-amber-400/25 bg-amber-400/[0.07] px-5 py-4">
+          <div className="mt-6 rounded-2xl border border-amber-400/25 bg-amber-400/[0.07] px-5 py-4">
             <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-amber-200">
               {t(naru.why.measureLabel)}
             </p>
@@ -755,15 +755,15 @@ export default function NaruHome() {
             {naru.record.gaps.map((gap, i) => (
               <li key={gap.title.en} className="relative border-b border-white/10 py-3 last:border-b-0 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-4 sm:transition sm:hover:border-accent/30 sm:hover:bg-white/[0.05]">
                 <div className="flex items-center gap-2.5 sm:block">
-                  <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent/15 text-xs font-black text-accent sm:h-8 sm:w-8 sm:text-sm">
+                  <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-2xl bg-accent/15 text-xs font-black text-accent sm:h-8 sm:w-8 sm:text-sm">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <h4 className="break-keep text-[15px] font-bold leading-snug text-white sm:mt-2.5 sm:text-base">{t(gap.title)}</h4>
+                  <h4 className="break-keep text-sm font-bold leading-snug text-white sm:mt-2.5 sm:text-base">{t(gap.title)}</h4>
                 </div>
                 <p className="mt-2 flex items-start gap-2 break-keep text-sm leading-relaxed text-white/75">
                   <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent/80" />
                   <span>
-                    <span className="mr-1.5 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">{t(naru.december.decemberLabel)}</span>
+                    <span className="mr-1.5 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-accent">{t(naru.december.decemberLabel)}</span>
                     {gap.answer ? t(gap.answer) : t(naru.record.answerPending)}
                   </span>
                 </p>
@@ -792,7 +792,7 @@ export default function NaruHome() {
               마지막 행은 last:border-b-0으로 뺐습니다. 하나만 남으면 그 선은
               가를 것이 없어 떠 있는 줄이 됩니다. */}
           <div className="mt-3 py-3 sm:mt-5 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-5">
-            <h4 className="break-keep text-[15px] font-bold leading-snug text-white sm:text-base">
+            <h4 className="break-keep text-sm font-bold leading-snug text-white sm:text-base">
               {t(naru.after.steps[0].title)}
             </h4>
             <p className="mt-2 break-keep text-sm leading-relaxed text-white/75">{t(naru.after.steps[0].body)}</p>
@@ -1516,7 +1516,7 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
       {/* 폰은 칩과 이름을 한 줄에, 내는 것은 숨기고 얻는 것만(나루 챕터 길이 목표). md부터 그 전 그대로. */}
       <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 md:block">
         <p>
-          <Chip tone="outline" className={`!text-xs tracking-[0.02em] lg:!text-[0.62rem] ${center ? "!border-accent/40 !text-accent" : ""}`}><RoleLabel text={t(layer.role)} /></Chip>
+          <Chip tone="outline" className={`!text-xs tracking-[0.02em] lg:!text-[0.68rem] ${center ? "!border-accent/40 !text-accent" : ""}`}><RoleLabel text={t(layer.role)} /></Chip>
         </p>
         <p className="break-keep text-sm font-bold leading-snug text-white sm:text-base md:mt-1.5">
           {t(layer.who)}
@@ -1536,7 +1536,7 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
   const arrow = (dir: "right" | "left") => (
     <span
       aria-hidden
-      className="flex shrink-0 items-center justify-center text-lg text-white/30 md:px-1"
+      className="flex shrink-0 items-center justify-center text-base text-white/30 md:px-1"
     >
       <span className="md:hidden">↓</span>
       <span className="hidden md:inline">{dir === "right" ? "→" : "←"}</span>
