@@ -682,8 +682,8 @@ export default function NaruHome() {
                     {t(stage.line)}
                   </p>
                   {stage.session && (
-                    <p className={`mt-1.5 flex flex-wrap items-baseline gap-x-1.5 break-keep text-sm leading-relaxed ${day0 ? "text-white/45" : "text-white/55"}`}>
-                      <span className={`font-bold uppercase tracking-[0.14em] ${day0 ? "text-accent/70" : "text-accent"}`}>{t(naru.december.sessionLabel)}</span>
+                    <p className="mt-1.5 flex flex-wrap items-baseline gap-x-1.5 break-keep text-sm leading-relaxed text-white/55">
+                      <span className={`font-bold uppercase tracking-[0.14em] ${day0 ? "text-accent/75" : "text-accent"}`}>{t(naru.december.sessionLabel)}</span>
                       <span className={day0 ? "font-semibold text-white/55" : "font-semibold text-white/85"}>{t(stage.session.title)}</span>
                       <span>{t(stage.session.body)}</span>
                     </p>
@@ -696,7 +696,7 @@ export default function NaruHome() {
                     </span>
                   )}
                   {stage.chips.map((c, j) => (
-                    <span key={j} className={day0 ? "text-xs text-white/45" : "text-xs text-white/60"}>{t(c)}</span>
+                    <span key={j} className={day0 ? "text-xs text-white/55" : "text-xs text-white/60"}>{t(c)}</span>
                   ))}
                 </div>
               </div>
@@ -725,7 +725,10 @@ export default function NaruHome() {
                 key={f.k.en}
                 className={`grid grid-cols-1 gap-x-6 gap-y-1 border-t border-white/10 py-3 sm:grid-cols-[7rem_1fr] ${i === naru.december.facts.length - 1 ? "border-b" : ""}`}
               >
-                <dt className="break-keep text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">{t(f.k)}</dt>
+                {/* /50이 아니라 /75인 이유는 대비입니다(LABEL_HEADING이 같은 이유로
+                    /75입니다). 12.24px은 큰 글자 예외를 받지 못해 4.5:1이 필요한데,
+                    배경 입자가 지나가는 자리에서 /50은 3.19:1이었습니다. */}
+                <dt className="break-keep text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/75">{t(f.k)}</dt>
                 <dd className="break-keep text-sm leading-relaxed text-white/70">{t(f.v)}</dd>
               </div>
             ))}
@@ -796,12 +799,14 @@ export default function NaruHome() {
                   key={sc.num}
                   className={`border-b border-white/10 py-4 sm:border-b-0 sm:py-0 sm:pt-4 ${i > 0 ? "sm:border-l sm:border-white/10 sm:pl-6" : ""} ${i < 2 ? "sm:pr-6" : ""}`}
                 >
-                  <p className={`flex items-baseline gap-2 break-keep ${past ? "text-white/45" : "text-white"}`}>
+                  {/* 한 단 낮춤은 /55입니다. 같은 챕터의 Day 0 행이 쓰는 값이고,
+                      /45는 배경 입자 위에서 3.35:1이었습니다. */}
+                  <p className={`flex items-baseline gap-2 break-keep ${past ? "text-white/55" : "text-white"}`}>
                     {/* uppercase를 걸지 않습니다. PDF의 번호가 소문자 로마 숫자(i · ii · iii)입니다. */}
-                    <span lang="en" className={`shrink-0 text-[0.68rem] font-black tracking-[0.12em] ${past ? "text-white/40" : "text-accent"}`}>{sc.num}</span>
+                    <span lang="en" className={`shrink-0 text-[0.68rem] font-black tracking-[0.12em] ${past ? "text-white/55" : "text-accent"}`}>{sc.num}</span>
                     <span className="text-sm font-bold leading-snug">{t(sc.title)}</span>
                   </p>
-                  <p className={`mt-1.5 break-keep text-[0.68rem] font-bold uppercase tracking-[0.14em] ${past ? "text-white/40" : "text-accent"}`}>
+                  <p className={`mt-1.5 break-keep text-[0.68rem] font-bold uppercase tracking-[0.14em] ${past ? "text-white/55" : "text-accent"}`}>
                     {t(sc.when)}
                   </p>
                 </li>
