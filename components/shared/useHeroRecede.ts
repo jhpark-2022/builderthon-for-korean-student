@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useReducedMotion, useScroll, useTransform } from "framer-motion";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -33,12 +33,22 @@ import { useReducedMotion, useScroll, useTransform } from "framer-motion";
 // 구간의 단위가 뷰포트 높이인 이유: 히어로의 높이가 화면 높이를 따라가기
 // 때문입니다. px로 박으면 13인치와 27인치에서 다른 지점에 사라집니다.
 //
-// ── 끄는 조건 둘 ────────────────────────────────────────────────────────────
-// 1. lg 아래. 폰에서는 히어로가 한 단으로 쌓여서 카피 다음에 카운트다운과 사진이
-//    옵니다. 그것을 읽으려고 스크롤하는 것인데 그 스크롤이 바로 글자를 지웁니다.
-//    8월 훅이 같은 이유로 페이드를 데스크톱 전용으로 두었습니다.
-// 2. prefers-reduced-motion. 8월 것은 사용자 요청으로 이 설정을 무시하지만,
-//    새로 만드는 효과의 기본값은 존중입니다.
+// ── 폰은 다른 곡선입니다 (2026-09-20 2차, 사용자: "모바일과 데스크탑 둘 다") ──
+// 같은 곡선을 폰에 걸 수는 없습니다. 폰에서는 히어로가 한 단으로 쌓여서 카피
+// 다음에 카운트다운과 사진이 옵니다. 그것을 읽으려고 내리는 스크롤인데,
+// 페이지 scrollY로 재면 0.5화면에서 이미 투명도가 0.3입니다. 그 자리에 아직
+// "등록 준비 중"과 "프로그램 보기"가 화면에 있어요. 읽고 누를 것을 지우는
+// 효과는 효과가 아니라 고장입니다.
+//
+// 그래서 폰은 **블록 자기 자신이 화면 위로 빠져나가는 마지막 구간**에서만
+// 움직입니다(useHeroExit). 블록의 아래쪽 4분의 1이 화면 위 모서리를 지나는
+// 동안 32px 들리면서 사라집니다. 화면에 남아 있는 것은 건드리지 않고, 나가는
+// 것만 녹습니다. 두 블록(카피 / 카운트다운+사진)이 각자의 때에 움직이므로
+// 데스크톱과 같은 "먼저와 나중"이 폰에서도 보입니다.
+//
+// ── 끄는 조건 ───────────────────────────────────────────────────────────────
+// prefers-reduced-motion. 8월 것은 사용자 요청으로 이 설정을 무시하지만,
+// 새로 만드는 효과의 기본값은 존중입니다.
 //
 // 푸터의 "배경 움직임 끄기"(MotionToggle)는 보지 않습니다. 그 손잡이는 WCAG
 // 2.2.2, 즉 **저절로 시작해서 5초를 넘기는** 움직임에 대한 것이고 배경 캔버스가
@@ -76,10 +86,42 @@ export function useHeroRecede() {
   const on = isWide && !reduce;
   return {
     on,
+    /** 폰에서 useHeroExit를 켤지. lg에서는 위의 값들이 대신합니다. */
+    phone: !isWide && !reduce,
     copyY: on ? copyY : undefined,
     copyOpacity: on ? copyOpacity : undefined,
     photoY: on ? photoY : undefined,
     photoScale: on ? photoScale : undefined,
     photoOpacity: on ? photoOpacity : undefined,
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 폰용. 블록 하나가 화면 위로 빠져나가는 마지막 구간에서만 들리고 사라집니다.
+//
+// offset ["start start", "end start"]: 진행도 0이 "블록의 위가 화면 위에 닿는
+// 순간", 1이 "블록의 아래가 화면 위에 닿는 순간"입니다. 즉 진행도는 이 블록이
+// 화면 위로 얼마나 빠져나갔는지입니다. 0.75부터 1까지, 마지막 4분의 1에서만
+// 값을 줍니다. 그 구간에 화면에 남아 있는 것은 블록의 아래쪽 4분의 1이고,
+// 600px짜리 카피 블록이면 150px입니다.
+//
+// 데스크톱 곡선(위)을 폰에 쓰지 않는 이유는 이 파일 머리의 주석에 있습니다.
+// 반대로 이 곡선을 데스크톱에 쓰지 않는 이유는, 데스크톱 히어로가 두 단이라
+// 블록이 화면 높이보다 짧고 "빠져나가는 구간"이 너무 짧게 끝나기 때문입니다.
+// 사용자가 고른 것은 두 단의 속도 차이가 보이는 쪽입니다.
+//
+// scale은 사진 블록에만 씁니다. 글자를 줄이면 읽는 중에 크기가 변합니다.
+// ─────────────────────────────────────────────────────────────────────────────
+export function useHeroExit(enabled: boolean) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const y = useTransform(scrollYProgress, [0.75, 1], [0, -32]);
+  const opacity = useTransform(scrollYProgress, [0.75, 1], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0.75, 1], [1, 0.96]);
+  return {
+    ref,
+    y: enabled ? y : undefined,
+    opacity: enabled ? opacity : undefined,
+    scale: enabled ? scale : undefined,
   };
 }

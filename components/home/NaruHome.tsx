@@ -35,7 +35,7 @@ import { H2, H3, LABEL_HEADING, ROW_HEADING, STATEMENT, GRADIENT_TEXT } from "@/
 import NaruMark from "@/components/ui/NaruMark";
 import MotionToggle from "@/components/ui/MotionToggle";
 import { motion } from "framer-motion";
-import { useHeroRecede } from "@/components/shared/useHeroRecede";
+import { useHeroRecede, useHeroExit } from "@/components/shared/useHeroRecede";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 나루 홈 (/).
@@ -398,6 +398,10 @@ export default function NaruHome() {
   // 그 결정은 그대로입니다. 2026-09-20에 들어온 것은 같은 효과를 되살린 것이
   // 아니라 다른 축의 다른 효과이고, 사용자가 셋 중에 고른 것입니다.
   const hero = useHeroRecede();
+  // 폰용. 블록이 화면 위로 빠져나가는 마지막 구간에서만 움직입니다. lg에서는
+  // 값이 undefined라 위의 데스크톱 곡선이 그대로 씁니다.
+  const copyExit = useHeroExit(hero.phone);
+  const stackExit = useHeroExit(hero.phone);
   // 노선도의 현재 위치 점(감사 반영 브리프 3.6). 호버한 일정 행으로 점이 옮겨 갑니다.
   // 2026-09-20 (표현 방식 브리프 4): openDay(폰 Day 카드 아코디언)는 카드와 함께
   // 사라졌습니다. 행은 처음부터 전부 펼쳐져 있어 접었다 펼 것이 없습니다.
@@ -440,7 +444,11 @@ export default function NaruHome() {
         <div className="relative grid items-center gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
           {/* 카피 단. 스크롤하면 위로 올라가며 사라집니다(useHeroRecede).
               lg 아래와 prefers-reduced-motion에서는 값이 undefined라 정지 그대로입니다. */}
-          <motion.div style={{ y: hero.copyY, opacity: hero.copyOpacity }} className="text-center lg:pl-10 lg:text-left xl:pl-16">
+          <motion.div
+            ref={copyExit.ref}
+            style={{ y: hero.copyY ?? copyExit.y, opacity: hero.copyOpacity ?? copyExit.opacity }}
+            className="relative text-center lg:pl-10 lg:text-left xl:pl-16"
+          >
             <Eyebrow color="purple">{t(naru.eventHero.eyebrow)}</Eyebrow>
             {/* 8월 H1과 같은 clamp. 2행은 그라데이션 토큰(GRADIENT_TEXT). ko는
                 "크로싱 서울" / "CROSSING SEOUL", en은 "CROSSING" / "SEOUL".
@@ -529,10 +537,17 @@ export default function NaruHome() {
         {/* 폰(lg 아래): 카피 바로 다음에 사진 넷(2×2), 그 아래 카운트다운. */}
         {/* 폰(lg 아래): CTA → 카운트다운 한 줄 → 사진 넷. 데스크톱(왼쪽 단 CTA 아래)과 같은
             순서(모바일 수정 브리프 2). */}
-        <div className="px-6 sm:px-10 lg:hidden">
+        {/* 폰의 두 번째 블록. 카피가 먼저 나가고 이것이 나중에 나갑니다. 데스크톱의
+            "카피 먼저, 사진 나중"이 폰에서는 순서로 나타납니다. 사진이 들어 있는
+            블록이라 scale까지 씁니다(글자만 있는 블록에는 쓰지 않습니다). */}
+        <motion.div
+          ref={stackExit.ref}
+          style={{ y: stackExit.y, opacity: stackExit.opacity, scale: stackExit.scale, transformOrigin: "50% 0%" }}
+          className="relative px-6 sm:px-10 lg:hidden"
+        >
           <CountdownPanel t={t} locale={locale} className="mt-8" />
           <HeroPhotos photos={naru.eventHero.photos} t={t} className="mt-6" />
-        </div>
+        </motion.div>
       </Chapter>
 
       {/* ── CH1 · 닷새의 모양 (DECIDED 2026-09-17, 홈 흐름 재배치 브리프) ──
