@@ -34,6 +34,8 @@ import OpenChatLink from "@/components/ui/OpenChatLink";
 import { H2, H3, LABEL_HEADING, ROW_HEADING, STATEMENT, GRADIENT_TEXT } from "@/components/ui/typography";
 import NaruMark from "@/components/ui/NaruMark";
 import MotionToggle from "@/components/ui/MotionToggle";
+import { motion } from "framer-motion";
+import { useHeroRecede } from "@/components/shared/useHeroRecede";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 나루 홈 (/).
@@ -388,9 +390,14 @@ export default function NaruHome() {
   // 화면은 그 전과 같습니다. open이면 CTA 셋이 "등록하기"로, closed면 "등록이 마감됐습니다".
   const reg = useCrossingRegisterOptional();
   const regState = reg?.state ?? "not_open";
-  // 8월 히어로의 패럴랙스 값 여섯. 두 단이 스크롤에 따라 양옆으로 벌어지며 사라집니다.
-  // 2026-09-19 (사용자): 8월 히어로의 패럴랙스(두 단이 양옆으로 벌어지며 사라짐, useHeroSplit)를
-  // 뺐습니다. "8월 페이지와 같은 효과, 마음에 안 듦." 히어로는 정지 레이아웃입니다.
+  // 히어로 스크롤 효과 (2026-09-20). 카피가 먼저 올라가며 사라지고 사진이 느리게
+  // 따라옵니다. 값과 이유는 components/shared/useHeroRecede.ts에.
+  //
+  // 2026-09-19 (사용자): 8월 히어로의 패럴랙스(두 단이 양옆으로 벌어지며 사라짐,
+  // useHeroSplit)를 뺐습니다. "8월 페이지와 같은 효과, 마음에 안 듦."
+  // 그 결정은 그대로입니다. 2026-09-20에 들어온 것은 같은 효과를 되살린 것이
+  // 아니라 다른 축의 다른 효과이고, 사용자가 셋 중에 고른 것입니다.
+  const hero = useHeroRecede();
   // 노선도의 현재 위치 점(감사 반영 브리프 3.6). 호버한 일정 행으로 점이 옮겨 갑니다.
   // 2026-09-20 (표현 방식 브리프 4): openDay(폰 Day 카드 아코디언)는 카드와 함께
   // 사라졌습니다. 행은 처음부터 전부 펼쳐져 있어 접었다 펼 것이 없습니다.
@@ -429,10 +436,11 @@ export default function NaruHome() {
           contentinfo만 남고, 18,000px짜리 한 장에서 챕터 단위 이동 수단이 레일
           하나뿐이었습니다. 각 챕터가 자기 제목을 이름으로 씁니다. */}
       <Chapter id="top" labelledBy="hero-title" align="center" wide className="pt-16 sm:pt-24 lg:pt-20">
-        {/* relative: useScroll의 target은 offsetParent가 positioned여야 합니다.
-            없으면 framer-motion이 콘솔에 경고를 냅니다(2026-09-17 배경 검증에서 발견). */}
+        {/* relative: 배경 국면이 이 상자를 기준으로 잡습니다(2026-09-17 배경 검증). */}
         <div className="relative grid items-center gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
-          <div className="text-center lg:pl-10 lg:text-left xl:pl-16">
+          {/* 카피 단. 스크롤하면 위로 올라가며 사라집니다(useHeroRecede).
+              lg 아래와 prefers-reduced-motion에서는 값이 undefined라 정지 그대로입니다. */}
+          <motion.div style={{ y: hero.copyY, opacity: hero.copyOpacity }} className="text-center lg:pl-10 lg:text-left xl:pl-16">
             <Eyebrow color="purple">{t(naru.eventHero.eyebrow)}</Eyebrow>
             {/* 8월 H1과 같은 clamp. 2행은 그라데이션 토큰(GRADIENT_TEXT). ko는
                 "크로싱 서울" / "CROSSING SEOUL", en은 "CROSSING" / "SEOUL".
@@ -499,7 +507,7 @@ export default function NaruHome() {
             </div>
             {/* 카운트다운(얇은 한 줄). lg부터 여기, 그 아래 폭에서는 무대 다음에. */}
             <CountdownPanel t={t} locale={locale} className="mt-8 hidden lg:block" />
-          </div>
+          </motion.div>
           {/* 오른쪽 단 = 8월 행사 사진 넷 (DECIDED 2026-09-17, 사용자). 8월 히어로의
               메탈 휴먼 자리입니다. 사람이 많이 나온 장면만, 같은 사진은 사이트에 한 번.
               그 전의 형상 무대(싱가포르·서울 점, 배경 수정 브리프)는 같은 날 걷었습니다.
@@ -508,9 +516,15 @@ export default function NaruHome() {
               priority가 걸려 있어 폰이 보지도 않을 이미지 둘을 preload 했습니다
               (2026-09-19, 접근성 감사 22). 느린 회선에서 히어로가 늦게 뜨면
               접근성 체감에도 영향이 있습니다. 아래 폰용 묶음이 priority를 맡습니다. */}
-          <div className="hidden lg:block lg:pr-10 xl:pr-16">
+          {/* 사진 단. 카피보다 느리게(-24px) 따라오고 살짝 작아집니다. 두 단의
+              속도 차이가 깊이를 만듭니다. transform-origin이 위쪽인 이유: 가운데를
+              기준으로 줄이면 사진이 아래에서 위로도 딸려 올라와 -24px이 흐려집니다. */}
+          <motion.div
+            style={{ y: hero.photoY, scale: hero.photoScale, opacity: hero.photoOpacity, transformOrigin: "50% 0%" }}
+            className="hidden lg:block lg:pr-10 xl:pr-16"
+          >
             <HeroPhotos photos={naru.eventHero.photos} t={t} desktopOnly />
-          </div>
+          </motion.div>
         </div>
         {/* 폰(lg 아래): 카피 바로 다음에 사진 넷(2×2), 그 아래 카운트다운. */}
         {/* 폰(lg 아래): CTA → 카운트다운 한 줄 → 사진 넷. 데스크톱(왼쪽 단 CTA 아래)과 같은
