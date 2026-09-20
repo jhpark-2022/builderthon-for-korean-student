@@ -1098,13 +1098,18 @@ export const naru = {
           ko: "데이터로 문제를 정의하는 단계가 없었습니다",
           en: "There was no step where data defines the problem",
         },
+        // 2026-09-20 (크로싱서울_일정.pdf 01): 같은 것을 더 정확하게 말합니다.
+        // 빠진 것은 "발견하는 구간"이 아니라 프로세스를 그려 보고 고쳐 볼 기회였고,
+        // 만든 것이 서로 비슷했던 이유가 거기 있습니다. 답도 "구간을 연다"에서
+        // "무엇을 만들고 어디에 적용되는지까지 학생이 정의한다"로 넓어집니다.
+        // 넷 중 첫 항목만 바꿉니다. 나머지 셋은 그대로.
         body: {
-          ko: "문제와 데이터가 이미 정제돼 있어서, 발견하는 구간이 통째로 빠졌습니다.",
-          en: "The problem and the data arrived already cleaned, so the discovery stretch was missing entirely.",
+          ko: "기업 프로세스 이해가 중요한데, 데이터를 가지고 프로세스를 그려 보고 고쳐 본 것이 아니라 문제 접근법만 받았습니다. 생각의 기회가 거기서 닫혔고, 만든 것이 서로 비슷했던 것도 같은 이유입니다.",
+          en: "Understanding the company's process matters, and what arrived was an approach to the problem rather than a chance to map that process from the data and revise it. That is where the thinking stopped, and it is why the builds resembled each other.",
         },
         answer: {
-          ko: "데이터에서 문제를 찾아 정의하는 구간부터 참가자에게 엽니다.",
-          en: "The stretch where you find and define the problem in the data opens to participants.",
+          ko: "만들어야 하는 것과 그것이 어디에 적용되는지까지 학생이 정의합니다.",
+          en: "What to build, and where it has to land, are both yours to define.",
         },
       },
       {
