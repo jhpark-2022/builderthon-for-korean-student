@@ -31,6 +31,21 @@ export const H3 =
   "break-keep text-[clamp(1.35rem,2.6vw,1.9rem)] font-bold tracking-tight text-white";
 
 /**
+ * 목록 한 행의 제목. #gains 다섯 행과 #december 스테이지 다섯 행.
+ *
+ * ADDED 2026-09-20 (표현 방식 브리프 3·4). 두 자리가 카드에서 행으로 내려오면서
+ * 생긴 자리입니다. H3를 그대로 쓸 수 없는 이유는 클램프입니다: 루트가 18px이라
+ * H3가 1440에서 34.2px이고, "실명 기업의 진짜 문제"가 283px가 되어 14rem 제목
+ * 칸에 한 줄로 들어가지 않습니다. 행의 제목은 행 높이를 정하기 때문에 다섯 배로
+ * 돌아옵니다.
+ *
+ * 1.35rem은 H3 클램프의 아래 끝 그대로입니다(24.3px). 새 계단을 만든 것이
+ * 아니라 있는 계단의 한 끝에 고정한 것입니다. 이 크기에서 가장 긴 제목이
+ * 201px이라 14rem 칸에 33px 여유로 들어갑니다.
+ */
+export const ROW_HEADING = "break-keep text-[1.35rem] font-bold tracking-tight text-white";
+
+/**
  * 구획 제목이 라벨의 모양을 유지해야 할 때.
  *
  * ADDED 2026-09-16. #why의 "약속이 지켜지는 지점"과 "방법은 바뀝니다"가 이

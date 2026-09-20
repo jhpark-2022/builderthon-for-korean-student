@@ -31,7 +31,7 @@ import OpenChatLink from "@/components/ui/OpenChatLink";
 // RecordTabs: 2026-09-17에 뺐다가(사용자: 바로 아카이브로) 2026-09-18 감사 반영 브리프 5.2로
 // 다시 넣었습니다. 멘토 / 연사와 피드백 패널 둘만.
 // (2026-09-19: RecordTabs·PressRows·Funnel은 화면에서 내려가 import도 뺐습니다. 파일은 그대로.)
-import { H2, H3, LABEL_HEADING, STATEMENT, GRADIENT_TEXT } from "@/components/ui/typography";
+import { H2, H3, LABEL_HEADING, ROW_HEADING, STATEMENT, GRADIENT_TEXT } from "@/components/ui/typography";
 import NaruMark from "@/components/ui/NaruMark";
 import MotionToggle from "@/components/ui/MotionToggle";
 
@@ -391,9 +391,9 @@ export default function NaruHome() {
   // 8월 히어로의 패럴랙스 값 여섯. 두 단이 스크롤에 따라 양옆으로 벌어지며 사라집니다.
   // 2026-09-19 (사용자): 8월 히어로의 패럴랙스(두 단이 양옆으로 벌어지며 사라짐, useHeroSplit)를
   // 뺐습니다. "8월 페이지와 같은 효과, 마음에 안 듦." 히어로는 정지 레이아웃입니다.
-  // 폰 Day 카드 아코디언의 열린 칸(감사 반영 브리프 3.1). 첫 카드만 기본 펼침. lg부터는 무시.
-  const [openDay, setOpenDay] = useState(0);
-  // 노선도의 현재 위치 점(감사 반영 브리프 3.6): 데스크톱은 호버·포커스한 카드, 폰은 열린 칸.
+  // 노선도의 현재 위치 점(감사 반영 브리프 3.6). 호버한 일정 행으로 점이 옮겨 갑니다.
+  // 2026-09-20 (표현 방식 브리프 4): openDay(폰 Day 카드 아코디언)는 카드와 함께
+  // 사라졌습니다. 행은 처음부터 전부 펼쳐져 있어 접었다 펼 것이 없습니다.
   const [hoverDay, setHoverDay] = useState<number | null>(null);
 
   return (
@@ -613,56 +613,93 @@ export default function NaruHome() {
             }))}
             pill={t(naru.december.mentoringHeading)}
             legend={{ anchor: t(naru.december.routeLegendSubmit), plain: t(naru.december.routeLegendStage) }}
-            current={hoverDay ?? (openDay >= 0 ? openDay : 0)}
+            current={hoverDay ?? 0}
           />
         </Reveal>
 
-        {/* 데이 카드 다섯. 8월 DayCard의 문법: DAY 큰 숫자 + 날짜 요일, 칩 줄,
-            제목, 본문, "→ 그날의 한 줄". 카드는 grid로 같은 높이. */}
+        {/* 2026-09-20 (표현 방식 브리프 4): Day 카드 다섯 장을 지우고 표 한 장으로.
+            바로 위 노선도가 이미 같은 다섯 라벨(BEFORE / 문제 발견 / 빌드 / 다듬기 /
+            피치)을 그리고 있었습니다(2026-09-18 감사 P1: "노선도와 Day 카드가 같은
+            시간축을 두 번 그린다"). 노선도가 뼈대이고 이 표가 살입니다. 카드로 두면
+            라벨이 세 번 나옵니다(노선도 · 카드 제목 · 표).
+
+            dl이 아니라 표인 이유는 열이 셋이고 세로로 비교되기 때문입니다. 폰에서는
+            행마다 쌓입니다. 폰 아코디언(감사 반영 브리프 3.1)은 함께 사라집니다.
+            접었다 펴는 장치가 필요했던 것은 카드 다섯 장이 세로로 1,000px을 썼기
+            때문이고, 행이면 처음부터 전부 보입니다.
+
+            제출물 칩은 알약을 벗고 오른쪽 열의 작은 글자가 됩니다. 노선도의 ★가
+            이미 "제출이 있는 날"을 말하고 있어서 칩이 같은 말을 세 번째로 하고
+            있었습니다.
+
+            워크샵 세 칸(Problem Discovery / PO session / Pitching session)은 별도
+            행이 아니라 해당 Day 행의 마지막 줄입니다. 전에는 열 정렬로만 관계를
+            암시했는데 Day 4에는 워크샵이 없어 줄이 어긋나 있었어요.
+
+            문장은 한 글자도 새로 쓰지 않았습니다. 카드에 있던 title·body·line·
+            workshop·chips·submit을 그대로 옮긴 것입니다. 날짜는 전과 같이
+            naruDates가 셉니다(data/naru.ts에 날짜 문자열을 쓰지 않는 규칙). */}
         <Reveal className="mx-auto mt-10 max-w-5xl text-left">
           <h3 className={LABEL_HEADING}>{t(naru.december.scheduleLabel)}</h3>
           <p className="mt-3 max-w-2xl break-keep text-sm leading-relaxed text-white/70">
             {t(naru.december.scheduleLead)}
           </p>
-          {/* 폰에서는 아코디언(감사 반영 브리프 3.1): 제목+날짜 56px 행, 탭하면 펼침, 첫 카드만
-              기본 펼침. lg부터는 그 전과 같은 정적 카드 다섯. 마크업은 DayCard 하나이고 헤더만
-              폰용 버튼과 데스크톱용 정적 행 둘을 두어 CSS로 고릅니다(하이드레이션 뒤 접히는
-              점프가 없습니다). */}
-          <ol role="list" className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="mt-5">
             {naru.december.stages.map((stage, i) => (
-              <DayCard
+              <div
                 key={stage.name.en}
-                stage={stage}
-                t={t}
-                locale={locale}
-                open={openDay === i}
-                onToggle={() => setOpenDay(openDay === i ? -1 : i)}
-                onFocus={() => setHoverDay(i)}
-                onBlur={() => setHoverDay(null)}
-              />
-            ))}
-          </ol>
-          {/* 워크샵 줄(5차 배치 그대로). 상자는 8월 Glass 계열의 연보라 테두리. lg부터만
-              (폰에서는 Day 카드 안의 한 줄이 대신합니다). */}
-          <div className="mt-3 hidden gap-3 lg:grid lg:grid-cols-5">
-            <p className="hidden break-keep text-xs leading-relaxed text-white/55 lg:block lg:self-center lg:pr-2">
-              {t(naru.december.workshopNote)}
-            </p>
-            {naru.december.stages.map((stage) =>
-              stage.workshop ? (
-                <div key={stage.name.en} className="rounded-xl border border-accent/25 bg-accent/10 px-4 py-3">
-                  <p className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-accent">
-                    {t(naru.december.workshopLabel)}
-                    <span className="lg:hidden">{`\u2002${t(stage.name)}`}</span>
-                  </p>
-                  <p className="mt-1 text-sm font-semibold text-white/90">{t(stage.workshop.title)}</p>
-                  <p className="mt-0.5 break-keep text-xs leading-snug text-white/55">{t(stage.workshop.body)}</p>
+                // 노선도의 현재 위치 점이 이 행으로 옵니다(감사 반영 브리프 3.6).
+                // 카드가 하던 일을 행이 그대로 이어받습니다.
+                onMouseEnter={() => setHoverDay(i)}
+                onMouseLeave={() => setHoverDay(null)}
+                className="grid grid-cols-1 gap-x-6 gap-y-2 border-t border-white/10 py-5 last:border-b sm:grid-cols-[7rem_1fr_10rem]"
+              >
+                <div className="flex items-baseline gap-2">
+                  {/* lang="en": DAY·BEFORE는 두 로케일 모두 영어입니다(접근성 감사 7). */}
+                  <span lang="en" className={LABEL_HEADING}>
+                    {stage.dayOffset === null
+                      ? t(naru.december.beforeLabel)
+                      : `${t(naru.december.dayLabel)}\u2002${stage.dayOffset + 1}`}
+                  </span>
+                  <span className="shrink-0 text-xs text-white/50">
+                    {stage.dayOffset === null ? t(stage.when) : formatDecemberDayWithWeekday(locale, stage.dayOffset)}
+                  </span>
                 </div>
-              ) : stage.dayOffset === null ? null : (
-                <div key={stage.name.en} aria-hidden className="hidden lg:block" />
-              ),
-            )}
+                <div>
+                  <h4 className={ROW_HEADING}>{t(stage.title)}</h4>
+                  {/* stage.body는 그리지 않습니다. 브리프 4장이 표로 옮긴다고 적은 것은
+                      제출물 칩, 그날의 한 줄, 워크샵 셋입니다. 카드 본문까지 넣으면 한
+                      행이 네 줄이 되고, 표가 아니라 세로로 세운 카드가 됩니다. 키는
+                      data/naru.ts에 그대로 있습니다. */}
+                  <p className="mt-1.5 flex gap-1.5 break-keep text-sm font-semibold leading-snug text-white">
+                    <span aria-hidden className="text-white/50">→</span>
+                    {t(stage.line)}
+                  </p>
+                  {stage.workshop && (
+                    <p className="mt-1.5 flex flex-wrap items-baseline gap-x-1.5 break-keep text-sm leading-relaxed text-white/55">
+                      <span className="font-bold uppercase tracking-[0.14em] text-accent">{t(naru.december.workshopLabel)}</span>
+                      <span className="font-semibold text-white/85">{t(stage.workshop.title)}</span>
+                      <span>{t(stage.workshop.body)}</span>
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-wrap items-start gap-x-3 gap-y-1">
+                  {stage.submit && (
+                    <span className="text-xs font-bold text-[#C79BB4]">
+                      {`${t(naru.december.submitLabel)}\u2002${t(stage.submit)}`}
+                    </span>
+                  )}
+                  {stage.chips.map((c, j) => (
+                    <span key={j} className="text-xs text-white/60">{t(c)}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
+          {/* 워크샵 줄의 왼쪽 라벨이던 문장. 상자 셋이 사라져도 이 한 줄은 남습니다. */}
+          <p className="mt-3 break-keep text-xs leading-relaxed text-white/55">
+            {t(naru.december.workshopNote)}
+          </p>
           {/* General Mentoring. 초록 테두리 강조 상자(8월 "과정이 기록됩니다" 문법). */}
           <div className="mt-3 flex flex-col gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-4 lg:flex-row lg:items-center lg:gap-8 lg:px-7">
             <div className="shrink-0 lg:w-56">
@@ -845,7 +882,7 @@ export default function NaruHome() {
               className="grid grid-cols-[2.25rem_1fr] items-start gap-x-4 gap-y-1 border-t border-white/10 py-5 last:border-b sm:grid-cols-[2.25rem_14rem_1fr] sm:gap-x-6"
             >
               <span className="pt-0.5 text-sm font-black tabular-nums text-accent">{item.num}</span>
-              <h3 className="break-keep text-[1.35rem] font-bold tracking-tight text-white">{t(item.title)}</h3>
+              <h3 className={ROW_HEADING}>{t(item.title)}</h3>
               <p className="col-start-2 break-keep text-sm leading-relaxed text-white/70 sm:col-start-3">
                 {t(item.body)}
               </p>
@@ -1512,133 +1549,6 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
         {t(naru.how.diagramNote)}
       </p>
     </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Day 카드 (2026-09-18, 감사 반영 브리프 3.1). 8월 DayCard의 문법(DAY 큰 숫자 + 날짜 요일, 칩 줄,
-// 제목, 본문, "→ 그날의 한 줄")은 그대로이고, 폰에서만 아코디언입니다.
-//
-// 헤더가 둘인 이유: 폰용은 <button aria-expanded>, 데스크톱용은 정적 행. matchMedia로 하나만
-// 그리면 서버 마크업(데스크톱)이 폰에서 하이드레이션 뒤에 접히며 800px이 점프합니다. CSS로
-// 고르면 첫 페인트부터 접혀 있습니다. display:none은 접근성 트리에서도 빠지므로 데스크톱
-// 스크린리더가 눌리지 않는 버튼을 만나지 않습니다.
-// ─────────────────────────────────────────────────────────────────────────────
-type Stage = (typeof naru.december.stages)[number];
-function DayCard({
-  stage,
-  t,
-  locale,
-  open,
-  onToggle,
-  onFocus,
-  onBlur,
-}: {
-  stage: Stage;
-  t: (p: Phrase) => string;
-  locale: "ko" | "en";
-  open: boolean;
-  onToggle: () => void;
-  /** 노선도의 현재 위치 점이 이 카드로 오게(호버·포커스). */
-  onFocus?: () => void;
-  onBlur?: () => void;
-}) {
-  const bodyId = `day-${stage.name.en.toLowerCase().replace(/\s+/g, "-")}-body`;
-  const kicker = stage.dayOffset === null ? t(naru.december.beforeLabel) : t(naru.december.dayLabel);
-  const date = stage.dayOffset === null ? t(stage.when) : formatDecemberDayWithWeekday(locale, stage.dayOffset);
-  // 한글 주 + 영문 소문자 보조(감사 반영 브리프 8). en에서는 이름이 곧 제목이라 보조를 붙이지 않습니다.
-  const sub = locale === "ko" ? stage.name.en.toLowerCase() : null;
-  return (
-    <li
-      onMouseEnter={onFocus}
-      onMouseLeave={onBlur}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      className={`relative flex h-full flex-col rounded-2xl border text-left ${
-        stage.submit ? "border-[#9A5A82]/40 bg-white/[0.055]" : "border-white/[0.08] bg-white/[0.03]"
-      }`}
-    >
-      {/* 폰 헤더: 56px 행, 탭하면 펼침.
-          h4로 감쌉니다 (2026-09-19, 접근성 감사 15). 아래 데스크톱용 h4는
-          hidden lg:flex라 폰에서는 접근성 트리에서 빠지고, 제목이 버튼 안의
-          span이 됐습니다. 폰 로터의 "제목"으로 일정 다섯 칸 사이를 오갈 수
-          없었어요. 버튼을 감싸면 로터에 뜨고 aria-expanded도 그대로입니다. */}
-      <h4 className="m-0 lg:hidden">
-      <button
-        type="button"
-        aria-expanded={open}
-        aria-controls={bodyId}
-        onClick={onToggle}
-        className="flex min-h-[56px] w-full items-center justify-between gap-3 px-4 text-left"
-      >
-        {/* items-center + 두 줄까지 (2026-09-19, 모바일 감사 12): 제목만 truncate라
-            좁은 폭에서 말줄임으로 잘렸습니다. 접힌 목록에서 제목이 잘리면 "무슨
-            날인지" 고르는 단 하나의 단서를 잃습니다. 왼쪽에 남는 폭이 약 109px이라
-            한글 7자, 영어 "Choosing a track"은 확실히 잘렸어요. 두 줄이면
-            14px × 1.25 × 2 = 35px으로 min-h-[56px] 안에 그대로 듭니다. */}
-        <span className="flex min-w-0 items-center gap-2">
-          {/* lang: kicker는 두 로케일 모두 영어("DAY" / "BEFORE")입니다
-              (2026-09-19, 접근성 감사 7). data/naru.ts의 dayLabel·beforeLabel. */}
-          <span lang="en" className="shrink-0 text-xs font-bold uppercase tracking-wider text-accent/80">{kicker}</span>
-          {stage.dayOffset !== null && <span className="shrink-0 text-xl font-black leading-none text-white">{stage.dayOffset + 1}</span>}
-          <span className="line-clamp-2 min-w-0 text-[14px] font-bold leading-tight text-white">{t(stage.title)}</span>
-        </span>
-        <span className="flex shrink-0 items-center gap-2 text-xs text-white/55">
-          {date}
-          <span aria-hidden className={`inline-block text-white/45 transition-transform motion-reduce:transition-none ${open ? "rotate-180" : ""}`}>⌄</span>
-        </span>
-      </button>
-      </h4>
-      {/* 데스크톱 헤더: 정적. */}
-      <div className="hidden items-baseline justify-between gap-3 p-4 pb-0 sm:p-5 sm:pb-0 lg:flex">
-        <span className="flex items-baseline gap-1.5">
-          <span lang="en" className="text-[0.6rem] font-bold uppercase tracking-wider text-accent/80">{kicker}</span>
-          {stage.dayOffset !== null && <span className="text-2xl font-black leading-none text-white">{stage.dayOffset + 1}</span>}
-        </span>
-        <span className="shrink-0 text-[0.7rem] text-white/55">{date}</span>
-      </div>
-      <div id={bodyId} className={`${open ? "block" : "hidden"} px-4 pb-4 sm:px-5 sm:pb-5 lg:block`}>
-        <div className="flex flex-wrap gap-1.5 lg:mt-3">
-          {/* 강조색은 하나(감사 반영 브리프 3.3): "★ 제출" 칩만 자주, 나머지는 --border-2 외곽선. */}
-          {stage.submit && (
-            <Chip tone="plum">
-              <span aria-hidden>★</span>{`${t(naru.december.submitLabel)}\u2002${t(stage.submit)}`}
-            </Chip>
-          )}
-          {stage.chips.map((c, i) => (
-            <Chip key={i} tone="outline">{t(c)}</Chip>
-          ))}
-        </div>
-        <h4 className="mt-3 hidden flex-wrap items-baseline gap-x-2 text-[15px] font-bold leading-snug text-white lg:flex">
-          {t(stage.title)}
-          {/* lang="en": sub는 한국어 로케일에서만 붙는 영문 이름입니다(위 정의). */}
-          {sub && <span lang="en" className="text-xs font-semibold text-white/50">{sub}</span>}
-        </h4>
-        {/* 폰(lg 아래)에서는 두 줄까지(모바일 수정 브리프 1.4). **단 접혀 있을
-            때만** (2026-09-19, 모바일 감사 20 · 접근성 감사 16). 전에는 펼쳐도 두
-            줄에서 잘려서, 스크린리더는 전문을 읽고 눈으로 읽는 사람만 못 읽는
-            비대칭이 있었습니다. 글자 크기를 키우면 줄 수는 그대로라 키울수록 더
-            많이 사라졌고요. 펼치는 행동의 보상은 "두 줄 더"가 아니라 "전부"여야
-            합니다. 길이 목표는 접힌 상태가 지킵니다.
-            13px → 13.5px (모바일 감사 13): 이 사이트의 text-xs이고, 읽는 문장이
-            12~13px 구간에 있던 둘 중 하나입니다. 새 임의 값을 만들지 않습니다. */}
-        <p className={`mt-2 break-keep text-[13.5px] leading-relaxed text-white/65 lg:mt-1.5 lg:text-[13px] ${open ? "" : "line-clamp-2 lg:line-clamp-none"}`}>{t(stage.body)}</p>
-        {/* "→ 그날의 한 줄"은 흰색 볼드 하나(감사 반영 브리프 3.3). */}
-        {/* 12.5px → 13.5px (2026-09-19, 모바일 감사 13). 읽는 문장이 12~13px
-            구간에 있던 둘 중 둘째입니다. 나머지 12px대는 라벨이라 그대로 둡니다. */}
-        <p className="mt-2 flex gap-1.5 break-keep text-[13.5px] font-bold leading-snug text-white lg:text-[12.5px]">
-          <span aria-hidden className="text-white/50">→</span>
-          {t(stage.line)}
-        </p>
-        {/* 폰: 워크샵을 카드 안 한 줄로(라벨 + 이름). 상자 셋은 lg부터(모바일 수정 브리프 1.1). */}
-        {stage.workshop && (
-          <p className="mt-2 flex flex-wrap items-baseline gap-x-1.5 text-xs text-white/70 lg:hidden">
-            <span className="font-bold uppercase tracking-[0.14em] text-accent">{t(naru.december.workshopLabel)}</span>
-            <span className="font-semibold text-white/85">{t(stage.workshop.title)}</span>
-          </p>
-        )}
-      </div>
-    </li>
   );
 }
 
