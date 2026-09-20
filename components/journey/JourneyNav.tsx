@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 // AnimatePresence와 motion은 등록 필이 있던 동안만 쓰였습니다 (2026-08-22 청산).
 // useReducedMotion은 헤더 자체의 전환에 여전히 필요합니다.
@@ -335,9 +336,14 @@ export default function JourneyNav({
       // 두 줄(로고 줄 + 섹션 레일)은 이미 이 배경 하나를 함께 씁니다 — 실측 105px =
       // nav 52 + 레일 53이라 줄 사이에 빈 틈이 없습니다. 여기서 갈라 두지 마세요.
       } ${scrolled ? "bg-[#070B1F]/95 backdrop-blur-md" : "bg-transparent"} ${
-        // 나루 홈: 로고 줄(52px)만 접고 레일은 남깁니다(감사 반영 브리프 2.1). 레일이 없는 첫 화면
+        // 로고 줄(52px)만 접고 목차 줄은 남깁니다(감사 반영 브리프 2.1). 레일이 없는 첫 화면
         // 근처(scrolled false)에서는 topZone이 먼저 막아 hidden이 되지 않습니다.
-        chromeHidden ? (naru && scrolled ? "-translate-y-[52px]" : "-translate-y-full") : "translate-y-0"
+        //
+        // 2026-09-20: 나루 홈만 이랬던 것을 8월 아카이브까지 넓혔습니다. 8월은
+        // 아래로 스크롤하면 헤더 전체가 사라져서, 목차도 12월 버튼도 위로 긁어야
+        // 나왔습니다. 사용자가 원한 것은 "항상 보이는 것"입니다. 대가는 폰에서
+        // 53px이 상주하는 것이고, 홈이 이미 치르고 있는 값입니다.
+        chromeHidden ? (scrolled ? "-translate-y-[52px]" : "-translate-y-full") : "translate-y-0"
       }`}
     >
       {/* 52px in the two-row band, h-20 from xl: the tall bar was designed for a
@@ -633,6 +639,21 @@ export default function JourneyNav({
         // "랜드마크"로 목차에 닿을 수 없었어요. 폰에서 이 레일이 유일한
         // 챕터 이동 수단이라는 점을 생각하면 가장 아픈 자리였습니다.
         <nav aria-label={t(dict.nav.sectionsAria)} className="xl:hidden">
+          {/* 8월 아카이브: 목차 줄 오른쪽 끝에 12월 이벤트 버튼을 고정합니다
+              (2026-09-20, 사용자: "8월 페이지에는 12월 이벤트 페이지로 돌아갈 수
+              있는 버튼이 항상 보였으면 좋겠어, along with the TOC at the top").
+
+              **레일 안이 아니라 레일 밖입니다.** 8월 목차는 가로로 굴러가는
+              레일이라(칩 다섯 × 94.5px = 552px, 화면은 390px) 안에 넣으면 굴려야
+              보이는 버튼이 됩니다. "항상 보였으면"과 반대예요. 밖에 두고 레일이
+              남는 폭을 쓰게 하면 굴리든 말든 버튼은 그 자리에 있습니다.
+
+              홈(naru)에는 붙이지 않습니다. 홈이 곧 12월 이벤트 페이지라 자기
+              자신으로 가는 버튼이 됩니다.
+
+              이 버튼 때문에 레일이 좁아지는 것은 감수합니다. 8월 목차는 원래
+              굴러가는 레일이라 보이는 칩 수가 줄 뿐 도달 못 하는 칸은 없습니다. */}
+          <div className={naru ? "" : "flex items-center gap-2 pr-5"}>
           {/* 나루(홈): 가로로 굴리지 않고 **접습니다** (2026-09-19, 사용자: "모바일 뷰에서
               TOC가 한 스크린에 다 들어왔으면"). 전에는 우측 페이드 마스크 + snap으로 "뒤에
               더 있다"를 알렸는데, 알려 주는 것과 보이는 것은 다릅니다. 다섯 칸짜리 목차는
@@ -661,7 +682,14 @@ export default function JourneyNav({
               위 주석대로 그 로케일들을 다시 재야 합니다. */}
           <div ref={railRef} className={naru
             ? "flex flex-wrap justify-center gap-2 px-5 pb-2"
-            : "flex gap-2 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]{display:none}"}>
+            // 우측 16px 페이드 (2026-09-20): 12월 버튼이 오른쪽에 서면서 칩이 그
+            // 경계에서 뚝 잘립니다. 잘린 자리는 "여기까지"로 읽히고, 페이드는
+            // "뒤에 더 있다"로 읽힙니다. 굴러가는 레일이니 뒤가 맞습니다.
+            //
+            // calc 안의 밑줄 두 개(100%_-_16px)가 필요합니다. Tailwind는 임의값의
+            // 밑줄을 공백으로 바꾸는데, CSS의 calc는 빼기 부호 양옆에 공백이 없으면
+            // 무효입니다. 밑줄 없이 적었다가 마스크가 통째로 무시됐습니다(실측).
+            : "flex gap-2 overflow-x-auto pb-2 pl-6 pr-1 [mask-image:linear-gradient(to_right,#000_calc(100%_-_16px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]{display:none}"}>
             {anchors.map((a) => {
               const here = a.id === activeSection;
               return (
@@ -731,6 +759,18 @@ export default function JourneyNav({
                 </a>
               );
             })}
+          </div>
+            {!naru && (
+              <Link
+                href="/#december"
+                aria-label={t(dict.nav.toDecemberAria)}
+                onClick={() => track("naru_cta", { src: "august_rail", to: "december" })}
+                className="inline-flex min-h-[44px] shrink-0 items-center gap-1.5 self-start whitespace-nowrap rounded-full border border-violet-400/45 bg-violet-500/[0.14] px-3 text-[0.7rem] font-bold text-violet-100 backdrop-blur transition active:scale-[0.97] hover:border-violet-400/70 hover:bg-violet-500/20"
+              >
+                {t(dict.nav.toDecember)}
+                <span aria-hidden className="text-violet-200/70">→</span>
+              </Link>
+            )}
           </div>
         </nav>
       )}
