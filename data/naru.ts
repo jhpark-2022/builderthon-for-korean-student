@@ -1444,6 +1444,50 @@ export const naru = {
         },
       },
     ] as { title: Phrase; body: Phrase }[],
+    // ── AI 활용 범위 셋 (DECIDED 2026-09-20, 크로싱서울_일정.pdf 01) ─────────
+    // PDF에서 가장 날카로운 장치입니다. "8월은 셋 중 하나만 썼습니다"가 12월이 왜
+    // 다른지를 한 눈에 말합니다. 바로 아래 gaps 첫 항목이 같은 이야기를 덜 선명하게
+    // 하고 있어서, 이 셋이 그 항목의 근거가 됩니다. 그래서 gaps **바로 위**입니다.
+    //
+    // 상자로 그리지 마세요(표현 방식 브리프 2장). 헤어라인으로 나뉜 3열 행 하나입니다.
+    // iii은 지난 것이라 한 단 낮은 밝기이고, i·ii의 when만 accent입니다.
+    scopeLabel: { ko: "학생이 도전할 수 있는 AI 활용 범위", en: "What students can take on with AI" },
+    scopeNote: { ko: "8월은 셋 중 하나만 썼습니다", en: "August used one of the three" },
+    scope: [
+      { num: "i", title: { ko: "다량의 Data 분석", en: "Analysing a lot of data" }, when: { ko: "12월에 더한다", en: "Added in December" } },
+      { num: "ii", title: { ko: "복잡한 Process 이해", en: "Understanding a complex process" }, when: { ko: "12월에 더한다", en: "Added in December" } },
+      { num: "iii", title: { ko: "아이디어의 코드화", en: "Turning an idea into code" }, when: { ko: "8월에 한 것", en: "What August did" } },
+    ] as { num: string; title: Phrase; when: Phrase }[],
+    scopeClose: {
+      ko: "아이디어를 LLM에 맡긴 것은, 그 전의 두 가지를 통한 본인 아이디어 구축이 없었기 때문입니다.",
+      en: "Ideas got handed to the LLM because the two steps before it, the ones that build your own idea, were missing.",
+    },
+
+    // ── 이렇게 굴립니다 (DECIDED 2026-09-20, 크로싱서울_일정.pdf 02 하단) ─────
+    // 프로그램 표 아래 한 줄짜리 정보 행 넷. 상자가 아닙니다.
+    //
+    // "공간"과 "장소"를 섞지 마세요. 장소(어디인가)는 여전히 미정이고 아래 tbd에
+    // 있습니다. 여기서 말하는 것은 운영 방식입니다.
+    factsLabel: { ko: "이렇게 굴립니다", en: "How it runs" },
+    facts: [
+      {
+        k: { ko: "세션", en: "Sessions" },
+        v: { ko: "모두 3시간씩. 따로 떼어 내도 하나의 이벤트로 쓸 수 있는 퀄리티로 만듭니다.", en: "Three hours each, built to stand on their own as an event." },
+      },
+      {
+        k: { ko: "공간", en: "Space" },
+        v: { ko: "4일 동안 아침부터 저녁까지. 마지막 날은 제외입니다.", en: "Open morning to evening for four days. Not the last day." },
+      },
+      {
+        k: { ko: "제출", en: "Submissions" },
+        v: { ko: "두 번뿐입니다. Day 1 이해도 1장, Day 3 덱 등 사전 제출물.", en: "Twice only. One page on Day 1, the deck and what goes with it on Day 3." },
+      },
+      {
+        k: { ko: "기록", en: "What gets recorded" },
+        v: { ko: "하루 끝 일지 10분, 팀 단위 체류 시간.", en: "Ten minutes of notes at the end of each day, and how long each team stayed." },
+      },
+    ] as { k: Phrase; v: Phrase }[],
+
     gapsHeading: { ko: "8월에 아쉬웠던 넷, 그리고 12월의 답", en: "Four things August missed, and December's answer" },
     gapsLead: {
       ko: "이 네 가지를 메우려면 한 번 더 해야 합니다. 각각 8월에 무엇이 없었고 12월에 무엇을 넣는지입니다.",

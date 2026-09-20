@@ -707,6 +707,30 @@ export default function NaruHome() {
               워크샵이 붙습니다")를 그리지 않습니다. Day 4에는 세션이 없어
               "스테이지마다"가 더 이상 맞지 않고, 3시간이라는 사실은 바로 아래
               facts의 첫 줄이 정확하게 말합니다. 키는 data/naru.ts에 그대로. */}
+
+          {/* DECIDED 2026-09-20 (일정 브리프 5장, PDF 02 하단): 세션·공간·제출·기록.
+              표가 "언제 무엇을"이라면 이 넷은 "어떻게 굴리는가"입니다. 상자가 아니라
+              표와 같은 문법의 행입니다(표현 방식 브리프 2장). 라벨 폭이 표의 왼쪽
+              열과 같은 7rem이라 두 블록의 왼쪽 축이 한 줄로 섭니다.
+
+              "공간"은 운영 방식이고 "장소"(어디인가)는 여전히 미정입니다. tbd 목록의
+              "장소"를 이 줄로 대신하지 마세요. */}
+          {/* 라벨은 dl 밖입니다. dl의 콘텐츠 모델은 dt/dd 아니면 **한 겹**의 div만
+              허용하고, 둘을 섞으면 VoiceOver가 용어와 정의를 짝지어 주지 못합니다
+              (2026-09-19 접근성 감사 9가 같은 자리에서 짚은 것). */}
+          <h4 className={`${LABEL_HEADING} mt-8`}>{t(naru.december.factsLabel)}</h4>
+          <dl className="mt-3">
+            {naru.december.facts.map((f, i) => (
+              <div
+                key={f.k.en}
+                className={`grid grid-cols-1 gap-x-6 gap-y-1 border-t border-white/10 py-3 sm:grid-cols-[7rem_1fr] ${i === naru.december.facts.length - 1 ? "border-b" : ""}`}
+              >
+                <dt className="break-keep text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/50">{t(f.k)}</dt>
+                <dd className="break-keep text-sm leading-relaxed text-white/70">{t(f.v)}</dd>
+              </div>
+            ))}
+          </dl>
+
           {/* General Mentoring. 초록 테두리 강조 상자(8월 "과정이 기록됩니다" 문법). */}
           <div className="mt-3 flex flex-col gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-4 lg:flex-row lg:items-center lg:gap-8 lg:px-7">
             <div className="shrink-0 lg:w-56">
@@ -723,7 +747,9 @@ export default function NaruHome() {
                 "마지막 날에는 새 방향을 제안하지 않음"(18자)이 세 줄, 영어는 네 줄이
                 됐습니다. 한 줄 길이는 짧아도 문제입니다. 세로가 늘어나는 대가는
                 아래 Day 카드의 clamp 완화와 같은 예산에서 나옵니다. */}
-            <ul role="list" className="grid flex-1 grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4">
+            {/* 2026-09-20 (일정 브리프 3장): 규칙이 넷에서 다섯이 되어 lg를 5열로.
+                4열이면 다섯째 줄만 아래로 내려가 왼쪽 칸이 둘이 됩니다. */}
+            <ul role="list" className="grid flex-1 grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-5">
               {naru.december.mentoringRules.map((rule, i) => (
                 <li key={i} className="flex gap-2.5 break-keep border-l-2 border-white/20 pl-3 text-xs leading-snug text-white/85 sm:text-sm">
                   {t(rule)}
@@ -749,6 +775,40 @@ export default function NaruHome() {
               {t(naru.why.measure)}
             </p>
           </div>
+        </Reveal>
+
+        {/* DECIDED 2026-09-20 (일정 브리프 4장, PDF 01): 학생이 도전할 수 있는 AI 활용
+            범위 셋. "8월은 셋 중 하나만 썼습니다"가 12월이 왜 다른지를 한 눈에
+            말합니다. 바로 아래 gaps 첫 항목이 같은 이야기를 덜 선명하게 하고 있어서
+            이 셋이 그 항목의 근거가 됩니다. 그래서 gaps 바로 위입니다.
+
+            상자가 아니라 3열 행 하나입니다(표현 방식 브리프 2장). iii은 지난 것이라
+            한 단 낮은 밝기이고, i·ii의 when만 accent입니다. 번호(i·ii·iii)는 로마
+            숫자 그대로 PDF에서 옵니다. */}
+        <Reveal className="mx-auto mt-8 max-w-5xl text-left lg:mt-12">
+          <h3 className={LABEL_HEADING}>{t(naru.december.scopeLabel)}</h3>
+          <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">{t(naru.december.scopeNote)}</p>
+          <ol role="list" className="mt-5 grid grid-cols-1 border-t border-white/10 sm:grid-cols-3">
+            {naru.december.scope.map((sc, i) => {
+              const past = sc.num === "iii";
+              return (
+                <li
+                  key={sc.num}
+                  className={`border-b border-white/10 py-4 sm:border-b-0 sm:py-0 sm:pt-4 ${i > 0 ? "sm:border-l sm:border-white/10 sm:pl-6" : ""} ${i < 2 ? "sm:pr-6" : ""}`}
+                >
+                  <p className={`flex items-baseline gap-2 break-keep ${past ? "text-white/45" : "text-white"}`}>
+                    {/* uppercase를 걸지 않습니다. PDF의 번호가 소문자 로마 숫자(i · ii · iii)입니다. */}
+                    <span lang="en" className={`shrink-0 text-[0.68rem] font-black tracking-[0.12em] ${past ? "text-white/40" : "text-accent"}`}>{sc.num}</span>
+                    <span className="text-sm font-bold leading-snug">{t(sc.title)}</span>
+                  </p>
+                  <p className={`mt-1.5 break-keep text-[0.68rem] font-bold uppercase tracking-[0.14em] ${past ? "text-white/40" : "text-accent"}`}>
+                    {t(sc.when)}
+                  </p>
+                </li>
+              );
+            })}
+          </ol>
+          <p className="mt-4 break-keep text-sm leading-relaxed text-white/70">{t(naru.december.scopeClose)}</p>
         </Reveal>
 
         {/* 8월에 아쉬웠던 넷과 12월의 답. 번호 배지 카드 넷(8월 BenefitCard 문법), 2×2.
