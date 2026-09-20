@@ -35,7 +35,7 @@ import { H2, H3, LABEL_HEADING, ROW_HEADING, STATEMENT, GRADIENT_TEXT } from "@/
 import NaruMark from "@/components/ui/NaruMark";
 import MotionToggle from "@/components/ui/MotionToggle";
 import { motion } from "framer-motion";
-import { useHeroRecede, useHeroExit } from "@/components/shared/useHeroRecede";
+import { useHeroRecede } from "@/components/shared/useHeroRecede";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 나루 홈 (/).
@@ -398,10 +398,6 @@ export default function NaruHome() {
   // 그 결정은 그대로입니다. 2026-09-20에 들어온 것은 같은 효과를 되살린 것이
   // 아니라 다른 축의 다른 효과이고, 사용자가 셋 중에 고른 것입니다.
   const hero = useHeroRecede();
-  // 폰용. 블록이 화면 위로 빠져나가는 마지막 구간에서만 움직입니다. lg에서는
-  // 값이 undefined라 위의 데스크톱 곡선이 그대로 씁니다.
-  const copyExit = useHeroExit(hero.phone);
-  const stackExit = useHeroExit(hero.phone);
   // 노선도의 현재 위치 점(감사 반영 브리프 3.6). 호버한 일정 행으로 점이 옮겨 갑니다.
   // 2026-09-20 (표현 방식 브리프 4): openDay(폰 Day 카드 아코디언)는 카드와 함께
   // 사라졌습니다. 행은 처음부터 전부 펼쳐져 있어 접었다 펼 것이 없습니다.
@@ -442,49 +438,53 @@ export default function NaruHome() {
       <Chapter id="top" labelledBy="hero-title" align="center" wide className="pt-16 sm:pt-24 lg:pt-20">
         {/* relative: 배경 국면이 이 상자를 기준으로 잡습니다(2026-09-17 배경 검증). */}
         <div className="relative grid items-center gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
-          {/* 카피 단. 스크롤하면 위로 올라가며 사라집니다(useHeroRecede).
-              lg 아래와 prefers-reduced-motion에서는 값이 undefined라 정지 그대로입니다. */}
-          <motion.div
-            ref={copyExit.ref}
-            style={{ y: hero.copyY ?? copyExit.y, opacity: hero.copyOpacity ?? copyExit.opacity }}
-            className="relative text-center lg:pl-10 lg:text-left xl:pl-16"
-          >
-            <Eyebrow color="purple">{t(naru.eventHero.eyebrow)}</Eyebrow>
-            {/* 8월 H1과 같은 clamp. 2행은 그라데이션 토큰(GRADIENT_TEXT). ko는
-                "크로싱 서울" / "CROSSING SEOUL", en은 "CROSSING" / "SEOUL".
-                390px에서 각 줄이 한 줄에 들어갑니다(2행은 0.82em, 실측 2026-09-17). */}
-            <h1 id="hero-title" className="text-[clamp(2.4rem,9.5vw,6.5rem)] font-black leading-[1.05] tracking-tight drop-shadow-[0_4px_40px_rgba(75,58,140,0.5)] lg:text-[clamp(2.65rem,6vw,5.5rem)]">
-              {locale === "ko" && DECEMBER_EVENT_NAME ? (
-                <>
-                  <span className="block break-keep text-white">{DECEMBER_EVENT_NAME.ko}</span>{" "}
-                  {/* lang="en" (2026-09-19, 접근성 감사 7): <html lang="ko">라
-                      한국어 TTS가 "CROSSING SEOUL"을 한글 음가로 읽습니다. 이
-                      사이트를 처음 듣는 사람이 듣는 **첫 줄**이 그것입니다.
-                      사이의 {" "}는 이름 계산용(감사 17): block span 둘 사이에
-                      텍스트 노드가 없으면 "크로싱 서울CROSSING SEOUL"로 붙어
-                      읽힙니다. block이라 화면에는 영향이 없습니다. */}
-                  <span lang="en" className={`${GRADIENT_TEXT} block text-[0.82em] tracking-[0.02em]`}>{DECEMBER_EVENT_NAME.en}</span>
-                </>
-              ) : (
-                <>
-                  <span className="block text-white">{decemberEventLabel(locale).split(" ")[0]}</span>
-                  <span className={`${GRADIENT_TEXT} block`}>{decemberEventLabel(locale).split(" ").slice(1).join(" ") || "\u00a0"}</span>
-                </>
-              )}
-            </h1>
-            {/* 굵은 기간 줄. 8월의 "2026.08.22 – 08.29 8일" 자리. */}
-            {/* 2026-09-18 (감사 반영 브리프 1.5): 주황 틴트 → 흰색 볼드. 주황은 점으로만. */}
-            <p className="mt-8 text-sm font-bold text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base">
-              {formatDecemberDateLine(locale)}
-            </p>
-            <p className="mx-auto mt-4 max-w-xl break-keep text-base font-bold leading-snug text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] lg:mx-0">
-              {t(naru.december.heading)}
-            </p>
-            <p className="mx-auto mt-3 max-w-xl break-keep text-sm leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base lg:mx-0">
-              {/* 나루 한 문장이 서술 첫 줄(감사 반영 브리프 1.2). TODO: confirm(문구는 사용자가). */}
-              <span className="text-white">{t(naru.eventHero.naruLine)}</span>{" "}
-              {t(naru.eventHero.sub)}
-            </p>
+          {/* DECIDED 2026-09-20 (히어로 효과 수정 브리프 4.3): 효과의 대상이 카피 단
+              전체가 아니라 **제목 묶음**입니다. 전에는 높이 839px짜리 블록 전체에
+              걸려서, 제목이 헤더 위로 사라진 뒤(스크롤 200px)에 CTA와 카운트다운이
+              지워지고 있었습니다. 페이드 구간과 보이는 구간이 겹치지 않았어요.
+              CTA 둘, 등록 안내, 카운트다운 패널은 이 묶음 바깥입니다. 움직이지도
+              옅어지지도 않습니다. */}
+          <div className="relative text-center lg:pl-10 lg:text-left xl:pl-16">
+            <motion.div style={{ y: hero.titleY, opacity: hero.titleOpacity }}>
+              <Eyebrow color="purple">{t(naru.eventHero.eyebrow)}</Eyebrow>
+              {/* 8월 H1과 같은 clamp. 2행은 그라데이션 토큰(GRADIENT_TEXT). ko는
+                  "크로싱 서울" / "CROSSING SEOUL", en은 "CROSSING" / "SEOUL".
+                  390px에서 각 줄이 한 줄에 들어갑니다(2행은 0.82em, 실측 2026-09-17). */}
+              <h1 id="hero-title" className="text-[clamp(2.4rem,9.5vw,6.5rem)] font-black leading-[1.05] tracking-tight drop-shadow-[0_4px_40px_rgba(75,58,140,0.5)] lg:text-[clamp(2.65rem,6vw,5.5rem)]">
+                {locale === "ko" && DECEMBER_EVENT_NAME ? (
+                  <>
+                    <span className="block break-keep text-white">{DECEMBER_EVENT_NAME.ko}</span>{" "}
+                    {/* lang="en" (2026-09-19, 접근성 감사 7): <html lang="ko">라
+                        한국어 TTS가 "CROSSING SEOUL"을 한글 음가로 읽습니다. 이
+                        사이트를 처음 듣는 사람이 듣는 **첫 줄**이 그것입니다.
+                        사이의 {" "}는 이름 계산용(감사 17): block span 둘 사이에
+                        텍스트 노드가 없으면 "크로싱 서울CROSSING SEOUL"로 붙어
+                        읽힙니다. block이라 화면에는 영향이 없습니다. */}
+                    <span lang="en" className={`${GRADIENT_TEXT} block text-[0.82em] tracking-[0.02em]`}>{DECEMBER_EVENT_NAME.en}</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="block text-white">{decemberEventLabel(locale).split(" ")[0]}</span>
+                    <span className={`${GRADIENT_TEXT} block`}>{decemberEventLabel(locale).split(" ").slice(1).join(" ") || "\u00a0"}</span>
+                  </>
+                )}
+              </h1>
+              {/* 굵은 기간 줄. 8월의 "2026.08.22 – 08.29 8일" 자리. */}
+              {/* 2026-09-18 (감사 반영 브리프 1.5): 주황 틴트 → 흰색 볼드. 주황은 점으로만. */}
+              <p className="mt-8 text-sm font-bold text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base">
+                {formatDecemberDateLine(locale)}
+              </p>
+              <p className="mx-auto mt-4 max-w-xl break-keep text-base font-bold leading-snug text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] lg:mx-0">
+                {t(naru.december.heading)}
+              </p>
+              <p className="mx-auto mt-3 max-w-xl break-keep text-sm leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base lg:mx-0">
+                {/* 나루 한 문장이 서술 첫 줄(감사 반영 브리프 1.2). TODO: confirm(문구는 사용자가). */}
+                <span className="text-white">{t(naru.eventHero.naruLine)}</span>{" "}
+                {t(naru.eventHero.sub)}
+              </p>
+            </motion.div>
+            {/* 여기부터는 효과 바깥입니다. 누를 것과 읽을 숫자는 제자리에서 그대로
+                스크롤됩니다(브리프 5장의 첫 줄). */}
             <div className="mt-10 flex flex-wrap items-start justify-center gap-3 lg:justify-start">
               {regState === "open" ? (
                 <button type="button" onClick={() => { track("naru_cta", { src: "hero", to: "register" }); reg?.openRegister(); }} className={`group ${buttonClass("primary", "naru")}`}>
@@ -515,7 +515,7 @@ export default function NaruHome() {
             </div>
             {/* 카운트다운(얇은 한 줄). lg부터 여기, 그 아래 폭에서는 무대 다음에. */}
             <CountdownPanel t={t} locale={locale} className="mt-8 hidden lg:block" />
-          </motion.div>
+          </div>
           {/* 오른쪽 단 = 8월 행사 사진 넷 (DECIDED 2026-09-17, 사용자). 8월 히어로의
               메탈 휴먼 자리입니다. 사람이 많이 나온 장면만, 같은 사진은 사이트에 한 번.
               그 전의 형상 무대(싱가포르·서울 점, 배경 수정 브리프)는 같은 날 걷었습니다.
@@ -524,9 +524,11 @@ export default function NaruHome() {
               priority가 걸려 있어 폰이 보지도 않을 이미지 둘을 preload 했습니다
               (2026-09-19, 접근성 감사 22). 느린 회선에서 히어로가 늦게 뜨면
               접근성 체감에도 영향이 있습니다. 아래 폰용 묶음이 priority를 맡습니다. */}
-          {/* 사진 단. 카피보다 느리게(-24px) 따라오고 살짝 작아집니다. 두 단의
-              속도 차이가 깊이를 만듭니다. transform-origin이 위쪽인 이유: 가운데를
-              기준으로 줄이면 사진이 아래에서 위로도 딸려 올라와 -24px이 흐려집니다. */}
+          {/* 사진 단. 제목보다 훨씬 느리게(-48px) 따라오고 0.92배까지 작아집니다.
+              두 단의 속도 차이가 깊이를 만듭니다. 불투명도는 0이 아니라 0.2에서
+              멈춥니다. 0까지 내리면 아직 화면에 있는 동안 사라집니다.
+              transform-origin이 위쪽인 이유: 가운데를 기준으로 줄이면 사진이
+              아래에서 위로도 딸려 올라와 -48px이 흐려집니다. */}
           <motion.div
             style={{ y: hero.photoY, scale: hero.photoScale, opacity: hero.photoOpacity, transformOrigin: "50% 0%" }}
             className="hidden lg:block lg:pr-10 xl:pr-16"
@@ -537,12 +539,11 @@ export default function NaruHome() {
         {/* 폰(lg 아래): 카피 바로 다음에 사진 넷(2×2), 그 아래 카운트다운. */}
         {/* 폰(lg 아래): CTA → 카운트다운 한 줄 → 사진 넷. 데스크톱(왼쪽 단 CTA 아래)과 같은
             순서(모바일 수정 브리프 2). */}
-        {/* 폰의 두 번째 블록. 카피가 먼저 나가고 이것이 나중에 나갑니다. 데스크톱의
-            "카피 먼저, 사진 나중"이 폰에서는 순서로 나타납니다. 사진이 들어 있는
-            블록이라 scale까지 씁니다(글자만 있는 블록에는 쓰지 않습니다). */}
+        {/* 폰의 두 번째 블록. 제목이 먼저 나가고 이것이 나중에 나갑니다. 데스크톱의
+            "제목 먼저, 사진 나중"이 폰에서는 순서로 나타납니다. 불투명도는 0.25에서
+            멈춥니다. 카운트다운 숫자를 읽는 중에 지우지 않습니다. */}
         <motion.div
-          ref={stackExit.ref}
-          style={{ y: stackExit.y, opacity: stackExit.opacity, scale: stackExit.scale, transformOrigin: "50% 0%" }}
+          style={{ y: hero.stackY, opacity: hero.stackOpacity }}
           className="relative px-6 sm:px-10 lg:hidden"
         >
           <CountdownPanel t={t} locale={locale} className="mt-8" />

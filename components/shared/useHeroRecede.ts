@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useReducedMotion, useScroll, useTransform } from "framer-motion";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -8,13 +8,13 @@ import { useReducedMotion, useScroll, useTransform } from "framer-motion";
 // 아래로 내려갈 때 애니메이션이 있으면 좋겠어. 8월 페이지를 참고하되 같은
 // 효과는 아니게").
 //
-// DECIDED 2026-09-20 (사용자가 셋 중에 고름): **깊이**입니다. 카피가 먼저 위로
-// 올라가며 사라지고, 사진 넷은 느리게 따라오며 살짝 작아집니다. 두 단의 속도가
-// 다른 것이 전부이고, 세로축 하나만 씁니다.
+// DECIDED 2026-09-20 (사용자가 셋 중에 고름): **깊이**입니다. 제목이 먼저 위로
+// 물러나며 사라지고, 사진 넷은 훨씬 느리게 따라오며 살짝 작아집니다. 두 단의
+// 속도 차이가 전부이고, 세로축 하나만 씁니다.
 //
 // 8월(useHeroSplit)과 무엇이 다른가:
 //   8월  두 단이 좌우로 ±500px 벌어지고, 배경 영상이 blur(10px)까지 흐려집니다.
-//   홈   좌우로 움직이지 않습니다. 흐림도 없습니다. 카피 -80px, 사진 -24px.
+//   홈   좌우로 움직이지 않습니다. 흐림도 없습니다.
 // 2026-09-19에 홈이 8월의 훅을 그대로 썼다가 사용자가 "8월 페이지와 같은 효과,
 // 마음에 안 듦"으로 걷어냈습니다. 그 결정은 유효합니다. 이 훅은 그것을 되살리는
 // 것이 아니라 다른 축의 다른 효과입니다.
@@ -23,123 +23,81 @@ import { useReducedMotion, useScroll, useTransform } from "framer-motion";
 // filter: blur()는 매 프레임 재페인트라 약한 기기에서 스크롤이 끊깁니다.
 // 여기서는 transform과 opacity만 씁니다. 둘 다 합성 단계에서 끝납니다.
 //
-// ── 왜 useScroll의 target이 아니라 페이지 scrollY인가 ───────────────────────
-// target + offset ["start start", "end start"]로 잡으면 진행도 0이 "대상의 위가
-// 뷰포트 위에 닿는 순간"입니다. 이 히어로는 헤더와 챕터 패딩 아래에서 시작해서
-// 스크롤 0에서 이미 200px쯤 내려와 있어요. 그러면 처음 200px을 내리는 동안
-// 아무 일도 일어나지 않습니다. 사용자가 본 것은 "스크롤하면 바로"입니다.
-// 페이지 scrollY를 직접 읽으면 첫 픽셀부터 반응합니다.
-//
-// 구간의 단위가 뷰포트 높이인 이유: 히어로의 높이가 화면 높이를 따라가기
-// 때문입니다. px로 박으면 13인치와 27인치에서 다른 지점에 사라집니다.
-//
-// ── 폰은 다른 곡선입니다 (2026-09-20 2차, 사용자: "모바일과 데스크탑 둘 다") ──
-// 같은 곡선을 폰에 걸 수는 없습니다. 폰에서는 히어로가 한 단으로 쌓여서 카피
-// 다음에 카운트다운과 사진이 옵니다. 그것을 읽으려고 내리는 스크롤인데,
-// 페이지 scrollY로 재면 0.5화면에서 이미 투명도가 0.3입니다. 그 자리에 아직
-// "등록 준비 중"과 "프로그램 보기"가 화면에 있어요. 읽고 누를 것을 지우는
-// 효과는 효과가 아니라 고장입니다.
-//
-// 그래서 폰은 **블록 자기 자신이 화면 위로 빠져나가는 마지막 구간**에서만
-// 움직입니다(useHeroExit). 블록의 아래쪽 4분의 1이 화면 위 모서리를 지나는
-// 동안 32px 들리면서 사라집니다. 화면에 남아 있는 것은 건드리지 않고, 나가는
-// 것만 녹습니다. 두 블록(카피 / 카운트다운+사진)이 각자의 때에 움직이므로
-// 데스크톱과 같은 "먼저와 나중"이 폰에서도 보입니다.
-//
-// ── prefers-reduced-motion에서는 페이드만 (2026-09-20 3차) ──────────────────
-// 사용자: "아니 그냥 아무런 effect 가 없음." 배포는 정상이었고 코드도 올라가
-// 있었습니다. 꺼 놓은 것은 이 설정이었어요. 처음에는 설정이 켜져 있으면 전부
-// 끄게 했는데, 그러면 그 설정을 켠 사람에게는 이 페이지에 아무 일도 일어나지
-// 않습니다.
-//
-// 이 설정이 막으려는 것은 **움직임**입니다. 전정기관 증상은 화면이 미끄러지고
-// 커지는 데서 옵니다. 투명도 변화는 그 대상이 아니고, 오히려 움직임을 대체하라고
-// 권장되는 쪽입니다. 그래서 나눴습니다.
-//
-//   설정 꺼짐  들어 올리기 + 크기 + 페이드 (전부)
-//   설정 켜짐  페이드만. 한 픽셀도 움직이지 않습니다.
-//
-// 8월(useHeroSplit)은 사용자 요청으로 설정 자체를 무시하고 ±500px을 그대로
-// 씁니다. 여기서는 그러지 않습니다. 같은 것을 보여 주면서 움직임만 빼는 길이
-// 있으면 그쪽이 맞습니다.
-//
 // 푸터의 "배경 움직임 끄기"(MotionToggle)는 보지 않습니다. 그 손잡이는 WCAG
-// 2.2.2, 즉 **저절로 시작해서 5초를 넘기는** 움직임에 대한 것이고 배경 캔버스가
+// 2.2.2, 즉 저절로 시작해서 5초를 넘기는 움직임에 대한 것이고 배경 캔버스가
 // 그 대상입니다. 이 효과는 스크롤하는 동안만 움직이고 손을 떼면 멈춥니다.
-// 저절로 시작하지 않으니 2.2.2의 대상이 아니고, 가려야 할 사람은 1번과 2번이
-// 이미 가립니다.
+//
+// ── 왜 구간을 옮겼나 (DECIDED 2026-09-20, 히어로 효과 수정 브리프) ──────────
+// 전 버전은 값이 정확했는데 보이지 않았습니다. 데스크톱 페이드 구간이 스크롤
+// 225~765px이었고, 제목(문서 90~290)은 90px 헤더 위로 스크롤 200px에 이미
+// 사라집니다. 페이드가 시작되기 전에 페이드할 것이 없었어요. 실제로 페이드된
+// 것은 스크롤 765px에 아직 164px 화면에 남아 있던 카운트다운 패널입니다.
+// 폰은 더 심해서, 효과 구간(스크롤 518~666px) 동안 보이는 것이 96px짜리
+// 띠 하나였습니다. 처음 440px 동안은 measured transform이 none이었습니다.
+//
+// 그래서 대상을 블록 전체가 아니라 **제목 묶음**으로 좁힙니다. 높이 839px짜리
+// 블록은 위와 아래가 839px 간격으로 화면을 떠나서, 둘 다 만족하는 불투명도
+// 구간이 존재하지 않습니다. CTA와 카운트다운은 이제 건드리지 않습니다.
+// "읽고 누를 것을 지우지 않는다"는 원래 의도가 여기서 더 잘 지켜집니다.
+//
+// 폰과 데스크톱이 같은 축(페이지 scrollY)을 씁니다. 갈리는 것은 구간과 폭뿐이고
+// 코드 경로는 하나입니다. 전 버전의 useHeroExit는 useScroll({ target })으로
+// **자기가 y를 거는 바로 그 요소**를 재고 있었습니다. 요소가 움직이면 경계
+// 상자도 같이 움직이고 진행도가 다시 계산되는 되먹임이라, 폭을 키우면 바로
+// 드러납니다. 그래서 지웠습니다. useScroll에 target을 주지 마세요.
+//
+// 합격 기준(브리프 3.1): 불투명도 0.5 지점에서 요소 높이의 35% 이상이 헤더
+// 아래 화면 안. 불투명도 0.3 아래에서 누를 수 있는 것이 화면에 없을 것.
+// 값을 바꾸려면 이 둘을 다시 재세요.
 // ─────────────────────────────────────────────────────────────────────────────
 export function useHeroRecede() {
   const { scrollY } = useScroll();
   const reduce = useReducedMotion();
-
-  // 뷰포트 높이. 서버와 첫 렌더가 같아야 해서 기본값을 두고 마운트 뒤에 보정합니다
-  // (LocaleProvider와 같은 패턴). 900은 이 사이트를 재는 기준 화면입니다.
-  const [vh, setVh] = useState(900);
-  const [isWide, setIsWide] = useState(false);
+  const [isWide, setIsWide] = useState(true); // 데스크톱 우선. 아래 주석 참고.
   useEffect(() => {
-    const sync = () => {
-      setVh(window.innerHeight);
-      setIsWide(window.matchMedia("(min-width: 1024px)").matches);
-    };
+    const sync = () => setIsWide(window.matchMedia("(min-width: 1024px)").matches);
     sync();
     window.addEventListener("resize", sync);
     return () => window.removeEventListener("resize", sync);
   }, []);
 
-  // 카피는 멀리 그리고 먼저, 사진은 조금 그리고 나중에. 그 차이가 깊이입니다.
-  // 페이드가 0.25vh에서 시작하는 이유: 첫 스크롤에 글자가 바로 옅어지면 읽다가
-  // 멈춘 사람에게는 고장으로 보입니다. 처음 4분의 1 화면은 자리만 옮깁니다.
-  const copyY = useTransform(scrollY, [0, vh], [0, -80]);
-  const copyOpacity = useTransform(scrollY, [vh * 0.25, vh * 0.85], [1, 0]);
-  const photoY = useTransform(scrollY, [0, vh], [0, -24]);
-  const photoScale = useTransform(scrollY, [0, vh], [1, 0.94]);
-  const photoOpacity = useTransform(scrollY, [vh * 0.35, vh * 0.95], [1, 0]);
+  // 제목 묶음. 데스크톱은 스크롤 300px, 폰은 260px 안에 끝납니다. 둘 다 그
+  // 구간 내내 제목이 화면에 있습니다(브리프 1장 지오메트리).
+  const end = isWide ? 300 : 260;
+  const titleY = useTransform(scrollY, [0, end], [0, isWide ? -120 : -60]);
+  // 첫 40px은 자리만 옮깁니다. 첫 픽셀에 글자가 옅어지면 고장으로 보입니다.
+  const titleOpacity = useTransform(scrollY, [40, end], [1, 0]);
 
-  // 페이드는 폭만 봅니다. 움직임은 설정까지 봅니다.
-  const fade = isWide;
-  const move = isWide && !reduce;
+  // 사진 단(데스크톱 오른쪽, 문서 240~779). 아래쪽이 화면을 떠나는 것이 스크롤
+  // 689px이라 거기서 끝냅니다. 0이 아니라 0.2에서 멈추는 이유: 0까지 내리면
+  // 아직 화면에 있는 동안 사라집니다(합격 기준 2번).
+  const photoY = useTransform(scrollY, [0, 700], [0, -48]);
+  const photoScale = useTransform(scrollY, [0, 700], [1, 0.92]);
+  const photoOpacity = useTransform(scrollY, [200, 700], [1, 0.2]);
+
+  // 폰의 두 번째 블록(카운트다운 + 사진, 문서 702~1155). 아래쪽이 떠나는 것이
+  // 스크롤 1,155px입니다. 카운트다운 숫자를 읽는 중에 지우지 않도록 늦게 시작해
+  // 0.25에서 멈춥니다.
+  const stackY = useTransform(scrollY, [450, 1050], [0, -40]);
+  const stackOpacity = useTransform(scrollY, [650, 1100], [1, 0.25]);
+
+  // 페이드는 두 화면 모두. 움직임만 prefers-reduced-motion을 봅니다.
+  // 이 설정이 막으려는 것은 움직임이고, 투명도 변화는 움직임의 대체로 권장되는
+  // 쪽입니다(전 버전의 판단 그대로).
+  const move = !reduce;
   return {
-    on: fade,
-    /** 폰에서 useHeroExit를 켤지. lg에서는 위의 값들이 대신합니다. */
-    phone: !isWide,
-    copyY: move ? copyY : undefined,
-    copyOpacity: fade ? copyOpacity : undefined,
+    titleY: move ? titleY : undefined,
+    titleOpacity,
     photoY: move ? photoY : undefined,
     photoScale: move ? photoScale : undefined,
-    photoOpacity: fade ? photoOpacity : undefined,
+    photoOpacity,
+    stackY: move ? stackY : undefined,
+    stackOpacity,
   };
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 폰용. 블록 하나가 화면 위로 빠져나가는 마지막 구간에서만 들리고 사라집니다.
-//
-// offset ["start start", "end start"]: 진행도 0이 "블록의 위가 화면 위에 닿는
-// 순간", 1이 "블록의 아래가 화면 위에 닿는 순간"입니다. 즉 진행도는 이 블록이
-// 화면 위로 얼마나 빠져나갔는지입니다. 0.75부터 1까지, 마지막 4분의 1에서만
-// 값을 줍니다. 그 구간에 화면에 남아 있는 것은 블록의 아래쪽 4분의 1이고,
-// 600px짜리 카피 블록이면 150px입니다.
-//
-// 데스크톱 곡선(위)을 폰에 쓰지 않는 이유는 이 파일 머리의 주석에 있습니다.
-// 반대로 이 곡선을 데스크톱에 쓰지 않는 이유는, 데스크톱 히어로가 두 단이라
-// 블록이 화면 높이보다 짧고 "빠져나가는 구간"이 너무 짧게 끝나기 때문입니다.
-// 사용자가 고른 것은 두 단의 속도 차이가 보이는 쪽입니다.
-//
-// scale은 사진 블록에만 씁니다. 글자를 줄이면 읽는 중에 크기가 변합니다.
-// ─────────────────────────────────────────────────────────────────────────────
-export function useHeroExit(enabled: boolean) {
-  const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0.75, 1], [0, -32]);
-  const opacity = useTransform(scrollYProgress, [0.75, 1], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0.75, 1], [1, 0.96]);
-  // 위와 같은 나눔입니다. 설정이 켜져 있으면 페이드만 남습니다.
-  const move = enabled && !reduce;
-  return {
-    ref,
-    y: move ? y : undefined,
-    opacity: enabled ? opacity : undefined,
-    scale: move ? scale : undefined,
-  };
-}
+// isWide의 기본값이 true인 것은 첫 프레임 때문입니다. false로 시작하면
+// 데스크톱에서도 첫 렌더가 폰 구간(260px)을 타고 useEffect 뒤에 바뀝니다.
+// 기본값을 데스크톱 쪽에 두면 폰에서 한 프레임 동안 300px 구간을 쓰는데,
+// 그 한 프레임은 스크롤 0이라 두 구간의 값이 같습니다(y 0, 불투명도 1).
+// 반대 방향은 값이 다릅니다.
