@@ -961,9 +961,22 @@ export default function NaruHome() {
           {/* 누구에게 진 빚인지 (2026-09-20, 사용자). 위 한 줄보다 한 단 작고
               한 단 어둡습니다. 앞 문장이 선언이고 이것이 명단이라, 같은 무게로
               두면 둘 다 읽히지 않습니다. 바로 아래 아카이브 버튼이 실제 이름들로
-              가는 문이고, 이 문단이 그 버튼의 이유가 됩니다. */}
-          <p className="mx-auto mt-3 max-w-2xl break-keep text-left text-sm leading-relaxed text-white/65 lg:text-center">
-            {t(naru.record.creditRoles)}
+              가는 문이고, 이 문단이 그 버튼의 이유가 됩니다.
+
+              2026-09-20 (표현 방식 브리프 5): 명단은 문단이 아니라 목록입니다.
+              마침표로 이어 붙이면 세 줄짜리 회색 덩어리가 되고 감사가 감사로 안
+              읽힙니다. 상자는 두지 않습니다. 목록이라는 것만 보이면 됩니다.
+              낱말은 바뀌지 않았습니다(data/naru.ts의 thanks·thanksClose). */}
+          <ul role="list" className="mx-auto mt-6 max-w-2xl space-y-2 text-left">
+            {naru.record.thanks.map((line, i) => (
+              <li key={i} className="flex gap-3 break-keep text-sm leading-relaxed text-white/70">
+                <span aria-hidden className="mt-[0.5em] inline-block h-[0.4em] w-[0.4em] shrink-0 rounded-full bg-white/30" />
+                <span>{t(line)}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mx-auto mt-4 max-w-2xl break-keep text-left text-sm text-white/55">
+            {t(naru.record.thanksClose)}
           </p>
           <div className="mt-6 flex justify-center">
             <Link
@@ -1198,8 +1211,12 @@ export default function NaruHome() {
             버튼이 아니라 링크인 이유: 이 자리는 결정 지점이 아니라 더 읽을 사람을
             위한 문입니다. 파일 정보를 라벨 아래 한 줄로 먼저 보입니다. 무엇을 받는지
             모르고 누르게 하지 않습니다. */}
+        {/* 2026-09-20 (표현 방식 브리프 6): 864x246 상자를 걷었습니다. 규칙 ①(누를 수
+            있는 것)에 해당하는 것은 버튼 하나뿐이고, 상자는 그 버튼을 감싸고 있을
+            뿐이었습니다. 위 헤어라인이 이미 이 블록을 본문에서 떼어 놓습니다.
+            문장과 순서는 그대로입니다. */}
         <div aria-hidden className="mx-auto mt-12 h-px w-full max-w-5xl bg-white/10" />
-        <Reveal id="join-ways" className="mx-auto mt-12 max-w-3xl rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-6 text-left sm:px-7">
+        <Reveal id="join-ways" className="mx-auto mt-10 max-w-3xl text-left">
           {/* "PDF · 1.0MB" (2026-09-19, 모바일 감사 21). 쪽 수와 파일 크기 줄을
               뺀 결정(data/naru.ts)은 그대로 존중합니다. 이건 그 줄을 되살리는 게
               아니라 라벨 옆의 한 조각입니다. 버튼의 ↓는 **형식을 말하지 않고**,
@@ -1210,7 +1227,7 @@ export default function NaruHome() {
             {t(naru.join.manifesto.label)}
             <span className="font-medium normal-case tracking-normal text-white/40">{"\u2002·\u2002PDF 0.9MB"}</span>
           </p>
-          <h3 className="mt-3 break-keep text-lg font-bold text-white">{t(naru.join.manifesto.title)}</h3>
+          <h3 className="mt-3 break-keep text-base font-bold text-white">{t(naru.join.manifesto.title)}</h3>
           <p className="mt-2 break-keep text-sm leading-relaxed text-white/70">{t(naru.join.manifesto.body)}</p>
           <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
             <a

@@ -735,9 +735,36 @@ export const naru = {
     //
     // 숫자는 바로 아래 stats에서 옵니다. "마지막 날 앞에 선"은 발표한 **21팀**이지
     // 신청한 74명이 아닙니다. 감사 문단에서 숫자를 올려 잡으면 홍보가 됩니다.
+    // 2026-09-20 (표현 방식 브리프 5): 한 문단이던 creditRoles를 여섯 줄(thanks)과
+    // 닫는 한 줄(thanksClose)로 쪼갰습니다. 낱말은 한 글자도 바뀌지 않았습니다.
+    // 마침표로 이어 붙이면 세 줄짜리 회색 덩어리가 되고, 감사가 감사로 읽히지
+    // 않습니다. 이건 명단이라 한 줄에 하나씩 세웁니다.
+    // creditRoles 키는 남겨 둡니다. /2026-08 마지막 화면의 같은 문단
+    // (data/dictionary.ts의 footer.thanks)과 짝이 맞는지 볼 자리입니다.
     creditRoles: {
       ko: "문제를 낸 기업. 소속과 별개로 개인 자격으로 저녁 시간을 낸 멘토들. 무대에 선 연사와 전문가. 1:1 멘토링을 위해 회관을 내어준 싱가포르 한인회. 각 학교 한인 학생회 운영진. 그리고 8일을 건너 마지막 날 앞에 선 21팀. 그 이름들이 지금의 나루를 만들었습니다.",
       en: "The company that set the problem. The mentors who gave their own evenings, separately from where they work. The speakers and expert reviewers. The Korean Association in Singapore, which opened its hall for the 1:1 mentoring. The student associations at each school. And the 21 teams that stood up on the final day. Those names are what NARU is made of.",
+    },
+    thanks: [
+      { ko: "문제를 낸 기업.", en: "The company that set the problem." },
+      {
+        ko: "소속과 별개로 개인 자격으로 저녁 시간을 낸 멘토들.",
+        en: "The mentors who gave their own evenings, separately from where they work.",
+      },
+      { ko: "무대에 선 연사와 전문가.", en: "The speakers and expert reviewers." },
+      {
+        ko: "1:1 멘토링을 위해 회관을 내어준 싱가포르 한인회.",
+        en: "The Korean Association in Singapore, which opened its hall for the 1:1 mentoring.",
+      },
+      { ko: "각 학교 한인 학생회 운영진.", en: "The student associations at each school." },
+      {
+        ko: "그리고 8일을 건너 마지막 날 앞에 선 21팀.",
+        en: "And the 21 teams that stood up on the final day.",
+      },
+    ] as Phrase[],
+    thanksClose: {
+      ko: "그 이름들이 지금의 나루를 만들었습니다.",
+      en: "Those names are what NARU is made of.",
     },
     stats: [
       { value: { ko: "74명", en: "74" }, label: { ko: "신청", en: "applied" } },
