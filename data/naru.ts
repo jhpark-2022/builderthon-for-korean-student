@@ -1716,8 +1716,19 @@ export const naru = {
           ko: "현장에서 한국과 싱가포르를 섞어 팀을 맺습니다. 본딩을 거쳐 바로 고른 트랙의 데이터에서 문제를 찾아 정의합니다.",
           en: "Teams form on site, Korea mixed with Singapore. You bond, then go straight into your track's data and define the problem.",
         },
-        line: { ko: "요구 강도가 가장 높은 날입니다.", en: "The hardest day." },
-        chips: [{ ko: "팀 매칭", en: "Team matching" }, { ko: "요구 강도 최고", en: "Hardest day" }],
+        // 2026-09-20 (사용자: "1일차가 요구 강도가 가장 높은 날이라는 거는 빼 줘").
+        // 한 줄과 칩 둘 다 "요구 강도 최고"를 말하고 있었습니다. 등록 전에 읽는
+        // 사람에게 날짜별 난이도 순위는 정보가 아니라 경고입니다. 못해도 되는
+        // 자리라고 말해 놓고 첫날에 가장 힘들다고 적는 것은 서로 다른 말이에요.
+        //
+        // 한 줄을 지우지 않고 바꿉니다. 다섯 칸이 모두 "그날의 한 줄"을 갖고 있어
+        // 하나만 비면 그 카드가 덜 채워진 것으로 읽힙니다. 대신 이 날에 실제로
+        // 일어나는 일을 적습니다(팀을 맺고 같은 날 정의서까지).
+        line: {
+          ko: "처음 만난 팀과 그날 안에 정의서까지 갑니다.",
+          en: "You meet your team and reach the problem statement the same day.",
+        },
+        chips: [{ ko: "팀 매칭", en: "Team matching" }],
         workshop: {
           title: { ko: "Problem Discovery", en: "Problem Discovery" },
           body: { ko: "워크플로우를 분해해 병목 짚는 법", en: "Taking a workflow apart to find the bottleneck" },
@@ -1859,10 +1870,20 @@ export const naru = {
         place: { ko: "한국에서", en: "In Korea" },
         // 2026-09-19 (사용자): "기회의 수가 적어서가 아닙니다"였습니다. 같은 화면에서
         // "…아닙니다"로 끝나는 문장이 셋이었어요(여기, 안전장치 둘). 안전장치 두 줄의
-        // 부정은 브리프가 요구하는 것이라 그대로 두고, 이 줄을 긍정으로 바꿉니다.
+        // 부정은 브리프가 요구하는 것이라 그대로 두고, 이 줄을 긍정으로 바꿨습니다.
+        //
+        // 2026-09-20 (사용자: "'국내에도 기회는 많습니다' 이게 좀 민감한 이야기일
+        // 수도, 다른 표현"). "다만 국내에서만 겨루면 자기 위치를 가늠할 기준이
+        // 하나뿐입니다"가 문제였습니다. 읽는 사람을 **기준이 모자란 쪽**으로
+        // 세우는 문장이라, 국내에서 공부하는 것이 덜한 선택이라는 말로 읽힙니다.
+        // 이 그룹이 할 말이 아니에요.
+        //
+        // 위아래 두 칸(싱가포르, 그 밖의 나라)은 사람의 부족이 아니라 **없는
+        // 자리**를 말합니다. "이어 주는 자리가 없었습니다", "서로의 존재를
+        // 모릅니다". 이 칸만 사람을 평가하고 있었습니다. 같은 문법으로 맞춥니다.
         lack: {
-          ko: "국내에도 기회는 많습니다. 다만 국내에서만 겨루면 자기 위치를 가늠할 기준이 하나뿐입니다.",
-          en: "There are plenty of chances at home. But measure yourself only at home and you have one yardstick.",
+          ko: "한국에서 공부하는 또래끼리는 이미 잘 이어져 있습니다. 없던 것은 다른 나라의 또래와 같은 문제를 놓고 만나는 자리입니다.",
+          en: "Students in Korea are already well connected to each other. What was missing was a shared problem with peers who study elsewhere.",
         },
         opens: {
           ko: "다른 나라에서 공부한 사람과 같은 문제를 풉니다.",
