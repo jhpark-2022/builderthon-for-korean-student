@@ -606,7 +606,9 @@ export default function NaruHome() {
             ariaLabel={t(naru.december.routeAria)}
             stations={naru.december.stages.map((s) => ({
               key: s.name.en,
-              sub: s.dayOffset === null ? t(naru.december.beforeLabel) : `${t(naru.december.dayLabel)} ${s.dayOffset + 1}`,
+              // 2026-09-20 (일정 브리프 2장): 12/10이 Day 0입니다. dayOffset이 곧 Day 번호이고
+              // +1을 더하지 않습니다. null 분기("본 일정 전")는 사라졌습니다.
+              sub: `${t(naru.december.dayLabel)} ${s.dayOffset}`,
               label: t(s.title),
               kind: s.submit ? "anchor" : "plain",
               badge: s.submit ? `${t(naru.december.submitLabel)}\u2002${t(s.submit)}` : undefined,
@@ -645,7 +647,13 @@ export default function NaruHome() {
             {t(naru.december.scheduleLead)}
           </p>
           <div className="mt-5">
-            {naru.december.stages.map((stage, i) => (
+            {naru.december.stages.map((stage, i) => {
+            // DECIDED 2026-09-20 (일정 브리프 2.2): Day 0만 한 단 낮은 밝기입니다.
+            // PDF 03이 "Day 1에 쓸 시간을 벌어 주는 장치이지, 별도의 스테이지가
+            // 아닙니다"라고 못박고 있는데, 다섯 칸이 같은 굵기면 그 말이 무너집니다.
+            // 행을 지우거나 접지 않습니다. 날짜가 붙은 하루이고 세션도 있습니다.
+            const day0 = stage.dayOffset === 0;
+            return (
               <div
                 key={stage.name.en}
                 // 노선도의 현재 위치 점이 이 행으로 옵니다(감사 반영 브리프 3.6).
@@ -655,31 +663,29 @@ export default function NaruHome() {
                 className="grid grid-cols-1 gap-x-6 gap-y-2 border-t border-white/10 py-5 last:border-b sm:grid-cols-[7rem_1fr_10rem]"
               >
                 <div className="flex items-baseline gap-2">
-                  {/* lang="en": DAY·BEFORE는 두 로케일 모두 영어입니다(접근성 감사 7). */}
+                  {/* lang="en": DAY는 두 로케일 모두 영어입니다(접근성 감사 7). */}
                   <span lang="en" className={LABEL_HEADING}>
-                    {stage.dayOffset === null
-                      ? t(naru.december.beforeLabel)
-                      : `${t(naru.december.dayLabel)}\u2002${stage.dayOffset + 1}`}
+                    {`${t(naru.december.dayLabel)}\u2002${stage.dayOffset}`}
                   </span>
                   <span className="shrink-0 text-xs text-white/50">
-                    {stage.dayOffset === null ? t(stage.when) : formatDecemberDayWithWeekday(locale, stage.dayOffset)}
+                    {formatDecemberDayWithWeekday(locale, stage.dayOffset)}
                   </span>
                 </div>
                 <div>
-                  <h4 className={ROW_HEADING}>{t(stage.title)}</h4>
+                  <h4 className={day0 ? `${ROW_HEADING} !text-white/55` : ROW_HEADING}>{t(stage.title)}</h4>
                   {/* stage.body는 그리지 않습니다. 브리프 4장이 표로 옮긴다고 적은 것은
                       제출물 칩, 그날의 한 줄, 워크샵 셋입니다. 카드 본문까지 넣으면 한
                       행이 네 줄이 되고, 표가 아니라 세로로 세운 카드가 됩니다. 키는
                       data/naru.ts에 그대로 있습니다. */}
-                  <p className="mt-1.5 flex gap-1.5 break-keep text-sm font-semibold leading-snug text-white">
+                  <p className={`mt-1.5 flex gap-1.5 break-keep text-sm font-semibold leading-snug ${day0 ? "text-white/55" : "text-white"}`}>
                     <span aria-hidden className="text-white/50">→</span>
                     {t(stage.line)}
                   </p>
-                  {stage.workshop && (
-                    <p className="mt-1.5 flex flex-wrap items-baseline gap-x-1.5 break-keep text-sm leading-relaxed text-white/55">
-                      <span className="font-bold uppercase tracking-[0.14em] text-accent">{t(naru.december.workshopLabel)}</span>
-                      <span className="font-semibold text-white/85">{t(stage.workshop.title)}</span>
-                      <span>{t(stage.workshop.body)}</span>
+                  {stage.session && (
+                    <p className={`mt-1.5 flex flex-wrap items-baseline gap-x-1.5 break-keep text-sm leading-relaxed ${day0 ? "text-white/45" : "text-white/55"}`}>
+                      <span className={`font-bold uppercase tracking-[0.14em] ${day0 ? "text-accent/70" : "text-accent"}`}>{t(naru.december.sessionLabel)}</span>
+                      <span className={day0 ? "font-semibold text-white/55" : "font-semibold text-white/85"}>{t(stage.session.title)}</span>
+                      <span>{t(stage.session.body)}</span>
                     </p>
                   )}
                 </div>
@@ -690,16 +696,17 @@ export default function NaruHome() {
                     </span>
                   )}
                   {stage.chips.map((c, j) => (
-                    <span key={j} className="text-xs text-white/60">{t(c)}</span>
+                    <span key={j} className={day0 ? "text-xs text-white/45" : "text-xs text-white/60"}>{t(c)}</span>
                   ))}
                 </div>
               </div>
-            ))}
+            );
+            })}
           </div>
-          {/* 워크샵 줄의 왼쪽 라벨이던 문장. 상자 셋이 사라져도 이 한 줄은 남습니다. */}
-          <p className="mt-3 break-keep text-xs leading-relaxed text-white/55">
-            {t(naru.december.workshopNote)}
-          </p>
+          {/* 2026-09-20 (일정 브리프 5장): workshopNote("스테이지마다 ... 3시간짜리
+              워크샵이 붙습니다")를 그리지 않습니다. Day 4에는 세션이 없어
+              "스테이지마다"가 더 이상 맞지 않고, 3시간이라는 사실은 바로 아래
+              facts의 첫 줄이 정확하게 말합니다. 키는 data/naru.ts에 그대로. */}
           {/* General Mentoring. 초록 테두리 강조 상자(8월 "과정이 기록됩니다" 문법). */}
           <div className="mt-3 flex flex-col gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-4 lg:flex-row lg:items-center lg:gap-8 lg:px-7">
             <div className="shrink-0 lg:w-56">

@@ -1462,7 +1462,12 @@ export const naru = {
       ko: "팀은 1일차 현장에서 맺습니다. Discovery에서 Pitch까지 하루에 한 스테이지씩 넘어갑니다.",
       en: "Teams form on site on day one, then one stage a day from Discovery to Pitch.",
     },
-    workshopLabel: { ko: "워크샵", en: "Workshop" },
+    // 2026-09-20 (크로싱서울_일정.pdf): 라벨이 "워크샵"에서 "세션"으로. PDF가 부르는
+    // 이름이고, stages의 필드 이름(workshop -> session)과 같은 말을 씁니다.
+    sessionLabel: { ko: "세션", en: "Session" },
+    // workshopNote는 그리지 않습니다. "스테이지마다"가 더 이상 맞지 않고(Day 4에는
+    // 세션이 없습니다), 3시간이라는 사실은 아래 facts의 첫 줄이 정확하게 말합니다.
+    // 키는 남겨 둡니다.
     workshopNote: {
       ko: "스테이지마다 그날의 어젠다에 맞는 3시간짜리 워크샵이 붙습니다.",
       en: "Each stage comes with a three-hour workshop matched to that day's agenda.",
@@ -1706,118 +1711,118 @@ export const naru = {
     ] as Stat[],
     // 스테이지 다섯. 날짜 대신 순서입니다(위 주석 참고).
     stagesLabel: { ko: "닷새의 스테이지", en: "Five days, five stages" },
-    // dayOffset: DECEMBER_STARTS_AT에서 며칠 뒤인지. null이면 본 일정 전.
+    // dayOffset: DECEMBER_STARTS_AT(12/10)에서 며칠 뒤인지. 다섯 칸 모두 숫자입니다.
     // 날짜 문자열을 여기 쓰지 않습니다(naruDates.formatDecemberDay가 셉니다).
-    // submit: 그 스테이지가 끝나며 받는 제출물. workshop: 그날 붙는 3시간 워크샵.
-    // 출처 빌더톤_2회차_기획.pdf 04.
+    // submit: 그 스테이지가 끝나며 받는 제출물. session: 그날 붙는 3시간 세션.
+    // 출처 크로싱서울_일정.pdf 02·03·04.
+    //
+    // DECIDED 2026-09-20 (크로싱서울_일정.pdf 02·03·04): 날짜가 하루씩 밀렸습니다.
+    // 12/10이 Day 0(Context Open)이고 Day 4가 12/14입니다. 전에는 12/10이 1일차,
+    // 첫 칸이 "본 일정 전"이었습니다.
+    //
+    // 첫 칸의 성격이 바뀐 것이 요점입니다. "본 일정 전"은 날짜가 없는 준비였는데,
+    // Day 0은 날짜가 붙고 3시간짜리 세션이 있는 하루입니다. 다만 스테이지는
+    // 아닙니다(아래 note). 다섯 칸을 같은 무게로 그리지 마세요.
     stages: [
-      // title: 한글 주 + 영문 소문자 보조(감사 반영 브리프 8, 영문 라벨 규칙). name은 기획서의
-      // 영문 스테이지 이름이고 ko 화면에서 보조 라벨로 작게 붙습니다. TODO: confirm(한글 이름).
-      // DECIDED 2026-09-19 (사용자): 본 일정 전은 팀 본딩이 아니라 데이터 공개입니다.
-      // 데이터를 먼저 열어 어느 트랙에서 풀지 고르고 오고, 팀은 1일차 현장에서 맺습니다.
-      // 사전 매칭이 없어졌으므로 "사전 매칭된 팀"이라고 쓰지 마세요.
       {
-        name: { ko: "Track Select", en: "Track Select" },
-        title: { ko: "트랙 선택", en: "Choosing a track" },
-        when: { ko: "본 일정 전", en: "Before it starts" },
-        dayOffset: null,
+        name: { ko: "Context Open", en: "Context Open" },
+        title: { ko: "컨텍스트 열기", en: "Opening the context" },
+        when: { ko: "Day 0", en: "Day 0" },
+        dayOffset: 0,
         body: {
-          ko: "데이터를 먼저 공개합니다. 어느 트랙에서 풀지 고르고 옵니다.",
-          en: "The data opens first. You pick the track you want before you come.",
+          ko: "데이터와 회사 소개, 의뢰 문제점, 활용 가이드를 엽니다. 정제해서 주는 것이 아니라 무엇이 어디에 있는지까지입니다.",
+          en: "The data opens, with the companies, what they are asking about, and a guide to using it. Not cleaned up for you. Just where everything is.",
         },
         line: {
-          ko: "1일차는 고른 상태에서 시작합니다.",
-          en: "Day one starts with that choice already made.",
+          ko: "Day 1에 쓸 시간을 벌어 주는 장치이지, 별도의 스테이지가 아닙니다.",
+          en: "It buys back time for Day 1. It is not a stage of its own.",
         },
         chips: [{ ko: "데이터 공개", en: "Data opens" }],
+        session: {
+          title: { ko: "활용 Guide", en: "Using it" },
+          body: { ko: "데이터와 도구를 어떻게 쓸지 짚는 3시간 세션", en: "Three hours on how to use the data and the tools" },
+        },
       },
       {
         name: { ko: "Discovery", en: "Discovery" },
         title: { ko: "문제 발견", en: "Discovery" },
-        when: { ko: "1일차", en: "Day 1" },
-        dayOffset: 0,
-        // DECIDED 2026-09-19 (사용자): 팀 매칭(한국 <> 싱가포르)과 본딩이 이 날 앞머리로
-        // 들어왔습니다. 본딩은 아이스브레이킹으로 하루를 쓰는 것이 아니라 바로 Discovery로
-        // 넘어가기 위한 것입니다. 그래서 이 날의 제출물(정의서)은 그대로입니다.
+        when: { ko: "Day 1", en: "Day 1" },
+        dayOffset: 1,
         body: {
-          ko: "현장에서 한국과 싱가포르를 섞어 팀을 맺습니다. 본딩을 거쳐 바로 고른 트랙의 데이터에서 문제를 찾아 정의합니다.",
-          en: "Teams form on site, Korea mixed with Singapore. You bond, then go straight into your track's data and define the problem.",
+          ko: "팀을 먼저 서로 확인합니다. Day 0에 각자 세운 생각을 꺼내 맞춰 보고, 출제사가 직접 여는 세션에서 회사를 봅니다.",
+          en: "First you meet your team. You put the thinking you did on Day 0 side by side, and the company opens its own session.",
         },
-        // 2026-09-20 (사용자: "1일차가 요구 강도가 가장 높은 날이라는 거는 빼 줘").
-        // 한 줄과 칩 둘 다 "요구 강도 최고"를 말하고 있었습니다. 등록 전에 읽는
-        // 사람에게 날짜별 난이도 순위는 정보가 아니라 경고입니다. 못해도 되는
-        // 자리라고 말해 놓고 첫날에 가장 힘들다고 적는 것은 서로 다른 말이에요.
-        //
-        // 한 줄을 지우지 않고 바꿉니다. 다섯 칸이 모두 "그날의 한 줄"을 갖고 있어
-        // 하나만 비면 그 카드가 덜 채워진 것으로 읽힙니다. 대신 이 날에 실제로
-        // 일어나는 일을 적습니다(팀을 맺고 같은 날 정의서까지).
+        // PDF 03에서 가장 강한 한 줄입니다. 8월과 12월의 차이를 한 문장이 말합니다.
         line: {
-          ko: "처음 만난 팀과 그날 안에 정의서까지 갑니다.",
-          en: "You meet your team and reach the problem statement the same day.",
+          ko: "8월에 출제사가 완성해서 준 문제집을, 12월에는 학생이 이 날 만듭니다.",
+          en: "In August the company handed over a finished problem set. In December you write it, on this day.",
         },
         chips: [{ ko: "팀 매칭", en: "Team matching" }],
-        workshop: {
-          title: { ko: "Problem Discovery", en: "Problem Discovery" },
-          body: { ko: "워크플로우를 분해해 병목 짚는 법", en: "Taking a workflow apart to find the bottleneck" },
+        session: {
+          title: { ko: "Sharing session", en: "Sharing session" },
+          body: { ko: "출제사가 직접. 회사와 의뢰 문제", en: "The company itself, on what it does and what it is asking" },
         },
-        submit: { ko: "정의서", en: "The problem statement" },
+        submit: { ko: "이해도 1장", en: "One page on what you understood" },
       },
       {
         name: { ko: "Build", en: "Build" },
         title: { ko: "빌드", en: "Build" },
-        when: { ko: "2일차", en: "Day 2" },
-        dayOffset: 1,
+        when: { ko: "Day 2", en: "Day 2" },
+        dayOffset: 2,
         body: {
-          ko: "정의한 문제를 실제로 풉니다.",
-          en: "You actually solve what you defined.",
+          ko: "오전 안에 돌아가는 첫 버전을 만들고 계속 고칩니다. 무엇을 만들지는 바뀔 수 있습니다. 다만 Day 1의 정의가 바뀌면 운영진에게 알립니다.",
+          en: "You get a first working version up in the morning and keep fixing it. What you build can change. If the Day 1 definition changes, you tell the organisers.",
         },
-        line: { ko: "PO 세션이 빌드 도중에 들어옵니다.", en: "The PO session lands mid-build." },
-        chips: [{ ko: "PO 세션", en: "PO session" }],
-        workshop: {
+        line: { ko: "추가 제출 요구는 없습니다.", en: "Nothing extra to hand in." },
+        chips: [{ ko: "방향 전환은 팀의 몫", en: "Changing course is yours to call" }],
+        session: {
           title: { ko: "PO session", en: "PO session" },
-          body: { ko: "정의를 기능으로 옮기는 판단 기준", en: "How a definition turns into a feature" },
+          body: { ko: "현업에서는 무엇에 집중하는지. 안 만들 것도 여기서 정합니다", en: "What people in the job actually focus on, and what they decide not to build" },
         },
       },
       {
         name: { ko: "Refine", en: "Refine" },
         title: { ko: "다듬기", en: "Refine" },
-        when: { ko: "3일차", en: "Day 3" },
-        dayOffset: 2,
+        when: { ko: "Day 3", en: "Day 3" },
+        dayOffset: 3,
         body: {
-          ko: "검증받을 수 있는 상태로 다듬습니다.",
-          en: "You get it to a state that can be verified.",
+          ko: "정의한 지표로 결과를 확인하고, 틀리는 경우를 직접 찾아 한계로 정리합니다. 피칭 연습을 팀끼리 서로 보여주고 의견을 주고받습니다.",
+          en: "You check the result against the measure you set, hunt for the cases where it fails, and write those down as limits. Teams show each other their pitch and trade notes.",
         },
-        line: { ko: "이 시점부터 새 방향은 제안하지 않습니다.", en: "From here, no new directions." },
-        chips: [{ ko: "새 방향 금지", en: "No new directions" }],
-        workshop: {
-          title: { ko: "Pitching session", en: "Pitching session" },
-          body: { ko: "무엇을 증명할지와 발표 구조", en: "What to prove, and how to structure the pitch" },
+        // 8월에 없었던 자리라는 것이 이 날의 요점입니다(PDF 04, gaps[2]와 같은 사실).
+        line: { ko: "팀 사이 공유는 8월에 없었던 자리입니다.", en: "Teams sharing with each other did not exist in August." },
+        chips: [{ ko: "멘토링은 이 날까지", en: "Mentoring ends here" }],
+        session: {
+          title: { ko: "Empower session", en: "Empower session" },
+          body: { ko: "창업과 커리어를 다루는 3시간 세션", en: "Three hours on starting something, and on careers" },
         },
-        submit: { ko: "결과물", en: "The build" },
+        submit: { ko: "덱을 포함한 사전 제출물", en: "The deck and what goes with it" },
       },
       {
         name: { ko: "Pitch", en: "Pitch" },
         title: { ko: "피치", en: "Pitch" },
-        when: { ko: "4일차", en: "Day 4" },
-        dayOffset: 3,
+        when: { ko: "Day 4", en: "Day 4" },
+        dayOffset: 4,
         body: {
-          ko: "만든 것을 앞에서 증명합니다. 발표 5분, 질의 5분.",
-          en: "You prove it out front. Five minutes to present, five to answer.",
+          ko: "청중은 회사 관계자입니다. 발표 5분, 질의 5분. 아이디어 단계여도 무대에 섭니다. 완성도가 아니라 과정을 봅니다.",
+          en: "You present to the people from the companies. Five minutes, then five for questions. You go up even if it is still an idea. What gets looked at is the process, not the finish.",
         },
-        line: { ko: "시상과 클로징까지 이 날입니다.", en: "Awards and closing the same day." },
-        chips: [{ ko: "발표 5분 + 질의 5분", en: "5 min + 5 min" }, { ko: "시상", en: "Awards" }],
+        // #after 챕터와 같은 말입니다. 여기서는 일정 안의 사실로, 저기서는 챕터로.
+        line: { ko: "여기서 만난 사람과 기회를 이어가는 것은 각자의 몫입니다.", en: "Carrying on with the people and the chances you met here is yours to do." },
+        chips: [{ ko: "멘토링 없음", en: "No mentoring" }, { ko: "시상과 클로징", en: "Awards and closing" }],
       },
     ] as {
       name: Phrase;
       title: Phrase;
       when: Phrase;
-      dayOffset: number | null;
+      dayOffset: number;
       body: Phrase;
-      /** 본문의 마지막 문장. 8월 데이 카드의 "→ 그날의 한 줄" 자리 (2026-09-17). 새로 쓴 문장이 아니라 body에서 떼어 낸 것입니다. */
+      /** 본문의 마지막 문장. 8월 데이 카드의 "→ 그날의 한 줄" 자리 (2026-09-17). */
       line: Phrase;
       /** 칩 줄. 8월 데이 카드의 필참·현장·시간 칩 자리. 본문에서 나온 낱말만 씁니다. */
       chips: Phrase[];
-      workshop?: { title: Phrase; body: Phrase };
+      /** 그날의 3시간 세션. 전에는 workshop이었습니다(2026-09-20, PDF가 부르는 이름). */
+      session?: { title: Phrase; body: Phrase };
       submit?: Phrase;
     }[],
     tbdLabel: { ko: "아직 정해지지 않은 것", en: "Not settled yet" },
