@@ -723,7 +723,9 @@ export default function NaruHome() {
             {naru.december.facts.map((f, i) => (
               <div
                 key={f.k.en}
-                className={`grid grid-cols-1 gap-x-6 gap-y-1 border-t border-white/10 py-3 sm:grid-cols-[7rem_1fr] ${i === naru.december.facts.length - 1 ? "border-b" : ""}`}
+                // 폰에서도 2열입니다. 라벨이 두 글자라 81px이면 충분하고, 위로
+                // 쌓으면 네 행에 라벨 줄이 넷 더 생깁니다.
+                className={`grid grid-cols-[4.5rem_1fr] gap-x-4 gap-y-1 border-t border-white/10 py-3 sm:grid-cols-[7rem_1fr] sm:gap-x-6 ${i === naru.december.facts.length - 1 ? "border-b" : ""}`}
               >
                 {/* /50이 아니라 /75인 이유는 대비입니다(LABEL_HEADING이 같은 이유로
                     /75입니다). 12.24px은 큰 글자 예외를 받지 못해 4.5:1이 필요한데,
