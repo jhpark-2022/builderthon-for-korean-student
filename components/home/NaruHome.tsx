@@ -251,7 +251,7 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
             .replace("{d}", String(left.d))
             .replace("{h}", String(left.h))
             // 싱가포르 줄 (2026-09-19, 접근성 감사 12). leftSg가 없거나 이미
-            // 시작했으면 서울 값으로 떨어뜨립니다 — 없는 숫자를 지어내지 않습니다.
+            // 시작했으면 서울 값으로 떨어뜨립니다. 없는 숫자를 지어내지 않습니다.
             .replace("{d2}", String(leftSg && leftSg !== "started" ? leftSg.d : left.d))
             .replace("{h2}", String(leftSg && leftSg !== "started" ? leftSg.h : left.h))
         : t(naru.eventHero.countdownLabel);
@@ -723,7 +723,7 @@ export default function NaruHome() {
 
             2026-09-19 (사용자): **첫 줄 하나만 그립니다.** steps 02(기업이 마지막 날 여는
             기회)와 03(다음 회차에 멘토로 돌아옵니다)은 data/naru.ts에 그대로 있고 화면에서
-            내렸습니다. 지우지 않은 이유는 이 레포의 규칙입니다 — 되살릴 때 번역을 다시
+            내렸습니다. 지우지 않은 이유는 이 레포의 규칙입니다. 되살릴 때 번역을 다시
             쓰지 않아도 되게 둡니다.
 
             번호 배지와 ol을 함께 뺐습니다. 항목이 하나면 "01"은 셀 것이 없고, 하나짜리
@@ -892,7 +892,7 @@ export default function NaruHome() {
             {t(naru.record.credit)}
           </p>
           {/* 누구에게 진 빚인지 (2026-09-20, 사용자). 위 한 줄보다 한 단 작고
-              한 단 어둡습니다 — 앞 문장이 선언이고 이것이 명단이라, 같은 무게로
+              한 단 어둡습니다. 앞 문장이 선언이고 이것이 명단이라, 같은 무게로
               두면 둘 다 읽히지 않습니다. 바로 아래 아카이브 버튼이 실제 이름들로
               가는 문이고, 이 문단이 그 버튼의 이유가 됩니다. */}
           <p className="mx-auto mt-3 max-w-2xl break-keep text-left text-sm leading-relaxed text-white/65 lg:text-center">
@@ -920,7 +920,7 @@ export default function NaruHome() {
 
             h3 (접근성 감사 18): 전에는 Eyebrow 하나뿐이라, 폰에서 "변하지 않는
             두 개"를 눌러 도착하면 어디에 왔는지 확인할 문장이 없었습니다.
-            why.heading 키는 전부터 있었고 그리지 않고 있던 것을 되살립니다 —
+            why.heading 키는 전부터 있었고 그리지 않고 있던 것을 되살립니다.
             sr-only가 아니라 눈에도 보이게 두는 편이 착지점을 말해 줍니다. */}
         <div id="why" className="mt-8 border-t border-white/10 pt-8 lg:mt-12 lg:pt-12">
           <Eyebrow color="purple">{t(naru.why.eyebrow)}</Eyebrow>
@@ -1134,7 +1134,7 @@ export default function NaruHome() {
         <div aria-hidden className="mx-auto mt-12 h-px w-full max-w-5xl bg-white/10" />
         <Reveal id="join-ways" className="mx-auto mt-12 max-w-3xl rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-6 text-left sm:px-7">
           {/* "PDF · 1.0MB" (2026-09-19, 모바일 감사 21). 쪽 수와 파일 크기 줄을
-              뺀 결정(data/naru.ts)은 그대로 존중합니다 — 이건 그 줄을 되살리는 게
+              뺀 결정(data/naru.ts)은 그대로 존중합니다. 이건 그 줄을 되살리는 게
               아니라 라벨 옆의 한 조각입니다. 버튼의 ↓는 **형식을 말하지 않고**,
               셀룰러에서 1MB는 데스크톱에서와 다른 값입니다. 그 결정의 이유
               ("무엇을 받는지 모르고 누르게 하지 않습니다")를 셀룰러까지 넓힙니다.

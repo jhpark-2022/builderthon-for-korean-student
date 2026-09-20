@@ -77,7 +77,7 @@ export type NavAnchor = {
    * 40%를 먹었습니다. 두 줄로 세우면 91.7px이 되고(칩 높이는 44px 그대로) 첫 줄이
    * 321px에서 283px로 내려갑니다. 한국어 "크로싱 서울"은 57.8px이라 판이 비어 있고,
    * 그래서 한 줄 그대로입니다. 자동 줄바꿈(whitespace-normal + max-width)으로는 안
-   * 됩니다 — flex 아이템의 폭이 max-content에서 정해져, 글자만 접히고 상자는 넓은
+   * 됩니다. flex 아이템의 폭이 max-content에서 정해져, 글자만 접히고 상자는 넓은
    * 채로 남습니다(실측).
    */
   railLines?: Phrase;
@@ -241,7 +241,7 @@ export default function JourneyNav({
     // 즉시 한 번 (2026-09-19, 접근성 감사 23). 350ms 타이머만 있으면 그 전에
     // Tab이나 앵커 점프가 일어났을 때 globals.css의 고정값 120px이 쓰입니다.
     // 영어 두 줄 헤더는 158px이라 38px이 모자라 착지점이 헤더 뒤로 들어갑니다.
-    // 타이머는 그대로 둡니다 — 서체가 늦게 오면 높이가 한 번 더 바뀝니다.
+    // 타이머는 그대로 둡니다. 서체가 늦게 오면 높이가 한 번 더 바뀝니다.
     apply();
     const timer = window.setTimeout(apply, 350);
     const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(schedule) : null;
@@ -383,7 +383,7 @@ export default function JourneyNav({
             // -my-1 py-1: 히트 영역만 44px로 (2026-09-19, 모바일 감사 6).
             // 이미지가 h-8(36px)뿐이라 맨 위로 돌아가는 관용 동작이 8px 모자랐습니다.
             // 음수 마진으로 52px 바 안의 세로 정렬은 그대로 둡니다. 로고 가이드의
-            // 비율·색은 건드리지 않습니다 — 상자만 키웁니다.
+            // 비율·색은 건드리지 않습니다. 상자만 키웁니다.
             <a href="#top" className="-my-1 flex min-h-[44px] items-center py-1 leading-none">
               <Image
                 src="/naru/naru-name-rev.png"
@@ -581,7 +581,7 @@ export default function JourneyNav({
               스타일은 올리지 않았습니다. 경쟁 상대가 없어졌으니 고스트 톤으로
               충분하고, 그라디언트로 올리면 마감 전과 같은 압력이 됩니다. */}
           {/* 배경 정지 토글, 헤더에도(감사 반영 브리프 2.4). 푸터 것은 그대로. 나루 홈만.
-              xl 아래에서는 여기 두지 않습니다 — 아래로 스크롤하면 이 줄이 52px 접혀 들어가
+              xl 아래에서는 여기 두지 않습니다. 아래로 스크롤하면 이 줄이 52px 접혀 들어가
               버튼이 화면 밖으로 나갔습니다(실측: 스크롤 뒤 top −51px). 폰·태블릿용은 헤더
               **바깥**의 고정 자리에 있습니다(이 파일 맨 아래). 두 벌이 동시에 뜨지 않도록
               이쪽을 display:none으로 지우므로 접근성 트리에도 하나만 남습니다. */}
@@ -629,7 +629,7 @@ export default function JourneyNav({
       {scrolled && (
         // nav 랜드마크입니다 (2026-09-19, 접근성 감사 4). 전에는 </nav> 뒤의
         // 그냥 <div>였습니다. 그래서 폰에서 navigation 랜드마크 안에는 로고와
-        // 토글 둘뿐이고 **진짜 목차는 랜드마크가 아니었습니다** — iOS 로터의
+        // 토글 둘뿐이고 **진짜 목차는 랜드마크가 아니었습니다**. iOS 로터의
         // "랜드마크"로 목차에 닿을 수 없었어요. 폰에서 이 레일이 유일한
         // 챕터 이동 수단이라는 점을 생각하면 가장 아픈 자리였습니다.
         <nav aria-label={t(dict.nav.sectionsAria)} className="xl:hidden">
@@ -720,7 +720,7 @@ export default function JourneyNav({
                   }`}
                 >
                   {/* railLines가 있으면 그 판의 줄바꿈대로 세웁니다. 없으면 한 줄.
-                      줄마다 <span>을 두면 안 됩니다 — 칩이 inline-flex라 그 span들이
+                      줄마다 <span>을 두면 안 됩니다. 칩이 inline-flex라 그 span들이
                       flex 아이템이 되어 <br>을 무시하고 나란히 섭니다(실측 135px).
                       한 덩어리 안에서 <br>로 끊어야 상자가 긴 쪽 줄의 폭을 가집니다. */}
                   <span className="text-center">
@@ -756,7 +756,7 @@ export default function JourneyNav({
           다시 재세요.
 
           z-40: 헤더(z-50) 아래. 앵커로 점프했을 때 헤더가 위를 덮는 관계를
-          유지합니다. 어두운 원반은 감싼 div가 만듭니다 — 버튼 자신의 테두리와
+          유지합니다. 어두운 원반은 감싼 div가 만듭니다. 버튼 자신의 테두리와
           호버를 덮어쓰지 않으려고 클래스를 섞지 않았습니다. */}
       {naru && (
         <div

@@ -1973,8 +1973,8 @@ export const dict = {
           // 숫자)는 쓰지 않습니다 — 바뀔 수 있는 운영 정보라 예약 시스템이 갖습니다.
           label: { ko: "온라인", en: "Online" },
           body: {
-            ko: "크래시코스 1:1 멘토링 — Day 3~7 매일, 팀이 고른 시간에 (온라인 기본)",
-            en: "Crash course 1:1 mentoring — every day from Day 3 to 7, at times your team picks (online by default)",
+            ko: "크래시코스 1:1 멘토링 · Day 3~7 매일, 팀이 고른 시간에 (온라인 기본)",
+            en: "Crash course 1:1 mentoring · every day from Day 3 to 7, at times your team picks (online by default)",
           },
         },
       ],
@@ -4724,7 +4724,7 @@ export const dict = {
     //
     // 이 자리에 적는 이름은 **전부 이 페이지가 이미 공개한 것**입니다. AXMOS와
     // 코드프레소는 파트너 섹션에, 세 학생회는 바로 아래 hostedBy에, 한인회는
-    // 파트너 카드에 있습니다. 새 이름을 여기서 만들지 마세요 — 감사는 사실일
+    // 파트너 카드에 있습니다. 새 이름을 여기서 만들지 마세요. 감사는 사실일
     // 때만 감사입니다. 사람 이름을 적지 않는 것도 같은 이유입니다. 멘토와 연사는
     // 각자의 섹션에 이름과 소속이 있고, 여기서 다시 나열하면 한 번 빠진 사람이
     // 빠진 채로 굳습니다. 대신 "이 페이지에 이름이 적힌"으로 가리킵니다.
@@ -4734,7 +4734,7 @@ export const dict = {
     // 때문입니다. 회사가 보낸 것이 아니라 각자 저녁을 낸 것입니다.
     // 숫자는 naru.record.stats에서 옵니다: 신청 74, Day 1 참석 59, 시작 25팀,
     // 발표 21팀. "8일을 건너 마지막 날 앞에 선"은 **21팀**입니다. 74는 신청자
-    // 수이지 끝까지 간 사람 수가 아닙니다 — 감사 문단에서 숫자를 올려 잡으면
+    // 수이지 끝까지 간 사람 수가 아닙니다. 감사 문단에서 숫자를 올려 잡으면
     // 고마움이 아니라 홍보가 됩니다. 숫자를 고칠 때 그쪽 stats와 함께 보세요.
     thanks: {
       label: { ko: "고맙습니다", en: "Thank you" },
@@ -4743,8 +4743,8 @@ export const dict = {
         en: "These eight days ran on other people's time",
       },
       body: {
-        ko: "AXMOS가 주최하고 코드프레소가 실제 기업 문제를 냈습니다. SMU·NUS·NTU 한인 학생회가 주관했고, 싱가포르 한인회가 1:1 멘토링을 위해 한인회관을 내어주었습니다. 멘토로 오신 분들은 대부분 소속 회사와 별개로 개인 자격으로 저녁 시간을 냈습니다. 무대에 선 연사와 전문가, 후원사, 그리고 8일을 건너 마지막 날 앞에 선 21팀까지 — 이 페이지에 이름이 적힌 모든 분들 덕분입니다.",
-        en: "AXMOS hosted it and Codepresso set the real company problem. The SMU, NUS and NTU Korean Student Associations ran it, and the Korean Association in Singapore opened its hall for the 1:1 mentoring. Most mentors came on their own evenings, separately from where they work. Speakers, expert reviewers, sponsors, and the 21 teams that stood up on the final day — every name on this page.",
+        ko: "AXMOS가 주최하고 코드프레소가 실제 기업 문제를 냈습니다. SMU·NUS·NTU 한인 학생회가 주관했고, 싱가포르 한인회가 1:1 멘토링을 위해 한인회관을 내어주었습니다. 멘토로 오신 분들은 대부분 소속 회사와 별개로 개인 자격으로 저녁 시간을 냈습니다. 무대에 선 연사와 전문가, 후원사, 그리고 8일을 건너 마지막 날 앞에 선 21팀까지. 이 페이지에 이름이 적힌 모든 분들 덕분입니다.",
+        en: "AXMOS hosted it and Codepresso set the real company problem. The SMU, NUS and NTU Korean Student Associations ran it, and the Korean Association in Singapore opened its hall for the 1:1 mentoring. Most mentors came on their own evenings, separately from where they work. Speakers, expert reviewers, sponsors, and the 21 teams that stood up on the final day. Every name on this page.",
       },
       // 마지막 줄이 요점입니다. 감사가 예의로 끝나면 각주가 되고, 결과를 말하면
       // 문장이 됩니다. 12월로 가는 버튼이 바로 위에 있어 이 줄이 그 버튼의 근거가 됩니다.
@@ -4784,7 +4784,7 @@ export const dict = {
     // 각자 자기 이름(EN / KR)과 aria-current를 이미 갖고 있어서, 묶음에
     // 필요한 것은 행동이 아니라 **이름**입니다. 그리고 한국어 페이지에서
     // 영어 문장을 읽어 주지 않게 로케일을 따라갑니다(3.1.2).
-    // "EN/KR"은 그대로 답니다 — 눈에 보이는 글자가 그것이라 2.5.3(Label in
+    // "EN/KR"은 그대로 답니다. 눈에 보이는 글자가 그것이라 2.5.3(Label in
     // Name)이 이름 안에 포함되기를 요구합니다.
     groupAria: { ko: "EN/KR: 언어 선택", en: "EN/KR: Language" },
   },

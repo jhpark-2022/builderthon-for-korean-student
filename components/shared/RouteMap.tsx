@@ -147,7 +147,7 @@ export default function RouteMap({
             {/* whitespace-nowrap은 sm부터 (2026-09-19, 모바일 감사 11). 영어
                 "General Mentoring, on call the whole way"가 약 296px이라 360px
                 화면(가용 306px)에서 10px 여유뿐이었습니다. 폰에서는 접히게 두고
-                가운데 정렬합니다 — 두 줄이 되어도 ol의 pb-10 안에 듭니다. */}
+                가운데 정렬합니다. 두 줄이 되어도 ol의 pb-10 안에 듭니다. */}
             <span className="flex max-w-full items-center gap-1.5 rounded-full border border-accent/40 bg-transparent px-2.5 py-1 text-center text-[0.72rem] font-semibold leading-tight text-accent sm:whitespace-nowrap sm:leading-none">
               <span aria-hidden className="h-[7px] w-[7px] shrink-0 rounded-full bg-accent/80" />
               {pill}

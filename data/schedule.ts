@@ -1794,12 +1794,12 @@ export const schedule: BEvent[] = [
   //   confirmed: false,
   //   title: { ko: "과제 딥다이브 (조율 중)", en: "Problem Deep-Dive (TBC)" },
   //   summary: {
-  //     ko: "과제를 낸 주최사가 문제의 배경과 맥락을 직접 풀어주는 시간 — 형식 조율 중.",
-  //     en: "The companies that set the problems walk through the background and context first-hand — format still being arranged.",
+  //     ko: "과제를 낸 주최사가 문제의 배경과 맥락을 직접 풀어주는 시간입니다. 형식 조율 중.",
+  //     en: "The companies that set the problems walk through the background and context first-hand. Format still being arranged.",
   //   },
   //   description: {
-  //     ko: "문제가 공개되고 트랙을 고른 직후, 그 과제를 실제로 낸 코드프레소가 배경과 맥락을 직접 풀어주는 시간입니다. 왜 이게 현업에서 문제인지, 안에서는 지금 어떻게 처리하고 있는지, 이번 과제의 범위는 어디까지인지 — 문제 설명문만으로는 보이지 않는 부분을 짚고 질문을 받습니다. 이어지는 현장 브리핑 & Q&A가 진행 방식·팀 구성·평가 기준을 다룬다면, 이 시간은 과제 내용 자체를 다룹니다. 참가자 전원이 한자리에 모이는 다음 기회는 Day 5이므로, 맥락을 가장 깊게 가져갈 수 있는 자리이기도 합니다. 진행자와 형식(길이·구성)은 아직 조율 중이며, 확정되는 대로 안내합니다.",
-  //     en: "Right after the problems drop and tracks are chosen, Codepresso, which actually set it, walks through the background and context first-hand: why this is a real problem inside the business, how it's handled today, and where the scope of this brief starts and ends — the parts a written problem statement doesn't show. Questions are taken on the spot. Where the on-site briefing & Q&A that follows covers how the eight days run, this session is about the problem itself. The next time everyone is in one room is Day 5, so this is the deepest context you can carry out of the room. Who runs it and in what format (length, structure) is still being arranged; we'll announce it once settled.",
+  //     ko: "문제가 공개되고 트랙을 고른 직후, 그 과제를 실제로 낸 코드프레소가 배경과 맥락을 직접 풀어주는 시간입니다. 왜 이게 현업에서 문제인지, 안에서는 지금 어떻게 처리하고 있는지, 이번 과제의 범위는 어디까지인지. 문제 설명문만으로는 보이지 않는 부분을 짚고 질문을 받습니다. 이어지는 현장 브리핑 & Q&A가 진행 방식·팀 구성·평가 기준을 다룬다면, 이 시간은 과제 내용 자체를 다룹니다. 참가자 전원이 한자리에 모이는 다음 기회는 Day 5이므로, 맥락을 가장 깊게 가져갈 수 있는 자리이기도 합니다. 진행자와 형식(길이·구성)은 아직 조율 중이며, 확정되는 대로 안내합니다.",
+  //     en: "Right after the problems drop and tracks are chosen, Codepresso, which actually set it, walks through the background and context first-hand: why this is a real problem inside the business, how it's handled today, and where the scope of this brief starts and ends. These are the parts a written problem statement doesn't show. Questions are taken on the spot. Where the on-site briefing & Q&A that follows covers how the eight days run, this session is about the problem itself. The next time everyone is in one room is Day 5, so this is the deepest context you can carry out of the room. Who runs it and in what format (length, structure) is still being arranged; we'll announce it once settled.",
   //   },
   //   location: FOUNDRY_REFINERY,
   //   locationUrl: FOUNDRY_URL,
@@ -1814,7 +1814,7 @@ export const schedule: BEvent[] = [
   //   },
   //   description: {
   //     ko: "공개된 과제를 함께 살펴보고, 8일간의 진행 방식·팀 구성·평가 기준을 안내하는 현장 브리핑입니다. 궁금한 점은 그 자리에서 바로 묻고 답을 들을 수 있어, 첫날부터 막힘 없이 출발할 수 있습니다.",
-  //     en: "An on-site briefing that walks through the released problems and explains how the eight days work — team formation, schedule and judging. Bring your questions; you'll get answers on the spot so nobody starts the week unsure of how it runs.",
+  //     en: "An on-site briefing that walks through the released problems and explains how the eight days work: team formation, schedule and judging. Bring your questions; you'll get answers on the spot so nobody starts the week unsure of how it runs.",
   //   },
   //   location: FOUNDRY_REFINERY,
   //   locationUrl: FOUNDRY_URL,
@@ -2419,7 +2419,7 @@ export const schedule: BEvent[] = [
       en: "Ten minutes per team in front of Codepresso, who set the problem, and industry experts.",
     },
     description: {
-      ko: "8일의 마지막이자, 문제를 낸 코드프레소와 업계 전문가 앞에서 ‘내 아이디어가 돌아간다’를 검증받는 자리입니다. 같은 공간에서 트랙별로 순차 진행하며, 팀당 10분입니다 — 발표 5분에 Q&A와 심사 5분. 팀 사이에는 전환 2분, 트랙 중간에는 5분 휴식이 있습니다. 두 트랙 사이에는 점심시간이 있어요. 피드백은 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다. 순위를 가리는 대신, 각 팀 결과물에 전문적인 시각과 다음 가능성을 제안합니다.",
+      ko: "8일의 마지막이자, 문제를 낸 코드프레소와 업계 전문가 앞에서 ‘내 아이디어가 돌아간다’를 검증받는 자리입니다. 같은 공간에서 트랙별로 순차 진행하며, 팀당 10분입니다. 발표 5분에 Q&A와 심사 5분. 팀 사이에는 전환 2분, 트랙 중간에는 5분 휴식이 있습니다. 두 트랙 사이에는 점심시간이 있어요. 피드백은 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다. 순위를 가리는 대신, 각 팀 결과물에 전문적인 시각과 다음 가능성을 제안합니다.",
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) — 뜻은 불변
       en: "The end of the eight days, and the moment your idea gets validated in front of Codepresso, who set the problem, and industry experts. Tracks run in sequence in one space, ten minutes per team: a 5-minute pitch, then 5 minutes of Q&A and review, with lunch between the two. The feedback comes from working leaders who have solved real problems in industry. Instead of ranking the teams, each one gets an expert read on its work and a sense of what could come next.",
     },

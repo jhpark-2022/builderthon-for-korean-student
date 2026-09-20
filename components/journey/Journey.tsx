@@ -4202,7 +4202,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
             문단이 이것입니다.
 
             글자 크기는 본문(text-base)이 아니라 한 단 아래입니다. 감사가 페이지의
-            결론인 척하면 오히려 가벼워집니다. 대신 마지막 줄만 흰색으로 올립니다 —
+            결론인 척하면 오히려 가벼워집니다. 대신 마지막 줄만 흰색으로 올립니다.
             그 줄이 12월로 가는 버튼의 근거라서요. */}
         <div className="mx-auto mt-16 w-full max-w-2xl border-t border-white/10 pt-8 text-left sm:text-center">
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/50">
