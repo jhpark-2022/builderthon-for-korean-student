@@ -678,12 +678,22 @@ export default function NaruHome() {
               ))}
             </ul>
           </div>
-          {/* 재는 것. 호박색 강조 상자(8월 "준비물은 하나예요" 문법). */}
-          <div className="mt-6 rounded-xl border border-amber-400/20 bg-amber-400/[0.06] px-4 py-3">
-            <p className="break-keep text-sm leading-relaxed text-amber-50/85">
-              <span className="font-bold text-amber-200">{t(naru.why.measureLabel)}</span>
-              {": "}
-              <span className="font-semibold text-white">{t(naru.why.measure)}</span>
+          {/* 재는 것. 호박색 강조 상자(8월 "준비물은 하나예요" 문법).
+
+              2026-09-20 (사용자: "가장 중요한 것은 완주율이라는 거를 강조"): 라벨과
+              문장을 한 줄에 "라벨: 문장"으로 붙여 두었더니, 이 챕터에서 가장 중요한
+              문장이 각주처럼 읽혔습니다. 라벨을 자기 줄로 올리고 문장을 본문 크기로
+              키웁니다. 상자 색과 문법은 그대로예요. 새 강조 장치를 만들지 않습니다.
+
+              처음에는 이 자리에 "84%" 같은 수치를 크게 세우려고 했는데 걷었습니다.
+              퍼센트를 한 번 적으면 그 수치가 목표가 되고, 다음 회차는 그 수치를
+              지키려고 설계하게 됩니다(data/naru.ts의 measure 주석). */}
+          <div className="mt-6 rounded-xl border border-amber-400/25 bg-amber-400/[0.07] px-5 py-4">
+            <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-amber-200">
+              {t(naru.why.measureLabel)}
+            </p>
+            <p className="mt-2 break-keep text-left text-base font-semibold leading-relaxed text-white lg:text-center">
+              {t(naru.why.measure)}
             </p>
           </div>
         </Reveal>

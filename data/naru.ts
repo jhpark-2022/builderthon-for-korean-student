@@ -514,8 +514,8 @@ export const naru = {
             en: "No screening, no ranking. It is a place where doing badly is allowed.",
           },
           {
-            ko: "여기서 잘하지 못한 것은 어디에도 기록되지 않습니다. 대신 끝까지 해본 것은 남습니다.",
-            en: "Nothing you do poorly here is recorded anywhere. What stays is that you went all the way through.",
+            ko: "여기서 잘하지 못한 것은 어디에도 기록되지 않습니다. 대신 끝까지 해본 것은 남습니다. 그래서 우리가 보는 것도 순위가 아니라 완주입니다.",
+            en: "Nothing you do poorly here is recorded anywhere. What stays is that you went all the way through. So what we look at is not placing but finishing.",
           },
         ],
         keeps: {
@@ -580,10 +580,23 @@ export const naru = {
         },
       },
     ] as { index: string; title: Phrase; body: Phrase }[],
-    measureLabel: { ko: "그래서 재는 것", en: "So this is what we count" },
+    // 2026-09-20 (사용자: "우리는 결과보다는 과정. 누가 우승이 아니라, 얼마나 많은
+    // 분이 완주했고, 얼마나 많이 준비한 과정을 즐겨주셨는지가 중요하다").
+    //
+    // 전에는 "몇 명이 왔느냐가 아닙니다. 몇 팀이 끝까지 갔느냐…"였습니다. 방향은
+    // 맞았는데 세는 것들의 목록이라 읽혔어요. 먼저 무엇을 보는지 한 문장으로
+    // 말하고, 그다음에 무엇을 보지 않는지 말합니다.
+    //
+    // **숫자를 적지 않습니다.** 퍼센트를 한 번 적으면 그 수치가 목표가 되고, 다음
+    // 회차는 그 수치를 지키려고 설계하게 됩니다. 이 그룹이 보는 것은 비율이 아니라
+    // 사람입니다. 8월의 실제 값은 #record의 stats에 그대로 있습니다.
+    //
+    // "즐겼는지"를 넣은 것이 요점입니다. 완주만 말하면 버틴 사람이 이기는 자리가
+    // 되고, 그건 "안전하게 도전할 수 있는 자리"와 다른 말입니다.
+    measureLabel: { ko: "결과보다 과정", en: "Process over result" },
     measure: {
-      ko: "몇 명이 왔느냐가 아닙니다. 몇 팀이 끝까지 갔느냐, 그리고 멘토링을 한 번이라도 받은 팀이 몇이냐를 봅니다.",
-      en: "Not headcount. How many teams went all the way through, and how many booked mentoring even once.",
+      ko: "누가 우승했느냐가 아닙니다. 얼마나 많은 분이 끝까지 완주했는지, 그리고 준비하는 과정을 얼마나 즐겼는지를 봅니다.",
+      en: "Not who won. How many people made it all the way through, and how much they enjoyed the run-up.",
     },
     note: {
       ko: "문턱이 낮아야 커지고, 롤모델이 있어야 자랍니다.",
