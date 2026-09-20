@@ -400,7 +400,7 @@ export default function NaruHome() {
     <>
     {/* tabIndex=-1: skip link가 여기로 보낼 때 브라우저가 실제로 포커스를
         옮기도록 합니다. Tab 순서에는 들어가지 않습니다. */}
-    {/* naru-min12: 폰 글자 하한 12px(app/globals.css). */}
+    {/* naru-min12: 홈의 글자 하한(app/globals.css). 2026-09-20에 폰 전용에서 모든 폭으로. */}
     <main id="main" tabIndex={-1} className="naru-min12 focus:outline-none">
       {/* ── CH0 · 크로싱 서울 히어로 (DECIDED 2026-09-17 2차) ──────────────
           홈의 첫 화면이 그룹에서 이벤트로 바뀌었습니다. 8월 사이트의 히어로가
