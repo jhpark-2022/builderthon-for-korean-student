@@ -815,34 +815,40 @@ export default function NaruHome() {
       <Chapter id="gains" labelledBy="gains-title" align="center">
         <Eyebrow color="purple">{t(naru.gains.eyebrow)}</Eyebrow>
         <h2 id="gains-title" className={H2}><Halo tone="violet">{t(naru.gains.heading)}</Halo></h2>
-        {/* DECIDED 2026-09-19 (얻는 것 브리프 3장): 다섯 칸에 본문이 붙습니다. 그래서
-            레일이 max-w-6xl이고(한 칸의 본문 폭이 170px 아래로 내려가면 안 됩니다),
-            lg:min-h-[8.5rem]은 지웠습니다. 본문이 생기면 최소 높이가 할 일이 없어요.
-            폰은 64px 리스트 행이 아니라 1열 카드입니다. 본문 두 줄이 행에 들어가지
-            않습니다. 번호 배지가 왼쪽, 제목과 본문이 오른쪽에 쌓입니다(끝나면 할 일
-            카드와 같은 문법). item.evidence는 그대로 두고 그리지 않습니다. 8월 숫자는
-            #record가 갖습니다. 이 주석을 풀지 마세요.
-            DECIDED 2026-09-20 (사용자: 상자 길이가 각각 달라서 거슬림): lg:items-start를
-            빼서 다섯 칸이 한 줄에서 같은 높이로 늘어납니다. 제목이 한 줄인 칸과 두 줄인
-            칸이 섞여 있으니, 본문은 lg:mt-auto로 칸 아래에 붙여 다섯 개의 본문 시작
-            줄을 맞춥니다. 최소 높이 숫자는 다시 넣지 않았습니다. 본문이 길어지면
-            그 칸이 커지고 나머지가 따라 늘어납니다. */}
+        {/* DECIDED 2026-09-20 (표현 방식 브리프 3장): 카드 다섯 → 행 다섯.
+            한 행에 36~51자를 담으려고 248×307 카드를 쓰고 있었습니다. 테두리와
+            23px 여백이 글자보다 존재감이 컸습니다. 데스크톱도 모바일과 같은 구조로,
+            번호와 제목이 왼쪽 고정 폭, 설명이 오른쪽. 칸을 나누는 것은 테두리가 아니라
+            헤어라인입니다. 상자는 여기서 하는 일이 없었습니다(2장 규칙).
+
+            번호 알약 상자도 뺐습니다. 번호 다섯 개는 눌리는 것도 기록도 경고도 아닙니다.
+
+            제목 칸이 14rem이고 제목 크기가 1.35rem인 이유: 루트가 18px이라 H3
+            클램프가 1440에서 34.2px까지 올라가고, 그러면 "실명 기업의 진짜 문제"가
+            283px라 어느 칸에도 한 줄로 안 들어갑니다. 1.35rem은 H3 클램프의 아래 끝
+            그대로이고(24.3px), 그 크기에서 가장 긴 제목이 201px입니다. 새 계단을 만든
+            것이 아니라 있는 계단의 한 끝에 고정한 것입니다.
+
+            행 여백이 데스크톱에서도 py-5인 이유: 이 챕터는 md부터 min-h-screen이라
+            1440×900에서 바닥이 900px입니다. py-6이면 안쪽 내용이 705px가 되어 그
+            바닥을 21px 밀어 올립니다. 한 줄 제목 다섯 개에 54px 여백은 필요하지도
+            않았고요.
+
+            item.evidence는 그대로 두고 그리지 않습니다. 8월 숫자는 #record가 갖습니다. */}
         <Reveal>
         {/* role="list" (2026-09-19, 접근성 감사 10): Tailwind preflight의
-            list-style:none 때문에 Safari/VoiceOver가 목록 역할을 떼어 냅니다.
-            이 파일의 다른 목록들은 이미 달고 있고 여기만 빠져 있었습니다. */}
-        <ol role="list" className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-2 lg:grid-cols-5 lg:gap-3">
+            list-style:none 때문에 Safari/VoiceOver가 목록 역할을 떼어 냅니다. */}
+        <ol role="list" className="mx-auto mt-10 max-w-4xl text-left">
           {naru.gains.items.map((item) => (
             <li
               key={item.num}
-              className="flex gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left lg:flex-col lg:p-5"
+              className="grid grid-cols-[2.25rem_1fr] items-start gap-x-4 gap-y-1 border-t border-white/10 py-5 last:border-b sm:grid-cols-[2.25rem_14rem_1fr] sm:gap-x-6"
             >
-              <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent/15 text-sm font-black text-accent">{item.num}</span>
-              <div className="min-w-0 lg:mt-4 lg:flex lg:flex-1 lg:flex-col">
-                <h3 className={H3}>{t(item.title)}</h3>
-                <p className="mt-2 break-keep text-sm leading-relaxed text-white/70 lg:mt-auto lg:pt-3">{t(item.body)}</p>
-                {/* {item.evidence && <p className="mt-2 text-xs text-white/55">{t(item.evidence)}</p>} */}
-              </div>
+              <span className="pt-0.5 text-sm font-black tabular-nums text-accent">{item.num}</span>
+              <h3 className="break-keep text-[1.35rem] font-bold tracking-tight text-white">{t(item.title)}</h3>
+              <p className="col-start-2 break-keep text-sm leading-relaxed text-white/70 sm:col-start-3">
+                {t(item.body)}
+              </p>
             </li>
           ))}
         </ol>
