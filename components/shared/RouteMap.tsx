@@ -142,12 +142,12 @@ export default function RouteMap({
         })}
         {pill && (
           <span className="pointer-events-none absolute bottom-0 left-0 right-0 flex justify-center">
-            {/* 2026-09-18 (감사 반영 브리프 8): 초록은 General Mentoring 상자의 "전 기간 상시"
-                배지 하나에만 남깁니다. 이 필은 같은 말을 한 번 더 하는 자리라 보라 외곽선. */}
-            {/* whitespace-nowrap은 sm부터 (2026-09-19, 모바일 감사 11). 영어
-                "General Mentoring, on call the whole way"가 약 296px이라 360px
-                화면(가용 306px)에서 10px 여유뿐이었습니다. 폰에서는 접히게 두고
-                가운데 정렬합니다. 두 줄이 되어도 ol의 pb-10 안에 듭니다. */}
+            {/* 2026-09-18 (감사 반영 브리프 8): 초록은 General Mentoring 상자의 기간 배지
+                하나에만 남깁니다. 이 필은 같은 말을 한 번 더 하는 자리라 보라 외곽선. */}
+            {/* whitespace-nowrap은 sm부터 (2026-09-19, 모바일 감사 11). 긴 영어 필이
+                360px 화면(가용 306px)에서 10px 여유뿐이었습니다. 폰에서는 접히게 두고
+                가운데 정렬합니다. 두 줄이 되어도 ol의 pb-10 안에 듭니다.
+                (2026-09-20에 문구가 짧아졌지만 규칙은 문구에 기대지 않습니다.) */}
             <span className="flex max-w-full items-center gap-1.5 rounded-full border border-accent/40 bg-transparent px-2.5 py-1 text-center text-[0.72rem] font-semibold leading-tight text-accent sm:whitespace-nowrap sm:leading-none">
               <span aria-hidden className="h-[7px] w-[7px] shrink-0 rounded-full bg-accent/80" />
               {pill}

@@ -1491,18 +1491,25 @@ export const naru = {
       { ko: "결과 공유회", en: "Sharing session" },
     ] as Phrase[],
     mentoringLabel: { ko: "멘토링", en: "Mentoring" },
-    mentoringHeading: { ko: "General Mentoring, 전 기간 상시", en: "General Mentoring, on call the whole way" },
+    // DECIDED 2026-09-20 (크로싱서울_일정.pdf 02·04): 멘토링은 Day 1부터 Day 3까지입니다.
+    // 화면이 세 자리에서 기간 전체를 약속하고 있었는데 사실이 아니었습니다.
+    // Day 3에 어젠다가 피칭 준비로 바뀌고, Day 4는 멘토링 없이 증명만 합니다.
+    // 약속을 좁히는 변경이라 되돌리기 어렵습니다. 다시 넓히려면 PDF부터 바꾸세요.
+    mentoringHeading: { ko: "General Mentoring, Day 1부터 Day 3까지", en: "General Mentoring, Day 1 to Day 3" },
     // 가로 상자의 이름 아래 한 줄(5차). 이름은 고유명사라 그대로 "General Mentoring".
-    mentoringAlways: { ko: "전 기간 상시", en: "On call the whole way through" },
+    mentoringAlways: { ko: "Day 1부터 Day 3까지", en: "Day 1 to Day 3" },
     mentoringLead: {
       ko: "8월에는 슬롯이 넉넉했는데 한 번도 쓰지 않은 팀이 있었습니다. 12월은 예약하지 않은 팀을 이탈 신호로 봅니다.",
       en: "August had plenty of slots and teams that never booked one. In December, a team that has not booked is a warning sign.",
     },
     mentoringRules: [
       { ko: "예약제, 30분 슬롯", en: "By booking, 30-minute slots" },
-      { ko: "질문은 몇 시간 전에 제출", en: "Questions submitted a few hours ahead" },
+      { ko: "질문은 사전 제출", en: "Questions submitted ahead" },
       { ko: "슬롯 횟수 제한 없음", en: "No cap on how many slots" },
-      { ko: "마지막 날에는 새 방향을 제안하지 않음", en: "No new directions on the last day" },
+      // 2026-09-20 (PDF 02·04): 마지막 줄이 "마지막 날에는 새 방향을 제안하지 않음"
+      // 이었습니다. 이제 마지막 날에는 멘토링 자체가 없습니다.
+      { ko: "Day 3에 피칭 준비로 어젠다가 바뀝니다", en: "On Day 3 the agenda switches to pitch prep" },
+      { ko: "Day 4는 멘토링 없이 증명만 합니다", en: "Day 4 is proving it, with no mentoring" },
     ] as Phrase[],
 
     // ── 제목이 포지션을 말합니다 (DECIDED 2026-09-15) ──────────────────────
@@ -1574,8 +1581,9 @@ export const naru = {
         en: "In August the problems arrived already cleaned. In December, finding and defining the problem in the data is yours too.",
       },
       {
-        ko: "코어는 그대로입니다. 스크리닝 없음, 무순위 부문별 시상, 전 기간 상시 멘토링.",
-        en: "The core is unchanged. No screening, awards by category with no ranking, mentoring on call the whole way through.",
+        // 2026-09-20 (PDF 02): 멘토링을 기간 전체로 적고 있었습니다. Day 1부터 Day 3까지입니다.
+        ko: "코어는 그대로입니다. 스크리닝 없음, 무순위 부문별 시상, Day 1부터 Day 3까지의 멘토링.",
+        en: "The core is unchanged. No screening, awards by category with no ranking, mentoring from Day 1 to Day 3.",
       },
     ],
     // ── 왜 국경을 여는가 ────────────────────────────────────────────────
@@ -1696,7 +1704,10 @@ export const naru = {
       {
         value: { ko: "2회", en: "2" },
         label: { ko: "중간 제출 지점", en: "submission checkpoints" },
-        note: { ko: "정의서와 결과물", en: "The problem statement, then the build" },
+        // 2026-09-20 (PDF 02): "정의서와 결과물"이었습니다. 제출물 이름이 바뀌었고
+        // 이 칸은 화면에 그려지는 둘 중 하나라(shape[0]과 shape[3]) 그대로 두면
+        // 바로 아래 표와 다른 말을 합니다.
+        note: { ko: "이해도 1장과 덱 등 사전 제출물", en: "One page, then the deck and what goes with it" },
       },
       {
         value: { ko: "무순위", en: "No ranking" },
@@ -1704,9 +1715,10 @@ export const naru = {
         note: { ko: "과정에 무게를 둡니다", en: "Weighted on the process" },
       },
       {
-        value: { ko: "상시", en: "Always on" },
+        // 2026-09-20 (PDF 02): "상시 / 예약제, 횟수 제한 없음"이었습니다.
+        value: { ko: "3일", en: "3 days" },
         label: { ko: "멘토링", en: "Mentoring" },
-        note: { ko: "예약제, 횟수 제한 없음", en: "By booking, no cap" },
+        note: { ko: "Day 1부터 Day 3까지, 예약제", en: "Day 1 to Day 3, by booking" },
       },
     ] as Stat[],
     // 스테이지 다섯. 날짜 대신 순서입니다(위 주석 참고).
