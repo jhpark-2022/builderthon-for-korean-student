@@ -812,21 +812,26 @@ export default function NaruHome() {
             폰은 64px 리스트 행이 아니라 1열 카드입니다. 본문 두 줄이 행에 들어가지
             않습니다. 번호 배지가 왼쪽, 제목과 본문이 오른쪽에 쌓입니다(끝나면 할 일
             카드와 같은 문법). item.evidence는 그대로 두고 그리지 않습니다. 8월 숫자는
-            #record가 갖습니다. 이 주석을 풀지 마세요. */}
+            #record가 갖습니다. 이 주석을 풀지 마세요.
+            DECIDED 2026-09-20 (사용자: 상자 길이가 각각 달라서 거슬림): lg:items-start를
+            빼서 다섯 칸이 한 줄에서 같은 높이로 늘어납니다. 제목이 한 줄인 칸과 두 줄인
+            칸이 섞여 있으니, 본문은 lg:mt-auto로 칸 아래에 붙여 다섯 개의 본문 시작
+            줄을 맞춥니다. 최소 높이 숫자는 다시 넣지 않았습니다. 본문이 길어지면
+            그 칸이 커지고 나머지가 따라 늘어납니다. */}
         <Reveal>
         {/* role="list" (2026-09-19, 접근성 감사 10): Tailwind preflight의
             list-style:none 때문에 Safari/VoiceOver가 목록 역할을 떼어 냅니다.
             이 파일의 다른 목록들은 이미 달고 있고 여기만 빠져 있었습니다. */}
-        <ol role="list" className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-2 lg:grid-cols-5 lg:items-start lg:gap-3">
+        <ol role="list" className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-2 lg:grid-cols-5 lg:gap-3">
           {naru.gains.items.map((item) => (
             <li
               key={item.num}
               className="flex gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-left lg:flex-col lg:p-5"
             >
               <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent/15 text-sm font-black text-accent">{item.num}</span>
-              <div className="min-w-0 lg:mt-4">
+              <div className="min-w-0 lg:mt-4 lg:flex lg:flex-1 lg:flex-col">
                 <h3 className={H3}>{t(item.title)}</h3>
-                <p className="mt-2 break-keep text-sm leading-relaxed text-white/70">{t(item.body)}</p>
+                <p className="mt-2 break-keep text-sm leading-relaxed text-white/70 lg:mt-auto lg:pt-3">{t(item.body)}</p>
                 {/* {item.evidence && <p className="mt-2 text-xs text-white/55">{t(item.evidence)}</p>} */}
               </div>
             </li>
