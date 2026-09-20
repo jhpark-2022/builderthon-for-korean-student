@@ -46,9 +46,22 @@ import { useReducedMotion, useScroll, useTransform } from "framer-motion";
 // 것만 녹습니다. 두 블록(카피 / 카운트다운+사진)이 각자의 때에 움직이므로
 // 데스크톱과 같은 "먼저와 나중"이 폰에서도 보입니다.
 //
-// ── 끄는 조건 ───────────────────────────────────────────────────────────────
-// prefers-reduced-motion. 8월 것은 사용자 요청으로 이 설정을 무시하지만,
-// 새로 만드는 효과의 기본값은 존중입니다.
+// ── prefers-reduced-motion에서는 페이드만 (2026-09-20 3차) ──────────────────
+// 사용자: "아니 그냥 아무런 effect 가 없음." 배포는 정상이었고 코드도 올라가
+// 있었습니다. 꺼 놓은 것은 이 설정이었어요. 처음에는 설정이 켜져 있으면 전부
+// 끄게 했는데, 그러면 그 설정을 켠 사람에게는 이 페이지에 아무 일도 일어나지
+// 않습니다.
+//
+// 이 설정이 막으려는 것은 **움직임**입니다. 전정기관 증상은 화면이 미끄러지고
+// 커지는 데서 옵니다. 투명도 변화는 그 대상이 아니고, 오히려 움직임을 대체하라고
+// 권장되는 쪽입니다. 그래서 나눴습니다.
+//
+//   설정 꺼짐  들어 올리기 + 크기 + 페이드 (전부)
+//   설정 켜짐  페이드만. 한 픽셀도 움직이지 않습니다.
+//
+// 8월(useHeroSplit)은 사용자 요청으로 설정 자체를 무시하고 ±500px을 그대로
+// 씁니다. 여기서는 그러지 않습니다. 같은 것을 보여 주면서 움직임만 빼는 길이
+// 있으면 그쪽이 맞습니다.
 //
 // 푸터의 "배경 움직임 끄기"(MotionToggle)는 보지 않습니다. 그 손잡이는 WCAG
 // 2.2.2, 즉 **저절로 시작해서 5초를 넘기는** 움직임에 대한 것이고 배경 캔버스가
@@ -83,16 +96,18 @@ export function useHeroRecede() {
   const photoScale = useTransform(scrollY, [0, vh], [1, 0.94]);
   const photoOpacity = useTransform(scrollY, [vh * 0.35, vh * 0.95], [1, 0]);
 
-  const on = isWide && !reduce;
+  // 페이드는 폭만 봅니다. 움직임은 설정까지 봅니다.
+  const fade = isWide;
+  const move = isWide && !reduce;
   return {
-    on,
+    on: fade,
     /** 폰에서 useHeroExit를 켤지. lg에서는 위의 값들이 대신합니다. */
-    phone: !isWide && !reduce,
-    copyY: on ? copyY : undefined,
-    copyOpacity: on ? copyOpacity : undefined,
-    photoY: on ? photoY : undefined,
-    photoScale: on ? photoScale : undefined,
-    photoOpacity: on ? photoOpacity : undefined,
+    phone: !isWide,
+    copyY: move ? copyY : undefined,
+    copyOpacity: fade ? copyOpacity : undefined,
+    photoY: move ? photoY : undefined,
+    photoScale: move ? photoScale : undefined,
+    photoOpacity: fade ? photoOpacity : undefined,
   };
 }
 
@@ -114,14 +129,17 @@ export function useHeroRecede() {
 // ─────────────────────────────────────────────────────────────────────────────
 export function useHeroExit(enabled: boolean) {
   const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0.75, 1], [0, -32]);
   const opacity = useTransform(scrollYProgress, [0.75, 1], [1, 0]);
   const scale = useTransform(scrollYProgress, [0.75, 1], [1, 0.96]);
+  // 위와 같은 나눔입니다. 설정이 켜져 있으면 페이드만 남습니다.
+  const move = enabled && !reduce;
   return {
     ref,
-    y: enabled ? y : undefined,
+    y: move ? y : undefined,
     opacity: enabled ? opacity : undefined,
-    scale: enabled ? scale : undefined,
+    scale: move ? scale : undefined,
   };
 }
