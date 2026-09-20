@@ -2,11 +2,11 @@
 
 대상 레포: `website` (커밋 `c4de111` 기준). 바꾸는 곳은 `data/naru.ts`의 `december` 블록과 `components/home/NaruHome.tsx`의 프로그램 표 렌더입니다. 배경, 등록 라우트, 수파베이스, `/2026-08`은 건드리지 않습니다.
 
-출처: `크로싱서울_일정.pdf` 5장 (방향 01 / 흐름 02 / 전반 03 / 후반 04 / 소양 05). PDF를 레포에 넣지 마세요. 이 브리프가 옮길 내용을 전부 담고 있습니다.
+출처: `크로싱서울_일정.pdf` (방향 01 / 흐름 02 / 전반 03 / 후반 04). 05장(FDE 소양)은 사용자 지시로 이번 반영에서 제외합니다. PDF를 레포에 넣지 마세요. 이 브리프가 옮길 내용을 전부 담고 있습니다.
 
 ## 0. 결론 한 줄
 
-화면의 일정이 **하루씩 어긋나 있고, 멘토링 약속이 사실과 다릅니다.** 그리고 PDF에서 가장 값진 두 가지(FDE 소양 넷, AI 활용 범위 셋)가 화면에 없습니다.
+화면의 일정이 **하루씩 어긋나 있고, 멘토링 약속이 사실과 다릅니다.** 그리고 PDF에서 가장 날카로운 장치(AI 활용 범위 셋)가 화면에 없습니다.
 
 ## 1. 지금 화면과 PDF의 차이
 
@@ -17,7 +17,6 @@
 | 멘토링 | "전 기간 상시" | Day 1부터 Day 3까지. Day 3에 피칭 준비로 어젠다 전환. Day 4는 멘토링 없음 | **틀린 약속** |
 | 세션 | Problem Discovery(D1) · PO session(D2) · Pitching session(D3) | 활용 Guide(D0) · Sharing session(D1) · PO session(D2) · Empower session(D3) | 셋 중 둘이 교체, 하나 추가 |
 | 제출 | 정의서(D1) · 결과물(D3) | 이해도 1장(D1) · 덱 등 사전 제출물(D3) | 이름 구체화 |
-| FDE 소양 넷 | 없음 | Day 1~4에 하나씩 | **새 내용** |
 | AI 활용 범위 셋 | 없음 | 8월은 셋 중 하나만 썼음 | **새 내용** |
 | 공간 · 기록 | 없음 | 4일 아침부터 저녁까지(마지막 날 제외) · 하루 끝 일지 10분 · 팀 단위 체류 시간 | 새 내용 |
 
@@ -41,7 +40,6 @@
         title: { ko: "컨텍스트 열기", en: "Opening the context" },
         when: { ko: "Day 0", en: "Day 0" },
         dayOffset: 0,
-        capability: null,     // Day 0에는 소양을 붙이지 않습니다(PDF 05).
         body: {
           ko: "데이터와 회사 소개, 의뢰 문제점, 활용 가이드를 엽니다. 정제해서 주는 것이 아니라 무엇이 어디에 있는지까지입니다.",
           en: "The data opens, with the companies, what they are asking about, and a guide to using it. Not cleaned up for you. Just where everything is.",
@@ -61,10 +59,6 @@
         title: { ko: "문제 발견", en: "Discovery" },
         when: { ko: "Day 1", en: "Day 1" },
         dayOffset: 1,
-        capability: {
-          ko: "문제를 발견하고 정의하는 힘",
-          en: "The power to find a problem and define it",
-        },
         body: {
           ko: "팀을 먼저 서로 확인합니다. Day 0에 각자 세운 생각을 꺼내 맞춰 보고, 출제사가 직접 여는 세션에서 회사를 봅니다.",
           en: "First you meet your team. You put the thinking you did on Day 0 side by side, and the company opens its own session.",
@@ -86,7 +80,6 @@
         title: { ko: "빌드", en: "Build" },
         when: { ko: "Day 2", en: "Day 2" },
         dayOffset: 2,
-        capability: { ko: "끝까지 만들고 검증하는 힘", en: "The power to finish it and check it" },
         body: {
           ko: "오전 안에 돌아가는 첫 버전을 만들고 계속 고칩니다. 무엇을 만들지는 바뀔 수 있습니다. 다만 Day 1의 정의가 바뀌면 운영진에게 알립니다.",
           en: "You get a first working version up in the morning and keep fixing it. What you build can change. If the Day 1 definition changes, you tell the organisers.",
@@ -103,7 +96,6 @@
         title: { ko: "다듬기", en: "Refine" },
         when: { ko: "Day 3", en: "Day 3" },
         dayOffset: 3,
-        capability: { ko: "함께하고 돌아보는 힘", en: "The power to work with others and look back" },
         body: {
           ko: "정의한 지표로 결과를 확인하고, 틀리는 경우를 직접 찾아 한계로 정리합니다. 피칭 연습을 팀끼리 서로 보여주고 의견을 주고받습니다.",
           en: "You check the result against the measure you set, hunt for the cases where it fails, and write those down as limits. Teams show each other their pitch and trade notes.",
@@ -122,7 +114,6 @@
         title: { ko: "피치", en: "Pitch" },
         when: { ko: "Day 4", en: "Day 4" },
         dayOffset: 4,
-        capability: { ko: "설득해서 실행되게 하는 힘", en: "The power to convince someone to act on it" },
         body: {
           ko: "청중은 회사 관계자입니다. 발표 5분, 질의 5분. 아이디어 단계여도 무대에 섭니다. 완성도가 아니라 과정을 봅니다.",
           en: "You present to the people from the companies. Five minutes, then five for questions. You go up even if it is still an idea. What gets looked at is the process, not the finish.",
@@ -136,7 +127,7 @@
 
 ### 2.1 타입과 렌더
 
-`workshop`을 `session`으로 이름을 바꾸고 `capability`를 더합니다. PDF가 부르는 이름이 워크샵이 아니라 세션이고, 소양이 새 필드입니다.
+`workshop`을 `session`으로 이름만 바꿉니다. PDF가 부르는 이름이 워크샵이 아니라 세션입니다. 새 필드는 없습니다.
 
 ```ts
     } as {
@@ -144,8 +135,6 @@
       title: Phrase;
       when: Phrase;
       dayOffset: number;
-      /** FDE 인재기준 넷을 참가자 언어로 옮긴 것. Day 0은 null(PDF 05). */
-      capability: Phrase | null;
       body: Phrase;
       line: Phrase;
       chips: Phrase[];
@@ -155,24 +144,13 @@
     }[],
 ```
 
-프로그램 표(표현 방식 브리프 4장에서 만든 것)의 가운데 열에서, `title` 바로 아래 `capability`를 한 줄로 그립니다. **새 상자를 만들지 마세요.**
-
-```tsx
-                <h3 className={`${H3} break-keep`}>{t(s.title)}</h3>
-                {/* 2026-09-20 (일정 브리프 2.1): FDE 소양 한 줄. 날짜와 스테이지 바로
-                    아래에 붙어야 "이 날 무엇을 가져가는가"가 한 줄에 읽힙니다.
-                    별도 챕터로 빼지 않은 이유는 소양이 날짜에 묶여 있기 때문입니다. */}
-                {s.capability && (
-                  <p className="mt-1 break-keep text-sm font-bold text-accent">{t(s.capability)}</p>
-                )}
-                <p className="mt-1.5 break-keep text-sm leading-relaxed text-white/70">{t(s.body)}</p>
-```
+프로그램 표(표현 방식 브리프 4장에서 만든 것)의 렌더는 필드 이름만 `workshop`에서 `session`으로 바뀝니다. 그 외에는 손대지 않습니다.
 
 `dayOffset`이 이제 전부 숫자이므로 `null` 분기를 지웁니다. 다섯 칸 모두 `formatDecemberDay`가 날짜를 붙입니다.
 
 ### 2.2 Day 0을 다른 무게로
 
-다섯 칸이 같은 굵기면 Day 0이 스테이지로 읽힙니다. PDF가 "별도의 스테이지가 아닙니다"라고 못박고 있어요. 표에서 Day 0 행만 `text-white/55`로 한 단 낮추고, 소양 줄이 없으니 그 자리가 비어 자연히 가벼워집니다. 행을 지우거나 접지는 마세요.
+다섯 칸이 같은 굵기면 Day 0이 스테이지로 읽힙니다. PDF가 "별도의 스테이지가 아닙니다"라고 못박고 있어요. 표에서 Day 0 행만 `text-white/55`로 한 단 낮춥니다. 행을 지우거나 접지는 마세요.
 
 ## 3. [P0] 멘토링을 사실대로
 
@@ -263,7 +241,8 @@ PDF 01이 `gaps[0]`과 같은 것을 더 정확하게 말합니다. 첫 항목�
 
 ## 7. 절대 하지 말 것
 
-- **`#gains`(오면 무엇이 남는가) 다섯 항목을 건드리지 마세요.** 소양 넷과 겹쳐 보이지만 사용자가 따로 정한 것이고, 소양은 날짜에 묶여 프로그램 표 안에 있어야 합니다. 둘의 관계는 9장 확인 사항입니다.
+- **`#gains`(오면 무엇이 남는가) 다섯 항목을 건드리지 마세요.** 사용자가 따로 정한 것입니다.
+- **PDF 05장(FDE 소양 넷)을 넣지 마세요.** 사용자가 이번 반영에서 제외했습니다. 스테이지에 `capability` 같은 필드를 만들지 마세요.
 - **`#after` 챕터를 건드리지 마세요.** Day 4의 `line`이 같은 말을 하지만 하나는 일정 안의 사실이고 하나는 챕터입니다.
 - **초안 고지(`draftNote`)를 걷지 마세요.** 이 PDF는 일정 초안이지 확정이 아닙니다.
 - **`tbd` 목록에서 "장소"를 빼지 마세요.** 5장의 "공간"은 운영 방식이지 장소가 아닙니다.
@@ -277,30 +256,27 @@ PDF 01이 `gaps[0]`과 같은 것을 더 정확하게 말합니다. 첫 항목�
 | --- | --- | --- |
 | 1 | 날짜 | 화면의 다섯 칸이 12.10 / 12.11 / 12.12 / 12.13 / 12.14 |
 | 2 | "전 기간 상시" | 레포 전체 검색 결과 **0건** |
-| 3 | 소양 | Day 1~4 네 행에 소양 한 줄이 있고 Day 0에는 없음 |
-| 4 | Day 0 무게 | Day 0 행이 나머지 넷보다 한 단 낮은 밝기. 접히거나 지워지지 않음 |
-| 5 | 세션 | 활용 Guide / Sharing session / PO session / Empower session 넷이 각각 해당 Day 행에 |
-| 6 | 상자 수 | 표현 방식 브리프 이후의 수에서 **늘지 않음** |
-| 7 | `#december` 높이 | 데스크톱 **1,950px 이하**, 모바일 **2,450px 이하** (내용이 늘었으므로 표현 방식 브리프의 상한 +150px까지 허용) |
-| 8 | 본문 대비 | 새로 넣은 줄의 흰 글자와 accent 글자가 배경 대비 4.5:1 이상 |
-| 9 | 영문 | 새 문장 전부 영문이 있고 한국어가 섞이지 않음 |
-| 10 | 글자 크기 | 12 / 14 / 16 / 18 넷 유지, 12px 미만 0건 |
-| 11 | em dash | 0건 |
+| 3 | Day 0 무게 | Day 0 행이 나머지 넷보다 한 단 낮은 밝기. 접히거나 지워지지 않음 |
+| 4 | 세션 | 활용 Guide / Sharing session / PO session / Empower session 넷이 각각 해당 Day 행에 |
+| 5 | 상자 수 | 표현 방식 브리프 이후의 수에서 **늘지 않음** |
+| 6 | `#december` 높이 | 데스크톱 **1,950px 이하**, 모바일 **2,450px 이하** (내용이 늘었으므로 표현 방식 브리프의 상한 +150px까지 허용) |
+| 7 | 본문 대비 | 새로 넣은 줄의 흰 글자와 accent 글자가 배경 대비 4.5:1 이상 |
+| 8 | 영문 | 새 문장 전부 영문이 있고 한국어가 섞이지 않음 |
+| 9 | 글자 크기 | 12 / 14 / 16 / 18 넷 유지, 12px 미만 0건 |
+| 10 | em dash | 0건 |
 
 ## 9. 사용자가 확인해야 할 것
 
 1. **멘토링이 정말 Day 1~Day 3인가.** 지금 화면은 "전 기간 상시"로 약속하고 있습니다. PDF대로 줄이면 약속을 좁히는 것이라 되돌리기 어렵습니다.
-2. **`#gains`의 다섯과 소양 넷의 관계.** 지금은 둘 다 화면에 있게 됩니다. "실명 기업의 진짜 문제 / 멘토 / 앞에서 증명 / 무순위 어워드"는 **제공물**이고 소양 넷은 **가져가는 것**이라 층이 다르지만, 독자가 "오면 무엇이 남는가"를 두 번 읽게 됩니다. 소양을 `#gains`로 올리고 지금 다섯을 프로그램 쪽으로 내리는 안도 있습니다. 화면을 보고 정하시는 편이 낫습니다.
-3. **`tbd`의 "일정표"를 뺄 것인가.** 이 PDF가 일정표입니다. 확정이면 빼고, 초안이면 둡니다.
-4. **Day 4의 청중.** "청중은 회사 관계자"라고 적었습니다. 외부 관객이 있으면 문장이 달라집니다.
+2. **`tbd`의 "일정표"를 뺄 것인가.** 이 PDF가 일정표입니다. 확정이면 빼고, 초안이면 둡니다.
+3. **Day 4의 청중.** "청중은 회사 관계자"라고 적었습니다. 외부 관객이 있으면 문장이 달라집니다.
 
 ## 10. 커밋
 
 1. `data(december): 일정을 Day 0부터 Day 4로, 날짜를 하루씩 밀린 대로` (2장)
 2. `fix(december): 멘토링은 Day 1부터 Day 3까지` (3장)
-3. `feat(december): FDE 소양 한 줄을 각 Day 행에` (2.1, 2.2)
-4. `feat(december): AI 활용 범위 셋과 운영 네 줄` (4장, 5장)
-5. `content(december): 8월 첫 항목의 문장을 일정 PDF대로` (6장)
-6. `docs(changelog): 2026-09-20 schedule`
+3. `feat(december): AI 활용 범위 셋과 운영 네 줄` (4장, 5장)
+4. `content(december): 8월 첫 항목의 문장을 일정 PDF대로` (6장)
+5. `docs(changelog): 2026-09-20 schedule`
 
-각 커밋에서 `npm run build`가 지나고 해당 검증을 통과해야 다음으로 갑니다. 1번과 2번은 지금 화면이 틀린 것을 고치는 것이라 먼저 배포해도 됩니다. `main` 푸시 전에 9장 1번을 사용자에게 확인하세요.
+각 커밋에서 `npm run build`가 지나고 해당 검증을 통과해야 다음으로 갑니다. 1번과 2번은 지금 화면이 틀린 것을 고치는 것이라 먼저 배포해도 됩니다. `main` 푸시 전에 9장 1번(멘토링 범위)을 사용자에게 확인하세요.
