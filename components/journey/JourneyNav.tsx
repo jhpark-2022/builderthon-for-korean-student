@@ -391,13 +391,26 @@ export default function JourneyNav({
             // 음수 마진으로 52px 바 안의 세로 정렬은 그대로 둡니다. 로고 가이드의
             // 비율·색은 건드리지 않습니다. 상자만 키웁니다.
             <a href="#top" className="-my-1 flex min-h-[44px] items-center py-1 leading-none">
+              {/* 영문 화면에서는 이름도 영문입니다 (DECIDED 2026-09-21, 사용자:
+                  "영어 버전에서도 로고 옆은 NARU여야 하고, 대문자로").
+                  한글 락업은 PNG인데(public/naru/README.md: 원본 SVG의 "나루"가
+                  <text>라 방문자 기기의 한글 서체를 부릅니다) 영문 판은 SVG입니다.
+                  Montserrat ExtraBold를 패스로 outline해 두어서 부를 서체가
+                  없습니다. 심볼 기하와 색은 원본 그대로고, 글자만 바뀝니다. */}
               <Image
-                src="/naru/naru-name-rev.png"
-                alt="나루 NARU"
-                width={604}
-                height={168}
+                src={locale === "en" ? "/naru/naru-name-en-rev.svg" : "/naru/naru-name-rev.png"}
+                alt={locale === "en" ? "NARU" : "나루 NARU"}
+                width={locale === "en" ? 857 : 604}
+                height={locale === "en" ? 142 : 168}
+                // SVG는 이미지 최적화를 태우지 않습니다. 벡터라 리샘플할 것이 없고,
+                // Next의 옵티마이저는 SVG에 400을 돌려줍니다(파트너 로고도 같은 이유로
+                // unoptimized입니다. Journey.tsx의 로고 타일 참고).
+                unoptimized={locale === "en"}
                 priority
-                className="h-8 w-auto sm:h-9"
+                // 영문 락업은 폰에서 한 단 낮습니다. 높이가 같으면 폭이 217px이 되어
+                // (한글 락업은 115px) 390px 바에서 EN/KR 토글에 10px까지 붙습니다.
+                // 네 글자짜리 이름은 두 글자보다 길 수밖에 없으니 높이로 갚습니다.
+                className={locale === "en" ? "h-7 w-auto sm:h-9" : "h-8 w-auto sm:h-9"}
               />
             </a>
           ) : (

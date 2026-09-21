@@ -1020,6 +1020,13 @@ export default function NaruHome() {
             <span className={`${GRADIENT_TEXT} block break-keep`}>{t(naru.hero.titleLine2)}</span>
           </Halo>
         </h2>
+        {/* 이름의 뜻 (2026-09-21, 사용자: 영문판에 나루가 무슨 뜻인지 설명이 필요). 태그라인
+            바로 아래입니다. 위 두 줄이 "건넌다"고 말하고, 이 줄이 무엇을 건너는 자리인지
+            말합니다. 순서가 반대면 낱말 풀이부터 읽히고 선언이 뒤로 밀립니다.
+            본문보다 한 단 작고 한 단 어둡습니다. 주석이지 주장이 아닙니다. */}
+        <p className="mx-auto mt-5 max-w-xl break-keep text-left text-sm leading-relaxed text-white/55 lg:text-center">
+          {t(naru.group.name)}
+        </p>
         {/* 폰에서 3줄을 넘는 문단은 왼쪽 정렬(감사 반영 브리프 6.1). 데스크톱은 가운데 그대로. */}
         <p className="mx-auto mt-6 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75 lg:text-center">
           {t(naru.group.lead)}
@@ -1390,11 +1397,14 @@ export default function NaruHome() {
           아직 정해지지 않았습니다. */}
       <footer id="closing" className="relative w-full border-t border-white/10 px-6 py-14 sm:px-10">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
+          {/* 헤더와 같은 규칙입니다 (2026-09-21): 영문 화면에서는 영문 락업.
+              헤더에서만 바꾸면 같은 페이지 위아래에서 이름이 달라집니다. */}
           <Image
-            src="/naru/naru-name-rev.png"
+            src={locale === "en" ? "/naru/naru-name-en-rev.svg" : "/naru/naru-name-rev.png"}
             alt={t(naru.footer.logoAlt)}
-            width={604}
-            height={168}
+            width={locale === "en" ? 857 : 604}
+            height={locale === "en" ? 142 : 168}
+            unoptimized={locale === "en"}
             className="h-10 w-auto sm:h-12"
           />
           <p className="break-keep text-xs leading-relaxed text-white/60">{t(naru.footer.credits)}</p>
@@ -1573,7 +1583,8 @@ function PhotoWall({ photos, t }: { photos: RecordPhoto[]; t: (p: Phrase) => str
 // 그대로 씁니다. SVG <text>였다면 두 벌을 따로 관리해야 했을 겁니다.
 //
 // 맨 위 "서로 직접 만나지 않습니다" 줄이 이 그림의 주장입니다. 학생회와 기업이
-// 직접 만나면 나루가 있을 이유가 없어요.
+// 직접 만나면 나루가 있을 이유가 없어요. 화살표 둘이 같은 말을 합니다. 둘 다
+// 가운데를 가리키고, 가운데 상자가 둘을 잇는다고 말합니다(2026-09-21).
 // ─────────────────────────────────────────────────────────────────────────────
 function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
   const [host, organiser, sponsor] = naru.how.layers;
@@ -1597,7 +1608,14 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
       // 여기서 걷은 주황이 #why의 나루 점 둘 값을 치릅니다. 페이지 전체의
       // 주황 면적은 오히려 줄었고, 주황 면은 히어로 CTA와 12월 아이브로
       // 둘로 내려갔습니다.
-      className={`flex-1 rounded-2xl border px-4 py-3 text-left md:py-5 md:text-center ${
+      // 상자 셋의 크기를 맞춥니다 (2026-09-21, 사용자: "상자 사이즈가 다름").
+      // flex-1이 폭은 이미 같게 만들고 있었는데(1 1 0%), 높이는 글의 길이가
+      // 정하고 있었습니다. 줄 수가 다른 세 상자가 나란히 서면 가장 짧은 상자가
+      // 덜 중요해 보입니다. 이 그림에서 셋의 무게는 같아야 합니다.
+      // 바깥 줄의 md:items-center를 md:items-stretch로 바꿔 높이를 맞추고,
+      // 남는 자리는 flex-col + justify-center로 글이 가운데에 서게 둡니다.
+      // 행 높이는 원래 가장 긴 상자가 정하고 있었으므로 챕터 길이는 그대로입니다.
+      className={`flex flex-1 flex-col justify-center rounded-2xl border px-4 py-3 text-left md:py-5 md:text-center ${
         center
           ? "border-white/20 bg-white/[0.06]"
           : "border-white/10 bg-white/[0.04]"
@@ -1625,14 +1643,25 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
     </div>
   );
 
-  // 화살표. 세로로 설 때는 아래를, 가로로 설 때는 안쪽을 가리킵니다.
-  const arrow = (dir: "right" | "left") => (
+  // 화살표. 둘 다 나루를 가리킵니다 (DECIDED 2026-09-21, 사용자: "나루는 학생과 기업을
+  // 이어주는 거니까 화살표 둘 다 나루를 가리키고 있어야 함").
+  //
+  // 그 전에는 → → 로 왼쪽에서 오른쪽으로 흘렀습니다. 그러면 학생회가 나루를 거쳐
+  // 기업으로 건너가는 그림, 즉 나루가 학생을 기업에 넘기는 파이프가 됩니다. 방향이
+  // 곧 주장이라서, 학생회와 기업이 각자 나루로 들고 와서 거기서 만난다는 말을
+  // 하려면 오른쪽 화살표는 반대여야 합니다. 바로 위 점선("서로 직접 만나지
+  // 않습니다")과 같은 말을 화살표가 합니다. Overview 01도 양쪽이 나루로 들어옵니다.
+  //
+  // 세로로 설 때(폰)도 같습니다. 나루 위의 상자는 아래를, 아래의 상자는 위를.
+  // white/30 → /45: 이 그림에서 유일하게 방향을 말하는 글자라 상자 테두리보다
+  // 흐리면 안 됩니다. 자리는 그대로라 챕터 길이는 변하지 않습니다.
+  const arrow = (from: "left" | "right") => (
     <span
       aria-hidden
-      className="flex shrink-0 items-center justify-center text-base text-white/30 md:px-1"
+      className="flex shrink-0 items-center justify-center text-base text-white/45 md:px-1"
     >
-      <span className="md:hidden">↓</span>
-      <span className="hidden md:inline">{dir === "right" ? "→" : "←"}</span>
+      <span className="md:hidden">{from === "left" ? "↓" : "↑"}</span>
+      <span className="hidden md:inline">{from === "left" ? "→" : "←"}</span>
     </span>
   );
 
@@ -1648,9 +1677,9 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
         </span>
         <span aria-hidden className="h-px flex-1 border-t border-dashed border-white/15" />
       </div>
-      <div className="mt-3 flex flex-col items-stretch gap-2 md:flex-row md:items-center">
+      <div className="mt-3 flex flex-col items-stretch gap-2 md:flex-row md:items-stretch">
         {box(organiser)}
-        {arrow("right")}
+        {arrow("left")}
         {box(host, true)}
         {arrow("right")}
         {box(sponsor)}

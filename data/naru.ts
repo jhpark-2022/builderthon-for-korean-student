@@ -358,7 +358,7 @@ export const naru = {
     ctaArchive: { ko: "제로백 빌더톤의 기록", en: "The Zero100 builderthon record" },
     // 로고의 대체 텍스트. 스크린리더가 읽는 이름이라 브랜드 표기 규칙을 그대로
     // 따릅니다: 한글이 주, 영문이 보조.
-    logoAlt: { ko: "나루 NARU", en: "나루 NARU" },
+    logoAlt: { ko: "나루 NARU", en: "NARU" },
   },
 
   // ── CH1 · 왜 존재하는가 ───────────────────────────────────────────────────
@@ -489,6 +489,19 @@ export const naru = {
   // 그룹이 있는 것이 아니라, 이벤트 아래에 그룹이 서명하는 구조입니다.
   group: {
     eyebrow: { ko: "나루 NARU", en: "나루 NARU" },
+    // 이름의 뜻 한 줄 (DECIDED 2026-09-21, 사용자: "영문판에서는 나루가 무슨 뜻인지
+    // 어딘가에 설명이 있어야 한다"). 매니페스토 마지막 쪽의 정의를 옮겼습니다:
+    // "이 그룹의 이름은 나루다. 강을 건너려는 사람이 배를 타는 자리를 뜻한다. 건너는
+    // 일은 각자가 한다. 나루는 건널 수 있는 자리를 만들고, 건너간 사람이 다시 돌아와
+    // 서는 자리도 같은 나루다."
+    //
+    // 가운뎃 문장("건너는 일은 각자가 한다")은 바로 위 태그라인이 이미 하므로 뺐습니다.
+    // 영문이 이 줄의 이유입니다. 한국어 독자는 낱말을 알지만 영어 독자에게 NARU는
+    // 네 글자일 뿐이고, 그러면 위의 crossing이 비유로 읽히지 않습니다.
+    name: {
+      ko: "나루는 강을 건너려는 사람이 배를 타는 자리입니다. 건너간 사람이 다시 돌아와 서는 자리도 같은 나루입니다.",
+      en: "NARU is the Korean word for a river landing: the place where you board the boat to cross. The place the ones who crossed come back and stand is the same landing.",
+    },
     lead: {
       ko: "이벤트는 나루가 학생회와 기업을 잇는 지금의 방식입니다. 방식은 바뀝니다. 바뀌지 않는 것은 아래 두 개입니다.",
       en: "An event is how NARU connects associations and companies for now. Methods change. The two things below do not.",
@@ -1312,7 +1325,11 @@ export const naru = {
       {
         role: { ko: "주최 HOST", en: "HOST" },
         who: { ko: "나루", en: "NARU" },
-        brings: { ko: "회차를 열고 책임진다", en: "Runs the round, answers for it" },
+        // DECIDED 2026-09-21 (사용자: "나루는 학생과 기업을 이어주는 것"). 그 전에는
+        // "회차를 열고 책임진다"였습니다. 틀린 말은 아니지만 가운데 상자가 그 말만 하면
+        // 세 상자는 각자 일하는 셋이 되고, 나루가 왜 가운데 있는지가 그림에서 빠집니다.
+        // 잇는다는 말이 먼저 오고, 회차는 그 다음입니다(Overview 01의 가운데 상자와 같은 순서).
+        brings: { ko: "학생회와 기업을 잇고, 회차를 열고 책임진다", en: "Joins associations and companies, runs the round" },
         does: {
           ko: "회차의 기획과 실행. 출제사와 멘토, 후원사와의 관계. 기록과 회차 사이의 연속성.",
           en: "Planning and running each round. Relationships with problem owners, mentors, sponsors. The record, and continuity between rounds.",
@@ -2235,7 +2252,7 @@ export const naru = {
     },
     archive: { ko: "제로백 빌더톤의 기록", en: "The Zero100 builderthon record" },
     contact: { ko: "문의", en: "Contact" },
-    rights: { ko: "© 2026 나루 NARU", en: "© 2026 나루 NARU" },
-    logoAlt: { ko: "나루 NARU", en: "나루 NARU" },
+    rights: { ko: "© 2026 나루 NARU", en: "© 2026 NARU" },
+    logoAlt: { ko: "나루 NARU", en: "NARU" },
   },
 } as const;
