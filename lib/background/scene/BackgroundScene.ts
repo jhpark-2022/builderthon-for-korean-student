@@ -277,6 +277,8 @@ export class BackgroundScene {
   private naruTop = Infinity;
   // water 변형: #join 상단(문서 px). 없는 페이지에서는 Infinity라 구간 5(형상 거두기)가 오지 않습니다.
   private joinTop = Infinity;
+  // 구간 4 진행도를 부드럽게 따라가는 값(점의 가로 이동용). 휠의 계단을 지웁니다.
+  private s4Eased = 0;
   private readAnchors() {
     if (this.variant === "water") {
       const sy = window.scrollY;
@@ -548,8 +550,16 @@ export class BackgroundScene {
       // 넘어가면 해가 아예 멈추고 빛이 퍼지는 것도 없음"): 서울 구간에서는 스크롤이 나루 점을
       // 올리고 파문이 건너는 동안 커지는데, 싱가포르에 닿은 뒤로는 스크롤에 반응하는 것이
       // 없었습니다. 셰이더가 이 값으로 점을 섬을 따라 움직이고 파문을 살려 둡니다.
-      const s4 = clamp((this.scrollY - morphEnd) / Math.max(dissolveStart - morphEnd, 1), 0, 1);
-      this.water.setStages(s1, s2, morph, s4);
+      // 2026-09-23 (사용자: "화면을 넓게 써서 빛이 이동했으면"): 끝을 형상 거두기 시작에서
+      // 문서 끝으로 늘립니다. 같은 폭을 더 긴 스크롤에 나눠 움직여 천천히 갑니다.
+      const docEnd = document.documentElement.scrollHeight - vh;
+      const s4 = clamp((this.scrollY - morphEnd) / Math.max(docEnd - morphEnd, 1), 0, 1);
+      // 휠은 한 번에 백 px씩 건너뛰어서, 스크롤 값을 그대로 쓰면 점이 계단처럼 튑니다
+      // ("너무 확확 이동"). 점만 지수 감쇠로 따라가게 합니다(1초에 약 90%). 사건을 시간이
+      // 만드는 것이 아니라 스크롤이 정한 자리까지 미끄러지는 것이고, 모션 민감 설정에서는
+      // 바로 그 자리에 섭니다.
+      this.s4Eased = this.reduced ? s4 : this.s4Eased + (s4 - this.s4Eased) * Math.min(1, dt * 2.4);
+      this.water.setStages(s1, s2, morph, this.s4Eased);
 
       // DECIDED 2026-09-19 (사용자): "모바일도 데스크톱과 같은 배경 효과였으면 좋겠다."
       // 세로 화면은 크기와 자리가 처음부터 끝까지 같습니다. calm으로 옮기지 않습니다

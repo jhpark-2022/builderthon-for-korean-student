@@ -327,10 +327,14 @@ void main(){
     // 구간 5(#join 앞)에서 형상을 거두고, 점이 본문 가운데 뒤에 있는 것은 서울 구간과 같습니다.
     // DECIDED 2026-09-23 (사용자: 싱가포르에서 점이 멈춘다): 구간 4 동안 점이 섬의 긴 축을
     // 따라 동쪽으로 갔다가 돌아옵니다(sin이라 처음과 끝이 가운데, 건너기 끝에서 튀지 않음).
-    // 스크롤이 만드는 움직임입니다. 2026-09-23 (사용자: "천천히 이동해야지, 너무 확확
-    // 이동하잖아"): 0.07 → 0.025. 0.07이면 스크롤 한 화면에 점이 가로로 백 px 넘게 움직였습니다.
-    // 0.025면 구간 전체에서 데스크톱 36px, 폰 10px 남짓입니다.
-    float mx = lx + 0.025 * sin(3.14159265 * uStage4);
+    // 스크롤이 만드는 움직임입니다.
+    // 2026-09-23 (사용자: "너무 조금 이동한다, 화면을 넓게 써서"): 한 번 동쪽으로 갔다 오던 것을
+    // 동쪽 끝 → 서쪽 끝 → 가운데로 한 바퀴 돕니다. 폭은 가로 화면 0.22, 세로 0.28(화면 폭 대비,
+    // 싱가포르 반폭 0.33 / 0.40 안쪽). 진행도는 건너기 끝부터 문서 끝까지라 긴 스크롤에
+    // 나눠 천천히 가고, smoothstep을 씌워 출발과 도착에서 속도가 0입니다. "확확"의 원인이던 휠의
+    // 계단은 BackgroundScene이 uStage4를 부드럽게 따라가게 해서 지웁니다.
+    float sweep = mix(0.22, 0.28, portrait);
+    float mx = lx + sweep * sin(6.2831853 * smoothstep(0.0, 1.0, uStage4));
     float my = mix(lightY, 0.5, smoothstep(0.0, 1.0, uStage2));
     vec2  q  = vec2((p.x - mx) * uAspect, p.y - my);
     float rr = length(q);
@@ -364,7 +368,10 @@ void main(){
     // 라 건너기 한가운데의 최댓값에서 이어져 내려옵니다. 구간 2(서울)는 전과 같은 0.28입니다.
     float arrived = 0.55 * smoothstep(0.5, 1.0, uMorph);
     float ringGain = 0.28 + 0.72 * max(max(bell(uStage1), bell(uMorph)), arrived);
-    float rings = smoothstep(0.86, 1.0, sin(phase)) * exp(-rr * 2.4 * K) * ringGain;
+    // 2026-09-23 (사용자: "빛이 퍼지다가 마네"): 싱가포르에 닿은 뒤에는 감쇠를 2.4 → 1.4로
+    // 풀어 파문이 화면 끝 쪽까지 갑니다. 서울 구간과 건너기 한가운데까지는 2.4 그대로입니다.
+    float reach = mix(2.4, 1.4, smoothstep(0.5, 1.0, uMorph));
+    float rings = smoothstep(0.86, 1.0, sin(phase)) * exp(-rr * reach * K) * ringGain;
     // 링은 깊은 물(deep = uStage1)에 얹히는데, 그러면 구간 1 한가운데에서 절반밖에 안 보여
     // 가장 커야 할 자리가 가장 크지 않습니다. 그 구간에서는 bell(uStage1)만큼 먼저 드러냅니다.
     // 구간 0에서는 둘 다 0이라 히어로에 링이 없는 것은 전과 같습니다.
