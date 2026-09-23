@@ -1516,6 +1516,11 @@ export const naru = {
     ] as { k: Phrase; v: Phrase }[],
 
     gapsHeading: { ko: "8월에 아쉬웠던 넷, 그리고 12월의 답", en: "Four things August missed, and December's answer" },
+    // DECIDED 2026-09-23 (첫 방문자 리뷰): 8월을 모르는 사람은 이 제목에서 멈췄습니다. 제목 바로 아래 한 줄.
+    gapsNote: {
+      ko: "첫 회차(2026년 8월, 싱가포르)를 치르고 남은 넷입니다. 8월을 모르셔도 됩니다. 각 항목의 12월 답만 보셔도 충분합니다.",
+      en: "Four things left over from the first run (Singapore, August 2026). You don't need to know August. The December answer under each one is enough.",
+    },
     gapsLead: {
       ko: "이 네 가지를 메우려면 한 번 더 해야 합니다. 각각 8월에 무엇이 없었고 12월에 무엇을 넣는지입니다.",
       en: "Filling these four takes doing it once more. For each, what August lacked and what December puts in.",

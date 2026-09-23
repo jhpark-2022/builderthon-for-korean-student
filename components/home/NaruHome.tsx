@@ -841,6 +841,7 @@ export default function NaruHome() {
             제목이 아쉬웠던 것, 본문이 12월의 답. */}
         <Reveal className="mx-auto mt-8 max-w-5xl text-left lg:mt-12">
           <h3 className={LABEL_HEADING}>{t(naru.december.gapsHeading)}</h3>
+          <p className="mt-2 break-keep text-sm leading-relaxed text-white/70">{t(naru.december.gapsNote)}</p>
           {/* 폰은 1열(모바일 수정 브리프 1.3). 2열이면 150px 폭에서 "12월" 답이 서너 글자씩
               끊겼습니다. 폰에서는 번호 배지가 제목 왼쪽에 인라인. sm부터 2열, 배지 위. */}
           {/* 폰은 상자 없이 행(구분선만). sm부터 카드 2열. */}
