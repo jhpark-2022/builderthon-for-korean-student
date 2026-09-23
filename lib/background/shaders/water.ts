@@ -91,6 +91,9 @@ ${NOISE_GLSL}
 // 0.02를 더하는 것은 지평선 정확히 위에서 z가 발산하는 것을 막기 위해서입니다.
 float depthAt(float d){ return 0.055 / (d + 0.02); }
 
+// 0.5에서 1, 0과 1에서 0인 종(2026-09-23). 파문의 사건 진폭에 씁니다.
+float bell(float x){ float d = abs(x - 0.5) * 2.0; return 1.0 - smoothstep(0.0, 1.0, d); }
+
 void main(){
   vec2 p = vUv;
 
@@ -337,20 +340,33 @@ void main(){
     // 2026-09-19 (파문 위상 브리프): uTime × (0.5 + uFlow × 1.6) → uRingPhase.
     // 곱셈이면 uFlow가 바뀔 때 지나간 시간 전체에 곱해져 위상이 점프합니다. 실측으로
     // 페이지를 100초 본 뒤 300px 튕김 한 번에 16.7rad(2.7파장)이 한 프레임에 움직였습니다.
-    // 적분값은 연속입니다. uScroll 항은 시간과 곱하지 않으므로 그대로 둡니다.
-    float phase = rr * 9.0 * K - uRingPhase - uScroll * 7.0;
-    float rings = smoothstep(0.86, 1.0, sin(phase)) * exp(-rr * 2.4 * K);
+    // 적분값은 연속입니다.
+    // DECIDED 2026-09-23 (한 시계 브리프 3.3): − uScroll × 7.0 항을 뺐습니다. 스크롤이
+    // 파문을 계속 같은 속도로 밀어서, 배경에서 가장 눈에 띄는 움직임이 아무 사건과도
+    // 관계가 없었습니다(40%와 80% 지점에서 링이 가장 컸습니다). 이제 스크롤은 위상이
+    // 아니라 진폭(ringGain)을 정합니다. 파문은 두 번 크게 입니다. 불빛이 물에 들어갈 때
+    // (구간 1 한가운데)와 형상이 건널 때(구간 3 한가운데). 그 밖에는 0.28의 잔물결입니다.
+    // 공간 주파수 9.0 × K와 감쇠 2.4 × K는 그대로입니다.
+    float phase = rr * 9.0 * K - uRingPhase;
+    float ringGain = 0.28 + 0.72 * max(bell(uStage1), bell(uMorph));
+    float rings = smoothstep(0.86, 1.0, sin(phase)) * exp(-rr * 2.4 * K) * ringGain;
+    // 링은 깊은 물(deep = uStage1)에 얹히는데, 그러면 구간 1 한가운데에서 절반밖에 안 보여
+    // 가장 커야 할 자리가 가장 크지 않습니다. 그 구간에서는 bell(uStage1)만큼 먼저 드러냅니다.
+    // 구간 0에서는 둘 다 0이라 히어로에 링이 없는 것은 전과 같습니다.
+    float ringVis = max(deep, bell(uStage1));
 
     vec3 dcol = uSkyHorizon * cur * (0.32 + uFlow * 0.24);
+    col += dcol * deep;
     // 2026-09-19 (세로 패리티 브리프 3.3): 세로 화면에서도 링과 점을 그립니다. 9/18에 이
     // 둘을 끈 것은 폰에서 "본문 뒤 60~90vw 고리"로 보였기 때문인데, 원인은 링이 아니라
     // 반지름의 기준이었습니다(위 K 주석). K를 먼저 넣고 이 게이트를 빼세요. 순서를 뒤집으면
     // 그 거대한 고리가 그대로 돌아옵니다.
-    dcol += uGlint * rings * (0.05 + uFlow * 0.045);
+    // 2026-09-23: 링은 deep이 아니라 ringVis로 드러냅니다(위 ringVis 주석).
+    col += uGlint * rings * (0.05 + uFlow * 0.045) * ringVis;
     // 점 하나와 그 무리. 점은 작게 둡니다 - 크게 만들면 면이 되고, 면이 되면
     // 로고 한가운데의 점이 더 이상 눈에 띄지 않습니다(파일 머리의 색 규칙).
     // 심(0.009)은 K로 나누지 않습니다. 폰에서 이미 10px 안쪽이고 줄이면 사라집니다.
-    col += dcol * deep;
+    // 2026-09-23: deep이 아니라 dotAlive(해와 합이 1)로 켭니다.
     col += uLamp * (exp(-rr / 0.009) * 0.42 + exp(-rr / (0.10 / K)) * 0.055) * dotAlive;
   }
 
