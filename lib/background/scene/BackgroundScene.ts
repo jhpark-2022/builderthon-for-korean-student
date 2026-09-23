@@ -538,7 +538,13 @@ export class BackgroundScene {
       // 구간 4의 밝기. 건너기가 끝난 뒤 1vh에 걸쳐 singaporeBright로. 싱가포르가 한 번은
       // 온전한 밝기로 서야 합니다. 어두워지면서 도착하면 물러나는 것으로 읽힙니다.
       const settle = ss(clamp((this.scrollY - morphEnd) / vh, 0, 1));
-      const shapeOpacity = reveal;
+      // 구간 5. #join(세 곳: 싱가포르, 한국, 그 밖) 상단 dissolve.startVh 앞에서 시작해
+      // spanVh 동안 형상을 거둡니다. 나루 점(water 셰이더의 깊은 물 층)은 남습니다.
+      // #join이 없는 페이지에서는 joinTop이 Infinity라 dissolve가 0입니다.
+      // 흩어지는 모양(브리프 3.4의 uBreath)은 넣지 않았습니다. 불투명도만으로 먼저 봅니다.
+      const dissolveStart = this.joinTop - S.dissolve.startVh * vh;
+      const dissolve = ss(clamp((this.scrollY - dissolveStart) / (S.dissolve.spanVh * vh), 0, 1));
+      const shapeOpacity = reveal * (1 - dissolve);
 
       // DECIDED 2026-09-19 (사용자): "모바일도 데스크톱과 같은 배경 효과였으면 좋겠다."
       // 세로 화면은 크기와 자리가 처음부터 끝까지 같습니다. calm으로 옮기지 않습니다
