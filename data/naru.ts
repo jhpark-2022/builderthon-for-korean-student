@@ -229,7 +229,12 @@ export const naruNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel
   // 그대로 두고 이름만 챕터 제목 전문으로 늘립니다.
   {
     id: "join",
-    label: { ko: "왜", en: "Why" },
+    // DECIDED 2026-09-23 (첫 방문자 리뷰): 보이는 글자를 "왜" → "왜 나루인가", "Why" → "Why NARU".
+    // 한 음절만으로는 처음 온 사람이 무엇에 대한 "왜"인지 몰랐습니다. ariaLabel은 그대로입니다.
+    label: { ko: "왜 나루인가", en: "Why NARU" },
+    // 폰(390px) 실측: ko는 다섯 칩이 한 줄에 들어갑니다(마지막 칩 오른쪽 364px). 그래서 "이유"로
+    // 줄이지 않습니다. en은 전의 "Why"(44px)일 때도 앞 네 칩이 357px까지 차서 둘째 줄로 내려가
+    // 있었고, 라벨을 줄여도 한 줄이 되지 않아 "Why NARU" 그대로 둡니다.
     ariaLabel: { ko: "왜 이 자리가 필요한가", en: "Why this place is needed" },
   },
 ];
