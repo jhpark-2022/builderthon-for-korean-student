@@ -1075,7 +1075,9 @@ export default function NaruHome() {
               </li>
             ))}
           </ul>
-          <p className="mx-auto mt-4 max-w-2xl break-keep text-left text-sm text-white/55">
+          {/* DECIDED 2026-09-23 (사용자): 55% → 70%. 폰에서 건너기가 막 끝난 자리라 싱가포르 점이
+              온전한 밝기로 이 줄 뒤를 지나고, 55%면 대비가 3.65:1까지 떨어졌습니다. 70%면 최저 4.97:1. */}
+          <p className="mx-auto mt-4 max-w-2xl break-keep text-left text-sm text-white/70">
             {t(naru.record.thanksClose)}
           </p>
           <div className="mt-6 flex justify-center">
