@@ -57,6 +57,8 @@ export class WaterSurface {
         // uMorph: 서울 → 싱가포르(ParticleField가 받는 값과 같습니다).
         uStage1: { value: 0 },
         uStage2: { value: 0 },
+        // 구간 4(싱가포르) 진행도 0..1. 건너기 끝 → #join 앞 형상 거두기 시작(2026-09-23).
+        uStage4: { value: 0 },
         uMorph: { value: 0 },
         // 밤하늘 꼭대기. 남색보다 더 어둡게 떨어뜨립니다.
         uSkyTop: { value: new THREE.Color("#03050F") },
@@ -134,10 +136,11 @@ export class WaterSurface {
   }
 
   /** 구간 진행도(2026-09-23). 전부 0..1, 챕터 앵커에서 셉니다. */
-  setStages(stage1: number, stage2: number, morph: number) {
+  setStages(stage1: number, stage2: number, morph: number, stage4 = 0) {
     const u = this.material.uniforms;
     u.uStage1.value = stage1;
     u.uStage2.value = stage2;
+    u.uStage4.value = stage4;
     u.uMorph.value = morph;
   }
 

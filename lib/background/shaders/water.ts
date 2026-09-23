@@ -66,6 +66,7 @@ uniform float uRingPhase; // BackgroundScene이 적분한 파문 위상(rad). uT
 // 구간 진행도 0..1 (2026-09-23). 챕터 앵커에서 셉니다(BackgroundScene).
 uniform float uStage1;    // #top 하단 → #gains 상단
 uniform float uStage2;    // #gains 상단 → #naru − 0.5화면
+uniform float uStage4;    // 건너기 끝 → #join 앞 형상 거두기 시작 (싱가포르)
 uniform float uMorph;     // 서울 → 싱가포르
 uniform vec3  uSkyTop;
 uniform vec3  uSkyHorizon;
@@ -324,7 +325,10 @@ void main(){
     // 점만 위 가장자리로 올라가, 번짐과 파문이 형상 밖에서 퍼지고 비네트에 눌렸습니다.
     // 서울에서처럼 형상 한가운데에서 퍼지게 둡니다. 점이 한 문단 뒤에 박히는 걱정은
     // 구간 5(#join 앞)에서 형상을 거두고, 점이 본문 가운데 뒤에 있는 것은 서울 구간과 같습니다.
-    float mx = lx;
+    // DECIDED 2026-09-23 (사용자: 싱가포르에서 점이 멈춘다): 구간 4 동안 점이 섬의 긴 축을
+    // 따라 동쪽으로 갔다가 돌아옵니다(sin이라 처음과 끝이 가운데, 건너기 끝에서 튀지 않음).
+    // 0.07은 싱가포르 반폭(가로 0.33, 세로 0.40) 안쪽입니다. 스크롤이 만드는 움직임입니다.
+    float mx = lx + 0.07 * sin(3.14159265 * uStage4);
     float my = mix(lightY, 0.5, smoothstep(0.0, 1.0, uStage2));
     vec2  q  = vec2((p.x - mx) * uAspect, p.y - my);
     float rr = length(q);
@@ -353,7 +357,11 @@ void main(){
     // (구간 1 한가운데)와 형상이 건널 때(구간 3 한가운데). 그 밖에는 0.28의 잔물결입니다.
     // 공간 주파수 9.0 × K와 감쇠 2.4 × K는 그대로입니다.
     float phase = rr * 9.0 * K - uRingPhase;
-    float ringGain = 0.28 + 0.72 * max(bell(uStage1), bell(uMorph));
+    // DECIDED 2026-09-23 (사용자: 싱가포르에서 빛이 퍼지는 것이 없다): 건너기가 끝나면 0.28로
+    // 내려가던 것을, 도착한 뒤에도 0.68(0.28 + 0.72 × 0.55)로 둡니다. smoothstep(0.5, 1.0, uMorph)
+    // 라 건너기 한가운데의 최댓값에서 이어져 내려옵니다. 구간 2(서울)는 전과 같은 0.28입니다.
+    float arrived = 0.55 * smoothstep(0.5, 1.0, uMorph);
+    float ringGain = 0.28 + 0.72 * max(max(bell(uStage1), bell(uMorph)), arrived);
     float rings = smoothstep(0.86, 1.0, sin(phase)) * exp(-rr * 2.4 * K) * ringGain;
     // 링은 깊은 물(deep = uStage1)에 얹히는데, 그러면 구간 1 한가운데에서 절반밖에 안 보여
     // 가장 커야 할 자리가 가장 크지 않습니다. 그 구간에서는 bell(uStage1)만큼 먼저 드러냅니다.
