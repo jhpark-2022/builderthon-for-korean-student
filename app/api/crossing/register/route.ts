@@ -3,7 +3,7 @@
 // (2026-09-18, Supabase 등록 브리프 2.2). 8월 라우트(/api/register)와 별개이고
 // 공통 로직은 lib/register/shared.ts에서 가져옵니다.
 //
-// 흐름: 창 확인 → 허니팟 → IP 스로틀(crossing_registrations 기준) → 스키마 검증 →
+// 흐름: 창 확인 → 봇 확인(Turnstile, 2026-09-23) → 허니팟 → IP 스로틀(crossing_registrations 기준) → 스키마 검증 →
 // 동의 → crossing_registrations 삽입 → crossing_members 삽입(event_slug 함께) →
 // 23505면 409 already_registered(부모 행 정리).
 // ─────────────────────────────────────────────────────────────────────────────
@@ -14,8 +14,9 @@ import { normalizeKakaoId } from "@/lib/kakao";
 import { CURRENT_EVENT, registrationState } from "@/lib/registrationWindow";
 import {
   MAX_MEMBERS, PER_IP_SHORT, PER_IP_LONG, GLOBAL,
-  type Json, str, optStr, hashIp, clientIp, rawMembersPreview, sinceIso, throttleVerdict,
+  type Json, str, optStr, hashIp, clientIp, honeypotLogFields, sinceIso, throttleVerdict,
 } from "@/lib/register/shared";
+import { verifyTurnstile } from "@/lib/register/turnstile";
 import { CROSSING_FORM, MEMBER_FIELDS, REGISTRATION_FIELDS, MAX_TEXTAREA, validateField } from "@/data/crossingForm";
 
 export const dynamic = "force-dynamic";
@@ -64,11 +65,22 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "invalid_event" }, { status: 400 });
   }
 
-  // ── 허니팟(8월과 같은 규칙: 조용한 201, 서버 로그) ───────────────────────
+  // ── 봇 확인(Cloudflare Turnstile) ─────────────────────────────────────────
+  // DECIDED 2026-09-23: 스로틀보다 먼저 합니다. 스로틀은 DB에 COUNT를 세 번 묻는데, 확인되지
+  // 않은 요청이 그 비용을 쓰지 못하게 합니다. 실패하면 403. 비밀키가 없으면 개발에서는
+  // 건너뛰고 운영에서는 503(lib/register/turnstile.ts).
+  const bot = await verifyTurnstile(body.turnstileToken, clientIp(req));
+  if (bot === "fail") return NextResponse.json({ error: "bot_check_failed" }, { status: 403 });
+  if (bot === "not_configured") {
+    console.error("[crossing/register] TURNSTILE_SECRET_KEY missing in production");
+    return NextResponse.json({ error: "not_configured" }, { status: 503 });
+  }
+  if (bot === "unavailable") return NextResponse.json({ error: "bot_check_unavailable" }, { status: 503 });
+
+  // ── 허니팟(8월과 같은 규칙: 조용한 201, 서버 로그. 이름과 이메일은 남기지 않음) ──
   const honeypot = str(body.url_confirm);
   if (honeypot) {
-    const who = (rawMembersPreview(body) ?? []).map((m) => `${m.name} <${m.email}>`).join(", ");
-    console.warn(`[crossing/register] honeypot tripped. discarded. field=${JSON.stringify(honeypot.slice(0, 120))} submitter=${who || "(no member data)"}`);
+    console.warn(`[crossing/register] honeypot tripped. discarded. ${honeypotLogFields(honeypot)}`);
     return NextResponse.json({ ok: true, id: crypto.randomUUID() }, { status: 201 });
   }
 

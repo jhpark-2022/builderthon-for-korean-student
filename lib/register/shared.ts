@@ -64,16 +64,14 @@ export function clientIp(req: Request): string {
 }
 
 /**
- * Name/email pairs straight off an unvalidated body, for the honeypot log only.
- * Deliberately tolerant: it describes a submission we are about to throw away,
- * so it must not throw on a malformed payload.
+ * 허니팟에 걸린 제출의 로그 한 줄에 넣을 값(8월, 12월 라우트 공통).
+ * DECIDED 2026-09-23: 이름과 이메일, 허니팟에 적힌 내용은 남기지 않습니다. 서버 로그에 개인정보가
+ * 쌓이지 않게 하려는 것입니다. 남는 것은 허니팟 필드의 길이와 받은 시각뿐입니다.
+ * 대가: 진짜 학생이 잘못 걸렸을 때 로그만으로는 그 사람을 찾을 수 없습니다. 그런 경우는
+ * 신청자가 "등록했는데 명단에 없다"고 알려 올 때 시각으로 맞춰 봅니다.
  */
-export function rawMembersPreview(body: Json): { name: string; email: string }[] | null {
-  if (!Array.isArray(body.members)) return null;
-  return body.members.slice(0, MAX_MEMBERS).map((m) => {
-    const src = (m ?? {}) as Json;
-    return { name: str(src.name), email: str(src.email) };
-  });
+export function honeypotLogFields(honeypot: string): string {
+  return `field_len=${honeypot.length} at=${new Date().toISOString()}`;
 }
 
 export const sinceIso = (minutes: number) =>

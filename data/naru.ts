@@ -200,6 +200,8 @@ export const register = {
     rate_limited: { ko: "잠시 뒤 다시 시도해 주세요.", en: "Please try again in a moment." },
     registration_not_open: { ko: "등록이 아직 열리지 않았습니다.", en: "Registration is not open yet." },
     registration_closed: { ko: "등록이 마감됐습니다.", en: "Registration has closed." },
+    bot_check_pending: { ko: "보안 확인이 끝날 때까지 잠시 기다려 주세요.", en: "Please wait for the security check to finish." },
+    bot_check_failed: { ko: "보안 확인을 통과하지 못했습니다. 확인을 다시 마친 뒤 보내 주세요.", en: "The security check did not pass. Please complete it again and resend." },
     generic: { ko: "보내지 못했습니다. 잠시 뒤 다시 시도해 주세요.", en: "Could not send. Please try again." },
   },
 } as const;

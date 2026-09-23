@@ -17,6 +17,8 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 import { CURRENT_EVENT } from "@/lib/registrationWindow";
+import TurnstileWidget from "@/components/crossing/TurnstileWidget";
+import { TURNSTILE_ACTION } from "@/lib/register/turnstileAction";
 import { naruLinks, register as copy } from "@/data/naru";
 import { links, type Phrase } from "@/data/dictionary";
 import {
@@ -37,7 +39,7 @@ const emptyMember = (id: number): Member => ({ id, a: {}, other: "" });
 export default function RegisterModal({ open, onClose, onRegistered, refSource }: {
   open: boolean; onClose: () => void; onRegistered: () => void; refSource: string | null;
 }) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const reduce = useReducedMotion();
   const [reg, setReg] = useState<Answers>({});
   const [members, setMembers] = useState<Member[]>([emptyMember(1)]);
@@ -45,6 +47,11 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource }
   const [status, setStatus] = useState<Status>("idle");
   const [errorCode, setErrorCode] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  // 봇 확인(Cloudflare Turnstile, 2026-09-23). 사이트 키가 없으면(로컬) 위젯을 그리지 않고,
+  // 서버도 개발 빌드에서는 확인을 건너뜁니다. 토큰은 한 번 쓰면 끝이라 보낸 뒤 실패하면 새로 받습니다.
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
+  const [botToken, setBotToken] = useState<string | null>(null);
+  const [botReset, setBotReset] = useState(0);
   const [touched, setTouched] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const nextId = useRef(2);
@@ -129,16 +136,17 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource }
       dialogRef.current?.querySelector<HTMLElement>("[aria-invalid='true']")?.focus();
       return;
     }
+    if (turnstileSiteKey && !botToken) { setStatus("error"); setErrorCode("bot_check_pending"); return; }
     setStatus("submitting"); setErrorCode(null);
     try {
-      const res = await fetch("/api/crossing/register", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
+      const res = await fetch("/api/crossing/register", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...payload, turnstileToken: botToken }) });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
-      if (!res.ok) { setStatus("error"); setErrorCode(data.error ?? "generic"); return; }
+      if (!res.ok) { setStatus("error"); setErrorCode(data.error ?? "generic"); setBotReset((n) => n + 1); return; }
       setStatus("success");
       try { window.localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
       onRegistered();
     } catch {
-      setStatus("error"); setErrorCode("generic");
+      setStatus("error"); setErrorCode("generic"); setBotReset((n) => n + 1);
     }
   };
 
@@ -250,6 +258,9 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource }
                     )}
                     {REGISTRATION_FIELDS.filter((f) => f.key === "consent").map((f) => renderField(f, reg[f.key], (v) => setRegField(f.key, v), errors[`reg.${f.key}`], `reg-${f.key}`))}
                     {REGISTRATION_FIELDS.filter((f) => !f.fixed).map((f) => renderField(f, reg[f.key], (v) => setRegField(f.key, v), errors[`reg.${f.key}`], `reg-${f.key}`))}
+                    {turnstileSiteKey && (
+                      <TurnstileWidget siteKey={turnstileSiteKey} action={TURNSTILE_ACTION} locale={locale === "en" ? "en" : "ko"} onToken={setBotToken} resetKey={botReset} />
+                    )}
                     {status === "error" && <p role="alert" className="text-sm font-medium text-rose-300">{errText(errorCode ?? "generic")}</p>}
                     <button type="submit" disabled={status === "submitting"} className={`${PRIMARY} mt-2`}>{t(status === "submitting" ? copy.submitting : copy.submit)}</button>
                   </form>

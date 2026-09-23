@@ -17,7 +17,7 @@ import { isRegistrationClosed } from "@/lib/registrationWindow";
 // 그대로입니다. 리팩토링 전후 curl 응답 diff는 체인지로그에.
 import {
   EMAIL_RE, MAX_MEMBERS, PER_IP_SHORT, PER_IP_LONG, GLOBAL,
-  type Json, str, optStr, hashIp, clientIp, rawMembersPreview, sinceIso,
+  type Json, str, optStr, hashIp, clientIp, honeypotLogFields, sinceIso,
 } from "@/lib/register/shared";
 
 // Uses a secret + a live DB → must not be statically evaluated at build time.
@@ -60,17 +60,13 @@ export async function POST(req: Request) {
   // and us nothing to keep discarding.
   //
   // BUT that same silence is dangerous for a false positive: the visitor sees
-  // "등록 완료" and never appears on the list. So log enough to tell the two
-  // apart and to reach the person if it was real. Yes, this puts a name and an
-  // email in the server log — that is the point. Casino-spam is obvious at a
-  // glance; a Korean name with an .edu address is a student to go and re-register
-  // by hand. Without this the mistake is undetectable AND unrecoverable.
+  // "등록 완료" and never appears on the list.
+  // DECIDED 2026-09-23: 로그에는 이름과 이메일을 남기지 않습니다(lib/register/shared.ts의
+  // honeypotLogFields). 필드 길이와 받은 시각만 남기고, 잘못 걸린 학생은 시각으로 맞춰 찾습니다.
+  // 응답은 전과 같습니다.
   const honeypot = str(body.url_confirm);
   if (honeypot) {
-    const who = (rawMembersPreview(body) ?? []).map((m) => `${m.name} <${m.email}>`).join(", ");
-    console.warn(
-      `[register] honeypot tripped — discarded. field=${JSON.stringify(honeypot.slice(0, 120))} submitter=${who || "(no member data)"}`
-    );
+    console.warn(`[register] honeypot tripped, discarded. ${honeypotLogFields(honeypot)}`);
     return NextResponse.json({ ok: true, id: crypto.randomUUID() }, { status: 201 });
   }
 
