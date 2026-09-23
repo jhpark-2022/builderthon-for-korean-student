@@ -473,7 +473,7 @@ export class BackgroundScene {
       this.ringPhase += ringRate * dt * this.motionScale;
       this.water.setRingPhase(this.ringPhase);
 
-      // 서울 워터마크(2026-09-18): 히어로 하단이 뷰포트 상단을 지나면 revealVh에 걸쳐
+      // 서울 워터마크(2026-09-18): 구간 1이 끝나면(2026-09-23부터 #gains 상단) revealVh에 걸쳐
       // 떠오르고, 그 뒤로는 서 있습니다. #naru부터 조금 더 어둡게. 국면 uniform은 전부 0
       // (banks 자세). uShift 0: 카메라 자식이라 뷰포트 고정입니다.
       this.anchorTimer += dt;
@@ -510,7 +510,7 @@ export class BackgroundScene {
       const s1 = clamp((this.scrollY - this.heroEnd) / (s1End - this.heroEnd), 0, 1);
       const s2 = clamp((this.scrollY - s1End) / Math.max(morphStart - s1End, 1), 0, 1);
       this.water.setStages(s1, s2, morph);
-      // 히어로 하단이 뷰포트 상단을 지나면 revealVh에 걸쳐 떠오르고, 그 뒤로는 서 있습니다.
+      // 구간 1이 끝나면(#gains 상단, 2026-09-23부터) 떠오르고, 그 뒤로는 서 있습니다.
       // #naru부터 조금 더 어둡게.
       //
       // DECIDED 2026-09-19 (사용자): "모바일도 데스크톱과 같은 배경 효과였으면 좋겠다.
@@ -523,7 +523,14 @@ export class BackgroundScene {
       // 밝기는 0.8 → 0.5로 내려갑니다. 폰에서 전체 밝기(1.0)면 카피 뒤가 시끄럽습니다.
       // W.portrait.dissolveVh는 이제 쓰지 않습니다(키는 둡니다).
       const portrait = vh > window.innerWidth;
-      const r = ss(clamp((this.scrollY - this.heroEnd) / (W.revealVh * vh), 0, 1));
+      // DECIDED 2026-09-23 (한 시계 브리프 3.4): 떠오르기 시작하는 자리를 히어로 하단에서
+      // 구간 1의 끝(#gains 상단)으로 옮깁니다. 전에는 수면이 60% 남아 있을 때 이미 지도가
+      // 보여서, 밤바다 위에 서울이 떠 있는 화면이 1,800px 이어졌습니다. 이제 수면이 가라앉은
+      // 뒤에 섭니다. 한 번에 한 장면입니다.
+      // 떠오르는 길이는 revealVh와 구간 2 중 짧은 쪽입니다. 데스크톱의 구간 2는 반 화면이라
+      // revealVh(0.8화면)를 그대로 쓰면 다 서기 전에 건넘이 시작합니다.
+      const revealSpan = Math.max(Math.min(W.revealVh * vh, morphStart - s1End), 1);
+      const r = ss(clamp((this.scrollY - s1End) / revealSpan, 0, 1));
       let opacity: number;
       if (portrait) {
         opacity = r * (W.portrait.heroBright + (W.portrait.naruBright - W.portrait.heroBright) * calm);
