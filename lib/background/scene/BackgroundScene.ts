@@ -569,7 +569,8 @@ export class BackgroundScene {
       // 2026-09-23 (사용자: "움직이는 속도가 너무 빠름"): 계수 2.4 → 0.7. 2.4는 1초에 90%를
       // 따라잡아 휠 한 번에 점이 휙 옮겨 갔습니다. 0.7이면 1초에 50%, 3초 남짓에 거의 다 가서
       // 천천히 흘러갑니다. 경로와 폭은 그대로입니다.
-      this.s4Eased = this.reduced ? s4 : this.s4Eased + (s4 - this.s4Eased) * Math.min(1, dt * 0.7);
+      // 2026-09-23 (사용자: "더 느리게, 이거의 50%로"): 0.7 → 0.35. 1초에 약 30%, 6초 남짓에 거의 다.
+      this.s4Eased = this.reduced ? s4 : this.s4Eased + (s4 - this.s4Eased) * Math.min(1, dt * 0.35);
       this.water.setStages(s1, s2, morph, this.s4Eased);
 
       // DECIDED 2026-09-19 (사용자): "모바일도 데스크톱과 같은 배경 효과였으면 좋겠다."
