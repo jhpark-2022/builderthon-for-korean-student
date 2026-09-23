@@ -166,7 +166,7 @@ export class PostFX {
    * text over the field stays readable.
    */
   setPhase(p: Phases, intensity = 1) {
-    this.lens.setPhase(p, intensity);
+    this.lens.setPhase(p, intensity * this.lensScale);
     if (this.bloom) {
       // bloom intensifies as particles converge / cross — volumetric light
       // emerging from density, not from a drawn glow
@@ -176,6 +176,19 @@ export class PostFX {
       // background "turning on". 0.25 holds the same shape inside ±15%.
       this.bloom.intensity = this.bloomBase + (p.portal * 0.25 + p.whiteout * 1.0) * intensity;
     }
+  }
+
+  /**
+   * 렌즈 왜곡의 배수. 1이면 지금까지와 같습니다(8월 field 변형).
+   * DECIDED 2026-09-23 (사용자: "빛이 중간에 오면 두 개로 갈라짐"): 나루 홈(water 변형)은 0입니다.
+   * 렌즈의 초점이 화면 한가운데에 고정돼 있고 세기가 8월 국면(reveal, portal)을 따라 페이지
+   * 아래로 갈수록 커져서, 한가운데를 오목하게 당겨 어두운 구멍을 만들었습니다. 나루 점이 그
+   * 자리를 지나가면 점 옆에 검은 점이 하나 더 붙어 빛이 둘로 갈라진 것처럼 보였습니다.
+   * 블룸은 그대로입니다(파문의 밝기가 여기에 걸려 있습니다).
+   */
+  private lensScale = 1;
+  setLensScale(s: number) {
+    this.lensScale = s;
   }
 
   /** Focal point in UV (0..1) where the field converges — projected from world. */

@@ -163,6 +163,8 @@ export class BackgroundScene {
       this.quality.bloomIntensity
     );
     this.post.setSize(window.innerWidth, window.innerHeight);
+    // 나루 홈은 렌즈 왜곡을 쓰지 않습니다(2026-09-23, PostFX.setLensScale 주석). 8월 field는 그대로.
+    if (variant === "water") this.post.setLensScale(0);
 
     this.applyReducedMotion(
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
