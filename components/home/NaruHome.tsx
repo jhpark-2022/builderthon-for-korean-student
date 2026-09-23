@@ -1414,7 +1414,15 @@ export default function NaruHome() {
             unoptimized={locale === "en"}
             className="h-10 w-auto sm:h-12"
           />
-          <p className="break-keep text-xs leading-relaxed text-white/60">{t(naru.footer.credits)}</p>
+          {/* 크레딧(2026-09-23): 폰(sm 미만)은 세 줄, sm부터 한 줄에 gap 여백. 가운뎃점은 쓰지 않습니다.
+              라벨 white/45, 값 white/70. */}
+          <p className="flex flex-col items-center gap-1 break-keep text-xs leading-relaxed sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-5">
+            {naru.footer.creditItems.map((c) => (
+              <span key={c.label.en}>
+                <span className="text-white/45">{t(c.label)}</span> <span className="text-white/70">{t(c.value)}</span>
+              </span>
+            ))}
+          </p>
           {/* gap-y-7 (2026-09-19, 모바일 감사 7): 아래 링크가 -my-3(−13.5px씩)이라
               gap-y-2로는 행 간격이 −18px이었습니다. 지금은 오픈채팅이 막혀 링크가
               둘뿐이라 한 줄에 들어가지만, 되살리면 즉시 발현하는 잠복 상태였습니다.

@@ -2260,6 +2260,14 @@ export const naru = {
       ko: "주최 나루 주관 각 학교 한인 학생 단체 후원 참여 기업",
       en: "Hosted by NARU Organised by each school's Korean student association Supported by participating companies",
     },
+    // DECIDED 2026-09-23 (첫 방문자 리뷰): 위 한 줄이 폰에서 한 문장처럼 읽혔습니다("주최 나루 주관 각
+    // 학교…"). 라벨과 값을 나눠 폰에서는 세 줄, 데스크톱은 한 줄에 여백으로 띄웁니다. 순서는 그대로.
+    // credits 한 줄 키는 남겨 둡니다.
+    creditItems: [
+      { label: { ko: "주최", en: "Hosted by" }, value: { ko: "나루", en: "NARU" } },
+      { label: { ko: "주관", en: "Organised by" }, value: { ko: "각 학교 한인 학생 단체", en: "each school's Korean student association" } },
+      { label: { ko: "후원", en: "Supported by" }, value: { ko: "참여 기업", en: "participating companies" } },
+    ],
     archive: { ko: "제로백 빌더톤의 기록", en: "The Zero100 builderthon record" },
     contact: { ko: "문의", en: "Contact" },
     rights: { ko: "© 2026 나루 NARU", en: "© 2026 NARU" },
