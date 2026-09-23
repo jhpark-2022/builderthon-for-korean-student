@@ -59,6 +59,8 @@ export class WaterSurface {
         uStage2: { value: 0 },
         // 구간 4(싱가포르) 진행도 0..1. 건너기 끝 → #join 앞 형상 거두기 시작(2026-09-23).
         uStage4: { value: 0 },
+        // 구간 4에서 점이 가로로 도는 폭(2026-09-23). BackgroundScene이 LIGHT_SWEEP에서 골라 넣습니다.
+        uSweep: { value: 0.12 },
         uMorph: { value: 0 },
         // 밤하늘 꼭대기. 남색보다 더 어둡게 떨어뜨립니다.
         uSkyTop: { value: new THREE.Color("#03050F") },
@@ -128,6 +130,11 @@ export class WaterSurface {
     u.uPointer.value.copy(pointer);
     u.uPointerOn.value = on;
     u.uFlow.value = flow;
+  }
+
+  /** 구간 4에서 점이 가로로 도는 폭(화면 폭 대비, 한쪽). */
+  setSweep(v: number) {
+    this.material.uniforms.uSweep.value = v;
   }
 
   /** 파문의 위상(rad). BackgroundScene이 적분한 값입니다(2026-09-19). */

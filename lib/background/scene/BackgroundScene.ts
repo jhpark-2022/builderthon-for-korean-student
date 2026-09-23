@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { CROSSING, RING, SHAPES, SEOUL_WATERMARK, pickQuality, type QualityTier } from "../config";
+import { CROSSING, RING, SHAPES, SEOUL_WATERMARK, LIGHT_SWEEP, LIGHT_MAX_RATE, pickQuality, type QualityTier } from "../config";
 import { computeStageLayout, readStageRect, findStageElement, type StageLayout } from "../utils/shapeLayout";
 import { Renderer } from "../renderer/Renderer";
 import { CameraController } from "../camera/CameraController";
@@ -279,6 +279,9 @@ export class BackgroundScene {
   private joinTop = Infinity;
   // 구간 4 진행도를 부드럽게 따라가는 값(점의 가로 이동용). 휠의 계단을 지웁니다.
   private s4Eased = 0;
+  // 수면 평면의 두 끝을 화면에 투영할 때 쓰는 벡터(매 프레임 새로 만들지 않습니다).
+  private readonly sweepA = new THREE.Vector3();
+  private readonly sweepB = new THREE.Vector3();
   private readAnchors() {
     if (this.variant === "water") {
       const sy = window.scrollY;
@@ -570,13 +573,27 @@ export class BackgroundScene {
       // 따라잡아 휠 한 번에 점이 휙 옮겨 갔습니다. 0.7이면 1초에 50%, 3초 남짓에 거의 다 가서
       // 천천히 흘러갑니다. 경로와 폭은 그대로입니다.
       // 2026-09-23 (사용자: "더 느리게, 이거의 50%로"): 0.7 → 0.35. 1초에 약 30%, 6초 남짓에 거의 다.
-      this.s4Eased = this.reduced ? s4 : this.s4Eased + (s4 - this.s4Eased) * Math.min(1, dt * 0.35);
+      // DECIDED 2026-09-23 (싱가포르 빛 속도 브리프 2.2): 지수 감쇠는 스크롤이 클수록 처음 속도가
+      // 비례해서 커져, 바닥까지 플릭하면 점이 1초에 화면 폭의 70%를 갔습니다. 한 프레임의 이동량에
+      // 상한(LIGHT_MAX_RATE, 초당 진행도 0.05)을 둡니다. 작은 스크롤은 전처럼 부드럽게 따라가고,
+      // 큰 스크롤은 상한 속도로 흘러갑니다. 모션 민감 설정에서는 전처럼 바로 그 자리에 섭니다.
+      const want = (s4 - this.s4Eased) * Math.min(1, dt * 0.35);
+      const cap = LIGHT_MAX_RATE * dt;
+      this.s4Eased = this.reduced ? s4 : this.s4Eased + Math.max(-cap, Math.min(cap, want));
       this.water.setStages(s1, s2, morph, this.s4Eased);
 
       // DECIDED 2026-09-19 (사용자): "모바일도 데스크톱과 같은 배경 효과였으면 좋겠다."
       // 세로 화면은 크기와 자리가 처음부터 끝까지 같습니다. calm으로 옮기지 않습니다
       // (2026-09-23부터 naruW, naruCy, naruBright를 지웠습니다).
       const portrait = vh > window.innerWidth;
+      // LIGHT_SWEEP은 화면 폭 대비입니다. 셰이더의 uv 1은 화면 폭이 아니라 수면 평면의 폭이고,
+      // 그 평면은 화면보다 12% 넓게 깔리고(WaterSurface.resize의 여유) 카메라 돌리로 조금 더
+      // 커집니다. 실측하니 0.12가 화면 폭의 0.136(폰 0.15가 0.179)으로 그려졌습니다. 평면의 두 끝을
+      // 매 프레임 화면에 투영해 uv 1이 화면 몇 폭인지 재고 그만큼 나눕니다.
+      this.sweepA.set(-1, 0, 0).applyMatrix4(this.water.mesh.matrixWorld).project(this.cam.camera);
+      this.sweepB.set(1, 0, 0).applyMatrix4(this.water.mesh.matrixWorld).project(this.cam.camera);
+      const uvSpan = Math.abs(this.sweepB.x - this.sweepA.x) / 2 || 1;
+      this.water.setSweep((portrait ? LIGHT_SWEEP.portrait : LIGHT_SWEEP.landscape) / uvSpan);
       let opacity: number;
       if (portrait) {
         opacity = shapeOpacity * W.portrait.heroBright * (1 - settle * (1 - S.singaporeBright));

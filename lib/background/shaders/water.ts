@@ -67,6 +67,7 @@ uniform float uRingPhase; // BackgroundScene이 적분한 파문 위상(rad). uT
 uniform float uStage1;    // #top 하단 → #gains 상단
 uniform float uStage2;    // #gains 상단 → #naru − 0.5화면
 uniform float uStage4;    // 건너기 끝 → #join 앞 형상 거두기 시작 (싱가포르)
+uniform float uSweep;     // 구간 4에서 점이 가로로 도는 폭(화면 폭 대비, 한쪽). config.ts LIGHT_SWEEP
 uniform float uMorph;     // 서울 → 싱가포르
 uniform vec3  uSkyTop;
 uniform vec3  uSkyHorizon;
@@ -333,7 +334,9 @@ void main(){
     // 싱가포르 반폭 0.33 / 0.40 안쪽). 진행도는 건너기 끝부터 문서 끝까지라 긴 스크롤에
     // 나눠 천천히 가고, smoothstep을 씌워 출발과 도착에서 속도가 0입니다. "확확"의 원인이던 휠의
     // 계단은 BackgroundScene이 uStage4를 부드럽게 따라가게 해서 지웁니다.
-    float sweep = mix(0.22, 0.28, portrait);
+    // DECIDED 2026-09-23 (싱가포르 빛 속도 브리프): 폭은 상수 0.22/0.28이 아니라 uSweep(config.ts의
+    // LIGHT_SWEEP, 0.12/0.15)입니다. 경로(sin의 한 바퀴)는 그대로이고 폭만 줄었습니다.
+    float sweep = uSweep;
     float mx = lx + sweep * sin(6.2831853 * smoothstep(0.0, 1.0, uStage4));
     float my = mix(lightY, 0.5, smoothstep(0.0, 1.0, uStage2));
     vec2  q  = vec2((p.x - mx) * uAspect, p.y - my);
