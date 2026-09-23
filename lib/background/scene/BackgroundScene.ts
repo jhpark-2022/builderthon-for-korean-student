@@ -278,6 +278,8 @@ export class BackgroundScene {
   // 그것도 없으면 fallbackAnchors.crossEnd.
   private gainsTop: number = CROSSING.fallbackAnchors.crossEnd;
   private naruTop = Infinity;
+  // water 변형: #join 상단(문서 px). 없는 페이지에서는 Infinity라 구간 5(형상 거두기)가 오지 않습니다.
+  private joinTop = Infinity;
   private readAnchors() {
     if (this.variant === "water") {
       const sy = window.scrollY;
@@ -290,6 +292,8 @@ export class BackgroundScene {
       this.gainsTop = top("gains") ?? top("record") ?? CROSSING.fallbackAnchors.crossEnd;
       const naru = top("naru");
       if (naru !== null) this.naruTop = naru;
+      const join = top("join");
+      if (join !== null) this.joinTop = join;
       return;
     }
     if (this.variant !== "crossing") return;
