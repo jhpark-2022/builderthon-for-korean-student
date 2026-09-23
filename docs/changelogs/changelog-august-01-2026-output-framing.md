@@ -2,7 +2,7 @@
 
 **Project:** Builderthon marketing site (Next.js)
 **Branch:** `main`
-**Source of truth:** organizer transcripts, 7/29–7/31 (definition of the final
+**Source of truth:** organizer meetings, 7/29–7/31 (definition of the final
 deliverable and of the AX brief)
 **Scope:** content only — four surfaces, no new section, no schedule data
 touched. Every string is a `{ko, en}` pair; English is written to the site's
@@ -90,7 +90,7 @@ order, which is why the sentence sits in front rather than replacing anything.
 ## Deliberately not written
 
 - **No presentation time split.** The "4분:1분"-style guidance from the
-  transcripts is internal and unsettled; the site says the weight is on the idea
+  organizer meetings is internal and unsettled; the site says the weight is on the idea
   and stops there.
 - **No new emphasis on track count.** The existing "메인 트랙 2개로 좁혀 논의 중"
   in the theme FAQ stays as-is; nothing new asserts a number.
