@@ -39,14 +39,21 @@ export default function Background({ variant = "field" }: { variant?: Background
           // 토글이 붙잡을 손잡이. 컨텍스트로 내려보내지 않는 이유는 소비처가
           // 헤더도 푸터도 아닌 어디든 될 수 있고, 그때마다 프로바이더를 한 겹
           // 더 씌우는 값이 이 한 줄보다 크기 때문입니다. 값은 함수 하나입니다.
-          window.__naruSetBackgroundPaused = (p: boolean) => scene?.setPaused(p);
+          // 켜기를 누르면(p false) 동작 줄이기 설정보다 그 선택이 우선합니다(2026-09-23).
+          window.__naruSetBackgroundPaused = (p: boolean) => {
+            scene?.setPaused(p);
+            if (!p) scene?.setMotionOptIn(true);
+          };
           scene.start();
           // 형상 라벨(NaruHome의 ShapeLabels)이 배경과 같이 뜨도록 알립니다.
           window.__naruBackgroundStarted = true;
           window.dispatchEvent(new Event("naru:bg-ready"));
           // 새로고침해도 꺼 둔 상태가 유지됩니다.
           try {
-            if (window.localStorage.getItem(MOTION_KEY) === "off") scene.setPaused(true);
+            const saved = window.localStorage.getItem(MOTION_KEY);
+            if (saved === "off") scene.setPaused(true);
+            // 전에 페이지 안에서 켠 사람은 새로고침해도 켜진 채입니다(동작 줄이기가 켜져 있어도).
+            if (saved === "on") scene.setMotionOptIn(true);
           } catch {
             /* storage blocked */
           }

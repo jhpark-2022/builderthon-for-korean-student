@@ -390,7 +390,16 @@ export class BackgroundScene {
     if (this.visible) this.clock.getDelta(); // swallow the gap
   };
 
-  private applyReducedMotion(reduced: boolean) {
+  // OS의 prefers-reduced-motion 값. 방문자가 페이지 안에서 켜기를 누르면(motionOptIn) 그 선택이 이깁니다.
+  private reducedPref = false;
+  private motionOptIn = false;
+  private applyReducedMotion(pref: boolean) {
+    this.reducedPref = pref;
+    // DECIDED 2026-09-23 (사용자: "내가 부탁한 내용이 반영이 안되고 있음"): 사용자의 맥은 동작 줄이기가
+    // 켜져 있어 배경이 멈춰 있었고, 헤더의 "배경 움직임 켜기"를 눌러도 motionScale이 0에 묶여
+    // 아무것도 움직이지 않았습니다. 버튼이 켜짐을 표시하는데 배경은 멈춘 채였습니다.
+    // 페이지 안에서 명시적으로 켠 선택은 OS 설정보다 우선합니다. 누르기 전까지는 OS 설정대로 멈춥니다.
+    const reduced = pref && !this.motionOptIn;
     this.reduced = reduced;
     this.cam.setReducedMotion(reduced);
     // DECIDED 2026-09-15: 0.1이 아니라 0입니다. WCAG 2.2.2가 요구하는 것은
@@ -607,6 +616,12 @@ export class BackgroundScene {
   };
 
   /** 방문자가 배경을 껐는가. 끄면 다음 프레임부터 그리지 않습니다. */
+  /** 방문자가 페이지 안에서 움직임을 켰는가(2026-09-23). 켜면 prefers-reduced-motion을 넘어섭니다. */
+  setMotionOptIn(on: boolean) {
+    this.motionOptIn = on;
+    this.applyReducedMotion(this.reducedPref);
+  }
+
   setPaused(paused: boolean) {
     this.paused = paused;
     // 켤 때 시계의 빈 구간을 삼킵니다. 그러지 않으면 꺼 둔 시간만큼 fieldTime이

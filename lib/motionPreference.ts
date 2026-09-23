@@ -35,6 +35,16 @@ export function readMotionPaused(): boolean {
   }
 }
 
+/** 페이지 안에서 명시적으로 고른 값. 한 번도 누르지 않았으면 null(2026-09-23). */
+export function readMotionChoice(): "on" | "off" | null {
+  try {
+    const v = window.localStorage.getItem(MOTION_KEY);
+    return v === "on" || v === "off" ? v : null;
+  } catch {
+    return null;
+  }
+}
+
 export function writeMotionPaused(paused: boolean) {
   try {
     window.localStorage.setItem(MOTION_KEY, paused ? "off" : "on");
