@@ -898,9 +898,10 @@ export const dict = {
     // them: what you actually do → how little of your August it costs → who you
     // prove it to → what you keep. Any addition here should have to displace one
     // of those four rather than sit alongside them.
+    // DECIDED 2026-09-23 (첫 방문자 리뷰): 기록 페이지라 과거형으로. 뜻과 길이는 그대로, 어미만.
     blurb: {
-      ko: "실제 기업의 AI 전환(AX) 과제를 바이브 코딩으로 풉니다. 필참은 첫날과 마지막 날 이틀뿐이고, 나머지는 팀이 편한 시간에 빌드해요. 마지막 날, 문제를 낸 기업과 현업 리더 앞에서 ‘내 아이디어가 돌아간다’를 증명하고 데모와 피칭, 수료증으로 남깁니다.",
-      en: "Solve a real company's AI-transformation (AX) problem with vibe coding. Only day one and day eight are required. The rest is your team's own time. On the last day you show it running to the company that set the problem and to working leaders, and keep the demo, the pitch and the certificate."
+      ko: "실제 기업의 AI 전환(AX) 과제를 바이브 코딩으로 풀었습니다. 필참은 첫날과 마지막 날 이틀뿐이었고, 나머지는 팀이 편한 시간에 빌드했습니다. 마지막 날, 문제를 낸 기업과 현업 리더 앞에서 ‘내 아이디어가 돌아간다’를 증명하고 데모와 피칭, 수료증으로 남겼습니다.",
+      en: "Teams solved a real company's AI-transformation (AX) problem with vibe coding. Only day one and day eight were required. The rest was each team's own time. On the last day they showed it running to the company that set the problem and to working leaders, and kept the demo, the pitch and the certificate."
     },
     // DECIDED 2026-08-22 (마감 후 청산): 히어로 1순위가 등록에서 트랙으로
     // 넘어왔습니다. 등록이 마감된 뒤로 첫 화면에서 할 수 있는 가장 중요한 일이
@@ -4645,7 +4646,8 @@ export const dict = {
         // 매칭 경고 사이입니다 — 앞은 "와도 된다", 뒤는 "늦으면 못 붙는다"라,
         // "붙으면 그 다음이 있다"가 둘 사이에 와야 경고가 마지막 인상이 되지
         // 않습니다. 위 세 곳 신호 계약은 그대로입니다(전문은 여기 하나).
-        q: { ko: "지금도 등록할 수 있나요?", en: "Can I still register?" },
+        // 2026-09-23: 기록 페이지라 "지금도"를 묻지 않습니다. 답은 이미 마감을 말합니다.
+        q: { ko: "등록은 언제 마감됐나요?", en: "When did registration close?" },
         a: {
           ko: "등록은 8월 22일 오후 2시 15분에 마감됐어요. 참가 관련 안내는 참가자 오픈채팅에서 이어집니다. 현장에서 매칭된 팀은 다음 날 팀 빌딩 시간으로 이어서 챙겨 드립니다. (이미 팀으로 오신 분들은 해당 없어요.)",
           en: "Registration closed at 2:15PM on 22 August. Everything for participants continues in the open chat. Teams matched on site carry into a team-building session the next day. (Doesn't apply if you came as a team.)",

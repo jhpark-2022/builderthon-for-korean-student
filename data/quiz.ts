@@ -656,7 +656,9 @@ export const quizUI = {
   eyebrow: { ko: "AI 성격 테스트", en: "AI Personality Test" },
   // Back-link to the event site — mirrors the nav's brandSuffix, so it carries
   // the same "AI 빌더톤 / AI Builderthon" wording.
-  back: { ko: "AI 빌더톤", en: "AI Builderthon" },
+  // 2026-09-23: 라벨이 "AI 빌더톤"인데 나루 홈("/")으로 가서 맞지 않았습니다. 목적지를 /2026-08로
+  // 옮기고(components/Quiz.tsx) 라벨도 그 기록의 이름으로.
+  back: { ko: "제로백 빌더톤 기록", en: "Zero100 record" },
   title: { ko: "당신의 AI 모델은?", en: "Which AI model are you?" },
   subtitle: {
     ko: "14개의 질문으로 알아보는 나의 빌더 유형. 결과는 16개 AI 모델 중 하나로 나와요.",

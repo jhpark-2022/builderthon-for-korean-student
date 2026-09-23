@@ -11,7 +11,9 @@ import QuizIntroShell from "./QuizIntroShell";
 // replaced it here is what the result actually carries, so a shared link and
 // the page agree.
 export const metadata: Metadata = {
-  title: "당신의 AI 모델은? Zero100 AI Builderthon",
+  // 2026-09-23: layout의 title.template("%s | 나루 NARU")이 뒤를 붙여
+  // "당신의 AI 모델은? | 제로백 빌더톤 기록 | 나루 NARU"가 됩니다. OG 문구는 그대로.
+  title: "당신의 AI 모델은? | 제로백 빌더톤 기록",
   description:
     "14개의 질문으로 알아보는 나의 빌더 유형. 결과는 16개 AI 모델 중 하나로. 강점과 약점, 빌더톤 추천 역할까지. / A 14-question AI personality test for the Singapore Korean-student builderthon: get your AI model, your strengths and the role you'd play.",
   openGraph: {

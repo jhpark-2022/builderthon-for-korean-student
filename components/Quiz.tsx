@@ -302,7 +302,7 @@ export default function Quiz() {
         {/* -my-3 py-3: 터치 면적을 44px로 키우면서 글자 위치는 그대로 둡니다
             (2026-08-17). 그전에는 두 링크 다 높이가 23px이라 손가락으로는
             빗나가기 쉬웠습니다. 아래 '이전' 버튼도 같은 처리입니다. */}
-        <a href="/" className="-my-3 inline-flex min-h-[44px] items-center py-3 text-sm font-semibold text-white/60 transition hover:text-white">
+        <a href="/2026-08" className="-my-3 inline-flex min-h-[44px] items-center py-3 text-sm font-semibold text-white/60 transition hover:text-white">
           ← {t(quizUI.back)}
         </a>
         <LocaleToggle />
@@ -638,7 +638,7 @@ function ResultView({
               viewport (capped at the original 0.7rem from ~430px up) and the
               tracking only opens up from `sm`, where the card can carry it. */}
           <div className="relative flex items-center justify-between gap-3">
-            <span className="whitespace-nowrap font-mono text-[clamp(0.52rem,2.6vw,0.7rem)] font-bold uppercase tracking-[0.08em] text-white/60 sm:tracking-[0.15em]">Zero100 AI Builderthon</span>
+            <span className="whitespace-nowrap font-mono text-[clamp(0.52rem,2.6vw,0.7rem)] font-bold uppercase tracking-[0.08em] text-white/60 sm:tracking-[0.15em]">{t({ ko: "제로백 빌더톤 2026.08", en: "Zero100 builderthon, Aug 2026" })}</span>
             <span className="whitespace-nowrap font-mono text-[clamp(0.52rem,2.6vw,0.7rem)] font-bold tracking-wider text-white/60">{result.resultId}</span>
           </div>
 
