@@ -1199,7 +1199,11 @@ export default function NaruHome() {
             링크의 히트 상자가 겹쳤습니다. 겹친 자리에서 먼저 잡는 쪽은 DOM 순서가
             아니라 z 순서라, "학생회로 문의하기"를 눌렀는데 옆의 메일이 열릴 수
             있습니다. 세 링크는 폰에서 반드시 접힙니다. 27 − 22.5 = 4.5px로 띄웁니다. */}
-        <Reveal className="mx-auto mt-6 flex max-w-5xl flex-wrap justify-center gap-x-8 gap-y-6">
+        {/* DECIDED 2026-09-23 (첫 방문자 리뷰): 폰에서 세 링크가 배경 형상의 점 위에 글자만 떠 있어
+            읽기 어려웠습니다. 페이지의 다른 버튼과 같은 알약으로 감쌉니다(테두리 white/15, ArchiveBanner의
+            어두운 반투명 채움, backdrop-blur). 폰은 세로로 쌓고 각 버튼은 내용 폭, sm부터 가로 한 줄.
+            알약 자체가 44px이라 위의 -my-2.5 관용구는 필요 없습니다. 형상은 건드리지 않습니다. */}
+        <Reveal className="mx-auto mt-6 flex max-w-5xl flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
           {naru.how.layers.map((layer) => (
             <a
               key={layer.join.id}
@@ -1208,7 +1212,7 @@ export default function NaruHome() {
               // 곧장 갑니다. 이 세 링크가 학생회·기업·운영진의 유일한 문입니다.
               href={layer.join.mail}
               onClick={() => track("naru_mail", { src: `how_${layer.join.id}` })}
-              className="-my-2.5 inline-flex min-h-[44px] items-center gap-1.5 py-2.5 text-sm font-medium text-accent transition hover:text-white"
+              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-white/15 bg-[#0B1430]/80 px-5 py-2.5 text-sm font-medium text-accent backdrop-blur-sm transition hover:border-white/30 hover:text-white"
             >
               {t(layer.join.label)}
               <span aria-hidden>→</span>
