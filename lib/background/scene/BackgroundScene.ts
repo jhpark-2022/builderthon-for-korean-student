@@ -564,10 +564,12 @@ export class BackgroundScene {
       const docEnd = document.documentElement.scrollHeight - vh;
       const s4 = clamp((this.scrollY - morphEnd) / Math.max(docEnd - morphEnd, 1), 0, 1);
       // 휠은 한 번에 백 px씩 건너뛰어서, 스크롤 값을 그대로 쓰면 점이 계단처럼 튑니다
-      // ("너무 확확 이동"). 점만 지수 감쇠로 따라가게 합니다(1초에 약 90%). 사건을 시간이
-      // 만드는 것이 아니라 스크롤이 정한 자리까지 미끄러지는 것이고, 모션 민감 설정에서는
-      // 바로 그 자리에 섭니다.
-      this.s4Eased = this.reduced ? s4 : this.s4Eased + (s4 - this.s4Eased) * Math.min(1, dt * 2.4);
+      // ("너무 확확 이동"). 점만 지수 감쇠로 따라가게 합니다. 사건을 시간이 만드는 것이 아니라
+      // 스크롤이 정한 자리까지 미끄러지는 것이고, 모션 민감 설정에서는 바로 그 자리에 섭니다.
+      // 2026-09-23 (사용자: "움직이는 속도가 너무 빠름"): 계수 2.4 → 0.7. 2.4는 1초에 90%를
+      // 따라잡아 휠 한 번에 점이 휙 옮겨 갔습니다. 0.7이면 1초에 50%, 3초 남짓에 거의 다 가서
+      // 천천히 흘러갑니다. 경로와 폭은 그대로입니다.
+      this.s4Eased = this.reduced ? s4 : this.s4Eased + (s4 - this.s4Eased) * Math.min(1, dt * 0.7);
       this.water.setStages(s1, s2, morph, this.s4Eased);
 
       // DECIDED 2026-09-19 (사용자): "모바일도 데스크톱과 같은 배경 효과였으면 좋겠다."
