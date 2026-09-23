@@ -407,10 +407,13 @@ export default function JourneyNav({
                 // unoptimized입니다. Journey.tsx의 로고 타일 참고).
                 unoptimized={locale === "en"}
                 priority
-                // 영문 락업은 폰에서 한 단 낮습니다. 높이가 같으면 폭이 217px이 되어
-                // (한글 락업은 115px) 390px 바에서 EN/KR 토글에 10px까지 붙습니다.
-                // 네 글자짜리 이름은 두 글자보다 길 수밖에 없으니 높이로 갚습니다.
-                className={locale === "en" ? "h-7 w-auto sm:h-9" : "h-8 w-auto sm:h-9"}
+                // DECIDED 2026-09-23 (사용자: "영어 버전이 더 큼. 동일해야지"): 두 파일의 여백이
+                // 다릅니다. 한글 PNG는 높이 168px 중 심볼이 142px이고(위 26px이 여백), 영문 SVG는
+                // 심볼 높이가 곧 파일 높이입니다. 같은 h-9로 두면 영문 심볼이 18% 크게 그려졌습니다.
+                // 그래서 영문은 한글 높이의 142/168로 둡니다. h-8(2rem) → 1.69rem, h-9(2.25rem) → 1.9rem.
+                // px가 아니라 rem인 것이 요점입니다. 루트 글자 크기가 화면에 따라 바뀌어 h-9가
+                // 데스크톱에서 40.5px이 되므로, px로 박으면 두 락업이 다시 어긋납니다.
+                className={locale === "en" ? "h-[1.69rem] w-auto sm:h-[1.9rem]" : "h-8 w-auto sm:h-9"}
               />
             </a>
           ) : (
