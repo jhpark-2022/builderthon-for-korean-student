@@ -274,9 +274,6 @@ export class BackgroundScene {
    * 무대 ResizeObserver, 그리고 2초마다 다시 읽습니다(이미지가 늦게 실리는 경우).
    */
   private heroEnd: number = CROSSING.fallbackAnchors.heroEnd; // water 변형: 히어로 section의 아래(문서 px)
-  // water 변형: 구간 1의 끝이자 구간 2의 시작(문서 px). #gains 상단, 없으면 #record 상단,
-  // 그것도 없으면 fallbackAnchors.crossEnd.
-  private gainsTop: number = CROSSING.fallbackAnchors.crossEnd;
   private naruTop = Infinity;
   // water 변형: #join 상단(문서 px). 없는 페이지에서는 Infinity라 구간 5(형상 거두기)가 오지 않습니다.
   private joinTop = Infinity;
@@ -289,11 +286,11 @@ export class BackgroundScene {
       };
       const hero = document.getElementById("top");
       this.heroEnd = hero ? hero.getBoundingClientRect().bottom + sy : CROSSING.fallbackAnchors.heroEnd;
-      this.gainsTop = top("gains") ?? top("record") ?? CROSSING.fallbackAnchors.crossEnd;
       const naru = top("naru");
       if (naru !== null) this.naruTop = naru;
       const join = top("join");
       if (join !== null) this.joinTop = join;
+      this.warnShortSeoul();
       return;
     }
     if (this.variant !== "crossing") return;
@@ -315,6 +312,27 @@ export class BackgroundScene {
       if (heroEnd <= december + 1 && december < gains && gains <= record && record < naru) {
         this.anchors = { heroEnd, crossStart: december, crossEnd: gains, arrivedAt: record, naru };
       }
+    }
+  }
+
+  /**
+   * 구간 2가 모자라면 개발 빌드에서 한 번 경고합니다(챕터 지도 브리프 3.2). 서울이 다 떠오른
+   * 뒤 온전히 설 자리가 한 화면이 안 되는 경우입니다. 2026-09-23 이전 배포본이 정확히
+   * 그랬고(서울 온전 0px), 아무도 몰랐습니다.
+   */
+  private warnedShortSeoul = false;
+  private warnShortSeoul() {
+    if (process.env.NODE_ENV === "production" || this.warnedShortSeoul) return;
+    if (!Number.isFinite(this.naruTop)) return;
+    const vh = window.innerHeight;
+    const S = SEOUL_WATERMARK.stages;
+    const room = (this.naruTop - S.morph.startVh * vh) - (this.heroEnd + S.descendVh * vh);
+    if (room < S.revealVh * vh + vh) {
+      this.warnedShortSeoul = true;
+      console.warn(
+        `[background] 구간 2가 모자랍니다: 서울이 설 자리 ${Math.round(room)}px, ` +
+        `필요 ${Math.round(S.revealVh * vh + vh)}px (revealVh + 1vh). stages.descendVh 또는 앵커를 보세요.`
+      );
     }
   }
 
@@ -477,75 +495,63 @@ export class BackgroundScene {
       this.ringPhase += ringRate * dt * this.motionScale;
       this.water.setRingPhase(this.ringPhase);
 
-      // 서울 워터마크(2026-09-18): 구간 1이 끝나면(2026-09-23부터 #gains 상단) revealVh에 걸쳐
-      // 떠오르고, 그 뒤로는 서 있습니다. #naru부터 조금 더 어둡게. 국면 uniform은 전부 0
-      // (banks 자세). uShift 0: 카메라 자식이라 뷰포트 고정입니다.
+      // 서울 워터마크(2026-09-18). 국면 uniform은 전부 0(banks 자세). uShift 0: 카메라
+      // 자식이라 뷰포트 고정입니다. 시간은 쓰지 않습니다. 손가락이 만든 움직임이라 모션
+      // 민감 설정과의 관계가 지금과 같습니다(WCAG 2.2.2의 대상이 아닙니다).
       this.anchorTimer += dt;
       if (this.anchorTimer > 2) { this.anchorTimer = 0; this.readAnchors(); }
       const vh = window.innerHeight;
       const ss = (x: number) => x * x * (3 - 2 * x);
       const W = SEOUL_WATERMARK;
-      // ── 서울 → 싱가포르 (2026-09-19, 서울→싱가포르 브리프 2.3) ──────────────
-      // #naru 반 화면 앞에서 시작해 1.5화면에 걸쳐 건넙니다. 이벤트(크로싱 서울)를
-      // 읽는 동안은 서울이고, 그룹(나루)을 읽는 동안은 싱가포르입니다. 그룹이 태어난
-      // 곳이라 자리가 뜻과 맞습니다. 위로 스크롤하면 같은 길로 돌아옵니다.
-      //
-      // calm(어두워짐)은 건너기가 **끝난 뒤에** 시작합니다. 싱가포르가 한 번은 온전한
-      // 밝기로 서야 합니다. 어두워지면서 도착하면 물러나는 것으로 읽힙니다.
-      //
-      // 시간은 쓰지 않습니다. 손가락이 만든 움직임이라 모션 민감 설정과의 관계가
-      // 지금과 같습니다(WCAG 2.2.2의 대상이 아닙니다).
-      const M = W.morph;
-      const morphStart = this.naruTop - M.startVh * vh;
-      const morph = ss(clamp((this.scrollY - morphStart) / (M.spanVh * vh), 0, 1));
-      const c = clamp((this.scrollY - (morphStart + M.spanVh * vh)) / vh, 0, 1);
-      const calm = ss(c);
-      this.particles?.setMorph(morph);
+      const S = W.stages;
 
-      // ── 구간 진행도 (2026-09-23, 한 시계 브리프 3.1) ──────────────────────────
-      // DECIDED 2026-09-23: 배경의 사건은 문서 비율(uScroll)이 아니라 챕터 앵커로 셉니다.
-      // 전에는 수면·해·나루 점·파문이 uScroll을, 서울 윤곽과 건넘이 앵커를 봐서, 카피가
-      // 늘면 uScroll 쪽 사건만 밀렸습니다(문서 11% 증가에 전부 11%씩 뒤로).
-      //   구간 1  #top 하단 → #gains 상단        해가 물에 들어가 나루 점이 됩니다
-      //   구간 2  #gains 상단 → #naru − startVh  서울 윤곽이 섭니다
-      //   구간 3  morph(위)                      서울이 싱가포르로 건넙니다
-      // 셋 다 선형 0..1입니다. 모양(완급)은 셰이더가 정합니다.
-      const s1End = Math.max(this.gainsTop, this.heroEnd + 1);
-      const s1 = clamp((this.scrollY - this.heroEnd) / (s1End - this.heroEnd), 0, 1);
-      const s2 = clamp((this.scrollY - s1End) / Math.max(morphStart - s1End, 1), 0, 1);
+      // ── 구간 지도 (DECIDED 2026-09-23, 챕터 지도 브리프) ──────────────────────
+      //   0 나루터    0 → #top 하단                        수면, 해
+      //   1 건넘      #top 하단 → +descendVh              해가 내려가 나루 점이 됨
+      //   2 서울      구간 1 끝 → #naru − morph.startVh    서울 윤곽(앞 revealVh는 떠오름)
+      //   3 크로싱    → +morph.spanVh                      서울 → 싱가포르
+      //   4 싱가포르  → #join − dissolve.startVh          싱가포르 윤곽
+      //   5 세 곳     → +dissolve.spanVh, 그 뒤 끝까지     형상을 거두고 나루 점만
+      // 전에는 구간 1이 #gains 상단까지라 #december 전체가 해가 지는 장면이었고, 건너기가
+      // 서울이 다 떠오르기 전에 시작해서 서울이 온전히 선 구간이 0px이었습니다.
+      const descendEnd = this.heroEnd + S.descendVh * vh;
+      const morphStart = this.naruTop - S.morph.startVh * vh;
+      const morphEnd = morphStart + S.morph.spanVh * vh;
+
+      // 구간 1. 선형으로 넘깁니다. water 셰이더가 uStage1에 자기 곡선(pow 12 등)을
+      // 이미 씌우므로, 여기서 ss()를 한 번 더 씌우면 해가 내려가는 모양이 바뀝니다.
+      const s1 = clamp((this.scrollY - this.heroEnd) / (S.descendVh * vh), 0, 1);
+      // 구간 2 진행. 셰이더가 uStage2로 나루 점을 화면 가운데로 올립니다(my).
+      // 구간 1 끝부터 건너기 시작까지로 다시 정의합니다.
+      const s2 = clamp((this.scrollY - descendEnd) / Math.max(morphStart - descendEnd, 1), 0, 1);
+      // 구간 3. #naru 제목("건너는 건 각자가 한다")이 건너기의 70% 지점에 옵니다.
+      // 위로 스크롤하면 같은 길로 돌아옵니다.
+      const morph = ss(clamp((this.scrollY - morphStart) / (S.morph.spanVh * vh), 0, 1));
+      this.particles?.setMorph(morph);
       this.water.setStages(s1, s2, morph);
-      // 구간 1이 끝나면(#gains 상단, 2026-09-23부터) 떠오르고, 그 뒤로는 서 있습니다.
-      // #naru부터 조금 더 어둡게.
-      //
-      // DECIDED 2026-09-19 (사용자): "모바일도 데스크톱과 같은 배경 효과였으면 좋겠다.
-      // 나루 이미지가 보이고, 내려가면서 서울 윤곽 점들이 빛나는 걸로."
-      // 세로 화면은 9/18의 모바일 브리프대로 **히어로에서부터** 서울 윤곽을 110vw로
-      // 세우고 있었습니다(heroBright 0.8). 그래서 폰에서는 첫 화면이 물과 해가 아니라
-      // 서울 윤곽이었고, 가로 화면과 순서가 반대였어요. 이제 둘 다 같은 순서입니다.
-      //
-      // 세로에 남은 것은 크기와 밝기뿐입니다. 심볼이 110vw → 90vw로 좁아지고(calm),
-      // 밝기는 0.8 → 0.5로 내려갑니다. 폰에서 전체 밝기(1.0)면 카피 뒤가 시끄럽습니다.
-      // W.portrait.dissolveVh는 이제 쓰지 않습니다(키는 둡니다).
+
+      // 떠오름 길이는 구간 2보다 길 수 없습니다(챕터가 짧아져도 떠오르다 건너지 않게).
+      // 떠오름은 구간 1이 끝난 뒤에 시작합니다. 수면이 가라앉는 것과 서울이 서는 것이
+      // 겹치지 않습니다(한 시계 브리프 3.4).
+      const revealSpan = Math.max(Math.min(S.revealVh * vh, morphStart - descendEnd), 1);
+      const reveal = ss(clamp((this.scrollY - descendEnd) / revealSpan, 0, 1));
+      // 구간 4의 밝기. 건너기가 끝난 뒤 1vh에 걸쳐 singaporeBright로. 싱가포르가 한 번은
+      // 온전한 밝기로 서야 합니다. 어두워지면서 도착하면 물러나는 것으로 읽힙니다.
+      const settle = ss(clamp((this.scrollY - morphEnd) / vh, 0, 1));
+      const shapeOpacity = reveal;
+
+      // DECIDED 2026-09-19 (사용자): "모바일도 데스크톱과 같은 배경 효과였으면 좋겠다."
+      // 세로 화면은 크기와 자리가 처음부터 끝까지 같습니다. calm으로 옮기지 않습니다
+      // (2026-09-23부터 naruW, naruCy, naruBright를 지웠습니다).
       const portrait = vh > window.innerWidth;
-      // DECIDED 2026-09-23 (한 시계 브리프 3.4): 떠오르기 시작하는 자리를 히어로 하단에서
-      // 구간 1의 끝(#gains 상단)으로 옮깁니다. 전에는 수면이 60% 남아 있을 때 이미 지도가
-      // 보여서, 밤바다 위에 서울이 떠 있는 화면이 1,800px 이어졌습니다. 이제 수면이 가라앉은
-      // 뒤에 섭니다. 한 번에 한 장면입니다.
-      // 떠오르는 길이는 revealVh와 구간 2 중 짧은 쪽입니다. 데스크톱의 구간 2는 반 화면이라
-      // revealVh(0.8화면)를 그대로 쓰면 다 서기 전에 건넘이 시작합니다.
-      const revealSpan = Math.max(Math.min(W.revealVh * vh, morphStart - s1End), 1);
-      const r = ss(clamp((this.scrollY - s1End) / revealSpan, 0, 1));
       let opacity: number;
       if (portrait) {
-        opacity = r * (W.portrait.heroBright + (W.portrait.naruBright - W.portrait.heroBright) * calm);
-        this.placeSeoul(
-          W.portrait.heroW + (W.portrait.naruW - W.portrait.heroW) * calm,
-          W.portrait.heroCy + (W.portrait.naruCy - W.portrait.heroCy) * calm
-        );
+        opacity = shapeOpacity * W.portrait.heroBright * (1 - settle * (1 - S.singaporeBright));
+        this.placeSeoul(W.portrait.heroW, W.portrait.heroCy);
       } else {
-        opacity = r * (1 - calm * (1 - W.calmBright));
+        opacity = shapeOpacity * (1 - settle * (1 - S.singaporeBright));
       }
-      this.particles?.updateCrossing(this.fieldTime, this.scroll, this.motionScale, { gather: 0, crossing: 0, arrived: 0, calm }, 0);
+      this.particles?.updateCrossing(this.fieldTime, this.scroll, this.motionScale, { gather: 0, crossing: 0, arrived: 0, calm: settle }, 0);
       // 점 크기는 화면 방향에 따라 다릅니다(2026-09-19). 같은 px이라도 형상이 크면
       // 비율이 작아져 선이 끊겨 보입니다. 세로는 3.2/1.6, 가로는 4.2/2.0.
       this.particles?.setShapeLook(
