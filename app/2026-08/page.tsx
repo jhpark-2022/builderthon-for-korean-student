@@ -55,6 +55,8 @@ export const metadata: Metadata = {
     "Singapore's first AI builderthon for Korean students. 22–29 Aug 2026 8 days, ~100 builders solving real companies' AI-transformation problems with vibe coding, from zero to MVP.",
   keywords: ["Builderthon", "Zero100", "Singapore", "Korean students", "AI", "vibe coding", "hackathon", "NUS", "NTU", "SMU", "나루", "NARU"],
   alternates: { canonical: "/2026-08" },
+  // EN 탭 제목(2026-09-23). LocaleContext가 EN일 때 탭 제목을 이 값으로 바꿉니다.
+  other: { "naru:title-en": "Zero100 AI Builderthon, Singapore | NARU" },
   openGraph: {
     title: "Zero100 AI Builderthon",
     description: OG_DESCRIPTION,

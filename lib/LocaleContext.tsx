@@ -7,8 +7,10 @@ import {
   useEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
+import { usePathname } from "next/navigation";
 import type { Locale, Phrase } from "@/data/dictionary";
 
 // Lightweight i18n — no external library.
@@ -69,12 +71,24 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   // drives the pre-hydration /quiz shell. Both are already correct on arrival
   // (the layout's bootstrap script); this is what keeps them right after a
   // toggle, which never reloads the page.
+  //
+  // 탭 제목(DECIDED 2026-09-23, 첫 방문자 리뷰): 서버는 한국어 제목을 냅니다(SEO). 페이지가
+  // <meta name="naru:title-en">을 가지고 있으면 EN에서 탭 제목을 그 값으로 바꾸고, KR로 돌아오면
+  // 처음 읽은 한국어 제목으로 되돌립니다. 메타가 없는 페이지에서는 아무것도 하지 않습니다.
+  // pathname을 같이 보는 것은 클라이언트 이동으로 페이지가 바뀌어도 새 페이지의 값을 읽기 위해서입니다.
+  const koTitleRef = useRef<string | null>(null);
+  const pathname = usePathname();
   useEffect(() => {
     if (typeof document !== "undefined") {
       document.documentElement.lang = locale;
       document.documentElement.setAttribute("data-locale", locale);
+      const en = document.querySelector('meta[name="naru:title-en"]')?.getAttribute("content");
+      if (!en) return;
+      if (document.title !== en) koTitleRef.current = document.title;
+      if (locale === "en") document.title = en;
+      else if (koTitleRef.current) document.title = koTitleRef.current;
     }
-  }, [locale]);
+  }, [locale, pathname]);
 
   const setLocale = useCallback((l: Locale) => {
     setLocaleState(l);

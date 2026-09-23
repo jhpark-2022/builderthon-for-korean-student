@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import JourneyNav from "@/components/journey/JourneyNav";
 import BackgroundMount from "@/components/BackgroundMount";
 import NaruHome from "@/components/home/NaruHome";
 import { naruNav } from "@/data/naru";
 import { CrossingRegisterProvider } from "@/components/crossing/RegisterProvider";
+
+// EN 탭 제목(2026-09-23). 서버 제목(한국어, layout의 기본값)은 그대로이고, LocaleContext가
+// EN일 때 이 값으로 탭 제목을 바꿉니다.
+export const metadata: Metadata = {
+  other: { "naru:title-en": "Crossing Seoul 2026 | NARU" },
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 나루 런칭 홈 (/).
