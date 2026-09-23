@@ -548,7 +548,11 @@ export class BackgroundScene {
         W.edgeBright,
         W.innerBright,
         opacity,
-        portrait ? W.edgePx : W.edgePxLandscape,
+        // 2026-09-23 (서울 존재감 브리프 3.2): 가장자리 점 크기는 형상별입니다. morph 0이면
+        // 서울 값, 1이면 싱가포르 값. morph가 스크롤에서 나오므로 건너는 동안 끊기지 않습니다.
+        portrait
+          ? W.edgePxSeoul + (W.edgePx - W.edgePxSeoul) * morph
+          : W.edgePxLandscapeSeoul + (W.edgePxLandscape - W.edgePxLandscapeSeoul) * morph,
         portrait ? W.innerPx : W.innerPxLandscape
       );
       if (this.particles) this.particles.points.visible = opacity > 0.001;
