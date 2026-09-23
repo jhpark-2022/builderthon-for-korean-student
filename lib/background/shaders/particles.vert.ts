@@ -202,7 +202,9 @@ void crossingMain(){
   vEdge = aEdge;
   vShape = 1.0;
   // 밝기. 가장자리는 1.0에 윤곽을 따라 도는 파도(±uWave.y, 한 바퀴 uWave.x초), 속은 0.35.
-  float wave = 1.0 + uWave.y * sin(6.2831853 * (aPhase - uTime / uWave.x));
+  // DECIDED 2026-09-23 (서울 존재감 브리프 3.1): 파도의 골에 바닥 0.8. 마루는 그대로 두고
+  // 골만 올립니다. 진폭(config.ts waveAmp)이 바뀌어도 점이 골에서 사라지지 않습니다.
+  float wave = max(1.0 + uWave.y * sin(6.2831853 * (aPhase - uTime / uWave.x)), 0.8);
   vBright = mix(uInnerBright, uEdgeBright * wave, aEdge);
 
   vec4 mv = modelViewMatrix * vec4(pos, 1.0);

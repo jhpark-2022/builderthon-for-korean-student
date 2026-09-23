@@ -160,7 +160,11 @@ export const SHAPES = {
   edgeBright: 1.0,
   innerBright: 0.35,
   wavePeriod: 12,     // 초
-  waveAmp: 0.3,
+  // 2026-09-23 (서울 존재감 브리프 2.2): 0.3 → 0.12. ±30%는 밝기에 여유가 있을 때
+  // "살아 있는 선"이지만, 기준 밝기가 보일까 말까 한 자리면 파도의 골에서 점이
+  // 사라집니다. 스크롤을 고정해 놓고 잰 열 프레임 중 두 프레임에서만 서울이
+  // 읽혔습니다. 파도는 남기되 골이 바닥에 닿지 않게 합니다(particles.vert.ts의 0.8 바닥).
+  waveAmp: 0.12,
   breath: 0.3,        // 숨 진폭: crossing 브리프 값의 30%
   shapePoints: (tier: number): number => {
     if (!SHAPES_ENABLED) return 0;
