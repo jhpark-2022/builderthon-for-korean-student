@@ -273,14 +273,23 @@ export class BackgroundScene {
    * 바뀌어도 "8월의 기록에서 건넌다"가 유지되어야 하기 때문입니다. 시작·리사이즈·
    * 무대 ResizeObserver, 그리고 2초마다 다시 읽습니다(이미지가 늦게 실리는 경우).
    */
-  private heroEnd = 900; // water 변형의 서울 워터마크가 씁니다(히어로 section의 아래, 문서 px)
+  private heroEnd: number = CROSSING.fallbackAnchors.heroEnd; // water 변형: 히어로 section의 아래(문서 px)
+  // water 변형: 구간 1의 끝이자 구간 2의 시작(문서 px). #gains 상단, 없으면 #record 상단,
+  // 그것도 없으면 fallbackAnchors.crossEnd.
+  private gainsTop: number = CROSSING.fallbackAnchors.crossEnd;
   private naruTop = Infinity;
   private readAnchors() {
     if (this.variant === "water") {
+      const sy = window.scrollY;
+      const top = (id: string) => {
+        const el = document.getElementById(id);
+        return el ? el.getBoundingClientRect().top + sy : null;
+      };
       const hero = document.getElementById("top");
-      if (hero) this.heroEnd = hero.getBoundingClientRect().bottom + window.scrollY;
-      const naru = document.getElementById("naru");
-      if (naru) this.naruTop = naru.getBoundingClientRect().top + window.scrollY;
+      this.heroEnd = hero ? hero.getBoundingClientRect().bottom + sy : CROSSING.fallbackAnchors.heroEnd;
+      this.gainsTop = top("gains") ?? top("record") ?? CROSSING.fallbackAnchors.crossEnd;
+      const naru = top("naru");
+      if (naru !== null) this.naruTop = naru;
       return;
     }
     if (this.variant !== "crossing") return;
@@ -488,6 +497,19 @@ export class BackgroundScene {
       const c = clamp((this.scrollY - (morphStart + M.spanVh * vh)) / vh, 0, 1);
       const calm = ss(c);
       this.particles?.setMorph(morph);
+
+      // ── 구간 진행도 (2026-09-23, 한 시계 브리프 3.1) ──────────────────────────
+      // DECIDED 2026-09-23: 배경의 사건은 문서 비율(uScroll)이 아니라 챕터 앵커로 셉니다.
+      // 전에는 수면·해·나루 점·파문이 uScroll을, 서울 윤곽과 건넘이 앵커를 봐서, 카피가
+      // 늘면 uScroll 쪽 사건만 밀렸습니다(문서 11% 증가에 전부 11%씩 뒤로).
+      //   구간 1  #top 하단 → #gains 상단        해가 물에 들어가 나루 점이 됩니다
+      //   구간 2  #gains 상단 → #naru − startVh  서울 윤곽이 섭니다
+      //   구간 3  morph(위)                      서울이 싱가포르로 건넙니다
+      // 셋 다 선형 0..1입니다. 모양(완급)은 셰이더가 정합니다.
+      const s1End = Math.max(this.gainsTop, this.heroEnd + 1);
+      const s1 = clamp((this.scrollY - this.heroEnd) / (s1End - this.heroEnd), 0, 1);
+      const s2 = clamp((this.scrollY - s1End) / Math.max(morphStart - s1End, 1), 0, 1);
+      this.water.setStages(s1, s2, morph);
       // 히어로 하단이 뷰포트 상단을 지나면 revealVh에 걸쳐 떠오르고, 그 뒤로는 서 있습니다.
       // #naru부터 조금 더 어둡게.
       //

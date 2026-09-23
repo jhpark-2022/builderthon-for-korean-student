@@ -59,6 +59,10 @@ uniform vec2  uPointer;   // uv 좌표 (0..1). 화면 밖이면 uPointerOn이 0
 uniform float uPointerOn;
 uniform float uFlow;      // 스크롤 속도 0..1. 손을 떼면 서서히 0으로 잦아듭니다.
 uniform float uRingPhase; // BackgroundScene이 적분한 파문 위상(rad). uTime × uFlow의 곱을 대신합니다.
+// 구간 진행도 0..1 (2026-09-23). 챕터 앵커에서 셉니다(BackgroundScene).
+uniform float uStage1;    // #top 하단 → #gains 상단
+uniform float uStage2;    // #gains 상단 → #naru − 0.5화면
+uniform float uMorph;     // 서울 → 싱가포르
 uniform vec3  uSkyTop;
 uniform vec3  uSkyHorizon;
 uniform vec3  uDeep;

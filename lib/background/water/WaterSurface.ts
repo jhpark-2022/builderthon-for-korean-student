@@ -52,6 +52,12 @@ export class WaterSurface {
         // 셰이더에서 uTime × uFlow로 곱하던 것을 대신합니다. 곱셈이면 uFlow가 바뀔 때
         // 지나간 시간 전체가 곱해져 위상이 점프합니다.
         uRingPhase: { value: 0 },
+        // 구간 진행도 0..1 (2026-09-23, 한 시계 브리프). BackgroundScene이 챕터 앵커에서
+        // 계산합니다. uStage1: #top 하단 → #gains, uStage2: #gains → 건넘 시작,
+        // uMorph: 서울 → 싱가포르(ParticleField가 받는 값과 같습니다).
+        uStage1: { value: 0 },
+        uStage2: { value: 0 },
+        uMorph: { value: 0 },
         // 밤하늘 꼭대기. 남색보다 더 어둡게 떨어뜨립니다.
         uSkyTop: { value: new THREE.Color("#03050F") },
         // 지평선의 남색. 로고 가이드의 #12246B를 그대로 쓰면 화면 가운데가
@@ -125,6 +131,14 @@ export class WaterSurface {
   /** 파문의 위상(rad). BackgroundScene이 적분한 값입니다(2026-09-19). */
   setRingPhase(v: number) {
     this.material.uniforms.uRingPhase.value = v;
+  }
+
+  /** 구간 진행도(2026-09-23). 전부 0..1, 챕터 앵커에서 셉니다. */
+  setStages(stage1: number, stage2: number, morph: number) {
+    const u = this.material.uniforms;
+    u.uStage1.value = stage1;
+    u.uStage2.value = stage2;
+    u.uMorph.value = morph;
   }
 
   /** 띠 모드: 띠가 그려지는 x 범위(uv 0..1). 무대의 좌우. */
