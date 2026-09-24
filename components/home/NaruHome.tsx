@@ -402,7 +402,7 @@ export default function NaruHome() {
   //
   // 두 번의 결론이 같습니다. 이 히어로에는 스크롤 효과를 걸지 마세요. 세 번째
   // 안을 만들기 전에 사용자에게 먼저 물어보세요. 그동안의 값과 계측은
-  // docs/changelogs/changelog-september-20-2026-hero-recede-fix.md와
+  // CHANGELOG.md 2026-09-20 항목과
   // docs/hero-recede-fix-brief.md에 남아 있습니다. 되살릴 일이 생기면 거기서
   // 꺼내 쓰면 되고, 코드는 지웁니다. 쓰지 않는 코드가 남아 있으면 다음 사람이
   // "왜 안 걸려 있지"부터 묻게 됩니다.
