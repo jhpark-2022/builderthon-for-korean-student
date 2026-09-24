@@ -582,7 +582,7 @@ export class BackgroundScene {
       const want = (s4 - this.s4Eased) * Math.min(1, dt * 0.35);
       const cap = LIGHT_MAX_RATE * dt;
       this.s4Eased = this.reduced ? s4 : this.s4Eased + Math.max(-cap, Math.min(cap, want));
-      this.water.setStages(s1, s2, morph, this.s4Eased);
+      this.water.setStages(s1, s2, morph);
 
       // DECIDED 2026-09-19 (사용자): "모바일도 데스크톱과 같은 배경 효과였으면 좋겠다."
       // 세로 화면은 크기와 자리가 처음부터 끝까지 같습니다. calm으로 옮기지 않습니다
@@ -595,7 +595,18 @@ export class BackgroundScene {
       this.sweepA.set(-1, 0, 0).applyMatrix4(this.water.mesh.matrixWorld).project(this.cam.camera);
       this.sweepB.set(1, 0, 0).applyMatrix4(this.water.mesh.matrixWorld).project(this.cam.camera);
       const uvSpan = Math.abs(this.sweepB.x - this.sweepA.x) / 2 || 1;
-      this.water.setSweep((portrait ? LIGHT_SWEEP.portrait : LIGHT_SWEEP.landscape) / uvSpan);
+      // 점의 가로 이동(DECIDED 2026-09-24, 폰 빛 움직임 브리프 2.1~2.2). 셰이더에 있던 식
+      // sweep × sin(2π × smoothstep(0, 1, s4Eased))를 여기서 그대로 계산합니다. 화면 폭 대비 값을
+      // 위의 uvSpan으로 나눠 uv로 넘기는 것도 전과 같습니다.
+      const ss01 = (x: number) => { const c = clamp(x, 0, 1); return c * c * (3 - 2 * c); };
+      const sweep = portrait ? LIGHT_SWEEP.portrait : LIGHT_SWEEP.landscape;
+      const dxScreen = sweep * Math.sin(2 * Math.PI * ss01(this.s4Eased));
+      const lightDx = dxScreen / uvSpan;
+      this.water.setLightDx(lightDx);
+      if (process.env.NODE_ENV !== "production") {
+        // 개발 빌드에서만. 속도를 스크린숏이 아니라 값으로 재기 위해서입니다(브리프 4장).
+        (window as unknown as { __naruBg?: unknown }).__naruBg = { lightDx, dxScreen, uvSpan, s4Eased: this.s4Eased, t: performance.now() };
+      }
       let opacity: number;
       if (portrait) {
         opacity = shapeOpacity * W.portrait.heroBright * (1 - settle * (1 - S.singaporeBright));
