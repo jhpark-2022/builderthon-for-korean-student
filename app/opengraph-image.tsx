@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-export const alt = "CROSSING SEOUL, 10–14 Dec 2026. 나루 NARU, Korean student builders.";
+export const alt = "CROSSING SEOUL, 18–22 Dec 2026. 나루 NARU, Korean student builders.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -105,7 +105,7 @@ export default async function OpengraphImage() {
             CROSSING SEOUL
           </div>
           <div style={{ display: "flex", marginTop: 20, fontSize: 36, fontWeight: 700, color: "#C79BB4" }}>
-            10–14 Dec 2026&nbsp;&nbsp;·&nbsp;&nbsp;Seoul
+            18–22 Dec 2026&nbsp;&nbsp;·&nbsp;&nbsp;Seoul
           </div>
         </div>
 

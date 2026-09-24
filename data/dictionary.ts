@@ -3012,12 +3012,12 @@ export const dict = {
     cardLabel: { ko: "8일이 끝났습니다", en: "That's a wrap" },
     cardLines: [
       { ko: "8월 22일~29일 스물한 팀이 무대에 섰습니다", en: "22~29 Aug twenty-one teams took the stage" },
-      { ko: "나루의 다음 이벤트는 12월 10일 서울입니다", en: "NARU's next event is 10 December, Seoul" },
+      { ko: "나루의 다음 이벤트는 12월 18일 서울입니다", en: "NARU's next event is 18 December, Seoul" },
     ],
     cardCta: { ko: "마무리 보기", en: "See how it ended" },
     next: {
-      ko: "제로백 빌더톤은 여기서 끝났지만, 같은 코어를 잇는 나루의 다음 이벤트가 2026년 12월 10일 서울에서 시작합니다. 이번에는 국경과 상관없이 만나요. 나루 홈에서 자세히 볼 수 있어요. 소식은 오픈채팅에서 가장 먼저 전해 드려요.",
-      en: "The Zero100 builderthon ends here, but NARU's next event, carrying the same two cores, starts in Seoul on 10 December 2026. This time everyone meets there whichever country they study in. You can read more on the NARU home page. The open chat hears about it first.",
+      ko: "제로백 빌더톤은 여기서 끝났지만, 같은 코어를 잇는 나루의 다음 이벤트가 2026년 12월 18일 서울에서 시작합니다. 이번에는 국경과 상관없이 만나요. 나루 홈에서 자세히 볼 수 있어요. 소식은 오픈채팅에서 가장 먼저 전해 드려요.",
+      en: "The Zero100 builderthon ends here, but NARU's next event, carrying the same two cores, starts in Seoul on 18 December 2026. This time everyone meets there whichever country they study in. You can read more on the NARU home page. The open chat hears about it first.",
     },
   },
 
