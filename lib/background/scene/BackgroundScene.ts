@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { CROSSING, RING, SHAPES, SEOUL_WATERMARK, LIGHT_SWEEP, LIGHT_MAX_RATE, pickQuality, type QualityTier } from "../config";
+import { CROSSING, RING, SHAPES, SEOUL_WATERMARK, LIGHT_SWEEP, LIGHT_MAX_RATE, LIGHT_PORTRAIT, pickQuality, type QualityTier } from "../config";
 import { computeStageLayout, readStageRect, findStageElement, type StageLayout } from "../utils/shapeLayout";
 import { Renderer } from "../renderer/Renderer";
 import { CameraController } from "../camera/CameraController";
@@ -281,6 +281,10 @@ export class BackgroundScene {
   private joinTop = Infinity;
   // 구간 4 진행도를 부드럽게 따라가는 값(점의 가로 이동용). 휠의 계단을 지웁니다.
   private s4Eased = 0;
+  // 세로 화면의 빛(2026-09-24): 건너기 끝부터 센 바퀴 수를 부드럽게 따라가는 값.
+  private lapEased = 0;
+  // 지난 프레임이 세로였는가. 회전하면 두 값을 목표로 바로 맞춥니다. 첫 프레임은 null.
+  private lightPortrait: boolean | null = null;
   // 수면 평면의 두 끝을 화면에 투영할 때 쓰는 벡터(매 프레임 새로 만들지 않습니다).
   private readonly sweepA = new THREE.Vector3();
   private readonly sweepB = new THREE.Vector3();
@@ -599,13 +603,30 @@ export class BackgroundScene {
       // sweep × sin(2π × smoothstep(0, 1, s4Eased))를 여기서 그대로 계산합니다. 화면 폭 대비 값을
       // 위의 uvSpan으로 나눠 uv로 넘기는 것도 전과 같습니다.
       const ss01 = (x: number) => { const c = clamp(x, 0, 1); return c * c * (3 - 2 * c); };
-      const sweep = portrait ? LIGHT_SWEEP.portrait : LIGHT_SWEEP.landscape;
-      const dxScreen = sweep * Math.sin(2 * Math.PI * ss01(this.s4Eased));
+      // 폰을 돌리면(가로 ↔ 세로) 두 값을 목표로 바로 맞춥니다. 한 프레임 튀지만 회전 중이라 보이지 않습니다.
+      const lap = Math.max(0, (this.scrollY - morphEnd) / (LIGHT_PORTRAIT.lapVh * vh));
+      if (this.lightPortrait !== null && this.lightPortrait !== portrait) { this.s4Eased = s4; this.lapEased = lap; }
+      this.lightPortrait = portrait;
+      let dxScreen: number;
+      if (portrait) {
+        // DECIDED 2026-09-24 (폰 빛 움직임 브리프 2.3): 세로 화면은 문서 끝까지 한 바퀴가 아니라
+        // 2.6화면마다 한 바퀴(바퀴 수로 셉니다. 1에서 자르지 않고 문서 끝에서 자연히 멈춥니다).
+        // 따라가기는 가로와 같은 감쇠(초당 35%)에 상한은 초당 0.07바퀴. 도착 직후 튀지 않게 첫
+        // 1/4바퀴 동안 폭을 0에서 키웁니다(가로의 smoothstep과 같은 역할).
+        const wantP = (lap - this.lapEased) * Math.min(1, dt * 0.35);
+        const capP = LIGHT_PORTRAIT.maxRate * dt;
+        this.lapEased = this.reduced ? lap : this.lapEased + Math.max(-capP, Math.min(capP, wantP));
+        const ramp = ss01(this.lapEased / 0.25);
+        dxScreen = LIGHT_PORTRAIT.sweep * ramp * Math.sin(2 * Math.PI * this.lapEased);
+      } else {
+        // 가로 화면은 전과 같습니다(문서 끝까지 한 바퀴, smoothstep, LIGHT_MAX_RATE).
+        dxScreen = LIGHT_SWEEP.landscape * Math.sin(2 * Math.PI * ss01(this.s4Eased));
+      }
       const lightDx = dxScreen / uvSpan;
       this.water.setLightDx(lightDx);
       if (process.env.NODE_ENV !== "production") {
         // 개발 빌드에서만. 속도를 스크린숏이 아니라 값으로 재기 위해서입니다(브리프 4장).
-        (window as unknown as { __naruBg?: unknown }).__naruBg = { lightDx, dxScreen, uvSpan, s4Eased: this.s4Eased, t: performance.now() };
+        (window as unknown as { __naruBg?: unknown }).__naruBg = { lightDx, dxScreen, uvSpan, s4Eased: this.s4Eased, lapEased: this.lapEased, t: performance.now() };
       }
       let opacity: number;
       if (portrait) {

@@ -195,8 +195,21 @@ export const SHAPES = {
  * 최고 속도가 데스크톱 약 80px/s, 폰 약 28px/s를 넘지 않습니다.
  * 더 느리게는 0.03(한 바퀴 33초), 더 좁게는 0.08/0.10까지가 브리프가 적은 범위입니다.
  */
+// portrait 값은 2026-09-24부터 쓰지 않습니다(세로 화면은 아래 LIGHT_PORTRAIT). 되돌릴 때를 위해 둡니다.
 export const LIGHT_SWEEP = { landscape: 0.12, portrait: 0.15 } as const;
 export const LIGHT_MAX_RATE = 0.05;
+
+/**
+ * 세로 화면(폰)의 빛. DECIDED 2026-09-24 (사용자: "mobile view에서는 빛이 너무 안 움직임", 폰 빛
+ * 움직임 브리프). 실측: 폰에서 한 바퀴가 5.2화면, 폭 60px이라 읽는 속도에서 점이 초당 약 3px
+ * 움직였습니다. 화면 폭 대비 비율은 데스크톱과 같았지만 60px은 손가락 한 마디라 멈춰 보였습니다.
+ * 가로 화면(LIGHT_SWEEP.landscape, LIGHT_MAX_RATE)과 값을 나눕니다. 가로 화면은 그대로입니다.
+ */
+export const LIGHT_PORTRAIT = {
+  sweep: 0.26,    // 한쪽 폭(화면 폭 대비). 390px에서 약 100px. 싱가포르 세로 반폭 0.40 안쪽.
+  lapVh: 2.6,     // 한 바퀴에 필요한 스크롤(화면 높이 배). 문서 끝이 아니라 고정 길이라 폰에서 약 2바퀴.
+  maxRate: 0.07,  // 초당 바퀴 수 상한. 점의 최고 속도가 약 45px/s.
+} as const;
 
 export const RING = {
   baseRate: 0.5,
