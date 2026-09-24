@@ -8,6 +8,7 @@
 
 ### 2026-09
 
+- [2026-09-24 크로싱 서울 일정을 12월 18~22일로](#2026-09-24-crossing-dates)
 - [2026-09-24 폰에서 싱가포르의 빛이 보이게](#changelog-september-24-2026-background-portrait-light-motion)
 - [2026-09-23 보안 정리](#changelog-september-23-2026-security)
 - [2026-09-23 싱가포르 빛의 폭과 속도 상한](#changelog-september-23-2026-background-singapore-light-speed)
@@ -115,6 +116,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-09-24-crossing-dates"></a>
+## 2026-09-24 크로싱 서울 일정을 12월 18~22일로
+- 범위: `lib/naruDates.ts`, `app/layout.tsx`(메타 설명, 공유 카드 제목), `app/opengraph-image.tsx`, `data/dictionary.ts`(/2026-08 마무리 두 줄)
+- 한 것: 시작일 12/10 → 12/18(금), 종료일 12/14 → 12/22(화). 학교 기말고사가 12/14~18에 몰리고 시험 일정과 조금이라도 겹치면 참여가 급감한다는 경험칙에 따라 옮겼습니다(DECIDED 2026-09-24, 사용자).
+  18일에 어젠다(Day 0), 19~20일 주말에 실질 활동, 21~22일 마무리. Day 0~4 구성은 그대로이고 날짜만 8일 뒤로. 날짜 카드와 카운트다운은 `naruDates`에서 셉니다.
+- 검증: 홈 날짜 줄 "2026년 12월 18일부터 22일까지, 서울.", 데이 카드 12.18 금 ~ 12.22 화, 카운트다운 12/18 0시(KST, SGT) 기준, `/2026-08`에 "12월 10일" 0건.
+- 커밋: 5a95a25
 
 <a id="changelog-september-24-2026-background-portrait-light-motion"></a>
 ## 2026-09-24 폰에서 싱가포르의 빛이 보이게
