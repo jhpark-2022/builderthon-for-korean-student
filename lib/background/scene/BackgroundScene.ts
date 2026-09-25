@@ -548,8 +548,8 @@ export class BackgroundScene {
       // 구간 2 진행. 셰이더가 uStage2로 나루 점을 화면 가운데로 올립니다(my).
       // 구간 1 끝부터 건너기 시작까지로 다시 정의합니다.
       const s2 = clamp((this.scrollY - descendEnd) / Math.max(morphStart - descendEnd, 1), 0, 1);
-      // 구간 3. #gains를 읽는 동안 건너고, #naru 상단이 화면에 들어올 때는 이미 싱가포르입니다
-      // (2026-09-26, config의 morph 주석). 위로 스크롤하면 같은 길로 돌아옵니다.
+      // 구간 3. #december 끝과 #gains 위쪽에서 건너고, #naru 상단이 화면 아래 끝에 닿을 때
+      // 끝납니다(2026-09-26 2차, config의 morph 주석). 위로 스크롤하면 같은 길로 돌아옵니다.
       const morph = ss(clamp((this.scrollY - morphStart) / (S.morph.spanVh * vh), 0, 1));
       this.particles?.setMorph(morph);
 
