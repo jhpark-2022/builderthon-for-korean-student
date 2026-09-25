@@ -513,6 +513,12 @@ export const naru = {
       ko: "이벤트는 나루가 학생회와 기업을 잇는 지금의 방식입니다. 방식은 바뀝니다. 바뀌지 않는 것은 아래 두 개입니다.",
       en: "An event is how NARU connects associations and companies for now. Methods change. The two things below do not.",
     },
+    // DECIDED 2026-09-25 (가독성 브리프 5, 사용자 승인): 추상적인 문장 옆의 구체적인 한 줄.
+    // 화면에 이미 있는 사실만 씁니다. 출처: group.lead, record.lead.
+    concrete: {
+      ko: "나루는 학생회와 기업을 이어 이벤트를 엽니다. 첫 이벤트는 2026년 8월 싱가포르의 제로백 빌더톤이었습니다.",
+      en: "NARU connects student associations and companies and runs events. The first was the Zero100 builderthon in Singapore, August 2026.",
+    },
   },
 
   why: {
@@ -622,6 +628,12 @@ export const naru = {
       ko: "문턱이 낮아야 커지고, 롤모델이 있어야 자랍니다.",
       en: "A low doorway is what makes it grow. Role models are what make it grow up.",
     },
+    // DECIDED 2026-09-25 (가독성 브리프 5, 사용자 승인): 추상적인 문장 옆의 구체적인 한 줄.
+    // 화면에 이미 있는 사실만 씁니다. 출처: 코어 01 "스크리닝이 없고", group.name "건너간 사람이 다시 돌아와 서는 자리".
+    noteConcrete: {
+      ko: "문턱은 스크리닝 없는 참가이고, 롤모델은 건너간 뒤 다시 돌아와 서는 사람입니다.",
+      en: "The low doorway is entry with no screening. The role models are the people who crossed and came back to stand here.",
+    },
     noteBody: {
       ko: "둘 중 하나만 있으면 친목 모임이거나 소수의 클럽이 됩니다. 둘을 동시에 지키는 것이 이 그룹이 하는 일이고, 부딪힐 때 어느 쪽으로 기울일지 매번 판단하는 것이 실력입니다.",
       en: "With only one, you end up a social circle or a small elite club. Holding both is this group's work, and leaning the right way when they collide is the skill.",
@@ -644,6 +656,12 @@ export const naru = {
   gains: {
     eyebrow: { ko: "참가 혜택", en: "What you get" },
     heading: { ko: "오면 무엇이 남는가", en: "What you leave with" },
+    // DECIDED 2026-09-25 (가독성 브리프 5, 사용자 승인): 추상적인 문장 옆의 구체적인 한 줄.
+    // 화면에 이미 있는 사실만 씁니다. 출처: 감사 명단 "마지막 날 앞에 선 21팀", items[2].
+    concrete: {
+      ko: "8월에는 21팀이 마지막 날 문제를 낸 회사 앞에서 발표했습니다.",
+      en: "In August, 21 teams presented to the company that set their problem, on the last day.",
+    },
     // DECIDED 2026-09-19 (얻는 것 브리프): 제목만 두던 것을 되돌립니다. 제목 +
     // 한 줄 설명. 설명은 "무엇인가"만 말하고 "어떻게 운영하는가"는 말하지
     // 않습니다. 후자는 아직 정해지지 않았고, note가 그렇게 적혀 있습니다.
@@ -1449,6 +1467,13 @@ export const naru = {
     // 전부 초안입니다. draftNote가 이 챕터에 붙어 있어야 합니다.
     programEyebrow: { ko: "프로그램", en: "Programme" },
     programHeading: { ko: "데이터에서 증명까지, 닷새", en: "From data to proof, in five days" },
+    // DECIDED 2026-09-25 (가독성 브리프 5, 사용자 승인): 추상적인 문장 옆의 구체적인 한 줄.
+    // 화면에 이미 있는 사실만 씁니다. {date}는 naruDates의 formatDecemberDateLine으로 채웁니다(날짜를
+    // 여기 쓰지 않는 규칙). 출처: Day 0 데이터 공개, Day 1 줄, #gains 03.
+    programConcrete: {
+      ko: "{date} 기업이 연 데이터에서 문제를 찾고, 마지막 날 그 기업 앞에서 발표합니다.",
+      en: "{date} You find the problem in the data a company opens, and on the last day you present to that company.",
+    },
     reasonsLabel: { ko: "왜 서울인가", en: "Why Seoul" },
     reasons: [
       {
@@ -2062,6 +2087,12 @@ export const naru = {
     closingStatement: {
       ko: "절박하지 않아도 시작할 수 있도록.",
       en: "So you can start before you have to.",
+    },
+    // DECIDED 2026-09-25 (가독성 브리프 5, 사용자 승인): 추상적인 문장 옆의 구체적인 한 줄.
+    // 화면에 이미 있는 사실만 씁니다. {name}은 naruDates의 decemberEventLabel. 출처: december.ctaNote.
+    closingConcrete: {
+      ko: "{name}은 스크리닝 없이, 오는 사람이 참가자입니다.",
+      en: "{name} has no screening. If you come, you are in.",
     },
     closingBody: [
       {

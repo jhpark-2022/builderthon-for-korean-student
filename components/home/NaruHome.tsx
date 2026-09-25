@@ -613,7 +613,13 @@ export default function NaruHome() {
             이미 쓰던 규칙(감사 반영 브리프 6.1)인데 #december와 #join에는 적용되지
             않았습니다. 336px 폭에 한글 18자/줄이면 서너 줄 문단이 양쪽 들쭉날쭉한
             마름모로 서고, 눈이 줄마다 시작점을 다시 찾아야 합니다. */}
+        {/* DECIDED 2026-09-25 (가독성 브리프 5, 사용자 승인): 제목 옆의 구체적인 한 줄. 날짜는
+            naruDates에서. 이 줄이 챕터 머리의 문단 하나라 가운데이고, 아래 shapeLead는 본문
+            축으로 내려갑니다(가독성 브리프 4.1: 머리는 h2 바로 아래 문단 하나). 문장은 그대로. */}
         <p className="mx-auto mt-6 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75 lg:text-center">
+          {t(naru.december.programConcrete).replace("{date}", formatDecemberDateLine(locale))}
+        </p>
+        <p className={`${BODY_AXIS} mt-6 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75`}>
           {t(naru.december.shapeLead)}
         </p>
         <p className={`${BODY_AXIS} mt-3 max-w-2xl break-keep text-left text-sm leading-relaxed text-white/55`}>
@@ -997,6 +1003,10 @@ export default function NaruHome() {
         <ReadingPlate />
         <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.gains.eyebrow)}</Eyebrow>
         <h2 id="gains-title" className={H2}><Halo tone="violet">{t(naru.gains.heading)}</Halo></h2>
+        {/* 제목 옆의 구체적인 한 줄(가독성 브리프 5, 2026-09-25 사용자 승인). 챕터 머리의 문단. */}
+        <p className="mx-auto mt-6 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75 lg:text-center">
+          {t(naru.gains.concrete)}
+        </p>
         {/* DECIDED 2026-09-20 (표현 방식 브리프 3장): 카드 다섯 → 행 다섯.
             한 행에 36~51자를 담으려고 248×307 카드를 쓰고 있었습니다. 테두리와
             23px 여백이 글자보다 존재감이 컸습니다. 데스크톱도 모바일과 같은 구조로,
@@ -1079,6 +1089,12 @@ export default function NaruHome() {
             본문보다 한 단 작고 한 단 어둡습니다. 주석이지 주장이 아닙니다. */}
         <p className="mx-auto mt-5 max-w-xl break-keep text-left text-sm leading-relaxed text-white/55 lg:text-center">
           {t(naru.group.name)}
+        </p>
+        {/* 태그라인 옆의 구체적인 한 줄(가독성 브리프 5, 2026-09-25 사용자 승인). 이름 풀이 다음,
+            리드 앞입니다. 머리 문단은 이름 풀이 하나라 이 줄은 본문 축에 섭니다. 리드의 첫
+            문장과 뜻이 겹치는 것은 알고 둔 것입니다(사용자: 표의 제안대로). */}
+        <p className={`${BODY_AXIS} mt-6 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75`}>
+          {t(naru.group.concrete)}
         </p>
         {/* 폰에서 3줄을 넘는 문단은 왼쪽 정렬(감사 반영 브리프 6.1). 데스크톱은 가운데 그대로. */}
         <p className={`${BODY_AXIS} mt-6 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75`}>
@@ -1209,6 +1225,8 @@ export default function NaruHome() {
           <p className="max-w-3xl break-keep text-left text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl">
             {t(naru.why.note)}
           </p>
+          {/* 경첩 옆의 구체적인 한 줄(가독성 브리프 5, 2026-09-25 사용자 승인). 폰에서도 보입니다. */}
+          <p className="mt-3 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75">{t(naru.why.noteConcrete)}</p>
           {/* 폰에서는 경첩의 부연을 접습니다(나루 챕터 길이 목표 2,200). 굵은 한 문장만. */}
           <p className="mt-6 hidden max-w-2xl break-keep text-left text-base leading-relaxed text-white/70 lg:block">
             {t(naru.why.noteBody)}
@@ -1232,8 +1250,10 @@ export default function NaruHome() {
           {/* "세 층"은 챕터 라벨이 아니라 챕터 안 소제목입니다(가독성 브리프 4.2의 표). 알약을 벗습니다. */}
           <p data-subheading className={SUBHEADING}>{t(naru.how.eyebrow)}</p>
           <h3 className={`${H3} mt-2`}>{t(naru.how.heading)}</h3>
-        {/* 폰에서는 리드를 접습니다. 다이어그램과 그 아래 한 줄("서로 직접 만나지 않습니다")이 같은 말을 합니다. */}
-        <p className="mt-6 hidden max-w-2xl break-keep text-left text-base leading-relaxed text-white/75 lg:block">
+        {/* 2026-09-25 (가독성 브리프 5 표의 4행, 사용자 승인): 폰에서도 리드를 보입니다. 새 줄을
+            붙이는 대신 "누가 무엇을 내는가"를 이미 말하는 이 문장을 폰에서 접지 않습니다.
+            그 전에는 폰에서 접었습니다(다이어그램과 아래 한 줄이 같은 말을 한다는 이유). */}
+        <p className="mt-6 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75">
           {t(naru.how.lead)}
         </p>
 
@@ -1353,6 +1373,8 @@ export default function NaruHome() {
             결핍이고, 이 두 문단이 그래서 무엇을 앞당겨 두는지입니다. */}
         <Reveal className={`${BODY_AXIS} mt-12 max-w-3xl text-left`}>
           <p className={STATEMENT}>{t(naru.join.closingStatement)}</p>
+          {/* 닫는 문장 옆의 구체적인 한 줄(가독성 브리프 5, 2026-09-25 사용자 승인). 이름은 naruDates. */}
+          <p className="mt-3 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75">{t(naru.join.closingConcrete).replace("{name}", decemberEventLabel(locale))}</p>
           <div className="mt-5 max-w-2xl space-y-3 break-keep text-sm leading-relaxed text-white/70">
             {naru.join.closingBody.map((line, i) => (
               <p key={i}>{t(line)}</p>
