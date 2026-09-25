@@ -279,6 +279,8 @@ export class BackgroundScene {
   private naruTop = Infinity;
   // water 변형: #join 상단(문서 px). 없는 페이지에서는 Infinity라 구간 5(형상 거두기)가 오지 않습니다.
   private joinTop = Infinity;
+  // 푸터(#closing) 상단. 문서 끝에서 빛을 거두는 기준(2026-09-26). 없으면 Infinity라 거두지 않습니다.
+  private closingTop = Infinity;
   // 구간 4 진행도를 부드럽게 따라가는 값(점의 가로 이동용). 휠의 계단을 지웁니다.
   private s4Eased = 0;
   // 세로 화면의 빛(2026-09-24): 건너기 끝부터 센 바퀴 수를 부드럽게 따라가는 값.
@@ -301,6 +303,8 @@ export class BackgroundScene {
       if (naru !== null) this.naruTop = naru;
       const join = top("join");
       if (join !== null) this.joinTop = join;
+      const closing = top("closing");
+      if (closing !== null) this.closingTop = closing;
       this.warnShortSeoul();
       return;
     }
@@ -587,6 +591,13 @@ export class BackgroundScene {
       const cap = LIGHT_MAX_RATE * dt;
       this.s4Eased = this.reduced ? s4 : this.s4Eased + Math.max(-cap, Math.min(cap, want));
       this.water.setStages(s1, s2, morph);
+      // 구간 6 (DECIDED 2026-09-26, 사용자: 맨 아래에서는 빛과 배경 효과가 보이지 않게).
+      // 푸터 상단이 화면 아래 끝에 들어오는 순간부터 0.4화면 동안 깊은 물의 빛(나루 점, 번짐,
+      // 파문, 물살)을 0으로 거둡니다. 푸터가 짧아 문서 끝이 먼저 오면 그 끝에서 다 거둬지게
+      // 길이를 줄입니다. 형상은 이미 구간 5에서 거둬져 있습니다.
+      const endStart = this.closingTop - vh;
+      const endSpan = Math.max(Math.min(0.4 * vh, docEnd - endStart), 1);
+      this.water.setEnd(ss(clamp((this.scrollY - endStart) / endSpan, 0, 1)));
 
       // DECIDED 2026-09-19 (사용자): "모바일도 데스크톱과 같은 배경 효과였으면 좋겠다."
       // 세로 화면은 크기와 자리가 처음부터 끝까지 같습니다. calm으로 옮기지 않습니다

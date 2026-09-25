@@ -68,6 +68,7 @@ uniform float uStage1;    // #top 하단 → #gains 상단
 uniform float uStage2;    // #gains 상단 → #naru − 0.5화면
 uniform float uLightDx;   // 구간 4에서 점의 가로 이동(uv). BackgroundScene이 계산합니다(2026-09-24).
 uniform float uMorph;     // 서울 → 싱가포르
+uniform float uEnd;       // 문서 끝(푸터가 들어올 때) 0 → 1. 깊은 물의 빛을 모두 거둡니다(2026-09-26).
 uniform vec3  uSkyTop;
 uniform vec3  uSkyHorizon;
 uniform vec3  uDeep;
@@ -301,7 +302,12 @@ void main(){
   // 있습니다. 가운데에 두면 본문 한가운데에 주황 점이 박힙니다.
   // 2026-09-23: smoothstep(0.16, 0.48, uScroll) → uStage1. 수면이 가라앉는 만큼 깊은 물이
   // 받습니다(sink와 같은 값). 점은 dotAlive, 같은 값입니다.
-  float deep = uStage1;
+  // DECIDED 2026-09-26 (사용자: "맨 아래에서는 빛 효과나 배경 효과가 안 보이게"): 푸터가
+  // 화면에 들어오면 깊은 물 층 전체(물살, 파문, 나루 점과 그 번짐)를 uEnd만큼 거둡니다.
+  // 남는 것은 하늘 그라데이션과 비네트뿐입니다. 스크롤로만 정해지는 값이라 위로 올리면
+  // 같은 길로 돌아옵니다.
+  float endK = 1.0 - uEnd;
+  float deep = uStage1 * endK;
   if (deep > 0.001) {
     // 물살. 위에서 아래로 흐릅니다. uScroll이 들어 있어서 모션 민감 설정으로
     // uTime이 멈춰도 스크롤하면 흐릅니다 - 그건 자동으로 시작되는 움직임이
@@ -391,7 +397,7 @@ void main(){
     // 로고 한가운데의 점이 더 이상 눈에 띄지 않습니다(파일 머리의 색 규칙).
     // 심(0.009)은 K로 나누지 않습니다. 폰에서 이미 10px 안쪽이고 줄이면 사라집니다.
     // 2026-09-23: deep이 아니라 dotAlive(해와 합이 1)로 켭니다.
-    col += uLamp * (exp(-rr / 0.009) * 0.42 + exp(-rr / (0.10 / K)) * 0.055) * dotAlive;
+    col += uLamp * (exp(-rr / 0.009) * 0.42 + exp(-rr / (0.10 / K)) * 0.055) * dotAlive * endK;
   }
 
   // 가장자리를 떨어뜨려 본문이 앉는 가운데를 비웁니다.
