@@ -592,10 +592,12 @@ export class BackgroundScene {
       this.s4Eased = this.reduced ? s4 : this.s4Eased + Math.max(-cap, Math.min(cap, want));
       this.water.setStages(s1, s2, morph);
       // 구간 6 (DECIDED 2026-09-26, 사용자: 맨 아래에서는 빛과 배경 효과가 보이지 않게).
-      // 푸터 상단이 화면 아래 끝에 들어오는 순간부터 0.4화면 동안 깊은 물의 빛(나루 점, 번짐,
-      // 파문, 물살)을 0으로 거둡니다. 푸터가 짧아 문서 끝이 먼저 오면 그 끝에서 다 거둬지게
-      // 길이를 줄입니다. 형상은 이미 구간 5에서 거둬져 있습니다.
-      const endStart = this.closingTop - vh;
+      // 깊은 물의 빛(나루 점, 번짐, 파문, 물살)을 푸터가 화면에 들어오기 **전에** 다 거둡니다.
+      // 푸터 상단이 화면 아래 끝보다 0.4화면 아래에 있을 때 시작해, 화면 아래 끝에 닿을 때 0.
+      // 처음에는 푸터가 들어온 뒤에 시작했는데, 폰에서 그 직전 화면(매니페스토 블록)에 점이
+      // 반쯤 남았습니다. 사용자가 짚은 "맨 아래"는 그 블록까지입니다. 문서 끝이 먼저 오면
+      // 그 끝에서 다 거둬지게 길이를 줄입니다. 형상은 이미 구간 5에서 거둬져 있습니다.
+      const endStart = this.closingTop - 1.4 * vh;
       const endSpan = Math.max(Math.min(0.4 * vh, docEnd - endStart), 1);
       this.water.setEnd(ss(clamp((this.scrollY - endStart) / endSpan, 0, 1)));
 
