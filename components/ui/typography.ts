@@ -36,9 +36,13 @@
  * 써서 한 줄이 1,000px을 넘었습니다. 그 아래 lead는 756px입니다. globals.css가
  * heading에 text-wrap: balance를 걸어 두었으니 폭만 주면 균형 잡힌 두 줄로
  * 떨어집니다.
+ *
+ * 2026-09-26 (한 축 브리프, 사용자: "h2도 맞게"): max-w-[52rem] → max-w-3xl. 챕터 제목도
+ * 본문과 같은 READ 기둥(NaruHome.tsx의 READ, 864px) 안에 섭니다. 폭 종류는 READ와 WIDE
+ * 둘뿐이라는 규칙에서 제목만 세 번째 폭(936px)이었습니다. 이 토큰은 홈에서만 씁니다.
  */
 export const H2 =
-  "mx-auto max-w-[52rem] text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white";
+  "mx-auto w-full max-w-3xl text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white";
 
 /**
  * 챕터 안의 하위 블록 제목.
