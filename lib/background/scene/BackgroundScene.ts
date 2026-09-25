@@ -544,8 +544,8 @@ export class BackgroundScene {
       // 구간 2 진행. 셰이더가 uStage2로 나루 점을 화면 가운데로 올립니다(my).
       // 구간 1 끝부터 건너기 시작까지로 다시 정의합니다.
       const s2 = clamp((this.scrollY - descendEnd) / Math.max(morphStart - descendEnd, 1), 0, 1);
-      // 구간 3. #naru 제목("건너는 건 각자가 한다")이 건너기의 70% 지점에 옵니다.
-      // 위로 스크롤하면 같은 길로 돌아옵니다.
+      // 구간 3. #gains를 읽는 동안 건너고, #naru 상단이 화면에 들어올 때는 이미 싱가포르입니다
+      // (2026-09-26, config의 morph 주석). 위로 스크롤하면 같은 길로 돌아옵니다.
       const morph = ss(clamp((this.scrollY - morphStart) / (S.morph.spanVh * vh), 0, 1));
       this.particles?.setMorph(morph);
 
