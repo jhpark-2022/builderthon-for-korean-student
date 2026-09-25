@@ -478,6 +478,8 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
 }
+/* READ 기둥(max-w-3xl = 48rem)만 있는 챕터의 판(2026-09-26, 한 축 브리프). 폭만 다릅니다. */
+.reading-plate--read { width: calc(min(100%, 48rem) + 64px); }
 @media (max-width: 639px) {
   .reading-plate {
     top: -40px;
