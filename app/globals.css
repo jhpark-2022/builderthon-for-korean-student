@@ -435,3 +435,85 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
 .naru-min12 :is([class*="text-[0.42rem]"], [class*="text-[0.58rem]"], [class*="text-[0.6rem]"], [class*="text-[0.62rem]"], [class*="text-[0.65rem]"], [class*="text-[0.66rem]"]):not([aria-hidden]) {
   font-size: 0.68rem;
 }
+
+/* ── 읽기 판 (DECIDED 2026-09-25, 가독성 브리프 2) ────────────────────────────
+   카드가 아니라 배경을 가라앉히는 막입니다. 테두리도 모서리 반경도 없고, 네
+   가장자리가 부드럽게 사라집니다. 홈의 네 챕터(#december, #gains, #naru, #join)
+   본문 기둥 뒤에 하나씩, 판 안에 판을 두지 않습니다. 쓰는 곳은 NaruHome.tsx의
+   ReadingPlate 하나뿐입니다.
+
+   흐림(blur)이 요점입니다. 글자 크기의 점 잡음은 지우고, 형상의 빛과 색과
+   움직임은 남깁니다. 투명도만 올리면 배경이 꺼지고, 흐림만 주면 밝은 점이 번져
+   남습니다. 둘을 같이 씁니다.
+
+   폭은 본문 기둥(max-w-5xl = 64rem)에 양옆 32px. 챕터 레일(max-w-6xl)이 아니라
+   가장 넓은 본문 블록이 기준입니다. 레일에 맞추면 1440에서 판이 화면을 거의
+   다 덮습니다.
+
+   폰(639px 이하)은 판이 화면 폭 전체입니다(레일 여백 1.5rem만큼 밖으로). 양옆
+   경계가 화면 끝이라 가로 마스크는 쓰지 않습니다. 가로 마스크를 남기면 판의
+   양 끝 40px이 옅어지는데, 그 자리가 바로 글자가 시작하는 곳입니다.
+
+   z-index: -1은 Chapter의 리빌 div(transform이 있어 쌓임 맥락이자 기준 상자)
+   안에서 글 뒤로 갑니다. 그 div는 opacity가 1인 동안 backdrop root가 아니라서
+   흐림이 배경 캔버스까지 닿습니다. */
+.reading-plate {
+  position: absolute;
+  top: -48px;
+  bottom: -48px;
+  left: 50%;
+  width: calc(min(100%, 64rem) + 64px);
+  transform: translateX(-50%);
+  z-index: -1;
+  pointer-events: none;
+  background: rgba(7, 11, 31, 0.62);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  -webkit-mask-image:
+    linear-gradient(to bottom, transparent, #000 64px, #000 calc(100% - 64px), transparent),
+    linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent);
+  mask-image:
+    linear-gradient(to bottom, transparent, #000 64px, #000 calc(100% - 64px), transparent),
+    linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+@media (max-width: 639px) {
+  .reading-plate {
+    top: -40px;
+    bottom: -40px;
+    left: -1.5rem;
+    right: -1.5rem;
+    width: auto;
+    transform: none;
+    background: rgba(7, 11, 31, 0.55);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 64px, #000 calc(100% - 64px), transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 64px, #000 calc(100% - 64px), transparent);
+  }
+}
+/* 가장 약한 기기(NaruHome이 deviceMemory 4GB 이하에서 html[data-plate="lite"]를 겁니다.
+   pickQuality가 최저 단으로 떨어뜨리는 조건 중 폼 팩터가 아니라 기기 성능인 것이
+   이것 하나입니다). 움직이는 캔버스 위의 backdrop-filter가 비싸서 흐림을 빼고
+   불투명도로만 가라앉힙니다. */
+:root[data-plate="lite"] .reading-plate {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: rgba(7, 11, 31, 0.8);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .reading-plate { background: rgba(7, 11, 31, 0.82); }
+}
+/* 모션 민감(가독성 브리프 7, 검증 8): 배경이 멈추더라도 점은 남으니 판을 불투명에
+   가깝게 세웁니다. 투명도 줄이기는 흐림까지 뺍니다. 뒤에 오는 쪽이 이깁니다. */
+@media (prefers-reduced-motion: reduce) {
+  .reading-plate, :root[data-plate="lite"] .reading-plate { background: rgba(7, 11, 31, 0.85); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .reading-plate, :root[data-plate="lite"] .reading-plate {
+    background: rgba(7, 11, 31, 0.9);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

@@ -179,6 +179,16 @@ function Card({ children, className = "", id }: { children: React.ReactNode; cla
   );
 }
 
+// DECIDED 2026-09-25 (가독성 브리프 2): 읽기 판. 카드가 아니라 배경을 가라앉히는 막입니다.
+// 흐림(blur)이 요점입니다. 글자 크기의 점 잡음은 지우고, 형상의 빛과 색과 움직임은 남깁니다.
+// 투명도만 올리면 배경이 꺼지고, 흐림만 주면 밝은 점이 번져 남습니다. 둘을 같이 씁니다.
+// 위 "상자를 쓰는 자리 셋"과 충돌하지 않습니다. 그 규칙은 내용을 담는 상자이고, 이 판은
+// 보이는 모양이 없습니다. 챕터마다 본문 기둥 뒤에 하나(#december, #gains, #naru, #join),
+// 판 안에 판을 두지 않고 히어로와 푸터에는 두지 않습니다. 값은 app/globals.css의 .reading-plate.
+function ReadingPlate() {
+  return <div aria-hidden className="reading-plate" />;
+}
+
 // 문장 안의 한 구절을 앵커로. notSequel의 "변하지 않는 두 개"가 #why로 갑니다.
 // 구절이 문장에 없으면(번역이 어긋나면) 링크 없이 문장만 그립니다. 깨진 링크보다
 // 링크 없는 문장이 낫습니다.
@@ -413,6 +423,13 @@ export default function NaruHome() {
   // 2026-09-20 (표현 방식 브리프 4): openDay(폰 Day 카드 아코디언)는 카드와 함께
   // 사라졌습니다. 행은 처음부터 전부 펼쳐져 있어 접었다 펼 것이 없습니다.
   const [hoverDay, setHoverDay] = useState<number | null>(null);
+  // 가장 약한 기기에서는 읽기 판의 흐림을 뺍니다(가독성 브리프 2.3). pickQuality가 최저 단으로
+  // 보내는 조건 셋(coarse, 폭 768 미만, 메모리 4GB 이하) 중 기기 성능을 말하는 것은 메모리
+  // 하나입니다. 나머지 둘로 가르면 모든 폰에서 흐림이 빠지고, 폰 판(blur 4px)이 뜻을 잃습니다.
+  useEffect(() => {
+    const mem = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8;
+    if (mem <= 4) document.documentElement.dataset.plate = "lite";
+  }, []);
 
   return (
     <>
@@ -560,6 +577,7 @@ export default function NaruHome() {
           5차 그대로이고 바뀐 것은 보이는 문법입니다. */}
       <Chapter id="december" labelledBy="december-title" align="center" className={BAND_TINT}>
         <BandFades />
+        <ReadingPlate />
         {/* 2026-09-18 (감사 반영 브리프 8): 아이브로는 보라 외곽선 1종. 주황 글자·주황 발광을 뺐습니다. */}
         <Eyebrow color="purple">
           {`${t(naru.december.eyebrowPrefix)}\u2002${decemberEventLabel(locale)}`}
@@ -944,6 +962,7 @@ export default function NaruHome() {
           그리드), 폰은 두 열 + 마지막 한 장 전폭. 아래 한 줄이 "왜 제목뿐인가"의 답.
           8월 참가 혜택 필과 같은 emerald. 기본 이음매. */}
       <Chapter id="gains" labelledBy="gains-title" align="center">
+        <ReadingPlate />
         <Eyebrow color="purple">{t(naru.gains.eyebrow)}</Eyebrow>
         <h2 id="gains-title" className={H2}><Halo tone="violet">{t(naru.gains.heading)}</Halo></h2>
         {/* DECIDED 2026-09-20 (표현 방식 브리프 3장): 카드 다섯 → 행 다섯.
@@ -1000,6 +1019,7 @@ export default function NaruHome() {
           exec와 measure는 #december의 멘토링 블록으로 갔습니다. 이벤트의
           실행에 관한 문장이라서요. 여기 남은 것은 코어 둘, 경첩, 마지막 줄. */}
       <Chapter id="naru" labelledBy="naru-title" align="center" className="pt-20 sm:pt-28 lg:pt-36">
+        <ReadingPlate />
         <Image
           src="/naru/naru-master-rev.png"
           alt={t(naru.hero.logoAlt)}
@@ -1241,6 +1261,7 @@ export default function NaruHome() {
           그 순서면 앞의 모든 것이 이 문단의 근거가 됩니다. 앞에 놓으면 근거 없이
           주장부터 하게 됩니다. */}
       <Chapter id="join" labelledBy="join-title" align="center">
+        <ReadingPlate />
         <Eyebrow color="purple">{t(naru.join.eyebrow)}</Eyebrow>
         <h2 id="join-title" className={H2}><Halo tone="violet">{t(naru.join.heading)}</Halo></h2>
         <p className="mx-auto mt-6 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75 lg:text-center">
