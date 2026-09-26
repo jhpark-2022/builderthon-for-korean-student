@@ -672,14 +672,17 @@ export default function NaruHome() {
             2026-09-19 (모바일 감사 17): 구분선 mx-5 → mx-3. 390px에서 칸 하나가
             145px뿐이라 영어 라벨("Four working days, data opens before")이 세 줄로
             접혔습니다. 자간도 폰에서 낮춥니다. 두 칸의 줄 수가 달라 숫자 아래가
-            비대칭으로 보이던 자리입니다. */}
-        <dl className={`${READ} mt-5 flex items-stretch justify-start`}>
+            비대칭으로 보이던 자리입니다.
+
+            DECIDED 2026-09-26 (사용자: "중간에 있어야지"): 이 줄만 가운데. 글이 아니라 한눈에 보는
+            요약이라 본문의 왼쪽 정렬 규칙(9월 25일, 26일)의 예외입니다. 칸 안의 숫자와 라벨도 가운데. */}
+        <dl className={`${READ} mt-5 flex items-stretch justify-center`}>
           {[naru.december.shape[0], naru.december.shape[3]].map((stat, i) => (
             // dl의 직계는 div 한 겹이고 그 안은 dt/dd뿐입니다. 그래서 구분선을
             // 엘리먼트로 두지 못하고 ::before로 그립니다. 화면은 같습니다.
             <div
               key={stat.label.en}
-              className={`relative flex flex-col items-start ${i > 0 ? "" : "pr-1"} ${
+              className={`relative flex flex-col items-center ${i > 0 ? "" : "pr-1"} ${
                 i > 0
                   ? "ml-3 pl-3 pr-1 before:absolute before:left-0 before:top-1/2 before:h-9 before:w-px before:-translate-y-1/2 before:bg-white/[0.14] before:content-[''] sm:ml-9 sm:pl-9"
                   : ""
@@ -688,7 +691,7 @@ export default function NaruHome() {
               <dd className="order-1 text-[clamp(1.5rem,4vw,2.25rem)] font-black leading-none text-white">
                 {t(stat.value)}
               </dd>
-              <dt className={`order-2 mt-1.5 break-keep text-left text-[0.68rem] font-bold uppercase text-white/50 ${locale === "en" ? "tracking-[0.04em] sm:tracking-[0.1em]" : "tracking-normal"}`}>
+              <dt className={`order-2 mt-1.5 break-keep text-center text-[0.68rem] font-bold uppercase text-white/50 ${locale === "en" ? "tracking-[0.04em] sm:tracking-[0.1em]" : "tracking-normal"}`}>
                 {t(stat.label)}
               </dt>
             </div>
