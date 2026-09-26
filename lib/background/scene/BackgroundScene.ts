@@ -61,13 +61,17 @@ const SINGAPORE_EXTENT = pointExtent(SINGAPORE_POINTS, SINGAPORE_STRIDE);
 
 /** 화면 좌표(CSS px) 상자. */
 export interface ScreenBox { top: number; bottom: number; left: number; right: number }
-/** 읽기 판 하나. 문서 좌표의 불투명한 안쪽과 덮개 구간(스크롤 px). 덮지 못하면 cover가 null. */
+/**
+ * 읽기 판 하나. 문서 좌표의 불투명한 안쪽과 덮개 구간(스크롤 px). 판이 형상 상자를 위아래로
+ * 덮지 못하거나 덮개가 stages.minHideVh보다 짧으면(#join 판은 예외) cover가 null. fade는 덮개 구간 양 끝에서 형상이 사라지고 돌아오는 길이(px).
+ * coversX는 좌우까지 덮는지(참고값. 숨기는 데는 쓰지 않습니다. 사라지면 옆도 안 보입니다).
+ */
 export interface PlateCover {
   id: string;
   top: number; bottom: number; left: number; right: number;
-  cover: { c0: number; c1: number } | null;
+  coversX: boolean;
+  cover: { c0: number; c1: number; fade: number } | null;
 }
-const PLATE_IDS = ["december", "gains", "naru", "join"] as const;
 
 export class BackgroundScene {
   private readonly scene = new THREE.Scene();
@@ -365,7 +369,7 @@ export class BackgroundScene {
   // 앵커는 챕터 머리가 아니라 판과 형상의 실제 위치에서 계산합니다. 창 크기, 카피 길이가
   // 바뀌어도 틈에는 완성된 형상만 보입니다(docs/background-change-under-cover-brief.md).
   private shapeBox: ScreenBox = { top: 0, bottom: 0, left: 0, right: 0 };
-  private plates: Record<string, PlateCover> = {};
+  private plates: PlateCover[] = [];
 
   /**
    * 형상의 화면 상자(CSS px). 서울 상자와 싱가포르 상자의 합집합입니다. 건너는 동안 점은 두
@@ -401,7 +405,9 @@ export class BackgroundScene {
 
   /**
    * 판마다 덮개 구간 [c0, c1](스크롤 px)을 계산합니다(판 덮개 브리프 2.1). 스크롤이 이 안에
-   * 있으면 판의 불투명한 안쪽(PLATE_FEATHER를 뺀 영역)이 형상 상자를 전부 덮습니다.
+   * 있으면 판의 불투명한 안쪽(PLATE_FEATHER를 뺀 영역)이 형상 상자를 위아래로 전부 덮고,
+   * 형상은 이 안에서 사라집니다(stages.hideFadeVh). 판은 문서 순서대로 전부 읽습니다
+   * (#december와 #naru는 판이 둘. NaruHome의 PlateSegment).
    * 판은 챕터 리빌 div 안에 있어, 리빌 전(translateY 40px)이나 리빌 중에 읽어도 그 이동을
    * 빼고 자리 잡은 뒤의 위치로 계산합니다.
    */
@@ -411,10 +417,11 @@ export class BackgroundScene {
     this.shapeBox = box;
     const F = PLATE_FEATHER;
     const fx = window.matchMedia("(max-width: 639px)").matches ? F.xPhone : F.x;
-    const plates: Record<string, PlateCover> = {};
-    for (const id of PLATE_IDS) {
-      const el = document.querySelector(`.reading-plate[data-plate="${id}"]`);
-      if (!el) continue;
+    const fadeMax = SEOUL_WATERMARK.stages.hideFadeVh * window.innerHeight;
+    const minHide = SEOUL_WATERMARK.stages.minHideVh * window.innerHeight;
+    const plates: PlateCover[] = [];
+    for (const el of Array.from(document.querySelectorAll<HTMLElement>(".reading-plate[data-plate]"))) {
+      const id = el.dataset.plate ?? "";
       const r = el.getBoundingClientRect();
       let ty = 0;
       const rev = el.closest("[data-chapter-reveal]");
@@ -429,73 +436,97 @@ export class BackgroundScene {
       const coversX = left <= box.left && right >= box.right;
       const c0 = top - box.top;
       const c1 = bottom - box.bottom;
-      plates[id] = { id, top, bottom, left, right, cover: coversX && c1 > c0 ? { c0, c1 } : null };
+      // 사라지고 돌아오는 길이는 덮개 구간의 3분의 1을 넘지 않습니다. 가운데 3분의 1 이상은
+      // 형상이 다 사라져 있어 바뀌는 일을 둘 자리가 남습니다.
+      const fade = Math.min(fadeMax, (c1 - c0) / 3);
+      // #join 판은 예외입니다. 그 뒤로 형상이 돌아오지 않아(사라짐) 짧게 사라져도 깜빡이지 않습니다.
+      // 1920×1080에서 이 판의 덮개는 0.29화면입니다.
+      const hides = c1 > c0 && (c1 - c0 >= minHide || id === "join");
+      plates.push({ id, top, bottom, left, right, coversX, cover: hides ? { c0, c1, fade } : null });
     }
+    plates.sort((a, b) => a.top - b.top);
     this.plates = plates;
   }
 
   /**
-   * 형상이 바뀌는 세 구간의 자리(문서 스크롤 px). 판 덮개 브리프 2.2의 표:
-   *   떠오름   december 판  시작 = max(descendEnd, c0), 길이 = min(revealVh, c1 − 시작)
-   *   건너기   naru 판      시작 = c0 + coverMarginVh, 길이 = min(morph.spanVh, c1 − 시작)
-   *   사라짐   join 판      끝 = c1 − coverMarginVh, 시작 = max(c0, 끝 − dissolve.spanVh)
-   * 건너기를 gains 판 아래 두지 않는 이유: 그 판은 READ 폭이라 데스크톱에서 형상 상자보다
-   * 좁고(덮개 없음), 폭이 맞는 창에서도 높이 여유가 한 줌입니다. naru 판은 넉넉합니다.
-   * 모자라면(2.3) 길이를 구간에 맞춰 줄이되 minSpanVh 아래로는 줄이지 않습니다. 하한에 걸려
-   * 구간 밖으로 넘치면 경고합니다.
-   * 덮개 구간이 아예 없으면 옛 식(챕터 머리 앵커, stages.coverFallback)으로 돌아가고 경고합니다.
+   * 형상이 바뀌는 세 구간의 자리(문서 스크롤 px). 판 덮개 브리프 2.2의 배정에 2026-09-26 2차의
+   * "판 뒤에서는 사라진다"를 더했습니다. 각 판의 덮개 구간에서 양 끝 fade를 뺀 가운데가 형상이
+   * 다 사라져 있는 구간이고, 바뀌는 일은 그 안에서만 일어납니다.
+   *   떠오름   #december 판(첫 조각)      시작 = descendEnd를 가운데 구간 안으로 당긴 값, 길이 ≤ revealVh
+   *   건너기   #naru 판(첫 조각부터)      시작 = 가운데 시작, 길이 ≤ morph.spanVh
+   *   사라짐   #join 판                  끝 = 가운데 끝, 길이 ≤ dissolve.spanVh
+   * 한 챕터의 판이 모두 형상보다 낮으면(덮개 없음) 옛 식(챕터 머리 앵커, stages.coverFallback)으로
+   * 돌아가고 개발 빌드에서 경고합니다. 그때는 바뀌는 모습이 보입니다.
    */
   private sched = { revealStart: Infinity, revealSpan: 1, morphStart: Infinity, morphSpan: 1, dissolveStart: Infinity, dissolveSpan: 1 };
   private schedule() {
     const vh = window.innerHeight;
     const S = SEOUL_WATERMARK.stages;
-    const margin = S.coverMarginVh * vh;
-    // 덮개 구간에 맞춰 줄이는 것만으로는 경고하지 않습니다. 줄인 길이도 판 뒤이기 때문입니다
-    // (1440×900의 join 판은 덮개가 0.54화면이라 사라짐이 0.8 → 0.54화면이 됩니다). 경고는
-    // 하한(minSpanVh)에 걸려 바뀌는 모습이 틈으로 새어 나갈 때만 합니다.
-    const fit = (key: string, want: number, room: number) => {
-      if (room >= want) return want;
-      const v = Math.max(room, S.minSpanVh * vh);
-      if (v > room) this.warnCover(key, `${key} 구간이 판 뒤에 들어가지 않습니다: 덮개 ${Math.round(room)}px, 하한 ${Math.round(v)}px. 틈에서 바뀌는 것이 보입니다.`);
-      return v;
-    };
     const descendEnd = this.heroEnd + S.descendVh * vh;
+    // 챕터(chapter)의 판 가운데, 형상이 다 사라져 있는 구간이 있는 첫 판.
+    const hidden = (chapter: string) => {
+      for (const p of this.plates) {
+        if (!p.cover || (p.id !== chapter && !p.id.startsWith(chapter + "-"))) continue;
+        const a = p.cover.c0 + p.cover.fade;
+        const b = p.cover.c1 - p.cover.fade;
+        if (b - a >= 1) return { a, b };
+      }
+      return null;
+    };
 
-    const naru = this.plates.naru?.cover;
+    const naru = hidden("naru");
     let morphStart: number, morphSpan: number;
     if (naru) {
-      morphStart = naru.c0 + margin;
-      morphSpan = fit("morph", S.morph.spanVh * vh, naru.c1 - morphStart);
+      morphStart = naru.a;
+      morphSpan = Math.min(S.morph.spanVh * vh, naru.b - naru.a);
     } else {
       morphStart = this.naruTop - S.coverFallback.morphStartVh * vh;
       morphSpan = S.morph.spanVh * vh;
-      if (Number.isFinite(this.naruTop)) this.warnCover("morph-fallback", "naru 판의 덮개 구간이 없습니다. 건너기를 #naru 머리 앵커로 둡니다.");
+      if (Number.isFinite(this.naruTop)) this.warnCover("morph-fallback", "#naru 판이 형상을 덮는 구간이 없습니다. 건너기를 #naru 머리 앵커로 둡니다(바뀌는 것이 보입니다).");
     }
 
-    const dec = this.plates.december?.cover;
+    // 떠오름은 #december의 첫 판 뒤입니다. 해가 다 내려가기 전에 그 판의 가운데 구간이 끝나는
+    // 창(1728×906, 1920×1080)에서도 첫 틈에 서울이 서 있게, 시작을 가운데 구간 안으로 당깁니다.
+    // 형상은 그동안 사라져 있으니 해와 서울이 겹쳐 보이는 것은 틈에서 해가 마저 내려가는 잠깐뿐입니다.
+    const dec = hidden("december");
     let revealStart: number, revealSpan: number;
     if (dec) {
-      revealStart = Math.max(descendEnd, dec.c0);
-      revealSpan = fit("reveal", S.revealVh * vh, dec.c1 - revealStart);
+      const room = Math.min(0.2 * vh, dec.b - dec.a);
+      revealStart = Math.min(Math.max(descendEnd, dec.a), dec.b - room);
+      revealSpan = Math.max(Math.min(S.revealVh * vh, dec.b - revealStart), 1);
     } else {
       // 옛 식: 구간 1 끝에서 시작, 건너기 시작을 넘지 않게.
       revealStart = descendEnd;
       revealSpan = Math.max(Math.min(S.revealVh * vh, morphStart - descendEnd), 1);
-      if (Number.isFinite(this.naruTop)) this.warnCover("reveal-fallback", "december 판의 덮개 구간이 없습니다. 떠오름을 구간 1 끝에 둡니다.");
+      if (Number.isFinite(this.naruTop)) this.warnCover("reveal-fallback", "#december 판이 구간 1 뒤에 형상을 덮는 구간이 없습니다. 떠오름을 구간 1 끝에 둡니다(떠오르는 것이 보입니다).");
     }
 
-    const join = this.plates.join?.cover;
+    const join = hidden("join");
     let dissolveStart: number, dissolveSpan: number;
     if (join) {
-      const end = join.c1 - margin;
-      dissolveSpan = fit("dissolve", S.dissolve.spanVh * vh, end - join.c0);
-      dissolveStart = end - dissolveSpan;
+      dissolveSpan = Math.min(S.dissolve.spanVh * vh, join.b - join.a);
+      dissolveStart = join.b - dissolveSpan;
     } else {
       dissolveStart = this.joinTop - S.coverFallback.dissolveStartVh * vh;
       dissolveSpan = S.dissolve.spanVh * vh;
-      if (Number.isFinite(this.joinTop)) this.warnCover("dissolve-fallback", "join 판의 덮개 구간이 없습니다. 사라짐을 #join 머리 앵커로 둡니다.");
+      if (Number.isFinite(this.joinTop)) this.warnCover("dissolve-fallback", "#join 판이 형상을 덮는 구간이 없습니다. 사라짐을 #join 머리 앵커로 둡니다(사라지는 것이 보입니다).");
     }
     this.sched = { revealStart, revealSpan, morphStart, morphSpan, dissolveStart, dissolveSpan };
+  }
+
+  /**
+   * 판 뒤에서 형상이 얼마나 사라져 있는가(0 = 보임, 1 = 다 사라짐). 덮개 구간에 들어가면 fade에
+   * 걸쳐 1로, 나올 때 fade에 걸쳐 0으로. 판이 겹치지 않으므로 가장 큰 값 하나입니다.
+   */
+  private hiddenAt(sy: number) {
+    let h = 0;
+    for (const p of this.plates) {
+      const c = p.cover;
+      if (!c || sy <= c.c0 || sy >= c.c1) continue;
+      const f = Math.max(c.fade, 1);
+      h = Math.max(h, Math.min(1, (sy - c.c0) / f, (c.c1 - sy) / f));
+    }
+    return h * h * (3 - 2 * h);
   }
 
   /** 판 덮개 경고. 개발 빌드에서 종류마다 한 번(판 덮개 브리프 2.3). */
@@ -742,7 +773,9 @@ export class BackgroundScene {
       // #join이 없는 페이지에서는 joinTop이 Infinity라 dissolve가 0입니다.
       // 흩어지는 모양(브리프 3.4의 uBreath)은 넣지 않았습니다. 불투명도만으로 먼저 봅니다.
       const dissolve = ss(clamp((this.scrollY - P.dissolveStart) / P.dissolveSpan, 0, 1));
-      const shapeOpacity = reveal * (1 - dissolve);
+      // 판 뒤에서는 사라지고 틈에서만 보입니다(DECIDED 2026-09-26 2차, config의 hideFadeVh).
+      const visible = 1 - this.hiddenAt(this.scrollY);
+      const shapeOpacity = reveal * (1 - dissolve) * visible;
       // 구간 4 진행(건너기 끝 → 형상 거두기 시작). DECIDED 2026-09-23 (사용자: "싱가폴 모양으로
       // 넘어가면 해가 아예 멈추고 빛이 퍼지는 것도 없음"): 서울 구간에서는 스크롤이 나루 점을
       // 올리고 파문이 건너는 동안 커지는데, 싱가포르에 닿은 뒤로는 스크롤에 반응하는 것이
@@ -817,7 +850,7 @@ export class BackgroundScene {
         // 2026-09-26 (판 덮개 브리프 4): 형상이 바뀌는 세 진행도와 판 덮개도 값으로 잽니다.
         (window as unknown as { __naruBg?: unknown }).__naruBg = {
           lightDx, dxScreen, uvSpan, s4Eased: this.s4Eased, lapEased: this.lapEased, t: performance.now(),
-          sy: this.scrollY, vh, s1, s2, reveal, morph, dissolve, ringPhase: this.ringPhase,
+          sy: this.scrollY, vh, s1, s2, reveal, morph, dissolve, visible, ringPhase: this.ringPhase,
           shapeBox: this.shapeBox, plates: this.plates, schedule: this.sched,
         };
       }

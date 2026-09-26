@@ -224,8 +224,23 @@ const eyebrowTrack = (locale: "ko" | "en") => (locale === "en" ? "" : "!tracking
 // 전과 같습니다. 모양(투명도, 흐림, 가장자리)은 그대로입니다.
 // 2026-09-26 (판 덮개 브리프 2.1): data-plate는 배경(BackgroundScene.readAnchors)이 판을 찾는 손잡이입니다.
 // 형상이 바뀌는 구간을 이 판들 뒤에 둡니다. 값은 챕터 id.
-function ReadingPlate({ id, read = false }: { id: "december" | "gains" | "naru" | "join"; read?: boolean }) {
+type PlateId = "december" | "december-2" | "gains" | "naru" | "naru-2" | "join";
+function ReadingPlate({ id, read = false }: { id: PlateId; read?: boolean }) {
   return <div aria-hidden data-plate={id} className={read ? "reading-plate reading-plate--read" : "reading-plate"} />;
+}
+
+// DECIDED 2026-09-26 (사용자: "안보이는 부분에 틈을 몇개 더 의도적으로 놓아서 거기는 보이게 해주고,
+// 변화하는게 안보이면 좋겠는데"): 긴 챕터(#december, #naru)의 판을 둘로 나눠 틈을 하나씩 더 둡니다.
+// 형상은 판이 다 덮는 동안 사라지고 틈에서만 보이며, 바뀌는 일은 사라져 있는 동안만 일어납니다
+// (lib/background/scene/BackgroundScene.ts의 schedule). gap은 앞 조각과의 사이를 벌립니다.
+// 216px에서 판의 위아래 확장(48px × 2)을 빼면 판 사이 120px로, 챕터 사이의 틈과 같습니다.
+function PlateSegment({ id, gap = false, children }: { id: PlateId; gap?: boolean; children: React.ReactNode }) {
+  return (
+    <div className={gap ? "relative mt-[216px]" : "relative"}>
+      <ReadingPlate id={id} />
+      {children}
+    </div>
+  );
 }
 
 // 문장 안의 한 구절을 앵커로. notSequel의 "변하지 않는 두 개"가 #why로 갑니다.
@@ -616,7 +631,7 @@ export default function NaruHome() {
           5차 그대로이고 바뀐 것은 보이는 문법입니다. */}
       <Chapter id="december" labelledBy="december-title" align="center" className={BAND_TINT}>
         <BandFades />
-        <ReadingPlate id="december" />
+        <PlateSegment id="december">
         {/* 2026-09-18 (감사 반영 브리프 8): 아이브로는 보라 외곽선 1종. 주황 글자·주황 발광을 뺐습니다. */}
         <Eyebrow color="purple" className={eyebrowTrack(locale)}>
           {`${t(naru.december.eyebrowPrefix)}\u2002${decemberEventLabel(locale)}`}
@@ -872,6 +887,8 @@ export default function NaruHome() {
           </div>
         </Reveal>
 
+        </PlateSegment>
+        <PlateSegment id="december-2" gap>
         {/* DECIDED 2026-09-20 (일정 브리프 4장, PDF 01): 학생이 도전할 수 있는 AI 활용
             범위 셋. "8월은 셋 중 하나만 썼습니다"가 12월이 왜 다른지를 한 눈에
             말합니다. 바로 아래 gaps 첫 항목이 같은 이야기를 덜 선명하게 하고 있어서
@@ -1014,6 +1031,7 @@ export default function NaruHome() {
           </a>
         </div>
         </div>
+        </PlateSegment>
       </Chapter>
 
       {/* ── CH2 · 오면 무엇이 남는가 (DECIDED 2026-09-17, 홈 흐름 재배치 브리프) ──
@@ -1083,7 +1101,7 @@ export default function NaruHome() {
           exec와 measure는 #december의 멘토링 블록으로 갔습니다. 이벤트의
           실행에 관한 문장이라서요. 여기 남은 것은 코어 둘, 경첩, 마지막 줄. */}
       <Chapter id="naru" labelledBy="naru-title" align="center" className="pt-20 sm:pt-28 lg:pt-36">
-        <ReadingPlate id="naru" />
+        <PlateSegment id="naru">
         <Image
           src="/naru/naru-master-rev.png"
           alt={t(naru.hero.logoAlt)}
@@ -1183,6 +1201,8 @@ export default function NaruHome() {
           </div>
         </Reveal>
 
+        </PlateSegment>
+        <PlateSegment id="naru-2" gap>
         {/* 앵커 착지 (2026-09-19, 모바일 감사 4·18): 이 자리에만 scroll-mt가
             없어서 영어 두 줄 헤더(158px) 아래로 아이브로가 들어갔습니다. 고치면서
             **장치를 하나로 줄였습니다**: 이 페이지의 네 앵커(#record, #why, #how,
@@ -1325,6 +1345,7 @@ export default function NaruHome() {
             없었습니다. notDoingLabel과 notDoing 키는 data/naru.ts에 그대로
             있습니다. 물어보는 사람에게 답할 문장이지 먼저 꺼낼 문장이 아닙니다. */}
         </div>
+        </PlateSegment>
       </Chapter>
 
 
