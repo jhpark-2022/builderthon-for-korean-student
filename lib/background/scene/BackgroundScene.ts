@@ -334,6 +334,7 @@ export class BackgroundScene {
       const closing = top("closing");
       if (closing !== null) this.closingTop = closing;
       this.readPlates();
+      this.schedule();
       this.warnShortSeoul();
       return;
     }
@@ -434,6 +435,78 @@ export class BackgroundScene {
   }
 
   /**
+   * 형상이 바뀌는 세 구간의 자리(문서 스크롤 px). 판 덮개 브리프 2.2의 표:
+   *   떠오름   december 판  시작 = max(descendEnd, c0), 길이 = min(revealVh, c1 − 시작)
+   *   건너기   naru 판      시작 = c0 + coverMarginVh, 길이 = min(morph.spanVh, c1 − 시작)
+   *   사라짐   join 판      끝 = c1 − coverMarginVh, 시작 = max(c0, 끝 − dissolve.spanVh)
+   * 건너기를 gains 판 아래 두지 않는 이유: 그 판은 READ 폭이라 데스크톱에서 형상 상자보다
+   * 좁고(덮개 없음), 폭이 맞는 창에서도 높이 여유가 한 줌입니다. naru 판은 넉넉합니다.
+   * 모자라면(2.3) 길이를 구간에 맞춰 줄이되 minSpanVh 아래로는 줄이지 않습니다. 하한에 걸려
+   * 구간 밖으로 넘치면 경고합니다.
+   * 덮개 구간이 아예 없으면 옛 식(챕터 머리 앵커, stages.coverFallback)으로 돌아가고 경고합니다.
+   */
+  private sched = { revealStart: Infinity, revealSpan: 1, morphStart: Infinity, morphSpan: 1, dissolveStart: Infinity, dissolveSpan: 1 };
+  private schedule() {
+    const vh = window.innerHeight;
+    const S = SEOUL_WATERMARK.stages;
+    const margin = S.coverMarginVh * vh;
+    // 덮개 구간에 맞춰 줄이는 것만으로는 경고하지 않습니다. 줄인 길이도 판 뒤이기 때문입니다
+    // (1440×900의 join 판은 덮개가 0.54화면이라 사라짐이 0.8 → 0.54화면이 됩니다). 경고는
+    // 하한(minSpanVh)에 걸려 바뀌는 모습이 틈으로 새어 나갈 때만 합니다.
+    const fit = (key: string, want: number, room: number) => {
+      if (room >= want) return want;
+      const v = Math.max(room, S.minSpanVh * vh);
+      if (v > room) this.warnCover(key, `${key} 구간이 판 뒤에 들어가지 않습니다: 덮개 ${Math.round(room)}px, 하한 ${Math.round(v)}px. 틈에서 바뀌는 것이 보입니다.`);
+      return v;
+    };
+    const descendEnd = this.heroEnd + S.descendVh * vh;
+
+    const naru = this.plates.naru?.cover;
+    let morphStart: number, morphSpan: number;
+    if (naru) {
+      morphStart = naru.c0 + margin;
+      morphSpan = fit("morph", S.morph.spanVh * vh, naru.c1 - morphStart);
+    } else {
+      morphStart = this.naruTop - S.coverFallback.morphStartVh * vh;
+      morphSpan = S.morph.spanVh * vh;
+      if (Number.isFinite(this.naruTop)) this.warnCover("morph-fallback", "naru 판의 덮개 구간이 없습니다. 건너기를 #naru 머리 앵커로 둡니다.");
+    }
+
+    const dec = this.plates.december?.cover;
+    let revealStart: number, revealSpan: number;
+    if (dec) {
+      revealStart = Math.max(descendEnd, dec.c0);
+      revealSpan = fit("reveal", S.revealVh * vh, dec.c1 - revealStart);
+    } else {
+      // 옛 식: 구간 1 끝에서 시작, 건너기 시작을 넘지 않게.
+      revealStart = descendEnd;
+      revealSpan = Math.max(Math.min(S.revealVh * vh, morphStart - descendEnd), 1);
+      if (Number.isFinite(this.naruTop)) this.warnCover("reveal-fallback", "december 판의 덮개 구간이 없습니다. 떠오름을 구간 1 끝에 둡니다.");
+    }
+
+    const join = this.plates.join?.cover;
+    let dissolveStart: number, dissolveSpan: number;
+    if (join) {
+      const end = join.c1 - margin;
+      dissolveSpan = fit("dissolve", S.dissolve.spanVh * vh, end - join.c0);
+      dissolveStart = end - dissolveSpan;
+    } else {
+      dissolveStart = this.joinTop - S.coverFallback.dissolveStartVh * vh;
+      dissolveSpan = S.dissolve.spanVh * vh;
+      if (Number.isFinite(this.joinTop)) this.warnCover("dissolve-fallback", "join 판의 덮개 구간이 없습니다. 사라짐을 #join 머리 앵커로 둡니다.");
+    }
+    this.sched = { revealStart, revealSpan, morphStart, morphSpan, dissolveStart, dissolveSpan };
+  }
+
+  /** 판 덮개 경고. 개발 빌드에서 종류마다 한 번(판 덮개 브리프 2.3). */
+  private readonly warnedCover = new Set<string>();
+  private warnCover(key: string, msg: string) {
+    if (process.env.NODE_ENV === "production" || this.warnedCover.has(key)) return;
+    this.warnedCover.add(key);
+    console.warn(`[background] ${msg}`);
+  }
+
+  /**
    * 구간 2가 모자라면 개발 빌드에서 한 번 경고합니다(챕터 지도 브리프 3.2). 서울이 다 떠오른
    * 뒤 온전히 설 자리가 한 화면이 안 되는 경우입니다. 2026-09-23 이전 배포본이 정확히
    * 그랬고(서울 온전 0px), 아무도 몰랐습니다.
@@ -441,10 +514,10 @@ export class BackgroundScene {
   private warnedShortSeoul = false;
   private warnShortSeoul() {
     if (process.env.NODE_ENV === "production" || this.warnedShortSeoul) return;
-    if (!Number.isFinite(this.naruTop)) return;
+    if (!Number.isFinite(this.sched.morphStart)) return;
     const vh = window.innerHeight;
     const S = SEOUL_WATERMARK.stages;
-    const room = (this.naruTop - S.morph.startVh * vh) - (this.heroEnd + S.descendVh * vh);
+    const room = this.sched.morphStart - (this.heroEnd + S.descendVh * vh);
     if (room < S.revealVh * vh + vh) {
       this.warnedShortSeoul = true;
       console.warn(
@@ -635,15 +708,17 @@ export class BackgroundScene {
       // ── 구간 지도 (DECIDED 2026-09-23, 챕터 지도 브리프) ──────────────────────
       //   0 나루터    0 → #top 하단                        수면, 해
       //   1 건넘      #top 하단 → +descendVh              해가 내려가 나루 점이 됨
-      //   2 서울      구간 1 끝 → #naru − morph.startVh    서울 윤곽(앞 revealVh는 떠오름)
-      //   3 크로싱    → +morph.spanVh                      서울 → 싱가포르
-      //   4 싱가포르  → #join − dissolve.startVh          싱가포르 윤곽
-      //   5 세 곳     → +dissolve.spanVh, 그 뒤 끝까지     형상을 거두고 나루 점만
+      //   2 서울      구간 1 끝 → 건너기 시작              서울 윤곽(떠오름은 december 판 뒤)
+      //   3 크로싱    naru 판 뒤, morph.spanVh             서울 → 싱가포르
+      //   4 싱가포르  → 사라짐 시작                        싱가포르 윤곽
+      //   5 세 곳     join 판 뒤, dissolve.spanVh, 그 뒤   형상을 거두고 나루 점만
+      // 2026-09-26 (판 덮개 브리프): 2, 3, 5의 경계는 schedule()이 판의 덮개 구간에서 정합니다.
       // 전에는 구간 1이 #gains 상단까지라 #december 전체가 해가 지는 장면이었고, 건너기가
       // 서울이 다 떠오르기 전에 시작해서 서울이 온전히 선 구간이 0px이었습니다.
       const descendEnd = this.heroEnd + S.descendVh * vh;
-      const morphStart = this.naruTop - S.morph.startVh * vh;
-      const morphEnd = morphStart + S.morph.spanVh * vh;
+      const P = this.sched;
+      const morphStart = P.morphStart;
+      const morphEnd = morphStart + P.morphSpan;
 
       // 구간 1. 선형으로 넘깁니다. water 셰이더가 uStage1에 자기 곡선(pow 12 등)을
       // 이미 씌우므로, 여기서 ss()를 한 번 더 씌우면 해가 내려가는 모양이 바뀝니다.
@@ -651,25 +726,22 @@ export class BackgroundScene {
       // 구간 2 진행. 셰이더가 uStage2로 나루 점을 화면 가운데로 올립니다(my).
       // 구간 1 끝부터 건너기 시작까지로 다시 정의합니다.
       const s2 = clamp((this.scrollY - descendEnd) / Math.max(morphStart - descendEnd, 1), 0, 1);
-      // 구간 3. #december 끝과 #gains 위쪽에서 건너고, #naru 상단이 화면 아래 끝에 닿을 때
-      // 끝납니다(2026-09-26 2차, config의 morph 주석). 위로 스크롤하면 같은 길로 돌아옵니다.
-      const morph = ss(clamp((this.scrollY - morphStart) / (S.morph.spanVh * vh), 0, 1));
+      // 구간 3. naru 판이 형상을 다 덮고 있는 동안 건넙니다(2026-09-26 판 덮개 브리프).
+      // 틈 B에는 온전한 서울, 틈 C에는 온전한 싱가포르. 위로 스크롤하면 같은 길로 돌아옵니다.
+      const morph = ss(clamp((this.scrollY - morphStart) / P.morphSpan, 0, 1));
       this.particles?.setMorph(morph);
 
-      // 떠오름 길이는 구간 2보다 길 수 없습니다(챕터가 짧아져도 떠오르다 건너지 않게).
-      // 떠오름은 구간 1이 끝난 뒤에 시작합니다. 수면이 가라앉는 것과 서울이 서는 것이
-      // 겹치지 않습니다(한 시계 브리프 3.4).
-      const revealSpan = Math.max(Math.min(S.revealVh * vh, morphStart - descendEnd), 1);
-      const reveal = ss(clamp((this.scrollY - descendEnd) / revealSpan, 0, 1));
+      // 떠오름은 구간 1이 끝난 뒤, december 판이 형상을 다 덮고 있는 동안입니다. 수면이
+      // 가라앉는 것과 서울이 서는 것이 겹치지 않습니다(한 시계 브리프 3.4).
+      const reveal = ss(clamp((this.scrollY - P.revealStart) / P.revealSpan, 0, 1));
       // 구간 4의 밝기. 건너기가 끝난 뒤 1vh에 걸쳐 singaporeBright로. 싱가포르가 한 번은
       // 온전한 밝기로 서야 합니다. 어두워지면서 도착하면 물러나는 것으로 읽힙니다.
       const settle = ss(clamp((this.scrollY - morphEnd) / vh, 0, 1));
-      // 구간 5. #join(세 곳: 싱가포르, 한국, 그 밖) 상단 dissolve.startVh 앞에서 시작해
-      // spanVh 동안 형상을 거둡니다. 나루 점(water 셰이더의 깊은 물 층)은 남습니다.
+      // 구간 5. #join(세 곳: 싱가포르, 한국, 그 밖) 판 뒤에서 형상을 거두고, 판의 덮개 구간이
+      // 끝나기 전에 다 거둡니다. 나루 점(water 셰이더의 깊은 물 층)은 남습니다.
       // #join이 없는 페이지에서는 joinTop이 Infinity라 dissolve가 0입니다.
       // 흩어지는 모양(브리프 3.4의 uBreath)은 넣지 않았습니다. 불투명도만으로 먼저 봅니다.
-      const dissolveStart = this.joinTop - S.dissolve.startVh * vh;
-      const dissolve = ss(clamp((this.scrollY - dissolveStart) / (S.dissolve.spanVh * vh), 0, 1));
+      const dissolve = ss(clamp((this.scrollY - P.dissolveStart) / P.dissolveSpan, 0, 1));
       const shapeOpacity = reveal * (1 - dissolve);
       // 구간 4 진행(건너기 끝 → 형상 거두기 시작). DECIDED 2026-09-23 (사용자: "싱가폴 모양으로
       // 넘어가면 해가 아예 멈추고 빛이 퍼지는 것도 없음"): 서울 구간에서는 스크롤이 나루 점을
@@ -746,7 +818,7 @@ export class BackgroundScene {
         (window as unknown as { __naruBg?: unknown }).__naruBg = {
           lightDx, dxScreen, uvSpan, s4Eased: this.s4Eased, lapEased: this.lapEased, t: performance.now(),
           sy: this.scrollY, vh, s1, s2, reveal, morph, dissolve, ringPhase: this.ringPhase,
-          shapeBox: this.shapeBox, plates: this.plates,
+          shapeBox: this.shapeBox, plates: this.plates, schedule: this.sched,
         };
       }
       let opacity: number;
