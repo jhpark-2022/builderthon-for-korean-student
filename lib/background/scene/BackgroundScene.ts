@@ -453,7 +453,8 @@ export class BackgroundScene {
    * "판 뒤에서는 사라진다"를 더했습니다. 각 판의 덮개 구간에서 양 끝 fade를 뺀 가운데가 형상이
    * 다 사라져 있는 구간이고, 바뀌는 일은 그 안에서만 일어납니다.
    *   떠오름   #december 판(첫 조각)      시작 = descendEnd를 가운데 구간 안으로 당긴 값, 길이 ≤ revealVh
-   *   건너기   #naru 판(첫 조각부터)      시작 = 가운데 시작, 길이 ≤ morph.spanVh
+   *   건너기   #naru 앞의 마지막 판        시작 = 가운데 시작, 길이 ≤ morph.spanVh
+   *            (떠오름의 판은 빼고. 데스크톱은 #december 둘째 조각, 폰은 #gains 판)
    *   사라짐   #join 판                  끝 = 가운데 끝, 길이 ≤ dissolve.spanVh
    * 한 챕터의 판이 모두 형상보다 낮으면(덮개 없음) 옛 식(챕터 머리 앵커, stages.coverFallback)으로
    * 돌아가고 개발 빌드에서 경고합니다. 그때는 바뀌는 모습이 보입니다.
@@ -474,7 +475,17 @@ export class BackgroundScene {
       return null;
     };
 
-    const naru = hidden("naru");
+    // DECIDED 2026-09-26 3차 (사용자: #gains와 #naru 사이 틈에 "아직 한국 shape이 보이는데?"):
+    // 건너기는 #naru 앞, 형상을 숨기는 마지막 판 뒤입니다. 같은 날 앞서 정한 "#gains와 #naru 사이
+    // 이음매에서는 싱가포르"로 돌아갑니다. 판 덮개 브리프 2.2의 "naru 판"을 대신합니다.
+    const decFirst = this.plates.find((p) => p.cover && (p.id === "december" || p.id.startsWith("december-")));
+    const beforeNaru = this.plates.filter((p) => p.cover && p !== decFirst && p.top < this.naruTop);
+    let naru: { a: number; b: number } | null = null;
+    for (let k = beforeNaru.length - 1; k >= 0 && !naru; k--) {
+      const c = beforeNaru[k].cover!;
+      if (c.c1 - c.fade - (c.c0 + c.fade) >= 1) naru = { a: c.c0 + c.fade, b: c.c1 - c.fade };
+    }
+    naru ??= hidden("naru");
     let morphStart: number, morphSpan: number;
     if (naru) {
       morphStart = naru.a;
@@ -538,23 +549,21 @@ export class BackgroundScene {
   }
 
   /**
-   * 구간 2가 모자라면 개발 빌드에서 한 번 경고합니다(챕터 지도 브리프 3.2). 서울이 다 떠오른
-   * 뒤 온전히 설 자리가 한 화면이 안 되는 경우입니다. 2026-09-23 이전 배포본이 정확히
-   * 그랬고(서울 온전 0px), 아무도 몰랐습니다.
+   * 구간 2가 모자라면 개발 빌드에서 한 번 경고합니다(챕터 지도 브리프 3.2). 2026-09-23 이전
+   * 배포본은 서울이 온전히 선 구간이 0px이었고, 아무도 몰랐습니다.
+   * 2026-09-26 3차부터 형상은 틈에서만 보이므로, 기준을 "이어진 한 화면"에서 "떠오름이 끝난 뒤
+   * 건너기 전에 서울이 온전히 보이는 스크롤이 있는가"로 바꿉니다(20px 간격으로 봅니다).
    */
   private warnedShortSeoul = false;
   private warnShortSeoul() {
     if (process.env.NODE_ENV === "production" || this.warnedShortSeoul) return;
-    if (!Number.isFinite(this.sched.morphStart)) return;
-    const vh = window.innerHeight;
-    const S = SEOUL_WATERMARK.stages;
-    const room = this.sched.morphStart - (this.heroEnd + S.descendVh * vh);
-    if (room < S.revealVh * vh + vh) {
+    const { revealStart, revealSpan, morphStart } = this.sched;
+    if (!Number.isFinite(morphStart) || !Number.isFinite(revealStart)) return;
+    let seen = 0;
+    for (let y = revealStart + revealSpan; y < morphStart; y += 20) if (this.hiddenAt(y) < 0.001) seen += 20;
+    if (seen < 20) {
       this.warnedShortSeoul = true;
-      console.warn(
-        `[background] 구간 2가 모자랍니다: 서울이 설 자리 ${Math.round(room)}px, ` +
-        `필요 ${Math.round(S.revealVh * vh + vh)}px (revealVh + 1vh). stages.descendVh 또는 앵커를 보세요.`
-      );
+      console.warn(`[background] 서울이 온전히 보이는 틈이 없습니다(떠오름 끝 ${Math.round(revealStart + revealSpan)}px, 건너기 시작 ${Math.round(morphStart)}px). 판 나누기를 보세요.`);
     }
   }
 

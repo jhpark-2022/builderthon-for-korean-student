@@ -308,8 +308,9 @@ export const SEOUL_WATERMARK = {
     // 구간 3: 서울 → 싱가포르. spanVh 동안.
     // DECIDED 2026-09-26 3차 (사용자: "gap이 나왔을 때 이미 바뀌어 있고, complete shape만",
     // docs/background-change-under-cover-brief.md): 시작은 챕터 머리의 vh 배수가 아니라
-    // #naru 첫 판 뒤, 형상이 다 사라져 있는 동안입니다(아래 hideFadeVh). 같은 날의 startVh
-    // 1.2, 1.8은 틈을 옮겼을 뿐이라 지웠습니다. 사라져 있는 구간이 짧으면 길이가 줄어듭니다.
+    // #naru 앞의 마지막 판 뒤, 형상이 다 사라져 있는 동안입니다(아래 hideFadeVh). 같은 날의
+    // startVh 1.2, 1.8은 틈을 옮겼을 뿐이라 지웠습니다. 사라져 있는 구간이 짧으면 길이가 줄어듭니다.
+    // DECIDED 2026-09-26 3차 (사용자): #gains와 #naru 사이 틈에는 싱가포르(BackgroundScene.schedule).
     morph: { spanVh: 1.2 },
     // 구간 4: 싱가포르의 밝기. 건너기가 끝난 뒤 1vh에 걸쳐 이 값으로 내려갑니다.
     // #naru와 #record 본문이 그 위에 놓이므로 온전한 1.0이 아니라 0.8.

@@ -839,6 +839,11 @@ export default function NaruHome() {
           </dl>
 
         </Reveal>
+        {/* 판 나누기(2026-09-26 3차, 사용자: #gains와 #naru 사이 틈에 한국 형상이 보임): 여기서 나눠야
+            뒤 조각이 넓은 창(1728, 1920)에서도 형상을 위아래로 다 덮을 만큼 깁니다. 서울 → 싱가포르가
+            이 조각이나 #gains 판 뒤에서 일어나, #naru 앞 틈에는 싱가포르가 섭니다. */}
+        </PlateSegment>
+        <PlateSegment id="december-2" gap>
         {/* General Mentoring. 초록 테두리 강조 상자(8월 "과정이 기록됩니다" 문법).
             2026-09-26 (한 축 브리프): lg에서 규칙 다섯이 가로로 서므로 WIDE입니다. 위 일정표와
             아래 재는 것은 READ라 Reveal을 셋으로 나눴습니다. 내용과 순서는 그대로. */}
@@ -890,8 +895,6 @@ export default function NaruHome() {
           </div>
         </Reveal>
 
-        </PlateSegment>
-        <PlateSegment id="december-2" gap>
         {/* DECIDED 2026-09-20 (일정 브리프 4장, PDF 01): 학생이 도전할 수 있는 AI 활용
             범위 셋. "8월은 셋 중 하나만 썼습니다"가 12월이 왜 다른지를 한 눈에
             말합니다. 바로 아래 gaps 첫 항목이 같은 이야기를 덜 선명하게 하고 있어서
