@@ -8,6 +8,7 @@
 
 ### 2026-09
 
+- [2026-09-26 #naru 앞 틈에는 싱가포르](#2026-09-26-singapore-before-naru)
 - [2026-09-26 숫자 줄을 가운데로](#2026-09-26-stats-center)
 - [2026-09-26 형상은 틈에서만 보인다](#2026-09-26-shape-in-gaps)
 - [2026-09-26 형상은 판 뒤에서만 바뀐다](#2026-09-26-change-under-cover)
@@ -124,6 +125,15 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-09-26-singapore-before-naru"></a>
+## 2026-09-26 #naru 앞 틈에는 싱가포르
+- 범위: `lib/background/scene/BackgroundScene.ts`(schedule, warnShortSeoul), `lib/background/config.ts`(주석), `components/home/NaruHome.tsx`(#december 판 나누는 자리).
+- 한 것: 배포 뒤 폰에서 #gains와 #naru 사이 틈에 서울이 보였습니다. 판 덮개 브리프의 표(그 틈은 서울)를 따른 결과였고, 같은 날 사용자가 정한 "그 이음매에서는 싱가포르"와 어긋났습니다.
+  건너기를 #naru 앞, 형상을 숨기는 마지막 판 뒤로 옮깁니다(DECIDED 2026-09-26 3차). 데스크톱은 #december 둘째 조각, 폰은 #gains 판.
+  #december 판을 General Mentoring 앞에서 나눠 둘째 조각이 넓은 창에서도 형상을 숨깁니다. 서울이 보이는 틈은 데스크톱 하나, 폰 둘입니다.
+- 검증: 1728×906, 1920×1080, 1440×900, 1280×800, 1000×560, 390×844, 360×780, 430×932에서 40px 훑기 위반 0곳, 배경 경고 없음. #naru 앞 틈은 모든 크기에서 싱가포르.
+- 커밋: 3221c13
 
 <a id="2026-09-26-stats-center"></a>
 ## 2026-09-26 숫자 줄을 가운데로
