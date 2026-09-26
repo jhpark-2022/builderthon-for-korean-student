@@ -8,6 +8,7 @@
 
 ### 2026-09
 
+- [2026-09-26 형상은 판 뒤에서만 바뀐다](#2026-09-26-change-under-cover)
 - [2026-09-26 이음매가 보이기 전에 싱가포르로](#2026-09-26-morph-before-seam)
 - [2026-09-26 페이지 맨 아래에서 빛을 거둔다](#2026-09-26-end-fade)
 - [2026-09-26 싱가포르로 건너는 시점을 앞당긴다](#2026-09-26-morph-earlier)
@@ -121,6 +122,19 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-09-26-change-under-cover"></a>
+## 2026-09-26 형상은 판 뒤에서만 바뀐다
+- 범위: `lib/background/scene/BackgroundScene.ts`(readAnchors, readPlates, schedule), `lib/background/config.ts`(`stages`, `PLATE_FEATHER`), `components/home/NaruHome.tsx`(판의 `data-plate`), `app/globals.css`(주석만).
+- 한 것: 사용자 요청 "gap이 나왔을 때 이미 바뀌어 있고, complete shape만". 형상이 바뀌는 구간이 챕터 머리의 vh 배수에 앵커되어 있어 창 크기에 따라 판 사이 틈과 겹쳤습니다.
+  이제 판마다 덮개 구간(판의 불투명한 안쪽이 형상 상자를 다 덮는 스크롤 구간)을 계산하고, 떠오름은 december 판, 건너기는 naru 판, 사라짐은 join 판의 덮개 안에서만 일어납니다(DECIDED 2026-09-26).
+  형상 상자는 서울과 싱가포르의 구운 점 min/max 합집합에 셰이더의 들어 올림, 숨, 점 반지름을 더한 값입니다.
+  같은 날의 `morph.startVh 1.8`(이음매가 보이기 전에 싱가포르로)은 이 규칙이 대신합니다. `morph`는 `{ spanVh: 1.2 }`, `dissolve`는 `{ spanVh: 0.8 }`, 새 값 `coverMarginVh 0.05`, `minSpanVh 0.3`.
+  덮개가 모자라면 길이를 덮개에 맞춰 줄입니다(1440×900의 사라짐 0.8 → 0.54화면). 경고는 하한에 걸려 틈으로 샐 때만 합니다.
+- 검증: 1440×900, 1280×800, 1000×560, 390×844에서 40px 훑기 위반 0곳(적용 전 1440×900 30곳). 1440×900에서 1000×560으로 줄인 뒤에도 0곳. 네 크기 경고 없음, descendVh 3.5에서 경고.
+  틈 A, B는 서울, C는 싱가포르(스크린숏 네 크기 × 셋). s1은 같은 스크롤에서 차이 0. /2026-08 차이는 같은 코드 두 번 캡처한 잡음과 같은 수준.
+- 브리프: docs/background-change-under-cover-brief.md
+- 커밋: 00cc5b4, 925bc0b
 
 <a id="2026-09-26-morph-before-seam"></a>
 ## 2026-09-26 이음매가 보이기 전에 싱가포르로
