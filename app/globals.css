@@ -456,7 +456,11 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
 
    z-index: -1은 Chapter의 리빌 div(transform이 있어 쌓임 맥락이자 기준 상자)
    안에서 글 뒤로 갑니다. 그 div는 opacity가 1인 동안 backdrop root가 아니라서
-   흐림이 배경 캔버스까지 닿습니다. */
+   흐림이 배경 캔버스까지 닿습니다.
+
+   가장자리 흐림(위아래 64px, 좌우 40px, 폰은 좌우 없음)은 lib/background/config.ts의
+   PLATE_FEATHER와 같은 값입니다(2026-09-26, 판 덮개 브리프). 배경은 이 값으로 판의
+   불투명한 안쪽을 계산해 형상이 바뀌는 구간을 그 뒤에 둡니다. 한쪽을 바꾸면 다른 쪽도. */
 .reading-plate {
   position: absolute;
   top: -48px;

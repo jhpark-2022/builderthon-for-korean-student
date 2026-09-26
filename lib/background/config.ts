@@ -212,6 +212,14 @@ export const LIGHT_PORTRAIT = {
   maxRate: 0.07,  // 초당 바퀴 수 상한. 점의 최고 속도가 약 45px/s.
 } as const;
 
+/**
+ * 읽기 판의 흐림 가장자리(px). DECIDED 2026-09-26 (판 덮개 브리프 2.1).
+ * app/globals.css의 .reading-plate 마스크 값과 같아야 합니다(위아래 64px, 좌우 40px, 폰 639px
+ * 이하는 좌우 마스크 없음). 한쪽을 바꾸면 다른 쪽도 바꾸세요. BackgroundScene.readAnchors가
+ * 판의 불투명한 안쪽을 이 값으로 계산해 형상이 바뀌는 구간을 그 뒤에 둡니다.
+ */
+export const PLATE_FEATHER = { y: 64, x: 40, xPhone: 0 } as const;
+
 export const RING = {
   baseRate: 0.5,
   flowGain: 1.6,

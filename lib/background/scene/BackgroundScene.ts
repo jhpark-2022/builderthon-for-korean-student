@@ -1,5 +1,7 @@
 import * as THREE from "three";
-import { CROSSING, RING, SHAPES, SEOUL_WATERMARK, LIGHT_SWEEP, LIGHT_MAX_RATE, LIGHT_PORTRAIT, pickQuality, type QualityTier } from "../config";
+import { CROSSING, RING, SHAPES, FIELD, SEOUL_WATERMARK, PLATE_FEATHER, LIGHT_SWEEP, LIGHT_MAX_RATE, LIGHT_PORTRAIT, pickQuality, type QualityTier } from "../config";
+import { SEOUL_POINTS, SEOUL_STRIDE } from "../shapes/seoul";
+import { SINGAPORE_POINTS, SINGAPORE_STRIDE } from "../shapes/singapore";
 import { computeStageLayout, readStageRect, findStageElement, type StageLayout } from "../utils/shapeLayout";
 import { Renderer } from "../renderer/Renderer";
 import { CameraController } from "../camera/CameraController";
@@ -40,6 +42,32 @@ import { isScrollLocked } from "../../useBodyScrollLock";
 // 8월의 엔진(입자·블룸·카메라·국면·품질 티어)을 그대로 쓰고 이야기만 바꿨습니다.
 // 국면 경계는 #record, #december, #naru의 실제 스크롤 위치에서 읽습니다.
 export type BackgroundVariant = "field" | "water" | "crossing";
+
+// 구운 점의 범위(정규화 좌표, 너비가 [-1, 1]). 판 덮개(2026-09-26, 판 덮개 브리프 2.1)가 형상의
+// 화면 상자를 추정 비율이 아니라 실제 점에서 계산하려고 한 번 잽니다.
+function pointExtent(pts: ArrayLike<number>, stride: number) {
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  for (let k = 0; k + 1 < pts.length; k += stride) {
+    const x = pts[k], y = pts[k + 1];
+    if (x < x0) x0 = x;
+    if (x > x1) x1 = x;
+    if (y < y0) y0 = y;
+    if (y > y1) y1 = y;
+  }
+  return { x0, x1, y0, y1 };
+}
+const SEOUL_EXTENT = pointExtent(SEOUL_POINTS, SEOUL_STRIDE);
+const SINGAPORE_EXTENT = pointExtent(SINGAPORE_POINTS, SINGAPORE_STRIDE);
+
+/** 화면 좌표(CSS px) 상자. */
+export interface ScreenBox { top: number; bottom: number; left: number; right: number }
+/** 읽기 판 하나. 문서 좌표의 불투명한 안쪽과 덮개 구간(스크롤 px). 덮지 못하면 cover가 null. */
+export interface PlateCover {
+  id: string;
+  top: number; bottom: number; left: number; right: number;
+  cover: { c0: number; c1: number } | null;
+}
+const PLATE_IDS = ["december", "gains", "naru", "join"] as const;
 
 export class BackgroundScene {
   private readonly scene = new THREE.Scene();
@@ -305,6 +333,7 @@ export class BackgroundScene {
       if (join !== null) this.joinTop = join;
       const closing = top("closing");
       if (closing !== null) this.closingTop = closing;
+      this.readPlates();
       this.warnShortSeoul();
       return;
     }
@@ -328,6 +357,80 @@ export class BackgroundScene {
         this.anchors = { heroEnd, crossStart: december, crossEnd: gains, arrivedAt: record, naru };
       }
     }
+  }
+
+  // ── 판 덮개 (DECIDED 2026-09-26, 사용자: "gap이 나왔을 때 이미 바뀌어 있고, complete shape만") ──
+  // 형상이 바뀌는 일(떠오름, 건너기, 사라짐)은 읽기 판이 형상을 다 덮고 있는 동안에만 일어납니다.
+  // 앵커는 챕터 머리가 아니라 판과 형상의 실제 위치에서 계산합니다. 창 크기, 카피 길이가
+  // 바뀌어도 틈에는 완성된 형상만 보입니다(docs/background-change-under-cover-brief.md).
+  private shapeBox: ScreenBox = { top: 0, bottom: 0, left: 0, right: 0 };
+  private plates: Record<string, PlateCover> = {};
+
+  /**
+   * 형상의 화면 상자(CSS px). 서울 상자와 싱가포르 상자의 합집합입니다. 건너는 동안 점은 두
+   * 자리를 잇는 직선 위에 있으므로 합집합 안에 머뭅니다. placeSeoul과 같은 중심과 반너비,
+   * 구운 점의 min/max에서 계산하고, 셰이더가 점을 옮기는 만큼을 더합니다: 건너기의 들어 올림
+   * (서울 반너비의 6%, 위로), 숨(컬 노이즈 단위 벡터 × uCurl × 0.75 + 0.12, × uBreath, z 방향
+   * 숨의 원근 확대까지), 점의 반지름(가장 큰 점 크기의 반 + 1px).
+   */
+  private computeShapeBox(): ScreenBox {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const portrait = h > w;
+    const halfH = 30 * Math.tan(((portrait ? 75 : 60) * Math.PI) / 360);
+    const halfW = halfH * (w / h);
+    const W = SEOUL_WATERMARK;
+    const hwS = (portrait ? W.portrait.heroW : W.landscapeW) * halfW;
+    const hwG = (portrait ? W.portrait.singaporeW : W.singaporeW) * halfW;
+    const cy = portrait ? W.portrait.heroCy : W.cy;
+    const x = (W.cx * 2 - 1) * halfW;
+    const y = (1 - cy * 2) * halfH;
+    const breath = (FIELD.curl * 0.75 + 0.12) * SHAPES.breath;
+    const lift = 0.06 * hwS;
+    const persp = 30 / (30 - breath);
+    const wx0 = (x + Math.min(SEOUL_EXTENT.x0 * hwS, SINGAPORE_EXTENT.x0 * hwG) - breath) * persp;
+    const wx1 = (x + Math.max(SEOUL_EXTENT.x1 * hwS, SINGAPORE_EXTENT.x1 * hwG) + breath) * persp;
+    const wy0 = (y + Math.min(SEOUL_EXTENT.y0 * hwS, SINGAPORE_EXTENT.y0 * hwG) - breath) * persp;
+    const wy1 = (y + Math.max(SEOUL_EXTENT.y1 * hwS, SINGAPORE_EXTENT.y1 * hwG) + breath + lift) * persp;
+    const dot = Math.max(W.edgePxLandscapeSeoul, W.edgePxLandscape, W.edgePxSeoul, W.edgePx) / 2 + 1;
+    const sx = (X: number) => (w / 2) * (1 + X / halfW);
+    const sy = (Y: number) => (h / 2) * (1 - Y / halfH);
+    return { left: sx(wx0) - dot, right: sx(wx1) + dot, top: sy(wy1) - dot, bottom: sy(wy0) + dot };
+  }
+
+  /**
+   * 판마다 덮개 구간 [c0, c1](스크롤 px)을 계산합니다(판 덮개 브리프 2.1). 스크롤이 이 안에
+   * 있으면 판의 불투명한 안쪽(PLATE_FEATHER를 뺀 영역)이 형상 상자를 전부 덮습니다.
+   * 판은 챕터 리빌 div 안에 있어, 리빌 전(translateY 40px)이나 리빌 중에 읽어도 그 이동을
+   * 빼고 자리 잡은 뒤의 위치로 계산합니다.
+   */
+  private readPlates() {
+    const sy = window.scrollY;
+    const box = this.computeShapeBox();
+    this.shapeBox = box;
+    const F = PLATE_FEATHER;
+    const fx = window.matchMedia("(max-width: 639px)").matches ? F.xPhone : F.x;
+    const plates: Record<string, PlateCover> = {};
+    for (const id of PLATE_IDS) {
+      const el = document.querySelector(`.reading-plate[data-plate="${id}"]`);
+      if (!el) continue;
+      const r = el.getBoundingClientRect();
+      let ty = 0;
+      const rev = el.closest("[data-chapter-reveal]");
+      if (rev) {
+        const tf = getComputedStyle(rev).transform;
+        if (tf && tf !== "none") ty = new DOMMatrixReadOnly(tf).m42;
+      }
+      const top = r.top + sy - ty + F.y;
+      const bottom = r.bottom + sy - ty - F.y;
+      const left = r.left + fx;
+      const right = r.right - fx;
+      const coversX = left <= box.left && right >= box.right;
+      const c0 = top - box.top;
+      const c1 = bottom - box.bottom;
+      plates[id] = { id, top, bottom, left, right, cover: coversX && c1 > c0 ? { c0, c1 } : null };
+    }
+    this.plates = plates;
   }
 
   /**
@@ -639,7 +742,12 @@ export class BackgroundScene {
       this.water.setLightDx(lightDx);
       if (process.env.NODE_ENV !== "production") {
         // 개발 빌드에서만. 속도를 스크린숏이 아니라 값으로 재기 위해서입니다(브리프 4장).
-        (window as unknown as { __naruBg?: unknown }).__naruBg = { lightDx, dxScreen, uvSpan, s4Eased: this.s4Eased, lapEased: this.lapEased, t: performance.now() };
+        // 2026-09-26 (판 덮개 브리프 4): 형상이 바뀌는 세 진행도와 판 덮개도 값으로 잽니다.
+        (window as unknown as { __naruBg?: unknown }).__naruBg = {
+          lightDx, dxScreen, uvSpan, s4Eased: this.s4Eased, lapEased: this.lapEased, t: performance.now(),
+          sy: this.scrollY, vh, s1, s2, reveal, morph, dissolve, ringPhase: this.ringPhase,
+          shapeBox: this.shapeBox, plates: this.plates,
+        };
       }
       let opacity: number;
       if (portrait) {

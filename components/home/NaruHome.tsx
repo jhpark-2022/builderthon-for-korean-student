@@ -222,8 +222,10 @@ const eyebrowTrack = (locale: "ko" | "en") => (locale === "en" ? "" : "!tracking
 // 2026-09-26 (한 축 브리프 2): 판은 본문 기둥을 따라갑니다. 기본은 WIDE(64rem) 폭이고, WIDE
 // 블록이 없는 챕터(#gains)는 read로 READ(48rem) 폭에 맞춥니다. 둘 다 가운데 축이라 위치는
 // 전과 같습니다. 모양(투명도, 흐림, 가장자리)은 그대로입니다.
-function ReadingPlate({ read = false }: { read?: boolean }) {
-  return <div aria-hidden className={read ? "reading-plate reading-plate--read" : "reading-plate"} />;
+// 2026-09-26 (판 덮개 브리프 2.1): data-plate는 배경(BackgroundScene.readAnchors)이 판을 찾는 손잡이입니다.
+// 형상이 바뀌는 구간을 이 판들 뒤에 둡니다. 값은 챕터 id.
+function ReadingPlate({ id, read = false }: { id: "december" | "gains" | "naru" | "join"; read?: boolean }) {
+  return <div aria-hidden data-plate={id} className={read ? "reading-plate reading-plate--read" : "reading-plate"} />;
 }
 
 // 문장 안의 한 구절을 앵커로. notSequel의 "변하지 않는 두 개"가 #why로 갑니다.
@@ -614,7 +616,7 @@ export default function NaruHome() {
           5차 그대로이고 바뀐 것은 보이는 문법입니다. */}
       <Chapter id="december" labelledBy="december-title" align="center" className={BAND_TINT}>
         <BandFades />
-        <ReadingPlate />
+        <ReadingPlate id="december" />
         {/* 2026-09-18 (감사 반영 브리프 8): 아이브로는 보라 외곽선 1종. 주황 글자·주황 발광을 뺐습니다. */}
         <Eyebrow color="purple" className={eyebrowTrack(locale)}>
           {`${t(naru.december.eyebrowPrefix)}\u2002${decemberEventLabel(locale)}`}
@@ -1020,7 +1022,7 @@ export default function NaruHome() {
           그리드), 폰은 두 열 + 마지막 한 장 전폭. 아래 한 줄이 "왜 제목뿐인가"의 답.
           8월 참가 혜택 필과 같은 emerald. 기본 이음매. */}
       <Chapter id="gains" labelledBy="gains-title" align="center">
-        <ReadingPlate read />
+        <ReadingPlate id="gains" read />
         <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.gains.eyebrow)}</Eyebrow>
         <h2 id="gains-title" className={H2}><Halo tone="violet">{t(naru.gains.heading)}</Halo></h2>
         {/* 제목 옆의 구체적인 한 줄(가독성 브리프 5, 2026-09-25 사용자 승인). 챕터 머리의 문단. */}
@@ -1081,7 +1083,7 @@ export default function NaruHome() {
           exec와 measure는 #december의 멘토링 블록으로 갔습니다. 이벤트의
           실행에 관한 문장이라서요. 여기 남은 것은 코어 둘, 경첩, 마지막 줄. */}
       <Chapter id="naru" labelledBy="naru-title" align="center" className="pt-20 sm:pt-28 lg:pt-36">
-        <ReadingPlate />
+        <ReadingPlate id="naru" />
         <Image
           src="/naru/naru-master-rev.png"
           alt={t(naru.hero.logoAlt)}
@@ -1337,7 +1339,7 @@ export default function NaruHome() {
           그 순서면 앞의 모든 것이 이 문단의 근거가 됩니다. 앞에 놓으면 근거 없이
           주장부터 하게 됩니다. */}
       <Chapter id="join" labelledBy="join-title" align="center">
-        <ReadingPlate />
+        <ReadingPlate id="join" />
         <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.join.eyebrow)}</Eyebrow>
         <h2 id="join-title" className={H2}><Halo tone="violet">{t(naru.join.heading)}</Halo></h2>
         <p className={`${READ} mt-6 break-keep text-left text-base leading-relaxed text-white/75 lg:text-center`}>
