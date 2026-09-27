@@ -1890,9 +1890,16 @@ export const naru = {
         },
         line: { ko: "추가 제출 요구는 없습니다.", en: "Nothing extra to hand in." },
         chips: [{ ko: "방향 전환은 팀의 몫", en: "Changing course is yours to call" }],
+        // DECIDED 2026-09-27 (사용자, 9/7 8월 참가자 회고): 왜 하는지가 바로 읽히게.
+        // UI는 AI가 바로 만들어 주지만 어떤 기능을 왜 넣을지 판단하는 훈련은 배울 곳이
+        // 없다는 것이 참가자의 말이었습니다. 인턴도 그 기회를 잘 받지 못합니다.
+        // 길이는 Day 3 세션 설명과 비슷하게 맞춥니다.
         session: {
           title: { ko: "PO session", en: "PO session" },
-          body: { ko: "현업에서는 무엇에 집중하는지. 안 만들 것도 여기서 정합니다", en: "What people in the job actually focus on, and what they decide not to build" },
+          body: {
+            ko: "현업 PO가 무엇을 왜 만들기로 했는지 푸는 3시간. 만드는 건 AI가 빨라도, 고르는 건 사람입니다",
+            en: "Three hours with a working PO on what they chose to build, and why. AI builds fast. Choosing is still yours.",
+          },
         },
       },
       {
