@@ -8,6 +8,7 @@
 
 ### 2026-09
 
+- [2026-09-27 해외 창업가 세션, 영문 마스터 로고](#2026-09-27-founders-session)
 - [2026-09-26 #naru 앞 틈에는 싱가포르](#2026-09-26-singapore-before-naru)
 - [2026-09-26 숫자 줄을 가운데로](#2026-09-26-stats-center)
 - [2026-09-26 형상은 틈에서만 보인다](#2026-09-26-shape-in-gaps)
@@ -125,6 +126,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-09-27-founders-session"></a>
+## 2026-09-27 해외 창업가 세션, 영문 마스터 로고
+- 범위: `data/naru.ts`(#december Day 3 세션), `components/home/NaruHome.tsx`(#naru 마스터 로고), `public/naru/naru-master-en-rev.svg`(새 파일), `public/naru/README.md`.
+- 한 것: Day 3의 Empower session을 "Founders from abroad"로 바꿨습니다. 한국에 자리 잡은 해외 창업가를 만나는 3시간 세션입니다(사용자 요청, 9/27 학생 단체 미팅 반영). 함께 여는 단체 이름은 아직 화면에 쓰지 않습니다(DECIDED 2026-09-27).
+  영문 화면의 #naru 마스터 로고에 한글 "나루"가 남아 있었습니다. 영문에서는 "나루"와 "N A R U" 두 줄 대신 아웃라인 NARU 한 줄인 영문 마스터를 씁니다. 헤더·푸터 락업(2026-09-21)과 같은 규칙입니다.
+- 검증: `?lang=en`에서 naru 이미지 셋 모두 영문 자산, 본문에 "나루" 없음. `?lang=ko`는 그대로. tsc 통과.
+- 커밋: c0f43bb
 
 <a id="2026-09-26-singapore-before-naru"></a>
 ## 2026-09-26 #naru 앞 틈에는 싱가포르
