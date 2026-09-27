@@ -703,9 +703,11 @@ export const naru = {
       {
         num: "04",
         title: { ko: "무순위 어워드", en: "Awards with no ranking" },
+        // DECIDED 2026-09-28 (사용자): 왜 순위를 매기지 않는지, 주최자가 미팅에서 한
+        // 말에서 가운데 문장을 가져왔습니다. 규칙만 있던 카드에 이유를 붙입니다.
         body: {
-          ko: "1등을 뽑지 않습니다. 독보적이었던 지점을 적습니다.",
-          en: "No first place. We write down what each team was singular at.",
+          ko: "1등을 뽑지 않습니다. 다 같이 애썼는데 누구는 받고 누구는 못 받는 게 늘 마음이 안 좋았습니다. 그래서 독보적이었던 지점을 적습니다.",
+          en: "No first place. Everyone put in the same days, and it never sat right with us that some went home with something and others did not. So we write down what each team was singular at.",
         },
         evidence: { ko: "8월 4부문 10팀", en: "August: 10 teams across 4 categories" },
       },
