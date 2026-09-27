@@ -50,6 +50,18 @@ PNG는 투명 여백을 잘라내고 긴 변을 900px로 맞췄습니다. 마스
 다시 받으면 됩니다. Noto Sans CJK KR Black을 woff2로 서브셋해 SVG에 임베드하는
 방법도 있지만, 필요한 글자가 "나루" 두 자뿐이라 아웃라인 쪽이 간단합니다.
 
+## 영문 마스터 (ADDED 2026-09-27)
+
+`naru-master-en-rev.svg`는 홈 `#naru` 챕터가 **영문 화면에서만** 쓰는 마스터입니다
+(사용자: 영문 화면에서는 "나루"나 NARU 둘 중 하나만, 한글이 보이지 않게).
+
+- 원본은 `SVG/naru_03_마스터_반전.svg`입니다. 한글 "나루"(`<text>`, 시스템 서체)와
+  그 아래 작은 "N A R U" 두 줄을 지우고, `naru-name-en-rev.svg`의 아웃라인 NARU를
+  0.55배로 줄여 같은 자리(가운데 x=180, 대문자 229~261)에 놓았습니다.
+- 원 둘레 글자(KOREAN STUDENT BUILDERS, SINGAPORE)는 원본처럼 임베드된 Montserrat
+  800으로 그립니다. 쓰지 않는 600·700 `@font-face`와 c2pa 메타데이터는 뺐습니다(85KB에서 29KB).
+- 한글 화면은 그대로 `naru-master-rev.png`입니다.
+
 ## 매니페스토 PDF (ADDED 2026-09-19)
 
 `naru-manifesto-v1-2026-09.pdf`는 `12월 빌더톤/그룹 기획/매니페스토_나루.pdf`의

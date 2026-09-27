@@ -1108,11 +1108,16 @@ export default function NaruHome() {
           실행에 관한 문장이라서요. 여기 남은 것은 코어 둘, 경첩, 마지막 줄. */}
       <Chapter id="naru" labelledBy="naru-title" align="center" className="pt-20 sm:pt-28 lg:pt-36">
         <PlateSegment id="naru">
+        {/* DECIDED 2026-09-27 (사용자): 영문 화면에서는 한글 "나루"가 보이지 않습니다.
+            헤더·푸터 락업과 같은 규칙(2026-09-21). 영문 마스터는 원본 03 반전에서
+            "나루"와 "N A R U" 두 줄을 아웃라인한 NARU 한 줄로 바꾼 것입니다
+            (public/naru/README.md). */}
         <Image
-          src="/naru/naru-master-rev.png"
+          src={locale === "en" ? "/naru/naru-master-en-rev.svg" : "/naru/naru-master-rev.png"}
           alt={t(naru.hero.logoAlt)}
           width={900}
           height={900}
+          unoptimized={locale === "en"}
           // 보조 마크(감사 반영 브리프 6.3): 폰 160px, 데스크톱 220px. 형태는 로고 가이드가 정본이라
           // 그대로입니다.
           className="mx-auto h-auto w-[160px] sm:w-[220px]"

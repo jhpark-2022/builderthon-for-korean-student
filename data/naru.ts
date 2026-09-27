@@ -1907,9 +1907,16 @@ export const naru = {
         // 8월에 없었던 자리라는 것이 이 날의 요점입니다(PDF 04, gaps[2]와 같은 사실).
         line: { ko: "팀 사이 공유는 8월에 없었던 자리입니다.", en: "Teams sharing with each other did not exist in August." },
         chips: [{ ko: "멘토링은 이 날까지", en: "Mentoring ends here" }],
+        // DECIDED 2026-09-27 (사용자, 9/27 학생 단체 미팅): Empower session이
+        // 한국에서 창업한 해외 창업가를 만나는 세션이 됐습니다. 국내 VC와 창업가는
+        // 원하면 만날 수 있지만 한국 안의 외국인 창업가는 닿기 어렵다는 것이 그 자리의
+        // 결론이었습니다. 함께 여는 단체 이름은 아직 화면에 쓰지 않습니다.
         session: {
-          title: { ko: "Empower session", en: "Empower session" },
-          body: { ko: "창업과 커리어를 다루는 3시간 세션", en: "Three hours on starting something, and on careers" },
+          title: { ko: "Founders from abroad", en: "Founders from abroad" },
+          body: {
+            ko: "한국에 자리 잡은 해외 창업가들을 만나는 3시간. 밖에서 온 눈으로 본 한국 시장",
+            en: "Three hours with founders from abroad who built their companies in Korea, and how the market looks to them",
+          },
         },
         submit: { ko: "덱을 포함한 사전 제출물", en: "The deck and what goes with it" },
       },
