@@ -23,7 +23,6 @@ import Chip, { ChipDot } from "@/components/ui/Chip";
 import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 import RouteMap from "@/components/shared/RouteMap";
 import MobileChatBar from "@/components/shared/MobileChatBar";
-import { BAND_TINT, BandFades } from "@/components/shared/Band";
 import Chapter from "@/components/journey/Chapter";
 import Reveal from "@/components/shared/Reveal";
 import Eyebrow from "@/components/ui/Eyebrow";
@@ -628,9 +627,12 @@ export default function NaruHome() {
       {/* 8월 프로그램 챕터의 격식(2026-09-17, 8월 문법 브리프): 섹션 띠(BAND_TINT),
           주황 글자 아이브로 + 발광 H2 + 리드, 숫자 둘, 노선도, 데이 카드 다섯,
           강조 상자(초록·호박), 번호 배지 카드, 플로우 스트립, CTA. 내용과 순서는
-          5차 그대로이고 바뀐 것은 보이는 문법입니다. */}
-      <Chapter id="december" labelledBy="december-title" align="center" className={BAND_TINT}>
-        <BandFades />
+          5차 그대로이고 바뀐 것은 보이는 문법입니다.
+          DECIDED 2026-09-28 (사용자: 서울과 싱가포르가 보일 때 "너무 어두워서 잘 안보이는 때가 있음"):
+          섹션 띠(BAND_TINT)를 걷습니다. 50% 막이라 #december 안의 틈(데스크톱에서 서울이 보이는 유일한
+          틈)에서 서울이 절반 밝기였습니다(실측: 캔버스 대비 0.55). 글 뒤는 읽기 판이 가라앉히므로 띠가
+          맡던 가독성은 판이 대신합니다. /2026-08의 띠는 그대로입니다(components/shared/Band.tsx). */}
+      <Chapter id="december" labelledBy="december-title" align="center">
         <PlateSegment id="december">
         {/* 2026-09-18 (감사 반영 브리프 8): 아이브로는 보라 외곽선 1종. 주황 글자·주황 발광을 뺐습니다. */}
         <Eyebrow color="purple" className={eyebrowTrack(locale)}>
