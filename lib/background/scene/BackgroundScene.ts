@@ -71,6 +71,8 @@ export interface PlateCover {
   top: number; bottom: number; left: number; right: number;
   coversX: boolean;
   cover: { c0: number; c1: number; fade: number } | null;
+  /** 판이 저절로 숨기지 못해 stages.bridge로 만든 덮개 구간인가(#gains 판, 데스크톱). */
+  forced?: boolean;
 }
 
 export class BackgroundScene {
@@ -445,6 +447,17 @@ export class BackgroundScene {
       plates.push({ id, top, bottom, left, right, coversX, cover: hides ? { c0, c1, fade } : null });
     }
     plates.sort((a, b) => a.top - b.top);
+    // #gains 판(건너기의 판)이 저절로 숨기지 못하면, 판의 한가운데가 형상의 한가운데를 지나는 스크롤을
+    // 중심으로 덮개 구간을 만듭니다(config의 stages.bridge).
+    const bridge = plates.find((p) => p.id === "gains");
+    if (bridge && !bridge.cover) {
+      const B = SEOUL_WATERMARK.stages.bridge;
+      const m = (bridge.top + bridge.bottom) / 2 - (box.top + box.bottom) / 2;
+      const f = B.fadeVh * window.innerHeight;
+      const hold = B.holdVh * window.innerHeight;
+      bridge.cover = { c0: m - hold / 2 - f, c1: m + hold / 2 + f, fade: f };
+      bridge.forced = true;
+    }
     this.plates = plates;
   }
 
@@ -475,15 +488,18 @@ export class BackgroundScene {
       return null;
     };
 
-    // DECIDED 2026-09-26 3차 (사용자: #gains와 #naru 사이 틈에 "아직 한국 shape이 보이는데?"):
-    // 건너기는 #naru 앞, 형상을 숨기는 마지막 판 뒤입니다. 같은 날 앞서 정한 "#gains와 #naru 사이
-    // 이음매에서는 싱가포르"로 돌아갑니다. 판 덮개 브리프 2.2의 "naru 판"을 대신합니다.
-    const decFirst = this.plates.find((p) => p.cover && (p.id === "december" || p.id.startsWith("december-")));
-    const beforeNaru = this.plates.filter((p) => p.cover && p !== decFirst && p.top < this.naruTop);
-    let naru: { a: number; b: number } | null = null;
-    for (let k = beforeNaru.length - 1; k >= 0 && !naru; k--) {
-      const c = beforeNaru[k].cover!;
-      if (c.c1 - c.fade - (c.c0 + c.fade) >= 1) naru = { a: c.c0 + c.fade, b: c.c1 - c.fade };
+    // DECIDED 2026-09-28 (사용자: #gains 앞 틈에는 서울, #naru 앞 틈부터 싱가포르): 건너기는 #gains 판
+    // 뒤입니다(데스크톱은 stages.bridge로 만든 덮개, 폰은 판 그대로). 2026-09-26 3차의 "#naru 앞 마지막
+    // 판"은 데스크톱에서 #december 둘째 조각이 되어 #gains 앞 틈이 싱가포르였습니다.
+    // #gains 판이 없는 구성에서는 #naru 앞, 형상을 숨기는 마지막 판(떠오름의 판은 빼고)으로 갑니다.
+    let naru = hidden("gains");
+    if (!naru) {
+      const decFirst = this.plates.find((p) => p.cover && (p.id === "december" || p.id.startsWith("december-")));
+      const beforeNaru = this.plates.filter((p) => p.cover && p !== decFirst && p.top < this.naruTop);
+      for (let k = beforeNaru.length - 1; k >= 0 && !naru; k--) {
+        const c = beforeNaru[k].cover!;
+        if (c.c1 - c.fade - (c.c0 + c.fade) >= 1) naru = { a: c.c0 + c.fade, b: c.c1 - c.fade };
+      }
     }
     naru ??= hidden("naru");
     let morphStart: number, morphSpan: number;
