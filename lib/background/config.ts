@@ -195,6 +195,8 @@ export const SHAPES = {
  * 최고 속도가 데스크톱 약 80px/s, 폰 약 28px/s를 넘지 않습니다.
  * 더 느리게는 0.03(한 바퀴 33초), 더 좁게는 0.08/0.10까지가 브리프가 적은 범위입니다.
  */
+// 2026-09-28부터 LIGHT_SWEEP, LIGHT_MAX_RATE, LIGHT_PORTRAIT는 쓰지 않습니다(아래 LIGHT_STATIONS가 대신).
+// 되돌릴 때를 위해 둡니다.
 // portrait 값은 2026-09-24부터 쓰지 않습니다(세로 화면은 아래 LIGHT_PORTRAIT). 되돌릴 때를 위해 둡니다.
 export const LIGHT_SWEEP = { landscape: 0.12, portrait: 0.15 } as const;
 export const LIGHT_MAX_RATE = 0.05;
@@ -219,6 +221,29 @@ export const LIGHT_PORTRAIT = {
  * 판의 불투명한 안쪽을 이 값으로 계산해 형상이 바뀌는 구간을 그 뒤에 둡니다.
  */
 export const PLATE_FEATHER = { y: 64, x: 40, xPhone: 0 } as const;
+
+/**
+ * 빛 정거장. DECIDED 2026-09-28 (사용자: "shape이 나올 때마다 빛이 나오는 원의 위치가 다 달랐으면",
+ * "너무 아래에 있어서 빛이 잘 보이지 않는 일이 없었으면"). 형상이 보이는 틈마다 나루 점이 설 자리입니다.
+ * 틈이 화면 한가운데에 올 때 점이 그 자리에 닿고, 틈과 틈 사이(판 뒤)에서 다음 자리로 옮겨 갑니다.
+ * u, v는 그때 서 있는 형상(서울 또는 싱가포르)의 구운 점 범위 안의 비율입니다. u는 가로(−1 왼쪽 끝,
+ * 1 오른쪽 끝), v는 세로(−1 아래 끝, 1 위 끝). v를 0 이상으로 두어 점이 화면 가운데보다 아래로
+ * 내려가지 않게 합니다. 틈이 다섯보다 많으면 처음부터 다시 씁니다.
+ * 전의 가로 흔들기(LIGHT_SWEEP, LIGHT_MAX_RATE, LIGHT_PORTRAIT)는 이것으로 대신합니다.
+ */
+export const LIGHT_STATIONS = [
+  { u: -0.42, v: 0.32 },  // 서울, 왼쪽 위
+  { u: 0.05, v: 0.55 },   // 서울, 가운데 위
+  { u: 0.55, v: 0.10 },   // 싱가포르, 오른쪽
+  { u: -0.50, v: 0.22 },  // 싱가포르, 왼쪽
+  { u: 0.28, v: 0.48 },   // 싱가포르, 오른쪽 위
+] as const;
+/**
+ * 점이 정거장 사이를 따라가는 빠르기. follow는 초당 따라잡는 비율, maxRate는 초당 uv 이동 상한.
+ * maxRate 0.25: 해가 진 자리(화면 아래 21%)에서 첫 정거장까지 오르는 길이 데스크톱에서 스크롤 약 0.6화면뿐이라,
+ * 0.12로는 빠르게 읽을 때(600px/s) 첫 틈에 닿지 못했습니다(실측 1728×906: 첫 틈에서 아래 37%).
+ */
+export const LIGHT_FOLLOW = { follow: 2.5, maxRate: 0.25 } as const;
 
 export const RING = {
   baseRate: 0.5,

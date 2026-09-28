@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { CROSSING, RING, SHAPES, FIELD, SEOUL_WATERMARK, PLATE_FEATHER, LIGHT_SWEEP, LIGHT_MAX_RATE, LIGHT_PORTRAIT, pickQuality, type QualityTier } from "../config";
+import { CROSSING, RING, SHAPES, FIELD, SEOUL_WATERMARK, PLATE_FEATHER, LIGHT_STATIONS, LIGHT_FOLLOW, pickQuality, type QualityTier } from "../config";
 import { SEOUL_POINTS, SEOUL_STRIDE } from "../shapes/seoul";
 import { SINGAPORE_POINTS, SINGAPORE_STRIDE } from "../shapes/singapore";
 import { computeStageLayout, readStageRect, findStageElement, type StageLayout } from "../utils/shapeLayout";
@@ -316,11 +316,15 @@ export class BackgroundScene {
   // 푸터(#closing) 상단. 문서 끝에서 빛을 거두는 기준(2026-09-26). 없으면 Infinity라 거두지 않습니다.
   private closingTop = Infinity;
   // 구간 4 진행도를 부드럽게 따라가는 값(점의 가로 이동용). 휠의 계단을 지웁니다.
-  private s4Eased = 0;
+  // 빛 정거장(2026-09-28). 형상이 보이는 틈마다 점이 설 자리. sy는 그 틈이 화면 한가운데에 오는
+  // 스크롤, fx·fy는 화면 비율(fx 왼쪽 0, fy 아래 0). schedule()이 채웁니다.
+  private lightKeys: { sy: number; fx: number; fy: number }[] = [];
+  // 점이 지금 서 있는 자리(uv). 목표를 부드럽게 따라갑니다. 첫 프레임은 null.
+  private lightUv: { x: number; y: number } | null = null;
   // 세로 화면의 빛(2026-09-24): 건너기 끝부터 센 바퀴 수를 부드럽게 따라가는 값.
-  private lapEased = 0;
+
   // 지난 프레임이 세로였는가. 회전하면 두 값을 목표로 바로 맞춥니다. 첫 프레임은 null.
-  private lightPortrait: boolean | null = null;
+
   // 수면 평면의 두 끝을 화면에 투영할 때 쓰는 벡터(매 프레임 새로 만들지 않습니다).
   private readonly sweepA = new THREE.Vector3();
   private readonly sweepB = new THREE.Vector3();
@@ -539,6 +543,43 @@ export class BackgroundScene {
       if (Number.isFinite(this.joinTop)) this.warnCover("dissolve-fallback", "#join 판이 형상을 덮는 구간이 없습니다. 사라짐을 #join 머리 앵커로 둡니다(사라지는 것이 보입니다).");
     }
     this.sched = { revealStart, revealSpan, morphStart, morphSpan, dissolveStart, dissolveSpan };
+    this.placeLightKeys();
+  }
+
+  /**
+   * 빛 정거장(DECIDED 2026-09-28, config의 LIGHT_STATIONS). 형상이 보이는 틈(떠오름이 끝난 뒤,
+   * 사라짐이 시작되기 전)마다 하나씩, 틈이 화면 한가운데에 오는 스크롤에 점이 설 자리를 둡니다.
+   * 자리는 그때 서 있는 형상의 구운 점 범위 안에서 정하고, 화면 비율로 저장합니다.
+   */
+  private placeLightKeys() {
+    const w = window.innerWidth;
+    const vh = window.innerHeight;
+    const portrait = vh > w;
+    const halfH = 30 * Math.tan(((portrait ? 75 : 60) * Math.PI) / 360);
+    const halfW = halfH * (w / vh);
+    const W = SEOUL_WATERMARK;
+    const hwS = (portrait ? W.portrait.heroW : W.landscapeW) * halfW;
+    const hwG = (portrait ? W.portrait.singaporeW : W.singaporeW) * halfW;
+    const P = this.sched;
+    const keys: { sy: number; fx: number; fy: number }[] = [];
+    for (let i = 0; i + 1 < this.plates.length; i++) {
+      const mid = (this.plates[i].bottom + this.plates[i + 1].top) / 2;
+      // 어느 형상의 틈인지는 틈이 화면 한가운데에 올 때로 가립니다.
+      const syMid = mid - vh / 2;
+      if (syMid <= P.revealStart + P.revealSpan || syMid >= P.dissolveStart) continue;
+      const seoul = syMid < P.morphStart;
+      const ext = seoul ? SEOUL_EXTENT : SINGAPORE_EXTENT;
+      const hw = seoul ? hwS : hwG;
+      const st = LIGHT_STATIONS[keys.length % LIGHT_STATIONS.length];
+      const nx = (ext.x0 + ext.x1) / 2 + st.u * (ext.x1 - ext.x0) / 2;
+      const ny = (ext.y0 + ext.y1) / 2 + st.v * (ext.y1 - ext.y0) / 2;
+      // 형상의 중심은 화면 가운데(SEOUL_WATERMARK.cx, cy = 0.5)입니다.
+      const fx = 0.5 + (nx * hw) / (2 * halfW);
+      const fy = 0.5 + (ny * hw) / (2 * halfH);
+      // 점은 틈이 자기 높이를 지날 때 그 자리에 닿습니다. 그 순간 점이 판 뒤가 아니라 맑은 틈 안에 있습니다.
+      keys.push({ sy: mid - (1 - fy) * vh, fx, fy });
+    }
+    this.lightKeys = keys;
   }
 
   /**
@@ -801,28 +842,7 @@ export class BackgroundScene {
       // 판 뒤에서는 사라지고 틈에서만 보입니다(DECIDED 2026-09-26 2차, config의 hideFadeVh).
       const visible = 1 - this.hiddenAt(this.scrollY);
       const shapeOpacity = reveal * (1 - dissolve) * visible;
-      // 구간 4 진행(건너기 끝 → 형상 거두기 시작). DECIDED 2026-09-23 (사용자: "싱가폴 모양으로
-      // 넘어가면 해가 아예 멈추고 빛이 퍼지는 것도 없음"): 서울 구간에서는 스크롤이 나루 점을
-      // 올리고 파문이 건너는 동안 커지는데, 싱가포르에 닿은 뒤로는 스크롤에 반응하는 것이
-      // 없었습니다. 셰이더가 이 값으로 점을 섬을 따라 움직이고 파문을 살려 둡니다.
-      // 2026-09-23 (사용자: "화면을 넓게 써서 빛이 이동했으면"): 끝을 형상 거두기 시작에서
-      // 문서 끝으로 늘립니다. 같은 폭을 더 긴 스크롤에 나눠 움직여 천천히 갑니다.
       const docEnd = document.documentElement.scrollHeight - vh;
-      const s4 = clamp((this.scrollY - morphEnd) / Math.max(docEnd - morphEnd, 1), 0, 1);
-      // 휠은 한 번에 백 px씩 건너뛰어서, 스크롤 값을 그대로 쓰면 점이 계단처럼 튑니다
-      // ("너무 확확 이동"). 점만 지수 감쇠로 따라가게 합니다. 사건을 시간이 만드는 것이 아니라
-      // 스크롤이 정한 자리까지 미끄러지는 것이고, 모션 민감 설정에서는 바로 그 자리에 섭니다.
-      // 2026-09-23 (사용자: "움직이는 속도가 너무 빠름"): 계수 2.4 → 0.7. 2.4는 1초에 90%를
-      // 따라잡아 휠 한 번에 점이 휙 옮겨 갔습니다. 0.7이면 1초에 50%, 3초 남짓에 거의 다 가서
-      // 천천히 흘러갑니다. 경로와 폭은 그대로입니다.
-      // 2026-09-23 (사용자: "더 느리게, 이거의 50%로"): 0.7 → 0.35. 1초에 약 30%, 6초 남짓에 거의 다.
-      // DECIDED 2026-09-23 (싱가포르 빛 속도 브리프 2.2): 지수 감쇠는 스크롤이 클수록 처음 속도가
-      // 비례해서 커져, 바닥까지 플릭하면 점이 1초에 화면 폭의 70%를 갔습니다. 한 프레임의 이동량에
-      // 상한(LIGHT_MAX_RATE, 초당 진행도 0.05)을 둡니다. 작은 스크롤은 전처럼 부드럽게 따라가고,
-      // 큰 스크롤은 상한 속도로 흘러갑니다. 모션 민감 설정에서는 전처럼 바로 그 자리에 섭니다.
-      const want = (s4 - this.s4Eased) * Math.min(1, dt * 0.35);
-      const cap = LIGHT_MAX_RATE * dt;
-      this.s4Eased = this.reduced ? s4 : this.s4Eased + Math.max(-cap, Math.min(cap, want));
       this.water.setStages(s1, s2, morph);
       // 구간 6 (DECIDED 2026-09-26, 사용자: 맨 아래에서는 빛과 배경 효과가 보이지 않게).
       // 깊은 물의 빛(나루 점, 번짐, 파문, 물살)을 푸터가 화면에 들어오기 **전에** 다 거둡니다.
@@ -838,43 +858,60 @@ export class BackgroundScene {
       // 세로 화면은 크기와 자리가 처음부터 끝까지 같습니다. calm으로 옮기지 않습니다
       // (2026-09-23부터 naruW, naruCy, naruBright를 지웠습니다).
       const portrait = vh > window.innerWidth;
-      // LIGHT_SWEEP은 화면 폭 대비입니다. 셰이더의 uv 1은 화면 폭이 아니라 수면 평면의 폭이고,
-      // 그 평면은 화면보다 12% 넓게 깔리고(WaterSurface.resize의 여유) 카메라 돌리로 조금 더
-      // 커집니다. 실측하니 0.12가 화면 폭의 0.136(폰 0.15가 0.179)으로 그려졌습니다. 평면의 두 끝을
-      // 매 프레임 화면에 투영해 uv 1이 화면 몇 폭인지 재고 그만큼 나눕니다.
+      // 셰이더의 uv 1은 화면 폭이 아니라 수면 평면의 폭이고, 그 평면은 화면보다 12% 넓게 깔리고
+      // (WaterSurface.resize의 여유) 카메라 돌리로 조금 더 커집니다. 평면의 네 끝을 매 프레임 화면에
+      // 투영해 uv 1이 화면 몇 폭(높이)인지 재고, 화면 비율을 uv로 바꿀 때 그만큼 나눕니다.
       this.sweepA.set(-1, 0, 0).applyMatrix4(this.water.mesh.matrixWorld).project(this.cam.camera);
       this.sweepB.set(1, 0, 0).applyMatrix4(this.water.mesh.matrixWorld).project(this.cam.camera);
       const uvSpan = Math.abs(this.sweepB.x - this.sweepA.x) / 2 || 1;
-      // 점의 가로 이동(DECIDED 2026-09-24, 폰 빛 움직임 브리프 2.1~2.2). 셰이더에 있던 식
-      // sweep × sin(2π × smoothstep(0, 1, s4Eased))를 여기서 그대로 계산합니다. 화면 폭 대비 값을
-      // 위의 uvSpan으로 나눠 uv로 넘기는 것도 전과 같습니다.
+      this.sweepA.set(0, -1, 0).applyMatrix4(this.water.mesh.matrixWorld).project(this.cam.camera);
+      this.sweepB.set(0, 1, 0).applyMatrix4(this.water.mesh.matrixWorld).project(this.cam.camera);
+      const uvSpanY = Math.abs(this.sweepB.y - this.sweepA.y) / 2 || 1;
+      // 빛 정거장(DECIDED 2026-09-28, config의 LIGHT_STATIONS). 해가 다 내려간 자리(셰이더의 옛 식이
+      // 그 순간 두는 자리)에서 출발해 첫 정거장으로, 그 뒤로는 정거장에서 정거장으로 스크롤을 따라
+      // 갑니다. 각 정거장에는 그 틈이 화면 한가운데에 올 때 닿습니다. 전의 가로 흔들기(구간 4의
+      // sin, 세로 화면의 바퀴)를 대신합니다. 휠의 계단은 아래 따라가기가 지웁니다.
+      const aspect = window.innerWidth / vh;
       const ss01 = (x: number) => { const c = clamp(x, 0, 1); return c * c * (3 - 2 * c); };
-      // 폰을 돌리면(가로 ↔ 세로) 두 값을 목표로 바로 맞춥니다. 한 프레임 튀지만 회전 중이라 보이지 않습니다.
-      const lap = Math.max(0, (this.scrollY - morphEnd) / (LIGHT_PORTRAIT.lapVh * vh));
-      if (this.lightPortrait !== null && this.lightPortrait !== portrait) { this.s4Eased = s4; this.lapEased = lap; }
-      this.lightPortrait = portrait;
-      let dxScreen: number;
-      if (portrait) {
-        // DECIDED 2026-09-24 (폰 빛 움직임 브리프 2.3): 세로 화면은 문서 끝까지 한 바퀴가 아니라
-        // 2.6화면마다 한 바퀴(바퀴 수로 셉니다. 1에서 자르지 않고 문서 끝에서 자연히 멈춥니다).
-        // 따라가기는 가로와 같은 감쇠(초당 35%)에 상한은 초당 0.07바퀴. 도착 직후 튀지 않게 첫
-        // 1/4바퀴 동안 폭을 0에서 키웁니다(가로의 smoothstep과 같은 역할).
-        const wantP = (lap - this.lapEased) * Math.min(1, dt * 0.35);
-        const capP = LIGHT_PORTRAIT.maxRate * dt;
-        this.lapEased = this.reduced ? lap : this.lapEased + Math.max(-capP, Math.min(capP, wantP));
-        const ramp = ss01(this.lapEased / 0.25);
-        dxScreen = LIGHT_PORTRAIT.sweep * ramp * Math.sin(2 * Math.PI * this.lapEased);
-      } else {
-        // 가로 화면은 전과 같습니다(문서 끝까지 한 바퀴, smoothstep, LIGHT_MAX_RATE).
-        dxScreen = LIGHT_SWEEP.landscape * Math.sin(2 * Math.PI * ss01(this.s4Eased));
+      const lxBase = portrait ? 0.5 : 0.2 + 0.3 * ss01((aspect - 0.75) / (1.3 - 0.75));
+      const toUv = (k: { fx: number; fy: number }) => ({ x: 0.5 + (k.fx - 0.5) / uvSpan, y: 0.5 + (k.fy - 0.5) / uvSpanY });
+      const keys = this.lightKeys;
+      let target = { x: lxBase, y: 0.24 };
+      if (keys.length) {
+        if (this.scrollY <= keys[0].sy) {
+          const t = ss01((this.scrollY - descendEnd) / Math.max(keys[0].sy - descendEnd, 1));
+          const k0 = toUv(keys[0]);
+          target = { x: lxBase + (k0.x - lxBase) * t, y: 0.24 + (k0.y - 0.24) * t };
+        } else {
+          let k = 0;
+          while (k + 1 < keys.length && this.scrollY > keys[k + 1].sy) k++;
+          const a = toUv(keys[k]);
+          const b = toUv(keys[Math.min(k + 1, keys.length - 1)]);
+          const t = k + 1 < keys.length ? ss01((this.scrollY - keys[k].sy) / Math.max(keys[k + 1].sy - keys[k].sy, 1)) : 0;
+          target = { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+        }
       }
-      const lightDx = dxScreen / uvSpan;
-      this.water.setLightDx(lightDx);
+      // 따라가기: 초당 follow 비율, 한 프레임 이동은 maxRate × dt 이하. 모션 민감 설정에서는 바로 섭니다.
+      if (!this.lightUv || this.reduced) this.lightUv = { ...target };
+      else {
+        const F = LIGHT_FOLLOW;
+        const gx = (target.x - this.lightUv.x) * Math.min(1, dt * F.follow);
+        const gy = (target.y - this.lightUv.y) * Math.min(1, dt * F.follow);
+        const len = Math.hypot(gx, gy);
+        const lim = F.maxRate * dt;
+        const k = len > lim ? lim / len : 1;
+        this.lightUv.x += gx * k;
+        this.lightUv.y += gy * k;
+      }
+      // 해가 내려가는 구간 1에서는 셰이더의 옛 식 그대로, 다 내려간 뒤 0.1화면에 걸쳐 정거장 길로 넘깁니다.
+      const lightW = ss01((this.scrollY - descendEnd) / (0.1 * vh));
+      this.water.setLightDx(0);
+      this.water.setLightAt(this.lightUv.x, this.lightUv.y, lightW);
       if (process.env.NODE_ENV !== "production") {
         // 개발 빌드에서만. 속도를 스크린숏이 아니라 값으로 재기 위해서입니다(브리프 4장).
         // 2026-09-26 (판 덮개 브리프 4): 형상이 바뀌는 세 진행도와 판 덮개도 값으로 잽니다.
         (window as unknown as { __naruBg?: unknown }).__naruBg = {
-          lightDx, dxScreen, uvSpan, s4Eased: this.s4Eased, lapEased: this.lapEased, t: performance.now(),
+          uvSpan, uvSpanY, light: { ...this.lightUv, w: lightW, target }, lightKeys: this.lightKeys, t: performance.now(),
           sy: this.scrollY, vh, s1, s2, reveal, morph, dissolve, visible, ringPhase: this.ringPhase,
           shapeBox: this.shapeBox, plates: this.plates, schedule: this.sched,
         };

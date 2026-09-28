@@ -67,6 +67,7 @@ uniform float uRingPhase; // BackgroundScene이 적분한 파문 위상(rad). uT
 uniform float uStage1;    // #top 하단 → #gains 상단
 uniform float uStage2;    // #gains 상단 → #naru − 0.5화면
 uniform float uLightDx;   // 구간 4에서 점의 가로 이동(uv). BackgroundScene이 계산합니다(2026-09-24).
+uniform vec3  uLightAt;   // 나루 점의 자리(uv x, y)와 따르는 정도. 빛 정거장(2026-09-28)
 uniform float uMorph;     // 서울 → 싱가포르
 uniform float uEnd;       // 문서 끝(푸터가 들어올 때) 0 → 1. 깊은 물의 빛을 모두 거둡니다(2026-09-26).
 uniform vec3  uSkyTop;
@@ -344,6 +345,11 @@ void main(){
     // 가로와 세로 화면이 다른 식을 쓰게 되어, 셰이더는 결과(uLightDx) 하나만 받습니다.
     float mx = lx + uLightDx;
     float my = mix(lightY, 0.5, smoothstep(0.0, 1.0, uStage2));
+    // DECIDED 2026-09-28 (사용자: 형상이 나올 때마다 빛의 자리가 다르고, 너무 아래에 있어 안 보이는
+    // 일이 없게): 해가 다 내려간 뒤로는 BackgroundScene이 정한 자리(빛 정거장)를 따릅니다.
+    // 해가 내려가는 구간 1에서는 uLightAt.z가 0이라 위의 식 그대로입니다.
+    mx = mix(mx, uLightAt.x, uLightAt.z);
+    my = mix(my, uLightAt.y, uLightAt.z);
     vec2  q  = vec2((p.x - mx) * uAspect, p.y - my);
     float rr = length(q);
 

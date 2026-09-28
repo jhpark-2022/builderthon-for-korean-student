@@ -59,6 +59,9 @@ export class WaterSurface {
         uStage2: { value: 0 },
         // 구간 4(싱가포르)에서 점의 가로 이동(uv, 2026-09-24). BackgroundScene이 계산해 넣습니다.
         uLightDx: { value: 0 },
+        // 나루 점의 자리(uv x, uv y, 섞는 정도 0..1). DECIDED 2026-09-28: 형상이 나오는 틈마다 다른
+        // 자리(빛 정거장)에 점을 둡니다. BackgroundScene이 해가 다 내려간 뒤부터 z를 1로 올립니다.
+        uLightAt: { value: new THREE.Vector3(0.5, 0.5, 0) },
         uMorph: { value: 0 },
         // 문서 끝에서 깊은 물의 빛을 거두는 값 0..1 (2026-09-26). BackgroundScene이 #closing에서 셉니다.
         uEnd: { value: 0 },
@@ -139,6 +142,11 @@ export class WaterSurface {
 
   setLightDx(v: number) {
     this.material.uniforms.uLightDx.value = v;
+  }
+
+  /** 나루 점의 자리(uv)와 그 자리를 따르는 정도(0 = 셰이더의 옛 식, 1 = 이 자리). 2026-09-28. */
+  setLightAt(x: number, y: number, w: number) {
+    this.material.uniforms.uLightAt.value.set(x, y, w);
   }
 
   /** 파문의 위상(rad). BackgroundScene이 적분한 값입니다(2026-09-19). */
