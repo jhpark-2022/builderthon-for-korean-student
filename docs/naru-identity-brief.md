@@ -1,4 +1,4 @@
-# 나루 공식 표기 반영 브리프 (2026-09-28, 정의 문장 2026-09-29 개정)
+# 나루 공식 표기 반영 브리프 (2026-09-28, 정의 문장 2026-09-29 재개정)
 
 이 브리프 하나로 작업합니다. 순서대로 하고, 각 단계의 검증을 통과한 뒤 다음으로 갑니다.
 레포 규칙은 `CLAUDE.md`를 따릅니다(체인지로그는 `CHANGELOG.md` 맨 위 한 항목, `DECIDED` 주석, em dash 금지).
@@ -11,15 +11,19 @@
 | 항목 | 문구 |
 | --- | --- |
 | 영문 부제 | A Korea-rooted alliance of student builders |
-| 정의 (EN) | A Korea-rooted, student-run alliance of student associations and clubs across Seoul, Singapore and beyond, building together with AI. |
-| 정의 (KO) | 서울과 싱가포르, 그리고 더 많은 나라의 학생회와 학회가 모인, 한국에 뿌리를 둔 학생 운영 연합입니다. AI로 함께 만듭니다. |
+| 정의 (EN) | A Korea-rooted, student-run, not-for-profit group that brings students in through events, grows them into a genuine community, and reaches out with student associations and clubs across Seoul, Singapore and beyond, building together with AI. |
+| 정의 짧은 판 (EN) | A Korea-rooted, student-run, not-for-profit group growing a community of student builders across Seoul, Singapore and beyond. |
+| 정의 (KO) | 나루는 한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 그룹입니다. 이벤트로 학생을 모으고, 모인 사람들을 진짜 커뮤니티로 잇고, 각 나라의 학생회, 학회와 함께 서울과 싱가포르를 넘어 더 넓게 다가갑니다. 모두 AI로 함께 만듭니다. |
+| 정의 짧은 판 (KO) | 한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 학생 빌더 그룹. 서울과 싱가포르, 그리고 그 너머. |
 | 국문 부제 | 한국에 뿌리를 둔 학생 빌더 연합 (**TODO: confirm.** 사용자가 아직 확정하지 않은 번역안입니다. 주석에 그렇게 남기세요) |
 
-정의 문장 개정(2026-09-29)에서 달라진 점: "Korea-rooted"와 "student-run"이 정의 안으로 들어왔고, 학생회 앞의 "Korean"이 빠졌으며, 지역이 "Seoul and Singapore"에서 "Seoul, Singapore and beyond"로 열렸습니다. 정의 문장이 "서울과 싱가포르"만 말하는 곳이 남아 있으면 이 문장으로 바꿉니다.
+정의 문장 재개정(2026-09-29)에서 달라진 점: 나루는 학생회들의 연합이 아니라 **학생이 운영하는 그룹**입니다. 이벤트로 학생을 모으고, 커뮤니티로 잇고, 각 나라로 넓혀 갑니다. 학생회와 학회는 구성단위가 아니라 각 나라에서 함께 여는 파트너입니다. 짧은 판은 한 줄 소개처럼 공간이 좁은 자리에, 정식 판은 `#naru` 챕터처럼 설명할 자리에 씁니다.
+
+**금지 표기 (DECIDED 2026-09-29, 사용자):** 사이트 어디에도 "non-profit", "NPO", "비영리 단체", "Society"를 쓰지 않습니다. 싱가포르 단체 등록 전이라 법적 형태를 말하지 않고 성격만 말합니다("student-run, not-for-profit", "영리를 목적으로 하지 않는"). "alliance"는 영문 부제에만 씁니다.
 
 왜 바꾸나: 자문(9/28)에서 "지금 이름만으로는 예쁜 이름의 이벤트 회사와 구별되지 않는다"는 지적이 나왔습니다.
 약어를 억지로 붙이는 대신, 이름은 두고 무엇인지 말하는 부제와 정의 문장을 고정했습니다.
-"싱가포르 한인 학생 빌더 커뮤니티"는 12월(서울)부터 맞지 않고, "유학생"과 "커뮤니티"는 이 그룹을 이벤트 회사나 동호회와 구별하지 못합니다.
+"싱가포르 한인 학생 빌더 커뮤니티"는 12월(서울)부터 맞지 않고, 나루를 "유학생 커뮤니티"라고만 부르면 이벤트 회사나 동호회와 구별되지 않습니다. 커뮤니티는 나루가 무엇인지가 아니라 나루가 만드는 결과로 씁니다.
 
 로고도 바뀌었습니다. 정본은 `~/Dropbox/Uni/Extra Curriculur/12월 빌더톤/그룹 기획/나루_로고_확정/` 입니다(`나루_로고가이드_v2_2026-09-29.pdf`).
 - 마스터 링: 위 `KOREAN STUDENT BUILDERS` → `A KOREA-ROOTED ALLIANCE`, 아래 `SINGAPORE` → `OF STUDENT BUILDERS`. 링을 위에서 아래로 읽으면 영문 부제가 됩니다. 두 줄 모두 Montserrat 800, font-size 23, letter-spacing 위 0.9 / 아래 1.2.
@@ -60,11 +64,11 @@
 | # | 위치 | 지금 | 바꿀 것 |
 | --- | --- | --- | --- |
 | 1 | `data/naru.ts` `hero.eyebrow` | ko 싱가포르 한인 학생 빌더 커뮤니티 / en Korean student builders in Singapore | ko 한국에 뿌리를 둔 학생 빌더 연합 (TODO: confirm) / en A Korea-rooted alliance of student builders |
-| 2 | `data/naru.ts` `eventHero.naruLine` | 싱가포르에서 시작한 커뮤니티, 나루가 엽니다. / Run by NARU, a community that started in Singapore. | 한국에 뿌리를 둔 학생 연합, 나루가 엽니다. / Run by NARU, a Korea-rooted alliance of student builders. |
-| 3 | `data/naru.ts` `group.concrete` | 나루는 학생회와 기업을 이어 이벤트를 엽니다. 첫 이벤트는 ... | 정의 문장(KO/EN) 그대로 + 기존 둘째 문장(첫 이벤트는 2026년 8월 싱가포르의 제로백 빌더톤이었습니다 / The first was ...). 첫 문장은 정의와 겹치므로 뺍니다 |
+| 2 | `data/naru.ts` `eventHero.naruLine` | 싱가포르에서 시작한 커뮤니티, 나루가 엽니다. / Run by NARU, a community that started in Singapore. | 학생이 직접 운영하는 그룹, 나루가 엽니다. / Run by NARU, a Korea-rooted, student-run group. |
+| 3 | `data/naru.ts` `group.concrete` | 나루는 학생회와 기업을 이어 이벤트를 엽니다. 첫 이벤트는 ... | 정의 정식 판(KO/EN) 그대로 + 기존 둘째 문장(첫 이벤트는 2026년 8월 싱가포르의 제로백 빌더톤이었습니다 / The first was ...). 첫 문장은 정의와 겹치므로 뺍니다 |
 | 4 | `data/naru.ts` `footer` 주관 | 각 학교 한인 학생 단체 / each school's Korean student association | 각 학교 한인 학생회와 학회 / Korean student associations and clubs at each school. 한 줄 요약(2309~2310행)도 같이 |
-| 5 | `app/layout.tsx` `SITE_DESCRIPTION` 마지막 문장 | 나루는 싱가포르에서 시작한 한인 학생 빌더 커뮤니티입니다. | 나루는 서울과 싱가포르, 그리고 더 많은 나라의 학생회와 학회가 모인, 한국에 뿌리를 둔 학생 운영 연합입니다. (정의 KO의 첫 문장. 검색 설명이 길어지면 AI 문장은 뺍니다) |
-| 6 | `app/layout.tsx` `keywords` | "싱가포르 한인 학생", "빌더 커뮤니티" | "학생 빌더 연합", "Korea-rooted alliance", "student builders"로 바꾸고 나머지는 둔다 |
+| 5 | `app/layout.tsx` `SITE_DESCRIPTION` 마지막 문장 | 나루는 싱가포르에서 시작한 한인 학생 빌더 커뮤니티입니다. | 나루는 한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 학생 빌더 그룹입니다. (짧은 판을 문장으로. 155자 예산을 넘으면 앞 이벤트 문장을 줄이지 말고 멈춰서 보고) |
+| 6 | `app/layout.tsx` `keywords` | "싱가포르 한인 학생", "빌더 커뮤니티" | "학생 빌더 그룹", "student-run", "student builders"로 바꾸고 나머지는 둔다 |
 | 7 | `app/opengraph-image.tsx` `alt` | ... 나루 NARU, Korean student builders. | ... 나루 NARU, a Korea-rooted alliance of student builders. 카드 오른쪽 아래 줄(Korean student builders, wherever they study)은 12월 포지션이라 **그대로** 둡니다 |
 | 8 | 위 1, 2번 자리의 `TODO: confirm` 주석 | "정체성 문구는 사용자가 정한다", "로고 링의 SINGAPORE에 묶여 있다" | `DECIDED 2026-09-28` 주석으로 바꾸고 0절의 표를 한 줄로 요약해 적는다. 국문 부제만 TODO로 남긴다 |
 
@@ -75,7 +79,7 @@
 
 1. `npm run lint`, `npm run build` 통과.
 2. 잔존 문구 grep이 0건이어야 합니다(아카이브 파일 제외):
-   `grep -rn "싱가포르 한인 학생 빌더 커뮤니티\|community that started in Singapore\|Korean student builders in Singapore\|student-run alliance of Korean student associations" app components/home data/naru.ts lib`
+   `grep -rn "싱가포르 한인 학생 빌더 커뮤니티\|community that started in Singapore\|Korean student builders in Singapore\|student-run alliance of\|학생 운영 연합\|non-profit\|비영리" app components/home data/naru.ts lib`
    `grep -n "KOREAN STUDENT BUILDERS\|>SINGAPORE<" public/naru/*.svg`
 3. `.shots/`에 스크린샷(ko, en 각각, 데스크톱 1440 / 모바일 390): 이벤트 히어로, `#naru` 챕터(마스터 로고와 정의 문장), 푸터, `/opengraph-image`. 링 글자가 잘리거나 겹치지 않는지, 영문 화면에 한글이 없는지 봅니다.
 4. 정의 문장이 들어간 `#naru` 챕터가 모바일에서 넘치지 않는지 확인합니다.

@@ -158,13 +158,15 @@
 <a id="2026-09-28-naru-identity"></a>
 ## 2026-09-28 나루 공식 표기와 로고 v2
 - 범위: `public/naru/`(마스터, 가로 락업, 영문 마스터 SVG, 매니페스토 v2, README), `data/naru.ts`(hero.eyebrow, eventHero.naruLine, group.concrete, footer, naruLinks.manifesto), `app/layout.tsx`(설명, keywords), `app/opengraph-image.tsx`(alt).
-- 한 것: 사용자가 나루의 공식 표기를 정했습니다(DECIDED 2026-09-28). 이름은 나루 / NARU 그대로이고, 영문 부제 "A Korea-rooted alliance of student builders"와 정의 문장을 고정했습니다.
-  자문에서 "이름만으로는 이벤트 회사와 구별되지 않는다"는 지적이 나와, 약어 대신 무엇인지 말하는 부제와 정의를 둡니다. 국문 부제 "한국에 뿌리를 둔 학생 빌더 연합"은 확정 전 번역안(TODO: confirm)입니다.
-  로고 가이드 v2에 맞춰 마스터 링을 A KOREA-ROOTED ALLIANCE / OF STUDENT BUILDERS로, 가로 락업 아래 줄을 NARU로 바꿨고, 새 표지의 매니페스토를 v2 파일명으로 올렸습니다.
+- 한 것: 사용자가 나루의 공식 표기를 정했습니다(DECIDED 2026-09-28, 정의 문장은 2026-09-29 재개정). 이름은 나루 / NARU 그대로, 영문 부제 "A Korea-rooted alliance of student builders".
+  정의는 "Korea-rooted, student-run, not-for-profit group"입니다. 나루는 학생회들의 연합이 아니라 학생이 운영하는 그룹이고, 이벤트로 모으고 커뮤니티로 잇고 각 나라로 넓혀 갑니다. 학생회와 학회는 각 나라의 파트너입니다.
+  자문에서 "이름만으로는 이벤트 회사와 구별되지 않는다"는 지적이 나와 부제와 정의를 고정했습니다. 국문 부제 "한국에 뿌리를 둔 학생 빌더 연합"은 확정 전 번역안(TODO: confirm)입니다.
+  법적 형태를 말하는 표기는 쓰지 않고(싱가포르 단체 등록 전), alliance는 영문 부제에만 씁니다.
+  로고 가이드 v2에 맞춰 마스터 링을 A KOREA-ROOTED ALLIANCE / OF STUDENT BUILDERS로, 가로 락업 아래 줄을 NARU로 바꿨고, 새 표지(2026-09-29판)의 매니페스토를 v2 파일명으로 올렸습니다.
   /2026-08 아카이브 본문과 12월 이벤트 문구(OG 제목과 설명, "wherever they study")는 그대로입니다.
-- 검증: 브리프 5의 잔존 문구 grep 두 개 0건. npm run build 통과(npm run lint는 ESLint 설정이 없어 대화형 설정 질문에서 멈춥니다). ko, en × 1440, 390 스크린샷에서 링 글자 잘림 없음, 영문 화면 한글 0곳, #naru 넘침 0곳.
+- 검증: 브리프 5의 잔존 문구 grep 두 개 0건. npm run build 통과(npm run lint는 ESLint 설정이 없어 대화형 설정 질문에서 멈춥니다). ko, en × 1440, 390 스크린샷에서 링 글자 잘림 없음, 영문 화면 한글 0곳, #naru 넘침 0곳. 검색 설명 134자.
 - 브리프: docs/naru-identity-brief.md
-- 커밋: b8f905f, 546e0dd
+- 커밋: b8f905f, 546e0dd, 83721d8, 15989eb
 
 <a id="2026-09-28-light-stations"></a>
 ## 2026-09-28 틈마다 빛이 다른 자리에
