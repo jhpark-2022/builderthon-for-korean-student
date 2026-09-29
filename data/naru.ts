@@ -1400,7 +1400,8 @@ export const naru = {
         // "회차를 열고 책임진다"였습니다. 틀린 말은 아니지만 가운데 상자가 그 말만 하면
         // 세 상자는 각자 일하는 셋이 되고, 나루가 왜 가운데 있는지가 그림에서 빠집니다.
         // 잇는다는 말이 먼저 오고, 회차는 그 다음입니다(Overview 01의 가운데 상자와 같은 순서).
-        brings: { ko: "학생회와 기업을 잇고, 회차를 열고 책임진다", en: "Joins associations and companies, runs the round" },
+        // 2026-09-29 (사용자: 그룹 기획 폴더의 부제와 정의가 사이트에 반영되게): Overview(2026-09-29)의 주최 칸 그대로.
+        brings: { ko: "학생이 만드는 그룹. 선배가 후배의 판을 깔고, 학생회와 기업을 잇는다", en: "A group students build. Seniors set the stage, and connect schools and companies" },
         does: {
           ko: "회차의 기획과 실행. 출제사와 멘토, 후원사와의 관계. 기록과 회차 사이의 연속성.",
           en: "Planning and running each round. Relationships with problem owners, mentors, sponsors. The record, and continuity between rounds.",
@@ -1415,10 +1416,10 @@ export const naru = {
         role: { ko: "주관 ORGANISER", en: "ORGANISER" },
         // TODO: confirm. 한국 안의 학교에서 누가 주관 자리에 서는지는 아직
         // 정해지지 않았습니다. 창업학회 같은 주체를 지어내 쓰지 마세요.
-        // DECIDED 2026-09-29 (사용자: 9/28 자문 미팅의 인사이트를 "한번 다 반영"): 크로스보더는 양쪽에 나루가 있어야 합니다.
-        // 주관을 한쪽(싱가포르 한인 학생회)이 아니라 양쪽 도시의 학생회와 학회로 적습니다. 학회 이름은 동의 전이라 쓰지 않습니다.
-        // TODO: confirm (사용자). 한국 측 학회를 주관 층위에 어떻게 세울지(자문 회의록 미결 ②).
-        who: { ko: "양쪽 도시의 한인 학생회와 학회", en: "Korean student associations and clubs in both cities" },
+        // DECIDED 2026-09-29 (사용자: 그룹 기획 폴더의 문서가 사이트에 반영되게): Overview(2026-09-29)의 주관 칸 그대로
+        // "각 학교 한인 학생회". 같은 날 자문 인사이트로 적었던 "양쪽 도시의 한인 학생회와 학회"(TODO: confirm)를 대신합니다.
+        // 그룹 문서가 정본입니다.
+        who: { ko: "각 학교 한인 학생회", en: "Student associations at each school" },
         brings: { ko: "소속 학생, 공간, 학교 안의 명의", en: "Students, space, standing inside the school" },
         does: {
           ko: "소속 학생 모집. 학교 안의 공간과 자원, 필요한 명의. 운영 협조.",
@@ -2368,6 +2369,14 @@ export const naru = {
   // 함께합니다"는 여기로 가져오지 않습니다. 그건 제로백 빌더톤의 크레딧이고,
   // 12월 이벤트의 주관은 아직 정해지지 않았습니다.
   footer: {
+    // DECIDED 2026-09-29 (사용자: "그룹의 부제와 정의 문장 같은 것들도 반영"): 로고 가이드 v2의 공식 표기 표 그대로.
+    // 부제는 영문이 공식이라 두 화면 모두 영문입니다(런칭 포스트 커버와 같은 쓰임). 정의는 가이드의 "짧은 판"이고,
+    // 가이드가 짧은 판을 "한 줄 소개처럼 공간이 좁은 자리"에 쓰라고 해서 푸터입니다. 정식 판은 #naru에 있습니다.
+    subtitle: { ko: "A Korea-rooted alliance of student builders", en: "A Korea-rooted alliance of student builders" },
+    shortDef: {
+      ko: "한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 학생 빌더 그룹. 서울과 싱가포르, 그리고 그 너머.",
+      en: "A Korea-rooted, student-run, not-for-profit group growing a community of student builders across Seoul, Singapore and beyond.",
+    },
     credits: {
       ko: "주최 나루 주관 각 학교 한인 학생회와 학회 후원 참여 기업",
       en: "Hosted by NARU Organised by Korean student associations and clubs at each school Supported by participating companies",

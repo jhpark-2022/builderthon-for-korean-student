@@ -17,8 +17,8 @@
 | 파일 | 원본 | 형식 | 이유 |
 | --- | --- | --- | --- |
 | `naru-symbol.svg` | `SVG/naru_07_심볼만.svg` | SVG | `<text>`가 아예 없습니다. 벡터로 안전합니다 |
-| `naru-master-rev.png` | `PNG/naru_03_마스터_반전.png` | PNG | 한글 "나루"가 들어 있습니다 |
-| `naru-lockup-rev.png` | `PNG/naru_11_가로락업_반전.png` | PNG | 한글 "나루"가 들어 있습니다 |
+| `naru-master-v2-rev.png` | `PNG/naru_03_마스터_반전.png` | PNG | 한글 "나루"가 들어 있습니다 |
+| `naru-lockup-v2-rev.png` | `PNG/naru_11_가로락업_반전.png` | PNG | 한글 "나루"가 들어 있습니다 |
 | `naru-name-rev.png` | `PNG/naru_17_가로락업_이름만_반전.png` | PNG | 한글 "나루"가 들어 있습니다 |
 | `naru-name-en-rev.svg` | `SVG/naru_17_가로락업_이름만_반전.svg` | SVG | 글자가 NARU라 한글 서체가 필요 없습니다 |
 
@@ -52,7 +52,7 @@ PNG는 투명 여백을 잘라내고 긴 변을 900px로 맞췄습니다. 마스
 
 ## 영문 마스터 (ADDED 2026-09-27)
 
-`naru-master-en-rev.svg`는 홈 `#naru` 챕터가 **영문 화면에서만** 쓰는 마스터입니다
+`naru-master-en-v2-rev.svg`는 홈 `#naru` 챕터가 **영문 화면에서만** 쓰는 마스터입니다
 (사용자: 영문 화면에서는 "나루"나 NARU 둘 중 하나만, 한글이 보이지 않게).
 
 - 원본은 `SVG/naru_03_마스터_반전.svg`입니다. 한글 "나루"(`<text>`, 시스템 서체)와
@@ -60,11 +60,14 @@ PNG는 투명 여백을 잘라내고 긴 변을 900px로 맞췄습니다. 마스
   0.55배로 줄여 같은 자리(가운데 x=180, 대문자 229~261)에 놓았습니다.
 - 원 둘레 글자(위 A KOREA-ROOTED ALLIANCE, 아래 OF STUDENT BUILDERS)는 원본처럼 임베드된
   Montserrat 800으로 그립니다. 쓰지 않는 600·700 `@font-face`와 c2pa 메타데이터는 뺐습니다(85KB에서 29KB).
-- 한글 화면은 그대로 `naru-master-rev.png`입니다.
+- 한글 화면은 그대로 `naru-master-v2-rev.png`입니다.
 - 2026-09-28 (로고 가이드 v2): 링 문구가 KOREAN STUDENT BUILDERS / SINGAPORE에서
   A KOREA-ROOTED ALLIANCE / OF STUDENT BUILDERS로 바뀌었습니다(위에서 아래로 읽으면 영문 부제).
   글자 두 줄만 원본 속성대로 바꿨습니다(font-size 23, letter-spacing 위 0.9 / 아래 1.2). 가운데 NARU와 심볼은 그대로.
   `naru-master-rev.png`와 `naru-lockup-rev.png`(아래 줄 SINGAPORE → NARU)도 v2 원본에서 다시 만들었습니다.
+- 2026-09-29: 위 세 파일을 `-v2-` 이름으로 바꿨습니다(`naru-master-v2-rev.png`, `naru-master-en-v2-rev.svg`,
+  `naru-lockup-v2-rev.png`). 사이트가 이미지를 `cache-control: public, max-age=31536000, immutable`로 내보내서,
+  같은 이름으로 덮은 v2는 9월 29일 전에 들른 브라우저에 1년 동안 옛 링으로 남았습니다(사용자가 실제로 봤습니다).
 
 ## 매니페스토 PDF (ADDED 2026-09-19)
 
@@ -75,6 +78,11 @@ PNG는 투명 여백을 잘라내고 긴 변을 900px로 맞췄습니다. 마스
 - 원본을 고치면 **파일명을 새 버전으로 바꿔** 다시 복사하세요(`v2-2026-xx`).
   같은 이름으로 덮으면 CDN과 브라우저에 남은 옛 파일이 그대로 나갑니다.
 - 화면에는 쪽 수나 파일 크기를 적지 않습니다(2026-09-19). 버튼 라벨 하나입니다.
+
+## 파일명 규칙 (DECIDED 2026-09-29)
+
+원본이 바뀌면 **파일명에 버전을 붙여 새 파일로** 올립니다. 로고도 매니페스토 PDF와 같습니다. 이미지는
+1년짜리 immutable 캐시로 나가서, 같은 이름으로 덮으면 이미 들른 방문자에게 옛 그림이 남습니다.
 
 ## 로고 가이드 v2 요약
 

@@ -1147,7 +1147,8 @@ export default function NaruHome() {
             (public/naru/README.md). */}
         <div className={READ}>
         <Image
-          src={locale === "en" ? "/naru/naru-master-en-rev.svg" : "/naru/naru-master-rev.png"}
+          // 2026-09-29: v2 파일명. 같은 이름으로 덮으면 1년짜리 immutable 캐시에 옛 링이 남습니다(public/naru/README.md).
+          src={locale === "en" ? "/naru/naru-master-en-v2-rev.svg" : "/naru/naru-master-v2-rev.png"}
           alt={t(naru.hero.logoAlt)}
           width={900}
           height={900}
@@ -1561,6 +1562,20 @@ export default function NaruHome() {
             unoptimized={locale === "en"}
             className="h-10 w-auto sm:h-12"
           />
+          {/* 부제와 짧은 정의(2026-09-29, data/naru.ts의 footer.subtitle과 shortDef). 부제는 로고 링과 같은 글자라
+              영문 대문자 라벨로, 정의는 크레딧보다 한 단 밝게. */}
+          <div className="-mt-2 flex max-w-xl flex-col items-center gap-2">
+            {/* 로고 가이드 v2: 영문 부제는 링처럼 "A KOREA-ROOTED ALLIANCE / OF STUDENT BUILDERS" 두 줄로 나눕니다.
+                폰에서 저절로 꺾이면 "ALLIANCE OF / STUDENT BUILDERS"가 되어 가이드의 나눔과 어긋났습니다. */}
+            <p lang="en" className="text-[0.68rem] font-bold uppercase leading-relaxed tracking-[0.14em] text-white/60">
+              {(() => {
+                const s = t(naru.footer.subtitle);
+                const i = s.toLowerCase().indexOf(" of ");
+                return i > 0 ? (<><span className="block">{s.slice(0, i)}</span><span className="block">{s.slice(i + 1)}</span></>) : s;
+              })()}
+            </p>
+            <p className="break-keep text-sm leading-relaxed text-white/75">{t(naru.footer.shortDef)}</p>
+          </div>
           {/* 크레딧(2026-09-23): 폰(sm 미만)은 세 줄, sm부터 한 줄에 gap 여백. 가운뎃점은 쓰지 않습니다.
               라벨 white/45, 값 white/70. */}
           <p className="flex flex-col items-center gap-1 break-keep text-xs leading-relaxed sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-5">
