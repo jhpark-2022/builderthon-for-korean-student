@@ -364,7 +364,7 @@ export default function JourneyNav({
           거기에 더합니다. */}
       <nav
         aria-label={t(dict.nav.primaryAria)}
-        className="relative flex h-[52px] w-full items-center justify-between xl:h-20"
+        className="flex h-[52px] w-full items-center justify-between xl:h-20"
         style={{
           paddingLeft: "calc(env(safe-area-inset-left, 0px) + var(--nav-gutter))",
           paddingRight: "calc(env(safe-area-inset-right, 0px) + var(--nav-gutter))",
@@ -390,10 +390,10 @@ export default function JourneyNav({
             // 이미지가 h-8(36px)뿐이라 맨 위로 돌아가는 관용 동작이 8px 모자랐습니다.
             // 음수 마진으로 52px 바 안의 세로 정렬은 그대로 둡니다. 로고 가이드의
             // 비율·색은 건드리지 않습니다. 상자만 키웁니다.
-            // DECIDED 2026-09-29 (사용자: "로고들은 무조건 화면의 center에 있어야함", 헤더도 가운데로 확인):
-            // 나루 헤더의 로고는 바 한가운데에 겹쳐 둡니다(absolute). 메뉴는 왼쪽, 버튼과 언어 토글은 오른쪽에
-            // 그대로 남아 좌우 폭과 상관없이 로고 중심이 화면 중심입니다. 8월 페이지(zero100)는 그대로입니다.
-            <a href="#top" className="absolute left-1/2 top-1/2 z-10 flex min-h-[44px] -translate-x-1/2 -translate-y-1/2 items-center py-1 leading-none">
+            // DECIDED 2026-09-29 (사용자: "맨위 TOC랑 있는 나루는 맨 왼쪽 like how it was like previously"):
+            // 헤더의 로고는 바 왼쪽 끝, 메뉴는 그 옆입니다. 같은 날 앞서 넣었던 "바 한가운데"(f3e12a6)를
+            // 되돌린 것입니다. 홈 본문의 #naru 인장과 푸터 로고는 그대로 가운데입니다.
+            <a href="#top" className="-my-1 flex min-h-[44px] items-center py-1 leading-none">
               {/* 영문 화면에서는 이름도 영문입니다 (DECIDED 2026-09-21, 사용자:
                   "영어 버전에서도 로고 옆은 NARU여야 하고, 대문자로").
                   한글 락업은 PNG인데(public/naru/README.md: 원본 SVG의 "나루"가
@@ -459,9 +459,7 @@ export default function JourneyNav({
               section rail below: between 1024 and 1279 this row does not fit
               next to the brand and the two CTAs in either locale, and flex
               silently crushed the brand to make room. */}
-          {/* 2026-09-29: 나루 헤더는 로고가 바 한가운데라 메뉴가 왼쪽 반에 들어가야 합니다. 영문 메뉴는 1280에서
-              "Why NARU"가 로고에 닿아, 영문만 1400부터 한 줄 메뉴이고 그 아래는 칩 줄이 대신합니다(아래 칩 줄과 같은 경계). */}
-          <div className={`hidden items-center gap-5 ${naru ? (locale === "en" ? "min-[1400px]:flex" : "xl:flex") : "xl:ml-10 xl:flex"}`}>
+          <div className="hidden items-center gap-5 xl:ml-10 xl:flex">
             {anchors.map((a) => {
               // DECIDED 2026-08-23: 데스크톱 앵커에도 현위치 표시를 답니다.
               // useActiveSection은 원래 폰의 섹션 레일만 쓰고 있었는데, 위치를
@@ -659,7 +657,7 @@ export default function JourneyNav({
         // 토글 둘뿐이고 **진짜 목차는 랜드마크가 아니었습니다**. iOS 로터의
         // "랜드마크"로 목차에 닿을 수 없었어요. 폰에서 이 레일이 유일한
         // 챕터 이동 수단이라는 점을 생각하면 가장 아픈 자리였습니다.
-        <nav aria-label={t(dict.nav.sectionsAria)} className={naru && locale === "en" ? "min-[1400px]:hidden" : "xl:hidden"}>
+        <nav aria-label={t(dict.nav.sectionsAria)} className="xl:hidden">
           {/* 8월 아카이브: 목차 줄 오른쪽 끝에 12월 이벤트 버튼을 고정합니다
               (2026-09-20, 사용자: "8월 페이지에는 12월 이벤트 페이지로 돌아갈 수
               있는 버튼이 항상 보였으면 좋겠어, along with the TOC at the top").
