@@ -946,7 +946,8 @@ export default function NaruHome() {
           {/* 폰은 상자 없이 행(구분선만). sm부터 카드 2열. */}
           <ol role="list" className="mt-3 grid grid-cols-1 sm:mt-5 sm:grid-cols-2 sm:gap-4">
             {naru.record.gaps.map((gap, i) => (
-              <li key={gap.title.en} className="relative border-b border-white/10 py-3 last:border-b-0 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-4 sm:transition sm:hover:border-accent/30 sm:hover:bg-white/[0.05]">
+              // 2026-09-29: 다섯째가 생겨 홀수입니다. 2열에서 마지막 한 장이 빈자리처럼 읽히지 않게 두 칸을 씁니다.
+              <li key={gap.title.en} className={`relative border-b border-white/10 py-3 last:border-b-0 ${i === naru.record.gaps.length - 1 && naru.record.gaps.length % 2 === 1 ? "sm:col-span-2" : ""} sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-4 sm:transition sm:hover:border-accent/30 sm:hover:bg-white/[0.05]`}>
                 <div className="flex items-center gap-2.5 sm:block">
                   <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-2xl bg-accent/15 text-xs font-black text-accent sm:h-8 sm:w-8 sm:text-sm">
                     {String(i + 1).padStart(2, "0")}
@@ -990,6 +991,15 @@ export default function NaruHome() {
             </h4>
             <p className="mt-2 break-keep text-sm leading-relaxed text-white/75">{t(naru.after.steps[0].body)}</p>
           </div>
+        </Reveal>
+
+        {/* 다음 건너기 (DECIDED 2026-09-29, 9/28 자문): 끝나면 할 일 바로 뒤. 이벤트가 끝나는 곳이 아니라 다음에
+            건너갈 곳을 말합니다. 시기가 정해지지 않아 날짜는 쓰지 않습니다(data/naru.ts december.next의 TODO). */}
+        <Reveal className={`${READ} mt-8 text-left lg:mt-12`}>
+          <h3 data-subheading className={SUBHEADING}>{t(naru.december.nextLabel)}</h3>
+          <p className="mt-3 break-keep text-base leading-relaxed text-white/75">
+            {t(naru.december.next).replace("{name}", decemberEventLabel(locale))}
+          </p>
         </Reveal>
 
         {/* DECIDED 2026-09-18 (사용자): "아직 정해지지 않은 것" 상자를 뺐습니다. 미정 목록
@@ -1093,7 +1103,9 @@ export default function NaruHome() {
           ))}
         </ol>
         </Reveal>
-        <p className={`${READ} mt-6 break-keep text-left text-sm text-white/50`}>{t(naru.gains.note)}</p>
+        {/* 2026-09-29 (9/28 자문): 결과물의 두 갈래. 창업만이 끝이 아니라는 한 줄(data/naru.ts gains.uses). */}
+        <p className={`${READ} mt-6 break-keep text-left text-base leading-relaxed text-white/75`}>{t(naru.gains.uses)}</p>
+        <p className={`${READ} mt-3 break-keep text-left text-sm text-white/50`}>{t(naru.gains.note)}</p>
 
       </Chapter>
 
@@ -1165,42 +1177,19 @@ export default function NaruHome() {
         {/* ── 8월이 남긴 것 (2026-09-19, 사용자: 8월과 나루를 합침). 코어 둘 바로 앞입니다. lead2가
             "이 이벤트에서 코어 2개가 나왔습니다"로 끝나서 다음 블록(변하지 않는 두 개)으로 이어집니다.
             id="record"는 옛 링크·배경 국면·하단 바(afterId)가 봅니다. 그 전의 챕터 판 주석은 git 이력에. */}
+        {/* DECIDED 2026-09-29 (사용자: "그냥 최소화하자"): 두 문장만. lead2가 두 장면(스크리닝 없이 받아 풀고,
+            앞에서 증명한 것)을 바로 아래 코어 둘과 같은 순서로 짝지우고, credit이 빚을 적습니다. 감사 명단
+            (thanks·thanksClose)과 lead는 화면에서 내렸습니다. data에는 남겨 둡니다(/2026-08 마지막 화면의
+            같은 문단과 짝을 볼 자리). 명단은 아래 아카이브 버튼 너머에 있습니다. */}
         <Reveal id="record" className={`${READ} mt-8 text-left lg:mt-12`}>
           <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.record.eyebrow)}</Eyebrow>
           <h3 className={H3}>{t(naru.record.heading)}</h3>
           <p className="mt-4 break-keep text-left text-base leading-relaxed text-white/75">
-            {t(naru.record.lead)}
-          </p>
-          <p className="mt-3 break-keep text-left text-base leading-relaxed text-white/75">
             {t(naru.record.lead2)}
           </p>
-          {/* 빚을 적는 한 줄(2026-09-19, 사용자: "제로백의 도움이 있었기에 이 모든 게
-              가능했다"). 본문보다 한 단 밝은 흰색입니다. 감사는 각주가 아니라 문장이어야
-              합니다. 아래 아카이브 버튼이 바로 이어지므로, 이 줄이 그 버튼의 이유가 됩니다. */}
+          {/* 빚을 적는 한 줄(2026-09-19). 감사는 각주가 아니라 문장이어야 합니다. */}
           <p className="mt-3 break-keep text-left text-base font-semibold leading-relaxed text-white/85">
             {t(naru.record.credit)}
-          </p>
-          {/* 누구에게 진 빚인지 (2026-09-20, 사용자). 위 한 줄보다 한 단 작고
-              한 단 어둡습니다. 앞 문장이 선언이고 이것이 명단이라, 같은 무게로
-              두면 둘 다 읽히지 않습니다. 바로 아래 아카이브 버튼이 실제 이름들로
-              가는 문이고, 이 문단이 그 버튼의 이유가 됩니다.
-
-              2026-09-20 (표현 방식 브리프 5): 명단은 문단이 아니라 목록입니다.
-              마침표로 이어 붙이면 세 줄짜리 회색 덩어리가 되고 감사가 감사로 안
-              읽힙니다. 상자는 두지 않습니다. 목록이라는 것만 보이면 됩니다.
-              낱말은 바뀌지 않았습니다(data/naru.ts의 thanks·thanksClose). */}
-          <ul role="list" className="mt-6 space-y-2 text-left">
-            {naru.record.thanks.map((line, i) => (
-              <li key={i} className="flex gap-3 break-keep text-sm leading-relaxed text-white/70">
-                <span aria-hidden className="mt-[0.5em] inline-block h-[0.4em] w-[0.4em] shrink-0 rounded-full bg-white/30" />
-                <span>{t(line)}</span>
-              </li>
-            ))}
-          </ul>
-          {/* DECIDED 2026-09-23 (사용자): 55% → 70%. 폰에서 건너기가 막 끝난 자리라 싱가포르 점이
-              온전한 밝기로 이 줄 뒤를 지나고, 55%면 대비가 3.65:1까지 떨어졌습니다. 70%면 최저 4.97:1. */}
-          <p className="mt-4 break-keep text-left text-sm text-white/70">
-            {t(naru.record.thanksClose)}
           </p>
           <div className="mt-6 flex justify-start">
             <Link

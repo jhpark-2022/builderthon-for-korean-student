@@ -383,7 +383,10 @@ export const naru = {
   // 나루 로고는 헤더에만 작게 있고, 큰 로고와 존재 목적은 맨 아래 #naru로
   // 내려갔습니다. 위의 hero 블록(태그라인)은 그쪽이 씁니다.
   eventHero: {
-    eyebrow: { ko: "나루의 다음 이벤트", en: "NARU's next event" },
+    // DECIDED 2026-09-29 (사용자: 9/28 자문 미팅의 인사이트를 "한번 다 반영"): 시리즈 표기. 행사명은
+    // 크로싱 서울 그대로 두고, 회차를 "나루 2026 · 서울"로 붙입니다. 다음은 "나루 2027 · 싱가포르".
+    // TODO: confirm (사용자). "크로싱 서울"과 "나루 2026 인서울"의 관계(자문 회의록 액션 7).
+    eyebrow: { ko: "나루 2026 · 서울", en: "NARU 2026 · Seoul" },
     // 나루를 모르는 사람에게 첫 화면에서 나루가 무엇인지 말하는 한 문장(감사 반영 브리프 1.2).
     // DECIDED 2026-09-28 (사용자, 나루 공식 표기 브리프. 정의는 2026-09-29 재개정): 이름은 나루 / NARU
     // 그대로. 영문 부제 "A Korea-rooted alliance of student builders"(로고 v2의 링과 같음). 정의는
@@ -406,7 +409,7 @@ export const naru = {
       // DECIDED 2026-09-17 (사용자): "raw data"라는 말을 쓰지 않습니다. 이번 회차가
       // 말하려는 것은 "데이터에서 시작한다"입니다. 다른 자리(programHeading,
       // gaps[0].answer, shapeLead, shape[1].note, partners)도 같은 날 같이 바꿨습니다.
-      ko: "한국의 대학생과 해외의 한인 유학생이 같은 문제 앞에 섭니다. 이번에는 데이터에서 시작합니다. 문제를 찾아내는 것부터 앞에서 증명하기까지, 닷새.",
+      ko: "한국의 대학생과 해외에서 공부하는 한인 학생이 같은 문제 앞에 섭니다. 이번에는 데이터에서 시작합니다. 문제를 찾아내는 것부터 앞에서 증명하기까지, 닷새.",
       en: "Students in Korea and Korean students abroad stand in front of the same problem. This time it starts from the data: find the problem, prove it out front, five days.",
     },
     ctaProgram: { ko: "프로그램 보기", en: "See the programme" },
@@ -516,7 +519,8 @@ export const naru = {
     // 영문이 이 줄의 이유입니다. 한국어 독자는 낱말을 알지만 영어 독자에게 NARU는
     // 네 글자일 뿐이고, 그러면 위의 crossing이 비유로 읽히지 않습니다.
     name: {
-      ko: "나루는 강을 건너려는 사람이 배를 타는 자리입니다. 건너간 사람이 다시 돌아와 서는 자리도 같은 나루입니다.",
+      // 2026-09-29 (9/28 자문): 어원 한 줄. 한글 화면에만 있습니다. 영문은 river landing 설명이 이미 같은 일을 합니다.
+      ko: "나루는 강을 건너려는 사람이 배를 타는 자리입니다. 노량진의 진(津)도 나루입니다. 건너간 사람이 다시 돌아와 서는 자리도 같은 나루입니다.",
       en: "NARU is the Korean word for a river landing: the place where you board the boat to cross. The place the ones who crossed come back and stand is the same landing.",
     },
     lead: {
@@ -633,8 +637,9 @@ export const naru = {
     // 되고, 그건 "안전하게 도전할 수 있는 자리"와 다른 말입니다.
     measureLabel: { ko: "결과보다 과정", en: "Process over result" },
     measure: {
-      ko: "누가 우승했느냐가 아닙니다. 얼마나 많은 분이 끝까지 완주했는지, 그리고 준비하는 과정을 얼마나 즐겼는지를 봅니다.",
-      en: "Not who won. How many people made it all the way through, and how much they enjoyed the run-up.",
+      // 2026-09-29 (9/28 자문): 마지막 문장. 무순위 시상의 이유를 개념으로 말합니다.
+      ko: "누가 우승했느냐가 아닙니다. 얼마나 많은 분이 끝까지 완주했는지, 그리고 준비하는 과정을 얼마나 즐겼는지를 봅니다. 앙트러프러너십은 결과가 아니라 과정이라, 순위를 매기지 않습니다.",
+      en: "Not who won. How many people made it all the way through, and how much they enjoyed the run-up. Entrepreneurship is a process, not a result, so we do not rank it.",
     },
     note: {
       ko: "문턱이 낮아야 커지고, 롤모델이 있어야 자랍니다.",
@@ -652,8 +657,9 @@ export const naru = {
     },
     agendaLabel: { ko: "방법은 바뀝니다", en: "The method changes" },
     agenda: {
-      ko: "AI도, 8일이라는 길이도, 지금의 형식도 방법입니다. 어젠다는 상황을 따라 바뀌고, 8일이 4일이 되어도 됩니다. 바뀌면 안 되는 것은 위의 두 개뿐입니다.",
-      en: "AI, the eight days, the format: all method. The agenda follows the situation, and eight days may become four. Only the two above cannot change.",
+      // 2026-09-29 (9/28 자문, "젓는 노가 AI다"): 마지막 문장. 정의 문장의 "AI로 함께 만듭니다"가 왜 AI인지.
+      ko: "AI도, 8일이라는 길이도, 지금의 형식도 방법입니다. 어젠다는 상황을 따라 바뀌고, 8일이 4일이 되어도 됩니다. 바뀌면 안 되는 것은 위의 두 개뿐입니다. 나루는 배를 댈 자리를 만들고, 노를 젓는 건 각자입니다. 지금 그 노가 AI입니다.",
+      en: "AI, the eight days, the format: all method. The agenda follows the situation, and eight days may become four. Only the two above cannot change. NARU builds the landing, and the rowing is yours. Right now, the oar is AI.",
     },
   },
 
@@ -735,6 +741,12 @@ export const naru = {
         },
       },
     ] as { num: string; title: Phrase; body: Phrase; evidence?: Phrase }[],
+    // DECIDED 2026-09-29 (사용자: 9/28 자문 미팅의 인사이트를 "한번 다 반영"): 결과물의 두 갈래. 창업만이 끝이 아니고,
+    // 조언자도 창업을 권하지 않았습니다. 채용 연계는 출제 기업의 의사가 확인되지 않아 약속처럼 쓰지 않습니다.
+    uses: {
+      ko: "만든 것은 두 갈래로 쓰입니다. 나를 보여 주는 실물로, 또는 계속 만들어 갈 프로젝트로.",
+      en: "What you build goes two ways: as proof of what you can do, or as a project you keep building.",
+    },
     // 제목뿐이 아니게 되므로 이 줄이 답하는 질문이 바뀝니다(브리프 2장).
     note: {
       ko: "각 항목을 어떻게 운영하는지는 확정되는 대로 이 자리에서 채웁니다.",
@@ -764,9 +776,12 @@ export const naru = {
     // 이 줄이 CH2를 CH1과 묶습니다. 8월이 자랑거리라서 여기 있는 것이 아니라,
     // 코어 2개가 거기서 나왔기 때문에 있습니다. 순서가 반대였어요. 먼저 해 보고
     // 나서 무엇이 바뀌면 안 되는지를 알았습니다.
+    // DECIDED 2026-09-29 (사용자: "이 코어 2개가 아래에 보이는 것과 이어지게 읽힐 수 있도록"): 두 장면을 코어 둘과
+    // 같은 순서로 짝지웁니다. 스크리닝 없이 받아 푼 것 → 안전하게 도전할 수 있는 자리, 앞에서 증명한 것 →
+    // 자기 가치를 증명해 보는 경험. 코어 이름은 why.cores의 title과 한 글자도 다르면 안 됩니다.
     lead2: {
-      ko: "실제 기업의 문제를 스크리닝 없이 받아 8일 동안 풀고, 마지막 날 앞에서 증명했습니다. 이 이벤트에서 코어 2개가 나왔습니다.",
-      en: "Teams took a real company's problem with no screening, worked it for eight days, and proved it out front on the last day. The two cores came out of it.",
+      ko: "스크리닝 없이 실제 기업의 문제를 받아 8일 동안 풀었고, 마지막 날 그 기업 앞에서 증명했습니다. 이 두 장면이 나루의 변하지 않는 두 개가 되었습니다. 안전하게 도전할 수 있는 자리, 그리고 자기 가치를 증명해 보는 경험입니다.",
+      en: "Teams took a real company's problem with no screening and worked it for eight days, then proved it in front of that company on the last day. Those two scenes became the two things NARU does not change: a safe place to try something new, and a chance to prove your own worth.",
     },
     // ADDED 2026-09-19 (사용자: "제로백의 도움이 있었기에 이 모든 게 가능했다").
     // 홈은 8월을 숫자와 사진으로만 말하고 있었습니다. 무엇을 빚졌는지는 한 줄도
@@ -1131,7 +1146,7 @@ export const naru = {
         en: "Session times and venues, mentor introductions, the FAQ: all of it is still on the August page.",
       },
     },
-    gapsLabel: { ko: "8월에 아쉬웠던 네 가지", en: "Four things August missed" },
+    gapsLabel: { ko: "8월에 아쉬웠던 다섯 가지", en: "Five things August missed" },
     // {name}은 렌더가 decemberEventLabel로 채웁니다.
     gapsNote: { ko: "그래서 {name}이 있습니다", en: "This is why {name} exists" },
     // ── 각 항목에 12월의 답을 답니다 (DECIDED 2026-09-15) ──────────────────
@@ -1204,6 +1219,23 @@ export const naru = {
           ko: "주관 학생도 피칭할 수 있게 열고, 시상은 운영 기여도 기준의 별도 트랙으로 둡니다.",
           en: "Organising students can pitch too, with a separate award for what they put into running it.",
         },
+      },
+      // DECIDED 2026-09-29 (사용자: 9/28 자문 미팅의 인사이트를 반영): 다섯째. 8월의 가장 큰 아쉬움은 이벤트가
+      // 만든 연결을 학생이 이어 쓴 사례가 없었던 것이고, 원인은 의지가 아니라 해 본 적이 없어서였습니다.
+      // 나루터는 건너는 법을 미리 연습시키는 곳이어야 합니다(스쿠버 강습 비유). 그 연습 세션이 12월 일정에
+      // 아직 없으므로 answer는 null이고 화면은 "아직 답이 없습니다"라고 씁니다. 정해지면 채우세요.
+      // 사실(아홉 팀, 한 팀)은 naru.after.lead와 같은 값이고, 그 자리의 TODO: confirm을 그대로 따릅니다
+      // ("한 팀"은 집계가 아니라 기억입니다. 확인되지 않으면 두 곳을 같이 "거의 없었습니다"로 바꿉니다).
+      {
+        title: {
+          ko: "끝난 뒤 이어지지 않았습니다",
+          en: "Nothing carried on after it ended",
+        },
+        body: {
+          ko: "이벤트 안에서는 아홉 팀이 먼저 자료를 요청했지만, 끝난 뒤 멘토에게 먼저 연락한 팀은 한 팀이었습니다. 해 본 적이 없어서입니다.",
+          en: "Inside the event nine teams asked for data on their own, and after it only one team contacted a mentor first. They had never done it before.",
+        },
+        answer: null,
       },
     ] as { title: Phrase; body: Phrase; answer: Phrase | null }[],
     // ── 로고 스트립은 넣지 않았습니다 (DECIDED 2026-09-15) ────────────────
@@ -1383,7 +1415,10 @@ export const naru = {
         role: { ko: "주관 ORGANISER", en: "ORGANISER" },
         // TODO: confirm. 한국 안의 학교에서 누가 주관 자리에 서는지는 아직
         // 정해지지 않았습니다. 창업학회 같은 주체를 지어내 쓰지 마세요.
-        who: { ko: "각 학교 한인 학생회", en: "Each school's Korean student association" },
+        // DECIDED 2026-09-29 (사용자: 9/28 자문 미팅의 인사이트를 "한번 다 반영"): 크로스보더는 양쪽에 나루가 있어야 합니다.
+        // 주관을 한쪽(싱가포르 한인 학생회)이 아니라 양쪽 도시의 학생회와 학회로 적습니다. 학회 이름은 동의 전이라 쓰지 않습니다.
+        // TODO: confirm (사용자). 한국 측 학회를 주관 층위에 어떻게 세울지(자문 회의록 미결 ②).
+        who: { ko: "양쪽 도시의 한인 학생회와 학회", en: "Korean student associations and clubs in both cities" },
         brings: { ko: "소속 학생, 공간, 학교 안의 명의", en: "Students, space, standing inside the school" },
         does: {
           ko: "소속 학생 모집. 학교 안의 공간과 자원, 필요한 명의. 운영 협조.",
@@ -1556,18 +1591,29 @@ export const naru = {
       },
     ] as { k: Phrase; v: Phrase }[],
 
-    gapsHeading: { ko: "8월에 아쉬웠던 넷, 그리고 12월의 답", en: "Four things August missed, and December's answer" },
+    gapsHeading: { ko: "8월에 아쉬웠던 다섯, 그리고 12월의 답", en: "Five things August missed, and December's answer" },
     // DECIDED 2026-09-23 (첫 방문자 리뷰): 8월을 모르는 사람은 이 제목에서 멈췄습니다. 제목 바로 아래 한 줄.
     gapsNote: {
-      ko: "첫 회차(2026년 8월, 싱가포르)를 치르고 남은 넷입니다. 8월을 모르셔도 됩니다. 각 항목의 12월 답만 보셔도 충분합니다.",
-      en: "Four things left over from the first run (Singapore, August 2026). You don't need to know August. The December answer under each one is enough.",
+      ko: "첫 회차(2026년 8월, 싱가포르)를 치르고 남은 다섯입니다. 8월을 모르셔도 됩니다. 각 항목의 12월 답만 보셔도 충분합니다.",
+      en: "Five things left over from the first run (Singapore, August 2026). You don't need to know August. The December answer under each one is enough.",
     },
     gapsLead: {
-      ko: "이 네 가지를 메우려면 한 번 더 해야 합니다. 각각 8월에 무엇이 없었고 12월에 무엇을 넣는지입니다.",
-      en: "Filling these four takes doing it once more. For each, what August lacked and what December puts in.",
+      ko: "이 다섯 가지를 메우려면 한 번 더 해야 합니다. 각각 8월에 무엇이 없었고 12월에 무엇을 넣는지입니다.",
+      en: "Filling these five takes doing it once more. For each, what August lacked and what December puts in.",
     },
     augustLabel: { ko: "8월", en: "August" },
     decemberLabel: { ko: "12월", en: "December" },
+    // DECIDED 2026-09-29 (사용자: 9/28 자문 미팅의 인사이트를 반영): 다음 건너기. 자문의 요지는 "12월은 제대로
+    // 하면 실패하지 않는다, 그 다음 시프트를 세팅하라"였고, 답은 한국의 학생이 싱가포르로 건너가는 것입니다.
+    // 온라인으로는 할 수 있다는 감각이 생기지 않고, 숙박은 상호 호스팅으로 풉니다(싱가포르 학생이 맞이하고,
+    // 서울 학생은 서울에서 맞이합니다). {name}은 렌더가 decemberEventLabel로 채웁니다.
+    // TODO: confirm (사용자). 시기, 재원, 인원이 하나도 정해지지 않았습니다. 그래서 날짜를 쓰지 않고
+    // "시기는 정해지는 대로"라고만 씁니다. 공개 약속이 되므로 배포 전에 확인하세요.
+    nextLabel: { ko: "다음 건너기", en: "The next crossing" },
+    next: {
+      ko: "{name} 다음은 싱가포르입니다(나루 2027 · 싱가포르). 이번에 서울이 맞이한 사람들을, 다음에는 싱가포르의 학생들이 맞이합니다. 온라인으로 만나는 것과 건너가서 서 보는 것은 다릅니다. 시기는 정해지는 대로 이 자리에 적습니다.",
+      en: "After {name} comes Singapore (NARU 2027 · Singapore). The people Seoul hosts this time, Singapore's students host next. Meeting online is not the same as crossing over and standing there. The dates go here once they are set.",
+    },
     scheduleLabel: { ko: "일정", en: "Schedule" },
     scheduleLead: {
       // 2026-09-19 (사용자): "한 공간에서 하는 거는 아님. 여러 공간일 수도 있음." 장소 문장을 뺐습니다.
@@ -1677,7 +1723,7 @@ export const naru = {
     // 끊깁니다. 8월은 싱가포르 안에서 열렸고 12월은 그 안이 아닌 자리입니다.
     // 넓어지는 것은 판이지 코어가 아닙니다.
     lead: {
-      ko: "8월은 싱가포르 안에서 열렸습니다. 12월은 한국의 대학생과 해외의 한인 유학생이 같은 문제 앞에 섭니다. 학교도 나라도 다르지만 같은 자리입니다. 코어는 둘 그대로이고, 넓어지는 것은 판입니다.",
+      ko: "8월은 싱가포르 안에서 열렸습니다. 12월은 한국의 대학생과 해외에서 공부하는 한인 학생이 같은 문제 앞에 섭니다. 학교도 나라도 다르지만 같은 자리입니다. 코어는 둘 그대로이고, 넓어지는 것은 판입니다.",
       en: "August happened inside Singapore. In December, students in Korea and Korean students abroad stand in front of the same problem. Different schools, different countries, one place. The cores are unchanged; the room widens.",
     },
     changesLabel: { ko: "무엇이 달라지는가", en: "What changes" },
@@ -1723,7 +1769,7 @@ export const naru = {
     // TODO: confirm. 알럼 참여 규모가 검증되지 않았습니다. 인원도 비율도 쓰지
     // 마세요. 셋을 나열만 하고 크기를 말하지 않는 것이 지금 쓸 수 있는 전부입니다.
     who: {
-      ko: "한국의 대학생, 해외의 한인 유학생, 그리고 8월을 싱가포르에서 건넌 사람들.",
+      ko: "한국의 대학생, 해외에서 공부하는 한인 학생, 그리고 8월을 싱가포르에서 건넌 사람들.",
       en: "Students at Korean universities, Korean students studying abroad, and the people who crossed August in Singapore.",
     },
     // ── 이벤트가 끝난 뒤에 할 일 ────────────────────────────────────────────
@@ -1816,7 +1862,8 @@ export const naru = {
         // 내려간 뒤 이 여덟 글자가 12월 블록에 남은 유일한 참가 대상 문구였고,
         // 싱가포르 밖에서 공부하는 한인 유학생을 정확히 제외했습니다. 포지션
         // 브리프 §2가 금지한 바로 그 문장이었어요. 인원과 비율은 여전히 쓰지 않습니다.
-        note: { ko: "한국의 대학생과 해외의 한인 유학생", en: "Students in Korea and Korean students abroad" },
+        // 2026-09-29: "유학생"은 공부만 하는 사람처럼 들립니다(9/28 자문). 해외에서 만들고 있는 학생입니다.
+        note: { ko: "한국의 대학생과 해외에서 공부하는 한인 학생", en: "Students in Korea and Korean students abroad" },
       },
       {
         value: { ko: "2회", en: "2" },
@@ -2032,13 +2079,15 @@ export const naru = {
     needs: [
       {
         place: { ko: "싱가포르에서", en: "In Singapore" },
+        // 2026-09-29 (9/28 자문, 두 방향의 갈증): 해외 쪽의 결핍은 "안으로", 한국과 이어져 있을 자리입니다.
+        // 톤 규칙대로 감정어("불안") 없이 없는 자리로 씁니다.
         lack: {
-          ko: "학교마다 한인 학생이 있지만, 학교를 가로질러 이어 주는 자리가 없었습니다. 선배가 졸업하면 그 사람이 알던 것도 같이 나갑니다.",
-          en: "Every campus has Korean students and nothing connects them across campuses. When a senior graduates, what they knew leaves too.",
+          ko: "학교마다 한인 학생이 있지만, 학교를 가로질러 이어 주는 자리가 없었습니다. 선배가 졸업하면 그 사람이 알던 것도 같이 나갑니다. 한국과 이어져 있을 자리도 없었습니다.",
+          en: "Every campus has Korean students and nothing connects them across campuses. When a senior graduates, what they knew leaves too. There was no place that kept them tied to Korea either.",
         },
         opens: {
-          ko: "사람이 바뀌어도 남는 자리를 둡니다.",
-          en: "We keep a place that stays when the people change.",
+          ko: "사람이 바뀌어도 남는 자리를 두고, 한국으로 건너가는 길을 엽니다.",
+          en: "We keep a place that stays when the people change, and open a way across to Korea.",
         },
       },
       {
@@ -2060,9 +2109,11 @@ export const naru = {
           ko: "한국에서 공부하는 또래끼리는 이미 잘 이어져 있습니다. 없던 것은 다른 나라의 또래와 같은 문제를 놓고 만나는 자리입니다.",
           en: "Students in Korea are already well connected to each other. What was missing was a shared problem with peers who study elsewhere.",
         },
+        // 2026-09-29 (9/28 자문, "크로스보더는 양쪽에 카운터파트가 있어야"): 한국 쪽의 결핍은 "밖으로".
+        // 한국의 학생이 이 자리에 오는 이유는 건너편에 싱가포르가 있기 때문입니다.
         opens: {
-          ko: "다른 나라에서 공부한 사람과 같은 문제를 풉니다.",
-          en: "You work the same problem as someone who studies in another country.",
+          ko: "건너편이 있어야 건넙니다. 다른 나라에서 공부하는 또래와 같은 문제를, 같은 팀으로 풉니다.",
+          en: "You cross because there is another side. You work the same problem, on the same team, with peers who study in another country.",
         },
       },
       {
