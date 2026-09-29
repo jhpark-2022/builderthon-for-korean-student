@@ -11,6 +11,7 @@
 - [2026-09-28 무순위 어워드의 이유](#2026-09-28-no-ranking-why)
 - [2026-09-27 PO session 설명](#2026-09-27-po-session)
 - [2026-09-27 해외 창업가 세션, 영문 마스터 로고](#2026-09-27-founders-session)
+- [2026-09-28 나루 공식 표기와 로고 v2](#2026-09-28-naru-identity)
 - [2026-09-28 틈마다 빛이 다른 자리에](#2026-09-28-light-stations)
 - [2026-09-28 #gains 판 뒤에서 건넌다](#2026-09-28-cross-under-gains)
 - [2026-09-28 틈에서 형상이 어둡지 않게](#2026-09-28-brighter-gaps)
@@ -153,6 +154,17 @@
   영문 화면의 #naru 마스터 로고에 한글 "나루"가 남아 있었습니다. 영문에서는 "나루"와 "N A R U" 두 줄 대신 아웃라인 NARU 한 줄인 영문 마스터를 씁니다. 헤더·푸터 락업(2026-09-21)과 같은 규칙입니다.
 - 검증: `?lang=en`에서 naru 이미지 셋 모두 영문 자산, 본문에 "나루" 없음. `?lang=ko`는 그대로. tsc 통과.
 - 커밋: c0f43bb
+
+<a id="2026-09-28-naru-identity"></a>
+## 2026-09-28 나루 공식 표기와 로고 v2
+- 범위: `public/naru/`(마스터, 가로 락업, 영문 마스터 SVG, 매니페스토 v2, README), `data/naru.ts`(hero.eyebrow, eventHero.naruLine, group.concrete, footer, naruLinks.manifesto), `app/layout.tsx`(설명, keywords), `app/opengraph-image.tsx`(alt).
+- 한 것: 사용자가 나루의 공식 표기를 정했습니다(DECIDED 2026-09-28). 이름은 나루 / NARU 그대로이고, 영문 부제 "A Korea-rooted alliance of student builders"와 정의 문장을 고정했습니다.
+  자문에서 "이름만으로는 이벤트 회사와 구별되지 않는다"는 지적이 나와, 약어 대신 무엇인지 말하는 부제와 정의를 둡니다. 국문 부제 "한국에 뿌리를 둔 학생 빌더 연합"은 확정 전 번역안(TODO: confirm)입니다.
+  로고 가이드 v2에 맞춰 마스터 링을 A KOREA-ROOTED ALLIANCE / OF STUDENT BUILDERS로, 가로 락업 아래 줄을 NARU로 바꿨고, 새 표지의 매니페스토를 v2 파일명으로 올렸습니다.
+  /2026-08 아카이브 본문과 12월 이벤트 문구(OG 제목과 설명, "wherever they study")는 그대로입니다.
+- 검증: 브리프 5의 잔존 문구 grep 두 개 0건. npm run build 통과(npm run lint는 ESLint 설정이 없어 대화형 설정 질문에서 멈춥니다). ko, en × 1440, 390 스크린샷에서 링 글자 잘림 없음, 영문 화면 한글 0곳, #naru 넘침 0곳.
+- 브리프: docs/naru-identity-brief.md
+- 커밋: b8f905f, 546e0dd
 
 <a id="2026-09-28-light-stations"></a>
 ## 2026-09-28 틈마다 빛이 다른 자리에
