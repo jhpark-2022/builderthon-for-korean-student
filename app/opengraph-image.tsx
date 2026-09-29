@@ -2,7 +2,9 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-export const alt = "CROSSING SEOUL, 18–22 Dec 2026. 나루 NARU, Korean student builders.";
+// 2026-09-28 (나루 공식 표기 브리프 4.7): 나루를 영문 부제로. 카드 오른쪽 아래 줄
+// "Korean student builders, wherever they study"는 12월 포지션이라 그대로 둡니다.
+export const alt = "CROSSING SEOUL, 18–22 Dec 2026. 나루 NARU, a Korea-rooted alliance of student builders.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

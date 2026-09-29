@@ -339,13 +339,14 @@ export const naru = {
   hero: {
     // 로고가 바로 위에 있으므로 이름을 한 번 더 말하지 않습니다. 이 줄은 나루가
     // 무엇인지를 한 줄로 말하는 자리입니다.
-    // TODO: confirm. 12월이 국경을 여니 "싱가포르에서 시작한 한인 학생 빌더
-    // 커뮤니티"가 후보입니다. 지금은 바꾸지 않습니다. 나루의 정체성 문구는
-    // Overview와 로고 링의 SINGAPORE에 묶여 있고, 그건 이벤트 포지션이 아니라
-    // 그룹의 정의라 사용자가 정할 일입니다.
+    // DECIDED 2026-09-28 (사용자, 나루 공식 표기 브리프): 이름은 나루 / NARU 그대로. 영문 부제
+    // "A Korea-rooted alliance of student builders", 정의 "A student-run alliance of Korean student
+    // associations and clubs across Seoul and Singapore, building together with AI." 로고 v2의 링도
+    // 이 부제입니다. 국문 부제 "한국에 뿌리를 둔 학생 빌더 연합"은 TODO: confirm (사용자가 아직
+    // 확정하지 않은 번역안입니다).
     eyebrow: {
-      ko: "싱가포르 한인 학생 빌더 커뮤니티",
-      en: "Korean student builders in Singapore",
+      ko: "한국에 뿌리를 둔 학생 빌더 연합",
+      en: "A Korea-rooted alliance of student builders",
     },
     // 확정 태그라인. 매니페스토의 마지막 문단에서 왔습니다.
     // "건너는 일은 각자가 한다. 나루는 건널 수 있는 자리를 만들고, 건너간 사람이
@@ -382,15 +383,19 @@ export const naru = {
   // 내려갔습니다. 위의 hero 블록(태그라인)은 그쪽이 씁니다.
   eventHero: {
     eyebrow: { ko: "나루의 다음 이벤트", en: "NARU's next event" },
-    // TODO: confirm. 나루를 모르는 사람에게 첫 화면에서 나루가 무엇인지 말하는 한 문장
-    // (감사 반영 브리프 1.2). 나루 정체성 문구는 사용자가 정합니다.
+    // 나루를 모르는 사람에게 첫 화면에서 나루가 무엇인지 말하는 한 문장(감사 반영 브리프 1.2).
+    // DECIDED 2026-09-28 (사용자, 나루 공식 표기 브리프): 이름은 나루 / NARU 그대로. 영문 부제
+    // "A Korea-rooted alliance of student builders", 정의 "A student-run alliance of Korean student
+    // associations and clubs across Seoul and Singapore, building together with AI." 로고 v2의 링도
+    // 이 부제입니다. 국문 부제 "한국에 뿌리를 둔 학생 빌더 연합"은 TODO: confirm (사용자가 아직
+    // 확정하지 않은 번역안입니다).
     // 2026-09-19 (사용자: "같은 단어가 한 스크린에서 자주 반복된다"): 이 줄이 바로 위
     // 아이브로("나루의 다음 이벤트")와 제목("한인 학생 빌더가 만나는 자리")의 말을 그대로
     // 다시 했습니다. 첫 화면에서 "나루의 다음 이벤트"가 두 번, "한인 학생 빌더"가 두 번
     // 나왔어요. 이 줄이 혼자 말해야 하는 것은 나루가 어디서 시작했는가 하나입니다.
     naruLine: {
-      ko: "싱가포르에서 시작한 커뮤니티, 나루가 엽니다.",
-      en: "Run by NARU, a community that started in Singapore.",
+      ko: "서울과 싱가포르의 한인 학생 연합, 나루가 엽니다.",
+      en: "Run by NARU, a Korea-rooted alliance of student builders.",
     },
     // 사진 넷 아래 한 줄(감사 반영 브리프 1.3). 캡션이 없으면 12월 사진으로 읽힙니다.
     photosCaption: { ko: "제로백 빌더톤 · 2026.08 싱가포르", en: "Zero100 builderthon · Aug 2026, Singapore" },
@@ -518,9 +523,11 @@ export const naru = {
     },
     // DECIDED 2026-09-25 (가독성 브리프 5, 사용자 승인): 추상적인 문장 옆의 구체적인 한 줄.
     // 화면에 이미 있는 사실만 씁니다. 출처: group.lead, record.lead.
+    // DECIDED 2026-09-28 (나루 공식 표기 브리프 4.3): 첫 문장을 정의 문장 그대로로 바꿨습니다. 옛 첫
+    // 문장("학생회와 기업을 이어 이벤트를 엽니다")은 정의와 겹쳐 뺐고, 둘째 문장은 그대로입니다.
     concrete: {
-      ko: "나루는 학생회와 기업을 이어 이벤트를 엽니다. 첫 이벤트는 2026년 8월 싱가포르의 제로백 빌더톤이었습니다.",
-      en: "NARU connects student associations and companies and runs events. The first was the Zero100 builderthon in Singapore, August 2026.",
+      ko: "서울과 싱가포르의 한인 학생회와 학회가 모인, 학생이 직접 운영하는 연합입니다. AI로 함께 만듭니다. 첫 이벤트는 2026년 8월 싱가포르의 제로백 빌더톤이었습니다.",
+      en: "A student-run alliance of Korean student associations and clubs across Seoul and Singapore, building together with AI. The first was the Zero100 builderthon in Singapore, August 2026.",
     },
   },
 
@@ -2309,15 +2316,16 @@ export const naru = {
   // 12월 이벤트의 주관은 아직 정해지지 않았습니다.
   footer: {
     credits: {
-      ko: "주최 나루 주관 각 학교 한인 학생 단체 후원 참여 기업",
-      en: "Hosted by NARU Organised by each school's Korean student association Supported by participating companies",
+      ko: "주최 나루 주관 각 학교 한인 학생회와 학회 후원 참여 기업",
+      en: "Hosted by NARU Organised by Korean student associations and clubs at each school Supported by participating companies",
     },
     // DECIDED 2026-09-23 (첫 방문자 리뷰): 위 한 줄이 폰에서 한 문장처럼 읽혔습니다("주최 나루 주관 각
     // 학교…"). 라벨과 값을 나눠 폰에서는 세 줄, 데스크톱은 한 줄에 여백으로 띄웁니다. 순서는 그대로.
     // credits 한 줄 키는 남겨 둡니다.
     creditItems: [
       { label: { ko: "주최", en: "Hosted by" }, value: { ko: "나루", en: "NARU" } },
-      { label: { ko: "주관", en: "Organised by" }, value: { ko: "각 학교 한인 학생 단체", en: "each school's Korean student association" } },
+      // 2026-09-28 (나루 공식 표기 브리프 4.4): 정의 문장의 "학생회와 학회"에 맞춥니다.
+      { label: { ko: "주관", en: "Organised by" }, value: { ko: "각 학교 한인 학생회와 학회", en: "Korean student associations and clubs at each school" } },
       { label: { ko: "후원", en: "Supported by" }, value: { ko: "참여 기업", en: "participating companies" } },
     ],
     archive: { ko: "제로백 빌더톤의 기록", en: "The Zero100 builderthon record" },
