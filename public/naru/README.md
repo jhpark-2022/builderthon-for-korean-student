@@ -58,21 +58,27 @@ PNG는 투명 여백을 잘라내고 긴 변을 900px로 맞췄습니다. 마스
 - 원본은 `SVG/naru_03_마스터_반전.svg`입니다. 한글 "나루"(`<text>`, 시스템 서체)와
   그 아래 작은 "N A R U" 두 줄을 지우고, `naru-name-en-rev.svg`의 아웃라인 NARU를
   0.55배로 줄여 같은 자리(가운데 x=180, 대문자 229~261)에 놓았습니다.
-- 원 둘레 글자(KOREAN STUDENT BUILDERS, SINGAPORE)는 원본처럼 임베드된 Montserrat
-  800으로 그립니다. 쓰지 않는 600·700 `@font-face`와 c2pa 메타데이터는 뺐습니다(85KB에서 29KB).
+- 원 둘레 글자(위 A KOREA-ROOTED ALLIANCE, 아래 OF STUDENT BUILDERS)는 원본처럼 임베드된
+  Montserrat 800으로 그립니다. 쓰지 않는 600·700 `@font-face`와 c2pa 메타데이터는 뺐습니다(85KB에서 29KB).
 - 한글 화면은 그대로 `naru-master-rev.png`입니다.
+- 2026-09-28 (로고 가이드 v2): 링 문구가 KOREAN STUDENT BUILDERS / SINGAPORE에서
+  A KOREA-ROOTED ALLIANCE / OF STUDENT BUILDERS로 바뀌었습니다(위에서 아래로 읽으면 영문 부제).
+  글자 두 줄만 원본 속성대로 바꿨습니다(font-size 23, letter-spacing 위 0.9 / 아래 1.2). 가운데 NARU와 심볼은 그대로.
+  `naru-master-rev.png`와 `naru-lockup-rev.png`(아래 줄 SINGAPORE → NARU)도 v2 원본에서 다시 만들었습니다.
 
 ## 매니페스토 PDF (ADDED 2026-09-19)
 
-`naru-manifesto-v1-2026-09.pdf`는 `12월 빌더톤/그룹 기획/매니페스토_나루.pdf`의
-사본입니다. 홈 `#join`의 마지막 블록이 이 파일을 내려받게 합니다
+`naru-manifesto-v2-2026-09.pdf`는 `12월 빌더톤/그룹 기획/매니페스토_나루.pdf`의
+사본입니다(2026-09-28 v2: 새 표지. v1은 지웠습니다). 홈 `#join`의 마지막 블록이 이 파일을 내려받게 합니다
 (`naruLinks.manifesto`).
 
 - 원본을 고치면 **파일명을 새 버전으로 바꿔** 다시 복사하세요(`v2-2026-xx`).
   같은 이름으로 덮으면 CDN과 브라우저에 남은 옛 파일이 그대로 나갑니다.
 - 화면에는 쪽 수나 파일 크기를 적지 않습니다(2026-09-19). 버튼 라벨 하나입니다.
 
-## 쓰는 규칙 (로고 가이드 v1 요약)
+## 로고 가이드 v2 요약
+
+- 04 열린 문구 판은 폐기되었습니다. 심볼, 이름만 락업, 프로필 마크는 v1과 같습니다.
 
 - 반전 계열은 **남색 계열 바탕에만.** 이 사이트는 바탕이 `#070B1F`라 반전이 기본입니다.
 - 사진이나 영상 위에 얹지 않습니다.
