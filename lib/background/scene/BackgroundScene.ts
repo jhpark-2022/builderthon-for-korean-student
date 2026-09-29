@@ -114,6 +114,16 @@ export class BackgroundScene {
   /** 파문의 위상(rad). 곱셈이 아니라 적분입니다(2026-09-19, 파문 위상 브리프). */
   private ringPhase = 0;
   private prevScroll = 0;
+  // 빠른 스크롤에서 형상이 돌아오는 법(DECIDED 2026-09-29, config의 stages.reappear). 사라지는 쪽은
+  // 스크롤을 그대로 따르고, 돌아오는 쪽은 스크롤이 잦아든 뒤 시간에 걸쳐 돌아옵니다. 그렇지 않으면
+  // 한 번에 여러 화면을 넘길 때 틈마다 형상이 켜졌다 꺼졌다 합니다(판 옆으로 나온 싱가포르에서 특히).
+  private shapeVis = 0;          // 지금 보이는 정도(0..1). 목표(떠오름 × 거둠 × 틈)를 아래 규칙으로 따라갑니다.
+  private scrollSpeed = 0;       // px/s. 오를 때 즉시, 잦아들 때 speedRelease/s로.
+  // 속도는 한 프레임의 차이가 아니라 최근 speedWindow초의 이동으로 잽니다. 스크롤 이벤트는 프레임 경계에
+  // 몰려 와서 한 프레임씩 재면 0과 두 배가 번갈아 나오고, 오를 때 즉시 따르는 값은 그 봉우리에 붙습니다
+  // (600px/s로 굴려도 1,000 넘게 읽혔습니다).
+  private readonly speedTrail: { t: number; y: number }[] = [];
+  private reappearHold = false;  // 빠르게 넘기는 중이라 돌아오지 않는 상태(이력).
   private visible = true;
   // 방문자가 직접 끈 상태. prefers-reduced-motion과 별개입니다.
   // WCAG 2.2.2는 5초를 넘겨 자동으로 시작하는 움직임에 "일시정지, 정지, 또는
@@ -841,7 +851,28 @@ export class BackgroundScene {
       const dissolve = ss(clamp((this.scrollY - P.dissolveStart) / P.dissolveSpan, 0, 1));
       // 판 뒤에서는 사라지고 틈에서만 보입니다(DECIDED 2026-09-26 2차, config의 hideFadeVh).
       const visible = 1 - this.hiddenAt(this.scrollY);
-      const shapeOpacity = reveal * (1 - dissolve) * visible;
+      // 빠른 스크롤에서 돌아오는 법(DECIDED 2026-09-29, config의 stages.reappear). 사라짐(visible이
+      // shapeVis보다 작음)은 그대로 따릅니다. 판 뒤에서만 바뀐다는 규칙이 여기에 기댑니다. 돌아옴은
+      // 스크롤 속도가 fastPxPerSec를 넘으면 멈추고 slowPxPerSec 아래로 잦아들면 다시 시작하며,
+      // 그때도 minSeconds보다 빠르게는 다 밝아지지 않습니다. 읽는 속도에서는 스크롤의 hideFadeVh가
+      // 더 길어 전과 같습니다.
+      const shapeTarget = reveal * (1 - dissolve) * visible;
+      {
+        const R = S.reappear;
+        const trail = this.speedTrail;
+        trail.push({ t, y: this.scrollY });
+        while (trail.length > 2 && t - trail[1].t >= R.speedWindow) trail.shift();
+        const span = t - trail[0].t;
+        const speedNow = span > 1e-3 ? Math.min(5 * R.fastPxPerSec, Math.abs(this.scrollY - trail[0].y) / span) : 0;
+        this.scrollSpeed = speedNow > this.scrollSpeed
+          ? speedNow
+          : this.scrollSpeed + (speedNow - this.scrollSpeed) * Math.min(1, R.speedRelease * dt);
+        if (this.scrollSpeed > R.fastPxPerSec) this.reappearHold = true;
+        else if (this.scrollSpeed < R.slowPxPerSec) this.reappearHold = false;
+        if (shapeTarget <= this.shapeVis) this.shapeVis = shapeTarget;
+        else if (!this.reappearHold) this.shapeVis = Math.min(shapeTarget, this.shapeVis + dt / R.minSeconds);
+      }
+      const shapeOpacity = this.shapeVis;
       const docEnd = document.documentElement.scrollHeight - vh;
       this.water.setStages(s1, s2, morph);
       // 구간 6 (DECIDED 2026-09-26, 사용자: 맨 아래에서는 빛과 배경 효과가 보이지 않게).
@@ -912,7 +943,8 @@ export class BackgroundScene {
         // 2026-09-26 (판 덮개 브리프 4): 형상이 바뀌는 세 진행도와 판 덮개도 값으로 잽니다.
         (window as unknown as { __naruBg?: unknown }).__naruBg = {
           uvSpan, uvSpanY, light: { ...this.lightUv, w: lightW, target }, lightKeys: this.lightKeys, t: performance.now(),
-          sy: this.scrollY, vh, s1, s2, reveal, morph, dissolve, visible, ringPhase: this.ringPhase,
+          sy: this.scrollY, vh, s1, s2, reveal, morph, dissolve, visible, shapeVis: this.shapeVis,
+          scrollSpeed: this.scrollSpeed, reappearHold: this.reappearHold, ringPhase: this.ringPhase,
           shapeBox: this.shapeBox, plates: this.plates, schedule: this.sched,
         };
       }
