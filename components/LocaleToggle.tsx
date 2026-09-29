@@ -25,12 +25,28 @@ export default function LocaleToggle({ className = "", variant = "zero100" }: { 
         </button>
       );
     };
+    // DECIDED 2026-09-29 (사용자: 헤더 로고도 화면 가운데): 폰(sm 미만)에서는 바 한가운데 로고와 두 버튼짜리
+    // 토글이 한 줄에 들어가지 않습니다(360px에서 영문 로고 184px + 토글 106px). 두 버튼은 각각 44px 하한이라
+    // 줄일 수 없어서, 폰에서는 **다른 언어 하나만** 보이는 44px 버튼 하나로 바꿉니다. 누르면 그 언어로 갑니다.
+    // 접근 가능한 이름이 보이는 글자("EN" 또는 "KR")로 시작합니다(WCAG 2.5.3, dict.toggle의 주석).
+    const other: "en" | "ko" = locale === "en" ? "ko" : "en";
     return (
-      <div role="group" aria-label={t(dict.toggle.groupAria)} className={`inline-flex min-h-[44px] shrink-0 items-center rounded-full border border-white/15 bg-white/5 px-1.5 text-xs ${className}`}>
-        {item("en", "EN")}
-        <span aria-hidden className="text-white/20">/</span>
-        {item("ko", "KR")}
-      </div>
+      <>
+        <button
+          type="button"
+          lang={other}
+          onClick={() => setLocale(other)}
+          className={`inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 px-3 text-xs font-bold text-white/85 transition hover:text-white sm:hidden ${className}`}
+        >
+          {other === "en" ? "EN" : "KR"}
+          <span className="sr-only">{other === "en" ? " English" : " 한국어"}</span>
+        </button>
+        <div role="group" aria-label={t(dict.toggle.groupAria)} className={`hidden min-h-[44px] shrink-0 items-center rounded-full border border-white/15 bg-white/5 px-1.5 text-xs sm:inline-flex ${className}`}>
+          {item("en", "EN")}
+          <span aria-hidden className="text-white/20">/</span>
+          {item("ko", "KR")}
+        </div>
+      </>
     );
   }
   return (
