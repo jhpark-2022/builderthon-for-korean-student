@@ -233,10 +233,18 @@ function ReadingPlate({ id, read = false }: { id: PlateId; read?: boolean }) {
 // 형상은 판이 다 덮는 동안 사라지고 틈에서만 보이며, 바뀌는 일은 사라져 있는 동안만 일어납니다
 // (lib/background/scene/BackgroundScene.ts의 schedule). gap은 앞 조각과의 사이를 벌립니다.
 // 216px에서 판의 위아래 확장(48px × 2)을 빼면 판 사이 120px로, 챕터 사이의 틈과 같습니다.
-function PlateSegment({ id, gap = false, children }: { id: PlateId; gap?: boolean; children: React.ReactNode }) {
+// DECIDED 2026-09-29 (사용자: "어떤 건 다 left에 있다가 갑자기 다 센터로 가고, 뒤죽박죽. 문장들과 버튼들도",
+// 왼쪽 끝 브리프): 글은 하나의 왼쪽 끝(READ 폭의 왼쪽)에서 시작합니다. 제목, 알약 라벨, 리드, 문단, 목록, 카드,
+// 버튼 모두. 가운데 정렬은 그림에만 씁니다: #december의 숫자 줄(5일, 2회, 2026-09-26 사용자 요청)과 5일 노선도,
+// 그리고 푸터. 9월 25일의 "챕터 머리는 가운데" 규칙을 이 규칙이 대신합니다(머리가 가운데이고 본문이 왼쪽이면
+// 챕터마다 한 번씩 뒤집힙니다). Chapter의 align="center"는 8월 페이지와 같은 컴포넌트라 두고, 판 조각이
+// text-left로 덮습니다. 그래서 홈의 네 챕터는 모두 PlateSegment 안에 있습니다.
+// 판 폭은 한 축 브리프(2026-09-26)대로 그 조각의 글 기둥을 따릅니다. WIDE 블록(노선도)이 남은 조각은 #december
+// 첫 조각뿐이라 나머지는 read입니다.
+function PlateSegment({ id, gap = false, read = false, children }: { id: PlateId; gap?: boolean; read?: boolean; children: React.ReactNode }) {
   return (
-    <div className={gap ? "relative mt-[216px]" : "relative"}>
-      <ReadingPlate id={id} />
+    <div className={gap ? "relative mt-[216px] text-left" : "relative text-left"}>
+      <ReadingPlate id={id} read={read} />
       {children}
     </div>
   );
@@ -421,7 +429,7 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
         ))}
       </div>
       {/* lg에서는 홀수 칸이 36px 내려가 있어 그만큼 더 띄웁니다. */}
-      <figcaption className="mt-3 text-center text-[0.68rem] text-white/50 lg:mt-12 lg:text-left">{t(naru.eventHero.photosCaption)}</figcaption>
+      <figcaption className="mt-3 text-left text-[0.68rem] text-white/50 lg:mt-12">{t(naru.eventHero.photosCaption)}</figcaption>
     </figure>
   );
 }
@@ -521,7 +529,7 @@ export default function NaruHome() {
             붙었습니다. 그 훅은 2026-09-20에 사라졌지만 클래스는 둡니다. 히어로가
             앉는 쌓임 맥락이고, 빼는 것은 아무도 요청하지 않은 레이아웃 변경입니다. */}
         <div className="relative grid items-center gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
-          <div className="text-center lg:pl-10 lg:text-left xl:pl-16">
+          <div className="text-left lg:pl-10 xl:pl-16">
             <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.eventHero.eyebrow)}</Eyebrow>
             {/* 8월 H1과 같은 clamp. 2행은 그라데이션 토큰(GRADIENT_TEXT). ko는
                 "크로싱 서울" / "CROSSING SEOUL", en은 "CROSSING" / "SEOUL".
@@ -550,15 +558,15 @@ export default function NaruHome() {
             <p className="mt-8 text-sm font-bold text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base">
               {formatDecemberDateLine(locale)}
             </p>
-            <p className="mx-auto mt-4 max-w-xl break-keep text-base font-bold leading-snug text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] lg:mx-0">
+            <p className="mt-4 max-w-xl break-keep text-base font-bold leading-snug text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] lg:mx-0">
               {t(naru.december.heading)}
             </p>
-            <p className="mx-auto mt-3 max-w-xl break-keep text-sm leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base lg:mx-0">
+            <p className="mt-3 max-w-xl break-keep text-sm leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base lg:mx-0">
               {/* 나루 한 문장이 서술 첫 줄(감사 반영 브리프 1.2). TODO: confirm(문구는 사용자가). */}
               <span className="text-white">{t(naru.eventHero.naruLine)}</span>{" "}
               {t(naru.eventHero.sub)}
             </p>
-            <div className="mt-10 flex flex-wrap items-start justify-center gap-3 lg:justify-start">
+            <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:justify-start">
               {regState === "open" ? (
                 <button type="button" onClick={() => { track("naru_cta", { src: "hero", to: "register" }); reg?.openRegister(); }} className={`group ${buttonClass("primary", "naru")}`}>
                   {t(registerCopy.cta)}
@@ -635,10 +643,12 @@ export default function NaruHome() {
       <Chapter id="december" labelledBy="december-title" align="center">
         <PlateSegment id="december">
         {/* 2026-09-18 (감사 반영 브리프 8): 아이브로는 보라 외곽선 1종. 주황 글자·주황 발광을 뺐습니다. */}
+        <div className={READ}>
         <Eyebrow color="purple" className={eyebrowTrack(locale)}>
           {`${t(naru.december.eyebrowPrefix)}\u2002${decemberEventLabel(locale)}`}
         </Eyebrow>
-        <h2 id="december-title" className={H2}><Halo tone="violet">{t(naru.december.programHeading)}</Halo></h2>
+        </div>
+        <h2 id="december-title" className={`${H2} ${READ}`}><Halo tone="violet">{t(naru.december.programHeading)}</Halo></h2>
         {/* 폰에서 3줄을 넘는 문단은 왼쪽 정렬 (2026-09-19, 모바일 감사 8). #naru가
             이미 쓰던 규칙(감사 반영 브리프 6.1)인데 #december와 #join에는 적용되지
             않았습니다. 336px 폭에 한글 18자/줄이면 서너 줄 문단이 양쪽 들쭉날쭉한
@@ -646,7 +656,7 @@ export default function NaruHome() {
         {/* DECIDED 2026-09-25 (가독성 브리프 5, 사용자 승인): 제목 옆의 구체적인 한 줄. 날짜는
             naruDates에서. 이 줄이 챕터 머리의 문단 하나라 가운데이고, 아래 shapeLead는 본문
             축으로 내려갑니다(가독성 브리프 4.1: 머리는 h2 바로 아래 문단 하나). 문장은 그대로. */}
-        <p className={`${READ} mt-6 break-keep text-left text-base leading-relaxed text-white/75 lg:text-center`}>
+        <p className={`${READ} mt-6 break-keep text-left text-base leading-relaxed text-white/75`}>
           {t(naru.december.programConcrete).replace("{date}", formatDecemberDateLine(locale))}
         </p>
         <p className={`${READ} mt-6 break-keep text-left text-base leading-relaxed text-white/75`}>
@@ -678,7 +688,8 @@ export default function NaruHome() {
 
             DECIDED 2026-09-26 (사용자: "중간에 있어야지"): 이 줄만 가운데. 글이 아니라 한눈에 보는
             요약이라 본문의 왼쪽 정렬 규칙(9월 25일, 26일)의 예외입니다. 칸 안의 숫자와 라벨도 가운데. */}
-        <dl className={`${READ} mt-5 flex items-stretch justify-center`}>
+        {/* data-center-zone: 가운데 정렬이 허용되는 세 자리 중 하나(왼쪽 끝 브리프 2.2). 검증이 이 표시로 찾습니다. */}
+        <dl data-center-zone="stats" className={`${READ} mt-5 flex items-stretch justify-center`}>
           {[naru.december.shape[0], naru.december.shape[3]].map((stat, i) => (
             // dl의 직계는 div 한 겹이고 그 안은 dt/dd뿐입니다. 그래서 구분선을
             // 엘리먼트로 두지 못하고 ::before로 그립니다. 화면은 같습니다.
@@ -704,6 +715,8 @@ export default function NaruHome() {
         {/* 노선도. 정거장 다섯, ★는 제출이 있는 날. 레일 아래 초록 필이
             General Mentoring(8월의 "1:1 멘토링 매일" 필 자리). */}
         <Reveal className={`${WIDE} mt-8 text-left`}>
+          {/* data-center-zone: 노선도와 범례는 그림이라 가운데를 씁니다(왼쪽 끝 브리프 2.2). */}
+          <div data-center-zone="routemap">
           <RouteMap
             ariaLabel={t(naru.december.routeAria)}
             stations={naru.december.stages.map((s) => ({
@@ -719,6 +732,7 @@ export default function NaruHome() {
             legend={{ anchor: t(naru.december.routeLegendSubmit), plain: t(naru.december.routeLegendStage) }}
             current={hoverDay ?? 0}
           />
+          </div>
         </Reveal>
 
         {/* 2026-09-20 (표현 방식 브리프 4): Day 카드 다섯 장을 지우고 표 한 장으로.
@@ -845,13 +859,15 @@ export default function NaruHome() {
             뒤 조각이 넓은 창(1728, 1920)에서도 형상을 위아래로 다 덮을 만큼 깁니다. 서울 → 싱가포르가
             이 조각이나 #gains 판 뒤에서 일어나, #naru 앞 틈에는 싱가포르가 섭니다. */}
         </PlateSegment>
-        <PlateSegment id="december-2" gap>
+        <PlateSegment id="december-2" gap read>
         {/* General Mentoring. 초록 테두리 강조 상자(8월 "과정이 기록됩니다" 문법).
             2026-09-26 (한 축 브리프): lg에서 규칙 다섯이 가로로 서므로 WIDE입니다. 위 일정표와
             아래 재는 것은 READ라 Reveal을 셋으로 나눴습니다. 내용과 순서는 그대로. */}
-        <Reveal className={`${WIDE} text-left`}>
-          <div className="mt-3 flex flex-col gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-4 lg:flex-row lg:items-center lg:gap-8 lg:px-7">
-            <div className="shrink-0 lg:w-56">
+        {/* 2026-09-29 (왼쪽 끝 브리프 2.1): WIDE → READ. 라벨을 규칙 옆이 아니라 위에 둡니다. READ 폭에서 옆에
+            두면 규칙 다섯 칸이 100px 남짓이라 한두 자씩 끊깁니다. */}
+        <Reveal className={`${READ} text-left`}>
+          <div className="mt-3 flex flex-col gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-4 lg:px-7">
+            <div className="shrink-0">
               <p className="flex items-center gap-2 text-base font-bold text-white">
                 <ChipDot />
                 {/* lang="en" (2026-09-19, 접근성 감사 7): 한국어 문단 속의 영어 고유명사. */}
@@ -867,7 +883,9 @@ export default function NaruHome() {
                 아래 Day 카드의 clamp 완화와 같은 예산에서 나옵니다. */}
             {/* 2026-09-20 (일정 브리프 3장): 규칙이 넷에서 다섯이 되어 lg를 5열로.
                 4열이면 다섯째 줄만 아래로 내려가 왼쪽 칸이 둘이 됩니다. */}
-            <ul role="list" className="grid flex-1 grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-5">
+            {/* 2026-09-29 (왼쪽 끝 브리프 2.1, 검증 4): READ 폭에서 다섯 칸은 150px 남짓이라 "바뀝니다"가 넉 자로
+                떨어졌습니다. 폰 한 칸, md부터 두 칸. */}
+            <ul role="list" className="grid flex-1 grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2 md:gap-x-6">
               {naru.december.mentoringRules.map((rule, i) => (
                 <li key={i} className="flex gap-2.5 break-keep border-l-2 border-white/20 pl-3 text-xs leading-snug text-white/85 sm:text-sm">
                   {t(rule)}
@@ -911,7 +929,7 @@ export default function NaruHome() {
             <h3 data-subheading className={SUBHEADING}>{t(naru.december.scopeLabel)}</h3>
             <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">{t(naru.december.scopeNote)}</p>
           </div>
-          <ol role="list" className={`${WIDE} mt-5 grid grid-cols-1 border-t border-white/10 sm:grid-cols-3`}>
+          <ol role="list" className={`${READ} mt-5 grid grid-cols-1 border-t border-white/10 sm:grid-cols-3`}>
             {naru.december.scope.map((sc, i) => {
               const past = sc.num === "iii";
               return (
@@ -1058,11 +1076,11 @@ export default function NaruHome() {
           그리드), 폰은 두 열 + 마지막 한 장 전폭. 아래 한 줄이 "왜 제목뿐인가"의 답.
           8월 참가 혜택 필과 같은 emerald. 기본 이음매. */}
       <Chapter id="gains" labelledBy="gains-title" align="center">
-        <ReadingPlate id="gains" read />
-        <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.gains.eyebrow)}</Eyebrow>
-        <h2 id="gains-title" className={H2}><Halo tone="violet">{t(naru.gains.heading)}</Halo></h2>
+        <PlateSegment id="gains" read>
+        <div className={READ}><Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.gains.eyebrow)}</Eyebrow></div>
+        <h2 id="gains-title" className={`${H2} ${READ}`}><Halo tone="violet">{t(naru.gains.heading)}</Halo></h2>
         {/* 제목 옆의 구체적인 한 줄(가독성 브리프 5, 2026-09-25 사용자 승인). 챕터 머리의 문단. */}
-        <p className={`${READ} mt-6 break-keep text-left text-base leading-relaxed text-white/75 lg:text-center`}>
+        <p className={`${READ} mt-6 break-keep text-left text-base leading-relaxed text-white/75`}>
           {t(naru.gains.concrete)}
         </p>
         {/* DECIDED 2026-09-20 (표현 방식 브리프 3장): 카드 다섯 → 행 다섯.
@@ -1107,6 +1125,7 @@ export default function NaruHome() {
         <p className={`${READ} mt-6 break-keep text-left text-base leading-relaxed text-white/75`}>{t(naru.gains.uses)}</p>
         <p className={`${READ} mt-3 break-keep text-left text-sm text-white/50`}>{t(naru.gains.note)}</p>
 
+        </PlateSegment>
       </Chapter>
 
       {/* 2026-09-19 (사용자): "8월과 나루는 합칠 수 있음. 나루의 코어가 여기서 나온 거라고." #record
@@ -1121,11 +1140,12 @@ export default function NaruHome() {
           exec와 measure는 #december의 멘토링 블록으로 갔습니다. 이벤트의
           실행에 관한 문장이라서요. 여기 남은 것은 코어 둘, 경첩, 마지막 줄. */}
       <Chapter id="naru" labelledBy="naru-title" align="center" className="pt-20 sm:pt-28 lg:pt-36">
-        <PlateSegment id="naru">
+        <PlateSegment id="naru" read>
         {/* DECIDED 2026-09-27 (사용자): 영문 화면에서는 한글 "나루"가 보이지 않습니다.
             헤더·푸터 락업과 같은 규칙(2026-09-21). 영문 마스터는 원본 03 반전에서
             "나루"와 "N A R U" 두 줄을 아웃라인한 NARU 한 줄로 바꾼 것입니다
             (public/naru/README.md). */}
+        <div className={READ}>
         <Image
           src={locale === "en" ? "/naru/naru-master-en-rev.svg" : "/naru/naru-master-rev.png"}
           alt={t(naru.hero.logoAlt)}
@@ -1134,13 +1154,14 @@ export default function NaruHome() {
           unoptimized={locale === "en"}
           // 보조 마크(감사 반영 브리프 6.3): 폰 160px, 데스크톱 220px. 형태는 로고 가이드가 정본이라
           // 그대로입니다.
-          className="mx-auto h-auto w-[160px] sm:w-[220px]"
+          className="h-auto w-[160px] sm:w-[220px]"
         />
-        <div className="mt-6">
+        </div>
+        <div className={`${READ} mt-6`}>
           <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.hero.eyebrow)}</Eyebrow>
         </div>
         {/* 태그라인. 두 줄 고정(히어로에 있던 때의 이유 그대로: 두 개의 선언). */}
-        <h2 id="naru-title" className={H2}>
+        <h2 id="naru-title" className={`${H2} ${READ}`}>
           <Halo tone="violet">
             <span className="block break-keep">{t(naru.hero.titleLine1)}</span>{" "}
             {/* {" "}: block span 둘 사이에 텍스트 노드가 없으면 이름 계산에서
@@ -1152,7 +1173,7 @@ export default function NaruHome() {
             바로 아래입니다. 위 두 줄이 "건넌다"고 말하고, 이 줄이 무엇을 건너는 자리인지
             말합니다. 순서가 반대면 낱말 풀이부터 읽히고 선언이 뒤로 밀립니다.
             본문보다 한 단 작고 한 단 어둡습니다. 주석이지 주장이 아닙니다. */}
-        <p className={`${READ} mt-5 break-keep text-left text-sm leading-relaxed text-white/55 lg:text-center`}>
+        <p className={`${READ} mt-5 break-keep text-left text-sm leading-relaxed text-white/55`}>
           {t(naru.group.name)}
         </p>
         {/* 태그라인 옆의 구체적인 한 줄(가독성 브리프 5, 2026-09-25 사용자 승인). 이름 풀이 다음,
@@ -1204,7 +1225,7 @@ export default function NaruHome() {
         </Reveal>
 
         </PlateSegment>
-        <PlateSegment id="naru-2" gap>
+        <PlateSegment id="naru-2" gap read>
         {/* 앵커 착지 (2026-09-19, 모바일 감사 4·18): 이 자리에만 scroll-mt가
             없어서 영어 두 줄 헤더(158px) 아래로 아이브로가 들어갔습니다. 고치면서
             **장치를 하나로 줄였습니다**: 이 페이지의 네 앵커(#record, #why, #how,
@@ -1362,10 +1383,10 @@ export default function NaruHome() {
           그 순서면 앞의 모든 것이 이 문단의 근거가 됩니다. 앞에 놓으면 근거 없이
           주장부터 하게 됩니다. */}
       <Chapter id="join" labelledBy="join-title" align="center">
-        <ReadingPlate id="join" />
-        <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.join.eyebrow)}</Eyebrow>
-        <h2 id="join-title" className={H2}><Halo tone="violet">{t(naru.join.heading)}</Halo></h2>
-        <p className={`${READ} mt-6 break-keep text-left text-base leading-relaxed text-white/75 lg:text-center`}>
+        <PlateSegment id="join" read>
+        <div className={READ}><Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.join.eyebrow)}</Eyebrow></div>
+        <h2 id="join-title" className={`${H2} ${READ}`}><Halo tone="violet">{t(naru.join.heading)}</Halo></h2>
+        <p className={`${READ} mt-6 break-keep text-left text-base leading-relaxed text-white/75`}>
           {t(naru.join.lead)}
         </p>
 
@@ -1374,7 +1395,7 @@ export default function NaruHome() {
             place → lack(없는 것) → opens(그래서 여는 것) 순서이고, 결핍이 먼저
             오고 처방이 나중입니다. */}
         <Reveal>
-        <ul role="list" className={`${WIDE} mt-12 grid grid-cols-1 gap-4 text-left lg:grid-cols-3`}>
+        <ul role="list" className={`${READ} mt-12 grid grid-cols-1 gap-4 text-left lg:grid-cols-3`}>
           {naru.join.needs.map((need) => (
             <li
               key={need.place.en}
@@ -1478,6 +1499,7 @@ export default function NaruHome() {
           </div>
         </Reveal>
 
+        </PlateSegment>
       </Chapter>
 
       {/* ── CH6 · 여기서 나온 사람 (조건부) ──────────────────────────────
@@ -1488,9 +1510,9 @@ export default function NaruHome() {
           인용문을 지어내지 마세요(data/naru.ts의 Story 주석). */}
       {naru.people.stories.length > 0 && (
         <Chapter id="people" labelledBy="people-title" align="center">
-          <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.people.eyebrow)}</Eyebrow>
-          <h2 id="people-title" className={H2}>{t(naru.people.heading)}</h2>
-          <p className="mx-auto mt-6 max-w-2xl break-keep text-left text-base leading-relaxed text-white/75 lg:text-center">
+          <div className={`${READ} text-left`}><Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.people.eyebrow)}</Eyebrow></div>
+          <h2 id="people-title" className={`${H2} ${READ} text-left`}>{t(naru.people.heading)}</h2>
+          <p className={`${READ} mt-6 break-keep text-left text-base leading-relaxed text-white/75`}>
             {t(naru.people.lead)}
           </p>
           <div className="mt-12 grid gap-4 text-left md:grid-cols-2">
@@ -1776,9 +1798,11 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
           {t(layer.who)}
         </p>
       </div>
-      <p className="mt-2 hidden break-keep text-xs leading-snug text-white/55 md:block">{t(layer.brings)}</p>
+      {/* 2026-09-29 (왼쪽 끝 브리프 검증 4): 도식이 READ 폭으로 좁아져 "깔 사람."이 넉 자 한 줄로 떨어졌습니다.
+          글자 크기는 그대로 두고 줄 나눔만 고르게(text-wrap: balance) 합니다. */}
+      <p className="mt-2 hidden break-keep text-xs leading-snug text-white/55 [text-wrap:balance] md:block">{t(layer.brings)}</p>
       {/* 얻는 것 한 줄(2026-09-18). 후원 상자에 내는 것만 있고 얻는 것이 없었습니다(ux-researcher P1). */}
-      <p className="mt-2 break-keep text-xs leading-snug text-white/70">
+      <p className="mt-2 break-keep text-xs leading-snug text-white/70 [text-wrap:balance]">
         <span className="font-bold text-accent">{t(naru.how.getsShort)}</span>
         {"\u2002"}
         {t(layer.gets)}
@@ -1809,7 +1833,8 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
   );
 
   return (
-    <div className={`${WIDE} mt-8 lg:mt-12`}>
+    // data-figure: 세 층 도식은 그림이라 안쪽 정렬(상자, 점선 가운데 라벨)은 그대로이고, 바깥 왼쪽 끝만 READ에 맞춥니다(왼쪽 끝 브리프 2.2).
+    <div data-figure="layers" className={`${READ} mt-8 lg:mt-12`}>
       {/* 서로 닿지 않는다는 선. 데스크톱에서만 그립니다. 세로로 선 모바일
           에서는 "양옆"이라는 배치 자체가 없어서 선이 뜻을 잃습니다.
           모바일에서는 같은 말을 아래 한 줄이 글로 합니다. */}
