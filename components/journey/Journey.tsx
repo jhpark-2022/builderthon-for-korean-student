@@ -4131,7 +4131,6 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           <h2 className="mx-auto max-w-3xl text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_40px_rgba(124,58,237,0.4)]">
             {t(dict.footer.heading)}
           </h2>
-          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/65">{t(dict.footer.blurb)}</p>
           {/* 다음 무대 (2026-09-19, 사용자: "여기를 12월 이벤트 페이지랑 연결시켜줘").
               제목이 "다음 무대에서 또 만나요"인데 그 무대로 가는 문이 이 페이지에
               한 곳도 없었습니다. 이름과 날짜는 lib/naruDates가 채웁니다.
@@ -4139,9 +4138,13 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               버튼이 그라디언트인 것은 지금 이 화면의 첫 CTA이기 때문입니다.
               오픈채팅이 다시 열리면(links.openChat) 그라디언트가 둘이 됩니다.
               그때는 둘 중 하나를 외곽선으로 내리세요. 마지막 화면에 같은 무게의
-              버튼이 둘이면 둘 다 약해집니다. */}
+              버튼이 둘이면 둘 다 약해집니다.
+
+              DECIDED 2026-09-30 (사용자: "내용을 합쳐줘. 비슷한 내용인데"): blurb 문단과 다음 무대
+              문단을 한 문단(dict.footer.closingLead)으로 합쳤습니다. 밝기는 버튼의 근거가 되는
+              쪽(다음 무대)의 /85를 따릅니다. */}
           <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/85">
-            {t(dict.footer.nextStage)
+            {t(dict.footer.closingLead)
               .replace("{name}", decemberEventLabel(locale))
               .replace("{date}", formatDecemberRange(locale))
               .replace("{city}", DECEMBER_CITY[locale])}

@@ -4709,6 +4709,18 @@ export const dict = {
       ko: "다음 무대는 {name}입니다. {date}, {city}. 이번에는 국경과 상관없이 만납니다.",
       en: "The next stage is {name}. {date}, {city}. This time everyone meets there whichever country they study in.",
     },
+    // DECIDED 2026-09-30 (사용자, 스크린숏: "이거는 내용을 합쳐줘. 비슷한 내용인데"): 마지막 화면에서 제목
+    // ("무대는 끝났습니다. 다음 무대에서 또 만나요") 아래에 blurb와 nextStage 두 문단이 나란히 있었고, 셋이
+    // 다 "끝났다, 다음이 있다"를 말했습니다. 두 문단을 한 문단으로 합친 것이 이 키이고, 화면은 이것만 그립니다.
+    // blurb와 nextStage는 지우지 않고 둡니다(그리지 않습니다).
+    //
+    // 합치면서 뺀 문장은 하나입니다: blurb의 "그 커뮤니티가 모여 있는 방은 계속 열려 있어요". 그 방으로 가는
+    // 버튼이 지금 화면에 없습니다(links.openChat이 빈 문자열, 2026-09-17). 방을 다시 열면 이 문단 끝에
+    // 그 문장을 되살리세요. 나머지 문장은 두 키에 있던 그대로이고, {name}·{date}·{city}의 계약도 위와 같습니다.
+    closingLead: {
+      ko: "여덟 날은 끝났지만 여기가 여전히 ‘초입’입니다. 일회성 행사를 넘어, 지속가능한 한–싱 빌더 커뮤니티를 함께 만들어 갑니다. 다음 무대는 {name}입니다. {date}, {city}. 이번에는 국경과 상관없이 만납니다.",
+      en: "The eight days are done, and this is still the entry point. Beyond a single event, we're building a lasting Korea–Singapore builder community. The next stage is {name}. {date}, {city}. This time everyone meets there whichever country they study in.",
+    },
     ctaDecember: { ko: "{name} 알아보기", en: "About {name}" },
     // Shown under the partnership CTA: `mailto:` does nothing when the visitor
     // has no mail client configured, so the address is also readable/copyable.
