@@ -1200,9 +1200,11 @@ export const naru = {
         },
         // DECIDED 2026-09-17 (사용자): "팀 본딩, 중간 공유"에서 바꿈. 12월의 답은 모든
         // 활동을 대면으로 하는 것입니다. 팀 본딩·중간 공유는 일정 블록이 말합니다.
+        // DECIDED 2026-09-30 (사용자: "더 설명은 해줘야지, 대면으로 하니까 다른 팀들도 더 볼 수 있는거니까"):
+        // 대면이 왜 답인지를 한 문장 더합니다. "같은 공간"이라고 쓰지 않습니다(장소는 여럿일 수 있습니다, 2026-09-19).
         answer: {
-          ko: "이번에는 모든 활동을 대면으로 합니다.",
-          en: "This time every activity is in person.",
+          ko: "이번에는 모든 활동을 대면으로 합니다. 현장에서 다른 팀이 무엇을 어떻게 만들고 있는지 직접 보고, 팀 밖의 사람과도 이야기하게 됩니다.",
+          en: "This time every activity is in person. You see what other teams are building and how, and you end up talking to people outside your own team.",
         },
       },
       {
@@ -1215,9 +1217,11 @@ export const naru = {
           en: "They worked hard for it, and we never made a place where they could feel they were growing too.",
         },
         // 2026-09-17: 기획 03에서 채움. 초안입니다.
+        // DECIDED 2026-09-30 (사용자: "주관학생들은 피칭은 할 수 있으나 수상은 없음"): 피칭은 열고 시상에서는
+        // 뺍니다. 그 전의 "운영 기여도 기준의 별도 트랙"은 없습니다. 다시 쓰지 마세요.
         answer: {
-          ko: "주관 학생도 피칭할 수 있게 열고, 시상은 운영 기여도 기준의 별도 트랙으로 둡니다.",
-          en: "Organising students can pitch too, with a separate award for what they put into running it.",
+          ko: "주관 학생도 피칭할 수 있습니다. 다만 시상 대상은 아닙니다.",
+          en: "Organising students can pitch too. They are not up for awards.",
         },
       },
       // DECIDED 2026-09-29 (사용자: 9/28 자문 미팅의 인사이트를 반영): 다섯째. 8월의 가장 큰 아쉬움은 이벤트가
@@ -1615,11 +1619,44 @@ export const naru = {
     // 서울 학생은 서울에서 맞이합니다). {name}은 렌더가 decemberEventLabel로 채웁니다.
     // TODO: confirm (사용자). 시기, 재원, 인원이 하나도 정해지지 않았습니다. 그래서 날짜를 쓰지 않고
     // "시기는 정해지는 대로"라고만 씁니다. 공개 약속이 되므로 배포 전에 확인하세요.
+    //
+    // DECIDED 2026-09-30 (사용자: "다음 건너기 내용을 넣어줘"): 한 문단이던 것을 리드 한 줄과 행 넷으로 풉니다.
+    // 새로 약속하는 것은 없습니다. 누가 건너고, 누가 맞이하고, 왜 건너가는지는 전부 위 자문의 요지와 그 전
+    // 문단에 있던 말이고, 정해지지 않은 셋(시기, 인원, 비용)은 넷째 행이 그대로 적습니다. 숙박을 어떻게
+    // 푸는지(상호 호스팅)는 아직 확인되지 않아 쓰지 않습니다. 확정되면 "맞이하는 사람" 행에 더하세요.
+    // 행의 문법은 위 facts("이렇게 굴립니다")와 같습니다.
     nextLabel: { ko: "다음 건너기", en: "The next crossing" },
     next: {
-      ko: "{name} 다음은 싱가포르입니다(나루 2027 · 싱가포르). 이번에 서울이 맞이한 사람들을, 다음에는 싱가포르의 학생들이 맞이합니다. 온라인으로 만나는 것과 건너가서 서 보는 것은 다릅니다. 시기는 정해지는 대로 이 자리에 적습니다.",
-      en: "After {name} comes Singapore (NARU 2027 · Singapore). The people Seoul hosts this time, Singapore's students host next. Meeting online is not the same as crossing over and standing there. The dates go here once they are set.",
+      ko: "{name} 다음은 싱가포르입니다(나루 2027 · 싱가포르). 이번에 서울로 건너온 길을 다음에는 반대로 건넙니다.",
+      en: "After {name} comes Singapore (NARU 2027 · Singapore). The crossing made to Seoul this time runs the other way next.",
     },
+    nextFacts: [
+      {
+        k: { ko: "건너는 사람", en: "Who crosses" },
+        v: { ko: "한국에서 공부하는 학생들이 싱가포르로 건너갑니다.", en: "Students studying in Korea cross to Singapore." },
+      },
+      {
+        k: { ko: "맞이하는 사람", en: "Who hosts" },
+        v: {
+          ko: "싱가포르에서 공부하는 한인 학생들이 맞이합니다. 이번에는 서울이 맞이하고, 다음에는 싱가포르가 맞이할 차례입니다.",
+          en: "Korean students studying in Singapore do the hosting. Seoul hosts this time, and next it is Singapore's turn.",
+        },
+      },
+      {
+        k: { ko: "건너는 이유", en: "Why cross" },
+        v: {
+          ko: "온라인으로 만나는 것과 건너가서 서 보는 것은 다릅니다. 직접 서 봐야 나도 할 수 있겠다는 감각이 생깁니다.",
+          en: "Meeting online is not the same as crossing over and standing there. You only come to feel you could do it too once you have stood there.",
+        },
+      },
+      {
+        k: { ko: "아직", en: "Not yet set" },
+        v: {
+          ko: "시기와 인원, 비용은 정해지지 않았습니다. 정해지는 대로 이 자리에 적습니다.",
+          en: "Dates, numbers and cost are not set. They go here once they are.",
+        },
+      },
+    ] as { k: Phrase; v: Phrase }[],
     scheduleLabel: { ko: "일정", en: "Schedule" },
     scheduleLead: {
       // 2026-09-19 (사용자): "한 공간에서 하는 거는 아님. 여러 공간일 수도 있음." 장소 문장을 뺐습니다.
