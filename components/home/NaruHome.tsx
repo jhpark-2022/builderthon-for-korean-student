@@ -1144,7 +1144,8 @@ export default function NaruHome() {
         <div className={READ}>
         <Image
           // 2026-09-29: v2 파일명. 같은 이름으로 덮으면 1년짜리 immutable 캐시에 옛 링이 남습니다(public/naru/README.md).
-          src={locale === "en" ? "/naru/naru-master-en-v2-rev.svg" : "/naru/naru-master-v2-rev.png"}
+          // 2026-09-30: v3(링 COLLECTIVE, 아랫줄 of 뺌).
+          src={locale === "en" ? "/naru/naru-master-en-v3-rev.svg" : "/naru/naru-master-v3-rev.png"}
           alt={t(naru.hero.logoAlt)}
           width={900}
           height={900}
@@ -1482,8 +1483,8 @@ export default function NaruHome() {
               아니라 라벨 옆의 한 조각입니다. 버튼의 ↓는 **형식을 말하지 않고**,
               셀룰러에서 1MB는 데스크톱에서와 다른 값입니다. 그 결정의 이유
               ("무엇을 받는지 모르고 누르게 하지 않습니다")를 셀룰러까지 넓힙니다.
-              파일이 바뀌면 이 숫자도 바꾸세요: public/naru/naru-manifesto-v2-2026-09.pdf
-              (2026-09-28 v2: 960,029바이트라 0.9MB 그대로) */}
+              파일이 바뀌면 이 숫자도 바꾸세요: public/naru/naru-manifesto-v3-2026-09.pdf
+              (2026-09-30 v3: 986,639바이트라 0.9MB 그대로) */}
           <p className={`text-[0.68rem] font-bold uppercase ${latinTrack(locale)} text-white/50`}>
             {t(naru.join.manifesto.label)}
             <span className="font-medium normal-case tracking-normal text-white/40">{"\u2002·\u2002PDF 0.9MB"}</span>
@@ -1572,14 +1573,12 @@ export default function NaruHome() {
           {/* 부제와 짧은 정의(2026-09-29, data/naru.ts의 footer.subtitle과 shortDef). 부제는 로고 링과 같은 글자라
               영문 대문자 라벨로, 정의는 크레딧보다 한 단 밝게. */}
           <div className="-mt-2 flex max-w-xl flex-col items-center gap-2">
-            {/* 로고 가이드 v2: 영문 부제는 링처럼 "A KOREA-ROOTED ALLIANCE / OF STUDENT BUILDERS" 두 줄로 나눕니다.
-                폰에서 저절로 꺾이면 "ALLIANCE OF / STUDENT BUILDERS"가 되어 가이드의 나눔과 어긋났습니다. */}
+            {/* 로고 가이드 2026-09-30: 링처럼 "A KOREA-ROOTED COLLECTIVE / STUDENT BUILDERS" 두 줄. 링에서는 of를 뺍니다
+                (사용자: 아랫줄이 OF로 시작하는 게 거슬림). 스크린리더는 문장 부제(footer.subtitle)를 읽습니다. */}
             <p lang="en" className="text-[0.68rem] font-bold uppercase leading-relaxed tracking-[0.14em] text-white/60">
-              {(() => {
-                const s = t(naru.footer.subtitle);
-                const i = s.toLowerCase().indexOf(" of ");
-                return i > 0 ? (<><span className="block">{s.slice(0, i)}</span><span className="block">{s.slice(i + 1)}</span></>) : s;
-              })()}
+              <span className="sr-only">{t(naru.footer.subtitle)}</span>
+              <span aria-hidden="true" className="block">{naru.footer.subtitleRing.top}</span>
+              <span aria-hidden="true" className="block">{naru.footer.subtitleRing.bottom}</span>
             </p>
             <p className="break-keep text-sm leading-relaxed text-white/75">{t(naru.footer.shortDef)}</p>
           </div>

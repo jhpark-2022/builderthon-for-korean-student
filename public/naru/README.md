@@ -17,7 +17,7 @@
 | 파일 | 원본 | 형식 | 이유 |
 | --- | --- | --- | --- |
 | `naru-symbol.svg` | `SVG/naru_07_심볼만.svg` | SVG | `<text>`가 아예 없습니다. 벡터로 안전합니다 |
-| `naru-master-v2-rev.png` | `PNG/naru_03_마스터_반전.png` | PNG | 한글 "나루"가 들어 있습니다 |
+| `naru-master-v3-rev.png` | `PNG/naru_03_마스터_반전.png` | PNG | 한글 "나루"가 들어 있습니다 |
 | `naru-lockup-v2-rev.png` | `PNG/naru_11_가로락업_반전.png` | PNG | 한글 "나루"가 들어 있습니다 |
 | `naru-name-rev.png` | `PNG/naru_17_가로락업_이름만_반전.png` | PNG | 한글 "나루"가 들어 있습니다 |
 | `naru-name-en-rev.svg` | `SVG/naru_17_가로락업_이름만_반전.svg` | SVG | 글자가 NARU라 한글 서체가 필요 없습니다 |
@@ -52,15 +52,15 @@ PNG는 투명 여백을 잘라내고 긴 변을 900px로 맞췄습니다. 마스
 
 ## 영문 마스터 (ADDED 2026-09-27)
 
-`naru-master-en-v2-rev.svg`는 홈 `#naru` 챕터가 **영문 화면에서만** 쓰는 마스터입니다
+`naru-master-en-v3-rev.svg`는 홈 `#naru` 챕터가 **영문 화면에서만** 쓰는 마스터입니다
 (사용자: 영문 화면에서는 "나루"나 NARU 둘 중 하나만, 한글이 보이지 않게).
 
 - 원본은 `SVG/naru_03_마스터_반전.svg`입니다. 한글 "나루"(`<text>`, 시스템 서체)와
   그 아래 작은 "N A R U" 두 줄을 지우고, `naru-name-en-rev.svg`의 아웃라인 NARU를
   0.55배로 줄여 같은 자리(가운데 x=180, 대문자 229~261)에 놓았습니다.
-- 원 둘레 글자(위 A KOREA-ROOTED ALLIANCE, 아래 OF STUDENT BUILDERS)는 원본처럼 임베드된
+- 원 둘레 글자(위 A KOREA-ROOTED COLLECTIVE, 아래 STUDENT BUILDERS, 양옆 주황 점)는 원본처럼 임베드된
   Montserrat 800으로 그립니다. 쓰지 않는 600·700 `@font-face`와 c2pa 메타데이터는 뺐습니다(85KB에서 29KB).
-- 한글 화면은 그대로 `naru-master-v2-rev.png`입니다.
+- 한글 화면은 그대로 `naru-master-v3-rev.png`입니다.
 - 2026-09-28 (로고 가이드 v2): 링 문구가 KOREAN STUDENT BUILDERS / SINGAPORE에서
   A KOREA-ROOTED ALLIANCE / OF STUDENT BUILDERS로 바뀌었습니다(위에서 아래로 읽으면 영문 부제).
   글자 두 줄만 원본 속성대로 바꿨습니다(font-size 23, letter-spacing 위 0.9 / 아래 1.2). 가운데 NARU와 심볼은 그대로.
@@ -68,11 +68,12 @@ PNG는 투명 여백을 잘라내고 긴 변을 900px로 맞췄습니다. 마스
 - 2026-09-29: 위 세 파일을 `-v2-` 이름으로 바꿨습니다(`naru-master-v2-rev.png`, `naru-master-en-v2-rev.svg`,
   `naru-lockup-v2-rev.png`). 사이트가 이미지를 `cache-control: public, max-age=31536000, immutable`로 내보내서,
   같은 이름으로 덮은 v2는 9월 29일 전에 들른 브라우저에 1년 동안 옛 링으로 남았습니다(사용자가 실제로 봤습니다).
+- 2026-09-30: 부제 alliance → collective, 링 아랫줄은 of를 빼고 양옆 점으로 나눔(로고 가이드 2026-09-30판). 마스터 두 파일을 `-v3-`로. letter-spacing 위 0.3 / 아래 3.
 
 ## 매니페스토 PDF (ADDED 2026-09-19)
 
-`naru-manifesto-v2-2026-09.pdf`는 `12월 빌더톤/그룹 기획/매니페스토_나루.pdf`의
-사본입니다(2026-09-28 v2: 새 표지. v1은 지웠습니다). 홈 `#join`의 마지막 블록이 이 파일을 내려받게 합니다
+`naru-manifesto-v3-2026-09.pdf`는 `12월 빌더톤/그룹 기획/매니페스토_나루.pdf`의
+사본입니다(2026-09-30 v3: 링 COLLECTIVE. v2는 지웠습니다). 홈 `#join`의 마지막 블록이 이 파일을 내려받게 합니다
 (`naruLinks.manifesto`).
 
 - 원본을 고치면 **파일명을 새 버전으로 바꿔** 다시 복사하세요(`v2-2026-xx`).
