@@ -11,6 +11,7 @@
 - [2026-09-28 무순위 어워드의 이유](#2026-09-28-no-ranking-why)
 - [2026-09-27 PO session 설명](#2026-09-27-po-session)
 - [2026-09-27 해외 창업가 세션, 영문 마스터 로고](#2026-09-27-founders-session)
+- [2026-09-30 부제는 collective, 링에서는 of를 뺀다](#2026-09-30-naru-collective)
 - [2026-09-30 가운데 자리 넷, 카드 05의 답, 세 상자 정리](#2026-09-30-center-spots)
 - [2026-09-29 빠른 스크롤에서 형상이 깜빡이지 않게](#2026-09-29-no-flicker)
 - [2026-09-29 헤더 로고는 다시 왼쪽에](#2026-09-29-header-logo-left)
@@ -140,6 +141,16 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-09-30-naru-collective"></a>
+## 2026-09-30 부제는 collective, 링에서는 of를 뺀다
+- 범위: `public/naru/`(마스터 두 파일과 매니페스토를 `-v3-`로, README), `data/naru.ts`(hero.eyebrow, footer.subtitle, 새 footer.subtitleRing, 주석), `components/home/NaruHome.tsx`(#naru 마스터 src, 푸터 부제 두 줄), `app/opengraph-image.tsx`(alt), `lib/background/shaders/water.ts`(주석).
+- 한 것: 사용자 결정(DECIDED 2026-09-30). 나루는 단체의 연합이 아니라 개인이 모인 그룹이라 부제를 "A Korea-rooted collective of student builders"로. alliance, 연합은 나루를 가리키는 말로 쓰지 않습니다. 국문 부제는 "한국에 뿌리를 둔 학생 빌더 모임"(TODO: confirm).
+  로고 링은 위 A KOREA-ROOTED COLLECTIVE, 아래 STUDENT BUILDERS이고 아랫줄의 of를 빼는 대신 3시, 9시에 주황 점을 찍어 두 줄을 나눕니다(로고 가이드 2026-09-30판). 영문 SVG는 링 두 줄과 점 둘만 바꿨고(letter-spacing 위 0.3, 아래 3), 한글 PNG는 원본에서 다시 잘랐습니다. 이미지는 1년 immutable 캐시라 v3 새 이름이고 v2는 지웠습니다.
+  푸터 부제는 " of "에서 자르던 코드 대신 subtitleRing 두 줄을 그리고, 스크린리더에는 문장 부제를 읽힙니다. 매니페스토 PDF는 새 표지 판(v3). 정의 문장(정식 판, 짧은 판)은 그대로입니다.
+- 검증: 스크래치 복사본에서 `npm run build` 통과. grep: alliance는 규칙을 적은 주석 두 줄(data/naru.ts)과 README의 날짜 이력 줄만, SVG에 ALLIANCE와 OF STUDENT BUILDERS 0, v2 파일 0. 영문 SVG와 원본 PNG를 나란히 렌더해 링 글자 자리 같음, 잘림 0. ko, en × 1440, 390에서 인장, 아이브로, 푸터 두 줄(OF 없음, 390에서 각 한 줄) 확인, 영문 화면 한글 0. 매니페스토 v3 표지 링 COLLECTIVE. 스크린숏 `.shots/naru-collective/`.
+- 브리프: docs/naru-collective-brief.md
+- 커밋: 0ffca42, 0435d56
 
 <a id="2026-09-30-center-spots"></a>
 ## 2026-09-30 가운데 자리 넷, 카드 05의 답, 세 상자 정리
