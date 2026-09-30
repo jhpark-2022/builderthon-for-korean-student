@@ -63,14 +63,16 @@ const SINGAPORE_EXTENT = pointExtent(SINGAPORE_POINTS, SINGAPORE_STRIDE);
 export interface ScreenBox { top: number; bottom: number; left: number; right: number }
 /**
  * 읽기 판 하나. 문서 좌표의 불투명한 안쪽과 덮개 구간(스크롤 px). 판이 형상 상자를 위아래로
- * 덮지 못하거나 덮개가 stages.minHideVh보다 짧으면(#join 판은 예외) cover가 null. fade는 덮개 구간 양 끝에서 형상이 사라지고 돌아오는 길이(px).
+ * 덮지 못하거나 덮개가 stages.minHideVh보다 짧으면(#join 판은 예외) cover가 null.
+ * 2026-09-30부터 [c0, c1] 전체에서 형상은 0입니다. f0은 c0 **앞**에서 사라지는 길이, f1은 c1 **뒤**에서
+ * 돌아오는 길이(px)입니다(config의 stages.hideFadeVh). 전에는 구간 안쪽 양 끝이었습니다.
  * coversX는 좌우까지 덮는지(참고값. 숨기는 데는 쓰지 않습니다. 사라지면 옆도 안 보입니다).
  */
 export interface PlateCover {
   id: string;
   top: number; bottom: number; left: number; right: number;
   coversX: boolean;
-  cover: { c0: number; c1: number; fade: number } | null;
+  cover: { c0: number; c1: number; f0: number; f1: number } | null;
   /** 판이 저절로 숨기지 못해 stages.bridge로 만든 덮개 구간인가(#gains 판, 데스크톱). */
   forced?: boolean;
 }
@@ -422,7 +424,9 @@ export class BackgroundScene {
   /**
    * 판마다 덮개 구간 [c0, c1](스크롤 px)을 계산합니다(판 덮개 브리프 2.1). 스크롤이 이 안에
    * 있으면 판의 불투명한 안쪽(PLATE_FEATHER를 뺀 영역)이 형상 상자를 위아래로 전부 덮고,
-   * 형상은 이 안에서 사라집니다(stages.hideFadeVh). 판은 문서 순서대로 전부 읽습니다
+   * 형상은 이 구간 전체에서 사라져 있습니다. 사라지고 돌아오는 일은 구간 밖, 틈이 화면에 걸쳐 있는
+   * 동안입니다(stages.hideFadeVh, 2026-09-30). 덮는지는 형상 상자와 화면 안쪽 띠(stages.gapInsetVh) 중
+   * 좁은 쪽으로 잽니다. 판은 문서 순서대로 전부 읽습니다
    * (#december와 #naru는 판이 둘. NaruHome의 PlateSegment).
    * 판은 챕터 리빌 div 안에 있어, 리빌 전(translateY 40px)이나 리빌 중에 읽어도 그 이동을
    * 빼고 자리 잡은 뒤의 위치로 계산합니다.
@@ -433,8 +437,14 @@ export class BackgroundScene {
     this.shapeBox = box;
     const F = PLATE_FEATHER;
     const fx = window.matchMedia("(max-width: 639px)").matches ? F.xPhone : F.x;
-    const fadeMax = SEOUL_WATERMARK.stages.hideFadeVh * window.innerHeight;
-    const minHide = SEOUL_WATERMARK.stages.minHideVh * window.innerHeight;
+    const vh = window.innerHeight;
+    const fadeMax = SEOUL_WATERMARK.stages.hideFadeVh * vh;
+    const minHide = SEOUL_WATERMARK.stages.minHideVh * vh;
+    // 덮개를 재는 상자(화면 y). 형상 상자와 화면 안쪽 띠 중 좁은 쪽입니다(config의 stages.gapInsetVh).
+    // 틈이 이 상자에 걸쳐 있는 동안만 형상이 보입니다.
+    const G = SEOUL_WATERMARK.stages.gapInsetVh;
+    const eTop = Math.max(box.top, G.top * vh);
+    const eBottom = Math.min(box.bottom, (1 - G.bottom) * vh);
     const plates: PlateCover[] = [];
     for (const el of Array.from(document.querySelectorAll<HTMLElement>(".reading-plate[data-plate]"))) {
       const id = el.dataset.plate ?? "";
@@ -450,35 +460,44 @@ export class BackgroundScene {
       const left = r.left + fx;
       const right = r.right - fx;
       const coversX = left <= box.left && right >= box.right;
-      const c0 = top - box.top;
-      const c1 = bottom - box.bottom;
-      // 사라지고 돌아오는 길이는 덮개 구간의 3분의 1을 넘지 않습니다. 가운데 3분의 1 이상은
-      // 형상이 다 사라져 있어 바뀌는 일을 둘 자리가 남습니다.
-      const fade = Math.min(fadeMax, (c1 - c0) / 3);
+      const c0 = top - eTop;
+      const c1 = bottom - eBottom;
       // #join 판은 예외입니다. 그 뒤로 형상이 돌아오지 않아(사라짐) 짧게 사라져도 깜빡이지 않습니다.
       // 1920×1080에서 이 판의 덮개는 0.29화면입니다.
       const hides = c1 > c0 && (c1 - c0 >= minHide || id === "join");
-      plates.push({ id, top, bottom, left, right, coversX, cover: hides ? { c0, c1, fade } : null });
+      plates.push({ id, top, bottom, left, right, coversX, cover: hides ? { c0, c1, f0: fadeMax, f1: fadeMax } : null });
     }
     plates.sort((a, b) => a.top - b.top);
-    // #gains 판(건너기의 판)이 저절로 숨기지 못하면, 판의 한가운데가 형상의 한가운데를 지나는 스크롤을
-    // 중심으로 덮개 구간을 만듭니다(config의 stages.bridge).
+    // #gains 판(건너기의 판)이 저절로 숨기지 못하면, 판의 한가운데가 덮개 상자의 한가운데를 지나는 스크롤을
+    // 중심으로 덮개 구간을 만듭니다(config의 stages.bridge). holdVh가 덮개 구간, fadeVh가 그 밖의 양쪽입니다.
     const bridge = plates.find((p) => p.id === "gains");
     if (bridge && !bridge.cover) {
       const B = SEOUL_WATERMARK.stages.bridge;
-      const m = (bridge.top + bridge.bottom) / 2 - (box.top + box.bottom) / 2;
-      const f = B.fadeVh * window.innerHeight;
-      const hold = B.holdVh * window.innerHeight;
-      bridge.cover = { c0: m - hold / 2 - f, c1: m + hold / 2 + f, fade: f };
+      const m = (bridge.top + bridge.bottom) / 2 - (eTop + eBottom) / 2;
+      const f = B.fadeVh * vh;
+      const hold = B.holdVh * vh;
+      bridge.cover = { c0: m - hold / 2, c1: m + hold / 2, f0: f, f1: f };
       bridge.forced = true;
+    }
+    // 틈 하나(앞 판의 c1부터 뒤 판의 c0까지)에서 돌아오는 길이와 사라지는 길이는 각각 그 틈의 3분의 1을
+    // 넘지 않습니다. 가운데 3분의 1 이상은 형상이 온전히 서 있습니다(세로 화면의 낮은 틈에서도).
+    let prev: PlateCover | null = null;
+    for (const p of plates) {
+      if (!p.cover) continue;
+      if (prev?.cover) {
+        const lim = Math.max(p.cover.c0 - prev.cover.c1, 0) / 3;
+        prev.cover.f1 = Math.min(prev.cover.f1, lim);
+        p.cover.f0 = Math.min(p.cover.f0, lim);
+      }
+      prev = p;
     }
     this.plates = plates;
   }
 
   /**
    * 형상이 바뀌는 세 구간의 자리(문서 스크롤 px). 판 덮개 브리프 2.2의 배정에 2026-09-26 2차의
-   * "판 뒤에서는 사라진다"를 더했습니다. 각 판의 덮개 구간에서 양 끝 fade를 뺀 가운데가 형상이
-   * 다 사라져 있는 구간이고, 바뀌는 일은 그 안에서만 일어납니다.
+   * "판 뒤에서는 사라진다"를 더했습니다. 각 판의 덮개 구간 [c0, c1]이 형상이 다 사라져 있는
+   * 구간이고(2026-09-30부터 구간 전체), 바뀌는 일은 그 안에서만 일어납니다.
    *   떠오름   #december 판(첫 조각)      시작 = descendEnd를 가운데 구간 안으로 당긴 값, 길이 ≤ revealVh
    *   건너기   #naru 앞의 마지막 판        시작 = 가운데 시작, 길이 ≤ morph.spanVh
    *            (떠오름의 판은 빼고. 데스크톱은 #december 둘째 조각, 폰은 #gains 판)
@@ -495,8 +514,8 @@ export class BackgroundScene {
     const hidden = (chapter: string) => {
       for (const p of this.plates) {
         if (!p.cover || (p.id !== chapter && !p.id.startsWith(chapter + "-"))) continue;
-        const a = p.cover.c0 + p.cover.fade;
-        const b = p.cover.c1 - p.cover.fade;
+        const a = p.cover.c0;
+        const b = p.cover.c1;
         if (b - a >= 1) return { a, b };
       }
       return null;
@@ -512,7 +531,7 @@ export class BackgroundScene {
       const beforeNaru = this.plates.filter((p) => p.cover && p !== decFirst && p.top < this.naruTop);
       for (let k = beforeNaru.length - 1; k >= 0 && !naru; k--) {
         const c = beforeNaru[k].cover!;
-        if (c.c1 - c.fade - (c.c0 + c.fade) >= 1) naru = { a: c.c0 + c.fade, b: c.c1 - c.fade };
+        if (c.c1 - c.c0 >= 1) naru = { a: c.c0, b: c.c1 };
       }
     }
     naru ??= hidden("naru");
@@ -593,16 +612,20 @@ export class BackgroundScene {
   }
 
   /**
-   * 판 뒤에서 형상이 얼마나 사라져 있는가(0 = 보임, 1 = 다 사라짐). 덮개 구간에 들어가면 fade에
-   * 걸쳐 1로, 나올 때 fade에 걸쳐 0으로. 판이 겹치지 않으므로 가장 큰 값 하나입니다.
+   * 판 뒤에서 형상이 얼마나 사라져 있는가(0 = 보임, 1 = 다 사라짐). 덮개 구간 [c0, c1] 전체에서 1이고,
+   * c0 앞 f0에 걸쳐 1로 오르고 c1 뒤 f1에 걸쳐 0으로 내립니다(2026-09-30: 판이 형상을 다 덮은 동안에는
+   * 판 옆으로도 형상이 보이지 않습니다). 가장 큰 값 하나입니다.
    */
   private hiddenAt(sy: number) {
     let h = 0;
     for (const p of this.plates) {
       const c = p.cover;
-      if (!c || sy <= c.c0 || sy >= c.c1) continue;
-      const f = Math.max(c.fade, 1);
-      h = Math.max(h, Math.min(1, (sy - c.c0) / f, (c.c1 - sy) / f));
+      if (!c) continue;
+      let v: number;
+      if (sy < c.c0) v = 1 - (c.c0 - sy) / Math.max(c.f0, 1);
+      else if (sy > c.c1) v = 1 - (sy - c.c1) / Math.max(c.f1, 1);
+      else v = 1;
+      if (v > h) h = v;
     }
     return h * h * (3 - 2 * h);
   }
@@ -863,7 +886,7 @@ export class BackgroundScene {
         trail.push({ t, y: this.scrollY });
         while (trail.length > 2 && t - trail[1].t >= R.speedWindow) trail.shift();
         const span = t - trail[0].t;
-        const speedNow = span > 1e-3 ? Math.min(5 * R.fastPxPerSec, Math.abs(this.scrollY - trail[0].y) / span) : 0;
+        const speedNow = span > 1e-3 ? Math.min(R.speedCapPxPerSec, Math.abs(this.scrollY - trail[0].y) / span) : 0;
         this.scrollSpeed = speedNow > this.scrollSpeed
           ? speedNow
           : this.scrollSpeed + (speedNow - this.scrollSpeed) * Math.min(1, R.speedRelease * dt);
