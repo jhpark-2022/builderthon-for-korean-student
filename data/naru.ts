@@ -110,7 +110,7 @@ export const naruLinks = {
   // 2026-09-28 (나루 공식 표기 브리프 3): 새 표지(로고 v2, 부제)로 다시 나온 원본을 v2로 복사했습니다.
   // 영문 매니페스토(그룹 기획/NARU_Manifesto_EN.pdf)를 영문 화면에서 내려받게 할지는
   // TODO: confirm (사용자). 이번에는 한 파일만 둡니다.
-  manifesto: "/naru/naru-manifesto-v2-2026-09.pdf",
+  manifesto: "/naru/naru-manifesto-v3-2026-09.pdf",
 } as const;
 
 // ─────────────────────────────────────────────────────────────────────────────
