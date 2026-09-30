@@ -1020,23 +1020,8 @@ export default function NaruHome() {
             건너갈 곳을 말합니다. 시기가 정해지지 않아 날짜는 쓰지 않습니다(data/naru.ts december.next의 TODO). */}
         {/* DECIDED 2026-09-30 (사용자: "다음 건너기 내용을 넣어줘"): 리드 한 줄 아래에 행 넷(건너는 사람, 맞이하는
             사람, 건너는 이유, 아직). "이렇게 굴립니다"와 같은 행 문법이고 상자가 아닙니다. 라벨은 dl 밖(접근성 감사 9). */}
-        <Reveal className={`${READ} mt-8 text-left lg:mt-12`}>
-          <h3 data-subheading className={SUBHEADING}>{t(naru.december.nextLabel)}</h3>
-          <p className="mt-3 break-keep text-base leading-relaxed text-white/75">
-            {t(naru.december.next).replace("{name}", decemberEventLabel(locale))}
-          </p>
-          <dl className="mt-4">
-            {naru.december.nextFacts.map((f, i) => (
-              <div
-                key={f.k.en}
-                className={`grid grid-cols-[4.5rem_1fr] gap-x-4 gap-y-1 border-t border-white/10 py-3 sm:grid-cols-[7rem_1fr] sm:gap-x-6 ${i === naru.december.nextFacts.length - 1 ? "border-b" : ""}`}
-              >
-                <dt className={`break-keep text-xs font-semibold uppercase ${latinTrack(locale)} text-white/75`}>{t(f.k)}</dt>
-                <dd className="break-keep text-sm leading-relaxed text-white/70">{t(f.v)}</dd>
-              </div>
-            ))}
-          </dl>
-        </Reveal>
+        {/* DECIDED 2026-09-30 (사용자, 스크린숏: "이부분은 빼줘"): "다음 건너기" 블록은 그리지 않습니다.
+            december.nextLabel, next, nextFacts 키는 data/naru.ts에 그대로 둡니다. */}
 
         {/* DECIDED 2026-09-18 (사용자): "아직 정해지지 않은 것" 상자를 뺐습니다. 미정 목록
             대신 위 draftNote 한 줄("새로 정해지는 것은 이 자리에 업데이트합니다")이 그 말을
@@ -1142,8 +1127,9 @@ export default function NaruHome() {
         </ol>
         </Reveal>
         {/* 2026-09-29 (9/28 자문): 결과물의 두 갈래. 창업만이 끝이 아니라는 한 줄(data/naru.ts gains.uses). */}
-        <p className={`${READ} mt-6 break-keep text-left text-base leading-relaxed text-white/75`}>{t(naru.gains.uses)}</p>
-        <p className={`${READ} mt-3 break-keep text-left text-sm text-white/50`}>{t(naru.gains.note)}</p>
+        {/* DECIDED 2026-09-30 (사용자, 스크린숏): 다섯 행 아래의 두 줄(gains.uses "만든 것은 두 갈래로 쓰입니다…",
+            gains.note "각 항목을 어떻게 운영하는지는…")은 그리지 않습니다. 챕터는 다섯 행에서 끝납니다.
+            키는 data/naru.ts에 그대로 둡니다. */}
 
         </PlateSegment>
       </Chapter>

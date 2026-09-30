@@ -725,7 +725,9 @@ export const naru = {
       },
       {
         num: "04",
-        title: { ko: "무순위 어워드", en: "Awards with no ranking" },
+        // DECIDED 2026-09-30 (사용자: "4번에 다양한 테마의 수상 이라고 하고"): 제목이 "무순위 어워드"였습니다.
+        // 순위가 없다는 말은 바로 옆 본문("1등을 뽑지 않습니다")이 하고, 제목은 무엇을 주는지를 말합니다.
+        title: { ko: "다양한 테마의 수상", en: "Awards across many themes" },
         // DECIDED 2026-09-28 (사용자): 왜 순위를 매기지 않는지, 주최자가 미팅에서 한
         // 말에서 가운데 문장을 가져왔습니다. 규칙만 있던 카드에 이유를 붙입니다.
         body: {
@@ -748,6 +750,7 @@ export const naru = {
     ] as { num: string; title: Phrase; body: Phrase; evidence?: Phrase }[],
     // DECIDED 2026-09-29 (사용자: 9/28 자문 미팅의 인사이트를 "한번 다 반영"): 결과물의 두 갈래. 창업만이 끝이 아니고,
     // 조언자도 창업을 권하지 않았습니다. 채용 연계는 출제 기업의 의사가 확인되지 않아 약속처럼 쓰지 않습니다.
+    // DECIDED 2026-09-30 (사용자): uses와 아래 note는 화면에서 내렸습니다(NaruHome의 #gains). 키는 둡니다.
     uses: {
       ko: "만든 것은 두 갈래로 쓰입니다. 나를 보여 주는 실물로, 또는 계속 만들어 갈 프로젝트로.",
       en: "What you build goes two ways: as proof of what you can do, or as a project you keep building.",
@@ -1634,6 +1637,8 @@ export const naru = {
     // 문단에 있던 말이고, 정해지지 않은 셋(시기, 인원, 비용)은 넷째 행이 그대로 적습니다. 숙박을 어떻게
     // 푸는지(상호 호스팅)는 아직 확인되지 않아 쓰지 않습니다. 확정되면 "맞이하는 사람" 행에 더하세요.
     // 행의 문법은 위 facts("이렇게 굴립니다")와 같습니다.
+    // DECIDED 2026-09-30 (사용자, 같은 날 뒤에: "이부분은 빼줘"): nextLabel, next, nextFacts는 화면에서 내렸습니다.
+    // 키는 둡니다. 되살릴 때는 위 TODO(시기, 재원, 인원)부터 확인하세요.
     nextLabel: { ko: "다음 건너기", en: "The next crossing" },
     next: {
       ko: "{name} 다음은 싱가포르입니다(나루 2027 · 싱가포르). 이번에 서울로 건너온 길을 다음에는 반대로 건넙니다.",
