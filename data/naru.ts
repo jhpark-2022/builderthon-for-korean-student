@@ -638,8 +638,11 @@ export const naru = {
     measureLabel: { ko: "결과보다 과정", en: "Process over result" },
     measure: {
       // 2026-09-29 (9/28 자문): 마지막 문장. 무순위 시상의 이유를 개념으로 말합니다.
-      ko: "누가 우승했느냐가 아닙니다. 얼마나 많은 분이 끝까지 완주했는지, 그리고 준비하는 과정을 얼마나 즐겼는지를 봅니다. 앙트러프러너십은 결과가 아니라 과정이라, 순위를 매기지 않습니다.",
-      en: "Not who won. How many people made it all the way through, and how much they enjoyed the run-up. Entrepreneurship is a process, not a result, so we do not rank it.",
+      // DECIDED 2026-09-30 (사용자, 문장 감사): 한 문단에 "X가 아니라 Y"가 둘이었습니다. 무엇을 보는지만
+      // 말하고, 보지 않는 것은 라벨("결과보다 과정")과 마지막 절이 말합니다. 위 주석의 "그다음에 무엇을
+      // 보지 않는지"는 이제 첫 문장이 아니라 그 둘의 몫입니다.
+      ko: "얼마나 많은 분이 끝까지 완주했는지, 준비하는 과정을 얼마나 즐겼는지를 봅니다. 앙트러프러너십은 과정이라고 보기 때문에 순위를 매기지 않습니다.",
+      en: "We look at how many people made it all the way through, and how much they enjoyed the run-up. We see entrepreneurship as a process, so we do not rank it.",
     },
     note: {
       ko: "문턱이 낮아야 커지고, 롤모델이 있어야 자랍니다.",
@@ -658,8 +661,10 @@ export const naru = {
     agendaLabel: { ko: "방법은 바뀝니다", en: "The method changes" },
     agenda: {
       // 2026-09-29 (9/28 자문, "젓는 노가 AI다"): 마지막 문장. 정의 문장의 "AI로 함께 만듭니다"가 왜 AI인지.
-      ko: "AI도, 8일이라는 길이도, 지금의 형식도 방법입니다. 어젠다는 상황을 따라 바뀌고, 8일이 4일이 되어도 됩니다. 바뀌면 안 되는 것은 위의 두 개뿐입니다. 나루는 배를 댈 자리를 만들고, 노를 젓는 건 각자입니다. 지금 그 노가 AI입니다.",
-      en: "AI, the eight days, the format: all method. The agenda follows the situation, and eight days may become four. Only the two above cannot change. NARU builds the landing, and the rowing is yours. Right now, the oar is AI.",
+      // DECIDED 2026-09-30 (사용자, 문장 감사): "나루는 배를 댈 자리를 만들고, 노를 젓는 건 각자입니다"를
+      // 뺐습니다. 태그라인과 group.name에 이어 같은 말의 세 번째였습니다. 노가 AI라는 문장만 남깁니다.
+      ko: "AI도, 8일이라는 길이도, 지금의 형식도 방법입니다. 어젠다는 상황을 따라 바뀌고, 8일이 4일이 되어도 됩니다. 바뀌면 안 되는 것은 위의 두 개뿐입니다. 건널 때 젓는 노가 지금은 AI입니다.",
+      en: "AI, the eight days, the format: all method. The agenda follows the situation, and eight days may become four. Only the two above cannot change. Right now, the oar you cross with is AI.",
     },
   },
 
@@ -1170,9 +1175,11 @@ export const naru = {
         // 만든 것이 서로 비슷했던 이유가 거기 있습니다. 답도 "구간을 연다"에서
         // "무엇을 만들고 어디에 적용되는지까지 학생이 정의한다"로 넓어집니다.
         // 넷 중 첫 항목만 바꿉니다. 나머지 셋은 그대로.
+        // DECIDED 2026-09-30 (사용자, 문장 감사): 같은 사실을 있었던 일의 순서로 다시 썼습니다. "이해가
+        // 중요한데", "생각의 기회가 닫혔고" 같은 추상어를 빼고, 누가 무엇을 줬고 무엇을 해 보지 못했는지만.
         body: {
-          ko: "기업 프로세스 이해가 중요한데, 데이터를 가지고 프로세스를 그려 보고 고쳐 본 것이 아니라 문제 접근법만 받았습니다. 생각의 기회가 거기서 닫혔고, 만든 것이 서로 비슷했던 것도 같은 이유입니다.",
-          en: "Understanding the company's process matters, and what arrived was an approach to the problem rather than a chance to map that process from the data and revise it. That is where the thinking stopped, and it is why the builds resembled each other.",
+          ko: "8월에는 출제사가 문제 접근법까지 정리해서 줬습니다. 데이터로 프로세스를 직접 그려 보고 고쳐 볼 일이 없었고, 그래서 팀마다 만든 것이 비슷했습니다.",
+          en: "In August the company handed over the approach along with the problem. Nobody had to map the process from the data and revise it, so the builds came out alike.",
         },
         answer: {
           ko: "만들어야 하는 것과 그것이 어디에 적용되는지까지 학생이 정의합니다.",
@@ -1571,9 +1578,10 @@ export const naru = {
       { num: "ii", title: { ko: "복잡한 Process 이해", en: "Understanding a complex process" }, when: { ko: "12월에 더한다", en: "Added in December" } },
       { num: "iii", title: { ko: "아이디어의 코드화", en: "Turning an idea into code" }, when: { ko: "8월에 한 것", en: "What August did" } },
     ] as { num: string; title: Phrase; when: Phrase }[],
+    // DECIDED 2026-09-30 (사용자, 문장 감사): "두 가지를 통한 본인 아이디어 구축"이 번역투였습니다. 뜻은 그대로.
     scopeClose: {
-      ko: "아이디어를 LLM에 맡긴 것은, 그 전의 두 가지를 통한 본인 아이디어 구축이 없었기 때문입니다.",
-      en: "Ideas got handed to the LLM because the two steps before it, the ones that build your own idea, were missing.",
+      ko: "앞의 두 가지를 해 보지 않았으니, 아이디어까지 LLM에 맡기게 됐습니다.",
+      en: "With the first two skipped, even the idea got handed to the LLM.",
     },
 
     // ── 이렇게 굴립니다 (DECIDED 2026-09-20, 크로싱서울_일정.pdf 02 하단) ─────
@@ -1585,7 +1593,8 @@ export const naru = {
     facts: [
       {
         k: { ko: "세션", en: "Sessions" },
-        v: { ko: "모두 3시간씩. 따로 떼어 내도 하나의 이벤트로 쓸 수 있는 퀄리티로 만듭니다.", en: "Three hours each, built to stand on their own as an event." },
+        // 2026-09-30 (사용자, 문장 감사): "퀄리티로"는 스스로 매긴 평가라 뺐습니다. 영문은 그대로.
+        v: { ko: "모두 3시간씩. 따로 떼어 내도 하나의 이벤트가 되게 만듭니다.", en: "Three hours each, built to stand on their own as an event." },
       },
       {
         k: { ko: "공간", en: "Space" },
@@ -1952,9 +1961,11 @@ export const naru = {
           ko: "데이터와 회사 소개, 의뢰 문제점, 활용 가이드를 엽니다. 정제해서 주는 것이 아니라 무엇이 어디에 있는지까지입니다.",
           en: "The data opens, with the companies, what they are asking about, and a guide to using it. Not cleaned up for you. Just where everything is.",
         },
+        // 2026-09-30 (사용자, 문장 감사): "…장치이지, 별도의 스테이지가 아닙니다"였습니다. 부정 병치를 풀었습니다.
+        // 뜻(스테이지가 아니다)은 그대로이고, NaruHome이 이 행을 한 단 낮게 그리는 것도 그대로입니다.
         line: {
-          ko: "Day 1에 쓸 시간을 벌어 주는 장치이지, 별도의 스테이지가 아닙니다.",
-          en: "It buys back time for Day 1. It is not a stage of its own.",
+          ko: "Day 1에 쓸 시간을 벌어 주는 날입니다. 스테이지로 세지 않습니다.",
+          en: "It buys back time for Day 1. It does not count as a stage.",
         },
         chips: [{ ko: "데이터 공개", en: "Data opens" }],
         session: {
@@ -2036,9 +2047,11 @@ export const naru = {
         title: { ko: "피치", en: "Pitch" },
         when: { ko: "Day 4", en: "Day 4" },
         dayOffset: 4,
+        // 2026-09-30 (사용자, 문장 감사): "완성도가 아니라 과정을 봅니다"였습니다. "결과보다 과정"은 #naru의
+        // 코어 01과 measure가 이미 세 번 말합니다. 여기서는 그 말이 이 무대에서 무슨 뜻인지만.
         body: {
-          ko: "청중은 회사 관계자입니다. 발표 5분, 질의 5분. 아이디어 단계여도 무대에 섭니다. 완성도가 아니라 과정을 봅니다.",
-          en: "You present to the people from the companies. Five minutes, then five for questions. You go up even if it is still an idea. What gets looked at is the process, not the finish.",
+          ko: "청중은 회사 관계자입니다. 발표 5분, 질의 5분. 아이디어 단계여도 무대에 섭니다. 어떻게 거기까지 갔는지를 봅니다.",
+          en: "You present to the people from the companies. Five minutes, then five for questions. You go up even if it is still an idea. We look at how you got there.",
         },
         // #after 챕터와 같은 말입니다. 여기서는 일정 안의 사실로, 저기서는 챕터로.
         line: { ko: "여기서 만난 사람과 기회를 이어가는 것은 각자의 몫입니다.", en: "Carrying on with the people and the chances you met here is yours to do." },
