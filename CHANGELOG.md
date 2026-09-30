@@ -8,6 +8,7 @@
 
 ### 2026-09
 
+- [2026-09-30 홈 문장 감사: 부정 병치와 번역투 일곱 곳](#2026-09-30-copy-audit)
 - [2026-09-30 가운데 자리 둘 더, 틈의 자리, 다음 건너기](#2026-09-30-center-gap-next)
 - [2026-09-28 무순위 어워드의 이유](#2026-09-28-no-ranking-why)
 - [2026-09-27 PO session 설명](#2026-09-27-po-session)
@@ -142,6 +143,16 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-09-30-copy-audit"></a>
+## 2026-09-30 홈 문장 감사: 부정 병치와 번역투 일곱 곳
+- 범위: `data/naru.ts`(why.measure, why.agenda, record.gaps[0].body, december.scopeClose, december.facts[0], december.stages[0].line, december.stages[4].body). ko와 en 같이.
+- 한 것: 사용자 요청(홈 카피를 AI 문장 패턴 기준으로 감사한 뒤 제안 표대로 고침, DECIDED 2026-09-30). 새 사실이나 약속은 없고 같은 말을 덜 공식처럼 씁니다.
+  "X가 아니라 Y"를 셋 풀었습니다(measure의 "누가 우승했느냐가 아닙니다"와 "결과가 아니라 과정", Day 0의 "별도의 스테이지가 아닙니다"). agenda에서는 태그라인을 세 번째로 되풀이하던 문장을 빼고 "건널 때 젓는 노가 지금은 AI입니다"만 남겼습니다. scopeClose의 번역투("두 가지를 통한 본인 아이디어 구축")와 facts의 "퀄리티로"를 걷었습니다.
+  gaps[0].body와 stages[4].body는 지금 화면에 그리지 않는 키입니다. 되살릴 때를 위해 같은 기준으로 고쳐 두었습니다. 화면에서 바뀌는 것은 다섯 곳입니다.
+  고치지 않은 것: 공식 정의 문장(group.concrete, footer.shortDef)은 로고 가이드가 정본이라 그대로. 안전장치 두 줄의 부정도 그대로. 영문 철자 혼용(Program과 Programme, organising과 organizing)은 남아 있습니다.
+- 검증: tsc 통과, 스크래치 복사본 `npm run build` 통과. 빌드된 `/` HTML에 새 문장 다섯 있음, 옛 문장("누가 우승했느냐", "퀄리티로") 0. 비주석 줄 em dash 0.
+- 커밋: 66bee24
 
 <a id="2026-09-30-center-gap-next"></a>
 ## 2026-09-30 가운데 자리 둘 더, 틈의 자리, 다음 건너기
