@@ -1235,7 +1235,12 @@ export const naru = {
           ko: "이벤트 안에서는 아홉 팀이 먼저 자료를 요청했지만, 끝난 뒤 멘토에게 먼저 연락한 팀은 한 팀이었습니다. 해 본 적이 없어서입니다.",
           en: "Inside the event nine teams asked for data on their own, and after it only one team contacted a mentor first. They had never done it before.",
         },
-        answer: null,
+        // DECIDED 2026-09-30 (사용자): 답은 따로 있던 "끝나면 할 일" 첫 줄(after.steps[0])입니다. 그 블록은 화면에서
+        // 내렸고 이 카드가 그 말을 합니다. 연습 세션이 정해지면 그 앞에 한 문장 더하세요.
+        answer: {
+          ko: "멘토에게 먼저 연락합니다. 이벤트 안에서 받은 피드백은 이벤트 밖에서도 유효합니다. 제목은 인사가 아니라 결과이고, 주신 이야기로 무엇을 만들었는지 한 줄이면 됩니다.",
+          en: "Message the mentor first. Feedback you got inside the event still holds outside it. Lead with the result, not the greeting: one line on what you built with it is enough.",
+        },
       },
     ] as { title: Phrase; body: Phrase; answer: Phrase | null }[],
     // ── 로고 스트립은 넣지 않았습니다 (DECIDED 2026-09-15) ────────────────
@@ -2082,9 +2087,11 @@ export const naru = {
         place: { ko: "싱가포르에서", en: "In Singapore" },
         // 2026-09-29 (9/28 자문, 두 방향의 갈증): 해외 쪽의 결핍은 "안으로", 한국과 이어져 있을 자리입니다.
         // 톤 규칙대로 감정어("불안") 없이 없는 자리로 씁니다.
+        // 2026-09-30 (사용자: 상자 셋의 글이 많음): 세 문장에서 한 문장으로. 선배가 졸업하면 알던 것도 나간다는
+        // 문장은 뺐습니다. 두 방향(학교 사이, 한국과)은 남았습니다.
         lack: {
-          ko: "학교마다 한인 학생이 있지만, 학교를 가로질러 이어 주는 자리가 없었습니다. 선배가 졸업하면 그 사람이 알던 것도 같이 나갑니다. 한국과 이어져 있을 자리도 없었습니다.",
-          en: "Every campus has Korean students and nothing connects them across campuses. When a senior graduates, what they knew leaves too. There was no place that kept them tied to Korea either.",
+          ko: "학교마다 한인 학생이 있지만, 학교를 가로질러 잇는 자리도, 한국과 이어져 있을 자리도 없었습니다.",
+          en: "Every campus has Korean students, but nothing connects them across campuses or back to Korea.",
         },
         opens: {
           ko: "사람이 바뀌어도 남는 자리를 두고, 한국으로 건너가는 길을 엽니다.",
@@ -2107,14 +2114,14 @@ export const naru = {
         // 자리**를 말합니다. "이어 주는 자리가 없었습니다", "서로의 존재를
         // 모릅니다". 이 칸만 사람을 평가하고 있었습니다. 같은 문법으로 맞춥니다.
         lack: {
-          ko: "한국에서 공부하는 또래끼리는 이미 잘 이어져 있습니다. 없던 것은 다른 나라의 또래와 같은 문제를 놓고 만나는 자리입니다.",
-          en: "Students in Korea are already well connected to each other. What was missing was a shared problem with peers who study elsewhere.",
+          ko: "한국의 또래끼리는 이미 잘 이어져 있습니다. 없던 것은 다른 나라의 또래와 같은 문제를 놓고 만나는 자리입니다.",
+          en: "Students in Korea are already well connected. What was missing was a shared problem with peers who study elsewhere.",
         },
         // 2026-09-29 (9/28 자문, "크로스보더는 양쪽에 카운터파트가 있어야"): 한국 쪽의 결핍은 "밖으로".
         // 한국의 학생이 이 자리에 오는 이유는 건너편에 싱가포르가 있기 때문입니다.
         opens: {
-          ko: "건너편이 있어야 건넙니다. 다른 나라에서 공부하는 또래와 같은 문제를, 같은 팀으로 풉니다.",
-          en: "You cross because there is another side. You work the same problem, on the same team, with peers who study in another country.",
+          ko: "건너편이 있어야 건넙니다. 다른 나라의 또래와 같은 문제를 같은 팀으로 풉니다.",
+          en: "You cross because there is another side. Same problem, same team, peers in another country.",
         },
       },
       {

@@ -239,6 +239,9 @@ function ReadingPlate({ id, read = false }: { id: PlateId; read?: boolean }) {
 // 그리고 푸터. 2026-09-29 (사용자): 로고는 어디서든 화면 가운데입니다(#naru 인장, 푸터 로고). 9월 25일의 "챕터 머리는 가운데" 규칙을 이 규칙이 대신합니다(머리가 가운데이고 본문이 왼쪽이면
 // 챕터마다 한 번씩 뒤집힙니다). Chapter의 align="center"는 8월 페이지와 같은 컴포넌트라 두고, 판 조각이
 // text-left로 덮습니다. 그래서 홈의 네 챕터는 모두 PlateSegment 안에 있습니다.
+// DECIDED 2026-09-30 (사용자, 스크린숏 일곱 장): 가운데를 쓰는 자리를 넷 더 둡니다. #december의 머리(알약, h2, 리드 셋,
+// 초안 고지), #december 끝의 등록 안내와 버튼 둘, #naru의 알약과 h2(인장 아래), #join의 매니페스토 블록. 규칙은
+// "글이 가운데면 버튼도 가운데"입니다(2026-09-29 사용자). 그 밖의 본문은 왼쪽 끝 하나 그대로입니다.
 // 판 폭은 한 축 브리프(2026-09-26)대로 그 조각의 글 기둥을 따릅니다. WIDE 블록(노선도)이 남은 조각은 #december
 // 첫 조각뿐이라 나머지는 read입니다.
 function PlateSegment({ id, gap = false, read = false, children }: { id: PlateId; gap?: boolean; read?: boolean; children: React.ReactNode }) {
@@ -643,12 +646,14 @@ export default function NaruHome() {
       <Chapter id="december" labelledBy="december-title" align="center">
         <PlateSegment id="december">
         {/* 2026-09-18 (감사 반영 브리프 8): 아이브로는 보라 외곽선 1종. 주황 글자·주황 발광을 뺐습니다. */}
-        <div className={READ}>
+        {/* DECIDED 2026-09-30 (사용자): 이 챕터의 머리(알약, h2, 리드 셋, 초안 고지)는 가운데입니다. 아래 숫자 줄과 노선도가
+            이미 가운데라 머리부터 노선도까지 한 축입니다. 일정표부터는 왼쪽 끝. */}
+        <div className={`${READ} text-center`}>
         <Eyebrow color="purple" className={eyebrowTrack(locale)}>
           {`${t(naru.december.eyebrowPrefix)}\u2002${decemberEventLabel(locale)}`}
         </Eyebrow>
         </div>
-        <h2 id="december-title" className={`${H2} ${READ}`}><Halo tone="violet">{t(naru.december.programHeading)}</Halo></h2>
+        <h2 id="december-title" className={`${H2} ${READ} text-center`}><Halo tone="violet">{t(naru.december.programHeading)}</Halo></h2>
         {/* 폰에서 3줄을 넘는 문단은 왼쪽 정렬 (2026-09-19, 모바일 감사 8). #naru가
             이미 쓰던 규칙(감사 반영 브리프 6.1)인데 #december와 #join에는 적용되지
             않았습니다. 336px 폭에 한글 18자/줄이면 서너 줄 문단이 양쪽 들쭉날쭉한
@@ -656,18 +661,18 @@ export default function NaruHome() {
         {/* DECIDED 2026-09-25 (가독성 브리프 5, 사용자 승인): 제목 옆의 구체적인 한 줄. 날짜는
             naruDates에서. 이 줄이 챕터 머리의 문단 하나라 가운데이고, 아래 shapeLead는 본문
             축으로 내려갑니다(가독성 브리프 4.1: 머리는 h2 바로 아래 문단 하나). 문장은 그대로. */}
-        <p className={`${READ} mt-6 break-keep text-left text-base leading-relaxed text-white/75`}>
+        <p className={`${READ} mt-6 break-keep text-center text-base leading-relaxed text-white/75`}>
           {t(naru.december.programConcrete).replace("{date}", formatDecemberDateLine(locale))}
         </p>
-        <p className={`${READ} mt-6 break-keep text-left text-base leading-relaxed text-white/75`}>
+        <p className={`${READ} mt-6 break-keep text-center text-base leading-relaxed text-white/75`}>
           {t(naru.december.shapeLead)}
         </p>
-        <p className={`${READ} mt-3 break-keep text-left text-sm leading-relaxed text-white/55`}>
+        <p className={`${READ} mt-3 break-keep text-center text-sm leading-relaxed text-white/55`}>
           <TermLink text={t(naru.december.notSequel)} term={t(naru.december.notSequelTerm)} href="#why" />
         </p>
         {/* 초안 고지(DECIDED 2026-09-18, 사용자): 세부 내용이 바뀔 수 있다는 것을 챕터 머리에서
             확실하게. 호박색 점선 상자(pending 칩과 같은 계열). 8월 문법의 강조 상자 크기. */}
-        <div role="note" className={`${READ} mt-6 rounded-2xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] px-4 py-3 text-left sm:flex sm:items-start sm:gap-3`}>
+        <div role="note" className={`${READ} mt-6 rounded-2xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] px-4 py-3 text-center sm:flex sm:items-start sm:justify-center sm:gap-3`}>
           <span className={`mr-2 inline-block shrink-0 rounded-full border border-amber-400/40 bg-amber-400/10 px-2 py-0.5 align-[2px] text-[0.68rem] font-bold uppercase ${latinTrack(locale)} text-amber-200 sm:mr-0 sm:mt-0.5`}>{t(naru.december.draftLabel)}</span>
           <p className="inline break-keep text-sm leading-relaxed text-amber-50/90 sm:block">{t(naru.december.draftNote)}</p>
         </div>
@@ -998,18 +1003,9 @@ export default function NaruHome() {
             목록은 목록이 아닙니다. 상자 문법(sm부터 테두리 + 면)은 그대로 두되 폭을
             한 칸이 아니라 전체로 씁니다. 3열 격자에 카드 하나가 남으면 빠진 자리처럼
             읽힙니다. */}
-        <Reveal className={`${READ} mt-8 text-left lg:mt-12`}>
-          <h3 data-subheading className={SUBHEADING}>{t(naru.after.stepsLabel)}</h3>
-          {/* 폰에는 아래 테두리가 없습니다. 셋일 때는 행 사이를 가르는 선이었고
-              마지막 행은 last:border-b-0으로 뺐습니다. 하나만 남으면 그 선은
-              가를 것이 없어 떠 있는 줄이 됩니다. */}
-          <div className="mt-3 py-3 sm:mt-5 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-5">
-            <h4 className="break-keep text-sm font-bold leading-snug text-white sm:text-base">
-              {t(naru.after.steps[0].title)}
-            </h4>
-            <p className="mt-2 break-keep text-sm leading-relaxed text-white/75">{t(naru.after.steps[0].body)}</p>
-          </div>
-        </Reveal>
+        {/* DECIDED 2026-09-30 (사용자): "끝나면 할 일" 블록은 그리지 않습니다. 그 내용(멘토에게 먼저 연락합니다)은
+            위 다섯째 카드 "끝난 뒤 이어지지 않았습니다"의 12월 답이 됐습니다(data/naru.ts record.gaps[4].answer).
+            같은 사실을 두 번 말하던 자리였습니다. after.stepsLabel과 steps는 데이터에 그대로 둡니다. */}
 
         {/* 다음 건너기 (DECIDED 2026-09-29, 9/28 자문): 끝나면 할 일 바로 뒤. 이벤트가 끝나는 곳이 아니라 다음에
             건너갈 곳을 말합니다. 시기가 정해지지 않아 날짜는 쓰지 않습니다(data/naru.ts december.next의 TODO). */}
@@ -1030,13 +1026,13 @@ export default function NaruHome() {
 
         {/* 문. 참가자는 오픈채팅(2차 유령 필), 출제사와 후원은 텍스트 링크.
             페이지의 그라데이션 필은 히어로 하나뿐입니다. */}
-        {/* 문의 줄과 버튼 줄은 한 덩어리입니다(가독성 브리프 4.1). 버튼은 이 글의 왼쪽 끝에 서고,
-            폰에서는 세로로 쌓습니다. */}
-        <div className={`${READ} mt-8 text-left lg:mt-12`}>
-        <p id="december-register-note" className="break-keep text-left text-sm text-white/55">
+        {/* 문의 줄과 버튼 줄은 한 덩어리입니다(가독성 브리프 4.1). 폰에서는 세로로 쌓습니다.
+            DECIDED 2026-09-30 (사용자): 이 덩어리는 가운데. 글이 가운데면 버튼도 가운데(2026-09-29). */}
+        <div className={`${READ} mt-8 text-center lg:mt-12`}>
+        <p id="december-register-note" className="break-keep text-center text-sm text-white/55">
           {regState === "closed" ? t(registerCopy.closed) : t(naru.december.ctaNote)}
         </p>
-        <div className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+        <div className="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4">
           {regState === "open" ? (
             <button type="button" onClick={() => { track("naru_cta", { src: "december", to: "register" }); reg?.openRegister(); }} className={`group ${buttonClass("primary", "naru")}`}>
               {t(registerCopy.cta)}
@@ -1162,11 +1158,13 @@ export default function NaruHome() {
           className="mx-auto block h-auto w-[160px] sm:w-[220px]"
         />
         </div>
-        <div className={`${READ} mt-6`}>
+        {/* DECIDED 2026-09-30 (사용자): 인장 아래의 알약과 태그라인은 가운데. 인장이 가운데라 셋이 한 축입니다.
+            그 아래 이름 풀이부터는 왼쪽 끝. */}
+        <div className={`${READ} mt-6 text-center`}>
           <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.hero.eyebrow)}</Eyebrow>
         </div>
         {/* 태그라인. 두 줄 고정(히어로에 있던 때의 이유 그대로: 두 개의 선언). */}
-        <h2 id="naru-title" className={`${H2} ${READ}`}>
+        <h2 id="naru-title" className={`${H2} ${READ} text-center`}>
           <Halo tone="violet">
             <span className="block break-keep">{t(naru.hero.titleLine1)}</span>{" "}
             {/* {" "}: block span 둘 사이에 텍스트 노드가 없으면 이름 계산에서
@@ -1402,13 +1400,17 @@ export default function NaruHome() {
         <Reveal>
         <ul role="list" className={`${READ} mt-12 grid grid-cols-1 gap-4 text-left lg:grid-cols-3`}>
           {naru.join.needs.map((need) => (
+            // DECIDED 2026-09-30 (사용자: 상자 셋의 글이 많고, 점 항목은 같은 선에): 글은 data/naru.ts에서 줄였고,
+            // 세 칸이 나란히 서는 lg에서는 카드 안이 부모 격자의 서브그리드(제목, 없는 것, 여는 것 세 줄)입니다.
+            // 줄 높이가 세 칸에서 같아져 점 항목의 윗선이 한 선에 섭니다. 카드 바닥에 붙이면(mt-auto) 두 줄짜리
+            // 항목의 점이 위로 올라가 어긋났습니다. 줄 사이 간격은 부모의 gap이 아니라 문단의 여백(mt-2, pt-4)입니다.
             <li
               key={need.place.en}
-              className="border-b border-white/10 py-4 last:border-b-0 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-5"
+              className="border-b border-white/10 py-4 last:border-b-0 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-5 lg:grid lg:grid-rows-subgrid lg:row-span-3 lg:gap-y-0"
             >
               <h3 className={H3}>{t(need.place)}</h3>
               <p className="mt-2 break-keep text-sm leading-relaxed text-white/70">{t(need.lack)}</p>
-              <p className="mt-3 flex gap-2 break-keep text-sm leading-relaxed text-white/85">
+              <p className="flex gap-2 self-start break-keep pt-4 text-sm leading-relaxed text-white/85">
                 <span aria-hidden className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent/80" />
                 {t(need.opens)}
               </p>
@@ -1473,7 +1475,8 @@ export default function NaruHome() {
             뿐이었습니다. 위 헤어라인이 이미 이 블록을 본문에서 떼어 놓습니다.
             문장과 순서는 그대로입니다. */}
         <div aria-hidden className={`${READ} mt-12 h-px bg-white/10`} />
-        <Reveal id="join-ways" className={`${READ} mt-10 text-left`}>
+        {/* DECIDED 2026-09-30 (사용자): 매니페스토 블록은 가운데. 글이 가운데면 버튼도 가운데(2026-09-29). */}
+        <Reveal id="join-ways" className={`${READ} mt-10 text-center`}>
           {/* "PDF · 1.0MB" (2026-09-19, 모바일 감사 21). 쪽 수와 파일 크기 줄을
               뺀 결정(data/naru.ts)은 그대로 존중합니다. 이건 그 줄을 되살리는 게
               아니라 라벨 옆의 한 조각입니다. 버튼의 ↓는 **형식을 말하지 않고**,
@@ -1487,7 +1490,7 @@ export default function NaruHome() {
           </p>
           <h3 className="mt-3 break-keep text-base font-bold text-white">{t(naru.join.manifesto.title)}</h3>
           <p className="mt-2 break-keep text-sm leading-relaxed text-white/70">{t(naru.join.manifesto.body)}</p>
-          <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             <a
               href={naruLinks.manifesto}
               // 같은 탭에서 열리면 이 페이지가 PDF 뷰어에 덮입니다. 돌아오는 길이
