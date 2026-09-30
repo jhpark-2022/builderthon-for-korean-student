@@ -1573,14 +1573,12 @@ export default function NaruHome() {
           {/* 부제와 짧은 정의(2026-09-29, data/naru.ts의 footer.subtitle과 shortDef). 부제는 로고 링과 같은 글자라
               영문 대문자 라벨로, 정의는 크레딧보다 한 단 밝게. */}
           <div className="-mt-2 flex max-w-xl flex-col items-center gap-2">
-            {/* 로고 가이드 v2: 영문 부제는 링처럼 "A KOREA-ROOTED ALLIANCE / OF STUDENT BUILDERS" 두 줄로 나눕니다.
-                폰에서 저절로 꺾이면 "ALLIANCE OF / STUDENT BUILDERS"가 되어 가이드의 나눔과 어긋났습니다. */}
+            {/* 로고 가이드 2026-09-30: 링처럼 "A KOREA-ROOTED COLLECTIVE / STUDENT BUILDERS" 두 줄. 링에서는 of를 뺍니다
+                (사용자: 아랫줄이 OF로 시작하는 게 거슬림). 스크린리더는 문장 부제(footer.subtitle)를 읽습니다. */}
             <p lang="en" className="text-[0.68rem] font-bold uppercase leading-relaxed tracking-[0.14em] text-white/60">
-              {(() => {
-                const s = t(naru.footer.subtitle);
-                const i = s.toLowerCase().indexOf(" of ");
-                return i > 0 ? (<><span className="block">{s.slice(0, i)}</span><span className="block">{s.slice(i + 1)}</span></>) : s;
-              })()}
+              <span className="sr-only">{t(naru.footer.subtitle)}</span>
+              <span aria-hidden="true" className="block">{naru.footer.subtitleRing.top}</span>
+              <span aria-hidden="true" className="block">{naru.footer.subtitleRing.bottom}</span>
             </p>
             <p className="break-keep text-sm leading-relaxed text-white/75">{t(naru.footer.shortDef)}</p>
           </div>

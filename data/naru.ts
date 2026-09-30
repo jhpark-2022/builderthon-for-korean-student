@@ -340,14 +340,14 @@ export const naru = {
     // 로고가 바로 위에 있으므로 이름을 한 번 더 말하지 않습니다. 이 줄은 나루가
     // 무엇인지를 한 줄로 말하는 자리입니다.
     // DECIDED 2026-09-28 (사용자, 나루 공식 표기 브리프. 정의는 2026-09-29 재개정): 이름은 나루 / NARU
-    // 그대로. 영문 부제 "A Korea-rooted alliance of student builders"(로고 v2의 링과 같음). 정의는
+    // 그대로. 영문 부제 "A Korea-rooted collective of student builders"(링에서는 of를 빼고 두 줄로 나눔). 정의는
     // "Korea-rooted, student-run, not-for-profit group"이고, 학생회와 학회는 구성단위가 아니라 각 나라의
-    // 파트너입니다. 법적 형태를 말하는 표기(브리프 0절의 금지 표기)는 쓰지 않고, 연합에 해당하는 영문
-    // 낱말은 영문 부제에만 씁니다. 국문 부제 "한국에 뿌리를 둔 학생 빌더 연합"은 TODO: confirm (사용자가 아직
-    // 확정하지 않은 번역안입니다).
+    // 파트너입니다. 법적 형태를 말하는 표기(브리프 0절의 금지 표기)는 쓰지 않고, alliance, 연합은 나루를
+    // 가리키는 말로 쓰지 않습니다(DECIDED 2026-09-30: 나루는 단체의 연합이 아니라 개인이 모인 그룹).
+    // 국문 부제 "한국에 뿌리를 둔 학생 빌더 모임"은 TODO: confirm (사용자가 아직 확정하지 않은 번역안입니다).
     eyebrow: {
-      ko: "한국에 뿌리를 둔 학생 빌더 연합",
-      en: "A Korea-rooted alliance of student builders",
+      ko: "한국에 뿌리를 둔 학생 빌더 모임",
+      en: "A Korea-rooted collective of student builders",
     },
     // 확정 태그라인. 매니페스토의 마지막 문단에서 왔습니다.
     // "건너는 일은 각자가 한다. 나루는 건널 수 있는 자리를 만들고, 건너간 사람이
@@ -389,11 +389,11 @@ export const naru = {
     eyebrow: { ko: "나루 2026 · 서울", en: "NARU 2026 · Seoul" },
     // 나루를 모르는 사람에게 첫 화면에서 나루가 무엇인지 말하는 한 문장(감사 반영 브리프 1.2).
     // DECIDED 2026-09-28 (사용자, 나루 공식 표기 브리프. 정의는 2026-09-29 재개정): 이름은 나루 / NARU
-    // 그대로. 영문 부제 "A Korea-rooted alliance of student builders"(로고 v2의 링과 같음). 정의는
+    // 그대로. 영문 부제 "A Korea-rooted collective of student builders"(링에서는 of를 빼고 두 줄로 나눔). 정의는
     // "Korea-rooted, student-run, not-for-profit group"이고, 학생회와 학회는 구성단위가 아니라 각 나라의
-    // 파트너입니다. 법적 형태를 말하는 표기(브리프 0절의 금지 표기)는 쓰지 않고, 연합에 해당하는 영문
-    // 낱말은 영문 부제에만 씁니다. 국문 부제 "한국에 뿌리를 둔 학생 빌더 연합"은 TODO: confirm (사용자가 아직
-    // 확정하지 않은 번역안입니다).
+    // 파트너입니다. 법적 형태를 말하는 표기(브리프 0절의 금지 표기)는 쓰지 않고, alliance, 연합은 나루를
+    // 가리키는 말로 쓰지 않습니다(DECIDED 2026-09-30: 나루는 단체의 연합이 아니라 개인이 모인 그룹).
+    // 국문 부제 "한국에 뿌리를 둔 학생 빌더 모임"은 TODO: confirm (사용자가 아직 확정하지 않은 번역안입니다).
     // 2026-09-19 (사용자: "같은 단어가 한 스크린에서 자주 반복된다"): 이 줄이 바로 위
     // 아이브로("나루의 다음 이벤트")와 제목("한인 학생 빌더가 만나는 자리")의 말을 그대로
     // 다시 했습니다. 첫 화면에서 "나루의 다음 이벤트"가 두 번, "한인 학생 빌더"가 두 번
@@ -2379,7 +2379,9 @@ export const naru = {
     // DECIDED 2026-09-29 (사용자: "그룹의 부제와 정의 문장 같은 것들도 반영"): 로고 가이드 v2의 공식 표기 표 그대로.
     // 부제는 영문이 공식이라 두 화면 모두 영문입니다(런칭 포스트 커버와 같은 쓰임). 정의는 가이드의 "짧은 판"이고,
     // 가이드가 짧은 판을 "한 줄 소개처럼 공간이 좁은 자리"에 쓰라고 해서 푸터입니다. 정식 판은 #naru에 있습니다.
-    subtitle: { ko: "A Korea-rooted alliance of student builders", en: "A Korea-rooted alliance of student builders" },
+    subtitle: { ko: "A Korea-rooted collective of student builders", en: "A Korea-rooted collective of student builders" },
+    // DECIDED 2026-09-30 (사용자): 링 글자를 옮겨 적는 자리라 링과 같이 of를 뺍니다. 문장으로 쓰는 부제는 subtitle.
+    subtitleRing: { top: "A Korea-rooted collective", bottom: "Student builders" },
     shortDef: {
       ko: "한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 학생 빌더 그룹. 서울과 싱가포르, 그리고 그 너머.",
       en: "A Korea-rooted, student-run, not-for-profit group growing a community of student builders across Seoul, Singapore and beyond.",
