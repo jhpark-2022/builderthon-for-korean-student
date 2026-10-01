@@ -1,8 +1,20 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="public/naru/naru-master-v3-rev.png">
+    <img src="docs/readme/naru-master-v3.png" alt="나루 NARU 로고. A Korea-rooted collective, student builders" width="200">
+  </picture>
+</p>
+
 # 나루 NARU 웹사이트
 
 **나루**는 한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 학생 빌더 그룹입니다(A Korea-rooted collective of student builders). 이 레포는 나루의 공식 사이트이고, 지금 홈은 2026년 12월 서울에서 여는 **크로싱 서울 CROSSING SEOUL**을 알립니다.
 
 > 건너는 건 각자가 한다. 자리는 우리가 만든다.
+
+<p align="center">
+  <img src="public/record/hero-day1-group.webp" alt="2026년 8월 22일 Day 1, 싱가포르 파운드리에 모인 참가자 단체 사진" width="100%">
+</p>
+<p align="center"><sub>제로백 빌더톤 Day 1, 2026년 8월 22일 싱가포르</sub></p>
 
 - 사이트: https://naru-crossing-seoul.vercel.app
 - 한국어와 영어 두 벌(KR/EN 전환)
@@ -40,6 +52,13 @@
 
 스크리닝 없이 실제 기업의 문제를 받아 8일 동안 풀었고, 마지막 날 그 기업 앞에서 발표했습니다.
 
+<p align="center">
+  <img src="public/record/day1-full-hall.webp" alt="Day 1, 싱가포르 파운드리 홀을 가득 채운 참가자들" width="32%">
+  <img src="public/record/day5-session.webp" alt="Day 5 세션, 둘러앉아 이야기를 듣는 참가자들" width="32%">
+  <img src="public/record/day8-prove.webp" alt="Day 8, 강단에 서서 슬라이드를 앞에 두고 발표하는 팀" width="32%">
+</p>
+<p align="center"><sub>Day 1 쉰아홉 명으로 시작했습니다. Day 5 세션. Day 8 앞에서 증명했습니다.</sub></p>
+
 | | |
 | --- | --- |
 | 74명 | 신청 |
@@ -51,6 +70,11 @@
 순위는 매기지 않았고 부문별로 시상했습니다. 행사가 끝난 뒤 CNA와 The Straits Times에 실렸습니다.
 
 문제를 낸 기업, 개인 자격으로 저녁 시간을 낸 멘토들, 무대에 선 연사와 전문가, 멘토링을 위해 회관을 내어준 싱가포르 한인회, 각 학교 한인 학생회 운영진, 그리고 8일을 건너 마지막 날 앞에 선 21팀이 지금의 나루를 만들었습니다. 제로백 빌더톤이 없었으면 나루도, 크로싱 서울도 없습니다.
+
+<p align="center">
+  <img src="public/record/hero-day8-group.webp" alt="Day 8 시상식이 끝난 뒤 참가자와 멘토, 운영진이 함께 찍은 단체 사진" width="100%">
+</p>
+<p align="center"><sub>Day 8, 시상식이 끝난 뒤</sub></p>
 
 기록 전체는 [/2026-08](https://naru-crossing-seoul.vercel.app/2026-08)에 있습니다.
 
@@ -168,6 +192,7 @@ dev 서버가 도는 동안 같은 폴더에서 `npm run build`를 돌리지 마
 | 배경 | `lib/background/` (`config.ts`가 수치) |
 | 8월 기록(`/2026-08`)의 문장과 일정 | `data/dictionary.ts`, `data/schedule.ts` |
 | 나루 로고 | `public/naru/` (같은 폴더 README에 출처와 규칙) |
+| README의 로고와 사진 | `docs/readme/`(밝은 화면용 로고), `public/naru/`(어두운 화면용), `public/record/`(8월 사진) |
 | 색과 서체 | `tailwind.config.ts`, `app/globals.css` |
 | 사이트 주소와 메타데이터 | `app/layout.tsx`, `app/sitemap.ts`, `app/robots.ts` |
 
