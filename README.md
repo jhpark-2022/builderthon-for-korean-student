@@ -16,10 +16,12 @@
 </p>
 <p align="center"><sub>제로백 빌더톤 Day 1, 2026년 8월 22일 싱가포르</sub></p>
 
+**제로백 빌더톤이 없었으면 나루도, 크로싱 서울도 없습니다. 그 8일을 만든 사람들에게 빚지고 시작합니다.**
+
 - 사이트: https://naru-crossing-seoul.vercel.app
 - 한국어와 영어 두 벌(KR/EN 전환)
 
-*NARU is a Korea-rooted, student-run, not-for-profit group of student builders. This repo is its website. The home page introduces CROSSING SEOUL (18 to 22 December 2026, Seoul), and `/2026-08` keeps the record of the group's first event, the Zero100 builderthon in Singapore.*
+*NARU is a Korea-rooted, student-run, not-for-profit group of student builders. This repo is its website. The home page introduces CROSSING SEOUL (18 to 22 December 2026, Seoul), and `/2026-08` keeps the record of the group's first event, the Zero100 builderthon in Singapore. Without the Zero100 builderthon there is no NARU and no CROSSING SEOUL. We begin owing the people who made those eight days.*
 
 ## 나루는
 
@@ -69,7 +71,18 @@
 
 순위는 매기지 않았고 부문별로 시상했습니다. 행사가 끝난 뒤 CNA와 The Straits Times에 실렸습니다.
 
-문제를 낸 기업, 개인 자격으로 저녁 시간을 낸 멘토들, 무대에 선 연사와 전문가, 멘토링을 위해 회관을 내어준 싱가포르 한인회, 각 학교 한인 학생회 운영진, 그리고 8일을 건너 마지막 날 앞에 선 21팀이 지금의 나루를 만들었습니다. 제로백 빌더톤이 없었으면 나루도, 크로싱 서울도 없습니다.
+### 빚지고 시작합니다
+
+제로백 빌더톤이 없었으면 나루도, 크로싱 서울도 없습니다. 나루의 변하지 않는 두 개가 그 8일에서 나왔습니다. 그 8일을 만든 분들입니다.
+
+- 문제를 낸 기업
+- 소속과 별개로 개인 자격으로 저녁 시간을 낸 멘토들
+- 무대에 선 연사와 전문가
+- 1:1 멘토링을 위해 회관을 내어준 싱가포르 한인회
+- 각 학교 한인 학생회 운영진
+- 그리고 8일을 건너 마지막 날 앞에 선 21팀
+
+그 이름들이 지금의 나루를 만들었습니다. 고맙습니다.
 
 <p align="center">
   <img src="public/record/hero-day8-group.webp" alt="Day 8 시상식이 끝난 뒤 참가자와 멘토, 운영진이 함께 찍은 단체 사진" width="100%">
@@ -114,7 +127,7 @@
 - 멘토링은 Day 1부터 Day 3까지, 예약제입니다.
 - 세부는 기획 단계라 바뀔 수 있습니다. 등록은 아직 열리지 않았고, 열리면 사이트에서 알립니다.
 
-크로싱 서울을 제로백 빌더톤의 2회차라고 부르지 않습니다. 이름이 다른 이벤트이고, 물려받은 것은 코어 둘입니다.
+나루의 두 번째 이벤트입니다. 제로백 빌더톤이 열어 준 8일에서 나온 변하지 않는 두 개를 그대로 잇습니다.
 
 ## 그 이후
 
