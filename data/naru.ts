@@ -726,13 +726,16 @@ export const naru = {
       {
         num: "04",
         // DECIDED 2026-09-30 (사용자: "4번에 다양한 테마의 수상 이라고 하고"): 제목이 "무순위 어워드"였습니다.
-        // 순위가 없다는 말은 바로 옆 본문("1등을 뽑지 않습니다")이 하고, 제목은 무엇을 주는지를 말합니다.
+        // 순위가 없다는 말은 바로 옆 본문이 하고, 제목은 무엇을 주는지를 말합니다.
         title: { ko: "다양한 테마의 수상", en: "Awards across many themes" },
-        // DECIDED 2026-09-28 (사용자): 왜 순위를 매기지 않는지, 주최자가 미팅에서 한
-        // 말에서 가운데 문장을 가져왔습니다. 규칙만 있던 카드에 이유를 붙입니다.
+        // DECIDED 2026-10-01 (사용자: "1위, 2위, 3위는 의미가 없다. 사람이 남는다. 과정이 그걸 완벽하게
+        // recognize 하게 한다", "모든 이들이 가진 강점들이 과정에서 드러날 수 있도록"): 본문이 "1등을 뽑지
+        // 않습니다. 다 같이 애썼는데 누구는 받고 누구는 못 받는 게 늘 마음이 안 좋았습니다. 그래서
+        // 독보적이었던 지점을 적습니다."(2026-09-28)였습니다. 순위를 매기지 않는 사정 대신, 각자의
+        // 강점이 과정에서 드러나고 인정받는다는 쪽을 말합니다.
         body: {
-          ko: "1등을 뽑지 않습니다. 다 같이 애썼는데 누구는 받고 누구는 못 받는 게 늘 마음이 안 좋았습니다. 그래서 독보적이었던 지점을 적습니다.",
-          en: "No first place. Everyone put in the same days, and it never sat right with us that some went home with something and others did not. So we write down what each team was singular at.",
+          ko: "1위, 2위, 3위에는 의미를 두지 않습니다. 사람이 남습니다. 각자가 가진 강점이 과정에서 드러나고, 과정이 그 강점을 빠짐없이 알아봅니다.",
+          en: "First, second and third mean little here. The people are what remain. Each person's strengths show in the process, and the process makes sure every one of them is recognised.",
         },
         evidence: { ko: "8월 4부문 10팀", en: "August: 10 teams across 4 categories" },
       },
@@ -1403,13 +1406,17 @@ export const naru = {
     // (01·02)를 다시 읽고 아주 짧게. 세 문장. 누가 무엇을 내고 누가 무엇을 하는지만.
     // 그 전 네 문장에서 뺀 것: "8월의 자리도 12월의 자리도"(앞 챕터가 이미 말함),
     // "방식은 바뀔 수 있습니다"(hedge. humanizer 23).
+    // DECIDED 2026-10-01 (사용자: "서로 직접 만나지 않습니다 이거는 잘못된 설명임. 직접 만나는거임,
+    // 그리고 이들이 진심으로 교류하는 곳임"): 첫 두 문장이 "서로 직접 만나지 않습니다. 나루를 거쳐
+    // 만납니다."였습니다. 나루는 둘 사이를 막고 선 중개자가 아니고, 둘이 직접 만나는 자리입니다.
     lead: {
-      ko: "학생회와 기업은 서로 직접 만나지 않습니다. 나루를 거쳐 만납니다. 학생회는 학생과 공간을 내고, 기업은 문제와 자금을 내고, 나루가 회차를 열고 책임집니다.",
-      en: "Associations and companies never meet directly. They meet through NARU. Associations bring students and space, companies bring problems and money, NARU runs the round and answers for it.",
+      ko: "학생회와 기업이 나루에서 직접 만납니다. 진심으로 교류하는 자리입니다. 학생회는 학생과 공간을 내고, 기업은 문제와 자금을 내고, 나루가 회차를 열고 책임집니다.",
+      en: "Associations and companies meet directly at NARU, and the exchange is a sincere one. Associations bring students and space, companies bring problems and money, NARU runs the round and answers for it.",
     },
+    // DECIDED 2026-10-01 (사용자, 위와 같은 요청): "서로 직접 만나지 않습니다"였습니다.
     diagramNote: {
-      ko: "서로 직접 만나지 않습니다",
-      en: "They do not meet directly",
+      ko: "직접 만나 진심으로 교류합니다",
+      en: "They meet directly, and sincerely",
     },
     layers: [
       {

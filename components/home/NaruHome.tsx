@@ -1360,7 +1360,9 @@ export default function NaruHome() {
             읽기 어려웠습니다. 페이지의 다른 버튼과 같은 알약으로 감쌉니다(테두리 white/15, ArchiveBanner의
             어두운 반투명 채움, backdrop-blur). 폰은 세로로 쌓고 각 버튼은 내용 폭, sm부터 가로 한 줄.
             알약 자체가 44px이라 위의 -my-2.5 관용구는 필요 없습니다. 형상은 건드리지 않습니다. */}
-        <Reveal className={`${READ} mt-6 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:justify-start`}>
+        {/* DECIDED 2026-10-01 (사용자: "아래에 있는 버튼 3곳이 center로"): 세 버튼은 도식의 가운데에 섭니다.
+            그 전에는 READ의 왼쪽 끝이었습니다. 폰의 세로 쌓기도 가운데입니다. */}
+        <Reveal className={`${READ} mt-6 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center`}>
           {naru.how.layers.map((layer) => (
             <a
               key={layer.join.id}
@@ -1773,13 +1775,14 @@ function PhotoWall({ photos, t }: { photos: RecordPhoto[]; t: (p: Phrase) => str
 // "하는 것 / 얻는 것" 카드가 말합니다.
 //
 // SVG가 아니라 HTML로 그립니다. 이 그림에서 정말 중요한 것은 가운데에 나루가
-// 있고 양옆이 서로 닿지 않는다는 배치 하나뿐이고, 그건 flex가 더 잘합니다.
+// 있고 양옆이 거기서 만난다는 배치 하나뿐이고, 그건 flex가 더 잘합니다.
 // 좁아지면 저절로 세로로 서고, 글자는 페이지 서체와 줄바꿈 규칙(break-keep)을
 // 그대로 씁니다. SVG <text>였다면 두 벌을 따로 관리해야 했을 겁니다.
 //
-// 맨 위 "서로 직접 만나지 않습니다" 줄이 이 그림의 주장입니다. 학생회와 기업이
-// 직접 만나면 나루가 있을 이유가 없어요. 화살표 둘이 같은 말을 합니다. 둘 다
-// 가운데를 가리키고, 가운데 상자가 둘을 잇는다고 말합니다(2026-09-21).
+// 맨 위 줄이 이 그림의 주장입니다. DECIDED 2026-10-01 (사용자: "직접 만나는거임, 그리고
+// 이들이 진심으로 교류하는 곳임"): 그 전에는 "서로 직접 만나지 않습니다"였고 선도 점선
+// 이었습니다. 학생회와 기업은 나루에서 직접 만납니다. 화살표 둘이 같은 말을 합니다. 둘 다
+// 가운데를 가리키고, 가운데 상자가 둘이 만나는 자리라고 말합니다(2026-09-21).
 // ─────────────────────────────────────────────────────────────────────────────
 function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
   const [host, organiser, sponsor] = naru.how.layers;
@@ -1827,9 +1830,25 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
         <p>
           <Chip tone="outline" className={`!text-xs tracking-[0.02em] lg:!text-[0.68rem] ${center ? "!border-accent/40 !text-accent" : ""}`}><RoleLabel text={t(layer.role)} /></Chip>
         </p>
-        <p className="break-keep text-sm font-bold leading-snug text-white sm:text-base md:mt-1.5">
-          {t(layer.who)}
-        </p>
+        {/* DECIDED 2026-10-01 (사용자: "나루 대신, 나루의 로고를 넣어줘. 나루라는 이름 대신"): 가운데 상자는
+            이름 글자 대신 헤더, 푸터와 같은 락업입니다. 한글 PNG는 위 26px이 여백이라(헤더 주석 참고)
+            영문 SVG보다 한 단 높게 잡아 심볼 크기를 맞춥니다. 양옆 상자는 그대로 글자입니다. */}
+        {center ? (
+          <p className="md:mt-2">
+            <Image
+              src={locale === "en" ? "/naru/naru-name-en-rev.svg" : "/naru/naru-name-rev.png"}
+              alt={t(layer.who)}
+              width={locale === "en" ? 857 : 604}
+              height={locale === "en" ? 142 : 168}
+              unoptimized={locale === "en"}
+              className={locale === "en" ? "h-5 w-auto sm:h-6" : "h-6 w-auto sm:h-7"}
+            />
+          </p>
+        ) : (
+          <p className="break-keep text-sm font-bold leading-snug text-white sm:text-base md:mt-1.5">
+            {t(layer.who)}
+          </p>
+        )}
       </div>
       {/* 2026-09-29 (왼쪽 끝 브리프 검증 4): 도식이 READ 폭으로 좁아져 "깔 사람."이 넉 자 한 줄로 떨어졌습니다.
           글자 크기는 그대로 두고 줄 나눔만 고르게(text-wrap: balance) 합니다. */}
@@ -1849,8 +1868,8 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
   // 그 전에는 → → 로 왼쪽에서 오른쪽으로 흘렀습니다. 그러면 학생회가 나루를 거쳐
   // 기업으로 건너가는 그림, 즉 나루가 학생을 기업에 넘기는 파이프가 됩니다. 방향이
   // 곧 주장이라서, 학생회와 기업이 각자 나루로 들고 와서 거기서 만난다는 말을
-  // 하려면 오른쪽 화살표는 반대여야 합니다. 바로 위 점선("서로 직접 만나지
-  // 않습니다")과 같은 말을 화살표가 합니다. Overview 01도 양쪽이 나루로 들어옵니다.
+  // 하려면 오른쪽 화살표는 반대여야 합니다. 바로 위 선("직접 만나 진심으로
+  // 교류합니다")과 같은 말을 화살표가 합니다. Overview 01도 양쪽이 나루로 들어옵니다.
   //
   // 세로로 설 때(폰)도 같습니다. 나루 위의 상자는 아래를, 아래의 상자는 위를.
   // white/30 → /45: 이 그림에서 유일하게 방향을 말하는 글자라 상자 테두리보다
@@ -1868,15 +1887,15 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
   return (
     // data-figure: 세 층 도식은 그림이라 안쪽 정렬(상자, 점선 가운데 라벨)은 그대로이고, 바깥 왼쪽 끝만 READ에 맞춥니다(왼쪽 끝 브리프 2.2).
     <div data-figure="layers" className={`${READ} mt-8 lg:mt-12`}>
-      {/* 서로 닿지 않는다는 선. 데스크톱에서만 그립니다. 세로로 선 모바일
-          에서는 "양옆"이라는 배치 자체가 없어서 선이 뜻을 잃습니다.
-          모바일에서는 같은 말을 아래 한 줄이 글로 합니다. */}
+      {/* 양옆이 직접 만난다는 선(2026-10-01). 그 전에는 "서로 닿지 않는다"는 점선이었고, 뜻이 뒤집히면서
+          끊긴 선을 이어진 실선으로 바꿨습니다. 데스크톱에서만 그립니다. 세로로 선 모바일에서는
+          "양옆"이라는 배치 자체가 없어서 선이 뜻을 잃습니다. 모바일에서는 같은 말을 아래 한 줄이 글로 합니다. */}
       <div className="hidden items-center gap-3 px-6 md:flex">
-        <span aria-hidden className="h-px flex-1 border-t border-dashed border-white/15" />
+        <span aria-hidden className="h-px flex-1 border-t border-white/15" />
         <span className={`break-keep text-[0.68rem] font-semibold uppercase ${latinTrack(locale)} text-white/55`}>
           {t(naru.how.diagramNote)}
         </span>
-        <span aria-hidden className="h-px flex-1 border-t border-dashed border-white/15" />
+        <span aria-hidden className="h-px flex-1 border-t border-white/15" />
       </div>
       <div className="mt-3 flex flex-col items-stretch gap-2 md:flex-row md:items-stretch">
         {box(organiser)}
