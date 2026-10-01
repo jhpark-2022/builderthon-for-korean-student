@@ -152,12 +152,13 @@
 
 <a id="2026-10-01-readme"></a>
 ## 2026-10-01 README를 나루와 크로싱 서울 기준으로 다시 쓴다
-- 범위: `README.md` 전체.
+- 범위: `README.md` 전체, `package.json`과 `package-lock.json`의 name, GitHub 레포 설정(설명, 홈페이지 주소).
 - 한 것: 사용자 요청(DECIDED 2026-10-01). README가 6월의 "SMU × Zero100 Builderthon Landing Page" 그대로였습니다. 12월 이야기가 없고, 등록 폼이 없다거나 백엔드가 없다는 설명, 지금은 없는 컴포넌트 목록(Nav, Hero, Timetable)이 남아 있었습니다.
   새 README는 한국어로 쓰고 영문 요약 한 단락을 둡니다. 나루의 정의와 사이트 주소, 주소별 내용(홈, /2026-08 기록, /quiz, API), 크로싱 서울의 날짜와 Day 0~4, 등록 창 상태, 기술(three.js 배경, Supabase, Turnstile 포함), 로컬 실행과 환경 변수, 무엇을 어느 파일에서 고치는지, 일하는 규칙(CLAUDE.md 요약), 배포, 폴더 구조.
   제로백 빌더톤은 나루의 첫 이벤트이자 /2026-08의 기록으로만 적습니다.
+  이어서(사용자: "이것들도 다 수정") 패키지 이름을 `smu-zero100-builderthon`에서 `naru-website`로, 레포 설명을 채우고 홈페이지 주소를 옛 주소에서 naru-crossing-seoul.vercel.app으로 바꿨습니다. 비공개 패키지라 이름은 동작에 영향이 없습니다.
 - 검증: 날짜와 이름은 `lib/naruDates.ts`, 등록 창은 `lib/registrationWindow.ts`, 환경 변수는 `.env.local.example`과 코드의 `process.env` 넷, 주소는 `app/sitemap.ts`와 대조. em dash 0.
-- 커밋: (이 항목과 같은 커밋)
+- 커밋: 144e71e, 그리고 패키지 이름은 이 항목을 고친 커밋
 
 <a id="2026-10-01-meet-directly"></a>
 ## 2026-10-01 세 층은 직접 만나는 자리, 04는 사람이 남는다
