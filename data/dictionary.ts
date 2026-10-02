@@ -4666,6 +4666,9 @@ export const dict = {
     // 무대를 당신에게 넘깁니다. hero.titleLine2와 짝이니 한쪽을 바꾸면 다른
     // 쪽도 함께 보세요.
     //
+    // DECIDED 2026-10-02 (사용자): heading과 closingLead는 마지막 화면에 더는 그리지 않습니다. 그 자리는
+    // 아래 thanks(고맙습니다)가 받습니다. 키는 지우지 않고 둡니다(blurb, nextStage와 같은 처리).
+    //
     // blurb의 마지막 문장은 "8일간의 전체 일정은 프로그램 섹션에서 확인하세요"로,
     // 페이지 끝에 도달한 독자를 다시 위로 돌려보내고 있었습니다. 여기서 필요한
     // 것은 되감기가 아니라 등록 다음에 무엇이 오는지입니다. 새 약속이 아니라
@@ -4772,7 +4775,7 @@ export const dict = {
         en: "AXMOS hosted it and Codepresso set the real company problem. The SMU, NUS and NTU Korean Student Associations ran it, and the Korean Association in Singapore opened its hall for the 1:1 mentoring. Most mentors came on their own evenings, separately from where they work. Speakers, expert reviewers, sponsors, and the 21 teams that stood up on the final day. Every name on this page.",
       },
       // 마지막 줄이 요점입니다. 감사가 예의로 끝나면 각주가 되고, 결과를 말하면
-      // 문장이 됩니다. 12월로 가는 버튼이 바로 위에 있어 이 줄이 그 버튼의 근거가 됩니다.
+      // 문장이 됩니다. 12월로 가는 버튼이 바로 아래에 있어(2026-10-02부터) 이 줄이 그 버튼의 근거가 됩니다.
       closing: {
         ko: "나루도, 크로싱 서울도 이 8일에서 나왔습니다.",
         en: "NARU and CROSSING SEOUL both came out of these eight days.",

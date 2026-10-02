@@ -10,7 +10,7 @@ import { useLocale } from "@/lib/LocaleContext";
 // 12월 이벤트의 이름과 날짜. 이 페이지가 나루 홈을 가리키는 자리(클로징의 다음
 // 무대 줄)에서만 씁니다. 카피는 data/dictionary.ts가 갖고, 그 안의 {name}·{date}·
 // {city} 자리를 이 셋이 채웁니다. 8월 카피에 12월 날짜를 박지 않기 위해서입니다.
-import { decemberEventLabel, formatDecemberRange, DECEMBER_CITY } from "@/lib/naruDates";
+import { decemberEventLabel } from "@/lib/naruDates";
 import { dict, links, partnerIntros, partnerIntroTBC, partnerArticles, type Phrase } from "@/data/dictionary";
 import {
   categoryMeta,
@@ -4128,27 +4128,32 @@ export default function Journey({ serverNow }: { serverNow: number }) {
         />
         {/* hero CTA block — vertically centred */}
         <div className="flex flex-1 flex-col items-center justify-center text-center">
-          <h2 className="mx-auto max-w-3xl text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_40px_rgba(124,58,237,0.4)]">
-            {t(dict.footer.heading)}
-          </h2>
-          {/* 다음 무대 (2026-09-19, 사용자: "여기를 12월 이벤트 페이지랑 연결시켜줘").
-              제목이 "다음 무대에서 또 만나요"인데 그 무대로 가는 문이 이 페이지에
-              한 곳도 없었습니다. 이름과 날짜는 lib/naruDates가 채웁니다.
+          {/* ── 고맙습니다 ──────────────────────────────────────────────
+              DECIDED 2026-10-02 (사용자: "무대는 끝났습니다. 다음 무대에서 또 만나요. 의 내용 빼고, 그 자리를
+              아래의 고맙습니다 … 로 대체"): 마지막 화면의 제목 자리를 감사가 받습니다. 그 전에는 제목
+              (dict.footer.heading)과 한 문단(dict.footer.closingLead)이 여기 있었고, 감사는 CTA 아래에
+              한 단 작은 글자로 있었습니다(2026-09-20). 이제 그 둘은 그리지 않습니다(사전의 키는 남겨 둡니다).
+              감사의 마지막 줄("나루도, 크로싱 서울도 이 8일에서 나왔습니다")이 바로 아래 12월 버튼의 근거입니다.
 
+              이 자리에 적는 이름은 전부 이 페이지가 이미 공개한 것입니다(dict.footer.thanks의 주석).
+              본문은 길어서 폰에서는 왼쪽 정렬, sm부터 가운데입니다(전과 같음). */}
+          <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/55">
+            {t(dict.footer.thanks.label)}
+          </p>
+          <h2 className="mx-auto mt-4 max-w-3xl break-keep text-[clamp(1.75rem,4.4vw,3rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_40px_rgba(124,58,237,0.4)]">
+            {t(dict.footer.thanks.heading)}
+          </h2>
+          <p className="mx-auto mt-6 max-w-2xl break-keep text-left text-base leading-relaxed text-white/80 sm:text-center">
+            {t(dict.footer.thanks.body)}
+          </p>
+          <p className="mx-auto mt-4 max-w-2xl break-keep text-base font-semibold leading-relaxed text-white">
+            {t(dict.footer.thanks.closing)}
+          </p>
+          {/* 다음 무대로 가는 문 (2026-09-19, 사용자: "여기를 12월 이벤트 페이지랑 연결시켜줘").
               버튼이 그라디언트인 것은 지금 이 화면의 첫 CTA이기 때문입니다.
               오픈채팅이 다시 열리면(links.openChat) 그라디언트가 둘이 됩니다.
               그때는 둘 중 하나를 외곽선으로 내리세요. 마지막 화면에 같은 무게의
-              버튼이 둘이면 둘 다 약해집니다.
-
-              DECIDED 2026-09-30 (사용자: "내용을 합쳐줘. 비슷한 내용인데"): blurb 문단과 다음 무대
-              문단을 한 문단(dict.footer.closingLead)으로 합쳤습니다. 밝기는 버튼의 근거가 되는
-              쪽(다음 무대)의 /85를 따릅니다. */}
-          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/85">
-            {t(dict.footer.closingLead)
-              .replace("{name}", decemberEventLabel(locale))
-              .replace("{date}", formatDecemberRange(locale))
-              .replace("{city}", DECEMBER_CITY[locale])}
-          </p>
+              버튼이 둘이면 둘 다 약해집니다. */}
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
               href="/#december"
@@ -4192,35 +4197,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           <PartnerEmailFallback t={t} />
         </div>
 
-        {/* ── 고맙습니다 (2026-09-20, 사용자: "제로백 빌더톤을 도와주신 모든 분들
-            덕분에 가능했던 것. 8월 이벤트 페이지에도 그걸 추가해 줘") ──────────
-
-            자리가 여기인 이유: 이 페이지에는 파트너 섹션도, 멘토 그리드도, 연사
-            카드도 이미 있습니다. 없던 것은 **그 전부를 한 번에 받는 문장**이었어요.
-            각 섹션은 누가 무엇을 했는지 말하지만 고맙다고는 말하지 않습니다.
-
-            CTA 아래, 크레딧 위입니다. 크레딧(주최·주관 한 줄)은 사무적인 표기라
-            그 안에 섞으면 같은 종류로 읽힙니다. CTA 블록 안에 넣으면 행동을
-            방해하고요. 마지막 화면을 다 읽고 내려온 사람이 마지막으로 만나는
-            문단이 이것입니다.
-
-            글자 크기는 본문(text-base)이 아니라 한 단 아래입니다. 감사가 페이지의
-            결론인 척하면 오히려 가벼워집니다. 대신 마지막 줄만 흰색으로 올립니다.
-            그 줄이 12월로 가는 버튼의 근거라서요. */}
-        <div className="mx-auto mt-16 w-full max-w-2xl border-t border-white/10 pt-8 text-left sm:text-center">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/50">
-            {t(dict.footer.thanks.label)}
-          </p>
-          <h3 className="mt-3 break-keep text-lg font-bold leading-snug text-white sm:text-xl">
-            {t(dict.footer.thanks.heading)}
-          </h3>
-          <p className="mt-3 break-keep text-sm leading-relaxed text-white/70">
-            {t(dict.footer.thanks.body)}
-          </p>
-          <p className="mt-3 break-keep text-sm font-semibold leading-relaxed text-white/90">
-            {t(dict.footer.thanks.closing)}
-          </p>
-        </div>
+        {/* 감사 문단은 2026-10-02부터 위 제목 자리에 있습니다(그 전에는 여기, CTA 아래 크레딧 위). */}
 
         {/* credits — pinned to the very bottom of the final screen */}
         <div className="mx-auto mt-10 w-full max-w-3xl border-t border-white/10 pt-8 text-center">
