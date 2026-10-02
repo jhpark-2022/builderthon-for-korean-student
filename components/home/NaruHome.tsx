@@ -675,15 +675,15 @@ export default function NaruHome() {
         {/* DECIDED 2026-09-25 (가독성 브리프 5, 사용자 승인): 제목 옆의 구체적인 한 줄. 날짜는
             naruDates에서. 이 줄이 챕터 머리의 문단 하나라 가운데이고, 아래 shapeLead는 본문
             축으로 내려갑니다(가독성 브리프 4.1: 머리는 h2 바로 아래 문단 하나). 문장은 그대로. */}
-        {/* DECIDED 2026-10-02 (사용자: 가독성 리뷰): 리드 셋은 폰에서 왼쪽, sm부터 가운데(2026-09-30)입니다.
-            폰에서 5줄짜리 가운데 문단은 줄마다 시작점이 달랐습니다. 알약과 h2는 폰에서도 가운데 그대로. */}
-        <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-left text-base leading-relaxed text-white/75 sm:text-center`}>
+        {/* DECIDED 2026-10-02 (사용자: "폰에서도 가운데 정렬로 되돌려줘"): 리드 셋은 폰에서도 가운데입니다.
+            같은 날 가독성 리뷰로 폰에서만 왼쪽 정렬로 바꿨다가 되돌렸습니다. 가운데인 블록은 폰에서도 가운데. */}
+        <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-center text-base leading-relaxed text-white/75`}>
           {t(naru.december.programConcrete).replace("{date}", formatDecemberDateLine(locale))}
         </p>
-        <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-left text-base leading-relaxed text-white/75 sm:text-center`}>
+        <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-center text-base leading-relaxed text-white/75`}>
           {t(naru.december.shapeLead)}
         </p>
-        <p className={`${READ} ${READ_MEASURE_C} mt-3 break-keep text-left text-sm leading-relaxed text-white/70 sm:text-center`}>
+        <p className={`${READ} ${READ_MEASURE_C} mt-3 break-keep text-center text-sm leading-relaxed text-white/70`}>
           <TermLink text={t(naru.december.notSequel)} term={t(naru.december.notSequelTerm)} href="#why" />
         </p>
         {/* 초안 고지(DECIDED 2026-09-18, 사용자): 세부 내용이 바뀔 수 있다는 것을 챕터 머리에서
@@ -1236,12 +1236,12 @@ export default function NaruHome() {
         <Reveal id="record" className={`${READ} mt-8 text-center lg:mt-12`}>
           <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.record.eyebrow)}</Eyebrow>
           <h3 className={H3}>{t(naru.record.heading)}</h3>
-          {/* DECIDED 2026-10-02 (사용자: 가독성 리뷰): 두 문장은 폰에서 왼쪽, sm부터 가운데. 알약, h3, 버튼은 그대로 가운데. */}
-          <p className={`mx-auto ${MEASURE} mt-4 break-keep text-left text-base leading-relaxed text-white/75 sm:text-center`}>
+          {/* DECIDED 2026-10-02 (사용자: "폰에서도 가운데 정렬로 되돌려줘"): 두 문장은 폰에서도 가운데(위 12월 머리와 같은 결정). */}
+          <p className={`mx-auto ${MEASURE} mt-4 break-keep text-center text-base leading-relaxed text-white/75`}>
             {t(naru.record.lead2)}
           </p>
           {/* 빚을 적는 한 줄(2026-09-19). 감사는 각주가 아니라 문장이어야 합니다. */}
-          <p className={`mx-auto ${MEASURE} mt-3 break-keep text-left text-base font-semibold leading-relaxed text-white/85 sm:text-center`}>
+          <p className={`mx-auto ${MEASURE} mt-3 break-keep text-center text-base font-semibold leading-relaxed text-white/85`}>
             {t(naru.record.credit)}
           </p>
           <div className="mt-6 flex justify-center">
