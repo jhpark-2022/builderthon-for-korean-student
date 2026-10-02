@@ -1816,7 +1816,9 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
       // 행 높이는 원래 가장 긴 상자가 정하고 있었으므로 챕터 길이는 그대로입니다.
       // 2026-09-25 (가독성 브리프 4.1): md부터 가운데 정렬이던 상자 안 글을 왼쪽으로. 본문 기둥
       // 아래의 글은 전부 왼쪽 정렬입니다. 상자의 배치(가운데가 나루)는 그대로입니다.
-      className={`flex flex-1 flex-col justify-center rounded-2xl border px-4 py-3 text-left md:py-5 ${
+      // DECIDED 2026-10-02 (사용자: "상자 3개가 좀 위로 너무 높은 느낌"): md부터의 위아래 안쪽 여백 py-5를
+      // 걷어 폰과 같은 py-3으로, 글 사이 간격도 md부터 mt-2 → mt-1.5. 글자 크기와 줄 수는 그대로입니다.
+      className={`flex flex-1 flex-col justify-center rounded-2xl border px-4 py-3 text-left ${
         center
           ? "border-white/20 bg-white/[0.06]"
           : "border-white/10 bg-white/[0.04]"
@@ -1854,9 +1856,9 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
       </div>
       {/* 2026-09-29 (왼쪽 끝 브리프 검증 4): 도식이 READ 폭으로 좁아져 "깔 사람."이 넉 자 한 줄로 떨어졌습니다.
           글자 크기는 그대로 두고 줄 나눔만 고르게(text-wrap: balance) 합니다. */}
-      <p className="mt-2 hidden break-keep text-xs leading-snug text-white/55 [text-wrap:balance] md:block">{t(layer.brings)}</p>
+      <p className="mt-1.5 hidden break-keep text-xs leading-snug text-white/55 [text-wrap:balance] md:block">{t(layer.brings)}</p>
       {/* 얻는 것 한 줄(2026-09-18). 후원 상자에 내는 것만 있고 얻는 것이 없었습니다(ux-researcher P1). */}
-      <p className="mt-2 break-keep text-xs leading-snug text-white/70 [text-wrap:balance]">
+      <p className="mt-2 break-keep text-xs leading-snug text-white/70 [text-wrap:balance] md:mt-1.5">
         <span className="font-bold text-accent">{t(naru.how.getsShort)}</span>
         {"\u2002"}
         {t(layer.gets)}
