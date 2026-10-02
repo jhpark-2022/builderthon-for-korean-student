@@ -1827,7 +1827,9 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
           라벨은 아이브로에만. */}
       {/* 폰은 칩과 이름을 한 줄에, 내는 것은 숨기고 얻는 것만(나루 챕터 길이 목표). md부터 그 전 그대로. */}
       <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 md:block">
-        <p>
+        {/* DECIDED 2026-10-02 (사용자: "주관, 주최, 후원 bubble이 at the centre"): md부터 역할 칩만 상자의
+            가로 가운데에 둡니다. 이름과 본문은 왼쪽 정렬 그대로입니다(2026-09-25). 폰은 칩과 이름이 한 줄이라 그대로. */}
+        <p className="md:text-center">
           <Chip tone="outline" className={`!text-xs tracking-[0.02em] lg:!text-[0.68rem] ${center ? "!border-accent/40 !text-accent" : ""}`}><RoleLabel text={t(layer.role)} /></Chip>
         </p>
         {/* DECIDED 2026-10-01 (사용자: "나루 대신, 나루의 로고를 넣어줘. 나루라는 이름 대신"): 가운데 상자는
