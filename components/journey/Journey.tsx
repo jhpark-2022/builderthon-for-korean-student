@@ -4136,14 +4136,15 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               감사의 마지막 줄("나루도, 크로싱 서울도 이 8일에서 나왔습니다")이 바로 아래 12월 버튼의 근거입니다.
 
               이 자리에 적는 이름은 전부 이 페이지가 이미 공개한 것입니다(dict.footer.thanks의 주석).
-              본문은 길어서 폰에서는 왼쪽 정렬, sm부터 가운데입니다(전과 같음). */}
+              DECIDED 2026-10-02 (사용자: 본문을 "centralize"): 본문도 폰까지 가운데 정렬입니다.
+              그 전에는 폰에서만 왼쪽 정렬이었습니다. */}
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/55">
             {t(dict.footer.thanks.label)}
           </p>
           <h2 className="mx-auto mt-4 max-w-3xl break-keep text-[clamp(1.75rem,4.4vw,3rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_40px_rgba(124,58,237,0.4)]">
             {t(dict.footer.thanks.heading)}
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl break-keep text-left text-base leading-relaxed text-white/80 sm:text-center">
+          <p className="mx-auto mt-6 max-w-2xl break-keep text-center text-base leading-relaxed text-white/80">
             {t(dict.footer.thanks.body)}
           </p>
           <p className="mx-auto mt-4 max-w-2xl break-keep text-base font-semibold leading-relaxed text-white">
