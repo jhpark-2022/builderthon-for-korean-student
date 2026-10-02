@@ -816,11 +816,15 @@ export default function JourneyNav({
 
           z-40: 헤더(z-50) 아래. 앵커로 점프했을 때 헤더가 위를 덮는 관계를
           유지합니다. 어두운 원반은 감싼 div가 만듭니다. 버튼 자신의 테두리와
-          호버를 덮어쓰지 않으려고 클래스를 섞지 않았습니다. */}
+          호버를 덮어쓰지 않으려고 클래스를 섞지 않았습니다.
+
+          DECIDED 2026-10-02 (사용자: 가독성 리뷰): 가장자리 여백 p-4 → p-1.5. 폰에서 본문 오른쪽 끝(레일
+          안쪽 여백 27px)을 버튼이 약 33px 덮어 줄 끝 두 글자가 가려졌습니다. 구석으로 붙여 겹침을 줄입니다.
+          버튼 크기(44px)와 항상 보인다는 것은 그대로입니다. */}
       {naru && (
         <div
-          className="fixed bottom-0 right-0 z-40 p-4 xl:hidden"
-          style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)" }}
+          className="fixed bottom-0 right-0 z-40 p-1.5 xl:hidden"
+          style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.375rem)" }}
         >
           <div className="rounded-full bg-[#070B1F]/85 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.9)] backdrop-blur">
             <MotionToggle compact />
