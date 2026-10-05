@@ -62,7 +62,9 @@ export const DECEMBER_EVENT_NAME: { ko: string; en: string } | null = {
 // 저학년이 많아 시험 준비 인원이 많음, 다른 대학도 대체로 겹침), 개인 시험 일정과 조금이라도
 // 겹치면 참여가 급감한다는 경험칙 때문입니다. 18일(금, 공강이 많은 날)에 어젠다를 열고, 19~20일
 // 주말에 실질 활동, 21~22일에 마무리합니다. Day 0~4의 구성은 그대로이고 날짜만 8일 뒤로 옮깁니다.
-export const DECEMBER_STARTS_AT = "2026-12-18";
+// DECIDED 2026-10-05 (사용자): 12월 17일(목). 기간 전체를 하루 앞으로 당겼습니다(17~21일, 닷새).
+// Day 0~4의 구성은 그대로이고 날짜만 옮깁니다. 주말(19~20일)은 이제 Day 2~3입니다.
+export const DECEMBER_STARTS_AT = "2026-12-17";
 
 /**
  * 12월 이벤트 종료일. **아직 확정되지 않았습니다.**
@@ -77,7 +79,8 @@ export const DECEMBER_STARTS_AT = "2026-12-18";
 // 하루가 비어 있습니다. 14일에 무엇이 있는지(예비일, 클로징, 이동일) 기획 팀과
 // 맞추기 전까지 화면은 기간만 말하고 14일에 무엇이 있다고 쓰지 않습니다.
 // DECIDED 2026-09-24: 12월 22일(화). 위 시작일과 같은 결정입니다(18~22일, 닷새).
-export const DECEMBER_ENDS_AT: string | null = "2026-12-22";
+// DECIDED 2026-10-05 (사용자): 12월 21일(월). 위 시작일과 같은 결정입니다.
+export const DECEMBER_ENDS_AT: string | null = "2026-12-21";
 
 /** 열리는 도시. 확정. */
 export const DECEMBER_CITY = { ko: "서울", en: "Seoul" } as const;

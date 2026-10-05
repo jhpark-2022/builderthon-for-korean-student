@@ -21,7 +21,7 @@
 - 사이트: https://naru-crossing-seoul.vercel.app
 - 한국어와 영어 두 벌(KR/EN 전환)
 
-*NARU is a Korea-rooted, student-run, not-for-profit group of student builders. This repo is its website. The home page introduces CROSSING SEOUL (18 to 22 December 2026, Seoul), and `/2026-08` keeps the record of the group's first event, the Zero100 builderthon in Singapore. Without the Zero100 builderthon there is no NARU and no CROSSING SEOUL. We begin owing the people who made those eight days.*
+*NARU is a Korea-rooted, student-run, not-for-profit group of student builders. This repo is its website. The home page introduces CROSSING SEOUL (17 to 21 December 2026, Seoul), and `/2026-08` keeps the record of the group's first event, the Zero100 builderthon in Singapore. Without the Zero100 builderthon there is no NARU and no CROSSING SEOUL. We begin owing the people who made those eight days.*
 
 ## 나루는
 
@@ -112,7 +112,7 @@
 
 ## 12월, 크로싱 서울
 
-2026년 12월 18일(금)부터 22일(화)까지, 서울. 기업이 연 데이터에서 문제를 찾고, 마지막 날 그 기업 앞에서 발표하는 닷새입니다.
+2026년 12월 17일(목)부터 21일(월)까지, 서울. 기업이 연 데이터에서 문제를 찾고, 마지막 날 그 기업 앞에서 발표하는 닷새입니다.
 
 | 날 | 스테이지 |
 | --- | --- |

@@ -4,7 +4,7 @@ import { join } from "node:path";
 
 // 2026-09-28 (나루 공식 표기 브리프 4.7): 나루를 영문 부제로. 카드 오른쪽 아래 줄
 // "Korean student builders, wherever they study"는 12월 포지션이라 그대로 둡니다.
-export const alt = "CROSSING SEOUL, 18–22 Dec 2026. 나루 NARU, a Korea-rooted collective of student builders.";
+export const alt = "CROSSING SEOUL, 17–21 Dec 2026. 나루 NARU, a Korea-rooted collective of student builders.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -107,7 +107,7 @@ export default async function OpengraphImage() {
             CROSSING SEOUL
           </div>
           <div style={{ display: "flex", marginTop: 20, fontSize: 36, fontWeight: 700, color: "#C79BB4" }}>
-            18–22 Dec 2026&nbsp;&nbsp;·&nbsp;&nbsp;Seoul
+            17–21 Dec 2026&nbsp;&nbsp;·&nbsp;&nbsp;Seoul
           </div>
         </div>
 
