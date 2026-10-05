@@ -520,8 +520,9 @@ export const naru = {
     // 네 글자일 뿐이고, 그러면 위의 crossing이 비유로 읽히지 않습니다.
     name: {
       // 2026-09-29 (9/28 자문): 어원 한 줄. 한글 화면에만 있습니다. 영문은 river landing 설명이 이미 같은 일을 합니다.
-      ko: "나루는 강을 건너려는 사람이 배를 타는 자리입니다. 노량진의 진(津)도 나루입니다. 건너간 사람이 다시 돌아와 서는 자리도 같은 나루입니다.",
-      en: "NARU is the Korean word for a river landing: the place where you board the boat to cross. The place the ones who crossed come back and stand is the same landing.",
+      // DECIDED 2026-10-05 (사용자, 스크린숏: "너무 길어. 간략하게"): 세 문장을 두 문장으로. 노량진의 진(津) 문장을 뺐습니다.
+      ko: "나루는 강을 건너려는 사람이 배를 타는 자리입니다. 건너간 사람이 다시 돌아와 서는 자리이기도 합니다.",
+      en: "NARU is the Korean word for a river landing, where you board the boat to cross. It is also where the ones who crossed come back and stand.",
     },
     lead: {
       ko: "이벤트는 나루가 학생회와 기업을 잇는 지금의 방식입니다. 방식은 바뀝니다. 바뀌지 않는 것은 아래 두 개입니다.",
@@ -532,8 +533,11 @@ export const naru = {
     // DECIDED 2026-09-28 (나루 공식 표기 브리프 4.3, 정의는 2026-09-29 재개정): 앞을 정의 정식 판 그대로로
     // 바꿨습니다. 옛 첫 문장("학생회와 기업을 이어 이벤트를 엽니다")은 정의와 겹쳐 뺐고, 마지막 문장은 그대로입니다.
     concrete: {
-      ko: "나루는 한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 그룹입니다. 이벤트로 학생을 모으고, 모인 사람들을 진짜 커뮤니티로 잇고, 각 나라의 학생회, 학회와 함께 서울과 싱가포르를 넘어 더 넓게 다가갑니다. 모두 AI로 함께 만듭니다. 첫 이벤트는 2026년 8월 싱가포르의 제로백 빌더톤이었습니다.",
-      en: "A Korea-rooted, student-run, not-for-profit group that brings students in through events, grows them into a genuine community, and reaches out with student associations and clubs across Seoul, Singapore and beyond, building together with AI. The first was the Zero100 builderthon in Singapore, August 2026.",
+      // DECIDED 2026-10-05 (사용자, 스크린숏: "너무 길어. 간략하게"): 네 문장을 두 문장으로. 뺀 것: 각 나라의 학생회, 학회와 함께
+      // 넓힌다는 구절, "모두 AI로 함께 만듭니다", 첫 이벤트 문장(바로 아래 record.lead2가 받습니다).
+      // 같은 날 group.lead("이벤트는 ... 지금의 방식입니다")는 화면에서 내렸습니다. 같은 말을 아래 "방법은 바뀝니다"가 합니다.
+      ko: "한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 그룹입니다. 이벤트로 학생을 모으고, 모인 사람들을 커뮤니티로 잇습니다.",
+      en: "A Korea-rooted, student-run, not-for-profit group. We bring students in through events and connect them into a community.",
     },
   },
 
@@ -663,8 +667,9 @@ export const naru = {
       // 2026-09-29 (9/28 자문, "젓는 노가 AI다"): 마지막 문장. 정의 문장의 "AI로 함께 만듭니다"가 왜 AI인지.
       // DECIDED 2026-09-30 (사용자, 문장 감사): "나루는 배를 댈 자리를 만들고, 노를 젓는 건 각자입니다"를
       // 뺐습니다. 태그라인과 group.name에 이어 같은 말의 세 번째였습니다. 노가 AI라는 문장만 남깁니다.
-      ko: "AI도, 8일이라는 길이도, 지금의 형식도 방법입니다. 어젠다는 상황을 따라 바뀌고, 8일이 4일이 되어도 됩니다. 바뀌면 안 되는 것은 위의 두 개뿐입니다. 건널 때 젓는 노가 지금은 AI입니다.",
-      en: "AI, the eight days, the format: all method. The agenda follows the situation, and eight days may become four. Only the two above cannot change. Right now, the oar you cross with is AI.",
+      // DECIDED 2026-10-05 (사용자: 가운데 글 가독성 감사): 가운데 문단은 세 줄까지라 줄였습니다. 뺀 것: "어젠다는 상황을 따라 바뀌고", "건널 때 젓는 노가 지금은 AI입니다".
+      ko: "AI도, 8일이라는 길이도, 지금의 형식도 방법입니다. 8일이 4일이 되어도 됩니다. 바뀌면 안 되는 것은 위의 두 개뿐입니다.",
+      en: "AI, the eight days, the format: all method. Eight days may become four. Only the two above cannot change.",
     },
   },
 
@@ -791,16 +796,19 @@ export const naru = {
     // 같은 순서로 짝지웁니다. 스크리닝 없이 받아 푼 것 → 안전하게 도전할 수 있는 자리, 앞에서 증명한 것 →
     // 자기 가치를 증명해 보는 경험. 코어 이름은 why.cores의 title과 한 글자도 다르면 안 됩니다.
     lead2: {
-      ko: "스크리닝 없이 실제 기업의 문제를 받아 8일 동안 풀었고, 마지막 날 그 기업 앞에서 증명했습니다. 이 두 장면이 나루의 변하지 않는 두 개가 되었습니다. 안전하게 도전할 수 있는 자리, 그리고 자기 가치를 증명해 보는 경험입니다.",
-      en: "Teams took a real company's problem with no screening and worked it for eight days, then proved it in front of that company on the last day. Those two scenes became the two things NARU does not change: a safe place to try something new, and a chance to prove your own worth.",
+      // DECIDED 2026-10-05 (사용자, 스크린숏: "너무 길어. 간략하게"): 두 장면만 남깁니다. 코어 둘의 이름을 부르던 뒤의 두 문장은
+      // 뺐습니다(바로 아래 "변하지 않는 두 개"가 같은 순서로 이름을 답니다). 첫 이벤트라는 사실은 이 줄이 받습니다.
+      ko: "2026년 8월 싱가포르의 제로백 빌더톤에서 시작했습니다. 스크리닝 없이 기업의 문제를 받아 풀었고, 마지막 날 그 기업 앞에서 증명했습니다.",
+      en: "It began at the Zero100 builderthon in Singapore, August 2026. Teams took a company's problem with no screening and proved it in front of that company on the last day.",
     },
     // ADDED 2026-09-19 (사용자: "제로백의 도움이 있었기에 이 모든 게 가능했다").
     // 홈은 8월을 숫자와 사진으로만 말하고 있었습니다. 무엇을 빚졌는지는 한 줄도
     // 없었어요. 이 자리가 그 한 줄입니다. 제로백을 부정하는 문장(옛 notSequel의
     // "속편은 아니고")을 걷어낸 것과 같은 결정입니다.
     credit: {
-      ko: "제로백 빌더톤이 없었으면 나루도, 크로싱 서울도 없습니다. 그 8일을 만든 사람들에게 빚지고 시작합니다.",
-      en: "Without the Zero100 builderthon there is no NARU and no CROSSING SEOUL. We begin owing the people who made those eight days.",
+      // DECIDED 2026-10-05 (사용자, 스크린숏: "너무 길어. 간략하게"): 한 문장으로. "없었으면 ... 없습니다"를 뺐습니다.
+      ko: "그 8일을 만든 사람들에게 빚지고 시작합니다.",
+      en: "We begin owing the people who made those eight days.",
     },
     // 2026-09-20 (사용자: "제로백 빌더톤을 도와주신 모든 분들 덕분에 가능했던 것.
     // acknowledgement가 더 있어야 한다"). 위 credit 한 줄이 빚을 말하고, 이 줄이
@@ -1892,8 +1900,9 @@ export const naru = {
     // 히어로의 서브도 "문제를 찾아내는 것부터 앞에서 증명하기까지, 닷새"입니다. 같은 공식이
     // 두 화면에 걸쳐 세 번 나왔어요. 제목이 하는 말을 리드가 다시 하지 않습니다.
     shapeLead: {
-      ko: "AI가 잘하는 일은 셋입니다. 아이디어를 코드로 만드는 것, 복잡한 비즈니스 프로세스를 이해하는 것, 많은 데이터를 분석하는 것. 8월은 첫 번째에 집중했습니다. 12월은 나머지 둘로 넓힙니다.",
-      en: "AI is good at three things: turning an idea into code, reading a complex business process, analysing a lot of data. August did the first. December adds the other two.",
+      // DECIDED 2026-10-05 (사용자: 가운데 글 가독성 감사): 가운데 문단은 세 줄까지라 줄였습니다. 세 항목의 꾸밈말을 뺐습니다.
+      ko: "AI가 잘하는 일은 셋입니다. 코드를 만드는 것, 비즈니스 프로세스를 이해하는 것, 데이터를 분석하는 것. 8월은 첫째에 집중했고, 12월은 나머지 둘로 넓힙니다.",
+      en: "AI is good at three things: writing code, reading a business process, analysing data. August did the first. December adds the other two.",
     },
     // DECIDED 2026-09-18 (사용자): "아직 정해지지 않은 것" 목록(tbd)을 화면에서 뺐습니다.
     // 미정을 나열하는 대신 이 한 줄만. tbd 키는 그대로 둡니다.
@@ -2133,7 +2142,8 @@ export const naru = {
     // 다른 나라 학생 공동체와 비교하는 문장을 넣지 마세요. 내부 문서의 관찰이
     // 공개 화면에서는 다른 집단에 대한 일반화가 됩니다. 우리 쪽에 무엇이
     // 없는지만 씁니다.
-    eyebrow: { ko: "왜 이 그룹인가", en: "Why this group" },
+    // 2026-10-03 (사용자): 알약이 "왜 이 그룹인가"였습니다. 제목과 같은 말로 바꿨다가, 같은 날 화면에서 뺐습니다(그리지 않음).
+    eyebrow: { ko: "왜 이 자리가 필요한가", en: "Why this has to exist" },
     heading: { ko: "왜 이 자리가 필요한가", en: "Why this has to exist" },
     // 2026-09-19 (사용자): 둘째 문장이 "그 셋은 서로의 답입니다"였습니다. 한 문장 건너
     // "서로"가 다시 나왔고, 같은 화면의 3층 다이어그램에도 "서로 직접 만나지 않습니다"가
@@ -2175,15 +2185,19 @@ export const naru = {
         // 위아래 두 칸(싱가포르, 그 밖의 나라)은 사람의 부족이 아니라 **없는
         // 자리**를 말합니다. "이어 주는 자리가 없었습니다", "서로의 존재를
         // 모릅니다". 이 칸만 사람을 평가하고 있었습니다. 같은 문법으로 맞춥니다.
+        //
+        // DECIDED 2026-10-05 (사용자: "한국에서도 대학끼리의 접점이 있을 기회는 없음"): 첫 문장이 "한국의
+        // 또래끼리는 이미 잘 이어져 있습니다"였습니다. 사실이 아닙니다. 한국 안에서도 학교가 다르면 만날
+        // 자리가 없습니다. 싱가포르 칸("학교를 가로질러 잇는 자리도")과 같은 문법으로, 없는 자리 둘을 적습니다.
         lack: {
-          ko: "한국의 또래끼리는 이미 잘 이어져 있습니다. 없던 것은 다른 나라의 또래와 같은 문제를 놓고 만나는 자리입니다.",
-          en: "Students in Korea are already well connected. What was missing was a shared problem with peers who study elsewhere.",
+          ko: "한국 안에서도 학교가 다르면 만날 자리가 없습니다. 다른 나라의 또래와 같은 문제를 놓고 만나는 자리도 없었습니다.",
+          en: "Even within Korea, students at different universities have nowhere to meet. Nor was there a shared problem to work on with peers who study elsewhere.",
         },
         // 2026-09-29 (9/28 자문, "크로스보더는 양쪽에 카운터파트가 있어야"): 한국 쪽의 결핍은 "밖으로".
         // 한국의 학생이 이 자리에 오는 이유는 건너편에 싱가포르가 있기 때문입니다.
         opens: {
-          ko: "건너편이 있어야 건넙니다. 다른 나라의 또래와 같은 문제를 같은 팀으로 풉니다.",
-          en: "You cross because there is another side. Same problem, same team, peers in another country.",
+          ko: "건너편이 있어야 건넙니다. 다른 학교, 다른 나라의 또래와 같은 문제를 같은 팀으로 풉니다.",
+          en: "You cross because there is another side. Same problem, same team, peers from other schools and other countries.",
         },
       },
       {
@@ -2223,8 +2237,9 @@ export const naru = {
     // 말합니다. 같은 I장에 있는 다른 나라 학생과의 비교는 가져오지 않습니다.
     // 공개 화면에서는 다른 집단에 대한 일반화가 됩니다.
     milestones: {
-      ko: "세 곳에 공통된 것이 하나 더 있습니다. 경쟁이 치열할수록 눈앞의 칸부터 채우게 됩니다. 학점, 인턴, 졸업, 오퍼. 칸을 채우는 동안에는 더 큰 질문을 물을 시간이 없습니다. 나는 어디로 나아갈 수 있는가, 내 앞에 놓인 방향은 몇 개인가.",
-      en: "One thing runs through all three. The tighter the competition, the sooner you fill in the box in front of you. Grades, an internship, graduation, an offer. Filling them leaves no room for the bigger question: where you can go, and how many directions are open.",
+      // DECIDED 2026-10-05 (사용자: 가운데 글 가독성 감사): 가운데 문단은 세 줄까지라 줄였습니다. 질문은 하나만 남깁니다.
+      ko: "세 곳 모두 경쟁이 치열할수록 눈앞의 칸부터 채우게 됩니다. 학점, 인턴, 졸업, 오퍼. 그동안에는 더 큰 질문을 물을 시간이 없습니다. 나는 어디로 나아갈 수 있는가.",
+      en: "In all three places, the tighter the competition, the sooner you fill in the box in front of you. Grades, an internship, graduation, an offer. That leaves no room for the bigger question: where can I go?",
     },
     // 챕터를 닫는 자리. 매니페스토 표지의 한 줄과 V장("왜 그럼에도 만드는가")
     // 입니다. 동기는 설계의 근거로 쓰되 마케팅 문구로 쓰지 않는다는 규칙(회고

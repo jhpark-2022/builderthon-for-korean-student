@@ -217,7 +217,18 @@ const WIDE = "mx-auto w-full max-w-5xl";
 // white/85 또는 흰색, white/55는 라벨과 Day 0에만. 뜻이 있는 문장에 /55를 쓰지 않습니다.
 const MEASURE = "lg:max-w-[36rem]";
 const READ_MEASURE = "lg:pr-[12rem]";
-const READ_MEASURE_C = "lg:px-[6rem]";
+// DECIDED 2026-10-05 (사용자: 가운데 글의 가독성 감사, "make all of the proposed fixes"): 가운데 문단의 규칙 넷.
+// ① 줄 길이를 고르게 나눕니다(text-balance). 가운데 정렬에서는 짧은 끝줄이 한가운데 혼자 떠서 윤곽이 깨집니다
+//    (실측 610/117px → 377/349px). 줄 수는 그대로입니다. 지원하지 않는 브라우저는 전과 같습니다.
+// ② 글 폭은 28rem 하나입니다(같은 날 2차, 사용자 스크린숏: 32rem에서는 고르게 나눈 두 줄짜리의 폭이
+//    문단 길이를 따라 388~575px로 벌어져 위아래 윤곽이 들쭉날쭉했습니다. 상한을 내려 폭의 차이를 줄입니다). 전에는 42rem(READ_MEASURE_C)과 36rem(MEASURE) 둘이 섞였습니다. 가운데 글은
+//    줄마다 시작점을 새로 찾아야 해서 왼쪽 정렬(36rem)보다 좁아야 합니다. READ 블록은 READ_MEASURE_C,
+//    그 안의 문단은 MEASURE_C를 씁니다(둘은 같은 폭). 왼쪽 정렬 문단은 MEASURE, READ_MEASURE 그대로.
+// ③ 덩어리의 첫 문단(챕터 리드)만 /90으로 밝히고, 같은 이야기 안은 mt-3, 이야기가 바뀌면 mt-8 이상.
+//    전역 CSS의 p { text-wrap: pretty }가 상속값을 이기므로 text-balance는 래퍼가 아니라 문단에 직접 답니다.
+// ④ 가운데 문단은 세 줄까지. 넘던 셋(december.lead, why.agenda, join.milestones)은 data/naru.ts에서 줄였습니다.
+const READ_MEASURE_C = "lg:px-[10rem] text-balance";
+const MEASURE_C = "mx-auto lg:max-w-[28rem] text-balance";
 // 작은 라벨의 자간. 한국어 화면은 0, 영문 화면(라틴 대문자)만 넓게.
 const latinTrack = (locale: "ko" | "en") => (locale === "en" ? "tracking-[0.14em]" : "tracking-normal");
 // 챕터 라벨(알약)의 자간. Eyebrow는 8월 페이지와 같은 컴포넌트라 거기 값(0.18em)은 두고
@@ -256,6 +267,7 @@ function ReadingPlate({ id, read = false }: { id: PlateId; read?: boolean }) {
 // "글이 가운데면 버튼도 가운데"입니다(2026-09-29 사용자). 그 밖의 본문은 왼쪽 끝 하나 그대로입니다.
 // DECIDED 2026-09-30 2차 (사용자, 스크린숏): 둘 더. #gains의 머리(알약, h2, 바로 아래 한 줄)와 #naru 안의
 // "8월이 남긴 것" 블록 전체(알약, h3, 두 문장, 아카이브 버튼). 머리가 왼쪽인 챕터는 #join 하나 남았습니다(요청 없음).
+// DECIDED 2026-10-03 (사용자, 스크린숏): #join의 머리(h2, 리드)도 가운데. 이제 네 챕터의 머리가 모두 가운데입니다. #join에는 알약이 없습니다.
 // 판 폭은 한 축 브리프(2026-09-26)대로 그 조각의 글 기둥을 따릅니다. WIDE 블록(노선도)이 남은 조각은 #december
 // 첫 조각뿐이라 나머지는 read입니다.
 function PlateSegment({ id, gap = false, read = false, children }: { id: PlateId; gap?: boolean; read?: boolean; children: React.ReactNode }) {
@@ -667,7 +679,7 @@ export default function NaruHome() {
           {`${t(naru.december.eyebrowPrefix)}\u2002${decemberEventLabel(locale)}`}
         </Eyebrow>
         </div>
-        <h2 id="december-title" className={`${H2} ${READ} text-center`}><Halo tone="violet">{t(naru.december.programHeading)}</Halo></h2>
+        <h2 id="december-title" className={`${H2} ${READ} text-balance text-center`}><Halo tone="violet">{t(naru.december.programHeading)}</Halo></h2>
         {/* 폰에서 3줄을 넘는 문단은 왼쪽 정렬 (2026-09-19, 모바일 감사 8). #naru가
             이미 쓰던 규칙(감사 반영 브리프 6.1)인데 #december와 #join에는 적용되지
             않았습니다. 336px 폭에 한글 18자/줄이면 서너 줄 문단이 양쪽 들쭉날쭉한
@@ -677,7 +689,7 @@ export default function NaruHome() {
             축으로 내려갑니다(가독성 브리프 4.1: 머리는 h2 바로 아래 문단 하나). 문장은 그대로. */}
         {/* DECIDED 2026-10-02 (사용자: "폰에서도 가운데 정렬로 되돌려줘"): 리드 셋은 폰에서도 가운데입니다.
             같은 날 가독성 리뷰로 폰에서만 왼쪽 정렬로 바꿨다가 되돌렸습니다. 가운데인 블록은 폰에서도 가운데. */}
-        <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-center text-base leading-relaxed text-white/75`}>
+        <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-center text-base leading-relaxed text-white/90`}>
           {t(naru.december.programConcrete).replace("{date}", formatDecemberDateLine(locale))}
         </p>
         <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-center text-base leading-relaxed text-white/75`}>
@@ -1049,8 +1061,8 @@ export default function NaruHome() {
             페이지의 그라데이션 필은 히어로 하나뿐입니다. */}
         {/* 문의 줄과 버튼 줄은 한 덩어리입니다(가독성 브리프 4.1). 폰에서는 세로로 쌓습니다.
             DECIDED 2026-09-30 (사용자): 이 덩어리는 가운데. 글이 가운데면 버튼도 가운데(2026-09-29). */}
-        <div className={`${READ} mt-8 text-center lg:mt-12`}>
-        <p id="december-register-note" className="break-keep text-center text-sm text-white/70">
+        <div className={`${READ} mt-8 text-balance text-center lg:mt-12`}>
+        <p id="december-register-note" className="text-balance break-keep text-center text-sm text-white/70">
           {regState === "closed" ? t(registerCopy.closed) : t(naru.december.ctaNote)}
         </p>
         <div className="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4">
@@ -1097,9 +1109,9 @@ export default function NaruHome() {
         {/* DECIDED 2026-09-30 (사용자, 스크린숏): 이 챕터의 머리(알약, h2, 바로 아래 한 줄)는 가운데입니다.
             #december와 #naru의 머리와 같은 축입니다. 아래 다섯 행부터는 왼쪽 끝. */}
         <div className={`${READ} text-center`}><Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.gains.eyebrow)}</Eyebrow></div>
-        <h2 id="gains-title" className={`${H2} ${READ} text-center`}><Halo tone="violet">{t(naru.gains.heading)}</Halo></h2>
+        <h2 id="gains-title" className={`${H2} ${READ} text-balance text-center`}><Halo tone="violet">{t(naru.gains.heading)}</Halo></h2>
         {/* 제목 옆의 구체적인 한 줄(가독성 브리프 5, 2026-09-25 사용자 승인). 챕터 머리의 문단. */}
-        <p className={`${READ} mt-6 break-keep text-center text-base leading-relaxed text-white/75`}>
+        <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-center text-base leading-relaxed text-white/90`}>
           {t(naru.gains.concrete)}
         </p>
         {/* DECIDED 2026-09-20 (표현 방식 브리프 3장): 카드 다섯 → 행 다섯.
@@ -1189,7 +1201,7 @@ export default function NaruHome() {
           <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.hero.eyebrow)}</Eyebrow>
         </div>
         {/* 태그라인. 두 줄 고정(히어로에 있던 때의 이유 그대로: 두 개의 선언). */}
-        <h2 id="naru-title" className={`${H2} ${READ} text-center`}>
+        <h2 id="naru-title" className={`${H2} ${READ} text-balance text-center`}>
           <Halo tone="violet">
             <span className="block break-keep">{t(naru.hero.titleLine1)}</span>{" "}
             {/* {" "}: block span 둘 사이에 텍스트 노드가 없으면 이름 계산에서
@@ -1202,22 +1214,27 @@ export default function NaruHome() {
             말합니다. 순서가 반대면 낱말 풀이부터 읽히고 선언이 뒤로 밀립니다.
             본문보다 한 단 작습니다. 주석이지 주장이 아닙니다.
             DECIDED 2026-10-02 (사용자: 가독성 리뷰): 밝기는 /55 → /70. 작고 흐리고 줄까지 길어 읽히지 않았습니다. */}
-        <p className={`${READ} ${READ_MEASURE} mt-5 break-keep text-left text-sm leading-relaxed text-white/70`}>
+        {/* DECIDED 2026-10-05 (사용자, 스크린숏: "그냥 하나로 합치라니까"): 이름 풀이부터 아카이브 버튼까지가
+            한 덩어리입니다. 문단이 모두 가운데이고 같은 폭(READ_MEASURE_C)에 같은 간격(mt-6)으로 섭니다.
+            "그 아래 이름 풀이부터는 왼쪽 끝"(2026-09-30)은 이 결정이 대신합니다. */}
+        <p className={`${READ} ${READ_MEASURE_C} mt-5 break-keep text-center text-sm leading-relaxed text-white/70`}>
           {t(naru.group.name)}
         </p>
         {/* 태그라인 옆의 구체적인 한 줄(가독성 브리프 5, 2026-09-25 사용자 승인). 이름 풀이 다음,
             리드 앞입니다. 머리 문단은 이름 풀이 하나라 이 줄은 본문 축에 섭니다. 리드의 첫
             문장과 뜻이 겹치는 것은 알고 둔 것입니다(사용자: 표의 제안대로). */}
-        <p className={`${READ} ${READ_MEASURE} mt-6 break-keep text-left text-base leading-relaxed text-white/75`}>
+        <p className={`${READ} ${READ_MEASURE_C} mt-8 break-keep text-center text-base leading-relaxed text-white/90`}>
           {t(naru.group.concrete)}
         </p>
-        {/* 폰에서 3줄을 넘는 문단은 왼쪽 정렬(감사 반영 브리프 6.1). 데스크톱은 가운데 그대로. */}
-        <p className={`${READ} ${READ_MEASURE} mt-6 break-keep text-left text-base leading-relaxed text-white/75`}>
-          {t(naru.group.lead)}
-        </p>
+        {/* DECIDED 2026-10-05 3차 (사용자, 스크린숏: "너무 길어. 간략하게"): 리드(group.lead)는 그리지 않습니다.
+            "방식은 바뀝니다"는 아래 "방법은 바뀝니다"가 다시 말합니다. 키는 data/naru.ts에 그대로.
+            남은 네 문단의 글도 같은 날 줄였습니다. */}
         {/* DECIDED 2026-10-05 (사용자, 스크린숏: "한 파트로 그냥 합쳐줘. 중간에 선 두고 나누지 말고"): 여기 있던
-            서명 헤어라인(2px 그라디언트)을 뺐습니다. 리드와 "8월이 남긴 것"은 선 없이 한 덩어리로 이어집니다.
-            선이 갖던 위아래 여백은 아래 블록의 mt 하나로 줄였습니다. */}
+            서명 헤어라인(2px 그라디언트)을 뺐습니다.
+            같은 날 2차 (사용자: "그냥 하나로 합치라니까"): 선만 빼서는 여전히 두 파트였습니다. 알약
+            (record.eyebrow)과 h3 "8월이 남긴 것"(record.heading)도 화면에서 내리고, 두 문장과 버튼을 위
+            문단들 바로 아래에 같은 간격으로 잇습니다. 두 키는 data/naru.ts에 그대로 있고 그리지 않습니다.
+            id="record"는 남깁니다(옛 링크, 배경 국면, 하단 바). */}
         {/* 라벨만. "우리는 두 가지를 만들려고 모였습니다" 제목은 내려갔습니다
             (2026-09-17 3차). 태그라인이 바로 위에 H2로 있고, lead가 "바뀌지 않는
             것은 아래 두 개"라고 이미 말합니다. 같은 챕터에 큰 제목 둘은 길이만
@@ -1231,15 +1248,13 @@ export default function NaruHome() {
             같은 문단과 짝을 볼 자리). 명단은 아래 아카이브 버튼 너머에 있습니다. */}
         {/* DECIDED 2026-09-30 (사용자, 스크린숏: "이것들도 center로"): 이 블록 전체(알약, h3, 두 문장, 버튼)는
             가운데입니다. 글이 가운데면 버튼도 가운데(2026-09-29). */}
-        <Reveal id="record" className={`${READ} mt-12 text-center lg:mt-16`}>
-          <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.record.eyebrow)}</Eyebrow>
-          <h3 className={H3}>{t(naru.record.heading)}</h3>
+        <Reveal id="record" className={`${READ} mt-8 text-center`}>
           {/* DECIDED 2026-10-02 (사용자: "폰에서도 가운데 정렬로 되돌려줘"): 두 문장은 폰에서도 가운데(위 12월 머리와 같은 결정). */}
-          <p className={`mx-auto ${MEASURE} mt-4 break-keep text-center text-base leading-relaxed text-white/75`}>
+          <p className={`${MEASURE_C} break-keep text-center text-base leading-relaxed text-white/75`}>
             {t(naru.record.lead2)}
           </p>
           {/* 빚을 적는 한 줄(2026-09-19). 감사는 각주가 아니라 문장이어야 합니다. */}
-          <p className={`mx-auto ${MEASURE} mt-3 break-keep text-center text-base font-semibold leading-relaxed text-white/85`}>
+          <p className={`${MEASURE_C} mt-3 break-keep text-center text-base font-semibold leading-relaxed text-white/85`}>
             {t(naru.record.credit)}
           </p>
           <div className="mt-6 flex justify-center">
@@ -1268,7 +1283,9 @@ export default function NaruHome() {
             두 개"를 눌러 도착하면 어디에 왔는지 확인할 문장이 없었습니다.
             why.heading 키는 전부터 있었고 그리지 않고 있던 것을 되살립니다.
             sr-only가 아니라 눈에도 보이게 두는 편이 착지점을 말해 줍니다. */}
-        <div id="why" className={`${READ} mt-8 border-t border-white/10 pt-8 text-left lg:mt-12 lg:pt-12`}>
+        {/* DECIDED 2026-10-05 (사용자, 스크린숏: "이거 center에"): 알약과 h3는 가운데. 아래 코어 두 장(글과 지킴
+            칸의 두 단)은 왼쪽 끝 그대로입니다. */}
+        <div id="why" className={`${READ} mt-8 border-t border-white/10 pt-8 text-balance text-center lg:mt-12 lg:pt-12`}>
           <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.why.eyebrow)}</Eyebrow>
           <h3 className={H3}>{t(naru.why.heading)}</h3>
         </div>
@@ -1316,14 +1333,15 @@ export default function NaruHome() {
         {/* 경첩. 두 개가 함께 있어야 하는 이유. 판 두 장을 닫는 헤어라인
             아래, 챕터 제목과 같은 축에 H3로 섭니다. 먼저 각각을 읽고, 그
             다음에 둘이 한 쌍인 이유를 읽습니다. */}
-        <Reveal className={`${READ} border-t border-white/10 pt-8 lg:pt-12`}>
-          <p className="break-keep text-left text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl">
+        {/* DECIDED 2026-10-05 (사용자, 스크린숏: "이것도"): 경첩 세 문단과 아래 "방법은 바뀝니다"는 가운데. */}
+        <Reveal className={`${READ} border-t border-white/10 pt-8 text-balance text-center lg:pt-12`}>
+          <p className="text-balance break-keep text-center text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl">
             {t(naru.why.note)}
           </p>
           {/* 경첩 옆의 구체적인 한 줄(가독성 브리프 5, 2026-09-25 사용자 승인). 폰에서도 보입니다. */}
-          <p className={`${MEASURE} mt-3 break-keep text-left text-base leading-relaxed text-white/75`}>{t(naru.why.noteConcrete)}</p>
+          <p className={`${MEASURE_C} mt-3 break-keep text-center text-base leading-relaxed text-white/75`}>{t(naru.why.noteConcrete)}</p>
           {/* 폰에서는 경첩의 부연을 접습니다(나루 챕터 길이 목표 2,200). 굵은 한 문장만. */}
-          <p className={`${MEASURE} mt-6 hidden break-keep text-left text-base leading-relaxed text-white/75 lg:block`}>
+          <p className={`${MEASURE_C} mt-3 hidden break-keep text-center text-base leading-relaxed text-white/75 lg:block`}>
             {t(naru.why.noteBody)}
           </p>
         </Reveal>
@@ -1331,9 +1349,9 @@ export default function NaruHome() {
         {/* 마지막 줄. 페이지 전체가 여기서 끝납니다. 위의 두 개를 빼면 전부
             방법이고, 방법은 바뀝니다(매니페스토 IV). 이 문장이 8일이 4일이 되는
             12월을 미리 설명합니다. */}
-        <Reveal className={`${READ} mt-8 text-left lg:mt-12`}>
+        <Reveal className={`${READ} mt-8 text-balance text-center lg:mt-12`}>
           <h3 data-subheading className={SUBHEADING}>{t(naru.why.agendaLabel)}</h3>
-          <p className={`${MEASURE} mt-3 break-keep text-left text-base leading-relaxed text-white/75`}>{t(naru.why.agenda)}</p>
+          <p className={`${MEASURE_C} mt-3 break-keep text-center text-base leading-relaxed text-white/75`}>{t(naru.why.agenda)}</p>
         </Reveal>
               {/* ── 어떻게 일하는가 (DECIDED 2026-09-18, 사용자: "나루와 학생회와 기업 내용은 하나의
             챕터로 합쳐져야 함"). 따로 있던 #how 챕터(세 층, 문 셋, 하지 않는 것)가 이 챕터의
@@ -1342,7 +1360,8 @@ export default function NaruHome() {
             그 전의 주석: #december 뒤로 내려온 이유(2026-09-17)는 git 이력에. */}
         {/* 2026-09-26 (한 축 브리프): 헤어라인과 머리, 리드는 READ. 세 층 도식만 WIDE(LayerDiagram). */}
         <div id="how" className="mt-10 text-left lg:mt-16">
-        <div className={`${READ} border-t border-white/10 pt-8 lg:pt-12`}>
+        {/* DECIDED 2026-10-05 (사용자, 스크린숏: "다 중간에"): 소제목, h3, 리드는 가운데. 도식과 버튼 셋이 이미 가운데입니다. */}
+        <div className={`${READ} border-t border-white/10 pt-8 text-balance text-center lg:pt-12`}>
 
           {/* "세 층"은 챕터 라벨이 아니라 챕터 안 소제목입니다(가독성 브리프 4.2의 표). 알약을 벗습니다. */}
           <p data-subheading className={SUBHEADING}>{t(naru.how.eyebrow)}</p>
@@ -1350,7 +1369,7 @@ export default function NaruHome() {
         {/* 2026-09-25 (가독성 브리프 5 표의 4행, 사용자 승인): 폰에서도 리드를 보입니다. 새 줄을
             붙이는 대신 "누가 무엇을 내는가"를 이미 말하는 이 문장을 폰에서 접지 않습니다.
             그 전에는 폰에서 접었습니다(다이어그램과 아래 한 줄이 같은 말을 한다는 이유). */}
-        <p className={`${MEASURE} mt-6 break-keep text-left text-base leading-relaxed text-white/75`}>
+        <p className={`${MEASURE_C} mt-6 break-keep text-center text-base leading-relaxed text-white/75`}>
           {t(naru.how.lead)}
         </p>
         </div>
@@ -1416,9 +1435,14 @@ export default function NaruHome() {
           주장부터 하게 됩니다. */}
       <Chapter id="join" labelledBy="join-title" align="center">
         <PlateSegment id="join" read>
-        <div className={READ}><Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.join.eyebrow)}</Eyebrow></div>
-        <h2 id="join-title" className={`${H2} ${READ}`}><Halo tone="violet">{t(naru.join.heading)}</Halo></h2>
-        <p className={`${READ} ${READ_MEASURE} mt-6 break-keep text-left text-base leading-relaxed text-white/75`}>
+        {/* DECIDED 2026-10-03 (사용자, 스크린숏: "다 centre로"): 이 챕터의 머리(h2, 리드)도 가운데입니다.
+            머리가 왼쪽인 챕터는 이제 없습니다. 세 칸부터는 왼쪽 끝 그대로.
+            DECIDED 2026-10-05 (사용자, 스크린숏: "다 중간에"): 세 칸 아래의 문단(공통 조건, 안전장치 두 줄, 닫는
+            문장과 그 아래)도 가운데입니다. 왼쪽 끝으로 남는 것은 세 칸의 카드 안뿐입니다.
+            같은 날 (사용자: "알약은 빼줘"): 알약을 제목과 같은 말로 바꿨더니 위아래로 겹쳐서 그리지 않습니다.
+            join.eyebrow 키는 data/naru.ts에 그대로 있습니다. */}
+        <h2 id="join-title" className={`${H2} ${READ} text-balance text-center`}><Halo tone="violet">{t(naru.join.heading)}</Halo></h2>
+        <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-center text-base leading-relaxed text-white/90`}>
           {t(naru.join.lead)}
         </p>
 
@@ -1451,7 +1475,7 @@ export default function NaruHome() {
         {/* 세 곳에 공통된 조건 하나(매니페스토 I장). 장소를 가리지 않습니다.
             같은 I장의 다른 나라 학생과의 비교는 가져오지 않았습니다. */}
         <Reveal>
-        <p className={`${READ} ${READ_MEASURE} mt-8 break-keep text-left text-base leading-relaxed text-white/75`}>
+        <p className={`${READ} ${READ_MEASURE_C} mt-10 break-keep text-center text-base leading-relaxed text-white/75`}>
           {t(naru.join.milestones)}
         </p>
         </Reveal>
@@ -1460,16 +1484,16 @@ export default function NaruHome() {
             합니다. 첫 줄이 없으면 폐쇄적인 모임으로, 둘째 줄이 없으면 억울함의
             호소로 읽힙니다. 한 줄만 그리지 마세요.
             DECIDED 2026-10-02 (사용자: 가독성 리뷰): 밝기 /55 → /70. 이 두 줄은 각주가 아니라 주장입니다. */}
-        <Reveal className={`${READ} ${READ_MEASURE} mt-8 space-y-3 break-keep text-left text-sm leading-relaxed text-white/70`}>
+        <Reveal className={`${READ} ${READ_MEASURE_C} mt-8 space-y-3 break-keep text-center text-sm leading-relaxed text-white/70`}>
           {naru.join.guards.map((guard, i) => (
-            <p key={i}>{t(guard)}</p>
+            <p key={i} className="text-balance">{t(guard)}</p>
           ))}
         </Reveal>
 
         {/* 규모 숫자는 출처가 확인되기 전까지 그리지 않습니다. statTbd 키는
             data/naru.ts에 있습니다. */}
         {JOIN_STAT_CONFIRMED && (
-          <p className={`${READ} ${READ_MEASURE} mt-6 break-keep text-left text-sm leading-relaxed text-white/70`}>
+          <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-center text-sm leading-relaxed text-white/70`}>
             {t(naru.join.statTbd)}
           </p>
         )}
@@ -1477,13 +1501,13 @@ export default function NaruHome() {
         {/* 챕터를 닫는 자리(DECIDED 2026-09-19, 사용자: "그 공간을 왜 이 자리가
             필요한가에 더 할애"). 매니페스토 표지의 한 줄과 V장입니다. 앞의 세 칸이
             결핍이고, 이 두 문단이 그래서 무엇을 앞당겨 두는지입니다. */}
-        <Reveal className={`${READ} mt-12 text-left`}>
-          <p className={STATEMENT}>{t(naru.join.closingStatement)}</p>
+        <Reveal className={`${READ} mt-12 text-balance text-center`}>
+          <p className={`${STATEMENT} text-balance`}>{t(naru.join.closingStatement)}</p>
           {/* 닫는 문장 옆의 구체적인 한 줄(가독성 브리프 5, 2026-09-25 사용자 승인). 이름은 naruDates. */}
-          <p className={`${MEASURE} mt-3 break-keep text-left text-base leading-relaxed text-white/75`}>{t(naru.join.closingConcrete).replace("{name}", decemberEventLabel(locale))}</p>
-          <div className={`${MEASURE} mt-5 space-y-3 break-keep text-sm leading-relaxed text-white/70`}>
+          <p className={`${MEASURE_C} mt-3 break-keep text-center text-base leading-relaxed text-white/75`}>{t(naru.join.closingConcrete).replace("{name}", decemberEventLabel(locale))}</p>
+          <div className={`${MEASURE_C} mt-5 space-y-3 break-keep text-sm leading-relaxed text-white/70`}>
             {naru.join.closingBody.map((line, i) => (
-              <p key={i}>{t(line)}</p>
+              <p key={i} className="text-balance">{t(line)}</p>
             ))}
           </div>
         </Reveal>
@@ -1506,7 +1530,7 @@ export default function NaruHome() {
             문장과 순서는 그대로입니다. */}
         <div aria-hidden className={`${READ} mt-12 h-px bg-white/10`} />
         {/* DECIDED 2026-09-30 (사용자): 매니페스토 블록은 가운데. 글이 가운데면 버튼도 가운데(2026-09-29). */}
-        <Reveal id="join-ways" className={`${READ} mt-10 text-center`}>
+        <Reveal id="join-ways" className={`${READ} mt-10 text-balance text-center`}>
           {/* "PDF · 1.0MB" (2026-09-19, 모바일 감사 21). 쪽 수와 파일 크기 줄을
               뺀 결정(data/naru.ts)은 그대로 존중합니다. 이건 그 줄을 되살리는 게
               아니라 라벨 옆의 한 조각입니다. 버튼의 ↓는 **형식을 말하지 않고**,
@@ -1519,7 +1543,7 @@ export default function NaruHome() {
             <span className="font-medium normal-case tracking-normal text-white/40">{"\u2002·\u2002PDF 0.9MB"}</span>
           </p>
           <h3 className="mt-3 break-keep text-base font-bold text-white">{t(naru.join.manifesto.title)}</h3>
-          <p className="mt-2 break-keep text-sm leading-relaxed text-white/70">{t(naru.join.manifesto.body)}</p>
+          <p className="mt-2 text-balance break-keep text-sm leading-relaxed text-white/70">{t(naru.join.manifesto.body)}</p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             <a
               href={naruLinks.manifesto}
