@@ -1344,6 +1344,10 @@ export default function NaruHome() {
           <p className={`${MEASURE_C} mt-3 hidden break-keep text-center text-base leading-relaxed text-white/75 lg:block`}>
             {t(naru.why.noteBody)}
           </p>
+          {/* DECIDED 2026-10-05 (사용자: "설명을 더"): 부연이 두 문단입니다. 둘 다 폰에서는 접습니다(위와 같은 이유). */}
+          <p className={`${MEASURE_C} mt-3 hidden break-keep text-center text-base leading-relaxed text-white/75 lg:block`}>
+            {t(naru.why.noteClose)}
+          </p>
         </Reveal>
 
         {/* 마지막 줄. 페이지 전체가 여기서 끝납니다. 위의 두 개를 빼면 전부
@@ -1352,6 +1356,7 @@ export default function NaruHome() {
         <Reveal className={`${READ} mt-8 text-balance text-center lg:mt-12`}>
           <h3 data-subheading className={SUBHEADING}>{t(naru.why.agendaLabel)}</h3>
           <p className={`${MEASURE_C} mt-3 break-keep text-center text-base leading-relaxed text-white/75`}>{t(naru.why.agenda)}</p>
+          <p className={`${MEASURE_C} mt-3 break-keep text-center text-base leading-relaxed text-white/75`}>{t(naru.why.agendaMore)}</p>
         </Reveal>
               {/* ── 어떻게 일하는가 (DECIDED 2026-09-18, 사용자: "나루와 학생회와 기업 내용은 하나의
             챕터로 합쳐져야 함"). 따로 있던 #how 챕터(세 층, 문 셋, 하지 않는 것)가 이 챕터의
@@ -1369,9 +1374,8 @@ export default function NaruHome() {
         {/* 2026-09-25 (가독성 브리프 5 표의 4행, 사용자 승인): 폰에서도 리드를 보입니다. 새 줄을
             붙이는 대신 "누가 무엇을 내는가"를 이미 말하는 이 문장을 폰에서 접지 않습니다.
             그 전에는 폰에서 접었습니다(다이어그램과 아래 한 줄이 같은 말을 한다는 이유). */}
-        <p className={`${MEASURE_C} mt-6 break-keep text-center text-base leading-relaxed text-white/75`}>
-          {t(naru.how.lead)}
-        </p>
+        {/* DECIDED 2026-10-05 (사용자, 스크린숏: "라는 설명은 생략"): 리드(how.lead)는 그리지 않습니다. 누가 무엇을
+            내는지는 바로 아래 세 층 도식이 칸마다 말합니다. 키는 data/naru.ts에 그대로. */}
         </div>
 
         <Reveal>

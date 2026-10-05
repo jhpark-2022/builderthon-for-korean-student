@@ -658,9 +658,16 @@ export const naru = {
       ko: "문턱은 스크리닝 없는 참가이고, 롤모델은 건너간 뒤 다시 돌아와 서는 사람입니다.",
       en: "The low doorway is entry with no screening. The role models are the people who crossed and came back to stand here.",
     },
+    // DECIDED 2026-10-05 (사용자, 스크린숏: "여기에는 설명을 더 넣어줘도 좋을거 같아"): 한 문단이던 것을 둘로
+    // 나눠 풀었습니다. noteBody는 하나만 있을 때 왜 그렇게 되는지(친목 모임, 소수의 클럽)를 말하고,
+    // noteClose는 전의 둘째 문장 그대로입니다. 가운데 문단은 세 줄까지라 한 문단을 늘리지 않고 문단을 늘립니다.
     noteBody: {
-      ko: "둘 중 하나만 있으면 친목 모임이거나 소수의 클럽이 됩니다. 둘을 동시에 지키는 것이 이 그룹이 하는 일이고, 부딪힐 때 어느 쪽으로 기울일지 매번 판단하는 것이 실력입니다.",
-      en: "With only one, you end up a social circle or a small elite club. Holding both is this group's work, and leaning the right way when they collide is the skill.",
+      ko: "문턱만 낮으면 사람은 모여도 어디까지 갈 수 있는지 보여 줄 사람이 없어 친목 모임이 됩니다. 롤모델만 있으면 이미 잘하는 소수의 클럽이 됩니다.",
+      en: "With only a low doorway, people gather but no one shows how far you can go, and it becomes a social circle. With only role models, it becomes a small club of the already good.",
+    },
+    noteClose: {
+      ko: "둘을 동시에 지키는 것이 이 그룹이 하는 일이고, 부딪힐 때 어느 쪽으로 기울일지 매번 판단하는 것이 실력입니다.",
+      en: "Holding both is this group's work, and leaning the right way when they collide is the skill.",
     },
     agendaLabel: { ko: "방법은 바뀝니다", en: "The method changes" },
     agenda: {
@@ -670,6 +677,12 @@ export const naru = {
       // DECIDED 2026-10-05 (사용자: 가운데 글 가독성 감사): 가운데 문단은 세 줄까지라 줄였습니다. 뺀 것: "어젠다는 상황을 따라 바뀌고", "건널 때 젓는 노가 지금은 AI입니다".
       ko: "AI도, 8일이라는 길이도, 지금의 형식도 방법입니다. 8일이 4일이 되어도 됩니다. 바뀌면 안 되는 것은 위의 두 개뿐입니다.",
       en: "AI, the eight days, the format: all method. Eight days may become four. Only the two above cannot change.",
+    },
+    // DECIDED 2026-10-05 (사용자, 스크린숏: "여기에는 설명을 더 넣어줘도 좋을거 같아"): 같은 날 줄이면서 뺀 두
+    // 문장(어젠다, 노가 AI)을 둘째 문단으로 되살립니다. 왜 지금은 AI인지를 이 줄이 말합니다.
+    agendaMore: {
+      ko: "어젠다는 상황을 따라 바뀝니다. 건널 때 젓는 노가 지금은 AI이고, 노가 바뀌면 방법도 따라 바뀝니다.",
+      en: "The agenda follows the situation. Right now the oar you cross with is AI, and when the oar changes, so does the method.",
     },
   },
 
