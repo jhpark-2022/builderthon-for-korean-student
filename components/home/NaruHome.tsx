@@ -1215,11 +1215,9 @@ export default function NaruHome() {
         <p className={`${READ} ${READ_MEASURE} mt-6 break-keep text-left text-base leading-relaxed text-white/75`}>
           {t(naru.group.lead)}
         </p>
-        {/* 서명 헤어라인. 이 페이지에서 한 번. */}
-        <div
-          aria-hidden
-          className={`${READ} mt-8 h-[2px] bg-gradient-to-r from-accent to-accent-strong lg:mt-12`}
-        />
+        {/* DECIDED 2026-10-05 (사용자, 스크린숏: "한 파트로 그냥 합쳐줘. 중간에 선 두고 나누지 말고"): 여기 있던
+            서명 헤어라인(2px 그라디언트)을 뺐습니다. 리드와 "8월이 남긴 것"은 선 없이 한 덩어리로 이어집니다.
+            선이 갖던 위아래 여백은 아래 블록의 mt 하나로 줄였습니다. */}
         {/* 라벨만. "우리는 두 가지를 만들려고 모였습니다" 제목은 내려갔습니다
             (2026-09-17 3차). 태그라인이 바로 위에 H2로 있고, lead가 "바뀌지 않는
             것은 아래 두 개"라고 이미 말합니다. 같은 챕터에 큰 제목 둘은 길이만
@@ -1233,7 +1231,7 @@ export default function NaruHome() {
             같은 문단과 짝을 볼 자리). 명단은 아래 아카이브 버튼 너머에 있습니다. */}
         {/* DECIDED 2026-09-30 (사용자, 스크린숏: "이것들도 center로"): 이 블록 전체(알약, h3, 두 문장, 버튼)는
             가운데입니다. 글이 가운데면 버튼도 가운데(2026-09-29). */}
-        <Reveal id="record" className={`${READ} mt-8 text-center lg:mt-12`}>
+        <Reveal id="record" className={`${READ} mt-12 text-center lg:mt-16`}>
           <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.record.eyebrow)}</Eyebrow>
           <h3 className={H3}>{t(naru.record.heading)}</h3>
           {/* DECIDED 2026-10-02 (사용자: "폰에서도 가운데 정렬로 되돌려줘"): 두 문장은 폰에서도 가운데(위 12월 머리와 같은 결정). */}
