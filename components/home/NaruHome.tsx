@@ -1861,7 +1861,11 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
       // 아래의 글은 전부 왼쪽 정렬입니다. 상자의 배치(가운데가 나루)는 그대로입니다.
       // DECIDED 2026-10-02 (사용자: "상자 3개가 좀 위로 너무 높은 느낌"): md부터의 위아래 안쪽 여백 py-5를
       // 걷어 폰과 같은 py-3으로, 글 사이 간격도 md부터 mt-2 → mt-1.5. 글자 크기와 줄 수는 그대로입니다.
-      className={`flex flex-1 flex-col justify-center rounded-2xl border px-4 py-3 text-left ${
+      // DECIDED 2026-10-05 (사용자, 스크린숏: "여기 너무 어색, 공간 사이의 gap도 너무 크고"): md부터 상자 안의
+      // 글(이름, 내는 것, 얻는 것)도 칩과 같이 가운데입니다. 칩만 가운데이고 글이 왼쪽이라 한 상자에 축이
+      // 둘이었습니다(2026-09-25의 "상자 안 글은 왼쪽"은 이 결정이 대신합니다). 글은 위에서부터 쌓아(md:justify-start)
+      // 세 칩이 한 줄에 섭니다. 그 전에는 줄 수가 다른 가운데 상자의 칩만 25px 위에 있었습니다. 폰은 그대로.
+      className={`flex flex-1 flex-col justify-center rounded-2xl border px-4 py-3 text-left md:justify-start md:py-4 md:text-center ${
         center
           ? "border-white/20 bg-white/[0.06]"
           : "border-white/10 bg-white/[0.04]"
@@ -1888,7 +1892,7 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
               width={locale === "en" ? 857 : 604}
               height={locale === "en" ? 142 : 168}
               unoptimized={locale === "en"}
-              className={locale === "en" ? "h-5 w-auto sm:h-6" : "h-6 w-auto sm:h-7"}
+              className={`md:mx-auto ${locale === "en" ? "h-5 w-auto sm:h-6" : "h-6 w-auto sm:h-7"}`}
             />
           </p>
         ) : (
@@ -1933,7 +1937,8 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
 
   return (
     // data-figure: 세 층 도식은 그림이라 안쪽 정렬(상자, 점선 가운데 라벨)은 그대로이고, 바깥 왼쪽 끝만 READ에 맞춥니다(왼쪽 끝 브리프 2.2).
-    <div data-figure="layers" className={`${READ} mt-8 lg:mt-12`}>
+    // DECIDED 2026-10-05 (사용자: "gap도 너무 크고"): 리드가 내려가 제목 바로 아래가 됐습니다. mt-8/12 → mt-5/6.
+    <div data-figure="layers" className={`${READ} mt-5 lg:mt-6`}>
       {/* 양옆이 직접 만난다는 선(2026-10-01). 그 전에는 "서로 닿지 않는다"는 점선이었고, 뜻이 뒤집히면서
           끊긴 선을 이어진 실선으로 바꿨습니다. 데스크톱에서만 그립니다. 세로로 선 모바일에서는
           "양옆"이라는 배치 자체가 없어서 선이 뜻을 잃습니다. 모바일에서는 같은 말을 아래 한 줄이 글로 합니다. */}
