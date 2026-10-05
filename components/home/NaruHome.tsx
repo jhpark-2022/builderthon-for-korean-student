@@ -1369,8 +1369,9 @@ export default function NaruHome() {
         <div className={`${READ} border-t border-white/10 pt-8 text-balance text-center lg:pt-12`}>
 
           {/* "세 층"은 챕터 라벨이 아니라 챕터 안 소제목입니다(가독성 브리프 4.2의 표). 알약을 벗습니다. */}
-          <p data-subheading className={SUBHEADING}>{t(naru.how.eyebrow)}</p>
-          <h3 className={`${H3} mt-2`}>{t(naru.how.heading)}</h3>
+          {/* DECIDED 2026-10-06 (사용자, 스크린숏: "세 층 빼주고"): 소제목 "세 층"(how.eyebrow)은 그리지 않습니다.
+              제목 하나만 섭니다. 키는 data/naru.ts에 그대로. */}
+          <h3 className={H3}>{t(naru.how.heading)}</h3>
         {/* 2026-09-25 (가독성 브리프 5 표의 4행, 사용자 승인): 폰에서도 리드를 보입니다. 새 줄을
             붙이는 대신 "누가 무엇을 내는가"를 이미 말하는 이 문장을 폰에서 접지 않습니다.
             그 전에는 폰에서 접었습니다(다이어그램과 아래 한 줄이 같은 말을 한다는 이유). */}
@@ -1939,26 +1940,16 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
     // data-figure: 세 층 도식은 그림이라 안쪽 정렬(상자, 점선 가운데 라벨)은 그대로이고, 바깥 왼쪽 끝만 READ에 맞춥니다(왼쪽 끝 브리프 2.2).
     // DECIDED 2026-10-05 (사용자: "gap도 너무 크고"): 리드가 내려가 제목 바로 아래가 됐습니다. mt-8/12 → mt-5/6.
     <div data-figure="layers" className={`${READ} mt-5 lg:mt-6`}>
-      {/* 양옆이 직접 만난다는 선(2026-10-01). 그 전에는 "서로 닿지 않는다"는 점선이었고, 뜻이 뒤집히면서
-          끊긴 선을 이어진 실선으로 바꿨습니다. 데스크톱에서만 그립니다. 세로로 선 모바일에서는
-          "양옆"이라는 배치 자체가 없어서 선이 뜻을 잃습니다. 모바일에서는 같은 말을 아래 한 줄이 글로 합니다. */}
-      <div className="hidden items-center gap-3 px-6 md:flex">
-        <span aria-hidden className="h-px flex-1 border-t border-white/15" />
-        <span className={`break-keep text-[0.68rem] font-semibold uppercase ${latinTrack(locale)} text-white/55`}>
-          {t(naru.how.diagramNote)}
-        </span>
-        <span aria-hidden className="h-px flex-1 border-t border-white/15" />
-      </div>
-      <div className="mt-3 flex flex-col items-stretch gap-2 md:flex-row md:items-stretch">
+      {/* DECIDED 2026-10-06 (사용자, 스크린숏: "이거 빼줘"): 상자 위의 선과 "직접 만나 진심으로 교류합니다"
+          (how.diagramNote)는 그리지 않습니다. 폰에서 같은 말을 하던 아래 한 줄도 같이 내렸습니다. 둘이 나루에서
+          만난다는 것은 가운데를 가리키는 화살표 둘이 말합니다. 키는 data/naru.ts에 그대로. */}
+      <div className="flex flex-col items-stretch gap-2 md:flex-row md:items-stretch">
         {box(organiser)}
         {arrow("left")}
         {box(host, true)}
         {arrow("right")}
         {box(sponsor)}
       </div>
-      <p className="mt-4 break-keep text-left text-xs text-white/55 md:hidden">
-        {t(naru.how.diagramNote)}
-      </p>
     </div>
   );
 }
