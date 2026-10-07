@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { WATER_VERT, WATER_FRAG } from "../shaders/water";
 import { disposeMaterial } from "../utils/Disposable";
+import { WATER_BASE } from "../config";
 
 /**
  * 나루터 수면 레이어. 전체 화면을 덮는 사각형 하나입니다.
@@ -65,14 +66,13 @@ export class WaterSurface {
         uMorph: { value: 0 },
         // 문서 끝에서 깊은 물의 빛을 거두는 값 0..1 (2026-09-26). BackgroundScene이 #closing에서 셉니다.
         uEnd: { value: 0 },
+        // 하늘과 물의 바탕색 셋은 lib/background/config.ts의 WATER_BASE에 있습니다(2026-10-07, 밝기 조정).
         // 밤하늘 꼭대기. 남색보다 더 어둡게 떨어뜨립니다.
-        uSkyTop: { value: new THREE.Color("#03050F") },
-        // 지평선의 남색. 로고 가이드의 #12246B를 그대로 쓰면 화면 가운데가
-        // 너무 밝아져 본문이 앉을 자리가 없습니다. 같은 색상환에서 명도만
-        // 내린 값입니다(227.9도 유지).
-        uSkyHorizon: { value: new THREE.Color("#0B1540") },
+        uSkyTop: { value: new THREE.Color(WATER_BASE.skyTop) },
+        // 지평선의 남색.
+        uSkyHorizon: { value: new THREE.Color(WATER_BASE.skyHorizon) },
         // 가까운 물. 거의 검정입니다.
-        uDeep: { value: new THREE.Color("#04060F") },
+        uDeep: { value: new THREE.Color(WATER_BASE.deep) },
         // 물비늘. 자주 #9A5A82의 밝은 쪽.
         uGlint: { value: new THREE.Color("#C79BB4") },
         // 등불. 주황 원색 그대로입니다. 화면에서 주황은 이것 하나뿐이라

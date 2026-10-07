@@ -1966,6 +1966,8 @@ export const naru = {
     // 첫 칸의 성격이 바뀐 것이 요점입니다. "본 일정 전"은 날짜가 없는 준비였는데,
     // Day 0은 날짜가 붙고 3시간짜리 세션이 있는 하루입니다. 다만 스테이지는
     // 아닙니다(아래 note). 다섯 칸을 같은 무게로 그리지 마세요.
+    // DECIDED 2026-10-07 (이슈 브리프 4.2): 일정표에서 Day 0 행을 흐리게 하지 않습니다. 진한 회색 글이 바탕에
+    // 묻혔습니다. 스테이지가 아니라는 것은 아래 line 문장이 말하고, 밝기는 다섯 행이 같습니다.
     stages: [
       {
         name: { ko: "Context Open", en: "Context Open" },
@@ -1977,7 +1979,7 @@ export const naru = {
           en: "The data opens, with the companies, what they are asking about, and a guide to using it. Not cleaned up for you. Just where everything is.",
         },
         // 2026-09-30 (사용자, 문장 감사): "…장치이지, 별도의 스테이지가 아닙니다"였습니다. 부정 병치를 풀었습니다.
-        // 뜻(스테이지가 아니다)은 그대로이고, NaruHome이 이 행을 한 단 낮게 그리는 것도 그대로입니다.
+        // 뜻(스테이지가 아니다)은 그대로입니다. (2026-10-07부터 NaruHome은 이 행을 한 단 낮게 그리지 않습니다.)
         line: {
           ko: "Day 1에 쓸 시간을 벌어 주는 날입니다. 스테이지로 세지 않습니다.",
           en: "It buys back time for Day 1. It does not count as a stage.",

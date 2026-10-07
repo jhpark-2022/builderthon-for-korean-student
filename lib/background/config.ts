@@ -31,6 +31,26 @@ export const PALETTE = {
   hi1: "#EE8A4F",
 } as const;
 
+/**
+ * 나루 홈(water 변형)의 하늘과 물 바탕색. WaterSurface가 읽습니다.
+ *
+ * DECIDED 2026-10-07 (이슈 브리프 4.3): 배경이 조금 어둡다는 피드백으로 한 단 밝힙니다. 바뀌는 것은 이 세 값의
+ * 명도뿐이고 색상(남색 228도 안팎)과 형상, 빛, 파문의 모양은 그대로입니다. 글을 숨긴 배경만의 화면에서 평균
+ * 휘도가 15~25% 오르는 것이 목표이고, 본문 대비 7:1과 작은 글자 4.5:1을 지키는 선에서 멈춥니다. 읽기 판도 같은
+ * 날 한 단 엷어졌습니다(app/globals.css의 .reading-plate).
+ * 위 PALETTE는 건드리지 않습니다. 8월 페이지(/2026-08)의 필드가 같이 읽는 값이라 바꾸면 그 페이지가 바뀝니다.
+ *
+ *   skyTop      밤하늘 꼭대기. 그 전 #03050F
+ *   skyHorizon  지평선의 남색. 그 전 #0B1540. 로고의 #12246B를 그대로 쓰면 화면 가운데가 너무 밝아 본문이
+ *               앉을 자리가 없습니다. 같은 색상환에서 명도만 내린 값입니다.
+ *   deep        가까운 물. 그 전 #04060F
+ */
+export const WATER_BASE = {
+  skyTop: "#040712",
+  skyHorizon: "#0E1949",
+  deep: "#050812",
+} as const;
+
 /** Responsive particle budget. Picked at init from viewport + device tier. */
 export interface QualityTier {
   particles: number;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { META } from "@/components/ui/typography";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 노선도, 일반형 (2026-09-17, 8월 문법 브리프).
@@ -117,11 +118,13 @@ export default function RouteMap({
                   )}
                 </span>
                 {s.sub && (
-                  <span className={`text-[0.62rem] font-bold leading-none ${anchor ? "text-[#C79BB4]" : spot ? "text-accent" : "text-white/55"}`}>
+                  // 2026-10-07 (이슈 브리프 4): 이 파일의 글자는 전부 META(13.5px)입니다. 그 전의 0.58~0.72rem은
+                  // 홈에서 12.24px로 올려 그리고 있었습니다(globals.css의 naru-min12). 회색은 /65 이상.
+                  <span className={`${META} font-bold leading-none ${anchor ? "text-[#C79BB4]" : spot ? "text-accent" : "text-white/65"}`}>
                     {s.sub}
                   </span>
                 )}
-                <span className={`break-keep text-[0.68rem] leading-tight ${anchor || spot ? "font-bold text-white" : "text-white/75"}`}>
+                <span className={`break-keep ${META} leading-tight ${anchor || spot ? "font-bold text-white" : "text-white/75"}`}>
                   {s.label}
                 </span>
                 {/* 배지는 sm부터 (2026-09-19, 모바일 감사 3). 폰에서 정거장 한 칸이
@@ -132,7 +135,7 @@ export default function RouteMap({
                     같은 뜻은 폰의 Day 카드 안 칩이 이미 말하고, 바로 아래 범례도
                     같은 이유로 sm부터입니다(규칙이 일관됩니다). 노드의 ★는 남습니다. */}
                 {anchor && s.badge && (
-                  <span className="absolute left-1/2 top-full mt-0.5 hidden -translate-x-1/2 whitespace-nowrap rounded-full border border-[#9A5A82]/50 bg-[#9A5A82]/[0.12] px-1.5 py-0.5 text-[0.58rem] font-bold leading-none text-[#C79BB4] sm:inline-flex">
+                  <span className={`absolute left-1/2 top-full mt-0.5 hidden -translate-x-1/2 whitespace-nowrap rounded-full border border-[#9A5A82]/50 bg-[#9A5A82]/[0.12] px-1.5 py-0.5 ${META} font-bold leading-none text-[#C79BB4] sm:inline-flex`}>
                     {s.badge}
                   </span>
                 )}
@@ -148,7 +151,7 @@ export default function RouteMap({
                 360px 화면(가용 306px)에서 10px 여유뿐이었습니다. 폰에서는 접히게 두고
                 가운데 정렬합니다. 두 줄이 되어도 ol의 pb-10 안에 듭니다.
                 (2026-09-20에 문구가 짧아졌지만 규칙은 문구에 기대지 않습니다.) */}
-            <span className="flex max-w-full items-center gap-1.5 rounded-full border border-accent/40 bg-transparent px-2.5 py-1 text-center text-[0.72rem] font-semibold leading-tight text-accent sm:whitespace-nowrap sm:leading-none">
+            <span className={`flex max-w-full items-center gap-1.5 rounded-full border border-accent/40 bg-transparent px-2.5 py-1 text-center ${META} font-semibold leading-tight text-accent sm:whitespace-nowrap sm:leading-none`}>
               <span aria-hidden className="h-[7px] w-[7px] shrink-0 rounded-full bg-accent/80" />
               {pill}
             </span>
@@ -158,16 +161,16 @@ export default function RouteMap({
       {/* 범례는 sm부터. 폰에서는 Day 카드의 "★ 제출" 칩이 같은 뜻을 말합니다(2026-09-18). */}
       {legend && (
         <div className="mt-3 hidden flex-wrap items-center gap-x-4 gap-y-1.5 sm:flex">
-          <span className="flex items-center gap-1.5 text-[0.66rem] text-[#C79BB4]/90">
+          <span className={`flex items-center gap-1.5 ${META} text-[#C79BB4]/90`}>
             <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-[#C79BB4]/60 bg-[#9A5A82]/40 text-[0.42rem] text-white">★</span>
             {legend.anchor}
           </span>
-          <span className="flex items-center gap-1.5 text-[0.66rem] text-white/50">
+          <span className={`flex items-center gap-1.5 ${META} text-white/65`}>
             <span aria-hidden className="h-2 w-2 rounded-full border border-white/35" />
             {legend.plain}
           </span>
           {legend.spot && (
-            <span className="flex items-center gap-1.5 text-[0.66rem] text-accent/85">
+            <span className={`flex items-center gap-1.5 ${META} text-accent/85`}>
               <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-accent/60 bg-accent/20">
                 <span className="h-1.5 w-1.5 rounded-full bg-accent" />
               </span>
