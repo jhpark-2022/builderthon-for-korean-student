@@ -9,8 +9,8 @@
 //                  join_type, team_name, wants_matching, consent).
 //   fixed 없음   → answers jsonb에 key → 답으로. 질문이 늘면 여기에 줄 하나.
 //
-// 지금 넣은 것: 고정 열과 팀/솔로, 동의뿐입니다. 추가 질문은 넣지 않았습니다(사용자가
-// 정하면 더합니다). 동의 문구는 자리만 있습니다(TODO: confirm).
+// 지금 넣은 것: 고정 열과 팀/솔로, 동의, 그리고 추가 질문 둘(전공, AI 활용 수준. 2026-10-07).
+// 동의 문구는 자리만 있습니다(TODO: confirm).
 // 카피는 data/naru.ts의 register 블록이 아니라 여기 label에 {ko, en}으로 둡니다. 질문과
 // 라벨이 한 줄에 있어야 질문을 바꿀 때 한 곳만 고칩니다.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -79,8 +79,24 @@ export const CROSSING_FORM: Field[] = [
     label: { ko: "개인정보 수집과 이용에 동의합니다.", en: "I agree to the collection and use of my personal data." },
     help: { ko: "TODO: confirm. 수집 항목과 보관 기간 문구.", en: "TODO: confirm. Items collected and retention period." } },
   // ── 추가 질문 ────────────────────────────────────────────────────────────
-  // 여기에 줄을 더합니다. fixed 없이. 예:
-  // { key: "major", scope: "member", type: "text", required: false, label: { ko: "전공", en: "Major" } },
+  // 여기에 줄을 더합니다. fixed 없이(answers jsonb로 갑니다. 표의 스키마는 바뀌지 않습니다).
+  // key, scope, label 순서를 지키세요. 명단 스크립트(scripts/build-crossing-roster.py의 form_keys)가
+  // 이 파일을 정규식으로 읽어 열을 만듭니다.
+  // DECIDED 2026-10-07 (이슈 브리프 3): 8월 폼에 전공과 AI 활용 수준 둘을 더합니다. 사람 단위라 팀이면
+  // 팀원마다 묻습니다. AI 활용 수준은 워크숍을 맞추려는 질문이고 선발에 쓰지 않습니다. 그 말을 도움말로
+  // 선택지 바로 아래에 둡니다. 선택지 넷은 브리프 D4의 초안입니다. 값(value)은 answers에 그대로 남으니
+  // 한번 받기 시작하면 바꾸지 마세요(라벨은 바꿔도 됩니다).
+  { key: "major", scope: "member", type: "text", required: true, maxLen: 80,
+    label: { ko: "전공", en: "Major" } },
+  { key: "ai_level", scope: "member", type: "select", required: true,
+    label: { ko: "지금 AI를 어디까지 써 봤나요?", en: "How far have you used AI so far?" },
+    help: { ko: "워크숍을 여러분에게 맞추기 위해 묻는 것이고, 이것으로 선발하지 않습니다.", en: "We ask this to fit the workshops to you. It is not used for selection." },
+    options: [
+      { value: "none", label: { ko: "아직 거의 써 보지 않았습니다", en: "I have barely used it yet" } },
+      { value: "chatbot", label: { ko: "챗봇(ChatGPT 등)을 공부나 일에 써 봤습니다", en: "I have used a chatbot (ChatGPT and the like) for study or work" } },
+      { value: "coding_tool", label: { ko: "AI 코딩 도구로 작은 것을 직접 만들어 봤습니다", en: "I have built something small myself with an AI coding tool" } },
+      { value: "cli_agent", label: { ko: "터미널에서 CLI 에이전트를 쓰고, MCP로 도구를 연결해 봤습니다", en: "I use a CLI agent in the terminal and have connected tools through MCP" } },
+    ] },
 ];
 
 export const MEMBER_FIELDS = CROSSING_FORM.filter((f) => f.scope === "member");
