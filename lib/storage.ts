@@ -14,6 +14,10 @@ export const STORAGE_PREFIX = "z100-";
 export const QUIZ_OWN_KEY = "z100-quiz-own";
 // localStorage — durable quiz result (returning-visitor greeting / attach).
 export const QUIZ_RESULT_KEY = "z100-quiz-result";
+// 12월판(/match, 크로싱 서울 현장 팀 매칭)의 같은 두 키와 기기 토큰 (2026-10-08). 접두사가 z100-이 아니라서
+// 8월 페이지의 ?reset=1 청소(clearSiteStorage)에 걸리지 않습니다. 8월 결과와 섞이지 않게 따로 둡니다.
+export const MATCH_OWN_KEY = "naru-match-own-2026-12";
+export const MATCH_RESULT_KEY = "naru-match-result-2026-12";
 // sessionStorage — register-form draft saved across the quiz round-trip.
 export const REGISTER_DRAFT_KEY = "z100-register-draft";
 // localStorage — "already registered" flag (nav button → "등록 완료 ✓").

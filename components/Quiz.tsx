@@ -9,7 +9,6 @@ import Confetti from "@/components/Confetti";
 import LocaleToggle from "@/components/LocaleToggle";
 import {
   QUESTIONS,
-  RESULTS,
   quizUI,
   axisMeta,
   type Axis,
@@ -19,7 +18,7 @@ import {
 } from "@/data/quiz";
 import { scoreQuiz, parseResultId, type Choice, type QuizResult, type AxisScore } from "@/lib/quizScore";
 import { saveOwnResult, loadOwnResult, type OwnResult } from "@/lib/quizResult";
-import { QUIZ_OWN_KEY as OWN_KEY } from "@/lib/storage";
+import { QUIZ_EDITIONS, type QuizEdition, type EditionConfig } from "@/data/quizEditions";
 import { getExplanation } from "@/data/quizExplanations";
 
 type Phase = "landing" | "quiz" | "analyzing" | "result";
@@ -32,28 +31,28 @@ type Phase = "landing" | "quiz" | "analyzing" | "result";
 // storage) — and any failure silently falls back to treating it as a share.
 // (OWN_KEY is centralized in lib/storage.ts so the ?reset=1 sweep covers it.)
 
-function readOwnResult(): string | null {
+function readOwnResult(key: string): string | null {
   if (typeof window === "undefined") return null;
   try {
-    return window.sessionStorage.getItem(OWN_KEY);
+    return window.sessionStorage.getItem(key);
   } catch {
     return null;
   }
 }
 
-function writeOwnResult(resultId: string): void {
+function writeOwnResult(key: string, resultId: string): void {
   if (typeof window === "undefined") return;
   try {
-    window.sessionStorage.setItem(OWN_KEY, resultId);
+    window.sessionStorage.setItem(key, resultId);
   } catch {
     /* storage blocked — keep old behavior */
   }
 }
 
-function clearOwnResult(): void {
+function clearOwnResult(key: string): void {
   if (typeof window === "undefined") return;
   try {
-    window.sessionStorage.removeItem(OWN_KEY);
+    window.sessionStorage.removeItem(key);
   } catch {
     /* storage blocked — no-op */
   }
@@ -123,7 +122,11 @@ function ModelGlyph({
   );
 }
 
-export default function Quiz() {
+// DECIDED 2026-10-08 (현장 팀 매칭 브리프 3): 판(edition)과 매칭 모드(matchMode)를 고를 수 있습니다.
+// 기본값은 8월판이고, /quiz는 아무것도 넘기지 않으므로 그 화면은 전과 픽셀 단위로 같습니다(검증 1).
+// 판이 바꾸는 것은 결과 표, 주소, 저장 키뿐입니다(data/quizEditions.ts). 질문과 채점은 같습니다.
+export default function Quiz({ edition = "2026-08", matchMode = false }: { edition?: QuizEdition; matchMode?: boolean }) {
+  const ed = QUIZ_EDITIONS[edition];
   const { t } = useLocale();
   const reduce = useReducedMotion();
   const params = useSearchParams();
@@ -141,7 +144,7 @@ export default function Quiz() {
   // deep-link, lets us recognise their own type across a browser restart.
   const [ownResult, setOwnResult] = useState<OwnResult | null>(null);
   useEffect(() => {
-    setOwnResult(loadOwnResult());
+    setOwnResult(loadOwnResult(ed.resultKey));
   }, []);
 
   // Came here from the register modal's round-trip (/quiz?return=register)?
@@ -164,9 +167,9 @@ export default function Quiz() {
     const parsed = parseResultId(params.get("r"));
     if (!parsed) return;
     setPhase("result");
-    const saved = loadOwnResult();
+    const saved = loadOwnResult(ed.resultKey);
     const isOwn =
-      readOwnResult() === parsed.resultId || saved?.resultId === parsed.resultId;
+      readOwnResult(ed.ownKey) === parsed.resultId || saved?.resultId === parsed.resultId;
     setFromShare(!isOwn);
     // Revisiting your OWN result (landing "다시 보기", a reopened link, a fresh
     // tab): re-score the stored answers so the per-axis % gauges come back
@@ -196,11 +199,11 @@ export default function Quiz() {
   // passed in rather than read from state: the reduced-motion path calls this in
   // the same tick as setAnswers, where the state hasn't flushed yet.
   const enterResult = useCallback((scored: QuizResult, taken: Choice[]) => {
-    writeOwnResult(scored.resultId);
-    saveOwnResult(scored.resultId, taken);
+    writeOwnResult(ed.ownKey, scored.resultId);
+    saveOwnResult(scored.resultId, taken, ed.resultKey);
     setOwnResult({ resultId: scored.resultId, savedAt: new Date().toISOString(), answers: taken });
     if (typeof window !== "undefined") {
-      window.history.replaceState(null, "", `/quiz?r=${scored.resultId}`);
+      window.history.replaceState(null, "", `${ed.path}?r=${scored.resultId}`);
     }
     setPhase("result");
   }, []);
@@ -222,7 +225,7 @@ export default function Quiz() {
     setAnswers([seed as Choice]);
     setIndex(1);
     setPhase("quiz");
-    window.history.replaceState(null, "", "/quiz");
+    window.history.replaceState(null, "", ed.path);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -232,10 +235,10 @@ export default function Quiz() {
     setSelected(null);
     setResult(null);
     setFromShare(false);
-    clearOwnResult();
+    clearOwnResult(ed.ownKey);
     // drop the ?r= so a restart doesn't leave a stale result in the URL
     if (typeof window !== "undefined") {
-      window.history.replaceState(null, "", "/quiz");
+      window.history.replaceState(null, "", ed.path);
     }
     setPhase("quiz");
   };
@@ -302,14 +305,14 @@ export default function Quiz() {
         {/* -my-3 py-3: 터치 면적을 44px로 키우면서 글자 위치는 그대로 둡니다
             (2026-08-17). 그전에는 두 링크 다 높이가 23px이라 손가락으로는
             빗나가기 쉬웠습니다. 아래 '이전' 버튼도 같은 처리입니다. */}
-        <a href="/2026-08" className="-my-3 inline-flex min-h-[44px] items-center py-3 text-sm font-semibold text-white/60 transition hover:text-white">
+        <a href={ed.backHref} className="-my-3 inline-flex min-h-[44px] items-center py-3 text-sm font-semibold text-white/60 transition hover:text-white">
           ← {t(quizUI.back)}
         </a>
         <LocaleToggle />
       </header>
 
       <div className={`relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] flex-col px-6 pb-12 ${phase === "result" ? "max-w-5xl" : "max-w-2xl"}`}>
-        {phase === "landing" && <Landing onStart={startQuiz} t={t} reduce={!!reduce} ownResult={ownResult} />}
+        {phase === "landing" && <Landing ed={ed} onStart={startQuiz} t={t} reduce={!!reduce} ownResult={ownResult} />}
 
         {phase === "quiz" && current && (
           <div className="flex flex-1 flex-col pt-4">
@@ -408,7 +411,7 @@ export default function Quiz() {
         {phase === "analyzing" && <Analyzing t={t} reduce={!!reduce} />}
 
         {phase === "result" && result && (
-          <ResultView result={result} t={t} reduce={!!reduce} fromShare={fromShare} onRetake={startQuiz} returnToRegister={returnToRegister} />
+          <ResultView ed={ed} result={result} t={t} reduce={!!reduce} fromShare={fromShare} onRetake={startQuiz} returnToRegister={returnToRegister} />
         )}
       </div>
     </main>
@@ -417,11 +420,13 @@ export default function Quiz() {
 
 // ── Landing ──────────────────────────────────────────────────────────────────
 function Landing({
+  ed,
   onStart,
   t,
   reduce,
   ownResult,
 }: {
+  ed: EditionConfig;
   onStart: () => void;
   t: (p: { ko: string; en: string }) => string;
   reduce: boolean;
@@ -434,7 +439,7 @@ function Landing({
   // so this is absent then → no hydration mismatch; it just fades in on mount.
   const parsedOwn = ownResult ? parseResultId(ownResult.resultId) : null;
   const ownVariantName = parsedOwn
-    ? RESULTS[parsedOwn.mbti].variants[parsedOwn.identity].name
+    ? ed.results[parsedOwn.mbti].variants[parsedOwn.identity].name
     : null;
 
   return (
@@ -480,7 +485,7 @@ function Landing({
           landing for a first-time visitor. */}
       {ownResult && ownVariantName && (
         <motion.a
-          href={`/quiz?r=${ownResult.resultId}`}
+          href={`${ed.path}?r=${ownResult.resultId}`}
           initial={reduce ? false : { opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
@@ -506,6 +511,7 @@ const quizLandingHint = {
 // ── Result screen ───────────────────────────────────────────────────────────
 
 function ResultView({
+  ed,
   result,
   t,
   reduce,
@@ -513,6 +519,7 @@ function ResultView({
   onRetake,
   returnToRegister,
 }: {
+  ed: EditionConfig;
   result: QuizResult;
   t: (p: { ko: string; en: string }) => string;
   reduce: boolean;
@@ -520,7 +527,7 @@ function ResultView({
   onRetake: () => void;
   returnToRegister: boolean;
 }) {
-  const data = RESULTS[result.mbti];
+  const data = ed.results[result.mbti];
   const variant = data.variants[result.identity];
   const ctaLead = t(quizUI.ctaLead).replace("{role}", t(data.role));
 
@@ -736,7 +743,7 @@ function ResultView({
         </div>
 
         {/* Dream teammates — the two types this result pairs best with, and why. */}
-        <DreamTeammates result={result} t={t} reduce={reduce} />
+        <DreamTeammates ed={ed} result={result} t={t} reduce={reduce} />
 
         {/* Actions: story-image save (primary), then retake. */}
         <div className="mx-auto flex w-full max-w-xl flex-col gap-3">
@@ -788,7 +795,7 @@ function ResultView({
 
       {/* Off-screen 9:16 capture target (not display:none — that captures blank). */}
       <div aria-hidden style={{ position: "fixed", top: 0, left: -9999, pointerEvents: "none", zIndex: -1 }}>
-        <StoryCard ref={storyRef} result={result} data={data} variant={variant} host={host} t={t} />
+        <StoryCard ref={storyRef} ed={ed} result={result} data={data} variant={variant} host={host} t={t} />
       </div>
 
       {/* Long-press-to-save overlay (in-app browsers — see saveImage). */}
@@ -853,15 +860,16 @@ function ResultView({
 const StoryCard = forwardRef<
   HTMLDivElement,
   {
+    ed: EditionConfig;
     result: QuizResult;
     data: Result;
     variant: Variant;
     host: string;
     t: (p: { ko: string; en: string }) => string;
   }
->(function StoryCard({ result, data, variant, host, t }, ref) {
+>(function StoryCard({ ed, result, data, variant, host, t }, ref) {
   const axes = result.axes && result.axes.length > 0 ? result.axes : null;
-  const url = `${host || "naru-crossing-seoul.vercel.app"}/quiz`;
+  const url = `${host || "naru-crossing-seoul.vercel.app"}${ed.path}`;
 
   // Two axis-explanation highlights below the gauges: the MOST decisive axis
   // (highest %) beside the CLOSEST-CALL axis (lowest %) — a "92% 단정" line next
@@ -1025,7 +1033,7 @@ const StoryCard = forwardRef<
               two-card version with reasons; at story scale a name is all that
               survives being shrunk into someone's feed. */}
           <p style={{ margin: "0 0 22px", fontSize: 27, fontWeight: 700, color: "rgba(255,255,255,0.65)" }}>
-            {t(quizUI.storyMatch)} <span style={{ color: "rgb(245,208,254)" }}>{RESULTS[data.match[0]].model} {data.match[0]}</span>
+            {t(quizUI.storyMatch)} <span style={{ color: "rgb(245,208,254)" }}>{ed.results[data.match[0]].model} {data.match[0]}</span>
           </p>
 
           <p style={{ margin: 0, fontSize: 38, fontWeight: 800, color: "#fff" }}>{t(quizUI.storyRetake)} →</p>
@@ -1042,15 +1050,17 @@ const StoryCard = forwardRef<
 // mate's glyph, model · type, catchphrase, the from-this-type reason it clicks,
 // and the mate's recommended builderthon role.
 function DreamTeammates({
+  ed,
   result,
   t,
   reduce,
 }: {
+  ed: EditionConfig;
   result: QuizResult;
   t: (p: { ko: string; en: string }) => string;
   reduce: boolean;
 }) {
-  const data = RESULTS[result.mbti];
+  const data = ed.results[result.mbti];
   return (
     <motion.section
       initial={reduce ? false : { opacity: 0, y: 16 }}
@@ -1068,7 +1078,7 @@ function DreamTeammates({
 
       <div className="grid gap-4 sm:grid-cols-2">
         {data.match.map((m, i) => {
-          const mate = RESULTS[m];
+          const mate = ed.results[m];
           const why = data.matchWhy[i];
           return (
             <div

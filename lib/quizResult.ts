@@ -39,7 +39,8 @@ export interface OwnResult {
 
 // Persist the visitor's own freshly-taken result. Overwrites any previous one
 // (a retake replaces the old type). No-op on the server or when storage throws.
-export function saveOwnResult(resultId: string, answers?: Choice[]): void {
+// key: 판마다 저장 키가 다릅니다(data/quizEditions.ts). 넘기지 않으면 8월판의 키 그대로입니다.
+export function saveOwnResult(resultId: string, answers?: Choice[], key: string = KEY): void {
   if (typeof window === "undefined") return;
   try {
     const payload = JSON.stringify({
@@ -48,7 +49,7 @@ export function saveOwnResult(resultId: string, answers?: Choice[]): void {
       savedAt: new Date().toISOString(),
       ...(answers ? { answers } : {}),
     });
-    window.localStorage.setItem(KEY, payload);
+    window.localStorage.setItem(key, payload);
   } catch {
     /* storage blocked (private mode, quota) — silently skip persistence */
   }
@@ -67,11 +68,11 @@ function parseAnswers(raw: unknown): Choice[] | undefined {
 // problem: missing, unparseable JSON, wrong version, or a resultId that no longer
 // passes parseResultId (so a future change to the type system can't resurrect a
 // now-invalid type). Never throws.
-export function loadOwnResult(): OwnResult | null {
+export function loadOwnResult(key: string = KEY): OwnResult | null {
   if (typeof window === "undefined") return null;
   let raw: string | null;
   try {
-    raw = window.localStorage.getItem(KEY);
+    raw = window.localStorage.getItem(key);
   } catch {
     return null; // storage blocked — behave as "no saved result"
   }
@@ -97,16 +98,16 @@ export function loadOwnResult(): OwnResult | null {
       answers: parseAnswers(answers),
     };
   } catch {
-    clearOwnResult(); // drop the corrupt/stale blob so we don't re-check it
+    clearOwnResult(key); // drop the corrupt/stale blob so we don't re-check it
     return null;
   }
 }
 
 // Forget the stored result. No-op on the server or when storage throws.
-export function clearOwnResult(): void {
+export function clearOwnResult(key: string = KEY): void {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.removeItem(KEY);
+    window.localStorage.removeItem(key);
   } catch {
     /* storage blocked — no-op */
   }
