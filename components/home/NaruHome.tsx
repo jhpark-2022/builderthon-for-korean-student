@@ -962,36 +962,29 @@ export default function NaruHome() {
             상자가 아니라 3열 행 하나입니다(표현 방식 브리프 2장). iii은 지난 것이라
             한 단 낮은 밝기이고, i·ii의 when만 accent입니다. 번호(i·ii·iii)는 로마
             숫자 그대로 PDF에서 옵니다. */}
-        {/* 2026-09-26 (한 축 브리프): 소제목과 글은 READ, 셋이 가로로 서는 줄만 WIDE. */}
+        {/* DECIDED 2026-10-07 (이슈 브리프 2.2): 위 "AI 활용 범위 셋"은 화면에서 내렸습니다. "데이터 분석을 12월에
+            더한다"는 옛 방침 위에 서 있었습니다. 같은 자리에 "문제를 찾는 방식"의 두 칸 비교(8월, 12월)가 섭니다.
+            문법은 그대로입니다: 상자가 아니라 헤어라인으로 나뉜 행 하나, 소제목은 READ. 8월 칸을 흐리게 하지
+            않습니다(같은 브리프 4.2). 두 칸의 차이는 라벨의 색이 말합니다. december.scope* 키는 data/naru.ts에 그대로. */}
         {/* 2026-09-30: 판 조각의 첫 블록이라 위 간격이 없습니다. 조각의 gap(216px)이 그 일을 합니다. */}
         <Reveal className="text-left">
           <div className={READ}>
-            <h3 data-subheading className={SUBHEADING}>{t(naru.december.scopeLabel)}</h3>
-            <p className={`${MEASURE} mt-3 break-keep text-sm leading-relaxed text-white/70`}>{t(naru.december.scopeNote)}</p>
+            <h3 data-subheading className={SUBHEADING}>{t(naru.december.findLabel)}</h3>
           </div>
-          <ol role="list" className={`${READ} mt-5 grid grid-cols-1 border-t border-white/10 sm:grid-cols-3`}>
-            {naru.december.scope.map((sc, i) => {
-              const past = sc.num === "iii";
-              return (
-                <li
-                  key={sc.num}
-                  className={`border-b border-white/10 py-4 sm:border-b-0 sm:py-0 sm:pt-4 ${i > 0 ? "sm:border-l sm:border-white/10 sm:pl-6" : ""} ${i < 2 ? "sm:pr-6" : ""}`}
-                >
-                  {/* 한 단 낮춤은 /55입니다. 같은 챕터의 Day 0 행이 쓰는 값이고,
-                      /45는 배경 입자 위에서 3.35:1이었습니다. */}
-                  <p className={`flex items-baseline gap-2 break-keep ${past ? "text-white/55" : "text-white"}`}>
-                    {/* uppercase를 걸지 않습니다. PDF의 번호가 소문자 로마 숫자(i · ii · iii)입니다. */}
-                    <span lang="en" className={`shrink-0 text-[0.68rem] font-black tracking-[0.12em] ${past ? "text-white/55" : "text-accent"}`}>{sc.num}</span>
-                    <span className="text-sm font-bold leading-snug">{t(sc.title)}</span>
-                  </p>
-                  <p className={`mt-1.5 break-keep text-[0.68rem] font-bold uppercase ${latinTrack(locale)} ${past ? "text-white/55" : "text-accent"}`}>
-                    {t(sc.when)}
-                  </p>
-                </li>
-              );
-            })}
-          </ol>
-          <p className={`${READ} ${READ_MEASURE} mt-4 break-keep text-sm leading-relaxed text-white/70`}>{t(naru.december.scopeClose)}</p>
+          <dl className={`${READ} mt-5 grid grid-cols-1 border-t border-white/10 sm:grid-cols-2`}>
+            {([
+              { k: naru.december.augustLabel, v: naru.december.find.august, now: false },
+              { k: naru.december.decemberLabel, v: naru.december.find.december, now: true },
+            ]).map((col, i) => (
+              <div
+                key={col.k.en}
+                className={`border-b border-white/10 py-4 sm:border-b-0 sm:py-0 sm:pt-4 ${i > 0 ? "sm:border-l sm:border-white/10 sm:pl-6" : "sm:pr-6"}`}
+              >
+                <dt className={`text-[0.68rem] font-bold uppercase ${latinTrack(locale)} ${col.now ? "text-accent" : "text-white/75"}`}>{t(col.k)}</dt>
+                <dd className={`mt-1.5 break-keep text-sm leading-relaxed ${col.now ? "text-white/85" : "text-white/70"}`}>{t(col.v)}</dd>
+              </div>
+            ))}
+          </dl>
         </Reveal>
 
         {/* 8월에 아쉬웠던 넷과 12월의 답. 번호 배지 카드 넷(8월 BenefitCard 문법), 2×2.

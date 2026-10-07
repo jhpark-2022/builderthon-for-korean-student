@@ -409,8 +409,11 @@ export const naru = {
       // DECIDED 2026-09-17 (사용자): "raw data"라는 말을 쓰지 않습니다. 이번 회차가
       // 말하려는 것은 "데이터에서 시작한다"입니다. 다른 자리(programHeading,
       // gaps[0].answer, shapeLead, shape[1].note, partners)도 같은 날 같이 바꿨습니다.
-      ko: "한국의 대학생과 해외에서 공부하는 한인 학생이 같은 문제 앞에 섭니다. 이번에는 데이터에서 시작합니다. 문제를 찾아내는 것부터 앞에서 증명하기까지, 닷새.",
-      en: "Students in Korea and Korean students abroad stand in front of the same problem. This time it starts from the data: find the problem, prove it out front, five days.",
+      // DECIDED 2026-10-07 (이슈 브리프 2.1): 출발점은 데이터가 아니라 기업이 지금 겪는 이슈입니다.
+      // 위 9월 17일의 "데이터에서 시작한다"를 이 결정이 대신합니다. 같은 날 programHeading,
+      // programConcrete, shapeLead, shape[0].label, stages[0], gains.items[0], 후원 상자도 같이 바꿨습니다.
+      ko: "한국의 대학생과 해외에서 공부하는 한인 학생이 같은 문제 앞에 섭니다. 이번에는 기업이 지금 겪는 이슈에서 시작합니다. 그 아래의 문제를 찾아내는 것부터 기업 앞에서 증명하기까지, 닷새.",
+      en: "Students in Korea and Korean students abroad stand in front of the same problem. This time it starts from an issue a company is facing right now: find the problem underneath it, prove it in front of that company, five days.",
     },
     ctaProgram: { ko: "프로그램 보기", en: "See the programme" },
     // ── 카운트다운 패널 (2026-09-17, 8월 문법 브리프) ─────────────────────
@@ -716,10 +719,11 @@ export const naru = {
     items: [
       {
         num: "01",
-        title: { ko: "실명 기업의 진짜 문제", en: "A real problem from a named company" },
+        // DECIDED 2026-10-07 (이슈 브리프 2.1): 받는 것은 완성된 문제가 아니라 이슈입니다.
+        title: { ko: "실명 기업의 진짜 이슈", en: "A real issue from a named company" },
         body: {
-          ko: "아직 풀리지 않은 문제를, 출제한 회사 이름과 함께 받습니다.",
-          en: "A problem still unsolved, handed over with the name of the company that set it.",
+          ko: "회사가 지금 겪고 있는 이슈를 회사 이름과 함께 받습니다. 그 아래의 문제는 직접 찾습니다.",
+          en: "An issue the company is facing right now, handed over with the company's name. The problem underneath is yours to find.",
         },
         evidence: { ko: "8월 코드프레소 출제", en: "August: Codepresso set the problem" },
       },
@@ -1481,7 +1485,7 @@ export const naru = {
       {
         role: { ko: "후원 SPONSOR", en: "SPONSOR" },
         who: { ko: "참여 기업", en: "Participating companies" },
-        brings: { ko: "문제와 자료, 자금, 멘토", en: "Problems and data, funding, mentors" },
+        brings: { ko: "이슈와 자료, 자금, 멘토", en: "Issues and materials, funding, mentors" },
         does: {
           ko: "자금과 현물, 용역. 문제와 자료. 멘토와 피드백 패널. 채용 기회.",
           en: "Funding, goods, services. Problems and data. Mentors and the feedback panel. Hiring opportunities.",
@@ -1563,13 +1567,13 @@ export const naru = {
     // 것이라 why.exec/measure를 이 챕터의 멘토링 블록이 읽습니다.
     // 전부 초안입니다. draftNote가 이 챕터에 붙어 있어야 합니다.
     programEyebrow: { ko: "프로그램", en: "Programme" },
-    programHeading: { ko: "데이터에서 증명까지, 닷새", en: "From data to proof, in five days" },
+    programHeading: { ko: "이슈에서 증명까지, 닷새", en: "From issue to proof, in five days" },
     // DECIDED 2026-09-25 (가독성 브리프 5, 사용자 승인): 추상적인 문장 옆의 구체적인 한 줄.
     // 화면에 이미 있는 사실만 씁니다. {date}는 naruDates의 formatDecemberDateLine으로 채웁니다(날짜를
     // 여기 쓰지 않는 규칙). 출처: Day 0 데이터 공개, Day 1 줄, #gains 03.
     programConcrete: {
-      ko: "{date} 기업이 연 데이터에서 문제를 찾고, 마지막 날 그 기업 앞에서 발표합니다.",
-      en: "{date} You find the problem in the data a company opens, and on the last day you present to that company.",
+      ko: "{date} 기업이 지금 겪는 이슈를 받아 그 아래의 문제를 찾고, 마지막 날 그 기업 앞에서 발표합니다.",
+      en: "{date} You take an issue a company is facing right now, find the problem underneath it, and on the last day you present to that company.",
     },
     reasonsLabel: { ko: "왜 서울인가", en: "Why Seoul" },
     reasons: [
@@ -1613,6 +1617,21 @@ export const naru = {
     scopeClose: {
       ko: "앞의 두 가지를 해 보지 않았으니, 아이디어까지 LLM에 맡기게 됐습니다.",
       en: "With the first two skipped, even the idea got handed to the LLM.",
+    },
+    // ── 문제를 찾는 방식 (DECIDED 2026-10-07, 이슈 브리프 2.2) ───────────────
+    // 위 "AI 활용 범위 셋"(scopeLabel, scopeNote, scope, scopeClose)은 "데이터 분석을 12월에 더한다"는
+    // 옛 방침 위에 서 있어 화면에서 내렸습니다. 같은 자리에 8월과 12월 두 칸 비교가 섭니다.
+    // 위 네 키는 그대로 두고 그리지 않습니다. 라벨은 augustLabel, decemberLabel을 씁니다.
+    findLabel: { ko: "문제를 찾는 방식", en: "How the problem gets found" },
+    find: {
+      august: {
+        ko: "출제사가 완성한 문제를 받았습니다. 문제의식이 같으니 AI에 맡긴 아이디어가 비슷해졌고, 마지막 날의 결과물도 서로 닮았습니다.",
+        en: "Teams received a finished problem from the company. Starting from the same question, the ideas handed to AI converged, and the final-day results looked alike.",
+      },
+      december: {
+        ko: "기업의 이슈를 받습니다. 공개된 정보를 AI로 모아 추론하고, 팀마다 다른 문제를 찾습니다. 그 과정에서 각자의 강점이 드러납니다.",
+        en: "Teams receive a company's issue. They gather public information with AI, reason from it, and each team finds a different problem. Along the way, each person's strengths show.",
+      },
     },
 
     // ── 이렇게 굴립니다 (DECIDED 2026-09-20, 크로싱서울_일정.pdf 02 하단) ─────
@@ -1914,8 +1933,11 @@ export const naru = {
     // 두 화면에 걸쳐 세 번 나왔어요. 제목이 하는 말을 리드가 다시 하지 않습니다.
     shapeLead: {
       // DECIDED 2026-10-05 (사용자: 가운데 글 가독성 감사): 가운데 문단은 세 줄까지라 줄였습니다. 세 항목의 꾸밈말을 뺐습니다.
-      ko: "AI가 잘하는 일은 셋입니다. 코드를 만드는 것, 비즈니스 프로세스를 이해하는 것, 데이터를 분석하는 것. 8월은 첫째에 집중했고, 12월은 나머지 둘로 넓힙니다.",
-      en: "AI is good at three things: writing code, reading a business process, analysing data. August did the first. December adds the other two.",
+      // DECIDED 2026-10-07 (이슈 브리프 2.1): "AI가 잘하는 일은 셋" 문단을 통째로 바꿉니다. 왜 데이터가 아니라
+      // 이슈에서 출발하는지를 말하는 자리이고, 홈에서 "데이터"라는 낱말이 남는 곳은 이 문단 하나입니다.
+      // 네 문장이라 위의 "세 줄까지"를 넘습니다(브리프의 문장 그대로).
+      ko: "정리된 데이터로 보이는 문제는 AI가 나온 뒤 기업이 이미 풀었습니다. 남은 것은 데이터로 잡히지 않거나, 있는지조차 모르는 문제입니다. 그래서 12월은 데이터가 아니라 이슈에서 출발합니다. 공개된 정보를 AI로 모으고, 그 위에서 추론해 문제를 찾습니다.",
+      en: "The problems that show up in clean data, companies have already solved since AI arrived. What is left does not show up in data, or nobody knows it is there. So December starts from the issue, not the data. You gather public information with AI, reason on top of it, and find the problem.",
     },
     // DECIDED 2026-09-18 (사용자): "아직 정해지지 않은 것" 목록(tbd)을 화면에서 뺐습니다.
     // 미정을 나열하는 대신 이 한 줄만. tbd 키는 그대로 둡니다.
@@ -1931,7 +1953,8 @@ export const naru = {
         value: { ko: "5일", en: "5 days" },
         // 2026-09-19: "실질 4일 + 사전 팀 본딩"에서. 본 일정 앞에 있는 것은 이제 팀 본딩이
         // 아니라 데이터 공개입니다(stages 첫 칸). 숫자 5일은 12/10~12/14 그대로입니다.
-        label: { ko: "실질 4일 + 사전 데이터 공개", en: "Four working days, data opens before" },
+        // DECIDED 2026-10-07 (이슈 브리프 D3): Day 0에 여는 것은 "이슈 공개"로 적습니다.
+        label: { ko: "실질 4일 + 사전 이슈 공개", en: "Four working days, issues open before" },
       },
       {
         value: { ko: "3곳", en: "3" },
@@ -2001,10 +2024,10 @@ export const naru = {
           ko: "Day 1에 쓸 시간을 벌어 주는 날입니다. 스테이지로 세지 않습니다.",
           en: "It buys back time for Day 1. It does not count as a stage.",
         },
-        chips: [{ ko: "데이터 공개", en: "Data opens" }],
+        chips: [{ ko: "이슈 공개", en: "Issues open" }],
         session: {
           title: { ko: "활용 Guide", en: "Using it" },
-          body: { ko: "데이터와 도구를 어떻게 쓸지 짚는 3시간 세션", en: "Three hours on how to use the data and the tools" },
+          body: { ko: "공개된 정보와 AI 도구로 이슈를 파고드는 법을 짚는 3시간 세션", en: "Three hours on digging into an issue with public information and AI tools" },
         },
       },
       {
