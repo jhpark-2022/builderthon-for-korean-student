@@ -21,6 +21,7 @@ import TurnstileWidget from "@/components/crossing/TurnstileWidget";
 import { TURNSTILE_ACTION } from "@/lib/register/turnstileAction";
 import { naruLinks, register as copy } from "@/data/naru";
 import { links, type Phrase } from "@/data/dictionary";
+import { BODY, META } from "@/components/ui/typography";
 import {
   COUNTRY_OTHER, MEMBER_FIELDS, REGISTRATION_FIELDS, MAX_MEMBERS, MAX_TEXT, MAX_TEXTAREA,
   type Field, validateField,
@@ -133,7 +134,12 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource }
     const e = validate();
     setErrors(e);
     if (Object.keys(e).length) {
-      dialogRef.current?.querySelector<HTMLElement>("[aria-invalid='true']")?.focus();
+      // 다음 프레임에서 찾습니다(2026-10-07). setErrors 직후에는 aria-invalid가 아직 DOM에 없어서, 첫 제출에서는
+      // 포커스가 오류 칸으로 가지 않았습니다. 선택 카드 묶음(radiogroup)은 포커스를 받지 못하므로 그 안의 첫 radio로.
+      requestAnimationFrame(() => {
+        const bad = dialogRef.current?.querySelector<HTMLElement>("[aria-invalid='true']");
+        (bad?.matches("[role='radiogroup']") ? bad.querySelector<HTMLElement>("input") : bad)?.focus();
+      });
       return;
     }
     if (turnstileSiteKey && !botToken) { setStatus("error"); setErrorCode("bot_check_pending"); return; }
@@ -167,6 +173,43 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource }
             {err && <span id={errorId} className="mt-0.5 block text-xs font-medium text-rose-300">{errText(err)}</span>}
           </span>
         </label>
+      );
+    }
+    // DECIDED 2026-10-07 (신청 폼 브리프 2.3): radio는 세로로 쌓인 선택 카드입니다. 카드 하나에 단계 숫자, 한 것(굵게),
+    // 그 아래 예(작게). 실제 <input type="radio">가 카드마다 있고 눈에만 숨깁니다. 같은 name이라 화살표 키로 옮기고
+    // 스페이스로 고르는 것은 브라우저가 합니다. 포커스 링과 고른 표시는 peer로 카드에 그립니다.
+    // 글자 크기는 BODY와 META 둘뿐입니다(CLAUDE.md의 "한 화면 글자 크기 셋 이하"). 도움말은 질문 바로 아래입니다.
+    if (f.type === "radio") {
+      const labelId = `${id}-label`;
+      const helpId = help ? `${id}-help` : undefined;
+      const described = [errorId, helpId].filter(Boolean).join(" ") || undefined;
+      return (
+        <div key={f.key} role="radiogroup" aria-labelledby={labelId} aria-describedby={described} aria-required={f.required || undefined} aria-invalid={err ? true : undefined} className="flex flex-col gap-1.5">
+          <span id={labelId} className={`${BODY} font-semibold leading-snug text-white/85`}>
+            {label}{f.required && <span aria-hidden className="ml-1 text-rose-400">*</span>}
+          </span>
+          {help && <span id={helpId} className={`${META} leading-relaxed text-white/70`}>{help}</span>}
+          <div className="mt-1 flex flex-col gap-2">
+            {(f.options ?? []).map((o, n) => (
+              <label key={o.value} className="relative block cursor-pointer">
+                <input
+                  type="radio" name={id} id={n === 0 ? id : undefined} value={o.value} checked={value === o.value}
+                  onChange={() => set(o.value)} required={f.required}
+                  aria-describedby={errorId}
+                  className="peer sr-only"
+                />
+                <span className="flex items-start gap-3 rounded-xl border border-white/[0.12] bg-white/[0.04] px-4 py-3 transition hover:border-white/25 peer-checked:border-violet-400/70 peer-checked:bg-violet-400/[0.12] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-violet-300 peer-checked:[&>span:first-child]:border-violet-300 peer-checked:[&>span:first-child]:bg-violet-500 peer-checked:[&>span:first-child]:text-white">
+                  <span aria-hidden className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/25 ${META} font-bold text-white/80`}>{n + 1}</span>
+                  <span className="min-w-0">
+                    <span className={`block break-keep ${BODY} font-bold leading-snug text-white`}>{t(o.label)}</span>
+                    {o.hint && <span className={`mt-1 block break-keep ${META} leading-relaxed text-white/70`}>{t(o.hint)}</span>}
+                  </span>
+                </span>
+              </label>
+            ))}
+          </div>
+          {err && <span id={errorId} className={`${META} font-medium text-rose-300`}>{errText(err)}</span>}
+        </div>
       );
     }
     const max = f.maxLen ?? (f.type === "textarea" ? MAX_TEXTAREA : MAX_TEXT);

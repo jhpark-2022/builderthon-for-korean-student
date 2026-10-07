@@ -9,14 +9,16 @@
 //                  join_type, team_name, wants_matching, consent).
 //   fixed 없음   → answers jsonb에 key → 답으로. 질문이 늘면 여기에 줄 하나.
 //
-// 지금 넣은 것: 고정 열과 팀/솔로, 동의, 그리고 추가 질문 둘(전공, AI 활용 수준. 2026-10-07).
+// 지금 넣은 것: 고정 열과 팀/솔로, 동의, 그리고 추가 질문 둘(전공, AI로 해 본 것 네 단계. 2026-10-07).
 // 동의 문구는 자리만 있습니다(TODO: confirm).
 // 카피는 data/naru.ts의 register 블록이 아니라 여기 label에 {ko, en}으로 둡니다. 질문과
 // 라벨이 한 줄에 있어야 질문을 바꿀 때 한 곳만 고칩니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export type FieldType = "text" | "email" | "select" | "textarea" | "checkbox" | "country";
-export interface FieldOption { value: string; label: { ko: string; en: string } }
+// radio (2026-10-07, 신청 폼 브리프 2.3): 하나만 고르는 선택 카드. 검증은 select와 같습니다(목록 안의 값인지).
+export type FieldType = "text" | "email" | "select" | "radio" | "textarea" | "checkbox" | "country";
+/** hint: 선택지 아래 작은 설명(예시). radio 카드가 그립니다. */
+export interface FieldOption { value: string; label: { ko: string; en: string }; hint?: { ko: string; en: string } }
 export interface Field {
   key: string;                 // answers jsonb의 키(또는 고정 열 이름)
   scope: "registration" | "member";
@@ -82,20 +84,29 @@ export const CROSSING_FORM: Field[] = [
   // 여기에 줄을 더합니다. fixed 없이(answers jsonb로 갑니다. 표의 스키마는 바뀌지 않습니다).
   // key, scope, label 순서를 지키세요. 명단 스크립트(scripts/build-crossing-roster.py의 form_keys)가
   // 이 파일을 정규식으로 읽어 열을 만듭니다.
-  // DECIDED 2026-10-07 (이슈 브리프 3): 8월 폼에 전공과 AI 활용 수준 둘을 더합니다. 사람 단위라 팀이면
-  // 팀원마다 묻습니다. AI 활용 수준은 워크숍을 맞추려는 질문이고 선발에 쓰지 않습니다. 그 말을 도움말로
-  // 선택지 바로 아래에 둡니다. 선택지 넷은 브리프 D4의 초안입니다. 값(value)은 answers에 그대로 남으니
-  // 한번 받기 시작하면 바꾸지 마세요(라벨은 바꿔도 됩니다).
+  // DECIDED 2026-10-07 (이슈 브리프 3, 신청 폼 브리프 2): 8월 폼에 전공과 "AI로 해 본 것" 둘을 더합니다. 사람 단위라
+  // 팀이면 팀원마다 묻습니다.
+  // AI로 해 본 것은 네 단계이고 수준이 아니라 행동으로 적습니다. 어느 회사 제품을 쓰든 자기 단계를 바로 알 수
+  // 있게, 단계마다 두 회사의 제품 이름을 예시(hint)로 나란히 둡니다. 제품 이름은 예시일 뿐입니다.
+  // 워크숍을 맞추려는 질문이고 선발에 쓰지 않습니다. 그 말을 도움말로 질문 바로 아래에 둡니다.
+  // 값(value)은 answers에 그대로 남으니 받기 시작하면 바꾸지 마세요(라벨과 예시는 바꿔도 됩니다). 같은 날 처음의
+  // 값(none, chatbot, coding_tool, cli_agent)을 아래 넷으로 바꿨습니다. 등록 창이 열리기 전이라 받은 답이 없었습니다.
+  // 순서가 곧 단계 번호입니다(명단 스크립트가 "3. 라벨"로 냅니다). 순서를 바꾸지 마세요.
   { key: "major", scope: "member", type: "text", required: true, maxLen: 80,
-    label: { ko: "전공", en: "Major" } },
-  { key: "ai_level", scope: "member", type: "select", required: true,
-    label: { ko: "지금 AI를 어디까지 써 봤나요?", en: "How far have you used AI so far?" },
+    label: { ko: "전공", en: "Major" },
+    placeholder: { ko: "예: 경영학, 컴퓨터공학, 미정", en: "e.g. Business, Computer Science, Undeclared" } },
+  { key: "ai_level", scope: "member", type: "radio", required: true,
+    label: { ko: "AI로 해 본 것 중 가장 위에 있는 것 하나를 골라 주세요.", en: "Pick the highest step you have actually done with AI." },
     help: { ko: "워크숍을 여러분에게 맞추기 위해 묻는 것이고, 이것으로 선발하지 않습니다.", en: "We ask this to fit the workshops to you. It is not used for selection." },
     options: [
-      { value: "none", label: { ko: "아직 거의 써 보지 않았습니다", en: "I have barely used it yet" } },
-      { value: "chatbot", label: { ko: "챗봇(ChatGPT 등)을 공부나 일에 써 봤습니다", en: "I have used a chatbot (ChatGPT and the like) for study or work" } },
-      { value: "coding_tool", label: { ko: "AI 코딩 도구로 작은 것을 직접 만들어 봤습니다", en: "I have built something small myself with an AI coding tool" } },
-      { value: "cli_agent", label: { ko: "터미널에서 CLI 에이전트를 쓰고, MCP로 도구를 연결해 봤습니다", en: "I use a CLI agent in the terminal and have connected tools through MCP" } },
+      { value: "chat", label: { ko: "채팅창에 물어보고 답을 받아 써 봤다", en: "Asked a chatbot and used its answers" },
+        hint: { ko: "ChatGPT나 Claude에 질문하고 글, 요약, 번역을 받아 씀", en: "Questions, drafts, summaries or translations from ChatGPT or Claude" } },
+      { value: "agent", label: { ko: "AI에게 일을 맡겨 끝까지 해내게 해 봤다", en: "Handed AI a task and let it finish the job" },
+        hint: { ko: "Claude Cowork나 ChatGPT 에이전트 모드로 파일 정리, 자료 조사, 문서 만들기", en: "Sorting files, research or making documents with Claude Cowork or ChatGPT agent mode" } },
+      { value: "terminal", label: { ko: "터미널에서 AI 코딩 도구를 켜서 무언가를 만들어 봤다", en: "Opened an AI coding tool in the terminal and built something" },
+        hint: { ko: "Claude Code나 Codex CLI로 앱이나 스크립트 만들기", en: "An app or a script with Claude Code or Codex CLI" } },
+      { value: "connect", label: { ko: "AI에 다른 도구를 연결해 함께 쓰게 해 봤다", en: "Connected other tools to AI so it can use them" },
+        hint: { ko: "MCP로 Claude나 ChatGPT에 노션, 깃허브, 캘린더 등을 연결", en: "Notion, GitHub or a calendar linked to Claude or ChatGPT through MCP" } },
     ] },
 ];
 
@@ -118,7 +129,7 @@ export function validateField(f: Field, raw: unknown): string | null {
   if (!v) return f.required ? "required" : null;
   if (v.length > max) return "too_long";
   if (f.type === "email" && !EMAIL_RE.test(v)) return "invalid_email";
-  if (f.type === "select" && !(f.options ?? []).some((o) => o.value === v)) return "invalid_option";
+  if ((f.type === "select" || f.type === "radio") && !(f.options ?? []).some((o) => o.value === v)) return "invalid_option";
   if (f.type === "country" && !COUNTRY_RE.test(v)) return "invalid_country";
   return null;
 }
