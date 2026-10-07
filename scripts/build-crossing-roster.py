@@ -8,7 +8,8 @@
 #
 # 자격증명은 website/.env.local의 NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY.
 # service_role 키라 RLS를 우회한다. 절대 브라우저로 넘기지 말 것.
-# answers jsonb는 data/crossingForm.ts의 스키마 순서로 열을 펼친다(아래 FORM_KEYS).
+# answers jsonb는 data/crossingForm.ts의 스키마 순서로 열을 펼친다(아래 form_keys).
+# 선택지가 있는 답(ai_level)은 값이 아니라 "3. 터미널에서 ..."처럼 단계 번호와 한국어 라벨로 낸다(option_labels).
 # 결과 docx는 레포에 커밋하지 않는다.
 
 import json
@@ -42,10 +43,31 @@ def form_keys():
     return out
 
 
+def option_labels():
+    """선택지가 있는 추가 질문의 {key: {value: 표시}}. radio는 순서가 단계라 "3. 라벨"로, select는 라벨만 (2026-10-07).
+
+    answers에는 값(terminal 등)이 들어 있다. 명단을 읽는 사람은 값이 아니라 단계와 문장을 봐야 한다.
+    """
+    src = (REPO / "data" / "crossingForm.ts").read_text(encoding="utf-8")
+    out = {}
+    for m in re.finditer(r'\{\s*key:\s*"([^"]+)",\s*scope:\s*"(?:registration|member)",\s*type:\s*"(radio|select)"', src):
+        # 이 질문의 블록은 다음 질문("{ key:")이나 목록의 끝("];") 앞까지다.
+        rest = src[m.end():]
+        end = re.search(r'\n\s*\{\s*key:|\n\];', rest)
+        block = rest[: end.start()] if end else rest
+        if "fixed: true" in block.split("options:")[0]:
+            continue
+        opts = re.findall(r'\{\s*value:\s*"([^"]+)",\s*label:\s*\{\s*ko:\s*"([^"]*)"', block)
+        if opts:
+            out[m.group(1)] = {v: (f"{i}. {l}" if m.group(2) == "radio" else l) for i, (v, l) in enumerate(opts, 1)}
+    return out
+
+
 def main():
     url, key = load_env()
     rows = fetch(url, key, f"crossing_participants?select=*&event_slug=eq.{EVENT}&order=created_at.asc,ordinal.asc")
     keys = form_keys()
+    labels = option_labels()
     reg_keys = [(k, l) for s, k, l in keys if s == "registration"]
     mem_keys = [(k, l) for s, k, l in keys if s == "member"]
 
@@ -65,7 +87,8 @@ def main():
             return "예"
         if v in (None, "", False):
             return ""
-        return str(v)
+        # 목록에 없는 값(옛 값 등)은 지어내지 않고 값 그대로 낸다.
+        return labels.get(k, {}).get(str(v), str(v))
 
     doc = open_doc(OUT)
     doc.add_paragraph("크로싱 서울 신청자 명단", style="Title")
