@@ -1195,93 +1195,40 @@ export const naru = {
     // 나머지 문장의 신뢰가 같이 떨어집니다. 확정되면 여기를 채우면 됩니다.
     answerLabel: { ko: "12월", en: "December" },
     answerPending: { ko: "아직 답이 없습니다", en: "No answer yet" },
+    // DECIDED 2026-10-07 (이슈 브리프 2.3): 다섯을 같은 무게로 늘어놓지 않습니다. 8월이 남기지 못한 것은
+    // 둘이고(기업이 가져다 쓸 결과물, 만난 사람을 이어 가는 일), 12월은 이 둘을 먼저 말하고 어떻게 메우는지
+    // 말합니다. 전의 02~04(멘토링, 팀 사이 교류, 주관 학생)는 12월의 답만 한 줄씩 남겨
+    // december.also("그 밖에 바꾼 것")로 내렸습니다. 전의 다섯 항목 원문은 git 이력에 있습니다.
+    // 참가자를 탓하는 문장을 쓰지 않습니다. 첫째는 문제의 구조, 둘째는 주최 측의 몫입니다.
+    // 화면은 title, body, answer를 모두 그립니다(전에는 body를 그리지 않았습니다).
     gaps: [
       {
         title: {
-          ko: "데이터로 문제를 정의하는 단계가 없었습니다",
-          en: "There was no step where data defines the problem",
+          ko: "기업이 가져다 쓸 결과물이 나오지 않았습니다.",
+          en: "Nothing came out that a company could pick up and use.",
         },
-        // 2026-09-20 (크로싱서울_일정.pdf 01): 같은 것을 더 정확하게 말합니다.
-        // 빠진 것은 "발견하는 구간"이 아니라 프로세스를 그려 보고 고쳐 볼 기회였고,
-        // 만든 것이 서로 비슷했던 이유가 거기 있습니다. 답도 "구간을 연다"에서
-        // "무엇을 만들고 어디에 적용되는지까지 학생이 정의한다"로 넓어집니다.
-        // 넷 중 첫 항목만 바꿉니다. 나머지 셋은 그대로.
-        // DECIDED 2026-09-30 (사용자, 문장 감사): 같은 사실을 있었던 일의 순서로 다시 썼습니다. "이해가
-        // 중요한데", "생각의 기회가 닫혔고" 같은 추상어를 빼고, 누가 무엇을 줬고 무엇을 해 보지 못했는지만.
         body: {
-          ko: "8월에는 출제사가 문제 접근법까지 정리해서 줬습니다. 데이터로 프로세스를 직접 그려 보고 고쳐 볼 일이 없었고, 그래서 팀마다 만든 것이 비슷했습니다.",
-          en: "In August the company handed over the approach along with the problem. Nobody had to map the process from the data and revise it, so the builds came out alike.",
+          ko: "참가자의 실력이 아니라 문제의 구조 때문이었습니다. 완성된 문제를 받으니 결과물이 서로 닮았습니다.",
+          en: "That came from how the problem was set up, not from the participants' ability. Given a finished problem, the results came out alike.",
         },
         answer: {
-          ko: "만들어야 하는 것과 그것이 어디에 적용되는지까지 학생이 정의합니다.",
-          en: "What to build, and where it has to land, are both yours to define.",
-        },
-      },
-      {
-        title: { ko: "멘토링을 충분히 쓰지 못했습니다", en: "Mentoring went underused" },
-        body: {
-          ko: "슬롯은 넉넉했는데 한 번도 쓰지 않은 팀이 있었습니다.",
-          en: "There were plenty of slots, and there were teams that never booked one.",
-        },
-        // DECIDED 2026-09-17 (사용자): "상시 예약제, 횟수 제한 없음"에서 바꿈. 12월의
-        // 답은 멘토링이 무엇인지 사전에 더 자세히 알려 주는 것입니다.
-        answer: {
-          ko: "멘토링의 디테일을 사전에 더 많이 공유합니다.",
-          en: "More of the mentoring details are shared in advance.",
-        },
-      },
-      {
-        title: { ko: "팀 사이 교류가 없었습니다", en: "Teams never mixed" },
-        body: {
-          ko: "팀 안에서는 붙었지만 팀과 팀은 섞이지 않았습니다.",
-          en: "People bonded inside their team. Between teams, nothing.",
-        },
-        // DECIDED 2026-09-17 (사용자): "팀 본딩, 중간 공유"에서 바꿈. 12월의 답은 모든
-        // 활동을 대면으로 하는 것입니다. 팀 본딩·중간 공유는 일정 블록이 말합니다.
-        // DECIDED 2026-09-30 (사용자: "더 설명은 해줘야지, 대면으로 하니까 다른 팀들도 더 볼 수 있는거니까"):
-        // 대면이 왜 답인지를 한 문장 더합니다. "같은 공간"이라고 쓰지 않습니다(장소는 여럿일 수 있습니다, 2026-09-19).
-        answer: {
-          ko: "이번에는 모든 활동을 대면으로 합니다. 현장에서 다른 팀이 무엇을 어떻게 만들고 있는지 직접 보고, 팀 밖의 사람과도 이야기하게 됩니다.",
-          en: "This time every activity is in person. You see what other teams are building and how, and you end up talking to people outside your own team.",
+          ko: "이슈에서 출발해, 문제는 참가자가 직접 찾습니다.",
+          en: "It starts from the issue, and participants find the problem themselves.",
         },
       },
       {
         title: {
-          ko: "주관 학생이 함께 자랄 자리가 없었습니다",
-          en: "The organizing students had no place to grow",
+          ko: "만난 사람을 이어 가는 자리로 만들지 못했습니다.",
+          en: "We did not turn the people we met into something that carries on.",
         },
         body: {
-          ko: "열심히 해 주었는데, 함께 자란다고 느낄 자리를 만들지 못했습니다.",
-          en: "They worked hard for it, and we never made a place where they could feel they were growing too.",
+          ko: "좋은 분들을 만났지만 끝난 뒤 이어지지 않았습니다. 그렇게 하라고 충분히 말하지 않은 것은 주최 측의 몫입니다.",
+          en: "We met good people, and it did not continue once the event ended. Not saying clearly enough that it should is on us, the organisers.",
         },
-        // 2026-09-17: 기획 03에서 채움. 초안입니다.
-        // DECIDED 2026-09-30 (사용자: "주관학생들은 피칭은 할 수 있으나 수상은 없음"): 피칭은 열고 시상에서는
-        // 뺍니다. 그 전의 "운영 기여도 기준의 별도 트랙"은 없습니다. 다시 쓰지 마세요.
+        // 뒤 두 문장은 2026-09-30의 답(멘토에게 먼저 연락합니다)에서 그대로 옵니다.
         answer: {
-          ko: "주관 학생도 피칭할 수 있습니다. 다만 시상 대상은 아닙니다.",
-          en: "Organising students can pitch too. They are not up for awards.",
-        },
-      },
-      // DECIDED 2026-09-29 (사용자: 9/28 자문 미팅의 인사이트를 반영): 다섯째. 8월의 가장 큰 아쉬움은 이벤트가
-      // 만든 연결을 학생이 이어 쓴 사례가 없었던 것이고, 원인은 의지가 아니라 해 본 적이 없어서였습니다.
-      // 나루터는 건너는 법을 미리 연습시키는 곳이어야 합니다(스쿠버 강습 비유). 그 연습 세션이 12월 일정에
-      // 아직 없으므로 answer는 null이고 화면은 "아직 답이 없습니다"라고 씁니다. 정해지면 채우세요.
-      // 사실(아홉 팀, 한 팀)은 naru.after.lead와 같은 값이고, 그 자리의 TODO: confirm을 그대로 따릅니다
-      // ("한 팀"은 집계가 아니라 기억입니다. 확인되지 않으면 두 곳을 같이 "거의 없었습니다"로 바꿉니다).
-      {
-        title: {
-          ko: "끝난 뒤 이어지지 않았습니다",
-          en: "Nothing carried on after it ended",
-        },
-        body: {
-          ko: "이벤트 안에서는 아홉 팀이 먼저 자료를 요청했지만, 끝난 뒤 멘토에게 먼저 연락한 팀은 한 팀이었습니다. 해 본 적이 없어서입니다.",
-          en: "Inside the event nine teams asked for data on their own, and after it only one team contacted a mentor first. They had never done it before.",
-        },
-        // DECIDED 2026-09-30 (사용자): 답은 따로 있던 "끝나면 할 일" 첫 줄(after.steps[0])입니다. 그 블록은 화면에서
-        // 내렸고 이 카드가 그 말을 합니다. 연습 세션이 정해지면 그 앞에 한 문장 더하세요.
-        answer: {
-          ko: "멘토에게 먼저 연락합니다. 이벤트 안에서 받은 피드백은 이벤트 밖에서도 유효합니다. 제목은 인사가 아니라 결과이고, 주신 이야기로 무엇을 만들었는지 한 줄이면 됩니다.",
-          en: "Message the mentor first. Feedback you got inside the event still holds outside it. Lead with the result, not the greeting: one line on what you built with it is enough.",
+          ko: "현장에서 여러 번, 그리고 글로 남겨 말합니다. 멘토에게 먼저 연락합니다. 제목은 인사가 아니라 결과이고, 주신 이야기로 무엇을 만들었는지 한 줄이면 됩니다.",
+          en: "We say it on site, more than once, and in writing. Message the mentor first. Lead with the result, not the greeting: one line on what you built with what they told you is enough.",
         },
       },
     ] as { title: Phrase; body: Phrase; answer: Phrase | null }[],
@@ -1660,12 +1607,23 @@ export const naru = {
       },
     ] as { k: Phrase; v: Phrase }[],
 
-    gapsHeading: { ko: "8월에 아쉬웠던 다섯, 그리고 12월의 답", en: "Five things August missed, and December's answer" },
+    // DECIDED 2026-10-07 (이슈 브리프 2.3, D1): "아쉬웠던 다섯"이 "남기지 못한 두 가지"가 됩니다. 소제목에
+    // "실패"는 쓰지 않습니다. 항목은 record.gaps.
+    gapsHeading: { ko: "8월이 남기지 못한 두 가지, 그리고 12월의 답", en: "Two things August did not leave behind, and December's answer" },
     // DECIDED 2026-09-23 (첫 방문자 리뷰): 8월을 모르는 사람은 이 제목에서 멈췄습니다. 제목 바로 아래 한 줄.
     gapsNote: {
-      ko: "첫 회차(2026년 8월, 싱가포르)를 치르고 남은 다섯입니다. 8월을 모르셔도 됩니다. 각 항목의 12월 답만 보셔도 충분합니다.",
-      en: "Five things left over from the first run (Singapore, August 2026). You don't need to know August. The December answer under each one is enough.",
+      ko: "첫 회차(2026년 8월, 싱가포르)를 돌아보며 가장 크게 남은 둘입니다. 8월을 모르셔도 됩니다.",
+      en: "Looking back on the first run (Singapore, August 2026), these are the two that stayed with us most. You don't need to know August.",
     },
+    // 그 밖에 바꾼 것 (DECIDED 2026-10-07, 이슈 브리프 2.3). 상자 없는 짧은 목록 셋입니다. 전의 gaps 02~04가
+    // 가지고 있던 12월의 답을 한 줄씩으로 줄였습니다. 둘째 줄은 "같은 공간"이라고 쓰지 않습니다(2026-09-19).
+    // 셋째 줄: 피칭은 열고 시상에서는 뺍니다(2026-09-30). "별도 트랙"을 다시 쓰지 마세요.
+    alsoLabel: { ko: "그 밖에 바꾼 것", en: "What else changed" },
+    also: [
+      { ko: "멘토링의 디테일을 사전에 더 많이 공유합니다.", en: "More of the mentoring details are shared in advance." },
+      { ko: "모든 활동을 대면으로 해서 다른 팀이 만드는 것을 직접 봅니다.", en: "Every activity is in person, so you see what other teams are building." },
+      { ko: "주관 학생도 피칭할 수 있습니다(시상 대상은 아닙니다).", en: "Organising students can pitch too (they are not up for awards)." },
+    ] as Phrase[],
     gapsLead: {
       ko: "이 다섯 가지를 메우려면 한 번 더 해야 합니다. 각각 8월에 무엇이 없었고 12월에 무엇을 넣는지입니다.",
       en: "Filling these five takes doing it once more. For each, what August lacked and what December puts in.",

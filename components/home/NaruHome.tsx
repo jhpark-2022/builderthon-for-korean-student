@@ -989,6 +989,9 @@ export default function NaruHome() {
 
         {/* 8월에 아쉬웠던 넷과 12월의 답. 번호 배지 카드 넷(8월 BenefitCard 문법), 2×2.
             제목이 아쉬웠던 것, 본문이 12월의 답. */}
+        {/* DECIDED 2026-10-07 (이슈 브리프 2.3): 카드 다섯이 둘이 됩니다. "8월이 남기지 못한 두 가지"만 카드로
+            세우고(카드 모양은 그대로, 2열), 전의 02~04는 그 아래 "그 밖에 바꾼 것" 세 줄로 내렸습니다. 카드는
+            제목, 무슨 일이 있었는지 두 문장(gap.body), 12월의 답 순서입니다. 전에는 body를 그리지 않았습니다. */}
         <Reveal className={`${READ} mt-8 text-left lg:mt-12`}>
           <h3 data-subheading className={SUBHEADING}>{t(naru.december.gapsHeading)}</h3>
           <p className={`${MEASURE} mt-2 break-keep text-sm leading-relaxed text-white/70`}>{t(naru.december.gapsNote)}</p>
@@ -997,15 +1000,15 @@ export default function NaruHome() {
           {/* 폰은 상자 없이 행(구분선만). sm부터 카드 2열. */}
           <ol role="list" className="mt-3 grid grid-cols-1 sm:mt-5 sm:grid-cols-2 sm:gap-4">
             {naru.record.gaps.map((gap, i) => (
-              // 2026-09-29: 다섯째가 생겨 홀수입니다. 2열에서 마지막 한 장이 빈자리처럼 읽히지 않게 두 칸을 씁니다.
-              <li key={gap.title.en} className={`relative border-b border-white/10 py-3 last:border-b-0 ${i === naru.record.gaps.length - 1 && naru.record.gaps.length % 2 === 1 ? "sm:col-span-2" : ""} sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-4 sm:transition sm:hover:border-accent/30 sm:hover:bg-white/[0.05]`}>
+              <li key={gap.title.en} className="relative border-b border-white/10 py-3 last:border-b-0 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-4 sm:transition sm:hover:border-accent/30 sm:hover:bg-white/[0.05]">
                 <div className="flex items-center gap-2.5 sm:block">
                   <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-2xl bg-accent/15 text-xs font-black text-accent sm:h-8 sm:w-8 sm:text-sm">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <h4 className="break-keep text-sm font-bold leading-snug text-white sm:mt-2.5 sm:text-base">{t(gap.title)}</h4>
                 </div>
-                <p className={`${MEASURE} mt-2 flex items-start gap-2 break-keep text-sm leading-relaxed text-white/75`}>
+                <p className="mt-2 break-keep text-sm leading-relaxed text-white/75">{t(gap.body)}</p>
+                <p className="mt-3 flex items-start gap-2 break-keep text-sm leading-relaxed text-white/85">
                   <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent/80" />
                   <span>
                     <span className={`mr-1.5 text-[0.68rem] font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.december.decemberLabel)}</span>
@@ -1015,6 +1018,16 @@ export default function NaruHome() {
               </li>
             ))}
           </ol>
+          {/* 그 밖에 바꾼 것. 상자 없는 목록 셋(규칙: 짧은 병렬 문장은 목록). 라벨은 ul 밖의 소제목입니다. */}
+          <h4 data-subheading className={`${SUBHEADING} mt-8`}>{t(naru.december.alsoLabel)}</h4>
+          <ul role="list" className="mt-3">
+            {naru.december.also.map((line, i) => (
+              <li key={i} className={`flex items-start gap-2 break-keep border-t border-white/10 py-3 text-sm leading-relaxed text-white/75 ${i === naru.december.also.length - 1 ? "border-b" : ""}`}>
+                <span aria-hidden className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent/80" />
+                {t(line)}
+              </li>
+            ))}
+          </ul>
         </Reveal>
 
         {/* 끝나면 할 일 (DECIDED 2026-09-18, 사용자: "챕터를 만들지는 말고 기존 포맷에 몇 줄 더").
@@ -1032,7 +1045,8 @@ export default function NaruHome() {
             한 칸이 아니라 전체로 씁니다. 3열 격자에 카드 하나가 남으면 빠진 자리처럼
             읽힙니다. */}
         {/* DECIDED 2026-09-30 (사용자): "끝나면 할 일" 블록은 그리지 않습니다. 그 내용(멘토에게 먼저 연락합니다)은
-            위 다섯째 카드 "끝난 뒤 이어지지 않았습니다"의 12월 답이 됐습니다(data/naru.ts record.gaps[4].answer).
+            위 다섯째 카드 "끝난 뒤 이어지지 않았습니다"의 12월 답이 됐습니다(data/naru.ts record.gaps[4].answer.
+            2026-10-07부터는 둘째 카드 record.gaps[1].answer).
             같은 사실을 두 번 말하던 자리였습니다. after.stepsLabel과 steps는 데이터에 그대로 둡니다. */}
 
         {/* 다음 건너기 (DECIDED 2026-09-29, 9/28 자문): 끝나면 할 일 바로 뒤. 이벤트가 끝나는 곳이 아니라 다음에
