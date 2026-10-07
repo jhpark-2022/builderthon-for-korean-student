@@ -169,7 +169,7 @@
 - 한 것: DECIDED 2026-10-07. 크로싱 서울 신청 폼은 8월 폼과 같은 항목에 사람마다 전공과 "AI로 해 본 것"을 더 받습니다. 같은 날 넣은 `ai_level` 선택 상자를 네 단계 선택 카드로 바꿨습니다(값 `chat`, `agent`, `terminal`, `connect`). 수준이 아니라 해 본 일로 적고, 단계마다 예시를 둡니다. 등록 창이 열리기 전이라 받은 답이 없어 값을 바꿨습니다.
   `FieldType`에 `radio`, `FieldOption`에 `hint`를 더했고 `validateField`는 `radio`를 `select`와 같이 검사합니다. 모달은 radiogroup과 실제 radio input으로 그리고, 글자 크기는 `BODY`와 `META` 둘입니다. 전공에는 자리표시를 더했습니다.
   제출에서 막혔을 때 포커스가 첫 오류 칸으로 가지 않던 것을 고쳤습니다(렌더 뒤에 찾습니다).
-  표는 바꾸지 않습니다. 답은 `crossing_members.answers`에 들어가고, 0005는 `crossing_participants` 뷰 끝에 `major`, `ai_level` 두 열을 더합니다. **0005는 파일만 있고 운영 DB에는 아직 적용하지 않았습니다.**
+  표는 바꾸지 않습니다. 답은 `crossing_members.answers`에 들어가고, 0005는 `crossing_participants` 뷰 끝에 `major`, `ai_level` 두 열을 더합니다. 0005는 푸시 뒤 사용자가 운영 DB에 적용했고(`supabase db push`), 뷰에 두 열이 생기고 권한(`anon`, `authenticated`에 select 없음)과 행 수가 그대로인 것을 읽기 질의로 확인했습니다.
   명단 스크립트는 `ai_level`을 "3. 터미널에서 ..."처럼 단계 번호와 한국어 라벨로 냅니다.
 - 8월 대조: `track`(8월에는 "관심 분야" 질문), `quiz_type` 말고 빠진 열은 없습니다. 모달은 `?ref=`를 `ref`로 보냅니다. 8월 폼에 있던 혼자 오는 사람의 1인 팀 이름 칸은 크로싱 모달에 없습니다(라우트는 받습니다).
 - 검증: 1440×900, 390×844에서 카드 넷이 보이고 예시 글의 대비 8.3:1 이상. 탭, 화살표, 스페이스로 고름. 빈 전공과 목록 밖 단계는 클라이언트와 서버 둘 다 막음.
