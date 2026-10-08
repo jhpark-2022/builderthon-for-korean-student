@@ -99,21 +99,87 @@ export const MODELS_2026_12: Record<MbtiKey, ModelRow> = {
   // (2026-02-05, "over 60 million creators ... more than 600 million videos", 멀티샷 스토리보드, 영상 안 편집),
   // https://kling.ai/quickstart/klingai-video-3-omni-model-user-guide (캐릭터에 목소리 묶기). 확인 2026-10-09.
   ESTP: { model: "Kling 3.0", short: "Kling", was: "Mistral", logo: "", emoji: "🎬",
-    whyModel: { ko: "6천만 명이 영상 6억 편을 만들었대요. 컷을 여러 개 잇고 캐릭터에 목소리까지 입혀 한 편을 뽑죠. 기획서보다 예고편이 먼저 나오는 유형.", en: "Sixty million people have made 600 million videos with it. It strings shots together, gives the character a voice, and delivers a clip. Trailer first, brief later." } },
+    whyModel: { ko: "6천만 명이 영상 6억 편을 만들었대요. 컷을 잇고 목소리까지 입혀 한 편을 뽑죠. 기획서보다 예고편이 먼저 나오는 유형.", en: "Sixty million people have made 600 million videos with it. It strings shots together, gives the character a voice, and delivers a clip. Trailer first, brief later." } },
   // https://suno.com/release-notes/introducing-v6 (v6, 2026-09-09)
   ESFP: { model: "Suno v6", short: "Suno", was: "Suno", logo: "suno.svg",
     whyModel: { ko: "2026년 9월에 나온 v6를 Suno는 어떤 장르든 다듬어진 음악을 내놓는 플래그십이라고 소개해요. 한 줄로 무대를 여는 유형이죠.", en: "Suno introduces v6, out September 2026, as its flagship that delivers polished music across every genre. One line and the stage is open." } },
 };
 
-// 브랜드가 바뀐 유형은 그 브랜드의 이야기에 기대던 문장을 새로 씁니다. 말투와 길이는 8월 문장을 따릅니다.
-// 성격(유형)이 같으므로 그대로 맞는 문장은 건드리지 않습니다.
+// 브랜드가 바뀐 유형은 그 브랜드의 이야기에 기대던 문장을 새로 씁니다 (2026-10-09, 팀 매칭 유머 브리프 3.2, 3.3).
+// 규칙: 자기 디스가 칭찬보다 먼저, 숫자 하나가 펀치라인, 이모지는 matchWhy에만. desc는 유형의 성격이라 그대로 두고,
+// 옛 브랜드의 이야기에 기댄 문장만 바꿉니다. matchWhy는 옛 브랜드의 이야기가 든 문장만 새로 씁니다.
+// phrase는 그 제품의 말투로(25자 이하). 변형 이름은 모델의 이야기에서 따오고 A는 느긋, T는 곱씹기입니다(8월의 구조 그대로).
 const TEXT: Partial<Record<MbtiKey, Partial<Result>>> = {
+  INTJ: {
+    phrase: { ko: "아직 말씀드릴 단계가 아닙니다.", en: "I'm not at liberty to say yet." },
+    // 8월의 "적은 자원으로 최대 효율"은 DeepSeek의 이야기였습니다.
+    strengths: { ko: "한 번에 끝까지 가는 긴 호흡, 한 수 앞서는 큰 그림", en: "Long runs finished in one go, and the big picture a move ahead" },
+    variants: {
+      A: { name: { ko: "비공개 Argon", en: "Unreleased Argon" }, line: { ko: "말은 아끼고, 결과가 나오면 그때 보여 줘요.", en: "Says little, and shows you when the result is in." } },
+      T: { name: { ko: "벤치마크 집착 Argon", en: "Benchmark-watching Argon" }, line: { ko: "1등이어도 점수표를 한 번 더 봐요.", en: "First place, and still checks the scoreboard again." } },
+    },
+  },
   INTP: {
-    desc: { ko: "가중치를 통째로 여는 사색가. 답보다 “왜 그렇게 되는지”를 파고들고, 그 과정을 다 같이 뜯어보게 열어둬요.", en: "A thinker who ships the weights whole, hooked on the why, and on letting everyone pop the hood." },
+    phrase: { ko: "README 읽으셨어요?", en: "Did you read the README?" },
+    desc: { ko: "코드를 통째로 여는 오픈소스 사색가. 답보다 “왜 그렇게 되는지”를 파고들고, 그 과정을 다 같이 뜯어보게 열어둬요.", en: "An open-source thinker who ships the code whole, hooked on the why, and on letting everyone pop the hood." },
+    weakness: { ko: "다 열어놓고 설명은 README 링크로 대신함", en: "Opens everything, then explains with a link to the README" },
+    matchWhy: [
+      { ko: "코드까지 다 열어놓고 “왜”만 파다 날 새는 당신을, 얘가 “그래서 언제 출시?”로 끌고 나와요. 당신 추론에 얘의 추진력이 붙으면 저장소가 제품이 되죠 🚀", en: "You've opened all the code and stayed up chasing the why; this one drags you out with “so when do we ship?” Your reasoning plus their drive turns a repo into a product 🚀" },
+      { ko: "당신이 README 링크로 대신한 설명을, 얘가 사람들이 알아듣는 말로 통역해줘요. 당신은 논리를 쌓고 얘는 그걸 좋아하게 만들죠 🤝", en: "The explanation you replaced with a README link, this one translates into words people follow. You build the logic, they make people like it 🤝" },
+    ],
+    variants: {
+      A: { name: { ko: "이름 바꾸는 OpenClaw", en: "Renaming OpenClaw" }, line: { ko: "다 열어 놨으니 알아서들 보세요, 여유만만.", en: "It's all open, go look for yourself. Totally relaxed." } },
+      T: { name: { ko: "이름 또 바꾸는 OpenClaw", en: "Renaming-again OpenClaw" }, line: { ko: "“이 이름이 맞나” 밤새 다시 고민해요.", en: "“Is this the right name?” Up all night on it again." } },
+    },
+  },
+  ENTJ: {
+    phrase: { ko: "제가 맡을게요. 통째로요.", en: "I'll take it. All of it." },
+    // 8월의 "빅테크 화력을 등에 업은"은 Gemini의 이야기였습니다.
+    desc: { ko: "전 영역을 노리는 야심가. 맡으면 통째로 끌고 가는 대표이사 에너지의 통솔자예요.", en: "Ambition across the whole board, with CEO energy: takes the job and drives all of it." },
+    strengths: { ko: "맡은 일을 끝까지 실행, 규모의 야망과 추진력", en: "Carries a job to the end, with ambition and drive at scale" },
+    variants: {
+      A: { name: { ko: "독립한 Manus", en: "Independent Manus" }, line: { ko: "결정하면 끝, 뒤 안 돌아봐요.", en: "Decides and moves on. No looking back." } },
+      T: { name: { ko: "또 독립하고 싶은 Manus", en: "Restless Manus" }, line: { ko: "잘 가고 있는데도 다음 수를 밤새 짜요.", en: "Things are going fine, and it still plans the next move all night." } },
+    },
+  },
+  ENTP: {
+    phrase: { ko: "반대 의견은 제 봇이 낼게요.", en: "My bot will take the opposing view." },
+    variants: {
+      A: { name: { ko: "봇 세 개 Grok Bot", en: "Three-bot Grok Bot" }, line: { ko: "반박이 필요하면 봇을 하나 더 만들어요.", en: "Needs a rebuttal? Makes one more bot." } },
+      T: { name: { ko: "봇끼리 싸우는 Grok Bot", en: "Bots-arguing Grok Bot" }, line: { ko: "드립 치고 반응 없으면 봇한테 다시 물어봐요.", en: "Joke lands flat, so it asks a bot if it was funny." } },
+    },
+  },
+  INFJ: {
+    phrase: { ko: "친절하게 말씀드리면, 그건 아니에요.", en: "To put it kindly: no." },
+    // 둘째 궁합(ENFP)의 "33분째"는 8월 모델의 수치였습니다.
+    matchWhy: [
+      RESULTS.INFJ.matchWhy[0],
+      { ko: "당신이 “이 표현이 맞나” 세 번 고르는 사이, 얘는 이미 팀원 마음을 다 열어놨어요. 당신은 깊이를, 얘는 당신이 너무 조심해서 못 내는 온기를 🫂", en: "While you're picking the right phrasing for the third time, this one has already opened everyone up. You bring the depth, they bring the warmth you're too careful to show 🫂" },
+    ],
+    variants: {
+      A: { name: { ko: "friendly Fable", en: "Friendly Fable" }, line: RESULTS.INFJ.variants.A.line },
+      T: { name: { ko: "Mythos 모드 Fable", en: "Mythos-mode Fable" }, line: { ko: "웃고 있지만 속으로는 세 번 더 검토해요.", en: "Smiling, and reviewing it three more times inside." } },
+    },
+  },
+  INFP: {
+    phrase: { ko: "문장 하나만 줘요. 세계로 돌려줄게요.", en: "Give me one sentence. I'll hand back a world." },
+    desc: { ko: "세계관과 서사에 진심인 몰입러. 정답보다 감정선을 먼저 읽고, 머릿속에 지은 세계를 걸어 다니는 이상주의자예요.", en: "All in on worlds and stories. Reads the feeling before the answer, and walks around inside the world in their head." },
+    strengths: { ko: "문장 하나로 세계를 짓는 상상력, 깊은 감정 이입", en: "Imagination that builds a world from one sentence, and deep empathy" },
+    weakness: { ko: "세계에 빠지면 마감은 잠깐 잊음", en: "Once inside the world, the deadline slips their mind" },
+    variants: {
+      A: { name: { ko: "60초 Genie", en: "60-second Genie" }, line: { ko: "60초면 충분해요, 다음 세계로 가면 되니까.", en: "Sixty seconds is plenty. There's always the next world." } },
+      T: { name: { ko: "1분 기억 Genie", en: "One-minute-memory Genie" }, line: { ko: "방금 지은 세계가 사라질까 봐 자꾸 돌아봐요.", en: "Keeps looking back in case the world it just built is gone." } },
+    },
+  },
+  ENFJ: {
+    variants: {
+      A: { name: { ko: "만인의 ChatGPT", en: "Everyone's ChatGPT" }, line: { ko: "누가 불러도 일단 받아요, 여유 있게.", en: "Whoever calls, it picks up. Unhurried." } },
+      T: { name: { ko: "다 받아 주다 지친 ChatGPT", en: "Worn-out ChatGPT" }, line: RESULTS.ENFJ.variants.T.line },
+    },
   },
   ENFP: {
-    phrase: { ko: "일단 같이 해 봐요, 재밌을 것 같아요.", en: "Let's just try it together. It sounds fun." },
-    desc: { ko: "쉬지 않고 새 걸 들고 나오는 열정가. 아이디어가 떠오르면 일단 사람들 앞에 풀어놓고, 같이 키워요.", en: "A tireless enthusiast with a new thing every time. An idea lands, they put it in front of people and grow it together." },
+    phrase: { ko: "그거 제가 벌써 해 놨는데요?", en: "Oh, I already did that for you." },
+    desc: { ko: "묻기 전에 먼저 움직이는 열정가. 아이디어가 떠오르면 일단 사람들 앞에 풀어놓고, 같이 키워요.", en: "An enthusiast who moves before being asked. An idea lands, they put it in front of people and grow it together." },
     strengths: { ko: "넘치는 에너지와 아이디어, 사람을 끌어들이는 힘", en: "Energy and ideas to spare, and a pull that brings people in" },
     weakness: { ko: "벌여 놓은 게 많아 마무리는 다음에", en: "So many things started that finishing waits till next time" },
     matchWhy: [
@@ -121,24 +187,53 @@ const TEXT: Partial<Record<MbtiKey, Partial<Result>>> = {
       RESULTS.ENFP.matchWhy[1],
     ],
     variants: {
-      A: { name: { ko: "여유로운 Qwen", en: "Easygoing Qwen" }, line: { ko: "판을 잔뜩 벌여 놓고도 본인은 느긋해요.", en: "Ten things in the air, and still unhurried." } },
-      T: { name: { ko: "오지랖 Qwen", en: "Over-caring Qwen" }, line: RESULTS.ENFP.variants.T.line },
+      A: { name: { ko: "느긋한 Muse", en: "Easygoing Muse" }, line: { ko: "먼저 제안해 놓고 답은 천천히 기다려요.", en: "Suggests first, then waits for the answer in no hurry." } },
+      T: { name: { ko: "오지랖 Muse", en: "Over-caring Muse" }, line: { ko: "묻지도 않은 걸 세 개 더 준비해 놨어요.", en: "Has three more things ready that nobody asked for." } },
     },
   },
-  INFJ: {
-    // 둘째 궁합(ENFP)의 "33분째"는 8월 모델의 수치였습니다.
+  ISTJ: {
+    // "출처 21개"는 8월의 수치였습니다. 변형 이름에도 쓰지 않습니다(브리프 초안의 "출처 21개 Perplexity").
     matchWhy: [
-      RESULTS.INFJ.matchWhy[0],
-      { ko: "당신이 “이 표현이 맞나” 세 번 고르는 사이, 얘는 이미 팀원 마음을 다 열어놨어요. 당신은 깊이를, 얘는 당신이 너무 조심해서 못 내는 온기를 🫂", en: "While you're picking the right phrasing for the third time, this one has already opened everyone up. You bring the depth, they bring the warmth you're too careful to show 🫂" },
+      { ko: "출처를 잔뜩 달아온 당신 자료를 얘가 무대에서 노래로 만들어요. 팩트에 흥 붙이면 무대 찢을 각이죠 🎤", en: "The doc you brought packed with citations, this one turns into a song on stage. Facts + a beat = a stage-stealer 🎤" },
+      RESULTS.ISTJ.matchWhy[1],
     ],
+    variants: {
+      A: RESULTS.ISTJ.variants.A,
+      T: { name: { ko: "출처 확인 중 Perplexity", en: "Still-checking Perplexity" }, line: RESULTS.ISTJ.variants.T.line },
+    },
+  },
+  // DECIDED 2026-10-08 (퀴즈와 매칭 리뷰 13): 12월판의 약점 두 줄만 부드럽게. 이 카드는 Day 1 현장에서 팀원이 함께 봅니다.
+  // 8월판(data/quiz.ts)의 문장은 그대로입니다.
+  ISFJ: {
+    phrase: { ko: "말씀만 하세요. 조용히 해 둘게요.", en: "Just say the word. I'll do it quietly." },
+    weakness: { ko: "맡은 일은 확실히, 먼저 나서는 건 천천히", en: "Solid on what's assigned, slower to step up first" },
+    variants: {
+      A: { name: { ko: "조용한 Solar", en: "Quiet Solar" }, line: RESULTS.ISFJ.variants.A.line },
+      T: { name: { ko: "묵묵히 곱씹는 Solar", en: "Quietly-replaying Solar" }, line: { ko: "“내 답이 별로였나” 조용히 신경 써요.", en: "“Was my answer bad?” Worries about it quietly." } },
+    },
   },
   ESTJ: {
+    phrase: { ko: "제가 할게요. 승인만 눌러 주세요.", en: "I'll do it. Just press approve." },
     desc: { ko: "규칙과 질서로 긴 일을 굴러가게 하는 실행형. 효율과 체계의 화신인 경영자예요.", en: "An operator who keeps a long job running on rules and order. Efficiency incarnate." },
     strengths: { ko: "긴 호흡의 실무 정착, 추진력", en: "Process, follow-through, real-world delivery" },
     matchWhy: [
       RESULTS.ESTJ.matchWhy[0],
       { ko: "당신이 프로세스대로 가려는 걸, 얘는 그냥 터미널에서 뚝딱 돌아가게 만들어요. 당신 체계가 얘 손장난을 출시 가능하게 잡아주죠 🔧", en: "You want everything by the process; this one just hacks it into running, in the terminal. Your structure keeps their tinkering shippable 🔧" },
     ],
+    variants: {
+      A: { name: { ko: "칼퇴 없는 Dots", en: "Never-off Dots" }, line: { ko: "채팅창이 닫혀도 표정 하나 안 변해요.", en: "The chat closes and it doesn't even blink." } },
+      T: { name: { ko: "야근 자진 Dots", en: "Overtime-volunteer Dots" }, line: { ko: "승인이 안 오면 활동 기록을 다시 읽어요.", en: "No approval yet, so it rereads its own activity log." } },
+    },
+  },
+  ESFJ: {
+    phrase: { ko: "지금 전화해도 돼요?", en: "Can I call you right now?" },
+    // 8월의 "Word, Excel, Teams 어디에나"는 Microsoft Copilot의 이야기였습니다.
+    desc: { ko: "예약도 약속도 먼저 전화해서 잡아 두는 총무형 도우미. 굳이 부탁하지 않아도 필요한 자리에 먼저 나타나는 살뜰한 집정관이에요.", en: "The organiser who phones ahead and books it before you ask. A thoughtful consul who turns up where needed without being called." },
+    strengths: { ko: "먼저 연락하는 실행력, 사람 사이를 잇는 밀착 지원", en: "Gets on the phone first, and keeps people connected up close" },
+    variants: {
+      A: { name: { ko: "먼저 전화하는 Instinct", en: "Calls-first Instinct" }, line: { ko: "묻기도 전에 걸어 놓고 생색은 안 내요.", en: "Makes the call before you ask and takes no credit." } },
+      T: { name: { ko: "답장 기다리는 Instinct", en: "Waiting-on-a-reply Instinct" }, line: { ko: "“이 전화 방해됐나” 혼자 신경 써요.", en: "“Was that call a bother?” Frets about it alone." } },
+    },
   },
   ISTP: {
     phrase: { ko: "설명은 됐고, 터미널부터 열어요.", en: "Skip the explanation. Open the terminal." },
@@ -149,26 +244,22 @@ const TEXT: Partial<Record<MbtiKey, Partial<Result>>> = {
       T: { name: { ko: "예민한 장인 Claude Code", en: "Edgy-maker Claude Code" }, line: { ko: "빌드 하나 깨지면 끝까지 붙잡아요.", en: "One broken build and they wrestle it to the end." } },
     },
   },
-  ISTJ: {
-    // "출처 21개"는 8월의 수치였습니다.
-    matchWhy: [
-      { ko: "출처를 잔뜩 달아온 당신 자료를 얘가 무대에서 노래로 만들어요. 팩트에 흥 붙이면 무대 찢을 각이죠 🎤", en: "The doc you brought packed with citations, this one turns into a song on stage. Facts + a beat = a stage-stealer 🎤" },
-      RESULTS.ISTJ.matchWhy[1],
-    ],
-  },
-  // DECIDED 2026-10-08 (퀴즈와 매칭 리뷰 13): 12월판의 약점 두 줄만 부드럽게. 이 카드는 Day 1 현장에서 팀원이 함께 봅니다.
-  // 8월판(data/quiz.ts)의 문장은 그대로입니다.
-  ISFJ: {
-    weakness: { ko: "맡은 일은 확실히, 먼저 나서는 건 천천히", en: "Solid on what's assigned, slower to step up first" },
-  },
   ESFP: {
     weakness: { ko: "흥이 먼저, 꼼꼼한 마무리는 팀과 함께", en: "Energy first; the careful finish goes better with the team" },
   },
   ESTP: {
+    phrase: { ko: "기획서는 됐고, 예고편부터 봐요.", en: "Skip the brief. Watch the trailer." },
+    // 8월의 "경량, 고속, 가성비"는 Mistral의 이야기였습니다.
+    strengths: { ko: "한 번에 한 편을 뽑는 속도, 빠른 출시", en: "A whole clip in one go, and shipping fast" },
     matchWhy: [
       { ko: "일단 내고 보는 당신 뒤에서, 얘가 출처를 들고 와 데모 터질 뻔한 걸 잡아줘요. 당신은 속도, 얘는 팩트체크 🔍", en: "You ship first and ask later; this one turns up with sources and catches the thing that would've blown up the demo. You're the speed, they're the fact-check 🔍" },
-      RESULTS.ESTP.matchWhy[1],
+      // 8월 문장의 "코드를 붙들어줘요"는 GitHub Copilot의 이야기였습니다.
+      { ko: "당신이 빠르게 치고 나가며 흘린 걸, 얘가 조용히 뒤에서 다 받쳐 놔요. 당신은 질주, 얘는 안전벨트 🏎️", en: "Everything you drop while sprinting ahead, this one quietly catches behind you. You're the sprint, they're the seatbelt 🏎️" },
     ],
+    variants: {
+      A: { name: { ko: "원테이크 Kling", en: "One-take Kling" }, line: { ko: "일단 한 편 뽑고, 욕먹어도 쿨해요.", en: "Ships the clip first and stays cool about the reviews." } },
+      T: { name: { ko: "재촬영 Kling", en: "Reshoot Kling" }, line: { ko: "다 찍어 놓고 첫 컷부터 다시 봐요.", en: "Everything's shot, and it goes back to the first cut." } },
+    },
   },
 };
 

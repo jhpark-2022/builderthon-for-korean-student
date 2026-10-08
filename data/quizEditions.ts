@@ -56,10 +56,11 @@ const UI_2026_12: typeof quizUI = {
   back: { ko: "크로싱 서울", en: "CROSSING SEOUL" },
   eyebrow: { ko: "Day 1 현장 팀 매칭", en: "Day 1 on-site team matching" },
   title: { ko: "크로싱 서울 팀 매칭", en: "CROSSING SEOUL team matching" },
-  subtitle: { ko: "14문항, 약 3분. 결과로 Day 1 팀 매칭을 합니다.", en: "14 questions, about 3 minutes. Your result is used for team matching on Day 1." },
+  // 2026-10-09 (팀 매칭 유머 브리프 5): 한 줄을 덧붙입니다.
+  subtitle: { ko: "14문항, 약 3분. 결과로 Day 1 팀 매칭을 합니다. 결과가 마음에 안 들면 다시 해도 됩니다. 다들 그래요.", en: "14 questions, about 3 minutes. Your result is used for team matching on Day 1. Don't like it? Take it again. Everyone does." },
   meta: { ko: "이름, 나라, 테스트 결과는 현장 팀 매칭에만 씁니다.", en: "Your name, country and result are used only for on-site team matching." },
   roleLabel: { ko: "추천 역할", en: "Your role" },
-  matchSub: { ko: "크로싱 서울에서 이 유형을 만나면 일단 팀 하세요. 이유는 나중에 ✦", en: "Spot one of these at CROSSING SEOUL? Team up first, talk later ✦" },
+  matchSub: { ko: "이 유형 보이면 일단 잡으세요. 이유는 Day 4에 알게 돼요 ✦", en: "See one of these? Grab them. You'll find out why on Day 4 ✦" },
   matchRoleLabel: { ko: "이 친구 추천 역할", en: "Their role" },
   ctaLead: { ko: "이 성격이면 크로싱 서울에서 {role} 포지션으로 빛나요 ✦", en: "With this type, you'll shine in the {role} role at CROSSING SEOUL ✦" },
   ctaApply: { ko: "프로그램 보기", en: "See the programme" },
