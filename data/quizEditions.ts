@@ -9,6 +9,7 @@
 //   2026-12  /match  크로싱 서울 현장 팀 매칭. 저장 키가 달라서 8월 결과와 섞이지 않습니다.
 // ─────────────────────────────────────────────────────────────────────────────
 import { RESULTS, quizUI, type MbtiKey, type Result } from "@/data/quiz";
+import { RESULTS_2026_12 } from "@/data/quiz-2026-12";
 import { QUIZ_OWN_KEY, QUIZ_RESULT_KEY, MATCH_OWN_KEY, MATCH_RESULT_KEY } from "@/lib/storage";
 
 export type QuizEdition = "2026-08" | "2026-12";
@@ -50,8 +51,6 @@ const UI_2026_12: typeof quizUI = {
 export const QUIZ_EDITIONS: Record<QuizEdition, EditionConfig> = {
   "2026-08": { results: RESULTS, path: "/quiz", backHref: "/2026-08", ownKey: QUIZ_OWN_KEY, resultKey: QUIZ_RESULT_KEY,
     ui: quizUI, cardStamp: { ko: "제로백 빌더톤 2026.08", en: "Zero100 builderthon, Aug 2026" } },
-  // 12월판의 결과 표는 data/quiz-2026-12.ts가 생기면 그쪽을 읽습니다. 그 전까지는 8월 표를 가리킵니다
-  // (이 판을 쓰는 페이지가 아직 없습니다).
-  "2026-12": { results: RESULTS, path: "/match", backHref: "/", ownKey: MATCH_OWN_KEY, resultKey: MATCH_RESULT_KEY,
+  "2026-12": { results: RESULTS_2026_12, path: "/match", backHref: "/", ownKey: MATCH_OWN_KEY, resultKey: MATCH_RESULT_KEY,
     ui: UI_2026_12, cardStamp: { ko: "크로싱 서울 2026.12", en: "CROSSING SEOUL, Dec 2026" } },
 };
