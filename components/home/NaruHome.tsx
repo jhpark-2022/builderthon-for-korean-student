@@ -579,7 +579,10 @@ export default function NaruHome() {
                 그 전의 히어로 전용 clamp(최대 86.4px)와 2행의 0.82em은 없습니다. 한 화면의 글자 크기가 셋을 넘지
                 않게 하려는 것입니다(components/ui/typography.ts). 390px에서 두 줄 모두 한 줄에 들어갑니다. */}
             <h1 id="hero-title" className={`${TITLE} font-black leading-[1.05] tracking-tight drop-shadow-[0_4px_40px_rgba(75,58,140,0.5)]`}>
-              {locale === "ko" && DECEMBER_EVENT_NAME ? (
+              {/* DECIDED 2026-10-08 (사용자: "영문 화면에도 같은 로고로"): 로고는 두 로케일에서 같습니다. 영문 화면에서도
+                  한글 "크로싱 서울"이 보입니다(로고의 일부라서요. 나루 로고의 "영문 화면에서는 한글을 보이지 않는다"는
+                  규칙은 나루 락업의 것이고 이 로고에는 적용하지 않습니다). 한글 줄에는 lang="ko"를 답니다. */}
+              {DECEMBER_EVENT_NAME ? (
                 <>
                   {/* DECIDED 2026-10-08 (사용자, 로고 스크린숏: "이걸로 써줘"): 히어로 제목은 마케팅 포스트의 크로싱 서울 로고
                       모양입니다. 큰 한글 "크로싱 서울"에 그라데이션, 그 아래 가운데에 영문 "CROSSING SEOUL"을 넓은 자간으로.
@@ -591,7 +594,7 @@ export default function NaruHome() {
                       영문 줄은 META 크기라 한 화면의 글자 크기는 그대로 셋입니다. gradient-text는 clip이 안 되는
                       브라우저의 단색 폴백 표식입니다(globals.css). */}
                   <span className="inline-block text-center">
-                    <span className="gradient-text block break-keep bg-gradient-to-r from-[#9AA8EE] to-[#C99ACB] bg-clip-text pb-[0.08em] tracking-[-0.02em] text-transparent">{DECEMBER_EVENT_NAME.ko}</span>{" "}
+                    <span lang="ko" className="gradient-text block break-keep bg-gradient-to-r from-[#9AA8EE] to-[#C99ACB] bg-clip-text pb-[0.08em] tracking-[-0.02em] text-transparent">{DECEMBER_EVENT_NAME.ko}</span>{" "}
                     {/* lang="en" (2026-09-19, 접근성 감사 7): 한국어 TTS가 영문을 한글 음가로 읽지 않게. 사이의 {" "}는
                         이름 계산용입니다(감사 17). pl은 자간만큼 왼쪽을 밀어 가운데를 맞춥니다(끝 글자 뒤의 자간).
                         폰에서는 자간을 좁힙니다: 한글이 36px라 0.55em이면 영문이 한글보다 넓어져 한글이 왼쪽 끝에서 밀립니다. */}
