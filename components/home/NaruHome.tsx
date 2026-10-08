@@ -391,7 +391,7 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
           나눕니다. 전에는 flex라 숫자 셋이 왼쪽에 몰리고 상자의 오른쪽 절반이 비어
           있었습니다. sm부터 라벨 한 칸 + 일·시간·분 세 칸을 같은 너비로 펴고, 숫자도
           한 단 키웁니다(1.6rem → 2.25rem). 폰은 일만 보이므로 두 칸 그대로입니다. */}
-      <div aria-hidden className="mt-2.5 grid gap-y-2">
+      <div aria-hidden className="mt-2.5 grid gap-y-2 xl:grid-cols-2 xl:gap-x-12">
         {rows.map((r) => (
           <div
             key={r.key.en}
@@ -403,16 +403,16 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
             // 약 78px)이 한 줄로 들어가는 값입니다.
             // 2026-10-07: 라벨이 META(13.5px)가 되어 "Singapore SGT"가 92px입니다. 81px 트랙에서는 숫자와
             // 겹쳤습니다(영문 390px 실측). 트랙을 5.25rem(94.5px)으로 넓힙니다.
-            className="grid grid-cols-[5.25rem_repeat(2,minmax(0,1fr))] items-baseline gap-x-2 sm:grid-cols-[8.5rem_repeat(3,minmax(0,1fr))] sm:gap-x-4"
+            className="grid grid-cols-[5.25rem_repeat(2,minmax(0,1fr))] items-baseline gap-x-2 sm:grid-cols-[8.5rem_repeat(3,minmax(0,1fr))] sm:gap-x-4 xl:grid-cols-[6.5rem_repeat(3,minmax(0,1fr))]"
           >
             <span className={`min-w-0 whitespace-nowrap ${META} font-semibold text-white/85`}>{t(r.key)}</span>
             {r.l === "started" ? (
               <span className={`col-span-2 ${BODY} font-black text-white sm:col-span-3`}>{t(naru.eventHero.started)}</span>
             ) : (
               cellsOf(r.l).map((c, i) => (
-                // 2026-10-07: 숫자가 TITLE이 되어(1440px에서 67.5px) lg의 반쪽 폭 패널에서는 단위가 옆에 서지 못합니다.
-                // lg부터 단위를 숫자 아래에 둡니다. 그 아래 폭은 패널이 전체 폭이라 옆에 그대로.
-                <span key={i} className={`min-w-0 items-baseline gap-1.5 lg:flex-col lg:items-start lg:gap-1 ${c.phone ? "flex" : "hidden sm:flex"}`}>
+                // 2026-10-08: 패널이 두 단 아래의 전체 폭 띠가 되어 단위가 다시 숫자 옆에 섭니다(10월 7일에는 반쪽 폭이라
+                // 단위를 숫자 아래로 내렸습니다).
+                <span key={i} className={`min-w-0 items-baseline gap-1.5 ${c.phone ? "flex" : "hidden sm:flex"}`}>
                   <span className={`${TITLE} font-black leading-none tabular-nums text-white`}>{c.v}</span>
                   <span className={`${META} font-semibold text-white/85`}>{t(c.u)}</span>
                 </span>
@@ -455,7 +455,7 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
         {shown.map((photo, i) => (
           <div
             key={photo.src}
-            className={`group relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.9)] ${i % 2 === 1 ? "lg:translate-y-8" : ""}`}
+            className={`group relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.9)]`}
           >
             <Image src={photo.src} alt={t(photo.alt)} fill sizes="(max-width: 1023px) 45vw, 280px" priority={!desktopOnly && i < 2} className="object-cover object-center" />
             {photo.day && (
@@ -470,7 +470,7 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
         ))}
       </div>
       {/* lg에서는 홀수 칸이 36px 내려가 있어 그만큼 더 띄웁니다. */}
-      <figcaption className={`mt-3 text-left ${META} text-white/80 lg:mt-12`}>{t(naru.eventHero.photosCaption)}</figcaption>
+      <figcaption className={`mt-3 text-left ${META} text-white/80`}>{t(naru.eventHero.photosCaption)}</figcaption>
     </figure>
   );
 }
@@ -571,7 +571,14 @@ export default function NaruHome() {
         {/* relative는 2026-09-17에 framer-motion의 useScroll target 경고 때문에
             붙었습니다. 그 훅은 2026-09-20에 사라졌지만 클래스는 둡니다. 히어로가
             앉는 쌓임 맥락이고, 빼는 것은 아무도 요청하지 않은 레이아웃 변경입니다. */}
-        <div className="relative grid items-center gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
+        {/* DECIDED 2026-10-08 (사용자, 스크린숏: "로고, 타이머, 사진, 설명이 display 되어 있는 방식이 모두 어색함"): 히어로 정리.
+            ① 두 단의 윗선을 맞춥니다(가운데 정렬이라 사진 단이 로고보다 아래에서 시작했습니다).
+            ② 사진 넷은 엇갈림 없이 반듯한 2×2, 캡션은 바로 아래.
+            ③ 버튼 둘은 한 줄에 붙이고, 안내 한 줄은 버튼 줄 아래에(전에는 첫 버튼 아래라 둘째 버튼이 밀렸습니다).
+            ④ 카운트다운은 왼쪽 단에서 꺼내 두 단 아래의 가로 띠 하나로. 숫자 옆에 단위, xl부터 서울과 싱가포르가
+               한 줄에 나란히. 왼쪽 단 안에서는 TITLE 숫자 두 줄이 단을 다 차지해 설명보다 무거웠습니다.
+            폰은 순서 그대로입니다(카피, 버튼, 카운트다운, 사진). */}
+        <div className="relative grid items-start gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
           <div className="text-left lg:pl-10 xl:pl-16">
             <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.eventHero.eyebrow)}</Eyebrow>
             {/* 2행은 그라데이션 토큰(GRADIENT_TEXT). ko는 "크로싱 서울" / "CROSSING SEOUL", en은 "CROSSING" / "SEOUL".
@@ -597,12 +604,17 @@ export default function NaruHome() {
                       테라코타 틴트 #E08A76. 로고의 색이라 "주황은 점으로만" 규칙의 대상이 아닙니다.
                       영문 줄은 META 크기라 한 화면의 글자 크기는 그대로 셋입니다. gradient-text는 clip이 안 되는
                       브라우저의 단색 폴백 표식입니다(globals.css). */}
-                  <span className="inline-block text-center">
+                  <span className="inline-block">
                     <span lang="ko" className="gradient-text block break-keep bg-gradient-to-r from-[#9AA8EE] to-[#C99ACB] bg-clip-text pb-[0.08em] tracking-[-0.02em] text-transparent">{DECEMBER_EVENT_NAME.ko}</span>{" "}
                     {/* lang="en" (2026-09-19, 접근성 감사 7): 한국어 TTS가 영문을 한글 음가로 읽지 않게. 사이의 {" "}는
                         이름 계산용입니다(감사 17). pl은 자간만큼 왼쪽을 밀어 가운데를 맞춥니다(끝 글자 뒤의 자간).
                         폰에서는 자간을 좁힙니다: 한글이 36px라 0.55em이면 영문이 한글보다 넓어져 한글이 왼쪽 끝에서 밀립니다. */}
-                    <span lang="en" className={`mt-1 block whitespace-nowrap pl-[0.18em] ${META} font-bold uppercase leading-none tracking-[0.18em] text-[#E08A76] sm:mt-2 sm:pl-[0.55em] sm:tracking-[0.55em]`}>{DECEMBER_EVENT_NAME.en}</span>
+                    {/* 2026-10-08 (히어로 정리): 영문 줄의 양 끝을 한글 줄의 양 끝에 맞춥니다(글자를 고르게 벌려 폭을 같게).
+                        가운데 정렬이면 왼쪽 정렬된 히어로에서 영문만 안쪽으로 들어가 보였습니다. 읽는 글은 sr-only 한 줄입니다. */}
+                    <span lang="en" className={`mt-1 flex justify-between ${META} font-bold uppercase leading-none text-[#E08A76] sm:mt-2`}>
+                      <span className="sr-only">{DECEMBER_EVENT_NAME.en}</span>
+                      {[...DECEMBER_EVENT_NAME.en].map((ch, i) => (<span key={i} aria-hidden>{ch === " " ? "\u00a0" : ch}</span>))}
+                    </span>
                   </span>
                 </>
               ) : (
@@ -625,7 +637,7 @@ export default function NaruHome() {
               <span className="text-white">{t(naru.eventHero.naruLine)}</span>{" "}
               {t(naru.eventHero.sub)}
             </p>
-            <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:justify-start">
+            <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-start">
               {regState === "open" ? (
                 <button type="button" onClick={() => { track("naru_cta", { src: "hero", to: "register" }); reg?.openRegister(); }} className={`group ${buttonClass("primary", "naru")}`}>
                   {t(registerCopy.cta)}
@@ -636,10 +648,7 @@ export default function NaruHome() {
               ) : (
                 // 창이 열리기 전: "등록 준비 중" + 바로 아래 12px 캡션(감사 반영 브리프 1.1).
                 // 그 전(2026-09-18 아침)의 반투명 "등록하기"는 이유 없이 죽어 있는 1차 CTA였습니다.
-                <div className="flex flex-col items-center gap-2 lg:items-start">
-                  <PreparingButton t={t} noteId="hero-register-note" onOpen={reg?.openRegister} className={HERO_BUTTON_GROUND} />
-                  <p id="hero-register-note" className={`${META} leading-snug text-white/90`}>{t(registerCopy.previewCtaNote)}</p>
-                </div>
+                <PreparingButton t={t} noteId="hero-register-note" onOpen={reg?.openRegister} className={HERO_BUTTON_GROUND} />
               )}
               {/* 오픈채팅이 막혀 있으면(links.openChat 빈 문자열, 2026-09-17) 이 앵커가
                   히어로의 유일한 문이라 주 CTA의 면(그라데이션 필)을 받습니다. 히어로의
@@ -653,8 +662,9 @@ export default function NaruHome() {
                 <span aria-hidden className="text-white/65">↓</span>
               </a>
             </div>
-            {/* 카운트다운(얇은 한 줄). lg부터 여기, 그 아래 폭에서는 무대 다음에. */}
-            <CountdownPanel t={t} locale={locale} className="mt-8 hidden lg:block" />
+            {regState === "not_open" && (
+              <p id="hero-register-note" className={`mt-3 ${META} leading-snug text-white/90`}>{t(registerCopy.previewCtaNote)}</p>
+            )}
           </div>
           {/* 오른쪽 단 = 8월 행사 사진 넷 (DECIDED 2026-09-17, 사용자). 8월 히어로의
               메탈 휴먼 자리입니다. 사람이 많이 나온 장면만, 같은 사진은 사이트에 한 번.
@@ -667,6 +677,10 @@ export default function NaruHome() {
           <div className="hidden lg:block lg:pr-10 xl:pr-16">
             <HeroPhotos photos={naru.eventHero.photos} t={t} desktopOnly />
           </div>
+        </div>
+        {/* 카운트다운 띠(lg부터). 두 단과 같은 좌우 여백이라 로고의 왼쪽 끝, 사진의 오른쪽 끝과 맞습니다. */}
+        <div className="hidden lg:block lg:px-10 xl:px-16">
+          <CountdownPanel t={t} locale={locale} className="mt-10" />
         </div>
         {/* 폰(lg 아래): 카피 바로 다음에 사진 넷(2×2), 그 아래 카운트다운. */}
         {/* 폰(lg 아래): CTA → 카운트다운 한 줄 → 사진 넷. 데스크톱(왼쪽 단 CTA 아래)과 같은
