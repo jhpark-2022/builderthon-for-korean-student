@@ -479,14 +479,18 @@ export const naru = {
         },
       },
       {
-        // 원본 Photo/Day 1/AWS/IMG_2028.HEIC
-        src: "/record/hero-day1-hall.webp",
+        // 원본 Photo/Day 1/AWS/IMG_2044.HEIC
+        // DECIDED 2026-10-08 (사용자, 스크린숏: "이 사진 대신 AWS에 찍은 사진, 최대한 사람 많은 거"): AWS 세션 사진 중
+        // 홀을 가장 넓게 잡아 사람이 가장 많이 나온 장면으로 바꿨습니다. 그 전은 같은 세션의 IMG_2028
+        // (/record/hero-day1-hall.webp, 파일은 그대로 둡니다). 이 파일은 화면에서 내려간 record.wall의
+        // day1-full-hall과 같은 사진입니다. 벽을 되살리면 "같은 사진 두 번 금지"에 걸리니 한쪽을 바꾸세요.
+        src: "/record/day1-full-hall.webp",
         width: 1200,
         height: 900,
         day: { ko: "Day 1", en: "Day 1" },
         alt: {
-          ko: "Day 1 파운드리 홀, 무대의 AWS 세션을 듣는 참가자들",
-          en: "Day 1 at Foundry: participants listening to the AWS session on stage",
+          ko: "Day 1 파운드리 홀을 가득 채우고 무대의 AWS 세션을 듣는 참가자들",
+          en: "Day 1 at Foundry: a full hall listening to the AWS session on stage",
         },
       },
       {
