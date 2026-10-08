@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-08 /match는 미리 해 볼 수 있고 저장만 닫는다](#2026-10-08-match-preview)
 - [2026-10-08 등록 폼은 미리 볼 수 있고 제출만 막는다](#2026-10-08-register-preview)
 - [2026-10-08 현장 팀 매칭: /match, 12월판 AI 유형 테스트, 선호 트랙 순위](#2026-10-08-match-quiz)
 - [2026-10-07 신청 폼: AI로 해 본 것 네 단계와 전공, 참가자 뷰의 두 열](#2026-10-07-registration-form)
@@ -164,6 +165,15 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-08-match-preview"></a>
+## 2026-10-08 /match는 미리 해 볼 수 있고 저장만 닫는다
+- 범위: `lib/crossingMatch.ts`의 `MATCH_WINDOW`, `components/match/MatchParts.tsx`의 안내 문구, `data/quizEditions.ts`와 `components/Quiz.tsx`의 이미지 파일 이름.
+- 한 것: 사용자 요청(DECIDED 2026-10-08: 8월처럼 이미지 저장까지 다 되고 해 볼 수도 있되, 아직 수파베이스에는 반영되지 않게). `MATCH_WINDOW.opensAt`을 null로 둬 결과 저장을 닫았습니다. `/match`는 끝까지 해 볼 수 있고 결과, 이미지 저장, 공유, 다시 하기가 그대로 됩니다.
+  결과 화면에는 "지금은 미리 해 보기입니다. 결과는 저장되지 않습니다. 팀 매칭은 Day 1 현장에서 엽니다."가 서고, 라우트는 403을 돌려줍니다. 받기 시작하려면 `opensAt`에 시각을 적습니다. 같은 날 아침의 "지금부터 받는다"는 이 결정이 대신합니다.
+  12월판에서 저장하는 이미지의 파일 이름은 `crossing-seoul-match-<유형>.png`입니다(8월판은 그대로).
+- 검증: `/match`에서 이미지 저장으로 1080×1920 PNG가 만들어짐(Kimi K3, Qwen3.8-Max, GLM-5.3, Claude Code, Claude Opus 5.5 다섯 유형, 새 로고 포함). 390×844에서 전체 흐름과 다시 하기 뒤 안내가 뜨고, 운영 표의 행 수는 0 그대로. 빌드 통과.
+- 커밋: 9fb3171
 
 <a id="2026-10-08-register-preview"></a>
 ## 2026-10-08 등록 폼은 미리 볼 수 있고 제출만 막는다
