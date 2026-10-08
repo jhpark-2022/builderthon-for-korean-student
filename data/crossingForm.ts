@@ -121,10 +121,13 @@ export const CROSSING_FORM: Field[] = [
   // 순서가 곧 단계 번호입니다(명단 스크립트가 "3. 라벨"로 냅니다). 순서를 바꾸지 마세요.
   { key: "major", scope: "member", type: "text", required: true, maxLen: 80,
     label: { ko: "전공", en: "Major" },
+    // DECIDED 2026-10-09 (사용자, 스크린숏: "여러분들을 위한 과정을 위해서 물어보는 것, screening 이 아니라는 내용 추가해줘"):
+    // 전공과 아래 AI 질문은 선발처럼 읽히기 쉬운 두 칸입니다. 둘 다 바로 아래에 왜 묻는지와 스크리닝이 아님을 적습니다.
+    help: { ko: "여러분에게 맞는 과정을 준비하려고 묻습니다. 스크리닝이 아닙니다.", en: "We ask so we can prepare a programme that fits you. This is not screening." },
     placeholder: { ko: "예: 경영학, 컴퓨터공학, 미정", en: "e.g. Business, Computer Science, Undeclared" } },
   { key: "ai_level", scope: "member", type: "radio", required: true,
     label: { ko: "AI로 해 본 것 중 가장 위에 있는 것 하나를 골라 주세요.", en: "Pick the highest step you have actually done with AI." },
-    help: { ko: "워크숍을 여러분에게 맞추기 위해 묻는 것이고, 이것으로 선발하지 않습니다.", en: "We ask this to fit the workshops to you. It is not used for selection." },
+    help: { ko: "여러분에게 맞는 과정을 준비하려고 묻습니다. 스크리닝이 아니고, 무엇을 골라도 참가에는 영향이 없습니다.", en: "We ask so we can prepare a programme that fits you. This is not screening, and your answer does not affect whether you can join." },
     options: [
       { value: "chat", label: { ko: "채팅창에 물어보고 답을 받아 써 봤다", en: "Asked a chatbot and used its answers" },
         hint: { ko: "ChatGPT나 Claude에 질문하고 글, 요약, 번역을 받아 씀", en: "Questions, drafts, summaries or translations from ChatGPT or Claude" } },
