@@ -2091,7 +2091,13 @@ export const naru = {
           en: "You present to the people from the companies. Five minutes, then five for questions. You go up even if it is not solved. We look at how you approached the problem.",
         },
         // #after 챕터와 같은 말입니다. 여기서는 일정 안의 사실로, 저기서는 챕터로.
-        line: { ko: "여기서 만난 사람과 기회를 이어가는 것은 각자의 몫입니다.", en: "Carrying on with the people and the chances you met here is yours to do." },
+        // DECIDED 2026-10-08 (프로그램 브리프 2.3, D3): 클로징은 끝난 뒤에 할 일을 말하고 글로 남기며 끝납니다.
+        // 그 전의 "이어가는 것은 각자의 몫"은 record.gaps[1](충분히 말하지 않은 것은 주최 측의 몫)과 방향이 어긋났습니다.
+        // record.gaps[1].answer, #after의 steps와 같은 사실입니다. 하나를 바꾸면 셋을 같이 보세요.
+        line: {
+          ko: "클로징은 끝난 뒤에 할 일로 끝납니다. 말로 하고, 글로도 남겨 드립니다.",
+          en: "The closing ends on what to do once it is over. We say it, and you get it in writing too.",
+        },
         chips: [{ ko: "멘토링 없음", en: "No mentoring" }, { ko: "시상과 클로징", en: "Awards and closing" }],
       },
     ] as {
