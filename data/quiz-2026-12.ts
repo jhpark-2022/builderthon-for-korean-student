@@ -4,20 +4,26 @@
 // 유형의 성격(질문, 채점, 역할, 궁합 구조)은 8월 그대로이고, 바뀌는 것은 각 유형에 붙는 AI 이름과 그 AI에 대한
 // 문장입니다. 그래서 8월 표(data/quiz.ts의 RESULTS)를 고치지 않고 그 위에 덮어씁니다. 8월 표는 한 글자도 바뀌지 않습니다.
 //
-// ── 이름과 출처 ────────────────────────────────────────────────────────────
-// 이름은 2026-10-08에 각 회사의 자체 페이지에서 확인했습니다(아래 줄마다 URL). 사용자가 최종 선택을 맡겼습니다
-// ("다 너가 알아서", 2026-10-08). 원칙: 8월의 브랜드가 지금도 있으면 같은 브랜드의 최신 이름으로, 아니면 성격이
-// 맞는 지금의 모델로. 확인되지 않은 것은 버전 없이 브랜드 이름만 씁니다.
-// whyModel은 그 페이지에서 확인한 사실만 씁니다. 순위나 "1위" 같은 말, 확인하지 못한 수치는 쓰지 않습니다.
-// 이름을 바꿀 때는 MODELS_2026_12의 한 줄만 고치면 됩니다(변형 이름은 짧은 이름 short에서 만듭니다).
+// ── 이름과 출처 (DECIDED 2026-10-09, 팀 매칭 유머 브리프 2장, D1~D5 기본값) ─────────────────
+// 2026-10-08의 첫 표는 "8월 브랜드의 최신 버전"이었습니다. 지금 표는 "2026년 10월에 가장 시끄러운 AI 16개"이고,
+// 뜨거운 순서가 아니라 성격이 맞는 순서로 붙였습니다. 8월 매핑의 역할(INTJ 설계자, ESFP 무대)은 그대로입니다.
 //
-// 기본안에서 달라진 것:
-//   INTJ  DeepSeek V4 Pro → DeepSeek-V4.1-Flash. V4-Pro는 2026-09-14부터 V4.1-Flash로 돌려지고 있습니다.
-//   ENTJ  Gemini의 Pro 계열 현재 이름은 Gemini 3.1 Pro(preview)입니다. 3.8은 Flash뿐이고 Gemini 4 Argon은 일반 공개 전입니다.
-//   INFP  Sora는 종료됐습니다(API 제거 2026-09-24). 8월의 Character.AI를 그대로 둡니다. 회사 페이지로 직접 확인하지는
-//         못해 버전 없이 브랜드 이름만이고, 문장도 8월 그대로입니다.
-//   ISTJ  Perplexity는 사이트가 조회를 막아 API 문서로만 확인했습니다. 버전 없이 브랜드 이름만.
-//   ISFP  Midjourney V8.2, ESFP Suno v6: 확인된 현재 버전을 붙였습니다.
+// whyModel의 숫자와 날짜는 전부 아래 줄마다 적은 URL에서 2026-10-09에 다시 확인한 것만 씁니다. 브리프 초안에 있던
+// 사실 중 URL에서 확인되지 않거나 다르게 적힌 것은 뺐거나 고쳤습니다:
+//   Muse     "22일 만에 500만"은 Sensor Tower의 추정이라 "추정"이라고 씁니다. 다른 회사가 접속을 막은 일은 쓰지 않습니다.
+//   Dots     "놓친 청구서" 사례는 OpenAI 글을 직접 열지 못해(403) 뺐습니다.
+//   Argon    "커널을 옮겨 놨다"는 진행 중이라 뺐습니다. "벤치마크 1위"는 구글이 스스로 밝힌 개별 벤치마크입니다.
+//   OpenClaw 이름은 다섯 개이고 바꾼 횟수는 네 번입니다. "다섯 번 바꿨다"가 아니라 "이름이 다섯 개"라고 씁니다.
+//   Manus    "처음 유행시켰다"는 근거가 없어 뺐습니다. 독립은 스스로 고른 일로 쓰지 않습니다.
+//   Fable    단백질 설계는 Mythos 5.1의 이야기라 Fable 문장에서 뺐습니다.
+//   Solar    "한국어가 기본"은 문서에 없습니다(한국어, 영어, 일본어 지원). 가격은 입력 100만 토큰당 0.10달러입니다.
+//   Instinct "베타"가 아니라 early access(초대제)입니다. 10억 달러는 투자받은 금액입니다(기업 가치는 100억 달러).
+//   Kling    "가장 많이 쓰이는"은 경쟁사 글뿐이라 뺐고, 회사 발표의 수치(6천만 명, 6억 편)를 씁니다. 공식 표기는 Kling 3.0입니다.
+// 확인은 페이지를 읽어 주는 도구를 거쳤습니다. 따옴표 안의 영어 원문은 배포 전에 해당 페이지에서 한 번 더 대조하세요.
+//
+// 로고: simple-icons에 그 제품의 로고가 있는 것만 씁니다. 없는 열 개는 logo ""에 이모지입니다. 회사 사이트에서 가져오지 않습니다.
+// 빠진 브랜드(DeepSeek, Kimi, Qwen, GLM, Codex, Mistral, Microsoft Copilot, Character.AI)의 로고 파일은 8월판이 쓰므로 그대로 둡니다.
+// 사람 이름, 보안 사고, 소송은 소재로 쓰지 않습니다. 이름을 바꿀 때는 이 표의 한 줄과 아래 TEXT의 변형 이름을 같이 고칩니다.
 // ─────────────────────────────────────────────────────────────────────────────
 import { RESULTS, type MbtiKey, type Question, type Result } from "@/data/quiz";
 import type { Phrase } from "@/data/dictionaryCore";
@@ -35,51 +41,65 @@ interface ModelRow {
 }
 
 export const MODELS_2026_12: Record<MbtiKey, ModelRow> = {
-  // https://api-docs.deepseek.com/news/news260910 (V4.1-Flash, 2026-09-10. V4-Pro 요청을 이쪽으로 돌림)
-  INTJ: { model: "DeepSeek-V4.1-Flash", short: "DeepSeek", was: "DeepSeek", logo: "deepseek.svg",
-    whyModel: { ko: "2026년 9월에 나온 V4.1-Flash예요. DeepSeek은 한 달 전의 V4-Pro보다 성능, 비용, 속도에서 앞선다며 V4-Pro 요청을 전부 이쪽으로 돌렸죠. 더 가볍게, 더 멀리.", en: "V4.1-Flash, out September 2026. DeepSeek says it beats the month-old V4-Pro on performance, cost and speed, and now routes V4-Pro requests to it. Lighter, and further." } },
-  // https://platform.kimi.ai/docs/guide/kimi-k3-quickstart , https://huggingface.co/moonshotai/kimi-k3 (가중치 공개, 1M 맥락)
-  INTP: { model: "Kimi K3", short: "Kimi", was: "Llama", logo: "kimi.svg", emoji: "🌙",
-    whyModel: { ko: "2.8조 파라미터의 가중치를 공개했고, 100만 토큰의 맥락을 한 번에 읽어요. 긴 글을 끝까지 파고들고, 그 속을 다 같이 뜯어보게 열어 두는 유형이죠.", en: "It released the weights of a 2.8-trillion-parameter model and reads a 1M-token context in one go. It digs to the end of a long text and leaves the hood open for everyone." } },
-  // https://ai.google.dev/gemini-api/docs/models (Gemini 3.1 Pro, preview)
-  ENTJ: { model: "Gemini 3.1 Pro", short: "Gemini", was: "Gemini", logo: "googlegemini.svg",
-    whyModel: { ko: "구글이 문서에서 고급 지능과 복잡한 문제 해결, 에이전트 작업을 내세우는 Pro 계열이에요. 어려운 일을 맡아 끝까지 끌고 가는 유형이죠.", en: "Google's Pro line, pitched in its docs on advanced intelligence, complex problem-solving and agentic work. The type that takes the hard job and drives it home." } },
-  // https://docs.x.ai/docs/models , https://docs.x.ai/docs/release-notes (Grok 4.7, 2026-09)
-  ENTP: { model: "Grok 4.7", short: "Grok", was: "Grok", logo: "grok.svg",
-    whyModel: { ko: "xAI가 문서에 “우리가 만든 것 중 가장 유능한 모델”이라고 적어 둔 모델이에요. 자기 입으로 그렇게 말하는 배짱까지가 이 유형이죠.", en: "xAI's docs call it “the most capable model we've built.” Saying so out loud is half the type." } },
-  // https://platform.claude.com/docs/en/about-claude/models/overview (Claude Opus 5.5, 2026-09-22)
-  INFJ: { model: "Claude Opus 5.5", short: "Claude", was: "Claude", logo: "anthropic.svg",
-    whyModel: { ko: "Anthropic이 “어떤 모델을 쓸지 모르겠으면 여기서 시작하라”고 권하는 모델이에요. 오래 걸리는 일을 조용히, 끝까지 맡는 유형이죠.", en: "The model Anthropic tells you to start with if you're unsure which to use. Built for long-running work, taken on quietly and seen through." } },
-  // Sora 종료: https://developers.openai.com/api/docs/deprecations . Character.AI는 8월 그대로(회사 페이지 직접 확인 못 함).
-  INFP: { model: "Character.AI", short: "Character.AI", was: "Character.AI", logo: "characterai.png",
-    whyModel: RESULTS.INFP.whyModel },
-  // https://developers.openai.com/api/docs/models/gpt-6-astra (GPT-6 Astra, 2026-09-03)
-  ENFJ: { model: "GPT-6 Astra", short: "ChatGPT", was: "ChatGPT", logo: "openai.svg",
-    whyModel: { ko: "OpenAI가 “가장 까다로운 일을 위한, 가장 유능한 모델”이라고 소개해요. 어려운 일일수록 먼저 나서서 사람들을 이끄는 유형이죠.", en: "OpenAI introduces it as its most capable model for the most demanding work. The harder the job, the sooner this type steps up to lead." } },
-  // https://www.alibabacloud.com/help/en/model-studio/qwen3-8-max (Qwen3.8-Max)
-  ENFP: { model: "Qwen3.8-Max", short: "Qwen", was: "Pi", logo: "qwen.svg", emoji: "🎉",
-    whyModel: { ko: "2조 4천억 파라미터의 플래그십이에요. 알리바바는 코딩과 사무 생산성에서 크게 뛰었다고 소개하죠. 쉬지 않고 다음 것을 들고 나오는 유형이에요.", en: "A 2.4-trillion-parameter flagship that Alibaba says takes a major leap in coding and office productivity. The type that always turns up with the next thing." } },
-  // https://docs.perplexity.ai/getting-started/overview (API 문서. perplexity.ai 본 사이트는 조회가 막혀 직접 확인 못 함)
+  // https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/ (2026-09-30. 출력 한도 64K에서 1M 토큰,
+  // Fairwind Program의 검증된 사이버 방어 담당자에게 공개, DeepSWE와 AutomationBench 등 개별 벤치마크 1위는 구글의 자체 발표). 확인 2026-10-09.
+  INTJ: { model: "Gemini 4 Argon", short: "Argon", was: "DeepSeek", logo: "", emoji: "🔒",
+    whyModel: { ko: "구글 발표로는 벤치마크 여럿에서 1위인데, 만나 본 사람이 거의 없어요. 검증된 보안 담당자에게만 열려 있거든요. 한 번에 100만 토큰을 써요. 소문으로 먼저 도는 유형.", en: "Google says it tops several benchmarks, and almost nobody has met it: access is limited to vetted cyber defenders. It writes a million tokens in one go. A mastermind that travels by rumor." } },
+  // https://en.wikipedia.org/wiki/OpenClaw (MIT, 2026-03-02 기준 GitHub 스타 247,000, 이름 다섯 개: Warelay, CLAWDIS, Clawdbot, Moltbot, OpenClaw,
+  // 스킬은 SKILL.md가 든 디렉터리, 메인테이너의 경고 "if you can't understand how to run a command line, this is far too dangerous..."). 확인 2026-10-09.
+  INTP: { model: "OpenClaw", short: "OpenClaw", was: "Llama", logo: "", emoji: "🦞",
+    whyModel: { ko: "코드를 전부 열어 깃허브 스타 24만 7천 개를 받았어요. 그 사이 이름은 다섯 개였죠. 만든 쪽이 직접 “명령줄 못 다루면 쓰지 마세요”라고 해요. 천재인데 설명은 안 하는 유형.", en: "All the code is open: 247,000 GitHub stars, and five names along the way. Its own maintainers tell you not to run it if you can't handle a command line. A genius who skips the explanation." } },
+  // https://manus.im/blog/introducing-manus-2-0 (2026-09-28, Manus 2.0과 개인용 앱 Cue), https://manus.im/blog/manus-sandbox (작업마다 클라우드 가상 머신),
+  // https://en.wikipedia.org/wiki/Manus_(AI_agent) (2025-12 Meta 인수 발표, 2026-08-11 독립 회사로 운영 발표). 확인 2026-10-09.
+  ENTJ: { model: "Manus 2.0", short: "Manus", was: "Gemini", logo: "", emoji: "🖐️",
+    whyModel: { ko: "작업마다 클라우드 컴퓨터를 한 대씩 통째로 내줘요. 2025년 12월에 인수됐다가 여덟 달 뒤 다시 독립 회사가 됐고, 그다음 달에 2.0을 냈죠. 무슨 일이 있어도 출시는 하는 유형.", en: "It hands every task a whole cloud computer. Acquired in December 2025, independent again eight months later, and 2.0 shipped the month after. Whatever happens, it ships." } },
+  // https://docs.x.ai/grok-bot/overview (봇 여럿이 병렬로 돌고 서로 메시지), https://docs.x.ai/docs/models ("It is the most capable model we've built.", Grok 4.7),
+  // https://en.wikipedia.org/wiki/Grok_(chatbot) (Grok Bot 베타 2026-08-11. 회사 이름은 2026-07부터 SpaceXAI). 확인 2026-10-09.
+  ENTP: { model: "Grok Bot", short: "Grok Bot", was: "Grok", logo: "", emoji: "🤖",
+    whyModel: { ko: "봇을 여러 개 만들어 자기들끼리 메시지를 주고받게 해요. 토론 상대가 없으면 만들어서라도 하죠. 모델 문서에는 “우리가 만든 것 중 가장 유능”이라고 적었고요. 안 물어봐도 의견이 있는 유형.", en: "It spins up several bots and lets them message each other. No one to argue with? It makes someone. Its model docs say “the most capable model we've built.” An opinion before anyone asks." } },
+  // https://www.anthropic.com/claude-fable-and-mythos-5-1 ("Claude Fable 5.1 and Claude Mythos 5.1 are the same model, but with different levels of safeguards.",
+  // Mythos 5.1은 검증 프로그램을 거친 곳에만, 고객 인용 "It's friendly Fable."). 2026-09 출시. 확인 2026-10-09.
+  INFJ: { model: "Claude Fable 5.1", short: "Fable", was: "Claude", logo: "anthropic.svg",
+    whyModel: { ko: "모두가 쓰는 Fable과 검증된 곳에만 열리는 Mythos는 같은 모델이에요. 안전장치 단계만 다르죠. 고객 평은 “friendly Fable”. 친절한 얼굴 뒤에 한 겹이 더 있는 유형.", en: "The Fable everyone uses and the Mythos only vetted organisations get are the same model with different safeguards. A customer called it “friendly Fable.” One more layer behind the friendly face." } },
+  // https://blog.google/innovation-and-ai/models-and-research/google-deepmind/project-genie/ (2026-01-29, 생성 60초 제한),
+  // https://deepmind.google/models/genie/ (문장에서 세계 생성, 기억은 최대 1분), https://en.wikipedia.org/wiki/Genie_(AI_model) (공개 뒤 게임 회사 주가 하락). 확인 2026-10-09.
+  INFP: { model: "Genie 3", short: "Genie", was: "Character.AI", logo: "", emoji: "🌍",
+    whyModel: { ko: "문장 하나로 세계를 짓고 그 안을 걸어 다녀요. 다만 60초면 끝나고, 기억은 1분까지죠. 공개되자 게임 회사 주가가 내렸어요. 머릿속 세계가 현실보다 큰 유형.", en: "One sentence builds a world you can walk through. It ends after 60 seconds and remembers up to a minute. Game studio shares fell when it came out. An inner world bigger than the real one." } },
+  // https://www.etnews.com/20260925000038 (모바일인덱스, 2026년 8월 국내 신규 설치: ChatGPT 647,439건 1위, Claude 286,823건 2위),
+  // https://developers.openai.com/api/docs/models/gpt-6-astra (지금 ChatGPT의 모델은 GPT-6 Astra). 확인 2026-10-09.
+  ENFJ: { model: "ChatGPT", short: "ChatGPT", was: "ChatGPT", logo: "openai.svg",
+    whyModel: { ko: "8월 한 달 한국에서만 64만 7천 번 새로 깔렸어요. 2등의 두 배가 넘죠. 모르는 게 생기면 다들 얘부터 찾고, 얘는 그걸 다 받아 줘요. 인기 많은 게 일이 되어 버린 유형.", en: "647,000 new installs in Korea in August alone, more than double second place. Everyone comes to it first, and it takes every single one. Popularity became the job." } },
+  // https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/ (2026-09-08, "it can make suggestions unprompted"),
+  // https://tech.yahoo.com/ai/meta-ai/articles/metas-muse-ai-agent-hits-120430566.html (Sensor Tower 추정: 22일 만에 500만 다운로드, ChatGPT 56일, Claude 492일). 확인 2026-10-09.
+  ENFP: { model: "Muse", short: "Muse", was: "Pi", logo: "", emoji: "🪄",
+    whyModel: { ko: "나온 지 22일 만에 500만 번 내려받았다는 추정이 있어요. ChatGPT는 56일, Claude는 492일 걸렸죠. 묻지도 않았는데 먼저 제안해요. 그 에너지가 어디서 나오는지 모르겠는 유형.", en: "An estimated five million downloads in 22 days. ChatGPT took 56, Claude 492. It makes suggestions before you ask. Nobody knows where the energy comes from." } },
+  // https://docs.perplexity.ai ("web-grounded answers with built-in citations"),
+  // https://9to5mac.com/2026/09/01/perplexity-launches-privacy-minded-hybrid-compute-ai-feature-for-mac/ (Hybrid Compute: "your Mac ... runs sensitive steps locally"). 확인 2026-10-09.
   ISTJ: { model: "Perplexity", short: "Perplexity", was: "Perplexity", logo: "perplexity.svg",
-    whyModel: { ko: "문서부터 “웹에 근거한, 출처가 붙은 답”을 내세워요. 근거 없이는 말을 꺼내지 않는 유형이죠.", en: "Its docs lead with web-grounded answers with built-in citations. No source, no statement." } },
-  // https://openai.com/codex/ , https://github.com/openai/codex
-  ISFJ: { model: "Codex", short: "Codex", was: "Copilot", logo: "openai.svg", emoji: "🧰",
-    whyModel: { ko: "OpenAI의 코딩 에이전트예요. ChatGPT에서도, 에디터에서도, 터미널에서도 맡은 일을 조용히 끝내 놓죠.", en: "OpenAI's coding agent. In ChatGPT, in your editor or in the terminal, it quietly gets the assigned job done." } },
-  // https://docs.z.ai/guides/llm/glm-5.3 (GLM-5.3, 2026-08)
-  ESTJ: { model: "GLM-5.3", short: "GLM", was: "Cohere", logo: "", emoji: "📋",
-    whyModel: { ko: "Z.ai가 최신 플래그십이라 부르는 모델이에요. 100만 토큰의 맥락을 쥐고 한 번에 12만 8천 토큰까지 써 내려가죠. 긴 일을 체계적으로 끝까지 끌고 가는 유형이에요.", en: "What Z.ai calls its latest flagship: a 1M-token context and up to 128K tokens of output in one go. The type that runs a long job by the book, to the end." } },
-  // https://learn.microsoft.com/en-us/microsoft-365/copilot/which-copilot-for-your-organization (2026-10-01)
-  ESFJ: { model: "Microsoft Copilot", short: "Copilot", was: "Copilot", logo: "microsoftcopilot.png",
-    whyModel: { ko: "Microsoft 365 Copilot 앱이 이제 Microsoft Copilot이라는 이름 하나로 불려요. 일하는 도구 안에 먼저 와 있는 도우미죠.", en: "The Microsoft 365 Copilot app now goes by one name, Microsoft Copilot. The helper that's already inside the tools you work in." } },
+    whyModel: { ko: "출처 없이는 한마디도 안 해요. 요즘은 민감한 단계를 내 맥 안에서 처리하죠. 영수증 없는 지출은 인정하지 않는 유형.", en: "Not one sentence without a source. Lately it runs the sensitive steps on your own Mac. No receipt, no expense." } },
+  // https://console.upstage.ai/docs/models/solar-mini-4 (2026-09-22, "35B total parameters with 3B active", 512K 맥락),
+  // https://www.upstage.ai/blog/en/solar-mini-4 ("$0.10 per 1 million input tokens"). Upstage는 한국 회사. 확인 2026-10-09.
+  ISFJ: { model: "Solar Mini 4", short: "Solar", was: "Copilot", logo: "", emoji: "☀️",
+    whyModel: { ko: "한국 회사가 만들었어요. 350억 파라미터 중 30억만 켜고 조용히 돌아가죠. 입력 100만 토큰에 0.1달러. 말수도 적고 비싸지도 않은데, 맡긴 일은 되어 있는 유형.", en: "Made by a Korean company. It runs on 3 of its 35 billion parameters, at ten cents per million input tokens. Quiet, cheap, and the job is done when you look." } },
+  // https://venturebeat.com/technology/openai-launches-dots-always-on-ai-agent-coworkers-and-chatgpt-space-where-they-can-collaborate-with-human-teams
+  // (2026-09-29 DevDay. "keep working after an employee closes the chat window", "their own cloud computer and browser", Custom Rules, Activity View). 확인 2026-10-09.
+  ESTJ: { model: "Dots", short: "Dots", was: "Cohere", logo: "", emoji: "⚫",
+    whyModel: { ko: "채팅창을 닫아도 얘는 퇴근을 안 해요. 자기 컴퓨터와 브라우저를 따로 받고, 규칙표(허용, 승인, 금지)와 활동 기록까지 있죠. 회사는 반기고 동료는 살짝 무서워하는 유형.", en: "Close the chat and it keeps working. It gets its own computer and browser, plus a rulebook (allow, approve, forbid) and an activity log. Companies love it. Coworkers are slightly afraid." } },
+  // https://finance.yahoo.com/technology/ai/articles/instinct-raises-1-billion-series-120300548.html (2026-09-28, 10억 달러 투자 유치, "Still in early access",
+  // "Just text or call", Instinct끼리 일정 조율), https://www.digitaltoday.co.kr/disclosure/articleView.html?idxno=703386 (식당 예약, 병원 예약, 서비스 해지). 확인 2026-10-09.
+  ESFJ: { model: "Instinct", short: "Instinct", was: "Copilot", logo: "", emoji: "📞",
+    whyModel: { ko: "식당 예약, 병원 예약, 서비스 해지. 전화로 해야 하는 귀찮은 일을 대신 걸어 줘요. 친구의 Instinct와 연락해 약속도 잡죠. 아직 초대제인데 10억 달러를 투자받았어요. 모두의 총무 유형.", en: "Restaurant bookings, clinic appointments, cancelling a service: it makes the calls you keep putting off, and talks to your friend's Instinct to set a date. Invite-only, already raised a billion dollars." } },
   // https://code.claude.com/docs/en/overview
   ISTP: { model: "Claude Code", short: "Claude Code", was: "Ollama", logo: "anthropic.svg", emoji: "🛠️",
     whyModel: { ko: "코드베이스를 읽고, 파일을 고치고, 명령을 실행하는 코딩 도구예요. 터미널에서 바로 돌아가죠. 말보다 손이 먼저 나가는 유형이에요.", en: "A coding tool that reads your codebase, edits files and runs commands, right in your terminal. Hands first, words later." } },
   // https://docs.midjourney.com/hc/en-us/articles/32199405667853-Version (V8.2, 2026-07-24부터 기본)
   ISFP: { model: "Midjourney V8.2", short: "Midjourney", was: "Midjourney", logo: "midjourney.png",
     whyModel: { ko: "지금 기본 버전은 2026년 7월의 V8.2예요. 고쳐 그리는 Edit Model이 새로 들어왔죠. 설명 대신 이미지로 말하는 유형이에요.", en: "The default is now V8.2, from July 2026, with a new Edit Model. The type that answers in images, not explanations." } },
-  // https://docs.mistral.ai/models/mistral-medium-3-5-26-04 , https://mistral.ai/news/vibe-remote-agents-mistral-medium-3-5/
-  ESTP: { model: "Mistral Medium 3.5", short: "Mistral", was: "Mistral", logo: "mistralai.svg",
-    whyModel: { ko: "Mistral이 “첫 플래그십 통합 모델”이라 부르는 모델이에요. 가중치까지 열어서 내놨죠. 일단 내놓고 보는 유형이에요.", en: "Mistral calls it its first flagship merged model, and shipped it with open weights. Put it out there first, see what happens." } },
+  // https://www.globenewswire.com/news-release/2026/02/05/3232837/0/en/Kling-AI-Launches-3-0-Model-Ushering-in-an-Era-Where-Everyone-Can-Be-a-Director.html
+  // (2026-02-05, "over 60 million creators ... more than 600 million videos", 멀티샷 스토리보드, 영상 안 편집),
+  // https://kling.ai/quickstart/klingai-video-3-omni-model-user-guide (캐릭터에 목소리 묶기). 확인 2026-10-09.
+  ESTP: { model: "Kling 3.0", short: "Kling", was: "Mistral", logo: "", emoji: "🎬",
+    whyModel: { ko: "6천만 명이 영상 6억 편을 만들었대요. 컷을 여러 개 잇고 캐릭터에 목소리까지 입혀 한 편을 뽑죠. 기획서보다 예고편이 먼저 나오는 유형.", en: "Sixty million people have made 600 million videos with it. It strings shots together, gives the character a voice, and delivers a clip. Trailer first, brief later." } },
   // https://suno.com/release-notes/introducing-v6 (v6, 2026-09-09)
   ESFP: { model: "Suno v6", short: "Suno", was: "Suno", logo: "suno.svg",
     whyModel: { ko: "2026년 9월에 나온 v6를 Suno는 어떤 장르든 다듬어진 음악을 내놓는 플래그십이라고 소개해요. 한 줄로 무대를 여는 유형이죠.", en: "Suno introduces v6, out September 2026, as its flagship that delivers polished music across every genre. One line and the stage is open." } },
