@@ -33,6 +33,7 @@ import OpenChatLink from "@/components/ui/OpenChatLink";
 import { TITLE, BODY, META, H2, H3, LABEL_HEADING, ROW_HEADING, STATEMENT, GRADIENT_TEXT } from "@/components/ui/typography";
 import NaruMark from "@/components/ui/NaruMark";
 import MotionToggle from "@/components/ui/MotionToggle";
+import CityShape, { type City } from "@/components/ui/CityShape";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 나루 홈 (/).
@@ -351,9 +352,9 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
     l && l !== "started"
       ? [{ v: String(l.d), u: units.days, phone: true }, { v: pad(l.h), u: units.hours, phone: true }, { v: pad(l.m), u: units.minutes, phone: false }]
       : [{ v: "--", u: units.days, phone: true }, { v: "--", u: units.hours, phone: true }, { v: "--", u: units.minutes, phone: false }];
-  const rows: { key: Phrase; l: Left | null }[] = [
-    { key: naru.eventHero.countdownRows.seoul, l: left },
-    { key: naru.eventHero.countdownRows.singapore, l: leftSg },
+  const rows: { key: Phrase; city: City; l: Left | null }[] = [
+    { key: naru.eventHero.countdownRows.seoul, city: "seoul", l: left },
+    { key: naru.eventHero.countdownRows.singapore, city: "singapore", l: leftSg },
   ];
   // 낭독은 컨테이너의 aria-label 하나로(감사 반영 브리프 1.4, WCAG 4.1.3). 전에는 자식이
   // 따로 읽혀 "81 일"로 끊겼고, aria-live면 분마다 낭독됐습니다. 아래 자식은 전부 aria-hidden.
@@ -403,9 +404,16 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
             // 약 78px)이 한 줄로 들어가는 값입니다.
             // 2026-10-07: 라벨이 META(13.5px)가 되어 "Singapore SGT"가 92px입니다. 81px 트랙에서는 숫자와
             // 겹쳤습니다(영문 390px 실측). 트랙을 5.25rem(94.5px)으로 넓힙니다.
-            className="grid grid-cols-[5.25rem_repeat(2,minmax(0,1fr))] items-baseline gap-x-2 sm:grid-cols-[8.5rem_repeat(3,minmax(0,1fr))] sm:gap-x-4 xl:grid-cols-[6.5rem_repeat(3,minmax(0,1fr))]"
+            className="grid grid-cols-[5.25rem_repeat(2,minmax(0,1fr))] items-center gap-x-2 sm:grid-cols-[8.5rem_repeat(3,minmax(0,1fr))] sm:gap-x-4 xl:grid-cols-[6.5rem_repeat(3,minmax(0,1fr))]"
           >
-            <span className={`min-w-0 whitespace-nowrap ${META} font-semibold text-white/85`}>{t(r.key)}</span>
+            {/* DECIDED 2026-10-08 (사용자, 스크린숏: "그냥 서울, 싱가포르 이것보다 나라의 형상이 있었으면"): 행 라벨 자리에
+                그곳의 윤곽을 둡니다. 마케팅 포스트와 같은 그림입니다(components/ui/CityShape.tsx). 어느 곳의 시각인지는
+                윤곽이 먼저 말하고, 작은 글 라벨은 그 아래에 남깁니다(윤곽만으로는 표준시를 알 수 없습니다). 윤곽은
+                로고 그라데이션의 두 끝 색입니다(서울은 남색 틴트, 싱가포르는 자주 틴트). */}
+            <span className="flex min-w-0 flex-col items-start gap-1">
+              <CityShape city={r.city} decorative className={`h-6 w-auto sm:h-9 ${r.city === "seoul" ? "text-[#9AA8EE]" : "text-[#C99ACB]"}`} />
+              <span className={`whitespace-nowrap ${META} font-semibold text-white/85`}>{t(r.key)}</span>
+            </span>
             {r.l === "started" ? (
               <span className={`col-span-2 ${BODY} font-black text-white sm:col-span-3`}>{t(naru.eventHero.started)}</span>
             ) : (
