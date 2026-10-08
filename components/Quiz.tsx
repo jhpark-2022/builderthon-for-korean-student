@@ -169,6 +169,8 @@ function ModelGlyph({
 // 판이 바꾸는 것은 결과 표, 주소, 저장 키뿐입니다(data/quizEditions.ts). 질문과 채점은 같습니다.
 export default function Quiz({ edition = "2026-08", matchMode = false }: { edition?: QuizEdition; matchMode?: boolean }) {
   const ed = QUIZ_EDITIONS[edition];
+  // 판마다 질문의 글이 다를 수 있습니다(12월판). 극과 가중치와 순서는 QUESTIONS와 같아서 채점은 그대로입니다.
+  const questions = ed.questions ?? QUESTIONS;
   // 판의 옷(data/quizEditions.ts의 tone). c(8월 클래스, 나루 클래스)로 고릅니다. 8월판의 문자열은 한 글자도 바뀌지 않습니다.
   const naru = ed.tone === "naru";
   const c = (z: string, n: string) => (naru ? n : z);
@@ -225,7 +227,7 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
     // change that shifts the outcome falls back to the axis-less card rather
     // than showing percentages that contradict the type on screen.
     const rescored =
-      isOwn && saved?.answers?.length === QUESTIONS.length ? scoreQuiz(saved.answers) : null;
+      isOwn && saved?.answers?.length === questions.length ? scoreQuiz(saved.answers) : null;
     const restored = rescored?.resultId === parsed.resultId ? rescored : parsed;
     // Keep a freshly-scored result (which carries `axes` for the gauges) when
     // our OWN enterResult → replaceState re-fires this effect with the same id
@@ -333,7 +335,7 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
     setAnswers(next);
 
     const advance = () => {
-      if (index + 1 < QUESTIONS.length) {
+      if (index + 1 < questions.length) {
         setIndex(index + 1);
         setSelected(null);
       } else {
@@ -391,8 +393,8 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
     setPhase("landing");
   };
 
-  const current = QUESTIONS[index];
-  const progress = ((index + 1) / QUESTIONS.length) * 100;
+  const current = questions[index];
+  const progress = ((index + 1) / questions.length) * 100;
 
   // Focus the new question after it mounts (both forward and back). preventScroll
   // keeps the page still - the question is already centred in the viewport.
@@ -447,14 +449,14 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
               <span className={`font-mono ${c("text-sm", BODY)} font-bold text-white`}>
                 {index + 1}
                 {/* white/35는 3.14:1이었습니다(접근성 감사 9). */}
-                <span className="text-white/55"> / {QUESTIONS.length}</span>
+                <span className="text-white/55"> / {questions.length}</span>
               </span>
             </div>
             <div
               className="h-2 w-full overflow-hidden rounded-full bg-white/10"
               role="progressbar"
               aria-valuemin={0}
-              aria-valuemax={QUESTIONS.length}
+              aria-valuemax={questions.length}
               aria-valuenow={index + 1}
               aria-label={t(ed.ui.progressLabel)}
             >
@@ -471,7 +473,7 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
             <p className="sr-only" aria-live="polite">
               {t(ed.ui.questionPosition)
                 .replace("{n}", String(index + 1))
-                .replace("{total}", String(QUESTIONS.length))}
+                .replace("{total}", String(questions.length))}
             </p>
 
             {/* question */}

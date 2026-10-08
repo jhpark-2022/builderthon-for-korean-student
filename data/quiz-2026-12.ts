@@ -19,7 +19,7 @@
 //   ISTJ  Perplexity는 사이트가 조회를 막아 API 문서로만 확인했습니다. 버전 없이 브랜드 이름만.
 //   ISFP  Midjourney V8.2, ESFP Suno v6: 확인된 현재 버전을 붙였습니다.
 // ─────────────────────────────────────────────────────────────────────────────
-import { RESULTS, type MbtiKey, type Result } from "@/data/quiz";
+import { RESULTS, type MbtiKey, type Question, type Result } from "@/data/quiz";
 import type { Phrase } from "@/data/dictionaryCore";
 
 interface ModelRow {
@@ -175,3 +175,106 @@ export const RESULTS_2026_12 = Object.fromEntries(
     return [k, merged];
   }),
 ) as Record<MbtiKey, Result>;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 12월판의 질문 14개 (DECIDED 2026-10-09, 팀 매칭 유머 브리프 4장, D1 기본값: 옷을 12월로 갈아입힌다).
+//
+// 8월 질문(data/quiz.ts의 QUESTIONS)은 채점이 읽으므로 손대지 않습니다. 이 배열은 화면에 보이는 글만 다릅니다.
+// **불변 조건**: 14개의 id, axis, w, a.pole, b.pole과 순서가 QUESTIONS와 완전히 같습니다. 바뀌는 것은 text와 label뿐입니다.
+// scripts/verify-quiz.mjs가 이 조건과, 같은 답 14개가 두 판에서 같은 결과를 내는지를 검사합니다. 채점(lib/quizScore.ts)은
+// 여전히 QUESTIONS를 읽습니다(극과 가중치가 같으므로 결과가 같습니다).
+//
+// 장면의 뼈대는 8월 그대로입니다. 축 설명 36개(data/quizExplanations.ts, 두 판이 같이 씀)가 "첫날", "쉬는 시간", "명함",
+// "새 툴과 스펙", "10년 뒤", "멘토 앞의 데이터", "데모가 터진 순간", "12시간 전의 더 좋은 아이디어", "무대 내려온 밤"을
+// 가리키므로, 그 말이 질문에서 사라지면 설명이 틀린 말이 됩니다. 그래서 브리프 초안에서 둘을 고쳤습니다.
+//   Q11  초안은 "자료 링크 더미를 받았다 / 폴더 구조부터 파악"이었는데, 설명 여섯 문장이 "새 툴"과 "스펙"을 말합니다.
+//        자료 더미와 함께 받은 "처음 보는 AI 툴"로 두고 선택지의 "상상"과 "스펙"을 살렸습니다.
+//   Q1   "어디 학교세요?"가 "서울이세요, 싱가포르세요?"가 됩니다. 설명의 같은 대사는 판 설정의 explainSwaps가 바꿉니다.
+// Q3, Q6, Q8, Q12, Q14는 8월 문장 그대로입니다(가운뎃점만 쉼표와 "와"로 풀었습니다. 새 문장에 가운뎃점을 쓰지 않습니다).
+// ─────────────────────────────────────────────────────────────────────────────
+export const QUESTIONS_2026_12: Question[] = [
+  {
+    id: "Q1", axis: "MIND", w: 2,
+    text: { ko: "Day 1 아침, 팀 매칭 테이블에 처음 보는 넷이 앉았다. 나는?", en: "Day 1, morning. Four strangers at the team-matching table. I…" },
+    a: { label: { ko: "일단 티켓 이미지만 보여 주고 분위기부터 읽는다", en: "Show my ticket image and read the room first" }, pole: "I" },
+    b: { label: { ko: "“서울이세요, 싱가포르세요?” 먼저 깐다", en: "Open with “Seoul or Singapore?”" }, pole: "E" },
+  },
+  {
+    id: "Q2", axis: "ENERGY", w: 3,
+    text: { ko: "기업이 지금 겪는 이슈를 던졌다. 머릿속은?", en: "The company drops the issue it is facing right now. My head goes to…" },
+    a: { label: { ko: "“이 회사, 10년 뒤엔 이게 문제겠네” 큰 그림부터", en: "“In 10 years this is their real problem.” The big picture" }, pole: "N" },
+    b: { label: { ko: "“그래서 자료는 어디 있죠?” 현실부터", en: "“So where is the material?” The concrete" }, pole: "S" },
+  },
+  {
+    id: "Q3", axis: "NATURE", w: 1,
+    text: { ko: "팀원 아이디어가 좀 별로다. 나는?", en: "A teammate's idea is… kind of weak. I…" },
+    a: { label: { ko: "“오 좋다! 근데 이건 어때?” 기분 안 상하게", en: "“Love it! but what about this?” Keep it kind" }, pole: "F" },
+    b: { label: { ko: "“이 부분 논리적으로 약한데?” 솔직하게 짚음", en: "“This part doesn't hold up.” Say it straight" }, pole: "T" },
+  },
+  {
+    id: "Q4", axis: "TACTICS", w: 4,
+    text: { ko: "Day 2 아침. 피치까지 48시간, 돌아가는 첫 버전까지는 4시간. 내 작업 스타일은?", en: "Day 2, morning. 48 hours to the pitch, 4 hours to a first working version. My work style is…" },
+    a: { label: { ko: "일단 만들면서 흐름 타기", en: "Start building and ride the flow" }, pole: "P" },
+    b: { label: { ko: "시간표부터 짜고 계획대로", en: "Map the schedule, then run the plan" }, pole: "J" },
+  },
+  {
+    id: "Q5", axis: "IDENTITY", w: 3,
+    text: { ko: "Day 4, 회사 사람들 앞. 데모가 갑자기 멈췄다. 멘탈은?", en: "Day 4, in front of the company. The demo freezes. My headspace…" },
+    a: { label: { ko: "“어떻게든 되겠지” 침착", en: "“We'll figure it out.” Stay calm" }, pole: "A" },
+    b: { label: { ko: "“망했다…” 심장 쿵", en: "“We're done…” Heart drops" }, pole: "Tid" },
+  },
+  {
+    id: "Q6", axis: "MIND", w: 8,
+    text: { ko: "쉬는 시간, 에너지 충전법은?", en: "On a break, I recharge by…" },
+    a: { label: { ko: "사람들이랑 수다 떨기", en: "Chatting with people" }, pole: "E" },
+    b: { label: { ko: "혼자 바람 쐬기", en: "Stepping out alone for air" }, pole: "I" },
+  },
+  {
+    id: "Q7", axis: "ENERGY", w: 6,
+    text: { ko: "멘토링 시간. 그 일을 실제로 하는 분이 “이거 왜 만들었어요?” 묻는다. 내 대답은?", en: "Mentoring. Someone who does this job for real asks “why did you build this?” I answer with…" },
+    a: { label: { ko: "구체적 데이터와 사례로", en: "Concrete data and examples" }, pole: "S" },
+    b: { label: { ko: "비전과 의미, 가능성으로", en: "Vision, meaning, what it could become" }, pole: "N" },
+  },
+  {
+    id: "Q8", axis: "NATURE", w: 5,
+    text: { ko: "팀 내 의견 충돌. 내 기준은?", en: "The team clashes on a call. My yardstick is…" },
+    a: { label: { ko: "뭐가 더 효율적이고 합리적인가", en: "What's more efficient and rational" }, pole: "T" },
+    b: { label: { ko: "다들 납득하고 기분 좋은가", en: "Whether everyone's on board and okay" }, pole: "F" },
+  },
+  {
+    id: "Q9", axis: "TACTICS", w: 2,
+    text: { ko: "덱 제출 12시간 전, 더 좋은 아이디어가 떠올랐다.", en: "12 hours before the deck is due, a better idea hits me." },
+    a: { label: { ko: "위험해, 원래 계획 고수", en: "Too risky, stick to the plan" }, pole: "J" },
+    b: { label: { ko: "가보자고, 갈아엎기", en: "Let's go, tear it up and rebuild" }, pole: "P" },
+  },
+  {
+    id: "Q10", axis: "IDENTITY", w: 7,
+    text: { ko: "발표는 끝났는데 회사 쪽 질문이 하나도 안 나왔다. 반응이 미지근하다. 집 가는 길의 나는?", en: "The pitch is done and the company asked zero questions. Lukewarm room. On the way home I…" },
+    a: { label: { ko: "“그때 그것만 고쳤어도…” 곱씹기", en: "“If only we'd fixed that…” Replay it" }, pole: "Tid" },
+    b: { label: { ko: "“잘했으니 됐지, 다음에 또” 툭툭 털기", en: "“We did well, next time.” Shake it off" }, pole: "A" },
+  },
+  {
+    id: "Q11", axis: "ENERGY", w: 1,
+    text: { ko: "Day 0, 자료 링크 더미와 함께 처음 보는 AI 툴을 받았다. 나는?", en: "Day 0. A pile of links arrives, plus an AI tool I have never seen. I…" },
+    a: { label: { ko: "“이걸로 뭘 만들 수 있을지” 상상부터 부풀림", en: "Dream up everything it could build" }, pole: "N" },
+    b: { label: { ko: "“이게 정확히 뭐 하는 건지” 스펙부터 확인", en: "Check exactly what it does, spec by spec" }, pole: "S" },
+  },
+  {
+    id: "Q12", axis: "NATURE", w: 2,
+    text: { ko: "팀원이 밤새다 멘붕왔다. 첫 반응은?", en: "A teammate hits a wall after an all-nighter. My first move…" },
+    a: { label: { ko: "“괜찮아? 좀 쉬어, 내가 도울게” 다독임부터", en: "“You okay? Rest, I've got you.” The person" }, pole: "F" },
+    b: { label: { ko: "“어디서 막혔어? 같이 해결하자” 문제부터", en: "“Where are you stuck? Let's solve it.” The problem" }, pole: "T" },
+  },
+  {
+    id: "Q13", axis: "MIND", w: 4,
+    text: { ko: "네트워킹 시간, 여러 나라에서 온 처음 보는 사람들로 방이 꽉 찼다. 나는?", en: "Networking. The room is packed with strangers from several countries. I…" },
+    a: { label: { ko: "몇 명이랑 진득하게 깊은 대화", en: "Go deep with just a few people" }, pole: "I" },
+    b: { label: { ko: "최대한 많은 사람과 인사하고 명함 뿌리기", en: "Work the room, meet as many as I can" }, pole: "E" },
+  },
+  {
+    id: "Q14", axis: "TACTICS", w: 1,
+    text: { ko: "팀 작업 방식을 정할 차례. 나는?", en: "Time to set how the team works. I…" },
+    a: { label: { ko: "역할과 순서 딱 나눠서 각자 맡은 것부터", en: "Split roles and order, everyone owns their part" }, pole: "J" },
+    b: { label: { ko: "일단 다 같이 붙어서 되는 대로 굴리기", en: "All hands on it together, figure it out as we go" }, pole: "P" },
+  },
+];

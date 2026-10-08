@@ -8,8 +8,8 @@
 //   2026-08  /quiz   8월 기록. 저장 키도 그때 그대로(z100-quiz-own, z100-quiz-result).
 //   2026-12  /match  크로싱 서울 현장 팀 매칭. 저장 키가 달라서 8월 결과와 섞이지 않습니다.
 // ─────────────────────────────────────────────────────────────────────────────
-import { RESULTS, quizUI, type MbtiKey, type Result } from "@/data/quiz";
-import { RESULTS_2026_12 } from "@/data/quiz-2026-12";
+import { RESULTS, quizUI, type MbtiKey, type Question, type Result } from "@/data/quiz";
+import { RESULTS_2026_12, QUESTIONS_2026_12 } from "@/data/quiz-2026-12";
 import { QUIZ_OWN_KEY, QUIZ_RESULT_KEY, MATCH_OWN_KEY, MATCH_RESULT_KEY } from "@/lib/storage";
 
 export type QuizEdition = "2026-08" | "2026-12";
@@ -42,6 +42,11 @@ export interface EditionConfig {
    * 12월에는 "결과 공유회"가 없고 마지막 날은 발표입니다.
    */
   explainSwaps?: { ko: [string, string][]; en: [string, string][] };
+  /**
+   * 이 판의 질문 글. 없으면 data/quiz.ts의 QUESTIONS입니다(8월판). 화면에 보이는 text와 label만 다르고,
+   * id, axis, w, 극과 순서는 QUESTIONS와 같아야 합니다(scripts/verify-quiz.mjs가 검사). 채점은 QUESTIONS를 읽습니다.
+   */
+  questions?: Question[];
 }
 
 // 12월판이 덮는 문구. 8월 문구의 "제로백 빌더톤", "빌더톤"이 든 줄과 시작 화면의 세 줄입니다.
@@ -68,5 +73,10 @@ export const QUIZ_EDITIONS: Record<QuizEdition, EditionConfig> = {
     ui: quizUI, cardStamp: { ko: "제로백 빌더톤 2026.08", en: "Zero100 builderthon, Aug 2026" }, fileStem: "zero100-quiz", tone: "zero100" },
   "2026-12": { results: RESULTS_2026_12, path: "/match", backHref: "/", ownKey: MATCH_OWN_KEY, resultKey: MATCH_RESULT_KEY,
     ui: UI_2026_12, cardStamp: { ko: "크로싱 서울 2026.12", en: "CROSSING SEOUL, Dec 2026" }, fileStem: "crossing-seoul-match", tone: "naru",
-    explainSwaps: { ko: [["공유회", "발표"]], en: [["showcase day", "pitch day"], ["showcase countdown", "pitch-day countdown"]] } },
+    // 2026-10-09: 12월 Q1의 첫마디가 바뀌어, 그 대사를 인용하는 축 설명도 같이 바꿉니다.
+    explainSwaps: {
+      ko: [["공유회", "발표"], ["어디 학교세요?", "서울이세요, 싱가포르세요?"]],
+      en: [["showcase day", "pitch day"], ["showcase countdown", "pitch-day countdown"], ["which school are you at?", "Seoul or Singapore?"]],
+    },
+    questions: QUESTIONS_2026_12 },
 };
