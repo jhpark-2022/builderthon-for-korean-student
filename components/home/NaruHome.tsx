@@ -1052,6 +1052,9 @@ export default function NaruHome() {
               </div>
             ))}
           </dl>
+          {/* DECIDED 2026-10-08 (프로그램 브리프 2.1): 두 칸 바로 아래의 한 문단. 12월이 익히게 하는 것은 정답보다 접근
+              방식이고, 풀리지 않을 수 있다는 것을 미리 말합니다. 같은 READ 왼쪽 끝, BODY, 상자 없음. */}
+          <p className={`${READ} ${READ_MEASURE} mt-5 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.findClose)}</p>
         </Reveal>
 
         {/* 8월에 아쉬웠던 넷과 12월의 답. 번호 배지 카드 넷(8월 BenefitCard 문법), 2×2.

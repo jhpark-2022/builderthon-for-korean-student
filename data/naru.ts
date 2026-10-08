@@ -1587,6 +1587,14 @@ export const naru = {
         en: "Teams receive a company's issue. They gather public information with AI, reason from it, and each team finds a different problem. Along the way, each person's strengths show.",
       },
     },
+    // DECIDED 2026-10-08 (프로그램 브리프 2.1, 결정 D2: 알린다): 12월의 목적은 정답보다 접근 방식입니다.
+    // 닷새 안에 풀리는 문제는 내지 않으므로, 풀리지 않을 수 있다는 것을 미리 말합니다.
+    // 이 문장은 "안전한 도전 공간"(코어 01)과 같은 편입니다. 못 풀어도 괜찮은 자리라는 뜻입니다.
+    // 위 find의 두 칸 바로 아래, 같은 왼쪽 끝에 문단 하나로 섭니다(상자 없음).
+    findClose: {
+      ko: "닷새 안에 끝까지 풀리지 않을 수 있는 문제를 고릅니다. 그래도 괜찮습니다. 이 닷새에 익히는 것은 현업이 문제에 다가가는 방식이고, 그 방식은 문제가 풀리지 않아도 남습니다.",
+      en: "We pick problems that may not be fully solved in five days, and that is fine. What these days teach is how people in the field approach a problem, and that stays with you even when the problem does not get solved.",
+    },
 
     // ── 이렇게 굴립니다 (DECIDED 2026-09-20, 크로싱서울_일정.pdf 02 하단) ─────
     // 프로그램 표 아래 한 줄짜리 정보 행 넷. 상자가 아닙니다.
@@ -2078,8 +2086,9 @@ export const naru = {
         // 2026-09-30 (사용자, 문장 감사): "완성도가 아니라 과정을 봅니다"였습니다. "결과보다 과정"은 #naru의
         // 코어 01과 measure가 이미 세 번 말합니다. 여기서는 그 말이 이 무대에서 무슨 뜻인지만.
         body: {
-          ko: "청중은 회사 관계자입니다. 발표 5분, 질의 5분. 아이디어 단계여도 무대에 섭니다. 어떻게 거기까지 갔는지를 봅니다.",
-          en: "You present to the people from the companies. Five minutes, then five for questions. You go up even if it is still an idea. We look at how you got there.",
+          // DECIDED 2026-10-08 (프로그램 브리프 2.2, D2): 보는 것은 결과물보다 문제에 다가간 방식입니다. 다 풀지 못해도 섭니다.
+          ko: "청중은 회사 관계자입니다. 발표 5분, 질의 5분. 다 풀지 못했어도 무대에 섭니다. 문제에 어떻게 다가갔는지를 봅니다.",
+          en: "You present to the people from the companies. Five minutes, then five for questions. You go up even if it is not solved. We look at how you approached the problem.",
         },
         // #after 챕터와 같은 말입니다. 여기서는 일정 안의 사실로, 저기서는 챕터로.
         line: { ko: "여기서 만난 사람과 기회를 이어가는 것은 각자의 몫입니다.", en: "Carrying on with the people and the chances you met here is yours to do." },
