@@ -29,6 +29,8 @@ export interface EditionConfig {
   ui: typeof quizUI;
   /** 결과 카드 왼쪽 위의 한 줄(행사 이름과 시기). */
   cardStamp: { ko: string; en: string };
+  /** 저장하는 이미지 파일 이름의 앞부분("<fileStem>-INFJ-A.png"). */
+  fileStem: string;
 }
 
 // 12월판이 덮는 문구. 8월 문구의 "제로백 빌더톤", "빌더톤"이 든 줄과 시작 화면의 세 줄입니다.
@@ -50,7 +52,7 @@ const UI_2026_12: typeof quizUI = {
 
 export const QUIZ_EDITIONS: Record<QuizEdition, EditionConfig> = {
   "2026-08": { results: RESULTS, path: "/quiz", backHref: "/2026-08", ownKey: QUIZ_OWN_KEY, resultKey: QUIZ_RESULT_KEY,
-    ui: quizUI, cardStamp: { ko: "제로백 빌더톤 2026.08", en: "Zero100 builderthon, Aug 2026" } },
+    ui: quizUI, cardStamp: { ko: "제로백 빌더톤 2026.08", en: "Zero100 builderthon, Aug 2026" }, fileStem: "zero100-quiz" },
   "2026-12": { results: RESULTS_2026_12, path: "/match", backHref: "/", ownKey: MATCH_OWN_KEY, resultKey: MATCH_RESULT_KEY,
-    ui: UI_2026_12, cardStamp: { ko: "크로싱 서울 2026.12", en: "CROSSING SEOUL, Dec 2026" } },
+    ui: UI_2026_12, cardStamp: { ko: "크로싱 서울 2026.12", en: "CROSSING SEOUL, Dec 2026" }, fileStem: "crossing-seoul-match" },
 };

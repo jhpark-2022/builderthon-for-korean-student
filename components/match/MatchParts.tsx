@@ -41,8 +41,9 @@ export const matchCopy = {
   saving: { ko: "팀 매칭에 올리는 중입니다", en: "Adding you to team matching" },
   saved: { ko: "팀 매칭에 올라갔습니다", en: "You are on the team-matching board" },
   savedSub: { ko: "다시 하면 이 기기의 기록을 덮어씁니다.", en: "Retaking replaces this device's entry." },
-  closed: { ko: "팀 매칭 기간이 아닙니다", en: "Team matching is not open right now" },
-  closedSub: { ko: "결과는 볼 수 있지만 매칭판에는 올라가지 않습니다.", en: "You can see your result, but it is not added to the board." },
+  // 받는 기간 밖(지금은 행사 전의 미리 해 보기). 결과, 이미지 저장, 공유는 그대로 되고 매칭판에만 올라가지 않습니다.
+  closed: { ko: "지금은 미리 해 보기입니다", en: "This is a preview run" },
+  closedSub: { ko: "결과는 저장되지 않습니다. 팀 매칭은 Day 1 현장에서 엽니다.", en: "Your result is not saved. Team matching opens on site on Day 1." },
   failed: { ko: "올리지 못했습니다", en: "Could not add you" },
   retry: { ko: "다시 보내기", en: "Try again" },
   noProfile: { ko: "이름과 나라가 없어 올리지 못했습니다. 처음부터 다시 해 주세요.", en: "No name and country on this device. Please start again." },
@@ -214,7 +215,7 @@ export function MatchSave({ t, result, data, fromShare }: { t: T; result: QuizRe
   }, [result.resultId, fromShare]);
 
   if (fromShare || state === "idle") return null;
-  const tone = state === "saved" ? "border-emerald-400/30 bg-emerald-400/[0.08]" : state === "saving" ? "border-white/15 bg-white/[0.05]" : "border-amber-400/30 bg-amber-400/[0.08]";
+  const tone = state === "saved" ? "border-emerald-400/30 bg-emerald-400/[0.08]" : state === "saving" || state === "closed" ? "border-white/15 bg-white/[0.05]" : "border-amber-400/30 bg-amber-400/[0.08]";
   const title = state === "saved" ? matchCopy.saved : state === "saving" ? matchCopy.saving : state === "closed" ? matchCopy.closed : state === "no_profile" ? matchCopy.noProfile : matchCopy.failed;
   const sub = state === "saved" ? matchCopy.savedSub : state === "closed" ? matchCopy.closedSub : null;
   return (

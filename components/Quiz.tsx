@@ -594,7 +594,7 @@ function ResultView({
       const blob = await toBlob(node, opts);
       if (!blob) throw new Error("capture produced no blob");
 
-      const fileName = `zero100-quiz-${result.resultId}.png`;
+      const fileName = `${ed.fileStem}-${result.resultId}.png`;
       const file = new File([blob], fileName, { type: "image/png" });
 
       const canShareFiles =
