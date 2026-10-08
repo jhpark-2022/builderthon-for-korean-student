@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-08 현장 팀 매칭: /match, 12월판 AI 유형 테스트, 선호 트랙 순위](#2026-10-08-match-quiz)
 - [2026-10-07 신청 폼: AI로 해 본 것 네 단계와 전공, 참가자 뷰의 두 열](#2026-10-07-registration-form)
 - [2026-10-07 데이터가 아니라 이슈에서, 한 화면에 글자 크기 셋](#2026-10-07-issue-first)
 - [2026-10-06 세 층 소제목과 도식 위의 선을 내린다](#2026-10-06-how-title-only)
@@ -162,6 +163,20 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-08-match-quiz"></a>
+## 2026-10-08 현장 팀 매칭: /match, 12월판 AI 유형 테스트, 선호 트랙 순위
+- 범위: 새 `/match`(`app/match`, `components/match/MatchParts.tsx`), `app/api/crossing/match/route.ts`, `data/quiz-2026-12.ts`, `data/quizEditions.ts`, `data/matchTracks.ts`, `lib/crossingMatch.ts`, `components/Quiz.tsx`, 홈 Day 1 행, 마이그레이션 0006, `scripts/build-match-board.py`.
+- 한 것: DECIDED 2026-10-08. 12월에는 AI 유형 테스트가 신청의 일부가 아니라 Day 1 현장의 팀 매칭 도구입니다. `/match`에서 이름과 나라를 넣고 14문항을 하면 결과가 새 표 `crossing_match_profiles`에 한 기기 한 행으로 올라갑니다(다시 하면 덮어씀). 신청 모달은 유형을 보내지 않습니다.
+  `Quiz.tsx`에 판(`edition`)과 매칭 모드를 더했습니다. 8월 `/quiz`와 `data/quiz.ts`는 그대로입니다.
+  12월판 16개 모델 이름은 같은 날 각 회사 자체 페이지에서 확인하고 줄마다 출처를 주석에 남겼습니다. 최종 선택은 사용자가 맡겼습니다. 기본안과 다른 것: DeepSeek-V4.1-Flash, Gemini 3.1 Pro, Midjourney V8.2, Suno v6, 그리고 Sora가 종료돼 INFP는 Character.AI 그대로. `whyModel`은 확인한 사실만 씁니다.
+  사용자 요청으로 선호 트랙 순위를 더했습니다(`track_ranking`). 12월 트랙이 미정이라 목록(`data/matchTracks.ts`)이 비어 있는 동안은 화면에 나오지 않고, 목록을 적으면 필수로 켜집니다.
+  라우트는 투표 라우트의 구조와 스로틀을 따르고, `model`과 `role_key`는 서버가 유형으로 다시 확인합니다. 홈 Day 1 행의 "팀 매칭" 칩 자리에 `/match` 버튼 하나를 뒀습니다.
+  0006은 사용자 승인 뒤 운영 DB에 적용했습니다.
+- 검증: `/quiz` 시작, 질문, 결과 넷을 두 크기에서 적용 전과 비교해 픽셀 차이 0. 390×844에서 흐름 셋이 저장됐고 다시 하기는 같은 행을 덮어씀. 이름 빈칸, 41자, 나라 `KOR`, 목록 밖 유형, 유형과 다른 모델은 400.
+  한 IP에서 200건 통과 뒤 429. 표는 RLS 켜짐에 정책 0개, 뷰는 `anon`과 `authenticated`에 select 없음. 시험 기기 토큰의 행만 지웠고 다른 표의 행 수는 그대로. 매칭판 스크립트는 시험 행으로 표 셋을 만듦(파일은 레포 밖). 빌드 통과.
+- 브리프: docs/match-quiz-brief.md
+- 커밋: bd94a1e, 70f521c, 96d5882, ed35a14, fa829ef, 5405815, c75008a
 
 <a id="2026-10-07-registration-form"></a>
 ## 2026-10-07 신청 폼: AI로 해 본 것 네 단계와 전공, 참가자 뷰의 두 열
