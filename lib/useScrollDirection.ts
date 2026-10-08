@@ -27,7 +27,7 @@ import { isScrollLocked } from "./useBodyScrollLock";
  * IDLE REVEAL IS NOW PART OF THIS HOOK'S CONTRACT. The rule used to be purely
  * directional: hide on the way down, come back only on a deliberate scroll UP.
  * That leaves the chrome hidden for as long as the reader sits still, which is
- * exactly when they are most likely to want the register button — they stopped
+ * exactly when they are most likely to want the register button - they stopped
  * because something caught them. Reaching it meant a scroll-up flick first,
  * which nobody thinks to do. So: `idleReveal` ms with no scroll event and the
  * chrome comes back on its own. Scrolling down hides it again immediately.
@@ -37,7 +37,7 @@ import { isScrollLocked } from "./useBodyScrollLock";
  * in-app browser.
  *
  * 900은 굼떠서 450으로 (2026-08-17). 300 밑으로 내리면 드래그 중 정지 시 팝핑
- * 생김 — 조정은 300~600 사이에서.
+ * 생김 - 조정은 300~600 사이에서.
  *
  * ── DECIDED 2026-08-24: 하단 바는 idle reveal에서 빠진다 (idleReveal: false) ──
  *
@@ -46,7 +46,7 @@ import { isScrollLocked } from "./useBodyScrollLock";
  * 하나예요. 급한 문이 아닙니다.
  *
  * 대신 대가가 그대로 남았습니다. 폰에서 읽으려고 멈추면 450ms 뒤에 알약이 화면
- * 아래 68px을 덮는데, 그 자리에 본문 한 줄이 지나갑니다 — 문장 가운데가 잘려서
+ * 아래 68px을 덮는데, 그 자리에 본문 한 줄이 지나갑니다 - 문장 가운데가 잘려서
  * 앞뒤만 보이는 상태로요. 읽으려고 멈춘 사람에게 정확히 그때 글을 가립니다.
  *
  * 그래서 하단 두 바(MobileStickyBar · MobileChatBar)만 false로 부릅니다. 위로
@@ -57,7 +57,7 @@ import { isScrollLocked } from "./useBodyScrollLock";
  * 문제가 없고(자기 높이만큼 페이지가 내려가 있습니다), 멈췄을 때 내비게이션이
  * 돌아오는 것은 지금도 맞는 동작입니다.
  *
- * The timer is not armed while the scroll lock is held — the chrome is already
+ * The timer is not armed while the scroll lock is held - the chrome is already
  * pinned visible there, and arming it would fire a redundant state write behind
  * an open modal.
  *
@@ -75,7 +75,7 @@ import { isScrollLocked } from "./useBodyScrollLock";
  * SCROLL LOCK. Every modal in this app freezes the page while open (see
  * lib/useBodyScrollLock: EventModal, PartnerModal, RegisterModal, the day
  * modal). The lock pins <body> at `position: fixed`, which makes `window.scrollY`
- * read 0 for as long as it is held — so this hook has to stand down rather than
+ * read 0 for as long as it is held - so this hook has to stand down rather than
  * interpret that as a jump to the top of the page. It also means a bar hidden
  * just before the modal opened would otherwise stay hidden underneath it. The
  * lock check pins the chrome visible for exactly that window.
@@ -109,7 +109,7 @@ export function useScrollDirection({
 
     const evaluate = () => {
       frame = 0;
-      // A modal owns the screen — leave the chrome where it is (visible).
+      // A modal owns the screen - leave the chrome where it is (visible).
       if (isScrollLocked()) {
         window.clearTimeout(idle);
         idle = 0;
@@ -124,7 +124,7 @@ export function useScrollDirection({
 
       // Stop scrolling and the chrome comes back by itself. Re-armed on every
       // evaluation, so it only fires once the gesture has actually ended.
-      // idleReveal false면 타이머를 아예 걸지 않습니다 — 멈춰 있는 동안 숨은 채로
+      // idleReveal false면 타이머를 아예 걸지 않습니다 - 멈춰 있는 동안 숨은 채로
       // 두는 표면(하단 바)이 있어서요. 아래 방향 판정은 그대로라 위로 밀면 나옵니다.
       window.clearTimeout(idle);
       if (idleReveal !== false) {

@@ -1,46 +1,13 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// 등록 마감 시각 — 단일 출처.
-//
-// 이 값은 원래 components/journey/Journey.tsx 안에 있었고, 히어로 카운트다운과
-// Problem 뷰의 "아직 등록할 수 있어요" 밴드만 읽었습니다. 그 둘은 시각을 화면에
-// 보여줄 뿐, 실제로 등록을 막지는 않았습니다 — 2시 15분이 지나도 API는 계속
-// 접수를 받았고 등록 버튼도 그대로 눌렸습니다.
-//
-// 마감을 실제로 걸려면 서버(app/api/register)와 클라이언트(lib/RegisterContext,
-// 그리고 각 등록 CTA)가 같은 시각을 봐야 합니다. 클라이언트 컴포넌트인 Journey를
-// 라우트에서 import 할 수는 없으므로, 상수를 여기로 끌어올려 세 곳이 함께 읽게
-// 했습니다. Journey는 이제 이 값을 도로 import 합니다.
-//
-// 오프셋(+08:00)을 문자열에 박아두는 것이 핵심입니다: 이 코드를 읽는 곳의
-// 시간대와 무관하게 같은 순간(2026-08-22 14:15 SGT = 06:15Z)을 가리킵니다.
-//
-// 이 시각은 Day 1 쉬는 시간(2:05–2:15)이 끝나는 순간과 묶여 있습니다. 문제 공개
-// 직전이라, 과제를 보고 나서 등록하는 창을 열어두지 않습니다. days[0].runOfShow의
-// 쉬는 시간 줄을 옮기면 이 값도 함께 옮겨야 합니다.
-//
-// dict.hero.countdownDeadline / problemRegistrationOpen 과 FAQ("일단 Day 1에 가
-// 보고…")가 이 시각을 글로 말합니다. 하나를 고치면 반드시 함께 고치세요.
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** 등록이 닫히는 순간 (epoch ms): 2026-08-22 14:15 SGT. */
-export const REGISTRATION_CLOSES_AT = new Date("2026-08-22T14:15:00+08:00").getTime();
-
-/**
- * `now` 시점에 등록이 마감됐는가? (기본값: 지금)
- * 2:15:00.000 SGT 정각에 닫힙니다 — 그 밀리초부터 마감입니다.
- */
-export function isRegistrationClosed(now: number = Date.now()): boolean {
-  return now >= REGISTRATION_CLOSES_AT;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
 // 크로싱 서울 등록 창 (2026-09-18, Supabase 등록 브리프 2.3).
 //
-// 8월 상수와 isRegistrationClosed()는 위에 그대로입니다(/2026-08과 /api/register가
-// 읽습니다). 12월은 회차 슬러그와 창(opensAt / closesAt)을 따로 둡니다. 둘 다 null이면
+// 8월 상수와 isRegistrationClosed()는 2026-10-08에 걷었습니다(8월 등록 모달과 /api/register를 지우면서
+// 읽는 곳이 없어졌습니다). 12월은 회차 슬러그와 창(opensAt / closesAt)을 따로 둡니다. 둘 다 null이면
 // 아직 열지 않은 것입니다. 시각을 채울 때는 KST 오프셋(+09:00)을 문자열에 박으세요.
 // 서버(app/api/crossing/register)와 클라이언트(components/crossing)가 같은 함수를 봅니다.
 // ─────────────────────────────────────────────────────────────────────────────
+
+import { CONSENT_NOTICE_READY } from "@/data/crossingForm";
 
 /** 지금 등록을 받는 회차. crossing_registrations.event_slug에 그대로 들어갑니다. */
 export const CURRENT_EVENT = "crossing-seoul-2026-12";
@@ -53,11 +20,18 @@ export const CROSSING_WINDOW: { opensAt: string | null; closesAt: string | null 
 
 export type RegistrationState = "not_open" | "open" | "closed";
 
-/** `now` 시점의 등록 상태. 모르는 회차는 not_open. */
+/**
+ * `now` 시점의 등록 상태. 모르는 회차는 not_open.
+ *
+ * 2026-10-08 (보안 감사 M4, 폼 리뷰 3): 동의 안내의 보관 기간(data/crossingForm.ts의 CONSENT_RETENTION)이 비어 있으면
+ * opensAt을 넣어도 not_open입니다. 날짜 한 줄로 미완성 동의 문구와 함께 등록이 열리는 일을 막습니다.
+ */
 export function registrationState(eventSlug: string = CURRENT_EVENT, now: number = Date.now()): RegistrationState {
   if (eventSlug !== CURRENT_EVENT) return "not_open";
   const { opensAt, closesAt } = CROSSING_WINDOW;
   if (!opensAt) return "not_open";
+  if (closesAt && now >= new Date(closesAt).getTime()) return "closed";
+  if (!CONSENT_NOTICE_READY) return "not_open";
   if (now < new Date(opensAt).getTime()) return "not_open";
   if (closesAt && now >= new Date(closesAt).getTime()) return "closed";
   return "open";

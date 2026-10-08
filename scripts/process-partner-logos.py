@@ -1,43 +1,43 @@
 #!/usr/bin/env python3
 """
 One-off: turn brand logos from the shared CI folder into the partner-wall
-convention — WHITE MONO on TRANSPARENT, natural aspect ratio (not squared),
+convention - WHITE MONO on TRANSPARENT, natural aspect ratio (not squared),
 matching the files already in public/partners/logos/white/.
 
 Three source shapes are handled:
-  • "dark"  — a dark mark on a white/transparent sheet (L^IFE). Alpha comes
+  • "dark"  - a dark mark on a white/transparent sheet (L^IFE). Alpha comes
               straight from darkness, so outlines and counters survive.
-  • "color" — a multicolour mark on a flat light background (마이크로소프트).
+  • "color" - a multicolour mark on a flat light background (마이크로소프트).
               Alpha comes from each pixel's colour distance to the sampled
               background, then everything surviving is flattened to white.
-              Only for marks that are FLAT — see "shaded" for the other kind.
-  • "shaded"— a colour mark with DRAWING INSIDE IT (싱가포르 한인회's emblem).
+              Only for marks that are FLAT - see "shaded" for the other kind.
+  • "shaded"- a colour mark with DRAWING INSIDE IT (싱가포르 한인회's emblem).
               Same silhouette as "color", but brightness inside that silhouette
               becomes opacity instead of everything going solid, so the emblem
               keeps its rosette and ring of type rather than filling in as a
               disc.
-  • "alpha" — a solid-colour mark ALREADY cut out on transparency. The shape is
+  • "alpha" - a solid-colour mark ALREADY cut out on transparency. The shape is
               exactly the source alpha, so use it as-is and just repaint the ink
               white. Running such a file through "dark" instead would scale
-              alpha by the ink's luminance and render the mark semi-transparent —
+              alpha by the ink's luminance and render the mark semi-transparent -
               a mid-purple wordmark came out visibly dimmer than its neighbours.
-  • "chroma"— a SATURATED mark on a white sheet whose shapes are separated by
+  • "chroma"- a SATURATED mark on a white sheet whose shapes are separated by
               DARK outlines. No JOB uses this today (it was built for Fyreflyz,
               which is no longer a partner); it is kept because the shape recurs
               and the ramp constants took a while to land. "color" would keep
               both the gold body and
-              the brown outline — every pixel is far from white — and the mark
+              the brown outline - every pixel is far from white - and the mark
               flattens to one featureless blob. Here alpha needs the saturated ink
               only: the white sheet drops out for having no saturation, the dark
               outline drops out for being dark, and what's left reads as the
               outline gaps that give the mark its shape.
-  • "light" — a WHITE mark on a dark sheet (Onword Lab's square glyph). The
+  • "light" - a WHITE mark on a dark sheet (Onword Lab's square glyph). The
               inverse of "dark": brightness IS the ink, so alpha comes from
               luminance above the sheet's own level. Feeding this to "dark"
-              would produce a perfect negative — the background solid and the
+              would produce a perfect negative - the background solid and the
               glyph punched out of it.
 
-Both are trimmed to the alpha bbox and downscaled so the long edge is 900px —
+Both are trimmed to the alpha bbox and downscaled so the long edge is 900px -
 these render ~40px tall, so anything larger is wasted bytes.
 
 Second job: build the marquee's copies. The logo band sizes every mark with the
@@ -46,7 +46,7 @@ baked into its canvas renders visibly smaller than a tightly-cropped neighbour
 (Brand Boost filled 40%x30% of its file; the zero100 WebPs fill ~100%). The band
 therefore reads from white/trimmed/, which is the same art cropped to its alpha
 bounding box so every mark fills its tile the same way. The partner wall above
-keeps using the untrimmed originals — its LogoTile has its own `big` sizing
+keeps using the untrimmed originals - its LogoTile has its own `big` sizing
 calibrated against them.
 
     python3 scripts/process-partner-logos.py
@@ -84,30 +84,30 @@ SHADED_GAIN = 1.3
 #            result has a soft edge rather than a staircase.
 JOBS = [
     ("life_logo.png", "life.png", "dark"),
-    # "color" → "shaded" (2026-08-19). 이 마크는 원 안에 그림이 있습니다 —
+    # "color" → "shaded" (2026-08-19). 이 마크는 원 안에 그림이 있습니다 -
     # 링의 활자, 무궁화 로제트, 삼태극. color 모드는 그 셋을 전부 불투명하게
     # 칠해 흰 원반 하나로 만들었습니다. from_shaded 주석에 자세히 적었습니다.
     ("싱가포르 한인회.jpg", "korean-association.png", "shaded"),
     # Microsoft: the stacked lockup (four squares over the wordmark) is the only
-    # art we have. It is used small — a 16px-tall mark on the pre-event band —
+    # art we have. It is used small - a 16px-tall mark on the pre-event band -
     # and the stacked form survives that better than a horizontal one would,
     # because the squares stay square instead of shrinking with the cap height.
     ("마이크로소프트.jpg", "microsoft.png", "color"),
     # The Foundry: black speech-bubble + "FOUNDRY." wordmark on an orange sheet.
     #
     # Only the WORDMARK is taken (crop). The bubble is a filled shape, so in white
-    # mono it is a featureless white square — at the size this renders (a route-map
+    # mono it is a featureless white square - at the size this renders (a route-map
     # venue marker, ~63x17 CSS px) it names nothing and eats a quarter of the width
     # the letters need.
     #
     # SOURCE: "The Foundry horizontal.png", the official horizontal lockup from
-    # foundry.sg, 2452x701. NOT "The Foundry.jpeg" — that is the square avatar at
+    # foundry.sg, 2452x701. NOT "The Foundry.jpeg" - that is the square avatar at
     # 225x225, where the wordmark is 65x16px of JPEG-artefacted ink. Upscaled to
     # the marker's device pixels it was visibly mushy, and no amount of blur-and-
     # threshold tracing recovers letterforms that were never sampled. If this logo
     # ever needs redoing, start by looking for a bigger source, not a better filter.
     ("The Foundry horizontal.png", "foundry.png", "color", {"crop": (640, 145, 2362, 557)}),
-    # Onword Lab: the wide "⊃ ONWORD LAB" lockup, NOT the square ">." glyph —
+    # Onword Lab: the wide "⊃ ONWORD LAB" lockup, NOT the square ">." glyph -
     # the glyph alone names nothing.
     #
     # NOTE THE OUTPUT FILENAME. This shipped as `onword.png` twice with different
@@ -116,11 +116,11 @@ JOBS = [
     # the logo got "fixed" a second time on the strength of a stale image. Any
     # future ARTWORK swap must land on a NEW filename for the same reason.
     # SMU: Day 8 결과 공유회가 이 캠퍼스로 옮겨오면서(2026-08-19) 노선도의 장소
-    # 마커로 씁니다. 소스는 CI/SMU.jpg — 공식 세로 로크업(싱가포르 지도 위 사자,
+    # 마커로 씁니다. 소스는 CI/SMU.jpg - 공식 세로 로크업(싱가포르 지도 위 사자,
     # 그 아래 "SMU" 워드마크)입니다.
     #
     # SMU: 공식 세로 로크업 전체(싱가포르 지도 위 사자 + "SMU" 워드마크)를 그대로
-    # 씁니다. 크롭하지 않습니다 — 사자만, 글자만 떼어 본 두 판을 거쳐 전체로
+    # 씁니다. 크롭하지 않습니다 - 사자만, 글자만 떼어 본 두 판을 거쳐 전체로
     # 돌아왔습니다. 글자만 쓰면 세리프 대문자가 폭 45px를 먹어 옆 마크보다
     # 무겁고, 사자만 쓰면 세로 비율 탓에 폭 10px로 줄어 형태가 남지 않습니다.
     #
@@ -129,12 +129,12 @@ JOBS = [
     #
     # ⚠️ 출력 파일명에 주의. 이 마크는 이미 한 번 같은 이름(smu.png)으로 아트워크만
     # 바뀐 적이 있고, 브라우저가 옛 이미지를 계속 서빙해 변경이 화면에 반영되지
-    # 않았습니다 — onword.png가 겪은 그대로입니다(아래 JOB 주석). 그래서 이번에는
+    # 않았습니다 - onword.png가 겪은 그대로입니다(아래 JOB 주석). 그래서 이번에는
     # 새 이름으로 나갑니다. 아트워크를 또 갈면 파일명도 또 바꾸세요.
     ("SMU.jpg", "smu-lockup.png", "color"),
     ("onword new logo.png", "onword-lab.png", "alpha"),
     # 널담(Nuldam): a solid blue "Nuldam" wordmark already cut out on
-    # transparency, so "alpha" — the source alpha IS the shape and we only
+    # transparency, so "alpha" - the source alpha IS the shape and we only
     # repaint the ink white. Do NOT feed this to "color": the sheet is
     # transparent, so the corner samples that mode averages for a background
     # colour are (255,255,255,0), and every ink pixel then measures its distance
@@ -165,7 +165,7 @@ def from_shaded(im):
     """Colour mark whose INSIDE has to survive → shape from the background
     distance, DENSITY from luminance.
 
-    "color" answers one question — is this pixel the sheet or the mark — and
+    "color" answers one question - is this pixel the sheet or the mark - and
     every non-sheet pixel comes out fully opaque. That is right for a flat mark
     and wrong for one with drawing inside it: 싱가포르 한인회's emblem is a ring
     of type around a mugunghwa rosette around a taegeuk, all of it mid-to-dark
@@ -180,7 +180,7 @@ def from_shaded(im):
     GAIN exists because the result would otherwise sit grey next to the pure
     white marks it shares a row with. 1.3 lifts the type and the ring to white
     while the petals keep enough falloff to stay separate. Raising it further
-    collapses the emblem back into the disc this mode was written to avoid —
+    collapses the emblem back into the disc this mode was written to avoid -
     at 2.0 it is indistinguishable from "color". Re-check it against a real
     render, not the full-size file: this mark ships ~34px tall.
     """

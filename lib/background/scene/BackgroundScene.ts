@@ -191,7 +191,7 @@ export class BackgroundScene {
       this.particles = new ParticleField(this.quality, 1.0);
       // NOTE: there is intentionally NO portal object in the scene. The phenomenon
       // is expressed only through particle convergence + screen-space lensing +
-      // density-driven bloom — never a rendered disc/sphere with a visible edge.
+      // density-driven bloom - never a rendered disc/sphere with a visible edge.
       this.scene.add(
         this.atmosphere.mesh,
         this.particles.points
@@ -697,7 +697,7 @@ export class BackgroundScene {
     // While a modal holds the scroll lock the page is parked at
     // `position: fixed` (lib/useBodyScrollLock): scrollY reads 0 and the
     // document collapses to viewport height, so this would drive the scene back
-    // to its start and then jump it forward again on close — visible through the
+    // to its start and then jump it forward again on close - visible through the
     // 70%-opacity backdrop. Hold the last real reading until the page is free.
     if (isScrollLocked()) return;
     const max = document.documentElement.scrollHeight - window.innerHeight;
@@ -755,7 +755,7 @@ export class BackgroundScene {
     const phases = computePhases(this.scroll);
 
     // project the convergence point to screen UV so the lens bends space around
-    // exactly where particles are streaming — the focus is felt, never outlined
+    // exactly where particles are streaming - the focus is felt, never outlined
     this.focusProjected.copy(this.focusWorld).project(this.cam.camera);
     this.post.setFocus(
       this.focusProjected.x * 0.5 + 0.5,

@@ -4,7 +4,7 @@
 // 것을 그대로 꺼냈습니다. 나루 홈의 8월 기록 탭이 같은 링크를 그려야 하는데,
 // 두 번째 버전을 만들면 호버 색과 탭 타깃이 두 페이지에서 갈라집니다.
 // 마크업과 클래스는 한 글자도 바뀌지 않았습니다.
-// LinkedIn glyph + link — shown ONLY on mentor / judge / speaker cards that
+// LinkedIn glyph + link - shown ONLY on mentor / judge / speaker cards that
 // carry a confirmed public URL (never invented). Opens in a new tab with
 // noopener; stopPropagation keeps a click off any surrounding button/card.
 export function LinkedInIcon({ className = "" }: { className?: string }) {

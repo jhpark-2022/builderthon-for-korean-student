@@ -3,11 +3,11 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Undocumented QA/reset helper. Visiting any page with `?reset=1` wipes this
 // device's site-local storage so fresh-user flows can be tested on the deployed
-// site — including phones, where DevTools isn't practical. No UI surface beyond a
+// site - including phones, where DevTools isn't practical. No UI surface beyond a
 // confirmation toast.
 //
 // Mounted as the FIRST child on both the main page and /quiz, so its effect fires
-// before the greeting pill / deep-link / register-modal effects read storage —
+// before the greeting pill / deep-link / register-modal effects read storage -
 // after a `?reset=1` load the page renders exactly like a first-time visitor,
 // with no second refresh needed.
 //
@@ -18,7 +18,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
-import { dict } from "@/data/dictionary";
+import { coreDict as dict } from "@/data/dictionaryCore";
 import { clearSiteStorage } from "@/lib/storage";
 
 export default function ResetHandler() {

@@ -10,7 +10,9 @@ import Quiz from "@/components/Quiz";
 // 현장 QR로 여는 주소라 짧고 바뀌지 않게 둡니다. 검색에는 내놓지 않습니다(현장 도구).
 // ─────────────────────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
-  title: "크로싱 서울 팀 매칭 | 나루",
+  // 2026-10-08: layout의 title.template("%s | 나루 NARU")이 뒤를 붙입니다. 여기에 "| 나루"를 또 적어
+  // "크로싱 서울 팀 매칭 | 나루 | 나루 NARU"로 겹쳐 나왔습니다.
+  title: "크로싱 서울 팀 매칭",
   other: { "naru:title-en": "CROSSING SEOUL team matching | NARU" },
   description:
     "14문항, 약 3분. 결과로 Day 1 팀 매칭을 합니다. / 14 questions, about 3 minutes. Your result is used for team matching on Day 1.",
@@ -19,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function MatchPage() {
   return (
-    <Suspense fallback={<main className="min-h-screen bg-[#070B1F]" />}>
+    <Suspense fallback={<main id="main" className="min-h-screen bg-[#070B1F]" />}>
       <Quiz edition="2026-12" matchMode />
     </Suspense>
   );

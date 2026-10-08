@@ -83,5 +83,12 @@ export const STATEMENT = `break-keep ${BODY} font-bold leading-snug tracking-tig
 // (#A99AD6)에서 자주 틴트(#C79BB4)로 끝납니다. 8월 문법 브리프 3장의 "보라 → 자주 → 주황"을
 // 이 결정이 대체합니다. 원색 --purple·--plum이 아니라 틴트인 이유는 대비입니다(어두운 바탕
 // 위 원색 보라 2.12:1). globals.css의 단색 폴백(#C79BB4)은 이제 끝 색과 같습니다.
+// DECIDED 2026-10-08 (사용자 승인, 브랜드 감사 7): 흰 글자의 밝기는 세 단입니다. 홈(NaruHome)에 여덟 단이 있었습니다.
+// 강조와 살아 있는 버튼은 STRONG, 본문과 META 글은 BODY 단, 장식 글리프(화살표, 구분자)만 QUIET입니다.
+// META 크기의 글은 QUIET을 쓰지 않습니다(작은 글자가 가장 먼저 묻힙니다). 새 단을 만들지 마세요.
+export const TEXT_STRONG = "text-white/85";
+export const TEXT_BODY = "text-white/70";
+export const TEXT_QUIET = "text-white/60";
+
 export const GRADIENT_TEXT =
-  "gradient-text bg-gradient-to-r from-[#A99AD6] to-[#C79BB4] bg-clip-text pb-[0.14em] text-transparent";
+  "gradient-text bg-gradient-to-r from-[#A99AD6] to-naru-plum-tint bg-clip-text pb-[0.14em] text-transparent";

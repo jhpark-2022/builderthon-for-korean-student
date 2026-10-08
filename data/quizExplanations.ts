@@ -1,17 +1,17 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Answer-aware explanation layer — a static, precompiled lookup (no backend, no
+// Answer-aware explanation layer - a static, precompiled lookup (no backend, no
 // LLM). Keyed by (axis, answer pattern), where the pattern is the axis's answers
 // encoded 1 = first pole (E/N/T/J/A), 0 = second, in QUESTION order (see
 // AxisScore.pattern in lib/quizScore.ts). O(1) pure lookup.
 //
 // Coverage: 4 MBTI axes × 8 patterns + Identity × 4 = 36 phrases. Each phrase
 // follows one grammar: (1) cite the specific scenario answered against the
-// result — the highest-weight one, or "all three" when unanimous; (2) name the
+// result - the highest-weight one, or "all three" when unanimous; (2) name the
 // behavior with a concrete, B-grade-funny detail the taker will recognize in
 // themselves (self-roast > generic praise); (3) tie it to the % with {pct}
-// (substituted at render); (4) hedge to a level set by the score band — the
+// (substituted at render); (4) hedge to a level set by the score band - the
 // margin mapping + ±2 spice lands these at strong (~56–66%), mid (~68–75%),
-// low (~80–87%), none (~89–97%). No trailing emoji — these sit under the axis
+// low (~80–87%), none (~89–97%). No trailing emoji - these sit under the axis
 // bars as running commentary, and a decorative glyph on every one of the five
 // rows read as clutter next to the numbers. Keep new phrases plain-text too.
 //
@@ -23,7 +23,7 @@
 //   IDENTITY [Q5 demo-panic(3), Q10 rumination(7)]                  1=A
 // ─────────────────────────────────────────────────────────────────────────────
 
-import type { Phrase } from "@/data/dictionary";
+import type { Phrase } from "@/data/dictionaryCore";
 import type { Axis } from "@/data/quiz";
 
 export const EXPLANATIONS: Record<Axis, Record<string, Phrase>> = {

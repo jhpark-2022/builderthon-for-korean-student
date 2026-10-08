@@ -20,7 +20,11 @@ import { scoreQuiz, parseResultId, type Choice, type QuizResult, type AxisScore 
 import { saveOwnResult, loadOwnResult, type OwnResult } from "@/lib/quizResult";
 import { QUIZ_EDITIONS, type QuizEdition, type EditionConfig } from "@/data/quizEditions";
 import { getExplanation } from "@/data/quizExplanations";
-import { MatchStartFields, MatchSave, loadMatchProfile, saveMatchProfile, matchProfileError, type MatchProfile } from "@/components/match/MatchParts";
+import { MatchStartFields, MatchSave, loadMatchProfile, saveMatchProfile, matchProfileError, matchCopy, type MatchProfile, type MatchProfileError } from "@/components/match/MatchParts";
+import { normalizeMatchCode } from "@/lib/crossingMatch";
+import { TITLE, BODY, META, GRADIENT_TEXT } from "@/components/ui/typography";
+import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
+import Eyebrow from "@/components/ui/Eyebrow";
 
 type Phase = "landing" | "quiz" | "analyzing" | "result";
 
@@ -28,8 +32,8 @@ type Phase = "landing" | "quiz" | "analyzing" | "result";
 // the quiz. On a result-screen refresh the ?r= deep-link would otherwise look
 // like a friend's share; matching it against this key keeps "my result" =
 // "my result" (so a taker sees "다시 테스트하기", not the viral "나도 테스트하기").
-// All access is guarded — sessionStorage can throw (private mode, blocked
-// storage) — and any failure silently falls back to treating it as a share.
+// All access is guarded - sessionStorage can throw (private mode, blocked
+// storage) - and any failure silently falls back to treating it as a share.
 // (OWN_KEY is centralized in lib/storage.ts so the ?reset=1 sweep covers it.)
 
 function readOwnResult(key: string): string | null {
@@ -46,7 +50,7 @@ function writeOwnResult(key: string, resultId: string): void {
   try {
     window.sessionStorage.setItem(key, resultId);
   } catch {
-    /* storage blocked — keep old behavior */
+    /* storage blocked - keep old behavior */
   }
 }
 
@@ -55,11 +59,48 @@ function clearOwnResult(key: string): void {
   try {
     window.sessionStorage.removeItem(key);
   } catch {
-    /* storage blocked — no-op */
+    /* storage blocked - no-op */
   }
 }
 
-// Landing-cluster logos, self-hosted from /public/logos — no CDN dependency.
+// 풀던 답(새로고침, 폰의 뒤로 가기 대비). sessionStorage라 탭을 닫으면 사라집니다. 판마다 키가 다릅니다.
+// DECIDED 2026-10-08 (퀴즈와 매칭 리뷰 11): 답이 React 상태에만 있어 현장에서 새로고침 한 번에 처음부터였습니다.
+// 키는 판의 ownKey에서 만듭니다(lib/storage.ts의 ?reset=1 청소 목록에는 없습니다. 탭 단위라 남아도 해가 없습니다).
+const progressKey = (ownKey: string) => `${ownKey}-progress`;
+function readProgress(ownKey: string): { index: number; answers: Choice[] } | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.sessionStorage.getItem(progressKey(ownKey));
+    if (!raw) return null;
+    const p: unknown = JSON.parse(raw);
+    if (typeof p !== "object" || p === null) return null;
+    const { index, answers } = p as { index?: unknown; answers?: unknown };
+    if (!Array.isArray(answers) || !answers.every((c) => c === "a" || c === "b")) return null;
+    if (typeof index !== "number" || !Number.isInteger(index) || index < 0 || index >= QUESTIONS.length || index > answers.length) return null;
+    if (answers.length === 0 || answers.length > QUESTIONS.length) return null;
+    return { index, answers: answers as Choice[] };
+  } catch {
+    return null;
+  }
+}
+function writeProgress(ownKey: string, index: number, answers: Choice[]): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.setItem(progressKey(ownKey), JSON.stringify({ index, answers }));
+  } catch {
+    /* storage blocked */
+  }
+}
+function clearProgress(ownKey: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.removeItem(progressKey(ownKey));
+  } catch {
+    /* storage blocked */
+  }
+}
+
+// Landing-cluster logos, self-hosted from /public/logos - no CDN dependency.
 // `file` is the full filename (ext included) under /public/logos, matching the
 // `logo` field on RESULTS. Each still carries an emoji fallback: HeroLogo swaps
 // to it if the local file is ever missing, so a tile never renders broken.
@@ -74,7 +115,7 @@ const HERO_LOGOS = [
 
 // Detects an <img> that already failed before React could attach onError (the
 // SSR/hydration race for a 404'd src): if it's complete with zero intrinsic
-// width, it errored — flip to the emoji fallback.
+// width, it errored - flip to the emoji fallback.
 function markBrokenImage(node: HTMLImageElement | null, fail: () => void) {
   if (node && node.complete && node.naturalWidth === 0) fail();
 }
@@ -128,6 +169,9 @@ function ModelGlyph({
 // 판이 바꾸는 것은 결과 표, 주소, 저장 키뿐입니다(data/quizEditions.ts). 질문과 채점은 같습니다.
 export default function Quiz({ edition = "2026-08", matchMode = false }: { edition?: QuizEdition; matchMode?: boolean }) {
   const ed = QUIZ_EDITIONS[edition];
+  // 판의 옷(data/quizEditions.ts의 tone). c(8월 클래스, 나루 클래스)로 고릅니다. 8월판의 문자열은 한 글자도 바뀌지 않습니다.
+  const naru = ed.tone === "naru";
+  const c = (z: string, n: string) => (naru ? n : z);
   const { t } = useLocale();
   const reduce = useReducedMotion();
   const params = useSearchParams();
@@ -152,6 +196,8 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
   // Captured once on mount, BEFORE enterResult's replaceState strips the param,
   // so the result screen can offer "Back to registration →" after a genuine
   // completion. (Deep-link views carry no axes, so the button stays hidden.)
+  // 매칭 모드: 결과 화면에서 프로필(이름, 나라, 트랙 순위)을 고치러 시작 화면으로 돌아온 상태. 무엇이 비었는지 들고 옵니다.
+  const [profileFix, setProfileFix] = useState<MatchProfileError | null>(null);
   const [returnToRegister, setReturnToRegister] = useState(false);
   useEffect(() => {
     if (params.get("return") === "register") setReturnToRegister(true);
@@ -160,7 +206,7 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
 
   // Deep-link: ?r=INFJ-A drops a visitor straight onto a result card. Usually
   // that's a friend's share (the viral loop → show "나도 테스트하기"). But if the id
-  // matches the one WE stashed, it's the visitor's own result — treat it as
+  // matches the one WE stashed, it's the visitor's own result - treat it as
   // theirs (fromShare=false → "다시 테스트하기"). "Ours" = the sessionStorage key
   // (survives a refresh) OR the durable localStorage id (survives a restart), so
   // reopening your own shared link on a later visit still reads as your result.
@@ -175,7 +221,7 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
     // Revisiting your OWN result (landing "다시 보기", a reopened link, a fresh
     // tab): re-score the stored answers so the per-axis % gauges come back
     // instead of the card rendering axis-less. Only ever for our own saved
-    // answers, and only if they still score to this exact type — a scoring
+    // answers, and only if they still score to this exact type - a scoring
     // change that shifts the outcome falls back to the axis-less card rather
     // than showing percentages that contradict the type on screen.
     const rescored =
@@ -192,10 +238,10 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
   // taker still sees "다시 테스트하기"), reflect it in the URL for sharing, then flip
   // the phase. Called straight away (reduced motion) or after the interstitial.
   // This is the ONLY genuine-completion path, so it's the ONLY place we write the
-  // durable localStorage result — a `?r=` deep-link never reaches here, so a
+  // durable localStorage result - a `?r=` deep-link never reaches here, so a
   // friend's shared type is never saved as the visitor's own. A retake that
   // completes overwrites the previous type.
-  // `taken` is the answer array the result was scored from — persisted alongside
+  // `taken` is the answer array the result was scored from - persisted alongside
   // the id so a later revisit can re-score it and show the gauges again. It's
   // passed in rather than read from state: the reduced-motion path calls this in
   // the same tick as setAnswers, where the state hasn't flushed yet.
@@ -203,6 +249,7 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
     writeOwnResult(ed.ownKey, scored.resultId);
     saveOwnResult(scored.resultId, taken, ed.resultKey);
     setOwnResult({ resultId: scored.resultId, savedAt: new Date().toISOString(), answers: taken });
+    clearProgress(ed.ownKey);
     if (typeof window !== "undefined") {
       window.history.replaceState(null, "", `${ed.path}?r=${scored.resultId}`);
     }
@@ -217,10 +264,12 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
     return () => window.clearTimeout(id);
   }, [phase, result, answers, enterResult]);
 
-  // ?q1=a|b — the home page's one-question hook was answered inline, so start
+  // ?q1=a|b - the home page's one-question hook was answered inline, so start
   // from that answer instead of throwing it away and asking again. Runs once on
   // mount; anything other than "a"/"b" is ignored.
+  // 매칭 모드(/match)에서는 읽지 않습니다. 이름과 나라를 받는 시작 화면을 건너뛰어 끝에서 "올리지 못했습니다"가 됐습니다(2026-10-08).
   useEffect(() => {
+    if (matchMode) return;
     const seed = params.get("q1");
     if (seed !== "a" && seed !== "b") return;
     setAnswers([seed as Choice]);
@@ -230,12 +279,44 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // 풀던 답을 되살립니다(새로고침, 뒤로 갔다가 돌아옴). 결과 딥링크(?r=)나 q1이 있으면 그쪽이 이깁니다.
+  // 매칭 모드는 프로필이 온전할 때만 질문으로 바로 갑니다. 아니면 시작 화면에서 채운 뒤 이어서 풉니다.
+  const [resumable, setResumable] = useState<{ index: number; answers: Choice[] } | null>(null);
+  useEffect(() => {
+    if (parseResultId(params.get("r")) || params.get("q1")) return;
+    const saved = readProgress(ed.ownKey);
+    if (!saved) return;
+    if (matchMode) {
+      const p = loadMatchProfile();
+      if (!p || matchProfileError(p)) { setResumable(saved); return; }
+    }
+    setAnswers(saved.answers);
+    setIndex(saved.index);
+    setPhase("quiz");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    if (phase === "quiz" && answers.length > 0) writeProgress(ed.ownKey, index, answers);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, index, answers]);
+
   const startQuiz = () => {
+    // 시작 화면에서 프로필을 채우고 온 사람에게 풀던 답이 남아 있으면 이어서 풉니다.
+    if (resumable) {
+      setAnswers(resumable.answers);
+      setIndex(resumable.index);
+      setSelected(null);
+      setResumable(null);
+      setPhase("quiz");
+      return;
+    }
     setAnswers([]);
     setIndex(0);
     setSelected(null);
     setResult(null);
     setFromShare(false);
+    setProfileFix(null);
+    clearProgress(ed.ownKey);
     clearOwnResult(ed.ownKey);
     // drop the ?r= so a restart doesn't leave a stale result in the URL
     if (typeof window !== "undefined") {
@@ -276,15 +357,45 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
       setPhase("landing");
       return;
     }
+    // 2026-10-08: 여기서 selected에 지난 답을 넣었더니 handleAnswer의 두 번 누르기 방지(selected가 있으면 무시)에
+    // 걸려 돌아간 질문에서 아무것도 고를 수 없었습니다. selected는 비우고, 지난 답은 answers[index]로 보여 줍니다.
     setIndex(index - 1);
-    setSelected(answers[index - 1] ?? null);
+    setSelected(null);
+  };
+
+  // 다시 하기. 매칭 모드에서 프로필이 비었으면(미리 해 본 기기는 트랙 순위가 없습니다) 질문이 아니라 시작 화면으로
+  // 갑니다. 그 전에는 14문항을 다시 풀고 같은 "올리지 못했습니다"를 봤습니다(퀴즈와 매칭 리뷰 2).
+  const retake = () => {
+    if (matchMode) {
+      const p = loadMatchProfile();
+      const err = p ? matchProfileError(p) : "name";
+      if (err) {
+        setAnswers([]);
+        setIndex(0);
+        setSelected(null);
+        setResult(null);
+        setFromShare(false);
+        clearProgress(ed.ownKey);
+        clearOwnResult(ed.ownKey);
+        if (typeof window !== "undefined") window.history.replaceState(null, "", ed.path);
+        setProfileFix(err);
+        setPhase("landing");
+        return;
+      }
+    }
+    startQuiz();
+  };
+  // 결과는 그대로 두고 프로필만 고치러 시작 화면으로. 채우면 결과로 돌아오고 MatchSave가 다시 올립니다.
+  const fixProfile = (problem: MatchProfileError) => {
+    setProfileFix(problem);
+    setPhase("landing");
   };
 
   const current = QUESTIONS[index];
   const progress = ((index + 1) / QUESTIONS.length) * 100;
 
   // Focus the new question after it mounts (both forward and back). preventScroll
-  // keeps the page still — the question is already centred in the viewport.
+  // keeps the page still - the question is already centred in the viewport.
   useEffect(() => {
     if (phase !== "quiz") return;
     const id = window.setTimeout(
@@ -295,36 +406,48 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
   }, [phase, index, reduce]);
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#070B1F] text-white">
-      {/* decorative field — same tokens as the main site */}
+    // id="main": 건너뛰기 링크(components/SkipLink.tsx)가 #main으로 갑니다. 이 화면에는 그 id가 없어 링크가 죽어 있었습니다(2026-10-08).
+    <main id="main" tabIndex={-1} className="relative min-h-screen overflow-hidden bg-[#070B1F] text-white focus:outline-none">
+      {/* decorative field - same tokens as the main site */}
       <div aria-hidden className="grid-bg pointer-events-none absolute inset-0 opacity-50" />
-      <div aria-hidden className="orb" style={{ left: "-12%", top: "-10%", width: "42vh", height: "42vh", background: "rgba(124,58,237,0.4)" }} />
-      <div aria-hidden className="orb" style={{ bottom: "-14%", right: "-10%", width: "46vh", height: "46vh", background: "rgba(6,182,212,0.3)" }} />
+      {/* 12월판의 빛은 나루의 보라와 자주입니다(#4B3A8C, #9A5A82). 8월판은 그대로. */}
+      <div aria-hidden className="orb" style={{ left: "-12%", top: "-10%", width: "42vh", height: "42vh", background: naru ? "rgba(75,58,140,0.5)" : "rgba(124,58,237,0.4)" }} />
+      <div aria-hidden className="orb" style={{ bottom: "-14%", right: "-10%", width: "46vh", height: "46vh", background: naru ? "rgba(154,90,130,0.3)" : "rgba(6,182,212,0.3)" }} />
+      {/* 질문과 결과 화면에는 h1이 없었습니다(?r= 딥링크는 h1 없는 페이지). 시작 화면은 자기 h1이 있습니다. */}
+      {phase !== "landing" && <h1 className="sr-only">{t(ed.ui.title)}</h1>}
 
-      {/* header — widens on the result screen so it lines up with the 2-col layout */}
+      {/* header - widens on the result screen so it lines up with the 2-col layout */}
       <header className={`relative z-10 mx-auto flex h-20 items-center justify-between px-6 ${phase === "result" ? "max-w-5xl" : "max-w-2xl"}`}>
         {/* -my-3 py-3: 터치 면적을 44px로 키우면서 글자 위치는 그대로 둡니다
             (2026-08-17). 그전에는 두 링크 다 높이가 23px이라 손가락으로는
             빗나가기 쉬웠습니다. 아래 '이전' 버튼도 같은 처리입니다. */}
-        <a href={ed.backHref} className="-my-3 inline-flex min-h-[44px] items-center py-3 text-sm font-semibold text-white/60 transition hover:text-white">
+        <a href={ed.backHref} className={`-my-3 inline-flex min-h-[44px] items-center py-3 ${c("text-sm", BODY)} font-semibold text-white/60 transition hover:text-white`}>
           ← {t(ed.ui.back)}
         </a>
         <LocaleToggle />
       </header>
 
       <div className={`relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] flex-col px-6 pb-12 ${phase === "result" ? "max-w-5xl" : "max-w-2xl"}`}>
-        {phase === "landing" && <Landing ed={ed} matchMode={matchMode} onStart={startQuiz} t={t} reduce={!!reduce} ownResult={ownResult} />}
+        {phase === "landing" && (
+          <Landing
+            ed={ed} matchMode={matchMode} onStart={startQuiz} t={t} reduce={!!reduce} ownResult={ownResult}
+            profileFix={profileFix}
+            // 결과가 아직 있으면(프로필만 고치러 온 경우) 테스트를 다시 하지 않고 결과로 돌아갑니다.
+            onResume={profileFix && result ? () => { setProfileFix(null); setPhase("result"); } : undefined}
+          />
+        )}
 
         {phase === "quiz" && current && (
           <div className="flex flex-1 flex-col pt-4">
             {/* progress */}
             <div className="mb-3 flex items-center justify-between">
-              <button type="button" onClick={goBack} className="-my-3 inline-flex min-h-[44px] items-center gap-1 py-3 pr-3 text-sm font-semibold text-white/50 transition hover:text-white/90">
+              <button type="button" onClick={goBack} className={`-my-3 inline-flex min-h-[44px] items-center gap-1 py-3 pr-3 ${c("text-sm", BODY)} font-semibold ${c("text-white/50", "text-white/60")} transition hover:text-white/90`}>
                 ← {t(ed.ui.prev)}
               </button>
-              <span className="font-mono text-sm font-bold text-white">
+              <span className={`font-mono ${c("text-sm", BODY)} font-bold text-white`}>
                 {index + 1}
-                <span className="text-white/35"> / {QUESTIONS.length}</span>
+                {/* white/35는 3.14:1이었습니다(접근성 감사 9). */}
+                <span className="text-white/55"> / {QUESTIONS.length}</span>
               </span>
             </div>
             <div
@@ -336,14 +459,14 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
               aria-label={t(ed.ui.progressLabel)}
             >
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-violet-500 to-cyan-400"
+                className={`h-full rounded-full bg-gradient-to-r ${c("from-violet-500 to-cyan-400", "from-naru-purple to-accent")}`}
                 animate={{ width: `${progress}%` }}
                 initial={false}
                 transition={{ duration: reduce ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
               />
             </div>
 
-            {/* Position announcement — the "n / 14" counter above is visual
+            {/* Position announcement - the "n / 14" counter above is visual
                 only; this is its polite spoken equivalent. */}
             <p className="sr-only" aria-live="polite">
               {t(ed.ui.questionPosition)
@@ -361,7 +484,7 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
                   exit={reduce ? undefined : { opacity: 0, x: -24 }}
                   transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
+                  <p className={c("mb-4 text-xs font-bold uppercase tracking-[0.2em] text-violet-300", `mb-4 ${META} font-bold uppercase tracking-[0.16em] text-accent`)}>
                     {current.id}
                   </p>
                   {/* Focused on every step: the question swaps in place, so a
@@ -372,31 +495,33 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
                   <h2
                     ref={questionRef}
                     tabIndex={-1}
-                    className="text-[1.6rem] font-bold leading-snug tracking-tight outline-none sm:text-[1.8rem]"
+                    className={c("text-[1.6rem] font-bold leading-snug tracking-tight outline-none sm:text-[1.8rem]", `break-keep ${BODY} font-black leading-snug tracking-tight text-white outline-none`)}
                   >
                     {t(current.text)}
                   </h2>
                   <div className="mt-8 flex flex-col gap-3.5">
                     {(["a", "b"] as const).map((key) => {
                       const opt = current[key];
-                      const isSel = selected === key;
+                      // 방금 누른 답, 또는 "이전"으로 돌아온 질문의 지난 답. 색만으로는 스크린리더에 전해지지 않아 aria-pressed도 겁니다.
+                      const isSel = selected === key || (selected === null && answers[index] === key);
                       return (
                         <button
                           key={key}
                           type="button"
+                          aria-pressed={isSel}
                           onClick={() => handleAnswer(key)}
                           className={`flex items-center gap-4 rounded-2xl border p-5 text-left transition ${
                             isSel
-                              ? "-translate-y-0.5 border-violet-400/50 bg-white/[0.08]"
+                              ? c("-translate-y-0.5 border-violet-400/50 bg-white/[0.08]", "-translate-y-0.5 border-accent/70 bg-white/[0.08]")
                               : "border-white/10 bg-white/[0.04] hover:border-white/20 hover:bg-white/[0.07]"
                           }`}
                         >
-                          <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm font-bold transition ${
-                            isSel ? "border-violet-400/50 bg-violet-500/20 text-violet-100" : "border-white/15 bg-white/[0.04] text-white/60"
+                          <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border ${c("text-sm", BODY)} font-bold transition ${
+                            isSel ? c("border-violet-400/50 bg-violet-500/20 text-violet-100", "border-accent/70 bg-naru-purple/40 text-white") : "border-white/15 bg-white/[0.04] text-white/60"
                           }`}>
                             {key.toUpperCase()}
                           </span>
-                          <span className="text-base font-semibold leading-snug text-white/90">
+                          <span className={`${c("text-base", BODY)} font-semibold leading-snug text-white/90`}>
                             {t(opt.label)}
                           </span>
                         </button>
@@ -409,10 +534,10 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
           </div>
         )}
 
-        {phase === "analyzing" && <Analyzing t={t} reduce={!!reduce} />}
+        {phase === "analyzing" && <Analyzing t={t} reduce={!!reduce} naru={naru} />}
 
         {phase === "result" && result && (
-          <ResultView ed={ed} matchMode={matchMode} result={result} t={t} reduce={!!reduce} fromShare={fromShare} onRetake={startQuiz} returnToRegister={returnToRegister} />
+          <ResultView ed={ed} matchMode={matchMode} result={result} t={t} reduce={!!reduce} fromShare={fromShare} onRetake={retake} onFixProfile={fixProfile} returnToRegister={returnToRegister} />
         )}
       </div>
     </main>
@@ -427,6 +552,8 @@ function Landing({
   t,
   reduce,
   ownResult,
+  profileFix,
+  onResume,
 }: {
   ed: EditionConfig;
   matchMode: boolean;
@@ -434,9 +561,15 @@ function Landing({
   t: (p: { ko: string; en: string }) => string;
   reduce: boolean;
   ownResult: OwnResult | null;
+  /** 매칭 모드: 결과 화면에서 프로필을 고치러 돌아왔을 때 비어 있던 항목. 그 칸에 바로 오류를 보여 줍니다. */
+  profileFix?: MatchProfileError | null;
+  /** 결과가 이미 있으면 시작 버튼이 테스트를 다시 하지 않고 결과로 돌아갑니다. */
+  onResume?: () => void;
 }) {
+  const naru = ed.tone === "naru";
+  const c = (z: string, n: string) => (naru ? n : z);
   // A returning taker gets a subtle "지난 결과: {variantName} · 다시 보기 →" line
-  // under the start button — an extra path to their result, never blocking a
+  // under the start button - an extra path to their result, never blocking a
   // retake. Derived (not stored) so copy changes always show the latest name.
   // `ownResult` is null on the server + first client render (loaded in an effect),
   // so this is absent then → no hydration mismatch; it just fades in on mount.
@@ -448,19 +581,45 @@ function Landing({
   // 매칭 모드(/match): 이름과 나라가 있어야 시작합니다(현장 팀 매칭 브리프 3). 이 기기에 넣어 둔 값이 있으면
   // 다시 채웁니다. 8월판(/quiz)에서는 아래 세 줄이 아무 일도 하지 않습니다.
   const [profile, setProfile] = useState<MatchProfile>({ name: "", country: "", tracks: [] });
-  const [profileError, setProfileError] = useState<"name" | "country" | "tracks" | null>(null);
+  const [profileError, setProfileError] = useState<MatchProfileError | null>(null);
+  const cleanProfile = (p: MatchProfile): MatchProfile => ({
+    name: p.name.trim(), country: p.country.trim().toUpperCase(), tracks: p.tracks, ...(p.code ? { code: p.code } : {}),
+  });
+  const focusProfileField = (err: MatchProfileError) =>
+    document.getElementById(err === "name" ? "match-name" : err === "country" ? "match-country" : "match-tracks")?.focus();
   useEffect(() => {
     if (!matchMode) return;
-    const saved = loadMatchProfile();
-    if (saved) setProfile(saved);
+    let next = loadMatchProfile() ?? { name: "", country: "", tracks: [] };
+    // 현장 QR의 주소(/match?code=...)에 실려 온 현장 코드를 받아 둡니다. 참가자가 따로 칠 것이 없습니다.
+    try {
+      const fromUrl = normalizeMatchCode(new URLSearchParams(window.location.search).get("code"));
+      if (fromUrl) { next = { ...next, code: fromUrl }; saveMatchProfile(next); }
+    } catch { /* ignore */ }
+    setProfile(next);
+    // 결과 화면에서 돌아왔으면 비어 있던 칸을 바로 가리킵니다.
+    if (profileFix) {
+      const err = matchProfileError(next);
+      setProfileError(err);
+      if (err) window.setTimeout(() => focusProfileField(err), 0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matchMode]);
+  // 온전한 프로필은 바뀔 때마다 저장합니다. 그 전에는 시작 버튼만 저장해서 이름 오타 하나를 고치려면 14문항을
+  // 다시 풀어야 했습니다(퀴즈와 매칭 리뷰 6). 고친 뒤 "지난 결과 다시 보기"로 가면 바뀐 이름이 다시 올라갑니다.
+  const changeProfile = (p: MatchProfile) => {
+    setProfile(p);
+    setProfileError(null);
+    const clean = cleanProfile(p);
+    if (!matchProfileError(clean)) saveMatchProfile(clean);
+  };
   const start = () => {
     if (matchMode) {
-      const clean = { name: profile.name.trim(), country: profile.country.trim().toUpperCase(), tracks: profile.tracks };
+      const clean = cleanProfile(profile);
       const err = matchProfileError(clean);
       setProfileError(err);
-      if (err) { document.getElementById(err === "name" ? "match-name" : err === "country" ? "match-country" : "match-tracks")?.focus(); return; }
+      if (err) { focusProfileField(err); return; }
       saveMatchProfile(clean);
+      if (onResume) { onResume(); return; }
     }
     onStart();
   };
@@ -472,20 +631,26 @@ function Landing({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
+      {/* DECIDED 2026-10-08 (브랜드 감사 2, 4, 9): 12월판은 나루의 Eyebrow, 그라데이션 글자, 버튼, 그리고 글자 크기 셋
+          (TITLE/BODY/META)을 씁니다. 8월판의 클래스는 아래 삼항의 앞쪽에 그대로 있습니다. */}
+      {naru ? (
+        <Eyebrow color="purple">✦ {t(ed.ui.eyebrow)}</Eyebrow>
+      ) : (
       <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-400/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-violet-200">
         ✦ {t(ed.ui.eyebrow)}
       </span>
-      <h1 className="text-[2.6rem] font-black leading-[1.05] tracking-tight sm:text-[3rem]">
-        <span className="gradient-text gradient-text--zero100 bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text pb-[0.12em] text-transparent">
+      )}
+      <h1 className={c("text-[2.6rem] font-black leading-[1.05] tracking-tight sm:text-[3rem]", `break-keep ${TITLE} font-black leading-[1.05] tracking-tight`)}>
+        <span className={c("gradient-text gradient-text--zero100 bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text pb-[0.12em] text-transparent", GRADIENT_TEXT)}>
           {t(ed.ui.title)}
         </span>
       </h1>
-      <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-white/70">
+      <p className={`mx-auto mt-5 max-w-md ${c("text-base", BODY)} leading-relaxed text-white/70`}>
         {t(ed.ui.subtitle)}
       </p>
       {/* 매칭 모드에서는 8월 로고 줄 자리에 이름과 나라 입력이 섭니다. */}
       {matchMode ? (
-        <MatchStartFields t={t} profile={profile} onChange={(p) => { setProfile(p); setProfileError(null); }} error={profileError} />
+        <MatchStartFields t={t} profile={profile} onChange={changeProfile} error={profileError} />
       ) : (
       <div className="mt-9 flex flex-wrap items-center justify-center gap-2.5">
         {HERO_LOGOS.map((l) => (
@@ -496,17 +661,20 @@ function Landing({
       </div>
       )}
       {/* Full-width and 56px tall on a phone, sitting low enough to fall in the
-          thumb zone. It was a centred inline pill — reachable on a desktop, a
+          thumb zone. It was a centred inline pill - reachable on a desktop, a
           stretch on a 6" screen where this is the only thing to press. */}
       <button
         type="button"
         onClick={start}
-        className="group mt-10 inline-flex min-h-[56px] w-full max-w-sm items-center justify-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 sm:w-auto"
+        className={c(
+          "group mt-10 inline-flex min-h-[56px] w-full max-w-sm items-center justify-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 sm:w-auto",
+          `${buttonClass("primary", "naru")} mt-10 min-h-[56px] w-full max-w-sm justify-center sm:w-auto`,
+        )}
       >
-        {t(ed.ui.start)}
-        <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+        {matchMode && onResume ? t(matchCopy.resume) : t(ed.ui.start)}
+        <span aria-hidden className={c("transition-transform duration-300 group-hover:translate-x-1", ARROW_CLASS)}>→</span>
       </button>
-      <p className="mt-5 text-xs font-medium text-white/55">{t(ed.ui.meta)}</p>
+      <p className={`mt-5 ${c("text-xs", META)} font-medium ${c("text-white/55", "text-white/70")}`}>{t(ed.ui.meta)}</p>
 
       {/* Returning taker: a low-key link back to their saved result. Fades in
           post-mount (ownResult loads client-side), so it never disrupts the
@@ -517,24 +685,33 @@ function Landing({
           initial={reduce ? false : { opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-xs font-semibold text-white/70 transition hover:border-white/20 hover:bg-white/[0.09] hover:text-white"
+          className={`mt-6 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 ${c("text-xs", META)} font-semibold text-white/70 transition hover:border-white/20 hover:bg-white/[0.09] hover:text-white`}
         >
           <span className="text-white/60">{t(quizLandingHint.lead)}</span>
-          <span className="font-bold text-violet-200">{t(ownVariantName)}</span>
-          <span aria-hidden className="text-white/30"> </span>
-          <span className="text-violet-300">{t(quizLandingHint.cta)} →</span>
+          <span className={`font-bold ${c("text-violet-200", "text-white")}`}>{t(ownVariantName)}</span>
+          <span aria-hidden> </span>
+          <span className={c("text-violet-300", "text-accent")}>{t(quizLandingHint.cta)} →</span>
         </motion.a>
       )}
     </motion.div>
   );
 }
 
-// Landing "지난 결과" hint copy (returning taker only). Kept local — it's specific
+// Landing "지난 결과" hint copy (returning taker only). Kept local - it's specific
 // to this component and not part of the shared quizUI export.
 const quizLandingHint = {
   lead: { ko: "지난 결과:", en: "Last result:" },
   cta: { ko: "다시 보기", en: "View again" },
 };
+
+// 축 설명 문장을 이 판의 말로. 문장 표(data/quizExplanations.ts)는 두 판이 같이 쓰고, 판에 없는 말만 바꿉니다
+// (12월판: "공유회" → "발표"). 8월판은 바꿀 것이 없어 그대로 돌려줍니다.
+function explainFor(ed: EditionConfig, axis: Axis, pattern: number[], pct: number): { ko: string; en: string } | null {
+  const exp = getExplanation(axis, pattern, pct);
+  if (!exp || !ed.explainSwaps) return exp;
+  const swap = (text: string, pairs: [string, string][]) => pairs.reduce((acc, [from, to]) => acc.split(from).join(to), text);
+  return { ko: swap(exp.ko, ed.explainSwaps.ko), en: swap(exp.en, ed.explainSwaps.en) };
+}
 
 // ── Result screen ───────────────────────────────────────────────────────────
 
@@ -546,6 +723,7 @@ function ResultView({
   reduce,
   fromShare,
   onRetake,
+  onFixProfile,
   returnToRegister,
 }: {
   ed: EditionConfig;
@@ -555,14 +733,20 @@ function ResultView({
   reduce: boolean;
   fromShare: boolean;
   onRetake: () => void;
+  onFixProfile: (problem: MatchProfileError) => void;
   returnToRegister: boolean;
 }) {
+  const naru = ed.tone === "naru";
+  const c = (z: string, n: string) => (naru ? n : z);
+  // 12월판의 블록 버튼. 페이지의 CTA와 같은 알약 모양입니다(브랜드 감사 10). 8월판은 rounded-2xl 그대로.
+  const NARU_PRIMARY = `${buttonClass("primary", "naru")} w-full justify-center`;
+  const NARU_GHOST = `${buttonClass("secondary")} w-full justify-center`;
   const data = ed.results[result.mbti];
   const variant = data.variants[result.identity];
   const ctaLead = t(ed.ui.ctaLead).replace("{role}", t(data.role));
 
   // 9:16 story-image export. We capture a dedicated, fixed-size (1080×1920) card
-  // rendered off-screen — never the live card (it's responsive and its gauge
+  // rendered off-screen - never the live card (it's responsive and its gauge
   // accordion state would leak in). On mobile the PNG goes into the native share
   // sheet (→ Instagram story / save to photos); desktop falls back to download.
   const storyRef = useRef<HTMLDivElement>(null);
@@ -574,6 +758,29 @@ function ResultView({
   useEffect(() => {
     setHost(window.location.hostname.replace(/^www\./, ""));
   }, []);
+
+  // 길게 눌러 저장하는 오버레이(role=dialog)의 포커스. 열리면 닫기 버튼으로 옮기고, Esc로 닫고, Tab은 안에 가두고,
+  // 닫히면 저장 버튼으로 돌려줍니다(접근성 감사 10). 그 전에는 포커스가 뒤의 페이지에 남아 있었습니다.
+  const saveBtnRef = useRef<HTMLButtonElement>(null);
+  const holdCloseRef = useRef<HTMLButtonElement>(null);
+  const closeHold = useCallback(() => {
+    setHoldImage((cur) => {
+      if (cur) URL.revokeObjectURL(cur);
+      return null;
+    });
+    saveBtnRef.current?.focus();
+  }, []);
+  useEffect(() => {
+    if (!holdImage) return;
+    const id = window.setTimeout(() => holdCloseRef.current?.focus(), 0);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { e.preventDefault(); closeHold(); }
+      // 안에서 포커스를 받을 수 있는 것은 닫기 버튼 하나입니다.
+      else if (e.key === "Tab") { e.preventDefault(); holdCloseRef.current?.focus(); }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => { window.clearTimeout(id); document.removeEventListener("keydown", onKey); };
+  }, [holdImage, closeHold]);
 
   const saveImage = useCallback(async () => {
     const node = storyRef.current;
@@ -587,7 +794,7 @@ function ResultView({
         await document.fonts.ready;
       }
       const opts = { width: 1080, height: 1920, pixelRatio: 1, cacheBust: true, backgroundColor: "#070B1F" };
-      // iOS Safari drops fonts/images on the FIRST html-to-image pass — render
+      // iOS Safari drops fonts/images on the FIRST html-to-image pass - render
       // twice and keep the second blob. Logos are self-hosted (/logos), so no
       // CORS taint; the double pass is purely for font/image warm-up.
       await toBlob(node, opts);
@@ -605,16 +812,16 @@ function ResultView({
       if (canShareFiles) {
         try {
           await navigator.share({ files: [file] });
-          // Counted only on resolve — a dismissed sheet throws AbortError below.
+          // Counted only on resolve - a dismissed sheet throws AbortError below.
           track("story_share", { type: result.resultId });
         } catch (err) {
-          // User dismissed the share sheet — not a failure, stay silent.
+          // User dismissed the share sheet - not a failure, stay silent.
           if ((err as Error)?.name === "AbortError") return;
           throw err;
         }
       } else if (window.matchMedia("(pointer: coarse)").matches) {
         // Mobile in-app browsers (Instagram, KakaoTalk, LINE…) support neither
-        // the file share sheet nor <a download> — the click silently did
+        // the file share sheet nor <a download> - the click silently did
         // nothing and the visitor was left with no image. Show the PNG instead
         // and tell them to long-press it, which always works.
         setHoldImage(URL.createObjectURL(blob));
@@ -650,35 +857,39 @@ function ResultView({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* Only for someone who actually finished the quiz — a shared link is a
+      {/* Only for someone who actually finished the quiz - a shared link is a
           stranger's result and gets no celebration. */}
       {!fromShare && <Confetti />}
+      {naru ? (
+        <Eyebrow color="purple">✦ {t(ed.ui.resultEyebrow)}</Eyebrow>
+      ) : (
       <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white/60">
         ✦ {t(ed.ui.resultEyebrow)}
       </span>
+      )}
       {/* 매칭 모드: 결과가 나오는 순간 매칭판에 올리고 그 상태를 보여 줍니다. 공유 링크로 온 사람은 올리지 않습니다. */}
-      {matchMode && <MatchSave t={t} result={result} data={data} fromShare={fromShare} />}
+      {matchMode && <MatchSave t={t} result={result} data={data} fromShare={fromShare} onFixProfile={onFixProfile} />}
 
       {/* Stacked: the shareable result card spans the full width on top, then
           the apply CTA + the match section + actions sit below it. (This said
-          "session recommendations" until 2026-08-12 — there are none and there
+          "session recommendations" until 2026-08-12 - there are none and there
           never were; the claim was removed from the home-page chip and /quiz's
           metadata in the same pass.) */}
       <div className="flex w-full flex-col gap-6">
         {/* full-width shareable result card */}
         <div
-          className="relative w-full overflow-hidden rounded-[28px] border border-white/[0.12] bg-[#0c0a18] p-7 text-left sm:p-9"
-          style={{ boxShadow: "0 30px 70px -28px rgba(217,70,239,0.42)" }}
+          className={`relative w-full overflow-hidden rounded-[28px] border border-white/[0.12] ${c("bg-[#0c0a18]", "bg-naru-surface")} p-7 text-left sm:p-9`}
+          style={{ boxShadow: naru ? "0 30px 70px -28px rgba(75,58,140,0.6)" : "0 30px 70px -28px rgba(217,70,239,0.42)" }}
         >
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-fuchsia-500/20 to-transparent" />
+          <div className={`pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b ${c("from-fuchsia-500/20", "from-naru-purple/30")} to-transparent`} />
           {/* Stub header. The event name is long enough that at phone widths the
-              wide mono tracking wrapped it — and squeezed the type code into
+              wide mono tracking wrapped it - and squeezed the type code into
               "ESTP-/T". Both stay on one line now; the size scales with the
               viewport (capped at the original 0.7rem from ~430px up) and the
               tracking only opens up from `sm`, where the card can carry it. */}
           <div className="relative flex items-center justify-between gap-3">
-            <span className="whitespace-nowrap font-mono text-[clamp(0.52rem,2.6vw,0.7rem)] font-bold uppercase tracking-[0.08em] text-white/60 sm:tracking-[0.15em]">{t(ed.cardStamp)}</span>
-            <span className="whitespace-nowrap font-mono text-[clamp(0.52rem,2.6vw,0.7rem)] font-bold tracking-wider text-white/60">{result.resultId}</span>
+            <span className={`whitespace-nowrap font-mono ${c("text-[clamp(0.52rem,2.6vw,0.7rem)]", META)} font-bold uppercase tracking-[0.08em] text-white/60 sm:tracking-[0.15em]`}>{t(ed.cardStamp)}</span>
+            <span className={`whitespace-nowrap font-mono ${c("text-[clamp(0.52rem,2.6vw,0.7rem)]", META)} font-bold tracking-wider text-white/60`}>{result.resultId}</span>
           </div>
 
           {/* two columns fill the wide card: identity + gauges on the left,
@@ -689,17 +900,17 @@ function ResultView({
               <div className={`flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br ${data.accent} shadow-lg`}>
                 <ModelGlyph result={data} imgClass="h-10 w-10 object-contain" emojiClass="text-4xl leading-none" />
               </div>
-              <p className="mt-6 text-sm font-semibold text-white/55">{t(ed.ui.youAre)}</p>
-              <h2 className="mt-1 text-[1.7rem] font-black leading-tight tracking-tight sm:text-[2rem]">{t(variant.name)}</h2>
-              <p className="mt-1 text-sm font-bold text-fuchsia-200">{data.model} {result.resultId}</p>
-              <p className="mt-4 text-[15px] font-semibold leading-relaxed text-white/90">“{t(data.phrase)}”</p>
-              <p className="mt-3 text-sm leading-relaxed text-white/65">{t(data.desc)}</p>
-              <p className="mt-3 text-sm italic leading-relaxed text-white/55">{t(variant.line)}</p>
+              <p className={`mt-6 ${c("text-sm", BODY)} font-semibold ${c("text-white/55", "text-white/70")}`}>{t(ed.ui.youAre)}</p>
+              <h2 className={c("mt-1 text-[1.7rem] font-black leading-tight tracking-tight sm:text-[2rem]", `mt-1 break-keep ${TITLE} font-black leading-tight tracking-tight`)}>{t(variant.name)}</h2>
+              <p className={`mt-1 ${c("text-sm", BODY)} font-bold ${c("text-fuchsia-200", "text-accent")}`}>{data.model} {result.resultId}</p>
+              <p className={`mt-4 ${c("text-[15px]", BODY)} font-semibold leading-relaxed text-white/90`}>“{t(data.phrase)}”</p>
+              <p className={`mt-3 ${c("text-sm", BODY)} leading-relaxed ${c("text-white/65", "text-white/75")}`}>{t(data.desc)}</p>
+              <p className={`mt-3 ${c("text-sm", BODY)} italic leading-relaxed ${c("text-white/55", "text-white/70")}`}>{t(variant.line)}</p>
 
-              {/* Why this model — the research-backed reason the type maps here. */}
-              <div className="mt-4 rounded-2xl border border-fuchsia-400/15 bg-fuchsia-500/[0.05] p-3.5">
-                <p className="text-[0.7rem] font-bold uppercase tracking-wider text-fuchsia-200/70">{t(ed.ui.whyModel)} {data.model}</p>
-                <p className="mt-1 text-sm leading-relaxed text-white/75">{t(data.whyModel)}</p>
+              {/* Why this model - the research-backed reason the type maps here. */}
+              <div className={`mt-4 rounded-2xl border ${c("border-fuchsia-400/15 bg-fuchsia-500/[0.05]", "border-accent/20 bg-accent/[0.05]")} p-3.5`}>
+                <p className={`${c("text-[0.7rem]", META)} font-bold uppercase tracking-wider ${c("text-fuchsia-200/70", "text-accent")}`}>{t(ed.ui.whyModel)} {data.model}</p>
+                <p className={`mt-1 ${c("text-sm", BODY)} leading-relaxed text-white/75`}>{t(data.whyModel)}</p>
               </div>
             </div>
 
@@ -707,29 +918,29 @@ function ResultView({
             <div className="flex flex-col gap-5">
               <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                 <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3.5">
-                  <p className="text-[0.7rem] font-bold uppercase tracking-wider text-emerald-300">{t(ed.ui.strengthsLabel)}</p>
-                  <p className="mt-1 text-sm leading-snug text-white/80">{t(data.strengths)}</p>
+                  <p className={`${c("text-[0.7rem]", META)} font-bold uppercase tracking-wider text-emerald-300`}>{t(ed.ui.strengthsLabel)}</p>
+                  <p className={`mt-1 ${c("text-sm", BODY)} leading-snug text-white/80`}>{t(data.strengths)}</p>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3.5">
-                  <p className="text-[0.7rem] font-bold uppercase tracking-wider text-rose-300">{t(ed.ui.weaknessLabel)}</p>
-                  <p className="mt-1 text-sm leading-snug text-white/80">{t(data.weakness)}</p>
+                  <p className={`${c("text-[0.7rem]", META)} font-bold uppercase tracking-wider text-rose-300`}>{t(ed.ui.weaknessLabel)}</p>
+                  <p className={`mt-1 ${c("text-sm", BODY)} leading-snug text-white/80`}>{t(data.weakness)}</p>
                 </div>
               </div>
 
-              {/* Per-axis % gauges — only when the visitor actually took the quiz.
+              {/* Per-axis % gauges - only when the visitor actually took the quiz.
                   Deep-linked (shared) results carry no axes, so this is hidden.
                   Each row is a click-to-expand accordion explaining the % from
                   the taker's own answers. */}
               {result.axes && result.axes.length > 0 && (
                 <div>
-                  <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/60">{t(ed.ui.axesLabel)}</p>
-                  <AxisGauges axes={result.axes} accent={data.accent} t={t} reduce={reduce} />
+                  <p className={`${c("text-[0.7rem]", META)} font-bold uppercase tracking-wider text-white/60`}>{t(ed.ui.axesLabel)}</p>
+                  <AxisGauges ed={ed} axes={result.axes} accent={data.accent} t={t} reduce={reduce} />
                 </div>
               )}
 
               <div>
-                <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/60">{t(ed.ui.roleLabel)}</p>
-                <span className="mt-2 inline-flex items-center gap-2 rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-4 py-2 text-sm font-bold text-fuchsia-200">
+                <p className={`${c("text-[0.7rem]", META)} font-bold uppercase tracking-wider text-white/60`}>{t(ed.ui.roleLabel)}</p>
+                <span className={`mt-2 inline-flex items-center gap-2 rounded-full border ${c("border-fuchsia-400/30 bg-fuchsia-400/10", "border-accent/40 bg-accent/10")} px-4 py-2 ${c("text-sm", BODY)} font-bold ${c("text-fuchsia-200", "text-accent")}`}>
                   ★ {t(data.role)}
                 </span>
               </div>
@@ -737,11 +948,14 @@ function ResultView({
           </div>
         </div>
 
-        {/* Round-trip return banner — only after a GENUINE completion (axes
+        {/* Round-trip return banner - only after a GENUINE completion (axes
             present; a deep-link view has none) that arrived from the register
             modal. Prominent, and never auto-redirects: the visitor taps to go
             back, where the modal restores their draft and attaches this type. */}
-        {returnToRegister && result.axes && result.axes.length > 0 && (
+        {/* DECIDED 2026-10-08: 이 배너는 8월 등록 모달의 왕복(/quiz?return=register)에서만 켜졌고, 그 모달은 이제 열리지
+            않습니다. 링크(/?register=1)는 홈의 12월 등록 공급자가 받아, 등록이 열려 있을 때 폼을 엽니다. 매칭 모드(/match)는
+            신청의 일부가 아니라(사용자: "팀 - 전원 현장 편성") 여기서 등록으로 보내지 않습니다. */}
+        {!matchMode && returnToRegister && result.axes && result.axes.length > 0 && (
           <div className="mx-auto w-full max-w-xl rounded-[24px] border border-emerald-400/25 bg-emerald-400/[0.06] p-6 text-center">
             <p className="text-[15px] font-bold leading-relaxed text-white/85">{t(ed.ui.ctaBackToRegisterNote)}</p>
             <a
@@ -753,45 +967,46 @@ function ResultView({
           </div>
         )}
 
-        {/* apply CTA — sits between the personality card and the match section.
+        {/* apply CTA - sits between the personality card and the match section.
             2026-08-22 (마감 후 청산): /?register=1&ref=quiz로 등록 모달을 열던
-            자리입니다. 등록이 닫혔으니 홈의 #wrap으로 보냅니다 — 결과를 본 사람에게
+            자리입니다. 등록이 닫혔으니 홈의 #wrap으로 보냅니다 - 결과를 본 사람에게
             지금 내밀 수 있는 다음 걸음. (2026-08-28: 그 섹션이 트랙에서 Day 8
             빌더스 초이스 투표가 되면서 #vote로 옮겼고, 행사가 끝난 8/30에
             마무리 섹션 #wrap이 됐습니다. 2026-09-16: 그 섹션이 8월 페이지에서
             내려갔고, 애초에 `/`는 이제 나루 홈이라 이 링크는 아무 데도 닿지 않는
-            앵커였습니다. 나루 홈의 #december로 보냅니다 — 유형 테스트를 막 끝낸
+            앵커였습니다. 나루 홈의 #december로 보냅니다 - 유형 테스트를 막 끝낸
             사람에게 지금 내밀 수 있는 다음 걸음은 다음 이벤트입니다.)
             위의 returnToRegister 배너는 등록 모달에서 건너온 왕복 경로라 이제
             켜지지 않지만, 모달 자체는 살아 있어서 그대로 둡니다. */}
         <div className="mx-auto w-full max-w-xl rounded-[24px] border border-white/10 bg-white/[0.04] p-6 text-center">
-          <p className="text-[15px] font-bold leading-relaxed text-white/85">{ctaLead}</p>
+          <p className={`${c("text-[15px]", BODY)} font-bold leading-relaxed text-white/85`}>{ctaLead}</p>
           <a
             href="/#december"
-            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
+            className={c("mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5", `mt-4 ${NARU_PRIMARY}`)}
           >
             {t(ed.ui.ctaApply)} →
           </a>
         </div>
 
-        {/* Dream teammates — the two types this result pairs best with, and why. */}
+        {/* Dream teammates - the two types this result pairs best with, and why. */}
         <DreamTeammates ed={ed} result={result} t={t} reduce={reduce} />
 
         {/* Actions: story-image save (primary), then retake. */}
         <div className="mx-auto flex w-full max-w-xl flex-col gap-3">
-          {/* Why the save matters — the image is the Day 1 matching ticket, not
+          {/* Why the save matters - the image is the Day 1 matching ticket, not
               just a share graphic. Above the button so it's read before the tap,
               not after. */}
-          <p className="text-center text-xs leading-relaxed text-violet-100/70">
+          <p className={`text-center ${c("text-xs", META)} leading-relaxed ${c("text-violet-100/70", "text-white/70")}`}>
             {t(ed.ui.saveImageTicket)}
           </p>
           {/* Save as a 9:16 story image (native share sheet on mobile). */}
           <button
             type="button"
+            ref={saveBtnRef}
             onClick={saveImage}
             disabled={saving}
             aria-busy={saving}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-4 text-sm font-bold text-white/90 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60"
+            className={c("inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-4 text-sm font-bold text-white/90 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60", `${NARU_GHOST} disabled:cursor-not-allowed disabled:opacity-60`)}
           >
             {saving ? (
               <>
@@ -804,12 +1019,12 @@ function ResultView({
           </button>
 
           {/* retake. For share-link visitors it becomes the prominent viral CTA
-              ("나도 테스트하기") — the loop's key conversion. */}
+              ("나도 테스트하기") - the loop's key conversion. */}
           {fromShare ? (
             <button
               type="button"
               onClick={onRetake}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-3.5 text-sm font-bold text-white shadow-[0_8px_30px_rgba(124,58,237,0.45)] transition hover:-translate-y-0.5"
+              className={c("inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-3.5 text-sm font-bold text-white shadow-[0_8px_30px_rgba(124,58,237,0.45)] transition hover:-translate-y-0.5", NARU_PRIMARY)}
             >
               ✦ {t(ed.ui.retakeViral)}
             </button>
@@ -817,7 +1032,7 @@ function ResultView({
             <button
               type="button"
               onClick={onRetake}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10"
+              className={c("inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10", NARU_GHOST)}
             >
               ↻ {t(ed.ui.retake)}
             </button>
@@ -825,12 +1040,12 @@ function ResultView({
         </div>
       </div>
 
-      {/* Off-screen 9:16 capture target (not display:none — that captures blank). */}
+      {/* Off-screen 9:16 capture target (not display:none - that captures blank). */}
       <div aria-hidden style={{ position: "fixed", top: 0, left: -9999, pointerEvents: "none", zIndex: -1 }}>
         <StoryCard ref={storyRef} ed={ed} result={result} data={data} variant={variant} host={host} t={t} />
       </div>
 
-      {/* Long-press-to-save overlay (in-app browsers — see saveImage). */}
+      {/* Long-press-to-save overlay (in-app browsers - see saveImage). */}
       <AnimatePresence>
         {holdImage && (
           <motion.div
@@ -843,7 +1058,7 @@ function ResultView({
             transition={{ duration: reduce ? 0 : 0.2 }}
             className="fixed inset-0 z-[70] flex flex-col items-center justify-center gap-4 bg-black/90 px-6 py-8"
           >
-            <p className="text-center text-sm font-semibold text-white/90">
+            <p className={`text-center ${c("text-sm", BODY)} font-semibold text-white/90`}>
               {t(ed.ui.saveImageHold)}
             </p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -853,12 +1068,10 @@ function ResultView({
               className="max-h-[70vh] w-auto max-w-full rounded-2xl border border-white/15 object-contain"
             />
             <button
+              ref={holdCloseRef}
               type="button"
-              onClick={() => {
-                URL.revokeObjectURL(holdImage);
-                setHoldImage(null);
-              }}
-              className="rounded-2xl border border-white/20 bg-white/10 px-6 py-3 text-sm font-bold text-white"
+              onClick={closeHold}
+              className={c("rounded-2xl border border-white/20 bg-white/10 px-6 py-3 text-sm font-bold text-white", `min-h-[44px] rounded-full border border-white/20 bg-white/10 px-6 py-3 ${BODY} font-bold text-white`)}
             >
               {t(ed.ui.saveImageHoldClose)}
             </button>
@@ -866,14 +1079,18 @@ function ResultView({
         )}
       </AnimatePresence>
 
+      {/* 늘 놓여 있는 알림 자리(접근성 감사 11). 아래 토스트는 나타나는 순간 마운트되어 스크린리더가 읽지 못했습니다.
+          이 자리는 처음부터 있고 글자만 바뀌므로 "이미지를 저장했어요"와 오류가 읽힙니다. 보이는 토스트는 장식으로 둡니다. */}
+      <p role="status" aria-live="polite" className="sr-only">{toast ?? ""}</p>
       {/* error toast (share-sheet cancels stay silent) */}
       <AnimatePresence>
         {toast && (
           <motion.div
+            aria-hidden
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 16 }}
-            className="fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full border border-white/15 bg-[#111A3A] px-5 py-3 text-sm font-semibold text-white shadow-xl"
+            className={`fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-full border border-white/15 bg-[#111A3A] px-5 py-3 ${c("text-sm", BODY)} font-semibold text-white shadow-xl`}
           >
             {toast}
           </motion.div>
@@ -904,7 +1121,7 @@ const StoryCard = forwardRef<
   const url = `${host || "naru-crossing-seoul.vercel.app"}${ed.path}`;
 
   // Two axis-explanation highlights below the gauges: the MOST decisive axis
-  // (highest %) beside the CLOSEST-CALL axis (lowest %) — a "92% 단정" line next
+  // (highest %) beside the CLOSEST-CALL axis (lowest %) - a "92% 단정" line next
   // to a "56% 반반" line is the whole gag. Ties resolve to the earlier axis (we
   // scan in AXIS_ORDER and keep the first extreme via strict compare). Only when
   // the taker actually answered (axes present); deep-link results carry none.
@@ -918,12 +1135,12 @@ const StoryCard = forwardRef<
       if (a.pct < loAxis.pct) loAxis = a;
     }
   }
-  // Build each card's copy; a missing explanation (defensive — pattern key gap)
+  // Build each card's copy; a missing explanation (defensive - pattern key gap)
   // silently drops just that card. The low card is skipped if it's the same axis
   // as the high one (all-equal %), so we never show a duplicate.
   const buildCard = (a: AxisScore | null, label: { ko: string; en: string }, tone: "hi" | "lo") => {
     if (!a) return null;
-    const exp = getExplanation(a.axis, a.pattern, a.pct);
+    const exp = explainFor(ed, a.axis, a.pattern, a.pct);
     if (!exp) return null;
     return { tone, label, text: t(exp) };
   };
@@ -970,7 +1187,7 @@ const StoryCard = forwardRef<
         fontFamily: '"Pretendard Variable", Pretendard, -apple-system, sans-serif',
       }}
     >
-      {/* orbs — same palette as the live page */}
+      {/* orbs - same palette as the live page */}
       <div style={{ position: "absolute", top: -180, left: -180, width: 660, height: 660, borderRadius: "50%", background: "radial-gradient(circle, rgba(124,58,237,0.45), transparent 70%)" }} />
       <div style={{ position: "absolute", bottom: -220, right: -180, width: 700, height: 700, borderRadius: "50%", background: "radial-gradient(circle, rgba(6,182,212,0.32), transparent 70%)" }} />
 
@@ -979,7 +1196,7 @@ const StoryCard = forwardRef<
         <div style={{ textAlign: "center" }}>
           <p style={{ margin: 0, fontSize: 26, fontWeight: 700, letterSpacing: 6, textTransform: "uppercase", color: "rgba(196,181,253,0.9)" }}>✦ {t(quizUI.eyebrow)}</p>
           <h1 style={{ margin: "12px 0 0", fontSize: 60, fontWeight: 900, lineHeight: 1.05, color: "#fff" }}>{t(quizUI.title)}</h1>
-          {/* Ticket stamp — dashed border + mono type so it reads as a stub,
+          {/* Ticket stamp - dashed border + mono type so it reads as a stub,
               not a logo lockup. Replaces the plain wordmark line: the image is
               a Day 1 matching ticket now, and saying so on the artwork is what
               makes someone keep it in their camera roll. */}
@@ -988,7 +1205,7 @@ const StoryCard = forwardRef<
           </div>
         </div>
 
-        {/* center — identity */}
+        {/* center - identity */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
           <div className={`bg-gradient-to-br ${data.accent}`} style={{ width: 192, height: 192, borderRadius: 44, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 30px 80px -22px rgba(217,70,239,0.5)" }}>
             <ModelGlyph result={data} imgClass="h-[114px] w-[114px] object-contain" emojiClass="text-[100px] leading-none" />
@@ -1014,7 +1231,7 @@ const StoryCard = forwardRef<
             </div>
           )}
 
-          {/* axis-explanation highlights — the B-grade one-liners from the result
+          {/* axis-explanation highlights - the B-grade one-liners from the result
               screen, just the most-decisive + closest-call axes. First card violet
               (단정), second cyan (반반), for the visual contrast. Full text, no
               ellipsis; the overflow guard above drops the 2nd card if needed. */}
@@ -1046,9 +1263,9 @@ const StoryCard = forwardRef<
           )}
         </div>
 
-        {/* bottom — meme stats, dream teammate, call to action + url */}
+        {/* bottom - meme stats, dream teammate, call to action + url */}
         <div ref={bottomRef} style={{ textAlign: "center" }}>
-          {/* Joke stats as three columns of label + number — deliberately NOT
+          {/* Joke stats as three columns of label + number - deliberately NOT
               bars. The axis gauges above are already bars with percentages, and
               a second bar block would read as more of the same real data
               instead of the gag it is. */}
@@ -1078,7 +1295,7 @@ const StoryCard = forwardRef<
 
 // ── Dream teammates ─────────────────────────────────────────────────────────
 // The two MBTI/model types this result pairs best with. Type-only, so it renders
-// for deep-link (?r=) visitors too — no answer data needed. Each card shows the
+// for deep-link (?r=) visitors too - no answer data needed. Each card shows the
 // mate's glyph, model · type, catchphrase, the from-this-type reason it clicks,
 // and the mate's recommended builderthon role.
 function DreamTeammates({
@@ -1093,6 +1310,8 @@ function DreamTeammates({
   reduce: boolean;
 }) {
   const data = ed.results[result.mbti];
+  const naru = ed.tone === "naru";
+  const c = (z: string, n: string) => (naru ? n : z);
   return (
     <motion.section
       initial={reduce ? false : { opacity: 0, y: 16 }}
@@ -1102,10 +1321,10 @@ function DreamTeammates({
       aria-label={t(ed.ui.matchTitle)}
     >
       <div className="mb-4 text-center">
-        <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-fuchsia-200">
+        <p className={c("text-[0.7rem] font-bold uppercase tracking-[0.18em] text-fuchsia-200", `${META} font-bold uppercase tracking-[0.16em] text-accent`)}>
           ✦ {t(ed.ui.matchTitle)}
         </p>
-        <p className="mx-auto mt-1.5 max-w-md text-sm leading-relaxed text-white/60">{t(ed.ui.matchSub)}</p>
+        <p className={`mx-auto mt-1.5 max-w-md ${c("text-sm", BODY)} leading-relaxed ${c("text-white/60", "text-white/70")}`}>{t(ed.ui.matchSub)}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -1115,24 +1334,24 @@ function DreamTeammates({
           return (
             <div
               key={m}
-              className="flex flex-col rounded-[24px] border border-white/[0.12] bg-[#0c0a18] p-6 text-left"
+              className={`flex flex-col rounded-[24px] border border-white/[0.12] ${c("bg-[#0c0a18]", "bg-naru-surface")} p-6 text-left`}
             >
               <div className="flex items-center gap-3">
                 <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${mate.accent} shadow-lg`}>
                   <ModelGlyph result={mate} imgClass="h-6 w-6 object-contain" emojiClass="text-2xl leading-none" />
                 </div>
                 <div className="min-w-0">
-                  <p className="truncate text-base font-black leading-tight">{mate.model}</p>
-                  <p className="text-xs font-bold text-fuchsia-200/80">{mate.mbti}</p>
+                  <p className={`truncate ${c("text-base", BODY)} font-black leading-tight`}>{mate.model}</p>
+                  <p className={`${c("text-xs", META)} font-bold ${c("text-fuchsia-200/80", "text-accent")}`}>{mate.mbti}</p>
                 </div>
               </div>
 
-              <p className="mt-4 text-[15px] font-semibold leading-relaxed text-white/90">“{t(mate.phrase)}”</p>
-              <p className="mt-2.5 text-sm leading-relaxed text-white/70">{t(why)}</p>
+              <p className={`mt-4 ${c("text-[15px]", BODY)} font-semibold leading-relaxed text-white/90`}>“{t(mate.phrase)}”</p>
+              <p className={`mt-2.5 ${c("text-sm", BODY)} leading-relaxed text-white/70`}>{t(why)}</p>
 
               <div className="mt-auto pt-4">
-                <p className="text-[0.65rem] font-bold uppercase tracking-wider text-white/55">{t(ed.ui.matchRoleLabel)}</p>
-                <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-fuchsia-400/25 bg-fuchsia-400/[0.08] px-3 py-1.5 text-xs font-bold text-fuchsia-100">
+                <p className={`${c("text-[0.65rem]", META)} font-bold uppercase tracking-wider ${c("text-white/55", "text-white/60")}`}>{t(ed.ui.matchRoleLabel)}</p>
+                <span className={`mt-1.5 inline-flex items-center gap-1.5 rounded-full border ${c("border-fuchsia-400/25 bg-fuchsia-400/[0.08]", "border-accent/40 bg-accent/10")} px-3 py-1.5 ${c("text-xs", META)} font-bold ${c("text-fuchsia-100", "text-accent")}`}>
                   ★ {t(mate.role)}
                 </span>
               </div>
@@ -1149,11 +1368,13 @@ function DreamTeammates({
 // losing pole faint, and a chevron. Click a row to expand an answer-aware
 // explanation of that %. Single-open accordion; the first axis starts open.
 function AxisGauges({
+  ed,
   axes,
   accent,
   t,
   reduce,
 }: {
+  ed: EditionConfig;
   axes: AxisScore[];
   accent: string;
   t: (p: { ko: string; en: string }) => string;
@@ -1165,6 +1386,7 @@ function AxisGauges({
       {axes.map((a, i) => (
         <AxisGaugeRow
           key={a.axis}
+          ed={ed}
           axis={a}
           accent={accent}
           t={t}
@@ -1179,6 +1401,7 @@ function AxisGauges({
 }
 
 function AxisGaugeRow({
+  ed,
   axis,
   accent,
   t,
@@ -1187,6 +1410,7 @@ function AxisGaugeRow({
   isOpen,
   onToggle,
 }: {
+  ed: EditionConfig;
   axis: AxisScore;
   accent: string; // literal Tailwind gradient classes, reused from the card
   t: (p: { ko: string; en: string }) => string;
@@ -1195,7 +1419,8 @@ function AxisGaugeRow({
   isOpen: boolean;
   onToggle: () => void;
 }) {
-  const explanation = getExplanation(axis.axis, axis.pattern, axis.pct);
+  const explanation = explainFor(ed, axis.axis, axis.pattern, axis.pct);
+  const naru = ed.tone === "naru";
   const bar = (
     <>
       <span className="w-11 shrink-0 text-right text-xs font-bold text-white/85">{t(axisMeta[axis.winner])}</span>
@@ -1208,7 +1433,8 @@ function AxisGaugeRow({
         />
       </div>
       <span className="w-9 shrink-0 text-right font-mono text-xs font-bold tabular-nums text-white/85">{axis.pct}%</span>
-      <span className="w-11 shrink-0 text-xs font-medium text-white/30">{t(axisMeta[axis.loser])}</span>
+      {/* 진 쪽 이름. white/30은 2.61:1이었습니다(접근성 감사 9). 두 판 모두 white/55. */}
+      <span className="w-11 shrink-0 text-xs font-medium text-white/55">{t(axisMeta[axis.loser])}</span>
     </>
   );
 
@@ -1245,7 +1471,7 @@ function AxisGaugeRow({
             transition={{ duration: reduce ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] }}
             className="overflow-hidden"
           >
-            <p className="px-1 pb-2 pt-0.5 text-[13px] leading-relaxed text-white/65">{t(explanation)}</p>
+            <p className={`px-1 pb-2 pt-0.5 ${naru ? META : "text-[13px]"} leading-relaxed ${naru ? "text-white/75" : "text-white/65"}`}>{t(explanation)}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -1256,7 +1482,7 @@ function AxisGaugeRow({
 // ── "Analyzing…" interstitial ───────────────────────────────────────────────
 // A spinner + three copy lines that swap on an ~0.8s cadence (≈2.4s total, the
 // parent's timer). Only mounted on the non-reduced-motion path.
-function Analyzing({ t, reduce }: { t: (p: { ko: string; en: string }) => string; reduce: boolean }) {
+function Analyzing({ t, reduce, naru }: { t: (p: { ko: string; en: string }) => string; reduce: boolean; naru: boolean }) {
   const messages = quizUI.analyzing;
   const [step, setStep] = useState(0);
   useEffect(() => {
@@ -1274,7 +1500,7 @@ function Analyzing({ t, reduce }: { t: (p: { ko: string; en: string }) => string
       className="flex flex-1 flex-col items-center justify-center py-16 text-center"
     >
       <motion.div
-        className="h-14 w-14 rounded-full border-[3px] border-white/15 border-t-violet-400"
+        className={`h-14 w-14 rounded-full border-[3px] border-white/15 ${naru ? "border-t-accent" : "border-t-violet-400"}`}
         animate={reduce ? undefined : { rotate: 360 }}
         transition={reduce ? undefined : { repeat: Infinity, ease: "linear", duration: 0.9 }}
       />
@@ -1286,7 +1512,7 @@ function Analyzing({ t, reduce }: { t: (p: { ko: string; en: string }) => string
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="text-lg font-bold text-white"
+            className={`${naru ? BODY : "text-lg"} font-bold text-white`}
           >
             {t(messages[step])}
           </motion.p>
@@ -1296,7 +1522,7 @@ function Analyzing({ t, reduce }: { t: (p: { ko: string; en: string }) => string
         {messages.map((_, i) => (
           <span
             key={i}
-            className={`h-1.5 w-1.5 rounded-full transition-colors ${i <= step ? "bg-violet-400" : "bg-white/15"}`}
+            className={`h-1.5 w-1.5 rounded-full transition-colors ${i <= step ? (naru ? "bg-accent" : "bg-violet-400") : "bg-white/15"}`}
             aria-hidden
           />
         ))}

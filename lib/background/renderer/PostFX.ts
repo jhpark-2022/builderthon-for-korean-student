@@ -11,13 +11,13 @@ import {
 import type { Phases } from "../utils/phases";
 
 /**
- * Gravitational lensing — a *distortion in space*, never a drawn object.
+ * Gravitational lensing - a *distortion in space*, never a drawn object.
  *
  * It bends the already-rendered scene toward a focal point using a smooth
  * potential falloff (∝ 1/(1+k·d²)), which is asymptotically zero everywhere and
- * has NO boundary — you can never trace an edge. Per-channel sample offsets give
+ * has NO boundary - you can never trace an edge. Per-channel sample offsets give
  * true chromatic dispersion that's strongest where the bend is strongest. The
- * crossing brightness is a soft, unbounded radial bloom around the focus — no
+ * crossing brightness is a soft, unbounded radial bloom around the focus - no
  * disc, no ring, no alpha mask.
  *
  * Reads the scene texture itself (inputBuffer) in mainImage so the warp acts on
@@ -33,7 +33,7 @@ class LensEffect extends Effect {
       uniform vec2  uFocus;      // focal point in UV space
       uniform float uAspect;     // width/height, for circular metric in UV
 
-      // smooth gravitational potential — no edge, no boundary
+      // smooth gravitational potential - no edge, no boundary
       float potential(float d){
         // 1/(1+k d^2): strong near focus, fades to ~0 with NO cutoff
         return 1.0 / (1.0 + 26.0 * d * d);
@@ -85,11 +85,11 @@ class LensEffect extends Effect {
     (this.uniforms.get("uStrength") as THREE.Uniform).value =
       // Halved with the same reasoning as bloom above: `reveal` runs 0→1 across
       // the whole page, so anything it multiplies is a slow but total change in
-      // how the field reads. Distortion still builds — just not enough to make
+      // how the field reads. Distortion still builds - just not enough to make
       // one section look like a different backdrop from its neighbour.
       (p.reveal * 0.12 + p.portal * 0.22) * intensity;
     // Cap + damp the white-out lift. At full scroll the focus sits over the
-    // footer (CTAs + heading); a full white-out washed that text out — and this
+    // footer (CTAs + heading); a full white-out washed that text out - and this
     // pass runs even on mobile (bloom is gated, the lens is not). Keep it legible.
     (this.uniforms.get("uBright") as THREE.Uniform).value =
       p.whiteout * 0.6 * intensity;
@@ -104,9 +104,9 @@ class LensEffect extends Effect {
 
 /**
  * Post-processing stack:
- *   1. Lens pass — gravitational space-bend + chromatic dispersion + crossing
+ *   1. Lens pass - gravitational space-bend + chromatic dispersion + crossing
  *      glow. This IS the portal: a distortion, never an object.
- *   2. Bloom + vignette pass — density-driven volumetric light (bright only
+ *   2. Bloom + vignette pass - density-driven volumetric light (bright only
  *      where particles converge) and edge falloff.
  *
  * The lens samples the scene texture (UV transform), so it must live in its own
@@ -160,7 +160,7 @@ export class PostFX {
 
   /**
    * Drive effect intensity from the narrative phases. `intensity` (0..1) damps
-   * the dynamic, flashier parts (portal/white-out) — passed as <1 under
+   * the dynamic, flashier parts (portal/white-out) - passed as <1 under
    * reduced-motion so the journey stays calm. The base bloom is kept gentle and
    * the portal/white-out multipliers are well below the old blow-out levels so
    * text over the field stays readable.
@@ -168,10 +168,10 @@ export class PostFX {
   setPhase(p: Phases, intensity = 1) {
     this.lens.setPhase(p, intensity * this.lensScale);
     if (this.bloom) {
-      // bloom intensifies as particles converge / cross — volumetric light
+      // bloom intensifies as particles converge / cross - volumetric light
       // emerging from density, not from a drawn glow
       // Clamped swing. portal maxes at 0.3 (see utils/phases), so the old 0.6
-      // coefficient moved bloom 0.60 → 0.78 — a ~30% brightness change between
+      // coefficient moved bloom 0.60 → 0.78 - a ~30% brightness change between
       // the top of the page and the FAQ/vision stretch, which read as the
       // background "turning on". 0.25 holds the same shape inside ±15%.
       this.bloom.intensity = this.bloomBase + (p.portal * 0.25 + p.whiteout * 1.0) * intensity;
@@ -191,7 +191,7 @@ export class PostFX {
     this.lensScale = s;
   }
 
-  /** Focal point in UV (0..1) where the field converges — projected from world. */
+  /** Focal point in UV (0..1) where the field converges - projected from world. */
   setFocus(x: number, y: number) {
     this.lens.setFocus(x, y);
   }

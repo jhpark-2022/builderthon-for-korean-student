@@ -10,6 +10,10 @@
 #   표 2  팀 제안. 3~4명, 한 팀 안에 역할이 겹치지 않게, 한국과 그 밖의 나라가 섞이게, 서로의 궁합 유형과
 #         1순위 트랙이 같으면 우선. **제안일 뿐이고 최종 배정은 운영진이 한다.**
 #   표 3  전체 명단(유형, 모델, 역할, 선호 트랙 순위)
+#   표 4  겹친 이름(있을 때만). 같은 이름과 나라로 올라온 행이 여럿이면 가장 새것만 남기고 여기에 적는다.
+#         한 사람이 브라우저 둘(카카오톡 인앱, Safari)에서 올리면 기기 토큰이 달라 두 행이 된다. 이름만 같은
+#         다른 사람일 수도 있으니 운영진이 이 표를 보고 확인한다. 뷰에 id, created_at(마이그레이션 0007)이 있으면
+#         같이 적고, 없어도 돈다.
 #
 # 자격증명은 website/.env.local의 NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY(service_role, RLS 우회).
 # 결과 docx는 레포 밖에 두고 커밋하지 않는다. 사람 이름은 그 파일에만 들어간다: 이 스크립트는 화면에
@@ -48,6 +52,22 @@ def track_labels():
     return dict(re.findall(r'\{\s*id:\s*"([^"]+)",\s*label:\s*\{\s*ko:\s*"([^"]*)"', body))
 
 
+def dedupe(rows):
+    """같은 (이름, 나라)는 updated_at이 가장 새것 하나만. (남긴 사람들, 겹친 묶음들)을 돌려준다."""
+    groups = {}
+    for r in rows:
+        key = (" ".join(str(r["name"]).split()).casefold(), r["study_country"])
+        groups.setdefault(key, []).append(r)
+    kept, collisions = [], []
+    for g in groups.values():
+        g.sort(key=lambda r: r.get("updated_at") or "", reverse=True)
+        kept.append(g[0])
+        if len(g) > 1:
+            collisions.append(g)
+    kept.sort(key=lambda r: (r["role_key"], r["study_country"], r["name"]))
+    return kept, collisions
+
+
 def propose(people, matches):
     """팀 제안. 드문 역할부터 한 사람씩, 점수가 가장 높은 팀에 넣는다."""
     n = len(people)
@@ -79,7 +99,8 @@ def propose(people, matches):
 
 def main():
     url, key = load_env()
-    people = fetch(url, key, "crossing_match_board?select=*")
+    raw = fetch(url, key, "crossing_match_board?select=*")
+    people, collisions = dedupe(raw)
     matches = match_map()
     tracks = track_labels()
 
@@ -126,10 +147,22 @@ def main():
         for i, p in enumerate(people, 1)
     ])
 
+    if collisions:
+        doc.add_paragraph("4. 겹친 이름 (가장 새로 올린 행만 위 표에 썼습니다)", style="Heading 1")
+        doc.add_paragraph("같은 이름과 나라로 올라온 행입니다. 한 사람이 브라우저 둘에서 올렸는지, 이름이 같은 다른 사람인지 확인해 주세요.")
+        crow = []
+        for g in collisions:
+            for j, q in enumerate(g):
+                crow.append([q["name"], country(q["study_country"]), f'{q["mbti"]}-{q["identity"]}', ROLE_KO[q["role_key"]],
+                             kst(q["created_at"]) if q.get("created_at") else "-", kst(q["updated_at"]),
+                             str(q["id"])[:8] if q.get("id") else "-", "씀" if j == 0 else "뺌"])
+        add_table(doc, ["이름", "나라", "유형", "역할", "처음 올린 시각", "고친 시각", "행 id", "처리"], crow)
+
     OUT.parent.mkdir(parents=True, exist_ok=True)
     doc.save(str(OUT))
     flagged = sum(1 for r in trows if r[-1])
-    print(f"{OUT.name}: {len(people)}명, 팀 제안 {len(teams)}개, 확인할 것이 붙은 줄 {flagged}개 → {OUT.parent}")
+    print(f"{OUT.name}: {len(people)}명(올라온 행 {len(raw)}개, 겹친 이름 {len(collisions)}묶음에서 {len(raw) - len(people)}행 뺌), "
+          f"팀 제안 {len(teams)}개, 확인할 것이 붙은 줄 {flagged}개 → {OUT.parent}")
 
 
 if __name__ == "__main__":

@@ -26,10 +26,12 @@ import { useLocale } from "@/lib/LocaleContext";
 // ─────────────────────────────────────────────────────────────────────────────
 const COPY = {
   note: {
-    ko: "제로백 빌더톤, 2026년 8월 싱가포르. 나루의 첫 이벤트 기록입니다. 나루라는 이름은 이 이벤트 뒤에 정해졌습니다.",
-    en: "The Zero100 builderthon, August 2026, Singapore. This is the record of NARU's first event. The name NARU was chosen after it.",
+    ko: "제로백 빌더톤, 2026년 8월 싱가포르. 나루가 시작된 이벤트의 기록입니다. 나루라는 이름은 이 이벤트 뒤에 정해졌습니다.",
+    en: "The Zero100 AI Builderthon, August 2026, Singapore. This is the record of the event NARU grew out of. The name NARU was chosen after it.",
   },
-  home: { ko: "나루 홈으로", en: "Go to NARU home" },
+  // DECIDED 2026-10-08 (전체 리뷰 반영): 배너의 버튼은 12월 이벤트로 곧장 갑니다(/#december).
+  // 예전에는 홈 맨 위(/)였는데, 이 기록을 읽은 사람이 다음에 알고 싶은 것은 12월입니다.
+  home: { ko: "12월 크로싱 서울 보기", en: "See CROSSING SEOUL, December" },
 } as const;
 
 export default function ArchiveBanner() {
@@ -39,8 +41,8 @@ export default function ArchiveBanner() {
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 px-6 py-3 text-center sm:flex-row sm:justify-center sm:gap-4 sm:px-10">
         <p className="break-keep text-xs leading-relaxed text-white/70">{t(COPY.note)}</p>
         <Link
-          href="/"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] px-3.5 py-1.5 text-xs font-semibold text-white/85 transition hover:border-white/35 hover:bg-white/10 hover:text-white"
+          href="/#december"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] min-h-[44px] px-4 py-1.5 text-xs font-semibold text-white/85 transition hover:border-white/35 hover:bg-white/10 hover:text-white"
         >
           {t(COPY.home)}
           <span aria-hidden className="text-white/50">→</span>

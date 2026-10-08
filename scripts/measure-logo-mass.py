@@ -12,7 +12,7 @@ wordmark (ONWORD LAB) drawn to the same height, and a lockup whose box also
 contains a second line or an icon (BRAND BOOST, aws, 싱가포르 한인회) reads
 smaller than its box, because only part of the box is the name.
 
-What the eye actually equalises is INK — how much of the row a mark paints —
+What the eye actually equalises is INK - how much of the row a mark paints -
 tempered by SILHOUETTE, the area the mark occupies as a shape. Outlined marks
 (REmited's pill, L^IFE) paint very little ink but read as their full outline,
 so ink alone would blow them up; silhouette alone would shrink the bold marks
@@ -40,7 +40,7 @@ import sys
 ROOT = Path(__file__).resolve().parent.parent
 TRIMMED = ROOT / "public" / "partners" / "logos" / "white" / "trimmed"
 
-# Ink below this alpha is antialiasing, not shape — it must not open or close a
+# Ink below this alpha is antialiasing, not shape - it must not open or close a
 # column when measuring the silhouette.
 SOLID = 0.35
 
@@ -51,7 +51,7 @@ def measure(path: Path):
     ink = float(a.sum() / (w * h))
     solid = a > SOLID
     # Silhouette: per column, everything between the topmost and bottommost ink
-    # counts. Filling columns (not rows) is deliberate — these marks are read
+    # counts. Filling columns (not rows) is deliberate - these marks are read
     # left to right, and it is the vertical extent at each x that the eye
     # integrates into "how tall is this logo".
     filled = 0

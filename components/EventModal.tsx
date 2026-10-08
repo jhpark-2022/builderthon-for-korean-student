@@ -84,7 +84,7 @@ export default function EventModal({
     // The dialog is portaled to <body>, so these siblings can be safely inerted.
     // `inert` already removes them from the a11y tree AND blocks focus (it also
     // moves focus out of the now-inert subtree), so we deliberately do NOT also
-    // set aria-hidden — doing so warns when the just-clicked card still holds
+    // set aria-hidden - doing so warns when the just-clicked card still holds
     // focus inside <main>. inert is the spec-recommended approach here.
     const inerted = Array.from(
       document.querySelectorAll<HTMLElement>("header, main, footer")
@@ -110,7 +110,7 @@ export default function EventModal({
   const dayMeta = event ? days.find((d) => d.day === event.day) : null;
   const isMain = event?.category === "main";
   // The chip and the 시간 row say the same thing, so they are built once.
-  // Precedence: dayLabel (an explicit override — only the pre-event session uses
+  // Precedence: dayLabel (an explicit override - only the pre-event session uses
   // it) → the session's real clock time when the run of show is confirmed
   // (`event.time`, Day 1 only today) → the AM/PM fallback everywhere else.
   // The AM/PM half is REPLACED, not appended: "Day 1 · 08.22 · PM · 1:10PM–1:50PM"
@@ -134,7 +134,7 @@ export default function EventModal({
           transition={{ duration: reduce ? 0 : 0.2 }}
         >
           {/* Backdrop. `touch-none` (touch-action: none) is a second line of
-              defence behind the position-fixed scroll lock — this element only
+              defence behind the position-fixed scroll lock - this element only
               ever handles a click-to-close, so refusing touch gestures outright
               costs nothing. */}
           <div
@@ -143,7 +143,7 @@ export default function EventModal({
             className="absolute inset-0 cursor-default touch-none bg-black/70 backdrop-blur-sm"
           />
 
-          {/* Dialog — dark glass */}
+          {/* Dialog - dark glass */}
           <motion.div
             ref={dialogRef}
             role="dialog"
@@ -153,7 +153,7 @@ export default function EventModal({
             animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.985 }}
             transition={{ duration: reduce ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
-            // dvh, NOT vh — iOS Safari에서 주소창이 펼쳐진 상태의 vh는 실제 보이는
+            // dvh, NOT vh - iOS Safari에서 주소창이 펼쳐진 상태의 vh는 실제 보이는
             // 높이보다 커서 시트 위쪽(=닫기 버튼)이 화면 밖으로 밀려납니다.
             // 바텀시트 네 개가 같은 이유로 dvh입니다(RegisterModal 주석 참고).
             className="relative z-10 flex max-h-[88dvh] w-full max-w-[760px] flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-[#0c0a18] shadow-2xl sm:rounded-3xl"
@@ -258,7 +258,7 @@ export default function EventModal({
                 {t(event.description)}
               </p>
 
-              {/* Who's behind it — partner/company with a link out */}
+              {/* Who's behind it - partner/company with a link out */}
               {/* Who is actually running it. Placed ABOVE the company block: for
                   the Crash Course the person is the reassurance, and "which firm
                   runs it" answers a question nobody nervous about coding asked. */}
@@ -321,7 +321,7 @@ export default function EventModal({
                 </div>
               )}
 
-              {/* 멘토링 시간에 함께 보는 것 — description이 "무슨 시간인지"를
+              {/* 멘토링 시간에 함께 보는 것 - description이 "무슨 시간인지"를
                   말하고, 이 목록이 "무엇을 보는지"를 말합니다. opportunities와
                   같은 마크업·간격을 그대로 씁니다(다른 질문이지만 같은 종류의
                   목록이라 새 스타일을 만들 이유가 없습니다). 번호는 순서가 아니라
@@ -340,7 +340,7 @@ export default function EventModal({
                       >
                         <span
                           aria-hidden
-                          className="mt-[3px] flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent/30 bg-accent/10 text-[0.62rem] font-bold text-accent"
+                          className="mt-[3px] flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent/30 bg-accent/10 text-xs font-bold text-accent"
                         >
                           {i + 1}
                         </span>
@@ -350,7 +350,7 @@ export default function EventModal({
                   </ul>
                 </div>
               )}
-              {/* What's in it for you — concrete opportunities */}
+              {/* What's in it for you - concrete opportunities */}
               {event.opportunities && event.opportunities.length > 0 && (
                 <div className="mt-7">
                   <p className="text-xs font-semibold uppercase tracking-wide text-white/70">
@@ -397,7 +397,7 @@ export default function EventModal({
                     {event.speaker ? t(event.speaker) : t(dict.modal.tbc)}
                   </dd>
                 </div>
-                {/* Self-paced build has no location to give — its `location` is
+                {/* Self-paced build has no location to give - its `location` is
                     "온라인", which is the single line most responsible for the
                     "so I log in at that hour?" misread. Swap the whole row to
                     FORMAT and say plainly that there's no time and nothing to
@@ -409,7 +409,7 @@ export default function EventModal({
                   {/* A venue with its own site becomes a link (Day 1's Foundry
                       hall). Same underlined-anchor treatment the speaker's
                       LinkedIn row above uses, so it reads as one pattern rather
-                      than a new affordance — and the row is plain text whenever
+                      than a new affordance - and the row is plain text whenever
                       `locationUrl` is absent, which is every other session. */}
                   <dd className="font-semibold text-white">
                     {selfPaced ? (

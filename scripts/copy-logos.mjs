@@ -4,7 +4,7 @@
 // renders white on the dark cards, matching the old `/ffffff` CDN URLs.
 //
 // Run: node scripts/copy-logos.mjs
-// Safe to re-run — it overwrites /public/logos and reports what it did.
+// Safe to re-run - it overwrites /public/logos and reports what it did.
 import { readFile, writeFile, mkdir, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";

@@ -7,11 +7,14 @@ import { LocaleProvider } from "@/lib/LocaleContext";
 import SkipLink from "@/components/SkipLink";
 import { DECEMBER_EVENT_NAME } from "@/lib/naruDates";
 
-// Self-hosted Pretendard (variable) — served same-origin from the Vercel edge,
+// Self-hosted Pretendard (variable) - served same-origin from the Vercel edge,
 // preloaded, with a metric-matched fallback (no CLS). Replaces the old
 // render-blocking jsdelivr @import.
+// DECIDED 2026-10-08 (성능 리뷰 1): 원본 가변 서체는 2.06MB였고 모든 경로에서 프리로드됐습니다. 지금은
+// KS X 1001 한글 2,350자와 라틴, 소스에 실제로 나오는 글자만 남긴 서브셋을 씁니다(굵기 축은 그대로).
+// 빠진 글자는 시스템 서체로 떨어집니다. 다시 만들 때는 scripts/build-site-font.py. 원본은 OG 서체의 재료라 남깁니다.
 const pretendard = localFont({
-  src: "./fonts/PretendardVariable.woff2",
+  src: "./fonts/PretendardSubset.woff2",
   display: "swap",
   weight: "45 920",
   variable: "--font-pretendard",
@@ -56,9 +59,10 @@ const HOME_TITLE = `${DECEMBER_EVENT_NAME?.ko ?? "크로싱 서울"} 2026 | ${SI
 // 검색 결과용. 구글은 155자 남짓을 보여 주므로 이벤트 이름과 날짜, 무엇을 하는
 // 자리인지, 나루가 무엇인지까지 한 벌에 넣습니다.
 const SITE_DESCRIPTION =
-  `${DECEMBER_EVENT_NAME?.ko ?? "크로싱 서울"} 2026년 12월 17~21일, 서울. 한국의 대학생과 해외에서 공부하는 한인 학생이 데이터에서 문제를 찾아 앞에서 증명하는 닷새입니다. 나루는 한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 학생 빌더 그룹입니다.`;
+  `${DECEMBER_EVENT_NAME?.ko ?? "크로싱 서울"} 2026년 12월 17~21일, 서울. 한국의 대학생과 해외에서 공부하는 한인 학생이 기업의 이슈에서 문제를 찾아 그 기업 앞에서 발표하는 닷새입니다. 나루는 한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 학생 빌더 그룹입니다.`;
 // DECIDED 2026-09-28 (나루 공식 표기 브리프 4.5, 2026-09-29 재개정): 마지막 문장을 정의 짧은 판의 문장으로.
-// 전체 134자(155자 예산 안).
+// 2026-10-08 (사용자 승인, 문장 감사 A1): 10월 7일의 "데이터가 아니라 이슈에서 출발" 결정이 이 줄과 아래 카드 설명에
+// 닿지 않았습니다. "데이터에서 문제를 찾아"를 이슈 기준으로 바꿉니다. 전체 144자(155자 예산 안).
 
 // ── 공유 카드의 제목과 설명 (DECIDED 2026-09-19, 사용자: "링크를 외부로 공유했을 때
 // 나오는 상자의 설명이 마음에 안 든다") ─────────────────────────────────────────
@@ -75,7 +79,7 @@ const SITE_DESCRIPTION =
 const OG_TITLE = `${DECEMBER_EVENT_NAME?.ko ?? "크로싱 서울"} · 2026년 12월 17~21일 서울`;
 const OG_DESCRIPTION =
   // 2026-09-29 (9/28 자문): "유학생" 대신 "해외의 한인 학생". 60자 예산 때문에 본문의 "해외에서 공부하는"보다 짧게.
-  "한국의 대학생과 해외의 한인 학생이 국경과 상관없이 만나는 자리. 데이터에서 문제를 찾아 앞에서 증명하는 닷새입니다.";
+  "한국의 대학생과 해외의 한인 학생이 국경과 상관없이 만나는 자리. 기업의 이슈에서 문제를 찾아 앞에서 발표하는 닷새입니다.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -85,10 +89,12 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   // 한 URL에 두 언어(localStorage 로케일)라 언어별 URL이 없습니다. ?lang=en은 LocaleProvider가
-  // 읽어 영어로 엽니다(2026-09-18). 로케일별 description은 정적 생성이라 한 벌뿐입니다. TODO: confirm.
+  // 읽어 영어로 엽니다(2026-09-18). 로케일별 description은 정적 생성이라 한 벌뿐입니다.
+  // DECIDED 2026-10-08 (사용자 승인, SEO 리뷰 6): hreflang 쌍을 뺐습니다. en이 ko와 같은 URL로 나갔고(쿼리가 떨어짐)
+  // 서버 HTML은 한국어뿐이라, 검색 엔진에 없는 영어판을 있다고 말하는 셈이었습니다. /en 경로가 생기면 되살립니다.
+  // ?lang=en 링크 자체는 그대로 동작합니다. canonical은 경로마다 자기 것을 적습니다(/quiz가 홈을 가리키던 문제).
   alternates: {
     canonical: "/",
-    languages: { ko: "/", en: "/?lang=en" },
   },
   keywords: [
     // 2026-09-28 (나루 공식 표기 브리프 4.6, 2026-09-29 재개정): "싱가포르 한인 학생", "빌더 커뮤니티"를 공식 표기로.
@@ -103,7 +109,6 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     type: "website",
     locale: "ko_KR",
-    alternateLocale: ["en_US"],
   },
   twitter: {
     card: "summary_large_image",
@@ -117,7 +122,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   // Let content extend into the display cutouts so env(safe-area-inset-*) is
-  // non-zero — used by the mobile event modal's bottom-sheet padding.
+  // non-zero - used by the mobile event modal's bottom-sheet padding.
   viewportFit: "cover",
 };
 
@@ -125,7 +130,7 @@ export const viewport: Viewport = {
 // stamps the saved locale onto <html> as `lang` and `data-locale`.
 //
 // The markup ships as Korean because that is LocaleProvider's default and these
-// pages are statically generated — the server has no way to know a preference
+// pages are statically generated - the server has no way to know a preference
 // that lives in localStorage. Without this, an English visitor saw Korean until
 // the React bundle landed and the provider's effect swapped it. On the home page
 // that is a frame; on /quiz it is the whole pre-hydration window, because the
@@ -144,13 +149,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     // Matches LocaleProvider's default. Corrected before paint by the bootstrap
     // script below, and kept in sync afterwards by the provider's effect, so a
-    // visitor who has chosen English gets lang="en" — this is only the value the
+    // visitor who has chosen English gets lang="en" - this is only the value the
     // markup ships with.
     <html lang="ko" data-locale="ko" className={`dark ${pretendard.variable}`}>
       <body className="font-sans antialiased bg-[#070B1F] text-white">
         <script dangerouslySetInnerHTML={{ __html: LOCALE_BOOTSTRAP }} />
         <LocaleProvider>
-          {/* First child of the provider so it stays first in the DOM — the
+          {/* First child of the provider so it stays first in the DOM - the
               provider renders no markup of its own. */}
           <SkipLink />
           {children}

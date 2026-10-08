@@ -13,7 +13,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 let cached: SupabaseClient | null = null;
 
 /**
- * Returns the admin client, or null when the env isn't configured — callers
+ * Returns the admin client, or null when the env isn't configured - callers
  * treat null as "backend not wired up yet" rather than crashing the route.
  */
 export function getSupabaseAdmin(): SupabaseClient | null {

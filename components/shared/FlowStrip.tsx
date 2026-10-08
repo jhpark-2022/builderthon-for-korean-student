@@ -5,18 +5,18 @@ import { Fragment } from "react";
 // 같은 파일을 import 합니다. 나루 홈이 같은 문법을 쓰기 위해서입니다.
 
 // ─────────────────────────────────────────────────────────────────────────────
-// FLOW STRIP — a row of boxes joined by arrows (참여 플로우, 최종 아웃풋).
+// FLOW STRIP - a row of boxes joined by arrows (참여 플로우, 최종 아웃풋).
 //
 // The arrows used to live INSIDE each box's own flex row: [box →][box →][box].
 // Horizontally that looks right, but stacked on a phone it puts the arrow beside
-// the box instead of between boxes — and because the arrow takes width, the two
+// the box instead of between boxes - and because the arrow takes width, the two
 // boxes that carry one end up narrower than the third. Boxes in a column that
 // don't share a width read as a rendering bug, which is what this was.
 //
 // So the children are FLAT: [box, arrow, box, arrow, box]. In a column every box
 // is full width and each arrow is its own centred row; in a row from `sm` the
 // same elements line up horizontally with the arrows between them, exactly as
-// before. One glyph, rotated 90° on phones — a second glyph conditionally
+// before. One glyph, rotated 90° on phones - a second glyph conditionally
 // rendered would be two things to keep in step for no gain.
 // ─────────────────────────────────────────────────────────────────────────────
 export default function FlowStrip<T>({

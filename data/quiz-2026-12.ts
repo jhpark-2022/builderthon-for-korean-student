@@ -20,7 +20,7 @@
 //   ISFP  Midjourney V8.2, ESFP Suno v6: 확인된 현재 버전을 붙였습니다.
 // ─────────────────────────────────────────────────────────────────────────────
 import { RESULTS, type MbtiKey, type Result } from "@/data/quiz";
-import type { Phrase } from "@/data/dictionary";
+import type { Phrase } from "@/data/dictionaryCore";
 
 interface ModelRow {
   /** 화면에 보이는 모델 이름. 회사가 쓰는 표기 그대로. */
@@ -135,6 +135,14 @@ const TEXT: Partial<Record<MbtiKey, Partial<Result>>> = {
       { ko: "출처를 잔뜩 달아온 당신 자료를 얘가 무대에서 노래로 만들어요. 팩트에 흥 붙이면 무대 찢을 각이죠 🎤", en: "The doc you brought packed with citations, this one turns into a song on stage. Facts + a beat = a stage-stealer 🎤" },
       RESULTS.ISTJ.matchWhy[1],
     ],
+  },
+  // DECIDED 2026-10-08 (퀴즈와 매칭 리뷰 13): 12월판의 약점 두 줄만 부드럽게. 이 카드는 Day 1 현장에서 팀원이 함께 봅니다.
+  // 8월판(data/quiz.ts)의 문장은 그대로입니다.
+  ISFJ: {
+    weakness: { ko: "맡은 일은 확실히, 먼저 나서는 건 천천히", en: "Solid on what's assigned, slower to step up first" },
+  },
+  ESFP: {
+    weakness: { ko: "흥이 먼저, 꼼꼼한 마무리는 팀과 함께", en: "Energy first; the careful finish goes better with the team" },
   },
   ESTP: {
     matchWhy: [

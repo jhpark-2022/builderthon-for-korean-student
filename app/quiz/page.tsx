@@ -6,7 +6,7 @@ import QuizIntroShell from "./QuizIntroShell";
 
 // REMOVED 2026-08-12: the "맞춤 세션 추천" claim from all three descriptions
 // below. The result card shows the model, the per-axis gauges, a builderthon
-// role and a match — it does not recommend sessions and never has. The matching
+// role and a match - it does not recommend sessions and never has. The matching
 // chip on the home page (dict.programQuizChip) went in the same pass. What
 // replaced it here is what the result actually carries, so a shared link and
 // the page agree.
@@ -18,7 +18,11 @@ export const metadata: Metadata = {
   other: { "naru:title-en": "Which AI model are you? | Zero100 record | NARU" },
   description:
     "14개의 질문으로 알아보는 나의 빌더 유형. 결과는 16개 AI 모델 중 하나로. 강점과 약점, 빌더톤 추천 역할까지. / A 14-question AI personality test for the Singapore Korean-student builderthon: get your AI model, your strengths and the role you'd play.",
+  // 2026-10-08 (성능과 SEO 리뷰 5): 이 줄이 없어 루트 레이아웃의 canonical "/"을 물려받았고, 구글에게 이 페이지가
+  // 홈의 중복이라고 알리고 있었습니다. og:url도 같은 이유로 없었습니다.
+  alternates: { canonical: "/quiz" },
   openGraph: {
+    url: "/quiz",
     title: "당신의 AI 모델은? Which AI model are you?",
     description: "14문항으로 알아보는 나의 빌더 유형 + 강점과 약점 + 빌더톤 추천 역할.",
     type: "website",

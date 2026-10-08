@@ -1,14 +1,14 @@
 "use client";
 
 import { track } from "@vercel/analytics";
-import { dict, links, type Phrase } from "@/data/dictionary";
+import { coreDict as dict, links, type Phrase } from "@/data/dictionaryCore";
 import ChatGlyph from "@/components/ChatGlyph";
 import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 
 type Tfn = (p: Phrase) => string;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// OPEN-CHAT LINK — the third CTA, for the visitor who isn't ready to register.
+// OPEN-CHAT LINK - the third CTA, for the visitor who isn't ready to register.
 //
 // Deliberately the lowest-hierarchy element wherever it appears: no border, no
 // fill, no pill. It sits directly under a register CTA, and the moment it reads
@@ -61,7 +61,9 @@ export default function OpenChatLink({
   // 발광)로 바뀌었습니다. 8월 히어로의 주 CTA와 같은 기하이고, 주황은 면이 아니라
   // 점이라는 원칙에 따라 버튼 면에서 뺐습니다. "secondary"는 8월의 유령 필(같은
   // 크기). #december의 문이 이것을 씁니다. 페이지의 그라데이션 필은 히어로 하나.
-  variant?: "ghost" | "primary" | "hero" | "secondary";
+  // 2026-10-08: 쓰는 곳이 없던 "primary"(흰 면 버튼)를 지웠습니다. 어두운 바탕에 밝은 판을
+  // 두지 않는다는 규칙과도 맞지 않았습니다.
+  variant?: "ghost" | "hero" | "secondary";
 }) {
   if (!links.openChat) return null;
   if (variant === "hero" || variant === "secondary") {
@@ -79,24 +81,9 @@ export default function OpenChatLink({
       </a>
     );
   }
-  if (variant === "primary") {
-    return (
-      <a
-        href={links.openChat}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={() => track("openchat_click", { src })}
-        className={`group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-bold text-naru-navy transition hover:-translate-y-0.5 hover:bg-white/90 sm:px-8 sm:text-base ${className}`}
-      >
-        <ChatGlyph className="h-4 w-4 shrink-0" />
-        {t(label ?? dict.register.openChatCta)}
-        <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-      </a>
-    );
-  }
   return (
     // Ghost CHIP, not a bare underlined line. At text-white/60 with a hairline
-    // underline this read as a footnote and was skipped — which defeats the
+    // underline this read as a footnote and was skipped - which defeats the
     // point, since this is the only offer on the page for someone who has read
     // everything and still isn't ready to register. Same ghost treatment as the
     // nav's open-chat button, so the two are recognisably the same door.

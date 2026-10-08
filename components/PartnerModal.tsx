@@ -13,7 +13,7 @@ import { dict, type Phrase, type PartnerArticle } from "@/data/dictionary";
 // A `stage` pill next to the name (e.g. "확정" / "협의 중") went away on
 // 2026-08-10: the 협의 중 tier had already been folded away, so every caller was
 // passing 확정 and the pill only ever said the one thing that was true of all of
-// them. If an in-discussion tier ever returns, bring the field back with it —
+// them. If an in-discussion tier ever returns, bring the field back with it -
 // it earns its place only when there are two values to tell apart.
 export interface PartnerInfo {
   name: string;
@@ -29,7 +29,7 @@ interface PartnerModalProps {
   partner: PartnerInfo | null;
   onClose: () => void;
   // The tile that opened the modal, so focus returns to it on close (Safari does
-  // not focus <button>s on click, so document.activeElement isn't dependable —
+  // not focus <button>s on click, so document.activeElement isn't dependable -
   // same reasoning as EventModal).
   triggerRef?: React.RefObject<HTMLElement | null>;
 }
@@ -51,7 +51,7 @@ export default function PartnerModal({
   useEffect(() => setMounted(true), []);
 
   // Declared before the lifecycle effect so the page is unfrozen before focus
-  // returns to the tile — see useBodyScrollLock.
+  // returns to the tile - see useBodyScrollLock.
   useBodyScrollLock(!!partner);
 
   // ESC + focus trap, inert background, focus restoration. Kept in lockstep with
@@ -120,14 +120,14 @@ export default function PartnerModal({
           exit={{ opacity: 0 }}
           transition={{ duration: reduce ? 0 : 0.2 }}
         >
-          {/* Backdrop — `touch-none` backs up the scroll lock (see EventModal). */}
+          {/* Backdrop - `touch-none` backs up the scroll lock (see EventModal). */}
           <div
             aria-hidden
             onClick={onClose}
             className="absolute inset-0 cursor-default touch-none bg-black/70 backdrop-blur-sm"
           />
 
-          {/* Dialog — dark glass, matching EventModal */}
+          {/* Dialog - dark glass, matching EventModal */}
           <motion.div
             ref={dialogRef}
             role="dialog"
@@ -137,7 +137,7 @@ export default function PartnerModal({
             animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.985 }}
             transition={{ duration: reduce ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
-            // dvh, NOT vh — iOS Safari에서 주소창이 펼쳐진 상태의 vh는 실제 보이는
+            // dvh, NOT vh - iOS Safari에서 주소창이 펼쳐진 상태의 vh는 실제 보이는
             // 높이보다 커서 시트 위쪽(=닫기 버튼)이 화면 밖으로 밀려납니다.
             // 바텀시트 네 개가 같은 이유로 dvh입니다(RegisterModal 주석 참고).
             className="relative z-10 flex max-h-[88dvh] w-full max-w-[560px] flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-[#0c0a18] shadow-2xl sm:rounded-3xl"

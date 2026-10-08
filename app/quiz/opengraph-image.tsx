@@ -3,8 +3,8 @@ import { ImageResponse } from "next/og";
 // ─────────────────────────────────────────────────────────────────────────────
 // Share card for /quiz.
 //
-// The quiz is the funnel's low-friction entry — it's the link that actually gets
-// pasted into KakaoTalk — and it was shipping with NO og:image at all. The root
+// The quiz is the funnel's low-friction entry - it's the link that actually gets
+// pasted into KakaoTalk - and it was shipping with NO og:image at all. The root
 // `app/opengraph-image.tsx` does not carry down here, because this segment
 // declares its own `openGraph` block in page.tsx, so a shared /quiz link
 // rendered as a bare grey card in exactly the channel Phase 2 runs on.

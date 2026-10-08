@@ -1,13 +1,13 @@
 import { NOISE_GLSL } from "./noise.glsl";
 
 /**
- * Particle vertex shader — the gravitational-portal narrative.
+ * Particle vertex shader - the gravitational-portal narrative.
  *
  * Each particle owns an immutable seed and per-particle attributes. Motion is
  * fully GPU-side:
  *   1. curl-noise drift (the stable "universe of opportunities")
  *   2. pointer magnetism (interactive)
- *   3. vortex attractor toward the portal — inward + tangential swirl, ramping
+ *   3. vortex attractor toward the portal - inward + tangential swirl, ramping
  *      with reveal/pull/portal so trajectories curve, then spiral, then race in
  *   4. velocity-aligned stretching → long-exposure trails during the pull
  *   5. parallax: nearer particles react faster than far ones
@@ -256,9 +256,9 @@ void main(){
     vec3 tangent = normalize(cross(dir, vec3(0.0, 0.0, 1.0)) + 1e-4);
     float grip = smoothstep(90.0, 4.0, hd) * parallax;
 
-    // Gentle gravitational drift only — greatly reduced so particles no longer
+    // Gentle gravitational drift only - greatly reduced so particles no longer
     // spiral into a tight, bright convergence ring at the bottom of the page.
-    // Displacement magnitude feeds vSpeed, which feeds both point size and alpha —
+    // Displacement magnitude feeds vSpeed, which feeds both point size and alpha -
     // so reveal (0..1 across the whole page) was quietly making the middle of
     // the document brighter than its ends. Trimmed so the field still organises
     // toward the portal, with roughly two thirds of the previous travel.
@@ -286,7 +286,7 @@ void main(){
   // Inflation factors dialed down so particles stay refined points, not big bokeh.
   // Growth toward the portal trimmed 0.8 → 0.35. Combined with the smaller cap
   // below, this is what stops the near-field particles from resolving into
-  // large soft discs behind the FAQ/vision copy — they stay a glow.
+  // large soft discs behind the FAQ/vision copy - they stay a glow.
   float size = aScale * (1.0 + infl * 1.0 + vNear * uPortal * 0.35);
   // trails: enlarge points along the pull to read as streaks (cheap stand-in)
   size *= (1.0 + vSpeed * 0.6);

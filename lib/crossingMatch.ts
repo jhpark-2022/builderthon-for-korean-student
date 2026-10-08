@@ -32,6 +32,22 @@ export const MATCH_WINDOW: { opensAt: string | null; closesAt: string | null } =
     : null,
 };
 
+/** 받기 전, 받는 중, 끝난 뒤. 화면이 "미리 해 보기"와 "접수가 끝났습니다"를 가르는 데 씁니다(2026-10-08). */
+export function matchWindowState(now: number = Date.now()): "before" | "open" | "after" {
+  if (MATCH_WINDOW.closesAt && now >= new Date(MATCH_WINDOW.closesAt).getTime()) return "after";
+  if (!MATCH_WINDOW.opensAt || now < new Date(MATCH_WINDOW.opensAt).getTime()) return "before";
+  return "open";
+}
+
+/**
+ * 현장 코드(선택). DECIDED 2026-10-08 (보안 감사 M1): 서버 환경변수 MATCH_ROOM_CODE가 있으면 라우트가 같은 코드를
+ * 요구합니다. 없으면 지금처럼 코드 없이 받습니다. 코드는 현장 QR의 주소(/match?code=...)에 실어 보내면 참가자가
+ * 칠 것이 없습니다. NEXT_PUBLIC_MATCH_ROOM_CODE_ON=1이면 시작 화면에 입력 칸도 보입니다(QR 없이 들어온 사람용).
+ */
+export const MATCH_CODE_MAX = 32;
+export const MATCH_CODE_FIELD_ON = process.env.NEXT_PUBLIC_MATCH_ROOM_CODE_ON === "1";
+export const normalizeMatchCode = (v: unknown): string => (typeof v === "string" ? v.trim().toUpperCase().slice(0, MATCH_CODE_MAX) : "");
+
 export function matchWindowOpen(now: number = Date.now()): boolean {
   if (!MATCH_WINDOW.opensAt || now < new Date(MATCH_WINDOW.opensAt).getTime()) return false;
   if (MATCH_WINDOW.closesAt && now >= new Date(MATCH_WINDOW.closesAt).getTime()) return false;

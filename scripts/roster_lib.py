@@ -35,12 +35,12 @@ def load_env():
 def fetch(url, key, path):
     # 시스템 파이썬에 CA 번들이 없어 urllib이 Supabase TLS를 검증하지 못하는 경우가 있다.
     # curl은 macOS 키체인을 쓰므로 그쪽으로 붙는다.
+    # 2026-10-08 (보안 감사 L6): 키를 명령줄 인자로 넘기지 않는다(ps에 그대로 보인다).
+    # 헤더는 curl 설정으로 표준 입력에 준다(-K -). 키는 프로세스 목록에 남지 않는다.
+    config = f'header = "apikey: {key}"\nheader = "Authorization: Bearer {key}"\n'
     out = subprocess.run(
-        [
-            "curl", "-sS", "--fail", f"{url}/rest/v1/{path}",
-            "-H", f"apikey: {key}",
-            "-H", f"Authorization: Bearer {key}",
-        ],
+        ["curl", "-sS", "--fail", "-K", "-", f"{url}/rest/v1/{path}"],
+        input=config,
         capture_output=True,
         text=True,
     )

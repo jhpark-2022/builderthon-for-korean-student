@@ -8,30 +8,34 @@ import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
-import { dict, links, type Phrase } from "@/data/dictionary";
+import { coreDict as dict, links, type Phrase } from "@/data/dictionaryCore";
 import { useRegisterOptional } from "@/lib/RegisterContext";
 import { useScrollDirection } from "@/lib/useScrollDirection";
 import { isScrollLocked } from "@/lib/useBodyScrollLock";
 import LocaleToggle from "@/components/LocaleToggle";
 import MotionToggle from "@/components/ui/MotionToggle";
 import ChatGlyph from "@/components/ChatGlyph";
-import ReturningGreeting from "./ReturningGreeting";
+import dynamic from "next/dynamic";
+// DECIDED 2026-10-08 (성능 리뷰 4): 인사 칩은 퀴즈 결과 표(data/quiz의 RESULTS, gzip 약 22KB)를 끌고 옵니다.
+// 홈은 이 칩을 쓰지 않는데(showQuiz=false) 헤더를 같이 쓰느라 그 표까지 받았습니다. 칩은 저장된 결과가
+// 있을 때 마운트 뒤에야 나타나므로, 따로 받아도 화면이 달라지지 않습니다.
+const ReturningGreeting = dynamic(() => import("./ReturningGreeting"), { ssr: false });
 
 // The one list every anchor UI reads: the desktop anchor row, the mobile/side
 // section rail, and useActiveSection's IntersectionObserver all map over it, so
 // a change here propagates everywhere. There is no second hardcoded list.
 //
-// DECIDED 2026-08-13 (안 A): nav 앵커 연사→멘토링 교체 — 참가자 클릭 가치 기준.
+// DECIDED 2026-08-13 (안 A): nav 앵커 연사→멘토링 교체 - 참가자 클릭 가치 기준.
 // 링크 8개 폭 예산 유지. 멘토링 챕터(3단계 멘토링 · 멘토진 · 피드백 패널)는 이
 // 페이지에서 가장 큰 챕터인데 앵커가 없었고, #speakers는 프로그램 바로 다음이라
 // 프로그램 앵커로 닿으며 연사 정보는 Day 카드에도 반복됩니다. #speakers 섹션은
-// 그대로 있습니다 — 사라진 것은 앵커뿐입니다.
+// 그대로 있습니다 - 사라진 것은 앵커뿐입니다.
 //
-// DECIDED 2026-08-22 (Day 1): 트랙 공개 — 저지먼트, 오토메이션, 출제 기업
+// DECIDED 2026-08-22 (Day 1): 트랙 공개 - 저지먼트, 오토메이션, 출제 기업
 // 코드프레소. nav 앵커 참가 대상(#join) → 트랙(#tracks). 등록이 마감된 뒤로
 // "참가 대상"은 클릭 가치가 다했고, 지금 이 페이지의 1순위 독자는 이미 들어온
 // 참가자입니다. 배열 순서는 페이지 순서를 따라야 하므로 tracks는 benefits 뒤,
-// program 앞에 옵니다 — #tracks 섹션이 바로 그 사이에 있습니다.
+// program 앞에 옵니다 - #tracks 섹션이 바로 그 사이에 있습니다.
 //
 // DECIDED 2026-08-23: 참가자 국면으로 세트를 다시 짭니다. 취지와 혜택이 빠지고
 // 연사가 들어왔습니다. 링크 8개 → 7개.
@@ -105,7 +109,7 @@ const DEFAULT_ANCHORS: NavAnchor[] = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
-// WHERE AM I — the id of the anchor section currently occupying the viewport.
+// WHERE AM I - the id of the anchor section currently occupying the viewport.
 //
 // The rail is the only wayfinding on a phone, and its chips used to look
 // identical whether you were in 취지 or in FAQ. That was survivable while an
@@ -142,7 +146,7 @@ function useActiveSection(enabled: boolean, anchors: NavAnchor[]) {
           if (ratio >= bestRatio) { bestRatio = ratio; best = id; }
         });
         // Keep the last known section when scrolling through a gap (the hero and
-        // the closing screen are not anchors) — blanking there reads as a bug.
+        // the closing screen are not anchors) - blanking there reads as a bug.
         if (best) setActive(best);
       },
       { rootMargin: "-96px 0px -45% 0px", threshold: [0, 0.15, 0.4, 0.75] }
@@ -186,12 +190,12 @@ export default function JourneyNav({
 }) {
   const { t, locale } = useLocale();
   const reduce = useReducedMotion();
-  // `registered`만 남습니다 — 등록 진입점은 2026-08-22에 걷어냈지만, 이미 등록한
-  // 방문자에게 인사하는 ReturningGreeting은 그대로 살아 있습니다.
+  // registered 하나만 읽습니다. 8월에 이 기기에서 등록했던 방문자에게 오픈채팅
+  // 버튼의 톤을 올려 주는 플래그입니다(lib/RegisterContext.tsx).
   // 나루 홈에는 RegisterProvider가 없으므로(등록 없음) null이 올 수 있습니다.
   const registered = useRegisterOptional()?.registered ?? false;
   const [scrolled, setScrolled] = useState(false);
-  // Only observe once the rail exists — before that there is nothing to mark,
+  // Only observe once the rail exists - before that there is nothing to mark,
   // and the observer would run through the whole hero for nobody.
   const activeSection = useActiveSection(scrolled, anchors);
   // 나루 홈(2026-09-18, 모바일 수정 브리프 7): 칩 일곱이 390px에 들어가지 않아 현위치 칩이
@@ -210,14 +214,14 @@ export default function JourneyNav({
   }, [activeSection, brand, reduce]);
   // Shared with the bottom bars and the back-to-top button (lib/useScrollDirection):
   // on a phone this header is two rows tall and, together with the bottom rail,
-  // was taking a quarter of an in-app browser's viewport. Scrolling DOWN — the
-  // gesture that means "show me more page" — slides it out; scrolling up brings
+  // was taking a quarter of an in-app browser's viewport. Scrolling DOWN - the
+  // gesture that means "show me more page" - slides it out; scrolling up brings
   // it straight back. Desktop is untouched: the translate only applies below lg.
   //
   // DECIDED 2026-08-17: 여기에 "멈추면 돌아온다"가 더해졌습니다. 스크롤이 0.9초
   // 멎으면 훅이 스스로 false로 돌아오므로, 읽으려고 멈춘 사람이 등록 버튼을
   // 다시 보려고 위로 긁을 필요가 없습니다. 그 규칙은 훅이 갖고 있고 이 컴포넌트는
-  // 그대로 구독만 합니다 — 여기에 별도 타이머를 만들지 마세요. 네 표면이 한 몸으로
+  // 그대로 구독만 합니다 - 여기에 별도 타이머를 만들지 마세요. 네 표면이 한 몸으로
   // 움직이는 이유가 신호가 하나라는 점입니다.
   // 나루 홈(감사 반영 브리프 2.1): 아래로 스크롤하면 로고 줄(52px)만 접고 칩 레일은 남깁니다. 위로
   // 스크롤해야 돌아오고, 멈춰 있다고 돌아오지 않습니다(idleReveal false). 8월 페이지는 그 전
@@ -300,7 +304,7 @@ export default function JourneyNav({
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     // Anchor jumps (the hero CTA → #program) normally emit a scroll event, but
-    // not in every context — a backgrounded tab coalesces them away. Since that
+    // not in every context - a backgrounded tab coalesces them away. Since that
     // exact path is what used to hide this button entirely, re-check on
     // hashchange too rather than depend on scroll alone.
     window.addEventListener("hashchange", onScroll);
@@ -326,14 +330,14 @@ export default function JourneyNav({
       // 죽으므로(인라인이 클래스를 이깁니다) 클래스로만 정의합니다.
       className={`fixed inset-x-0 top-0 z-50 [--nav-gutter:1.5rem] focus-within:translate-y-0 sm:[--nav-gutter:2.5rem] lg:!translate-y-0 ${
         reduce ? "" : "transition-all duration-300 lg:duration-500"
-      // DECIDED 2026-08-23 (박주형): /85 → /95. 스크롤하면 헤더 뒤로 본문이 —
-      // 특히 파트너 로고 월이 — 비쳐 보였습니다. 15%가 통과하고 있었어요.
+      // DECIDED 2026-08-23 (박주형): /85 → /95. 스크롤하면 헤더 뒤로 본문이 -
+      // 특히 파트너 로고 월이 - 비쳐 보였습니다. 15%가 통과하고 있었어요.
       //
       // backdrop-blur에만 기대면 안 됩니다. blur는 뒤를 흐릴 뿐 가리지 않아서,
       // 로고처럼 대비가 큰 것은 흐려진 채로 그대로 읽힙니다. 어두운 단색이 기본이고
       // blur는 보조입니다.
       //
-      // 두 줄(로고 줄 + 섹션 레일)은 이미 이 배경 하나를 함께 씁니다 — 실측 105px =
+      // 두 줄(로고 줄 + 섹션 레일)은 이미 이 배경 하나를 함께 씁니다 - 실측 105px =
       // nav 52 + 레일 53이라 줄 사이에 빈 틈이 없습니다. 여기서 갈라 두지 마세요.
       } ${scrolled ? "bg-[#070B1F]/95 backdrop-blur-md" : "bg-transparent"} ${
         // 로고 줄(52px)만 접고 목차 줄은 남깁니다(감사 반영 브리프 2.1). 레일이 없는 첫 화면
@@ -348,13 +352,13 @@ export default function JourneyNav({
     >
       {/* 52px in the two-row band, h-20 from xl: the tall bar was designed for a
           desktop row of seven anchor links, but below that it carries a logo, a
-          chip or two and the language toggle — and it sits above a second row.
+          chip or two and the language toggle - and it sits above a second row.
           Together with the rail's tightened padding this takes the two-row header
-          from ~145px to ~105px — about a quarter of that chrome back. Touch
+          from ~145px to ~105px - about a quarter of that chrome back. Touch
           targets inside are unchanged (44px minimums), and the nav CTAs that
           appear from lg are ~43px tall, so they still clear the 52px bar.
           Tracks the anchor row's breakpoint (`lg` → `xl`, 2026-08-03) so the bar
-          is tall exactly when it has a row of links to hold — and so
+          is tall exactly when it has a row of links to hold - and so
           scroll-padding-top in globals.css only ever needs two bands. */}
       {/* aria-label: 이름 없는 nav가 둘이면 iOS 로터에 "탐색, 탐색"으로 뜹니다
           (2026-09-19, 접근성 감사 4). 아래 칩 레일이 두 번째입니다.
@@ -370,7 +374,7 @@ export default function JourneyNav({
           paddingRight: "calc(env(safe-area-inset-right, 0px) + var(--nav-gutter))",
         }}
       >
-        {/* LEFT group — brand logo + anchor links, kept together on the left edge. */}
+        {/* LEFT group - brand logo + anchor links, kept together on the left edge. */}
         <div className="flex items-center">
           {brand === "naru" ? (
             /* 나루 가로 락업(이름만, 반전). 어두운 바탕 전용이고 이 사이트는
@@ -420,7 +424,7 @@ export default function JourneyNav({
               />
             </a>
           ) : (
-            <a href="#top" className="flex items-center gap-2.5 leading-none">
+            <a href="#top" className="mr-2 flex items-center gap-2.5 leading-none">
               {/* Official Zero100 lockup (icon + wordmark) leads the brand; the event
                   is "Zero100 AI Builderthon". The "AI Builderthon" suffix is hidden
                   on the narrowest screens so the brand, EN/KR toggle and View Program
@@ -431,7 +435,9 @@ export default function JourneyNav({
                 width={602}
                 height={127}
                 priority
-                className="h-7 w-auto opacity-90 brightness-0 invert sm:h-8"
+                // 360px 아래에서는 한 단계 작게(2026-10-08): 320 폭에서 로고 오른쪽 끝과
+                // 퀴즈 알약이 0px로 붙어 있었습니다. 위 mr-2와 함께 틈을 만듭니다.
+                className="h-6 w-auto opacity-90 brightness-0 invert min-[360px]:h-7 sm:h-8"
               />
               {/* items-center centres the text box, but Hangul glyphs sit high in
                   that box (no descenders) so "AI 빌더톤" reads as floating above the
@@ -442,7 +448,7 @@ export default function JourneyNav({
                   rather than pushing anything off-screen.
                   It drops below `sm` in both locales, and ENGLISH drops it again
                   from `xl` to 1500px. That second band is where the anchor row
-                  appears, and the EN labels are the longer set — "AI Builderthon"
+                  appears, and the EN labels are the longer set - "AI Builderthon"
                   is 163px against "AI 빌더톤"'s 89px, and the EN anchor row is
                   577px against 509px. Measured with the suffix forced on: at 1400
                   the two nav groups touch (0px between them) and the lockup still
@@ -450,12 +456,12 @@ export default function JourneyNav({
                   1500 it is 75px. Below that the lockup printed on top of the first
                   two links; the zero100 wordmark alone carries the brand there.
                   KR fits from `xl` with 42px to spare, so it needs no second band.
-                  Re-measure before touching 1500 — it is the EN row width, not a
+                  Re-measure before touching 1500 - it is the EN row width, not a
                   round number. */}
               <span className={`hidden items-center whitespace-nowrap text-lg font-black leading-none tracking-wide text-white/90 sm:inline-flex sm:text-xl ${locale === "ko" ? "translate-y-[2px]" : "xl:hidden min-[1500px]:inline-flex"}`}>{t(dict.nav.brandSuffix)}</span>
             </a>
           )}
-          {/* ANCHOR ROW — `xl` (1280), not `lg` (1024). See the note on the
+          {/* ANCHOR ROW - `xl` (1280), not `lg` (1024). See the note on the
               section rail below: between 1024 and 1279 this row does not fit
               next to the brand and the two CTAs in either locale, and flex
               silently crushed the brand to make room. */}
@@ -480,7 +486,7 @@ export default function JourneyNav({
                   aria-current={here ? "location" : undefined}
                   // whitespace-nowrap: a nav label is a single target and must stay
                   // on one line. The Korean labels are the longer set and were
-                  // breaking apart at the narrow end of `lg` — "참가 대상" split at
+                  // breaking apart at the narrow end of `lg` - "참가 대상" split at
                   // its space and the row turned into two ragged lines of syllables.
                   className={`relative whitespace-nowrap text-sm font-medium transition after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:bg-accent/70 after:transition-transform after:duration-300 hover:text-white hover:after:scale-x-100 focus-visible:after:scale-x-100 ${
                     here ? "text-white after:scale-x-100" : "text-white/70 after:scale-x-0"
@@ -490,7 +496,7 @@ export default function JourneyNav({
                 </a>
               );
             })}
-            {/* Quiz — an anchor-weight text link after FAQ, not a button. It has
+            {/* Quiz - an anchor-weight text link after FAQ, not a button. It has
                 to be reachable from the nav (there was no path at all), but it
                 sits under the open-chat ghost button and two under the register
                 pill, which is the order these three should always be in. */}
@@ -505,7 +511,7 @@ export default function JourneyNav({
             )}
           </div>
         </div>
-        {/* RIGHT group — open chat + EN/KR toggle, with the register button
+        {/* RIGHT group - open chat + EN/KR toggle, with the register button
             appearing as soon as the visitor scrolls off the hero.
  
             "파트너십 문의" USED TO LIVE HERE and was moved to the footer. This
@@ -516,15 +522,15 @@ export default function JourneyNav({
             the footer CTA (a full pill, more prominent than this ever was) and
             from the partner section. */}
         <div className="flex items-center gap-2.5 sm:gap-3">
-          {/* Returning quiz-taker greeting — sits to the LEFT of open chat.
+          {/* Returning quiz-taker greeting - sits to the LEFT of open chat.
               Compact single-line pill; renders nothing for first-time visitors.
               Desktop-only, so the mobile bar stays uncluttered.
               Held back to 1700px: it used to appear at `xl`, the same breakpoint
               where the brand suffix returns, and the two together overran the bar
               for anyone who had taken the quiz (~210px pill + ~130px suffix).
               Of the two the brand lockup wins, so the pill waits for the width.
-              1700 rather than `2xl` because at 1536 — a very common effective
-              width, 1920 at 125% scaling — the row fits only exactly: the FAQ
+              1700 rather than `2xl` because at 1536 - a very common effective
+              width, 1920 at 125% scaling - the row fits only exactly: the FAQ
               link ends at the pixel the pill starts. This is the width where the
               two groups stop touching. */}
           {/* 퀴즈를 본 적 있는 방문자에게 이름으로 인사하는 필. 퀴즈와 같은
@@ -535,26 +541,26 @@ export default function JourneyNav({
               <ReturningGreeting compact />
             </span>
           )}
-          {/* Open chat — visible from first paint, NOT scroll-revealed. Someone
+          {/* Open chat - visible from first paint, NOT scroll-revealed. Someone
               who lands and isn't ready to register should find the low-commitment
               door immediately, not after proving they'll scroll.
  
               Emphasized violet-tinted outline while unregistered: a soft violet
               glow + brighter text so the low-commitment door actually draws the
-              eye — but still an OUTLINE, not a fill, so it stays one tier below
+              eye - but still an OUTLINE, not a fill, so it stays one tier below
               the solid register pill (no two competing primaries). Once
               registered the roles swap: registration is done ("등록 완료 ✓"), so
               the next real action is the chat, and this becomes the filled
               control. See the registered branch below. */}
           {/* Phone/tablet path to the quiz. The anchor row above is `xl:flex`, so
               without this there is no route to /quiz from the header at all
-              below xl. Kept to a compact chip rather than a new hamburger — the
+              below xl. Kept to a compact chip rather than a new hamburger - the
               header's minimalism is the point, and one more sheet to open is one
               more reason not to. Tracks the anchor row's breakpoint: if that
               moves, this moves with it or the quiz loses its only header route. */}
           {/* 2026-08-12: ✦ 하나만 있던 칩에 글자를 붙였습니다. 세로는 이미
               min-h-[44px]였지만 가로가 px-3 + 글리프 하나라 40px 남짓이었고,
-              무엇보다 ✦만으로는 눌러야 할 이유가 전달되지 않았습니다 — 폰에서
+              무엇보다 ✦만으로는 눌러야 할 이유가 전달되지 않았습니다 - 폰에서
               헤더에 있는 유일한 퀴즈 통로인데 라벨이 aria에만 있었습니다.
               전체 라벨("유형 테스트 ✦")은 좁은 헤더에서 다른 칩을 밀어내므로
               짧은 라벨을 따로 둡니다. */}
@@ -591,18 +597,21 @@ export default function JourneyNav({
               }
             >
               <ChatGlyph className="h-4 w-4" />
-              {t(dict.nav.openChat)}
+              {/* DECIDED 2026-10-08 (사용자: "오픈채팅 - 열어줘", 390px 스크린숏 확인): 링크를 되살리니 폰에서 로고의
+                  오른쪽 끝과 이 알약의 왼쪽 끝이 0px로 붙었습니다. 퀴즈 칩이 없는 헤더(나루 홈)의 420px 아래에서는
+                  글자를 화면에서만 내리고 아이콘만 둡니다. 이름은 aria-label이 그대로 읽습니다. */}
+              <span className={showQuiz ? undefined : "max-[419px]:sr-only"}>{t(dict.nav.openChat)}</span>
             </a>
           )}
           {/* DECIDED 2026-08-22 (마감 후 청산): 스크롤로 나타나던 등록 필을
-              걷어냈습니다. 등록 진입점 전면 제거 — 비활성 버튼을 남기지 않는다.
+              걷어냈습니다. 등록 진입점 전면 제거 - 비활성 버튼을 남기지 않는다.
               1순위 액션은 오픈채팅, 히어로 1순위는 트랙. 등록 코드(모달·API·
               registered 상태)는 삭제하지 않고 진입점만 끊습니다.
 
               누를 수 없는 버튼을 회색으로 남기는 쪽이 더 나빴습니다. 참가자가 이
               페이지에서 지금 할 수 있는 일은 오픈채팅에 들어오는 것 하나뿐인데,
               그 옆에 죽은 버튼이 서 있으면 어느 쪽이 살아 있는지를 매번 읽어야
-              합니다. 위의 오픈채팅 버튼이 이제 이 바의 유일한 액션입니다 —
+              합니다. 위의 오픈채팅 버튼이 이제 이 바의 유일한 액션입니다 -
               스타일은 올리지 않았습니다. 경쟁 상대가 없어졌으니 고스트 톤으로
               충분하고, 그라디언트로 올리면 마감 전과 같은 압력이 됩니다. */}
           {/* 배경 정지 토글, 헤더에도(감사 반영 브리프 2.4). 푸터 것은 그대로. 나루 홈만.
@@ -615,14 +624,29 @@ export default function JourneyNav({
               <MotionToggle compact />
             </div>
           )}
-          {/* Language last — it's a setting, not an action, so it sits after
+          {/* DECIDED 2026-10-08 (사용자 2026-09-20: "8월 페이지에는 12월 이벤트 페이지로 돌아갈 수
+              있는 버튼이 항상 보였으면"): 12월 버튼이 xl 아래의 목차 레일에만 있어서 1280px부터는
+              헤더에 홈으로도 12월로도 가는 길이 없었습니다. 같은 링크를 xl부터 여기에 둡니다.
+              레일의 것과 동시에 뜨지 않습니다(저쪽은 xl:hidden). */}
+          {!naru && (
+            <Link
+              href="/#december"
+              aria-label={t(dict.nav.toDecemberAria)}
+              onClick={() => track("naru_cta", { src: "august_nav", to: "december" })}
+              className="hidden min-h-[44px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/45 bg-violet-500/[0.14] px-4 text-sm font-bold text-violet-100 transition hover:border-violet-400/70 hover:bg-violet-500/20 xl:inline-flex"
+            >
+              {t(dict.nav.toDecember)}
+              <span aria-hidden className="text-violet-200/70">→</span>
+            </Link>
+          )}
+          {/* Language last - it's a setting, not an action, so it sits after
               the CTA rather than between the brand and it. */}
           <LocaleToggle variant={brand} />
         </div>
       </nav>
       {/* ── Section rail (below `xl` only) ────────────────────────────────────
           The anchor row above is `xl:flex`, so on a phone the header carried the
-          brand, the quiz chip and the language toggle and nothing else — while
+          brand, the quiz chip and the language toggle and nothing else - while
           the page itself runs ~27,000px on a 390px screen. A visitor who wanted
           the programme or the FAQ had one tool: scrolling, or the back-to-top
           button. This is that missing route.
@@ -631,13 +655,13 @@ export default function JourneyNav({
           1024 but did not FIT until ~1200 (KR) / ~1280 (EN): brand 171 + row 509
           /577 + the two CTAs 324 + rail padding came to 1139px (KR) and 1201px
           (EN) inside a 1024px bar. Nothing wrapped, because every label is
-          whitespace-nowrap — instead flex shrank the one item that could give,
+          whitespace-nowrap - instead flex shrank the one item that could give,
           the brand link, and at 1024 the zero100 wordmark was crushed from 171px
           to 50px while the EN/KR toggle sat off the right edge. Measured, both
           locales, before and after. So 1024–1279 now gets the same two-row
           treatment as a phone: compact bar + this rail, which reaches every
           section the inline row does. Do not move this back to `lg` without
-          re-measuring the widest locale — the row is the constraint, not the
+          re-measuring the widest locale - the row is the constraint, not the
           breakpoint name.
 
           Deliberately a scrollable rail, not a hamburger sheet: the same chips
@@ -645,7 +669,7 @@ export default function JourneyNav({
           opened or learned (the header's minimalism was the reason a menu was
           turned down before, and it still holds).
 
-          Appears only once the hero is behind you — the same `scrolled` latch
+          Appears only once the hero is behind you - the same `scrolled` latch
           the register button uses. On the first screen the hero's own CTAs are
           the point and this would just be a second row of chrome.
 
@@ -708,7 +732,7 @@ export default function JourneyNav({
             // calc 안의 밑줄 두 개(100%_-_16px)가 필요합니다. Tailwind는 임의값의
             // 밑줄을 공백으로 바꾸는데, CSS의 calc는 빼기 부호 양옆에 공백이 없으면
             // 무효입니다. 밑줄 없이 적었다가 마스크가 통째로 무시됐습니다(실측).
-            : "flex gap-2 overflow-x-auto pb-2 pl-6 pr-1 [mask-image:linear-gradient(to_right,#000_calc(100%_-_16px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]{display:none}"}>
+            : "flex gap-2 overflow-x-auto pb-2 pl-6 pr-1 [mask-image:linear-gradient(to_right,#000_calc(100%_-_16px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"}>
             {anchors.map((a) => {
               const here = a.id === activeSection;
               return (
@@ -724,24 +748,24 @@ export default function JourneyNav({
                   // 음절이라, 로터의 링크 목록에 문맥 없이 나열되면 무엇인지 알 수
                   // 없습니다. 눈으로 읽는 글자는 그대로 두고 이름만 늘립니다.
                   aria-label={a.ariaLabel ? t(a.ariaLabel) : undefined}
-                  // min-h stays 44px — the row got shorter by losing padding around
+                  // min-h stays 44px - the row got shorter by losing padding around
                   // it, never by shrinking the thing a thumb has to hit.
                   //
                   // 현위치 표시는 테두리+글자색까지만 (2026-08-12). 칩을 채우면
                   // 헤더에서 등록 버튼 다음으로 무거운 요소가 되어, 읽고 있는
                   // 챕터가 행동을 부르는 것처럼 보입니다. 이건 표지판이지
                   // 버튼이 아닙니다.
-                  // DECIDED 2026-08-17: 레일 칩 폭 통일 — 라벨 길이 무관 동일 폭.
+                  // DECIDED 2026-08-17: 레일 칩 폭 통일 - 라벨 길이 무관 동일 폭.
                   // 폭이 라벨을 따라가서 "혜택"(51px)과 "참가 대상"(76px)이 나란히
                   // 서면 레일이 들쭉날쭉했습니다. 칩은 표지판이라 크기가 정보가 되면
-                  // 안 됩니다 — 긴 이름의 챕터가 더 중요한 챕터로 보입니다.
+                  // 안 됩니다 - 긴 이름의 챕터가 더 중요한 챕터로 보입니다.
                   //
                   // 5.25rem(94.5px)은 두 로케일의 최장 라벨을 실측해 고른 최소값입니다:
                   // ko "참가 대상" 75.9px, en "Mentoring" 89.9px. (2026-08-23에
                   // "참가 대상"이 세트에서 빠졌지만 폭을 정한 것은 en "Mentoring"이고
                   // 그건 그대로라, 이 값은 손대지 않습니다.) 5rem은 90px이라
                   // Mentoring과 0.1px 차이여서 폰트 렌더링이 조금만 달라도 넘칩니다.
-                  // 라벨을 더 긴 것으로 바꾸면 이 값을 다시 재세요 — 하나라도 min-w를
+                  // 라벨을 더 긴 것으로 바꾸면 이 값을 다시 재세요 - 하나라도 min-w를
                   // 넘기면 그 칩만 넓어져서 통일이 깨집니다.
                   //
                   // 대가: 레일 총 길이가 늘어 한 화면에 보이는 칩이 줄어듭니다.
@@ -784,7 +808,7 @@ export default function JourneyNav({
                 href="/#december"
                 aria-label={t(dict.nav.toDecemberAria)}
                 onClick={() => track("naru_cta", { src: "august_rail", to: "december" })}
-                className="inline-flex min-h-[44px] shrink-0 items-center gap-1.5 self-start whitespace-nowrap rounded-full border border-violet-400/45 bg-violet-500/[0.14] px-3 text-[0.7rem] font-bold text-violet-100 backdrop-blur transition active:scale-[0.97] hover:border-violet-400/70 hover:bg-violet-500/20"
+                className="inline-flex min-h-[44px] shrink-0 items-center gap-1.5 self-start whitespace-nowrap rounded-full border border-violet-400/45 bg-violet-500/[0.14] px-3 text-xs font-bold text-violet-100 backdrop-blur transition active:scale-[0.97] hover:border-violet-400/70 hover:bg-violet-500/20"
               >
                 {t(dict.nav.toDecember)}
                 <span aria-hidden className="text-violet-200/70">→</span>

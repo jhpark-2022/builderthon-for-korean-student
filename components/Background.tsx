@@ -22,7 +22,7 @@ export default function Background({ variant = "field" }: { variant?: Background
 
     // We always mount the WebGL canvas when WebGL is available. Reduced-motion is
     // handled *inside* BackgroundScene as a heavily-damped "calm" variant
-    // (near-frozen camera, slow particles, gentle lens/bloom) — it is no longer a
+    // (near-frozen camera, slow particles, gentle lens/bloom) - it is no longer a
     // reason to skip the scene. The branded CSS gradient fallback is reserved for
     // genuinely unsupported / failed WebGL (the try/catch below).
 
@@ -93,7 +93,7 @@ export default function Background({ variant = "field" }: { variant?: Background
   );
 }
 
-/** Branded gradient fallback — preserves palette + atmosphere, no blank screen. */
+/** Branded gradient fallback - preserves palette + atmosphere, no blank screen. */
 function CssFallback() {
   return (
     <div

@@ -1,5 +1,5 @@
 /* Pretendard is now self-hosted via next/font/local (see app/layout.tsx) and
-   exposed as --font-pretendard — no render-blocking third-party @import. */
+   exposed as --font-pretendard - no render-blocking third-party @import. */
 
 @tailwind base;
 @tailwind components;
@@ -71,12 +71,12 @@ html { font-size: 112.5%; scroll-padding-top: 96px; }
    빈 프레임이 찍혔습니다. 8월 페이지(/2026-08, body[data-sticky])는 그 전 그대로 CSS smooth. */
 html:has(body[data-sticky]) { scroll-behavior: smooth; }
 
-/* Below `xl` the fixed header grows a second row — the scrollable section rail
+/* Below `xl` the fixed header grows a second row - the scrollable section rail
    (components/journey/JourneyNav.tsx), which only exists at this breakpoint.
    Without the extra offset an anchor jump parks the target heading underneath
    it. Keep this in step with the rail's height if its padding ever changes:
    the bar row is 52px and the rail is a 44px chip plus 8px of padding, so
-   ~105px of chrome — 120 leaves a little air under it.
+   ~105px of chrome - 120 leaves a little air under it.
    The bound moved 1023 → 1279 with the nav's anchor row (2026-08-03): the
    inline row and the tall h-20 bar now both start at `xl`, so 1024–1279 gets
    the same two-row header a phone does and needs the same offset. */
@@ -89,7 +89,7 @@ html:has(body[data-sticky]) { scroll-behavior: smooth; }
    in one tap: measured, a rail jump from the top to #faq travels 14,779px, and
    Chrome animates it for ~1.8s. On a phone that is nearly two seconds of the
    whole page smearing past at speed, on top of the three.js field that is
-   already asking for those frames — the two together drop frames and read as
+   already asking for those frames - the two together drop frames and read as
    motion sickness rather than as orientation.
    Desktop keeps smooth: shorter effective distances, more headroom, and a
    mouse user gets real spatial feedback from it.
@@ -110,14 +110,14 @@ html:has(body[data-sticky]) { scroll-behavior: smooth; }
 
    THIS IS A SAFETY NET, NOT A FIX. It exists so a future mistake never reaches a
    user as a page that slides sideways under a vertical swipe. DO NOT hide a new
-   overflow behind it — if `document.documentElement.scrollWidth` exceeds
+   overflow behind it - if `document.documentElement.scrollWidth` exceeds
    `clientWidth` again, find the element and contain it where it lives.
 
    `clip`, not `hidden`: `hidden` makes the element a scroll container, which
    silently breaks `position: sticky` in descendants and lets programmatic
    scrollLeft push content sideways anyway. `clip` just clips. It is applied to
    BOTH html and body because body alone does not stop the document element from
-   reporting the overflow — that is precisely why the old
+   reporting the overflow - that is precisely why the old
    `body { overflow-x: hidden }` measured 18px of document overflow while
    visually clipping. */
 html { overflow-x: clip; }
@@ -135,11 +135,11 @@ body {
    CSS breaks Korean between SYLLABLES by default, so a narrow column shreds
    words mid-token: 라이프사이클 → "라 / 이프사이클", 간담회 → "간담 / 회". Every
    fix for this used to be a `break-keep` class on one element, which meant every
-   new element started broken again — this is the same rule applied once, at the
+   new element started broken again - this is the same rule applied once, at the
    root, so nothing can be missed.
 
-     word-break: keep-all   — break at spaces only (the Korean rule)
-     overflow-wrap: break-word — escape hatch: a token with no space that is
+     word-break: keep-all   - break at spaces only (the Korean rule)
+     overflow-wrap: break-word - escape hatch: a token with no space that is
                                  wider than its box (long URLs, 회사명+직함
                                  compounds in a phone-width card) may still be
                                  split, so it can never overflow the layout
@@ -147,7 +147,7 @@ body {
    In @layer base, so any Tailwind utility (break-words, break-all, truncate…)
    still wins on the element that needs it. The `break-keep` classes already
    scattered through Journey.tsx / EventModal.tsx / RegisterModal.tsx are now
-   redundant, not wrong — they set exactly this value, so they were left alone
+   redundant, not wrong - they set exactly this value, so they were left alone
    rather than touched in bulk.
 
    text-wrap balance/pretty: unsupported engines ignore the declaration and get
@@ -180,10 +180,10 @@ body {
   /* Exempt the decorative logo marquees: a slow, continuous horizontal scroll is
      low-risk for motion sensitivity, and freezing it just looks broken. Higher
      selector specificity than `*` lets these win despite both being !important.
-     These two are the #companions band — atmosphere, not evidence.
+     These two are the #companions band - atmosphere, not evidence.
      `.marquee-hero` used to be exempt here as well, for the hero confirmed-partner
      strip. That strip is static at every width now (see HeroPartnerStrip), so
-     there is no longer any animation to exempt — which also retires the awkward
+     there is no longer any animation to exempt - which also retires the awkward
      part of this rule: an exemption that overrode a user's reduced-motion
      preference because the layout depended on movement to stay reachable. */
   .marquee-left  { animation-duration: 60s !important; }
@@ -204,7 +204,7 @@ body {
   100% { box-shadow: 0 0 0 4px rgba(10,6,20,0.85), 0 0 0 0 rgba(199,155,180,0.0); filter: brightness(1); }
 }
 
-/* Soft "live" pulse — a gentle expanding ring, slower and calmer than Tailwind's
+/* Soft "live" pulse - a gentle expanding ring, slower and calmer than Tailwind's
    animate-ping (used by the countdown's live dot). */
 @keyframes softPulse {
   0%   { transform: scale(1);   opacity: 0.6; }
@@ -225,11 +225,11 @@ body {
      /60 → 7.29 : 1
 
    Root font is 18px, so even text-xs (13.5px) and the smallest chips (11.2px)
-   are "normal text" and owe 4.5:1 — the large-text 3:1 allowance never applies
+   are "normal text" and owe 4.5:1 - the large-text 3:1 allowance never applies
    here. /45 was the only tier sitting on the line, and its four uses moved to
    /55. Nothing below /55 for text a reader is meant to read; /50 measures fine
    and is left alone, so do not sweep it "for consistency".
-   Purely decorative glyphs (arrows, separators) are exempt — they carry no
+   Purely decorative glyphs (arrows, separators) are exempt - they carry no
    information a screen reader or a reader needs.                              */
 
 /* ── WHAT LIVES IN THIS FILE ──────────────────────────────────────────────────
@@ -252,13 +252,13 @@ body {
    style the next button a third way. If a real button token is ever wanted, it
    belongs in a React component, not in a global class nothing imports.
 
-   Note .glass is NOT the <Glass> component in Journey.tsx — same word, unrelated,
+   Note .glass is NOT the <Glass> component in Journey.tsx - same word, unrelated,
    and the component stays.
 
    The survivors are here because a string builds them at runtime:
-     .orb / .grid-bg          — decorative background layers
-     .marquee-track / -left / -right — #companions band (dir is a data string)
-     .quiz-confetti           — components/Confetti.tsx, and the reduced-motion
+     .orb / .grid-bg          - decorative background layers
+     .marquee-track / -left / -right - #companions band (dir is a data string)
+     .quiz-confetti           - components/Confetti.tsx, and the reduced-motion
                                 gate below is the only thing that can hide it   */
 
 /* ── Glow orbs (decorative background blobs) ───────────────────────────────── */
@@ -283,13 +283,13 @@ body {
 .marquee-right { animation: marquee-reverse 60s linear infinite; }
 /* `.marquee-hero` lived here for the hero confirmed-partner strip on mobile.
    Removed 2026-08-03: that strip is now a static wrapped grid at every width, so
-   nothing referenced this rule. `.marquee-track` stays — the #companions band
+   nothing referenced this rule. `.marquee-track` stays - the #companions band
    still uses it with marquee-left / marquee-right. */
 @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 @keyframes marquee-reverse { from{transform:translateX(-50%)} to{transform:translateX(0)} }
 
 /* ── Quiz hook micro-animations ──────────────────────────────────────────────
-   Both are opacity/blur only — no layout properties, so nothing here can shift
+   Both are opacity/blur only - no layout properties, so nothing here can shift
    the page. Wrapped in motion-safe at the call site AND gated here, so a
    reduced-motion visitor gets a static frame either way. */
 @keyframes quizNameSwap {
@@ -303,7 +303,7 @@ body {
   94%, 100% { opacity: 0; }
 }
 /* One-shot confetti on the quiz result reveal. 18 particles, 1.2s, brand hues
-   only, and it never repeats — a sponsor is reading this page too. */
+   only, and it never repeats - a sponsor is reading this page too. */
 @keyframes quizConfetti {
   0%   { opacity: 1; transform: translate3d(0,0,0) rotate(0deg); }
   100% { opacity: 0; transform: translate3d(var(--dx), var(--dy), 0) rotate(var(--rot)); }
@@ -313,9 +313,9 @@ body {
 }
 
 /* Reserve the mobile sticky bar's height from first paint so revealing it can
-   never shift the page. Phone only — the bar itself is `sm:hidden`.
+   never shift the page. Phone only - the bar itself is `sm:hidden`.
    4rem, down from 4.5: the bar's own padding shrank (p-1 instead of p-1.5). The
-   reservation stays FIXED rather than following the bar's hide/show — the bar
+   reservation stays FIXED rather than following the bar's hide/show - the bar
    now slides away on scroll-down, and reclaiming its space each time would make
    the page height breathe under the reader's thumb. */
 /* 8월 페이지에만 겁니다. 이 규칙은 그 페이지의 모바일 스티키 바 자리를
@@ -365,7 +365,7 @@ html:not(.js-reveal-ready) [data-chapter-reveal] { animation: chapterFailsafe 1m
    These pages are statically generated, so their HTML ships in LocaleProvider's
    default language (ko). Everything React renders is fixed the moment the
    bundle hydrates, but /quiz paints real copy from a server shell BEFORE that
-   (app/quiz/QuizIntroShell.tsx) — an English visitor was reading Korean for the
+   (app/quiz/QuizIntroShell.tsx) - an English visitor was reading Korean for the
    whole download.
 
    So that shell ships both languages and CSS picks one, off the `data-locale`
@@ -373,7 +373,7 @@ html:not(.js-reveal-ready) [data-chapter-reveal] { animation: chapterFailsafe 1m
    Nothing else on the site needs this: every other string goes through t().
 
    The default branch is `html:not([data-locale="en"])` rather than
-   `[data-locale="ko"]` on purpose — with JS disabled the attribute is whatever
+   `[data-locale="ko"]` on purpose - with JS disabled the attribute is whatever
    the static HTML carried, and Korean is the honest fallback either way.
 
    Only ever put bare <span>s on [data-l]. The rules below out-specify a Tailwind

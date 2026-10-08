@@ -1,7 +1,7 @@
 /**
  * Central configuration for the interactive background.
  *
- * "The invisible infrastructure of intelligence" — a flow-field of GPU-driven
+ * "The invisible infrastructure of intelligence" - a flow-field of GPU-driven
  * particles drifting through volumetric depth. All tunable constants live here
  * so the scene reads from a single source of truth.
  */
@@ -67,7 +67,7 @@ export interface QualityTier {
 }
 
 /**
- * Adaptive quality. We don't trust raw width alone — combine viewport area with
+ * Adaptive quality. We don't trust raw width alone - combine viewport area with
  * a coarse device-memory / pointer heuristic so phones don't melt and ultrawide
  * desktops stay rich.
  */
@@ -81,7 +81,7 @@ export function pickQuality(): QualityTier {
   // navigator.deviceMemory is non-standard but widely supported on Chrome/Android
   const mem = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8;
 
-  // Mobile / low memory — leanest particle budget, tight DPR cap, and the lowest
+  // Mobile / low memory - leanest particle budget, tight DPR cap, and the lowest
   // intensity so the background is quietest on phones (bloom already off here).
   // 2026-09-19 (세로 패리티 브리프 3.5·3.6): 블룸을 켜고(해와 물비늘의 번짐이 전부
   // 사라지고 있었습니다) 형상 밝기 배수를 0.6 → 0.85로 올립니다. 3.4에서 올린 밝기가
@@ -113,7 +113,7 @@ export const MOTION = {
   scrollDollyZ: 24,           // 30 - 24 = 6, well short of the core/portal
   scrollDriftY: -1.2,         // gentle vertical drift across the scroll
   scrollRollDeg: 5,           // subtle roll only (was a cinematic 14°)
-  scrollLambda: 2.4,          // inertia — camera feels carried, never snaps
+  scrollLambda: 2.4,          // inertia - camera feels carried, never snaps
   scrollEasePower: 2.2,       // ease-in: slow start, accelerating pull near the end
 } as const;
 

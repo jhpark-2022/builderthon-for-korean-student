@@ -73,9 +73,9 @@ void main(){
 
   // heat from glow + pointer + motion trails + convergence proximity.
   // Converging particles get HOTTER (brighter highlight) rather than snapping to
-  // a white core — so the focus reveals itself as accumulating volumetric light
+  // a white core - so the focus reveals itself as accumulating volumetric light
   // (via bloom on dense regions), never as an outlined bright shape.
-  // Portal heat halved — the hue shift toward the hot highlight was the other
+  // Portal heat halved - the hue shift toward the hot highlight was the other
   // half of "the tone changes here", separate from the brightness change.
   float heat = clamp(vGlow * 0.5 + vPointer * 0.9 + vSpeed * 0.6 + vNear * uPortal * 0.4, 0.0, 1.0);
   vec3 col = mix(accent, highlight, heat);

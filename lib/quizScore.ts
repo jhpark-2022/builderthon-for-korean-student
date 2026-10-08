@@ -5,11 +5,11 @@
 // For each axis we sum the weights of the answers pointing at the FIRST pole
 // (E/N/T/J/A) and divide by the axis denom → r ∈ [0,1]. r > 0.5 wins the first
 // pole, r < 0.5 the second. Because each axis's weights are a Sidon set (all
-// subset sums distinct) and no subset sums to denom/2, r === 0.5 is impossible —
+// subset sums distinct) and no subset sums to denom/2, r === 0.5 is impossible -
 // so ties can't happen.
 //
 // Displayed %: the win margin (max(r,1-r) - 0.5) * 2 ∈ (0,1] is stretched over
-// the per-axis [floor, ceil] band — a barely-won axis shows ~58%, a sweep ~95% —
+// the per-axis [floor, ceil] band - a barely-won axis shows ~58%, a sweep ~95% -
 // then a deterministic ±2 "spice" derived from the FULL answer sheet is added,
 // so two takers with the same pattern on one axis (but any difference elsewhere)
 // see different numbers. Same answers → always the same result; the winner and
@@ -48,7 +48,7 @@ export const AXIS_CONFIG: Record<Axis, AxisBand> = {
   IDENTITY: { denom: 10, floor: 56, ceil: 92 }, // weights {3,7} → bases 70 / 92 (±2 spice)
 };
 
-// Round half to even — reconciles the published bands with the ratio formula:
+// Round half to even - reconciles the published bands with the ratio formula:
 // e.g. NATURE's 86.5 → 86 and 77.5 → 78 (plain Math.round would give 87).
 function bankRound(x: number): number {
   const floor = Math.floor(x);
@@ -57,9 +57,9 @@ function bankRound(x: number): number {
   return Math.round(x);
 }
 
-// Deterministic per-person nudge in [-2, +2] — djb2 over the FULL 14-answer
+// Deterministic per-person nudge in [-2, +2] - djb2 over the FULL 14-answer
 // sheet + the axis id. NOT random: the same answer sheet always produces the
-// same %, so shared/retaken results stay stable — but any single different
+// same %, so shared/retaken results stay stable - but any single different
 // answer anywhere shifts every axis's number, so the gauges stop looking like
 // a fixed 4-value menu. ±2 can't flip a winner (lowest base is 58) and can't
 // cross bands (adjacent bases are ≥ 8 apart on every axis).
@@ -116,7 +116,7 @@ export function scoreQuiz(answers: Choice[]): QuizResult {
     if (r === 0.5) throw new Error(`quiz: impossible tie on ${axis}`);
     const winner = r > 0.5 ? first : second;
     const loser = winner === first ? second : first;
-    const margin = (Math.max(r, 1 - r) - 0.5) * 2; // (0,1] — how decisively it broke
+    const margin = (Math.max(r, 1 - r) - 0.5) * 2; // (0,1] - how decisively it broke
     const pct = bankRound(cfg.floor + margin * (cfg.ceil - cfg.floor)) + spice(answers, axis);
     return { axis, winner, loser, pct, pattern };
   });

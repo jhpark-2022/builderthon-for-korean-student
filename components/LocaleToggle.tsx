@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale } from "@/lib/LocaleContext";
-import { dict } from "@/data/dictionary";
+import { coreDict as dict } from "@/data/dictionaryCore";
 
 // variant "naru" (2026-09-18, 감사 반영 브리프 2.3): 현재 언어를 색만으로 구분하지 않습니다(WCAG
 // 1.4.1). 밑줄 + 굵기, aria-current, 각 버튼에 lang. 8월 페이지와 /quiz는 기본 변형 그대로입니다.
@@ -36,9 +36,11 @@ export default function LocaleToggle({ className = "", variant = "zero100" }: { 
   return (
     <button type="button" onClick={toggle} aria-label={t(dict.toggle.aria)}
       className={`inline-flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold transition hover:border-white/30 ${className}`}>
-      <span className={locale === "en" ? "text-accent" : "text-white/55"}>EN</span>
-      <span className="text-white/20">/</span>
-      <span className={locale === "ko" ? "text-violet-400" : "text-white/30"}>KR</span>
+      {/* 2026-10-08 (사용자 승인, 접근성 감사 9, 17): 현재 언어를 색만으로 구분하지 않습니다(WCAG 1.4.1). naru 변형과 같이
+          밑줄과 굵기를 더합니다. 꺼진 쪽 KR은 white/30(2.61:1)이었고 EN과 같은 white/55(6.2:1)로 올립니다. */}
+      <span className={locale === "en" ? "font-bold text-accent underline decoration-2 underline-offset-4" : "text-white/55"}>EN</span>
+      <span aria-hidden className="text-white/20">/</span>
+      <span className={locale === "ko" ? "font-bold text-accent underline decoration-2 underline-offset-4" : "text-white/55"}>KR</span>
     </button>
   );
 }

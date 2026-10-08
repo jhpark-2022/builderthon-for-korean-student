@@ -91,7 +91,7 @@ export default function RouteMap({
         {/* 레일. top-[1.625rem]은 노드 줄의 중심(py-2.5 + h-8의 절반). */}
         <span
           aria-hidden
-          className="pointer-events-none absolute top-[1.625rem] h-px bg-gradient-to-r from-[#C79BB4]/40 via-white/15 to-[#C79BB4]/40"
+          className="pointer-events-none absolute top-[1.625rem] h-px bg-gradient-to-r from-naru-plum-tint/40 via-white/15 to-naru-plum-tint/40"
           style={{ left: inset, right: inset }}
         />
         {dotLeft && (
@@ -111,7 +111,7 @@ export default function RouteMap({
                   {anchor ? (
                     <span
                       key={flash[stations.indexOf(s)] ?? 0}
-                      className={`relative flex h-7 w-7 items-center justify-center rounded-full border border-[#C79BB4]/60 bg-[#9A5A82]/40 text-[0.6rem] text-white shadow-[0_0_0_4px_rgba(10,6,20,0.85)] ${flash[stations.indexOf(s)] ? "motion-safe:animate-[starFlash_600ms_ease-out_1]" : ""}`}
+                      className={`relative flex h-7 w-7 items-center justify-center rounded-full border border-naru-plum-tint/60 bg-[#9A5A82]/40 text-[0.6rem] text-white shadow-[0_0_0_4px_rgba(10,6,20,0.85)] ${flash[stations.indexOf(s)] ? "motion-safe:animate-[starFlash_600ms_ease-out_1]" : ""}`}
                     >
                       <span aria-hidden>★</span>
                     </span>
@@ -126,7 +126,7 @@ export default function RouteMap({
                 {s.sub && (
                   // 2026-10-07 (이슈 브리프 4): 이 파일의 글자는 전부 META(13.5px)입니다. 그 전의 0.58~0.72rem은
                   // 홈에서 12.24px로 올려 그리고 있었습니다(globals.css의 naru-min12). 회색은 /65 이상.
-                  <span className={`${META} font-bold leading-none ${anchor ? "text-[#C79BB4]" : spot ? "text-accent" : "text-white/65"}`}>
+                  <span className={`${META} font-bold leading-none ${anchor ? "text-naru-plum-tint" : spot ? "text-accent" : "text-white/65"}`}>
                     {s.sub}
                   </span>
                 )}
@@ -141,7 +141,7 @@ export default function RouteMap({
                     같은 뜻은 폰의 Day 카드 안 칩이 이미 말하고, 바로 아래 범례도
                     같은 이유로 sm부터입니다(규칙이 일관됩니다). 노드의 ★는 남습니다. */}
                 {anchor && s.badge && (
-                  <span className={`absolute left-1/2 top-full mt-0.5 hidden -translate-x-1/2 whitespace-nowrap rounded-full border border-[#9A5A82]/50 bg-[#9A5A82]/[0.12] px-1.5 py-0.5 ${META} font-bold leading-none text-[#C79BB4] sm:inline-flex`}>
+                  <span className={`absolute left-1/2 top-full mt-0.5 hidden -translate-x-1/2 whitespace-nowrap rounded-full border border-[#9A5A82]/50 bg-[#9A5A82]/[0.12] px-1.5 py-0.5 ${META} font-bold leading-none text-naru-plum-tint sm:inline-flex`}>
                     {s.badge}
                   </span>
                 )}
@@ -165,8 +165,8 @@ export default function RouteMap({
       {/* 범례는 sm부터. 폰에서는 Day 카드의 "★ 제출" 칩이 같은 뜻을 말합니다(2026-09-18). */}
       {legend && (
         <div className="mt-3 hidden flex-wrap items-center gap-x-4 gap-y-1.5 sm:flex">
-          <span className={`flex items-center gap-1.5 ${META} text-[#C79BB4]/90`}>
-            <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-[#C79BB4]/60 bg-[#9A5A82]/40 text-[0.42rem] text-white">★</span>
+          <span className={`flex items-center gap-1.5 ${META} text-naru-plum-tint/90`}>
+            <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-naru-plum-tint/60 bg-[#9A5A82]/40 text-[0.42rem] text-white">★</span>
             {legend.anchor}
           </span>
           <span className={`flex items-center gap-1.5 ${META} text-white/65`}>

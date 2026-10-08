@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 
 // WebGL 배경은 클라이언트 전용입니다(ssr: false).
 //
-// DECIDED 2026-08-24: 히어로 라이브 스트립 하이드레이션 밀림 제거 — 서버가
+// DECIDED 2026-08-24: 히어로 라이브 스트립 하이드레이션 밀림 제거 - 서버가
 // 자기 시각을 내려보내고(serverNow) 클라이언트가 그대로 그린 뒤 보정한다.
 // / 는 정적 프리렌더에서 ISR(revalidate 300)로 바뀐다.
 //

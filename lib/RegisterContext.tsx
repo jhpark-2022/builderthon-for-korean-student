@@ -1,193 +1,40 @@
 "use client";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Registration modal state, shared across the page.
+// 8월 등록의 남은 자리 하나: "이 기기에서 등록했었다"는 플래그.
 //
-// The "등록하기" flow is triggered from three places that live in different
-// component trees — the hero question-hook (Journey), the scroll-revealed nav
-// button (JourneyNav), and a URL auto-open (?register=1 from the /quiz result
-// CTA) — so the open state + the single RegisterModal instance live here, above
-// both siblings. Consumers only need `openRegister()` and the `registered` flag.
+// DECIDED 2026-10-08 (전체 리뷰 반영): 8월 등록 모달(components/RegisterModal.tsx),
+// 닫을 때 뜨던 오픈채팅 넛지, /api/register 라우트를 지웠습니다. 등록 진입점은
+// 2026-08-22에 이미 전부 걷혔고 openRegister()를 부르는 곳이 없었는데, 모달
+// 1,551줄이 /2026-08 번들에 계속 실려 나갔습니다. 테이블은 그대로입니다.
 //
-// Provider is mounted in app/page.tsx, INSIDE LocaleProvider (layout) so the
-// modal can use useLocale().
+// 남긴 것은 registered 하나입니다. JourneyNav가 오픈채팅 버튼의 톤을 정할 때
+// 읽습니다. 나루 홈에는 프로바이더가 없으므로 useRegisterOptional()은 null을
+// 돌려줄 수 있습니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import RegisterModal from "@/components/RegisterModal";
-import OpenChatNudge from "@/components/OpenChatNudge";
-import { OPENCHAT_NUDGE_KEY, REGISTERED_KEY } from "@/lib/storage";
-import { REGISTRATION_CLOSES_AT, isRegistrationClosed } from "@/lib/registrationWindow";
-
-// Optional starting state for the modal, so a CTA can express what it promised.
-// The hero's "팀이 없어도 괜찮아요 → 등록하고 팀 매칭 받기" card opens the form
-// already set to solo + matching, instead of making the visitor re-answer a
-// question they just answered by clicking.
-export interface RegisterPreset {
-  joinType?: "team" | "solo";
-  wantsMatching?: boolean;
-}
+import { createContext, useContext, useEffect, useState } from "react";
+import { REGISTERED_KEY } from "@/lib/storage";
 
 interface RegisterContextValue {
-  openRegister: (preset?: RegisterPreset) => void;
   registered: boolean;
-  // Whether the modal is currently open — the mobile sticky bar has to hide
-  // while it is, or it sits on top of the form it just opened.
-  registerOpen: boolean;
-  // True once the deadline (2:15 PM SGT) has passed. Every register CTA reads
-  // this to render a disabled "신청 마감" state; openRegister() becomes a no-op.
-  // The API enforces the same cutoff independently — this is the UX half.
-  closed: boolean;
 }
 
 const RegisterContext = createContext<RegisterContextValue | null>(null);
 
-export function useRegister(): RegisterContextValue {
-  const ctx = useContext(RegisterContext);
-  if (!ctx) throw new Error("useRegister must be used within a RegisterProvider");
-  return ctx;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 프로바이더가 없어도 되는 소비처를 위한 문 (2026-09-15, 나루 런칭).
-//
-// JourneyNav는 이제 두 페이지가 함께 씁니다: /2026-08(RegisterProvider 있음)과
-// /(없음). 나루 홈에는 등록이 없습니다. 12월 이벤트의 등록이 아직 열리지 않았고,
-// 가입 폼 자체를 두지 않기로 했기 때문입니다(Overview 06). 그래서 홈에
-// RegisterProvider를 붙이는 것은 "쓰지 않을 모달과 그 API 상태를 페이지마다
-// 마운트한다"는 뜻이고, 그건 없는 기능을 있는 것처럼 실어 나르는 일입니다.
-//
-// useRegister()는 프로바이더가 없으면 throw 합니다. 그 계약을 느슨하게 만들지
-// 않은 것은 의도입니다. 등록 CTA가 프로바이더 밖에서 조용히 죽는 쪽이 더
-// 나쁩니다. 대신 "없으면 없는 대로 그린다"가 맞는 소비처만 이 함수를 씁니다.
-// 지금 이 문을 쓰는 곳은 JourneyNav 하나이고, 거기서 쓰는 값은 registered
-// 하나뿐입니다(오픈채팅 버튼의 톤을 정하는 플래그).
-// ─────────────────────────────────────────────────────────────────────────────
 export function useRegisterOptional(): RegisterContextValue | null {
   return useContext(RegisterContext);
 }
 
 export function RegisterProvider({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useState(false);
+  // 서버의 첫 페인트와 맞추려고 false에서 시작하고 마운트 뒤에 읽습니다.
   const [registered, setRegistered] = useState(false);
-  // Starts false to match the server's first paint (same pattern as
-  // `registered`), then corrected on mount and flipped live by a timer if the
-  // tab is open across the deadline. The API is the real gate; this drives UI.
-  const [closed, setClosed] = useState(false);
-  // Holds the pending deadline-flip timeout so the mount effect can clear it.
-  const deadlineTimer = useRef<number | undefined>(undefined);
-  // Referrer captured from the URL on the auto-open path ("quiz" | "quiz-return").
-  // The AI type is NEVER passed via the URL — it's read from this device's saved
-  // result inside the modal (localStorage), so there's no cross-device leak.
-  const [urlRef, setUrlRef] = useState<string | null>(null);
-  // Preset applied on the next open (cleared by the modal once consumed).
-  const [preset, setPreset] = useState<RegisterPreset | null>(null);
-
   useEffect(() => {
-    // Restore the "already registered" flag (client-only).
     try {
       if (window.localStorage.getItem(REGISTERED_KEY)) setRegistered(true);
     } catch {
-      /* storage blocked — treat as not registered */
-    }
-
-    // Deadline: correct the flag on mount, then schedule the exact flip if the
-    // tab loaded before 2:15 and stays open — so a long-open page closes itself
-    // to the second instead of waiting for a refresh. setTimeout's ~24.8-day cap
-    // is far beyond this hours-away deadline.
-    if (isRegistrationClosed()) {
-      setClosed(true);
-    } else {
-      const ms = REGISTRATION_CLOSES_AT - Date.now();
-      deadlineTimer.current = window.setTimeout(() => setClosed(true), ms);
-    }
-
-    // Auto-open from the /quiz result CTA: /?register=1&ref=quiz[-return].
-    //
-    // DECIDED 2026-08-22 (마감 후 청산): 이 경로로는 더 이상 모달을 열지 않습니다.
-    // 페이지의 등록 진입점을 전부 걷어냈는데 URL 하나가 살아 있으면, 예전 링크나
-    // 북마크를 타고 온 사람에게만 아무 데서도 닿을 수 없는 모달이 튀어나옵니다.
-    // 쿼리를 지우는 것은 그대로 둡니다 — 주소창에 죽은 파라미터를 남길 이유가
-    // 없어요. `ref`는 계속 읽습니다(유입 출처는 여전히 유효한 정보).
-    // 모달 자체와 openRegister()는 살아 있습니다. 다음 라운드에 되살릴 때는
-    // 아래 setOpen(true) 한 줄만 돌려놓으면 됩니다.
-    const params = new URLSearchParams(window.location.search);
-    const ref = params.get("ref");
-    if (ref) setUrlRef(ref);
-    if (params.get("register") === "1") {
-      // Strip the query so the dead parameter doesn't linger in the address bar.
-      // Keep the hash (deep-link anchors) intact.
-      window.history.replaceState(
-        null,
-        "",
-        window.location.pathname + window.location.hash
-      );
-    }
-
-    return () => {
-      if (deadlineTimer.current !== undefined) {
-        window.clearTimeout(deadlineTimer.current);
-      }
-    };
-  }, []);
-
-  const openRegister = useCallback((next?: RegisterPreset) => {
-    // Past the deadline the form no longer opens — the CTAs are already in their
-    // disabled "신청 마감" state and the API would reject the POST anyway. Guard
-    // here too so a stale in-page trigger can't reopen it.
-    if (isRegistrationClosed()) {
-      setClosed(true);
-      return;
-    }
-    setPreset(next ?? null);
-    setOpen(true);
-  }, []);
-  // Dismissing the form without submitting is the moment to offer the
-  // low-commitment alternative. Deliberately NOT a second modal: the toast
-  // renders outside the dialog and self-dismisses, so it can't fight
-  // RegisterModal's focus restoration or stack a dialog on a closing dialog.
-  // Suppressed for anyone already registered (nothing to nudge them toward) and
-  // capped at once per session via sessionStorage.
-  const [nudge, setNudge] = useState(false);
-  const closeRegister = useCallback(() => {
-    setOpen(false);
-    if (registered) return;
-    try {
-      if (window.sessionStorage.getItem(OPENCHAT_NUDGE_KEY)) return;
-      window.sessionStorage.setItem(OPENCHAT_NUDGE_KEY, "1");
-    } catch {
-      /* storage blocked — show it this once rather than not at all */
-    }
-    setNudge(true);
-  }, [registered]);
-  const onSuccess = useCallback(() => {
-    setRegistered(true);
-    try {
-      window.localStorage.setItem(REGISTERED_KEY, "1");
-    } catch {
-      /* storage blocked — the label just won't persist across visits */
+      /* storage blocked: 등록하지 않은 것으로 봅니다 */
     }
   }, []);
-
-  return (
-    <RegisterContext.Provider value={{ openRegister, registered, registerOpen: open, closed }}>
-      {children}
-      <RegisterModal
-        open={open}
-        onClose={closeRegister}
-        urlRef={urlRef}
-        preset={preset}
-        onSuccess={onSuccess}
-        alreadyRegistered={registered}
-      />
-      <OpenChatNudge open={nudge} onClose={() => setNudge(false)} />
-    </RegisterContext.Provider>
-  );
+  return <RegisterContext.Provider value={{ registered }}>{children}</RegisterContext.Provider>;
 }

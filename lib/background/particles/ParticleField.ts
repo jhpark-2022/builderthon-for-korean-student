@@ -10,7 +10,7 @@ import { disposeMaterial } from "../utils/Disposable";
  * The hero layer: a GPU-driven curl-noise flow field of soft glowing particles.
  *
  * Positions are advected entirely in the vertex shader (see particles.vert),
- * so the only per-frame CPU work is updating a handful of uniforms — zero
+ * so the only per-frame CPU work is updating a handful of uniforms - zero
  * allocations in the render loop.
  */
 export type ParticleVariant = "field" | "crossing";
@@ -120,7 +120,7 @@ function pairSeoulToSingapore(
     const ms = (typeof performance !== "undefined" ? performance.now() : 0) - t0;
     // 검증 6·9(브리프 4장): 최소값이 최대값의 절반 이하여야 정렬이 효과를 낸 것입니다.
     console.info(
-      `[naru:bg] 서울→싱가포르 짝짓기 — 점 ${count}, 오프셋 ${logged.off}, 방향 ${logged.dir > 0 ? "+" : "-"}, ` +
+      `[naru:bg] 서울→싱가포르 짝짓기 - 점 ${count}, 오프셋 ${logged.off}, 방향 ${logged.dir > 0 ? "+" : "-"}, ` +
         `거리제곱합 최소 ${logged.min.toFixed(1)} / 최대 ${logged.max.toFixed(1)} ` +
         `(비 ${(logged.min / Math.max(logged.max, 1e-6)).toFixed(3)}), ${ms.toFixed(1)}ms`
     );
@@ -241,7 +241,7 @@ export class ParticleField {
         // top-of-page palette (indigo-violet)
         uAccent: { value: new THREE.Color("#6366f1") },
         uHighlight: { value: new THREE.Color("#a855f7") },
-        // bottom-of-page palette (fuchsia-pink) — blended by uScroll
+        // bottom-of-page palette (fuchsia-pink) - blended by uScroll
         uAccent2: { value: new THREE.Color("#a855f7") },
         uHighlight2: { value: new THREE.Color("#e879f9") },
         uFog: { value: new THREE.Color(PALETTE.base2) },
@@ -312,7 +312,7 @@ export class ParticleField {
     u.uWhiteout.value = p.whiteout;
 
     // Scroll-aware calm: medium immersive at the hero, then fade the field well
-    // down through the content-heavy sections, and quietest at the footer — so
+    // down through the content-heavy sections, and quietest at the footer - so
     // text/cards stay readable and the lower page feels premium, not crowded.
     const ss = (a: number, b: number, x: number) => {
       const t = Math.min(Math.max((x - a) / (b - a), 0), 1);

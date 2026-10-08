@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 One-off: turn the 4 raster brand logos the site received (solid-bg color/mono
-marks) into the site's logo convention — WHITE MONO on a TRANSPARENT square,
+marks) into the site's logo convention - WHITE MONO on a TRANSPARENT square,
 matching the existing simple-icons SVGs (public/logos/*.svg).
 
 Approach (works for both mono and multicolor marks): sample the flat background
@@ -38,7 +38,7 @@ JOBS = [
 
 
 def bg_color(a):
-    """Median of the four corner pixels — the flat background."""
+    """Median of the four corner pixels - the flat background."""
     h, w, _ = a.shape
     corners = np.array([a[0, 0], a[0, w - 1], a[h - 1, 0], a[h - 1, w - 1]])
     return np.median(corners, axis=0)
@@ -79,7 +79,7 @@ def main():
             a = a[int(crop[0] * h):int(crop[1] * h), :, :]
         img = trim_and_center(to_white_mono(a))
         # White-mono is fully described by the alpha channel, so store as LA
-        # (grayscale L=255=white + alpha) — same look, ~40% smaller than RGBA.
+        # (grayscale L=255=white + alpha) - same look, ~40% smaller than RGBA.
         rgba = np.asarray(img)
         img = Image.fromarray(np.dstack([rgba[:, :, 0], rgba[:, :, 3]]), "LA")
         dst = LOGOS / out

@@ -118,7 +118,7 @@ for (const axis of AXIS_ORDER) {
   const bands = [...pcts].sort((a, b) => a - b);
   // ① spice safety: bands must sit ≥5 apart and never reach ≤52 (base - 2 > 50)
   for (let i = 1; i < bands.length; i++) {
-    if (bands[i] - bands[i - 1] < 5) fail(`${axis}: bands ${bands[i - 1]} and ${bands[i]} are <5 apart — ±2 spice could blur them`);
+    if (bands[i] - bands[i - 1] < 5) fail(`${axis}: bands ${bands[i - 1]} and ${bands[i]} are <5 apart - ±2 spice could blur them`);
   }
   if (bands[0] - 2 <= 50) fail(`${axis}: lowest band ${bands[0]} - 2 spice dips to ≤50%`);
   console.log(`  ${ok ? "✓" : "·"} ${axis}: weights ${JSON.stringify(weights)} (Σ=${cfg.denom}), bands = ${bands.join(" / ")} %, explanations ${keys ? keys.length : 0}/${combos}`);
@@ -147,7 +147,7 @@ whyBlocks.forEach((entries, i) => {
 if (ok) console.log(`\nDream teammates: 16 results × 2 = ${whyPhrases} matchWhy phrases, all ko/en, match↔matchWhy aligned.`);
 
 // Logo files: every non-empty `logo` field is a filename (ext included) under
-// public/logos — assert the file actually exists (a missing file silently falls
+// public/logos - assert the file actually exists (a missing file silently falls
 // back to emoji, which is what we want the check to catch). Empty logos are the
 // deliberate emoji-fallback models (openai/cohere have no self-hostable mono
 // mark); they're reported, not failed.
@@ -159,5 +159,5 @@ for (const f of withFile) {
 }
 console.log(`\nRESULTS logos: ${withFile.length}/${logos.length} have a file in public/logos, ${emojiOnly} emoji-fallback. Files: ${[...new Set(withFile)].join(", ")}`);
 
-console.log(ok ? "\n✅ All Sidon + explanation invariants hold." : "\n❌ Invariant violation — see above.");
+console.log(ok ? "\n✅ All Sidon + explanation invariants hold." : "\n❌ Invariant violation - see above.");
 process.exit(ok ? 0 : 1);

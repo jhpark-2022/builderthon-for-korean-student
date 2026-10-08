@@ -1,10 +1,10 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Zero100 AI Builderthon Build in Singapore";
+export const alt = "Zero100 AI Builderthon, the record. Singapore, 22 to 29 August 2026. 74 applied, 21 teams presented.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Branded social-share card (generated at build/edge — no binary asset needed).
+// Branded social-share card (generated at build/edge - no binary asset needed).
 export default function OpengraphImage() {
   return new ImageResponse(
     (
@@ -27,7 +27,7 @@ export default function OpengraphImage() {
           <span style={{ opacity: 0.75 }}>AI Builderthon</span>
         </div>
         <div style={{ display: "flex", fontSize: 34, color: "#a5b4fc", marginTop: 26, fontWeight: 600 }}>
-          Singapore&apos;s first AI builderthon for Korean students
+          The record of Singapore&apos;s first AI builderthon for Korean students
         </div>
         <div style={{ display: "flex", flexDirection: "column", marginTop: 22, fontSize: 118, fontWeight: 900, lineHeight: 1 }}>
           <span>Build</span>
@@ -36,7 +36,7 @@ export default function OpengraphImage() {
           </span>
         </div>
         <div style={{ display: "flex", marginTop: 40, fontSize: 32, color: "#cbd5e1" }}>
-          22–29 Aug 2026 8 days ~100 builders
+          22 to 29 Aug 2026, 8 days. 74 applied, 21 teams presented
         </div>
       </div>
     ),

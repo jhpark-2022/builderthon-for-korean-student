@@ -9,7 +9,7 @@ import { useScroll, useTransform } from "framer-motion";
 // Journey()의 히어로 패럴랙스 값 여섯을 훅 하나로. 반환값의 이름은 Journey.tsx가
 // 쓰던 변수 이름 그대로라 그쪽의 JSX는 한 글자도 바뀌지 않았습니다.
 export function useHeroSplit() {
-    // Hero split — as the hero scrolls out, the two columns fly apart to the
+    // Hero split - as the hero scrolls out, the two columns fly apart to the
     // left/right screen edges and fade, so the screen "opens" onto what's below.
     const heroRef = useRef<HTMLDivElement | null>(null);
     const { scrollYProgress: heroProgress } = useScroll({
@@ -34,11 +34,11 @@ export function useHeroSplit() {
       mq.addEventListener("change", sync);
       return () => mq.removeEventListener("change", sync);
     }, []);
-    // Apply the horizontal split on the wide (two-up) layout only — it stays on
+    // Apply the horizontal split on the wide (two-up) layout only - it stays on
     // even under reduced-motion (by explicit request), so this is NOT gated on
     // `reduce`. Below lg the columns stack, so no horizontal shift there.
     const splitX = isWide;
-    // Background video blurs early — in step with the columns flying apart — so the
+    // Background video blurs early - in step with the columns flying apart - so the
     // whole hero softens as soon as the visitor starts scrolling.
     // NOTE: this scroll-linked `filter: blur()` on the (playing) hero video repaints
     // the video every frame and can cause scroll jank on weaker devices. It was
@@ -47,10 +47,10 @@ export function useHeroSplit() {
     const bgBlur = useTransform(heroProgress, [0, 0.15], ["blur(0px)", "blur(10px)"]);
     // The scroll-linked opacity FADE is a DESKTOP effect (it plays as the two
     // columns fly apart). On mobile the hero stacks into one tall column with the
-    // Countdown/Problem panel at the bottom — so scrolling to reach it is exactly
+    // Countdown/Problem panel at the bottom - so scrolling to reach it is exactly
     // what the fade reacts to, dimming the panel before you can read it. Gate the
     // fade on the wide layout so mobile keeps the hero fully opaque and readable.
-    // The background blur stays on everywhere (kept on mobile by request) — it's
+    // The background blur stays on everywhere (kept on mobile by request) - it's
     // behind the content, so it doesn't hurt readability.
     const heroFade = isWide ? heroFadeWide : undefined;
   return { heroRef, leftX, rightX, splitX, heroFade, bgBlur };

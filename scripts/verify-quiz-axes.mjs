@@ -3,8 +3,8 @@
 //   (1) exactly the correct pole pair for that axis,
 //   (2) the weight multiset matches the Sidon config,
 //   (3) both poles lead as option `a` on at least one question,
-//   (4) the WEIGHTED first-option split stays within tolerance — |diff| <= 4
-//       per axis (the best the Sidon sets allow) and 40–60% overall — so
+//   (4) the WEIGHTED first-option split stays within tolerance - |diff| <= 4
+//       per axis (the best the Sidon sets allow) and 40–60% overall - so
 //       habitual first-tappers aren't funneled toward any single type.
 // Run: node scripts/verify-quiz-axes.mjs
 import { readFile } from "node:fs/promises";
@@ -72,7 +72,7 @@ const share = leftTotal / (leftTotal + rightTotal);
 const globalOk = share >= 0.4 && share <= 0.6;
 ok &&= globalOk;
 console.log(
-  `\nWeighted first-option split: E/N/T/J/A ${leftTotal} : ${rightTotal} others (${Math.round(share * 100)}%${globalOk ? "" : " — OUT OF 40–60% BAND"})`,
+  `\nWeighted first-option split: E/N/T/J/A ${leftTotal} : ${rightTotal} others (${Math.round(share * 100)}%${globalOk ? "" : " - OUT OF 40–60% BAND"})`,
 );
-console.log(ok ? "\n✅ Pole-balance invariants hold." : "\n❌ Invariant violation — see above.");
+console.log(ok ? "\n✅ Pole-balance invariants hold." : "\n❌ Invariant violation - see above.");
 process.exit(ok ? 0 : 1);

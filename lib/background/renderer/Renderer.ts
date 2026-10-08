@@ -14,7 +14,7 @@ export class Renderer {
     this.canvas = canvas;
     this.dprMax = quality.dprMax;
 
-    // Let Three acquire and own the context — its internal creation/fallback
+    // Let Three acquire and own the context - its internal creation/fallback
     // logic is the most robust path across drivers. (Pre-acquiring a context and
     // passing it in triggers driver-specific crashes on some headless/software
     // GL stacks.) A genuine failure throws here and is caught upstream → CSS

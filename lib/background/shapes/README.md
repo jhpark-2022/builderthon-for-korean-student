@@ -39,7 +39,7 @@ main island만"). 원자료의 남쪽 해안에는 케펠·파시르판장의 �
 - TODO: confirm. 통계청 SGIS의 이용 약관(공공누리 유형)을 확인해 여기에 적을 것.
   웹 배경의 점 2,000개로 쓰는 것이라 원자료를 재배포하지는 않지만,
   `scripts/data/seoul-kostat-2013.geojson`은 원자료의 일부입니다.
-- 싱가포르 윤곽: geoBoundaries gbOpen은 **CC BY 4.0**입니다. 표기 —
+- 싱가포르 윤곽: geoBoundaries gbOpen은 **CC BY 4.0**입니다. 표기 -
   "Boundaries from geoBoundaries (geoboundaries.org), gbOpen SGP ADM0, CC BY 4.0."
   원자료인 data.gov.sg의 URA 자료는 Open Data Commons ODbL 1.0 /
   Singapore Open Data Licence입니다. 두 표기를 `scripts/data/singapore-geoboundaries-2016.geojson`

@@ -56,14 +56,14 @@ export default function Chapter({
     // 비켜섭니다(2026-09-19). 없으면 안전망이 1.5초 뒤 전부 보여 줍니다.
     document.documentElement.classList.add("js-reveal-ready");
     // Fire as soon as ANY part of the section enters the viewport (threshold 0),
-    // not once 25% of it is on screen. A section taller than the viewport — e.g.
-    // the About/Vision chapter on a phone — can never show 25% of its area at
+    // not once 25% of it is on screen. A section taller than the viewport - e.g.
+    // the About/Vision chapter on a phone - can never show 25% of its area at
     // once, so a 0.25 threshold left it stuck at opacity:0 (invisible) on real
     // iOS Safari, where the usable viewport is shorter than desktop emulators.
     // A small negative rootMargin still lets it reveal a touch before fully in.
     const io = new IntersectionObserver(
       ([e]) => {
-        // Reveal once and stay revealed — don't re-hide when scrolled back past.
+        // Reveal once and stay revealed - don't re-hide when scrolled back past.
         if (e.isIntersecting) {
           setShown(true);
           io.disconnect();
@@ -126,11 +126,11 @@ export default function Chapter({
       className={`relative flex w-full flex-col justify-center py-14 sm:py-20 lg:py-24 ${footer ? "min-h-screen" : "min-h-[auto] md:min-h-screen"} ${wide ? "" : "px-6 sm:px-10"} ${background ? "isolate" : ""} ${className}`}
     >
       {background}
-      {/* centered content rail — the real boundary (z-10 keeps it above any
+      {/* centered content rail - the real boundary (z-10 keeps it above any
           full-bleed background layer). `wide` drops the max-width + centering so
           content can reach the screen edges.
           When there's a bottom-pinned footer (the scroll hint), reserve space
-          for it so the centred content can't grow down into it on short phones —
+          for it so the centred content can't grow down into it on short phones -
           iPhone heights vary, so we don't chase a fixed number: pad the bottom
           on mobile and let it drop away once there's room (sm+). */}
       <div className={`relative z-10 w-full ${wide ? "" : "mx-auto max-w-6xl"} ${footer ? "pb-24 sm:pb-0" : ""}`}>

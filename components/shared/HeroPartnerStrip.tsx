@@ -15,19 +15,19 @@ type Tfn = (p: Phrase) => string;
 // 지금의 confirmedPartnerTiers는 8월 회차의 것이라 홈에 그대로 걸면 안 됩니다.
 
 // ─────────────────────────────────────────────────────────────────────────────
-// HERO CONFIRMED-PARTNER STRIP — the deck cover's "CONFIRMED PARTNERS" band.
+// HERO CONFIRMED-PARTNER STRIP - the deck cover's "CONFIRMED PARTNERS" band.
 //
 // HONESTY RULE (same as the partner wall): only partners whose participation is
-// CONFIRMED may appear here. The Zero100 network marquee stays out — those are
-// network companions, not partners of this event — as does anything still in
+// CONFIRMED may appear here. The Zero100 network marquee stays out - those are
+// network companions, not partners of this event - as does anything still in
 // discussion.
 //
 // STRUCTURE: the strip mirrors the partner section's own 주최 → 주관 → 후원
 // tiering rather than dumping every mark into one anonymous row, so the hero
-// answers "who is running this" and "who is backing it" as separate questions —
+// answers "who is running this" and "who is backing it" as separate questions -
 // which is the whole point of showing logos this early.
 //
-// Assets are the same trimmed white silhouettes the partner wall uses — no new
+// Assets are the same trimmed white silhouettes the partner wall uses - no new
 // files. They're above the fold, so they load eagerly (never lazily).
 // ─────────────────────────────────────────────────────────────────────────────
 // ── SIZING: equal OPTICAL MASS, with a width wall ────────────────────────────
@@ -43,7 +43,7 @@ type Tfn = (p: Phrase) => string;
 //     싱가포르 한인회 is a crest plus a line of 6pt English. Only part of the box
 //     is the name, so the whole thing reads small at any given box height.
 //   • THE WIDTH CAP. It only bites the widest wordmarks, and when it bites it
-//     drops their height off a cliff — INNOVATE 360 and ONWORD LAB were landing
+//     drops their height off a cliff - INNOVATE 360 and ONWORD LAB were landing
 //     at 11px and 10px next to 26px neighbours. That cliff was most of the
 //     visible unevenness.
 //
@@ -53,7 +53,7 @@ type Tfn = (p: Phrase) => string;
 // was half right. Area is the correct axis; a raw bounding box is the wrong
 // thing to measure, because it counts a hairline mark's whitespace as ink.
 //
-// So each mark now carries a measured `mass` — the fraction of its trimmed box
+// So each mark now carries a measured `mass` - the fraction of its trimmed box
 // it actually paints, as sqrt(ink coverage × silhouette coverage). Ink alone
 // would blow up outlined marks (REmited's pill, L^IFE) that paint almost
 // nothing; silhouette alone would shrink the bold ones too far. The geometric
@@ -66,13 +66,13 @@ type Tfn = (p: Phrase) => string;
 // be 2.6× the height of ONWORD LAB), 0 is the old fixed height. 0.35 is where
 // a row of these marks reads even.
 // The width wall still exists, but it is now the last step rather than a cliff
-// — the exponent has already pulled the wide marks most of the way down, so
+// - the exponent has already pulled the wide marks most of the way down, so
 // the wall trims rather than amputates.
 //
 // This IS per-mark sizing, which the fixed-box note warned against. The
 // difference is that `mass` is measured, not tuned: run
 // `python3 scripts/measure-logo-mass.py <name>` and paste the number. There is
-// still no hand-picked fudge factor, and there should not be one — if a mark
+// still no hand-picked fudge factor, and there should not be one - if a mark
 // looks wrong, re-measure it or move STRIP_EXP and re-check the whole tier.
 //
 // `w`/`h` are the trimmed art's INK dimensions; they give both the aspect ratio
@@ -86,17 +86,17 @@ type StripBox = {
 };
 type StripLogoSpec = {
   src: string; alt: string; w: number; h: number;
-  // sqrt(ink × silhouette) coverage of the trimmed box — see the script above.
+  // sqrt(ink × silhouette) coverage of the trimmed box - see the script above.
   mass: number;
 };
 
 // The mark that renders at exactly the tier's base height: aspect × mass ≈ 1.45,
 // i.e. a ~4:1 wordmark painting ~36% of its box. That is the middle of this set,
-// and it is a FIXED constant on purpose — deriving it from the current line-up
+// and it is a FIXED constant on purpose - deriving it from the current line-up
 // would resize every existing logo the day a sponsor is added.
 const STRIP_NORM = 1.45;
 // EDIT 2026-08-17: 0.35 → 0.5. 드리마스가 주최 줄에서 혼자 커 보인다는 지적이
-// 있었고, 재보니 눈이 맞았습니다 — 그 마크가 칠하는 잉크가 같은 줄 중앙값보다
+// 있었고, 재보니 눈이 맞았습니다 - 그 마크가 칠하는 잉크가 같은 줄 중앙값보다
 // 30% 많았습니다(1079 vs 829, 모바일 기준). mass는 다시 재도 같은 값이라 데이터가
 // 아니라 이 지수가 원인이었습니다.
 //
@@ -106,24 +106,24 @@ const STRIP_NORM = 1.45;
 //
 // 0.5는 잉크를 정확히 맞춥니다. 이 값을 처음에 버린 이유는 "aws가 ONWORD LAB의
 // 2.6배 높이가 된다"였는데, 그 뒤에 들어온 폭 상한이 그 극단을 이미 붙잡고
-// 있습니다 — ONWORD LAB은 지수와 무관하게 상한(98px)에 걸려 10px로 고정이고,
+// 있습니다 - ONWORD LAB은 지수와 무관하게 상한(98px)에 걸려 10px로 고정이고,
 // 지수를 올려도 더 작아지지 않습니다. 실제 비는 2.2배에서 2.4배로만 움직입니다.
 // 원래 반대의 근거가 사라진 값이라 다시 씁니다.
 //
 // 결과(모바일): 주최 줄의 잉크 편차 1.41배 → 1.00배, 드리마스 폭 119px → 105px.
 // 후원 줄은 폭 상한이 이미 잡고 있어 마크당 ±6% 안에서만 움직입니다.
-// 이 값을 다시 만지면 두 줄을 다 보세요 — 한 마크만 보고 옮기면 다른 줄이 틀어집니다.
+// 이 값을 다시 만지면 두 줄을 다 보세요 - 한 마크만 보고 옮기면 다른 줄이 틀어집니다.
 const STRIP_EXP = 0.5;
 
 // Base heights are set so each tier's total rendered width comes out where the
-// old fixed box had it (~840px for 후원 on desktop) — this evens the marks out
+// old fixed box had it (~840px for 후원 on desktop) - this evens the marks out
 // without making the strip claim more of the hero, so the wrap points at every
 // breakpoint are unchanged. The scale clamps are guard rails for a future mark
 // far outside this set; nothing in the current line-up reaches them.
 const STRIP_MIN_SCALE = 0.6;
 const STRIP_MAX_SCALE = 1.45;
 const LEAD_BOX: StripBox = { h: 30, maxW: 160, mH: 24, mMaxW: 128 };
-// 후원 sits one step below 주최·주관 — a ~23% smaller base height, same rule.
+// 후원 sits one step below 주최·주관 - a ~23% smaller base height, same rule.
 const SPONSOR_BOX: StripBox = { h: 23, maxW: 122, mH: 18, mMaxW: 98 };
 
 // Rendered height for one mark inside one tier box, at one breakpoint.
@@ -144,12 +144,12 @@ function stripHeight(spec: StripLogoSpec, base: number, maxW: number) {
 // 로고 하나하나는 알아볼 수 없게 작아 보입니다. 폭을 묶어 두면 같은 마크가
 // 두 줄로 접히면서 크기는 그대로, 읽기만 나아집니다.
 //
-// 티어별로만 겁니다 — 주최(5)와 주관(3)은 한 줄이 자연스러운 길이라 손대지
+// 티어별로만 겁니다 - 주최(5)와 주관(3)은 한 줄이 자연스러운 길이라 손대지
 // 않습니다. 후원이 열둘, 열셋으로 늘면 이 값을 다시 보세요(줄당 대여섯 개가
 // 기준입니다). 모바일에는 걸지 않습니다: 거기서는 이미 폭이 좁아 알아서 접힙니다.
 const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpec[]; rowMax?: string; rowGap?: string }[] = [
   {
-    // 주최 — the AXMOS collective.
+    // 주최 - the AXMOS collective.
     label: dict.hero.partnersHost,
     box: LEAD_BOX,
     items: [
@@ -161,7 +161,7 @@ const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpe
     ],
   },
   {
-    // 주관 — the student associations actually running the event.
+    // 주관 - the student associations actually running the event.
     label: dict.hero.partnersOrganizers,
     box: LEAD_BOX,
     items: [
@@ -171,19 +171,19 @@ const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpe
     ],
   },
   {
-    // 후원 — confirmed only; the deck lists no in-discussion sponsors.
+    // 후원 - confirmed only; the deck lists no in-discussion sponsors.
     // AWS and Hashed lead: they are the two marks a visitor recognises without
     // being told, so they do the most work in a first-screen band. The rest keep
-    // the partner section's order. (Only the hero strip is ordered this way —
+    // the partner section's order. (Only the hero strip is ordered this way -
     // the section itself stays grouped by what each sponsor provides.)
     label: dict.hero.partnersSponsors,
     box: SPONSOR_BOX,
     // 후원이 열한 곳이 되면서 한 줄이 화면을 가로질렀습니다 (2026-08-17).
-    // 6 + 5 두 줄로 접습니다 — 위 rowMax 주석 참고.
+    // 6 + 5 두 줄로 접습니다 - 위 rowMax 주석 참고.
     //
     // EDIT 2026-08-17 (2차): 두 줄로 접고 나니 이번엔 로고들이 화면 가운데
     // 뭉쳐 보였습니다. 이 티어만 마크 사이를 넓힙니다(sm:gap-x-6 → 12, 27px →
-    // 54px). 줄의 실제 폭을 정하는 건 rowMax가 아니라 마크 폭 + 간격입니다 —
+    // 54px). 줄의 실제 폭을 정하는 건 rowMax가 아니라 마크 폭 + 간격입니다 -
     // rowMax는 어디서 접히는지만 정하고, 남는 폭은 가운데 정렬로 그냥 비어
     // 있습니다. 그래서 "더 넓게 퍼뜨린다"의 손잡이는 간격 쪽입니다.
     // 결과: 첫 줄 608 → 743px, 둘째 줄 567 → 675px.
@@ -216,7 +216,7 @@ const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpe
       { src: "/partners/logos/white/trimmed/remited.png",            alt: "REmited",                         w: 512, h: 105, mass: 0.500 },
       { src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81,  mass: 0.454 },
       { src: "/partners/logos/white/trimmed/nuldam.png",             alt: "Nuldam",                          w: 631, h: 136, mass: 0.518 },
-      // 해녀의 부엌, 2026-08-17 확정. 널담 바로 뒤에 둡니다 — 둘 다 어워드 부상이고,
+      // 해녀의 부엌, 2026-08-17 확정. 널담 바로 뒤에 둡니다 - 둘 다 어워드 부상이고,
       // 아래 후원 그리드는 이 스트립 순서를 그대로 따르므로(sortLikeHeroStrip) 여기
       // 순서가 곧 그리드에서 두 마크가 나란히 서는 이유가 됩니다.
       //
@@ -230,7 +230,7 @@ const confirmedPartnerTiers: { label: Phrase; box: StripBox; items: StripLogoSpe
 ];
 
 // Sort any sponsor list into the hero strip's order. The strip is the single
-// source of truth for sponsor sequence (AWS and Hashed lead it — the two marks
+// source of truth for sponsor sequence (AWS and Hashed lead it - the two marks
 // a visitor recognises without being told); anything the strip doesn't list
 // keeps its relative position at the end rather than being dropped.
 export function sortLikeHeroStrip<T extends { src: string }>(rows: T[]): T[] {
@@ -247,7 +247,7 @@ export function sortLikeHeroStrip<T extends { src: string }>(rows: T[]): T[] {
 // The measured mass of a sponsor mark, read off the hero strip's roster so the
 // 후원 grid cannot drift from it. Same reasoning as sortLikeHeroStrip: the two
 // lists describe the same ten marks, and every time they have held their own
-// copy of something they have disagreed. Throws rather than defaulting — a
+// copy of something they have disagreed. Throws rather than defaulting - a
 // silent fallback would size the new mark wrong and look like a design choice.
 // Throwing is safe here precisely because it is loud: the home page is
 // statically prerendered, so an unmeasured mark fails `next build` and can
@@ -265,7 +265,7 @@ export function sponsorMass(src: string): number {
 function StripLogo({ src, alt, w, h, mass, box }: StripLogoSpec & { box: StripBox }) {
   // One <img>, two heights. A CSS variable per breakpoint is what lets the phone
   // size be genuinely its own instead of a scaled-down desktop one, without
-  // a second element in the DOM (these are 18 above-fold images — duplicating
+  // a second element in the DOM (these are 18 above-fold images - duplicating
   // them for a media query is not a trade worth making).
   const spec = { src, alt, w, h, mass };
   return (
@@ -274,7 +274,7 @@ function StripLogo({ src, alt, w, h, mass, box }: StripLogoSpec & { box: StripBo
       src={src}
       alt=""
       aria-hidden
-      // INK dimensions, for the aspect ratio only — CSS below owns the size.
+      // INK dimensions, for the aspect ratio only - CSS below owns the size.
       // Present so the browser reserves the right box before the file lands.
       width={w}
       height={h}
@@ -297,13 +297,13 @@ function StripLogo({ src, alt, w, h, mass, box }: StripLogoSpec & { box: StripBo
         "--sl-w-sm": `${box.maxW}px`,
       } as React.CSSProperties}
       // max-w restates the wall stripHeight() already applied, so it never bites
-      // — it is a backstop for a mark whose `mass` was never measured (a wrong
+      // - it is a backstop for a mark whose `mass` was never measured (a wrong
       // mass makes one logo the wrong size; a missing wall would let it run
       // across the row).
       //
       // Opacity raised 50 → 80. At 50 the marks were only legible once the page
       // had scrolled far enough for the strip to sit over the hero scrim's dark
-      // end — brightness was an accident of scroll position, not a design, so
+      // end - brightness was an accident of scroll position, not a design, so
       // they looked muddy exactly where they matter most (at rest, first view).
       // The scrim added behind the strip is what makes 80 safe on the bright
       // part of the video; the drop-shadow still carries the thin wordmarks.
@@ -325,23 +325,23 @@ function StripTierLabel({ children }: { children: React.ReactNode }) {
 }
 
 // Thin confirmed-partner logo band at the bottom of the hero, above the scroll
-// hint — grouped 주최 → 주관 → 후원 like the partner section. Desktop lays the
+// hint - grouped 주최 → 주관 → 후원 like the partner section. Desktop lays the
 // tiers out inline and lets them wrap; below sm it reuses the site's marquee
 // animation as a slow auto-scroll (17 marks can't fit a phone width) with the
 // tier captions riding inline in the same track. Tapping anywhere jumps to the
-// full partner section — individual intro modals stay there, not here.
+// full partner section - individual intro modals stay there, not here.
 export default function HeroPartnerStrip({ t }: { t: Tfn }) {
   // ONE STATIC LAYOUT AT EVERY WIDTH (2026-08-03).
   //
   // Mobile used to render this as a single-line auto-scroll marquee, on the
-  // reasoning that 18 marks can't fit a phone width. They can — they just have to
+  // reasoning that 18 marks can't fit a phone width. They can - they just have to
   // wrap. And the marquee cost the thing the strip exists for: a logo wall earns
   // trust by being SEEN AT ONCE. Three marks sliding past one at a time is a
   // ticker; it reads as decoration, and a visitor who looks away has no idea
   // whether they saw two sponsors or twenty. Sequential exposure is a weak trust
   // signal no matter how many logos are in the queue.
   //
-  // So the tier stack below is no longer `hidden sm:flex` — it renders at every
+  // So the tier stack below is no longer `hidden sm:flex` - it renders at every
   // width, from the same data, through the same StripLogo and the same tier
   // boxes. Mobile is not a separate layout: it is the same optical-mass rule
   // with the phone half of each StripBox (mH / mMaxW) and tighter gaps, so the
@@ -356,7 +356,7 @@ export default function HeroPartnerStrip({ t }: { t: Tfn }) {
     // Non-clickable: kept the `group` wrapper so the hover highlight still plays,
     // but it's a div (not a link) so the strip no longer jumps to #builders.
     // `relative` + the scrim below. The hero's own legibility scrim fades to
-    // TRANSPARENT at its bottom edge, which is exactly where this strip sits —
+    // TRANSPARENT at its bottom edge, which is exactly where this strip sits -
     // so the brightest part of the video was showing through the marks at full
     // strength, and they only sharpened once scrolling carried them up into the
     // dark end of that gradient. This gives the strip its own constant backdrop
@@ -365,20 +365,20 @@ export default function HeroPartnerStrip({ t }: { t: Tfn }) {
     // mt-11 on phones (2026-08-18). 이 스트립 바로 위에 모바일 전용 오픈채팅
     // 칩이 있는데(lg:hidden), 아래 글로가 -inset-y-6만큼 위로 번지면서 그 칩의
     // 밑동을 애매하게 물고 있었습니다. 버튼이 글로 안에 반쯤 잠긴 것처럼 보여서
-    // 둘 사이를 벌립니다. sm 이상은 종전 값 그대로입니다 — 그 폭에서는 위에
+    // 둘 사이를 벌립니다. sm 이상은 종전 값 그대로입니다 - 그 폭에서는 위에
     // 칩이 없습니다.
     <div className="group relative mt-11 block w-full rounded-2xl py-1.5 sm:mt-5">
       <div
         aria-hidden
         // No rounding and a long falloff that runs PAST the container on every
         // side: with a tight radius this read as a dark card floating over the
-        // video — fine behind the tall three-tier desktop stack, obviously a box
+        // video - fine behind the tall three-tier desktop stack, obviously a box
         // behind the single-line mobile marquee. Bleeding the gradient outside
         // the element and fading to transparent well before its edge keeps it a
         // shadow rather than a panel.
         // -inset-x-6 on mobile, not -inset-x-10. The hero rail pads the strip in
         // by px-6 (24px), so a 40px horizontal bleed put this layer 16px past the
-        // viewport on each side — that was one of the two sources of the 18px
+        // viewport on each side - that was one of the two sources of the 18px
         // horizontal document overflow (see the overflow changelog). At -6 the
         // glow reaches exactly the screen edge and no further. The gradient is
         // already ~0 alpha out there, so nothing visible changed; from sm up the
@@ -396,7 +396,7 @@ export default function HeroPartnerStrip({ t }: { t: Tfn }) {
       <p className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-white/75 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)] transition group-hover:text-white/90">
         {t(dict.hero.partnersLabel)}
       </p>
-      {/* ≥sm — one row per tier, caption centred above its own marks. The tiers
+      {/* ≥sm - one row per tier, caption centred above its own marks. The tiers
           used to run inline (caption, then marks, then the next caption) which
           read as one long undifferentiated line: the whole point of the tiering
           is that 주최 / 주관 / 후원 are answers to different questions, and a

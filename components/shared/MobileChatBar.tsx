@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
-import { dict, links } from "@/data/dictionary";
+import { coreDict as dict, links } from "@/data/dictionaryCore";
 import ChatGlyph from "@/components/ChatGlyph";
 import { useScrollDirection } from "@/lib/useScrollDirection";
 
@@ -31,7 +31,7 @@ export default function MobileChatBar({ afterId = "about", endId = "closing", ph
   const [visible, setVisible] = useState(false);
   const [atEnd, setAtEnd] = useState(false);
   // Shared with the header and the FAB (lib/useScrollDirection).
-  // idleReveal: false — 아래 폰 바와 같은 이유입니다(훅 주석 참고). 두 바가 같은
+  // idleReveal: false - 아래 폰 바와 같은 이유입니다(훅 주석 참고). 두 바가 같은
   // 자리를 다른 브레이크포인트에서 맡고 있어서, 한쪽만 멈춤 복귀를 하면 화면 폭에
   // 따라 다르게 동작합니다.
   const chromeHidden = useScrollDirection({ idleReveal: false });
@@ -42,7 +42,7 @@ export default function MobileChatBar({ afterId = "about", endId = "closing", ph
   useEffect(() => {
     const onScroll = () => {
       const about = document.getElementById(afterId);
-      // Fires once #about's TOP has passed the top of the viewport — i.e. the
+      // Fires once #about's TOP has passed the top of the viewport - i.e. the
       // visitor is reading the "why" and has left the hero for good. Waiting for
       // its BOTTOM would be far too late: on a phone #about is ~2400px tall, so
       // the bar wouldn't show until three screens of scrolling in. If the section
@@ -59,7 +59,7 @@ export default function MobileChatBar({ afterId = "about", endId = "closing", ph
   }, [afterId]);
 
   // The closing section carries its own register CTA. Two identical buttons, one
-  // fixed over the other, is the kind of duplication a visitor reads as a bug —
+  // fixed over the other, is the kind of duplication a visitor reads as a bug -
   // so this bar stands down while that section is on screen. Same observer the
   // phone-width bar already used; this one never had it.
   useEffect(() => {
@@ -69,7 +69,7 @@ export default function MobileChatBar({ afterId = "about", endId = "closing", ph
     // -20%였습니다: 클로징이 화면 아래 20%를 지나 올라와야 바가 비켜섰는데, 그
     // 사이 구간에서 알약 바가 "우리가 있었으면 했던 다리를" 헤드라인을 그대로
     // 덮었습니다. 관찰자를 닿는 즉시로 당깁니다. 바가 조금 일찍 사라지는 쪽이
-    // 헤드라인을 가리는 것보다 낫습니다 — 클로징에는 같은 CTA가 이미 있습니다.
+    // 헤드라인을 가리는 것보다 낫습니다 - 클로징에는 같은 CTA가 이미 있습니다.
     const io = new IntersectionObserver(([e]) => setAtEnd(e.isIntersecting), { rootMargin: "0px", threshold: 0 });
     io.observe(end);
     return () => io.disconnect();
@@ -86,10 +86,10 @@ export default function MobileChatBar({ afterId = "about", endId = "closing", ph
           transition={{ duration: reduce ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
           // z-40 keeps it under the ScrollToTop button (z-50), which is offset
           // ~5.25rem UP on this breakpoint (a vertical band above the bar), so
-          // the bar can use the full screen width — no right-side reservation.
+          // the bar can use the full screen width - no right-side reservation.
           // pt-2 / pb 0.5rem + safe area: the bar lost ~10px of padding without
           // touching the buttons inside it, which stay at 44px+.
-          // `hidden sm:block lg:hidden` — TABLET ONLY. This was `lg:hidden` alone,
+          // `hidden sm:block lg:hidden` - TABLET ONLY. This was `lg:hidden` alone,
           // which meant that below sm it rendered on top of MobileStickyBar (also
           // `sm:hidden`): two fixed bars at bottom-0, two register buttons, and
           // after this change two open-chat buttons as well. The phone rail is the

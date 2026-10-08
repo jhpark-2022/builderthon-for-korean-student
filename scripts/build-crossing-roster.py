@@ -11,6 +11,10 @@
 # answers jsonb는 data/crossingForm.ts의 스키마 순서로 열을 펼친다(아래 form_keys).
 # 선택지가 있는 답(ai_level)은 값이 아니라 "3. 터미널에서 ..."처럼 단계 번호와 한국어 라벨로 낸다(option_labels).
 # 결과 docx는 레포에 커밋하지 않는다.
+#
+# 2026-10-08 (사용자: "팀 - 전원 현장 편성"): 폼이 한 사람씩만 받는다. 새 행은 전부 개인(join_type solo, ordinal 1)이다.
+# 그 전에 시험으로 들어간 팀 행이 있을 수 있어 유형, 팀명, 역할 열은 "있을 때만" 낸다(없는 열을 읽다 죽지 않게 .get).
+# 나라가 목록에 없던 사람은 study_country가 비어 있고 적은 이름이 member_answers.study_country_other에 있다.
 
 import json
 import os
@@ -28,7 +32,18 @@ EVENT = "crossing-seoul-2026-12"
 OUT = Path(os.environ["ROSTER_OUT"]) if os.environ.get("ROSTER_OUT") else (
     REPO.parent.parent / "12월 빌더톤" / "Execution" / "Tracking" / "크로싱서울_신청자_명단.docx"
 )
-COUNTRY = {"KR": "한국", "SG": "싱가포르"}
+COUNTRY = {
+    "KR": "한국", "SG": "싱가포르", "US": "미국", "GB": "영국", "JP": "일본",
+    "CN": "중국", "HK": "홍콩", "AU": "호주", "CA": "캐나다", "DE": "독일",
+}
+
+
+def country_of(p):
+    """나라 표시. 두 글자 코드는 한국어 이름으로, 목록 밖은 적은 이름 그대로, 둘 다 없으면 빈 문자열."""
+    code = p.get("study_country") or ""
+    if code:
+        return COUNTRY.get(code, code)
+    return ((p.get("member_answers") or {}).get("study_country_other") or "").strip()
 
 
 def form_keys():
@@ -73,12 +88,12 @@ def main():
 
     regs = OrderedDict()
     for r in rows:
-        g = regs.setdefault(r["registration_id"], {"rows": [], **{k: r[k] for k in ("created_at", "join_type", "team_name", "wants_matching", "consent_at", "registration_answers")}})
+        g = regs.setdefault(r["registration_id"], {"rows": [], **{k: r.get(k) for k in ("created_at", "join_type", "team_name", "wants_matching", "consent_at", "registration_answers")}})
         g["rows"].append(r)
     for no, g in enumerate(regs.values(), 1):
         g["no"] = no
         for m in g["rows"]:
-            m["role"] = "대표" if m["ordinal"] == 1 else f"팀원{m['ordinal'] - 1}"
+            m["role"] = "대표" if (m.get("ordinal") or 1) == 1 else f"팀원{m['ordinal'] - 1}"
     people = [m for g in regs.values() for m in g["rows"]]
 
     def ans(d, k):
@@ -95,18 +110,18 @@ def main():
     now = datetime.now(KST).strftime("%Y년 %m월 %d일 %H:%M")
     doc.add_paragraph(f"추출 시각: {now} (KST){EM}신청 건수 {len(regs)}건{EM}명단 인원 {len(people)}명")
 
+    # 옛 팀 행이 하나라도 있으면 팀 열을 낸다. 없으면(정상) 내지 않는다.
+    has_team = any(g.get("join_type") == "team" or len(g["rows"]) > 1 for g in regs.values())
     solo = sum(1 for g in regs.values() if g.get("join_type") != "team")
     team = len(regs) - solo
-    matching = sum(1 for g in regs.values() if g.get("wants_matching"))
-    countries = ranked([(COUNTRY.get(p.get("study_country") or "", p.get("study_country") or NO_ENTRY), i) for i, p in enumerate(people)])
+    countries = ranked([(country_of(p) or NO_ENTRY, i) for i, p in enumerate(people)])
     unis = ranked([((p.get("university") or "").strip() or NO_ENTRY, i) for i, p in enumerate(people)])
 
     doc.add_paragraph("1. 요약 통계", style="Heading 1")
     add_table(doc, ["구분", "값"], [
         ["총 신청 건수", f"{len(regs)}건"],
         ["명단 인원", f"{len(people)}명"],
-        ["참가 유형", f"개인 {solo}건, 팀 {team}건"],
-        ["팀 매칭 희망", f"{matching}건"],
+        *([["참가 유형", f"개인 {solo}건, 팀 {team}건 (팀은 2026-10-08 전의 옛 폼)"]] if has_team else []),
         ["공부하는 나라", ", ".join(f"{k} {v}명" for k, v in countries) or "-"],
         ["학교", ", ".join(f"{k} {v}명" for k, v in unis) or "-"],
         ["최초 신청", kst(next(iter(regs.values()))["created_at"]) if regs else "-"],
@@ -114,10 +129,14 @@ def main():
     ])
 
     doc.add_paragraph("2. 참가자 전체 명단 (1인 1행)", style="Heading 1")
-    headers = ["No", "신청번호", "유형", "팀명", "역할", "이름", "이메일", "카카오톡 ID", "학교", "나라", "링크드인"] + [l for _, l in mem_keys] + [l for _, l in reg_keys] + ["신청일시", "비고"]
+    # 나라 이름(study_country_other)은 "나라" 열에 합쳐 내므로 따로 열을 만들지 않는다.
+    mem_keys = [(k, l) for k, l in mem_keys if k != "study_country_other"]
+    team_headers = ["유형", "팀명", "역할"] if has_team else []
+    headers = ["No", "신청번호"] + team_headers + ["이름", "이메일", "카카오톡 ID", "학교", "나라", "링크드인"] + [l for _, l in mem_keys] + [l for _, l in reg_keys] + ["신청일시", "비고"]
     add_table(doc, headers, [
-        [i, regs[p["registration_id"]]["no"], "팀" if p.get("join_type") == "team" else "개인", p.get("team_name") or "-", p["role"],
-         p["name"], p["email"], p["contact"], p.get("university") or "", COUNTRY.get(p.get("study_country") or "", p.get("study_country") or ""), p.get("linkedin") or "-"]
+        [i, regs[p["registration_id"]]["no"]]
+        + (["팀" if p.get("join_type") == "team" else "개인", p.get("team_name") or "-", p["role"]] if has_team else [])
+        + [p["name"], p["email"], p["contact"], p.get("university") or "", country_of(p), p.get("linkedin") or "-"]
         + [ans(p.get("member_answers"), k) for k, _ in mem_keys]
         + [ans(p.get("registration_answers"), k) for k, _ in reg_keys]
         + [kst(p["created_at"]), ""]

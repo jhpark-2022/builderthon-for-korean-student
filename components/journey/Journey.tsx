@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, type MotionValue } from "framer-motion";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
 // 12월 이벤트의 이름과 날짜. 이 페이지가 나루 홈을 가리키는 자리(클로징의 다음
@@ -16,15 +16,11 @@ import {
   categoryMeta,
   dayEmphasis,
   days,
-  getEventDayState,
   mentoringOpenOn,
-  nextDeadline,
   schedule,
   MENTORING_DAY_RANGE,
   type BEvent,
-  type Deadline,
   type DayMeta,
-  type EventPhase,
 } from "@/data/schedule";
 import Chapter from "./Chapter";
 import Eyebrow from "@/components/ui/Eyebrow";
@@ -42,88 +38,14 @@ import { useHeroSplit } from "@/components/shared/useHeroSplit";
 import EventModal from "@/components/EventModal";
 import PartnerModal, { type PartnerInfo } from "@/components/PartnerModal";
 import ChatGlyph from "@/components/ChatGlyph";
-// 2026-08-23: 퀴즈 프로모션 카드가 빠지면서 이 파일에서 퀴즈 데이터를 읽을 일이
-// 없어졌습니다(loadOwnResult · parseResultId · RESULTS · QUESTIONS · MbtiKey).
-// /quiz 페이지와 헤더의 ReturningGreeting은 각자 import 하므로 영향 없습니다.
-// RegisterPreset은 등록 진입점과 함께 2026-08-22에 이 파일에서 빠졌습니다.
-// 타입 자체는 RegisterContext에 그대로 있고, 모달도 살아 있습니다.
-import { useRegister } from "@/lib/RegisterContext";
+// DECIDED 2026-10-08 (전체 리뷰 반영): 이 파일에서 "행사 중" 시계(useEventDay,
+// 히어로 라이브 스트립, 노선도의 지나온 레일, 데이 카드의 오늘/지난 상태)와
+// 8월 등록 컨텍스트, Day 8 투표 관찰자를 걷었습니다. 모든 날짜가 지나 어느
+// 가지에도 닿을 수 없었습니다. 이 페이지는 이제 시각에 반응하지 않는 기록입니다.
 import { useScrollDirection } from "@/lib/useScrollDirection";
 import { useBodyScrollLock, isScrollLocked } from "@/lib/useBodyScrollLock";
+import { readMotionChoice } from "@/lib/motionPreference";
 
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 진행 상태 — 페이지 전체가 공유하는 시계 하나.
-//
-// DECIDED 2026-08-23 (Day 2): 진행 상태 3상 시각화 — 노선도 지나온 레일·현재역
-// 펄스, 데이 카드 완료·오늘 상태, 섹션 라이브 칩. SG 시간 기준, 행사 종료 후
-// 전부 꺼짐(아카이브 복귀).
-//
-// 판정은 schedule.ts의 getEventDayState가 전부 합니다. 여기 있는 것은 그 값을
-// 하이드레이션 안전하게 들여오는 껍데기뿐이에요.
-//
-// 서버는 항상 NEUTRAL로 그립니다. 서버에는 방문자의 "지금"이 없고, 서버 시각으로
-// 그렸다가 클라이언트에서 다른 날이 나오면 하이드레이션이 어긋납니다. 그래서 첫
-// 페인트는 행사 전과 똑같은 화면이고, 마운트 직후 진행 상태가 얹힙니다 —
-// 바뀌는 것이 투명도·테두리·펄스뿐이라 레이아웃은 움직이지 않습니다.
-//
-// 자정을 넘겨 열어둔 탭은 새로고침 전까지 어제를 가리킵니다. 타이머를 걸지 않은
-// 것은 의도입니다: 8일 내내 도는 인터벌을 페이지에 심을 값이, 자정에 탭을 열어둔
-// 사람이 보는 하루 오차보다 크지 않습니다.
-//
-// 이 훅은 Journey()에서 한 번만 부르고 값을 내려보냅니다. 소비처(노선도, 데이
-// 카드, 섹션 칩)에서 각자 부르면 세 번의 Date.now()가 자정 언저리에 서로 다른
-// 날을 말할 수 있습니다.
-// ─────────────────────────────────────────────────────────────────────────────
-//
-// now가 함께 실려 오는 이유 (2026-08-24): 마감 줄이 "오늘까지 / 내일까지 / 날짜"를
-// 고르려면 며칠차인지가 아니라 지금 시각이 필요합니다. 소비처에서 Date.now()를
-// 다시 읽으면 그 순간 시계가 둘이 되고, 자정 언저리에 라이브 필과 마감 칩이 서로
-// 다른 날을 말할 수 있습니다. 한 번 읽어 같이 내려보냅니다.
-//
-// ── DECIDED 2026-08-24: 히어로 라이브 스트립 하이드레이션 밀림 제거 — 서버가
-// 자기 시각을 내려보내고(serverNow) 클라이언트가 그대로 그린 뒤 보정한다.
-// / 는 정적 프리렌더에서 ISR(revalidate 300)로 바뀐다. ──────────────────────
-//
-// 첫 렌더가 NEUTRAL(행사 전과 같은 화면)이었습니다. 서버에 방문자의 "지금"이
-// 없으니 그리지 않는 것이 맞다고 봤는데, 대가가 컸어요: 마운트 직후 히어로에
-// 스트립 세 줄이 끼어들면서 폰에서 아래 본문과 CTA가 165px 내려앉았습니다.
-// 첫 화면에서 누르려던 버튼이 손가락 밑에서 움직입니다.
-//
-// 이제 서버가 자기 시각을 prop으로 실어 보냅니다(app/page.tsx). 서버 HTML과
-// 클라이언트의 첫 렌더가 같은 숫자를 보므로 마크업이 일치하고 — 하이드레이션
-// 불일치도 밀림도 없습니다 — 그 다음 useEffect가 방문자의 진짜 시각으로 보정해요.
-//
-// serverNow는 최대 5분 낡을 수 있습니다(ISR). 하루 단위 신호라 SG 자정 직후 5분이
-// 유일하게 틀릴 수 있는 창이고, 그마저 아래 effect가 곧바로 고칩니다. 보정 폭이
-// 하루 경계에 걸리면 그때는 한 줄만 바뀌지, 세 줄이 통째로 생기지 않습니다.
-//
-// serverNow를 인자로 받는 것이 이 훅의 계약입니다. 안에서 Date.now()를 초기값으로
-// 읽으면 서버(빌드 시각)와 클라이언트(방문 시각)가 갈려 다시 어긋납니다.
-type EventDayState = { current: number | null; phase: EventPhase; now: number | null };
-
-function useEventDay(serverNow: number): EventDayState {
-  const [state, setState] = useState<EventDayState>(() => ({
-    ...getEventDayState(serverNow),
-    now: serverNow,
-  }));
-  useEffect(() => {
-    const now = Date.now();
-    setState({ ...getEventDayState(now), now });
-  }, []);
-  return state;
-}
-
-// 노선도와 데이 카드가 같은 낱말로 상태를 말하게 하는 판정 하나.
-// "past"는 오늘보다 앞선 날, "today"는 오늘, 나머지는 전부 "future"입니다.
-// 행사 전·후(phase !== "during")에는 전부 "future" — 즉 아무 효과도 없습니다.
-type DayProgress = "past" | "today" | "future";
-function dayProgress(day: number, ev: EventDayState): DayProgress {
-  if (ev.phase !== "during" || ev.current === null) return "future";
-  if (day < ev.current) return "past";
-  if (day === ev.current) return "today";
-  return "future";
-}
 
 // glass panel wrapper
 // Glass는 components/ui/Glass.tsx로 옮겼습니다 (2026-09-17, 8월 문법 브리프).
@@ -161,19 +83,19 @@ function Emph({ text, className = "font-semibold text-white" }: { text: string; 
 // Optical logo sizing. Capping every mark at the same HEIGHT is what made the
 // wall look ragged: a two-line lockup and a long thin wordmark set to the same
 // height carry wildly different visual weight (the wordmark ends up three times
-// the area). So we hold the rendered AREA roughly constant instead — for a mark
+// the area). So we hold the rendered AREA roughly constant instead - for a mark
 // of aspect r drawn at height h the area goes as r·h², hence h = √(A / r).
 //
 // The clamp keeps it sane at the extremes: without a floor a 8:1 wordmark like
 // INNOVATE 360 would shrink to a hairline, and without a ceiling a square crest
 // would overflow the tile. Anything still too wide is caught by `max-w-full`,
-// which letterboxes it down — that only pushes it further toward equal area.
+// which letterboxes it down - that only pushes it further toward equal area.
 // Dimensions must describe the INK, not the shipped canvas, so every caller
 // passes the trimmed art (see scripts/process-partner-logos.py).
 //
 // TWO CALLERS ONLY, both of which draw marks inside a VISIBLE container: the
 // white partner-wall chip (LogoTile) and the Zero100 companion band tile. The
-// hero confirmed-partner strip used this too and no longer does — with no tile
+// hero confirmed-partner strip used this too and no longer does - with no tile
 // to measure a mark against, bounding-box area let width run free and the
 // widest wordmarks dominated their tier. It sizes by measured optical mass
 // instead; see stripHeight().
@@ -207,8 +129,8 @@ function opticalHeight(w: number, h: number, area: number, min: number, max: num
 // perceived size to within 3%.
 //
 // TARGET is set just under the width ceiling of the second-widest mark, so nine
-// of ten marks reach it exactly and only INNOVATE 360 — too wide and too thin to
-// ever match inside a tile this size — sits at its wall, 15% under. Raising
+// of ten marks reach it exactly and only INNOVATE 360 - too wide and too thin to
+// ever match inside a tile this size - sits at its wall, 15% under. Raising
 // TARGET buys nothing: it only pushes more marks into the wall, where they
 // letterbox back down.
 const GRID_TARGET = 1050;
@@ -223,7 +145,7 @@ function massHeight(w: number, h: number, mass: number) {
 // gradients) read best on a light tile against the dark section, and a missing
 // file just shows an empty white chip rather than a broken-image icon.
 // `onOpen` makes the tile a button that opens the company-intro modal (takes
-// precedence — sponsor/mentor tiles use this instead of linking out); `url`
+// precedence - sponsor/mentor tiles use this instead of linking out); `url`
 // makes it a link; `badge` shows a small role/stage pill; `big` gives square
 // marks more presence.
 function LogoTile({
@@ -232,7 +154,7 @@ function LogoTile({
   src: string; alt: string; w: number; h: number;
   url?: string; badge?: string;
   // Measured sqrt(ink × silhouette) coverage. When present it sizes the mark
-  // (see massHeight) and `area` is ignored — a measured number beats a box.
+  // (see massHeight) and `area` is ignored - a measured number beats a box.
   // Only the 후원 grid passes it, because only its marks have been measured;
   // the two grids that haven't still size by area. Do not hand-pick a value
   // here: run `python3 scripts/measure-logo-mass.py` and paste what it prints.
@@ -244,18 +166,18 @@ function LogoTile({
   //   1. STACKED LOCKUPS. A stacked mark splits the same box across two rows,
   //      so at equal area each row is drawn at roughly half the height of a
   //      single-line neighbour and the mark reads small no matter how much area
-  //      you give the box — exactly what happened to Brand Boost (BRAND over
+  //      you give the box - exactly what happened to Brand Boost (BRAND over
   //      BOOST). RAISE `area`.
   //   2. SOLID SILHOUETTES NEXT TO LINE-DRAWN MARKS. Area is the box, not the
   //      ink in it. A filled silhouette turns nearly the whole box into ink; a
   //      crest drawn in thin lines fills maybe half of it. Side by side at equal
-  //      area the silhouette reads a size larger — the SMU lion against the NUS
+  //      area the silhouette reads a size larger - the SMU lion against the NUS
   //      and NTU seals in the organizers grid. LOWER `area` for the silhouette.
   //
   // Both are cases where equal area gives unequal perceived size, which is what
   // this prop corrects. It is NOT a knob for "this one looks a bit small": if a
   // single-line mark of ordinary density looks wrong here, the rule itself is
-  // wrong. And a correction is local to the grid that motivated it — the same
+  // wrong. And a correction is local to the grid that motivated it - the same
   // mark elsewhere sits next to different neighbours.
   area?: number;
   onOpen?: (el: HTMLElement) => void;
@@ -270,21 +192,23 @@ function LogoTile({
         width={w}
         height={h}
         // Logos are tiny static brand marks (all ≤512px, pre-shrunk): skip the
-        // image optimizer and load eagerly so they appear instantly instead of
-        // popping in one-by-one via lazy-load + on-demand optimization.
+        // image optimizer. 2026-10-08: eager에서 lazy로. 화면 아래의 로고 43개가
+        // 히어로 포스터보다 먼저 프리로드되고 있었습니다(428KB). 자리는 width와
+        // height로 잡혀 있어 늦게 떠도 레이아웃이 움직이지 않습니다.
         unoptimized
-        loading="eager"
+        loading="lazy"
+        decoding="async"
         style={{ height: boxH }}
         className="w-auto max-w-full object-contain"
       />
       {badge && (
-        <span className="absolute right-1.5 top-1.5 rounded-full border border-white/15 bg-white/10 px-1.5 py-0.5 text-[0.55rem] font-bold uppercase tracking-wide text-white/75">
+        <span className="absolute right-1.5 top-1.5 rounded-full border border-white/15 bg-white/10 px-1.5 py-0.5 text-xs font-bold uppercase tracking-wide text-white/75">
           {badge}
         </span>
       )}
     </>
   );
-  // Uniform dark card that matches the rest of the site's glass cards — the logos
+  // Uniform dark card that matches the rest of the site's glass cards - the logos
   // are pre-rendered as white silhouettes (transparent bg), so they read cleanly
   // on this dark tile with no background block behind them.
   // px-3 rather than px-5 for measured tiles: those marks are sized against the
@@ -337,7 +261,7 @@ function LogoTile({
 //
 // 빼는 값은 gap-3(0.75rem) × 칸 사이 수에 0.03rem씩 여유를 더한 것입니다. 딱 맞게
 // 계산하면 소수점 반올림 때문에 마지막 하나가 다음 줄로 튈 수 있습니다.
-// shrink는 기본값(1) 그대로 둡니다 — 넘칠 일은 없지만, 넘치더라도 줄이 깨지는
+// shrink는 기본값(1) 그대로 둡니다 - 넘칠 일은 없지만, 넘치더라도 줄이 깨지는
 // 것보다 타일이 조금 좁아지는 편이 낫습니다.
 const TILE_BASIS_2_3_5 =
   "basis-[calc((100%_-_0.78rem)/2)] sm:basis-[calc((100%_-_1.56rem)/3)] lg:basis-[calc((100%_-_3.12rem)/5)]";
@@ -354,7 +278,7 @@ const FOCUSABLE =
   'a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// HOOK CARDS — the two-up entry point, rendered in the hero and reused verbatim
+// HOOK CARDS - the two-up entry point, rendered in the hero and reused verbatim
 // as the mid-page CTA bands (after 혜택, after FAQ). One component, one style:
 // the bands are the same cards, not a second design.
 //
@@ -363,22 +287,22 @@ const FOCUSABLE =
 // kept as a light aside; for a visitor who already took it, it deep-links to
 // their saved result instead ("내 결과 보기").
 //
-// The register card carries `register.reassure` under its CTA — the same line in
+// The register card carries `register.reassure` under its CTA - the same line in
 // all three placements, from one key.
 // ─────────────────────────────────────────────────────────────────────────────
 // OpenChatLink는 components/ui/OpenChatLink.tsx로 옮겼습니다 (2026-09-15).
 // 나루 홈에 오픈채팅 자리가 세 군데 생겼고, 그 셋이 이 파일의 버전과 같은 칩이어야
 // 합니다. `src`의 목록에 naru-* 세 개가 늘었을 뿐 나머지는 그대로입니다.
 
-// CHAPTER HEADING SIZE — text-[clamp(2rem,5.5vw,3.75rem)], all nine of them.
+// CHAPTER HEADING SIZE - text-[clamp(2rem,5.5vw,3.75rem)], all nine of them.
 //
 // Unified 2026-08-12. Six chapters were on this clamp and three had drifted
 // smaller (join at 1.8/3.25, speakers and mentoring at 1.9/3.5), which read as a
-// hierarchy the page does not actually have — those three are peer chapters, not
+// hierarchy the page does not actually have - those three are peer chapters, not
 // sub-sections. Scrolling past them, the headings breathed in and out.
 //
 // The smaller clamps further down (1.6/2.5, 1.5/2.5, 1.5/2.25) are h3s inside a
-// chapter — the judges block, the mentor stages — and they stay smaller on
+// chapter - the judges block, the mentor stages - and they stay smaller on
 // purpose. Only the nine <h2>s share this value.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -392,26 +316,17 @@ const FOCUSABLE =
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MOBILE STICKY BAR — open chat + register. Phone only.
+// MOBILE STICKY BAR - open chat + register. Phone only.
 //
 // Appears once the hero is behind you (~120vh) and hides again over the closing
 // section, so it can never sit on top of the footer's copy-email button. Hidden
 // outright while the register modal is open. The <body> gets bottom padding for
 // the bar's height from first paint, so revealing it shifts nothing.
 // ─────────────────────────────────────────────────────────────────────────────
-function MobileStickyBar({
-  t,
-  registerOpen,
-}: {
-  t: Tfn;
-  // 모달이 열려 있는 동안 바를 숨기는 조건입니다. 등록 진입점은 2026-08-22에
-  // 걷어냈지만 모달 자체는 살아 있어서, 이 가드는 그대로 둡니다.
-  registerOpen: boolean;
-}) {
+function MobileStickyBar({ t }: { t: Tfn }) {
   const [past, setPast] = useState(false);
   const [atEnd, setAtEnd] = useState(false);
-  const [atVote, setAtVote] = useState(false);
-  // Same signal the header and the FAB use — the three move as one surface, so
+  // Same signal the header and the FAB use - the three move as one surface, so
   // the page never settles at a height that only some of them agreed on.
   //
   // DECIDED 2026-08-24: 하단 바는 idle reveal에서 뺍니다(idleReveal: false). 폰에서
@@ -440,43 +355,22 @@ function MobileStickyBar({
     // -20%였습니다: 클로징이 화면 아래 20%를 지나 올라와야 바가 비켜섰는데, 그
     // 사이 구간에서 알약 바가 "우리가 있었으면 했던 다리를" 헤드라인을 그대로
     // 덮었습니다. 관찰자를 닿는 즉시로 당깁니다. 바가 조금 일찍 사라지는 쪽이
-    // 헤드라인을 가리는 것보다 낫습니다 — 클로징에는 같은 CTA가 이미 있습니다.
+    // 헤드라인을 가리는 것보다 낫습니다 - 클로징에는 같은 CTA가 이미 있습니다.
     const io = new IntersectionObserver(([e]) => setAtEnd(e.isIntersecting), { rootMargin: "0px", threshold: 0 });
     io.observe(end);
     return () => io.disconnect();
   }, []);
 
-  // DECIDED 2026-08-28 (Day 8): 투표 섹션에서는 비켜섭니다.
-  //
-  // 클로징에 쓴 것과 같은 이유이고 같은 장치입니다. 다른 점은 가리는 것이
-  // 헤드라인이 아니라 탭 타깃이라는 것 — 폰에서 팀 목록은 한 줄에 한 팀씩 화면
-  // 폭을 다 쓰고, 알약은 그 위에 떠 있습니다. 손가락이 알약에 먼저 닿으면 투표
-  // 대신 카톡이 열려요. 8/29에 이 화면에서 할 일은 하나뿐이라, 그 하나를 가리는
-  // 것은 어떤 CTA여도 비켜서는 편이 맞습니다.
-  //
-  // 오픈채팅 자체는 그대로입니다. 페이지의 다른 구간에서는 나오고, 데스크톱
-  // 헤더의 오픈채팅 버튼도 건드리지 않았습니다.
-  useEffect(() => {
-    const vote = document.getElementById("vote");
-    if (!vote) return;
-    const io = new IntersectionObserver(([e]) => setAtVote(e.isIntersecting), {
-      rootMargin: "0px",
-      threshold: 0,
-    });
-    io.observe(vote);
-    return () => io.disconnect();
-  }, []);
-
   // `chromeHidden` is the only condition that comes back on its own (scroll up);
   // the others are states of the page, not of the gesture.
-  const shown = past && !atEnd && !atVote && !registerOpen && !chromeHidden;
+  const shown = past && !atEnd && !chromeHidden;
 
   return (
     <div
       aria-label={t(dict.stickyBar.aria)}
       // 2026-08-23: 컨테이너는 언제나 pointer-events-none이고, 클릭을 받는 것은
       // 알약 자신뿐입니다. 바가 풀폭일 때는 컨테이너가 곧 알약이라 상관없었는데,
-      // 내용 폭으로 줄이면서 알약 양옆의 빈 자리가 남았습니다 — 거기서 탭이
+      // 내용 폭으로 줄이면서 알약 양옆의 빈 자리가 남았습니다 - 거기서 탭이
       // 먹히면 아래 본문을 누를 수 없습니다.
       className="pointer-events-none fixed inset-x-0 bottom-0 z-40 sm:hidden"
       style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
@@ -491,20 +385,20 @@ function MobileStickyBar({
           shown ? "translate-y-0 opacity-100" : "translate-y-24 opacity-0"
         }`}
       >
-        {/* OPEN CHAT sits FIRST, register second — the pair reads low-commitment →
+        {/* OPEN CHAT sits FIRST, register second - the pair reads low-commitment →
             commitment, and the primary keeps the wider, brighter slot on the right
             where the thumb rests. The quiz chip that used to hold this slot is
             gone: the funnel's low-friction entrance is the open chat, and the quiz
             already has two permanent doors (the nav's ✦ chip, in view at all
             times, and the hook card in the 혜택 band). Open chat had none on a
-            phone — the nav's open-chat button is `lg`-only, so between the hero
+            phone - the nav's open-chat button is `lg`-only, so between the hero
             and the footer there was no way in at all.
             ICON + LABEL, never icon alone: a bare speech bubble in a dark pill is
             not a recognisable KakaoTalk affordance, and this is the one CTA a
             hesitant visitor is looking for by name. */}
         {/* DECIDED 2026-08-22 (마감 후 청산): 옆에 있던 등록 버튼을 걷어내고
             오픈채팅이 이 바의 단독 액션이 됐습니다. flex-1로 폭을 넘겨받아
-            그라디언트 필이 있던 자리를 채웁니다 — 짝을 잃은 알약이 왼쪽에 작게
+            그라디언트 필이 있던 자리를 채웁니다 - 짝을 잃은 알약이 왼쪽에 작게
             붙어 있으면 바가 무언가 빠진 것처럼 보입니다.
             바 자체는 그대로 둡니다. 행사 중에 참가자가 가장 자주 여는 문이고,
             등장 조건과 chromeHidden 로직은 하나도 건드리지 않았습니다. */}
@@ -531,7 +425,7 @@ function MobileStickyBar({
 
 
 // Self-paced build is not a session: no start time, nowhere to be, nothing to
-// attend. Read off the explicit data flag rather than category === "build" —
+// attend. Read off the explicit data flag rather than category === "build" -
 // that category held a scheduled 4-hour on-site track (the Day 5 Quickathon)
 // until the Day-5 networking pivot (2026-08-03), and the next scheduled build
 // session would break the inference again. See BEvent.selfPaced.
@@ -546,24 +440,7 @@ const dayHasSelfPaced = (dayNum: number) =>
 const dayIsSelfPaced = (dayNum: number) =>
   dayHasSelfPaced(dayNum) && realSessions(dayNum).length === 0;
 
-// ─────────────────────────────────────────────────────────────────────────────
-// TRACK PANEL — 걷어냈습니다 (2026-08-28, Day 8 투표).
-//
-// 여기 있던 것은 두 문제(상황·흐름·목표·제약)를 아코디언으로 여닫던 패널입니다.
-// 그 화면의 일은 "트랙을 고르게 하는 것"이었고, 트랙 선택은 Day 2에 끝났습니다.
-// 8/29에 같은 자리가 해야 하는 일은 발표를 다 본 사람이 폰으로 팀을 뽑는 것이라,
-// 자리를 components/journey/Day8Vote.tsx에 넘겼습니다.
-//
-// 두 패널의 머리(01 채용 저지먼트 / 02 마케팅 콘텐츠 오토메이션)는 그대로 살아
-// 있습니다. Day8Vote가 dict.tracks.items의 num·kicker·title을 같은 어법으로
-// 다시 그려요. 사라진 것은 본문뿐입니다.
-//
-// 문제 상세 문자열(situation·flow·goals·constraint)은 dict.tracks에 그대로 있고,
-// 되살릴 일이 생기면 git 이력에서 이 컴포넌트를 꺼내면 됩니다. 사본을 만들어
-// 두지 않은 이유는 그것이 곧 갈라지기 때문입니다.
-// ─────────────────────────────────────────────────────────────────────────────
-
-// Self-paced build as a quiet, NON-INTERACTIVE line — no badge, no
+// Self-paced build as a quiet, NON-INTERACTIVE line - no badge, no
 // "자세히 보기", nothing to click. Rendered as a session card it read as one
 // more thing to turn up for, and on an 8-day programme that is what tips
 // "exciting" into "exhausting". There is nothing to open because there is
@@ -584,7 +461,7 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
   const meta = categoryMeta[ev.category];
   const isMain = ev.category === "main";
   const offline = ev.mode === "offline";
-  // "mixed" (1:1 mentoring — in person or online depending on the mentor) gets
+  // "mixed" (1:1 mentoring - in person or online depending on the mentor) gets
   // its own neutral badge: an amber "현장" would promise F2F to everyone.
   const byMentor = ev.mode === "mixed";
   const selfPaced = isSelfPaced(ev);
@@ -601,24 +478,24 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
         </span>
         <span className="ml-auto flex items-center gap-1.5">
           {ev.confirmed && (
-            <span className="rounded-full bg-emerald-400/15 px-1.5 py-0.5 text-[0.7rem] font-bold text-emerald-300 ring-1 ring-emerald-400/25">
+            <span className="rounded-full bg-emerald-400/15 px-1.5 py-0.5 text-xs font-bold text-emerald-300 ring-1 ring-emerald-400/25">
               {t(dict.program.confirmedBadge)}
             </span>
           )}
           {selfPaced ? (
-            <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/60">
+            <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-1.5 py-0.5 text-xs font-semibold text-white/60">
               {t(dict.program.selfPacedLabel)}
             </span>
           ) : byMentor ? (
-            <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/60">
+            <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-1.5 py-0.5 text-xs font-semibold text-white/60">
               {t(dict.program.byMentorLabel)}
             </span>
           ) : offline ? (
-            <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/30 bg-amber-400/10 px-1.5 py-0.5 text-[0.7rem] font-bold text-amber-200">
+            <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/30 bg-amber-400/10 px-1.5 py-0.5 text-xs font-bold text-amber-200">
               <span aria-hidden>●</span>{t(dict.program.offlineLabel)}
             </span>
           ) : (
-            <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-1.5 py-0.5 text-[0.7rem] font-semibold text-white/60">
+            <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-1.5 py-0.5 text-xs font-semibold text-white/60">
               {t(dict.program.onlineLabel)}
             </span>
           )}
@@ -639,10 +516,10 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
 // 범례 스와치가 쓰는 마크업을 그대로 줄여서 씁니다. 한 곳에 모아 둔 이유는 색이
 // 바뀔 때 노선도만 바뀌고 카드가 남는 일을 막기 위해서입니다.
 //
-// ★(필참)는 예외적으로 문자 그대로 씁니다 — 원래부터 그랬고, 별은 어느 폰트에서나
+// ★(필참)는 예외적으로 문자 그대로 씁니다 - 원래부터 그랬고, 별은 어느 폰트에서나
 // 별입니다. 여기 있는 둘은 원형이라 문자로는 재현이 안 됩니다.
 
-// ◉ 놓치면 아까운 — 노선도 스포트라이트 노드(violet 링 + 안쪽 점)의 축소판.
+// ◉ 놓치면 아까운 - 노선도 스포트라이트 노드(violet 링 + 안쪽 점)의 축소판.
 function SpotlightGlyph() {
   return (
     <span aria-hidden className="flex h-3 w-3 shrink-0 items-center justify-center rounded-full border border-violet-300/60 bg-violet-400/20">
@@ -651,7 +528,7 @@ function SpotlightGlyph() {
   );
 }
 
-// ● 멘토링 — 노선도 노드 아래의 점, 그리고 그 아래 필 앞의 점과 같은 것.
+// ● 멘토링 - 노선도 노드 아래의 점, 그리고 그 아래 필 앞의 점과 같은 것.
 // 7px 그대로입니다: 크기가 다르면 "같은 것"으로 안 읽힙니다.
 function MentoringDot() {
   return <span aria-hidden className="h-[7px] w-[7px] shrink-0 rounded-full bg-emerald-400/80" />;
@@ -672,7 +549,7 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
     );
   if (day.dayMode === "pending") return <Chip tone="pending">{t(dict.program.pendingLabel)}</Chip>;
   // A half-on-site day: carries the amber dot the in-person days use, at a
-  // lighter weight — the day has an on-site half, it just isn't an on-site day.
+  // lighter weight - the day has an on-site half, it just isn't an on-site day.
   // No day is "mixed" at the moment (Day 3·4 were, until their mentoring went
   // online-first); kept for the next one that is.
   if (day.dayMode === "mixed")
@@ -682,7 +559,7 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
       </Chip>
     );
   // Day 3·4: online unless your mentor offers F2F. Same neutral pill as 온라인,
-  // no amber and no dot — the amber treatments above are "there is somewhere to
+  // no amber and no dot - the amber treatments above are "there is somewhere to
   // be", and here there isn't one for most people. Only the wording changes,
   // which is exactly the size of the correction.
   if (day.dayMode === "online-default") return <Chip tone="neutral">{t(dict.program.onlineDefaultLabel)}</Chip>;
@@ -690,178 +567,14 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// HERO LIVE STRIP — 첫 화면에서 "지금 진행 중"을 말하는 두 줄.
-//
-// DECIDED 2026-08-23: 라이브 신호를 첫 화면으로 승격 — 히어로 오늘/다음
-// 스트립(행사 중에만), OG 메타데이터 국면 전환. 시계는 getEventDayState 하나.
-//
-// 진행 중이라는 신호가 프로그램 챕터에만 있었습니다(노선도, 카드 3상태, 헤더 칩).
-// 그런데 첫 화면만 보고 떠나는 방문자에게 이 페이지는 행사 전과 똑같은 포스터예요.
-// 날짜 범위 옆에 오늘이 며칠차인지, 오늘 무엇을 하는지, 다음에 어디로 모이는지를
-// 둡니다.
-//
-// 문자열을 새로 쓰지 않는 것이 이 컴포넌트의 규칙입니다. 라이브 필은 프로그램
-// 헤더와 같은 dict.program.dayLive를 읽고(같은 모양이어야 같은 사실로 읽힙니다),
-// 오늘 줄과 다음 현장 줄은 days[]에서 파생하며, 모드 칩은 데이 카드가 쓰는
-// DayModeBadge를 그대로 씁니다. 여기서 날짜나 세션 이름을 손으로 적지 마세요 —
-// 스케줄이 바뀌면 첫 화면만 거짓말을 하게 됩니다.
-//
-// 행사 전·후에는 아무것도 렌더하지 않습니다. 시계는 Journey()가 한 번 읽어
-// 내려보내는 그 값 하나입니다.
-//
-// DECIDED 2026-08-24: 참가자 도구화 3종 — 라이브 스트립 마감 줄(데이터 기반,
-// 지나면 다음 마감으로), ?day=N 딥링크(카톡 공지 연동), 노선도 정거장 = 그 날
-// 모달을 여는 버튼. 시계는 getEventDayState 하나.
-//
-// 셋째 줄이 마감입니다. 행사 주간의 1번 사용자는 매일 들어와 "오늘 뭐지, 언제까지
-// 뭐 내야 하지"를 확인하는 참가자예요. 앞의 두 줄이 첫 물음에 답하고, 이 줄이
-// 두 번째에 답합니다.
-//
-// 최대 한 건입니다(schedule.ts의 nextDeadline이 하나만 돌려줍니다). 남은 마감을
-// 전부 늘어놓으면 히어로가 할 일 목록이 되고, 스트립은 넉 줄을 넘지 않아야 합니다.
-// ─────────────────────────────────────────────────────────────────────────────
-// 라이브 필만 따로. 날짜 줄 안에 인라인으로 들어갑니다 — "8월 22일부터 29일까지"를
-// 읽은 자리에서 바로 "지금 Day 2"가 붙는 것이 가장 짧은 경로예요.
-//
-// 스트립에서 이 필을 뺀 이유는 하이드레이션 이동량입니다. 스트립이 세 줄일 때
-// 마운트 직후 아래 본문과 CTA가 126px 밀렸습니다. 필을 이미 존재하는 날짜 줄 안에
-// 넣으면 그 줄의 높이가 변하지 않아(한 줄 안에 들어갑니다) 이동량이 두 줄치로
-// 줄어듭니다. 첫 화면에서 CTA가 눈에 띄게 내려앉는 것보다 낫습니다.
-//
-// 모양은 프로그램 헤더 칩과 같아야 합니다. 두 자리가 같은 사실을 말하는데 모양이
-// 다르면 방문자는 다른 두 가지로 셉니다.
-function HeroLivePill({ t, ev }: { t: Tfn; ev: EventDayState }) {
-  if (ev.phase !== "during" || ev.current === null) return null;
-  return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/35 bg-violet-500/[0.12] px-3 py-1 text-[0.7rem] font-bold leading-none text-violet-100">
-      <span aria-hidden className="relative flex h-[7px] w-[7px] shrink-0">
-        <span className="absolute inline-flex h-full w-full rounded-full bg-violet-300/70 animate-[softPulse_2.4s_ease-in-out_infinite] motion-reduce:animate-none" />
-        <span className="relative inline-flex h-full w-full rounded-full bg-violet-200" />
-      </span>
-      {t(dict.program.dayLive).replace("{n}", String(ev.current))}
-    </span>
-  );
-}
-
-// 마감까지의 거리. 오늘·내일만 낱말이고 모레부터는 날짜입니다 — 사전 주석 참고.
-// 날짜 표기는 days[]에서 가져옵니다("08.28 금"). 데이 카드가 쓰는 표기 그대로예요:
-// 같은 날짜가 두 자리에서 다른 모양으로 적히면 방문자는 다른 날로 셉니다.
-// 마감일이 days[]에 없는 날이면(행사 밖의 마감) 원본 문자열로 떨어집니다.
-//
-// 마감 시각이 공개된 항목(dueTime)은 칩에 시각까지 붙습니다 — "오늘 12:00까지".
-// 낮에 끝나는 마감을 "오늘까지"라고만 적으면 저녁까지 여유가 있는 것으로 읽힙니다.
-function deadlineWhen(deadline: Deadline, daysAway: number, t: Tfn): string {
-  const { due, dueTime } = deadline;
-  if (daysAway === 0)
-    return dueTime
-      ? t(dict.program.dueTodayAt).replace("{time}", dueTime)
-      : t(dict.program.dueToday);
-  if (daysAway === 1)
-    return dueTime
-      ? t(dict.program.dueTomorrowAt).replace("{time}", dueTime)
-      : t(dict.program.dueTomorrow);
-  const d = days.find((x) => x.date === due);
-  const when = d ? `${d.date} ${t(d.weekday)}` : due;
-  return dueTime ? `${when} ${dueTime}` : when;
-}
-
-function HeroLiveStrip({
-  t,
-  ev,
-  onOpen,
-}: {
-  t: Tfn;
-  ev: EventDayState;
-  onOpen: (n: number) => void;
-}) {
-  if (ev.phase !== "during" || ev.current === null) return null;
-  const today = days.find((d) => d.day === ev.current);
-  if (!today) return null;
-  // 오늘 이후의 첫 현장일. 마지막 현장일(Day 8)에 서 있으면 없고, 그때는 줄이
-  // 통째로 빠집니다 — "다음 현장"이라 해 놓고 오늘을 가리키면 안 되니까요.
-  const nextOnsite = days.find((d) => d.day > ev.current! && d.dayMode === "offline");
-  // 아직 지나지 않은 첫 마감. 전부 지났으면 null이고 줄이 통째로 빠집니다.
-  const upcoming = ev.now === null ? null : nextDeadline(ev.now);
-  const row =
-    "flex flex-wrap items-center gap-x-2 gap-y-1 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-left transition hover:border-violet-400/30 hover:bg-white/[0.07]";
-  const label = "shrink-0 text-[0.6rem] font-bold uppercase tracking-[0.14em] text-white/45";
-  return (
-    <div className="mt-4 flex max-w-md flex-col gap-2 lg:mx-0">
-      {/* 오늘 줄. 누르면 그 날의 모달이 열립니다 — 데이 카드와 같은 문을 씁니다. */}
-      <button type="button" onClick={() => onOpen(today.day)} className={row}>
-        <span className={label}>{t(dict.program.liveNow)}</span>
-        <span className="break-keep text-[0.8rem] font-bold leading-snug text-white">
-          {t(today.theme)}
-        </span>
-        {today.hours && (
-          <span className="shrink-0 rounded-full border border-white/[0.12] bg-white/[0.04] px-2 py-0.5 text-[0.65rem] font-semibold text-white/60">
-            {today.hours}
-          </span>
-        )}
-        <DayModeBadge day={today} t={t} selfPaced={dayIsSelfPaced(today.day)} />
-      </button>
-
-      {nextOnsite && (
-        <button type="button" onClick={() => onOpen(nextOnsite.day)} className={row}>
-          <span className={label}>{t(dict.program.liveNextOnsite)}</span>
-          <span className="break-keep text-[0.8rem] font-semibold leading-snug text-white/85">
-            {t(dict.program.dayLabel)} {nextOnsite.day} {t(nextOnsite.theme)}
-          </span>
-          <span className="shrink-0 text-[0.65rem] font-semibold text-white/50">{nextOnsite.date}</span>
-        </button>
-      )}
-
-      {/* 마감 줄. 앞의 두 줄과 같은 어법입니다 — 라벨 하나, 이름 하나, 칩 하나.
-          문장을 쓰지 마세요.
-
-          앰버는 칩에만 붙습니다. 이 줄에서 급한 것은 "언제까지"이지 "무엇을"이
-          아니고, 라벨까지 물들이면 세 줄의 라벨 층계가 깨집니다. 색은 새로 만들지
-          않고 현장 칩이 쓰던 amber-400/30 · amber-400/10 · amber-200 그대로입니다.
-          펄스는 넣지 않습니다 — 첫 화면에서 뛰는 것은 라이브 필 하나로 충분합니다.
-
-          가는 곳이 두 종류라 태그가 갈립니다. 섹션이면 그냥 앵커 링크예요 —
-          이 페이지의 다른 앵커와 같은 문을 쓰면 스크롤 동작(scroll-margin, 부드러운
-          스크롤)을 여기서 다시 구현하지 않아도 됩니다. 그 날의 모달이면 버튼입니다. */}
-      {upcoming && (() => {
-        const { deadline, daysAway } = upcoming;
-        // action을 const로 꺼내야 아래 삼항의 좁히기가 onClick 클로저 안까지
-        // 따라옵니다. deadline.action처럼 프로퍼티 접근으로 두면 TS가 콜백 안에서
-        // 다시 유니온으로 되돌립니다.
-        const action = deadline.action;
-        const inner = (
-          <>
-            <span className={label}>{t(dict.program.liveDue)}</span>
-            <span className="break-keep text-[0.8rem] font-semibold leading-snug text-white/85">
-              {t(deadline.label)}
-            </span>
-            <span className="shrink-0 rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[0.65rem] font-bold text-amber-200">
-              {deadlineWhen(deadline, daysAway, t)}
-            </span>
-          </>
-        );
-        return action.type === "anchor" ? (
-          <a href={`#${action.target}`} className={row}>
-            {inner}
-          </a>
-        ) : (
-          <button type="button" onClick={() => onOpen(action.target)} className={row}>
-            {inner}
-          </button>
-        );
-      })()}
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 정거장 원칙 — the 8-day arc as a route, not a calendar.
+// 정거장 원칙 - the 8-day arc as a route, not a calendar.
 //
 // The grid below shows eight cards of equal weight, which reads as eight days of
 // obligation however many sentences say otherwise. A route says it structurally:
 // two terminals you have to be at, six stops you choose. Sits directly above the
 // grid so the grid is read through it.
 //
-// Everything is derived from days[].mandatory — see the note in dict.program.
+// Everything is derived from days[].mandatory - see the note in dict.program.
 // ─────────────────────────────────────────────────────────────────────────────
 
 // The node keyword. days[].theme is "오프닝 · 문제 공개" / "크래시코스 (집중)";
@@ -870,59 +583,27 @@ function HeroLiveStrip({
 //
 // `days[].stopLabel` overrides the derivation where the head of the theme isn't
 // the reason to get off. Day 3·4's theme is "자율 빌드 · 멘토링", so the derived
-// keyword was 자율 빌드 — but self-paced build is not something you turn up for;
+// keyword was 자율 빌드 - but self-paced build is not something you turn up for;
 // the 1:1 mentoring is. Day 6 carries the same override since the mentoring went
 // daily across Day 3–7 (2026-08-09).
 // EDIT 2026-08-16: splits on a wide space (U+2002 since 2026-08-19), not "·". The middot was
 // removed from every user-facing string in the site that day; where it had been
 // separating the two halves of a chip or label it became a wide space, and this
 // parser reads exactly such a label. A normal space would not do as the split
-// token — "오프닝 문제 공개" has one inside each half — which is the reason the
+// token - "오프닝 문제 공개" has one inside each half - which is the reason the
 // replacement is a distinct character rather than " ".
 const stopKeyword = (theme: string) =>
   theme.split(" ")[0].replace(/\([^)]*\)/g, "").trim();
 
 // ── 멘토링 점 마커 ────────────────────────────────────────────────────────────
 // 어느 날에 점이 붙는지(mentoringOpenOn)와 구간(MENTORING_DAY_RANGE)은
-// schedule.ts가 스케줄에서 셉니다. 여기서 다시 세지 마세요 — 데이 카드의
+// schedule.ts가 스케줄에서 셉니다. 여기서 다시 세지 마세요 - 데이 카드의
 // "● 1:1 멘토링" 칩이 같은 함수를 읽고 있어서, 한쪽만 고치면 두 표면이
 // 어긋납니다. 판정이 그리로 올라간 이유는 그 파일의 주석에 있습니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
-// ── 지나온 레일의 기하 ────────────────────────────────────────────────────────
-// 한 행은 네 칸이고 노드는 각 칸의 한가운데(12.5% · 37.5% · 62.5% · 87.5%)에
-// 섭니다. 베이스 레일은 그 첫 노드에서 마지막 노드까지 그어지는데, 데스크톱에서는
-// 두 행이 이어져 보이도록 안쪽 끝만 행 가장자리까지 나갑니다(위 레일 주석).
-//
-// 그래서 "레일의 몇 %까지 채우는가"는 브레이크포인트마다 다릅니다. 같은 노드인데
-// 기준이 되는 레일 길이가 다르니까요:
-//   행 0 모바일  레일 12.5%→87.5% (길이 75)   · 노드 k까지 = 25k / 75
-//   행 0 데스크톱 레일 12.5%→100%  (길이 87.5) · 노드 k까지 = 25k / 87.5
-//   행 1 모바일  레일 12.5%→87.5% (길이 75)   · 노드 k까지 = 25k / 75
-//   행 1 데스크톱 레일 0%→87.5%   (길이 87.5) · 노드 k까지 = (12.5 + 25k) / 87.5
-//
-// 두 값을 CSS 변수로 넘기고 클래스에서 골라 쓰면(w-[var(--p-m)] sm:w-[var(--p-d)])
-// 스팬이 접힘과 무관하게 정확합니다. 퍼센트를 마크업에 두 번 적지 않으려고 이
-// 함수 하나에 모아 뒀습니다 — 칸 수(4)가 적히는 자리는 여기뿐입니다.
-function railFill(rowIdx: number, current: number): { m: string; d: string } {
-  const firstDay = rowIdx * 4 + 1;
-  const pct = (v: number) => `${Math.round(Math.min(1, Math.max(0, v)) * 1000) / 10}%`;
-  // 아직 이 행에 닿지 않았으면 0입니다. 데스크톱 둘째 행의 레일은 행 왼쪽
-  // 가장자리(0%)에서 시작해 첫 노드(12.5%)까지 이어지는 도입부를 갖는데, 그
-  // 도입부는 "앞 행에서 넘어온 구간"이라 현재 날이 앞 행에 있으면 그려지면
-  // 안 됩니다. 이 가드가 없으면 Day 2에 서 있는데 Day 4~5 사이에 정체불명의
-  // 밝은 토막이 뜹니다(2026-08-23에 실제로 그랬습니다).
-  if (current < firstDay) return { m: "0%", d: "0%" };
-  // 이 행에서 몇 번째 노드까지 지나왔는가 (0..3). 현재 날이 이 행보다 뒤면 끝까지.
-  const k = Math.min(3, current - firstDay);
-  const mobile = (25 * k) / 75;
-  const desktop = rowIdx === 0 ? (25 * k) / 87.5 : (12.5 + 25 * k) / 87.5;
-  return { m: pct(mobile), d: pct(desktop) };
-}
-
-function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: EventDayState }) {
+function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
   const r = dict.program.route;
-  const live = ev.phase === "during" && ev.current !== null;
   // 필 문구의 {from}·{to}를 파생값으로 채웁니다. 사전 계산해 두는 것은 두 행이
   // 각각 렌더될 때 같은 문자열을 두 번 만들지 않게 하려는 것뿐입니다.
   const mentoringPill = MENTORING_DAY_RANGE
@@ -935,8 +616,8 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
       {/* TWO ROWS OF FOUR ON MOBILE, one row of eight from sm up.
           This was a horizontally scrolling single row, on the theory that a route
           which wraps stops being a route. That theory lost to a fact: at 375px the
-          strip cut off around Day 5, so Day 8 — the ★ terminal this device exists
-          to show — was invisible until you scrolled it. A route map whose
+          strip cut off around Day 5, so Day 8 - the ★ terminal this device exists
+          to show - was invisible until you scrolled it. A route map whose
           destination is off-screen by default is worse than a wrapped one.
           Both anchors are now on screen at 375px with no scrolling.
 
@@ -962,7 +643,7 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
           // mt-9(모바일, 둘째 행): 여기 "계속 아래로"를 뜻하는 세로선+꺾쇠 화살표가
           // 있었습니다 (2026-08-10 제거). 두 행이 위아래로 놓인 것만으로 순서는
           // 읽히고, 화살표는 노선도에서 유일하게 아무 정거장도 가리키지 않는
-          // 표시라 시선을 먹었습니다. 여백은 남깁니다 — 지우기만 하면 둘째 행의
+          // 표시라 시선을 먹었습니다. 여백은 남깁니다 - 지우기만 하면 둘째 행의
           // 장소 로고(노드 위로 -top-5만큼 삐져나옵니다)가 첫 행의 멘토링 점·필과
           // 부딪힙니다. 36px은 화살표 블록이 차지하던 높이 그대로라, 제거로 세로
           // 리듬이 바뀌지 않습니다. 데스크톱은 두 행이 나란해서 여백이 없습니다.
@@ -988,34 +669,9 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
                 : "left-[12.5%] right-[12.5%] sm:left-0"
             }`}
           />
-          {/* 지나온 구간. 베이스 레일과 완전히 같은 자리에 겹쳐 그리고, 그 안에서
-              현재역까지만 폭을 채웁니다 — 위치를 두 번 계산하지 않으려는 것이라
-              inset 클래스는 위와 한 글자도 다르지 않아야 합니다.
-              베이스보다 한 픽셀 두껍습니다(h-px → h-[2px], -top-px로 중심 유지).
-              같은 두께로 색만 바꾸면 어두운 배경에서 "지나온 곳"이 아니라 렌더
-              잡티로 보입니다. 그 이상 두껍게는 마세요 — 레일이 노드보다 세지면
-              노선도가 아니라 진행 바가 됩니다. */}
-          {live && (
-            <span
-              aria-hidden
-              style={{
-                // CSS 변수로 넘기는 이유는 railFill 주석에 있습니다: 채움 비율이
-                // 브레이크포인트마다 달라서 클래스 하나로는 표현되지 않습니다.
-                ["--p-m" as string]: railFill(rowIdx, ev.current!).m,
-                ["--p-d" as string]: railFill(rowIdx, ev.current!).d,
-              }}
-              className={`pointer-events-none absolute top-[1.625rem] -mt-px h-[2px] ${
-                rowIdx === 0
-                  ? "left-[12.5%] right-[12.5%] sm:right-0"
-                  : "left-[12.5%] right-[12.5%] sm:left-0"
-              }`}
-            >
-              <span className="block h-full w-[var(--p-m)] rounded-full bg-gradient-to-r from-violet-400/70 to-violet-300/70 sm:w-[var(--p-d)]" />
-            </span>
-          )}
           {/* ── 멘토링 점 마커 ──────────────────────────────────────────────
               멘토링이 열리는 날(현재 Day 3·4·5·6·7)의 노드 아래에 에메랄드 점을
-              하나씩 찍습니다. 날짜는 MENTORING_DAYS가 스케줄에서 셉니다 —
+              하나씩 찍습니다. 날짜는 MENTORING_DAYS가 스케줄에서 셉니다 -
               여기에 3·4·5·6·7을 적지 마세요.
 
               2026-08-10, 연속 선에서 바뀌었습니다. 원래는 Day 3 노드에서 Day 7
@@ -1028,20 +684,20 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
 
               데스크톱도 같은 점입니다. 한 줄일 때는 선이 "닷새 내내"를 더 잘
               말하지만, 그 이득보다 두 레이아웃이 다른 시각 언어를 쓰는 값이
-              큽니다 — 같은 페이지를 폰과 노트북에서 번갈아 보는 사람에게 노선도가
+              큽니다 - 같은 페이지를 폰과 노트북에서 번갈아 보는 사람에게 노선도가
               두 개인 것처럼 보입니다. 점 다섯 개가 나란한 것으로도 "매일"은
               읽히고, 아래 필이 그것을 말로 확인해 줍니다.
 
               기하: 노드 행과 같은 flex-1 칸을 다시 깔아 점을 가운데 세웁니다.
               퍼센트(12.5%·37.5%…)를 쓰지 않는 이유는, 그러면 한 행이 네 칸이라는
               사실이 두 군데에 적히기 때문입니다. 점을 li 안에 넣지 않은 것도
-              의도적입니다 — 정거장 이름이 두 줄로 접히는 날이 있어서, li 기준으로
+              의도적입니다 - 정거장 이름이 두 줄로 접히는 날이 있어서, li 기준으로
               잡으면 점 높이가 날마다 들쭉날쭉해집니다.
 
               크기 5px → 7px (2026-08-10): 5px은 400원짜리 먼지처럼 보여서 노드에
               딸린 표시가 아니라 렌더 잡티로 읽혔습니다. 위로는 ol의 pb를 한 칸
               늘리고(pb-10) 아래로는 이 값을 30px로 내려, 정거장 이름과 필 사이의
-              여백을 키우기 전과 같게 유지합니다. 더 키우지는 마세요 — 선택일
+              여백을 키우기 전과 같게 유지합니다. 더 키우지는 마세요 - 선택일
               노드(○ 12px)와 크기가 붙으면 점이 아홉 번째 정거장처럼 보입니다.
 
               aria-hidden: 스크린리더에는 아래 필의 문장 하나로 충분합니다.
@@ -1074,7 +730,7 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
                   앞의 점은 위 마커와 같은 색·같은 크기입니다. 이 둘이 서로를
                   설명하는 짝이라 범례에는 넣지 않습니다(범례는 정거장의 층을
                   말하는 축이고, 멘토링은 정거장이 아닙니다). */}
-              <span className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-emerald-400/30 bg-emerald-400/[0.1] px-2.5 py-1 text-[0.72rem] font-semibold leading-none text-emerald-100">
+              <span className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-emerald-400/30 bg-emerald-400/[0.1] px-2.5 py-1 text-xs font-semibold leading-none text-emerald-100">
                 <span aria-hidden className="h-[7px] w-[7px] shrink-0 rounded-full bg-emerald-400/80" />
                 {mentoringPill}
               </span>
@@ -1082,29 +738,23 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
           )}
           {row.map((d) => {
             // 층 판정은 schedule.ts의 dayEmphasis 하나뿐입니다. 여기서
-            // mandatory·spotlight를 직접 보지 마세요 — 데이 카드의 배지가 같은
+            // mandatory·spotlight를 직접 보지 마세요 - 데이 카드의 배지가 같은
             // 함수를 읽고 있어서, 우선순위를 두 곳에 적으면 갈라집니다.
             const emphasis = dayEmphasis(d);
             const anchor = emphasis === "must";
             const spot = emphasis === "worth";
             // 싱가포르에 몸이 있어야 하는 날. "pending"(장소 미확정)은 일부러
-            // 제외합니다 — 마커는 "여기로 오세요"라는 약속인데, 아직 어디로 갈지
+            // 제외합니다 - 마커는 "여기로 오세요"라는 약속인데, 아직 어디로 갈지
             // 모르는 날에 그 약속을 하면 안 됩니다. 지금은 해당 날이 없습니다.
             const onSite = d.dayMode === "offline";
-            // 시간의 층. 정거장의 층(필참·놓치면 아까운·선택)과 다른 축이라
-            // 서로 덮어쓰지 않고 겹쳐 얹힙니다 — 다만 이름의 밝기에서는 시간이
-            // 이깁니다(아래). 이미 지나간 필참일은 더 이상 행동 안내가 아니니까요.
-            const prog = dayProgress(d.day, ev);
-            const passed = prog === "past";
-            const today = prog === "today";
             return (
               <li key={d.day} className="relative flex-1">
-                {/* 정거장 하나가 버튼 하나입니다 — 노드와 이름을 함께 감쌉니다.
+                {/* 정거장 하나가 버튼 하나입니다 - 노드와 이름을 함께 감쌉니다.
                     노드만 누르게 하면 모바일에서 탭 타깃이 12~28px짜리 원이 됩니다.
 
                     py-2.5는 터치 영역용입니다(시각 크기는 그대로). 노드 줄 h-8에
                     위아래 10px씩 더해 48px을 넘기고, 이름 줄까지 합치면 한 칸이
-                    통째로 눌립니다. cursor-pointer는 명시합니다 — Tailwind
+                    통째로 눌립니다. cursor-pointer는 명시합니다 - Tailwind
                     preflight가 버튼의 커서를 default로 되돌려 놓기 때문에, 없으면
                     데스크톱에서 누를 수 있다는 신호가 hover 밝기 하나뿐입니다.
 
@@ -1116,17 +766,17 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
                   className="group flex w-full cursor-pointer flex-col items-center gap-1.5 px-1 py-2.5 text-center"
                   // 마커는 aria-hidden이라 스크린리더에는 안 보입니다. 눈으로 읽는
                   // 사람이 얻는 정보를 여기서 말로 채웁니다. 진행 상태도 같은 이유로
-                  // 여기 붙습니다 — 펄스와 감쇠는 눈으로만 읽히니까요.
+                  // 여기 붙습니다 - 펄스와 감쇠는 눈으로만 읽히니까요.
                   //
                   // 끝의 tapHint("자세히 보기")는 이 버튼이 무엇을 하는지 말합니다.
-                  // 데이 카드의 같은 버튼이 쓰는 문자열 그대로예요 — 두 자리가 같은
+                  // 데이 카드의 같은 버튼이 쓰는 문자열 그대로예요 - 두 자리가 같은
                   // 모달을 여는데 이름이 다르면 두 기능으로 들립니다.
-                  aria-label={`Day ${d.day}, ${t(d.theme)}${onSite ? `, ${t(dict.program.offlineLabel)}` : ""}${onSite && d.venueLogo ? `, ${d.venueLogo.name}` : ""}${today ? `, ${t(dict.program.dayToday)}` : passed ? `, ${t(dict.program.dayDone)}` : ""}, ${t(dict.program.tapHint)}`}
+                  aria-label={`Day ${d.day}, ${t(d.theme)}${onSite ? `, ${t(dict.program.offlineLabel)}` : ""}${onSite && d.venueLogo ? `, ${d.venueLogo.name}` : ""}, ${t(dict.program.tapHint)}`}
                 >
                   {/* Fixed-height row so both node sizes share one centreline and
                       the rail passes through every node at the same height. */}
                   <span className="relative flex h-8 items-center justify-center">
-                    {/* 현장 마커. ABSOLUTE인 것이 핵심입니다 — 흐름에 넣으면 모든
+                    {/* 현장 마커. ABSOLUTE인 것이 핵심입니다 - 흐름에 넣으면 모든
                         노드가 아래로 밀리는데, 레일은 <ol> 기준 top-[1.625rem]에 절대
                         배치돼 있어서 함께 내려오지 않습니다. 레일이 노드를 관통하는
                         정렬이 깨지느니 마커를 띄웁니다.
@@ -1136,14 +786,14 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
                         노선도에서 알고 싶은 것은 어느 문으로 가느냐입니다.
 
                         박스는 h-4 × w-14 고정에 object-contain입니다. 폭을 고정해
-                        두는 것이 핵심이에요 — 모바일에서 한 칸이 ~86px이라 마크가
+                        두는 것이 핵심이에요 - 모바일에서 한 칸이 ~86px이라 마크가
                         제 비율대로 늘어나면 옆 칸을 침범합니다. 덕분에 FOUNDRY처럼
                         가로로 긴 워드마크는 폭에, aws처럼 정사각에 가까운 마크는
                         높이에 맞춰 각자 들어갑니다.
 
                         max-w-none이 없으면 안 됩니다. Tailwind preflight의
                         `img { max-width: 100% }`에서 100%는 이 이미지의 컨테이닝
-                        블록, 즉 노드 하나짜리 span(w-7 또는 w-6)입니다 — 그대로
+                        블록, 즉 노드 하나짜리 span(w-7 또는 w-6)입니다 - 그대로
                         두면 로고가 27~32px로 눌려서 필참일과 선택일의 마크 크기가
                         제각각이 됩니다.
 
@@ -1157,66 +807,34 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
                         aria-hidden
                         // tall은 세로로 긴 마크만 씁니다(DayMeta.venueLogo 주석).
                         // 박스가 16px에서 24px이 되고 top이 그만큼 올라가 아래 끝은
-                        // 다른 마커와 같은 자리에 남습니다 — 정렬 기준은 위가 아니라
+                        // 다른 마커와 같은 자리에 남습니다 - 정렬 기준은 위가 아니라
                         // 아래입니다. 위를 맞추면 큰 마크만 노드 쪽으로 내려옵니다.
                         className={`pointer-events-none absolute left-1/2 w-14 max-w-none -translate-x-1/2 object-contain opacity-45 transition group-hover:opacity-90 ${
                           d.venueLogo.tall ? "-top-8 h-7" : "-top-5 h-4"
                         }`}
                       />
                     )}
-                    {/* 현재역. 노드 뒤에 링 하나와 펄스 하나를 깔아 둡니다 —
-                        노드 자체의 모양(★ / ◉ / ○)은 그대로 두는 것이 핵심입니다.
-                        오늘이라고 해서 그 날의 층이 바뀌지는 않으니까요.
-                        펄스는 등록 밴드가 쓰던 softPulse 어휘 그대로이고 색만
-                        바이올렛입니다. scale(2.2)까지 커지므로 시작 크기는 노드와
-                        같아야 합니다 — 더 크게 잡으면 옆 칸까지 번집니다. */}
-                    {today && (
-                      <>
-                        <span
-                          aria-hidden
-                          className="pointer-events-none absolute h-9 w-9 rounded-full border border-violet-300/60"
-                        />
-                        <span
-                          aria-hidden
-                          className="pointer-events-none absolute h-7 w-7 rounded-full bg-violet-400/40 animate-[softPulse_2.4s_ease-in-out_infinite] motion-reduce:animate-none"
-                        />
-                      </>
-                    )}
                     {anchor ? (
-                      <span className={`relative flex h-7 w-7 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-[0.6rem] text-rose-100 shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:bg-rose-400/40 ${passed ? "opacity-55" : ""}`}>
+                      <span className={`relative flex h-7 w-7 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-[0.6rem] text-rose-100 shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:bg-rose-400/40`}>
                         <span aria-hidden>★</span>
                       </span>
                     ) : spot ? (
                       // 필참보다 한 치수 작고 점보다 두 치수 큽니다. ★를 쓰지 않고
-                      // 색도 rose가 아닌 violet인 것은 의도적입니다 — ★와 rose는
+                      // 색도 rose가 아닌 violet인 것은 의도적입니다 - ★와 rose는
                       // 노선도에서 오직 "필참"만 뜻해야 하고, 이 날은 선택일입니다.
-                      <span className={`relative flex h-6 w-6 items-center justify-center rounded-full border border-violet-300/60 bg-violet-400/20 shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:bg-violet-400/40 ${passed ? "opacity-55" : ""}`}>
+                      <span className={`relative flex h-6 w-6 items-center justify-center rounded-full border border-violet-300/60 bg-violet-400/20 shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:bg-violet-400/40`}>
                         <span aria-hidden className="h-2 w-2 rounded-full bg-violet-200" />
                       </span>
                     ) : (
-                      // 지나온 선택일만 속이 찹니다. 빈 원은 "아직 들르지 않은
-                      // 정거장"이라, 지나온 날에는 채워져 있는 편이 노선도의
-                      // 관례에 맞습니다. 채움은 흰색 한 톤 낮게 — 오늘보다 세지면
-                      // 현재역이 묻힙니다.
-                      <span className={`relative h-3 w-3 rounded-full shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:border-violet-300/70 group-hover:bg-violet-400/30 ${
-                        passed ? "border border-white/40 bg-white/40" : "border border-white/35 bg-[#0a0614]"
-                      }`} />
+                      <span className="relative h-3 w-3 rounded-full border border-white/35 bg-[#0a0614] shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:border-violet-300/70 group-hover:bg-violet-400/30" />
                     )}
                   </span>
                   {/* 시간의 층이 정거장의 층을 이기는 유일한 자리입니다. 지나온
                       날의 "Day 1"이 여전히 rose로 빛나면, 이미 끝난 필참일이 아직
                       가야 할 곳처럼 읽힙니다. 오늘은 반대로 최고 밝기입니다. */}
                   <span
-                    className={`text-[0.62rem] font-bold leading-none ${
-                      passed
-                        ? "text-white/35"
-                        : today
-                          ? "text-violet-100"
-                          : anchor
-                            ? "text-rose-200"
-                            : spot
-                              ? "text-violet-200"
-                              : "text-white/55"
+                    className={`text-xs font-bold leading-none ${
+                      anchor ? "text-rose-200" : spot ? "text-violet-200" : "text-white/60"
                     }`}
                   >
                     {t(dict.program.dayLabel)} {d.day}
@@ -1224,7 +842,7 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
                   {/* 정거장 이름의 밝기 규칙은 하나입니다: 필참·스포트라이트는
                       굵은 흰색, 나머지 선택일(Day 2·3·4·6)은 같은 회색.
                       세션이 있는 날/자율일 같은 기준으로 흐리게 하는 로직은 없고,
-                      만들지도 마세요 — 노드의 층(필참 / 놓치면 아까운 / 선택)이
+                      만들지도 마세요 - 노드의 층(필참 / 놓치면 아까운 / 선택)이
                       이 페이지가 쓰는 유일한 위계입니다. Day 6이 유독 흐려 보인다면
                       그건 규칙이 아니라 이웃 탓입니다(양옆 Day 5·7이 둘 다 굵은
                       흰색이라 대비가 큽니다).
@@ -1232,20 +850,14 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
                       위계는 서므로, 대비를 낮추는 일까지 색이 겹쳐 할 필요는
                       없었습니다. 작은 화면에서 0.68rem·/60은 읽히지 않습니다. */}
                   <span
-                    className={`break-keep text-[0.68rem] leading-tight transition ${
-                      passed
-                        ? "text-white/40 group-hover:text-white/75"
-                        : today
-                          ? "font-bold text-white"
-                          : anchor || spot
-                            ? "font-bold text-white"
-                            : "text-white/75 group-hover:text-white"
+                    className={`break-keep text-xs leading-tight transition ${
+                      anchor || spot ? "font-bold text-white" : "text-white/75 group-hover:text-white"
                     }`}
                   >
                     {d.stopLabel ? t(d.stopLabel) : stopKeyword(t(d.theme))}
                   </span>
                   {/* 필참 배지는 흐름에서 빠져 있습니다 (absolute, 2026-08-09).
-                      보이는 자리는 전과 같지만 — 정거장 이름 바로 아래 —
+                      보이는 자리는 전과 같지만 - 정거장 이름 바로 아래 -
                       행 높이에는 더하지 않습니다. 이 배지를 다는 날은 Day 1·8
                       둘뿐인데, 흐름 안에 있으면 그 두 칸이 행 전체를 24px 키우고,
                       행 바닥에 붙는 멘토링 마커가 정거장 이름에서 그만큼 멀어져
@@ -1253,7 +865,7 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
                       칸)과 마커·필이 지나는 구간(Day 3~7)은 가로로 겹치지 않아,
                       넘쳐도 부딪히지 않습니다. */}
                   {anchor && (
-                    <span className="absolute left-1/2 top-full mt-0.5 -translate-x-1/2 whitespace-nowrap rounded-full border border-rose-400/30 bg-rose-400/10 px-1.5 py-0.5 text-[0.58rem] font-bold leading-none text-rose-200">
+                    <span className="absolute left-1/2 top-full mt-0.5 -translate-x-1/2 whitespace-nowrap rounded-full border border-rose-400/30 bg-rose-400/10 px-1.5 py-0.5 text-xs font-bold leading-none text-rose-200">
                       {t(dict.program.mandatoryBadge)}
                     </span>
                   )}
@@ -1273,7 +885,7 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
           이어지는 것처럼 읽혔습니다. (2) 오른쪽 정렬로 한 줄 아래: 빈 자리에 혼자 떠서 툭
           튀어나왔습니다. (3) 범례 끝에 구분선으로 붙이기: 네 번째 범례로 읽혔고,
           모바일에서는 어차피 줄이 넘어가 한 줄이 늘었습니다.
-          합친 이유는 자리 때문만이 아닙니다 — 원칙 문단이 "이 무대"라고 쓰는데
+          합친 이유는 자리 때문만이 아닙니다 - 원칙 문단이 "이 무대"라고 쓰는데
           그 무대의 이름을 대는 문장이 바로 이 줄이었습니다. 한 문장 안에 있어야
           지시어가 자기 앞의 말을 가리킵니다.
           범례 세 줄은 그대로 둡니다. 스포트라이트가 붙는 날이 둘(Day 5·7)뿐이라
@@ -1281,17 +893,17 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
           선택일에 배지 비슷한 것을 달면 의무로 읽힙니다(schedule.ts spotlight
           주석의 결정). 게다가 지금 그 아래는 멘토링 점 마커가 지나갑니다. */}
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
-        <span className="flex items-center gap-1.5 text-[0.66rem] text-rose-200/85">
+        <span className="flex items-center gap-1.5 text-xs text-rose-200/85">
           <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-[0.42rem] text-rose-100">★</span>
           {t(r.legendMandatory)}
         </span>
-        <span className="flex items-center gap-1.5 text-[0.66rem] text-white/50">
+        <span className="flex items-center gap-1.5 text-xs text-white/55">
           <span aria-hidden className="h-2 w-2 rounded-full border border-white/35" />
           {t(r.legendOptional)}
         </span>
         {/* 세 번째 모양. 스와치는 노선도의 스포트라이트 노드를 그대로 줄인 것이라
             둘이 같은 것임이 눈으로 이어집니다. */}
-        <span className="flex items-center gap-1.5 text-[0.66rem] text-violet-200/85">
+        <span className="flex items-center gap-1.5 text-xs text-violet-200/85">
           <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-violet-300/60 bg-violet-400/20">
             <span className="h-1.5 w-1.5 rounded-full bg-violet-200" />
           </span>
@@ -1302,16 +914,16 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
       {/* The principle, then what the optional stops actually are. Two lines, one
           claim: "you choose" on top, "and here's why they're worth choosing"
           underneath. The second is a step quieter so the thesis still leads, but
-          not a footnote — it is the line that stops "선택" being read as
+          not a footnote - it is the line that stops "선택" being read as
           "skippable filler".
           첫 줄이 행선지("결과 공유회 = 기업·업계 전문가 앞 검증")까지 안고
-          있습니다 — 위 범례 옆에 따로 서 있던 줄을 여기로 합쳤습니다 (2026-08-10).
+          있습니다 - 위 범례 옆에 따로 서 있던 줄을 여기로 합쳤습니다 (2026-08-10).
           mt-5 → mt-4: 그 줄이 사라지며 위쪽 여백이 한 칸 헐거워졌습니다. */}
       <div className="mx-auto mt-4 max-w-3xl text-center">
-        <p className="break-keep text-[13px] font-semibold leading-relaxed text-white/80 sm:text-sm">
+        <p className="break-keep text-xs font-semibold leading-relaxed text-white/80 sm:text-sm">
           {t(r.principle)}
         </p>
-        <p className="mt-2.5 break-keep text-xs leading-relaxed text-white/60 sm:text-[13px]">
+        <p className="mt-2.5 break-keep text-xs leading-relaxed text-white/60">
           {t(r.optionalValue)}
         </p>
       </div>
@@ -1322,7 +934,7 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
 // One benefit card. Collapses to two bullets ON MOBILE ONLY.
 //
 // Desktop must render exactly what it rendered before, so the extra points are
-// never removed from the DOM — they are `hidden sm:flex`, which means the phone
+// never removed from the DOM - they are `hidden sm:flex`, which means the phone
 // hides them and every other viewport (and every crawler and screen reader in
 // desktop layout) sees the full list. The toggle itself is `sm:hidden`, so above
 // the breakpoint there is no button, no tab stop and no aria state at all.
@@ -1330,7 +942,7 @@ function RouteMap({ t, onOpen, ev }: { t: Tfn; onOpen: (n: number) => void; ev: 
 // The tap target is a transparent overlay across the whole card rather than a
 // small "더 보기" link: on a phone the card IS the control, and a 4mm link at the
 // bottom of a card is a worse target than the 200px block above it. The label row
-// stays visible as the affordance — an overlay with no visible cue is a card that
+// stays visible as the affordance - an overlay with no visible cue is a card that
 // silently eats taps.
 function BenefitCard({
   item,
@@ -1359,19 +971,19 @@ function BenefitCard({
           </li>
         ))}
       </ul>
-      {/* footnote — 후원사 매장 위치 한 줄 + 짧은 지도 링크 (DECIDED 2026-08-16).
+      {/* footnote - 후원사 매장 위치 한 줄 + 짧은 지도 링크 (DECIDED 2026-08-16).
           ul 밖입니다: points는 모바일에서 앞 두 줄만 펼쳐지는데(아래 더 보기),
           어디서 쓰는지는 접히면 안 되는 정보입니다. 목록에 섞으면 수료증이 세
           장으로 보이기도 합니다(dict의 BenefitFootnote 주석).
           링크는 "지도" 한 낱말이고 주소는 앞의 text가 말합니다. */}
       {item.footnote && (
-        <p className="mt-3 break-keep text-xs leading-relaxed text-white/50">
+        <p className="mt-3 break-keep text-xs leading-relaxed text-white/55">
           {t(item.footnote.text)}{" "}
           <a
             href={item.footnote.url}
             target="_blank"
             rel="noopener noreferrer"
-            /* relative + after:-inset-2 — 글자는 그대로 두고 탭 영역만 8px씩
+            /* relative + after:-inset-2 - 글자는 그대로 두고 탭 영역만 8px씩
                넓힙니다. "지도"는 두 글자라 실측 23x16px이고, 폰에서 손가락으로
                정확히 짚기 어렵습니다. 멘토 카드의 LinkedIn 아이콘이 쓰는 것과
                같은 수법이에요(모양을 키우면 문장 속 링크가 버튼처럼 보입니다). */
@@ -1446,7 +1058,7 @@ function ProgramStats({ t }: { t: Tfn }) {
                 {row.n}
                 <span className="ml-0.5 text-[0.5em] font-bold">{t(s.unit)}</span>
               </dd>
-              <dt className={`mt-1.5 text-[0.68rem] font-bold uppercase tracking-[0.1em] ${row.strong ? "text-rose-300/80" : "text-white/50"}`}>
+              <dt className={`mt-1.5 text-xs font-bold uppercase tracking-[0.1em] ${row.strong ? "text-rose-300/80" : "text-white/55"}`}>
                 {t(row.label)}
               </dt>
             </div>
@@ -1459,22 +1071,19 @@ function ProgramStats({ t }: { t: Tfn }) {
 }
 
 // One clean summary card per day (deck-style). Opens the day detail modal on
-// click rather than exploding every session inline — keeps the arc scannable.
-function DayCard({ day, t, onOpen, ev }: { day: DayMeta; t: Tfn; onOpen: (n: number) => void; ev: EventDayState }) {
+// click rather than exploding every session inline - keeps the arc scannable.
+function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number) => void }) {
   const allSelfPaced = dayIsSelfPaced(day.day);
   // 노선도의 노드 모양을 결정하는 그 함수입니다. 카드가 자기만의 판정을 갖지
   // 않아야 두 표면이 함께 움직입니다.
   const emphasis = dayEmphasis(day);
-  // 시간의 층. 노선도의 노드와 같은 함수를 읽습니다 — 여기서 Date를 다시 읽으면
-  // 자정 언저리에 노선도와 카드가 서로 다른 날을 가리킬 수 있습니다.
-  const prog = dayProgress(day.day, ev);
   return (
     <button
       type="button"
       onClick={() => onOpen(day.day)}
       // The two anchors carry a rose-tinted border at rest so they read first in
       // a grid of eight. Rose because that is already the 필참 colour on the badge
-      // inside them and on the route terminals above — one meaning, one hue. Kept
+      // inside them and on the route terminals above - one meaning, one hue. Kept
       // to a border/tint step: a stronger treatment would turn the other six into
       // greyed-out rejects, which is the opposite of "stops you choose".
       //
@@ -1487,16 +1096,16 @@ function DayCard({ day, t, onOpen, ev }: { day: DayMeta; t: Tfn; onOpen: (n: num
       // 자체가 진행 바가 됩니다. 새 장치를 만들지 않고 투명도와 테두리만 씁니다.
       //
       // 지난 날: 감쇠하되 숨기지 않습니다. hover와 키보드 포커스에서 원래 밝기로
-      //   돌아와요 — 지난 날 카드는 여전히 아카이브로 읽혀야 하고, 모달도 그대로
+      //   돌아와요 - 지난 날 카드는 여전히 아카이브로 읽혀야 하고, 모달도 그대로
       //   열립니다. focus-visible이 아니라 focus-within인 것은 카드가 <button>
       //   자신이라 둘 다 걸리지만, 안쪽에 포커서블이 생겨도 따라오게 하려는 것.
       // 오늘: 비전 섹션 ★시작 카드가 이미 쓰는 어법(border-violet-400/50 +
       //   bg-violet-500/10)입니다. 새 색을 만들지 않았어요. 필참 테두리(rose)보다
-      //   우선합니다 — Day 1은 필참이면서 이미 지나간 날이고, 지금 서 있어야 할
+      //   우선합니다 - Day 1은 필참이면서 이미 지나간 날이고, 지금 서 있어야 할
       //   카드는 오늘 하나뿐입니다. 8/29에는 Day 8이 필참이면서 동시에 오늘이
       //   되는데, 그때도 같은 규칙으로 오늘이 이깁니다.
       //
-      // DECIDED 2026-08-23: 카드 진행 효과를 노선도와 같은 강도로 — 오늘 카드
+      // DECIDED 2026-08-23: 카드 진행 효과를 노선도와 같은 강도로 - 오늘 카드
       // 글로우(등록 필의 보라 글로우 어법), 지난 카드 깊은 감쇠 + 노드형 완료
       // 배지, 지난 그룹 헤더 감쇠.
       //
@@ -1508,21 +1117,13 @@ function DayCard({ day, t, onOpen, ev }: { day: DayMeta; t: Tfn; onOpen: (n: num
       //   채도를 함께 빼면 밝기를 덜 깎고도 "지나간 것"이 읽혀요. 복원에는 filter도
       //   같이 돌아와야 해서 transition-[opacity,filter]입니다.
       // 오늘 카드의 글로우: nav 등록 필이 쓰던 보라 글로우 어법 그대로입니다.
-      //   상시 글로우이고 애니메이션은 걸지 않았습니다 — 움직임은 "● 오늘" 필의
+      //   상시 글로우이고 애니메이션은 걸지 않았습니다 - 움직임은 "● 오늘" 필의
       //   펄스 점 하나로 충분하고, 카드 전체가 숨쉬면 격자에서 혼자 튑니다.
       className={`group relative flex h-full flex-col rounded-2xl border p-5 text-left transition duration-300 hover:-translate-y-1 hover:border-violet-400/30 hover:bg-white/[0.06] ${
-        prog === "past"
-          ? "opacity-[0.55] saturate-[0.85] transition-[opacity,filter] duration-300 hover:opacity-100 hover:saturate-100 focus-within:opacity-100 focus-within:saturate-100 focus:opacity-100 focus:saturate-100"
-          : ""
-      } ${
-        prog === "today"
-          ? "border-violet-400/50 bg-violet-500/10 shadow-[0_0_30px_rgba(124,92,255,0.28)]"
-          : emphasis === "must"
-            ? "border-rose-400/25 bg-white/[0.055]"
-            : "border-white/[0.08] bg-white/[0.03]"
+        emphasis === "must" ? "border-rose-400/25 bg-white/[0.055]" : "border-white/[0.08] bg-white/[0.03]"
       }`}
     >
-      {/* FIX 2026-08-20: 모바일에서 DAY 숫자와 날짜가 붙어 보이던 것 — 헤더 행
+      {/* FIX 2026-08-20: 모바일에서 DAY 숫자와 날짜가 붙어 보이던 것 - 헤더 행
           우측 정렬로 분리.
 
           justify-between은 이미 있었고 360·390px 실측에서도 날짜는 우측 패딩
@@ -1535,75 +1136,50 @@ function DayCard({ day, t, onOpen, ev }: { day: DayMeta; t: Tfn; onOpen: (n: num
              가운데로 맞추면 날짜가 숫자 중앙에 떠서 두 블록이 각자 다른 줄에 선
              것처럼 읽힙니다. 베이스라인을 공유하면 "DAY 1"과 "08.22 토"가 한 줄로
              앉습니다. 왼쪽 블록이 이미 items-baseline이라 규칙도 하나로 통일됩니다.
-             전 브레이크포인트 동일 — 분기 없습니다. */}
+             전 브레이크포인트 동일 - 분기 없습니다. */}
       <div className="flex items-baseline justify-between gap-3">
         <span className="flex items-baseline gap-1.5">
-          <span className="text-[0.6rem] font-bold uppercase tracking-wider text-violet-300/70">{t(dict.program.dayLabel)}</span>
+          <span className="text-xs font-bold uppercase tracking-wider text-violet-300/70">{t(dict.program.dayLabel)}</span>
           {/* 오늘 카드에서만 숫자가 보라로 섭니다. 노선도의 현재역 이름이 최고
-              밝기를 갖는 것과 같은 규칙이에요 — 두 층위가 같은 자리를 같은
+              밝기를 갖는 것과 같은 규칙이에요 - 두 층위가 같은 자리를 같은
               방식으로 가리켜야 합니다. */}
-          <span className={`text-2xl font-black leading-none ${prog === "today" ? "text-violet-200" : "text-white"}`}>{day.day}</span>
-          {/* ✓ 하나. 글자를 붙이지 않는 이유는 dict.program.dayDone 주석에
-              있습니다 — 넉 장에 "지난 일정"이 반복되면 아카이브가 폐기물로
-              읽힙니다. 낭독에는 sr-only로 이름이 갑니다.
-
-              2026-08-23: 흐릿한 링 배지에서 채워진 원으로. 노선도의 지나온 노드가
-              속이 차는 것과 같은 어법입니다 — 두 표면이 "지나왔다"를 다른 모양으로
-              말하고 있었습니다. 카드 전체가 감쇠된 상태라 배지 자체는 오히려
-              또렷해야 눈에 걸립니다. */}
-          {prog === "past" && (
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-[0.65rem] font-black leading-none text-white/80">
-              <span aria-hidden>✓</span>
-              <span className="sr-only">{t(dict.program.dayDone)}</span>
-            </span>
-          )}
-          {/* 오늘 필. 점은 등록 밴드와 같은 softPulse 어휘이고, 링이 퍼져 나가는
-              동안 가운데 점은 그대로 있어야 해서 두 겹입니다. */}
-          {prog === "today" && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/40 bg-violet-500/15 px-2 py-0.5 text-[0.6rem] font-bold leading-none text-violet-100">
-              <span aria-hidden className="relative flex h-[6px] w-[6px] shrink-0">
-                <span className="absolute inline-flex h-full w-full rounded-full bg-violet-300/70 animate-[softPulse_2.4s_ease-in-out_infinite] motion-reduce:animate-none" />
-                <span className="relative inline-flex h-full w-full rounded-full bg-violet-200" />
-              </span>
-              {t(dict.program.dayToday)}
-            </span>
-          )}
+          <span className="text-2xl font-black leading-none text-white">{day.day}</span>
         </span>
         {/* shrink-0: 날짜는 줄바꿈되면 안 되는 한 덩어리입니다. */}
-        <span className="shrink-0 text-[0.7rem] text-white/55">{day.date} {t(day.weekday)}</span>
+        <span className="shrink-0 text-xs text-white/55">{day.date} {t(day.weekday)}</span>
       </div>
       {/* ── 정거장의 층, 노선도와 같은 세 가지 (2026-08-10) ──────────────────
           여기는 오래 필참/선택 두 가지였습니다. 노선도가 Day 5·7을 ◉로 강조하는
           동안 카드에서는 그 둘이 나머지 선택일과 똑같이 보여서, 같은 사실을 두
           표면이 다르게 말하고 있었습니다. 이제 셋 다 dayEmphasis 하나에서 나옵니다.
-          날짜를 여기에 적지 마세요 — spotlight를 뒤집으면 노드와 이 배지가 같이
+          날짜를 여기에 적지 마세요 - spotlight를 뒤집으면 노드와 이 배지가 같이
           움직여야 합니다. */}
       <div className="mt-3 flex flex-wrap gap-1.5">
         {emphasis === "must" ? (
-          <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/30 bg-rose-400/10 px-2 py-0.5 text-[0.68rem] font-bold text-rose-200">
+          <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/30 bg-rose-400/10 px-2 py-0.5 text-xs font-bold text-rose-200">
             <span aria-hidden>★</span>{t(dict.program.mandatoryBadge)}
           </span>
         ) : emphasis === "worth" ? (
-          /* 필참과 같은 무게(테두리 + 굵은 글씨)지만 색과 글리프가 다릅니다 —
+          /* 필참과 같은 무게(테두리 + 굵은 글씨)지만 색과 글리프가 다릅니다 -
              violet ◉는 이 사이트에서 오직 "놓치면 아까운"만 뜻하고, rose ★는
              오직 "필참"만 뜻합니다. 두 축이 색으로 갈려 있어서 무게가 같아도
              의무로 번지지 않습니다. 이 날이 선택이라는 사실은 데이 모달의
              "선택 참여" 칩이 글자로 받습니다(schedule.ts spotlight 주석의 거래).
-             rose를 쓰거나 ★를 달지 마세요 — 그 순간 필참일이 넷이 됩니다. */
-          <span className="inline-flex items-center gap-1 rounded-full border border-violet-400/30 bg-violet-400/10 px-2 py-0.5 text-[0.68rem] font-bold text-violet-200">
+             rose를 쓰거나 ★를 달지 마세요 - 그 순간 필참일이 넷이 됩니다. */
+          <span className="inline-flex items-center gap-1 rounded-full border border-violet-400/30 bg-violet-400/10 px-2 py-0.5 text-xs font-bold text-violet-200">
             <SpotlightGlyph />{t(dict.program.spotlightBadge)}
           </span>
         ) : (
           /* Same slot as the 필참 pill, deliberately quieter: borderless and
              low-contrast so it registers as a fact about the day rather than
              competing with the two anchors. */
-          <span className="inline-flex items-center rounded-full bg-white/[0.06] px-2 py-0.5 text-[0.68rem] font-semibold text-white/55">
+          <span className="inline-flex items-center rounded-full bg-white/[0.06] px-2 py-0.5 text-xs font-semibold text-white/55">
             {t(dict.program.optionalBadge)}
           </span>
         )}
         <DayModeBadge day={day} t={t} selfPaced={day.selfPacedDay ?? allSelfPaced} />
         {/* Day 3·4 carry self-paced build AND a real session (the 1:1 slot), so
-            DayModeBadge resolves them to a plain "온라인" pill — which is the
+            DayModeBadge resolves them to a plain "온라인" pill - which is the
             exact misread this badge exists to prevent: it reads as a scheduled
             online day when the fixed part is one optional slot. Show the
             self-paced pill ALONGSIDE the mode on those days. Day 6 already
@@ -1611,59 +1187,59 @@ function DayCard({ day, t, onOpen, ev }: { day: DayMeta; t: Tfn; onOpen: (n: num
             it up. Only Days 3·4·6 have self-paced entries, so this stays rare
             enough to mean something. */}
         {dayHasSelfPaced(day.day) && !(day.selfPacedDay ?? allSelfPaced) && (
-          <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60">
+          <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-2 py-0.5 text-xs font-semibold text-white/60">
             {t(dict.program.selfPacedLabel)}
           </span>
         )}
         {/* 그날 시간을 비워야 하는 창 (DayMeta.hours). 없는 날은 아무것도 그리지
-            않습니다 — 시간이 없는 게 그 날의 성격이고, "미정"을 찍으면 있지도 않은
+            않습니다 - 시간이 없는 게 그 날의 성격이고, "미정"을 찍으면 있지도 않은
             공백을 만듭니다. `hours`는 두 로케일이 같은 문자열이라 sr-only 라벨만
             번역합니다.
 
             DECIDED 2026-08-20: 시간 칩을 상태 칩보다 한 단계 위로 올립니다.
             같은 줄의 다른 칩들과 똑같은 모양이라 "이 날 언제 가야 하나"가 참여
             방식(필참·현장·온라인) 사이에 묻혀 있었는데, 카드를 스캔할 때 먼저
-            찾는 것은 시간입니다. 승격은 무채색 밝기로만 합니다 — 채움을 한 단계
+            찾는 것은 시간입니다. 승격은 무채색 밝기로만 합니다 - 채움을 한 단계
             올리고(bg-white/10) 글자를 굵고 밝게(font-bold, white/90), 크기를 반
             단계 키웁니다(0.68 → 0.72rem).
 
             유채색을 쓰지 마세요. rose는 필참, violet은 "놓치면 아까운", amber는
             어워드로 이미 각자의 뜻이 있어서, 시간에 색을 주면 네 번째 축이 생기고
-            그 축들의 자리를 침범합니다. 상태 칩의 스타일도 건드리지 마세요 —
+            그 축들의 자리를 침범합니다. 상태 칩의 스타일도 건드리지 마세요 -
             승격은 둘 사이의 대비로 성립합니다.
 
             shrink-0: 좁은 폭에서 칩 줄이 접힐 때 이 칩만은 줄어들어 잘리지 않게. */}
         {day.hours && (
-          <span className="shrink-0 rounded-full border border-white/20 bg-white/10 px-2.5 py-0.5 text-[0.72rem] font-bold text-white/90">
+          <span className="shrink-0 rounded-full border border-white/20 bg-white/10 px-2.5 py-0.5 text-xs font-bold text-white/90">
             <span className="sr-only">{t(dict.program.hoursLabel)} </span>
             {day.hours}
           </span>
         )}
       </div>
       <h4 className="mt-3 text-[15px] font-bold leading-snug text-white">{t(day.theme)}</h4>
-      <p className="mt-1.5 text-[13px] leading-relaxed text-white/65">{t(day.summary)}</p>
-      {/* '올 이유' 한 줄 — 요약(무엇을 하는 날인가) 아래, 세션 카운트 위.
+      <p className="mt-1.5 text-xs leading-relaxed text-white/65">{t(day.summary)}</p>
+      {/* '올 이유' 한 줄 - 요약(무엇을 하는 날인가) 아래, 세션 카운트 위.
           노선도 아래 문단이 "하나하나 내려설 이유가 있도록 설계했습니다"라고
           주장하는데 카드들이 그걸 증명하지 못하고 있었습니다. 이 줄이 증명입니다.
           에메랄드는 이 페이지에서 '얻는 것'에 쓰는 색(혜택 섹션)이라, 일정 서술과
           가치 제시를 색으로 갈라 놓습니다. 새 토큰은 만들지 않았습니다.
-          필참일에는 렌더하지 않습니다 — 갈지 말지 고르는 날이 아니어서, 거기에
+          필참일에는 렌더하지 않습니다 - 갈지 말지 고르는 날이 아니어서, 거기에
           '올 이유'를 붙이면 필참이 설득의 문제로 보입니다. */}
       {day.whyStop && emphasis !== "must" && (
-        <p className="mt-2 flex gap-1.5 break-keep text-[12.5px] font-semibold leading-snug text-emerald-200/85">
+        <p className="mt-2 flex gap-1.5 break-keep text-xs font-semibold leading-snug text-emerald-200/85">
           <span aria-hidden className="text-emerald-300/70">→</span>
           {t(day.whyStop)}
         </p>
       )}
       {/* ── 멘토링 칩 (2026-08-10) ────────────────────────────────────────────
           노선도는 Day 3~7 노드 아래에 에메랄드 점을 찍는데 카드에는 그 표시가
-          없었습니다. 같은 점을 카드에도 답니다 — 한 번 배운 기호가 두 표면에서
+          없었습니다. 같은 점을 카드에도 답니다 - 한 번 배운 기호가 두 표면에서
           같은 뜻이면 범례를 다시 읽을 필요가 없습니다. 어느 날에 붙는지는
           schedule.ts의 mentoringOpenOn이 스케줄에서 셉니다.
 
           제목에 이미 "멘토링"이 있는 Day 3·4에도 똑같이 답니다. 중복처럼
           보이지만, 이 칩이 하는 말은 "이 날 멘토링이 있다"가 아니라 "이 날은
-          노선도에서 점이 찍힌 그 날들 중 하나"입니다 — 셋 중 둘에만 붙으면
+          노선도에서 점이 찍힌 그 날들 중 하나"입니다 - 셋 중 둘에만 붙으면
           기호가 아니라 장식이 됩니다.
 
           배지 행이 아니라 자기 줄인 이유: 375px에서 배지 행이 이미 세 칩(층 ·
@@ -1675,7 +1251,7 @@ function DayCard({ day, t, onOpen, ev }: { day: DayMeta; t: Tfn; onOpen: (n: num
           점은 aria-hidden이고 칩의 글자가 뜻을 그대로 말합니다. */}
       {mentoringOpenOn(day.day) && (
         <p className="mt-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/25 bg-emerald-400/[0.08] px-2 py-0.5 text-[0.68rem] font-semibold text-emerald-100/90">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/25 bg-emerald-400/[0.08] px-2 py-0.5 text-xs font-semibold text-emerald-100/90">
             <MentoringDot />
             {t(dict.program.mentoringChip)}
           </span>
@@ -1690,7 +1266,7 @@ function DayCard({ day, t, onOpen, ev }: { day: DayMeta; t: Tfn; onOpen: (n: num
           빈칸을 메우려고 없는 말을 지어내지 않았습니다. Day 8이 가진 것 중 카드가
           아직 말하지 않은 사실 하나가 어워드의 규모입니다.
 
-          글자는 dict.program.awards.countBadge를 그대로 읽습니다 — 새로 쓰지
+          글자는 dict.program.awards.countBadge를 그대로 읽습니다 - 새로 쓰지
           마세요. 어워드 박스가 쓰는 바로 그 상수라, 부문 수나 팀 수가 바뀌면 두
           표면이 같이 움직입니다. "4부문 8팀"이 사는 자리를 넷으로 늘리지 말라는
           규칙(dict.program.awards 주석)과도 어긋나지 않습니다: 사본이 아니라
@@ -1698,10 +1274,10 @@ function DayCard({ day, t, onOpen, ev }: { day: DayMeta; t: Tfn; onOpen: (n: num
 
           색은 앰버입니다. 이 페이지에서 상은 앰버, 멘토링은 에메랄드이고, 같은
           자리에 서는 두 칩이 색으로 갈립니다. day.awardsBox는 "이 날 어워드 박스가
-          열린다"는 뜻이라 그대로 조건으로 씁니다 — 새 플래그를 만들지 마세요. */}
+          열린다"는 뜻이라 그대로 조건으로 씁니다 - 새 플래그를 만들지 마세요. */}
       {day.awardsBox && (
         <p className="mt-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/[0.09] px-2 py-0.5 text-[0.68rem] font-semibold text-amber-100/90">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/[0.09] px-2 py-0.5 text-xs font-semibold text-amber-100/90">
             <span aria-hidden className="text-amber-300/90">★</span>
             {t(dict.program.awards.countBadge)}
           </span>
@@ -1726,12 +1302,12 @@ function DayCard({ day, t, onOpen, ev }: { day: DayMeta; t: Tfn; onOpen: (n: num
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PRE-EVENT BAND — one wide row above Lab 1.
+// PRE-EVENT BAND - one wide row above Lab 1.
 //
 // The 13 Aug session runs NINE DAYS before Day 1, so it cannot go in the day
 // grid without making the event look like it starts on the 13th. It also does
 // not belong in the speakers section: every other card there carries a face and
-// a name, and this speaker asked for neither — sitting between two named,
+// a name, and this speaker asked for neither - sitting between two named,
 // photographed people is exactly where an unnamed one draws the most attention.
 //
 // So: a full-width band that reads as a prologue to the eight days, showing only
@@ -1741,44 +1317,23 @@ function DayCard({ day, t, onOpen, ev }: { day: DayMeta; t: Tfn; onOpen: (n: num
 function PreEventBand({
   t,
   onOpen,
-  eventDay,
 }: {
   t: Tfn;
   onOpen: (e: BEvent, el: HTMLElement) => void;
-  eventDay: EventDayState;
 }) {
   const ev = schedule.find((e) => e.day === 0);
   if (!ev) return null;
-  // DECIDED 2026-08-23: 이 밴드도 시간의 층에 넣습니다. 8/13은 Day 1보다도 먼저
-  // 지났는데 밴드만 혼자 밝게 서 있어서, 바로 아래 Day 1 카드가 가라앉은 것과
-  // 어긋났습니다. 배지가 "지난 사전 세션"이라고 말하고 있는데 시각은 아니라고
-  // 말하고 있던 셈이에요.
-  //
-  // 조건이 "행사 중"인 것은 데이 카드와 같은 규칙이기 때문입니다. 행사 전에는
-  // 진행 표시가 없고, 행사가 끝나면(8/29 이후) 페이지 전체가 다시 시간 없는
-  // 아카이브로 돌아가면서 이 감쇠도 함께 꺼집니다 — 그때는 여덟 날과 사전 세션이
-  // 모두 같은 무게의 기록입니다.
-  //
-  // ✓ 배지는 달지 않습니다. 데이 카드는 숫자만 있어서 글리프가 필요했지만, 이
-  // 밴드의 칩은 이미 "지난"으로 시작합니다. 같은 말을 두 번 하는 자리예요.
-  const past = eventDay.phase === "during";
   return (
     <button
       type="button"
       onClick={(e) => onOpen(ev, e.currentTarget)}
-      // 감쇠 값과 복원 방식은 데이 카드의 지난 상태와 한 글자도 다르지 않습니다.
-      // 두 표면이 같은 사실을 말하니 같은 세기여야 합니다.
-      className={`group flex w-full flex-col gap-3 rounded-2xl border border-violet-400/20 bg-violet-500/[0.05] px-5 py-4 text-left transition hover:border-violet-400/40 hover:bg-violet-500/[0.09] sm:flex-row sm:items-center sm:gap-5 ${
-        past
-          ? "opacity-[0.55] saturate-[0.85] transition-[opacity,filter] duration-300 hover:opacity-100 hover:saturate-100 focus-within:opacity-100 focus-within:saturate-100 focus:opacity-100 focus:saturate-100"
-          : ""
-      }`}
+      className="group flex w-full flex-col gap-3 rounded-2xl border border-violet-400/20 bg-violet-500/[0.05] px-5 py-4 text-left transition hover:border-violet-400/40 hover:bg-violet-500/[0.09] sm:flex-row sm:items-center sm:gap-5"
     >
       {/* 칩과 연사 소속 로고를 한 묶음으로 둡니다. 모바일에서 밴드가 세로로
           쌓이는데(flex-col), 둘을 따로 두면 로고가 자기 줄을 차지하면서 제목보다
-          커 보입니다 — 여기 묶어두면 어느 폭에서도 "언제 · 누구"가 한 줄입니다. */}
+          커 보입니다 - 여기 묶어두면 어느 폭에서도 "언제 · 누구"가 한 줄입니다. */}
       <span className="flex shrink-0 items-center gap-3">
-        <span className="inline-flex shrink-0 items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-violet-200">
+        <span className="inline-flex shrink-0 items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-violet-200">
           {t(dict.program.preEventTag)}
         </span>
         {/* alt를 채웁니다(노선도 마커와 반대). 이 밴드는 어디에도 회사명을 글로
@@ -1804,7 +1359,7 @@ function PreEventBand({
   );
 }
 
-// Day detail modal — opened from a DayCard. Lists that day's sessions as the
+// Day detail modal - opened from a DayCard. Lists that day's sessions as the
 // shared EventCard; tapping a session opens the full EventModal on top.
 function DayModal({
   dayNum,
@@ -1817,7 +1372,7 @@ function DayModal({
   onClose: () => void;
   onSelectEvent: (e: BEvent, el: HTMLElement) => void;
   // True while an EventModal is stacked on top of this one. Both dialogs listen
-  // for Escape on `document`, so without this one press closed BOTH — you'd
+  // for Escape on `document`, so without this one press closed BOTH - you'd
   // land back on the page instead of the day you were reading, and the two
   // focus-restores raced each other down to <body>.
   eventOpen: boolean;
@@ -1834,8 +1389,8 @@ function DayModal({
   eventOpenRef.current = eventOpen;
   // Same reason: `onClose` is an inline arrow from the parent, so it's a new
   // function on every render. With it in the deps the effect tore down and
-  // re-ran on every re-render — including the one caused by opening an event
-  // dialog — and each re-run re-captured `opener` from whatever happened to
+  // re-ran on every re-render - including the one caused by opening an event
+  // dialog - and each re-run re-captured `opener` from whatever happened to
   // have focus at that moment. By the time the dialog actually closed, the
   // original day card was long forgotten and focus fell to <body>.
   const onCloseRef = useRef(onClose);
@@ -1844,12 +1399,12 @@ function DayModal({
   useEffect(() => setMounted(true), []);
 
   // The event dialog stacks on top of this one, so both hold the lock at the
-  // same time — useBodyScrollLock counts depth and only the outer release
+  // same time - useBodyScrollLock counts depth and only the outer release
   // restores the offset. Declared before the lifecycle effect so the page is
   // unfrozen before focus returns to the day card.
   useBodyScrollLock(dayNum != null);
 
-  // Same open/close lifecycle as EventModal and RegisterModal — ESC, Tab focus
+  // Same open/close lifecycle as EventModal and RegisterModal - ESC, Tab focus
   // trap, inert background, initial focus and focus
   // restoration. This dialog only had ESC + scroll lock, so Tab walked straight
   // out into the page behind it and closing dropped focus back to <body>: with
@@ -1920,7 +1475,7 @@ function DayModal({
           exit={{ opacity: 0 }}
           transition={{ duration: reduce ? 0 : 0.2 }}
         >
-          {/* Backdrop — `touch-none` backs up the scroll lock (see EventModal). */}
+          {/* Backdrop - `touch-none` backs up the scroll lock (see EventModal). */}
           <div aria-hidden onClick={onClose} className="absolute inset-0 cursor-default touch-none bg-black/70 backdrop-blur-sm" />
           <motion.div
             ref={dialogRef}
@@ -1931,7 +1486,7 @@ function DayModal({
             animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.985 }}
             transition={{ duration: reduce ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
-            // dvh, NOT vh — iOS Safari에서 주소창이 펼쳐진 상태의 vh는 실제 보이는
+            // dvh, NOT vh - iOS Safari에서 주소창이 펼쳐진 상태의 vh는 실제 보이는
             // 높이보다 커서 시트 위쪽(=닫기 버튼)이 화면 밖으로 밀려납니다.
             // 바텀시트 네 개가 같은 이유로 dvh입니다(RegisterModal 주석 참고).
             className="relative z-10 flex max-h-[88dvh] w-full max-w-[720px] flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-[#0c0a18] shadow-2xl sm:rounded-3xl"
@@ -1955,13 +1510,13 @@ function DayModal({
                 <span className="rounded-full border border-violet-400/25 bg-violet-500/[0.12] px-3 py-1 text-xs font-bold text-violet-200">
                   {t(day.phase)}
                 </span>
-                {/* The booked window rides in the same chip as the date — it
+                {/* The booked window rides in the same chip as the date - it
                     answers the same question ("when do I turn up") and a second
                     chip would split one answer across two. Appended only when
                     the day has hours; online days keep the chip as it was.
 
                     DECIDED 2026-08-20: 카드의 시간 칩을 승격하면서 여기도 맞췄습니다.
-                    다만 칩을 쪼개지는 않습니다(위 문단의 결정) — 한 칩 안에서 시간만
+                    다만 칩을 쪼개지는 않습니다(위 문단의 결정) - 한 칩 안에서 시간만
                     굵고 밝게 씁니다. 카드와 같은 무채색 승격이고 날짜는 그대로 둡니다.
                     날짜까지 밝히면 칩 전체가 올라와 대비가 사라집니다. */}
                 <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/70">
@@ -1980,11 +1535,11 @@ function DayModal({
                 )}
                 {/* 스포트라이트 날은 배지 + "선택 참여" 두 칩이 한 쌍으로 섭니다.
                     카드에서 이 날의 "선택" 필이 ◉ 필로 바뀌었기 때문에, 필참이
-                    아니라는 사실을 글자로 받는 자리가 한 곳은 있어야 합니다 —
+                    아니라는 사실을 글자로 받는 자리가 한 곳은 있어야 합니다 -
                     그 자리가 여기입니다(schedule.ts spotlight 주석의 거래).
                     둘을 떼어 놓지 마세요. ◉만 남으면 이 모달은 무게만 말하고
                     의무 여부는 말하지 않는 화면이 됩니다.
-                    "선택 참여" 칩은 중립색입니다 — 카드의 선택 필과 같은 층이고,
+                    "선택 참여" 칩은 중립색입니다 - 카드의 선택 필과 같은 층이고,
                     여기서 색을 주면 세 번째 축이 하나 더 생깁니다. */}
                 {dayEmphasis(day) === "worth" && (
                   <>
@@ -2000,24 +1555,24 @@ function DayModal({
               </div>
               <h3 id="day-modal-title" className="mt-5 text-[24px] font-bold leading-tight text-white sm:text-[30px]">{t(day.theme)}</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/70">{t(day.summary)}</p>
-              {/* 입장 안내가 먼저입니다 — 건물에 못 들어가면 그날의 나머지는
+              {/* 입장 안내가 먼저입니다 - 건물에 못 들어가면 그날의 나머지는
                   읽을 이유가 없습니다. 제출물 박스보다 아래로 내리지 마세요. */}
               {day.entryNotice && <EntryNoticeBox t={t} />}
               {day.deliverableDue && <SubmissionBox t={t} />}
               {day.awardsBox && <AwardsBox t={t} />}
-              {/* 진행 순서가 있으면 그것이 세션 목록을 대신합니다 — 둘 다 두면
+              {/* 진행 순서가 있으면 그것이 세션 목록을 대신합니다 - 둘 다 두면
                   같은 세션을 시간표에서 한 번, 카드에서 또 한 번 읽게 됩니다.
                   시간표가 더 나은 이유: 카드에 없는 순간(입장·휴식·네트워킹·정리)
                   까지 담고, 순서와 시각이 보이고, 카드로 가는 길(→)도 그 안에
                   있습니다. 그래서 시간표를 채울 때는 모든 세션이 어느 줄엔가
-                  걸려 있어야 합니다 — 안 걸린 세션은 열 방법이 없어집니다. */}
+                  걸려 있어야 합니다 - 안 걸린 세션은 열 방법이 없어집니다. */}
               {day.runOfShow?.length ? (
                 <>
                   <RunOfShow rows={day.runOfShow} t={t} onSelectEvent={onSelectEvent} />
                   {/* 시간표에 걸리지 않은 세션만 카드로 남깁니다. 시간표에 있는 걸
                       또 카드로 보여주면 같은 세션을 두 번 읽게 되고, 반대로 아무
                       카드도 안 두면 시간표에 없는 세션은 열 방법이 사라집니다.
-                      Day 7의 드롭인 1:1 멘토링이 그 경우예요 — 온라인 드롭인이라
+                      Day 7의 드롭인 1:1 멘토링이 그 경우예요 - 온라인 드롭인이라
                       시각이 없어서 현장 시간표에 넣을 수 없습니다. Day 1은 모든
                       세션이 시간표에 걸려 있어 이 목록이 비고, 아무것도 렌더되지
                       않습니다. */}
@@ -2053,7 +1608,7 @@ function DayModal({
 
 // The day's run of show (days[].runOfShow). Two columns: time on the left in a
 // fixed-width tabular column so the times stack into a readable ruler, content
-// on the right. No new design language — same border/tint/typography as the
+// on the right. No new design language - same border/tint/typography as the
 // session cards, one step quieter because this is the index, not the content.
 //
 // A row with an `eventId` is a button that opens that session's modal (the same
@@ -2075,11 +1630,11 @@ function RunOfShow({
   };
   return (
     <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-4 sm:p-5">
-      <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-violet-200/80">
+      <p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-200/80">
         {t(dict.program.runOfShowTitle)}
       </p>
       <ol className="mt-3 space-y-px">
-        {/* key는 index입니다 — 한 세션이 두 블록으로 나뉘어 도는 경우(Day 8의 두
+        {/* key는 index입니다 - 한 세션이 두 블록으로 나뉘어 도는 경우(Day 8의 두
             트랙 발표)가 있어 eventId도, time+label 조합도 유일하지 않습니다. */}
         {rows.map((row, i) => {
           const linked = row.eventId ? schedule.find((e) => e.id === row.eventId) : undefined;
@@ -2089,11 +1644,11 @@ function RunOfShow({
                   a list of strings rather than a schedule. */}
               {/* 빈 time = 위 줄과 같은 블록의 하위 항목. 시각을 지어내지 않으면서
                   "이어지는 순서"임을 보여줍니다 (Day 1의 문제 공개). */}
-              <span className="w-[6.5rem] shrink-0 pt-[1px] text-[0.72rem] font-semibold tabular-nums text-white/50 sm:w-[7.5rem] sm:text-xs">
+              <span className="w-[6.5rem] shrink-0 pt-[1px] text-xs font-semibold tabular-nums text-white/55 sm:w-[7.5rem]">
                 {row.time || <span aria-hidden className="pl-3 text-white/25">↳</span>}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block break-keep text-[13px] font-semibold leading-snug text-white/85">
+                <span className="block break-keep text-xs font-semibold leading-snug text-white/85">
                   {t(row.label)}
                   {(linked || row.href) && (
                     <span aria-hidden className="ml-1.5 text-violet-300/70 transition group-hover:text-violet-300">→</span>
@@ -2104,14 +1659,14 @@ function RunOfShow({
                     {t(row.note)}
                   </span>
                 )}
-                {/* noteAside — 후원사 매장 위치 한 줄 + 짧은 지도 링크
+                {/* noteAside - 후원사 매장 위치 한 줄 + 짧은 지도 링크
                     (DECIDED 2026-08-16). linked/href가 있는 행에서는 렌더하지
                     않습니다: 그 행은 전체가 버튼이나 링크라서 안에 <a>를 또 넣으면
                     잘못된 HTML이 되고, 중첩 링크는 키보드로도 빠져나갈 수 없습니다.
-                    주소 전문을 링크 텍스트에 넣지 마세요 — 링크는 "지도" 한 낱말이고
+                    주소 전문을 링크 텍스트에 넣지 마세요 - 링크는 "지도" 한 낱말이고
                     주소는 앞의 text가 말합니다. */}
                 {row.noteAside && !linked && !row.href && (
-                  <span className="mt-1 block break-keep text-xs leading-relaxed text-white/45">
+                  <span className="mt-1 block break-keep text-xs leading-relaxed text-white/55">
                     {t(row.noteAside.text)}{" "}
                     <a
                       href={row.noteAside.url}
@@ -2140,7 +1695,7 @@ function RunOfShow({
                 </button>
               ) : row.href ? (
                 // 세션이 아니라 사이트 안의 다른 페이지로 가는 줄 (/quiz).
-                // 링크이므로 button이 아닌 a — 새 탭으로 열지 않습니다(내부 이동).
+                // 링크이므로 button이 아닌 a - 새 탭으로 열지 않습니다(내부 이동).
                 <a
                   href={row.href}
                   onClick={() => track("quiz_click", { src: "run_of_show" })}
@@ -2162,7 +1717,7 @@ function RunOfShow({
 // The Day 7 AWS-office entry notice. Rose for the same reason SubmissionBox is
 // rose: there is a hard consequence attached, and this page has one colour for
 // that. Deliberately the FIRST thing in the Day 7 modal, above the deliverable
-// box — you have to be able to get into the building before anything else on
+// box - you have to be able to get into the building before anything else on
 // that day applies to you.
 //
 // It is one line of label and one short paragraph, not a list. The deadline is
@@ -2186,7 +1741,7 @@ function EntryNoticeBox({ t }: { t: Tfn }) {
   );
 }
 
-// The Day 7 required-deliverable box. Rose, matching the 필참 badge — this page
+// The Day 7 required-deliverable box. Rose, matching the 필참 badge - this page
 // already uses rose for "you don't get to skip this", and inventing a second
 // required-colour would make one of them look softer than it is.
 //
@@ -2198,15 +1753,15 @@ function SubmissionBox({ t }: { t: Tfn }) {
   return (
     <div className="mt-5 rounded-2xl border border-rose-400/25 bg-rose-400/[0.07] px-5 py-4">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/35 bg-rose-400/[0.12] px-2.5 py-1 text-[0.68rem] font-bold text-rose-100">
+        <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/35 bg-rose-400/[0.12] px-2.5 py-1 text-xs font-bold text-rose-100">
           <span aria-hidden>★</span>{t(s.mustBadge)}
         </span>
-        <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-rose-200/80">{t(s.tag)}</span>
+        <span className="text-xs font-bold uppercase tracking-[0.14em] text-rose-200/80">{t(s.tag)}</span>
       </div>
       <p className="mt-2.5 break-keep text-sm font-bold leading-snug text-white">{t(s.heading)}</p>
       {/* 한 줄이던 항목이 이름 · 형식 · 본문 세 조각이 됐습니다 (2026-08-19,
           주최 제출물 표). 이름과 형식이 한 행에 서고 본문이 그 아래로 내려가는
-          이유는 스캔 순서입니다 — 팀이 마감 전에 다시 열어 보는 것은 "무엇을,
+          이유는 스캔 순서입니다 - 팀이 마감 전에 다시 열어 보는 것은 "무엇을,
           몇 장으로"이고, 본문은 처음 읽을 때만 필요합니다. 셋을 한 문장에
           이어 붙이면 그 두 가지가 산문 속에 묻힙니다.
           형식 칩은 분량을 말할 뿐이라 테두리를 주지 않습니다. 이 박스에서
@@ -2223,7 +1778,7 @@ function SubmissionBox({ t }: { t: Tfn }) {
             <span className="min-w-0 break-keep">
               <span className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                 <span className="font-bold text-rose-50">{t(item.name)}</span>
-                <span className="text-[0.68rem] font-semibold text-rose-200/70">{t(item.format)}</span>
+                <span className="text-xs font-semibold text-rose-200/70">{t(item.format)}</span>
               </span>
               <span className="mt-0.5 block">{t(item)}</span>
             </span>
@@ -2244,7 +1799,7 @@ function SubmissionBox({ t }: { t: Tfn }) {
 //
 // Each row carries three lines because they answer three different questions and
 // readers arrive with different ones: the NAME (what it's called on stage), the
-// META (who picks it, how many teams, what you get — the line people scan for),
+// META (who picks it, how many teams, what you get - the line people scan for),
 // and the DESC (what it's actually looking for, in the voice of the event).
 // Keep the humour in desc only; a joke in meta makes the conditions look soft.
 function AwardsBox({ t }: { t: Tfn }) {
@@ -2252,10 +1807,10 @@ function AwardsBox({ t }: { t: Tfn }) {
   return (
     <div className="mt-5 rounded-2xl border border-amber-400/25 bg-amber-400/[0.07] px-5 py-4">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/35 bg-amber-400/[0.12] px-2.5 py-1 text-[0.68rem] font-bold text-amber-100">
+        <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/35 bg-amber-400/[0.12] px-2.5 py-1 text-xs font-bold text-amber-100">
           <span aria-hidden>★</span>{t(a.countBadge)}
         </span>
-        <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-amber-200/80">{t(a.tag)}</span>
+        <span className="text-xs font-bold uppercase tracking-[0.14em] text-amber-200/80">{t(a.tag)}</span>
       </div>
       <p className="mt-2.5 break-keep text-sm font-bold leading-snug text-white">{t(a.heading)}</p>
       {/* DECIDED 2026-08-16 (정체성 얼라인, 공모전): 제목 아래 부제 한 줄. 제목이
@@ -2274,7 +1829,7 @@ function AwardsBox({ t }: { t: Tfn }) {
             </span>
             <div className="min-w-0">
               <p className="break-keep text-xs font-bold leading-snug text-amber-50">{t(item.name)}</p>
-              <p className="mt-0.5 break-keep text-[0.68rem] leading-relaxed text-amber-100/60">{t(item.meta)}</p>
+              <p className="mt-0.5 break-keep text-xs leading-relaxed text-amber-100/60">{t(item.meta)}</p>
               <p className="mt-1 break-keep text-xs leading-relaxed text-amber-50/85">{t(item.desc)}</p>
             </div>
           </li>
@@ -2285,14 +1840,14 @@ function AwardsBox({ t }: { t: Tfn }) {
       </p>
       {/* DECIDED 2026-08-16 (정체성 얼라인, 공모전): 어워드가 상으로 끝나지 않고
           다음 무대로 가는 관문이라, 무엇이 이어지는지를 목록 바로 아래에 둡니다.
-          두 블록이 나란히 서는 것이 요점입니다 — 왼쪽은 수상팀에게만 따라오는
+          두 블록이 나란히 서는 것이 요점입니다 - 왼쪽은 수상팀에게만 따라오는
           어드밴티지, 오른쪽은 수상과 무관하게 전원에게 열린 인턴십. 하나만 남기면
           "수상해야 뭔가 있다"로 읽히고, 그건 인턴십 전원 개방 결정과 어긋납니다.
           카피는 dict.program.awards의 next/openToAll이 정본입니다. */}
       <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
         {[a.next, a.openToAll].map((b, i) => (
           <div key={i} className="rounded-xl border border-amber-300/15 bg-amber-400/[0.05] px-3.5 py-3">
-            <p className="break-keep text-[0.62rem] font-bold uppercase tracking-[0.1em] text-amber-200/85">{t(b.label)}</p>
+            <p className="break-keep text-xs font-bold uppercase tracking-[0.1em] text-amber-200/85">{t(b.label)}</p>
             <p className="mt-1.5 break-keep text-xs leading-relaxed text-amber-50/85">{t(b.body)}</p>
           </div>
         ))}
@@ -2305,15 +1860,15 @@ function AwardsBox({ t }: { t: Tfn }) {
 // the Zero100 network partners. Source logos from zero100.org were full-res
 // SVGs (~13MB total); they're downscaled to ~100px-tall transparent WebPs in
 // /public/partners/zero100/ (~220KB total) since they only render ~36px tall.
-// They're light-on-transparent already, so they render as-is on the dark band —
+// They're light-on-transparent already, so they render as-is on the dark band -
 // no invert. To add one: add a trimmed WebP there and append { src, alt, w, h }
-// here — w/h are the file's own pixel dimensions and must describe the INK, as
+// here - w/h are the file's own pixel dimensions and must describe the INK, as
 // the band sizes every mark to equal area from them (see opticalHeight).
 // Order here = order on screen.
 const companions: { src?: string; alt?: string; w?: number; h?: number }[] = [
   { src: "/partners/zero100/01-translink-investment.webp", alt: "Translink Investment", w: 338, h: 100 },
   { src: "/partners/zero100/02-wilt-venture-builder.webp", alt: "Wilt Venture Builder", w: 203, h: 100 },
-  // Popup Studio's old logo removed here — the current mark lives in the
+  // Popup Studio's old logo removed here - the current mark lives in the
   // confirmed-partner card below. D.CAMP / 혁신의숲 / Career Day / Brand Worker
   // Partners were 2024-event supporters with no ongoing tie to this builderthon,
   // so they're excluded from the network wall to avoid implying participation.
@@ -2339,7 +1894,7 @@ const companions: { src?: string; alt?: string; w?: number; h?: number }[] = [
   { src: "/partners/zero100/25-one-dgree-labs.webp", alt: "One Degree Labs", w: 122, h: 100 },
   // This builderthon's own partner slide (host · organizers · confirmed
   // sponsors) rides in the same band, so every logo on that slide appears here
-  // too. These read from white/trimmed/ — the same marks as the partner wall
+  // too. These read from white/trimmed/ - the same marks as the partner wall
   // above, cropped to their alpha bbox. Several ship with transparent padding
   // baked into the canvas (Brand Boost filled 40%x30% of its file), which made
   // them render visibly smaller than the tightly-cropped zero100 logos beside
@@ -2364,7 +1919,10 @@ const companions: { src?: string; alt?: string; w?: number; h?: number }[] = [
 // holds the list twice and translates -50%, so the loop is seamless; the global
 // prefers-reduced-motion rule freezes it for motion-sensitive users, and it
 // pauses on hover. Empty slots render a tasteful "logo coming" frame.
-function CompanionMarquee({ t }: { t: Tfn }) {
+// paused (2026-10-08, WCAG 2.2.2): 이 띠는 호버로만 멈출 수 있어서 키보드와 터치로는
+// 세울 방법이 없었습니다. 모션 줄이기를 켠 사람과 "배경 움직임 끄기"를 누른 사람에게는
+// 멈춘 채로 둡니다. 판정은 Journey()의 motionPaused 하나입니다.
+function CompanionMarquee({ t, paused }: { t: Tfn; paused: boolean }) {
   // Two rows: the network is split in half so each row shows distinct logos,
   // and they scroll in opposite directions (left / right) for a livelier band.
   const mid = Math.ceil(companions.length / 2);
@@ -2377,14 +1935,14 @@ function CompanionMarquee({ t }: { t: Tfn }) {
       {/* edge fades so logos dissolve into the band rather than hard-cut */}
       <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#0a0814]/55 to-transparent sm:w-28" />
       <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#0a0814]/55 to-transparent sm:w-28" />
-      {/* decorative logo wall (two duplicated tracks) — hidden from AT to avoid
+      {/* decorative logo wall (two duplicated tracks) - hidden from AT to avoid
           announcing the names twice; the "Builder Network" heading conveys it */}
       <div aria-hidden className="group flex flex-col gap-4 overflow-hidden sm:gap-5">
         {rows.map((r, ri) => {
           // each track holds its half twice so the -50% translate loops seamlessly
           const track = [...r.items, ...r.items];
           return (
-            <div key={ri} className={`marquee-track ${r.dir} group-hover:[animation-play-state:paused]`}>
+            <div key={ri} style={paused ? { animationPlayState: "paused" } : undefined} className={`marquee-track ${r.dir} group-hover:[animation-play-state:paused]`}>
               {track.map((c, i) => (
                 <div
                   key={i}
@@ -2396,13 +1954,15 @@ function CompanionMarquee({ t }: { t: Tfn }) {
                     <img
                       src={c.src}
                       alt=""
+                      loading="lazy"
+                      decoding="async"
                       // Same equal-area rule as the partner wall above, sized up
-                      // for the taller band tile — see opticalHeight().
+                      // for the taller band tile - see opticalHeight().
                       style={{ height: c.w && c.h ? opticalHeight(c.w, c.h, 3000, 28, 56) : undefined }}
                       className="w-auto max-w-[82%] object-contain opacity-95 transition group-hover:opacity-100"
                     />
                   ) : (
-                    // placeholder logo frame — neutral, claims no specific company
+                    // placeholder logo frame - neutral, claims no specific company
                     <span className="flex h-7 w-7 items-center justify-center rounded-md border border-dashed border-white/15 text-white/20">
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5 12.5 7 7 12.5 1.5 7 7 1.5Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" /></svg>
                     </span>
@@ -2419,7 +1979,7 @@ function CompanionMarquee({ t }: { t: Tfn }) {
 
 // ── Hero background video ──────────────────────────────────────────────────
 // Scoped to the hero only (the rest of the page keeps the WebGL field). It's a
-// standard autoplay/muted/loop/playsInline background video — muted is what
+// standard autoplay/muted/loop/playsInline background video - muted is what
 // lets it autoplay; playsInline stops iOS going fullscreen; the poster shows
 // before the video loads or if it fails.
 //
@@ -2427,19 +1987,19 @@ function CompanionMarquee({ t }: { t: Tfn }) {
 // To turn it on, drop a web-optimised clip into /public/hero/ as hero.webm
 // (+ hero.mp4 fallback) and a still frame hero-poster.jpg, then set
 // enabled: true. Keep each video file ~1–2MB (see /public/hero/README.md).
-// metal-human — chrome/liquid-metal humanoid loop (GetLayers, no watermark).
+// metal-human - chrome/liquid-metal humanoid loop (GetLayers, no watermark).
 // Source master is 4K mp4 + 2K poster (see /public/hero/metal-human*). No webm
 // variant ships with this asset, so we serve the mp4 alone.
-// TODO: transcode a web-optimised ~1–2MB clip (+ webm) for production — the 4K
+// TODO: transcode a web-optimised ~1–2MB clip (+ webm) for production - the 4K
 // master is heavy for an autoplaying hero background.
 // ONE clip, server-rendered, on every screen. Two mobile variants were tried and
 // reverted: a poster-only phone hero (killed the point of the hero) and a 480×360
-// phone cut (visibly soft at 3× DPR). Measured on Slow 4G — the pessimistic end of
-// what our visitors use — the full file lands in 4.3s vs the small cut's 2.1s and
+// phone cut (visibly soft at 3× DPR). Measured on Slow 4G - the pessimistic end of
+// what our visitors use - the full file lands in 4.3s vs the small cut's 2.1s and
 // neither delays anything: the poster paints immediately, the clip is decorative,
 // and LCP (1.67s) and CLS (0.00) are the same either way. Both variants also had to
 // mount client-side to pick a source, and a <video> mounted after hydration would
-// not start loading in Chrome at all (readyState stuck at 0) — which is the second
+// not start loading in Chrome at all (readyState stuck at 0) - which is the second
 // reason this is back to the plain server-rendered element.
 const HERO_VIDEO = {
   enabled: true,
@@ -2448,33 +2008,22 @@ const HERO_VIDEO = {
   poster: "/hero/metal-human-poster.jpg",
 };
 
-// 국면별 히어로 모드 — "journey"=둘러보기(모집 초기), "register"=곧장 등록(마감
-// 임박, 8/10 전환), "tracks"=트랙 보기(마감 후, 8/22 전환). 되돌릴 땐 이 한 줄만.
-//
-// "register"로 갔던 이유: 모바일 첫 화면에 등록 진입점이 아예 없었습니다. 주 CTA가
-// "8일의 여정 둘러보기"였고, 등록 버튼을 가진 스티키 바는 히어로 구간에서
-// 숨겨집니다(그 구간의 CTA는 히어로 자신이 맡는다는 전제였는데, 그 CTA가 등록이
-// 아니었습니다).
-//
-// DECIDED 2026-08-22 (마감 후 청산): "tracks"로 넘어갑니다. 등록이 닫힌 뒤 첫
-// 화면에서 할 수 있는 가장 중요한 일은 무슨 문제를 푸는지 보는 것이고, 이 페이지의
-// 1순위 독자도 등록을 고민하는 사람에서 이미 들어온 참가자로 바뀌었습니다.
-// "register" 가지는 지웠습니다 — 눌리지 않는 버튼을 조건부로 남겨 두면 다음 라운드에
-// 그대로 되살아납니다. 되살릴 때는 등록 모달이 그대로 있으니 가지를 다시 쓰세요.
-// 스티키 바와 네비의 동작은 이 스위치와 무관하게 그대로입니다.
-//
-// DECIDED 2026-09-16: 다시 "journey"입니다. "tracks" 가지의 주 CTA가 #wrap을
-// 가리키고 있었는데 그 챕터가 내려갔습니다(같은 날짜의 Journey/JourneyNav 주석).
-// 이 페이지는 이제 기록이라, 첫 화면에서 할 수 있는 가장 중요한 일은 8일이
-// 어떻게 흘렀는지 보는 것입니다. "tracks" 가지는 지우지 않았습니다 — 다음 회차에
-// 트랙이 공개되면 대상 앵커만 새 섹션으로 바꿔 되살리세요.
-const HERO_PRIMARY: "journey" | "tracks" = "journey";
-
-function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
+// paused (2026-10-08, WCAG 2.2.2): 자동 재생에 반복인데 멈출 방법이 없었습니다. 모션
+// 줄이기를 켠 사람과 "배경 움직임 끄기"를 누른 사람에게는 영상을 세웁니다. 서버 HTML은
+// autoPlay 그대로라(늦게 붙인 <video>는 크롬에서 로드를 시작하지 않습니다, 위 주석),
+// 마운트 직후 pause()로 멈추고 첫 프레임이나 포스터가 남습니다.
+function HeroVideo({ blur, paused = false }: { blur?: MotionValue<string>; paused?: boolean }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (paused) v.pause();
+    else void v.play().catch(() => {});
+  }, [paused]);
   if (!HERO_VIDEO.enabled) return null; // placeholder: keep the WebGL background
   return (
     // The whole layer fades to transparent over its bottom third (mask) so the
-    // video dissolves into the fixed WebGL field behind it — no hard seam where
+    // video dissolves into the fixed WebGL field behind it - no hard seam where
     // the hero ends and the next chapter begins.
     <div
       aria-hidden
@@ -2485,10 +2034,12 @@ function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
       }}
     >
       <motion.video
+        ref={videoRef}
         autoPlay
         muted
         loop
         playsInline
+        preload="metadata"
         poster={HERO_VIDEO.poster}
         // Scroll-driven blur (sharp → soft as the hero scrolls away).
         style={blur ? { filter: blur } : undefined}
@@ -2499,7 +2050,7 @@ function HeroVideo({ blur }: { blur?: MotionValue<string> }) {
         {HERO_VIDEO.webm && <source src={HERO_VIDEO.webm} type="video/webm" />}
         <source src={HERO_VIDEO.mp4} type="video/mp4" />
       </motion.video>
-      {/* legibility scrim — darker top so the headline reads; fades to nothing
+      {/* legibility scrim - darker top so the headline reads; fades to nothing
           toward the bottom so the mask hands off cleanly to the WebGL field */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#0a0814]/85 via-[#0a0814]/68 to-transparent" />
     </div>
@@ -2523,7 +2074,6 @@ function ScrollToTop() {
   const { t } = useLocale();
   const reduce = useReducedMotion();
   const [visible, setVisible] = useState(false);
-  const [atVote, setAtVote] = useState(false);
 
   // Rides the same scroll signal as the bars. Two reasons: on a phone this button
   // sits directly above the register rail, so a rail that slides away leaving the
@@ -2540,29 +2090,6 @@ function ScrollToTop() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // DECIDED 2026-08-28 (Day 8, 모바일 감사): 투표 섹션에서는 내려갑니다.
-  //
-  // 재보니 이 원반(50x50 히트 영역)이 팀 버튼의 오른쪽 끝을 22px 덮고 있었습니다.
-  // 폰에서 팀 목록은 한 줄에 한 팀씩 화면 폭을 다 쓰기 때문에, 어느 스크롤
-  // 위치에서든 두 팀쯤이 이 버튼 아래에 깔립니다(측정 당시 "마일로"와 "스무스무").
-  // 줄 끝을 누르면 투표 대신 페이지가 맨 위로 튀고, 찍던 자리를 잃어요.
-  //
-  // 하단 알약(MobileStickyBar)과 같은 이유이지만 장치가 다릅니다. 저쪽은 폰 전용
-  // 컴포넌트라 통째로 숨기면 되고, 이 버튼은 데스크톱에도 서 있어요. 데스크톱은
-  // 콘텐츠 레일이 max-w-6xl로 가운데 있고 이 버튼은 그 바깥 여백에 있어서 겹칠
-  // 일이 없습니다. 그래서 chromeHidden과 같은 max-lg 클래스로 폰에서만 내립니다 -
-  // 데스크톱 렌더 경로는 그대로입니다.
-  useEffect(() => {
-    const vote = document.getElementById("vote");
-    if (!vote) return;
-    const io = new IntersectionObserver(([e]) => setAtVote(e.isIntersecting), {
-      rootMargin: "0px",
-      threshold: 0,
-    });
-    io.observe(vote);
-    return () => io.disconnect();
   }, []);
 
   const toTop = () =>
@@ -2591,20 +2118,20 @@ function ScrollToTop() {
           // Opacity + pointer-events rather than unmounting, so the desktop render
           // path is byte-identical to what it was.
           // The BUTTON is the hit area, the SPAN is the artwork. On a phone the
-          // visible disc drops to 32px — this is a utility, and at 48px solid
+          // visible disc drops to 32px - this is a utility, and at 48px solid
           // violet it was reading as loudly as the 등록하기 pill and sitting on top
           // of body copy (the 참가 대상 disclaimer, the benefits paragraph, the
           // footer). The tap target stays 44px via the transparent button around
           // it, so the size cut costs nothing in reachability.
           // From lg up nothing changes: 48px, filled violet, same shadow.
           // `!opacity-0`, not `opacity-0`. framer-motion writes `opacity: 1` as an
-          // INLINE style from the `animate` prop, and inline beats any class — so
+          // INLINE style from the `animate` prop, and inline beats any class - so
           // the hide-on-scroll-down never actually hid this button. It only went
           // pointer-events:none, which is invisible to the user: the FAB sat on
           // top of the body copy the whole way down the page and merely stopped
           // responding to taps. `!important` is the one thing that outranks an
           // inline style, and it is why this is the only `!` in the file.
-          className={`${chromeHidden || atVote ? "max-lg:pointer-events-none max-lg:!opacity-0" : ""} group fixed bottom-[calc(env(safe-area-inset-bottom,0px)+5.25rem)] right-6 z-50 flex h-11 w-11 items-center justify-center transition-opacity duration-200 sm:right-8 lg:bottom-8 lg:h-12 lg:w-12`}
+          className={`${chromeHidden ? "max-lg:pointer-events-none max-lg:!opacity-0" : ""} group fixed bottom-[calc(env(safe-area-inset-bottom,0px)+5.25rem)] right-6 z-50 flex h-11 w-11 items-center justify-center transition-opacity duration-200 sm:right-8 lg:bottom-8 lg:h-12 lg:w-12`}
         >
           <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/[0.07] text-white/65 backdrop-blur-sm transition group-hover:-translate-y-0.5 group-hover:border-white/35 group-hover:text-white lg:h-12 lg:w-12 lg:border-violet-400/40 lg:bg-violet-600/85 lg:text-violet-100 lg:shadow-[0_6px_24px_rgba(124,58,237,0.3)] lg:group-hover:border-violet-400/60 lg:group-hover:bg-violet-500 lg:group-hover:text-white">
             {/* upward chevron */}
@@ -2618,17 +2145,17 @@ function ScrollToTop() {
   );
 }
 
-export default function Journey({ serverNow }: { serverNow: number }) {
+export default function Journey() {
   const { t, locale } = useLocale();
-  // 2026-08-22 마감 후 청산: openRegister와 closed는 이 컴포넌트에서 더 이상
-  // 읽지 않습니다. registered는 ReturningGreeting류가, registerOpen은 스티키 바의
-  // 숨김 조건이 씁니다.
-  const { registered, registerOpen } = useRegister();
-  // 페이지 전체가 공유하는 시계 하나 (useEventDay 주석 참고). 여기서 한 번만
-  // 부르고 노선도와 데이 카드에 값을 내려보냅니다. 초기값은 서버가 준 시각이라
-  // 첫 페인트부터 진행 상태가 서 있습니다.
-  const eventDay = useEventDay(serverNow);
-  const reduce = useReducedMotion();
+  // 히어로 영상과 #companions 로고 띠가 함께 읽는 "멈춤" 하나 (2026-10-08).
+  // 초기값의 규칙은 MotionToggle과 같습니다: 페이지에서 고른 값이 있으면 그것이, 없으면
+  // OS의 모션 줄이기가 정합니다. 서버의 첫 페인트와 맞추려고 false에서 시작합니다.
+  const [motionPaused, setMotionPaused] = useState(false);
+  useEffect(() => {
+    const saved = readMotionChoice();
+    const prefersReduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setMotionPaused(saved === "off" || (prefersReduce && saved !== "on"));
+  }, []);
   const [active, setActive] = useState<BEvent | null>(null);
   const [activeDay, setActiveDay] = useState<number | null>(null); // day detail modal
   const [activePartner, setActivePartner] = useState<PartnerInfo | null>(null); // sponsor/mentor intro modal
@@ -2636,18 +2163,18 @@ export default function Journey({ serverNow }: { serverNow: number }) {
   // The click-to-filter state that used to live here (activeStage / hoverStage /
   // mentorHoverStage) is gone with the three stage cards: the mentors are now
   // physically grouped into the box they belong to, so there is nothing left to
-  // filter. What remains is the one derivation the layout needs — the mentors
+  // filter. What remains is the one derivation the layout needs - the mentors
   // who belong to NEITHER box, i.e. the Day 1·2 session leads, who ride in the
   // warm-up strip. Computed rather than listed so it follows the data.
   const warmupMentors = dict.mentoring.mentors.filter((m) => m.stages.length === 0);
   // Remember the card that opened the modal so focus returns to it on close
-  // (document.activeElement is unreliable in Safari — see EventModal).
+  // (document.activeElement is unreliable in Safari - see EventModal).
   const triggerRef = useRef<HTMLElement | null>(null);
   const partnerTriggerRef = useRef<HTMLElement | null>(null);
   // Open the company-intro modal for a logo tile. `name` is the tile's `alt`;
   // copy comes from partnerIntros, falling back to the "coming soon" blurb.
   // A `stage` argument used to sit between them, and every caller passed the
-  // same 확정 — see the note on partners.stageConfirmed in dictionary.ts.
+  // same 확정 - see the note on partners.stageConfirmed in dictionary.ts.
   const openPartner = (name: string, el?: HTMLElement | null, url?: string) => {
     partnerTriggerRef.current = el ?? null;
     setActivePartner({ name, desc: partnerIntros[name] ?? partnerIntroTBC, url, articles: partnerArticles[name] });
@@ -2662,12 +2189,12 @@ export default function Journey({ serverNow }: { serverNow: number }) {
   // 사라졌어요. 헤더의 ReturningGreeting은 자기 파일에서 따로 읽으므로 영향 없습니다.
 
   // ── 데이 모달을 여는 문 하나 ─────────────────────────────────────────────
-  // DECIDED 2026-08-24: 참가자 도구화 3종 — 라이브 스트립 마감 줄(데이터 기반,
+  // DECIDED 2026-08-24: 참가자 도구화 3종 - 라이브 스트립 마감 줄(데이터 기반,
   // 지나면 다음 마감으로), ?day=N 딥링크(카톡 공지 연동), 노선도 정거장 = 그 날
   // 모달을 여는 버튼. 시계는 getEventDayState 하나.
   //
   // 네 곳이 이 함수를 부릅니다: 데이 카드의 자세히 보기, 노선도 정거장, 히어로
-  // 스트립의 세 줄, URL 딥링크. 스크롤 락·포커스 복귀는 DayModal이 그대로 합니다 —
+  // 스트립의 세 줄, URL 딥링크. 스크롤 락·포커스 복귀는 DayModal이 그대로 합니다 -
   // 여는 쪽에서 할 일은 날 번호를 넘기는 것뿐이에요.
   const openDayModal = useCallback((day: number) => setActiveDay(day), []);
 
@@ -2681,14 +2208,10 @@ export default function Journey({ serverNow }: { serverNow: number }) {
   //
   // 연 뒤 URL은 그대로 둡니다. 지우면 그 주소를 다시 여는 사람에게는 아무 일도
   // 일어나지 않고, 그러면 딥링크가 아니라 일회용 트리거입니다. 닫기·Escape·뒤로가기는
-  // 기존 모달 동작 그대로고, 새로고침하면 다시 열립니다 — 그게 공유 가능한 상태의 뜻입니다.
+  // 기존 모달 동작 그대로고, 새로고침하면 다시 열립니다 - 그게 공유 가능한 상태의 뜻입니다.
   //
-  // days[]에 있는 날만 통과시킵니다. ?day=9·?day=abc는 조용히 무시해요 — 잘못된
+  // days[]에 있는 날만 통과시킵니다. ?day=9·?day=abc는 조용히 무시해요 - 잘못된
   // 링크를 타고 온 사람에게 오류를 보여줄 이유가 없고, 보여줄 화면도 없습니다.
-  //
-  // RegisterContext도 마운트 시 쿼리를 읽습니다(ref · register=1). 그쪽은 register=1일
-  // 때만 쿼리를 지우는데, 이 효과가 먼저 돕니다 — 리액트는 자식(Journey)의 효과를
-  // 부모(RegisterProvider)보다 먼저 흘립니다. /?day=5&register=1도 안전합니다.
   useEffect(() => {
     const raw = new URLSearchParams(window.location.search).get("day");
     if (raw === null) return;
@@ -2704,28 +2227,16 @@ export default function Journey({ serverNow }: { serverNow: number }) {
   const { heroRef, leftX, rightX, splitX, heroFade, bgBlur } = useHeroSplit();
 
   return (
-    <main className="relative z-10">
+    <main id="main" tabIndex={-1} className="relative z-10 focus:outline-none">
       <ScrollToTop />
       <MobileChatBar />
-      {/* REMOVED 2026-09-16: 맨 위에 있던 #wrap(행사 마무리) 챕터를 걷었습니다.
-
-          그 자리가 하던 일은 셋이었는데 지금은 셋 다 다른 데서 합니다. "지난
-          이벤트다"는 맨 위 ArchiveBanner 한 줄이, "8일에 무슨 일이 있었나"는
-          나루 홈의 #record가, "다음은 12월"은 홈의 #december가 말합니다. 같은
-          말을 세 곳에서 하면 어느 쪽도 정본이 아니게 되고, 이 페이지는 기록이라
-          미래를 말하는 문단이 남아 있을 자리가 아닙니다.
-
-          문자열은 dict.wrap에 그대로 있습니다(heading · body · thanks · next ·
-          cardLabel · cardLines · cardCta · navLabel). 지우지 않았으니 되살릴 때
-          번역을 다시 쓸 일은 없습니다. 함께 내려간 것은 히어로의 HeroTrackCard와
-          JourneyNav의 wrap 앵커입니다. */}
 
       {/* ── CH 0 · HERO ─────────────────────────────────────────────── */}
       <Chapter
         id="top"
         align="center"
         wide
-        background={<HeroVideo blur={bgBlur} />}
+        background={<HeroVideo blur={bgBlur} paused={motionPaused} />}
         // Scroll ticker disabled on all screen sizes (commented out). Restore by
         // re-adding this footer prop:
         // footer={
@@ -2744,11 +2255,11 @@ export default function Journey({ serverNow }: { serverNow: number }) {
             heroRef anchors the scroll-parallax: the two columns drift up at
             different speeds and fade as the hero scrolls out. */}
         <div ref={heroRef} className="grid items-center gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
-          {/* LEFT — headline, meta, blurb, CTAs. Centred on mobile, left-aligned
+          {/* LEFT - headline, meta, blurb, CTAs. Centred on mobile, left-aligned
               and pushed to the left edge from lg up. */}
           <motion.div style={{ x: splitX ? leftX : undefined, opacity: heroFade }} className="text-center lg:pl-10 lg:text-left xl:pl-16">
             {/* The returning-quiz-taker greeting lives only in the nav now
-                (compact, desktop-only), so there's no hero greeting — it stays
+                (compact, desktop-only), so there's no hero greeting - it stays
                 off mobile entirely and never shows twice on desktop. */}
             <div className="mt-10 sm:mt-12 lg:mt-0">
               {/* Smaller on phones so the long eyebrow line doesn't crowd the
@@ -2756,11 +2267,11 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                   0.55rem → 0.65rem (2026-08-24 모바일 감사): 루트가 18px이라
                   0.55rem은 9.9px이었고 페이지에서 가장 작은 글자였습니다. 320px
                   에서 이 줄의 실측 폭이 250px, 칸이 266px이라 한 줄을 유지합니다
-                  — 더 올리면(0.68rem = 260px) 두 줄로 접힙니다. */}
-              <Eyebrow className="!text-[0.65rem] sm:!text-xs">{t(dict.hero.eyebrow)}</Eyebrow>
+                  - 더 올리면(0.68rem = 260px) 두 줄로 접힙니다. */}
+              <Eyebrow>{t(dict.hero.eyebrow)}</Eyebrow>
             </div>
             {/* clamp caps trimmed (8rem->7.1rem, 3rem->2.65rem) so the 18px root
-                bump doesn't enlarge the hero headline — it stays ~its current size
+                bump doesn't enlarge the hero headline - it stays ~its current size
                 while the rest of the site grows. */}
             <h1 className="text-[clamp(2.65rem,11vw,7.1rem)] font-black leading-[1.05] tracking-tight drop-shadow-[0_4px_40px_rgba(124,58,237,0.5)] lg:text-[clamp(2.65rem,6vw,5.5rem)]">
               <span className="block text-white">{t(dict.hero.titleLine1)}</span>
@@ -2775,18 +2286,11 @@ export default function Journey({ serverNow }: { serverNow: number }) {
             {/* flex-wrap이 붙었습니다 (2026-08-23): 라이브 필이 이 줄에 합류하면서
                 좁은 폭에서는 두 줄로 접혀야 합니다. whitespace-nowrap은 각 조각이
                 자기 안에서 쪼개지지 않게 하는 것이고, 조각들 사이의 줄바꿈은
-                허용해야 해요 — 없으면 390px에서 가로로 넘칩니다. */}
-            <p className="mt-8 flex flex-wrap items-center justify-center gap-2 whitespace-nowrap text-[0.65rem] text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:gap-3 sm:text-base lg:justify-start">
+                허용해야 해요 - 없으면 390px에서 가로로 넘칩니다. */}
+            <p className="mt-8 flex flex-wrap items-center justify-center gap-2 whitespace-nowrap text-xs text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:gap-3 sm:text-base lg:justify-start">
               <span className="font-semibold">{t(dict.hero.dates)}</span>
-              <HeroLivePill t={t} ev={eventDay} />
             </p>
-            {/* 날짜 범위 바로 아래. 이 순서가 요점입니다 — "8월 22일부터 29일까지"를
-                읽은 눈이 곧장 "그래서 오늘은?"으로 가고, 그 답이 다음 줄에 있습니다.
-                행사 전·후에는 아무것도 렌더되지 않아 히어로가 지금과 같습니다. */}
-            <div className="flex justify-center lg:justify-start">
-              <HeroLiveStrip t={t} ev={eventDay} onOpen={openDayModal} />
-            </div>
-            {/* break-keep — without it Korean breaks between syllables and the
+            {/* break-keep - without it Korean breaks between syllables and the
                 paragraph ended "…남깁니" / "다." with a single orphaned syllable
                 on its own line. Wrapping still happens, but only at word
                 boundaries. */}
@@ -2794,65 +2298,23 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               {t(dict.hero.blurb)}
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-3 lg:justify-start">
-              {/* ── 주 CTA ────────────────────────────────────────────────
-                  HERO_PRIMARY가 무엇이 이 자리에 서는지를 정합니다(파일 상단).
-                  두 모드가 같은 시각 위계(보라 그라디언트 필 하나)를 쓰고, 바뀌는
-                  것은 그 자리에 오는 행동뿐입니다. */}
-              {HERO_PRIMARY === "tracks" ? (
-                <a
-                  /* 2026-08-28: 대상이 #tracks에서 #vote로. 같은 섹션이지만 무대
-                     슬라이드 QR이 쓰는 앵커와 같은 자리에 떨어집니다.
-                     analytics 이벤트 이름은 tracks_click 그대로 둡니다 — 8/22부터
-                     쌓인 계열이라, 여기서 이름을 바꾸면 시리즈가 둘로 갈라집니다. */
-                  href="#wrap"
-                  onClick={() => track("tracks_click", { src: "hero" })}
-                  className={buttonClass("primary", "zero100")}
-                >
-                  {t(dict.wrap.heroCta)}
-                  <span aria-hidden className={ARROW_CLASS}>→</span>
-                </a>
-              ) : (
-                <a href={links.program} className={buttonClass("primary", "zero100")}>
-                  {t(dict.hero.ctaProgram)}
-                  <span aria-hidden className={ARROW_CLASS}>→</span>
-                </a>
-              )}
-              {/* 보조: 여정 둘러보기. journey 모드에서는 위의 주 CTA가 같은 링크라
-                  두 번 걸릴 이유가 없어서 빠집니다. 고스트 필이라 주 CTA와
-                  경쟁하지 않습니다. */}
-              {HERO_PRIMARY === "tracks" && (
-                <a
-                  href={links.program}
-                  className={buttonClass("secondary")}
-                >
-                  {t(dict.hero.ctaProgram)}
-                </a>
-              )}
-              {/* 파트너십 문의 — journey 모드 전용입니다.
-                  This used to mirror a "파트너십 문의" button in the nav, hidden at
-                  md+ to avoid duplicating it. That nav button is gone (the slot
-                  went to open chat — see JourneyNav), so nothing is duplicated
-                  any more and the md:hidden gate is now the only reason a
-                  desktop visitor doesn't see a partnership CTA above the fold.
-                  Kept as-is deliberately: the nav's audience was moved to
-                  students on purpose, and the footer carries a full partnership
-                  pill for companies. Drop `md:hidden` if that ever needs undoing.
-                  register 모드에서는 히어로에서 빠집니다: 학생 등록 마감 국면에
-                  첫 화면의 버튼 자리는 등록·여정·오픈채팅 셋이면 충분하고, 넷째가
-                  붙으면 375px에서 두 줄로 접히며 주 CTA의 무게가 흩어집니다.
-                  기업용 문의 창구가 사라지는 것은 아닙니다 — 클로징 섹션과 푸터가
-                  같은 링크를 그대로 갖고 있습니다. */}
-              {HERO_PRIMARY === "journey" && (
-                <a href={links.partnership} className={`${buttonClass("secondary")} md:hidden`}>
-                  {t(dict.hero.ctaPartner)}
-                </a>
-              )}
-              {/* OPEN CHAT — phones and tablets only (`lg:hidden`). From lg up the
+              {/* 주 CTA는 프로그램 보기 하나입니다. DECIDED 2026-10-08: 국면 스위치
+                  (HERO_PRIMARY)와 "tracks" 가지를 걷었습니다. 그 가지는 없는 #wrap을
+                  가리켰고, 기록 페이지의 첫 화면에서 할 일은 8일이 어떻게 흘렀는지
+                  보는 것 하나입니다. 파트너십 문의는 폰과 태블릿에서만 여기에 섭니다. */}
+              <a href={links.program} className={buttonClass("primary", "zero100")}>
+                {t(dict.hero.ctaProgram)}
+                <span aria-hidden className={ARROW_CLASS}>→</span>
+              </a>
+              <a href={links.partnership} className={`${buttonClass("secondary")} md:hidden`}>
+                {t(dict.hero.ctaPartner)}
+              </a>
+              {/* OPEN CHAT - phones and tablets only (`lg:hidden`). From lg up the
                   nav carries a permanent open-chat button in the same viewport, so
                   a second one here would be the same offer twice (that is why
                   HookCards passes `chatSrc={null}` in the hero). Below lg that nav
-                  button does not exist, and the hero — the screen most visitors
-                  never scroll past — had no low-commitment door at all.
+                  button does not exist, and the hero - the screen most visitors
+                  never scroll past - had no low-commitment door at all.
                   Ghost pill, one tier under the violet 여정 둘러보기 CTA: it is the
                   alternative for someone not ready to act, not a competing primary. */}
               {links.openChat && (
@@ -2877,22 +2339,16 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                 right-column instance, which is untouched. */}
 
             {/* REMOVED 2026-08-17: 모바일 전용 마감 배지가 여기 있었습니다
-                (ADDED 2026-08-12 — 폰에서 마감 시각이 CTA보다 세 스크린 아래에
+                (ADDED 2026-08-12 - 폰에서 마감 시각이 CTA보다 세 스크린 아래에
                 있어서 "요청이 근거보다 먼저 도착한다"는 이유로 한 줄만 올린
                 것이었습니다). 스택 없이 혼자 떠 있는 알약이라 고아 요소로 읽혀
                 지웠습니다. (2026-08-22: 마감 시각을 함께 보여주던 히어로
                 카운트다운/Problem 패널도 이후 제거됐습니다.) */}
           </motion.div>
 
-          {/* RIGHT — hook cards only, pushed to the right edge. Slides right
-              (opposite the left column) as the hero scrolls out. Desktop only:
-              on mobile these are pulled out into the left stack above so the
-              stacked hero doesn't get too tall / buried under the fade. */}
-          <motion.div style={{ x: splitX ? rightX : undefined, opacity: heroFade }} className="hidden lg:block lg:pr-10 xl:pr-16">
-            {/* Right-aligned column holding the hook cards, capped to the same
-                max-width the launch panel used to share so the stack still lines
-                up under the headline. */}
-          </motion.div>
+          {/* 오른쪽 단은 비어 있습니다(훅 카드가 2026-08-23에 내려갔습니다). 2단 격자의
+              자리만 지킵니다. */}
+          <motion.div aria-hidden style={{ x: splitX ? rightX : undefined, opacity: heroFade }} className="hidden lg:block lg:pr-10 xl:pr-16" />
         </div>
 
         {/* Confirmed-partner logo band, spanning under both hero columns and
@@ -2900,7 +2356,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
 
             Deliberately NOT wired to heroFade like the columns are. That curve
             starts dropping on the first pixel of scroll and is gone by 35% of
-            the hero, which made the strip the shortest-lived thing on the page —
+            the hero, which made the strip the shortest-lived thing on the page -
             it sits lowest, so it is the last thing to come into view and the
             first thing the fade erased. It just scrolls away with the page
             instead, which also keeps one more element off the scroll-linked
@@ -2909,6 +2365,38 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           <HeroPartnerStrip t={t} />
         </div>
       </Chapter>
+
+      {/* ── 8일의 결과 ────────────────────────────────────────────────────
+          DECIDED 2026-10-08 (전체 리뷰 반영): 이 페이지는 배너만 얹은 모집 페이지였고,
+          그 자리에 없던 사람이 알고 싶은 "무슨 일이 있었나"가 어디에도 없었습니다.
+          히어로 바로 아래에서 숫자 넷과 어워드 한 줄로 말합니다. 숫자의 정본과 옮겨
+          적은 사정은 dict.record 주석에 있습니다. 가운데 정렬은 폰에서도 그대로입니다. */}
+      <section id="results" aria-labelledby="results-heading" className="relative w-full px-6 py-14 sm:px-10 sm:py-20">
+        <div className="mx-auto max-w-4xl text-center">
+          <Eyebrow color="emerald">{t(dict.record.tag)}</Eyebrow>
+          <h2 id="results-heading" className="break-keep text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+            {t(dict.record.heading)}
+          </h2>
+          <p className="mx-auto mt-5 max-w-2xl break-keep text-base leading-relaxed text-white/75">{t(dict.record.lead)}</p>
+          <dl className="mx-auto mt-8 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
+            {dict.record.stats.map((st) => (
+              <div key={st.label.en} className="flex flex-col-reverse items-center gap-1 rounded-2xl border border-white/[0.08] bg-white/[0.03] px-3 py-5">
+                <dt className="text-xs leading-snug text-white/65">{t(st.label)}</dt>
+                <dd className="text-4xl font-black leading-none tracking-tight text-white">{t(st.value)}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">{t(dict.record.awards)}</p>
+          <Link
+            href="/#record"
+            onClick={() => track("naru_cta", { src: "august_results", to: "record" })}
+            className="mt-4 inline-flex min-h-[44px] items-center gap-1.5 text-xs font-semibold text-violet-200 underline-offset-4 transition hover:text-white hover:underline"
+          >
+            {t(dict.record.more)}
+            <span aria-hidden>→</span>
+          </Link>
+        </div>
+      </section>
 
       {/* ── CH 1 · ABOUT ───────────────────────────────────────────── */}
       <Chapter id="about" align="center">
@@ -2922,7 +2410,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           </p>
         </div>
 
-        {/* the problem, in numbers — faint violet weight so it reads as "the
+        {/* the problem, in numbers - faint violet weight so it reads as "the
             gap" distinct from the lighter "shift" belief cards below */}
         <div className="mt-10 rounded-3xl border border-violet-400/15 bg-violet-950/20 p-6 sm:p-8">
           <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
@@ -2940,13 +2428,13 @@ export default function Journey({ serverNow }: { serverNow: number }) {
             {t(dict.about.gapNote)}
           </p>
 
-          {/* Press — outside coverage of the very gap this block just described,
+          {/* Press - outside coverage of the very gap this block just described,
               so it sits with the claim rather than after the chapter's closing
               vision funnel. One slim full-width row per article (logo · title ·
               date · outbound), not a card, so it reads as a citation. Add
               entries to dict.about.press to extend. */}
           <div className="mx-auto mt-6 max-w-2xl">
-            <p className="text-center text-[0.68rem] font-bold uppercase tracking-[0.2em] text-white/55">
+            <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-white/55">
               {t(dict.about.pressTag)}
             </p>
             {dict.about.press.map((p) => (
@@ -2958,7 +2446,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                 className="group mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-center transition hover:border-violet-400/30 hover:bg-white/[0.06]"
               >
                 {/* 로고는 선택입니다 (dict의 PressItem 참고). 흰색 트림 자산이 없는
-                    매체는 제호를 텍스트로 냅니다 — 이미지와 같은 높이·불투명도라 한
+                    매체는 제호를 텍스트로 냅니다 - 이미지와 같은 높이·불투명도라 한
                     줄 안에서 같은 무게로 읽히고, 색이 남은 로고를 어두운 배경에
                     얹는 것보다 낫습니다. */}
                 {p.logo ? (
@@ -2978,7 +2466,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           </div>
         </div>
 
-        {/* the answer — the shift we're building */}
+        {/* the answer - the shift we're building */}
         <p className="mt-12 text-center text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
           {t(dict.about.shiftTag)}
         </p>
@@ -3009,14 +2497,15 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
             {t(dict.whoWhat.heading)}
           </h2>
+          <p className="mx-auto mt-4 max-w-2xl break-keep text-xs leading-relaxed text-white/60">{t(dict.record.asWritten)}</p>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/70">
             {t(dict.whoWhat.intro)}
           </p>
         </div>
         {/* "얻어가는 것" used to sit beside this list, repeating the benefits
             chapter that follows immediately after. This chapter now does one
-            job — who it's for, and why the usual reasons not to join don't
-            apply — and the next chapter answers "what do I get". */}
+            job - who it's for, and why the usual reasons not to join don't
+            apply - and the next chapter answers "what do I get". */}
         <Glass className="mx-auto mt-10 max-w-2xl text-left">
           <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-violet-300">{t(dict.whoWhat.whoTitle)}</h3>
           <ul className="mt-4 space-y-3">
@@ -3027,7 +2516,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               </li>
             ))}
           </ul>
-          {/* The one hard condition, inside the same box as the invitation —
+          {/* The one hard condition, inside the same box as the invitation -
               anyone reading "누구나" needs it in the same glance, not two
               chapters later in the programme section. Day 1 and Day 8 are the
               only `mandatory: true` days in data/schedule.ts; if that ever
@@ -3035,7 +2524,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           <p className="mt-5 border-t border-white/10 pt-4 text-sm leading-relaxed text-white/60">
             {t(dict.whoWhat.requirement)}
           </p>
-          {/* 준비물 — 조건 바로 다음, 같은 박스 안. 이 페이지에서 유일하게 돈이
+          {/* 준비물 - 조건 바로 다음, 같은 박스 안. 이 페이지에서 유일하게 돈이
               드는 항목이라 등록을 결정하는 그 자리에 있어야 하고, 조건과 같은
               시선 안에 들어와야 "참가비 무료"와 나란히 정직하게 읽힙니다.
 
@@ -3045,7 +2534,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               갖지 못했습니다. 계정이 없으면 Day 1에 와도 만들 것이 없습니다.
               라벨과 본문 구조는 체크인 블록의 bonusLabel과 같은 형태이고, 핵심
               구절은 dict 쪽 ** 마커를 Emph가 굵게 칠합니다.
-              로즈로 올리지 마세요 — 그 층은 의무이고, 준비물이 자격 조건처럼
+              로즈로 올리지 마세요 - 그 층은 의무이고, 준비물이 자격 조건처럼
               읽히기 시작합니다(dict.whoWhat.prep 위 주석). */}
           <div className="mt-4 rounded-xl border border-amber-400/20 bg-amber-400/[0.06] px-4 py-3">
             <p className="break-keep text-sm leading-relaxed text-amber-50/85">
@@ -3055,30 +2544,32 @@ export default function Journey({ serverNow }: { serverNow: number }) {
             </p>
           </div>
         </Glass>
-        <p className="mt-5 text-center text-xs text-white/65">{t(dict.whoWhat.disclaimer)}</p>
       </Chapter>
 
       {/* ── CH 2.5 · WHY JOIN (benefits) + INCENTIVES ──────────────── */}
-      <Chapter id="benefits" align="center">
+      {/* 폰에서 아래 여백을 줄입니다(2026-10-08): 이 챕터 끝과 프로그램 제목 사이가
+          360px 폭에서 500px 가까이 비어 덜 불러온 화면처럼 보였습니다. */}
+      <Chapter id="benefits" align="center" className="!pb-6 sm:!pb-20 lg:!pb-24">
         <Eyebrow color="cyan">{t(dict.benefits.tag)}</Eyebrow>
         <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
           {t(dict.benefits.heading)}
         </h2>
+        <p className="mx-auto mt-4 max-w-2xl break-keep text-xs leading-relaxed text-white/60">{t(dict.record.asWritten)}</p>
         {/* ── Q1 spine ──────────────────────────────────────────────────────
             The one thing these eight days leave you, stated before the six cards
             rather than assembled from them. It sits between the heading and the
             intro on purpose: the intro's job is now to say the cards BELOW are
             what make this reachable, which only reads correctly once "this" has
-            been named. Tinted panel + three tangible chips — deliberately the
+            been named. Tinted panel + three tangible chips - deliberately the
             most emphatic block in the section, because it is the section's
             answer; the cards are the footnotes to it. */}
         <div className="mx-auto mt-7 max-w-3xl rounded-2xl border border-cyan-400/25 bg-cyan-400/[0.06] px-5 py-6 sm:px-7">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-cyan-200/90">{t(dict.benefits.spine.tag)}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-cyan-200/90">{t(dict.benefits.spine.tag)}</p>
           <p className="mx-auto mt-2.5 max-w-2xl break-keep text-[clamp(1.05rem,2.4vw,1.45rem)] font-bold leading-snug text-white">
             {t(dict.benefits.spine.heading)}
           </p>
           {/* The artefacts, not adjectives: what a participant physically holds
-              on Day 9. The certificates' conditions stay off these chips — card
+              on Day 9. The certificates' conditions stay off these chips - card
               05 and the FAQ carry them, and a looser second wording here would
               quietly lower the bar. Same reason the chip doesn't count them:
               "수료증 2종" would put the number here without the criteria that
@@ -3122,7 +2613,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
             남았습니다. 히어로와 같은 훅 카드 두 장을 여기 다시 놓던 자리인데,
             8/23에 트랙 카드가 빠지고(히어로와 중복) 이번에 퀴즈 카드까지 빠지면서
             담을 것이 없어졌어요.
-            링크는 남깁니다 — 무엇을 얻는지 다 읽은 직후가 이 페이지에서 오픈채팅이
+            링크는 남깁니다 - 무엇을 얻는지 다 읽은 직후가 이 페이지에서 오픈채팅이
             가장 자연스러운 지점이고, 그 문은 지금도 열려 있는 유일한 문입니다. */}
         <div className="mt-10 flex justify-center">
           <OpenChatLink t={t} src="band" />
@@ -3130,36 +2621,15 @@ export default function Journey({ serverNow }: { serverNow: number }) {
       </Chapter>
 
       {/* ── CH 3 · PROGRAM ─────────────────────────────────────────── */}
-      {/* Full-width translucent program band — a dark violet tint that dims the
+      {/* Full-width translucent program band - a dark violet tint that dims the
           WebGL field for legibility while still letting the background dots show
           through. Top & bottom fade out so it blends into the journey. */}
-      <section id="program" className={`relative w-full ${BAND_TINT} py-14 sm:py-20 lg:py-28`}>
+      <section id="program" className={`relative w-full ${BAND_TINT} pb-14 pt-10 sm:py-20 lg:py-28`}>
         <BandFades />
         <div className="relative mx-auto w-full max-w-[1700px] px-6 sm:px-10">
           <div className="text-center">
-            {/* Eyebrow 옆에 라이브 칩 하나. 섹션에 들어서자마자 이 페이지가 지금
-                살아 움직인다는 신호를 줍니다 — 아래 노선도와 카드가 말하는 것과
-                같은 사실이지만, 저 둘은 읽어야 알고 이건 보면 압니다.
-                행사 중에만 렌더되고, 끝나면 이 줄부터 사라져 섹션이 다시 시간
-                없는 아카이브로 돌아갑니다. 숫자시계(카운트다운)는 넣지 않습니다. */}
-            {/* !mb-0: Eyebrow는 자기 클래스에 mb-4를 갖고 있고, 여기서 넘기는
-                className은 뒤에 붙을 뿐 우선순위를 갖지 않습니다(같은 특이도라
-                Tailwind가 스타일시트에 찍은 순서가 이깁니다 — mb-4가 이겼습니다).
-                그 상태에서는 칩이 아이브로보다 14px 내려앉아 두 요소가 다른 줄에
-                선 것처럼 보였습니다. important 수식어가 그 충돌을 끝냅니다.
-                아래로 벌어지던 16px은 h2의 mt-4가 그대로 받습니다 — 세로 리듬은
-                이 변경 전과 같습니다. */}
             <div className="flex flex-wrap items-center justify-center gap-2">
               <Eyebrow className="!mb-0">{t(dict.program.tag)}</Eyebrow>
-              {eventDay.phase === "during" && eventDay.current !== null && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/35 bg-violet-500/[0.12] px-3 py-1 text-[0.7rem] font-bold leading-none text-violet-100">
-                  <span aria-hidden className="relative flex h-[7px] w-[7px] shrink-0">
-                    <span className="absolute inline-flex h-full w-full rounded-full bg-violet-300/70 animate-[softPulse_2.4s_ease-in-out_infinite] motion-reduce:animate-none" />
-                    <span className="relative inline-flex h-full w-full rounded-full bg-violet-200" />
-                  </span>
-                  {t(dict.program.dayLive).replace("{n}", String(eventDay.current))}
-                </span>
-              )}
             </div>
             <h2 className="mt-4 text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
               {t(dict.program.heading)}
@@ -3168,7 +2638,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                 gets is "how much of my August does this take", and it used to be
                 answerable only by reading the amber box four blocks down. */}
             <ProgramStats t={t} />
-            {/* No day-by-day summary paragraph here — the eight cards below ARE
+            {/* No day-by-day summary paragraph here - the eight cards below ARE
                 the arc, and spelling it out in prose first read as clutter. */}
             {/* ── 최종 아웃풋 ────────────────────────────────────────────────
                 What a team actually hands in, stated before the eight day-cards
@@ -3190,7 +2660,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                 render={(st, i) => (
                   <div className="flex h-full w-full flex-col rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-3.5">
                     <div className="flex items-center gap-2">
-                      <span aria-hidden className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-violet-400/35 bg-violet-400/10 text-[0.62rem] font-black text-violet-200">
+                      <span aria-hidden className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-violet-400/35 bg-violet-400/10 text-xs font-black text-violet-200">
                         {i + 1}
                       </span>
                       <p className="text-sm font-bold leading-snug text-white">{t(st.title)}</p>
@@ -3201,24 +2671,9 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               />
               <p className="mx-auto mt-3 max-w-3xl text-xs leading-relaxed text-white/55">{t(dict.program.outputNote)}</p>
             </div>
-            {/* Two separate notes, in this order on purpose. First: how much of
-                this is settled — read before the cards, it stops eight tidy day
-                boxes being taken for a finished timetable. Second: how little of
-                it you actually have to attend. */}
-            {/* REMOVED 2026-08-12 — the "유형 테스트 결과로 맞춤 세션 추천받기"
-                ghost chip (dict.programQuizChip, quiz_click src "program_chip").
-                It promised a feature that does not exist: the quiz result card
-                shows the model, axes and a role, and has never recommended
-                sessions. The quiz keeps its two permanent entrances (the nav ✦
-                chip and the 혜택 band hook card), so nothing lost a door.
-                Do not put a session-recommendation chip back unless the result
-                page actually recommends sessions. */}
-            <p className="mx-auto mt-6 max-w-2xl text-xs leading-relaxed text-white/50">
-              {t(dict.program.pendingNote)}
-            </p>
             {/* A labelled list, not a paragraph: this box answers "which days do
                 I actually have to show up for", and that is a lookup, not a read.
-                Two grid columns rather than inline labels — `auto` sizes the label
+                Two grid columns rather than inline labels - `auto` sizes the label
                 column to the longest label in whichever language is showing, so
                 the three answers line up under each other and can be compared in
                 one downward glance. Left-aligned inside a centred section for the
@@ -3248,31 +2703,24 @@ export default function Journey({ serverNow }: { serverNow: number }) {
 
           {/* The route, immediately above the grid it describes: the eight cards
               are read through it rather than as eight equal obligations. */}
-          <RouteMap t={t} onOpen={openDayModal} ev={eventDay} />
+          <RouteMap t={t} onOpen={openDayModal} />
 
           {/* Two Labs, four clean day cards each. Tapping a card opens the day
               detail modal (that day's sessions) instead of exploding all ~18
-              sessions inline — the 8-day arc stays scannable. */}
+              sessions inline - the 8-day arc stays scannable. */}
           <div className="mt-12 space-y-8">
-            {/* Prologue row — before Lab 1, outside the eight days. */}
-            <PreEventBand t={t} onOpen={selectEvent} eventDay={eventDay} />
+            {/* Prologue row - before Lab 1, outside the eight days. */}
+            <PreEventBand t={t} onOpen={selectEvent} />
             {[days.slice(0, 4), days.slice(4, 8)].map((group) => {
-              // 그룹도 시간의 층에 들어갑니다: 이 Lab의 마지막 날까지 지나갔으면
-              // 라벨과 구분선이 함께 가라앉습니다. 카드만 감쇠하고 머리글이 그대로
-              // 밝으면, 다 지나간 Lab이 아직 진행 중인 구간처럼 남습니다.
-              //
-              // 판정은 마지막 날 하나로. 그룹 안에 오늘이 있으면 당연히 마지막
-              // 날은 아직 안 지났고, 그 경우 머리글은 그대로입니다.
-              const groupPast = dayProgress(group[group.length - 1].day, eventDay) === "past";
               return (
               <div key={group[0].day}>
-                <div className={`mb-4 flex items-center gap-3 transition-opacity duration-300 ${groupPast ? "opacity-60" : ""}`}>
+                <div className="mb-4 flex items-center gap-3">
                   <span className="text-sm font-bold uppercase tracking-[0.14em] text-violet-200">{t(group[0].phase)}</span>
                   <span aria-hidden className="h-px flex-1 bg-white/10" />
                 </div>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                   {group.map((day) => (
-                    <DayCard key={day.day} day={day} t={t} onOpen={openDayModal} ev={eventDay} />
+                    <DayCard key={day.day} day={day} t={t} onOpen={openDayModal} />
                   ))}
                 </div>
               </div>
@@ -3283,8 +2731,8 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           {/* ── 체크인 3종 ───────────────────────────────────────────────
               Placed AFTER the eight cards, not before: "a form lands on Day 4
               evening" only means something once Day 4 has gone past the reader's
-              eye. Same FlowStrip grammar as the output steps — three boxes joined
-              by → — because this is also a sequence, and the arrows carry the
+              eye. Same FlowStrip grammar as the output steps - three boxes joined
+              by → - because this is also a sequence, and the arrows carry the
               "questions move from thinking to evidence" claim without a sentence.
               Roles only; the question lists themselves stay in the forms. */}
           <div className="mx-auto mt-12 max-w-5xl text-center">
@@ -3301,10 +2749,10 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               render={(f) => (
                 <div className="flex h-full w-full flex-col rounded-xl border border-white/[0.12] bg-white/[0.04] px-4 py-3.5">
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="rounded-full border border-violet-400/25 bg-violet-500/[0.12] px-2 py-0.5 text-[0.62rem] font-bold text-violet-200">
+                    <span className="rounded-full border border-violet-400/25 bg-violet-500/[0.12] px-2 py-0.5 text-xs font-bold text-violet-200">
                       {t(f.when)}
                     </span>
-                    <span className="text-[0.62rem] font-semibold text-white/55">{t(f.duration)}</span>
+                    <span className="text-xs font-semibold text-white/55">{t(f.duration)}</span>
                   </div>
                   <p className="mt-2 text-sm font-bold leading-snug text-white">{t(f.title)}</p>
                   <p className="mt-1.5 break-keep text-xs leading-relaxed text-white/70">{t(f.body)}</p>
@@ -3326,7 +2774,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
       </section>
 
       {/* ── CH 3.2 · SPEAKER SESSIONS (Day 1·5·8) ──────────────────── */}
-      {/* Speaker names + photos are transcribed from the internal deck — public
+      {/* Speaker names + photos are transcribed from the internal deck - public
           naming/likeness to be confirmed with the user (flagged in the handoff). */}
       <Chapter id="speakers" align="center">
         <Eyebrow>{t(dict.speakers.tag)}</Eyebrow>
@@ -3337,8 +2785,8 @@ export default function Journey({ serverNow }: { serverNow: number }) {
         {/* 2-up then 3-up (DECIDED 2026-08-20). 오래 4열이었는데 Day 8 커리어
             간담회가 아래 피처 밴드로 빠지면서 카드가 셋이 됐습니다. 3열이면 lg에서
             한 줄에 정확히 들어가고, sm에서는 2+1로 접힙니다. 카드가 넷이 되면
-            4열로 되돌리세요 — 3열에 넷을 두면 한 장이 다음 줄에 혼자 남습니다. */}
-        {/* 카드를 가로로 줄 세우는 일은 subgrid가 합니다 — 제목이 끝나는 줄,
+            4열로 되돌리세요 - 3열에 넷을 두면 한 장이 다음 줄에 혼자 남습니다. */}
+        {/* 카드를 가로로 줄 세우는 일은 subgrid가 합니다 - 제목이 끝나는 줄,
             불릿이 시작하는 줄, 푸터 구분선이 앉는 줄.
 
             카드마다 ① 제목 줄 수(1–4줄, 언어와 폭에 따라) ② 불릿 개수(3–4개)
@@ -3352,12 +2800,12 @@ export default function Journey({ serverNow }: { serverNow: number }) {
             (row-span-3 + grid-rows-subgrid). 행 높이는 그 줄에 선 카드들 중
             가장 큰 것으로 정해지고, 나머지 카드는 같은 선에 맞춰집니다. 언어를
             바꾸든 폭이 줄어 제목이 네 줄이 되든 자동으로 다시 맞으니, 여기에
-            제목 높이나 푸터 높이를 숫자로 박아 넣지 마세요 — 그 숫자는 KO에서
+            제목 높이나 푸터 높이를 숫자로 박아 넣지 마세요 - 그 숫자는 KO에서
             맞추면 EN에서, 1440px에서 맞추면 1024px에서 어긋납니다.
 
             1열(모바일)에서는 카드 하나가 곧 한 줄이라 행 높이가 제 내용대로
             잡힙니다. 즉 정렬 규칙이 데스크톱에서만 일하고 모바일에서는 카드를
-            불필요하게 늘이지 않습니다 — 브레이크포인트 분기가 따로 필요 없는
+            불필요하게 늘이지 않습니다 - 브레이크포인트 분기가 따로 필요 없는
             이유입니다.
 
             gap-y-4는 부모의 gap-5를 카드 안에서만 덮어씁니다. subgrid는 부모의
@@ -3365,13 +2813,13 @@ export default function Journey({ serverNow }: { serverNow: number }) {
             같아야 할 이유가 없습니다(원래 값은 mt-4 = 16px였습니다).
 
             subgrid를 모르는 브라우저에서는 규칙이 통째로 무시되고 카드가 각자
-            3행 그리드가 됩니다 — 예전처럼 카드끼리 어긋날 뿐, 깨지지 않습니다. */}
+            3행 그리드가 됩니다 - 예전처럼 카드끼리 어긋날 뿐, 깨지지 않습니다. */}
         <div className="mt-10 grid items-stretch gap-5 text-left sm:grid-cols-2 lg:grid-cols-3">
-          {/* keyed by index, not `img` — one speaker can hold two sessions
+          {/* keyed by index, not `img` - one speaker can hold two sessions
               (박희덕: Day 7 조언 세션 + Day 8 간담회) and so reuse the same photo */}
           {dict.speakers.people.map((s, si) => (
             <div key={si} className="row-span-3 grid grid-rows-subgrid gap-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-400/25 hover:bg-white/[0.05]">
-              {/* 라벨과 제목이 한 행입니다 — 줄 세워야 하는 것은 제목의 시작이
+              {/* 라벨과 제목이 한 행입니다 - 줄 세워야 하는 것은 제목의 시작이
                   아니라 끝(=첫 불릿이 앉는 자리)이라, 둘을 묶어야 그 끝이 하나의
                   행 경계가 됩니다. */}
               <div>
@@ -3384,14 +2832,14 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                   // 익명 자식이라 줄바꿈된 둘째 줄이 카드마다 다르게 앉아
                   // 보였습니다. span으로 묶어 둘째 줄이 마커가 아니라 텍스트
                   // 시작선에 붙습니다(행잉 인덴트).
-                  <li key={i} className="flex items-start gap-2 text-[13px] leading-relaxed text-white/70">
+                  <li key={i} className="flex items-start gap-2 text-xs leading-relaxed text-white/70">
                     <span aria-hidden className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-violet-300/70" />
                     <span className="min-w-0 break-keep">{t(p)}</span>
                   </li>
                 ))}
               </ul>
               {/* 구분선이 곧 세 번째 행의 시작선이라, 이 블록은 카드 바닥이
-                  아니라 '같은 줄'에 걸립니다. mt-auto는 그래서 뺐습니다 —
+                  아니라 '같은 줄'에 걸립니다. mt-auto는 그래서 뺐습니다 -
                   subgrid가 이미 자리를 잡아주는데 mt-auto를 함께 두면 푸터가
                   행 안에서 한 번 더 아래로 밀립니다. */}
               <div className="flex items-center gap-3 border-t border-white/10 pt-4">
@@ -3407,13 +2855,13 @@ export default function Journey({ serverNow }: { serverNow: number }) {
         </div>
         {/* ── Day 8 커리어 간담회 · 3인 패널 피처 밴드 ────────────────────────
             위 그리드가 1인 세션 셋이라면 이 자리는 세 사람이 한 무대에 서는
-            세션 하나입니다. 카드로 두면 그 사실이 안 보입니다 — 카드는 1인
+            세션 하나입니다. 카드로 두면 그 사실이 안 보입니다 - 카드는 1인
             구조라 셋 중 하나만 얼굴을 갖고, 나머지 둘은 글자로만 남습니다.
             데이터와 결정 이력은 dict.speakers.panel 주석에 있습니다.
 
             승격은 폭과 테두리 한 단계로만 합니다. 카드가 border-white/10인
             자리에서 이 밴드는 border-white/15에 배경을 한 단계 올립니다.
-            새 유채색을 쓰지 마세요 — 이 섹션은 violet 하나로 도는 자리이고,
+            새 유채색을 쓰지 마세요 - 이 섹션은 violet 하나로 도는 자리이고,
             여기에 색을 더하면 밴드가 섹션 밖에서 온 것처럼 보입니다. */}
         <div className="mt-5 rounded-2xl border border-white/15 bg-white/[0.05] p-6 text-left sm:p-8">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -3422,7 +2870,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           </div>
           <p className="mt-3 max-w-3xl break-keep text-sm leading-relaxed text-white/75">{t(dict.speakers.panel.lead)}</p>
           {/* 셋이 가로로 나란히 서는 것이 이 밴드의 요점입니다(모바일은 세로 스택).
-              사진은 카드의 h-14보다 한 단계 큰 h-16 — 이 자리에서 사람이 주인공인
+              사진은 카드의 h-14보다 한 단계 큰 h-16 - 이 자리에서 사람이 주인공인
               만큼은 올리되, 밴드가 사진 갤러리로 보이지 않는 선에서 멈춥니다.
               소스는 400x400이라 이 크기의 2배(retina)를 충분히 넘습니다. */}
           <div className="mt-6 grid gap-5 sm:grid-cols-3">
@@ -3435,7 +2883,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                     {p.linkedin && <LinkedInLink url={p.linkedin} label={t(p.name)} />}
                   </div>
                   <p className="mt-0.5 break-keep text-xs leading-snug text-white/60">{t(p.role)}</p>
-                  <p className="mt-2 break-keep text-[13px] leading-relaxed text-white/75">{t(p.note)}</p>
+                  <p className="mt-2 break-keep text-xs leading-relaxed text-white/75">{t(p.note)}</p>
                 </div>
               </div>
             ))}
@@ -3444,7 +2892,6 @@ export default function Journey({ serverNow }: { serverNow: number }) {
             {t(dict.speakers.panel.footer)}
           </p>
         </div>
-        <p className="mt-6 text-xs text-white/55">{t(dict.speakers.tbcNote)}</p>
       </Chapter>
 
       {/* ── CH 3.3 · MENTORING PHILOSOPHY ──────────────────────────── */}
@@ -3457,7 +2904,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
         {/* The separation footnote leads now, directly under the intro: it answers
             a worry ("does this affect my score?") that belongs before the names,
             not after them. */}
-        <p className="mx-auto mt-4 max-w-3xl break-keep text-xs leading-relaxed text-white/50">{t(dict.mentoring.separationNote)}</p>
+        <p className="mx-auto mt-4 max-w-3xl break-keep text-xs leading-relaxed text-white/55">{t(dict.mentoring.separationNote)}</p>
 
         {/* ── Mentors, grouped by what they help you DO ──────────────────────
             This replaced three stage cards sitting above one undivided grid of
@@ -3468,7 +2915,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
             another, and the mapping needs no affordance at all.
 
             Which box a card lands in comes from `mentors[].stages` joined against
-            each group's own `stages` — no counts, no name lists here. Add or drop
+            each group's own `stages` - no counts, no name lists here. Add or drop
             a mentor in data/dictionary.ts and the boxes rearrange themselves. */}
         <div className="mt-8 text-left">
           {/* Plain section label, not the emerald pill it used to be. The pill's
@@ -3480,7 +2927,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
             {t(dict.mentoring.gridLabel)}
           </p>
 
-          {/* Warm-up strip — Day 1·2. A single line, not a box: these two run
+          {/* Warm-up strip - Day 1·2. A single line, not a box: these two run
               SESSIONS (the AWS talk, the crash course) rather than 1:1 mentoring,
               and a third box their size would claim otherwise. Rendered only if
               somebody actually has no stage, so it disappears on its own if that
@@ -3490,7 +2937,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               {/* Centred like the partner panel below it: this strip spans the full
                   width and two names pinned left left the row looking unfinished. */}
               <div className="flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1">
-                <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white/60">
+                <span className="text-xs font-bold uppercase tracking-[0.14em] text-white/60">
                   {t(dict.mentoring.warmup.label)}
                 </span>
                 <span className="break-keep text-xs text-white/55">{t(dict.mentoring.warmup.note)}</span>
@@ -3505,12 +2952,12 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                         크래시코스)라, 날짜가 배정 예고가 아니라 세션 공지입니다.
                         아래 멘토 카드에는 같은 이유로 칩이 없습니다. */}
                     {m.days && (
-                      <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-1.5 py-0.5 text-[0.6rem] font-semibold text-white/55">{m.days}</span>
+                      <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-1.5 py-0.5 text-xs font-semibold text-white/55">{m.days}</span>
                     )}
                     {/* 확정 원칙이지만 날짜가 아직 안 잠긴 세션. 지금은 해당자가
-                        없습니다 — 새 세션 연사가 들어올 때를 위한 자리입니다. */}
+                        없습니다 - 새 세션 연사가 들어올 때를 위한 자리입니다. */}
                     {m.daysPending && (
-                      <span className="rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-1.5 py-0.5 text-[0.6rem] font-semibold text-amber-200/90">
+                      <span className="rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-1.5 py-0.5 text-xs font-semibold text-amber-200/90">
                         {m.daysPending} {t(dict.mentoring.dayPendingLabel)}
                       </span>
                     )}
@@ -3531,7 +2978,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                 <div key={g.id} className="rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.04] p-4 sm:p-5">
                   {/* Header: what this group is for, then who partners on it. */}
                   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                    <span className="whitespace-nowrap rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-0.5 text-[0.68rem] font-bold text-emerald-200">
+                    <span className="whitespace-nowrap rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-0.5 text-xs font-bold text-emerald-200">
                       {t(g.dayRange)}
                     </span>
                     <p className="break-keep text-[15px] font-bold text-white">{t(g.title)}</p>
@@ -3545,7 +2992,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                   {/* 두 문단입니다 (2026-08-18). 한 덩어리로 두면 폰에서 열
                       줄 가까이 이어져 어디서 화제가 바뀌는지 안 보였습니다.
                       문단 경계는 사전의 `\n\n`이 정하고, 이 자리는 그것을
-                      나눠 그리기만 합니다 — 문구는 건드리지 않았습니다. */}
+                      나눠 그리기만 합니다 - 문구는 건드리지 않았습니다. */}
                   {t(g.sub).split("\n\n").map((para, i) => (
                     <p key={i} className={`break-keep text-xs leading-relaxed text-white/70 ${i === 0 ? "mt-2" : "mt-2.5"}`}>
                       {para}
@@ -3555,7 +3002,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                   {/* Partner logos. The label above them is not decoration: most of
                       the cards below belong to other companies (REmited · YMX ·
                       T3Q · NTU), and two marks over a list of faces would read as
-                      an org chart without it. White trimmed silhouettes — the same
+                      an org chart without it. White trimmed silhouettes - the same
                       assets the hero strip and partner wall use, so no tile is
                       needed on this dark panel. Marks only: each used to carry a
                       day-span chip ("Day 3·4 아이디에이션" / "Day 5–7 드롭인 멘토링"),
@@ -3567,13 +3014,13 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                           so two marks pinned to the left edge left a wide empty
                           field to their right and read as an unfinished row rather
                           than a pair. Centring makes the pair the subject. */}
-                      <p className="text-center text-[0.62rem] font-bold uppercase tracking-[0.14em] text-white/50">
+                      <p className="text-center text-xs font-bold uppercase tracking-[0.14em] text-white/55">
                         {t(g.partnersLabel)}
                       </p>
-                      {/* gap-x-14: the separation IS the grouping here — two marks
+                      {/* gap-x-14: the separation IS the grouping here - two marks
                           any closer read as one lockup. Each sits in a common
                           fixed-height band because the logos are deliberately
-                          DIFFERENT heights (optical sizing — see logoClass in
+                          DIFFERENT heights (optical sizing - see logoClass in
                           dictionary.ts); the band centres them on one line while
                           the marks keep their own sizes. */}
                       <div className="mt-4 flex flex-wrap items-center justify-center gap-x-14 gap-y-6">
@@ -3597,7 +3044,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                       would otherwise mislead: two company marks directly above a
                       grid of cards that each print a company name reads as "these
                       are their people", and none of them are. Quiet styling on
-                      purpose — it's a qualifier on the grid, not a third heading
+                      purpose - it's a qualifier on the grid, not a third heading
                       competing with the box title. */}
                   {g.personalNote && (
                     <div className="mt-4 border-l-2 border-emerald-400/25 pl-3">
@@ -3607,12 +3054,12 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                   )}
 
                   {/* MOBILE: a swipe row. DESKTOP: the same flex-wrap grid as
-                      before — widths mirror the old grid columns (gap-3 = 0.75rem)
+                      before - widths mirror the old grid columns (gap-3 = 0.75rem)
                       and the last line stays centred.
                       Twelve mentor cards stacked one per screen was the single
                       largest block on the mobile page; as a snap row they cost one
                       screen instead of twelve. The peek of the next card (75vw +
-                      gap) is the whole affordance — no dots, because a dot row is
+                      gap) is the whole affordance - no dots, because a dot row is
                       more chrome than the thing it explains.
                       The negative margin + padding lets cards scroll to the screen
                       edge while the first one still lines up with the section. */}
@@ -3628,7 +3075,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                       return (
                         <div key={i} className="flex w-[75vw] shrink-0 snap-start flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-emerald-400/25 hover:bg-white/[0.05] sm:w-[calc((100%-0.75rem)/2)] sm:shrink lg:w-[calc((100%-1.5rem)/3)]">
                           <div className="flex items-start justify-between gap-2">
-                            {/* break-keep — Korean breaks between syllables by
+                            {/* break-keep - Korean breaks between syllables by
                                 default, which shreds a 3-syllable name into a
                                 vertical column. */}
                             <p className="min-w-0 break-keep text-sm font-bold leading-snug text-white">{name}</p>
@@ -3642,12 +3089,12 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                               nothing needs evening out, and the clamp was eating a
                               line off the longer intros. */}
                           {intro && (
-                            <p className="mt-2 break-keep text-xs leading-relaxed text-white/50 sm:line-clamp-3">{intro}</p>
+                            <p className="mt-2 break-keep text-xs leading-relaxed text-white/55 sm:line-clamp-3">{intro}</p>
                           )}
                           {/* ⛔ NO DAY CHIP (DECIDED 2026-08-09). 이 자리에는
                               "Day 3·4" / "Day 7" 칩이 있었습니다. 멘토링이 Day 3–7
                               닷새 매일 예약제로 돌아가면서, 누가 언제 들어오는지는
-                              예약 시스템이 멘토링 전날 공개하는 정보가 됐습니다 —
+                              예약 시스템이 멘토링 전날 공개하는 정보가 됐습니다 -
                               사이트가 미리 약속하는 정보가 아닙니다. 칩을 두면
                               참가자가 특정 멘토를 좇거나 피해서 날짜를 고르게 되고,
                               그건 배정 방식(가능 시간 겹침) 자체를 무너뜨립니다.
@@ -3660,7 +3107,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                     })}
                     {/* A dashed "드롭인 멘토링 · 멘토 명단 공개 예정" card used to close
                         this row (desktop) with a full-width twin below it
-                        (mobile) — it stood in for Popup Studio, who send FDEs on
+                        (mobile) - it stood in for Popup Studio, who send FDEs on
                         rotation rather than an assigned mentor. Both are gone with
                         the `placeholder` field (2026-08-05): the drop-in sessions are
                         still described in the box blurb above and scheduled in the
@@ -3677,8 +3124,8 @@ export default function Journey({ serverNow }: { serverNow: number }) {
             Moved BELOW the grid. It used to sit above it, on the reasoning that
             a reader should know the line-up isn't a menu before reading names.
             Two things changed that: the stage cards now filter this grid, so
-            they have to sit next to what they filter — anything wedged between
-            them breaks the connection — and "can I pick one?" is a question the
+            they have to sit next to what they filter - anything wedged between
+            them breaks the connection - and "can I pick one?" is a question the
             cards provoke, not one a reader arrives with. Answering it directly
             under the faces is answering it where it is asked. */}
         <div className="mt-8 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] p-5 text-left sm:p-6">
@@ -3705,11 +3152,11 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           </div>
           {/* Same flex-wrap + justify-center treatment as the mentor grid above:
               ten judges over three columns left the tenth stranded on its own
-              line. Card widths reproduce the grid columns — gap-4 = 1rem, so two
-              columns are (100% − 1rem)/2 and three are (100% − 2rem)/3 — and the
+              line. Card widths reproduce the grid columns - gap-4 = 1rem, so two
+              columns are (100% − 1rem)/2 and three are (100% − 2rem)/3 - and the
               count is never hardcoded, so the last line keeps centring itself as
               judges are added or removed. */}
-          {/* Swipe row on mobile, unchanged wrap grid from sm up — same treatment
+          {/* Swipe row on mobile, unchanged wrap grid from sm up - same treatment
               and the same reasoning as the mentor rows above. Ten judges is ten
               screens of scrolling otherwise. */}
           <div
@@ -3734,7 +3181,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                     )}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-start justify-between gap-2">
-                        {/* break-keep — see the mentor grid above. */}
+                        {/* break-keep - see the mentor grid above. */}
                         <p className="min-w-0 break-keep text-sm font-bold leading-snug text-white">{name}</p>
                         {j.linkedin && <LinkedInLink url={j.linkedin} label={name} />}
                       </div>
@@ -3742,13 +3189,13 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                     </div>
                   </div>
                   <div className="mt-4 flex flex-wrap items-center gap-1.5">
-                    <span className="inline-flex w-fit items-center rounded-full border border-violet-400/20 bg-violet-400/[0.08] px-2.5 py-0.5 text-[0.62rem] font-semibold uppercase tracking-wide text-violet-200/90">
+                    <span className="inline-flex w-fit items-center rounded-full border border-violet-400/20 bg-violet-400/[0.08] px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-violet-200/90">
                       {t(j.tag)}
                     </span>
-                    {/* Agreed in principle, not locked — same amber dashed pill the
+                    {/* Agreed in principle, not locked - same amber dashed pill the
                         mentor grid uses for a pending day, so the two read alike. */}
                     {j.pending && (
-                      <span className="inline-flex items-center rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-2 py-0.5 text-[0.62rem] font-semibold text-amber-200/90">
+                      <span className="inline-flex items-center rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-2 py-0.5 text-xs font-semibold text-amber-200/90">
                         {t(dict.judges.pendingLabel)}
                       </span>
                     )}
@@ -3757,24 +3204,24 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                       line for the short ones (박희덕·신동혁 ran to two, so their cards
                       sat visibly shorter than 한정필's three and the row looked
                       ragged); line-clamp-3 is the guard on the other side. 4.875em =
-                      3 × leading-relaxed (1.625) — in `em`, so it tracks the 13px
+                      3 × leading-relaxed (1.625) - in `em`, so it tracks the 13px
                       font size rather than the 18px root and cannot drift if either
                       changes. Same rule the mentor grid above already uses.
                       A bio long enough to CLAMP would lose its tail silently, so
-                      keep them within three lines in BOTH languages — English wraps
+                      keep them within three lines in BOTH languages - English wraps
                       differently and is the tighter constraint. */}
                   {/* The clamp + reserved third line are a DESKTOP device: they keep a row of
                       cards even. On a phone the cards are one per row, nothing needs
                       evening out, and the clamp was silently eating 1–2 lines off 8 of
                       10 bios in English (9 of 10 at 360px). Both rules start at `sm`. */}
-                  <p className="mt-3 text-[13px] leading-relaxed text-white/70 sm:line-clamp-3 sm:min-h-[4.875em]">{t(j.bio)}</p>
+                  <p className="mt-3 text-xs leading-relaxed text-white/70 sm:line-clamp-3 sm:min-h-[4.875em]">{t(j.bio)}</p>
                 </div>
               );
             })}
             {/* The two "추후 공개" placeholder cards that used to close this grid are
                 gone: the panel is full at ten judges, so an empty dashed slot read
                 as a gap rather than as news. dict.judges.tbcLabel/tbcNote went with
-                them — bring both back together if more judges are ever pending. */}
+                them - bring both back together if more judges are ever pending. */}
           </div>
         </div>
       </Chapter>
@@ -3791,27 +3238,27 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           <p className="mx-auto mt-4 max-w-2xl text-center text-sm leading-relaxed text-white/75">{t(dict.partners.note)}</p>
 
           {/* ── Tier 1 · 주최 (the AXMOS consortium) ─────────────────────────
-              AXMOS is NOT a sixth company — it's the AX consortium the five host
+              AXMOS is NOT a sixth company - it's the AX consortium the five host
               companies formed. So the five marks are wrapped in one umbrella
               CARD whose header carries the AXMOS wordmark + one-liner; the header
               is a button that opens the same partner-intro modal as the tiles.
               The header→body containment reads "AXMOS ⊃ these five" at a glance.
               The AXMOS mark is a WHITE silhouette of the brand wordmark (the source
               gradient's darker "AX" half was near-invisible on this panel), matching
-              the white member logos below — recoloured from CI/AXMOS.png via its
+              the white member logos below - recoloured from CI/AXMOS.png via its
               alpha channel, trimmed + downscaled. Filename carries "-white" so a
               browser can't serve the earlier colour version from cache. */}
           <div className="mt-9 text-left">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.hostLabel)}</p>
             <div className="mt-3 overflow-hidden rounded-2xl border border-white/[0.12] bg-white/[0.02]">
-              {/* Umbrella header — click opens the AXMOS intro modal. */}
+              {/* Umbrella header - click opens the AXMOS intro modal. */}
               <button
                 type="button"
                 onClick={(e) => openPartner("AXMOS", e.currentTarget)}
                 // No aria-label: it was "AXMOS" while the button's visible text is the
                 // consortium tagline, so the accessible name didn't contain the label
                 // (WCAG 2.5.3). Without it the name comes from the wordmark's alt plus
-                // that tagline — which is both the visible text and more useful.
+                // that tagline - which is both the visible text and more useful.
                 className="group flex w-full flex-col items-start gap-1.5 border-b border-white/10 bg-white/[0.04] px-5 py-4 text-left transition hover:bg-white/[0.07] sm:flex-row sm:items-center sm:gap-4"
               >
                 <Image
@@ -3847,7 +3294,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           <div className="mt-8 text-left">
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.organizersLabel)}</p>
-              <p className="text-xs text-white/50">{t(dict.partners.organizersNote)}</p>
+              <p className="text-xs text-white/55">{t(dict.partners.organizersNote)}</p>
             </div>
             {/* 폰에서 2열입니다 (2026-08-24 모바일 감사). grid-cols-3 고정이라
                 320px에서 한 칸이 55px까지 줄었고, 그 안에서 역할 배지("기획과
@@ -3863,7 +3310,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                 // 넓이에서 실제로 칠해지는 면적이 절반쯤입니다. 그래서 규칙대로
                 // 같은 area를 주면 라이온만 한 치수 커 보였습니다. 상자 넓이는
                 // 같은데 체감 크기가 다른 것이므로, 맞춰야 하는 쪽은 상자가 아니라
-                // 눈입니다 — Brand Boost가 스택 락업이라 area를 올린 것과 같은
+                // 눈입니다 - Brand Boost가 스택 락업이라 area를 올린 것과 같은
                 // 종류의 보정이고, 방향만 반대입니다.
                 // 다른 실루엣 마크에 기계적으로 복사하지 마세요. 이 값은 "인장
                 // 두 개 옆에 선 실루엣 하나"라는 이 그리드의 조합에서 나온 값입니다.
@@ -3880,14 +3327,14 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           {/* ── Tier 3 · 후원 ─────────────────────────────────────────────
               Mirrors the deck's partner slide exactly: one confirmed row, each
               logo captioned with what that sponsor actually provides. The old
-              "협의 중" tier and the separate 멘토사 tier were folded away — the
+              "협의 중" tier and the separate 멘토사 tier were folded away - the
               deck lists no in-discussion sponsors, and 멘토링 is just another
               role caption here. */}
           <div className="mt-8 border-t border-white/10 pt-8 text-left">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.sponsorsLabel)}</p>
 
             {/* A green "확정 (CONFIRMED)" pill sat here between the label and the
-                grid. Removed 2026-08-10 — every sponsor below is confirmed, so
+                grid. Removed 2026-08-10 - every sponsor below is confirmed, so
                 see the note on dict.partners.sponsorConfirmedLabel. The grid
                 keeps the pill's own top margin so the block below the 후원 label
                 sits exactly where it did. */}
@@ -3896,63 +3343,63 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                 어워드 부상 캡션을 달고 나란히 섭니다. 타일도 넓어져 가로로 긴
                 워드마크가 편해집니다. 남는 줄은 TILE_BASIS가 가운데로 모읍니다. */}
             <div className="mt-4 flex flex-wrap justify-center gap-3">
-              {/* ORDER FOLLOWS THE HERO STRIP — sorted below against
+              {/* ORDER FOLLOWS THE HERO STRIP - sorted below against
                   `confirmedPartnerTiers`, not hand-ordered here, so the two
                   lists cannot drift apart again. Seeing AWS·Hashed lead the
                   hero and Hashed last down here read as two different rosters.
                   Each logo keeps its own role caption, so the captions are no
-                  longer grouped (장소·장소·장소 …) — that grouping was the only
+                  longer grouped (장소·장소·장소 …) - that grouping was the only
                   thing the old order bought, and matching the hero is worth
                   more than it. */}
               {/* `url` adds the "사이트 방문 ↗" button to the intro modal, exactly as
                   it does for the five host companies above. Every one of these was
-                  opened and read before being wired, not inferred from the name —
+                  opened and read before being wired, not inferred from the name -
                   several plausible-looking guesses were wrong:
                   · L^IFE has its OWN domain (life-singapore.com); it is NOT a path
                     under innovate360.sg, even though Innovate 360 runs the space.
                   · REmited's product is 영끌 / REmited AI but the company site is
-                    teamremited.com — remited.ai does not resolve (only its blog
+                    teamremited.com - remited.ai does not resolve (only its blog
                     subdomain does), so it would have shipped as a dead link.
                   · BZCF is bzcf.io (a link hub for the YouTube channel), not a
                     .co.kr; 브랜드부스트 is brandboost.kr, whose own blog describes the
                     구성·공정·단가 → 패킹 flow this tile's caption is about.
                   · 싱가포르 한인회 is singapore.korean.net. korchamsg.org looks right
-                    but is KorCham, the chamber of commerce — a different body. */}
+                    but is KorCham, the chamber of commerce - a different body. */}
               {sortLikeHeroStrip([
                 { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/aws.png",                alt: "AWS",                             w: 512, h: 306, url: "https://aws.amazon.com/" as string | undefined },
                 { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/innovate360.png",        alt: "INNOVATE 360",                    w: 455, h: 54,  url: "https://innovate360.sg/" },
                 { cat: t(dict.partners.catVenue),     src: "/partners/logos/white/trimmed/life.png",               alt: "L^IFE",                           w: 900, h: 352, url: "https://life-singapore.com/" },
                 { cat: t(dict.partners.catMarketing), src: "/partners/logos/white/trimmed/bzcf.png",               alt: "BZCF",                            w: 465, h: 156, url: "https://bzcf.io/" },
-                // 한인회's role is the venue plus goodie bags for the mentors — it
+                // 한인회's role is the venue plus goodie bags for the mentors - it
                 // read 심사위원 지원 until the organizers corrected it, and no judge
                 // reaches us through the association. Its intro modal copy
                 // (dict["Korean Association in Singapore"]) says the same thing.
                 { cat: t(dict.partners.catVenueGoods), src: "/partners/logos/white/trimmed/korean-association.png", alt: "Korean Association in Singapore",  w: 443, h: 90,  url: "https://singapore.korean.net/" },
                 // 널담 replaced Fyreflyz here on 2026-08-07. Both rosters (this
-                // one and the hero strip) must be edited together — they used to
+                // one and the hero strip) must be edited together - they used to
                 // disagree by one mark, which is how Fyreflyz ended up in the
                 // strip and missing here for a while.
                 //
                 // DECIDED 2026-08-16: nuldam.com → sg.nuldam.com. 이 사이트를 읽는
                 // 사람은 싱가포르에서 이 매장을 찾을 사람이고, 혜택(수료증 할인)이
                 // 걸린 곳도 싱가포르 매장입니다. 매장 컨셉 사이트(nuldamspace.com/en)를
-                // 정본으로 할지는 박주형 확인 대기 — 확인되면 이 한 줄만 고치세요.
+                // 정본으로 할지는 박주형 확인 대기 - 확인되면 이 한 줄만 고치세요.
                 //
                 // url is the brand's own page. NOT the Daniel Food Diary
-                // review — that is a source for the *SCAPE outlet, not a partner's
+                // review - that is a source for the *SCAPE outlet, not a partner's
                 // own page, and every other tile here links to the company itself.
                 { cat: t(dict.partners.catAwards),    src: "/partners/logos/white/trimmed/nuldam.png",             alt: "Nuldam",                          w: 631, h: 136, url: "https://sg.nuldam.com/" },
-                // 폐지 2026-08-23 (원대로 대표님 지시): Day 5 투표·부상 전면 제거 —
+                // 폐지 2026-08-23 (원대로 대표님 지시): Day 5 투표·부상 전면 제거 -
                 // 아래는 이력.
                 //   DECIDED 2026-08-16: 해녀의 부엌이 후원하는 것은 Day 5 즉석 인기
                 //   투표에서 최다 득표 3팀에게 가는 음료 바우처.
                 //
                 // 타일은 그대로 둡니다. 후원 관계는 유효하고 사라진 것은 부상이
-                // 걸려 있던 자리뿐이에요. 캡션("어워드 부상")도 그대로입니다 —
+                // 걸려 있던 자리뿐이에요. 캡션("어워드 부상")도 그대로입니다 -
                 // 바우처를 어디로 돌릴지가 정리되면 그때 다시 봅니다.
                 //
                 // DECIDED 2026-08-17 (박주형): 캡션은 널담과 같은 "어워드 부상"입니다.
-                // 한때 catDay5Prize("Day 5 부상")로 갈라 두었는데 되돌렸습니다 —
+                // 한때 catDay5Prize("Day 5 부상")로 갈라 두었는데 되돌렸습니다 -
                 // 캡션은 후원사가 무엇을 대는지 한 낱말로 부르는 자리이고, 참가자에게는
                 // 둘 다 "상으로 받는 것"입니다. 어느 날 뽑히는지까지 캡션이 말하면
                 // 열한 개 타일 중 이 하나만 다른 층위로 읽힙니다. 정확한 내용은 타일을
@@ -3960,7 +3407,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                 //
                 // DECIDED 2026-08-16: en 표기는 "Jeju Haenyeo"입니다. 싱가포르 매장이
                 // 자기 사이트에서 쓰는 영문 브랜드라 그쪽을 따릅니다.
-                // "Haenyeo's Kitchen"으로 되돌리지 마세요 — 직역이고, 그 이름으로는
+                // "Haenyeo's Kitchen"으로 되돌리지 마세요 - 직역이고, 그 이름으로는
                 // 검색해도 이 매장이 나오지 않습니다. 구글 지도 등록명도 JEJU HAENYEO입니다.
                 { cat: t(dict.partners.catAwards),    src: "/partners/logos/white/trimmed/haenyeo-kitchen.png",    alt: "Jeju Haenyeo",                     w: 316, h: 72,  url: "https://www.jejuhaenyeosg.com/" },
                 { cat: t(dict.partners.catMentoring), src: "/partners/logos/white/trimmed/onword-lab.png",             alt: "Onword Lab",                      w: 900, h: 92,  url: "https://www.onwordlab.com/" },
@@ -3970,16 +3417,16 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                 // lockup from a rule that measured boxes, and it overshot: this
                 // became the LARGEST mark in the grid, 2.8× the smallest. The
                 // mass rule needs no exception, because the silhouette it
-                // measures fills the gap between BRAND and BOOST — the stacking
+                // measures fills the gap between BRAND and BOOST - the stacking
                 // is already in the number.
                 { cat: t(dict.partners.catGoods),     src: "/partners/logos/white/trimmed/brandboost.png",         alt: "Brand Boost",                     w: 205, h: 81,  url: "https://www.brandboost.kr/" },
                 { cat: t(dict.partners.catOverall),   src: "/partners/logos/white/trimmed/hashed.png",             alt: "Hashed",                          w: 355, h: 90,  url: "https://www.hashed.com/" },
               ]).map(({ cat, url, ...l }) => (
                 <div key={l.alt} className={`flex flex-col gap-1.5 ${TILE_BASIS_2_3_4}`}>
-                  {/* mass comes from the strip's roster, never from this list —
+                  {/* mass comes from the strip's roster, never from this list -
                       see sponsorMass. */}
                   <LogoTile {...l} mass={sponsorMass(l.src)} onOpen={(el) => openPartner(l.alt, el, url)} />
-                  <span className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-white/55">{cat}</span>
+                  <span className="text-center text-xs font-semibold uppercase tracking-[0.1em] text-white/55">{cat}</span>
                 </div>
               ))}
             </div>
@@ -4004,7 +3451,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               {t(dict.partners.companionsSub)}
             </p>
           </div>
-          <CompanionMarquee t={t} />
+          <CompanionMarquee t={t} paused={motionPaused} />
         </div>
       </section>
 
@@ -4014,6 +3461,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
         <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
           {t(dict.faq.heading)}
         </h2>
+        <p className="mx-auto mt-4 max-w-2xl break-keep text-xs leading-relaxed text-white/60">{t(dict.record.asWritten)}</p>
         <Glass className="mt-8 text-left">
           <FAQList />
         </Glass>
@@ -4024,7 +3472,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           which lands better as the last thing read before the closing CTA than
           as a coda inside the chapter that opens the page. */}
       <Chapter id="vision" align="center">
-        {/* Vision roadmap — how the eight days keep going, from a participant's
+        {/* Vision roadmap - how the eight days keep going, from a participant's
             seat. DECIDED 2026-08-15: five concept cards became a five-stop
             TIMELINE, so each card leads with its `when` (Aug 2026 Singapore →
             right after the event → autumn → Dec 2026 Seoul → Mar 2027) and the
@@ -4060,7 +3508,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                     {s.num}
                   </span>
                   {start && (
-                    <span className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-violet-400/20 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-violet-200">
+                    <span className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-violet-400/20 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-violet-200">
                       {t(dict.about.visionStartBadge)}
                     </span>
                   )}
@@ -4068,7 +3516,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
                       question this section answers is "when does that happen",
                       and violet-200 keeps it legible on the dark card while
                       still sitting apart from the white title. */}
-                  <p className="mt-2 text-[0.68rem] font-semibold leading-snug tracking-wide text-violet-200">
+                  <p className="mt-2 text-xs font-semibold leading-snug tracking-wide text-violet-200">
                     {t(s.when)}
                   </p>
                   <p className="mt-1 text-sm font-bold leading-snug text-white">{t(s.title)}</p>
@@ -4079,7 +3527,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           </ol>
 
           {/* Continuity note (small), then the bridge into the CTA that follows
-              immediately below — hence the bridge outranks the note
+              immediately below - hence the bridge outranks the note
               typographically. The button reuses the nav/footer pill style rather
               than introducing another CTA treatment.
 
@@ -4087,10 +3535,10 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               이 자리가 하던 일(비전을 읽은 직후의 한 걸음)은 그대로이고, 지금
               열려 있는 문이 오픈채팅뿐이라 그 문을 겁니다.
 
-              DECIDED 2026-08-24: 브리지 CTA 라벨 분리 — 클로징과 같은 문구가
+              DECIDED 2026-08-24: 브리지 CTA 라벨 분리 - 클로징과 같은 문구가
               모바일에서 연달아 반복되어 역할을 나눔(브리지=소식, 클로징=합류).
               라벨만 dict.about.visionChatCta로 갈라졌고 링크·트래킹·스타일은
-              그대로입니다. 두 버튼이 같은 방으로 가는 것은 변함이 없어요 —
+              그대로입니다. 두 버튼이 같은 방으로 가는 것은 변함이 없어요 -
               다른 것은 누르는 이유입니다. */}
           <p className="mx-auto mt-8 max-w-2xl text-center text-xs leading-relaxed text-white/55">
             {t(dict.about.visionNote)}
@@ -4126,7 +3574,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               "radial-gradient(60% 55% at 50% 45%, rgba(7,11,31,0.82) 0%, rgba(7,11,31,0.5) 42%, rgba(7,11,31,0) 78%)",
           }}
         />
-        {/* hero CTA block — vertically centred */}
+        {/* hero CTA block - vertically centred */}
         <div className="flex flex-1 flex-col items-center justify-center text-center">
           {/* ── 고맙습니다 ──────────────────────────────────────────────
               DECIDED 2026-10-02 (사용자: "무대는 끝났습니다. 다음 무대에서 또 만나요. 의 내용 빼고, 그 자리를
@@ -4138,7 +3586,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               이 자리에 적는 이름은 전부 이 페이지가 이미 공개한 것입니다(dict.footer.thanks의 주석).
               DECIDED 2026-10-02 (사용자: 본문을 "centralize"): 본문도 폰까지 가운데 정렬입니다.
               그 전에는 폰에서만 왼쪽 정렬이었습니다. */}
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/55">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/55">
             {t(dict.footer.thanks.label)}
           </p>
           <h2 className="mx-auto mt-4 max-w-3xl break-keep text-[clamp(1.75rem,4.4vw,3rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_40px_rgba(124,58,237,0.4)]">
@@ -4168,7 +3616,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           <div className="mt-4 flex flex-wrap justify-center gap-3">
             {/* Primary CTA. 2026-08-22 (마감 후 청산): 등록 모달을 열던 자리를
                 오픈채팅이 받습니다. 페이지의 마지막 CTA라 그라디언트 필은 그대로
-                두고 행동만 바꿉니다 — 여기까지 읽고 내려온 사람에게 내밀 수 있는
+                두고 행동만 바꿉니다 - 여기까지 읽고 내려온 사람에게 내밀 수 있는
                 문이 지금은 이것 하나뿐입니다.
                 아래 OpenChatLink(텍스트 링크)는 함께 뺐습니다. 같은 문이 같은
                 화면에서 두 번 열리면 둘 다 약해집니다. */}
@@ -4191,7 +3639,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
           </div>
 
           {/* mailto: only opens whatever mail client the visitor's device has
-              configured — on a desktop without one, or inside some in-app
+              configured - on a desktop without one, or inside some in-app
               browsers, the button does nothing at all and the inquiry is simply
               lost. Show the address as selectable text with a copy button so
               there's always a way to reach us. */}
@@ -4200,7 +3648,7 @@ export default function Journey({ serverNow }: { serverNow: number }) {
 
         {/* 감사 문단은 2026-10-02부터 위 제목 자리에 있습니다(그 전에는 여기, CTA 아래 크레딧 위). */}
 
-        {/* credits — pinned to the very bottom of the final screen */}
+        {/* credits - pinned to the very bottom of the final screen */}
         <div className="mx-auto mt-10 w-full max-w-3xl border-t border-white/10 pt-8 text-center">
           <p className="text-sm font-bold tracking-widest text-white">ZERO100 AI BUILDERTHON</p>
           <p className="mt-2 text-xs text-white/65">{t(dict.footer.hostedBy)}</p>
@@ -4209,7 +3657,11 @@ export default function Journey({ serverNow }: { serverNow: number }) {
               배경 필드는 여기서도 무한히 돕니다. 이 한 줄이 이 파일에 더해진
               전부입니다. */}
           <div className="mt-4 flex justify-center">
-            <MotionToggle />
+            {/* onClick은 버튼의 것이 먼저 돌고 여기로 올라옵니다. 같은 누름에 영상과
+                로고 띠도 함께 멈추거나 다시 돕니다(motionPaused 주석). */}
+            <span className="inline-flex" onClick={() => setMotionPaused((v) => !v)}>
+              <MotionToggle />
+            </span>
           </div>
         </div>
       </section>
@@ -4217,26 +3669,30 @@ export default function Journey({ serverNow }: { serverNow: number }) {
       <DayModal dayNum={activeDay} onClose={() => setActiveDay(null)} onSelectEvent={selectEvent} eventOpen={active != null} t={t} />
       <EventModal event={active} onClose={() => setActive(null)} triggerRef={triggerRef} />
       <PartnerModal partner={activePartner} onClose={() => setActivePartner(null)} triggerRef={partnerTriggerRef} />
-      <MobileStickyBar t={t} registerOpen={registerOpen} />
+      <MobileStickyBar t={t} />
     </main>
   );
 }
 
 
-// Copyable partnership address — the fallback for when `mailto:` goes nowhere.
+// Copyable partnership address - the fallback for when `mailto:` goes nowhere.
 // Uses the clipboard API where available and falls back to selecting the text,
 // so "copy" never silently fails.
 function PartnerEmailFallback({ t }: { t: Tfn }) {
   const [copied, setCopied] = useState(false);
   const addrRef = useRef<HTMLSpanElement>(null);
+  // "복사됨" 표시를 되돌리는 타이머. 떠날 때 지웁니다(2026-10-08).
+  const copiedTimer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(copiedTimer.current), []);
 
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(PARTNER_EMAIL);
       setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
+      window.clearTimeout(copiedTimer.current);
+      copiedTimer.current = window.setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Clipboard blocked (insecure context / permission) — select the text so
+      // Clipboard blocked (insecure context / permission) - select the text so
       // the visitor can copy it by hand instead of getting nothing.
       const node = addrRef.current;
       if (!node) return;
@@ -4249,7 +3705,7 @@ function PartnerEmailFallback({ t }: { t: Tfn }) {
   };
 
   return (
-    <p className="mt-5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-white/50">
+    <p className="mt-5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-white/55">
       <span>{t(dict.footer.partnerFallback)}</span>
       <span ref={addrRef} className="select-all font-medium text-white/75">
         {PARTNER_EMAIL}
@@ -4292,20 +3748,20 @@ function FAQList() {
                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: reduce ? 0 : 0.28, ease: [0.22,1,0.36,1] }} className="overflow-hidden">
                   {/* Most answers are a single paragraph and stay one. An item may
                       opt into structure (aGroups / aTail) when its answer contains
-                      lists someone LOOKS UP rather than reads — the judging answer
+                      lists someone LOOKS UP rather than reads - the judging answer
                       does, and as prose it read as a wall. `a` becomes the lead in
                       that case; the shape is otherwise unchanged. */}
                   {/* pr-8은 sm부터입니다 (2026-08-17). 이 오른쪽 여백은 질문 줄의
                       +/× 토글과 답변의 오른쪽 끝을 맞춰 두려고 넣은 것인데, 답변
                       줄에는 비켜갈 버튼이 없습니다. 390px 화면에서는 그 36px이
                       본문 폭의 13%였고, 카드 자체의 p-7(31.5px 양쪽)까지 겹쳐
-                      답변이 235px 안에서 줄바꿈했습니다 — 한 줄에 한국어 13~14자,
+                      답변이 235px 안에서 줄바꿈했습니다 - 한 줄에 한국어 13~14자,
                       질문보다 좁은 단입니다. 모바일에서만 걷어내면 271px이 되고,
                       데스크톱의 정렬은 그대로 남습니다. */}
                   <div className="pb-5 sm:pr-8">
                     {/* DECIDED 2026-08-23 (박주형): FAQ 답변은 모바일에서 문단으로.
                         긴 답변이 한 덩어리라 폰에서 벽처럼 읽혔습니다. 사전의
-                        빈 줄(\n\n)을 문단 경계로 읽습니다 — 문장은 하나도 바꾸지
+                        빈 줄(\n\n)을 문단 경계로 읽습니다 - 문장은 하나도 바꾸지
                         않고 끊는 자리만 데이터가 정합니다.
                         space-y-3: 문단 사이 간격은 본문 행간(leading-relaxed,
                         약 20px)보다 크고 항목 사이 간격(py-5)보다 작아야 합니다.
@@ -4322,13 +3778,13 @@ function FAQList() {
                     {/* items-start, not stretch: groups rarely hold the same
                         number of rows, and a box padded out with dead space to
                         match its neighbour reads as a missing item. Two columns
-                        only when there are two boxes to fill them — a lone group
+                        only when there are two boxes to fill them - a lone group
                         in a half-width column looks like its pair failed to load. */}
                     {"aGroups" in item && item.aGroups && (
                       <div className={`mt-4 grid items-start gap-4 ${item.aGroups.length > 1 ? "sm:grid-cols-2" : ""}`}>
                         {item.aGroups.map((g, gi) => (
                           <div key={gi} className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5">
-                            <p className="text-[0.7rem] font-bold uppercase tracking-[0.12em] text-violet-200/90">
+                            <p className="text-xs font-bold uppercase tracking-[0.12em] text-violet-200/90">
                               {t(g.label)}
                             </p>
                             <ul className="mt-2.5 space-y-1.5">
@@ -4342,26 +3798,6 @@ function FAQList() {
                           </div>
                         ))}
                       </div>
-                    )}
-                    {/* Withheld detail → the open chat. Amber, and the only
-                        coloured thing in an answer: it is an offer, and it has to
-                        out-rank the grey tail line under it or the reader stops
-                        at "criteria not published" and never sees where they are.
-                        Sits ABOVE the tail for the same reason. */}
-                    {"aOpenChat" in item && item.aOpenChat && links.openChat && (
-                      <a
-                        href={links.openChat}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => track("openchat_click", { src: "faq_judging" })}
-                        className="group mt-4 flex items-start gap-2.5 rounded-xl border border-amber-400/25 bg-amber-400/[0.07] px-4 py-3 transition hover:border-amber-300/45 hover:bg-amber-400/[0.12]"
-                      >
-                        <ChatGlyph className="mt-0.5 h-4 w-4 shrink-0 text-amber-200" />
-                        <span className="break-keep text-xs leading-relaxed text-amber-50/90">
-                          {t(item.aOpenChat)}
-                          <span aria-hidden className="ml-1.5 text-amber-200/70 transition group-hover:text-amber-100">→</span>
-                        </span>
-                      </a>
                     )}
                     {"aTail" in item && item.aTail && (
                       <p className="mt-4 text-xs leading-relaxed text-white/55">{t(item.aTail)}</p>

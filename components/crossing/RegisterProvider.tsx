@@ -6,7 +6,7 @@
 //
 // state는 서버 첫 그림에서 "not_open"으로 시작해 마운트 뒤 registrationState()로 맞춥니다.
 // 창이 닫혀 있는 동안(지금) 화면은 그 전과 같습니다. 창이 열리면 CTA 셋(히어로, #december,
-// #join 참가자 카드)이 "등록하기"로 바뀌고 ?register=1이 모달을 엽니다.
+// #join 참가자 카드)이 "등록하기"로 바뀝니다. ?register=1은 마감 전이면 모달을 엽니다(창이 열리기 전에는 미리 보기).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
@@ -50,7 +50,8 @@ export function CrossingRegisterProvider({ children }: { children: React.ReactNo
     const r = params.get("ref");
     if (r) setRef(r);
     if (params.get("register") === "1") {
-      if (s === "open") setOpen(true);
+      // 2026-10-08: 창이 열리기 전에도 ?register=1은 미리 보기를 엽니다(버튼과 같은 규칙). 마감 뒤에는 열지 않습니다.
+      if (s !== "closed") setOpen(true);
       window.history.replaceState(null, "", window.location.pathname + window.location.hash);
     }
     // 창이 열리거나 닫히는 순간을 탭이 열린 채로 맞으면 그 자리에서 바꿉니다.
@@ -72,6 +73,7 @@ export function CrossingRegisterProvider({ children }: { children: React.ReactNo
         onClose={() => setOpen(false)}
         refSource={ref}
         preview={state !== "open"}
+        closed={state === "closed"}
         onRegistered={() => {
           setRegistered(true);
           try { window.localStorage.setItem(CROSSING_REGISTERED_KEY, "1"); } catch { /* ignore */ }

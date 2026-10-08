@@ -8,7 +8,7 @@ import { damp, degToRad } from "../utils/math";
  *  - tiny pointer-driven rotation (capped at MOTION.pointerInfluenceDeg)
  *  - scroll-driven travel: dollies through the field, drifts vertically, and
  *    adds a subtle roll, so scrolling feels like flying deeper into the world.
- * All motion is frame-rate-independent damped — alive, never abrupt.
+ * All motion is frame-rate-independent damped - alive, never abrupt.
  */
 export class CameraController {
   readonly camera: THREE.PerspectiveCamera;
@@ -59,7 +59,7 @@ export class CameraController {
     // scrolling no longer flies through the field (idle drift/roll are already 0).
     const scrollTravel = this.reduced ? 0.15 : 1;
 
-    // dolly forward (decreasing z) as we scroll down — flying into the field
+    // dolly forward (decreasing z) as we scroll down - flying into the field
     this.camera.position.z = 30 + breathe - s * MOTION.scrollDollyZ * scrollTravel;
     this.camera.position.x = driftX;
     this.camera.position.y = driftY + s * MOTION.scrollDriftY * scrollTravel;

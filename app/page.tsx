@@ -4,11 +4,51 @@ import BackgroundMount from "@/components/BackgroundMount";
 import NaruHome from "@/components/home/NaruHome";
 import { naruNav } from "@/data/naru";
 import { CrossingRegisterProvider } from "@/components/crossing/RegisterProvider";
+import { DECEMBER_EVENT_NAME, DECEMBER_STARTS_AT, DECEMBER_ENDS_AT, DECEMBER_CITY } from "@/lib/naruDates";
+
+const SITE_URL = "https://naru-crossing-seoul.vercel.app";
+
+// DECIDED 2026-10-08 (사용자 승인, SEO 리뷰 7): 구조화 데이터. 검색 엔진이 이 페이지를 날짜가 있는 행사로 읽게 합니다.
+// 확정된 사실만 넣습니다: 이름, 기간(lib/naruDates.ts), 도시, 주최. 장소 이름과 참가비는 화면에도 쓰지 않으므로
+// (참가자 카카오톡 방에서 알립니다) 여기에도 지어내지 않습니다. 값은 전부 상수라 사용자 입력이 섞이지 않습니다.
+const ORGANIZATION_LD = {
+  "@type": "Organization",
+  "@id": `${SITE_URL}/#naru`,
+  name: "나루 NARU",
+  alternateName: "NARU",
+  url: SITE_URL,
+  logo: `${SITE_URL}/icon.svg`,
+  description: "A Korea-rooted, student-run, not-for-profit collective of student builders.",
+};
+const HOME_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    ORGANIZATION_LD,
+    {
+      "@type": "Event",
+      name: `${DECEMBER_EVENT_NAME?.ko ?? "크로싱 서울"} ${DECEMBER_EVENT_NAME?.en ?? "CROSSING SEOUL"}`,
+      startDate: DECEMBER_STARTS_AT,
+      ...(DECEMBER_ENDS_AT ? { endDate: DECEMBER_ENDS_AT } : {}),
+      eventStatus: "https://schema.org/EventScheduled",
+      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+      location: {
+        "@type": "Place",
+        name: DECEMBER_CITY.ko,
+        address: { "@type": "PostalAddress", addressLocality: DECEMBER_CITY.en, addressCountry: "KR" },
+      },
+      organizer: { "@id": `${SITE_URL}/#naru` },
+      image: `${SITE_URL}/opengraph-image`,
+      url: SITE_URL,
+      inLanguage: "ko",
+      description: "한국의 대학생과 해외에서 공부하는 한인 학생이 기업의 이슈에서 문제를 찾아 그 기업 앞에서 발표하는 닷새입니다.",
+    },
+  ],
+};
 
 // EN 탭 제목(2026-09-23). 서버 제목(한국어, layout의 기본값)은 그대로이고, LocaleContext가
 // EN일 때 이 값으로 탭 제목을 바꿉니다.
 export const metadata: Metadata = {
-  other: { "naru:title-en": "Crossing Seoul 2026 | NARU" },
+  other: { "naru:title-en": "CROSSING SEOUL 2026 | NARU" },
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -39,6 +79,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD).replace(/</g, "\\u003c") }} />
       {/* 나루터 수면. 밤의 강과 건너편 등불 하나입니다.
           8월의 입자 필드는 그 회차의 것이라 /2026-08에 그대로 남습니다
           (lib/background/scene/BackgroundScene.ts의 variant 주석 참고). */}

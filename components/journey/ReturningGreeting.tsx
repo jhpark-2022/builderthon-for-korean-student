@@ -4,12 +4,12 @@
 // Returning-visitor greeting pill for the hero.
 //
 // A visitor who took the /quiz personality test and comes back to the main site
-// is welcomed by name — "안녕하세요, 조급한 Mistral님 👋" — with a link straight back
+// is welcomed by name - "안녕하세요, 조급한 Mistral님 👋" - with a link straight back
 // to their result. Non-takers (no saved result) see nothing at all, so the hero
 // is 100% unchanged for them.
 //
 // HYDRATION: the saved result lives only in localStorage (absent during SSR), so
-// we render nothing until it's read in an effect — no server/client markup
+// we render nothing until it's read in an effect - no server/client markup
 // mismatch. It then fades in (respecting prefers-reduced-motion).
 //
 // The variant NAME is derived from the stored resultId at render time (localStorage
@@ -23,7 +23,7 @@ import { RESULTS } from "@/data/quiz";
 import { parseResultId } from "@/lib/quizScore";
 import { loadOwnResult, type OwnResult } from "@/lib/quizResult";
 
-// Model brand logo (white mono) from /public/logos with an emoji fallback —
+// Model brand logo (white mono) from /public/logos with an emoji fallback -
 // mirrors Quiz.tsx's ModelGlyph so the pill's mark matches the result screen.
 function GreetingGlyph({ logo, emoji, model }: { logo: string; emoji: string; model: string }) {
   const [failed, setFailed] = useState(false);
@@ -57,7 +57,7 @@ export default function ReturningGreeting({ compact = false }: { compact?: boole
   if (!own) return null; // first-time visitor (or SSR) → hero is untouched
 
   const parsed = parseResultId(own.resultId);
-  if (!parsed) return null; // defensive — loadOwnResult already validated it
+  if (!parsed) return null; // defensive - loadOwnResult already validated it
 
   const data = RESULTS[parsed.mbti];
   const variantName = t(data.variants[parsed.identity].name);
@@ -65,7 +65,7 @@ export default function ReturningGreeting({ compact = false }: { compact?: boole
     locale === "ko" ? `안녕하세요, ${variantName}님 👋` : `Welcome back, ${variantName} 👋`;
   const sub = locale === "ko" ? "다시 보러 가기 →" : "See it again →";
 
-  // Compact variant — a single-line pill sized for the top nav bar. Same link
+  // Compact variant - a single-line pill sized for the top nav bar. Same link
   // and glyph, but the "다시 보러 가기" sub-line is dropped and the name shows
   // just the type ("조급한 Mistral님"), so it fits inline beside the nav buttons.
   if (compact) {
@@ -103,7 +103,7 @@ export default function ReturningGreeting({ compact = false }: { compact?: boole
         </span>
         <span className="flex flex-col leading-tight">
           <span className="text-sm font-bold text-white">{lead}</span>
-          <span className="text-[0.7rem] font-semibold text-violet-200/80 transition group-hover:text-violet-100">
+          <span className="text-xs font-semibold text-violet-200/80 transition group-hover:text-violet-100">
             {sub}
           </span>
         </span>

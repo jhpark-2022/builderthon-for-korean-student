@@ -1,7 +1,7 @@
 /**
  * Ashima 3D simplex noise + curl-noise derivative, as a reusable GLSL chunk.
  * Source: Ian McEwan / Ashima Arts (MIT). Used to drive the particle flow field
- * entirely on the GPU — no per-frame CPU noise sampling.
+ * entirely on the GPU - no per-frame CPU noise sampling.
  */
 export const NOISE_GLSL = /* glsl */ `
 vec3 mod289(vec3 x){ return x - floor(x * (1.0/289.0)) * 289.0; }
@@ -52,7 +52,7 @@ float snoise(vec3 v){
   return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
 }
 
-// Curl of the noise field — produces smooth, divergence-free flow (no clumping).
+// Curl of the noise field - produces smooth, divergence-free flow (no clumping).
 vec3 curlNoise(vec3 p){
   const float e = 0.1;
   vec3 dx = vec3(e, 0.0, 0.0);

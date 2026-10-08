@@ -1,14 +1,9 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // 등록 라우트의 공통 로직. 2026-09-18에 app/api/register/route.ts(8월)에서 꺼냈습니다.
-// 8월 라우트와 12월 라우트(app/api/crossing/register)가 같이 씁니다. 8월 라우트의
-// 동작·응답은 그대로입니다(옮겼을 뿐). 값을 고치면 두 라우트가 같이 바뀝니다.
+// 8월 라우트는 2026-10-08에 지웠고, 지금은 12월 라우트(app/api/crossing/register)만 씁니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { createHash } from "node:crypto";
-
-export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-import { MAX_MEMBERS } from "@/data/crossingForm";
-export { MAX_MEMBERS };
 
 // ── Throttle limits ─────────────────────────────────────────────────────────
 // Tuned to be USELESS against a real student and painful for a script. The

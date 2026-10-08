@@ -16,6 +16,16 @@ import { TURNSTILE_ACTION } from "./turnstileAction";
 
 const VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
+/**
+ * 토큰을 받아도 되는 호스트. 기본은 운영 도메인 하나입니다. 도메인을 옮기거나 프리뷰 배포에서 폼을 시험할 때는
+ * TURNSTILE_ALLOWED_HOSTNAMES에 쉼표로 더합니다(예: "naru.example,my-preview.vercel.app").
+ */
+const DEFAULT_HOSTNAMES = ["naru-crossing-seoul.vercel.app"];
+function allowedHostnames(): Set<string> {
+  const extra = (process.env.TURNSTILE_ALLOWED_HOSTNAMES ?? "").split(",").map((h) => h.trim().toLowerCase()).filter(Boolean);
+  return new Set([...DEFAULT_HOSTNAMES, ...extra]);
+}
+
 export type TurnstileResult = "ok" | "skip" | "fail" | "not_configured" | "unavailable";
 
 export async function verifyTurnstile(token: unknown, ip: string): Promise<TurnstileResult> {
@@ -28,10 +38,17 @@ export async function verifyTurnstile(token: unknown, ip: string): Promise<Turns
   try {
     const res = await fetch(VERIFY_URL, { method: "POST", body: form, signal: AbortSignal.timeout(5000) });
     if (!res.ok) return "unavailable";
-    const data = (await res.json()) as { success?: boolean; action?: string; "error-codes"?: string[] };
+    const data = (await res.json()) as { success?: boolean; action?: string; hostname?: string; "error-codes"?: string[] };
     if (!data.success) return "fail";
-    // Cloudflare의 시험용 키는 action을 비워 돌려줍니다. 값이 있을 때만 맞춰 봅니다.
-    if (data.action && data.action !== TURNSTILE_ACTION) return "fail";
+    // 2026-10-08 (보안 감사 L1): 운영에서는 action이 정확히 같아야 하고, 토큰이 발급된 호스트가 허용 목록에 있어야
+    // 합니다. 다른 사이트에서 받은 토큰이나 Cloudflare 시험용 키(action이 비고 hostname이 example.com)는 통과하지
+    // 못합니다. 개발에서는 전과 같이 action이 있을 때만 맞춰 봅니다(시험용 키로 로컬에서 폼을 시험할 수 있게).
+    if (process.env.NODE_ENV === "production") {
+      if (data.action !== TURNSTILE_ACTION) return "fail";
+      if (!data.hostname || !allowedHostnames().has(data.hostname.toLowerCase())) return "fail";
+    } else if (data.action && data.action !== TURNSTILE_ACTION) {
+      return "fail";
+    }
     return "ok";
   } catch {
     // Cloudflare에 닿지 못한 것은 봇의 증거가 아닙니다. 403이 아니라 503으로 돌려 다시 시도하게 합니다.

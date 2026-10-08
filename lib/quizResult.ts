@@ -1,14 +1,14 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Persistent "own result" store for the /quiz personality test.
 //
-// This is the DURABLE layer (localStorage) — it survives a browser restart, so a
+// This is the DURABLE layer (localStorage) - it survives a browser restart, so a
 // returning visitor to the main site can be greeted by name ("안녕하세요, 조급한
 // Mistral님 👋"). It sits ON TOP of the existing sessionStorage own-result key in
 // components/Quiz.tsx (OWN_KEY, "z100-quiz-own"), which only needs to survive a
-// result-screen refresh — the two are independent and both are consulted.
+// result-screen refresh - the two are independent and both are consulted.
 //
 // SAVE POLICY (critical): call saveOwnResult ONLY the moment a visitor finishes
-// the quiz themselves. Never persist a `?r=` deep-linked result — that's usually
+// the quiz themselves. Never persist a `?r=` deep-linked result - that's usually
 // a friend's share, and saving it would greet the visitor as someone else's type.
 //
 // All access is SSR-guarded and try/catch-wrapped: in a blocked-storage
@@ -27,7 +27,7 @@ import { QUIZ_RESULT_KEY as KEY } from "@/lib/storage";
 const VERSION = 1;
 
 export interface OwnResult {
-  resultId: string; // e.g. "ESTP-T" — the ONLY identity we persist
+  resultId: string; // e.g. "ESTP-T" - the ONLY identity we persist
   savedAt: string; // ISO timestamp of when it was saved
   // The 14 raw answers, so revisiting your own result can re-score it and show
   // the per-axis % gauges again. We store the ANSWERS, not the computed axes:
@@ -51,12 +51,12 @@ export function saveOwnResult(resultId: string, answers?: Choice[], key: string 
     });
     window.localStorage.setItem(key, payload);
   } catch {
-    /* storage blocked (private mode, quota) — silently skip persistence */
+    /* storage blocked (private mode, quota) - silently skip persistence */
   }
 }
 
 // A stored `answers` blob is only usable if it's an array of "a"/"b". Anything
-// else (hand-edited storage, a future answer format) is dropped silently — the
+// else (hand-edited storage, a future answer format) is dropped silently - the
 // result still loads, just without gauges.
 function parseAnswers(raw: unknown): Choice[] | undefined {
   if (!Array.isArray(raw)) return undefined;
@@ -74,7 +74,7 @@ export function loadOwnResult(key: string = KEY): OwnResult | null {
   try {
     raw = window.localStorage.getItem(key);
   } catch {
-    return null; // storage blocked — behave as "no saved result"
+    return null; // storage blocked - behave as "no saved result"
   }
   if (!raw) return null;
 
@@ -109,6 +109,6 @@ export function clearOwnResult(key: string = KEY): void {
   try {
     window.localStorage.removeItem(key);
   } catch {
-    /* storage blocked — no-op */
+    /* storage blocked - no-op */
   }
 }

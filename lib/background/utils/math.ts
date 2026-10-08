@@ -1,4 +1,4 @@
-/** Small math helpers — no allocations in hot paths. */
+/** Small math helpers - no allocations in hot paths. */
 
 export const clamp = (v: number, min: number, max: number) =>
   v < min ? min : v > max ? max : v;

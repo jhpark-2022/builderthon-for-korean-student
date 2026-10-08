@@ -31,6 +31,17 @@ export interface EditionConfig {
   cardStamp: { ko: string; en: string };
   /** 저장하는 이미지 파일 이름의 앞부분("<fileStem>-INFJ-A.png"). */
   fileStem: string;
+  /**
+   * 화면의 옷. zero100은 8월의 보라, 인디고, 푸크시아 그대로이고 naru는 나루 토큰과 글자 크기 셋(TITLE/BODY/META)입니다.
+   * DECIDED 2026-10-08 (브랜드 감사 2, 4): /match는 이름만 크로싱 서울이고 옷은 제로백이었습니다. 판이 옷도 고릅니다.
+   * 저장 이미지(9:16 카드)의 글자 크기와 색은 판과 무관하게 그대로입니다.
+   */
+  tone: "zero100" | "naru";
+  /**
+   * 축 설명 문장(data/quizExplanations.ts, 두 판이 같이 씀)에서 이 판에 없는 말을 바꿉니다. 8월판은 비워 둡니다.
+   * 12월에는 "결과 공유회"가 없고 마지막 날은 발표입니다.
+   */
+  explainSwaps?: { ko: [string, string][]; en: [string, string][] };
 }
 
 // 12월판이 덮는 문구. 8월 문구의 "제로백 빌더톤", "빌더톤"이 든 줄과 시작 화면의 세 줄입니다.
@@ -48,11 +59,14 @@ const UI_2026_12: typeof quizUI = {
   ctaLead: { ko: "이 성격이면 크로싱 서울에서 {role} 포지션으로 빛나요 ✦", en: "With this type, you'll shine in the {role} role at CROSSING SEOUL ✦" },
   ctaApply: { ko: "프로그램 보기", en: "See the programme" },
   storyTicket: { ko: "CROSSING SEOUL 팀 매칭 티켓  DAY 1  12.18", en: "CROSSING SEOUL TEAM-MATCHING TICKET  DAY 1  12.18" },
+  // DECIDED 2026-10-08 (사용자: "팀 - 전원 현장 편성"): 8월 문장의 "솔로 참가자는"을 뺍니다. 12월은 모두가 Day 1 현장에서 팀을 맺습니다.
+  saveImageTicket: { ko: "이 이미지를 저장해 두세요. Day 1 현장 팀 매칭에서 서로 보여 줍니다 🎟️", en: "Save this image. Everyone shows theirs at on-site team matching on Day 1 🎟️" },
 };
 
 export const QUIZ_EDITIONS: Record<QuizEdition, EditionConfig> = {
   "2026-08": { results: RESULTS, path: "/quiz", backHref: "/2026-08", ownKey: QUIZ_OWN_KEY, resultKey: QUIZ_RESULT_KEY,
-    ui: quizUI, cardStamp: { ko: "제로백 빌더톤 2026.08", en: "Zero100 builderthon, Aug 2026" }, fileStem: "zero100-quiz" },
+    ui: quizUI, cardStamp: { ko: "제로백 빌더톤 2026.08", en: "Zero100 builderthon, Aug 2026" }, fileStem: "zero100-quiz", tone: "zero100" },
   "2026-12": { results: RESULTS_2026_12, path: "/match", backHref: "/", ownKey: MATCH_OWN_KEY, resultKey: MATCH_RESULT_KEY,
-    ui: UI_2026_12, cardStamp: { ko: "크로싱 서울 2026.12", en: "CROSSING SEOUL, Dec 2026" }, fileStem: "crossing-seoul-match" },
+    ui: UI_2026_12, cardStamp: { ko: "크로싱 서울 2026.12", en: "CROSSING SEOUL, Dec 2026" }, fileStem: "crossing-seoul-match", tone: "naru",
+    explainSwaps: { ko: [["공유회", "발표"]], en: [["showcase day", "pitch day"], ["showcase countdown", "pitch-day countdown"]] } },
 };

@@ -11,9 +11,9 @@ import {
   useState,
 } from "react";
 import { usePathname } from "next/navigation";
-import type { Locale, Phrase } from "@/data/dictionary";
+import type { Locale, Phrase } from "@/data/dictionaryCore";
 
-// Lightweight i18n — no external library.
+// Lightweight i18n - no external library.
 // LocaleProvider holds "ko" | "en"; useLocale() exposes the current locale, a
 // setter/toggle, and a t() helper that resolves a { ko, en } phrase to a string.
 
@@ -31,14 +31,14 @@ const STORAGE_KEY = "builderthon.locale";
 // useLayoutEffect runs before the browser paints; useEffect can run after it.
 // That difference is the whole flash: with useEffect an English visitor gets one
 // painted frame of Korean before the restore lands. React warns when
-// useLayoutEffect is called during SSR, so fall back to useEffect there — the
+// useLayoutEffect is called during SSR, so fall back to useEffect there - the
 // server never runs either body anyway.
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
   // Default locale: ko. The audience is Korean students in Singapore, so this is
-  // the language most first-time visitors want — and the server has no way to
+  // the language most first-time visitors want - and the server has no way to
   // know better (the preference lives in localStorage, which never reaches it).
   //
   // This value is what the STATIC HTML ships with, so anything server-rendered

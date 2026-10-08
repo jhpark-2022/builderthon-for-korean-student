@@ -16,7 +16,7 @@ uniform vec3 uBase;
 uniform vec3 uMid;
 uniform vec3 uAccent;
 uniform float uScroll;
-uniform float uReveal;   // black-hole approach 0..1 — darkens the sky
+uniform float uReveal;   // black-hole approach 0..1 - darkens the sky
 varying vec2 vUv;
 
 ${NOISE_GLSL}
@@ -40,7 +40,7 @@ void main(){
   col = mix(col, uBase, d * 0.4); // darken edges
 
   // Drain the SKY (background only) to pure black ONLY at the very end of scroll
-  // (≈95→100%), so the closing screen sits on a black void — while the particles
+  // (≈95→100%), so the closing screen sits on a black void - while the particles
   // / sun-like convergence keep glowing on top (they're a separate layer).
   float toBlack = smoothstep(0.95, 1.0, uScroll);
   col = mix(col, vec3(0.0), toBlack);

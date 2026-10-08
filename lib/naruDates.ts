@@ -51,9 +51,8 @@ export const DECEMBER_EVENT_NAME: { ko: string; en: string } | null = {
 /**
  * 12월 이벤트 시작일. **확정된 사실**입니다.
  *
- * 기획 초안(빌더톤_2회차_원페이저.pdf, v1 2026-09-10)은 12/10~12/14로 적고
- * 있습니다. 그 문서는 내부 공유용 초안이고, 확정된 것은 12월 9일 시작이라는
- * 사실뿐입니다. TODO: confirm. 초안과 확정 사이의 차이를 기획 팀과 맞출 것.
+ * 지금 값은 12월 17일입니다(아래 DECIDED 2026-10-05). 그 전의 12/9, 12/10, 12/18은 아래 주석에
+ * 날짜순으로 남아 있습니다.
  */
 // DECIDED 2026-09-17: 12월 10일. 기획(빌더톤_2회차_기획.pdf 04 일정)의 12/10~12/14를
 // 사용자가 확정했습니다. 그 전까지는 12/9 시작만 확정이었고 초안과 어긋나
@@ -67,10 +66,9 @@ export const DECEMBER_EVENT_NAME: { ko: string; en: string } | null = {
 export const DECEMBER_STARTS_AT = "2026-12-17";
 
 /**
- * 12월 이벤트 종료일. **아직 확정되지 않았습니다.**
+ * 12월 이벤트 종료일. 지금 값은 12월 21일로 확정입니다(아래 DECIDED 2026-10-05).
  *
- * TODO: confirm. 기획 초안은 12/14 종료(실질 4일 + 사전 팀 본딩)이지만 확정이
- * 아닙니다. null인 동안 화면은 "12월 9일부터"까지만 그립니다. 없는 날짜를
+ * null로 두면 화면은 시작일 "부터"까지만 그립니다. 없는 날짜를
  * 지어내 채우지 마세요. 참가자가 항공권을 그 날짜로 끊습니다.
  */
 // DECIDED 2026-09-17: 12월 14일. 위와 같은 결정입니다. null로 돌아가면 화면은
@@ -121,7 +119,7 @@ export function formatDecemberRange(locale: Locale): string {
       ? `${sy}년 ${sm}월 ${sd}일부터 ${ed}일까지`
       : `${sy}년 ${sm}월 ${sd}일부터 ${ey}년 ${em}월 ${ed}일까지`;
   }
-  // en dash(–), em dash(—)가 아닙니다. 날짜 범위의 en dash는 하우스 스타일에
+  // en dash(–), em dash(-)가 아닙니다. 날짜 범위의 en dash는 하우스 스타일에
   // 이미 있습니다(dictionary의 "22–29 Aug 2026").
   return sy === ey && sm === em
     ? `${sd}–${ed} ${EN_MONTHS[em - 1]} ${ey}`

@@ -1,12 +1,12 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// "당신의 AI 모델은?" — viral personality test data.
+// "당신의 AI 모델은?" - viral personality test data.
 // Source of truth: AI_성격테스트_기획서.md (14 questions · 16 MBTI×AI models ·
 // A/T variants · scoring map). Every string is bilingual { ko, en } like the
-// rest of the site (see data/dictionary.ts). Pure data only — scoring lives in
+// rest of the site (see data/dictionary.ts). Pure data only - scoring lives in
 // lib/quizScore.ts.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import type { Phrase } from "@/data/dictionary";
+import type { Phrase } from "@/data/dictionaryCore";
 
 // ── Personality axes ─────────────────────────────────────────────────────────
 // Four MBTI axes + a 5th "Identity" axis (A/T) that picks the model's variant.
@@ -18,7 +18,7 @@ export type Axis = "MIND" | "ENERGY" | "NATURE" | "TACTICS" | "IDENTITY";
 export interface Question {
   id: string;
   axis: Axis;
-  w: number; // Sidon weight — per-axis weights form a Sidon set (all subset
+  w: number; // Sidon weight - per-axis weights form a Sidon set (all subset
              // sums distinct), so no answer combo lands on denom/2 → no ties.
   text: Phrase;
   a: { label: Phrase; pole: Pole };
@@ -29,15 +29,15 @@ export interface Question {
 //
 // First-choice debias: leading every question with the E/N/T/J/A pole as option
 // `a` would skew habitual first-tappers toward one type. The a/b objects (label
-// AND pole move together, so scoring is untouched — it reads q[choice].pole) are
+// AND pole move together, so scoring is untouched - it reads q[choice].pole) are
 // arranged so each axis's WEIGHTED first-option mass splits as evenly as the
 // Sidon weights allow: swapped on Q1·Q3·Q4·Q7·Q10·Q12, plus Q13 leading I.
-// Per-axis a-lead split — MIND E8:I6, ENERGY N4:S6, NATURE T5:F3, TACTICS J3:P4,
+// Per-axis a-lead split - MIND E8:I6, ENERGY N4:S6, NATURE T5:F3, TACTICS J3:P4,
 // IDENTITY A3:Tid7 → 23:26 overall. Re-run scripts/verify-quiz-axes.mjs after
 // touching weights or option order.
 //
-// Sidon weighting (phase 2): each axis's per-question weights form a Sidon set —
-// MIND {2,4,8}, ENERGY {1,3,6}, NATURE {1,2,5}, TACTICS {1,2,4}, IDENTITY {3,7} —
+// Sidon weighting (phase 2): each axis's per-question weights form a Sidon set -
+// MIND {2,4,8}, ENERGY {1,3,6}, NATURE {1,2,5}, TACTICS {1,2,4}, IDENTITY {3,7} -
 // so every subset sum is distinct and none equals denom/2. That both guarantees
 // no ties AND spreads the gauge % across 4 distinct bands per axis (vs the old
 // flat 67%). The highest weight sits on each axis's most diagnostic scenario
@@ -46,95 +46,95 @@ export interface Question {
 // verified by scripts/verify-quiz.mjs.
 export const QUESTIONS: Question[] = [
   {
-    id: "Q1", axis: "MIND", w: 2, // light first-impression behavior — low diagnostic weight
+    id: "Q1", axis: "MIND", w: 2, // light first-impression behavior - low diagnostic weight
     text: { ko: "빌더톤 첫날, 처음 보는 팀원들과 한 방에 모였다. 나는?", en: "Day 1 of the builderthon, in a room full of strangers. I…" },
-    // a/b swapped (I first) — Sidon rebalance; see the debias note above QUESTIONS.
+    // a/b swapped (I first) - Sidon rebalance; see the debias note above QUESTIONS.
     a: { label: { ko: "일단 관찰하다 자연스러워지면 낀다", en: "Hang back, read the room, then ease in" }, pole: "I" },
     b: { label: { ko: "먼저 “어디 학교세요?” 분위기 띄운다", en: "Break the ice first: “which school are you at?”" }, pole: "E" },
   },
   {
-    id: "Q2", axis: "ENERGY", w: 3, // abstract big-picture vs concrete — solid N/S signal
+    id: "Q2", axis: "ENERGY", w: 3, // abstract big-picture vs concrete - solid N/S signal
     text: { ko: "주제가 ‘AI로 세상을 바꿀 아이디어’로 정해졌다. 머릿속은?", en: "The theme is “an AI idea that changes the world.” My head goes to…" },
     a: { label: { ko: "“10년 뒤엔 이게 어떻게 될까?” 큰 그림부터", en: "“Where is this in 10 years?” The big picture" }, pole: "N" },
     b: { label: { ko: "“지금 당장 뭘 만들 수 있지?” 현실부터", en: "“What can we ship right now?” The concrete" }, pole: "S" },
   },
   {
-    id: "Q3", axis: "NATURE", w: 1, // feedback delivery style — lightest T/F signal
+    id: "Q3", axis: "NATURE", w: 1, // feedback delivery style - lightest T/F signal
     text: { ko: "팀원 아이디어가 좀 별로다. 나는?", en: "A teammate's idea is… kind of weak. I…" },
-    // a/b swapped (F first) — Sidon rebalance; see the debias note above QUESTIONS.
+    // a/b swapped (F first) - Sidon rebalance; see the debias note above QUESTIONS.
     a: { label: { ko: "“오 좋다! 근데 이건 어때?” 기분 안 상하게", en: "“Love it! but what about this?” Keep it kind" }, pole: "F" },
     b: { label: { ko: "“이 부분 논리적으로 약한데?” 솔직하게 짚음", en: "“This part doesn't hold up.” Say it straight" }, pole: "T" },
   },
   {
-    id: "Q4", axis: "TACTICS", w: 4, // plan-first vs ride-the-flow — the core J/P scenario
+    id: "Q4", axis: "TACTICS", w: 4, // plan-first vs ride-the-flow - the core J/P scenario
     text: { ko: "데드라인까지 48시간. 내 작업 스타일은?", en: "48 hours to the deadline. My work style is…" },
-    // a/b swapped (P first) to debias the first-choice tendency — see the note above QUESTIONS.
+    // a/b swapped (P first) to debias the first-choice tendency - see the note above QUESTIONS.
     a: { label: { ko: "일단 만들면서 흐름 타기", en: "Start building and ride the flow" }, pole: "P" },
     b: { label: { ko: "시간표부터 짜고 계획대로", en: "Map the schedule, then run the plan" }, pole: "J" },
   },
   {
-    id: "Q5", axis: "IDENTITY", w: 3, // stress reaction — supporting A/T signal
+    id: "Q5", axis: "IDENTITY", w: 3, // stress reaction - supporting A/T signal
     text: { ko: "발표 직전, 데모가 갑자기 안 돈다. 멘탈은?", en: "Right before the pitch, the demo breaks. My headspace…" },
     a: { label: { ko: "“어떻게든 되겠지” 침착", en: "“We'll figure it out.” Stay calm" }, pole: "A" },
     b: { label: { ko: "“망했다…” 심장 쿵", en: "“We're done…” Heart drops" }, pole: "Tid" },
   },
   {
-    id: "Q6", axis: "MIND", w: 8, // energy source = the essence of E/I — highest MIND weight
+    id: "Q6", axis: "MIND", w: 8, // energy source = the essence of E/I - highest MIND weight
     text: { ko: "쉬는 시간, 에너지 충전법은?", en: "On a break, I recharge by…" },
     a: { label: { ko: "사람들이랑 수다 떨기", en: "Chatting with people" }, pole: "E" },
     b: { label: { ko: "혼자 바람 쐬기", en: "Stepping out alone for air" }, pole: "I" },
   },
   {
-    id: "Q7", axis: "ENERGY", w: 6, // meaning vs data when justifying — highest ENERGY weight
+    id: "Q7", axis: "ENERGY", w: 6, // meaning vs data when justifying - highest ENERGY weight
     text: { ko: "멘토가 “이거 왜 만들었어요?” 묻는다. 내 대답은?", en: "A mentor asks “why did you build this?” I answer with…" },
-    // a/b swapped (S first) — see the debias note above QUESTIONS.
+    // a/b swapped (S first) - see the debias note above QUESTIONS.
     a: { label: { ko: "구체적 데이터·사례로", en: "Concrete data and examples" }, pole: "S" },
     b: { label: { ko: "비전·의미·가능성으로", en: "Vision, meaning, what it could become" }, pole: "N" },
   },
   {
-    id: "Q8", axis: "NATURE", w: 5, // decision yardstick under conflict — highest NATURE weight
+    id: "Q8", axis: "NATURE", w: 5, // decision yardstick under conflict - highest NATURE weight
     text: { ko: "팀 내 의견 충돌. 내 기준은?", en: "The team clashes on a call. My yardstick is…" },
     a: { label: { ko: "뭐가 더 효율적·합리적인가", en: "What's more efficient and rational" }, pole: "T" },
     b: { label: { ko: "다들 납득하고 기분 좋은가", en: "Whether everyone's on board and okay" }, pole: "F" },
   },
   {
-    id: "Q9", axis: "TACTICS", w: 2, // replan-under-pressure — mid J/P signal
+    id: "Q9", axis: "TACTICS", w: 2, // replan-under-pressure - mid J/P signal
     text: { ko: "마감 12시간 전, 더 좋은 아이디어가 떠올랐다.", en: "12 hours out, a better idea hits me." },
     a: { label: { ko: "위험해, 원래 계획 고수", en: "Too risky, stick to the plan" }, pole: "J" },
     b: { label: { ko: "가보자고, 갈아엎기", en: "Let's go, tear it up and rebuild" }, pole: "P" },
   },
   {
-    id: "Q10", axis: "IDENTITY", w: 7, // rumination after a flat reception = core Turbulent trait — highest IDENTITY weight
-    // 원래 "입상 못 했다"였습니다 — 2026-08-05 결과 공유회 전환으로 등수 자체가
+    id: "Q10", axis: "IDENTITY", w: 7, // rumination after a flat reception = core Turbulent trait - highest IDENTITY weight
+    // 원래 "입상 못 했다"였습니다 - 2026-08-05 결과 공유회 전환으로 등수 자체가
     // 없어졌으니, 흔들리는 순간을 순위가 아니라 무대 반응으로 바꿨습니다.
     // 재는 축(곱씹기 vs 털기)은 그대로입니다. quizExplanations의 IDENTITY 설명
     // 문구도 같이 움직였습니다.
     text: { ko: "발표는 끝났는데 반응이 미지근했다. 집 가는 길의 나는?", en: "The presentation is done and the room was lukewarm. On the way home I…" },
-    // a/b swapped (Tid first) — see the debias note above QUESTIONS.
+    // a/b swapped (Tid first) - see the debias note above QUESTIONS.
     a: { label: { ko: "“그때 그것만 고쳤어도…” 곱씹기", en: "“If only we'd fixed that…” Replay it" }, pole: "Tid" },
     b: { label: { ko: "“잘했으니 됐지, 다음에 또” 툭툭 털기", en: "“We did well, next time.” Shake it off" }, pole: "A" },
   },
   {
-    id: "Q11", axis: "ENERGY", w: 1, // imagine vs spec-check — lightest N/S signal
+    id: "Q11", axis: "ENERGY", w: 1, // imagine vs spec-check - lightest N/S signal
     text: { ko: "새 AI 툴을 받았다. 나는?", en: "I get my hands on a new AI tool. I…" },
     a: { label: { ko: "“이걸로 뭘 할 수 있을지” 상상부터 부풀림", en: "Dream up everything it could do" }, pole: "N" },
     b: { label: { ko: "“이게 정확히 뭐 하는 건지” 스펙부터 확인", en: "Check exactly what it does, spec by spec" }, pole: "S" },
   },
   {
-    id: "Q12", axis: "NATURE", w: 2, // empathy vs problem-first — mid T/F signal
+    id: "Q12", axis: "NATURE", w: 2, // empathy vs problem-first - mid T/F signal
     text: { ko: "팀원이 밤새다 멘붕왔다. 첫 반응은?", en: "A teammate hits a wall after an all-nighter. My first move…" },
-    // a/b swapped (F first) — see the debias note above QUESTIONS.
+    // a/b swapped (F first) - see the debias note above QUESTIONS.
     a: { label: { ko: "“괜찮아? 좀 쉬어, 내가 도울게” 다독임부터", en: "“You okay? Rest, I've got you.” The person" }, pole: "F" },
     b: { label: { ko: "“어디서 막혔어? 같이 해결하자” 문제부터", en: "“Where are you stuck? Let's solve it.” The problem" }, pole: "T" },
   },
   {
-    id: "Q13", axis: "MIND", w: 4, // networking style — mid E/I signal; leads on the right pole (I) for balance
+    id: "Q13", axis: "MIND", w: 4, // networking style - mid E/I signal; leads on the right pole (I) for balance
     text: { ko: "네트워킹 세션, 처음 보는 사람들로 방이 꽉 찼다. 나는?", en: "A networking session, the room packed with strangers. I…" },
     a: { label: { ko: "몇 명이랑 진득하게 깊은 대화", en: "Go deep with just a few people" }, pole: "I" },
     b: { label: { ko: "최대한 많은 사람과 인사하고 명함 뿌리기", en: "Work the room, meet as many as I can" }, pole: "E" },
   },
   {
-    id: "Q14", axis: "TACTICS", w: 1, // role/work-division style — lightest J/P signal
+    id: "Q14", axis: "TACTICS", w: 1, // role/work-division style - lightest J/P signal
     text: { ko: "팀 작업 방식을 정할 차례. 나는?", en: "Time to set how the team works. I…" },
     a: { label: { ko: "역할·순서 딱 나눠서 각자 맡은 것부터", en: "Split roles and order, everyone owns their part" }, pole: "J" },
     b: { label: { ko: "일단 다 같이 붙어서 되는 대로 굴리기", en: "All hands on it together, figure it out as we go" }, pole: "P" },
@@ -160,7 +160,8 @@ export const axisMeta: Record<Pole, Phrase> = {
   E: { ko: "외향", en: "Extraverted" },
   I: { ko: "내향", en: "Introverted" },
   N: { ko: "직관", en: "Intuitive" },
-  S: { ko: "현실", en: "Observant" },
+  // 2026-10-08: 영문이 "Observant"였는데 축 설명(data/quizExplanations.ts)은 전부 "grounded"라고 불러 한 화면에서 이름이 둘이었습니다.
+  S: { ko: "현실", en: "Grounded" },
   T: { ko: "이성", en: "Thinking" },
   F: { ko: "감성", en: "Feeling" },
   J: { ko: "계획", en: "Judging" },
@@ -237,7 +238,7 @@ export interface Result {
   role: Phrase;         // the brief's recommended builderthon role (display)
   roleKey: RoleKey;     // bucket for group matching
   match: MbtiKey[];     // 2 best-fit teammate types
-  // Why each match works, from THIS type's point of view — index-aligned to
+  // Why each match works, from THIS type's point of view - index-aligned to
   // `match` (matchWhy[i] explains match[i]). Weaves the two models' real
   // identities into a concrete complementarity: my weak spot, their strong one.
   matchWhy: [Phrase, Phrase];
@@ -246,7 +247,7 @@ export interface Result {
   whyModel: Phrase;     // 1–2 sentences on why THIS model fits (research-backed)
   strengths: Phrase;
   weakness: Phrase;
-  // Three joke stats for the 9:16 story image. Purely comedic — derived from
+  // Three joke stats for the 9:16 story image. Purely comedic - derived from
   // this type's own desc/strengths/weakness, never from the scoring axes (those
   // have their own gauges on the card, and mixing real numbers with made-up ones
   // would make both look untrustworthy). The AXES DIFFER PER TYPE on purpose:
@@ -654,7 +655,7 @@ export const MODEL_MAP: Record<MbtiKey, string> = Object.fromEntries(
 // ── UI copy (bilingual) ────────────────────────────────────────────────────
 export const quizUI = {
   eyebrow: { ko: "AI 성격 테스트", en: "AI Personality Test" },
-  // Back-link to the event site — mirrors the nav's brandSuffix, so it carries
+  // Back-link to the event site - mirrors the nav's brandSuffix, so it carries
   // the same "AI 빌더톤 / AI Builderthon" wording.
   // 2026-09-23: 라벨이 "AI 빌더톤"인데 나루 홈("/")으로 가서 맞지 않았습니다. 목적지를 /2026-08로
   // 옮기고(components/Quiz.tsx) 라벨도 그 기록의 이름으로.
@@ -701,12 +702,12 @@ export const quizUI = {
     en: "With this type, you'll shine in the {role} role at the builderthon ✦",
   },
   // 2026-08-22 마감 후 청산: 신청 → 트랙. 결과 카드의 다음 걸음이 등록이었는데
-  // 등록이 닫혔습니다. 홈의 #tracks로 보냅니다 — 지금 이 사람이 볼 만한 것.
+  // 등록이 닫혔습니다. 홈의 #tracks로 보냅니다 - 지금 이 사람이 볼 만한 것.
   // 2026-09-16: 트랙은 8월 회차의 것이고 그 섹션은 이제 없습니다. 이 버튼은
   // 나루 홈의 12월 챕터로 갑니다(components/Quiz.tsx의 같은 날짜 주석).
   ctaApply: { ko: "다음 이벤트 보기", en: "See the next event" },
   // Shown after a genuine completion that came from the register modal's
-  // round-trip (/quiz?return=register) — links back to the modal, which restores
+  // round-trip (/quiz?return=register) - links back to the modal, which restores
   // the saved draft and attaches this freshly-saved type. Never auto-redirects.
   ctaBackToRegister: { ko: "등록으로 돌아가기 →", en: "Back to registration →" },
   ctaBackToRegisterNote: {
@@ -716,7 +717,7 @@ export const quizUI = {
 
   // 9:16 story-image export
   // Sits directly above the save button. The image stopped being a vanity
-  // screenshot the moment on-site matching started using it — so the button
+  // screenshot the moment on-site matching started using it - so the button
   // needs a reason attached, not just a verb.
   saveImageTicket: {
     ko: "이 이미지를 저장해 두세요. 솔로 참가자는 Day 1 현장 팀 매칭에 쓰여요 🎟️",
@@ -725,7 +726,7 @@ export const quizUI = {
   saveImage: { ko: "이미지로 저장", en: "Save as image" },
   saveImageLoading: { ko: "만드는 중…", en: "Creating…" },
   saveImageError: { ko: "이미지 생성에 실패했어요", en: "Couldn't create the image" },
-  // Desktop: the file went to the downloads folder — say so, since nothing
+  // Desktop: the file went to the downloads folder - say so, since nothing
   // visible happens otherwise.
   saveImageSaved: { ko: "이미지를 저장했어요", en: "Image saved" },
   // In-app browsers (Instagram, KakaoTalk…) support neither the file share
@@ -738,7 +739,7 @@ export const quizUI = {
   // shown on the story card itself
   storyRetake: { ko: "나도 테스트하기", en: "Take the test yourself" },
   // Ticket stamp across the top of the story image. The date is the builderthon's
-  // Day 1 (2026-08-22) — the day this image is actually used for on-site
+  // Day 1 (2026-08-22) - the day this image is actually used for on-site
   // matching, which is the whole reason it's framed as a ticket.
   storyTicket: { ko: "ZERO100 팀 매칭 티켓 · DAY 1 · 08.22", en: "ZERO100 TEAM-MATCHING TICKET · DAY 1 · 08.22" },
   // Meme-stat block heading.
@@ -746,7 +747,7 @@ export const quizUI = {
   // One-line dream-teammate tease. The full two-card version lives on the result
   // screen; the image gets the headline so it stays readable at story scale.
   storyMatch: { ko: "환상의 짝꿍", en: "Dream teammate" },
-  // Story-card axis-explanation highlights — the most decisive axis (highest %)
+  // Story-card axis-explanation highlights - the most decisive axis (highest %)
   // vs the closest-call axis (lowest %), sitting side by side for the contrast.
   storyHighlightHi: { ko: "빼박인 부분", en: "No debate here" },
   storyHighlightLo: { ko: "아슬아슬한 부분", en: "The coin toss" },

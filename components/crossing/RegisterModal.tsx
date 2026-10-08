@@ -4,14 +4,20 @@
 // 크로싱 서울 등록 폼 (2026-09-18, Supabase 등록 브리프 2.4).
 //
 // 8월 RegisterModal(1,551줄)을 복제하지 않습니다. data/crossingForm.ts의 스키마를 돌며
-// 필드를 그립니다. 질문이 바뀌면 스키마 한 줄이면 됩니다. 8월 모달에서 가져온 것은
-// 껍데기뿐: 열기/닫기, ESC·배경 클릭, 스크롤 잠금, 팀원 추가(최대 3인), 제출 중·완료·
-// 오류 상태, localStorage 초안. 시각은 8월 문법(Glass 패널, 그라데이션 필 1차 버튼).
-// 완료 화면은 "등록됐습니다. 며칠 안에 안내 메일을 보냅니다." + 문의 메일. 오픈채팅은
-// 닫혀 있어 언급하지 않습니다(links.openChat이 비면 숨는 규칙 그대로).
+// 필드를 그립니다. 질문이 바뀌면 스키마 한 줄이면 됩니다.
+//
+// DECIDED 2026-10-08 (사용자: "팀 - 전원 현장 편성"): 한 폼에 한 사람입니다. 참가 형태, 팀 이름, 팀원 줄, 팀 매칭
+// 희망은 없습니다. 팀은 현장에서 맺습니다.
+//
+// 2026-10-08 (폼 리뷰, 접근성 감사, 브랜드 감사 반영):
+//   포커스  열릴 때 닫기 버튼으로, Tab은 대화상자 안에서 돌고, 뒤의 페이지는 inert, 닫으면 연 버튼으로 돌아갑니다
+//           (components/EventModal.tsx와 같은 수명 주기).
+//   색      나루 토큰만 씁니다(면 naru-surface, 강조 accent, 주 버튼 buttonClass("primary", "naru")). 8월의 보라와
+//           인디고는 이 폼에 없습니다.
+//   크기    BODY와 META, 그리고 LARGE(18px) 셋입니다. 아래 LARGE의 주석을 보세요.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
@@ -19,121 +25,158 @@ import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 import { CURRENT_EVENT } from "@/lib/registrationWindow";
 import TurnstileWidget from "@/components/crossing/TurnstileWidget";
 import { TURNSTILE_ACTION } from "@/lib/register/turnstileAction";
-import { naruLinks, register as copy } from "@/data/naru";
-import { links, type Phrase } from "@/data/dictionary";
+import { naruLinks, openChatLabels, register as copy } from "@/data/naru";
+import { links, type Phrase } from "@/data/dictionaryCore";
 import { BODY, META } from "@/components/ui/typography";
+import { buttonClass } from "@/components/ui/Button";
 import {
-  COUNTRY_OTHER, MEMBER_FIELDS, REGISTRATION_FIELDS, MAX_MEMBERS, MAX_TEXT, MAX_TEXTAREA,
-  type Field, validateField,
+  COUNTRY_OTHER, COUNTRY_OTHER_KEY, MEMBER_FIELDS, REGISTRATION_FIELDS, MAX_TEXT, MAX_TEXTAREA,
+  type Field, validateField, validatePerson,
 } from "@/data/crossingForm";
 
 const DRAFT_KEY = `naru.register.${CURRENT_EVENT}.draft`;
-const FIELD = "w-full rounded-xl border border-white/[0.12] bg-white/[0.04] px-4 py-3 text-base text-white placeholder:text-white/35 outline-none transition focus:border-violet-400/50 focus:bg-white/[0.06]";
-const PRIMARY = "inline-flex min-h-[48px] items-center justify-center rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-7 py-3.5 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 disabled:opacity-60 disabled:hover:translate-y-0";
+const SUBMIT_TIMEOUT_MS = 20_000;
+const FOCUSABLE = "a[href], button:not([disabled]), input:not([disabled]):not([tabindex='-1']), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])";
+
+// 2026-10-08: 입력칸과 제목의 크기. BODY의 sm 값(18px)을 폰에서도 그대로 씁니다. iOS Safari와 카카오톡 인앱 브라우저는
+// 16px보다 작은 입력칸에 포커스가 가면 화면을 확대하는데, BODY는 폰에서 15.75px입니다. 새 크기가 아니고(BODY가 이미
+// 쓰는 값), 이 폼은 TITLE을 쓰지 않으므로 한 화면의 크기는 폰에서 셋(18, 15.75, 13.5), 데스크톱에서 둘(18, 13.5)입니다.
+const LARGE = "text-base";
+// 테두리 white/45는 면 위에서 3:1을 넘고(1.4.11), 자리표시 글자 white/55는 6:1입니다(1.4.3). 그 전의 /12와 /35는 못 넘었습니다.
+const FIELD = `w-full rounded-xl border border-white/45 bg-white/[0.04] px-4 py-3 ${LARGE} text-white placeholder:text-white/55 transition focus:border-accent focus:bg-white/[0.06]`;
+const PRIMARY = `${buttonClass("primary", "naru")} min-h-[48px] justify-center disabled:opacity-60 disabled:hover:translate-y-0`;
 
 type Answers = Record<string, string | boolean>;
-type Member = { id: number; a: Answers; other: string };
 type Status = "idle" | "submitting" | "success" | "error";
-
-const emptyMember = (id: number): Member => ({ id, a: {}, other: "" });
 
 // preview (2026-10-08): 등록 창이 열리기 전의 미리 보기. 폼은 그대로 보이고 채울 수도 있지만 제출 버튼이 꺼져 있고
 // 요청을 보내지 않습니다. 서버도 창이 열리기 전에는 403입니다.
-export default function RegisterModal({ open, onClose, onRegistered, refSource, preview = false }: {
-  open: boolean; onClose: () => void; onRegistered: () => void; refSource: string | null; preview?: boolean;
+// closed: 폼이 열린 채로 마감 시각을 넘긴 경우. 안내가 "아직 열리지 않았습니다"가 아니라 "마감됐습니다"여야 합니다.
+export default function RegisterModal({ open, onClose, onRegistered, refSource, preview = false, closed = false }: {
+  open: boolean; onClose: () => void; onRegistered: () => void; refSource: string | null; preview?: boolean; closed?: boolean;
 }) {
   const { t, locale } = useLocale();
   const reduce = useReducedMotion();
+  const [person, setPerson] = useState<Answers>({});
   const [reg, setReg] = useState<Answers>({});
-  const [members, setMembers] = useState<Member[]>([emptyMember(1)]);
   const [website, setWebsite] = useState(""); // 허니팟(url_confirm). 초안에 넣지 않습니다.
   const [status, setStatus] = useState<Status>("idle");
   const [errorCode, setErrorCode] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [sentEmail, setSentEmail] = useState("");
   // 봇 확인(Cloudflare Turnstile, 2026-09-23). 사이트 키가 없으면(로컬) 위젯을 그리지 않고,
   // 서버도 개발 빌드에서는 확인을 건너뜁니다. 토큰은 한 번 쓰면 끝이라 보낸 뒤 실패하면 새로 받습니다.
   const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
   const [botToken, setBotToken] = useState<string | null>(null);
   const [botReset, setBotReset] = useState(0);
+  const [botFailed, setBotFailed] = useState(false);
   const [touched, setTouched] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
-  const nextId = useRef(2);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const successRef = useRef<HTMLHeadingElement>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+  const statusRef = useRef(status);
+  statusRef.current = status;
 
-  const isTeam = reg.join_type === "team";
-  const visibleMembers = isTeam ? members : members.slice(0, 1);
-
+  // 수명 주기 effect보다 먼저 선언합니다. 정리 순서가 스크롤 복원 → 포커스 복원이 됩니다(EventModal과 같은 이유).
   useBodyScrollLock(open);
 
-  // 초안 복원(마운트 뒤, 클라이언트만).
+  // 초안 복원(마운트 뒤, 클라이언트만). 2026-10-08 전의 초안({reg, members})도 읽습니다.
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(DRAFT_KEY);
-      if (raw) {
-        const d = JSON.parse(raw) as { reg?: Answers; members?: Member[] };
-        if (d.reg) setReg(d.reg);
-        if (Array.isArray(d.members) && d.members.length) {
-          setMembers(d.members.map((m, i) => ({ id: i + 1, a: m.a ?? {}, other: m.other ?? "" })));
-          nextId.current = d.members.length + 1;
-        }
+      if (!raw) return;
+      const d = JSON.parse(raw) as { person?: Answers; reg?: Answers; members?: { a?: Answers }[] };
+      const p = d.person ?? d.members?.[0]?.a;
+      if (p && typeof p === "object") setPerson(p);
+      if (d.reg && typeof d.reg === "object") {
+        const known = new Set(REGISTRATION_FIELDS.map((f) => f.key));
+        setReg(Object.fromEntries(Object.entries(d.reg).filter(([k]) => known.has(k) && k !== "consent")));
       }
     } catch { /* corrupt draft */ }
   }, []);
-  // 초안 저장(입력할 때마다). 완료하면 지웁니다.
+  // 초안 저장(입력할 때마다). 완료하면 지웁니다. 동의 표시는 넣지 않습니다(2026-10-08. 다음에 열 때 다시 묻습니다).
   useEffect(() => {
     if (!touched || status === "success") return;
-    try { window.localStorage.setItem(DRAFT_KEY, JSON.stringify({ reg, members })); } catch { /* ignore */ }
-  }, [reg, members, touched, status]);
+    try {
+      const regDraft = Object.fromEntries(Object.entries(reg).filter(([k]) => k !== "consent"));
+      window.localStorage.setItem(DRAFT_KEY, JSON.stringify({ person, reg: regDraft }));
+    } catch { /* ignore */ }
+  }, [person, reg, touched, status]);
 
+  // 열고 닫을 때의 상태 정리(2026-10-08).
+  //   열 때  지난번에 등록을 마친 채 닫았다면 빈 폼으로. 그 전에는 새로고침할 때까지 "등록됐습니다"만 보였습니다.
+  //   닫을 때 봇 토큰을 버립니다(다시 열면 위젯이 새 토큰을 받습니다). 남아 있던 서버 오류 문구도 지웁니다.
+  useEffect(() => {
+    if (open) {
+      if (statusRef.current === "success") {
+        setPerson({}); setReg({}); setErrors({}); setTouched(false); setSentEmail(""); setStatus("idle");
+      }
+      return;
+    }
+    setBotToken(null); setBotFailed(false); setErrorCode(null);
+    setStatus((s) => (s === "error" ? "idle" : s));
+  }, [open]);
+
+  // 열림/닫힘 수명 주기: ESC, Tab 가두기, 뒤 페이지 inert, 닫으면 연 자리로 포커스 복원.
+  // onClose는 ref로 읽습니다. 프로바이더가 렌더마다 새 함수를 주므로 의존성에 넣으면 입력할 때마다 포커스가 튑니다.
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") { e.preventDefault(); onClose(); } };
+    const opener = document.activeElement as HTMLElement | null;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { e.preventDefault(); onCloseRef.current(); return; }
+      if (e.key !== "Tab" || !dialogRef.current) return;
+      const nodes = Array.from(dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE))
+        .filter((el) => el.offsetParent !== null || el === document.activeElement);
+      if (nodes.length === 0) { e.preventDefault(); return; }
+      const first = nodes[0];
+      const last = nodes[nodes.length - 1];
+      const active = document.activeElement;
+      const outside = !dialogRef.current.contains(active);
+      if (e.shiftKey && (active === first || outside)) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && (active === last || outside)) { e.preventDefault(); first.focus(); }
+    };
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+    // 대화상자는 <body>로 포털되므로 이 형제들을 통째로 inert로 둘 수 있습니다. aria-hidden은 같이 걸지 않습니다
+    // (방금 누른 버튼이 <main> 안에서 포커스를 쥐고 있어 경고가 납니다. EventModal의 주석과 같은 이유).
+    const inerted = Array.from(document.querySelectorAll<HTMLElement>("header, main, footer"));
+    inerted.forEach((el) => el.setAttribute("inert", ""));
+    const id = window.setTimeout(() => closeRef.current?.focus(), 50);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      inerted.forEach((el) => el.removeAttribute("inert"));
+      window.clearTimeout(id);
+      opener?.focus?.();
+    };
+  }, [open]);
 
-  const setRegField = (k: string, v: string | boolean) => { setTouched(true); setReg((r) => ({ ...r, [k]: v })); };
-  const setMemberField = (id: number, k: string, v: string | boolean) => { setTouched(true); setMembers((ms) => ms.map((m) => (m.id === id ? { ...m, a: { ...m.a, [k]: v } } : m))); };
-  const setMemberOther = (id: number, v: string) => { setTouched(true); setMembers((ms) => ms.map((m) => (m.id === id ? { ...m, other: v } : m))); };
-  const addMember = () => setMembers((ms) => (ms.length >= MAX_MEMBERS ? ms : [...ms, emptyMember(nextId.current++)]));
-  const removeMember = (id: number) => setMembers((ms) => (ms.length <= 1 ? ms : ms.filter((m) => m.id !== id)));
+  // 완료 화면으로 바뀌면 제출 버튼이 사라져 포커스가 body로 떨어집니다. 제목으로 옮겨 결과를 읽게 합니다.
+  useEffect(() => {
+    if (status === "success") successRef.current?.focus();
+  }, [status]);
 
-  /** 서버로 보내는 꼴. country OTHER는 직접 넣은 두 글자 코드로. */
-  const payload = useMemo(() => ({
-    eventSlug: CURRENT_EVENT,
-    ref: refSource,
-    submittedAt: new Date().toISOString(),
-    url_confirm: website,
-    registration: reg,
-    members: visibleMembers.map((m) => {
-      const a: Answers = { ...m.a };
-      if (a.study_country === COUNTRY_OTHER) a.study_country = m.other.trim().toUpperCase();
-      return a;
-    }),
-  }), [reg, visibleMembers, website, refSource]);
+  // 값을 고치면 그 칸의 오류는 바로 지웁니다(2026-10-08. 그 전에는 다음 제출까지 빨간 글이 남았습니다).
+  const clearError = (key: string) => setErrors((e) => (key in e ? Object.fromEntries(Object.entries(e).filter(([k]) => k !== key)) : e));
+  const setPersonField = (k: string, v: string | boolean) => { setTouched(true); setPerson((p) => ({ ...p, [k]: v })); clearError(`m.${k}`); };
+  const setRegField = (k: string, v: string | boolean) => { setTouched(true); setReg((r) => ({ ...r, [k]: v })); clearError(`reg.${k}`); };
+
+  const otherCountry = person.study_country === COUNTRY_OTHER;
 
   const validate = (): Record<string, string> => {
     const e: Record<string, string> = {};
+    for (const [k, code] of Object.entries(validatePerson(person))) e[`m.${k}`] = code;
     for (const f of REGISTRATION_FIELDS) {
-      if (f.key === "team_name" && !isTeam) continue;
-      if (f.key === "wants_matching") continue;
       const err = validateField(f, reg[f.key]);
-      if (err) e[`reg.${f.key}`] = err;
+      if (err) e[`reg.${f.key}`] = f.key === "consent" ? "consent_required" : err;
     }
-    if (isTeam && !String(reg.team_name ?? "").trim()) e["reg.team_name"] = "required";
-    payload.members.forEach((a, i) => {
-      for (const f of MEMBER_FIELDS) {
-        const err = validateField(f, a[f.key]);
-        if (err) e[`m${i}.${f.key}`] = err;
-      }
-    });
-    const emails = payload.members.map((a) => String(a.email ?? "").trim().toLowerCase()).filter(Boolean);
-    if (new Set(emails).size !== emails.length) e["m1.email"] = "duplicate_email";
     return e;
   };
 
   const onSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
-    if (preview) return;
+    if (preview || status === "submitting") return;
+    setStatus("idle"); setErrorCode(null);
     const e = validate();
     setErrors(e);
     if (Object.keys(e).length) {
@@ -145,37 +188,59 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
       });
       return;
     }
-    if (turnstileSiteKey && !botToken) { setStatus("error"); setErrorCode("bot_check_pending"); return; }
-    setStatus("submitting"); setErrorCode(null);
+    if (turnstileSiteKey && !botToken) { setStatus("error"); setErrorCode(botFailed ? "bot_check_load_failed" : "bot_check_pending"); return; }
+    setStatus("submitting");
+    // 서버로 보내는 꼴. 한 폼에 한 사람이라 members는 늘 하나입니다. 나라가 목록에 있으면 나라 이름 칸은 보내지 않습니다.
+    const member: Answers = { ...person };
+    if (!otherCountry) delete member[COUNTRY_OTHER_KEY];
+    const email = String(person.email ?? "").trim();
+    // 응답이 오지 않으면 20초 뒤에 끊습니다. 그 전에는 "보내는 중"에서 영영 멈췄습니다.
+    const ctrl = new AbortController();
+    const timer = window.setTimeout(() => ctrl.abort(), SUBMIT_TIMEOUT_MS);
     try {
-      const res = await fetch("/api/crossing/register", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...payload, turnstileToken: botToken }) });
+      const res = await fetch("/api/crossing/register", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        signal: ctrl.signal,
+        body: JSON.stringify({
+          eventSlug: CURRENT_EVENT, ref: refSource, submittedAt: new Date().toISOString(), url_confirm: website,
+          registration: reg, members: [member], turnstileToken: botToken,
+        }),
+      });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
-      if (!res.ok) { setStatus("error"); setErrorCode(data.error ?? "generic"); setBotReset((n) => n + 1); return; }
+      if (!res.ok) { setStatus("error"); setErrorCode(data.error ?? "generic"); setBotToken(null); setBotReset((n) => n + 1); return; }
+      setSentEmail(email);
       setStatus("success");
       try { window.localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
       onRegistered();
     } catch {
-      setStatus("error"); setErrorCode("generic"); setBotReset((n) => n + 1);
+      setStatus("error"); setErrorCode("generic"); setBotToken(null); setBotReset((n) => n + 1);
+    } finally {
+      window.clearTimeout(timer);
     }
   };
 
-  const errText = (code: string | undefined) => (code ? t((copy.errors as Record<string, Phrase>)[code] ?? copy.errors.generic) : undefined);
+  const maxOf = (f: Field) => f.maxLen ?? (f.type === "textarea" ? MAX_TEXTAREA : MAX_TEXT);
+  const errText = (code: string | undefined, max: number = MAX_TEXT) =>
+    code ? t((copy.errors as Record<string, Phrase>)[code] ?? copy.errors.generic).replace("{max}", String(max)) : undefined;
 
-  const renderField = (f: Field, value: string | boolean | undefined, set: (v: string | boolean) => void, err: string | undefined, id: string, extra?: { other: string; setOther: (v: string) => void }) => {
+  const renderField = (f: Field, value: string | boolean | undefined, set: (v: string | boolean) => void, err: string | undefined, id: string) => {
     const label = t(f.label);
-    // "TODO"로 시작하는 도움말은 아직 정해지지 않은 자리표시(동의 문구)라 화면에 그리지 않습니다(2026-10-08.
-    // 미리 보기로 폼이 방문자에게 보이게 되면서). 문구가 정해져 data/crossingForm.ts에 들어가면 그대로 나옵니다.
-    const help = f.help && !f.help.ko.startsWith("TODO") ? t(f.help) : undefined;
+    const help = f.help ? t(f.help) : undefined;
+    const max = maxOf(f);
     const errorId = err ? `${id}-error` : undefined;
-    const common = { id, "aria-invalid": err ? true : undefined, "aria-describedby": errorId };
+    const helpId = help ? `${id}-help` : undefined;
+    const described = [errorId, helpId].filter(Boolean).join(" ") || undefined;
+    const common = { id, "aria-invalid": err ? true : undefined, "aria-describedby": described, "aria-required": f.required || undefined };
     if (f.type === "checkbox") {
+      // 줄의 높이는 44px 이상입니다(누르는 자리). 상자를 키우지 않고 줄에 여백을 줍니다.
       return (
-        <label key={f.key} className="flex items-start gap-3 text-sm text-white/85">
-          <input {...common} type="checkbox" checked={value === true} onChange={(e) => set(e.target.checked)} className="mt-1 h-4 w-4 rounded border-white/30 bg-white/[0.04] accent-violet-500" />
+        <label key={f.key} className={`flex min-h-[44px] cursor-pointer items-start gap-3 py-2 ${BODY} text-white/85`}>
+          <input {...common} type="checkbox" checked={value === true} onChange={(e) => set(e.target.checked)} className="mt-1 h-5 w-5 shrink-0 rounded border-white/45 bg-white/[0.04] accent-accent" />
           <span>
-            {label}{f.required && <span aria-hidden className="ml-1 text-rose-400">*</span>}
-            {help && <span className="mt-0.5 block text-xs text-white/55">{help}</span>}
-            {err && <span id={errorId} className="mt-0.5 block text-xs font-medium text-rose-300">{errText(err)}</span>}
+            <span className="font-semibold">{label}</span>{f.required && <span aria-hidden className="ml-1 text-rose-400">*</span>}
+            {help && <span id={helpId} className={`mt-1 block ${META} leading-relaxed text-white/70`}>{help}</span>}
+            {err && <span id={errorId} className={`mt-1 block ${META} font-medium text-rose-300`}>{errText(err, max)}</span>}
           </span>
         </label>
       );
@@ -186,8 +251,6 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
     // 글자 크기는 BODY와 META 둘뿐입니다(CLAUDE.md의 "한 화면 글자 크기 셋 이하"). 도움말은 질문 바로 아래입니다.
     if (f.type === "radio") {
       const labelId = `${id}-label`;
-      const helpId = help ? `${id}-help` : undefined;
-      const described = [errorId, helpId].filter(Boolean).join(" ") || undefined;
       return (
         <div key={f.key} role="radiogroup" aria-labelledby={labelId} aria-describedby={described} aria-required={f.required || undefined} aria-invalid={err ? true : undefined} className="flex flex-col gap-1.5">
           <span id={labelId} className={`${BODY} font-semibold leading-snug text-white/85`}>
@@ -203,8 +266,8 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                   aria-describedby={errorId}
                   className="peer sr-only"
                 />
-                <span className="flex items-start gap-3 rounded-xl border border-white/[0.12] bg-white/[0.04] px-4 py-3 transition hover:border-white/25 peer-checked:border-violet-400/70 peer-checked:bg-violet-400/[0.12] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-violet-300 peer-checked:[&>span:first-child]:border-violet-300 peer-checked:[&>span:first-child]:bg-violet-500 peer-checked:[&>span:first-child]:text-white">
-                  <span aria-hidden className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/25 ${META} font-bold text-white/80`}>{n + 1}</span>
+                <span className="flex items-start gap-3 rounded-xl border border-white/45 bg-white/[0.04] px-4 py-3 transition hover:border-white/70 peer-checked:border-accent peer-checked:bg-accent/[0.12] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent peer-checked:[&>span:first-child]:border-accent peer-checked:[&>span:first-child]:bg-naru-purple peer-checked:[&>span:first-child]:text-white">
+                  <span aria-hidden className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/45 ${META} font-bold text-white/80`}>{n + 1}</span>
                   <span className="min-w-0">
                     <span className={`block break-keep ${BODY} font-bold leading-snug text-white`}>{t(o.label)}</span>
                     {o.hint && <span className={`mt-1 block break-keep ${META} leading-relaxed text-white/70`}>{t(o.hint)}</span>}
@@ -213,33 +276,33 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
               </label>
             ))}
           </div>
-          {err && <span id={errorId} className={`${META} font-medium text-rose-300`}>{errText(err)}</span>}
+          {err && <span id={errorId} className={`${META} font-medium text-rose-300`}>{errText(err, max)}</span>}
         </div>
       );
     }
-    const max = f.maxLen ?? (f.type === "textarea" ? MAX_TEXTAREA : MAX_TEXT);
     return (
       <div key={f.key} className="flex flex-col gap-1.5">
-        <label htmlFor={id} className="flex items-center gap-1.5 text-sm font-semibold text-white/85">
-          {label}{f.required && <span aria-hidden className="text-rose-400">*</span>}
+        <label htmlFor={id} className={`flex items-center gap-1.5 ${BODY} font-semibold text-white/85`}>
+          {label}
+          {f.required ? <span aria-hidden className="text-rose-400">*</span> : <span className={`${META} font-normal text-white/70`}>{t(copy.optional)}</span>}
         </label>
         {f.type === "textarea" ? (
           <textarea {...common} value={String(value ?? "")} maxLength={max} rows={3} onChange={(e) => set(e.target.value)} className={FIELD} />
         ) : f.type === "select" || f.type === "country" ? (
-          <>
-            <select {...common} value={String(value ?? "")} onChange={(e) => set(e.target.value)} className={`${FIELD} appearance-none`}>
-              <option value="">{"—"}</option>
-              {(f.options ?? []).map((o) => <option key={o.value} value={o.value}>{t(o.label)}</option>)}
-            </select>
-            {f.type === "country" && value === COUNTRY_OTHER && extra && (
-              <input type="text" value={extra.other} maxLength={2} onChange={(e) => extra.setOther(e.target.value)} placeholder="JP" className={`${FIELD} uppercase`} aria-label={label} />
-            )}
-          </>
+          <select {...common} value={String(value ?? "")} onChange={(e) => set(e.target.value)} className={`${FIELD} appearance-none`}>
+            <option value="">{t(copy.selectPlaceholder)}</option>
+            {(f.options ?? []).map((o) => <option key={o.value} value={o.value}>{t(o.label)}</option>)}
+          </select>
         ) : (
-          <input {...common} type={f.type === "email" ? "email" : "text"} value={String(value ?? "")} maxLength={max} onChange={(e) => set(e.target.value)} placeholder={f.placeholder ? t(f.placeholder) : undefined} className={FIELD} autoComplete={f.type === "email" ? "email" : "off"} />
+          <input
+            {...common} type={f.type === "email" ? "email" : "text"} inputMode={f.inputMode} value={String(value ?? "")} maxLength={max}
+            onChange={(e) => set(e.target.value)} placeholder={f.placeholder ? t(f.placeholder) : undefined} className={FIELD}
+            autoComplete={f.autoComplete ?? "off"}
+            {...(f.verbatim ? { autoCapitalize: "none", autoCorrect: "off", spellCheck: false } : {})}
+          />
         )}
-        {help && <span className="text-xs leading-relaxed text-white/60">{help}</span>}
-        {err && <span id={errorId} className="text-xs font-medium text-rose-300">{errText(err)}</span>}
+        {help && <span id={helpId} className={`${META} leading-relaxed text-white/70`}>{help}</span>}
+        {err && <span id={errorId} className={`${META} font-medium text-rose-300`}>{errText(err, max)}</span>}
       </div>
     );
   };
@@ -257,65 +320,55 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
             animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.985 }}
             transition={{ duration: reduce ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 flex max-h-[88dvh] w-full max-w-[560px] flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-[#0c0a18] shadow-2xl sm:rounded-3xl"
+            className="relative z-10 flex max-h-[88dvh] w-full max-w-[560px] flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-naru-surface shadow-2xl sm:rounded-3xl"
           >
             <span aria-hidden className="h-[2px] w-full shrink-0 bg-gradient-to-r from-accent to-accent-strong" />
-            <button type="button" onClick={onClose} aria-label={t(copy.close)} className="absolute right-5 top-6 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 transition hover:bg-white/10 hover:text-white active:scale-95">
-              <svg width="16" height="16" viewBox="0 0 15 15" fill="none"><path d="M1 1l13 13M14 1L1 14" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg>
+            {/* 닫기 버튼의 면은 대화상자와 같은 어두운 면입니다. 반투명이면 스크롤된 글이 아래로 비쳐 X와 겹쳤습니다(모바일 리뷰 9). */}
+            <button ref={closeRef} type="button" onClick={onClose} aria-label={t(copy.close)} className="absolute right-4 top-5 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-naru-surface text-white/80 transition hover:border-white/45 hover:text-white active:scale-95">
+              <svg aria-hidden width="16" height="16" viewBox="0 0 15 15" fill="none"><path d="M1 1l13 13M14 1L1 14" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg>
             </button>
             <div className="overflow-y-auto overscroll-contain px-6 pt-8 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:px-9 sm:py-9">
               {status === "success" ? (
                 <div className="py-6 text-center">
                   <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-accent/40 bg-accent/10">
-                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="text-accent"><path d="M4 12.5l5 5L20 6.5" /></svg>
+                    <svg aria-hidden width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="text-accent"><path d="M4 12.5l5 5L20 6.5" /></svg>
                   </span>
-                  <h3 id="crossing-register-title" className="mt-6 text-[24px] font-bold leading-tight text-white sm:text-[28px]">{t(copy.successTitle)}</h3>
-                  <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-white/70">{t(copy.successBody)}</p>
-                  <a href={naruLinks.general} className="mt-4 inline-block text-sm text-white/65 underline-offset-4 hover:text-white hover:underline">{t(copy.successMail)}</a>
-                  {links.openChat && <p className="mt-4 text-sm text-white/60"><a href={links.openChat} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">Open chat</a></p>}
-                  <div className="mt-7"><button type="button" onClick={onClose} className={PRIMARY}>{t(copy.close)}</button></div>
+                  <h3 ref={successRef} tabIndex={-1} id="crossing-register-title" className={`mt-6 ${LARGE} font-bold leading-tight text-white focus:outline-none`}>{t(copy.successTitle)}</h3>
+                  <p className={`mx-auto mt-3 max-w-sm break-keep ${BODY} leading-relaxed text-white/85`}>{t(copy.successBody).replace("{email}", sentEmail)}</p>
+                  <p className={`mx-auto mt-3 max-w-sm break-keep ${META} leading-relaxed text-white/70`}>{t(copy.successHelp)}</p>
+                  <a href={naruLinks.general} className={`mt-2 inline-flex min-h-[44px] items-center ${BODY} font-semibold text-accent underline underline-offset-4 hover:text-white`}>{naruLinks.contact}</a>
+                  {links.openChat && (
+                    <p><a href={links.openChat} target="_blank" rel="noopener noreferrer" className={`inline-flex min-h-[44px] items-center ${BODY} text-white/85 underline underline-offset-4 hover:text-white`}>{t(openChatLabels.footer)}</a></p>
+                  )}
+                  <div className="mt-5"><button type="button" onClick={onClose} className={PRIMARY}>{t(copy.close)}</button></div>
                 </div>
               ) : (
                 <>
-                  <h3 id="crossing-register-title" className="pr-12 text-[24px] font-bold leading-tight text-white sm:text-[28px]">{t(copy.title)}</h3>
-                  <p className="mt-2 text-sm text-white/65">{t(copy.intro)}</p>
-                  {preview && (
-                    <p id="crossing-register-preview" role="note" className="mt-4 rounded-2xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] px-4 py-3 text-sm leading-relaxed text-amber-50/90">{t(copy.previewBanner)}</p>
+                  <h3 id="crossing-register-title" className={`pr-12 ${LARGE} font-bold leading-tight text-white`}>{t(copy.title)}</h3>
+                  <p className={`mt-2 break-keep pr-12 ${BODY} leading-relaxed text-white/85`}>{t(copy.intro)}</p>
+                  <p className={`mt-1 ${META} leading-relaxed text-white/70`}>{t(copy.draftNote)}</p>
+                  {(preview || closed) && (
+                    <p id="crossing-register-preview" role="note" className={`mt-4 rounded-2xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] px-4 py-3 ${BODY} leading-relaxed text-amber-50/90`}>{t(closed ? copy.closed : copy.previewBanner)}</p>
                   )}
                   <form onSubmit={onSubmit} className="mt-6 flex flex-col gap-4" noValidate>
                     {/* 허니팟. 8월과 같은 세 겹의 방어(이름, 매니저 opt-out, 서버 로그). */}
                     <input type="text" name="url_confirm" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} aria-hidden="true" autoComplete="off" data-1p-ignore data-lpignore="true" data-bwignore data-form-type="other" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }} />
-                    {REGISTRATION_FIELDS.filter((f) => f.key === "join_type").map((f) => renderField(f, reg[f.key], (v) => setRegField(f.key, v), errors[`reg.${f.key}`], `reg-${f.key}`))}
-                    {isTeam && (
-                      <>
-                        {REGISTRATION_FIELDS.filter((f) => f.key === "team_name").map((f) => renderField({ ...f, required: true }, reg[f.key], (v) => setRegField(f.key, v), errors[`reg.${f.key}`], `reg-${f.key}`))}
-                        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-violet-200/80">{t(copy.teamSize)}</p>
-                      </>
-                    )}
-                    {!isTeam && REGISTRATION_FIELDS.filter((f) => f.key === "wants_matching").map((f) => renderField(f, reg[f.key], (v) => setRegField(f.key, v), undefined, `reg-${f.key}`))}
-                    {visibleMembers.map((m, i) => (
-                      <fieldset key={m.id} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                        <legend className="flex w-full items-center justify-between px-1 text-sm font-bold text-violet-200">
-                          <span>{i === 0 ? t(copy.memberYou) : t(copy.memberN).replace("{n}", String(i))}</span>
-                          {i > 0 && <button type="button" onClick={() => removeMember(m.id)} className="text-xs font-medium text-white/55 hover:text-white">{t(copy.removeMember)}</button>}
-                        </legend>
-                        <div className="mt-2 flex flex-col gap-4">
-                          {MEMBER_FIELDS.map((f) => renderField(f, m.a[f.key], (v) => setMemberField(m.id, f.key, v), errors[`m${i}.${f.key}`], `m${m.id}-${f.key}`, { other: m.other, setOther: (v) => setMemberOther(m.id, v) }))}
-                        </div>
-                      </fieldset>
-                    ))}
-                    {isTeam && members.length < MAX_MEMBERS && (
-                      <button type="button" onClick={addMember} className="self-start rounded-full border border-white/20 bg-white/[0.06] px-4 py-2 text-sm font-medium text-white/80 transition hover:border-white/35 hover:text-white">+ {t(copy.addMember)}</button>
-                    )}
-                    {REGISTRATION_FIELDS.filter((f) => f.key === "consent").map((f) => renderField(f, reg[f.key], (v) => setRegField(f.key, v), errors[`reg.${f.key}`], `reg-${f.key}`))}
+                    {MEMBER_FIELDS.map((f) => {
+                      // 나라 이름은 "그 밖의 나라"를 골랐을 때만 묻고, 그때는 필수입니다(validatePerson과 같은 규칙).
+                      if (f.key === COUNTRY_OTHER_KEY && !otherCountry) return null;
+                      const field = f.key === COUNTRY_OTHER_KEY ? { ...f, required: true } : f;
+                      return renderField(field, person[f.key], (v) => setPersonField(f.key, v), errors[`m.${f.key}`], `m-${f.key}`);
+                    })}
                     {REGISTRATION_FIELDS.filter((f) => !f.fixed).map((f) => renderField(f, reg[f.key], (v) => setRegField(f.key, v), errors[`reg.${f.key}`], `reg-${f.key}`))}
+                    {REGISTRATION_FIELDS.filter((f) => f.key === "consent").map((f) => renderField(f, reg[f.key], (v) => setRegField(f.key, v), errors[`reg.${f.key}`], `reg-${f.key}`))}
                     {turnstileSiteKey && !preview && (
-                      <TurnstileWidget siteKey={turnstileSiteKey} action={TURNSTILE_ACTION} locale={locale === "en" ? "en" : "ko"} onToken={setBotToken} resetKey={botReset} />
+                      <TurnstileWidget siteKey={turnstileSiteKey} action={TURNSTILE_ACTION} locale={locale === "en" ? "en" : "ko"} onToken={setBotToken} onError={setBotFailed} resetKey={botReset} />
                     )}
-                    {status === "error" && <p role="alert" className="text-sm font-medium text-rose-300">{errText(errorCode ?? "generic")}</p>}
+                    {botFailed && !preview && status !== "error" && <p role="alert" className={`${BODY} font-medium text-rose-300`}>{errText("bot_check_load_failed")}</p>}
+                    {status === "error" && <p role="alert" className={`${BODY} font-medium text-rose-300`}>{errText(errorCode ?? "generic")}</p>}
                     {preview ? (
                       // 꺼진 버튼은 흐림이 아니라 색으로 말합니다(히어로의 준비 중 버튼과 같은 문법). 이유는 위 안내가 읽어 줍니다.
-                      <button type="submit" disabled aria-describedby="crossing-register-preview" className="mt-2 inline-flex min-h-[48px] cursor-not-allowed items-center justify-center rounded-2xl border border-white/20 bg-white/[0.06] px-7 py-3.5 text-base font-bold text-white/70">{t(copy.previewSubmit)}</button>
+                      <button type="submit" disabled aria-describedby="crossing-register-preview" className={`mt-2 inline-flex min-h-[48px] cursor-not-allowed items-center justify-center rounded-full border border-white/20 bg-white/[0.06] px-7 py-3 ${BODY} font-bold text-white/70`}>{t(closed ? copy.closed : copy.previewSubmit)}</button>
                     ) : (
                       <button type="submit" disabled={status === "submitting"} className={`${PRIMARY} mt-2`}>{t(status === "submitting" ? copy.submitting : copy.submit)}</button>
                     )}

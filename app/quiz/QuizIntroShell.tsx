@@ -1,7 +1,7 @@
 import { quizUI } from "@/data/quiz";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// SERVER-RENDERED INTRO SHELL — what /quiz paints before any JS runs.
+// SERVER-RENDERED INTRO SHELL - what /quiz paints before any JS runs.
 //
 // Quiz reads useSearchParams (the ?r= deep link), which opts its whole subtree
 // out of server rendering. The Suspense fallback was `min-h-screen bg-[#070B1F]`,
@@ -9,12 +9,12 @@ import { quizUI } from "@/data/quiz";
 // screen until the bundle landed, which is a hard place to lose a visitor who
 // was only mildly curious in the first place.
 //
-// This renders the same first frame the real Landing does — eyebrow, title,
-// subtitle, logo row, button — from static markup, so the page is legible
+// This renders the same first frame the real Landing does - eyebrow, title,
+// subtitle, logo row, button - from static markup, so the page is legible
 // immediately and hydration swaps like-for-like.
 //
 // LOCALE: both. This page is statically generated, so the HTML cannot know a
-// preference that lives in localStorage — and unlike the home page, where the
+// preference that lives in localStorage - and unlike the home page, where the
 // pre-hydration frame is a frame, here the shell is what an English visitor
 // READS for the entire time the bundle is downloading.
 //
@@ -27,7 +27,7 @@ import { quizUI } from "@/data/quiz";
 // inline. Wrap the TEXT, never the box.
 //
 // Keep the box metrics (chip height, title clamp, button min-height) in step
-// with Landing in components/Quiz.tsx — that is what keeps the handover from
+// with Landing in components/Quiz.tsx - that is what keeps the handover from
 // shifting anything.
 // ─────────────────────────────────────────────────────────────────────────────
 const SHELL_LOGOS = ["🐋", "✳️", "🤖", "✨", "🦙", "❓"];
@@ -44,7 +44,7 @@ function Both({ phrase }: { phrase: { ko: string; en: string } }) {
 
 export default function QuizIntroShell() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#070B1F] text-white">
+    <main id="main" tabIndex={-1} className="relative min-h-screen overflow-hidden bg-[#070B1F] text-white focus:outline-none">
       <div aria-hidden className="grid-bg pointer-events-none absolute inset-0 opacity-50" />
       <div className="relative z-10 mx-auto flex min-h-screen max-w-2xl flex-col px-6 pb-12">
         <div className="h-20 shrink-0" />
@@ -71,7 +71,7 @@ export default function QuizIntroShell() {
               </span>
             ))}
           </div>
-          {/* Shaped like the real button but inert — it cannot start the quiz
+          {/* Shaped like the real button but inert - it cannot start the quiz
               before the bundle lands, and a control that looks pressable and
               isn't is worse than one that reads as still loading. */}
           <div

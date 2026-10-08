@@ -35,6 +35,12 @@ const config: Config = {
           navy: "#12246B",
           purple: "#4B3A8C",
           plum: "#9A5A82",
+          // DECIDED 2026-10-08 (사용자 승인, 브랜드 감사 11): 손으로 적던 색 셋에 이름을 붙입니다.
+          // plum-tint는 GRADIENT_TEXT의 끝 색이자 자주 글자색(바탕 위 8.15:1). logo-from, logo-to는
+          // 히어로 워드마크의 그라데이션(로고 v2)입니다. 값은 그 전과 같습니다.
+          "plum-tint": "#C79BB4",
+          "logo-from": "#9AA8EE",
+          "logo-to": "#C99ACB",
           orange: "#EE8A4F",
           ink: "#070B1F",
           surface: "#0C1230",

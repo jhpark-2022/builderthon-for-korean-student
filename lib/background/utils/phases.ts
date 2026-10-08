@@ -3,12 +3,12 @@ import { clamp } from "./math";
 /**
  * Narrative scroll phases for the gravitational-portal journey.
  *
- *   0.00–0.20  drift        — stable universe, faint hint in the distance
- *   0.20–0.40  field        — gravity forms, particles curve, light lensing
- *   0.40–0.60  push         — camera pushes in, trails, parallax, momentum
- *   0.60–0.80  portal       — luminous vortex, spiral inflow, space warps
- *   0.80–0.95  pull         — accelerate, trails stretch, brightening
- *   0.95–1.00  cross        — through the centre, white-out, new dimension
+ *   0.00–0.20  drift        - stable universe, faint hint in the distance
+ *   0.20–0.40  field        - gravity forms, particles curve, light lensing
+ *   0.40–0.60  push         - camera pushes in, trails, parallax, momentum
+ *   0.60–0.80  portal       - luminous vortex, spiral inflow, space warps
+ *   0.80–0.95  pull         - accelerate, trails stretch, brightening
+ *   0.95–1.00  cross        - through the centre, white-out, new dimension
  */
 export interface Phases {
   /** 0..1 overall reveal of the gravitational presence (eases up from 0.1). */
@@ -19,7 +19,7 @@ export interface Phases {
   pull: number;
   /** 0..1 white-out crossing (only the final 5%). */
   whiteout: number;
-  /** 0..1 "arrived" — brighter, hopeful post-transition environment. */
+  /** 0..1 "arrived" - brighter, hopeful post-transition environment. */
   arrived: number;
   /** raw scroll passthrough */
   scroll: number;
@@ -39,7 +39,7 @@ export function computePhases(scroll: number): Phases {
   const portal = ease(seg(s, 0.55, 0.85)) * 0.3;
   const pull = ease(seg(s, 0.4, 0.95)) * 0.3;
   // No white-out crossing. It turned the footer field bright white and boosted
-  // particle alpha, overriding the calm opacity fade — the "game portal" look.
+  // particle alpha, overriding the calm opacity fade - the "game portal" look.
   const whiteout = 0;
   // arrived environment fades up right at the very end
   const arrived = ease(seg(s, 0.97, 1.0));

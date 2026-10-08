@@ -21,7 +21,7 @@
 - 사이트: https://naru-crossing-seoul.vercel.app
 - 한국어와 영어 두 벌(KR/EN 전환)
 
-*NARU is a Korea-rooted, student-run, not-for-profit group of student builders. This repo is its website. The home page introduces CROSSING SEOUL (17 to 21 December 2026, Seoul), and `/2026-08` keeps the record of the group's first event, the Zero100 builderthon in Singapore. Without the Zero100 builderthon there is no NARU and no CROSSING SEOUL. We begin owing the people who made those eight days.*
+*NARU is a Korea-rooted, student-run, not-for-profit group of student builders. This repo is its website. The home page introduces CROSSING SEOUL (17 to 21 December 2026, Seoul), and `/2026-08` keeps the record of the event the group grew out of, the Zero100 builderthon in Singapore, hosted by AXMOS member companies in the Zero100 community. Without the Zero100 builderthon there is no NARU and no CROSSING SEOUL. We begin owing the people who made those eight days.*
 
 ## 나루는
 
@@ -41,8 +41,8 @@
 | 층 | 누구 | 내는 것 |
 | --- | --- | --- |
 | 주최 | 나루 | 회차의 기획과 실행, 기록, 회차 사이의 연속성 |
-| 주관 | 각 학교 한인 학생회 | 소속 학생, 공간, 학교 안의 명의 |
-| 후원 | 참여 기업 | 문제와 자료, 자금, 멘토 |
+| 주관 | 각 학교 한인 학생회와 학회 | 소속 학생, 공간, 학교 안의 명의 |
+| 후원 | 참여 기업 | 이슈와 자료, 자금, 멘토 |
 
 학생회와 기업은 나루에서 직접 만나고, 진심으로 교류합니다. 나루는 회비를 받지 않고 가입 폼도 두지 않습니다. 참가자가 들어오는 길은 회차 하나입니다.
 
@@ -50,7 +50,7 @@
 
 ## 8월, 제로백 빌더톤
 
-나루의 첫 이벤트입니다. 2026년 8월 22일부터 29일까지, 싱가포르에서 8일이었습니다.
+나루가 시작된 이벤트입니다. Zero100 커뮤니티에 속한 AXMOS 소속 회사들이 주최했고, 2026년 8월 22일부터 29일까지 싱가포르에서 8일이었습니다. 위 표의 세 층은 나루가 직접 여는 회차(크로싱 서울부터)의 구조입니다.
 
 스크리닝 없이 실제 기업의 문제를 받아 8일 동안 풀었고, 마지막 날 그 기업 앞에서 발표했습니다.
 
@@ -69,7 +69,7 @@
 | 21팀 | 마지막 날 발표 |
 | 9팀 | 출제사에 직접 자료를 요청. 시키지 않았습니다 |
 
-순위는 매기지 않았고 부문별로 시상했습니다. 행사가 끝난 뒤 CNA와 The Straits Times에 실렸습니다.
+순위는 매기지 않았고 부문별로 시상했습니다. 행사가 끝난 뒤 출제사의 보도자료가 CNA와 The Straits Times에 게재됐습니다.
 
 ### 빚지고 시작합니다
 
@@ -107,12 +107,12 @@
 
 넓어지는 것은 둘입니다.
 
-- **판.** 8월은 싱가포르 안에서 열렸습니다. 12월은 한국의 대학생, 해외에서 공부하는 한인 학생, 8월을 싱가포르에서 건넌 사람들이 같은 문제 앞에 섭니다. 팀은 1일차 현장에서 맺습니다.
-- **AI를 쓰는 범위.** AI가 잘하는 일 셋 가운데 8월은 아이디어를 코드로 만드는 것 하나에 집중했습니다. 12월은 많은 데이터를 분석하는 것, 복잡한 프로세스를 이해하는 것을 더합니다. 그래서 데이터에서 시작합니다.
+- **판.** 8월은 싱가포르 안에서 열렸습니다. 12월은 한국의 대학생, 해외에서 공부하는 한인 학생, 8월을 싱가포르에서 건넌 사람들이 한 팀이 됩니다. 등록은 모두 혼자 하고, 팀은 Day 1 현장에서 전원이 함께 맺습니다.
+- **문제를 찾는 방식.** 8월은 출제사가 완성한 문제를 받았습니다. 12월은 기업이 지금 겪는 이슈를 받습니다. 공개된 정보를 AI로 모아 추론하고, 팀마다 그 아래의 문제를 직접 찾습니다.
 
 ## 12월, 크로싱 서울
 
-2026년 12월 17일(목)부터 21일(월)까지, 서울. 기업이 연 데이터에서 문제를 찾고, 마지막 날 그 기업 앞에서 발표하는 닷새입니다.
+2026년 12월 17일(목)부터 21일(월)까지, 서울. 기업이 지금 겪는 이슈에서 문제를 찾고, 마지막 날 그 기업 앞에서 발표하는 닷새입니다. 참가비와 장소, Day 0 안내는 참가자 카카오톡 방에서 알립니다.
 
 | 날 | 스테이지 |
 | --- | --- |
@@ -146,10 +146,9 @@
 | 주소 | 내용 |
 | --- | --- |
 | `/` | 나루 홈. 크로싱 서울 소개, 프로그램, 얻는 것, 나루(8월의 기록, 세 층 구조), 왜 나루인가 |
-| `/2026-08` | 제로백 빌더톤(2026년 8월, 싱가포르)의 기록. 나루의 첫 이벤트이고 끝난 회차입니다 |
+| `/2026-08` | 제로백 빌더톤(2026년 8월, 싱가포르)의 기록. 나루가 시작된 이벤트이고 끝난 회차입니다 |
 | `/quiz` | 8월 팀 매칭에 쓴 유형 테스트 |
 | `/api/crossing/register` | 크로싱 서울 등록 |
-| `/api/register`, `/api/vote` | 8월 회차의 등록과 Day 8 투표 |
 
 등록 창은 아직 열지 않았습니다(`lib/registrationWindow.ts`의 `CROSSING_WINDOW`가 둘 다 `null`). 값을 채우면 홈의 등록 버튼이 켜집니다. 12월과 8월의 용어 규칙은 `data/naru.ts` 맨 위 주석에 있습니다.
 
