@@ -1249,13 +1249,16 @@ export const naru = {
           ko: "기업이 가져다 쓸 결과물이 나오지 않았습니다.",
           en: "Nothing came out that a company could pick up and use.",
         },
+        // DECIDED 2026-10-09 (사용자, 스크린숏: "상자가 비슷하게 차있으면 좋겠어 내용이"): 01이 02의 절반 길이라
+        // 나란히 선 두 상자 중 왼쪽 아래가 비었습니다. 01에는 걷었던 사실 한 문장(완성된 문제를 받으니 결과물이
+        // 닮았다)을 되돌리고 12월의 답을 두 문장으로, 02의 답은 세 문장에서 두 문장으로 줄여 길이를 맞춥니다.
         body: {
-          ko: "원인은 문제의 구조에 있었습니다. 참가자의 실력과는 상관이 없었습니다.",
-          en: "The cause was how the problem was set up. It had nothing to do with the participants' ability.",
+          ko: "원인은 문제의 구조에 있었습니다. 참가자의 실력과는 상관이 없었습니다. 완성된 문제를 받으니 결과물이 서로 닮았습니다.",
+          en: "The cause was how the problem was set up. It had nothing to do with the participants' ability. Given a finished problem, the results came out alike.",
         },
         answer: {
-          ko: "이슈에서 출발해, 문제는 참가자가 직접 찾습니다.",
-          en: "It starts from the issue, and participants find the problem themselves.",
+          ko: "기업은 지금 겪는 이슈를 가져옵니다. 그 아래의 문제는 팀이 직접 찾고, 마지막 날 그 기업 앞에서 발표합니다.",
+          en: "The company brings an issue it is facing now. The team finds the problem underneath it and presents to that company on the last day.",
         },
       },
       {
@@ -1269,8 +1272,8 @@ export const naru = {
         },
         // 뒤 두 문장은 2026-09-30의 답(멘토에게 먼저 연락합니다)에서 그대로 옵니다.
         answer: {
-          ko: "현장에서 여러 번, 그리고 글로 남겨 말합니다. 멘토에게 먼저 연락합니다. 제목은 인사가 아니라 결과이고, 주신 이야기로 무엇을 만들었는지 한 줄이면 됩니다.",
-          en: "We say it on site, more than once, and in writing. Message the mentor first. Lead with the result, not the greeting: one line on what you built with what they told you is enough.",
+          ko: "현장에서 여러 번, 그리고 글로 남겨 말합니다. 멘토에게 먼저 연락해, 주신 이야기로 무엇을 만들었는지 한 줄을 보냅니다.",
+          en: "We say it on site, more than once, and in writing. Message the mentor first, with one line on what you built with what they told you.",
         },
       },
     ] as { title: Phrase; body: Phrase; answer: Phrase | null }[],
