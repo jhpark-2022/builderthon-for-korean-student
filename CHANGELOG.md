@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-09 팀 매칭 테스트: 결과 카드 16개 모두 실제 로고로](#2026-10-09-match-logos)
 - [2026-10-09 팀 매칭 테스트: 10월의 모델 16개, 자기 디스 톤, 12월 질문](#2026-10-09-match-humor)
 - [2026-10-09 등록 폼: 전공과 AI 질문은 스크리닝이 아니라는 안내](#2026-10-09-form-not-screening)
 - [2026-10-09 폰에서 글 블록을 가운데로](#2026-10-09-phone-center)
@@ -174,6 +175,15 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-09-match-logos"></a>
+## 2026-10-09 팀 매칭 테스트: 결과 카드 16개 모두 실제 로고로
+- 범위: data/quiz-2026-12.ts, public/logos/(새 파일 7개)
+- 한 것: 사용자 요청으로 이모지 폴백이던 열 개 카드에 실제 로고를 붙였습니다(DECIDED 2026-10-09). 같은 날 유머 브리프의 "simple-icons에 있는 것만" 규칙을 이 결정이 대신합니다.
+  OpenClaw, Manus, DeepMind, Upstage, Kling, Claude Code는 @lobehub/icons-static-svg(MIT)에서, Instinct는 회사 사이트의 파비콘 글리프에서 흰색 단색으로 옮겼습니다.
+  제품 로고가 따로 없는 것은 만든 회사의 로고입니다(Argon은 Gemini, Genie는 DeepMind, Muse는 Meta, Dots는 OpenAI). 8월 /quiz는 건드리지 않았습니다.
+- 검증: /match 결과 32장(390px)에서 깨진 이미지 0, 이모지 폴백 0. verify-quiz 통과.
+- 커밋: 08c343b
 
 <a id="2026-10-09-match-humor"></a>
 ## 2026-10-09 팀 매칭 테스트: 10월의 모델 16개, 자기 디스 톤, 12월 질문
