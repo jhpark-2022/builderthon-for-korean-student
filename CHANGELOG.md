@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-09 팀 매칭 테스트: 10월의 모델 16개, 자기 디스 톤, 12월 질문](#2026-10-09-match-humor)
 - [2026-10-09 등록 폼: 전공과 AI 질문은 스크리닝이 아니라는 안내](#2026-10-09-form-not-screening)
 - [2026-10-09 폰에서 글 블록을 가운데로](#2026-10-09-phone-center)
 - [2026-10-09 8월이 남기지 못한 두 상자의 글 길이를 맞춘다](#2026-10-09-gap-cards-even)
@@ -173,6 +174,19 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-09-match-humor"></a>
+## 2026-10-09 팀 매칭 테스트: 10월의 모델 16개, 자기 디스 톤, 12월 질문
+- 범위: data/quiz-2026-12.ts, data/quizEditions.ts, components/Quiz.tsx(질문 배열을 판에서 읽기), scripts/verify-quiz.mjs. data/quiz.ts, lib/quizScore.ts, /quiz, Supabase는 건드리지 않았습니다.
+- 한 것: 사용자 요청 "전반적으로 더 유머러스하게, 요즘 가장 hype한 모델로, MBTI와 매칭". DECIDED D1~D5 모두 기본값.
+  - 질문 14개의 글을 12월 현장으로(QUESTIONS_2026_12). id, axis, w, 극, 순서는 8월과 같고 채점은 그대로입니다.
+  - 모델 16개: Muse, Dots, ChatGPT, Grok Bot, Gemini 4 Argon, OpenClaw, Manus 2.0, Claude Fable 5.1, Genie 3, Perplexity, Solar Mini 4, Instinct, Claude Code, Midjourney V8.2, Kling 3.0, Suno v6.
+  - whyModel은 주석의 URL에서 2026-10-09에 확인한 사실만. 브리프 초안에서 확인되지 않은 것(Manus "처음 유행", Kling "가장 많이 쓰이는", Dots 청구서 사례, Fable 단백질 설계, Argon 커널 이식 완료)은 뺐고, 다르게 적힌 것(OpenClaw 이름 다섯 개, Instinct 초대제, Solar 입력 가격, Kling 3.0 표기)은 고쳤습니다.
+  - phrase와 변형 이름 A/T를 제품의 이야기로 새로 썼습니다. 새 로고 파일은 없고 열 개는 이모지입니다.
+  - 브리프와 다르게 한 것: Q11은 축 설명이 가리키는 "새 툴과 스펙"을 남겼고, Q1의 첫마디는 explainSwaps로 설명도 같이 바꿉니다.
+- 검증: verify-quiz 통과(판 사이 14/14 일치, 무작위 1,000세트 동일). /quiz 적용 전후: 1440px 80프레임 차이 0, 390px 결과와 저장 이미지 97프레임 차이 0, 질문 14프레임 중 11장은 최대 1/255 차이(같은 빌드를 두 번 찍어도 나오는 캡처 잡음). ko whyModel 최대 110자, phrase 최대 21자. 깨진 이미지 0. 스크래치 복사본에서 npm run build 통과.
+- 브리프: docs/match-humor-brief.md
+- 커밋: 69a2ee6, b2d7aaa, 5a4eeed, 235b168
 
 <a id="2026-10-09-form-not-screening"></a>
 ## 2026-10-09 등록 폼: 전공과 AI 질문은 스크리닝이 아니라는 안내
