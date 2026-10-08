@@ -848,6 +848,19 @@ export default function NaruHome() {
                       <span>{t(stage.session.body)}</span>
                     </p>
                   )}
+                  {/* DECIDED 2026-10-08 (현장 팀 매칭 브리프 5): Day 1 행에만 있는 버튼 하나. 전에 오른쪽 열의 "팀 매칭"
+                      칩이 있던 말을 버튼이 합니다. 글이 한 줄이라 10rem 오른쪽 열에는 들어가지 않아, 이 행의 글 기둥
+                      왼쪽 끝에 맞춥니다(2026-09-29 왼쪽 끝 규칙). 알약 테두리 버튼(누르는 것의 문법), 글자는 BODY. */}
+                  {stage.matchCta && (
+                    <Link
+                      href={stage.matchCta.href}
+                      onClick={() => track("naru_cta", { src: "december-day1", to: "match" })}
+                      className={`mt-3 inline-flex min-h-[44px] items-center gap-1.5 whitespace-nowrap rounded-full border border-white/15 bg-[#0B1430]/80 px-5 py-2 ${BODY} font-medium text-accent transition hover:border-white/30 hover:text-white`}
+                    >
+                      {t(stage.matchCta.label)}
+                      <span aria-hidden>→</span>
+                    </Link>
+                  )}
                 </div>
                 <div className="flex flex-wrap items-start gap-x-3 gap-y-1">
                   {stage.submit && (

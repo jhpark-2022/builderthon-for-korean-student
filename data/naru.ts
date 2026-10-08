@@ -2004,7 +2004,11 @@ export const naru = {
           ko: "8월에 출제사가 완성해서 준 문제집을, 12월에는 학생이 이 날 만듭니다.",
           en: "In August the company handed over a finished problem set. In December you write it, on this day.",
         },
-        chips: [{ ko: "팀 매칭", en: "Team matching" }],
+        // DECIDED 2026-10-08 (현장 팀 매칭 브리프 5): "팀 매칭" 칩 자리에 /match로 가는 버튼 하나가 섭니다.
+        // 12월에는 AI 유형 테스트가 신청의 일부가 아니라 Day 1 현장의 팀 매칭 도구입니다. 칩은 뺐습니다
+        // (버튼이 같은 말을 합니다). 버튼은 이 행의 글 기둥 왼쪽 끝에 섭니다(NaruHome).
+        chips: [],
+        matchCta: { label: { ko: "AI 유형 테스트로 팀 매칭", en: "Team matching with the AI type test" }, href: "/match" },
         session: {
           title: { ko: "Sharing session", en: "Sharing session" },
           body: { ko: "출제사가 직접. 회사와 의뢰 문제", en: "The company itself, on what it does and what it is asking" },
@@ -2086,6 +2090,8 @@ export const naru = {
       chips: Phrase[];
       /** 그날의 3시간 세션. 전에는 workshop이었습니다(2026-09-20, PDF가 부르는 이름). */
       session?: { title: Phrase; body: Phrase };
+      /** 그 행의 글 기둥 아래에 서는 버튼 하나(2026-10-08, Day 1의 /match). */
+      matchCta?: { label: Phrase; href: string };
       submit?: Phrase;
     }[],
     tbdLabel: { ko: "아직 정해지지 않은 것", en: "Not settled yet" },
