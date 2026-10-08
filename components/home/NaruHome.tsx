@@ -578,22 +578,22 @@ export default function NaruHome() {
                 DECIDED 2026-10-07 (이슈 브리프 4.1): 크기는 TITLE 하나입니다. 챕터 h2, 카운트다운 숫자와 같은 값이고,
                 그 전의 히어로 전용 clamp(최대 86.4px)와 2행의 0.82em은 없습니다. 한 화면의 글자 크기가 셋을 넘지
                 않게 하려는 것입니다(components/ui/typography.ts). 390px에서 두 줄 모두 한 줄에 들어갑니다. */}
-            <h1 id="hero-title" className={`${TITLE} font-black leading-[1.05] tracking-tight drop-shadow-[0_4px_40px_rgba(75,58,140,0.5)]`}>
+            <h1 id="hero-title" className={`${TITLE} font-black leading-[1.05] tracking-tight ${locale === "ko" && DECEMBER_EVENT_NAME ? "" : "drop-shadow-[0_4px_40px_rgba(75,58,140,0.5)]"}`}>
               {locale === "ko" && DECEMBER_EVENT_NAME ? (
                 <>
-                  {/* DECIDED 2026-10-08 (사용자: 맨 위를 마케팅 포스트의 크로싱 서울 로고처럼): 워드마크 모양입니다. 큰 한글
-                      "크로싱 서울"에 그라데이션, 그 아래 작은 영문 "CROSSING SEOUL"을 넓은 자간으로. 포스트(밝은 바탕)의
-                      남색에서 자주로 가는 그라데이션은 어두운 바탕에서 읽히지 않아 같은 방향의 틴트(GRADIENT_TEXT)를 쓰고,
-                      영문의 테라코타는 자주 틴트로 옮겼습니다(주황은 점으로만). 영문 줄은 BODY 크기라 한 화면의 글자
-                      크기는 그대로 셋입니다. 그 전에는 1행 흰색, 2행이 같은 크기의 그라데이션 영문이었습니다. */}
-                  <span className={`${GRADIENT_TEXT} block break-keep`}>{DECEMBER_EVENT_NAME.ko}</span>{" "}
-                  {/* lang="en" (2026-09-19, 접근성 감사 7): <html lang="ko">라
-                      한국어 TTS가 "CROSSING SEOUL"을 한글 음가로 읽습니다. 이
-                      사이트를 처음 듣는 사람이 듣는 **첫 줄**이 그것입니다.
-                      사이의 {" "}는 이름 계산용(감사 17): block span 둘 사이에
-                      텍스트 노드가 없으면 "크로싱 서울CROSSING SEOUL"로 붙어
-                      읽힙니다. block이라 화면에는 영향이 없습니다. */}
-                  <span lang="en" className={`mt-2 block ${BODY} font-bold uppercase leading-none tracking-[0.5em] text-[#C79BB4] sm:mt-3`}>{DECEMBER_EVENT_NAME.en}</span>
+                  {/* DECIDED 2026-10-08 (사용자, 로고 스크린숏: "이걸로 써줘", 선택: 크림색 판 위에 원본 그대로): 히어로 제목은
+                      마케팅 포스트의 크로싱 서울 로고 그대로입니다. 큰 한글 "크로싱 서울"에 남색(#12246B)에서 자주(#845185)로
+                      가는 그라데이션, 그 아래 가운데에 테라코타(#9A3324) 영문 "CROSSING SEOUL"을 넓은 자간으로. 이 색들은
+                      어두운 바탕에서 보이지 않아(남색 1.4:1) 포스트와 같은 크림색(#FCFBF8) 판 위에 올립니다. 같은 날 아침의
+                      "틴트로 옮긴다"는 이 결정이 대신합니다. 로고의 색이라 "주황은 점으로만" 규칙의 대상이 아닙니다.
+                      영문 줄은 META 크기라 한 화면의 글자 크기는 그대로 셋입니다. gradient-text는 clip이 안 되는 브라우저의
+                      단색 폴백 표식이고(globals.css), 그때의 색은 판 위에서도 읽힙니다. */}
+                  <span className="inline-block rounded-2xl bg-[#FCFBF8] px-6 pb-5 pt-4 text-center shadow-[0_20px_60px_-30px_rgba(0,0,0,0.9)] sm:px-9 sm:pb-7 sm:pt-6">
+                    <span className="gradient-text block break-keep bg-gradient-to-r from-[#12246B] to-[#845185] bg-clip-text pb-[0.08em] tracking-[-0.02em] text-transparent">{DECEMBER_EVENT_NAME.ko}</span>{" "}
+                    {/* lang="en" (2026-09-19, 접근성 감사 7): 한국어 TTS가 영문을 한글 음가로 읽지 않게. 사이의 {" "}는
+                        이름 계산용입니다(감사 17). pl은 자간만큼 왼쪽을 밀어 가운데를 맞춥니다(끝 글자 뒤의 자간). */}
+                    <span lang="en" className={`mt-1 block whitespace-nowrap pl-[0.55em] ${META} font-bold uppercase leading-none tracking-[0.55em] text-[#9A3324] sm:mt-2`}>{DECEMBER_EVENT_NAME.en}</span>
+                  </span>
                 </>
               ) : (
                 <>
