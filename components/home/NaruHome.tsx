@@ -581,14 +581,19 @@ export default function NaruHome() {
             <h1 id="hero-title" className={`${TITLE} font-black leading-[1.05] tracking-tight drop-shadow-[0_4px_40px_rgba(75,58,140,0.5)]`}>
               {locale === "ko" && DECEMBER_EVENT_NAME ? (
                 <>
-                  <span className="block break-keep text-white">{DECEMBER_EVENT_NAME.ko}</span>{" "}
+                  {/* DECIDED 2026-10-08 (사용자: 맨 위를 마케팅 포스트의 크로싱 서울 로고처럼): 워드마크 모양입니다. 큰 한글
+                      "크로싱 서울"에 그라데이션, 그 아래 작은 영문 "CROSSING SEOUL"을 넓은 자간으로. 포스트(밝은 바탕)의
+                      남색에서 자주로 가는 그라데이션은 어두운 바탕에서 읽히지 않아 같은 방향의 틴트(GRADIENT_TEXT)를 쓰고,
+                      영문의 테라코타는 자주 틴트로 옮겼습니다(주황은 점으로만). 영문 줄은 BODY 크기라 한 화면의 글자
+                      크기는 그대로 셋입니다. 그 전에는 1행 흰색, 2행이 같은 크기의 그라데이션 영문이었습니다. */}
+                  <span className={`${GRADIENT_TEXT} block break-keep`}>{DECEMBER_EVENT_NAME.ko}</span>{" "}
                   {/* lang="en" (2026-09-19, 접근성 감사 7): <html lang="ko">라
                       한국어 TTS가 "CROSSING SEOUL"을 한글 음가로 읽습니다. 이
                       사이트를 처음 듣는 사람이 듣는 **첫 줄**이 그것입니다.
                       사이의 {" "}는 이름 계산용(감사 17): block span 둘 사이에
                       텍스트 노드가 없으면 "크로싱 서울CROSSING SEOUL"로 붙어
                       읽힙니다. block이라 화면에는 영향이 없습니다. */}
-                  <span lang="en" className={`${GRADIENT_TEXT} block tracking-[0.02em]`}>{DECEMBER_EVENT_NAME.en}</span>
+                  <span lang="en" className={`mt-2 block ${BODY} font-bold uppercase leading-none tracking-[0.5em] text-[#C79BB4] sm:mt-3`}>{DECEMBER_EVENT_NAME.en}</span>
                 </>
               ) : (
                 <>
