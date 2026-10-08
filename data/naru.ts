@@ -738,8 +738,10 @@ export const naru = {
         num: "02",
         title: { ko: "멘토", en: "Mentors" },
         body: {
-          ko: "기간 내내 열려 있습니다. 막힐 때마다 다시 갑니다.",
-          en: "Open the whole time. You go back every time you get stuck.",
+          // 2026-10-08 (프로그램 브리프 2.4): 그 전의 문장은 멘토링이 행사 내내 열린다고 했습니다. 2026-09-20 결정은
+          // Day 1부터 Day 3까지이고 Day 4에는 없습니다.
+          ko: "Day 1부터 Day 3까지 열려 있습니다. 막힐 때마다 다시 갑니다.",
+          en: "Open from Day 1 to Day 3. You go back every time you get stuck.",
         },
         evidence: { ko: "8월 11명", en: "August: eleven of them" },
       },
