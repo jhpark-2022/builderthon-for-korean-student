@@ -579,10 +579,14 @@ export default function NaruHome() {
                 그 전의 히어로 전용 clamp(최대 86.4px)와 2행의 0.82em은 없습니다. 한 화면의 글자 크기가 셋을 넘지
                 않게 하려는 것입니다(components/ui/typography.ts). 390px에서 두 줄 모두 한 줄에 들어갑니다. */}
             <h1 id="hero-title" className={`${TITLE} font-black leading-[1.05] tracking-tight drop-shadow-[0_4px_40px_rgba(75,58,140,0.5)]`}>
-              {/* DECIDED 2026-10-08 (사용자: "영문 화면에도 같은 로고로"): 로고는 두 로케일에서 같습니다. 영문 화면에서도
-                  한글 "크로싱 서울"이 보입니다(로고의 일부라서요. 나루 로고의 "영문 화면에서는 한글을 보이지 않는다"는
-                  규칙은 나루 락업의 것이고 이 로고에는 적용하지 않습니다). 한글 줄에는 lang="ko"를 답니다. */}
-              {DECEMBER_EVENT_NAME ? (
+              {/* DECIDED 2026-10-08 (사용자: "영문 화면에도 같은 로고로", 이어서 "영어 crossing seoul 로고로 바꿨으면"):
+                  영문 화면의 로고는 영문입니다. 큰 글자가 "CROSSING SEOUL"이고 같은 그라데이션을 씁니다. 한글 줄은
+                  영문 화면에 보이지 않습니다(나루 락업의 규칙과 같아졌습니다). 영문 로고 파일이 따로 없어서 한국어
+                  로고의 큰 줄 문법(굵기, 자간, 그라데이션)을 그대로 옮긴 것이고, 작은 둘째 줄은 두지 않습니다.
+                  글자 크기가 TITLE 하나라 좁은 기둥에서는 두 줄로 접힙니다. */}
+              {DECEMBER_EVENT_NAME && locale === "en" ? (
+                <span lang="en" className="gradient-text block bg-gradient-to-r from-[#9AA8EE] to-[#C99ACB] bg-clip-text pb-[0.08em] tracking-[-0.02em] text-transparent">{DECEMBER_EVENT_NAME.en}</span>
+              ) : DECEMBER_EVENT_NAME ? (
                 <>
                   {/* DECIDED 2026-10-08 (사용자, 로고 스크린숏: "이걸로 써줘"): 히어로 제목은 마케팅 포스트의 크로싱 서울 로고
                       모양입니다. 큰 한글 "크로싱 서울"에 그라데이션, 그 아래 가운데에 영문 "CROSSING SEOUL"을 넓은 자간으로.
