@@ -29,7 +29,7 @@ export type RouteStation = {
 
 export default function RouteMap({
   stations,
-  pill,
+  pills,
   legend,
   ariaLabel,
   className = "",
@@ -42,8 +42,12 @@ export default function RouteMap({
    * 이 점이 주황 허용 목록의 "노선도 현재 위치 점"입니다. 점은 하나만.
    */
   current?: number;
-  /** 레일 아래 초록 필. 8월의 "1:1 멘토링 Day 3~7 매일 열려 있어요" 자리. */
-  pill?: string;
+  /**
+   * 레일 아래의 필들. 8월의 "1:1 멘토링 Day 3~7 매일 열려 있어요" 자리.
+   * 2026-10-08 (프로그램 브리프 2.5): 하나(pill)에서 여럿(pills)으로. 세로로 쌓습니다. 외곽선과 크기는 같고 점의
+   * 색만 다릅니다: 첫째는 accent, 둘째부터는 노선도의 현재 위치 점과 같은 주황(naru-orange). 새 색은 만들지 않습니다.
+   */
+  pills?: string[];
   legend?: { anchor: string; plain: string; spot?: string };
   ariaLabel?: string;
   className?: string;
@@ -80,7 +84,9 @@ export default function RouteMap({
       <ol
         role="list"
         aria-label={ariaLabel}
-        className={`relative flex items-start ${pill ? "pb-10" : "pb-2"}`}
+        // 2026-10-08: 필이 ol 안의 absolute에서 ol 아래의 보통 흐름으로 나왔습니다. 필이 둘이 되고 폰에서 각각 두 줄로
+        // 접혀도 높이가 저절로 늘어 아래 범례, 다음 블록과 겹치지 않습니다. pb-7은 ★ 정거장 아래에 매달린 배지의 자리입니다.
+        className={`relative flex items-start ${pills && pills.length ? "pb-7" : "pb-2"}`}
       >
         {/* 레일. top-[1.625rem]은 노드 줄의 중심(py-2.5 + h-8의 절반). */}
         <span
@@ -143,21 +149,19 @@ export default function RouteMap({
             </li>
           );
         })}
-        {pill && (
-          <span className="pointer-events-none absolute bottom-0 left-0 right-0 flex justify-center">
-            {/* 2026-09-18 (감사 반영 브리프 8): 초록은 General Mentoring 상자의 기간 배지
-                하나에만 남깁니다. 이 필은 같은 말을 한 번 더 하는 자리라 보라 외곽선. */}
-            {/* whitespace-nowrap은 sm부터 (2026-09-19, 모바일 감사 11). 긴 영어 필이
-                360px 화면(가용 306px)에서 10px 여유뿐이었습니다. 폰에서는 접히게 두고
-                가운데 정렬합니다. 두 줄이 되어도 ol의 pb-10 안에 듭니다.
-                (2026-09-20에 문구가 짧아졌지만 규칙은 문구에 기대지 않습니다.) */}
-            <span className={`flex max-w-full items-center gap-1.5 rounded-full border border-accent/40 bg-transparent px-2.5 py-1 text-center ${META} font-semibold leading-tight text-accent sm:whitespace-nowrap sm:leading-none`}>
-              <span aria-hidden className="h-[7px] w-[7px] shrink-0 rounded-full bg-accent/80" />
-              {pill}
-            </span>
-          </span>
-        )}
       </ol>
+      {pills && pills.length > 0 && (
+        <div className="flex flex-col items-center gap-1.5">
+          {pills.map((p, i) => (
+            // 2026-09-18 (감사 반영 브리프 8): 초록은 General Mentoring 상자의 기간 배지 하나에만 남깁니다. 필은 보라 외곽선.
+            // whitespace-nowrap은 sm부터 (2026-09-19, 모바일 감사 11). 폰에서는 접히게 두고 가운데 정렬합니다.
+            <span key={i} className={`flex max-w-full items-center gap-1.5 rounded-full border border-accent/40 bg-transparent px-2.5 py-1 text-center ${META} font-semibold leading-tight text-accent sm:whitespace-nowrap sm:leading-none`}>
+              <span aria-hidden data-pill-dot className={`h-[7px] w-[7px] shrink-0 rounded-full ${i === 0 ? "bg-accent/80" : "bg-naru-orange"}`} />
+              {p}
+            </span>
+          ))}
+        </div>
+      )}
       {/* 범례는 sm부터. 폰에서는 Day 카드의 "★ 제출" 칩이 같은 뜻을 말합니다(2026-09-18). */}
       {legend && (
         <div className="mt-3 hidden flex-wrap items-center gap-x-4 gap-y-1.5 sm:flex">

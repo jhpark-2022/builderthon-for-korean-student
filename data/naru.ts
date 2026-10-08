@@ -1740,6 +1740,22 @@ export const naru = {
     mentoringHeading: { ko: "General Mentoring, Day 1부터 Day 3까지", en: "General Mentoring, Day 1 to Day 3" },
     // 가로 상자의 이름 아래 한 줄(5차). 이름은 고유명사라 그대로 "General Mentoring".
     mentoringAlways: { ko: "Day 1부터 Day 3까지", en: "Day 1 to Day 3" },
+    // ── 현장 멘토링 (DECIDED 2026-10-08, 사용자: "멘토가 오는 게 아니고 우리가 직접 간다". 프로그램 브리프 2.5, D5) ──
+    // General Mentoring(행사장, 예약제)은 그대로이고, 현장 방문이 하나 더 섭니다. 대신하는 것이 아닙니다.
+    // TODO: confirm. 기업별 수락, 방문 날짜, 횟수가 정해지지 않았습니다. 그래서 날짜와 횟수를 쓰지 않고
+    // "Day 1부터 Day 3 사이"라고만 씁니다. 초안 배너(draftNote)가 이 약속을 덮습니다. 배너를 떼기 전에 확인하세요.
+    // 비밀유지와 결과물 귀속 합의를 기업과 먼저 맺어야 합니다(등록 폼에 동의 문구가 필요해질 수 있습니다).
+    // 특정 Day 행에 칩을 달지 않습니다(날짜가 미정). 기업 이름도 쓰지 않습니다.
+    fieldMentoring: {
+      name: { ko: "현장 멘토링", en: "Field mentoring" },
+      when: { ko: "Day 1부터 Day 3 사이", en: "Between Day 1 and Day 3" },
+      body: {
+        ko: "이번에는 멘토가 오지 않고 우리가 갑니다. 팀을 나눠 이슈를 낸 기업의 일터로 가서, 그 일을 하는 사람에게 그 자리에서 묻습니다.",
+        en: "This time the mentors do not come to us. We go to them. Teams split up and visit the company behind the issue, and ask the people doing that work, where they do it.",
+      },
+    },
+    // 노선도 아래 둘째 필. 첫째 필(mentoringHeading)과 같은 문법입니다.
+    fieldMentoringPill: { ko: "현장 멘토링, 팀이 기업으로 갑니다", en: "Field mentoring, teams go to the company" },
     mentoringLead: {
       ko: "8월에는 슬롯이 넉넉했는데 한 번도 쓰지 않은 팀이 있었습니다. 12월은 예약하지 않은 팀을 이탈 신호로 봅니다.",
       en: "August had plenty of slots and teams that never booked one. In December, a team that has not booked is a warning sign.",

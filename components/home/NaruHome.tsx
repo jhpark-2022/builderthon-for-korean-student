@@ -817,7 +817,7 @@ export default function NaruHome() {
               kind: s.submit ? "anchor" : "plain",
               badge: s.submit ? `${t(naru.december.submitLabel)}\u2002${t(s.submit)}` : undefined,
             }))}
-            pill={t(naru.december.mentoringHeading)}
+            pills={[t(naru.december.mentoringHeading), t(naru.december.fieldMentoringPill)]}
             legend={{ anchor: t(naru.december.routeLegendSubmit), plain: t(naru.december.routeLegendStage) }}
             current={hoverDay ?? 0}
           />
@@ -989,6 +989,19 @@ export default function NaruHome() {
                 </li>
               ))}
             </ul>
+          </div>
+          {/* DECIDED 2026-10-08 (사용자: "멘토가 오는 게 아니고 우리가 직접 간다", 프로그램 브리프 2.5): 현장 멘토링.
+              General Mentoring 바로 아래에 한 묶음으로 섭니다(mt-3). 같은 READ 폭과 왼쪽 끝, 같은 상자 문법이고
+              초록은 쓰지 않습니다(초록은 General Mentoring 하나, 2026-09-18). 무채색 테두리에 점만 노선도 둘째 필과 같은
+              주황입니다(주황은 점으로만). 이름은 BODY 굵게, 기간은 META, 설명은 BODY. 규칙 목록은 없습니다.
+              날짜, 횟수, 기업 이름은 쓰지 않습니다(미정). 위 초안 배너가 이 약속을 덮습니다. */}
+          <div className="mt-3 rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 lg:px-7">
+            <p className={`flex items-center gap-2 ${BODY} font-bold text-white`}>
+              <ChipDot className="bg-naru-orange" />
+              {t(naru.december.fieldMentoring.name)}
+            </p>
+            <p className={`mt-0.5 ${META} font-semibold text-white/75`}>{t(naru.december.fieldMentoring.when)}</p>
+            <p className={`${MEASURE} mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.fieldMentoring.body)}</p>
           </div>
           {/* 재는 것. 호박색 강조 상자(8월 "준비물은 하나예요" 문법).
 
