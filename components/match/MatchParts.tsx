@@ -18,9 +18,11 @@ import {
 } from "@/lib/crossingMatch";
 import type { QuizResult } from "@/lib/quizScore";
 import type { Result } from "@/data/quiz";
+import { MATCH_TRACKS, isValidTrackRanking, type MatchTrack } from "@/data/matchTracks";
 
 type T = (p: { ko: string; en: string }) => string;
-export interface MatchProfile { name: string; country: string }
+/** tracks: 선호 트랙 순위(트랙 id, 앞이 1순위). 트랙 목록이 비어 있으면 언제나 []. */
+export interface MatchProfile { name: string; country: string; tracks: string[] }
 
 export const matchCopy = {
   nameLabel: { ko: "이름", en: "Name" },
@@ -30,6 +32,10 @@ export const matchCopy = {
   countrySG: { ko: "싱가포르", en: "Singapore" },
   countryOther: { ko: "그 밖(두 글자 코드 입력)", en: "Elsewhere (two-letter code)" },
   choose: { ko: "골라 주세요", en: "Choose one" },
+  tracksLabel: { ko: "풀고 싶은 트랙 순위", en: "Rank the tracks you want" },
+  tracksHelp: { ko: "가장 하고 싶은 트랙부터 차례로 눌러 주세요. 다시 누르면 빠집니다.", en: "Tap the tracks in order, most wanted first. Tap again to remove." },
+  tracksRank: { ko: "{n}순위", en: "No. {n}" },
+  errTracks: { ko: "모든 트랙에 순위를 매겨 주세요.", en: "Please rank every track." },
   errName: { ko: "이름을 넣어 주세요.", en: "Please enter your name." },
   errCountry: { ko: "나라를 골라 주세요. 그 밖이면 두 글자 코드(예: JP)를 넣습니다.", en: "Please choose a country. For elsewhere, enter a two-letter code (e.g. JP)." },
   saving: { ko: "팀 매칭에 올리는 중입니다", en: "Adding you to team matching" },
@@ -47,17 +53,21 @@ export function loadMatchProfile(): MatchProfile | null {
     const raw = window.localStorage.getItem(MATCH_PROFILE_KEY);
     if (!raw) return null;
     const p = JSON.parse(raw) as Partial<MatchProfile>;
-    return typeof p.name === "string" && typeof p.country === "string" ? { name: p.name, country: p.country } : null;
+    if (typeof p.name !== "string" || typeof p.country !== "string") return null;
+    // 저장된 순위가 지금 목록과 맞지 않으면(트랙이 바뀌었으면) 버리고 다시 받습니다.
+    return { name: p.name, country: p.country, tracks: isValidTrackRanking(p.tracks) ? p.tracks : [] };
   } catch { return null; }
 }
 export function saveMatchProfile(p: MatchProfile): void {
   try { window.localStorage.setItem(MATCH_PROFILE_KEY, JSON.stringify(p)); } catch { /* storage blocked */ }
 }
-/** 문제 없으면 null. 이름은 1~40자, 나라는 두 글자 코드. */
-export function matchProfileError(p: MatchProfile): "name" | "country" | null {
+/** 문제 없으면 null. 이름은 1~40자, 나라는 두 글자 코드, 트랙이 있으면 전부 순위. tracks는 시험용(기본은 MATCH_TRACKS). */
+export type MatchProfileError = "name" | "country" | "tracks";
+export function matchProfileError(p: MatchProfile, tracks: MatchTrack[] = MATCH_TRACKS): MatchProfileError | null {
   const n = p.name.trim();
   if (!n || [...n].length > MATCH_NAME_MAX) return "name";
   if (!MATCH_COUNTRY_RE.test(p.country.trim().toUpperCase())) return "country";
+  if (!isValidTrackRanking(p.tracks, tracks)) return "tracks";
   return null;
 }
 
@@ -81,8 +91,15 @@ function deviceToken(): string | null {
 const INPUT = `w-full rounded-xl border border-white/[0.12] bg-white/[0.04] px-4 py-3 ${BODY} text-white placeholder:text-white/40 outline-none transition focus:border-violet-400/60 focus:bg-white/[0.06]`;
 
 export function MatchStartFields({ t, profile, onChange, error }: {
-  t: T; profile: MatchProfile; onChange: (p: MatchProfile) => void; error: "name" | "country" | null;
+  t: T; profile: MatchProfile; onChange: (p: MatchProfile) => void; error: MatchProfileError | null;
 }) {
+  // 선호 트랙 순위(DECIDED 2026-10-08, 사용자: 필수, 전부 순위). 누른 순서가 곧 순위이고 다시 누르면 빠지며 뒤 순위가
+  // 당겨집니다. 끌어 옮기기는 쓰지 않습니다(폰 한 손, 스크린리더). 버튼마다 aria-pressed와 순위를 읽어 줍니다.
+  // 목록(data/matchTracks.ts)이 비어 있으면 이 블록은 그려지지 않습니다.
+  const toggleTrack = (id: string) => {
+    const has = profile.tracks.includes(id);
+    onChange({ ...profile, tracks: has ? profile.tracks.filter((x) => x !== id) : [...profile.tracks, id] });
+  };
   // 나라 select는 KR, SG, 그 밖 셋. 그 밖이면 두 글자 코드를 직접 넣습니다(신청 폼과 같은 방식).
   const known = profile.country === "KR" || profile.country === "SG";
   const [other, setOther] = useState(!known && profile.country !== "");
@@ -124,6 +141,31 @@ export function MatchStartFields({ t, profile, onChange, error }: {
         )}
         {error === "country" && <span id="match-country-error" role="alert" className={`${META} font-medium text-rose-300`}>{t(matchCopy.errCountry)}</span>}
       </div>
+      {MATCH_TRACKS.length > 0 && (
+        <div role="group" aria-labelledby="match-tracks-label" aria-describedby={error === "tracks" ? "match-tracks-help match-tracks-error" : "match-tracks-help"} className="flex flex-col gap-1.5">
+          <span id="match-tracks-label" className={`${META} font-semibold text-white/85`}>{t(matchCopy.tracksLabel)}</span>
+          <span id="match-tracks-help" className={`${META} text-white/70`}>{t(matchCopy.tracksHelp)}</span>
+          <div className="mt-1 flex flex-col gap-2">
+            {MATCH_TRACKS.map((tr, i) => {
+              const rank = profile.tracks.indexOf(tr.id) + 1;
+              return (
+                <button
+                  key={tr.id} id={i === 0 ? "match-tracks" : undefined} type="button" aria-pressed={rank > 0} data-track={tr.id} onClick={() => toggleTrack(tr.id)}
+                  className={`flex min-h-[48px] items-center gap-3 rounded-xl border px-4 py-3 text-left transition ${rank > 0 ? "border-violet-400/70 bg-violet-400/[0.12]" : "border-white/[0.12] bg-white/[0.04] hover:border-white/25"}`}
+                >
+                  <span aria-hidden className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${META} font-bold ${rank > 0 ? "border-violet-300 bg-violet-500 text-white" : "border-white/25 text-white/60"}`}>{rank > 0 ? rank : ""}</span>
+                  <span className="min-w-0">
+                    <span className={`block break-keep ${BODY} font-bold leading-snug text-white`}>{t(tr.label)}</span>
+                    {tr.hint && <span className={`mt-0.5 block break-keep ${META} text-white/70`}>{t(tr.hint)}</span>}
+                  </span>
+                  {rank > 0 && <span className="sr-only">{t(matchCopy.tracksRank).replace("{n}", String(rank))}</span>}
+                </button>
+              );
+            })}
+          </div>
+          {error === "tracks" && <span id="match-tracks-error" role="alert" className={`${META} font-medium text-rose-300`}>{t(matchCopy.errTracks)}</span>}
+        </div>
+      )}
     </div>
   );
 }
@@ -149,7 +191,7 @@ export function MatchSave({ t, result, data, fromShare }: { t: T; result: QuizRe
           eventSlug: MATCH_EVENT, quiz_edition: MATCH_EDITION,
           name: profile.name.trim(), study_country: profile.country.trim().toUpperCase(),
           mbti: result.mbti, identity: result.identity, model: data.model, role_key: data.roleKey,
-          axes, device_token: token, url_confirm: "",
+          axes, track_ranking: profile.tracks, device_token: token, url_confirm: "",
         }),
       });
       if (res.ok) {

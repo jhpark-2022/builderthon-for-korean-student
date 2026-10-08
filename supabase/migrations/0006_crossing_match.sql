@@ -24,6 +24,8 @@ create table if not exists public.crossing_match_profiles (
   model         text not null,          -- 저장 시점의 모델 이름(나중에 매핑이 바뀌어도 기록은 남음)
   role_key      text not null check (role_key in ('plan','dev','design','growth')),
   axes          jsonb not null default '{}'::jsonb,  -- 축별 점수
+  -- 선호 트랙 순위. 트랙 id의 배열이고 앞이 1순위(data/matchTracks.ts). 트랙이 정해지기 전에는 [].
+  track_ranking jsonb not null default '[]'::jsonb check (jsonb_typeof(track_ranking) = 'array'),
   quiz_edition  text not null default '2026-12',
   device_token  text not null,          -- 브라우저가 만든 무작위 UUID. 사람을 가리키지 않음
   ip_hash       text,                   -- 스로틀용 솔트 해시. 원 IP는 저장하지 않음
@@ -39,7 +41,7 @@ alter table public.crossing_match_profiles enable row level security;  -- 정책
 
 -- 운영진용 매칭판. 기기 토큰과 IP 해시는 내보내지 않습니다.
 create or replace view public.crossing_match_board as
-  select name, study_country, mbti, identity, model, role_key, updated_at
+  select name, study_country, mbti, identity, model, role_key, updated_at, track_ranking
   from public.crossing_match_profiles
   where event_slug = 'crossing-seoul-2026-12'
   order by role_key, study_country, name;

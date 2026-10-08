@@ -16,6 +16,7 @@ import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { QUIZ_EDITIONS } from "@/data/quizEditions";
 import { AXIS_ORDER, type MbtiKey } from "@/data/quiz";
+import { isValidTrackRanking } from "@/data/matchTracks";
 import {
   MATCH_EVENT, MATCH_EDITION, MATCH_NAME_MAX, MATCH_COUNTRY_RE, isMatchDeviceToken, matchWindowOpen,
 } from "@/lib/crossingMatch";
@@ -98,6 +99,9 @@ export async function POST(req: Request) {
   // 모델 이름과 역할은 서버의 표가 정본입니다. 다른 값을 보내면 받지 않습니다.
   if (body.model !== type.model) return NextResponse.json({ error: "model_mismatch", field: "model" }, { status: 400 });
   if (body.role_key !== type.roleKey) return NextResponse.json({ error: "invalid_option", field: "role_key" }, { status: 400 });
+  // 선호 트랙 순위: 목록의 모든 트랙이 한 번씩. 목록이 비어 있는 동안은 빈 배열(보내지 않아도 됨)만 받습니다.
+  const ranking = body.track_ranking ?? [];
+  if (!isValidTrackRanking(ranking)) return NextResponse.json({ error: "invalid_option", field: "track_ranking" }, { status: 400 });
   if (!isMatchDeviceToken(body.device_token)) return NextResponse.json({ error: "invalid_device", field: "device_token" }, { status: 400 });
 
   // ── 스로틀(COUNT가 실패하면 통과시킵니다. 난간이지 문이 아닙니다) ──────────────────
@@ -127,6 +131,7 @@ export async function POST(req: Request) {
       model: type.model,
       role_key: type.roleKey,
       axes: pickAxes(body.axes),
+      track_ranking: ranking,
       quiz_edition: MATCH_EDITION,
       ip_hash: ipHash,
       updated_at: new Date().toISOString(),

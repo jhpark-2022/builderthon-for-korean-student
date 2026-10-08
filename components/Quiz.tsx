@@ -447,8 +447,8 @@ function Landing({
 
   // 매칭 모드(/match): 이름과 나라가 있어야 시작합니다(현장 팀 매칭 브리프 3). 이 기기에 넣어 둔 값이 있으면
   // 다시 채웁니다. 8월판(/quiz)에서는 아래 세 줄이 아무 일도 하지 않습니다.
-  const [profile, setProfile] = useState<MatchProfile>({ name: "", country: "" });
-  const [profileError, setProfileError] = useState<"name" | "country" | null>(null);
+  const [profile, setProfile] = useState<MatchProfile>({ name: "", country: "", tracks: [] });
+  const [profileError, setProfileError] = useState<"name" | "country" | "tracks" | null>(null);
   useEffect(() => {
     if (!matchMode) return;
     const saved = loadMatchProfile();
@@ -456,10 +456,10 @@ function Landing({
   }, [matchMode]);
   const start = () => {
     if (matchMode) {
-      const clean = { name: profile.name.trim(), country: profile.country.trim().toUpperCase() };
+      const clean = { name: profile.name.trim(), country: profile.country.trim().toUpperCase(), tracks: profile.tracks };
       const err = matchProfileError(clean);
       setProfileError(err);
-      if (err) { document.getElementById(err === "name" ? "match-name" : "match-country")?.focus(); return; }
+      if (err) { document.getElementById(err === "name" ? "match-name" : err === "country" ? "match-country" : "match-tracks")?.focus(); return; }
       saveMatchProfile(clean);
     }
     onStart();
