@@ -20,6 +20,7 @@ import { scoreQuiz, parseResultId, type Choice, type QuizResult, type AxisScore 
 import { saveOwnResult, loadOwnResult, type OwnResult } from "@/lib/quizResult";
 import { QUIZ_EDITIONS, type QuizEdition, type EditionConfig } from "@/data/quizEditions";
 import { getExplanation } from "@/data/quizExplanations";
+import { MatchStartFields, MatchSave, loadMatchProfile, saveMatchProfile, matchProfileError, type MatchProfile } from "@/components/match/MatchParts";
 
 type Phase = "landing" | "quiz" | "analyzing" | "result";
 
@@ -306,20 +307,20 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
             (2026-08-17). 그전에는 두 링크 다 높이가 23px이라 손가락으로는
             빗나가기 쉬웠습니다. 아래 '이전' 버튼도 같은 처리입니다. */}
         <a href={ed.backHref} className="-my-3 inline-flex min-h-[44px] items-center py-3 text-sm font-semibold text-white/60 transition hover:text-white">
-          ← {t(quizUI.back)}
+          ← {t(ed.ui.back)}
         </a>
         <LocaleToggle />
       </header>
 
       <div className={`relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] flex-col px-6 pb-12 ${phase === "result" ? "max-w-5xl" : "max-w-2xl"}`}>
-        {phase === "landing" && <Landing ed={ed} onStart={startQuiz} t={t} reduce={!!reduce} ownResult={ownResult} />}
+        {phase === "landing" && <Landing ed={ed} matchMode={matchMode} onStart={startQuiz} t={t} reduce={!!reduce} ownResult={ownResult} />}
 
         {phase === "quiz" && current && (
           <div className="flex flex-1 flex-col pt-4">
             {/* progress */}
             <div className="mb-3 flex items-center justify-between">
               <button type="button" onClick={goBack} className="-my-3 inline-flex min-h-[44px] items-center gap-1 py-3 pr-3 text-sm font-semibold text-white/50 transition hover:text-white/90">
-                ← {t(quizUI.prev)}
+                ← {t(ed.ui.prev)}
               </button>
               <span className="font-mono text-sm font-bold text-white">
                 {index + 1}
@@ -332,7 +333,7 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
               aria-valuemin={0}
               aria-valuemax={QUESTIONS.length}
               aria-valuenow={index + 1}
-              aria-label={t(quizUI.progressLabel)}
+              aria-label={t(ed.ui.progressLabel)}
             >
               <motion.div
                 className="h-full rounded-full bg-gradient-to-r from-violet-500 to-cyan-400"
@@ -345,7 +346,7 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
             {/* Position announcement — the "n / 14" counter above is visual
                 only; this is its polite spoken equivalent. */}
             <p className="sr-only" aria-live="polite">
-              {t(quizUI.questionPosition)
+              {t(ed.ui.questionPosition)
                 .replace("{n}", String(index + 1))
                 .replace("{total}", String(QUESTIONS.length))}
             </p>
@@ -411,7 +412,7 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
         {phase === "analyzing" && <Analyzing t={t} reduce={!!reduce} />}
 
         {phase === "result" && result && (
-          <ResultView ed={ed} result={result} t={t} reduce={!!reduce} fromShare={fromShare} onRetake={startQuiz} returnToRegister={returnToRegister} />
+          <ResultView ed={ed} matchMode={matchMode} result={result} t={t} reduce={!!reduce} fromShare={fromShare} onRetake={startQuiz} returnToRegister={returnToRegister} />
         )}
       </div>
     </main>
@@ -421,12 +422,14 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
 // ── Landing ──────────────────────────────────────────────────────────────────
 function Landing({
   ed,
+  matchMode,
   onStart,
   t,
   reduce,
   ownResult,
 }: {
   ed: EditionConfig;
+  matchMode: boolean;
   onStart: () => void;
   t: (p: { ko: string; en: string }) => string;
   reduce: boolean;
@@ -442,6 +445,26 @@ function Landing({
     ? ed.results[parsedOwn.mbti].variants[parsedOwn.identity].name
     : null;
 
+  // 매칭 모드(/match): 이름과 나라가 있어야 시작합니다(현장 팀 매칭 브리프 3). 이 기기에 넣어 둔 값이 있으면
+  // 다시 채웁니다. 8월판(/quiz)에서는 아래 세 줄이 아무 일도 하지 않습니다.
+  const [profile, setProfile] = useState<MatchProfile>({ name: "", country: "" });
+  const [profileError, setProfileError] = useState<"name" | "country" | null>(null);
+  useEffect(() => {
+    if (!matchMode) return;
+    const saved = loadMatchProfile();
+    if (saved) setProfile(saved);
+  }, [matchMode]);
+  const start = () => {
+    if (matchMode) {
+      const clean = { name: profile.name.trim(), country: profile.country.trim().toUpperCase() };
+      const err = matchProfileError(clean);
+      setProfileError(err);
+      if (err) { document.getElementById(err === "name" ? "match-name" : "match-country")?.focus(); return; }
+      saveMatchProfile(clean);
+    }
+    onStart();
+  };
+
   return (
     <motion.div
       className="flex flex-1 flex-col items-center justify-center text-center"
@@ -450,16 +473,20 @@ function Landing({
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
     >
       <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-400/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-violet-200">
-        ✦ {t(quizUI.eyebrow)}
+        ✦ {t(ed.ui.eyebrow)}
       </span>
       <h1 className="text-[2.6rem] font-black leading-[1.05] tracking-tight sm:text-[3rem]">
         <span className="gradient-text gradient-text--zero100 bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text pb-[0.12em] text-transparent">
-          {t(quizUI.title)}
+          {t(ed.ui.title)}
         </span>
       </h1>
       <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-white/70">
-        {t(quizUI.subtitle)}
+        {t(ed.ui.subtitle)}
       </p>
+      {/* 매칭 모드에서는 8월 로고 줄 자리에 이름과 나라 입력이 섭니다. */}
+      {matchMode ? (
+        <MatchStartFields t={t} profile={profile} onChange={(p) => { setProfile(p); setProfileError(null); }} error={profileError} />
+      ) : (
       <div className="mt-9 flex flex-wrap items-center justify-center gap-2.5">
         {HERO_LOGOS.map((l) => (
           <span key={l.file} className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05]">
@@ -467,18 +494,19 @@ function Landing({
           </span>
         ))}
       </div>
+      )}
       {/* Full-width and 56px tall on a phone, sitting low enough to fall in the
           thumb zone. It was a centred inline pill — reachable on a desktop, a
           stretch on a 6" screen where this is the only thing to press. */}
       <button
         type="button"
-        onClick={onStart}
+        onClick={start}
         className="group mt-10 inline-flex min-h-[56px] w-full max-w-sm items-center justify-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 sm:w-auto"
       >
-        {t(quizUI.start)}
+        {t(ed.ui.start)}
         <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">→</span>
       </button>
-      <p className="mt-5 text-xs font-medium text-white/55">{t(quizUI.meta)}</p>
+      <p className="mt-5 text-xs font-medium text-white/55">{t(ed.ui.meta)}</p>
 
       {/* Returning taker: a low-key link back to their saved result. Fades in
           post-mount (ownResult loads client-side), so it never disrupts the
@@ -512,6 +540,7 @@ const quizLandingHint = {
 
 function ResultView({
   ed,
+  matchMode,
   result,
   t,
   reduce,
@@ -520,6 +549,7 @@ function ResultView({
   returnToRegister,
 }: {
   ed: EditionConfig;
+  matchMode: boolean;
   result: QuizResult;
   t: (p: { ko: string; en: string }) => string;
   reduce: boolean;
@@ -529,7 +559,7 @@ function ResultView({
 }) {
   const data = ed.results[result.mbti];
   const variant = data.variants[result.identity];
-  const ctaLead = t(quizUI.ctaLead).replace("{role}", t(data.role));
+  const ctaLead = t(ed.ui.ctaLead).replace("{role}", t(data.role));
 
   // 9:16 story-image export. We capture a dedicated, fixed-size (1080×1920) card
   // rendered off-screen — never the live card (it's responsive and its gauge
@@ -601,11 +631,11 @@ function ResultView({
         a.remove();
         URL.revokeObjectURL(url);
         track("story_download", { type: result.resultId });
-        setToast(t(quizUI.saveImageSaved));
+        setToast(t(ed.ui.saveImageSaved));
         window.setTimeout(() => setToast(null), 2600);
       }
     } catch {
-      setToast(t(quizUI.saveImageError));
+      setToast(t(ed.ui.saveImageError));
       window.setTimeout(() => setToast(null), 2600);
     } finally {
       setSaving(false);
@@ -624,8 +654,10 @@ function ResultView({
           stranger's result and gets no celebration. */}
       {!fromShare && <Confetti />}
       <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white/60">
-        ✦ {t(quizUI.resultEyebrow)}
+        ✦ {t(ed.ui.resultEyebrow)}
       </span>
+      {/* 매칭 모드: 결과가 나오는 순간 매칭판에 올리고 그 상태를 보여 줍니다. 공유 링크로 온 사람은 올리지 않습니다. */}
+      {matchMode && <MatchSave t={t} result={result} data={data} fromShare={fromShare} />}
 
       {/* Stacked: the shareable result card spans the full width on top, then
           the apply CTA + the match section + actions sit below it. (This said
@@ -645,7 +677,7 @@ function ResultView({
               viewport (capped at the original 0.7rem from ~430px up) and the
               tracking only opens up from `sm`, where the card can carry it. */}
           <div className="relative flex items-center justify-between gap-3">
-            <span className="whitespace-nowrap font-mono text-[clamp(0.52rem,2.6vw,0.7rem)] font-bold uppercase tracking-[0.08em] text-white/60 sm:tracking-[0.15em]">{t({ ko: "제로백 빌더톤 2026.08", en: "Zero100 builderthon, Aug 2026" })}</span>
+            <span className="whitespace-nowrap font-mono text-[clamp(0.52rem,2.6vw,0.7rem)] font-bold uppercase tracking-[0.08em] text-white/60 sm:tracking-[0.15em]">{t(ed.cardStamp)}</span>
             <span className="whitespace-nowrap font-mono text-[clamp(0.52rem,2.6vw,0.7rem)] font-bold tracking-wider text-white/60">{result.resultId}</span>
           </div>
 
@@ -657,7 +689,7 @@ function ResultView({
               <div className={`flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br ${data.accent} shadow-lg`}>
                 <ModelGlyph result={data} imgClass="h-10 w-10 object-contain" emojiClass="text-4xl leading-none" />
               </div>
-              <p className="mt-6 text-sm font-semibold text-white/55">{t(quizUI.youAre)}</p>
+              <p className="mt-6 text-sm font-semibold text-white/55">{t(ed.ui.youAre)}</p>
               <h2 className="mt-1 text-[1.7rem] font-black leading-tight tracking-tight sm:text-[2rem]">{t(variant.name)}</h2>
               <p className="mt-1 text-sm font-bold text-fuchsia-200">{data.model} {result.resultId}</p>
               <p className="mt-4 text-[15px] font-semibold leading-relaxed text-white/90">“{t(data.phrase)}”</p>
@@ -666,7 +698,7 @@ function ResultView({
 
               {/* Why this model — the research-backed reason the type maps here. */}
               <div className="mt-4 rounded-2xl border border-fuchsia-400/15 bg-fuchsia-500/[0.05] p-3.5">
-                <p className="text-[0.7rem] font-bold uppercase tracking-wider text-fuchsia-200/70">{t(quizUI.whyModel)} {data.model}</p>
+                <p className="text-[0.7rem] font-bold uppercase tracking-wider text-fuchsia-200/70">{t(ed.ui.whyModel)} {data.model}</p>
                 <p className="mt-1 text-sm leading-relaxed text-white/75">{t(data.whyModel)}</p>
               </div>
             </div>
@@ -675,11 +707,11 @@ function ResultView({
             <div className="flex flex-col gap-5">
               <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                 <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3.5">
-                  <p className="text-[0.7rem] font-bold uppercase tracking-wider text-emerald-300">{t(quizUI.strengthsLabel)}</p>
+                  <p className="text-[0.7rem] font-bold uppercase tracking-wider text-emerald-300">{t(ed.ui.strengthsLabel)}</p>
                   <p className="mt-1 text-sm leading-snug text-white/80">{t(data.strengths)}</p>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3.5">
-                  <p className="text-[0.7rem] font-bold uppercase tracking-wider text-rose-300">{t(quizUI.weaknessLabel)}</p>
+                  <p className="text-[0.7rem] font-bold uppercase tracking-wider text-rose-300">{t(ed.ui.weaknessLabel)}</p>
                   <p className="mt-1 text-sm leading-snug text-white/80">{t(data.weakness)}</p>
                 </div>
               </div>
@@ -690,13 +722,13 @@ function ResultView({
                   the taker's own answers. */}
               {result.axes && result.axes.length > 0 && (
                 <div>
-                  <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/60">{t(quizUI.axesLabel)}</p>
+                  <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/60">{t(ed.ui.axesLabel)}</p>
                   <AxisGauges axes={result.axes} accent={data.accent} t={t} reduce={reduce} />
                 </div>
               )}
 
               <div>
-                <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/60">{t(quizUI.roleLabel)}</p>
+                <p className="text-[0.7rem] font-bold uppercase tracking-wider text-white/60">{t(ed.ui.roleLabel)}</p>
                 <span className="mt-2 inline-flex items-center gap-2 rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-4 py-2 text-sm font-bold text-fuchsia-200">
                   ★ {t(data.role)}
                 </span>
@@ -711,12 +743,12 @@ function ResultView({
             back, where the modal restores their draft and attaches this type. */}
         {returnToRegister && result.axes && result.axes.length > 0 && (
           <div className="mx-auto w-full max-w-xl rounded-[24px] border border-emerald-400/25 bg-emerald-400/[0.06] p-6 text-center">
-            <p className="text-[15px] font-bold leading-relaxed text-white/85">{t(quizUI.ctaBackToRegisterNote)}</p>
+            <p className="text-[15px] font-bold leading-relaxed text-white/85">{t(ed.ui.ctaBackToRegisterNote)}</p>
             <a
               href="/?register=1&ref=quiz-return"
               className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(16,185,129,0.4)] transition hover:-translate-y-0.5"
             >
-              {t(quizUI.ctaBackToRegister)}
+              {t(ed.ui.ctaBackToRegister)}
             </a>
           </div>
         )}
@@ -738,7 +770,7 @@ function ResultView({
             href="/#december"
             className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
           >
-            {t(quizUI.ctaApply)} →
+            {t(ed.ui.ctaApply)} →
           </a>
         </div>
 
@@ -751,7 +783,7 @@ function ResultView({
               just a share graphic. Above the button so it's read before the tap,
               not after. */}
           <p className="text-center text-xs leading-relaxed text-violet-100/70">
-            {t(quizUI.saveImageTicket)}
+            {t(ed.ui.saveImageTicket)}
           </p>
           {/* Save as a 9:16 story image (native share sheet on mobile). */}
           <button
@@ -764,10 +796,10 @@ function ResultView({
             {saving ? (
               <>
                 <span className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-white/30 border-t-white" aria-hidden />
-                {t(quizUI.saveImageLoading)}
+                {t(ed.ui.saveImageLoading)}
               </>
             ) : (
-              <>📸 {t(quizUI.saveImage)}</>
+              <>📸 {t(ed.ui.saveImage)}</>
             )}
           </button>
 
@@ -779,7 +811,7 @@ function ResultView({
               onClick={onRetake}
               className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-3.5 text-sm font-bold text-white shadow-[0_8px_30px_rgba(124,58,237,0.45)] transition hover:-translate-y-0.5"
             >
-              ✦ {t(quizUI.retakeViral)}
+              ✦ {t(ed.ui.retakeViral)}
             </button>
           ) : (
             <button
@@ -787,7 +819,7 @@ function ResultView({
               onClick={onRetake}
               className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white/90 transition hover:bg-white/10"
             >
-              ↻ {t(quizUI.retake)}
+              ↻ {t(ed.ui.retake)}
             </button>
           )}
         </div>
@@ -804,7 +836,7 @@ function ResultView({
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label={t(quizUI.saveImageHold)}
+            aria-label={t(ed.ui.saveImageHold)}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -812,7 +844,7 @@ function ResultView({
             className="fixed inset-0 z-[70] flex flex-col items-center justify-center gap-4 bg-black/90 px-6 py-8"
           >
             <p className="text-center text-sm font-semibold text-white/90">
-              {t(quizUI.saveImageHold)}
+              {t(ed.ui.saveImageHold)}
             </p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -828,7 +860,7 @@ function ResultView({
               }}
               className="rounded-2xl border border-white/20 bg-white/10 px-6 py-3 text-sm font-bold text-white"
             >
-              {t(quizUI.saveImageHoldClose)}
+              {t(ed.ui.saveImageHoldClose)}
             </button>
           </motion.div>
         )}
@@ -952,7 +984,7 @@ const StoryCard = forwardRef<
               a Day 1 matching ticket now, and saying so on the artwork is what
               makes someone keep it in their camera roll. */}
           <div style={{ display: "inline-block", margin: "16px 0 0", border: "3px dashed rgba(196,181,253,0.55)", borderRadius: 18, padding: "12px 26px", background: "rgba(124,58,237,0.12)" }}>
-            <p style={{ margin: 0, fontSize: 24, fontWeight: 800, letterSpacing: 3, color: "rgb(221,214,254)", fontFamily: "ui-monospace, monospace" }}>{t(quizUI.storyTicket)}</p>
+            <p style={{ margin: 0, fontSize: 24, fontWeight: 800, letterSpacing: 3, color: "rgb(221,214,254)", fontFamily: "ui-monospace, monospace" }}>{t(ed.ui.storyTicket)}</p>
           </div>
         </div>
 
@@ -1067,13 +1099,13 @@ function DreamTeammates({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reduce ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] }}
       className="w-full"
-      aria-label={t(quizUI.matchTitle)}
+      aria-label={t(ed.ui.matchTitle)}
     >
       <div className="mb-4 text-center">
         <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-fuchsia-200">
-          ✦ {t(quizUI.matchTitle)}
+          ✦ {t(ed.ui.matchTitle)}
         </p>
-        <p className="mx-auto mt-1.5 max-w-md text-sm leading-relaxed text-white/60">{t(quizUI.matchSub)}</p>
+        <p className="mx-auto mt-1.5 max-w-md text-sm leading-relaxed text-white/60">{t(ed.ui.matchSub)}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -1099,7 +1131,7 @@ function DreamTeammates({
               <p className="mt-2.5 text-sm leading-relaxed text-white/70">{t(why)}</p>
 
               <div className="mt-auto pt-4">
-                <p className="text-[0.65rem] font-bold uppercase tracking-wider text-white/55">{t(quizUI.matchRoleLabel)}</p>
+                <p className="text-[0.65rem] font-bold uppercase tracking-wider text-white/55">{t(ed.ui.matchRoleLabel)}</p>
                 <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-fuchsia-400/25 bg-fuchsia-400/[0.08] px-3 py-1.5 text-xs font-bold text-fuchsia-100">
                   ★ {t(mate.role)}
                 </span>

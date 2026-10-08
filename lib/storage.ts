@@ -18,6 +18,10 @@ export const QUIZ_RESULT_KEY = "z100-quiz-result";
 // 8월 페이지의 ?reset=1 청소(clearSiteStorage)에 걸리지 않습니다. 8월 결과와 섞이지 않게 따로 둡니다.
 export const MATCH_OWN_KEY = "naru-match-own-2026-12";
 export const MATCH_RESULT_KEY = "naru-match-result-2026-12";
+// localStorage: /match 시작 화면에 넣은 이름과 나라, 이 기기의 무작위 토큰(한 기기 한 행), 저장이 끝난 결과 id.
+export const MATCH_PROFILE_KEY = "naru-match-profile-2026-12";
+export const MATCH_DEVICE_KEY = "naru-match-device";
+export const MATCH_SAVED_KEY = "naru-match-saved-2026-12";
 // sessionStorage — register-form draft saved across the quiz round-trip.
 export const REGISTER_DRAFT_KEY = "z100-register-draft";
 // localStorage — "already registered" flag (nav button → "등록 완료 ✓").
