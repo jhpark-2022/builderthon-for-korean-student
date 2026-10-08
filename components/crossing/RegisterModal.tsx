@@ -37,8 +37,10 @@ type Status = "idle" | "submitting" | "success" | "error";
 
 const emptyMember = (id: number): Member => ({ id, a: {}, other: "" });
 
-export default function RegisterModal({ open, onClose, onRegistered, refSource }: {
-  open: boolean; onClose: () => void; onRegistered: () => void; refSource: string | null;
+// preview (2026-10-08): 등록 창이 열리기 전의 미리 보기. 폼은 그대로 보이고 채울 수도 있지만 제출 버튼이 꺼져 있고
+// 요청을 보내지 않습니다. 서버도 창이 열리기 전에는 403입니다.
+export default function RegisterModal({ open, onClose, onRegistered, refSource, preview = false }: {
+  open: boolean; onClose: () => void; onRegistered: () => void; refSource: string | null; preview?: boolean;
 }) {
   const { t, locale } = useLocale();
   const reduce = useReducedMotion();
@@ -131,6 +133,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource }
 
   const onSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
+    if (preview) return;
     const e = validate();
     setErrors(e);
     if (Object.keys(e).length) {
@@ -160,7 +163,9 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource }
 
   const renderField = (f: Field, value: string | boolean | undefined, set: (v: string | boolean) => void, err: string | undefined, id: string, extra?: { other: string; setOther: (v: string) => void }) => {
     const label = t(f.label);
-    const help = f.help ? t(f.help) : undefined;
+    // "TODO"로 시작하는 도움말은 아직 정해지지 않은 자리표시(동의 문구)라 화면에 그리지 않습니다(2026-10-08.
+    // 미리 보기로 폼이 방문자에게 보이게 되면서). 문구가 정해져 data/crossingForm.ts에 들어가면 그대로 나옵니다.
+    const help = f.help && !f.help.ko.startsWith("TODO") ? t(f.help) : undefined;
     const errorId = err ? `${id}-error` : undefined;
     const common = { id, "aria-invalid": err ? true : undefined, "aria-describedby": errorId };
     if (f.type === "checkbox") {
@@ -274,6 +279,9 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource }
                 <>
                   <h3 id="crossing-register-title" className="pr-12 text-[24px] font-bold leading-tight text-white sm:text-[28px]">{t(copy.title)}</h3>
                   <p className="mt-2 text-sm text-white/65">{t(copy.intro)}</p>
+                  {preview && (
+                    <p id="crossing-register-preview" role="note" className="mt-4 rounded-2xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] px-4 py-3 text-sm leading-relaxed text-amber-50/90">{t(copy.previewBanner)}</p>
+                  )}
                   <form onSubmit={onSubmit} className="mt-6 flex flex-col gap-4" noValidate>
                     {/* 허니팟. 8월과 같은 세 겹의 방어(이름, 매니저 opt-out, 서버 로그). */}
                     <input type="text" name="url_confirm" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} aria-hidden="true" autoComplete="off" data-1p-ignore data-lpignore="true" data-bwignore data-form-type="other" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }} />
@@ -301,11 +309,16 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource }
                     )}
                     {REGISTRATION_FIELDS.filter((f) => f.key === "consent").map((f) => renderField(f, reg[f.key], (v) => setRegField(f.key, v), errors[`reg.${f.key}`], `reg-${f.key}`))}
                     {REGISTRATION_FIELDS.filter((f) => !f.fixed).map((f) => renderField(f, reg[f.key], (v) => setRegField(f.key, v), errors[`reg.${f.key}`], `reg-${f.key}`))}
-                    {turnstileSiteKey && (
+                    {turnstileSiteKey && !preview && (
                       <TurnstileWidget siteKey={turnstileSiteKey} action={TURNSTILE_ACTION} locale={locale === "en" ? "en" : "ko"} onToken={setBotToken} resetKey={botReset} />
                     )}
                     {status === "error" && <p role="alert" className="text-sm font-medium text-rose-300">{errText(errorCode ?? "generic")}</p>}
-                    <button type="submit" disabled={status === "submitting"} className={`${PRIMARY} mt-2`}>{t(status === "submitting" ? copy.submitting : copy.submit)}</button>
+                    {preview ? (
+                      // 꺼진 버튼은 흐림이 아니라 색으로 말합니다(히어로의 준비 중 버튼과 같은 문법). 이유는 위 안내가 읽어 줍니다.
+                      <button type="submit" disabled aria-describedby="crossing-register-preview" className="mt-2 inline-flex min-h-[48px] cursor-not-allowed items-center justify-center rounded-2xl border border-white/20 bg-white/[0.06] px-7 py-3.5 text-base font-bold text-white/70">{t(copy.previewSubmit)}</button>
+                    ) : (
+                      <button type="submit" disabled={status === "submitting"} className={`${PRIMARY} mt-2`}>{t(status === "submitting" ? copy.submitting : copy.submit)}</button>
+                    )}
                   </form>
                 </>
               )}

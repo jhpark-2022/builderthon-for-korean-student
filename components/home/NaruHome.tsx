@@ -479,16 +479,18 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
 // 흰 글자 /70은 바탕 위 9:1이라 4.5:1을 넉넉히 넘습니다. disabled 속성 대신 aria-disabled를
 // 쓰는 이유는 포커스가 닿아야 aria-describedby의 캡션이 읽히기 때문입니다. 누르면 아무 일도
 // 없습니다. 창이 열리면 부르는 쪽의 open 분기가 대신 그립니다.
-function PreparingButton({ t, noteId, className = "" }: { t: (p: Phrase) => string; noteId: string; className?: string }) {
+// DECIDED 2026-10-08 (사용자: "등록은 볼 수 있는데, submit만 못하게"): 이제 누르면 등록 폼이 미리 보기로 열립니다.
+// 제출 버튼만 꺼져 있습니다(components/crossing/RegisterModal의 preview). 라벨은 "등록 폼 미리 보기"이고 살아
+// 있는 버튼이라 글자는 /85입니다. 프로바이더가 없는 자리에서는 전처럼 아무 일도 없습니다.
+function PreparingButton({ t, noteId, onOpen, className = "" }: { t: (p: Phrase) => string; noteId: string; onOpen?: () => void; className?: string }) {
   return (
     <button
       type="button"
-      aria-disabled="true"
       aria-describedby={noteId}
-      onClick={(e) => e.preventDefault()}
-      className={`inline-flex cursor-not-allowed items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-5 py-3 ${BODY} font-bold text-white/70 sm:px-8 sm:py-4 ${className}`}
+      onClick={() => { track("naru_cta", { src: "preview", to: "register" }); onOpen?.(); }}
+      className={`inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-5 py-3 ${BODY} font-bold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10 sm:px-8 sm:py-4 ${className}`}
     >
-      {t(registerCopy.preparing)}
+      {t(registerCopy.previewCta)}
       <span aria-hidden className="text-white/65">→</span>
     </button>
   );
@@ -620,8 +622,8 @@ export default function NaruHome() {
                 // 창이 열리기 전: "등록 준비 중" + 바로 아래 12px 캡션(감사 반영 브리프 1.1).
                 // 그 전(2026-09-18 아침)의 반투명 "등록하기"는 이유 없이 죽어 있는 1차 CTA였습니다.
                 <div className="flex flex-col items-center gap-2 lg:items-start">
-                  <PreparingButton t={t} noteId="hero-register-note" className={HERO_BUTTON_GROUND} />
-                  <p id="hero-register-note" className={`${META} leading-snug text-white/90`}>{t(registerCopy.preparingNote)}</p>
+                  <PreparingButton t={t} noteId="hero-register-note" onOpen={reg?.openRegister} className={HERO_BUTTON_GROUND} />
+                  <p id="hero-register-note" className={`${META} leading-snug text-white/90`}>{t(registerCopy.previewCtaNote)}</p>
                 </div>
               )}
               {/* 오픈채팅이 막혀 있으면(links.openChat 빈 문자열, 2026-09-17) 이 앵커가
@@ -1105,7 +1107,7 @@ export default function NaruHome() {
           ) : regState === "not_open" ? (
             <>
               {/* 위 ctaNote("등록은 아직 열리지 않았습니다…")가 이 버튼의 캡션입니다. */}
-              <PreparingButton t={t} noteId="december-register-note" />
+              <PreparingButton t={t} noteId="december-register-note" onOpen={reg?.openRegister} />
               <OpenChatLink t={t} src="naru-december" label={openChatLabels.december} variant="secondary" />
             </>
           ) : null}

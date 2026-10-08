@@ -58,8 +58,10 @@ export function CrossingRegisterProvider({ children }: { children: React.ReactNo
     return () => window.clearInterval(id);
   }, []);
 
+  // DECIDED 2026-10-08 (사용자: "등록은 볼 수 있는데, submit만 못하게"): 창이 열리기 전(not_open)에도 폼은 열립니다.
+  // 그때는 미리 보기라 제출 버튼이 꺼져 있습니다(아래 preview). 마감(closed) 뒤에는 열지 않습니다.
   const openRegister = useCallback(() => {
-    if (registrationState(CURRENT_EVENT) === "open") setOpen(true);
+    if (registrationState(CURRENT_EVENT) !== "closed") setOpen(true);
   }, []);
 
   return (
@@ -69,6 +71,7 @@ export function CrossingRegisterProvider({ children }: { children: React.ReactNo
         open={open}
         onClose={() => setOpen(false)}
         refSource={ref}
+        preview={state !== "open"}
         onRegistered={() => {
           setRegistered(true);
           try { window.localStorage.setItem(CROSSING_REGISTERED_KEY, "1"); } catch { /* ignore */ }

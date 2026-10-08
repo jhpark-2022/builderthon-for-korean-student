@@ -175,6 +175,13 @@ export const register = {
   // "등록하기"에 이유가 없어 첫 화면에서 이탈한다는 것이 여섯 관점의 P0였습니다.
   preparing: { ko: "등록 준비 중", en: "Registration opens later" },
   preparingNote: { ko: "열리면 이 자리에서 알립니다", en: "It opens right here when it does" },
+  // DECIDED 2026-10-08 (사용자: "등록은 볼 수 있는데, submit만 못하게"): 창이 열리기 전에도 버튼을 누르면 등록
+  // 폼이 열립니다. 무엇을 묻는지 미리 볼 수 있고, 제출 버튼만 꺼져 있습니다. 아래 notYet의 "클릭이 되게 하지는
+  // 말고"(2026-09-18)는 이 결정이 대신합니다. 서버는 전과 같이 창이 열리기 전의 제출을 403으로 막습니다.
+  previewCta: { ko: "등록 폼 미리 보기", en: "Preview the form" },
+  previewCtaNote: { ko: "등록은 아직 열리지 않았습니다. 제출은 열리면 됩니다.", en: "Registration is not open yet. You can submit once it opens." },
+  previewBanner: { ko: "등록은 아직 열리지 않았습니다. 지금은 무엇을 묻는지 미리 볼 수 있고, 제출은 등록이 열린 뒤에 됩니다.", en: "Registration is not open yet. You can see what we ask now, and submit once registration opens." },
+  previewSubmit: { ko: "아직 제출할 수 없습니다", en: "Not open for submission yet" },
   // 창이 열리기 전에도 버튼은 보입니다(사용자, 2026-09-18: "넣어는 줘. 클릭이 되게 하지는 말고").
   // disabled이고 title로 이 문장을 보여 줍니다.
   notYet: { ko: "등록은 아직 열리지 않았습니다. 열리면 이 버튼이 켜집니다.", en: "Registration is not open yet. This button turns on when it is." },
