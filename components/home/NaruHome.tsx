@@ -579,7 +579,10 @@ export default function NaruHome() {
                한 줄에 나란히. 왼쪽 단 안에서는 TITLE 숫자 두 줄이 단을 다 차지해 설명보다 무거웠습니다.
             폰은 순서 그대로입니다(카피, 버튼, 카운트다운, 사진). */}
         <div className="relative grid items-start gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
-          <div className="text-left lg:pl-10 xl:pl-16">
+          {/* DECIDED 2026-10-08 (사용자, 스크린숏: "여기를 이 공간에서 centralize, 그 아래 버튼들도 같이"): 왼쪽 단의 글 묶음
+              (알약, 로고, 날짜, 한 줄, 설명, 버튼 둘, 안내)은 그 단 안에서 가운데입니다. 폰에서도 가운데입니다
+              (가운데인 블록은 폰에서도 가운데, 2026-10-02). 9월 29일의 "글은 하나의 왼쪽 끝"에서 히어로 왼쪽 단은 예외가 됩니다. */}
+          <div className="text-center lg:pl-10 xl:pl-16">
             <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.eventHero.eyebrow)}</Eyebrow>
             {/* 2행은 그라데이션 토큰(GRADIENT_TEXT). ko는 "크로싱 서울" / "CROSSING SEOUL", en은 "CROSSING" / "SEOUL".
                 DECIDED 2026-10-07 (이슈 브리프 4.1): 크기는 TITLE 하나입니다. 챕터 h2, 카운트다운 숫자와 같은 값이고,
@@ -629,15 +632,15 @@ export default function NaruHome() {
             <p className={`mt-8 ${BODY} font-bold text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)]`}>
               {formatDecemberDateLine(locale)}
             </p>
-            <p className={`mt-4 max-w-xl break-keep ${BODY} font-bold leading-snug text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] lg:mx-0`}>
+            <p className={`mx-auto mt-4 max-w-xl break-keep ${BODY} font-bold leading-snug text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)]`}>
               {t(naru.december.heading)}
             </p>
-            <p className={`mt-3 max-w-xl break-keep ${BODY} leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] lg:mx-0`}>
+            <p className={`mx-auto mt-3 max-w-xl text-balance break-keep ${BODY} leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)]`}>
               {/* 나루 한 문장이 서술 첫 줄(감사 반영 브리프 1.2). TODO: confirm(문구는 사용자가). */}
               <span className="text-white">{t(naru.eventHero.naruLine)}</span>{" "}
               {t(naru.eventHero.sub)}
             </p>
-            <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-start">
+            <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
               {regState === "open" ? (
                 <button type="button" onClick={() => { track("naru_cta", { src: "hero", to: "register" }); reg?.openRegister(); }} className={`group ${buttonClass("primary", "naru")}`}>
                   {t(registerCopy.cta)}
