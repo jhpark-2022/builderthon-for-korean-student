@@ -1784,6 +1784,8 @@ export const naru = {
     // 2026-10-10 (마일스톤 브리프 2.1): 노선도의 주황 점 줄이 무엇인지 말하는 범례 한 칸.
     routeLegendMilestone: { ko: "마일스톤 지원, 넘은 팀 모두", en: "Milestone support, for every team that clears it" },
     milestoneLabel: { ko: "마일스톤", en: "Milestone" },
+    // 일정표 행의 마일스톤 줄 끝에 붙는 말(2026-10-10). 누가 받는지를 날마다 한 번씩 말합니다.
+    milestoneNote: { ko: "넘은 팀 모두 지원", en: "Support for every team that clears it" },
     dayLabel: { ko: "DAY", en: "DAY" },
     beforeLabel: { ko: "BEFORE", en: "BEFORE" },
     flowLabel: { ko: "참여 플로우", en: "How it flows" },

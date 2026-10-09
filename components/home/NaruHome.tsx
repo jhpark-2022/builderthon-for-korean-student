@@ -954,6 +954,18 @@ export default function NaruHome() {
                       <span>{t(stage.session.body)}</span>
                     </p>
                   )}
+                  {/* DECIDED 2026-10-10 (사용자: 넣은 정보는 그대로, 8월 캘린더 형식은 쓰지 않는다): 그날의 마일스톤은 표의 형식 안에서,
+                      이 행의 글 기둥에 한 줄로 섭니다. 같은 날 아침에는 오른쪽 10rem 열의 META 한 줄이었는데 두 줄로 끊기고
+                      눈에 들어오지 않았습니다. amber 칩(홈에서 "결과보다 과정" 상자가 쓰는 색)과 BODY 굵은 글, 뒤에 누가 받는지. */}
+                  {stage.milestone && (
+                    <p className="mt-3 flex flex-wrap items-center gap-x-2.5 gap-y-1 break-keep max-sm:justify-center">
+                      <span className={`inline-flex shrink-0 items-center gap-1 rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 ${META} font-bold text-amber-100`}>
+                        <span aria-hidden>★</span>{t(naru.december.milestoneLabel)}
+                      </span>
+                      <span className={`${BODY} font-bold leading-snug text-white`}>{t(stage.milestone)}</span>
+                      <span className={`${META} text-white/70`}>{t(naru.december.milestoneNote)}</span>
+                    </p>
+                  )}
                   {/* DECIDED 2026-10-08 (현장 팀 매칭 브리프 5): Day 1 행에만 있는 버튼 하나. 전에 오른쪽 열의 "팀 매칭"
                       칩이 있던 말을 버튼이 합니다. 글이 한 줄이라 10rem 오른쪽 열에는 들어가지 않아, 이 행의 글 기둥
                       왼쪽 끝에 맞춥니다(2026-09-29 왼쪽 끝 규칙). 알약 테두리 버튼(누르는 것의 문법), 글자는 BODY. */}
@@ -968,7 +980,7 @@ export default function NaruHome() {
                     </Link>
                   )}
                 </div>
-                <div className="flex flex-wrap items-start gap-x-3 gap-y-1 max-sm:justify-center">
+                <div className="flex flex-wrap content-start items-start gap-x-3 gap-y-1 max-sm:justify-center">
                   {stage.submit && (
                     <span className={`${META} font-bold text-naru-plum-tint`}>
                       {`${t(naru.december.submitLabel)}\u2002${t(stage.submit)}`}
@@ -977,14 +989,6 @@ export default function NaruHome() {
                   {stage.chips.map((c, j) => (
                     <span key={j} className={`${META} text-white/70`}>{t(c)}</span>
                   ))}
-                  {/* 2026-10-10 (마일스톤 브리프 2.1): 그날의 마일스톤. 노선도의 주황 점 줄과 같은 말이고, 노선도가 이 줄을
-                      그리지 않는 폰에서는 여기가 유일한 자리입니다. 칸 전체 폭을 써서 칩 아래 한 줄로 섭니다. */}
-                  {stage.milestone && (
-                    <span className={`flex w-full items-start gap-1.5 break-keep max-sm:justify-center ${META} text-white/85`}>
-                      <span aria-hidden className="mt-[6px] h-[6px] w-[6px] shrink-0 rounded-full bg-naru-orange" />
-                      <span><span className="font-bold">{t(naru.december.milestoneLabel)}</span>{"\u2002"}{t(stage.milestone)}</span>
-                    </span>
-                  )}
                 </div>
               </div>
             );
