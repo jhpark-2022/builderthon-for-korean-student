@@ -7,7 +7,7 @@
 --
 -- create or replace view는 열을 끝에만 더할 수 있어 두 열을 맨 뒤에 둡니다. 기존 열의 이름과 순서는 그대로.
 -- 표(crossing_match_profiles)에 닿는 문장 0개. 멱등. 0005와 같이 security_invoker와 권한을 다시 겁니다.
--- 적용: 대시보드 SQL 에디터, 또는 `supabase db push`. 이 파일은 써 두기만 했고 아직 적용하지 않았습니다.
+-- 적용: 대시보드 SQL 에디터, 또는 `supabase db push`. 2026-10-09에 `supabase db push`로 프로덕션에 적용했습니다.
 -- ─────────────────────────────────────────────────────────────────────────────
 
 create or replace view public.crossing_match_board as
