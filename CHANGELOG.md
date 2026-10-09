@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-10 영문 화면은 영문 매니페스토를 내려받는다](#2026-10-10-manifesto-en)
 - [2026-10-10 매니페스토 PDF를 10월 8일판으로](#2026-10-10-manifesto-v4)
 - [2026-10-10 마일스톤 지원과 먼저 찾아가는 멘토링](#2026-10-10-milestone-mentoring)
 - [2026-10-10 폰 화면 줄이기: 홈과 /match 결과는 접어서 보여 준다](#2026-10-10-phone-declutter)
@@ -181,6 +182,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-10-manifesto-en"></a>
+## 2026-10-10 영문 화면은 영문 매니페스토를 내려받는다
+- 범위: public/naru/naru-manifesto-en-v1-2026-10.pdf (새 파일), data/naru.ts, components/home/NaruHome.tsx, public/naru/README.md
+- 한 것: DECIDED 2026-10-10 (사용자). 영문 화면의 "Download the manifesto" 버튼이 영문판을 받습니다. 한국어 화면은 그대로 한국어판입니다.
+  버튼 라벨에서 "(Korean)"을 떼고, 라벨 옆 크기 표기는 영문 화면에서 0.2MB입니다. 9월 28일부터 미정이던 항목입니다.
+- 검증: 두 로케일에서 버튼의 주소와 크기 표기 확인, 두 파일 모두 200.
+- 커밋: 8c4b058
 
 <a id="2026-10-10-manifesto-v4"></a>
 ## 2026-10-10 매니페스토 PDF를 10월 8일판으로
