@@ -867,10 +867,14 @@ export default function NaruHome() {
               sub: `${t(naru.december.dayLabel)} ${s.dayOffset}`,
               label: t(s.title),
               kind: s.submit ? "anchor" : "plain",
-              badge: s.submit ? `${t(naru.december.submitLabel)}\u2002${t(s.submit)}` : undefined,
+              // 2026-10-10 (마일스톤 브리프 2.1): 마일스톤 줄이 생긴 날의 배지는 "제출" 한 낱말입니다. Day 1은 마일스톤과
+              // 제출물이 같은 문장이라 두 번 읽혔고, 영문 768px에서는 길어진 Day 1 배지가 Day 3 배지와 겹쳤습니다.
+              // 제출물의 이름은 아래 일정표의 행과 "이렇게 굴립니다"의 제출 줄이 말합니다.
+              badge: s.submit ? (s.milestone ? t(naru.december.submitLabel) : `${t(naru.december.submitLabel)}\u2002${t(s.submit)}`) : undefined,
+              milestone: s.milestone ? t(s.milestone) : undefined,
             }))}
             pills={[t(naru.december.mentoringHeading), t(naru.december.fieldMentoringPill)]}
-            legend={{ anchor: t(naru.december.routeLegendSubmit), plain: t(naru.december.routeLegendStage) }}
+            legend={{ anchor: t(naru.december.routeLegendSubmit), plain: t(naru.december.routeLegendStage), milestone: t(naru.december.routeLegendMilestone) }}
             current={hoverDay ?? 0}
           />
           </div>
@@ -973,6 +977,14 @@ export default function NaruHome() {
                   {stage.chips.map((c, j) => (
                     <span key={j} className={`${META} text-white/70`}>{t(c)}</span>
                   ))}
+                  {/* 2026-10-10 (마일스톤 브리프 2.1): 그날의 마일스톤. 노선도의 주황 점 줄과 같은 말이고, 노선도가 이 줄을
+                      그리지 않는 폰에서는 여기가 유일한 자리입니다. 칸 전체 폭을 써서 칩 아래 한 줄로 섭니다. */}
+                  {stage.milestone && (
+                    <span className={`flex w-full items-start gap-1.5 break-keep max-sm:justify-center ${META} text-white/85`}>
+                      <span aria-hidden className="mt-[6px] h-[6px] w-[6px] shrink-0 rounded-full bg-naru-orange" />
+                      <span><span className="font-bold">{t(naru.december.milestoneLabel)}</span>{"\u2002"}{t(stage.milestone)}</span>
+                    </span>
+                  )}
                 </div>
               </div>
             );
@@ -1031,6 +1043,9 @@ export default function NaruHome() {
                 <span lang="en">General Mentoring</span>
               </p>
               <p className={`mt-0.5 ${META} font-semibold text-emerald-200/90`}>{t(naru.december.mentoringAlways)}</p>
+              {/* DECIDED 2026-10-10 (사용자, 마일스톤 브리프 2.5): 멘토링은 먼저 찾아가는 자리라는 문장을 상자 안에 그립니다.
+                  mentoringLead는 그 전까지 화면에 그려지지 않던 키였습니다. 규칙 목록 위, 이름 줄 아래에 섭니다. */}
+              <p className={`${MEASURE} mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.mentoringLead)}</p>
             </div>
             {/* 폰은 2열·작은 글자(길이 목표, 감사 반영 브리프 3.1). */}
             {/* 2026-09-19 (모바일 감사 14): 폰에서 2열을 풉니다. 상자 안쪽 291px을

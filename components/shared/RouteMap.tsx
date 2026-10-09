@@ -25,6 +25,13 @@ export type RouteStation = {
   kind: "anchor" | "spot" | "plain";
   /** 앵커 노드 아래 배지("★ 제출" 같은). 앵커일 때만. */
   badge?: string;
+  /**
+   * 그날의 마일스톤 한 줄(2026-10-10, 마일스톤 브리프 2.1). 이름 아래에 META 크기로, 앞에 주황 점을 붙여 그립니다.
+   * 주황은 현재 위치 점과 같은 naru-orange이고 점으로만 씁니다. 글자 색과 크기는 새로 만들지 않습니다.
+   * 배지, 범례와 같이 sm부터 그립니다. 폰에서는 정거장 한 칸이 67px이라 한 줄이 네댓 줄로 끊깁니다.
+   * 폰에서는 날짜별 일정의 각 행이 같은 말을 합니다(NaruHome).
+   */
+  milestone?: string;
 };
 
 export default function RouteMap({
@@ -39,7 +46,8 @@ export default function RouteMap({
   /**
    * 현재 위치(정거장 인덱스). 주황 점 하나가 레일을 따라 200ms에 이동합니다(2026-09-18, 감사
    * 반영 브리프 3.6). 지나가는 ★ 정거장은 한 번 밝아집니다. prefers-reduced-motion이면 정적.
-   * 이 점이 주황 허용 목록의 "노선도 현재 위치 점"입니다. 점은 하나만.
+   * 이 점이 주황 허용 목록의 "노선도 현재 위치 점"입니다. 움직이는 점은 하나만.
+   * (2026-10-10: 마일스톤 줄 앞의 작은 주황 점이 더해졌습니다. 그것은 움직이지 않는 표식입니다.)
    */
   current?: number;
   /**
@@ -48,7 +56,7 @@ export default function RouteMap({
    * 색만 다릅니다: 첫째는 accent, 둘째부터는 노선도의 현재 위치 점과 같은 주황(naru-orange). 새 색은 만들지 않습니다.
    */
   pills?: string[];
-  legend?: { anchor: string; plain: string; spot?: string };
+  legend?: { anchor: string; plain: string; spot?: string; milestone?: string };
   ariaLabel?: string;
   className?: string;
 }) {
@@ -86,7 +94,9 @@ export default function RouteMap({
         aria-label={ariaLabel}
         // 2026-10-08: 필이 ol 안의 absolute에서 ol 아래의 보통 흐름으로 나왔습니다. 필이 둘이 되고 폰에서 각각 두 줄로
         // 접혀도 높이가 저절로 늘어 아래 범례, 다음 블록과 겹치지 않습니다. pb-7은 ★ 정거장 아래에 매달린 배지의 자리입니다.
-        className={`relative flex items-start ${pills && pills.length ? "pb-7" : "pb-2"}`}
+        // 2026-10-10 (마일스톤 브리프 2.1): items-start에서 items-stretch로. 마일스톤 줄이 칸마다 한 줄에서 세 줄까지 달라서,
+        // 배지(top-full)가 자기 칸의 끝이 아니라 가장 긴 칸의 끝 아래에 매달려야 옆 칸의 마일스톤과 겹치지 않습니다.
+        className={`relative flex items-stretch ${pills && pills.length ? "pb-7" : "pb-2"}`}
       >
         {/* 레일. top-[1.625rem]은 노드 줄의 중심(py-2.5 + h-8의 절반). */}
         <span
@@ -133,6 +143,12 @@ export default function RouteMap({
                 <span className={`break-keep ${META} leading-tight ${anchor || spot ? "font-bold text-white" : "text-white/75"}`}>
                   {s.label}
                 </span>
+                {s.milestone && (
+                  <span className={`hidden break-keep ${META} leading-tight text-white/75 sm:block`}>
+                    <span aria-hidden className="mr-1.5 inline-block h-[6px] w-[6px] -translate-y-[2px] rounded-full bg-naru-orange" />
+                    {s.milestone}
+                  </span>
+                )}
                 {/* 배지는 sm부터 (2026-09-19, 모바일 감사 3). 폰에서 정거장 한 칸이
                     67px인데 영어 배지는 "Submission The problem statement"(약 186px)와
                     "Submission The build"(약 120px)이라, 가운데 정렬된 두 배지가
@@ -173,6 +189,12 @@ export default function RouteMap({
             <span aria-hidden className="h-2 w-2 rounded-full border border-white/35" />
             {legend.plain}
           </span>
+          {legend.milestone && (
+            <span className={`flex items-center gap-1.5 ${META} text-white/75`}>
+              <span aria-hidden className="h-[6px] w-[6px] rounded-full bg-naru-orange" />
+              {legend.milestone}
+            </span>
+          )}
           {legend.spot && (
             <span className={`flex items-center gap-1.5 ${META} text-accent/85`}>
               <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-accent/60 bg-accent/20">
