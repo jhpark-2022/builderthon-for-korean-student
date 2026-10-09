@@ -1728,8 +1728,8 @@ export default function NaruHome() {
               아니라 라벨 옆의 한 조각입니다. 버튼의 ↓는 **형식을 말하지 않고**,
               셀룰러에서 1MB는 데스크톱에서와 다른 값입니다. 그 결정의 이유
               ("무엇을 받는지 모르고 누르게 하지 않습니다")를 셀룰러까지 넓힙니다.
-              파일이 바뀌면 이 숫자도 바꾸세요: public/naru/naru-manifesto-v3-2026-09.pdf
-              (2026-09-30 v3: 986,639바이트라 0.9MB 그대로) */}
+              파일이 바뀌면 이 숫자도 바꾸세요: public/naru/naru-manifesto-v4-2026-10.pdf
+              (2026-10-10 v4: 959,215바이트라 0.9MB 그대로) */}
           <p className={`${META} font-bold uppercase ${latinTrack(locale)} text-white/70`}>
             {t(naru.join.manifesto.label)}
             <span className="font-medium normal-case tracking-normal text-white/70">{"\u2002·\u2002PDF 0.9MB"}</span>
