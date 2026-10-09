@@ -1732,19 +1732,19 @@ export default function NaruHome() {
               (2026-10-10 v4: 959,215바이트라 0.9MB 그대로) */}
           <p className={`${META} font-bold uppercase ${latinTrack(locale)} text-white/70`}>
             {t(naru.join.manifesto.label)}
-            <span className="font-medium normal-case tracking-normal text-white/70">{"\u2002·\u2002PDF 0.9MB"}</span>
+            <span className="font-medium normal-case tracking-normal text-white/70">{/* 2026-10-10: 영문 화면은 영문판(191,475바이트)을 받습니다. 크기 표기도 로케일을 따릅니다. */}{locale === "en" ? "\u2002·\u2002PDF 0.2MB" : "\u2002·\u2002PDF 0.9MB"}</span>
           </p>
           <h3 className={`mt-3 break-keep ${BODY} font-bold text-white`}>{t(naru.join.manifesto.title)}</h3>
           <p className={`mt-2 text-balance break-keep ${BODY} leading-relaxed text-white/70`}>{t(naru.join.manifesto.body)}</p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             <a
-              href={naruLinks.manifesto}
+              href={locale === "en" ? naruLinks.manifestoEn : naruLinks.manifesto}
               // 같은 탭에서 열리면 이 페이지가 PDF 뷰어에 덮입니다. 돌아오는 길이
               // 뒤로 가기뿐이면 읽던 자리를 잃습니다.
               target="_blank"
               rel="noopener noreferrer"
               download
-              onClick={() => track("naru_cta", { src: "join", to: "manifesto" })}
+              onClick={() => track("naru_cta", { src: "join", to: locale === "en" ? "manifesto-en" : "manifesto" })}
               className={buttonClass("secondary")}
             >
               {t(naru.join.manifesto.cta)}
