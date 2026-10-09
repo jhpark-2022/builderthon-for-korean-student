@@ -746,6 +746,11 @@ function ResultView({
   const data = ed.results[result.mbti];
   const variant = data.variants[result.identity];
   const ctaLead = t(ed.ui.ctaLead).replace("{role}", t(data.role));
+  // DECIDED 2026-10-10 (사용자: 폰에서 내용이 너무 많고 덕지덕지하다): 12월판은 폰(sm 아래)에서 카드를 줄여 보여 줍니다.
+  // 처음 보이는 것은 로고, 이름, 대사, 한 줄 설명, 추천 역할, 강점과 약점뿐입니다. 변형 한 줄, 모델 이야기, 성향 막대는
+  // "자세히 보기"를 눌러야 펼쳐집니다. 상자의 테두리와 바탕, 워터마크도 폰에서는 뺍니다. sm 이상은 전부 그대로 보입니다.
+  const [more, setMore] = useState(false);
+  const moreOnly = more ? "" : "max-sm:hidden";
 
   // 9:16 story-image export. We capture a dedicated, fixed-size (1080×1920) card
   // rendered off-screen - never the live card (it's responsive and its gauge
@@ -890,7 +895,7 @@ function ResultView({
           {naru && (
             <>
               <div aria-hidden className={`pointer-events-none absolute -left-28 -top-28 h-96 w-96 rounded-full bg-gradient-to-br ${data.accent} opacity-[0.28] blur-3xl`} />
-              <div aria-hidden className={`pointer-events-none absolute -bottom-32 -right-24 h-80 w-80 rounded-full bg-gradient-to-br ${data.accent} opacity-[0.12] blur-3xl`} />
+              <div aria-hidden className={`pointer-events-none absolute -bottom-32 -right-24 h-80 w-80 rounded-full bg-gradient-to-br ${data.accent} opacity-[0.12] blur-3xl max-sm:hidden`} />
               <div
                 aria-hidden
                 className={`pointer-events-none absolute inset-0 rounded-[28px] bg-gradient-to-br ${data.accent} p-px opacity-60`}
@@ -898,7 +903,7 @@ function ResultView({
               />
               {data.logo && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={`/logos/${data.logo}`} alt="" aria-hidden className="pointer-events-none absolute -right-8 -top-10 h-44 w-44 rotate-12 object-contain opacity-[0.06] sm:-right-10 sm:-top-14 sm:h-80 sm:w-80" />
+                <img src={`/logos/${data.logo}`} alt="" aria-hidden className="pointer-events-none absolute -right-10 -top-14 h-80 w-80 rotate-12 object-contain opacity-[0.06] max-sm:hidden" />
               )}
             </>
           )}
@@ -917,10 +922,10 @@ function ResultView({
           {naru ? (
             <>
               {/* 머리: 큰 로고 타일과 이름. 이름의 끝이 모델의 색으로 물듭니다. */}
-              <div className="relative mt-7 flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8">
+              <div className="relative mt-6 flex flex-col gap-5 sm:mt-7 sm:flex-row sm:items-center sm:gap-8">
                 <div className="relative shrink-0 self-start sm:self-auto">
                   <div aria-hidden className={`absolute inset-0 rounded-[2rem] bg-gradient-to-br ${data.accent} opacity-60 blur-2xl`} />
-                  <div className={`relative flex h-24 w-24 items-center justify-center rounded-[2rem] bg-gradient-to-br ${data.accent} shadow-lg ring-1 ring-white/25 sm:h-32 sm:w-32`}>
+                  <div className={`relative flex h-24 w-24 items-center justify-center rounded-[2rem] bg-gradient-to-br ${data.accent} shadow-lg ring-1 ring-white/25 max-sm:h-20 max-sm:w-20 max-sm:rounded-3xl sm:h-32 sm:w-32`}>
                     <ModelGlyph result={data} imgClass="h-12 w-12 object-contain sm:h-16 sm:w-16" emojiClass="text-4xl leading-none" />
                   </div>
                 </div>
@@ -934,45 +939,54 @@ function ResultView({
               </div>
 
               {/* 대사: 카드 너비의 띠 */}
-              <p className={`relative mt-7 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] py-4 pl-6 pr-5 ${BODY} font-semibold leading-relaxed text-white/90`}>
-                <span aria-hidden className={`absolute inset-y-0 left-0 w-1.5 bg-gradient-to-b ${data.accent}`} />
+              <p className={`relative mt-5 overflow-hidden pl-4 sm:mt-7 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.04] sm:py-4 sm:pl-6 sm:pr-5 ${BODY} font-semibold leading-relaxed text-white/90`}>
+                <span aria-hidden className={`absolute inset-y-0 left-0 w-1 rounded-full bg-gradient-to-b sm:w-1.5 sm:rounded-none ${data.accent}`} />
                 “{t(data.phrase)}”
               </p>
 
-              <div className="relative mt-7 grid gap-8 lg:grid-cols-2 lg:gap-14">
+              <div className="relative mt-5 grid gap-6 sm:mt-7 sm:gap-8 lg:grid-cols-2 lg:gap-14">
                 <div>
                   <p className={`${BODY} leading-relaxed text-white/75`}>{t(data.desc)}</p>
-                  <p className={`mt-3 ${BODY} italic leading-relaxed text-white/70`}>{t(variant.line)}</p>
-                  <div className="mt-6">
+                  <p className={`mt-3 ${BODY} italic leading-relaxed text-white/70 ${moreOnly}`}>{t(variant.line)}</p>
+                  <div className="mt-5 sm:mt-6">
                     <p className={`${META} font-bold uppercase tracking-wider text-white/60`}>{t(ed.ui.roleLabel)}</p>
                     <span className={`mt-2 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-4 py-2 ${BODY} font-bold text-accent`}>
                       ★ {t(data.role)}
                     </span>
                   </div>
-                  <div className="mt-6 rounded-2xl border border-accent/20 bg-accent/[0.05] p-4">
+                  <div className={`mt-6 rounded-2xl border border-accent/20 bg-accent/[0.05] p-4 ${moreOnly}`}>
                     <p className={`${META} font-bold uppercase tracking-wider text-accent`}>{t(ed.ui.whyModel)} {data.model}</p>
                     <p className={`mt-1 ${BODY} leading-relaxed text-white/75`}>{t(data.whyModel)}</p>
                   </div>
                 </div>
                 <div className="flex flex-col gap-5">
-                  <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                    <div className="rounded-2xl border border-emerald-300/20 bg-emerald-300/[0.05] p-4">
+                  <div className="grid grid-cols-1 gap-4 border-t border-white/10 pt-5 sm:grid-cols-2 sm:gap-2.5 sm:border-0 sm:pt-0">
+                    <div className="sm:rounded-2xl sm:border sm:border-emerald-300/20 sm:bg-emerald-300/[0.05] sm:p-4">
                       <p className={`${META} font-bold uppercase tracking-wider text-emerald-300`}>{t(ed.ui.strengthsLabel)}</p>
                       <p className={`mt-1 ${BODY} leading-snug text-white/80`}>{t(data.strengths)}</p>
                     </div>
-                    <div className="rounded-2xl border border-rose-300/20 bg-rose-300/[0.05] p-4">
+                    <div className="sm:rounded-2xl sm:border sm:border-rose-300/20 sm:bg-rose-300/[0.05] sm:p-4">
                       <p className={`${META} font-bold uppercase tracking-wider text-rose-300`}>{t(ed.ui.weaknessLabel)}</p>
                       <p className={`mt-1 ${BODY} leading-snug text-white/80`}>{t(data.weakness)}</p>
                     </div>
                   </div>
                   {result.axes && result.axes.length > 0 && (
-                    <div>
+                    <div className={moreOnly}>
                       <p className={`${META} font-bold uppercase tracking-wider text-white/60`}>{t(ed.ui.axesLabel)}</p>
                       <AxisGauges ed={ed} axes={result.axes} accent={data.accent} t={t} reduce={reduce} />
                     </div>
                   )}
                 </div>
               </div>
+              <button
+                type="button"
+                onClick={() => setMore((v) => !v)}
+                aria-expanded={more}
+                className={`relative mt-5 inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 border-t border-white/10 pt-4 ${BODY} font-bold text-accent sm:hidden`}
+              >
+                {more ? t({ ko: "접기", en: "Show less" }) : t({ ko: "자세히 보기", en: "See more" })}
+                <svg aria-hidden width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={more ? "rotate-180" : ""}><path d="m6 9 6 6 6-6" /></svg>
+              </button>
             </>
           ) : (
           <div className="relative mt-6 grid gap-8 lg:grid-cols-2 lg:gap-14">
@@ -1060,7 +1074,8 @@ function ResultView({
             사람에게 지금 내밀 수 있는 다음 걸음은 다음 이벤트입니다.)
             위의 returnToRegister 배너는 등록 모달에서 건너온 왕복 경로라 이제
             켜지지 않지만, 모달 자체는 살아 있어서 그대로 둡니다. */}
-        <div className="mx-auto w-full max-w-xl rounded-[24px] border border-white/10 bg-white/[0.04] p-6 text-center">
+        {/* 2026-10-10: 매칭 모드의 폰에서는 이 상자를 뺍니다. 현장에서 팀을 찾는 사람에게 프로그램 안내는 다음 걸음이 아닙니다. */}
+        <div className={`mx-auto w-full max-w-xl rounded-[24px] border border-white/10 bg-white/[0.04] p-6 text-center ${matchMode ? "max-sm:hidden" : ""}`}>
           <p className={`${c("text-[15px]", BODY)} font-bold leading-relaxed text-white/85`}>{ctaLead}</p>
           <a
             href="/#december"
@@ -1416,7 +1431,7 @@ function DreamTeammates({
           return (
             <div
               key={m}
-              className={`flex flex-col rounded-[24px] border border-white/[0.12] ${c("bg-[#0c0a18]", "bg-naru-surface")} p-6 text-left`}
+              className={`flex flex-col rounded-[24px] border border-white/[0.12] ${c("bg-[#0c0a18]", "bg-naru-surface")} ${c("p-6", "p-5 sm:p-6")} text-left`}
             >
               <div className="flex items-center gap-3">
                 <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${mate.accent} shadow-lg`}>
@@ -1428,11 +1443,11 @@ function DreamTeammates({
                 </div>
               </div>
 
-              <p className={`mt-4 ${c("text-[15px]", BODY)} font-semibold leading-relaxed text-white/90`}>“{t(mate.phrase)}”</p>
-              <p className={`mt-2.5 ${c("text-sm", BODY)} leading-relaxed text-white/70`}>{t(why)}</p>
+              <p className={`mt-4 ${c("text-[15px]", BODY)} font-semibold leading-relaxed text-white/90 ${c("", "max-sm:hidden")}`}>“{t(mate.phrase)}”</p>
+              <p className={`${c("mt-2.5", "mt-3 sm:mt-2.5")} ${c("text-sm", BODY)} leading-relaxed text-white/70`}>{t(why)}</p>
 
               <div className="mt-auto pt-4">
-                <p className={`${c("text-[0.65rem]", META)} font-bold uppercase tracking-wider ${c("text-white/55", "text-white/60")}`}>{t(ed.ui.matchRoleLabel)}</p>
+                <p className={`${c("text-[0.65rem]", META)} font-bold uppercase tracking-wider ${c("text-white/55", "text-white/60 max-sm:hidden")}`}>{t(ed.ui.matchRoleLabel)}</p>
                 <span className={`mt-1.5 inline-flex items-center gap-1.5 rounded-full border ${c("border-fuchsia-400/25 bg-fuchsia-400/[0.08]", "border-accent/40 bg-accent/10")} px-3 py-1.5 ${c("text-xs", META)} font-bold ${c("text-fuchsia-100", "text-accent")}`}>
                   ★ {t(mate.role)}
                 </span>
