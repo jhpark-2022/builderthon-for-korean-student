@@ -25,7 +25,8 @@
 //   simple-icons: Anthropic, OpenAI, Perplexity, Suno, Gemini, Meta. 8월판에서 받은 파일: Grok, Midjourney.
 //   @lobehub/icons-static-svg 1.95.1(MIT): OpenClaw, Manus, DeepMind, Upstage, Kling, Claude Code.
 //   Instinct는 아이콘 세트에 없어 instinct.com의 파비콘 글리프를 흰색으로 옮겼습니다.
-//   제품 로고가 따로 없는 것은 만든 회사의 로고입니다: Argon은 Gemini, Genie는 DeepMind, Muse는 Meta, Dots는 OpenAI, Solar는 Upstage.
+//   제품 로고가 따로 없는 것은 만든 회사의 로고입니다: Argon은 Gemini, Genie는 DeepMind, Muse는 Meta, Solar는 Upstage.
+//   Dots는 ChatGPT와 같은 OpenAI 로고라 구분이 안 되어, 점 하나를 그린 파일(dots.svg)을 씁니다(DECIDED 2026-10-09, 사용자). 공식 로고가 아닙니다. 공식 마크는 찾지 못했습니다(openai.com 403).
 // 빠진 브랜드(DeepSeek, Kimi, Qwen, GLM, Codex, Mistral, Microsoft Copilot, Character.AI)의 로고 파일은 8월판이 쓰므로 그대로 둡니다.
 // 사람 이름, 보안 사고, 소송은 소재로 쓰지 않습니다. 이름을 바꿀 때는 이 표의 한 줄과 아래 TEXT의 변형 이름을 같이 고칩니다.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -87,7 +88,7 @@ export const MODELS_2026_12: Record<MbtiKey, ModelRow> = {
     whyModel: { ko: "한국 회사가 만들었어요. 350억 파라미터 중 30억만 켜고 조용히 돌아가죠. 입력 100만 토큰에 0.1달러. 말수도 적고 비싸지도 않은데, 맡긴 일은 되어 있는 유형.", en: "Made by a Korean company. It runs on 3 of its 35 billion parameters, at ten cents per million input tokens. Quiet, cheap, and the job is done when you look." } },
   // https://venturebeat.com/technology/openai-launches-dots-always-on-ai-agent-coworkers-and-chatgpt-space-where-they-can-collaborate-with-human-teams
   // (2026-09-29 DevDay. "keep working after an employee closes the chat window", "their own cloud computer and browser", Custom Rules, Activity View). 확인 2026-10-09.
-  ESTJ: { model: "Dots", short: "Dots", was: "Cohere", logo: "openai.svg", emoji: "⚫",
+  ESTJ: { model: "Dots", short: "Dots", was: "Cohere", logo: "dots.svg", emoji: "⚫",
     whyModel: { ko: "채팅창을 닫아도 얘는 퇴근을 안 해요. 자기 컴퓨터와 브라우저를 따로 받고, 규칙표(허용, 승인, 금지)와 활동 기록까지 있죠. 회사는 반기고 동료는 살짝 무서워하는 유형.", en: "Close the chat and it keeps working. It gets its own computer and browser, plus a rulebook (allow, approve, forbid) and an activity log. Companies love it. Coworkers are slightly afraid." } },
   // https://finance.yahoo.com/technology/ai/articles/instinct-raises-1-billion-series-120300548.html (2026-09-28, 10억 달러 투자 유치, "Still in early access",
   // "Just text or call", Instinct끼리 일정 조율), https://www.digitaltoday.co.kr/disclosure/articleView.html?idxno=703386 (식당 예약, 병원 예약, 서비스 해지). 확인 2026-10-09.
