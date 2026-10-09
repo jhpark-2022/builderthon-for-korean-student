@@ -884,6 +884,24 @@ function ResultView({
           style={{ boxShadow: naru ? "0 30px 70px -28px rgba(75,58,140,0.6)" : "0 30px 70px -28px rgba(217,70,239,0.42)" }}
         >
           <div className={`pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b ${c("from-fuchsia-500/20", "from-naru-purple/30")} to-transparent`} />
+          {/* DECIDED 2026-10-09 (사용자: 결과 카드를 더 예쁘게, 더 과감하게): 12월판은 카드가 그 모델의 색을 입습니다.
+              로고 뒤와 맞은편 아래에서 색이 번지고, 테두리가 같은 색으로 빛나고, 로고가 오른쪽 위에 크게 비칩니다.
+              열여섯 장이 같은 남색이던 것을 유형마다 다른 카드로 보이게 합니다. 8월판(/quiz)은 아래 else 가지 그대로입니다. */}
+          {naru && (
+            <>
+              <div aria-hidden className={`pointer-events-none absolute -left-28 -top-28 h-96 w-96 rounded-full bg-gradient-to-br ${data.accent} opacity-[0.28] blur-3xl`} />
+              <div aria-hidden className={`pointer-events-none absolute -bottom-32 -right-24 h-80 w-80 rounded-full bg-gradient-to-br ${data.accent} opacity-[0.12] blur-3xl`} />
+              <div
+                aria-hidden
+                className={`pointer-events-none absolute inset-0 rounded-[28px] bg-gradient-to-br ${data.accent} p-px opacity-60`}
+                style={{ WebkitMask: "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude" }}
+              />
+              {data.logo && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={`/logos/${data.logo}`} alt="" aria-hidden className="pointer-events-none absolute -right-8 -top-10 h-44 w-44 rotate-12 object-contain opacity-[0.06] sm:-right-10 sm:-top-14 sm:h-80 sm:w-80" />
+              )}
+            </>
+          )}
           {/* Stub header. The event name is long enough that at phone widths the
               wide mono tracking wrapped it - and squeezed the type code into
               "ESTP-/T". Both stay on one line now; the size scales with the
@@ -896,6 +914,67 @@ function ResultView({
 
           {/* two columns fill the wide card: identity + gauges on the left,
               strengths / weakness / role / match on the right */}
+          {naru ? (
+            <>
+              {/* 머리: 큰 로고 타일과 이름. 이름의 끝이 모델의 색으로 물듭니다. */}
+              <div className="relative mt-7 flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8">
+                <div className="relative shrink-0 self-start sm:self-auto">
+                  <div aria-hidden className={`absolute inset-0 rounded-[2rem] bg-gradient-to-br ${data.accent} opacity-60 blur-2xl`} />
+                  <div className={`relative flex h-24 w-24 items-center justify-center rounded-[2rem] bg-gradient-to-br ${data.accent} shadow-lg ring-1 ring-white/25 sm:h-32 sm:w-32`}>
+                    <ModelGlyph result={data} imgClass="h-12 w-12 object-contain sm:h-16 sm:w-16" emojiClass="text-4xl leading-none" />
+                  </div>
+                </div>
+                <div className="min-w-0">
+                  <p className={`${BODY} font-semibold text-white/70`}>{t(ed.ui.youAre)}</p>
+                  <h2 className={`mt-1 break-keep ${TITLE} font-black leading-[1.12] tracking-tight`}>
+                    <span className={`bg-gradient-to-r from-white via-white ${data.accent.split(" ").find((x) => x.startsWith("to-")) ?? "to-white"} bg-clip-text text-transparent`}>{t(variant.name)}</span>
+                  </h2>
+                  <p className={`mt-2 ${BODY} font-bold text-accent`}>{data.model} {result.resultId}</p>
+                </div>
+              </div>
+
+              {/* 대사: 카드 너비의 띠 */}
+              <p className={`relative mt-7 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] py-4 pl-6 pr-5 ${BODY} font-semibold leading-relaxed text-white/90`}>
+                <span aria-hidden className={`absolute inset-y-0 left-0 w-1.5 bg-gradient-to-b ${data.accent}`} />
+                “{t(data.phrase)}”
+              </p>
+
+              <div className="relative mt-7 grid gap-8 lg:grid-cols-2 lg:gap-14">
+                <div>
+                  <p className={`${BODY} leading-relaxed text-white/75`}>{t(data.desc)}</p>
+                  <p className={`mt-3 ${BODY} italic leading-relaxed text-white/70`}>{t(variant.line)}</p>
+                  <div className="mt-6">
+                    <p className={`${META} font-bold uppercase tracking-wider text-white/60`}>{t(ed.ui.roleLabel)}</p>
+                    <span className={`mt-2 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-4 py-2 ${BODY} font-bold text-accent`}>
+                      ★ {t(data.role)}
+                    </span>
+                  </div>
+                  <div className="mt-6 rounded-2xl border border-accent/20 bg-accent/[0.05] p-4">
+                    <p className={`${META} font-bold uppercase tracking-wider text-accent`}>{t(ed.ui.whyModel)} {data.model}</p>
+                    <p className={`mt-1 ${BODY} leading-relaxed text-white/75`}>{t(data.whyModel)}</p>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-5">
+                  <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                    <div className="rounded-2xl border border-emerald-300/20 bg-emerald-300/[0.05] p-4">
+                      <p className={`${META} font-bold uppercase tracking-wider text-emerald-300`}>{t(ed.ui.strengthsLabel)}</p>
+                      <p className={`mt-1 ${BODY} leading-snug text-white/80`}>{t(data.strengths)}</p>
+                    </div>
+                    <div className="rounded-2xl border border-rose-300/20 bg-rose-300/[0.05] p-4">
+                      <p className={`${META} font-bold uppercase tracking-wider text-rose-300`}>{t(ed.ui.weaknessLabel)}</p>
+                      <p className={`mt-1 ${BODY} leading-snug text-white/80`}>{t(data.weakness)}</p>
+                    </div>
+                  </div>
+                  {result.axes && result.axes.length > 0 && (
+                    <div>
+                      <p className={`${META} font-bold uppercase tracking-wider text-white/60`}>{t(ed.ui.axesLabel)}</p>
+                      <AxisGauges ed={ed} axes={result.axes} accent={data.accent} t={t} reduce={reduce} />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          ) : (
           <div className="relative mt-6 grid gap-8 lg:grid-cols-2 lg:gap-14">
             {/* identity + traits */}
             <div>
@@ -948,6 +1027,7 @@ function ResultView({
               </div>
             </div>
           </div>
+          )}
         </div>
 
         {/* Round-trip return banner - only after a GENUINE completion (axes
@@ -1426,7 +1506,7 @@ function AxisGaugeRow({
   const bar = (
     <>
       <span className="w-11 shrink-0 text-right text-xs font-bold text-white/85">{t(axisMeta[axis.winner])}</span>
-      <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-white/10">
+      <div className={`relative ${naru ? "h-2.5" : "h-2"} flex-1 overflow-hidden rounded-full bg-white/10`}>
         <motion.div
           className={`h-full rounded-full bg-gradient-to-r ${accent}`}
           initial={reduce ? false : { width: 0 }}
@@ -1473,7 +1553,7 @@ function AxisGaugeRow({
             transition={{ duration: reduce ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] }}
             className="overflow-hidden"
           >
-            <p className={`px-1 pb-2 pt-0.5 ${naru ? META : "text-[13px]"} leading-relaxed ${naru ? "text-white/75" : "text-white/65"}`}>{t(explanation)}</p>
+            <p className={`${naru ? "mb-2 mt-1 border-l border-white/15 pl-3 sm:ml-[3.375rem]" : "px-1 pb-2 pt-0.5"} ${naru ? META : "text-[13px]"} leading-relaxed ${naru ? "text-white/75" : "text-white/65"}`}>{t(explanation)}</p>
           </motion.div>
         )}
       </AnimatePresence>
