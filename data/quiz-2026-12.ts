@@ -65,7 +65,7 @@ export const MODELS_2026_12: Record<MbtiKey, ModelRow> = {
   // https://www.anthropic.com/claude-fable-and-mythos-5-1 ("Claude Fable 5.1 and Claude Mythos 5.1 are the same model, but with different levels of safeguards.",
   // Mythos 5.1은 검증 프로그램을 거친 곳에만, 고객 인용 "It's friendly Fable."). 2026-09 출시. 확인 2026-10-09.
   INFJ: { model: "Claude Fable 5.1", short: "Fable", was: "Claude", logo: "anthropic.svg",
-    whyModel: { ko: "모두가 쓰는 Fable과 검증된 곳에만 열리는 Mythos는 같은 모델이에요. 안전장치 단계만 다르죠. 고객 평은 “friendly Fable”. 친절한 얼굴 뒤에 한 겹이 더 있는 유형.", en: "The Fable everyone uses and the Mythos only vetted organisations get are the same model with different safeguards. A customer called it “friendly Fable.” One more layer behind the friendly face." } },
+    whyModel: { ko: "모두가 쓰는 Fable과 검증된 곳에만 열리는 Mythos는 같은 모델이에요. 안전장치 단계만 다르죠. 한 고객은 “friendly Fable”이라 했어요. 친절한 얼굴 뒤에 한 겹이 더 있는 유형.", en: "The Fable everyone uses and the Mythos only vetted organisations get are the same model with different safeguards. A customer called it “friendly Fable.” One more layer behind the friendly face." } },
   // https://blog.google/innovation-and-ai/models-and-research/google-deepmind/project-genie/ (2026-01-29, 생성 60초 제한),
   // https://deepmind.google/models/genie/ (문장에서 세계 생성, 기억은 최대 1분), https://en.wikipedia.org/wiki/Genie_(AI_model) (공개 뒤 게임 회사 주가 하락). 확인 2026-10-09.
   INFP: { model: "Genie 3", short: "Genie", was: "Character.AI", logo: "deepmind.svg", emoji: "🌍",
@@ -73,7 +73,7 @@ export const MODELS_2026_12: Record<MbtiKey, ModelRow> = {
   // https://www.etnews.com/20260925000038 (모바일인덱스, 2026년 8월 국내 신규 설치: ChatGPT 647,439건 1위, Claude 286,823건 2위),
   // https://developers.openai.com/api/docs/models/gpt-6-astra (지금 ChatGPT의 모델은 GPT-6 Astra). 확인 2026-10-09.
   ENFJ: { model: "ChatGPT", short: "ChatGPT", was: "ChatGPT", logo: "openai.svg",
-    whyModel: { ko: "8월 한 달 한국에서만 64만 7천 번 새로 깔렸어요. 2등의 두 배가 넘죠. 모르는 게 생기면 다들 얘부터 찾고, 얘는 그걸 다 받아 줘요. 인기 많은 게 일이 되어 버린 유형.", en: "647,000 new installs in Korea in August alone, more than double second place. Everyone comes to it first, and it takes every single one. Popularity became the job." } },
+    whyModel: { ko: "8월 한 달 한국에서만 64만 7천 번 새로 깔렸어요. 2등의 두 배가 넘죠. 모르는 게 생기면 다들 얘부터 찾고, 얘는 그걸 다 받아 줘요. 인기 많은 게 일이 되어 버린 유형.", en: "647,000 new installs in Korea in August alone, more than double second place. Everyone comes to it first, and it takes them all. Popularity became the job." } },
   // https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/ (2026-09-08, "it can make suggestions unprompted"),
   // https://tech.yahoo.com/ai/meta-ai/articles/metas-muse-ai-agent-hits-120430566.html (Sensor Tower 추정: 22일 만에 500만 다운로드, ChatGPT 56일, Claude 492일). 확인 2026-10-09.
   ENFP: { model: "Muse", short: "Muse", was: "Pi", logo: "meta.svg", emoji: "🪄",
@@ -85,7 +85,7 @@ export const MODELS_2026_12: Record<MbtiKey, ModelRow> = {
   // https://console.upstage.ai/docs/models/solar-mini-4 (2026-09-22, "35B total parameters with 3B active", 512K 맥락),
   // https://www.upstage.ai/blog/en/solar-mini-4 ("$0.10 per 1 million input tokens"). Upstage는 한국 회사. 확인 2026-10-09.
   ISFJ: { model: "Solar Mini 4", short: "Solar", was: "Copilot", logo: "upstage.svg", emoji: "☀️",
-    whyModel: { ko: "한국 회사가 만들었어요. 350억 파라미터 중 30억만 켜고 조용히 돌아가죠. 입력 100만 토큰에 0.1달러. 말수도 적고 비싸지도 않은데, 맡긴 일은 되어 있는 유형.", en: "Made by a Korean company. It runs on 3 of its 35 billion parameters, at ten cents per million input tokens. Quiet, cheap, and the job is done when you look." } },
+    whyModel: { ko: "한국 회사가 만들었어요. 350억 파라미터 중 30억만 켜고 조용히 돌아가죠. 값은 입력 100만 토큰에 0.1달러예요. 말수도 적고 비싸지도 않은데, 맡긴 일은 되어 있는 유형.", en: "Made by a Korean company. It runs on 3 of its 35 billion parameters, at ten cents per million input tokens. Quiet, cheap, and the job is done when you look." } },
   // https://venturebeat.com/technology/openai-launches-dots-always-on-ai-agent-coworkers-and-chatgpt-space-where-they-can-collaborate-with-human-teams
   // (2026-09-29 DevDay. "keep working after an employee closes the chat window", "their own cloud computer and browser", Custom Rules, Activity View). 확인 2026-10-09.
   ESTJ: { model: "Dots", short: "Dots", was: "Cohere", logo: "dots.svg", emoji: "⚫",
@@ -93,13 +93,13 @@ export const MODELS_2026_12: Record<MbtiKey, ModelRow> = {
   // https://finance.yahoo.com/technology/ai/articles/instinct-raises-1-billion-series-120300548.html (2026-09-28, 10억 달러 투자 유치, "Still in early access",
   // "Just text or call", Instinct끼리 일정 조율), https://www.digitaltoday.co.kr/disclosure/articleView.html?idxno=703386 (식당 예약, 병원 예약, 서비스 해지). 확인 2026-10-09.
   ESFJ: { model: "Instinct", short: "Instinct", was: "Copilot", logo: "instinct.svg", emoji: "📞",
-    whyModel: { ko: "식당 예약, 병원 예약, 서비스 해지. 전화로 해야 하는 귀찮은 일을 대신 걸어 줘요. 친구의 Instinct와 연락해 약속도 잡죠. 아직 초대제인데 10억 달러를 투자받았어요. 모두의 총무 유형.", en: "Restaurant bookings, clinic appointments, cancelling a service: it makes the calls you keep putting off, and talks to your friend's Instinct to set a date. Invite-only, already raised a billion dollars." } },
+    whyModel: { ko: "식당과 병원 예약, 서비스 해지처럼 전화로 해야 하는 귀찮은 일을 대신 걸어 줘요. 친구의 Instinct와 연락해 약속도 잡죠. 아직 초대제인데 10억 달러를 투자받았어요. 모두의 총무 유형.", en: "Restaurant bookings, clinic appointments, cancelling a service: it makes the calls you keep putting off, and talks to your friend's Instinct to set a date. It is still invite-only and has already raised a billion dollars." } },
   // https://code.claude.com/docs/en/overview
   ISTP: { model: "Claude Code", short: "Claude Code", was: "Ollama", logo: "claudecode.svg", emoji: "🛠️",
     whyModel: { ko: "코드베이스를 읽고, 파일을 고치고, 명령을 실행하는 코딩 도구예요. 터미널에서 바로 돌아가죠. 말보다 손이 먼저 나가는 유형이에요.", en: "A coding tool that reads your codebase, edits files and runs commands, right in your terminal. Hands first, words later." } },
   // https://docs.midjourney.com/hc/en-us/articles/32199405667853-Version (V8.2, 2026-07-24부터 기본)
   ISFP: { model: "Midjourney V8.2", short: "Midjourney", was: "Midjourney", logo: "midjourney.png",
-    whyModel: { ko: "지금 기본 버전은 2026년 7월의 V8.2예요. 고쳐 그리는 Edit Model이 새로 들어왔죠. 설명 대신 이미지로 말하는 유형이에요.", en: "The default is now V8.2, from July 2026, with a new Edit Model. The type that answers in images, not explanations." } },
+    whyModel: { ko: "지금 기본 버전은 2026년 7월의 V8.2예요. 고쳐 그리는 Edit Model이 새로 들어왔죠. 이미지로 대답하는 유형이에요.", en: "The default is now V8.2, from July 2026, with a new Edit Model. The type that answers in images." } },
   // https://www.globenewswire.com/news-release/2026/02/05/3232837/0/en/Kling-AI-Launches-3-0-Model-Ushering-in-an-Era-Where-Everyone-Can-Be-a-Director.html
   // (2026-02-05, "over 60 million creators ... more than 600 million videos", 멀티샷 스토리보드, 영상 안 편집),
   // https://kling.ai/quickstart/klingai-video-3-omni-model-user-guide (캐릭터에 목소리 묶기). 확인 2026-10-09.
