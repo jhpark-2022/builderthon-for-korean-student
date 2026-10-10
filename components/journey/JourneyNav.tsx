@@ -681,7 +681,10 @@ export default function JourneyNav({
         // 토글 둘뿐이고 **진짜 목차는 랜드마크가 아니었습니다**. iOS 로터의
         // "랜드마크"로 목차에 닿을 수 없었어요. 폰에서 이 레일이 유일한
         // 챕터 이동 수단이라는 점을 생각하면 가장 아픈 자리였습니다.
-        <nav aria-label={t(dict.nav.sectionsAria)} className="xl:hidden">
+        // DECIDED 2026-10-10 (사용자: "TOC가 모바일 화면에서 맨 위에 딱 붙어 있다"): 로고 줄(52px)이 접히면
+        // 이 줄이 화면 맨 위(0px)에 닿았습니다. 원래는 로고 줄이 위 여백 노릇을 해서 이 줄에는 아래 여백(pb-2)만
+        // 있습니다. 접혔을 때만 위에도 같은 만큼을 둡니다. lg부터는 로고 줄이 접히지 않으므로 0입니다.
+        <nav aria-label={t(dict.nav.sectionsAria)} className={`xl:hidden ${chromeHidden ? "pt-2 lg:pt-0" : ""} ${reduce ? "" : "transition-[padding] duration-300"}`}>
           {/* 8월 아카이브: 목차 줄 오른쪽 끝에 12월 이벤트 버튼을 고정합니다
               (2026-09-20, 사용자: "8월 페이지에는 12월 이벤트 페이지로 돌아갈 수
               있는 버튼이 항상 보였으면 좋겠어, along with the TOC at the top").
