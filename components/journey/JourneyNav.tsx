@@ -508,20 +508,19 @@ export default function JourneyNav({
               <span className={`hidden items-center whitespace-nowrap text-lg font-black leading-none tracking-wide text-white/90 sm:inline-flex sm:text-xl ${locale === "ko" ? "translate-y-[2px]" : "xl:hidden min-[1500px]:inline-flex"}`}>{t(dict.nav.brandSuffix)}</span>
             </a>
           )}
-          {back && (
-            <a
-              href={back.href}
-              className="-my-3 ml-4 inline-flex min-h-[44px] items-center whitespace-nowrap py-3 text-sm font-semibold text-white/60 transition hover:text-white sm:ml-6"
-            >
-              <span aria-hidden className="mr-1.5">←</span>{t(back.label)}
-            </a>
-          )}
+          {/* DECIDED 2026-10-10 (사용자, 스크린숏: "TOC가 너무 어색함. 여기 크로싱 서울에도 크로싱 서울 로고를"): 돌아가기는
+              로고와 목차 사이가 아니라 오른쪽 묶음에 섭니다(아래, sm부터). 로고, 돌아가기, 목차 넷이 한 줄에 붙어 있으면
+              돌아가기가 목차의 첫 칸처럼 읽혔습니다. 글자는 홈 헤더와 같은 크로싱 서울 워드마크(그라데이션)입니다.
+              폰(sm 아래)은 로고 줄에 자리가 없어(로고, 오픈채팅, 언어 토글로 342px이 찹니다) 목차 레일의 마지막 칸으로 갑니다. */}
           {/* ANCHOR ROW - `xl` (1280), not `lg` (1024). See the note on the
               section rail below: between 1024 and 1279 this row does not fit
               next to the brand and the two CTAs in either locale, and flex
               silently crushed the brand to make room. */}
           <div className="hidden items-center gap-5 xl:ml-10 xl:flex">
-            {anchors.map((a) => {
+            {/* DECIDED 2026-10-10 (사용자: "TOC가 너무 어색함"): 나루 계열 헤더(홈, /naru)의 데스크톱 줄에서는 첫 항목(#top)을
+                그리지 않습니다. 바로 왼쪽의 로고가 같은 이름이고 같은 곳(#top)으로 갑니다. "나루 나루", "크로싱 서울 크로싱 서울"로
+                읽혔습니다. 폰 레일은 로고 줄이 접힌 뒤에 혼자 남으므로 넷 그대로입니다. 8월 페이지는 그대로. */}
+            {(naru ? anchors.filter((a) => a.id !== "top") : anchors).map((a) => {
               // DECIDED 2026-08-23: 데스크톱 앵커에도 현위치 표시를 답니다.
               // useActiveSection은 원래 폰의 섹션 레일만 쓰고 있었는데, 위치를
               // 알려줄 필요는 화면이 넓다고 없어지지 않습니다. 이 페이지는
@@ -694,6 +693,18 @@ export default function JourneyNav({
               <span aria-hidden className="text-violet-200/70">→</span>
             </Link>
           )}
+          {back && (
+            <Link
+              href={back.href}
+              aria-label={t(back.label)}
+              className="hidden min-h-[44px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-white/15 bg-white/[0.04] px-4 transition hover:border-white/30 hover:bg-white/[0.08] sm:inline-flex"
+            >
+              <span lang={locale === "en" ? "en" : undefined} className="gradient-text bg-gradient-to-r from-naru-logo-from to-naru-logo-to bg-clip-text pb-[0.08em] text-lg font-black tracking-[-0.02em] text-transparent">
+                {decemberEventLabel(locale)}
+              </span>
+              <span aria-hidden className="text-sm text-white/60">→</span>
+            </Link>
+          )}
           {/* Language last - it's a setting, not an action, so it sits after
               the CTA rather than between the brand and it. */}
           <LocaleToggle variant={brand} />
@@ -860,6 +871,19 @@ export default function JourneyNav({
                 </a>
               );
             })}
+            {/* /naru의 돌아가기(폰). 로고 줄에 자리가 없어 레일의 마지막 칸입니다. sm부터는 헤더 오른쪽 묶음의 것이 보입니다. */}
+            {naru && back && (
+              <Link
+                href={back.href}
+                aria-label={t(back.label)}
+                className="inline-flex min-h-[44px] shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-full border border-white/[0.12] bg-white/[0.06] px-2.5 backdrop-blur transition active:scale-[0.97] sm:hidden"
+              >
+                <span lang={locale === "en" ? "en" : undefined} className="gradient-text bg-gradient-to-r from-naru-logo-from to-naru-logo-to bg-clip-text pb-[0.08em] text-[0.8rem] font-black tracking-[-0.02em] text-transparent">
+                  {decemberEventLabel(locale)}
+                </span>
+                <span aria-hidden className="text-[0.7rem] text-white/60">→</span>
+              </Link>
+            )}
           </div>
             {!naru && (
               <Link
