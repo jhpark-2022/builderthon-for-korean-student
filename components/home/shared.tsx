@@ -262,11 +262,17 @@ export function usePlateLite() {
 // 8월 푸터의 "SMU, NUS, NTU 한인 학생회가 주관하고" 줄은 가져오지
 // 않았습니다. 그건 제로백 빌더톤의 크레딧이고, 12월 이벤트의 주관은
 // 아직 정해지지 않았습니다.
-export function SiteFooter() {
+// DECIDED 2026-10-10 (사용자, 스크린숏: "나루가 2번 있는 건데, 무언가가 이상함"): 홈에서는 compact로 부릅니다.
+// 홈의 마지막 블록이 나루 티저(인장, 한 줄 소개, "나루 알아보기")라, 바로 아래 푸터가 로고와 소개를 한 번 더
+// 그리면 같은 것이 위아래로 둘이 됩니다. compact는 로고, 링 부제, 짧은 정의를 그리지 않고 크레딧부터 시작합니다.
+// /naru의 푸터는 전과 같습니다.
+export function SiteFooter({ compact = false }: { compact?: boolean } = {}) {
   const { t, locale } = useLocale();
   return (
       <footer id="closing" className="relative w-full border-t border-white/10 px-6 py-14 sm:px-10">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
+          {!compact && (
+          <>
           {/* 헤더와 같은 규칙입니다 (2026-09-21): 영문 화면에서는 영문 락업.
               헤더에서만 바꾸면 같은 페이지 위아래에서 이름이 달라집니다. */}
           {/* DECIDED 2026-10-10 (구조 브리프 2.4): 푸터의 나루 로고는 /naru로 갑니다. 모양은 그대로입니다. */}
@@ -292,6 +298,8 @@ export function SiteFooter() {
             </p>
             <p className={`break-keep ${BODY} leading-relaxed text-white/70`}>{t(naru.footer.shortDef)}</p>
           </div>
+          </>
+          )}
           {/* 크레딧(2026-09-23): 폰(sm 미만)은 세 줄, sm부터 한 줄에 gap 여백. 가운뎃점은 쓰지 않습니다.
               라벨 white/45, 값 white/70. */}
           <p className={`flex flex-col items-center gap-1 break-keep ${META} leading-relaxed sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-5`}>

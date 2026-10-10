@@ -1119,7 +1119,7 @@ export default function NaruHome() {
       <MobileChatBar afterId="gains" endId="closing" phone />
       </main>
 
-      <SiteFooter />
+      <SiteFooter compact />
     </>
   );
 }

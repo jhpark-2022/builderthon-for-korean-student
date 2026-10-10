@@ -362,11 +362,11 @@ export const naru = {
   teaser: {
     eyebrow: { ko: "여는 사람들", en: "Who runs this" },
     body: {
-      // DECIDED 2026-10-10 (사용자: 티저를 "첫 이벤트"에 맞춘다): 브리프의 "이번이 두 번째 자리입니다"를 고쳤습니다.
-      // 같은 화면의 프로그램 리드(december.notSequel, "나루가 직접 여는 첫 이벤트입니다")와 어긋났고, 8월은 나루가 연
-      // 이벤트가 아니라는 결정(2026-10-08)과도 부딪혔습니다. 이 문장을 고칠 때는 notSequel과 같이 보세요.
-      ko: "학생이 직접 운영하는 비영리 그룹 나루가 엽니다. 2026년 8월 싱가포르에서 시작했고, 직접 여는 이벤트는 이번이 처음입니다.",
-      en: "CROSSING SEOUL is run by NARU, a student-run, not-for-profit group. It started in Singapore in August 2026, and this is the first event it hosts itself.",
+      // DECIDED 2026-10-10 (사용자, 스크린숏: "이번이 처음이라는 표현 빼주고"): 둘째 문장은 어디서 시작했는지만 말합니다.
+      // 브리프의 "이번이 두 번째 자리입니다"는 프로그램 리드(december.notSequel, "나루가 직접 여는 첫 이벤트입니다")와
+      // 어긋나 같은 날 "직접 여는 이벤트는 이번이 처음입니다"로 고쳤다가, 그 표현도 뺐습니다. 몇 번째인지는 여기서 말하지 않습니다.
+      ko: "학생이 직접 운영하는 비영리 그룹 나루가 엽니다. 2026년 8월 싱가포르에서 시작했습니다.",
+      en: "CROSSING SEOUL is run by NARU, a student-run, not-for-profit group. It started in Singapore in August 2026.",
     },
     cta: { label: { ko: "나루 알아보기", en: "About NARU" }, href: "/naru" },
   },
