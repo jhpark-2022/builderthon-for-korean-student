@@ -52,11 +52,19 @@ export default function AugustGaps() {
           </li>
         ))}
       </ol>
+      {/* DECIDED 2026-10-10 (사용자, 스크린숏: "그 밖에 바꾼 것 아래의 내용들이 너무 부실함"): 헤어라인 사이의 한 줄 셋이던 것을
+          위 카드 둘과 같은 유리 카드 셋으로 세웁니다. 번호는 위에서 이어 03부터, 앞에 12월 라벨. 문장은 그대로입니다. */}
       <h3 className="mt-10 break-keep text-left text-base font-bold text-white">{t(naru.december.alsoLabel)}</h3>
-      <ul role="list" className="mt-3 text-left">
+      <ul role="list" className="mt-4 grid grid-cols-1 gap-4 text-left sm:grid-cols-3">
         {naru.december.also.map((line, i) => (
-          <li key={i} className={`break-keep border-t border-white/10 py-3 text-sm leading-relaxed text-white/75 ${i === naru.december.also.length - 1 ? "border-b" : ""}`}>
-            {t(line)}
+          <li key={i} className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-violet-500/20 text-xs font-black text-violet-200">
+              {String(i + 1 + naru.record.gaps.length).padStart(2, "0")}
+            </span>
+            <p className="mt-3 break-keep text-sm leading-relaxed text-white/90">
+              <span className="mr-1.5 text-xs font-bold uppercase text-violet-200">{t(naru.december.decemberLabel)}</span>
+              {t(line)}
+            </p>
           </li>
         ))}
       </ul>

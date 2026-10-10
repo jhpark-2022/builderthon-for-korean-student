@@ -535,7 +535,8 @@ export default function NaruHome() {
                 className={`${buttonClass("secondary")} ${HERO_BUTTON_GROUND} max-sm:hidden`}
               >
                 {t(naru.eventHero.ctaProgram)}
-                <span aria-hidden className="text-white/70">↓</span>
+                {/* DECIDED 2026-10-10 (사용자, 스크린숏: "화살표가 뒤죽박죽"): ↓를 →로. 이 줄의 세 버튼이 같은 화살표를 씁니다. */}
+                <span aria-hidden className="text-white/70">→</span>
               </a>
             </div>
             {regState === "not_open" && (
@@ -847,8 +848,11 @@ export default function NaruHome() {
         {/* 2026-09-30: 판 나누기가 이 상자 앞에서 아래(AI 활용 범위 앞)로 내려가, 이 상자는 위 표에 이어지는
             블록입니다. 블록 사이 간격(mt-8 lg:mt-12)을 씁니다. */}
         <PhoneFold more={t({ ko: "멘토링 자세히 보기", en: "Mentoring in detail" })} less={t({ ko: "멘토링 접기", en: "Hide mentoring" })}>
-        <Reveal className={`${READ} mt-8 text-left max-sm:text-center lg:mt-12`}>
-          <div className="flex flex-col gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-4 lg:px-7">
+        {/* DECIDED 2026-10-10 (사용자, 스크린숏: "상자가 너무 비워져있음"): 두 상자를 위아래에서 좌우로 세웁니다(md부터).
+            READ 폭 한 줄을 다 쓰는 상자 안에서 글이 MEASURE(36rem)에 묶여 오른쪽 절반이 비어 있었습니다. 두 칸으로 나누면
+            글이 상자를 채웁니다. 상자 안 문단의 MEASURE는 그래서 뺐습니다. 폰은 전처럼 위아래입니다. 색과 글은 그대로. */}
+        <Reveal className={`${READ} mt-8 grid grid-cols-1 gap-3 text-left max-sm:text-center md:grid-cols-2 md:gap-4 lg:mt-12`}>
+          <div className="flex flex-col gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-4 lg:px-6 lg:py-5">
             <div className="shrink-0">
               <p className={`flex items-center gap-2 max-sm:justify-center ${BODY} font-bold text-white`}>
                 <ChipDot />
@@ -858,7 +862,7 @@ export default function NaruHome() {
               <p className={`mt-0.5 ${META} font-semibold text-emerald-200/90`}>{t(naru.december.mentoringAlways)}</p>
               {/* DECIDED 2026-10-10 (사용자, 마일스톤 브리프 2.5): 멘토링은 먼저 찾아가는 자리라는 문장을 상자 안에 그립니다.
                   mentoringLead는 그 전까지 화면에 그려지지 않던 키였습니다. 규칙 목록 위, 이름 줄 아래에 섭니다. */}
-              <p className={`${MEASURE} mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.mentoringLead)}</p>
+              <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.mentoringLead)}</p>
             </div>
             {/* 폰은 2열·작은 글자(길이 목표, 감사 반영 브리프 3.1). */}
             {/* 2026-09-19 (모바일 감사 14): 폰에서 2열을 풉니다. 상자 안쪽 291px을
@@ -884,13 +888,13 @@ export default function NaruHome() {
               초록은 쓰지 않습니다(초록은 General Mentoring 하나, 2026-09-18). 무채색 테두리에 점만 노선도 둘째 필과 같은
               주황입니다(주황은 점으로만). 이름은 BODY 굵게, 기간은 META, 설명은 BODY. 규칙 목록은 없습니다.
               날짜, 횟수, 기업 이름은 쓰지 않습니다(미정). 위 초안 배너가 이 약속을 덮습니다. */}
-          <div className="mt-3 rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 lg:px-7">
+          <div className="rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 lg:px-6 lg:py-5">
             <p className={`flex items-center gap-2 max-sm:justify-center ${BODY} font-bold text-white`}>
               <ChipDot className="bg-naru-orange" />
               {t(naru.december.fieldMentoring.name)}
             </p>
             <p className={`mt-0.5 ${META} font-semibold text-white/70`}>{t(naru.december.fieldMentoring.when)}</p>
-            <p className={`${MEASURE} mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.fieldMentoring.body)}</p>
+            <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.fieldMentoring.body)}</p>
           </div>
           {/* 재는 것. 호박색 강조 상자(8월 "준비물은 하나예요" 문법).
 
@@ -909,15 +913,9 @@ export default function NaruHome() {
             그 자리에 findClose 문단이 섭니다. 평가가 과정이라는 말을 이 문단이 대신합니다. 상자 없이 READ 왼쪽 끝, BODY. */}
         <Reveal className={`${READ} text-left max-sm:text-center`}>
           <p className={`${MEASURE} mt-6 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.findClose)}</p>
-          {/* DECIDED 2026-10-10 (중복 브리프 B3): 8월과의 비교는 8월 페이지로 갔고, 여기는 그리로 가는 한 줄입니다. */}
-          <Link
-            href="/2026-08#gaps"
-            onClick={() => track("naru_cta", { src: "december", to: "august-gaps" })}
-            className={`mt-2 inline-flex min-h-[44px] items-center gap-1.5 ${BODY} font-medium text-accent underline-offset-4 transition hover:text-white hover:underline`}
-          >
-            {t(naru.december.gapsLink)}
-            <span aria-hidden>→</span>
-          </Link>
+          {/* DECIDED 2026-10-10 (사용자: "8월이랑 뭐가 다른지 12월 페이지에서는 설명할 필요가 없음"): 여기 있던
+              "8월과 무엇이 다른지" 링크를 뺐습니다. 8월 페이지의 #gaps는 그대로 있고, 홈에서는 가리키지 않습니다.
+              december.gapsLink 키는 data/naru.ts에 그대로. */}
         </Reveal>
         {/* 판 나누기(2026-09-26 3차, 사용자: #gains와 #naru 사이 틈에 한국 형상이 보임): 긴 챕터의 판을 둘로 나눠
             서울이 보이는 틈을 하나 더 둡니다.
