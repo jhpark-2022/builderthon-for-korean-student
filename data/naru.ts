@@ -1643,13 +1643,11 @@ export const naru = {
     // "공간"과 "장소"를 섞지 마세요. 장소(어디인가)는 여전히 미정이고 아래 tbd에
     // 있습니다. 여기서 말하는 것은 운영 방식입니다.
     factsLabel: { ko: "이렇게 굴립니다", en: "How it runs" },
+    // DECIDED 2026-10-10 (사용자, 스크린숏: "내용이 너무 많아, 정보가 너무 많음"): 여섯 줄에서 셋으로 줄였습니다.
+    // 뺀 셋은 같은 화면에 이미 있는 말입니다. "참가비와 장소"는 바로 아래 등록 안내 문장(ctaNote)과 같은 문장이고,
+    // "제출"은 위 일정표의 Day 1, Day 3 줄에 있고, "보상"은 일정표의 마일스톤 줄과 "그 밖에 바꾼 것" 첫 줄에 있습니다.
+    // 다시 넣기 전에 그 자리들을 먼저 보세요.
     facts: [
-      {
-        // DECIDED 2026-10-08 (사용자: "12월 참가비와 장소, Day 0 - 참여자 대상 카톡방으로 공개"): 금액과 장소, Day 0의
-        // 방식은 화면에 쓰지 않습니다. 어디서 알게 되는지만 말합니다.
-        k: { ko: "참가비와 장소", en: "Fee and venue" },
-        v: { ko: "참가비와 장소, Day 0 안내는 참가자 카카오톡 방에서 알립니다.", en: "The fee, the venue and the Day 0 details are announced in the participants' KakaoTalk room." },
-      },
       {
         k: { ko: "세션", en: "Sessions" },
         // 2026-09-30 (사용자, 문장 감사): "퀄리티로"는 스스로 매긴 평가라 뺐습니다. 영문은 그대로.
@@ -1658,20 +1656,6 @@ export const naru = {
       {
         k: { ko: "공간", en: "Space" },
         v: { ko: "4일 동안 아침부터 저녁까지. 마지막 날은 제외입니다.", en: "Open morning to evening for four days. Not the last day." },
-      },
-      {
-        k: { ko: "제출", en: "Submissions" },
-        // 2026-10-10 (마일스톤 브리프 2.1): Day 1 제출물의 이름을 마일스톤과 같은 말로 맞췄습니다. 제출이 두 번이라는 사실은 그대로입니다.
-        v: { ko: "두 번뿐입니다. Day 1 이슈에 대한 내 생각 1장, Day 3 덱 등 사전 제출물.", en: "Twice only. One page of your own take on Day 1, the deck and what goes with it on Day 3." },
-      },
-      {
-        // DECIDED 2026-10-10 (사용자, 마일스톤 브리프 2.3): 보상은 한 팀에 몰지 않고 날마다 나눕니다.
-        // TODO: confirm. 형태와 금액, 지급 방식이 정해지면 이 문장 뒤에 붙입니다. 그 전에는 숫자와 형태를 쓰지 않습니다.
-        k: { ko: "보상", en: "Rewards" },
-        v: {
-          ko: "상금을 한 팀에 몰지 않습니다. Day 1부터 Day 4까지 그날의 마일스톤을 넘은 팀 모두에게 나눕니다.",
-          en: "No single team takes it all. From Day 1 to Day 4, every team that clears the day's milestone gets a share.",
-        },
       },
       {
         k: { ko: "기록", en: "What gets recorded" },
@@ -1830,14 +1814,12 @@ export const naru = {
       ko: "멘토는 답을 주러 오지 않습니다. 이슈에 대한 내 생각을 들고 먼저 찾아가 말하고, 들은 이야기로 아이디어를 다듬어 코드로 옮깁니다. 8월에는 슬롯이 넉넉했는데 한 번도 쓰지 않은 팀이 있었습니다.",
       en: "Mentors do not come with answers. You walk in with your own take on the issue, say it, then shape the idea with what you hear and turn it into code. In August there were plenty of slots, and some teams never used one.",
     },
+    // DECIDED 2026-10-10 (사용자: "정보가 너무 많음"): 다섯 줄을 셋으로 묶었습니다. 내용은 그대로입니다
+    // (예약제와 횟수, Day 3과 Day 4를 한 줄씩으로). Day 4에는 멘토링 자체가 없습니다(2026-09-20, PDF 02·04).
     mentoringRules: [
-      { ko: "예약제, 30분 슬롯", en: "By booking, 30-minute slots" },
+      { ko: "예약제 30분 슬롯, 횟수 제한 없음", en: "Booked 30-minute slots, as many as you need" },
       { ko: "질문 대신 내 생각 한 장을 들고 갑니다", en: "Bring one page of your own thinking, not a list of questions" },
-      { ko: "슬롯 횟수 제한 없음", en: "No cap on how many slots" },
-      // 2026-09-20 (PDF 02·04): 마지막 줄이 "마지막 날에는 새 방향을 제안하지 않음"
-      // 이었습니다. 이제 마지막 날에는 멘토링 자체가 없습니다.
-      { ko: "Day 3에 피칭 준비로 어젠다가 바뀝니다", en: "On Day 3 the agenda switches to pitch prep" },
-      { ko: "Day 4는 멘토링 없이 증명만 합니다", en: "Day 4 is proving it, with no mentoring" },
+      { ko: "Day 3은 피칭 준비, Day 4는 멘토링이 없습니다", en: "Day 3 is pitch prep, Day 4 has no mentoring" },
     ] as Phrase[],
 
     // ── 제목이 포지션을 말합니다 (DECIDED 2026-09-15) ──────────────────────

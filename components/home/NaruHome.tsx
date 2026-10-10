@@ -1084,7 +1084,8 @@ export default function NaruHome() {
                 4열이면 다섯째 줄만 아래로 내려가 왼쪽 칸이 둘이 됩니다. */}
             {/* 2026-09-29 (왼쪽 끝 브리프 2.1, 검증 4): READ 폭에서 다섯 칸은 150px 남짓이라 "바뀝니다"가 넉 자로
                 떨어졌습니다. 폰 한 칸, md부터 두 칸. */}
-            <ul role="list" className="grid flex-1 grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2 md:gap-x-6">
+            {/* 2026-10-10: 규칙이 셋이 되어 한 칸으로 세웁니다. 두 칸이면 셋째만 아래로 내려가고, 세 칸이면 READ 폭에서 줄마다 두 줄로 꺾입니다. */}
+            <ul role="list" className="grid flex-1 grid-cols-1 gap-y-2">
               {naru.december.mentoringRules.map((rule, i) => (
                 <li key={i} className={`flex gap-2.5 break-keep border-l-2 border-white/20 pl-3 max-sm:justify-center max-sm:border-l-0 max-sm:pl-0 ${BODY} leading-snug text-white/85`}>
                   {t(rule)}
@@ -1191,38 +1192,23 @@ export default function NaruHome() {
             문법은 그대로입니다: 상자가 아니라 헤어라인으로 나뉜 행 하나, 소제목은 READ. 8월 칸을 흐리게 하지
             않습니다(같은 브리프 4.2). 두 칸의 차이는 라벨의 색이 말합니다. december.scope* 키는 data/naru.ts에 그대로. */}
         {/* 2026-09-30: 판 조각의 첫 블록이라 위 간격이 없습니다. 조각의 gap(216px)이 그 일을 합니다. */}
-        <Reveal className="text-left max-sm:text-center">
-          <div className={READ}>
-            <h3 data-subheading className={SUBHEADING}>{t(naru.december.findLabel)}</h3>
-          </div>
-          <dl className={`${READ} mt-5 grid grid-cols-1 border-t border-white/10 sm:grid-cols-2`}>
-            {([
-              { k: naru.december.augustLabel, v: naru.december.find.august, now: false },
-              { k: naru.december.decemberLabel, v: naru.december.find.december, now: true },
-            ]).map((col, i) => (
-              <div
-                key={col.k.en}
-                className={`border-b border-white/10 py-4 sm:border-b-0 sm:py-0 sm:pt-4 ${i > 0 ? "sm:border-l sm:border-white/10 sm:pl-6" : "sm:pr-6"}`}
-              >
-                <dt className={`${META} font-bold uppercase ${latinTrack(locale)} ${col.now ? "text-accent" : "text-white/70"}`}>{t(col.k)}</dt>
-                <dd className={`mt-1.5 break-keep ${BODY} leading-relaxed ${col.now ? "text-white/85" : "text-white/70"}`}>{t(col.v)}</dd>
-              </div>
-            ))}
-          </dl>
-          {/* DECIDED 2026-10-08 (프로그램 브리프 2.1): 두 칸 바로 아래의 한 문단. 12월이 익히게 하는 것은 정답보다 접근
-              방식이고, 풀리지 않을 수 있다는 것을 미리 말합니다. 같은 READ 왼쪽 끝, BODY, 상자 없음. */}
-          <p className={`${READ} ${READ_MEASURE} mt-5 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.findClose)}</p>
-        </Reveal>
-
+        {/* DECIDED 2026-10-10 (사용자, 스크린숏: "내용이 너무 많아, 정보가 너무 많음"): 이 자리의 "문제를 찾는 방식" 두 칸 비교를
+            화면에서 내렸습니다. 바로 아래 카드 01이 같은 말을 합니다(8월은 완성된 문제를 받아 결과물이 닮았다, 12월은
+            이슈를 받고 문제는 팀이 찾는다). 두 칸 아래에 있던 문단(findClose)은 카드 둘 아래로 옮겼습니다.
+            december.find, findLabel 키는 data/naru.ts에 그대로 있습니다. */}
         {/* 8월에 아쉬웠던 넷과 12월의 답. 번호 배지 카드 넷(8월 BenefitCard 문법), 2×2.
             제목이 아쉬웠던 것, 본문이 12월의 답. */}
         {/* DECIDED 2026-10-07 (이슈 브리프 2.3): 카드 다섯이 둘이 됩니다. "8월이 남기지 못한 두 가지"만 카드로
             세우고(카드 모양은 그대로, 2열), 전의 02~04는 그 아래 "그 밖에 바꾼 것" 세 줄로 내렸습니다. 카드는
             제목, 무슨 일이 있었는지 두 문장(gap.body), 12월의 답 순서입니다. 전에는 body를 그리지 않았습니다. */}
-        <PhoneFold more={t({ ko: "8월과 달라진 점 보기", en: "What changed since August" })} less={t({ ko: "8월과 달라진 점 접기", en: "Hide what changed" })}>
-        <Reveal className={`${READ} mt-8 text-left max-sm:text-center lg:mt-12`}>
+        {/* 2026-10-10: 판 조각의 첫 블록이 되어 위 간격이 없습니다(조각의 gap이 그 일을 합니다). 제목과 한 줄은 접힘 밖에
+            있어서, 폰에서도 단추 위에 무엇에 관한 묶음인지가 보입니다. */}
+        <Reveal className={`${READ} text-left max-sm:text-center`}>
           <h3 data-subheading className={SUBHEADING}>{t(naru.december.gapsHeading)}</h3>
           <p className={`${MEASURE} mt-2 break-keep ${BODY} leading-relaxed text-white/70`}>{t(naru.december.gapsNote)}</p>
+        </Reveal>
+        <PhoneFold more={t({ ko: "8월과 달라진 점 보기", en: "What changed since August" })} less={t({ ko: "8월과 달라진 점 접기", en: "Hide what changed" })}>
+        <Reveal className={`${READ} text-left max-sm:text-center`}>
           {/* 폰은 1열(모바일 수정 브리프 1.3). 2열이면 150px 폭에서 "12월" 답이 서너 글자씩
               끊겼습니다. 폰에서는 번호 배지가 제목 왼쪽에 인라인. sm부터 2열, 배지 위. */}
           {/* 폰은 상자 없이 행(구분선만). sm부터 카드 2열. */}
@@ -1246,6 +1232,7 @@ export default function NaruHome() {
               </li>
             ))}
           </ol>
+          <p className={`${MEASURE} mt-5 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.findClose)}</p>
           {/* 그 밖에 바꾼 것. 상자 없는 목록 셋(규칙: 짧은 병렬 문장은 목록). 라벨은 ul 밖의 소제목입니다. */}
           <h4 data-subheading className={`${SUBHEADING} mt-8`}>{t(naru.december.alsoLabel)}</h4>
           <ul role="list" className="mt-3">
