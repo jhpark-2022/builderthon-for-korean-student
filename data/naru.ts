@@ -1645,7 +1645,7 @@ export const naru = {
     factsLabel: { ko: "이렇게 굴립니다", en: "How it runs" },
     // DECIDED 2026-10-10 (사용자, 스크린숏: "내용이 너무 많아, 정보가 너무 많음"): 여섯 줄에서 셋으로 줄였습니다.
     // 뺀 셋은 같은 화면에 이미 있는 말입니다. "참가비와 장소"는 바로 아래 등록 안내 문장(ctaNote)과 같은 문장이고,
-    // "제출"은 위 일정표의 Day 1, Day 3 줄에 있고, "보상"은 일정표의 마일스톤 줄과 "그 밖에 바꾼 것" 첫 줄에 있습니다.
+    // "제출"은 위 일정표의 Day 1, Day 3 마일스톤 줄에 있고, "보상"은 일정표의 마일스톤 줄과 "그 밖에 바꾼 것" 첫 줄에 있습니다.
     // 다시 넣기 전에 그 자리들을 먼저 보세요.
     facts: [
       {
@@ -2143,7 +2143,9 @@ export const naru = {
         },
         // 8월에 없었던 자리라는 것이 이 날의 요점입니다(PDF 04, gaps[2]와 같은 사실).
         line: { ko: "팀 사이 공유는 8월에 없었던 자리입니다.", en: "Teams sharing with each other did not exist in August." },
-        chips: [{ ko: "멘토링은 이 날까지", en: "Mentoring ends here" }],
+        // DECIDED 2026-10-10 (중복 브리프 B1): 칩 "멘토링은 이 날까지"를 뺐습니다. General Mentoring 상자의
+        // "Day 3은 피칭 준비, Day 4는 멘토링이 없습니다"가 같은 말을 합니다.
+        chips: [],
         // DECIDED 2026-09-27 (사용자, 9/27 학생 단체 미팅): Empower session이
         // 한국에서 창업한 해외 창업가를 만나는 세션이 됐습니다. 국내 VC와 창업가는
         // 원하면 만날 수 있지만 한국 안의 외국인 창업가는 닿기 어렵다는 것이 그 자리의
@@ -2179,7 +2181,8 @@ export const naru = {
           ko: "클로징은 끝난 뒤에 할 일로 끝납니다. 말로 하고, 글로도 남겨 드립니다.",
           en: "The closing ends on what to do once it is over. We say it, and you get it in writing too.",
         },
-        chips: [{ ko: "멘토링 없음", en: "No mentoring" }, { ko: "시상과 클로징", en: "Awards and closing" }],
+        // DECIDED 2026-10-10 (중복 브리프 B1): 칩 "멘토링 없음"을 뺐습니다(위 Day 3과 같은 이유).
+        chips: [{ ko: "시상과 클로징", en: "Awards and closing" }],
         milestone: { ko: "성과 공유회 완주", en: "Making it through the showcase" },
       },
     ] as {

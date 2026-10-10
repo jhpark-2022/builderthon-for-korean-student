@@ -986,7 +986,8 @@ export default function NaruHome() {
                         <span aria-hidden>★</span>{t(naru.december.milestoneLabel)}
                       </span>
                       <span className={`${BODY} font-bold leading-snug text-white`}>{t(stage.milestone)}</span>
-                      <span className={`${META} text-white/70`}>{t(naru.december.milestoneNote)}</span>
+                      {/* DECIDED 2026-10-10 (중복 브리프 B1): 뒤에 붙던 "넘은 팀 모두 지원"(milestoneNote)을 그리지 않습니다.
+                          노선도 범례가 한 번 말합니다. 네 행에서 네 번 되풀이됐습니다. 키는 data/naru.ts에 그대로. */}
                     </p>
                   )}
                   {/* DECIDED 2026-10-08 (현장 팀 매칭 브리프 5): Day 1 행에만 있는 버튼 하나. 전에 오른쪽 열의 "팀 매칭"
@@ -1004,11 +1005,8 @@ export default function NaruHome() {
                   )}
                 </div>
                 <div className="flex flex-wrap content-start items-start gap-x-3 gap-y-1 max-sm:justify-center">
-                  {stage.submit && (
-                    <span className={`${META} font-bold text-naru-plum-tint`}>
-                      {`${t(naru.december.submitLabel)}\u2002${t(stage.submit)}`}
-                    </span>
-                  )}
+                  {/* DECIDED 2026-10-10 (중복 브리프 B1): "제출 {제출물}" 칩을 그리지 않습니다. 같은 행의 마일스톤 줄이
+                      같은 이름을 말합니다. stage.submit은 노선도의 ★ 판정에만 씁니다. */}
                   {stage.chips.map((c, j) => (
                     <span key={j} className={`${META} text-white/70`}>{t(c)}</span>
                   ))}
