@@ -19,6 +19,7 @@ const Background = dynamic(() => import("@/components/Background"), { ssr: false
 // 나루 홈은 "water"를 넘겨 나루터 수면을 받습니다.
 export type { BackgroundVariant } from "@/lib/background/scene/BackgroundScene";
 
-export default function BackgroundMount({ variant }: { variant?: "field" | "water" | "crossing" }) {
-  return <Background variant={variant} />;
+// still (2026-10-10, 구조 브리프 4): /naru의 정지 장면. water 변형에서만 뜻이 있습니다(BackgroundScene의 still 주석).
+export default function BackgroundMount({ variant, still }: { variant?: "field" | "water" | "crossing"; still?: boolean }) {
+  return <Background variant={variant} still={still} />;
 }

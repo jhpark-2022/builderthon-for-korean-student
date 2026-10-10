@@ -9,7 +9,7 @@ import { MOTION_KEY } from "@/lib/motionPreference";
  * full-viewport, fixed. Falls back to a branded CSS gradient if WebGL is
  * unavailable or initialization throws.
  */
-export default function Background({ variant = "field" }: { variant?: BackgroundVariant }) {
+export default function Background({ variant = "field", still = false }: { variant?: BackgroundVariant; still?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [failed, setFailed] = useState(false);
 
@@ -35,7 +35,7 @@ export default function Background({ variant = "field" }: { variant?: Background
       requestAnimationFrame(() => {
         if (cancelled) return;
         try {
-          scene = new BackgroundScene(canvas, variant);
+          scene = new BackgroundScene(canvas, variant, { still });
           // 토글이 붙잡을 손잡이. 컨텍스트로 내려보내지 않는 이유는 소비처가
           // 헤더도 푸터도 아닌 어디든 될 수 있고, 그때마다 프로바이더를 한 겹
           // 더 씌우는 값이 이 한 줄보다 크기 때문입니다. 값은 함수 하나입니다.
