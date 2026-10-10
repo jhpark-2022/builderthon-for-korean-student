@@ -1643,7 +1643,8 @@ export default function NaruHome() {
         <Reveal className={`${READ} mt-12 text-balance text-center`}>
           <p className={`${STATEMENT} text-balance`}>{t(naru.join.closingStatement)}</p>
           {/* 닫는 문장 옆의 구체적인 한 줄(가독성 브리프 5, 2026-09-25 사용자 승인). 이름은 naruDates. */}
-          <p className={`${MEASURE_C} mt-3 break-keep text-center ${BODY} leading-relaxed text-white/70`}>{t(naru.join.closingConcrete).replace("{name}", decemberEventLabel(locale))}</p>
+          {/* DECIDED 2026-10-10 (중복 브리프 C8): closingConcrete("{name}은 스크리닝 없이, 오는 사람이 참가자입니다")를 그리지 않습니다.
+              #december 끝의 등록 안내가 같은 말을 합니다. 키는 data/naru.ts에 그대로. */}
           <div className={`${MEASURE_C} mt-5 space-y-3 break-keep ${BODY} leading-relaxed text-white/70`}>
             {naru.join.closingBody.map((line, i) => (
               <p key={i} className="text-balance">{t(line)}</p>

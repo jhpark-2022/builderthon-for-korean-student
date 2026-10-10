@@ -609,8 +609,9 @@ export const naru = {
           },
         ],
         keeps: {
-          ko: "스크리닝 없이 전원에게 실제 기업의 이슈를 줍니다. 순위 대신 부문별로 시상하고, 평가는 결과물보다 과정에 무게를 둡니다.",
-          en: "A real company issue for everyone, no screening. Awards by category, not by placing, and the weight sits on the process.",
+          // DECIDED 2026-10-10 (중복 브리프 C5): "스크리닝 없이"와 "순위 대신"을 뺐습니다. 바로 위 본문이 둘 다 말합니다.
+          ko: "전원에게 실제 기업의 이슈를 줍니다. 부문별로 시상하고, 평가는 결과물보다 과정에 무게를 둡니다.",
+          en: "A real company issue for everyone. Awards by category, and the weight sits on the process.",
         },
       },
       {
@@ -630,8 +631,9 @@ export const naru = {
           },
         ],
         keeps: {
-          ko: "학점도 이력서도 보지 않습니다. 실명이 박힌 기업의 이슈 하나가 전부이고, 증명은 마지막 날 그 기업 앞에서 합니다.",
-          en: "No grades, no CV. One issue from a named company, proved in front of that company on the last day.",
+          // DECIDED 2026-10-10 (중복 브리프 C6): "증명은 마지막 날 그 기업 앞에서 합니다"를 뺐습니다. 히어로와 프로그램 리드가 말합니다.
+          ko: "학점도 이력서도 보지 않습니다. 실명이 박힌 기업의 이슈 하나가 전부입니다.",
+          en: "No grades, no CV. One issue from a named company is all there is.",
         },
       },
     ],
@@ -699,8 +701,9 @@ export const naru = {
     // DECIDED 2026-09-25 (가독성 브리프 5, 사용자 승인): 추상적인 문장 옆의 구체적인 한 줄.
     // 화면에 이미 있는 사실만 씁니다. 출처: 코어 01 "스크리닝이 없고", group.name "건너간 사람이 다시 돌아와 서는 자리".
     noteConcrete: {
-      ko: "문턱은 스크리닝 없는 참가이고, 롤모델은 건너간 뒤 다시 돌아와 서는 사람입니다.",
-      en: "The low doorway is entry with no screening. The role models are the people who crossed and came back to stand here.",
+      // DECIDED 2026-10-10 (중복 브리프 C7): "스크리닝 없는"을 "누구나 올 수 있는"으로. 스크리닝이라는 낱말은 코어 01과 등록 안내 두 자리에만 둡니다.
+      ko: "문턱은 누구나 올 수 있는 참가이고, 롤모델은 건너간 뒤 다시 돌아와 서는 사람입니다.",
+      en: "The low doorway is entry open to anyone. The role models are the people who crossed and came back to stand here.",
     },
     // DECIDED 2026-10-05 (사용자, 스크린숏: "여기에는 설명을 더 넣어줘도 좋을거 같아"): 한 문단이던 것을 둘로
     // 나눠 풀었습니다. noteBody는 하나만 있을 때 왜 그렇게 되는지(친목 모임, 소수의 클럽)를 말하고,
@@ -764,8 +767,9 @@ export const naru = {
         // DECIDED 2026-10-07 (이슈 브리프 2.1): 받는 것은 완성된 문제가 아니라 이슈입니다.
         title: { ko: "실명 기업의 진짜 이슈", en: "A real issue from a named company" },
         body: {
-          ko: "회사가 지금 겪고 있는 이슈를 회사 이름과 함께 받습니다. 그 아래의 문제는 직접 찾습니다.",
-          en: "An issue the company is facing right now, handed over with the company's name. The problem underneath is yours to find.",
+          // DECIDED 2026-10-10 (중복 브리프 C1): "이슈를 받고 문제는 직접 찾는다"는 히어로와 프로그램 리드가 말합니다. 이 칸의 새 정보는 실명 하나입니다.
+          ko: "회사 이름과 함께 받습니다. 어느 회사의 어떤 이슈인지 숨기지 않습니다.",
+          en: "Handed over with the company's name. Which company and which issue is not hidden.",
         },
         evidence: { ko: "8월 코드프레소 출제", en: "August: Codepresso set the problem" },
       },
@@ -798,8 +802,9 @@ export const naru = {
         // TODO: confirm. 무엇을 주는지(형태, 금액, 지급 방식)는 정해지지 않아 "지원"이라고만 씁니다.
         title: { ko: "하루마다, 모두에게", en: "Every day, for everyone" },
         body: {
-          ko: "그날의 마일스톤을 넘은 팀은 모두 지원을 받습니다.",
-          en: "Every team that clears the day's milestone gets support.",
+          // DECIDED 2026-10-10 (중복 브리프 C3): "넘은 팀 모두"는 노선도 범례가 한 번 말합니다. 이 칸은 언제 받는지만 말합니다.
+          ko: "마지막 날이 아니라 그날그날 받습니다.",
+          en: "You get it day by day, not on the last day.",
         },
       },
       {
@@ -857,8 +862,9 @@ export const naru = {
     lead2: {
       // DECIDED 2026-10-05 (사용자, 스크린숏: "너무 길어. 간략하게"): 두 장면만 남깁니다. 코어 둘의 이름을 부르던 뒤의 두 문장은
       // 뺐습니다(바로 아래 "변하지 않는 두 개"가 같은 순서로 이름을 답니다). 첫 이벤트라는 사실은 이 줄이 받습니다.
-      ko: "2026년 8월 싱가포르의 제로백 빌더톤에서 시작했습니다. 스크리닝 없이 기업의 문제를 받아 풀었고, 마지막 날 그 기업 앞에서 증명했습니다.",
-      en: "It began at the Zero100 builderthon in Singapore, August 2026. Teams took a company's problem with no screening and proved it in front of that company on the last day.",
+      // DECIDED 2026-10-10 (중복 브리프 C4): 뒤 문장(스크리닝 없이 받아 풀었고, 그 기업 앞에서 증명했다)을 뺐습니다. 바로 아래 코어 둘이 같은 말을 합니다.
+      ko: "2026년 8월 싱가포르의 제로백 빌더톤에서 시작했습니다.",
+      en: "It began at the Zero100 builderthon in Singapore, August 2026.",
     },
     // ADDED 2026-09-19 (사용자: "제로백의 도움이 있었기에 이 모든 게 가능했다").
     // 홈은 8월을 숫자와 사진으로만 말하고 있었습니다. 무엇을 빚졌는지는 한 줄도
