@@ -101,7 +101,7 @@ export default function Home() {
           (lib/registrationWindow.ts의 CROSSING_WINDOW가 null) 화면은 그 전과 같고 모달은
           열리지 않습니다. 8월 RegisterProvider와 별개. */}
       <CrossingRegisterProvider>
-        <JourneyNav anchors={naruNav} brand="naru" showQuiz={false} />
+        <JourneyNav anchors={naruNav} brand="naru" mark="crossing" showQuiz={false} />
         <NaruHome />
       </CrossingRegisterProvider>
     </>

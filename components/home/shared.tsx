@@ -269,14 +269,17 @@ export function SiteFooter() {
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
           {/* 헤더와 같은 규칙입니다 (2026-09-21): 영문 화면에서는 영문 락업.
               헤더에서만 바꾸면 같은 페이지 위아래에서 이름이 달라집니다. */}
-          <Image
-            src={locale === "en" ? "/naru/naru-name-en-rev.svg" : "/naru/naru-name-rev.png"}
-            alt={t(naru.footer.logoAlt)}
-            width={locale === "en" ? 857 : 604}
-            height={locale === "en" ? 142 : 168}
-            unoptimized={locale === "en"}
-            className="h-10 w-auto sm:h-12"
-          />
+          {/* DECIDED 2026-10-10 (구조 브리프 2.4): 푸터의 나루 로고는 /naru로 갑니다. 모양은 그대로입니다. */}
+          <Link href="/naru" className="inline-flex">
+            <Image
+              src={locale === "en" ? "/naru/naru-name-en-rev.svg" : "/naru/naru-name-rev.png"}
+              alt={t(naru.footer.logoAlt)}
+              width={locale === "en" ? 857 : 604}
+              height={locale === "en" ? 142 : 168}
+              unoptimized={locale === "en"}
+              className="h-10 w-auto sm:h-12"
+            />
+          </Link>
           {/* 부제와 짧은 정의(2026-09-29, data/naru.ts의 footer.subtitle과 shortDef). 부제는 로고 링과 같은 글자라
               영문 대문자 라벨로, 정의는 크레딧보다 한 단 밝게. */}
           <div className="-mt-2 flex max-w-xl flex-col items-center gap-2">

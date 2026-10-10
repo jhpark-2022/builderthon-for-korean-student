@@ -244,39 +244,19 @@ export const register = {
   },
 } as const;
 
+// DECIDED 2026-10-10 (사용자: "목차는 프로그램과 나루로 단순하게", 구조 브리프 2.4): 홈의 목차는 넷입니다.
+// 크로싱 서울(히어로), 프로그램, 참가(전의 "얻는 것". 참가 혜택 챕터), 나루(홈 끝의 티저. 글은 /naru).
+// "왜 나루인가"(#join)는 /naru로 가서 항목에서 뺐습니다. 그 페이지의 목차는 아래 naruPageNav.
+// railLines: 폰 목차에서만 두 줄 (2026-09-19, 사용자). 영어 "CROSSING SEOUL" 한 줄은 칩 하나가 첫 줄의 40%를 먹었습니다.
 export const naruNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel?: Phrase }[] = [
-  // DECIDED 2026-09-17 (홈 흐름 재배치 브리프): 크로싱 서울 · 프로그램 · 얻는 것 ·
-  // 8월 · 나루 · 학생회와 기업 · 함께. 순서는 화면 순서와 같아야 합니다.
-  // railLines: 폰 목차에서만 두 줄 (2026-09-19, 사용자: "두 줄로 해 주면 되지 않을까
-  // crossing seoul로"). 영어 한 줄은 138.6px이라 칩 하나가 첫 줄의 40%를 먹었습니다.
-  // 한국어는 57.8px이라 판이 비어 있고 한 줄 그대로입니다. 상단 인라인 행(xl 이상)과
-  // 본문 제목은 label을 쓰므로 바뀌지 않습니다.
   {
     id: "top",
     label: { ko: "크로싱 서울", en: "CROSSING SEOUL" },
     railLines: { ko: "크로싱 서울", en: "CROSSING\nSEOUL" },
   },
   { id: "december", label: { ko: "프로그램", en: "Programme" } },
-  { id: "gains", label: { ko: "얻는 것", en: "What you get" } },
-  // 2026-09-19 (사용자): 8월은 #naru 안으로 합쳐져 항목에서 뺐습니다(안쪽 앵커 #record는 남음).
-  // 2026-09-18 (사용자): 학생회와 기업(#how)이 #naru 안으로 합쳐져 항목 하나가 됐습니다.
+  { id: "gains", label: { ko: "참가", en: "Taking part" } },
   { id: "naru", label: { ko: "나루", en: "NARU" } },
-  // 2026-09-19 (왜 브리프 3.1): 챕터 제목이 "어떻게 함께하는가"에서 "왜 이 자리가
-  // 필요한가"로 바뀌었습니다. 칩은 제목을 따라갑니다. 들어오는 길 넷은 그 챕터
-  // 안의 #join-ways로 내려갔습니다.
-  // ariaLabel (2026-09-19, 접근성 감사 19): "왜" / "Why"는 한 음절이라 로터의
-  // 링크 목록에 문맥 없이 나열되면 무엇인지 알 수 없습니다. 눈으로 읽는 글자는
-  // 그대로 두고 이름만 챕터 제목 전문으로 늘립니다.
-  {
-    id: "join",
-    // DECIDED 2026-09-23 (첫 방문자 리뷰): 보이는 글자를 "왜" → "왜 나루인가", "Why" → "Why NARU".
-    // 한 음절만으로는 처음 온 사람이 무엇에 대한 "왜"인지 몰랐습니다. ariaLabel은 그대로입니다.
-    label: { ko: "왜 나루인가", en: "Why NARU" },
-    // 폰(390px) 실측: ko는 다섯 칩이 한 줄에 들어갑니다(마지막 칩 오른쪽 364px). 그래서 "이유"로
-    // 줄이지 않습니다. en은 전의 "Why"(44px)일 때도 앞 네 칩이 357px까지 차서 둘째 줄로 내려가
-    // 있었고, 라벨을 줄여도 한 줄이 되지 않아 "Why NARU" 그대로 둡니다.
-    ariaLabel: { ko: "왜 이 자리가 필요한가", en: "Why this place is needed" },
-  },
 ];
 
 // DECIDED 2026-10-10 (구조 브리프 3.2): /naru의 목차 넷. id는 그 페이지의 섹션 id와 같아야 합니다
@@ -377,6 +357,16 @@ export interface Story {
 }
 
 export const naru = {
+  // DECIDED 2026-10-10 (사용자: 나루 내용은 전부 다른 탭으로, 구조 브리프 2.3): 홈의 마지막 블록(#naru)에 서는 티저.
+  // 그룹의 글은 /naru에 있고, 홈에는 누가 여는지 한 상자만 남습니다. 문장 둘은 브리프의 것 그대로입니다.
+  teaser: {
+    eyebrow: { ko: "여는 사람들", en: "Who runs this" },
+    body: {
+      ko: "학생이 직접 운영하는 비영리 그룹 나루가 엽니다. 2026년 8월 싱가포르에서 시작했고, 이번이 두 번째 자리입니다.",
+      en: "CROSSING SEOUL is run by NARU, a student-run, not-for-profit group. It started in Singapore in August 2026, and this is the second time.",
+    },
+    cta: { label: { ko: "나루 알아보기", en: "About NARU" }, href: "/naru" },
+  },
   // ── CH0 · 히어로 ──────────────────────────────────────────────────────────
   // 구체적인 사실로 시작합니다. 코어는 다음 챕터의 몫이에요.
   //
@@ -449,6 +439,9 @@ export const naru = {
       ko: "학생이 직접 운영하는 그룹, 나루가 엽니다.",
       en: "Hosted by NARU, a Korea-rooted, student-run group.",
     },
+    // DECIDED 2026-10-10 (구조 브리프 2.4): 위 문장 안의 이 낱말이 /naru로 가는 링크입니다(밑줄 없이 색만).
+    // naruLine의 문자열에 그대로 들어 있어야 합니다. 없으면 링크 없이 문장만 그립니다.
+    naruLineTerm: { ko: "나루", en: "NARU" },
     // 사진 넷 아래 한 줄(감사 반영 브리프 1.3). 캡션이 없으면 12월 사진으로 읽힙니다.
     photosCaption: { ko: "제로백 빌더톤 2026.08 싱가포르", en: "Zero100 builderthon Aug 2026, Singapore" },
     // 이름 아래 한 줄. 포지션은 december.heading이 그대로 맡습니다.

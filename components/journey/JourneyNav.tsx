@@ -15,6 +15,7 @@ import { isScrollLocked } from "@/lib/useBodyScrollLock";
 import LocaleToggle from "@/components/LocaleToggle";
 import MotionToggle from "@/components/ui/MotionToggle";
 import ChatGlyph from "@/components/ChatGlyph";
+import { decemberEventLabel } from "@/lib/naruDates";
 import dynamic from "next/dynamic";
 // DECIDED 2026-10-08 (성능 리뷰 4): 인사 칩은 퀴즈 결과 표(data/quiz의 RESULTS, gzip 약 22KB)를 끌고 옵니다.
 // 홈은 이 칩을 쓰지 않는데(showQuiz=false) 헤더를 같이 쓰느라 그 표까지 받았습니다. 칩은 저장된 결과가
@@ -162,7 +163,12 @@ export default function JourneyNav({
   brand = "zero100",
   showQuiz = true,
   back,
+  mark = "lockup",
 }: {
+  // DECIDED 2026-10-10 (구조 브리프 2.4, D2): 홈(/)의 헤더 왼쪽은 나루 락업이 아니라 크로싱 서울 워드마크입니다.
+  // 두 이름이 한 화면에 로고로 같이 서는 것이 혼동의 절반이었습니다. 나루 락업은 /naru에서만 씁니다.
+  // brand="naru"일 때만 봅니다. 기본값 "lockup"은 전과 같습니다.
+  mark?: "lockup" | "crossing";
   anchors?: NavAnchor[];
   // DECIDED 2026-10-10 (구조 브리프 3.1): /naru 헤더 왼쪽, 로고 옆의 돌아가기("← 크로싱 서울"). /match의 돌아가기와
   // 같은 문법(화살표와 글자, 44px 히트 영역)입니다. 넘기지 않으면 아무것도 그리지 않습니다(홈, /2026-08).
@@ -401,6 +407,14 @@ export default function JourneyNav({
             // DECIDED 2026-09-29 (사용자: "맨위 TOC랑 있는 나루는 맨 왼쪽 like how it was like previously"):
             // 헤더의 로고는 바 왼쪽 끝, 메뉴는 그 옆입니다. 같은 날 앞서 넣었던 "바 한가운데"(f3e12a6)를
             // 되돌린 것입니다. 홈 본문의 #naru 인장과 푸터 로고는 그대로 가운데입니다.
+            mark === "crossing" ? (
+            // 히어로 제목과 같은 글자, 같은 그라데이션(naru-logo-from → to). 로고 파일이 아니라 글자입니다.
+            <a href="#top" className="-my-1 flex min-h-[44px] items-center py-1 leading-none">
+              <span lang={locale === "en" ? "en" : undefined} className="gradient-text whitespace-nowrap bg-gradient-to-r from-naru-logo-from to-naru-logo-to bg-clip-text pb-[0.08em] text-xl font-black tracking-[-0.02em] text-transparent">
+                {decemberEventLabel(locale)}
+              </span>
+            </a>
+            ) : (
             <a href="#top" className="-my-1 flex min-h-[44px] items-center py-1 leading-none">
               {/* 영문 화면에서는 이름도 영문입니다 (DECIDED 2026-09-21, 사용자:
                   "영어 버전에서도 로고 옆은 NARU여야 하고, 대문자로").
@@ -427,6 +441,7 @@ export default function JourneyNav({
                 className={locale === "en" ? "h-[1.69rem] w-auto sm:h-[1.9rem]" : "h-8 w-auto sm:h-9"}
               />
             </a>
+            )
           ) : (
             <a href="#top" className="mr-2 flex items-center gap-2.5 leading-none">
               {/* Official Zero100 lockup (icon + wordmark) leads the brand; the event
@@ -470,7 +485,7 @@ export default function JourneyNav({
               href={back.href}
               className="-my-3 ml-4 inline-flex min-h-[44px] items-center whitespace-nowrap py-3 text-sm font-semibold text-white/60 transition hover:text-white sm:ml-6"
             >
-              ← {t(back.label)}
+              <span aria-hidden className="mr-1.5">←</span>{t(back.label)}
             </a>
           )}
           {/* ANCHOR ROW - `xl` (1280), not `lg` (1024). See the note on the

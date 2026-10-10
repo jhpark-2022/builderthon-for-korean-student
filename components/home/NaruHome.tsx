@@ -475,7 +475,23 @@ export default function NaruHome() {
             </p>
             <p className={`mx-auto mt-3 max-w-xl text-balance break-keep ${BODY} leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)]`}>
               {/* 나루 한 문장이 서술 첫 줄(감사 반영 브리프 1.2). TODO: confirm(문구는 사용자가). */}
-              <span className="text-white">{t(naru.eventHero.naruLine)}</span>{" "}
+              {/* DECIDED 2026-10-10 (구조 브리프 2.4): 첫 화면에서 누가 여는지는 한 번 말하고, "나루"가 /naru로 갑니다.
+                  밑줄 없이 색만 다릅니다. 낱말이 문장에 없으면 링크 없이 문장만 그립니다. */}
+              <span className="text-white">
+                {(() => {
+                  const line = t(naru.eventHero.naruLine);
+                  const term = t(naru.eventHero.naruLineTerm);
+                  const i = line.indexOf(term);
+                  if (i < 0) return line;
+                  return (
+                    <>
+                      {line.slice(0, i)}
+                      <Link href="/naru" onClick={() => track("naru_cta", { src: "hero", to: "naru-page" })} className="text-accent transition hover:text-white">{term}</Link>
+                      {line.slice(i + term.length)}
+                    </>
+                  );
+                })()}
+              </span>{" "}
               {t(naru.eventHero.sub)}
             </p>
             <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center lg:mt-14">
@@ -569,11 +585,8 @@ export default function NaruHome() {
         {/* 2026-09-18 (감사 반영 브리프 8): 아이브로는 보라 외곽선 1종. 주황 글자·주황 발광을 뺐습니다. */}
         {/* DECIDED 2026-09-30 (사용자): 이 챕터의 머리(알약, h2, 리드 셋, 초안 고지)는 가운데입니다. 아래 숫자 줄과 노선도가
             이미 가운데라 머리부터 노선도까지 한 축입니다. 일정표부터는 왼쪽 끝. */}
-        <div className={`${READ} text-center`}>
-        <Eyebrow color="purple" className={eyebrowTrack(locale)}>
-          {`${t(naru.december.eyebrowPrefix)}\u2002${decemberEventLabel(locale)}`}
-        </Eyebrow>
-        </div>
+        {/* DECIDED 2026-10-10 (구조 브리프 2.4): 머리말 "다음 이벤트 크로싱 서울"을 그리지 않습니다. 홈이 곧 크로싱 서울입니다.
+            december.eyebrowPrefix 키는 data/naru.ts에 그대로 있습니다. */}
         <h2 id="december-title" className={`${H2} ${READ} text-balance text-center`}><Halo tone="violet">{t(naru.december.programHeading)}</Halo></h2>
         {/* 폰에서 3줄을 넘는 문단은 왼쪽 정렬 (2026-09-19, 모바일 감사 8). #naru가
             이미 쓰던 규칙(감사 반영 브리프 6.1)인데 #december와 #join에는 적용되지
@@ -1049,6 +1062,38 @@ export default function NaruHome() {
 
         </PlateSegment>
       </Chapter>
+
+      {/* ── 나루 티저 (DECIDED 2026-10-10, 사용자: "프로그램 끝에 나루 티저, 나루 내용은 전부 다른 탭으로", 구조 브리프 2.3) ──
+          홈의 마지막 블록입니다. id는 naru라 옛 링크 /#naru가 여기에 내려앉고, 목차의 넷째 칩이 여기로 옵니다.
+          READ 폭의 상자 하나(General Mentoring 상자와 같은 문법, 색은 보라 계열). 왼쪽에 나루 인장(크기는 전의 #naru 머리와
+          같은 160/220px), 폰에서는 위. 읽기 판 밖이라 상자가 자기 바탕을 가집니다(배경의 서울 형상이 이 뒤에 서 있습니다).
+          Chapter가 아니라 section입니다. Chapter는 md부터 한 화면 높이를 잡아 상자 하나에 빈 화면이 생깁니다. */}
+      <section id="naru" aria-labelledby="naru-teaser-label" className="relative w-full px-6 pb-20 pt-6 sm:px-10 lg:pb-28">
+        <Reveal className={READ}>
+          <div className="flex flex-col items-center gap-5 rounded-2xl border border-accent/25 bg-[#0B1430]/85 px-5 py-6 text-center sm:flex-row sm:gap-8 sm:text-left lg:px-7">
+            <Image
+              src={locale === "en" ? "/naru/naru-master-en-v3-rev.svg" : "/naru/naru-master-v3-rev.png"}
+              alt={t(naru.hero.logoAlt)}
+              width={900}
+              height={900}
+              unoptimized={locale === "en"}
+              className="block h-auto w-[160px] shrink-0 sm:w-[220px]"
+            />
+            <div>
+              <p id="naru-teaser-label" className={`${META} font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.teaser.eyebrow)}</p>
+              <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.teaser.body)}</p>
+              <Link
+                href={naru.teaser.cta.href}
+                onClick={() => track("naru_cta", { src: "teaser", to: "naru-page" })}
+                className={`mt-4 ${buttonClass("secondary", "naru")}`}
+              >
+                {t(naru.teaser.cta.label)}
+                <span aria-hidden>→</span>
+              </Link>
+            </div>
+          </div>
+        </Reveal>
+      </section>
 
       {/* DECIDED 2026-10-10 (사용자: "나루와 크로싱 서울이 한 페이지에 있어 혼동된다", 구조 브리프 2.2): 여기 있던 #naru, #join,
           (조건부) #people 챕터는 /naru로 옮겼습니다(components/naru/NaruPage.tsx). 삭제가 아니라 이동입니다. */}
