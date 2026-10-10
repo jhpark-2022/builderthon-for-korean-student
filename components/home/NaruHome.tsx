@@ -1116,15 +1116,11 @@ export default function NaruHome() {
               지키려고 설계하게 됩니다(data/naru.ts의 measure 주석). */}
         </Reveal>
         </PhoneFold>
+        {/* DECIDED 2026-10-10 (중복 브리프 B2): 이 자리의 호박색 "결과보다 과정" 상자(naru.why.measure)를 그리지 않습니다.
+            #naru 코어 01의 "그래서 우리가 보는 것도 순위가 아니라 완주입니다"와 같은 말입니다. 키는 data/naru.ts에 그대로.
+            그 자리에 findClose 문단이 섭니다. 평가가 과정이라는 말을 이 문단이 대신합니다. 상자 없이 READ 왼쪽 끝, BODY. */}
         <Reveal className={`${READ} text-left max-sm:text-center`}>
-          <div className="mt-6 rounded-2xl border border-amber-400/25 bg-amber-400/[0.07] px-5 py-4">
-            <p className={`${META} font-bold uppercase ${latinTrack(locale)} text-amber-200`}>
-              {t(naru.why.measureLabel)}
-            </p>
-            <p className={`mt-2 break-keep text-left max-sm:text-center ${BODY} font-semibold leading-relaxed text-white`}>
-              {t(naru.why.measure)}
-            </p>
-          </div>
+          <p className={`${MEASURE} mt-6 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.findClose)}</p>
         </Reveal>
         {/* 판 나누기(2026-09-26 3차, 사용자: #gains와 #naru 사이 틈에 한국 형상이 보임): 긴 챕터의 판을 둘로 나눠
             서울이 보이는 틈을 하나 더 둡니다.
@@ -1230,7 +1226,6 @@ export default function NaruHome() {
               </li>
             ))}
           </ol>
-          <p className={`${MEASURE} mt-5 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.findClose)}</p>
           {/* 그 밖에 바꾼 것. 상자 없는 목록 셋(규칙: 짧은 병렬 문장은 목록). 라벨은 ul 밖의 소제목입니다. */}
           <h4 data-subheading className={`${SUBHEADING} mt-8`}>{t(naru.december.alsoLabel)}</h4>
           <ul role="list" className="mt-3">
