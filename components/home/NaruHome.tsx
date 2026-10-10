@@ -365,6 +365,15 @@ export default function NaruHome() {
   // 사라졌습니다. 행은 처음부터 전부 펼쳐져 있어 접었다 펼 것이 없습니다.
   const [hoverDay, setHoverDay] = useState<number | null>(null);
   usePlateLite();
+  // DECIDED 2026-10-10 (구조 브리프 3.2): 옛 주소. 홈에 있던 #join, #how, #why, #record, #join-ways는 /naru로 갔습니다.
+  // 해시는 서버에 오지 않아 redirects로 잡을 수 없으므로, 마운트 때 한 번 보고 /naru의 같은 자리로 바꿉니다.
+  // /naru에서 id가 바뀐 둘은 여기서 맞춥니다: 전의 #why(변하지 않는 두 개)는 #core, 전의 #join(왜 이 자리가 필요한가)은 #why.
+  // 그 밖의 해시(#december, #gains, #naru 등)는 손대지 않습니다. #naru는 홈 끝의 티저에 내려앉습니다.
+  useEffect(() => {
+    const moved: Record<string, string> = { "#join": "why", "#how": "how", "#why": "core", "#record": "record", "#join-ways": "join-ways" };
+    const to = moved[window.location.hash];
+    if (to) window.location.replace(`/naru#${to}`);
+  }, []);
 
   return (
     <>

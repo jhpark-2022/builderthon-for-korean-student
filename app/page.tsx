@@ -3,23 +3,14 @@ import JourneyNav from "@/components/journey/JourneyNav";
 import BackgroundMount from "@/components/BackgroundMount";
 import NaruHome from "@/components/home/NaruHome";
 import { naruNav } from "@/data/naru";
+import { SITE_URL, ORGANIZATION_LD } from "@/lib/organizationLd";
 import { CrossingRegisterProvider } from "@/components/crossing/RegisterProvider";
 import { DECEMBER_EVENT_NAME, DECEMBER_STARTS_AT, DECEMBER_ENDS_AT, DECEMBER_CITY } from "@/lib/naruDates";
-
-const SITE_URL = "https://naru-crossing-seoul.vercel.app";
 
 // DECIDED 2026-10-08 (사용자 승인, SEO 리뷰 7): 구조화 데이터. 검색 엔진이 이 페이지를 날짜가 있는 행사로 읽게 합니다.
 // 확정된 사실만 넣습니다: 이름, 기간(lib/naruDates.ts), 도시, 주최. 장소 이름과 참가비는 화면에도 쓰지 않으므로
 // (참가자 카카오톡 방에서 알립니다) 여기에도 지어내지 않습니다. 값은 전부 상수라 사용자 입력이 섞이지 않습니다.
-const ORGANIZATION_LD = {
-  "@type": "Organization",
-  "@id": `${SITE_URL}/#naru`,
-  name: "나루 NARU",
-  alternateName: "NARU",
-  url: SITE_URL,
-  logo: `${SITE_URL}/icon.svg`,
-  description: "A Korea-rooted, student-run, not-for-profit collective of student builders.",
-};
+// 2026-10-10 (구조 브리프): Organization LD는 lib/organizationLd.ts로 옮겼습니다. /naru도 같은 것을 씁니다.
 const HOME_LD = {
   "@context": "https://schema.org",
   "@graph": [

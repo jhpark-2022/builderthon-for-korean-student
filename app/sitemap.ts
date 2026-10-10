@@ -12,6 +12,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: SITE_URL, lastModified, changeFrequency: "weekly", priority: 1 },
     // 기록은 이제 바뀌지 않습니다. 색인에서 내리지는 않아요. 8월에 참가한
     // 사람이 검색으로 자기 회차를 다시 찾을 수 있어야 합니다.
+    // 2026-10-10 (구조 브리프 3.1): 그룹 나루의 페이지.
+    { url: `${SITE_URL}/naru`, lastModified, changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE_URL}/2026-08`, lastModified, changeFrequency: "yearly", priority: 0.6 },
     { url: `${SITE_URL}/quiz`, lastModified, changeFrequency: "monthly", priority: 0.5 },
   ];
