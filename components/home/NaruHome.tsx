@@ -304,7 +304,7 @@ const eyebrowTrack = (locale: "ko" | "en") => (locale === "en" ? "" : "!tracking
 // 전과 같습니다. 모양(투명도, 흐림, 가장자리)은 그대로입니다.
 // 2026-09-26 (판 덮개 브리프 2.1): data-plate는 배경(BackgroundScene.readAnchors)이 판을 찾는 손잡이입니다.
 // 형상이 바뀌는 구간을 이 판들 뒤에 둡니다. 값은 챕터 id.
-type PlateId = "december" | "december-2" | "gains" | "naru" | "naru-2" | "join";
+type PlateId = "december" | "gains" | "naru" | "naru-2" | "join";
 function ReadingPlate({ id, read = false }: { id: PlateId; read?: boolean }) {
   return <div aria-hidden data-plate={id} className={read ? "reading-plate reading-plate--read" : "reading-plate"} />;
 }
@@ -1121,6 +1121,15 @@ export default function NaruHome() {
             그 자리에 findClose 문단이 섭니다. 평가가 과정이라는 말을 이 문단이 대신합니다. 상자 없이 READ 왼쪽 끝, BODY. */}
         <Reveal className={`${READ} text-left max-sm:text-center`}>
           <p className={`${MEASURE} mt-6 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.findClose)}</p>
+          {/* DECIDED 2026-10-10 (중복 브리프 B3): 8월과의 비교는 8월 페이지로 갔고, 여기는 그리로 가는 한 줄입니다. */}
+          <Link
+            href="/2026-08#gaps"
+            onClick={() => track("naru_cta", { src: "december", to: "august-gaps" })}
+            className={`mt-2 inline-flex min-h-[44px] items-center gap-1.5 ${BODY} font-medium text-accent underline-offset-4 transition hover:text-white hover:underline`}
+          >
+            {t(naru.december.gapsLink)}
+            <span aria-hidden>→</span>
+          </Link>
         </Reveal>
         {/* 판 나누기(2026-09-26 3차, 사용자: #gains와 #naru 사이 틈에 한국 형상이 보임): 긴 챕터의 판을 둘로 나눠
             서울이 보이는 틈을 하나 더 둡니다.
@@ -1171,73 +1180,12 @@ export default function NaruHome() {
         </div>
         </div>
         </PlateSegment>
-        <PlateSegment id="december-2" gap read>
-
-        {/* DECIDED 2026-09-20 (일정 브리프 4장, PDF 01): 학생이 도전할 수 있는 AI 활용
-            범위 셋. "8월은 셋 중 하나만 썼습니다"가 12월이 왜 다른지를 한 눈에
-            말합니다. 바로 아래 gaps 첫 항목이 같은 이야기를 덜 선명하게 하고 있어서
-            이 셋이 그 항목의 근거가 됩니다. 그래서 gaps 바로 위입니다.
-
-            상자가 아니라 3열 행 하나입니다(표현 방식 브리프 2장). iii은 지난 것이라
-            한 단 낮은 밝기이고, i·ii의 when만 accent입니다. 번호(i·ii·iii)는 로마
-            숫자 그대로 PDF에서 옵니다. */}
-        {/* DECIDED 2026-10-07 (이슈 브리프 2.2): 위 "AI 활용 범위 셋"은 화면에서 내렸습니다. "데이터 분석을 12월에
-            더한다"는 옛 방침 위에 서 있었습니다. 같은 자리에 "문제를 찾는 방식"의 두 칸 비교(8월, 12월)가 섭니다.
-            문법은 그대로입니다: 상자가 아니라 헤어라인으로 나뉜 행 하나, 소제목은 READ. 8월 칸을 흐리게 하지
-            않습니다(같은 브리프 4.2). 두 칸의 차이는 라벨의 색이 말합니다. december.scope* 키는 data/naru.ts에 그대로. */}
-        {/* 2026-09-30: 판 조각의 첫 블록이라 위 간격이 없습니다. 조각의 gap(216px)이 그 일을 합니다. */}
-        {/* DECIDED 2026-10-10 (사용자, 스크린숏: "내용이 너무 많아, 정보가 너무 많음"): 이 자리의 "문제를 찾는 방식" 두 칸 비교를
-            화면에서 내렸습니다. 바로 아래 카드 01이 같은 말을 합니다(8월은 완성된 문제를 받아 결과물이 닮았다, 12월은
-            이슈를 받고 문제는 팀이 찾는다). 두 칸 아래에 있던 문단(findClose)은 카드 둘 아래로 옮겼습니다.
-            december.find, findLabel 키는 data/naru.ts에 그대로 있습니다. */}
-        {/* 8월에 아쉬웠던 넷과 12월의 답. 번호 배지 카드 넷(8월 BenefitCard 문법), 2×2.
-            제목이 아쉬웠던 것, 본문이 12월의 답. */}
-        {/* DECIDED 2026-10-07 (이슈 브리프 2.3): 카드 다섯이 둘이 됩니다. "8월이 남기지 못한 두 가지"만 카드로
-            세우고(카드 모양은 그대로, 2열), 전의 02~04는 그 아래 "그 밖에 바꾼 것" 세 줄로 내렸습니다. 카드는
-            제목, 무슨 일이 있었는지 두 문장(gap.body), 12월의 답 순서입니다. 전에는 body를 그리지 않았습니다. */}
-        {/* 2026-10-10: 판 조각의 첫 블록이 되어 위 간격이 없습니다(조각의 gap이 그 일을 합니다). 제목과 한 줄은 접힘 밖에
-            있어서, 폰에서도 단추 위에 무엇에 관한 묶음인지가 보입니다. */}
-        <Reveal className={`${READ} text-left max-sm:text-center`}>
-          <h3 data-subheading className={SUBHEADING}>{t(naru.december.gapsHeading)}</h3>
-          <p className={`${MEASURE} mt-2 break-keep ${BODY} leading-relaxed text-white/70`}>{t(naru.december.gapsNote)}</p>
-        </Reveal>
-        <PhoneFold more={t({ ko: "8월과 달라진 점 보기", en: "What changed since August" })} less={t({ ko: "8월과 달라진 점 접기", en: "Hide what changed" })}>
-        <Reveal className={`${READ} text-left max-sm:text-center`}>
-          {/* 폰은 1열(모바일 수정 브리프 1.3). 2열이면 150px 폭에서 "12월" 답이 서너 글자씩
-              끊겼습니다. 폰에서는 번호 배지가 제목 왼쪽에 인라인. sm부터 2열, 배지 위. */}
-          {/* 폰은 상자 없이 행(구분선만). sm부터 카드 2열. */}
-          <ol role="list" className="mt-3 grid grid-cols-1 sm:mt-5 sm:grid-cols-2 sm:gap-4">
-            {naru.record.gaps.map((gap, i) => (
-              <li key={gap.title.en} className="relative border-b border-white/10 py-3 last:border-b-0 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-4 sm:transition sm:hover:border-accent/30 sm:hover:bg-white/[0.05]">
-                <div className="flex items-center gap-2.5 max-sm:flex-col max-sm:gap-2 sm:block">
-                  <span className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-2xl bg-accent/15 ${META} font-black text-accent sm:h-8 sm:w-8`}>
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <h4 className={`break-keep ${BODY} font-bold leading-snug text-white sm:mt-2.5`}>{t(gap.title)}</h4>
-                </div>
-                <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/70`}>{t(gap.body)}</p>
-                <p className={`mt-3 flex items-start gap-2 break-keep max-sm:justify-center ${BODY} leading-relaxed text-white/85`}>
-                  <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent/80 max-sm:hidden" />
-                  <span>
-                    <span className={`mr-1.5 ${META} font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.december.decemberLabel)}</span>
-                    {gap.answer ? t(gap.answer) : t(naru.record.answerPending)}
-                  </span>
-                </p>
-              </li>
-            ))}
-          </ol>
-          {/* 그 밖에 바꾼 것. 상자 없는 목록 셋(규칙: 짧은 병렬 문장은 목록). 라벨은 ul 밖의 소제목입니다. */}
-          <h4 data-subheading className={`${SUBHEADING} mt-8`}>{t(naru.december.alsoLabel)}</h4>
-          <ul role="list" className="mt-3">
-            {naru.december.also.map((line, i) => (
-              <li key={i} className={`flex items-start gap-2 break-keep border-t border-white/10 py-3 max-sm:justify-center ${BODY} leading-relaxed text-white/70 ${i === naru.december.also.length - 1 ? "border-b" : ""}`}>
-                <span aria-hidden className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent/80 max-sm:hidden" />
-                {t(line)}
-              </li>
-            ))}
-          </ul>
-        </Reveal>
-        </PhoneFold>
+        {/* DECIDED 2026-10-10 (사용자: "객관적으로 너무 내용이 많다", 중복 브리프 B3): #december의 둘째 판 조각을 홈에서
+            내렸습니다. "8월이 남기지 못한 두 가지, 그리고 12월의 답"(카드 둘)과 "그 밖에 바꾼 것"은 8월 페이지 맨 아래의
+            #gaps로 갔습니다(components/archive/AugustGaps.tsx). 홈에는 위의 한 줄 링크만 남습니다. 폰의 접힘 단추 하나가
+            같이 사라졌습니다. 이 챕터의 판은 이제 하나라 틈도 하나 줄었고, 배경은 판을 DOM에서 읽어 다시 계산합니다
+            (BackgroundScene.readAnchors). 같은 자리에 있던 "문제를 찾는 방식" 두 칸 비교는 2026-10-10 앞선 정리에서 내렸습니다.
+            december.find, findLabel, gapsHeading, gapsNote, alsoLabel, also 키는 data/naru.ts에 그대로 있습니다. */}
 
         {/* 끝나면 할 일 (DECIDED 2026-09-18, 사용자: "챕터를 만들지는 말고 기존 포맷에 몇 줄 더").
             팔로업 브리프는 #after 챕터를 제안했지만 사용자가 챕터를 원하지 않아, 아쉬웠던 넷과 같은
@@ -1273,7 +1221,6 @@ export default function NaruHome() {
             브리프 3.2). 노선도가 데스크톱에서 렌더되는 것을 확인했고, 같은 시간축을 두 번 그리고
             있었습니다. FlowStrip 컴포넌트와 december.flow 키는 그대로. */}
 
-        </PlateSegment>
       </Chapter>
 
       {/* ── CH2 · 오면 무엇이 남는가 (DECIDED 2026-09-17, 홈 흐름 재배치 브리프) ──

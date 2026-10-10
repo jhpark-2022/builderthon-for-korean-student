@@ -23,6 +23,7 @@ import {
   type DayMeta,
 } from "@/data/schedule";
 import Chapter from "./Chapter";
+import AugustGaps from "@/components/archive/AugustGaps";
 import Eyebrow from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
 import LinkedInLink from "@/components/ui/LinkedInLink";
@@ -3562,6 +3563,11 @@ export default function Journey() {
           </div>
         </div>
       </Chapter>
+
+      {/* DECIDED 2026-10-10 (중복 브리프 B3): 홈에 있던 "8월이 남기지 못한 두 가지, 그리고 12월의 답"이 이 페이지의
+          맨 아래, 마지막 화면 앞에 섭니다. 홈의 프로그램 챕터 끝이 /2026-08#gaps로 링크합니다. 이 페이지의 다른
+          부분은 그대로입니다. 목차 레일에는 넣지 않았습니다. */}
+      <AugustGaps />
 
       {/* ── CH 6 · FOOTER ──────────────────────────────────────────── */}
       <section id="closing" className="relative flex min-h-screen w-full flex-col px-6 py-16 sm:px-10">

@@ -1676,8 +1676,8 @@ export const naru = {
     // 셋째 줄: 피칭은 열고 시상에서는 뺍니다(2026-09-30). "별도 트랙"을 다시 쓰지 마세요.
     alsoLabel: { ko: "그 밖에 바꾼 것", en: "What else changed" },
     also: [
-      // 2026-10-10 (마일스톤 브리프 2.4): 맨 앞 줄.
-      { ko: "보상을 마지막 날에서 매일로 옮겼습니다. 넘은 팀은 모두 받습니다.", en: "Rewards moved from the last day to every day. Every team that clears the bar gets one." },
+      // DECIDED 2026-10-10 (중복 브리프 B3): 같은 날 아침 맨 앞에 넣었던 "보상을 마지막 날에서 매일로 옮겼습니다" 줄을 뺐습니다.
+      // 홈의 노선도 범례가 한 번 말합니다. 이 목록은 이제 8월 페이지의 #gaps에서만 그립니다.
       { ko: "멘토링의 디테일을 사전에 더 많이 공유합니다.", en: "More of the mentoring details are shared in advance." },
       { ko: "모든 활동을 대면으로 해서 다른 팀이 만드는 것을 직접 봅니다.", en: "Every activity is in person, so you see what other teams are building." },
       { ko: "주관 학생도 피칭할 수 있습니다(시상 대상은 아닙니다).", en: "Organising students can pitch too (they are not up for awards)." },
@@ -1686,6 +1686,10 @@ export const naru = {
       ko: "이 다섯 가지를 메우려면 한 번 더 해야 합니다. 각각 8월에 무엇이 없었고 12월에 무엇을 넣는지입니다.",
       en: "Filling these five takes doing it once more. For each, what August lacked and what December puts in.",
     },
+    // DECIDED 2026-10-10 (중복 브리프 B3): 홈의 프로그램 챕터 끝에서 8월 페이지의 #gaps로 가는 한 줄과,
+    // 8월 페이지의 #gaps에서 홈의 프로그램 챕터로 돌아오는 한 줄. 화살표는 화면에서 붙입니다.
+    gapsLink: { ko: "8월과 무엇이 다른지", en: "How it differs from August" },
+    gapsBackLink: { ko: "크로싱 서울 프로그램 보기", en: "See the Crossing Seoul program" },
     augustLabel: { ko: "8월", en: "August" },
     decemberLabel: { ko: "12월", en: "December" },
     // DECIDED 2026-09-29 (사용자: 9/28 자문 미팅의 인사이트를 반영): 다음 건너기. 자문의 요지는 "12월은 제대로
