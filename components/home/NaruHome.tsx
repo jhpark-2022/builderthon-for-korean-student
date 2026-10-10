@@ -829,10 +829,9 @@ export default function NaruHome() {
         </p>
         {/* 초안 고지(DECIDED 2026-09-18, 사용자): 세부 내용이 바뀔 수 있다는 것을 챕터 머리에서
             확실하게. 호박색 점선 상자(pending 칩과 같은 계열). 8월 문법의 강조 상자 크기. */}
-        <div role="note" className={`${READ} mt-6 rounded-2xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] px-4 py-3 text-center sm:flex sm:items-start sm:justify-center sm:gap-3`}>
-          <span className={`mr-2 inline-block shrink-0 rounded-full border border-amber-400/40 bg-amber-400/10 px-2 py-0.5 align-[2px] ${META} font-bold uppercase ${latinTrack(locale)} text-amber-200 sm:mr-0 sm:mt-0.5`}>{t(naru.december.draftLabel)}</span>
-          <p className={`inline break-keep ${BODY} leading-relaxed text-amber-50/90 sm:block`}>{t(naru.december.draftNote)}</p>
-        </div>
+        {/* DECIDED 2026-10-10 (사용자, 스크린숏: "초안이나, 중복 단계나 이 내용도 빼줘"): 위 초안 고지 상자를 그리지 않습니다.
+            일정과 현장 멘토링이 아직 바뀔 수 있다는 말은 이제 화면에 없습니다. december.draftLabel, draftNote 키는
+            data/naru.ts에 그대로 있습니다. */}
         {/* 숫자 둘. 8월 ProgramStats("2일 필참 / 6일 선택")의 문법. shape에 이미 있는
             값 둘(5일, 2회)만 씁니다. 4차에서 여섯 칸을 뺐으니 늘리지 않습니다. */}
         <Reveal>
@@ -851,7 +850,8 @@ export default function NaruHome() {
             DECIDED 2026-09-26 (사용자: "중간에 있어야지"): 이 줄만 가운데. 글이 아니라 한눈에 보는
             요약이라 본문의 왼쪽 정렬 규칙(9월 25일, 26일)의 예외입니다. 칸 안의 숫자와 라벨도 가운데. */}
         {/* data-center-zone: 가운데 정렬이 허용되는 세 자리 중 하나(왼쪽 끝 브리프 2.2). 검증이 이 표시로 찾습니다. */}
-        <dl data-center-zone="stats" className={`${READ} mt-5 flex items-stretch justify-center`}>
+        {/* 2026-10-10: 초안 상자가 빠져 리드 문단 바로 아래가 됐습니다. 숫자가 문단에 붙지 않게 mt-5를 mt-10으로. */}
+        <dl data-center-zone="stats" className={`${READ} mt-10 flex items-stretch justify-center`}>
           {/* DECIDED 2026-10-08 (사용자 승인, 홈 리뷰 12): 둘째 칸이 "2회 중간 제출 지점"이었습니다. 처음 온 사람에게
               뜻이 없는 숫자라 "무순위, 부문별 시상"(shape[4])으로 바꿉니다. 제출 두 번은 아래 "이렇게 굴립니다"가 말합니다. */}
           {[naru.december.shape[0], naru.december.shape[4]].map((stat, i) => (
