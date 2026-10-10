@@ -1077,28 +1077,49 @@ export default function NaruHome() {
           READ 폭의 상자 하나(General Mentoring 상자와 같은 문법, 색은 보라 계열). 왼쪽에 나루 인장(크기는 전의 #naru 머리와
           같은 160/220px), 폰에서는 위. 읽기 판 밖이라 상자가 자기 바탕을 가집니다(배경의 서울 형상이 이 뒤에 서 있습니다).
           Chapter가 아니라 section입니다. Chapter는 md부터 한 화면 높이를 잡아 상자 하나에 빈 화면이 생깁니다. */}
+      {/* DECIDED 2026-10-10 (사용자, 스크린숏: "너무 밋밋하다"): 티저를 다시 그렸습니다. 테두리 한 줄짜리 상자에서
+          ① 보라에서 자주로 가는 그라데이션 테두리와 안쪽의 빛 둘(/match 결과 카드와 같은 문법), ② 인장 뒤의 빛,
+          ③ 나루의 두 줄 선언(naru.hero.titleLine1, 2. /naru 머리의 제목과 같은 문장, 새 글이 아닙니다)을 TITLE로.
+          폭은 READ에서 WIDE로 넓혔습니다. TITLE 두 줄이 인장 옆에 서려면 READ(864px)로는 모자랍니다.
+          주황은 쓰지 않습니다(주황은 점으로만). 글자 크기는 TITLE, BODY, META 셋 그대로입니다. */}
       <section id="naru" aria-labelledby="naru-teaser-label" className="relative w-full px-6 pb-20 pt-6 sm:px-10 lg:pb-28">
-        <Reveal className={READ}>
-          <div className="flex flex-col items-center gap-5 rounded-2xl border border-accent/25 bg-[#0B1430]/85 px-5 py-6 text-center sm:flex-row sm:gap-8 sm:text-left lg:px-7">
-            <Image
-              src={locale === "en" ? "/naru/naru-master-en-v3-rev.svg" : "/naru/naru-master-v3-rev.png"}
-              alt={t(naru.hero.logoAlt)}
-              width={900}
-              height={900}
-              unoptimized={locale === "en"}
-              className="block h-auto w-[160px] shrink-0 sm:w-[220px]"
+        <Reveal className={WIDE}>
+          <div className="relative overflow-hidden rounded-3xl bg-[#0B1430]/90 px-6 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-12">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-accent/80 via-white/10 to-accent-strong/70 p-px"
+              style={{ WebkitMask: "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude" }}
             />
-            <div>
-              <p id="naru-teaser-label" className={`${META} font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.teaser.eyebrow)}</p>
-              <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.teaser.body)}</p>
-              <Link
-                href={naru.teaser.cta.href}
-                onClick={() => track("naru_cta", { src: "teaser", to: "naru-page" })}
-                className={`mt-4 ${buttonClass("secondary", "naru")}`}
-              >
-                {t(naru.teaser.cta.label)}
-                <span aria-hidden>→</span>
-              </Link>
+            <div aria-hidden className="pointer-events-none absolute -left-24 -top-28 h-80 w-80 rounded-full bg-naru-purple/40 blur-3xl" />
+            <div aria-hidden className="pointer-events-none absolute -bottom-32 -right-20 h-80 w-80 rounded-full bg-accent-strong/25 blur-3xl" />
+            <div className="relative flex flex-col items-center gap-7 text-center md:flex-row md:gap-12 md:text-left">
+              <div className="relative shrink-0">
+                <div aria-hidden className="pointer-events-none absolute inset-[-14%] rounded-full bg-accent/25 blur-2xl" />
+                <Image
+                  src={locale === "en" ? "/naru/naru-master-en-v3-rev.svg" : "/naru/naru-master-v3-rev.png"}
+                  alt={t(naru.hero.logoAlt)}
+                  width={900}
+                  height={900}
+                  unoptimized={locale === "en"}
+                  className="relative block h-auto w-[160px] sm:w-[220px]"
+                />
+              </div>
+              <div className="min-w-0">
+                <p id="naru-teaser-label" className={`${META} font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.teaser.eyebrow)}</p>
+                <p className={`mt-3 ${TITLE} font-bold leading-[1.15] tracking-tight text-white`}>
+                  <span className="block break-keep">{t(naru.hero.titleLine1)}</span>{" "}
+                  <span className={`${GRADIENT_TEXT} block break-keep`}>{t(naru.hero.titleLine2)}</span>
+                </p>
+                <p className={`mt-4 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.teaser.body)}</p>
+                <Link
+                  href={naru.teaser.cta.href}
+                  onClick={() => track("naru_cta", { src: "teaser", to: "naru-page" })}
+                  className={`group mt-6 ${buttonClass("secondary", "naru")}`}
+                >
+                  {t(naru.teaser.cta.label)}
+                  <span aria-hidden className={ARROW_CLASS}>→</span>
+                </Link>
+              </div>
             </div>
           </div>
         </Reveal>

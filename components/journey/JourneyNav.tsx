@@ -432,7 +432,13 @@ export default function JourneyNav({
             mark === "crossing" ? (
             // 히어로 제목과 같은 글자, 같은 그라데이션(naru-logo-from → to). 로고 파일이 아니라 글자입니다.
             <a href="#top" className="-my-1 flex min-h-[44px] items-center py-1 leading-none">
-              <span lang={locale === "en" ? "en" : undefined} className="gradient-text whitespace-nowrap bg-gradient-to-r from-naru-logo-from to-naru-logo-to bg-clip-text pb-[0.08em] text-xl font-black tracking-[-0.02em] text-transparent">
+              <span lang={locale === "en" ? "en" : undefined} className={`gradient-text whitespace-nowrap bg-gradient-to-r from-naru-logo-from to-naru-logo-to bg-clip-text pb-[0.08em] font-black tracking-[-0.02em] text-transparent ${
+                // DECIDED 2026-10-10 (사용자, 스크린숏: "크로싱 서울 로고가 더 크게 보였으면"): text-xl(22.5px)에서 키웠습니다.
+                // 52px 바에서는 2xl(27px), 80px 바(xl부터)에서는 3xl(33.75px)로 전의 나루 락업(36~40px)과 비슷한 무게입니다.
+                // 영문 "CROSSING SEOUL"은 글자 수가 두 배라 폰에서는 작게 둡니다(390px에서 오른쪽 버튼과 28px, 360px에서도 닿지 않게).
+                // 한국어도 360px 아래에서는 한 단 작습니다. sm(640px)부터는 두 로케일이 같은 크기입니다.
+                locale === "en" ? "text-xs min-[390px]:text-sm sm:text-2xl xl:text-3xl" : "text-lg min-[360px]:text-2xl xl:text-3xl"
+              }`}>
                 {decemberEventLabel(locale)}
               </span>
             </a>
