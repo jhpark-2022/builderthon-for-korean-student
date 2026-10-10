@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-10 홈은 크로싱 서울, 나루는 /naru](#2026-10-10-split-naru)
 - [2026-10-10 프로그램 챕터의 초안 고지를 뺀다](#2026-10-10-draft-note-off)
 - [2026-10-10 홈: 같은 말을 한 번만, 8월 비교는 8월 페이지로](#2026-10-10-home-dedupe)
 - [2026-10-10 12월 챕터 줄이기: 두 번 나오는 말을 걷는다](#2026-10-10-december-trim)
@@ -187,6 +188,23 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-10-split-naru"></a>
+## 2026-10-10 홈은 크로싱 서울, 나루는 /naru
+- 범위: app/naru (새 페이지와 공유 카드), components/naru/NaruPage.tsx, components/home/shared.tsx (새 파일 둘),
+  components/home/NaruHome.tsx, components/journey/JourneyNav.tsx, data/naru.ts, lib/background, lib/organizationLd.ts, app/sitemap.ts
+- 한 것: DECIDED 2026-10-10 (사용자: 나루와 크로싱 서울이 한 페이지에 있어 혼동된다. 나루 내용은 전부 다른 탭으로).
+  홈의 나루 챕터와 "왜 이 자리가 필요한가" 챕터를 /naru로 옮겼습니다. 글은 그대로이고 삭제한 것은 없습니다.
+  홈 끝에는 나루 티저 상자 하나(#naru)가 남고, 목차는 크로싱 서울, 프로그램, 참가, 나루 넷입니다.
+  홈 헤더 왼쪽은 크로싱 서울 워드마크이고 나루 락업은 /naru에서만 씁니다. 프로그램 머리말은 그리지 않습니다.
+  /naru의 id는 top, core(전 #why), how, why(전 #join)이고, 홈이 옛 해시 다섯을 그 자리로 보냅니다.
+  배경: 건너기(서울에서 싱가포르)는 그룹 챕터의 판이 있을 때만 일어납니다. 홈은 서울이 티저 뒤까지 서고 푸터 앞에서 거둡니다.
+  /naru는 같은 water 변형의 정지 장면입니다. 공유 카드의 한글은 레포 규칙대로 로고 PNG가 들고, 부제는 영문입니다.
+  결정 D1~D4는 모두 브리프의 기본값입니다.
+- 검증: 옮긴 글은 두 로케일, 두 폭에서 innerText 동일. 홈 길이 1440에서 10,526→6,305px, 390에서 8,692→5,016px.
+  홈 본문의 "나루" 4회, "제로백" 2회. 형상 전환 검증 1은 홈 1440, 1000, 390에서 위반 0. /2026-08, /quiz, /match 픽셀 차이 0. 빌드 통과.
+- 브리프: docs/split-naru-brief.md
+- 커밋: 070128e, 3db51ed, 23184ab, b6d0c74, 8ca3d0e, a3e2d7d
 
 <a id="2026-10-10-draft-note-off"></a>
 ## 2026-10-10 프로그램 챕터의 초안 고지를 뺀다
