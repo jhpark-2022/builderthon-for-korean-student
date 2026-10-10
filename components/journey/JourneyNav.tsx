@@ -131,6 +131,28 @@ function useActiveSection(enabled: boolean, anchors: NavAnchor[]) {
       .map((a) => document.getElementById(a.id))
       .filter((n): n is HTMLElement => !!n);
     if (!nodes.length) return;
+    // DECIDED 2026-10-10 (구조 브리프 3.2): /naru의 목차는 한 섹션(#top) 안에 다른 항목(#core, #how)이 들어 있습니다.
+    // 아래의 겹침 비율 방식은 그런 구성에서 바깥 섹션이 늘 이깁니다(코어를 읽는 동안에도 "나루"가 켜져 있었습니다).
+    // 항목이 서로 안에 들어 있는 페이지에서만, 판정선(화면 위에서 140px)을 지난 마지막 항목을 현위치로 봅니다.
+    // 겹치지 않는 페이지(홈, /2026-08)는 이 분기에 들어오지 않아 전과 같습니다.
+    if (nodes.some((a) => nodes.some((b) => a !== b && a.contains(b)))) {
+      let raf = 0;
+      const read = () => {
+        raf = 0;
+        let current: string | null = null;
+        for (const n of nodes) if (n.getBoundingClientRect().top <= 140) current = n.id;
+        if (current) setActive(current);
+      };
+      const onScroll = () => { if (!raf) raf = requestAnimationFrame(read); };
+      read();
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll, { passive: true });
+      return () => {
+        window.removeEventListener("scroll", onScroll);
+        window.removeEventListener("resize", onScroll);
+        if (raf) cancelAnimationFrame(raf);
+      };
+    }
     // Track ratios rather than reacting to each entry: with several sections in
     // view during a fast flick, "last one that fired" is whichever the browser
     // reported last, not the one on screen.
