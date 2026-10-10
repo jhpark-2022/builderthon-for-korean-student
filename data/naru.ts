@@ -279,6 +279,18 @@ export const naruNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel
   },
 ];
 
+// DECIDED 2026-10-10 (구조 브리프 3.2): /naru의 목차 넷. id는 그 페이지의 섹션 id와 같아야 합니다
+// (components/naru/NaruPage.tsx). 홈에 있을 때의 #why(변하지 않는 두 개)는 #core가 됐고, #join(왜 이 자리가
+// 필요한가)은 #why가 됐습니다. 순서는 화면 순서입니다.
+export const naruPageNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel?: Phrase }[] = [
+  { id: "top", label: { ko: "나루", en: "NARU" } },
+  { id: "core", label: { ko: "코어", en: "Core" }, ariaLabel: { ko: "변하지 않는 두 개", en: "The two things that do not change" } },
+  { id: "how", label: { ko: "함께하기", en: "Join in" }, ariaLabel: { ko: "어떻게 일하는가", en: "How we work" } },
+  { id: "why", label: { ko: "왜", en: "Why" }, ariaLabel: { ko: "왜 이 자리가 필요한가", en: "Why this place is needed" } },
+];
+// /naru 헤더 왼쪽의 돌아가기. /match의 돌아가기와 같은 문법입니다.
+export const naruPageBack = { href: "/", label: { ko: "크로싱 서울", en: "CROSSING SEOUL" } as Phrase };
+
 export interface Stat {
   value: Phrase;
   label: Phrase;

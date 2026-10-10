@@ -161,8 +161,12 @@ export default function JourneyNav({
   anchors = DEFAULT_ANCHORS,
   brand = "zero100",
   showQuiz = true,
+  back,
 }: {
   anchors?: NavAnchor[];
+  // DECIDED 2026-10-10 (구조 브리프 3.1): /naru 헤더 왼쪽, 로고 옆의 돌아가기("← 크로싱 서울"). /match의 돌아가기와
+  // 같은 문법(화살표와 글자, 44px 히트 영역)입니다. 넘기지 않으면 아무것도 그리지 않습니다(홈, /2026-08).
+  back?: { href: string; label: Phrase };
   // 어느 이름표를 다는가. 8월 페이지는 Zero100 락업(그 회차의 주최 표기가 그것이라
   // 역사입니다), 나루 홈은 나루 가로 락업입니다.
   // DECIDED 2026-09-15: 홈의 락업은 SVG가 아니라 PNG입니다. 납품된 SVG에는 영문
@@ -459,6 +463,14 @@ export default function JourneyNav({
                   Re-measure before touching 1500 - it is the EN row width, not a
                   round number. */}
               <span className={`hidden items-center whitespace-nowrap text-lg font-black leading-none tracking-wide text-white/90 sm:inline-flex sm:text-xl ${locale === "ko" ? "translate-y-[2px]" : "xl:hidden min-[1500px]:inline-flex"}`}>{t(dict.nav.brandSuffix)}</span>
+            </a>
+          )}
+          {back && (
+            <a
+              href={back.href}
+              className="-my-3 ml-4 inline-flex min-h-[44px] items-center whitespace-nowrap py-3 text-sm font-semibold text-white/60 transition hover:text-white sm:ml-6"
+            >
+              ← {t(back.label)}
             </a>
           )}
           {/* ANCHOR ROW - `xl` (1280), not `lg` (1024). See the note on the
