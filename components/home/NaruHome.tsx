@@ -173,27 +173,52 @@ const JOIN_STAT_CONFIRMED: boolean = false;
 // 있습니다. 두 줄짜리 래퍼를 꺼내려고 5,157줄 파일을 건드리지 않았습니다.
 /**
  * 폰에서만 접히는 묶음. DECIDED 2026-10-10 (사용자: 데스크톱은 지금이 좋다, 폰은 내용이 너무 많고 지저분하다).
- * sm(640px) 아래에서는 안의 내용을 숨기고 "더 보기" 단추 하나를 둡니다. 누르면 그 자리에 펼쳐집니다.
+ * sm(640px) 아래에서는 안의 내용을 숨기고 단추 하나를 둡니다. 누르면 그 아래에 펼쳐집니다.
  * sm 이상에서는 감싸는 div가 display: contents라 상자가 생기지 않고, 단추도 없습니다. 데스크톱의 배치는 그대로입니다.
- * 글은 지우지 않습니다. 폰의 첫 화면에는 각 블록의 제목과 한 줄만 남기고 나머지를 이 안에 둡니다.
- * 안에 앵커(id)가 있는 블록은 감싸지 않습니다. 접혀 있으면 그 링크가 갈 곳이 없습니다.
+ * 글은 지우지 않습니다. 안에 앵커(id)가 있는 블록은 감싸지 않습니다. 접혀 있으면 그 링크가 갈 곳이 없습니다.
+ *
+ * DECIDED 2026-10-10 (사용자: "너무 많다, 뭐를 눌렀고 어디를 눌러야 닫는지 모르겠다"):
+ * 단추는 내용의 위에 있고 누른 뒤에도 그 자리에 남습니다. 열리면 색이 차고 글이 "접기"로 바뀝니다.
+ * 전에는 단추가 내용 아래에 있어서, 열면 단추가 화면 밖으로 밀려나 무엇을 눌렀는지 알 수 없었습니다.
+ * 긴 내용의 끝에도 접기가 하나 더 있고, 누르면 위의 단추로 돌아갑니다.
+ * 이름은 묶음마다 다릅니다("이어서 읽기"가 셋이면 구분이 안 됩니다). 짧은 글 둘은 접지 않고 그대로 보입니다. 홈에 넷입니다.
  */
 function PhoneFold({ more, less, children }: { more: string; less: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
+  const head = useRef<HTMLButtonElement>(null);
+  const chevron = (up: boolean) => (
+    <svg aria-hidden width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={up ? "rotate-180" : ""}><path d="m6 9 6 6 6-6" /></svg>
+  );
   return (
     <>
-      <div className={open ? "contents" : "max-sm:hidden sm:contents"}>{children}</div>
-      <div className="mt-4 text-center sm:hidden">
+      <div className="mt-5 text-center sm:hidden">
         <button
+          ref={head}
           type="button"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
-          className={`inline-flex min-h-[44px] items-center gap-1.5 ${BODY} font-bold text-accent`}
+          className={`inline-flex min-h-[44px] items-center gap-2 rounded-full border px-5 ${BODY} font-bold ${open ? "border-accent/50 bg-accent/15 text-white" : "border-white/20 text-accent"}`}
         >
           {open ? less : more}
-          <svg aria-hidden width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={open ? "rotate-180" : ""}><path d="m6 9 6 6 6-6" /></svg>
+          {chevron(open)}
         </button>
       </div>
+      <div className={open ? "contents" : "max-sm:hidden sm:contents"}>{children}</div>
+      {open && (
+        <div className="mt-6 text-center sm:hidden">
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              requestAnimationFrame(() => head.current?.scrollIntoView({ block: "center" }));
+            }}
+            className={`inline-flex min-h-[44px] items-center gap-2 px-5 ${BODY} font-bold text-accent`}
+          >
+            {less}
+            {chevron(true)}
+          </button>
+        </div>
+      )}
     </>
   );
 }
@@ -796,14 +821,12 @@ export default function NaruHome() {
         <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-center ${BODY} leading-relaxed text-white/85`}>
           {t(naru.december.programConcrete).replace("{date}", formatDecemberDateLine(locale))}
         </p>
-        <PhoneFold more={t({ ko: "이어서 읽기", en: "Keep reading" })} less={t({ ko: "접기", en: "Show less" })}>
         <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-center ${BODY} leading-relaxed text-white/70`}>
           {t(naru.december.shapeLead)}
         </p>
         <p className={`${READ} ${READ_MEASURE_C} mt-3 break-keep text-center ${BODY} leading-relaxed text-white/70`}>
           <TermLink text={t(naru.december.notSequel)} term={t(naru.december.notSequelTerm)} href="#why" />
         </p>
-        </PhoneFold>
         {/* 초안 고지(DECIDED 2026-09-18, 사용자): 세부 내용이 바뀔 수 있다는 것을 챕터 머리에서
             확실하게. 호박색 점선 상자(pending 칩과 같은 계열). 8월 문법의 강조 상자 크기. */}
         <div role="note" className={`${READ} mt-6 rounded-2xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] px-4 py-3 text-center sm:flex sm:items-start sm:justify-center sm:gap-3`}>
@@ -912,7 +935,7 @@ export default function NaruHome() {
           <p className={`${MEASURE} mt-3 break-keep ${BODY} leading-relaxed text-white/70`}>
             {t(naru.december.scheduleLead)}
           </p>
-          <PhoneFold more={t({ ko: "날짜별 일정 보기", en: "Day-by-day schedule" })} less={t({ ko: "접기", en: "Show less" })}>
+          <PhoneFold more={t({ ko: "날짜별 일정 보기", en: "Day-by-day schedule" })} less={t({ ko: "날짜별 일정 접기", en: "Hide the schedule" })}>
           <div className="mt-5">
             {naru.december.stages.map((stage, i) => {
             // DECIDED 2026-10-07 (이슈 브리프 4.2): Day 0 행을 흐리게 하지 않습니다. 2026-09-20에는 이 행만
@@ -1037,7 +1060,7 @@ export default function NaruHome() {
             두면 규칙 다섯 칸이 100px 남짓이라 한두 자씩 끊깁니다. */}
         {/* 2026-09-30: 판 나누기가 이 상자 앞에서 아래(AI 활용 범위 앞)로 내려가, 이 상자는 위 표에 이어지는
             블록입니다. 블록 사이 간격(mt-8 lg:mt-12)을 씁니다. */}
-        <PhoneFold more={t({ ko: "멘토링 자세히 보기", en: "Mentoring in detail" })} less={t({ ko: "접기", en: "Show less" })}>
+        <PhoneFold more={t({ ko: "멘토링 자세히 보기", en: "Mentoring in detail" })} less={t({ ko: "멘토링 접기", en: "Hide mentoring" })}>
         <Reveal className={`${READ} mt-8 text-left max-sm:text-center lg:mt-12`}>
           <div className="flex flex-col gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-4 lg:px-7">
             <div className="shrink-0">
@@ -1196,7 +1219,7 @@ export default function NaruHome() {
         {/* DECIDED 2026-10-07 (이슈 브리프 2.3): 카드 다섯이 둘이 됩니다. "8월이 남기지 못한 두 가지"만 카드로
             세우고(카드 모양은 그대로, 2열), 전의 02~04는 그 아래 "그 밖에 바꾼 것" 세 줄로 내렸습니다. 카드는
             제목, 무슨 일이 있었는지 두 문장(gap.body), 12월의 답 순서입니다. 전에는 body를 그리지 않았습니다. */}
-        <PhoneFold more={t({ ko: "8월에 못 한 것과 12월의 답 보기", en: "What August missed, and December's answer" })} less={t({ ko: "접기", en: "Show less" })}>
+        <PhoneFold more={t({ ko: "8월과 달라진 점 보기", en: "What changed since August" })} less={t({ ko: "8월과 달라진 점 접기", en: "Hide what changed" })}>
         <Reveal className={`${READ} mt-8 text-left max-sm:text-center lg:mt-12`}>
           <h3 data-subheading className={SUBHEADING}>{t(naru.december.gapsHeading)}</h3>
           <p className={`${MEASURE} mt-2 break-keep ${BODY} leading-relaxed text-white/70`}>{t(naru.december.gapsNote)}</p>
@@ -1506,7 +1529,6 @@ export default function NaruHome() {
             아래, 챕터 제목과 같은 축에 H3로 섭니다. 먼저 각각을 읽고, 그
             다음에 둘이 한 쌍인 이유를 읽습니다. */}
         {/* DECIDED 2026-10-05 (사용자, 스크린숏: "이것도"): 경첩 세 문단과 아래 "방법은 바뀝니다"는 가운데. */}
-        <PhoneFold more={t({ ko: "이어서 읽기", en: "Keep reading" })} less={t({ ko: "접기", en: "Show less" })}>
         <Reveal className={`${READ} border-t border-white/10 pt-8 text-balance text-center lg:pt-12`}>
           <p className={`text-balance break-keep text-center ${BODY} font-bold leading-snug tracking-tight text-white`}>
             {t(naru.why.note)}
@@ -1531,7 +1553,6 @@ export default function NaruHome() {
           <p className={`${MEASURE_C} mt-3 break-keep text-center ${BODY} leading-relaxed text-white/70`}>{t(naru.why.agenda)}</p>
           <p className={`${MEASURE_C} mt-3 break-keep text-center ${BODY} leading-relaxed text-white/70`}>{t(naru.why.agendaMore)}</p>
         </Reveal>
-        </PhoneFold>
               {/* ── 어떻게 일하는가 (DECIDED 2026-09-18, 사용자: "나루와 학생회와 기업 내용은 하나의
             챕터로 합쳐져야 함"). 따로 있던 #how 챕터(세 층, 문 셋, 하지 않는 것)가 이 챕터의
             마지막 블록이 됐습니다. 헤어라인 하나로 나뉘고 제목은 H3. 안쪽 앵커 id="how"는
@@ -1664,7 +1685,7 @@ export default function NaruHome() {
 
         {/* 세 곳에 공통된 조건 하나(매니페스토 I장). 장소를 가리지 않습니다.
             같은 I장의 다른 나라 학생과의 비교는 가져오지 않았습니다. */}
-        <PhoneFold more={t({ ko: "이어서 읽기", en: "Keep reading" })} less={t({ ko: "접기", en: "Show less" })}>
+        <PhoneFold more={t({ ko: "왜 필요한지 더 읽기", en: "More on why" })} less={t({ ko: "왜 필요한지 접기", en: "Hide the rest" })}>
         <Reveal>
         <p className={`${READ} ${READ_MEASURE_C} mt-10 break-keep text-center ${BODY} leading-relaxed text-white/70`}>
           {t(naru.join.milestones)}
