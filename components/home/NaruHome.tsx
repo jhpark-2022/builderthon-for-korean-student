@@ -7,7 +7,7 @@ import { useLocale } from "@/lib/LocaleContext";
 import { naru, naruLinks, openChatLabels, register as registerCopy, type RecordPhoto } from "@/data/naru";
 import { useCrossingRegisterOptional } from "@/components/crossing/RegisterProvider";
 import { links, type Phrase } from "@/data/dictionaryCore";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import {
   DECEMBER_EVENT_NAME,
   DECEMBER_STARTS_AT_MS,
@@ -333,6 +333,37 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
   );
 }
 
+// DECIDED 2026-10-11 (사용자, 스크린숏: "마일스톤에 대한 자세한 설명이 클릭하면 보여지도록"): 일정 카드 바닥의 마일스톤 띠는 누르는 것입니다.
+// 누르면 같은 띠 안에 설명이 열리고 다시 누르면 닫힙니다. 띠마다 따로 열립니다. 설명이 없으면 전처럼 글만 있는 띠입니다.
+function MilestoneStrip({ label, title, detail, center = false }: { label: string; title: string; detail?: string; center?: boolean }) {
+  const [open, setOpen] = useState(false);
+  const id = useId();
+  const head = (
+    <>
+      <span className={`inline-flex shrink-0 items-center gap-1 ${META} font-bold text-amber-100`}>
+        <span aria-hidden>★</span>{label}
+      </span>
+      <span className={`${BODY} font-bold leading-snug text-white`}>{title}</span>
+    </>
+  );
+  const row = `flex w-full flex-wrap items-center gap-x-2.5 gap-y-1 break-keep px-3 py-2 ${center ? "justify-center" : "text-left"}`;
+  return (
+    <div className="mt-auto w-full rounded-xl border border-amber-400/25 bg-amber-400/10">
+      {detail ? (
+        <button type="button" aria-expanded={open} aria-controls={id} onClick={() => setOpen((v) => !v)} className={`${row} min-h-[44px] rounded-xl transition-colors hover:bg-amber-400/10`}>
+          {head}
+          <svg aria-hidden width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 text-amber-100 transition-transform ${center ? "" : "ml-auto"} ${open ? "rotate-180" : ""}`}><path d="m6 9 6 6 6-6" /></svg>
+        </button>
+      ) : (
+        <p className={row}>{head}</p>
+      )}
+      {detail && open && (
+        <p id={id} className={`break-keep border-t border-amber-400/20 px-3 py-2.5 ${BODY} leading-relaxed text-white/85 ${center ? "text-center" : ""}`}>{detail}</p>
+      )}
+    </div>
+  );
+}
+
 export default function NaruHome() {
   const { t, locale } = useLocale();
   // 크로싱 서울 등록 상태(2026-09-18). 프로바이더가 없거나 창이 닫혀 있으면 "not_open"이고
@@ -467,12 +498,7 @@ export default function NaruHome() {
       )}
       {/* 그날의 마일스톤. amber 띠(홈에서 "결과보다 과정"이 쓰던 색)가 카드 바닥에 섭니다. Day 0에는 없습니다. */}
       {stage.milestone && (
-        <p className={`mt-auto flex w-full flex-wrap items-center gap-x-2.5 gap-y-1 break-keep rounded-xl border border-amber-400/25 bg-amber-400/10 px-3 py-2 ${phone ? "justify-center" : ""}`}>
-          <span className={`inline-flex shrink-0 items-center gap-1 ${META} font-bold text-amber-100`}>
-            <span aria-hidden>★</span>{t(naru.december.milestoneLabel)}
-          </span>
-          <span className={`${BODY} font-bold leading-snug text-white`}>{t(stage.milestone)}</span>
-        </p>
+        <MilestoneStrip label={t(naru.december.milestoneLabel)} title={t(stage.milestone)} detail={stage.milestoneDetail && t(stage.milestoneDetail)} center={phone} />
       )}
     </div>
   );

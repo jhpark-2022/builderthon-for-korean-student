@@ -2146,6 +2146,12 @@ export const naru = {
         // submit은 "이해도 1장"이었고, 마일스톤과 같은 말로 맞췄습니다.
         submit: { ko: "이슈에 대한 내 생각 1장", en: "One page of your own take on the issue" },
         milestone: { ko: "이슈에 대한 내 생각 1장", en: "One page of your own take on the issue" },
+        // DECIDED 2026-10-11 (사용자: "마일스톤에 대한 자세한 설명이 클릭하면 보여지도록"): 마일스톤 띠를 누르면 열리는 설명.
+        // 새 사실은 없습니다. 같은 날의 body, 멘토링 상자, 2026-10-10 마일스톤 브리프에 있던 말입니다.
+        milestoneDetail: {
+          ko: "받은 이슈에서 팀이 직접 세운 문제를 한 장으로 적습니다. 이 한 장을 들고 멘토를 먼저 찾아갑니다.",
+          en: "Your team writes down, on one page, the problem it set from the issue it was given. That page is what you take to the mentors.",
+        },
       },
       {
         name: { ko: "Build", en: "Build" },
@@ -2172,6 +2178,10 @@ export const naru = {
           },
         },
         milestone: { ko: "현업에게 확인받은 문제 정의", en: "A problem definition checked with the people who do the work" },
+        milestoneDetail: {
+          ko: "Day 1에 세운 문제 정의를 멘토와 현업에게 가져가 확인받습니다. 무엇을 내는 것이 아니라, 확인받는 것이 이 날의 마일스톤입니다.",
+          en: "You take the problem you defined on Day 1 to mentors and to the people doing the work, and have it checked. Nothing is handed in. Getting it checked is the milestone.",
+        },
       },
       {
         name: { ko: "Refine", en: "Refine" },
@@ -2200,6 +2210,10 @@ export const naru = {
         },
         submit: { ko: "덱을 포함한 사전 제출물", en: "The deck and what goes with it" },
         milestone: { ko: "코드로 옮긴 결과물과 덱", en: "Something built in code, plus the deck" },
+        milestoneDetail: {
+          ko: "코드로 옮긴 결과물과 발표 덱을 성과 공유회 전에 냅니다. 정의한 지표로 결과를 확인하고, 틀리는 경우는 한계로 정리해 함께 담습니다.",
+          en: "You hand in what you built in code and the deck before the showcase. You check the result against the measure you set, and write down where it fails as its limits.",
+        },
       },
       {
         // 2026-10-10 (마일스톤 브리프 2.7): 마지막 날의 이름은 "Pitch / 피치"에서 성과 공유회(Showcase)로.
@@ -2225,6 +2239,10 @@ export const naru = {
         // DECIDED 2026-10-10 (중복 브리프 B1): 칩 "멘토링 없음"을 뺐습니다(위 Day 3과 같은 이유).
         chips: [{ ko: "시상과 클로징", en: "Awards and closing" }],
         milestone: { ko: "성과 공유회 완주", en: "Making it through the showcase" },
+        milestoneDetail: {
+          ko: "발표 5분, 질의 5분. 다 풀지 못했어도 무대에 서면 완주입니다. 문제에 어떻게 다가갔는지를 봅니다.",
+          en: "Five minutes to present, five for questions. If you go up, you have made it through, solved or not. We look at how you approached the problem.",
+        },
       },
     ] as {
       name: Phrase;
@@ -2243,6 +2261,8 @@ export const naru = {
       submit?: Phrase;
       /** 그날의 마일스톤(2026-10-10). 넘은 팀 모두가 지원을 받습니다. Day 0에는 없습니다. */
       milestone?: Phrase;
+      /** 마일스톤 띠를 누르면 열리는 설명(2026-10-11). */
+      milestoneDetail?: Phrase;
     }[],
     tbdLabel: { ko: "아직 정해지지 않은 것", en: "Not settled yet" },
     // 2026-09-15: "이벤트 이름"이 이 목록에서 빠졌습니다. 크로싱 서울로
