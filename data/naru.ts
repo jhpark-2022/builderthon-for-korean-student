@@ -651,8 +651,10 @@ export const naru = {
         },
         lines: [
           {
-            ko: "연습이 아니라 진짜 앞에 섭니다. 실명이 박힌 기업, 실제로 그 일을 하는 사람, 답이 정해지지 않은 문제입니다.",
-            en: "Not a rehearsal. A company with its name on it, the person who actually does the work, a problem with no settled answer.",
+            // DECIDED 2026-10-11 (브랜드 브리프 B6, 결정 D3): "연습"은 나루터의 말이라 여기서는 "모의"를 씁니다(docs/brand.md의 은유 규칙).
+            // 그 전: "연습이 아니라 진짜 앞에 섭니다." / "Not a rehearsal."
+            ko: "모의가 아니라 진짜 앞에 섭니다. 실명이 박힌 기업, 실제로 그 일을 하는 사람, 답이 정해지지 않은 문제입니다.",
+            en: "Not a mock run. The real thing: a company with its name on it, the person who actually does the work, a problem with no settled answer.",
           },
           {
             ko: "그 앞에서 자기 판단으로 무언가를 만들고, 그 경험을 증명하는 실물을 손에 쥐고 나갑니다.",
