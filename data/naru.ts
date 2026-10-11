@@ -2128,10 +2128,8 @@ export const naru = {
           en: "It buys back time for Day 1. It does not count as a stage.",
         },
         chips: [{ ko: "이슈 공개", en: "Issues open" }],
-        session: {
-          title: { ko: "활용 가이드", en: "Using it" },
-          body: { ko: "공개된 정보와 AI 도구로 이슈를 파고드는 법을 짚는 3시간 세션", en: "Three hours on digging into an issue with public information and AI tools" },
-        },
+        // DECIDED 2026-10-11 (사용자: "day0은 세션이 따로 있는 건 없음"): 여기 있던 3시간 세션 "활용 가이드"를 뺐습니다.
+        // Day 0은 이슈와 자료를 여는 날이고 세션은 Day 1부터입니다. 위 주석(2026-09-20)의 "3시간짜리 세션이 있는 하루"는 더 맞지 않습니다.
       },
       {
         name: { ko: "Discovery", en: "Discovery" },
