@@ -1730,8 +1730,11 @@ export const naru = {
         v: { ko: "4일 동안 아침부터 저녁까지. 마지막 날은 제외입니다.", en: "Open morning to evening for four days. Not the last day." },
       },
       {
-        k: { ko: "마일스톤", en: "Milestones" },
-        v: { ko: "날마다 하나씩 있습니다. 넘은 팀은 모두 그날 지원을 받고, 넘은 마일스톤이 그 팀의 기록으로 남습니다.", en: "One a day. Every team that clears it gets support that day, and the milestones a team clears become its record." },
+        // DECIDED 2026-10-11 (사용자: "이거 하면 혜택을 받는 거니까, 미션?"): "마일스톤"을 "미션"으로 부릅니다(docs/brand.md).
+        // 마일스톤은 지나가는 지점이라 무엇을 하는지가 보이지 않았습니다. 키 이름(milestone, milestoneLabel 등)은 그대로 둡니다.
+        // 그 전: k "마일스톤", v "...넘은 팀은 모두 그날 지원을 받고, 넘은 마일스톤이 그 팀의 기록으로 남습니다."
+        k: { ko: "미션", en: "Missions" },
+        v: { ko: "날마다 하나씩 있습니다. 해낸 팀은 모두 그날 지원을 받고, 해낸 미션이 그 팀의 기록으로 남습니다.", en: "One a day. Every team that completes it gets support that day, and the missions a team completes become its record." },
       },
       {
         // DECIDED 2026-10-11 (브랜드 브리프 B1, docs/brand.md의 금지어): 참가자가 읽는 자리에 "가설", "검증"을 쓰지 않습니다.
@@ -1853,14 +1856,15 @@ export const naru = {
     routeLegendStage: { ko: "스테이지", en: "Stage" },
     // DECIDED 2026-10-11 (사용자: "각 날마다 이제 제출물 / milestone이 있는거임"): ★는 Day 1부터 Day 4까지 전부입니다.
     // routeLegendSubmit("제출이 있는 날")과 routeLegendStage는 그리지 않습니다. 키는 그대로.
-    routeLegendMilestoneDay: { ko: "제출물과 마일스톤이 있는 날", en: "A day with something to hand in and a milestone" },
+    routeLegendMilestoneDay: { ko: "제출물과 미션이 있는 날", en: "A day with something to hand in and a mission" },
     // 폰에서만 그리는 한 줄(2026-10-11). 노선도의 정거장과 필이 눌린다는 것을 말합니다.
     routeHint: { ko: "날짜를 누르면 그날의 일정이 열립니다", en: "Tap a day to open its schedule" },
     // 2026-10-10 (마일스톤 브리프 2.1): 노선도의 주황 점 줄이 무엇인지 말하는 범례 한 칸.
-    routeLegendMilestone: { ko: "마일스톤 지원, 넘은 팀 모두", en: "Milestone support, for every team that clears it" },
-    milestoneLabel: { ko: "마일스톤", en: "Milestone" },
+    routeLegendMilestone: { ko: "미션 지원, 해낸 팀 모두", en: "Mission support, for every team that completes it" },
+    // 2026-10-11: 날짜 카드와 폰 패널의 띠에 서는 라벨. "마일스톤"에서 "미션"으로.
+    milestoneLabel: { ko: "미션", en: "Mission" },
     // 일정표 행의 마일스톤 줄 끝에 붙는 말(2026-10-10). 누가 받는지를 날마다 한 번씩 말합니다.
-    milestoneNote: { ko: "넘은 팀 모두 지원", en: "Support for every team that clears it" },
+    milestoneNote: { ko: "해낸 팀 모두 지원", en: "Support for every team that completes it" },
     dayLabel: { ko: "DAY", en: "DAY" },
     beforeLabel: { ko: "BEFORE", en: "BEFORE" },
     flowLabel: { ko: "참여 플로우", en: "How it flows" },
@@ -2240,8 +2244,8 @@ export const naru = {
         },
         milestone: { ko: "현업에게 확인받은 문제 정의", en: "A problem definition checked with the people who do the work" },
         milestoneDetail: {
-          ko: "Day 1에 세운 문제 정의를 멘토와 현업에게 가져가 확인받습니다. 무엇을 내는 것이 아니라, 확인받는 것이 이 날의 마일스톤입니다.",
-          en: "You take the problem you defined on Day 1 to mentors and to the people doing the work, and have it checked. Nothing is handed in. Getting it checked is the milestone.",
+          ko: "Day 1에 세운 문제 정의를 멘토와 현업에게 가져가 확인받습니다. 무엇을 내는 것이 아니라, 확인받는 것이 이 날의 미션입니다.",
+          en: "You take the problem you defined on Day 1 to mentors and to the people doing the work, and have it checked. Nothing is handed in. Getting it checked is the mission.",
         },
       },
       {
