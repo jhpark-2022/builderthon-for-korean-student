@@ -198,7 +198,8 @@ export function ReadingPlate({ id, read = false }: { id: PlateId; read?: boolean
 // 첫 조각뿐이라 나머지는 read입니다.
 export function PlateSegment({ id, gap = false, read = false, children }: { id: PlateId; gap?: boolean; read?: boolean; children: React.ReactNode }) {
   return (
-    <div className={gap ? "relative mt-[216px] text-left" : "relative text-left"}>
+    // 2026-10-11 (리뷰 브리프 3단계 D7): 폰에서는 판 사이를 216px에서 126px로 줄입니다(/naru 히어로 아래의 틈이 263px이었습니다).
+    <div className={gap ? "relative mt-[126px] text-left sm:mt-[216px]" : "relative text-left"}>
       <ReadingPlate id={id} read={read} />
       {children}
     </div>
