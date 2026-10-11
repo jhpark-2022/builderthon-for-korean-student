@@ -193,7 +193,7 @@ export default function JourneyNav({
   mark?: "lockup" | "crossing";
   anchors?: NavAnchor[];
   // DECIDED 2026-10-10 (구조 브리프 3.1): /naru 헤더 왼쪽, 로고 옆의 돌아가기("← 크로싱 서울"). /match의 돌아가기와
-  // 같은 문법(화살표와 글자, 44px 히트 영역)입니다. 넘기지 않으면 아무것도 그리지 않습니다(홈, /2026-08).
+  // 같은 문법(화살표와 글자, 44px 히트 영역)입니다. 2026-10-10에 오른쪽으로 갔다가 2026-10-11에 왼쪽으로 돌아왔습니다. 넘기지 않으면 아무것도 그리지 않습니다(홈, /2026-08).
   back?: { href: string; label: Phrase };
   // 어느 이름표를 다는가. 8월 페이지는 Zero100 락업(그 회차의 주최 표기가 그것이라
   // 역사입니다), 나루 홈은 나루 가로 락업입니다.
@@ -259,6 +259,9 @@ export default function JourneyNav({
   // 스크롤해야 돌아오고, 멈춰 있다고 돌아오지 않습니다(idleReveal false). 8월 페이지는 그 전
   // 그대로(헤더 전체 숨김 + 정지 시 복귀).
   const naru = brand === "naru";
+  // 돌아가기 알약이 로고 줄에 서는 폭(2026-10-11). 실측: 로고, 알약, 오픈채팅, 언어 토글을 합치면 한국어 556px, 영문 716px입니다
+  // (여백 90px 제외). 한국어는 md(768)부터, 영문은 lg(1024)부터 들어갑니다. 그 아래에서는 목차 레일의 마지막 칸입니다.
+  const backFrom = locale === "en" ? { show: "lg:inline-flex", hide: "lg:hidden" } : { show: "md:inline-flex", hide: "md:hidden" };
   const chromeHidden = useScrollDirection({ idleReveal: naru ? false : 450 });
   const headerRef = useRef<HTMLElement | null>(null);
   // 헤더 실높이를 scroll-padding-top으로(감사 반영 브리프 2.1). 접힌 상태에서는 레일 높이만큼만
@@ -508,15 +511,27 @@ export default function JourneyNav({
               <span className={`hidden items-center whitespace-nowrap text-lg font-black leading-none tracking-wide text-white/90 sm:inline-flex sm:text-xl ${locale === "ko" ? "translate-y-[2px]" : "xl:hidden min-[1500px]:inline-flex"}`}>{t(dict.nav.brandSuffix)}</span>
             </a>
           )}
-          {/* DECIDED 2026-10-10 (사용자, 스크린숏: "TOC가 너무 어색함. 여기 크로싱 서울에도 크로싱 서울 로고를"): 돌아가기는
-              로고와 목차 사이가 아니라 오른쪽 묶음에 섭니다(아래, sm부터). 로고, 돌아가기, 목차 넷이 한 줄에 붙어 있으면
-              돌아가기가 목차의 첫 칸처럼 읽혔습니다. 글자는 홈 헤더와 같은 크로싱 서울 워드마크(그라데이션)입니다.
-              폰(sm 아래)은 로고 줄에 자리가 없어(로고, 오픈채팅, 언어 토글로 342px이 찹니다) 목차 레일의 마지막 칸으로 갑니다. */}
+          {/* DECIDED 2026-10-11 (사용자, 스크린숏: "크로싱 서울은 left에"): 돌아가기는 왼쪽 묶음, 로고 바로 옆입니다(한국어 md, 영문 lg부터. backFrom).
+              전날(2026-10-10) 오른쪽 묶음으로 보냈던 것을 되돌립니다. 그때의 걱정(목차의 첫 칸처럼 읽힘)은 모양으로 풉니다.
+              목차는 맨글자이고 이것은 테두리 있는 알약에 크로싱 서울 워드마크(그라데이션)입니다. 왼쪽에 서므로 화살표는 앞의 "←"입니다.
+              그 아래 폭은 로고 줄에 자리가 없어 목차 레일의 마지막 칸 그대로입니다. */}
+          {back && (
+            <Link
+              href={back.href}
+              aria-label={t(back.label)}
+              className={`ml-5 hidden min-h-[44px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-white/15 bg-white/[0.04] px-4 transition hover:border-white/30 hover:bg-white/[0.08] ${backFrom.show}`}
+            >
+              <span aria-hidden className="text-sm text-white/60">←</span>
+              <span lang={locale === "en" ? "en" : undefined} className="gradient-text bg-gradient-to-r from-naru-logo-from to-naru-logo-to bg-clip-text pb-[0.08em] text-lg font-black tracking-[-0.02em] text-transparent">
+                {decemberEventLabel(locale)}
+              </span>
+            </Link>
+          )}
           {/* ANCHOR ROW - `xl` (1280), not `lg` (1024). See the note on the
               section rail below: between 1024 and 1279 this row does not fit
               next to the brand and the two CTAs in either locale, and flex
               silently crushed the brand to make room. */}
-          <div className="hidden items-center gap-5 xl:ml-10 xl:flex">
+          <div className={`hidden items-center gap-5 xl:flex ${back ? "xl:ml-6" : "xl:ml-10"}`}>
             {/* DECIDED 2026-10-10 (사용자: "TOC가 너무 어색함"): 나루 계열 헤더(홈, /naru)의 데스크톱 줄에서는 첫 항목(#top)을
                 그리지 않습니다. 바로 왼쪽의 로고가 같은 이름이고 같은 곳(#top)으로 갑니다. "나루 나루", "크로싱 서울 크로싱 서울"로
                 읽혔습니다. 폰 레일은 로고 줄이 접힌 뒤에 혼자 남으므로 넷 그대로입니다. 8월 페이지는 그대로. */}
@@ -693,18 +708,6 @@ export default function JourneyNav({
               <span aria-hidden className="text-violet-200/70">→</span>
             </Link>
           )}
-          {back && (
-            <Link
-              href={back.href}
-              aria-label={t(back.label)}
-              className="hidden min-h-[44px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-white/15 bg-white/[0.04] px-4 transition hover:border-white/30 hover:bg-white/[0.08] sm:inline-flex"
-            >
-              <span lang={locale === "en" ? "en" : undefined} className="gradient-text bg-gradient-to-r from-naru-logo-from to-naru-logo-to bg-clip-text pb-[0.08em] text-lg font-black tracking-[-0.02em] text-transparent">
-                {decemberEventLabel(locale)}
-              </span>
-              <span aria-hidden className="text-sm text-white/60">→</span>
-            </Link>
-          )}
           {/* Language last - it's a setting, not an action, so it sits after
               the CTA rather than between the brand and it. */}
           <LocaleToggle variant={brand} />
@@ -871,12 +874,12 @@ export default function JourneyNav({
                 </a>
               );
             })}
-            {/* /naru의 돌아가기(폰). 로고 줄에 자리가 없어 레일의 마지막 칸입니다. sm부터는 헤더 오른쪽 묶음의 것이 보입니다. */}
+            {/* /naru의 돌아가기(폰). 로고 줄에 자리가 없어 레일의 마지막 칸입니다. 넓은 폭(backFrom)에서는 헤더 왼쪽, 로고 옆의 것이 보입니다. */}
             {naru && back && (
               <Link
                 href={back.href}
                 aria-label={t(back.label)}
-                className="inline-flex min-h-[44px] shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-full border border-white/[0.12] bg-white/[0.06] px-2.5 backdrop-blur transition active:scale-[0.97] sm:hidden"
+                className={`inline-flex min-h-[44px] shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-full border border-white/[0.12] bg-white/[0.06] px-2.5 backdrop-blur transition active:scale-[0.97] ${backFrom.hide}`}
               >
                 <span lang={locale === "en" ? "en" : undefined} className="gradient-text bg-gradient-to-r from-naru-logo-from to-naru-logo-to bg-clip-text pb-[0.08em] text-[0.8rem] font-black tracking-[-0.02em] text-transparent">
                   {decemberEventLabel(locale)}
