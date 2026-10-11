@@ -471,7 +471,8 @@ export default function NaruPage() {
               className={buttonClass("secondary")}
             >
               {t(naru.join.manifesto.cta)}
-              <span aria-hidden className="text-white/70">↓</span>
+              {/* DECIDED 2026-10-11 (사용자, 스크린숏: "화살표 방향 통일"): ↓를 →로. 바로 아래 두 버튼과 같은 방향입니다(홈 히어로의 2026-10-10 결정과 같음). */}
+              <span aria-hidden className="text-white/70">→</span>
             </a>
           </div>
         </Reveal>
