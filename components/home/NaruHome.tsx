@@ -32,7 +32,7 @@ import OpenChatLink from "@/components/ui/OpenChatLink";
 import { TITLE, BODY, META, H2, H3, LABEL_HEADING, ROW_HEADING, GRADIENT_TEXT } from "@/components/ui/typography";
 import CityShape, { type City } from "@/components/ui/CityShape";
 import {
-  PhoneFold, SUBHEADING, READ, WIDE, MEASURE, READ_MEASURE_C, HERO_BUTTON_GROUND,
+  SUBHEADING, READ, WIDE, MEASURE, READ_MEASURE_C, HERO_BUTTON_GROUND,
   latinTrack, eyebrowTrack, PlateSegment, TermLink, PreparingButton, SiteFooter, usePlateLite,
 } from "./shared";
 
@@ -365,6 +365,159 @@ export default function NaruHome() {
   // 사라졌습니다. 행은 처음부터 전부 펼쳐져 있어 접었다 펼 것이 없습니다.
   const [hoverDay, setHoverDay] = useState<number | null>(null);
   usePlateLite();
+  // DECIDED 2026-10-11 (사용자: "button으로 말고, 여기(노선도)를 클릭하면 나오는 구조가 더 자연스러운듯"): 폰의 접힘 단추 둘
+  // ("날짜별 일정 보기", "멘토링 자세히 보기")을 뺐습니다. 노선도의 정거장을 누르면 그날의 행이, 필을 누르면 멘토링 상자가
+  // 노선도 바로 아래에 열립니다(다시 누르면 닫힘). sm부터는 표와 상자가 전처럼 다 보이고, 누르면 그 자리로 갑니다.
+  // 그래서 행과 상자를 한 번 만들어 두 자리에 그립니다: 폰은 노선도 아래(phone), sm부터는 원래 자리.
+  const [openDay, setOpenDay] = useState<number | null>(null);
+  const [mentoringOpen, setMentoringOpen] = useState(false);
+  const isPhone = () => typeof window !== "undefined" && window.matchMedia("(max-width: 639.98px)").matches;
+  const goTo = (id: string) => document.getElementById(id)?.scrollIntoView({ block: "center", behavior: "smooth" });
+  const selectDay = (i: number) => {
+    if (isPhone()) return setOpenDay((d) => (d === i ? null : i));
+    setOpenDay(i);
+    goTo(`december-day-${i}`);
+  };
+  const selectPill = () => {
+    if (isPhone()) return setMentoringOpen((v) => !v);
+    goTo("december-mentoring");
+  };
+  const mentoringBoxes = (
+    <>
+          <div className="flex flex-col gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-4 lg:px-6 lg:py-5">
+            <div className="shrink-0">
+              <p className={`flex items-center gap-2 max-sm:justify-center ${BODY} font-bold text-white`}>
+                <ChipDot />
+                {/* lang="en" (2026-09-19, 접근성 감사 7): 한국어 문단 속의 영어 고유명사. */}
+                <span lang="en">General Mentoring</span>
+              </p>
+              <p className={`mt-0.5 ${META} font-semibold text-emerald-200/90`}>{t(naru.december.mentoringAlways)}</p>
+              {/* DECIDED 2026-10-10 (사용자, 마일스톤 브리프 2.5): 멘토링은 먼저 찾아가는 자리라는 문장을 상자 안에 그립니다.
+                  mentoringLead는 그 전까지 화면에 그려지지 않던 키였습니다. 규칙 목록 위, 이름 줄 아래에 섭니다. */}
+              <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.mentoringLead)}</p>
+            </div>
+            {/* 폰은 2열·작은 글자(길이 목표, 감사 반영 브리프 3.1). */}
+            {/* 2026-09-19 (모바일 감사 14): 폰에서 2열을 풉니다. 상자 안쪽 291px을
+                둘로 나누면 한 칸의 **글자 폭이 121px**, text-xs로 한글 8.9자/줄입니다.
+                "마지막 날에는 새 방향을 제안하지 않음"(18자)이 세 줄, 영어는 네 줄이
+                됐습니다. 한 줄 길이는 짧아도 문제입니다. 세로가 늘어나는 대가는
+                아래 Day 카드의 clamp 완화와 같은 예산에서 나옵니다. */}
+            {/* 2026-09-20 (일정 브리프 3장): 규칙이 넷에서 다섯이 되어 lg를 5열로.
+                4열이면 다섯째 줄만 아래로 내려가 왼쪽 칸이 둘이 됩니다. */}
+            {/* 2026-09-29 (왼쪽 끝 브리프 2.1, 검증 4): READ 폭에서 다섯 칸은 150px 남짓이라 "바뀝니다"가 넉 자로
+                떨어졌습니다. 폰 한 칸, md부터 두 칸. */}
+            {/* 2026-10-10: 규칙이 셋이 되어 한 칸으로 세웁니다. 두 칸이면 셋째만 아래로 내려가고, 세 칸이면 READ 폭에서 줄마다 두 줄로 꺾입니다. */}
+            <ul role="list" className="grid flex-1 grid-cols-1 gap-y-2">
+              {naru.december.mentoringRules.map((rule, i) => (
+                <li key={i} className={`flex gap-2.5 break-keep border-l-2 border-white/20 pl-3 max-sm:justify-center max-sm:border-l-0 max-sm:pl-0 ${BODY} leading-snug text-white/85`}>
+                  {t(rule)}
+                </li>
+              ))}
+            </ul>
+          </div>
+          {/* DECIDED 2026-10-08 (사용자: "멘토가 오는 게 아니고 우리가 직접 간다", 프로그램 브리프 2.5): 현장 멘토링.
+              General Mentoring 바로 아래에 한 묶음으로 섭니다(mt-3). 같은 READ 폭과 왼쪽 끝, 같은 상자 문법이고
+              초록은 쓰지 않습니다(초록은 General Mentoring 하나, 2026-09-18). 무채색 테두리에 점만 노선도 둘째 필과 같은
+              주황입니다(주황은 점으로만). 이름은 BODY 굵게, 기간은 META, 설명은 BODY. 규칙 목록은 없습니다.
+              날짜, 횟수, 기업 이름은 쓰지 않습니다(미정). 위 초안 배너가 이 약속을 덮습니다. */}
+          <div className="rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 lg:px-6 lg:py-5">
+            <p className={`flex items-center gap-2 max-sm:justify-center ${BODY} font-bold text-white`}>
+              <ChipDot className="bg-naru-orange" />
+              {t(naru.december.fieldMentoring.name)}
+            </p>
+            <p className={`mt-0.5 ${META} font-semibold text-white/70`}>{t(naru.december.fieldMentoring.when)}</p>
+            <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.fieldMentoring.body)}</p>
+          </div>
+          {/* 재는 것. 호박색 강조 상자(8월 "준비물은 하나예요" 문법).
+
+              2026-09-20 (사용자: "가장 중요한 것은 완주율이라는 거를 강조"): 라벨과
+              문장을 한 줄에 "라벨: 문장"으로 붙여 두었더니, 이 챕터에서 가장 중요한
+              문장이 각주처럼 읽혔습니다. 라벨을 자기 줄로 올리고 문장을 본문 크기로
+              키웁니다. 상자 색과 문법은 그대로예요. 새 강조 장치를 만들지 않습니다.
+
+              처음에는 이 자리에 "84%" 같은 수치를 크게 세우려고 했는데 걷었습니다.
+              퍼센트를 한 번 적으면 그 수치가 목표가 되고, 다음 회차는 그 수치를
+              지키려고 설계하게 됩니다(data/naru.ts의 measure 주석). */}
+    </>
+  );
+  const stageRow = (stage: (typeof naru.december.stages)[number], i: number, phone = false) => {
+            // DECIDED 2026-10-07 (이슈 브리프 4.2): Day 0 행을 흐리게 하지 않습니다. 2026-09-20에는 이 행만
+            // 한 단 낮은 밝기(/55)였는데, 진한 회색 글이 바탕에 묻혀 읽히지 않았습니다. "스테이지로 세지
+            // 않는다"는 것은 이 행의 문장(stage.line)이 이미 말합니다. 다섯 행의 밝기는 같습니다.
+            return (
+              <div
+                key={stage.name.en}
+                id={phone ? undefined : `december-day-${i}`}
+                // 노선도의 현재 위치 점이 이 행으로 옵니다(감사 반영 브리프 3.6).
+                // 카드가 하던 일을 행이 그대로 이어받습니다.
+                onMouseEnter={() => setHoverDay(i)}
+                onMouseLeave={() => setHoverDay(null)}
+                className={`grid grid-cols-1 gap-x-6 gap-y-2 border-t border-white/10 py-5 sm:grid-cols-[7rem_1fr_10rem] ${phone ? "border-b text-center" : `last:border-b ${openDay === i ? "sm:bg-white/[0.04]" : ""}`}`}
+              >
+                <div className="flex items-baseline gap-2 max-sm:justify-center">
+                  {/* lang="en": DAY는 두 로케일 모두 영어입니다(접근성 감사 7). */}
+                  <span lang="en" className={LABEL_HEADING}>
+                    {`${t(naru.december.dayLabel)}\u2002${stage.dayOffset}`}
+                  </span>
+                  <span className={`shrink-0 ${META} text-white/70`}>
+                    {formatDecemberDayWithWeekday(locale, stage.dayOffset)}
+                  </span>
+                </div>
+                <div>
+                  <h4 className={ROW_HEADING}>{t(stage.title)}</h4>
+                  {/* stage.body는 그리지 않습니다. 브리프 4장이 표로 옮긴다고 적은 것은
+                      제출물 칩, 그날의 한 줄, 워크샵 셋입니다. 카드 본문까지 넣으면 한
+                      행이 네 줄이 되고, 표가 아니라 세로로 세운 카드가 됩니다. 키는
+                      data/naru.ts에 그대로 있습니다. */}
+                  <p className={`mt-1.5 flex gap-1.5 break-keep max-sm:justify-center ${BODY} font-semibold leading-snug text-white`}>
+                    {/* 2026-10-09: 가운데 정렬(폰)에서 글이 두 줄이 되면 화살표만 왼쪽 끝에 떨어져 숨깁니다. */}
+                    <span aria-hidden className="text-white/70 max-sm:hidden">→</span>
+                    {t(stage.line)}
+                  </p>
+                  {stage.session && (
+                    <p className={`mt-1.5 flex flex-wrap items-baseline gap-x-1.5 break-keep max-sm:justify-center ${BODY} leading-relaxed text-white/70`}>
+                      <span className={`font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.december.sessionLabel)}</span>
+                      <span className="font-semibold text-white/85">{t(stage.session.title)}</span>
+                      <span>{t(stage.session.body)}</span>
+                    </p>
+                  )}
+                  {/* DECIDED 2026-10-10 (사용자: 넣은 정보는 그대로, 8월 캘린더 형식은 쓰지 않는다): 그날의 마일스톤은 표의 형식 안에서,
+                      이 행의 글 기둥에 한 줄로 섭니다. 같은 날 아침에는 오른쪽 10rem 열의 META 한 줄이었는데 두 줄로 끊기고
+                      눈에 들어오지 않았습니다. amber 칩(홈에서 "결과보다 과정" 상자가 쓰는 색)과 BODY 굵은 글, 뒤에 누가 받는지. */}
+                  {stage.milestone && (
+                    <p className="mt-3 flex flex-wrap items-center gap-x-2.5 gap-y-1 break-keep max-sm:justify-center">
+                      <span className={`inline-flex shrink-0 items-center gap-1 rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 ${META} font-bold text-amber-100`}>
+                        <span aria-hidden>★</span>{t(naru.december.milestoneLabel)}
+                      </span>
+                      <span className={`${BODY} font-bold leading-snug text-white`}>{t(stage.milestone)}</span>
+                      {/* DECIDED 2026-10-10 (중복 브리프 B1): 뒤에 붙던 "넘은 팀 모두 지원"(milestoneNote)을 그리지 않습니다.
+                          노선도 범례가 한 번 말합니다. 네 행에서 네 번 되풀이됐습니다. 키는 data/naru.ts에 그대로. */}
+                    </p>
+                  )}
+                  {/* DECIDED 2026-10-08 (현장 팀 매칭 브리프 5): Day 1 행에만 있는 버튼 하나. 전에 오른쪽 열의 "팀 매칭"
+                      칩이 있던 말을 버튼이 합니다. 글이 한 줄이라 10rem 오른쪽 열에는 들어가지 않아, 이 행의 글 기둥
+                      왼쪽 끝에 맞춥니다(2026-09-29 왼쪽 끝 규칙). 알약 테두리 버튼(누르는 것의 문법), 글자는 BODY. */}
+                  {stage.matchCta && (
+                    <Link
+                      href={stage.matchCta.href}
+                      onClick={() => track("naru_cta", { src: "december-day1", to: "match" })}
+                      className={`mt-3 inline-flex min-h-[44px] items-center gap-1.5 whitespace-nowrap rounded-full border border-white/15 bg-[#0B1430]/80 px-5 py-2 ${BODY} font-medium text-accent transition hover:border-white/30 hover:text-white`}
+                    >
+                      {t(stage.matchCta.label)}
+                      <span aria-hidden>→</span>
+                    </Link>
+                  )}
+                </div>
+                <div className="flex flex-wrap content-start items-start gap-x-3 gap-y-1 max-sm:justify-center">
+                  {/* DECIDED 2026-10-10 (중복 브리프 B1): "제출 {제출물}" 칩을 그리지 않습니다. 같은 행의 마일스톤 줄이
+                      같은 이름을 말합니다. stage.submit은 노선도의 ★ 판정에만 씁니다. */}
+                  {stage.chips.map((c, j) => (
+                    <span key={j} className={`${META} text-white/70`}>{t(c)}</span>
+                  ))}
+                </div>
+              </div>
+            );
+  };
   // DECIDED 2026-10-10 (구조 브리프 3.2): 옛 주소. 홈에 있던 #join, #how, #why, #record, #join-ways는 /naru로 갔습니다.
   // 해시는 서버에 오지 않아 redirects로 잡을 수 없으므로, 마운트 때 한 번 보고 /naru의 같은 자리로 바꿉니다.
   // /naru에서 id가 바뀐 둘은 여기서 맞춥니다: 전의 #why(변하지 않는 두 개)는 #core, 전의 #join(왜 이 자리가 필요한가)은 #why.
@@ -678,17 +831,22 @@ export default function NaruHome() {
               // +1을 더하지 않습니다. null 분기("본 일정 전")는 사라졌습니다.
               sub: `${t(naru.december.dayLabel)} ${s.dayOffset}`,
               label: t(s.title),
-              kind: s.submit ? "anchor" : "plain",
-              // 2026-10-10 (마일스톤 브리프 2.1): 마일스톤 줄이 생긴 날의 배지는 "제출" 한 낱말입니다. Day 1은 마일스톤과
-              // 제출물이 같은 문장이라 두 번 읽혔고, 영문 768px에서는 길어진 Day 1 배지가 Day 3 배지와 겹쳤습니다.
-              // 제출물의 이름은 아래 일정표의 행과 "이렇게 굴립니다"의 제출 줄이 말합니다.
-              badge: s.submit ? (s.milestone ? t(naru.december.submitLabel) : `${t(naru.december.submitLabel)}\u2002${t(s.submit)}`) : undefined,
+              // DECIDED 2026-10-11 (사용자: "각 날마다 이제 제출물 / milestone이 있는거임"): ★는 제출이 있는 이틀이 아니라
+              // 마일스톤이 있는 날 전부(Day 1부터 Day 4)입니다. 이틀에만 달리던 "제출" 배지는 그래서 뺐습니다.
+              kind: s.milestone ? "anchor" : "plain",
               milestone: s.milestone ? t(s.milestone) : undefined,
             }))}
             pills={[t(naru.december.mentoringHeading), t(naru.december.fieldMentoringPill)]}
-            legend={{ anchor: t(naru.december.routeLegendSubmit), plain: t(naru.december.routeLegendStage), milestone: t(naru.december.routeLegendMilestone) }}
-            current={hoverDay ?? 0}
+            legend={{ anchor: t(naru.december.routeLegendMilestoneDay), milestone: t(naru.december.routeLegendMilestone) }}
+            current={hoverDay ?? openDay ?? 0}
+            selected={openDay}
+            onSelect={selectDay}
+            onPill={selectPill}
+            pillsOpen={mentoringOpen}
+            hint={t(naru.december.routeHint)}
+            below={openDay !== null && <div className="mt-3 sm:hidden">{stageRow(naru.december.stages[openDay], openDay, true)}</div>}
           />
+          {mentoringOpen && <div className="mt-4 grid grid-cols-1 gap-3 text-center sm:hidden">{mentoringBoxes}</div>}
           </div>
         </Reveal>
 
@@ -724,85 +882,9 @@ export default function NaruHome() {
           <p className={`${MEASURE} mt-3 break-keep ${BODY} leading-relaxed text-white/70`}>
             {t(naru.december.scheduleLead)}
           </p>
-          <PhoneFold more={t({ ko: "날짜별 일정 보기", en: "Day-by-day schedule" })} less={t({ ko: "날짜별 일정 접기", en: "Hide the schedule" })}>
-          <div className="mt-5">
-            {naru.december.stages.map((stage, i) => {
-            // DECIDED 2026-10-07 (이슈 브리프 4.2): Day 0 행을 흐리게 하지 않습니다. 2026-09-20에는 이 행만
-            // 한 단 낮은 밝기(/55)였는데, 진한 회색 글이 바탕에 묻혀 읽히지 않았습니다. "스테이지로 세지
-            // 않는다"는 것은 이 행의 문장(stage.line)이 이미 말합니다. 다섯 행의 밝기는 같습니다.
-            return (
-              <div
-                key={stage.name.en}
-                // 노선도의 현재 위치 점이 이 행으로 옵니다(감사 반영 브리프 3.6).
-                // 카드가 하던 일을 행이 그대로 이어받습니다.
-                onMouseEnter={() => setHoverDay(i)}
-                onMouseLeave={() => setHoverDay(null)}
-                className="grid grid-cols-1 gap-x-6 gap-y-2 border-t border-white/10 py-5 last:border-b sm:grid-cols-[7rem_1fr_10rem]"
-              >
-                <div className="flex items-baseline gap-2 max-sm:justify-center">
-                  {/* lang="en": DAY는 두 로케일 모두 영어입니다(접근성 감사 7). */}
-                  <span lang="en" className={LABEL_HEADING}>
-                    {`${t(naru.december.dayLabel)}\u2002${stage.dayOffset}`}
-                  </span>
-                  <span className={`shrink-0 ${META} text-white/70`}>
-                    {formatDecemberDayWithWeekday(locale, stage.dayOffset)}
-                  </span>
-                </div>
-                <div>
-                  <h4 className={ROW_HEADING}>{t(stage.title)}</h4>
-                  {/* stage.body는 그리지 않습니다. 브리프 4장이 표로 옮긴다고 적은 것은
-                      제출물 칩, 그날의 한 줄, 워크샵 셋입니다. 카드 본문까지 넣으면 한
-                      행이 네 줄이 되고, 표가 아니라 세로로 세운 카드가 됩니다. 키는
-                      data/naru.ts에 그대로 있습니다. */}
-                  <p className={`mt-1.5 flex gap-1.5 break-keep max-sm:justify-center ${BODY} font-semibold leading-snug text-white`}>
-                    {/* 2026-10-09: 가운데 정렬(폰)에서 글이 두 줄이 되면 화살표만 왼쪽 끝에 떨어져 숨깁니다. */}
-                    <span aria-hidden className="text-white/70 max-sm:hidden">→</span>
-                    {t(stage.line)}
-                  </p>
-                  {stage.session && (
-                    <p className={`mt-1.5 flex flex-wrap items-baseline gap-x-1.5 break-keep max-sm:justify-center ${BODY} leading-relaxed text-white/70`}>
-                      <span className={`font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.december.sessionLabel)}</span>
-                      <span className="font-semibold text-white/85">{t(stage.session.title)}</span>
-                      <span>{t(stage.session.body)}</span>
-                    </p>
-                  )}
-                  {/* DECIDED 2026-10-10 (사용자: 넣은 정보는 그대로, 8월 캘린더 형식은 쓰지 않는다): 그날의 마일스톤은 표의 형식 안에서,
-                      이 행의 글 기둥에 한 줄로 섭니다. 같은 날 아침에는 오른쪽 10rem 열의 META 한 줄이었는데 두 줄로 끊기고
-                      눈에 들어오지 않았습니다. amber 칩(홈에서 "결과보다 과정" 상자가 쓰는 색)과 BODY 굵은 글, 뒤에 누가 받는지. */}
-                  {stage.milestone && (
-                    <p className="mt-3 flex flex-wrap items-center gap-x-2.5 gap-y-1 break-keep max-sm:justify-center">
-                      <span className={`inline-flex shrink-0 items-center gap-1 rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 ${META} font-bold text-amber-100`}>
-                        <span aria-hidden>★</span>{t(naru.december.milestoneLabel)}
-                      </span>
-                      <span className={`${BODY} font-bold leading-snug text-white`}>{t(stage.milestone)}</span>
-                      {/* DECIDED 2026-10-10 (중복 브리프 B1): 뒤에 붙던 "넘은 팀 모두 지원"(milestoneNote)을 그리지 않습니다.
-                          노선도 범례가 한 번 말합니다. 네 행에서 네 번 되풀이됐습니다. 키는 data/naru.ts에 그대로. */}
-                    </p>
-                  )}
-                  {/* DECIDED 2026-10-08 (현장 팀 매칭 브리프 5): Day 1 행에만 있는 버튼 하나. 전에 오른쪽 열의 "팀 매칭"
-                      칩이 있던 말을 버튼이 합니다. 글이 한 줄이라 10rem 오른쪽 열에는 들어가지 않아, 이 행의 글 기둥
-                      왼쪽 끝에 맞춥니다(2026-09-29 왼쪽 끝 규칙). 알약 테두리 버튼(누르는 것의 문법), 글자는 BODY. */}
-                  {stage.matchCta && (
-                    <Link
-                      href={stage.matchCta.href}
-                      onClick={() => track("naru_cta", { src: "december-day1", to: "match" })}
-                      className={`mt-3 inline-flex min-h-[44px] items-center gap-1.5 whitespace-nowrap rounded-full border border-white/15 bg-[#0B1430]/80 px-5 py-2 ${BODY} font-medium text-accent transition hover:border-white/30 hover:text-white`}
-                    >
-                      {t(stage.matchCta.label)}
-                      <span aria-hidden>→</span>
-                    </Link>
-                  )}
-                </div>
-                <div className="flex flex-wrap content-start items-start gap-x-3 gap-y-1 max-sm:justify-center">
-                  {/* DECIDED 2026-10-10 (중복 브리프 B1): "제출 {제출물}" 칩을 그리지 않습니다. 같은 행의 마일스톤 줄이
-                      같은 이름을 말합니다. stage.submit은 노선도의 ★ 판정에만 씁니다. */}
-                  {stage.chips.map((c, j) => (
-                    <span key={j} className={`${META} text-white/70`}>{t(c)}</span>
-                  ))}
-                </div>
-              </div>
-            );
-            })}
+          {/* 2026-10-11: 폰에서는 이 표를 그리지 않습니다. 위 노선도의 정거장을 누르면 그날의 행이 노선도 아래에 열립니다. */}
+          <div className="mt-5 max-sm:hidden">
+            {naru.december.stages.map((stage, i) => stageRow(stage, i))}
           </div>
           {/* 2026-09-20 (일정 브리프 5장): workshopNote("스테이지마다 ... 3시간짜리
               워크샵이 붙습니다")를 그리지 않습니다. Day 4에는 세션이 없어
@@ -837,7 +919,6 @@ export default function NaruHome() {
               </div>
             ))}
           </dl>
-          </PhoneFold>
 
         </Reveal>
         {/* General Mentoring. 초록 테두리 강조 상자(8월 "과정이 기록됩니다" 문법).
@@ -847,67 +928,12 @@ export default function NaruHome() {
             두면 규칙 다섯 칸이 100px 남짓이라 한두 자씩 끊깁니다. */}
         {/* 2026-09-30: 판 나누기가 이 상자 앞에서 아래(AI 활용 범위 앞)로 내려가, 이 상자는 위 표에 이어지는
             블록입니다. 블록 사이 간격(mt-8 lg:mt-12)을 씁니다. */}
-        <PhoneFold more={t({ ko: "멘토링 자세히 보기", en: "Mentoring in detail" })} less={t({ ko: "멘토링 접기", en: "Hide mentoring" })}>
         {/* DECIDED 2026-10-10 (사용자, 스크린숏: "상자가 너무 비워져있음"): 두 상자를 위아래에서 좌우로 세웁니다(md부터).
             READ 폭 한 줄을 다 쓰는 상자 안에서 글이 MEASURE(36rem)에 묶여 오른쪽 절반이 비어 있었습니다. 두 칸으로 나누면
             글이 상자를 채웁니다. 상자 안 문단의 MEASURE는 그래서 뺐습니다. 폰은 전처럼 위아래입니다. 색과 글은 그대로. */}
-        <Reveal className={`${READ} mt-8 grid grid-cols-1 gap-3 text-left max-sm:text-center md:grid-cols-2 md:gap-4 lg:mt-12`}>
-          <div className="flex flex-col gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-4 lg:px-6 lg:py-5">
-            <div className="shrink-0">
-              <p className={`flex items-center gap-2 max-sm:justify-center ${BODY} font-bold text-white`}>
-                <ChipDot />
-                {/* lang="en" (2026-09-19, 접근성 감사 7): 한국어 문단 속의 영어 고유명사. */}
-                <span lang="en">General Mentoring</span>
-              </p>
-              <p className={`mt-0.5 ${META} font-semibold text-emerald-200/90`}>{t(naru.december.mentoringAlways)}</p>
-              {/* DECIDED 2026-10-10 (사용자, 마일스톤 브리프 2.5): 멘토링은 먼저 찾아가는 자리라는 문장을 상자 안에 그립니다.
-                  mentoringLead는 그 전까지 화면에 그려지지 않던 키였습니다. 규칙 목록 위, 이름 줄 아래에 섭니다. */}
-              <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.mentoringLead)}</p>
-            </div>
-            {/* 폰은 2열·작은 글자(길이 목표, 감사 반영 브리프 3.1). */}
-            {/* 2026-09-19 (모바일 감사 14): 폰에서 2열을 풉니다. 상자 안쪽 291px을
-                둘로 나누면 한 칸의 **글자 폭이 121px**, text-xs로 한글 8.9자/줄입니다.
-                "마지막 날에는 새 방향을 제안하지 않음"(18자)이 세 줄, 영어는 네 줄이
-                됐습니다. 한 줄 길이는 짧아도 문제입니다. 세로가 늘어나는 대가는
-                아래 Day 카드의 clamp 완화와 같은 예산에서 나옵니다. */}
-            {/* 2026-09-20 (일정 브리프 3장): 규칙이 넷에서 다섯이 되어 lg를 5열로.
-                4열이면 다섯째 줄만 아래로 내려가 왼쪽 칸이 둘이 됩니다. */}
-            {/* 2026-09-29 (왼쪽 끝 브리프 2.1, 검증 4): READ 폭에서 다섯 칸은 150px 남짓이라 "바뀝니다"가 넉 자로
-                떨어졌습니다. 폰 한 칸, md부터 두 칸. */}
-            {/* 2026-10-10: 규칙이 셋이 되어 한 칸으로 세웁니다. 두 칸이면 셋째만 아래로 내려가고, 세 칸이면 READ 폭에서 줄마다 두 줄로 꺾입니다. */}
-            <ul role="list" className="grid flex-1 grid-cols-1 gap-y-2">
-              {naru.december.mentoringRules.map((rule, i) => (
-                <li key={i} className={`flex gap-2.5 break-keep border-l-2 border-white/20 pl-3 max-sm:justify-center max-sm:border-l-0 max-sm:pl-0 ${BODY} leading-snug text-white/85`}>
-                  {t(rule)}
-                </li>
-              ))}
-            </ul>
-          </div>
-          {/* DECIDED 2026-10-08 (사용자: "멘토가 오는 게 아니고 우리가 직접 간다", 프로그램 브리프 2.5): 현장 멘토링.
-              General Mentoring 바로 아래에 한 묶음으로 섭니다(mt-3). 같은 READ 폭과 왼쪽 끝, 같은 상자 문법이고
-              초록은 쓰지 않습니다(초록은 General Mentoring 하나, 2026-09-18). 무채색 테두리에 점만 노선도 둘째 필과 같은
-              주황입니다(주황은 점으로만). 이름은 BODY 굵게, 기간은 META, 설명은 BODY. 규칙 목록은 없습니다.
-              날짜, 횟수, 기업 이름은 쓰지 않습니다(미정). 위 초안 배너가 이 약속을 덮습니다. */}
-          <div className="rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 lg:px-6 lg:py-5">
-            <p className={`flex items-center gap-2 max-sm:justify-center ${BODY} font-bold text-white`}>
-              <ChipDot className="bg-naru-orange" />
-              {t(naru.december.fieldMentoring.name)}
-            </p>
-            <p className={`mt-0.5 ${META} font-semibold text-white/70`}>{t(naru.december.fieldMentoring.when)}</p>
-            <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.fieldMentoring.body)}</p>
-          </div>
-          {/* 재는 것. 호박색 강조 상자(8월 "준비물은 하나예요" 문법).
-
-              2026-09-20 (사용자: "가장 중요한 것은 완주율이라는 거를 강조"): 라벨과
-              문장을 한 줄에 "라벨: 문장"으로 붙여 두었더니, 이 챕터에서 가장 중요한
-              문장이 각주처럼 읽혔습니다. 라벨을 자기 줄로 올리고 문장을 본문 크기로
-              키웁니다. 상자 색과 문법은 그대로예요. 새 강조 장치를 만들지 않습니다.
-
-              처음에는 이 자리에 "84%" 같은 수치를 크게 세우려고 했는데 걷었습니다.
-              퍼센트를 한 번 적으면 그 수치가 목표가 되고, 다음 회차는 그 수치를
-              지키려고 설계하게 됩니다(data/naru.ts의 measure 주석). */}
+        <Reveal id="december-mentoring" className={`${READ} mt-8 grid grid-cols-1 gap-3 text-left max-sm:hidden md:grid-cols-2 md:gap-4 lg:mt-12`}>
+          {mentoringBoxes}
         </Reveal>
-        </PhoneFold>
         {/* DECIDED 2026-10-10 (중복 브리프 B2): 이 자리의 호박색 "결과보다 과정" 상자(naru.why.measure)를 그리지 않습니다.
             #naru 코어 01의 "그래서 우리가 보는 것도 순위가 아니라 완주입니다"와 같은 말입니다. 키는 data/naru.ts에 그대로.
             그 자리에 findClose 문단이 섭니다. 평가가 과정이라는 말을 이 문단이 대신합니다. 상자 없이 READ 왼쪽 끝, BODY. */}

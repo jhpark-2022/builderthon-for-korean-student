@@ -41,8 +41,26 @@ export default function RouteMap({
   ariaLabel,
   className = "",
   current,
+  selected,
+  onSelect,
+  onPill,
+  pillsOpen,
+  hint,
+  below,
 }: {
   stations: RouteStation[];
+  /**
+   * DECIDED 2026-10-11 (사용자: "button으로 말고, 여기를 클릭하면 나오는 구조가 더 자연스러운듯"): onSelect를 주면 정거장이
+   * 누르는 것이 됩니다. 무엇을 여는지는 부르는 쪽이 정합니다(홈: 폰에서는 그날의 일정 한 행을 below에 열고, sm부터는
+   * 아래 표의 그 행으로 갑니다). selected는 지금 열린 정거장이고 옅은 판으로 표시합니다. onPill도 같습니다(필이 누르는 것).
+   * hint는 폰에서만 그리는 한 줄(무엇이 눌리는지), below는 레일과 필 사이에 서는 자리입니다.
+   */
+  selected?: number | null;
+  onSelect?: (index: number) => void;
+  onPill?: (index: number) => void;
+  pillsOpen?: boolean;
+  hint?: string;
+  below?: React.ReactNode;
   /**
    * 현재 위치(정거장 인덱스). 주황 점 하나가 레일을 따라 200ms에 이동합니다(2026-09-18, 감사
    * 반영 브리프 3.6). 지나가는 ★ 정거장은 한 번 밝아집니다. prefers-reduced-motion이면 정적.
@@ -56,7 +74,7 @@ export default function RouteMap({
    * 색만 다릅니다: 첫째는 accent, 둘째부터는 노선도의 현재 위치 점과 같은 주황(naru-orange). 새 색은 만들지 않습니다.
    */
   pills?: string[];
-  legend?: { anchor: string; plain: string; spot?: string; milestone?: string };
+  legend?: { anchor: string; plain?: string; spot?: string; milestone?: string };
   ariaLabel?: string;
   className?: string;
 }) {
@@ -96,7 +114,8 @@ export default function RouteMap({
         // 접혀도 높이가 저절로 늘어 아래 범례, 다음 블록과 겹치지 않습니다. pb-7은 ★ 정거장 아래에 매달린 배지의 자리입니다.
         // 2026-10-10 (마일스톤 브리프 2.1): items-start에서 items-stretch로. 마일스톤 줄이 칸마다 한 줄에서 세 줄까지 달라서,
         // 배지(top-full)가 자기 칸의 끝이 아니라 가장 긴 칸의 끝 아래에 매달려야 옆 칸의 마일스톤과 겹치지 않습니다.
-        className={`relative flex items-stretch ${pills && pills.length ? "pb-7" : "pb-2"}`}
+        // 2026-10-11: 배지가 하나도 없으면 배지 자리(pb-7)를 비워 두지 않습니다.
+        className={`relative flex items-stretch ${pills && pills.length && stations.some((s) => s.badge) ? "pb-7" : "pb-2"}`}
       >
         {/* 레일. top-[1.625rem]은 노드 줄의 중심(py-2.5 + h-8의 절반). */}
         <span
@@ -111,12 +130,18 @@ export default function RouteMap({
             style={{ left: dotLeft }}
           />
         )}
-        {stations.map((s) => {
+        {stations.map((s, index) => {
           const anchor = s.kind === "anchor";
           const spot = s.kind === "spot";
+          const on = selected === index;
+          // 누르는 정거장은 button, 아니면 전과 같은 div입니다. 안쪽 내용과 간격은 같습니다.
+          const Box = onSelect ? "button" : "div";
           return (
             <li key={s.key} className="relative flex-1">
-              <div className="flex w-full flex-col items-center gap-1.5 px-1 py-2.5 text-center">
+              <Box
+                {...(onSelect ? { type: "button" as const, "aria-pressed": on, onClick: () => onSelect(index) } : {})}
+                className={`flex h-full w-full flex-col items-center gap-1.5 rounded-xl px-1 py-2.5 text-center ${onSelect ? `cursor-pointer transition-colors hover:bg-white/[0.06] ${on ? "bg-white/[0.07]" : ""}` : ""}`}
+              >
                 <span className="relative flex h-8 items-center justify-center">
                   {anchor ? (
                     <span
@@ -161,14 +186,27 @@ export default function RouteMap({
                     {s.badge}
                   </span>
                 )}
-              </div>
+              </Box>
             </li>
           );
         })}
       </ol>
+      {hint && <p className={`text-center ${META} text-white/65 sm:hidden`}>{hint}</p>}
+      {below}
       {pills && pills.length > 0 && (
-        <div className="flex flex-col items-center gap-1.5">
-          {pills.map((p, i) => (
+        <div className={`flex flex-col items-center gap-1.5 ${hint ? "max-sm:mt-3" : ""}`}>
+          {pills.map((p, i) => onPill ? (
+            <button
+              key={i}
+              type="button"
+              aria-expanded={pillsOpen}
+              onClick={() => onPill(i)}
+              className={`flex max-w-full cursor-pointer items-center gap-1.5 rounded-full border border-accent/40 px-2.5 py-1 text-center ${META} font-semibold leading-tight text-accent transition-colors hover:bg-accent/10 max-sm:min-h-[36px] sm:whitespace-nowrap sm:leading-none ${pillsOpen ? "max-sm:bg-accent/15" : "bg-transparent"}`}
+            >
+              <span aria-hidden data-pill-dot className={`h-[7px] w-[7px] shrink-0 rounded-full ${i === 0 ? "bg-accent/80" : "bg-naru-orange"}`} />
+              {p}
+            </button>
+          ) : (
             // 2026-09-18 (감사 반영 브리프 8): 초록은 General Mentoring 상자의 기간 배지 하나에만 남깁니다. 필은 보라 외곽선.
             // whitespace-nowrap은 sm부터 (2026-09-19, 모바일 감사 11). 폰에서는 접히게 두고 가운데 정렬합니다.
             <span key={i} className={`flex max-w-full items-center gap-1.5 rounded-full border border-accent/40 bg-transparent px-2.5 py-1 text-center ${META} font-semibold leading-tight text-accent sm:whitespace-nowrap sm:leading-none`}>
@@ -185,10 +223,12 @@ export default function RouteMap({
             <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-naru-plum-tint/60 bg-[#9A5A82]/40 text-[0.42rem] text-white">★</span>
             {legend.anchor}
           </span>
-          <span className={`flex items-center gap-1.5 ${META} text-white/65`}>
-            <span aria-hidden className="h-2 w-2 rounded-full border border-white/35" />
-            {legend.plain}
-          </span>
+          {legend.plain && (
+            <span className={`flex items-center gap-1.5 ${META} text-white/65`}>
+              <span aria-hidden className="h-2 w-2 rounded-full border border-white/35" />
+              {legend.plain}
+            </span>
+          )}
           {legend.milestone && (
             <span className={`flex items-center gap-1.5 ${META} text-white/75`}>
               <span aria-hidden className="h-[6px] w-[6px] rounded-full bg-naru-orange" />

@@ -1786,6 +1786,11 @@ export const naru = {
     routeAria: { ko: "크로싱 서울 닷새의 노선도", en: "The five-day route of CROSSING SEOUL" },
     routeLegendSubmit: { ko: "제출이 있는 날", en: "Submission day" },
     routeLegendStage: { ko: "스테이지", en: "Stage" },
+    // DECIDED 2026-10-11 (사용자: "각 날마다 이제 제출물 / milestone이 있는거임"): ★는 Day 1부터 Day 4까지 전부입니다.
+    // routeLegendSubmit("제출이 있는 날")과 routeLegendStage는 그리지 않습니다. 키는 그대로.
+    routeLegendMilestoneDay: { ko: "제출물과 마일스톤이 있는 날", en: "A day with something to hand in and a milestone" },
+    // 폰에서만 그리는 한 줄(2026-10-11). 노선도의 정거장과 필이 눌린다는 것을 말합니다.
+    routeHint: { ko: "날짜를 누르면 그날의 일정이 열립니다", en: "Tap a day to open its schedule" },
     // 2026-10-10 (마일스톤 브리프 2.1): 노선도의 주황 점 줄이 무엇인지 말하는 범례 한 칸.
     routeLegendMilestone: { ko: "마일스톤 지원, 넘은 팀 모두", en: "Milestone support, for every team that clears it" },
     milestoneLabel: { ko: "마일스톤", en: "Milestone" },
@@ -2141,7 +2146,9 @@ export const naru = {
           ko: "오전 안에 돌아가는 첫 버전을 만들고 계속 고칩니다. 무엇을 만들지는 바뀔 수 있습니다. 다만 Day 1의 정의가 바뀌면 운영진에게 알립니다.",
           en: "You get a first working version up in the morning and keep fixing it. What you build can change. If the Day 1 definition changes, you tell the organisers.",
         },
-        line: { ko: "추가 제출 요구는 없습니다.", en: "Nothing extra to hand in." },
+        // DECIDED 2026-10-11 (사용자: "각 날마다 이제 제출물 / milestone이 있는거임"): "추가 제출 요구는 없습니다."였습니다.
+        // 같은 행의 마일스톤 줄과 어긋나 뺐고, 위 body의 첫 문장을 그대로 씁니다(새로 쓴 사실 없음).
+        line: { ko: "오전 안에 돌아가는 첫 버전을 만들고 계속 고칩니다.", en: "You get a first working version up in the morning and keep fixing it." },
         chips: [{ ko: "방향 전환은 팀의 몫", en: "Changing course is yours to call" }],
         // DECIDED 2026-09-27 (사용자, 9/7 8월 참가자 회고): 왜 하는지가 바로 읽히게.
         // UI는 AI가 바로 만들어 주지만 어떤 기능을 왜 넣을지 판단하는 훈련은 배울 곳이
