@@ -367,8 +367,10 @@ export const naru = {
       // DECIDED 2026-10-10 (사용자, 스크린숏: "이번이 처음이라는 표현 빼주고"): 둘째 문장은 어디서 시작했는지만 말합니다.
       // 브리프의 "이번이 두 번째 자리입니다"는 프로그램 리드(december.notSequel, "나루가 직접 여는 첫 이벤트입니다")와
       // 어긋나 같은 날 "직접 여는 이벤트는 이번이 처음입니다"로 고쳤다가, 그 표현도 뺐습니다. 몇 번째인지는 여기서 말하지 않습니다.
-      ko: "학생이 직접 운영하는 비영리 그룹 나루가 엽니다. 2026년 8월 싱가포르에서 시작했습니다.",
-      en: "CROSSING SEOUL is run by NARU, a student-run, not-for-profit group. It started in Singapore in August 2026.",
+      // DECIDED 2026-10-11 (브랜드 브리프 B4): 나루의 정의는 docs/brand.md의 정의문을 따릅니다. "비영리"는 쓰지 않습니다.
+      // 그 전: "학생이 직접 운영하는 비영리 그룹 나루가 엽니다. 2026년 8월 싱가포르에서 시작했습니다."
+      ko: "한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 그룹 나루가 엽니다. 2026년 8월 싱가포르에서 시작했습니다.",
+      en: "CROSSING SEOUL is run by NARU, a Korea-rooted, student-run, not-for-profit group. It started in Singapore in August 2026.",
     },
     cta: { label: { ko: "나루 알아보기", en: "About NARU" }, href: "/naru" },
   },
@@ -388,7 +390,8 @@ export const naru = {
     // 가리키는 말로 쓰지 않습니다(DECIDED 2026-09-30: 나루는 단체의 연합이 아니라 개인이 모인 그룹).
     // 국문 부제 "한국에 뿌리를 둔 학생 빌더 모임"은 TODO: confirm (사용자가 아직 확정하지 않은 번역안입니다).
     eyebrow: {
-      ko: "한국에 뿌리를 둔 학생 빌더 모임",
+      // 2026-10-11 (브랜드 브리프 B4): 모임에서 그룹으로. 영문은 정본의 부제 그대로입니다.
+      ko: "한국에 뿌리를 둔 학생 빌더 그룹",
       en: "A Korea-rooted collective of student builders",
     },
     // 확정 태그라인. 매니페스토의 마지막 문단에서 왔습니다.
@@ -604,8 +607,10 @@ export const naru = {
       // DECIDED 2026-10-05 (사용자, 스크린숏: "너무 길어. 간략하게"): 네 문장을 두 문장으로. 뺀 것: 각 나라의 학생회, 학회와 함께
       // 넓힌다는 구절, "모두 AI로 함께 만듭니다", 첫 이벤트 문장(바로 아래 record.lead2가 받습니다).
       // 같은 날 group.lead("이벤트는 ... 지금의 방식입니다")는 화면에서 내렸습니다. 같은 말을 아래 "방법은 바뀝니다"가 합니다.
-      ko: "한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 그룹입니다. 이벤트로 학생을 모으고, 모인 사람들을 커뮤니티로 잇습니다.",
-      en: "A Korea-rooted, student-run, not-for-profit group. We bring students in through events and connect them into a community.",
+      // 2026-10-11 (브랜드 브리프 B4): docs/brand.md의 정의문 전문 그대로입니다(KO, EN).
+      // 그 전: "...영리를 목적으로 하지 않는 그룹입니다. 이벤트로 학생을 모으고, 모인 사람들을 커뮤니티로 잇습니다."
+      ko: "나루는 한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 그룹입니다. 이벤트로 학생을 모으고, 모인 사람들을 진짜 커뮤니티로 잇고, 각 나라의 학생회, 학회와 함께 서울과 싱가포르를 넘어 더 넓게 다가갑니다. 모두 AI로 함께 만듭니다.",
+      en: "A Korea-rooted, student-run, not-for-profit group that brings students in through events, grows them into a genuine community, and reaches out with student associations and clubs across Seoul, Singapore and beyond, building together with AI.",
     },
   },
 
@@ -2690,8 +2695,10 @@ export const naru = {
     // DECIDED 2026-09-30 (사용자): 링 글자를 옮겨 적는 자리라 링과 같이 of를 뺍니다. 문장으로 쓰는 부제는 subtitle.
     subtitleRing: { top: "A Korea-rooted collective", bottom: "Student builders" },
     shortDef: {
-      ko: "한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 학생 빌더 그룹. 서울과 싱가포르, 그리고 그 너머.",
-      en: "A Korea-rooted, student-run, not-for-profit group growing a community of student builders across Seoul, Singapore and beyond.",
+      // 2026-10-11 (브랜드 브리프 B4): 정의문의 짧은 판입니다(docs/brand.md). 영문은 정의문 EN의 첫 구절입니다.
+      // 그 전: "...영리를 목적으로 하지 않는 학생 빌더 그룹. 서울과 싱가포르, 그리고 그 너머."
+      ko: "한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 그룹.",
+      en: "A Korea-rooted, student-run, not-for-profit group.",
     },
     credits: {
       ko: "주최 나루 주관 각 학교 한인 학생회와 학회 후원 참여 기업",
