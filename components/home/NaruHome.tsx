@@ -813,6 +813,10 @@ export default function NaruHome() {
         <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-center ${BODY} leading-relaxed text-white/85`}>
           {t(naru.december.programConcrete).replace("{date}", formatDecemberDateLine(locale))}
         </p>
+        {/* DECIDED 2026-10-11 (브랜드 브리프 B3): "크로싱"의 뜻 한 줄. 위 문단과 같은 모양의 문단입니다. */}
+        <p className={`${READ} ${READ_MEASURE_C} mt-3 break-keep text-center ${BODY} leading-relaxed text-white/85`}>
+          {t(naru.december.crossingLine)}
+        </p>
         <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-center ${BODY} leading-relaxed text-white/70`}>
           {t(naru.december.shapeLead)}
         </p>

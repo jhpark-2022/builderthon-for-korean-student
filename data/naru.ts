@@ -464,8 +464,10 @@ export const naru = {
       // programConcrete, shapeLead, shape[0].label, stages[0], gains.items[0], 후원 상자도 같이 바꿨습니다.
       // 2026-10-08 (사용자 승인, 문장 감사 B2): 끝의 조각 문장(", 닷새.")과 "같은 문제 앞에 섭니다"를 풀었습니다.
       // 팀마다 찾는 문제가 다르므로 "같은 문제"는 사실과도 달랐습니다. 내용은 그대로입니다.
-      ko: "한국의 대학생과 해외에서 공부하는 한인 학생이 한 팀이 됩니다. 기업이 지금 겪는 이슈를 받아 그 아래의 문제를 찾고, 닷새째 그 기업 앞에서 발표합니다.",
-      en: "Students in Korea and Korean students abroad work in the same teams. Each team takes an issue a company is facing now, finds the problem underneath it, and presents to that company on the fifth day.",
+      // 2026-10-11 (브랜드 브리프 B3): 첫 문장 "한국의 대학생과 해외에서 공부하는 한인 학생이 한 팀이 됩니다."를 뺐습니다.
+      // 프로그램 챕터의 crossingLine이 같은 말을 합니다. 영문도 첫 문장("Students in Korea ... work in the same teams.")을 뺐습니다.
+      ko: "기업이 지금 겪는 이슈를 받아 그 아래의 문제를 찾고, 닷새째 그 기업 앞에서 발표합니다.",
+      en: "Each team takes an issue a company is facing now, finds the problem underneath it, and presents to that company on the fifth day.",
     },
     ctaProgram: { ko: "프로그램 보기", en: "See the programme" },
     // DECIDED 2026-10-11 (사용자): AI 유형 테스트(/match)로 가는 버튼이 일정표의 Day 1에서 히어로의 버튼 줄로 왔습니다.
@@ -1613,6 +1615,12 @@ export const naru = {
     programConcrete: {
       ko: "{date} 기업이 지금 겪는 이슈를 받아 그 아래의 문제를 찾고, 마지막 날 그 기업 앞에서 발표합니다.",
       en: "{date} You take an issue a company is facing right now, find the problem underneath it, and on the last day you present to that company.",
+    },
+    // DECIDED 2026-10-11 (브랜드 브리프 B3): "크로싱"의 뜻 한 줄. programConcrete 문단 바로 아래에 같은 모양으로 섭니다.
+    // 이름이 무엇을 건너는지 사이트 어디에도 없었습니다. 히어로의 "한 팀이 됩니다" 문장은 이 줄과 겹쳐 히어로에서 뺐습니다.
+    crossingLine: {
+      ko: "싱가포르에서 만든 자리를 서울로 건너와 엽니다. 한국의 대학생과 해외에서 공부하는 한인 학생이 같은 팀이 됩니다.",
+      en: "A place made in Singapore, crossed over to Seoul. Students in Korea and Korean students abroad end up on the same team.",
     },
     reasonsLabel: { ko: "왜 서울인가", en: "Why Seoul" },
     reasons: [
