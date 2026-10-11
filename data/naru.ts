@@ -1813,8 +1813,8 @@ export const naru = {
       // 2026-09-19 (사용자): 첫 문장이 바로 아래 BEFORE 카드와 같은 말이었습니다
       // ("데이터를 먼저 공개합니다. 어느 트랙에서 풀지 고르고 옵니다"). 한 화면에서
       // 데이터가 네 번, 트랙이 네 번 나왔어요. 카드가 말하는 것은 리드가 말하지 않습니다.
-      ko: "등록은 모두 혼자 합니다. 팀은 Day 1 현장에서 전원이 함께 맺습니다. Discovery에서 Showcase까지 하루에 한 스테이지씩 넘어갑니다.",
-      en: "Everyone registers alone. Teams are formed on site on Day 1, for all participants. Then one stage a day from Discovery to Showcase.",
+      ko: "등록은 모두 혼자 합니다. 팀은 Day 1 현장에서 전원이 함께 맺습니다. 찾기에서 공유하기까지 하루에 한 스테이지씩 넘어갑니다.",
+      en: "Everyone registers alone. Teams are formed on site on Day 1, for all participants. Then one stage a day from Find to Share.",
     },
     // 2026-09-20 (크로싱서울_일정.pdf): 라벨이 "워크샵"에서 "세션"으로. PDF가 부르는
     // 이름이고, stages의 필드 이름(workshop -> session)과 같은 말을 씁니다.
@@ -2158,8 +2158,10 @@ export const naru = {
         // Day 0은 이슈와 자료를 여는 날이고 세션은 Day 1부터입니다. 위 주석(2026-09-20)의 "3시간짜리 세션이 있는 하루"는 더 맞지 않습니다.
       },
       {
-        name: { ko: "Discovery", en: "Discovery" },
-        title: { ko: "문제 발견", en: "Discovery" },
+        // DECIDED 2026-10-11 (브랜드 브리프 B2, 결정 D1): 닷새의 이름은 찾기, 확인받기, 만들기, 공유하기입니다(docs/brand.md).
+        // 그 전: 문제 발견/Discovery, 빌드/Build, 다듬기/Refine, 성과 공유회/Showcase. 마지막 날의 행사 이름 "성과 공유회"는 본문과 마일스톤에 그대로 씁니다.
+        name: { ko: "Find", en: "Find" },
+        title: { ko: "찾기", en: "Find" },
         when: { ko: "Day 1", en: "Day 1" },
         dayOffset: 1,
         body: {
@@ -2197,8 +2199,8 @@ export const naru = {
         },
       },
       {
-        name: { ko: "Build", en: "Build" },
-        title: { ko: "빌드", en: "Build" },
+        name: { ko: "Check", en: "Check" },
+        title: { ko: "확인받기", en: "Check" },
         when: { ko: "Day 2", en: "Day 2" },
         dayOffset: 2,
         body: {
@@ -2227,8 +2229,8 @@ export const naru = {
         },
       },
       {
-        name: { ko: "Refine", en: "Refine" },
-        title: { ko: "다듬기", en: "Refine" },
+        name: { ko: "Build", en: "Build" },
+        title: { ko: "만들기", en: "Build" },
         when: { ko: "Day 3", en: "Day 3" },
         dayOffset: 3,
         body: {
@@ -2260,8 +2262,8 @@ export const naru = {
       },
       {
         // 2026-10-10 (마일스톤 브리프 2.7): 마지막 날의 이름은 "Pitch / 피치"에서 성과 공유회(Showcase)로.
-        name: { ko: "Showcase", en: "Showcase" },
-        title: { ko: "성과 공유회", en: "Showcase" },
+        name: { ko: "Share", en: "Share" },
+        title: { ko: "공유하기", en: "Share" },
         when: { ko: "Day 4", en: "Day 4" },
         dayOffset: 4,
         // 2026-09-30 (사용자, 문장 감사): "완성도가 아니라 과정을 봅니다"였습니다. "결과보다 과정"은 #naru의
