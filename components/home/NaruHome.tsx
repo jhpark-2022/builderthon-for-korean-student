@@ -7,7 +7,7 @@ import { useLocale } from "@/lib/LocaleContext";
 import { naru, naruLinks, openChatLabels, register as registerCopy, type RecordPhoto } from "@/data/naru";
 import { useCrossingRegisterOptional } from "@/components/crossing/RegisterProvider";
 import { links, type Phrase } from "@/data/dictionaryCore";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DECEMBER_EVENT_NAME,
   DECEMBER_STARTS_AT_MS,
@@ -349,9 +349,12 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
 
 // DECIDED 2026-10-11 (사용자, 스크린숏: "마일스톤에 대한 자세한 설명이 클릭하면 보여지도록"): 일정 카드 바닥의 마일스톤 띠는 누르는 것입니다.
 // 누르면 같은 띠 안에 설명이 열리고 다시 누르면 닫힙니다. 띠마다 따로 열립니다. 설명이 없으면 전처럼 글만 있는 띠입니다.
-function MilestoneStrip({ label, title, detail, center = false }: { label: string; title: string; detail?: string; center?: boolean }) {
+// DECIDED 2026-10-11 (리뷰 A3, A5): id는 useId가 아니라 부르는 쪽이 주는 안정된 값입니다(서버와 클라이언트의 useId가 어긋나
+// aria-controls가 없는 id를 가리켰습니다). 설명 문단은 닫혀 있어도 hidden으로 마운트해 둡니다.
+// expanded: 폰의 노선도 카드에서는 띠를 누르지 않습니다. 날짜를 눌러 연 카드 안에서 한 번 더 접혀 있던 것(2단 접힘)을 없애고
+// 설명 한 문장을 펼쳐 둡니다. 데스크톱 일정 카드의 띠는 전과 같이 누르는 것입니다.
+function MilestoneStrip({ id, label, title, detail, center = false, expanded = false }: { id: string; label: string; title: string; detail?: string; center?: boolean; expanded?: boolean }) {
   const [open, setOpen] = useState(false);
-  const id = useId();
   const head = (
     <>
       <span className={`inline-flex shrink-0 items-center gap-1 ${META} font-bold text-amber-100`}>
@@ -363,7 +366,7 @@ function MilestoneStrip({ label, title, detail, center = false }: { label: strin
   const row = `flex w-full flex-wrap items-center gap-x-2.5 gap-y-1 break-keep px-3 py-2 ${center ? "justify-center" : "text-left"}`;
   return (
     <div className="mt-auto w-full rounded-xl border border-amber-400/25 bg-amber-400/10">
-      {detail ? (
+      {detail && !expanded ? (
         <button type="button" aria-expanded={open} aria-controls={id} onClick={() => setOpen((v) => !v)} className={`${row} min-h-[44px] rounded-xl transition-colors hover:bg-amber-400/10`}>
           {head}
           <svg aria-hidden width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 text-amber-100 transition-transform ${center ? "" : "ml-auto"} ${open ? "rotate-180" : ""}`}><path d="m6 9 6 6 6-6" /></svg>
@@ -371,8 +374,8 @@ function MilestoneStrip({ label, title, detail, center = false }: { label: strin
       ) : (
         <p className={row}>{head}</p>
       )}
-      {detail && open && (
-        <p id={id} className={`break-keep border-t border-amber-400/20 px-3 py-2.5 ${BODY} leading-relaxed text-white/85 ${center ? "text-center" : ""}`}>{detail}</p>
+      {detail && (
+        <p id={expanded ? undefined : id} hidden={!expanded && !open} className={`break-keep border-t border-amber-400/20 px-3 py-2.5 ${BODY} leading-relaxed text-white/85 ${center ? "text-center" : ""}`}>{detail}</p>
       )}
     </div>
   );
@@ -415,8 +418,32 @@ export default function NaruHome() {
   // DECIDED 2026-10-11 (사용자, 같은 날 뒤: "여기 클릭하게 하는 건 빼주면 될 것 같고"): sm부터는 정거장이 눌리지 않습니다.
   // 일정 카드가 다 보이는 화면에서 누르면 표시만 남고 하는 일이 없었습니다. 폰은 그대로입니다(카드 다섯을 한 번에 펴면 길어서).
   // 멘토링 필 둘은 뺐고(아래 상자가 같은 말을 합니다), 멘토링 상자는 폰에서도 처음부터 보입니다.
-  const [openDay, setOpenDay] = useState<number | null>(null);
-  const selectDay = (i: number) => setOpenDay((d) => (d === i ? null : i));
+  // DECIDED 2026-10-11 (리뷰 A3): 폰의 첫 진입에는 DAY 1(인덱스 1)이 열려 있습니다. 날짜를 눌러 카드가 열릴 때 카드 하단이
+  // 화면 하단에서 63px 위보다 아래에 있으면 그만큼만 스크롤합니다(전에는 점 행이 화면 아래쪽에 있으면 카드가 화면 밖에 열려
+  // 아무 일도 일어나지 않은 것처럼 보였습니다). 처음부터 열려 있는 DAY 1에는 스크롤하지 않습니다. 누른 때만입니다.
+  // phone: 정거장이 눌리는 폭(sm 아래)인가. sm부터는 정거장이 버튼이 아니고(전에는 눌리지 않는 버튼이었습니다),
+  // 노선도의 현재 위치 점도 전처럼 Day 0에서 시작합니다.
+  const [openDay, setOpenDay] = useState<number | null>(1);
+  const [phone, setPhone] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 639.98px)");
+    const read = () => setPhone(mq.matches);
+    read();
+    mq.addEventListener("change", read);
+    return () => mq.removeEventListener("change", read);
+  }, []);
+  const routePanelId = (i: number) => `route-day-${naru.december.stages[i].dayOffset}`;
+  const selectDay = (i: number) => {
+    const opening = openDay !== i;
+    setOpenDay(opening ? i : null);
+    if (!opening) return;
+    requestAnimationFrame(() => {
+      const panel = document.getElementById(routePanelId(i));
+      if (!panel) return;
+      const over = panel.getBoundingClientRect().bottom - (window.innerHeight - 63);
+      if (over > 0) window.scrollBy({ top: over, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    });
+  };
   const mentoringBoxes = (
     <>
           <div className="flex flex-col gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-4 lg:px-6 lg:py-5">
@@ -480,20 +507,25 @@ export default function NaruHome() {
   // DECIDED 2026-10-11 (사용자, 같은 날 뒤: "visually 눈에 잘 들어오지 않음"): 헤어라인 칸을 카드로 바꿨습니다. 글자 크기는 그대로 셋이고
   // (2026-10-07), 눈에 걸리는 자리를 둘로 줄였습니다: 위의 DAY 알약과 제목, 아래 끝의 마일스톤 띠. 그날의 한 줄은 굵기를 내렸습니다.
   // 마일스톤 띠는 카드 바닥에 붙어(mt-auto) 옆 카드와 같은 높이에 섭니다. Day 1의 /match 버튼은 히어로로 갔습니다.
-  const stageCard = (stage: (typeof naru.december.stages)[number], i: number, phone = false) => (
+  // 2026-10-11 (리뷰 A3, A5): inPanel은 폰의 노선도 패널 안에 서는 카드입니다. 제목은 패널의 첫 줄이고, 마일스톤은 펼쳐 둡니다.
+  // 패널의 제목이 h4가 아니라 h3인 이유: 지금은 노선도가 "일정" 소제목(h3)보다 위에 있어 바로 앞 제목이 챕터의 h2입니다.
+  // h4로 두면 폰에서 h2 다음이 h4가 됩니다. 일정 소제목이 노선도 위로 올라가면(리뷰 브리프 2.3) h4로 바꿉니다.
+  const stageCard = (stage: (typeof naru.december.stages)[number], i: number, inPanel = false) => {
+    const StageHeading = inPanel ? "h3" : "h4";
+    return (
     <div
       key={stage.name.en}
       // 노선도의 현재 위치 점이 이 카드로 옵니다(감사 반영 브리프 3.6).
       onMouseEnter={() => setHoverDay(i)}
       onMouseLeave={() => setHoverDay(null)}
-      className={`flex flex-col gap-2.5 rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 lg:px-6 lg:py-5 items-center text-center ${!phone && i === 0 ? "md:col-span-2" : ""}`}
+      className={`flex flex-col gap-2.5 rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 lg:px-6 lg:py-5 items-center text-center ${!inPanel && i === 0 ? "md:col-span-2" : ""}`}
     >
       <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1">
         {/* lang="en": DAY는 두 로케일 모두 영어입니다(접근성 감사 7). */}
         <span lang="en" className={`rounded-full border border-accent/40 bg-accent/15 px-2.5 py-0.5 ${META} font-bold tracking-[0.08em] text-accent`}>
           {`${t(naru.december.dayLabel)} ${stage.dayOffset}`}
         </span>
-        <h4 className={ROW_HEADING}>{t(stage.title)}</h4>
+        <StageHeading className={ROW_HEADING}>{t(stage.title)}</StageHeading>
         <span className={`${META} text-white/70`}>{formatDecemberDayWithWeekday(locale, stage.dayOffset)}</span>
       </div>
       {/* stage.body는 그리지 않습니다(2026-09-20). 키는 data/naru.ts에 그대로 있습니다. */}
@@ -501,7 +533,8 @@ export default function NaruHome() {
       {stage.session && (
         <p className={`break-keep ${BODY} leading-relaxed text-white/70`}>
           <span className={`mr-1.5 font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.december.sessionLabel)}</span>
-          <span className="mr-1.5 font-semibold text-white/85">{t(stage.session.title)}</span>
+          {/* lang="en" (2026-10-11, 리뷰 작은 것): 세션 이름 셋은 두 로케일 모두 영어입니다. */}
+          <span lang="en" className="mr-1.5 font-semibold text-white/85">{t(stage.session.title)}</span>
           {t(stage.session.body)}
         </p>
       )}
@@ -512,10 +545,11 @@ export default function NaruHome() {
       )}
       {/* 그날의 마일스톤. amber 띠(홈에서 "결과보다 과정"이 쓰던 색)가 카드 바닥에 섭니다. Day 0에는 없습니다. */}
       {stage.milestone && (
-        <MilestoneStrip label={t(naru.december.milestoneLabel)} title={t(stage.milestone)} detail={stage.milestoneDetail && t(stage.milestoneDetail)} center />
+        <MilestoneStrip id={`milestone-day-${stage.dayOffset}`} label={t(naru.december.milestoneLabel)} title={t(stage.milestone)} detail={stage.milestoneDetail && t(stage.milestoneDetail)} center expanded={inPanel} />
       )}
     </div>
-  );
+    );
+  };
   // DECIDED 2026-10-10 (구조 브리프 3.2): 옛 주소. 홈에 있던 #join, #how, #why, #record, #join-ways는 /naru로 갔습니다.
   // 해시는 서버에 오지 않아 redirects로 잡을 수 없으므로, 마운트 때 한 번 보고 /naru의 같은 자리로 바꿉니다.
   // /naru에서 id가 바뀐 둘은 여기서 맞춥니다: 전의 #why(변하지 않는 두 개)는 #core, 전의 #join(왜 이 자리가 필요한가)은 #why.
@@ -856,11 +890,23 @@ export default function NaruHome() {
             }))}
             // DECIDED 2026-10-11 (사용자): 레일 아래의 멘토링 필 둘과 범례를 그리지 않습니다. 필은 아래 멘토링 상자가 같은 말을 하고,
             // 범례는 "제출물과 마일스톤이 있는 날"처럼 따로 표시하지 말라는 요청입니다. 날마다의 마일스톤은 정거장 아래 한 줄이 말합니다.
-            current={hoverDay ?? openDay ?? 0}
-            selected={openDay}
-            onSelect={selectDay}
-            hint={t(naru.december.routeHint)}
-            below={openDay !== null && <div className="mt-3 sm:hidden">{stageCard(naru.december.stages[openDay], openDay, true)}</div>}
+            current={hoverDay ?? (phone ? openDay : null) ?? 0}
+            selected={phone ? openDay : null}
+            onSelect={phone ? selectDay : undefined}
+            controls={routePanelId}
+            // 2026-10-11 (리뷰 A3): 카드가 열려 있는 동안 힌트 자리에는 그 날짜가 섭니다. 눌린 것이 무엇인지 말합니다.
+            hint={openDay !== null ? formatDecemberDayWithWeekday(locale, naru.december.stages[openDay].dayOffset) : t(naru.december.routeHint)}
+            // 패널 다섯은 늘 마운트돼 있고 열린 것만 hidden이 풀립니다(aria-controls가 가리키는 id가 항상 있습니다).
+            // sm부터는 감싼 div가 통째로 display: none입니다. 그 폭에서는 아래 일정 카드가 같은 내용을 그립니다.
+            below={
+              <div className="sm:hidden">
+                {naru.december.stages.map((stage, i) => (
+                  <div key={stage.name.en} id={routePanelId(i)} hidden={openDay !== i} className="mt-3">
+                    {stageCard(stage, i, true)}
+                  </div>
+                ))}
+              </div>
+            }
           />
           </div>
         </Reveal>

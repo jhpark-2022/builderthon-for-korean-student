@@ -43,6 +43,7 @@ export default function RouteMap({
   current,
   selected,
   onSelect,
+  controls,
   hint,
   below,
 }: {
@@ -55,6 +56,12 @@ export default function RouteMap({
    */
   selected?: number | null;
   onSelect?: (index: number) => void;
+  /**
+   * DECIDED 2026-10-11 (리뷰 A3, A5): 누르는 정거장은 토글(aria-pressed)이 아니라 disclosure입니다. controls가 정거장마다
+   * 여는 패널의 id를 돌려주면 버튼에 aria-expanded와 aria-controls가 붙습니다. 패널은 부르는 쪽이 below 안에 hidden으로
+   * 늘 마운트해 두어야 합니다(id가 가리키는 것이 항상 있어야 합니다).
+   */
+  controls?: (index: number) => string;
   hint?: string;
   below?: React.ReactNode;
   /**
@@ -135,7 +142,7 @@ export default function RouteMap({
           return (
             <li key={s.key} className="relative flex-1">
               <Box
-                {...(onSelect ? { type: "button" as const, "aria-pressed": on, onClick: () => onSelect(index) } : {})}
+                {...(onSelect ? { type: "button" as const, ...(controls ? { "aria-expanded": on, "aria-controls": controls(index) } : { "aria-pressed": on }), onClick: () => onSelect(index) } : {})}
                 className={`flex h-full w-full flex-col items-center gap-1.5 rounded-xl px-1 py-2.5 text-center ${onSelect ? `max-sm:cursor-pointer sm:pointer-events-none ${on ? "max-sm:bg-white/[0.07]" : ""}` : ""}`}
               >
                 <span className="relative flex h-8 items-center justify-center">
