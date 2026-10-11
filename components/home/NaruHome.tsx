@@ -620,7 +620,10 @@ export default function NaruHome() {
                 DECIDED 2026-10-07 (이슈 브리프 4.1): 크기는 TITLE 하나입니다. 챕터 h2, 카운트다운 숫자와 같은 값이고,
                 그 전의 히어로 전용 clamp(최대 86.4px)와 2행의 0.82em은 없습니다. 한 화면의 글자 크기가 셋을 넘지
                 않게 하려는 것입니다(components/ui/typography.ts). 390px에서 두 줄 모두 한 줄에 들어갑니다. */}
-            <h1 id="hero-title" className={`${TITLE} font-black leading-[1.05] tracking-tight drop-shadow-[0_4px_40px_rgba(75,58,140,0.5)]`}>
+            {/* DECIDED 2026-10-11 (사용자, 스크린숏: "좀 더 로고가 크면 좋겠어", 이어서 "둘다 사이즈가 동일해야함"): 히어로의 로고는 TITLE의 1.25배입니다
+                (폰 45px, 데스크톱 84px). 한국어 화면과 영문 화면이 같은 크기입니다. 영문은 글자가 길어 이 크기에서 두 줄로 접힙니다.
+                한 화면의 글자 크기는 셋이라는 규칙(2026-10-07)에서 이 로고 하나만 예외입니다. 글이 아니라 표식입니다. 다른 자리에 이 크기를 쓰지 마세요. */}
+            <h1 id="hero-title" className="text-[clamp(2.5rem,6.875vw,4.6875rem)] font-black leading-[1.05] tracking-tight drop-shadow-[0_4px_40px_rgba(75,58,140,0.5)]">
               {/* DECIDED 2026-10-08 (사용자: "영문 화면에도 같은 로고로", 이어서 "영어 crossing seoul 로고로 바꿨으면"):
                   영문 화면의 로고는 영문입니다. 큰 글자가 "CROSSING SEOUL"이고 같은 그라데이션을 씁니다. 한글 줄은
                   영문 화면에 보이지 않습니다(나루 락업의 규칙과 같아졌습니다). 영문 로고 파일이 따로 없어서 한국어
@@ -664,7 +667,9 @@ export default function NaruHome() {
             </h1>
             {/* 굵은 기간 줄. 8월의 "2026.08.22 – 08.29 8일" 자리. */}
             {/* 2026-09-18 (감사 반영 브리프 1.5): 주황 틴트 → 흰색 볼드. 주황은 점으로만. */}
-            <p className={`mt-8 ${BODY} font-bold text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] lg:mt-14`}>
+            {/* DECIDED 2026-10-11 (사용자: "로고랑 아래 내용의 gap이 조금 더 줄어들어도"): 로고와 날짜 줄 사이를 36/63px에서 27/36px로.
+                로고가 커진 만큼 간격이 줄어 아래 버튼과 카운트다운의 자리는 거의 그대로입니다. */}
+            <p className={`mt-6 ${BODY} font-bold text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] lg:mt-8`}>
               {formatDecemberDateLine(locale)}
             </p>
             <p className={`mx-auto mt-4 max-w-xl break-keep ${BODY} font-bold leading-snug text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)]`}>
