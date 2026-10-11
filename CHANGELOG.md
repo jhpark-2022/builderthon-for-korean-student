@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-11 리뷰 1단계: 폰의 고장 다섯(A1~A5)과 작은 것들](#2026-10-11-review-stage1)
 - [2026-10-11 맨 위 화면의 로고는 하나만 (되돌림)](#2026-10-11-one-logo-at-top)
 - [2026-10-11 히어로 사진 크게 보기, 노선도의 별은 하나만](#2026-10-11-photo-lightbox-one-star)
 - [2026-10-11 참가 카드와 나루 티저 사이 간격](#2026-10-11-teaser-gap)
@@ -205,6 +206,24 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-11-review-stage1"></a>
+## 2026-10-11 리뷰 1단계: 폰의 고장 다섯(A1~A5)과 작은 것들
+- 범위: components/journey/JourneyNav.tsx, components/shared/RouteMap.tsx, components/home/NaruHome.tsx, components/home/shared.tsx,
+  components/naru/NaruPage.tsx, components/shared/MobileChatBar.tsx(이름 한 줄), data/naru.ts(목차의 참가 칩)
+- 한 것: 사용자 지시로 리뷰 브리프의 1단계만. 결정 D-a~D-f는 기본값(이 단계에 걸리는 것은 D-d). 2단계와 3단계는 하지 않았습니다.
+  A1 나루 계열 헤더는 focus-within 대신 :has(:focus-visible)에 펼칩니다. A2 등록 블록에 id=register, "참가" 칩은 그 자리로.
+  A3 폰 노선도: 누르면 카드 하단이 보일 만큼만 스크롤, 힌트 자리에 그 날짜, 마일스톤 설명은 펼침, 첫 진입에 DAY 1 열림,
+  날짜 버튼은 aria-expanded와 aria-controls. A4 xl 미만의 고정 배경 정지 버튼 제거(푸터 버튼만). A5 disclosure의 id를 안정된 값으로,
+  /naru에 h1, 코어와 함께하기는 section과 h2, 홈에 sr-only 제목 둘. 작은 것 일곱(lang, dl 순서, 오픈채팅 이름, 44px, 칩 13.5px, mailto).
+- 브리프와 다른 것: 폰 노선도 패널의 제목은 h4가 아니라 h3입니다(노선도가 "일정" h3보다 위라 h4면 h2 다음이 h4). 2.3에서 되돌립니다.
+  하단 오픈채팅 알약의 이름을 고치느라 목록에 없던 MobileChatBar를 한 줄 고쳤습니다(나루 계열만, 8월은 그대로).
+- 검증: 390에서 칩 탭 3회 모두 #register, 새 창 0. 등록 버튼 셋이 헤더 아래 보임(390, 1440). 점 행 y=700에서 DAY 2 탭 뒤 카드 하단 781/844.
+  axe 위반 0(홈과 /naru, 390과 1440), h1 각 1개, 레벨 건너뜀 0. /quiz와 /match 픽셀 차이 0, /2026-08은 렌더된 DOM과 헤더 치수 동일
+  (그 페이지는 같은 빌드끼리도 로고 띠와 시계로 픽셀이 달라 DOM으로 비교). npm run build 통과.
+- 남은 것: 세션명 셋이 탭 없이 보이는 것은 2.3의 일이라 지금은 DAY 1의 하나만 보입니다. 폰에서 위로 스크롤하면 하단 오픈채팅 알약(고정)이 나옵니다.
+- 브리프: docs/site-review-brief.md (근거 docs/review-2026-10-11.md)
+- 커밋: d3ecf08, dcc1acd, 06cbc6f, 97e3821
 
 <a id="2026-10-11-one-logo-at-top"></a>
 ## 2026-10-11 맨 위 화면의 로고는 하나만 (되돌림)
