@@ -259,20 +259,6 @@ export default function JourneyNav({
   // 스크롤해야 돌아오고, 멈춰 있다고 돌아오지 않습니다(idleReveal false). 8월 페이지는 그 전
   // 그대로(헤더 전체 숨김 + 정지 시 복귀).
   const naru = brand === "naru";
-  // DECIDED 2026-10-11 (사용자, 스크린숏: "맨 위에는 로고가 2번 있다. 거슬린다"): 홈의 헤더 워드마크는 히어로의 큰 로고(#hero-title)가
-  // 화면에 있는 동안 보이지 않습니다. 같은 글자, 같은 그라데이션이 한 화면에 둘이었습니다. 히어로 로고가 헤더 아래로 지나가면
-  // 헤더 워드마크가 나타납니다. 자리는 그대로 두므로(투명) 목차와 오른쪽 버튼은 움직이지 않습니다. /naru와 8월 페이지는 그대로.
-  const crossingMark = naru && mark === "crossing";
-  const [heroLogoInView, setHeroLogoInView] = useState(true);
-  useEffect(() => {
-    if (!crossingMark) return;
-    const title = document.getElementById("hero-title");
-    if (!title || typeof IntersectionObserver === "undefined") { setHeroLogoInView(false); return; }
-    // 위 80px은 데스크톱 헤더의 높이입니다. 히어로 로고가 헤더 뒤로 들어간 때를 "지나갔다"로 봅니다.
-    const io = new IntersectionObserver(([entry]) => setHeroLogoInView(entry.isIntersecting), { rootMargin: "-80px 0px 0px 0px" });
-    io.observe(title);
-    return () => io.disconnect();
-  }, [crossingMark]);
   // 돌아가기 알약이 로고 줄에 서는 폭(2026-10-11). 실측: 로고, 알약, 오픈채팅, 언어 토글을 합치면 한국어 556px, 영문 716px입니다
   // (여백 90px 제외). 한국어는 md(768)부터, 영문은 lg(1024)부터 들어갑니다. 그 아래에서는 목차 레일의 마지막 칸입니다.
   const backFrom = locale === "en" ? { show: "lg:inline-flex", hide: "lg:hidden" } : { show: "md:inline-flex", hide: "md:hidden" };
@@ -448,12 +434,7 @@ export default function JourneyNav({
             // 되돌린 것입니다. 홈 본문의 #naru 인장과 푸터 로고는 그대로 가운데입니다.
             mark === "crossing" ? (
             // 히어로 제목과 같은 글자, 같은 그라데이션(naru-logo-from → to). 로고 파일이 아니라 글자입니다.
-            <a
-              href="#top"
-              aria-hidden={heroLogoInView || undefined}
-              tabIndex={heroLogoInView ? -1 : undefined}
-              className={`-my-1 flex min-h-[44px] items-center py-1 leading-none ${reduce ? "" : "transition-opacity duration-300"} ${heroLogoInView ? "pointer-events-none opacity-0" : "opacity-100"}`}
-            >
+            <a href="#top" className="-my-1 flex min-h-[44px] items-center py-1 leading-none">
               <span lang={locale === "en" ? "en" : undefined} className={`gradient-text whitespace-nowrap bg-gradient-to-r from-naru-logo-from to-naru-logo-to bg-clip-text pb-[0.08em] font-black tracking-[-0.02em] text-transparent ${
                 // DECIDED 2026-10-10 (사용자, 스크린숏: "크로싱 서울 로고가 더 크게 보였으면"): text-xl(22.5px)에서 키웠습니다.
                 // 52px 바에서는 2xl(27px), 80px 바(xl부터)에서는 3xl(33.75px)로 전의 나루 락업(36~40px)과 비슷한 무게입니다.
