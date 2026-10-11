@@ -144,7 +144,10 @@ export class BackgroundScene {
 
   /**
    * DECIDED 2026-10-10 (구조 브리프 4, D3): /naru의 정지 장면. water 변형 그대로이고 새 셰이더는 없습니다.
-   * 해가 내려가는 구간과 떠오름을 건너뛰어 서울 형상이 처음부터 완성돼 있고, 건너기(서울에서 싱가포르)는 없습니다.
+   * 해가 내려가는 구간과 떠오름을 건너뛰어 형상이 처음부터 완성돼 있고, 건너기(서울에서 싱가포르)는 없습니다.
+   * DECIDED 2026-10-11 (사용자: "나루 탭에서는 싱가폴 형상이 보여졌으면, 서울 말고"): 그 형상은 싱가포르입니다.
+   * 나루는 싱가포르에서 시작한 그룹이고 서울은 12월 이벤트(홈)의 자리입니다. 건너기가 처음부터 끝나 있는 상태로 둡니다
+   * (schedule의 morphStart). 점 크기, 밝기, 빛 정거장은 홈에서 건넌 뒤의 싱가포르와 같은 값을 그대로 탑니다.
    * 형상이 판 뒤에서 사라지고 틈에서만 보이는 것, #join 판 뒤에서 거두는 것, 푸터 앞에서 빛을 거두는 것은 홈과 같습니다.
    */
   private readonly still: boolean;
@@ -594,9 +597,11 @@ export class BackgroundScene {
     let s2End = morphStart;
     if (!crosses) morphStart = Infinity;
     if (this.still) {
-      // 처음부터 완성된 서울, 가운데에 올라와 있는 나루 점.
+      // 처음부터 완성된 싱가포르(건너기가 이미 끝난 상태), 가운데에 올라와 있는 나루 점.
       revealStart = -1e7;
       revealSpan = 1;
+      morphStart = -1e7;
+      morphSpan = 1;
       s2End = descendEnd;
     }
     this.sched = { revealStart, revealSpan, morphStart, morphSpan, dissolveStart, dissolveSpan, s2End };
@@ -674,7 +679,8 @@ export class BackgroundScene {
    */
   private warnedShortSeoul = false;
   private warnShortSeoul() {
-    if (process.env.NODE_ENV === "production" || this.warnedShortSeoul) return;
+    // 정지 장면(/naru)은 처음부터 싱가포르라 서울이 서는 구간이 없는 것이 맞습니다.
+    if (process.env.NODE_ENV === "production" || this.warnedShortSeoul || this.still) return;
     const { revealStart, revealSpan, morphStart } = this.sched;
     if (!Number.isFinite(morphStart) || !Number.isFinite(revealStart)) return;
     let seen = 0;

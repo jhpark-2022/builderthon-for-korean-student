@@ -39,7 +39,8 @@ export default function NaruGroupPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(NARU_LD).replace(/</g, "\\u003c") }} />
       {/* DECIDED 2026-10-10 (구조 브리프 4, D3): 홈과 같은 water 변형의 정지 장면입니다. 새 셰이더는 없습니다.
-          서울 형상이 처음부터 완성돼 있고 건너기는 없습니다. 형상은 판 뒤에서 사라지고 틈에서만 보입니다. */}
+          DECIDED 2026-10-11 (사용자): 형상은 서울이 아니라 싱가포르입니다. 처음부터 완성돼 있고 건너기는 없습니다.
+          형상은 판 뒤에서 사라지고 틈에서만 보입니다. */}
       <BackgroundMount variant="water" still />
       <JourneyNav anchors={naruPageNav} brand="naru" showQuiz={false} back={naruPageBack} />
       <NaruPage />
