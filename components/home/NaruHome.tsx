@@ -627,7 +627,7 @@ export default function NaruHome() {
                   로고의 큰 줄 문법(굵기, 자간, 그라데이션)을 그대로 옮긴 것이고, 작은 둘째 줄은 두지 않습니다.
                   글자 크기가 TITLE 하나라 좁은 기둥에서는 두 줄로 접힙니다. */}
               {DECEMBER_EVENT_NAME && locale === "en" ? (
-                <span lang="en" className="gradient-text block bg-gradient-to-r from-naru-logo-from to-naru-logo-to bg-clip-text pb-[0.08em] tracking-[-0.02em] text-transparent">{DECEMBER_EVENT_NAME.en}</span>
+                <span lang="en" className="gradient-text block bg-[linear-gradient(90deg,#9AA8EE_0%,#A99AD6_35%,#C99ACB_68%,#E08A76_100%)] bg-clip-text pb-[0.08em] tracking-[-0.02em] text-transparent">{DECEMBER_EVENT_NAME.en}</span>
               ) : DECEMBER_EVENT_NAME ? (
                 <>
                   {/* DECIDED 2026-10-08 (사용자, 로고 스크린숏: "이걸로 써줘"): 히어로 제목은 마케팅 포스트의 크로싱 서울 로고
@@ -639,8 +639,11 @@ export default function NaruHome() {
                       테라코타 틴트 #E08A76. 로고의 색이라 "주황은 점으로만" 규칙의 대상이 아닙니다.
                       영문 줄은 META 크기라 한 화면의 글자 크기는 그대로 셋입니다. gradient-text는 clip이 안 되는
                       브라우저의 단색 폴백 표식입니다(globals.css). */}
+                  {/* DECIDED 2026-10-11 (사용자, 네 안의 스크린숏에서 B를 고름: "로고가 색깔이 더 다양하면"): 로고의 그라데이션은 두 색에서 네 색으로.
+                      남색 틴트 #9AA8EE, 보라 #A99AD6, 자주 틴트 #C99ACB, 테라코타 틴트 #E08A76(0, 35, 68, 100%). 끝 색이 아래 영문 줄과 같습니다.
+                      헤더의 워드마크와 /naru의 돌아가기도 같은 그라데이션입니다(JourneyNav). 정본은 docs/brand.md의 "색". */}
                   <span className="inline-block">
-                    <span lang="ko" className="gradient-text block break-keep bg-gradient-to-r from-naru-logo-from to-naru-logo-to bg-clip-text pb-[0.08em] tracking-[-0.02em] text-transparent">{DECEMBER_EVENT_NAME.ko}</span>{" "}
+                    <span lang="ko" className="gradient-text block break-keep bg-[linear-gradient(90deg,#9AA8EE_0%,#A99AD6_35%,#C99ACB_68%,#E08A76_100%)] bg-clip-text pb-[0.08em] tracking-[-0.02em] text-transparent">{DECEMBER_EVENT_NAME.ko}</span>{" "}
                     {/* lang="en" (2026-09-19, 접근성 감사 7): 한국어 TTS가 영문을 한글 음가로 읽지 않게. 사이의 {" "}는
                         이름 계산용입니다(감사 17). pl은 자간만큼 왼쪽을 밀어 가운데를 맞춥니다(끝 글자 뒤의 자간).
                         폰에서는 자간을 좁힙니다: 한글이 36px라 0.55em이면 영문이 한글보다 넓어져 한글이 왼쪽 끝에서 밀립니다. */}

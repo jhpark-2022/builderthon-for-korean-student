@@ -442,7 +442,7 @@ export default function JourneyNav({
                   그 전에는 한국어 화면에서 국문 "크로싱 서울" 단독이었는데, 정본의 표기는 A(국문과 영문 락업)와 B(영문 단독) 둘뿐입니다.
                   히어로의 큰 로고는 표기 A 그대로입니다. 같은 그라데이션이고, 크기는 영문 화면이 쓰던 값입니다(sm부터는 전과 같은 크기,
                   그 아래에서는 글자 수가 두 배라 전의 영문 화면처럼 작게 둡니다). */}
-              <span lang="en" className={`gradient-text whitespace-nowrap bg-gradient-to-r from-naru-logo-from to-naru-logo-to bg-clip-text pb-[0.08em] font-black tracking-[-0.02em] text-transparent ${
+              <span lang="en" className={`gradient-text whitespace-nowrap bg-[linear-gradient(90deg,#9AA8EE_0%,#A99AD6_35%,#C99ACB_68%,#E08A76_100%)] bg-clip-text pb-[0.08em] font-black tracking-[-0.02em] text-transparent ${
                 // DECIDED 2026-10-10 (사용자, 스크린숏: "크로싱 서울 로고가 더 크게 보였으면"): text-xl(22.5px)에서 키웠습니다.
                 // 52px 바에서는 2xl(27px), 80px 바(xl부터)에서는 3xl(33.75px)로 전의 나루 락업(36~40px)과 비슷한 무게입니다.
                 // 영문 "CROSSING SEOUL"은 글자 수가 두 배라 폰에서는 작게 둡니다(390px에서 오른쪽 버튼과 28px, 360px에서도 닿지 않게).
@@ -529,7 +529,7 @@ export default function JourneyNav({
               className={`ml-5 hidden min-h-[44px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-white/15 bg-white/[0.04] px-4 transition hover:border-white/30 hover:bg-white/[0.08] ${backFrom.show}`}
             >
               <span aria-hidden className="text-sm text-white/60">←</span>
-              <span lang={locale === "en" ? "en" : undefined} className="gradient-text bg-gradient-to-r from-naru-logo-from to-naru-logo-to bg-clip-text pb-[0.08em] text-lg font-black tracking-[-0.02em] text-transparent">
+              <span lang={locale === "en" ? "en" : undefined} className="gradient-text bg-[linear-gradient(90deg,#9AA8EE_0%,#A99AD6_35%,#C99ACB_68%,#E08A76_100%)] bg-clip-text pb-[0.08em] text-lg font-black tracking-[-0.02em] text-transparent">
                 {decemberEventLabel(locale)}
               </span>
             </Link>
@@ -892,7 +892,7 @@ export default function JourneyNav({
                 aria-label={t(back.label)}
                 className={`inline-flex min-h-[44px] shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-full border border-white/[0.12] bg-white/[0.06] px-2.5 backdrop-blur transition active:scale-[0.97] ${backFrom.hide}`}
               >
-                <span lang={locale === "en" ? "en" : undefined} className="gradient-text bg-gradient-to-r from-naru-logo-from to-naru-logo-to bg-clip-text pb-[0.08em] text-[0.8rem] font-black tracking-[-0.02em] text-transparent">
+                <span lang={locale === "en" ? "en" : undefined} className="gradient-text bg-[linear-gradient(90deg,#9AA8EE_0%,#A99AD6_35%,#C99ACB_68%,#E08A76_100%)] bg-clip-text pb-[0.08em] text-[0.8rem] font-black tracking-[-0.02em] text-transparent">
                   {decemberEventLabel(locale)}
                 </span>
                 <span aria-hidden className="text-[0.7rem] text-white/60">→</span>
