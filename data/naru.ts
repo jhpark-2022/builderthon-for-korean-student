@@ -1719,8 +1719,10 @@ export const naru = {
         v: { ko: "날마다 하나씩 있습니다. 넘은 팀은 모두 그날 지원을 받고, 넘은 마일스톤이 그 팀의 기록으로 남습니다.", en: "One a day. Every team that clears it gets support that day, and the milestones a team clears become its record." },
       },
       {
-        k: { ko: "가설", en: "Our hypothesis" },
-        v: { ko: "결과만 존재하면 안 됩니다. 1위 한 팀에게 몰아 주는 것보다 과정마다 모두에게 나누는 쪽이 더 좋은 결과물을 낸다고 봅니다. 12월은 그 가설의 검증입니다.", en: "The result cannot be the only thing that exists. We think sharing support with everyone along the way produces better work than handing it all to first place. December is the test of that." },
+        // DECIDED 2026-10-11 (브랜드 브리프 B1, docs/brand.md의 금지어): 참가자가 읽는 자리에 "가설", "검증"을 쓰지 않습니다.
+        // 그 전: k "가설", v "결과만 존재하면 안 됩니다. ... 12월은 그 가설의 검증입니다."
+        k: { ko: "왜 날마다", en: "Why every day" },
+        v: { ko: "1위 한 팀에게 몰아 주는 것보다 과정마다 모두에게 나누는 쪽이 더 좋은 결과물을 낸다고 봅니다. 그래서 날마다 나눕니다.", en: "We think sharing support with everyone along the way produces better work than handing it all to first place. So we share it every day." },
       },
     ] as { k: Phrase; v: Phrase }[],
 
