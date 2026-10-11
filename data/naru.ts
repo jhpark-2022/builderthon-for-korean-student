@@ -1822,22 +1822,26 @@ export const naru = {
       // 될 때 갑니다. 예약 멘토링(General Mentoring)은 그대로이고, 방문은 그 위에 더해지는 것이라고 문장이 직접 말합니다.
       when: { ko: "출제사 일정에 따라", en: "Depending on the companies' availability" },
       body: {
-        ko: "예약 멘토링은 그대로 열립니다. 여기에 더해, 출제사의 일정이 되면 우리가 갑니다. 팀을 나눠 이슈를 낸 기업의 일터로 가서, 그 일을 하는 사람에게 그 자리에서 내 생각을 말하고 의견을 듣습니다.",
-        en: "Booked mentoring stays open. On top of it, when the companies' schedules allow, we go to them. Teams split up and visit the company behind the issue, tell the people doing that work what you think, and hear them out, right where they work.",
+        // DECIDED 2026-10-11 (사용자, 폰 스크린숏: "내용이 too much, 표현이 vague"): 세 문장을 둘로 줄였습니다. 누가 어디로 가서
+        // 누구에게 무엇을 하는지만 남깁니다. "출제사의 일정이 되면"은 바로 위 when 줄이 말합니다.
+        ko: "팀을 나눠 이슈를 낸 기업의 일터로 가서, 실무자에게 내 생각을 말하고 의견을 듣습니다. 예약 멘토링에 더해지는 방문입니다.",
+        en: "Teams split up, visit the company behind the issue, tell the people doing the work what they think, and hear them out. It comes on top of booked mentoring.",
       },
     },
     // 노선도 아래 둘째 필. 첫째 필(mentoringHeading)과 같은 문법입니다.
     fieldMentoringPill: { ko: "현장 멘토링, 출제사 일정에 따라", en: "Field mentoring, when the companies can host" },
+    // DECIDED 2026-10-11 (사용자, 폰 스크린숏: "내용이 too much, 표현이 vague"): 세 문장을 한 문장으로 줄였습니다. "멘토는 답을 주러
+    // 오지 않습니다", "들은 이야기로 아이디어를 다듬어 코드로 옮깁니다", 8월 슬롯 이야기를 뺐고, 무엇을 들고 누가 먼저 가는지만
+    // 남깁니다(2026-10-10 마일스톤 브리프 2.5의 원칙은 그대로). 규칙의 "질문 대신 내 생각 한 장"이 이 문장으로 올라와 규칙은 둘입니다.
     mentoringLead: {
-      ko: "멘토는 답을 주러 오지 않습니다. 이슈에 대한 내 생각을 들고 먼저 찾아가 말하고, 들은 이야기로 아이디어를 다듬어 코드로 옮깁니다. 8월에는 슬롯이 넉넉했는데 한 번도 쓰지 않은 팀이 있었습니다.",
-      en: "Mentors do not come with answers. You walk in with your own take on the issue, say it, then shape the idea with what you hear and turn it into code. In August there were plenty of slots, and some teams never used one.",
+      ko: "질문 목록 대신, 이슈에 대한 내 생각 한 장을 들고 먼저 찾아갑니다.",
+      en: "You go first, with one page of your own thinking on the issue instead of a list of questions.",
     },
-    // DECIDED 2026-10-10 (사용자: "정보가 너무 많음"): 다섯 줄을 셋으로 묶었습니다. 내용은 그대로입니다
-    // (예약제와 횟수, Day 3과 Day 4를 한 줄씩으로). Day 4에는 멘토링 자체가 없습니다(2026-09-20, PDF 02·04).
+    // DECIDED 2026-10-10 (사용자: "정보가 너무 많음"): 다섯 줄을 셋으로 묶었습니다. 2026-10-11에 둘로(위 mentoringLead 주석).
+    // Day 4에는 멘토링 자체가 없습니다(2026-09-20, PDF 02·04).
     mentoringRules: [
-      { ko: "예약제 30분 슬롯, 횟수 제한 없음", en: "Booked 30-minute slots, as many as you need" },
-      { ko: "질문 대신 내 생각 한 장을 들고 갑니다", en: "Bring one page of your own thinking, not a list of questions" },
-      { ko: "Day 3은 피칭 준비, Day 4는 멘토링이 없습니다", en: "Day 3 is pitch prep, Day 4 has no mentoring" },
+      { ko: "예약제 30분, 횟수 제한 없음", en: "Booked 30-minute slots, as many as you need" },
+      { ko: "Day 3은 피칭 준비, Day 4는 멘토링 없음", en: "Day 3 is pitch prep, Day 4 has no mentoring" },
     ] as Phrase[],
 
     // ── 제목이 포지션을 말합니다 (DECIDED 2026-09-15) ──────────────────────

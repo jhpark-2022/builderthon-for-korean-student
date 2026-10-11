@@ -1047,15 +1047,18 @@ export default function NaruHome() {
         <Reveal>
         {/* role="list" (2026-09-19, 접근성 감사 10): Tailwind preflight의
             list-style:none 때문에 Safari/VoiceOver가 목록 역할을 떼어 냅니다. */}
+        {/* DECIDED 2026-10-11 (사용자, 폰 스크린숏: "내용은 저 정도로 충분, 보여 주는 방식이 이상함"): 폰에서 번호, 제목, 설명이
+            가운데로 세 줄씩 쌓여 번호가 혼자 떠 있었습니다. 폰에서는 번호와 제목을 한 줄에 붙이고 설명을 그 아래에 둡니다
+            (행마다 두 덩어리). 행 여백도 py-5에서 py-4로. 글과 가운데 정렬, 헤어라인은 그대로이고 sm부터는 전과 같은 세 칸입니다. */}
         <ol role="list" className={`${READ} mt-10 text-left max-sm:text-center`}>
           {naru.gains.items.map((item) => (
             <li
               key={item.num}
-              className="grid grid-cols-1 items-start gap-x-4 gap-y-1 border-t border-white/10 py-5 last:border-b sm:grid-cols-[2.25rem_14rem_1fr] sm:gap-x-6"
+              className="flex flex-wrap items-baseline justify-center gap-x-2 gap-y-1 border-t border-white/10 py-4 last:border-b sm:grid sm:grid-cols-[2.25rem_14rem_1fr] sm:items-start sm:justify-normal sm:gap-x-6 sm:py-5"
             >
-              <span className={`pt-0.5 ${BODY} font-black tabular-nums text-accent`}>{item.num}</span>
+              <span className={`sm:pt-0.5 ${BODY} font-black tabular-nums text-accent`}>{item.num}</span>
               <h3 className={ROW_HEADING}>{t(item.title)}</h3>
-              <p className={`break-keep ${BODY} leading-relaxed text-white/70 sm:col-start-3`}>
+              <p className={`w-full break-keep ${BODY} leading-relaxed text-white/70 sm:col-start-3 sm:w-auto`}>
                 {t(item.body)}
               </p>
             </li>
