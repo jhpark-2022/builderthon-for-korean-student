@@ -770,7 +770,9 @@ export const naru = {
     // 문장은 화면에 이미 있는 말로만 지었습니다: 실명 기업의 이슈(items[0]), 문제를 직접 찾는다(Day 1), 그 기업 앞에서(items[2]).
     // 칩 셋은 날마다의 마일스톤에서 왔습니다(Day 1 팀의 생각 1장, Day 3 코드로 옮긴 결과물, Day 4 성과 공유회). 수료증은 정해지지 않아 쓰지 않습니다.
     spine: {
-      tag: { ko: "이 닷새가 남기는 단 하나", en: "The one thing these five days leave you" },
+      // DECIDED 2026-10-11 (사용자, 스크린숏: "단 하나라는 표현이 마음에 들지 않음"): "이 닷새가 남기는 단 하나"에서 바꿨습니다.
+      // 리뷰 브리프 D5가 적어 둔 문장 그대로입니다.
+      tag: { ko: "이 닷새에 남는 것", en: "What these five days leave you" },
       heading: {
         ko: "실명 기업의 이슈에서 문제를 직접 찾고, 그 기업 앞에서 증명해 본 경험.",
         en: "Finding the problem yourself in a named company's issue, and proving it in front of that company.",

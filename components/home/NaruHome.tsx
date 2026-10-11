@@ -1136,9 +1136,8 @@ export default function NaruHome() {
               ))}
             </div>
           </div>
-          <p className={`${READ_MEASURE_C} mt-5 break-keep text-center ${BODY} leading-relaxed text-white/85`}>
-            {t(naru.gains.concrete)}
-          </p>
+          {/* DECIDED 2026-10-11 (사용자, 스크린숏: "이거 빼줘"): 판 아래의 8월 숫자 한 줄(naru.gains.concrete)은 그리지 않습니다.
+              키는 data/naru.ts에 그대로 둡니다. */}
           {/* role="list" (2026-09-19, 접근성 감사 10): Safari/VoiceOver가 list-style:none인 목록의 역할을 떼어 냅니다.
               다섯 장: lg에서 여섯 칸 격자에 두 칸씩, 넷째를 둘째 칸에서 시작해 아랫줄 둘이 가운데에 섭니다. */}
           <ol role="list" className="mt-8 grid grid-cols-1 gap-3 text-center sm:grid-cols-2 md:gap-4 lg:grid-cols-6">
