@@ -440,7 +440,12 @@ export default function NaruHome() {
               지키려고 설계하게 됩니다(data/naru.ts의 measure 주석). */}
     </>
   );
-  const stageRow = (stage: (typeof naru.december.stages)[number], i: number, phone = false) => {
+  // DECIDED 2026-10-11 (사용자, 스크린숏: "너무 한 줄이어서 가독성이 없음. Day 0, 그 아래에 2x2 테이블로"): sm부터 일정표는
+  // 다섯 행 한 기둥이 아니라, Day 0 한 행과 그 아래 Day 1부터 Day 4의 두 칸 두 줄입니다(md부터 두 칸, 그 아래는 한 칸).
+  // 모양은 셋입니다: "row"(Day 0, 전과 같은 세 열 행), "cell"(2x2의 한 칸, 위에서 아래로 쌓음), "phone"(폰에서 노선도 아래에 열리는 한 행).
+  const stageRow = (stage: (typeof naru.december.stages)[number], i: number, mode: "row" | "cell" | "phone" = "row") => {
+    const phone = mode === "phone";
+    const cell = mode === "cell";
             // DECIDED 2026-10-07 (이슈 브리프 4.2): Day 0 행을 흐리게 하지 않습니다. 2026-09-20에는 이 행만
             // 한 단 낮은 밝기(/55)였는데, 진한 회색 글이 바탕에 묻혀 읽히지 않았습니다. "스테이지로 세지
             // 않는다"는 것은 이 행의 문장(stage.line)이 이미 말합니다. 다섯 행의 밝기는 같습니다.
@@ -452,7 +457,12 @@ export default function NaruHome() {
                 // 카드가 하던 일을 행이 그대로 이어받습니다.
                 onMouseEnter={() => setHoverDay(i)}
                 onMouseLeave={() => setHoverDay(null)}
-                className={`grid grid-cols-1 gap-x-6 gap-y-2 border-t border-white/10 py-5 sm:grid-cols-[7rem_1fr_10rem] ${phone ? "border-b text-center" : `last:border-b ${openDay === i ? "sm:bg-white/[0.04]" : ""}`}`}
+                className={`grid grid-cols-1 gap-x-6 gap-y-2 border-t border-white/10 py-5 ${
+                  phone ? "border-b text-center"
+                  // 왼쪽 칸은 READ의 왼쪽 끝에 그대로 섭니다(2026-09-29 왼쪽 끝 규칙). 안쪽 여백은 두 칸 사이에만.
+                  : cell ? "content-start md:odd:border-r md:odd:pr-6 md:even:pl-6"
+                  : "sm:grid-cols-[7rem_1fr_10rem]"
+                }`}
               >
                 <div className="flex items-baseline gap-2 max-sm:justify-center">
                   {/* lang="en": DAY는 두 로케일 모두 영어입니다(접근성 감사 7). */}
@@ -844,7 +854,7 @@ export default function NaruHome() {
             onPill={selectPill}
             pillsOpen={mentoringOpen}
             hint={t(naru.december.routeHint)}
-            below={openDay !== null && <div className="mt-3 sm:hidden">{stageRow(naru.december.stages[openDay], openDay, true)}</div>}
+            below={openDay !== null && <div className="mt-3 sm:hidden">{stageRow(naru.december.stages[openDay], openDay, "phone")}</div>}
           />
           {mentoringOpen && <div className="mt-4 grid grid-cols-1 gap-3 text-center sm:hidden">{mentoringBoxes}</div>}
           </div>
@@ -884,7 +894,10 @@ export default function NaruHome() {
           </p>
           {/* 2026-10-11: 폰에서는 이 표를 그리지 않습니다. 위 노선도의 정거장을 누르면 그날의 행이 노선도 아래에 열립니다. */}
           <div className="mt-5 max-sm:hidden">
-            {naru.december.stages.map((stage, i) => stageRow(stage, i))}
+            {stageRow(naru.december.stages[0], 0)}
+            <div className="grid grid-cols-1 border-b border-white/10 md:grid-cols-2">
+              {naru.december.stages.slice(1).map((stage, j) => stageRow(stage, j + 1, "cell"))}
+            </div>
           </div>
           {/* 2026-09-20 (일정 브리프 5장): workshopNote("스테이지마다 ... 3시간짜리
               워크샵이 붙습니다")를 그리지 않습니다. Day 4에는 세션이 없어
