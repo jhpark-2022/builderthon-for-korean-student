@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { META } from "@/components/ui/typography";
+import { BODY, META } from "@/components/ui/typography";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 노선도, 일반형 (2026-09-17, 8월 문법 브리프).
@@ -168,7 +168,9 @@ export default function RouteMap({
                     {s.sub}
                   </span>
                 )}
-                <span className={`break-keep ${META} leading-tight ${anchor || spot ? "font-bold text-white" : "text-white/75"}`}>
+                {/* DECIDED 2026-10-11 (리뷰 브리프 2.1): 스테이지 이름은 META가 아니라 BODY 굵게입니다. 노선도에서 읽어야 할 것이 이 이름입니다.
+                    DAY 줄과 마일스톤 줄은 META 그대로입니다. */}
+                <span className={`break-keep ${BODY} font-bold leading-tight ${anchor || spot ? "text-white" : "text-white/75"}`}>
                   {s.label}
                 </span>
                 {s.milestone && (

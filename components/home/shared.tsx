@@ -14,7 +14,7 @@ import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
 import { naru, naruLinks, openChatLabels, register as registerCopy } from "@/data/naru";
 import type { Phrase } from "@/data/dictionaryCore";
-import { BODY, META } from "@/components/ui/typography";
+import { BODY, META, BTN_SECONDARY } from "@/components/ui/typography";
 import OpenChatLink from "@/components/ui/OpenChatLink";
 import MotionToggle from "@/components/ui/MotionToggle";
 
@@ -121,6 +121,12 @@ export const SUBHEADING = `break-keep ${BODY} font-semibold tracking-normal text
 // 루트가 18px이라 READ는 864px, WIDE는 1152px입니다(브리프의 768/1024는 16px 기준).
 // 폰에서는 둘 다 레일 전체라 화면이 바뀌지 않습니다.
 export const READ = "mx-auto w-full max-w-3xl";
+/**
+ * DECIDED 2026-10-11 (리뷰 브리프 2.7, B6): 글 블록의 정렬은 이것 하나입니다. sm부터 READ의 왼쪽 끝, 폰은 가운데(2026-10-09).
+ * 가운데를 쓰는 것은 h1, 챕터 제목(h2), 노선도, 세션 세 줄의 Day 태그 열, 푸터뿐입니다. 균형 줄바꿈(text-balance)은 제목에만 씁니다.
+ * 가운데 정렬에 균형 줄바꿈을 같이 걸면 문단이 마름모꼴이 됐습니다. 504px 변형(MEASURE_C)은 쓰지 않습니다.
+ */
+export const PROSE = "text-center sm:text-left";
 export const WIDE = "mx-auto w-full max-w-5xl";
 // ── 줄 길이 (DECIDED 2026-10-02, 사용자: 가독성 리뷰의 제안을 모두 반영) ─────────────────
 // READ(864px)를 꽉 채운 문단은 한 줄이 45~68자였습니다(실측 1440px). 한글은 35~45자가 편합니다.
@@ -237,7 +243,8 @@ export function PreparingButton({ t, noteId, onOpen, className = "" }: { t: (p: 
       type="button"
       aria-describedby={noteId}
       onClick={() => { track("naru_cta", { src: "preview", to: "register" }); onOpen?.(); }}
-      className={`inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-5 py-3 ${BODY} font-bold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10 sm:px-8 sm:py-4 ${className}`}
+      // 2026-10-11 (리뷰 브리프 2.8): 버튼 토큰(BTN_SECONDARY)을 씁니다.
+      className={`${BTN_SECONDARY} ${className}`}
     >
       {t(registerCopy.previewCta)}
       <span aria-hidden className="text-white/70">→</span>
