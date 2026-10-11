@@ -41,8 +41,7 @@
 굵은 줄 2 (바꿈): 한인 학생 빌더가 팀으로 기업의 이슈를 푸는 닷새.
                   en: Five days where Korean student builders take on a company's issue, as teams.
 문단 (순서만 바꿈): 한국의 대학생과 해외에서 공부하는 한인 학생이 한 팀이 됩니다. 기업이 지금 겪는 이슈를 받아 그 아래의 문제를 찾고, 닷새째 그 기업 앞에서 발표합니다. 학생이 직접 운영하는 그룹, 나루가 엽니다.
-META 한 줄 (새로): 전공, 코딩 경험 무관. 참가비와 장소는 오픈채팅에서. 등록 오픈 11월.
-                  en: Any major, no coding experience needed. Fee and venue in the open chat. Registration opens in November.
+등록 안내의 '전공과 코딩 경험은 참가 조건이 아닙니다'를 그대로 둔다. 히어로에 올리지 않는다.
 ```
 
 "나루"의 인라인 링크는 뺍니다(목차 칩과 티저 버튼이 있음).
