@@ -1109,7 +1109,7 @@ export default function NaruHome() {
           주황은 쓰지 않습니다(주황은 점으로만). 글자 크기는 TITLE, BODY, META 셋 그대로입니다. */}
       {/* DECIDED 2026-10-11 (사용자, 스크린숏: "여기 gap이 다른 gap들에 비해서 너무 좁은데"): 위 여백을 pt-6에서 pt-16 lg:pt-28로.
           #gains가 카드로 길어지면서 마지막 카드와 이 상자 사이가 1440px에서 135px이었습니다(#december 끝과 #gains 머리 사이는 약 220px).
-          이제 223px, 폰은 90px에서 130px입니다. */}
+          이제 234px, 폰은 90px에서 135px입니다(실측). */}
       <section id="naru" aria-labelledby="naru-teaser-label" className="relative w-full px-6 pb-20 pt-16 sm:px-10 lg:pb-28 lg:pt-28">
         <Reveal className={WIDE}>
           <div className="relative overflow-hidden rounded-3xl bg-[#0B1430]/90 px-6 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-12">
