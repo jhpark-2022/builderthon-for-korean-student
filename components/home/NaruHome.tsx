@@ -517,9 +517,9 @@ export default function NaruHome() {
         </Reveal>
 
         <Reveal className={`${WIDE} mt-8`}>
-          {/* data-center-zone: 노선도는 그림이라 가운데를 씁니다(왼쪽 끝 브리프 2.2, 리뷰 브리프 2.7). 머리의 한 줄도 그 그림의 일부입니다. */}
-          <div data-center-zone="routemap">
-          <p className={`mb-4 text-center ${META} text-white/70`}>{t(naru.december.routeNote)}</p>
+          <p className={`text-center ${META} text-white/70`}>{t(naru.december.routeNote)}</p>
+          {/* data-center-zone: 노선도는 그림이라 가운데를 씁니다(왼쪽 끝 브리프 2.2, 리뷰 브리프 2.7). */}
+          <div data-center-zone="routemap" className="mt-4">
           <RouteMap
             ariaLabel={t(naru.december.routeAria)}
             stations={naru.december.stages.map((s, i) => ({
