@@ -21,6 +21,7 @@ import Halo from "@/components/ui/Halo";
 import { ChipDot } from "@/components/ui/Chip";
 import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 import RouteMap from "@/components/shared/RouteMap";
+import PhotoLightbox from "@/components/shared/PhotoLightbox";
 import MobileChatBar from "@/components/shared/MobileChatBar";
 import Chapter from "@/components/journey/Chapter";
 import Reveal from "@/components/shared/Reveal";
@@ -306,14 +307,20 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
   desktopOnly?: boolean;
 }) {
   const shown = photos.filter((p) => !!p.src).slice(0, 4);
+  // DECIDED 2026-10-11 (사용자, 스크린숏: "이거 클릭하면 더 큰 이미지로 볼 수 있도록"): 칸은 누르는 것이고, 누르면 그 사진이 크게 열립니다.
+  const [openPhoto, setOpenPhoto] = useState<number | null>(null);
   if (shown.length === 0) return null;
   return (
     <figure className={className}>
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
         {shown.map((photo, i) => (
-          <div
+          <button
             key={photo.src}
-            className={`group relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.9)]`}
+            type="button"
+            aria-haspopup="dialog"
+            title={t(naru.eventHero.photoOpen)}
+            onClick={() => setOpenPhoto(i)}
+            className={`group relative block aspect-[4/3] w-full cursor-zoom-in overflow-hidden rounded-2xl border border-white/10 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.9)] transition-colors hover:border-white/30`}
           >
             <Image src={photo.src} alt={t(photo.alt)} fill sizes="(max-width: 1023px) 45vw, 280px" priority={!desktopOnly && i < 2} className="object-cover object-center" />
             {photo.day && (
@@ -324,11 +331,18 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
                 {t(photo.day)}
               </span>
             )}
-          </div>
+          </button>
         ))}
       </div>
       {/* lg에서는 홀수 칸이 36px 내려가 있어 그만큼 더 띄웁니다. */}
       <figcaption className={`mt-3 text-left max-sm:text-center ${META} text-white/85`}>{t(naru.eventHero.photosCaption)}</figcaption>
+      <PhotoLightbox
+        photos={shown.map((p) => ({ src: p.src, alt: t(p.alt), width: p.width, height: p.height, caption: p.day && `${t(naru.eventHero.photosCaption)} · ${t(p.day)}` }))}
+        index={openPhoto}
+        onIndex={setOpenPhoto}
+        onClose={() => setOpenPhoto(null)}
+        labels={{ close: t(naru.eventHero.photoClose), prev: t(naru.eventHero.photoPrev), next: t(naru.eventHero.photoNext) }}
+      />
     </figure>
   );
 }
@@ -827,15 +841,17 @@ export default function NaruHome() {
           <div data-center-zone="routemap">
           <RouteMap
             ariaLabel={t(naru.december.routeAria)}
-            stations={naru.december.stages.map((s) => ({
+            stations={naru.december.stages.map((s, i) => ({
               key: s.name.en,
               // 2026-09-20 (일정 브리프 2장): 12/10이 Day 0입니다. dayOffset이 곧 Day 번호이고
               // +1을 더하지 않습니다. null 분기("본 일정 전")는 사라졌습니다.
               sub: `${t(naru.december.dayLabel)} ${s.dayOffset}`,
               label: t(s.title),
-              // DECIDED 2026-10-11 (사용자: "각 날마다 이제 제출물 / milestone이 있는거임"): ★는 제출이 있는 이틀이 아니라
-              // 마일스톤이 있는 날 전부(Day 1부터 Day 4)입니다. 이틀에만 달리던 "제출" 배지는 그래서 뺐습니다.
-              kind: s.milestone ? "anchor" : "plain",
+              // DECIDED 2026-10-11 (사용자: "각 날마다 이제 제출물 / milestone이 있는거임"): 마일스톤은 Day 1부터 Day 4까지 날마다 있습니다.
+              // 이틀에만 달리던 "제출" 배지는 그래서 뺐습니다.
+              // DECIDED 2026-10-11 (사용자, 스크린숏: "다 별이니까 이상한데"): 그 넷에 전부 ★를 달았더니 별이 아무것도 가리키지 않았습니다.
+              // ★는 종착역(마지막 날, 성과 공유회) 하나에만 남기고, 마일스톤이 있는 나머지 날은 ◉입니다. Day 0은 전처럼 빈 점.
+              kind: !s.milestone ? "plain" : i === naru.december.stages.length - 1 ? "anchor" : "spot",
               milestone: s.milestone ? t(s.milestone) : undefined,
             }))}
             // DECIDED 2026-10-11 (사용자): 레일 아래의 멘토링 필 둘과 범례를 그리지 않습니다. 필은 아래 멘토링 상자가 같은 말을 하고,

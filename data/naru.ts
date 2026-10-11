@@ -447,6 +447,11 @@ export const naru = {
     naruLineTerm: { ko: "나루", en: "NARU" },
     // 사진 넷 아래 한 줄(감사 반영 브리프 1.3). 캡션이 없으면 12월 사진으로 읽힙니다.
     photosCaption: { ko: "제로백 빌더톤 2026.08 싱가포르", en: "Zero100 builderthon Aug 2026, Singapore" },
+    // 사진을 누르면 크게 열립니다(2026-10-11). 칸의 툴팁과, 열린 화면의 버튼 셋의 이름입니다.
+    photoOpen: { ko: "사진 크게 보기", en: "View larger" },
+    photoClose: { ko: "닫기", en: "Close" },
+    photoPrev: { ko: "이전 사진", en: "Previous photo" },
+    photoNext: { ko: "다음 사진", en: "Next photo" },
     // 이름 아래 한 줄. 포지션은 december.heading이 그대로 맡습니다.
     sub: {
       // DECIDED 2026-09-17 (사용자): "raw data"라는 말을 쓰지 않습니다. 이번 회차가
