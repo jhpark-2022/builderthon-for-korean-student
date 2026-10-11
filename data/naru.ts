@@ -463,6 +463,11 @@ export const naru = {
     ctaProgram: { ko: "프로그램 보기", en: "See the programme" },
     // DECIDED 2026-10-11 (사용자): AI 유형 테스트(/match)로 가는 버튼이 일정표의 Day 1에서 히어로의 버튼 줄로 왔습니다.
     ctaMatch: { ko: "AI 유형 테스트", en: "AI type test" },
+    // 버튼 줄 아래의 설명 한 줄(2026-10-11). 버튼 안에는 넣지 않습니다.
+    matchNote: {
+      ko: "AI 유형 테스트는 Day 1 현장에서 팀을 맺을 때 씁니다. 그 전에도 해 볼 수 있지만, 결과는 Day 1 전에는 저장되지 않습니다.",
+      en: "The AI type test is used to form teams on site on Day 1. You can try it before then, but results are not saved before Day 1.",
+    },
     // ── 카운트다운 패널 (2026-09-17, 8월 문법 브리프) ─────────────────────
     // 8월 히어로의 오른쪽 단(Glass 패널)에 있던 카운트다운의 자리입니다. 숫자는
     // 마운트 뒤에 채우고 패널 높이는 고정입니다(하이드레이션 밀림 방지).

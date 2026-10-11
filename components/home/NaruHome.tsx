@@ -32,7 +32,7 @@ import OpenChatLink from "@/components/ui/OpenChatLink";
 import { TITLE, BODY, META, H2, H3, LABEL_HEADING, ROW_HEADING, GRADIENT_TEXT } from "@/components/ui/typography";
 import CityShape, { type City } from "@/components/ui/CityShape";
 import {
-  SUBHEADING, READ, WIDE, MEASURE, READ_MEASURE_C, HERO_BUTTON_GROUND,
+  SUBHEADING, READ, WIDE, MEASURE_C, READ_MEASURE_C, HERO_BUTTON_GROUND,
   latinTrack, eyebrowTrack, PlateSegment, TermLink, PreparingButton, SiteFooter, usePlateLite,
 } from "./shared";
 
@@ -407,7 +407,7 @@ export default function NaruHome() {
     <>
           <div className="flex flex-col gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-4 lg:px-6 lg:py-5">
             <div className="shrink-0">
-              <p className={`flex items-center gap-2 max-sm:justify-center ${BODY} font-bold text-white`}>
+              <p className={`flex items-center justify-center gap-2 ${BODY} font-bold text-white`}>
                 <ChipDot />
                 {/* lang="en" (2026-09-19, 접근성 감사 7): 한국어 문단 속의 영어 고유명사. */}
                 <span lang="en">General Mentoring</span>
@@ -430,7 +430,7 @@ export default function NaruHome() {
             {/* 2026-10-10: 규칙이 셋이 되어 한 칸으로 세웁니다. 두 칸이면 셋째만 아래로 내려가고, 세 칸이면 READ 폭에서 줄마다 두 줄로 꺾입니다. */}
             <ul role="list" className="grid flex-1 grid-cols-1 gap-y-2">
               {naru.december.mentoringRules.map((rule, i) => (
-                <li key={i} className={`flex gap-2.5 break-keep border-l-2 border-white/20 pl-3 max-sm:justify-center max-sm:border-l-0 max-sm:pl-0 ${BODY} leading-snug text-white/85`}>
+                <li key={i} className={`break-keep ${BODY} leading-snug text-white/85`}>
                   {t(rule)}
                 </li>
               ))}
@@ -442,7 +442,7 @@ export default function NaruHome() {
               주황입니다(주황은 점으로만). 이름은 BODY 굵게, 기간은 META, 설명은 BODY. 규칙 목록은 없습니다.
               날짜, 횟수, 기업 이름은 쓰지 않습니다(미정). 위 초안 배너가 이 약속을 덮습니다. */}
           <div className="rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 lg:px-6 lg:py-5">
-            <p className={`flex items-center gap-2 max-sm:justify-center ${BODY} font-bold text-white`}>
+            <p className={`flex items-center justify-center gap-2 ${BODY} font-bold text-white`}>
               <ChipDot className="bg-naru-orange" />
               {t(naru.december.fieldMentoring.name)}
             </p>
@@ -472,15 +472,15 @@ export default function NaruHome() {
       // 노선도의 현재 위치 점이 이 카드로 옵니다(감사 반영 브리프 3.6).
       onMouseEnter={() => setHoverDay(i)}
       onMouseLeave={() => setHoverDay(null)}
-      className={`flex flex-col gap-2.5 rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 lg:px-6 lg:py-5 ${phone ? "items-center text-center" : i === 0 ? "md:col-span-2" : ""}`}
+      className={`flex flex-col gap-2.5 rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 lg:px-6 lg:py-5 items-center text-center ${!phone && i === 0 ? "md:col-span-2" : ""}`}
     >
-      <div className={`flex flex-wrap items-center gap-x-2.5 gap-y-1 ${phone ? "justify-center" : ""}`}>
+      <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1">
         {/* lang="en": DAY는 두 로케일 모두 영어입니다(접근성 감사 7). */}
         <span lang="en" className={`rounded-full border border-accent/40 bg-accent/15 px-2.5 py-0.5 ${META} font-bold tracking-[0.08em] text-accent`}>
           {`${t(naru.december.dayLabel)} ${stage.dayOffset}`}
         </span>
         <h4 className={ROW_HEADING}>{t(stage.title)}</h4>
-        <span className={`${META} text-white/70 ${phone ? "" : "ml-auto"}`}>{formatDecemberDayWithWeekday(locale, stage.dayOffset)}</span>
+        <span className={`${META} text-white/70`}>{formatDecemberDayWithWeekday(locale, stage.dayOffset)}</span>
       </div>
       {/* stage.body는 그리지 않습니다(2026-09-20). 키는 data/naru.ts에 그대로 있습니다. */}
       <p className={`break-keep ${BODY} leading-relaxed text-white/85`}>{t(stage.line)}</p>
@@ -492,13 +492,13 @@ export default function NaruHome() {
         </p>
       )}
       {stage.chips.length > 0 && (
-        <p className={`flex flex-wrap gap-x-3 gap-y-1 ${META} text-white/70 ${phone ? "justify-center" : ""}`}>
+        <p className={`flex flex-wrap justify-center gap-x-3 gap-y-1 ${META} text-white/70`}>
           {stage.chips.map((c, j) => <span key={j}>{t(c)}</span>)}
         </p>
       )}
       {/* 그날의 마일스톤. amber 띠(홈에서 "결과보다 과정"이 쓰던 색)가 카드 바닥에 섭니다. Day 0에는 없습니다. */}
       {stage.milestone && (
-        <MilestoneStrip label={t(naru.december.milestoneLabel)} title={t(stage.milestone)} detail={stage.milestoneDetail && t(stage.milestoneDetail)} center={phone} />
+        <MilestoneStrip label={t(naru.december.milestoneLabel)} title={t(stage.milestone)} detail={stage.milestoneDetail && t(stage.milestoneDetail)} center />
       )}
     </div>
   );
@@ -680,6 +680,7 @@ export default function NaruHome() {
               </a>
               <Link
                 href="/match"
+                aria-describedby="hero-match-note"
                 onClick={() => track("naru_cta", { src: "hero", to: "match" })}
                 className={`${buttonClass("secondary")} ${HERO_BUTTON_GROUND}`}
               >
@@ -690,6 +691,12 @@ export default function NaruHome() {
             {regState === "not_open" && (
               <p id="hero-register-note" className={`mt-3 ${META} leading-snug text-white/85`}>{t(registerCopy.previewCtaNote)}</p>
             )}
+            {/* DECIDED 2026-10-11 (사용자: "버튼 안에 넣지는 말고, 설명은 보일 수 있도록"): AI 유형 테스트가 무엇에 쓰이는지 버튼 줄 아래에 적습니다.
+                Day 1의 팀 매칭용이고, 그 전에도 해 볼 수 있지만 결과는 Day 1 전에는 저장되지 않습니다(/match의 2026-10-08 결정과 같은 사실). */}
+            <p id="hero-match-note" className={`mt-2 break-keep ${META} leading-snug text-white/85`}>
+              {/* 문장마다 한 줄. 한 문단으로 두면 둘째 문장의 첫 낱말만 윗줄 끝에 걸렸습니다. */}
+              {t(naru.eventHero.matchNote).split(/(?<=\.) /).map((line, i) => <span key={i} className="block">{line}</span>)}
+            </p>
           </div>
           {/* 오른쪽 단 = 8월 행사 사진 넷 (DECIDED 2026-09-17, 사용자). 8월 히어로의
               메탈 휴먼 자리입니다. 사람이 많이 나온 장면만, 같은 사진은 사이트에 한 번.
@@ -869,9 +876,13 @@ export default function NaruHome() {
             그 밖에 바꾼 것)과 #gains 목록, #naru의 코어 둘, #join의 세 카드가 가운데 정렬입니다. 전에는 제목과 리드만
             가운데이고 그 아래가 전부 왼쪽이라, 폰 한 화면에 축이 둘이었습니다. 왼쪽 끝 규칙(2026-09-29)은 sm부터 그대로입니다.
             가운데에서는 줄머리 점과 왼쪽 세로선이 축을 다시 왼쪽에 세우므로 폰에서만 숨깁니다. */}
-        <Reveal className={`${READ} mt-10 text-left max-sm:text-center`}>
+        {/* DECIDED 2026-10-11 (사용자, 스크린숏 둘: "완전 뒤죽박죽, 뭐는 중간에, 뭐는 left에"): 이 챕터와 #gains의 글 블록은 sm부터도
+            가운데입니다. 머리(알약, 제목, 리드, 숫자), 노선도, 등록 줄은 가운데인데 그 사이의 일정, 표, 멘토링 상자, 문단만 왼쪽이라
+            한 화면에 축이 둘이었습니다. 폰은 2026-10-09부터 가운데였고, 이제 모든 폭에서 축이 하나입니다.
+            왼쪽 끝 규칙(2026-09-29)은 홈의 이 블록들에서는 더 쓰지 않습니다. 표의 라벨은 값 위에 쌓습니다(폰과 같은 모양). */}
+        <Reveal className={`${READ} mt-10 text-center`}>
           <h3 data-subheading className={SUBHEADING}>{t(naru.december.scheduleLabel)}</h3>
-          <p className={`${MEASURE} mt-3 break-keep ${BODY} leading-relaxed text-white/70`}>
+          <p className={`${MEASURE_C} mt-3 break-keep ${BODY} leading-relaxed text-white/70`}>
             {t(naru.december.scheduleLead)}
           </p>
           {/* 2026-10-11: 폰에서는 이 표를 그리지 않습니다. 위 노선도의 정거장을 누르면 그날의 행이 노선도 아래에 열립니다. */}
@@ -899,7 +910,7 @@ export default function NaruHome() {
               <div
                 key={f.k.en}
                 // 2026-10-09: 폰은 가운데 정렬이라 라벨을 값 위에 쌓습니다(전에는 폰에서도 2열, 라벨 81px).
-                className={`grid grid-cols-1 gap-x-4 gap-y-1 border-t border-white/10 py-3 sm:grid-cols-[7rem_1fr] sm:gap-x-6 ${i === naru.december.facts.length - 1 ? "border-b" : ""}`}
+                className={`grid grid-cols-1 gap-y-1 border-t border-white/10 py-3 ${i === naru.december.facts.length - 1 ? "border-b" : ""}`}
               >
                 {/* /50이 아니라 /75인 이유는 대비입니다(LABEL_HEADING이 같은 이유로
                     /75입니다). 12.24px은 큰 글자 예외를 받지 못해 4.5:1이 필요한데,
@@ -907,7 +918,7 @@ export default function NaruHome() {
                     2026-09-25 (가독성 브리프 4.2): 12.24px → 13.5px, 한국어 화면의 자간 0.16em → 0.
                     표의 행 라벨은 13px 이상, white/60 이상입니다. */}
                 <dt className={`break-keep ${META} font-semibold uppercase ${latinTrack(locale)} text-white/70`}>{t(f.k)}</dt>
-                <dd className={`break-keep ${BODY} leading-relaxed text-white/70`}>{t(f.v)}</dd>
+                <dd className={`text-balance break-keep ${BODY} leading-relaxed text-white/70`}>{t(f.v)}</dd>
               </div>
             ))}
           </dl>
@@ -923,14 +934,14 @@ export default function NaruHome() {
         {/* DECIDED 2026-10-10 (사용자, 스크린숏: "상자가 너무 비워져있음"): 두 상자를 위아래에서 좌우로 세웁니다(md부터).
             READ 폭 한 줄을 다 쓰는 상자 안에서 글이 MEASURE(36rem)에 묶여 오른쪽 절반이 비어 있었습니다. 두 칸으로 나누면
             글이 상자를 채웁니다. 상자 안 문단의 MEASURE는 그래서 뺐습니다. 폰은 전처럼 위아래입니다. 색과 글은 그대로. */}
-        <Reveal className={`${READ} mt-8 grid grid-cols-1 gap-3 text-left max-sm:text-center md:grid-cols-2 md:gap-4 lg:mt-12`}>
+        <Reveal className={`${READ} mt-8 grid grid-cols-1 gap-3 text-center md:grid-cols-2 md:gap-4 lg:mt-12`}>
           {mentoringBoxes}
         </Reveal>
         {/* DECIDED 2026-10-10 (중복 브리프 B2): 이 자리의 호박색 "결과보다 과정" 상자(naru.why.measure)를 그리지 않습니다.
             #naru 코어 01의 "그래서 우리가 보는 것도 순위가 아니라 완주입니다"와 같은 말입니다. 키는 data/naru.ts에 그대로.
             그 자리에 findClose 문단이 섭니다. 평가가 과정이라는 말을 이 문단이 대신합니다. 상자 없이 READ 왼쪽 끝, BODY. */}
-        <Reveal className={`${READ} text-left max-sm:text-center`}>
-          <p className={`${MEASURE} mt-6 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.findClose)}</p>
+        <Reveal className={`${READ} text-center`}>
+          <p className={`mt-6 text-balance break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.findClose)}</p>
           {/* DECIDED 2026-10-10 (사용자: "8월이랑 뭐가 다른지 12월 페이지에서는 설명할 필요가 없음"): 여기 있던
               "8월과 무엇이 다른지" 링크를 뺐습니다. 8월 페이지의 #gaps는 그대로 있고, 홈에서는 가리키지 않습니다.
               december.gapsLink 키는 data/naru.ts에 그대로. */}
@@ -1068,15 +1079,15 @@ export default function NaruHome() {
         {/* DECIDED 2026-10-11 (사용자, 폰 스크린숏: "내용은 저 정도로 충분, 보여 주는 방식이 이상함"): 폰에서 번호, 제목, 설명이
             가운데로 세 줄씩 쌓여 번호가 혼자 떠 있었습니다. 폰에서는 번호와 제목을 한 줄에 붙이고 설명을 그 아래에 둡니다
             (행마다 두 덩어리). 행 여백도 py-5에서 py-4로. 글과 가운데 정렬, 헤어라인은 그대로이고 sm부터는 전과 같은 세 칸입니다. */}
-        <ol role="list" className={`${READ} mt-10 text-left max-sm:text-center`}>
+        <ol role="list" className={`${READ} mt-10 text-center`}>
           {naru.gains.items.map((item) => (
             <li
               key={item.num}
-              className="flex flex-wrap items-baseline justify-center gap-x-2 gap-y-1 border-t border-white/10 py-4 last:border-b sm:grid sm:grid-cols-[2.25rem_14rem_1fr] sm:items-start sm:justify-normal sm:gap-x-6 sm:py-5"
+              className="flex flex-wrap items-baseline justify-center gap-x-2 gap-y-1 border-t border-white/10 py-4 last:border-b"
             >
-              <span className={`sm:pt-0.5 ${BODY} font-black tabular-nums text-accent`}>{item.num}</span>
+              <span className={`${BODY} font-black tabular-nums text-accent`}>{item.num}</span>
               <h3 className={ROW_HEADING}>{t(item.title)}</h3>
-              <p className={`w-full break-keep ${BODY} leading-relaxed text-white/70 sm:col-start-3 sm:w-auto`}>
+              <p className={`w-full break-keep ${BODY} leading-relaxed text-white/70`}>
                 {t(item.body)}
               </p>
             </li>
