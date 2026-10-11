@@ -461,6 +461,8 @@ export const naru = {
       en: "Students in Korea and Korean students abroad work in the same teams. Each team takes an issue a company is facing now, finds the problem underneath it, and presents to that company on the fifth day.",
     },
     ctaProgram: { ko: "프로그램 보기", en: "See the programme" },
+    // DECIDED 2026-10-11 (사용자): AI 유형 테스트(/match)로 가는 버튼이 일정표의 Day 1에서 히어로의 버튼 줄로 왔습니다.
+    ctaMatch: { ko: "AI 유형 테스트", en: "AI type test" },
     // ── 카운트다운 패널 (2026-09-17, 8월 문법 브리프) ─────────────────────
     // 8월 히어로의 오른쪽 단(Glass 패널)에 있던 카운트다운의 자리입니다. 숫자는
     // 마운트 뒤에 채우고 패널 높이는 고정입니다(하이드레이션 밀림 방지).
@@ -1661,19 +1663,26 @@ export const naru = {
     // 뺀 셋은 같은 화면에 이미 있는 말입니다. "참가비와 장소"는 바로 아래 등록 안내 문장(ctaNote)과 같은 문장이고,
     // "제출"은 위 일정표의 Day 1, Day 3 마일스톤 줄에 있고, "보상"은 일정표의 마일스톤 줄과 "그 밖에 바꾼 것" 첫 줄에 있습니다.
     // 다시 넣기 전에 그 자리들을 먼저 보세요.
+    // DECIDED 2026-10-11 (사용자: "좀 더 와닿는 문구", "마일스톤의 존재 목적이 더 선명하게", "우리의 가설이 설명되어야 함", "기록이 마일스톤임").
+    // 문장은 사용자가 미팅에서 직접 한 말에서 가져왔습니다(어느 3시간만 떼어도 그 하나만으로 훌륭한 이벤트, 결과만 존재하면 안 된다,
+    // 1위에게 주는 것보다 나누는 쪽이 더 좋은 결과물, 12월은 그 가설의 검증). "기록" 줄(일지 10분, 체류 시간)은 "마일스톤"과 "가설" 두 줄이 됐습니다.
+    // 가설 줄은 약속이 아니라 가설이라고 씁니다. 금액과 지급 방식은 정해지지 않아 쓰지 않습니다.
     facts: [
       {
         k: { ko: "세션", en: "Sessions" },
-        // 2026-09-30 (사용자, 문장 감사): "퀄리티로"는 스스로 매긴 평가라 뺐습니다. 영문은 그대로.
-        v: { ko: "모두 3시간씩. 따로 떼어 내도 하나의 이벤트가 되게 만듭니다.", en: "Three hours each, built to stand on their own as an event." },
+        v: { ko: "닷새 가운데 어느 3시간만 떼어 와도, 그 하나만으로 훌륭한 이벤트가 되게 만듭니다.", en: "Take any three hours out of the five days, and that alone should stand as a good event." },
       },
       {
         k: { ko: "공간", en: "Space" },
         v: { ko: "4일 동안 아침부터 저녁까지. 마지막 날은 제외입니다.", en: "Open morning to evening for four days. Not the last day." },
       },
       {
-        k: { ko: "기록", en: "What gets recorded" },
-        v: { ko: "하루 끝 일지 10분, 팀 단위 체류 시간.", en: "Ten minutes of notes at the end of each day, and how long each team stayed." },
+        k: { ko: "마일스톤", en: "Milestones" },
+        v: { ko: "날마다 하나씩 있습니다. 넘은 팀은 모두 그날 지원을 받고, 넘은 마일스톤이 그 팀의 기록으로 남습니다.", en: "One a day. Every team that clears it gets support that day, and the milestones a team clears become its record." },
+      },
+      {
+        k: { ko: "가설", en: "Our hypothesis" },
+        v: { ko: "결과만 존재하면 안 됩니다. 1위 한 팀에게 몰아 주는 것보다 과정마다 모두에게 나누는 쪽이 더 좋은 결과물을 낸다고 봅니다. 12월은 그 가설의 검증입니다.", en: "The result cannot be the only thing that exists. We think sharing support with everyone along the way produces better work than handing it all to first place. December is the test of that." },
       },
     ] as { k: Phrase; v: Phrase }[],
 
@@ -2125,6 +2134,7 @@ export const naru = {
         // 12월에는 AI 유형 테스트가 신청의 일부가 아니라 Day 1 현장의 팀 매칭 도구입니다. 칩은 뺐습니다
         // (버튼이 같은 말을 합니다). 버튼은 이 행의 글 기둥 왼쪽 끝에 섭니다(NaruHome).
         chips: [],
+        // 2026-10-11: 화면에 그리지 않습니다. 버튼은 히어로로 갔습니다(eventHero.ctaMatch). 키는 그대로.
         matchCta: { label: { ko: "AI 유형 테스트로 팀 매칭", en: "Team matching with the AI type test" }, href: "/match" },
         session: {
           title: { ko: "Sharing session", en: "Sharing session" },

@@ -365,23 +365,13 @@ export default function NaruHome() {
   // 사라졌습니다. 행은 처음부터 전부 펼쳐져 있어 접었다 펼 것이 없습니다.
   const [hoverDay, setHoverDay] = useState<number | null>(null);
   usePlateLite();
-  // DECIDED 2026-10-11 (사용자: "button으로 말고, 여기(노선도)를 클릭하면 나오는 구조가 더 자연스러운듯"): 폰의 접힘 단추 둘
-  // ("날짜별 일정 보기", "멘토링 자세히 보기")을 뺐습니다. 노선도의 정거장을 누르면 그날의 행이, 필을 누르면 멘토링 상자가
-  // 노선도 바로 아래에 열립니다(다시 누르면 닫힘). sm부터는 표와 상자가 전처럼 다 보이고, 누르면 그 자리로 갑니다.
-  // 그래서 행과 상자를 한 번 만들어 두 자리에 그립니다: 폰은 노선도 아래(phone), sm부터는 원래 자리.
+  // DECIDED 2026-10-11 (사용자: "button으로 말고, 여기(노선도)를 클릭하면 나오는 구조가 더 자연스러운듯"): 폰의 접힘 단추를 뺐습니다.
+  // 폰에서 노선도의 정거장을 누르면 그날의 카드가 노선도 바로 아래에 열립니다(다시 누르면 닫힘).
+  // DECIDED 2026-10-11 (사용자, 같은 날 뒤: "여기 클릭하게 하는 건 빼주면 될 것 같고"): sm부터는 정거장이 눌리지 않습니다.
+  // 일정 카드가 다 보이는 화면에서 누르면 표시만 남고 하는 일이 없었습니다. 폰은 그대로입니다(카드 다섯을 한 번에 펴면 길어서).
+  // 멘토링 필 둘은 뺐고(아래 상자가 같은 말을 합니다), 멘토링 상자는 폰에서도 처음부터 보입니다.
   const [openDay, setOpenDay] = useState<number | null>(null);
-  const [mentoringOpen, setMentoringOpen] = useState(false);
-  const isPhone = () => typeof window !== "undefined" && window.matchMedia("(max-width: 639.98px)").matches;
-  const goTo = (id: string) => document.getElementById(id)?.scrollIntoView({ block: "center", behavior: "smooth" });
-  const selectDay = (i: number) => {
-    if (isPhone()) return setOpenDay((d) => (d === i ? null : i));
-    setOpenDay(i);
-    goTo(`december-day-${i}`);
-  };
-  const selectPill = () => {
-    if (isPhone()) return setMentoringOpen((v) => !v);
-    goTo("december-mentoring");
-  };
+  const selectDay = (i: number) => setOpenDay((d) => (d === i ? null : i));
   const mentoringBoxes = (
     <>
           <div className="flex flex-col gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-4 lg:px-6 lg:py-5">
@@ -440,94 +430,52 @@ export default function NaruHome() {
               지키려고 설계하게 됩니다(data/naru.ts의 measure 주석). */}
     </>
   );
-  // DECIDED 2026-10-11 (사용자, 스크린숏: "너무 한 줄이어서 가독성이 없음. Day 0, 그 아래에 2x2 테이블로"): sm부터 일정표는
-  // 다섯 행 한 기둥이 아니라, Day 0 한 행과 그 아래 Day 1부터 Day 4의 두 칸 두 줄입니다(md부터 두 칸, 그 아래는 한 칸).
-  // 모양은 셋입니다: "row"(Day 0, 전과 같은 세 열 행), "cell"(2x2의 한 칸, 위에서 아래로 쌓음), "phone"(폰에서 노선도 아래에 열리는 한 행).
-  const stageRow = (stage: (typeof naru.december.stages)[number], i: number, mode: "row" | "cell" | "phone" = "row") => {
-    const phone = mode === "phone";
-    const cell = mode === "cell";
-            // DECIDED 2026-10-07 (이슈 브리프 4.2): Day 0 행을 흐리게 하지 않습니다. 2026-09-20에는 이 행만
-            // 한 단 낮은 밝기(/55)였는데, 진한 회색 글이 바탕에 묻혀 읽히지 않았습니다. "스테이지로 세지
-            // 않는다"는 것은 이 행의 문장(stage.line)이 이미 말합니다. 다섯 행의 밝기는 같습니다.
-            return (
-              <div
-                key={stage.name.en}
-                id={phone ? undefined : `december-day-${i}`}
-                // 노선도의 현재 위치 점이 이 행으로 옵니다(감사 반영 브리프 3.6).
-                // 카드가 하던 일을 행이 그대로 이어받습니다.
-                onMouseEnter={() => setHoverDay(i)}
-                onMouseLeave={() => setHoverDay(null)}
-                className={`grid grid-cols-1 gap-x-6 gap-y-2 border-t border-white/10 py-5 ${
-                  phone ? "border-b text-center"
-                  // 왼쪽 칸은 READ의 왼쪽 끝에 그대로 섭니다(2026-09-29 왼쪽 끝 규칙). 안쪽 여백은 두 칸 사이에만.
-                  : cell ? "content-start md:odd:border-r md:odd:pr-6 md:even:pl-6"
-                  : "sm:grid-cols-[7rem_1fr_10rem]"
-                }`}
-              >
-                <div className="flex items-baseline gap-2 max-sm:justify-center">
-                  {/* lang="en": DAY는 두 로케일 모두 영어입니다(접근성 감사 7). */}
-                  <span lang="en" className={LABEL_HEADING}>
-                    {`${t(naru.december.dayLabel)}\u2002${stage.dayOffset}`}
-                  </span>
-                  <span className={`shrink-0 ${META} text-white/70`}>
-                    {formatDecemberDayWithWeekday(locale, stage.dayOffset)}
-                  </span>
-                </div>
-                <div>
-                  <h4 className={ROW_HEADING}>{t(stage.title)}</h4>
-                  {/* stage.body는 그리지 않습니다. 브리프 4장이 표로 옮긴다고 적은 것은
-                      제출물 칩, 그날의 한 줄, 워크샵 셋입니다. 카드 본문까지 넣으면 한
-                      행이 네 줄이 되고, 표가 아니라 세로로 세운 카드가 됩니다. 키는
-                      data/naru.ts에 그대로 있습니다. */}
-                  <p className={`mt-1.5 flex gap-1.5 break-keep max-sm:justify-center ${BODY} font-semibold leading-snug text-white`}>
-                    {/* 2026-10-09: 가운데 정렬(폰)에서 글이 두 줄이 되면 화살표만 왼쪽 끝에 떨어져 숨깁니다. */}
-                    <span aria-hidden className="text-white/70 max-sm:hidden">→</span>
-                    {t(stage.line)}
-                  </p>
-                  {stage.session && (
-                    <p className={`mt-1.5 flex flex-wrap items-baseline gap-x-1.5 break-keep max-sm:justify-center ${BODY} leading-relaxed text-white/70`}>
-                      <span className={`font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.december.sessionLabel)}</span>
-                      <span className="font-semibold text-white/85">{t(stage.session.title)}</span>
-                      <span>{t(stage.session.body)}</span>
-                    </p>
-                  )}
-                  {/* DECIDED 2026-10-10 (사용자: 넣은 정보는 그대로, 8월 캘린더 형식은 쓰지 않는다): 그날의 마일스톤은 표의 형식 안에서,
-                      이 행의 글 기둥에 한 줄로 섭니다. 같은 날 아침에는 오른쪽 10rem 열의 META 한 줄이었는데 두 줄로 끊기고
-                      눈에 들어오지 않았습니다. amber 칩(홈에서 "결과보다 과정" 상자가 쓰는 색)과 BODY 굵은 글, 뒤에 누가 받는지. */}
-                  {stage.milestone && (
-                    <p className="mt-3 flex flex-wrap items-center gap-x-2.5 gap-y-1 break-keep max-sm:justify-center">
-                      <span className={`inline-flex shrink-0 items-center gap-1 rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 ${META} font-bold text-amber-100`}>
-                        <span aria-hidden>★</span>{t(naru.december.milestoneLabel)}
-                      </span>
-                      <span className={`${BODY} font-bold leading-snug text-white`}>{t(stage.milestone)}</span>
-                      {/* DECIDED 2026-10-10 (중복 브리프 B1): 뒤에 붙던 "넘은 팀 모두 지원"(milestoneNote)을 그리지 않습니다.
-                          노선도 범례가 한 번 말합니다. 네 행에서 네 번 되풀이됐습니다. 키는 data/naru.ts에 그대로. */}
-                    </p>
-                  )}
-                  {/* DECIDED 2026-10-08 (현장 팀 매칭 브리프 5): Day 1 행에만 있는 버튼 하나. 전에 오른쪽 열의 "팀 매칭"
-                      칩이 있던 말을 버튼이 합니다. 글이 한 줄이라 10rem 오른쪽 열에는 들어가지 않아, 이 행의 글 기둥
-                      왼쪽 끝에 맞춥니다(2026-09-29 왼쪽 끝 규칙). 알약 테두리 버튼(누르는 것의 문법), 글자는 BODY. */}
-                  {stage.matchCta && (
-                    <Link
-                      href={stage.matchCta.href}
-                      onClick={() => track("naru_cta", { src: "december-day1", to: "match" })}
-                      className={`mt-3 inline-flex min-h-[44px] items-center gap-1.5 whitespace-nowrap rounded-full border border-white/15 bg-[#0B1430]/80 px-5 py-2 ${BODY} font-medium text-accent transition hover:border-white/30 hover:text-white`}
-                    >
-                      {t(stage.matchCta.label)}
-                      <span aria-hidden>→</span>
-                    </Link>
-                  )}
-                </div>
-                <div className="flex flex-wrap content-start items-start gap-x-3 gap-y-1 max-sm:justify-center">
-                  {/* DECIDED 2026-10-10 (중복 브리프 B1): "제출 {제출물}" 칩을 그리지 않습니다. 같은 행의 마일스톤 줄이
-                      같은 이름을 말합니다. stage.submit은 노선도의 ★ 판정에만 씁니다. */}
-                  {stage.chips.map((c, j) => (
-                    <span key={j} className={`${META} text-white/70`}>{t(c)}</span>
-                  ))}
-                </div>
-              </div>
-            );
-  };
+  // DECIDED 2026-10-11 (사용자, 스크린숏: "너무 한 줄이어서 가독성이 없음. Day 0, 그 아래에 2x2 테이블로"): 일정은 다섯 행 한 기둥이
+  // 아니라 Day 0 한 장과 그 아래 Day 1부터 Day 4의 두 칸 두 줄입니다(md부터 두 칸).
+  // DECIDED 2026-10-11 (사용자, 같은 날 뒤: "visually 눈에 잘 들어오지 않음"): 헤어라인 칸을 카드로 바꿨습니다. 글자 크기는 그대로 셋이고
+  // (2026-10-07), 눈에 걸리는 자리를 둘로 줄였습니다: 위의 DAY 알약과 제목, 아래 끝의 마일스톤 띠. 그날의 한 줄은 굵기를 내렸습니다.
+  // 마일스톤 띠는 카드 바닥에 붙어(mt-auto) 옆 카드와 같은 높이에 섭니다. Day 1의 /match 버튼은 히어로로 갔습니다.
+  const stageCard = (stage: (typeof naru.december.stages)[number], i: number, phone = false) => (
+    <div
+      key={stage.name.en}
+      // 노선도의 현재 위치 점이 이 카드로 옵니다(감사 반영 브리프 3.6).
+      onMouseEnter={() => setHoverDay(i)}
+      onMouseLeave={() => setHoverDay(null)}
+      className={`flex flex-col gap-2.5 rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 lg:px-6 lg:py-5 ${phone ? "items-center text-center" : i === 0 ? "md:col-span-2" : ""}`}
+    >
+      <div className={`flex flex-wrap items-center gap-x-2.5 gap-y-1 ${phone ? "justify-center" : ""}`}>
+        {/* lang="en": DAY는 두 로케일 모두 영어입니다(접근성 감사 7). */}
+        <span lang="en" className={`rounded-full border border-accent/40 bg-accent/15 px-2.5 py-0.5 ${META} font-bold tracking-[0.08em] text-accent`}>
+          {`${t(naru.december.dayLabel)} ${stage.dayOffset}`}
+        </span>
+        <h4 className={ROW_HEADING}>{t(stage.title)}</h4>
+        <span className={`${META} text-white/70 ${phone ? "" : "ml-auto"}`}>{formatDecemberDayWithWeekday(locale, stage.dayOffset)}</span>
+      </div>
+      {/* stage.body는 그리지 않습니다(2026-09-20). 키는 data/naru.ts에 그대로 있습니다. */}
+      <p className={`break-keep ${BODY} leading-relaxed text-white/85`}>{t(stage.line)}</p>
+      {stage.session && (
+        <p className={`break-keep ${BODY} leading-relaxed text-white/70`}>
+          <span className={`mr-1.5 font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.december.sessionLabel)}</span>
+          <span className="mr-1.5 font-semibold text-white/85">{t(stage.session.title)}</span>
+          {t(stage.session.body)}
+        </p>
+      )}
+      {stage.chips.length > 0 && (
+        <p className={`flex flex-wrap gap-x-3 gap-y-1 ${META} text-white/70 ${phone ? "justify-center" : ""}`}>
+          {stage.chips.map((c, j) => <span key={j}>{t(c)}</span>)}
+        </p>
+      )}
+      {/* 그날의 마일스톤. amber 띠(홈에서 "결과보다 과정"이 쓰던 색)가 카드 바닥에 섭니다. Day 0에는 없습니다. */}
+      {stage.milestone && (
+        <p className={`mt-auto flex w-full flex-wrap items-center gap-x-2.5 gap-y-1 break-keep rounded-xl border border-amber-400/25 bg-amber-400/10 px-3 py-2 ${phone ? "justify-center" : ""}`}>
+          <span className={`inline-flex shrink-0 items-center gap-1 ${META} font-bold text-amber-100`}>
+            <span aria-hidden>★</span>{t(naru.december.milestoneLabel)}
+          </span>
+          <span className={`${BODY} font-bold leading-snug text-white`}>{t(stage.milestone)}</span>
+        </p>
+      )}
+    </div>
+  );
   // DECIDED 2026-10-10 (구조 브리프 3.2): 옛 주소. 홈에 있던 #join, #how, #why, #record, #join-ways는 /naru로 갔습니다.
   // 해시는 서버에 오지 않아 redirects로 잡을 수 없으므로, 마운트 때 한 번 보고 /naru의 같은 자리로 바꿉니다.
   // /naru에서 id가 바뀐 둘은 여기서 맞춥니다: 전의 #why(변하지 않는 두 개)는 #core, 전의 #join(왜 이 자리가 필요한가)은 #why.
@@ -666,7 +614,10 @@ export default function NaruHome() {
               </span>{" "}
               {t(naru.eventHero.sub)}
             </p>
-            <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center lg:mt-14">
+            {/* DECIDED 2026-10-11 (사용자, 스크린숏: "여기에 있으면 좋겠음. 2x2, 버튼 별 사이즈는 똑같이"): AI 유형 테스트 버튼이 일정표의
+                Day 1에서 여기로 왔습니다. 버튼 넷이 두 칸 두 줄로 서고, 격자가 칸을 늘려 넷의 크기가 같습니다(글은 가운데).
+                폰은 한 칸이고 "프로그램 보기"는 전처럼 폰에서 숨깁니다. */}
+            <div className="mx-auto mt-10 grid w-fit max-w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:mt-14 [&>*]:justify-center [&>*]:whitespace-nowrap max-sm:[&>*]:whitespace-normal">
               {regState === "open" ? (
                 <button type="button" onClick={() => { track("naru_cta", { src: "hero", to: "register" }); reg?.openRegister(); }} className={`group ${buttonClass("primary", "naru")}`}>
                   {t(registerCopy.cta)}
@@ -701,6 +652,14 @@ export default function NaruHome() {
                 {/* DECIDED 2026-10-10 (사용자, 스크린숏: "화살표가 뒤죽박죽"): ↓를 →로. 이 줄의 세 버튼이 같은 화살표를 씁니다. */}
                 <span aria-hidden className="text-white/70">→</span>
               </a>
+              <Link
+                href="/match"
+                onClick={() => track("naru_cta", { src: "hero", to: "match" })}
+                className={`${buttonClass("secondary")} ${HERO_BUTTON_GROUND}`}
+              >
+                {t(naru.eventHero.ctaMatch)}
+                <span aria-hidden className="text-white/70">→</span>
+              </Link>
             </div>
             {regState === "not_open" && (
               <p id="hero-register-note" className={`mt-3 ${META} leading-snug text-white/85`}>{t(registerCopy.previewCtaNote)}</p>
@@ -846,17 +805,14 @@ export default function NaruHome() {
               kind: s.milestone ? "anchor" : "plain",
               milestone: s.milestone ? t(s.milestone) : undefined,
             }))}
-            pills={[t(naru.december.mentoringHeading), t(naru.december.fieldMentoringPill)]}
-            legend={{ anchor: t(naru.december.routeLegendMilestoneDay), milestone: t(naru.december.routeLegendMilestone) }}
+            // DECIDED 2026-10-11 (사용자): 레일 아래의 멘토링 필 둘과 범례를 그리지 않습니다. 필은 아래 멘토링 상자가 같은 말을 하고,
+            // 범례는 "제출물과 마일스톤이 있는 날"처럼 따로 표시하지 말라는 요청입니다. 날마다의 마일스톤은 정거장 아래 한 줄이 말합니다.
             current={hoverDay ?? openDay ?? 0}
             selected={openDay}
             onSelect={selectDay}
-            onPill={selectPill}
-            pillsOpen={mentoringOpen}
             hint={t(naru.december.routeHint)}
-            below={openDay !== null && <div className="mt-3 sm:hidden">{stageRow(naru.december.stages[openDay], openDay, "phone")}</div>}
+            below={openDay !== null && <div className="mt-3 sm:hidden">{stageCard(naru.december.stages[openDay], openDay, true)}</div>}
           />
-          {mentoringOpen && <div className="mt-4 grid grid-cols-1 gap-3 text-center sm:hidden">{mentoringBoxes}</div>}
           </div>
         </Reveal>
 
@@ -893,11 +849,8 @@ export default function NaruHome() {
             {t(naru.december.scheduleLead)}
           </p>
           {/* 2026-10-11: 폰에서는 이 표를 그리지 않습니다. 위 노선도의 정거장을 누르면 그날의 행이 노선도 아래에 열립니다. */}
-          <div className="mt-5 max-sm:hidden">
-            {stageRow(naru.december.stages[0], 0)}
-            <div className="grid grid-cols-1 border-b border-white/10 md:grid-cols-2">
-              {naru.december.stages.slice(1).map((stage, j) => stageRow(stage, j + 1, "cell"))}
-            </div>
+          <div data-schedule className="mt-5 grid grid-cols-1 gap-3 max-sm:hidden md:grid-cols-2 md:gap-4">
+            {naru.december.stages.map((stage, i) => stageCard(stage, i))}
           </div>
           {/* 2026-09-20 (일정 브리프 5장): workshopNote("스테이지마다 ... 3시간짜리
               워크샵이 붙습니다")를 그리지 않습니다. Day 4에는 세션이 없어
@@ -944,7 +897,7 @@ export default function NaruHome() {
         {/* DECIDED 2026-10-10 (사용자, 스크린숏: "상자가 너무 비워져있음"): 두 상자를 위아래에서 좌우로 세웁니다(md부터).
             READ 폭 한 줄을 다 쓰는 상자 안에서 글이 MEASURE(36rem)에 묶여 오른쪽 절반이 비어 있었습니다. 두 칸으로 나누면
             글이 상자를 채웁니다. 상자 안 문단의 MEASURE는 그래서 뺐습니다. 폰은 전처럼 위아래입니다. 색과 글은 그대로. */}
-        <Reveal id="december-mentoring" className={`${READ} mt-8 grid grid-cols-1 gap-3 text-left max-sm:hidden md:grid-cols-2 md:gap-4 lg:mt-12`}>
+        <Reveal className={`${READ} mt-8 grid grid-cols-1 gap-3 text-left max-sm:text-center md:grid-cols-2 md:gap-4 lg:mt-12`}>
           {mentoringBoxes}
         </Reveal>
         {/* DECIDED 2026-10-10 (중복 브리프 B2): 이 자리의 호박색 "결과보다 과정" 상자(naru.why.measure)를 그리지 않습니다.

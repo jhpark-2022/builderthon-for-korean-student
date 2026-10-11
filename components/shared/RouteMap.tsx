@@ -43,8 +43,6 @@ export default function RouteMap({
   current,
   selected,
   onSelect,
-  onPill,
-  pillsOpen,
   hint,
   below,
 }: {
@@ -52,13 +50,11 @@ export default function RouteMap({
   /**
    * DECIDED 2026-10-11 (사용자: "button으로 말고, 여기를 클릭하면 나오는 구조가 더 자연스러운듯"): onSelect를 주면 정거장이
    * 누르는 것이 됩니다. 무엇을 여는지는 부르는 쪽이 정합니다(홈: 폰에서는 그날의 일정 한 행을 below에 열고, sm부터는
-   * 아래 표의 그 행으로 갑니다). selected는 지금 열린 정거장이고 옅은 판으로 표시합니다. onPill도 같습니다(필이 누르는 것).
+   * 눌리지 않습니다, 2026-10-11 같은 날 뒤의 결정). selected는 지금 열린 정거장이고 폰에서 옅은 판으로 표시합니다.
    * hint는 폰에서만 그리는 한 줄(무엇이 눌리는지), below는 레일과 필 사이에 서는 자리입니다.
    */
   selected?: number | null;
   onSelect?: (index: number) => void;
-  onPill?: (index: number) => void;
-  pillsOpen?: boolean;
   hint?: string;
   below?: React.ReactNode;
   /**
@@ -140,7 +136,7 @@ export default function RouteMap({
             <li key={s.key} className="relative flex-1">
               <Box
                 {...(onSelect ? { type: "button" as const, "aria-pressed": on, onClick: () => onSelect(index) } : {})}
-                className={`flex h-full w-full flex-col items-center gap-1.5 rounded-xl px-1 py-2.5 text-center ${onSelect ? `cursor-pointer transition-colors hover:bg-white/[0.06] ${on ? "bg-white/[0.07]" : ""}` : ""}`}
+                className={`flex h-full w-full flex-col items-center gap-1.5 rounded-xl px-1 py-2.5 text-center ${onSelect ? `max-sm:cursor-pointer sm:pointer-events-none ${on ? "max-sm:bg-white/[0.07]" : ""}` : ""}`}
               >
                 <span className="relative flex h-8 items-center justify-center">
                   {anchor ? (
@@ -195,18 +191,7 @@ export default function RouteMap({
       {below}
       {pills && pills.length > 0 && (
         <div className={`flex flex-col items-center gap-1.5 ${hint ? "max-sm:mt-3" : ""}`}>
-          {pills.map((p, i) => onPill ? (
-            <button
-              key={i}
-              type="button"
-              aria-expanded={pillsOpen}
-              onClick={() => onPill(i)}
-              className={`flex max-w-full cursor-pointer items-center gap-1.5 rounded-full border border-accent/40 px-2.5 py-1 text-center ${META} font-semibold leading-tight text-accent transition-colors hover:bg-accent/10 max-sm:min-h-[36px] sm:whitespace-nowrap sm:leading-none ${pillsOpen ? "max-sm:bg-accent/15" : "bg-transparent"}`}
-            >
-              <span aria-hidden data-pill-dot className={`h-[7px] w-[7px] shrink-0 rounded-full ${i === 0 ? "bg-accent/80" : "bg-naru-orange"}`} />
-              {p}
-            </button>
-          ) : (
+          {pills.map((p, i) => (
             // 2026-09-18 (감사 반영 브리프 8): 초록은 General Mentoring 상자의 기간 배지 하나에만 남깁니다. 필은 보라 외곽선.
             // whitespace-nowrap은 sm부터 (2026-09-19, 모바일 감사 11). 폰에서는 접히게 두고 가운데 정렬합니다.
             <span key={i} className={`flex max-w-full items-center gap-1.5 rounded-full border border-accent/40 bg-transparent px-2.5 py-1 text-center ${META} font-semibold leading-tight text-accent sm:whitespace-nowrap sm:leading-none`}>
