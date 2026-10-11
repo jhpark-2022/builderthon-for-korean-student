@@ -259,8 +259,9 @@ export default function JourneyNav({
   // 스크롤해야 돌아오고, 멈춰 있다고 돌아오지 않습니다(idleReveal false). 8월 페이지는 그 전
   // 그대로(헤더 전체 숨김 + 정지 시 복귀).
   const naru = brand === "naru";
-  // 돌아가기 글자 링크가 로고 줄에 서는 폭(2026-10-11, 리뷰 브리프 3단계 D3). 그 아래에서는 hide 쪽 클래스를 쓰는 둘째 줄입니다.
-  const backFrom = locale === "en" ? { show: "md:inline-flex", hide: "md:hidden" } : { show: "sm:inline-flex", hide: "sm:hidden" };
+  // 돌아가기 알약이 로고 줄에 서는 폭(2026-10-11). 실측: 로고, 알약, 오픈채팅, 언어 토글을 합치면 한국어 556px, 영문 716px입니다
+  // (여백 90px 제외). 한국어는 md(768)부터, 영문은 lg(1024)부터 들어갑니다. 그 아래에서는 목차 레일의 마지막 칸입니다.
+  const backFrom = locale === "en" ? { show: "lg:inline-flex", hide: "lg:hidden" } : { show: "md:inline-flex", hide: "md:hidden" };
   const chromeHidden = useScrollDirection({ idleReveal: naru ? false : 450 });
   const headerRef = useRef<HTMLElement | null>(null);
   // 헤더 실높이를 scroll-padding-top으로(감사 반영 브리프 2.1). 접힌 상태에서는 레일 높이만큼만
@@ -521,15 +522,10 @@ export default function JourneyNav({
             <Link
               href={back.href}
               aria-label={t(back.label)}
-              // DECIDED 2026-10-11 (리뷰 브리프 3단계 D3): 돌아가기는 목차와 같은 크기의 보통 글자입니다. 그라데이션과 알약 테두리를 뺐습니다.
-              // 홈의 워드마크와 같은 모양이라 로고 옆에서 "나루 크로싱 서울" 락업으로 읽혔습니다. 폰의 첫 화면(스크롤 전)에도 보입니다.
-              // 전에는 폰에서 스크롤해야 목차 줄 끝에 나타났습니다. 좁은 폭에서는 글자를 한 단 줄입니다.
-              // 로고 줄에는 한국어 sm, 영문 md부터 섭니다(그 아래 폭에서는 로고, 오픈채팅, 언어 토글만으로 줄이 찹니다. 390px에서 한국어가 약 20px 모자랍니다).
-              // 그 아래 폭의 첫 화면에서는 로고 줄 바로 아래의 한 줄에 섭니다.
-              className={`ml-5 hidden min-h-[44px] shrink-0 items-center gap-1.5 whitespace-nowrap text-sm font-medium text-white/70 transition hover:text-white ${backFrom.show}`}
+              className={`ml-5 hidden min-h-[44px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-white/15 bg-white/[0.04] px-4 transition hover:border-white/30 hover:bg-white/[0.08] ${backFrom.show}`}
             >
-              <span aria-hidden className="text-white/60">←</span>
-              <span lang={locale === "en" ? "en" : undefined}>
+              <span aria-hidden className="text-sm text-white/60">←</span>
+              <span lang={locale === "en" ? "en" : undefined} className="gradient-text bg-gradient-to-r from-naru-logo-from to-naru-logo-to bg-clip-text pb-[0.08em] text-lg font-black tracking-[-0.02em] text-transparent">
                 {decemberEventLabel(locale)}
               </span>
             </Link>
@@ -679,8 +675,7 @@ export default function JourneyNav({
               {/* DECIDED 2026-10-08 (사용자: "오픈채팅 - 열어줘", 390px 스크린숏 확인): 링크를 되살리니 폰에서 로고의
                   오른쪽 끝과 이 알약의 왼쪽 끝이 0px로 붙었습니다. 퀴즈 칩이 없는 헤더(나루 홈)의 420px 아래에서는
                   글자를 화면에서만 내리고 아이콘만 둡니다. 이름은 aria-label이 그대로 읽습니다. */}
-              {/* 2026-10-11 (리뷰 브리프 3단계 D6): 나루 계열의 영문 표기는 "Open chat"입니다(8월 페이지의 "Open Chat"은 그대로). */}
-              <span className={showQuiz ? undefined : "max-[419px]:sr-only"}>{naru ? t({ ko: "오픈채팅", en: "Open chat" }) : t(dict.nav.openChat)}</span>
+              <span className={showQuiz ? undefined : "max-[419px]:sr-only"}>{t(dict.nav.openChat)}</span>
             </a>
           )}
           {/* DECIDED 2026-08-22 (마감 후 청산): 스크롤로 나타나던 등록 필을
@@ -755,15 +750,6 @@ export default function JourneyNav({
 
           `scroll-padding-top` in globals.css accounts for the extra height on
           this breakpoint, so an anchor jump doesn't park a heading underneath. */}
-      {/* /naru의 돌아가기, 좁은 폭의 첫 화면(스크롤 전). 스크롤하면 아래 목차 줄의 마지막 칸이 같은 일을 합니다. */}
-      {naru && back && !scrolled && (
-        <div className={`-mt-1 pb-1 ${backFrom.hide}`} style={{ paddingLeft: "calc(env(safe-area-inset-left, 0px) + var(--nav-gutter))" }}>
-          <Link href={back.href} aria-label={t(back.label)} className="inline-flex min-h-[44px] items-center gap-1 whitespace-nowrap text-xs font-medium text-white/70 transition hover:text-white">
-            <span aria-hidden className="text-white/60">←</span>
-            <span lang={locale === "en" ? "en" : undefined}>{decemberEventLabel(locale)}</span>
-          </Link>
-        </div>
-      )}
       {scrolled && (
         // nav 랜드마크입니다 (2026-09-19, 접근성 감사 4). 전에는 </nav> 뒤의
         // 그냥 <div>였습니다. 그래서 폰에서 navigation 랜드마크 안에는 로고와
@@ -900,10 +886,9 @@ export default function JourneyNav({
               <Link
                 href={back.href}
                 aria-label={t(back.label)}
-                // 2026-10-11 (D3): 목차 줄의 것도 보통 글자입니다. 로고 줄이 접히는 폭(lg 아래)에서만 그립니다.
-                className="inline-flex min-h-[44px] shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-full border border-white/[0.12] bg-white/[0.06] px-2.5 text-[0.75rem] font-semibold text-white/75 backdrop-blur transition active:scale-[0.97] lg:hidden"
+                className={`inline-flex min-h-[44px] shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-full border border-white/[0.12] bg-white/[0.06] px-2.5 backdrop-blur transition active:scale-[0.97] ${backFrom.hide}`}
               >
-                <span lang={locale === "en" ? "en" : undefined}>
+                <span lang={locale === "en" ? "en" : undefined} className="gradient-text bg-gradient-to-r from-naru-logo-from to-naru-logo-to bg-clip-text pb-[0.08em] text-[0.8rem] font-black tracking-[-0.02em] text-transparent">
                   {decemberEventLabel(locale)}
                 </span>
                 <span aria-hidden className="text-[0.7rem] text-white/60">→</span>
