@@ -1658,7 +1658,9 @@ export const naru = {
     //
     // "공간"과 "장소"를 섞지 마세요. 장소(어디인가)는 여전히 미정이고 아래 tbd에
     // 있습니다. 여기서 말하는 것은 운영 방식입니다.
-    factsLabel: { ko: "이렇게 굴립니다", en: "How it runs" },
+    // DECIDED 2026-10-11 (사용자: "이렇게 굴립니다가 이상함", 기존 해커톤과 다른 경험을 큐레이션한다는 느낌으로): 제목을 바꿨습니다.
+    // 아래 줄들은 운영 메모가 아니라 기존 해커톤과 다르게 설계한 점들입니다.
+    factsLabel: { ko: "기존 해커톤과 다른 경험을 큐레이션합니다", en: "A different experience from the usual hackathon, curated" },
     // DECIDED 2026-10-10 (사용자, 스크린숏: "내용이 너무 많아, 정보가 너무 많음"): 여섯 줄에서 셋으로 줄였습니다.
     // 뺀 셋은 같은 화면에 이미 있는 말입니다. "참가비와 장소"는 바로 아래 등록 안내 문장(ctaNote)과 같은 문장이고,
     // "제출"은 위 일정표의 Day 1, Day 3 마일스톤 줄에 있고, "보상"은 일정표의 마일스톤 줄과 "그 밖에 바꾼 것" 첫 줄에 있습니다.
@@ -1668,6 +1670,13 @@ export const naru = {
     // 1위에게 주는 것보다 나누는 쪽이 더 좋은 결과물, 12월은 그 가설의 검증). "기록" 줄(일지 10분, 체류 시간)은 "마일스톤"과 "가설" 두 줄이 됐습니다.
     // 가설 줄은 약속이 아니라 가설이라고 씁니다. 금액과 지급 방식은 정해지지 않아 쓰지 않습니다.
     facts: [
+      {
+        // DECIDED 2026-10-11 (사용자): 팀 구성을 여기서 말합니다. 모든 팀에 싱가포르에서 공부하는 학생 몇 명과 다른 학교 학생이
+        // 한 명씩 섞입니다. 나라나 학교별 대항전 같은 느낌을 주려는 것이 아닙니다. 인원수는 정해지지 않아 "몇 명"이라고만 씁니다.
+        // "유학생"은 쓰지 않습니다(2026-09-29). 팀을 Day 1 현장에서 맺는다는 것은 위 scheduleLead가 말합니다.
+        k: { ko: "팀 구성", en: "Teams" },
+        v: { ko: "모든 팀에 싱가포르에서 공부하는 학생 몇 명과, 서로 다른 학교의 학생이 한 명씩 섞입니다. 나라나 학교끼리 겨루는 대항전이 아닙니다.", en: "Every team mixes a few students studying in Singapore with one student each from different schools. It is not a contest between countries or schools." },
+      },
       {
         k: { ko: "세션", en: "Sessions" },
         v: { ko: "닷새 가운데 어느 3시간만 떼어 와도, 그 하나만으로 훌륭한 이벤트가 되게 만듭니다.", en: "Take any three hours out of the five days, and that alone should stand as a good event." },
@@ -1838,8 +1847,9 @@ export const naru = {
       body: {
         // DECIDED 2026-10-11 (사용자, 폰 스크린숏: "내용이 too much, 표현이 vague"): 세 문장을 둘로 줄였습니다. 누가 어디로 가서
         // 누구에게 무엇을 하는지만 남깁니다. "출제사의 일정이 되면"은 바로 위 when 줄이 말합니다.
-        ko: "팀을 나눠 이슈를 낸 기업의 일터로 가서, 실무자에게 내 생각을 말하고 의견을 듣습니다. 예약 멘토링에 더해지는 방문입니다.",
-        en: "Teams split up, visit the company behind the issue, tell the people doing the work what they think, and hear them out. It comes on top of booked mentoring.",
+        // 2026-10-11 (사용자: "그룹의 생각임", "예약 없이 그냥 멘토가 그 공간에 있는 거임"): 내 생각을 팀의 생각으로, 예약 멘토링이라는 말을 뺐습니다.
+        ko: "팀을 나눠 이슈를 낸 기업의 일터로 가서, 실무자에게 팀의 생각을 말하고 의견을 듣습니다. 공간에서 하는 멘토링에 더해지는 방문입니다.",
+        en: "Teams split up, visit the company behind the issue, tell the people doing the work what the team thinks, and hear them out. It comes on top of the mentoring in the space.",
       },
     },
     // 노선도 아래 둘째 필. 첫째 필(mentoringHeading)과 같은 문법입니다.
@@ -1848,13 +1858,16 @@ export const naru = {
     // 오지 않습니다", "들은 이야기로 아이디어를 다듬어 코드로 옮깁니다", 8월 슬롯 이야기를 뺐고, 무엇을 들고 누가 먼저 가는지만
     // 남깁니다(2026-10-10 마일스톤 브리프 2.5의 원칙은 그대로). 규칙의 "질문 대신 내 생각 한 장"이 이 문장으로 올라와 규칙은 둘입니다.
     mentoringLead: {
-      ko: "질문 목록 대신, 이슈에 대한 내 생각 한 장을 들고 먼저 찾아갑니다.",
-      en: "You go first, with one page of your own thinking on the issue instead of a list of questions.",
+      // DECIDED 2026-10-11 (사용자: "그룹의 생각임"): 들고 가는 한 장은 개인의 것이 아니라 팀의 것입니다.
+      ko: "질문 목록 대신, 이슈에 대한 팀의 생각 한 장을 들고 먼저 찾아갑니다.",
+      en: "Your team goes first, with one page of its own thinking on the issue instead of a list of questions.",
     },
     // DECIDED 2026-10-10 (사용자: "정보가 너무 많음"): 다섯 줄을 셋으로 묶었습니다. 2026-10-11에 둘로(위 mentoringLead 주석).
     // Day 4에는 멘토링 자체가 없습니다(2026-09-20, PDF 02·04).
     mentoringRules: [
-      { ko: "예약제 30분, 횟수 제한 없음", en: "Booked 30-minute slots, as many as you need" },
+      // DECIDED 2026-10-11 (사용자: "예약 없이 그냥 멘토가 그 공간에 있는 거임"): "예약제 30분, 횟수 제한 없음"이었습니다.
+      // 예약도 슬롯도 없습니다. 멘토가 같은 공간에 있고, 팀이 찾아갑니다.
+      { ko: "예약 없이, 멘토가 같은 공간에 있습니다", en: "No booking. The mentors are in the same space" },
       { ko: "Day 3은 피칭 준비, Day 4는 멘토링 없음", en: "Day 3 is pitch prep, Day 4 has no mentoring" },
     ] as Phrase[],
 
@@ -2062,7 +2075,7 @@ export const naru = {
         // 2026-09-20 (PDF 02): "정의서와 결과물"이었습니다. 제출물 이름이 바뀌었고
         // 이 칸은 화면에 그려지는 둘 중 하나라(shape[0]과 shape[3]) 그대로 두면
         // 바로 아래 표와 다른 말을 합니다.
-        note: { ko: "내 생각 1장과 덱 등 사전 제출물", en: "One page of your own take, then the deck and what goes with it" },
+        note: { ko: "팀의 생각 1장과 덱 등 사전 제출물", en: "One page of the team's take, then the deck and what goes with it" },
       },
       {
         value: { ko: "무순위", en: "No ranking" },
@@ -2073,7 +2086,7 @@ export const naru = {
         // 2026-09-20 (PDF 02): "상시 / 예약제, 횟수 제한 없음"이었습니다.
         value: { ko: "3일", en: "3 days" },
         label: { ko: "멘토링", en: "Mentoring" },
-        note: { ko: "Day 1부터 Day 3까지, 예약제", en: "Day 1 to Day 3, by booking" },
+        note: { ko: "Day 1부터 Day 3까지, 예약 없이", en: "Day 1 to Day 3, no booking" },
       },
     ] as Stat[],
     // 스테이지 다섯. 날짜 대신 순서입니다(위 주석 참고).
@@ -2144,8 +2157,9 @@ export const naru = {
         // Day 1, Day 3의 마일스톤은 기존 submit과 같은 물건입니다. Day 2는 제출이 아니라 멘토와 현업의 확인,
         // Day 4는 완주입니다. 그래서 "제출은 두 번뿐"(facts)은 그대로 참입니다. 하나를 바꾸면 facts도 보세요.
         // submit은 "이해도 1장"이었고, 마일스톤과 같은 말로 맞췄습니다.
-        submit: { ko: "이슈에 대한 내 생각 1장", en: "One page of your own take on the issue" },
-        milestone: { ko: "이슈에 대한 내 생각 1장", en: "One page of your own take on the issue" },
+        // DECIDED 2026-10-11 (사용자: "그룹의 생각임"): "내 생각 1장"이었습니다. 한 장은 팀이 함께 씁니다.
+        submit: { ko: "이슈에 대한 팀의 생각 1장", en: "One page of the team's take on the issue" },
+        milestone: { ko: "이슈에 대한 팀의 생각 1장", en: "One page of the team's take on the issue" },
         // DECIDED 2026-10-11 (사용자: "마일스톤에 대한 자세한 설명이 클릭하면 보여지도록"): 마일스톤 띠를 누르면 열리는 설명.
         // 새 사실은 없습니다. 같은 날의 body, 멘토링 상자, 2026-10-10 마일스톤 브리프에 있던 말입니다.
         milestoneDetail: {
