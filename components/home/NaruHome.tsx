@@ -975,7 +975,9 @@ export default function NaruHome() {
             페이지의 그라데이션 필은 히어로 하나뿐입니다. */}
         {/* 문의 줄과 버튼 줄은 한 덩어리입니다(가독성 브리프 4.1). 폰에서는 세로로 쌓습니다.
             DECIDED 2026-09-30 (사용자): 이 덩어리는 가운데. 글이 가운데면 버튼도 가운데(2026-09-29). */}
-        <div className={`${READ} mt-8 text-balance text-center lg:mt-12`}>
+        {/* DECIDED 2026-10-11 (리뷰 A2): 목차의 "참가" 칩이 내려앉는 자리입니다. 착지 여백은 JourneyNav가 헤더 실높이로 넣는
+            scroll-padding-top이 맡습니다(scroll-margin을 따로 더하면 두 값이 합쳐집니다, NaruPage의 2026-09-19 주석). */}
+        <div id="register" className={`${READ} mt-8 text-balance text-center lg:mt-12`}>
         <p id="december-register-note" className={`text-balance break-keep text-center ${BODY} text-white/70`}>
           {regState === "closed" ? t(registerCopy.closed) : t(naru.december.ctaNote)}
         </p>

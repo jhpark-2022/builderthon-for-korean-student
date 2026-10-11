@@ -360,10 +360,13 @@ export default function JourneyNav({
       // focus-within pins it open: a keyboard user tabbing into the nav must not
       // have it slide away under them. `lg:!translate-y-0` keeps the desktop bar
       // fixed in place no matter what the scroll signal says.
+      // DECIDED 2026-10-11 (리뷰 A1): 나루 계열 헤더(홈, /naru)는 focus-within이 아니라 :has(:focus-visible)에 반응합니다.
+      // 폰에서 접힌 헤더(-52px)의 칩을 탭하면 탭 순간 포커스가 들어와 헤더가 내려오고, 손가락 아래의 칩이 사라져 첫 탭이
+      // 빈 헤더에 떨어졌습니다(같은 자리의 둘째 탭은 오픈채팅). 키보드 포커스에만 펼칩니다. 8월 페이지는 그대로.
       // --nav-gutter: 아래 <nav>가 인라인 style로 safe-area를 더해야 해서
       // px-6 / sm:px-10을 변수로 옮겼습니다. 여기서 인라인 style을 쓰면 sm 분기가
       // 죽으므로(인라인이 클래스를 이깁니다) 클래스로만 정의합니다.
-      className={`fixed inset-x-0 top-0 z-50 [--nav-gutter:1.5rem] focus-within:translate-y-0 sm:[--nav-gutter:2.5rem] lg:!translate-y-0 ${
+      className={`fixed inset-x-0 top-0 z-50 [--nav-gutter:1.5rem] ${naru ? "[&:has(:focus-visible)]:translate-y-0" : "focus-within:translate-y-0"} sm:[--nav-gutter:2.5rem] lg:!translate-y-0 ${
         reduce ? "" : "transition-all duration-300 lg:duration-500"
       // DECIDED 2026-08-23 (박주형): /85 → /95. 스크롤하면 헤더 뒤로 본문이 -
       // 특히 파트너 로고 월이 - 비쳐 보였습니다. 15%가 통과하고 있었어요.

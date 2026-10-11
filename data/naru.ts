@@ -255,7 +255,9 @@ export const naruNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel
     railLines: { ko: "크로싱 서울", en: "CROSSING\nSEOUL" },
   },
   { id: "december", label: { ko: "프로그램", en: "Programme" } },
-  { id: "gains", label: { ko: "참가", en: "Taking part" } },
+  // DECIDED 2026-10-11 (리뷰 A2): "참가"는 혜택 챕터(#gains)가 아니라 등록 블록(#register)으로 갑니다. #gains로 뛰면 바로 위의
+  // 등록 버튼 셋이 헤더 뒤로 사라졌습니다. 혜택 챕터에는 칩이 없습니다(#gains 주소는 그대로 살아 있습니다).
+  { id: "register", label: { ko: "참가", en: "Taking part" } },
   { id: "naru", label: { ko: "나루", en: "NARU" } },
 ];
 
