@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-11 리뷰 2단계와 3단계: 위계와 순서, /naru와 카피](#2026-10-11-review-stage23)
 - [2026-10-11 남는 것 판: 라벨을 바꾸고 8월 숫자 한 줄을 뺀다](#2026-10-11-gains-tag)
 - [2026-10-11 리뷰 1단계: 폰의 고장 다섯(A1~A5)과 작은 것들](#2026-10-11-review-stage1)
 - [2026-10-11 맨 위 화면의 로고는 하나만 (되돌림)](#2026-10-11-one-logo-at-top)
@@ -207,6 +208,26 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-11-review-stage23"></a>
+## 2026-10-11 리뷰 2단계와 3단계: 위계와 순서, /naru와 카피
+- 범위: components/home/NaruHome.tsx(화면을 다시 짬), components/naru/NaruPage.tsx, components/home/shared.tsx, components/journey/JourneyNav.tsx,
+  components/shared/RouteMap.tsx, components/shared/MobileChatBar.tsx, components/ui/typography.ts, data/naru.ts
+- 한 것: 사용자 지시("남은 단계들 다 실행")로 리뷰 브리프 2단계와 3단계. 결정 D-a~D-f는 기본값.
+  홈: SUBTITLE 단계와 칩, 버튼, 카드 토큰. 히어로는 글만(굵은 줄은 "무엇", 버튼 하나와 글자 링크, 사실 한 줄, 카운트다운 한 줄),
+  사진은 한 장이 둘째 챕터로. 일정 문단이 노선도 위로, 세션 세 줄 노출, 마일스톤은 펼친 행. 남는 것(판 하나) 뒤에 등록, 01~05 카드와
+  숫자 줄은 그리지 않음. 나루 티저 축소. 글 블록은 sm부터 왼쪽 끝 하나, 폰은 가운데(2026-10-11 오전의 "모든 폭에서 가운데"를 대신함).
+  /naru: 어떻게 일하는가가 둘째 화면의 TITLE, 주는 것은 폰에서도, 지키는 것은 펼침. 히어로 버튼은 함께하기, 돌아가기는 보통 글자.
+  카피: 나루 설명 정본 한 문장(NARU_DEF)을 네 자리가 같이 씀, 성과 공유회로 통일, 영문 CROSSING SEOUL, programme, Open chat.
+- 브리프와 다른 것: 사진 옆의 "74명, 21팀" 문장은 같은 날 사용자가 빼라고 해서 그리지 않음. 홈 히어로는 READ가 아니라 왼쪽 단에 섬
+  (오른쪽을 비우라는 2.2를 따름). /naru의 세 층 도식은 그림이라 가운데 그대로. 브리프의 커밋 여섯(2단계)을 하나로 묶음.
+- 검증: 타입 검사와 npm run build 통과. axe 위반 0, h1 각 1개, 레벨 건너뜀 0. 홈 1440에서 5,363px, 390에서 5,204px. /naru 390 히어로 아래 틈 126px.
+  홈 본문의 "나루" 4회, 슬로건 0회. 영문 Crossing Seoul 0, program 0, Open Chat 0. 배경 덮개 경고 0(1440, 1000, 390).
+  /quiz와 /match 픽셀 차이 0, /2026-08은 렌더된 DOM과 헤더 치수 동일.
+- 못 맞춘 것: 1440에서 TITLE과 SUBTITLE이 한 화면에 드는 자리가 페이지마다 하나(글자 크기 넷). 폰의 노선도는 1,577px(1.9화면)에서 시작.
+  서울 형상이 "남는 것" 뒤에서 완성되는지는 눈으로 보지 않음. main에는 올리지 않았고 사용자 확인 뒤에 올림.
+- 브리프: docs/site-review-brief.md (근거 docs/review-2026-10-11.md)
+- 커밋: 2569860, b90926e, 547f245, 03be779
 
 <a id="2026-10-11-gains-tag"></a>
 ## 2026-10-11 남는 것 판: 라벨을 바꾸고 8월 숫자 한 줄을 뺀다
