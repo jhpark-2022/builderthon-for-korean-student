@@ -143,9 +143,7 @@ export const naruLinks = {
 // 무엇을 언제 받는지를 말하게 합니다. 막연한 구독이 아니라 날짜가 있는 약속이
 // 되어야, 미정 목록(december.tbd)과 이어집니다.
 export const openChatLabels = {
-  // DECIDED 2026-10-11 (리뷰 브리프 2.2, C6, D6): "등록이 열리면 가장 먼저 알기"에서 바꿨습니다. 어디로 가는지(오픈채팅)를 이름이 말합니다.
-  // 영문은 "Know the day registration opens"가 1440px의 버튼 상자를 넘쳐 "Get notified first".
-  december: { ko: "오픈채팅에서 알림 받기", en: "Get notified first" },
+  december: { ko: "등록이 열리면 가장 먼저 알기", en: "Know the day registration opens" },
   join: { ko: "오픈채팅에서 소식 받기", en: "Get news in the open chat" },
   footer: { ko: "오픈채팅", en: "Open chat" },
 } as const;
@@ -365,8 +363,6 @@ export const naru = {
   // 그룹의 글은 /naru에 있고, 홈에는 누가 여는지 한 상자만 남습니다. 문장 둘은 브리프의 것 그대로입니다.
   teaser: {
     eyebrow: { ko: "여는 사람들", en: "Who runs this" },
-    // DECIDED 2026-10-11 (리뷰 브리프 2.6, B4): 슬로건 두 줄 대신 서는 한 줄. 슬로건은 /naru에만 있습니다.
-    title: { ko: "크로싱 서울을 여는 그룹, 나루", en: "NARU, the group that runs CROSSING SEOUL" },
     body: {
       // DECIDED 2026-10-10 (사용자, 스크린숏: "이번이 처음이라는 표현 빼주고"): 둘째 문장은 어디서 시작했는지만 말합니다.
       // 브리프의 "이번이 두 번째 자리입니다"는 프로그램 리드(december.notSequel, "나루가 직접 여는 첫 이벤트입니다")와
@@ -451,16 +447,6 @@ export const naru = {
     // DECIDED 2026-10-10 (구조 브리프 2.4): 위 문장 안의 이 낱말이 /naru로 가는 링크입니다(밑줄 없이 색만).
     // naruLine의 문자열에 그대로 들어 있어야 합니다. 없으면 링크 없이 문장만 그립니다.
     naruLineTerm: { ko: "나루", en: "NARU" },
-    // DECIDED 2026-10-11 (리뷰 브리프 2.2, C4): 버튼 아래의 한 줄. 참가를 정하는 데 필요한 사실 셋입니다.
-    facts: {
-      ko: "전공, 코딩 경험 무관. 참가비와 장소는 오픈채팅에서. 등록 오픈 11월.",
-      en: "Any major, no coding experience needed. Fee and venue in the open chat. Registration opens in November.",
-    },
-    // DECIDED 2026-10-11 (리뷰 브리프 2.2, B2, 결정 D-a): 두 시간대의 숫자 판 대신 한 줄. {date}와 {n}은 naruDates가 셉니다.
-    // TODO: 등록 오픈일이 정해지면 그 날짜까지로 셉니다.
-    countdownLine: { ko: "{date}까지 {n}일", en: "{n} days until {date}" },
-    // DECIDED 2026-10-11 (리뷰 브리프 2.2, B7, 결정 D-b): 사진은 한 장만 "이슈에서 증명까지, 닷새" 챕터에 섭니다. 그 사진의 캡션.
-    pastCaption: { ko: "지난 회차, 제로백 빌더톤 2026.08 싱가포르", en: "Last time, the Zero100 builderthon, Aug 2026, Singapore" },
     // 사진 넷 아래 한 줄(감사 반영 브리프 1.3). 캡션이 없으면 12월 사진으로 읽힙니다.
     photosCaption: { ko: "제로백 빌더톤 2026.08 싱가포르", en: "Zero100 builderthon Aug 2026, Singapore" },
     // 사진을 누르면 크게 열립니다(2026-10-11). 칸의 툴팁과, 열린 화면의 버튼 셋의 이름입니다.
@@ -1703,19 +1689,7 @@ export const naru = {
     // 있습니다. 여기서 말하는 것은 운영 방식입니다.
     // DECIDED 2026-10-11 (사용자: "이렇게 굴립니다가 이상함", 기존 해커톤과 다른 경험을 큐레이션한다는 느낌으로): 제목을 바꿨습니다.
     // 아래 줄들은 운영 메모가 아니라 기존 해커톤과 다르게 설계한 점들입니다.
-    // DECIDED 2026-10-11 (리뷰 브리프 2.5, C3): 제목은 "기존 해커톤과 다른 점". 그 전: "기존 해커톤과 다른 경험을 큐레이션합니다".
-    // 다섯 행 중 화면에 그리는 것은 마일스톤과 가설 둘입니다(NaruHome이 고릅니다). 팀 구성은 일정 문단이,
-    // 세션은 노선도 아래의 세 줄이 말하고, 공간은 운영 정보입니다. 다섯 행의 키는 그대로 둡니다.
-    factsLabel: { ko: "기존 해커톤과 다른 점", en: "How it differs from the usual hackathon" },
-    // DECIDED 2026-10-11 (리뷰 브리프 2.3): 노선도 머리의 한 줄. "5일 / 무순위" 숫자 줄을 대신합니다.
-    routeNote: { ko: "5일, 실질 4일 + Day 0. 순위 대신 부문별 시상.", en: "Five days: four working days plus Day 0. Awards by category, not by rank." },
-    // DECIDED 2026-10-11 (리뷰 브리프 2.3, C1): 노선도 바로 아래, 누르지 않아도 보이는 세션 세 줄. 폰에서는 세션이 날짜 카드 안에만
-    // 있어 세 번 눌러야 했습니다. 이름은 두 로케일 모두 영어입니다.
-    sessionsLead: [
-      { dayOffset: 1, name: "Sharing session", note: { ko: "이슈를 낸 기업(출제사)이 직접", en: "run by the company that set the issue" } },
-      { dayOffset: 2, name: "PO session", note: { ko: "현업 PO의 3시간", en: "three hours with a working PO" } },
-      { dayOffset: 3, name: "Founders from abroad", note: { ko: "한국에 자리 잡은 해외 창업가의 3시간", en: "three hours with founders from abroad who built in Korea" } },
-    ] as { dayOffset: number; name: string; note: Phrase }[],
+    factsLabel: { ko: "기존 해커톤과 다른 경험을 큐레이션합니다", en: "A different experience from the usual hackathon, curated" },
     // DECIDED 2026-10-10 (사용자, 스크린숏: "내용이 너무 많아, 정보가 너무 많음"): 여섯 줄에서 셋으로 줄였습니다.
     // 뺀 셋은 같은 화면에 이미 있는 말입니다. "참가비와 장소"는 바로 아래 등록 안내 문장(ctaNote)과 같은 문장이고,
     // "제출"은 위 일정표의 Day 1, Day 3 마일스톤 줄에 있고, "보상"은 일정표의 마일스톤 줄과 "그 밖에 바꾼 것" 첫 줄에 있습니다.
@@ -1742,8 +1716,7 @@ export const naru = {
       },
       {
         k: { ko: "마일스톤", en: "Milestones" },
-        // TODO (리뷰 브리프 2.5, 결정 D-f): 지원의 실체가 정해지면 괄호를 그 이름으로 바꿉니다. 지금은 정해진 것이 없습니다.
-        v: { ko: "날마다 하나씩 있습니다. 넘은 팀은 모두 그날의 지원(내용은 등록 때 공개)을 받고, 넘은 마일스톤이 그 팀의 기록으로 남습니다.", en: "One a day. Every team that clears it gets that day's support (details announced at registration), and the milestones a team clears become its record." },
+        v: { ko: "날마다 하나씩 있습니다. 넘은 팀은 모두 그날 지원을 받고, 넘은 마일스톤이 그 팀의 기록으로 남습니다.", en: "One a day. Every team that clears it gets support that day, and the milestones a team clears become its record." },
       },
       {
         k: { ko: "가설", en: "Our hypothesis" },
@@ -1838,9 +1811,8 @@ export const naru = {
       // 2026-09-19 (사용자): 첫 문장이 바로 아래 BEFORE 카드와 같은 말이었습니다
       // ("데이터를 먼저 공개합니다. 어느 트랙에서 풀지 고르고 옵니다"). 한 화면에서
       // 데이터가 네 번, 트랙이 네 번 나왔어요. 카드가 말하는 것은 리드가 말하지 않습니다.
-      // DECIDED 2026-10-11 (리뷰 브리프 2.3, C5): 팀 구성 행을 이 문단이 흡수했고, 스테이지의 영어 이름을 한 번 짝지어 둡니다.
-      ko: "등록은 모두 혼자 합니다. 팀은 Day 1 현장에서, 싱가포르에서 공부하는 학생과 다른 학교 학생이 섞여 맺습니다. 문제 발견(Discovery)에서 성과 공유회(Showcase)까지 하루에 한 스테이지씩 넘어갑니다.",
-      en: "Everyone registers alone. Teams are formed on site on Day 1, mixing students studying in Singapore with students from other schools. Then one stage a day, from Discovery to the Showcase.",
+      ko: "등록은 모두 혼자 합니다. 팀은 Day 1 현장에서 전원이 함께 맺습니다. Discovery에서 Showcase까지 하루에 한 스테이지씩 넘어갑니다.",
+      en: "Everyone registers alone. Teams are formed on site on Day 1, for all participants. Then one stage a day from Discovery to Showcase.",
     },
     // 2026-09-20 (크로싱서울_일정.pdf): 라벨이 "워크샵"에서 "세션"으로. PDF가 부르는
     // 이름이고, stages의 필드 이름(workshop -> session)과 같은 말을 씁니다.
@@ -1925,8 +1897,7 @@ export const naru = {
       // DECIDED 2026-10-11 (사용자: "예약 없이 그냥 멘토가 그 공간에 있는 거임"): "예약제 30분, 횟수 제한 없음"이었습니다.
       // 예약도 슬롯도 없습니다. 멘토가 같은 공간에 있고, 팀이 찾아갑니다.
       { ko: "예약 없이, 멘토가 같은 공간에 있습니다", en: "No booking. The mentors are in the same space" },
-      // 2026-10-11 (리뷰 브리프 2.3): 마지막 날의 이름은 "성과 공유회" 하나입니다. 그 전: "Day 3은 피칭 준비".
-      { ko: "Day 3은 성과 공유회 준비, Day 4는 멘토링 없음", en: "Day 3 is showcase prep, Day 4 has no mentoring" },
+      { ko: "Day 3은 피칭 준비, Day 4는 멘토링 없음", en: "Day 3 is pitch prep, Day 4 has no mentoring" },
     ] as Phrase[],
 
     // ── 제목이 포지션을 말합니다 (DECIDED 2026-09-15) ──────────────────────
@@ -1934,14 +1905,12 @@ export const naru = {
     // 챕터가 가장 큰 글씨로 "언제"를 말하는데, 이 이벤트에서 설명이 필요한 것은
     // 언제가 아니라 무엇입니다. 날짜는 아래 한 줄로 내려갔습니다.
     heading: {
-      // DECIDED 2026-10-11 (리뷰 브리프 2.2, B5): 히어로의 둘째 굵은 줄은 "무엇"을 말합니다.
-      // 그 전: "국경과 상관없이, 한인 학생 빌더가 만나는 자리." / "Korean student builders meet here, wherever they study."
-      ko: "한인 학생 빌더가 팀으로 기업의 이슈를 푸는 닷새.",
+      ko: "국경과 상관없이, 한인 학생 빌더가 만나는 자리.",
       // 브리프의 초안은 "Where Korean student builders meet, whichever country
       // they study in."이었는데 375px에서 다섯 줄이 됐습니다(실측). 뜻을 유지한
       // 채 줄였습니다. "Korean"은 빼지 않습니다. 국경을 여는 것이지 한인이라는
       // 범위를 여는 것이 아닙니다.
-      en: "Five days where Korean student builders take on a company's issue, as teams.",
+      en: "Korean student builders meet here, wherever they study.",
     },
     // 8월을 아는 사람은 이 자리에서 "2회차인가"를 묻습니다. 그 답을 **부정 없이**
     // 합니다(DECIDED 2026-09-19, 사용자). 전에는 "제로백 빌더톤의 속편은 아니고"로
@@ -2245,9 +2214,8 @@ export const naru = {
         session: {
           title: { ko: "PO session", en: "PO session" },
           body: {
-            // 2026-10-11 (리뷰 브리프 2.3, D5): 끝의 경구("만드는 건 AI가 빨라도, 고르는 건 사람입니다")를 뺐습니다.
-            ko: "현업 PO가 무엇을 왜 만들기로 했는지 푸는 3시간.",
-            en: "Three hours with a working PO on what they chose to build, and why.",
+            ko: "현업 PO가 무엇을 왜 만들기로 했는지 푸는 3시간. 만드는 건 AI가 빨라도, 고르는 건 사람입니다",
+            en: "Three hours with a working PO on what they chose to build, and why. AI builds fast. Choosing is still yours.",
           },
         },
         milestone: { ko: "현업에게 확인받은 문제 정의", en: "A problem definition checked with the people who do the work" },
@@ -2262,7 +2230,7 @@ export const naru = {
         when: { ko: "Day 3", en: "Day 3" },
         dayOffset: 3,
         body: {
-          ko: "정의한 지표로 결과를 확인하고, 틀리는 경우를 직접 찾아 한계로 정리합니다. 성과 공유회 연습을 팀끼리 서로 보여주고 의견을 주고받습니다.",
+          ko: "정의한 지표로 결과를 확인하고, 틀리는 경우를 직접 찾아 한계로 정리합니다. 피칭 연습을 팀끼리 서로 보여주고 의견을 주고받습니다.",
           en: "You check the result against the measure you set, hunt for the cases where it fails, and write those down as limits. Teams show each other their pitch and trade notes.",
         },
         // 8월에 없었던 자리라는 것이 이 날의 요점입니다(PDF 04, gaps[2]와 같은 사실).
@@ -2306,9 +2274,8 @@ export const naru = {
         // 그 전의 "이어가는 것은 각자의 몫"은 record.gaps[1](충분히 말하지 않은 것은 주최 측의 몫)과 방향이 어긋났습니다.
         // record.gaps[1].answer, #after의 steps와 같은 사실입니다. 하나를 바꾸면 셋을 같이 보세요.
         line: {
-          // 2026-10-11 (리뷰 브리프 2.3, D5). 그 전: "클로징은 끝난 뒤에 할 일로 끝납니다. 말로 하고, 글로도 남겨 드립니다."
-          ko: "클로징에서는 끝난 뒤 할 일을 정리합니다. 말로 전하고 글로도 남깁니다.",
-          en: "The closing sets out what to do once it is over. We say it, and you get it in writing too.",
+          ko: "클로징은 끝난 뒤에 할 일로 끝납니다. 말로 하고, 글로도 남겨 드립니다.",
+          en: "The closing ends on what to do once it is over. We say it, and you get it in writing too.",
         },
         // DECIDED 2026-10-10 (중복 브리프 B1): 칩 "멘토링 없음"을 뺐습니다(위 Day 3과 같은 이유).
         chips: [{ ko: "시상과 클로징", en: "Awards and closing" }],

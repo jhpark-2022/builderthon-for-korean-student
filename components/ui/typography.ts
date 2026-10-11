@@ -35,26 +35,6 @@ export const TITLE = "text-[clamp(2rem,5.5vw,3.75rem)]";
 export const BODY = "text-sm sm:text-base";
 /** 라벨과 캡션. 알약 라벨(components/ui/Eyebrow.tsx)과 같은 값입니다. */
 export const META = "text-xs";
-/**
- * DECIDED 2026-10-11 (리뷰 브리프 2.1): 소제목 단계. 폰 22px, sm부터 28px, 굵게. TITLE이 없는 화면의 소제목에만 씁니다.
- * 한 화면에 TITLE이 있으면 쓰지 않습니다(한 화면에 글자 크기 셋, 2026-10-07 규칙은 그대로). TITLE은 h1과 챕터 제목(h2)에만 남깁니다.
- */
-export const SUBTITLE = "text-[22px] sm:text-[28px] leading-[1.25] font-bold";
-
-// DECIDED 2026-10-11 (리뷰 브리프 2.8): 홈과 /naru의 칩 둘, 버튼 하나, 카드 하나. 높이와 여백이 네 가지씩이던 것을 이 값으로 맞춥니다.
-// 8월 페이지가 쓰는 components/ui/Button.tsx와 Eyebrow.tsx는 그대로 두고, 나루 계열은 이 토큰을 씁니다.
-/** 챕터 머리의 알약 라벨. */
-export const CHIP_EYEBROW = "inline-flex h-8 items-center gap-2 rounded-full border border-accent/40 px-4 text-[13.5px] font-semibold text-accent";
-/** 카드 안의 작은 꼬리표(DAY 1, 체크 칩). */
-export const CHIP_TAG = "inline-flex h-6 items-center gap-1.5 rounded-full border border-accent/40 bg-accent/[0.1] px-3 text-[13.5px] font-semibold";
-/** 버튼 한 종류. 채움이 있는 것은 BTN_PRIMARY 하나뿐입니다. */
-export const BTN = "inline-flex h-14 items-center justify-center gap-2 whitespace-nowrap rounded-full px-8 text-sm font-semibold transition hover:-translate-y-0.5 sm:text-base";
-export const BTN_PRIMARY = `group ${BTN} bg-gradient-to-r from-naru-purple to-naru-plum text-white shadow-[0_8px_40px_rgba(75,58,140,0.55)] hover:shadow-[0_12px_50px_rgba(75,58,140,0.75)]`;
-export const BTN_SECONDARY = `${BTN} border border-white/20 bg-white/5 text-white/85 hover:bg-white/10`;
-/** 글자 링크. 버튼 옆에 서도 누르는 자리는 44px입니다. */
-export const BTN_TEXT = "inline-flex min-h-[44px] items-center gap-1.5 text-sm font-medium text-white/85 underline-offset-4 transition hover:text-white hover:underline sm:text-base";
-/** 카드 한 종류. */
-export const CARD = "rounded-2xl border border-white/10 bg-white/[0.04] p-6";
 
 // ── 아래는 크기가 아니라 역할입니다. 크기는 위 셋에서만 옵니다. ─────────────────────────
 
