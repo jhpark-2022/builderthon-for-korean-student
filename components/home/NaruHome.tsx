@@ -1050,49 +1050,44 @@ export default function NaruHome() {
         <div className={`${READ} text-center`}><Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.gains.eyebrow)}</Eyebrow></div>
         <h2 id="gains-title" className={`${H2} ${READ} text-balance text-center`}><Halo tone="violet">{t(naru.gains.heading)}</Halo></h2>
         {/* 제목 옆의 구체적인 한 줄(가독성 브리프 5, 2026-09-25 사용자 승인). 챕터 머리의 문단. */}
-        <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-center ${BODY} leading-relaxed text-white/85`}>
-          {t(naru.gains.concrete)}
-        </p>
-        {/* DECIDED 2026-09-20 (표현 방식 브리프 3장): 카드 다섯 → 행 다섯.
-            한 행에 36~51자를 담으려고 248×307 카드를 쓰고 있었습니다. 테두리와
-            23px 여백이 글자보다 존재감이 컸습니다. 데스크톱도 모바일과 같은 구조로,
-            번호와 제목이 왼쪽 고정 폭, 설명이 오른쪽. 칸을 나누는 것은 테두리가 아니라
-            헤어라인입니다. 상자는 여기서 하는 일이 없었습니다(2장 규칙).
-
-            번호 알약 상자도 뺐습니다. 번호 다섯 개는 눌리는 것도 기록도 경고도 아닙니다.
-
-            제목 칸이 14rem이고 제목 크기가 1.35rem인 이유: 루트가 18px이라 H3
-            클램프가 1440에서 34.2px까지 올라가고, 그러면 "실명 기업의 진짜 문제"가
-            283px라 어느 칸에도 한 줄로 안 들어갑니다. 1.35rem은 H3 클램프의 아래 끝
-            그대로이고(24.3px), 그 크기에서 가장 긴 제목이 201px입니다. 새 계단을 만든
-            것이 아니라 있는 계단의 한 끝에 고정한 것입니다.
-
-            행 여백이 데스크톱에서도 py-5인 이유: 이 챕터는 md부터 min-h-screen이라
-            1440×900에서 바닥이 900px입니다. py-6이면 안쪽 내용이 705px가 되어 그
-            바닥을 21px 밀어 올립니다. 한 줄 제목 다섯 개에 54px 여백은 필요하지도
-            않았고요.
-
-            item.evidence는 그대로 두고 그리지 않습니다. 8월 숫자는 #record가 갖습니다. */}
-        <Reveal>
-        {/* role="list" (2026-09-19, 접근성 감사 10): Tailwind preflight의
-            list-style:none 때문에 Safari/VoiceOver가 목록 역할을 떼어 냅니다. */}
-        {/* DECIDED 2026-10-11 (사용자, 폰 스크린숏: "내용은 저 정도로 충분, 보여 주는 방식이 이상함"): 폰에서 번호, 제목, 설명이
-            가운데로 세 줄씩 쌓여 번호가 혼자 떠 있었습니다. 폰에서는 번호와 제목을 한 줄에 붙이고 설명을 그 아래에 둡니다
-            (행마다 두 덩어리). 행 여백도 py-5에서 py-4로. 글과 가운데 정렬, 헤어라인은 그대로이고 sm부터는 전과 같은 세 칸입니다. */}
-        <ol role="list" className={`${READ} mt-10 text-center`}>
-          {naru.gains.items.map((item) => (
-            <li
-              key={item.num}
-              className="flex flex-wrap items-baseline justify-center gap-x-2 gap-y-1 border-t border-white/10 py-4 last:border-b"
-            >
-              <span className={`${BODY} font-black tabular-nums text-accent`}>{item.num}</span>
-              <h3 className={ROW_HEADING}>{t(item.title)}</h3>
-              <p className={`w-full break-keep ${BODY} leading-relaxed text-white/70`}>
-                {t(item.body)}
-              </p>
-            </li>
-          ))}
-        </ol>
+        {/* DECIDED 2026-10-11 (사용자, 스크린숏 둘: "이거 말고, 8월에 display 방식 차용해서"): 다섯 행 목록을 8월 페이지 "참가하면 무엇을
+            얻나요?"의 문법으로 바꿨습니다(components/journey/Journey.tsx의 #benefits): 맨 위에 "남기는 단 하나" 판과 ✓ 칩, 그 아래 한 줄,
+            그 아래 번호 카드. 2026-09-20에 카드를 행으로 바꾼 결정은 이 요청으로 되돌립니다.
+            8월과 다른 점: 색은 cyan이 아니라 홈의 accent(보라), 글자 크기는 홈의 셋(TITLE, BODY, META)만, 카드 안은 가운데입니다
+            (같은 날 "뭐는 중간에, 뭐는 left에" 결정). 카드 본문은 불릿이 아니라 한 문장입니다(항목마다 문장이 하나뿐). */}
+        <Reveal className={READ}>
+          <div className="mt-8 rounded-2xl border border-accent/30 bg-accent/[0.08] px-5 py-6 text-center sm:px-7">
+            <p className={`${META} font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.gains.spine.tag)}</p>
+            <p className={`mx-auto mt-2.5 max-w-[34rem] text-balance break-keep ${BODY} font-bold leading-snug text-white`}>{t(naru.gains.spine.heading)}</p>
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+              {naru.gains.spine.tangibles.map((x, i) => (
+                <span key={i} className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-accent/30 bg-accent/[0.1] px-3 py-1 ${META} font-semibold text-white/90`}>
+                  <span aria-hidden className="text-accent">✓</span>
+                  {t(x)}
+                </span>
+              ))}
+            </div>
+          </div>
+          <p className={`${READ_MEASURE_C} mt-5 break-keep text-center ${BODY} leading-relaxed text-white/85`}>
+            {t(naru.gains.concrete)}
+          </p>
+          {/* role="list" (2026-09-19, 접근성 감사 10): Safari/VoiceOver가 list-style:none인 목록의 역할을 떼어 냅니다.
+              다섯 장: lg에서 여섯 칸 격자에 두 칸씩, 넷째를 둘째 칸에서 시작해 아랫줄 둘이 가운데에 섭니다. */}
+          <ol role="list" className="mt-8 grid grid-cols-1 gap-3 text-center sm:grid-cols-2 md:gap-4 lg:grid-cols-6">
+            {naru.gains.items.map((item, i) => (
+              <li
+                key={item.num}
+                className={`flex flex-col items-center rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 sm:py-5 lg:col-span-2 ${i === 3 ? "lg:col-start-2" : ""} ${i === 4 ? "max-lg:sm:col-span-2" : ""}`}
+              >
+                {/* 폰에서는 번호와 제목을 한 줄에 둡니다(카드 다섯이 세로로 쌓여 길어지지 않게). sm부터는 8월처럼 번호가 제목 위. */}
+                <div className="flex items-center justify-center gap-2.5 sm:flex-col sm:gap-3">
+                  <span className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent/15 ${META} font-black tabular-nums text-accent`}>{item.num}</span>
+                  <h3 className={ROW_HEADING}>{t(item.title)}</h3>
+                </div>
+                <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/70`}>{t(item.body)}</p>
+              </li>
+            ))}
+          </ol>
         </Reveal>
         {/* 2026-09-29 (9/28 자문): 결과물의 두 갈래. 창업만이 끝이 아니라는 한 줄(data/naru.ts gains.uses). */}
         {/* DECIDED 2026-09-30 (사용자, 스크린숏): 다섯 행 아래의 두 줄(gains.uses "만든 것은 두 갈래로 쓰입니다…",

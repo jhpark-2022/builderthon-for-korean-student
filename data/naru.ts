@@ -759,6 +759,21 @@ export const naru = {
   gains: {
     eyebrow: { ko: "참가 혜택", en: "What you get" },
     heading: { ko: "오면 무엇이 남는가", en: "What you leave with" },
+    // DECIDED 2026-10-11 (사용자: 8월 페이지의 display 방식을 차용): 다섯 카드 위에 서는 "남기는 단 하나" 판.
+    // 문장은 화면에 이미 있는 말로만 지었습니다: 실명 기업의 이슈(items[0]), 문제를 직접 찾는다(Day 1), 그 기업 앞에서(items[2]).
+    // 칩 셋은 날마다의 마일스톤에서 왔습니다(Day 1 팀의 생각 1장, Day 3 코드로 옮긴 결과물, Day 4 성과 공유회). 수료증은 정해지지 않아 쓰지 않습니다.
+    spine: {
+      tag: { ko: "이 닷새가 남기는 단 하나", en: "The one thing these five days leave you" },
+      heading: {
+        ko: "실명 기업의 이슈에서 문제를 직접 찾고, 그 기업 앞에서 증명해 본 경험.",
+        en: "Finding the problem yourself in a named company's issue, and proving it in front of that company.",
+      },
+      tangibles: [
+        { ko: "팀의 생각 1장", en: "One page of the team's take" },
+        { ko: "코드로 옮긴 결과물", en: "Something built in code" },
+        { ko: "성과 공유회 무대", en: "The showcase stage" },
+      ] as Phrase[],
+    },
     // DECIDED 2026-09-25 (가독성 브리프 5, 사용자 승인): 추상적인 문장 옆의 구체적인 한 줄.
     // 화면에 이미 있는 사실만 씁니다. 출처: 감사 명단 "마지막 날 앞에 선 21팀", items[2].
     concrete: {
