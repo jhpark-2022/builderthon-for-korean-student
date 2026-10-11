@@ -560,7 +560,9 @@ export default function JourneyNav({
                   // on one line. The Korean labels are the longer set and were
                   // breaking apart at the narrow end of `lg` - "참가 대상" split at
                   // its space and the row turned into two ragged lines of syllables.
-                  className={`relative whitespace-nowrap text-sm font-medium transition after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:bg-accent/70 after:transition-transform after:duration-300 hover:text-white hover:after:scale-x-100 focus-visible:after:scale-x-100 ${
+                  // 2026-10-11 (리뷰 작은 것): 나루 계열 헤더의 링크는 누르는 자리를 py-2.5 px-2만큼 키웁니다(높이 23px에서 45px).
+                  // 음수 마진으로 배치는 그대로이고, 밑줄은 글자 폭과 전의 높이에 그대로 섭니다. 8월 페이지는 그대로.
+                  className={`relative whitespace-nowrap text-sm font-medium transition after:absolute ${naru ? "-mx-2 -my-2.5 px-2 py-2.5 after:bottom-[0.375rem] after:left-2 after:w-[calc(100%-1rem)]" : "after:-bottom-1 after:left-0 after:w-full"} after:h-px after:origin-left after:bg-accent/70 after:transition-transform after:duration-300 hover:text-white hover:after:scale-x-100 focus-visible:after:scale-x-100 ${
                     here ? "text-white after:scale-x-100" : "text-white/70 after:scale-x-0"
                   }`}
                 >
@@ -652,7 +654,8 @@ export default function JourneyNav({
               href={links.openChat}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={t(dict.nav.openChatAria)}
+              // 2026-10-11 (리뷰 작은 것): 나루 계열 헤더의 이름은 보이는 글자("오픈채팅")로 시작하고 새 창임을 말합니다(WCAG 2.5.3).
+              aria-label={naru ? t({ ko: "오픈채팅, 카카오톡 새 창", en: "Open chat, KakaoTalk, new window" }) : t(dict.nav.openChatAria)}
               onClick={() => track("openchat_click", { src: "nav" })}
               className={
                 registered
@@ -846,14 +849,15 @@ export default function JourneyNav({
                   // 대가: 레일 총 길이가 늘어 한 화면에 보이는 칩이 줄어듭니다.
                   // 원래부터 가로 스크롤 레일이라 감당하는 쪽을 골랐습니다.
                   // 상단 행의 퀴즈 칩(✦)은 이 레일이 아니라 첫 행에 있어 대상이 아닙니다.
-                  className={`inline-flex min-h-[44px] shrink-0 items-center justify-center whitespace-nowrap rounded-full border text-[0.7rem] font-semibold backdrop-blur transition active:scale-[0.97] ${
+                  // 2026-10-11 (리뷰 작은 것): 나루 계열의 칩 글자는 12.6px에서 13.5px(META)로. 홈의 최소 글자 크기입니다.
+                  className={`inline-flex min-h-[44px] shrink-0 items-center justify-center whitespace-nowrap rounded-full border font-semibold backdrop-blur transition active:scale-[0.97] ${
                     // px-2: 360px에서 ko가 한 줄로 들어가는 값(위 주석의 실측).
                     // leading-[1.15]: 두 줄짜리 칩이 44px 안에 앉게(en "CROSSING / SEOUL").
                     // min-w-[44px] (2026-09-19, 감사 반영): 칩 폭을 내용에 맞추자
                     // "왜"가 30.9px, "나루"가 41.8px이 됐습니다. 세로는 44px인데
                     // 가로가 그 아래면 엄지로 옆 칩을 누르게 됩니다. px-1.5로
                     // 조여 그 44px을 만들고도 ko가 360px에서 한 줄에 들어갑니다.
-                    naru ? "min-w-[44px] px-1.5 leading-[1.15]" : "min-w-[5.25rem] snap-center px-3"
+                    naru ? "min-w-[44px] px-1.5 text-[0.75rem] leading-[1.15]" : "min-w-[5.25rem] snap-center px-3 text-[0.7rem]"
                   } ${
                     // 현위치를 색만으로 말하지 않습니다 (2026-09-19, 접근성 감사 14,
                     // WCAG 1.4.1). 데스크톱 앵커 행은 활성일 때 밑줄이 함께 켜지는데

@@ -857,12 +857,13 @@ export default function NaruHome() {
                   : ""
               }`}
             >
-              <dd className={`order-1 ${TITLE} font-black leading-none text-white`}>
-                {t(stat.value)}
-              </dd>
+              {/* 2026-10-11 (리뷰 작은 것): DOM은 dt 다음 dd입니다(용어가 먼저). 보이는 순서는 order가 전과 같이 숫자 위, 라벨 아래로 둡니다. */}
               <dt className={`order-2 mt-1.5 break-keep text-center ${META} font-bold uppercase text-white/70 ${locale === "en" ? "tracking-[0.04em] sm:tracking-[0.1em]" : "tracking-normal"}`}>
                 {t(stat.label)}
               </dt>
+              <dd className={`order-1 ${TITLE} font-black leading-none text-white`}>
+                {t(stat.value)}
+              </dd>
             </div>
           ))}
         </dl>
@@ -966,7 +967,8 @@ export default function NaruHome() {
           {/* 라벨은 dl 밖입니다. dl의 콘텐츠 모델은 dt/dd 아니면 **한 겹**의 div만
               허용하고, 둘을 섞으면 VoiceOver가 용어와 정의를 짝지어 주지 못합니다
               (2026-09-19 접근성 감사 9가 같은 자리에서 짚은 것). */}
-          <h4 data-subheading className={`${SUBHEADING} mt-8`}>{t(naru.december.factsLabel)}</h4>
+          {/* 2026-10-11 (리뷰 A5): h4에서 h3로. "일정"(h3)과 같은 층의 소제목입니다. 모양은 그대로. */}
+          <h3 data-subheading className={`${SUBHEADING} mt-8`}>{t(naru.december.factsLabel)}</h3>
           <dl className="mt-3">
             {naru.december.facts.map((f, i) => (
               <div
@@ -1024,6 +1026,8 @@ export default function NaruHome() {
         {/* DECIDED 2026-10-11 (리뷰 A2): 목차의 "참가" 칩이 내려앉는 자리입니다. 착지 여백은 JourneyNav가 헤더 실높이로 넣는
             scroll-padding-top이 맡습니다(scroll-margin을 따로 더하면 두 값이 합쳐집니다, NaruPage의 2026-09-19 주석). */}
         <div id="register" className={`${READ} mt-8 text-balance text-center lg:mt-12`}>
+        {/* 2026-10-11 (리뷰 A5): 등록 블록의 제목. 화면에는 그리지 않고 제목 목록에서 찾을 수 있게 합니다. */}
+        <h3 className="sr-only">{t({ ko: "등록", en: "Registration" })}</h3>
         <p id="december-register-note" className={`text-balance break-keep text-center ${BODY} text-white/70`}>
           {regState === "closed" ? t(registerCopy.closed) : t(naru.december.ctaNote)}
         </p>
@@ -1175,6 +1179,8 @@ export default function NaruHome() {
           #gains가 카드로 길어지면서 마지막 카드와 이 상자 사이가 1440px에서 135px이었습니다(#december 끝과 #gains 머리 사이는 약 220px).
           이제 234px, 폰은 90px에서 135px입니다(실측). */}
       <section id="naru" aria-labelledby="naru-teaser-label" className="relative w-full px-6 pb-20 pt-16 sm:px-10 lg:pb-28 lg:pt-28">
+        {/* 2026-10-11 (리뷰 A5): 티저의 제목. 화면에는 그리지 않습니다. */}
+        <h2 className="sr-only">{t({ ko: "나루", en: "NARU" })}</h2>
         <Reveal className={WIDE}>
           <div className="relative overflow-hidden rounded-3xl bg-[#0B1430]/90 px-6 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-12">
             <div

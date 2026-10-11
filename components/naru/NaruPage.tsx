@@ -20,7 +20,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { track } from "@vercel/analytics";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocale } from "@/lib/LocaleContext";
 import { naru, naruLinks, openChatLabels, partnerContact, type Layer, type Stat, type RecordPhoto } from "@/data/naru";
 import type { Phrase } from "@/data/dictionaryCore";
@@ -94,14 +94,15 @@ export default function NaruPage() {
           <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.hero.eyebrow)}</Eyebrow>
         </div>
         {/* 태그라인. 두 줄 고정(히어로에 있던 때의 이유 그대로: 두 개의 선언). */}
-        <h2 id="naru-title" className={`${H2} ${READ} text-balance text-center`}>
+        {/* 2026-10-11 (리뷰 A5): h2에서 h1로. 이 페이지에 h1이 없었습니다. 모양은 그대로입니다. */}
+        <h1 id="naru-title" className={`${H2} ${READ} text-balance text-center`}>
           <Halo tone="violet">
             <span className="block break-keep">{t(naru.hero.titleLine1)}</span>{" "}
             {/* {" "}: block span 둘 사이에 텍스트 노드가 없으면 이름 계산에서
                 "…한다.자리는…"처럼 붙어 읽힙니다 (2026-09-19, 접근성 감사 17). */}
             <span className={`${GRADIENT_TEXT} block break-keep`}>{t(naru.hero.titleLine2)}</span>
           </Halo>
-        </h2>
+        </h1>
         {/* 이름의 뜻 (2026-09-21, 사용자: 영문판에 나루가 무슨 뜻인지 설명이 필요). 태그라인
             바로 아래입니다. 위 두 줄이 "건넌다"고 말하고, 이 줄이 무엇을 건너는 자리인지
             말합니다. 순서가 반대면 낱말 풀이부터 읽히고 선언이 뒤로 밀립니다.
@@ -178,10 +179,12 @@ export default function NaruPage() {
             sr-only가 아니라 눈에도 보이게 두는 편이 착지점을 말해 줍니다. */}
         {/* DECIDED 2026-10-05 (사용자, 스크린숏: "이거 center에"): 알약과 h3는 가운데. 아래 코어 두 장(글과 지킴
             칸의 두 단)은 왼쪽 끝 그대로입니다. */}
-        <div id="core" className={`${READ} mt-8 border-t border-white/10 pt-8 text-balance text-center lg:mt-12 lg:pt-12`}>
+        {/* 2026-10-11 (리뷰 A5): 코어는 이름 있는 section이고 제목은 h2입니다(모양은 H3 토큰 그대로). 코어 카드의 제목이 h3.
+            section은 머리만 감쌉니다. 코어 판과 "방법은 바뀝니다"까지 감싸면 Reveal의 배치가 바뀝니다. */}
+        <section id="core" aria-labelledby="core-title" className={`${READ} mt-8 border-t border-white/10 pt-8 text-balance text-center lg:mt-12 lg:pt-12`}>
           <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.why.eyebrow)}</Eyebrow>
-          <h3 className={H3}>{t(naru.why.heading)}</h3>
-        </div>
+          <h2 id="core-title" className={H3}>{t(naru.why.heading)}</h2>
+        </section>
         {/* 코어 둘. 판 두 장.
             ol인 이유: 순서가 뜻입니다. 01이 문턱이고 02가 증명이며, 바로 아래
             note가 그 둘이 한 쌍이라고 말합니다. 번호는 그리지 않습니다(9/16
@@ -215,7 +218,7 @@ export default function NaruPage() {
                   {t(core.lines[1])}
                 </p>
               </div>
-              <KeepsPanel label={t(naru.why.keepsLabel)} body={t(core.keeps)} />
+              <KeepsPanel id={`keeps-${core.index}`} label={t(naru.why.keepsLabel)} body={t(core.keeps)} />
             </li>
           ))}
         </ol>
@@ -255,14 +258,15 @@ export default function NaruPage() {
             옛 링크와 층별 문(#join-*)의 출발점을 위해 남깁니다. 카피 키(naru.how.*)는 그대로.
             그 전의 주석: #december 뒤로 내려온 이유(2026-09-17)는 git 이력에. */}
         {/* 2026-09-26 (한 축 브리프): 헤어라인과 머리, 리드는 READ. 세 층 도식만 WIDE(LayerDiagram). */}
-        <div id="how" className="mt-10 text-left lg:mt-16">
+        {/* 2026-10-11 (리뷰 A5): 함께하기도 이름 있는 section, 제목은 h2(모양은 H3 토큰 그대로). */}
+        <section id="how" aria-labelledby="how-title" className="mt-10 text-left lg:mt-16">
         {/* DECIDED 2026-10-05 (사용자, 스크린숏: "다 중간에"): 소제목, h3, 리드는 가운데. 도식과 버튼 셋이 이미 가운데입니다. */}
         <div className={`${READ} border-t border-white/10 pt-8 text-balance text-center lg:pt-12`}>
 
           {/* "세 층"은 챕터 라벨이 아니라 챕터 안 소제목입니다(가독성 브리프 4.2의 표). 알약을 벗습니다. */}
           {/* DECIDED 2026-10-06 (사용자, 스크린숏: "세 층 빼주고"): 소제목 "세 층"(how.eyebrow)은 그리지 않습니다.
               제목 하나만 섭니다. 키는 data/naru.ts에 그대로. */}
-          <h3 className={H3}>{t(naru.how.heading)}</h3>
+          <h2 id="how-title" className={H3}>{t(naru.how.heading)}</h2>
         {/* 2026-09-25 (가독성 브리프 5 표의 4행, 사용자 승인): 폰에서도 리드를 보입니다. 새 줄을
             붙이는 대신 "누가 무엇을 내는가"를 이미 말하는 이 문장을 폰에서 접지 않습니다.
             그 전에는 폰에서 접었습니다(다이어그램과 아래 한 줄이 같은 말을 한다는 이유). */}
@@ -315,7 +319,8 @@ export default function NaruPage() {
           <p className={`mt-1 ${META} text-white/70`}>
             {t(partnerContact.addressLabel)}
             {"\u2002"}
-            <span className="select-all text-white/85">{naruLinks.contact}</span>
+{/* 2026-10-11 (리뷰 작은 것): 주소는 글자이면서 mailto 링크입니다. 전에는 span이라 탭으로 닿지 않았습니다. */}
+            <a href={`mailto:${naruLinks.contact}`} className="-my-3 inline-flex min-h-[44px] select-all items-center py-3 text-white/85 underline-offset-4 hover:text-white hover:underline">{naruLinks.contact}</a>
           </p>
         </Reveal>
 
@@ -325,7 +330,7 @@ export default function NaruPage() {
             아래에서 마지막으로 남는 인상이 회비·후원 계약·보수일 이유가
             없었습니다. notDoingLabel과 notDoing 키는 data/naru.ts에 그대로
             있습니다. 물어보는 사람에게 답할 문장이지 먼저 꺼낼 문장이 아닙니다. */}
-        </div>
+        </section>
         </PlateSegment>
       </Chapter>
 
@@ -381,7 +386,7 @@ export default function NaruPage() {
 
         {/* 세 곳에 공통된 조건 하나(매니페스토 I장). 장소를 가리지 않습니다.
             같은 I장의 다른 나라 학생과의 비교는 가져오지 않았습니다. */}
-        <PhoneFold more={t({ ko: "왜 필요한지 더 읽기", en: "More on why" })} less={t({ ko: "왜 필요한지 접기", en: "Hide the rest" })}>
+        <PhoneFold id="why-more" more={t({ ko: "왜 필요한지 더 읽기", en: "More on why" })} less={t({ ko: "왜 필요한지 접기", en: "Hide the rest" })}>
         <Reveal>
         <p className={`${READ} ${READ_MEASURE_C} mt-10 break-keep text-center ${BODY} leading-relaxed text-white/70`}>
           {t(naru.join.milestones)}
@@ -797,13 +802,9 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
 // "그래서 지키는 것" (2026-09-18, 감사 반영 브리프 6.1). 폰에서는 접혀 있고 버튼으로 펼칩니다.
 // lg부터는 그 전과 같은 dl. 데스크톱 판형은 사용자가 정한 자리라 그대로입니다.
 // ─────────────────────────────────────────────────────────────────────────────
-function KeepsPanel({ label, body }: { label: string; body: string }) {
+// 2026-10-11 (리뷰 A5): id는 useId가 아니라 부르는 쪽이 주는 안정된 값(keeps-01, keeps-02)입니다.
+function KeepsPanel({ id, label, body }: { id: string; label: string; body: string }) {
   const [open, setOpen] = useState(false);
-  // useId (2026-09-19, 접근성 감사 20). 전에는 `keeps-${label.length}-${body.length}`
-  // 였습니다. 지금은 우연히 안 겹치지만(keeps-9-67 / keeps-9-65), 두 코어의 본문
-  // 길이가 같아지는 순간 id가 겹치고 aria-controls가 남의 패널을 가리킵니다.
-  // 카피 한 글자에 접근성이 걸려 있으면 안 됩니다.
-  const id = useId();
   const { locale } = useLocale();
   return (
     <div className="border-t border-white/10 pt-3 md:border-l md:border-t-0 md:pl-10 md:pt-2 lg:pt-6 md:lg:pt-2">

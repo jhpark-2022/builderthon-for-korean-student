@@ -40,8 +40,11 @@ import MotionToggle from "@/components/ui/MotionToggle";
  * 전에는 단추가 내용 아래에 있어서, 열면 단추가 화면 밖으로 밀려나 무엇을 눌렀는지 알 수 없었습니다.
  * 긴 내용의 끝에도 접기가 하나 더 있고, 누르면 위의 단추로 돌아갑니다.
  * 이름은 묶음마다 다릅니다("이어서 읽기"가 셋이면 구분이 안 됩니다). 짧은 글 둘은 접지 않고 그대로 보입니다. 홈에 넷입니다.
+ *
+ * 2026-10-11 (리뷰 A5): id는 접히는 묶음의 안정된 id입니다. 단추가 aria-controls로 가리킵니다. 묶음은 닫혀 있어도
+ * 마운트돼 있어(폰에서 display: none) 그 id는 항상 있습니다.
  */
-export function PhoneFold({ more, less, children }: { more: string; less: string; children: React.ReactNode }) {
+export function PhoneFold({ id, more, less, children }: { id: string; more: string; less: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const head = useRef<HTMLButtonElement>(null);
   const chevron = (up: boolean) => (
@@ -54,6 +57,7 @@ export function PhoneFold({ more, less, children }: { more: string; less: string
           ref={head}
           type="button"
           aria-expanded={open}
+          aria-controls={id}
           onClick={() => setOpen((v) => !v)}
           className={`inline-flex min-h-[44px] items-center gap-2 rounded-full border px-5 ${BODY} font-bold ${open ? "border-accent/50 bg-accent/15 text-white" : "border-white/20 text-accent"}`}
         >
@@ -61,7 +65,7 @@ export function PhoneFold({ more, less, children }: { more: string; less: string
           {chevron(open)}
         </button>
       </div>
-      <div className={open ? "contents" : "max-sm:hidden sm:contents"}>{children}</div>
+      <div id={id} className={open ? "contents" : "max-sm:hidden sm:contents"}>{children}</div>
       {open && (
         <div className="mt-6 text-center sm:hidden">
           <button
@@ -314,7 +318,8 @@ export function SiteFooter({ compact = false }: { compact?: boolean } = {}) {
               둘뿐이라 한 줄에 들어가지만, 되살리면 즉시 발현하는 잠복 상태였습니다.
               31.5 − 27 = 4.5px. */}
           <div className={`flex flex-wrap items-center justify-center gap-x-5 gap-y-7 ${META}`}>
-            <OpenChatLink t={t} src="naru-footer" label={openChatLabels.footer} className="!px-3.5 !py-2 !text-xs" />
+            {/* min-h-[44px] (2026-10-11, 리뷰 작은 것): 전에는 38px이었습니다. */}
+            <OpenChatLink t={t} src="naru-footer" label={openChatLabels.footer} className="min-h-[44px] !px-3.5 !py-2 !text-xs" />
             <a
               href={naruLinks.general}
               onClick={() => track("naru_mail", { src: "footer" })}
