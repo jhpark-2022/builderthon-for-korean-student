@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-11 히어로 사진 크게 보기, 노선도의 별은 하나만](#2026-10-11-photo-lightbox-one-star)
 - [2026-10-11 참가 카드와 나루 티저 사이 간격](#2026-10-11-teaser-gap)
 - [2026-10-11 오면 무엇이 남는가를 8월 페이지의 문법으로](#2026-10-11-gains-august-grammar)
 - [2026-10-11 Day 0에는 세션이 없다](#2026-10-11-day0-no-session)
@@ -203,6 +204,16 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-11-photo-lightbox-one-star"></a>
+## 2026-10-11 히어로 사진 크게 보기, 노선도의 별은 하나만
+- 범위: components/shared/PhotoLightbox.tsx(새 파일), components/home/NaruHome.tsx(HeroPhotos, 노선도 kind), data/naru.ts(버튼 이름 넷)
+- 한 것: DECIDED 2026-10-11 (사용자, 스크린숏 둘). 히어로의 사진 넷은 누르면 원본(1200x900)이 화면에 맞춰 크게 열립니다.
+  좌우 화살표(버튼과 키보드)로 넘기고 Esc나 바깥을 눌러 닫습니다. 스크롤 잠금과 포커스 처리는 PartnerModal과 같은 순서입니다.
+  노선도는 Day 1부터 Day 4가 전부 ★라 별이 아무것도 가리키지 않았습니다. ★는 종착역(Day 4) 하나에만 남기고
+  Day 1부터 Day 3은 ◉, Day 0은 전과 같은 빈 점입니다. 날마다의 마일스톤 줄은 그대로입니다.
+- 검증: 1440px에서 사진 1161x871, 390px 폭에서 화면 폭에 맞음, Esc 뒤 inert와 스크롤 잠금 해제 확인. 타입 검사와 next build 통과.
+- 커밋: a302a29
 
 <a id="2026-10-11-teaser-gap"></a>
 ## 2026-10-11 참가 카드와 나루 티저 사이 간격
