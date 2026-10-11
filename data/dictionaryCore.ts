@@ -72,7 +72,8 @@ export const coreDict = {
     // Nav open-chat entry. Present from first paint (unlike the register button,
     // which is scroll-revealed): the whole point is to give someone who isn't
     // ready to register a door that is already open when they land.
-    openChat: { ko: "오픈채팅", en: "Open Chat" },
+    // 2026-10-11 (브랜드 브리프 B11): "Open Chat"에서 "Open chat"으로. 푸터(data/naru.ts)와 같은 표기입니다.
+    openChat: { ko: "오픈채팅", en: "Open chat" },
     // DECIDED 2026-08-22 (마감 후 청산): 등록 진입점 전면 제거 - 비활성 버튼을
     // 남기지 않는다. 1순위 액션은 오픈채팅, 히어로 1순위는 트랙. 등록 코드
     // (모달·API·registered 상태)는 삭제하지 않고 진입점만 끊는다.

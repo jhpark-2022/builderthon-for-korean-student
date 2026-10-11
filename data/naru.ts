@@ -1767,7 +1767,8 @@ export const naru = {
     // DECIDED 2026-10-10 (중복 브리프 B3): 홈의 프로그램 챕터 끝에서 8월 페이지의 #gaps로 가는 한 줄과,
     // 8월 페이지의 #gaps에서 홈의 프로그램 챕터로 돌아오는 한 줄. 화살표는 화면에서 붙입니다.
     gapsLink: { ko: "8월과 무엇이 다른지", en: "How it differs from August" },
-    gapsBackLink: { ko: "크로싱 서울 프로그램 보기", en: "See the Crossing Seoul program" },
+    // 2026-10-11 (브랜드 브리프 B11): 영문 표기는 CROSSING SEOUL(항상 대문자)과 programme입니다. 그 전: "See the Crossing Seoul program"
+    gapsBackLink: { ko: "크로싱 서울 프로그램 보기", en: "See the CROSSING SEOUL programme" },
     augustLabel: { ko: "8월", en: "August" },
     decemberLabel: { ko: "12월", en: "December" },
     // DECIDED 2026-09-29 (사용자: 9/28 자문 미팅의 인사이트를 반영): 다음 건너기. 자문의 요지는 "12월은 제대로
