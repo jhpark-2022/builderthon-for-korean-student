@@ -122,7 +122,7 @@ export default function MobileChatBar({ afterId = "about", endId = "closing", ph
                 className="pointer-events-auto inline-flex h-12 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/45 bg-[#070B1F]/92 px-6 text-sm font-bold text-violet-100 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.9)] backdrop-blur transition active:scale-95"
               >
                 <ChatGlyph className="h-5 w-5 shrink-0" />
-                {t(dict.nav.openChat)}
+                {phone ? t({ ko: "오픈채팅", en: "Open chat" }) : t(dict.nav.openChat)}
               </a>
             )}
           </div>

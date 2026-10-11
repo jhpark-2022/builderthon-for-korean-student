@@ -268,8 +268,9 @@ export const naruNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel
 // 필요한가)은 #why가 됐습니다. 순서는 화면 순서입니다.
 export const naruPageNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel?: Phrase }[] = [
   { id: "top", label: { ko: "나루", en: "NARU" } },
-  { id: "core", label: { ko: "코어", en: "Core" }, ariaLabel: { ko: "변하지 않는 두 개", en: "The two things that do not change" } },
+  // 2026-10-11 (리뷰 브리프 3단계 D1): 함께하기가 코어보다 앞입니다(화면 순서).
   { id: "how", label: { ko: "함께하기", en: "Join in" }, ariaLabel: { ko: "어떻게 일하는가", en: "How we work" } },
+  { id: "core", label: { ko: "코어", en: "Core" }, ariaLabel: { ko: "변하지 않는 두 개", en: "The two things that do not change" } },
   { id: "why", label: { ko: "왜", en: "Why" }, ariaLabel: { ko: "왜 이 자리가 필요한가", en: "Why this place is needed" } },
 ];
 // /naru 헤더 왼쪽의 돌아가기. /match의 돌아가기와 같은 문법입니다.
@@ -360,6 +361,15 @@ export interface Story {
   after: Phrase;
 }
 
+// DECIDED 2026-10-11 (리뷰 브리프 3단계 D4): 나루를 설명하는 정본 한 문장. 전에는 네 자리에서 네 가지로 말했습니다
+// ("학생이 직접 운영하는 그룹", "비영리 그룹", "한국에 뿌리를 둔 학생 빌더 모임", "영리를 목적으로 하지 않는 그룹").
+// 홈 티저의 문단, /naru 머리의 알약, /naru 히어로의 둘째 문단, 푸터가 모두 이 문장을 씁니다. "비영리"라는 낱말은 쓰지 않습니다
+// (not-for-profit 결정). 고치려면 여기 한 곳만 고칩니다.
+export const NARU_DEF: Phrase = {
+  ko: "한국에 뿌리를 두고 학생이 운영하는, 영리를 목적으로 하지 않는 빌더 그룹.",
+  en: "A Korea-rooted, student-run, not-for-profit builder group.",
+};
+
 export const naru = {
   // DECIDED 2026-10-10 (사용자: 나루 내용은 전부 다른 탭으로, 구조 브리프 2.3): 홈의 마지막 블록(#naru)에 서는 티저.
   // 그룹의 글은 /naru에 있고, 홈에는 누가 여는지 한 상자만 남습니다. 문장 둘은 브리프의 것 그대로입니다.
@@ -371,8 +381,9 @@ export const naru = {
       // DECIDED 2026-10-10 (사용자, 스크린숏: "이번이 처음이라는 표현 빼주고"): 둘째 문장은 어디서 시작했는지만 말합니다.
       // 브리프의 "이번이 두 번째 자리입니다"는 프로그램 리드(december.notSequel, "나루가 직접 여는 첫 이벤트입니다")와
       // 어긋나 같은 날 "직접 여는 이벤트는 이번이 처음입니다"로 고쳤다가, 그 표현도 뺐습니다. 몇 번째인지는 여기서 말하지 않습니다.
-      ko: "학생이 직접 운영하는 비영리 그룹 나루가 엽니다. 2026년 8월 싱가포르에서 시작했습니다.",
-      en: "CROSSING SEOUL is run by NARU, a student-run, not-for-profit group. It started in Singapore in August 2026.",
+      // 2026-10-11 (D4): 정본 문장. 그 전: "학생이 직접 운영하는 비영리 그룹 나루가 엽니다. 2026년 8월 싱가포르에서 시작했습니다."
+      ko: NARU_DEF.ko,
+      en: NARU_DEF.en,
     },
     cta: { label: { ko: "나루 알아보기", en: "About NARU" }, href: "/naru" },
   },
@@ -392,8 +403,9 @@ export const naru = {
     // 가리키는 말로 쓰지 않습니다(DECIDED 2026-09-30: 나루는 단체의 연합이 아니라 개인이 모인 그룹).
     // 국문 부제 "한국에 뿌리를 둔 학생 빌더 모임"은 TODO: confirm (사용자가 아직 확정하지 않은 번역안입니다).
     eyebrow: {
-      ko: "한국에 뿌리를 둔 학생 빌더 모임",
-      en: "A Korea-rooted collective of student builders",
+      // 2026-10-11 (D4): 정본 문장. 그 전: "한국에 뿌리를 둔 학생 빌더 모임" / "A Korea-rooted collective of student builders"
+      ko: NARU_DEF.ko,
+      en: NARU_DEF.en,
     },
     // 확정 태그라인. 매니페스토의 마지막 문단에서 왔습니다.
     // "건너는 일은 각자가 한다. 나루는 건널 수 있는 자리를 만들고, 건너간 사람이
@@ -616,8 +628,9 @@ export const naru = {
       // DECIDED 2026-10-05 (사용자, 스크린숏: "너무 길어. 간략하게"): 네 문장을 두 문장으로. 뺀 것: 각 나라의 학생회, 학회와 함께
       // 넓힌다는 구절, "모두 AI로 함께 만듭니다", 첫 이벤트 문장(바로 아래 record.lead2가 받습니다).
       // 같은 날 group.lead("이벤트는 ... 지금의 방식입니다")는 화면에서 내렸습니다. 같은 말을 아래 "방법은 바뀝니다"가 합니다.
-      ko: "한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 그룹입니다. 이벤트로 학생을 모으고, 모인 사람들을 커뮤니티로 잇습니다.",
-      en: "A Korea-rooted, student-run, not-for-profit group. We bring students in through events and connect them into a community.",
+      // 2026-10-11 (D4): 첫 문장은 정본(NARU_DEF)입니다. 그 전: "...영리를 목적으로 하지 않는 그룹입니다."
+      ko: `${NARU_DEF.ko} 이벤트로 학생을 모으고, 모인 사람들을 커뮤니티로 잇습니다.`,
+      en: `${NARU_DEF.en} We bring students in through events and connect them into a community.`,
     },
   },
 
@@ -1503,7 +1516,8 @@ export const naru = {
         // 세 상자는 각자 일하는 셋이 되고, 나루가 왜 가운데 있는지가 그림에서 빠집니다.
         // 잇는다는 말이 먼저 오고, 회차는 그 다음입니다(Overview 01의 가운데 상자와 같은 순서).
         // 2026-09-29 (사용자: 그룹 기획 폴더의 부제와 정의가 사이트에 반영되게): Overview(2026-09-29)의 주최 칸 그대로.
-        brings: { ko: "학생이 만드는 그룹. 선배가 후배의 판을 깔고, 학생회와 기업을 잇는다", en: "A group students build. Seniors set the stage, and connect schools and companies" },
+        // 2026-10-11 (D5): 명사 마침으로. 그 전: "...학생회와 기업을 잇는다"
+        brings: { ko: "학생이 만드는 그룹. 선배가 후배의 판을 깔고 학생회와 기업을 잇는 자리", en: "A group students build. Seniors set the stage, and connect schools and companies" },
         does: {
           ko: "회차의 기획과 실행. 출제사와 멘토, 후원사와의 관계. 기록과 회차 사이의 연속성.",
           en: "Planning and running each round. Relationships with problem owners, mentors, sponsors. The record, and continuity between rounds.",
@@ -1778,6 +1792,9 @@ export const naru = {
     // 8월 페이지의 #gaps에서 홈의 프로그램 챕터로 돌아오는 한 줄. 화살표는 화면에서 붙입니다.
     gapsLink: { ko: "8월과 무엇이 다른지", en: "How it differs from August" },
     gapsBackLink: { ko: "크로싱 서울 프로그램 보기", en: "See the Crossing Seoul program" },
+    // 2026-10-11 (리뷰 브리프 3단계 D6): /naru 끝의 같은 링크. 영문 표기를 CROSSING SEOUL과 programme으로 맞췄습니다.
+    // 위 gapsBackLink는 8월 페이지(#gaps)가 쓰고 있어 그대로 둡니다.
+    programLink: { ko: "크로싱 서울 프로그램 보기", en: "See the CROSSING SEOUL programme" },
     augustLabel: { ko: "8월", en: "August" },
     decemberLabel: { ko: "12월", en: "December" },
     // DECIDED 2026-09-29 (사용자: 9/28 자문 미팅의 인사이트를 반영): 다음 건너기. 자문의 요지는 "12월은 제대로
@@ -2711,8 +2728,9 @@ export const naru = {
     // DECIDED 2026-09-30 (사용자): 링 글자를 옮겨 적는 자리라 링과 같이 of를 뺍니다. 문장으로 쓰는 부제는 subtitle.
     subtitleRing: { top: "A Korea-rooted collective", bottom: "Student builders" },
     shortDef: {
-      ko: "한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 학생 빌더 그룹. 서울과 싱가포르, 그리고 그 너머.",
-      en: "A Korea-rooted, student-run, not-for-profit group growing a community of student builders across Seoul, Singapore and beyond.",
+      // 2026-10-11 (D4, D7): 푸터의 문단은 정본 한 줄만입니다. 그 전: "...학생 빌더 그룹. 서울과 싱가포르, 그리고 그 너머."
+      ko: NARU_DEF.ko,
+      en: NARU_DEF.en,
     },
     credits: {
       ko: "주최 나루 주관 각 학교 한인 학생회와 학회 후원 참여 기업",
