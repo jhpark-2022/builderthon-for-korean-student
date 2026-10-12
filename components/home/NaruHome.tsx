@@ -646,6 +646,12 @@ export default function NaruHome() {
                       남색 틴트 #9AA8EE, 보라 #A99AD6, 자주 틴트 #C99ACB, 테라코타 틴트 #E08A76(0, 35, 68, 100%). 끝 색이 아래 영문 줄과 같습니다.
                       헤더의 워드마크와 /naru의 돌아가기도 같은 그라데이션입니다(JourneyNav). 정본은 docs/brand.md의 "색". */}
                   <span className="inline-block">
+                    {/* DECIDED 2026-10-12 (사용자, 스크린숏: "한국어 버전에는 맨 위에도 crossing seoul이 있으면"): 한글 줄 위에도 같은 영문 줄을 둡니다.
+                        아래 줄과 크기, 자간, 색이 같고 양 끝도 한글 줄에 맞춥니다. 첫 색은 그라데이션의 시작(#9AA8EE)이 아니라 아래 줄과 같은 테라코타 틴트입니다.
+                        읽는 이름은 아래 줄의 sr-only 한 번이라 이 줄은 통째로 aria-hidden입니다. 영문 화면에는 없습니다. */}
+                    <span lang="en" aria-hidden className={`mb-1 flex justify-between ${META} font-bold uppercase leading-none text-[#E08A76] sm:mb-2`}>
+                      {[...DECEMBER_EVENT_NAME.en].map((ch, i) => (<span key={i}>{ch === " " ? "\u00a0" : ch}</span>))}
+                    </span>
                     <span lang="ko" className="gradient-text block break-keep bg-[linear-gradient(90deg,#9AA8EE_0%,#A99AD6_35%,#C99ACB_68%,#E08A76_100%)] bg-clip-text pb-[0.08em] tracking-[-0.02em] text-transparent">{DECEMBER_EVENT_NAME.ko}</span>{" "}
                     {/* lang="en" (2026-09-19, 접근성 감사 7): 한국어 TTS가 영문을 한글 음가로 읽지 않게. 사이의 {" "}는
                         이름 계산용입니다(감사 17). pl은 자간만큼 왼쪽을 밀어 가운데를 맞춥니다(끝 글자 뒤의 자간).
