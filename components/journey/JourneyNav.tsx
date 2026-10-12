@@ -442,14 +442,17 @@ export default function JourneyNav({
                   그 전에는 한국어 화면에서 국문 "크로싱 서울" 단독이었는데, 정본의 표기는 A(국문과 영문 락업)와 B(영문 단독) 둘뿐입니다.
                   히어로의 큰 로고는 표기 A 그대로입니다. 같은 그라데이션이고, 크기는 영문 화면이 쓰던 값입니다(sm부터는 전과 같은 크기,
                   그 아래에서는 글자 수가 두 배라 전의 영문 화면처럼 작게 둡니다). */}
-              <span lang="en" className={`gradient-text whitespace-nowrap bg-[linear-gradient(90deg,#9AA8EE_0%,#A99AD6_35%,#C99ACB_68%,#E08A76_100%)] bg-clip-text pb-[0.08em] font-black tracking-[-0.02em] text-transparent ${
+              {/* DECIDED 2026-10-12 (사용자, 스크린숏: "한국어 버전에서는 crossing seoul이 아니고 크로싱 서울"): 위의 결정을 한국어 화면에서 되돌립니다.
+                  한국어 화면의 헤더 워드마크는 국문 "크로싱 서울" 단독, 영문 화면은 영문 "CROSSING SEOUL" 단독입니다(docs/brand.md의 표기 C).
+                  크기도 10월 11일 전의 값으로 돌아갑니다. 한글은 글자 수가 절반이라 폰에서도 크게 둡니다. */}
+              <span lang={locale === "en" ? "en" : undefined} className={`gradient-text whitespace-nowrap bg-[linear-gradient(90deg,#9AA8EE_0%,#A99AD6_35%,#C99ACB_68%,#E08A76_100%)] bg-clip-text pb-[0.08em] font-black tracking-[-0.02em] text-transparent ${
                 // DECIDED 2026-10-10 (사용자, 스크린숏: "크로싱 서울 로고가 더 크게 보였으면"): text-xl(22.5px)에서 키웠습니다.
                 // 52px 바에서는 2xl(27px), 80px 바(xl부터)에서는 3xl(33.75px)로 전의 나루 락업(36~40px)과 비슷한 무게입니다.
                 // 영문 "CROSSING SEOUL"은 글자 수가 두 배라 폰에서는 작게 둡니다(390px에서 오른쪽 버튼과 28px, 360px에서도 닿지 않게).
                 // 한국어도 360px 아래에서는 한 단 작습니다. sm(640px)부터는 두 로케일이 같은 크기입니다.
-                "text-xs min-[390px]:text-sm sm:text-2xl xl:text-3xl"
+                locale === "en" ? "text-xs min-[390px]:text-sm sm:text-2xl xl:text-3xl" : "text-lg min-[360px]:text-2xl xl:text-3xl"
               }`}>
-                {decemberEventLabel("en")}
+                {decemberEventLabel(locale)}
               </span>
             </a>
             ) : (
