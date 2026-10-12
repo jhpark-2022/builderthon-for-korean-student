@@ -32,7 +32,16 @@ const COPY = {
   // DECIDED 2026-10-08 (전체 리뷰 반영): 배너의 버튼은 12월 이벤트로 곧장 갑니다(/#december).
   // 예전에는 홈 맨 위(/)였는데, 이 기록을 읽은 사람이 다음에 알고 싶은 것은 12월입니다.
   home: { ko: "12월 크로싱 서울 보기", en: "See CROSSING SEOUL, December" },
+  // DECIDED 2026-10-12 (사용자: "나루 페이지를 통해서 들어오는데, 크로싱 서울로만이 아니라 나루로도 돌아갈 수
+  // 있어야지"): 이 페이지로 오는 문은 /naru의 "8월이 남긴 것" 블록(#record)입니다. 그런데 나가는 문은 12월 하나라
+  // 온 길로 돌아갈 수 없었습니다. 들어온 자리로 되돌아가는 버튼을 12월 버튼 앞에 둡니다. 모양은 /naru 헤더의
+  // 돌아가기("← 크로싱 서울")와 같은 문법입니다. 12월 버튼은 그대로 뒤에 남습니다(brand 3장 원칙 2: 무대가 먼저).
+  back: { ko: "나루", en: "NARU" },
+  backAria: { ko: "나루 페이지로 돌아가기", en: "Back to the NARU page" },
 } as const;
+
+const CHIP =
+  "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] min-h-[44px] px-4 py-1.5 text-xs font-semibold text-white/85 transition hover:border-white/35 hover:bg-white/10 hover:text-white";
 
 export default function ArchiveBanner() {
   const { t } = useLocale();
@@ -40,13 +49,16 @@ export default function ArchiveBanner() {
     <div className="relative z-20 w-full border-b border-white/10 bg-[#0B1430]/80 pt-[52px] backdrop-blur-sm xl:pt-20">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 px-6 py-3 text-center sm:flex-row sm:justify-center sm:gap-4 sm:px-10">
         <p className="break-keep text-xs leading-relaxed text-white/70">{t(COPY.note)}</p>
-        <Link
-          href="/#december"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] min-h-[44px] px-4 py-1.5 text-xs font-semibold text-white/85 transition hover:border-white/35 hover:bg-white/10 hover:text-white"
-        >
-          {t(COPY.home)}
-          <span aria-hidden className="text-white/50">→</span>
-        </Link>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <Link href="/naru#record" aria-label={t(COPY.backAria)} className={CHIP}>
+            <span aria-hidden className="text-white/50">←</span>
+            {t(COPY.back)}
+          </Link>
+          <Link href="/#december" className={CHIP}>
+            {t(COPY.home)}
+            <span aria-hidden className="text-white/50">→</span>
+          </Link>
+        </div>
       </div>
     </div>
   );
