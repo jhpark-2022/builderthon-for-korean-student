@@ -11,6 +11,38 @@
 
 > 건너는 건 각자가 한다. 자리는 우리가 만든다.
 
+## 변하지 않는 두 개
+
+무엇이 바뀌어도 이 둘은 바뀌지 않습니다. 이벤트, AI, 기간, 형식은 전부 이 둘을 실행하는 방법입니다.
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <sub><b>CORE 01</b></sub>
+      <h3>안전하게 도전할 수 있는 자리</h3>
+      <i>A safe place to try something new</i>
+      <br><br>
+      스크리닝하지 않습니다. 순위를 매기지 않습니다. 못해도 되는 자리입니다. 여기서 잘하지 못한 것은 어디에도 기록되지 않고, 끝까지 해본 것은 남습니다.
+    </td>
+    <td width="50%" valign="top">
+      <sub><b>CORE 02</b></sub>
+      <h3>자기 가치를 증명해 보는 경험</h3>
+      <i>A chance to prove your own worth</i>
+      <br><br>
+      모의가 아니라 진짜 앞에 섭니다. 실명이 박힌 기업, 실제로 그 일을 하는 사람, 답이 정해지지 않은 문제. 그 앞에서 자기 판단으로 만들고, 그 경험을 증명하는 실물을 손에 쥐고 나갑니다.
+    </td>
+  </tr>
+</table>
+
+이 둘이 이벤트에서는 이렇게 보입니다.
+
+| | CORE 01 안전하게 도전할 수 있는 자리 | CORE 02 자기 가치를 증명해 보는 경험 |
+| --- | --- | --- |
+| 8월, 제로백 빌더톤 | 스크리닝 없이 74명이 신청했고, 순위 없이 부문별로 시상했습니다 | 실제 기업의 문제를 8일 동안 풀고, 21팀이 마지막 날 그 기업 앞에서 발표했습니다 |
+| 12월, 크로싱 서울 | 오는 사람이 참가자입니다. 1위, 2위, 3위에 의미를 두지 않습니다 | 기업이 지금 겪는 이슈에서 문제를 직접 찾고, 닷새째 그 기업 앞에서 발표합니다 |
+
+무엇을 할지 고민될 때 묻는 것도 이 둘입니다. 이 방식이 안전하게 도전할 자리를 넓히는가, 자기 가치를 증명할 기회를 주는가.
+
 <p align="center">
   <img src="public/record/hero-day1-group.webp" alt="2026년 8월 22일 Day 1, 싱가포르 파운드리에 모인 참가자 단체 사진" width="100%">
 </p>
@@ -21,7 +53,7 @@
 - 사이트: https://naru-crossing-seoul.vercel.app
 - 한국어와 영어 두 벌(KR/EN 전환)
 
-*NARU is a Korea-rooted, student-run, not-for-profit group of student builders. This repo is its website. The home page introduces CROSSING SEOUL (17 to 21 December 2026, Seoul), and `/2026-08` keeps the record of the event the group grew out of, the Zero100 builderthon in Singapore, hosted by AXMOS member companies in the Zero100 community. Without the Zero100 builderthon there is no NARU and no CROSSING SEOUL. We begin owing the people who made those eight days.*
+*NARU is a Korea-rooted, student-run, not-for-profit group of student builders. This repo is its website. Two things do not change: a safe place to try something new, and a chance to prove your own worth. The home page introduces CROSSING SEOUL (17 to 21 December 2026, Seoul), and `/2026-08` keeps the record of the event the group grew out of, the Zero100 builderthon in Singapore, hosted by AXMOS member companies in the Zero100 community. Without the Zero100 builderthon there is no NARU and no CROSSING SEOUL. We begin owing the people who made those eight days.*
 
 ## 나루는
 
@@ -29,12 +61,7 @@
 
 시작은 싱가포르였습니다. 학교마다 한인 학생이 있는데 학교를 가로질러 잇는 자리가 없었고, 선배가 후배에게 남기고 가는 것도 없었습니다. 경쟁이 치열할수록 학점, 인턴, 졸업, 오퍼처럼 눈앞의 칸부터 채우게 되고, 나는 어디로 나아갈 수 있는지를 물을 시간은 없습니다. 문을 두드리는 법은 대개 절박해진 다음에 배웁니다. 나루는 그 자리를 앞당겨 만듭니다. 절박하지 않아도 시작할 수 있도록.
 
-무엇이 바뀌어도 바뀌지 않는 것은 둘입니다.
-
-1. **안전하게 도전할 수 있는 자리.** 스크리닝이 없고 순위가 없습니다. 못해도 되는 자리입니다. 잘하지 못한 것은 어디에도 기록되지 않고, 끝까지 해본 것은 남습니다.
-2. **자기 가치를 증명해 보는 경험.** 실명이 박힌 기업, 실제로 그 일을 하는 사람, 답이 정해지지 않은 문제 앞에 섭니다.
-
-이벤트는 이 둘을 실행하는 지금의 방식입니다. 어젠다와 형식은 바뀝니다.
+무엇이 바뀌어도 바뀌지 않는 것은 위의 [둘](#변하지-않는-두-개)입니다. 이벤트는 이 둘을 실행하는 지금의 방식이고, 어젠다와 형식은 바뀝니다.
 
 나루를 만드는 주체는 언제나 학생입니다. 먼저 겪은 선배가 후배가 설 판을 깔고, 그 자리에서 자란 사람이 다음 회차를 엽니다. 일하는 구조는 세 층입니다.
 
@@ -124,7 +151,7 @@
 
 - 스크리닝이 없습니다. 오는 사람이 참가자입니다. 팀은 2~3명입니다.
 - 1위, 2위, 3위에 의미를 두지 않습니다. 각자의 강점이 과정에서 드러나고, 다양한 테마로 시상합니다.
-- 멘토링은 Day 1부터 Day 3까지, 예약제입니다.
+- 멘토링은 Day 1부터 Day 3까지, 예약 없이 합니다. 멘토가 같은 공간에 있습니다.
 - 세부는 기획 단계라 바뀔 수 있습니다. 등록은 아직 열리지 않았고, 열리면 사이트에서 알립니다.
 
 나루의 두 번째 이벤트입니다. 제로백 빌더톤이 열어 준 8일에서 나온 변하지 않는 두 개를 그대로 잇습니다.
@@ -145,7 +172,9 @@
 
 | 주소 | 내용 |
 | --- | --- |
-| `/` | 나루 홈. 크로싱 서울 소개, 프로그램, 얻는 것, 나루(8월의 기록, 세 층 구조), 왜 나루인가 |
+| `/` | 홈. 크로싱 서울 소개, 프로그램, 참가 |
+| `/naru` | 그룹 나루. 변하지 않는 두 개, 8월 요약, 어떻게 일하는가 |
+| `/match` | 크로싱 서울 Day 1 현장 팀 매칭용 AI 유형 테스트 |
 | `/2026-08` | 제로백 빌더톤(2026년 8월, 싱가포르)의 기록. 나루가 시작된 이벤트이고 끝난 회차입니다 |
 | `/quiz` | 8월 팀 매칭에 쓴 유형 테스트 |
 | `/api/crossing/register` | 크로싱 서울 등록 |
@@ -154,7 +183,7 @@
 
 ## 기술
 
-- **Next.js 14**(App Router), **TypeScript**, **Tailwind CSS**
+- **Next.js 15**(App Router), **TypeScript**, **Tailwind CSS**
 - **Framer Motion**: 스크롤 리빌, 모달
 - **three.js**: 홈 배경(밤의 강과 등불, 서울과 싱가포르 윤곽). `lib/background/`
 - **Supabase**: 등록과 투표 저장. 서버 라우트에서만 service role 키로 씁니다
@@ -205,6 +234,7 @@ dev 서버가 도는 동안 같은 폴더에서 `npm run build`를 돌리지 마
 | 8월 기록(`/2026-08`)의 문장과 일정 | `data/dictionary.ts`, `data/schedule.ts` |
 | 나루 로고 | `public/naru/` (같은 폴더 README에 출처와 규칙) |
 | README의 로고와 사진 | `docs/readme/`(밝은 화면용 로고), `public/naru/`(어두운 화면용), `public/record/`(8월 사진) |
+| 이름, 정의문, 변하지 않는 두 개의 문장 | `docs/brand.md` (브랜드 정본. 여기부터 바꿉니다) |
 | 색과 서체 | `tailwind.config.ts`, `app/globals.css` |
 | 사이트 주소와 메타데이터 | `app/layout.tsx`, `app/sitemap.ts`, `app/robots.ts` |
 
@@ -228,7 +258,9 @@ dev 서버가 도는 동안 같은 폴더에서 `npm run build`를 돌리지 마
 
 ```
 app/
-  page.tsx               나루 홈
+  page.tsx               홈(크로싱 서울)
+  naru/                  그룹 나루
+  match/                 현장 팀 매칭
   2026-08/               제로백 빌더톤 기록
   quiz/                  유형 테스트
   api/                   등록, 투표 라우트
