@@ -206,6 +206,7 @@ export const registerFacts: Record<"feeLine" | "venueLine" | "travelLine" | "hou
 
 // DECIDED 2026-10-12 (등록 브리프 1.2, 리뷰 S1 S2 S3 S7 S9): 등록이 열리기 전의 안내는 이 네 줄 하나입니다. 히어로 안내
 // (#hero-register-note)가 첫 두 줄을, 등록 블록(#december-register-note)과 모달의 안내 상자가 네 줄 전부를 읽습니다.
+// DECIDED 2026-10-13 (사용자: "너무 길어, 있는 말 반복이니까"): 등록 블록은 이 네 줄을 읽지 않습니다. 네 줄 전부는 모달의 안내 상자만.
 // 그 전에는 세 자리의 문장이 서로 달랐고, 언제 열리는지(11월)가 어디에도 없었습니다.
 // 셋째, 넷째 줄은 위 registerFacts가 채워지면 그 값으로 바뀝니다.
 function registerNoteLines(): Phrase[] {
@@ -230,7 +231,7 @@ function registerNoteLines(): Phrase[] {
 }
 export const registerNote: Phrase[] = registerNoteLines();
 // DECIDED 2026-10-13 (사용자, 스크린숏: "너무 길어"): 히어로 버튼 아래는 한 줄입니다. 위 네 줄의 첫 두 줄에서 빈칸 둘(언제, 혼자 가도 되나)만
-// 남긴 줄이고, 네 줄 전부는 등록 블록과 모달이 읽습니다. 알림 버튼의 "휴대폰에서 열면…" 줄도 히어로에서는 뺐습니다(등록 블록에만).
+// 남긴 줄이고, 네 줄 전부는 모달이 읽습니다. 알림 버튼의 "휴대폰에서 열면…" 줄도 히어로에서는 뺐습니다(등록 블록에만).
 export const registerNoteShort: Phrase = {
   ko: "등록은 11월에 엽니다. 혼자 등록하고, 전공과 코딩 경험은 조건이 아닙니다.",
   en: "Registration opens in November. You register on your own; your major and coding experience are not conditions.",
@@ -2424,7 +2425,7 @@ export const naru = {
       // 자격과 안내 경로를 결정 지점 옆에 적습니다. 등록 폼이 전공을 묻기 때문에 "묻지 않습니다"가 아니라 "조건이 아닙니다"입니다.
       // 진행 언어는 레포 어디에도 정해져 있지 않아 쓰지 않았습니다(TODO: confirm).
       // DECIDED 2026-10-12 (등록 브리프 1.2): 이 줄에는 스크리닝 문장 하나만 남습니다. 언제 열리는지, 혼자 등록하는지, 참가비와
-      // 장소가 언제 적히는지는 registerNote 네 줄이 말하고, 등록 블록이 그 네 줄의 둘째 줄 뒤에 이 문장을 끼웁니다.
+      // 장소가 언제 적히는지는 registerNote 네 줄이 말합니다. 2026-10-13부터 등록 블록에는 이 문장 하나만 섭니다.
       // 홈에서 "스크리닝"이라는 낱말은 이 한 자리입니다(docs/brand.md 9장).
       ko: "스크리닝 없이, 오는 사람이 참가자입니다.",
       en: "There is no screening: if you come, you are in.",

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
-import { naru, naruLinks, openChatLabels, register as registerCopy, registerNote, registerNoteShort, type RecordPhoto } from "@/data/naru";
+import { naru, naruLinks, openChatLabels, register as registerCopy, registerNoteShort, type RecordPhoto } from "@/data/naru";
 import { useCrossingRegisterOptional } from "@/components/crossing/RegisterProvider";
 import { links, type Phrase } from "@/data/dictionaryCore";
 import { useEffect, useState } from "react";
@@ -739,7 +739,7 @@ export default function NaruHome() {
               </Link>
             </div>
             {/* DECIDED 2026-10-12 (등록 브리프 1.2, 리뷰 S1 S3): 언제 열리는지, 혼자 등록해도 되는지, 전공과 코딩 경험이 조건인지가
-                첫 화면 안에서 답해집니다. DECIDED 2026-10-13 (사용자: "너무 길어"): 한 줄(registerNoteShort)입니다. 네 줄 전부는 등록 블록과 모달에. */}
+                첫 화면 안에서 답해집니다. DECIDED 2026-10-13 (사용자: "너무 길어"): 한 줄(registerNoteShort)입니다. 네 줄 전부는 모달에(2026-10-13부터 등록 블록은 스크리닝 한 줄만). */}
             {regState === "not_open" && (
               <p id="hero-register-note" className={`mt-3 text-balance break-keep ${META} leading-snug text-white/85`}>{t(registerNoteShort)}</p>
             )}
@@ -1036,12 +1036,11 @@ export default function NaruHome() {
         <div id="register" className={`${READ} mt-8 text-balance text-center lg:mt-12`}>
         {/* 2026-10-11 (리뷰 A5): 등록 블록의 제목. 화면에는 그리지 않고 제목 목록에서 찾을 수 있게 합니다. */}
         <h3 className="sr-only">{t({ ko: "등록", en: "Registration" })}</h3>
-        {/* DECIDED 2026-10-12 (등록 브리프 1.2): 히어로, 모달과 같은 registerNote 네 줄입니다. 둘째 줄 뒤에 스크리닝 문장
-            (december.ctaNote)이 끼어 섭니다. 홈에서 그 낱말은 이 한 자리입니다. 등록이 열리면 "11월에 엽니다" 줄만 뺍니다. */}
+        {/* DECIDED 2026-10-13 (사용자, 스크린숏: "너무 길어, 있는 말 반복이니까"): 여기 서던 registerNote 네 줄을 뺐습니다. 언제 여는지와
+            혼자 등록하는지는 히어로 한 줄이, 참가비와 장소, 진행 언어는 모달의 안내 상자가 말합니다. 스크리닝 문장(december.ctaNote)
+            한 줄만 남습니다. 홈에서 그 낱말은 이 한 자리입니다(docs/brand.md 9장). */}
         <p id="december-register-note" className={`break-keep text-center ${BODY} text-white/70`}>
-          {regState === "closed" ? t(registerCopy.closed) : [
-            ...(regState === "open" ? [] : [registerNote[0]]), registerNote[1], naru.december.ctaNote, ...registerNote.slice(2),
-          ].map((line, i) => <span key={i} className="block text-balance">{t(line)}</span>)}
+          {t(regState === "closed" ? registerCopy.closed : naru.december.ctaNote)}
         </p>
         <div className="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4">
           {regState === "open" ? (
@@ -1051,7 +1050,7 @@ export default function NaruHome() {
             </button>
           ) : regState === "not_open" ? (
             <>
-              {/* 위 안내 네 줄이 이 버튼의 캡션입니다. */}
+              {/* 위 안내 한 줄이 이 버튼의 캡션입니다. */}
               <PreparingButton t={t} noteId="december-register-note" onOpen={reg?.openRegister} />
               {/* DECIDED 2026-10-12 (등록 브리프 1.3, 리뷰 S8): 알림 버튼은 히어로와 같은 그라데이션 필입니다. 그 전에는 미리 보기,
                   알림, 후원 문의 셋이 같은 윤곽선이라 무엇을 눌러야 하는지 보이지 않았습니다. "페이지의 그라데이션 필은 히어로
