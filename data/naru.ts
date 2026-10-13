@@ -143,7 +143,11 @@ export const naruLinks = {
 // 무엇을 언제 받는지를 말하게 합니다. 막연한 구독이 아니라 날짜가 있는 약속이
 // 되어야, 미정 목록(december.tbd)과 이어집니다.
 export const openChatLabels = {
-  december: { ko: "등록이 열리면 가장 먼저 알기", en: "Know the day registration opens" },
+  // DECIDED 2026-10-12 (등록 브리프 1.3, 리뷰 S7): 라벨이 어디로 나가는지 말합니다. 그 전의 "등록이 열리면 가장 먼저 알기"에는
+  // 카카오톡이라는 말이 없어, 데스크톱에서 눌렀을 때 뜨는 설치 안내가 뜻밖이었습니다. 화살표는 OpenChatLink가 붙입니다.
+  december: { ko: "등록 소식 먼저 받기, 카카오톡 오픈채팅", en: "Get notified first, KakaoTalk open chat" },
+  // 알림 버튼 바로 아래의 한 줄(META). 데스크톱에서 누르면 카카오톡 설치 안내만 뜹니다.
+  phoneHint: { ko: "휴대폰에서 열면 바로 들어갑니다.", en: "Open it on your phone and you are in right away." },
   join: { ko: "오픈채팅에서 소식 받기", en: "Get news in the open chat" },
   footer: { ko: "오픈채팅", en: "Open chat" },
 } as const;
@@ -185,6 +189,45 @@ export const partnerContact = {
 // ── 크로싱 서울 등록 폼의 카피 (2026-09-18, Supabase 등록 브리프 2.1·2.4) ──────────
 // 질문의 라벨은 data/crossingForm.ts에 있습니다(질문과 라벨이 한 줄에). 여기는 폼의
 // 껍데기(제목, 버튼, 상태 문장)만. 8월의 dict.register는 건드리지 않습니다.
+//
+// ── 사실이 정해져야 쓰는 칸 (DECIDED 2026-10-12, 등록 브리프 1.1. 사용자: "전부 null로 시작합니다. 값을 지어내지 않습니다") ──
+// 값은 여기 한 곳에만 둡니다. null인 동안에는 그 자리에 "11월 등록 시작과 함께 이 페이지에 적습니다" 계열의 문장이 나옵니다.
+// 채울 때는 마침표 없는 한 문장을 {ko, en}으로 넣습니다. 예는 아래 각 줄의 주석. 지어내지 마세요.
+// retentionLine은 등록의 잠금이기도 합니다. null이면 등록 창에 시각을 넣어도 열리지 않습니다(data/crossingForm.ts의 CONSENT_NOTICE_READY).
+export const registerFacts: Record<"feeLine" | "venueLine" | "travelLine" | "hoursLine" | "retentionLine", Phrase | null> = {
+  feeLine: null,       // 참가비. 예: { ko: "참가비 3만원 이하", en: "The fee is 30,000 won or less" }
+  venueLine: null,     // 장소 권역. 예: { ko: "장소는 서울 강남권", en: "The venue is in the Gangnam area of Seoul" }
+  travelLine: null,    // 해외 학생의 항공과 숙소. 예: { ko: "항공과 숙소는 각자 준비합니다", en: "Flights and lodging are your own to arrange" }
+  hoursLine: null,     // 하루 시각. 예: { ko: "10시부터 19시까지", en: "from 10:00 to 19:00" }
+  retentionLine: null, // 개인정보 보유 기간. 예: { ko: "행사 종료 후 6개월", en: "six months after the event ends" }
+};
+
+// DECIDED 2026-10-12 (등록 브리프 1.2, 리뷰 S1 S2 S3 S7 S9): 등록이 열리기 전의 안내는 이 네 줄 하나입니다. 히어로 안내
+// (#hero-register-note)가 첫 두 줄을, 등록 블록(#december-register-note)과 모달의 안내 상자가 네 줄 전부를 읽습니다.
+// 그 전에는 세 자리의 문장이 서로 달랐고, 언제 열리는지(11월)가 어디에도 없었습니다.
+// 셋째, 넷째 줄은 위 registerFacts가 채워지면 그 값으로 바뀝니다.
+function registerNoteLines(): Phrase[] {
+  const { feeLine: fee, venueLine: venue, travelLine: travel } = registerFacts;
+  const later = (ko: string, en: string): Phrase => ({ ko: `${ko} 11월 등록 시작과 함께 이 페이지에 적습니다.`, en: `${en} will be written on this page when registration opens in November.` });
+  const said = (p: Phrase): Phrase => ({ ko: `${p.ko}.`, en: `${p.en}.` });
+  const join = (a: Phrase, b: Phrase): Phrase => ({ ko: `${a.ko} ${b.ko}`, en: `${a.en} ${b.en}` });
+  const feeVenue =
+    fee && venue ? join(said(fee), said(venue))
+    : fee ? join(said(fee), later("장소는", "The venue"))
+    : venue ? join(later("참가비는", "The fee"), said(venue))
+    : later("참가비와 장소는", "The fee and the venue");
+  const travelLine = travel
+    ? said(travel)
+    : { ko: "해외에서 오는 학생의 항공과 숙소 안내도 그때 함께 적습니다.", en: "Notes on flights and lodging for students coming from abroad will be written then too." };
+  return [
+    { ko: "등록은 11월에 엽니다. 여는 날은 카카오톡 오픈채팅에서 먼저 알립니다.", en: "Registration opens in November. The day it opens is announced first in the KakaoTalk open chat." },
+    { ko: "등록은 혼자, 팀은 Day 1에 맺습니다. 전공과 코딩 경험은 조건이 아닙니다.", en: "You register on your own, and teams are formed on Day 1. Your major and coding experience are not conditions." },
+    feeVenue,
+    join(travelLine, { ko: "진행은 한국어입니다.", en: "The programme runs in Korean." }),
+  ];
+}
+export const registerNote: Phrase[] = registerNoteLines();
+
 export const register = {
   cta: { ko: "등록하기", en: "Register" },
   // 2026-09-18 (감사 반영 브리프 1.1): 창이 열리기 전의 버튼 라벨과 그 아래 캡션. 비활성
@@ -195,9 +238,14 @@ export const register = {
   // 폼이 열립니다. 무엇을 묻는지 미리 볼 수 있고, 제출 버튼만 꺼져 있습니다. 아래 notYet의 "클릭이 되게 하지는
   // 말고"(2026-09-18)는 이 결정이 대신합니다. 서버는 전과 같이 창이 열리기 전의 제출을 403으로 막습니다.
   previewCta: { ko: "등록 폼 미리 보기", en: "Preview the form" },
-  previewCtaNote: { ko: "등록은 아직 열리지 않았습니다. 제출은 등록이 열린 뒤에 할 수 있습니다.", en: "Registration is not open yet. You can submit once it opens." },
-  previewBanner: { ko: "등록은 아직 열리지 않았습니다. 지금은 무엇을 묻는지 미리 볼 수 있고, 제출은 등록이 열린 뒤에 할 수 있습니다.", en: "Registration is not open yet. You can see what we ask now, and submit once registration opens." },
-  previewSubmit: { ko: "아직 제출할 수 없습니다", en: "Not open for submission yet" },
+  // DECIDED 2026-10-12 (등록 브리프 1.2, 1.4): 미리 보기의 안내(히어로 캡션, 모달 상자)는 위 registerNote가 대신합니다.
+  // 그 전의 previewCtaNote, previewBanner("등록은 아직 열리지 않았습니다…")는 없앴습니다. 모달 상자는 그 네 줄 뒤에
+  // previewKeep 한 문장을 붙입니다. 초안이 기기에 남는다는 사실을 사생활 고지가 아니라 쓸모로 말합니다(리뷰 S4).
+  previewKeep: { ko: "지금 적어 두면 이 기기에 남아, 열리는 날 바로 보낼 수 있습니다.", en: "What you fill in now stays on this device, so you can send it the day registration opens." },
+  previewSubmit: { ko: "11월에 열리면 보낼 수 있습니다", en: "You can send this when it opens in November" },
+  // 미리 보기일 때의 제목. 등록이 열리면 아래 title을 그대로 씁니다.
+  previewTitle: { ko: "크로싱 서울 등록 (미리 보기)", en: "CROSSING SEOUL registration (preview)" },
+  requiredLegend: { ko: "필수", en: "required" },
   // 창이 열리기 전에도 버튼은 보입니다(사용자, 2026-09-18: "넣어는 줘. 클릭이 되게 하지는 말고").
   // disabled이고 title로 이 문장을 보여 줍니다.
   notYet: { ko: "등록은 아직 열리지 않았습니다. 열리면 이 버튼이 켜집니다.", en: "Registration is not open yet. This button turns on when it is." },
@@ -207,6 +255,7 @@ export const register = {
   // 팀원 줄의 문구(memberYou, memberN, addMember, removeMember, teamSize)는 폼에서 팀 등록이 빠지며 없앴습니다.
   intro: { ko: "스크리닝은 없습니다. 오는 사람이 참가자입니다. 한 사람씩 등록하고, 팀은 현장에서 맺습니다.", en: "No screening. If you come, you are in. Everyone registers individually, and teams are formed on site." },
   // 2026-10-08 (폼 리뷰 10): 초안이 이 기기에 남는다는 것을 알립니다. 동의 표시는 초안에 넣지 않습니다.
+  // 2026-10-12: 등록이 열린 뒤에만 그립니다. 미리 보기에서는 previewKeep이 같은 사실을 말합니다.
   draftNote: { ko: "입력한 내용은 보내기 전까지 이 기기에만 임시로 저장됩니다.", en: "What you type is kept on this device only until you send it." },
   optional: { ko: "(선택)", en: "(optional)" },
   selectPlaceholder: { ko: "선택", en: "Select" },
@@ -2361,8 +2410,11 @@ export const naru = {
       // DECIDED 2026-10-08 (사용자 승인, 홈 리뷰 2~5. 사용자: "12월 참가비와 장소, Day 0 - 참여자 대상 카톡방으로 공개"):
       // 자격과 안내 경로를 결정 지점 옆에 적습니다. 등록 폼이 전공을 묻기 때문에 "묻지 않습니다"가 아니라 "조건이 아닙니다"입니다.
       // 진행 언어는 레포 어디에도 정해져 있지 않아 쓰지 않았습니다(TODO: confirm).
-      ko: "등록은 아직 열리지 않았습니다. 전공과 코딩 경험은 참가 조건이 아닙니다. 스크리닝 없이, 오는 사람이 참가자입니다. 참가비와 장소, Day 0 안내는 참가자 카카오톡 방에서 알립니다.",
-      en: "Registration is not open yet. Your major and coding experience are not conditions. There is no screening: if you come, you are in. The fee, the venue and the Day 0 details are announced in the participants' KakaoTalk room.",
+      // DECIDED 2026-10-12 (등록 브리프 1.2): 이 줄에는 스크리닝 문장 하나만 남습니다. 언제 열리는지, 혼자 등록하는지, 참가비와
+      // 장소가 언제 적히는지는 registerNote 네 줄이 말하고, 등록 블록이 그 네 줄의 둘째 줄 뒤에 이 문장을 끼웁니다.
+      // 홈에서 "스크리닝"이라는 낱말은 이 한 자리입니다(docs/brand.md 9장).
+      ko: "스크리닝 없이, 오는 사람이 참가자입니다.",
+      en: "There is no screening: if you come, you are in.",
     },
     ctaMail: { ko: "출제사 및 후원 문의", en: "Problem owners and sponsors" },
   },

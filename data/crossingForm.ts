@@ -17,6 +17,8 @@
 // 라벨이 한 줄에 있어야 질문을 바꿀 때 한 곳만 고칩니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { registerFacts } from "./naru";
+
 // radio (2026-10-07, 신청 폼 브리프 2.3): 하나만 고르는 선택 카드. 검증은 select와 같습니다(목록 안의 값인지).
 export type FieldType = "text" | "email" | "select" | "radio" | "textarea" | "checkbox" | "country";
 /** hint: 선택지 아래 작은 설명(예시). radio 카드가 그립니다. */
@@ -51,22 +53,23 @@ export const COUNTRY_OTHER = "OTHER";
 export const COUNTRY_OTHER_KEY = "study_country_other";
 
 // ── 개인정보 동의 안내 ────────────────────────────────────────────────────────
-// 수집 항목, 목적, 거부할 권리는 아래에 적었습니다. 보관 기간은 아직 정해지지 않았습니다.
-// TODO: confirm (사용자). 보관 기간 문장을 CONSENT_RETENTION에 {ko, en}으로 넣으세요.
-//   예: { ko: "보관: 행사가 끝난 뒤 N개월까지 보관하고 지웁니다.", en: "Retention: kept until N months after the event, then deleted." }
+// 수집 항목, 목적, 거부할 권리는 아래에 적었습니다. 보유 기간은 아직 정해지지 않았습니다.
+// TODO: confirm (사용자). 보유 기간은 data/naru.ts의 registerFacts.retentionLine에 {ko, en}으로 넣으세요(예는 그 줄의 주석).
+// DECIDED 2026-10-12 (등록 브리프 1.1, 1.4): CONSENT_RETENTION의 값은 registerFacts.retentionLine에서 옵니다.
+// 사실이 정해져야 쓰는 칸 다섯이 한 곳에 있습니다. 이름은 남겼습니다(라우트의 로그와 lib/registrationWindow.ts의 주석이 부릅니다). 잠금은 그대로입니다:
 // 이 값이 null인 동안에는 등록 창(lib/registrationWindow.ts)에 시각을 넣어도 등록이 열리지 않습니다.
 // registrationState가 not_open을 돌려주고, 라우트(app/api/crossing/register)도 따로 막습니다.
-// 보관 기간 없이 개인정보를 받지 않으려는 잠금입니다.
-export const CONSENT_RETENTION: { ko: string; en: string } | null = null;
+// 보유 기간 없이 개인정보를 받지 않으려는 잠금입니다. null인 동안 동의 문구는 보유 기간을 언제 적는지만 말합니다.
+export const CONSENT_RETENTION: { ko: string; en: string } | null = registerFacts.retentionLine;
 export const CONSENT_NOTICE_READY = CONSENT_RETENTION !== null;
+const retention = CONSENT_RETENTION;
 const CONSENT_BASE = {
-  ko: "수집 항목: 이름, 이메일, 카카오톡 ID, 학교, 공부하는 나라, 전공, AI로 해 본 것, 링크드인(선택). 목적: 참가 안내와 현장 팀 편성. 동의하지 않을 수 있고, 그 경우 등록할 수 없습니다.",
-  en: "What we collect: name, email, KakaoTalk ID, school, country of study, major, your AI step, and LinkedIn (optional). Purpose: participation notices and on-site team formation. You may decline, in which case you cannot register.",
+  ko: "수집 항목: 이름, 이메일, 카카오톡 ID, 학교, 공부하는 나라, 전공(선택), AI로 해 본 것, 링크드인(선택). 목적: 참가 안내와 현장 팀 편성. 동의하지 않을 수 있고, 그 경우 등록할 수 없습니다.",
+  en: "What we collect: name, email, KakaoTalk ID, school, country of study, major (optional), your AI step, and LinkedIn (optional). Purpose: participation notices and on-site team formation. You may decline, in which case you cannot register.",
 };
-const retention = CONSENT_RETENTION as { ko: string; en: string } | null;
 const CONSENT_HELP = retention
-  ? { ko: `${CONSENT_BASE.ko} ${retention.ko}`, en: `${CONSENT_BASE.en} ${retention.en}` }
-  : CONSENT_BASE;
+  ? { ko: `${CONSENT_BASE.ko} 보유 기간: ${retention.ko}.`, en: `${CONSENT_BASE.en} Retention: ${retention.en}.` }
+  : { ko: `${CONSENT_BASE.ko} 보유 기간은 등록이 열릴 때 함께 적습니다.`, en: `${CONSENT_BASE.en} The retention period will be written here when registration opens.` };
 
 export const CROSSING_FORM: Field[] = [
   // ── 사람 단위 ────────────────────────────────────────────────────────────

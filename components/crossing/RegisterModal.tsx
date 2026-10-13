@@ -25,7 +25,7 @@ import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 import { CURRENT_EVENT } from "@/lib/registrationWindow";
 import TurnstileWidget from "@/components/crossing/TurnstileWidget";
 import { TURNSTILE_ACTION } from "@/lib/register/turnstileAction";
-import { naruLinks, openChatLabels, register as copy } from "@/data/naru";
+import { naruLinks, openChatLabels, register as copy, registerNote } from "@/data/naru";
 import { links, type Phrase } from "@/data/dictionaryCore";
 import { BODY, META } from "@/components/ui/typography";
 import { buttonClass } from "@/components/ui/Button";
@@ -348,7 +348,9 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                   <p className={`mt-2 break-keep pr-12 ${BODY} leading-relaxed text-white/85`}>{t(copy.intro)}</p>
                   <p className={`mt-1 ${META} leading-relaxed text-white/70`}>{t(copy.draftNote)}</p>
                   {(preview || closed) && (
-                    <p id="crossing-register-preview" role="note" className={`mt-4 rounded-2xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] px-4 py-3 ${BODY} leading-relaxed text-amber-50/90`}>{t(closed ? copy.closed : copy.previewBanner)}</p>
+                    <p id="crossing-register-preview" role="note" className={`mt-4 rounded-2xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] px-4 py-3 ${BODY} leading-relaxed text-amber-50/90`}>
+                      {closed ? t(copy.closed) : [...registerNote, copy.previewKeep].map((line, i) => <span key={i} className="block break-keep">{t(line)}</span>)}
+                    </p>
                   )}
                   <form onSubmit={onSubmit} className="mt-6 flex flex-col gap-4" noValidate>
                     {/* 허니팟. 8월과 같은 세 겹의 방어(이름, 매니저 opt-out, 서버 로그). */}

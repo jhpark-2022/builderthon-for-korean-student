@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
-import { naru, naruLinks, openChatLabels, register as registerCopy, type RecordPhoto } from "@/data/naru";
+import { naru, naruLinks, openChatLabels, register as registerCopy, registerNote, type RecordPhoto } from "@/data/naru";
 import { useCrossingRegisterOptional } from "@/components/crossing/RegisterProvider";
 import { links, type Phrase } from "@/data/dictionaryCore";
 import { useEffect, useState } from "react";
@@ -745,13 +745,21 @@ export default function NaruHome() {
               </Link>
             </div>
             {regState === "not_open" && (
-              <p id="hero-register-note" className={`mt-3 ${META} leading-snug text-white/85`}>{t(registerCopy.previewCtaNote)}</p>
+              <p id="hero-register-note" className={`mt-3 break-keep ${META} leading-snug text-white/85`}>
+                {registerNote.slice(0, 2).map((line, i) => <span key={i} className="block">{t(line)}</span>)}
+              </p>
+            )}
+            {/* 알림 버튼의 캡션(등록 브리프 1.3, 리뷰 S7). 데스크톱에서 누르면 카카오톡 설치 안내만 뜨기 때문입니다. */}
+            {regState === "not_open" && links.openChat && (
+              <p id="hero-chat-note" className={`mt-2 break-keep ${META} leading-snug text-white/85`}>{t(openChatLabels.phoneHint)}</p>
             )}
             {/* DECIDED 2026-10-11 (사용자: "버튼 안에 넣지는 말고, 설명은 보일 수 있도록"): AI 유형 테스트가 무엇에 쓰이는지 버튼 줄 아래에 적습니다.
                 Day 1의 팀 매칭용이고, 그 전에도 해 볼 수 있지만 결과는 Day 1 전에는 저장되지 않습니다(/match의 2026-10-08 결정과 같은 사실). */}
             <p id="hero-match-note" className={`mt-2 break-keep ${META} leading-snug text-white/85`}>
               {/* 문장마다 한 줄. 한 문단으로 두면 둘째 문장의 첫 낱말만 윗줄 끝에 걸렸습니다. */}
               {t(naru.eventHero.matchNote).split(/(?<=\.) /).map((line, i) => <span key={i} className="block">{line}</span>)}
+            {/* DECIDED 2026-10-12 (등록 브리프 1.2, 리뷰 S1 S3): 히어로의 안내는 registerNote의 첫 두 줄입니다. 언제 열리는지,
+                혼자 등록해도 되는지, 전공과 코딩 경험이 조건인지가 첫 화면 안에서 답해집니다. 등록 블록과 모달이 같은 줄을 읽습니다. */}
             </p>
           </div>
           {/* 오른쪽 단 = 8월 행사 사진 넷 (DECIDED 2026-09-17, 사용자). 8월 히어로의
@@ -1040,8 +1048,12 @@ export default function NaruHome() {
         <div id="register" className={`${READ} mt-8 text-balance text-center lg:mt-12`}>
         {/* 2026-10-11 (리뷰 A5): 등록 블록의 제목. 화면에는 그리지 않고 제목 목록에서 찾을 수 있게 합니다. */}
         <h3 className="sr-only">{t({ ko: "등록", en: "Registration" })}</h3>
-        <p id="december-register-note" className={`text-balance break-keep text-center ${BODY} text-white/70`}>
-          {regState === "closed" ? t(registerCopy.closed) : t(naru.december.ctaNote)}
+        {/* DECIDED 2026-10-12 (등록 브리프 1.2): 히어로, 모달과 같은 registerNote 네 줄입니다. 둘째 줄 뒤에 스크리닝 문장
+            (december.ctaNote)이 끼어 섭니다. 홈에서 그 낱말은 이 한 자리입니다. 등록이 열리면 "11월에 엽니다" 줄만 뺍니다. */}
+        <p id="december-register-note" className={`break-keep text-center ${BODY} text-white/70`}>
+          {regState === "closed" ? t(registerCopy.closed) : [
+            ...(regState === "open" ? [] : [registerNote[0]]), registerNote[1], naru.december.ctaNote, ...registerNote.slice(2),
+          ].map((line, i) => <span key={i} className="block text-balance">{t(line)}</span>)}
         </p>
         <div className="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4">
           {regState === "open" ? (
@@ -1051,7 +1063,7 @@ export default function NaruHome() {
             </button>
           ) : regState === "not_open" ? (
             <>
-              {/* 위 ctaNote("등록은 아직 열리지 않았습니다…")가 이 버튼의 캡션입니다. */}
+              {/* 위 안내 네 줄이 이 버튼의 캡션입니다. */}
               <PreparingButton t={t} noteId="december-register-note" onOpen={reg?.openRegister} />
               <OpenChatLink t={t} src="naru-december" label={openChatLabels.december} variant="secondary" />
             </>
