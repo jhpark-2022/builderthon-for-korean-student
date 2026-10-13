@@ -1787,7 +1787,8 @@ export const naru = {
         // 마일스톤은 지나가는 지점이라 무엇을 하는지가 보이지 않았습니다. 키 이름(milestone, milestoneLabel 등)은 그대로 둡니다.
         // 그 전: k "마일스톤", v "...넘은 팀은 모두 그날 지원을 받고, 넘은 마일스톤이 그 팀의 기록으로 남습니다."
         k: { ko: "미션", en: "Missions" },
-        v: { ko: "날마다 하나씩 있습니다. 해낸 팀은 모두 그날 지원을 받고, 해낸 미션이 그 팀의 기록으로 남습니다.", en: "One a day. Every team that completes it gets support that day, and the missions a team completes become its record." },
+        // DECIDED 2026-10-13 (사용자, 멘토링 브리프 2): 미션은 Day 2부터이고 조건은 참여입니다. 그 전: "날마다 하나씩 있습니다."
+        v: { ko: "Day 2부터 날마다 하나씩 있습니다. 무엇을 냈는지보다 함께 있었는지를 봅니다. 해낸 팀은 모두 그날 지원을 받고, 해낸 미션이 그 팀의 기록으로 남습니다.", en: "One a day from Day 2. We look at whether you were there together, more than at what you handed in. Every team that completes it gets support that day, and the missions a team completes become its record." },
       },
       {
         // DECIDED 2026-10-11 (브랜드 브리프 B1, docs/brand.md의 금지어): 참가자가 읽는 자리에 "가설", "검증"을 쓰지 않습니다.
@@ -1908,6 +1909,7 @@ export const naru = {
     routeLegendSubmit: { ko: "제출이 있는 날", en: "Submission day" },
     routeLegendStage: { ko: "스테이지", en: "Stage" },
     // DECIDED 2026-10-11 (사용자: "각 날마다 이제 제출물 / milestone이 있는거임"): ★는 Day 1부터 Day 4까지 전부입니다.
+    // 2026-10-13: 미션은 Day 2부터라 Day 1은 빈 점입니다(멘토링 브리프 2).
     // routeLegendSubmit("제출이 있는 날")과 routeLegendStage는 그리지 않습니다. 키는 그대로.
     routeLegendMilestoneDay: { ko: "제출물과 미션이 있는 날", en: "A day with something to hand in and a mission" },
     // 폰에서만 그리는 한 줄(2026-10-11). 노선도의 정거장과 필이 눌린다는 것을 말합니다.
@@ -2277,13 +2279,8 @@ export const naru = {
         // submit은 "이해도 1장"이었고, 마일스톤과 같은 말로 맞췄습니다.
         // DECIDED 2026-10-11 (사용자: "그룹의 생각임"): "내 생각 1장"이었습니다. 한 장은 팀이 함께 씁니다.
         submit: { ko: "이슈에 대한 팀의 생각 1장", en: "One page of the team's take on the issue" },
-        milestone: { ko: "이슈에 대한 팀의 생각 1장", en: "One page of the team's take on the issue" },
-        // DECIDED 2026-10-11 (사용자: "마일스톤에 대한 자세한 설명이 클릭하면 보여지도록"): 마일스톤 띠를 누르면 열리는 설명.
-        // 새 사실은 없습니다. 같은 날의 body, 멘토링 상자, 2026-10-10 마일스톤 브리프에 있던 말입니다.
-        milestoneDetail: {
-          ko: "받은 이슈에서 팀이 직접 세운 문제를 한 장으로 적습니다. 이 한 장을 들고 멘토를 먼저 찾아갑니다.",
-          en: "Your team writes down, on one page, the problem it set from the issue it was given. That page is what you take to the mentors.",
-        },
+        // DECIDED 2026-10-13 (사용자, 멘토링 브리프 2, D2): Day 1에는 미션이 없습니다. milestone과 milestoneDetail을 뺐고,
+        // 노선도의 Day 1은 빈 점이 됩니다. 위 submit의 한 장은 내는 것이 아니라 Day 2에 멘토에게 들고 가는 것입니다.
       },
       {
         name: { ko: "Check", en: "Check" },
@@ -2309,10 +2306,12 @@ export const naru = {
             en: "Three hours with a working PO on what they chose to build, and why. AI builds fast. Choosing is still yours.",
           },
         },
-        milestone: { ko: "현업에게 확인받은 문제 정의", en: "A problem definition checked with the people who do the work" },
+        // DECIDED 2026-10-13 (사용자, 멘토링 브리프 2, D4): 미션은 Day 2부터이고, 무엇을 냈는가보다 함께 있었는가를 봅니다.
+        // 그래서 조건이 "팀 전원"입니다. 그 전: "현업에게 확인받은 문제 정의".
+        milestone: { ko: "팀 전원이 멘토를 찾아가 확인받기", en: "The whole team takes it to a mentor" },
         milestoneDetail: {
-          ko: "Day 1에 세운 문제 정의를 멘토와 현업에게 가져가 확인받습니다. 무엇을 내는 것이 아니라, 확인받는 것이 이 날의 미션입니다.",
-          en: "You take the problem you defined on Day 1 to mentors and to the people doing the work, and have it checked. Nothing is handed in. Getting it checked is the mission.",
+          ko: "Day 1에 쓴 팀의 생각 한 장을 팀 전원이 함께 멘토에게 가져가 확인받습니다. 무엇을 내는 것이 아니라, 다 같이 가는 것이 이 날의 미션입니다.",
+          en: "Your whole team takes the one page from Day 1 to a mentor together and has it checked. Nothing is handed in. Going together is the mission.",
         },
       },
       {
@@ -2341,10 +2340,13 @@ export const naru = {
           },
         },
         submit: { ko: "덱을 포함한 사전 제출물", en: "The deck and what goes with it" },
-        milestone: { ko: "코드로 옮긴 결과물과 덱", en: "Something built in code, plus the deck" },
+        // DECIDED 2026-10-13 (사용자, 멘토링 브리프 2, D3): Day 3의 미션은 내는 것이 아니라 다른 팀 한 곳의 리허설에 의견을 주는 것입니다.
+        // 덱과 결과물(위 submit)은 미션과 별개로 성과 공유회 전에 냅니다. 브리프의 "연습 피칭"은 정본 5장(피칭은 안 쓰는 말)에 따라
+        // "리허설"로 씁니다(같은 날 사용자 확인, docs/brand.md 7장). 그 전: "코드로 옮긴 결과물과 덱".
+        milestone: { ko: "다른 팀의 리허설에 의견 주기", en: "Give notes on another team's rehearsal" },
         milestoneDetail: {
-          ko: "코드로 옮긴 결과물과 발표 덱을 성과 공유회 전에 냅니다. 정의한 지표로 결과를 확인하고, 틀리는 경우는 한계로 정리해 함께 담습니다.",
-          en: "You hand in what you built in code and the deck before the showcase. You check the result against the measure you set, and write down where it fails as its limits.",
+          ko: "리허설을 다른 팀에 보여 주고, 다른 팀 한 곳의 리허설에 의견을 남깁니다. 덱과 결과물은 미션과 별개로 성과 공유회 전에 냅니다.",
+          en: "Show your rehearsal to another team and leave notes on one other team's rehearsal. The deck and what you built are handed in before the showcase, separately from the mission.",
         },
       },
       {
