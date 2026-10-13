@@ -17,6 +17,7 @@ import type { Phrase } from "@/data/dictionaryCore";
 import { BODY, META } from "@/components/ui/typography";
 import OpenChatLink from "@/components/ui/OpenChatLink";
 import MotionToggle from "@/components/ui/MotionToggle";
+import { FooterNav, type SitePage } from "@/components/shared/PageChips";
 
 // ── 상자를 쓰는 자리 (DECIDED 2026-09-20, 표현 방식 브리프) ──────────────────
 // 셋뿐입니다. ①누를 수 있는 것 ②여러 항목이 한 덩어리로 묶여야 하는 기록
@@ -270,7 +271,7 @@ export function usePlateLite() {
 // 홈의 마지막 블록이 나루 티저(인장, 한 줄 소개, "나루 알아보기")라, 바로 아래 푸터가 로고와 소개를 한 번 더
 // 그리면 같은 것이 위아래로 둘이 됩니다. compact는 로고, 링 부제, 짧은 정의를 그리지 않고 크레딧부터 시작합니다.
 // /naru의 푸터는 전과 같습니다.
-export function SiteFooter({ compact = false }: { compact?: boolean } = {}) {
+export function SiteFooter({ compact = false, page }: { compact?: boolean; page: SitePage }) {
   const { t, locale } = useLocale();
   return (
       <footer id="closing" className="relative w-full border-t border-white/10 px-6 py-14 sm:px-10">
@@ -313,33 +314,9 @@ export function SiteFooter({ compact = false }: { compact?: boolean } = {}) {
               </span>
             ))}
           </p>
-          {/* gap-y-7 (2026-09-19, 모바일 감사 7): 아래 링크가 -my-3(−13.5px씩)이라
-              gap-y-2로는 행 간격이 −18px이었습니다. 지금은 오픈채팅이 막혀 링크가
-              둘뿐이라 한 줄에 들어가지만, 되살리면 즉시 발현하는 잠복 상태였습니다.
-              31.5 − 27 = 4.5px. */}
-          <div className={`flex flex-wrap items-center justify-center gap-x-5 gap-y-7 ${META}`}>
-            {/* min-h-[44px] (2026-10-11, 리뷰 작은 것): 전에는 38px이었습니다. */}
-            <OpenChatLink t={t} src="naru-footer" label={openChatLabels.footer} className="min-h-[44px] !px-3.5 !py-2 !text-xs" />
-            <a
-              href={naruLinks.general}
-              onClick={() => track("naru_mail", { src: "footer" })}
-              // min-w-[44px] (2026-09-19, 감사 반영): "문의"/"Contact"는 글자가
-              // 짧아 가로 23.4px이었습니다. 세로 44px은 -my-3 + py-3이 만들지만
-              // 가로는 아무것도 보장하지 않았어요. 가운데 정렬로 글자 자리는 그대로.
-              className="-my-3 inline-flex min-h-[44px] min-w-[44px] items-center justify-center py-3 text-white/70 underline-offset-4 transition hover:text-white hover:underline"
-            >
-              {t(naru.footer.contact)}
-            </a>
-            <Link
-              href={naruLinks.archive}
-              // min-w-[44px] (2026-09-19, 감사 반영): "문의"/"Contact"는 글자가
-              // 짧아 가로 23.4px이었습니다. 세로 44px은 -my-3 + py-3이 만들지만
-              // 가로는 아무것도 보장하지 않았어요. 가운데 정렬로 글자 자리는 그대로.
-              className="-my-3 inline-flex min-h-[44px] min-w-[44px] items-center justify-center py-3 text-white/70 underline-offset-4 transition hover:text-white hover:underline"
-            >
-              {t(naru.footer.archive)}
-            </Link>
-          </div>
+          {/* DECIDED 2026-10-13 (등록 브리프 2.3): 세 페이지의 푸터가 같은 한 줄을 씁니다(페이지 셋, 오픈채팅, 문의).
+              그 전의 오픈채팅 칩, 문의, "제로백 빌더톤의 기록" 링크는 이 줄 안에 있습니다. */}
+          <FooterNav t={t} page={page} />
           <p className={`${META} text-white/70`}>{t(naru.footer.rights)}</p>
           {/* 배경 움직임 끄기. WCAG 2.2.2. 자리가 푸터인 이유는 컴포넌트 주석에
               있습니다. */}

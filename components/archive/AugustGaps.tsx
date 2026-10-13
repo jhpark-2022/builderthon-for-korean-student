@@ -31,7 +31,7 @@ export default function AugustGaps() {
         <Link
           href="/#december"
           onClick={() => track("archive_cta", { src: "gaps", to: "december" })}
-          className="inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-white/85 underline-offset-4 transition hover:text-white hover:underline"
+          className="inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-white/85 underline underline-offset-4 transition hover:text-white"
         >
           {t(naru.december.gapsBackLink)}
           <span aria-hidden>→</span>

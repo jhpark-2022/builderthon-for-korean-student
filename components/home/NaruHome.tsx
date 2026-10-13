@@ -685,23 +685,9 @@ export default function NaruHome() {
             </p>
             <p className={`mx-auto mt-3 max-w-xl text-balance break-keep ${BODY} leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)]`}>
               {/* 나루 한 문장이 서술 첫 줄(감사 반영 브리프 1.2). TODO: confirm(문구는 사용자가). */}
-              {/* DECIDED 2026-10-10 (구조 브리프 2.4): 첫 화면에서 누가 여는지는 한 번 말하고, "나루"가 /naru로 갑니다.
-                  밑줄 없이 색만 다릅니다. 낱말이 문장에 없으면 링크 없이 문장만 그립니다. */}
-              <span className="text-white">
-                {(() => {
-                  const line = t(naru.eventHero.naruLine);
-                  const term = t(naru.eventHero.naruLineTerm);
-                  const i = line.indexOf(term);
-                  if (i < 0) return line;
-                  return (
-                    <>
-                      {line.slice(0, i)}
-                      <Link href="/naru" onClick={() => track("naru_cta", { src: "hero", to: "naru-page" })} className="text-accent transition hover:text-white">{term}</Link>
-                      {line.slice(i + term.length)}
-                    </>
-                  );
-                })()}
-              </span>{" "}
+              {/* DECIDED 2026-10-13 (등록 브리프 2.3): 이 문장의 "나루"는 링크가 아닙니다. 2026-10-10에는 색만 다른 인라인 링크였는데,
+                  /naru로 가는 길은 헤더의 페이지 칩과 홈 끝의 티저 버튼이 맡습니다. 본문 인라인 링크는 밑줄 하나로 통일합니다. */}
+              <span className="text-white">{t(naru.eventHero.naruLine)}              </span>{" "}
               {t(naru.eventHero.sub)}
             </p>
             {/* DECIDED 2026-10-11 (사용자, 스크린숏: "여기에 있으면 좋겠음. 2x2, 버튼 별 사이즈는 똑같이"): AI 유형 테스트 버튼이 일정표의
@@ -1266,7 +1252,7 @@ export default function NaruHome() {
       <MobileChatBar afterId="gains" endId="closing" phone />
       </main>
 
-      <SiteFooter compact />
+      <SiteFooter compact page="crossing" />
     </>
   );
 }

@@ -33,6 +33,7 @@ import Chip from "@/components/ui/Chip";
 import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 import HeroPartnerStrip, { sortLikeHeroStrip, sponsorMass } from "@/components/shared/HeroPartnerStrip";
 import MobileChatBar from "@/components/shared/MobileChatBar";
+import { FooterNav } from "@/components/shared/PageChips";
 import { BAND_TINT, BandFades } from "@/components/shared/Band";
 import FlowStrip from "@/components/shared/FlowStrip";
 import { useHeroSplit } from "@/components/shared/useHeroSplit";
@@ -2389,9 +2390,11 @@ export default function Journey() {
           </dl>
           <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">{t(dict.record.awards)}</p>
           <Link
-            href="/#record"
-            onClick={() => track("naru_cta", { src: "august_results", to: "record" })}
-            className="mt-4 inline-flex min-h-[44px] items-center gap-1.5 text-xs font-semibold text-violet-200 underline-offset-4 transition hover:text-white hover:underline"
+            // 2026-10-13 (등록 브리프 2.3, 리뷰 N6): /#record는 /naru#record로 한 번 더 넘어가 두 문장짜리 블록에 닿았고, 거기 버튼은
+            // 다시 이 페이지였습니다. 사진은 홈 히어로에 있으므로 홈 맨 위로 갑니다. 인라인 링크는 밑줄입니다.
+            href="/"
+            onClick={() => track("naru_cta", { src: "august_results", to: "home" })}
+            className="mt-4 inline-flex min-h-[44px] items-center gap-1.5 text-xs font-semibold text-accent underline underline-offset-4 transition hover:text-white"
           >
             {t(dict.record.more)}
             <span aria-hidden>→</span>
@@ -3611,8 +3614,10 @@ export default function Journey() {
               버튼이 둘이면 둘 다 약해집니다. */}
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
-              href="/#december"
-              onClick={() => track("naru_cta", { src: "august_closing", to: "december" })}
+              // 2026-10-13 (등록 브리프 2.3, 리뷰 N2): 홈 맨 위로 갑니다. /#december는 히어로와 등록 버튼을 건너뛰었습니다.
+              // 이 페이지에서 /#december로 가는 링크는 라벨이 "프로그램"인 #gaps의 하나뿐입니다.
+              href="/"
+              onClick={() => track("naru_cta", { src: "august_closing", to: "home" })}
               className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
             >
               {t(dict.footer.ctaDecember).replace("{name}", decemberEventLabel(locale))}
@@ -3658,7 +3663,9 @@ export default function Journey() {
         <div className="mx-auto mt-10 w-full max-w-3xl border-t border-white/10 pt-8 text-center">
           <p className="text-sm font-bold tracking-widest text-white">ZERO100 AI BUILDERTHON</p>
           <p className="mt-2 text-xs text-white/65">{t(dict.footer.hostedBy)}</p>
-          <p className="mt-4 text-xs text-white/55">© 2026 {t(dict.footer.rights)}</p>
+          {/* 2026-10-13 (등록 브리프 2.3, 리뷰 N7): 세 페이지가 같은 한 줄을 씁니다. 저작권은 나루입니다. 위 주최 표기는 8월 그대로. */}
+          <div className="mt-4"><FooterNav t={t} page="aug" /></div>
+          <p className="mt-2 text-xs text-white/70">© 2026 {t(dict.footer.rights)}</p>
           {/* 배경 움직임 끄기 (2026-09-15). WCAG 2.2.2는 이 페이지에도 적용되고,
               배경 필드는 여기서도 무한히 돕니다. 이 한 줄이 이 파일에 더해진
               전부입니다. */}

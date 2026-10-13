@@ -359,7 +359,8 @@ export const dict = {
       ko: "어워드는 순위 없이 네 부문에서 열 팀이 받았습니다.",
       en: "Awards had no placings. Ten teams were recognised across four categories.",
     },
-    more: { ko: "8일의 사진과 이야기는 나루 홈에", en: "Photos and the story are on the NARU home page" },
+    // 2026-10-13 (등록 브리프 2.3): 홈은 나루가 아니라 크로싱 서울입니다(2026-10-10부터). 링크는 홈 맨 위로 갑니다.
+    more: { ko: "8일의 사진은 크로싱 서울 홈에", en: "Photos from the eight days are on the CROSSING SEOUL home page" },
     // 모집 때 쓴 글(참가 대상, 혜택, 문답) 위에 붙는 한 줄. 그 글들은 그때 안내한 그대로
     // 남겨 두었고, 지금 신청을 받는 내용이 아니라는 것을 섹션마다 한 번 말합니다.
     asWritten: {
@@ -750,7 +751,7 @@ export const dict = {
     // 한국어로 읽는 사람에게 이 둘만 영어로 튀었습니다. 네비의 레일 칩이 이미
     // "프로그램"이라고 부르고 있어 이름도 그쪽에 맞춥니다.
     // FAQ는 예외로 둡니다 - 한국어에서도 그대로 FAQ라고 씁니다.
-    tag: { ko: "프로그램", en: "Program" },
+    tag: { ko: "프로그램", en: "Programme" },
     heading: { ko: "8일, zero에서 MVP까지", en: "8 days, from zero to MVP" },
     // ── 최종 아웃풋 (프로그램 머리) ──────────────────────────────────────────
     // The page said what happens on each day and never said what a team hands in
@@ -3410,10 +3411,8 @@ export const dict = {
         en: "NARU and CROSSING SEOUL both came out of these eight days.",
       },
     },
-    rights: {
-      ko: "Zero100 AI Builderthon. All rights reserved.",
-      en: "Zero100 AI Builderthon. All rights reserved.",
-    },
+    // 2026-10-13 (등록 브리프 2.3, 리뷰 N7): 저작권 표기는 본 사이트와 같습니다("© 2026 나루 NARU"). 주최 표기(hostedBy)는 8월 그대로.
+    rights: { ko: "나루 NARU", en: "NARU" },
   },
 
   // ── 화면에 글로 보이지 않는 문구들 ──────────────────────────────────────

@@ -522,7 +522,7 @@ export default function NaruPage() {
       {/* 하단 오픈채팅 바. 홈에 있을 때와 같은 조건입니다(#record가 지나면 나타나고 푸터가 보이면 물러남). */}
       <MobileChatBar afterId="record" endId="closing" phone />
     </main>
-    <SiteFooter />
+    <SiteFooter page="naru" />
     </>
   );
 }
