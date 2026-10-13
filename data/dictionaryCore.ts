@@ -32,27 +32,33 @@ export const links = {
   // 폰 하단 바, 홈과 /2026-08의 자리들)이 `links.openChat &&`로 지키고 있어서 이 한 줄로
   // 함께 돌아옵니다. 다시 막으려면 빈 문자열로 두면 됩니다.
   openChat: "https://open.kakao.com/o/g6msvcFi",
+  // 자리를 가리지 않는 일반 문의. 세 페이지 푸터의 한 줄이 씁니다(data/naru.ts의 naruLinks.general과 같은 주소, 같은 제목).
+  general: `mailto:pjh030924@gmail.com?subject=${encodeURIComponent("나루 문의")}`,
 };
 
 export const coreDict = {
+  // DECIDED 2026-10-13 (등록 브리프 2.1): 세 페이지를 잇는 칩 셋. 순서는 고정입니다(components/shared/PageChips.tsx).
+  // 영문 칩은 브리프가 "Crossing Seoul"이라고 적었지만 정본(docs/brand.md 6장: 영문은 항상 대문자)을 따라 대문자입니다.
+  // footerLabel은 푸터의 한 줄에서 쓰는 긴 이름입니다.
+  pages: [
+    { key: "crossing", href: "/", label: { ko: "크로싱 서울", en: "CROSSING SEOUL" }, footerLabel: { ko: "크로싱 서울", en: "CROSSING SEOUL" } },
+    { key: "naru", href: "/naru", label: { ko: "나루", en: "NARU" }, footerLabel: { ko: "나루", en: "NARU" } },
+    { key: "aug", href: "/2026-08", label: { ko: "8월 기록", en: "Aug 2026" }, footerLabel: { ko: "제로백 빌더톤 8월 기록", en: "Zero100 builderthon, Aug 2026" } },
+  ],
+  footerNav: {
+    aria: { ko: "사이트 안내", en: "Site" },
+    openChat: { ko: "오픈채팅", en: "Open chat" },
+    contact: { ko: "문의", en: "Contact" },
+  },
   nav: {
     // 두 탐색 랜드마크의 이름 (2026-09-19, 접근성 감사 4). 이름 없는 nav가
     // 둘이면 iOS 로터에 "탐색, 탐색"으로 뜹니다. 하나는 상단 바(xl 이상의
     // 앵커 행), 하나는 폰·태블릿의 칩 레일입니다.
     primaryAria: { ko: "주요 탐색", en: "Primary" },
     sectionsAria: { ko: "챕터 목차", en: "Sections" },
-    // 폰 목차 줄에 상주하는 12월 이벤트 버튼 (2026-09-20, 사용자: "8월 페이지에는
-    // 12월 이벤트 페이지로 돌아갈 수 있는 버튼이 항상 보였으면 좋겠어, along with
-    // the TOC at the top").
-    //
-    // 이름("크로싱 서울" / "CROSSING SEOUL")을 쓰지 않습니다. 목차 줄에 남는 폭이
-    // 좁고 en은 138px이라 칩 하나가 그 줄을 다 먹습니다. 이름은 맨 위 아카이브
-    // 배너와 마지막 화면의 CTA가 이미 말하고 있어요. 여기서는 **어디로 가는지**만
-    // 말하면 됩니다. 이 페이지가 지난 이벤트라는 것은 배너가 이미 못 박았으므로
-    // "12월"이면 그것이 지금 열려 있는 쪽이라는 뜻이 섭니다.
-    toDecember: { ko: "12월 이벤트", en: "Dec event" },
-    toDecemberAria: { ko: "12월 이벤트 페이지로 이동", en: "Go to the December event page" },
-    program: { ko: "프로그램", en: "Program" },
+    // 2026-10-13 (등록 브리프 2.1): 여기 있던 toDecember("12월 이벤트" / "Dec event")는 페이지 칩 셋(아래 pages)이 대신합니다.
+    // 2026-10-13 (등록 브리프 2.3): 영문은 정본대로 Programme.
+    program: { ko: "프로그램", en: "Programme" },
     // 2026-08-13에 앵커에서 뺐다가 2026-08-23에 되살렸습니다. 뺐던 이유는
     // "프로그램 앵커로 닿고 Day 카드에도 반복된다"였는데, Day 1이 지나고 Day 7·8
     // 세션이 남은 지금은 "누가 언제 오는지"가 실제로 찾는 정보가 됐습니다.

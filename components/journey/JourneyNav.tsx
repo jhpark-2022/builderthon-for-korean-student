@@ -15,6 +15,7 @@ import { isScrollLocked } from "@/lib/useBodyScrollLock";
 import LocaleToggle from "@/components/LocaleToggle";
 import MotionToggle from "@/components/ui/MotionToggle";
 import ChatGlyph from "@/components/ChatGlyph";
+import { PageChips, type SitePage } from "@/components/shared/PageChips";
 import { decemberEventLabel } from "@/lib/naruDates";
 import dynamic from "next/dynamic";
 // DECIDED 2026-10-08 (성능 리뷰 4): 인사 칩은 퀴즈 결과 표(data/quiz의 RESULTS, gzip 약 22KB)를 끌고 옵니다.
@@ -184,17 +185,17 @@ export default function JourneyNav({
   anchors = DEFAULT_ANCHORS,
   brand = "zero100",
   showQuiz = true,
-  back,
+  page,
   mark = "lockup",
 }: {
+  // DECIDED 2026-10-13 (등록 브리프 2.1): 지금 어느 페이지인가. 로고 옆(xl부터)과 레일 맨 앞(xl 아래)의 페이지 칩 셋이 읽습니다.
+  // 그 전의 back(/naru의 "← 크로싱 서울" 알약)과 8월 페이지의 "12월 이벤트 →" 알약은 이 칩 셋이 대신합니다.
+  page: SitePage;
   // DECIDED 2026-10-10 (구조 브리프 2.4, D2): 홈(/)의 헤더 왼쪽은 나루 락업이 아니라 크로싱 서울 워드마크입니다.
   // 두 이름이 한 화면에 로고로 같이 서는 것이 혼동의 절반이었습니다. 나루 락업은 /naru에서만 씁니다.
   // brand="naru"일 때만 봅니다. 기본값 "lockup"은 전과 같습니다.
   mark?: "lockup" | "crossing";
   anchors?: NavAnchor[];
-  // DECIDED 2026-10-10 (구조 브리프 3.1): /naru 헤더 왼쪽, 로고 옆의 돌아가기("← 크로싱 서울"). /match의 돌아가기와
-  // 같은 문법(화살표와 글자, 44px 히트 영역)입니다. 2026-10-10에 오른쪽으로 갔다가 2026-10-11에 왼쪽으로 돌아왔습니다. 넘기지 않으면 아무것도 그리지 않습니다(홈, /2026-08).
-  back?: { href: string; label: Phrase };
   // 어느 이름표를 다는가. 8월 페이지는 Zero100 락업(그 회차의 주최 표기가 그것이라
   // 역사입니다), 나루 홈은 나루 가로 락업입니다.
   // DECIDED 2026-09-15: 홈의 락업은 SVG가 아니라 PNG입니다. 납품된 SVG에는 영문
@@ -235,7 +236,7 @@ export default function JourneyNav({
   // 페이지는 움직이지 않음). 8월 페이지는 그대로(brand 조건).
   const railRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    if (brand !== "naru" || !activeSection || !railRef.current) return;
+    if (!activeSection || !railRef.current) return;
     // 2026-09-19: 홈 레일은 접히므로 가로로 넘칠 것이 없습니다. 넘치지 않으면
     // 아무것도 하지 않습니다(문서를 건드리지 않게).
     if (railRef.current.scrollWidth <= railRef.current.clientWidth + 1) return;
@@ -243,7 +244,7 @@ export default function JourneyNav({
     if (!chip) return;
     // 감사 반영 브리프 2.2: 활성 칩을 레일 가운데로. block:nearest라 문서는 움직이지 않습니다.
     chip.scrollIntoView({ inline: "center", block: "nearest", behavior: reduce ? "auto" : "smooth" });
-  }, [activeSection, brand, reduce]);
+  }, [activeSection, reduce]);
   // Shared with the bottom bars and the back-to-top button (lib/useScrollDirection):
   // on a phone this header is two rows tall and, together with the bottom rail,
   // was taking a quarter of an in-app browser's viewport. Scrolling DOWN - the
@@ -259,9 +260,6 @@ export default function JourneyNav({
   // 스크롤해야 돌아오고, 멈춰 있다고 돌아오지 않습니다(idleReveal false). 8월 페이지는 그 전
   // 그대로(헤더 전체 숨김 + 정지 시 복귀).
   const naru = brand === "naru";
-  // 돌아가기 알약이 로고 줄에 서는 폭(2026-10-11). 실측: 로고, 알약, 오픈채팅, 언어 토글을 합치면 한국어 556px, 영문 716px입니다
-  // (여백 90px 제외). 한국어는 md(768)부터, 영문은 lg(1024)부터 들어갑니다. 그 아래에서는 목차 레일의 마지막 칸입니다.
-  const backFrom = locale === "en" ? { show: "lg:inline-flex", hide: "lg:hidden" } : { show: "md:inline-flex", hide: "md:hidden" };
   const chromeHidden = useScrollDirection({ idleReveal: naru ? false : 450 });
   const headerRef = useRef<HTMLElement | null>(null);
   // 헤더 실높이를 scroll-padding-top으로(감사 반영 브리프 2.1). 접힌 상태에서는 레일 높이만큼만
@@ -385,7 +383,8 @@ export default function JourneyNav({
         // 아래로 스크롤하면 헤더 전체가 사라져서, 목차도 12월 버튼도 위로 긁어야
         // 나왔습니다. 사용자가 원한 것은 "항상 보이는 것"입니다. 대가는 폰에서
         // 53px이 상주하는 것이고, 홈이 이미 치르고 있는 값입니다.
-        chromeHidden ? (scrolled ? "-translate-y-[52px]" : "-translate-y-full") : "translate-y-0"
+        // 2026-10-13 (등록 브리프 2.2): 레일이 스크롤 0부터 있으므로 맨 위에서도 로고 줄만 접습니다(그 전에는 헤더 전체).
+        chromeHidden ? "-translate-y-[52px]" : "translate-y-0"
       }`}
     >
       {/* 52px in the two-row band, h-20 from xl: the tall bar was designed for a
@@ -450,7 +449,8 @@ export default function JourneyNav({
                 // 52px 바에서는 2xl(27px), 80px 바(xl부터)에서는 3xl(33.75px)로 전의 나루 락업(36~40px)과 비슷한 무게입니다.
                 // 영문 "CROSSING SEOUL"은 글자 수가 두 배라 폰에서는 작게 둡니다(390px에서 오른쪽 버튼과 28px, 360px에서도 닿지 않게).
                 // 한국어도 360px 아래에서는 한 단 작습니다. sm(640px)부터는 두 로케일이 같은 크기입니다.
-                locale === "en" ? "text-xs min-[390px]:text-sm sm:text-2xl xl:text-3xl" : "text-lg min-[360px]:text-2xl xl:text-3xl"
+                // 2026-10-13: 영문은 페이지 칩 셋이 로고 옆에 서는 xl~1399px에서 한 단 작게 둡니다(1280에서 왼쪽과 오른쪽 묶음이 0px로 닿았습니다).
+                locale === "en" ? "text-xs min-[390px]:text-sm sm:text-2xl min-[1400px]:text-3xl" : "text-lg min-[360px]:text-2xl xl:text-3xl"
               }`}>
                 {decemberEventLabel(locale)}
               </span>
@@ -497,7 +497,8 @@ export default function JourneyNav({
                 priority
                 // 360px 아래에서는 한 단계 작게(2026-10-08): 320 폭에서 로고 오른쪽 끝과
                 // 퀴즈 알약이 0px로 붙어 있었습니다. 위 mr-2와 함께 틈을 만듭니다.
-                className="h-6 w-auto opacity-90 brightness-0 invert min-[360px]:h-7 sm:h-8"
+                // 2026-10-13: 언어 토글이 두 버튼이 되어 17px 넓어졌습니다. 작은 로고를 380px 아래까지 씁니다(360에서 0px로 닿았습니다).
+                className="h-6 w-auto opacity-90 brightness-0 invert min-[380px]:h-7 sm:h-8"
               />
               {/* items-center centres the text box, but Hangul glyphs sit high in
                   that box (no descenders) so "AI 빌더톤" reads as floating above the
@@ -517,31 +518,23 @@ export default function JourneyNav({
                   two links; the zero100 wordmark alone carries the brand there.
                   KR fits from `xl` with 42px to spare, so it needs no second band.
                   Re-measure before touching 1500 - it is the EN row width, not a
-                  round number. */}
-              <span className={`hidden items-center whitespace-nowrap text-lg font-black leading-none tracking-wide text-white/90 sm:inline-flex sm:text-xl ${locale === "ko" ? "translate-y-[2px]" : "xl:hidden min-[1500px]:inline-flex"}`}>{t(dict.nav.brandSuffix)}</span>
+                  round number. 
+                  2026-10-13: 1500 → 1700. 페이지 칩 셋이 로고 옆에 서면서 1536에서 두 묶음 사이가 6px이었습니다(실측). */}
+              <span className={`hidden items-center whitespace-nowrap text-lg font-black leading-none tracking-wide text-white/90 sm:inline-flex sm:text-xl ${locale === "ko" ? "translate-y-[2px]" : "xl:hidden min-[1700px]:inline-flex"}`}>{t(dict.nav.brandSuffix)}</span>
             </a>
           )}
-          {/* DECIDED 2026-10-11 (사용자, 스크린숏: "크로싱 서울은 left에"): 돌아가기는 왼쪽 묶음, 로고 바로 옆입니다(한국어 md, 영문 lg부터. backFrom).
-              전날(2026-10-10) 오른쪽 묶음으로 보냈던 것을 되돌립니다. 그때의 걱정(목차의 첫 칸처럼 읽힘)은 모양으로 풉니다.
-              목차는 맨글자이고 이것은 테두리 있는 알약에 크로싱 서울 워드마크(그라데이션)입니다. 왼쪽에 서므로 화살표는 앞의 "←"입니다.
-              그 아래 폭은 로고 줄에 자리가 없어 목차 레일의 마지막 칸 그대로입니다. */}
-          {back && (
-            <Link
-              href={back.href}
-              aria-label={t(back.label)}
-              className={`ml-5 hidden min-h-[44px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-white/15 bg-white/[0.04] px-4 transition hover:border-white/30 hover:bg-white/[0.08] ${backFrom.show}`}
-            >
-              <span aria-hidden className="text-sm text-white/60">←</span>
-              <span lang={locale === "en" ? "en" : undefined} className="gradient-text bg-[linear-gradient(90deg,#9AA8EE_0%,#A99AD6_35%,#C99ACB_68%,#E08A76_100%)] bg-clip-text pb-[0.08em] text-lg font-black tracking-[-0.02em] text-transparent">
-                {decemberEventLabel(locale)}
-              </span>
-            </Link>
-          )}
+          {/* DECIDED 2026-10-13 (등록 브리프 2.1): 페이지 칩 셋. 세 페이지 모두 로고 바로 오른쪽, 같은 자리입니다(xl부터).
+              그 아래 폭에서는 레일의 맨 앞에 섭니다. 2026-10-11의 돌아가기 알약("← 크로싱 서울")은 이 칩이 대신합니다. */}
+          <div className="ml-5 hidden items-center gap-2 xl:flex">
+            <PageChips t={t} page={page} />
+          </div>
           {/* ANCHOR ROW - `xl` (1280), not `lg` (1024). See the note on the
               section rail below: between 1024 and 1279 this row does not fit
               next to the brand and the two CTAs in either locale, and flex
               silently crushed the brand to make room. */}
-          <div className={`hidden items-center gap-5 xl:flex ${back ? "xl:ml-6" : "xl:ml-10"}`}>
+          {/* 챕터 링크는 페이지 칩에서 24px 띄웁니다(등록 브리프 2.1). 8월 페이지는 다섯이라 2xl(1536)부터 섭니다.
+              실측: 1440에서 로고, 칩 셋, 링크 다섯, 오른쪽 묶음이 한 줄에 들어가지 않습니다. 그 아래에서는 레일이 맡습니다. */}
+          <div className={`hidden items-center gap-5 ${naru ? "xl:ml-6 xl:flex" : "2xl:ml-6 2xl:flex"}`}>
             {/* DECIDED 2026-10-10 (사용자: "TOC가 너무 어색함"): 나루 계열 헤더(홈, /naru)의 데스크톱 줄에서는 첫 항목(#top)을
                 그리지 않습니다. 바로 왼쪽의 로고가 같은 이름이고 같은 곳(#top)으로 갑니다. "나루 나루", "크로싱 서울 크로싱 서울"로
                 읽혔습니다. 폰 레일은 로고 줄이 접힌 뒤에 혼자 남으므로 넷 그대로입니다. 8월 페이지는 그대로. */}
@@ -668,7 +661,8 @@ export default function JourneyNav({
               onClick={() => track("openchat_click", { src: "nav" })}
               className={
                 registered
-                  ? "hidden shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(124,92,255,0.4)] transition hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(124,92,255,0.6)] lg:inline-flex"
+                  // 2026-10-13 (등록 브리프 2.3, 리뷰 N7): 8월의 보라와 인디고 대신 본 사이트의 나루 그라데이션입니다.
+                  ? "hidden shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-r from-naru-purple to-naru-plum px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(75,58,140,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(75,58,140,0.7)] lg:inline-flex"
                   // showQuiz가 false면 lg 아래에서도 보입니다. 퀴즈 칩을 뺀
                   // 자리가 비면 폰에서 헤더에 액션이 하나도 없게 되는데, 이
                   // 페이지에서 지금 할 수 있는 일이 이것 하나입니다. 좁은 폭에서는
@@ -708,24 +702,12 @@ export default function JourneyNav({
               <MotionToggle compact />
             </div>
           )}
-          {/* DECIDED 2026-10-08 (사용자 2026-09-20: "8월 페이지에는 12월 이벤트 페이지로 돌아갈 수
-              있는 버튼이 항상 보였으면"): 12월 버튼이 xl 아래의 목차 레일에만 있어서 1280px부터는
-              헤더에 홈으로도 12월로도 가는 길이 없었습니다. 같은 링크를 xl부터 여기에 둡니다.
-              레일의 것과 동시에 뜨지 않습니다(저쪽은 xl:hidden). */}
-          {!naru && (
-            <Link
-              href="/#december"
-              aria-label={t(dict.nav.toDecemberAria)}
-              onClick={() => track("naru_cta", { src: "august_nav", to: "december" })}
-              className="hidden min-h-[44px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/45 bg-violet-500/[0.14] px-4 text-sm font-bold text-violet-100 transition hover:border-violet-400/70 hover:bg-violet-500/20 xl:inline-flex"
-            >
-              {t(dict.nav.toDecember)}
-              <span aria-hidden className="text-violet-200/70">→</span>
-            </Link>
-          )}
+          {/* 2026-10-13 (등록 브리프 2.1): 여기 있던 8월 페이지의 "12월 이벤트 →" 알약은 페이지 칩 셋이 대신합니다.
+              "항상 보였으면"(2026-09-20)은 그대로 지켜집니다. 칩 셋이 xl부터는 로고 옆에, 그 아래에서는 레일 맨 앞에 늘 있습니다. */}
           {/* Language last - it's a setting, not an action, so it sits after
               the CTA rather than between the brand and it. */}
-          <LocaleToggle variant={brand} />
+          {/* 2026-10-13 (등록 브리프 2.3, 리뷰 N7): 8월 페이지도 EN KR 두 버튼입니다(그 전에는 "EN / KR" 단일 버튼). */}
+          <LocaleToggle variant="naru" />
         </div>
       </nav>
       {/* ── Section rail (below `xl` only) ────────────────────────────────────
@@ -759,165 +741,47 @@ export default function JourneyNav({
 
           `scroll-padding-top` in globals.css accounts for the extra height on
           this breakpoint, so an anchor jump doesn't park a heading underneath. */}
-      {scrolled && (
-        // nav 랜드마크입니다 (2026-09-19, 접근성 감사 4). 전에는 </nav> 뒤의
-        // 그냥 <div>였습니다. 그래서 폰에서 navigation 랜드마크 안에는 로고와
-        // 토글 둘뿐이고 **진짜 목차는 랜드마크가 아니었습니다**. iOS 로터의
-        // "랜드마크"로 목차에 닿을 수 없었어요. 폰에서 이 레일이 유일한
-        // 챕터 이동 수단이라는 점을 생각하면 가장 아픈 자리였습니다.
-        // DECIDED 2026-10-10 (사용자: "TOC가 모바일 화면에서 맨 위에 딱 붙어 있다"): 로고 줄(52px)이 접히면
-        // 이 줄이 화면 맨 위(0px)에 닿았습니다. 원래는 로고 줄이 위 여백 노릇을 해서 이 줄에는 아래 여백(pb-2)만
-        // 있습니다. 접혔을 때만 위에도 같은 만큼을 둡니다. lg부터는 로고 줄이 접히지 않으므로 0입니다.
-        <nav aria-label={t(dict.nav.sectionsAria)} className={`xl:hidden ${chromeHidden ? "pt-2 lg:pt-0" : ""} ${reduce ? "" : "transition-[padding] duration-300"}`}>
-          {/* 8월 아카이브: 목차 줄 오른쪽 끝에 12월 이벤트 버튼을 고정합니다
-              (2026-09-20, 사용자: "8월 페이지에는 12월 이벤트 페이지로 돌아갈 수
-              있는 버튼이 항상 보였으면 좋겠어, along with the TOC at the top").
-
-              **레일 안이 아니라 레일 밖입니다.** 8월 목차는 가로로 굴러가는
-              레일이라(칩 다섯 × 94.5px = 552px, 화면은 390px) 안에 넣으면 굴려야
-              보이는 버튼이 됩니다. "항상 보였으면"과 반대예요. 밖에 두고 레일이
-              남는 폭을 쓰게 하면 굴리든 말든 버튼은 그 자리에 있습니다.
-
-              홈(naru)에는 붙이지 않습니다. 홈이 곧 12월 이벤트 페이지라 자기
-              자신으로 가는 버튼이 됩니다.
-
-              이 버튼 때문에 레일이 좁아지는 것은 감수합니다. 8월 목차는 원래
-              굴러가는 레일이라 보이는 칩 수가 줄 뿐 도달 못 하는 칸은 없습니다. */}
-          <div className={naru ? "" : "flex items-center gap-2 pr-5"}>
-          {/* 나루(홈): 가로로 굴리지 않고 **접습니다** (2026-09-19, 사용자: "모바일 뷰에서
-              TOC가 한 스크린에 다 들어왔으면"). 전에는 우측 페이드 마스크 + snap으로 "뒤에
-              더 있다"를 알렸는데, 알려 주는 것과 보이는 것은 다릅니다. 다섯 칸짜리 목차는
-              굴릴 것이 아니라 한눈에 있어야 합니다.
-
-              **이 파일의 rem 값은 18px 기준입니다.** globals.css의 `html { font-size: 112.5% }`
-              때문입니다. px-5 = 22.5px, gap-2 = 9px, px-2 = 9px. 16px로 계산하면 전부 틀립니다
-              (2026-09-19에 한 번 틀렸습니다).
-
-              브라우저에서 잰 칩 폭(글자 + 여백 + 테두리): ko 82.3·68.1·60.5·46.3·35.4,
-              en 91.6·71.8·99.1·56.4·46.6. 칸 사이 9px×4 = 36을 더하면 ko 329, en 401입니다.
-              가용 폭은 390px에서 345px, 360px에서 315px. **ko는 두 화면 모두 한 줄이고 en은
-              못 들어갑니다.** en을 한 줄에 넣으려면 글자가 9px까지 내려가야 해서(읽을 수
-              없습니다) 대신 접습니다: en은 두 줄, ko는 한 줄. 로케일 분기가 아니라 폭이
-              스스로 결정합니다.
-
-              여백이 px-6/px-2.5가 아니라 px-5/px-2인 이유가 그 360px입니다. 처음 값으로는
-              ko가 329 대 306으로 23px 모자라 4 + 1로 접혔습니다.
-
-              칩 폭 통일(min-w 5.25rem)은 여기서 풉니다. 그 값은 /2026-08 레일의 최장 라벨
-              en "Mentoring"에서 나온 것이고, 굴리는 레일에서 칩이 들쭉날쭉해 보이지 않게
-              하는 장치였습니다. 접는 목차에서는 다섯 칸이 한눈에 함께 보여서 서로가 서로의
-              기준이 되고, 통일하면 오히려 두 줄이 됩니다(ko 94.5×5 + 32 = 505px).
-
-              /2026-08은 그대로 굴러갑니다. 그쪽은 아카이브고 라벨 길이가 달라서, 옮기려면
-              위 주석대로 그 로케일들을 다시 재야 합니다. */}
-          <div ref={railRef} className={naru
-            ? "flex flex-wrap justify-center gap-2 px-5 pb-2"
-            // 우측 16px 페이드 (2026-09-20): 12월 버튼이 오른쪽에 서면서 칩이 그
-            // 경계에서 뚝 잘립니다. 잘린 자리는 "여기까지"로 읽히고, 페이드는
-            // "뒤에 더 있다"로 읽힙니다. 굴러가는 레일이니 뒤가 맞습니다.
-            //
-            // calc 안의 밑줄 두 개(100%_-_16px)가 필요합니다. Tailwind는 임의값의
-            // 밑줄을 공백으로 바꾸는데, CSS의 calc는 빼기 부호 양옆에 공백이 없으면
-            // 무효입니다. 밑줄 없이 적었다가 마스크가 통째로 무시됐습니다(실측).
-            : "flex gap-2 overflow-x-auto pb-2 pl-6 pr-1 [mask-image:linear-gradient(to_right,#000_calc(100%_-_16px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"}>
-            {anchors.map((a) => {
-              const here = a.id === activeSection;
-              return (
-                <a
-                  key={a.id}
-                  href={`#${a.id}`}
-                  // aria-current, not just colour: the chip's meaning has to
-                  // survive for someone who can't see the tint.
-                  // "location": 스크린리더가 "현재 위치"로 읽습니다. 섹션 현위치에는
-                  // true보다 정확합니다 (2026-09-19, 접근성 감사 25).
-                  aria-current={here ? "location" : undefined}
-                  // 챕터 제목 전문을 이름으로 (접근성 감사 19). "왜" / "Why"는 한
-                  // 음절이라, 로터의 링크 목록에 문맥 없이 나열되면 무엇인지 알 수
-                  // 없습니다. 눈으로 읽는 글자는 그대로 두고 이름만 늘립니다.
-                  aria-label={a.ariaLabel ? t(a.ariaLabel) : undefined}
-                  // min-h stays 44px - the row got shorter by losing padding around
-                  // it, never by shrinking the thing a thumb has to hit.
-                  //
-                  // 현위치 표시는 테두리+글자색까지만 (2026-08-12). 칩을 채우면
-                  // 헤더에서 등록 버튼 다음으로 무거운 요소가 되어, 읽고 있는
-                  // 챕터가 행동을 부르는 것처럼 보입니다. 이건 표지판이지
-                  // 버튼이 아닙니다.
-                  // DECIDED 2026-08-17: 레일 칩 폭 통일 - 라벨 길이 무관 동일 폭.
-                  // 폭이 라벨을 따라가서 "혜택"(51px)과 "참가 대상"(76px)이 나란히
-                  // 서면 레일이 들쭉날쭉했습니다. 칩은 표지판이라 크기가 정보가 되면
-                  // 안 됩니다 - 긴 이름의 챕터가 더 중요한 챕터로 보입니다.
-                  //
-                  // 5.25rem(94.5px)은 두 로케일의 최장 라벨을 실측해 고른 최소값입니다:
-                  // ko "참가 대상" 75.9px, en "Mentoring" 89.9px. (2026-08-23에
-                  // "참가 대상"이 세트에서 빠졌지만 폭을 정한 것은 en "Mentoring"이고
-                  // 그건 그대로라, 이 값은 손대지 않습니다.) 5rem은 90px이라
-                  // Mentoring과 0.1px 차이여서 폰트 렌더링이 조금만 달라도 넘칩니다.
-                  // 라벨을 더 긴 것으로 바꾸면 이 값을 다시 재세요 - 하나라도 min-w를
-                  // 넘기면 그 칩만 넓어져서 통일이 깨집니다.
-                  //
-                  // 대가: 레일 총 길이가 늘어 한 화면에 보이는 칩이 줄어듭니다.
-                  // 원래부터 가로 스크롤 레일이라 감당하는 쪽을 골랐습니다.
-                  // 상단 행의 퀴즈 칩(✦)은 이 레일이 아니라 첫 행에 있어 대상이 아닙니다.
-                  // 2026-10-11 (리뷰 작은 것): 나루 계열의 칩 글자는 12.6px에서 13.5px(META)로. 홈의 최소 글자 크기입니다.
-                  className={`inline-flex min-h-[44px] shrink-0 items-center justify-center whitespace-nowrap rounded-full border font-semibold backdrop-blur transition active:scale-[0.97] ${
-                    // px-2: 360px에서 ko가 한 줄로 들어가는 값(위 주석의 실측).
-                    // leading-[1.15]: 두 줄짜리 칩이 44px 안에 앉게(en "CROSSING / SEOUL").
-                    // min-w-[44px] (2026-09-19, 감사 반영): 칩 폭을 내용에 맞추자
-                    // "왜"가 30.9px, "나루"가 41.8px이 됐습니다. 세로는 44px인데
-                    // 가로가 그 아래면 엄지로 옆 칩을 누르게 됩니다. px-1.5로
-                    // 조여 그 44px을 만들고도 ko가 360px에서 한 줄에 들어갑니다.
-                    naru ? "min-w-[44px] px-1.5 text-[0.75rem] leading-[1.15]" : "min-w-[5.25rem] snap-center px-3 text-[0.7rem]"
-                  } ${
-                    // 현위치를 색만으로 말하지 않습니다 (2026-09-19, 접근성 감사 14,
-                    // WCAG 1.4.1). 데스크톱 앵커 행은 활성일 때 밑줄이 함께 켜지는데
-                    // (위의 after:scale-x-100) 이 칩은 틴트만 바뀌어서, 색각 이상이
-                    // 있거나 햇빛 아래에서 보는 사람에게는 다섯이 같아 보였습니다.
-                    // 같은 문제를 LocaleToggle이 이미 밑줄로 풀었습니다.
-                    here
-                      ? "border-accent/40 bg-accent/[0.12] font-bold text-white underline decoration-accent decoration-2 underline-offset-2"
-                      : "border-white/[0.12] bg-white/[0.06] text-white/75"
-                  }`}
-                >
-                  {/* railLines가 있으면 그 판의 줄바꿈대로 세웁니다. 없으면 한 줄.
-                      줄마다 <span>을 두면 안 됩니다. 칩이 inline-flex라 그 span들이
-                      flex 아이템이 되어 <br>을 무시하고 나란히 섭니다(실측 135px).
-                      한 덩어리 안에서 <br>로 끊어야 상자가 긴 쪽 줄의 폭을 가집니다. */}
-                  <span className="text-center">
-                    {t(a.railLines ?? a.label)
-                      .split("\n")
-                      .flatMap((line, i) => (i === 0 ? [line] : [<br key={`br${i}`} />, line]))}
-                  </span>
-                </a>
-              );
-            })}
-            {/* /naru의 돌아가기(폰). 로고 줄에 자리가 없어 레일의 마지막 칸입니다. 넓은 폭(backFrom)에서는 헤더 왼쪽, 로고 옆의 것이 보입니다. */}
-            {naru && back && (
-              <Link
-                href={back.href}
-                aria-label={t(back.label)}
-                className={`inline-flex min-h-[44px] shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-full border border-white/[0.12] bg-white/[0.06] px-2.5 backdrop-blur transition active:scale-[0.97] ${backFrom.hide}`}
+      {/* DECIDED 2026-10-13 (등록 브리프 2.2, 리뷰 N5 N8): 레일은 스크롤 0부터 보이고, 세 페이지가 같은 레일 하나를 씁니다.
+          [페이지 칩 셋] 1px 구분선 [챕터 칩]. 왼쪽 정렬, 13.5px, 한 줄, 넘치면 가로로 굴립니다(오른쪽 16px 페이드).
+          그 전에는 셋이 제각각이었습니다(홈은 가운데로 접는 칩, /naru는 왼쪽과 돌아가기 칸, /2026-08은 고정폭 칩과 오른쪽 핀).
+          폰의 첫 화면에 다른 페이지로 가는 길이 없던 것도 이 줄이 풉니다. 2026-09-19의 "접는 목차"와 2026-08-17의
+          "칩 폭 통일"은 이 결정이 대신합니다. 8월 페이지의 챕터 링크는 2xl부터 로고 줄에 서므로 레일도 거기까지 남습니다.
+          nav 랜드마크입니다(2026-09-19, 접근성 감사 4). 로고 줄이 접히면 위에도 여백을 둡니다(2026-10-10). */}
+      <nav aria-label={t(dict.nav.sectionsAria)} className={`${naru ? "xl:hidden" : "2xl:hidden"} ${chromeHidden ? "pt-2 lg:pt-0" : ""} ${reduce ? "" : "transition-[padding] duration-300"}`}>
+        <div
+          ref={railRef}
+          // calc 안의 밑줄 두 개(100%_-_16px)가 필요합니다. Tailwind는 임의값의 밑줄을 공백으로 바꾸는데,
+          // CSS의 calc는 빼기 부호 양옆에 공백이 없으면 무효입니다(실측 2026-09-20).
+          className="flex items-center gap-2 overflow-x-auto pb-2 pl-5 pr-5 [mask-image:linear-gradient(to_right,#000_calc(100%_-_16px),transparent)] [scrollbar-width:none] sm:pl-10 [&::-webkit-scrollbar]:hidden"
+        >
+          {/* 페이지 칩은 로고 줄에 서는 폭(xl)부터 레일에서 빠집니다. 같은 칩이 두 줄에 서지 않게 합니다. */}
+          <span className="contents xl:hidden">
+            <PageChips t={t} page={page} size="rail" />
+            <span aria-hidden className="mx-1 h-6 w-px shrink-0 bg-white/20" />
+          </span>
+          {anchors.map((a) => {
+            const here = a.id === activeSection;
+            return (
+              <a
+                key={a.id}
+                href={`#${a.id}`}
+                // "location": 스크린리더가 "현재 위치"로 읽습니다(2026-09-19, 접근성 감사 25).
+                aria-current={here ? "location" : undefined}
+                // 챕터 제목 전문을 이름으로(접근성 감사 19). "왜"는 한 음절이라 링크 목록에서 뜻이 없습니다.
+                aria-label={a.ariaLabel ? t(a.ariaLabel) : undefined}
+                // 현위치는 색만으로 말하지 않습니다(WCAG 1.4.1). 밑줄이 함께 켜집니다. 칩은 표지판이라 누르는 자리는 44px.
+                className={`inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center whitespace-nowrap rounded-full border px-2.5 text-[0.75rem] font-semibold backdrop-blur transition active:scale-[0.97] ${
+                  here
+                    ? "border-accent/40 bg-accent/[0.12] font-bold text-white underline decoration-accent decoration-2 underline-offset-2"
+                    : "border-white/[0.12] bg-white/[0.06] text-white/75"
+                }`}
               >
-                <span lang={locale === "en" ? "en" : undefined} className="gradient-text bg-[linear-gradient(90deg,#9AA8EE_0%,#A99AD6_35%,#C99ACB_68%,#E08A76_100%)] bg-clip-text pb-[0.08em] text-[0.8rem] font-black tracking-[-0.02em] text-transparent">
-                  {decemberEventLabel(locale)}
-                </span>
-                <span aria-hidden className="text-[0.7rem] text-white/60">→</span>
-              </Link>
-            )}
-          </div>
-            {!naru && (
-              <Link
-                href="/#december"
-                aria-label={t(dict.nav.toDecemberAria)}
-                onClick={() => track("naru_cta", { src: "august_rail", to: "december" })}
-                className="inline-flex min-h-[44px] shrink-0 items-center gap-1.5 self-start whitespace-nowrap rounded-full border border-violet-400/45 bg-violet-500/[0.14] px-3 text-xs font-bold text-violet-100 backdrop-blur transition active:scale-[0.97] hover:border-violet-400/70 hover:bg-violet-500/20"
-              >
-                {t(dict.nav.toDecember)}
-                <span aria-hidden className="text-violet-200/70">→</span>
-              </Link>
-            )}
-          </div>
-        </nav>
-      )}
+                {t(a.label)}
+              </a>
+            );
+          })}
+        </div>
+      </nav>
       </header>
 
       {/* DECIDED 2026-10-11 (리뷰 A4, 결정 D-d): 여기 있던 폰과 태블릿(xl 미만)의 고정 배경 정지 버튼을 뺐습니다.

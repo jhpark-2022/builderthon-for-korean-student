@@ -83,6 +83,11 @@ html:has(body[data-sticky]) { scroll-behavior: smooth; }
 @media (max-width: 1279px) {
   html { scroll-padding-top: 120px; }
 }
+/* 2026-10-13 (등록 브리프 2.1): 8월 페이지는 챕터 링크 다섯이 2xl(1536)부터 로고 줄에 섭니다. 1280~1535에서는
+   80px 바 아래에 레일이 한 줄 더 있어(실측 143px) 그만큼 더 밉니다. 홈과 /naru는 JourneyNav가 실높이로 넣습니다. */
+@media (min-width: 1280px) and (max-width: 1535px) {
+  html:has(body[data-sticky]) { scroll-padding-top: 160px; }
+}
 
 /* Anchor jumps land instantly below `lg`.
    This page is ~18,000px tall, and the section rail can send you most of that

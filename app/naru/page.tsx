@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import JourneyNav from "@/components/journey/JourneyNav";
 import BackgroundMount from "@/components/BackgroundMount";
 import NaruPage from "@/components/naru/NaruPage";
-import { naru, naruPageNav, naruPageBack } from "@/data/naru";
+import { naru, naruPageNav } from "@/data/naru";
 import { ORGANIZATION_LD } from "@/lib/organizationLd";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -42,7 +42,7 @@ export default function NaruGroupPage() {
           DECIDED 2026-10-11 (사용자): 형상은 서울이 아니라 싱가포르입니다. 처음부터 완성돼 있고 건너기는 없습니다.
           형상은 판 뒤에서 사라지고 틈에서만 보입니다. */}
       <BackgroundMount variant="water" still />
-      <JourneyNav anchors={naruPageNav} brand="naru" showQuiz={false} back={naruPageBack} />
+      <JourneyNav anchors={naruPageNav} brand="naru" showQuiz={false} page="naru" />
       <NaruPage />
     </>
   );

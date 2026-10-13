@@ -305,30 +305,25 @@ export const register = {
 // 크로싱 서울(히어로), 프로그램, 참가(전의 "얻는 것". 참가 혜택 챕터), 나루(홈 끝의 티저. 글은 /naru).
 // "왜 나루인가"(#join)는 /naru로 가서 항목에서 뺐습니다. 그 페이지의 목차는 아래 naruPageNav.
 // railLines: 폰 목차에서만 두 줄 (2026-09-19, 사용자). 영어 "CROSSING SEOUL" 한 줄은 칩 하나가 첫 줄의 40%를 먹었습니다.
+// DECIDED 2026-10-13 (등록 브리프 2.1, 2.3, 리뷰 N1): 홈의 챕터 칩은 둘입니다. "크로싱 서울"(#top)과 "나루"(#naru 티저)는 뺐습니다.
+// 둘 다 헤더의 페이지 칩(크로싱 서울, 나루, 8월 기록)이 맡습니다. 그 전에는 헤더의 "나루"가 /naru가 아니라 페이지 83% 지점의
+// 티저로 내려가, 거기서 한 번 더 눌러야 했습니다. 티저 챕터(#naru)는 그대로 있습니다.
+// "참가"는 "등록"이 됐습니다. 내려앉는 블록의 제목과 같은 말입니다. 목적지(#register)는 그대로입니다(2026-10-11, 리뷰 A2).
 export const naruNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel?: Phrase }[] = [
-  {
-    id: "top",
-    label: { ko: "크로싱 서울", en: "CROSSING SEOUL" },
-    railLines: { ko: "크로싱 서울", en: "CROSSING\nSEOUL" },
-  },
   { id: "december", label: { ko: "프로그램", en: "Programme" } },
-  // DECIDED 2026-10-11 (리뷰 A2): "참가"는 혜택 챕터(#gains)가 아니라 등록 블록(#register)으로 갑니다. #gains로 뛰면 바로 위의
-  // 등록 버튼 셋이 헤더 뒤로 사라졌습니다. 혜택 챕터에는 칩이 없습니다(#gains 주소는 그대로 살아 있습니다).
-  { id: "register", label: { ko: "참가", en: "Taking part" } },
-  { id: "naru", label: { ko: "나루", en: "NARU" } },
+  { id: "register", label: { ko: "등록", en: "Register" } },
 ];
 
 // DECIDED 2026-10-10 (구조 브리프 3.2): /naru의 목차 넷. id는 그 페이지의 섹션 id와 같아야 합니다
 // (components/naru/NaruPage.tsx). 홈에 있을 때의 #why(변하지 않는 두 개)는 #core가 됐고, #join(왜 이 자리가
 // 필요한가)은 #why가 됐습니다. 순서는 화면 순서입니다.
 export const naruPageNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel?: Phrase }[] = [
-  { id: "top", label: { ko: "나루", en: "NARU" } },
+  // 2026-10-13 (등록 브리프 2.1): 첫 칸 "나루"(#top)는 뺐습니다. 페이지 칩의 "나루"가 이 페이지의 맨 위입니다.
   { id: "core", label: { ko: "코어", en: "Core" }, ariaLabel: { ko: "변하지 않는 두 개", en: "The two things that do not change" } },
   { id: "how", label: { ko: "함께하기", en: "Join in" }, ariaLabel: { ko: "어떻게 일하는가", en: "How we work" } },
   { id: "why", label: { ko: "왜", en: "Why" }, ariaLabel: { ko: "왜 이 자리가 필요한가", en: "Why this place is needed" } },
 ];
-// /naru 헤더 왼쪽의 돌아가기. /match의 돌아가기와 같은 문법입니다.
-export const naruPageBack = { href: "/", label: { ko: "크로싱 서울", en: "CROSSING SEOUL" } as Phrase };
+// 2026-10-13 (등록 브리프 2.1): 여기 있던 naruPageBack("← 크로싱 서울")은 헤더의 페이지 칩 셋이 대신합니다.
 
 export interface Stat {
   value: Phrase;

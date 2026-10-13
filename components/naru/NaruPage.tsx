@@ -64,7 +64,7 @@ export default function NaruPage() {
           #why 앵커는 코어 판 목록에 남겨 옛 링크와 notSequel의 링크가 닿습니다.
           exec와 measure는 #december의 멘토링 블록으로 갔습니다. 이벤트의
           실행에 관한 문장이라서요. 여기 남은 것은 코어 둘, 경첩, 마지막 줄. */}
-      <Chapter id="top" labelledBy="naru-title" align="center" className="pt-20 sm:pt-28 lg:pt-36">
+      <Chapter id="top" labelledBy="naru-title" align="center" className="pt-32 sm:pt-40 lg:pt-48 xl:pt-36">
         <PlateSegment id="naru" read>
         {/* DECIDED 2026-09-27 (사용자): 영문 화면에서는 한글 "나루"가 보이지 않습니다.
             헤더·푸터 락업과 같은 규칙(2026-09-21). 영문 마스터는 원본 03 반전에서

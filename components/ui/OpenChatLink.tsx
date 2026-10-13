@@ -80,8 +80,7 @@ export default function OpenChatLink({
         className={`${buttonClass(variant === "hero" ? "primary" : "secondary", "naru")} ${className}`}
       >
         <ChatGlyph className="h-4 w-4 shrink-0" />
-        {/* 2026-10-12: 라벨이 두 줄로 접힐 때 줄 길이를 고르게 합니다("…받기," / "카카오톡 오픈채팅"). 한 줄이면 그대로입니다. */}
-        <span className="text-balance break-keep">{t(label ?? dict.register.openChatCta)}</span>
+        {t(label ?? dict.register.openChatCta)}
         <span aria-hidden className={variant === "hero" ? ARROW_CLASS : "text-white/50"}>→</span>
       </a>
     );

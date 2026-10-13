@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useLocale } from "@/lib/LocaleContext";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -29,36 +28,18 @@ const COPY = {
     ko: "제로백 빌더톤, 2026년 8월 싱가포르. 나루가 시작된 이벤트의 기록입니다. 나루라는 이름은 이 이벤트 뒤에 정해졌습니다.",
     en: "The Zero100 AI Builderthon, August 2026, Singapore. This is the record of the event NARU grew out of. The name NARU was chosen after it.",
   },
-  // DECIDED 2026-10-08 (전체 리뷰 반영): 배너의 버튼은 12월 이벤트로 곧장 갑니다(/#december).
-  // 예전에는 홈 맨 위(/)였는데, 이 기록을 읽은 사람이 다음에 알고 싶은 것은 12월입니다.
-  home: { ko: "12월 크로싱 서울 보기", en: "See CROSSING SEOUL, December" },
-  // DECIDED 2026-10-12 (사용자: "나루 페이지를 통해서 들어오는데, 크로싱 서울로만이 아니라 나루로도 돌아갈 수
-  // 있어야지"): 이 페이지로 오는 문은 /naru의 "8월이 남긴 것" 블록(#record)입니다. 그런데 나가는 문은 12월 하나라
-  // 온 길로 돌아갈 수 없었습니다. 들어온 자리로 되돌아가는 버튼을 12월 버튼 앞에 둡니다. 모양은 /naru 헤더의
-  // 돌아가기("← 크로싱 서울")와 같은 문법입니다. 12월 버튼은 그대로 뒤에 남습니다(brand 3장 원칙 2: 무대가 먼저).
-  back: { ko: "나루", en: "NARU" },
-  backAria: { ko: "나루 페이지로 돌아가기", en: "Back to the NARU page" },
+  // DECIDED 2026-10-13 (등록 브리프 2.1, 리뷰 N2 N3): 이 줄의 버튼 둘("← 나루", "12월 크로싱 서울 보기 →")을 뺐습니다.
+  // 바로 위 헤더의 페이지 칩 셋(크로싱 서울, 나루, 8월 기록)이 같은 두 길을 화살표 없이 엽니다. 문장은 그대로입니다.
+  // 2026-10-12의 "나루로도 돌아갈 수 있어야지"는 칩의 "나루"가 지킵니다.
 } as const;
-
-const CHIP =
-  "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] min-h-[44px] px-4 py-1.5 text-xs font-semibold text-white/85 transition hover:border-white/35 hover:bg-white/10 hover:text-white";
 
 export default function ArchiveBanner() {
   const { t } = useLocale();
   return (
-    <div className="relative z-20 w-full border-b border-white/10 bg-[#0B1430]/80 pt-[52px] backdrop-blur-sm xl:pt-20">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 px-6 py-3 text-center sm:flex-row sm:justify-center sm:gap-4 sm:px-10">
+    // 위 여백은 고정 헤더의 높이입니다. 2026-10-13: 레일이 스크롤 0부터 있어 2xl 아래에서는 두 줄(로고 줄 + 레일)입니다.
+    <div className="relative z-20 w-full border-b border-white/10 bg-[#0B1430]/80 pt-[108px] backdrop-blur-sm xl:pt-[136px] 2xl:pt-20">
+      <div className="mx-auto max-w-6xl px-6 py-3 text-center sm:px-10">
         <p className="break-keep text-xs leading-relaxed text-white/70">{t(COPY.note)}</p>
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          <Link href="/naru#record" aria-label={t(COPY.backAria)} className={CHIP}>
-            <span aria-hidden className="text-white/50">←</span>
-            {t(COPY.back)}
-          </Link>
-          <Link href="/#december" className={CHIP}>
-            {t(COPY.home)}
-            <span aria-hidden className="text-white/50">→</span>
-          </Link>
-        </div>
       </div>
     </div>
   );

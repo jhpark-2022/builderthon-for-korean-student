@@ -82,7 +82,7 @@ export default function August2026Archive() {
       {/* DECIDED 2026-10-10 (사용자: "유형 테스트는 8월 페이지에서 보이지 않게, 12월과 혼동할 수 있음"): 헤더의 유형 테스트
           링크(데스크톱 줄, 폰 칩, 다시 온 사람 인사)를 그리지 않습니다. 12월에는 /match가 따로 있어 두 테스트가 섞여 보였습니다.
           /quiz 페이지는 주소로는 그대로 열립니다. */}
-      <JourneyNav showQuiz={false} />
+      <JourneyNav showQuiz={false} page="aug" />
       <ArchiveBanner />
       <Journey />
     </RegisterProvider>

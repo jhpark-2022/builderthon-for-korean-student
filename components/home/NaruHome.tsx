@@ -598,9 +598,11 @@ export default function NaruHome() {
           랜드마크로 노출되지 않습니다. 그래서 폰 로터의 랜드마크 목록에 main과
           contentinfo만 남고, 18,000px짜리 한 장에서 챕터 단위 이동 수단이 레일
           하나뿐이었습니다. 각 챕터가 자기 제목을 이름으로 씁니다. */}
+      {/* 2026-10-13 (등록 브리프 2.2): xl 아래에서는 레일이 스크롤 0부터 헤더의 둘째 줄로 서므로 그 높이(54px)만큼 위 여백을 더합니다.
+          xl부터는 전과 같습니다(pt-28). */}
       {/* 2026-10-08 (사용자: "크로싱 서울이 너무 위에 있다"): lg의 위 여백을 한 단 늘렸습니다(pt-20 → pt-28). 로고가 헤더에
           바로 붙어 있었습니다. 카운트다운 띠까지 1440×900 한 화면에 들어오는 선에서입니다. */}
-      <Chapter id="top" labelledBy="hero-title" align="center" wide className="pt-16 sm:pt-24 lg:pt-28">
+      <Chapter id="top" labelledBy="hero-title" align="center" wide className="pt-28 sm:pt-36 lg:pt-40 xl:pt-28">
         {/* relative는 2026-09-17에 framer-motion의 useScroll target 경고 때문에
             붙었습니다. 그 훅은 2026-09-20에 사라졌지만 클래스는 둡니다. 히어로가
             앉는 쌓임 맥락이고, 빼는 것은 아무도 요청하지 않은 레이아웃 변경입니다. */}
