@@ -1936,7 +1936,23 @@ export const naru = {
     // 말하고, 들은 이야기로 아이디어를 다듬어 코드로 옮깁니다. fieldMentoring과 같은 원칙입니다.
     mentoringHeading: { ko: "먼저 찾아가는 멘토링, Day 1부터 Day 3까지", en: "Mentoring you walk into, Day 1 to Day 3" },
     // 가로 상자의 이름 아래 한 줄(5차). 이름은 고유명사라 그대로 "General Mentoring".
-    mentoringAlways: { ko: "Day 1부터 Day 3까지", en: "Day 1 to Day 3" },
+    // DECIDED 2026-10-13 (사용자, 멘토링 브리프 0, 1): Day 1에는 멘토링이 없습니다(출제사가 Sharing session에서 맥락을 풉니다).
+    // 팀이 찾아가는 멘토링은 Day 2와 Day 3입니다. 그 전: "Day 1부터 Day 3까지".
+    mentoringAlways: { ko: "Day 2와 Day 3", en: "Day 2 and Day 3" },
+    // 왼쪽 상자(2026-10-13). Day 1은 멘토링이 아니라 이슈를 낸 기업이 맥락을 더 풀어 주는 날입니다.
+    contextMentoring: {
+      name: { ko: "출제사 컨텍스트", en: "Context from the companies" },
+      when: { ko: "Day 1", en: "Day 1" },
+      body: {
+        ko: "멘토링은 없습니다. 이슈를 낸 기업의 담당자가 Sharing session에서 회사와 이슈의 맥락을 더 풀어 줍니다. 질문은 이 날 합니다.",
+        en: "No mentoring. The person behind the issue opens up the company and the context at the Sharing session. This is the day for questions.",
+      },
+    },
+    // 세 상자 아래 한 줄(2026-10-13). 그 전에는 규칙 목록의 "Day 4는 멘토링 없음"이 이 말을 했습니다.
+    mentoringDay4Line: {
+      ko: "Day 4는 성과 공유회입니다. 멘토링 대신 무대에서 질의를 받습니다.",
+      en: "Day 4 is the showcase. Questions from the floor take the place of mentoring.",
+    },
     // ── 현장 멘토링 (DECIDED 2026-10-08, 사용자: "멘토가 오는 게 아니고 우리가 직접 간다". 프로그램 브리프 2.5, D5) ──
     // General Mentoring(행사장, 예약제)은 그대로이고, 현장 방문이 하나 더 섭니다. 대신하는 것이 아닙니다.
     // TODO: confirm. 기업별 수락, 방문 날짜, 횟수가 정해지지 않았습니다. 그래서 날짜와 횟수를 쓰지 않고
@@ -1947,13 +1963,14 @@ export const naru = {
       name: { ko: "현장 멘토링", en: "Field mentoring" },
       // DECIDED 2026-10-08 (사용자: "멘토링 - based on the availability from the 출제사"): 현장 방문은 출제사의 일정이
       // 될 때 갑니다. 예약 멘토링(General Mentoring)은 그대로이고, 방문은 그 위에 더해지는 것이라고 문장이 직접 말합니다.
-      when: { ko: "출제사 일정에 따라", en: "Depending on the companies' availability" },
+      // 2026-10-13 (멘토링 브리프 1): "출제사 일정에 따라"였습니다. 방문이 들어갈 수 있는 구간을 앞에 적습니다. 날짜와 횟수는 여전히 쓰지 않습니다.
+      when: { ko: "Day 2와 Day 3 사이, 출제사 일정에 따라", en: "Between Day 2 and Day 3, when the companies can host" },
       body: {
         // DECIDED 2026-10-11 (사용자, 폰 스크린숏: "내용이 too much, 표현이 vague"): 세 문장을 둘로 줄였습니다. 누가 어디로 가서
         // 누구에게 무엇을 하는지만 남깁니다. "출제사의 일정이 되면"은 바로 위 when 줄이 말합니다.
         // 2026-10-11 (사용자: "그룹의 생각임", "예약 없이 그냥 멘토가 그 공간에 있는 거임"): 내 생각을 팀의 생각으로, 예약 멘토링이라는 말을 뺐습니다.
-        ko: "팀을 나눠 이슈를 낸 기업의 일터로 가서, 실무자에게 팀의 생각을 말하고 의견을 듣습니다. 공간에서 하는 멘토링에 더해지는 방문입니다.",
-        en: "Teams split up, visit the company behind the issue, tell the people doing the work what the team thinks, and hear them out. It comes on top of the mentoring in the space.",
+        ko: "팀을 나눠 이슈를 낸 기업의 일터로 가서, 실무자에게 팀의 생각을 말하고 의견을 듣습니다. 받을 수 있는 기업이 정해지면 이 자리에 적습니다.",
+        en: "Teams split up, visit the company behind the issue, tell the people doing the work what the team thinks, and hear them out. Which companies can host goes here once it is settled.",
       },
     },
     // 노선도 아래 둘째 필. 첫째 필(mentoringHeading)과 같은 문법입니다.
@@ -1963,17 +1980,14 @@ export const naru = {
     // 남깁니다(2026-10-10 마일스톤 브리프 2.5의 원칙은 그대로). 규칙의 "질문 대신 내 생각 한 장"이 이 문장으로 올라와 규칙은 둘입니다.
     mentoringLead: {
       // DECIDED 2026-10-11 (사용자: "그룹의 생각임"): 들고 가는 한 장은 개인의 것이 아니라 팀의 것입니다.
-      ko: "질문 목록 대신, 이슈에 대한 팀의 생각 한 장을 들고 먼저 찾아갑니다.",
-      en: "Your team goes first, with one page of its own thinking on the issue instead of a list of questions.",
+      // 2026-10-13: 규칙 목록의 "예약 없이, 멘토가 같은 공간에 있습니다"가 이 문단으로 올라왔습니다.
+      ko: "질문 목록 대신, 이슈에 대한 팀의 생각 한 장을 들고 먼저 찾아갑니다. 예약 없이, 멘토가 같은 공간에 있습니다.",
+      en: "Your team goes first, with one page of its own thinking on the issue instead of a list of questions. No booking. The mentors are in the same space.",
     },
     // DECIDED 2026-10-10 (사용자: "정보가 너무 많음"): 다섯 줄을 셋으로 묶었습니다. 2026-10-11에 둘로(위 mentoringLead 주석).
     // Day 4에는 멘토링 자체가 없습니다(2026-09-20, PDF 02·04).
-    mentoringRules: [
-      // DECIDED 2026-10-11 (사용자: "예약 없이 그냥 멘토가 그 공간에 있는 거임"): "예약제 30분, 횟수 제한 없음"이었습니다.
-      // 예약도 슬롯도 없습니다. 멘토가 같은 공간에 있고, 팀이 찾아갑니다.
-      { ko: "예약 없이, 멘토가 같은 공간에 있습니다", en: "No booking. The mentors are in the same space" },
-      { ko: "Day 3은 피칭 준비, Day 4는 멘토링 없음", en: "Day 3 is pitch prep, Day 4 has no mentoring" },
-    ] as Phrase[],
+    // DECIDED 2026-10-13 (멘토링 브리프 1): 비웁니다. 두 줄은 가운데 상자의 설명(mentoringLead)과 상자 아래 한 줄(mentoringDay4Line)로 올라갔습니다.
+    mentoringRules: [] as Phrase[],
 
     // ── 제목이 포지션을 말합니다 (DECIDED 2026-09-15) ──────────────────────
     // 전에는 H2가 날짜였습니다("12월 9일, 서울에서 시작합니다"). 그러면 이

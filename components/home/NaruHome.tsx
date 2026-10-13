@@ -452,42 +452,31 @@ export default function NaruHome() {
   };
   const mentoringBoxes = (
     <>
-          <div className="flex flex-col gap-3 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-4 lg:px-6 lg:py-5">
-            <div className="shrink-0">
-              <p className={`flex items-center justify-center gap-2 ${BODY} font-bold text-white`}>
-                <ChipDot />
-                {/* lang="en" (2026-09-19, 접근성 감사 7): 한국어 문단 속의 영어 고유명사. */}
-                <span lang="en">General Mentoring</span>
-              </p>
-              <p className={`mt-0.5 ${META} font-semibold text-emerald-200/90`}>{t(naru.december.mentoringAlways)}</p>
-              {/* DECIDED 2026-10-10 (사용자, 마일스톤 브리프 2.5): 멘토링은 먼저 찾아가는 자리라는 문장을 상자 안에 그립니다.
-                  mentoringLead는 그 전까지 화면에 그려지지 않던 키였습니다. 규칙 목록 위, 이름 줄 아래에 섭니다. */}
-              <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.mentoringLead)}</p>
-            </div>
-            {/* 폰은 2열·작은 글자(길이 목표, 감사 반영 브리프 3.1). */}
-            {/* 2026-09-19 (모바일 감사 14): 폰에서 2열을 풉니다. 상자 안쪽 291px을
-                둘로 나누면 한 칸의 **글자 폭이 121px**, text-xs로 한글 8.9자/줄입니다.
-                "마지막 날에는 새 방향을 제안하지 않음"(18자)이 세 줄, 영어는 네 줄이
-                됐습니다. 한 줄 길이는 짧아도 문제입니다. 세로가 늘어나는 대가는
-                아래 Day 카드의 clamp 완화와 같은 예산에서 나옵니다. */}
-            {/* 2026-09-20 (일정 브리프 3장): 규칙이 넷에서 다섯이 되어 lg를 5열로.
-                4열이면 다섯째 줄만 아래로 내려가 왼쪽 칸이 둘이 됩니다. */}
-            {/* 2026-09-29 (왼쪽 끝 브리프 2.1, 검증 4): READ 폭에서 다섯 칸은 150px 남짓이라 "바뀝니다"가 넉 자로
-                떨어졌습니다. 폰 한 칸, md부터 두 칸. */}
-            {/* 2026-10-10: 규칙이 셋이 되어 한 칸으로 세웁니다. 두 칸이면 셋째만 아래로 내려가고, 세 칸이면 READ 폭에서 줄마다 두 줄로 꺾입니다. */}
-            <ul role="list" className="grid flex-1 grid-cols-1 gap-y-2">
-              {naru.december.mentoringRules.map((rule, i) => (
-                <li key={i} className={`break-keep ${BODY} leading-snug text-white/85`}>
-                  {t(rule)}
-                </li>
-              ))}
-            </ul>
+          {/* DECIDED 2026-10-13 (사용자, 멘토링 브리프 1, D1): 상자는 셋이고 종류로 나눕니다. Day 1의 출제사 컨텍스트, Day 2와 Day 3의
+              General Mentoring, 출제사 일정에 따르는 현장 멘토링. 문법은 셋이 같습니다(이름 BODY 굵게, 기간 META, 설명 BODY).
+              초록 테두리는 가운데 하나뿐이고(초록은 General Mentoring 하나, 2026-09-18), 양옆은 무채색 테두리에 점 색만 다릅니다.
+              규칙 목록(mentoringRules)은 가운데 상자의 설명과 아래 Day 4 한 줄로 올라가 그리지 않습니다.
+              날짜, 횟수, 기업 이름은 쓰지 않습니다(미정). */}
+          <div className="rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 lg:px-6 lg:py-5">
+            <p className={`flex items-center justify-center gap-2 ${BODY} font-bold text-white`}>
+              <ChipDot className="bg-accent" />
+              {t(naru.december.contextMentoring.name)}
+            </p>
+            <p className={`mt-0.5 ${META} font-semibold text-white/70`}>{t(naru.december.contextMentoring.when)}</p>
+            <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.contextMentoring.body)}</p>
+          </div>
+          <div className="rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-4 lg:px-6 lg:py-5">
+            <p className={`flex items-center justify-center gap-2 ${BODY} font-bold text-white`}>
+              <ChipDot />
+              {/* lang="en" (2026-09-19, 접근성 감사 7): 한국어 문단 속의 영어 고유명사. */}
+              <span lang="en">General Mentoring</span>
+            </p>
+            <p className={`mt-0.5 ${META} font-semibold text-emerald-200/90`}>{t(naru.december.mentoringAlways)}</p>
+            {/* DECIDED 2026-10-10 (사용자, 마일스톤 브리프 2.5): 멘토링은 먼저 찾아가는 자리라는 문장을 상자 안에 그립니다. */}
+            <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.mentoringLead)}</p>
           </div>
           {/* DECIDED 2026-10-08 (사용자: "멘토가 오는 게 아니고 우리가 직접 간다", 프로그램 브리프 2.5): 현장 멘토링.
-              General Mentoring 바로 아래에 한 묶음으로 섭니다(mt-3). 같은 READ 폭과 왼쪽 끝, 같은 상자 문법이고
-              초록은 쓰지 않습니다(초록은 General Mentoring 하나, 2026-09-18). 무채색 테두리에 점만 노선도 둘째 필과 같은
-              주황입니다(주황은 점으로만). 이름은 BODY 굵게, 기간은 META, 설명은 BODY. 규칙 목록은 없습니다.
-              날짜, 횟수, 기업 이름은 쓰지 않습니다(미정). 위 초안 배너가 이 약속을 덮습니다. */}
+              무채색 테두리에 점만 노선도 둘째 필과 같은 주황입니다(주황은 점으로만). */}
           <div className="rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 lg:px-6 lg:py-5">
             <p className={`flex items-center justify-center gap-2 ${BODY} font-bold text-white`}>
               <ChipDot className="bg-naru-orange" />
@@ -496,6 +485,8 @@ export default function NaruHome() {
             <p className={`mt-0.5 ${META} font-semibold text-white/70`}>{t(naru.december.fieldMentoring.when)}</p>
             <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.fieldMentoring.body)}</p>
           </div>
+          {/* 세 상자 아래 한 줄. Day 4에는 멘토링이 없다는 것을 상자가 아니라 줄로 말합니다(상자로 두면 "없음" 하나라 비어 보입니다). */}
+          <p className={`break-keep ${META} leading-snug text-white/70 md:col-span-3`}>{t(naru.december.mentoringDay4Line)}</p>
           {/* 재는 것. 호박색 강조 상자(8월 "준비물은 하나예요" 문법).
 
               2026-09-20 (사용자: "가장 중요한 것은 완주율이라는 거를 강조"): 라벨과
@@ -1006,7 +997,8 @@ export default function NaruHome() {
         {/* DECIDED 2026-10-10 (사용자, 스크린숏: "상자가 너무 비워져있음"): 두 상자를 위아래에서 좌우로 세웁니다(md부터).
             READ 폭 한 줄을 다 쓰는 상자 안에서 글이 MEASURE(36rem)에 묶여 오른쪽 절반이 비어 있었습니다. 두 칸으로 나누면
             글이 상자를 채웁니다. 상자 안 문단의 MEASURE는 그래서 뺐습니다. 폰은 전처럼 위아래입니다. 색과 글은 그대로. */}
-        <Reveal className={`${READ} mt-8 grid grid-cols-1 gap-3 text-center md:grid-cols-2 md:gap-4 lg:mt-12`}>
+        {/* DECIDED 2026-10-13 (사용자, 멘토링 브리프 1): 상자가 셋이 되어 md부터 세 칸입니다. 폰은 전처럼 위아래. */}
+        <Reveal className={`${READ} mt-8 grid grid-cols-1 gap-3 text-center md:grid-cols-3 md:gap-4 lg:mt-12`}>
           {mentoringBoxes}
         </Reveal>
         {/* DECIDED 2026-10-10 (중복 브리프 B2): 이 자리의 호박색 "결과보다 과정" 상자(naru.why.measure)를 그리지 않습니다.
