@@ -127,7 +127,9 @@ const DEFAULT_ANCHORS: NavAnchor[] = [
 function useActiveSection(enabled: boolean, anchors: NavAnchor[]) {
   const [active, setActive] = useState<string | null>(null);
   useEffect(() => {
-    if (!enabled || typeof IntersectionObserver === "undefined") return;
+    // 2026-10-13 (폰 점검): 맨 위로 돌아오면 현위치를 비웁니다. 그 전에는 마지막 챕터의 칩이 맨 위에서도 켜져 있었습니다.
+    if (!enabled) { setActive(null); return; }
+    if (typeof IntersectionObserver === "undefined") return;
     const nodes = anchors
       .map((a) => document.getElementById(a.id))
       .filter((n): n is HTMLElement => !!n);
@@ -236,7 +238,9 @@ export default function JourneyNav({
   // 페이지는 움직이지 않음). 8월 페이지는 그대로(brand 조건).
   const railRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    if (!activeSection || !railRef.current) return;
+    // 2026-10-13 (폰 점검): 현위치가 비면(맨 위) 레일을 처음으로 되돌려 페이지 칩 셋이 다시 보이게 합니다.
+    if (!activeSection) { railRef.current?.scrollTo({ left: 0, behavior: reduce ? "auto" : "smooth" }); return; }
+    if (!railRef.current) return;
     // 2026-09-19: 홈 레일은 접히므로 가로로 넘칠 것이 없습니다. 넘치지 않으면
     // 아무것도 하지 않습니다(문서를 건드리지 않게).
     if (railRef.current.scrollWidth <= railRef.current.clientWidth + 1) return;
@@ -752,7 +756,7 @@ export default function JourneyNav({
           ref={railRef}
           // calc 안의 밑줄 두 개(100%_-_16px)가 필요합니다. Tailwind는 임의값의 밑줄을 공백으로 바꾸는데,
           // CSS의 calc는 빼기 부호 양옆에 공백이 없으면 무효입니다(실측 2026-09-20).
-          className="flex items-center gap-2 overflow-x-auto pb-2 pl-5 pr-5 [mask-image:linear-gradient(to_right,#000_calc(100%_-_16px),transparent)] [scrollbar-width:none] sm:pl-10 [&::-webkit-scrollbar]:hidden"
+          className="flex items-center gap-2 overflow-x-auto pb-2 pl-5 pr-5 [mask-image:linear-gradient(to_right,transparent,#000_16px,#000_calc(100%_-_16px),transparent)] [scrollbar-width:none] sm:pl-10 [&::-webkit-scrollbar]:hidden"
         >
           {/* 페이지 칩은 로고 줄에 서는 폭(xl)부터 레일에서 빠집니다. 같은 칩이 두 줄에 서지 않게 합니다. */}
           <span className="contents xl:hidden">

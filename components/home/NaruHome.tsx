@@ -338,7 +338,7 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
       {/* DECIDED 2026-10-12 (등록 브리프 1.5, 리뷰 S10): 캡션이 8월 기록으로 갑니다. 밑줄은 본문 인라인 링크의 문법입니다.
           같이 붙였던 8월 숫자 문장은 2026-10-13에 뺐습니다(사용자: "이렇게 디테일한 설명은 필요 없음"). */}
       <figcaption className={`mt-3 text-left max-sm:text-center ${META} text-white/85`}>
-        <Link href={naruLinks.archive} onClick={() => track("naru_cta", { src: "hero-caption", to: "archive" })} className="break-keep underline underline-offset-4 transition hover:text-white">
+        <Link href={naruLinks.archive} onClick={() => track("naru_cta", { src: "hero-caption", to: "archive" })} className="-my-3.5 inline-flex min-h-[44px] items-center break-keep underline underline-offset-4 transition hover:text-white">
           {t(naru.eventHero.photosCaption)}
         </Link>
       </figcaption>
