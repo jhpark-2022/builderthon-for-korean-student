@@ -874,9 +874,9 @@ export const naru = {
         title: { ko: "멘토", en: "Mentors" },
         body: {
           // 2026-10-08 (프로그램 브리프 2.4): 그 전의 문장은 멘토링이 행사 내내 열린다고 했습니다. 2026-09-20 결정은
-          // Day 1부터 Day 3까지이고 Day 4에는 없습니다.
-          ko: "Day 1부터 Day 3까지 열려 있습니다. 막힐 때마다 다시 갑니다.",
-          en: "Open from Day 1 to Day 3. You go back every time you get stuck.",
+          // 첫날부터 사흘째까지이고 Day 4에는 없다는 것이었습니다. 2026-10-13 (멘토링 브리프 3): 멘토링은 Day 2와 Day 3입니다.
+          ko: "Day 2와 Day 3에 열려 있습니다. 막힐 때마다 다시 갑니다.",
+          en: "Open on Day 2 and Day 3. You go back every time you get stuck.",
         },
         evidence: { ko: "8월 11명", en: "August: eleven of them" },
       },
@@ -1787,7 +1787,7 @@ export const naru = {
         // 마일스톤은 지나가는 지점이라 무엇을 하는지가 보이지 않았습니다. 키 이름(milestone, milestoneLabel 등)은 그대로 둡니다.
         // 그 전: k "마일스톤", v "...넘은 팀은 모두 그날 지원을 받고, 넘은 마일스톤이 그 팀의 기록으로 남습니다."
         k: { ko: "미션", en: "Missions" },
-        // DECIDED 2026-10-13 (사용자, 멘토링 브리프 2): 미션은 Day 2부터이고 조건은 참여입니다. 그 전: "날마다 하나씩 있습니다."
+        // DECIDED 2026-10-13 (사용자, 멘토링 브리프 2): 미션은 Day 2부터이고 조건은 참여입니다. 그 전에는 Day 2부터라는 말이 없었습니다.
         v: { ko: "Day 2부터 날마다 하나씩 있습니다. 무엇을 냈는지보다 함께 있었는지를 봅니다. 해낸 팀은 모두 그날 지원을 받고, 해낸 미션이 그 팀의 기록으로 남습니다.", en: "One a day from Day 2. We look at whether you were there together, more than at what you handed in. Every team that completes it gets support that day, and the missions a team completes become its record." },
       },
       {
@@ -1930,16 +1930,17 @@ export const naru = {
       { ko: "성과 공유회", en: "Showcase" },
     ] as Phrase[],
     mentoringLabel: { ko: "멘토링", en: "Mentoring" },
-    // DECIDED 2026-09-20 (크로싱서울_일정.pdf 02·04): 멘토링은 Day 1부터 Day 3까지입니다.
+    // DECIDED 2026-09-20 (크로싱서울_일정.pdf 02·04): 멘토링은 첫날부터 사흘째까지입니다.
+    // DECIDED 2026-10-13 (사용자, 멘토링 브리프 0): 위를 대신합니다. Day 1은 출제사의 컨텍스트이고 멘토링은 Day 2와 Day 3입니다.
     // 화면이 세 자리에서 기간 전체를 약속하고 있었는데 사실이 아니었습니다.
     // Day 3에 어젠다가 피칭 준비로 바뀌고, Day 4는 멘토링 없이 증명만 합니다.
     // 약속을 좁히는 변경이라 되돌리기 어렵습니다. 다시 넓히려면 PDF부터 바꾸세요.
     // DECIDED 2026-10-10 (사용자, 마일스톤 브리프 2.5): 멘토링은 학생이 먼저 나섭니다. 질문이 아니라 이슈에 대한 자기 생각을 들고 가서
     // 말하고, 들은 이야기로 아이디어를 다듬어 코드로 옮깁니다. fieldMentoring과 같은 원칙입니다.
-    mentoringHeading: { ko: "먼저 찾아가는 멘토링, Day 1부터 Day 3까지", en: "Mentoring you walk into, Day 1 to Day 3" },
+    mentoringHeading: { ko: "먼저 찾아가는 멘토링, Day 2와 Day 3", en: "Mentoring you walk into, Day 2 and Day 3" },
     // 가로 상자의 이름 아래 한 줄(5차). 이름은 고유명사라 그대로 "General Mentoring".
     // DECIDED 2026-10-13 (사용자, 멘토링 브리프 0, 1): Day 1에는 멘토링이 없습니다(출제사가 Sharing session에서 맥락을 풉니다).
-    // 팀이 찾아가는 멘토링은 Day 2와 Day 3입니다. 그 전: "Day 1부터 Day 3까지".
+    // 팀이 찾아가는 멘토링은 Day 2와 Day 3입니다. 그 전에는 첫날부터 사흘째까지라고 적었습니다.
     mentoringAlways: { ko: "Day 2와 Day 3", en: "Day 2 and Day 3" },
     // 왼쪽 상자(2026-10-13). Day 1은 멘토링이 아니라 이슈를 낸 기업이 맥락을 더 풀어 주는 날입니다.
     contextMentoring: {
@@ -1958,7 +1959,7 @@ export const naru = {
     // ── 현장 멘토링 (DECIDED 2026-10-08, 사용자: "멘토가 오는 게 아니고 우리가 직접 간다". 프로그램 브리프 2.5, D5) ──
     // General Mentoring(행사장, 예약제)은 그대로이고, 현장 방문이 하나 더 섭니다. 대신하는 것이 아닙니다.
     // TODO: confirm. 기업별 수락, 방문 날짜, 횟수가 정해지지 않았습니다. 그래서 날짜와 횟수를 쓰지 않고
-    // "Day 1부터 Day 3 사이"라고만 씁니다. 초안 배너(draftNote)가 이 약속을 덮습니다. 배너를 떼기 전에 확인하세요.
+    // 구간만 씁니다(2026-10-13부터 "Day 2와 Day 3 사이"). 초안 배너(draftNote)가 이 약속을 덮습니다. 배너를 떼기 전에 확인하세요.
     // 비밀유지와 결과물 귀속 합의를 기업과 먼저 맺어야 합니다(등록 폼에 동의 문구가 필요해질 수 있습니다).
     // 특정 Day 행에 칩을 달지 않습니다(날짜가 미정). 기업 이름도 쓰지 않습니다.
     fieldMentoring: {
@@ -2061,9 +2062,9 @@ export const naru = {
         en: "In August the problems arrived already cleaned. In December, finding and defining the problem under a company's issue is yours too.",
       },
       {
-        // 2026-09-20 (PDF 02): 멘토링을 기간 전체로 적고 있었습니다. Day 1부터 Day 3까지입니다.
-        ko: "코어는 그대로입니다. 스크리닝 없음, 무순위 부문별 시상, Day 1부터 Day 3까지의 멘토링.",
-        en: "The core is unchanged. No screening, awards by category with no ranking, mentoring from Day 1 to Day 3.",
+        // 2026-09-20 (PDF 02): 멘토링을 기간 전체로 적고 있었습니다. 2026-10-13 (멘토링 브리프 3): Day 2와 Day 3입니다.
+        ko: "코어는 그대로입니다. 스크리닝 없음, 무순위 부문별 시상, Day 2와 Day 3의 멘토링.",
+        en: "The core is unchanged. No screening, awards by category with no ranking, mentoring on Day 2 and Day 3.",
       },
     ],
     // ── 왜 국경을 여는가 ────────────────────────────────────────────────
@@ -2190,12 +2191,13 @@ export const naru = {
         note: { ko: "한국의 대학생과 해외에서 공부하는 한인 학생", en: "Students in Korea and Korean students abroad" },
       },
       {
-        value: { ko: "2회", en: "2" },
-        label: { ko: "중간 제출 지점", en: "submission checkpoints" },
+        // 2026-10-13 (멘토링 브리프 3, D2): "2회"였습니다. Day 1의 한 장은 내는 것이 아니라 들고 가는 것이라 제출은 Day 3의 덱 하나입니다.
+        value: { ko: "1회", en: "1" },
+        label: { ko: "중간 제출 지점", en: "submission checkpoint" },
         // 2026-09-20 (PDF 02): "정의서와 결과물"이었습니다. 제출물 이름이 바뀌었고
         // 이 칸은 화면에 그려지는 둘 중 하나라(shape[0]과 shape[3]) 그대로 두면
         // 바로 아래 표와 다른 말을 합니다.
-        note: { ko: "팀의 생각 1장과 덱 등 사전 제출물", en: "One page of the team's take, then the deck and what goes with it" },
+        note: { ko: "덱과 결과물, 성과 공유회 전", en: "The deck and what you built, before the showcase" },
       },
       {
         value: { ko: "무순위", en: "No ranking" },
@@ -2204,9 +2206,10 @@ export const naru = {
       },
       {
         // 2026-09-20 (PDF 02): "상시 / 예약제, 횟수 제한 없음"이었습니다.
-        value: { ko: "3일", en: "3 days" },
+        // 2026-10-13 (멘토링 브리프 3): "3일"이었습니다. Day 1은 출제사의 컨텍스트라 멘토링은 이틀입니다.
+        value: { ko: "2일", en: "2 days" },
         label: { ko: "멘토링", en: "Mentoring" },
-        note: { ko: "Day 1부터 Day 3까지, 예약 없이", en: "Day 1 to Day 3, no booking" },
+        note: { ko: "Day 2와 Day 3, 예약 없이", en: "Day 2 and Day 3, no booking" },
       },
     ] as Stat[],
     // 스테이지 다섯. 날짜 대신 순서입니다(위 주석 참고).
@@ -2275,7 +2278,7 @@ export const naru = {
         },
         // DECIDED 2026-10-10 (사용자, 마일스톤 브리프 2.1): 보상은 마지막 날 한 팀이 아니라, 그날의 마일스톤을 넘은 팀 모두에게.
         // Day 1, Day 3의 마일스톤은 기존 submit과 같은 물건입니다. Day 2는 제출이 아니라 멘토와 현업의 확인,
-        // Day 4는 완주입니다. 그래서 "제출은 두 번뿐"(facts)은 그대로 참입니다. 하나를 바꾸면 facts도 보세요.
+        // Day 4는 완주입니다. 2026-10-13: Day 1의 한 장은 제출로 세지 않습니다. 제출은 Day 3의 덱 하나입니다(shape[3]).
         // submit은 "이해도 1장"이었고, 마일스톤과 같은 말로 맞췄습니다.
         // DECIDED 2026-10-11 (사용자: "그룹의 생각임"): "내 생각 1장"이었습니다. 한 장은 팀이 함께 씁니다.
         submit: { ko: "이슈에 대한 팀의 생각 1장", en: "One page of the team's take on the issue" },
