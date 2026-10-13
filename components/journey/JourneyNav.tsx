@@ -129,56 +129,32 @@ function useActiveSection(enabled: boolean, anchors: NavAnchor[]) {
   useEffect(() => {
     // 2026-10-13 (폰 점검): 맨 위로 돌아오면 현위치를 비웁니다. 그 전에는 마지막 챕터의 칩이 맨 위에서도 켜져 있었습니다.
     if (!enabled) { setActive(null); return; }
-    if (typeof IntersectionObserver === "undefined") return;
     const nodes = anchors
       .map((a) => document.getElementById(a.id))
       .filter((n): n is HTMLElement => !!n);
     if (!nodes.length) return;
-    // DECIDED 2026-10-10 (구조 브리프 3.2): /naru의 목차는 한 섹션(#top) 안에 다른 항목(#core, #how)이 들어 있습니다.
-    // 아래의 겹침 비율 방식은 그런 구성에서 바깥 섹션이 늘 이깁니다(코어를 읽는 동안에도 "나루"가 켜져 있었습니다).
-    // 항목이 서로 안에 들어 있는 페이지에서만, 판정선(화면 위에서 140px)을 지난 마지막 항목을 현위치로 봅니다.
-    // 겹치지 않는 페이지(홈, /2026-08)는 이 분기에 들어오지 않아 전과 같습니다.
-    if (nodes.some((a) => nodes.some((b) => a !== b && a.contains(b)))) {
-      let raf = 0;
-      const read = () => {
-        raf = 0;
-        let current: string | null = null;
-        for (const n of nodes) if (n.getBoundingClientRect().top <= 140) current = n.id;
-        if (current) setActive(current);
-      };
-      const onScroll = () => { if (!raf) raf = requestAnimationFrame(read); };
-      read();
-      window.addEventListener("scroll", onScroll, { passive: true });
-      window.addEventListener("resize", onScroll, { passive: true });
-      return () => {
-        window.removeEventListener("scroll", onScroll);
-        window.removeEventListener("resize", onScroll);
-        if (raf) cancelAnimationFrame(raf);
-      };
-    }
-    // Track ratios rather than reacting to each entry: with several sections in
-    // view during a fast flick, "last one that fired" is whichever the browser
-    // reported last, not the one on screen.
-    const visible = new Map<string, number>();
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) visible.set(e.target.id, e.intersectionRatio);
-          else visible.delete(e.target.id);
-        });
-        let best: string | null = null;
-        let bestRatio = 0;
-        visible.forEach((ratio, id) => {
-          if (ratio >= bestRatio) { bestRatio = ratio; best = id; }
-        });
-        // Keep the last known section when scrolling through a gap (the hero and
-        // the closing screen are not anchors) - blanking there reads as a bug.
-        if (best) setActive(best);
-      },
-      { rootMargin: "-96px 0px -45% 0px", threshold: [0, 0.15, 0.4, 0.75] }
-    );
-    nodes.forEach((n) => io.observe(n));
-    return () => io.disconnect();
+    // DECIDED 2026-10-13 (폰 점검): 현위치는 판정선(화면 높이의 35%, 적어도 140px)을 지난 마지막 항목입니다. 세 페이지 모두 같습니다.
+    // 그 전에는 /naru만 이 방식이었고(2026-10-10, 구조 브리프 3.2) 홈과 /2026-08은 IntersectionObserver의 겹침 비율로
+    // 골랐습니다. 그 비율은 문턱(0, 0.15, 0.4, 0.75)을 넘을 때만 갱신돼서, 칩으로 뛰어 내려간 직후에는 지나온 긴 챕터의
+    // 묵은 값이 이겼습니다(8월 페이지에서 "파트너"를 눌렀는데 "멘토링"이 켜짐, 실측). 착지점은 74~209px이라 선 안입니다.
+    // 항목 사이의 틈에서는 마지막 항목이 그대로 남습니다(전과 같음). 맨 위에서는 비웁니다.
+    let raf = 0;
+    const read = () => {
+      raf = 0;
+      let current: string | null = null;
+      const line = Math.max(140, window.innerHeight * 0.35);
+      for (const n of nodes) if (n.getBoundingClientRect().top <= line) current = n.id;
+      setActive(current);
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(read); };
+    read();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, [enabled, anchors]);
   return active;
 }
@@ -368,7 +344,7 @@ export default function JourneyNav({
       // --nav-gutter: 아래 <nav>가 인라인 style로 safe-area를 더해야 해서
       // px-6 / sm:px-10을 변수로 옮겼습니다. 여기서 인라인 style을 쓰면 sm 분기가
       // 죽으므로(인라인이 클래스를 이깁니다) 클래스로만 정의합니다.
-      className={`fixed inset-x-0 top-0 z-50 [--nav-gutter:1.5rem] ${naru ? "[&:has(:focus-visible)]:translate-y-0" : "focus-within:translate-y-0"} sm:[--nav-gutter:2.5rem] lg:!translate-y-0 ${
+      className={`fixed inset-x-0 top-0 z-50 [--nav-gutter:1rem] min-[360px]:[--nav-gutter:1.5rem] ${naru ? "[&:has(:focus-visible)]:translate-y-0" : "focus-within:translate-y-0"} sm:[--nav-gutter:2.5rem] lg:!translate-y-0 ${
         reduce ? "" : "transition-all duration-300 lg:duration-500"
       // DECIDED 2026-08-23 (박주형): /85 → /95. 스크롤하면 헤더 뒤로 본문이 -
       // 특히 파트너 로고 월이 - 비쳐 보였습니다. 15%가 통과하고 있었어요.
@@ -454,7 +430,8 @@ export default function JourneyNav({
                 // 영문 "CROSSING SEOUL"은 글자 수가 두 배라 폰에서는 작게 둡니다(390px에서 오른쪽 버튼과 28px, 360px에서도 닿지 않게).
                 // 한국어도 360px 아래에서는 한 단 작습니다. sm(640px)부터는 두 로케일이 같은 크기입니다.
                 // 2026-10-13: 영문은 페이지 칩 셋이 로고 옆에 서는 xl~1399px에서 한 단 작게 둡니다(1280에서 왼쪽과 오른쪽 묶음이 0px로 닿았습니다).
-                locale === "en" ? "text-xs min-[390px]:text-sm sm:text-2xl min-[1400px]:text-3xl" : "text-lg min-[360px]:text-2xl xl:text-3xl"
+                // 2026-10-13 (폰 점검): 360px 아래에서는 한 단 더 작게(320에서 오른쪽 묶음이 여백 안으로 23px 들어왔습니다).
+                locale === "en" ? "text-[0.7rem] min-[360px]:text-xs min-[390px]:text-sm sm:text-2xl min-[1400px]:text-3xl" : "text-lg min-[360px]:text-2xl xl:text-3xl"
               }`}>
                 {decemberEventLabel(locale)}
               </span>
@@ -483,7 +460,9 @@ export default function JourneyNav({
                 // 그래서 영문은 한글 높이의 142/168로 둡니다. h-8(2rem) → 1.69rem, h-9(2.25rem) → 1.9rem.
                 // px가 아니라 rem인 것이 요점입니다. 루트 글자 크기가 화면에 따라 바뀌어 h-9가
                 // 데스크톱에서 40.5px이 되므로, px로 박으면 두 락업이 다시 어긋납니다.
-                className={locale === "en" ? "h-[1.69rem] w-auto sm:h-[1.9rem]" : "h-8 w-auto sm:h-9"}
+                // 2026-10-13 (폰 점검): 좁은 폰에서는 한두 단 작게 둡니다. 영문 락업은 가로가 길어 390px에서도 오픈채팅 알약과 0px로 닿았고,
+                // 한글 락업은 360px에서 6px이었습니다. 360px 아래(320px 화면)에서는 한 단 더 작습니다. 비율과 색은 그대로이고 높이만 바뀝니다.
+                className={locale === "en" ? "h-[1rem] w-auto min-[360px]:h-[1.1rem] min-[380px]:h-[1.35rem] min-[430px]:h-[1.69rem] sm:h-[1.9rem]" : "h-6 w-auto min-[360px]:h-7 min-[380px]:h-8 sm:h-9"}
               />
             </a>
             )
@@ -502,7 +481,7 @@ export default function JourneyNav({
                 // 360px 아래에서는 한 단계 작게(2026-10-08): 320 폭에서 로고 오른쪽 끝과
                 // 퀴즈 알약이 0px로 붙어 있었습니다. 위 mr-2와 함께 틈을 만듭니다.
                 // 2026-10-13: 언어 토글이 두 버튼이 되어 17px 넓어졌습니다. 작은 로고를 380px 아래까지 씁니다(360에서 0px로 닿았습니다).
-                className="h-6 w-auto opacity-90 brightness-0 invert min-[380px]:h-7 sm:h-8"
+                className="h-[1.1rem] w-auto opacity-90 brightness-0 invert min-[360px]:h-5 min-[380px]:h-6 min-[430px]:h-7 sm:h-8"
               />
               {/* items-center centres the text box, but Hangul glyphs sit high in
                   that box (no descenders) so "AI 빌더톤" reads as floating above the
@@ -599,7 +578,7 @@ export default function JourneyNav({
             audience cost the larger one a door. Companies still reach it from
             the footer CTA (a full pill, more prominent than this ever was) and
             from the partner section. */}
-        <div className="flex items-center gap-2.5 sm:gap-3">
+        <div className="flex items-center gap-1.5 min-[360px]:gap-2.5 sm:gap-3">
           {/* Returning quiz-taker greeting - sits to the LEFT of open chat.
               Compact single-line pill; renders nothing for first-time visitors.
               Desktop-only, so the mobile bar stays uncluttered.
@@ -674,7 +653,7 @@ export default function JourneyNav({
                   : `shrink-0 items-center gap-1.5 rounded-full border border-accent/40 bg-accent/[0.12] font-semibold text-accent transition hover:-translate-y-0.5 hover:border-accent/60 hover:bg-accent/20 hover:text-white ${
                       showQuiz
                         ? "hidden px-4 py-2 text-sm lg:inline-flex"
-                        : "inline-flex min-h-[44px] px-3.5 text-xs sm:px-4 sm:text-sm"
+                        : "inline-flex min-h-[44px] min-w-[44px] justify-center px-2.5 text-xs min-[360px]:px-3.5 sm:px-4 sm:text-sm"
                     }`
               }
             >

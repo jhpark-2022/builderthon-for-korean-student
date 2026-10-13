@@ -1334,7 +1334,8 @@ function PreEventBand({
       {/* 칩과 연사 소속 로고를 한 묶음으로 둡니다. 모바일에서 밴드가 세로로
           쌓이는데(flex-col), 둘을 따로 두면 로고가 자기 줄을 차지하면서 제목보다
           커 보입니다 - 여기 묶어두면 어느 폭에서도 "언제 · 누구"가 한 줄입니다. */}
-      <span className="flex shrink-0 items-center gap-3">
+      {/* 2026-10-13 (폰 점검): 320px 영문에서 로고가 카드 밖으로 30px 나갔습니다. 좁으면 로고가 다음 줄로 내려갑니다. */}
+      <span className="flex flex-wrap items-center gap-x-3 gap-y-2 sm:shrink-0 sm:flex-nowrap">
         <span className="inline-flex shrink-0 items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-violet-200">
           {t(dict.program.preEventTag)}
         </span>
@@ -2818,7 +2819,7 @@ export default function Journey() {
 
             subgrid를 모르는 브라우저에서는 규칙이 통째로 무시되고 카드가 각자
             3행 그리드가 됩니다 - 예전처럼 카드끼리 어긋날 뿐, 깨지지 않습니다. */}
-        <div className="mt-10 grid items-stretch gap-5 text-left sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 items-stretch gap-5 text-left sm:grid-cols-2 lg:grid-cols-3">
           {/* keyed by index, not `img` - one speaker can hold two sessions
               (박희덕: Day 7 조언 세션 + Day 8 간담회) and so reuse the same photo */}
           {dict.speakers.people.map((s, si) => (

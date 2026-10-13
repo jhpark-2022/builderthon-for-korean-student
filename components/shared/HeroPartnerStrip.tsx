@@ -318,7 +318,7 @@ function StripLogo({ src, alt, w, h, mass, box }: StripLogoSpec & { box: StripBo
 // 여백이 남습니다(320px에서 "주최 AXMOS"가 66px, 칸이 266px).
 function StripTierLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="shrink-0 whitespace-nowrap text-[0.65rem] font-bold uppercase tracking-[0.16em] text-violet-200/85 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)]">
+    <span className="shrink-0 whitespace-nowrap text-[0.65rem] font-bold min-[360px]:text-[0.7rem] uppercase tracking-[0.16em] text-violet-200/85 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)]">
       {children}
     </span>
   );
@@ -393,7 +393,7 @@ export default function HeroPartnerStrip({ t }: { t: Tfn }) {
             "radial-gradient(75% 130% at 50% 50%, rgba(6,4,15,0.7) 0%, rgba(6,4,15,0.5) 42%, rgba(6,4,15,0.22) 68%, transparent 88%)",
         }}
       />
-      <p className="text-center text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-white/75 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)] transition group-hover:text-white/90">
+      <p className="text-center text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-white/75 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)] transition group-hover:text-white/90">
         {t(dict.hero.partnersLabel)}
       </p>
       {/* ≥sm - one row per tier, caption centred above its own marks. The tiers
