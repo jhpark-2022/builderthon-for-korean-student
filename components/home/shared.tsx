@@ -305,15 +305,8 @@ export function SiteFooter({ compact = false, page }: { compact?: boolean; page:
           </div>
           </>
           )}
-          {/* 크레딧(2026-09-23): 폰(sm 미만)은 세 줄, sm부터 한 줄에 gap 여백. 가운뎃점은 쓰지 않습니다.
-              라벨 white/45, 값 white/70. */}
-          <p className={`flex flex-col items-center gap-1 break-keep ${META} leading-relaxed sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-5`}>
-            {naru.footer.creditItems.map((c) => (
-              <span key={c.label.en}>
-                <span className="text-white/70">{t(c.label)}</span> <span className="text-white/70">{t(c.value)}</span>
-              </span>
-            ))}
-          </p>
+          {/* DECIDED 2026-10-13 (사용자, 스크린숏: "이 부분도 빼줘"): 여기 서던 크레딧 한 줄(주최 나루, 주관 각 학교 한인 학생회와 학회,
+              후원 참여 기업)을 그리지 않습니다. 키(naru.footer.creditItems)는 data에 그대로 있습니다. */}
           {/* DECIDED 2026-10-13 (등록 브리프 2.3): 세 페이지의 푸터가 같은 한 줄을 씁니다(페이지 셋, 오픈채팅, 문의).
               그 전의 오픈채팅 칩, 문의, "제로백 빌더톤의 기록" 링크는 이 줄 안에 있습니다. */}
           <FooterNav t={t} page={page} />
