@@ -739,7 +739,7 @@ export default function NaruHome() {
               </Link>
             </div>
             {/* DECIDED 2026-10-12 (등록 브리프 1.2, 리뷰 S1 S3): 언제 열리는지, 혼자 등록해도 되는지, 전공과 코딩 경험이 조건인지가
-                첫 화면 안에서 답해집니다. DECIDED 2026-10-13 (사용자: "너무 길어"): 한 줄(registerNoteShort)입니다. 네 줄 전부는 모달에(2026-10-13부터 등록 블록은 스크리닝 한 줄만). */}
+                첫 화면 안에서 답해집니다. DECIDED 2026-10-13 (사용자: "너무 길어"): 한 줄(registerNoteShort)입니다. 전부는 모달에(2026-10-13부터 등록 블록은 스크리닝 한 줄만). */}
             {regState === "not_open" && (
               <p id="hero-register-note" className={`mt-3 text-balance break-keep ${META} leading-snug text-white/85`}>{t(registerNoteShort)}</p>
             )}
@@ -1036,8 +1036,8 @@ export default function NaruHome() {
         <div id="register" className={`${READ} mt-8 text-balance text-center lg:mt-12`}>
         {/* 2026-10-11 (리뷰 A5): 등록 블록의 제목. 화면에는 그리지 않고 제목 목록에서 찾을 수 있게 합니다. */}
         <h3 className="sr-only">{t({ ko: "등록", en: "Registration" })}</h3>
-        {/* DECIDED 2026-10-13 (사용자, 스크린숏: "너무 길어, 있는 말 반복이니까"): 여기 서던 registerNote 네 줄을 뺐습니다. 언제 여는지와
-            혼자 등록하는지는 히어로 한 줄이, 참가비와 장소, 진행 언어는 모달의 안내 상자가 말합니다. 스크리닝 문장(december.ctaNote)
+        {/* DECIDED 2026-10-13 (사용자, 스크린숏: "너무 길어, 있는 말 반복이니까"): 여기 서던 registerNote 줄들을 뺐습니다. 언제 여는지와
+            혼자 등록하는지는 히어로 한 줄이, 장소와 진행 언어는 모달의 안내 상자가 말합니다. 스크리닝 문장(december.ctaNote)
             한 줄만 남습니다. 홈에서 그 낱말은 이 한 자리입니다(docs/brand.md 9장). */}
         <p id="december-register-note" className={`break-keep text-center ${BODY} text-white/70`}>
           {t(regState === "closed" ? registerCopy.closed : naru.december.ctaNote)}

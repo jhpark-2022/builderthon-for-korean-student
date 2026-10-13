@@ -196,42 +196,32 @@ export const partnerContact = {
 // 값은 여기 한 곳에만 둡니다. null인 동안에는 그 자리에 "11월 등록 시작과 함께 이 페이지에 적습니다" 계열의 문장이 나옵니다.
 // 채울 때는 마침표 없는 한 문장을 {ko, en}으로 넣습니다. 예는 아래 각 줄의 주석. 지어내지 마세요.
 // retentionLine은 등록의 잠금이기도 합니다. null이면 등록 창에 시각을 넣어도 열리지 않습니다(data/crossingForm.ts의 CONSENT_NOTICE_READY).
-export const registerFacts: Record<"feeLine" | "venueLine" | "travelLine" | "hoursLine" | "retentionLine", Phrase | null> = {
-  feeLine: null,       // 참가비. 예: { ko: "참가비 3만원 이하", en: "The fee is 30,000 won or less" }
+// DECIDED 2026-10-13 (사용자: "참가비, 항공, 숙소 일절 아무 곳에서도 mention 되면 안됨"): 돈과 이동, 잠자리에 관한 칸은 두지 않습니다.
+// 값이 정해져도 사이트에는 쓰지 않습니다. 칸을 다시 만들지 마세요.
+export const registerFacts: Record<"venueLine" | "hoursLine" | "retentionLine", Phrase | null> = {
   venueLine: null,     // 장소 권역. 예: { ko: "장소는 서울 강남권", en: "The venue is in the Gangnam area of Seoul" }
-  travelLine: null,    // 해외 학생의 항공과 숙소. 예: { ko: "항공과 숙소는 각자 준비합니다", en: "Flights and lodging are your own to arrange" }
   hoursLine: null,     // 하루 시각. 예: { ko: "10시부터 19시까지", en: "from 10:00 to 19:00" }
   retentionLine: null, // 개인정보 보유 기간. 예: { ko: "행사 종료 후 6개월", en: "six months after the event ends" }
 };
 
-// DECIDED 2026-10-12 (등록 브리프 1.2, 리뷰 S1 S2 S3 S7 S9): 등록이 열리기 전의 안내는 이 네 줄 하나입니다. 히어로 안내
-// (#hero-register-note)가 첫 두 줄을, 등록 블록(#december-register-note)과 모달의 안내 상자가 네 줄 전부를 읽습니다.
-// DECIDED 2026-10-13 (사용자: "너무 길어, 있는 말 반복이니까"): 등록 블록은 이 네 줄을 읽지 않습니다. 네 줄 전부는 모달의 안내 상자만.
+// DECIDED 2026-10-12 (등록 브리프 1.2, 리뷰 S1 S2 S3 S7 S9): 등록이 열리기 전의 안내는 이 묶음 하나입니다.
 // 그 전에는 세 자리의 문장이 서로 달랐고, 언제 열리는지(11월)가 어디에도 없었습니다.
-// 셋째, 넷째 줄은 위 registerFacts가 채워지면 그 값으로 바뀝니다.
+// DECIDED 2026-10-13 (사용자: "너무 길어, 있는 말 반복이니까"): 등록 블록은 이 줄들을 읽지 않습니다. 전부는 모달의 안내 상자만.
+// 2026-10-13: 참가비 줄과 항공, 숙소 줄을 빼서 세 줄입니다. 셋째 줄의 장소는 registerFacts.venueLine이 채워지면 그 값으로 바뀝니다.
 function registerNoteLines(): Phrase[] {
-  const { feeLine: fee, venueLine: venue, travelLine: travel } = registerFacts;
-  const later = (ko: string, en: string): Phrase => ({ ko: `${ko} 11월 등록 시작과 함께 이 페이지에 적습니다.`, en: `${en} will be written on this page when registration opens in November.` });
-  const said = (p: Phrase): Phrase => ({ ko: `${p.ko}.`, en: `${p.en}.` });
-  const join = (a: Phrase, b: Phrase): Phrase => ({ ko: `${a.ko} ${b.ko}`, en: `${a.en} ${b.en}` });
-  const feeVenue =
-    fee && venue ? join(said(fee), said(venue))
-    : fee ? join(said(fee), later("장소는", "The venue"))
-    : venue ? join(later("참가비는", "The fee"), said(venue))
-    : later("참가비와 장소는", "The fee and the venue");
-  const travelLine = travel
-    ? said(travel)
-    : { ko: "해외에서 오는 학생의 항공과 숙소 안내도 그때 함께 적습니다.", en: "Notes on flights and lodging for students coming from abroad will be written then too." };
+  const venue = registerFacts.venueLine;
+  const venueLine: Phrase = venue
+    ? { ko: `${venue.ko}.`, en: `${venue.en}.` }
+    : { ko: "장소는 11월 등록 시작과 함께 이 페이지에 적습니다.", en: "The venue will be written on this page when registration opens in November." };
   return [
     { ko: "등록은 11월에 엽니다. 여는 날은 카카오톡 오픈채팅에서 먼저 알립니다.", en: "Registration opens in November. The day it opens is announced first in the KakaoTalk open chat." },
     { ko: "등록은 혼자, 팀은 Day 1에 맺습니다. 전공과 코딩 경험은 조건이 아닙니다.", en: "You register on your own, and teams are formed on Day 1. Your major and coding experience are not conditions." },
-    feeVenue,
-    join(travelLine, { ko: "진행은 한국어입니다.", en: "The programme runs in Korean." }),
+    { ko: `${venueLine.ko} 진행은 한국어입니다.`, en: `${venueLine.en} The programme runs in Korean.` },
   ];
 }
 export const registerNote: Phrase[] = registerNoteLines();
-// DECIDED 2026-10-13 (사용자, 스크린숏: "너무 길어"): 히어로 버튼 아래는 한 줄입니다. 위 네 줄의 첫 두 줄에서 빈칸 둘(언제, 혼자 가도 되나)만
-// 남긴 줄이고, 네 줄 전부는 모달이 읽습니다. 알림 버튼의 "휴대폰에서 열면…" 줄도 히어로에서는 뺐습니다(등록 블록에만).
+// DECIDED 2026-10-13 (사용자, 스크린숏: "너무 길어"): 히어로 버튼 아래는 한 줄입니다. 위 줄들의 첫 두 줄에서 빈칸 둘(언제, 혼자 가도 되나)만
+// 남긴 줄이고, 전부는 모달이 읽습니다. 알림 버튼의 "휴대폰에서 열면…" 줄도 히어로에서는 뺐습니다(등록 블록에만).
 export const registerNoteShort: Phrase = {
   ko: "등록은 11월에 엽니다. 혼자 등록하고, 전공과 코딩 경험은 조건이 아닙니다.",
   en: "Registration opens in November. You register on your own; your major and coding experience are not conditions.",
@@ -248,7 +238,7 @@ export const register = {
   // 말고"(2026-09-18)는 이 결정이 대신합니다. 서버는 전과 같이 창이 열리기 전의 제출을 403으로 막습니다.
   previewCta: { ko: "등록 폼 미리 보기", en: "Preview the form" },
   // DECIDED 2026-10-12 (등록 브리프 1.2, 1.4): 미리 보기의 안내(히어로 캡션, 모달 상자)는 위 registerNote가 대신합니다.
-  // 그 전의 previewCtaNote, previewBanner("등록은 아직 열리지 않았습니다…")는 없앴습니다. 모달 상자는 그 네 줄 뒤에
+  // 그 전의 previewCtaNote, previewBanner("등록은 아직 열리지 않았습니다…")는 없앴습니다. 모달 상자는 그 줄들 뒤에
   // previewKeep 한 문장을 붙입니다. 초안이 기기에 남는다는 사실을 사생활 고지가 아니라 쓸모로 말합니다(리뷰 S4).
   previewKeep: { ko: "지금 적어 두면 이 기기에 남아, 열리는 날 바로 보낼 수 있습니다.", en: "What you fill in now stays on this device, so you can send it the day registration opens." },
   previewSubmit: { ko: "11월에 열리면 보낼 수 있습니다", en: "You can send this when it opens in November" },
@@ -275,8 +265,8 @@ export const register = {
   // 보낸다고 적고, 오지 않을 때 할 일과 수정, 삭제의 길을 같이 적습니다. {email}은 등록한 주소로 바뀝니다.
   // DECIDED 2026-10-08 (사용자: 참가비와 장소, Day 0은 "참여자 대상 카톡방으로 공개"): 그 안내가 어디서 오는지도 여기서 말합니다.
   successBody: {
-    ko: "며칠 안에 {email} 주소로 안내 메일을 보냅니다. 운영진이 직접 보내는 메일이라 바로 오지 않을 수 있습니다. 참가비, 장소, Day 0 안내는 참가자 카카오톡 방에서 알립니다.",
-    en: "We will email {email} within a few days. The organisers send it by hand, so it may not arrive right away. Cost, venue and Day 0 details are shared in the participant KakaoTalk room.",
+    ko: "며칠 안에 {email} 주소로 안내 메일을 보냅니다. 운영진이 직접 보내는 메일이라 바로 오지 않을 수 있습니다. 장소와 Day 0 안내는 참가자 카카오톡 방에서 알립니다.",
+    en: "We will email {email} within a few days. The organisers send it by hand, so it may not arrive right away. Venue and Day 0 details are shared in the participant KakaoTalk room.",
   },
   successHelp: {
     ko: "메일이 오지 않으면 스팸함을 먼저 확인하고 아래 주소로 알려 주세요. 등록 내용의 수정과 삭제도 같은 주소로 받습니다.",
@@ -2425,7 +2415,7 @@ export const naru = {
       // 자격과 안내 경로를 결정 지점 옆에 적습니다. 등록 폼이 전공을 묻기 때문에 "묻지 않습니다"가 아니라 "조건이 아닙니다"입니다.
       // 진행 언어는 레포 어디에도 정해져 있지 않아 쓰지 않았습니다(TODO: confirm).
       // DECIDED 2026-10-12 (등록 브리프 1.2): 이 줄에는 스크리닝 문장 하나만 남습니다. 언제 열리는지, 혼자 등록하는지, 참가비와
-      // 장소가 언제 적히는지는 registerNote 네 줄이 말합니다. 2026-10-13부터 등록 블록에는 이 문장 하나만 섭니다.
+      // 장소가 언제 적히는지는 registerNote가 말합니다. 2026-10-13부터 등록 블록에는 이 문장 하나만 섭니다.
       // 홈에서 "스크리닝"이라는 낱말은 이 한 자리입니다(docs/brand.md 9장).
       ko: "스크리닝 없이, 오는 사람이 참가자입니다.",
       en: "There is no screening: if you come, you are in.",

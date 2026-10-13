@@ -3133,8 +3133,8 @@ export const dict = {
           // DECIDED 2026-08-16 (정체성 얼라인, 공모전): 상금 뒤에 무엇이 이어지는지
           // 한 문장. 이 답은 "얼마"에서 끝나 있었는데, 수상의 실제 값은 부상보다
           // 그 뒤에 붙는 자리입니다(정본은 dict.program.awards의 next).
-          ko: "네, 다만 팀을 1, 2, 3위로 세우지 않습니다. 시상은 테마형 어워드 4부문이고 열 팀이 받아 가요. 부상은 부문에 따라 현금, 널담 바우처 또는 해녀의 부엌 이용권입니다.\n\n수상팀에게는 12월에 열리는 크로싱 서울의 자리를 먼저 안내합니다. 어떤 부문이 있고 누가 뽑는지는 프로그램의 Day\u00a08 카드에 정리해 뒀습니다.\n\n참가비는 무료이고, 네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드와 캡 세트는 Day\u00a01 현장에서 선착순 60세트로 드립니다.",
-          en: "Yes, but nobody is lined up 1st-2nd-3rd. Four thematic awards, ten teams take one home, each with a cash prize, a Nuldam voucher or Haenyeo Kitchen passes.\n\nAward-winning teams hear about a place at CROSSING SEOUL in December first. Which awards there are and who picks them is on the Day\u00a08 card in the programme.\n\nEntry is free and the networking goes to everyone. Brand Boost hoodie + cap sets go out on Day\u00a01 on site, 60 sets first-come.",
+          ko: "네, 다만 팀을 1, 2, 3위로 세우지 않습니다. 시상은 테마형 어워드 4부문이고 열 팀이 받아 가요. 부상은 부문에 따라 현금, 널담 바우처 또는 해녀의 부엌 이용권입니다.\n\n수상팀에게는 12월에 열리는 크로싱 서울의 자리를 먼저 안내합니다. 어떤 부문이 있고 누가 뽑는지는 프로그램의 Day\u00a08 카드에 정리해 뒀습니다.\n\n네트워킹은 전원에게 돌아갑니다. 브랜드부스트 후드와 캡 세트는 Day\u00a01 현장에서 선착순 60세트로 드립니다.",
+          en: "Yes, but nobody is lined up 1st-2nd-3rd. Four thematic awards, ten teams take one home, each with a cash prize, a Nuldam voucher or Haenyeo Kitchen passes.\n\nAward-winning teams hear about a place at CROSSING SEOUL in December first. Which awards there are and who picks them is on the Day\u00a08 card in the programme.\n\nThe networking goes to everyone. Brand Boost hoodie + cap sets go out on Day\u00a01 on site, 60 sets first-come.",
         },
       },
       {
