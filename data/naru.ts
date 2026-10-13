@@ -501,6 +501,9 @@ export const naru = {
     naruLineTerm: { ko: "나루", en: "NARU" },
     // 사진 넷 아래 한 줄(감사 반영 브리프 1.3). 캡션이 없으면 12월 사진으로 읽힙니다.
     photosCaption: { ko: "제로백 빌더톤 2026.08 싱가포르", en: "Zero100 builderthon Aug 2026, Singapore" },
+    // DECIDED 2026-10-12 (등록 브리프 1.5, 리뷰 S10): 캡션 뒤에 8월 숫자 한 문장을 붙이고 캡션 전체가 /2026-08로 갑니다.
+    // 숫자는 docs/brand.md 8장의 것(74명 신청, 21팀 마지막 날 발표)만 씁니다. 크게 연 사진의 캡션은 위 짧은 줄 그대로입니다.
+    photosProof: { ko: "74명이 신청하고 21팀이 발표했습니다.", en: "74 students applied and 21 teams presented." },
     // 사진을 누르면 크게 열립니다(2026-10-11). 칸의 툴팁과, 열린 화면의 버튼 셋의 이름입니다.
     photoOpen: { ko: "사진 크게 보기", en: "View larger" },
     photoClose: { ko: "닫기", en: "Close" },
@@ -526,8 +529,10 @@ export const naru = {
     ctaMatch: { ko: "AI 유형 테스트", en: "AI type test" },
     // 버튼 줄 아래의 설명 한 줄(2026-10-11). 버튼 안에는 넣지 않습니다.
     matchNote: {
-      ko: "AI 유형 테스트는 Day 1 현장에서 팀을 맺을 때 씁니다. 그 전에도 해 볼 수 있지만, 결과는 Day 1 전에는 저장되지 않습니다.",
-      en: "The AI type test is used to form teams on site on Day 1. You can try it before then, but results are not saved before Day 1.",
+      // DECIDED 2026-10-12 (등록 브리프 1.3, 리뷰 S12): 같은 사실을 긍정형으로. 그 전의 "결과는 Day 1 전에는 저장되지 않습니다"는
+      // 첫 화면의 버튼 셋 가운데 둘째 "아직 안 됨"으로 읽혔습니다.
+      ko: "Day 1 팀을 맺을 때 쓰는 테스트입니다. 미리 해 봐도 되고, 그날 다시 받습니다.",
+      en: "The test we use to form teams on Day 1. Try it now if you like; you take it again that day.",
     },
     // ── 카운트다운 패널 (2026-09-17, 8월 문법 브리프) ─────────────────────
     // 8월 히어로의 오른쪽 단(Glass 패널)에 있던 카운트다운의 자리입니다. 숫자는
@@ -1776,7 +1781,12 @@ export const naru = {
       },
       {
         k: { ko: "공간", en: "Space" },
-        v: { ko: "4일 동안 아침부터 저녁까지. 마지막 날은 제외입니다.", en: "Open morning to evening for four days. Not the last day." },
+        // DECIDED 2026-10-12 (등록 브리프 1.5, 리뷰 S11): 시각은 registerFacts.hoursLine이 채워지면 그 값으로, 그 전에는
+        // "아침부터 저녁까지" 그대로입니다. 준비물 한 문장을 붙였습니다.
+        v: {
+          ko: `4일 동안 ${registerFacts.hoursLine?.ko ?? "아침부터 저녁까지"}. 마지막 날은 제외입니다. 노트북은 각자 가져옵니다.`,
+          en: `Open ${registerFacts.hoursLine?.en ?? "morning to evening"} for four days. Not the last day. Bring your own laptop.`,
+        },
       },
       {
         // DECIDED 2026-10-11 (사용자: "이거 하면 혜택을 받는 거니까, 미션?"): "마일스톤"을 "미션"으로 부릅니다(docs/brand.md).
@@ -2416,7 +2426,9 @@ export const naru = {
       ko: "스크리닝 없이, 오는 사람이 참가자입니다.",
       en: "There is no screening: if you come, you are in.",
     },
-    ctaMail: { ko: "출제사 및 후원 문의", en: "Problem owners and sponsors" },
+    // DECIDED 2026-10-12 (등록 브리프 1.3, 리뷰 S8): 버튼이 아니라 텍스트 링크이고, 누가 누르는 문인지 라벨이 먼저 말합니다.
+    // 그 전: "출제사 및 후원 문의". mailto(naruLinks.sponsor)와 그 제목은 그대로입니다.
+    ctaMail: { ko: "기업 출제, 후원 문의", en: "For companies: issues and sponsorship" },
   },
 
   // ── CH5 · 왜 이 자리가 필요한가 (DECIDED 2026-09-19, 왜 브리프) ───────────

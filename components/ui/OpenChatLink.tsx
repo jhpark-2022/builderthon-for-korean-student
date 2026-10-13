@@ -34,6 +34,7 @@ export default function OpenChatLink({
   label,
   className = "",
   variant = "ghost",
+  describedBy,
 }: {
   t: Tfn;
   // 자리마다 누르는 이유가 다릅니다. 기본값(dict.register.openChatCta)은 8월
@@ -64,6 +65,8 @@ export default function OpenChatLink({
   // 2026-10-08: 쓰는 곳이 없던 "primary"(흰 면 버튼)를 지웠습니다. 어두운 바탕에 밝은 판을
   // 두지 않는다는 규칙과도 맞지 않았습니다.
   variant?: "ghost" | "hero" | "secondary";
+  /** 버튼 아래 캡션의 id(2026-10-12). 버튼 안에 넣지 않는 한 줄을 이름 뒤에 읽게 합니다. */
+  describedBy?: string;
 }) {
   if (!links.openChat) return null;
   if (variant === "hero" || variant === "secondary") {
@@ -72,11 +75,13 @@ export default function OpenChatLink({
         href={links.openChat}
         target="_blank"
         rel="noopener noreferrer"
+        aria-describedby={describedBy}
         onClick={() => track("openchat_click", { src })}
         className={`${buttonClass(variant === "hero" ? "primary" : "secondary", "naru")} ${className}`}
       >
         <ChatGlyph className="h-4 w-4 shrink-0" />
-        {t(label ?? dict.register.openChatCta)}
+        {/* 2026-10-12: 라벨이 두 줄로 접힐 때 줄 길이를 고르게 합니다("…받기," / "카카오톡 오픈채팅"). 한 줄이면 그대로입니다. */}
+        <span className="text-balance break-keep">{t(label ?? dict.register.openChatCta)}</span>
         <span aria-hidden className={variant === "hero" ? ARROW_CLASS : "text-white/50"}>→</span>
       </a>
     );

@@ -335,7 +335,13 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
         ))}
       </div>
       {/* lg에서는 홀수 칸이 36px 내려가 있어 그만큼 더 띄웁니다. */}
-      <figcaption className={`mt-3 text-left max-sm:text-center ${META} text-white/85`}>{t(naru.eventHero.photosCaption)}</figcaption>
+      {/* DECIDED 2026-10-12 (등록 브리프 1.5, 리뷰 S10): 캡션에 8월 숫자 한 문장을 붙이고 캡션 전체가 8월 기록으로 갑니다.
+          홈에 "실제로 열린 적 있는 이벤트"라는 증거가 없었습니다. 밑줄은 본문 인라인 링크의 문법입니다. */}
+      <figcaption className={`mt-3 text-left max-sm:text-center ${META} text-white/85`}>
+        <Link href={naruLinks.archive} onClick={() => track("naru_cta", { src: "hero-caption", to: "archive" })} className="break-keep underline underline-offset-4 transition hover:text-white">
+          {t(naru.eventHero.photosCaption)}. {t(naru.eventHero.photosProof)}
+        </Link>
+      </figcaption>
       <PhotoLightbox
         photos={shown.map((p) => ({ src: p.src, alt: t(p.alt), width: p.width, height: p.height, caption: p.day && `${t(naru.eventHero.photosCaption)} · ${t(p.day)}` }))}
         index={openPhoto}
@@ -699,7 +705,9 @@ export default function NaruHome() {
             {/* DECIDED 2026-10-11 (사용자, 스크린숏: "여기에 있으면 좋겠음. 2x2, 버튼 별 사이즈는 똑같이"): AI 유형 테스트 버튼이 일정표의
                 Day 1에서 여기로 왔습니다. 버튼 넷이 두 칸 두 줄로 서고, 격자가 칸을 늘려 넷의 크기가 같습니다(글은 가운데).
                 폰은 한 칸이고 "프로그램 보기"는 전처럼 폰에서 숨깁니다. */}
-            <div className="mx-auto mt-10 grid w-fit max-w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:mt-14 [&>*]:justify-center [&>*]:whitespace-nowrap max-sm:[&>*]:whitespace-normal">
+            {/* 2026-10-12 (등록 브리프 1.3): 알림 버튼의 라벨이 길어져 이 칸 폭(1440에서 302px)에 한 줄로 들어가지 않습니다. 그 버튼만
+                두 줄로 접고, 넷의 크기가 같도록 줄 높이를 맞춥니다(sm:auto-rows-fr, 2026-10-11의 "버튼 별 사이즈는 똑같이"). */}
+            <div className="mx-auto mt-10 grid w-fit max-w-full grid-cols-1 gap-3 sm:auto-rows-fr sm:grid-cols-2 lg:mt-14 [&>*]:justify-center [&>*]:whitespace-nowrap max-sm:[&>*]:whitespace-normal">
               {regState === "open" ? (
                 <button type="button" onClick={() => { track("naru_cta", { src: "hero", to: "register" }); reg?.openRegister(); }} className={`group ${buttonClass("primary", "naru")}`}>
                   {t(registerCopy.cta)}
@@ -720,7 +728,7 @@ export default function NaruHome() {
                 // 하나라는 규칙대로, 등록이 열리면 등록 버튼이 그 면을 받고 이 링크는 유령 필로 내려갑니다.
                 regState === "open"
                   ? <OpenChatLink t={t} src="naru-hero" label={openChatLabels.join} variant="secondary" className={HERO_BUTTON_GROUND} />
-                  : <OpenChatLink t={t} src="naru-hero" label={openChatLabels.december} variant="hero" />
+                  : <OpenChatLink t={t} src="naru-hero" label={openChatLabels.december} variant="hero" describedBy="hero-chat-note" className="sm:!whitespace-normal" />
               )}
               {/* 오픈채팅이 막혀 있으면(links.openChat 빈 문자열, 2026-09-17) 이 앵커가
                   히어로의 유일한 문이라 주 CTA의 면(그라데이션 필)을 받습니다. 히어로의
@@ -744,6 +752,8 @@ export default function NaruHome() {
                 <span aria-hidden className="text-white/70">→</span>
               </Link>
             </div>
+            {/* DECIDED 2026-10-12 (등록 브리프 1.2, 리뷰 S1 S3): 히어로의 안내는 registerNote의 첫 두 줄입니다. 언제 열리는지,
+                혼자 등록해도 되는지, 전공과 코딩 경험이 조건인지가 첫 화면 안에서 답해집니다. 등록 블록과 모달이 같은 줄을 읽습니다. */}
             {regState === "not_open" && (
               <p id="hero-register-note" className={`mt-3 break-keep ${META} leading-snug text-white/85`}>
                 {registerNote.slice(0, 2).map((line, i) => <span key={i} className="block">{t(line)}</span>)}
@@ -758,8 +768,6 @@ export default function NaruHome() {
             <p id="hero-match-note" className={`mt-2 break-keep ${META} leading-snug text-white/85`}>
               {/* 문장마다 한 줄. 한 문단으로 두면 둘째 문장의 첫 낱말만 윗줄 끝에 걸렸습니다. */}
               {t(naru.eventHero.matchNote).split(/(?<=\.) /).map((line, i) => <span key={i} className="block">{line}</span>)}
-            {/* DECIDED 2026-10-12 (등록 브리프 1.2, 리뷰 S1 S3): 히어로의 안내는 registerNote의 첫 두 줄입니다. 언제 열리는지,
-                혼자 등록해도 되는지, 전공과 코딩 경험이 조건인지가 첫 화면 안에서 답해집니다. 등록 블록과 모달이 같은 줄을 읽습니다. */}
             </p>
           </div>
           {/* 오른쪽 단 = 8월 행사 사진 넷 (DECIDED 2026-09-17, 사용자). 8월 히어로의
@@ -1065,26 +1073,29 @@ export default function NaruHome() {
             <>
               {/* 위 안내 네 줄이 이 버튼의 캡션입니다. */}
               <PreparingButton t={t} noteId="december-register-note" onOpen={reg?.openRegister} />
-              <OpenChatLink t={t} src="naru-december" label={openChatLabels.december} variant="secondary" />
+              {/* DECIDED 2026-10-12 (등록 브리프 1.3, 리뷰 S8): 알림 버튼은 히어로와 같은 그라데이션 필입니다. 그 전에는 미리 보기,
+                  알림, 후원 문의 셋이 같은 윤곽선이라 무엇을 눌러야 하는지 보이지 않았습니다. "페이지의 그라데이션 필은 히어로
+                  하나"(2026-09-17)는 이 결정이 대신합니다. 같은 문(오픈채팅)이 두 자리에서 같은 모양입니다. */}
+              <OpenChatLink t={t} src="naru-december" label={openChatLabels.december} variant="hero" describedBy="december-chat-note" />
             </>
           ) : null}
+        </div>
+        {regState === "not_open" && links.openChat && (
+          <p id="december-chat-note" className={`mt-3 break-keep ${META} leading-snug text-white/70`}>{t(openChatLabels.phoneHint)}</p>
+        )}
+        {/* DECIDED 2026-10-12 (등록 브리프 1.3, 리뷰 S8): 출제사와 후원 문의는 버튼에서 텍스트 링크로 내려갑니다. 학생이 누를 문이
+            아니라서 버튼 줄 밖, 한 단 아래에 섭니다. mailto는 그대로입니다. 2026-09-19(모바일 감사 16)에 유령 필로 올렸던 것은
+            오픈채팅이 막혀 있어 이 링크가 그 줄의 유일하게 살아 있는 문이던 때의 결정입니다. 누르는 자리는 44px을 지킵니다. */}
+        <p className="mt-1">
           <a
             href={naruLinks.sponsor}
             onClick={() => track("naru_mail", { src: "december" })}
-            // 2026-09-19 (모바일 감사 16): text → secondary. 오픈채팅이 막혀
-            // 있고(links.openChat 빈 문자열) 등록 창도 닫혀 있어, 이 행에 남는
-            // 것은 누를 수 없는 PreparingButton(테두리 + 면)과 이 메일 링크
-            // 둘뿐입니다. 눈이 먼저 가는 쪽이 면을 가진 죽은 버튼이었어요.
-            // 이 파일 맨 위의 원칙("누를 수 없는 버튼을 회색으로 남기지 않습니다")과
-            // 어긋난 상태였습니다. 유령 필로 올려 살아 있는 쪽이 1순위가 되게 합니다.
-            // 음수 마진도 함께 사라집니다(모바일 감사 23: gap-4 안에서 줄이 바뀌면
-            // 행 간격이 −4.5px이 되던 자리).
-            className={buttonClass("secondary", "naru")}
+            className={`inline-flex min-h-[44px] items-center gap-1.5 ${META} font-medium text-white/85 underline underline-offset-4 transition hover:text-white`}
           >
             {t(naru.december.ctaMail)}
             <span aria-hidden>→</span>
           </a>
-        </div>
+        </p>
         </div>
         </PlateSegment>
         {/* DECIDED 2026-10-10 (사용자: "객관적으로 너무 내용이 많다", 중복 브리프 B3): #december의 둘째 판 조각을 홈에서

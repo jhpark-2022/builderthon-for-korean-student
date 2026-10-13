@@ -89,6 +89,8 @@ export const coreDict = {
     // 다시 부르면 됩니다.
     openChatJoin: { ko: "오픈채팅으로 함께하기", en: "Join the open chat" },
     openChatAria: { ko: "카카오톡 오픈채팅방 열기", en: "Open the KakaoTalk open chat" },
+    // 2026-10-12 (등록 브리프 1.3, 리뷰 S7): 헤더 오픈채팅 알약의 title. 폰에서는 아이콘만 보이는 자리입니다.
+    openChatTitle: { ko: "카카오톡 오픈채팅", en: "KakaoTalk open chat" },
     // Brand suffix beside the Zero100 wordmark in the nav.
     brandSuffix: { ko: "AI 빌더톤", en: "AI Builderthon" },
   },

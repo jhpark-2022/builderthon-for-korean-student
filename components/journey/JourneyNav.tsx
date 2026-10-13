@@ -663,6 +663,8 @@ export default function JourneyNav({
               rel="noopener noreferrer"
               // 2026-10-11 (리뷰 작은 것): 나루 계열 헤더의 이름은 보이는 글자("오픈채팅")로 시작하고 새 창임을 말합니다(WCAG 2.5.3).
               aria-label={naru ? t({ ko: "오픈채팅, 카카오톡 새 창", en: "Open chat, KakaoTalk, new window" }) : t(dict.nav.openChatAria)}
+              // 2026-10-12 (등록 브리프 1.3, 리뷰 S7): 폰에서는 아이콘만 보이는 자리라, 올려 두면 어디로 가는지 보이게 합니다.
+              title={t(dict.nav.openChatTitle)}
               onClick={() => track("openchat_click", { src: "nav" })}
               className={
                 registered
