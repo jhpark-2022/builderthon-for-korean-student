@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-13 참가비, 항공, 숙소를 어디에도 쓰지 않는다](#2026-10-13-no-fee-travel)
 - [2026-10-13 등록 블록의 안내를 한 줄로](#2026-10-13-register-note-one-line)
 - [2026-10-13 폰 점검 마무리: 8월 페이지의 작은 글자](#2026-10-13-phone-audit-3)
 - [2026-10-13 폰 점검 이어서: 좁은 헤더, 챕터 현위치, 8월 페이지 넘침](#2026-10-13-phone-audit-2)
@@ -223,6 +224,16 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-13-no-fee-travel"></a>
+## 2026-10-13 참가비, 항공, 숙소를 어디에도 쓰지 않는다
+- 범위: data/naru.ts, data/crossingForm.ts, data/dictionary.ts, components/home/NaruHome.tsx(주석), components/crossing/RegisterModal.tsx(주석), README.md, docs/brand.md
+- 한 것: DECIDED 2026-10-13 (사용자: "일절 아무 곳에서도 mention 되면 안됨"). 등록 모달 안내에서 참가비 줄과 항공, 숙소 줄을 빼 세 줄로,
+  카카오톡 ID 도움말과 등록 완료 문장, README에서 "참가비"를, 8월 FAQ에서 무료 문장을 뺐습니다.
+  registerFacts의 feeLine, travelLine 칸을 없앴습니다. 정본 9장 금지어에 한 줄을 더했습니다.
+  근거: brand 5장(약속하지 않는다), 9장. 판단 질문 1, 2 모두 해당 없음(정해지지 않은 것을 예고하지 않는 정리).
+- 검증: 빌드 통과. 빌드 산출물(HTML, JS 청크) 전체에서 참가비, 항공, 숙소, 숙박, flight, lodging 0건.
+- 커밋: dbf0157
 
 <a id="2026-10-13-register-note-one-line"></a>
 ## 2026-10-13 등록 블록의 안내를 한 줄로
