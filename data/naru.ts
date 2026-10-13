@@ -2313,11 +2313,9 @@ export const naru = {
         },
         // DECIDED 2026-10-13 (사용자, 멘토링 브리프 2, D4): 미션은 Day 2부터이고, 무엇을 냈는가보다 함께 있었는가를 봅니다.
         // 그래서 조건이 "팀 전원"입니다. 그 전: "현업에게 확인받은 문제 정의".
-        milestone: { ko: "팀 전원이 멘토를 찾아가 확인받기", en: "The whole team takes it to a mentor" },
-        milestoneDetail: {
-          ko: "Day 1에 쓴 팀의 생각 한 장을 팀 전원이 함께 멘토에게 가져가 확인받습니다. 무엇을 내는 것이 아니라, 다 같이 가는 것이 이 날의 미션입니다.",
-          en: "Your whole team takes the one page from Day 1 to a mentor together and has it checked. Nothing is handed in. Going together is the mission.",
-        },
+        // DECIDED 2026-10-13 (사용자: "day 2랑 3 미션은 아직 잘 모르겠네, 이후 공개 이런 식으로만"): 내용을 쓰지 않고 "이후 공개"만 둡니다.
+        // 설명(milestoneDetail)도 뺐습니다. 같은 날 앞서 적었던 것: "팀 전원이 멘토를 찾아가 확인받기". 정해지면 milestoneDetail과 함께 다시 적습니다.
+        milestone: { ko: "이후 공개", en: "To be announced" },
       },
       {
         name: { ko: "Build", en: "Build" },
@@ -2348,11 +2346,8 @@ export const naru = {
         // DECIDED 2026-10-13 (사용자, 멘토링 브리프 2, D3): Day 3의 미션은 내는 것이 아니라 다른 팀 한 곳의 리허설에 의견을 주는 것입니다.
         // 덱과 결과물(위 submit)은 미션과 별개로 성과 공유회 전에 냅니다. 브리프의 "연습 피칭"은 정본 5장(피칭은 안 쓰는 말)에 따라
         // "리허설"로 씁니다(같은 날 사용자 확인, docs/brand.md 7장). 그 전: "코드로 옮긴 결과물과 덱".
-        milestone: { ko: "다른 팀의 리허설에 의견 주기", en: "Give notes on another team's rehearsal" },
-        milestoneDetail: {
-          ko: "리허설을 다른 팀에 보여 주고, 다른 팀 한 곳의 리허설에 의견을 남깁니다. 덱과 결과물은 미션과 별개로 성과 공유회 전에 냅니다.",
-          en: "Show your rehearsal to another team and leave notes on one other team's rehearsal. The deck and what you built are handed in before the showcase, separately from the mission.",
-        },
+        // DECIDED 2026-10-13 (사용자): Day 2와 같습니다. 같은 날 앞서 적었던 것: "다른 팀의 리허설에 의견 주기".
+        milestone: { ko: "이후 공개", en: "To be announced" },
       },
       {
         // 2026-10-10 (마일스톤 브리프 2.7): 마지막 날의 이름은 "Pitch / 피치"에서 성과 공유회(Showcase)로.
@@ -2377,11 +2372,8 @@ export const naru = {
         },
         // DECIDED 2026-10-10 (중복 브리프 B1): 칩 "멘토링 없음"을 뺐습니다(위 Day 3과 같은 이유).
         chips: [{ ko: "시상과 클로징", en: "Awards and closing" }],
-        milestone: { ko: "성과 공유회 완주", en: "Making it through the showcase" },
-        milestoneDetail: {
-          ko: "발표 5분, 질의 5분. 다 풀지 못했어도 무대에 서면 완주입니다. 문제에 어떻게 다가갔는지를 봅니다.",
-          en: "Five minutes to present, five for questions. If you go up, you have made it through, solved or not. We look at how you approached the problem.",
-        },
+        // DECIDED 2026-10-13 (사용자: "2,3,4일 모두 이후 공개"): Day 4도 내용을 쓰지 않습니다. 그 전: "성과 공유회 완주"와 그 설명.
+        milestone: { ko: "이후 공개", en: "To be announced" },
       },
     ] as {
       name: Phrase;

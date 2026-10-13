@@ -361,9 +361,13 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
 // 설명 한 문장을 펼쳐 둡니다. 데스크톱 일정 카드의 띠는 전과 같이 누르는 것입니다.
 function MilestoneStrip({ id, label, title, detail, center = false, expanded = false }: { id: string; label: string; title: string; detail?: string; center?: boolean; expanded?: boolean }) {
   const [open, setOpen] = useState(false);
+  // DECIDED 2026-10-13 (사용자, 스크린숏: "properly centralize it"): 설명이 없는 가운데 띠에서는 제목이 띠의 한가운데에 섭니다.
+  // 그 전에는 "★ 미션 + 제목" 묶음이 가운데라, 제목("이후 공개")만 보면 오른쪽으로 치우쳐 있었습니다. 세 칸(1fr auto 1fr)의 가운데 칸이
+  // 제목이고, 라벨은 왼쪽 칸의 오른쪽 끝에 붙습니다. 설명이 있어 누르는 띠(오른쪽에 꺾쇠)는 전과 같습니다.
+  const centerTitle = center && !detail;
   const head = (
     <>
-      <span className={`inline-flex shrink-0 items-center gap-1 ${META} font-bold text-amber-100`}>
+      <span className={`inline-flex shrink-0 items-center gap-1 ${META} font-bold text-amber-100 ${centerTitle ? "justify-self-end" : ""}`}>
         <span aria-hidden>★</span>{label}
       </span>
       <span className={`${BODY} font-bold leading-snug text-white`}>{title}</span>
@@ -378,7 +382,7 @@ function MilestoneStrip({ id, label, title, detail, center = false, expanded = f
           <svg aria-hidden width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 text-amber-100 transition-transform ${center ? "" : "ml-auto"} ${open ? "rotate-180" : ""}`}><path d="m6 9 6 6 6-6" /></svg>
         </button>
       ) : (
-        <p className={row}>{head}</p>
+        <p className={centerTitle ? "grid min-h-[44px] w-full grid-cols-[1fr_auto_1fr] items-center gap-x-2.5 break-keep px-3 py-2" : row}>{head}</p>
       )}
       {detail && (
         <p id={expanded ? undefined : id} hidden={!expanded && !open} className={`break-keep border-t border-amber-400/20 px-3 py-2.5 ${BODY} leading-relaxed text-white/85 ${center ? "text-center" : ""}`}>{detail}</p>
