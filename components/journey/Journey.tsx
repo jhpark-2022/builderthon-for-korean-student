@@ -817,7 +817,7 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                       />
                     )}
                     {anchor ? (
-                      <span className={`relative flex h-7 w-7 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-[0.6rem] text-rose-100 shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:bg-rose-400/40`}>
+                      <span className={`relative flex h-7 w-7 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-xs text-rose-100 shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:bg-rose-400/40`}>
                         <span aria-hidden>★</span>
                       </span>
                     ) : spot ? (
@@ -896,7 +896,8 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
           주석의 결정). 게다가 지금 그 아래는 멘토링 점 마커가 지나갑니다. */}
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
         <span className="flex items-center gap-1.5 text-xs text-rose-200/85">
-          <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-[0.42rem] text-rose-100">★</span>
+          {/* DECIDED 2026-10-13 (폰 점검): 원 안의 ★가 7.6px이라 읽히지 않았습니다. 원을 18px로, ★를 12.6px로 올립니다. 노선도 원 안의 ★도 10.8px에서 13.5px로. */}
+          <span aria-hidden className="flex h-4 w-4 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-[0.7rem] leading-none text-rose-100">★</span>
           {t(r.legendMandatory)}
         </span>
         <span className="flex items-center gap-1.5 text-xs text-white/55">

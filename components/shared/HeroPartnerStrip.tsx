@@ -316,9 +316,10 @@ function StripLogo({ src, alt, w, h, mass, box }: StripLogoSpec & { box: StripBo
 // 0.55rem → 0.65rem (2026-08-24 모바일 감사): 히어로 아이브로와 같은 이유입니다.
 // 이 캡션은 whitespace-nowrap이라 줄이 접힐 위험이 없고, 폰의 마퀴 행에서도
 // 여백이 남습니다(320px에서 "주최 AXMOS"가 66px, 칸이 266px).
+// DECIDED 2026-10-13 (폰 점검): 360px 아래에서도 12.6px로 둡니다. 영문 줄이 넘치지 않게 그 폭에서는 자간만 0.08em으로 줄입니다.
 function StripTierLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="shrink-0 whitespace-nowrap text-[0.65rem] font-bold min-[360px]:text-[0.7rem] uppercase tracking-[0.16em] text-violet-200/85 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)]">
+    <span className="shrink-0 whitespace-nowrap text-[0.7rem] font-bold uppercase tracking-[0.08em] min-[360px]:tracking-[0.16em] text-violet-200/85 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)]">
       {children}
     </span>
   );
