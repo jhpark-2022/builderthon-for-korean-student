@@ -359,30 +359,31 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
 // aria-controls가 없는 id를 가리켰습니다). 설명 문단은 닫혀 있어도 hidden으로 마운트해 둡니다.
 // expanded: 폰의 노선도 카드에서는 띠를 누르지 않습니다. 날짜를 눌러 연 카드 안에서 한 번 더 접혀 있던 것(2단 접힘)을 없애고
 // 설명 한 문장을 펼쳐 둡니다. 데스크톱 일정 카드의 띠는 전과 같이 누르는 것입니다.
-function MilestoneStrip({ id, label, title, detail, center = false, expanded = false }: { id: string; label: string; title: string; detail?: string; center?: boolean; expanded?: boolean }) {
+// tone: "plain"은 미션이 아닌 띠입니다(Day 1의 "Day 2에 들고 갈 것"). 같은 자리와 같은 문법이고, 호박색과 ★는 미션에만 씁니다.
+function MilestoneStrip({ id, label, title, detail, center = false, expanded = false, tone = "amber" }: { id: string; label: string; title: string; detail?: string; center?: boolean; expanded?: boolean; tone?: "amber" | "plain" }) {
   const [open, setOpen] = useState(false);
-  // DECIDED 2026-10-13 (사용자, 스크린숏: "properly centralize it"): 설명이 없는 가운데 띠에서는 제목이 띠의 한가운데에 섭니다.
-  // 그 전에는 "★ 미션 + 제목" 묶음이 가운데라, 제목("이후 공개")만 보면 오른쪽으로 치우쳐 있었습니다. 세 칸(1fr auto 1fr)의 가운데 칸이
-  // 제목이고, 라벨은 왼쪽 칸의 오른쪽 끝에 붙습니다. 설명이 있어 누르는 띠(오른쪽에 꺾쇠)는 전과 같습니다.
-  const centerTitle = center && !detail;
+  const amber = tone === "amber";
+  // DECIDED 2026-10-13 (사용자, 스크린숏: "별, 미션, 이후 공개 이게 다 고려가 되어야 함"): 가운데에 서는 것은 제목 하나가 아니라
+  // ★, 라벨, 제목 묶음 전체입니다. 같은 날 앞서 제목만 가운데에 세웠던 것(1fr auto 1fr)을 되돌렸습니다.
+  // 위아래는 글자의 잉크로 맞춥니다. 한글은 줄 상자 안에서 위로 붙어 앉고(실측 0.6px) ★의 왼쪽 여백 때문에 묶음이 왼쪽으로 0.75px 치우쳐, 설명이 없는 띠에서는 묶음을 1px 내리고 1px 오른쪽으로 둡니다.
   const head = (
     <>
-      <span className={`inline-flex shrink-0 items-center gap-1 ${META} font-bold text-amber-100 ${centerTitle ? "justify-self-end" : ""}`}>
-        <span aria-hidden>★</span>{label}
+      <span className={`inline-flex shrink-0 items-center gap-1 ${META} font-bold ${amber ? "text-amber-100" : "text-white/70"}`}>
+        {amber && <span aria-hidden>★</span>}{label}
       </span>
       <span className={`${BODY} font-bold leading-snug text-white`}>{title}</span>
     </>
   );
   const row = `flex w-full flex-wrap items-center gap-x-2.5 gap-y-1 break-keep px-3 py-2 ${center ? "justify-center" : "text-left"}`;
   return (
-    <div className="mt-auto w-full rounded-xl border border-amber-400/25 bg-amber-400/10">
+    <div className={`mt-auto w-full rounded-xl border ${amber ? "border-amber-400/25 bg-amber-400/10" : "border-white/15 bg-white/[0.04]"}`}>
       {detail && !expanded ? (
         <button type="button" aria-expanded={open} aria-controls={id} onClick={() => setOpen((v) => !v)} className={`${row} min-h-[44px] rounded-xl transition-colors hover:bg-amber-400/10`}>
           {head}
           <svg aria-hidden width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 text-amber-100 transition-transform ${center ? "" : "ml-auto"} ${open ? "rotate-180" : ""}`}><path d="m6 9 6 6 6-6" /></svg>
         </button>
       ) : (
-        <p className={centerTitle ? "grid min-h-[44px] w-full grid-cols-[1fr_auto_1fr] items-center gap-x-2.5 break-keep px-3 py-2" : row}>{head}</p>
+        <p className={`${row} min-h-[44px] pb-[7px] pl-[13px] pr-[11px] pt-[9px]`}>{head}</p>
       )}
       {detail && (
         <p id={expanded ? undefined : id} hidden={!expanded && !open} className={`break-keep border-t border-amber-400/20 px-3 py-2.5 ${BODY} leading-relaxed text-white/85 ${center ? "text-center" : ""}`}>{detail}</p>
@@ -548,6 +549,11 @@ export default function NaruHome() {
         </p>
       )}
       {/* 그날의 마일스톤. amber 띠(홈에서 "결과보다 과정"이 쓰던 색)가 카드 바닥에 섭니다. Day 0에는 없습니다. */}
+      {/* DECIDED 2026-10-13 (사용자, 스크린숏: "1일차 박스가 너무 비어있음"): 미션이 없는 Day 1은 같은 자리에 무채색 띠를 세웁니다.
+          그날 쓰는 한 장(stage.submit)이 Day 2에 멘토에게 들고 가는 것이라는, 이미 있는 사실입니다. 호박색과 ★는 미션에만 씁니다. */}
+      {!stage.milestone && stage.submit && (
+        <MilestoneStrip id={`carry-day-${stage.dayOffset}`} label={t(naru.december.carryLabel)} title={t(stage.submit)} center tone="plain" />
+      )}
       {stage.milestone && (
         <MilestoneStrip id={`milestone-day-${stage.dayOffset}`} label={t(naru.december.milestoneLabel)} title={t(stage.milestone)} detail={stage.milestoneDetail && t(stage.milestoneDetail)} center expanded={inPanel} />
       )}

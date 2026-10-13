@@ -1928,6 +1928,8 @@ export const naru = {
     routeLegendMilestone: { ko: "미션 지원, 해낸 팀 모두", en: "Mission support, for every team that completes it" },
     // 2026-10-11: 날짜 카드와 폰 패널의 띠에 서는 라벨. "마일스톤"에서 "미션"으로.
     milestoneLabel: { ko: "미션", en: "Mission" },
+    // DECIDED 2026-10-13 (사용자: "1일차 박스가 너무 비어있음"): 미션이 없는 Day 1 카드의 바닥 띠 라벨. 띠의 제목은 그날의 submit입니다.
+    carryLabel: { ko: "Day 2에 들고 갈 것", en: "To bring on Day 2" },
     // 일정표 행의 마일스톤 줄 끝에 붙는 말(2026-10-10). 누가 받는지를 날마다 한 번씩 말합니다.
     milestoneNote: { ko: "해낸 팀 모두 지원", en: "Support for every team that completes it" },
     dayLabel: { ko: "DAY", en: "DAY" },
@@ -2280,7 +2282,8 @@ export const naru = {
         // DECIDED 2026-10-08 (현장 팀 매칭 브리프 5): "팀 매칭" 칩 자리에 /match로 가는 버튼 하나가 섭니다.
         // 12월에는 AI 유형 테스트가 신청의 일부가 아니라 Day 1 현장의 팀 매칭 도구입니다. 칩은 뺐습니다
         // (버튼이 같은 말을 합니다). 버튼은 이 행의 글 기둥 왼쪽 끝에 섭니다(NaruHome).
-        chips: [],
+        // 2026-10-13 (사용자: "1일차 박스가 너무 비어있음"): 위 body의 첫 문장("현장에서 팀을 맺습니다")을 칩으로 올렸습니다(brand 7장 팀).
+        chips: [{ ko: "현장에서 팀 구성", en: "Teams form on site" }],
         // 2026-10-11: 화면에 그리지 않습니다. 버튼은 히어로로 갔습니다(eventHero.ctaMatch). 키는 그대로.
         matchCta: { label: { ko: "AI 유형 테스트로 팀 매칭", en: "Team matching with the AI type test" }, href: "/match" },
         session: {
