@@ -88,6 +88,10 @@ html:has(body[data-sticky]) { scroll-behavior: smooth; }
 @media (min-width: 1280px) and (max-width: 1535px) {
   html:has(body[data-sticky]) { scroll-padding-top: 160px; }
 }
+/* 2026-10-13: 영문 8월 페이지는 챕터 아홉 칸이 1800부터 로고 줄에 섭니다(JourneyNav의 anchorRowAt). 그 아래까지 레일이 남습니다. */
+@media (min-width: 1536px) and (max-width: 1799px) {
+  html[lang="en"]:has(body[data-sticky]) { scroll-padding-top: 160px; }
+}
 
 /* Anchor jumps land instantly below `lg`.
    This page is ~18,000px tall, and the section rail can send you most of that

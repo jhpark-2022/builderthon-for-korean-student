@@ -949,7 +949,8 @@ export default function NaruHome() {
             가운데입니다. 머리(알약, 제목, 리드, 숫자), 노선도, 등록 줄은 가운데인데 그 사이의 일정, 표, 멘토링 상자, 문단만 왼쪽이라
             한 화면에 축이 둘이었습니다. 폰은 2026-10-09부터 가운데였고, 이제 모든 폭에서 축이 하나입니다.
             왼쪽 끝 규칙(2026-09-29)은 홈의 이 블록들에서는 더 쓰지 않습니다. 표의 라벨은 값 위에 쌓습니다(폰과 같은 모양). */}
-        <Reveal className={`${READ} mt-10 text-center`}>
+        {/* id="schedule": 목차의 "일정" 칩이 내려앉는 자리입니다(2026-10-13). */}
+        <Reveal id="schedule" className={`${READ} mt-10 text-center`}>
           <h3 data-subheading className={SUBHEADING}>{t(naru.december.scheduleLabel)}</h3>
           <p className={`${MEASURE_C} mt-3 break-keep ${BODY} leading-relaxed text-white/70`}>
             {t(naru.december.scheduleLead)}
@@ -1005,7 +1006,8 @@ export default function NaruHome() {
             READ 폭 한 줄을 다 쓰는 상자 안에서 글이 MEASURE(36rem)에 묶여 오른쪽 절반이 비어 있었습니다. 두 칸으로 나누면
             글이 상자를 채웁니다. 상자 안 문단의 MEASURE는 그래서 뺐습니다. 폰은 전처럼 위아래입니다. 색과 글은 그대로. */}
         {/* DECIDED 2026-10-13 (사용자, 멘토링 브리프 1): 상자가 셋이 되어 md부터 세 칸입니다. 폰은 전처럼 위아래. */}
-        <Reveal className={`${READ} mt-8 grid grid-cols-1 gap-3 text-center md:grid-cols-3 md:gap-4 lg:mt-12`}>
+        {/* id="mentoring": 목차의 "멘토링" 칩이 내려앉는 자리입니다(2026-10-13). */}
+        <Reveal id="mentoring" className={`${READ} mt-8 grid grid-cols-1 gap-3 text-center md:grid-cols-3 md:gap-4 lg:mt-12`}>
           {mentoringBoxes}
         </Reveal>
         {/* DECIDED 2026-10-10 (중복 브리프 B2): 이 자리의 호박색 "결과보다 과정" 상자(naru.why.measure)를 그리지 않습니다.

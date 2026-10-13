@@ -101,6 +101,11 @@ export type NavAnchor = {
 // 반드시 짝이라, 섹션 없이 남으면 링크는 아무 데도 가지 않고 현위치 표시가
 // 영영 켜지지 않습니다. 라벨 키는 dict.wrap.navLabel에 그대로 있습니다.
 const DEFAULT_ANCHORS: NavAnchor[] = [
+  // 2026-10-13: 앞의 네 챕터(결과, 취지, 참가, 혜택). id는 Journey.tsx의 섹션 id와 같습니다.
+  { id: "results",   label: dict.nav.results },
+  { id: "about",     label: dict.nav.about },
+  { id: "join",      label: dict.nav.join },
+  { id: "benefits",  label: dict.nav.benefits },
   { id: "program",   label: dict.nav.program },
   { id: "speakers",  label: dict.nav.speakers },
   { id: "mentoring", label: dict.nav.mentoring },
@@ -331,6 +336,20 @@ export default function JourneyNav({
   // mobile section rail below doubles its height and page text kept reading
   // through between the two rows. The blur separates bar from page without
   // making it a solid slab.
+  // DECIDED 2026-10-13 (사용자: "TOC 수가 너무 적음"): 챕터 링크가 늘어 로고 줄에 서는 폭을 실측으로 다시 정했습니다.
+  // 한국어는 전과 같습니다(홈과 /naru는 xl, 8월 페이지는 2xl). 영문은 낱말이 길어 같은 폭에서 오픈채팅 버튼과 겹칩니다
+  // (홈 1280~1536에서 9px 겹침). 그래서 영문 홈은 한 단 넓은 폭(1728)부터, 영문 /naru는 2xl부터 서고, 그 아래에서는 레일이 맡습니다.
+  // 줄과 레일은 같은 폭에서 바뀌어야 합니다(둘 다 서거나 둘 다 없으면 안 됩니다).
+  // 8월 페이지의 영문 아홉 칸도 1536에서 오픈채팅 버튼과 붙어(실측 간격 0, 1728에서 6px) 1800부터 섭니다. 그 사이(1536~1799)에는 레일이
+  // 남으므로, 배너의 위 여백(ArchiveBanner)과 scroll-padding(globals.css의 html[lang="en"] 규칙)이 같은 폭에서 따라 바뀝니다.
+  const en = locale === "en";
+  const anchorRowAt = en && !naru
+    ? { row: "min-[1800px]:ml-6 min-[1800px]:flex", rail: "min-[1800px]:hidden" }
+    : en && anchors.length > 4
+    ? { row: "min-[1728px]:ml-6 min-[1728px]:flex", rail: "min-[1728px]:hidden" }
+    : (naru && !en)
+      ? { row: "xl:ml-6 xl:flex", rail: "xl:hidden" }
+      : { row: "2xl:ml-6 2xl:flex", rail: "2xl:hidden" };
   return (
     <>
       <header
@@ -517,7 +536,8 @@ export default function JourneyNav({
               silently crushed the brand to make room. */}
           {/* 챕터 링크는 페이지 칩에서 24px 띄웁니다(등록 브리프 2.1). 8월 페이지는 다섯이라 2xl(1536)부터 섭니다.
               실측: 1440에서 로고, 칩 셋, 링크 다섯, 오른쪽 묶음이 한 줄에 들어가지 않습니다. 그 아래에서는 레일이 맡습니다. */}
-          <div className={`hidden items-center gap-5 ${naru ? "xl:ml-6 xl:flex" : "2xl:ml-6 2xl:flex"}`}>
+          {/* 영문 8월의 아홉 칸은 간격 20px이면 오픈채팅 버튼과 붙어 그 줄만 12px입니다. */}
+          <div className={`hidden items-center ${en && !naru ? "gap-3" : "gap-5"} ${anchorRowAt.row}`}>
             {/* DECIDED 2026-10-10 (사용자: "TOC가 너무 어색함"): 나루 계열 헤더(홈, /naru)의 데스크톱 줄에서는 첫 항목(#top)을
                 그리지 않습니다. 바로 왼쪽의 로고가 같은 이름이고 같은 곳(#top)으로 갑니다. "나루 나루", "크로싱 서울 크로싱 서울"로
                 읽혔습니다. 폰 레일은 로고 줄이 접힌 뒤에 혼자 남으므로 넷 그대로입니다. 8월 페이지는 그대로. */}
@@ -730,7 +750,7 @@ export default function JourneyNav({
           폰의 첫 화면에 다른 페이지로 가는 길이 없던 것도 이 줄이 풉니다. 2026-09-19의 "접는 목차"와 2026-08-17의
           "칩 폭 통일"은 이 결정이 대신합니다. 8월 페이지의 챕터 링크는 2xl부터 로고 줄에 서므로 레일도 거기까지 남습니다.
           nav 랜드마크입니다(2026-09-19, 접근성 감사 4). 로고 줄이 접히면 위에도 여백을 둡니다(2026-10-10). */}
-      <nav aria-label={t(dict.nav.sectionsAria)} className={`${naru ? "xl:hidden" : "2xl:hidden"} ${chromeHidden ? "pt-2 lg:pt-0" : ""} ${reduce ? "" : "transition-[padding] duration-300"}`}>
+      <nav aria-label={t(dict.nav.sectionsAria)} className={`${anchorRowAt.rail} ${chromeHidden ? "pt-2 lg:pt-0" : ""} ${reduce ? "" : "transition-[padding] duration-300"}`}>
         <div
           ref={railRef}
           // calc 안의 밑줄 두 개(100%_-_16px)가 필요합니다. Tailwind는 임의값의 밑줄을 공백으로 바꾸는데,

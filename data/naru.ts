@@ -302,8 +302,14 @@ export const register = {
 // 티저로 내려가, 거기서 한 번 더 눌러야 했습니다. 티저 챕터(#naru)는 그대로 있습니다.
 // "참가"는 "등록"이 됐습니다. 내려앉는 블록의 제목과 같은 말입니다. 목적지(#register)는 그대로입니다(2026-10-11, 리뷰 A2).
 export const naruNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel?: Phrase }[] = [
+  // DECIDED 2026-10-13 (사용자: "TOC가 어색하거나 수가 너무 적음, 실제 내용에 비해"): 둘에서 다섯으로. 실측으로 홈은 6.9화면인데
+  // 칩 둘이 1.3화면과 4.4화면에만 내려앉아, 일정(2.2), 멘토링(3.7), 남는 것(4.8)으로 가는 길이 없었습니다. 순서는 화면 순서입니다.
+  // "나루"(#naru 티저)는 여전히 페이지 칩이 맡습니다(같은 날 앞의 결정). id는 NaruHome.tsx의 블록 id와 같아야 합니다.
   { id: "december", label: { ko: "프로그램", en: "Programme" } },
+  { id: "schedule", label: { ko: "일정", en: "Schedule" } },
+  { id: "mentoring", label: { ko: "멘토링", en: "Mentoring" } },
   { id: "register", label: { ko: "등록", en: "Register" } },
+  { id: "gains", label: { ko: "남는 것", en: "Gains" }, ariaLabel: { ko: "오면 무엇이 남는가", en: "What you leave with" } },
 ];
 
 // DECIDED 2026-10-10 (구조 브리프 3.2): /naru의 목차 넷. id는 그 페이지의 섹션 id와 같아야 합니다
@@ -312,8 +318,11 @@ export const naruNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel
 export const naruPageNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel?: Phrase }[] = [
   // 2026-10-13 (등록 브리프 2.1): 첫 칸 "나루"(#top)는 뺐습니다. 페이지 칩의 "나루"가 이 페이지의 맨 위입니다.
   { id: "core", label: { ko: "코어", en: "Core" }, ariaLabel: { ko: "변하지 않는 두 개", en: "The two things that do not change" } },
-  { id: "how", label: { ko: "함께하기", en: "Join in" }, ariaLabel: { ko: "어떻게 일하는가", en: "How we work" } },
+  // DECIDED 2026-10-13 (사용자: "TOC가 어색함"): "함께하기"는 내려앉는 챕터의 제목("어떻게 일하는가")과 다른 말이었습니다.
+  // 제목의 말로 맞춥니다. 끝의 매니페스토 블록(#join-ways)으로 가는 칸을 하나 더했습니다.
+  { id: "how", label: { ko: "일하는 방식", en: "How" }, ariaLabel: { ko: "어떻게 일하는가", en: "How we work" } },
   { id: "why", label: { ko: "왜", en: "Why" }, ariaLabel: { ko: "왜 이 자리가 필요한가", en: "Why this place is needed" } },
+  { id: "join-ways", label: { ko: "매니페스토", en: "Manifesto" } },
 ];
 // 2026-10-13 (등록 브리프 2.1): 여기 있던 naruPageBack("← 크로싱 서울")은 헤더의 페이지 칩 셋이 대신합니다.
 

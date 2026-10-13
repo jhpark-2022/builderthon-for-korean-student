@@ -58,6 +58,12 @@ export const coreDict = {
     sectionsAria: { ko: "챕터 목차", en: "Sections" },
     // 2026-10-13 (등록 브리프 2.1): 여기 있던 toDecember("12월 이벤트" / "Dec event")는 페이지 칩 셋(아래 pages)이 대신합니다.
     // 2026-10-13 (등록 브리프 2.3): 영문은 정본대로 Programme.
+    // DECIDED 2026-10-13 (사용자: "TOC가 수가 너무 적음, 실제 내용에 비해"): 앞의 넷을 더했습니다. 8월 페이지는 22화면인데
+    // 첫 칩(프로그램)이 7.2화면에 있어, 그 앞의 결과, 취지, 참가, 혜택 네 챕터로 가는 길이 없었습니다.
+    results: { ko: "결과", en: "Results" },
+    about: { ko: "취지", en: "Why" },
+    join: { ko: "참가", en: "Who" },
+    benefits: { ko: "혜택", en: "Benefits" },
     program: { ko: "프로그램", en: "Programme" },
     // 2026-08-13에 앵커에서 뺐다가 2026-08-23에 되살렸습니다. 뺐던 이유는
     // "프로그램 앵커로 닿고 Day 카드에도 반복된다"였는데, Day 1이 지나고 Day 7·8

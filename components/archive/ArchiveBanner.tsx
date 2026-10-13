@@ -34,10 +34,12 @@ const COPY = {
 } as const;
 
 export default function ArchiveBanner() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
+  // 2026-10-13: 영문은 챕터 아홉 칸이 1800부터 로고 줄에 서므로(JourneyNav의 anchorRowAt) 그 아래에서는 두 줄 높이를 씁니다.
+  const top = locale === "en" ? "2xl:pt-[136px] min-[1800px]:pt-20" : "2xl:pt-20";
   return (
     // 위 여백은 고정 헤더의 높이입니다. 2026-10-13: 레일이 스크롤 0부터 있어 2xl 아래에서는 두 줄(로고 줄 + 레일)입니다.
-    <div className="relative z-20 w-full border-b border-white/10 bg-[#0B1430]/80 pt-[108px] backdrop-blur-sm xl:pt-[136px] 2xl:pt-20">
+    <div className={`relative z-20 w-full border-b border-white/10 bg-[#0B1430]/80 pt-[108px] backdrop-blur-sm xl:pt-[136px] ${top}`}>
       <div className="mx-auto max-w-6xl px-6 py-3 text-center sm:px-10">
         <p className="break-keep text-xs leading-relaxed text-white/70">{t(COPY.note)}</p>
       </div>
