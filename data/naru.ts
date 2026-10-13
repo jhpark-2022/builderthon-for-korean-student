@@ -145,7 +145,9 @@ export const naruLinks = {
 export const openChatLabels = {
   // DECIDED 2026-10-12 (등록 브리프 1.3, 리뷰 S7): 라벨이 어디로 나가는지 말합니다. 그 전의 "등록이 열리면 가장 먼저 알기"에는
   // 카카오톡이라는 말이 없어, 데스크톱에서 눌렀을 때 뜨는 설치 안내가 뜻밖이었습니다. 화살표는 OpenChatLink가 붙입니다.
-  december: { ko: "등록 소식 먼저 받기, 카카오톡 오픈채팅", en: "Get notified first, KakaoTalk open chat" },
+  // DECIDED 2026-10-13 (사용자, 스크린숏: "버튼들이 너무 두꺼워"): 브리프의 라벨("등록 소식 먼저 받기, 카카오톡 오픈채팅")은 히어로 칸에
+  // 한 줄로 들어가지 않아 버튼 넷이 두꺼워졌습니다. 한 줄에 들어가는 길이로 줄입니다. "카카오톡"은 남깁니다.
+  december: { ko: "카카오톡으로 등록 소식 받기", en: "Get news on KakaoTalk" },
   // 알림 버튼 바로 아래의 한 줄(META). 데스크톱에서 누르면 카카오톡 설치 안내만 뜹니다.
   phoneHint: { ko: "휴대폰에서 열면 바로 들어갑니다.", en: "Open it on your phone and you are in right away." },
   join: { ko: "오픈채팅에서 소식 받기", en: "Get news in the open chat" },
@@ -227,6 +229,12 @@ function registerNoteLines(): Phrase[] {
   ];
 }
 export const registerNote: Phrase[] = registerNoteLines();
+// DECIDED 2026-10-13 (사용자, 스크린숏: "너무 길어"): 히어로 버튼 아래는 한 줄입니다. 위 네 줄의 첫 두 줄에서 빈칸 둘(언제, 혼자 가도 되나)만
+// 남긴 줄이고, 네 줄 전부는 등록 블록과 모달이 읽습니다. 알림 버튼의 "휴대폰에서 열면…" 줄도 히어로에서는 뺐습니다(등록 블록에만).
+export const registerNoteShort: Phrase = {
+  ko: "등록은 11월에 엽니다. 혼자 등록하고, 전공과 코딩 경험은 조건이 아닙니다.",
+  en: "Registration opens in November. You register on your own; your major and coding experience are not conditions.",
+};
 
 export const register = {
   cta: { ko: "등록하기", en: "Register" },
@@ -501,9 +509,8 @@ export const naru = {
     naruLineTerm: { ko: "나루", en: "NARU" },
     // 사진 넷 아래 한 줄(감사 반영 브리프 1.3). 캡션이 없으면 12월 사진으로 읽힙니다.
     photosCaption: { ko: "제로백 빌더톤 2026.08 싱가포르", en: "Zero100 builderthon Aug 2026, Singapore" },
-    // DECIDED 2026-10-12 (등록 브리프 1.5, 리뷰 S10): 캡션 뒤에 8월 숫자 한 문장을 붙이고 캡션 전체가 /2026-08로 갑니다.
-    // 숫자는 docs/brand.md 8장의 것(74명 신청, 21팀 마지막 날 발표)만 씁니다. 크게 연 사진의 캡션은 위 짧은 줄 그대로입니다.
-    photosProof: { ko: "74명이 신청하고 21팀이 발표했습니다.", en: "74 students applied and 21 teams presented." },
+    // DECIDED 2026-10-13 (사용자, 스크린숏: "이렇게 디테일한 설명은 필요 없음"): 2026-10-12에 캡션 뒤에 붙였던 8월 숫자 문장
+    // ("74명이 신청하고 21팀이 발표했습니다")을 뺐습니다. 캡션은 위 한 줄이고, /2026-08로 가는 링크만 남습니다.
     // 사진을 누르면 크게 열립니다(2026-10-11). 칸의 툴팁과, 열린 화면의 버튼 셋의 이름입니다.
     photoOpen: { ko: "사진 크게 보기", en: "View larger" },
     photoClose: { ko: "닫기", en: "Close" },
@@ -531,8 +538,9 @@ export const naru = {
     matchNote: {
       // DECIDED 2026-10-12 (등록 브리프 1.3, 리뷰 S12): 같은 사실을 긍정형으로. 그 전의 "결과는 Day 1 전에는 저장되지 않습니다"는
       // 첫 화면의 버튼 셋 가운데 둘째 "아직 안 됨"으로 읽혔습니다.
-      ko: "Day 1 팀을 맺을 때 쓰는 테스트입니다. 미리 해 봐도 되고, 그날 다시 받습니다.",
-      en: "The test we use to form teams on Day 1. Try it now if you like; you take it again that day.",
+      // DECIDED 2026-10-13 (사용자, 스크린숏: "너무 길어"): 한 줄로 줄였습니다. 그 전: "Day 1 팀을 맺을 때 쓰는 테스트입니다. 미리 해 봐도 되고, 그날 다시 받습니다."
+      ko: "AI 유형 테스트는 Day 1에 팀을 맺을 때 씁니다.",
+      en: "The AI type test is used to form teams on Day 1.",
     },
     // ── 카운트다운 패널 (2026-09-17, 8월 문법 브리프) ─────────────────────
     // 8월 히어로의 오른쪽 단(Glass 패널)에 있던 카운트다운의 자리입니다. 숫자는
