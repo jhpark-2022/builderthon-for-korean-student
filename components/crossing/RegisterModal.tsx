@@ -15,10 +15,17 @@
 //   색      나루 토큰만 씁니다(면 naru-surface, 강조 accent, 주 버튼 buttonClass("primary", "naru")). 8월의 보라와
 //           인디고는 이 폼에 없습니다.
 //   크기    BODY와 META, 그리고 LARGE(18px) 셋입니다. 아래 LARGE의 주석을 보세요.
+//
+// DECIDED 2026-10-12 (등록 브리프 1.4, 리뷰 S4 S5 S13 S14 S15): 미리 보기가 끝이 아니라 준비가 되게 합니다.
+//   제목    미리 보기일 때 "(미리 보기)". 제목과 닫기 버튼은 스크롤되지 않는 한 줄에 있습니다. 그 전에는 닫기 버튼이
+//           스크롤 영역 위에 떠 있어, 폰에서 입력칸의 오른쪽 끝을 누르면 폼이 닫혔습니다.
+//   안내    data/naru.ts의 registerNote 네 줄(히어로, 등록 블록과 같은 문장)과 "지금 적어 두면 이 기기에 남아…" 한 문장.
+//   끝      꺼진 버튼의 라벨은 언제 켜지는지를 말하고, 바로 아래에 오픈채팅 링크가 있습니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { track } from "@vercel/analytics";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useLocale } from "@/lib/LocaleContext";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
@@ -267,7 +274,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                   className="peer sr-only"
                 />
                 <span className="flex items-start gap-3 rounded-xl border border-white/45 bg-white/[0.04] px-4 py-3 transition hover:border-white/70 peer-checked:border-accent peer-checked:bg-accent/[0.12] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent peer-checked:[&>span:first-child]:border-accent peer-checked:[&>span:first-child]:bg-naru-purple peer-checked:[&>span:first-child]:text-white">
-                  <span aria-hidden className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/45 ${META} font-bold text-white/80`}>{n + 1}</span>
+                  <span aria-hidden className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/45 ${META} font-bold text-white/80`}>{(f.firstStep ?? 1) + n}</span>
                   <span className="min-w-0">
                     <span className={`block break-keep ${BODY} font-bold leading-snug text-white`}>{t(o.label)}</span>
                     {o.hint && <span className={`mt-1 block break-keep ${META} leading-relaxed text-white/70`}>{t(o.hint)}</span>}
@@ -323,11 +330,17 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
             className="relative z-10 flex max-h-[88dvh] w-full max-w-[560px] flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-naru-surface shadow-2xl sm:rounded-3xl"
           >
             <span aria-hidden className="h-[2px] w-full shrink-0 bg-gradient-to-r from-accent to-accent-strong" />
-            {/* 닫기 버튼의 면은 대화상자와 같은 어두운 면입니다. 반투명이면 스크롤된 글이 아래로 비쳐 X와 겹쳤습니다(모바일 리뷰 9). */}
-            <button ref={closeRef} type="button" onClick={onClose} aria-label={t(copy.close)} className="absolute right-4 top-5 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-naru-surface text-white/80 transition hover:border-white/45 hover:text-white active:scale-95">
-              <svg aria-hidden width="16" height="16" viewBox="0 0 15 15" fill="none"><path d="M1 1l13 13M14 1L1 14" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg>
-            </button>
-            <div className="overflow-y-auto overscroll-contain px-6 pt-8 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:px-9 sm:py-9">
+            {/* 제목 줄. 스크롤 영역 밖이라 늘 보이고, 닫기 버튼이 입력칸 위에 오지 않습니다(2026-10-12, 리뷰 S14).
+                완료 화면에서는 제목이 본문 안에 있어 이 줄에는 닫기 버튼만 남습니다. */}
+            <div className="flex shrink-0 items-center justify-between gap-3 px-6 pb-3 pt-4 sm:px-9 sm:pt-6">
+              {status === "success" ? <span /> : (
+                <h3 id="crossing-register-title" className={`break-keep ${LARGE} font-bold leading-tight text-white`}>{t(preview && !closed ? copy.previewTitle : copy.title)}</h3>
+              )}
+              <button ref={closeRef} type="button" onClick={onClose} aria-label={t(copy.close)} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/25 bg-naru-surface text-white/80 transition hover:border-white/45 hover:text-white active:scale-95">
+                <svg aria-hidden width="16" height="16" viewBox="0 0 15 15" fill="none"><path d="M1 1l13 13M14 1L1 14" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg>
+              </button>
+            </div>
+            <div className="overflow-y-auto overscroll-contain px-6 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:px-9 sm:pb-9">
               {status === "success" ? (
                 <div className="py-6 text-center">
                   <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-accent/40 bg-accent/10">
@@ -344,15 +357,16 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                 </div>
               ) : (
                 <>
-                  <h3 id="crossing-register-title" className={`pr-12 ${LARGE} font-bold leading-tight text-white`}>{t(copy.title)}</h3>
-                  <p className={`mt-2 break-keep pr-12 ${BODY} leading-relaxed text-white/85`}>{t(copy.intro)}</p>
-                  <p className={`mt-1 ${META} leading-relaxed text-white/70`}>{t(copy.draftNote)}</p>
+                  <p className={`break-keep ${BODY} leading-relaxed text-white/85`}>{t(copy.intro)}</p>
+                  {/* 초안이 기기에 남는다는 말은 미리 보기에서는 아래 상자의 마지막 문장이, 등록이 열린 뒤에는 이 줄이 합니다. */}
+                  {!preview && <p className={`mt-1 ${META} leading-relaxed text-white/70`}>{t(copy.draftNote)}</p>}
                   {(preview || closed) && (
                     <p id="crossing-register-preview" role="note" className={`mt-4 rounded-2xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] px-4 py-3 ${BODY} leading-relaxed text-amber-50/90`}>
                       {closed ? t(copy.closed) : [...registerNote, copy.previewKeep].map((line, i) => <span key={i} className="block break-keep">{t(line)}</span>)}
                     </p>
                   )}
                   <form onSubmit={onSubmit} className="mt-6 flex flex-col gap-4" noValidate>
+                    <p className={`${META} leading-relaxed text-white/70`}><span aria-hidden className="text-rose-400">*</span> {t(copy.requiredLegend)}</p>
                     {/* 허니팟. 8월과 같은 세 겹의 방어(이름, 매니저 opt-out, 서버 로그). */}
                     <input type="text" name="url_confirm" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} aria-hidden="true" autoComplete="off" data-1p-ignore data-lpignore="true" data-bwignore data-form-type="other" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }} />
                     {MEMBER_FIELDS.map((f) => {
@@ -370,7 +384,16 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                     {status === "error" && <p role="alert" className={`${BODY} font-medium text-rose-300`}>{errText(errorCode ?? "generic")}</p>}
                     {preview ? (
                       // 꺼진 버튼은 흐림이 아니라 색으로 말합니다(히어로의 준비 중 버튼과 같은 문법). 이유는 위 안내가 읽어 줍니다.
-                      <button type="submit" disabled aria-describedby="crossing-register-preview" className={`mt-2 inline-flex min-h-[48px] cursor-not-allowed items-center justify-center rounded-full border border-white/20 bg-white/[0.06] px-7 py-3 ${BODY} font-bold text-white/70`}>{t(closed ? copy.closed : copy.previewSubmit)}</button>
+                      <>
+                        <button type="submit" disabled aria-describedby="crossing-register-preview" className={`mt-2 inline-flex min-h-[48px] cursor-not-allowed items-center justify-center rounded-full border border-white/20 bg-white/[0.06] px-7 py-3 ${BODY} font-bold text-white/70`}>{t(closed ? copy.closed : copy.previewSubmit)}</button>
+                        {/* 다 적은 사람이 지금 할 수 있는 일 하나(리뷰 S4). 홈의 알림 버튼과 같은 라벨, 같은 문입니다. */}
+                        {!closed && links.openChat && (
+                          <a href={links.openChat} target="_blank" rel="noopener noreferrer" onClick={() => track("openchat_click", { src: "naru-register-modal" })} className={`inline-flex min-h-[44px] items-center justify-center gap-1.5 ${BODY} font-semibold text-accent underline underline-offset-4 hover:text-white`}>
+                            {t(openChatLabels.december)}
+                            <span aria-hidden>→</span>
+                          </a>
+                        )}
+                      </>
                     ) : (
                       <button type="submit" disabled={status === "submitting"} className={`${PRIMARY} mt-2`}>{t(status === "submitting" ? copy.submitting : copy.submit)}</button>
                     )}

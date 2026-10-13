@@ -39,6 +39,8 @@ export interface Field {
   inputMode?: "text" | "email" | "url";
   /** 아이디 같은 값. 폰이 첫 글자를 대문자로 바꾸거나 맞춤법을 고치지 않게 합니다. */
   verbatim?: boolean;
+  /** radio 카드의 첫 번호. 기본 1. 폼(RegisterModal)과 명단 스크립트(build-crossing-roster.py)가 같이 읽습니다. */
+  firstStep?: number;
 }
 
 export const MAX_TEXT = 200;
@@ -80,7 +82,8 @@ export const CROSSING_FORM: Field[] = [
     help: { ko: "안내 메일이 가는 주소입니다.", en: "Where the follow-up email goes." } },
   { key: "contact", scope: "member", type: "text", required: true, fixed: true, verbatim: true,
     label: { ko: "카카오톡 ID", en: "KakaoTalk ID" },
-    help: { ko: "참가자 카카오톡 방에 초대할 때 씁니다. 참가비, 장소, Day 0 안내가 그 방에서 나갑니다.", en: "Used to invite you to the participant KakaoTalk room, where cost, venue and Day 0 details are shared." } },
+    // 2026-10-12 (등록 브리프 1.4, 리뷰 S6): ID를 어디서 보는지, 그 방이 오픈채팅과 다른 방이라는 것을 끝에 붙였습니다.
+    help: { ko: "참가자 카카오톡 방에 초대할 때 씁니다. 참가비, 장소, Day 0 안내가 그 방에서 나갑니다. ID는 카카오톡 > 설정 > 프로필에서 볼 수 있습니다. 참가자 방은 오픈채팅과 다른, 참가자만 있는 방입니다.", en: "Used to invite you to the participant KakaoTalk room, where cost, venue and Day 0 details are shared. You can find your ID in KakaoTalk > Settings > Profile. The participant room is separate from the open chat and is for participants only." } },
   { key: "university", scope: "member", type: "text", required: false, fixed: true, autoComplete: "organization",
     label: { ko: "학교", en: "School" },
     placeholder: { ko: "예: 서울대학교, NUS", en: "e.g. Seoul National University, NUS" } },
@@ -122,16 +125,24 @@ export const CROSSING_FORM: Field[] = [
   // 값(value)은 answers에 그대로 남으니 받기 시작하면 바꾸지 마세요(라벨과 예시는 바꿔도 됩니다). 같은 날 처음의
   // 값(none, chatbot, coding_tool, cli_agent)을 아래 넷으로 바꿨습니다. 등록 창이 열리기 전이라 받은 답이 없었습니다.
   // 순서가 곧 단계 번호입니다(명단 스크립트가 "3. 라벨"로 냅니다). 순서를 바꾸지 마세요.
-  { key: "major", scope: "member", type: "text", required: true, maxLen: 80,
+  // DECIDED 2026-10-12 (등록 브리프 1.4 D3, 리뷰 S15): 전공은 선택입니다. Day 1 전에 꼭 필요한 것은 이름, 이메일, 카카오톡 ID,
+  // 나라, 동의입니다. 서버도 같은 스키마로 검증하므로 빈 전공을 받습니다(빈 답은 answers에 넣지 않습니다).
+  { key: "major", scope: "member", type: "text", required: false, maxLen: 80,
     label: { ko: "전공", en: "Major" },
     // DECIDED 2026-10-09 (사용자, 스크린숏: "여러분들을 위한 과정을 위해서 물어보는 것, screening 이 아니라는 내용 추가해줘"):
-    // 전공과 아래 AI 질문은 선발처럼 읽히기 쉬운 두 칸입니다. 둘 다 바로 아래에 왜 묻는지와 스크리닝이 아님을 적습니다.
-    help: { ko: "여러분에게 맞는 과정을 준비하려고 묻습니다. 스크리닝이 아닙니다.", en: "We ask so we can prepare a programme that fits you. This is not screening." },
+    // 전공과 아래 AI 질문은 선발처럼 읽히기 쉬운 두 칸입니다. 둘 다 바로 아래에 왜 묻는지를 적습니다.
+    // DECIDED 2026-10-12 (등록 브리프 1.4, 리뷰 S5): "스크리닝이 아닙니다"는 두 도움말에서 빼고 모달 도입부 한 번만 둡니다.
+    // 세 번 되풀이하니 오히려 선발처럼 읽혔습니다(docs/brand.md 9장: 한 자리에 한 번).
+    help: { ko: "여러분에게 맞는 과정을 준비하려고 묻습니다.", en: "We ask so we can prepare a programme that fits you." },
     placeholder: { ko: "예: 경영학, 컴퓨터공학, 미정", en: "e.g. Business, Computer Science, Undeclared" } },
-  { key: "ai_level", scope: "member", type: "radio", required: true,
-    label: { ko: "AI로 해 본 것 중 가장 위에 있는 것 하나를 골라 주세요.", en: "Pick the highest step you have actually done with AI." },
-    help: { ko: "여러분에게 맞는 과정을 준비하려고 묻습니다. 스크리닝이 아니고, 무엇을 골라도 참가에는 영향이 없습니다.", en: "We ask so we can prepare a programme that fits you. This is not screening, and your answer does not affect whether you can join." },
+  // DECIDED 2026-10-12 (등록 브리프 1.4 D2, 리뷰 S5): 0단계 "아직 거의 써 보지 않았다"(값 none)를 맨 앞에 더합니다. 그 전에는
+  // 아무것도 해 보지 않은 사람이 고를 칸이 없는데 필수였습니다. 번호는 0부터입니다(firstStep). 기존 넷의 값과 번호(1~4)는
+  // 그대로라 이미 있는 답과 명단의 번호가 바뀌지 않습니다. 라벨은 "가장 위"가 아니라 "번호가 가장 큰 것"입니다(카드는 1번이 맨 위).
+  { key: "ai_level", scope: "member", type: "radio", required: true, firstStep: 0,
+    label: { ko: "AI로 해 본 것 중 번호가 가장 큰 것 하나를 골라 주세요.", en: "Of the things you have done with AI, pick the one with the highest number." },
+    help: { ko: "여러분에게 맞는 과정을 준비하려고 묻습니다. 무엇을 골라도 참가에는 영향이 없습니다.", en: "We ask so we can prepare a programme that fits you. Your answer does not affect whether you can join." },
     options: [
+      { value: "none", label: { ko: "아직 거의 써 보지 않았다", en: "Have barely used it yet" } },
       { value: "chat", label: { ko: "채팅창에 물어보고 답을 받아 써 봤다", en: "Asked a chatbot and used its answers" },
         hint: { ko: "ChatGPT나 Claude에 질문하고 글, 요약, 번역을 받아 씀", en: "Questions, drafts, summaries or translations from ChatGPT or Claude" } },
       { value: "agent", label: { ko: "AI에게 일을 맡겨 끝까지 해내게 해 봤다", en: "Handed AI a task and let it finish the job" },

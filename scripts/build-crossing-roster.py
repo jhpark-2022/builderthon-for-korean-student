@@ -74,7 +74,10 @@ def option_labels():
             continue
         opts = re.findall(r'\{\s*value:\s*"([^"]+)",\s*label:\s*\{\s*ko:\s*"([^"]*)"', block)
         if opts:
-            out[m.group(1)] = {v: (f"{i}. {l}" if m.group(2) == "radio" else l) for i, (v, l) in enumerate(opts, 1)}
+            # 2026-10-12: 첫 번호는 스키마의 firstStep(없으면 1). ai_level은 0단계 "아직 거의 써 보지 않았다"가 생겨 0부터다.
+            first = re.search(r'firstStep:\s*(\d+)', block.split("options:")[0])
+            start = int(first.group(1)) if first else 1
+            out[m.group(1)] = {v: (f"{i}. {l}" if m.group(2) == "radio" else l) for i, (v, l) in enumerate(opts, start)}
     return out
 
 
