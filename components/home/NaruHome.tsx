@@ -477,13 +477,16 @@ export default function NaruHome() {
           </div>
           {/* DECIDED 2026-10-08 (사용자: "멘토가 오는 게 아니고 우리가 직접 간다", 프로그램 브리프 2.5): 현장 멘토링.
               무채색 테두리에 점만 노선도 둘째 필과 같은 주황입니다(주황은 점으로만). */}
-          <div className="rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 lg:px-6 lg:py-5">
-            <p className={`flex items-center justify-center gap-2 ${BODY} font-bold text-white`}>
-              <ChipDot className="bg-naru-orange" />
+          {/* DECIDED 2026-10-13 (사용자, 스크린숏: "현장 멘토링 박스는 pending 느낌이 더 나오도록"): 아직 정해지지 않은 자리라는 것이 상자 모양에서
+              읽히게 합니다. 테두리는 점선, 바탕은 비우고, 점은 속이 빈 주황 고리, 글은 한 단 흐리게(이름 /85, 설명 /70).
+              새 색과 새 글자 크기는 없습니다. 정해지면 옆 상자와 같은 실선과 채운 점으로 되돌립니다. */}
+          <div className="rounded-2xl border border-dashed border-white/25 px-5 py-4 lg:px-6 lg:py-5">
+            <p className={`flex items-center justify-center gap-2 ${BODY} font-bold text-white/85`}>
+              <ChipDot className="border border-naru-orange" />
               {t(naru.december.fieldMentoring.name)}
             </p>
             <p className={`mt-0.5 ${META} font-semibold text-white/70`}>{t(naru.december.fieldMentoring.when)}</p>
-            <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.fieldMentoring.body)}</p>
+            <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/70`}>{t(naru.december.fieldMentoring.body)}</p>
           </div>
           {/* 세 상자 아래 한 줄. Day 4에는 멘토링이 없다는 것을 상자가 아니라 줄로 말합니다(상자로 두면 "없음" 하나라 비어 보입니다). */}
           <p className={`break-keep ${META} leading-snug text-white/70 md:col-span-3`}>{t(naru.december.mentoringDay4Line)}</p>

@@ -147,7 +147,8 @@ export const openChatLabels = {
   // 카카오톡이라는 말이 없어, 데스크톱에서 눌렀을 때 뜨는 설치 안내가 뜻밖이었습니다. 화살표는 OpenChatLink가 붙입니다.
   // DECIDED 2026-10-13 (사용자, 스크린숏: "버튼들이 너무 두꺼워"): 브리프의 라벨("등록 소식 먼저 받기, 카카오톡 오픈채팅")은 히어로 칸에
   // 한 줄로 들어가지 않아 버튼 넷이 두꺼워졌습니다. 한 줄에 들어가는 길이로 줄입니다. "카카오톡"은 남깁니다.
-  december: { ko: "카카오톡으로 등록 소식 받기", en: "Get news on KakaoTalk" },
+  // DECIDED 2026-10-13 (사용자, 스크린숏: "등록 소식 받기를 그냥 소식 받기 이런 느낌으로"): "카카오톡으로 등록 소식 받기"였습니다.
+  december: { ko: "카카오톡으로 소식 받기", en: "Get news on KakaoTalk" },
   // 알림 버튼 바로 아래의 한 줄(META). 데스크톱에서 누르면 카카오톡 설치 안내만 뜹니다.
   phoneHint: { ko: "휴대폰에서 열면 바로 들어갑니다.", en: "Open it on your phone and you are in right away." },
   join: { ko: "오픈채팅에서 소식 받기", en: "Get news in the open chat" },
@@ -1947,8 +1948,9 @@ export const naru = {
       name: { ko: "출제사 컨텍스트", en: "Context from the companies" },
       when: { ko: "Day 1", en: "Day 1" },
       body: {
-        ko: "멘토링은 없습니다. 이슈를 낸 기업의 담당자가 Sharing session에서 회사와 이슈의 맥락을 더 풀어 줍니다. 질문은 이 날 합니다.",
-        en: "No mentoring. The person behind the issue opens up the company and the context at the Sharing session. This is the day for questions.",
+        // DECIDED 2026-10-13 (사용자, 스크린숏: "멘토링은 없습니다 내용은 빼줘"): 첫 문장 "멘토링은 없습니다."를 뺐습니다.
+        ko: "이슈를 낸 기업의 담당자가 Sharing session에서 회사와 이슈의 맥락을 더 풀어 줍니다. 질문은 이 날 합니다.",
+        en: "The person behind the issue opens up the company and the context at the Sharing session. This is the day for questions.",
       },
     },
     // 세 상자 아래 한 줄(2026-10-13). 그 전에는 규칙 목록의 "Day 4는 멘토링 없음"이 이 말을 했습니다.
