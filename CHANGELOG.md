@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-14 영어로 공유한 링크는 영어 카드로](#2026-10-14-share-lang)
 - [2026-10-14 공유 카드 세 장을 다시 그린다](#2026-10-14-og-cards)
 - [2026-10-13 푸터의 주최, 주관, 후원 줄을 뺀다](#2026-10-13-footer-credit-off)
 - [2026-10-13 Day 1 카드를 채우고, 미션 띠는 묶음 전체를 가운데로](#2026-10-13-day1-card)
@@ -231,6 +232,17 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-14-share-lang"></a>
+## 2026-10-14 영어로 공유한 링크는 영어 카드로
+- 범위: lib/LocaleContext.tsx, middleware.ts, app/en/(page, naru, 2026-08), lib/ogCards.tsx, app/**/opengraph-image.tsx, scripts/build-og-fonts.py
+- 한 것: 사용자 요청("영어로 바꾸면 링크를 공유할 때 받는 사람에게도 그 언어로. so does the image and explanation").
+  언어를 바꾸면 주소에 ?lang=en이 붙고 한국어로 돌아오면 빠집니다. 페이지를 옮겨도 붙어 있습니다.
+  크롤러는 JS를 돌리지 않으므로 middleware가 ?lang=en인 /, /naru, /2026-08을 app/en/ 정적 사본으로 다시 씁니다. 사본은 같은 화면에 영문 제목, 설명, 카드를 답니다. /en 주소로 직접 오면 ?lang=en 주소로 보냅니다.
+  영문 글은 data/naru.ts에 이미 있는 영문에서. 영문 홈은 og:url을 적지 않습니다(Next가 "/"의 쿼리를 떨어뜨립니다).
+  근거: brand 6장 표기 B(영문 단독), 8장 숫자. 판단 질문 1(해외의 한인 학생이 자기 언어로 같은 자리를 받는다).
+- 검증: 스크래치 next start에서 세 경로의 ko/en og 메타와 카드 여섯 장 확인. 브라우저에서 토글이 주소를 바꾸고, 새 컨텍스트에서 ?lang=en 링크가 영어로 열리고 이동 뒤에도 유지.
+- 커밋: 258beb1
 
 <a id="2026-10-14-og-cards"></a>
 ## 2026-10-14 공유 카드 세 장을 다시 그린다
