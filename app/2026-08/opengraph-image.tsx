@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { OG_BACKGROUND, OG_SIZE, loadOgFonts } from "@/lib/ogCard";
+import { OG_BACKGROUND, OG_SIZE, loadOgFonts, publicPngDataUri } from "@/lib/ogCard";
 
 export const alt = "제로백 빌더톤 Zero100 AI Builderthon 기록. 2026년 8월 22~29일 싱가포르. 74명 신청, 25팀 시작, 21팀 발표, 현업 멘토 14명.";
 export const size = OG_SIZE;
@@ -14,6 +14,9 @@ export const contentType = "image/png";
 // 기록의 카드라 숫자가 주인공입니다(brand 5장 "숫자 하나가 문장을 대신할 수 있으면 숫자를 쓴다").
 // 숫자는 brand 8장에 적힌 것만 씁니다. Day 1 참석 수는 자료마다 달라 쓰지 않습니다.
 // 이 페이지에서는 제로백 빌더톤이 주인공이라 나루 로고를 얹지 않습니다(brand 6장).
+// 같은 날 (사용자, 스크린숏: "zero100 로고도 있으면 좋겠음"): 왼쪽 위에 Zero100 워드마크를 둡니다. 원래 색(남색)은
+// 잉크 바탕에서 보이지 않아 흰색판(public/partners/zero100-wordmark-white.png, 원본의 알파 그대로)입니다.
+// 8월 페이지 헤더가 같은 워드마크를 brightness-0 invert로 희게 쓰는 것과 같은 결과입니다. 날짜 줄은 오른쪽으로.
 // ─────────────────────────────────────────────────────────────────────────────
 const STATS = [
   { n: "74", unit: "명", label: "신청" },
@@ -23,7 +26,7 @@ const STATS = [
 ];
 
 export default async function OpengraphImage() {
-  const fonts = await loadOgFonts();
+  const [logoSrc, fonts] = await Promise.all([publicPngDataUri("partners/zero100-wordmark-white.png"), loadOgFonts()]);
 
   return new ImageResponse(
     (
@@ -40,10 +43,14 @@ export default async function OpengraphImage() {
           fontFamily: "Pretendard",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={logoSrc} width={228} height={48} alt="Zero100" />
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <div style={{ display: "flex", width: 12, height: 12, borderRadius: 6, backgroundColor: "#EE8A4F" }} />
           <div style={{ display: "flex", fontSize: 26, fontWeight: 700, color: "#A99AD6" }}>
             2026년 8월 22~29일, 싱가포르의 기록
+          </div>
           </div>
         </div>
 
