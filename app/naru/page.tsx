@@ -17,19 +17,24 @@ import { ORGANIZATION_LD } from "@/lib/organizationLd";
 // ─────────────────────────────────────────────────────────────────────────────
 // 설명은 이 페이지 머리의 한 줄(이름 풀이, naru.group.name) 그대로입니다. 새 문장을 쓰지 않습니다.
 // title은 absolute입니다. 레이아웃의 template("%s | 나루 NARU")을 타면 이름이 두 번 붙습니다.
+const NARU_OG_DESCRIPTION =
+  "한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 그룹입니다. 크로싱 서울은 나루가 직접 여는 첫 자리입니다.";
+
 export const metadata: Metadata = {
   title: { absolute: "나루 NARU" },
   description: naru.group.name.ko,
   alternates: { canonical: "/naru" },
   other: { "naru:title-en": "NARU" },
+  // DECIDED 2026-10-14 (사용자: 공유 카드의 수준): 공유 카드의 설명은 영문 어원 풀이였습니다. 한국어 제목 아래 영문이
+  // 나왔고, 무엇을 하는 그룹인지가 없었습니다. 정의 짧은 판과 관계 한 문장의 뒤 절(brand 1장, 6장)을 그대로 씁니다.
   openGraph: {
     title: "나루 NARU",
-    description: naru.group.name.en,
+    description: NARU_OG_DESCRIPTION,
     url: "/naru",
     siteName: "나루 NARU",
     type: "website",
   },
-  twitter: { card: "summary_large_image", title: "나루 NARU", description: naru.group.name.en },
+  twitter: { card: "summary_large_image", title: "나루 NARU", description: NARU_OG_DESCRIPTION },
 };
 
 const NARU_LD = { "@context": "https://schema.org", "@graph": [ORGANIZATION_LD] };

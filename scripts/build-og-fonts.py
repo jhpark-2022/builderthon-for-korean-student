@@ -14,22 +14,31 @@ satori는 **woff2를 읽지 못합니다.** 이 레포에 있는 것은 가변 w
 ---------------
 public/fonts/Pretendard-OG-{Regular,Bold,Black}.ttf  (굵기 450 / 700 / 900)
 
-라틴 글자와 카드에서 쓰는 문장부호만 남깁니다. 한 벌이 28KB 남짓입니다.
-**한글은 넣지 않습니다.** 넣으면 한 벌이 몇 MB가 되고, 카드의 한글은 로고
-PNG가 들고 오는 것이 이 레포의 규칙입니다(public/naru/README.md).
+라틴 글자와 카드에서 쓰는 문장부호, 그리고 **카드 파일에 실제로 적힌 한글만**
+남깁니다.
+
+DECIDED 2026-10-14 (사용자: "공유했을 때의 설명과 이미지가 정말 수준이 높으면"):
+카드의 큰 글자를 한글로 씁니다(크로싱 서울, 나루, 제로백 빌더톤). 한글 전체를
+넣으면 한 벌이 몇 MB가 되므로, app/**/opengraph-image.tsx에서 한글 글자를 모아
+그 글자만 넣습니다. 수십 자라 한 벌이 수십 KB입니다. 카드에 한글을 새로 쓰면
+**이 스크립트를 다시 돌려야** 합니다. 빠진 글자는 satori가 두부로 그립니다.
+로고 PNG의 "나루"는 그대로 로고가 들고 옵니다(public/naru/README.md).
 
 언제 다시 돌리는가
 ------------------
 - Pretendard 원본을 바꿨을 때
 - 카드에 새 문장부호가 필요할 때(CHARS에 더하고 다시 돌리세요)
+- 카드 파일에 새 한글 글자를 썼을 때(자동으로 모읍니다, 다시 돌리기만 하세요)
 
     python3 scripts/build-og-fonts.py
 
 필요한 것: fonttools, brotli (pip install fonttools brotli)
 """
 
+import glob
 import io
 import os
+import re
 import sys
 
 from fontTools.ttLib import TTFont
@@ -42,6 +51,21 @@ OUT_DIR = "public/fonts"
 # 기본 라틴 + 카드에서 쓰는 문장부호(가운뎃점, en/em 대시, 따옴표, 화살표 등).
 CHARS = "".join(chr(c) for c in range(0x20, 0x7F)) + " ·–—‘’“”•→×…"
 
+CARD_GLOB = "app/**/opengraph-image.tsx"
+
+
+def card_hangul() -> str:
+    """카드 파일의 코드에 적힌 한글 음절을 모읍니다. 주석은 빼고 봅니다(주석의 한글까지 넣으면 몇 배로 커집니다)."""
+    found = set()
+    for path in glob.glob(CARD_GLOB, recursive=True):
+        with open(path, encoding="utf-8") as f:
+            src = f.read()
+        src = re.sub(r"/\*.*?\*/", "", src, flags=re.S)
+        src = re.sub(r"^\s*//.*$", "", src, flags=re.M)
+        found.update(re.findall(r"[\uAC00-\uD7A3]", src))
+    return "".join(sorted(found))
+
+
 WEIGHTS = [("Regular", 450), ("Bold", 700), ("Black", 900)]
 
 
@@ -50,6 +74,8 @@ def main() -> int:
         print(f"원본이 없습니다: {SRC}", file=sys.stderr)
         return 1
     os.makedirs(OUT_DIR, exist_ok=True)
+    text = CHARS + card_hangul()
+    print(f"한글 {len(text) - len(CHARS)}자")
 
     for name, wght in WEIGHTS:
         var = TTFont(SRC)
@@ -70,7 +96,7 @@ def main() -> int:
         options.recalc_bounds = True
 
         subsetter = subset.Subsetter(options=options)
-        subsetter.populate(text=CHARS)
+        subsetter.populate(text=text)
         subsetter.subset(font)
 
         out = os.path.join(OUT_DIR, f"Pretendard-OG-{name}.ttf")

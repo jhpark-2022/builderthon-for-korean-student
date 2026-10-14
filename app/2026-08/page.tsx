@@ -37,20 +37,23 @@ import StickyBarSpace from "@/components/archive/StickyBarSpace";
 // record.stats). 숫자를 고치고, 지난 이벤트의 기록이라는 것을 문장에 넣었습니다.
 // 영문 이름은 "Zero100 AI Builderthon", 한글 이름은 "제로백 빌더톤" 하나로 씁니다.
 // 모집형 문구(등록, 신청, 지원하세요)는 넣지 않습니다.
+// DECIDED 2026-10-14 (사용자: 공유 카드의 수준): 카드의 제목과 설명을 한국어로(홈, /naru와 같은 언어). Day 1 참석 59명은
+// 자료마다 58/59로 달라 brand 8장이 쓰지 말라는 숫자라 뺐고, 25팀 시작을 넣었습니다. 검색용 description도 같습니다.
+const OG_TITLE = "제로백 빌더톤 기록, 2026년 8월 싱가포르";
 const OG_DESCRIPTION =
-  "The record of the Zero100 AI Builderthon, Singapore, 22 to 29 August 2026. 74 applied, 59 came on Day 1 and 21 teams presented to the company that set the problem.";
+  "74명이 신청하고 25팀이 시작해, 21팀이 마지막 날 이슈를 낸 기업 앞에서 발표했습니다. 현업 멘토 14명과 함께한 8일, 나루가 시작된 이벤트입니다.";
 
 export const metadata: Metadata = {
   // layout의 title.template("%s | 나루 NARU")이 뒤를 붙입니다.
-  title: "제로백 빌더톤 기록, 2026년 8월 싱가포르",
+  title: OG_TITLE,
   description:
-    "2026년 8월 22일부터 29일까지 싱가포르에서 열린 제로백 빌더톤(Zero100 AI Builderthon)의 기록입니다. 74명이 신청했고 59명이 첫날 왔으며, 21팀이 마지막 날 문제를 낸 기업 앞에서 발표했습니다.",
+    "2026년 8월 22일부터 29일까지 싱가포르에서 열린 제로백 빌더톤(Zero100 AI Builderthon)의 기록입니다. 74명이 신청하고 25팀이 시작해, 21팀이 마지막 날 이슈를 낸 기업 앞에서 발표했습니다.",
   keywords: ["Builderthon", "Zero100", "Singapore", "Korean students", "AI", "vibe coding", "hackathon", "NUS", "NTU", "SMU", "나루", "NARU"],
   alternates: { canonical: "/2026-08" },
   // EN 탭 제목(2026-09-23). LocaleContext가 EN일 때 탭 제목을 이 값으로 바꿉니다.
   other: { "naru:title-en": "Zero100 AI Builderthon, the record, August 2026 | NARU" },
   openGraph: {
-    title: "Zero100 AI Builderthon, the record",
+    title: OG_TITLE,
     description: OG_DESCRIPTION,
     url: "/2026-08",
     siteName: "나루 NARU",
@@ -58,7 +61,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Zero100 AI Builderthon, the record",
+    title: OG_TITLE,
     description: OG_DESCRIPTION,
   },
 };
