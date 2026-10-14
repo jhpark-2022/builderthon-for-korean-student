@@ -36,6 +36,19 @@ const STORAGE_KEY = "builderthon.locale";
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
+// DECIDED 2026-10-14 (사용자: "영어로 바꾼 뒤 링크를 공유하면 받는 사람에게도 영어로, 이미지와 설명도"):
+// 지금 언어를 주소에 적습니다. 영어면 ?lang=en, 한국어면 뺍니다(한국어가 기본이라 주소를 깨끗하게 둡니다).
+// 그러면 주소창에서 복사한 링크가 언어를 들고 가고, middleware.ts가 그 링크의 공유 카드를 영문판으로 냅니다.
+// 새 기록을 쌓지 않도록 replaceState입니다. 해시(#program 같은)는 그대로 둡니다.
+function syncLangParam(l: Locale) {
+  try {
+    const url = new URL(window.location.href);
+    if (l === "en") url.searchParams.set("lang", "en");
+    else url.searchParams.delete("lang");
+    if (url.href !== window.location.href) window.history.replaceState(null, "", url.pathname + url.search + url.hash);
+  } catch { /* history blocked */ }
+}
+
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
   // Default locale: ko. The audience is Korean students in Singapore, so this is
   // the language most first-time visitors want - and the server has no way to
@@ -48,6 +61,8 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   // that before paint for visitors who have chosen otherwise; this default is
   // what everyone else, and anyone with JS off, ends up on.
   const [locale, setLocaleState] = useState<Locale>("ko");
+  // 저장값을 읽기 전에는 주소를 건드리지 않습니다. 첫 렌더의 "ko"가 ?lang=en을 지우면 안 됩니다.
+  const restoredRef = useRef(false);
 
   // Restore a saved preference. BEFORE PAINT (see useIsomorphicLayoutEffect):
   // the first client render still produces Korean to match the server HTML, and
@@ -57,14 +72,17 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     // ?lang=en|ko가 저장값보다 먼저입니다(app/layout.tsx의 alternates.languages, 2026-09-18). 값은
     // 저장해 두어 다음 방문에도 이어집니다.
     const q = new URLSearchParams(window.location.search).get("lang");
+    restoredRef.current = true;
     if (q === "ko" || q === "en") {
       setLocaleState(q);
       try { window.localStorage.setItem(STORAGE_KEY, q); } catch { /* storage blocked */ }
+      syncLangParam(q);
       return;
     }
     let saved: string | null = null;
     try { saved = window.localStorage.getItem(STORAGE_KEY); } catch { /* storage blocked */ }
     if (saved === "ko" || saved === "en") setLocaleState(saved);
+    if (saved === "en") syncLangParam("en");
   }, []);
 
   // Keep <html> in sync: `lang` for accessibility, `data-locale` for the CSS that
@@ -90,10 +108,16 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     }
   }, [locale, pathname]);
 
+  // 페이지를 옮기면(클라이언트 이동) 새 주소에는 ?lang이 없습니다. 영어면 다시 붙입니다.
+  useEffect(() => {
+    if (restoredRef.current && locale === "en") syncLangParam("en");
+  }, [locale, pathname]);
+
   const setLocale = useCallback((l: Locale) => {
     setLocaleState(l);
     if (typeof window !== "undefined") {
       window.localStorage.setItem(STORAGE_KEY, l);
+      syncLangParam(l);
     }
   }, []);
 

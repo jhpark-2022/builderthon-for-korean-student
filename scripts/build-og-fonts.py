@@ -19,7 +19,7 @@ public/fonts/Pretendard-OG-{Regular,Bold,Black}.ttf  (굵기 450 / 700 / 900)
 
 DECIDED 2026-10-14 (사용자: "공유했을 때의 설명과 이미지가 정말 수준이 높으면"):
 카드의 큰 글자를 한글로 씁니다(크로싱 서울, 나루, 제로백 빌더톤). 한글 전체를
-넣으면 한 벌이 몇 MB가 되므로, app/**/opengraph-image.tsx에서 한글 글자를 모아
+넣으면 한 벌이 몇 MB가 되므로, 카드를 그리는 lib/ogCards.tsx에서 한글 글자를 모아
 그 글자만 넣습니다. 수십 자라 한 벌이 수십 KB입니다. 카드에 한글을 새로 쓰면
 **이 스크립트를 다시 돌려야** 합니다. 빠진 글자는 satori가 두부로 그립니다.
 로고 PNG의 "나루"는 그대로 로고가 들고 옵니다(public/naru/README.md).
@@ -51,7 +51,7 @@ OUT_DIR = "public/fonts"
 # 기본 라틴 + 카드에서 쓰는 문장부호(가운뎃점, en/em 대시, 따옴표, 화살표 등).
 CHARS = "".join(chr(c) for c in range(0x20, 0x7F)) + " ·–—‘’“”•→×…"
 
-CARD_GLOB = "app/**/opengraph-image.tsx"
+CARD_GLOB = "lib/ogCards.tsx"
 
 
 def card_hangul() -> str:
