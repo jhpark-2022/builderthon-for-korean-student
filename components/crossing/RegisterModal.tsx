@@ -19,7 +19,7 @@
 // DECIDED 2026-10-12 (등록 브리프 1.4, 리뷰 S4 S5 S13 S14 S15): 미리 보기가 끝이 아니라 준비가 되게 합니다.
 //   제목    미리 보기일 때 "(미리 보기)". 제목과 닫기 버튼은 스크롤되지 않는 한 줄에 있습니다. 그 전에는 닫기 버튼이
 //           스크롤 영역 위에 떠 있어, 폰에서 입력칸의 오른쪽 끝을 누르면 폼이 닫혔습니다.
-//   안내    data/naru.ts의 registerNote 세 줄과 "지금 적어 두면 이 기기에 남아…" 한 문장.
+//   안내    2026-10-15부터 없습니다. 폼이 바로 시작합니다(아래 DECIDED 2026-10-15).
 //   끝      꺼진 버튼의 라벨은 언제 켜지는지를 말하고, 바로 아래에 오픈채팅 링크가 있습니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -32,7 +32,7 @@ import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 import { CURRENT_EVENT } from "@/lib/registrationWindow";
 import TurnstileWidget from "@/components/crossing/TurnstileWidget";
 import { TURNSTILE_ACTION } from "@/lib/register/turnstileAction";
-import { naruLinks, openChatLabels, register as copy, registerNote } from "@/data/naru";
+import { naruLinks, openChatLabels, register as copy } from "@/data/naru";
 import { links, type Phrase } from "@/data/dictionaryCore";
 import { BODY, META } from "@/components/ui/typography";
 import { buttonClass } from "@/components/ui/Button";
@@ -357,13 +357,12 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                 </div>
               ) : (
                 <>
-                  <p className={`break-keep ${BODY} leading-relaxed text-white/85`}>{t(copy.intro)}</p>
-                  {/* 초안이 기기에 남는다는 말은 미리 보기에서는 아래 상자의 마지막 문장이, 등록이 열린 뒤에는 이 줄이 합니다. */}
-                  {!preview && <p className={`mt-1 ${META} leading-relaxed text-white/70`}>{t(copy.draftNote)}</p>}
-                  {(preview || closed) && (
-                    <p id="crossing-register-preview" role="note" className={`mt-4 rounded-2xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] px-4 py-3 ${BODY} leading-relaxed text-amber-50/90`}>
-                      {closed ? t(copy.closed) : [...registerNote, copy.previewKeep].map((line, i) => <span key={i} className="block break-keep">{t(line)}</span>)}
-                    </p>
+                  {/* DECIDED 2026-10-15 (사용자, 스크린숏: "이 내용 빼줘, 그냥 바로 form만 보여줘"): 폼 위의 첫 줄(스크리닝, 혼자 등록)과
+                      미리 보기 안내 상자(registerNote 세 줄 + previewKeep)를 뺐습니다. 언제 여는지와 혼자 등록한다는 말은 히어로 한 줄이
+                      하고, 꺼진 버튼의 라벨이 11월을 말합니다. 마감 안내만 남깁니다. */}
+                  {!preview && <p className={`${META} leading-relaxed text-white/70`}>{t(copy.draftNote)}</p>}
+                  {closed && (
+                    <p id="crossing-register-preview" role="note" className={`mt-4 rounded-2xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] px-4 py-3 ${BODY} leading-relaxed text-amber-50/90`}>{t(copy.closed)}</p>
                   )}
                   <form onSubmit={onSubmit} className="mt-6 flex flex-col gap-4" noValidate>
                     <p className={`${META} leading-relaxed text-white/70`}><span aria-hidden className="text-rose-400">*</span> {t(copy.requiredLegend)}</p>
@@ -385,7 +384,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                     {preview ? (
                       // 꺼진 버튼은 흐림이 아니라 색으로 말합니다(히어로의 준비 중 버튼과 같은 문법). 이유는 위 안내가 읽어 줍니다.
                       <>
-                        <button type="submit" disabled aria-describedby="crossing-register-preview" className={`mt-2 inline-flex min-h-[48px] cursor-not-allowed items-center justify-center rounded-full border border-white/20 bg-white/[0.06] px-7 py-3 ${BODY} font-bold text-white/70`}>{t(closed ? copy.closed : copy.previewSubmit)}</button>
+                        <button type="submit" disabled aria-describedby={closed ? "crossing-register-preview" : undefined} className={`mt-2 inline-flex min-h-[48px] cursor-not-allowed items-center justify-center rounded-full border border-white/20 bg-white/[0.06] px-7 py-3 ${BODY} font-bold text-white/70`}>{t(closed ? copy.closed : copy.previewSubmit)}</button>
                         {/* 다 적은 사람이 지금 할 수 있는 일 하나(리뷰 S4). 홈의 알림 버튼과 같은 라벨, 같은 문입니다. */}
                         {!closed && links.openChat && (
                           <a href={links.openChat} target="_blank" rel="noopener noreferrer" onClick={() => track("openchat_click", { src: "naru-register-modal" })} className={`inline-flex min-h-[44px] items-center justify-center gap-1.5 ${BODY} font-semibold text-accent underline underline-offset-4 hover:text-white`}>

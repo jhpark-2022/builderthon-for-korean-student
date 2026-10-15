@@ -238,10 +238,7 @@ export const register = {
   // 폼이 열립니다. 무엇을 묻는지 미리 볼 수 있고, 제출 버튼만 꺼져 있습니다. 아래 notYet의 "클릭이 되게 하지는
   // 말고"(2026-09-18)는 이 결정이 대신합니다. 서버는 전과 같이 창이 열리기 전의 제출을 403으로 막습니다.
   previewCta: { ko: "등록 폼 미리 보기", en: "Preview the form" },
-  // DECIDED 2026-10-12 (등록 브리프 1.2, 1.4): 미리 보기의 안내(히어로 캡션, 모달 상자)는 위 registerNote가 대신합니다.
-  // 그 전의 previewCtaNote, previewBanner("등록은 아직 열리지 않았습니다…")는 없앴습니다. 모달 상자는 그 줄들 뒤에
-  // previewKeep 한 문장을 붙입니다. 초안이 기기에 남는다는 사실을 사생활 고지가 아니라 쓸모로 말합니다(리뷰 S4).
-  previewKeep: { ko: "지금 적어 두면 이 기기에 남아, 열리는 날 바로 보낼 수 있습니다.", en: "What you fill in now stays on this device, so you can send it the day registration opens." },
+  // DECIDED 2026-10-15 (사용자: "그냥 바로 form만 보여줘"): 모달의 미리 보기 안내 상자와 previewKeep은 없앴습니다.
   previewSubmit: { ko: "11월에 열리면 보낼 수 있습니다", en: "You can send this when it opens in November" },
   // 미리 보기일 때의 제목. 등록이 열리면 아래 title을 그대로 씁니다.
   previewTitle: { ko: "크로싱 서울 등록 (미리 보기)", en: "CROSSING SEOUL registration (preview)" },
@@ -251,11 +248,9 @@ export const register = {
   notYet: { ko: "등록은 아직 열리지 않았습니다. 열리면 이 버튼이 켜집니다.", en: "Registration is not open yet. This button turns on when it is." },
   closed: { ko: "등록이 마감됐습니다.", en: "Registration has closed." },
   title: { ko: "크로싱 서울 등록", en: "Register for CROSSING SEOUL" },
-  // DECIDED 2026-10-08 (사용자: "팀 - 전원 현장 편성"): 모두 혼자 등록하고 팀은 현장에서 맺습니다. 폼 첫 줄이 그 말을 합니다.
-  // 팀원 줄의 문구(memberYou, memberN, addMember, removeMember, teamSize)는 폼에서 팀 등록이 빠지며 없앴습니다.
-  intro: { ko: "스크리닝은 없습니다. 오는 사람이 참가자입니다. 한 사람씩 등록하고, 팀은 현장에서 맺습니다.", en: "No screening. If you come, you are in. Everyone registers individually, and teams are formed on site." },
+  // DECIDED 2026-10-15 (사용자: "이 내용 빼줘"): 폼 첫 줄(intro, 스크리닝과 혼자 등록)은 없앴습니다. 폼이 바로 시작합니다.
   // 2026-10-08 (폼 리뷰 10): 초안이 이 기기에 남는다는 것을 알립니다. 동의 표시는 초안에 넣지 않습니다.
-  // 2026-10-12: 등록이 열린 뒤에만 그립니다. 미리 보기에서는 previewKeep이 같은 사실을 말합니다.
+  // 2026-10-12: 등록이 열린 뒤에만 그립니다.
   draftNote: { ko: "입력한 내용은 보내기 전까지 이 기기에만 임시로 저장됩니다.", en: "What you type is kept on this device only until you send it." },
   optional: { ko: "(선택)", en: "(optional)" },
   selectPlaceholder: { ko: "선택", en: "Select" },
