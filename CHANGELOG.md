@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-15 등록 폼 손질과 완료 화면의 다음 할 일](#2026-10-15-register-success-next)
 - [2026-10-15 등록 폼은 안내 없이 폼부터](#2026-10-15-register-form-first)
 - [2026-10-14 영어로 공유한 링크는 영어 카드로](#2026-10-14-share-lang)
 - [2026-10-14 공유 카드 세 장을 다시 그린다](#2026-10-14-og-cards)
@@ -233,6 +234,17 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-15-register-success-next"></a>
+## 2026-10-15 등록 폼 손질과 완료 화면의 다음 할 일
+- 범위: data/crossingForm.ts, data/naru.ts, components/crossing/RegisterModal.tsx, components/crossing/MatchTeaser.tsx(새 파일)
+- 한 것: 사용자 요청. 학교 칸 예시에서 학교 이름을 뺐고("가장 좋은 학교를 넣으면 intimidate"), 학교는 필수입니다. 공부하는 나라는 한국, 싱가포르, 기타 셋.
+  완료 화면: 메일 언급을 모두 빼고 "소식은 카카오톡 오픈채팅에서, 계속 받으려면 지금 들어와 주세요"와 오픈채팅 버튼. 그 아래 AI 유형 테스트 카드(워드마크 그라데이션 테두리와 제목, 결과 AI 로고 여덟 개, /match로).
+  테스트 결과는 Day 1부터 받으므로 카드는 "미리 해 보고 오세요"라고 씁니다. 아래 문의 줄은 "궁금한 게 있으면 여기로 알려 주세요".
+  개인정보 보유 기간은 "삭제를 요청할 때까지"(사용자: "계속 가지고 있는 걸로"). 등록의 잠금 하나가 풀렸고, 남은 것은 lib/registrationWindow.ts의 opensAt입니다.
+  근거: brand 2장 판단 질문 1(혼자 등록한 사람이 팀에 들어갈 준비), 5장 웃음은 /match에서만(카드는 질문 하나로), 10장 워드마크 그라데이션.
+- 검증: tsc, next build 통과. Supabase 실 DB에 등록 한 건을 라우트와 같은 모양으로 넣어 저장, 같은 이메일 23505 확인 뒤 지움. Vercel 운영 env의 Supabase URL이 같은 프로젝트.
+- 커밋: 86e1562
 
 <a id="2026-10-15-register-form-first"></a>
 ## 2026-10-15 등록 폼은 안내 없이 폼부터
