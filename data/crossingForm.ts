@@ -56,7 +56,7 @@ export const COUNTRY_OTHER_KEY = "study_country_other";
 
 // ── 개인정보 동의 안내 ────────────────────────────────────────────────────────
 // 수집 항목, 목적, 거부할 권리는 아래에 적었습니다. 보유 기간은 아직 정해지지 않았습니다.
-// TODO: confirm (사용자). 보유 기간은 data/naru.ts의 registerFacts.retentionLine에 {ko, en}으로 넣으세요(예는 그 줄의 주석).
+// 보유 기간은 data/naru.ts의 registerFacts.retentionLine입니다(2026-10-15: 삭제를 요청할 때까지).
 // DECIDED 2026-10-12 (등록 브리프 1.1, 1.4): CONSENT_RETENTION의 값은 registerFacts.retentionLine에서 옵니다.
 // 사실이 정해져야 쓰는 칸 다섯이 한 곳에 있습니다. 이름은 남겼습니다(라우트의 로그와 lib/registrationWindow.ts의 주석이 부릅니다). 잠금은 그대로입니다:
 // 이 값이 null인 동안에는 등록 창(lib/registrationWindow.ts)에 시각을 넣어도 등록이 열리지 않습니다.
@@ -79,29 +79,25 @@ export const CROSSING_FORM: Field[] = [
     label: { ko: "이름", en: "Name" } },
   { key: "email", scope: "member", type: "email", required: true, fixed: true, autoComplete: "email", inputMode: "email", verbatim: true,
     label: { ko: "이메일", en: "Email" },
-    help: { ko: "안내 메일이 가는 주소입니다.", en: "Where the follow-up email goes." } },
+    // DECIDED 2026-10-15 (사용자: 메일은 보내지 않고 소식은 카카오톡으로): 안내 메일을 약속하지 않습니다.
+    help: { ko: "운영진이 따로 연락할 일이 있을 때만 씁니다.", en: "Only used if the organisers need to reach you directly." } },
   { key: "contact", scope: "member", type: "text", required: true, fixed: true, verbatim: true,
     label: { ko: "카카오톡 ID", en: "KakaoTalk ID" },
     // 2026-10-12 (등록 브리프 1.4, 리뷰 S6): ID를 어디서 보는지, 그 방이 오픈채팅과 다른 방이라는 것을 끝에 붙였습니다.
     help: { ko: "참가자 카카오톡 방에 초대할 때 씁니다. 장소와 Day 0 안내가 그 방에서 나갑니다. ID는 카카오톡 > 설정 > 프로필에서 볼 수 있습니다. 참가자 방은 오픈채팅과 다른, 참가자만 있는 방입니다.", en: "Used to invite you to the participant KakaoTalk room, where venue and Day 0 details are shared. You can find your ID in KakaoTalk > Settings > Profile. The participant room is separate from the open chat and is for participants only." } },
-  { key: "university", scope: "member", type: "text", required: false, fixed: true, autoComplete: "organization",
+  { key: "university", scope: "member", type: "text", required: true, fixed: true, autoComplete: "organization",
+    // DECIDED 2026-10-15 (사용자: "학교 이름은 필수임"): 필수입니다.
     label: { ko: "학교", en: "School" },
-    placeholder: { ko: "예: 서울대학교, NUS", en: "e.g. Seoul National University, NUS" } },
+    // DECIDED 2026-10-15 (사용자: "서울대랑 nus 넣지 말아줘, 가장 좋은 학교를 넣으면 intimidate 될 수 있어"): 예시에 학교 이름을 두지 않습니다.
+    placeholder: { ko: "다니는 학교 이름", en: "Your school's name" } },
   { key: "study_country", scope: "member", type: "country", required: true, fixed: true,
     label: { ko: "공부하는 나라", en: "Country you study in" },
     help: { ko: "한국과 해외의 학생이 한 팀에 섞이도록 팀을 맺을 때 봅니다.", en: "Used when forming teams so students in Korea and abroad are mixed." },
     options: [
       { value: "KR", label: { ko: "한국", en: "Korea" } },
       { value: "SG", label: { ko: "싱가포르", en: "Singapore" } },
-      { value: "US", label: { ko: "미국", en: "United States" } },
-      { value: "GB", label: { ko: "영국", en: "United Kingdom" } },
-      { value: "JP", label: { ko: "일본", en: "Japan" } },
-      { value: "CN", label: { ko: "중국", en: "China" } },
-      { value: "HK", label: { ko: "홍콩", en: "Hong Kong" } },
-      { value: "AU", label: { ko: "호주", en: "Australia" } },
-      { value: "CA", label: { ko: "캐나다", en: "Canada" } },
-      { value: "DE", label: { ko: "독일", en: "Germany" } },
-      { value: COUNTRY_OTHER, label: { ko: "그 밖의 나라", en: "Another country" } },
+      // DECIDED 2026-10-15 (사용자: "공부하는 나라는 한국, 싱가폴, 기타"): 셋입니다. 기타를 고르면 아래 나라 이름 칸이 열립니다.
+      { value: COUNTRY_OTHER, label: { ko: "기타", en: "Other" } },
     ] },
   // 위에서 "그 밖의 나라"를 골랐을 때만 묻고, 그때는 필수입니다(validatePerson). answers jsonb로 갑니다.
   { key: "study_country_other", scope: "member", type: "text", required: false, maxLen: 60, autoComplete: "country-name",

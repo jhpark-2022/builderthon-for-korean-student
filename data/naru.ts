@@ -202,7 +202,9 @@ export const partnerContact = {
 export const registerFacts: Record<"venueLine" | "hoursLine" | "retentionLine", Phrase | null> = {
   venueLine: null,     // 장소 권역. 예: { ko: "장소는 서울 강남권", en: "The venue is in the Gangnam area of Seoul" }
   hoursLine: null,     // 하루 시각. 예: { ko: "10시부터 19시까지", en: "from 10:00 to 19:00" }
-  retentionLine: null, // 개인정보 보유 기간. 예: { ko: "행사 종료 후 6개월", en: "six months after the event ends" }
+  // DECIDED 2026-10-15 (사용자: "그냥 계속 가지고 있는 걸로"): 기간을 정하지 않고 계속 보관합니다. 동의 문구에는 "무기한" 대신
+  // 삭제를 요청할 때까지라고 적어, 지울 길이 있다는 것을 함께 말합니다. 요청은 완료 화면의 문의 주소로 받습니다.
+  retentionLine: { ko: "삭제를 요청할 때까지", en: "until you ask us to delete it" },
 };
 
 // DECIDED 2026-10-12 (등록 브리프 1.2, 리뷰 S1 S2 S3 S7 S9): 등록이 열리기 전의 안내는 이 묶음 하나입니다.
@@ -260,14 +262,29 @@ export const register = {
   // DECIDED 2026-10-08 (사용자: 등록 뒤 안내 메일은 "내가 수동으로"): 자동 메일을 약속하지 않습니다. 운영진이 직접
   // 보낸다고 적고, 오지 않을 때 할 일과 수정, 삭제의 길을 같이 적습니다. {email}은 등록한 주소로 바뀝니다.
   // DECIDED 2026-10-08 (사용자: 참가비와 장소, Day 0은 "참여자 대상 카톡방으로 공개"): 그 안내가 어디서 오는지도 여기서 말합니다.
+  // DECIDED 2026-10-15 (사용자: "그냥 mention을 하지마 메일에 대해서", "계속 up to date 하려면 카톡으로 들어와야 한다고 해줘"):
+  // 위 2026-10-08의 안내 메일 문장을 뺐습니다. 메일 이야기는 하지 않고, 소식은 오픈채팅으로 들어와야 받는다고만 씁니다.
   successBody: {
-    ko: "며칠 안에 {email} 주소로 안내 메일을 보냅니다. 운영진이 직접 보내는 메일이라 바로 오지 않을 수 있습니다. 장소와 Day 0 안내는 참가자 카카오톡 방에서 알립니다.",
-    en: "We will email {email} within a few days. The organisers send it by hand, so it may not arrive right away. Venue and Day 0 details are shared in the participant KakaoTalk room.",
+    ko: "소식은 카카오톡 오픈채팅에서 알립니다. 계속 받으려면 지금 들어와 주세요. 장소와 Day 0 안내는 참가자 카카오톡 방에서 알립니다.",
+    en: "News goes out in the KakaoTalk open chat. Join it now to stay up to date. Venue and Day 0 details are shared in the participant KakaoTalk room.",
   },
+  // DECIDED 2026-10-15 (사용자, 스크린숏: "궁금한게 있으면 여기에 알려주세요"): 수정, 삭제 안내 대신 문의 한 줄.
   successHelp: {
-    ko: "메일이 오지 않으면 스팸함을 먼저 확인하고 아래 주소로 알려 주세요. 등록 내용의 수정과 삭제도 같은 주소로 받습니다.",
-    en: "If nothing arrives, check your spam folder, then write to the address below. Corrections and deletion requests go to the same address.",
+    ko: "궁금한 게 있으면 여기로 알려 주세요.",
+    en: "Any questions? Let us know here.",
   },
+  // DECIDED 2026-10-15 (사용자: "보내면 그 이후에 AI 유형 테스트로 direct 해주는 화면"): 완료 화면의 다음 할 일 하나.
+  // 혼자 등록하고 팀은 현장에서 맺으므로, 그 팀을 맺는 재료(/match 결과)를 미리 해 보게 합니다. 결과는 Day 1부터 받으므로(lib/crossingMatch.ts)
+  // "미리 해 보기, 그날 한 번 더"라고 사실대로 씁니다.
+  // DECIDED 2026-10-15 (사용자, 스크린숏: "더 eye grabbing 하고, 더 catchy 하게"): 제목을 질문으로, 테스트의 AI 로고 줄을 위에 둡니다.
+  // 웃음은 /match의 몫이라(brand 5장) 카드는 질문 하나로 부르고, 결과를 Day 1에 쓴다는 사실을 붙입니다.
+  nextLabel: { ko: "등록 다음, 3분", en: "Next, 3 minutes" },
+  nextTitle: { ko: "나는 16개 AI 중 누구일까?", en: "Which of 16 AIs are you?" },
+  nextBody: {
+    ko: "14문항 AI 유형 테스트. Day 1 현장에서 팀을 맺을 때 이 결과를 씁니다. 미리 해 보고 오세요.",
+    en: "A 14-question AI type test. Teams are formed on Day 1 using this result. Try it before you come.",
+  },
+  nextCta: { ko: "내 AI 유형 알아보기", en: "Find my AI type" },
   close: { ko: "닫기", en: "Close" },
   errors: {
     // 2026-10-08 (문장 감사 10): 무엇을 하면 되는지 말합니다. {max}는 그 칸의 글자 수 한도로 바뀝니다.

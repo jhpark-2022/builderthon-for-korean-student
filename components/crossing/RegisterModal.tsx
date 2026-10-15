@@ -31,6 +31,7 @@ import { useLocale } from "@/lib/LocaleContext";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 import { CURRENT_EVENT } from "@/lib/registrationWindow";
 import TurnstileWidget from "@/components/crossing/TurnstileWidget";
+import MatchTeaser from "@/components/crossing/MatchTeaser";
 import { TURNSTILE_ACTION } from "@/lib/register/turnstileAction";
 import { naruLinks, openChatLabels, register as copy } from "@/data/naru";
 import { links, type Phrase } from "@/data/dictionaryCore";
@@ -348,12 +349,17 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                   </span>
                   <h3 ref={successRef} tabIndex={-1} id="crossing-register-title" className={`mt-6 ${LARGE} font-bold leading-tight text-white focus:outline-none`}>{t(copy.successTitle)}</h3>
                   <p className={`mx-auto mt-3 max-w-sm break-keep ${BODY} leading-relaxed text-white/85`}>{t(copy.successBody).replace("{email}", sentEmail)}</p>
-                  <p className={`mx-auto mt-3 max-w-sm break-keep ${META} leading-relaxed text-white/70`}>{t(copy.successHelp)}</p>
-                  <a href={naruLinks.general} className={`mt-2 inline-flex min-h-[44px] items-center ${BODY} font-semibold text-accent underline underline-offset-4 hover:text-white`}>{naruLinks.contact}</a>
+                  {/* DECIDED 2026-10-15 (사용자): 소식은 오픈채팅으로만 나가므로, 이 화면에서 그 방으로 가는 버튼이 테스트 카드보다 먼저 섭니다. */}
                   {links.openChat && (
-                    <p><a href={links.openChat} target="_blank" rel="noopener noreferrer" className={`inline-flex min-h-[44px] items-center ${BODY} text-white/85 underline underline-offset-4 hover:text-white`}>{t(openChatLabels.footer)}</a></p>
+                    <a href={links.openChat} target="_blank" rel="noopener noreferrer" onClick={() => track("openchat_click", { src: "naru-register-success" })} className={`${buttonClass("secondary", "naru")} mt-5 min-h-[48px] w-full max-w-sm justify-center`}>
+                      {t(openChatLabels.december)}<span aria-hidden className="ml-1.5">→</span>
+                    </a>
                   )}
-                  <div className="mt-5"><button type="button" onClick={onClose} className={PRIMARY}>{t(copy.close)}</button></div>
+                  {/* DECIDED 2026-10-15 (사용자): 보낸 뒤의 다음 할 일은 AI 유형 테스트 하나. 이 화면의 주 버튼이고, 닫기는 글자 버튼으로 내렸습니다. */}
+                  <MatchTeaser />
+                  <p className={`mx-auto mt-7 max-w-sm break-keep ${META} leading-relaxed text-white/70`}>{t(copy.successHelp)}</p>
+                  <a href={naruLinks.general} className={`mt-2 inline-flex min-h-[44px] items-center ${BODY} font-semibold text-accent underline underline-offset-4 hover:text-white`}>{naruLinks.contact}</a>
+                  <div className="mt-3"><button type="button" onClick={onClose} className={`inline-flex min-h-[44px] items-center ${BODY} text-white/70 underline underline-offset-4 hover:text-white`}>{t(copy.close)}</button></div>
                 </div>
               ) : (
                 <>
