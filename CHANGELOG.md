@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-17 미션 설명을 목록으로](#2026-10-17-mission-bullets)
 - [2026-10-17 Day 2~4 미션 인정 조건](#2026-10-17-mission-conditions)
 - [2026-10-15 노선도 Day 1 원도 강조](#2026-10-15-route-day1-spot)
 - [2026-10-15 등록 폼 손질과 완료 화면의 다음 할 일](#2026-10-15-register-success-next)
@@ -236,6 +237,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-17-mission-bullets"></a>
+## 2026-10-17 미션 설명을 목록으로
+- 범위: data/naru.ts(milestoneDetail 모양, 라벨 둘), components/home/NaruHome.tsx(MilestoneStrip)
+- 한 것: DECIDED 2026-10-17 (사용자, 스크린숏: "문장으로 말고, bullet point로, 그리고 제출하는 방법으로"). 미션 띠를 펼치면 문단 대신 "인정 조건 (전부 충족)"과 "제출 방법" 두 목록이 섭니다. 목록 묶음은 카드 가운데, 그 안은 왼쪽 정렬. 글자 크기는 META 라벨과 BODY 항목 둘. 근거: brand 5장(짧은 평서문), 7장 미션.
+- 검증: 1440px에서 Day 2, 3, 4 띠를 펼쳐 확인. tsc 통과.
+- 커밋: 25d73f8
 
 <a id="2026-10-17-mission-conditions"></a>
 ## 2026-10-17 Day 2~4 미션 인정 조건
