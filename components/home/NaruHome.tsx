@@ -360,7 +360,10 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
 // expanded: 폰의 노선도 카드에서는 띠를 누르지 않습니다. 날짜를 눌러 연 카드 안에서 한 번 더 접혀 있던 것(2단 접힘)을 없애고
 // 설명 한 문장을 펼쳐 둡니다. 데스크톱 일정 카드의 띠는 전과 같이 누르는 것입니다.
 // tone: "plain"은 미션이 아닌 띠입니다(Day 1의 "Day 2에 들고 갈 것"). 같은 자리와 같은 문법이고, 호박색과 ★는 미션에만 씁니다.
-function MilestoneStrip({ id, label, title, detail, center = false, expanded = false, tone = "amber" }: { id: string; label: string; title: string; detail?: string; center?: boolean; expanded?: boolean; tone?: "amber" | "plain" }) {
+// DECIDED 2026-10-17 (사용자: "문장으로 말고, bullet point로, 그리고 제출하는 방법으로"): detail은 문단 하나가 아니라 라벨이 붙은 목록 둘입니다.
+// 카드는 가운데 정렬이지만 목록은 글머리가 한 줄로 서야 읽히므로, 목록 묶음만 가운데에 두고 그 안은 왼쪽 정렬입니다.
+type MilestoneDetail = { label: string; items: string[] }[];
+function MilestoneStrip({ id, label, title, detail, center = false, expanded = false, tone = "amber" }: { id: string; label: string; title: string; detail?: MilestoneDetail; center?: boolean; expanded?: boolean; tone?: "amber" | "plain" }) {
   const [open, setOpen] = useState(false);
   const amber = tone === "amber";
   // DECIDED 2026-10-13 (사용자, 스크린숏: "별, 미션, 이후 공개 이게 다 고려가 되어야 함"): 가운데에 서는 것은 제목 하나가 아니라
@@ -386,7 +389,20 @@ function MilestoneStrip({ id, label, title, detail, center = false, expanded = f
         <p className={`${row} min-h-[44px] pb-[7px] pl-[13px] pr-[11px] pt-[9px]`}>{head}</p>
       )}
       {detail && (
-        <p id={expanded ? undefined : id} hidden={!expanded && !open} className={`break-keep border-t border-amber-400/20 px-3 py-2.5 ${BODY} leading-relaxed text-white/85 ${center ? "text-center" : ""}`}>{detail}</p>
+        <div id={expanded ? undefined : id} hidden={!expanded && !open} className="break-keep border-t border-amber-400/20 px-3 py-3">
+          <div className={`flex w-fit flex-col gap-2.5 text-left ${center ? "mx-auto" : ""}`}>
+            {detail.map((g) => (
+              <div key={g.label}>
+                <p className={`${META} font-bold text-amber-100`}>{g.label}</p>
+                <ul className={`mt-1 ${BODY} leading-relaxed text-white/85`}>
+                  {g.items.map((it) => (
+                    <li key={it} className="flex gap-2"><span aria-hidden className="text-amber-100/70">•</span><span>{it}</span></li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );
@@ -555,7 +571,10 @@ export default function NaruHome() {
         <MilestoneStrip id={`carry-day-${stage.dayOffset}`} label={t(naru.december.carryLabel)} title={t(stage.submit)} center tone="plain" />
       )}
       {stage.milestone && (
-        <MilestoneStrip id={`milestone-day-${stage.dayOffset}`} label={t(naru.december.milestoneLabel)} title={t(stage.milestone)} detail={stage.milestoneDetail && t(stage.milestoneDetail)} center expanded={inPanel} />
+        <MilestoneStrip id={`milestone-day-${stage.dayOffset}`} label={t(naru.december.milestoneLabel)} title={t(stage.milestone)} detail={stage.milestoneDetail && [
+          { label: t(naru.december.milestoneConditionsLabel), items: stage.milestoneDetail.conditions.map(t) },
+          { label: t(naru.december.milestoneSubmitLabel), items: stage.milestoneDetail.submit.map(t) },
+        ]} center expanded={inPanel} />
       )}
     </div>
     );

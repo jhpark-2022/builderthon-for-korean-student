@@ -1940,6 +1940,9 @@ export const naru = {
     routeLegendMilestone: { ko: "미션 지원, 해낸 팀 모두", en: "Mission support, for every team that completes it" },
     // 2026-10-11: 날짜 카드와 폰 패널의 띠에 서는 라벨. "마일스톤"에서 "미션"으로.
     milestoneLabel: { ko: "미션", en: "Mission" },
+    // DECIDED 2026-10-17 (사용자): 미션 띠를 펼치면 서는 두 목록의 라벨.
+    milestoneConditionsLabel: { ko: "인정 조건 (전부 충족)", en: "To complete it (all of these)" },
+    milestoneSubmitLabel: { ko: "제출 방법", en: "How to submit" },
     // DECIDED 2026-10-13 (사용자: "1일차 박스가 너무 비어있음"): 미션이 없는 Day 1 카드의 바닥 띠 라벨. 띠의 제목은 그날의 submit입니다.
     carryLabel: { ko: "Day 2에 들고 갈 것", en: "To bring on Day 2" },
     // 일정표 행의 마일스톤 줄 끝에 붙는 말(2026-10-10). 누가 받는지를 날마다 한 번씩 말합니다.
@@ -2342,9 +2345,19 @@ export const naru = {
         // DECIDED 2026-10-17 (사용자, 스크린숏 표): Day 2와 Day 3의 미션 인정 조건이 정해졌습니다. "이후 공개"를 이것으로 바꿉니다.
         // 조건 셋(과반 현장, 멘토 1명 이상, 진척 PDF)을 전부 채워야 하고, 확인은 현장 체크, 멘토와 찍은 인증 사진, PDF입니다.
         milestone: { ko: "멘토 찾아가기와 진척 공유", en: "Visit a mentor, share progress" },
+        // DECIDED 2026-10-17 (사용자, 스크린숏: "문장으로 말고, bullet point로, 그리고 제출하는 방법으로"): 설명은 문단이 아니라
+        // 인정 조건과 제출 방법 두 목록입니다. 그 전: "세 가지를 모두 채우면 인정됩니다. ..." 한 문단.
         milestoneDetail: {
-          ko: "세 가지를 모두 채우면 인정됩니다. 팀원 과반이 현장에 옵니다. 멘토 1명 이상을 찾아갑니다. 그날 만든 진척을 PDF로 공유합니다. 확인은 현장 체크, 멘토와 함께 찍은 인증 사진, PDF로 합니다.",
-          en: "All three count. More than half the team is on site. You visit at least one mentor. You share that day's progress as a PDF. We confirm it with an on-site check, a photo with the mentor, and the PDF.",
+          conditions: [
+            { ko: "팀원 과반이 현장에 오기", en: "More than half the team on site" },
+            { ko: "멘토 1명 이상 찾아가기", en: "Visit at least one mentor" },
+            { ko: "그날 만든 진척을 PDF로 공유하기", en: "Share that day's progress as a PDF" },
+          ],
+          submit: [
+            { ko: "멘토와 함께 찍은 인증 사진", en: "A photo with the mentor" },
+            { ko: "그날의 진척 PDF", en: "That day's progress as a PDF" },
+            { ko: "현장 출석은 운영진이 체크합니다", en: "The organisers check who is on site" },
+          ],
         },
       },
       {
@@ -2380,9 +2393,19 @@ export const naru = {
         // DECIDED 2026-10-17 (사용자, 스크린숏 표): Day 2와 Day 3의 미션 인정 조건이 정해졌습니다. "이후 공개"를 이것으로 바꿉니다.
         // 조건 셋(과반 현장, 멘토 1명 이상, 진척 PDF)을 전부 채워야 하고, 확인은 현장 체크, 멘토와 찍은 인증 사진, PDF입니다.
         milestone: { ko: "멘토 찾아가기와 진척 공유", en: "Visit a mentor, share progress" },
+        // DECIDED 2026-10-17 (사용자, 스크린숏: "문장으로 말고, bullet point로, 그리고 제출하는 방법으로"): 설명은 문단이 아니라
+        // 인정 조건과 제출 방법 두 목록입니다. 그 전: "세 가지를 모두 채우면 인정됩니다. ..." 한 문단.
         milestoneDetail: {
-          ko: "세 가지를 모두 채우면 인정됩니다. 팀원 과반이 현장에 옵니다. 멘토 1명 이상을 찾아갑니다. 그날 만든 진척을 PDF로 공유합니다. 확인은 현장 체크, 멘토와 함께 찍은 인증 사진, PDF로 합니다.",
-          en: "All three count. More than half the team is on site. You visit at least one mentor. You share that day's progress as a PDF. We confirm it with an on-site check, a photo with the mentor, and the PDF.",
+          conditions: [
+            { ko: "팀원 과반이 현장에 오기", en: "More than half the team on site" },
+            { ko: "멘토 1명 이상 찾아가기", en: "Visit at least one mentor" },
+            { ko: "그날 만든 진척을 PDF로 공유하기", en: "Share that day's progress as a PDF" },
+          ],
+          submit: [
+            { ko: "멘토와 함께 찍은 인증 사진", en: "A photo with the mentor" },
+            { ko: "그날의 진척 PDF", en: "That day's progress as a PDF" },
+            { ko: "현장 출석은 운영진이 체크합니다", en: "The organisers check who is on site" },
+          ],
         },
       },
       {
@@ -2413,8 +2436,15 @@ export const naru = {
         // 다 풀지 못해도 됩니다(brand 7장). 운영진이 클로징 때 확인합니다.
         milestone: { ko: "성과 공유회에서 발표", en: "Present at the showcase" },
         milestoneDetail: {
-          ko: "둘 다 채우면 인정됩니다. 팀원 과반이 현장에 옵니다. 성과 공유회에서 발표합니다. 다 풀지 못했어도 됩니다. 확인은 운영진이 클로징 때 합니다.",
-          en: "Both count. More than half the team is on site. You present at the showcase, even if it is not solved. The organisers confirm it at the closing.",
+          conditions: [
+            { ko: "팀원 과반이 현장에 오기", en: "More than half the team on site" },
+            { ko: "성과 공유회에서 발표하기", en: "Present at the showcase" },
+            { ko: "다 못 풀어도 됩니다", en: "It does not have to be solved" },
+          ],
+          submit: [
+            { ko: "따로 내는 것은 없습니다", en: "Nothing to hand in" },
+            { ko: "운영진이 클로징 때 체크합니다", en: "The organisers check at the closing" },
+          ],
         },
       },
     ] as {
@@ -2434,8 +2464,8 @@ export const naru = {
       submit?: Phrase;
       /** 그날의 마일스톤(2026-10-10). 넘은 팀 모두가 지원을 받습니다. Day 0에는 없습니다. */
       milestone?: Phrase;
-      /** 마일스톤 띠를 누르면 열리는 설명(2026-10-11). */
-      milestoneDetail?: Phrase;
+      /** 마일스톤 띠를 누르면 열리는 설명(2026-10-11). 2026-10-17부터 인정 조건과 제출 방법 두 목록. */
+      milestoneDetail?: { conditions: Phrase[]; submit: Phrase[] };
     }[],
     tbdLabel: { ko: "아직 정해지지 않은 것", en: "Not settled yet" },
     // 2026-09-15: "이벤트 이름"이 이 목록에서 빠졌습니다. 크로싱 서울로
