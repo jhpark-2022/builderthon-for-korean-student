@@ -2339,7 +2339,13 @@ export const naru = {
         // 그래서 조건이 "팀 전원"입니다. 그 전: "현업에게 확인받은 문제 정의".
         // DECIDED 2026-10-13 (사용자: "day 2랑 3 미션은 아직 잘 모르겠네, 이후 공개 이런 식으로만"): 내용을 쓰지 않고 "이후 공개"만 둡니다.
         // 설명(milestoneDetail)도 뺐습니다. 같은 날 앞서 적었던 것: "팀 전원이 멘토를 찾아가 확인받기". 정해지면 milestoneDetail과 함께 다시 적습니다.
-        milestone: { ko: "이후 공개", en: "To be announced" },
+        // DECIDED 2026-10-17 (사용자, 스크린숏 표): Day 2와 Day 3의 미션 인정 조건이 정해졌습니다. "이후 공개"를 이것으로 바꿉니다.
+        // 조건 셋(과반 현장, 멘토 1명 이상, 진척 PDF)을 전부 채워야 하고, 확인은 현장 체크, 멘토와 찍은 인증 사진, PDF입니다.
+        milestone: { ko: "멘토 찾아가기와 진척 공유", en: "Visit a mentor, share progress" },
+        milestoneDetail: {
+          ko: "세 가지를 모두 채우면 인정됩니다. 팀원 과반이 현장에 옵니다. 멘토 1명 이상을 찾아갑니다. 그날 만든 진척을 PDF로 공유합니다. 확인은 현장 체크, 멘토와 함께 찍은 인증 사진, PDF로 합니다.",
+          en: "All three count. More than half the team is on site. You visit at least one mentor. You share that day's progress as a PDF. We confirm it with an on-site check, a photo with the mentor, and the PDF.",
+        },
       },
       {
         name: { ko: "Build", en: "Build" },
@@ -2371,7 +2377,13 @@ export const naru = {
         // 덱과 결과물(위 submit)은 미션과 별개로 성과 공유회 전에 냅니다. 브리프의 "연습 피칭"은 정본 5장(피칭은 안 쓰는 말)에 따라
         // "리허설"로 씁니다(같은 날 사용자 확인, docs/brand.md 7장). 그 전: "코드로 옮긴 결과물과 덱".
         // DECIDED 2026-10-13 (사용자): Day 2와 같습니다. 같은 날 앞서 적었던 것: "다른 팀의 리허설에 의견 주기".
-        milestone: { ko: "이후 공개", en: "To be announced" },
+        // DECIDED 2026-10-17 (사용자, 스크린숏 표): Day 2와 Day 3의 미션 인정 조건이 정해졌습니다. "이후 공개"를 이것으로 바꿉니다.
+        // 조건 셋(과반 현장, 멘토 1명 이상, 진척 PDF)을 전부 채워야 하고, 확인은 현장 체크, 멘토와 찍은 인증 사진, PDF입니다.
+        milestone: { ko: "멘토 찾아가기와 진척 공유", en: "Visit a mentor, share progress" },
+        milestoneDetail: {
+          ko: "세 가지를 모두 채우면 인정됩니다. 팀원 과반이 현장에 옵니다. 멘토 1명 이상을 찾아갑니다. 그날 만든 진척을 PDF로 공유합니다. 확인은 현장 체크, 멘토와 함께 찍은 인증 사진, PDF로 합니다.",
+          en: "All three count. More than half the team is on site. You visit at least one mentor. You share that day's progress as a PDF. We confirm it with an on-site check, a photo with the mentor, and the PDF.",
+        },
       },
       {
         // 2026-10-10 (마일스톤 브리프 2.7): 마지막 날의 이름은 "Pitch / 피치"에서 성과 공유회(Showcase)로.
@@ -2397,7 +2409,13 @@ export const naru = {
         // DECIDED 2026-10-10 (중복 브리프 B1): 칩 "멘토링 없음"을 뺐습니다(위 Day 3과 같은 이유).
         chips: [{ ko: "시상과 클로징", en: "Awards and closing" }],
         // DECIDED 2026-10-13 (사용자: "2,3,4일 모두 이후 공개"): Day 4도 내용을 쓰지 않습니다. 그 전: "성과 공유회 완주"와 그 설명.
-        milestone: { ko: "이후 공개", en: "To be announced" },
+        // DECIDED 2026-10-17 (사용자, 스크린숏 표): Day 4의 미션 인정 조건. 팀원 과반이 현장에 오고 성과 공유회에서 발표하면 됩니다.
+        // 다 풀지 못해도 됩니다(brand 7장). 운영진이 클로징 때 확인합니다.
+        milestone: { ko: "성과 공유회에서 발표", en: "Present at the showcase" },
+        milestoneDetail: {
+          ko: "둘 다 채우면 인정됩니다. 팀원 과반이 현장에 옵니다. 성과 공유회에서 발표합니다. 다 풀지 못했어도 됩니다. 확인은 운영진이 클로징 때 합니다.",
+          en: "Both count. More than half the team is on site. You present at the showcase, even if it is not solved. The organisers confirm it at the closing.",
+        },
       },
     ] as {
       name: Phrase;

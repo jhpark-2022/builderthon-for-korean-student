@@ -899,7 +899,7 @@ export default function NaruHome() {
               // DECIDED 2026-10-11 (사용자, 스크린숏: "다 별이니까 이상한데"): 그 넷에 전부 ★를 달았더니 별이 아무것도 가리키지 않았습니다.
               // ★는 종착역(마지막 날, 성과 공유회) 하나에만 남기고, 마일스톤이 있는 나머지 날은 ◉입니다. Day 0은 전처럼 빈 점.
               // DECIDED 2026-10-15 (사용자, 스크린숏: "day 1 circle 에도, day 2 and 3 와 같은 강조"): Day 1도 ◉입니다.
-              // 미션은 여전히 Day 2부터라 Day 1 아래 "이후 공개" 줄은 없습니다. 빈 점은 Day 0 하나.
+              // 미션은 여전히 Day 2부터라 Day 1 아래 미션 줄은 없습니다. 빈 점은 Day 0 하나.
               kind: i === 0 ? "plain" : i === naru.december.stages.length - 1 ? "anchor" : "spot",
               milestone: s.milestone ? t(s.milestone) : undefined,
             }))}
