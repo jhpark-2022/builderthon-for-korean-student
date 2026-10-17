@@ -2342,12 +2342,15 @@ export const naru = {
         when: { ko: "Day 2", en: "Day 2" },
         dayOffset: 2,
         body: {
-          ko: "오전 안에 돌아가는 첫 버전을 만들고 계속 고칩니다. 무엇을 만들지는 바뀔 수 있습니다. 다만 Day 1의 정의가 바뀌면 운영진에게 알립니다.",
-          en: "You get a first working version up in the morning and keep fixing it. What you build can change. If the Day 1 definition changes, you tell the organisers.",
+          // 2026-10-17: 위 line과 같은 이유로 첫 문장을 바꿨습니다(이 body는 지금 홈에 그려지지 않습니다).
+          ko: "정의한 문제와 아이디어를 멘토에게 확인받습니다. 무엇을 만들지는 바뀔 수 있습니다. 다만 Day 1의 정의가 바뀌면 운영진에게 알립니다.",
+          en: "You get the problem you defined and your idea checked by mentors. What you build can change. If the Day 1 definition changes, you tell the organisers.",
         },
         // DECIDED 2026-10-11 (사용자: "각 날마다 이제 제출물 / milestone이 있는거임"): "추가 제출 요구는 없습니다."였습니다.
         // 같은 행의 마일스톤 줄과 어긋나 뺐고, 위 body의 첫 문장을 그대로 씁니다(새로 쓴 사실 없음).
-        line: { ko: "오전 안에 돌아가는 첫 버전을 만들고 계속 고칩니다.", en: "You get a first working version up in the morning and keep fixing it." },
+        // DECIDED 2026-10-17 (사용자: "2,3일차가 겹침. 아이디어 확인 받는 시간이 2일차, 실질적으로 만들어보는 시간이 3일차"):
+        // 그 전 "오전 안에 돌아가는 첫 버전을 만들고 계속 고칩니다."는 만드는 날의 말이라 Day 3("코드화하는 시간")과 겹쳤습니다.
+        line: { ko: "정의한 문제와 아이디어를 멘토에게 확인받는 시간입니다.", en: "Time to get the problem you defined and your idea checked by mentors." },
         chips: [{ ko: "방향 전환은 팀의 몫", en: "Changing course is yours to call" }],
         // DECIDED 2026-09-27 (사용자, 9/7 8월 참가자 회고): 왜 하는지가 바로 읽히게.
         // UI는 AI가 바로 만들어 주지만 어떤 기능을 왜 넣을지 판단하는 훈련은 배울 곳이
