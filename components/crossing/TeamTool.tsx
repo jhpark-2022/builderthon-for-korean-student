@@ -126,11 +126,15 @@ export default function TeamTool() {
 
         <div className="flex flex-wrap items-center gap-3">
           <label htmlFor="team" className={`${META} font-bold text-white/85`}>{t(c.teamLabel)}</label>
-          <select id="team" value={teams.includes(team) ? team : ""} onChange={(e) => { setTeam(e.target.value); save(TEAM_KEY, e.target.value); }}
-            className={`rounded-lg border border-white/20 bg-[#0d1230] px-3 py-2 ${BODY} text-white`}>
-            <option value="">{t(c.teamPick)}</option>
-            {teams.map((x) => <option key={x} value={x}>{x}</option>)}
-          </select>
+          {/* 2026-10-17 (사용자: "화살표도 상자 밖으로 튀어나와 있는 느낌"): 브라우저 기본 화살표를 끄고 상자 안쪽에 그립니다. */}
+          <div className="relative">
+            <select id="team" value={teams.includes(team) ? team : ""} onChange={(e) => { setTeam(e.target.value); save(TEAM_KEY, e.target.value); }}
+              className={`min-w-[10rem] appearance-none rounded-lg border border-white/20 bg-[#0d1230] py-2 pl-3 pr-10 ${BODY} text-white`}>
+              <option value="">{t(c.teamPick)}</option>
+              {teams.map((x) => <option key={x} value={x}>{x}</option>)}
+            </select>
+            <svg aria-hidden width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/70"><path d="m6 9 6 6 6-6" /></svg>
+          </div>
           <div role="tablist" className="flex gap-2">
             {PROOF_DAYS.map((d) => (
               <button key={d} role="tab" aria-selected={day === d} type="button" onClick={() => setDay(d)}
