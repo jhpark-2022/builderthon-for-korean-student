@@ -2367,18 +2367,20 @@ export const naru = {
         // DECIDED 2026-10-13 (사용자: "day 2랑 3 미션은 아직 잘 모르겠네, 이후 공개 이런 식으로만"): 내용을 쓰지 않고 "이후 공개"만 둡니다.
         // 설명(milestoneDetail)도 뺐습니다. 같은 날 앞서 적었던 것: "팀 전원이 멘토를 찾아가 확인받기". 정해지면 milestoneDetail과 함께 다시 적습니다.
         // DECIDED 2026-10-17 (사용자, 스크린숏 표): Day 2와 Day 3의 미션 인정 조건이 정해졌습니다. "이후 공개"를 이것으로 바꿉니다.
-        // 조건 셋(과반 현장, 멘토 1명 이상, 진척 PDF)을 전부 채워야 하고, 확인은 현장 체크, 멘토와 찍은 인증 사진, PDF입니다.
+        // 조건 셋(과반 현장, 멘토 찾아가기, 진척 PDF). 2026-10-17 뒤: 멘토 찾아가기는 Day 2, 3 중 하루 이상. 확인은 현장 체크, 멘토와 찍은 사진(찾아간 날), PDF입니다.
         milestone: { ko: "멘토 찾아가기와 진척 공유", en: "Visit a mentor, share progress" },
         // DECIDED 2026-10-17 (사용자, 스크린숏: "문장으로 말고, bullet point로, 그리고 제출하는 방법으로"): 설명은 문단이 아니라
         // 인정 조건과 제출 방법 두 목록입니다. 그 전: "세 가지를 모두 채우면 인정됩니다. ..." 한 문단.
         milestoneDetail: {
           conditions: [
             { ko: "팀원 과반이 현장에 오기", en: "More than half the team on site" },
-            { ko: "멘토 1명 이상 찾아가기", en: "Visit at least one mentor" },
+            // DECIDED 2026-10-17 (사용자: 멘토 수로는 20팀 × 이틀을 못 채워 "미션을 완화하는걸로"): 멘토 찾아가기는 Day 2, 3 중 하루 이상이면 됩니다.
+            // 그 전: "멘토 1명 이상 찾아가기"(날마다). 과반 현장과 진척 PDF는 여전히 날마다입니다.
+            { ko: "멘토 찾아가기 (이틀 중 하루 이상)", en: "Visit a mentor (on at least one of the two days)" },
             { ko: "그날 만든 진척을 PDF로 공유하기", en: "Share that day's progress as a PDF" },
           ],
           submit: [
-            { ko: "멘토와 함께 찍은 인증 사진", en: "A photo with the mentor" },
+            { ko: "멘토와 찍은 사진 (찾아간 날)", en: "A photo with the mentor (on the day you went)" },
             { ko: "그날의 진척 PDF", en: "That day's progress as a PDF" },
             { ko: "현장 출석은 운영진이 체크합니다", en: "The organisers check who is on site" },
           ],
@@ -2423,18 +2425,20 @@ export const naru = {
         // "리허설"로 씁니다(같은 날 사용자 확인, docs/brand.md 7장). 그 전: "코드로 옮긴 결과물과 덱".
         // DECIDED 2026-10-13 (사용자): Day 2와 같습니다. 같은 날 앞서 적었던 것: "다른 팀의 리허설에 의견 주기".
         // DECIDED 2026-10-17 (사용자, 스크린숏 표): Day 2와 Day 3의 미션 인정 조건이 정해졌습니다. "이후 공개"를 이것으로 바꿉니다.
-        // 조건 셋(과반 현장, 멘토 1명 이상, 진척 PDF)을 전부 채워야 하고, 확인은 현장 체크, 멘토와 찍은 인증 사진, PDF입니다.
+        // 조건 셋(과반 현장, 멘토 찾아가기, 진척 PDF). 2026-10-17 뒤: 멘토 찾아가기는 Day 2, 3 중 하루 이상. 확인은 현장 체크, 멘토와 찍은 사진(찾아간 날), PDF입니다.
         milestone: { ko: "멘토 찾아가기와 진척 공유", en: "Visit a mentor, share progress" },
         // DECIDED 2026-10-17 (사용자, 스크린숏: "문장으로 말고, bullet point로, 그리고 제출하는 방법으로"): 설명은 문단이 아니라
         // 인정 조건과 제출 방법 두 목록입니다. 그 전: "세 가지를 모두 채우면 인정됩니다. ..." 한 문단.
         milestoneDetail: {
           conditions: [
             { ko: "팀원 과반이 현장에 오기", en: "More than half the team on site" },
-            { ko: "멘토 1명 이상 찾아가기", en: "Visit at least one mentor" },
+            // DECIDED 2026-10-17 (사용자: 멘토 수로는 20팀 × 이틀을 못 채워 "미션을 완화하는걸로"): 멘토 찾아가기는 Day 2, 3 중 하루 이상이면 됩니다.
+            // 그 전: "멘토 1명 이상 찾아가기"(날마다). 과반 현장과 진척 PDF는 여전히 날마다입니다.
+            { ko: "멘토 찾아가기 (이틀 중 하루 이상)", en: "Visit a mentor (on at least one of the two days)" },
             { ko: "그날 만든 진척을 PDF로 공유하기", en: "Share that day's progress as a PDF" },
           ],
           submit: [
-            { ko: "멘토와 함께 찍은 인증 사진", en: "A photo with the mentor" },
+            { ko: "멘토와 찍은 사진 (찾아간 날)", en: "A photo with the mentor (on the day you went)" },
             { ko: "그날의 진척 PDF", en: "That day's progress as a PDF" },
             { ko: "현장 출석은 운영진이 체크합니다", en: "The organisers check who is on site" },
           ],
