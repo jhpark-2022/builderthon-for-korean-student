@@ -68,7 +68,7 @@ create table if not exists public.crossing_mentors (
 
 -- 멘토가 받는 시간. 하루에 여러 구간이 있을 수 있습니다. 시각은 한국 시간 그대로(예: day 2, 14:00, 17:00).
 -- 그 날 행이 하나도 없는 멘토는 10:00~22:00으로 봅니다(임시, lib/crossingOps.ts DEFAULT_WINDOW).
--- 10분 단위로 적습니다. 날짜는 앱이 Day 번호로 셉니다(lib/crossingOps.ts dayDate).
+-- 10분 단위로 적을 수 있지만, 시간표 줄이 30분이라(2026-10-17) 30분 단위로 적는 것이 맞습니다. 날짜는 앱이 Day 번호로 셉니다(lib/crossingOps.ts dayDate).
 create table if not exists public.crossing_mentor_windows (
   id          uuid primary key default gen_random_uuid(),
   mentor_id   uuid not null references public.crossing_mentors(id) on delete cascade,
