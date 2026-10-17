@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-17 멘토 예약을 공유 시간표 하나로](#2026-10-17-shared-timetable)
 - [2026-10-17 멘토 예약과 미션 인증 업로드 (DB 적용 전)](#2026-10-17-booking-proofs)
 - [2026-10-17 미션 설명을 목록으로](#2026-10-17-mission-bullets)
 - [2026-10-17 Day 2~4 미션 인정 조건](#2026-10-17-mission-conditions)
@@ -238,6 +239,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-17-shared-timetable"></a>
+## 2026-10-17 멘토 예약을 공유 시간표 하나로
+- 범위: /crossing/team, /api/crossing/{mentoring,proofs,staff}, lib/crossingOps*.ts, migrations/0008(적용 전이라 제자리 수정), data/naru.ts 한 줄, README
+- 한 것: DECIDED 2026-10-17 (사용자: "너무 뭐가 많은데? 그냥 timetable where team can put in their available, 다른 팀과 공유"). 팀 코드와 코드 입력 화면을 빼고, wejoinin처럼 표 하나로 합니다. 줄은 15분, 칸은 멘토, 팀을 골라 빈 칸을 누르면 팀 이름이 30분 들어가고 앞뒤 15분은 "쉬는 15분"으로 막힙니다. 모든 팀이 같은 표를 봅니다. 미션 인증 업로드는 같은 팀 선택 아래에 남깁니다. 근거: brand 7장 멘토링.
+- 대가: 주소를 아는 사람은 어느 팀으로든 칸을 넣고 뺄 수 있습니다(현장 도구라 받아들임).
+- 검증: 가짜 데이터로 1280px과 390px 확인(폰에서는 표만 옆으로 밀림, 페이지 폭 390). tsc 통과.
+- 커밋: bb69230
 
 <a id="2026-10-17-booking-proofs"></a>
 ## 2026-10-17 멘토 예약과 미션 인증 업로드 (DB 적용 전)
