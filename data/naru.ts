@@ -1945,6 +1945,23 @@ export const naru = {
     milestoneSubmitLabel: { ko: "제출 방법", en: "How to submit" },
     // DECIDED 2026-10-13 (사용자: "1일차 박스가 너무 비어있음"): 미션이 없는 Day 1 카드의 바닥 띠 라벨. 띠의 제목은 그날의 submit입니다.
     carryLabel: { ko: "Day 2에 들고 갈 것", en: "To bring on Day 2" },
+    // DECIDED 2026-10-17 (사용자, 스크린숏: "1일차랑 2&3일차 length of mission 차이가 너무 남"): Day 1 띠도 펼쳐집니다.
+    // 미션이라고 부르지 않습니다(정본 "미션은 Day 2부터"는 그대로, 같은 날 사용자 결정). 넣는 것은 같은 날 정한 사실 둘뿐입니다:
+    // 그 1장을 Day 2에 멘토에게 들고 가고, Day 1에 PDF로 올립니다(시간표 페이지의 Day 1 칸).
+    carryDetail: {
+      todoLabel: { ko: "할 것", en: "What to do" },
+      // 같은 날 뒤(사용자: "또 너무 길잖아 compare to day 2 and 3. 똑같이. 상자 색깔로 동일하게"): 두 목록 각 세 줄, 줄이 꺾이지 않는 길이.
+      todo: [
+        { ko: "현장에서 팀 맺기", en: "Form your team on site" },
+        { ko: "팀의 생각을 1장으로 정리하기", en: "Put the team's take on one page" },
+        { ko: "Day 2에 멘토에게 들고 가기", en: "Bring it to a mentor on Day 2" },
+      ],
+      submit: [
+        { ko: "그 1장을 PDF로 올리기", en: "Upload that page as a PDF" },
+        { ko: "시간표 페이지에서 Day 1 고르기", en: "Pick Day 1 on the timetable page" },
+        { ko: "사진은 Day 2부터 올립니다", en: "Photos start on Day 2" },
+      ],
+    },
     // 일정표 행의 마일스톤 줄 끝에 붙는 말(2026-10-10). 누가 받는지를 날마다 한 번씩 말합니다.
     milestoneNote: { ko: "해낸 팀 모두 지원", en: "Support for every team that completes it" },
     dayLabel: { ko: "DAY", en: "DAY" },
@@ -2376,8 +2393,14 @@ export const naru = {
           ko: "정의한 지표로 결과를 확인하고, 틀리는 경우를 직접 찾아 한계로 정리합니다. 피칭 연습을 팀끼리 서로 보여주고 의견을 주고받습니다.",
           en: "You check the result against the measure you set, hunt for the cases where it fails, and write those down as limits. Teams show each other their pitch and trade notes.",
         },
-        // 8월에 없었던 자리라는 것이 이 날의 요점입니다(PDF 04, gaps[2]와 같은 사실).
-        line: { ko: "팀 사이 공유는 8월에 없었던 자리입니다.", en: "Teams sharing with each other did not exist in August." },
+        // DECIDED 2026-10-17 (사용자: "'팀 사이 공유는 8월에 없었던 자리입니다'랑 3일차의 존재 목적이랑 무슨 연관"): 그 전의 줄은 팀끼리
+        // 리허설을 보여 주는 자리가 이 날의 요점이던 때(PDF 04, gaps[2])의 것이고, 그 미션은 2026-10-17에 멘토 찾아가기와 진척 공유로 바뀌었습니다.
+        // Day 2와 같이 body의 첫 문장, 이 날 무엇을 만드는지를 씁니다(새로 쓴 사실 없음). 그 전: "팀 사이 공유는 8월에 없었던 자리입니다."
+        // 같은 날 뒤(사용자: "정의한 문제를 풀 수 있는 아이디어를 코드화시키는 시간이라고 해"): body의 첫 문장 대신 이 문장입니다.
+        line: {
+          ko: "정의한 문제를 풀 수 있는 아이디어를 코드화하는 시간입니다.",
+          en: "Time to turn an idea that can solve the problem you defined into code.",
+        },
         // DECIDED 2026-10-10 (중복 브리프 B1): 칩 "멘토링은 이 날까지"를 뺐습니다. General Mentoring 상자의
         // "Day 3은 피칭 준비, Day 4는 멘토링이 없습니다"가 같은 말을 합니다.
         chips: [],
