@@ -13,7 +13,7 @@ import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { CURRENT_EVENT } from "@/lib/registrationWindow";
 import { findTeam } from "@/lib/crossingOpsServer";
-import { MAX_BOOKINGS_PER_TEAM_PER_DAY, SESSION_MINUTES, fitsWindow, isOpsDay, kstTime, type Window } from "@/lib/crossingOps";
+import { DEFAULT_WINDOW, OPS_DAYS, SESSION_MINUTES, fitsWindow, isOpsDay, kstTime, type Window } from "@/lib/crossingOps";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +21,11 @@ export const dynamic = "force-dynamic";
 function toWindow(day: number, start: string, end: string): Window | null {
   const a = kstTime(day, String(start).slice(0, 5)), b = kstTime(day, String(end).slice(0, 5));
   return a && b && b > a ? { startsAt: a.toISOString(), endsAt: b.toISOString() } : null;
+}
+// 그 날 적힌 시간이 없으면 기본값(10:00~22:00, 임시)으로 봅니다(2026-10-17 사용자).
+function windowsFor(day: number, rows: { start_time: string; end_time: string }[]): Window[] {
+  const ws = rows.map((w) => toWindow(day, w.start_time, w.end_time)).filter((w): w is Window => !!w);
+  return ws.length ? ws : [toWindow(day, DEFAULT_WINDOW.start, DEFAULT_WINDOW.end)!];
 }
 
 export async function GET(req: Request) {
@@ -44,7 +49,7 @@ export async function GET(req: Request) {
     teams: (teams.data ?? []).map((t) => t.name),
     mentors: (mentors.data ?? []).map((m) => ({
       id: m.id, name: m.name, field: m.field,
-      windows: (windows ?? []).filter((w) => w.mentor_id === m.id).map((w) => toWindow(day, w.start_time, w.end_time)).filter(Boolean),
+      windows: windowsFor(day, (windows ?? []).filter((w) => w.mentor_id === m.id)),
       bookings: (bookings ?? []).filter((b) => b.mentor_id === m.id).map((b) => ({
         id: b.id, team: b.team_name, startsAt: b.starts_at, endsAt: b.ends_at,
       })),
@@ -65,18 +70,15 @@ export async function POST(req: Request) {
   const { data: mentor } = await db.from("crossing_mentors").select("id").eq("id", mentorId).eq("event_slug", CURRENT_EVENT).eq("active", true).maybeSingle();
   if (!mentor) return NextResponse.json({ error: "invalid" }, { status: 400 });
   const { data: windows } = await db.from("crossing_mentor_windows").select("day, start_time, end_time").eq("mentor_id", mentorId);
-  const hit = (windows ?? []).map((w) => ({ day: w.day as number, win: toWindow(w.day, w.start_time, w.end_time) })).find((w) => w.win && fitsWindow(t, [w.win]));
+  const hit = OPS_DAYS.map((d) => ({ day: d, ws: windowsFor(d, (windows ?? []).filter((w) => w.day === d)) })).find((x) => fitsWindow(t, x.ws));
   if (!hit) return NextResponse.json({ error: "outside_window" }, { status: 400 });
-
-  const { count } = await db.from("crossing_mentor_bookings").select("id", { count: "exact", head: true }).eq("team_name", team.name).eq("day", hit.day);
-  if ((count ?? 0) >= MAX_BOOKINGS_PER_TEAM_PER_DAY) return NextResponse.json({ error: "team_limit" }, { status: 409 });
 
   const { error } = await db.from("crossing_mentor_bookings").insert({
     mentor_id: mentorId, team_name: team.name, day: hit.day,
     starts_at: new Date(t).toISOString(), ends_at: new Date(t + SESSION_MINUTES * 60_000).toISOString(),
   });
   if (error) {
-    if (error.code === "23P01") return NextResponse.json({ error: (error.message ?? "").includes("team_overlap") ? "team_busy" : "taken" }, { status: 409 });
+    if (error.code === "23P01") return NextResponse.json({ error: (error.message ?? "").includes("team_cooldown") ? "team_busy" : "taken" }, { status: 409 });
     console.error("[crossing/mentoring] insert failed", error.code);
     return NextResponse.json({ error: "db" }, { status: 500 });
   }

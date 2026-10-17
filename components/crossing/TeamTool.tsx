@@ -66,7 +66,7 @@ export default function TeamTool() {
     const r = await fetch("/api/crossing/mentoring", { method, headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
     if (!r.ok) {
       const e = (await r.json().catch(() => ({}))).error;
-      setMsg(t(e === "taken" ? c.errTaken : e === "team_busy" ? c.errTeamBusy : e === "team_limit" ? c.errLimit : e === "past" ? c.errPast : c.errGeneric));
+      setMsg(t(e === "taken" ? c.errTaken : e === "team_busy" ? c.errTeamBusy : e === "past" ? c.errPast : c.errGeneric));
     }
     setOpen(null); setBusy(false); void refresh();
   };
@@ -128,6 +128,10 @@ export default function TeamTool() {
           </div>
         </div>
 
+        {/* DECIDED 2026-10-17 (사용자, 스크린숏: "인증 올리는 거를 테이블 위로"): 인증이 시간표보다 먼저 섭니다. */}
+        {team && teams.includes(team) && <Proofs team={team} day={day} />}
+
+        <h2 className={`mt-4 ${BODY} font-bold`}>{t(c.timetableHeading)}</h2>
         <p className={`${BODY} text-white/85`}>{t(c.lead)} {t(c.carry)}</p>
         {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}
 
@@ -158,7 +162,6 @@ export default function TeamTool() {
           </div>
         )}
 
-        {team && teams.includes(team) && <Proofs team={team} day={day} />}
       </div>
     </main>
   );
@@ -237,7 +240,7 @@ function Proofs({ team, day }: { team: string; day: OpsDay }) {
   };
 
   return (
-    <section aria-labelledby="proof-h" className="mt-6 flex flex-col gap-4">
+    <section aria-labelledby="proof-h" className="flex flex-col gap-4">
       <h2 id="proof-h" className={`${BODY} font-bold`}>{t(c.proofHeading)}</h2>
       <p className={`${BODY} text-white/85`}>{t(c.proofLead)}</p>
       {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}

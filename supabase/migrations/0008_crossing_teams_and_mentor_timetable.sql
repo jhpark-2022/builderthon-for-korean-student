@@ -60,6 +60,7 @@ create table if not exists public.crossing_mentors (
 );
 
 -- 멘토가 받는 시간. 하루에 여러 구간이 있을 수 있습니다. 시각은 한국 시간 그대로(예: day 2, 14:00, 17:00).
+-- 그 날 행이 하나도 없는 멘토는 10:00~22:00으로 봅니다(임시, lib/crossingOps.ts DEFAULT_WINDOW).
 -- 15분 단위로 적습니다. 날짜는 앱이 Day 번호로 셉니다(lib/crossingOps.ts dayDate).
 create table if not exists public.crossing_mentor_windows (
   id          uuid primary key default gen_random_uuid(),
@@ -84,9 +85,10 @@ create table if not exists public.crossing_mentor_bookings (
   -- 같은 멘토: 칸 + 뒤 15분이 다른 칸과 겹치면 거절(23P01). 두 칸 사이가 15분 미만이 될 수 없습니다.
   constraint crossing_bookings_mentor_buffer
     exclude using gist (mentor_id with =, tstzrange(starts_at, ends_at + interval '15 minutes', '[)') with &&),
-  -- 같은 팀: 한 팀이 같은 시간에 두 멘토를 잡지 못합니다.
-  constraint crossing_bookings_team_overlap
-    exclude using gist (team_name with =, tstzrange(starts_at, ends_at, '[)') with &&)
+  -- 같은 팀: 칸 하나를 넣으면 그 시작부터 2시간 동안은 어느 멘토의 칸도 못 넣습니다(하루 횟수 제한은 없음).
+  -- 두 칸의 시작이 2시간 이상 떨어져야 합니다. 2시간은 lib/crossingOps.ts의 TEAM_COOLDOWN_MINUTES와 같아야 합니다.
+  constraint crossing_bookings_team_cooldown
+    exclude using gist (team_name with =, tstzrange(starts_at, starts_at + interval '2 hours', '[)') with &&)
 );
 create index if not exists crossing_mentor_bookings_day_idx on public.crossing_mentor_bookings (day, starts_at);
 

@@ -6,13 +6,14 @@
 import type { Phrase } from "@/data/dictionaryCore";
 
 export const teamCopy = {
-  title: { ko: "멘토 시간표", en: "Mentor timetable" },
+  title: { ko: "멘토 시간표와 미션 인증", en: "Mentor timetable and check-in" },
+  timetableHeading: { ko: "멘토 시간표", en: "Mentor timetable" },
   teamLabel: { ko: "우리 팀", en: "Your team" },
   teamPick: { ko: "팀을 고르세요", en: "Pick your team" },
   dayTab: { ko: "Day", en: "Day" },
   lead: {
-    ko: "빈 칸을 누르면 우리 팀 이름이 들어가고, 모든 팀이 같은 시간표를 봅니다. 한 번은 30분, 앞뒤 15분은 자동으로 비워 둡니다. 하루 두 번까지.",
-    en: "Tap an empty cell to put your team in. Every team sees the same timetable. Each slot is 30 minutes, with 15 minutes kept free before and after. Up to two a day.",
+    ko: "빈 칸을 누르면 우리 팀 이름이 들어가고, 모든 팀이 같은 시간표를 봅니다. 한 번은 30분, 앞뒤 15분은 자동으로 비워 둡니다. 한 칸을 넣으면 그 시작부터 2시간 뒤에 다음 칸을 넣을 수 있습니다.",
+    en: "Tap an empty cell to put your team in. Every team sees the same timetable. Each slot is 30 minutes, with 15 minutes kept free before and after. After one slot, your next one can start two hours later.",
   },
   carry: { ko: "이슈에 대한 팀의 생각 한 장을 들고 찾아갑니다.", en: "Bring one page of your team's take on the issue." },
   time: { ko: "시간", en: "Time" },
@@ -20,8 +21,7 @@ export const teamCopy = {
   clear: { ko: "비우기", en: "Remove" },
   noMentors: { ko: "이 날 시간을 연 멘토가 아직 없습니다.", en: "No mentors have opened times on this day yet." },
   errTaken: { ko: "방금 다른 팀이 들어간 칸입니다.", en: "Another team just took that cell." },
-  errTeamBusy: { ko: "우리 팀의 다른 멘토 시간과 겹칩니다.", en: "That clashes with your team's other slot." },
-  errLimit: { ko: "이 날은 이미 두 번 넣었습니다.", en: "Your team already has two slots that day." },
+  errTeamBusy: { ko: "우리 팀의 다른 칸과 2시간이 떨어져야 합니다.", en: "Your slots need to start at least two hours apart." },
   errPast: { ko: "지난 시간입니다.", en: "That time has passed." },
   errGeneric: { ko: "잠시 뒤 다시 해 주세요.", en: "Something went wrong. Try again in a moment." },
 

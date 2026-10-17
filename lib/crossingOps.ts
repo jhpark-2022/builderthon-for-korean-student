@@ -15,8 +15,17 @@ export const SESSION_MINUTES = 30;
 export const BUFFER_MINUTES = 15;
 /** 시작 시각을 고르는 칸의 간격(분). */
 export const GRID_MINUTES = 15;
-/** 한 팀이 하루에 잡을 수 있는 예약 수. 한 팀이 멘토 시간을 쓸어 가지 않게. TODO: confirm. */
-export const MAX_BOOKINGS_PER_TEAM_PER_DAY = 2;
+/**
+ * 한 팀이 칸을 하나 넣으면 그 칸의 시작부터 이만큼은 어느 멘토의 칸도 넣지 못합니다. 하루 횟수 제한은 없습니다.
+ * DECIDED 2026-10-17 (사용자: "한번 slot booking을 하면, 그 이후 2시간 동안은 같은 멘토던 다른 멘토던 booking 못하고").
+ * 앞뒤 대칭입니다(16:00을 먼저 넣었으면 14:00~17:45 시작도 막힘). 마이그레이션 0008의 interval '2 hours'와 같아야 합니다.
+ */
+export const TEAM_COOLDOWN_MINUTES = 120;
+/**
+ * 멘토가 받는 시간을 표에 적지 않았을 때 쓰는 기본값(한국 시간). TODO: confirm.
+ * DECIDED 2026-10-17 (사용자: "지금은 tentative 한거니까 availability를 오전 10시부터 오후 10시로").
+ */
+export const DEFAULT_WINDOW = { start: "10:00", end: "22:00" } as const;
 /** 예약과 인증이 있는 날. */
 export const OPS_DAYS = [2, 3] as const;
 export type OpsDay = (typeof OPS_DAYS)[number];
@@ -73,8 +82,9 @@ export function slotState(t: number, mentorBookings: Booking[], teamBookings: Bo
     if (overlap(t, end, b0 - buf, b1 + buf)) return "buffer";
   }
   if (t < now) return "past";
+  const cool = TEAM_COOLDOWN_MINUTES * MIN;
   for (const b of teamBookings) {
-    if (overlap(t, end, Date.parse(b.startsAt), Date.parse(b.endsAt))) return "teamBusy";
+    if (Math.abs(t - Date.parse(b.startsAt)) < cool) return "teamBusy";
   }
   return "open";
 }
