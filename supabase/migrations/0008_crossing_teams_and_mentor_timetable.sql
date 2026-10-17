@@ -28,6 +28,13 @@
 
 create extension if not exists btree_gist with schema extensions;
 
+-- exclude 제약의 식에는 IMMUTABLE 함수만 쓸 수 있는데 timestamptz + interval은 STABLE입니다(일, 월 단위는 시간대에 따라
+-- 달라질 수 있어서). 여기서는 분 단위만 더하므로 시간대와 무관합니다. 그래서 분을 더하는 함수를 IMMUTABLE로 둡니다.
+create or replace function public.crossing_plus_minutes(t timestamptz, m integer)
+  returns timestamptz language sql immutable parallel safe
+  as $$ select t + make_interval(mins => m) $$;
+revoke execute on function public.crossing_plus_minutes(timestamptz, integer) from public, anon, authenticated;
+
 -- ── 1. 팀 ───────────────────────────────────────────────────────────────────
 -- Day 1 현장에서 팀을 맺으면 운영진이 만듭니다. 시간표에서 팀은 이 이름으로 보입니다.
 create table if not exists public.crossing_teams (
@@ -84,11 +91,11 @@ create table if not exists public.crossing_mentor_bookings (
   check (ends_at > starts_at),
   -- 같은 멘토: 칸 + 뒤 10분이 다른 칸과 겹치면 거절(23P01). 두 칸 사이가 10분 미만이 될 수 없습니다(2026-10-17 사용자, 15분에서 10분).
   constraint crossing_bookings_mentor_buffer
-    exclude using gist (mentor_id with =, tstzrange(starts_at, ends_at + interval '10 minutes', '[)') with &&),
+    exclude using gist (mentor_id with =, tstzrange(starts_at, public.crossing_plus_minutes(ends_at, 10), '[)') with &&),
   -- 같은 팀: 칸 하나를 넣으면 그 시작부터 2시간 동안은 어느 멘토의 칸도 못 넣습니다(하루 횟수 제한은 없음).
   -- 두 칸의 시작이 2시간 이상 떨어져야 합니다. 2시간은 lib/crossingOps.ts의 TEAM_COOLDOWN_MINUTES와 같아야 합니다.
   constraint crossing_bookings_team_cooldown
-    exclude using gist (team_name with =, tstzrange(starts_at, starts_at + interval '2 hours', '[)') with &&)
+    exclude using gist (team_name with =, tstzrange(starts_at, public.crossing_plus_minutes(starts_at, 120), '[)') with &&)
 );
 create index if not exists crossing_mentor_bookings_day_idx on public.crossing_mentor_bookings (day, starts_at);
 
