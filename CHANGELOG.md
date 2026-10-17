@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-17 favicon.ico를 나루 아이콘으로](#2026-10-17-favicon)
 - [2026-10-17 팀 선택 상자 화살표](#2026-10-17-team-select-chevron)
 - [2026-10-17 Supabase 전체 점검 (57개 통과, 명단 뷰 하나 고침)](#2026-10-17-supabase-full-check)
 - [2026-10-17 멘토 시간표 줄을 30분으로](#2026-10-17-grid-30)
@@ -245,6 +246,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-17-favicon"></a>
+## 2026-10-17 favicon.ico를 나루 아이콘으로
+- 범위: app/favicon.ico, app/apple-icon.png
+- 한 것: DECIDED 2026-10-17 (사용자, Vercel 프로젝트 아이콘 스크린숏: "제로백 로고가 있는 것이 너무 싫어"). /favicon.ico가 404라 그 파일을 찾는 곳에 8월 아이콘이 남아 있었습니다. app/icon.svg와 같은 그림(흰 판, 섬, 주황 점)으로 favicon.ico와 apple-icon.png를 둡니다. 근거: brand 10장 로고.
+- 검증: 빌드 후 /favicon.ico, /apple-icon.png, /icon.svg 모두 200, head에 세 링크.
+- 커밋: f87a91c
 
 <a id="2026-10-17-team-select-chevron"></a>
 ## 2026-10-17 팀 선택 상자 화살표
