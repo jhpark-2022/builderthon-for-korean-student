@@ -2012,8 +2012,10 @@ export const naru = {
     mentoringLead: {
       // DECIDED 2026-10-11 (사용자: "그룹의 생각임"): 들고 가는 한 장은 개인의 것이 아니라 팀의 것입니다.
       // 2026-10-13: 규칙 목록의 "예약 없이, 멘토가 같은 공간에 있습니다"가 이 문단으로 올라왔습니다.
-      ko: "질문 목록 대신, 이슈에 대한 팀의 생각 한 장을 들고 먼저 찾아갑니다. 예약 없이, 멘토가 같은 공간에 있습니다.",
-      en: "Your team goes first, with one page of its own thinking on the issue instead of a list of questions. No booking. The mentors are in the same space.",
+      // DECIDED 2026-10-17 (사용자: 멘토링 예약제로 바꾼다): 둘째 문장이 "예약 없이, 멘토가 같은 공간에 있습니다."였습니다.
+      // 예약은 Day 1에 받는 팀 페이지(/crossing/team)에서 합니다. 앞뒤 15분 규칙은 그 페이지가 말합니다.
+      ko: "질문 목록 대신, 이슈에 대한 팀의 생각 한 장을 들고 먼저 찾아갑니다. 멘토 시간은 Day 1에 받는 팀 페이지에서 예약합니다.",
+      en: "Your team goes first, with one page of its own thinking on the issue instead of a list of questions. You book mentor time on the team page you get on Day 1.",
     },
     // DECIDED 2026-10-10 (사용자: "정보가 너무 많음"): 다섯 줄을 셋으로 묶었습니다. 2026-10-11에 둘로(위 mentoringLead 주석).
     // Day 4에는 멘토링 자체가 없습니다(2026-09-20, PDF 02·04).
@@ -2237,7 +2239,8 @@ export const naru = {
         // 2026-10-13 (멘토링 브리프 3): "3일"이었습니다. Day 1은 출제사의 컨텍스트라 멘토링은 이틀입니다.
         value: { ko: "2일", en: "2 days" },
         label: { ko: "멘토링", en: "Mentoring" },
-        note: { ko: "Day 2와 Day 3, 예약 없이", en: "Day 2 and Day 3, no booking" },
+        // DECIDED 2026-10-17 (사용자): "예약 없이"에서 예약제로.
+        note: { ko: "Day 2와 Day 3, 예약제", en: "Day 2 and Day 3, by booking" },
       },
     ] as Stat[],
     // 스테이지 다섯. 날짜 대신 순서입니다(위 주석 참고).
