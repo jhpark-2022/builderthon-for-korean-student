@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-17 멘토 예약과 미션 인증 업로드 (DB 적용 전)](#2026-10-17-booking-proofs)
 - [2026-10-17 미션 설명을 목록으로](#2026-10-17-mission-bullets)
 - [2026-10-17 Day 2~4 미션 인정 조건](#2026-10-17-mission-conditions)
 - [2026-10-15 노선도 Day 1 원도 강조](#2026-10-15-route-day1-spot)
@@ -237,6 +238,15 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-17-booking-proofs"></a>
+## 2026-10-17 멘토 예약과 미션 인증 업로드 (DB 적용 전)
+- 범위: /crossing/team, /crossing/staff, /api/crossing/{team,mentoring,proofs,staff}, lib/crossingOps*.ts, migrations/0008, data/naru.ts 두 줄, docs/brand.md 7장, README
+- 한 것: DECIDED 2026-10-17 (사용자: 멘토링 예약제로 바꾼다, "앞뒤 15분씩 자동으로 block"). 그 전 2026-10-11의 "예약 없이"를 바꿉니다. 같은 멘토의 두 예약 사이 15분은 DB exclude 제약이 지킵니다. Day 2, 3 미션의 멘토 사진과 진척 PDF는 비공개 버킷에 서명 URL로 올립니다(상금·인센티브 정리 2장, 7장 3번과 6번). 팀은 Day 1에 받는 6자 코드로, 운영진은 CROSSING_STAFF_KEY로 들어옵니다.
+- 근거: brand 7장 멘토링과 미션, 판단 질문 2(멘토 앞에서 진척을 보인다).
+- 남은 것: 0008 적용(사용자 결정: 나중에), Vercel에 CROSSING_STAFF_KEY, 한 번 길이 30분과 하루 두 번(TODO: confirm).
+- 검증: 칸 계산 단위 확인(14:00~14:30 예약이면 13:30~14:30 시작 막힘, 13:15와 14:45 열림). 두 화면은 가짜 데이터로 폰과 데스크톱 확인. tsc 통과.
+- 커밋: 93e63c1
 
 <a id="2026-10-17-mission-bullets"></a>
 ## 2026-10-17 미션 설명을 목록으로
