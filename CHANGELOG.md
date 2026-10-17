@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-17 멘토 시간표와 미션 인증을 DB에 잇고 배포 (버튼은 잠금)](#2026-10-17-timetable-live)
 - [2026-10-17 멘토 시간표와 미션 인증을 배포에서 뺀다 (브랜치 보관)](#2026-10-17-timetable-held)
 - [2026-10-17 미션 설명을 목록으로](#2026-10-17-mission-bullets)
 - [2026-10-17 Day 2~4 미션 인정 조건](#2026-10-17-mission-conditions)
@@ -238,6 +239,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-17-timetable-live"></a>
+## 2026-10-17 멘토 시간표와 미션 인증을 DB에 잇고 배포 (버튼은 잠금)
+- 범위: migrations/0008_crossing_teams_and_mentor_timetable.sql(Supabase 적용), /crossing/team, /api/crossing/{mentoring,proofs}, lib/crossingOps*.ts, 홈 Day 2, 3 카드, data/naru.ts 멘토링 두 줄, docs/brand.md 7장, README
+- 한 것: DECIDED 2026-10-17 (사용자). 등록한 사람을 팀으로 묶고(crossing_team_members), 팀이 넣은 멘토 칸을 모든 팀이 보게 하고, Day 2, 3 인증 사진과 PDF를 날마다 따로 남깁니다. 팀은 이름이 곧 키이고 ID나 코드는 없습니다. 운영진 페이지 없이 Supabase 표 편집기로 넣습니다. 칸은 30분, 앞뒤 10분은 쉼(줄도 10분 단위), 한 팀은 한 칸 뒤 2시간, 멘토 시간을 안 적으면 10:00~22:00(임시). 팀을 골라야 업로드와 칸 넣기가 풀립니다. 홈 버튼은 TIMETABLE_OPEN=false라 잠겨 있습니다("당장은 이용자들이 바로면 안되서").
+- 근거: brand 7장 멘토링(예약 없음에서 예약제로 정본을 같이 고침), 판단 질문 2.
+- 검증: 실제 DB에서 시험 팀 둘과 멘토 하나로 확인 후 삭제. 14:00 뒤 같은 멘토 14:30 거절, 14:40 통과, 같은 팀 15:50 거절, 16:00 통과, API를 거치지 않은 직접 삽입도 23P01. Day 2 사진과 Day 3 PDF가 day2/, day3/ 폴더와 행에 따로 남음. 적용 중 42P17(timestamptz + interval이 IMMUTABLE 아님)을 crossing_plus_minutes 함수로 풀었습니다.
+- 커밋: 105c2ac(되돌림의 되돌림), 879a4c5(브랜치 합침), 이 항목과 같은 커밋
 
 <a id="2026-10-17-timetable-held"></a>
 ## 2026-10-17 멘토 시간표와 미션 인증을 배포에서 뺀다 (브랜치 보관)
