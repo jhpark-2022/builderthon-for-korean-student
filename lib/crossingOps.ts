@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // 크로싱 서울 현장 도구(멘토 시간표, 미션 인증)의 값과 계산. 서버와 브라우저가 함께 씁니다.
-// 표는 supabase/migrations/0008_crossing_mentoring_and_proofs.sql.
+// 표는 supabase/migrations/0008_crossing_teams_and_mentor_timetable.sql.
 //
 // DECIDED 2026-10-17 (사용자): 멘토링은 예약제이고, 예약 하나가 그 앞뒤 15분을 막습니다.
 // 막는 규칙의 정본은 DB의 exclude 제약입니다. 여기의 계산은 화면에 칸을 그리고 미리 거절하는 용도이고,

@@ -2,10 +2,10 @@
 
 // ─────────────────────────────────────────────────────────────────────────────
 // /crossing/staff. 운영진 화면(2026-10-17). 한국어만 씁니다(운영진 도구).
-//   팀: 만들기(시간표의 팀 목록이 됩니다)
+//   팀: 등록 명단에서 사람을 골라 팀을 만들고 고칩니다(한 사람은 한 팀에만). 이 팀 이름이 시간표에 보입니다.
 //   멘토: 만들기, 받는 시간(Day, 시작, 끝) 넣기와 빼기, 끄기
-//   예약: 날마다 멘토별 목록, 운영진이 지우기
-//   미션: 팀 × 날 표. 사진과 PDF가 왔는지, 현장 출석과 인정 체크(Day 4는 클로징 때 체크)
+//   시간표: 날마다 멘토별로 어느 팀이 넣었는지, 운영진이 빼기
+//   인증: 팀과 날마다 가장 최근 사진과 PDF(누르면 열림)
 // 키는 이 탭의 sessionStorage에만 둡니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -14,13 +14,13 @@ import { BODY, META } from "@/components/ui/typography";
 import { buttonClass } from "@/components/ui/Button";
 import { OPS_DAYS, fmtKst } from "@/lib/crossingOps";
 
-type Team = { id: string; name: string };
+type Person = { id: string; name: string; university: string | null; study_country: string | null };
+type Team = { id: string; name: string; memberIds: string[] };
 type Mentor = { id: string; name: string; field: string | null; active: boolean };
 type Win = { id: string; mentor_id: string; day: number; starts_at: string; ends_at: string };
 type Bk = { id: string; mentor_id: string; team_id: string; day: number; starts_at: string; ends_at: string };
 type Proof = { id: string; teamId: string; day: number; kind: "photo" | "pdf"; createdAt: string; url: string | null };
-type Check = { team_id: string; day: number; on_site: boolean; completed: boolean };
-type Data = { teams: Team[]; mentors: Mentor[]; windows: Win[]; bookings: Bk[]; proofs: Proof[]; checks: Check[] };
+type Data = { people: Person[]; teams: Team[]; mentors: Mentor[]; windows: Win[]; bookings: Bk[]; proofs: Proof[] };
 
 const KEY = "crossing-staff-key";
 const FIELD = `rounded-lg border border-white/20 bg-white/[0.04] px-3 py-2 ${BODY} text-white outline-none focus:border-white/50`;
@@ -46,7 +46,10 @@ export default function StaffTool() {
 
   const post = async (body: object) => {
     const r = await fetch("/api/crossing/staff", { method: "POST", headers: { "content-type": "application/json", "x-staff-key": key }, body: JSON.stringify(body) });
-    if (!r.ok) setErr("저장하지 못했습니다.");
+    if (!r.ok) {
+      const e = (await r.json().catch(() => ({}))).error;
+      setErr(e === "already_in_team" ? "이미 다른 팀에 있는 사람이 있습니다." : e === "duplicate" ? "같은 이름의 팀이 있습니다." : "저장하지 못했습니다.");
+    } else setErr(null);
     await load(key);
   };
 
@@ -78,31 +81,72 @@ export default function StaffTool() {
         </header>
         {err && <p role="alert" className={`${META} text-rose-300`}>{err}</p>}
 
-        <Teams teams={data.teams} onCreate={(name) => post({ action: "createTeam", name })} />
+        <Teams data={data} post={post} />
         <Mentors data={data} post={post} />
         <Bookings data={data} teamName={teamName} post={post} />
-        <Missions data={data} post={post} />
+        <Uploads data={data} />
       </div>
     </main>
   );
 }
 
-function Teams({ teams, onCreate }: { teams: Team[]; onCreate: (name: string) => void }) {
+function Teams({ data, post }: { data: Data; post: (b: object) => Promise<void> }) {
   const [name, setName] = useState("");
+  const [picked, setPicked] = useState<string[]>([]);
+  const [q, setQ] = useState("");
+  const inTeam = new Map(data.teams.flatMap((t) => t.memberIds.map((id) => [id, t.name] as const)));
+  const person = (id: string) => data.people.find((p) => p.id === id);
+  const label = (p: Person) => [p.name, p.university, p.study_country].filter(Boolean).join(" · ");
+  const free = data.people.filter((p) => !inTeam.has(p.id) && (!q || label(p).toLowerCase().includes(q.toLowerCase())));
   return (
     <section className="flex flex-col gap-3">
-      <h2 className={`${BODY} font-bold`}>팀 ({teams.length})</h2>
-      <form className="flex flex-wrap gap-2" onSubmit={(e) => { e.preventDefault(); if (name.trim()) { onCreate(name.trim()); setName(""); } }}>
-        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="팀 이름" maxLength={40} className={FIELD} />
-        <button className={buttonClass("secondary")}>팀 만들기</button>
-      </form>
-      <ul className={`grid gap-2 sm:grid-cols-3 ${BODY}`}>
-        {teams.map((t) => (
-          <li key={t.id} className={`${BOX} flex items-center justify-between gap-2`}>
-            <span className="font-bold">{t.name}</span>
-          </li>
+      <h2 className={`${BODY} font-bold`}>팀 ({data.teams.length}) <span className={`${META} font-normal text-white/70`}>등록 {data.people.length}명, 팀 없음 {data.people.length - inTeam.size}명</span></h2>
+      <div className={`${BOX} flex flex-col gap-3`}>
+        <div className="flex flex-wrap gap-2">
+          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="팀 이름" maxLength={40} className={FIELD} />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="이름, 학교로 찾기" className={FIELD} />
+          <button type="button" disabled={!name.trim()} className={buttonClass("secondary")}
+            onClick={async () => { await post({ action: "createTeam", name: name.trim(), memberIds: picked }); setName(""); setPicked([]); }}>
+            팀 만들기 ({picked.length}명)
+          </button>
+        </div>
+        <ul className={`grid max-h-64 gap-1 overflow-y-auto sm:grid-cols-2 ${META}`}>
+          {free.map((p) => (
+            <li key={p.id}>
+              <label className="flex items-center gap-2 text-white/85">
+                <input type="checkbox" checked={picked.includes(p.id)} onChange={(e) => setPicked((x) => e.target.checked ? [...x, p.id] : x.filter((y) => y !== p.id))} />
+                {label(p)}
+              </label>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2">
+        {data.teams.map((t) => (
+          <div key={t.id} className={`${BOX} flex flex-col gap-2`}>
+            <div className="flex items-baseline justify-between gap-2">
+              <span className={`${BODY} font-bold`}>{t.name} <span className={`${META} font-normal text-white/70`}>{t.memberIds.length}명</span></span>
+              <button type="button" className={`${META} text-rose-300 underline`} onClick={() => post({ action: "deleteTeam", teamId: t.id })}>팀 지우기</button>
+            </div>
+            <ul className={`${META} text-white/85`}>
+              {t.memberIds.map((id) => {
+                const p = person(id);
+                return (
+                  <li key={id} className="flex items-center justify-between gap-2">
+                    <span>{p ? label(p) : "?"}</span>
+                    <button type="button" className="text-rose-300 underline" onClick={() => post({ action: "setTeamMembers", teamId: t.id, memberIds: t.memberIds.filter((x) => x !== id) })}>빼기</button>
+                  </li>
+                );
+              })}
+            </ul>
+            {picked.length > 0 && (
+              <button type="button" className={`${buttonClass("text")} ${META}`} onClick={async () => { await post({ action: "setTeamMembers", teamId: t.id, memberIds: [...t.memberIds, ...picked] }); setPicked([]); }}>
+                고른 {picked.length}명을 이 팀에 넣기
+              </button>
+            )}
+          </div>
         ))}
-      </ul>
+      </div>
     </section>
   );
 }
@@ -156,7 +200,7 @@ function MentorCard({ m, windows, post }: { m: Mentor; windows: Win[]; post: (b:
 function Bookings({ data, teamName, post }: { data: Data; teamName: (id: string) => string; post: (b: object) => Promise<void> }) {
   return (
     <section className="flex flex-col gap-3">
-      <h2 className={`${BODY} font-bold`}>예약</h2>
+      <h2 className={`${BODY} font-bold`}>시간표</h2>
       {OPS_DAYS.map((d) => (
         <div key={d} className={BOX}>
           <h3 className={`${META} font-bold text-white/85`}>Day {d}</h3>
@@ -183,40 +227,23 @@ function Bookings({ data, teamName, post }: { data: Data; teamName: (id: string)
   );
 }
 
-function Missions({ data, post }: { data: Data; post: (b: object) => Promise<void> }) {
-  const days = [2, 3, 4];
-  const check = (teamId: string, day: number) => data.checks.find((c) => c.team_id === teamId && c.day === day) ?? { team_id: teamId, day, on_site: false, completed: false };
+function Uploads({ data }: { data: Data }) {
   const latest = (teamId: string, day: number, kind: "photo" | "pdf") => data.proofs.find((p) => p.teamId === teamId && p.day === day && p.kind === kind);
+  const link = (p: Proof | undefined, label: string) =>
+    p?.url ? <a href={p.url} target="_blank" rel="noreferrer" className="text-amber-100 underline">{label} {fmtKst(p.createdAt)}</a> : <span className="text-white/40">{label} 없음</span>;
   return (
     <section className="flex flex-col gap-3">
-      <h2 className={`${BODY} font-bold`}>미션</h2>
-      <p className={`${META} text-white/70`}>Day 2, 3: 과반 현장 + 멘토 사진 + 진척 PDF. Day 4: 과반 현장 + 성과 공유회 발표(클로징 때 체크).</p>
+      <h2 className={`${BODY} font-bold`}>미션 인증</h2>
       <div className="overflow-x-auto">
-        <table className={`w-full min-w-[640px] ${META}`}>
-          <thead><tr className="text-left text-white/70"><th className="py-2">팀</th>{days.map((d) => <th key={d}>Day {d}</th>)}</tr></thead>
+        <table className={`w-full min-w-[520px] ${META}`}>
+          <thead><tr className="text-left text-white/70"><th className="py-2">팀</th>{OPS_DAYS.map((d) => <th key={d}>Day {d}</th>)}</tr></thead>
           <tbody>
             {data.teams.map((t) => (
-              <tr key={t.id} className="border-t border-white/10 align-top">
+              <tr key={t.id} className="border-t border-white/10">
                 <td className={`py-2 ${BODY} font-bold`}>{t.name}</td>
-                {days.map((d) => {
-                  const c = check(t.id, d);
-                  const photo = d < 4 ? latest(t.id, d, "photo") : undefined;
-                  const pdf = d < 4 ? latest(t.id, d, "pdf") : undefined;
-                  return (
-                    <td key={d} className="py-2 pr-3">
-                      <div className="flex flex-col gap-1">
-                        {d < 4 && (
-                          <span className="flex gap-2">
-                            {photo?.url ? <a href={photo.url} target="_blank" rel="noreferrer" className="text-amber-100 underline">사진</a> : <span className="text-white/40">사진 없음</span>}
-                            {pdf?.url ? <a href={pdf.url} target="_blank" rel="noreferrer" className="text-amber-100 underline">PDF</a> : <span className="text-white/40">PDF 없음</span>}
-                          </span>
-                        )}
-                        <label className="flex items-center gap-1.5"><input type="checkbox" checked={c.on_site} onChange={(e) => post({ action: "setCheck", teamId: t.id, day: d, onSite: e.target.checked, completed: c.completed })} />과반 현장</label>
-                        <label className="flex items-center gap-1.5"><input type="checkbox" checked={c.completed} onChange={(e) => post({ action: "setCheck", teamId: t.id, day: d, onSite: c.on_site, completed: e.target.checked })} />미션 인정</label>
-                      </div>
-                    </td>
-                  );
-                })}
+                {OPS_DAYS.map((d) => (
+                  <td key={d} className="py-2 pr-3"><span className="flex gap-3">{link(latest(t.id, d, "photo"), "사진")}{link(latest(t.id, d, "pdf"), "PDF")}</span></td>
+                ))}
               </tr>
             ))}
           </tbody>
