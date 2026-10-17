@@ -15,6 +15,10 @@
 -- 남습니다. 이 규칙은 앱이 아니라 아래 exclude 제약이 지킵니다(같은 순간 두 팀이 같은 칸을 눌러도 한 팀만 들어감).
 -- 15는 lib/crossingOps.ts의 BUFFER_MINUTES와 같아야 합니다.
 --
+-- 운영진 화면은 없습니다(같은 날 사용자: "운영진 page는 필요가 없음"). 팀, 팀원, 멘토, 멘토가 받는 시간은 Supabase 표 편집기에
+-- 바로 넣습니다. 그래서 event_slug에는 기본값을 두고, 멘토 시간은 날짜 없이 Day와 한국 시각(HH:MM)으로 적습니다.
+-- 팀원의 member_id는 표 편집기에서 외래키를 누르면 crossing_members 목록에서 고를 수 있습니다.
+--
 -- 기존 표(8월 표, crossing_registrations, crossing_members, crossing_match_profiles)와 뷰에는 새 외래키가 그쪽을
 -- 가리킬 뿐 고치는 문장이 없습니다. 멱등. 쓰기는 /api/crossing/* 라우트가 service_role로만 합니다.
 -- 거부 전부: RLS ON, 정책 0. 적용: 대시보드 SQL 에디터, 또는 `supabase db push`.
@@ -27,7 +31,7 @@ create extension if not exists btree_gist with schema extensions;
 create table if not exists public.crossing_teams (
   id          uuid primary key default gen_random_uuid(),
   created_at  timestamptz not null default now(),
-  event_slug  text not null,
+  event_slug  text not null default 'crossing-seoul-2026-12',
   name        text not null check (char_length(name) between 1 and 40),
   unique (event_slug, name)
 );
@@ -37,7 +41,7 @@ create table if not exists public.crossing_teams (
 create table if not exists public.crossing_team_members (
   team_id           uuid not null references public.crossing_teams(id) on delete cascade,
   member_id         uuid not null references public.crossing_members(id) on delete cascade,
-  event_slug        text not null,
+  event_slug        text not null default 'crossing-seoul-2026-12',
   match_profile_id  uuid references public.crossing_match_profiles(id) on delete set null,
   added_at          timestamptz not null default now(),
   primary key (team_id, member_id),
@@ -49,22 +53,23 @@ create index if not exists crossing_team_members_member_idx on public.crossing_t
 create table if not exists public.crossing_mentors (
   id          uuid primary key default gen_random_uuid(),
   created_at  timestamptz not null default now(),
-  event_slug  text not null,
+  event_slug  text not null default 'crossing-seoul-2026-12',
   name        text not null check (char_length(name) between 1 and 40),
   field       text check (field is null or char_length(field) <= 80),
   active      boolean not null default true
 );
 
--- 멘토가 받는 시간. 하루에 여러 구간이 있을 수 있습니다.
+-- 멘토가 받는 시간. 하루에 여러 구간이 있을 수 있습니다. 시각은 한국 시간 그대로(예: day 2, 14:00, 17:00).
+-- 15분 단위로 적습니다. 날짜는 앱이 Day 번호로 셉니다(lib/crossingOps.ts dayDate).
 create table if not exists public.crossing_mentor_windows (
   id          uuid primary key default gen_random_uuid(),
   mentor_id   uuid not null references public.crossing_mentors(id) on delete cascade,
   day         smallint not null check (day in (2, 3)),
-  starts_at   timestamptz not null,
-  ends_at     timestamptz not null,
-  check (ends_at > starts_at)
+  start_time  time not null check (extract(minute from start_time)::int % 15 = 0),
+  end_time    time not null check (extract(minute from end_time)::int % 15 = 0),
+  check (end_time > start_time)
 );
-create index if not exists crossing_mentor_windows_mentor_idx on public.crossing_mentor_windows (mentor_id, day, starts_at);
+create index if not exists crossing_mentor_windows_mentor_idx on public.crossing_mentor_windows (mentor_id, day, start_time);
 
 -- 팀이 넣은 칸.
 create table if not exists public.crossing_mentor_bookings (

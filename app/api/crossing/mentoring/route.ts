@@ -13,9 +13,15 @@ import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { CURRENT_EVENT } from "@/lib/registrationWindow";
 import { findTeam } from "@/lib/crossingOpsServer";
-import { MAX_BOOKINGS_PER_TEAM_PER_DAY, SESSION_MINUTES, fitsWindow, isOpsDay } from "@/lib/crossingOps";
+import { MAX_BOOKINGS_PER_TEAM_PER_DAY, SESSION_MINUTES, fitsWindow, isOpsDay, kstTime, type Window } from "@/lib/crossingOps";
 
 export const dynamic = "force-dynamic";
+
+// 멘토 시간은 표에 Day와 한국 시각("14:00:00")으로 들어 있습니다(운영진이 표 편집기에 바로 적음). 화면과 판정에는 시각으로 바꿔 씁니다.
+function toWindow(day: number, start: string, end: string): Window | null {
+  const a = kstTime(day, String(start).slice(0, 5)), b = kstTime(day, String(end).slice(0, 5));
+  return a && b && b > a ? { startsAt: a.toISOString(), endsAt: b.toISOString() } : null;
+}
 
 export async function GET(req: Request) {
   const db = getSupabaseAdmin();
@@ -31,7 +37,7 @@ export async function GET(req: Request) {
   const ids = (mentors.data ?? []).map((m) => m.id);
   const none = ["00000000-0000-0000-0000-000000000000"];
   const [{ data: windows }, { data: bookings }] = await Promise.all([
-    db.from("crossing_mentor_windows").select("mentor_id, starts_at, ends_at").eq("day", day).in("mentor_id", ids.length ? ids : none).order("starts_at"),
+    db.from("crossing_mentor_windows").select("mentor_id, start_time, end_time").eq("day", day).in("mentor_id", ids.length ? ids : none).order("start_time"),
     db.from("crossing_mentor_bookings").select("id, mentor_id, team_id, starts_at, ends_at").eq("day", day).in("mentor_id", ids.length ? ids : none).order("starts_at"),
   ]);
   const name = new Map((teams.data ?? []).map((t) => [t.id, t.name]));
@@ -39,7 +45,7 @@ export async function GET(req: Request) {
     teams: teams.data,
     mentors: (mentors.data ?? []).map((m) => ({
       id: m.id, name: m.name, field: m.field,
-      windows: (windows ?? []).filter((w) => w.mentor_id === m.id).map((w) => ({ startsAt: w.starts_at, endsAt: w.ends_at })),
+      windows: (windows ?? []).filter((w) => w.mentor_id === m.id).map((w) => toWindow(day, w.start_time, w.end_time)).filter(Boolean),
       bookings: (bookings ?? []).filter((b) => b.mentor_id === m.id).map((b) => ({
         id: b.id, teamId: b.team_id, teamName: name.get(b.team_id) ?? "", startsAt: b.starts_at, endsAt: b.ends_at,
       })),
@@ -59,8 +65,8 @@ export async function POST(req: Request) {
 
   const { data: mentor } = await db.from("crossing_mentors").select("id").eq("id", mentorId).eq("event_slug", CURRENT_EVENT).eq("active", true).maybeSingle();
   if (!mentor) return NextResponse.json({ error: "invalid" }, { status: 400 });
-  const { data: windows } = await db.from("crossing_mentor_windows").select("day, starts_at, ends_at").eq("mentor_id", mentorId);
-  const hit = (windows ?? []).map((w) => ({ day: w.day as number, startsAt: w.starts_at as string, endsAt: w.ends_at as string })).find((w) => fitsWindow(t, [w]));
+  const { data: windows } = await db.from("crossing_mentor_windows").select("day, start_time, end_time").eq("mentor_id", mentorId);
+  const hit = (windows ?? []).map((w) => ({ day: w.day as number, win: toWindow(w.day, w.start_time, w.end_time) })).find((w) => w.win && fitsWindow(t, [w.win]));
   if (!hit) return NextResponse.json({ error: "outside_window" }, { status: 400 });
 
   const { count } = await db.from("crossing_mentor_bookings").select("id", { count: "exact", head: true }).eq("team_id", team.id).eq("day", hit.day);
