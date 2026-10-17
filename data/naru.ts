@@ -2302,6 +2302,8 @@ export const naru = {
         // (버튼이 같은 말을 합니다). 버튼은 이 행의 글 기둥 왼쪽 끝에 섭니다(NaruHome).
         // 2026-10-13 (사용자: "1일차 박스가 너무 비어있음"): 위 body의 첫 문장("현장에서 팀을 맺습니다")을 칩으로 올렸습니다(brand 7장 팀).
         chips: [{ ko: "현장에서 팀 구성", en: "Teams form on site" }],
+        // DECIDED 2026-10-17 (사용자: "1일차에도 미션인증은 해야해서, 버튼은 2,3일차처럼"): Day 1 카드에도 같은 버튼. 들어가면 Day 1 탭이고 시간표는 잠겨 있습니다.
+        timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Mentor timetable and check-in" }, href: "/crossing/team?day=1" },
         // 2026-10-11: 화면에 그리지 않습니다. 버튼은 히어로로 갔습니다(eventHero.ctaMatch). 키는 그대로.
         matchCta: { label: { ko: "AI 유형 테스트로 팀 매칭", en: "Team matching with the AI type test" }, href: "/match" },
         session: {
@@ -2335,7 +2337,7 @@ export const naru = {
         // 없다는 것이 참가자의 말이었습니다. 인턴도 그 기회를 잘 받지 못합니다.
         // 길이는 Day 3 세션 설명과 비슷하게 맞춥니다.
         // DECIDED 2026-10-17 (사용자: "여기에 들어갈 수 있는 button은 day 2 and day 3 상자에 있는걸로"): 멘토 시간표와 미션 인증으로 가는 버튼.
-        timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Mentor timetable and check-in" }, href: "/crossing/team" },
+        timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Mentor timetable and check-in" }, href: "/crossing/team?day=2" },
         session: {
           title: { ko: "PO session", en: "PO session" },
           body: {
@@ -2384,7 +2386,7 @@ export const naru = {
         // 원하면 만날 수 있지만 한국 안의 외국인 창업가는 닿기 어렵다는 것이 그 자리의
         // 결론이었습니다. 함께 여는 단체 이름은 아직 화면에 쓰지 않습니다.
         // DECIDED 2026-10-17 (사용자: "여기에 들어갈 수 있는 button은 day 2 and day 3 상자에 있는걸로"): 멘토 시간표와 미션 인증으로 가는 버튼.
-        timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Mentor timetable and check-in" }, href: "/crossing/team" },
+        timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Mentor timetable and check-in" }, href: "/crossing/team?day=3" },
         session: {
           title: { ko: "Founders from abroad", en: "Founders from abroad" },
           body: {

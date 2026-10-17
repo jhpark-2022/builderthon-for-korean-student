@@ -13,7 +13,7 @@ import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { CURRENT_EVENT } from "@/lib/registrationWindow";
 import { findTeam } from "@/lib/crossingOpsServer";
-import { DEFAULT_WINDOW, OPS_DAYS, SESSION_MINUTES, fitsWindow, isOpsDay, kstTime, type Window } from "@/lib/crossingOps";
+import { DEFAULT_WINDOW, OPS_DAYS, SESSION_MINUTES, fitsWindow, isOpsDay, isProofDay, kstTime, type Window } from "@/lib/crossingOps";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +32,8 @@ export async function GET(req: Request) {
   const db = getSupabaseAdmin();
   if (!db) return NextResponse.json({ error: "not_configured" }, { status: 503 });
   const day = Number(new URL(req.url).searchParams.get("day"));
-  if (!isOpsDay(day)) return NextResponse.json({ error: "invalid_day" }, { status: 400 });
+  // Day 1도 읽습니다(팀 목록과 잠긴 시간표를 그리려고, 2026-10-17). Day 1에는 칸이 없고 POST도 받지 않습니다.
+  if (!isProofDay(day)) return NextResponse.json({ error: "invalid_day" }, { status: 400 });
 
   const [teams, mentors] = await Promise.all([
     db.from("crossing_teams").select("name").eq("event_slug", CURRENT_EVENT).order("name"),
@@ -42,8 +43,8 @@ export async function GET(req: Request) {
   const ids = (mentors.data ?? []).map((m) => m.id);
   const none = ["00000000-0000-0000-0000-000000000000"];
   const [{ data: windows }, { data: bookings }] = await Promise.all([
-    db.from("crossing_mentor_windows").select("mentor_id, start_time, end_time").eq("day", day).in("mentor_id", ids.length ? ids : none).order("start_time"),
-    db.from("crossing_mentor_bookings").select("id, mentor_id, team_name, starts_at, ends_at").eq("day", day).in("mentor_id", ids.length ? ids : none).order("starts_at"),
+    db.from("crossing_mentor_windows").select("mentor_id, start_time, end_time").eq("day", isOpsDay(day) ? day : -1).in("mentor_id", ids.length ? ids : none).order("start_time"),
+    db.from("crossing_mentor_bookings").select("id, mentor_id, team_name, starts_at, ends_at").eq("day", isOpsDay(day) ? day : -1).in("mentor_id", ids.length ? ids : none).order("starts_at"),
   ]);
   return NextResponse.json({
     teams: (teams.data ?? []).map((t) => t.name),

@@ -11,7 +11,8 @@
 import { DECEMBER_STARTS_AT } from "@/lib/naruDates";
 
 /** 예약 한 번의 길이(분). TODO: confirm. 멘토와 정해지면 바꿉니다. */
-export const SESSION_MINUTES = 30;
+// DECIDED 2026-10-17 (사용자: "멘토링 40분, 전후 10분씩"). 그 전 30분.
+export const SESSION_MINUTES = 40;
 /** 예약 앞뒤로 막히는 시간(분). 마이그레이션 0008과 같아야 합니다. */
 export const BUFFER_MINUTES = 10;
 /** 시작 시각을 고르는 칸의 간격(분). */
@@ -48,6 +49,15 @@ export const PROOF_TYPES: Record<ProofKind, string[]> = {
 const MIN = 60_000;
 
 export const isOpsDay = (v: unknown): v is OpsDay => v === 2 || v === 3;
+
+/**
+ * 미션 인증을 올리는 날. Day 1도 올립니다. 시간표 칸은 여전히 Day 2, 3뿐입니다(OPS_DAYS).
+ * DECIDED 2026-10-17 (사용자: "1일차에도 미션인증은 해야해서", "Day 1에는 PDF 하나만"). Day 1은 PDF만 받습니다.
+ */
+export const PROOF_DAYS = [1, 2, 3] as const;
+export type ProofDay = (typeof PROOF_DAYS)[number];
+export const isProofDay = (v: unknown): v is ProofDay => v === 1 || v === 2 || v === 3;
+export const proofKindsFor = (day: ProofDay): readonly ("photo" | "pdf")[] => (day === 1 ? ["pdf"] : ["photo", "pdf"]);
 
 /** Day n의 날짜(KST) "YYYY-MM-DD". Day 0이 DECEMBER_STARTS_AT입니다. */
 export function dayDate(day: number): string {

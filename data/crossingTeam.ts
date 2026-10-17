@@ -13,8 +13,8 @@ export const teamCopy = {
   pickFirst: { ko: "팀을 고르면 인증 올리기와 시간표 칸 넣기가 열립니다.", en: "Pick your team to unlock uploads and timetable slots." },
   dayTab: { ko: "Day", en: "Day" },
   lead: {
-    ko: "빈 칸을 누르면 우리 팀 이름이 들어가고, 모든 팀이 같은 시간표를 봅니다. 한 번은 30분, 앞뒤 10분은 자동으로 비워 둡니다. 한 칸을 넣으면 그 시작부터 2시간 뒤에 다음 칸을 넣을 수 있습니다.",
-    en: "Tap an empty cell to put your team in. Every team sees the same timetable. Each slot is 30 minutes, with 10 minutes kept free before and after. After one slot, your next one can start two hours later.",
+    ko: "빈 칸을 누르면 우리 팀 이름이 들어가고, 모든 팀이 같은 시간표를 봅니다. 한 번은 40분, 앞뒤 10분은 자동으로 비워 둡니다. 한 칸을 넣으면 그 시작부터 2시간 뒤에 다음 칸을 넣을 수 있습니다.",
+    en: "Tap an empty cell to put your team in. Every team sees the same timetable. Each slot is 40 minutes, with 10 minutes kept free before and after. After one slot, your next one can start two hours later.",
   },
   carry: { ko: "이슈에 대한 팀의 생각 한 장을 들고 찾아갑니다.", en: "Bring one page of your team's take on the issue." },
   time: { ko: "시간", en: "Time" },
@@ -33,6 +33,10 @@ export const teamCopy = {
   },
   proofPhoto: { ko: "멘토와 함께 찍은 인증 사진", en: "Photo with the mentor" },
   proofPdf: { ko: "그날의 진척 PDF", en: "That day's progress PDF" },
+  // Day 1은 PDF 하나(2026-10-17 사용자). 홈 Day 1 카드의 "Day 2에 들고 갈 것"과 같은 물건입니다.
+  proofPdfDay1: { ko: "이슈에 대한 팀의 생각 1장 (PDF)", en: "One page of the team's take on the issue (PDF)" },
+  proofLeadDay1: { ko: "Day 1에는 이슈에 대한 팀의 생각 1장을 PDF로 올립니다.", en: "On Day 1, upload one page of your team's take on the issue as a PDF." },
+  day1Timetable: { ko: "Day 1에는 멘토 시간표에 칸을 넣지 않습니다. 시간표는 Day 2, 3에 씁니다.", en: "There are no mentor slots on Day 1. The timetable is for Day 2 and 3." },
   proofPick: { ko: "파일 올리기", en: "Upload a file" },
   proofReplace: { ko: "다시 올리기", en: "Upload again" },
   proofUploading: { ko: "올리는 중", en: "Uploading" },

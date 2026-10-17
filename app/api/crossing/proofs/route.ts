@@ -12,7 +12,7 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { PROOF_BUCKET, findTeam, teamFolder } from "@/lib/crossingOpsServer";
-import { PROOF_KINDS, PROOF_MAX_BYTES, PROOF_TYPES, isOpsDay, type ProofKind } from "@/lib/crossingOps";
+import { PROOF_MAX_BYTES, PROOF_TYPES, isProofDay, proofKindsFor, type ProofKind } from "@/lib/crossingOps";
 
 export const dynamic = "force-dynamic";
 
@@ -56,7 +56,8 @@ export async function POST(req: Request) {
     const kind = body.kind as ProofKind;
     const type = typeof body.contentType === "string" ? body.contentType : "";
     const size = Number(body.size);
-    if (!isOpsDay(day) || !PROOF_KINDS.includes(kind)) return NextResponse.json({ error: "invalid" }, { status: 400 });
+    // Day 1은 PDF만(2026-10-17 사용자).
+    if (!isProofDay(day) || !proofKindsFor(day).includes(kind)) return NextResponse.json({ error: "invalid" }, { status: 400 });
     if (!PROOF_TYPES[kind].includes(type)) return NextResponse.json({ error: "bad_type" }, { status: 400 });
     if (!(size > 0) || size > PROOF_MAX_BYTES) return NextResponse.json({ error: "too_big" }, { status: 400 });
     // 경로가 팀과 날을 말합니다. confirm은 이 접두어가 맞는지만 봅니다.
@@ -71,7 +72,7 @@ export async function POST(req: Request) {
 
   if (body?.action === "confirm") {
     const path = typeof body.path === "string" ? body.path : "";
-    const m = path.match(/^([0-9a-f]{16})\/day([23])\/(photo|pdf)-[^/]+$/);
+    const m = path.match(/^([0-9a-f]{16})\/day([123])\/(photo|pdf)-[^/]+$/);
     if (!m || m[1] !== teamFolder(team.name)) return NextResponse.json({ error: "invalid" }, { status: 400 });
     const dir = `${m[1]}/day${m[2]}`;
     const name = path.slice(dir.length + 1);

@@ -15,8 +15,8 @@ import { BODY, META } from "@/components/ui/typography";
 import { buttonClass } from "@/components/ui/Button";
 import { teamCopy as c } from "@/data/crossingTeam";
 import {
-  BUFFER_MINUTES, GRID_MINUTES, OPS_DAYS, PROOF_MAX_BYTES, PROOF_TYPES, dayDate, fitsWindow, fmtKst, slotState,
-  type OpsDay, type ProofKind, type Window,
+  BUFFER_MINUTES, GRID_MINUTES, PROOF_DAYS, PROOF_MAX_BYTES, PROOF_TYPES, dayDate, fitsWindow, fmtKst, isProofDay, proofKindsFor, slotState,
+  type ProofDay, type ProofKind, type Window,
 } from "@/lib/crossingOps";
 
 const TEAM_KEY = "crossing-team";
@@ -30,7 +30,7 @@ const save = (k: string, v: string) => { try { localStorage.setItem(k, v); } cat
 
 export default function TeamTool() {
   const { t } = useLocale();
-  const [day, setDay] = useState<OpsDay>(2);
+  const [day, setDay] = useState<ProofDay>(2);
   const [teams, setTeams] = useState<string[]>([]);
   const [mentors, setMentors] = useState<Mentor[] | null>(null);
   const [team, setTeam] = useState(""); // 팀 이름. 따로 만드는 ID는 없습니다
@@ -38,7 +38,14 @@ export default function TeamTool() {
   const [msg, setMsg] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => { setTeam(load(TEAM_KEY)); }, []);
+  useEffect(() => {
+    setTeam(load(TEAM_KEY));
+    // 홈의 Day 1, 2, 3 카드 버튼이 ?day=N으로 엽니다(2026-10-17).
+    const d = Number(new URLSearchParams(window.location.search).get("day"));
+    if (isProofDay(d)) setDay(d);
+  }, []);
+  // DECIDED 2026-10-17 (사용자: "day 1으로 들어왔을때는 timetable은 disable, 팀 이름을 넣던 말던"): Day 1 탭에서는 시간표가 늘 잠깁니다.
+  const timetableLocked = day === 1;
 
   const refresh = useCallback(async () => {
     const r = await fetch(`/api/crossing/mentoring?day=${day}`, { cache: "no-store" });
@@ -98,8 +105,8 @@ export default function TeamTool() {
     });
     if (gap) return <td key={m.id} className={`border-l border-white/5 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.06)_0_4px,transparent_4px_8px)] px-2 ${META} text-white/60`}>{t(c.gap)}</td>;
     const free = fitsWindow(r, m.windows) && slotState(r, m.bookings, []) === "open";
-    const ok = !!picked && free && slotState(r, m.bookings, mine) === "open";
-    const locked = !picked && free; // 팀을 고르면 열릴 칸: "+"를 흐리게 보여 줍니다
+    const ok = !timetableLocked && !!picked && free && slotState(r, m.bookings, mine) === "open";
+    const locked = (timetableLocked || !picked) && free; // 팀을 고르면 열릴 칸: "+"를 흐리게 보여 줍니다
     return (
       <td key={m.id} className="border-l border-white/5 p-0.5">
         <button type="button" disabled={!ok || busy} aria-label={`${m.name} ${fmtKst(r)}`}
@@ -124,7 +131,7 @@ export default function TeamTool() {
             {teams.map((x) => <option key={x} value={x}>{x}</option>)}
           </select>
           <div role="tablist" className="flex gap-2">
-            {OPS_DAYS.map((d) => (
+            {PROOF_DAYS.map((d) => (
               <button key={d} role="tab" aria-selected={day === d} type="button" onClick={() => setDay(d)}
                 className={`rounded-full border px-4 py-2 ${BODY} font-bold ${day === d ? "border-white/60 bg-white/15" : "border-white/15 text-white/70"}`}>
                 {t(c.dayTab)} {d} <span className={`${META} font-normal text-white/70`}>{dayDate(d).slice(5).replace("-", ".")}</span>
@@ -139,6 +146,7 @@ export default function TeamTool() {
 
         <h2 className={`mt-4 ${BODY} font-bold`}>{t(c.timetableHeading)}</h2>
         <p className={`${BODY} text-white/85`}>{t(c.lead)} {t(c.carry)}</p>
+        {timetableLocked && <p className={`${META} font-bold text-amber-100`}>{t(c.day1Timetable)}</p>}
         {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}
 
         {mentors && !rows.length && <p className={`${BODY} text-white/70`}>{t(c.noMentors)}</p>}
@@ -189,7 +197,7 @@ async function shrink(file: File): Promise<Blob> {
   }
 }
 
-function Proofs({ team, day }: { team: string; day: OpsDay }) {
+function Proofs({ team, day }: { team: string; day: ProofDay }) {
   const { t } = useLocale();
   const [proofs, setProofs] = useState<Proof[]>([]);
   const [state, setState] = useState<Record<ProofKind, "idle" | "uploading">>({ photo: "idle", pdf: "idle" });
@@ -230,7 +238,7 @@ function Proofs({ team, day }: { team: string; day: OpsDay }) {
     return (
       <div key={kind} className="flex flex-col gap-3 rounded-2xl border border-white/15 bg-white/[0.03] p-4">
         <div className="flex items-baseline justify-between gap-3">
-          <h3 className={`${BODY} font-bold`}>{t(kind === "photo" ? c.proofPhoto : c.proofPdf)}</h3>
+          <h3 className={`${BODY} font-bold`}>{t(kind === "photo" ? c.proofPhoto : day === 1 ? c.proofPdfDay1 : c.proofPdf)}</h3>
           <span className={`${META} ${latest ? "text-amber-100" : "text-white/70"}`}>{latest ? `★ ${t(c.proofDone)} ${fmtKst(latest.createdAt)}` : t(c.proofNone)}</span>
         </div>
         {latest?.url && kind === "photo" && (
@@ -250,9 +258,9 @@ function Proofs({ team, day }: { team: string; day: OpsDay }) {
   return (
     <section aria-labelledby="proof-h" className="flex flex-col gap-4">
       <h2 id="proof-h" className={`${BODY} font-bold`}>{t(c.proofHeading)}</h2>
-      <p className={`${BODY} text-white/85`}>{t(c.proofLead)}</p>
+      <p className={`${BODY} text-white/85`}>{t(day === 1 ? c.proofLeadDay1 : c.proofLead)}</p>
       {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}
-      <div className="grid gap-4 sm:grid-cols-2">{slot("photo")}{slot("pdf")}</div>
+      <div className="grid gap-4 sm:grid-cols-2">{proofKindsFor(day).map((k) => slot(k))}</div>
     </section>
   );
 }
