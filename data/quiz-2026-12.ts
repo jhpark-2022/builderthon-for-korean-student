@@ -329,7 +329,9 @@ export const QUESTIONS_2026_12: Question[] = [
   },
   {
     id: "Q4", axis: "TACTICS", w: 4,
-    text: { ko: "Day 2 아침. 피치까지 48시간, 돌아가는 첫 버전까지는 4시간. 내 작업 스타일은?", en: "Day 2, morning. 48 hours to the pitch, 4 hours to a first working version. My work style is…" },
+    // DECIDED 2026-10-17 (사용자: "고쳐줘"): Day 2는 아이디어를 확인받는 날이고 만드는 날은 Day 3입니다. "피치"는 정본에서 쓰지 않는 말입니다.
+    // 그 전: "Day 2 아침. 피치까지 48시간, 돌아가는 첫 버전까지는 4시간." 축(TACTICS)과 두 답은 그대로입니다.
+    text: { ko: "Day 3 아침. 만들 시간은 오늘 하루, 내일은 성과 공유회. 내 작업 스타일은?", en: "Day 3, morning. One day to build, and the showcase is tomorrow. My work style is…" },
     a: { label: { ko: "일단 만들면서 흐름 타기", en: "Start building and ride the flow" }, pole: "P" },
     b: { label: { ko: "시간표부터 짜고 계획대로", en: "Map the schedule, then run the plan" }, pole: "J" },
   },
@@ -365,7 +367,7 @@ export const QUESTIONS_2026_12: Question[] = [
   },
   {
     id: "Q10", axis: "IDENTITY", w: 7,
-    text: { ko: "발표는 끝났는데 회사 쪽 질문이 하나도 안 나왔다. 반응이 미지근하다. 집 가는 길의 나는?", en: "The pitch is done and the company asked zero questions. Lukewarm room. On the way home I…" },
+    text: { ko: "발표는 끝났는데 회사 쪽 질문이 하나도 안 나왔다. 반응이 미지근하다. 집 가는 길의 나는?", en: "The showcase is over and the company asked zero questions. Lukewarm room. On the way home I…" },
     a: { label: { ko: "“그때 그것만 고쳤어도…” 곱씹기", en: "“If only we'd fixed that…” Replay it" }, pole: "Tid" },
     b: { label: { ko: "“잘했으니 됐지, 다음에 또” 툭툭 털기", en: "“We did well, next time.” Shake it off" }, pole: "A" },
   },
