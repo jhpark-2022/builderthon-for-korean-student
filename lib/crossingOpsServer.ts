@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// 현장 도구 라우트의 서버 공통(2026-10-17). 팀 찾기와 운영진 키 확인.
+// 현장 도구 라우트의 서버 공통(2026-10-17). 팀 찾기.
 //
 // DECIDED 2026-10-17 (사용자: "너무 뭐가 많은데? 그냥 timetable where team can put in their available"):
 // 팀 코드를 뺐습니다. 시간표는 모든 팀이 같이 보고, 팀은 목록에서 자기 팀을 골라 칸에 넣습니다(wejoinin처럼).
@@ -7,26 +7,21 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import "server-only";
-import { timingSafeEqual } from "node:crypto";
+import { createHash } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { CURRENT_EVENT } from "@/lib/registrationWindow";
 
-export type Team = { id: string; name: string };
+// 팀에는 따로 만드는 ID가 없습니다. 운영진이 Supabase에 적은 팀 이름이 곧 키입니다(2026-10-17).
+export type Team = { name: string };
 
-/** id로 이번 회차의 팀을 찾습니다. 없으면 null. */
-export async function findTeam(db: SupabaseClient, id: unknown): Promise<Team | null> {
-  if (typeof id !== "string" || !/^[0-9a-f-]{36}$/.test(id)) return null;
-  const { data } = await db.from("crossing_teams").select("id, name").eq("event_slug", CURRENT_EVENT).eq("id", id).maybeSingle();
+/** 이름으로 이번 회차의 팀을 찾습니다. 없으면 null. */
+export async function findTeam(db: SupabaseClient, name: unknown): Promise<Team | null> {
+  if (typeof name !== "string" || !name.trim() || name.length > 40) return null;
+  const { data } = await db.from("crossing_teams").select("name").eq("event_slug", CURRENT_EVENT).eq("name", name).maybeSingle();
   return (data as Team | null) ?? null;
 }
 
-/** 운영진 키. 환경 변수가 없으면 "unset"(라우트는 503). */
-export function staffKeyVerdict(req: Request): "ok" | "bad" | "unset" {
-  const want = process.env.CROSSING_STAFF_KEY;
-  if (!want) return "unset";
-  const got = req.headers.get("x-staff-key") ?? "";
-  const a = Buffer.from(got), b = Buffer.from(want);
-  return a.length === b.length && timingSafeEqual(a, b) ? "ok" : "bad";
-}
+/** 저장소 폴더 이름. 팀 이름(한글)은 경로에 못 써서 해시 16자로 씁니다. */
+export const teamFolder = (name: string) => createHash("sha256").update(name).digest("hex").slice(0, 16);
 
 export const PROOF_BUCKET = "crossing-proofs";

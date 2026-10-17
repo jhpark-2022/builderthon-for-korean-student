@@ -4,8 +4,8 @@
 // /crossing/team. 모든 팀이 같이 보는 멘토 시간표와 Day 2, Day 3 미션 인증(2026-10-17).
 //
 // DECIDED 2026-10-17 (사용자: "너무 뭐가 많은데? 그냥 timetable where team can put in their available, 다른 팀과 공유"):
-// wejoinin처럼 표 하나입니다. 줄은 15분, 칸은 멘토. 팀을 고르고 빈 칸을 누르면 그 팀 이름이 30분 들어가고,
-// 앞뒤 15분은 "쉬는 15분"으로 막힙니다(규칙의 정본은 DB 제약, lib/crossingOps.ts). 팀 코드는 없습니다.
+// wejoinin처럼 표 하나입니다. 줄은 10분, 칸은 멘토. 팀을 고르고 빈 칸을 누르면 그 팀 이름이 30분 들어가고,
+// 앞뒤 10분은 "쉬는 10분"으로 막힙니다(규칙의 정본은 DB 제약, lib/crossingOps.ts). 팀 코드는 없습니다.
 // 고른 팀은 이 기기의 localStorage에만 둡니다. 폰에서 표가 넓으면 표만 옆으로 밉니다(페이지는 밀리지 않음).
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -19,10 +19,9 @@ import {
   type OpsDay, type ProofKind, type Window,
 } from "@/lib/crossingOps";
 
-const TEAM_KEY = "crossing-team-id";
+const TEAM_KEY = "crossing-team";
 const MIN = 60_000;
-type Team = { id: string; name: string };
-type Bk = { id: string; teamId: string; teamName: string; startsAt: string; endsAt: string };
+type Bk = { id: string; team: string; startsAt: string; endsAt: string };
 type Mentor = { id: string; name: string; field: string | null; windows: Window[]; bookings: Bk[] };
 type Proof = { id: string; day: number; kind: ProofKind; createdAt: string; url: string | null };
 
@@ -32,14 +31,14 @@ const save = (k: string, v: string) => { try { localStorage.setItem(k, v); } cat
 export default function TeamTool() {
   const { t } = useLocale();
   const [day, setDay] = useState<OpsDay>(2);
-  const [teams, setTeams] = useState<Team[]>([]);
+  const [teams, setTeams] = useState<string[]>([]);
   const [mentors, setMentors] = useState<Mentor[] | null>(null);
-  const [teamId, setTeamId] = useState("");
+  const [team, setTeam] = useState(""); // 팀 이름. 따로 만드는 ID는 없습니다
   const [open, setOpen] = useState<string | null>(null); // 우리 팀 칸을 누르면 "비우기"가 섭니다
   const [msg, setMsg] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => { setTeamId(load(TEAM_KEY)); }, []);
+  useEffect(() => { setTeam(load(TEAM_KEY)); }, []);
 
   const refresh = useCallback(async () => {
     const r = await fetch(`/api/crossing/mentoring?day=${day}`, { cache: "no-store" });
@@ -60,14 +59,17 @@ export default function TeamTool() {
     return out;
   }, [mentors]);
 
-  const mine = (mentors ?? []).flatMap((m) => m.bookings.filter((b) => b.teamId === teamId));
+  // DECIDED 2026-10-17 (사용자: "팀 선택을 해야 업로드나 시간표에 슬롯 넣는 것이 풀리는 걸로"): 목록에 있는 팀을 골라야
+  // 인증 올리기와 칸 넣기가 풀립니다. 그 전에는 두 영역이 보이되 잠겨 있습니다.
+  const picked = teams.includes(team) ? team : "";
+  const mine = (mentors ?? []).flatMap((m) => m.bookings.filter((b) => b.team === picked));
 
   const call = async (method: "POST" | "DELETE", body: object) => {
     setBusy(true); setMsg(null);
     const r = await fetch("/api/crossing/mentoring", { method, headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
     if (!r.ok) {
       const e = (await r.json().catch(() => ({}))).error;
-      setMsg(t(e === "taken" ? c.errTaken : e === "team_busy" ? c.errTeamBusy : e === "team_limit" ? c.errLimit : e === "past" ? c.errPast : c.errGeneric));
+      setMsg(t(e === "taken" ? c.errTaken : e === "team_busy" ? c.errTeamBusy : e === "past" ? c.errPast : c.errGeneric));
     }
     setOpen(null); setBusy(false); void refresh();
   };
@@ -78,15 +80,15 @@ export default function TeamTool() {
     const b = m.bookings.find((x) => Date.parse(x.startsAt) <= r && r < Date.parse(x.endsAt));
     if (b) {
       const first = Date.parse(b.startsAt) === r;
-      const ours = b.teamId === teamId;
+      const ours = b.team === picked;
       return (
         <td key={m.id} className={`border-l border-white/5 px-1 ${ours ? "bg-amber-400/20" : "bg-white/[0.08]"}`}>
           {first && (ours ? (
             <div className="flex items-center justify-between gap-2">
-              <button type="button" aria-expanded={open === b.id} onClick={() => setOpen(open === b.id ? null : b.id)} className={`min-w-0 flex-1 truncate px-1 py-1.5 text-left ${META} font-bold text-amber-50`}>{b.teamName}</button>
+              <button type="button" aria-expanded={open === b.id} onClick={() => setOpen(open === b.id ? null : b.id)} className={`min-w-0 flex-1 truncate px-1 py-1.5 text-left ${META} font-bold text-amber-50`}>{b.team}</button>
               {open === b.id && <button type="button" disabled={busy} onClick={() => call("DELETE", { bookingId: b.id })} className={`shrink-0 rounded-full border border-amber-200/50 px-2 ${META} text-amber-50`}>{t(c.clear)}</button>}
             </div>
-          ) : <span className={`block truncate px-1 py-1.5 ${META} font-bold text-white/85`}>{b.teamName}</span>)}
+          ) : <span className={`block truncate px-1 py-1.5 ${META} font-bold text-white/85`}>{b.team}</span>)}
         </td>
       );
     }
@@ -95,12 +97,14 @@ export default function TeamTool() {
       return (r >= s - BUFFER_MINUTES * MIN && r < s) || (r >= e && r < e + BUFFER_MINUTES * MIN);
     });
     if (gap) return <td key={m.id} className={`border-l border-white/5 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.06)_0_4px,transparent_4px_8px)] px-2 ${META} text-white/60`}>{t(c.gap)}</td>;
-    const ok = !!teamId && fitsWindow(r, m.windows) && slotState(r, m.bookings, mine) === "open";
+    const free = fitsWindow(r, m.windows) && slotState(r, m.bookings, []) === "open";
+    const ok = !!picked && free && slotState(r, m.bookings, mine) === "open";
+    const locked = !picked && free; // 팀을 고르면 열릴 칸: "+"를 흐리게 보여 줍니다
     return (
       <td key={m.id} className="border-l border-white/5 p-0.5">
         <button type="button" disabled={!ok || busy} aria-label={`${m.name} ${fmtKst(r)}`}
-          onClick={() => call("POST", { teamId, mentorId: m.id, startsAt: new Date(r).toISOString() })}
-          className={`h-8 w-full rounded-md ${META} transition ${ok ? "border border-white/20 text-white/70 hover:bg-white/15" : "text-transparent"}`}>
+          onClick={() => call("POST", { team: picked, mentorId: m.id, startsAt: new Date(r).toISOString() })}
+          className={`h-8 w-full rounded-md ${META} transition ${ok ? "border border-white/20 text-white/70 hover:bg-white/15" : locked ? "cursor-not-allowed border border-white/10 text-white/30" : "text-transparent"}`}>
           +
         </button>
       </td>
@@ -114,10 +118,10 @@ export default function TeamTool() {
 
         <div className="flex flex-wrap items-center gap-3">
           <label htmlFor="team" className={`${META} font-bold text-white/85`}>{t(c.teamLabel)}</label>
-          <select id="team" value={teamId} onChange={(e) => { setTeamId(e.target.value); save(TEAM_KEY, e.target.value); }}
+          <select id="team" value={teams.includes(team) ? team : ""} onChange={(e) => { setTeam(e.target.value); save(TEAM_KEY, e.target.value); }}
             className={`rounded-lg border border-white/20 bg-[#0d1230] px-3 py-2 ${BODY} text-white`}>
             <option value="">{t(c.teamPick)}</option>
-            {teams.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}
+            {teams.map((x) => <option key={x} value={x}>{x}</option>)}
           </select>
           <div role="tablist" className="flex gap-2">
             {OPS_DAYS.map((d) => (
@@ -128,7 +132,12 @@ export default function TeamTool() {
             ))}
           </div>
         </div>
+        {!picked && <p className={`${META} font-bold text-amber-100`}>{t(c.pickFirst)}</p>}
 
+        {/* DECIDED 2026-10-17 (사용자, 스크린숏: "인증 올리는 거를 테이블 위로"): 인증이 시간표보다 먼저 섭니다. */}
+        <Proofs team={picked} day={day} />
+
+        <h2 className={`mt-4 ${BODY} font-bold`}>{t(c.timetableHeading)}</h2>
         <p className={`${BODY} text-white/85`}>{t(c.lead)} {t(c.carry)}</p>
         {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}
 
@@ -159,7 +168,6 @@ export default function TeamTool() {
           </div>
         )}
 
-        {teamId && <Proofs teamId={teamId} day={day} />}
       </div>
     </main>
   );
@@ -181,16 +189,17 @@ async function shrink(file: File): Promise<Blob> {
   }
 }
 
-function Proofs({ teamId, day }: { teamId: string; day: OpsDay }) {
+function Proofs({ team, day }: { team: string; day: OpsDay }) {
   const { t } = useLocale();
   const [proofs, setProofs] = useState<Proof[]>([]);
   const [state, setState] = useState<Record<ProofKind, "idle" | "uploading">>({ photo: "idle", pdf: "idle" });
   const [msg, setMsg] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
-    const r = await fetch(`/api/crossing/proofs?teamId=${teamId}`, { cache: "no-store" });
+    if (!team) { setProofs([]); return; } // 팀을 고르기 전에는 잠겨 있습니다
+    const r = await fetch(`/api/crossing/proofs?team=${encodeURIComponent(team)}`, { cache: "no-store" });
     if (r.ok) setProofs((await r.json()).proofs);
-  }, [teamId]);
+  }, [team]);
   useEffect(() => { void refresh(); }, [refresh]);
 
   const upload = async (kind: ProofKind, file: File) => {
@@ -201,7 +210,7 @@ function Proofs({ teamId, day }: { teamId: string; day: OpsDay }) {
       const blob = kind === "photo" ? await shrink(file) : file;
       if (blob.size > PROOF_MAX_BYTES) { setMsg(t(c.proofTooBig)); throw new Error("size"); }
       const type = blob.type || file.type;
-      const post = (body: object) => fetch("/api/crossing/proofs", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ teamId, ...body }) });
+      const post = (body: object) => fetch("/api/crossing/proofs", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ team, ...body }) });
       const s = await post({ action: "sign", day, kind, contentType: type, size: blob.size });
       if (!s.ok) throw new Error("sign");
       const { path, signedUrl } = await s.json();
@@ -217,6 +226,7 @@ function Proofs({ teamId, day }: { teamId: string; day: OpsDay }) {
   const slot = (kind: ProofKind) => {
     const latest = proofs.find((p) => p.day === day && p.kind === kind);
     const up = state[kind] === "uploading";
+    const off = up || !team;
     return (
       <div key={kind} className="flex flex-col gap-3 rounded-2xl border border-white/15 bg-white/[0.03] p-4">
         <div className="flex items-baseline justify-between gap-3">
@@ -228,9 +238,9 @@ function Proofs({ teamId, day }: { teamId: string; day: OpsDay }) {
           <img src={latest.url} alt="" className="max-h-56 w-fit rounded-xl object-contain" />
         )}
         {latest?.url && kind === "pdf" && <a href={latest.url} target="_blank" rel="noreferrer" className={buttonClass("text")}>{t(c.proofView)}</a>}
-        <label className={`${buttonClass("secondary")} w-fit cursor-pointer justify-center ${up ? "pointer-events-none opacity-50" : ""}`}>
+        <label aria-disabled={off} className={`${buttonClass("secondary")} w-fit cursor-pointer justify-center ${off ? "pointer-events-none opacity-50" : ""}`}>
           {up ? t(c.proofUploading) : t(latest ? c.proofReplace : c.proofPick)}
-          <input type="file" className="sr-only" disabled={up} accept={kind === "photo" ? "image/*" : "application/pdf"}
+          <input type="file" className="sr-only" disabled={off} accept={kind === "photo" ? "image/*" : "application/pdf"}
             onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) void upload(kind, f); }} />
         </label>
       </div>
@@ -238,7 +248,7 @@ function Proofs({ teamId, day }: { teamId: string; day: OpsDay }) {
   };
 
   return (
-    <section aria-labelledby="proof-h" className="mt-6 flex flex-col gap-4">
+    <section aria-labelledby="proof-h" className="flex flex-col gap-4">
       <h2 id="proof-h" className={`${BODY} font-bold`}>{t(c.proofHeading)}</h2>
       <p className={`${BODY} text-white/85`}>{t(c.proofLead)}</p>
       {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}

@@ -2013,7 +2013,7 @@ export const naru = {
       // DECIDED 2026-10-11 (사용자: "그룹의 생각임"): 들고 가는 한 장은 개인의 것이 아니라 팀의 것입니다.
       // 2026-10-13: 규칙 목록의 "예약 없이, 멘토가 같은 공간에 있습니다"가 이 문단으로 올라왔습니다.
       // DECIDED 2026-10-17 (사용자: 멘토링 예약제로 바꾼다): 둘째 문장이 "예약 없이, 멘토가 같은 공간에 있습니다."였습니다.
-      // 예약은 모든 팀이 같이 보는 멘토 시간표(/crossing/team)에 팀 이름을 넣는 것입니다. 앞뒤 15분 규칙은 그 페이지가 말합니다.
+      // 예약은 모든 팀이 같이 보는 멘토 시간표(/crossing/team)에 팀 이름을 넣는 것입니다. 앞뒤 10분 규칙은 그 페이지가 말합니다.
       ko: "질문 목록 대신, 이슈에 대한 팀의 생각 한 장을 들고 먼저 찾아갑니다. 멘토 시간은 모든 팀이 같이 보는 시간표에 팀 이름을 넣어 예약합니다.",
       en: "Your team goes first, with one page of its own thinking on the issue instead of a list of questions. You book mentor time by putting your team's name on a timetable every team can see.",
     },
@@ -2334,6 +2334,8 @@ export const naru = {
         // UI는 AI가 바로 만들어 주지만 어떤 기능을 왜 넣을지 판단하는 훈련은 배울 곳이
         // 없다는 것이 참가자의 말이었습니다. 인턴도 그 기회를 잘 받지 못합니다.
         // 길이는 Day 3 세션 설명과 비슷하게 맞춥니다.
+        // DECIDED 2026-10-17 (사용자: "여기에 들어갈 수 있는 button은 day 2 and day 3 상자에 있는걸로"): 멘토 시간표와 미션 인증으로 가는 버튼.
+        timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Mentor timetable and check-in" }, href: "/crossing/team" },
         session: {
           title: { ko: "PO session", en: "PO session" },
           body: {
@@ -2381,6 +2383,8 @@ export const naru = {
         // 한국에서 창업한 해외 창업가를 만나는 세션이 됐습니다. 국내 VC와 창업가는
         // 원하면 만날 수 있지만 한국 안의 외국인 창업가는 닿기 어렵다는 것이 그 자리의
         // 결론이었습니다. 함께 여는 단체 이름은 아직 화면에 쓰지 않습니다.
+        // DECIDED 2026-10-17 (사용자: "여기에 들어갈 수 있는 button은 day 2 and day 3 상자에 있는걸로"): 멘토 시간표와 미션 인증으로 가는 버튼.
+        timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Mentor timetable and check-in" }, href: "/crossing/team" },
         session: {
           title: { ko: "Founders from abroad", en: "Founders from abroad" },
           body: {
@@ -2464,6 +2468,8 @@ export const naru = {
       session?: { title: Phrase; body: Phrase };
       /** 그 행의 글 기둥 아래에 서는 버튼 하나(2026-10-08, Day 1의 /match). */
       matchCta?: { label: Phrase; href: string };
+      /** 그 날 카드 바닥의 버튼(2026-10-17, Day 2와 Day 3의 멘토 시간표). */
+      timetableCta?: { label: Phrase; href: string };
       submit?: Phrase;
       /** 그날의 마일스톤(2026-10-10). 넘은 팀 모두가 지원을 받습니다. Day 0에는 없습니다. */
       milestone?: Phrase;

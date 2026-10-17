@@ -20,6 +20,7 @@ import Glass from "@/components/ui/Glass";
 import Halo from "@/components/ui/Halo";
 import { ChipDot } from "@/components/ui/Chip";
 import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
+import { TIMETABLE_OPEN } from "@/lib/crossingOps";
 import RouteMap from "@/components/shared/RouteMap";
 import PhotoLightbox from "@/components/shared/PhotoLightbox";
 import MobileChatBar from "@/components/shared/MobileChatBar";
@@ -576,6 +577,17 @@ export default function NaruHome() {
           { label: t(naru.december.milestoneSubmitLabel), items: stage.milestoneDetail.submit.map(t) },
         ]} center expanded={inPanel} />
       )}
+      {/* DECIDED 2026-10-17 (사용자): 멘토 시간표와 미션 인증으로 들어가는 문은 Day 2, Day 3 카드에만 있습니다. */}
+      {/* 열기 전(TIMETABLE_OPEN false)에는 같은 자리에 잠긴 버튼이 섭니다. */}
+      {stage.timetableCta && (TIMETABLE_OPEN ? (
+        <Link href={stage.timetableCta.href} className={`group w-full justify-center ${buttonClass("secondary")}`}>
+          {t(stage.timetableCta.label)}<span aria-hidden className={ARROW_CLASS}>→</span>
+        </Link>
+      ) : (
+        <span role="link" aria-disabled="true" className={`w-full cursor-not-allowed justify-center opacity-50 ${buttonClass("secondary")} hover:!translate-y-0 hover:!bg-white/5`}>
+          {t(stage.timetableCta.label)}
+        </span>
+      ))}
     </div>
     );
   };

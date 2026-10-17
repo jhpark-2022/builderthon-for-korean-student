@@ -1,10 +1,11 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // 크로싱 서울 현장 도구(멘토 시간표, 미션 인증)의 값과 계산. 서버와 브라우저가 함께 씁니다.
-// 표는 supabase/migrations/0008_crossing_mentoring_and_proofs.sql.
+// 표는 supabase/migrations/0008_crossing_teams_and_mentor_timetable.sql.
 //
-// DECIDED 2026-10-17 (사용자): 멘토링은 예약제이고, 예약 하나가 그 앞뒤 15분을 막습니다.
+// DECIDED 2026-10-17 (사용자): 멘토링은 예약제이고, 예약 하나가 그 앞뒤 10분을 막습니다(같은 날 15분에서 10분으로).
+// 쉬는 시간이 10분이라 줄도 10분 단위입니다(15분 줄이면 10분 쉬어도 다음 칸이 15분 뒤에야 섭니다).
 // 막는 규칙의 정본은 DB의 exclude 제약입니다. 여기의 계산은 화면에 칸을 그리고 미리 거절하는 용도이고,
-// BUFFER_MINUTES를 바꾸면 마이그레이션의 interval '15 minutes'도 같이 바꿔야 합니다.
+// BUFFER_MINUTES를 바꾸면 마이그레이션 0008의 crossing_plus_minutes(ends_at, 10)도 같이 바꿔야 합니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { DECEMBER_STARTS_AT } from "@/lib/naruDates";
@@ -12,11 +13,26 @@ import { DECEMBER_STARTS_AT } from "@/lib/naruDates";
 /** 예약 한 번의 길이(분). TODO: confirm. 멘토와 정해지면 바꿉니다. */
 export const SESSION_MINUTES = 30;
 /** 예약 앞뒤로 막히는 시간(분). 마이그레이션 0008과 같아야 합니다. */
-export const BUFFER_MINUTES = 15;
+export const BUFFER_MINUTES = 10;
 /** 시작 시각을 고르는 칸의 간격(분). */
-export const GRID_MINUTES = 15;
-/** 한 팀이 하루에 잡을 수 있는 예약 수. 한 팀이 멘토 시간을 쓸어 가지 않게. TODO: confirm. */
-export const MAX_BOOKINGS_PER_TEAM_PER_DAY = 2;
+export const GRID_MINUTES = 10;
+/**
+ * 한 팀이 칸을 하나 넣으면 그 칸의 시작부터 이만큼은 어느 멘토의 칸도 넣지 못합니다. 하루 횟수 제한은 없습니다.
+ * DECIDED 2026-10-17 (사용자: "한번 slot booking을 하면, 그 이후 2시간 동안은 같은 멘토던 다른 멘토던 booking 못하고").
+ * 앞뒤 대칭입니다(16:00을 먼저 넣었으면 14:10~17:50 시작도 막힘). 마이그레이션 0008의 crossing_plus_minutes(starts_at, 120)과 같아야 합니다.
+ */
+export const TEAM_COOLDOWN_MINUTES = 120;
+/**
+ * 멘토가 받는 시간을 표에 적지 않았을 때 쓰는 기본값(한국 시간). TODO: confirm.
+ * DECIDED 2026-10-17 (사용자: "지금은 tentative 한거니까 availability를 오전 10시부터 오후 10시로").
+ */
+export const DEFAULT_WINDOW = { start: "10:00", end: "22:00" } as const;
+/**
+ * 홈의 Day 2, Day 3 카드 버튼이 눌리는지. false면 버튼이 보이되 잠겨 있습니다.
+ * DECIDED 2026-10-17 (사용자: "production에도 열어줘, 그런데 당장은 이용자들이 바로면 안되서, 일단 button은 disable").
+ * 열 때 true로 바꿉니다. /crossing/team 페이지 자체는 주소로 열립니다.
+ */
+export const TIMETABLE_OPEN = false;
 /** 예약과 인증이 있는 날. */
 export const OPS_DAYS = [2, 3] as const;
 export type OpsDay = (typeof OPS_DAYS)[number];
@@ -73,8 +89,9 @@ export function slotState(t: number, mentorBookings: Booking[], teamBookings: Bo
     if (overlap(t, end, b0 - buf, b1 + buf)) return "buffer";
   }
   if (t < now) return "past";
+  const cool = TEAM_COOLDOWN_MINUTES * MIN;
   for (const b of teamBookings) {
-    if (overlap(t, end, Date.parse(b.startsAt), Date.parse(b.endsAt))) return "teamBusy";
+    if (Math.abs(t - Date.parse(b.startsAt)) < cool) return "teamBusy";
   }
   return "open";
 }
