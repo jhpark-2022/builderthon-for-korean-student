@@ -10,6 +10,7 @@ export const teamCopy = {
   timetableHeading: { ko: "멘토 시간표", en: "Mentor timetable" },
   teamLabel: { ko: "우리 팀", en: "Your team" },
   teamPick: { ko: "팀을 고르세요", en: "Pick your team" },
+  pickFirst: { ko: "팀을 고르면 인증 올리기와 시간표 칸 넣기가 열립니다.", en: "Pick your team to unlock uploads and timetable slots." },
   dayTab: { ko: "Day", en: "Day" },
   lead: {
     ko: "빈 칸을 누르면 우리 팀 이름이 들어가고, 모든 팀이 같은 시간표를 봅니다. 한 번은 30분, 앞뒤 15분은 자동으로 비워 둡니다. 한 칸을 넣으면 그 시작부터 2시간 뒤에 다음 칸을 넣을 수 있습니다.",

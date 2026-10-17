@@ -59,7 +59,10 @@ export default function TeamTool() {
     return out;
   }, [mentors]);
 
-  const mine = (mentors ?? []).flatMap((m) => m.bookings.filter((b) => b.team === team));
+  // DECIDED 2026-10-17 (사용자: "팀 선택을 해야 업로드나 시간표에 슬롯 넣는 것이 풀리는 걸로"): 목록에 있는 팀을 골라야
+  // 인증 올리기와 칸 넣기가 풀립니다. 그 전에는 두 영역이 보이되 잠겨 있습니다.
+  const picked = teams.includes(team) ? team : "";
+  const mine = (mentors ?? []).flatMap((m) => m.bookings.filter((b) => b.team === picked));
 
   const call = async (method: "POST" | "DELETE", body: object) => {
     setBusy(true); setMsg(null);
@@ -77,7 +80,7 @@ export default function TeamTool() {
     const b = m.bookings.find((x) => Date.parse(x.startsAt) <= r && r < Date.parse(x.endsAt));
     if (b) {
       const first = Date.parse(b.startsAt) === r;
-      const ours = b.team === team;
+      const ours = b.team === picked;
       return (
         <td key={m.id} className={`border-l border-white/5 px-1 ${ours ? "bg-amber-400/20" : "bg-white/[0.08]"}`}>
           {first && (ours ? (
@@ -94,12 +97,14 @@ export default function TeamTool() {
       return (r >= s - BUFFER_MINUTES * MIN && r < s) || (r >= e && r < e + BUFFER_MINUTES * MIN);
     });
     if (gap) return <td key={m.id} className={`border-l border-white/5 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.06)_0_4px,transparent_4px_8px)] px-2 ${META} text-white/60`}>{t(c.gap)}</td>;
-    const ok = !!team && fitsWindow(r, m.windows) && slotState(r, m.bookings, mine) === "open";
+    const free = fitsWindow(r, m.windows) && slotState(r, m.bookings, []) === "open";
+    const ok = !!picked && free && slotState(r, m.bookings, mine) === "open";
+    const locked = !picked && free; // 팀을 고르면 열릴 칸: "+"를 흐리게 보여 줍니다
     return (
       <td key={m.id} className="border-l border-white/5 p-0.5">
         <button type="button" disabled={!ok || busy} aria-label={`${m.name} ${fmtKst(r)}`}
-          onClick={() => call("POST", { team, mentorId: m.id, startsAt: new Date(r).toISOString() })}
-          className={`h-8 w-full rounded-md ${META} transition ${ok ? "border border-white/20 text-white/70 hover:bg-white/15" : "text-transparent"}`}>
+          onClick={() => call("POST", { team: picked, mentorId: m.id, startsAt: new Date(r).toISOString() })}
+          className={`h-8 w-full rounded-md ${META} transition ${ok ? "border border-white/20 text-white/70 hover:bg-white/15" : locked ? "cursor-not-allowed border border-white/10 text-white/30" : "text-transparent"}`}>
           +
         </button>
       </td>
@@ -127,9 +132,10 @@ export default function TeamTool() {
             ))}
           </div>
         </div>
+        {!picked && <p className={`${META} font-bold text-amber-100`}>{t(c.pickFirst)}</p>}
 
         {/* DECIDED 2026-10-17 (사용자, 스크린숏: "인증 올리는 거를 테이블 위로"): 인증이 시간표보다 먼저 섭니다. */}
-        {team && teams.includes(team) && <Proofs team={team} day={day} />}
+        <Proofs team={picked} day={day} />
 
         <h2 className={`mt-4 ${BODY} font-bold`}>{t(c.timetableHeading)}</h2>
         <p className={`${BODY} text-white/85`}>{t(c.lead)} {t(c.carry)}</p>
@@ -190,6 +196,7 @@ function Proofs({ team, day }: { team: string; day: OpsDay }) {
   const [msg, setMsg] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
+    if (!team) { setProofs([]); return; } // 팀을 고르기 전에는 잠겨 있습니다
     const r = await fetch(`/api/crossing/proofs?team=${encodeURIComponent(team)}`, { cache: "no-store" });
     if (r.ok) setProofs((await r.json()).proofs);
   }, [team]);
@@ -219,6 +226,7 @@ function Proofs({ team, day }: { team: string; day: OpsDay }) {
   const slot = (kind: ProofKind) => {
     const latest = proofs.find((p) => p.day === day && p.kind === kind);
     const up = state[kind] === "uploading";
+    const off = up || !team;
     return (
       <div key={kind} className="flex flex-col gap-3 rounded-2xl border border-white/15 bg-white/[0.03] p-4">
         <div className="flex items-baseline justify-between gap-3">
@@ -230,9 +238,9 @@ function Proofs({ team, day }: { team: string; day: OpsDay }) {
           <img src={latest.url} alt="" className="max-h-56 w-fit rounded-xl object-contain" />
         )}
         {latest?.url && kind === "pdf" && <a href={latest.url} target="_blank" rel="noreferrer" className={buttonClass("text")}>{t(c.proofView)}</a>}
-        <label className={`${buttonClass("secondary")} w-fit cursor-pointer justify-center ${up ? "pointer-events-none opacity-50" : ""}`}>
+        <label aria-disabled={off} className={`${buttonClass("secondary")} w-fit cursor-pointer justify-center ${off ? "pointer-events-none opacity-50" : ""}`}>
           {up ? t(c.proofUploading) : t(latest ? c.proofReplace : c.proofPick)}
-          <input type="file" className="sr-only" disabled={up} accept={kind === "photo" ? "image/*" : "application/pdf"}
+          <input type="file" className="sr-only" disabled={off} accept={kind === "photo" ? "image/*" : "application/pdf"}
             onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) void upload(kind, f); }} />
         </label>
       </div>
