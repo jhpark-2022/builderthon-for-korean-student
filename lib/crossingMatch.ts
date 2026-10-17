@@ -2,7 +2,7 @@
 // 크로싱 서울 현장 팀 매칭(/match)의 공용 상수와 검사 (2026-10-08, 현장 팀 매칭 브리프 4.1).
 // 페이지(components/match)와 라우트(app/api/crossing/match)가 같이 읽습니다. 서버 전용 코드를 넣지 마세요.
 // ─────────────────────────────────────────────────────────────────────────────
-import { CURRENT_EVENT } from "@/lib/registrationWindow";
+import { CROSSING_WINDOW, CURRENT_EVENT } from "@/lib/registrationWindow";
 import { DECEMBER_ENDS_AT } from "@/lib/naruDates";
 
 /** crossing_match_profiles.event_slug. 신청과 같은 회차 슬러그입니다. */
@@ -24,9 +24,12 @@ export const isMatchDeviceToken = (v: unknown): v is string => typeof v === "str
  * 받기 시작하려면 opensAt에 시각을 적습니다(예: "2026-12-18T00:00:00+09:00", Day 1). 같은 날 아침의
  * "지금부터 받는다"는 이 결정이 대신합니다.
  * 닫히는 때는 행사 마지막 날의 다음 날 끝(서울 시각)이고, 마지막 날은 lib/naruDates.ts의 DECEMBER_ENDS_AT에서 옵니다.
+ *
+ * DECIDED 2026-10-17 (사용자: "성격 test, either when they register or at the first day"): 등록이 열리는 시각에 함께 엽니다.
+ * 그 전에는 따로 시각을 적어야 해서, 등록만 열고 이 값을 잊으면 등록 직후 한 테스트가 저장되지 않았습니다.
  */
 export const MATCH_WINDOW: { opensAt: string | null; closesAt: string | null } = {
-  opensAt: null,
+  opensAt: CROSSING_WINDOW.opensAt,
   closesAt: DECEMBER_ENDS_AT
     ? new Date(new Date(`${DECEMBER_ENDS_AT}T00:00:00+09:00`).getTime() + 2 * 86_400_000).toISOString()
     : null,

@@ -36,7 +36,8 @@ export interface MatchProfile { name: string; country: string; tracks: string[];
 
 export const matchCopy = {
   nameLabel: { ko: "이름", en: "Name" },
-  namePlaceholder: { ko: "현장에서 불리는 이름", en: "The name people call you on site" },
+  // DECIDED 2026-10-17 (사용자: 등록에 썼던 본인 이름으로 잇는다): 그 전 "현장에서 불리는 이름"은 별명을 부르는 말이라 등록 명단과 이어지지 않았습니다.
+  namePlaceholder: { ko: "등록할 때 쓴 본명", en: "The real name you registered with" },
   countryLabel: { ko: "공부하는 나라", en: "Country you study in" },
   countryKR: { ko: "한국", en: "Korea" },
   countrySG: { ko: "싱가포르", en: "Singapore" },

@@ -3,7 +3,7 @@
 //
 //   GET    ?day=2                          팀 목록, 그날의 멘토와 받는 구간, 예약(팀 이름 포함)
 //   POST   {team, mentorId, startsAt}       칸에 팀 넣기. 길이는 SESSION_MINUTES
-//   DELETE {bookingId}                     칸 비우기
+//   (빼기 없음) DECIDED 2026-10-17 (사용자: "once they put in, they cannot change it"). 운영진은 표 편집기에서 지웁니다.
 //
 // DECIDED 2026-10-17 (사용자: "그냥 timetable where team can put in their available, 다른 팀과 공유"): 팀 코드 없이
 // 팀을 골라 넣습니다. 같은 멘토의 앞뒤 10분과 한 팀의 시간 겹침은 DB의 exclude 제약이 지킵니다(23P01).
@@ -13,7 +13,7 @@ import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { CURRENT_EVENT } from "@/lib/registrationWindow";
 import { findTeam } from "@/lib/crossingOpsServer";
-import { DEFAULT_WINDOW, OPS_DAYS, SESSION_MINUTES, fitsWindow, isOpsDay, isProofDay, kstTime, type Window } from "@/lib/crossingOps";
+import { DEFAULT_WINDOW, MAX_BOOKINGS_PER_TEAM_PER_DAY, OPS_DAYS, SESSION_MINUTES, fitsWindow, isOpsDay, isProofDay, kstTime, type Window } from "@/lib/crossingOps";
 
 export const dynamic = "force-dynamic";
 
@@ -74,26 +74,19 @@ export async function POST(req: Request) {
   const hit = OPS_DAYS.map((d) => ({ day: d, ws: windowsFor(d, (windows ?? []).filter((w) => w.day === d)) })).find((x) => fitsWindow(t, x.ws));
   if (!hit) return NextResponse.json({ error: "outside_window" }, { status: 400 });
 
+  // 하루 두 칸(2026-10-17). 미리 세어 알맞은 말로 거절하고, 동시에 들어온 요청은 DB 트리거가 막습니다(P0001 team_daily_limit).
+  const { count } = await db.from("crossing_mentor_bookings").select("id", { count: "exact", head: true }).eq("team_name", team.name).eq("day", hit.day);
+  if ((count ?? 0) >= MAX_BOOKINGS_PER_TEAM_PER_DAY) return NextResponse.json({ error: "team_limit" }, { status: 409 });
+
   const { error } = await db.from("crossing_mentor_bookings").insert({
     mentor_id: mentorId, team_name: team.name, day: hit.day,
     starts_at: new Date(t).toISOString(), ends_at: new Date(t + SESSION_MINUTES * 60_000).toISOString(),
   });
   if (error) {
+    if (error.code === "P0001" && (error.message ?? "").includes("team_daily_limit")) return NextResponse.json({ error: "team_limit" }, { status: 409 });
     if (error.code === "23P01") return NextResponse.json({ error: (error.message ?? "").includes("team_cooldown") ? "team_busy" : "taken" }, { status: 409 });
     console.error("[crossing/mentoring] insert failed", error.code);
     return NextResponse.json({ error: "db" }, { status: 500 });
   }
   return NextResponse.json({ ok: true }, { status: 201 });
-}
-
-export async function DELETE(req: Request) {
-  const db = getSupabaseAdmin();
-  if (!db) return NextResponse.json({ error: "not_configured" }, { status: 503 });
-  const body = await req.json().catch(() => null);
-  const id = typeof body?.bookingId === "string" ? body.bookingId : "";
-  if (!id) return NextResponse.json({ error: "invalid" }, { status: 400 });
-  const { data, error } = await db.from("crossing_mentor_bookings").delete().eq("id", id).select("id");
-  if (error) return NextResponse.json({ error: "db" }, { status: 500 });
-  if (!data?.length) return NextResponse.json({ error: "not_found" }, { status: 404 });
-  return NextResponse.json({ ok: true });
 }

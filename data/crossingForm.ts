@@ -76,7 +76,9 @@ const CONSENT_HELP = retention
 export const CROSSING_FORM: Field[] = [
   // ── 사람 단위 ────────────────────────────────────────────────────────────
   { key: "name", scope: "member", type: "text", required: true, fixed: true, autoComplete: "name",
-    label: { ko: "이름", en: "Name" } },
+    label: { ko: "이름", en: "Name" },
+    // DECIDED 2026-10-17 (사용자: "등록에도 본명을 쓰라는걸 명시"): Day 1 유형 테스트와 팀 명단을 이 이름으로 잇습니다(0010 crossing_matching_pool).
+    help: { ko: "본명으로 적어 주세요. Day 1의 AI 유형 테스트와 팀 구성을 이 이름으로 잇습니다.", en: "Use your real name. Your Day 1 AI type test and your team are matched to it." } },
   { key: "email", scope: "member", type: "email", required: true, fixed: true, autoComplete: "email", inputMode: "email", verbatim: true,
     label: { ko: "이메일", en: "Email" },
     // DECIDED 2026-10-15 (사용자: 메일은 보내지 않고 소식은 카카오톡으로): 안내 메일을 약속하지 않습니다.

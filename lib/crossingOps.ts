@@ -23,6 +23,9 @@ export const GRID_MINUTES = 10;
  * 앞뒤 대칭입니다(16:00을 먼저 넣었으면 14:10~17:50 시작도 막힘). 마이그레이션 0008의 crossing_plus_minutes(starts_at, 120)과 같아야 합니다.
  */
 export const TEAM_COOLDOWN_MINUTES = 120;
+/** 한 팀이 하루에 넣는 칸 수의 상한. DB 트리거(0010 crossing_bookings_daily_limit)와 같아야 합니다.
+ * DECIDED 2026-10-17 (사용자: "they can put down their slot two times a day", "둘 다": 2시간 규칙과 함께). */
+export const MAX_BOOKINGS_PER_TEAM_PER_DAY = 2;
 /**
  * 멘토가 받는 시간을 표에 적지 않았을 때 쓰는 기본값(한국 시간). TODO: confirm.
  * DECIDED 2026-10-17 (사용자: "지금은 tentative 한거니까 availability를 오전 10시부터 오후 10시로").

@@ -15,7 +15,7 @@ import { BODY, META } from "@/components/ui/typography";
 import { buttonClass } from "@/components/ui/Button";
 import { teamCopy as c } from "@/data/crossingTeam";
 import {
-  BUFFER_MINUTES, GRID_MINUTES, PROOF_DAYS, PROOF_MAX_BYTES, PROOF_TYPES, dayDate, fitsWindow, fmtKst, isProofDay, proofKindsFor, slotState,
+  BUFFER_MINUTES, GRID_MINUTES, MAX_BOOKINGS_PER_TEAM_PER_DAY, PROOF_DAYS, PROOF_MAX_BYTES, PROOF_TYPES, dayDate, fitsWindow, fmtKst, isProofDay, proofKindsFor, slotState,
   type ProofDay, type ProofKind, type Window,
 } from "@/lib/crossingOps";
 
@@ -34,7 +34,7 @@ export default function TeamTool() {
   const [teams, setTeams] = useState<string[]>([]);
   const [mentors, setMentors] = useState<Mentor[] | null>(null);
   const [team, setTeam] = useState(""); // 팀 이름. 따로 만드는 ID는 없습니다
-  const [open, setOpen] = useState<string | null>(null); // 우리 팀 칸을 누르면 "비우기"가 섭니다
+  const [pending, setPending] = useState<{ m: string; r: number } | null>(null); // 넣기 전에 한 번 묻는 칸
   const [msg, setMsg] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -53,7 +53,7 @@ export default function TeamTool() {
     const j = await r.json();
     setTeams(j.teams ?? []); setMentors(j.mentors ?? []);
   }, [day]);
-  useEffect(() => { setMentors(null); setMsg(null); setOpen(null); void refresh(); }, [refresh]);
+  useEffect(() => { setMentors(null); setMsg(null); setPending(null); void refresh(); }, [refresh]);
   // 다른 팀이 넣은 칸이 보이도록 20초마다 다시 읽습니다.
   useEffect(() => { const id = setInterval(refresh, 20_000); return () => clearInterval(id); }, [refresh]);
 
@@ -76,9 +76,9 @@ export default function TeamTool() {
     const r = await fetch("/api/crossing/mentoring", { method, headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
     if (!r.ok) {
       const e = (await r.json().catch(() => ({}))).error;
-      setMsg(t(e === "taken" ? c.errTaken : e === "team_busy" ? c.errTeamBusy : e === "past" ? c.errPast : c.errGeneric));
+      setMsg(t(e === "taken" ? c.errTaken : e === "team_busy" ? c.errTeamBusy : e === "team_limit" ? c.errLimit : e === "past" ? c.errPast : c.errGeneric));
     }
-    setOpen(null); setBusy(false); void refresh();
+    setPending(null); setBusy(false); void refresh();
   };
 
   const cell = (m: Mentor, r: number) => {
@@ -91,10 +91,8 @@ export default function TeamTool() {
       return (
         <td key={m.id} className={`border-l border-white/5 px-1 ${ours ? "bg-amber-400/20" : "bg-white/[0.08]"}`}>
           {first && (ours ? (
-            <div className="flex items-center justify-between gap-2">
-              <button type="button" aria-expanded={open === b.id} onClick={() => setOpen(open === b.id ? null : b.id)} className={`min-w-0 flex-1 truncate px-1 py-1.5 text-left ${META} font-bold text-amber-50`}>{b.team}</button>
-              {open === b.id && <button type="button" disabled={busy} onClick={() => call("DELETE", { bookingId: b.id })} className={`shrink-0 rounded-full border border-amber-200/50 px-2 ${META} text-amber-50`}>{t(c.clear)}</button>}
-            </div>
+            // 한 번 넣은 칸은 바꾸지 못합니다(2026-10-17). 우리 팀 칸도 이름만 보입니다.
+            <span className={`block truncate px-1 py-1.5 ${META} font-bold text-amber-50`}>{b.team}</span>
           ) : <span className={`block truncate px-1 py-1.5 ${META} font-bold text-white/85`}>{b.team}</span>)}
         </td>
       );
@@ -105,14 +103,17 @@ export default function TeamTool() {
     });
     if (gap) return <td key={m.id} className={`border-l border-white/5 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.06)_0_4px,transparent_4px_8px)] px-2 ${META} text-white/60`}>{t(c.gap)}</td>;
     const free = fitsWindow(r, m.windows) && slotState(r, m.bookings, []) === "open";
-    const ok = !timetableLocked && !!picked && free && slotState(r, m.bookings, mine) === "open";
+    const full = mine.length >= MAX_BOOKINGS_PER_TEAM_PER_DAY; // 이 날 두 칸을 다 넣었으면 더 열지 않습니다
+    const ok = !timetableLocked && !!picked && !full && free && slotState(r, m.bookings, mine) === "open";
+    const asking = pending?.m === m.id && pending.r === r;
     const locked = (timetableLocked || !picked) && free; // 팀을 고르면 열릴 칸: "+"를 흐리게 보여 줍니다
     return (
       <td key={m.id} className="border-l border-white/5 p-0.5">
         <button type="button" disabled={!ok || busy} aria-label={`${m.name} ${fmtKst(r)}`}
-          onClick={() => call("POST", { team: picked, mentorId: m.id, startsAt: new Date(r).toISOString() })}
-          className={`h-8 w-full rounded-md ${META} transition ${ok ? "border border-white/20 text-white/70 hover:bg-white/15" : locked ? "cursor-not-allowed border border-white/10 text-white/30" : "text-transparent"}`}>
-          +
+          // 바꿀 수 없으니 두 번 누릅니다: 처음은 "넣기?"로 묻고, 같은 칸을 한 번 더 누르면 넣습니다.
+          onClick={() => (asking ? (setPending(null), call("POST", { team: picked, mentorId: m.id, startsAt: new Date(r).toISOString() })) : setPending({ m: m.id, r }))}
+          className={`h-8 w-full rounded-md ${META} transition ${asking ? "border border-amber-300/70 bg-amber-400/20 font-bold text-amber-50" : ok ? "border border-white/20 text-white/70 hover:bg-white/15" : locked ? "cursor-not-allowed border border-white/10 text-white/30" : "text-transparent"}`}>
+          {asking ? t(c.confirmPut) : "+"}
         </button>
       </td>
     );
