@@ -2,7 +2,7 @@
 // /api/crossing/mentoring. 멘토 시간표(2026-10-17). 모든 팀이 같은 시간표를 봅니다.
 //
 //   GET    ?day=2                          팀 목록, 그날의 멘토와 받는 구간, 예약(팀 이름 포함)
-//   POST   {teamId, mentorId, startsAt}    칸에 팀 넣기. 길이는 SESSION_MINUTES
+//   POST   {team, mentorId, startsAt}       칸에 팀 넣기. 길이는 SESSION_MINUTES
 //   DELETE {bookingId}                     칸 비우기
 //
 // DECIDED 2026-10-17 (사용자: "그냥 timetable where team can put in their available, 다른 팀과 공유"): 팀 코드 없이
@@ -30,7 +30,7 @@ export async function GET(req: Request) {
   if (!isOpsDay(day)) return NextResponse.json({ error: "invalid_day" }, { status: 400 });
 
   const [teams, mentors] = await Promise.all([
-    db.from("crossing_teams").select("id, name").eq("event_slug", CURRENT_EVENT).order("name"),
+    db.from("crossing_teams").select("name").eq("event_slug", CURRENT_EVENT).order("name"),
     db.from("crossing_mentors").select("id, name, field").eq("event_slug", CURRENT_EVENT).eq("active", true).order("name"),
   ]);
   if (teams.error || mentors.error) return NextResponse.json({ error: "db" }, { status: 500 });
@@ -38,16 +38,15 @@ export async function GET(req: Request) {
   const none = ["00000000-0000-0000-0000-000000000000"];
   const [{ data: windows }, { data: bookings }] = await Promise.all([
     db.from("crossing_mentor_windows").select("mentor_id, start_time, end_time").eq("day", day).in("mentor_id", ids.length ? ids : none).order("start_time"),
-    db.from("crossing_mentor_bookings").select("id, mentor_id, team_id, starts_at, ends_at").eq("day", day).in("mentor_id", ids.length ? ids : none).order("starts_at"),
+    db.from("crossing_mentor_bookings").select("id, mentor_id, team_name, starts_at, ends_at").eq("day", day).in("mentor_id", ids.length ? ids : none).order("starts_at"),
   ]);
-  const name = new Map((teams.data ?? []).map((t) => [t.id, t.name]));
   return NextResponse.json({
-    teams: teams.data,
+    teams: (teams.data ?? []).map((t) => t.name),
     mentors: (mentors.data ?? []).map((m) => ({
       id: m.id, name: m.name, field: m.field,
       windows: (windows ?? []).filter((w) => w.mentor_id === m.id).map((w) => toWindow(day, w.start_time, w.end_time)).filter(Boolean),
       bookings: (bookings ?? []).filter((b) => b.mentor_id === m.id).map((b) => ({
-        id: b.id, teamId: b.team_id, teamName: name.get(b.team_id) ?? "", startsAt: b.starts_at, endsAt: b.ends_at,
+        id: b.id, team: b.team_name, startsAt: b.starts_at, endsAt: b.ends_at,
       })),
     })),
   });
@@ -57,7 +56,7 @@ export async function POST(req: Request) {
   const db = getSupabaseAdmin();
   if (!db) return NextResponse.json({ error: "not_configured" }, { status: 503 });
   const body = await req.json().catch(() => null);
-  const team = await findTeam(db, body?.teamId);
+  const team = await findTeam(db, body?.team);
   const mentorId = typeof body?.mentorId === "string" ? body.mentorId : "";
   const t = Date.parse(typeof body?.startsAt === "string" ? body.startsAt : "");
   if (!team || !mentorId || Number.isNaN(t)) return NextResponse.json({ error: "invalid" }, { status: 400 });
@@ -69,11 +68,11 @@ export async function POST(req: Request) {
   const hit = (windows ?? []).map((w) => ({ day: w.day as number, win: toWindow(w.day, w.start_time, w.end_time) })).find((w) => w.win && fitsWindow(t, [w.win]));
   if (!hit) return NextResponse.json({ error: "outside_window" }, { status: 400 });
 
-  const { count } = await db.from("crossing_mentor_bookings").select("id", { count: "exact", head: true }).eq("team_id", team.id).eq("day", hit.day);
+  const { count } = await db.from("crossing_mentor_bookings").select("id", { count: "exact", head: true }).eq("team_name", team.name).eq("day", hit.day);
   if ((count ?? 0) >= MAX_BOOKINGS_PER_TEAM_PER_DAY) return NextResponse.json({ error: "team_limit" }, { status: 409 });
 
   const { error } = await db.from("crossing_mentor_bookings").insert({
-    mentor_id: mentorId, team_id: team.id, day: hit.day,
+    mentor_id: mentorId, team_name: team.name, day: hit.day,
     starts_at: new Date(t).toISOString(), ends_at: new Date(t + SESSION_MINUTES * 60_000).toISOString(),
   });
   if (error) {

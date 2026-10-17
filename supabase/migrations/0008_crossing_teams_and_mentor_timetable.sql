@@ -18,6 +18,8 @@
 -- 운영진 화면은 없습니다(같은 날 사용자: "운영진 page는 필요가 없음"). 팀, 팀원, 멘토, 멘토가 받는 시간은 Supabase 표 편집기에
 -- 바로 넣습니다. 그래서 event_slug에는 기본값을 두고, 멘토 시간은 날짜 없이 Day와 한국 시각(HH:MM)으로 적습니다.
 -- 팀원의 member_id는 표 편집기에서 외래키를 누르면 crossing_members 목록에서 고를 수 있습니다.
+-- 팀에는 따로 만드는 ID가 없습니다. 팀 이름이 곧 키이고(같은 날 사용자: "팀 아이디 생성 이런게 필요없음, 내가 사전에 팀 만들고
+-- 팀 이름 만들면"), 팀원, 시간표 칸, 인증 파일이 모두 팀 이름을 가리킵니다. 이름을 고치면 따라 바뀝니다(on update cascade).
 --
 -- 기존 표(8월 표, crossing_registrations, crossing_members, crossing_match_profiles)와 뷰에는 새 외래키가 그쪽을
 -- 가리킬 뿐 고치는 문장이 없습니다. 멱등. 쓰기는 /api/crossing/* 라우트가 service_role로만 합니다.
@@ -29,22 +31,20 @@ create extension if not exists btree_gist with schema extensions;
 -- ── 1. 팀 ───────────────────────────────────────────────────────────────────
 -- Day 1 현장에서 팀을 맺으면 운영진이 만듭니다. 시간표에서 팀은 이 이름으로 보입니다.
 create table if not exists public.crossing_teams (
-  id          uuid primary key default gen_random_uuid(),
+  name        text primary key check (char_length(name) between 1 and 40),
   created_at  timestamptz not null default now(),
-  event_slug  text not null default 'crossing-seoul-2026-12',
-  name        text not null check (char_length(name) between 1 and 40),
-  unique (event_slug, name)
+  event_slug  text not null default 'crossing-seoul-2026-12'
 );
 
 -- 팀원. 등록한 사람 한 명이 한 회차에 한 팀에만 들어갑니다.
 -- match_profile_id: Day 1 AI 유형 테스트(crossing_match_profiles)를 본 운영진이 이어 둘 때만. 없어도 됩니다.
 create table if not exists public.crossing_team_members (
-  team_id           uuid not null references public.crossing_teams(id) on delete cascade,
+  team_name         text not null references public.crossing_teams(name) on update cascade on delete cascade,
   member_id         uuid not null references public.crossing_members(id) on delete cascade,
   event_slug        text not null default 'crossing-seoul-2026-12',
   match_profile_id  uuid references public.crossing_match_profiles(id) on delete set null,
   added_at          timestamptz not null default now(),
-  primary key (team_id, member_id),
+  primary key (team_name, member_id),
   unique (event_slug, member_id)
 );
 create index if not exists crossing_team_members_member_idx on public.crossing_team_members (member_id);
@@ -76,7 +76,7 @@ create table if not exists public.crossing_mentor_bookings (
   id          uuid primary key default gen_random_uuid(),
   created_at  timestamptz not null default now(),
   mentor_id   uuid not null references public.crossing_mentors(id) on delete cascade,
-  team_id     uuid not null references public.crossing_teams(id) on delete cascade,
+  team_name   text not null references public.crossing_teams(name) on update cascade on delete cascade,
   day         smallint not null check (day in (2, 3)),
   starts_at   timestamptz not null,
   ends_at     timestamptz not null,
@@ -86,7 +86,7 @@ create table if not exists public.crossing_mentor_bookings (
     exclude using gist (mentor_id with =, tstzrange(starts_at, ends_at + interval '15 minutes', '[)') with &&),
   -- 같은 팀: 한 팀이 같은 시간에 두 멘토를 잡지 못합니다.
   constraint crossing_bookings_team_overlap
-    exclude using gist (team_id with =, tstzrange(starts_at, ends_at, '[)') with &&)
+    exclude using gist (team_name with =, tstzrange(starts_at, ends_at, '[)') with &&)
 );
 create index if not exists crossing_mentor_bookings_day_idx on public.crossing_mentor_bookings (day, starts_at);
 
@@ -95,14 +95,14 @@ create index if not exists crossing_mentor_bookings_day_idx on public.crossing_m
 create table if not exists public.crossing_mission_proofs (
   id            uuid primary key default gen_random_uuid(),
   created_at    timestamptz not null default now(),
-  team_id       uuid not null references public.crossing_teams(id) on delete cascade,
+  team_name     text not null references public.crossing_teams(name) on update cascade on delete cascade,
   day           smallint not null check (day in (2, 3)),
   kind          text not null check (kind in ('photo', 'pdf')),
   storage_path  text not null unique,
   content_type  text not null,
   size_bytes    integer not null check (size_bytes > 0)
 );
-create index if not exists crossing_mission_proofs_team_idx on public.crossing_mission_proofs (team_id, day, kind, created_at desc);
+create index if not exists crossing_mission_proofs_team_idx on public.crossing_mission_proofs (team_name, day, kind, created_at desc);
 
 -- 비공개 버킷. 20MB, 사진과 PDF만. 정책 0개라 서명 URL로만 오갑니다.
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
@@ -120,12 +120,11 @@ alter table public.crossing_mission_proofs  enable row level security;
 -- ── 운영진이 대시보드에서 보는 뷰 셋 ────────────────────────────────────────────
 -- 팀 명단: 팀마다 누가 있는지(등록 정보와 함께).
 create or replace view public.crossing_team_roster as
-  select t.name as team, t.id as team_id, m.name, m.university, m.study_country, m.email, m.contact,
+  select tm.team_name as team, m.name, m.university, m.study_country, m.email, m.contact,
          tm.member_id, tm.match_profile_id
-  from public.crossing_teams t
-  join public.crossing_team_members tm on tm.team_id = t.id
+  from public.crossing_team_members tm
   join public.crossing_members m on m.id = tm.member_id
-  order by t.name, m.name;
+  order by tm.team_name, m.name;
 alter view public.crossing_team_roster set (security_invoker = on);
 revoke select on public.crossing_team_roster from anon, authenticated;
 
@@ -133,23 +132,21 @@ revoke select on public.crossing_team_roster from anon, authenticated;
 create or replace view public.crossing_mentor_timetable as
   select b.day, to_char(b.starts_at at time zone 'Asia/Seoul', 'HH24:MI') as starts,
          to_char(b.ends_at at time zone 'Asia/Seoul', 'HH24:MI') as ends,
-         mt.name as mentor, t.name as team, b.id as booking_id
+         mt.name as mentor, b.team_name as team, b.id as booking_id
   from public.crossing_mentor_bookings b
   join public.crossing_mentors mt on mt.id = b.mentor_id
-  join public.crossing_teams t on t.id = b.team_id
   order by b.day, b.starts_at, mt.name;
 alter view public.crossing_mentor_timetable set (security_invoker = on);
 revoke select on public.crossing_mentor_timetable from anon, authenticated;
 
 -- 인증 현황: 팀과 날마다 사진과 PDF가 왔는지(가장 최근 시각). 파일은 Storage의 crossing-proofs/<storage_path>.
 create or replace view public.crossing_mission_uploads as
-  select t.name as team, p.day,
+  select p.team_name as team, p.day,
          max(p.created_at) filter (where p.kind = 'photo') as photo_at,
          max(p.created_at) filter (where p.kind = 'pdf')   as pdf_at
-  from public.crossing_teams t
-  join public.crossing_mission_proofs p on p.team_id = t.id
-  group by t.name, p.day
-  order by p.day, t.name;
+  from public.crossing_mission_proofs p
+  group by p.team_name, p.day
+  order by p.day, p.team_name;
 alter view public.crossing_mission_uploads set (security_invoker = on);
 revoke select on public.crossing_mission_uploads from anon, authenticated;
 

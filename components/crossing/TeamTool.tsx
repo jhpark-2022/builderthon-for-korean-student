@@ -19,10 +19,9 @@ import {
   type OpsDay, type ProofKind, type Window,
 } from "@/lib/crossingOps";
 
-const TEAM_KEY = "crossing-team-id";
+const TEAM_KEY = "crossing-team";
 const MIN = 60_000;
-type Team = { id: string; name: string };
-type Bk = { id: string; teamId: string; teamName: string; startsAt: string; endsAt: string };
+type Bk = { id: string; team: string; startsAt: string; endsAt: string };
 type Mentor = { id: string; name: string; field: string | null; windows: Window[]; bookings: Bk[] };
 type Proof = { id: string; day: number; kind: ProofKind; createdAt: string; url: string | null };
 
@@ -32,14 +31,14 @@ const save = (k: string, v: string) => { try { localStorage.setItem(k, v); } cat
 export default function TeamTool() {
   const { t } = useLocale();
   const [day, setDay] = useState<OpsDay>(2);
-  const [teams, setTeams] = useState<Team[]>([]);
+  const [teams, setTeams] = useState<string[]>([]);
   const [mentors, setMentors] = useState<Mentor[] | null>(null);
-  const [teamId, setTeamId] = useState("");
+  const [team, setTeam] = useState(""); // 팀 이름. 따로 만드는 ID는 없습니다
   const [open, setOpen] = useState<string | null>(null); // 우리 팀 칸을 누르면 "비우기"가 섭니다
   const [msg, setMsg] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => { setTeamId(load(TEAM_KEY)); }, []);
+  useEffect(() => { setTeam(load(TEAM_KEY)); }, []);
 
   const refresh = useCallback(async () => {
     const r = await fetch(`/api/crossing/mentoring?day=${day}`, { cache: "no-store" });
@@ -60,7 +59,7 @@ export default function TeamTool() {
     return out;
   }, [mentors]);
 
-  const mine = (mentors ?? []).flatMap((m) => m.bookings.filter((b) => b.teamId === teamId));
+  const mine = (mentors ?? []).flatMap((m) => m.bookings.filter((b) => b.team === team));
 
   const call = async (method: "POST" | "DELETE", body: object) => {
     setBusy(true); setMsg(null);
@@ -78,15 +77,15 @@ export default function TeamTool() {
     const b = m.bookings.find((x) => Date.parse(x.startsAt) <= r && r < Date.parse(x.endsAt));
     if (b) {
       const first = Date.parse(b.startsAt) === r;
-      const ours = b.teamId === teamId;
+      const ours = b.team === team;
       return (
         <td key={m.id} className={`border-l border-white/5 px-1 ${ours ? "bg-amber-400/20" : "bg-white/[0.08]"}`}>
           {first && (ours ? (
             <div className="flex items-center justify-between gap-2">
-              <button type="button" aria-expanded={open === b.id} onClick={() => setOpen(open === b.id ? null : b.id)} className={`min-w-0 flex-1 truncate px-1 py-1.5 text-left ${META} font-bold text-amber-50`}>{b.teamName}</button>
+              <button type="button" aria-expanded={open === b.id} onClick={() => setOpen(open === b.id ? null : b.id)} className={`min-w-0 flex-1 truncate px-1 py-1.5 text-left ${META} font-bold text-amber-50`}>{b.team}</button>
               {open === b.id && <button type="button" disabled={busy} onClick={() => call("DELETE", { bookingId: b.id })} className={`shrink-0 rounded-full border border-amber-200/50 px-2 ${META} text-amber-50`}>{t(c.clear)}</button>}
             </div>
-          ) : <span className={`block truncate px-1 py-1.5 ${META} font-bold text-white/85`}>{b.teamName}</span>)}
+          ) : <span className={`block truncate px-1 py-1.5 ${META} font-bold text-white/85`}>{b.team}</span>)}
         </td>
       );
     }
@@ -95,11 +94,11 @@ export default function TeamTool() {
       return (r >= s - BUFFER_MINUTES * MIN && r < s) || (r >= e && r < e + BUFFER_MINUTES * MIN);
     });
     if (gap) return <td key={m.id} className={`border-l border-white/5 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.06)_0_4px,transparent_4px_8px)] px-2 ${META} text-white/60`}>{t(c.gap)}</td>;
-    const ok = !!teamId && fitsWindow(r, m.windows) && slotState(r, m.bookings, mine) === "open";
+    const ok = !!team && fitsWindow(r, m.windows) && slotState(r, m.bookings, mine) === "open";
     return (
       <td key={m.id} className="border-l border-white/5 p-0.5">
         <button type="button" disabled={!ok || busy} aria-label={`${m.name} ${fmtKst(r)}`}
-          onClick={() => call("POST", { teamId, mentorId: m.id, startsAt: new Date(r).toISOString() })}
+          onClick={() => call("POST", { team, mentorId: m.id, startsAt: new Date(r).toISOString() })}
           className={`h-8 w-full rounded-md ${META} transition ${ok ? "border border-white/20 text-white/70 hover:bg-white/15" : "text-transparent"}`}>
           +
         </button>
@@ -114,10 +113,10 @@ export default function TeamTool() {
 
         <div className="flex flex-wrap items-center gap-3">
           <label htmlFor="team" className={`${META} font-bold text-white/85`}>{t(c.teamLabel)}</label>
-          <select id="team" value={teamId} onChange={(e) => { setTeamId(e.target.value); save(TEAM_KEY, e.target.value); }}
+          <select id="team" value={teams.includes(team) ? team : ""} onChange={(e) => { setTeam(e.target.value); save(TEAM_KEY, e.target.value); }}
             className={`rounded-lg border border-white/20 bg-[#0d1230] px-3 py-2 ${BODY} text-white`}>
             <option value="">{t(c.teamPick)}</option>
-            {teams.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}
+            {teams.map((x) => <option key={x} value={x}>{x}</option>)}
           </select>
           <div role="tablist" className="flex gap-2">
             {OPS_DAYS.map((d) => (
@@ -159,7 +158,7 @@ export default function TeamTool() {
           </div>
         )}
 
-        {teamId && <Proofs teamId={teamId} day={day} />}
+        {team && teams.includes(team) && <Proofs team={team} day={day} />}
       </div>
     </main>
   );
@@ -181,16 +180,16 @@ async function shrink(file: File): Promise<Blob> {
   }
 }
 
-function Proofs({ teamId, day }: { teamId: string; day: OpsDay }) {
+function Proofs({ team, day }: { team: string; day: OpsDay }) {
   const { t } = useLocale();
   const [proofs, setProofs] = useState<Proof[]>([]);
   const [state, setState] = useState<Record<ProofKind, "idle" | "uploading">>({ photo: "idle", pdf: "idle" });
   const [msg, setMsg] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
-    const r = await fetch(`/api/crossing/proofs?teamId=${teamId}`, { cache: "no-store" });
+    const r = await fetch(`/api/crossing/proofs?team=${encodeURIComponent(team)}`, { cache: "no-store" });
     if (r.ok) setProofs((await r.json()).proofs);
-  }, [teamId]);
+  }, [team]);
   useEffect(() => { void refresh(); }, [refresh]);
 
   const upload = async (kind: ProofKind, file: File) => {
@@ -201,7 +200,7 @@ function Proofs({ teamId, day }: { teamId: string; day: OpsDay }) {
       const blob = kind === "photo" ? await shrink(file) : file;
       if (blob.size > PROOF_MAX_BYTES) { setMsg(t(c.proofTooBig)); throw new Error("size"); }
       const type = blob.type || file.type;
-      const post = (body: object) => fetch("/api/crossing/proofs", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ teamId, ...body }) });
+      const post = (body: object) => fetch("/api/crossing/proofs", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ team, ...body }) });
       const s = await post({ action: "sign", day, kind, contentType: type, size: blob.size });
       if (!s.ok) throw new Error("sign");
       const { path, signedUrl } = await s.json();

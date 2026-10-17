@@ -576,6 +576,12 @@ export default function NaruHome() {
           { label: t(naru.december.milestoneSubmitLabel), items: stage.milestoneDetail.submit.map(t) },
         ]} center expanded={inPanel} />
       )}
+      {/* DECIDED 2026-10-17 (사용자): 멘토 시간표와 미션 인증으로 들어가는 문은 Day 2, Day 3 카드에만 있습니다. */}
+      {stage.timetableCta && (
+        <Link href={stage.timetableCta.href} className={`group w-full justify-center ${buttonClass("secondary")}`}>
+          {t(stage.timetableCta.label)}<span aria-hidden className={ARROW_CLASS}>→</span>
+        </Link>
+      )}
     </div>
     );
   };
