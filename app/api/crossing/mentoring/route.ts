@@ -6,7 +6,7 @@
 //   DELETE {bookingId}                     칸 비우기
 //
 // DECIDED 2026-10-17 (사용자: "그냥 timetable where team can put in their available, 다른 팀과 공유"): 팀 코드 없이
-// 팀을 골라 넣습니다. 같은 멘토의 앞뒤 15분과 한 팀의 시간 겹침은 DB의 exclude 제약이 지킵니다(23P01).
+// 팀을 골라 넣습니다. 같은 멘토의 앞뒤 10분과 한 팀의 시간 겹침은 DB의 exclude 제약이 지킵니다(23P01).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { NextResponse } from "next/server";

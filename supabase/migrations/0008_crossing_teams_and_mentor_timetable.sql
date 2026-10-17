@@ -11,9 +11,9 @@
 --      (같은 날 사용자: "upload section은 있어야함. 그것도 DB에 연동은 되어야하고")
 -- 돈, 계좌, 출석 체크는 넣지 않습니다.
 --
--- 멘토링은 예약제입니다(그 전 2026-10-11 결정은 "예약 없이"). 한 칸은 30분이고, 같은 멘토의 두 칸 사이에는 15분 이상이
+-- 멘토링은 예약제입니다(그 전 2026-10-11 결정은 "예약 없이"). 한 칸은 30분이고, 같은 멘토의 두 칸 사이에는 10분 이상이
 -- 남습니다. 이 규칙은 앱이 아니라 아래 exclude 제약이 지킵니다(같은 순간 두 팀이 같은 칸을 눌러도 한 팀만 들어감).
--- 15는 lib/crossingOps.ts의 BUFFER_MINUTES와 같아야 합니다.
+-- 10은 lib/crossingOps.ts의 BUFFER_MINUTES와 같아야 합니다.
 --
 -- 운영진 화면은 없습니다(같은 날 사용자: "운영진 page는 필요가 없음"). 팀, 팀원, 멘토, 멘토가 받는 시간은 Supabase 표 편집기에
 -- 바로 넣습니다. 그래서 event_slug에는 기본값을 두고, 멘토 시간은 날짜 없이 Day와 한국 시각(HH:MM)으로 적습니다.
@@ -61,13 +61,13 @@ create table if not exists public.crossing_mentors (
 
 -- 멘토가 받는 시간. 하루에 여러 구간이 있을 수 있습니다. 시각은 한국 시간 그대로(예: day 2, 14:00, 17:00).
 -- 그 날 행이 하나도 없는 멘토는 10:00~22:00으로 봅니다(임시, lib/crossingOps.ts DEFAULT_WINDOW).
--- 15분 단위로 적습니다. 날짜는 앱이 Day 번호로 셉니다(lib/crossingOps.ts dayDate).
+-- 10분 단위로 적습니다. 날짜는 앱이 Day 번호로 셉니다(lib/crossingOps.ts dayDate).
 create table if not exists public.crossing_mentor_windows (
   id          uuid primary key default gen_random_uuid(),
   mentor_id   uuid not null references public.crossing_mentors(id) on delete cascade,
   day         smallint not null check (day in (2, 3)),
-  start_time  time not null check (extract(minute from start_time)::int % 15 = 0),
-  end_time    time not null check (extract(minute from end_time)::int % 15 = 0),
+  start_time  time not null check (extract(minute from start_time)::int % 10 = 0),
+  end_time    time not null check (extract(minute from end_time)::int % 10 = 0),
   check (end_time > start_time)
 );
 create index if not exists crossing_mentor_windows_mentor_idx on public.crossing_mentor_windows (mentor_id, day, start_time);
@@ -82,9 +82,9 @@ create table if not exists public.crossing_mentor_bookings (
   starts_at   timestamptz not null,
   ends_at     timestamptz not null,
   check (ends_at > starts_at),
-  -- 같은 멘토: 칸 + 뒤 15분이 다른 칸과 겹치면 거절(23P01). 두 칸 사이가 15분 미만이 될 수 없습니다.
+  -- 같은 멘토: 칸 + 뒤 10분이 다른 칸과 겹치면 거절(23P01). 두 칸 사이가 10분 미만이 될 수 없습니다(2026-10-17 사용자, 15분에서 10분).
   constraint crossing_bookings_mentor_buffer
-    exclude using gist (mentor_id with =, tstzrange(starts_at, ends_at + interval '15 minutes', '[)') with &&),
+    exclude using gist (mentor_id with =, tstzrange(starts_at, ends_at + interval '10 minutes', '[)') with &&),
   -- 같은 팀: 칸 하나를 넣으면 그 시작부터 2시간 동안은 어느 멘토의 칸도 못 넣습니다(하루 횟수 제한은 없음).
   -- 두 칸의 시작이 2시간 이상 떨어져야 합니다. 2시간은 lib/crossingOps.ts의 TEAM_COOLDOWN_MINUTES와 같아야 합니다.
   constraint crossing_bookings_team_cooldown
@@ -155,4 +155,4 @@ revoke select on public.crossing_mission_uploads from anon, authenticated;
 comment on table public.crossing_team_members is
   '크로싱 서울 팀원. 등록한 사람(crossing_members) 한 명은 한 회차에 한 팀에만.';
 comment on table public.crossing_mentor_bookings is
-  '크로싱 서울 멘토 시간표의 칸. 같은 멘토의 두 칸 사이는 15분 이상(exclude 제약). 15는 lib/crossingOps.ts BUFFER_MINUTES와 같아야 함.';
+  '크로싱 서울 멘토 시간표의 칸. 같은 멘토의 두 칸 사이는 10분 이상(exclude 제약). 10은 lib/crossingOps.ts BUFFER_MINUTES와 같아야 함.';

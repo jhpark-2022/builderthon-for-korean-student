@@ -2013,7 +2013,7 @@ export const naru = {
       // DECIDED 2026-10-11 (사용자: "그룹의 생각임"): 들고 가는 한 장은 개인의 것이 아니라 팀의 것입니다.
       // 2026-10-13: 규칙 목록의 "예약 없이, 멘토가 같은 공간에 있습니다"가 이 문단으로 올라왔습니다.
       // DECIDED 2026-10-17 (사용자: 멘토링 예약제로 바꾼다): 둘째 문장이 "예약 없이, 멘토가 같은 공간에 있습니다."였습니다.
-      // 예약은 모든 팀이 같이 보는 멘토 시간표(/crossing/team)에 팀 이름을 넣는 것입니다. 앞뒤 15분 규칙은 그 페이지가 말합니다.
+      // 예약은 모든 팀이 같이 보는 멘토 시간표(/crossing/team)에 팀 이름을 넣는 것입니다. 앞뒤 10분 규칙은 그 페이지가 말합니다.
       ko: "질문 목록 대신, 이슈에 대한 팀의 생각 한 장을 들고 먼저 찾아갑니다. 멘토 시간은 모든 팀이 같이 보는 시간표에 팀 이름을 넣어 예약합니다.",
       en: "Your team goes first, with one page of its own thinking on the issue instead of a list of questions. You book mentor time by putting your team's name on a timetable every team can see.",
     },

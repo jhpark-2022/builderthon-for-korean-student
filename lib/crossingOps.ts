@@ -2,9 +2,10 @@
 // 크로싱 서울 현장 도구(멘토 시간표, 미션 인증)의 값과 계산. 서버와 브라우저가 함께 씁니다.
 // 표는 supabase/migrations/0008_crossing_teams_and_mentor_timetable.sql.
 //
-// DECIDED 2026-10-17 (사용자): 멘토링은 예약제이고, 예약 하나가 그 앞뒤 15분을 막습니다.
+// DECIDED 2026-10-17 (사용자): 멘토링은 예약제이고, 예약 하나가 그 앞뒤 10분을 막습니다(같은 날 15분에서 10분으로).
+// 쉬는 시간이 10분이라 줄도 10분 단위입니다(15분 줄이면 10분 쉬어도 다음 칸이 15분 뒤에야 섭니다).
 // 막는 규칙의 정본은 DB의 exclude 제약입니다. 여기의 계산은 화면에 칸을 그리고 미리 거절하는 용도이고,
-// BUFFER_MINUTES를 바꾸면 마이그레이션의 interval '15 minutes'도 같이 바꿔야 합니다.
+// BUFFER_MINUTES를 바꾸면 마이그레이션의 interval '10 minutes'도 같이 바꿔야 합니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { DECEMBER_STARTS_AT } from "@/lib/naruDates";
@@ -12,9 +13,9 @@ import { DECEMBER_STARTS_AT } from "@/lib/naruDates";
 /** 예약 한 번의 길이(분). TODO: confirm. 멘토와 정해지면 바꿉니다. */
 export const SESSION_MINUTES = 30;
 /** 예약 앞뒤로 막히는 시간(분). 마이그레이션 0008과 같아야 합니다. */
-export const BUFFER_MINUTES = 15;
+export const BUFFER_MINUTES = 10;
 /** 시작 시각을 고르는 칸의 간격(분). */
-export const GRID_MINUTES = 15;
+export const GRID_MINUTES = 10;
 /**
  * 한 팀이 칸을 하나 넣으면 그 칸의 시작부터 이만큼은 어느 멘토의 칸도 넣지 못합니다. 하루 횟수 제한은 없습니다.
  * DECIDED 2026-10-17 (사용자: "한번 slot booking을 하면, 그 이후 2시간 동안은 같은 멘토던 다른 멘토던 booking 못하고").
