@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // /api/crossing/proofs. Day 2, Day 3 미션 인증(2026-10-17, 상금·인센티브 정리 2장).
 //
-//   GET                                내 팀이 올린 파일(가장 최근 것부터, 10분짜리 보기 URL)
+//   GET ?teamId=                       그 팀이 올린 파일(가장 최근 것부터, 10분짜리 보기 URL)
 //   POST {action:"sign", day, kind, contentType, size}   한 번 쓰는 업로드 URL
 //   POST {action:"confirm", path}      파일이 실제로 올라갔는지 보고 행을 남김
 //
@@ -11,8 +11,7 @@
 
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
-import { clientIp } from "@/lib/register/shared";
-import { PROOF_BUCKET, badCodeGate, findTeam } from "@/lib/crossingOpsServer";
+import { PROOF_BUCKET, findTeam } from "@/lib/crossingOpsServer";
 import { PROOF_KINDS, PROOF_MAX_BYTES, PROOF_TYPES, isOpsDay, type ProofKind } from "@/lib/crossingOps";
 
 export const dynamic = "force-dynamic";
@@ -21,21 +20,17 @@ const EXT: Record<string, string> = {
   "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/heic": "heic", "image/heif": "heif", "application/pdf": "pdf",
 };
 
-async function auth(req: Request) {
+// 팀은 GET이면 ?teamId=, POST면 본문의 teamId로 옵니다(2026-10-17, 팀 코드를 뺐습니다).
+async function auth(teamId: unknown) {
   const db = getSupabaseAdmin();
   if (!db) return { res: NextResponse.json({ error: "not_configured" }, { status: 503 }) } as const;
-  const ip = clientIp(req);
-  if (!badCodeGate(ip)) return { res: NextResponse.json({ error: "rate_limited" }, { status: 429 }) } as const;
-  const team = await findTeam(db, req.headers.get("x-team-code"));
-  if (!team) {
-    badCodeGate(ip, true);
-    return { res: NextResponse.json({ error: "unknown_code" }, { status: 401 }) } as const;
-  }
+  const team = await findTeam(db, teamId);
+  if (!team) return { res: NextResponse.json({ error: "unknown_team" }, { status: 400 }) } as const;
   return { db, team } as const;
 }
 
 export async function GET(req: Request) {
-  const a = await auth(req);
+  const a = await auth(new URL(req.url).searchParams.get("teamId"));
   if ("res" in a) return a.res;
   const { db, team } = a;
   const { data, error } = await db.from("crossing_mission_proofs")
@@ -51,10 +46,10 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const a = await auth(req);
+  const body = await req.json().catch(() => null);
+  const a = await auth(body?.teamId);
   if ("res" in a) return a.res;
   const { db, team } = a;
-  const body = await req.json().catch(() => null);
 
   if (body?.action === "sign") {
     const day = Number(body.day);

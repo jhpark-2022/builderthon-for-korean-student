@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// 크로싱 서울 현장 도구(팀 코드, 멘토 예약, 미션 인증)의 값과 계산. 서버와 브라우저가 함께 씁니다.
+// 크로싱 서울 현장 도구(멘토 시간표, 미션 인증)의 값과 계산. 서버와 브라우저가 함께 씁니다.
 // 표는 supabase/migrations/0008_crossing_mentoring_and_proofs.sql.
 //
 // DECIDED 2026-10-17 (사용자): 멘토링은 예약제이고, 예약 하나가 그 앞뒤 15분을 막습니다.
@@ -54,6 +54,7 @@ export function fmtKst(iso: string | number | Date): string {
 
 export type Window = { startsAt: string; endsAt: string };
 export type Booking = { startsAt: string; endsAt: string; mine?: boolean };
+
 export type SlotState = "open" | "booked" | "buffer" | "mine" | "past" | "teamBusy";
 
 const overlap = (a0: number, a1: number, b0: number, b1: number) => a0 < b1 && b0 < a1;
@@ -92,9 +93,3 @@ export function slotStarts(windows: Window[]): number[] {
 export function fitsWindow(t: number, windows: Window[]): boolean {
   return slotStarts(windows).includes(t);
 }
-
-// 헷갈리는 글자(0 O 1 I L)를 뺀 31자. 마이그레이션의 check와 같은 집합입니다.
-export const TEAM_CODE_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
-export const normalizeTeamCode = (v: unknown) =>
-  typeof v === "string" ? v.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6) : "";
-export const isTeamCode = (v: string) => /^[A-HJKMNP-Z2-9]{6}$/.test(v);

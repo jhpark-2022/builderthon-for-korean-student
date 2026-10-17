@@ -1,6 +1,7 @@
 -- ─────────────────────────────────────────────────────────────────────────────
 -- 0008: 크로싱 서울 현장 도구. 팀 코드, 멘토 예약, 미션 인증 (2026-10-17).
 --
+-- 시간표는 모든 팀이 같이 봅니다. 칸에는 예약한 팀의 이름이 보입니다.
 -- DECIDED 2026-10-17 (사용자: "멘토링 booking system", "그 시간 앞뒤 15분씩도 자동으로 block"):
 -- Day 2와 Day 3 멘토링은 예약제입니다(그 전 2026-10-11 결정은 "예약 없이"). 예약 하나는 자기 시간과
 -- 그 뒤 15분을 막습니다. 예약마다 그렇게 하므로 같은 멘토의 두 예약 사이에는 언제나 15분 이상이 남고,
@@ -16,14 +17,14 @@
 
 create extension if not exists btree_gist with schema extensions;
 
--- 팀. Day 1 현장에서 팀을 맺은 뒤 운영진이 만들고, 팀은 코드 하나로 예약과 인증을 합니다(로그인 없음).
+-- 팀. Day 1 현장에서 팀을 맺은 뒤 운영진이 만듭니다. 로그인도 코드도 없습니다. 시간표에서 팀을 골라 씁니다
+-- (DECIDED 2026-10-17, 사용자: "그냥 timetable where team can put in their available, 다른 팀과 공유").
 create table if not exists public.crossing_teams (
   id          uuid primary key default gen_random_uuid(),
   created_at  timestamptz not null default now(),
   event_slug  text not null,
   name        text not null check (char_length(name) between 1 and 40),
-  -- 헷갈리는 글자(0 O 1 I L)를 뺀 대문자와 숫자 6자. lib/crossingOps.ts가 만듭니다.
-  code        text not null unique check (code ~ '^[A-HJKMNP-Z2-9]{6}$')
+  unique (event_slug, name)
 );
 create index if not exists crossing_teams_event_idx on public.crossing_teams (event_slug, name);
 

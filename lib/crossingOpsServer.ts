@@ -1,43 +1,22 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// 현장 도구 라우트의 서버 공통(2026-10-17). 팀 코드로 팀 찾기, 운영진 키 확인, 팀 코드 만들기.
+// 현장 도구 라우트의 서버 공통(2026-10-17). 팀 찾기와 운영진 키 확인.
 //
-// 로그인이 없습니다. 팀은 Day 1에 운영진이 준 6자 코드로, 운영진은 CROSSING_STAFF_KEY로 들어옵니다.
-// 코드는 31자 6자리(약 8.9억 가지)이고 한 회차의 팀은 20개 안팎이라 맞혀서 들어오기 어렵습니다.
-// 틀린 코드는 IP별로 세어 막습니다(아래 badCodeGate).
+// DECIDED 2026-10-17 (사용자: "너무 뭐가 많은데? 그냥 timetable where team can put in their available"):
+// 팀 코드를 뺐습니다. 시간표는 모든 팀이 같이 보고, 팀은 목록에서 자기 팀을 골라 칸에 넣습니다(wejoinin처럼).
+// 대가: 주소를 아는 사람은 어느 팀으로든 넣고 뺄 수 있습니다. 현장에서만 쓰는 도구라 받아들입니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import "server-only";
-import { randomInt, timingSafeEqual } from "node:crypto";
+import { timingSafeEqual } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { CURRENT_EVENT } from "@/lib/registrationWindow";
-import { TEAM_CODE_ALPHABET, isTeamCode, normalizeTeamCode } from "@/lib/crossingOps";
 
-export type Team = { id: string; name: string; code: string };
+export type Team = { id: string; name: string };
 
-export function newTeamCode(): string {
-  let s = "";
-  for (let i = 0; i < 6; i++) s += TEAM_CODE_ALPHABET[randomInt(TEAM_CODE_ALPHABET.length)];
-  return s;
-}
-
-// 틀린 코드 시도. 인스턴스 메모리라 완벽하지 않지만(인스턴스가 여럿이면 각자 셉니다) 코드 공간이 커서 이 정도면 됩니다.
-const bad = new Map<string, { n: number; since: number }>();
-const BAD_WINDOW_MS = 10 * 60_000;
-const BAD_MAX = 20;
-export function badCodeGate(ip: string, hit = false): boolean {
-  const now = Date.now();
-  const cur = bad.get(ip);
-  const rec = !cur || now - cur.since > BAD_WINDOW_MS ? { n: 0, since: now } : cur;
-  if (hit) rec.n += 1;
-  bad.set(ip, rec);
-  return rec.n < BAD_MAX;
-}
-
-/** 코드로 팀을 찾습니다. 형식이 틀리거나 없으면 null. */
-export async function findTeam(db: SupabaseClient, raw: unknown): Promise<Team | null> {
-  const code = normalizeTeamCode(raw);
-  if (!isTeamCode(code)) return null;
-  const { data } = await db.from("crossing_teams").select("id, name, code").eq("event_slug", CURRENT_EVENT).eq("code", code).maybeSingle();
+/** id로 이번 회차의 팀을 찾습니다. 없으면 null. */
+export async function findTeam(db: SupabaseClient, id: unknown): Promise<Team | null> {
+  if (typeof id !== "string" || !/^[0-9a-f-]{36}$/.test(id)) return null;
+  const { data } = await db.from("crossing_teams").select("id, name").eq("event_slug", CURRENT_EVENT).eq("id", id).maybeSingle();
   return (data as Team | null) ?? null;
 }
 

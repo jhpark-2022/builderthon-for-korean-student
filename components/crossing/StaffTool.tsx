@@ -2,7 +2,7 @@
 
 // ─────────────────────────────────────────────────────────────────────────────
 // /crossing/staff. 운영진 화면(2026-10-17). 한국어만 씁니다(운영진 도구).
-//   팀: 만들기(코드 자동), 코드 보기
+//   팀: 만들기(시간표의 팀 목록이 됩니다)
 //   멘토: 만들기, 받는 시간(Day, 시작, 끝) 넣기와 빼기, 끄기
 //   예약: 날마다 멘토별 목록, 운영진이 지우기
 //   미션: 팀 × 날 표. 사진과 PDF가 왔는지, 현장 출석과 인정 체크(Day 4는 클로징 때 체크)
@@ -14,7 +14,7 @@ import { BODY, META } from "@/components/ui/typography";
 import { buttonClass } from "@/components/ui/Button";
 import { OPS_DAYS, fmtKst } from "@/lib/crossingOps";
 
-type Team = { id: string; name: string; code: string };
+type Team = { id: string; name: string };
 type Mentor = { id: string; name: string; field: string | null; active: boolean };
 type Win = { id: string; mentor_id: string; day: number; starts_at: string; ends_at: string };
 type Bk = { id: string; mentor_id: string; team_id: string; day: number; starts_at: string; ends_at: string };
@@ -100,7 +100,6 @@ function Teams({ teams, onCreate }: { teams: Team[]; onCreate: (name: string) =>
         {teams.map((t) => (
           <li key={t.id} className={`${BOX} flex items-center justify-between gap-2`}>
             <span className="font-bold">{t.name}</span>
-            <code className="tracking-[0.2em] text-amber-100">{t.code}</code>
           </li>
         ))}
       </ul>

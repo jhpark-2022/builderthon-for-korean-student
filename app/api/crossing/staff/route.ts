@@ -10,7 +10,7 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { CURRENT_EVENT } from "@/lib/registrationWindow";
-import { PROOF_BUCKET, newTeamCode, staffKeyVerdict } from "@/lib/crossingOpsServer";
+import { PROOF_BUCKET, staffKeyVerdict } from "@/lib/crossingOpsServer";
 import { isOpsDay, kstTime } from "@/lib/crossingOps";
 
 export const dynamic = "force-dynamic";
@@ -31,7 +31,7 @@ export async function GET(req: Request) {
   if (!db) return NextResponse.json({ error: "not_configured" }, { status: 503 });
 
   const [teams, mentors, windows, bookings, proofs, checks] = await Promise.all([
-    db.from("crossing_teams").select("id, name, code, created_at").eq("event_slug", CURRENT_EVENT).order("name"),
+    db.from("crossing_teams").select("id, name, created_at").eq("event_slug", CURRENT_EVENT).order("name"),
     db.from("crossing_mentors").select("id, name, field, active").eq("event_slug", CURRENT_EVENT).order("name"),
     db.from("crossing_mentor_windows").select("id, mentor_id, day, starts_at, ends_at").order("starts_at"),
     db.from("crossing_mentor_bookings").select("id, mentor_id, team_id, day, starts_at, ends_at").order("starts_at"),
@@ -65,13 +65,9 @@ export async function POST(req: Request) {
     case "createTeam": {
       const name = s(b.name, 40);
       if (!name) return fail("invalid");
-      // 코드가 겹치면(드묾) 몇 번 다시 뽑습니다.
-      for (let i = 0; i < 5; i++) {
-        const { error } = await db.from("crossing_teams").insert({ event_slug: CURRENT_EVENT, name, code: newTeamCode() });
-        if (!error) return NextResponse.json({ ok: true }, { status: 201 });
-        if (error.code !== "23505") return fail("db", 500);
-      }
-      return fail("db", 500);
+      const { error } = await db.from("crossing_teams").insert({ event_slug: CURRENT_EVENT, name });
+      if (error) return fail(error.code === "23505" ? "duplicate" : "db", error.code === "23505" ? 409 : 500);
+      return NextResponse.json({ ok: true }, { status: 201 });
     }
     case "createMentor": {
       const name = s(b.name, 40);
