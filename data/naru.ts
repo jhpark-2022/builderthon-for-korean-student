@@ -2307,6 +2307,9 @@ export const naru = {
         title: { ko: "찾기", en: "Find" },
         when: { ko: "Day 1", en: "Day 1" },
         dayOffset: 1,
+        // DECIDED 2026-10-19 (사용자: "day 1 and day 4에 각각 GSC랑 MARU180 로고 넣어줘"): 노선도 정거장 아래의 로고.
+        // 흰색 단색(scripts/process-partner-logos.py, 원본은 "12월 빌더톤/CI"). 로고가 무엇을 뜻하는지(장소, 함께하는 곳)는 글로 쓰지 않습니다.
+        logo: { src: "/partners/logos/white/trimmed/gsc.png", name: "GSC Global Startup Center", w: 455, h: 129 },
         body: {
           // DECIDED 2026-10-08 (사용자: "팀 - 전원 현장 편성"): 미리 짠 팀을 확인하는 날이 아니라 이 날 팀을 맺습니다.
           ko: "현장에서 팀을 맺습니다. Day 0에 각자 세운 생각을 꺼내 맞춰 보고, 출제사가 직접 여는 세션에서 회사를 봅니다.",
@@ -2456,6 +2459,9 @@ export const naru = {
         title: { ko: "공유하기", en: "Share" },
         when: { ko: "Day 4", en: "Day 4" },
         dayOffset: 4,
+        // DECIDED 2026-10-19 (사용자: "day 1 and day 4에 각각 GSC랑 MARU180 로고 넣어줘"): 노선도 정거장 아래의 로고.
+        // 흰색 단색(scripts/process-partner-logos.py, 원본은 "12월 빌더톤/CI"). 로고가 무엇을 뜻하는지(장소, 함께하는 곳)는 글로 쓰지 않습니다.
+        logo: { src: "/partners/logos/white/trimmed/maru180.png", name: "MARU180", w: 385, h: 91 },
         // 2026-09-30 (사용자, 문장 감사): "완성도가 아니라 과정을 봅니다"였습니다. "결과보다 과정"은 #naru의
         // 코어 01과 measure가 이미 세 번 말합니다. 여기서는 그 말이 이 무대에서 무슨 뜻인지만.
         body: {
@@ -2494,6 +2500,8 @@ export const naru = {
       title: Phrase;
       when: Phrase;
       dayOffset: number;
+      /** 노선도 정거장 아래의 로고(2026-10-19). 흰색 단색 PNG. name은 스크린리더가 읽습니다. */
+      logo?: { src: string; name: string; w: number; h: number };
       body: Phrase;
       /** 본문의 마지막 문장. 8월 데이 카드의 "→ 그날의 한 줄" 자리 (2026-09-17). */
       line: Phrase;

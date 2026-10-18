@@ -32,6 +32,11 @@ export type RouteStation = {
    * 폰에서는 날짜별 일정의 각 행이 같은 말을 합니다(NaruHome).
    */
   milestone?: string;
+  /**
+   * 정거장 칸 바닥의 로고(2026-10-19, 사용자: Day 1 GSC, Day 4 MARU180). 흰색 단색 PNG를 칸의 맨 아래(mt-auto)에 둡니다.
+   * 마일스톤 줄의 길이가 날마다 달라도 로고 둘이 같은 줄에 섭니다. 폰에서도 그립니다(칸 폭 안으로 줄어듦).
+   */
+  logo?: { src: string; name: string; w: number; h: number };
 };
 
 export default function RouteMap({
@@ -175,6 +180,13 @@ export default function RouteMap({
                   <span className={`hidden break-keep ${META} leading-tight text-white/75 sm:block`}>
                     <span aria-hidden className="mr-1.5 inline-block h-[6px] w-[6px] -translate-y-[2px] rounded-full bg-naru-orange" />
                     {s.milestone}
+                  </span>
+                )}
+                {s.logo && (
+                  <span className="mt-auto flex w-full justify-center pt-2">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={s.logo.src} alt={s.logo.name} width={s.logo.w} height={s.logo.h} loading="lazy"
+                      className="h-auto max-h-5 w-auto max-w-[88%] object-contain opacity-80 sm:max-h-6 sm:max-w-[7rem]" />
                   </span>
                 )}
                 {/* 배지는 sm부터 (2026-09-19, 모바일 감사 3). 폰에서 정거장 한 칸이

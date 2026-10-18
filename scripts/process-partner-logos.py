@@ -51,12 +51,15 @@ calibrated against them.
 
     python3 scripts/process-partner-logos.py
 """
+import sys
 from PIL import Image
 import numpy as np
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CI = ROOT.parent / "CI"
+# 2026-10-19: 12월 로고는 형제 폴더 "12월 빌더톤/CI"에 있습니다. JOBS의 옵션 {"ci": "dec"}로 고릅니다.
+CI_DEC = ROOT.parent.parent / "12월 빌더톤" / "CI"
 OUT = ROOT / "public" / "partners" / "logos" / "white"
 TRIMMED = OUT / "trimmed"
 
@@ -140,6 +143,10 @@ JOBS = [
     # colour are (255,255,255,0), and every ink pixel then measures its distance
     # from white rather than from nothing.
     ("Nuldam.png", "nuldam.png", "alpha"),
+    # 2026-10-19 (사용자: "day 1 and day 4에 각각 GSC랑 MARU180 로고"): 12월 노선도의 장소 로고.
+    # GSC는 G, S, C가 겹쳐 있어 "alpha"로 통째 흰색이면 세 글자가 한 덩어리가 됩니다. "tone"이 글자마다 밝기를 달리합니다.
+    ("GSC.png", "gsc.png", "tone", {"ci": "dec"}),
+    ("마루180.png", "maru180.png", "color", {"ci": "dec"}),
 ]
 
 
@@ -217,15 +224,29 @@ def from_chroma(im):
     return ink * lit * 255.0
 
 
+def from_tone(im):
+    """Cut-out mark with OVERLAPPING colour shapes plus black type (GSC).
+    The black type stays fully white. Each coloured shape keeps its own share of
+    white by its luminance, so G, S and C stay apart where they overlap."""
+    a = np.asarray(im.convert("RGBA")).astype(float)
+    rgb, alpha = a[:, :, :3], a[:, :, 3]
+    colour = (rgb.max(axis=2) - rgb.min(axis=2)) >= 40
+    out = alpha.copy()
+    out[colour] = alpha[colour] * np.clip(0.45 + rgb.mean(axis=2)[colour] / 255 * 0.8, 0, 1)
+    return out
+
+
 def from_alpha(im):
     """Already cut out on transparency → the source alpha IS the shape."""
     return np.asarray(im.convert("RGBA")).astype(int)[:, :, 3].astype(float)
 
 
-def trim_all():
+def trim_all(only=frozenset()):
     """Crop every mark to its alpha bbox so they all fill their tile the same."""
     TRIMMED.mkdir(parents=True, exist_ok=True)
     for src in sorted(OUT.glob("*.png")):
+        if only and src.name not in only:
+            continue
         slug = src.stem
         im = Image.open(src)
         bbox = im.getbbox()
@@ -242,9 +263,12 @@ def trim_all():
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
+    only = set(sys.argv[1:])  # 출력 파일 이름을 주면 그것만 만듭니다(예: gsc.png maru180.png)
     for src, out, mode, *rest in JOBS:
         opts = rest[0] if rest else {}
-        im = Image.open(CI / src)
+        if only and out not in only:
+            continue
+        im = Image.open((CI_DEC if opts.get("ci") == "dec" else CI) / src)
         if "crop" in opts:
             im = im.crop(opts["crop"])
         if "upscale" in opts:
@@ -257,6 +281,7 @@ def main():
             "alpha": from_alpha,
             "light": from_light,
             "chroma": from_chroma,
+            "tone": from_tone,
         }[mode](im)
         h, w = alpha.shape
         # white mono is fully described by alpha → store as LA (L=255 + alpha)
@@ -274,7 +299,7 @@ def main():
         img.save(dst, "PNG", optimize=True)
         print(f"  {src:24s} -> {out:24s} {img.size[0]}x{img.size[1]}  "
               f"{dst.stat().st_size / 1024:.1f} KB")
-    trim_all()
+    trim_all(only)
 
 
 if __name__ == "__main__":

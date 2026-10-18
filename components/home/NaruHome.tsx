@@ -938,6 +938,7 @@ export default function NaruHome() {
               // 미션은 여전히 Day 2부터라 Day 1 아래 미션 줄은 없습니다. 빈 점은 Day 0 하나.
               kind: i === 0 ? "plain" : i === naru.december.stages.length - 1 ? "anchor" : "spot",
               milestone: s.milestone ? t(s.milestone) : undefined,
+              logo: s.logo,
             }))}
             // DECIDED 2026-10-11 (사용자): 레일 아래의 멘토링 필 둘과 범례를 그리지 않습니다. 필은 아래 멘토링 상자가 같은 말을 하고,
             // 범례는 "제출물과 마일스톤이 있는 날"처럼 따로 표시하지 말라는 요청입니다. 날마다의 마일스톤은 정거장 아래 한 줄이 말합니다.
