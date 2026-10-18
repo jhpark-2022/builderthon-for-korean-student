@@ -780,39 +780,15 @@ export default function NaruHome() {
                   ? <OpenChatLink t={t} src="naru-hero" label={openChatLabels.join} variant="secondary" className={HERO_BUTTON_GROUND} />
                   : <OpenChatLink t={t} src="naru-hero" label={openChatLabels.december} variant="hero" />
               )}
-              {/* 오픈채팅이 막혀 있으면(links.openChat 빈 문자열, 2026-09-17) 이 앵커가
-                  히어로의 유일한 문이라 주 CTA의 면(그라데이션 필)을 받습니다. 히어로의
-                  주 CTA는 언제나 하나입니다. 등록이 열리면(regState open) 등록 버튼이 주 CTA. */}
-              <a
-                href="#december"
-                onClick={() => track("naru_cta", { src: "hero", to: "december" })}
-                className={`${buttonClass("secondary")} ${HERO_BUTTON_GROUND} max-sm:hidden`}
-              >
-                {t(naru.eventHero.ctaProgram)}
-                {/* DECIDED 2026-10-10 (사용자, 스크린숏: "화살표가 뒤죽박죽"): ↓를 →로. 이 줄의 세 버튼이 같은 화살표를 씁니다. */}
-                <span aria-hidden className="text-white/70">→</span>
-              </a>
-              <Link
-                href="/match"
-                aria-describedby="hero-match-note"
-                onClick={() => track("naru_cta", { src: "hero", to: "match" })}
-                className={`${buttonClass("secondary")} ${HERO_BUTTON_GROUND}`}
-              >
-                {t(naru.eventHero.ctaMatch)}
-                <span aria-hidden className="text-white/70">→</span>
-              </Link>
+              {/* DECIDED 2026-10-18 (사용자, 스크린숏: "중요한 버튼 2개만 남겨줘"): "프로그램 보기"(#december)와 "AI 유형 테스트"(/match)를 뺐습니다.
+                  남는 둘은 등록과 소식 받기, 신청으로 가는 길입니다. /match는 등록 완료 화면과 Day 1 카드의 matchCta가 잇고,
+                  #december는 스크롤 바로 아래입니다. 아래 matchNote 줄도 버튼과 함께 내렸습니다. 키(ctaProgram, ctaMatch, matchNote)는 둡니다. */}
             </div>
             {/* DECIDED 2026-10-12 (등록 브리프 1.2, 리뷰 S1 S3): 언제 열리는지, 혼자 등록해도 되는지, 전공과 코딩 경험이 조건인지가
                 첫 화면 안에서 답해집니다. DECIDED 2026-10-13 (사용자: "너무 길어"): 한 줄(registerNoteShort)입니다. 전부는 모달에(2026-10-13부터 등록 블록은 스크리닝 한 줄만). */}
             {regState === "not_open" && (
               <p id="hero-register-note" className={`mt-3 text-balance break-keep ${META} leading-snug text-white/85`}>{t(registerNoteShort)}</p>
             )}
-            {/* DECIDED 2026-10-11 (사용자: "버튼 안에 넣지는 말고, 설명은 보일 수 있도록"): AI 유형 테스트가 무엇에 쓰이는지 버튼 줄 아래에 적습니다.
-                Day 1의 팀 매칭용이고, 그 전에도 해 볼 수 있지만 결과는 Day 1 전에는 저장되지 않습니다(/match의 2026-10-08 결정과 같은 사실). */}
-            <p id="hero-match-note" className={`mt-2 break-keep ${META} leading-snug text-white/85`}>
-              {/* 문장마다 한 줄. 한 문단으로 두면 둘째 문장의 첫 낱말만 윗줄 끝에 걸렸습니다. */}
-              {t(naru.eventHero.matchNote).split(/(?<=\.) /).map((line, i) => <span key={i} className="block">{line}</span>)}
-            </p>
           </div>
           {/* 오른쪽 단 = 8월 행사 사진 넷 (DECIDED 2026-09-17, 사용자). 8월 히어로의
               메탈 휴먼 자리입니다. 사람이 많이 나온 장면만, 같은 사진은 사이트에 한 번.
