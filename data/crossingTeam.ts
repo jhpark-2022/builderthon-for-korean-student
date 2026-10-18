@@ -39,7 +39,8 @@ export const teamCopy = {
   proofPdf: { ko: "그날의 진척 PDF", en: "That day's progress PDF" },
   // Day 1은 PDF 하나(2026-10-17 사용자). 홈 Day 1 카드의 "Day 2에 들고 갈 것"과 같은 물건입니다.
   proofPdfDay1: { ko: "이슈에 대한 팀의 생각 1장 (PDF)", en: "One page of the team's take on the issue (PDF)" },
-  proofLeadDay1: { ko: "Day 1에는 이슈에 대한 팀의 생각 1장을 PDF로 올립니다.", en: "On Day 1, upload one page of your team's take on the issue as a PDF." },
+  // 2026-10-19 (사용자: Day 1 미션 뺌): Day 1 올리기는 선택입니다.
+  proofLeadDay1: { ko: "Day 1은 미션이 없습니다. 이슈에 대한 팀의 생각 1장을 PDF로 올려 둘 수 있습니다.", en: "There is no mission on Day 1. You can upload one page of your team's take on the issue as a PDF." },
   day1Timetable: { ko: "Day 1에는 멘토 시간표에 칸을 넣지 않습니다. 시간표는 Day 2, 3에 씁니다.", en: "There are no mentor slots on Day 1. The timetable is for Day 2 and 3." },
   proofPick: { ko: "파일 올리기", en: "Upload a file" },
   proofReplace: { ko: "다시 올리기", en: "Upload again" },

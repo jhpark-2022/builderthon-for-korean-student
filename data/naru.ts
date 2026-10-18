@@ -926,8 +926,9 @@ export const naru = {
         title: { ko: "미션 지원", en: "Mission support" },
         body: {
           // DECIDED 2026-10-10 (중복 브리프 C3): "해낸 팀 모두"는 노선도 범례와 december.facts가 말합니다. 이 칸에서는 되풀이하지 않습니다.
-          ko: "Day 2부터 그날 미션을 해내면 그날 지원을 받습니다.",
-          en: "From Day 2, complete the day's mission and get support that day.",
+          // 2026-10-19 (사용자: "1일차랑 4일차에는 미션을 빼자"): "Day 2부터"는 Day 4까지로 읽혀 Day 2와 Day 3으로.
+          ko: "Day 2와 Day 3에 그날 미션을 해내면 그날 지원을 받습니다.",
+          en: "On Day 2 and Day 3, complete the day's mission and get support that day.",
         },
       },
       {
@@ -1839,7 +1840,8 @@ export const naru = {
         // 그 전: k "마일스톤", v "...넘은 팀은 모두 그날 지원을 받고, 넘은 마일스톤이 그 팀의 기록으로 남습니다."
         k: { ko: "미션", en: "Missions" },
         // DECIDED 2026-10-13 (사용자, 멘토링 브리프 2): 미션은 Day 2부터이고 조건은 참여입니다. 그 전에는 Day 2부터라는 말이 없었습니다.
-        v: { ko: "Day 2부터 날마다 하나씩 있습니다. 무엇을 냈는지보다 함께 있었는지를 봅니다. 해낸 팀은 모두 그날 지원을 받고, 해낸 미션이 그 팀의 기록으로 남습니다.", en: "One a day from Day 2. We look at whether you were there together, more than at what you handed in. Every team that completes it gets support that day, and the missions a team completes become its record." },
+        // 2026-10-19 (사용자): 미션은 Day 2와 Day 3에만. 그 전 "Day 2부터 날마다 하나씩".
+        v: { ko: "Day 2와 Day 3에 하나씩 있습니다. 무엇을 냈는지보다 함께 있었는지를 봅니다. 해낸 팀은 모두 그날 지원을 받고, 해낸 미션이 그 팀의 기록으로 남습니다.", en: "One each on Day 2 and Day 3. We look at whether you were there together, more than at what you handed in. Every team that completes it gets support that day, and the missions a team completes become its record." },
       },
       {
         // DECIDED 2026-10-11 (브랜드 브리프 B1, docs/brand.md의 금지어): 참가자가 읽는 자리에 "가설", "검증"을 쓰지 않습니다.
@@ -1977,6 +1979,7 @@ export const naru = {
     // DECIDED 2026-10-17 (사용자, 스크린숏: "1일차랑 2&3일차 length of mission 차이가 너무 남"): Day 1 띠도 펼쳐집니다.
     // 미션이라고 부르지 않습니다(정본 "미션은 Day 2부터"는 그대로, 같은 날 사용자 결정). 넣는 것은 같은 날 정한 사실 둘뿐입니다:
     // 그 1장을 Day 2에 멘토에게 들고 가고, Day 1에 PDF로 올립니다(시간표 페이지의 Day 1 칸).
+    carrySubmitLabel: { ko: "올려 두기 (선택)", en: "Uploading (optional)" },
     carryDetail: {
       todoLabel: { ko: "할 것", en: "What to do" },
       // 같은 날 뒤(사용자: "또 너무 길잖아 compare to day 2 and 3. 똑같이. 상자 색깔로 동일하게"): 두 목록 각 세 줄, 줄이 꺾이지 않는 길이.
@@ -1985,10 +1988,11 @@ export const naru = {
         { ko: "팀의 생각을 1장으로 정리하기", en: "Put the team's take on one page" },
         { ko: "Day 2에 멘토에게 들고 가기", en: "Bring it to a mentor on Day 2" },
       ],
+      // 2026-10-19 (사용자: Day 1 미션 뺌, 한 장은 미션 아닌 띠로): 올리기는 선택입니다. 라벨은 carrySubmitLabel.
       submit: [
-        { ko: "그 1장을 PDF로 올리기", en: "Upload that page as a PDF" },
+        { ko: "PDF로 올려 둘 수 있습니다", en: "You can upload it as a PDF" },
         { ko: "시간표 페이지에서 Day 1 고르기", en: "Pick Day 1 on the timetable page" },
-        { ko: "사진은 Day 2부터 올립니다", en: "Photos start on Day 2" },
+        { ko: "미션은 Day 2와 Day 3에 있습니다", en: "Missions are on Day 2 and Day 3" },
       ],
     },
     // 일정표 행의 마일스톤 줄 끝에 붙는 말(2026-10-10). 누가 받는지를 날마다 한 번씩 말합니다.
@@ -2520,18 +2524,8 @@ export const naru = {
         // DECIDED 2026-10-13 (사용자: "2,3,4일 모두 이후 공개"): Day 4도 내용을 쓰지 않습니다. 그 전: "성과 공유회 완주"와 그 설명.
         // DECIDED 2026-10-17 (사용자, 스크린숏 표): Day 4의 미션 인정 조건. 팀원 과반이 현장에 오고 성과 공유회에서 발표하면 됩니다.
         // 다 풀지 못해도 됩니다(brand 7장). 운영진이 클로징 때 확인합니다.
-        milestone: { ko: "성과 공유회에서 발표", en: "Present at the showcase" },
-        milestoneDetail: {
-          conditions: [
-            { ko: "팀원 과반이 현장에 오기", en: "More than half the team on site" },
-            { ko: "성과 공유회에서 발표하기", en: "Present at the showcase" },
-            { ko: "다 못 풀어도 됩니다", en: "It does not have to be solved" },
-          ],
-          submit: [
-            { ko: "따로 내는 것은 없습니다", en: "Nothing to hand in" },
-            { ko: "운영진이 클로징 때 체크합니다", en: "The organisers check at the closing" },
-          ],
-        },
+        // DECIDED 2026-10-19 (사용자: "1일차랑 4일차에는 미션을 빼자"): Day 4의 미션(성과 공유회에서 발표, 팀원 과반)을 뺐습니다.
+        // 노선도의 Day 4 아래 줄과 카드의 미션 띠가 함께 사라집니다. 그 전 인정 조건은 git 이력에.
       },
     ] as {
       name: Phrase;

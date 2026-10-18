@@ -603,11 +603,13 @@ export default function NaruHome() {
       {!stage.milestone && stage.submit && (
         // DECIDED 2026-10-17 (사용자: "똑같이. 상자 색깔로 동일하게"): Day 1 띠도 호박색과 ★, 라벨 "미션"입니다. 2026-10-13의 "호박색과 ★는 미션에만"을
         // 이 결정이 바꿉니다. 그 전 라벨 "Day 2에 들고 갈 것"은 두 줄로 꺾여 Day 2, 3 띠보다 높았습니다.
-        <MilestoneStrip id={`carry-day-${stage.dayOffset}`} label={t(naru.december.milestoneLabel)} title={t(stage.submit)} center expanded={inPanel} fill={sub}
+        // DECIDED 2026-10-19 (사용자: "1일차랑 4일차에는 미션을 빼자", 답: 미션 아닌 띠로 남김): Day 1 띠는 다시 무채색, ★ 없음, 라벨 "Day 2에 들고 갈 것".
+        // 2026-10-17의 호박색 미션 띠를 되돌립니다. 띠는 이제 늘 쌓은 모양이라 그때의 두 줄 꺾임 문제는 없습니다.
+        <MilestoneStrip id={`carry-day-${stage.dayOffset}`} tone="plain" label={t(naru.december.carryLabel)} title={t(stage.submit)} center expanded={inPanel} fill={sub}
           {...sync}
           detail={[
             { label: t(naru.december.carryDetail.todoLabel), items: naru.december.carryDetail.todo.map(t) },
-            { label: t(naru.december.milestoneSubmitLabel), items: naru.december.carryDetail.submit.map(t) },
+            { label: t(naru.december.carrySubmitLabel), items: naru.december.carryDetail.submit.map(t) },
           ]} />
       )}
       {stage.milestone && (
