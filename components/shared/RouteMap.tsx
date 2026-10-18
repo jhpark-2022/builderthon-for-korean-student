@@ -33,8 +33,9 @@ export type RouteStation = {
    */
   milestone?: string;
   /**
-   * 정거장 칸 바닥의 로고(2026-10-19, 사용자: Day 1 GSC, Day 4 MARU180). 흰색 단색 PNG를 칸의 맨 아래(mt-auto)에 둡니다.
-   * 마일스톤 줄의 길이가 날마다 달라도 로고 둘이 같은 줄에 섭니다. 폰에서도 그립니다(칸 폭 안으로 줄어듦).
+   * 정거장 노드 위의 로고(2026-10-19, 사용자: Day 1 GSC, Day 4 MARU180). 흰색 단색 PNG.
+   * DECIDED 2026-10-19 (사용자, 스크린숏: "로고가 위쪽에 있으면 좋겠는데"): 칸 바닥에서 노드 위로 옮겼습니다(8월 노선도의 장소 로고 자리).
+   * 하나라도 로고가 있으면 모든 칸에 같은 높이의 로고 줄이 생기고, 레일과 현재 위치 점이 그만큼 내려갑니다. 폰에서도 그립니다.
    */
   logo?: { src: string; name: string; w: number; h: number };
 };
@@ -107,6 +108,9 @@ export default function RouteMap({
       return next;
     });
   }, [current, stations]);
+  // 로고 줄(h-7) + 칸의 gap(1.5) 만큼 레일이 내려갑니다. 1.625rem은 노드 줄의 중심(py-2.5 + h-8의 절반).
+  const hasLogos = stations.some((s) => s.logo);
+  const railTop = hasLogos ? "3.75rem" : "1.625rem";
   const dotLeft = current === undefined ? null : `calc(${inset} + (100% - 2 * ${inset}) * ${n > 1 ? current / (n - 1) : 0})`;
   return (
     <div className={className}>
@@ -125,17 +129,17 @@ export default function RouteMap({
         // 2026-10-11: 배지가 하나도 없으면 배지 자리(pb-7)를 비워 두지 않습니다.
         className={`relative flex items-stretch ${pills && pills.length && stations.some((s) => s.badge) ? "pb-7" : "pb-2"}`}
       >
-        {/* 레일. top-[1.625rem]은 노드 줄의 중심(py-2.5 + h-8의 절반). */}
+        {/* 레일. 높이는 위 railTop. */}
         <span
           aria-hidden
-          className="pointer-events-none absolute top-[1.625rem] h-px bg-gradient-to-r from-naru-plum-tint/40 via-white/15 to-naru-plum-tint/40"
-          style={{ left: inset, right: inset }}
+          className="pointer-events-none absolute h-px bg-gradient-to-r from-naru-plum-tint/40 via-white/15 to-naru-plum-tint/40"
+          style={{ left: inset, right: inset, top: railTop }}
         />
         {dotLeft && (
           <span
             aria-hidden
-            className="pointer-events-none absolute top-[1.625rem] z-10 h-[9px] w-[9px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-naru-orange shadow-[0_0_0_3px_rgba(7,11,31,0.9),0_0_12px_rgba(238,138,79,0.8)] transition-[left] duration-200 ease-out motion-reduce:transition-none"
-            style={{ left: dotLeft }}
+            className="pointer-events-none absolute z-10 h-[9px] w-[9px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-naru-orange shadow-[0_0_0_3px_rgba(7,11,31,0.9),0_0_12px_rgba(238,138,79,0.8)] transition-[left] duration-200 ease-out motion-reduce:transition-none"
+            style={{ left: dotLeft, top: railTop }}
           />
         )}
         {stations.map((s, index) => {
@@ -150,6 +154,15 @@ export default function RouteMap({
                 {...(onSelect ? { type: "button" as const, ...(controls ? { "aria-expanded": on, "aria-controls": controls(index) } : { "aria-pressed": on }), onClick: () => onSelect(index) } : {})}
                 className={`flex h-full w-full flex-col items-center gap-1.5 rounded-xl px-1 py-2.5 text-center ${onSelect ? `max-sm:cursor-pointer sm:pointer-events-none ${on ? "max-sm:bg-white/[0.07]" : ""}` : ""}`}
               >
+                {hasLogos && (
+                  <span className="flex h-7 w-full items-end justify-center">
+                    {s.logo && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={s.logo.src} alt={s.logo.name} width={s.logo.w} height={s.logo.h} loading="lazy"
+                        className="h-auto max-h-5 w-auto max-w-[88%] object-contain opacity-80 sm:max-h-6 sm:max-w-[7rem]" />
+                    )}
+                  </span>
+                )}
                 <span className="relative flex h-8 items-center justify-center">
                   {anchor ? (
                     <span
@@ -180,13 +193,6 @@ export default function RouteMap({
                   <span className={`hidden break-keep ${META} leading-tight text-white/75 sm:block`}>
                     <span aria-hidden className="mr-1.5 inline-block h-[6px] w-[6px] -translate-y-[2px] rounded-full bg-naru-orange" />
                     {s.milestone}
-                  </span>
-                )}
-                {s.logo && (
-                  <span className="mt-auto flex w-full justify-center pt-2">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={s.logo.src} alt={s.logo.name} width={s.logo.w} height={s.logo.h} loading="lazy"
-                      className="h-auto max-h-5 w-auto max-w-[88%] object-contain opacity-80 sm:max-h-6 sm:max-w-[7rem]" />
                   </span>
                 )}
                 {/* 배지는 sm부터 (2026-09-19, 모바일 감사 3). 폰에서 정거장 한 칸이
