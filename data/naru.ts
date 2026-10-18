@@ -803,8 +803,9 @@ export const naru = {
     // 화면에 이미 있는 사실만 씁니다. 출처: 코어 01 "스크리닝이 없고", group.name "건너간 사람이 다시 돌아와 서는 자리".
     noteConcrete: {
       // DECIDED 2026-10-10 (중복 브리프 C7): "스크리닝 없는"을 "누구나 올 수 있는"으로. 스크리닝이라는 낱말은 코어 01과 등록 안내 두 자리에만 둡니다.
-      ko: "문턱은 누구나 올 수 있는 참가이고, 롤모델은 건너간 뒤 다시 돌아와 서는 사람입니다.",
-      en: "The low doorway is entry open to anyone. The role models are the people who crossed and came back to stand here.",
+      // 2026-10-19 (/naru 감사 5): "누구나"는 brand 5장이 쓰지 않는 말(문턱을 낮추는 말로 부르지 않음). 쓰는 말 "온 사람이 참가자"로.
+      ko: "문턱은 온 사람이 곧 참가자라는 것이고, 롤모델은 건너간 뒤 다시 돌아와 서는 사람입니다.",
+      en: "The low doorway means whoever comes is a participant. The role models are the people who crossed and came back to stand here.",
     },
     // DECIDED 2026-10-05 (사용자, 스크린숏: "여기에는 설명을 더 넣어줘도 좋을거 같아"): 한 문단이던 것을 둘로
     // 나눠 풀었습니다. noteBody는 하나만 있을 때 왜 그렇게 되는지(친목 모임, 소수의 클럽)를 말하고,
@@ -897,8 +898,9 @@ export const naru = {
         body: {
           // 2026-10-08 (프로그램 브리프 2.4): 그 전의 문장은 멘토링이 행사 내내 열린다고 했습니다. 2026-09-20 결정은
           // 첫날부터 사흘째까지이고 Day 4에는 없다는 것이었습니다. 2026-10-13 (멘토링 브리프 3): 멘토링은 Day 2와 Day 3입니다.
-          ko: "Day 2와 Day 3에 열려 있습니다. 막힐 때마다 다시 갑니다.",
-          en: "Open on Day 2 and Day 3. You go back every time you get stuck.",
+          // 2026-10-19 (시각 감사 3): "막힐 때마다 다시 갑니다"가 하루 두 칸, 2시간 간격 규칙(2026-10-17)과 어긋났습니다.
+          ko: "Day 2와 Day 3에 열려 있습니다. 하루 두 번까지 찾아갑니다.",
+          en: "Open on Day 2 and Day 3. You can go up to twice a day.",
         },
         evidence: { ko: "8월 11명", en: "August: eleven of them" },
       },
@@ -1544,6 +1546,15 @@ export const naru = {
   },
 
   how: {
+    // DECIDED 2026-10-19 (사용자: 감사 제안 전부 적용, 출제사 브리프 1장): 기업이 얻는 것 넷. brand 4장에 따라 기업에게 하는 말은
+    // 이 자리에만 씁니다. 12월의 숫자(팀 수, 인원)와 "상생", "협업", "스크리닝 없음"은 쓰지 않습니다.
+    companyLabel: { ko: "출제사가 얻는 것", en: "What the company gets" },
+    company: [
+      { title: { ko: "일하는 모습으로 보는 사람", en: "People seen at work" }, body: { ko: "이력서 대신 닷새 동안 묻고, 확인받고, 고치는 모습을 봅니다.", en: "Instead of a CV, five days of asking, checking and fixing." } },
+      { title: { ko: "바깥에서 보는 여러 답", en: "Several answers from outside" }, body: { ko: "같은 이슈를 여러 팀이 다르게 파고듭니다. 안에서 묻지 않던 전제가 보입니다.", en: "Several teams dig into the same issue differently. Assumptions nobody inside asked about show up." } },
+      { title: { ko: "결과보다 과정", en: "Process over output" }, body: { ko: "첫날의 생각이 마지막 날까지 어떻게 달라졌는지 봅니다.", en: "You see how the first day's thinking changed by the last." } },
+      { title: { ko: "이어지는 만남", en: "A conversation that continues" }, body: { ko: "더 이야기하고 싶은 팀이 있으면 따로 자리를 만듭니다. 결과물을 도입할 의무는 없습니다.", en: "If you want to keep talking with a team, we set up a time. There is no obligation to adopt what they built." } },
+    ] as { title: Phrase; body: Phrase }[],
     eyebrow: { ko: "세 층", en: "Three layers" },
     heading: { ko: "어떻게 일하는가", en: "How we work" },
     // DECIDED 2026-09-18 (사용자): 나루_Constitution.docx(제9조·제10조)와 나루_Overview.pdf
@@ -1765,6 +1776,21 @@ export const naru = {
     // 닷새 안에 풀리는 문제는 내지 않으므로, 풀리지 않을 수 있다는 것을 미리 말합니다.
     // 이 문장은 "안전한 도전 공간"(코어 01)과 같은 편입니다. 못 풀어도 괜찮은 자리라는 뜻입니다.
     // 위 find의 두 칸 바로 아래, 같은 왼쪽 끝에 문단 하나로 섭니다(상자 없음).
+    // ── 문제에 들어가는 네 단계 (DECIDED 2026-10-19, 사용자, 출제사 브리프 3장 반영 요청) ─────────────
+    // 브리프의 "기능, 업무, 병목, 실험"에서 "실험"은 참가자에게 쓰지 않는 말이라(brand 9장) "어떻게 확인하나"로 씁니다.
+    // findClose 바로 위, 상자 없이 헤어라인 네 칸. approachClose는 brand 7장 평가(결과보다 과정)를 사실로 말합니다.
+    approachLabel: { ko: "문제에 들어가는 네 단계", en: "Four steps into the problem" },
+    approach: [
+      { title: { ko: "무엇을", en: "What" }, body: { ko: "어떤 AI 기능을 붙일 수 있나", en: "Which AI capability could go in" } },
+      { title: { ko: "누구의 일을", en: "Whose work" }, body: { ko: "누구의 어떤 일이 바뀌나", en: "Whose work changes, and how" } },
+      { title: { ko: "왜 막혔나", en: "Why it stuck" }, body: { ko: "회사는 왜 해 보고도 못 했나", en: "Why the company tried and still could not" } },
+      { title: { ko: "어떻게 확인하나", en: "How to check" }, body: { ko: "가장 작게 확인할 방법", en: "The smallest way to check it" } },
+    ] as { title: Phrase; body: Phrase }[],
+    // 2026-10-19 (시각 감사 1): 바로 아래 findClose와 같은 말을 해서 한 문단으로 합쳤습니다. 화면은 이 문단만 그리고 findClose는 그리지 않습니다.
+    approachClose: {
+      ko: "닷새 안에 끝까지 풀리지 않을 수 있는 문제를 고릅니다. 그래서 다 풀었는지보다 어디까지 물어 들어갔는지를 보고, 중간에서 멈춘 팀도 거기까지 간 과정을 발표합니다. 이 닷새에 익히는 것은 현업이 문제에 다가가는 방식이고, 그 방식은 문제가 풀리지 않아도 남습니다.",
+      en: "We pick problems that may not be fully solved in five days. So what counts is how far down you asked, not whether you solved it all, and a team that stopped halfway still presents how it got there. What these days teach is how people in the field approach a problem, and that stays with you even when the problem does not get solved.",
+    },
     findClose: {
       ko: "닷새 안에 끝까지 풀리지 않을 수 있는 문제를 고릅니다. 그래도 괜찮습니다. 이 닷새에 익히는 것은 현업이 문제에 다가가는 방식이고, 그 방식은 문제가 풀리지 않아도 남습니다.",
       en: "We pick problems that may not be fully solved in five days, and that is fine. What these days teach is how people in the field approach a problem, and that stays with you even when the problem does not get solved.",
@@ -2020,7 +2046,8 @@ export const naru = {
         // DECIDED 2026-10-11 (사용자, 폰 스크린숏: "내용이 too much, 표현이 vague"): 세 문장을 둘로 줄였습니다. 누가 어디로 가서
         // 누구에게 무엇을 하는지만 남깁니다. "출제사의 일정이 되면"은 바로 위 when 줄이 말합니다.
         // 2026-10-11 (사용자: "그룹의 생각임", "예약 없이 그냥 멘토가 그 공간에 있는 거임"): 내 생각을 팀의 생각으로, 예약 멘토링이라는 말을 뺐습니다.
-        ko: "팀을 나눠 이슈를 낸 기업의 일터로 가서, 실무자에게 팀의 생각을 말하고 의견을 듣습니다. 받을 수 있는 기업이 정해지면 이 자리에 적습니다.",
+        // 2026-10-19 (사용자, 스크린숏: 세 상자의 내용 길이가 달라 크기가 달라 보임): 옆 상자와 줄 수를 맞추려 "팀을 나눠"를 뺐습니다. 뜻은 그대로.
+        ko: "이슈를 낸 기업의 일터로 가서 실무자에게 팀의 생각을 말하고 의견을 듣습니다. 갈 수 있는 기업은 정해지면 적습니다.",
         en: "Teams split up, visit the company behind the issue, tell the people doing the work what the team thinks, and hear them out. Which companies can host goes here once it is settled.",
       },
     },
@@ -2034,7 +2061,8 @@ export const naru = {
       // 2026-10-13: 규칙 목록의 "예약 없이, 멘토가 같은 공간에 있습니다"가 이 문단으로 올라왔습니다.
       // DECIDED 2026-10-17 (사용자: 멘토링 예약제로 바꾼다): 둘째 문장이 "예약 없이, 멘토가 같은 공간에 있습니다."였습니다.
       // 예약은 모든 팀이 같이 보는 멘토 시간표(/crossing/team)에 팀 이름을 넣는 것입니다. 앞뒤 10분 규칙은 그 페이지가 말합니다.
-      ko: "질문 목록 대신, 이슈에 대한 팀의 생각 한 장을 들고 먼저 찾아갑니다. 멘토 시간은 모든 팀이 같이 보는 시간표에 팀 이름을 넣어 예약합니다.",
+      // 2026-10-19 (사용자, 스크린숏: 세 상자의 내용 길이가 달라 크기가 달라 보임): 옆 상자와 줄 수를 맞추려 줄였습니다. 뜻은 그대로.
+      ko: "질문 목록 대신 팀의 생각 한 장을 들고 먼저 찾아갑니다. 멘토 시간은 모든 팀이 같이 보는 시간표로 예약합니다.",
       en: "Your team goes first, with one page of its own thinking on the issue instead of a list of questions. You book mentor time by putting your team's name on a timetable every team can see.",
     },
     // DECIDED 2026-10-10 (사용자: "정보가 너무 많음"): 다섯 줄을 셋으로 묶었습니다. 2026-10-11에 둘로(위 mentoringLead 주석).
@@ -2292,9 +2320,12 @@ export const naru = {
         },
         // 2026-09-30 (사용자, 문장 감사): "…장치이지, 별도의 스테이지가 아닙니다"였습니다. 부정 병치를 풀었습니다.
         // 뜻(스테이지가 아니다)은 그대로입니다. (2026-10-07부터 NaruHome은 이 행을 한 단 낮게 그리지 않습니다.)
+        // DECIDED 2026-10-19 (사용자, 출제사 브리프 2장 반영 요청): 출제사가 주는 네 가지 정보 중 둘(붙이려 한 곳, 기대한 효과)이
+        // Day 0에 공개됩니다. 나머지 둘(막힌 지점, 이미 해 본 것)은 Day 1 현장 발표에서(아래 Day 1 session).
+        // 그 전: "Day 1에 쓸 시간을 벌어 주는 날입니다. 스테이지로 세지 않습니다."
         line: {
-          ko: "Day 1에 쓸 시간을 벌어 주는 날입니다. 스테이지로 세지 않습니다.",
-          en: "It buys back time for Day 1. It does not count as a stage.",
+          ko: "출제사가 AI를 붙이려 한 곳과 기대한 효과가 먼저 공개됩니다. Day 1에 쓸 시간을 벌어 주는 날이라 스테이지로 세지 않습니다.",
+          en: "You get where the company tried to put AI and what it hoped for, ahead of time. The day buys back time for Day 1, so it does not count as a stage.",
         },
         chips: [{ ko: "이슈 공개", en: "Issues open" }],
         // DECIDED 2026-10-11 (사용자: "day0은 세션이 따로 있는 건 없음"): 여기 있던 3시간 세션 "활용 가이드"를 뺐습니다.
@@ -2317,8 +2348,9 @@ export const naru = {
         },
         // PDF 03에서 가장 강한 한 줄입니다. 8월과 12월의 차이를 한 문장이 말합니다.
         line: {
-          ko: "8월에는 출제사가 문제를 완성해서 줬습니다. 12월에는 이 날 팀이 문제를 직접 정의합니다.",
-          en: "In August the company handed over finished problems. In December your team defines the problem on this day.",
+          // 2026-10-19 (시각 감사 4): 세 줄로 꺾여 Day 2, 3 카드에 빈 줄이 생겼습니다. 뜻은 그대로 두 줄로.
+          ko: "8월과 달리, 이 날 팀이 문제를 직접 정의합니다.",
+          en: "Unlike August, your team defines the problem on this day.",
         },
         // DECIDED 2026-10-08 (현장 팀 매칭 브리프 5): "팀 매칭" 칩 자리에 /match로 가는 버튼 하나가 섭니다.
         // 12월에는 AI 유형 테스트가 신청의 일부가 아니라 Day 1 현장의 팀 매칭 도구입니다. 칩은 뺐습니다
@@ -2331,7 +2363,13 @@ export const naru = {
         matchCta: { label: { ko: "AI 유형 테스트로 팀 매칭", en: "Team matching with the AI type test" }, href: "/match" },
         session: {
           title: { ko: "Sharing session", en: "Sharing session" },
-          body: { ko: "출제사가 직접. 회사와 의뢰 문제", en: "The company itself, on what it does and what it is asking" },
+          // DECIDED 2026-10-19 (사용자, 출제사 브리프 2장): 막힌 지점과 이미 해 본 것은 Day 1에 출제사가 직접 엽니다. 팀이 Day 0에 세운
+          // 첫 생각 뒤에 "그건 이미 해 봤어요"를 듣게 하려는 순서입니다. 그 전: "출제사가 직접. 회사와 의뢰 문제".
+          // 2026-10-19 (사용자: Day 1 카드가 길어짐): 이유 문장("첫 생각을 세운 뒤에 듣는…")은 화면에서 뺐습니다.
+          body: {
+            ko: "출제사가 막힌 지점과 이미 해 본 것을 직접 엽니다",
+            en: "The company itself opens where it got stuck and what it already tried",
+          },
         },
         // DECIDED 2026-10-10 (사용자, 마일스톤 브리프 2.1): 보상은 마지막 날 한 팀이 아니라, 그날의 마일스톤을 넘은 팀 모두에게.
         // Day 1, Day 3의 마일스톤은 기존 submit과 같은 물건입니다. Day 2는 제출이 아니라 멘토와 현업의 확인,
@@ -2649,11 +2687,14 @@ export const naru = {
         },
       },
     ] as { place: Phrase; lack: Phrase; opens: Phrase }[],
+    // 2026-10-19 (/naru 감사 3): 문단 일곱이 이어지던 자리를 나눕니다. 안전장치 둘 위의 소제목. brand 3장 "서는 방식".
+    guardsLabel: { ko: "우리가 서는 방식", en: "How we stand" },
     // 안전장치 둘. 하나만 넣지 마세요. 첫 줄이 없으면 폐쇄적인 모임으로
     // 읽히고, 둘째 줄이 없으면 억울함의 호소로 읽힙니다.
     guards: [
       {
-        ko: "담을 쌓는 모임이 아닙니다. 같은 언어를 쓰는 사람들이 공동의 의제를 만드는 것은 다른 일이고, 문은 회차마다 열립니다.",
+        // 2026-10-19 (/naru 감사 5): "모임"은 brand 5장이 그룹을 가리킬 때 쓰지 않는 말이라 "자리"로.
+        ko: "담을 쌓는 자리가 아닙니다. 같은 언어를 쓰는 사람들이 공동의 의제를 만드는 것은 다른 일이고, 문은 회차마다 열립니다.",
         en: "This is not a wall. People who share a language building a shared agenda is a different thing, and the door opens every round.",
       },
       {

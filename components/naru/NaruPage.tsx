@@ -26,7 +26,7 @@ import { naru, naruLinks, openChatLabels, partnerContact, type Layer, type Stat,
 import type { Phrase } from "@/data/dictionaryCore";
 import Halo from "@/components/ui/Halo";
 import Chip from "@/components/ui/Chip";
-import { buttonClass } from "@/components/ui/Button";
+import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 import MobileChatBar from "@/components/shared/MobileChatBar";
 import Chapter from "@/components/journey/Chapter";
 import Reveal from "@/components/shared/Reveal";
@@ -90,9 +90,9 @@ export default function NaruPage() {
         </div>
         {/* DECIDED 2026-09-30 (사용자): 인장 아래의 알약과 태그라인은 가운데. 인장이 가운데라 셋이 한 축입니다.
             그 아래 이름 풀이부터는 왼쪽 끝. */}
-        <div className={`${READ} mt-6 text-center`}>
-          <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.hero.eyebrow)}</Eyebrow>
-        </div>
+        {/* 2026-10-19 (/naru 감사 4): 인장 아래 알약(naru.hero.eyebrow, "한국에 뿌리를 둔 학생 빌더 그룹")을 그리지 않습니다. 인장의 링과 아래
+            정의문, 푸터가 같은 말을 해서 한 페이지에 세 번이었습니다(brand 5장: 같은 사실은 두 번까지). 키는 data/naru.ts에 그대로. */}
+        <div aria-hidden className="mt-6" />
         {/* 태그라인. 두 줄 고정(히어로에 있던 때의 이유 그대로: 두 개의 선언). */}
         {/* 2026-10-11 (리뷰 A5): h2에서 h1로. 이 페이지에 h1이 없었습니다. 모양은 그대로입니다. */}
         <h1 id="naru-title" className={`${H2} ${READ} text-balance text-center`}>
@@ -181,7 +181,8 @@ export default function NaruPage() {
             칸의 두 단)은 왼쪽 끝 그대로입니다. */}
         {/* 2026-10-11 (리뷰 A5): 코어는 이름 있는 section이고 제목은 h2입니다(모양은 H3 토큰 그대로). 코어 카드의 제목이 h3.
             section은 머리만 감쌉니다. 코어 판과 "방법은 바뀝니다"까지 감싸면 Reveal의 배치가 바뀝니다. */}
-        <section id="core" aria-labelledby="core-title" className={`${READ} mt-8 border-t border-white/10 pt-8 text-balance text-center lg:mt-12 lg:pt-12`}>
+        {/* 2026-10-19 (/naru 감사 8): 윗선(border-t)을 뺐습니다. 바로 위 판 사이 틈의 배경 형상 한가운데를 가로질렀습니다. 틈이 이미 둘을 나눕니다. */}
+        <section id="core" aria-labelledby="core-title" className={`${READ} mt-8 pt-8 text-balance text-center lg:mt-12 lg:pt-12`}>
           <Eyebrow color="purple" className={eyebrowTrack(locale)}>{t(naru.why.eyebrow)}</Eyebrow>
           <h2 id="core-title" className={H3}>{t(naru.why.heading)}</h2>
         </section>
@@ -193,6 +194,8 @@ export default function NaruPage() {
             로고 가이드의 하한 18px 아래로 내려갑니다. mt는 첫 줄의 한가운데.
             keeps가 dl인 이유: 항목 이름과 값이지 제목이 아닙니다. */}
         <Reveal>
+        {/* DECIDED 2026-10-19 (사용자, 스크린숏: "이거는 원래처럼 보여지면 좋겠는데"): 같은 날 감사 2로 가운데 한 기둥으로 바꿨던 것을
+            되돌렸습니다. 코어는 데스크톱에서 왼쪽 글과 오른쪽 "그래서 지키는 것" 두 칸입니다. */}
         <ol role="list" className={`${READ} text-left max-sm:text-center`}>
           {naru.why.cores.map((core, i) => (
             <li
@@ -295,6 +298,19 @@ export default function NaruPage() {
             알약 자체가 44px이라 위의 -my-2.5 관용구는 필요 없습니다. 형상은 건드리지 않습니다. */}
         {/* DECIDED 2026-10-01 (사용자: "아래에 있는 버튼 3곳이 center로"): 세 버튼은 도식의 가운데에 섭니다.
             그 전에는 READ의 왼쪽 끝이었습니다. 폰의 세로 쌓기도 가운데입니다. */}
+        {/* DECIDED 2026-10-19 (/naru 감사 7, 출제사 브리프 1장): 기업이 얻는 것 넷. 홈의 "문제에 들어가는 네 단계"와 같은 모양(가는 선 네 칸, 폰 두 칸).
+            기업에게 하는 말은 이 자리에만 씁니다(brand 4장). */}
+        <Reveal className={`${READ} mt-10 text-center`}>
+          <h3 data-subheading className={SUBHEADING}>{t(naru.how.companyLabel)}</h3>
+          <ul role="list" className="mt-3 grid grid-cols-2 border-y border-white/10 md:grid-cols-4">
+            {naru.how.company.map((c, i) => (
+              <li key={i} className={`flex flex-col items-center gap-1 px-3 py-4 ${i >= 2 ? "border-t md:border-t-0" : ""} ${i % 2 === 1 ? "border-l" : ""} ${i === 2 ? "md:border-l" : ""} border-white/10`}>
+                <span className={`break-keep ${BODY} font-bold text-white`}>{t(c.title)}</span>
+                <span className={`break-keep ${META} leading-snug text-white/70`}>{t(c.body)}</span>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
         <Reveal className={`${READ} mt-6 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center`}>
           {naru.how.layers.map((layer) => (
             <a
@@ -353,7 +369,9 @@ export default function NaruPage() {
             문장과 그 아래)도 가운데입니다. 왼쪽 끝으로 남는 것은 세 칸의 카드 안뿐입니다.
             같은 날 (사용자: "알약은 빼줘"): 알약을 제목과 같은 말로 바꿨더니 위아래로 겹쳐서 그리지 않습니다.
             join.eyebrow 키는 data/naru.ts에 그대로 있습니다. */}
-        <h2 id="join-title" className={`${H2} ${READ} text-balance text-center`}><Halo tone="violet">{t(naru.join.heading)}</Halo></h2>
+        {/* 2026-10-19 (/naru 감사 1): H2에서 H3으로. 같은 급의 "우리는 두 가지를…", "어떻게 일하는가"는 H3인데 이 제목만 히어로 크기라
+            페이지의 구조가 읽히지 않았습니다. 큰 제목은 히어로 하나입니다. */}
+        <h2 id="join-title" className={`${H3} ${READ} text-balance text-center`}>{t(naru.join.heading)}</h2>
         <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-center ${BODY} leading-relaxed text-white/85`}>
           {t(naru.join.lead)}
         </p>
@@ -363,7 +381,8 @@ export default function NaruPage() {
             place → lack(없는 것) → opens(그래서 여는 것) 순서이고, 결핍이 먼저
             오고 처방이 나중입니다. */}
         <Reveal>
-        <ul role="list" className={`${READ} mt-12 grid grid-cols-1 gap-4 text-left max-sm:text-center lg:grid-cols-3`}>
+        {/* 2026-10-19 (/naru 감사 3): 카드 안도 가운데(폰과 같게). 점 표식은 가운데 글에서 축을 왼쪽에 세우므로 그리지 않습니다. */}
+        <ul role="list" className={`${READ} mt-12 grid grid-cols-1 gap-4 text-center lg:grid-cols-3`}>
           {naru.join.needs.map((need) => (
             // DECIDED 2026-09-30 (사용자: 상자 셋의 글이 많고, 점 항목은 같은 선에): 글은 data/naru.ts에서 줄였고,
             // 세 칸이 나란히 서는 lg에서는 카드 안이 부모 격자의 서브그리드(제목, 없는 것, 여는 것 세 줄)입니다.
@@ -375,8 +394,7 @@ export default function NaruPage() {
             >
               <h3 className={H3}>{t(need.place)}</h3>
               <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/70`}>{t(need.lack)}</p>
-              <p className={`flex gap-2 self-start break-keep pt-4 max-sm:justify-center ${BODY} leading-relaxed text-white/85`}>
-                <span aria-hidden className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent/80 max-sm:hidden" />
+              <p className={`self-start break-keep pt-4 ${BODY} leading-relaxed text-white/85`}>
                 {t(need.opens)}
               </p>
             </li>
@@ -397,7 +415,11 @@ export default function NaruPage() {
             합니다. 첫 줄이 없으면 폐쇄적인 모임으로, 둘째 줄이 없으면 억울함의
             호소로 읽힙니다. 한 줄만 그리지 마세요.
             DECIDED 2026-10-02 (사용자: 가독성 리뷰): 밝기 /55 → /70. 이 두 줄은 각주가 아니라 주장입니다. */}
-        <Reveal className={`${READ} ${READ_MEASURE_C} mt-8 space-y-3 break-keep text-center ${BODY} leading-relaxed text-white/70`}>
+        {/* 2026-10-19 (/naru 감사 3): 문단 일곱이 소제목 없이 이어졌습니다. 안전장치 둘 위에 가는 선과 소제목 하나. */}
+        <Reveal className={`${READ} ${READ_MEASURE_C} mt-10 border-t border-white/10 pt-8 text-center`}>
+          <h3 data-subheading className={SUBHEADING}>{t(naru.join.guardsLabel)}</h3>
+        </Reveal>
+        <Reveal className={`${READ} ${READ_MEASURE_C} mt-3 space-y-3 break-keep text-center ${BODY} leading-relaxed text-white/70`}>
           {naru.join.guards.map((guard, i) => (
             <p key={i} className="text-balance">{t(guard)}</p>
           ))}
@@ -481,9 +503,10 @@ export default function NaruPage() {
             앞의 것은 8월 페이지 #gaps에서 홈으로 가는 줄과 같은 라벨이고, 뒤의 것은 홈의 프로그램 챕터 끝에 있는 버튼과
             같은 버튼입니다(같은 곳으로 갑니다). data-naru-return은 글자 보존 검증이 이 줄을 빼고 비교하는 손잡이입니다. */}
         <div data-naru-return className={`${READ} mt-10 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-4`}>
-          <Link href="/#december" onClick={() => track("naru_cta", { src: "naru-page", to: "december" })} className={buttonClass("secondary", "naru")}>
+          {/* 2026-10-19 (/naru 감사 6): 버튼 셋이 같은 모양이었습니다. 주 버튼은 이벤트로 가는 것 하나(brand 3장 원칙 2: 무대가 먼저). */}
+          <Link href="/#december" onClick={() => track("naru_cta", { src: "naru-page", to: "december" })} className={buttonClass("primary", "naru")}>
             {t(naru.december.gapsBackLink)}
-            <span aria-hidden>→</span>
+            <span aria-hidden className={ARROW_CLASS}>→</span>
           </Link>
           <OpenChatLink t={t} src="naru-join" label={openChatLabels.december} variant="secondary" />
         </div>

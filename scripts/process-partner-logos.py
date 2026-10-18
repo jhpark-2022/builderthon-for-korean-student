@@ -226,14 +226,32 @@ def from_chroma(im):
 
 def from_tone(im):
     """Cut-out mark with OVERLAPPING colour shapes plus black type (GSC).
-    The black type stays fully white. Each coloured shape keeps its own share of
-    white by its luminance, so G, S and C stay apart where they overlap."""
+    Everything turns solid white, and a thin gap is cut wherever two differently
+    coloured shapes meet, so G, S and C stay apart without going grey.
+    (2026-10-19, visual audit 7: the first version dimmed each letter by its
+    luminance, and the mark read grey next to MARU180's solid white.)"""
     a = np.asarray(im.convert("RGBA")).astype(float)
     rgb, alpha = a[:, :, :3], a[:, :, 3]
-    colour = (rgb.max(axis=2) - rgb.min(axis=2)) >= 40
-    out = alpha.copy()
-    out[colour] = alpha[colour] * np.clip(0.45 + rgb.mean(axis=2)[colour] / 255 * 0.8, 0, 1)
-    return out
+    colour = ((rgb.max(axis=2) - rgb.min(axis=2)) >= 40) & (alpha > 128)
+    # Label each coloured pixel by its nearest letter colour (sampled from the source).
+    refs = np.array([[96, 91, 164], [218, 114, 119], [60, 160, 90]], float)
+    d = ((rgb[:, :, None, :] - refs[None, None]) ** 2).sum(axis=3)
+    lab = np.where(colour, d.argmin(axis=2), -1)
+    edge = np.zeros(lab.shape, bool)
+    for dy, dx in ((0, 1), (1, 0)):
+        a1, b1 = lab[: lab.shape[0] - dy, : lab.shape[1] - dx], lab[dy:, dx:]
+        e = (a1 >= 0) & (b1 >= 0) & (a1 != b1)
+        edge[: lab.shape[0] - dy, : lab.shape[1] - dx] |= e
+        edge[dy:, dx:] |= e
+    gap = edge.copy()
+    for _ in range(2):  # widen to ~5px at source size
+        g = gap.copy()
+        g[1:] |= gap[:-1]; g[:-1] |= gap[1:]; g[:, 1:] |= gap[:, :-1]; g[:, :-1] |= gap[:, 1:]
+        gap = g
+    # Soften the gap so it reads as a clean cut, not a jagged one, at ~24px.
+    from PIL import ImageFilter
+    soft = np.asarray(Image.fromarray((gap * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(1.4))).astype(float) / 255
+    return alpha * np.clip(1 - soft * 1.6, 0, 1)
 
 
 def from_alpha(im):

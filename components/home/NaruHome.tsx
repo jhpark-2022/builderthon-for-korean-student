@@ -363,9 +363,17 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
 // tone: "plain"은 미션이 아닌 띠입니다(Day 1의 "Day 2에 들고 갈 것"). 같은 자리와 같은 문법이고, 호박색과 ★는 미션에만 씁니다.
 // DECIDED 2026-10-17 (사용자: "문장으로 말고, bullet point로, 그리고 제출하는 방법으로"): detail은 문단 하나가 아니라 라벨이 붙은 목록 둘입니다.
 // 카드는 가운데 정렬이지만 목록은 글머리가 한 줄로 서야 읽히므로, 목록 묶음만 가운데에 두고 그 안은 왼쪽 정렬입니다.
+// 2026-10-19 (시각 감사 6): 열기 전의 시간표 버튼. 흐린 글자만 있는 큰 알약이 고장 난 버튼처럼 보여, 현장 멘토링 상자와 같은
+// "아직" 문법(점선 테두리)에 자물쇠를 붙입니다. 새 색과 새 글자 크기는 없습니다.
+const LOCKED_CLASS = `w-full cursor-not-allowed justify-center gap-2 !border-dashed !border-white/25 !bg-transparent text-white/70 ${buttonClass("secondary")} hover:!translate-y-0`;
+const LOCK_ICON = (
+  <svg aria-hidden width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+    <rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" />
+  </svg>
+);
 type MilestoneDetail = { label: string; items: string[] }[];
 // open, onToggle(2026-10-17): 데스크톱 Day 1~3 판의 세 띠는 함께 열리고 닫힙니다. 한 칸만 열리면 그 줄의 높이가 크게 어긋났습니다.
-function MilestoneStrip({ id, label, title, detail, center = false, expanded = false, tone = "amber", open: openProp, onToggle }: { id: string; label: string; title: string; detail?: MilestoneDetail; center?: boolean; expanded?: boolean; tone?: "amber" | "plain"; open?: boolean; onToggle?: () => void }) {
+function MilestoneStrip({ id, label, title, detail, center = false, expanded = false, tone = "amber", open: openProp, onToggle, fill = false, narrow = false }: { id: string; label: string; title: string; detail?: MilestoneDetail; center?: boolean; expanded?: boolean; tone?: "amber" | "plain"; open?: boolean; onToggle?: () => void; fill?: boolean; narrow?: boolean }) {
   const [openSelf, setOpenSelf] = useState(false);
   const open = openProp ?? openSelf;
   const setOpen = (f: (v: boolean) => boolean) => (onToggle ? onToggle() : setOpenSelf(f));
@@ -381,11 +389,13 @@ function MilestoneStrip({ id, label, title, detail, center = false, expanded = f
       <span className={`${BODY} font-bold leading-snug text-white`}>{title}</span>
     </>
   );
-  const row = `flex w-full flex-wrap items-center gap-x-2.5 gap-y-1 break-keep px-3 py-2 ${center ? "justify-center" : "text-left"}`;
+  // 2026-10-19 (시각 감사 5): 가운데 띠는 늘 쌓습니다(★ 미션 / 제목 / 화살표). 제목 길이와 카드 폭에 따라 한 줄로 서던 띠(Day 1, 넓은 Day 4)가 있었습니다.
+  const row = `flex w-full items-center gap-x-2.5 gap-y-1 break-keep px-3 py-2 ${center ? "flex-col justify-center" : "flex-wrap text-left"}`;
   return (
-    <div className={`mt-auto w-full rounded-xl border ${amber ? "border-amber-400/25 bg-amber-400/10" : "border-white/15 bg-white/[0.04]"}`}>
+    // fill(2026-10-19): 데스크톱 Day 1~3 격자의 띠는 행 높이를 채웁니다. 제목 길이 때문에 화살표가 한 줄에 들어가는 띠만 낮아지던 것.
+    <div className={`mt-auto flex w-full flex-col rounded-xl border ${fill ? "md:mt-0" : ""} ${narrow ? "md:mx-auto md:max-w-[17rem]" : ""} ${amber ? "border-amber-400/25 bg-amber-400/10" : "border-white/15 bg-white/[0.04]"}`}>
       {detail && !expanded ? (
-        <button type="button" aria-expanded={open} aria-controls={id} onClick={() => setOpen((v) => !v)} className={`${row} min-h-[44px] rounded-xl transition-colors ${amber ? "hover:bg-amber-400/10" : "hover:bg-white/[0.06]"}`}>
+        <button type="button" aria-expanded={open} aria-controls={id} onClick={() => setOpen((v) => !v)} className={`${row} min-h-[44px] flex-1 rounded-xl transition-colors ${amber ? "hover:bg-amber-400/10" : "hover:bg-white/[0.06]"}`}>
           {head}
           <svg aria-hidden width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${amber ? "text-amber-100" : "text-white/70"} transition-transform ${center ? "" : "ml-auto"} ${open ? "rotate-180" : ""}`}><path d="m6 9 6 6 6-6" /></svg>
         </button>
@@ -545,13 +555,14 @@ export default function NaruHome() {
           {t(sharedCta.label)}<span aria-hidden className={ARROW_CLASS}>→</span>
         </Link>
       ) : (
-        <span role="link" aria-disabled="true" className={`w-full cursor-not-allowed justify-center opacity-50 ${buttonClass("secondary")} hover:!translate-y-0 hover:!bg-white/5`}>
+        <span role="link" aria-disabled="true" className={LOCKED_CLASS}>{LOCK_ICON}
           {t(sharedCta.label)}
         </span>
       )}
     </div>
   );
-  const stageCard = (stage: (typeof naru.december.stages)[number], i: number, inPanel = false) => {
+  // sub: 데스크톱 Day 1~3 줄의 카드(2026-10-19). 카드가 부모 격자의 행을 나눠 써서(subgrid) 한 줄, 세션, 칩, 미션이 세 카드에서 같은 높이에 섭니다.
+  const stageCard = (stage: (typeof naru.december.stages)[number], i: number, inPanel = false, sub = false) => {
     const StageHeading = inPanel ? "h3" : "h4";
     // 데스크톱의 Day 1~3 띠는 함께 열립니다. 폰 패널과 Day 4는 각자.
     const sync = !inPanel && i >= 1 && i <= 3 ? { open: stripsOpen, onToggle: () => setStripsOpen((v) => !v) } : {};
@@ -561,7 +572,7 @@ export default function NaruHome() {
       // 노선도의 현재 위치 점이 이 카드로 옵니다(감사 반영 브리프 3.6).
       onMouseEnter={() => setHoverDay(i)}
       onMouseLeave={() => setHoverDay(null)}
-      className={`flex flex-col gap-2.5 rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 lg:px-6 lg:py-5 items-center text-center ${!inPanel && (i === 0 || i === naru.december.stages.length - 1) ? "md:col-span-3" : ""}`}
+      className={`flex flex-col gap-2.5 rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 lg:px-6 lg:py-5 items-center text-center ${!inPanel && (i === 0 || i === naru.december.stages.length - 1) ? "md:col-span-3" : ""} ${sub ? "md:row-span-5 md:grid md:grid-rows-subgrid md:items-stretch md:gap-2.5" : ""}`}
     >
       <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1">
         {/* lang="en": DAY는 두 로케일 모두 영어입니다(접근성 감사 7). */}
@@ -581,18 +592,18 @@ export default function NaruHome() {
           {t(stage.session.body)}
         </p>
       )}
-      {stage.chips.length > 0 && (
+      {stage.chips.length > 0 ? (
         <p className={`flex flex-wrap justify-center gap-x-3 gap-y-1 ${META} text-white/70`}>
           {stage.chips.map((c, j) => <span key={j}>{t(c)}</span>)}
         </p>
-      )}
+      ) : sub && <span aria-hidden />/* 칩이 없는 날도 행 하나를 차지해야 아래 미션이 옆 카드와 같은 행에 섭니다 */}
       {/* 그날의 마일스톤. amber 띠(홈에서 "결과보다 과정"이 쓰던 색)가 카드 바닥에 섭니다. Day 0에는 없습니다. */}
       {/* DECIDED 2026-10-13 (사용자, 스크린숏: "1일차 박스가 너무 비어있음"): 미션이 없는 Day 1은 같은 자리에 무채색 띠를 세웁니다.
           그날 쓰는 한 장(stage.submit)이 Day 2에 멘토에게 들고 가는 것이라는, 이미 있는 사실입니다. 호박색과 ★는 미션에만 씁니다. */}
       {!stage.milestone && stage.submit && (
         // DECIDED 2026-10-17 (사용자: "똑같이. 상자 색깔로 동일하게"): Day 1 띠도 호박색과 ★, 라벨 "미션"입니다. 2026-10-13의 "호박색과 ★는 미션에만"을
         // 이 결정이 바꿉니다. 그 전 라벨 "Day 2에 들고 갈 것"은 두 줄로 꺾여 Day 2, 3 띠보다 높았습니다.
-        <MilestoneStrip id={`carry-day-${stage.dayOffset}`} label={t(naru.december.milestoneLabel)} title={t(stage.submit)} center expanded={inPanel}
+        <MilestoneStrip id={`carry-day-${stage.dayOffset}`} label={t(naru.december.milestoneLabel)} title={t(stage.submit)} center expanded={inPanel} fill={sub}
           {...sync}
           detail={[
             { label: t(naru.december.carryDetail.todoLabel), items: naru.december.carryDetail.todo.map(t) },
@@ -603,7 +614,7 @@ export default function NaruHome() {
         <MilestoneStrip id={`milestone-day-${stage.dayOffset}`} label={t(naru.december.milestoneLabel)} title={t(stage.milestone)} detail={stage.milestoneDetail && [
           { label: t(naru.december.milestoneConditionsLabel), items: stage.milestoneDetail.conditions.map(t) },
           { label: t(naru.december.milestoneSubmitLabel), items: stage.milestoneDetail.submit.map(t) },
-        ]} center expanded={inPanel} {...sync} />
+        ]} center expanded={inPanel} fill={sub} narrow={!inPanel && i === naru.december.stages.length - 1} {...sync} />
       )}
       {/* DECIDED 2026-10-17 (사용자): 멘토 시간표와 미션 인증으로 들어가는 문은 Day 2, Day 3 카드에만 있습니다. */}
       {/* 열기 전(TIMETABLE_OPEN false)에는 같은 자리에 잠긴 버튼이 섭니다. */}
@@ -613,7 +624,7 @@ export default function NaruHome() {
           {t(stage.timetableCta.label)}<span aria-hidden className={ARROW_CLASS}>→</span>
         </Link>
       ) : (
-        <span role="link" aria-disabled="true" className={`w-full cursor-not-allowed justify-center opacity-50 ${buttonClass("secondary")} hover:!translate-y-0 hover:!bg-white/5`}>
+        <span role="link" aria-disabled="true" className={LOCKED_CLASS}>{LOCK_ICON}
           {t(stage.timetableCta.label)}
         </span>
       ))}
@@ -994,6 +1005,22 @@ export default function NaruHome() {
             가운데입니다. 머리(알약, 제목, 리드, 숫자), 노선도, 등록 줄은 가운데인데 그 사이의 일정, 표, 멘토링 상자, 문단만 왼쪽이라
             한 화면에 축이 둘이었습니다. 폰은 2026-10-09부터 가운데였고, 이제 모든 폭에서 축이 하나입니다.
             왼쪽 끝 규칙(2026-09-29)은 홈의 이 블록들에서는 더 쓰지 않습니다. 표의 라벨은 값 위에 쌓습니다(폰과 같은 모양). */}
+        {/* DECIDED 2026-10-19 (사용자, 출제사 브리프 3장): 문제에 들어가는 네 단계. 상자 없이 헤어라인 네 칸(폰은 두 칸),
+            아래 한 줄이 평가 원칙(어디까지 물어 들어갔는가)을 말합니다. 글자 크기는 BODY와 META 둘.
+            2026-10-19 (시각 감사 2): 멘토링 상자 아래에서 노선도 바로 아래, 일정 위로 옮겼습니다. 팀이 이슈를 파고드는 방식이라 일정보다 먼저 읽힙니다. */}
+        <Reveal className={`${READ} mt-8 text-center lg:mt-12`}>
+          <p className={`${META} font-bold text-white/70`}>{t(naru.december.approachLabel)}</p>
+          <ol role="list" className="mt-3 grid grid-cols-2 border-t border-white/10 md:grid-cols-4">
+            {naru.december.approach.map((a, i) => (
+              <li key={i} className={`flex flex-col items-center gap-1 border-b border-white/10 px-2 py-4 md:border-b-0 ${i % 2 === 1 ? "border-l" : ""} md:border-l ${i === 0 ? "md:border-l-0" : ""} border-white/10`}>
+                <span className={`${META} font-bold tabular-nums text-accent`}>{String(i + 1).padStart(2, "0")}</span>
+                <span className={`break-keep ${BODY} font-bold text-white`}>{t(a.title)}</span>
+                <span className={`break-keep ${META} leading-snug text-white/70`}>{t(a.body)}</span>
+              </li>
+            ))}
+          </ol>
+          <p className={`mt-4 text-balance break-keep ${BODY} leading-relaxed text-white/85 md:border-t md:border-white/10 md:pt-4`}>{t(naru.december.approachClose)}</p>
+        </Reveal>
         {/* id="schedule": 목차의 "일정" 칩이 내려앉는 자리입니다(2026-10-13). */}
         <Reveal id="schedule" className={`${READ} mt-10 text-center`}>
           <h3 data-subheading className={SUBHEADING}>{t(naru.december.scheduleLabel)}</h3>
@@ -1009,8 +1036,10 @@ export default function NaruHome() {
                 큰 판 하나가 감쌉니다. 버튼이 세 날의 것이라는 것을 판이 말합니다. */}
             {stageCard(naru.december.stages[0], 0)}
             <div className="flex flex-col gap-3 rounded-[1.25rem] border border-white/10 bg-white/[0.02] p-3 md:col-span-3 md:gap-4 md:p-4">
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-4">
-                {naru.december.stages.slice(1, 4).map((stage, k) => stageCard(stage, k + 1))}
+              {/* DECIDED 2026-10-19 (사용자, 스크린숏: "세션이라는 말도 다 같은 선상에"): 세 카드가 이 격자의 다섯 행(제목, 한 줄, 세션, 칩, 미션)을
+                  나눠 씁니다(subgrid). 한 줄의 길이가 날마다 달라도 세션과 미션이 같은 높이에 섭니다. */}
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-x-4 md:gap-y-0">
+                {naru.december.stages.slice(1, 4).map((stage, k) => stageCard(stage, k + 1, false, true))}
               </div>
               {timetableButton}
             </div>
@@ -1070,12 +1099,10 @@ export default function NaruHome() {
         {/* DECIDED 2026-10-10 (중복 브리프 B2): 이 자리의 호박색 "결과보다 과정" 상자(naru.why.measure)를 그리지 않습니다.
             #naru 코어 01의 "그래서 우리가 보는 것도 순위가 아니라 완주입니다"와 같은 말입니다. 키는 data/naru.ts에 그대로.
             그 자리에 findClose 문단이 섭니다. 평가가 과정이라는 말을 이 문단이 대신합니다. 상자 없이 READ 왼쪽 끝, BODY. */}
-        <Reveal className={`${READ} text-center`}>
-          <p className={`mt-6 text-balance break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.findClose)}</p>
-          {/* DECIDED 2026-10-10 (사용자: "8월이랑 뭐가 다른지 12월 페이지에서는 설명할 필요가 없음"): 여기 있던
+        {/* 2026-10-19 (시각 감사 1): findClose는 네 단계 아래 approachClose에 합쳐져 여기서 그리지 않습니다(이 Reveal도 뺌). */}
+        {/* DECIDED 2026-10-10 (사용자: "8월이랑 뭐가 다른지 12월 페이지에서는 설명할 필요가 없음"): 여기 있던
               "8월과 무엇이 다른지" 링크를 뺐습니다. 8월 페이지의 #gaps는 그대로 있고, 홈에서는 가리키지 않습니다.
               december.gapsLink 키는 data/naru.ts에 그대로. */}
-        </Reveal>
         {/* 판 나누기(2026-09-26 3차, 사용자: #gains와 #naru 사이 틈에 한국 형상이 보임): 긴 챕터의 판을 둘로 나눠
             서울이 보이는 틈을 하나 더 둡니다.
             DECIDED 2026-09-30 (사용자, 스크린숏: "이렇게 gap이 있는 것이 어색함"): 틈의 자리를 "이렇게 굴립니다"
