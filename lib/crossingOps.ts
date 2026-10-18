@@ -68,6 +68,7 @@ export const isOpsDay = (v: unknown): v is OpsDay => v === 2 || v === 3;
  * 미션 인증을 올리는 날. Day 1도 올립니다. 시간표 칸은 여전히 Day 2, 3뿐입니다(OPS_DAYS).
  * DECIDED 2026-10-17 (사용자: "1일차에도 미션인증은 해야해서", "Day 1에는 PDF 하나만"). Day 1은 PDF만 받습니다.
  */
+// 2026-10-19 (사용자: Day 1, Day 4 미션 뺌): Day 1 올리기는 남지만 미션이 아닙니다(선택). DB의 mission 열과 crossing_mission_progress 뷰가 Day 2, 3만 셉니다(0013).
 export const PROOF_DAYS = [1, 2, 3] as const;
 export type ProofDay = (typeof PROOF_DAYS)[number];
 export const isProofDay = (v: unknown): v is ProofDay => v === 1 || v === 2 || v === 3;
