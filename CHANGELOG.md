@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-19 노선도에 GSC, MARU180 로고](#2026-10-19-route-logos)
 - [2026-10-18 시간표 칸을 상자 하나로](#2026-10-18-one-box)
 - [2026-10-18 트랙 표, 활동 기록마다 트랙, 멘토 자리 10개 (0012)](#2026-10-18-tracks)
 - [2026-10-18 히어로 버튼 둘](#2026-10-18-hero-two-buttons)
@@ -253,6 +254,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-19-route-logos"></a>
+## 2026-10-19 노선도에 GSC, MARU180 로고
+- 범위: data/naru.ts(Day 1, Day 4의 logo), components/shared/RouteMap.tsx, components/home/NaruHome.tsx, scripts/process-partner-logos.py, public/partners/logos/white(gsc, maru180)
+- 한 것: 사용자: "day 1 and day 4에 각각 GSC랑 MARU180 로고 넣어줘". 원본(12월 빌더톤/CI)을 흰색 단색으로 만들어 정거장 칸 바닥에 둡니다. 마일스톤 줄 길이가 달라도 두 로고가 같은 줄에 섭니다. GSC는 겹친 G, S, C가 한 덩어리가 되지 않게 글자마다 밝기를 달리하는 tone 모드를 스크립트에 더했습니다. 로고의 뜻(장소 등)은 글로 쓰지 않았습니다. 근거: brand 10장(잉크 위, 밝은 판 없음), 2장 코어 02(실명이 박힌 진짜 앞).
+- 검증: 데스크톱 1100px, 폰 폭 스크린숏 확인. 빌드 통과.
+- 커밋: bc41fc9
 
 <a id="2026-10-18-one-box"></a>
 ## 2026-10-18 시간표 칸을 상자 하나로
