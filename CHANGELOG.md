@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-19 Supabase에 미션 Day 2, 3 반영 (0013)](#2026-10-19-mission-db)
 - [2026-10-19 미션은 Day 2와 Day 3에만](#2026-10-19-mission-days)
 - [2026-10-19 출제사 브리프 반영, 홈과 /naru 시각 감사](#2026-10-19-brief-audit)
 - [2026-10-19 노선도 로고를 정거장 위로](#2026-10-19-route-logos-up)
@@ -257,6 +258,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-19-mission-db"></a>
+## 2026-10-19 Supabase에 미션 Day 2, 3 반영 (0013)
+- 범위: supabase/migrations/0013, lib/crossingOps.ts(주석)
+- 한 것: 사용자: "supabase도 이걸 반영을 해야할거 같은데". Day 4 미션은 DB에 없던 것이라 그대로. Day 1 PDF 올리기는 남기되 미션으로 세지 않습니다: crossing_mission_proofs.mission(Day 2, 3이면 true, 계산 열), crossing_track_activity는 Day 1을 carry_pdf_teams_day1로 분리하고 미션 칸은 Day 2, 3만, 새 뷰 crossing_mission_progress는 팀마다 Day 2, 3 PDF와 멘토 사진(이틀 중 하나), 멘토 칸 수, dayN_ready. 팀원 과반 현장은 운영진 체크라 DB에 없습니다. 근거: brand 7장 미션 인정 조건.
+- 검증: PGlite에서 0004~0013 두 번 적용, 시험 팀 셋으로 mission 열, 트랙 집계, ready 판정 확인. 프로덕션 적용 뒤 세 뷰 읽힘.
+- 커밋: 8adb6ff
 
 <a id="2026-10-19-mission-days"></a>
 ## 2026-10-19 미션은 Day 2와 Day 3에만
