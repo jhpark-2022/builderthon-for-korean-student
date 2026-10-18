@@ -17,6 +17,8 @@ export const teamCopy = {
     en: "Tap an empty cell twice to put your team in. Mentors and every team see the same timetable. A slot cannot be changed once it is in. Each slot is 40 minutes, with 10 minutes kept free before and after. Up to two a day, at least two hours apart.",
   },
   carry: { ko: "이슈에 대한 팀의 생각 한 장을 들고 찾아갑니다.", en: "Bring one page of your team's take on the issue." },
+  // 2026-10-18 (사용자: "트랙에 따라서 슬롯 색깔이 달라졌으면"). 우리 팀 칸은 흰 테두리로 가립니다.
+  trackLegend: { ko: "칸의 색은 그 팀의 트랙입니다. 흰 테두리는 우리 팀입니다.", en: "Each slot takes its team's track colour. A white outline marks your team." },
   time: { ko: "시간", en: "Time" },
   gap: { ko: "쉬는 10분", en: "10-minute gap" },
   confirmPut: { ko: "넣기?", en: "Put in?" },

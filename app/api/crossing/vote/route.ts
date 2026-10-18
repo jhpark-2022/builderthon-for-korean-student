@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // /api/crossing/vote. 마지막 날 트랙별 인기투표(2026-10-17, lib/crossingVote.ts).
 //
-//   GET                                          트랙과 그 트랙의 팀 이름, 이 기기가 이미 낸 트랙
+//   GET                                          트랙(이름과 색)과 그 트랙의 팀 이름, 이 기기가 이미 낸 트랙
 //   POST {deviceToken, voterTeam, votes: {트랙: 팀}}  트랙마다 한 표. 자기 팀 제외, 한 번 내면 못 바꿈
 //
 // CROSSING_VOTE_OPEN=1이 아니면 403입니다. 8월 투표처럼 IP 해시로 몰려드는 요청만 막고, 사람은 저장하지 않습니다.
@@ -12,6 +12,7 @@ import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { CURRENT_EVENT } from "@/lib/registrationWindow";
 import { clientIp, hashIp, sinceIso } from "@/lib/register/shared";
 import { NO_TEAM, isUuid, voteOpen } from "@/lib/crossingVote";
+import { listTracks } from "@/lib/crossingOpsServer";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +40,9 @@ export async function GET(req: Request) {
     done = (data ?? []).map((r) => r.track as string);
   }
   const { data: all } = await db.from("crossing_teams").select("name").eq("event_slug", CURRENT_EVENT).order("name");
-  return NextResponse.json({ tracks: t, teams: (all ?? []).map((r) => r.name), done });
+  // 트랙의 이름과 색(0012). 투표 화면이 id 대신 이름을 보여 줍니다.
+  const info = (await listTracks(db)) ?? [];
+  return NextResponse.json({ tracks: t, trackInfo: info.filter((x) => t[x.id]), teams: (all ?? []).map((r) => r.name), done });
 }
 
 export async function POST(req: Request) {

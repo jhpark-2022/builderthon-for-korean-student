@@ -10,6 +10,7 @@ import { useLocale } from "@/lib/LocaleContext";
 import { BODY, META } from "@/components/ui/typography";
 import { buttonClass } from "@/components/ui/Button";
 import { NO_TEAM, VOTE_DEVICE_KEY } from "@/lib/crossingVote";
+import { trackTint, type Track } from "@/lib/crossingOps";
 
 const copy = {
   title: { ko: "트랙별 인기투표", en: "Vote by track" },
@@ -37,6 +38,7 @@ function deviceToken(): string {
 export default function VoteTool() {
   const { t } = useLocale();
   const [tracks, setTracks] = useState<Record<string, string[]>>({});
+  const [info, setInfo] = useState<Track[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
   const [done, setDone] = useState<string[]>([]);
   const [voter, setVoter] = useState(NO_TEAM);
@@ -48,7 +50,7 @@ export default function VoteTool() {
     void fetch(`/api/crossing/vote?device=${deviceToken()}`, { cache: "no-store" }).then(async (r) => {
       if (!r.ok) return;
       const j = await r.json();
-      setTracks(j.tracks ?? {}); setTeams(j.teams ?? []); setDone(j.done ?? []);
+      setTracks(j.tracks ?? {}); setInfo(j.trackInfo ?? []); setTeams(j.teams ?? []); setDone(j.done ?? []);
     });
   }, []);
 
@@ -74,9 +76,12 @@ export default function VoteTool() {
             {teams.map((x) => <option key={x} value={x}>{x}</option>)}
           </select>
         </label>
-        {Object.entries(tracks).map(([track, list]) => (
+        {/* 트랙 순서와 이름은 트랙 표(0012)를 따릅니다. 이름이 없으면 id를 그대로 씁니다. */}
+        {Object.entries(tracks).sort(([a], [b]) => info.findIndex((x) => x.id === a) - info.findIndex((x) => x.id === b)).map(([track, list]) => {
+          const ti = info.find((x) => x.id === track);
+          return (
           <fieldset key={track} disabled={done.includes(track)} className="rounded-2xl border border-white/15 bg-white/[0.03] p-4">
-            <legend className={`px-1 ${BODY} font-bold`}>{track} {done.includes(track) && <span className={`${META} text-amber-100`}>★ {t(copy.done)}</span>}</legend>
+            <legend className={`flex items-center gap-2 px-1 ${BODY} font-bold`}><span aria-hidden className="h-2.5 w-2.5 rounded-full" style={{ background: trackTint(ti?.color) }} />{ti ? t(ti.label) : track} {done.includes(track) && <span className={`${META} text-amber-100`}>★ {t(copy.done)}</span>}</legend>
             <div className="mt-2 flex flex-wrap gap-2">
               {list.map((team) => (
                 <label key={team} className={`flex items-center gap-2 rounded-full border px-3 py-2 ${BODY} ${team === voter ? "border-white/10 text-white/30" : picks[track] === team ? "border-amber-300/70 bg-amber-400/20" : "border-white/20"}`}>
@@ -86,7 +91,8 @@ export default function VoteTool() {
               ))}
             </div>
           </fieldset>
-        ))}
+          );
+        })}
         {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}
         {open.length > 0 && (
           <button type="button" disabled={busy || !open.some((k) => picks[k])} onClick={send} className={`${buttonClass("primary")} w-fit justify-center disabled:opacity-50`}>{t(copy.submit)}</button>

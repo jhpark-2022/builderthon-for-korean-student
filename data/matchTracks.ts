@@ -7,7 +7,9 @@
 // 트랙이 한 번씩 든 순서"인지 검사하고, 매칭판 스크립트가 순위를 냅니다. 다른 파일은 고칠 것이 없습니다.
 //
 // id는 crossing_match_profiles.track_ranking(jsonb 배열)에 그대로 남습니다. 받기 시작하면 id를 바꾸지 마세요
-// (label은 바꿔도 됩니다). 영문 소문자와 숫자, 하이픈만 씁니다. 예:
+// (label은 바꿔도 됩니다). 영문 소문자와 숫자, 하이픈만 씁니다.
+// 2026-10-18: 팀의 트랙은 DB의 crossing_tracks 표(마이그레이션 0012, 지금은 자리 a, b, c)가 정본입니다. 여기에 줄을 더할 때
+// id를 그 표의 id와 같게 둡니다(표의 id를 먼저 바꾸면 팀과 기록이 따라 바뀝니다). 그래야 선호 순위와 배정된 트랙을 맞대 볼 수 있습니다. 예:
 //   { id: "ops", label: { ko: "업무 자동화", en: "Ops automation" } },
 // ─────────────────────────────────────────────────────────────────────────────
 export interface MatchTrack { id: string; label: { ko: string; en: string }; hint?: { ko: string; en: string } }

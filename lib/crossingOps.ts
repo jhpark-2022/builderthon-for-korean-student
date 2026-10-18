@@ -42,6 +42,16 @@ export const TIMETABLE_OPEN = false;
 export const OPS_DAYS = [2, 3] as const;
 export type OpsDay = (typeof OPS_DAYS)[number];
 
+/**
+ * 트랙 색. 키는 crossing_tracks.color(마이그레이션 0012), 값은 brand 10장 크로싱 워드마크 그라데이션의 화면용 네 색입니다.
+ * DECIDED 2026-10-18 (사용자: "무슨 트랙인지에 따라서 슬롯 색깔이 달라졌으면"): 시간표의 칸이 그 팀의 트랙 색으로 칠해집니다.
+ * 잉크 바탕 위에 틴트로만 씁니다(밝은 판 금지).
+ */
+export const TRACK_TINTS = { blue: "#9AA8EE", violet: "#A99AD6", plum: "#C99ACB", orange: "#E08A76" } as const;
+export type TrackColor = keyof typeof TRACK_TINTS;
+export type Track = { id: string; label: { ko: string; en: string }; color: TrackColor };
+export const trackTint = (c: string | undefined): string => (c && c in TRACK_TINTS ? TRACK_TINTS[c as TrackColor] : "#FFFFFF");
+
 export const PROOF_KINDS = ["photo", "pdf"] as const;
 export type ProofKind = (typeof PROOF_KINDS)[number];
 export const PROOF_MAX_BYTES = 20 * 1024 * 1024;

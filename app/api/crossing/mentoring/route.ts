@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // /api/crossing/mentoring. 멘토 시간표(2026-10-17). 모든 팀이 같은 시간표를 봅니다.
 //
-//   GET    ?day=2                          팀 목록, 그날의 멘토와 받는 구간, 예약(팀 이름 포함)
+//   GET    ?day=2                          트랙, 팀 목록(팀마다 트랙), 그날의 멘토와 받는 구간, 예약(팀 이름과 트랙 포함)
 //   POST   {team, mentorId, startsAt}       칸에 팀 넣기. 길이는 SESSION_MINUTES
 //   (빼기 없음) DECIDED 2026-10-17 (사용자: "once they put in, they cannot change it"). 운영진은 표 편집기에서 지웁니다.
 //
@@ -12,7 +12,7 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { CURRENT_EVENT } from "@/lib/registrationWindow";
-import { findTeam } from "@/lib/crossingOpsServer";
+import { findTeam, listTracks } from "@/lib/crossingOpsServer";
 import { DEFAULT_WINDOW, MAX_BOOKINGS_PER_TEAM_PER_DAY, OPS_DAYS, SESSION_MINUTES, fitsWindow, isOpsDay, isProofDay, kstTime, type Window } from "@/lib/crossingOps";
 
 export const dynamic = "force-dynamic";
@@ -35,24 +35,29 @@ export async function GET(req: Request) {
   // Day 1도 읽습니다(팀 목록과 잠긴 시간표를 그리려고, 2026-10-17). Day 1에는 칸이 없고 POST도 받지 않습니다.
   if (!isProofDay(day)) return NextResponse.json({ error: "invalid_day" }, { status: 400 });
 
-  const [teams, mentors] = await Promise.all([
-    db.from("crossing_teams").select("name").eq("event_slug", CURRENT_EVENT).order("name"),
-    db.from("crossing_mentors").select("id, name, field").eq("event_slug", CURRENT_EVENT).eq("active", true).order("name"),
+  // 멘토 열 순서는 sort(0012, 자리 10개가 01~10). 이름을 바꿔도 순서가 흔들리지 않습니다.
+  const [teams, mentors, tracks] = await Promise.all([
+    db.from("crossing_teams").select("name, track").eq("event_slug", CURRENT_EVENT).order("name"),
+    db.from("crossing_mentors").select("id, name, field").eq("event_slug", CURRENT_EVENT).eq("active", true).order("sort").order("name"),
+    listTracks(db),
   ]);
-  if (teams.error || mentors.error) return NextResponse.json({ error: "db" }, { status: 500 });
+  if (teams.error || mentors.error || !tracks) return NextResponse.json({ error: "db" }, { status: 500 });
   const ids = (mentors.data ?? []).map((m) => m.id);
   const none = ["00000000-0000-0000-0000-000000000000"];
   const [{ data: windows }, { data: bookings }] = await Promise.all([
     db.from("crossing_mentor_windows").select("mentor_id, start_time, end_time").eq("day", isOpsDay(day) ? day : -1).in("mentor_id", ids.length ? ids : none).order("start_time"),
-    db.from("crossing_mentor_bookings").select("id, mentor_id, team_name, starts_at, ends_at").eq("day", isOpsDay(day) ? day : -1).in("mentor_id", ids.length ? ids : none).order("starts_at"),
+    db.from("crossing_mentor_bookings").select("id, mentor_id, team_name, track, starts_at, ends_at").eq("day", isOpsDay(day) ? day : -1).in("mentor_id", ids.length ? ids : none).order("starts_at"),
   ]);
   return NextResponse.json({
+    // DECIDED 2026-10-18 (사용자: "트랙에 따라서 슬롯 색깔이 달라졌으면"): 화면이 팀과 칸을 트랙 색으로 칠합니다.
+    tracks,
     teams: (teams.data ?? []).map((t) => t.name),
+    teamTracks: Object.fromEntries((teams.data ?? []).map((t) => [t.name, t.track])),
     mentors: (mentors.data ?? []).map((m) => ({
       id: m.id, name: m.name, field: m.field,
       windows: windowsFor(day, (windows ?? []).filter((w) => w.mentor_id === m.id)),
       bookings: (bookings ?? []).filter((b) => b.mentor_id === m.id).map((b) => ({
-        id: b.id, team: b.team_name, startsAt: b.starts_at, endsAt: b.ends_at,
+        id: b.id, team: b.team_name, track: b.track, startsAt: b.starts_at, endsAt: b.ends_at,
       })),
     })),
   });

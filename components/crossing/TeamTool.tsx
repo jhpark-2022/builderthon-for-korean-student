@@ -7,6 +7,8 @@
 // wejoinin처럼 표 하나입니다. 줄은 30분, 칸은 멘토. 팀을 고르고 빈 칸을 누르면 그 팀 이름이 30분 들어가고,
 // 앞뒤 10분은 "쉬는 10분"으로 막힙니다(규칙의 정본은 DB 제약, lib/crossingOps.ts). 팀 코드는 없습니다.
 // 고른 팀은 이 기기의 localStorage에만 둡니다. 폰에서 표가 넓으면 표만 옆으로 밉니다(페이지는 밀리지 않음).
+// DECIDED 2026-10-18 (사용자: "멘토링 슬롯을 넣을때도 무슨 트랙인지에 따라서 슬롯 색깔이 달라졌으면"): 넣은 칸은 그 팀의
+// 트랙 색(lib/crossingOps.ts TRACK_TINTS)으로 칠합니다. 우리 팀은 주황 대신 흰 테두리로 가립니다(주황은 트랙 색과 겹침).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -15,13 +17,13 @@ import { BODY, META } from "@/components/ui/typography";
 import { buttonClass } from "@/components/ui/Button";
 import { teamCopy as c } from "@/data/crossingTeam";
 import {
-  BUFFER_MINUTES, GRID_MINUTES, MAX_BOOKINGS_PER_TEAM_PER_DAY, PROOF_DAYS, PROOF_MAX_BYTES, PROOF_TYPES, dayDate, fitsWindow, fmtKst, isProofDay, proofKindsFor, slotState,
-  type ProofDay, type ProofKind, type Window,
+  BUFFER_MINUTES, GRID_MINUTES, MAX_BOOKINGS_PER_TEAM_PER_DAY, PROOF_DAYS, PROOF_MAX_BYTES, PROOF_TYPES, dayDate, fitsWindow, fmtKst, isProofDay, proofKindsFor, slotState, trackTint,
+  type ProofDay, type ProofKind, type Track, type Window,
 } from "@/lib/crossingOps";
 
 const TEAM_KEY = "crossing-team";
 const MIN = 60_000;
-type Bk = { id: string; team: string; startsAt: string; endsAt: string };
+type Bk = { id: string; team: string; track: string; startsAt: string; endsAt: string };
 type Mentor = { id: string; name: string; field: string | null; windows: Window[]; bookings: Bk[] };
 type Proof = { id: string; day: number; kind: ProofKind; createdAt: string; url: string | null };
 
@@ -32,6 +34,8 @@ export default function TeamTool() {
   const { t } = useLocale();
   const [day, setDay] = useState<ProofDay>(2);
   const [teams, setTeams] = useState<string[]>([]);
+  const [tracks, setTracks] = useState<Track[]>([]);
+  const [teamTracks, setTeamTracks] = useState<Record<string, string>>({});
   const [mentors, setMentors] = useState<Mentor[] | null>(null);
   const [team, setTeam] = useState(""); // 팀 이름. 따로 만드는 ID는 없습니다
   const [pending, setPending] = useState<{ m: string; r: number } | null>(null); // 넣기 전에 한 번 묻는 칸
@@ -51,7 +55,7 @@ export default function TeamTool() {
     const r = await fetch(`/api/crossing/mentoring?day=${day}`, { cache: "no-store" });
     if (!r.ok) { setMsg(t(c.errGeneric)); return; }
     const j = await r.json();
-    setTeams(j.teams ?? []); setMentors(j.mentors ?? []);
+    setTeams(j.teams ?? []); setTracks(j.tracks ?? []); setTeamTracks(j.teamTracks ?? {}); setMentors(j.mentors ?? []);
   }, [day]);
   useEffect(() => { setMentors(null); setMsg(null); setPending(null); void refresh(); }, [refresh]);
   // 다른 팀이 넣은 칸이 보이도록 20초마다 다시 읽습니다.
@@ -70,6 +74,9 @@ export default function TeamTool() {
   // 인증 올리기와 칸 넣기가 풀립니다. 그 전에는 두 영역이 보이되 잠겨 있습니다.
   const picked = teams.includes(team) ? team : "";
   const mine = (mentors ?? []).flatMap((m) => m.bookings.filter((b) => b.team === picked));
+  const trackOf = (id: string | undefined) => tracks.find((x) => x.id === id);
+  const tintOf = (id: string | undefined) => trackTint(trackOf(id)?.color);
+  const myTint = tintOf(teamTracks[picked]);
 
   const call = async (method: "POST" | "DELETE", body: object) => {
     setBusy(true); setMsg(null);
@@ -88,12 +95,17 @@ export default function TeamTool() {
     if (b) {
       const first = Date.parse(b.startsAt) === r;
       const ours = b.team === picked;
+      // 칸의 색은 그 팀의 트랙(2026-10-18). 왼쪽 띠는 진하게, 바탕은 옅게. 우리 팀은 흰 테두리.
+      const tint = tintOf(b.track);
       return (
-        <td key={m.id} className={`border-l border-white/5 px-1 ${ours ? "bg-amber-400/20" : "bg-white/[0.08]"}`}>
-          {first && (ours ? (
-            // 한 번 넣은 칸은 바꾸지 못합니다(2026-10-17). 우리 팀 칸도 이름만 보입니다.
-            <span className={`block truncate px-1 py-1.5 ${META} font-bold text-amber-50`}>{b.team}</span>
-          ) : <span className={`block truncate px-1 py-1.5 ${META} font-bold text-white/85`}>{b.team}</span>)}
+        <td key={m.id} className="border-l border-white/5 p-0.5">
+          <div title={trackOf(b.track) ? t(trackOf(b.track)!.label) : undefined}
+            // 띠와 흰 테두리를 한 그림자에 둡니다(Tailwind ring도 그림자라 따로 쓰면 하나가 지워짐).
+            className="h-8 rounded-md"
+            style={{ background: `${tint}38`, boxShadow: `inset 3px 0 0 ${tint}${ours ? ", inset 0 0 0 2px rgba(255,255,255,0.9)" : ""}` }}>
+            {/* 한 번 넣은 칸은 바꾸지 못합니다(2026-10-17). 우리 팀 칸도 이름만 보입니다. */}
+            {first && <span className={`block truncate py-1.5 pl-2.5 pr-1 ${META} font-bold ${ours ? "text-white" : "text-white/90"}`}>{b.team}</span>}
+          </div>
         </td>
       );
     }
@@ -112,7 +124,9 @@ export default function TeamTool() {
         <button type="button" disabled={!ok || busy} aria-label={`${m.name} ${fmtKst(r)}`}
           // 바꿀 수 없으니 두 번 누릅니다: 처음은 "넣기?"로 묻고, 같은 칸을 한 번 더 누르면 넣습니다.
           onClick={() => (asking ? (setPending(null), call("POST", { team: picked, mentorId: m.id, startsAt: new Date(r).toISOString() })) : setPending({ m: m.id, r }))}
-          className={`h-8 w-full rounded-md ${META} transition ${asking ? "border border-amber-300/70 bg-amber-400/20 font-bold text-amber-50" : ok ? "border border-white/20 text-white/70 hover:bg-white/15" : locked ? "cursor-not-allowed border border-white/10 text-white/30" : "text-transparent"}`}>
+          // 묻는 칸은 우리 팀의 트랙 색으로 미리 칠합니다(넣으면 이 색이 됩니다).
+          style={asking ? { background: `${myTint}38`, borderColor: myTint } : undefined}
+          className={`h-8 w-full rounded-md ${META} transition ${asking ? "border font-bold text-white" : ok ? "border border-white/20 text-white/70 hover:bg-white/15" : locked ? "cursor-not-allowed border border-white/10 text-white/30" : "text-transparent"}`}>
           {asking ? t(c.confirmPut) : "+"}
         </button>
       </td>
@@ -131,7 +145,7 @@ export default function TeamTool() {
             <select id="team" value={teams.includes(team) ? team : ""} onChange={(e) => { setTeam(e.target.value); save(TEAM_KEY, e.target.value); }}
               className={`min-w-[10rem] appearance-none rounded-lg border border-white/20 bg-[#0d1230] py-2 pl-3 pr-10 ${BODY} text-white`}>
               <option value="">{t(c.teamPick)}</option>
-              {teams.map((x) => <option key={x} value={x}>{x}</option>)}
+              {teams.map((x) => <option key={x} value={x}>{trackOf(teamTracks[x]) ? `${x} (${t(trackOf(teamTracks[x])!.label)})` : x}</option>)}
             </select>
             <svg aria-hidden width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/70"><path d="m6 9 6 6 6-6" /></svg>
           </div>
@@ -152,6 +166,17 @@ export default function TeamTool() {
         <h2 className={`mt-4 ${BODY} font-bold`}>{t(c.timetableHeading)}</h2>
         <p className={`${BODY} text-white/85`}>{t(c.lead)} {t(c.carry)}</p>
         {timetableLocked && <p className={`${META} font-bold text-amber-100`}>{t(c.day1Timetable)}</p>}
+        {tracks.length > 0 && (
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            {tracks.map((x) => (
+              <span key={x.id} className={`flex items-center gap-2 ${META} ${teamTracks[picked] === x.id ? "font-bold text-white" : "text-white/85"}`}>
+                <span aria-hidden className="h-3 w-5 rounded-sm" style={{ background: `${trackTint(x.color)}38`, boxShadow: `inset 3px 0 0 ${trackTint(x.color)}` }} />
+                {t(x.label)}
+              </span>
+            ))}
+            <span className={`${META} text-white/70`}>{t(c.trackLegend)}</span>
+          </div>
+        )}
         {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}
 
         {mentors && !rows.length && <p className={`${BODY} text-white/70`}>{t(c.noMentors)}</p>}
