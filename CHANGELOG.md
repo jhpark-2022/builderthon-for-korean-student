@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-19 미션은 Day 2와 Day 3에만](#2026-10-19-mission-days)
 - [2026-10-19 출제사 브리프 반영, 홈과 /naru 시각 감사](#2026-10-19-brief-audit)
 - [2026-10-19 노선도 로고를 정거장 위로](#2026-10-19-route-logos-up)
 - [2026-10-19 노선도에 GSC, MARU180 로고](#2026-10-19-route-logos)
@@ -256,6 +257,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-19-mission-days"></a>
+## 2026-10-19 미션은 Day 2와 Day 3에만
+- 범위: docs/brand.md 7장, data/naru.ts, data/crossingTeam.ts, components/home/NaruHome.tsx
+- 한 것: 사용자: "1일차랑 4일차에는 미션을 빼자", Day 1 한 장은 "미션 아닌 띠로 남김". 정본 7장부터 고쳤습니다. Day 4의 미션(발표, 과반)과 노선도의 Day 4 줄, 카드의 미션 띠를 뺐고, Day 1 띠는 무채색 "Day 2에 들고 갈 것"으로 되돌렸습니다(2026-10-17의 호박색 미션 띠를 되돌림). Day 1 PDF 올리기는 선택이라고 적었습니다. 운영 정보 "미션"과 남는 것 04의 "Day 2부터"는 "Day 2와 Day 3"으로. 근거: brand 7장 미션.
+- 검증: 1440px에서 Day 1~3 카드 행 높이 같음, Day 4 띠 없음. 빌드 통과.
+- 커밋: 0391e75
 
 <a id="2026-10-19-brief-audit"></a>
 ## 2026-10-19 출제사 브리프 반영, 홈과 /naru 시각 감사
