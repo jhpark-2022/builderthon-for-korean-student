@@ -93,18 +93,24 @@ export default function TeamTool() {
     if (!inWin) return <td key={m.id} className="border-l border-white/5 bg-black/20" />;
     const b = m.bookings.find((x) => Date.parse(x.startsAt) <= r && r < Date.parse(x.endsAt));
     if (b) {
-      const first = Date.parse(b.startsAt) === r;
+      // DECIDED 2026-10-18 (사용자: "두개의 상자 불편함. 하나의 상자면 좋겠음"): 40분 칸이 30분 줄 둘에 걸쳐도
+      // 첫 줄의 칸이 그 줄들을 합쳐(rowSpan) 상자 하나로 그립니다. 뒤 줄에는 칸을 그리지 않습니다.
+      const s = Date.parse(b.startsAt), e = Date.parse(b.endsAt);
+      const span = rows.filter((x) => s <= x && x < e);
+      if (span[0] !== r) return null;
       const ours = b.team === picked;
       // 칸의 색은 그 팀의 트랙(2026-10-18). 왼쪽 띠는 진하게, 바탕은 옅게. 우리 팀은 흰 테두리.
       const tint = tintOf(b.track);
       return (
-        <td key={m.id} className="border-l border-white/5 p-0.5">
+        <td key={m.id} rowSpan={span.length} className="border-l border-white/5 p-0.5 align-top">
           <div title={trackOf(b.track) ? t(trackOf(b.track)!.label) : undefined}
             // 띠와 흰 테두리를 한 그림자에 둡니다(Tailwind ring도 그림자라 따로 쓰면 하나가 지워짐).
-            className="h-8 rounded-md"
-            style={{ background: `${tint}38`, boxShadow: `inset 3px 0 0 ${tint}${ours ? ", inset 0 0 0 2px rgba(255,255,255,0.9)" : ""}` }}>
+            // 높이: 줄 하나 2.5rem(h-10) × 줄 수에서 위아래 여백을 뺍니다.
+            className="rounded-md"
+            style={{ height: `calc(${span.length * 2.5}rem - 0.25rem)`, background: `${tint}38`, boxShadow: `inset 3px 0 0 ${tint}${ours ? ", inset 0 0 0 2px rgba(255,255,255,0.9)" : ""}` }}>
             {/* 한 번 넣은 칸은 바꾸지 못합니다(2026-10-17). 우리 팀 칸도 이름만 보입니다. */}
-            {first && <span className={`block truncate py-1.5 pl-2.5 pr-1 ${META} font-bold ${ours ? "text-white" : "text-white/90"}`}>{b.team}</span>}
+            <span className={`block truncate py-1.5 pl-2.5 pr-1 ${META} font-bold ${ours ? "text-white" : "text-white/90"}`}>{b.team}</span>
+            <span className={`block pl-2.5 ${META} tabular-nums text-white/70`}>{fmtKst(s)}~{fmtKst(e)}</span>
           </div>
         </td>
       );
