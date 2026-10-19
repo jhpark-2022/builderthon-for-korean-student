@@ -10,6 +10,12 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const voteOpen = () => process.env.CROSSING_VOTE_OPEN === "1";
+/**
+ * 홈 Day 4 카드의 인기투표 버튼이 눌리는지. false면 버튼이 보이되 잠겨 있습니다(시간표 버튼 TIMETABLE_OPEN과 같은 문법).
+ * DECIDED 2026-10-19 (사용자: "버튼이 4일차에 있으면 좋겠어, 그런데 지금은 disable"). 열 때는 이 값을 true로,
+ * Vercel 환경 변수 CROSSING_VOTE_OPEN=1을 함께 켭니다. 하나만 켜면 버튼이 404로 가거나 페이지가 열려도 길이 없습니다.
+ */
+export const VOTE_BUTTON_OPEN = false;
 export const VOTE_DEVICE_KEY = "crossing-vote-device";
 export const NO_TEAM = "NONE";
 export const isUuid = (v: unknown): v is string =>

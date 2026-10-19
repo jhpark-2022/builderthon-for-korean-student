@@ -21,6 +21,7 @@ import Halo from "@/components/ui/Halo";
 import { ChipDot } from "@/components/ui/Chip";
 import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 import { TIMETABLE_OPEN } from "@/lib/crossingOps";
+import { VOTE_BUTTON_OPEN } from "@/lib/crossingVote";
 import RouteMap from "@/components/shared/RouteMap";
 import PhotoLightbox from "@/components/shared/PhotoLightbox";
 import MobileChatBar from "@/components/shared/MobileChatBar";
@@ -630,6 +631,20 @@ export default function NaruHome() {
           {t(stage.timetableCta.label)}
         </span>
       ))}
+      {/* DECIDED 2026-10-19 (사용자): Day 4 카드의 인기투표 버튼. 데스크톱과 폰 패널 모두 카드 안에 섭니다. 열기 전에는 잠긴 버튼입니다. */}
+      {stage.voteCta && (
+        <div className={`w-full ${inPanel ? "" : "md:max-w-sm"}`}>
+          {VOTE_BUTTON_OPEN ? (
+            <Link href={stage.voteCta.href} className={`group w-full justify-center ${buttonClass("secondary")}`}>
+              {t(stage.voteCta.label)}<span aria-hidden className={ARROW_CLASS}>→</span>
+            </Link>
+          ) : (
+            <span role="link" aria-disabled="true" className={LOCKED_CLASS}>{LOCK_ICON}
+              {t(stage.voteCta.label)}
+            </span>
+          )}
+        </div>
+      )}
     </div>
     );
   };

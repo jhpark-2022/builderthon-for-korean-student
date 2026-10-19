@@ -2521,6 +2521,9 @@ export const naru = {
         },
         // DECIDED 2026-10-10 (중복 브리프 B1): 칩 "멘토링 없음"을 뺐습니다(위 Day 3과 같은 이유).
         chips: [{ ko: "시상과 클로징", en: "Awards and closing" }],
+        // DECIDED 2026-10-19 (사용자: "인기 투표 버튼이 4일차에 있으면 좋겠어, 지금은 disable"): 트랙별 인기투표(/crossing/vote)로 가는 버튼.
+        // 팀 이름은 Supabase crossing_teams.name 그대로입니다. 열기 전(VOTE_BUTTON_OPEN false)에는 잠긴 버튼입니다.
+        voteCta: { label: { ko: "트랙별 인기투표", en: "Vote by track" }, href: "/crossing/vote" },
         // DECIDED 2026-10-13 (사용자: "2,3,4일 모두 이후 공개"): Day 4도 내용을 쓰지 않습니다. 그 전: "성과 공유회 완주"와 그 설명.
         // DECIDED 2026-10-17 (사용자, 스크린숏 표): Day 4의 미션 인정 조건. 팀원 과반이 현장에 오고 성과 공유회에서 발표하면 됩니다.
         // 다 풀지 못해도 됩니다(brand 7장). 운영진이 클로징 때 확인합니다.
@@ -2545,6 +2548,8 @@ export const naru = {
       matchCta?: { label: Phrase; href: string };
       /** 그 날 카드 바닥의 버튼(2026-10-17, Day 2와 Day 3의 멘토 시간표). */
       timetableCta?: { label: Phrase; href: string };
+      /** Day 4 카드 바닥의 인기투표 버튼(2026-10-19). 열기 전에는 잠겨 있습니다(lib/crossingVote.ts VOTE_BUTTON_OPEN). */
+      voteCta?: { label: Phrase; href: string };
       submit?: Phrase;
       /** 그날의 마일스톤(2026-10-10). 넘은 팀 모두가 지원을 받습니다. Day 0에는 없습니다. */
       milestone?: Phrase;
