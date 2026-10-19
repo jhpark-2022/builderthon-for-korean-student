@@ -7,7 +7,7 @@ import { useLocale } from "@/lib/LocaleContext";
 import { naru, naruLinks, openChatLabels, register as registerCopy, registerNoteShort, type RecordPhoto } from "@/data/naru";
 import { useCrossingRegisterOptional } from "@/components/crossing/RegisterProvider";
 import { links, type Phrase } from "@/data/dictionaryCore";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   DECEMBER_EVENT_NAME,
   DECEMBER_STARTS_AT_MS,
@@ -546,16 +546,43 @@ export default function NaruHome() {
     return () => mq.removeEventListener("change", read);
   }, []);
   const routePanelId = (i: number) => `route-day-${naru.december.stages[i].dayOffset}`;
-  const selectDay = (i: number) => {
-    const opening = openDay !== i;
-    setOpenDay(opening ? i : null);
-    if (!opening) return;
+  // DECIDED 2026-10-19 (사용자, 스크린숏: "너무 내려감", 카드 머리 "DAY 2 확인받기 12.19 토"도 보였으면): Day 2, 3 카드는 화면보다 길어서
+  // 카드 하단을 맞추면 머리가 위의 칩 줄 밑으로 들어갔습니다. 하단을 맞추되 카드 머리가 칩 줄(scroll-padding-top, JourneyNav가 실높이로 넣음)
+  // 아래 12px보다 위로 올라가지 않는 만큼까지만 내립니다. 스와이프로 날을 바꿨을 때 머리가 이미 위로 지나가 있으면 머리로 되돌립니다.
+  const revealPanel = (i: number) => {
     requestAnimationFrame(() => {
       const panel = document.getElementById(routePanelId(i));
       if (!panel) return;
-      const over = panel.getBoundingClientRect().bottom - (window.innerHeight - 63);
-      if (over > 0) window.scrollBy({ top: over, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      const r = panel.getBoundingClientRect();
+      const pad = (parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0) + 12;
+      const over = Math.min(r.bottom - (window.innerHeight - 63), r.top - pad);
+      if (over !== 0 && (over > 0 || r.top < pad)) window.scrollBy({ top: over, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     });
+  };
+  const selectDay = (i: number) => {
+    const opening = openDay !== i;
+    setOpenDay(opening ? i : null);
+    if (opening) revealPanel(i);
+  };
+  // DECIDED 2026-10-19 (사용자: "timeline 클릭해야만 움직이는 게 아니고, 스와이핑이 가능했으면"): 폰의 Day 카드를 옆으로 밀면 앞뒤 날로 갑니다.
+  // 가로 이동이 48px 이상이고 세로보다 1.5배 클 때만 넘깁니다(세로 스크롤은 그대로). 끝(Day 0, Day 4)에서는 멈춥니다. 닫혀 있으면 아무 일도 없습니다.
+  const swipeStart = useRef<{ x: number; y: number } | null>(null);
+  const onSwipeStart = (e: React.TouchEvent) => {
+    const t0 = e.touches[0];
+    swipeStart.current = e.touches.length === 1 ? { x: t0.clientX, y: t0.clientY } : null;
+  };
+  const onSwipeEnd = (e: React.TouchEvent) => {
+    const s0 = swipeStart.current;
+    swipeStart.current = null;
+    if (!s0 || openDay === null) return;
+    const t1 = e.changedTouches[0];
+    const dx = t1.clientX - s0.x;
+    const dy = t1.clientY - s0.y;
+    if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    const next = openDay + (dx < 0 ? 1 : -1);
+    if (next < 0 || next >= naru.december.stages.length) return;
+    setOpenDay(next);
+    revealPanel(next);
   };
   const mentoringBoxes = (
     <>
@@ -1050,7 +1077,7 @@ export default function NaruHome() {
             // 패널 다섯은 늘 마운트돼 있고 열린 것만 hidden이 풀립니다(aria-controls가 가리키는 id가 항상 있습니다).
             // sm부터는 감싼 div가 통째로 display: none입니다. 그 폭에서는 아래 일정 카드가 같은 내용을 그립니다.
             below={
-              <div className="sm:hidden">
+              <div className="sm:hidden" onTouchStart={onSwipeStart} onTouchEnd={onSwipeEnd} onTouchCancel={() => { swipeStart.current = null; }}>
                 {naru.december.stages.map((stage, i) => (
                   <div key={stage.name.en} id={routePanelId(i)} hidden={openDay !== i} className="mt-3">
                     {stageCard(stage, i, true)}
