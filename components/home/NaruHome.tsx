@@ -261,8 +261,11 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
                 그곳의 윤곽을 둡니다. 마케팅 포스트와 같은 그림입니다(components/ui/CityShape.tsx). 어느 곳의 시각인지는
                 윤곽이 먼저 말하고, 작은 글 라벨은 그 아래에 남깁니다(윤곽만으로는 표준시를 알 수 없습니다). 윤곽은
                 로고 그라데이션의 두 끝 색입니다(서울은 남색 틴트, 싱가포르는 자주 틴트). */}
-            <span className="flex min-w-0 flex-col items-start gap-1 sm:items-center">
-              <CityShape city={r.city} decorative className={`h-6 w-auto sm:h-10 ${r.city === "seoul" ? "text-naru-logo-from" : "text-naru-logo-to"}`} />
+            {/* DECIDED 2026-10-19 (사용자, 스크린숏: "나라의 shape 사이즈가 동일하지 않음. 그리고 needs to be centralized aligned"):
+                높이만 같게(h-6) 두면 가로로 긴 싱가포르가 서울보다 훨씬 커 보였습니다. 두 윤곽을 같은 상자(w-10 h-7, sm부터
+                w-14 h-10)에 contain으로 넣어 크기를 맞추고, 윤곽과 라벨을 칸의 가운데에 둡니다. */}
+            <span className="flex min-w-0 flex-col items-center gap-1">
+              <CityShape city={r.city} decorative className={`h-7 w-10 sm:h-10 sm:w-14 ${r.city === "seoul" ? "text-naru-logo-from" : "text-naru-logo-to"}`} />
               <span className={`whitespace-nowrap ${META} font-semibold text-white/85`}>{t(r.key)}</span>
             </span>
             {r.l === "started" ? (
