@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-20 AI 티 걷기: 라벨, 사이트 틀, 리빌](#2026-10-20-hwang-tells)
 - [2026-10-19 사진 크게 보기 속도, 폰 스크롤 랙](#2026-10-19-photo-lag)
 - [2026-10-19 폰 Day 카드 스와이프와 스크롤](#2026-10-19-day-swipe)
 - [2026-10-19 참가 혜택 노선을 시간표 칸으로](#2026-10-19-gains-timetable)
@@ -268,6 +269,17 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-20-hwang-tells"></a>
+## 2026-10-20 AI 티 걷기: 라벨, 사이트 틀, 리빌
+- 범위: components/home/NaruHome.tsx, shared.tsx, components/naru/NaruPage.tsx, components/journey/JourneyNav.tsx, Journey.tsx, Chapter.tsx, components/shared/SiteChrome.tsx(새), PageChips.tsx, RouteMap.tsx, Reveal.tsx, components/ui/Eyebrow.tsx, Chip.tsx, app/globals.css, data/dictionaryCore.ts, data/naru.ts, lib/ogCards.tsx, lib/siteUrl.ts(새), app/layout.tsx, sitemap.ts, robots.ts, lib/organizationLd.ts, lib/register/turnstile.ts, components/Quiz.tsx
+- 한 것: 10/19 피드백 감사의 세 묶음만 적용했습니다(사용자: 브리프 1~4단계 전체를 본 뒤 되돌리고 이 셋만). 색, 발광, hover, 글 수정, 레이아웃 2열, 매니페스토는 production 그대로입니다.
+  - 작은 라벨의 옷: 히어로 영문 한 줄(자간 0), 카운트다운 라벨, 아이브로, DAY, /naru 라벨의 대문자와 넓은 자간과 알약, 장식 점, 노선도 ◉를 걷었고, ✓칩 셋은 한 문장, 폰 챕터 칩은 밑줄 링크. 알약은 누르는 것에만. 8월 페이지 라벨은 그대로(AugustEyebrow). 근거: brand 5장 성격, brand 10장 사이트 규칙.
+  - 페이지를 잇는 부품: 사이트 메뉴는 글자 링크(크로싱 서울/Home, 나루, 8월 기록, 후원 문의), 폰은 목차 레일 왼쪽의 메뉴 단추. 세 페이지 푸터 하나(한 줄 소개, 메뉴, 문의, 8월 파트너 로고 열여섯 링크). 8월 OG에 나루 락업. 주소는 NEXT_PUBLIC_SITE_URL 하나. 헤더 바이라인 "by 나루"는 넣지 않았습니다(사용자, 스크린숏). 근거: brand 3장 원칙 2, brand 6장.
+  - 리빌: 스크롤마다 올라오던 효과를 전부 걷었습니다(D5). 근거: brand 5장(조용하다), 판단 질문 1.
+- 검증: 홈 390 리빌 발화 9 → 0, 한글 양의 자간 3 → 0, 라벨 알약 0, 장식 점 0. 세 페이지 헤더 메뉴 같음, 1280~1536 KR, EN 헤더 겹침 0. axe production과 같음. build 통과.
+- 브리프: docs/hwang-brief.md, 근거 docs/hwang-audit-2026-10-19.md. 1~4단계 전체는 로컬 브랜치 hwang-ai-tell-2026-10-20.
+- 커밋: 8662e20, 92b2e86, a0c631f
 
 <a id="2026-10-19-photo-lag"></a>
 ## 2026-10-19 사진 크게 보기 속도, 폰 스크롤 랙
