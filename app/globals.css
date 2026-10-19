@@ -527,6 +527,18 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
   backdrop-filter: none;
   background: rgba(7, 11, 31, 0.8);
 }
+/* DECIDED 2026-10-19 (사용자: 폰에서 열면 랙이 너무 많다): 폰 폭(639px 이하)에서는 판의 흐림을 늘 빼고 lite와 같은 0.8 바탕을 씁니다.
+   위의 lite 판정은 기기 메모리(navigator.deviceMemory)로 하는데 iOS Safari는 그 값을 주지 않아 모든 아이폰이 흐림을 받았습니다.
+   흐림 판은 화면 5.6장 높이라 움직이는 배경 위에서 스크롤 프레임마다 다시 그려집니다. 390px 스크린숏으로 비교해 차이가 거의 보이지 않았습니다.
+   같은 이유로 고정 헤더(이미 흐림) 안의 칩마다 겹쳐 걸린 흐림도 폰에서는 뺍니다. 데스크톱은 그대로입니다. */
+@media (max-width: 639px) {
+  .reading-plate, :root[data-plate="lite"] .reading-plate {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: rgba(7, 11, 31, 0.8);
+  }
+  header * { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+}
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .reading-plate { background: rgba(7, 11, 31, 0.82); }
 }

@@ -15,7 +15,22 @@ import { META } from "@/components/ui/typography";
 // 누르거나 Esc로 닫습니다. 스크롤 잠금, inert, 포커스 가두기와 되돌리기는 PartnerModal과
 // 같은 순서입니다. 바탕은 밝은 판 없이 사이트 바탕을 어둡게 덮습니다.
 // ─────────────────────────────────────────────────────────────────────────────
-export type LightboxPhoto = { src: string; alt: string; width: number; height: number; caption?: string };
+// thumb: 그 사진의 이미 받은 작은 판(칸에 보이던 것)의 주소. 큰 사진이 오기 전까지 같은 자리에 늘려 보여 줍니다.
+export type LightboxPhoto = { src: string; alt: string; width: number; height: number; caption?: string; thumb?: string };
+
+// DECIDED 2026-10-19 (사용자: "사진을 크게 볼 때 랙이 너무 있음, 사진이 보이기에 너무 오래 걸려", 데스크톱과 폰 둘 다):
+// 큰 사진은 이미지 최적화(/_next/image)를 거치지 않고 원본 webp(1200×900, 120~200KB)를 그대로 받습니다. 최적화를 거치면
+// 처음 요청된 폭마다 서버가 AVIF로 다시 인코딩하느라 눌러도 한참 빈 틀이었고, 원본이 이미 webp라 줄어드는 몫도 작았습니다.
+// 칸에 손이 닿거나(호버, 터치 시작, 포커스) 상자가 열리면 원본을 미리 받고, 오는 동안은 칸의 작은 판을 같은 자리에 늘려 둡니다.
+// 바탕의 전면 흐림(backdrop-blur)은 뺐습니다. 90%로 덮인 바탕이라 흐림은 거의 보이지 않으면서, 움직이는 배경 위에서 프레임마다 다시 그려졌습니다.
+const warmed = new Set<string>();
+export function warmPhoto(src: string) {
+  if (typeof window === "undefined" || warmed.has(src)) return;
+  warmed.add(src);
+  const img = new window.Image();
+  img.decoding = "async";
+  img.src = src;
+}
 
 const FOCUSABLE = 'a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])';
 const ROUND = "flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-[#070B1F]/70 text-white/80 backdrop-blur-sm transition hover:bg-white/10 hover:text-white active:scale-95";
@@ -42,6 +57,11 @@ export default function PhotoLightbox({ photos, index, onIndex, onClose, labels 
   // (사진을 넘길 때마다 inert와 포커스를 다시 걸지 않게).
   const state = useRef({ index, onIndex, onClose, n });
   state.current = { index, onIndex, onClose, n };
+
+  // 열리면 나머지 사진도 미리 받습니다(화살표로 넘길 때 빈 틀이 없게).
+  useEffect(() => {
+    if (open) photos.forEach((p) => warmPhoto(p.src));
+  }, [open, photos]);
 
   useEffect(() => {
     if (!open) return;
@@ -98,7 +118,7 @@ export default function PhotoLightbox({ photos, index, onIndex, onClose, labels 
           exit={{ opacity: 0 }}
           transition={{ duration: reduce ? 0 : 0.2 }}
         >
-          <div aria-hidden onClick={onClose} className="absolute inset-0 cursor-zoom-out touch-none bg-[#070B1F]/90 backdrop-blur-sm" />
+          <div aria-hidden onClick={onClose} className="absolute inset-0 cursor-zoom-out touch-none bg-[#070B1F]/95" />
 
           {/* figure는 사진만큼만 자리를 잡습니다. 그 밖을 누르면 뒤의 바탕이 받아 닫힙니다. */}
           {/* 폭은 원본 폭, 화면 폭, "높이 80dvh에 맞는 폭" 중 가장 작은 값입니다. 폭을 여기서 정해야 사진이 비율대로 섭니다
@@ -114,9 +134,11 @@ export default function PhotoLightbox({ photos, index, onIndex, onClose, labels 
               alt={photo.alt}
               width={photo.width}
               height={photo.height}
-              sizes="(max-width: 1264px) 100vw, 1200px"
+              unoptimized
               // 눌러서 연 사진이라 바로 받습니다. 기본값(lazy)이면 빈 틀이 먼저 보입니다.
               loading="eager"
+              decoding="async"
+              style={photo.thumb ? { backgroundImage: `url("${photo.thumb}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
               className="pointer-events-auto h-auto w-full rounded-2xl border border-white/10 object-contain shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]"
             />
             <figcaption className={`mt-3 flex items-center gap-2.5 ${META} text-white/85`}>

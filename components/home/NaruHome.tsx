@@ -23,7 +23,7 @@ import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 import { TIMETABLE_OPEN } from "@/lib/crossingOps";
 import { VOTE_BUTTON_OPEN } from "@/lib/crossingVote";
 import RouteMap from "@/components/shared/RouteMap";
-import PhotoLightbox from "@/components/shared/PhotoLightbox";
+import PhotoLightbox, { warmPhoto } from "@/components/shared/PhotoLightbox";
 import MobileChatBar from "@/components/shared/MobileChatBar";
 import Chapter from "@/components/journey/Chapter";
 import Reveal from "@/components/shared/Reveal";
@@ -382,6 +382,8 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
   const shown = photos.filter((p) => !!p.src).slice(0, 4);
   // DECIDED 2026-10-11 (사용자, 스크린숏: "이거 클릭하면 더 큰 이미지로 볼 수 있도록"): 칸은 누르는 것이고, 누르면 그 사진이 크게 열립니다.
   const [openPhoto, setOpenPhoto] = useState<number | null>(null);
+  // 2026-10-19: 칸에 이미 받아 둔 작은 판의 주소. 큰 사진이 오는 동안 상자에 늘려 보여 줍니다(PhotoLightbox의 thumb).
+  const [thumbs, setThumbs] = useState<Record<string, string>>({});
   if (shown.length === 0) return null;
   return (
     <figure className={className}>
@@ -392,7 +394,16 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
             type="button"
             aria-haspopup="dialog"
             title={t(naru.eventHero.photoOpen)}
-            onClick={() => setOpenPhoto(i)}
+            onPointerEnter={() => warmPhoto(photo.src)}
+            onTouchStart={() => warmPhoto(photo.src)}
+            onFocus={() => warmPhoto(photo.src)}
+            onClick={(e) => {
+              const imgs = e.currentTarget.parentElement?.querySelectorAll("img") ?? [];
+              const next: Record<string, string> = {};
+              imgs.forEach((img, k) => { if (img.currentSrc && shown[k]) next[shown[k].src] = img.currentSrc; });
+              setThumbs(next);
+              setOpenPhoto(i);
+            }}
             className={`group relative block aspect-[4/3] w-full cursor-zoom-in overflow-hidden rounded-2xl border border-white/10 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.9)] transition-colors hover:border-white/30`}
           >
             <Image src={photo.src} alt={t(photo.alt)} fill sizes="(max-width: 1023px) 45vw, 280px" priority={!desktopOnly && i < 2} className="object-cover object-center" />
@@ -416,7 +427,7 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
         </Link>
       </figcaption>
       <PhotoLightbox
-        photos={shown.map((p) => ({ src: p.src, alt: t(p.alt), width: p.width, height: p.height, caption: p.day && `${t(naru.eventHero.photosCaption)} · ${t(p.day)}` }))}
+        photos={shown.map((p) => ({ src: p.src, alt: t(p.alt), width: p.width, height: p.height, caption: p.day && `${t(naru.eventHero.photosCaption)} · ${t(p.day)}`, thumb: thumbs[p.src] }))}
         index={openPhoto}
         onIndex={setOpenPhoto}
         onClose={() => setOpenPhoto(null)}
