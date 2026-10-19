@@ -929,14 +929,17 @@ export const naru = {
         // DECIDED 2026-10-18 (사용자: "하루마다, 모두에게가 무슨 뜻인지 모르겠음"): 제목과 본문 어디에도 무엇을 받는지가 없었습니다.
         // 제목을 정본 7장의 이름 "미션"으로 세우고, 본문은 언제부터와 조건만 말합니다. 그 전: "하루마다, 모두에게" / "마지막 날이 아니라 그날그날 받습니다."
         // 무엇을 주는지(형태, 금액)는 여전히 정해지지 않아 "지원"이라고만 씁니다. 전사록에 나온 후보(나눠 주는 상금, 크레딧, 식사)는 모두 미확정입니다.
-        title: { ko: "미션 지원", en: "Mission support" },
+        // DECIDED 2026-10-19 (사용자: "미션 지원이라고 하지 말고, 좀 다른 way to phrase it", 전사록의 표현 넷 중 선택):
+        // 기획자가 회의에서 이 장치를 설명한 말("1위 몫을 쪼개서 나눈다", "과정에 뿌린다")에서 왔습니다. 그 전: "미션 지원".
+        title: { ko: "과정에 거는 몫", en: "A share staked on the process" },
         // DECIDED 2026-10-19 (사용자, 스크린숏: "너무 평면적"): 카드 아래 Day 0~4 작은 노선에서 불이 켜지는 날. 미션은 Day 2와 Day 3에만(brand 7장).
         days: [2, 3],
         body: {
           // DECIDED 2026-10-10 (중복 브리프 C3): "해낸 팀 모두"는 노선도 범례와 december.facts가 말합니다. 이 칸에서는 되풀이하지 않습니다.
           // 2026-10-19 (사용자: "1일차랑 4일차에는 미션을 빼자"): "Day 2부터"는 Day 4까지로 읽혀 Day 2와 Day 3으로.
-          ko: "Day 2와 Day 3에 그날 미션을 해내면 그날 지원을 받습니다.",
-          en: "On Day 2 and Day 3, complete the day's mission and get support that day.",
+          // DECIDED 2026-10-19 (같은 요청): "A가 아니라 B"는 이 문단에 하나뿐입니다(brand 5장).
+          ko: "결과 한 번이 아니라, Day 2와 Day 3에 해낸 미션마다 나눠 줍니다.",
+          en: "Not one prize for the result: it is shared out for every mission completed on Day 2 and Day 3.",
         },
       },
       {
@@ -1978,7 +1981,8 @@ export const naru = {
     // 폰에서만 그리는 한 줄(2026-10-11). 노선도의 정거장과 필이 눌린다는 것을 말합니다.
     routeHint: { ko: "날짜를 누르면 그날의 일정이 열립니다", en: "Tap a day to open its schedule" },
     // 2026-10-10 (마일스톤 브리프 2.1): 노선도의 주황 점 줄이 무엇인지 말하는 범례 한 칸.
-    routeLegendMilestone: { ko: "미션 지원, 해낸 팀 모두", en: "Mission support, for every team that completes it" },
+    // 2026-10-19: 혜택 04의 이름("과정에 거는 몫")에 맞췄습니다. 그 전: "미션 지원, 해낸 팀 모두".
+    routeLegendMilestone: { ko: "과정에 거는 몫, 미션을 해낸 팀 모두", en: "A share staked on the process, for every team that completes the mission" },
     // 2026-10-11: 날짜 카드와 폰 패널의 띠에 서는 라벨. "마일스톤"에서 "미션"으로.
     milestoneLabel: { ko: "미션", en: "Mission" },
     // DECIDED 2026-10-17 (사용자): 미션 띠를 펼치면 서는 두 목록의 라벨.
