@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-19 Day 4 카드에 인기투표 버튼 (잠금)](#2026-10-19-vote-button)
 - [2026-10-19 Supabase에 미션 Day 2, 3 반영 (0013)](#2026-10-19-mission-db)
 - [2026-10-19 미션은 Day 2와 Day 3에만](#2026-10-19-mission-days)
 - [2026-10-19 출제사 브리프 반영, 홈과 /naru 시각 감사](#2026-10-19-brief-audit)
@@ -258,6 +259,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-19-vote-button"></a>
+## 2026-10-19 Day 4 카드에 인기투표 버튼 (잠금)
+- 범위: data/naru.ts(Day 4 voteCta), components/home/NaruHome.tsx, lib/crossingVote.ts
+- 한 것: 사용자: 인기 투표 버튼이 4일차에 있되 지금은 disable, 누르면 8월처럼 팀 이름이 쭉 나오고 고르는 기능, 팀 이름은 Supabase에 저장된 이름. 2026-10-17에 숨겨 둔 /crossing/vote(트랙마다 한 팀, 자기 팀 제외, 수정 불가, 이름은 crossing_teams.name)로 가는 버튼을 Day 4 카드 바닥에 세웠습니다. 데스크톱과 폰 패널 모두. 시간표 버튼과 같은 잠긴 모양(점선, 자물쇠)이고 VOTE_BUTTON_OPEN=false입니다. 열 때는 이 값과 환경 변수 CROSSING_VOTE_OPEN=1을 함께 켭니다. 근거: brand 2장 판단 질문 2(동료 앞에서 증명), brand 9장(우승, 1등 안 씀).
+- 검증: tsc, next build 통과. 1440px와 390px에서 Day 4 카드의 잠긴 버튼 확인.
+- 커밋: abac495
 
 <a id="2026-10-19-mission-db"></a>
 ## 2026-10-19 Supabase에 미션 Day 2, 3 반영 (0013)
