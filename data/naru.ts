@@ -934,6 +934,8 @@ export const naru = {
         title: { ko: "과정에 거는 몫", en: "A share staked on the process" },
         // DECIDED 2026-10-19 (사용자, 스크린숏: "너무 평면적"): 카드 아래 Day 0~4 작은 노선에서 불이 켜지는 날. 미션은 Day 2와 Day 3에만(brand 7장).
         days: [2, 3],
+        // 2026-10-19 (디자인 검토): 날마다 따로 받는 몫이라 노선 위 막대를 날마다 끊어 그립니다. 이어진 막대인 02 멘토와 모양이 갈립니다.
+        split: true,
         body: {
           // DECIDED 2026-10-10 (중복 브리프 C3): "해낸 팀 모두"는 노선도 범례와 december.facts가 말합니다. 이 칸에서는 되풀이하지 않습니다.
           // 2026-10-19 (사용자: "1일차랑 4일차에는 미션을 빼자"): "Day 2부터"는 Day 4까지로 읽혀 Day 2와 Day 3으로.
@@ -955,7 +957,7 @@ export const naru = {
           en: "Whichever country you study in, you end up on the same team.",
         },
       },
-    ] as { num: string; title: Phrase; body: Phrase; days: number[]; evidence?: Phrase }[],
+    ] as { num: string; title: Phrase; body: Phrase; days: number[]; split?: boolean; evidence?: Phrase }[],
     // DECIDED 2026-09-29 (사용자: 9/28 자문 미팅의 인사이트를 "한번 다 반영"): 결과물의 두 갈래. 창업만이 끝이 아니고,
     // 조언자도 창업을 권하지 않았습니다. 채용 연계는 출제 기업의 의사가 확인되지 않아 약속처럼 쓰지 않습니다.
     // DECIDED 2026-09-30 (사용자): uses와 아래 note는 화면에서 내렸습니다(NaruHome의 #gains). 키는 둡니다.

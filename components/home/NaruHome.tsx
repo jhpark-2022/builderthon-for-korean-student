@@ -296,47 +296,61 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
 // 날짜는 data/naru.ts gains.items[].days. 글자는 META 하나라 화면의 크기 셋을 넘지 않습니다.
 // 근거: brand 5장 "추상적인 문장 옆에는 구체적인 한 줄", brand 7장 닷새.
 // ─────────────────────────────────────────────────────────────────────────────
-// 정거장 다섯의 가운데: 10%, 30%, 50%, 70%, 90%. 세로 안내선도 같은 자리입니다(20% 주기의 가운데에 1px).
-const gainAt = (d: number) => `${10 + d * 20}%`;
-const GAIN_GUIDES =
-  "repeating-linear-gradient(to right, transparent 0 calc(10% - 0.5px), rgba(255,255,255,0.07) calc(10% - 0.5px) calc(10% + 0.5px), transparent calc(10% + 0.5px) 20%)";
+// DECIDED 2026-10-19 (사용자: 노선 하나를 같이 쓰는 생각은 좋지만 "initial version 진짜 이상함", 디자인 서브에이전트 셋의 검토):
+// 첫 판은 막대 끝의 큰 점이 노선보다 무거워 스위치 다섯 개처럼 읽혔고, 막대가 행 가운데에 떠 글과 멀었고, 날 이름이 없었고,
+// 폰에서는 머리가 스크롤로 사라졌습니다. 이제 머리와 다섯 행이 같은 칸 틀(GAIN_COLS) 하나를 씁니다: 왼쪽 글 칸 + 날 다섯 칸.
+// 머리는 "Day N / 날 이름"과 정거장, Day 4 정거장에만 주황 점(도착, 성과 공유회). 막대는 점 없는 얇은 띠이고 제목 줄 높이에 섭니다.
+// split인 행(04)은 날마다 끊어 그립니다. 폰은 머리를 두지 않고 행마다 0~4 작은 노선을 답니다(스크롤해도 스스로 읽힙니다).
+const GAIN_COLS = "sm:grid-cols-[minmax(0,18rem)_repeat(5,minmax(0,1fr))]";
+const GAIN_BAR = "h-2 rounded-full bg-gradient-to-r from-naru-logo-from/75 to-naru-logo-to/75";
 
-/** 판 맨 위의 노선 하나. Day 0~4 정거장과 이름. */
-function GainRouteHead() {
+/** 데스크톱 머리: 왼쪽에 "닷새", 날마다 번호와 이름과 정거장. */
+function GainRouteHead({ label, names }: { label: string; names: string[] }) {
   return (
-    <div className="relative pb-3">
-      <div className="grid grid-cols-5 text-center">
-        {[0, 1, 2, 3, 4].map((d) => (
-          <span key={d} className={`${META} whitespace-nowrap font-bold tabular-nums text-white/85`}>Day {d}</span>
-        ))}
-      </div>
-      <div className="relative mt-2 h-3">
-        <div className="absolute top-1/2 h-px -translate-y-1/2 bg-white/30" style={{ left: gainAt(0), right: "10%" }} />
-        {[0, 1, 2, 3, 4].map((d) => (
-          <span key={d} className="absolute top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/60 bg-[#0B1430]" style={{ left: gainAt(d) }} />
-        ))}
-      </div>
+    <div className={`grid ${GAIN_COLS}`}>
+      <p className={`self-end pr-6 ${META} font-bold text-accent`}>{label}</p>
+      {[0, 1, 2, 3, 4].map((d) => (
+        <div key={d} className="flex flex-col items-center text-center">
+          <span className={`${META} font-bold tabular-nums text-white/85`}>Day {d}</span>
+          <span className={`${META} break-keep px-1 text-white/45`}>{names[d]}</span>
+          <div className="relative mt-2.5 h-3 w-full">
+            <div className={`absolute top-1/2 h-px -translate-y-1/2 bg-white/25 ${d === 0 ? "left-1/2 right-0" : d === 4 ? "left-0 right-1/2" : "inset-x-0"}`} />
+            <span className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full ${d === 4 ? "h-3 w-3 bg-[#EE8A4F]" : "h-2.5 w-2.5 border border-white/50 bg-[#0B1430]"}`} />
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
 
-/** 한 행의 막대. 위 노선과 같은 다섯 칸 위에서 그 혜택이 있는 날만큼. */
-function GainLane({ days }: { days: number[] }) {
+/** 데스크톱 한 행의 막대들. 이어진 날은 한 띠, split이면 날마다 한 칸. 높이는 제목 줄(번호 배지 28px의 가운데)에 맞춥니다. */
+function GainBars({ days, split }: { days: number[]; split?: boolean }) {
   const lo = Math.min(...days);
   const hi = Math.max(...days);
+  const spans = split ? days.map((d) => [d, d]) : [[lo, hi]];
   return (
-    <div
-      className="relative min-h-8 sm:-my-5 sm:self-stretch sm:[background-image:var(--gain-guides)]"
-      style={{ ["--gain-guides" as string]: GAIN_GUIDES }}
-      role="img"
-      aria-label={days.map((d) => `Day ${d}`).join(", ")}
-    >
-      <div className="absolute inset-x-0 top-1/2 h-3 -translate-y-1/2">
-        {hi > lo && (
-          <div className="absolute top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-gradient-to-r from-accent/70 to-naru-logo-to/70" style={{ left: gainAt(lo), width: `${(hi - lo) * 20}%` }} />
-        )}
-        {days.map((d) => (
-          <span key={d} className="absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_12px_2px_rgba(169,154,214,0.6)] ring-2 ring-white/80" style={{ left: gainAt(d) }} />
+    <>
+      {spans.map(([a, b]) => (
+        <div key={a} aria-hidden className="mt-2.5 px-2 max-sm:hidden" style={{ gridColumn: `${a + 2} / span ${b - a + 1}`, gridRow: 1 }}>
+          <div className={GAIN_BAR} />
+        </div>
+      ))}
+    </>
+  );
+}
+
+/** 폰의 작은 노선: 다섯 칸과 그 아래 0~4. */
+function GainStrip({ days }: { days: number[] }) {
+  return (
+    <div aria-hidden className="mx-auto mt-3 w-full max-w-[16rem] sm:hidden">
+      <div className="grid grid-cols-5 gap-1">
+        {[0, 1, 2, 3, 4].map((d) => (
+          <span key={d} className={days.includes(d) ? GAIN_BAR.replace("h-2", "h-1.5") : "h-1.5 rounded-full bg-white/10"} />
+        ))}
+      </div>
+      <div className="mt-1.5 grid grid-cols-5">
+        {[0, 1, 2, 3, 4].map((d) => (
+          <span key={d} className={`${META} tabular-nums ${days.includes(d) ? "font-bold text-white/85" : "text-white/30"}`}>{d}</span>
         ))}
       </div>
     </div>
@@ -1316,30 +1330,36 @@ export default function NaruHome() {
               자기 날짜만큼 막대를 긋습니다. 정거장에서 내려오는 옅은 세로줄이 다섯 행을 꿰어 같은 노선이라는 것이 보입니다.
               폰은 행 안에서 글 아래에 막대(가운데 정렬), sm부터는 왼쪽에 글, 오른쪽에 막대. 글자는 BODY와 META만.
               role="list" (2026-09-19, 접근성 감사 10): Safari/VoiceOver가 list-style:none인 목록의 역할을 떼어 냅니다. */}
-          <div className="relative mt-8 overflow-hidden rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-5 sm:px-7 sm:py-6">
-            <div aria-hidden className="pointer-events-none absolute -top-24 right-[10%] h-48 w-72 rounded-full bg-accent/15 blur-3xl" />
-            <div aria-hidden className="relative grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] sm:gap-x-8">
-              <div className="max-sm:hidden" />
-              <GainRouteHead />
-            </div>
-            <ol role="list" className="relative">
-              {naru.gains.items.map((item) => (
-                <li
-                  key={item.num}
-                  className="grid grid-cols-1 items-center gap-y-3 border-t border-white/10 py-4 text-center max-sm:[background-image:var(--gain-guides)] sm:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] sm:gap-x-8 sm:py-5 sm:text-left"
-                  style={{ ["--gain-guides" as string]: GAIN_GUIDES }}
-                >
-                  <div className="min-w-0 self-center">
-                    <div className="flex items-center justify-center gap-2.5 sm:justify-start">
-                      <span className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent/15 ${META} font-black tabular-nums text-accent`}>{item.num}</span>
-                      <h3 className={ROW_HEADING}>{t(item.title)}</h3>
+          <div className="relative mt-8 rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-2 sm:px-7 sm:py-6">
+            <div className="relative">
+              {/* 날마다의 옅은 세로 띠(Day 0, 2, 4). 가는 안내선 대신 칸이 보이게. 머리와 행과 같은 칸 틀입니다. */}
+              <div aria-hidden className={`pointer-events-none absolute inset-0 grid max-sm:hidden ${GAIN_COLS}`}>
+                <div />
+                {[0, 1, 2, 3, 4].map((d) => (<div key={d} className={d % 2 === 0 ? "rounded-lg bg-white/[0.03]" : ""} />))}
+              </div>
+              <div aria-hidden className="relative pb-4 max-sm:hidden">
+                <GainRouteHead label={t({ ko: "닷새", en: "Five days" })} names={naru.december.stages.map((st) => t(st.title))} />
+              </div>
+              <ol role="list" className="relative">
+                {naru.gains.items.map((item, i) => (
+                  <li
+                    key={item.num}
+                    className={`py-4 text-center sm:grid sm:items-start sm:py-5 sm:text-left ${GAIN_COLS} ${i > 0 ? "border-t border-white/[0.08]" : "sm:border-t sm:border-white/[0.08]"}`}
+                  >
+                    <div className="min-w-0 sm:pr-6" style={{ gridColumn: 1, gridRow: 1 }}>
+                      <div className="flex items-center justify-center gap-2.5 sm:justify-start">
+                        <span aria-hidden className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent/15 ${META} font-black tabular-nums text-accent`}>{item.num}</span>
+                        <h3 className={ROW_HEADING}>{t(item.title)}</h3>
+                      </div>
+                      <p className={`mt-1.5 break-keep ${BODY} leading-relaxed text-white/65`}>{t(item.body)}</p>
+                      <span className="sr-only">{item.days.map((d) => `Day ${d}`).join(", ")}</span>
                     </div>
-                    <p className={`mt-1.5 break-keep ${BODY} leading-relaxed text-white/70`}>{t(item.body)}</p>
-                  </div>
-                  <GainLane days={item.days} />
-                </li>
-              ))}
-            </ol>
+                    <GainBars days={item.days} split={item.split} />
+                    <GainStrip days={item.days} />
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
         </Reveal>
         {/* 2026-09-29 (9/28 자문): 결과물의 두 갈래. 창업만이 끝이 아니라는 한 줄(data/naru.ts gains.uses). */}
