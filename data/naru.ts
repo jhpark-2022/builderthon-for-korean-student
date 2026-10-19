@@ -2344,7 +2344,7 @@ export const naru = {
         dayOffset: 1,
         // DECIDED 2026-10-19 (사용자: "day 1 and day 4에 각각 GSC랑 MARU180 로고 넣어줘"): 노선도 정거장 위의 로고.
         // 흰색 단색(scripts/process-partner-logos.py, 원본은 "12월 빌더톤/CI"). 로고가 무엇을 뜻하는지(장소, 함께하는 곳)는 글로 쓰지 않습니다.
-        logo: { src: "/partners/logos/white/trimmed/gsc.png", name: "GSC Global Startup Center", w: 455, h: 129 },
+        logo: { src: "/partners/logos/white/trimmed/gsc.png", name: "GSC Global Startup Center", w: 900, h: 259 },
         body: {
           // DECIDED 2026-10-08 (사용자: "팀 - 전원 현장 편성"): 미리 짠 팀을 확인하는 날이 아니라 이 날 팀을 맺습니다.
           ko: "현장에서 팀을 맺습니다. Day 0에 각자 세운 생각을 꺼내 맞춰 보고, 출제사가 직접 여는 세션에서 회사를 봅니다.",

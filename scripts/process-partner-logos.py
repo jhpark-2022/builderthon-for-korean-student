@@ -229,29 +229,53 @@ def from_tone(im):
     Everything turns solid white, and a thin gap is cut wherever two differently
     coloured shapes meet, so G, S and C stay apart without going grey.
     (2026-10-19, visual audit 7: the first version dimmed each letter by its
-    luminance, and the mark read grey next to MARU180's solid white.)"""
+    luminance, and the mark read grey next to MARU180's solid white.)
+    DECIDED 2026-10-19 (사용자: "G and S 가 좀 깨져있음"): 경계의 섞인 색 픽셀을
+    픽셀마다 따로 분류하니 틈이 톱니처럼 깨졌습니다. 글자별 소속을 4배로 보간해
+    다시 나누어 경계를 매끄럽게 하고, 그 경계를 따라 틈을 팝니다."""
+    from PIL import ImageFilter
+    K = 4  # 원본(466px)이 작아서 4배로 키운 뒤 틈을 팝니다.
     a = np.asarray(im.convert("RGBA")).astype(float)
     rgb, alpha = a[:, :, :3], a[:, :, 3]
     colour = ((rgb.max(axis=2) - rgb.min(axis=2)) >= 40) & (alpha > 128)
     # Label each coloured pixel by its nearest letter colour (sampled from the source).
     refs = np.array([[96, 91, 164], [218, 114, 119], [60, 160, 90]], float)
     d = ((rgb[:, :, None, :] - refs[None, None]) ** 2).sum(axis=3)
-    lab = np.where(colour, d.argmin(axis=2), -1)
-    edge = np.zeros(lab.shape, bool)
-    for dy, dx in ((0, 1), (1, 0)):
-        a1, b1 = lab[: lab.shape[0] - dy, : lab.shape[1] - dx], lab[dy:, dx:]
-        e = (a1 >= 0) & (b1 >= 0) & (a1 != b1)
-        edge[: lab.shape[0] - dy, : lab.shape[1] - dx] |= e
-        edge[dy:, dx:] |= e
-    gap = edge.copy()
-    for _ in range(2):  # widen to ~5px at source size
-        g = gap.copy()
-        g[1:] |= gap[:-1]; g[:-1] |= gap[1:]; g[:, 1:] |= gap[:, :-1]; g[:, :-1] |= gap[:, 1:]
-        gap = g
-    # Soften the gap so it reads as a clean cut, not a jagged one, at ~24px.
-    from PIL import ImageFilter
-    soft = np.asarray(Image.fromarray((gap * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(1.4))).astype(float) / 255
-    return alpha * np.clip(1 - soft * 1.6, 0, 1)
+    near = d.argmin(axis=2)
+    W, H = im.width * K, im.height * K
+
+    def up(m, blur=0.0):
+        img = Image.fromarray(np.clip(m, 0, 255).astype(np.uint8))
+        if blur:
+            img = img.filter(ImageFilter.GaussianBlur(blur))
+        return np.asarray(img.resize((W, H), Image.BICUBIC)).astype(float) / 255
+
+    # 글자마다 원본 해상도의 소속 정도를 부드럽게 보간해 키운 뒤 가장 강한 쪽으로 나눕니다.
+    # 픽셀 계단이 매끄러운 곡선이 되고, G의 가로 막대 같은 직선과 모서리는 그대로 남습니다.
+    score = np.stack([up((colour & (near == i)) * 255.0, 0.8) for i in range(len(refs))])
+    region = up(colour * 255.0, 0.6) > 0.3
+    lab = np.where(region, score.argmax(axis=0), -1)
+    # 틈은 뒤에 놓인 글자 쪽만 팝니다. 앞 글자는 원래 윤곽(G의 가로 막대 등)을 그대로 지킵니다.
+    # 겹침 순서는 원본 그림에서 읽었습니다(원본 y 기준): G/S는 y 62 위에서 S가 앞, 아래에서 G가 앞.
+    # S/C는 y 57 위에서 C가 앞, 아래에서 S가 앞.
+    yy = np.arange(H)[:, None] / K
+    back = {(0, 1): np.where(yy < 62, 0, 1), (1, 2): np.where(yy < 57, 1, 2)}
+    gap = np.zeros(lab.shape, bool)
+    for (i, j), bk in back.items():
+        e = np.zeros(lab.shape, bool)
+        for dy, dx in ((0, 1), (1, 0)):
+            a1, b1 = lab[: H - dy, : W - dx], lab[dy:, dx:]
+            hit = ((a1 == i) & (b1 == j)) | ((a1 == j) & (b1 == i))
+            e[: H - dy, : W - dx] |= hit
+            e[dy:, dx:] |= hit
+        # 틈 너비는 원본 기준 약 5px.
+        wide = np.asarray(Image.fromarray((e * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(41))) > 0
+        gap |= wide & (lab == bk)
+    soft = np.asarray(Image.fromarray((gap * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(1.5))).astype(float) / 255
+    big_alpha = np.asarray(Image.fromarray(alpha.astype(np.uint8)).resize((W, H), Image.LANCZOS)).astype(float)
+    big_alpha = np.clip(big_alpha, 0, 255)
+    big_alpha[big_alpha < 8] = 0  # 확대할 때 가장자리에 생긴 옅은 잔상을 지워 여백이 늘지 않게 합니다.
+    return big_alpha * np.clip(1 - soft * 1.3, 0, 1)
 
 
 def from_alpha(im):
