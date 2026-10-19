@@ -290,6 +290,46 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// #gains 카드 아래의 작은 노선(DECIDED 2026-10-19, 사용자, 스크린숏: "너무 평면적으로 보여주는거 같고,
+// visually 의미 있게 다가오지 않음"). 다섯 카드가 같은 모양의 글 상자라 무엇이 언제 오는지가 보이지 않았습니다.
+// 프로그램의 노선도와 같은 그림으로 Day 0~4 다섯 정거장을 긋고, 그 혜택이 있는 날에 불을 켭니다.
+// 날짜는 data/naru.ts gains.items[].days. 글자는 META 하나라 화면의 크기 셋을 넘지 않습니다.
+// 근거: brand 5장 "추상적인 문장 옆에는 구체적인 한 줄", brand 7장 닷새.
+// ─────────────────────────────────────────────────────────────────────────────
+function GainDays({ days }: { days: number[] }) {
+  const lo = Math.min(...days);
+  const hi = Math.max(...days);
+  // 정거장 다섯의 가운데는 10%, 30%, 50%, 70%, 90%입니다.
+  const at = (d: number) => `${10 + d * 20}%`;
+  return (
+    <div className="relative mt-auto w-full max-w-[16rem] pt-4" aria-label={days.map((d) => `Day ${d}`).join(", ")} role="img">
+      <div className="relative h-3">
+        <div aria-hidden className="absolute top-1/2 h-px -translate-y-1/2 bg-white/15" style={{ left: at(0), right: "10%" }} />
+        {hi > lo && (
+          <div aria-hidden className="absolute top-1/2 h-0.5 -translate-y-1/2 rounded-full bg-gradient-to-r from-accent to-naru-logo-to" style={{ left: at(lo), width: `${(hi - lo) * 20}%` }} />
+        )}
+        {[0, 1, 2, 3, 4].map((d) => {
+          const on = days.includes(d);
+          return (
+            <span
+              key={d}
+              aria-hidden
+              className={`absolute top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full ${on ? "h-3 w-3 bg-accent shadow-[0_0_12px_2px_rgba(169,154,214,0.6)] ring-2 ring-white/80" : "h-1.5 w-1.5 bg-white/30"}`}
+              style={{ left: at(d) }}
+            />
+          );
+        })}
+      </div>
+      <div aria-hidden className="mt-2 grid grid-cols-5">
+        {[0, 1, 2, 3, 4].map((d) => (
+          <span key={d} className={`${META} whitespace-nowrap tabular-nums ${days.includes(d) ? "font-bold text-white" : "font-medium text-white/35"}`}>Day {d}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // 히어로 사진 넷 (DECIDED 2026-09-17, 사용자). 오른쪽 단(폰은 카피 아래)에 8월 행사
 // 사진을 2×2로. 형상 무대(싱가포르·서울 점)는 이날 걷었습니다. 사진은 전부 4:3이라
 // 칸도 4:3, fill + cover가 실제로는 아무것도 자르지 않습니다(PhotoWall과 같음).
@@ -1263,14 +1303,17 @@ export default function NaruHome() {
             {naru.gains.items.map((item, i) => (
               <li
                 key={item.num}
-                className={`flex flex-col items-center rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 sm:py-5 lg:col-span-2 ${i === 3 ? "lg:col-start-2" : ""} ${i === 4 ? "max-lg:sm:col-span-2" : ""}`}
+                className={`relative flex flex-col items-center overflow-hidden rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 sm:py-5 lg:col-span-2 ${i === 3 ? "lg:col-start-2" : ""} ${i === 4 ? "max-lg:sm:col-span-2" : ""}`}
               >
+                {/* 번호 뒤의 옅은 빛. 카드가 판처럼 납작해 보이지 않게(2026-10-19). 밝은 판은 아닙니다. */}
+                <div aria-hidden className="pointer-events-none absolute -top-16 left-1/2 h-32 w-48 -translate-x-1/2 rounded-full bg-accent/15 blur-3xl" />
                 {/* 폰에서는 번호와 제목을 한 줄에 둡니다(카드 다섯이 세로로 쌓여 길어지지 않게). sm부터는 8월처럼 번호가 제목 위. */}
                 <div className="flex items-center justify-center gap-2.5 sm:flex-col sm:gap-3">
                   <span className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent/15 ${META} font-black tabular-nums text-accent`}>{item.num}</span>
                   <h3 className={ROW_HEADING}>{t(item.title)}</h3>
                 </div>
-                <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/70`}>{t(item.body)}</p>
+                <p className={`relative mt-2 break-keep ${BODY} leading-relaxed text-white/70`}>{t(item.body)}</p>
+                <GainDays days={item.days} />
               </li>
             ))}
           </ol>
