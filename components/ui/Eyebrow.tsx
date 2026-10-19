@@ -17,7 +17,7 @@
 // 통과하지만(2026-09-15 재측정, 이전 주석의 5.9:1은 틀린 값이었습니다)
 // 여유가 크고 주황을 점으로 아끼는 규칙과도 맞아 틴트를 씁니다.
 // ─────────────────────────────────────────────────────────────────────────────
-export default function Eyebrow({ children, color = "violet", className = "" }: { children: React.ReactNode; color?: "violet" | "cyan" | "emerald" | "purple" | "plum" | "orange"; className?: string }) {
+export function AugustEyebrow({ children, color = "violet", className = "" }: { children: React.ReactNode; color?: "violet" | "cyan" | "emerald" | "purple" | "plum" | "orange"; className?: string }) {
   const map = {
     // ── 8월 회차 전용. Journey.tsx만 부릅니다 ────────────────────────────
     // 나루 화면에서 쓰지 마세요. Tailwind 기본 violet은 색상이 나루 보라와
@@ -45,4 +45,19 @@ export default function Eyebrow({ children, color = "violet", className = "" }: 
       {children}
     </span>
   );
+}
+
+// DECIDED 2026-10-20 (hwang 브리프 2.3, 감사 W1, W4): 챕터 라벨은 알약도 대문자도 넓은 자간도 없는 META 굵은 글자 하나입니다.
+// 알약은 누르는 것에만 씁니다. 8월 페이지(Journey.tsx)는 위 AugustEyebrow를 그대로 써서 픽셀이 바뀌지 않습니다.
+// 색은 글자색만 받습니다(나루 화면은 purple 하나).
+const EYEBROW_TEXT = {
+  violet: "text-violet-200",
+  cyan: "text-cyan-200",
+  emerald: "text-emerald-200",
+  purple: "text-accent",
+  plum: "text-naru-plum-tint",
+  orange: "text-[#F2B183]",
+} as const;
+export default function Eyebrow({ children, color = "purple", className = "" }: { children: React.ReactNode; color?: keyof typeof EYEBROW_TEXT; className?: string }) {
+  return <span className={`mb-4 inline-flex items-center gap-2 text-xs font-bold ${EYEBROW_TEXT[color]} ${className}`}>{children}</span>;
 }

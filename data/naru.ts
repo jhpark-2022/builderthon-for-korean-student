@@ -857,6 +857,11 @@ export const naru = {
         ko: "실명 기업의 이슈에서 문제를 직접 찾고, 그 기업 앞에서 증명해 본 경험.",
         en: "Finding the problem yourself in a named company's issue, and proving it in front of that company.",
       },
+      // DECIDED 2026-10-20 (hwang 브리프 1.2, 2.6, 감사 W3, W4): ✓칩 셋(알약)을 상자 없이 한 문장으로 그립니다(tangiblesLine). tangibles 키는 그대로 둡니다.
+      tangiblesLine: {
+        ko: "팀의 생각 1장, 코드로 옮긴 결과물, 성과 공유회 무대가 남습니다.",
+        en: "You keep a page of the team's take, something built in code, and the showcase stage.",
+      },
       tangibles: [
         { ko: "팀의 생각 1장", en: "One page of the team's take" },
         { ko: "코드로 옮긴 결과물", en: "Something built in code" },

@@ -7,8 +7,6 @@
 // (폭과 정렬 토큰, 읽기 판, 폰 접힘, 등록 미리 보기 버튼, 푸터)을 여기 한 곳에 둡니다. 복사하지 않습니다.
 // 아래 조각들은 components/home/NaruHome.tsx에서 정의만 옮긴 것입니다. 마크업과 클래스는 그대로입니다.
 // ─────────────────────────────────────────────────────────────────────────────
-import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
@@ -16,8 +14,6 @@ import { naru, naruLinks, openChatLabels, register as registerCopy } from "@/dat
 import type { Phrase } from "@/data/dictionaryCore";
 import { BODY, META } from "@/components/ui/typography";
 import OpenChatLink from "@/components/ui/OpenChatLink";
-import MotionToggle from "@/components/ui/MotionToggle";
-import { FooterNav, type SitePage } from "@/components/shared/PageChips";
 
 // ── 상자를 쓰는 자리 (DECIDED 2026-09-20, 표현 방식 브리프) ──────────────────
 // 셋뿐입니다. ①누를 수 있는 것 ②여러 항목이 한 덩어리로 묶여야 하는 기록
@@ -151,10 +147,12 @@ export const MEASURE_C = "mx-auto lg:max-w-[28rem] text-balance";
 // (본문 기준 7:1). #naru의 문 셋이 같은 이유로 쓰는 알약 바탕(2026-09-23)과 같은 색입니다. 테두리와 크기는 그대로.
 export const HERO_BUTTON_GROUND = "!bg-[#0B1430]/60 backdrop-blur-sm";
 // 작은 라벨의 자간. 한국어 화면은 0, 영문 화면(라틴 대문자)만 넓게.
-export const latinTrack = (locale: "ko" | "en") => (locale === "en" ? "tracking-[0.14em]" : "tracking-normal");
+// DECIDED 2026-10-20 (hwang 브리프 2.4, 감사 W1): 영문 0.14em → 0.06em.
+export const latinTrack = (locale: "ko" | "en") => (locale === "en" ? "tracking-[0.06em]" : "tracking-normal");
 // 챕터 라벨(알약)의 자간. Eyebrow는 8월 페이지와 같은 컴포넌트라 거기 값(0.18em)은 두고
 // 홈에서만 한국어일 때 덮습니다.
-export const eyebrowTrack = (locale: "ko" | "en") => (locale === "en" ? "" : "!tracking-[0.04em]");
+// DECIDED 2026-10-20 (hwang 브리프 2.4): 라벨이 알약이 아니게 되면서(Eyebrow) 덮을 자간이 없습니다. 호출부를 남기려고 빈 값을 돌려줍니다.
+export const eyebrowTrack = (_locale: "ko" | "en") => "";
 
 // DECIDED 2026-09-25 (가독성 브리프 2): 읽기 판. 카드가 아니라 배경을 가라앉히는 막입니다.
 // 흐림(blur)이 요점입니다. 글자 크기의 점 잡음은 지우고, 형상의 빛과 색과 움직임은 남깁니다.
@@ -271,50 +269,5 @@ export function usePlateLite() {
 // 홈의 마지막 블록이 나루 티저(인장, 한 줄 소개, "나루 알아보기")라, 바로 아래 푸터가 로고와 소개를 한 번 더
 // 그리면 같은 것이 위아래로 둘이 됩니다. compact는 로고, 링 부제, 짧은 정의를 그리지 않고 크레딧부터 시작합니다.
 // /naru의 푸터는 전과 같습니다.
-export function SiteFooter({ compact = false, page }: { compact?: boolean; page: SitePage }) {
-  const { t, locale } = useLocale();
-  return (
-      <footer id="closing" className="relative w-full border-t border-white/10 px-6 py-14 sm:px-10">
-        <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
-          {!compact && (
-          <>
-          {/* 헤더와 같은 규칙입니다 (2026-09-21): 영문 화면에서는 영문 락업.
-              헤더에서만 바꾸면 같은 페이지 위아래에서 이름이 달라집니다. */}
-          {/* DECIDED 2026-10-10 (구조 브리프 2.4): 푸터의 나루 로고는 /naru로 갑니다. 모양은 그대로입니다. */}
-          <Link href="/naru" className="inline-flex">
-            <Image
-              src={locale === "en" ? "/naru/naru-name-en-rev.svg" : "/naru/naru-name-rev.png"}
-              alt={t(naru.footer.logoAlt)}
-              width={locale === "en" ? 857 : 604}
-              height={locale === "en" ? 142 : 168}
-              unoptimized={locale === "en"}
-              className="h-10 w-auto sm:h-12"
-            />
-          </Link>
-          {/* 부제와 짧은 정의(2026-09-29, data/naru.ts의 footer.subtitle과 shortDef). 부제는 로고 링과 같은 글자라
-              영문 대문자 라벨로, 정의는 크레딧보다 한 단 밝게. */}
-          <div className="-mt-2 flex max-w-xl flex-col items-center gap-2">
-            {/* 로고 가이드 2026-09-30: 링처럼 "A KOREA-ROOTED COLLECTIVE / STUDENT BUILDERS" 두 줄. 링에서는 of를 뺍니다
-                (사용자: 아랫줄이 OF로 시작하는 게 거슬림). 스크린리더는 문장 부제(footer.subtitle)를 읽습니다. */}
-            <p lang="en" className={`${META} font-bold uppercase leading-relaxed tracking-[0.14em] text-white/70`}>
-              <span className="sr-only">{t(naru.footer.subtitle)}</span>
-              <span aria-hidden="true" className="block">{naru.footer.subtitleRing.top}</span>
-              <span aria-hidden="true" className="block">{naru.footer.subtitleRing.bottom}</span>
-            </p>
-            <p className={`break-keep ${BODY} leading-relaxed text-white/70`}>{t(naru.footer.shortDef)}</p>
-          </div>
-          </>
-          )}
-          {/* DECIDED 2026-10-13 (사용자, 스크린숏: "이 부분도 빼줘"): 여기 서던 크레딧 한 줄(주최 나루, 주관 각 학교 한인 학생회와 학회,
-              후원 참여 기업)을 그리지 않습니다. 키(naru.footer.creditItems)는 data에 그대로 있습니다. */}
-          {/* DECIDED 2026-10-13 (등록 브리프 2.3): 세 페이지의 푸터가 같은 한 줄을 씁니다(페이지 셋, 오픈채팅, 문의).
-              그 전의 오픈채팅 칩, 문의, "제로백 빌더톤의 기록" 링크는 이 줄 안에 있습니다. */}
-          <FooterNav t={t} page={page} />
-          <p className={`${META} text-white/70`}>{t(naru.footer.rights)}</p>
-          {/* 배경 움직임 끄기. WCAG 2.2.2. 자리가 푸터인 이유는 컴포넌트 주석에
-              있습니다. */}
-          <MotionToggle className="min-h-[44px] mt-2 !text-white/70" />
-        </div>
-      </footer>
-  );
-}
+// DECIDED 2026-10-20 (hwang 브리프 4.2): 푸터는 세 페이지가 같은 하나입니다(components/shared/SiteChrome.tsx). compact와 /naru의 로고 푸터를 걷었습니다.
+export { SiteFooter } from "@/components/shared/SiteChrome";

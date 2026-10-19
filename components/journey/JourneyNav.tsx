@@ -15,7 +15,8 @@ import { isScrollLocked } from "@/lib/useBodyScrollLock";
 import LocaleToggle from "@/components/LocaleToggle";
 import MotionToggle from "@/components/ui/MotionToggle";
 import ChatGlyph from "@/components/ChatGlyph";
-import { PageChips, type SitePage } from "@/components/shared/PageChips";
+import type { SitePage } from "@/components/shared/PageChips";
+import { SiteMenuBar, SiteMenuButton, SiteMenuSheet, useSiteMenu } from "@/components/shared/SiteChrome";
 import { decemberEventLabel } from "@/lib/naruDates";
 import dynamic from "next/dynamic";
 // DECIDED 2026-10-08 (성능 리뷰 4): 인사 칩은 퀴즈 결과 표(data/quiz의 RESULTS, gzip 약 22KB)를 끌고 옵니다.
@@ -205,6 +206,7 @@ export default function JourneyNav({
   showQuiz?: boolean;
 }) {
   const { t, locale } = useLocale();
+  const menu = useSiteMenu();
   const reduce = useReducedMotion();
   // registered 하나만 읽습니다. 8월에 이 기기에서 등록했던 방문자에게 오픈채팅
   // 버튼의 톤을 올려 주는 플래그입니다(lib/RegisterContext.tsx).
@@ -525,11 +527,10 @@ export default function JourneyNav({
               <span className={`hidden items-center whitespace-nowrap text-lg font-black leading-none tracking-wide text-white/90 sm:inline-flex sm:text-xl ${locale === "ko" ? "translate-y-[2px]" : "xl:hidden min-[1700px]:inline-flex"}`}>{t(dict.nav.brandSuffix)}</span>
             </a>
           )}
-          {/* DECIDED 2026-10-13 (등록 브리프 2.1): 페이지 칩 셋. 세 페이지 모두 로고 바로 오른쪽, 같은 자리입니다(xl부터).
-              그 아래 폭에서는 레일의 맨 앞에 섭니다. 2026-10-11의 돌아가기 알약("← 크로싱 서울")은 이 칩이 대신합니다. */}
-          <div className="ml-5 hidden items-center gap-2 xl:flex">
-            <PageChips t={t} page={page} />
-          </div>
+          {/* DECIDED 2026-10-20 (사용자, 스크린숏: "여기서 by 나루는 빼고"): hwang 브리프 4.3의 헤더 바이라인은 넣지 않습니다. 8월 OG의 나루 락업은 그대로. */}
+          {/* DECIDED 2026-10-20 (hwang 브리프 4.1, 감사 W8): 사이트 메뉴는 알약(PageChips)이 아니라 글자 링크입니다(xl부터).
+              크로싱 서울(EN Home), 나루, 8월 기록, 후원 문의. 오픈채팅은 같은 줄 오른쪽의 버튼입니다. 그 아래 폭에서는 레일 왼쪽의 메뉴 단추. */}
+          <SiteMenuBar page={page} />
           {/* ANCHOR ROW - `xl` (1280), not `lg` (1024). See the note on the
               section rail below: between 1024 and 1279 this row does not fit
               next to the brand and the two CTAs in either locale, and flex
@@ -538,6 +539,8 @@ export default function JourneyNav({
               실측: 1440에서 로고, 칩 셋, 링크 다섯, 오른쪽 묶음이 한 줄에 들어가지 않습니다. 그 아래에서는 레일이 맡습니다. */}
           {/* 영문 8월의 아홉 칸은 간격 20px이면 오픈채팅 버튼과 붙어 그 줄만 12px입니다. */}
           <div className={`hidden items-center ${en && !naru ? "gap-3" : "gap-5"} ${anchorRowAt.row}`}>
+            {/* 2026-10-20 (hwang 브리프 4.1): 사이트 메뉴와 챕터 목차 사이의 1px 선. 목차 줄이 설 때만 섭니다. */}
+            <span aria-hidden className="h-5 w-px shrink-0 bg-white/20" />
             {/* DECIDED 2026-10-10 (사용자: "TOC가 너무 어색함"): 나루 계열 헤더(홈, /naru)의 데스크톱 줄에서는 첫 항목(#top)을
                 그리지 않습니다. 바로 왼쪽의 로고가 같은 이름이고 같은 곳(#top)으로 갑니다. "나루 나루", "크로싱 서울 크로싱 서울"로
                 읽혔습니다. 폰 레일은 로고 줄이 접힌 뒤에 혼자 남으므로 넷 그대로입니다. 8월 페이지는 그대로. */}
@@ -750,18 +753,19 @@ export default function JourneyNav({
           폰의 첫 화면에 다른 페이지로 가는 길이 없던 것도 이 줄이 풉니다. 2026-09-19의 "접는 목차"와 2026-08-17의
           "칩 폭 통일"은 이 결정이 대신합니다. 8월 페이지의 챕터 링크는 2xl부터 로고 줄에 서므로 레일도 거기까지 남습니다.
           nav 랜드마크입니다(2026-09-19, 접근성 감사 4). 로고 줄이 접히면 위에도 여백을 둡니다(2026-10-10). */}
-      <nav aria-label={t(dict.nav.sectionsAria)} className={`${anchorRowAt.rail} ${chromeHidden ? "pt-2 lg:pt-0" : ""} ${reduce ? "" : "transition-[padding] duration-300"}`}>
+      {/* DECIDED 2026-10-20 (hwang 브리프 4.1): 레일에서 페이지 칩을 뺐습니다. 레일은 챕터 목차만, 사이트 메뉴는 레일 왼쪽의 단추가 엽니다
+          (레일 밖, 가로로 굴러가지 않습니다). 메뉴는 레일 아래 한 줄입니다. */}
+      <div className={`${anchorRowAt.rail} ${chromeHidden ? "pt-2 lg:pt-0" : ""} ${reduce ? "" : "transition-[padding] duration-300"}`}>
+      <div className="flex items-center pl-1 sm:pl-6 xl:pl-0">
+      <SiteMenuButton open={menu.open} onToggle={menu.toggle} controls={menu.id} />
+      <span aria-hidden className="h-6 w-px shrink-0 bg-white/20 xl:hidden" />
+      <nav aria-label={t(dict.nav.sectionsAria)} className="min-w-0 flex-1">
         <div
           ref={railRef}
           // calc 안의 밑줄 두 개(100%_-_16px)가 필요합니다. Tailwind는 임의값의 밑줄을 공백으로 바꾸는데,
           // CSS의 calc는 빼기 부호 양옆에 공백이 없으면 무효입니다(실측 2026-09-20).
-          className="flex items-center gap-2 overflow-x-auto pb-2 pl-5 pr-5 [mask-image:linear-gradient(to_right,transparent,#000_16px,#000_calc(100%_-_16px),transparent)] [scrollbar-width:none] sm:pl-10 [&::-webkit-scrollbar]:hidden"
+          className="flex items-center gap-2 overflow-x-auto pb-1 pl-3 pr-5 [mask-image:linear-gradient(to_right,transparent,#000_12px,#000_calc(100%_-_16px),transparent)] [scrollbar-width:none] sm:pr-10 xl:pl-5 [&::-webkit-scrollbar]:hidden"
         >
-          {/* 페이지 칩은 로고 줄에 서는 폭(xl)부터 레일에서 빠집니다. 같은 칩이 두 줄에 서지 않게 합니다. */}
-          <span className="contents xl:hidden">
-            <PageChips t={t} page={page} size="rail" />
-            <span aria-hidden className="mx-1 h-6 w-px shrink-0 bg-white/20" />
-          </span>
           {anchors.map((a) => {
             const here = a.id === activeSection;
             return (
@@ -773,10 +777,11 @@ export default function JourneyNav({
                 // 챕터 제목 전문을 이름으로(접근성 감사 19). "왜"는 한 음절이라 링크 목록에서 뜻이 없습니다.
                 aria-label={a.ariaLabel ? t(a.ariaLabel) : undefined}
                 // 현위치는 색만으로 말하지 않습니다(WCAG 1.4.1). 밑줄이 함께 켜집니다. 칩은 표지판이라 누르는 자리는 44px.
-                className={`inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center whitespace-nowrap rounded-full border px-2.5 text-[0.75rem] font-semibold backdrop-blur transition active:scale-[0.97] ${
+                // DECIDED 2026-10-20 (hwang 브리프 2.13, 감사 W4): 챕터 칩(알약)을 밑줄 글자 링크로. 알약은 버튼에만 씁니다. 현위치는 accent 밑줄.
+                className={`inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center whitespace-nowrap px-1.5 text-[0.75rem] font-semibold underline-offset-4 transition ${
                   here
-                    ? "border-accent/40 bg-accent/[0.12] font-bold text-white underline decoration-accent decoration-2 underline-offset-2"
-                    : "border-white/[0.12] bg-white/[0.06] text-white/75"
+                    ? "font-bold text-white underline decoration-accent decoration-2"
+                    : "text-white/75"
                 }`}
               >
                 {t(a.label)}
@@ -785,6 +790,9 @@ export default function JourneyNav({
           })}
         </div>
       </nav>
+      </div>
+      <SiteMenuSheet page={page} open={menu.open} id={menu.id} onClose={menu.close} />
+      </div>
       </header>
 
       {/* DECIDED 2026-10-11 (리뷰 A4, 결정 D-d): 여기 있던 폰과 태블릿(xl 미만)의 고정 배경 정지 버튼을 뺐습니다.

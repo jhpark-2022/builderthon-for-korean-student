@@ -172,9 +172,8 @@ export default function RouteMap({
                       <span aria-hidden>★</span>
                     </span>
                   ) : spot ? (
-                    <span className="relative flex h-6 w-6 items-center justify-center rounded-full border border-accent/60 bg-accent/20 shadow-[0_0_0_4px_rgba(10,6,20,0.85)]">
-                      <span aria-hidden className="h-2 w-2 rounded-full bg-accent" />
-                    </span>
+                    // DECIDED 2026-10-20 (hwang 브리프 2.9, 감사 W16): 테두리 원 안의 점(◉)을 속 찬 원 하나로. Day 0 빈 고리와 ★는 그대로.
+                    <span className="relative h-4 w-4 rounded-full bg-accent shadow-[0_0_0_4px_rgba(10,6,20,0.85)]" />
                   ) : (
                     <span className="relative h-3 w-3 rounded-full border border-white/35 bg-[#0a0614] shadow-[0_0_0_4px_rgba(10,6,20,0.85)]" />
                   )}
@@ -247,9 +246,7 @@ export default function RouteMap({
           )}
           {legend.spot && (
             <span className={`flex items-center gap-1.5 ${META} text-accent/85`}>
-              <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-accent/60 bg-accent/20">
-                <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-              </span>
+              <span aria-hidden className="h-3.5 w-3.5 rounded-full bg-accent" />
               {legend.spot}
             </span>
           )}

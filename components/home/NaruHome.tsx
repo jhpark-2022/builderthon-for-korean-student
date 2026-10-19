@@ -18,7 +18,6 @@ import {
 } from "@/lib/naruDates";
 import Glass from "@/components/ui/Glass";
 import Halo from "@/components/ui/Halo";
-import { ChipDot } from "@/components/ui/Chip";
 import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 import { TIMETABLE_OPEN } from "@/lib/crossingOps";
 import { VOTE_BUTTON_OPEN } from "@/lib/crossingVote";
@@ -223,8 +222,8 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
       {/* 2026-09-18 (감사 반영 브리프 1.4): 테두리는 --border-2, 라벨은 흰색. 주황은 옆의 점 하나
           (상태 표시)뿐입니다. 이 점이 주황 허용 목록의 "카운트다운 옆 점"입니다.
           2026-09-19 (사용자): 서울·싱가포르 두 줄. 시차 한 시간이라 일은 같고 시간만 다릅니다. */}
-      <p aria-hidden className={`flex items-center gap-2 max-sm:justify-center ${META} font-bold uppercase tracking-[0.18em] text-white/85`}>
-        <span className="h-[7px] w-[7px] shrink-0 rounded-full bg-naru-orange" />
+      {/* DECIDED 2026-10-20 (hwang 브리프 2.2, 감사 W1, W16): 대문자, 자간 0.18em, 주황 점을 뺐습니다. META 굵게 글자 하나. */}
+      <p aria-hidden className={`flex items-center gap-2 max-sm:justify-center ${META} font-bold text-white/85`}>
         {t(naru.eventHero.countdownLabel)}
         {/* /45 → /60 (2026-09-19, 접근성 감사 2). 이 줄은 sm:hidden이라 **폰에서만**
             보이는데 흰색 45%는 #070B1F 위에서 4.49:1로 AA(4.5:1)에 못 미칩니다.
@@ -603,16 +602,15 @@ export default function NaruHome() {
               규칙 목록(mentoringRules)은 가운데 상자의 설명과 아래 Day 4 한 줄로 올라가 그리지 않습니다.
               날짜, 횟수, 기업 이름은 쓰지 않습니다(미정). */}
           <div className="rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 lg:px-6 lg:py-5">
-            <p className={`flex items-center justify-center gap-2 ${BODY} font-bold text-white`}>
-              <ChipDot className="bg-accent" />
+            {/* DECIDED 2026-10-20 (hwang 브리프 2.8, 감사 W16): 이름 앞의 장식 점 셋을 뺐습니다. */}
+            <p className={`break-keep text-center ${BODY} font-bold text-white`}>
               {t(naru.december.contextMentoring.name)}
             </p>
             <p className={`mt-0.5 ${META} font-semibold text-white/70`}>{t(naru.december.contextMentoring.when)}</p>
             <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.december.contextMentoring.body)}</p>
           </div>
           <div className="rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] px-5 py-4 lg:px-6 lg:py-5">
-            <p className={`flex items-center justify-center gap-2 ${BODY} font-bold text-white`}>
-              <ChipDot />
+            <p className={`break-keep text-center ${BODY} font-bold text-white`}>
               {/* lang="en" (2026-09-19, 접근성 감사 7): 한국어 문단 속의 영어 고유명사. */}
               <span lang="en">General Mentoring</span>
             </p>
@@ -626,8 +624,7 @@ export default function NaruHome() {
               읽히게 합니다. 테두리는 점선, 바탕은 비우고, 점은 속이 빈 주황 고리, 글은 한 단 흐리게(이름 /85, 설명 /70).
               새 색과 새 글자 크기는 없습니다. 정해지면 옆 상자와 같은 실선과 채운 점으로 되돌립니다. */}
           <div className="rounded-2xl border border-dashed border-white/25 px-5 py-4 lg:px-6 lg:py-5">
-            <p className={`flex items-center justify-center gap-2 ${BODY} font-bold text-white/85`}>
-              <ChipDot className="border border-naru-orange" />
+            <p className={`break-keep text-center ${BODY} font-bold text-white/85`}>
               {t(naru.december.fieldMentoring.name)}
             </p>
             <p className={`mt-0.5 ${META} font-semibold text-white/70`}>{t(naru.december.fieldMentoring.when)}</p>
@@ -686,7 +683,8 @@ export default function NaruHome() {
     >
       <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1">
         {/* lang="en": DAY는 두 로케일 모두 영어입니다(접근성 감사 7). */}
-        <span lang="en" className={`rounded-full border border-accent/40 bg-accent/15 px-2.5 py-0.5 ${META} font-bold tracking-[0.08em] text-accent`}>
+        {/* DECIDED 2026-10-20 (hwang 브리프 2.5, 감사 W4): 알약을 걷고 글자만. 알약은 누르는 것에만 씁니다. */}
+        <span lang="en" className={`${META} font-bold text-accent`}>
           {`${t(naru.december.dayLabel)} ${stage.dayOffset}`}
         </span>
         <StageHeading className={ROW_HEADING}>{t(stage.title)}</StageHeading>
@@ -861,10 +859,9 @@ export default function NaruHome() {
                         폰에서는 자간을 좁힙니다: 한글이 36px라 0.55em이면 영문이 한글보다 넓어져 한글이 왼쪽 끝에서 밀립니다. */}
                     {/* 2026-10-08 (히어로 정리): 영문 줄의 양 끝을 한글 줄의 양 끝에 맞춥니다(글자를 고르게 벌려 폭을 같게).
                         가운데 정렬이면 왼쪽 정렬된 히어로에서 영문만 안쪽으로 들어가 보였습니다. 읽는 글은 sr-only 한 줄입니다. */}
-                    <span lang="en" className={`mt-1 flex justify-between ${META} font-bold uppercase leading-none text-[#E08A76] sm:mt-2`}>
-                      <span className="sr-only">{DECEMBER_EVENT_NAME.en}</span>
-                      {[...DECEMBER_EVENT_NAME.en].map((ch, i) => (<span key={i} aria-hidden>{ch === " " ? "\u00a0" : ch}</span>))}
-                    </span>
+                    {/* DECIDED 2026-10-20 (hwang 브리프 2.1, 감사 W1): 글자를 하나씩 쪼개 한글 폭에 벌리던 것(실효 자간 0.5em 이상)을 걷었습니다.
+                        한 줄, 자간 0, 한글 워드마크 아래 가운데. 2026-10-08의 양 끝 맞춤을 이 결정이 대신합니다. */}
+                    <span lang="en" className={`mt-1 block text-center ${META} font-bold uppercase leading-none text-[#E08A76] sm:mt-2`}>{DECEMBER_EVENT_NAME.en}</span>
                   </span>
                 </>
               ) : (
@@ -1043,7 +1040,7 @@ export default function NaruHome() {
               }`}
             >
               {/* 2026-10-11 (리뷰 작은 것): DOM은 dt 다음 dd입니다(용어가 먼저). 보이는 순서는 order가 전과 같이 숫자 위, 라벨 아래로 둡니다. */}
-              <dt className={`order-2 mt-1.5 break-keep text-center ${META} font-bold uppercase text-white/70 ${locale === "en" ? "tracking-[0.04em] sm:tracking-[0.1em]" : "tracking-normal"}`}>
+              <dt className={`order-2 mt-1.5 break-keep text-center ${META} font-bold uppercase text-white/70 ${latinTrack(locale)}`}>
                 {t(stat.label)}
               </dt>
               <dd className={`order-1 ${TITLE} font-black leading-none text-white`}>
@@ -1352,14 +1349,8 @@ export default function NaruHome() {
           <div className="mt-8 rounded-2xl border border-accent/30 bg-accent/[0.08] px-5 py-6 text-center sm:px-7">
             <p className={`${META} font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.gains.spine.tag)}</p>
             <p className={`mx-auto mt-2.5 max-w-[34rem] text-balance break-keep ${BODY} font-bold leading-snug text-white`}>{t(naru.gains.spine.heading)}</p>
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-              {naru.gains.spine.tangibles.map((x, i) => (
-                <span key={i} className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-accent/30 bg-accent/[0.1] px-3 py-1 ${META} font-semibold text-white/90`}>
-                  <span aria-hidden className="text-accent">✓</span>
-                  {t(x)}
-                </span>
-              ))}
-            </div>
+            {/* DECIDED 2026-10-20 (hwang 브리프 1.2, 2.6, 감사 W3, W4): ✓칩 셋(알약)을 걷고 한 문장으로. tangibles 키는 남깁니다. */}
+            <p className={`mx-auto mt-3 max-w-[34rem] text-balance break-keep ${META} leading-snug text-white/80`}>{t(naru.gains.spine.tangiblesLine)}</p>
           </div>
           {/* DECIDED 2026-10-11 (사용자, 스크린숏: "이거 빼줘"): 판 아래의 8월 숫자 한 줄(naru.gains.concrete)은 그리지 않습니다.
               키는 data/naru.ts에 그대로 둡니다. */}
@@ -1478,10 +1469,10 @@ export default function NaruHome() {
           폰에서 main에 들어선 첫 Tab이 화면 아래 끝의 버튼으로 뜁니다. 보이는
           순서와 포커스 순서가 어긋나면 안 됩니다(2.4.3). 지금은 links.openChat이
           빈 문자열이라 렌더되지 않는 잠복 상태였어요. */}
-      <MobileChatBar afterId="gains" endId="closing" phone />
+      <MobileChatBar afterId="gains" endId="site-footer" phone />
       </main>
 
-      <SiteFooter compact page="crossing" />
+      <SiteFooter page="crossing" />
     </>
   );
 }

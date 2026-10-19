@@ -543,7 +543,7 @@ export default function NaruPage() {
       )}
 
       {/* 하단 오픈채팅 바. 홈에 있을 때와 같은 조건입니다(#record가 지나면 나타나고 푸터가 보이면 물러남). */}
-      <MobileChatBar afterId="record" endId="closing" phone />
+      <MobileChatBar afterId="record" endId="site-footer" phone />
     </main>
     <SiteFooter page="naru" />
     </>
@@ -662,7 +662,8 @@ function PhotoWall({ photos, t }: { photos: RecordPhoto[]; t: (p: Phrase) => str
           </div>
           {photo.day && photo.caption && (
             <figcaption className="mt-2.5 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-              <span className={`${META} font-bold uppercase tracking-[0.14em] text-accent`}>
+              {/* 2026-10-20 (hwang 브리프 2.7): 자간 0 */}
+              <span className={`${META} font-bold uppercase text-accent`}>
                 {t(photo.day)}
               </span>
               <span className={`break-keep ${BODY} leading-snug text-white/70`}>{t(photo.caption)}</span>
@@ -748,7 +749,7 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
         {/* DECIDED 2026-10-02 (사용자: "주관, 주최, 후원 bubble이 at the centre"): md부터 역할 칩만 상자의
             가로 가운데에 둡니다. 이름과 본문은 왼쪽 정렬 그대로입니다(2026-09-25). 폰은 칩과 이름이 한 줄이라 그대로. */}
         <p>
-          <Chip tone="outline" size="meta" className={`tracking-[0.02em] ${center ? "!border-accent/40 !text-accent" : ""}`}><RoleLabel text={t(layer.role)} /></Chip>
+          <Chip tone="outline" size="meta" className={center ? "!border-accent/40 !text-accent" : ""}><RoleLabel text={t(layer.role)} /></Chip>
         </p>
         {/* DECIDED 2026-10-01 (사용자: "나루 대신, 나루의 로고를 넣어줘. 나루라는 이름 대신"): 가운데 상자는
             이름 글자 대신 헤더, 푸터와 같은 락업입니다. 한글 PNG는 위 26px이 여백이라(헤더 주석 참고)

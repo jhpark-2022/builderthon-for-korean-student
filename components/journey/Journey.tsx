@@ -24,16 +24,16 @@ import {
 } from "@/data/schedule";
 import Chapter from "./Chapter";
 import AugustGaps from "@/components/archive/AugustGaps";
-import Eyebrow from "@/components/ui/Eyebrow";
+// 2026-10-20 (hwang 브리프 2.3): 8월 페이지는 옛 알약 라벨을 그대로 씁니다.
+import { AugustEyebrow as Eyebrow } from "@/components/ui/Eyebrow";
 import OpenChatLink from "@/components/ui/OpenChatLink";
 import LinkedInLink from "@/components/ui/LinkedInLink";
-import MotionToggle from "@/components/ui/MotionToggle";
 import Glass from "@/components/ui/Glass";
 import Chip from "@/components/ui/Chip";
 import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 import HeroPartnerStrip, { sortLikeHeroStrip, sponsorMass } from "@/components/shared/HeroPartnerStrip";
 import MobileChatBar from "@/components/shared/MobileChatBar";
-import { FooterNav } from "@/components/shared/PageChips";
+import { SiteFooter } from "@/components/shared/SiteChrome";
 import { BAND_TINT, BandFades } from "@/components/shared/Band";
 import FlowStrip from "@/components/shared/FlowStrip";
 import { useHeroSplit } from "@/components/shared/useHeroSplit";
@@ -2231,6 +2231,7 @@ export default function Journey() {
   const { heroRef, leftX, rightX, splitX, heroFade, bgBlur } = useHeroSplit();
 
   return (
+    <>
     <main id="main" tabIndex={-1} className="relative z-10 focus:outline-none">
       <ScrollToTop />
       <MobileChatBar />
@@ -3665,19 +3666,8 @@ export default function Journey() {
         <div className="mx-auto mt-10 w-full max-w-3xl border-t border-white/10 pt-8 text-center">
           <p className="text-sm font-bold tracking-widest text-white">ZERO100 AI BUILDERTHON</p>
           <p className="mt-2 text-xs text-white/65">{t(dict.footer.hostedBy)}</p>
-          {/* 2026-10-13 (등록 브리프 2.3, 리뷰 N7): 세 페이지가 같은 한 줄을 씁니다. 저작권은 나루입니다. 위 주최 표기는 8월 그대로. */}
-          <div className="mt-4"><FooterNav t={t} page="aug" /></div>
-          <p className="mt-2 text-xs text-white/70">© 2026 {t(dict.footer.rights)}</p>
-          {/* 배경 움직임 끄기 (2026-09-15). WCAG 2.2.2는 이 페이지에도 적용되고,
-              배경 필드는 여기서도 무한히 돕니다. 이 한 줄이 이 파일에 더해진
-              전부입니다. */}
-          <div className="mt-4 flex justify-center">
-            {/* onClick은 버튼의 것이 먼저 돌고 여기로 올라옵니다. 같은 누름에 영상과
-                로고 띠도 함께 멈추거나 다시 돕니다(motionPaused 주석). */}
-            <span className="inline-flex" onClick={() => setMotionPaused((v) => !v)}>
-              <MotionToggle />
-            </span>
-          </div>
+          {/* DECIDED 2026-10-20 (hwang 브리프 4.2): 여기 서던 FooterNav, 저작권, 배경 움직임 토글은 main 밖의 SiteFooter 하나가 맡습니다
+              (세 페이지 같은 푸터). 위 두 줄(ZERO100 AI BUILDERTHON, 주최 표기)은 8월 기록이라 그대로입니다. */}
         </div>
       </section>
 
@@ -3686,6 +3676,8 @@ export default function Journey() {
       <PartnerModal partner={activePartner} onClose={() => setActivePartner(null)} triggerRef={partnerTriggerRef} />
       <MobileStickyBar t={t} />
     </main>
+    <div className="relative z-10"><SiteFooter page="aug" onMotionToggle={() => setMotionPaused((v) => !v)} /></div>
+    </>
   );
 }
 

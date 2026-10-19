@@ -32,10 +32,7 @@ export const CHIP: Record<ChipTone, string> = {
   outline: "inline-flex items-center gap-1 rounded-full border border-white/[0.12] bg-transparent px-2 py-0.5 text-[0.68rem] font-semibold text-white/80",
 };
 
-/** 7px 점. 8월 노선도의 멘토링 마커와 같은 크기입니다. 크기가 다르면 같은 것으로 안 읽힙니다. */
-export function ChipDot({ className = "bg-emerald-400/80" }: { className?: string }) {
-  return <span aria-hidden className={`h-[7px] w-[7px] shrink-0 rounded-full ${className}`} />;
-}
+// 2026-10-20 (hwang 브리프 2.8): ChipDot(7px 장식 점)을 지웠습니다. 쓰던 곳은 홈 멘토링 상자 셋뿐이었습니다.
 
 // DECIDED 2026-10-08 (사용자 승인, 브랜드 감사 12): size. "meta"는 글자 크기를 META(text-xs, 13.5px)로 올립니다.
 // 그 전에는 홈이 <main class="naru-min12">의 속성 선택자와 !text-xs 덮어쓰기로 칩을 키웠고, 포털로 뜨는

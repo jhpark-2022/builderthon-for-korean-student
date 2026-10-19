@@ -175,14 +175,20 @@ const RECORD_STATS = [
 ];
 
 export async function renderRecordCard(locale: Locale) {
-  const [logoSrc, fonts] = await Promise.all([publicPngDataUri("partners/zero100-wordmark-white.png"), loadOgFonts()]);
+  const [logoSrc, naruSrc, fonts] = await Promise.all([
+    publicPngDataUri("partners/zero100-wordmark-white.png"),
+    locale === "en" ? publicSvgDataUri("naru/naru-name-en-rev.svg") : publicPngDataUri("naru/naru-name-rev.png"),
+    loadOgFonts(),
+  ]);
   const en = locale === "en";
 
   return new ImageResponse(
     (
       <div style={FRAME}>
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <div style={{ display: "flex", width: 12, height: 12, borderRadius: 6, backgroundColor: "#EE8A4F" }} />
+        {/* DECIDED 2026-10-20 (hwang 브리프 4.4, D2, 감사 W13): 홈 카드와 같은 왼쪽 위 작은 나루 락업. 그 옆의 주황 점은 걷었습니다. */}
+        <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          {en ? <img src={naruSrc} width={290} height={48} alt="NARU" /> : <img src={naruSrc} width={173} height={48} alt="나루 NARU" />}
           <div style={{ display: "flex", fontSize: 26, fontWeight: 700, color: "#A99AD6" }}>
             {en ? "The record, Singapore, 22–29 August 2026" : "2026년 8월 22~29일, 싱가포르의 기록"}
           </div>
