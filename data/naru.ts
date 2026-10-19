@@ -1850,8 +1850,9 @@ export const naru = {
         // DECIDED 2026-10-12 (등록 브리프 1.5, 리뷰 S11): 시각은 registerFacts.hoursLine이 채워지면 그 값으로, 그 전에는
         // "아침부터 저녁까지" 그대로입니다. 준비물 한 문장을 붙였습니다.
         v: {
-          ko: `4일 동안 ${registerFacts.hoursLine?.ko ?? "아침부터 저녁까지"}. 마지막 날은 제외입니다. 노트북은 각자 가져옵니다.`,
-          en: `Open ${registerFacts.hoursLine?.en ?? "morning to evening"} for four days. Not the last day. Bring your own laptop.`,
+          // DECIDED 2026-10-20 (hwang 브리프 1.1, 감사 P3): 4일 모두 열립니다. 그 전 "...까지. 마지막 날은 제외입니다."는 4일 모두와 어긋났습니다.
+          ko: `4일 모두 ${registerFacts.hoursLine?.ko ?? "아침부터 저녁까지"} 열려 있고, 노트북은 각자 가져옵니다.`,
+          en: `Open ${registerFacts.hoursLine?.en ?? "morning to evening"} on all four days. Bring your own laptop.`,
         },
       },
       {
@@ -1867,7 +1868,7 @@ export const naru = {
         // DECIDED 2026-10-11 (브랜드 브리프 B1, docs/brand.md의 금지어): 참가자가 읽는 자리에 "가설", "검증"을 쓰지 않습니다.
         // 그 전: k "가설", v "결과만 존재하면 안 됩니다. ... 12월은 그 가설의 검증입니다."
         k: { ko: "왜 날마다", en: "Why every day" },
-        v: { ko: "1위 한 팀에게 몰아 주는 것보다 과정마다 모두에게 나누는 쪽이 더 좋은 결과물을 낸다고 봅니다. 그래서 날마다 나눕니다.", en: "We think sharing support with everyone along the way produces better work than handing it all to first place. So we share it every day." },
+        v: { ko: "한 팀에게 몰아 주는 것보다 과정마다 모두에게 나누는 쪽이 더 좋은 결과물을 낸다고 봅니다. 그래서 날마다 나눕니다.", en: "We think sharing support with everyone along the way produces better work than handing it all to one team. So we share it every day." },
       },
     ] as { k: Phrase; v: Phrase }[],
 
@@ -2046,8 +2047,9 @@ export const naru = {
       when: { ko: "Day 1", en: "Day 1" },
       body: {
         // DECIDED 2026-10-13 (사용자, 스크린숏: "멘토링은 없습니다 내용은 빼줘"): 첫 문장 "멘토링은 없습니다."를 뺐습니다.
-        ko: "이슈를 낸 기업의 담당자가 Sharing session에서 회사와 이슈의 맥락을 더 풀어 줍니다. 질문은 이 날 합니다.",
-        en: "The person behind the issue opens up the company and the context at the Sharing session. This is the day for questions.",
+        // DECIDED 2026-10-20 (hwang 브리프 1.1, 감사 P5): 끝 문장 "질문은 이 날 합니다."를 뺐습니다. Day 2, 3의 찾아가는 멘토링과 같은 화면에서 어긋났습니다.
+        ko: "이슈를 낸 기업의 담당자가 Sharing session에서 회사와 이슈의 맥락을 더 풀어 줍니다.",
+        en: "The person behind the issue opens up the company and the context at the Sharing session.",
       },
     },
     // 세 상자 아래 한 줄(2026-10-13). 그 전에는 규칙 목록의 "Day 4는 멘토링 없음"이 이 말을 했습니다.
@@ -2537,8 +2539,9 @@ export const naru = {
         // 그 전의 "이어가는 것은 각자의 몫"은 record.gaps[1](충분히 말하지 않은 것은 주최 측의 몫)과 방향이 어긋났습니다.
         // record.gaps[1].answer, #after의 steps와 같은 사실입니다. 하나를 바꾸면 셋을 같이 보세요.
         line: {
-          ko: "클로징은 끝난 뒤에 할 일로 끝납니다. 말로 하고, 글로도 남겨 드립니다.",
-          en: "The closing ends on what to do once it is over. We say it, and you get it in writing too.",
+          // DECIDED 2026-10-20 (hwang 브리프 1.1, 감사 P10, brand 7장 "끝난 뒤"): 끝난 뒤에 할 일이 무엇인지 적습니다.
+          ko: "클로징은 끝난 뒤에 할 일로 끝납니다. 멘토에게 먼저 연락해 무엇을 만들었는지 한 줄을 보내는 것. 말로 하고, 글로도 남겨 드립니다.",
+          en: "The closing ends on what to do once it is over: write to your mentor first, with one line on what you built. We say it, and you get it in writing too.",
         },
         // DECIDED 2026-10-10 (중복 브리프 B1): 칩 "멘토링 없음"을 뺐습니다(위 Day 3과 같은 이유).
         chips: [{ ko: "시상과 클로징", en: "Awards and closing" }],
