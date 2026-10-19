@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 // A full-viewport-height scroll chapter. Content fades/rises in when it enters
@@ -38,66 +37,7 @@ export default function Chapter({
    */
   labelledBy?: string;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [shown, setShown] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    // IntersectionObserver가 없는 환경(구형 웹뷰, 일부 인앱 브라우저)을 먼저
-    // 거릅니다 (2026-09-19, 접근성 감사 13). 순서가 중요합니다: js-reveal-ready를
-    // 먼저 달고 나서 생성자가 던지면, globals.css의 안전망은 이미 비켜선 뒤라
-    // 화면에 배경과 헤더만 남습니다. 같은 파일의 Funnel은 이미 이렇게 가드합니다.
-    if (typeof IntersectionObserver === "undefined") {
-      setShown(true);
-      return;
-    }
-    // React가 살아 있다는 표시. globals.css의 리빌 안전망이 이 클래스를 보고
-    // 비켜섭니다(2026-09-19). 없으면 안전망이 1.5초 뒤 전부 보여 줍니다.
-    document.documentElement.classList.add("js-reveal-ready");
-    // Fire as soon as ANY part of the section enters the viewport (threshold 0),
-    // not once 25% of it is on screen. A section taller than the viewport - e.g.
-    // the About/Vision chapter on a phone - can never show 25% of its area at
-    // once, so a 0.25 threshold left it stuck at opacity:0 (invisible) on real
-    // iOS Safari, where the usable viewport is shorter than desktop emulators.
-    // A small negative rootMargin still lets it reveal a touch before fully in.
-    const io = new IntersectionObserver(
-      ([e]) => {
-        // Reveal once and stay revealed - don't re-hide when scrolled back past.
-        if (e.isIntersecting) {
-          setShown(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0, rootMargin: "0px 0px -10% 0px" }
-    );
-    io.observe(el);
-    // Safety net: if the observer somehow never fires (e.g. the element starts
-    // already spanning the viewport with no scroll event), reveal after a beat
-    // so content can never stay permanently hidden.
-    //
-    // 2026-09-19: 화면 안에 있는 경우로 좁혔습니다. 조건이 없던 동안에는 화면
-    // 밖 챕터까지 1200ms에 전부 보이게 되어, 스크롤해서 내려갈 때 아무것도
-    // 나타나지 않았습니다(8월 페이지에서 실측: 17,000px 아래 챕터가 스크롤 전에
-    // 이미 opacity 1). 안전망이 하려던 일은 "이미 화면에 있는데 관찰자가 울리지
-    // 않는 경우"이고, 그 경우는 그대로 지킵니다.
-    const fallback = window.setTimeout(() => {
-      const r = el.getBoundingClientRect();
-      if (r.top < window.innerHeight && r.bottom > 0) setShown(true);
-    }, 1200);
-    // 키보드가 먼저 도착하는 경우 (2026-09-19, 접근성 감사 3). opacity 0은
-    // 접근성 트리에서 빠지지 않아서, 아직 나타나지 않은 블록 안의 링크로 Tab이
-    // 들어갈 수 있습니다. 그러면 700ms 동안 포커스는 거기 있는데 화면에는
-    // 아무것도 보이지 않습니다. 포커스가 들어오면 즉시 보여 줍니다.
-    const onFocusIn = () => setShown(true);
-    el.addEventListener("focusin", onFocusIn);
-    return () => {
-      io.disconnect();
-      window.clearTimeout(fallback);
-      el.removeEventListener("focusin", onFocusIn);
-    };
-  }, []);
-
+  // DECIDED 2026-10-20 (hwang 브리프 3.1, D5): 챕터 리빌을 걷었습니다(8월 페이지도 같은 부품). 최종 화면은 전과 같습니다.
   // text alignment for the inner column
   const textCls =
     align === "left" ? "text-left"
@@ -116,7 +56,6 @@ export default function Chapter({
   return (
     <section
       id={id}
-      ref={ref}
       aria-labelledby={labelledBy}
       // A footer (the scroll hint) is pinned to the section's bottom, so it only
       // lands at the real screen bottom if the section fills the viewport. Force
@@ -140,11 +79,7 @@ export default function Chapter({
           // 페이지의 모든 문단이 들어 있습니다. 자세한 사정은 globals.css의
           // "Chapter 리빌 안전망" 블록을 보세요.
           data-chapter-reveal
-          className={`w-full transition-all duration-700 ease-out ${textCls} ${offsetCls}`}
-          style={{
-            opacity: shown ? 1 : 0,
-            transform: shown ? "translateY(0)" : "translateY(40px)",
-          }}
+          className={`w-full ${textCls} ${offsetCls}`}
         >
           {children}
         </div>

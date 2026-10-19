@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -21,77 +20,24 @@ import type { ReactNode } from "react";
 // (번들이 죽으면 1.5초 뒤 강제로 보이게)과 모션 민감 설정(transform 제거)이
 // 그 선택자로 걸려 있습니다. 새 이름을 만들면 둘 다 빠집니다.
 // ─────────────────────────────────────────────────────────────────────────────
+// DECIDED 2026-10-20 (hwang 브리프 3.1, 감사 W6, D5 기본값: 리빌 전부 제거): 스크롤마다 올라오던 효과(opacity 0 → 1,
+// translateY 40px, 700ms)를 걷었습니다. 모션 토글이 이 효과를 끄지 못했습니다. 감싸는 태그와 data-chapter-reveal은
+// 남깁니다. 배경(lib/background/scene/BackgroundScene.ts)이 판의 위치를 잴 때 이 속성을 읽습니다.
 export default function Reveal({
   children,
   className = "",
   id,
-  /** 같은 화면에 여럿이 들어올 때 순서를 주고 싶으면 ms 단위로. 기본은 없음. */
-  delay = 0,
   as: Tag = "div",
 }: {
   children: ReactNode;
   className?: string;
   id?: string;
+  /** 2026-10-20부터 쓰지 않습니다. 호출부를 남기려고 받기만 합니다. */
   delay?: number;
   as?: "div" | "section" | "li";
 }) {
-  const ref = useRef<HTMLElement>(null);
-  const [shown, setShown] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    // IntersectionObserver가 없으면 그냥 보여 줍니다 (2026-09-19, 접근성 감사 13).
-    // js-reveal-ready를 먼저 달고 나서 생성자가 던지면 globals.css의 안전망이
-    // 이미 비켜선 뒤라 본문이 통째로 사라집니다. 가드가 클래스보다 먼저입니다.
-    if (typeof IntersectionObserver === "undefined") {
-      setShown(true);
-      return;
-    }
-    // React가 살아 있다는 표시. globals.css의 안전망이 이 클래스를 보고 비켜섭니다.
-    document.documentElement.classList.add("js-reveal-ready");
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setShown(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0, rootMargin: "0px 0px -10% 0px" }
-    );
-    io.observe(el);
-    // 안전망. 관찰자가 한 번도 울리지 않는 경우에도 **이미 화면에 있는** 블록은
-    // 보여 줍니다. 화면 밖은 건드리지 않습니다. 전에는 조건 없이 1200ms에 전부
-    // 보이게 했는데, 그러면 아래쪽 블록이 스크롤 전에 이미 나타나 있어서
-    // 스크롤 애니메이션이 사라집니다(2026-09-19).
-    const fallback = window.setTimeout(() => {
-      const r = el.getBoundingClientRect();
-      if (r.top < window.innerHeight && r.bottom > 0) setShown(true);
-    }, 1200);
-    // 키보드가 먼저 도착하면 즉시 보여 줍니다 (2026-09-19, 접근성 감사 3).
-    // opacity 0은 접근성 트리에서 빠지지 않아, 안 보이는 곳에 포커스가 설 수 있습니다.
-    const onFocusIn = () => setShown(true);
-    el.addEventListener("focusin", onFocusIn);
-    return () => {
-      io.disconnect();
-      window.clearTimeout(fallback);
-      el.removeEventListener("focusin", onFocusIn);
-    };
-  }, []);
-
   return (
-    <Tag
-      id={id}
-      // @ts-expect-error 태그가 셋 중 하나라 ref 타입이 갈라집니다. 셋 다 HTMLElement입니다.
-      ref={ref}
-      data-chapter-reveal
-      className={`transition-all duration-700 ease-out ${className}`}
-      style={{
-        opacity: shown ? 1 : 0,
-        transform: shown ? "translateY(0)" : "translateY(40px)",
-        transitionDelay: shown && delay ? `${delay}ms` : undefined,
-      }}
-    >
+    <Tag id={id} data-chapter-reveal className={className}>
       {children}
     </Tag>
   );

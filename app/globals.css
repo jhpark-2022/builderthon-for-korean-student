@@ -364,11 +364,7 @@ body {
    방문자에게 본문이 통째로 사라집니다. 지금 방식(인라인 style + transition)이
    안전한 이유는 보이는 최종 상태가 애니메이션이 아니라 인라인 스타일에 있어서,
    전환 시간이 0이 되면 즉시 도착하기 때문입니다.                            */
-@keyframes chapterFailsafe { to { opacity: 1; transform: none; } }
-html:not(.js-reveal-ready) [data-chapter-reveal] { animation: chapterFailsafe 1ms linear 1.5s forwards; }
-@media (prefers-reduced-motion: reduce) {
-  [data-chapter-reveal] { transform: none !important; }
-}
+/* 2026-10-20 (hwang 브리프 3.1): 리빌을 걷어 [data-chapter-reveal]은 처음부터 보입니다. 위 안전망은 지킬 것이 없어 지웠습니다. */
 
 /* ── Pre-hydration language swap (server-rendered copy only) ─────────────────
    These pages are statically generated, so their HTML ships in LocaleProvider's
