@@ -24,9 +24,8 @@ const pretendard = localFont({
 // 2026-09-19 (사용자: "링크도 빌더톤이 아니고, 나루, 크로싱 서울이어야 함"):
 // Vercel 프로젝트 이름을 builderthon-for-korean-student에서 naru-crossing-seoul로
 // 바꿨고, 주소가 그것을 따라왔습니다. 옛 주소는 더 이상 이 프로젝트의 것이 아닙니다.
-// TODO: 진짜 도메인(naru.kr 같은)을 사면 그때 이 상수만 바꾸고 Vercel에 연결하세요.
-// 이 값을 쓰는 곳: metadataBase(공유 카드·정규 주소), sitemap.ts, robots.ts.
-const SITE_URL = "https://naru-crossing-seoul.vercel.app";
+// 2026-10-20 (hwang 브리프 4.8): 주소는 lib/siteUrl.ts 한 곳(NEXT_PUBLIC_SITE_URL)입니다.
+import { SITE_URL } from "@/lib/siteUrl";
 
 // ── 공유 카드 문자열 ─────────────────────────────────────────────────────────
 // DECIDED 2026-09-15 (나루 런칭): 레이아웃의 metadata는 이제 나루를 말합니다.

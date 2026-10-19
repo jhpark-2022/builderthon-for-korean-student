@@ -13,6 +13,7 @@
 
 import "server-only";
 import { TURNSTILE_ACTION } from "./turnstileAction";
+import { SITE_HOST } from "@/lib/siteUrl";
 
 const VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
@@ -20,7 +21,8 @@ const VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
  * 토큰을 받아도 되는 호스트. 기본은 운영 도메인 하나입니다. 도메인을 옮기거나 프리뷰 배포에서 폼을 시험할 때는
  * TURNSTILE_ALLOWED_HOSTNAMES에 쉼표로 더합니다(예: "naru.example,my-preview.vercel.app").
  */
-const DEFAULT_HOSTNAMES = ["naru-crossing-seoul.vercel.app"];
+// 2026-10-20 (hwang 브리프 4.8): 운영 주소(lib/siteUrl.ts)와 지금의 vercel.app 둘 다. 도메인을 옮기는 동안 두 주소가 함께 삽니다.
+const DEFAULT_HOSTNAMES = Array.from(new Set([SITE_HOST, "naru-crossing-seoul" + ".vercel.app"]));
 function allowedHostnames(): Set<string> {
   const extra = (process.env.TURNSTILE_ALLOWED_HOSTNAMES ?? "").split(",").map((h) => h.trim().toLowerCase()).filter(Boolean);
   return new Set([...DEFAULT_HOSTNAMES, ...extra]);

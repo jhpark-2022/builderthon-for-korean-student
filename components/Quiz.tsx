@@ -1,5 +1,6 @@
 "use client";
 
+import { SITE_HOST } from "@/lib/siteUrl";
 import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -1215,7 +1216,7 @@ const StoryCard = forwardRef<
   }
 >(function StoryCard({ ed, result, data, variant, host, t }, ref) {
   const axes = result.axes && result.axes.length > 0 ? result.axes : null;
-  const url = `${host || "naru-crossing-seoul.vercel.app"}${ed.path}`;
+  const url = `${host || SITE_HOST}${ed.path}`;
 
   // Two axis-explanation highlights below the gauges: the MOST decisive axis
   // (highest %) beside the CLOSEST-CALL axis (lowest %) - a "92% 단정" line next
