@@ -849,7 +849,7 @@ export default function NaruHome() {
                       로고의 원래 색(남색 #12246B에서 자주 #845185, 영문 테라코타 #9A3324)은 어두운 바탕에서 보이지 않아
                       (남색 1.4:1) 같은 색상의 밝은 틴트로 옮겼습니다: 남색 틴트 #9AA8EE에서 자주 틴트 #C99ACB, 영문은
                       테라코타 틴트 #E08A76. 로고의 색이라 "주황은 점으로만" 규칙의 대상이 아닙니다.
-                      영문 줄은 META 크기라 한 화면의 글자 크기는 그대로 셋입니다. gradient-text는 clip이 안 되는
+                      영문 줄은 BODY 크기라(2026-10-20부터) 한 화면의 글자 크기는 그대로 셋입니다. gradient-text는 clip이 안 되는
                       브라우저의 단색 폴백 표식입니다(globals.css). */}
                   {/* DECIDED 2026-10-11 (사용자, 네 안의 스크린숏에서 B를 고름: "로고가 색깔이 더 다양하면"): 로고의 그라데이션은 두 색에서 네 색으로.
                       남색 틴트 #9AA8EE, 보라 #A99AD6, 자주 틴트 #C99ACB, 테라코타 틴트 #E08A76(0, 35, 68, 100%). 끝 색이 아래 영문 줄과 같습니다.
@@ -863,7 +863,9 @@ export default function NaruHome() {
                         가운데 정렬이면 왼쪽 정렬된 히어로에서 영문만 안쪽으로 들어가 보였습니다. 읽는 글은 sr-only 한 줄입니다. */}
                     {/* DECIDED 2026-10-20 (사용자, 스크린숏: "아래에 crossing seoul은 전처럼 좀 space 되게"): hwang 브리프 2.1의 한 줄(자간 0)을 되돌려
                         영문 줄의 양 끝을 한글 줄의 양 끝에 맞춥니다(2026-10-08 그대로). */}
-                    <span lang="en" className={`mt-1 flex justify-between ${META} font-bold uppercase leading-none text-[#E08A76] sm:mt-2`}>
+                    {/* DECIDED 2026-10-20 (사용자, 스크린숏: "아래에 있는 CROSSING SEOUL 이 너무 작네"): 영문 줄은 META에서 BODY로
+                        (폰 15.75px, 데스크톱 18px). 새 크기를 만들지 않으려고 이미 있는 BODY를 씁니다. 한 화면의 크기는 그대로 셋입니다. */}
+                    <span lang="en" className={`mt-1 flex justify-between ${BODY} font-bold uppercase leading-none text-[#E08A76] sm:mt-2`}>
                       <span className="sr-only">{DECEMBER_EVENT_NAME.en}</span>
                       {[...DECEMBER_EVENT_NAME.en].map((ch, i) => (<span key={i} aria-hidden>{ch === " " ? "\u00a0" : ch}</span>))}
                     </span>
