@@ -859,9 +859,12 @@ export default function NaruHome() {
                         폰에서는 자간을 좁힙니다: 한글이 36px라 0.55em이면 영문이 한글보다 넓어져 한글이 왼쪽 끝에서 밀립니다. */}
                     {/* 2026-10-08 (히어로 정리): 영문 줄의 양 끝을 한글 줄의 양 끝에 맞춥니다(글자를 고르게 벌려 폭을 같게).
                         가운데 정렬이면 왼쪽 정렬된 히어로에서 영문만 안쪽으로 들어가 보였습니다. 읽는 글은 sr-only 한 줄입니다. */}
-                    {/* DECIDED 2026-10-20 (hwang 브리프 2.1, 감사 W1): 글자를 하나씩 쪼개 한글 폭에 벌리던 것(실효 자간 0.5em 이상)을 걷었습니다.
-                        한 줄, 자간 0, 한글 워드마크 아래 가운데. 2026-10-08의 양 끝 맞춤을 이 결정이 대신합니다. */}
-                    <span lang="en" className={`mt-1 block text-center ${META} font-bold uppercase leading-none text-[#E08A76] sm:mt-2`}>{DECEMBER_EVENT_NAME.en}</span>
+                    {/* DECIDED 2026-10-20 (사용자, 스크린숏: "아래에 crossing seoul은 전처럼 좀 space 되게"): hwang 브리프 2.1의 한 줄(자간 0)을 되돌려
+                        영문 줄의 양 끝을 한글 줄의 양 끝에 맞춥니다(2026-10-08 그대로). */}
+                    <span lang="en" className={`mt-1 flex justify-between ${META} font-bold uppercase leading-none text-[#E08A76] sm:mt-2`}>
+                      <span className="sr-only">{DECEMBER_EVENT_NAME.en}</span>
+                      {[...DECEMBER_EVENT_NAME.en].map((ch, i) => (<span key={i} aria-hidden>{ch === " " ? "\u00a0" : ch}</span>))}
+                    </span>
                   </span>
                 </>
               ) : (
