@@ -35,7 +35,7 @@ import { TITLE, BODY, META, H2, H3, LABEL_HEADING, ROW_HEADING, GRADIENT_TEXT } 
 import CityShape, { type City } from "@/components/ui/CityShape";
 import {
   SUBHEADING, READ, WIDE, MEASURE_C, READ_MEASURE_C, HERO_BUTTON_GROUND,
-  latinTrack, eyebrowTrack, PlateSegment, TermLink, PreparingButton, SiteFooter, usePlateLite,
+  latinTrack, eyebrowTrack, PlateSegment, TermLink, SiteFooter, usePlateLite,
 } from "./shared";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -894,7 +894,7 @@ export default function NaruHome() {
             {/* DECIDED 2026-10-11 (사용자, 스크린숏: "여기에 있으면 좋겠음. 2x2, 버튼 별 사이즈는 똑같이"): AI 유형 테스트 버튼이 일정표의
                 Day 1에서 여기로 왔습니다. 버튼 넷이 두 칸 두 줄로 서고, 격자가 칸을 늘려 넷의 크기가 같습니다(글은 가운데).
                 폰은 한 칸이고 "프로그램 보기"는 전처럼 폰에서 숨깁니다. */}
-            <div className="mx-auto mt-10 grid w-fit max-w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:mt-14 [&>*]:justify-center [&>*]:whitespace-nowrap max-sm:[&>*]:whitespace-normal">
+            <div className={`mx-auto mt-10 grid w-fit max-w-full grid-cols-1 gap-3 ${regState === "not_open" ? "" : "sm:grid-cols-2"} lg:mt-14 [&>*]:justify-center [&>*]:whitespace-nowrap max-sm:[&>*]:whitespace-normal`}>
               {regState === "open" ? (
                 <button type="button" onClick={() => { track("naru_cta", { src: "hero", to: "register" }); reg?.openRegister(); }} className={`group ${buttonClass("primary", "naru")}`}>
                   {t(registerCopy.cta)}
@@ -902,11 +902,11 @@ export default function NaruHome() {
                 </button>
               ) : regState === "closed" ? (
                 <span className={`${buttonClass("secondary")} cursor-default !text-white/70`}>{t(registerCopy.closed)}</span>
-              ) : (
-                // 창이 열리기 전: "등록 준비 중" + 바로 아래 12px 캡션(감사 반영 브리프 1.1).
-                // 그 전(2026-09-18 아침)의 반투명 "등록하기"는 이유 없이 죽어 있는 1차 CTA였습니다.
-                <PreparingButton t={t} noteId="hero-register-note" onOpen={reg?.openRegister} className={HERO_BUTTON_GROUND} />
-              )}
+              ) : null
+                // DECIDED 2026-10-20 (사용자, hwang 브리프 3.7, 감사 W11): 열리기 전의 "등록 폼 미리 보기"(제출할 수 없는 폼)를 내렸습니다.
+                // 열리기 전에 알릴 것(혼자 등록, 조건 없음)은 아래 한 줄이 말하고, 버튼은 오픈채팅 하나입니다.
+                // PreparingButton과 모달의 미리 보기 분기, registerCopy.preview* 키는 남깁니다.
+              }
               {/* DECIDED 2026-10-08 (사용자: "오픈채팅 - 열어줘"): 등록이 열리기 전에도 학생이 지금 할 수 있는 일이
                   히어로에 하나 있어야 합니다. 미리 보기 버튼은 제출이 막혀 있어 흔적을 남길 수 없었습니다.
                   links.openChat이 비어 있으면 OpenChatLink가 스스로 숨습니다. 마감 뒤에는 그리지 않습니다. */}
@@ -1261,8 +1261,7 @@ export default function NaruHome() {
             </button>
           ) : regState === "not_open" ? (
             <>
-              {/* 위 안내 한 줄이 이 버튼의 캡션입니다. */}
-              <PreparingButton t={t} noteId="december-register-note" onOpen={reg?.openRegister} />
+              {/* 2026-10-20 (hwang 브리프 3.7): 미리 보기 버튼을 내렸습니다. 히어로와 같은 이유입니다. */}
               {/* DECIDED 2026-10-12 (등록 브리프 1.3, 리뷰 S8): 알림 버튼은 히어로와 같은 그라데이션 필입니다. 그 전에는 미리 보기,
                   알림, 후원 문의 셋이 같은 윤곽선이라 무엇을 눌러야 하는지 보이지 않았습니다. "페이지의 그라데이션 필은 히어로
                   하나"(2026-09-17)는 이 결정이 대신합니다. 같은 문(오픈채팅)이 두 자리에서 같은 모양입니다. */}

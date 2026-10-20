@@ -37,7 +37,7 @@ export type RouteStation = {
    * DECIDED 2026-10-19 (사용자, 스크린숏: "로고가 위쪽에 있으면 좋겠는데"): 칸 바닥에서 노드 위로 옮겼습니다(8월 노선도의 장소 로고 자리).
    * 하나라도 로고가 있으면 모든 칸에 같은 높이의 로고 줄이 생기고, 레일과 현재 위치 점이 그만큼 내려갑니다. 폰에서도 그립니다.
    */
-  logo?: { src: string; name: string; w: number; h: number };
+  logo?: { src: string; name: string; w: number; h: number; url?: string };
 };
 
 export default function RouteMap({
@@ -207,6 +207,12 @@ export default function RouteMap({
                   </span>
                 )}
               </Box>
+              {/* DECIDED 2026-10-20 (사용자, hwang 브리프 3.8, 감사 W12): url이 있으면 로고 줄 위에 새 창 링크를 겹칩니다(호버 설명 대신).
+                  정거장이 폰에서 button이라 링크를 그 안에 넣지 않고 형제로 둡니다(버튼 안의 링크는 HTML에서 허용되지 않습니다). */}
+              {hasLogos && s.logo?.url && (
+                <a href={s.logo.url} target="_blank" rel="noopener noreferrer" aria-label={s.logo.name}
+                  className="absolute inset-x-1 top-2.5 z-10 h-7 rounded-md" />
+              )}
             </li>
           );
         })}
