@@ -14,6 +14,8 @@ import {
   DECEMBER_STARTS_AT_SG_MS,
   decemberEventLabel,
   formatDecemberDateLine,
+  formatDecemberRange,
+  DECEMBER_CITY,
   formatDecemberDayWithWeekday,
 } from "@/lib/naruDates";
 import Glass from "@/components/ui/Glass";
@@ -232,7 +234,7 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
             2026-10-07 (이슈 브리프 4.2, 4.3): /60 → /90. 위 숫자는 단색 바탕 기준이고, 폰 히어로에서는 이 줄 뒤로
             해의 빛이 지나갑니다(실측 3.8:1). 히어로에는 읽기 판이 없어서, 히어로의 작은 글(이 줄, 아래 행 라벨과
             단위, 등록 버튼 아래 한 줄)은 밝은 쪽에 둡니다. */}
-        <span className="text-white/85 sm:hidden">{` · ${formatDecemberDayWithWeekday(locale, 0)}`}</span>
+        <span className="text-white/85 sm:hidden">{` (${formatDecemberDayWithWeekday(locale, 0)})`}</span>
       </p>
       {/* 2026-09-19 (사용자: "시간 타이머가 좀 더 박스를 꽉 채워주면 좋겠다"): 칸을 격자로
           나눕니다. 전에는 flex라 숫자 셋이 왼쪽에 몰리고 상자의 오른쪽 절반이 비어
@@ -1000,7 +1002,7 @@ export default function NaruHome() {
         {/* DECIDED 2026-10-02 (사용자: "폰에서도 가운데 정렬로 되돌려줘"): 리드 셋은 폰에서도 가운데입니다.
             같은 날 가독성 리뷰로 폰에서만 왼쪽 정렬로 바꿨다가 되돌렸습니다. 가운데인 블록은 폰에서도 가운데. */}
         <p className={`${READ} ${READ_MEASURE_C} mt-8 break-keep text-center ${BODY} leading-relaxed text-white/85`}>
-          {t(naru.december.programConcrete).replace("{date}", formatDecemberDateLine(locale))}
+          {t(naru.december.programConcrete).replace("{range}", formatDecemberRange(locale)).replace("{city}", DECEMBER_CITY[locale])}
         </p>
         {/* DECIDED 2026-10-11 (브랜드 브리프 B3): "크로싱"의 뜻 한 줄. 위 문단과 같은 모양의 문단입니다. */}
         <p className={`${READ} ${READ_MEASURE_C} mt-3 break-keep text-center ${BODY} leading-relaxed text-white/85`}>

@@ -13,8 +13,8 @@ export const teamCopy = {
   pickFirst: { ko: "팀을 고르면 인증 올리기와 시간표 칸 넣기가 열립니다.", en: "Pick your team to unlock uploads and timetable slots." },
   dayTab: { ko: "Day", en: "Day" },
   lead: {
-    ko: "빈 칸을 두 번 누르면 우리 팀 이름이 들어가고, 멘토와 모든 팀이 같은 시간표를 봅니다. 한 번 넣은 칸은 바꿀 수 없습니다. 한 번은 40분, 앞뒤 10분은 비워 둡니다. 하루 두 칸까지, 두 칸은 2시간 이상 떨어져야 합니다.",
-    en: "Tap an empty cell twice to put your team in. Mentors and every team see the same timetable. A slot cannot be changed once it is in. Each slot is 40 minutes, with 10 minutes kept free before and after. Up to two a day, at least two hours apart.",
+    ko: "빈 칸을 두 번 누르면 우리 팀 이름이 들어가고, 멘토와 모든 팀이 같은 시간표를 봅니다. 한 칸은 40분이고 앞뒤 10분은 비워 두며, 한 번 넣은 칸은 바꿀 수 없습니다. 하루 두 칸까지 넣을 수 있고, 두 칸은 2시간 이상 떨어져야 합니다.",
+    en: "Tap an empty cell twice to put your team in, and mentors and every team see the same timetable. Each slot is 40 minutes with 10 minutes kept free on either side, and it cannot be changed once it is in. You can take up to two a day, at least two hours apart.",
   },
   carry: { ko: "이슈에 대한 팀의 생각 한 장을 들고 찾아갑니다.", en: "Bring one page of your team's take on the issue." },
   // 2026-10-18 (사용자: "트랙에 따라서 슬롯 색깔이 달라졌으면"). 우리 팀 칸은 흰 테두리로 가립니다.
