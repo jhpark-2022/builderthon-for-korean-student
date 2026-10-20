@@ -63,7 +63,7 @@ function FootLine({ left, right }: { left: string; right: string }) {
 }
 
 // DECIDED 2026-10-21: 태그라인은 naru.hero.titleLine1, 2와 같은 문장입니다.
-const TAGLINE = { ko: "처음부터 잘 젓는 사람은 없습니다. 건너기 전에 노 젓는 법을 익히는 곳.", en: "Nobody rows well the first time. Where you learn to row before you cross." };
+const TAGLINE = { ko: "처음엔 다 서툽니다. 건너기 전에 연습부터.", en: "Everyone starts out clumsy. Practice before you cross." };
 
 // ── 홈 ────────────────────────────────────────────────────────────────────────
 // 큰 글자는 사이트 히어로의 로고 그대로입니다. 한국어: 국문 "크로싱 서울"에 네 색 그라데이션, 그 아래 영문을

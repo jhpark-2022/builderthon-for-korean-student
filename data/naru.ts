@@ -475,8 +475,9 @@ export const naru = {
     // 영문(같은 날, 사용자: "영어표현에서 나루터 이게 잘 사나?"): "나루터 할 때 나루"의 말맛은 영어로 옮겨지지 않아 뜻만 한 줄로 줍니다.
     // 같은 날 (사용자: "나루터 할 때 나루입니다. 는 좀 짜침", 후보 셋 중 1번): 첫 줄을 "처음부터 잘 젓는 사람은 없습니다."로. 전사록의
     // "연습도 안 시켜 놓고 왜 못하냐고 하면 안 된다"를 순하게 옮긴 말이고, 코어 01 "못해도 되는 자리"와 이어집니다.
-    titleLine1: { ko: "처음부터 잘 젓는 사람은 없습니다.", en: "Nobody rows well the first time." },
-    titleLine2: { ko: "건너기 전에 노 젓는 법을 익히는 곳.", en: "Where you learn to row before you cross." },
+    // 같은 날 (사용자, 스크린숏: "너무 기니까 또 부담스럽다", 후보 셋 중 1번): 두 줄을 절반 길이로. "처음엔 다 서툽니다. / 건너기 전에 연습부터."
+    titleLine1: { ko: "처음엔 다 서툽니다.", en: "Everyone starts out clumsy." },
+    titleLine2: { ko: "건너기 전에 연습부터.", en: "Practice before you cross." },
     // 숫자 둘과 날짜 하나. 전부 확정된 사실입니다.
     sub: {
       // 날짜와 이름은 lib/naruDates.ts에서 조립해 넣습니다. 이 문자열에 "12월
