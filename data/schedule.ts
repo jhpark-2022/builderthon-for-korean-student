@@ -1,4 +1,6 @@
 // ─────────────────────────────────────────────────────────────────────────────
+// DECIDED 2026-10-20 (사용자: humanizer와 10/19 피드백을 모든 곳에): 8월 기록 페이지의 문장을 다듬었습니다.
+// 명사로 끝나는 조각 문장을 합니다체로, 잘게 끊긴 문장은 하나로, 'A가 아니라 B'와 경구형 끝맺음, 보이는 가운뎃점을 걷었습니다. 사실과 숫자는 그대로입니다.
 // SINGLE SOURCE OF TRUTH for the program.
 // Both the Timetable grid and the EventModal read from this array, so editing an
 // event here updates the card AND the detail view everywhere.
@@ -1183,8 +1185,8 @@ export const days: DayMeta[] = [
         // 두 발표 줄의 note는 이제 서로 다릅니다(팀 수와 휴식 시각). 규격은 양쪽에
         // 모두 적습니다 - 상수를 걷은 이유는 D8_TRACK_PITCH_NOTE가 있던 자리의 주석에.
         note: {
-          ko: "14팀 팀당 10분(발표 5분 + Q&A·피드백 5분), 팀 사이 전환 2분. 중간 11:32AM–11:37AM 5분 휴식.",
-          en: "14 teams 10 min each (5 min pitch + 5 min Q&A), 2 min changeover. 5 min break at 11:32AM.",
+          ko: "14팀 팀당 10분(발표 5분, Q&A와 피드백 5분), 팀 사이 전환 2분. 중간 11:32AM–11:37AM 5분 휴식.",
+          en: "14 teams 10 min each (5 min presentation, 5 min Q&A and feedback), 2 min changeover. 5 min break at 11:32AM.",
         },
         eventId: "d8-judging",
       },
@@ -1482,9 +1484,9 @@ const DROPIN_MENTORING = {
     // keeps office hours open with its FDEs"). FDE가 어떤 일을 하는 사람인지는
     // 남기고, 어느 회사 소속인지만 걷어냅니다 - 참가자가 알아야 하는 것은 누가
     // 들어오느냐가 아니라 무엇을 같이 볼 수 있느냐입니다.
-    ko: "1:1 멘토링이 취하는 두 번째 형태입니다. 빌드가 막히는 지점을 현업 엔지니어와 함께 푸는 자리예요. AI 전환을 업으로 하는 현업 엔지니어들이 온라인으로 자리를 열어 둡니다. 예약제 1:1이 시간을 잡아 만나는 자리라면, 이쪽은 원하는 팀이 원하는 때 그냥 들어오면 되고 문제 정의와 워크플로 분석과 구현 방향을 그 자리에서 점검받습니다. 출석 의무는 없었습니다. 멘토를 지정하지 않고 열려 있는 시간이라는 점은 예약제 1:1과 같습니다.",
+    ko: "1:1 멘토링의 두 번째 형태로, AI 전환을 업으로 하는 현업 엔지니어들이 온라인으로 자리를 열어 두고 빌드가 막히는 지점을 함께 풉니다. 예약제 1:1이 시간을 잡아 만나는 자리라면, 이쪽은 원하는 팀이 원하는 때 그냥 들어와 문제 정의와 워크플로 분석, 구현 방향을 그 자리에서 점검받습니다. 출석 의무는 없었고, 멘토를 지정하지 않는다는 점은 예약제 1:1과 같습니다.",
     // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) - 뜻은 불변
-    en: "The second form the 1:1 mentoring takes: working through what's blocking the build with engineers who do it for a living. Engineers working in AI transformation keep the room open online. Where the booked 1:1 is a time you arrange, this one you simply walk into whenever your team wants, and you get a read on your problem definition, workflow analysis and implementation direction on the spot. There was no attendance obligation. Like the booked 1:1, it's open time rather than a mentor you pick.",
+    en: "The second form the 1:1 mentoring takes: working through what's blocking the build with engineers who do it for a living. Engineers working in AI transformation keep the room open online. Where the booked 1:1 is a time you arrange, this one you simply walk into whenever your team wants, and you get a read on your problem definition, workflow analysis and implementation direction on the spot. There was no attendance obligation, and as with the booked 1:1, you didn't pick the mentor.",
   },
   location: ONLINE,
   org: POPUP_STUDIO_ORG,
@@ -1561,8 +1563,8 @@ export const schedule: BEvent[] = [
     // 사람에게는 이 로고가 "누가 와서 말하는가"의 유일한 신호입니다.
     speakerLogo: { src: "/partners/logos/white/trimmed/microsoft.png", alt: "Microsoft" },
     summary: {
-      ko: "본 행사 9일 전, SMU 법학대학원 현장. “데모는 쉽고, 시스템은 어렵다”, 엔터프라이즈 AI 에이전트를 실제로 만드는 이야기.",
-      en: "Nine days before the event, in person at SMU's School of Law. “The demo is easy, the system is hard”: building enterprise AI agents for real.",
+      ko: "본 행사 9일 전 SMU 법학대학원에서 열렸습니다. “데모는 쉽고, 시스템은 어렵다”는 주제로 엔터프라이즈 AI 에이전트를 실제로 만드는 이야기를 나눴습니다.",
+      en: "Held in person at SMU's School of Law nine days before the event, on “The demo is easy, the system is hard” and what it takes to build enterprise AI agents for real.",
     },
     // 모달이 스스로 말하는 것은 여기서 반복하지 않습니다: 연사 소속은 연사 행,
     // 시각은 시간 행, 강의실은 장소 행, 그리고 신원·권한·툴·승인·감사 · 회계
@@ -1628,12 +1630,12 @@ export const schedule: BEvent[] = [
     // TODO: confirm - speaker name is from the internal deck; confirm public naming is OK.
     speaker: { ko: "원대로 대표님", en: "Won Dae-ro" },
     summary: {
-      ko: "‘취업과 창업의 사이’, 8일의 ‘왜’를 여는 오프닝 키노트.",
-      en: "“Between Employment and Founding”, the keynote that opens the 8-day ‘why’.",
+      ko: "‘취업과 창업의 사이’를 주제로 8일의 ‘왜’를 여는 오프닝 키노트입니다.",
+      en: "The keynote on “Between Employment and Founding” that opens the eight days with the ‘why’.",
     },
     description: {
-      ko: "빌더톤의 문을 여는 오프닝 키노트입니다. Wilt Venture Builder(SG)의 원대로 대표님이 ‘취업과 창업의 사이’를 주제로, 정형화된 ‘취업 vs 창업’ 이분법에서 벗어나 벤처빌더가 본 여러 갈래의 커리어와 비개발자도 시작할 수 있는 길들을 45분 동안 Q&A와 함께 풀어냅니다. ‘처음이어도 괜찮다’는 톤으로 8일의 ‘왜’를 세우며 출발선을 엽니다.",
-      en: "The keynote that opens the builderthon. Won Dae-ro (Managing Director, Wilt Venture Builder SG) speaks on “Between Employment and Founding” for 45 minutes, with Q&A, stepping past the tidy ‘employment vs. founding’ binary to the many career paths a venture builder has seen, and the routes even non-developers can start from. It sets the 8-day ‘why’ in a ‘first-timers welcome’ tone.",
+      ko: "빌더톤의 문을 여는 오프닝 키노트입니다. Wilt Venture Builder(SG)의 원대로 대표님이 ‘취업과 창업의 사이’를 주제로, 정형화된 ‘취업 vs 창업’ 이분법에서 벗어나 벤처빌더가 본 여러 갈래의 커리어와 비개발자도 시작할 수 있는 길들을 45분 동안 Q&A와 함께 풀어냅니다. ‘처음이어도 괜찮다’는 이야기로 이 8일을 왜 하는지부터 짚습니다.",
+      en: "The keynote that opens the builderthon. Won Dae-ro (Managing Director, Wilt Venture Builder SG) speaks on “Between Employment and Founding” for 45 minutes, with Q&A, stepping past the tidy ‘employment vs. founding’ binary to the many career paths a venture builder has seen, and the routes even non-developers can start from. It starts with why these eight days exist, and says it's fine to be new at this.",
     },
     location: FOUNDRY_REFINERY,
     locationUrl: FOUNDRY_URL,
@@ -1659,8 +1661,8 @@ export const schedule: BEvent[] = [
     // 이미 지나간 일을 뒤늦게 알려주는 셈이었고, 나눠주는 시점과 읽는 자리가
     // 같아야 일찍 올 이유가 됩니다. 여기로 되돌리지 마세요.
     summary: {
-      ko: "문제 공개에 이어, 그 문제를 풀 수 있도록 준비한 것들. 7일 운영과 멘토링 안내.",
-      en: "Straight after the release: what we've set up for solving it, how the seven days and mentoring run.",
+      ko: "문제 공개에 이어, 그 문제를 풀 수 있도록 준비한 것과 7일 운영, 멘토링을 안내합니다.",
+      en: "Straight after the release, we walk through what we've set up for solving it and how the seven days and mentoring run.",
     },
     description: {
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) - 뜻은 불변
@@ -1684,8 +1686,8 @@ export const schedule: BEvent[] = [
     // deck; verify the public name may be shown before surfacing it in the UI.
     speaker: { ko: "한장환 님 (AWS)", en: "Han Jang-whan (AWS)" },
     summary: {
-      ko: "Amazon의 AI 문제 정의, 접근 방법론.",
-      en: "Amazon's AI problem-definition & approach methodology.",
+      ko: "Amazon이 AI 문제를 정의하고 접근하는 방법론을 다룹니다.",
+      en: "How Amazon defines AI problems and the methodology it uses to approach them.",
     },
     description: {
       // "확정 세션입니다" opened this until 2026-08-10 - the card above it
@@ -1865,8 +1867,8 @@ export const schedule: BEvent[] = [
       linkedin: "https://www.linkedin.com/in/jihoon-kim-613878134",
     },
     summary: {
-      ko: "바이브 코딩 입문 9AM–12PM. 비개발자도 OK, 코드프레소 김지훈 이사님 진행.",
-      en: "A vibe-coding intro, 9AM–12PM. Non-developers welcome, led by Jihoon Kim of Codepresso.",
+      ko: "9AM–12PM, 코드프레소 김지훈 이사님이 진행하는 바이브 코딩 입문입니다.",
+      en: "A vibe-coding intro from 9AM to 12PM, led by Jihoon Kim of Codepresso.",
     },
     description: {
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) - 뜻은 불변
@@ -2013,7 +2015,7 @@ export const schedule: BEvent[] = [
     timeOfDay: "PM",
     title: { ko: "1:1 멘토링 (온라인 기본)", en: "1:1 Mentoring (online by default)" },
     summary: {
-      ko: "아이디어에서 가장 뾰족한 지점을 찾고, 그걸 어떻게 증명할지까지 잡는 1:1입니다. 온라인이 기본이고, 멘토에 따라 한인회관 대면.",
+      ko: "아이디어에서 가장 뾰족한 지점을 찾고, 그걸 어떻게 증명할지까지 잡는 1:1입니다. 온라인이 기본이고, 멘토에 따라 한인회관에서 대면으로 만납니다.",
       en: "A 1:1 to find the sharpest point in your idea, and to work out how you'll prove it. Online by default, in person at the Korean Association hall with some mentors.",
     },
     description: {
@@ -2025,8 +2027,8 @@ export const schedule: BEvent[] = [
       // 팝업스튜디오 FDE가…" 같은 누가-언제 문장이 "Day 7까지 매일"로 바뀌었습니다.
       // 예약 방식(전날 오픈 · 팀 단위 1시간)은 사이트에서 여기 한 곳에만 적습니다 -
       // 운영 시간대나 슬롯표 같은 숫자는 예약 시스템과 참가자 카톡방의 정보입니다.
-      ko: "Day\u00a03–6은 근거를 만드는 시간입니다. 범위도 방향도 아직 고칠 수 있는 구간이라, 멘토와 함께 아이디어에서 가장 뾰족한 지점을 찾아 그게 데모에서 제일 잘 드러나게 만듭니다. 멘토는 ‘정답을 주는 심사자’가 아니라 한때 우리와 같았던 유학생 출신 현직 대표입니다. 확정 멘토진은 멘토링 섹션에 있어요. 예약은 전날 열리고, 팀 단위로 1시간씩 가능 시간이 겹치는 구간에 배정됩니다. 멘토링은 Day\u00a07까지 매일 이어집니다.",
-      en: "Day\u00a03–6 is where the evidence gets built. Scope and direction can still genuinely change, so this is when you and a mentor find the sharpest point in your idea and make sure that's what the demo shows. Mentors aren't answer-giving judges; they're Korean ex-international-student founders who were once in your shoes. The confirmed line-up is in the mentoring section. Booking opens the day before, in one-hour team slots, landing wherever your team's availability and a mentor's overlap. Mentoring then runs every day through Day\u00a07.",
+      ko: "Day\u00a03–6은 근거를 만드는 시간입니다. 범위도 방향도 아직 고칠 수 있는 구간이라, 멘토와 함께 아이디어에서 가장 뾰족한 지점을 찾아 그게 데모에서 제일 잘 드러나게 만듭니다. 멘토는 한때 우리와 같았던 유학생 출신 현직 대표이고, 정답을 주러 오지 않습니다. 확정 멘토진은 멘토링 섹션에 있어요. 예약은 전날 열리고, 팀 단위로 1시간씩 가능 시간이 겹치는 구간에 배정됩니다. 멘토링은 Day\u00a07까지 매일 이어집니다.",
+      en: "Day\u00a03–6 is where the evidence gets built. Scope and direction can still genuinely change, so this is when you and a mentor find the sharpest point in your idea and make sure that's what the demo shows. Mentors are Korean founders who were once international students in your shoes, and they don't come to hand out answers. The confirmed line-up is in the mentoring section. Booking opens the day before, in one-hour team slots, landing wherever your team's availability and a mentor's overlap. Mentoring then runs every day through Day\u00a07.",
     },
     location: MENTORING_MODE,
     checkpoints: SCORE_BUILDING_CHECKS,
@@ -2074,7 +2076,7 @@ export const schedule: BEvent[] = [
     timeOfDay: "PM",
     title: { ko: "1:1 멘토링 (온라인 기본)", en: "1:1 Mentoring (online by default)" },
     summary: {
-      ko: "프로토타입을 놓고 뾰족함과 증명 방법을 다시 조이는 1:1입니다. 온라인이 기본이고, 멘토에 따라 한인회관 대면.",
+      ko: "프로토타입을 놓고 뾰족함과 증명 방법을 다시 조이는 1:1입니다. 온라인이 기본이고, 멘토에 따라 한인회관에서 대면으로 만납니다.",
       en: "A 1:1 over the prototype, tightening what makes it sharp and how you'll prove it. Online by default, in person at the Korean Association hall with some mentors.",
     },
     description: {
@@ -2241,8 +2243,8 @@ export const schedule: BEvent[] = [
     // 멘토진이 진행합니다 - Day 1 오리엔테이션과 같은 종류의 복사 오염이었습니다.
     title: { ko: "최종 점검 멘토링 (현장)", en: "Final-check Mentoring (on-site)" },
     summary: {
-      ko: "이미 만든 것을 발표와 Q&A 안에서 증명하도록, 멘토와 함께하는 마지막 점검.",
-      en: "Making what you already built stand up in the pitch and the Q&A. The last check, with mentors.",
+      ko: "이미 만든 것을 발표와 Q&A 안에서 증명할 수 있도록 멘토와 함께 마지막으로 점검합니다.",
+      en: "A last check with mentors, so what you already built stands up in the presentation and the Q&A.",
     },
     // TRIMMED 2026-08-26: 378자 → 240자 (영문 824 → 571). 이 파일의 description은
     // 중간값이 200자 언저리인데 d7은 d1-problem-release 다음으로 길었습니다.
@@ -2316,7 +2318,7 @@ export const schedule: BEvent[] = [
     // 시각은 `time`이 갖습니다 - 요약과 설명 앞머리에 박혀 있던 "12:30–14:00"을
     // 뺐습니다. 같은 정보가 세 군데 있으면 하나가 바뀔 때 나머지가 어긋납니다.
     summary: {
-      ko: "리허설 한가운데, 형식 없는 조언과 Q&A. 박희덕 대표님의 ‘Zero100의 진짜 의미’.",
+      ko: "리허설 중간에 박희덕 대표님이 ‘Zero100의 진짜 의미’를 주제로 형식 없이 조언하고 질문을 받습니다.",
       en: "Advice and Q&A with no format, in the middle of rehearsal day: Park Hee-deok on “The Real Meaning of Zero100”.",
     },
     description: {
@@ -2371,8 +2373,8 @@ export const schedule: BEvent[] = [
     // 무엇을 맡는지를 말합니다.
     speaker: { ko: "박희덕 대표님, 이동훈 대표님, 원대로 대표님(진행)", en: "Park Hee-deok, Lee Dong-hoon, Won Dae-ro (moderator)" },
     summary: {
-      ko: "세 대표님이 나란히 앉는 패널 토의 ‘FDE로 일한다는 것’.",
-      en: "A three-person panel “Working as an FDE”.",
+      ko: "세 대표님이 나란히 앉아 ‘FDE로 일한다는 것’을 이야기하는 패널 토의입니다.",
+      en: "Three CEOs sit side by side for a panel on “Working as an FDE”.",
     },
     description: {
       ko: "트랙별 팀 발표가 모두 끝난 뒤, 어워드로 넘어가기 전 한 시간입니다. 세 분이 나란히 앉아 ‘FDE로 일한다는 것’을 이야기합니다. 트랜스링크 인베스트먼트 박희덕 대표님은 자본과 시장의 눈으로, 코드프레소 이동훈 대표님은 현장과 교육의 눈으로 답하고, Wilt Venture Builder 원대로 대표님이 진행을 맡습니다. FDE가 실제로 어떤 일인지, 어떤 사람을 뽑는지, 비전공자에게도 열려 있는지를 차례로 다루고 플로어에서 직접 묻는 시간으로 마칩니다. 인턴과 채용 pool로 이어지는 자리이고, 후속 1:1 면담과 멘토링(희망자)은 당일 행사가 끝난 뒤에 진행됩니다.",
@@ -2415,13 +2417,13 @@ export const schedule: BEvent[] = [
     // 남긴 넷: 이게 무슨 자리인가 · 형식(10분) · 오고 갈 자유 · 누가 어떤
     // 성격의 피드백을 주는가. 덜어낸 문장을 여기로 되돌리지 마세요.
     summary: {
-      ko: "문제를 낸 코드프레소와 업계 전문가 앞에서 팀당 10분.",
-      en: "Ten minutes per team in front of Codepresso, who set the problem, and industry experts.",
+      ko: "문제를 낸 코드프레소와 업계 전문가 앞에서 팀당 10분씩 발표합니다.",
+      en: "Each team presents for ten minutes in front of Codepresso, who set the problem, and industry experts.",
     },
     description: {
-      ko: "8일의 마지막이자, 문제를 낸 코드프레소와 업계 전문가 앞에서 ‘내 아이디어가 돌아간다’를 검증받는 자리입니다. 같은 공간에서 트랙별로 순차 진행하며, 팀당 10분입니다. 발표 5분에 Q&A와 심사 5분. 팀 사이에는 전환 2분, 트랙 중간에는 5분 휴식이 있습니다. 두 트랙 사이에는 점심시간이 있어요. 피드백은 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다. 순위를 가리는 대신, 각 팀 결과물에 전문적인 시각과 다음 가능성을 제안합니다.",
+      ko: "8일의 마지막이자, 문제를 낸 코드프레소와 업계 전문가 앞에서 ‘내 아이디어가 돌아간다’를 검증받는 자리입니다. 같은 공간에서 트랙별로 차례로 진행하고, 팀당 10분(발표 5분, Q&A와 피드백 5분)입니다. 팀 사이에는 전환 2분, 트랙 중간에는 5분 휴식이 있고, 두 트랙 사이에는 점심시간이 있어요. 피드백은 실제 산업에서 문제를 풀어온 현업 리더들이 맡습니다. 순위를 가리는 대신 각 팀 결과물에 전문적인 시각과 다음 가능성을 제안합니다.",
       // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) - 뜻은 불변
-      en: "The end of the eight days, and the moment your idea gets validated in front of Codepresso, who set the problem, and industry experts. Tracks run in sequence in one space, ten minutes per team: a 5-minute pitch, then 5 minutes of Q&A and review, with lunch between the two. The feedback comes from working leaders who have solved real problems in industry. Instead of ranking the teams, each one gets an expert read on its work and a sense of what could come next.",
+      en: "The end of the eight days, and the moment your idea gets validated in front of Codepresso, who set the problem, and industry experts. Tracks run in sequence in one space, ten minutes per team: a 5-minute presentation, then 5 minutes of Q&A and feedback, with lunch between the two tracks. The feedback comes from working leaders who have solved real problems in industry. Instead of ranking the teams, each one gets an expert read on its work and a sense of what could come next.",
     },
     location: SMU_LKCSB,
   },
@@ -2435,8 +2437,8 @@ export const schedule: BEvent[] = [
     time: "4:20PM–4:40PM",
     title: { ko: "어워드 클로징", en: "Awards & Closing" },
     summary: {
-      ko: "테마별 어워드 발표, 사진 → 앞으로의 안내 → 완주 수료증과 함께 단체 사진.",
-      en: "Thematic awards and photos → what comes next → a group photo with your completion certificate.",
+      ko: "테마별 어워드 발표와 사진, 앞으로의 안내에 이어 완주 수료증을 들고 단체 사진을 찍습니다.",
+      en: "Thematic awards and photos, a word on what comes next, then a group photo with your completion certificates.",
     },
     // DECIDED 2026-08-06: 테마형 어워드 4부문 확정(비욘드 브리프·비즈니스 포텐셜·빌더스
     // 초이스·0→100). 이름은 포멀·설명은 유머 원칙. 금액 확정 S$100/75/50 -

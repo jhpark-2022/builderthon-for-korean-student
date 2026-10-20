@@ -1,4 +1,6 @@
 // ─────────────────────────────────────────────────────────────────────────────
+// DECIDED 2026-10-20 (사용자: humanizer와 10/19 피드백을 모든 곳에): 8월 기록 페이지의 문장을 다듬었습니다.
+// 명사로 끝나는 조각 문장을 합니다체로, 잘게 끊긴 문장은 하나로, 'A가 아니라 B'와 경구형 끝맺음, 보이는 가운뎃점을 걷었습니다. 사실과 숫자는 그대로입니다.
 // All STATIC UI copy lives here (event strings live in schedule.ts).
 // Every string is bilingual: { ko, en }. Add new strings as { ko, en } pairs and
 // read them with the t() helper in components.
@@ -304,8 +306,8 @@ export const dict = {
     // of those four rather than sit alongside them.
     // DECIDED 2026-09-23 (첫 방문자 리뷰): 기록 페이지라 과거형으로. 뜻과 길이는 그대로, 어미만.
     blurb: {
-      ko: "실제 기업의 AI 전환(AX) 과제를 바이브 코딩으로 풀었습니다. 필참은 첫날과 마지막 날 이틀뿐이었고, 나머지는 팀이 편한 시간에 빌드했습니다. 마지막 날, 문제를 낸 기업과 현업 리더 앞에서 ‘내 아이디어가 돌아간다’를 증명하고 데모와 피칭, 수료증으로 남겼습니다.",
-      en: "Teams solved a real company's AI-transformation (AX) problem with vibe coding. Only day one and day eight were required. The rest was each team's own time. On the last day they showed it running to the company that set the problem and to working leaders, and kept the demo, the pitch and the certificate."
+      ko: "실제 기업의 AI 전환(AX) 과제를 바이브 코딩으로 풀었습니다. 필참은 첫날과 마지막 날 이틀뿐이었고, 나머지는 팀이 편한 시간에 빌드했습니다. 마지막 날에는 문제를 낸 기업과 현업 리더 앞에서 아이디어가 실제로 돌아가는 것을 보여 주었고, 데모와 수료증이 남았습니다.",
+      en: "Teams solved a real company's AI-transformation (AX) problem with vibe coding. Only day one and day eight were required; the rest was each team's own time. On the last day they showed it running to the company that set the problem and to working leaders, and left with the demo and a certificate."
     },
     ctaProgram: { ko: "8일의 여정 둘러보기", en: "Explore the 8-day journey" },
     ctaPartner: { ko: "파트너십 문의", en: "Partner with us" },
@@ -347,8 +349,8 @@ export const dict = {
       en: "74 applied, and 21 teams presented on the last day",
     },
     lead: {
-      ko: "2026년 8월 22일부터 29일까지 싱가포르에서 8일이었습니다. 스크리닝 없이 실제 기업의 문제를 받아 풀었고, 마지막 날 그 기업 앞에서 발표했습니다.",
-      en: "Eight days in Singapore, 22 to 29 August 2026. With no screening, teams took a real company's problems and presented to that company on the last day.",
+      ko: "2026년 8월 22일부터 29일까지 8일 동안 싱가포르에서 열렸습니다. 스크리닝 없이 실제 기업의 문제를 받아 풀었고, 마지막 날 그 기업 앞에서 발표했습니다.",
+      en: "It ran for eight days in Singapore, 22 to 29 August 2026. With no screening, teams took a real company's problems and presented to that company on the last day.",
     },
     stats: [
       { value: { ko: "74명", en: "74" }, label: { ko: "신청", en: "applied" } },
@@ -410,7 +412,7 @@ export const dict = {
       },
     ],
     gapNote: {
-      ko: "진로와 교육의 장은 부재하고, 선배가 후배를 끌어주는 멘토십도 약합니다. ‘4–6년 잠깐 있다 가는 사람’으로 여겨져 목소리를 내기 어려웠던 1,000명에게, 이번 빌더톤은 그 공백을 잇는 첫 시도입니다.",
+      ko: "진로와 배움을 다루는 자리가 없고, 선배가 후배를 끌어주는 멘토십도 약합니다. ‘4–6년 잠깐 있다 가는 사람’으로 여겨져 목소리를 내기 어려웠던 1,000명에게, 이번 빌더톤은 그 공백을 잇는 첫 시도입니다.",
       en: "There's no real space for careers or learning, and little senior-to-junior mentorship. Seen as people who pass through for 4–6 years, these 1,000 students have had no voice. This builderthon is the first attempt to close that gap.",
     },
     shiftTag: { ko: "그래서 우리가 만드는 변화", en: "The shift we're building" },
@@ -430,11 +432,11 @@ export const dict = {
         kicker: { ko: "02", en: "02" },
         title: { ko: "하나의 행사에서 커뮤니티로", en: "From one event to a community" },
         body: {
-          ko: "빌더톤은 끝이 아니라 ‘깔때기의 입구’입니다. 학생과 창업가, 빌더가 반복적으로 연결되는 지속 가능한 커뮤니티로 키워갑니다.",
+          ko: "빌더톤은 ‘깔때기의 입구’입니다. 여기서 만난 학생과 창업가, 빌더가 계속 연결되는 커뮤니티로 키워 갑니다.",
           // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) - 뜻은 불변
           // ko의 깔때기 은유는 보존 대상이라 en도 유지하되, 직역투
           // "the mouth of a funnel"만 영어 관용구로 바꿉니다.
-          en: "The builderthon is the top of the funnel, not the end of it: it grows into a durable community where students, founders and builders keep connecting.",
+          en: "The builderthon is the top of the funnel. We grow it into a community where the students, founders and builders who meet here keep connecting.",
         },
       },
       {
@@ -454,8 +456,8 @@ export const dict = {
     // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) - 뜻은 불변
     // 깔때기 은유는 위 shift 카드 02에서 한 번만 쓴다.
     visionOneLiner: {
-      ko: "행사가 끝나도 연결은 계속됩니다. 그 시작이 당신입니다.",
-      en: "The event ends. The community it opens doesn't, and it starts with you.",
+      ko: "행사가 끝나도 여기서 시작한 연결은 이어집니다.",
+      en: "The event ends, and the connections that start here carry on.",
     },
     visionTag: { ko: "비전", en: "Vision" },
     // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) - 뜻은 불변
@@ -524,8 +526,8 @@ export const dict = {
         when: { ko: "2026.08 싱가포르", en: "Aug 2026 Singapore" },
         title: { ko: "제로백 빌더톤", en: "Zero100 AI Builderthon" },
         body: {
-          ko: "8일의 성공 경험. 여기서 만나는 동료와 멘토, 기업이 전부의 시작점입니다.",
-          en: "Eight days of shipping something real. The peers, mentors, and companies you meet here are where everything starts.",
+          ko: "8일 동안 무언가를 끝까지 만들어 봅니다. 여기서 만난 동료와 멘토, 기업이 그다음의 출발점이 됩니다.",
+          en: "You spend eight days building something all the way through, and the peers, mentors and companies you meet here are where the next step starts.",
         },
       },
       // ── 글로벌 해커톤 칸은 삭제됐습니다 (DECIDED 2026-09-15) ──────────────
@@ -594,8 +596,8 @@ export const dict = {
     // 가장 많이 나온 걱정이라 지우지 않고 뒤에 붙여 살립니다. 앞뒤를 바꾸지
     // 마세요 - 목적지가 먼저고, 연속성은 그 목적지가 성립하는 조건입니다.
     visionNote: {
-      ko: "‘이걸 하러 싱가포르에 온다’. 한인 학생 빌더의 목적지가 될 때까지, 군 복무나 교환을 다녀와도 연결이 끊기지 않는 커뮤니티를 만듭니다.",
-      en: "“You come to Singapore to do this.” Until that is true for Korean student builders, we're building a community where the connection survives military service and exchange terms.",
+      ko: "한인 학생 빌더가 ‘이걸 하러 싱가포르에 온다’고 말하게 될 때까지, 군 복무나 교환을 다녀와도 연결이 끊기지 않는 커뮤니티를 만듭니다.",
+      en: "Until Korean student builders say “I came to Singapore to do this,” we're building a community where the connection survives military service and exchange terms.",
     },
     // Bridge into the closing register CTA that sits directly below this
     // section - higher in the hierarchy than visionNote for that reason.
@@ -783,16 +785,16 @@ export const dict = {
       {
         title: { ko: "병목 진단 + AI 해법", en: "The bottleneck, and the AI fix" },
         body: {
-          ko: "그 흐름의 어디가 막혀 있고, AI를 어떻게 접목하면 풀리는지. 여기가 당신의 아이디어입니다.",
-          en: "Where that flow jams, and how AI unjams it. That's your idea.",
+          ko: "그 흐름의 어디가 막혀 있고 AI를 어떻게 접목하면 풀리는지가 여러분의 아이디어입니다.",
+          en: "Your idea is where that flow jams and how AI can unjam it.",
         },
       },
       {
         title: { ko: "증명하는 데모", en: "A demo that proves it" },
         body: {
           // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) - 뜻은 불변
-          ko: "아이디어를 뒷받침하는 임팩트 있는 데모. 완성도보다 설득력입니다.",
-          en: "A demo with impact behind the idea. Persuasive beats polished.",
+          ko: "아이디어를 뒷받침하는 데모입니다. 완성도보다 설득력을 봅니다.",
+          en: "A demo that backs up the idea. What counts is how convincing it is, more than how polished.",
         },
       },
     ],
@@ -864,8 +866,8 @@ export const dict = {
         },
         {
           name: { ko: "데모 영상", en: "Demo video" },
-          ko: "입력에서 처리, 출력까지 실제 화면. 홍보물이 아니라 작동 증명이 목적이라 편집은 최소로 합니다",
-          en: "Input, processing and output on the real screen. It exists to prove the thing runs, not to sell it, so keep the editing minimal",
+          ko: "입력에서 처리, 출력까지 실제 화면을 담습니다. 작동을 보여 주는 것이 목적이라 편집은 최소로 합니다",
+          en: "Input, processing and output on the real screen. It is there to show the thing runs, so keep the editing minimal",
           format: { ko: "1–2분 mp4", en: "1–2 min mp4" },
         },
         {
@@ -877,8 +879,8 @@ export const dict = {
           // 그 이름은 여기 옮기지 않습니다 - 위 규칙 그대로입니다. 내용은 표를
           // 따랐습니다(같은 입력, 범용 LLM, 나란히, 보는 것은 출력의 차이).
           name: { ko: "비교 화면 1컷", en: "Comparison shot" },
-          ko: "같은 입력을 범용 LLM(ChatGPT 등)에 그대로 넣은 출력과 팀 시스템의 출력을 한 화면에 나란히. 보는 것은 ‘만들었다’가 아니라 출력의 차이입니다",
-          en: "The same input dropped into a general LLM (ChatGPT and the like), side by side with your system's output. What gets read is the difference, not that you built something",
+          ko: "같은 입력을 범용 LLM(ChatGPT 등)에 그대로 넣은 출력과 팀 시스템의 출력을 한 화면에 나란히 놓습니다. 보는 것은 두 출력의 차이입니다",
+          en: "The same input dropped into a general LLM (ChatGPT and the like), side by side with your system's output. What gets read is the difference between the two outputs",
           format: { ko: "이미지 1장", en: "1 image" },
         },
       ],
@@ -1290,8 +1292,8 @@ export const dict = {
           // 숫자)는 쓰지 않습니다 - 바뀔 수 있는 운영 정보라 예약 시스템이 갖습니다.
           label: { ko: "온라인", en: "Online" },
           body: {
-            ko: "크래시코스 1:1 멘토링 · Day\u00a03~7 매일, 팀이 고른 시간에 (온라인 기본)",
-            en: "Crash course 1:1 mentoring · every day from Day\u00a03 to 7, at times your team picks (online by default)",
+            ko: "크래시코스 1:1 멘토링, Day\u00a03~7 매일, 팀이 고른 시간에 (온라인 기본)",
+            en: "Crash course 1:1 mentoring, every day from Day\u00a03 to 7, at times your team picks (online by default)",
           },
         },
       ],
@@ -1390,8 +1392,8 @@ export const dict = {
       // 붙이면 같은 말을 문단과 카드가 두 번 하게 됩니다.
       optionalValue: {
         // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) - 뜻은 불변
-        ko: "나머지 여섯 정거장에는 하나하나 내려설 이유가 있습니다. 그러라고 설계했어요.",
-        en: "Each of the other six stops gives you a reason to get off. That's what they were designed for.",
+        ko: "나머지 여섯 정거장도 하나하나 내려설 이유가 있게 설계했습니다.",
+        en: "The other six stops were each designed to give you a reason to get off.",
       },
       ariaLabel: { ko: "8일 노선도", en: "The 8-day route" },
       // ── 멘토링 필 (2026-08-09) ──────────────────────────────────────────
@@ -1591,8 +1593,8 @@ export const dict = {
     // never built anything. The no-screening promise stays - it is the first
     // barrier this section removes.
     intro: {
-      ko: "크래시코스, 멘토링, 수료증, 네트워킹. 아래의 모든 것은 이 하나의 경험을 누구나 가질 수 있게 만든 장치였습니다. 사전 심사나 평가가 없었고, 개발 경험이 없어도 올 수 있었습니다.",
-      en: "The crash course, the mentoring, the certificate, the network: everything below existed to put that one experience within anyone\u2019s reach. There was no screening or pre-assessment, and no dev experience was needed.",
+      ko: "아래의 크래시코스와 멘토링, 수료증, 네트워킹은 모두 이 경험을 온 사람 전원이 가질 수 있게 만든 장치였습니다. 사전 스크리닝이 없었고, 개발 경험이 없어도 올 수 있었습니다.",
+      en: "The crash course, mentoring, certificates and networking below were all there so that everyone who came could have that one experience. There was no screening, and no dev experience was needed.",
     },
     // as BenefitItem[]: 카드 하나만 footnote를 갖기 때문입니다. 배열 리터럴에
     // 맡기면 원소 타입이 유니온으로 추론돼 BenefitCard에서 item.footnote를 읽을 수
@@ -1637,7 +1639,7 @@ export const dict = {
           // 함께 나온다고 다시 쓰지 마세요. 요청 기반이라는 사실을 새 포인트로 떼지
           // 않고 같은 줄에 붙인 이유는 위 주석대로입니다: 카드는 모바일에서 앞 두
           // 줄만 보이므로 네 번째 포인트는 접혀서 읽히지 않습니다.
-          { ko: "문제는 ‘AX 의뢰서’로 나옵니다. 실제 업무 워크플로우, 담당자가 겪는 불편, 맥락이 Day\u00a01에 공개. 필요한 자료와 데이터는 진행 중 요청하면 전달돼요", en: "The problem arrives as an AX brief: the real workflow, the owner's pain points and the context, released on Day\u00a01. Data and materials come on request as you build" },
+          { ko: "문제는 ‘AX 의뢰서’로 나옵니다. 실제 업무 워크플로우와 담당자가 겪는 불편, 맥락은 Day\u00a01에 공개됩니다. 필요한 자료와 데이터는 진행 중 요청하면 전달돼요", en: "The problem arrives as an AX brief: the real workflow, the owner's pain points and the context, released on Day\u00a01. Data and materials come on request as you build" },
           // REMOVED: "트랙 구성 미확정 - 재무·영업·마케팅 3트랙으로 논의 중(잠정) ·
           // AWS 방법론으로 접근 · 클라이언트 사명도 조율 중". 트랙/클라이언트가 확정되기
           // 전까지는 표기하지 않습니다.
@@ -1900,8 +1902,8 @@ export const dict = {
     // 이어지는 것까지 갑니다. "순위가 아니라"는 뺐습니다 - 순위형은 이미 없고,
     // 그 사실은 어워드 박스의 sub가 한 번 말합니다.
     flowNote: {
-      ko: "네트워크와 경험은 참가자 전원에게. 어워드는 각 팀의 강점에, 그리고 다음 자리는 12월의 크로싱 서울로 이어집니다.",
-      en: "Network and experience for everyone. Awards go to each team's strengths, and the next place is CROSSING SEOUL in December.",
+      ko: "네트워크와 경험은 참가자 전원에게 돌아가고, 어워드는 각 팀의 강점을 봅니다. 다음 자리는 12월의 크로싱 서울로 이어집니다.",
+      en: "Network and experience go to everyone, and the awards look at each team's strengths. The next step is CROSSING SEOUL in December.",
     },
   },
 
@@ -1934,7 +1936,7 @@ export const dict = {
     // 아래 tbcNote가 이미 답니다. 연사가 추가되면 카드를 늘리면 됩니다 -
     // 그건 약속을 어기는 일이 아닙니다.
     intro: {
-      ko: "먼저 길을 낸 사람들이 Day\u00a01, 7, 8에 직접 왔습니다. 취업과 창업 사이에서 무엇을 골랐는지, 실무에서 AI를 어떻게 쓰는지를 각자의 자리에서 이야기했습니다. 0에서 100까지 무엇이 필요한지도 이야기했습니다.",
+      ko: "먼저 길을 낸 사람들이 Day\u00a01, 7, 8에 직접 왔습니다. 취업과 창업 사이에서 무엇을 골랐는지, 실무에서 AI를 어떻게 쓰는지, 0에서 100까지 무엇이 필요한지를 각자의 자리에서 이야기했습니다.",
       en: "People who had already cut a path showed up in person on Days\u00a01, 7 and 8. They talked about what they chose between a job and founding, how AI is actually used at work, and what it takes to get from zero to a hundred.",
     },
     // 이름에는 존칭을 붙입니다 - 규칙은 dict.mentoring.mentors 위 '호칭 규칙' 주석.
@@ -2037,8 +2039,8 @@ export const dict = {
       label: { ko: "DAY 8 커리어 간담회", en: "Day\u00a08 Career Panel" },
       title: { ko: "‘FDE로 일한다는 것’", en: "“Working as an FDE”" },
       lead: {
-        ko: "세 회사의 대표가 한 무대에 오릅니다. 가르치러가 아니라, 함께 일할 사람을 찾으러.",
-        en: "Three CEOs share one stage. Not to lecture, but to find people they want to work with.",
+        ko: "세 회사의 대표가 함께 일할 사람을 찾으러 한 무대에 오릅니다.",
+        en: "Three CEOs share one stage, looking for people they want to work with.",
       },
       // note는 "이 사람이 이 세션에서 무엇을 맡는가"까지만 씁니다.
       // "이번 크래시코스와 멘토링을 만든 분", "세션을 설계한 분" 같은 공로 표기는
@@ -2093,8 +2095,8 @@ export const dict = {
     // 눈높이/선배 framing now lives inside stage 1, where it is accurate.
     heading: { ko: "단계마다 다른 멘토가 붙었습니다", en: "A different kind of mentor at each stage" },
     intro: {
-      ko: "아이디어를 형태로 만들 때, 빌드가 막힐 때, 무대에서 팔아야 할 때. 필요한 사람이 매번 달랐습니다.",
-      en: "Shaping the idea, unblocking the build, selling it on stage: each needed a different person in the room.",
+      ko: "아이디어를 형태로 만들 때와 빌드가 막힐 때, 무대에서 팔아야 할 때마다 필요한 사람이 달랐습니다.",
+      en: "Shaping the idea, unblocking the build and selling it on stage each needed a different person in the room.",
     },
     // ── 멘토링 그룹 (두 박스 + 워밍업 줄) ────────────────────────────────────
     // Replaces the three stage cards that stood here. Those cards described the
@@ -2262,8 +2264,8 @@ export const dict = {
           // 대상을 문장 안에 넣지 않으면 뜻이 서지 않습니다.
           // 같은 인용이 FAQ("결과물이 실제로 쓰일 수도 있나요?")에도 있습니다 -
           // 함께 움직이세요. 축약형으로 되돌리지 말 것.
-          ko: "빌드는 끝났고, 남은 것은 증명입니다. 공유회 전날입니다. AWS의 GTM과 세일즈 시니어를 비롯해, 현업에서 제품을 직접 파는 사람들이 함께합니다. 발표와 이어지는 Q&A 안에서 ‘어떤 병목을 왜 골랐고, 근거는 무엇이고, 실제로 돌아가는가’가 서는지 점검합니다. 전문가들이 던질 질문도 미리 받아봅니다. “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”\n\n과제를 낸 코드프레소의 대표와 공동창업자도 같은 자리에 있어, 무대에 서기 전 담당자에게 직접 물어볼 수 있습니다. 그날 저녁 마감되는 사전 제출물의 마지막 점검 자리이기도 해요.",
-          en: "The build is done; what's left is the proof. This is the day before the Showcase. In the room: AWS GTM and sales seniors, and people who sell products for a living. You pressure-test whether ‘which bottleneck, why, on what evidence, and does it run’ holds up in the pitch and the Q&A. You also field the question the experts will ask: “how is this different from what the problem owner would get by just asking a general LLM?”\n\nCodepresso's CEO and co-founder, who set the problem, are in the room, so you can ask the problem owner directly before you go on stage. It is also the last check before the submission package closes that evening.",
+          ko: "공유회 전날, 빌드를 마치고 증명을 준비하는 자리입니다. AWS의 GTM과 세일즈 시니어를 비롯해 현업에서 제품을 직접 파는 사람들이 함께합니다. 발표와 이어지는 Q&A 안에서 ‘어떤 병목을 왜 골랐고, 근거는 무엇이고, 실제로 돌아가는가’가 서는지 점검합니다. 전문가들이 던질 질문도 미리 받아봅니다. “담당자가 그냥 범용 LLM에 물어봐서 얻는 답과, 이건 뭐가 다르죠?”\n\n과제를 낸 코드프레소의 대표와 공동창업자도 같은 자리에 있어, 무대에 서기 전 담당자에게 직접 물어볼 수 있습니다. 그날 저녁 마감되는 사전 제출물의 마지막 점검 자리이기도 해요.",
+          en: "This is the day before the Showcase, when the build is done and you get ready to prove it. AWS GTM and sales seniors join, along with people who sell products for a living. You pressure-test whether ‘which bottleneck, why, on what evidence, and does it run’ holds up in the presentation and the Q&A. You also field the question the experts will ask: “how is this different from what the problem owner would get by just asking a general LLM?”\n\nCodepresso's CEO and co-founder, who set the problem, are in the room, so you can ask the problem owner directly before you go on stage. It is also the last check before the submission package closes that evening.",
         },
         // No partner logos here on purpose. AWS is where several of these mentors
         // work, and it sponsors the Day 7 venue - but it has never been named a
@@ -2478,9 +2480,9 @@ export const dict = {
       // `img` is set even though the mentor card doesn't render a photo - the
       // file is on hand, so the field is ready if the avatar ever returns.
       {
-        name: { ko: "김종현 님", en: "Joseph JongHyun Kim" }, org: { ko: "YMX", en: "YMX" }, role: { ko: "해외사업개발 · 싱가포르 법인장", en: "Overseas BD · Singapore Country Head" },
+        name: { ko: "김종현 님", en: "Joseph JongHyun Kim" }, org: { ko: "YMX", en: "YMX" }, role: { ko: "해외사업개발, 싱가포르 법인장", en: "Overseas BD, Singapore Country Head" },
         intro: {
-          ko: "산업 XR·디지털 트윈. 정보보호 침해사고대응 20년+, 前 더존비즈온 보안 수석. KISA/KITRI BoB 멘토.",
+          ko: "산업 XR과 디지털 트윈. 정보보호 침해사고대응 20년+, 前 더존비즈온 보안 수석. KISA/KITRI BoB 멘토.",
           en: "Industrial XR & digital twin. 20+ yrs in security incident response, ex-Douzone Bizon. KISA/KITRI BoB mentor.",
         },
         days: "", daysPending: "", stages: [1], img: "/partners/people/joseph-jonghyun-kim.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/joseph-jonghyun-kim-009b244a",
@@ -2620,8 +2622,8 @@ export const dict = {
     // 말을 들려주는 자리"로만 읽혔습니다. 어느 부문인지는 dict.program.awards의
     // meta가 부문별로 들고 있으니 여기서 다시 나열하지 마세요.
     sub: {
-      ko: "순위를 매기는 심사가 아니라 전문적인 시각의 피드백이었습니다. 문제를 낸 기업과, 실제 산업에서 문제를 풀어온 시니어 리더들이 결과 공유회에서 각자의 관점으로 피드백과 다음 가능성을 제안했습니다. 출제 기업과 VC 패널은 이 자리에서 어워드 수상팀을 직접 지명했습니다. 여덟 분 중 다섯 분은 두 트랙에 모두 앉았고, 저지먼트에는 한정필 교수님이, 오토메이션에는 신상길 님과 신동혁 총괄님이 함께했습니다.",
-      en: "It was expert feedback, with no ranking. The company that set the problem and senior leaders who have solved real ones looked at the Showcase work. Each said, from their own vantage point, what they thought and what could come next. The problem owner and the VC panel also named the award-winning teams. Five of the eight sat for both tracks. Jungpil Hahn joined Judgment, and Shin Sang-gil and Shin Dong-hyuk joined Automation.",
+      ko: "결과 공유회에서는 순위를 매기지 않고 피드백을 드렸습니다. 문제를 낸 기업과 실제 산업에서 문제를 풀어온 시니어 리더들이 각자의 관점으로 피드백과 다음 가능성을 제안했습니다. 출제 기업과 VC 패널은 이 자리에서 어워드 수상팀을 직접 지명했습니다. 여덟 분 중 다섯 분은 두 트랙에 모두 앉았고, 저지먼트에는 한정필 교수님이, 오토메이션에는 신상길 님과 신동혁 총괄님이 함께했습니다.",
+      en: "Nobody was ranked at the Showcase. The company that set the problem and senior leaders who have solved real problems each gave feedback from their own vantage point and suggested what could come next. The problem owner and the VC panel also named the award-winning teams. Five of the eight sat for both tracks. Jungpil Hahn joined Judgment, and Shin Sang-gil and Shin Dong-hyuk joined Automation.",
     },
     // 이름에는 존칭을 붙입니다 - 규칙은 dict.mentoring.mentors 위 '호칭 규칙' 주석.
     people: [
@@ -3052,7 +3054,7 @@ export const dict = {
         a: {
           // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) - 뜻은 불변
           // 첫 문장의 부정은 질문 직답이라 유지, 뒤의 두 대구만 정리했습니다.
-          ko: "기술 완성도는 보는 기준이 아닙니다. 크게 보면 무게는 결과물보다 거기까지 간 과정에 실려 있어요. 어떤 근거로 그 문제를 골랐는지, 그리고 그게 실제로 돌아가는지입니다.\n\n무엇을 보고 피드백을 드리는지는 피드백 문서로 대회 전에 그대로 공개하니, 무엇을 준비해야 하는지 모르는 채 무대에 서실 일은 없어요.",
+          ko: "기술 완성도는 보는 기준이 아닙니다. 무게는 결과물보다 거기까지 간 과정에 실려 있어요. 어떤 근거로 그 문제를 골랐는지, 그리고 그게 실제로 돌아가는지를 봅니다.\n\n무엇을 보고 피드백을 드리는지는 피드백 문서로 대회 전에 그대로 공개하니, 무엇을 준비해야 하는지 모르는 채 무대에 서실 일은 없어요.",
           en: "Technical polish is not one of the things looked at. The weight is on your process more than the finish: what evidence you chose the problem from, and whether the thing actually runs.\n\nWhat the feedback is based on goes to participants before the event, exactly as it stands, so you are never preparing blind.",
         },
         aGroups: [
@@ -3183,8 +3185,8 @@ export const dict = {
           // 근무합니다" 같은 확정형이나 특정 국가의 특정 포지션을 약속하는 문장으로
           // 바꾸지 마세요. 지역은 아래 "구체적인 조건"에 걸리는 항목이기도 해서,
           // 그 문장 앞에 둡니다.
-          ko: "네, 지금 추진 중인 유급 인턴십입니다. AXMOS(코드프레소와 WVB)의 인턴 기회이고, 수상 여부와 무관하게 열려 있습니다. 근무 지역도 싱가포르에 한정되지 않고, 한국과 미국의 기회가 포함될 수 있어요.\n\n행사에서 잘하는 것과 현장에서 잘하는 것은 다를 수 있어서, 주최사가 관심 있는 참가자를 행사 과정과 제출 자료를 바탕으로 직접 검토해요. 8일 전체가 사실상 포트폴리오가 되는 구조입니다.\n\n구체적인 조건은 행사가 끝난 뒤 회사와 학생이 학기 일정에 맞춰 이야기해 정합니다. Day\u00a08 커리어 간담회도 인턴과 채용 풀로 이어지는 별도 연결 통로예요.",
-          en: "Yes, a paid internship already in motion, with AXMOS (Codepresso, WVB), open whether or not your team wins anything. Not limited to Singapore either; Korea and the US can be part of it.\n\nDoing well at an event and doing well on the job differ, so the hosts review interested participants directly, on their work across the event and what they submit. The eight days become your portfolio.\n\nTerms get settled after the event, between the company and the student around their term dates. The Day\u00a08 career session is a separate route into the internship and hiring pool.",
+          ko: "네, 지금 추진 중인 유급 인턴십입니다. AXMOS(코드프레소와 WVB)의 인턴 기회이고, 수상 여부와 무관하게 열려 있습니다. 근무 지역도 싱가포르에 한정되지 않고, 한국과 미국의 기회가 포함될 수 있어요.\n\n행사에서 잘하는 것과 현장에서 잘하는 것은 다를 수 있어서, 주최사가 관심 있는 참가자를 행사 과정과 제출 자료를 바탕으로 직접 검토해요. 그래서 8일의 과정이 그대로 포트폴리오가 됩니다.\n\n구체적인 조건은 행사가 끝난 뒤 회사와 학생이 학기 일정에 맞춰 이야기해 정합니다. Day\u00a08 커리어 간담회도 인턴과 채용 풀로 이어지는 별도 연결 통로예요.",
+          en: "Yes, a paid internship already in motion, with AXMOS (Codepresso, WVB), open whether or not your team wins anything. Not limited to Singapore either; Korea and the US can be part of it.\n\nDoing well at an event and doing well on the job differ, so the hosts review interested participants directly, on their work across the event and what they submit. So the eight days themselves become your portfolio.\n\nTerms get settled after the event, between the company and the student around their term dates. The Day\u00a08 career session is a separate route into the internship and hiring pool.",
         },
       },
       {
@@ -3250,8 +3252,8 @@ export const dict = {
           // 그 세션을 말합니다 - 세 번째 사본을 만들면 이 답이 다시 목록이 됩니다.
           // 첫 문장의 "세 가지"는 실물(benefits.spine.tangibles)만 세는 숫자이고,
           // 마지막 문장은 실물 밖의 것이라 그 숫자에 들어가지 않습니다.
-          ko: "세 가지가 실물로 남습니다. 실제 기업이 낸 문제를 풀어 돌아가는 데모. 기업과 업계 전문가 앞에서 피칭한 경험, 사진으로 남습니다. 그리고 수료증 두 장. 크래시코스 전 시간을 들으면 크래시코스 수료증, 공유회 발표까지 마치면 완주 수료증입니다. 실물 밖으로는 현직 선배들과의 1:1 멘토링, 그리고 행사 후에도 이어지는 커뮤니티가 남고요.",
-          en: "Three things you can show. A demo that runs on a real company's problem. The experience of pitching it to that company and to industry experts, photos included. And two certificates: one for attending the full Crash Course, one for going all the way through your Showcase pitch. Beyond those, you keep the 1:1 mentoring with people already in the field, and a community that carries on after the event.",
+          ko: "실물로는 세 가지가 남습니다. 실제 기업이 낸 문제를 풀어 만든 돌아가는 데모, 기업과 업계 전문가 앞에서 발표하는 모습을 담은 사진, 그리고 수료증 두 장입니다. 크래시코스 전 시간을 들으면 크래시코스 수료증을, 공유회 발표까지 마치면 완주 수료증을 받습니다. 실물 밖으로는 현직 선배들과의 1:1 멘토링, 그리고 행사 후에도 이어지는 커뮤니티가 남고요.",
+          en: "Three things you can show: a demo that runs on a real company's problem, photos of you presenting it to that company and to industry experts, and two certificates (one for attending the full Crash Course, one for presenting at the Showcase). Beyond those, you keep the 1:1 mentoring with people already in the field, and a community that carries on after the event.",
         },
       },
       {
@@ -3265,8 +3267,8 @@ export const dict = {
           // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) - 뜻은 불변
           // 앞 문장의 "필참은 이틀"이 이미 '매일 안 나와도 된다'를 증명하므로
           // 부정 절을 덜어냈습니다.
-          ko: "시간을 통으로 내야 하는 날은 사실 이틀입니다. 필참은 Day\u00a01(오프닝)과 Day\u00a08(8/29 결과 공유회)뿐이고, 나머지는 각자 편한 시간에 하는 자율 빌드와 선택 참여 세션입니다. 8일로 늘린 건 학기 중에도 크래시 코스로 배우고 → 만들고 → 발표까지 가는 호흡을 만들기 위해서예요.",
-          en: "Only two days need blocking out: Day\u00a01 (opening) and Day\u00a08 (29 Aug, the Showcase). Everything else is self-paced building plus optional sessions. Stretching it to eight days is what makes room, mid-semester, for the full arc of crash course → building → presenting.",
+          ko: "시간을 통으로 내야 하는 날은 사실 이틀입니다. 필참은 Day\u00a01(오프닝)과 Day\u00a08(8/29 결과 공유회)뿐이고, 나머지는 각자 편한 시간에 하는 자율 빌드와 선택 참여 세션입니다. 8일로 늘린 건 학기 중에도 크래시코스로 배우고, 만들고, 발표까지 가는 호흡을 만들기 위해서예요.",
+          en: "Only two days need blocking out: Day\u00a01 (opening) and Day\u00a08 (29 Aug, the Showcase). Everything else is self-paced building plus optional sessions. Stretching it to eight days is what makes room, mid-semester, for the full arc from the crash course to building to presenting.",
         },
       },
       // MERGED 2026-08-11: 두 항목이 하나가 됐습니다 - "문과인데 이과생들에게
@@ -3297,8 +3299,8 @@ export const dict = {
           // 네 곳에 있었고, 그 문장의 집은 기준 항목("피드백과 어워드는 어떤
           // 기준인가요?")의 '보지 않는 것' 목록입니다. 여기서는 와이어프레임
           // 수준이어도 된다는 앞 문장이 이미 같은 일을 합니다.
-          ko: "네, 괜찮습니다. 코드 실력을 겨루는 대회가 아니에요. 피드백의 무게는 문제를 얼마나 정확히 이해했는가, 그 위에 세운 아이디어가 적절한가, 데모가 그 아이디어를 실제로 증명하는가에 실려 있어요. 프로토타입은 와이어프레임 수준이어도 됩니다.\n\n발표는 전부 한국어예요. 참가자도, 피드백을 주시는 전문가분들도 한인 커뮤니티 기반이라 영어 걱정은 내려놓으셔도 돼요.\n\n8일에 걸쳐 만드는 빌더톤이라 밤을 새울 일도 없고, 코딩 기본기는 Day\u00a02 크래시코스에서 맞춰 드립니다. 산업 맥락을 아는 사람이 오히려 유리한 구조예요.",
-          en: "Yes, you'll be fine. This is not a contest of coding ability. The feedback weighs how accurately you understand the problem, whether the idea on top of it is the right one, and whether the demo proves that idea. A wireframe-level prototype is fine.\n\nPresentations are all in Korean, and both the participants and the experts come from the Korean community here, so put the English worry down.\n\nIt runs over eight days, so no all-nighters, and the Day\u00a02 Crash Course levels the coding basics. If anything, the structure favours people who know the industry context.",
+          ko: "네, 괜찮습니다. 코드 실력을 겨루는 대회가 아니에요. 피드백의 무게는 문제를 얼마나 정확히 이해했는가, 그 위에 세운 아이디어가 적절한가, 데모가 그 아이디어를 실제로 증명하는가에 실려 있어요. 프로토타입은 와이어프레임 수준이어도 됩니다.\n\n발표는 전부 한국어예요. 참가자도, 피드백을 주시는 전문가분들도 한인 커뮤니티 기반이라 영어 걱정은 내려놓으셔도 돼요.\n\n8일에 걸쳐 만드는 빌더톤이라 밤을 새울 일도 없고, 코딩 기본기는 Day\u00a02 크래시코스에서 맞춰 드립니다. 산업 맥락을 아는 사람이 오히려 유리합니다.",
+          en: "Yes, you'll be fine. This is not a contest of coding ability. The feedback weighs how accurately you understand the problem, whether the idea on top of it is the right one, and whether the demo proves that idea. A wireframe-level prototype is fine.\n\nPresentations are all in Korean, and both the participants and the experts come from the Korean community here, so put the English worry down.\n\nIt runs over eight days, so no all-nighters, and the Day\u00a02 Crash Course levels the coding basics. If anything, people who know the industry context have the edge.",
         },
       },
       {
@@ -3402,8 +3404,8 @@ export const dict = {
         en: "These eight days ran on other people's time",
       },
       body: {
-        ko: "제로백(Zero100) 커뮤니티의 일부인 AXMOS 소속 회사들이 주최했고, 그중 코드프레소가 실제 기업 문제를 냈습니다. SMU, NUS, NTU 한인 학생회가 주관했고, 싱가포르 한인회가 1:1 멘토링을 위해 한인회관을 내어주었습니다. 멘토로 오신 분들은 대부분 소속 회사와 별개로 개인 자격으로 저녁 시간을 냈습니다. 무대에 선 연사와 전문가, 후원사, 그리고 8일을 건너 마지막 날 앞에 선 21팀까지. 이 페이지에 이름이 적힌 모든 분들 덕분입니다.",
-        en: "The member companies of AXMOS, part of the Zero100 community, hosted it, and Codepresso, one of them, set the real company problem. The SMU, NUS and NTU Korean Student Associations ran it, and the Korean Association in Singapore opened its hall for the 1:1 mentoring. Most mentors came on their own evenings, separately from where they work. Speakers, expert reviewers, sponsors, and the 21 teams that stood up on the final day. Every name on this page.",
+        ko: "제로백(Zero100) 커뮤니티의 일부인 AXMOS 소속 회사들이 주최했고, 그중 코드프레소가 실제 기업 문제를 냈습니다. SMU, NUS, NTU 한인 학생회가 주관했고, 싱가포르 한인회가 1:1 멘토링을 위해 한인회관을 내어주었습니다. 멘토로 오신 분들은 대부분 소속 회사와 별개로 개인 자격으로 저녁 시간을 냈습니다. 무대에 선 연사와 전문가, 후원사, 그리고 8일을 건너 마지막 날 앞에 선 21팀까지, 이 페이지에 이름이 적힌 모든 분 덕분입니다.",
+        en: "The member companies of AXMOS, part of the Zero100 community, hosted it, and Codepresso, one of them, set the real company problem. The SMU, NUS and NTU Korean Student Associations ran it, and the Korean Association in Singapore opened its hall for the 1:1 mentoring. Most mentors came on their own evenings, separately from where they work. It happened thanks to everyone named on this page, from the speakers, experts and sponsors to the 21 teams that stood up on the final day.",
       },
       // 마지막 줄이 요점입니다. 감사가 예의로 끝나면 각주가 되고, 결과를 말하면
       // 문장이 됩니다. 12월로 가는 버튼이 바로 아래에 있어(2026-10-02부터) 이 줄이 그 버튼의 근거가 됩니다.
