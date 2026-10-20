@@ -476,11 +476,11 @@ export default function NaruPage() {
               아니라 라벨 옆의 한 조각입니다. 버튼의 ↓는 **형식을 말하지 않고**,
               셀룰러에서 1MB는 데스크톱에서와 다른 값입니다. 그 결정의 이유
               ("무엇을 받는지 모르고 누르게 하지 않습니다")를 셀룰러까지 넓힙니다.
-              파일이 바뀌면 이 숫자도 바꾸세요: public/naru/naru-manifesto-v4-2026-10.pdf
-              (2026-10-10 v4: 959,215바이트라 0.9MB 그대로) */}
+              파일이 바뀌면 이 숫자도 바꾸세요: public/naru/naru-manifesto-v5-2026-10.pdf
+              (2026-10-20 v5: 1,286,556바이트라 1.3MB) */}
           <p className={`${META} font-bold uppercase ${latinTrack(locale)} text-white/70`}>
             {t(naru.join.manifesto.label)}
-            <span className="font-medium normal-case tracking-normal text-white/70">{/* 2026-10-10: 영문 화면은 영문판(191,475바이트)을 받습니다. 크기 표기도 로케일을 따릅니다. */}{locale === "en" ? "\u2002·\u2002PDF 0.2MB" : "\u2002·\u2002PDF 0.9MB"}</span>
+            <span className="font-medium normal-case tracking-normal text-white/70">{/* 2026-10-10: 영문 화면은 영문판(191,475바이트)을 받습니다. 크기 표기도 로케일을 따릅니다. */}{locale === "en" ? "\u2002·\u2002PDF 0.2MB" : "\u2002·\u2002PDF 1.3MB"}</span>
           </p>
           <h3 className={`mt-3 break-keep ${BODY} font-bold text-white`}>{t(naru.join.manifesto.title)}</h3>
           <p className={`mt-2 text-balance break-keep ${BODY} leading-relaxed text-white/70`}>{t(naru.join.manifesto.body)}</p>
