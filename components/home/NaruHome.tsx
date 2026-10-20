@@ -1445,7 +1445,7 @@ export default function NaruHome() {
               <div aria-hidden className="hidden h-56 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent md:block" />
               <div className="min-w-0 max-w-[48rem]">
                 <p id="naru-teaser-label" className={`${META} font-bold text-accent`}>{t(naru.teaser.eyebrow)}</p>
-                <p className={`mt-3 ${TITLE} font-bold leading-[1.15] tracking-tight text-white`}>
+                <p className={`mt-3 ${TITLE} text-balance font-bold leading-[1.15] tracking-tight text-white`}>
                   <span className="block break-keep">{t(naru.hero.titleLine1)}</span>{" "}
                   <span className={`${GRADIENT_TEXT} block break-keep`}>{t(naru.hero.titleLine2)}</span>
                 </p>

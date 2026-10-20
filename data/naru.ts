@@ -473,7 +473,9 @@ export const naru = {
     // 처음 보는 사람에게 실제로 하는 말("나루터 할 때 나루예요", "노 젓는 건 본인 몫, 그 전에 연습은 시켜 줘야")을 그대로 옮겼습니다.
     // 그 전 문장은 연습 쪽 절반이 빠져 차갑게 들렸습니다. brand 6장 "연습"도 같은 날 고쳤습니다.
     // 영문(같은 날, 사용자: "영어표현에서 나루터 이게 잘 사나?"): "나루터 할 때 나루"의 말맛은 영어로 옮겨지지 않아 뜻만 한 줄로 줍니다.
-    titleLine1: { ko: "나루터 할 때 나루입니다.", en: "NARU is Korean for a ferry landing." },
+    // 같은 날 (사용자: "나루터 할 때 나루입니다. 는 좀 짜침", 후보 셋 중 1번): 첫 줄을 "처음부터 잘 젓는 사람은 없습니다."로. 전사록의
+    // "연습도 안 시켜 놓고 왜 못하냐고 하면 안 된다"를 순하게 옮긴 말이고, 코어 01 "못해도 되는 자리"와 이어집니다.
+    titleLine1: { ko: "처음부터 잘 젓는 사람은 없습니다.", en: "Nobody rows well the first time." },
     titleLine2: { ko: "건너기 전에 노 젓는 법을 익히는 곳.", en: "Where you learn to row before you cross." },
     // 숫자 둘과 날짜 하나. 전부 확정된 사실입니다.
     sub: {
@@ -674,8 +676,8 @@ export const naru = {
       // 2026-09-29 (9/28 자문): 어원 한 줄. 한글 화면에만 있습니다. 영문은 river landing 설명이 이미 같은 일을 합니다.
       // DECIDED 2026-10-05 (사용자, 스크린숏: "너무 길어. 간략하게"): 세 문장을 두 문장으로. 노량진의 진(津) 문장을 뺐습니다.
       // DECIDED 2026-10-21 (사용자: 제목 1번 "나루터 할 때 나루입니다"에 맞춰 /naru를 한 번에): "배를 타는 자리"가 새 제목과 부딪혀 연습과 돌아옴으로.
-      ko: "강을 건너는 노는 각자가 젓습니다. 나루는 그 전에 노 젓는 법을 익힐 자리를 열고, 먼저 건넌 사람이 돌아와 다음 사람에게 젓는 법을 알려 줍니다.",
-      en: "Everyone rows their own way across. NARU opens a place to learn the stroke before that, and the ones who crossed first come back to teach the next.",
+      ko: "건너는 것은 각자의 몫이고, 나루는 그 전의 연습을 엽니다. 먼저 건넌 사람이 돌아와 다음 사람에게 젓는 법을 알려 줍니다.",
+      en: "The crossing is yours to make, and NARU opens the practice before it. Those who crossed first come back to teach the next.",
     },
     lead: {
       // DECIDED 2026-10-20 (hwang 브리프 1.2): 세 조각을 한 문장으로(지금 화면에 그리지 않는 키).
