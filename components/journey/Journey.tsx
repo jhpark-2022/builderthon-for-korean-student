@@ -34,6 +34,7 @@ import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 import HeroPartnerStrip, { sortLikeHeroStrip, sponsorMass } from "@/components/shared/HeroPartnerStrip";
 import MobileChatBar from "@/components/shared/MobileChatBar";
 import { SiteFooter } from "@/components/shared/SiteChrome";
+import { partnerUrl } from "@/data/partnerLinks";
 import { BAND_TINT, BandFades } from "@/components/shared/Band";
 import FlowStrip from "@/components/shared/FlowStrip";
 import { useHeroSplit } from "@/components/shared/useHeroSplit";
@@ -1941,16 +1942,23 @@ function CompanionMarquee({ t, paused }: { t: Tfn; paused: boolean }) {
       <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#0a0814]/55 to-transparent sm:w-28" />
       {/* decorative logo wall (two duplicated tracks) - hidden from AT to avoid
           announcing the names twice; the "Builder Network" heading conveys it */}
-      <div aria-hidden className="group flex flex-col gap-4 overflow-hidden sm:gap-5">
+      {/* DECIDED 2026-10-20 (사용자: 모든 로고를 링크로): 주소가 있는 타일은 새 창 링크입니다(data/partnerLinks.ts). 띠가 같은 목록을 두 번
+          이어 그리므로 두 번째 줄은 낭독과 키보드에서 뺍니다(aria-hidden, tabIndex -1). 호버하면 띠가 멈춰 누를 수 있습니다. */}
+      <div className="group flex flex-col gap-4 overflow-hidden sm:gap-5">
         {rows.map((r, ri) => {
           // each track holds its half twice so the -50% translate loops seamlessly
           const track = [...r.items, ...r.items];
           return (
             <div key={ri} style={paused ? { animationPlayState: "paused" } : undefined} className={`marquee-track ${r.dir} group-hover:[animation-play-state:paused]`}>
-              {track.map((c, i) => (
-                <div
+              {track.map((c, i) => {
+                const url = partnerUrl(c.alt);
+                const dup = i >= r.items.length;
+                const Tile = url ? "a" : "div";
+                return (
+                <Tile
                   key={i}
-                  aria-hidden={!c.src}
+                  {...(url ? { href: url, target: "_blank", rel: "noopener noreferrer", "aria-label": c.alt, tabIndex: dup ? -1 : undefined } : {})}
+                  aria-hidden={!c.src || dup || undefined}
                   className="mr-4 flex h-24 w-44 shrink-0 items-center justify-center rounded-2xl border border-white/[0.10] bg-white/[0.05] px-6 sm:mr-5 sm:h-28 sm:w-52"
                 >
                   {c.src ? (
@@ -1971,8 +1979,10 @@ function CompanionMarquee({ t, paused }: { t: Tfn; paused: boolean }) {
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5 12.5 7 7 12.5 1.5 7 7 1.5Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" /></svg>
                     </span>
                   )}
-                </div>
-              ))}
+                </Tile>
+                );
+              })}
+
             </div>
           );
         })}
@@ -3031,8 +3041,12 @@ export default function Journey() {
                           dictionary.ts); the band centres them on one line while
                           the marks keep their own sizes. */}
                       <div className="mt-4 flex flex-wrap items-center justify-center gap-x-14 gap-y-6">
-                        {g.partners.map((pt) => (
-                          <span key={pt.name} className="flex h-12 items-center sm:h-14">
+                        {/* 2026-10-20 (사용자: 모든 로고를 링크로): 주소가 있으면 새 창 링크(data/partnerLinks.ts). 모양은 그대로. */}
+                        {g.partners.map((pt) => {
+                          const url = partnerUrl(pt.name);
+                          const Wrap = url ? "a" : "span";
+                          return (
+                          <Wrap key={pt.name} {...(url ? { href: url, target: "_blank", rel: "noopener noreferrer" } : {})} className="flex h-12 items-center sm:h-14">
                             <Image
                               src={pt.logo}
                               alt={pt.name}
@@ -3040,8 +3054,9 @@ export default function Journey() {
                               height={pt.logoH}
                               className={`w-auto max-w-[10rem] shrink-0 object-contain opacity-90 ${pt.logoClass}`}
                             />
-                          </span>
-                        ))}
+                          </Wrap>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
@@ -3290,7 +3305,8 @@ export default function Journey() {
                   { src: "/partners/logos/white/trimmed/drimaes.png",      alt: "Drimaes",              w: 332, h: 50,  url: "https://www.drimaes.com" },
                 ].map(({ url, ...l }) => (
                   <div key={l.alt} className={TILE_BASIS_2_3_5}>
-                    <LogoTile {...l} onOpen={(el) => openPartner(l.alt, el, url)} />
+                    {/* 2026-10-20 (사용자, hwang 브리프 3.9, 감사 W12): url이 있으면 모달을 거치지 않고 새 창 링크. 없는 것만 모달. */}
+                    {url ? <LogoTile {...l} url={url} /> : <LogoTile {...l} onOpen={(el) => openPartner(l.alt, el, url)} />}
                   </div>
                 ))}
               </div>
@@ -3432,7 +3448,7 @@ export default function Journey() {
                 <div key={l.alt} className={`flex flex-col gap-1.5 ${TILE_BASIS_2_3_4}`}>
                   {/* mass comes from the strip's roster, never from this list -
                       see sponsorMass. */}
-                  <LogoTile {...l} mass={sponsorMass(l.src)} onOpen={(el) => openPartner(l.alt, el, url)} />
+                  {url ? <LogoTile {...l} mass={sponsorMass(l.src)} url={url} /> : <LogoTile {...l} mass={sponsorMass(l.src)} onOpen={(el) => openPartner(l.alt, el, url)} />}
                   <span className="text-center text-xs font-semibold uppercase tracking-[0.1em] text-white/55">{cat}</span>
                 </div>
               ))}

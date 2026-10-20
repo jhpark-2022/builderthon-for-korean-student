@@ -1,5 +1,6 @@
 "use client";
 
+import { partnerUrl } from "@/data/partnerLinks";
 import { dict, type Phrase } from "@/data/dictionary";
 
 type Tfn = (p: Phrase) => string;
@@ -262,7 +263,7 @@ export function sponsorMass(src: string): number {
 
 // One logo, drawn at the height that gives it the same optical mass as the rest
 // of its tier (see stripHeight above).
-function StripLogo({ src, alt, w, h, mass, box }: StripLogoSpec & { box: StripBox }) {
+function StripLogoImg({ src, alt, w, h, mass, box }: StripLogoSpec & { box: StripBox }) {
   // One <img>, two heights. A CSS variable per breakpoint is what lets the phone
   // size be genuinely its own instead of a scaled-down desktop one, without
   // a second element in the DOM (these are 18 above-fold images - duplicating
@@ -309,6 +310,18 @@ function StripLogo({ src, alt, w, h, mass, box }: StripLogoSpec & { box: StripBo
       // part of the video; the drop-shadow still carries the thin wordmarks.
       className="h-[var(--sl-h)] w-auto max-w-[var(--sl-w)] shrink-0 object-contain opacity-80 grayscale drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] transition duration-300 group-hover:opacity-100 sm:h-[var(--sl-h-sm)] sm:max-w-[var(--sl-w-sm)]"
     />
+  );
+}
+
+// DECIDED 2026-10-20 (사용자: 모든 로고를 링크로, hwang 브리프 3.9): 주소가 있는 로고는 새 창 링크입니다(data/partnerLinks.ts).
+// 이름은 링크가 읽습니다. 주소가 없는 학교 학생회 셋은 그림 그대로입니다.
+function StripLogo(props: StripLogoSpec & { box: StripBox }) {
+  const url = partnerUrl(props.alt);
+  if (!url) return <StripLogoImg {...props} />;
+  return (
+    <a href={url} target="_blank" rel="noopener noreferrer" aria-label={props.alt} className="inline-flex rounded">
+      <StripLogoImg {...props} />
+    </a>
   );
 }
 
