@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-20 hover 들림 대신 눌림, 미리 보기 버튼 내림, 노선도 로고 링크](#2026-10-20-press-preview-logos)
 - [2026-10-20 매니페스토 v5: 리뷰 반영 재조판](#2026-10-20-manifesto-v5)
 - [2026-10-20 영문 전체 감사: 꺾이던 버튼, 이름, 숫자 줄](#2026-10-20-en-audit)
 - [2026-10-20 조각문 열 곳을 문장으로, EN 단축, 영문 헤더 한 줄](#2026-10-20-fragments-en)
@@ -274,6 +275,16 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-20-press-preview-logos"></a>
+## 2026-10-20 hover 들림 대신 눌림, 미리 보기 버튼 내림, 노선도 로고 링크
+- 범위: components/ui/Button.tsx, components/home/shared.tsx, components/journey/JourneyNav.tsx, components/match/MatchParts.tsx, components/Quiz.tsx, tailwind.config.ts, components/home/NaruHome.tsx, components/shared/RouteMap.tsx, data/naru.ts
+- 한 것: 사용자 요청(hwang 브리프 3.3, 3.7, 3.8, 시각 브리프 3.5~3.6).
+  - 폰에서 버튼을 누르는 동안 반응이 없고, 떼면 :hover가 남아 들린 채 굳었습니다. hover 들림을 걷고 눌림(active:scale-[0.98])만, hover는 (hover:hover) 안에서만. 8월 zero100 버튼은 그대로. 근거: brand 5장 성격(조용하다).
+  - 등록이 열리기 전의 "등록 폼 미리 보기"(제출할 수 없는 폼)를 히어로와 등록 블록에서 내리고 오픈채팅 하나. 근거: 판단 질문 1(지금 할 수 있는 일 하나).
+  - 노선도 로고를 새 창 링크로. MARU180은 maru.org(아산나눔재단 사이트가 거는 주소), GSC는 자체 홈페이지를 확인하지 못해 창업진흥원의 공식 GSC 안내 페이지. 근거: brand 3장 원칙 4(사람과 곳을 앞에).
+- 검증: hover 규칙 70/70이 (hover:hover) 안, 버튼 hover 들림 0, "등록 폼 미리 보기" 2 → 0(KR, EN), 노선도 로고 a[target=_blank] 2. build 통과.
+- 커밋: e3589e3, 3c0211b
 
 <a id="2026-10-20-manifesto-v5"></a>
 ## 2026-10-20 매니페스토 v5: 리뷰 반영 재조판
