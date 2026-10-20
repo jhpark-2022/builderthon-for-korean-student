@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-20 사이트의 모든 파트너 로고를 링크로](#2026-10-20-all-logo-links)
 - [2026-10-20 hover 들림 대신 눌림, 미리 보기 버튼 내림, 노선도 로고 링크](#2026-10-20-press-preview-logos)
 - [2026-10-20 매니페스토 v5: 리뷰 반영 재조판](#2026-10-20-manifesto-v5)
 - [2026-10-20 영문 전체 감사: 꺾이던 버튼, 이름, 숫자 줄](#2026-10-20-en-audit)
@@ -275,6 +276,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-20-all-logo-links"></a>
+## 2026-10-20 사이트의 모든 파트너 로고를 링크로
+- 범위: data/partnerLinks.ts(새), components/shared/HeroPartnerStrip.tsx, components/journey/Journey.tsx(로고 벽, 멘토링 파트너, 네트워크 띠)
+- 한 것: 사용자 요청("이 웹사이트에 있는 모든 로고들에 적용", hwang 브리프 3.9, 감사 W12). 로고에서 가는 주소를 한 표에 모으고, 8월 페이지의 히어로 로고 띠, 로고 벽(모달 대신 바로 새 창), 멘토링 파트너, "이 빌더톤이 자라 나온 곳" 띠를 링크로 바꿨습니다. 푸터와 12월 노선도는 이미 링크입니다. 새로 넣은 주소(Startup Alliance, KAIA, Venture Square, MYSC, EventUs, UKF, TheMiilk, andar, CEO SUITE, Habit Factory, Twigfarm, Kowork, One Degree Labs)는 직접 열어 제목을 확인한 공식 사이트입니다. 주소를 확인하지 못한 AXMOS, Mission, YJ, 학생회 셋은 그대로이고, AXMOS와 학생회는 설명 모달을 엽니다. 프로그램 카드 안의 장소, 연사 로고는 카드가 버튼이라 링크를 넣지 않았습니다. 근거: brand 3장 원칙 4(사람과 곳을 앞에), 판단 질문 1.
+- 검증: 8월 페이지 파트너 로고 링크 히어로 16, 로고 벽 16, 멘토링 2, 띠 29곳. axe 전과 같음(list 1). 첫 화면 모양 production과 같음(헤더 메뉴 제외). build 통과.
+- 커밋: 4327cd3
 
 <a id="2026-10-20-press-preview-logos"></a>
 ## 2026-10-20 hover 들림 대신 눌림, 미리 보기 버튼 내림, 노선도 로고 링크
