@@ -233,7 +233,7 @@ export function MatchStartFields({ t, profile, onChange, error }: {
 
 type SaveState = "idle" | "saving" | "saved" | "preview" | "ended" | "failed" | "failed_kept" | "reload" | "no_profile" | "no_storage" | "code";
 const SAVE_TIMEOUT_MS = 10_000;
-const GHOST = `inline-flex min-h-[44px] items-center rounded-full border border-white/25 bg-white/[0.06] px-5 ${BODY} font-semibold text-white transition hover:bg-white/10`;
+const GHOST = `inline-flex min-h-[44px] items-center rounded-full border border-white/25 bg-white/[0.06] px-5 ${BODY} font-semibold text-white transition active:scale-[0.98] hover:bg-white/10`; // 2026-10-20 (hwang 브리프 3.3): 눌림
 
 function readSavedSig(): string | null {
   try { return window.localStorage.getItem(MATCH_SAVED_KEY); } catch { return null; }

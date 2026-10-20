@@ -236,7 +236,7 @@ export function PreparingButton({ t, noteId, onOpen, className = "" }: { t: (p: 
       type="button"
       aria-describedby={noteId}
       onClick={() => { track("naru_cta", { src: "preview", to: "register" }); onOpen?.(); }}
-      className={`inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-5 py-3 ${BODY} font-bold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10 sm:px-8 sm:py-4 ${className}`}
+      className={`inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-5 py-3 ${BODY} font-bold text-white/85 transition active:translate-y-0 active:scale-[0.98] active:duration-75 hover:bg-white/10 sm:px-8 sm:py-4 ${className}`}
     >
       {t(registerCopy.previewCta)}
       <span aria-hidden className="text-white/70">→</span>

@@ -23,15 +23,18 @@ const PRIMARY: Record<ButtonTone, string> = {
   // 같은 기하, 나루 토큰. 보라(#4B3A8C) → 자주(#9A5A82). 발광은 보라.
   // 글자는 흰색입니다: 보라 위 흰 글자 7.2:1, 자주 위 4.9:1 (실측 2026-09-17).
   naru:
-    "group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-naru-purple to-naru-plum px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(75,58,140,0.55)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(75,58,140,0.75)] sm:px-8 sm:py-4 sm:text-base",
+    "group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-naru-purple to-naru-plum px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(75,58,140,0.55)] transition active:translate-y-0 active:scale-[0.98] active:duration-75 hover:shadow-[0_12px_50px_rgba(75,58,140,0.75)] sm:px-8 sm:py-4 sm:text-base",
 };
 
 // Journey.tsx 히어로 보조 CTA의 문자열 그대로. 톤이 없습니다(무채색).
+// DECIDED 2026-10-20 (사용자, hwang 브리프 3.3, 시각 브리프 3.5~3.6): naru 주 버튼과 보조 버튼의 호버 들림(-translate-y)을 걷고 눌림만 둡니다.
+// 폰에서 누르는 동안 반응이 없고, 떼면 :hover가 남아 들린 채 굳었습니다. hover 규칙은 tailwind.config의 hoverOnlyWhenSupported로
+// (hover: hover) 안에서만 섭니다. zero100 주 버튼은 8월 페이지 것이라 그대로입니다.
 const SECONDARY =
-  "inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10 sm:px-8 sm:py-4 sm:text-base";
+  "inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 transition active:translate-y-0 active:scale-[0.98] active:duration-75 hover:bg-white/10 sm:px-8 sm:py-4 sm:text-base";
 
 const TEXT =
-  "inline-flex items-center gap-1.5 text-sm font-medium text-white/75 underline-offset-4 transition hover:text-white hover:underline";
+  "inline-flex items-center gap-1.5 text-sm font-medium text-white/75 underline-offset-4 transition active:text-white hover:text-white hover:underline";
 
 export function buttonClass(variant: ButtonVariant, tone: ButtonTone = "naru"): string {
   if (variant === "primary") return PRIMARY[tone];

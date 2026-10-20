@@ -672,12 +672,12 @@ export default function JourneyNav({
               className={
                 registered
                   // 2026-10-13 (등록 브리프 2.3, 리뷰 N7): 8월의 보라와 인디고 대신 본 사이트의 나루 그라데이션입니다.
-                  ? "hidden shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-r from-naru-purple to-naru-plum px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(75,58,140,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_0_28px_rgba(75,58,140,0.7)] lg:inline-flex"
+                  ? "hidden shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-r from-naru-purple to-naru-plum px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(75,58,140,0.5)] transition active:translate-y-0 active:scale-[0.98] active:duration-75 hover:shadow-[0_0_28px_rgba(75,58,140,0.7)] lg:inline-flex"
                   // showQuiz가 false면 lg 아래에서도 보입니다. 퀴즈 칩을 뺀
                   // 자리가 비면 폰에서 헤더에 액션이 하나도 없게 되는데, 이
                   // 페이지에서 지금 할 수 있는 일이 이것 하나입니다. 좁은 폭에서는
                   // 패딩과 글자를 줄이고 min-h로 터치 타깃 44px을 지킵니다.
-                  : `shrink-0 items-center gap-1.5 rounded-full border border-accent/40 bg-accent/[0.12] font-semibold text-accent transition hover:-translate-y-0.5 hover:border-accent/60 hover:bg-accent/20 hover:text-white ${
+                  : `shrink-0 items-center gap-1.5 rounded-full border border-accent/40 bg-accent/[0.12] font-semibold text-accent transition active:translate-y-0 active:scale-[0.98] active:duration-75 hover:border-accent/60 hover:bg-accent/20 hover:text-white ${
                       showQuiz
                         ? "hidden px-4 py-2 text-sm lg:inline-flex"
                         : "inline-flex min-h-[44px] min-w-[44px] justify-center px-2.5 text-xs min-[360px]:px-3.5 sm:px-4 sm:text-sm"

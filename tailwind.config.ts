@@ -7,6 +7,8 @@ const config: Config = {
     "./data/**/*.{ts,tsx}",
   ],
   darkMode: "class",
+  // DECIDED 2026-10-20 (hwang 브리프 3.3, 시각 브리프 3.5): hover: 변형을 (hover: hover) 미디어 안에서만 만듭니다. 폰에서 누른 뒤 호버 모양이 남지 않게.
+  future: { hoverOnlyWhenSupported: true },
   theme: {
     extend: {
       fontFamily: {

@@ -513,7 +513,8 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
                           type="button"
                           aria-pressed={isSel}
                           onClick={() => handleAnswer(key)}
-                          className={`flex items-center gap-4 rounded-2xl border p-5 text-left transition ${
+                          // 2026-10-20 (시각 브리프 3.6): 선택지 눌림 active:scale-[0.99]
+                          className={`flex items-center gap-4 rounded-2xl border p-5 text-left transition active:scale-[0.99] ${
                             isSel
                               ? c("-translate-y-0.5 border-violet-400/50 bg-white/[0.08]", "-translate-y-0.5 border-accent/70 bg-white/[0.08]")
                               : "border-white/10 bg-white/[0.04] hover:border-white/20 hover:bg-white/[0.07]"
