@@ -539,8 +539,9 @@ export const naru = {
       // 팀마다 찾는 문제가 다르므로 "같은 문제"는 사실과도 달랐습니다. 내용은 그대로입니다.
       // 2026-10-11 (브랜드 브리프 B3): 첫 문장 "한국의 대학생과 해외에서 공부하는 한인 학생이 한 팀이 됩니다."를 뺐습니다.
       // 프로그램 챕터의 crossingLine이 같은 말을 합니다. 영문도 첫 문장("Students in Korea ... work in the same teams.")을 뺐습니다.
-      ko: "기업이 지금 겪는 이슈를 받아 그 아래의 문제를 찾고, 닷새째 그 기업 앞에서 발표합니다.",
-      en: "Each team takes an issue a company is facing now, finds the problem underneath it, and presents to that company on the fifth day.",
+      // DECIDED 2026-10-20 (사용자: 과정 절을 앞으로, 도착점 절을 뒤로. 블록마다 첫 문장이 도착점이라 "발표회"로 읽혔습니다): 그 전 "...문제를 찾고, 닷새째 그 기업 앞에서 발표합니다."
+      ko: "기업이 지금 겪는 이슈를 받아 닷새 동안 그 아래의 문제를 찾아 들어가고, 마지막 날 그 기업 앞에 섭니다.",
+      en: "Each team takes an issue a company is facing now, spends five days digging into the problem underneath it, and stands in front of that company on the last day.",
     },
     ctaProgram: { ko: "프로그램 보기", en: "See the programme" },
     // DECIDED 2026-10-11 (사용자): AI 유형 테스트(/match)로 가는 버튼이 일정표의 Day 1에서 히어로의 버튼 줄로 왔습니다.
@@ -857,8 +858,9 @@ export const naru = {
       // 리뷰 브리프 D5가 적어 둔 문장 그대로입니다.
       tag: { ko: "이 닷새에 남는 것", en: "What these five days leave you" },
       heading: {
-        ko: "실명 기업의 이슈에서 문제를 직접 찾고, 그 기업 앞에서 증명해 본 경험.",
-        en: "Finding the problem yourself in a named company's issue, and proving it in front of that company.",
+        // DECIDED 2026-10-20 (사용자: 과정 절을 앞으로, 도착점 절을 뒤로. 블록마다 첫 문장이 도착점이라 "발표회"로 읽혔습니다): "증명"은 남기고 무엇을 증명하는지(거기까지 간 과정)를 앞에 둡니다.
+        ko: "실명 기업의 이슈에서 문제를 찾아 들어가고, 거기까지 간 과정을 그 기업 앞에서 증명해 본 경험.",
+        en: "Digging into a named company's issue for the problem, and proving how you got there in front of that company.",
       },
       // DECIDED 2026-10-20 (hwang 브리프 1.2, 2.6, 감사 W3, W4): ✓칩 셋(알약)을 상자 없이 한 문장으로 그립니다(tangiblesLine). tangibles 키는 그대로 둡니다.
       tangiblesLine: {
@@ -905,34 +907,8 @@ export const naru = {
         evidence: { ko: "8월 코드프레소 출제", en: "August: Codepresso set the problem" },
       },
       {
+        // DECIDED 2026-10-20 (사용자): "과정에 거는 몫"을 넷째에서 둘째로. 사이트에서 과정을 가장 잘 말하는 칸인데 제일 늦게 읽혔습니다. 번호는 새 순서대로.
         num: "02",
-        title: { ko: "멘토", en: "Mentors" },
-        // DECIDED 2026-10-19 (사용자, 스크린숏: "너무 평면적"): 카드 아래 Day 0~4 작은 노선에서 불이 켜지는 날. 멘토링은 Day 2와 Day 3(brand 7장).
-        days: [2, 3],
-        body: {
-          // 2026-10-08 (프로그램 브리프 2.4): 그 전의 문장은 멘토링이 행사 내내 열린다고 했습니다. 2026-09-20 결정은
-          // 첫날부터 사흘째까지이고 Day 4에는 없다는 것이었습니다. 2026-10-13 (멘토링 브리프 3): 멘토링은 Day 2와 Day 3입니다.
-          // 2026-10-19 (시각 감사 3): "막힐 때마다 다시 갑니다"가 하루 두 칸, 2시간 간격 규칙(2026-10-17)과 어긋났습니다.
-          // DECIDED 2026-10-20 (hwang 브리프 1.2): 두 조각을 한 문장으로.
-          ko: "Day 2와 Day 3에 하루 두 번까지 찾아갈 수 있습니다.",
-          en: "You can go to them up to twice a day on Day 2 and Day 3.",
-        },
-        evidence: { ko: "8월 11명", en: "August: eleven of them" },
-      },
-      {
-        num: "03",
-        title: { ko: "앞에서 증명", en: "Proving it out front" },
-        // DECIDED 2026-10-19 (사용자, 스크린숏: "너무 평면적"): 카드 아래 Day 0~4 작은 노선에서 불이 켜지는 날. Day 4 성과 공유회.
-        days: [4],
-        body: {
-          // 2026-10-10 (마일스톤 브리프 2.7): 마지막 날의 이름은 성과 공유회입니다.
-          ko: "마지막 날 성과 공유회에서, 이슈를 낸 회사와 나눕니다.",
-          en: "On the last day, at the showcase, you share it with the company that brought the issue.",
-        },
-        evidence: { ko: "8월 21팀 발표", en: "August: 21 teams presented" },
-      },
-      {
-        num: "04",
         // DECIDED 2026-10-10 (사용자, 마일스톤 브리프 2.2): 상금이나 상에 몰지 않고 날마다 마일스톤별로 모든 팀에게.
         // 2026-09-30의 "다양한 테마의 수상"은 Day 4 칩 "시상과 클로징"에 남습니다(D1 기본값: 부문별 수상은 남김).
         // evidence 키는 지웠습니다. 하루 단위 지원은 12월에 처음 하는 것이라 8월 근거가 없습니다.
@@ -953,6 +929,34 @@ export const naru = {
           ko: "결과 한 번이 아니라, Day 2와 Day 3에 해낸 미션마다 나눠 줍니다.",
           en: "Not one prize for the result: it is shared out for every mission completed on Day 2 and Day 3.",
         },
+      },
+      {
+        num: "03",
+        title: { ko: "멘토", en: "Mentors" },
+        // DECIDED 2026-10-19 (사용자, 스크린숏: "너무 평면적"): 카드 아래 Day 0~4 작은 노선에서 불이 켜지는 날. 멘토링은 Day 2와 Day 3(brand 7장).
+        days: [2, 3],
+        body: {
+          // 2026-10-08 (프로그램 브리프 2.4): 그 전의 문장은 멘토링이 행사 내내 열린다고 했습니다. 2026-09-20 결정은
+          // 첫날부터 사흘째까지이고 Day 4에는 없다는 것이었습니다. 2026-10-13 (멘토링 브리프 3): 멘토링은 Day 2와 Day 3입니다.
+          // 2026-10-19 (시각 감사 3): "막힐 때마다 다시 갑니다"가 하루 두 칸, 2시간 간격 규칙(2026-10-17)과 어긋났습니다.
+          // DECIDED 2026-10-20 (hwang 브리프 1.2): 두 조각을 한 문장으로.
+          ko: "Day 2와 Day 3에 하루 두 번까지 찾아갈 수 있습니다.",
+          en: "You can go to them up to twice a day on Day 2 and Day 3.",
+        },
+        evidence: { ko: "8월 11명", en: "August: eleven of them" },
+      },
+      {
+        num: "04",
+        title: { ko: "앞에서 증명", en: "Proving it out front" },
+        // DECIDED 2026-10-19 (사용자, 스크린숏: "너무 평면적"): 카드 아래 Day 0~4 작은 노선에서 불이 켜지는 날. Day 4 성과 공유회.
+        days: [4],
+        body: {
+          // 2026-10-10 (마일스톤 브리프 2.7): 마지막 날의 이름은 성과 공유회입니다.
+          // DECIDED 2026-10-20 (사용자: 과정 절을 앞으로, 도착점 절을 뒤로. 블록마다 첫 문장이 도착점이라 "발표회"로 읽혔습니다): 무엇을 나누는지(어디까지 갔는지)를 넣었습니다.
+          ko: "마지막 날 성과 공유회에서, 어디까지 갔는지를 이슈를 낸 회사와 나눕니다.",
+          en: "On the last day, at the showcase, you share it with the company that brought the issue.",
+        },
+        evidence: { ko: "8월 21팀 발표", en: "August: 21 teams presented" },
       },
       {
         num: "05",
@@ -1731,7 +1735,8 @@ export const naru = {
     // 전부 초안입니다. draftNote가 이 챕터에 붙어 있어야 합니다.
     programEyebrow: { ko: "프로그램", en: "Programme" },
     // DECIDED 2026-10-20 (hwang 브리프 1.3): EN 단축. 그 전 "From issue to proof, in five days".
-    programHeading: { ko: "이슈에서 증명까지, 닷새", en: "Issue to proof, five days" },
+    // DECIDED 2026-10-20 (사용자: 과정 절을 앞으로, 도착점 절을 뒤로. 블록마다 첫 문장이 도착점이라 "발표회"로 읽혔습니다): approachClose의 말("문제에 다가가는 방식")을 제목으로 올렸습니다. 그 전 "이슈에서 증명까지, 닷새".
+    programHeading: { ko: "문제에 다가가는 닷새", en: "Five days into the problem" },
     // DECIDED 2026-09-25 (가독성 브리프 5, 사용자 승인): 추상적인 문장 옆의 구체적인 한 줄.
     // 화면에 이미 있는 사실만 씁니다. {date}는 naruDates의 formatDecemberDateLine으로 채웁니다(날짜를
     // 여기 쓰지 않는 규칙). 출처: Day 0 데이터 공개, Day 1 줄, #gains 03.
@@ -1973,8 +1978,9 @@ export const naru = {
       // ("데이터를 먼저 공개합니다. 어느 트랙에서 풀지 고르고 옵니다"). 한 화면에서
       // 데이터가 네 번, 트랙이 네 번 나왔어요. 카드가 말하는 것은 리드가 말하지 않습니다.
       // DECIDED 2026-10-20 (hwang 브리프 1.2, 감사 W3): 조각문 셋을 두 문장으로. 사실은 그대로입니다.
-      ko: "등록은 혼자 하고, 팀은 Day 1 현장에서 전원이 함께 맺습니다. 그 뒤로는 찾기에서 공유하기까지 하루에 한 스테이지씩 넘어갑니다.",
-      en: "You register alone, and everyone forms teams together on site on Day 1. From there it is one stage a day, from Find to Share.",
+      // DECIDED 2026-10-20 (사용자: 과정 절을 앞으로, 도착점 절을 뒤로. 블록마다 첫 문장이 도착점이라 "발표회"로 읽혔습니다): 스테이지 이름 넷(정본 7장)을 그대로 적고 날마다 남는 것을 붙였습니다.
+      ko: "등록은 혼자 하고, 팀은 Day 1 현장에서 전원이 함께 맺습니다. 그 뒤로는 찾기, 확인받기, 만들기, 공유하기를 하루에 하나씩 지나고, 날마다 그날의 생각이 남습니다.",
+      en: "You register alone, and everyone forms teams together on site on Day 1. From there you pass through Find, Check, Build and Share, one a day, and each day leaves that day's thinking behind.",
     },
     // 2026-09-20 (크로싱서울_일정.pdf): 라벨이 "워크샵"에서 "세션"으로. PDF가 부르는
     // 이름이고, stages의 필드 이름(workshop -> session)과 같은 말을 씁니다.
@@ -2556,8 +2562,9 @@ export const naru = {
         body: {
           // DECIDED 2026-10-08 (프로그램 브리프 2.2, D2): 보는 것은 결과물보다 문제에 다가간 방식입니다. 다 풀지 못해도 섭니다.
           // DECIDED 2026-10-20 (hwang 브리프 1.2): 조각문 넷을 두 문장으로.
-          ko: "이슈를 낸 회사 관계자 앞에서 5분 발표하고 5분 질의를 받습니다. 다 풀지 못했어도 무대에 서고, 보는 것은 결과보다 문제에 어떻게 다가갔는지입니다.",
-          en: "You present for five minutes to the people from the company that set the issue, then take five minutes of questions. You go up even if it is not solved, and what we look at is how you approached the problem.",
+          // DECIDED 2026-10-20 (사용자: 과정 절을 앞으로, 도착점 절을 뒤로. 블록마다 첫 문장이 도착점이라 "발표회"로 읽혔습니다): 둘째 문장의 앞뒤를 바꿨습니다.
+          ko: "이슈를 낸 회사 관계자 앞에서 5분 발표하고 5분 질의를 받습니다. 보는 것은 결과보다 문제에 어떻게 다가갔는지라, 다 풀지 못했어도 무대에 섭니다.",
+          en: "You present for five minutes to the people from the company that set the issue, then take five minutes of questions. What we look at is how you approached the problem more than the result, so you go up even if it is not solved.",
         },
         // #after 챕터와 같은 말입니다. 여기서는 일정 안의 사실로, 저기서는 챕터로.
         // DECIDED 2026-10-08 (프로그램 브리프 2.3, D3): 클로징은 끝난 뒤에 할 일을 말하고 글로 남기며 끝납니다.

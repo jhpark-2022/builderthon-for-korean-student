@@ -984,6 +984,10 @@ export default function NaruHome() {
         {/* DECIDED 2026-10-10 (구조 브리프 2.4): 머리말 "다음 이벤트 크로싱 서울"을 그리지 않습니다. 홈이 곧 크로싱 서울입니다.
             december.eyebrowPrefix 키는 data/naru.ts에 그대로 있습니다. */}
         <h2 id="december-title" className={`${H2} ${READ} text-balance text-center`}>{t(naru.december.programHeading)}</h2>
+        {/* DECIDED 2026-10-20 (사용자: 과정을 문장 끝이나 네 번째 칸이 아니라 먼저): 사이트에서 과정을 가장 잘 말하는 문단(approachClose,
+            "닷새 안에 끝까지 풀리지 않을 수 있는 문제를 고릅니다 ... 그 방식은 문제가 풀리지 않아도 남습니다")을 네 단계 표 아래에서
+            제목 바로 아래로 올렸습니다. 아래 리드(programConcrete 이하)는 그대로입니다. */}
+        <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-center ${BODY} leading-relaxed text-white/90`}>{t(naru.december.approachClose)}</p>
         {/* 폰에서 3줄을 넘는 문단은 왼쪽 정렬 (2026-09-19, 모바일 감사 8). #naru가
             이미 쓰던 규칙(감사 반영 브리프 6.1)인데 #december와 #join에는 적용되지
             않았습니다. 336px 폭에 한글 18자/줄이면 서너 줄 문단이 양쪽 들쭉날쭉한
@@ -993,7 +997,7 @@ export default function NaruHome() {
             축으로 내려갑니다(가독성 브리프 4.1: 머리는 h2 바로 아래 문단 하나). 문장은 그대로. */}
         {/* DECIDED 2026-10-02 (사용자: "폰에서도 가운데 정렬로 되돌려줘"): 리드 셋은 폰에서도 가운데입니다.
             같은 날 가독성 리뷰로 폰에서만 왼쪽 정렬로 바꿨다가 되돌렸습니다. 가운데인 블록은 폰에서도 가운데. */}
-        <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-center ${BODY} leading-relaxed text-white/85`}>
+        <p className={`${READ} ${READ_MEASURE_C} mt-8 break-keep text-center ${BODY} leading-relaxed text-white/85`}>
           {t(naru.december.programConcrete).replace("{date}", formatDecemberDateLine(locale))}
         </p>
         {/* DECIDED 2026-10-11 (브랜드 브리프 B3): "크로싱"의 뜻 한 줄. 위 문단과 같은 모양의 문단입니다. */}
@@ -1147,7 +1151,7 @@ export default function NaruHome() {
               </li>
             ))}
           </ol>
-          <p className={`mt-4 text-balance break-keep ${BODY} leading-relaxed text-white/85 md:border-t md:border-white/10 md:pt-4`}>{t(naru.december.approachClose)}</p>
+          {/* 2026-10-20 (사용자): 여기 서던 approachClose는 프로그램 제목 바로 아래로 올라갔습니다. */}
         </Reveal>
         {/* id="schedule": 목차의 "일정" 칩이 내려앉는 자리입니다(2026-10-13). */}
         <Reveal id="schedule" className={`${READ} mt-10 text-center`}>
