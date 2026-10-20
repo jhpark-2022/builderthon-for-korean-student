@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-20 매니페스토 v5: 리뷰 반영 재조판](#2026-10-20-manifesto-v5)
 - [2026-10-20 영문 전체 감사: 꺾이던 버튼, 이름, 숫자 줄](#2026-10-20-en-audit)
 - [2026-10-20 조각문 열 곳을 문장으로, EN 단축, 영문 헤더 한 줄](#2026-10-20-fragments-en)
 - [2026-10-20 프로그램 카피 넷: 4일 모두, 질문은 날마다, 끝난 뒤 멘토에게, 1위](#2026-10-20-program-copy)
@@ -273,6 +274,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-20-manifesto-v5"></a>
+## 2026-10-20 매니페스토 v5: 리뷰 반영 재조판
+- 범위: public/naru/naru-manifesto-v5-2026-10.pdf(새, v4 삭제), data/naru.ts(naruLinks.manifesto), components/naru/NaruPage.tsx(크기 표기), public/naru/README.md. 원본은 Dropbox 그룹 기획/매니페스토_나루_v5.pdf, .html(편집용)
+- 한 것: 사용자 요청. 10/19 리뷰(W14)가 짚은 조판을 고쳤습니다. 서체 3가족 9컷 → Noto Serif KR 2컷, 가로줄 15 → 0, 자간 넓힌 제목(N A R U, MANIFESTO, CORE) → 자간 0, 가운뎃점 5 → 0, 크림 바탕에 남색과 테라코타. 내용은 그대로이고 정본이 v5에서 맞추라고 한 표기만 바꿨습니다(공간 → 자리, 증명해보는 → 증명해 보는, I장의 다리 → 자리, 데모데이 → 성과 공유회). 표지와 끝 쪽의 버전, 날짜 줄은 뺐습니다(사용자). 근거: brand 2장 표기 주석, brand 3장 원칙 1(다리는 III장만), brand 10장 색과 서체.
+- 검증: 7쪽, 서체 NotoSerifKR-Regular, Bold 둘, em dash 0, 가운뎃점 0, "다리"는 III장에만. 1.3MB. build 통과.
+- 커밋: 48e5f09
 
 <a id="2026-10-20-en-audit"></a>
 ## 2026-10-20 영문 전체 감사: 꺾이던 버튼, 이름, 숫자 줄
