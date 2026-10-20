@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-21 나루 태그라인과 홈 나루 상자](#2026-10-21-naru-tagline)
 - [2026-10-20 사이트 전체 글: humanizer와 10/19 피드백](#2026-10-20-humanize-all)
 - [2026-10-20 Day 4 클로징 줄 다듬음](#2026-10-20-closing-line)
 - [2026-10-20 운영 방식 제목을 과정 지향으로](#2026-10-20-facts-label-process)
@@ -284,6 +285,15 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-21-naru-tagline"></a>
+## 2026-10-21 나루 태그라인과 홈 나루 상자
+- 범위: NaruHome(나루 티저), NaruPage(제목 폭), data/naru.ts(hero.titleLine1, 2, /naru 네 문단), lib/ogCards.tsx, docs/brand.md(6장)
+- 한 것: 사용자 스크린숏("좀더 visually 예뻤으면"). 세 시안을 찍어 비교한 뒤 B안: 인장 230~250px, 사이 흐린 세로선, 글 폭 제한. 발광은 되살리지 않음.
+- 태그라인(사용자: "건너는 건 각자가 한다. 자리는 우리가 만든다. 이거 좀 이상함"): 전사록에서 나루를 설명하는 말을 찾아 후보 셋 중 1번 "나루터 할 때 나루입니다. / 건너기 전에 노 젓는 법을 익히는 곳." EN "NARU is Korean for a ferry landing. / Where you learn to row before you cross."
+- /naru를 같은 틀로: 제목 아래 문단(배를 타는 자리 → 노 젓는 법을 익히고 먼저 건넌 사람이 알려 줌), 방법은 바뀝니다, 절박하지 않아도, 주최 칸. 코어와 원칙은 그대로. 근거: brand 6장 "연습"을 같은 커밋에서 고침.
+- 검증: npm run build 통과. 1440에서 홈 상자 세 줄, /naru 제목 두 줄.
+- 커밋: 0231700, 2a02b60
 
 <a id="2026-10-20-humanize-all"></a>
 ## 2026-10-20 사이트 전체 글: humanizer와 10/19 피드백
