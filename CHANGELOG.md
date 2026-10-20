@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-20 사이트 전체 글: humanizer와 10/19 피드백](#2026-10-20-humanize-all)
 - [2026-10-20 Day 4 클로징 줄 다듬음](#2026-10-20-closing-line)
 - [2026-10-20 운영 방식 제목을 과정 지향으로](#2026-10-20-facts-label-process)
 - [2026-10-20 히어로 영문 줄 키움](#2026-10-20-hero-en-size)
@@ -283,6 +284,17 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-20-humanize-all"></a>
+## 2026-10-20 사이트 전체 글: humanizer와 10/19 피드백
+- 범위: data/naru.ts, NaruHome, NaruPage, crossingTeam.ts, dictionary.ts, schedule.ts, ArchiveBanner, quiz.ts, quiz-2026-12.ts, quizEditions.ts, MatchParts, docs/brand.md(2장)
+- 한 것: 사용자("humanizer.md로 내용을 쭉 돌리고 10/19 피드백 반영", 이어서 "모든 곳들에 적용"). 하나면 될 문장을 잘게 끊은 곳, 명사로 끝나는 조각문, 셋 나열, "A가 아니라 B", 맺음 경구, 가운뎃점을 홈, /naru, 8월 기록, 유형 테스트, 팀 시간표에서 걷었습니다. EN도 맞춤. 근거: brand 5장 문체.
+- 코어 02의 셋 나열을 한 문장으로 바꾸고 brand 2장을 같은 커밋에서 고쳤습니다(매니페스토는 다음 판에서 맞춤).
+- 같이 고친 정본 위반: "59명"을 "25팀"으로(8장), 학생회와 기업이 "나루를 거쳐" 만남(6장), 피칭, 결과 공유회, 1등, 비전공자(9장). 12월 테스트의 "공유회" 치환은 "성과 공유회"로.
+- /match 나라 선택 "그 밖(두 글자 코드 입력)"을 "기타"로, 입력 칸에 영문 약자 예시(사용자 스크린숏).
+- 남긴 것: 8월 기록의 모객 카피 원문 속 금지어(다리, 피치, 누구나, 검증)는 기록이라 그대로.
+- 검증: tsc, verify-quiz, npm run build 통과. 새로 넣은 글에 em dash와 가운뎃점 0.
+- 커밋: abd1ecd, ab101f8, 36873a4
 
 <a id="2026-10-20-closing-line"></a>
 ## 2026-10-20 Day 4 클로징 줄 다듬음
