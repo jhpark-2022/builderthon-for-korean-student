@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-20 보라는 CTA 하나로, 발광과 팔레트 밖 색을 걷음](#2026-10-20-purple-one)
 - [2026-10-20 사이트의 모든 파트너 로고를 링크로](#2026-10-20-all-logo-links)
 - [2026-10-20 hover 들림 대신 눌림, 미리 보기 버튼 내림, 노선도 로고 링크](#2026-10-20-press-preview-logos)
 - [2026-10-20 매니페스토 v5: 리뷰 반영 재조판](#2026-10-20-manifesto-v5)
@@ -276,6 +277,17 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-20-purple-one"></a>
+## 2026-10-20 보라는 CTA 하나로, 발광과 팔레트 밖 색을 걷음
+- 범위: components/home/NaruHome.tsx, components/naru/NaruPage.tsx, components/journey/JourneyNav.tsx, components/shared/MobileChatBar.tsx, components/ui/Halo.tsx(삭제)
+- 한 것: 사용자 요청("보라 몰아주기", hwang 브리프 3.4~3.6, 2.10~2.12, 감사 W2, W5, 시각 리뷰 C1~C6, 시각 브리프 1.6~1.8. 겹치는 곳은 hwang이 이김).
+  - 발광: Halo 셋(프로그램 제목, 참가 혜택 제목, /naru 첫 화면)과 나루 티저의 발광 셋을 걷고, 티저 테두리 그라데이션을 옅게.
+  - 그라데이션: 헤더 워드마크는 흰색, 4색은 히어로 로고 하나. #gains 막대는 accent 단색.
+  - 팔레트 밖 색: General Mentoring 초록 → 옆 상자와 같은 무채색, 미션 띠 호박색 → 기본 톤(★만 남김), 폰 오픈채팅 바 Tailwind violet → accent. 헤더 오픈채팅 칩의 보라 면 → 무채색(첫 화면의 보라 면은 히어로 버튼 하나).
+  - 8월 페이지 색은 기록이라 그대로. 근거: brand 10장 색(무지개식 배색 금지), brand 5장 성격(조용하다).
+- 검증: 홈, /naru 390과 1440 화면마다 보라 면(그라데이션, accent 면) 최대 1(#gains 9px 막대 제외). 홈 emerald, amber, violet 클래스 0. build 통과.
+- 커밋: 6d8335f
 
 <a id="2026-10-20-all-logo-links"></a>
 ## 2026-10-20 사이트의 모든 파트너 로고를 링크로
