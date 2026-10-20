@@ -345,11 +345,14 @@ export default function JourneyNav({
   // 8월 페이지의 영문 아홉 칸도 1536에서 오픈채팅 버튼과 붙어(실측 간격 0, 1728에서 6px) 1800부터 섭니다. 그 사이(1536~1799)에는 레일이
   // 남으므로, 배너의 위 여백(ArchiveBanner)과 scroll-padding(globals.css의 html[lang="en"] 규칙)이 같은 폭에서 따라 바뀝니다.
   const en = locale === "en";
+  // DECIDED 2026-10-20 (hwang 브리프 2.14, 1.3, 감사 W7): 영문도 한국어와 같은 폭에서 한 줄이 됩니다(홈과 /naru는 xl, 8월은 그대로).
+  // 그 전에는 영문 홈 1728, /naru 2xl부터였고 1440 영문 헤더가 두 줄이었습니다. 페이지 칩이 글자 메뉴가 되고 EN 문자열이 짧아져 들어갑니다.
   const anchorRowAt = en && !naru
     ? { row: "min-[1800px]:ml-6 min-[1800px]:flex", rail: "min-[1800px]:hidden" }
-    : en && anchors.length > 4
-    ? { row: "min-[1728px]:ml-6 min-[1728px]:flex", rail: "min-[1728px]:hidden" }
-    : (naru && !en)
+    : naru && en && anchors.length > 4
+      // 영문 홈은 낱말이 길어 xl(1280)에서 목차 끝이 오픈채팅과 겹쳐(실측) 1440부터입니다. 영문 /naru는 xl에서 들어갑니다.
+      ? { row: "min-[1440px]:ml-4 min-[1440px]:flex", rail: "min-[1440px]:hidden" }
+      : naru
       ? { row: "xl:ml-6 xl:flex", rail: "xl:hidden" }
       : { row: "2xl:ml-6 2xl:flex", rail: "2xl:hidden" };
   return (
@@ -452,7 +455,8 @@ export default function JourneyNav({
                 // 한국어도 360px 아래에서는 한 단 작습니다. sm(640px)부터는 두 로케일이 같은 크기입니다.
                 // 2026-10-13: 영문은 페이지 칩 셋이 로고 옆에 서는 xl~1399px에서 한 단 작게 둡니다(1280에서 왼쪽과 오른쪽 묶음이 0px로 닿았습니다).
                 // 2026-10-13 (폰 점검): 360px 아래에서는 한 단 더 작게(320에서 오른쪽 묶음이 여백 안으로 23px 들어왔습니다).
-                locale === "en" ? "text-[0.7rem] min-[360px]:text-xs min-[390px]:text-sm sm:text-2xl min-[1400px]:text-3xl" : "text-lg min-[360px]:text-2xl xl:text-3xl"
+                // 2026-10-20 (hwang 브리프 2.14): 영문은 목차가 같은 줄에 서는 1440~1599에서 한 단 작게(실측 넘침), 1600부터 3xl.
+                locale === "en" ? "text-[0.7rem] min-[360px]:text-xs min-[390px]:text-sm sm:text-2xl min-[1600px]:text-3xl" : "text-lg min-[360px]:text-2xl xl:text-3xl"
               }`}>
                 {decemberEventLabel(locale)}
               </span>
@@ -538,7 +542,7 @@ export default function JourneyNav({
           {/* 챕터 링크는 페이지 칩에서 24px 띄웁니다(등록 브리프 2.1). 8월 페이지는 다섯이라 2xl(1536)부터 섭니다.
               실측: 1440에서 로고, 칩 셋, 링크 다섯, 오른쪽 묶음이 한 줄에 들어가지 않습니다. 그 아래에서는 레일이 맡습니다. */}
           {/* 영문 8월의 아홉 칸은 간격 20px이면 오픈채팅 버튼과 붙어 그 줄만 12px입니다. */}
-          <div className={`hidden items-center ${en && !naru ? "gap-3" : "gap-5"} ${anchorRowAt.row}`}>
+          <div className={`hidden items-center ${en ? (naru ? "gap-4" : "gap-3") : "gap-5"} ${anchorRowAt.row}`}>
             {/* 2026-10-20 (hwang 브리프 4.1): 사이트 메뉴와 챕터 목차 사이의 1px 선. 목차 줄이 설 때만 섭니다. */}
             <span aria-hidden className="h-5 w-px shrink-0 bg-white/20" />
             {/* DECIDED 2026-10-10 (사용자: "TOC가 너무 어색함"): 나루 계열 헤더(홈, /naru)의 데스크톱 줄에서는 첫 항목(#top)을
