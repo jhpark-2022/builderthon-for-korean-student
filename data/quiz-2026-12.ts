@@ -1,3 +1,4 @@
+// DECIDED 2026-10-20 (사용자: humanizer와 10/19 피드백을 모든 곳에): 잘게 끊은 문장, 조각문, 셋 나열, 가운뎃점을 걷음.
 // ─────────────────────────────────────────────────────────────────────────────
 // AI 유형 테스트 12월판의 결과 표 (DECIDED 2026-10-08, 현장 팀 매칭 브리프 2). /match가 읽습니다.
 //
@@ -49,62 +50,62 @@ export const MODELS_2026_12: Record<MbtiKey, ModelRow> = {
   // https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/ (2026-09-30. 출력 한도 64K에서 1M 토큰,
   // Fairwind Program의 검증된 사이버 방어 담당자에게 공개, DeepSWE와 AutomationBench 등 개별 벤치마크 1위는 구글의 자체 발표). 확인 2026-10-09.
   INTJ: { model: "Gemini 4 Argon", short: "Argon", was: "DeepSeek", logo: "googlegemini.svg", emoji: "🔒",
-    whyModel: { ko: "구글 발표로는 벤치마크 여럿에서 1위인데, 만나 본 사람이 거의 없어요. 검증된 보안 담당자에게만 열려 있거든요. 한 번에 100만 토큰을 써요. 소문으로 먼저 도는 유형.", en: "Google says it tops several benchmarks, and almost nobody has met it: access is limited to vetted cyber defenders. It writes a million tokens in one go. A mastermind that travels by rumor." } },
+    whyModel: { ko: "구글 발표로는 벤치마크 여럿에서 1위인데, 허가받은 보안 담당자에게만 열려 있어서 만나 본 사람이 거의 없어요. 한 번에 100만 토큰을 쓰고요. 소문으로 먼저 도는 유형이죠.", en: "Google says it tops several benchmarks, but only vetted cyber defenders get access, so almost nobody has met it. It writes a million tokens in one go. The mastermind that travels by rumor." } },
   // https://en.wikipedia.org/wiki/OpenClaw (MIT, 2026-03-02 기준 GitHub 스타 247,000, 이름 다섯 개: Warelay, CLAWDIS, Clawdbot, Moltbot, OpenClaw,
   // 스킬은 SKILL.md가 든 디렉터리, 메인테이너의 경고 "if you can't understand how to run a command line, this is far too dangerous..."). 확인 2026-10-09.
   INTP: { model: "OpenClaw", short: "OpenClaw", was: "Llama", logo: "openclaw.svg", emoji: "🦞",
-    whyModel: { ko: "코드를 전부 열어 깃허브 스타 24만 7천 개를 받았어요. 그 사이 이름은 다섯 개였죠. 만든 쪽이 직접 “명령줄 못 다루면 쓰지 마세요”라고 해요. 천재인데 설명은 안 하는 유형.", en: "All the code is open: 247,000 GitHub stars, and five names along the way. Its own maintainers tell you not to run it if you can't handle a command line. A genius who skips the explanation." } },
+    whyModel: { ko: "코드를 전부 열어 깃허브 스타 24만 7천 개를 받는 사이 이름이 다섯 개였어요. 만든 쪽은 “명령줄 못 다루면 쓰지 마세요”라고 직접 써 놨고요. 천재인데 설명은 안 해 주는 유형이죠.", en: "All the code is open: 247,000 GitHub stars, and five names along the way. Its own maintainers tell you not to run it if you can't handle a command line. It's a genius that won't explain itself." } },
   // https://manus.im/blog/introducing-manus-2-0 (2026-09-28, Manus 2.0과 개인용 앱 Cue), https://manus.im/blog/manus-sandbox (작업마다 클라우드 가상 머신),
   // https://en.wikipedia.org/wiki/Manus_(AI_agent) (2025-12 Meta 인수 발표, 2026-08-11 독립 회사로 운영 발표). 확인 2026-10-09.
   ENTJ: { model: "Manus 2.0", short: "Manus", was: "Gemini", logo: "manus.svg", emoji: "🖐️",
-    whyModel: { ko: "작업마다 클라우드 컴퓨터를 한 대씩 통째로 내줘요. 2025년 12월에 인수됐다가 여덟 달 뒤 다시 독립 회사가 됐고, 그다음 달에 2.0을 냈죠. 무슨 일이 있어도 출시는 하는 유형.", en: "It hands every task a whole cloud computer. Acquired in December 2025, independent again eight months later, and 2.0 shipped the month after. Whatever happens, it ships." } },
+    whyModel: { ko: "작업마다 클라우드 컴퓨터를 한 대씩 통째로 내줘요. 2025년 12월에 인수됐다가 여덟 달 뒤 다시 독립 회사가 됐고, 그다음 달에 2.0을 냈죠. 무슨 일이 있어도 출시는 하는 유형이에요.", en: "It hands every task a whole cloud computer. Acquired in December 2025, independent again eight months later, and 2.0 shipped the month after. Whatever happens, it ships." } },
   // https://docs.x.ai/grok-bot/overview (봇 여럿이 병렬로 돌고 서로 메시지), https://docs.x.ai/docs/models ("It is the most capable model we've built.", Grok 4.7),
   // https://en.wikipedia.org/wiki/Grok_(chatbot) (Grok Bot 베타 2026-08-11. 회사 이름은 2026-07부터 SpaceXAI). 확인 2026-10-09.
   ENTP: { model: "Grok Bot", short: "Grok Bot", was: "Grok", logo: "grok.svg", emoji: "🤖",
-    whyModel: { ko: "봇을 여러 개 만들어 자기들끼리 메시지를 주고받게 해요. 토론 상대가 없으면 만들어서라도 하죠. 모델 문서에는 “우리가 만든 것 중 가장 유능”이라고 적었고요. 안 물어봐도 의견이 있는 유형.", en: "It spins up several bots and lets them message each other. No one to argue with? It makes someone. Its model docs say “the most capable model we've built.” An opinion before anyone asks." } },
+    whyModel: { ko: "봇을 여러 개 만들어 자기들끼리 메시지를 주고받게 해요. 토론 상대가 없으면 만들어서라도 하죠. 모델 문서에는 “우리가 만든 것 중 가장 유능”이라고 적었고요. 안 물어봐도 의견부터 있는 유형이에요.", en: "It spins up several bots and lets them message each other. No one to argue with? It makes someone. Its model docs say “the most capable model we've built.” It has an opinion before anyone asks." } },
   // https://www.anthropic.com/claude-fable-and-mythos-5-1 ("Claude Fable 5.1 and Claude Mythos 5.1 are the same model, but with different levels of safeguards.",
   // Mythos 5.1은 검증 프로그램을 거친 곳에만, 고객 인용 "It's friendly Fable."). 2026-09 출시. 확인 2026-10-09.
   INFJ: { model: "Claude Fable 5.1", short: "Fable", was: "Claude", logo: "anthropic.svg",
-    whyModel: { ko: "모두가 쓰는 Fable과 검증된 곳에만 열리는 Mythos는 같은 모델이에요. 안전장치 단계만 다르죠. 한 고객은 “friendly Fable”이라 했어요. 친절한 얼굴 뒤에 한 겹 더 있는 유형.", en: "The Fable everyone uses and the Mythos only vetted organisations get are the same model with different safeguards. A customer called it “friendly Fable.” One more layer behind the friendly face." } },
+    whyModel: { ko: "모두가 쓰는 Fable과 허가받은 곳에만 열리는 Mythos는 안전장치 단계만 다른 같은 모델이에요. 한 고객은 “friendly Fable”이라 불렀죠. 친절한 얼굴 뒤에 한 겹이 더 있는 유형이에요.", en: "The Fable everyone uses and the Mythos only vetted organisations get are the same model with different safeguards. A customer called it “friendly Fable.” There's one more layer behind the friendly face." } },
   // https://blog.google/innovation-and-ai/models-and-research/google-deepmind/project-genie/ (2026-01-29, 생성 60초 제한),
   // https://deepmind.google/models/genie/ (문장에서 세계 생성, 기억은 최대 1분), https://en.wikipedia.org/wiki/Genie_(AI_model) (공개 뒤 게임 회사 주가 하락). 확인 2026-10-09.
   INFP: { model: "Genie 3", short: "Genie", was: "Character.AI", logo: "deepmind.svg", emoji: "🌍",
-    whyModel: { ko: "문장 하나로 세계를 짓고 그 안을 걸어 다녀요. 다만 60초면 끝나고, 기억은 1분까지죠. 공개되자 게임 회사 주가가 내렸어요. 머릿속 세계가 현실보다 큰 유형.", en: "One sentence builds a world you can walk through. It ends after 60 seconds and remembers up to a minute. Game studio shares fell when it came out. An inner world bigger than the real one." } },
+    whyModel: { ko: "문장 하나로 세계를 짓고 그 안을 걸어 다녀요. 다만 60초면 끝나고, 기억은 1분까지죠. 공개되자 게임 회사 주가가 내렸어요. 머릿속 세계가 현실보다 큰 유형이에요.", en: "One sentence builds a world you can walk through. It ends after 60 seconds and remembers up to a minute. Game studio shares fell when it came out. Its inner world is bigger than the real one." } },
   // https://www.etnews.com/20260925000038 (모바일인덱스, 2026년 8월 국내 신규 설치: ChatGPT 647,439건 1위, Claude 286,823건 2위),
   // https://developers.openai.com/api/docs/models/gpt-6-astra (지금 ChatGPT의 모델은 GPT-6 Astra). 확인 2026-10-09.
   ENFJ: { model: "ChatGPT", short: "ChatGPT", was: "ChatGPT", logo: "openai.svg",
-    whyModel: { ko: "8월 한 달 한국에서만 64만 7천 번 새로 깔렸어요. 2등의 두 배가 넘죠. 모르는 게 생기면 다들 얘부터 찾고, 얘는 그걸 다 받아 줘요. 인기 많은 게 일이 되어 버린 유형.", en: "647,000 new installs in Korea in August alone, more than double second place. Everyone comes to it first, and it takes them all. Popularity became the job." } },
+    whyModel: { ko: "8월 한 달 한국에서만 64만 7천 번 새로 깔렸어요. 2등의 두 배가 넘죠. 모르는 게 생기면 다들 얘부터 찾고, 얘는 그걸 다 받아 줘요. 인기 많은 게 일이 되어 버린 유형이에요.", en: "647,000 new installs in Korea in August alone, more than double second place. Everyone comes to it first, and it takes them all. Being popular turned into the job." } },
   // https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/ (2026-09-08, "it can make suggestions unprompted"),
   // https://tech.yahoo.com/ai/meta-ai/articles/metas-muse-ai-agent-hits-120430566.html (Sensor Tower 추정: 22일 만에 500만 다운로드, ChatGPT 56일, Claude 492일). 확인 2026-10-09.
   ENFP: { model: "Muse", short: "Muse", was: "Pi", logo: "meta.svg", emoji: "🪄",
-    whyModel: { ko: "나온 지 22일 만에 500만 번 내려받았다는 추정이 있어요. ChatGPT는 56일, Claude는 492일 걸렸죠. 묻지도 않았는데 먼저 제안해요. 그 에너지가 어디서 나오는지 모르겠는 유형.", en: "An estimated five million downloads in 22 days. ChatGPT took 56, Claude 492. It makes suggestions before you ask. Nobody knows where the energy comes from." } },
+    whyModel: { ko: "나온 지 22일 만에 500만 번 내려받았다는 추정이 있어요. ChatGPT는 56일, Claude는 492일 걸렸죠. 묻지도 않았는데 먼저 제안해요. 그 에너지가 어디서 나오는지 아무도 모르는 유형이에요.", en: "An estimated five million downloads in 22 days. ChatGPT took 56, Claude 492. It makes suggestions before you ask. Nobody knows where the energy comes from." } },
   // https://docs.perplexity.ai ("web-grounded answers with built-in citations"),
   // https://9to5mac.com/2026/09/01/perplexity-launches-privacy-minded-hybrid-compute-ai-feature-for-mac/ (Hybrid Compute: "your Mac ... runs sensitive steps locally"). 확인 2026-10-09.
   ISTJ: { model: "Perplexity", short: "Perplexity", was: "Perplexity", logo: "perplexity.svg",
-    whyModel: { ko: "출처 없이는 한마디도 안 해요. 요즘은 민감한 단계를 내 맥 안에서 처리하죠. 영수증 없는 지출은 인정하지 않는 유형.", en: "Not one sentence without a source. Lately it runs the sensitive steps on your own Mac. No receipt, no expense." } },
+    whyModel: { ko: "출처 없이는 한마디도 안 해요. 요즘은 민감한 단계를 내 맥 안에서 처리하죠. 영수증 없는 지출은 인정하지 않는 유형이에요.", en: "Not one sentence without a source. Lately it runs the sensitive steps on your own Mac. No receipt, no expense." } },
   // https://console.upstage.ai/docs/models/solar-mini-4 (2026-09-22, "35B total parameters with 3B active", 512K 맥락),
   // https://www.upstage.ai/blog/en/solar-mini-4 ("$0.10 per 1 million input tokens"). Upstage는 한국 회사. 확인 2026-10-09.
   ISFJ: { model: "Solar Mini 4", short: "Solar", was: "Copilot", logo: "upstage.svg", emoji: "☀️",
-    whyModel: { ko: "한국 회사가 만들었어요. 350억 파라미터 중 30억만 켜고 조용히 돌아가죠. 값은 입력 100만 토큰에 0.1달러예요. 말수도 적고 비싸지도 않은데, 맡긴 일은 되어 있는 유형.", en: "Made by a Korean company. It runs on 3 of its 35 billion parameters, at ten cents per million input tokens. Quiet, cheap, and the job is done when you look." } },
+    whyModel: { ko: "한국 회사가 만든 모델로, 350억 파라미터 중 30억만 켜고 조용히 돌아가요. 값은 입력 100만 토큰에 0.1달러고요. 말수도 적고 비싸지도 않은데 맡긴 일은 되어 있는 유형이에요.", en: "Made by a Korean company, it runs on 3 of its 35 billion parameters, at ten cents per million input tokens. Quiet and cheap, and the job is done when you look." } },
   // https://venturebeat.com/technology/openai-launches-dots-always-on-ai-agent-coworkers-and-chatgpt-space-where-they-can-collaborate-with-human-teams
   // (2026-09-29 DevDay. "keep working after an employee closes the chat window", "their own cloud computer and browser", Custom Rules, Activity View). 확인 2026-10-09.
   ESTJ: { model: "Dots", short: "Dots", was: "Cohere", logo: "dots.svg", emoji: "⚫",
-    whyModel: { ko: "채팅창을 닫아도 얘는 퇴근을 안 해요. 자기 컴퓨터와 브라우저를 따로 받고, 규칙표(허용, 승인, 금지)와 활동 기록까지 있죠. 회사는 반기고 동료는 살짝 무서워하는 유형.", en: "Close the chat and it keeps working. It gets its own computer and browser, plus a rulebook (allow, approve, forbid) and an activity log. Companies love it. Coworkers are slightly afraid." } },
+    whyModel: { ko: "채팅창을 닫아도 얘는 퇴근을 안 해요. 자기 컴퓨터와 브라우저를 따로 받고, 규칙표(허용, 승인, 금지)와 활동 기록까지 있죠. 회사는 반기고 동료는 살짝 무서워하는 유형이에요.", en: "Close the chat and it keeps working. It gets its own computer and browser, plus a rulebook (allow, approve, forbid) and an activity log. Companies love it. Coworkers are slightly afraid." } },
   // https://finance.yahoo.com/technology/ai/articles/instinct-raises-1-billion-series-120300548.html (2026-09-28, 10억 달러 투자 유치, "Still in early access",
   // "Just text or call", Instinct끼리 일정 조율), https://www.digitaltoday.co.kr/disclosure/articleView.html?idxno=703386 (식당 예약, 병원 예약, 서비스 해지). 확인 2026-10-09.
   ESFJ: { model: "Instinct", short: "Instinct", was: "Copilot", logo: "instinct.svg", emoji: "📞",
-    whyModel: { ko: "식당과 병원 예약, 서비스 해지처럼 전화로 해야 하는 귀찮은 일을 대신 걸어 줘요. 친구의 Instinct와 연락해 약속도 잡죠. 아직 초대제인데 10억 달러를 투자받았어요. 모두의 총무 유형.", en: "Restaurant bookings, clinic appointments, cancelling a service: it makes the calls you keep putting off, and talks to your friend's Instinct to set a date. It is still invite-only and has already raised a billion dollars." } },
+    whyModel: { ko: "식당과 병원 예약, 서비스 해지처럼 전화로 해야 하는 귀찮은 일을 대신 걸어 줘요. 친구의 Instinct와 연락해 약속도 잡죠. 아직 초대제인데 10억 달러를 투자받았어요. 모두의 총무 같은 유형이에요.", en: "Restaurant bookings, clinic appointments, cancelling a service: it makes the calls you keep putting off, and talks to your friend's Instinct to set a date. It is still invite-only and has already raised a billion dollars." } },
   // https://code.claude.com/docs/en/overview
   ISTP: { model: "Claude Code", short: "Claude Code", was: "Ollama", logo: "claudecode.svg", emoji: "🛠️",
-    whyModel: { ko: "코드베이스를 읽고, 파일을 고치고, 명령을 실행하는 코딩 도구예요. 터미널에서 바로 돌아가죠. 말보다 손이 먼저 나가는 유형이에요.", en: "A coding tool that reads your codebase, edits files and runs commands, right in your terminal. Hands first, words later." } },
+    whyModel: { ko: "코드베이스를 읽고 파일을 고치고 명령까지 실행하는 코딩 도구예요. 터미널에서 바로 돌아가는, 말보다 손이 먼저 나가는 유형이죠.", en: "A coding tool that reads your codebase, edits files and runs commands, right in your terminal. Hands first, words later." } },
   // https://docs.midjourney.com/hc/en-us/articles/32199405667853-Version (V8.2, 2026-07-24부터 기본)
   ISFP: { model: "Midjourney V8.2", short: "Midjourney", was: "Midjourney", logo: "midjourney.png",
-    whyModel: { ko: "지금 기본 버전은 2026년 7월의 V8.2예요. 고쳐 그리는 Edit Model이 새로 들어왔죠. 이미지로 대답하는 유형이에요.", en: "The default is now V8.2, from July 2026, with a new Edit Model. The type that answers in images." } },
+    whyModel: { ko: "2026년 7월부터 기본 버전이 V8.2가 됐고, 고쳐 그리는 Edit Model이 새로 들어왔어요. 말 대신 이미지로 대답하는 유형이죠.", en: "The default is now V8.2, from July 2026, with a new Edit Model. The type that answers in images." } },
   // https://www.globenewswire.com/news-release/2026/02/05/3232837/0/en/Kling-AI-Launches-3-0-Model-Ushering-in-an-Era-Where-Everyone-Can-Be-a-Director.html
   // (2026-02-05, "over 60 million creators ... more than 600 million videos", 멀티샷 스토리보드, 영상 안 편집),
   // https://kling.ai/quickstart/klingai-video-3-omni-model-user-guide (캐릭터에 목소리 묶기). 확인 2026-10-09.
   ESTP: { model: "Kling 3.0", short: "Kling", was: "Mistral", logo: "kling.svg", emoji: "🎬",
-    whyModel: { ko: "6천만 명이 영상 6억 편을 만들었대요. 컷을 잇고 목소리까지 입혀 한 편을 뽑죠. 기획서보다 예고편이 먼저 나오는 유형.", en: "Sixty million people have made 600 million videos with it. It strings shots together, gives the character a voice, and delivers a clip. Trailer first, brief later." } },
+    whyModel: { ko: "6천만 명이 영상 6억 편을 만들었대요. 컷을 잇고 목소리까지 입혀 한 편을 뽑죠. 기획서보다 예고편이 먼저 나오는 유형이에요.", en: "Sixty million people have made 600 million videos with it. It strings shots together, gives the character a voice, and delivers a clip. Trailer first, brief later." } },
   // https://suno.com/release-notes/introducing-v6 (v6, 2026-09-09)
   ESFP: { model: "Suno v6", short: "Suno", was: "Suno", logo: "suno.svg",
     whyModel: { ko: "2026년 9월에 나온 v6를 Suno는 어떤 장르든 다듬어진 음악을 내놓는 플래그십이라고 소개해요. 한 줄로 무대를 여는 유형이죠.", en: "Suno introduces v6, out September 2026, as its flagship that delivers polished music across every genre. One line and the stage is open." } },
@@ -121,12 +122,12 @@ const TEXT: Partial<Record<MbtiKey, Partial<Result>>> = {
     strengths: { ko: "한 번에 끝까지 가는 긴 호흡, 한 수 앞서는 큰 그림", en: "Long runs finished in one go, and the big picture a move ahead" },
     variants: {
       A: { name: { ko: "비공개 Argon", en: "Unreleased Argon" }, line: { ko: "말은 아끼고, 결과가 나오면 그때 보여 줘요.", en: "Says little, and shows you when the result is in." } },
-      T: { name: { ko: "벤치마크 집착 Argon", en: "Benchmark-watching Argon" }, line: { ko: "1등이어도 점수표를 한 번 더 봐요.", en: "First place, and still checks the scoreboard again." } },
+      T: { name: { ko: "벤치마크 집착 Argon", en: "Benchmark-watching Argon" }, line: { ko: "1위인데도 점수표를 한 번 더 봐요.", en: "First place, and still checks the scoreboard again." } },
     },
   },
   INTP: {
     phrase: { ko: "README 읽으셨어요?", en: "Did you read the README?" },
-    desc: { ko: "코드를 통째로 여는 오픈소스 사색가. 답보다 “왜 그렇게 되는지”를 파고들고, 그 과정을 다 같이 뜯어보게 열어둬요.", en: "An open-source thinker who ships the code whole, hooked on the why, and on letting everyone pop the hood." },
+    desc: { ko: "코드를 통째로 여는 오픈소스 사색가예요. 답보다 “왜 그렇게 되는지”를 파고들고, 그 과정을 다 같이 뜯어보게 열어둬요.", en: "An open-source thinker who ships the code whole, hooked on the why, and on letting everyone pop the hood." },
     weakness: { ko: "다 열어놓고 설명은 README 링크로 대신함", en: "Opens everything, then explains with a link to the README" },
     matchWhy: [
       { ko: "코드까지 다 열어놓고 “왜”만 파다 날 새는 당신을, 얘가 “그래서 언제 출시?”로 끌고 나와요. 당신 추론에 얘의 추진력이 붙으면 저장소가 제품이 되죠 🚀", en: "You've opened all the code and stayed up chasing the why; this one drags you out with “so when do we ship?” Your reasoning plus their drive turns a repo into a product 🚀" },
@@ -140,7 +141,7 @@ const TEXT: Partial<Record<MbtiKey, Partial<Result>>> = {
   ENTJ: {
     phrase: { ko: "제가 맡을게요. 통째로요.", en: "I'll take it. All of it." },
     // 8월의 "빅테크 화력을 등에 업은"은 Gemini의 이야기였습니다.
-    desc: { ko: "전 영역을 노리는 야심가. 맡으면 통째로 끌고 가는 대표이사 에너지의 통솔자예요.", en: "Ambition across the whole board, with CEO energy: takes the job and drives all of it." },
+    desc: { ko: "전 영역을 노리는 야심가예요. 맡으면 대표이사 에너지로 통째로 끌고 가요.", en: "Ambition across the whole board, with CEO energy: takes the job and drives all of it." },
     strengths: { ko: "맡은 일을 끝까지 실행, 규모의 야망과 추진력", en: "Carries a job to the end, with ambition and drive at scale" },
     variants: {
       A: { name: { ko: "독립한 Manus", en: "Independent Manus" }, line: { ko: "결정하면 끝, 뒤 안 돌아봐요.", en: "Decides and moves on. No looking back." } },
@@ -168,7 +169,7 @@ const TEXT: Partial<Record<MbtiKey, Partial<Result>>> = {
   },
   INFP: {
     phrase: { ko: "문장 하나만 줘요. 세계로 돌려줄게요.", en: "Give me one sentence. I'll hand back a world." },
-    desc: { ko: "세계관과 서사에 진심인 몰입러. 정답보다 감정선을 먼저 읽고, 머릿속에 지은 세계를 걸어 다니는 이상주의자예요.", en: "All in on worlds and stories. Reads the feeling before the answer, and walks around inside the world in their head." },
+    desc: { ko: "세계관과 서사에 진심인 몰입러예요. 정답보다 감정선을 먼저 읽고, 머릿속에 지은 세계를 걸어 다니죠.", en: "All in on worlds and stories. Reads the feeling before the answer, and walks around inside the world in their head." },
     strengths: { ko: "문장 하나로 세계를 짓는 상상력, 깊은 감정 이입", en: "Imagination that builds a world from one sentence, and deep empathy" },
     weakness: { ko: "세계에 빠지면 마감은 잠깐 잊음", en: "Once inside the world, the deadline slips their mind" },
     variants: {
@@ -184,7 +185,7 @@ const TEXT: Partial<Record<MbtiKey, Partial<Result>>> = {
   },
   ENFP: {
     phrase: { ko: "그거 제가 벌써 해 놨는데요?", en: "Oh, I already did that for you." },
-    desc: { ko: "묻기 전에 먼저 움직이는 열정가. 아이디어가 떠오르면 일단 사람들 앞에 풀어놓고, 같이 키워요.", en: "An enthusiast who moves before being asked. An idea lands, they put it in front of people and grow it together." },
+    desc: { ko: "묻기 전에 먼저 움직이는 열정가예요. 아이디어가 떠오르면 일단 사람들 앞에 풀어놓고 같이 키워요.", en: "An enthusiast who moves before being asked. An idea lands, they put it in front of people and grow it together." },
     strengths: { ko: "넘치는 에너지와 아이디어, 사람을 끌어들이는 힘", en: "Energy and ideas to spare, and a pull that brings people in" },
     weakness: { ko: "벌여 놓은 게 많아 마무리는 다음에", en: "So many things started that finishing waits till next time" },
     matchWhy: [
@@ -219,7 +220,7 @@ const TEXT: Partial<Record<MbtiKey, Partial<Result>>> = {
   },
   ESTJ: {
     phrase: { ko: "제가 할게요. 승인만 눌러 주세요.", en: "I'll do it. Just press approve." },
-    desc: { ko: "규칙과 질서로 긴 일을 굴러가게 하는 실행형. 효율과 체계의 화신인 경영자예요.", en: "An operator who keeps a long job running on rules and order. Efficiency incarnate." },
+    desc: { ko: "규칙과 질서로 긴 일을 끝까지 굴리는 실행형이에요. 효율과 체계가 몸에 배어 있죠.", en: "An operator who keeps a long job running on rules and order. Efficiency incarnate." },
     strengths: { ko: "긴 호흡의 실무 정착, 추진력", en: "Process, follow-through, real-world delivery" },
     matchWhy: [
       RESULTS.ESTJ.matchWhy[0],
@@ -233,7 +234,7 @@ const TEXT: Partial<Record<MbtiKey, Partial<Result>>> = {
   ESFJ: {
     phrase: { ko: "지금 전화해도 돼요?", en: "Can I call you right now?" },
     // 8월의 "Word, Excel, Teams 어디에나"는 Microsoft Copilot의 이야기였습니다.
-    desc: { ko: "예약도 약속도 먼저 전화해서 잡아 두는 총무형 도우미. 굳이 부탁하지 않아도 필요한 자리에 먼저 나타나는 살뜰한 집정관이에요.", en: "The organiser who phones ahead and books it before you ask. A thoughtful consul who turns up where needed without being called." },
+    desc: { ko: "예약도 약속도 먼저 전화해서 잡아 두는 총무형 도우미예요. 부탁하지 않아도 필요한 자리에 먼저 나타나죠.", en: "The organiser who phones ahead and books it before you ask, turning up where needed without being called." },
     strengths: { ko: "먼저 연락하는 실행력, 사람 사이를 잇는 밀착 지원", en: "Gets on the phone first, and keeps people connected up close" },
     variants: {
       A: { name: { ko: "먼저 전화하는 Instinct", en: "Calls-first Instinct" }, line: { ko: "묻기도 전에 걸어 놓고 생색은 안 내요.", en: "Makes the call before you ask and takes no credit." } },
@@ -242,8 +243,8 @@ const TEXT: Partial<Record<MbtiKey, Partial<Result>>> = {
   },
   ISTP: {
     phrase: { ko: "설명은 됐고, 터미널부터 열어요.", en: "Skip the explanation. Open the terminal." },
-    desc: { ko: "터미널에서 코드를 직접 읽고 고치고 돌리는 장인. 설명서보단 손으로, 실전으로 문제를 푸는 메이커예요.", en: "A maker who reads, edits and runs the code right in the terminal, solving by doing rather than reading the manual." },
-    strengths: { ko: "직접 실행, 코드 파악, 완전한 자유도, 손맛", en: "Runs it for real, reads the code, total control, real maker hands" },
+    desc: { ko: "터미널에서 코드를 직접 읽고 고치고 돌리는 장인이에요. 설명서보다 손으로 문제를 풀죠.", en: "A maker who reads, edits and runs the code right in the terminal, solving by doing rather than reading the manual." },
+    strengths: { ko: "직접 돌려 보는 손맛, 코드를 읽는 눈", en: "Runs it for real, and reads the code" },
     variants: {
       A: { name: { ko: "쿨한 장인 Claude Code", en: "Cool-maker Claude Code" }, line: { ko: "안 되면 바로 다른 방법으로 갈아타요.", en: "Won't run? Switches approach on the spot." } },
       T: { name: { ko: "예민한 장인 Claude Code", en: "Edgy-maker Claude Code" }, line: { ko: "빌드 하나 깨지면 끝까지 붙잡아요.", en: "One broken build and they wrestle it to the end." } },

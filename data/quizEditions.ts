@@ -1,3 +1,4 @@
+// DECIDED 2026-10-20 (사용자: humanizer와 10/19 피드백을 모든 곳에): 잘게 끊은 문장, 조각문, 셋 나열, 가운뎃점을 걷음.
 // ─────────────────────────────────────────────────────────────────────────────
 // AI 유형 테스트의 판 (DECIDED 2026-10-08, 현장 팀 매칭 브리프 3).
 //
@@ -39,7 +40,7 @@ export interface EditionConfig {
   tone: "zero100" | "naru";
   /**
    * 축 설명 문장(data/quizExplanations.ts, 두 판이 같이 씀)에서 이 판에 없는 말을 바꿉니다. 8월판은 비워 둡니다.
-   * 12월에는 "결과 공유회"가 없고 마지막 날은 발표입니다.
+   * 12월 마지막 날의 이름은 "성과 공유회"입니다(brand 7장). EN은 8월과 같은 showcase를 씁니다(피치는 쓰지 않는 말, brand 5장).
    */
   explainSwaps?: { ko: [string, string][]; en: [string, string][] };
   /**
@@ -57,7 +58,7 @@ const UI_2026_12: typeof quizUI = {
   eyebrow: { ko: "Day 1 현장 팀 매칭", en: "Day 1 on-site team matching" },
   title: { ko: "크로싱 서울 팀 매칭", en: "CROSSING SEOUL team matching" },
   // 2026-10-09 (팀 매칭 유머 브리프 5): 한 줄을 덧붙입니다.
-  subtitle: { ko: "14문항, 약 3분. 결과로 Day 1 팀 매칭을 합니다. 결과가 마음에 안 들면 다시 해도 됩니다. 다들 그래요.", en: "14 questions, about 3 minutes. Your result is used for team matching on Day 1. Don't like it? Take it again. Everyone does." },
+  subtitle: { ko: "14문항, 약 3분이면 끝나고 결과는 Day 1 팀 매칭에 씁니다. 마음에 안 들면 다시 해도 됩니다. 다들 그래요.", en: "14 questions, about 3 minutes, and your result is used for team matching on Day 1. Don't like it? Take it again. Everyone does." },
   meta: { ko: "이름, 나라, 테스트 결과는 현장 팀 매칭에만 씁니다.", en: "Your name, country and result are used only for on-site team matching." },
   roleLabel: { ko: "추천 역할", en: "Your role" },
   matchSub: { ko: "이 유형 보이면 일단 잡으세요. 이유는 Day 4에 알게 돼요 ✦", en: "See one of these? Grab them. You'll find out why on Day 4 ✦" },
@@ -76,8 +77,8 @@ export const QUIZ_EDITIONS: Record<QuizEdition, EditionConfig> = {
     ui: UI_2026_12, cardStamp: { ko: "크로싱 서울 2026.12", en: "CROSSING SEOUL, Dec 2026" }, fileStem: "crossing-seoul-match", tone: "naru",
     // 2026-10-09: 12월 Q1의 첫마디가 바뀌어, 그 대사를 인용하는 축 설명도 같이 바꿉니다.
     explainSwaps: {
-      ko: [["공유회", "발표"], ["어디 학교세요?", "서울이세요, 싱가포르세요?"]],
-      en: [["showcase day", "pitch day"], ["showcase countdown", "pitch-day countdown"], ["which school are you at?", "Seoul or Singapore?"]],
+      ko: [["공유회", "성과 공유회"], ["어디 학교세요?", "서울이세요, 싱가포르세요?"]],
+      en: [["which school are you at?", "Seoul or Singapore?"]],
     },
     questions: QUESTIONS_2026_12 },
 };

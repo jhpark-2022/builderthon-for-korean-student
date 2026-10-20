@@ -41,14 +41,16 @@ export const matchCopy = {
   countryLabel: { ko: "공부하는 나라", en: "Country you study in" },
   countryKR: { ko: "한국", en: "Korea" },
   countrySG: { ko: "싱가포르", en: "Singapore" },
-  countryOther: { ko: "그 밖(두 글자 코드 입력)", en: "Elsewhere (two-letter code)" },
+  // DECIDED 2026-10-20 (사용자, 스크린숏: "두 글자 코드? 이제 뭔말임", 이어서 "그냥 기타라고 해"): 목록 칸은 "기타". 입력 칸에는 영문 약자 두 글자와 예를 적습니다. 값 체계(ISO 두 글자)는 그대로입니다.
+  countryOther: { ko: "기타", en: "Other" },
+  countryCodeHint: { ko: "나라 영문 약자 두 글자 (예: 일본 JP, 미국 US)", en: "Two-letter country code (e.g. JP for Japan, US for the United States)" },
   choose: { ko: "골라 주세요", en: "Choose one" },
   tracksLabel: { ko: "풀고 싶은 트랙 순위", en: "Rank the tracks you want" },
   tracksHelp: { ko: "가장 하고 싶은 트랙부터 차례로 눌러 주세요. 다시 누르면 빠집니다.", en: "Tap the tracks in order, most wanted first. Tap again to remove." },
   tracksRank: { ko: "{n}순위", en: "No. {n}" },
   errTracks: { ko: "모든 트랙에 순위를 매겨 주세요.", en: "Please rank every track." },
   errName: { ko: "이름을 넣어 주세요.", en: "Please enter your name." },
-  errCountry: { ko: "나라를 골라 주세요. 그 밖이면 두 글자 코드(예: JP)를 넣습니다.", en: "Please choose a country. For elsewhere, enter a two-letter code (e.g. JP)." },
+  errCountry: { ko: "나라를 골라 주세요. 기타면 영문 약자 두 글자를 넣습니다(예: 일본 JP).", en: "Please choose a country. For Other, enter its two-letter code (e.g. JP for Japan)." },
   saving: { ko: "팀 매칭에 올리는 중입니다", en: "Adding you to team matching" },
   saved: { ko: "팀 매칭에 올라갔습니다", en: "You are on the team-matching board" },
   savedSub: { ko: "다시 하면 이 기기의 기록을 덮어씁니다.", en: "Retaking replaces this device's entry." },
@@ -180,7 +182,7 @@ export function MatchStartFields({ t, profile, onChange, error }: {
         </select>
         {other && (
           <input
-            id="match-country-code" type="text" maxLength={2} value={profile.country} placeholder="JP" aria-label={t(matchCopy.countryOther)}
+            id="match-country-code" type="text" maxLength={2} value={profile.country} placeholder={t(matchCopy.countryCodeHint)} aria-label={t(matchCopy.countryCodeHint)}
             required aria-required="true" autoComplete="off" autoCapitalize="characters" autoCorrect="off" spellCheck={false}
             aria-invalid={error === "country" || undefined} aria-describedby={error === "country" ? "match-country-error" : undefined}
             onChange={(e) => onChange({ ...profile, country: e.target.value.toUpperCase().replace(/[^A-Z]/g, "") })}
