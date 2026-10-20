@@ -1824,9 +1824,11 @@ export const naru = {
       { title: { ko: "어떻게 확인하나", en: "How to check" }, body: { ko: "가장 작게 확인할 방법", en: "The smallest way to check it" } },
     ] as { title: Phrase; body: Phrase }[],
     // 2026-10-19 (시각 감사 1): 바로 아래 findClose와 같은 말을 해서 한 문단으로 합쳤습니다. 화면은 이 문단만 그리고 findClose는 그리지 않습니다.
+    // DECIDED 2026-10-20 (사용자, 스크린숏: "너무 길어"): 프로그램 제목 바로 아래로 올라오며 네 줄이었습니다. 두 문장으로 줄였습니다.
+    // 그 전: "...보고, 중간에서 멈춘 팀도 거기까지 간 과정을 발표합니다. 이 닷새에 익히는 것은 현업이 문제에 다가가는 방식이고, 그 방식은 문제가 풀리지 않아도 남습니다."
     approachClose: {
-      ko: "닷새 안에 끝까지 풀리지 않을 수 있는 문제를 고릅니다. 그래서 다 풀었는지보다 어디까지 물어 들어갔는지를 보고, 중간에서 멈춘 팀도 거기까지 간 과정을 발표합니다. 이 닷새에 익히는 것은 현업이 문제에 다가가는 방식이고, 그 방식은 문제가 풀리지 않아도 남습니다.",
-      en: "We pick problems that may not be fully solved in five days. So what counts is how far down you asked, not whether you solved it all, and a team that stopped halfway still presents how it got there. What these days teach is how people in the field approach a problem, and that stays with you even when the problem does not get solved.",
+      ko: "닷새 안에 다 풀리지 않을 수 있는 문제를 고릅니다. 그래서 다 풀었는지보다 어디까지 물어 들어갔는지를 봅니다.",
+      en: "We pick problems that may not be solved in five days, so what counts is how far down you asked, not whether you solved it all.",
     },
     findClose: {
       ko: "닷새 안에 끝까지 풀리지 않을 수 있는 문제를 고릅니다. 그래도 괜찮습니다. 이 닷새에 익히는 것은 현업이 문제에 다가가는 방식이고, 그 방식은 문제가 풀리지 않아도 남습니다.",

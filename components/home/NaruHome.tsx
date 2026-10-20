@@ -1004,9 +1004,8 @@ export default function NaruHome() {
         <p className={`${READ} ${READ_MEASURE_C} mt-3 break-keep text-center ${BODY} leading-relaxed text-white/85`}>
           {t(naru.december.crossingLine)}
         </p>
-        <p className={`${READ} ${READ_MEASURE_C} mt-6 break-keep text-center ${BODY} leading-relaxed text-white/70`}>
-          {t(naru.december.shapeLead)}
-        </p>
+        {/* DECIDED 2026-10-20 (사용자, 스크린숏: "너무 길어"): shapeLead("정리된 데이터로 보이는 문제는...", 네 줄)를 그리지 않습니다.
+            "데이터가 아니라 이슈에서 출발"은 바로 아래 네 단계 표가 말합니다. 키는 data/naru.ts에 그대로 둡니다. */}
         <p className={`${READ} ${READ_MEASURE_C} mt-3 break-keep text-center ${BODY} leading-relaxed text-white/70`}>
           <TermLink text={t(naru.december.notSequel)} term={t(naru.december.notSequelTerm)} href="/naru#core" />
         </p>
