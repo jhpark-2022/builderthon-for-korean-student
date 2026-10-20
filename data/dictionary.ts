@@ -271,7 +271,8 @@ export const dict = {
   hero: {
     eyebrow: {
       ko: "싱가포르 최초의 한인 학생 AI 빌더톤",
-      en: "Singapore's first AI builderthon for Korean students",
+      // DECIDED 2026-10-20 (사용자: 영문 전체 감사 후 고침): 폰 히어로 알약이 세 줄로 꺾여 줄임. 그 전 "Singapore's first AI builderthon for Korean students".
+      en: "Singapore's first Korean AI builderthon",
     },
     titleLine1: { ko: "싱가포르,", en: "Build" },
     titleLine2: { ko: "빌드의 무대", en: "in Singapore." },

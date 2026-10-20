@@ -889,7 +889,8 @@ export const naru = {
       {
         num: "01",
         // DECIDED 2026-10-07 (이슈 브리프 2.1): 받는 것은 완성된 문제가 아니라 이슈입니다.
-        title: { ko: "실명 기업의 진짜 이슈", en: "A real issue from a named company" },
+        // DECIDED 2026-10-20 (사용자: 영문 전체 감사 후 고침): 참가 혜택 표의 왼쪽 칸에서 두 줄로 꺾여 줄임.
+        title: { ko: "실명 기업의 진짜 이슈", en: "A named company's real issue" },
         // DECIDED 2026-10-19 (사용자, 스크린숏: "너무 평면적"): 카드 아래 Day 0~4 작은 노선에서 불이 켜지는 날. Day 0 이슈 공개, Day 1 출제사 세션.
         days: [0, 1],
         body: {
@@ -1446,7 +1447,8 @@ export const naru = {
     //
     // 넣기로 한다면 라벨 문자열은 이것입니다. 나루의 후원사라고 쓰지 마세요.
     partnersLabel: { ko: "제로백 빌더톤을 함께한 곳", en: "Who was with us on the Zero100 builderthon" },
-    cta: { ko: "제로백 빌더톤 기록 전체 보기", en: "Read the full Zero100 builderthon record" },
+    // DECIDED 2026-10-20 (사용자: 영문 전체 감사 후 고침): 폰에서 버튼이 두 줄로 꺾여 줄임.
+    cta: { ko: "제로백 빌더톤 기록 전체 보기", en: "Read the Zero100 record" },
     // DECIDED 2026-09-17 (3차): 벽에 거는 것은 여섯 장입니다. 사용자가 "너무 길다"고
     // 했고, 폰에서 열두 장은 800px이었습니다. photos 목록은 열두 장 그대로 두고
     // (기록), 여기 있는 순서대로 골라 겁니다. 6의 배수 규칙은 그대로.
@@ -1627,7 +1629,8 @@ export const naru = {
         // 그룹 문서가 정본입니다.
         // DECIDED 2026-10-08 (사용자 승인, 문장 감사 A4): 푸터("각 학교 한인 학생회와 학회")와 같은 말로 맞춥니다. 한국 안의
         // 캠퍼스에는 한인 학생회가 없어 학회가 자기 자리를 찾지 못했습니다. 9월 29일의 "각 학교 한인 학생회"를 이 결정이 대신합니다.
-        who: { ko: "각 학교 한인 학생회와 학회", en: "Korean student associations and clubs at each school" },
+        // DECIDED 2026-10-20 (사용자: 영문 전체 감사 후 고침): 3층 도식의 이름이 세 줄로 꺾여 줄임.
+        who: { ko: "각 학교 한인 학생회와 학회", en: "Korean societies at each school" },
         brings: { ko: "소속 학생, 공간, 학교 안의 명의", en: "Students, space, standing inside the school" },
         does: {
           ko: "소속 학생을 모으고, 학교 안의 공간과 자원, 필요한 명의를 내고, 운영을 돕습니다.",
@@ -1905,7 +1908,8 @@ export const naru = {
     // 8월 페이지의 #gaps에서 홈의 프로그램 챕터로 돌아오는 한 줄. 화살표는 화면에서 붙입니다.
     gapsLink: { ko: "8월과 무엇이 다른지", en: "How it differs from August" },
     // 2026-10-11 (브랜드 브리프 B11): 영문 표기는 CROSSING SEOUL(항상 대문자)과 programme입니다. 그 전: "See the Crossing Seoul program"
-    gapsBackLink: { ko: "크로싱 서울 프로그램 보기", en: "See the CROSSING SEOUL programme" },
+    // DECIDED 2026-10-20 (사용자: 영문 전체 감사 후 고침): 폰에서 버튼이 두 줄로 꺾여 줄임.
+    gapsBackLink: { ko: "크로싱 서울 프로그램 보기", en: "See the programme" },
     augustLabel: { ko: "8월", en: "August" },
     decemberLabel: { ko: "12월", en: "December" },
     // DECIDED 2026-09-29 (사용자: 9/28 자문 미팅의 인사이트를 반영): 다음 건너기. 자문의 요지는 "12월은 제대로
@@ -2050,7 +2054,8 @@ export const naru = {
     mentoringAlways: { ko: "Day 2와 Day 3", en: "Day 2 and Day 3" },
     // 왼쪽 상자(2026-10-13). Day 1은 멘토링이 아니라 이슈를 낸 기업이 맥락을 더 풀어 주는 날입니다.
     contextMentoring: {
-      name: { ko: "출제사 컨텍스트", en: "Context from the companies" },
+      // DECIDED 2026-10-20 (사용자: 영문 전체 감사 후 고침): 상자 이름이 두 줄로 꺾여 줄임.
+      name: { ko: "출제사 컨텍스트", en: "Company context" },
       when: { ko: "Day 1", en: "Day 1" },
       body: {
         // DECIDED 2026-10-13 (사용자, 스크린숏: "멘토링은 없습니다 내용은 빼줘"): 첫 문장 "멘토링은 없습니다."를 뺐습니다.
@@ -2076,18 +2081,20 @@ export const naru = {
       // DECIDED 2026-10-08 (사용자: "멘토링 - based on the availability from the 출제사"): 현장 방문은 출제사의 일정이
       // 될 때 갑니다. 예약 멘토링(General Mentoring)은 그대로이고, 방문은 그 위에 더해지는 것이라고 문장이 직접 말합니다.
       // 2026-10-13 (멘토링 브리프 1): "출제사 일정에 따라"였습니다. 방문이 들어갈 수 있는 구간을 앞에 적습니다. 날짜와 횟수는 여전히 쓰지 않습니다.
-      when: { ko: "Day 2와 Day 3 사이, 출제사 일정에 따라", en: "Between Day 2 and Day 3, when the companies can host" },
+      // DECIDED 2026-10-20 (사용자: 영문 전체 감사 후 고침): 기간 줄이 두 줄로 꺾여 줄임.
+      when: { ko: "Day 2와 Day 3 사이, 출제사 일정에 따라", en: "Day 2 or 3, as the company allows" },
       body: {
         // DECIDED 2026-10-11 (사용자, 폰 스크린숏: "내용이 too much, 표현이 vague"): 세 문장을 둘로 줄였습니다. 누가 어디로 가서
         // 누구에게 무엇을 하는지만 남깁니다. "출제사의 일정이 되면"은 바로 위 when 줄이 말합니다.
         // 2026-10-11 (사용자: "그룹의 생각임", "예약 없이 그냥 멘토가 그 공간에 있는 거임"): 내 생각을 팀의 생각으로, 예약 멘토링이라는 말을 뺐습니다.
         // 2026-10-19 (사용자, 스크린숏: 세 상자의 내용 길이가 달라 크기가 달라 보임): 옆 상자와 줄 수를 맞추려 "팀을 나눠"를 뺐습니다. 뜻은 그대로.
         ko: "이슈를 낸 기업의 일터로 가서 실무자에게 팀의 생각을 말하고 의견을 듣습니다. 갈 수 있는 기업은 정해지면 적습니다.",
-        en: "Teams split up, visit the company behind the issue, tell the people doing the work what the team thinks, and hear them out. Which companies can host goes here once it is settled.",
+        // 2026-10-20 (영문 감사): 세 칸 중 하나라 영문이 한글의 1.6배 길이로 상자가 늘었습니다. 뜻은 그대로 줄였습니다.
+        en: "Go to the company's workplace, tell the people there what your team thinks, and hear them out. Hosts are listed once settled.",
       },
     },
     // 노선도 아래 둘째 필. 첫째 필(mentoringHeading)과 같은 문법입니다.
-    fieldMentoringPill: { ko: "현장 멘토링, 출제사 일정에 따라", en: "Field mentoring, when the companies can host" },
+    fieldMentoringPill: { ko: "현장 멘토링, 출제사 일정에 따라", en: "Field mentoring, as the company allows" },
     // DECIDED 2026-10-11 (사용자, 폰 스크린숏: "내용이 too much, 표현이 vague"): 세 문장을 한 문장으로 줄였습니다. "멘토는 답을 주러
     // 오지 않습니다", "들은 이야기로 아이디어를 다듬어 코드로 옮깁니다", 8월 슬롯 이야기를 뺐고, 무엇을 들고 누가 먼저 가는지만
     // 남깁니다(2026-10-10 마일스톤 브리프 2.5의 원칙은 그대로). 규칙의 "질문 대신 내 생각 한 장"이 이 문장으로 올라와 규칙은 둘입니다.
@@ -2098,7 +2105,8 @@ export const naru = {
       // 예약은 모든 팀이 같이 보는 멘토 시간표(/crossing/team)에 팀 이름을 넣는 것입니다. 앞뒤 10분 규칙은 그 페이지가 말합니다.
       // 2026-10-19 (사용자, 스크린숏: 세 상자의 내용 길이가 달라 크기가 달라 보임): 옆 상자와 줄 수를 맞추려 줄였습니다. 뜻은 그대로.
       ko: "질문 목록 대신 팀의 생각 한 장을 들고 먼저 찾아갑니다. 멘토 시간은 모든 팀이 같이 보는 시간표로 예약합니다.",
-      en: "Your team goes first, with one page of its own thinking on the issue instead of a list of questions. You book mentor time by putting your team's name on a timetable every team can see.",
+      // 2026-10-20 (영문 감사): 가운데 상자가 영문에서 10줄로 늘었습니다. 뜻은 그대로 줄였습니다.
+      en: "Bring your team's one-page take, not a list of questions. Book mentor time on the timetable every team can see.",
     },
     // DECIDED 2026-10-10 (사용자: "정보가 너무 많음"): 다섯 줄을 셋으로 묶었습니다. 2026-10-11에 둘로(위 mentoringLead 주석).
     // Day 4에는 멘토링 자체가 없습니다(2026-09-20, PDF 02·04).
@@ -2283,7 +2291,8 @@ export const naru = {
         // 2026-09-19: "실질 4일 + 사전 팀 본딩"에서. 본 일정 앞에 있는 것은 이제 팀 본딩이
         // 아니라 데이터 공개입니다(stages 첫 칸). 숫자 5일은 12/17~12/21입니다(2026-10-05에 12/10~12/14에서 옮겼습니다).
         // DECIDED 2026-10-07 (이슈 브리프 D3): Day 0에 여는 것은 "이슈 공개"로 적습니다.
-        label: { ko: "실질 4일 + 사전 이슈 공개", en: "Four working days, issues open before" },
+        // DECIDED 2026-10-20 (사용자: 영문 전체 감사 후 고침): 두 줄로 꺾여 줄임. 그 전 "Four working days, issues open before".
+        label: { ko: "실질 4일 + 사전 이슈 공개", en: "4 days, issues early" },
       },
       {
         value: { ko: "3곳", en: "3" },
@@ -2313,7 +2322,8 @@ export const naru = {
         note: { ko: "덱과 결과물, 성과 공유회 전", en: "The deck and what you built, before the showcase" },
       },
       {
-        value: { ko: "무순위", en: "No ranking" },
+        // DECIDED 2026-10-20 (사용자: 영문 전체 감사 후 고침): 폰에서 숫자가 두 줄로 꺾여 "Unranked". 그 전 "No ranking".
+        value: { ko: "무순위", en: "Unranked" },
         label: { ko: "부문별 시상", en: "Awards by category" },
         note: { ko: "과정에 무게를 둡니다", en: "Weighted on the process" },
       },
@@ -2345,7 +2355,8 @@ export const naru = {
     stages: [
       {
         name: { ko: "Context Open", en: "Context Open" },
-        title: { ko: "컨텍스트 열기", en: "Opening the context" },
+        // DECIDED 2026-10-20 (사용자: 영문 전체 감사 후 고침): 노선도 Day 0 칸에서 세 줄로 꺾였습니다. 정본 7장의 영문 단계 이름 "Context Open"을 씁니다.
+        title: { ko: "컨텍스트 열기", en: "Context Open" },
         when: { ko: "Day 0", en: "Day 0" },
         dayOffset: 0,
         body: {
@@ -2393,7 +2404,7 @@ export const naru = {
         // 2026-10-13 (사용자: "1일차 박스가 너무 비어있음"): 위 body의 첫 문장("현장에서 팀을 맺습니다")을 칩으로 올렸습니다(brand 7장 팀).
         chips: [{ ko: "현장에서 팀 구성", en: "Teams form on site" }],
         // DECIDED 2026-10-17 (사용자: "1일차에도 미션인증은 해야해서, 버튼은 2,3일차처럼"): Day 1 카드에도 같은 버튼. 들어가면 Day 1 탭이고 시간표는 잠겨 있습니다.
-        timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Mentor timetable and check-in" }, href: "/crossing/team?day=1" },
+        timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Timetable and check-in" }, href: "/crossing/team?day=1" },
         // 2026-10-11: 화면에 그리지 않습니다. 버튼은 히어로로 갔습니다(eventHero.ctaMatch). 키는 그대로.
         matchCta: { label: { ko: "AI 유형 테스트로 팀 매칭", en: "Team matching with the AI type test" }, href: "/match" },
         session: {
@@ -2437,7 +2448,7 @@ export const naru = {
         // 없다는 것이 참가자의 말이었습니다. 인턴도 그 기회를 잘 받지 못합니다.
         // 길이는 Day 3 세션 설명과 비슷하게 맞춥니다.
         // DECIDED 2026-10-17 (사용자: "여기에 들어갈 수 있는 button은 day 2 and day 3 상자에 있는걸로"): 멘토 시간표와 미션 인증으로 가는 버튼.
-        timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Mentor timetable and check-in" }, href: "/crossing/team?day=2" },
+        timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Timetable and check-in" }, href: "/crossing/team?day=2" },
         session: {
           title: { ko: "PO session", en: "PO session" },
           body: {
@@ -2494,7 +2505,7 @@ export const naru = {
         // 원하면 만날 수 있지만 한국 안의 외국인 창업가는 닿기 어렵다는 것이 그 자리의
         // 결론이었습니다. 함께 여는 단체 이름은 아직 화면에 쓰지 않습니다.
         // DECIDED 2026-10-17 (사용자: "여기에 들어갈 수 있는 button은 day 2 and day 3 상자에 있는걸로"): 멘토 시간표와 미션 인증으로 가는 버튼.
-        timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Mentor timetable and check-in" }, href: "/crossing/team?day=3" },
+        timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Timetable and check-in" }, href: "/crossing/team?day=3" },
         session: {
           title: { ko: "Founders from abroad", en: "Founders from abroad" },
           body: {
