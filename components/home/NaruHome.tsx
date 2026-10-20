@@ -1426,36 +1426,34 @@ export default function NaruHome() {
       <section id="naru" aria-labelledby="naru-teaser-label" className="relative w-full px-6 pb-20 pt-16 sm:px-10 lg:pb-28 lg:pt-28">
         {/* 2026-10-11 (리뷰 A5): 티저의 제목. 화면에는 그리지 않습니다. */}
         <h2 className="sr-only">{t({ ko: "나루", en: "NARU" })}</h2>
+        {/* DECIDED 2026-10-20 (사용자, 스크린숏: "좀더 visually 예뻤으면", 세 시안 중 B): 인장을 280px로 키우고 글 폭을 좁혀
+            인장과 글의 무게를 맞췄습니다. 사이에 흐린 세로선 하나. 발광은 되살리지 않습니다(hwang 브리프 3.4). 사진 시안(A)은
+            히어로 사진과 겹치고 얼굴 공개 확인 전이라, 가운데 시안(C)은 배경 형상이 글 뒤로 지나가 고르지 않았습니다. */}
         <Reveal className={WIDE}>
-          <div className="relative overflow-hidden rounded-3xl bg-[#0B1430]/90 px-6 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-12">
+          <div className="relative overflow-hidden rounded-3xl bg-[#0B1430]/90 px-6 py-10 sm:px-10 lg:px-12 lg:py-16">
             <div
               aria-hidden
               className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-accent/40 via-white/10 to-accent-strong/30 p-px"
               style={{ WebkitMask: "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude" }}
             />
-            {/* 2026-10-20 (사용자, hwang 브리프 3.4와 같은 이유, 시각 리뷰 C2): 티저 상자 모서리의 발광 둘과 인장 뒤 발광을 걷었습니다. 보라 면은 CTA에만. */}
-            <div className="relative flex flex-col items-center gap-7 text-center md:flex-row md:gap-12 md:text-left">
-              <div className="relative shrink-0">
-                <Image
+            <div className="relative flex flex-col items-center gap-8 text-center md:flex-row md:items-center md:justify-center md:gap-12 md:text-left">
+              <div className="shrink-0"><Image
                   src={locale === "en" ? "/naru/naru-master-en-v3-rev.svg" : "/naru/naru-master-v3-rev.png"}
-                  alt={t(naru.hero.logoAlt)}
-                  width={900}
-                  height={900}
-                  unoptimized={locale === "en"}
-                  className="relative block h-auto w-[160px] sm:w-[220px]"
-                />
-              </div>
-              <div className="min-w-0">
-                <p id="naru-teaser-label" className={`${META} font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.teaser.eyebrow)}</p>
+                  alt={t(naru.hero.logoAlt)} width={900} height={900} unoptimized={locale === "en"}
+                  className="relative block h-auto w-[200px] sm:w-[240px] lg:w-[230px] xl:w-[250px]"
+                /></div>
+              <div aria-hidden className="hidden h-56 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent md:block" />
+              <div className="min-w-0 max-w-[48rem]">
+                <p id="naru-teaser-label" className={`${META} font-bold text-accent`}>{t(naru.teaser.eyebrow)}</p>
                 <p className={`mt-3 ${TITLE} font-bold leading-[1.15] tracking-tight text-white`}>
                   <span className="block break-keep">{t(naru.hero.titleLine1)}</span>{" "}
                   <span className={`${GRADIENT_TEXT} block break-keep`}>{t(naru.hero.titleLine2)}</span>
                 </p>
-                <p className={`mt-4 break-keep ${BODY} leading-relaxed text-white/85`}>{t(naru.teaser.body)}</p>
+                <p className={`mt-5 break-keep ${BODY} leading-relaxed text-white/80`}>{t(naru.teaser.body)}</p>
                 <Link
                   href={naru.teaser.cta.href}
                   onClick={() => track("naru_cta", { src: "teaser", to: "naru-page" })}
-                  className={`group mt-6 ${buttonClass("secondary", "naru")}`}
+                  className={`group mt-7 ${buttonClass("secondary", "naru")}`}
                 >
                   {t(naru.teaser.cta.label)}
                   <span aria-hidden className={ARROW_CLASS}>→</span>
