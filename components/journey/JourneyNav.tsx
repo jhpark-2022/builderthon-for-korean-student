@@ -448,7 +448,9 @@ export default function JourneyNav({
               {/* DECIDED 2026-10-12 (사용자, 스크린숏: "한국어 버전에서는 crossing seoul이 아니고 크로싱 서울"): 위의 결정을 한국어 화면에서 되돌립니다.
                   한국어 화면의 헤더 워드마크는 국문 "크로싱 서울" 단독, 영문 화면은 영문 "CROSSING SEOUL" 단독입니다(docs/brand.md의 표기 C).
                   크기도 10월 11일 전의 값으로 돌아갑니다. 한글은 글자 수가 절반이라 폰에서도 크게 둡니다. */}
-              <span lang={locale === "en" ? "en" : undefined} className={`gradient-text whitespace-nowrap bg-[linear-gradient(90deg,#9AA8EE_0%,#A99AD6_35%,#C99ACB_68%,#E08A76_100%)] bg-clip-text pb-[0.08em] font-black tracking-[-0.02em] text-transparent ${
+              {/* DECIDED 2026-10-20 (사용자, hwang 브리프 3.5, 감사 W2): 헤더 워드마크는 단색 흰색. 4색 그라데이션은 히어로의 큰 로고 하나에만 남깁니다
+                  (폰 첫 화면에 같은 그라데이션 글자가 둘 서지 않게). */}
+              <span lang={locale === "en" ? "en" : undefined} className={`whitespace-nowrap pb-[0.08em] font-black tracking-[-0.02em] text-white ${
                 // DECIDED 2026-10-10 (사용자, 스크린숏: "크로싱 서울 로고가 더 크게 보였으면"): text-xl(22.5px)에서 키웠습니다.
                 // 52px 바에서는 2xl(27px), 80px 바(xl부터)에서는 3xl(33.75px)로 전의 나루 락업(36~40px)과 비슷한 무게입니다.
                 // 영문 "CROSSING SEOUL"은 글자 수가 두 배라 폰에서는 작게 둡니다(390px에서 오른쪽 버튼과 28px, 360px에서도 닿지 않게).
@@ -677,7 +679,7 @@ export default function JourneyNav({
                   // 자리가 비면 폰에서 헤더에 액션이 하나도 없게 되는데, 이
                   // 페이지에서 지금 할 수 있는 일이 이것 하나입니다. 좁은 폭에서는
                   // 패딩과 글자를 줄이고 min-h로 터치 타깃 44px을 지킵니다.
-                  : `shrink-0 items-center gap-1.5 rounded-full border border-accent/40 bg-accent/[0.12] font-semibold text-accent transition active:translate-y-0 active:scale-[0.98] active:duration-75 hover:border-accent/60 hover:bg-accent/20 hover:text-white ${
+                  : `shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] font-semibold text-white/85 transition active:translate-y-0 active:scale-[0.98] active:duration-75 hover:border-white/30 hover:bg-white/10 hover:text-white ${
                       showQuiz
                         ? "hidden px-4 py-2 text-sm lg:inline-flex"
                         : "inline-flex min-h-[44px] min-w-[44px] justify-center px-2.5 text-xs min-[360px]:px-3.5 sm:px-4 sm:text-sm"

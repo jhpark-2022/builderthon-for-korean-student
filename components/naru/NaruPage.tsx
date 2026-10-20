@@ -24,7 +24,6 @@ import { useEffect, useRef, useState } from "react";
 import { useLocale } from "@/lib/LocaleContext";
 import { naru, naruLinks, openChatLabels, partnerContact, type Layer, type Stat, type RecordPhoto } from "@/data/naru";
 import type { Phrase } from "@/data/dictionaryCore";
-import Halo from "@/components/ui/Halo";
 import Chip from "@/components/ui/Chip";
 import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 import MobileChatBar from "@/components/shared/MobileChatBar";
@@ -96,12 +95,13 @@ export default function NaruPage() {
         {/* 태그라인. 두 줄 고정(히어로에 있던 때의 이유 그대로: 두 개의 선언). */}
         {/* 2026-10-11 (리뷰 A5): h2에서 h1로. 이 페이지에 h1이 없었습니다. 모양은 그대로입니다. */}
         <h1 id="naru-title" className={`${H2} ${READ} text-balance text-center`}>
-          <Halo tone="violet">
+          {/* 2026-10-20 (사용자, hwang 브리프 3.4): Halo 발광을 걷고 span만 남겼습니다. */}
+          <span className="inline-block">
             <span className="block break-keep">{t(naru.hero.titleLine1)}</span>{" "}
             {/* {" "}: block span 둘 사이에 텍스트 노드가 없으면 이름 계산에서
                 "…한다.자리는…"처럼 붙어 읽힙니다 (2026-09-19, 접근성 감사 17). */}
             <span className={`${GRADIENT_TEXT} block break-keep`}>{t(naru.hero.titleLine2)}</span>
-          </Halo>
+          </span>
         </h1>
         {/* 이름의 뜻 (2026-09-21, 사용자: 영문판에 나루가 무슨 뜻인지 설명이 필요). 태그라인
             바로 아래입니다. 위 두 줄이 "건넌다"고 말하고, 이 줄이 무엇을 건너는 자리인지

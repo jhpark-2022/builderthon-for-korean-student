@@ -117,9 +117,10 @@ export default function MobileChatBar({ afterId = "about", endId = "closing", ph
                 rel="noopener noreferrer"
                 // 2026-10-11 (리뷰 작은 것): 나루 계열(phone, 홈과 /naru)의 이름은 보이는 글자("오픈채팅")로 시작하고 새 창임을 말합니다
                 // (WCAG 2.5.3, 헤더의 오픈채팅과 같은 문장). 8월 페이지는 그대로입니다.
+                // DECIDED 2026-10-20 (사용자, hwang 브리프 2.12, 시각 리뷰 C6): 나루 계열은 Tailwind violet 대신 나루 accent. 8월은 그대로.
                 aria-label={phone ? t({ ko: "오픈채팅, 카카오톡 새 창", en: "Open chat, KakaoTalk, new window" }) : t(dict.nav.openChatAria)}
                 onClick={() => track("openchat_click", { src: "mobile-bar" })}
-                className="pointer-events-auto inline-flex h-12 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/45 bg-[#070B1F]/92 px-6 text-sm font-bold text-violet-100 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.9)] backdrop-blur transition active:scale-95"
+                className={`pointer-events-auto inline-flex h-12 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border ${phone ? "border-accent/40 text-accent" : "border-violet-400/45 text-violet-100"} bg-[#070B1F]/92 px-6 text-sm font-bold shadow-[0_8px_30px_-8px_rgba(0,0,0,0.9)] backdrop-blur transition active:scale-95`}
               >
                 <ChatGlyph className="h-5 w-5 shrink-0" />
                 {t(dict.nav.openChat)}
