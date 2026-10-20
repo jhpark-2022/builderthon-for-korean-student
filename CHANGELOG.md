@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-20 운영 방식 제목을 과정 지향으로](#2026-10-20-facts-label-process)
 - [2026-10-20 히어로 영문 줄 키움](#2026-10-20-hero-en-size)
 - [2026-10-20 프로그램 머리 줄임](#2026-10-20-program-head-short)
 - [2026-10-20 과정을 먼저: 문장 순서와 두 자리](#2026-10-20-process-first)
@@ -281,6 +282,12 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-20-facts-label-process"></a>
+## 2026-10-20 운영 방식 제목을 과정 지향으로
+- 범위: data/naru.ts(december.factsLabel)
+- 한 것: 사용자 스크린숏("과정 지향적인 이벤트를 큐레이션 할려고 합니다 로 해줘"). "기존 해커톤과 다른 경험을 큐레이션합니다" → "과정 지향적인 이벤트를 큐레이션하려고 합니다"("할려고"는 맞춤법대로). EN은 "We set out to curate a process-driven event". 근거: brand 7장 평가(결과물보다 과정).
+- 커밋: 5d0edea
 
 <a id="2026-10-20-hero-en-size"></a>
 ## 2026-10-20 히어로 영문 줄 키움
