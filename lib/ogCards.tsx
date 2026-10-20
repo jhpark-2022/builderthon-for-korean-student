@@ -62,7 +62,8 @@ function FootLine({ left, right }: { left: string; right: string }) {
   );
 }
 
-const TAGLINE = { ko: "건너는 건 각자가 한다. 자리는 우리가 만든다.", en: "You do the crossing. We make the place." };
+// DECIDED 2026-10-21: 태그라인은 naru.hero.titleLine1, 2와 같은 문장입니다.
+const TAGLINE = { ko: "나루터 할 때 나루입니다. 건너기 전에 노 젓는 법을 익히는 곳.", en: "NARU is Korean for a ferry landing. Where you learn to row before you cross." };
 
 // ── 홈 ────────────────────────────────────────────────────────────────────────
 // 큰 글자는 사이트 히어로의 로고 그대로입니다. 한국어: 국문 "크로싱 서울"에 네 색 그라데이션, 그 아래 영문을

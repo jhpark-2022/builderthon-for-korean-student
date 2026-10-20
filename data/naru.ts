@@ -469,8 +469,12 @@ export const naru = {
     // 다시 돌아와 서는 자리도 같은 나루다."
     //
     // TODO: confirm. 영문은 초안입니다. 한글이 정본이고 영문은 보조입니다.
-    titleLine1: { ko: "건너는 건 각자가 한다.", en: "You do the crossing." },
-    titleLine2: { ko: "자리는 우리가 만든다.", en: "We make the place." },
+    // DECIDED 2026-10-21 (사용자: "건너는 건 각자가 한다. 자리는 우리가 만든다. 이거 좀 이상함", 전사록에서 나루를 설명하는 말을 찾아 후보 셋 중 1번):
+    // 처음 보는 사람에게 실제로 하는 말("나루터 할 때 나루예요", "노 젓는 건 본인 몫, 그 전에 연습은 시켜 줘야")을 그대로 옮겼습니다.
+    // 그 전 문장은 연습 쪽 절반이 빠져 차갑게 들렸습니다. brand 6장 "연습"도 같은 날 고쳤습니다.
+    // 영문(같은 날, 사용자: "영어표현에서 나루터 이게 잘 사나?"): "나루터 할 때 나루"의 말맛은 영어로 옮겨지지 않아 뜻만 한 줄로 줍니다.
+    titleLine1: { ko: "나루터 할 때 나루입니다.", en: "NARU is Korean for a ferry landing." },
+    titleLine2: { ko: "건너기 전에 노 젓는 법을 익히는 곳.", en: "Where you learn to row before you cross." },
     // 숫자 둘과 날짜 하나. 전부 확정된 사실입니다.
     sub: {
       // 날짜와 이름은 lib/naruDates.ts에서 조립해 넣습니다. 이 문자열에 "12월
@@ -669,8 +673,9 @@ export const naru = {
     name: {
       // 2026-09-29 (9/28 자문): 어원 한 줄. 한글 화면에만 있습니다. 영문은 river landing 설명이 이미 같은 일을 합니다.
       // DECIDED 2026-10-05 (사용자, 스크린숏: "너무 길어. 간략하게"): 세 문장을 두 문장으로. 노량진의 진(津) 문장을 뺐습니다.
-      ko: "나루는 강을 건너려는 사람이 배를 타는 자리입니다. 건너간 사람이 다시 돌아와 서는 자리이기도 합니다.",
-      en: "NARU is the Korean word for a river landing, where you board the boat to cross. It is also where the ones who crossed come back to.",
+      // DECIDED 2026-10-21 (사용자: 제목 1번 "나루터 할 때 나루입니다"에 맞춰 /naru를 한 번에): "배를 타는 자리"가 새 제목과 부딪혀 연습과 돌아옴으로.
+      ko: "강을 건너는 노는 각자가 젓습니다. 나루는 그 전에 노 젓는 법을 익힐 자리를 열고, 먼저 건넌 사람이 돌아와 다음 사람에게 젓는 법을 알려 줍니다.",
+      en: "Everyone rows their own way across. NARU opens a place to learn the stroke before that, and the ones who crossed first come back to teach the next.",
     },
     lead: {
       // DECIDED 2026-10-20 (hwang 브리프 1.2): 세 조각을 한 문장으로(지금 화면에 그리지 않는 키).
@@ -837,8 +842,9 @@ export const naru = {
     // DECIDED 2026-10-05 (사용자, 스크린숏: "여기에는 설명을 더 넣어줘도 좋을거 같아"): 같은 날 줄이면서 뺀 두
     // 문장(어젠다, 노가 AI)을 둘째 문단으로 되살립니다. 왜 지금은 AI인지를 이 줄이 말합니다.
     agendaMore: {
-      ko: "어젠다는 상황을 따라 바뀝니다. 건널 때 젓는 노가 지금은 AI이고, 노가 바뀌면 방법도 따라 바뀝니다.",
-      en: "The agenda follows the situation. Right now the oar you cross with is AI, and when the oar changes, so does the method.",
+      // DECIDED 2026-10-21 (사용자: 제목 1번 "나루터 할 때 나루입니다"에 맞춰 /naru를 한 번에): 노는 AI, 익히는 것은 그 노를 쓰는 법.
+      ko: "어젠다는 상황을 따라 바뀝니다. 지금 익히는 노 젓는 법은 AI를 쓰는 법이고, 노가 바뀌면 익히는 것도 따라 바뀝니다.",
+      en: "The agenda follows the situation. Right now the stroke you learn is how to work with AI, and when the oar changes, so does what you learn.",
     },
   },
 
@@ -1616,7 +1622,7 @@ export const naru = {
         // 세 상자는 각자 일하는 셋이 되고, 나루가 왜 가운데 있는지가 그림에서 빠집니다.
         // 잇는다는 말이 먼저 오고, 회차는 그 다음입니다(Overview 01의 가운데 상자와 같은 순서).
         // 2026-09-29 (사용자: 그룹 기획 폴더의 부제와 정의가 사이트에 반영되게): Overview(2026-09-29)의 주최 칸 그대로.
-        brings: { ko: "학생이 만드는 그룹으로, 선배가 후배의 판을 깔고 학생회와 기업을 잇습니다", en: "A group students build, where seniors set the stage for juniors and connect schools with companies" },
+        brings: { ko: "학생이 만드는 그룹으로, 먼저 건넌 선배가 후배의 연습 자리를 열고 학생회와 기업을 잇습니다", en: "A group students build, where those who crossed first open the practice for juniors and connect schools with companies" },
         does: {
           // DECIDED 2026-10-20 (hwang 브리프 1.2): layers의 does/gets 명사 조각을 서술문 한 문장씩으로(does는 지금 화면에 그리지 않는 키).
           ko: "회차를 기획하고 실행하며, 출제사와 멘토, 후원사와의 관계를 맡고, 회차 사이의 기록을 잇습니다.",
@@ -2799,8 +2805,9 @@ export const naru = {
     },
     closingBody: [
       {
-        ko: "문을 두드리는 법은 대개 절박해진 다음에 배웁니다. 그 전에 배울 수 있었다면 더 좋았을 것이고, 그래서 그 자리를 앞당겨 만듭니다.",
-        en: "Most people learn how to knock on a door only once they have to. Better to learn it before that, so we make the place earlier.",
+        // DECIDED 2026-10-21 (사용자: 제목 1번 "나루터 할 때 나루입니다"에 맞춰 /naru를 한 번에): 전사록의 "연습도 안 시켜 놓고 왜 못하냐고 하면 안 된다"를 이유로.
+        ko: "문을 두드리는 법은 대개 절박해진 다음에 배웁니다. 연습할 자리도 없이 왜 못하느냐고 묻기보다, 그 연습을 앞당겨 엽니다.",
+        en: "Most people learn how to knock on a door only once they have to. Rather than ask why someone cannot do what they never got to practise, we open that practice earlier.",
       },
       {
         ko: "끝까지 쓰지 않는 사람이 있어도 이 자리는 있어야 합니다. 몇 사람이 쓰지 않는다는 이유로 나머지의 자리를 닫는 것은, 없어서 아쉬웠던 그 상태로 돌아가는 일입니다.",

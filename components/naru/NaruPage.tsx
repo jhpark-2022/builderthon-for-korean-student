@@ -94,7 +94,8 @@ export default function NaruPage() {
         <div aria-hidden className="mt-6" />
         {/* 태그라인. 두 줄 고정(히어로에 있던 때의 이유 그대로: 두 개의 선언). */}
         {/* 2026-10-11 (리뷰 A5): h2에서 h1로. 이 페이지에 h1이 없었습니다. 모양은 그대로입니다. */}
-        <h1 id="naru-title" className={`${H2} ${READ} text-balance text-center`}>
+        {/* DECIDED 2026-10-21 (사용자: 태그라인 1번): 둘째 줄("건너기 전에 노 젓는 법을 익히는 곳.")이 READ(768px)에서 접혀 세 줄이 돼, 제목만 폭을 넓힙니다. */}
+        <h1 id="naru-title" className={`${H2.replace("max-w-3xl", "max-w-6xl")} text-balance text-center`}>
           {/* 2026-10-20 (사용자, hwang 브리프 3.4): Halo 발광을 걷고 span만 남겼습니다. */}
           <span className="inline-block">
             <span className="block break-keep">{t(naru.hero.titleLine1)}</span>{" "}
