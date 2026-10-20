@@ -42,9 +42,10 @@ export const coreDict = {
   // footerLabel은 푸터의 한 줄에서 쓰는 긴 이름입니다.
   pages: [
     // DECIDED 2026-10-20 (hwang 브리프 1.3, 4.1): EN 메뉴 이름은 "Home". 헤더 워드마크와 같은 글자가 한 줄에 둘 서지 않게. 푸터(footerLabel)는 그대로.
+    // 같은 날 8월의 EN footerLabel "Zero100 builderthon, Aug 2026"을 "Aug 2026"으로 줄였습니다(EN 푸터 줄바꿈).
     { key: "crossing", href: "/", label: { ko: "크로싱 서울", en: "Home" }, footerLabel: { ko: "크로싱 서울", en: "CROSSING SEOUL" } },
     { key: "naru", href: "/naru", label: { ko: "나루", en: "NARU" }, footerLabel: { ko: "나루", en: "NARU" } },
-    { key: "aug", href: "/2026-08", label: { ko: "8월 기록", en: "Aug 2026" }, footerLabel: { ko: "제로백 빌더톤 8월 기록", en: "Zero100 builderthon, Aug 2026" } },
+    { key: "aug", href: "/2026-08", label: { ko: "8월 기록", en: "Aug 2026" }, footerLabel: { ko: "제로백 빌더톤 8월 기록", en: "Aug 2026" } },
   ],
   // DECIDED 2026-10-20 (hwang 브리프 4.1, 4.2, 4.3, D2, D3, D4): 세 페이지가 같은 사이트 메뉴, 같은 푸터, 같은 바이라인을 씁니다
   // (components/shared/SiteChrome.tsx). 메뉴는 알약이 아니라 글자 링크이고, 목차(챕터 칩)와 갈립니다. 후원은 "후원 문의" 메일 하나(D4),

@@ -553,7 +553,8 @@ export const naru = {
     // ── 카운트다운 패널 (2026-09-17, 8월 문법 브리프) ─────────────────────
     // 8월 히어로의 오른쪽 단(Glass 패널)에 있던 카운트다운의 자리입니다. 숫자는
     // 마운트 뒤에 채우고 패널 높이는 고정입니다(하이드레이션 밀림 방지).
-    countdownLabel: { ko: "크로싱 서울까지", en: "Until CROSSING SEOUL" },
+    // DECIDED 2026-10-20 (hwang 브리프 1.3, 감사 W7): EN이 폰에서 두 줄로 꺾여 숫자를 밀었습니다. 그 전 "Until CROSSING SEOUL".
+    countdownLabel: { ko: "크로싱 서울까지", en: "Countdown" },
     // 컨테이너 하나의 aria-label(감사 반영 브리프 1.4). 자식 숫자와 단위는 aria-hidden.
     // 2026-09-19 (접근성 감사 12): 화면에는 서울·싱가포르 두 줄이 있는데 낭독은
     // 한 줄만 했습니다. 두 줄을 굳이 그려 놓고 하나만 읽어 주는 것은 어긋납니다.
@@ -666,8 +667,9 @@ export const naru = {
       en: "NARU is the Korean word for a river landing, where you board the boat to cross. It is also where the ones who crossed come back to.",
     },
     lead: {
-      ko: "이벤트는 나루가 학생회와 기업을 잇는 지금의 방식입니다. 방식은 바뀝니다. 바뀌지 않는 것은 아래 두 개입니다.",
-      en: "An event is how NARU connects associations and companies for now. Methods change. The two things below do not.",
+      // DECIDED 2026-10-20 (hwang 브리프 1.2): 세 조각을 한 문장으로(지금 화면에 그리지 않는 키).
+      ko: "이벤트는 나루가 학생회와 기업을 잇는 지금의 방식이고, 방식은 바뀌어도 아래 두 개는 바뀌지 않습니다.",
+      en: "An event is how NARU connects associations and companies for now, and while the method may change, the two things below do not.",
     },
     // DECIDED 2026-09-25 (가독성 브리프 5, 사용자 승인): 추상적인 문장 옆의 구체적인 한 줄.
     // 화면에 이미 있는 사실만 씁니다. 출처: group.lead, record.lead.
@@ -697,14 +699,12 @@ export const naru = {
           ko: "안전하게 도전할 수 있는 자리",
           en: "A safe place to try something new",
         },
+        // DECIDED 2026-10-20 (hwang 브리프 1.2, 감사 W3): 두 줄(조각문 다섯)을 한 문단으로 합쳤습니다. 뜻은 brand 2장 코어 01 그대로입니다.
+        // 그 전: "스크리닝이 없고, 순위가 없습니다. 못해도 되는 자리입니다." / "여기서 잘하지 못한 것은 어디에도 기록되지 않습니다. 대신 끝까지 해본 것은 남습니다. 그래서 ..."
         lines: [
           {
-            ko: "스크리닝이 없고, 순위가 없습니다. 못해도 되는 자리입니다.",
-            en: "No screening, no ranking. It is a place where doing badly is allowed.",
-          },
-          {
-            ko: "여기서 잘하지 못한 것은 어디에도 기록되지 않습니다. 대신 끝까지 해본 것은 남습니다. 그래서 우리가 보는 것도 순위가 아니라 완주입니다.",
-            en: "Nothing you do poorly here is recorded anywhere. What stays is that you went all the way through. So what we look at is not placing but finishing.",
+            ko: "스크리닝도 순위도 없는, 못해도 되는 자리입니다. 여기서 잘하지 못한 것은 어디에도 남지 않고 끝까지 해본 것만 남기 때문에, 우리가 보는 것도 순위가 아니라 완주입니다.",
+            en: "With no screening and no ranking, this is a place where doing badly is allowed. Nothing you do poorly here is kept anywhere, only that you went all the way through, so what we look at is finishing, not placing.",
           },
         ],
         keeps: {
@@ -894,8 +894,9 @@ export const naru = {
         days: [0, 1],
         body: {
           // DECIDED 2026-10-10 (중복 브리프 C1): "이슈를 받고 문제는 직접 찾는다"는 히어로와 프로그램 리드가 말합니다. 이 칸의 새 정보는 실명 하나입니다.
-          ko: "회사 이름과 함께 받습니다. 어느 회사의 어떤 이슈인지 숨기지 않습니다.",
-          en: "Handed over with the company's name. Which company and which issue is not hidden.",
+          // DECIDED 2026-10-20 (hwang 브리프 1.2): 두 조각을 한 문장으로.
+          ko: "어느 회사의 어떤 이슈인지 숨기지 않고 회사 이름과 함께 받습니다.",
+          en: "You get it with the company's name on it, nothing hidden about who or what.",
         },
         evidence: { ko: "8월 코드프레소 출제", en: "August: Codepresso set the problem" },
       },
@@ -908,8 +909,9 @@ export const naru = {
           // 2026-10-08 (프로그램 브리프 2.4): 그 전의 문장은 멘토링이 행사 내내 열린다고 했습니다. 2026-09-20 결정은
           // 첫날부터 사흘째까지이고 Day 4에는 없다는 것이었습니다. 2026-10-13 (멘토링 브리프 3): 멘토링은 Day 2와 Day 3입니다.
           // 2026-10-19 (시각 감사 3): "막힐 때마다 다시 갑니다"가 하루 두 칸, 2시간 간격 규칙(2026-10-17)과 어긋났습니다.
-          ko: "Day 2와 Day 3에 열려 있습니다. 하루 두 번까지 찾아갑니다.",
-          en: "Open on Day 2 and Day 3. You can go up to twice a day.",
+          // DECIDED 2026-10-20 (hwang 브리프 1.2): 두 조각을 한 문장으로.
+          ko: "Day 2와 Day 3에 하루 두 번까지 찾아갈 수 있습니다.",
+          en: "You can go to them up to twice a day on Day 2 and Day 3.",
         },
         evidence: { ko: "8월 11명", en: "August: eleven of them" },
       },
@@ -1605,12 +1607,14 @@ export const naru = {
         // 2026-09-29 (사용자: 그룹 기획 폴더의 부제와 정의가 사이트에 반영되게): Overview(2026-09-29)의 주최 칸 그대로.
         brings: { ko: "학생이 만드는 그룹. 선배가 후배의 판을 깔고, 학생회와 기업을 잇는다", en: "A group students build. Seniors set the stage, and connect schools and companies" },
         does: {
-          ko: "회차의 기획과 실행. 출제사와 멘토, 후원사와의 관계. 기록과 회차 사이의 연속성.",
-          en: "Planning and running each round. Relationships with problem owners, mentors, sponsors. The record, and continuity between rounds.",
+          // DECIDED 2026-10-20 (hwang 브리프 1.2): layers의 does/gets 명사 조각을 서술문 한 문장씩으로(does는 지금 화면에 그리지 않는 키).
+          ko: "회차를 기획하고 실행하며, 출제사와 멘토, 후원사와의 관계를 맡고, 회차 사이의 기록을 잇습니다.",
+          en: "Plans and runs each round, looks after the problem owners, mentors and sponsors, and keeps the record going from one round to the next.",
         },
         gets: {
-          ko: "회차의 책임과 이름. 다음 판을 깔 사람.",
-          en: "The responsibility and the name of the round. The people who will set up the next one.",
+          // gets는 화면에서 "얻는 것" 라벨 뒤에 붙어 "얻습니다"를 다시 쓰지 않습니다. EN은 "Gets" 뒤의 한 구.
+          ko: "회차의 책임과 이름을 지고, 다음 판을 깔 사람이 생깁니다.",
+          en: "The round's responsibility and name, and the people who will set up the next one.",
         },
         join: { id: "join-crew", label: { ko: "운영진으로 함께하기", en: "Join the crew" }, mail: naruLinks.crew },
       },
@@ -1626,12 +1630,12 @@ export const naru = {
         who: { ko: "각 학교 한인 학생회와 학회", en: "Korean student associations and clubs at each school" },
         brings: { ko: "소속 학생, 공간, 학교 안의 명의", en: "Students, space, standing inside the school" },
         does: {
-          ko: "소속 학생 모집. 학교 안의 공간과 자원, 필요한 명의. 운영 협조.",
-          en: "Recruiting their own students. Space, resources, and the school's standing. Hands on the day.",
+          ko: "소속 학생을 모으고, 학교 안의 공간과 자원, 필요한 명의를 내고, 운영을 돕습니다.",
+          en: "Recruits its own students, brings space, resources and the school's standing, and helps run the day.",
         },
         gets: {
-          ko: "학생에게 열어 줄 자리. 임기를 마친 임원이 이어서 일할 자리.",
-          en: "Something real to open up for their students. A place for officers to keep working after their term ends.",
+          ko: "학생에게 열어 줄 자리와, 임기를 마친 임원이 이어서 일할 자리가 생깁니다.",
+          en: "Something real to open up for their students, and a place for officers to keep working after their term.",
         },
         join: { id: "join-organiser", label: { ko: "학생회, 학회로 문의하기", en: "As an association or club" }, mail: naruLinks.organiser },
       },
@@ -1640,12 +1644,12 @@ export const naru = {
         who: { ko: "참여 기업", en: "Participating companies" },
         brings: { ko: "이슈와 자료, 자금, 멘토", en: "Issues and materials, funding, mentors" },
         does: {
-          ko: "자금과 현물, 용역. 이슈와 자료. 멘토와 피드백 패널. 채용 기회.",
-          en: "Funding, goods, services. Issues and materials. Mentors and the feedback panel. Hiring opportunities.",
+          ko: "자금과 현물, 용역을 내고, 이슈와 자료, 멘토와 피드백 패널, 채용 기회를 가져옵니다.",
+          en: "Puts in funding, goods or services, and brings issues and materials, mentors and the feedback panel, and hiring opportunities.",
         },
         gets: {
-          ko: "한인 학생과의 접점. 채용 연계. 회차 크레딧.",
-          en: "A way to reach Korean students. A hiring pipeline. Credit on the round.",
+          ko: "한인 학생과 만나는 자리와 채용 연계, 회차 크레딧이 생깁니다.",
+          en: "A way to reach Korean students, a hiring pipeline and credit on the round.",
         },
         join: { id: "join-company", label: { ko: "기업으로 문의하기", en: "As a company" }, mail: naruLinks.sponsor },
       },
@@ -1681,16 +1685,17 @@ export const naru = {
     // 한 줄씩. 세 줄 그대로, 문장은 더 짧게.
     notDoing: [
       {
-        ko: "회비도 가입 폼도 없습니다. 들어오는 길은 회차 하나입니다.",
-        en: "No dues, no sign-up form. The way in is a round.",
+        // DECIDED 2026-10-20 (hwang 브리프 1.2): 조각문을 한 문장으로(지금 화면에 그리지 않는 키).
+        ko: "회비도 가입 폼도 없어서 들어오는 길은 회차에 오는 것 하나입니다.",
+        en: "There are no dues and no sign-up form, so the only way in is to come to a round.",
       },
       {
         ko: "후원 계약은 나루가 맺습니다. 법인격을 갖추기 전에는 돈을 직접 받지 않습니다.",
         en: "NARU signs with sponsors. Until it is a legal entity it takes no money directly.",
       },
       {
-        ko: "운영진에게 보수를 주지 않습니다. 실비만 정산합니다.",
-        en: "The crew is not paid. Only receipts are reimbursed.",
+        ko: "운영진은 보수 없이 실비만 정산합니다.",
+        en: "The crew is not paid and only claims back what it spends.",
       },
     ],
   },
@@ -1720,7 +1725,8 @@ export const naru = {
     // 것이라 why.exec/measure를 이 챕터의 멘토링 블록이 읽습니다.
     // 전부 초안입니다. draftNote가 이 챕터에 붙어 있어야 합니다.
     programEyebrow: { ko: "프로그램", en: "Programme" },
-    programHeading: { ko: "이슈에서 증명까지, 닷새", en: "From issue to proof, in five days" },
+    // DECIDED 2026-10-20 (hwang 브리프 1.3): EN 단축. 그 전 "From issue to proof, in five days".
+    programHeading: { ko: "이슈에서 증명까지, 닷새", en: "Issue to proof, five days" },
     // DECIDED 2026-09-25 (가독성 브리프 5, 사용자 승인): 추상적인 문장 옆의 구체적인 한 줄.
     // 화면에 이미 있는 사실만 씁니다. {date}는 naruDates의 formatDecemberDateLine으로 채웁니다(날짜를
     // 여기 쓰지 않는 규칙). 출처: Day 0 데이터 공개, Day 1 줄, #gains 03.
@@ -1960,8 +1966,9 @@ export const naru = {
       // 2026-09-19 (사용자): 첫 문장이 바로 아래 BEFORE 카드와 같은 말이었습니다
       // ("데이터를 먼저 공개합니다. 어느 트랙에서 풀지 고르고 옵니다"). 한 화면에서
       // 데이터가 네 번, 트랙이 네 번 나왔어요. 카드가 말하는 것은 리드가 말하지 않습니다.
-      ko: "등록은 모두 혼자 합니다. 팀은 Day 1 현장에서 전원이 함께 맺습니다. 찾기에서 공유하기까지 하루에 한 스테이지씩 넘어갑니다.",
-      en: "Everyone registers alone. Teams are formed on site on Day 1, for all participants. Then one stage a day from Find to Share.",
+      // DECIDED 2026-10-20 (hwang 브리프 1.2, 감사 W3): 조각문 셋을 두 문장으로. 사실은 그대로입니다.
+      ko: "등록은 혼자 하고, 팀은 Day 1 현장에서 전원이 함께 맺습니다. 그 뒤로는 찾기에서 공유하기까지 하루에 한 스테이지씩 넘어갑니다.",
+      en: "You register alone, and everyone forms teams together on site on Day 1. From there it is one stage a day, from Find to Share.",
     },
     // 2026-09-20 (크로싱서울_일정.pdf): 라벨이 "워크샵"에서 "세션"으로. PDF가 부르는
     // 이름이고, stages의 필드 이름(workshop -> session)과 같은 말을 씁니다.
@@ -2054,8 +2061,9 @@ export const naru = {
     },
     // 세 상자 아래 한 줄(2026-10-13). 그 전에는 규칙 목록의 "Day 4는 멘토링 없음"이 이 말을 했습니다.
     mentoringDay4Line: {
-      ko: "Day 4는 성과 공유회입니다. 멘토링 대신 무대에서 질의를 받습니다.",
-      en: "Day 4 is the showcase. Questions from the floor take the place of mentoring.",
+      // DECIDED 2026-10-20 (hwang 브리프 1.2): 두 조각을 한 문장으로.
+      ko: "Day 4는 멘토링 없이 성과 공유회 무대에서 질의를 받습니다.",
+      en: "Day 4 has no mentoring; you take questions on the showcase stage.",
     },
     // ── 현장 멘토링 (DECIDED 2026-10-08, 사용자: "멘토가 오는 게 아니고 우리가 직접 간다". 프로그램 브리프 2.5, D5) ──
     // General Mentoring(행사장, 예약제)은 그대로이고, 현장 방문이 하나 더 섭니다. 대신하는 것이 아닙니다.
@@ -2414,8 +2422,9 @@ export const naru = {
         dayOffset: 2,
         body: {
           // 2026-10-17: 위 line과 같은 이유로 첫 문장을 바꿨습니다(이 body는 지금 홈에 그려지지 않습니다).
-          ko: "정의한 문제와 아이디어를 멘토에게 확인받습니다. 무엇을 만들지는 바뀔 수 있습니다. 다만 Day 1의 정의가 바뀌면 운영진에게 알립니다.",
-          en: "You get the problem you defined and your idea checked by mentors. What you build can change. If the Day 1 definition changes, you tell the organisers.",
+          // DECIDED 2026-10-20 (hwang 브리프 1.2): 세 문장을 두 문장으로.
+          ko: "정의한 문제와 아이디어를 멘토에게 확인받는 날입니다. 무엇을 만들지는 바뀌어도 되고, Day 1의 정의가 바뀌면 운영진에게 알립니다.",
+          en: "The day you get your problem and idea checked by mentors. What you build can change, and if the Day 1 definition changes, you tell the organisers.",
         },
         // DECIDED 2026-10-11 (사용자: "각 날마다 이제 제출물 / milestone이 있는거임"): "추가 제출 요구는 없습니다."였습니다.
         // 같은 행의 마일스톤 줄과 어긋나 뺐고, 위 body의 첫 문장을 그대로 씁니다(새로 쓴 사실 없음).
@@ -2531,8 +2540,9 @@ export const naru = {
         // 코어 01과 measure가 이미 세 번 말합니다. 여기서는 그 말이 이 무대에서 무슨 뜻인지만.
         body: {
           // DECIDED 2026-10-08 (프로그램 브리프 2.2, D2): 보는 것은 결과물보다 문제에 다가간 방식입니다. 다 풀지 못해도 섭니다.
-          ko: "청중은 회사 관계자입니다. 발표 5분, 질의 5분. 다 풀지 못했어도 무대에 섭니다. 문제에 어떻게 다가갔는지를 봅니다.",
-          en: "You present to the people from the companies. Five minutes, then five for questions. You go up even if it is not solved. We look at how you approached the problem.",
+          // DECIDED 2026-10-20 (hwang 브리프 1.2): 조각문 넷을 두 문장으로.
+          ko: "이슈를 낸 회사 관계자 앞에서 5분 발표하고 5분 질의를 받습니다. 다 풀지 못했어도 무대에 서고, 보는 것은 결과보다 문제에 어떻게 다가갔는지입니다.",
+          en: "You present for five minutes to the people from the company that set the issue, then take five minutes of questions. You go up even if it is not solved, and what we look at is how you approached the problem.",
         },
         // #after 챕터와 같은 말입니다. 여기서는 일정 안의 사실로, 저기서는 챕터로.
         // DECIDED 2026-10-08 (프로그램 브리프 2.3, D3): 클로징은 끝난 뒤에 할 일을 말하고 글로 남기며 끝납니다.

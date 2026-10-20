@@ -217,9 +217,12 @@ export default function NaruPage() {
                 </p>
                 {/* 폰에서는 코어가 제목 + 한 문장(감사 반영 브리프 6, 나루 챕터 4.4화면). 둘째 줄은
                     lg부터. 키는 그대로. */}
-                <p className={`mt-2 hidden max-w-xl break-keep ${BODY} leading-relaxed text-white/70 lg:block`}>
-                  {t(core.lines[1])}
-                </p>
+                {/* DECIDED 2026-10-20 (hwang 브리프 1.2): 코어 01은 한 문단이 되어 둘째 줄이 없습니다. */}
+                {core.lines[1] && (
+                  <p className={`mt-2 hidden max-w-xl break-keep ${BODY} leading-relaxed text-white/70 lg:block`}>
+                    {t(core.lines[1])}
+                  </p>
+                )}
               </div>
               <KeepsPanel id={`keeps-${core.index}`} label={t(naru.why.keepsLabel)} body={t(core.keeps)} />
             </li>
