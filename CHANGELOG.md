@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-21 태그라인 짧게](#2026-10-21-tagline-short)
 - [2026-10-21 태그라인 첫 줄 다시](#2026-10-21-tagline-line1)
 - [2026-10-21 나루 태그라인과 홈 나루 상자](#2026-10-21-naru-tagline)
 - [2026-10-20 사이트 전체 글: humanizer와 10/19 피드백](#2026-10-20-humanize-all)
@@ -286,6 +287,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-21-tagline-short"></a>
+## 2026-10-21 태그라인 짧게
+- 범위: data/naru.ts(hero.titleLine1, 2), lib/ogCards.tsx, docs/brand.md(6장 태그라인)
+- 한 것: 사용자 스크린숏("너무 기니까 또 부담스럽다", 후보 셋 중 1번). "처음엔 다 서툽니다. / 건너기 전에 연습부터."(EN "Everyone starts out clumsy. / Practice before you cross."). 뜻은 앞 문장 그대로, 길이는 절반. 근거: brand 5장(짧은 평서문), 6장.
+- 검증: build 통과. 1440 /naru 제목 두 줄.
+- 커밋: 3a73c05
 
 <a id="2026-10-21-tagline-line1"></a>
 ## 2026-10-21 태그라인 첫 줄 다시
