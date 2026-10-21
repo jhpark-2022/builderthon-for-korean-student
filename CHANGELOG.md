@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-22 AXMOS 코어 순서](#2026-10-22-axmos-order)
 - [2026-10-22 대학교 휘장에 한동대](#2026-10-22-handong)
 - [2026-10-22 AXMOS 컨소시엄 묶음, 링크 고침](#2026-10-22-axmos-links)
 - [2026-10-22 서울 안의 대학교 휘장](#2026-10-22-seoul-clubs)
@@ -299,6 +300,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-22-axmos-order"></a>
+
+## 2026-10-22 AXMOS 코어 순서
+- 범위: data/naru.ts(decemberPartners 메인 후원)
+- 한 것: 사용자 요청("translink, wilt, codepresso, popup, 드림에이스 순서임")으로 함께하는 곳의 컨소시엄 코어 다섯 로고 순서를 바꿨습니다. 히어로, 푸터, 8월 기록의 파트너 줄은 이미 이 순서라 그대로 둡니다. 근거: brand 6장(이름과 표기, 사용자 결정 그대로).
+- 검증: tsc 통과.
+- 커밋: bbe02e4
 
 <a id="2026-10-22-handong"></a>
 
