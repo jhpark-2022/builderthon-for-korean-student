@@ -110,7 +110,7 @@ export function useSiteMenu() {
 
 // 8월에 실제로 함께한 곳 중 주소가 있는 열여섯(Journey.tsx의 로고 벽과 같은 주소). 학생회 셋은 주소가 없어 빠집니다.
 const AUGUST_PARTNERS: { src: string; alt: string; w: number; h: number; url: string }[] = [
-  { src: "translink.png", alt: "Translink Investment", w: 330, h: 91, url: "https://translinkinvestment.com" },
+  { src: "translink.png", alt: "Translink Investment", w: 330, h: 91, url: "https://translink.kr" },
   { src: "wilt.png", alt: "Wilt Venture Builder", w: 309, h: 148, url: "https://www.wiltvb.com/" },
   { src: "codepresso.png", alt: "Codepresso", w: 456, h: 91, url: "https://codepresso.io" },
   { src: "popup-studio.png", alt: "Popup Studio", w: 512, h: 245, url: "https://popupstudio.ai" },

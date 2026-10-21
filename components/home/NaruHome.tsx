@@ -519,6 +519,20 @@ function partnerLogoHeight(l: { w: number; h: number; square?: boolean }): strin
   return "h-7 sm:h-8";
 }
 
+/** 함께하는 곳의 로고 하나. 링크가 있으면 새 탭 링크입니다. h를 주면 비율 높이 대신 그 높이(AXMOS 머리). */
+function partnerLogo(l: { name: string; src: string; w: number; h: number; url?: string; square?: boolean }, h?: string) {
+  const img = (
+    <Image src={l.src} alt={l.name} width={l.w} height={l.h} unoptimized className={`block w-auto ${h ?? partnerLogoHeight(l)} opacity-90`} />
+  );
+  return l.url ? (
+    <a key={l.name} href={l.url} target="_blank" rel="noopener noreferrer" aria-label={l.name} className="rounded-sm transition-opacity hover:opacity-100 [&>img]:hover:opacity-100">
+      {img}
+    </a>
+  ) : (
+    <span key={l.name}>{img}</span>
+  );
+}
+
 export default function NaruHome() {
   const { t, locale } = useLocale();
   // 크로싱 서울 등록 상태(2026-09-18). 프로바이더가 없거나 창이 닫혀 있으면 "not_open"이고
@@ -1439,29 +1453,22 @@ export default function NaruHome() {
                     같은 날 (사용자, 스크린숏: "role 도 각 row 마다 넣어줘"): 분류 이름을 다시 보이게. 주최 줄과 같은 META, 로고 위 가운데.
                     같은 날 (사용자: "글자가 더 잘보이게"): white/50 → white/85, 굵게. 크기는 META 그대로. */}
                 <p className={`${META} font-semibold text-white/85`}>{t(g.label)}</p>
-                <div>
-                  <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
-                    {g.logos.map((l) => {
-                      const img = (
-                        <Image
-                          src={l.src}
-                          alt={l.name}
-                          width={l.w}
-                          height={l.h}
-                          unoptimized
-                          className={`block w-auto ${partnerLogoHeight(l)} opacity-90`}
-                        />
-                      );
-                      return l.url ? (
-                        <a key={l.name} href={l.url} target="_blank" rel="noopener noreferrer" aria-label={l.name} className="rounded-sm transition-opacity hover:opacity-100 [&>img]:hover:opacity-100">
-                          {img}
-                        </a>
-                      ) : (
-                        <span key={l.name}>{img}</span>
-                      );
-                    })}
+                {g.lead ? (
+                  // DECIDED 2026-10-22 (사용자: "AXMOS라는 컨소시엄 안에 이 5개의 회사가 있다는 느낌을 더 보여줘"): AXMOS가 위, 짧은 선으로
+                  // 이어진 테두리 안에 코어 5개사. 테두리는 선만이고 바탕을 칠하지 않습니다(어두운 바탕에 밝은 판 금지).
+                  <div className="flex flex-col items-center">
+                    {partnerLogo(g.lead, "h-8 sm:h-10")}
+                    <p className={`mt-3 ${META} text-white/60`}>{t(g.lead.note)}</p>
+                    <span aria-hidden className="h-6 w-px bg-white/25" />
+                    <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-5 rounded-2xl border border-white/20 px-6 py-6 sm:px-10">
+                      {g.logos.map((l) => partnerLogo(l))}
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
+                    {g.logos.map((l) => partnerLogo(l))}
+                  </div>
+                )}
               </li>
             ))}
             {/* DECIDED 2026-10-21 (사용자, 스크린숏: "따로 아래에 주최 박스를 넣지 말고, 나루 로고를 주최에 넣어줘 at the table, 로고 옆에 learn more"):

@@ -5,7 +5,7 @@
 // 주소가 없는 곳(AXMOS, Mission, YJ, 각 학교 학생회 셋)은 비워 둡니다. AXMOS와 학생회는 로고 벽에서 지금처럼 설명 모달을 엽니다.
 // ─────────────────────────────────────────────────────────────────────────────
 export const partnerLinks: Record<string, string> = {
-  "Translink Investment": "https://translinkinvestment.com",
+  "Translink Investment": "https://translink.kr",
   "Wilt Venture Builder": "https://www.wiltvb.com/",
   Codepresso: "https://codepresso.io",
   "Popup Studio": "https://popupstudio.ai",

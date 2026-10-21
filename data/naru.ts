@@ -3072,18 +3072,22 @@ export const seoulCampuses: { name: Phrase; src: string; w: number; h: number; u
   { name: { ko: "건국대학교", en: "Konkuk University" }, src: "/partners/logos/white/trimmed/uni-konkuk.png", w: 240, h: 240, u: 0.493, v: -0.128, size: 0.15 },
 ];
 
-export const decemberPartners: { heading: Phrase; groups: { label: Phrase; logos: PartnerLogo[] }[] } = {
+// DECIDED 2026-10-22 (사용자, 스크린숏: "AXMOS라는 컨소시엄 안에 이 5개의 회사가 있다는 느낌을 더 보여줘"): 메인 후원 줄은 AXMOS(lead)가 위에,
+// 그 코어 5개사가 아래 테두리 안에. 순서와 묶음은 AXMOS 공식 사이트(axmos.ai/kr)의 "Consortium · 코어 5개사"를 따릅니다.
+// 같은 날 (사용자: "작동이 안 되는 링크들이 있음, 블룸이랑 크라이치즈버거도 반드시 넣어줘"): translinkinvestment.com은 도메인이 없어
+// translink.kr로. AXMOS, Bloom(bloomworld.ai), 크라이치즈버거(crycheeseburger.com)에 링크를 넣었습니다. 모든 링크를 curl로 열어 봤습니다.
+export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?: PartnerLogo & { note: Phrase }; logos: PartnerLogo[] }[] } = {
   heading: { ko: "함께하는 곳", en: "With us in December" },
   groups: [
     {
       label: { ko: "메인 후원", en: "Main sponsors" },
+      lead: { name: "AXMOS", src: "/partners/logos/white/trimmed/axmos.png", w: 900, h: 240, url: "https://axmos.ai/kr", note: { ko: "컨소시엄 코어 5개사", en: "Consortium, five core members" } },
       logos: [
-        { name: "AXMOS", src: "/partners/logos/white/trimmed/axmos.png", w: 900, h: 240 },
-        { name: "Translink Investment", src: "/partners/logos/white/trimmed/translink.png", w: 330, h: 91, url: "https://translinkinvestment.com" },
         { name: "Wilt Venture Builder", src: "/partners/logos/white/trimmed/wilt.png", w: 309, h: 148, url: "https://www.wiltvb.com/" },
-        { name: "Codepresso", src: "/partners/logos/white/trimmed/codepresso.png", w: 456, h: 91, url: "https://codepresso.io" },
         { name: "Popup Studio", src: "/partners/logos/white/trimmed/popup-studio.png", w: 512, h: 245, url: "https://popupstudio.ai" },
+        { name: "Codepresso", src: "/partners/logos/white/trimmed/codepresso.png", w: 456, h: 91, url: "https://codepresso.io" },
         { name: "Drimaes", src: "/partners/logos/white/trimmed/drimaes.png", w: 332, h: 50, url: "https://www.drimaes.com" },
+        { name: "Translink Investment", src: "/partners/logos/white/trimmed/translink.png", w: 330, h: 91, url: "https://translink.kr" },
       ],
     },
     {
@@ -3101,10 +3105,10 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; logos
     {
       label: { ko: "커뮤니티, 홍보", en: "Community and PR" },
       logos: [
-        { name: "Bloom", src: "/partners/logos/color/bloom.png", w: 900, h: 217 },
+        { name: "Bloom", src: "/partners/logos/color/bloom.png", w: 900, h: 217, url: "https://bloomworld.ai/" },
         // DECIDED 2026-10-21 (사용자: "노란색 살려줘"): 이 로고만 흰색 단색이 아니라 원래 색입니다. 바깥 흰 바탕만 투명하게 지웠습니다
         // (public/partners/logos/color/, 모서리에서 flood fill). 노란 면이라 어두운 바탕 위에서도 밝은 판 없이 보입니다.
-        { name: "크라이치즈버거", src: "/partners/logos/color/crycheeseburger.png", w: 459, h: 378, square: true },
+        { name: "크라이치즈버거", src: "/partners/logos/color/crycheeseburger.png", w: 459, h: 378, square: true, url: "https://www.crycheeseburger.com/" },
       ],
     },
   ],
