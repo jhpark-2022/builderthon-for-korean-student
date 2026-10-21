@@ -13,7 +13,7 @@
 // 있고, 홈의 다른 파일은 text-sm 같은 크기 클래스를 직접 쓰지 않고 이 토큰을 씁니다. 새 크기를
 // 만들지 마세요(CLAUDE.md). 루트가 18px이라 rem과 px이 어긋나므로 실제 px을 함께 적습니다.
 //
-//   TITLE  히어로 제목, 챕터 h2, 카운트다운 숫자, 숫자 줄(5일, 2회).
+//   TITLE  히어로 제목, 장면을 바꾸는 챕터 제목. 카운트다운과 숫자 줄은 BODY.
 //          화면 폭마다 값 하나: 390px에서 36px, 1000px에서 55px, 1440px에서 67.5px.
 //   BODY   리드, 문단, 목록, 카드 제목, h3/h4 소제목, 버튼. 폰 15.75px, sm(640px)부터 18px.
 //          카드 제목과 소제목은 크기가 아니라 굵기와 색으로만 구분합니다.
@@ -25,11 +25,11 @@
 // 28.8, 34.2, 40.5px 같은 중간 크기는 이제 없습니다.
 //
 // 8월 페이지(/2026-08)와 같이 쓰는 컴포넌트(Chip, Eyebrow, Button)는 그쪽 픽셀이 바뀌면 안 되므로
-// 건드리지 않습니다. Eyebrow(text-xs)와 Button(text-sm sm:text-base)은 이미 META, BODY와 같은 값이고,
+// 8월 톤과 화면 단위 연출은 유지합니다. Eyebrow(text-xs)와 Button(text-sm sm:text-base)은 이미 META, BODY와 같은 값이고,
 // Chip(0.68rem)은 홈의 <main class="naru-min12"> 안에서만 META로 올립니다(app/globals.css).
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** 제목. 8월 페이지의 아홉 개 h2와 같은 clamp입니다(Journey.tsx의 CHAPTER HEADING SIZE). 값을 바꾸지 마세요. */
+/** 제목. DECIDED 2026-10-21: 기존 세 크기를 유지하고 역할만 정리합니다. */
 export const TITLE = "text-[clamp(2rem,5.5vw,3.75rem)]";
 /** 본문. 버튼(components/ui/Button.tsx)과 같은 값입니다. */
 export const BODY = "text-sm sm:text-base";

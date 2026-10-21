@@ -99,7 +99,7 @@ export default function OpenChatLink({
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => track("openchat_click", { src })}
-      className={`inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2.5 text-sm font-medium leading-relaxed text-white/75 transition hover:border-white/35 hover:bg-white/10 hover:text-white ${className}`}
+      className={`inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-[18px] py-[11.25px] text-center text-sm sm:text-base font-medium leading-relaxed text-white/85 transition-[background-color,border-color,transform] duration-150 active:scale-[0.98] hover:border-white/35 hover:bg-white/10 hover:text-white ${className}`}
     >
       <ChatGlyph className="h-4 w-4 shrink-0" />
       {t(label ?? dict.register.openChatCta)}

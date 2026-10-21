@@ -420,17 +420,17 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
       {phase !== "landing" && <h1 className="sr-only">{t(ed.ui.title)}</h1>}
 
       {/* header - widens on the result screen so it lines up with the 2-col layout */}
-      <header className={`relative z-10 mx-auto flex h-20 items-center justify-between px-6 ${phase === "result" ? "max-w-5xl" : "max-w-2xl"}`}>
+      <header className={`relative z-10 mx-auto flex h-20 items-center justify-between ${c("px-6", "px-[27px] sm:px-[40px]")} ${phase === "result" ? "max-w-5xl" : "max-w-2xl"}`}>
         {/* -my-3 py-3: 터치 면적을 44px로 키우면서 글자 위치는 그대로 둡니다
             (2026-08-17). 그전에는 두 링크 다 높이가 23px이라 손가락으로는
             빗나가기 쉬웠습니다. 아래 '이전' 버튼도 같은 처리입니다. */}
-        <a href={ed.backHref} className={`-my-3 inline-flex min-h-[44px] items-center py-3 ${c("text-sm", BODY)} font-semibold text-white/60 transition hover:text-white`}>
+        <a href={ed.backHref} className={`-my-3 inline-flex min-h-[44px] items-center py-3 ${c("text-sm", BODY)} font-semibold ${c("text-white/60", "text-white/70")} transition hover:text-white`}>
           ← {t(ed.ui.back)}
         </a>
         <LocaleToggle />
       </header>
 
-      <div className={`relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] flex-col px-6 pb-12 ${phase === "result" ? "max-w-5xl" : "max-w-2xl"}`}>
+      <div className={`relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] flex-col ${c("px-6", "px-[27px] sm:px-[40px]")} pb-12 ${phase === "result" ? "max-w-5xl" : "max-w-2xl"}`}>
         {phase === "landing" && (
           <Landing
             ed={ed} matchMode={matchMode} onStart={startQuiz} t={t} reduce={!!reduce} ownResult={ownResult}
@@ -444,13 +444,13 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
           <div className="flex flex-1 flex-col pt-4">
             {/* progress */}
             <div className="mb-3 flex items-center justify-between">
-              <button type="button" onClick={goBack} className={`-my-3 inline-flex min-h-[44px] items-center gap-1 py-3 pr-3 ${c("text-sm", BODY)} font-semibold ${c("text-white/50", "text-white/60")} transition hover:text-white/90`}>
+              <button type="button" onClick={goBack} className={`-my-3 inline-flex min-h-[44px] items-center gap-1 py-3 pr-3 ${c("text-sm", BODY)} font-semibold ${c("text-white/50", "text-white/70")} transition hover:text-white/90`}>
                 ← {t(ed.ui.prev)}
               </button>
               <span className={`font-mono ${c("text-sm", BODY)} font-bold text-white`}>
                 {index + 1}
                 {/* white/35는 3.14:1이었습니다(접근성 감사 9). */}
-                <span className="text-white/55"> / {questions.length}</span>
+                <span className={c("text-white/55", "text-white/70")}> / {questions.length}</span>
               </span>
             </div>
             <div
@@ -502,7 +502,8 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
                   >
                     {t(current.text)}
                   </h2>
-                  <div className="mt-8 flex flex-col gap-3.5">
+                  {/* DECIDED 2026-10-21: 나루 선택지는 52px 이상, 20/32px 카드 여백으로 등록 폼과 맞춥니다. */}
+                  <div className={`mt-8 flex flex-col ${c("gap-3.5", "gap-[16px]")}`}>
                     {(["a", "b"] as const).map((key) => {
                       const opt = current[key];
                       // 방금 누른 답, 또는 "이전"으로 돌아온 질문의 지난 답. 색만으로는 스크린리더에 전해지지 않아 aria-pressed도 겁니다.
@@ -514,7 +515,7 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
                           aria-pressed={isSel}
                           onClick={() => handleAnswer(key)}
                           // 2026-10-20 (시각 브리프 3.6): 선택지 눌림 active:scale-[0.99]
-                          className={`flex items-center gap-4 rounded-2xl border p-5 text-left transition active:scale-[0.99] ${
+                          className={`flex items-center ${c("gap-4 p-5", "min-h-[52px] gap-[18px] p-[22.5px] sm:p-[32px]")} rounded-2xl border text-left transition active:scale-[0.99] ${
                             isSel
                               ? c("-translate-y-0.5 border-violet-400/50 bg-white/[0.08]", "-translate-y-0.5 border-accent/70 bg-white/[0.08]")
                               : "border-white/10 bg-white/[0.04] hover:border-white/20 hover:bg-white/[0.07]"
@@ -525,7 +526,7 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
                           }`}>
                             {key.toUpperCase()}
                           </span>
-                          <span className={`${c("text-base", BODY)} font-semibold leading-snug text-white/90`}>
+                          <span className={`${c("text-base", BODY)} font-semibold leading-snug ${c("text-white/90", "text-white/85")}`}>
                             {t(opt.label)}
                           </span>
                         </button>
@@ -672,7 +673,7 @@ function Landing({
         onClick={start}
         className={c(
           "group mt-10 inline-flex min-h-[56px] w-full max-w-sm items-center justify-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 sm:w-auto",
-          `${buttonClass("primary", "naru")} mt-10 min-h-[56px] w-full max-w-sm justify-center sm:w-auto`,
+          `${buttonClass("primary", "naru")} mt-10 w-full max-w-sm justify-center sm:w-auto`,
         )}
       >
         {matchMode && onResume ? t(matchCopy.resume) : t(ed.ui.start)}
@@ -887,7 +888,7 @@ function ResultView({
       <div className="flex w-full flex-col gap-6">
         {/* full-width shareable result card */}
         <div
-          className={`relative w-full overflow-hidden rounded-[28px] border border-white/[0.12] ${c("bg-[#0c0a18]", "bg-naru-surface")} p-7 text-left sm:p-9`}
+          className={`relative w-full overflow-hidden rounded-[28px] border border-white/[0.12] ${c("bg-[#0c0a18]", "bg-naru-surface")} ${c("p-7 text-left sm:p-9", "p-[31.5px] text-left sm:p-[40.5px]")}`}
           style={{ boxShadow: naru ? "0 30px 70px -28px rgba(75,58,140,0.6)" : "0 30px 70px -28px rgba(217,70,239,0.42)" }}
         >
           <div className={`pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b ${c("from-fuchsia-500/20", "from-naru-purple/30")} to-transparent`} />
@@ -915,8 +916,8 @@ function ResultView({
               viewport (capped at the original 0.7rem from ~430px up) and the
               tracking only opens up from `sm`, where the card can carry it. */}
           <div className="relative flex items-center justify-between gap-3">
-            <span className={`whitespace-nowrap font-mono ${c("text-[clamp(0.52rem,2.6vw,0.7rem)]", META)} font-bold uppercase tracking-[0.08em] text-white/60 sm:tracking-[0.15em]`}>{t(ed.cardStamp)}</span>
-            <span className={`whitespace-nowrap font-mono ${c("text-[clamp(0.52rem,2.6vw,0.7rem)]", META)} font-bold tracking-wider text-white/60`}>{result.resultId}</span>
+            <span className={`whitespace-nowrap font-mono ${c("text-[clamp(0.52rem,2.6vw,0.7rem)]", META)} font-bold uppercase tracking-[0.08em] ${c("text-white/60", "text-white/70")} sm:tracking-[0.15em]`}>{t(ed.cardStamp)}</span>
+            <span className={`whitespace-nowrap font-mono ${c("text-[clamp(0.52rem,2.6vw,0.7rem)]", META)} font-bold tracking-wider ${c("text-white/60", "text-white/70")}`}>{result.resultId}</span>
           </div>
 
           {/* two columns fill the wide card: identity + gauges on the left,
@@ -941,40 +942,40 @@ function ResultView({
               </div>
 
               {/* 대사: 카드 너비의 띠 */}
-              <p className={`relative mt-5 overflow-hidden pl-4 sm:mt-7 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.04] sm:py-4 sm:pl-6 sm:pr-5 ${BODY} font-semibold leading-relaxed text-white/90`}>
+              <p className={`relative mt-5 overflow-hidden pl-4 sm:mt-7 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.04] sm:py-[24px] sm:pl-[27px] sm:pr-[24px] ${BODY} font-semibold leading-relaxed text-white/85`}>
                 <span aria-hidden className={`absolute inset-y-0 left-0 w-1 rounded-full bg-gradient-to-b sm:w-1.5 sm:rounded-none ${data.accent}`} />
                 “{t(data.phrase)}”
               </p>
 
               <div className="relative mt-5 grid gap-6 sm:mt-7 sm:gap-8 lg:grid-cols-2 lg:gap-14">
                 <div>
-                  <p className={`${BODY} leading-relaxed text-white/75`}>{t(data.desc)}</p>
+                  <p className={`${BODY} leading-relaxed text-white/70`}>{t(data.desc)}</p>
                   <p className={`mt-3 ${BODY} italic leading-relaxed text-white/70 ${moreOnly}`}>{t(variant.line)}</p>
                   <div className="mt-5 sm:mt-6">
-                    <p className={`${META} font-bold uppercase tracking-wider text-white/60`}>{t(ed.ui.roleLabel)}</p>
+                    <p className={`${META} font-bold uppercase tracking-wider text-white/70`}>{t(ed.ui.roleLabel)}</p>
                     <span className={`mt-2 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-4 py-2 ${BODY} font-bold text-accent`}>
                       ★ {t(data.role)}
                     </span>
                   </div>
-                  <div className={`mt-6 rounded-2xl border border-accent/20 bg-accent/[0.05] p-4 ${moreOnly}`}>
+                  <div className={`mt-6 rounded-2xl border border-accent/20 bg-accent/[0.05] p-[20px] sm:p-[24px] ${moreOnly}`}>
                     <p className={`${META} font-bold uppercase tracking-wider text-accent`}>{t(ed.ui.whyModel)} {data.model}</p>
-                    <p className={`mt-1 ${BODY} leading-relaxed text-white/75`}>{t(data.whyModel)}</p>
+                    <p className={`mt-1 ${BODY} leading-relaxed text-white/70`}>{t(data.whyModel)}</p>
                   </div>
                 </div>
                 <div className="flex flex-col gap-5">
                   <div className="grid grid-cols-1 gap-4 border-t border-white/10 pt-5 sm:grid-cols-2 sm:gap-2.5 sm:border-0 sm:pt-0">
-                    <div className="sm:rounded-2xl sm:border sm:border-emerald-300/20 sm:bg-emerald-300/[0.05] sm:p-4">
+                    <div className="sm:rounded-2xl sm:border sm:border-emerald-300/20 sm:bg-emerald-300/[0.05] sm:p-[24px]">
                       <p className={`${META} font-bold uppercase tracking-wider text-emerald-300`}>{t(ed.ui.strengthsLabel)}</p>
-                      <p className={`mt-1 ${BODY} leading-snug text-white/80`}>{t(data.strengths)}</p>
+                      <p className={`mt-1 ${BODY} leading-snug text-white/70`}>{t(data.strengths)}</p>
                     </div>
-                    <div className="sm:rounded-2xl sm:border sm:border-rose-300/20 sm:bg-rose-300/[0.05] sm:p-4">
+                    <div className="sm:rounded-2xl sm:border sm:border-rose-300/20 sm:bg-rose-300/[0.05] sm:p-[24px]">
                       <p className={`${META} font-bold uppercase tracking-wider text-rose-300`}>{t(ed.ui.weaknessLabel)}</p>
-                      <p className={`mt-1 ${BODY} leading-snug text-white/80`}>{t(data.weakness)}</p>
+                      <p className={`mt-1 ${BODY} leading-snug text-white/70`}>{t(data.weakness)}</p>
                     </div>
                   </div>
                   {result.axes && result.axes.length > 0 && (
                     <div className={moreOnly}>
-                      <p className={`${META} font-bold uppercase tracking-wider text-white/60`}>{t(ed.ui.axesLabel)}</p>
+                      <p className={`${META} font-bold uppercase tracking-wider text-white/70`}>{t(ed.ui.axesLabel)}</p>
                       <AxisGauges ed={ed} axes={result.axes} accent={data.accent} t={t} reduce={reduce} />
                     </div>
                   )}
@@ -1077,7 +1078,7 @@ function ResultView({
             위의 returnToRegister 배너는 등록 모달에서 건너온 왕복 경로라 이제
             켜지지 않지만, 모달 자체는 살아 있어서 그대로 둡니다. */}
         {/* 2026-10-10: 매칭 모드의 폰에서는 이 상자를 뺍니다. 현장에서 팀을 찾는 사람에게 프로그램 안내는 다음 걸음이 아닙니다. */}
-        <div className={`mx-auto w-full max-w-xl rounded-[24px] border border-white/10 bg-white/[0.04] p-6 text-center ${matchMode ? "max-sm:hidden" : ""}`}>
+        <div className={`mx-auto w-full max-w-xl rounded-[24px] border border-white/10 bg-white/[0.04] ${c("p-6", "p-[27px] sm:p-[32px]")} text-center ${matchMode ? "max-sm:hidden" : ""}`}>
           <p className={`${c("text-[15px]", BODY)} font-bold leading-relaxed text-white/85`}>{ctaLead}</p>
           <a
             href="/#december"
@@ -1433,7 +1434,7 @@ function DreamTeammates({
           return (
             <div
               key={m}
-              className={`flex flex-col rounded-[24px] border border-white/[0.12] ${c("bg-[#0c0a18]", "bg-naru-surface")} ${c("p-6", "p-5 sm:p-6")} text-left`}
+              className={`flex flex-col rounded-[24px] border border-white/[0.12] ${c("bg-[#0c0a18]", "bg-naru-surface")} ${c("p-6", "p-[22.5px] sm:p-[32px]")} text-left`}
             >
               <div className="flex items-center gap-3">
                 <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${mate.accent} shadow-lg`}>
@@ -1445,11 +1446,11 @@ function DreamTeammates({
                 </div>
               </div>
 
-              <p className={`mt-4 ${c("text-[15px]", BODY)} font-semibold leading-relaxed text-white/90 ${c("", "max-sm:hidden")}`}>“{t(mate.phrase)}”</p>
+              <p className={`mt-4 ${c("text-[15px]", BODY)} font-semibold leading-relaxed ${c("text-white/90", "text-white/85")} ${c("", "max-sm:hidden")}`}>“{t(mate.phrase)}”</p>
               <p className={`${c("mt-2.5", "mt-3 sm:mt-2.5")} ${c("text-sm", BODY)} leading-relaxed text-white/70`}>{t(why)}</p>
 
               <div className="mt-auto pt-4">
-                <p className={`${c("text-[0.65rem]", META)} font-bold uppercase tracking-wider ${c("text-white/55", "text-white/60 max-sm:hidden")}`}>{t(ed.ui.matchRoleLabel)}</p>
+                <p className={`${c("text-[0.65rem]", META)} font-bold uppercase tracking-wider ${c("text-white/55", "text-white/70 max-sm:hidden")}`}>{t(ed.ui.matchRoleLabel)}</p>
                 <span className={`mt-1.5 inline-flex items-center gap-1.5 rounded-full border ${c("border-fuchsia-400/25 bg-fuchsia-400/[0.08]", "border-accent/40 bg-accent/10")} px-3 py-1.5 ${c("text-xs", META)} font-bold ${c("text-fuchsia-100", "text-accent")}`}>
                   ★ {t(mate.role)}
                 </span>
@@ -1532,8 +1533,8 @@ function AxisGaugeRow({
         />
       </div>
       <span className="w-9 shrink-0 text-right font-mono text-xs font-bold tabular-nums text-white/85">{axis.pct}%</span>
-      {/* 진 쪽 이름. white/30은 2.61:1이었습니다(접근성 감사 9). 두 판 모두 white/55. */}
-      <span className="w-11 shrink-0 text-xs font-medium text-white/55">{t(axisMeta[axis.loser])}</span>
+      {/* DECIDED 2026-10-21: 진 쪽 이름은 8월판 white/55, 나루 META white/70으로 읽습니다. */}
+      <span className={`w-11 shrink-0 text-xs font-medium ${naru ? "text-white/70" : "text-white/55"}`}>{t(axisMeta[axis.loser])}</span>
     </>
   );
 
@@ -1548,7 +1549,7 @@ function AxisGaugeRow({
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
-        className="flex w-full items-center gap-2.5 rounded-lg py-1 text-left transition hover:bg-white/[0.03]"
+        className={`flex w-full items-center gap-2.5 rounded-lg ${naru ? "min-h-[44px] py-[8px]" : "py-1"} text-left transition hover:bg-white/[0.03]`}
       >
         {bar}
         <motion.span
@@ -1570,7 +1571,7 @@ function AxisGaugeRow({
             transition={{ duration: reduce ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] }}
             className="overflow-hidden"
           >
-            <p className={`${naru ? "mb-2 mt-1 border-l border-white/15 pl-3 sm:ml-[3.375rem]" : "px-1 pb-2 pt-0.5"} ${naru ? META : "text-[13px]"} leading-relaxed ${naru ? "text-white/75" : "text-white/65"}`}>{t(explanation)}</p>
+            <p className={`${naru ? "mb-[9px] mt-[8px] border-l border-white/15 pl-3 sm:ml-[3.375rem]" : "px-1 pb-2 pt-0.5"} ${naru ? META : "text-[13px]"} leading-relaxed ${naru ? "text-white/70" : "text-white/65"}`}>{t(explanation)}</p>
           </motion.div>
         )}
       </AnimatePresence>

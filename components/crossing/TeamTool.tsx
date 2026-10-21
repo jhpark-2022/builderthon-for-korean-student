@@ -102,14 +102,14 @@ export default function TeamTool() {
       // 칸의 색은 그 팀의 트랙(2026-10-18). 왼쪽 띠는 진하게, 바탕은 옅게. 우리 팀은 흰 테두리.
       const tint = tintOf(b.track);
       return (
-        <td key={m.id} rowSpan={span.length} className="border-l border-white/5 p-0.5 align-top">
+        <td key={m.id} rowSpan={span.length} className="border-l border-white/5 p-0 align-top">
           <div title={trackOf(b.track) ? t(trackOf(b.track)!.label) : undefined}
             // 띠와 흰 테두리를 한 그림자에 둡니다(Tailwind ring도 그림자라 따로 쓰면 하나가 지워짐).
-            // 높이: 줄 하나 2.5rem(h-10) × 줄 수에서 위아래 여백을 뺍니다.
+            // DECIDED 2026-10-21 (시각 통일): 예약 높이는 걸친 45px 시간표 줄 수입니다.
             className="rounded-md"
-            style={{ height: `calc(${span.length * 2.5}rem - 0.25rem)`, background: `${tint}38`, boxShadow: `inset 3px 0 0 ${tint}${ours ? ", inset 0 0 0 2px rgba(255,255,255,0.9)" : ""}` }}>
+            style={{ height: `${span.length * 45}px`, background: `${tint}38`, boxShadow: `inset 3px 0 0 ${tint}${ours ? ", inset 0 0 0 2px rgba(255,255,255,0.9)" : ""}` }}>
             {/* 한 번 넣은 칸은 바꾸지 못합니다(2026-10-17). 우리 팀 칸도 이름만 보입니다. */}
-            <span className={`block truncate py-1.5 pl-2.5 pr-1 ${META} font-bold ${ours ? "text-white" : "text-white/90"}`}>{b.team}</span>
+            <span className={`block truncate py-1.5 pl-2.5 pr-1 ${META} font-bold ${ours ? "text-white" : "text-white/85"}`}>{b.team}</span>
             <span className={`block pl-2.5 ${META} tabular-nums text-white/70`}>{fmtKst(s)}~{fmtKst(e)}</span>
           </div>
         </td>
@@ -119,20 +119,20 @@ export default function TeamTool() {
       const s = Date.parse(x.startsAt), e = Date.parse(x.endsAt);
       return (r >= s - BUFFER_MINUTES * MIN && r < s) || (r >= e && r < e + BUFFER_MINUTES * MIN);
     });
-    if (gap) return <td key={m.id} className={`border-l border-white/5 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.06)_0_4px,transparent_4px_8px)] px-2 ${META} text-white/60`}>{t(c.gap)}</td>;
+    if (gap) return <td key={m.id} className={`border-l border-white/5 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.06)_0_4px,transparent_4px_8px)] px-2 ${META} text-white/70`}>{t(c.gap)}</td>;
     const free = fitsWindow(r, m.windows) && slotState(r, m.bookings, []) === "open";
     const full = mine.length >= MAX_BOOKINGS_PER_TEAM_PER_DAY; // 이 날 두 칸을 다 넣었으면 더 열지 않습니다
     const ok = !timetableLocked && !!picked && !full && free && slotState(r, m.bookings, mine) === "open";
     const asking = pending?.m === m.id && pending.r === r;
     const locked = (timetableLocked || !picked) && free; // 팀을 고르면 열릴 칸: "+"를 흐리게 보여 줍니다
     return (
-      <td key={m.id} className="border-l border-white/5 p-0.5">
+      <td key={m.id} className="border-l border-white/5 p-0">
         <button type="button" disabled={!ok || busy} aria-label={`${m.name} ${fmtKst(r)}`}
           // 바꿀 수 없으니 두 번 누릅니다: 처음은 "넣기?"로 묻고, 같은 칸을 한 번 더 누르면 넣습니다.
           onClick={() => (asking ? (setPending(null), call("POST", { team: picked, mentorId: m.id, startsAt: new Date(r).toISOString() })) : setPending({ m: m.id, r }))}
           // 묻는 칸은 우리 팀의 트랙 색으로 미리 칠합니다(넣으면 이 색이 됩니다).
           style={asking ? { background: `${myTint}38`, borderColor: myTint } : undefined}
-          className={`h-8 w-full rounded-md ${META} transition ${asking ? "border font-bold text-white" : ok ? "border border-white/20 text-white/70 hover:bg-white/15" : locked ? "cursor-not-allowed border border-white/10 text-white/30" : "text-transparent"}`}>
+          className={`min-h-[44px] w-full rounded-md px-1 py-2 ${META} transition duration-150 ${asking ? "border font-bold text-white" : ok ? "border border-white/20 text-white/70 hover:bg-white/15" : locked ? "cursor-not-allowed border border-white/10 text-white/30" : "text-transparent"}`}>
           {asking ? t(c.confirmPut) : "+"}
         </button>
       </td>
@@ -141,41 +141,45 @@ export default function TeamTool() {
 
   return (
     <main id="main" className="min-h-screen bg-[#070B1F] px-4 pb-24 pt-10 text-white">
-      <div className="mx-auto flex max-w-5xl flex-col gap-6">
+      <div className="mx-auto flex max-w-5xl flex-col gap-[27px]">
         <h1 className={`${BODY} font-bold`}>{t(c.title)}</h1>
 
-        <div className="flex flex-wrap items-center gap-3">
-          <label htmlFor="team" className={`${META} font-bold text-white/85`}>{t(c.teamLabel)}</label>
-          {/* 2026-10-17 (사용자: "화살표도 상자 밖으로 튀어나와 있는 느낌"): 브라우저 기본 화살표를 끄고 상자 안쪽에 그립니다. */}
-          <div className="relative">
-            <select id="team" value={teams.includes(team) ? team : ""} onChange={(e) => { setTeam(e.target.value); save(TEAM_KEY, e.target.value); }}
-              className={`min-w-[10rem] appearance-none rounded-lg border border-white/20 bg-[#0d1230] py-2 pl-3 pr-10 ${BODY} text-white`}>
-              <option value="">{t(c.teamPick)}</option>
-              {teams.map((x) => <option key={x} value={x}>{trackOf(teamTracks[x]) ? `${x} (${t(trackOf(teamTracks[x])!.label)})` : x}</option>)}
-            </select>
-            <svg aria-hidden width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/70"><path d="m6 9 6 6 6-6" /></svg>
+        <div className="flex flex-col gap-[24px] rounded-2xl border border-white/10 bg-white/[0.04] p-[20px] sm:p-[32px]">
+          <div className="flex flex-col gap-[24px] sm:flex-row sm:flex-wrap sm:items-end">
+            <div className="flex flex-col gap-[8px]">
+              <label htmlFor="team" className={`${META} font-bold text-white/85`}>{t(c.teamLabel)}</label>
+              {/* 2026-10-17 (사용자: "화살표도 상자 밖으로 튀어나와 있는 느낌"): 브라우저 기본 화살표를 끄고 상자 안쪽에 그립니다. */}
+              <div className="relative">
+                <select id="team" value={teams.includes(team) ? team : ""} onChange={(e) => { setTeam(e.target.value); save(TEAM_KEY, e.target.value); }}
+                  className={`min-h-[52px] w-full min-w-[10rem] appearance-none rounded-xl border border-white/45 bg-[#0d1230] py-3 pl-3 pr-10 ${BODY} text-white sm:w-auto`}>
+                  <option value="">{t(c.teamPick)}</option>
+                  {teams.map((x) => <option key={x} value={x}>{trackOf(teamTracks[x]) ? `${x} (${t(trackOf(teamTracks[x])!.label)})` : x}</option>)}
+                </select>
+                <svg aria-hidden width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/70"><path d="m6 9 6 6 6-6" /></svg>
+              </div>
+            </div>
+            <div role="tablist" className="flex flex-wrap gap-[9px]">
+              {PROOF_DAYS.map((d) => (
+                <button key={d} role="tab" aria-selected={day === d} type="button" onClick={() => setDay(d)}
+                  className={`min-h-[52px] rounded-full border px-4 py-3 ${BODY} font-bold transition duration-150 ${day === d ? "border-white/60 bg-white/15" : "border-white/15 text-white/70"}`}>
+                  {t(c.dayTab)} {d} <span className={`${META} font-normal text-white/70`}>{dayDate(d).slice(5).replace("-", ".")}</span>
+                </button>
+              ))}
+            </div>
           </div>
-          <div role="tablist" className="flex gap-2">
-            {PROOF_DAYS.map((d) => (
-              <button key={d} role="tab" aria-selected={day === d} type="button" onClick={() => setDay(d)}
-                className={`rounded-full border px-4 py-2 ${BODY} font-bold ${day === d ? "border-white/60 bg-white/15" : "border-white/15 text-white/70"}`}>
-                {t(c.dayTab)} {d} <span className={`${META} font-normal text-white/70`}>{dayDate(d).slice(5).replace("-", ".")}</span>
-              </button>
-            ))}
-          </div>
+          {!picked && <p className={`${META} font-bold text-amber-100`}>{t(c.pickFirst)}</p>}
         </div>
-        {!picked && <p className={`${META} font-bold text-amber-100`}>{t(c.pickFirst)}</p>}
 
         {/* DECIDED 2026-10-17 (사용자, 스크린숏: "인증 올리는 거를 테이블 위로"): 인증이 시간표보다 먼저 섭니다. */}
         <Proofs team={picked} day={day} />
 
-        <h2 className={`mt-4 ${BODY} font-bold`}>{t(c.timetableHeading)}</h2>
-        <p className={`${BODY} text-white/85`}>{t(c.lead)} {t(c.carry)}</p>
+        <h2 className={`mt-[18px] ${BODY} font-bold`}>{t(c.timetableHeading)}</h2>
+        <p className={`${BODY} text-white/70`}>{t(c.lead)} {t(c.carry)}</p>
         {timetableLocked && <p className={`${META} font-bold text-amber-100`}>{t(c.day1Timetable)}</p>}
         {tracks.length > 0 && (
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             {tracks.map((x) => (
-              <span key={x.id} className={`flex items-center gap-2 ${META} ${teamTracks[picked] === x.id ? "font-bold text-white" : "text-white/85"}`}>
+              <span key={x.id} className={`flex items-center gap-2 ${META} ${teamTracks[picked] === x.id ? "font-bold text-white" : "text-white/70"}`}>
                 <span aria-hidden className="h-3 w-5 rounded-sm" style={{ background: `${trackTint(x.color)}38`, boxShadow: `inset 3px 0 0 ${trackTint(x.color)}` }} />
                 {t(x.label)}
               </span>
@@ -202,7 +206,7 @@ export default function TeamTool() {
               </thead>
               <tbody>
                 {rows.map((r) => (
-                  <tr key={r} className="h-10 border-t border-white/5">
+                  <tr key={r} className="h-[45px] border-t border-white/5">
                     <th scope="row" className={`sticky left-0 z-10 bg-[#0d1230] px-3 py-1 text-left ${META} font-normal tabular-nums text-white/70`}>{fmtKst(r)}</th>
                     {mentors!.map((m) => cell(m, r))}
                   </tr>
@@ -272,8 +276,8 @@ function Proofs({ team, day }: { team: string; day: ProofDay }) {
     const up = state[kind] === "uploading";
     const off = up || !team;
     return (
-      <div key={kind} className="flex flex-col gap-3 rounded-2xl border border-white/15 bg-white/[0.03] p-4">
-        <div className="flex items-baseline justify-between gap-3">
+      <div key={kind} className="flex flex-col gap-[13.5px] rounded-2xl border border-white/15 bg-white/[0.03] p-[20px] sm:p-[24px]">
+        <div className="flex flex-col gap-[13.5px] sm:flex-row sm:items-baseline sm:justify-between">
           <h3 className={`${BODY} font-bold`}>{t(kind === "photo" ? c.proofPhoto : day === 1 ? c.proofPdfDay1 : c.proofPdf)}</h3>
           <span className={`${META} ${latest ? "text-amber-100" : "text-white/70"}`}>{latest ? `★ ${t(c.proofDone)} ${fmtKst(latest.createdAt)}` : t(c.proofNone)}</span>
         </div>
@@ -282,7 +286,7 @@ function Proofs({ team, day }: { team: string; day: ProofDay }) {
           <img src={latest.url} alt="" className="max-h-56 w-fit rounded-xl object-contain" />
         )}
         {latest?.url && kind === "pdf" && <a href={latest.url} target="_blank" rel="noreferrer" className={buttonClass("text")}>{t(c.proofView)}</a>}
-        <label aria-disabled={off} className={`${buttonClass("secondary")} w-fit cursor-pointer justify-center ${off ? "pointer-events-none opacity-50" : ""}`}>
+        <label aria-disabled={off} className={`${buttonClass("secondary", "naru")} w-full cursor-pointer justify-center sm:w-fit ${off ? "pointer-events-none opacity-50" : ""}`}>
           {up ? t(c.proofUploading) : t(latest ? c.proofReplace : c.proofPick)}
           <input type="file" className="sr-only" disabled={off} accept={kind === "photo" ? "image/*" : "application/pdf"}
             onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) void upload(kind, f); }} />
@@ -292,11 +296,13 @@ function Proofs({ team, day }: { team: string; day: ProofDay }) {
   };
 
   return (
-    <section aria-labelledby="proof-h" className="flex flex-col gap-4">
-      <h2 id="proof-h" className={`${BODY} font-bold`}>{t(c.proofHeading)}</h2>
-      <p className={`${BODY} text-white/85`}>{t(day === 1 ? c.proofLeadDay1 : c.proofLead)}</p>
-      {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}
-      <div className="grid gap-4 sm:grid-cols-2">{proofKindsFor(day).map((k) => slot(k))}</div>
+    <section aria-labelledby="proof-h" className="flex flex-col gap-[24px]">
+      <div className="flex flex-col gap-[18px]">
+        <h2 id="proof-h" className={`${BODY} font-bold`}>{t(c.proofHeading)}</h2>
+        <p className={`${BODY} text-white/70`}>{t(day === 1 ? c.proofLeadDay1 : c.proofLead)}</p>
+        {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}
+      </div>
+      <div className="grid gap-[18px] sm:grid-cols-2">{proofKindsFor(day).map((k) => slot(k))}</div>
     </section>
   );
 }
