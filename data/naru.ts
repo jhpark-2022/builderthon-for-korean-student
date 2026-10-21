@@ -743,12 +743,10 @@ export const naru = {
             // DECIDED 2026-10-11 (브랜드 브리프 B6, 결정 D3): "연습"은 나루터의 말이라 여기서는 "모의"를 씁니다(docs/brand.md의 은유 규칙).
             // 그 전: "연습이 아니라 진짜 앞에 섭니다." / "Not a rehearsal."
             // DECIDED 2026-10-20 (사용자: "모든 곳들에 적용", brand 2장을 같은 커밋에서 바꿈): 셋 나열을 한 문장으로.
-            ko: "모의가 아니라 진짜 앞에 섭니다. 실명이 박힌 기업이 아직 답을 모르는 문제를, 실제로 그 일을 하는 사람 앞에서 풉니다.",
-            en: "Not a mock run. You work on a problem a named company has no answer to yet, in front of the person who actually does that work.",
-          },
-          {
-            ko: "그 앞에서 자기 판단으로 무언가를 만들고, 그 경험을 증명하는 실물을 손에 쥐고 나갑니다.",
-            en: "You build something on your own judgement and leave holding proof of it.",
+            // DECIDED 2026-10-21 (사용자: "나루 page 문장이 너무 많다", 더 과감하게): 두 문단을 한 문단으로. 둘째 문단
+            // ("그 앞에서 자기 판단으로 무언가를 만들고, 그 경험을 증명하는 실물을 손에 쥐고 나갑니다.")을 여기에 합쳤습니다.
+            ko: "모의가 아니라 진짜 앞에 섭니다. 실명이 박힌 기업이 아직 답을 모르는 문제를 실제로 그 일을 하는 사람 앞에서 자기 판단으로 풀고, 그 경험을 증명하는 실물을 손에 쥐고 나갑니다.",
+            en: "Not a mock run. You take a problem a named company has no answer to yet, work it on your own judgement in front of the person who actually does that work, and leave holding proof of it.",
           },
         ],
         keeps: {
@@ -831,8 +829,9 @@ export const naru = {
     // 나눠 풀었습니다. noteBody는 하나만 있을 때 왜 그렇게 되는지(친목 모임, 소수의 클럽)를 말하고,
     // noteClose는 전의 둘째 문장 그대로입니다. 가운데 문단은 세 줄까지라 한 문단을 늘리지 않고 문단을 늘립니다.
     noteBody: {
-      ko: "문턱만 낮으면 사람은 모여도 어디까지 갈 수 있는지 보여 줄 사람이 없어 친목 모임이 됩니다. 롤모델만 있으면 이미 잘하는 소수의 클럽이 됩니다.",
-      en: "With only a low doorway, people gather but no one shows how far you can go, and it becomes a social circle. With only role models, it becomes a small club of the already good.",
+      // DECIDED 2026-10-21 (사용자: 문장이 너무 많다): brand 2장 성장 모델 문장 그대로로 줄였습니다. noteConcrete, noteClose는 그리지 않습니다.
+      ko: "문턱만 낮으면 친목 모임이 되고, 롤모델만 있으면 소수의 클럽이 됩니다.",
+      en: "With only a low doorway it becomes a social circle. With only role models, a small club.",
     },
     noteClose: {
       ko: "둘을 동시에 지키는 것이 이 그룹이 하는 일이고, 부딪힐 때 어느 쪽으로 기울일지 매번 판단하는 것이 실력입니다.",
@@ -844,8 +843,10 @@ export const naru = {
       // DECIDED 2026-09-30 (사용자, 문장 감사): "나루는 배를 댈 자리를 만들고, 노를 젓는 건 각자입니다"를
       // 뺐습니다. 태그라인과 group.name에 이어 같은 말의 세 번째였습니다. 노가 AI라는 문장만 남깁니다.
       // DECIDED 2026-10-05 (사용자: 가운데 글 가독성 감사): 가운데 문단은 세 줄까지라 줄였습니다. 뺀 것: "어젠다는 상황을 따라 바뀌고", "건널 때 젓는 노가 지금은 AI입니다".
-      ko: "AI도 기간도 방법이라, 8일이었던 것이 이번에는 닷새가 됐습니다. 바뀌면 안 되는 것은 위의 두 개뿐입니다.",
-      en: "AI and the length are both method, which is why eight days became five this time. Only the two above cannot change.",
+      // DECIDED 2026-10-21 (사용자: 문장이 너무 많다): agendaMore와 합쳐 한 문단. "바뀌면 안 되는 것은 위의 두 개뿐"은
+      // 이 블록의 제목과 위 "변하지 않는 두 개"가 이미 말합니다. agendaMore는 그리지 않습니다.
+      ko: "AI도 기간도 방법이라, 8일이었던 것이 이번에는 닷새가 됐습니다. 지금 익히는 노 젓는 법은 AI를 쓰는 법입니다.",
+      en: "AI and the length are both method, which is why eight days became five this time. Right now the stroke you learn is how to work with AI.",
     },
     // DECIDED 2026-10-05 (사용자, 스크린숏: "여기에는 설명을 더 넣어줘도 좋을거 같아"): 같은 날 줄이면서 뺀 두
     // 문장(어젠다, 노가 AI)을 둘째 문단으로 되살립니다. 왜 지금은 AI인지를 이 줄이 말합니다.
@@ -2699,8 +2700,9 @@ export const naru = {
     // "서로"가 다시 나왔고, 같은 화면의 3층 다이어그램에도 "서로 직접 만나지 않습니다"가
     // 있어 한 스크린에 셋이었습니다. 뜻은 그대로 두고 구체적으로 적습니다.
     lead: {
-      ko: "한인 학생은 어디에나 있는데, 서로 닿지 못합니다. 없는 것이 지역마다 다르고, 한 곳의 결핍을 다른 곳이 메웁니다.",
-      en: "Korean students are everywhere and cannot reach each other. What is missing differs by place, and what one place lacks another can fill.",
+      // DECIDED 2026-10-21 (사용자: 문장이 너무 많다): 둘째 문장("없는 것이 지역마다 다르고...")을 뺐습니다. 아래 세 칸이 그 말을 합니다.
+      ko: "한인 학생은 어디에나 있는데, 서로 닿지 못합니다.",
+      en: "Korean students are everywhere and cannot reach each other.",
     },
     // 세 칸. 각 칸은 "없는 것" 한 줄과 "그래서 여는 것" 한 줄입니다. 순서를
     // 바꾸지 마세요. 결핍이 먼저 오고 처방이 나중입니다.
@@ -2740,8 +2742,9 @@ export const naru = {
         // 또래끼리는 이미 잘 이어져 있습니다"였습니다. 사실이 아닙니다. 한국 안에서도 학교가 다르면 만날
         // 자리가 없습니다. 싱가포르 칸("학교를 가로질러 잇는 자리도")과 같은 문법으로, 없는 자리 둘을 적습니다.
         lack: {
-          ko: "한국 안에서도 학교가 다르면 만날 자리가 없습니다. 다른 나라의 또래와 같은 문제를 놓고 만나는 자리도 없었습니다.",
-          en: "Even within Korea, students at different universities have nowhere to meet. Nor was there a shared problem to work on with peers who study elsewhere.",
+          // DECIDED 2026-10-21 (사용자: 문장이 너무 많다): 세 칸은 한 줄씩. 두 문장을 한 문장으로, 없는 자리 둘은 그대로.
+          ko: "한국 안에서는 학교가 다르면, 밖으로는 나라가 다르면 같은 문제를 놓고 만날 자리가 없었습니다.",
+          en: "Within Korea, a different university meant nowhere to meet, and beyond it there was no shared problem to work on with peers abroad.",
         },
         // 2026-09-29 (9/28 자문, "크로스보더는 양쪽에 카운터파트가 있어야"): 한국 쪽의 결핍은 "밖으로".
         // 한국의 학생이 이 자리에 오는 이유는 건너편에 싱가포르가 있기 때문입니다.
@@ -2817,10 +2820,7 @@ export const naru = {
         ko: "문을 두드리는 법은 대개 절박해진 다음에 배웁니다. 연습할 자리도 없이 왜 못하느냐고 묻기보다, 그 연습을 앞당겨 엽니다.",
         en: "Most people learn how to knock on a door only once they have to. Rather than ask why someone cannot do what they never got to practise, we open that practice earlier.",
       },
-      {
-        ko: "끝까지 쓰지 않는 사람이 있어도 이 자리는 있어야 합니다. 몇 사람이 쓰지 않는다는 이유로 나머지의 자리를 닫는 것은, 없어서 아쉬웠던 그 상태로 돌아가는 일입니다.",
-        en: "Even if some never use it, the place has to exist. Closing it because a few did not is going back to not having it.",
-      },
+      // DECIDED 2026-10-21 (사용자: 문장이 너무 많다): 둘째 문단("끝까지 쓰지 않는 사람이 있어도 이 자리는 있어야 합니다...")을 뺐습니다.
     ] as Phrase[],
     // 챕터의 마지막 자리(DECIDED 2026-09-19, 사용자: "그냥 공간에는 매니페스토
     // pdf 다운로드 받을 수 있게 해"). 카드 넷과 알럼 띠가 있던 자리입니다.

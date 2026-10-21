@@ -216,14 +216,7 @@ export default function NaruPage() {
                 <p className={`mt-4 max-w-xl break-keep max-sm:mx-auto ${BODY} leading-relaxed text-white/85`}>
                   {t(core.lines[0])}
                 </p>
-                {/* 폰에서는 코어가 제목 + 한 문장(감사 반영 브리프 6, 나루 챕터 4.4화면). 둘째 줄은
-                    lg부터. 키는 그대로. */}
-                {/* DECIDED 2026-10-20 (hwang 브리프 1.2): 코어 01은 한 문단이 되어 둘째 줄이 없습니다. */}
-                {core.lines[1] && (
-                  <p className={`mt-2 hidden max-w-xl break-keep ${BODY} leading-relaxed text-white/70 lg:block`}>
-                    {t(core.lines[1])}
-                  </p>
-                )}
+                {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다): 코어 02도 한 문단이 되어 두 코어 모두 둘째 줄이 없습니다. */}
               </div>
               <KeepsPanel id={`keeps-${core.index}`} label={t(naru.why.keepsLabel)} body={t(core.keeps)} />
             </li>
@@ -239,15 +232,10 @@ export default function NaruPage() {
           <p className={`text-balance break-keep text-center ${BODY} font-bold leading-snug tracking-tight text-white`}>
             {t(naru.why.note)}
           </p>
-          {/* 경첩 옆의 구체적인 한 줄(가독성 브리프 5, 2026-09-25 사용자 승인). 폰에서도 보입니다. */}
-          <p className={`${MEASURE_C} mt-3 break-keep text-center ${BODY} leading-relaxed text-white/70`}>{t(naru.why.noteConcrete)}</p>
-          {/* 폰에서는 경첩의 부연을 접습니다(나루 챕터 길이 목표 2,200). 굵은 한 문장만. */}
-          <p className={`${MEASURE_C} mt-3 hidden break-keep text-center ${BODY} leading-relaxed text-white/70 lg:block`}>
+          {/* DECIDED 2026-10-21 (사용자: "나루 page 문장이 너무 많다", 더 과감하게): 경첩은 굵은 줄과 한 줄. noteConcrete와
+              noteClose는 그리지 않고, 짧아진 noteBody는 폰에서도 보입니다. 키는 data/naru.ts에 그대로. */}
+          <p className={`${MEASURE_C} mt-3 break-keep text-center ${BODY} leading-relaxed text-white/70`}>
             {t(naru.why.noteBody)}
-          </p>
-          {/* DECIDED 2026-10-05 (사용자: "설명을 더"): 부연이 두 문단입니다. 둘 다 폰에서는 접습니다(위와 같은 이유). */}
-          <p className={`${MEASURE_C} mt-3 hidden break-keep text-center ${BODY} leading-relaxed text-white/70 lg:block`}>
-            {t(naru.why.noteClose)}
           </p>
         </Reveal>
 
@@ -257,7 +245,7 @@ export default function NaruPage() {
         <Reveal className={`${READ} mt-8 text-balance text-center lg:mt-12`}>
           <h3 data-subheading className={SUBHEADING}>{t(naru.why.agendaLabel)}</h3>
           <p className={`${MEASURE_C} mt-3 break-keep text-center ${BODY} leading-relaxed text-white/70`}>{t(naru.why.agenda)}</p>
-          <p className={`${MEASURE_C} mt-3 break-keep text-center ${BODY} leading-relaxed text-white/70`}>{t(naru.why.agendaMore)}</p>
+          {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다): agendaMore는 agenda와 합쳐 그리지 않습니다. */}
         </Reveal>
               {/* ── 어떻게 일하는가 (DECIDED 2026-09-18, 사용자: "나루와 학생회와 기업 내용은 하나의
             챕터로 합쳐져야 함"). 따로 있던 #how 챕터(세 층, 문 셋, 하지 않는 것)가 이 챕터의
@@ -304,9 +292,15 @@ export default function NaruPage() {
             그 전에는 READ의 왼쪽 끝이었습니다. 폰의 세로 쌓기도 가운데입니다. */}
         {/* DECIDED 2026-10-19 (/naru 감사 7, 출제사 브리프 1장): 기업이 얻는 것 넷. 홈의 "문제에 들어가는 네 단계"와 같은 모양(가는 선 네 칸, 폰 두 칸).
             기업에게 하는 말은 이 자리에만 씁니다(brand 4장). */}
+        {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다, 더 과감하게): 넷은 접어 둡니다. 기업만 펼쳐 보면 됩니다.
+            라벨은 코어의 "그래서 지키는 것"과 같은 알약입니다. */}
         <Reveal className={`${READ} mt-10 text-center`}>
-          <h3 data-subheading className={SUBHEADING}>{t(naru.how.companyLabel)}</h3>
-          <ul role="list" className="mt-3 grid grid-cols-2 border-y border-white/10 md:grid-cols-4">
+          <details className="group">
+          <summary className={`mx-auto inline-flex min-h-[44px] cursor-pointer list-none items-center gap-2 rounded-full border border-white/15 bg-[#0B1430]/80 px-4 ${BODY} font-medium text-accent transition hover:border-white/30 hover:text-white [&::-webkit-details-marker]:hidden`}>
+            {t(naru.how.companyLabel)}
+            <span aria-hidden className="inline-block text-white/60 transition-transform group-open:rotate-180 motion-reduce:transition-none">⌄</span>
+          </summary>
+          <ul role="list" className="mt-4 grid grid-cols-2 border-y border-white/10 md:grid-cols-4">
             {naru.how.company.map((c, i) => (
               <li key={i} className={`flex flex-col items-center gap-1 px-3 py-4 ${i >= 2 ? "border-t md:border-t-0" : ""} ${i % 2 === 1 ? "border-l" : ""} ${i === 2 ? "md:border-l" : ""} border-white/10`}>
                 <span className={`break-keep ${BODY} font-bold text-white`}>{t(c.title)}</span>
@@ -314,6 +308,7 @@ export default function NaruPage() {
               </li>
             ))}
           </ul>
+          </details>
         </Reveal>
         <Reveal className={`${READ} mt-6 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center`}>
           {naru.how.layers.map((layer) => (
@@ -394,13 +389,11 @@ export default function NaruPage() {
             // 항목의 점이 위로 올라가 어긋났습니다. 줄 사이 간격은 부모의 gap이 아니라 문단의 여백(mt-2, pt-4)입니다.
             <li
               key={need.place.en}
-              className="border-b border-white/10 py-4 last:border-b-0 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-5 lg:grid lg:grid-rows-subgrid lg:row-span-3 lg:gap-y-0"
+              className="border-b border-white/10 py-4 last:border-b-0 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-5 lg:grid lg:grid-rows-subgrid lg:row-span-2 lg:gap-y-0"
             >
               <h3 className={H3}>{t(need.place)}</h3>
-              <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/70`}>{t(need.lack)}</p>
-              <p className={`self-start break-keep pt-4 ${BODY} leading-relaxed text-white/85`}>
-                {t(need.opens)}
-              </p>
+              {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다, 더 과감하게): 칸마다 없는 것 한 줄만. opens는 그리지 않습니다. */}
+              <p className={`mt-2 break-keep ${BODY} leading-relaxed text-white/85`}>{t(need.lack)}</p>
             </li>
           ))}
         </ul>
@@ -415,20 +408,8 @@ export default function NaruPage() {
         </p>
         </Reveal>
 
-        {/* 안전장치 두 줄(왜 브리프 2.1). 카드가 아니라 문단입니다. 둘 다 있어야
-            합니다. 첫 줄이 없으면 폐쇄적인 모임으로, 둘째 줄이 없으면 억울함의
-            호소로 읽힙니다. 한 줄만 그리지 마세요.
-            DECIDED 2026-10-02 (사용자: 가독성 리뷰): 밝기 /55 → /70. 이 두 줄은 각주가 아니라 주장입니다. */}
-        {/* 2026-10-19 (/naru 감사 3): 문단 일곱이 소제목 없이 이어졌습니다. 안전장치 둘 위에 가는 선과 소제목 하나. */}
-        <Reveal className={`${READ} ${READ_MEASURE_C} mt-10 border-t border-white/10 pt-8 text-center`}>
-          <h3 data-subheading className={SUBHEADING}>{t(naru.join.guardsLabel)}</h3>
-        </Reveal>
-        <Reveal className={`${READ} ${READ_MEASURE_C} mt-3 space-y-3 break-keep text-center ${BODY} leading-relaxed text-white/70`}>
-          {naru.join.guards.map((guard, i) => (
-            <p key={i} className="text-balance">{t(guard)}</p>
-          ))}
-        </Reveal>
-
+        {/* DECIDED 2026-10-21 (사용자: "나루 page 문장이 너무 많다", 더 과감하게): "우리가 서는 방식"(guardsLabel, guards 두 줄)을
+            그리지 않습니다. brand 3장 원칙 1, 2이고 매니페스토에 그대로 있습니다. 그 전의 "한 줄만 그리지 마세요"는 둘 다 빼는 것으로 지킵니다. */}
         {/* 규모 숫자는 출처가 확인되기 전까지 그리지 않습니다. statTbd 키는
             data/naru.ts에 있습니다. */}
         {JOIN_STAT_CONFIRMED && (
@@ -483,8 +464,8 @@ export default function NaruPage() {
             {t(naru.join.manifesto.label)}
             <span className="font-medium normal-case tracking-normal text-white/70">{/* 2026-10-10: 영문 화면은 영문판(191,475바이트)을 받습니다. 크기 표기도 로케일을 따릅니다. */}{locale === "en" ? " (PDF 0.2MB)" : " (PDF 1.3MB)"}</span>
           </p>
-          <h3 className={`mt-3 break-keep ${BODY} font-bold text-white`}>{t(naru.join.manifesto.title)}</h3>
-          <p className={`mt-2 text-balance break-keep ${BODY} leading-relaxed text-white/70`}>{t(naru.join.manifesto.body)}</p>
+          {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다): 제목 줄("이 챕터의 문장들은 여기서 왔습니다.")은 그리지 않습니다. */}
+          <p className={`mt-3 text-balance break-keep ${BODY} leading-relaxed text-white/70`}>{t(naru.join.manifesto.body)}</p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             <a
               href={locale === "en" ? naruLinks.manifestoEn : naruLinks.manifesto}
