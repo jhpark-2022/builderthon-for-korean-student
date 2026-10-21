@@ -1426,7 +1426,7 @@ export default function NaruHome() {
           나루 티저 바로 앞입니다(brand 3장 원칙 2). 분류, 로고 줄, 한 줄 설명을 모든 폭에서 가운데로 쌓습니다
           (같은 날 사용자: "put the logo at the center". 그 전은 lg에서 왼쪽 분류, 오른쪽 로고).
           로고는 원래 색이고(data/naru.ts decemberPartners) 비율로 높이를 맞춥니다. 링크가 확실한 곳만 새 탭 링크입니다. */}
-      <section id="partners" aria-labelledby="partners-title" className="relative w-full px-6 pt-16 sm:px-10 lg:pt-24">
+      <section id="partners" aria-labelledby="partners-title" className="relative w-full px-6 pb-20 pt-16 sm:px-10 lg:pb-28 lg:pt-24">
         <div className={WIDE}>
           <h2 id="partners-title" className={`${H2} text-center`}>{t(decemberPartners.heading)}</h2>
           <ul className="mt-10 border-t border-white/10">
@@ -1459,65 +1459,33 @@ export default function NaruHome() {
                 </div>
               </li>
             ))}
+            {/* DECIDED 2026-10-21 (사용자, 스크린숏: "따로 아래에 주최 박스를 넣지 말고, 나루 로고를 주최에 넣어줘 at the table, 로고 옆에 learn more"):
+                아래에 있던 나루 티저 상자를 없애고 이 표의 마지막 줄로. 이벤트가 먼저, 나루는 그 안에서 드러납니다(brand 3장 원칙 2, 6장 나루 = 주최).
+                id="naru"는 옛 링크 /#naru와 목차 칩이 여기에 내려앉게 이 줄로 옮겼습니다. */}
+            <li id="naru" className="flex flex-col items-center gap-4 border-b border-white/10 py-7 text-center sm:flex-row sm:justify-center sm:gap-8">
+              <p className={`${META} text-white/50`}>{t(naru.teaser.eyebrow)}</p>
+              <Image
+                src={locale === "en" ? "/naru/naru-name-en-rev.svg" : "/naru/naru-name-rev.png"}
+                alt={t({ ko: "나루", en: "NARU" })}
+                width={604}
+                height={168}
+                unoptimized={locale === "en"}
+                className="block h-8 w-auto sm:h-9"
+              />
+              <Link
+                href={naru.teaser.cta.href}
+                onClick={() => track("naru_cta", { src: "partners", to: "naru-page" })}
+                className={`group inline-flex items-center gap-1.5 ${BODY} font-semibold text-accent transition-colors hover:text-white`}
+              >
+                {t(naru.teaser.cta.label)}
+                <span aria-hidden className={ARROW_CLASS}>→</span>
+              </Link>
+            </li>
           </ul>
         </div>
       </section>
 
-      {/* ── 나루 티저 (DECIDED 2026-10-10, 사용자: "프로그램 끝에 나루 티저, 나루 내용은 전부 다른 탭으로", 구조 브리프 2.3) ──
-          홈의 마지막 블록입니다. id는 naru라 옛 링크 /#naru가 여기에 내려앉고, 목차의 넷째 칩이 여기로 옵니다.
-          READ 폭의 상자 하나(General Mentoring 상자와 같은 문법, 색은 보라 계열). 왼쪽에 나루 인장(크기는 전의 #naru 머리와
-          같은 160/220px), 폰에서는 위. 읽기 판 밖이라 상자가 자기 바탕을 가집니다(배경의 서울 형상이 이 뒤에 서 있습니다).
-          Chapter가 아니라 section입니다. Chapter는 md부터 한 화면 높이를 잡아 상자 하나에 빈 화면이 생깁니다. */}
-      {/* DECIDED 2026-10-10 (사용자, 스크린숏: "너무 밋밋하다"): 티저를 다시 그렸습니다. 테두리 한 줄짜리 상자에서
-          ① 보라에서 자주로 가는 그라데이션 테두리와 안쪽의 빛 둘(/match 결과 카드와 같은 문법), ② 인장 뒤의 빛,
-          ③ 나루의 두 줄 선언(naru.hero.titleLine1, 2. /naru 머리의 제목과 같은 문장, 새 글이 아닙니다)을 TITLE로.
-          폭은 READ에서 WIDE로 넓혔습니다. TITLE 두 줄이 인장 옆에 서려면 READ(864px)로는 모자랍니다.
-          주황은 쓰지 않습니다(주황은 점으로만). 글자 크기는 TITLE, BODY, META 셋 그대로입니다. */}
-      {/* DECIDED 2026-10-11 (사용자, 스크린숏: "여기 gap이 다른 gap들에 비해서 너무 좁은데"): 위 여백을 pt-6에서 pt-16 lg:pt-28로.
-          #gains가 카드로 길어지면서 마지막 카드와 이 상자 사이가 1440px에서 135px이었습니다(#december 끝과 #gains 머리 사이는 약 220px).
-          이제 234px, 폰은 90px에서 135px입니다(실측). */}
-      {/* 2026-10-21 (사용자: "여기가 주최라는 느낌"): 바로 위 함께하는 곳과 한 덩어리로 읽히게 위 여백을 pt-16 lg:pt-28에서 pt-10 lg:pt-14로. */}
-      <section id="naru" aria-labelledby="naru-teaser-label" className="relative w-full px-6 pb-20 pt-10 sm:px-10 lg:pb-28 lg:pt-14">
-        {/* 2026-10-11 (리뷰 A5): 티저의 제목. 화면에는 그리지 않습니다. */}
-        <h2 className="sr-only">{t({ ko: "나루", en: "NARU" })}</h2>
-        {/* DECIDED 2026-10-20 (사용자, 스크린숏: "좀더 visually 예뻤으면", 세 시안 중 B): 인장을 280px로 키우고 글 폭을 좁혀
-            인장과 글의 무게를 맞췄습니다. 사이에 흐린 세로선 하나. 발광은 되살리지 않습니다(hwang 브리프 3.4). 사진 시안(A)은
-            히어로 사진과 겹치고 얼굴 공개 확인 전이라, 가운데 시안(C)은 배경 형상이 글 뒤로 지나가 고르지 않았습니다. */}
-        <Reveal className={WIDE}>
-          <div className="relative overflow-hidden rounded-3xl bg-[#0B1430]/90 px-6 py-10 sm:px-10 lg:px-12 lg:py-16">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-accent/40 via-white/10 to-accent-strong/30 p-px"
-              style={{ WebkitMask: "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)", WebkitMaskComposite: "xor", maskComposite: "exclude" }}
-            />
-            <div className="relative flex flex-col items-center gap-8 text-center md:flex-row md:items-center md:justify-center md:gap-12 md:text-left">
-              <div className="shrink-0"><Image
-                  src={locale === "en" ? "/naru/naru-master-en-v3-rev.svg" : "/naru/naru-master-v3-rev.png"}
-                  alt={t(naru.hero.logoAlt)} width={900} height={900} unoptimized={locale === "en"}
-                  className="relative block h-auto w-[200px] sm:w-[240px] lg:w-[230px] xl:w-[250px]"
-                /></div>
-              <div aria-hidden className="hidden h-56 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent md:block" />
-              <div className="min-w-0 max-w-[48rem]">
-                <p id="naru-teaser-label" className={`${BODY} font-bold text-accent`}>{t(naru.teaser.eyebrow)}</p>
-                <p className={`mt-3 ${TITLE} text-balance font-bold leading-[1.15] tracking-tight text-white`}>
-                  <span className="block break-keep">{t(naru.hero.titleLine1)}</span>{" "}
-                  <span className={`${GRADIENT_TEXT} block break-keep`}>{t(naru.hero.titleLine2)}</span>
-                </p>
-                <p className={`mt-5 break-keep ${BODY} leading-relaxed text-white/80`}>{t(naru.teaser.body)}</p>
-                <Link
-                  href={naru.teaser.cta.href}
-                  onClick={() => track("naru_cta", { src: "teaser", to: "naru-page" })}
-                  className={`group mt-7 ${buttonClass("secondary", "naru")}`}
-                >
-                  {t(naru.teaser.cta.label)}
-                  <span aria-hidden className={ARROW_CLASS}>→</span>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </section>
-
+      {/* DECIDED 2026-10-21 (사용자): 여기 있던 나루 티저 상자(#naru)는 없앴습니다. 주최는 위 함께하는 곳 표의 마지막 줄입니다. */}
       {/* DECIDED 2026-10-10 (사용자: "나루와 크로싱 서울이 한 페이지에 있어 혼동된다", 구조 브리프 2.2): 여기 있던 #naru, #join,
           (조건부) #people 챕터는 /naru로 옮겼습니다(components/naru/NaruPage.tsx). 삭제가 아니라 이동입니다. */}
 
