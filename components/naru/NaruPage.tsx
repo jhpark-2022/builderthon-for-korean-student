@@ -253,9 +253,13 @@ export default function NaruPage() {
             그 전의 주석: #december 뒤로 내려온 이유(2026-09-17)는 git 이력에. */}
         {/* 2026-09-26 (한 축 브리프): 헤어라인과 머리, 리드는 READ. 세 층 도식만 WIDE(LayerDiagram). */}
         {/* 2026-10-11 (리뷰 A5): 함께하기도 이름 있는 section, 제목은 h2(모양은 H3 토큰 그대로). */}
-        <section id="how" aria-labelledby="how-title" className="mt-10 text-left lg:mt-16">
+        </PlateSegment>
+        {/* DECIDED 2026-10-21 (사용자: "나루 탭에 형상이 3번만 보이게", 싱가포르 그대로): 판을 하나 더 나눠 코어와 "어떻게 일하는가"
+            사이에 틈을 둡니다. 형상이 보이는 틈은 히어로 뒤, 여기, "왜" 앞의 셋입니다. 틈이 둘을 나누므로 윗선과 위 여백은 뺐습니다. */}
+        <PlateSegment id="naru-3" gap read>
+        <section id="how" aria-labelledby="how-title" className="text-left">
         {/* DECIDED 2026-10-05 (사용자, 스크린숏: "다 중간에"): 소제목, h3, 리드는 가운데. 도식과 버튼 셋이 이미 가운데입니다. */}
-        <div className={`${READ} border-t border-white/10 pt-8 text-balance text-center lg:pt-12`}>
+        <div className={`${READ} pt-8 text-balance text-center lg:pt-12`}>
 
           {/* "세 층"은 챕터 라벨이 아니라 챕터 안 소제목입니다(가독성 브리프 4.2의 표). 알약을 벗습니다. */}
           {/* DECIDED 2026-10-06 (사용자, 스크린숏: "세 층 빼주고"): 소제목 "세 층"(how.eyebrow)은 그리지 않습니다.
