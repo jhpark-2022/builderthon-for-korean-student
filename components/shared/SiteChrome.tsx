@@ -145,6 +145,9 @@ export function SiteFooter({ page, onMotionToggle }: { page: SitePage; onMotionT
             {t(dict.footerNav.contact)}
           </a>
         </nav>
+        {/* DECIDED 2026-10-21 (사용자, 스크린숏: "빼줘"): 크로싱 서울 홈에는 8월 파트너 줄을 두지 않습니다. 바로 위 12월 "함께하는 곳"과 겹칩니다.
+            /naru와 /2026-08에는 그대로입니다. */}
+        {page !== "crossing" && (
         <div className="flex w-full flex-col items-center gap-3">
           <p className={`${META} text-white/70`}>{t(dict.siteFooter.partners)}</p>
           <ul role="list" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
@@ -158,6 +161,7 @@ export function SiteFooter({ page, onMotionToggle }: { page: SitePage; onMotionT
             ))}
           </ul>
         </div>
+        )}
         <p className={`${META} text-white/70`}>{t(dict.siteFooter.rights)}</p>
         <span className="inline-flex" onClick={onMotionToggle}>
           <MotionToggle className="min-h-[44px] !text-white/70" />
