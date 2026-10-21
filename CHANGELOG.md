@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-22 AXMOS 컨소시엄 묶음, 링크 고침](#2026-10-22-axmos-links)
 - [2026-10-22 서울 안의 대학교 휘장](#2026-10-22-seoul-clubs)
 - [2026-10-22 함께하는 곳의 커서 빛](#2026-10-22-partners-cursor-light)
 - [2026-10-21 함께하는 곳 줄마다 분류 이름](#2026-10-21-partners-roles)
@@ -297,6 +298,15 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-22-axmos-links"></a>
+
+## 2026-10-22 AXMOS 컨소시엄 묶음, 링크 고침
+- 범위: components/home/NaruHome.tsx, data/naru.ts(decemberPartners), data/partnerLinks.ts, components/shared/SiteChrome.tsx, components/journey/Journey.tsx
+- 한 것: 사용자 "AXMOS라는 컨소시엄 안에 이 5개의 회사가 있다는 느낌을 더 보여줘"(스크린숏). 메인 후원 줄을 AXMOS 로고, "컨소시엄 코어 5개사", 짧은 세로선, 선만 있는 테두리 안의 다섯 로고로. 순서는 axmos.ai/kr의 코어 5개사 순서. 바탕은 칠하지 않음.
+- 같은 요청 "작동이 안 되는 링크들이 있음, 블룸이랑 크라이치즈버거도 반드시 넣어줘": translinkinvestment.com은 도메인이 없어 translink.kr로(세 곳). AXMOS, Bloom(bloomworld.ai), 크라이치즈버거(crycheeseburger.com) 링크 추가. 근거: brand 3장 원칙 2(무대가 먼저), 10장 사이트 규칙(글자 크기 셋, META만 추가).
+- 검증: 사이트의 바깥 링크 97개를 curl로. 실패는 봇 차단(LinkedIn 999, Cloudflare 403)뿐이고 403 셋은 Chrome에서 열림. 1512폭과 390폭에서 묶음 확인. 프로덕션 빌드 통과.
+- 커밋: 6f96059
 
 <a id="2026-10-22-seoul-clubs"></a>
 
