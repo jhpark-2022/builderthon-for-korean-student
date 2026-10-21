@@ -22,15 +22,14 @@ import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "@/lib/LocaleContext";
-import { naru, naruLinks, openChatLabels, partnerContact, type Layer, type Stat, type RecordPhoto } from "@/data/naru";
+import { naru, naruLinks, partnerContact, type Layer, type Stat, type RecordPhoto } from "@/data/naru";
 import type { Phrase } from "@/data/dictionaryCore";
 import Chip from "@/components/ui/Chip";
-import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
+import { buttonClass } from "@/components/ui/Button";
 import MobileChatBar from "@/components/shared/MobileChatBar";
 import Chapter from "@/components/journey/Chapter";
 import Reveal from "@/components/shared/Reveal";
 import Eyebrow from "@/components/ui/Eyebrow";
-import OpenChatLink from "@/components/ui/OpenChatLink";
 import { TITLE, BODY, META, H2, H3, STATEMENT, GRADIENT_TEXT } from "@/components/ui/typography";
 import NaruMark from "@/components/ui/NaruMark";
 import {
@@ -458,11 +457,11 @@ export default function NaruPage() {
               아니라 라벨 옆의 한 조각입니다. 버튼의 ↓는 **형식을 말하지 않고**,
               셀룰러에서 1MB는 데스크톱에서와 다른 값입니다. 그 결정의 이유
               ("무엇을 받는지 모르고 누르게 하지 않습니다")를 셀룰러까지 넓힙니다.
-              파일이 바뀌면 이 숫자도 바꾸세요: public/naru/naru-manifesto-v5-2026-10.pdf
-              (2026-10-20 v5: 1,286,556바이트라 1.3MB) */}
+              파일이 바뀌면 이 숫자도 바꾸세요: public/naru/naru-manifesto-v6-2026-10.pdf
+              (2026-10-21 v6: 621,513바이트라 0.6MB) */}
           <p className={`${META} font-bold uppercase ${latinTrack(locale)} text-white/70`}>
             {t(naru.join.manifesto.label)}
-            <span className="font-medium normal-case tracking-normal text-white/70">{/* 2026-10-10: 영문 화면은 영문판(191,475바이트)을 받습니다. 크기 표기도 로케일을 따릅니다. */}{locale === "en" ? " (PDF 0.2MB)" : " (PDF 1.3MB)"}</span>
+            <span className="font-medium normal-case tracking-normal text-white/70">{/* 2026-10-10: 영문 화면은 영문판(191,475바이트)을 받습니다. 크기 표기도 로케일을 따릅니다. */}{locale === "en" ? " (PDF 0.2MB)" : " (PDF 0.6MB)"}</span>
           </p>
           {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다): 제목 줄("이 챕터의 문장들은 여기서 왔습니다.")은 그리지 않습니다. */}
           <p className={`mt-3 text-balance break-keep ${BODY} leading-relaxed text-white/70`}>{t(naru.join.manifesto.body)}</p>
@@ -484,17 +483,8 @@ export default function NaruPage() {
           </div>
         </Reveal>
 
-        {/* DECIDED 2026-10-10 (구조 브리프 3.3): 페이지의 맨 끝, 매니페스토 상자 아래의 돌아가는 줄. 새 문장은 없습니다.
-            앞의 것은 8월 페이지 #gaps에서 홈으로 가는 줄과 같은 라벨이고, 뒤의 것은 홈의 프로그램 챕터 끝에 있는 버튼과
-            같은 버튼입니다(같은 곳으로 갑니다). data-naru-return은 글자 보존 검증이 이 줄을 빼고 비교하는 손잡이입니다. */}
-        <div data-naru-return className={`${READ} mt-10 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-4`}>
-          {/* 2026-10-19 (/naru 감사 6): 버튼 셋이 같은 모양이었습니다. 주 버튼은 이벤트로 가는 것 하나(brand 3장 원칙 2: 무대가 먼저). */}
-          <Link href="/#december" onClick={() => track("naru_cta", { src: "naru-page", to: "december" })} className={buttonClass("primary", "naru")}>
-            {t(naru.december.gapsBackLink)}
-            <span aria-hidden className={ARROW_CLASS}>→</span>
-          </Link>
-          <OpenChatLink t={t} src="naru-join" label={openChatLabels.december} variant="secondary" />
-        </div>
+        {/* DECIDED 2026-10-21 (사용자, 스크린숏: "이거 빼줘"): 매니페스토 아래의 돌아가는 줄(크로싱 서울 프로그램 보기,
+            카카오톡으로 소식 받기)을 뺐습니다. 헤더에 크로싱 서울이, 하단 바와 푸터에 오픈채팅이 있습니다. */}
 
         </PlateSegment>
       </Chapter>

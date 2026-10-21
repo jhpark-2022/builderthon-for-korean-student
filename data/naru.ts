@@ -117,7 +117,10 @@ export const naruLinks = {
   // DECIDED 2026-10-20 (사용자: 피드백 반영 재조판, "V5 날짜 이런거 빼주고 production에 반영"): v5는 10/19 리뷰(W14)대로 다시 짠 판입니다.
   // 서체 한 가족 두 컷(Noto Serif KR), 가로줄 없음, 자간 0, 가운뎃점 없음, 정본 v5 표기(자리, 증명해 보는, I장의 다리 → 자리, 성과 공유회).
   // 원본은 그룹 기획/매니페스토_나루_v5.pdf와 같은 이름의 .html(편집용).
-  manifesto: "/naru/naru-manifesto-v5-2026-10.pdf",
+  // DECIDED 2026-10-21 (사용자: "update 매니페스토 based on this", 그룹 기획/매니페스토_나루.pdf): v6. 바뀐 곳은 표지 첫 문장(안전하게
+  // 도전하고 스스로를 증명해 볼), 코어 02(모의가 아니라, brand 2장 문장), 방법 문단(8일이 닷새, 빌더톤이 크로싱 서울), 다음 회차 도시,
+  // 나루의 뜻(건너기 전에 노 젓는 법을 익히는). 6쪽, 621,513바이트.
+  manifesto: "/naru/naru-manifesto-v6-2026-10.pdf",
   manifestoEn: "/naru/naru-manifesto-en-v1-2026-10.pdf",
 } as const;
 
