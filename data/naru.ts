@@ -3086,11 +3086,12 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
       label: { ko: "메인 후원", en: "Main sponsors" },
       lead: { name: "AXMOS", src: "/partners/logos/white/trimmed/axmos.png", w: 900, h: 240, url: "https://axmos.ai/kr", note: { ko: "컨소시엄 코어 5개사", en: "Consortium, five core members" } },
       logos: [
-        { name: "Wilt Venture Builder", src: "/partners/logos/white/trimmed/wilt.png", w: 309, h: 148, url: "https://www.wiltvb.com/" },
-        { name: "Popup Studio", src: "/partners/logos/white/trimmed/popup-studio.png", w: 512, h: 245, url: "https://popupstudio.ai" },
-        { name: "Codepresso", src: "/partners/logos/white/trimmed/codepresso.png", w: 456, h: 91, url: "https://codepresso.io" },
-        { name: "Drimaes", src: "/partners/logos/white/trimmed/drimaes.png", w: 332, h: 50, url: "https://www.drimaes.com" },
+        // DECIDED 2026-10-22 (사용자: "translink, wilt, codepresso, popup, 드림에이스 순서임").
         { name: "Translink Investment", src: "/partners/logos/white/trimmed/translink.png", w: 330, h: 91, url: "https://translink.kr" },
+        { name: "Wilt Venture Builder", src: "/partners/logos/white/trimmed/wilt.png", w: 309, h: 148, url: "https://www.wiltvb.com/" },
+        { name: "Codepresso", src: "/partners/logos/white/trimmed/codepresso.png", w: 456, h: 91, url: "https://codepresso.io" },
+        { name: "Popup Studio", src: "/partners/logos/white/trimmed/popup-studio.png", w: 512, h: 245, url: "https://popupstudio.ai" },
+        { name: "Drimaes", src: "/partners/logos/white/trimmed/drimaes.png", w: 332, h: 50, url: "https://www.drimaes.com" },
       ],
     },
     {
