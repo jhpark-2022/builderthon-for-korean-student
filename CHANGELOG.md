@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-21 /naru 배경 형상 세 번](#2026-10-21-naru-three-gaps)
 - [2026-10-21 매니페스토 v6, /naru 끝 버튼 줄 뺌](#2026-10-21-manifesto-v6)
 - [2026-10-21 /naru 문장 줄임](#2026-10-21-naru-trim)
 - [2026-10-21 홈 푸터에서 8월 파트너 줄 뺌](#2026-10-21-footer-aug-off)
@@ -293,6 +294,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-21-naru-three-gaps"></a>
+
+## 2026-10-21 /naru 배경 형상 세 번
+- 범위: components/naru/NaruPage.tsx, components/home/shared.tsx(PlateId에 naru-3)
+- 한 것: 사용자 "나루 탭에 형상이 3번만 보이게". 형상은 2026-10-11 결정대로 싱가포르. 판 조각 naru-2를 코어와 "어떻게 일하는가" 사이에서 나눠 틈을 하나 더 둠. 보이는 자리는 히어로 뒤, 코어 뒤, "왜" 앞의 셋. 근거: brand 10장(배경 형상은 판 뒤에서만 바뀐다).
+- 검증: tsc 통과. 1440x900과 390x844에서 판 넷, 틈 셋에 형상 확인.
+- 커밋: dd42d3f
 
 <a id="2026-10-21-manifesto-v6"></a>
 
