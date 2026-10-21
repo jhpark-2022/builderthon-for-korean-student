@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
-import { naru, naruLinks, openChatLabels, register as registerCopy, registerNoteShort, type RecordPhoto } from "@/data/naru";
+import { naru, naruLinks, openChatLabels, register as registerCopy, registerNoteShort, decemberPartners, type RecordPhoto } from "@/data/naru";
 import { useCrossingRegisterOptional } from "@/components/crossing/RegisterProvider";
 import { links, type Phrase } from "@/data/dictionaryCore";
 import { useEffect, useRef, useState } from "react";
@@ -505,6 +505,17 @@ function MilestoneStrip({ id, label, title, detail, center = false, expanded = f
       )}
     </div>
   );
+}
+
+// 함께하는 곳 로고의 높이(2026-10-21). 같은 높이면 가로로 긴 워드마크(DRIMAES, Lovable)가 커 보이고 두 줄짜리 마크(팝업스튜디오, Wilt)가
+// 작아 보여서, 가로세로 비율로 높이를 나눕니다. 눈에 보이는 면적이 비슷해지는 값입니다.
+function partnerLogoHeight(l: { w: number; h: number; square?: boolean }): string {
+  if (l.square) return "h-12 sm:h-14"; // 2026-10-21: 크라이치즈버거가 얼굴 아래 글자 두 줄인 판으로 바뀌어 글자가 읽히는 높이로.
+  const r = l.w / l.h;
+  if (r > 5) return "h-4 sm:h-[1.15rem]";
+  if (r > 3.6) return "h-5 sm:h-[1.35rem]";
+  if (r > 2.4) return "h-6 sm:h-7";
+  return "h-7 sm:h-8";
 }
 
 export default function NaruHome() {
@@ -1410,6 +1421,48 @@ export default function NaruHome() {
         </PlateSegment>
       </Chapter>
 
+      {/* ── 함께하는 곳 (DECIDED 2026-10-21, 사용자: 후원 현황 스크린숏과 "이렇게 로고 반영해줘") ──────────────
+          현황표의 네 줄(메인 후원, 장소, 기술과 크레딧, 커뮤니티와 홍보)을 그대로 옮겼습니다. 이벤트가 먼저, 나루는 그 뒤라
+          나루 티저 바로 앞입니다(brand 3장 원칙 2). 분류, 로고 줄, 한 줄 설명을 모든 폭에서 가운데로 쌓습니다
+          (같은 날 사용자: "put the logo at the center". 그 전은 lg에서 왼쪽 분류, 오른쪽 로고).
+          로고는 원래 색이고(data/naru.ts decemberPartners) 비율로 높이를 맞춥니다. 링크가 확실한 곳만 새 탭 링크입니다. */}
+      <section id="partners" aria-labelledby="partners-title" className="relative w-full px-6 pt-16 sm:px-10 lg:pt-24">
+        <div className={WIDE}>
+          <h2 id="partners-title" className={`${H2} text-center`}>{t(decemberPartners.heading)}</h2>
+          <ul className="mt-10 border-t border-white/10">
+            {decemberPartners.groups.map((g) => (
+              <li key={g.label.en} className="flex flex-col items-center gap-4 border-b border-white/10 py-7 text-center">
+                <p className={`${BODY} font-bold text-white`}>{t(g.label)}</p>
+                <div>
+                  <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
+                    {g.logos.map((l) => {
+                      const img = (
+                        <Image
+                          src={l.src}
+                          alt={l.name}
+                          width={l.w}
+                          height={l.h}
+                          unoptimized
+                          className={`block w-auto ${partnerLogoHeight(l)} opacity-90`}
+                        />
+                      );
+                      return l.url ? (
+                        <a key={l.name} href={l.url} target="_blank" rel="noopener noreferrer" aria-label={l.name} className="rounded-sm transition-opacity hover:opacity-100 [&>img]:hover:opacity-100">
+                          {img}
+                        </a>
+                      ) : (
+                        <span key={l.name}>{img}</span>
+                      );
+                    })}
+                  </div>
+                  {g.note && <p className={`mt-3 ${META} text-white/60`}>{t(g.note)}</p>}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* ── 나루 티저 (DECIDED 2026-10-10, 사용자: "프로그램 끝에 나루 티저, 나루 내용은 전부 다른 탭으로", 구조 브리프 2.3) ──
           홈의 마지막 블록입니다. id는 naru라 옛 링크 /#naru가 여기에 내려앉고, 목차의 넷째 칩이 여기로 옵니다.
           READ 폭의 상자 하나(General Mentoring 상자와 같은 문법, 색은 보라 계열). 왼쪽에 나루 인장(크기는 전의 #naru 머리와
@@ -1423,7 +1476,8 @@ export default function NaruHome() {
       {/* DECIDED 2026-10-11 (사용자, 스크린숏: "여기 gap이 다른 gap들에 비해서 너무 좁은데"): 위 여백을 pt-6에서 pt-16 lg:pt-28로.
           #gains가 카드로 길어지면서 마지막 카드와 이 상자 사이가 1440px에서 135px이었습니다(#december 끝과 #gains 머리 사이는 약 220px).
           이제 234px, 폰은 90px에서 135px입니다(실측). */}
-      <section id="naru" aria-labelledby="naru-teaser-label" className="relative w-full px-6 pb-20 pt-16 sm:px-10 lg:pb-28 lg:pt-28">
+      {/* 2026-10-21 (사용자: "여기가 주최라는 느낌"): 바로 위 함께하는 곳과 한 덩어리로 읽히게 위 여백을 pt-16 lg:pt-28에서 pt-10 lg:pt-14로. */}
+      <section id="naru" aria-labelledby="naru-teaser-label" className="relative w-full px-6 pb-20 pt-10 sm:px-10 lg:pb-28 lg:pt-14">
         {/* 2026-10-11 (리뷰 A5): 티저의 제목. 화면에는 그리지 않습니다. */}
         <h2 className="sr-only">{t({ ko: "나루", en: "NARU" })}</h2>
         {/* DECIDED 2026-10-20 (사용자, 스크린숏: "좀더 visually 예뻤으면", 세 시안 중 B): 인장을 280px로 키우고 글 폭을 좁혀
@@ -1444,7 +1498,7 @@ export default function NaruHome() {
                 /></div>
               <div aria-hidden className="hidden h-56 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent md:block" />
               <div className="min-w-0 max-w-[48rem]">
-                <p id="naru-teaser-label" className={`${META} font-bold text-accent`}>{t(naru.teaser.eyebrow)}</p>
+                <p id="naru-teaser-label" className={`${BODY} font-bold text-accent`}>{t(naru.teaser.eyebrow)}</p>
                 <p className={`mt-3 ${TITLE} text-balance font-bold leading-[1.15] tracking-tight text-white`}>
                   <span className="block break-keep">{t(naru.hero.titleLine1)}</span>{" "}
                   <span className={`${GRADIENT_TEXT} block break-keep`}>{t(naru.hero.titleLine2)}</span>

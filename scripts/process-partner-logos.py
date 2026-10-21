@@ -147,6 +147,10 @@ JOBS = [
     # GSC는 G, S, C가 겹쳐 있어 "alpha"로 통째 흰색이면 세 글자가 한 덩어리가 됩니다. "tone"이 글자마다 밝기를 달리합니다.
     ("GSC.png", "gsc.png", "tone", {"ci": "dec"}),
     ("마루180.png", "maru180.png", "color", {"ci": "dec"}),
+    # 2026-10-21 (사용자: 12월 함께하는 곳 로고). 아산나눔재단은 짙은 초록 단색이라 "dark".
+    # AXMOS는 원본이 이미 투명 바탕이라 "alpha". Lovable, Bloom, 크라이치즈버거는 원래 색이라 scripts/colorize-partner-logos.py에 있습니다.
+    ("아산나눔재단.png", "asan-nanum.png", "dark", {"ci": "dec"}),
+    ("AXMOS.png", "axmos.png", "alpha", {"ci": "dec"}),
 ]
 
 

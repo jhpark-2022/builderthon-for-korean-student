@@ -432,15 +432,19 @@ export const naru = {
   // DECIDED 2026-10-10 (사용자: 나루 내용은 전부 다른 탭으로, 구조 브리프 2.3): 홈의 마지막 블록(#naru)에 서는 티저.
   // 그룹의 글은 /naru에 있고, 홈에는 누가 여는지 한 상자만 남습니다. 문장 둘은 브리프의 것 그대로입니다.
   teaser: {
-    eyebrow: { ko: "여는 사람들", en: "Who runs this" },
+    // DECIDED 2026-10-21 (사용자, 스크린숏: "여기가 주최라는 느낌을 내줘"): 라벨을 "여는 사람들"에서 "크로싱 서울 주최"로, 본문 첫 문장을
+    // "크로싱 서울은 나루가 주최합니다."로. 바로 위 "함께하는 곳"(후원, 장소, 기술, 커뮤니티)에 이어 주최가 누구인지 말합니다(brand 6장: 나루 = 주최).
+    eyebrow: { ko: "크로싱 서울 주최", en: "Hosted by" },
     body: {
       // DECIDED 2026-10-10 (사용자, 스크린숏: "이번이 처음이라는 표현 빼주고"): 둘째 문장은 어디서 시작했는지만 말합니다.
       // 브리프의 "이번이 두 번째 자리입니다"는 프로그램 리드(december.notSequel, "나루가 직접 여는 첫 이벤트입니다")와
       // 어긋나 같은 날 "직접 여는 이벤트는 이번이 처음입니다"로 고쳤다가, 그 표현도 뺐습니다. 몇 번째인지는 여기서 말하지 않습니다.
       // DECIDED 2026-10-11 (브랜드 브리프 B4): 나루의 정의는 docs/brand.md의 정의문을 따릅니다. "비영리"는 쓰지 않습니다.
       // 그 전: "학생이 직접 운영하는 비영리 그룹 나루가 엽니다. 2026년 8월 싱가포르에서 시작했습니다."
-      ko: "한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 그룹 나루가 엽니다. 2026년 8월 싱가포르에서 시작했습니다.",
-      en: "CROSSING SEOUL is run by NARU, a Korea-rooted, student-run, not-for-profit group. It started in Singapore in August 2026.",
+      // 같은 날 (사용자: "크로싱 서울은 나루가 주최합니다. 너무 내용이 greedy 한거 같음"): 주최는 라벨이 말하므로 본문은 두 짧은 문장만.
+      // 정의문 전체는 /naru에 있습니다.
+      ko: "학생이 직접 운영하는 그룹입니다. 2026년 8월 싱가포르에서 시작했습니다.",
+      en: "A student-run group that started in Singapore in August 2026.",
     },
     cta: { label: { ko: "나루 알아보기", en: "About NARU" }, href: "/naru" },
   },
@@ -3035,3 +3039,57 @@ export const naru = {
     logoAlt: { ko: "나루 NARU", en: "NARU" },
   },
 } as const;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 12월 크로싱 서울을 함께하는 곳 (DECIDED 2026-10-21, 사용자: 후원 현황 스크린숏 셋과 "이렇게 로고 반영해줘")
+//
+// 분류와 순서는 사용자가 보낸 후원 현황표 그대로입니다: 메인 후원, 장소, 기술과 크레딧, 커뮤니티와 홍보.
+// 로고는 원래 색입니다(public/partners/logos/color/, scripts/colorize-partner-logos.py, 2026-10-21 사용자: "로고들의 색감을 살려줘").
+// 검정과 회색만 흰색으로, 너무 어두운 색(남색, 짙은 초록)은 같은 색의 밝은 틴트로 올렸습니다. 밝은 판은 깔지 않습니다.
+// 같은 날 (사용자: "또 이러니까 너무 잘 안보이내, 메인 후원이랑 장소는 하얀색으로 다시 revert"): 메인 후원과 장소는 흰색 단색(white/trimmed/)으로 되돌렸습니다.
+// 원래 색은 기술과 크레딧, 커뮤니티와 홍보(Lovable, Bloom, 크라이치즈버거)에만 남습니다.
+// url은 확실한 곳만 적습니다. 없으면 링크 없이 로고만 섭니다(AXMOS, Bloom, 크라이치즈버거).
+// 커뮤니티와 홍보는 현황표에서 "일부 확정"입니다. 바뀌면 여기서 빼거나 더합니다.
+// 금액, 무료 여부는 쓰지 않습니다(brand 9장).
+// ─────────────────────────────────────────────────────────────────────────────
+export type PartnerLogo = { name: string; src: string; w: number; h: number; url?: string; square?: boolean };
+export const decemberPartners: { heading: Phrase; groups: { label: Phrase; note?: Phrase; logos: PartnerLogo[] }[] } = {
+  heading: { ko: "함께하는 곳", en: "With us in December" },
+  groups: [
+    {
+      label: { ko: "메인 후원", en: "Main sponsors" },
+      note: { ko: "AXMOS 컨소시엄과 회원사 5곳", en: "The AXMOS consortium and its five member companies" },
+      logos: [
+        { name: "AXMOS", src: "/partners/logos/white/trimmed/axmos.png", w: 900, h: 240 },
+        { name: "Translink Investment", src: "/partners/logos/white/trimmed/translink.png", w: 330, h: 91, url: "https://translinkinvestment.com" },
+        { name: "Wilt Venture Builder", src: "/partners/logos/white/trimmed/wilt.png", w: 309, h: 148, url: "https://www.wiltvb.com/" },
+        { name: "Codepresso", src: "/partners/logos/white/trimmed/codepresso.png", w: 456, h: 91, url: "https://codepresso.io" },
+        { name: "Popup Studio", src: "/partners/logos/white/trimmed/popup-studio.png", w: 512, h: 245, url: "https://popupstudio.ai" },
+        { name: "Drimaes", src: "/partners/logos/white/trimmed/drimaes.png", w: 332, h: 50, url: "https://www.drimaes.com" },
+      ],
+    },
+    {
+      label: { ko: "장소", en: "Venues" },
+      note: { ko: "Day 1 GSC 팁스타운, Day 4 아산나눔재단 마루180", en: "Day 1 at GSC TIPS Town, Day 4 at the Asan Nanum Foundation's MARU180" },
+      logos: [
+        { name: "GSC Global Startup Center", src: "/partners/logos/white/trimmed/gsc.png", w: 900, h: 259, url: "https://www.kised.or.kr/menu.es?mid=a10214050000" },
+        { name: "아산나눔재단", src: "/partners/logos/white/trimmed/asan-nanum.png", w: 772, h: 154, url: "https://www.asan-nanum.org/" },
+        { name: "MARU180", src: "/partners/logos/white/trimmed/maru180.png", w: 385, h: 91, url: "https://maru.org/" },
+      ],
+    },
+    {
+      label: { ko: "기술, 크레딧", en: "Tech and credits" },
+      note: { ko: "참가자에게 Lovable 크레딧을 드립니다.", en: "Participants get Lovable credits." },
+      logos: [{ name: "Lovable", src: "/partners/logos/color/lovable.png", w: 644, h: 110, url: "https://lovable.dev/" }],
+    },
+    {
+      label: { ko: "커뮤니티, 홍보", en: "Community and PR" },
+      logos: [
+        { name: "Bloom", src: "/partners/logos/color/bloom.png", w: 900, h: 217 },
+        // DECIDED 2026-10-21 (사용자: "노란색 살려줘"): 이 로고만 흰색 단색이 아니라 원래 색입니다. 바깥 흰 바탕만 투명하게 지웠습니다
+        // (public/partners/logos/color/, 모서리에서 flood fill). 노란 면이라 어두운 바탕 위에서도 밝은 판 없이 보입니다.
+        { name: "크라이치즈버거", src: "/partners/logos/color/crycheeseburger.png", w: 459, h: 378, square: true },
+      ],
+    },
+  ],
+};
