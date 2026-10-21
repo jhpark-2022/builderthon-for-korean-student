@@ -3059,7 +3059,7 @@ export const naru = {
 // ─────────────────────────────────────────────────────────────────────────────
 export type PartnerLogo = { name: string; src: string; w: number; h: number; url?: string; square?: boolean };
 /**
- * 서울 안의 대학교(DECIDED 2026-10-22, 사용자: "서울 안에서 빛이 비추면 안 보이던 한국 대학교 학회 로고가 보이면 좋겠어. 한동대는 일단 빼줘",
+ * 서울 안의 대학교(DECIDED 2026-10-22, 사용자: "서울 안에서 빛이 비추면 안 보이던 한국 대학교 학회 로고가 보이면 좋겠어. 한동대는 일단 빼줘", 같은 날 다시 넣음,
  * 이어서 "로고는 지금 쓰면 안 되겠다. 대학교 로고로 해줘"). 학회 로고는 쓰지 않고, 함께하는 학회가 있는 대학교의 휘장을 씁니다.
  * 함께하는 곳 뒤의 서울 형상에서, 커서 빛이 닿는 자리에만 보입니다(components/home/SeoulCampuses.tsx).
  * u, v는 서울 형상의 정규화 좌표(너비 [-1, 1], 북쪽 +, lib/background/shapes/seoul.ts와 같은 축)이고,
@@ -3070,6 +3070,9 @@ export const seoulCampuses: { name: Phrase; src: string; w: number; h: number; u
   { name: { ko: "서울대학교", en: "Seoul National University" }, src: "/partners/logos/white/trimmed/uni-snu.png", w: 232, h: 240, u: -0.115, v: -0.616, size: 0.15 },
   { name: { ko: "연세대학교", en: "Yonsei University" }, src: "/partners/logos/white/trimmed/uni-yonsei.png", w: 240, h: 240, u: -0.178, v: 0.022, size: 0.15 },
   { name: { ko: "건국대학교", en: "Konkuk University" }, src: "/partners/logos/white/trimmed/uni-konkuk.png", w: 240, h: 240, u: 0.493, v: -0.128, size: 0.15 },
+  // DECIDED 2026-10-22 (사용자: "한동대도 일단 넣어줘"). 포항은 서울 밖이라 실제 자리 대신 형상의 동남쪽(포항 쪽) 빈자리에 둡니다.
+  // 가로형 워드마크라 높이를 낮춰 너비가 다른 휘장과 비슷하게 보이게 합니다.
+  { name: { ko: "한동대학교", en: "Handong Global University" }, src: "/partners/logos/white/trimmed/uni-handong.png", w: 480, h: 136, u: 0.5, v: -0.52, size: 0.07 },
 ];
 
 // DECIDED 2026-10-22 (사용자, 스크린숏: "AXMOS라는 컨소시엄 안에 이 5개의 회사가 있다는 느낌을 더 보여줘"): 메인 후원 줄은 AXMOS(lead)가 위에,
