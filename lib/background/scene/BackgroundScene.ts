@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { CROSSING, RING, SHAPES, FIELD, SEOUL_WATERMARK, PLATE_FEATHER, LIGHT_STATIONS, LIGHT_FOLLOW, pickQuality, type QualityTier } from "../config";
+import { CROSSING, RING, SHAPES, FIELD, SEOUL_WATERMARK, PLATE_FEATHER, LIGHT_STATIONS, LIGHT_FOLLOW, PARTNERS_LIGHT, pickQuality, type QualityTier } from "../config";
 import { SEOUL_POINTS, SEOUL_STRIDE } from "../shapes/seoul";
 import { SINGAPORE_POINTS, SINGAPORE_STRIDE } from "../shapes/singapore";
 import { computeStageLayout, readStageRect, findStageElement, type StageLayout } from "../utils/shapeLayout";
@@ -258,6 +258,7 @@ export class BackgroundScene {
     const x = (W.cx * 2 - 1) * halfW;
     const y = (1 - cy * 2) * halfH;
     this.particles.setShapes({ x, y, hw: hwSg }, { x, y, hw: hwSeoul });
+    this.seoulPx = { cx: W.cx * w, cy: cy * h, s: (hwSeoul / halfW) * (w / 2) };
   }
 
   private placeShapes() {
@@ -338,6 +339,16 @@ export class BackgroundScene {
   private joinTop = Infinity;
   // 푸터(#closing) 상단. 문서 끝에서 빛을 거두는 기준(2026-09-26). 없으면 Infinity라 거두지 않습니다.
   private closingTop = Infinity;
+  // 함께하는 곳(#partners)의 위아래(문서 px). 그 안에서 빛이 커서를 따라갑니다(2026-10-22). 없으면 꺼집니다.
+  private partnersTop = Infinity;
+  private partnersBottom = -Infinity;
+  // 커서 빛이 켜진 정도 0..1(부드럽게), 형상 밝기 0..1, 지난 프레임의 포인터 ndc.
+  private cursorMix = 0;
+  private glow = 0;
+  private readonly prevNdc = new THREE.Vector2();
+  // 서울 형상의 화면 자리(px). placeSeoul이 채웁니다. 대학교 휘장 층(#seoul-campuses)이 씁니다(2026-10-22).
+  private seoulPx = { cx: 0, cy: 0, s: 0 };
+  private clubsVars = "";
   // 구간 4 진행도를 부드럽게 따라가는 값(점의 가로 이동용). 휠의 계단을 지웁니다.
   // 빛 정거장(2026-09-28). 형상이 보이는 틈마다 점이 설 자리. sy는 그 틈이 화면 한가운데에 오는
   // 스크롤, fx·fy는 화면 비율(fx 왼쪽 0, fy 아래 0). schedule()이 채웁니다.
@@ -368,6 +379,15 @@ export class BackgroundScene {
       if (join !== null) this.joinTop = join;
       const closing = top("closing");
       if (closing !== null) this.closingTop = closing;
+      const partners = document.getElementById("partners");
+      if (partners) {
+        const r = partners.getBoundingClientRect();
+        this.partnersTop = r.top + sy;
+        this.partnersBottom = r.bottom + sy;
+      } else {
+        this.partnersTop = Infinity;
+        this.partnersBottom = -Infinity;
+      }
       this.readPlates();
       this.schedule();
       this.warnShortSeoul();
@@ -985,10 +1005,34 @@ export class BackgroundScene {
           target = { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
         }
       }
+      // 함께하는 곳의 커서 빛(DECIDED 2026-10-22, config의 PARTNERS_LIGHT). 그 구간이 화면 가운데를 덮고
+      // 마우스가 화면 안에 있으면 정거장 대신 커서로 갑니다. 켜고 끄는 것은 0.25초쯤에 걸쳐 섞습니다.
+      const PL = PARTNERS_LIGHT;
+      const mid = this.scrollY + vh / 2;
+      const edge = PL.edgeVh * vh;
+      const inPartners = ss01((mid - this.partnersTop) / edge) * ss01((this.partnersBottom - mid) / edge);
+      const cursorWant = this.pointer.mouse && this.pointer.inside ? inPartners : 0;
+      this.cursorMix += (cursorWant - this.cursorMix) * Math.min(1, dt * 4);
+      if (this.cursorMix > 0.001) {
+        const c = toUv({ fx: this.pointer.ndc.x * 0.5 + 0.5, fy: this.pointer.ndc.y * 0.5 + 0.5 });
+        target = { x: target.x + (c.x - target.x) * this.cursorMix, y: target.y + (c.y - target.y) * this.cursorMix };
+      }
+      // 커서가 움직인 빠르기(화면 높이/초)로 형상의 밝기를 올립니다. 오를 때는 빠르게, 멈추면 천천히 잦아듭니다.
+      {
+        const dxPx = (this.pointer.ndc.x - this.prevNdc.x) * window.innerWidth / 2;
+        const dyPx = (this.pointer.ndc.y - this.prevNdc.y) * vh / 2;
+        this.prevNdc.copy(this.pointer.ndc);
+        const speed = Math.hypot(dxPx, dyPx) / vh / Math.max(dt, 1e-3);
+        const want = clamp(speed / PL.speedFull, 0, 1) * this.cursorMix;
+        this.glow += (want - this.glow) * Math.min(1, dt * (want > this.glow ? 10 : PL.release));
+      }
       // 따라가기: 초당 follow 비율, 한 프레임 이동은 maxRate × dt 이하. 모션 민감 설정에서는 바로 섭니다.
       if (!this.lightUv || this.reduced) this.lightUv = { ...target };
       else {
-        const F = LIGHT_FOLLOW;
+        const F = {
+          follow: LIGHT_FOLLOW.follow + (PL.follow - LIGHT_FOLLOW.follow) * this.cursorMix,
+          maxRate: LIGHT_FOLLOW.maxRate + (PL.maxRate - LIGHT_FOLLOW.maxRate) * this.cursorMix,
+        };
         const gx = (target.x - this.lightUv.x) * Math.min(1, dt * F.follow);
         const gy = (target.y - this.lightUv.y) * Math.min(1, dt * F.follow);
         const len = Math.hypot(gx, gy);
@@ -1001,13 +1045,36 @@ export class BackgroundScene {
       const lightW = ss01((this.scrollY - descendEnd) / (0.1 * vh));
       this.water.setLightDx(0);
       this.water.setLightAt(this.lightUv.x, this.lightUv.y, lightW);
+      // 형상의 밝은 자리는 빛이 지금 서 있는 곳입니다(커서를 따라 늦게 오는 빛과 같이 움직입니다).
+      // 점은 카메라에서 30 떨어진 평면에 있으니 화면 비율을 그 평면의 좌표로 바꿉니다.
+      if (this.particles) {
+        const gh = 30 * Math.tan(((portrait ? 75 : 60) * Math.PI) / 360);
+        const gw = gh * (window.innerWidth / vh);
+        const gx = (0.5 + (this.lightUv.x - 0.5) * uvSpan) * 2 - 1;
+        const gy = (0.5 + (this.lightUv.y - 0.5) * uvSpanY) * 2 - 1;
+        this.particles.setGlow(gx * gw, gy * gh, PL.radius * 2 * gh, this.glow, PL.gain);
+        // 서울 안의 대학교 휘장(DECIDED 2026-10-22, components/home/SeoulCampuses.tsx). 빛의 원 안에서만 보입니다.
+        // 서울이 온전히 서 있을 때만(건너기 전, 판 뒤가 아닐 때). 값이 바뀔 때만 씁니다.
+        const clubs = document.getElementById("seoul-campuses");
+        if (clubs) {
+          const on = this.cursorMix * shapeOpacity * (1 - morph);
+          const S = this.seoulPx;
+          const vars = `--sx:${S.cx.toFixed(1)}px;--sy:${S.cy.toFixed(1)}px;--ss:${S.s.toFixed(1)}px;` +
+            `--lx:${((gx * 0.5 + 0.5) * window.innerWidth).toFixed(1)}px;--ly:${((0.5 - gy * 0.5) * vh).toFixed(1)}px;` +
+            `--lr:${(PL.radius * vh).toFixed(1)}px;--on:${on.toFixed(3)}`;
+          if (vars !== this.clubsVars) {
+            this.clubsVars = vars;
+            for (const kv of vars.split(";")) { const i = kv.indexOf(":"); clubs.style.setProperty(kv.slice(0, i), kv.slice(i + 1)); }
+          }
+        }
+      }
       if (process.env.NODE_ENV !== "production") {
         // 개발 빌드에서만. 속도를 스크린숏이 아니라 값으로 재기 위해서입니다(브리프 4장).
         // 2026-09-26 (판 덮개 브리프 4): 형상이 바뀌는 세 진행도와 판 덮개도 값으로 잽니다.
         (window as unknown as { __naruBg?: unknown }).__naruBg = {
           uvSpan, uvSpanY, light: { ...this.lightUv, w: lightW, target }, lightKeys: this.lightKeys, t: performance.now(),
           sy: this.scrollY, vh, s1, s2, reveal, morph, dissolve, closeShape, visible, shapeVis: this.shapeVis,
-          scrollSpeed: this.scrollSpeed, reappearHold: this.reappearHold, ringPhase: this.ringPhase,
+          scrollSpeed: this.scrollSpeed, reappearHold: this.reappearHold, ringPhase: this.ringPhase, cursorMix: this.cursorMix, glow: this.glow,
           shapeBox: this.shapeBox, plates: this.plates, schedule: this.sched,
         };
       }

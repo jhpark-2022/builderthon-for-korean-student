@@ -34,6 +34,7 @@ import OpenChatLink from "@/components/ui/OpenChatLink";
 // (2026-09-19: RecordTabs·PressRows·Funnel은 화면에서 내려가 import도 뺐습니다. 파일은 그대로.)
 import { TITLE, BODY, META, H2, H3, LABEL_HEADING, ROW_HEADING, GRADIENT_TEXT } from "@/components/ui/typography";
 import CityShape, { type City } from "@/components/ui/CityShape";
+import SeoulCampuses from "@/components/home/SeoulCampuses";
 import {
   SUBHEADING, READ, WIDE, MEASURE_C, READ_MEASURE_C, HERO_BUTTON_GROUND,
   latinTrack, eyebrowTrack, PlateSegment, TermLink, SiteFooter, usePlateLite,
@@ -1427,6 +1428,8 @@ export default function NaruHome() {
           (같은 날 사용자: "put the logo at the center". 그 전은 lg에서 왼쪽 분류, 오른쪽 로고).
           로고는 원래 색이고(data/naru.ts decemberPartners) 비율로 높이를 맞춥니다. 링크가 확실한 곳만 새 탭 링크입니다. */}
       <section id="partners" aria-labelledby="partners-title" className="relative w-full px-6 pb-20 pt-16 sm:px-10 lg:pb-28 lg:pt-24">
+        {/* DECIDED 2026-10-22 (사용자): 서울 안에서 빛이 비추면 대학교 휘장이 보입니다(학회 로고는 쓰지 않음). 표보다 먼저 두어 표 아래에 깔립니다. */}
+        <SeoulCampuses />
         <div className={WIDE}>
           <h2 id="partners-title" className={`${H2} text-center`}>{t(decemberPartners.heading)}</h2>
           <ul className="mt-10 border-t border-white/10">

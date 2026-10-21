@@ -17,12 +17,17 @@ export class Pointer {
   private readonly plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
   private readonly hit = new THREE.Vector3();
   private active = false;
+  /** 마지막 움직임이 마우스(또는 펜)였는가. 손가락은 스크롤이라 커서로 치지 않습니다(2026-10-22). */
+  mouse = false;
+  /** 커서가 화면 안에 있는가. 나가면 함께하는 곳의 빛이 정거장으로 돌아갑니다. */
+  get inside() { return this.active; }
 
   private onMove = (e: PointerEvent) => {
     const nx = (e.clientX / window.innerWidth) * 2 - 1;
     const ny = -((e.clientY / window.innerHeight) * 2 - 1);
     this.ndc.set(nx, ny);
     this.active = true;
+    this.mouse = e.pointerType === "mouse" || e.pointerType === "pen";
   };
   private onLeave = () => {
     this.active = false;

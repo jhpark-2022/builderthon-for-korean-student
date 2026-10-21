@@ -3058,6 +3058,20 @@ export const naru = {
 // DECIDED 2026-10-21 (사용자, 스크린숏: "그냥 로고만 보여줘"): 줄마다의 설명은 지웠습니다. 같은 날 (사용자: "role 도 각 row 마다 넣어줘"): 분류 이름(label)은 줄마다 로고 위에 보입니다.
 // ─────────────────────────────────────────────────────────────────────────────
 export type PartnerLogo = { name: string; src: string; w: number; h: number; url?: string; square?: boolean };
+/**
+ * 서울 안의 대학교(DECIDED 2026-10-22, 사용자: "서울 안에서 빛이 비추면 안 보이던 한국 대학교 학회 로고가 보이면 좋겠어. 한동대는 일단 빼줘",
+ * 이어서 "로고는 지금 쓰면 안 되겠다. 대학교 로고로 해줘"). 학회 로고는 쓰지 않고, 함께하는 학회가 있는 대학교의 휘장을 씁니다.
+ * 함께하는 곳 뒤의 서울 형상에서, 커서 빛이 닿는 자리에만 보입니다(components/home/SeoulCampuses.tsx).
+ * u, v는 서울 형상의 정규화 좌표(너비 [-1, 1], 북쪽 +, lib/background/shapes/seoul.ts와 같은 축)이고,
+ * 각 캠퍼스의 실제 위경도를 그 축으로 옮긴 값입니다(관악, 신촌, 화양). size는 형상 반너비 대비 휘장 높이.
+ * 휘장은 마케팅 템플릿의 uni_*_w.png(건국대는 원형 휘장 konkuk_seal)를 240px로.
+ */
+export const seoulCampuses: { name: Phrase; src: string; w: number; h: number; u: number; v: number; size: number }[] = [
+  { name: { ko: "서울대학교", en: "Seoul National University" }, src: "/partners/logos/white/trimmed/uni-snu.png", w: 232, h: 240, u: -0.115, v: -0.616, size: 0.15 },
+  { name: { ko: "연세대학교", en: "Yonsei University" }, src: "/partners/logos/white/trimmed/uni-yonsei.png", w: 240, h: 240, u: -0.178, v: 0.022, size: 0.15 },
+  { name: { ko: "건국대학교", en: "Konkuk University" }, src: "/partners/logos/white/trimmed/uni-konkuk.png", w: 240, h: 240, u: 0.493, v: -0.128, size: 0.15 },
+];
+
 export const decemberPartners: { heading: Phrase; groups: { label: Phrase; logos: PartnerLogo[] }[] } = {
   heading: { ko: "함께하는 곳", en: "With us in December" },
   groups: [

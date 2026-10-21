@@ -265,6 +265,27 @@ export const LIGHT_STATIONS = [
  */
 export const LIGHT_FOLLOW = { follow: 2.5, maxRate: 0.25 } as const;
 
+/**
+ * 함께하는 곳(#partners)의 커서 빛. DECIDED 2026-10-22 (사용자: "이 부분에서는 빛이 커서를 따라가게,
+ * 움직이면 서울 형상도 빛이 나도록"). 이 구간이 화면 가운데를 덮는 동안에만, 마우스일 때만 켭니다.
+ * 손가락(폰)은 스크롤이라 정거장 길 그대로입니다.
+ *  - edgeVh: 구간의 위아래 끝이 화면 가운데에서 이만큼(화면 높이 배) 안쪽에 들어와야 다 켜집니다.
+ *  - follow, maxRate: 빛이 커서를 따라가는 빠르기(정거장 길보다 훨씬 빠르게).
+ *  - radius: 형상이 밝아지는 반경(화면 높이 대비). gain: 그 안의 최대 밝기 배수 증가.
+ *  - speedFull: 이 속도(화면 높이/초)로 움직이면 밝기가 다 오릅니다. release: 멈춘 뒤 잦아드는 빠르기(초당).
+ */
+export const PARTNERS_LIGHT = {
+  edgeVh: 0.25,
+  // 2026-10-22 사용자 "바로 따라가는 게 아니라 조금의 lag, 따라가는 속도가 너무 빨라서": 7, 2.5 → 1.6, 0.6.
+  // 초당 남은 거리의 약 1.6배만큼 다가가, 커서가 멈춘 뒤 약 1초에 걸쳐 닿습니다.
+  follow: 1.6,
+  maxRate: 0.6,
+  radius: 0.32,
+  gain: 1.8,
+  speedFull: 1.2,
+  release: 1.4,
+} as const;
+
 export const RING = {
   baseRate: 0.5,
   flowGain: 1.6,
