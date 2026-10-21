@@ -8,6 +8,8 @@
 
 ### 2026-10
 
+- [2026-10-22 서울 안의 대학교 휘장](#2026-10-22-seoul-clubs)
+- [2026-10-22 함께하는 곳의 커서 빛](#2026-10-22-partners-cursor-light)
 - [2026-10-21 함께하는 곳 줄마다 분류 이름](#2026-10-21-partners-roles)
 - [2026-10-21 /naru 배경 형상 세 번](#2026-10-21-naru-three-gaps)
 - [2026-10-21 매니페스토 v6, /naru 끝 버튼 줄 뺌](#2026-10-21-manifesto-v6)
@@ -295,6 +297,25 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-22-seoul-clubs"></a>
+
+## 2026-10-22 서울 안의 대학교 휘장
+- 범위: components/home/SeoulCampuses.tsx(새), components/home/NaruHome.tsx, data/naru.ts(seoulCampuses), lib/background/scene/BackgroundScene.ts, public/partners/logos/white/trimmed/(uni-snu, uni-yonsei, uni-konkuk)
+- 한 것: 사용자 "서울 안에서 빛이 비추면 안 보이던 한국 대학교 학회 로고가 보이면 좋겠어. 한동대는 일단 빼줘". 함께하는 학회가 확정된 세 학교를 서울 형상 위 캠퍼스의 실제 위경도 자리(관악, 신촌, 화양)에 둔다. 커서 빛의 원 안에서만 보이고, 배경이 빛과 서울의 화면 자리를 CSS 변수로 넘긴다. 휘장과 캠퍼스 점은 서울 가장자리 점과 같은 hi0로 칠해 표가 아니라 지도의 일부로 읽히게. 마우스가 있는 화면에서만, 보조 기술에는 숨김. 근거: brand 1장 정의문(학생회, 학회와 함께), 10장 색 규칙(글자와 점의 색은 같다).
+- 같은 날 사용자 "로고는 지금 쓰면 안 되겠다. 대학교 로고로 해줘": 학회 로고를 대학교 휘장(서울대, 연세대, 건국대 원형 휘장)으로 바꾸고 학회 로고 파일은 지움.
+- 남은 것: 표가 서울 가운데를 덮어 일부 휘장이 표의 줄 이름과 겹친다(스크롤 위치에 따라).
+- 검증: tsc 통과. localhost 1459폭에서 빛을 가운데에 두면 휘장 셋이 각 캠퍼스 자리에 보임.
+- 커밋: 3384776
+
+<a id="2026-10-22-partners-cursor-light"></a>
+
+## 2026-10-22 함께하는 곳의 커서 빛
+- 범위: lib/background(scene/BackgroundScene.ts, config.ts, interactions/Pointer.ts, particles/ParticleField.ts, shaders/particles.vert.ts)
+- 한 것: 사용자 "이 부분에서는 빛이 커서를 따라가게, 움직이면 서울 형상도 빛이 나도록"(스크린숏). #partners가 화면 가운데를 덮는 동안, 마우스일 때만 나루 점이 빛 정거장 대신 커서로 간다(약 0.25초에 걸쳐 섞음). 커서를 움직인 빠르기만큼 빛 둘레의 서울 점이 밝고 굵어지고 hi0 쪽으로 뜨며, 멈추면 잦아든다. 손가락(폰)은 스크롤이라 그대로. 주황은 여전히 나루 점뿐. 값은 config PARTNERS_LIGHT. 근거: brand 10장 사이트 규칙(배경 형상), 색 규칙.
+- 같은 날 사용자 "바로 따라가는 게 아니라 조금의 lag, 속도가 너무 빨라서": follow 7 → 1.6, maxRate 2.5 → 0.6. 화면을 가로지르면 0.5초에 56%, 1초에 80%, 1.5초에 91%.
+- 검증: tsc 통과. localhost 1512폭에서 빛이 커서 자리에 섬, 움직이는 동안 glow 최대 0.81, #gains에서는 cursorMix 0.
+- 커밋: 3384776
 
 <a id="2026-10-21-partners-roles"></a>
 
