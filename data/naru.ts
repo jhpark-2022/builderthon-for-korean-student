@@ -3051,14 +3051,14 @@ export const naru = {
 // url은 확실한 곳만 적습니다. 없으면 링크 없이 로고만 섭니다(AXMOS, Bloom, 크라이치즈버거).
 // 커뮤니티와 홍보는 현황표에서 "일부 확정"입니다. 바뀌면 여기서 빼거나 더합니다.
 // 금액, 무료 여부는 쓰지 않습니다(brand 9장).
+// DECIDED 2026-10-21 (사용자, 스크린숏: "그냥 로고만 보여줘"): 화면에는 로고만 섭니다. 분류 이름(label)은 스크린리더용으로만 남기고, 줄마다의 설명은 지웠습니다.
 // ─────────────────────────────────────────────────────────────────────────────
 export type PartnerLogo = { name: string; src: string; w: number; h: number; url?: string; square?: boolean };
-export const decemberPartners: { heading: Phrase; groups: { label: Phrase; note?: Phrase; logos: PartnerLogo[] }[] } = {
+export const decemberPartners: { heading: Phrase; groups: { label: Phrase; logos: PartnerLogo[] }[] } = {
   heading: { ko: "함께하는 곳", en: "With us in December" },
   groups: [
     {
       label: { ko: "메인 후원", en: "Main sponsors" },
-      note: { ko: "AXMOS 컨소시엄과 회원사 5곳", en: "The AXMOS consortium and its five member companies" },
       logos: [
         { name: "AXMOS", src: "/partners/logos/white/trimmed/axmos.png", w: 900, h: 240 },
         { name: "Translink Investment", src: "/partners/logos/white/trimmed/translink.png", w: 330, h: 91, url: "https://translinkinvestment.com" },
@@ -3070,7 +3070,6 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; note?
     },
     {
       label: { ko: "장소", en: "Venues" },
-      note: { ko: "Day 1 GSC 팁스타운, Day 4 아산나눔재단 마루180", en: "Day 1 at GSC TIPS Town, Day 4 at the Asan Nanum Foundation's MARU180" },
       logos: [
         { name: "GSC Global Startup Center", src: "/partners/logos/white/trimmed/gsc.png", w: 900, h: 259, url: "https://www.kised.or.kr/menu.es?mid=a10214050000" },
         { name: "아산나눔재단", src: "/partners/logos/white/trimmed/asan-nanum.png", w: 772, h: 154, url: "https://www.asan-nanum.org/" },
@@ -3079,7 +3078,6 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; note?
     },
     {
       label: { ko: "기술, 크레딧", en: "Tech and credits" },
-      note: { ko: "참가자에게 Lovable 크레딧을 드립니다.", en: "Participants get Lovable credits." },
       logos: [{ name: "Lovable", src: "/partners/logos/color/lovable.png", w: 644, h: 110, url: "https://lovable.dev/" }],
     },
     {

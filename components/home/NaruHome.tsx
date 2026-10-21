@@ -1431,8 +1431,9 @@ export default function NaruHome() {
           <h2 id="partners-title" className={`${H2} text-center`}>{t(decemberPartners.heading)}</h2>
           <ul className="mt-10 border-t border-white/10">
             {decemberPartners.groups.map((g) => (
-              <li key={g.label.en} className="flex flex-col items-center gap-4 border-b border-white/10 py-7 text-center">
-                <p className={`${BODY} font-bold text-white`}>{t(g.label)}</p>
+              <li key={g.label.en} className="flex flex-col items-center border-b border-white/10 py-7 text-center">
+                {/* DECIDED 2026-10-21 (사용자: "그냥 로고만 보여줘"): 분류 이름은 화면에 그리지 않고, 설명 줄은 없앴습니다. */}
+                <p className="sr-only">{t(g.label)}</p>
                 <div>
                   <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
                     {g.logos.map((l) => {
@@ -1455,7 +1456,6 @@ export default function NaruHome() {
                       );
                     })}
                   </div>
-                  {g.note && <p className={`mt-3 ${META} text-white/60`}>{t(g.note)}</p>}
                 </div>
               </li>
             ))}
