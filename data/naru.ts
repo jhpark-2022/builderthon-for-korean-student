@@ -3055,7 +3055,7 @@ export const naru = {
 // url은 확실한 곳만 적습니다. 없으면 링크 없이 로고만 섭니다(AXMOS, Bloom, 크라이치즈버거).
 // 커뮤니티와 홍보는 현황표에서 "일부 확정"입니다. 바뀌면 여기서 빼거나 더합니다.
 // 금액, 무료 여부는 쓰지 않습니다(brand 9장).
-// DECIDED 2026-10-21 (사용자, 스크린숏: "그냥 로고만 보여줘"): 화면에는 로고만 섭니다. 분류 이름(label)은 스크린리더용으로만 남기고, 줄마다의 설명은 지웠습니다.
+// DECIDED 2026-10-21 (사용자, 스크린숏: "그냥 로고만 보여줘"): 줄마다의 설명은 지웠습니다. 같은 날 (사용자: "role 도 각 row 마다 넣어줘"): 분류 이름(label)은 줄마다 로고 위에 보입니다.
 // ─────────────────────────────────────────────────────────────────────────────
 export type PartnerLogo = { name: string; src: string; w: number; h: number; url?: string; square?: boolean };
 export const decemberPartners: { heading: Phrase; groups: { label: Phrase; logos: PartnerLogo[] }[] } = {

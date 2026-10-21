@@ -1431,9 +1431,10 @@ export default function NaruHome() {
           <h2 id="partners-title" className={`${H2} text-center`}>{t(decemberPartners.heading)}</h2>
           <ul className="mt-10 border-t border-white/10">
             {decemberPartners.groups.map((g) => (
-              <li key={g.label.en} className="flex flex-col items-center border-b border-white/10 py-7 text-center">
-                {/* DECIDED 2026-10-21 (사용자: "그냥 로고만 보여줘"): 분류 이름은 화면에 그리지 않고, 설명 줄은 없앴습니다. */}
-                <p className="sr-only">{t(g.label)}</p>
+              <li key={g.label.en} className="flex flex-col items-center gap-5 border-b border-white/10 py-7 text-center">
+                {/* DECIDED 2026-10-21 (사용자: "그냥 로고만 보여줘"): 설명 줄은 없앴습니다.
+                    같은 날 (사용자, 스크린숏: "role 도 각 row 마다 넣어줘"): 분류 이름을 다시 보이게. 주최 줄과 같은 META 회색, 로고 위 가운데. */}
+                <p className={`${META} text-white/50`}>{t(g.label)}</p>
                 <div>
                   <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
                     {g.logos.map((l) => {
