@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-22 Analytics 경로 데이터](#2026-10-22-analytics-routes)
 - [2026-10-22 네 단계 진행 막대 뺌](#2026-10-22-no-progress-bars)
 - [2026-10-22 8월 페이지 푸터에서 로고 띠 뺌](#2026-10-22-aug-no-marquee)
 - [2026-10-22 /naru에도 커서 빛, 푸터 메뉴 뺌](#2026-10-22-naru-light)
@@ -316,6 +317,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-22-analytics-routes"></a>
+
+## 2026-10-22 Analytics 경로 데이터
+- 범위: app/layout.tsx
+- 한 것: 사용자 스크린숏(Vercel Analytics Routes "No route data found"). 패키지는 이미 최신(2.0.1)이었고, 불러오는 곳이 @vercel/analytics/react라 경로 패턴을 보내지 않았습니다. @vercel/analytics/next로 바꿨습니다. 화면 변화는 없습니다.
+- 검증: tsc, next build 통과(페이지 모두 정적 그대로).
+- 커밋: 01041df
 
 <a id="2026-10-22-no-progress-bars"></a>
 
