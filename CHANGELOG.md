@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-22 /naru에도 커서 빛, 푸터 메뉴 뺌](#2026-10-22-naru-light)
 - [2026-10-22 헤더 메뉴에서 후원 문의 뺌](#2026-10-22-nav-no-sponsor)
 - [2026-10-22 한국어 메뉴는 홈](#2026-10-22-nav-home)
 - [2026-10-22 프로그램 리드를 더 보이게](#2026-10-22-december-visual)
@@ -313,6 +314,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-22-naru-light"></a>
+
+## 2026-10-22 /naru에도 커서 빛, 푸터 메뉴 뺌
+- 범위: lib/background/scene/BackgroundScene.ts(readAnchors), components/naru/NaruPage.tsx(main), components/shared/SiteChrome.tsx(SiteFooter)
+- 한 것: 사용자 요청(스크린숏: "이 부분 빼줘", "빛 효과 나루에도 넣어줘"). 커서 빛 구간을 #partners가 없으면 [data-cursor-light]로 찾게 하고 /naru 본문 전체에 붙였습니다. 옮긴 빛은 그 자리에 머뭅니다(같은 날 결정). 세 페이지 푸터의 한 줄 소개와 메뉴 줄(후원 문의, 오픈채팅, 문의 포함)을 뺐고, 푸터는 로고 띠, 저작권, 배경 움직임 토글입니다. 근거: brand 10장(배경 형상은 판 뒤에서만), 판단 질문 1.
+- 검증: tsc 통과. localhost /naru 위와 중간에서 cursorMix 1, 빛이 커서 자리로.
+- 커밋: 673af20
 
 <a id="2026-10-22-nav-no-sponsor"></a>
 
