@@ -43,7 +43,8 @@ export const coreDict = {
   pages: [
     // DECIDED 2026-10-20 (hwang 브리프 1.3, 4.1): EN 메뉴 이름은 "Home". 헤더 워드마크와 같은 글자가 한 줄에 둘 서지 않게. 푸터(footerLabel)는 그대로.
     // 같은 날 8월의 EN footerLabel "Zero100 builderthon, Aug 2026"을 "Aug 2026"으로 줄였습니다(EN 푸터 줄바꿈).
-    { key: "crossing", href: "/", label: { ko: "크로싱 서울", en: "Home" }, footerLabel: { ko: "크로싱 서울", en: "CROSSING SEOUL" } },
+    // DECIDED 2026-10-22 (사용자, 스크린숏: "크로싱 서울이 3개나 있네"): KO 메뉴도 "홈". 헤더 워드마크, 메뉴, 히어로 제목에 같은 이름이 셋 서던 것.
+    { key: "crossing", href: "/", label: { ko: "홈", en: "Home" }, footerLabel: { ko: "크로싱 서울", en: "CROSSING SEOUL" } },
     { key: "naru", href: "/naru", label: { ko: "나루", en: "NARU" }, footerLabel: { ko: "나루", en: "NARU" } },
     { key: "aug", href: "/2026-08", label: { ko: "8월 기록", en: "Aug 2026" }, footerLabel: { ko: "제로백 빌더톤 8월 기록", en: "Aug 2026" } },
   ],
