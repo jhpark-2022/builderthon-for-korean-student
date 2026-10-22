@@ -40,8 +40,12 @@ export function AugustEyebrow({ children, color = "violet", className = "" }: { 
     // 2026-09-17 (8월 문법 브리프): 면을 뺐습니다. 주황은 글자색과 테두리만. 주황은 면이 아니라 점입니다.
     orange: "border-naru-orange/35 bg-transparent text-[#F2B183]", // #F2B183 10.58:1
   } as const;
+  void map;
+  const AUG_TEXT = { violet: "text-accent", cyan: "text-white/85", emerald: "text-white/85", purple: "text-accent", plum: "text-naru-plum-tint", orange: "text-[#F2B183]" } as const;
   return (
-    <span className={`mb-4 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] ${map[color]} ${className}`}>
+    // DECIDED 2026-10-22 (사용자: 10/19 피드백을 8월 페이지에도): 홈의 Eyebrow와 같은 모양입니다. 알약, 대문자, 넓은 자간, 면을 걷고
+    // 글자색 하나만 남깁니다(hwang 감사 W1, W4). 8월의 cyan, emerald는 무채색으로, violet은 accent로 모았습니다.
+    <span className={`mb-4 inline-flex items-center gap-2 text-xs font-bold ${AUG_TEXT[color]} ${className}`}>
       {children}
     </span>
   );

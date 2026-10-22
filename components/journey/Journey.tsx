@@ -205,7 +205,7 @@ function LogoTile({
         className="w-auto max-w-full object-contain"
       />
       {badge && (
-        <span className="absolute right-1.5 top-1.5 rounded-full border border-white/15 bg-white/10 px-1.5 py-0.5 text-xs font-bold uppercase tracking-wide text-white/75">
+        <span className="absolute right-1.5 top-1.5 rounded-full border border-white/15 bg-white/10 px-1.5 py-0.5 text-xs font-bold text-white/75">
           {badge}
         </span>
       )}
@@ -231,7 +231,7 @@ function LogoTile({
   // 후원은 flex-col의 stretch) 결과가 같고, 다음에 타일을 또 감쌀 때 같은 일이
   // 반복되지 않습니다.
   const cls =
-    `group relative flex h-20 w-full items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] ${mass ? "px-3" : "px-5"} transition duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.07]`;
+    `group relative flex h-20 w-full items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] ${mass ? "px-3" : "px-5"} transition duration-300 hover:border-white/20 hover:bg-white/[0.07]`;
   if (onOpen) {
     return (
       <button
@@ -412,7 +412,7 @@ function MobileStickyBar({ t }: { t: Tfn }) {
             rel="noopener noreferrer"
             aria-label={t(dict.nav.openChatAria)}
             onClick={() => track("openchat_click", { src: "sticky" })}
-            className={`inline-flex h-12 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-violet-400/35 bg-[#0b0817]/92 px-6 text-sm font-bold text-violet-100 shadow-[0_8px_30px_-8px_rgba(0,0,0,0.9)] backdrop-blur-md ${
+            className={`inline-flex h-12 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-white/15 bg-[#0b0817]/92 px-6 text-sm font-bold text-white  backdrop-blur-md ${
               shown ? "pointer-events-auto" : "pointer-events-none"
             }`}
           >
@@ -472,33 +472,33 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
     <button
       type="button"
       onClick={(e) => onSelect(ev, e.currentTarget)}
-      className="group relative flex w-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-white/[0.03] p-4 text-left transition hover:-translate-y-0.5 hover:border-violet-400/25 hover:bg-white/[0.06] xl:min-h-[148px]"
+      className="group relative flex w-full flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-white/[0.03] p-4 text-left transition hover:border-white/25 hover:bg-white/[0.06] xl:min-h-[148px]"
     >
       <span aria-hidden className="absolute inset-y-0 left-0 w-[2px] opacity-70" style={{ backgroundColor: meta.dot }} />
       <div className="flex flex-wrap items-center gap-1.5 pl-2">
-        <span className="text-xs font-bold uppercase tracking-wide" style={{ color: meta.dot }}>
-          {isMain && <span className="mr-0.5 text-amber-300">★</span>}{t(meta.label)}
+        <span className="text-xs font-bold" style={{ color: meta.dot }}>
+          {isMain && <span className="mr-0.5 text-white/70">★</span>}{t(meta.label)}
         </span>
         <span className="ml-auto flex items-center gap-1.5">
           {ev.confirmed && (
-            <span className="rounded-full bg-emerald-400/15 px-1.5 py-0.5 text-xs font-bold text-emerald-300 ring-1 ring-emerald-400/25">
+            <span className="text-xs font-bold text-white/70">
               {t(dict.program.confirmedBadge)}
             </span>
           )}
           {selfPaced ? (
-            <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-1.5 py-0.5 text-xs font-semibold text-white/60">
+            <span className="text-xs font-semibold text-white/60">
               {t(dict.program.selfPacedLabel)}
             </span>
           ) : byMentor ? (
-            <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-1.5 py-0.5 text-xs font-semibold text-white/60">
+            <span className="text-xs font-semibold text-white/60">
               {t(dict.program.byMentorLabel)}
             </span>
           ) : offline ? (
-            <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/30 bg-amber-400/10 px-1.5 py-0.5 text-xs font-bold text-amber-200">
+            <span className="inline-flex items-center gap-1 text-xs font-bold text-white/85">
               <span aria-hidden>●</span>{t(dict.program.offlineLabel)}
             </span>
           ) : (
-            <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-1.5 py-0.5 text-xs font-semibold text-white/60">
+            <span className="text-xs font-semibold text-white/60">
               {t(dict.program.onlineLabel)}
             </span>
           )}
@@ -506,7 +506,7 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
       </div>
       <h4 className="mt-2 pl-2 text-base font-bold leading-snug text-white">{t(ev.title)}</h4>
       <p className="mt-1.5 pl-2 text-sm leading-relaxed text-white/70">{t(ev.summary)}</p>
-      <span className="mt-auto pl-2 pt-3 text-xs font-semibold text-violet-300/75 transition group-hover:text-violet-300">
+      <span className="mt-auto pl-2 pt-3 text-xs font-semibold text-accent/75 transition group-hover:text-accent">
         {t(dict.program.tapHint)} →
       </span>
     </button>
@@ -525,16 +525,15 @@ function EventCard({ ev, t, onSelect }: { ev: BEvent; t: Tfn; onSelect: (e: BEve
 // ◉ 놓치면 아까운 - 노선도 스포트라이트 노드(violet 링 + 안쪽 점)의 축소판.
 function SpotlightGlyph() {
   return (
-    <span aria-hidden className="flex h-3 w-3 shrink-0 items-center justify-center rounded-full border border-violet-300/60 bg-violet-400/20">
-      <span className="h-1.5 w-1.5 rounded-full bg-violet-200" />
-    </span>
+    // DECIDED 2026-10-22 (10/19 피드백 W16): 원 안의 점 대신 속 찬 점 하나.
+    <span aria-hidden className="h-2 w-2 shrink-0 rounded-full bg-accent" />
   );
 }
 
 // ● 멘토링 - 노선도 노드 아래의 점, 그리고 그 아래 필 앞의 점과 같은 것.
 // 7px 그대로입니다: 크기가 다르면 "같은 것"으로 안 읽힙니다.
 function MentoringDot() {
-  return <span aria-hidden className="h-[7px] w-[7px] shrink-0 rounded-full bg-emerald-400/80" />;
+  return <span aria-hidden className="h-[7px] w-[7px] shrink-0 rounded-full bg-white/50" />;
 }
 
 // Small mode/mandatory pill helpers for the clean day cards + day modal.
@@ -558,7 +557,7 @@ function DayModeBadge({ day, t, selfPaced = false }: { day: DayMeta; t: Tfn; sel
   if (day.dayMode === "mixed")
     return (
       <Chip tone="amberSoft">
-        <span aria-hidden className="text-amber-300/70">●</span>{t(dict.program.mixedLabel)}
+        <span aria-hidden className="text-white/70">●</span>{t(dict.program.mixedLabel)}
       </Chip>
     );
   // Day 3·4: online unless your mentor offers F2F. Same neutral pill as 온라인,
@@ -666,7 +665,7 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
               줄 높이를 건드리면 이 값도 같이 고쳐야 합니다. */}
           <span
             aria-hidden
-            className={`pointer-events-none absolute top-[1.625rem] h-px bg-gradient-to-r from-rose-300/40 via-white/15 to-rose-300/40 ${
+            className={`pointer-events-none absolute top-[1.625rem] h-px bg-gradient-to-r from-accent/40 via-white/15 to-accent/40 ${
               rowIdx === 0
                 ? "left-[12.5%] right-[12.5%] sm:right-0"
                 : "left-[12.5%] right-[12.5%] sm:left-0"
@@ -709,7 +708,7 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
             {row.map((d) => (
               <span key={d.day} className="flex flex-1 justify-center">
                 {mentoringOpenOn(d.day) && (
-                  <span className="h-[7px] w-[7px] rounded-full bg-emerald-400/80" />
+                  <span className="h-[7px] w-[7px] rounded-full bg-white/50" />
                 )}
               </span>
             ))}
@@ -733,8 +732,8 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                   앞의 점은 위 마커와 같은 색·같은 크기입니다. 이 둘이 서로를
                   설명하는 짝이라 범례에는 넣지 않습니다(범례는 정거장의 층을
                   말하는 축이고, 멘토링은 정거장이 아닙니다). */}
-              <span className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-emerald-400/30 bg-emerald-400/[0.1] px-2.5 py-1 text-xs font-semibold leading-none text-emerald-100">
-                <span aria-hidden className="h-[7px] w-[7px] shrink-0 rounded-full bg-emerald-400/80" />
+              <span className="flex items-center gap-1.5 whitespace-nowrap text-xs font-semibold leading-none text-white/85">
+                <span aria-hidden className="h-[7px] w-[7px] shrink-0 rounded-full bg-white/50" />
                 {mentoringPill}
               </span>
             </span>
@@ -818,18 +817,16 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                       />
                     )}
                     {anchor ? (
-                      <span className={`relative flex h-7 w-7 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-xs text-rose-100 shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:bg-rose-400/40`}>
+                      <span className={`relative flex h-7 w-7 items-center justify-center rounded-full border border-accent/50 bg-accent/25 text-xs text-white shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:bg-accent/40`}>
                         <span aria-hidden>★</span>
                       </span>
                     ) : spot ? (
                       // 필참보다 한 치수 작고 점보다 두 치수 큽니다. ★를 쓰지 않고
                       // 색도 rose가 아닌 violet인 것은 의도적입니다 - ★와 rose는
                       // 노선도에서 오직 "필참"만 뜻해야 하고, 이 날은 선택일입니다.
-                      <span className={`relative flex h-6 w-6 items-center justify-center rounded-full border border-violet-300/60 bg-violet-400/20 shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:bg-violet-400/40`}>
-                        <span aria-hidden className="h-2 w-2 rounded-full bg-violet-200" />
-                      </span>
+                      <span aria-hidden className="relative h-4 w-4 rounded-full bg-accent shadow-[0_0_0_4px_rgba(10,6,20,0.85)]" />
                     ) : (
-                      <span className="relative h-3 w-3 rounded-full border border-white/35 bg-[#0a0614] shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:border-violet-300/70 group-hover:bg-violet-400/30" />
+                      <span className="relative h-3 w-3 rounded-full border border-white/35 bg-[#0a0614] shadow-[0_0_0_4px_rgba(10,6,20,0.85)] transition group-hover:border-accent/70 group-hover:bg-white/[0.06]" />
                     )}
                   </span>
                   {/* 시간의 층이 정거장의 층을 이기는 유일한 자리입니다. 지나온
@@ -837,7 +834,7 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                       가야 할 곳처럼 읽힙니다. 오늘은 반대로 최고 밝기입니다. */}
                   <span
                     className={`text-xs font-bold leading-none ${
-                      anchor ? "text-rose-200" : spot ? "text-violet-200" : "text-white/60"
+                      anchor ? "text-white/85" : spot ? "text-accent" : "text-white/60"
                     }`}
                   >
                     {t(dict.program.dayLabel)} {d.day}
@@ -868,7 +865,7 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
                       칸)과 마커·필이 지나는 구간(Day 3~7)은 가로로 겹치지 않아,
                       넘쳐도 부딪히지 않습니다. */}
                   {anchor && (
-                    <span className="absolute left-1/2 top-full mt-0.5 -translate-x-1/2 whitespace-nowrap rounded-full border border-rose-400/30 bg-rose-400/10 px-1.5 py-0.5 text-xs font-bold leading-none text-rose-200">
+                    <span className="absolute left-1/2 top-full mt-0.5 -translate-x-1/2 whitespace-nowrap text-xs font-bold leading-none text-white/85">
                       {t(dict.program.mandatoryBadge)}
                     </span>
                   )}
@@ -896,9 +893,9 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
           선택일에 배지 비슷한 것을 달면 의무로 읽힙니다(schedule.ts spotlight
           주석의 결정). 게다가 지금 그 아래는 멘토링 점 마커가 지나갑니다. */}
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
-        <span className="flex items-center gap-1.5 text-xs text-rose-200/85">
+        <span className="flex items-center gap-1.5 text-xs text-white/85">
           {/* DECIDED 2026-10-13 (폰 점검): 원 안의 ★가 7.6px이라 읽히지 않았습니다. 원을 18px로, ★를 12.6px로 올립니다. 노선도 원 안의 ★도 10.8px에서 13.5px로. */}
-          <span aria-hidden className="flex h-4 w-4 items-center justify-center rounded-full border border-rose-300/50 bg-rose-400/25 text-[0.7rem] leading-none text-rose-100">★</span>
+          <span aria-hidden className="flex h-4 w-4 items-center justify-center rounded-full border border-accent/50 bg-accent/25 text-[0.7rem] leading-none text-white">★</span>
           {t(r.legendMandatory)}
         </span>
         <span className="flex items-center gap-1.5 text-xs text-white/55">
@@ -907,10 +904,8 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
         </span>
         {/* 세 번째 모양. 스와치는 노선도의 스포트라이트 노드를 그대로 줄인 것이라
             둘이 같은 것임이 눈으로 이어집니다. */}
-        <span className="flex items-center gap-1.5 text-xs text-violet-200/85">
-          <span aria-hidden className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-violet-300/60 bg-violet-400/20">
-            <span className="h-1.5 w-1.5 rounded-full bg-violet-200" />
-          </span>
+        <span className="flex items-center gap-1.5 text-xs text-accent/85">
+          <span aria-hidden className="h-2 w-2 rounded-full bg-accent" />
           {t(r.legendSpotlight)}
         </span>
       </div>
@@ -959,8 +954,8 @@ function BenefitCard({
   const listId = `benefit-${item.num}-points`;
   const hidden = item.points.length - 2;
   return (
-    <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-cyan-400/25 hover:bg-white/[0.05]">
-      <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-400/15 text-sm font-black text-cyan-200">{item.num}</span>
+    <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-white/25 hover:bg-white/[0.05]">
+      <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.04] text-sm font-black text-white/85">{item.num}</span>
       <h3 className="mt-4 text-lg font-bold text-white">{t(item.title)}</h3>
       <ul id={listId} className="mt-3 space-y-2">
         {item.points.map((p, i) => (
@@ -970,7 +965,7 @@ function BenefitCard({
               i > 1 && !open ? "hidden sm:flex" : "flex"
             }`}
           >
-            <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300/70" />
+            <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-white/50" />
             {t(p)}
           </li>
         ))}
@@ -991,7 +986,7 @@ function BenefitCard({
                넓힙니다. "지도"는 두 글자라 실측 23x16px이고, 폰에서 손가락으로
                정확히 짚기 어렵습니다. 멘토 카드의 LinkedIn 아이콘이 쓰는 것과
                같은 수법이에요(모양을 키우면 문장 속 링크가 버튼처럼 보입니다). */
-            className="relative font-semibold text-cyan-200/80 underline decoration-cyan-200/30 underline-offset-2 transition after:absolute after:-inset-2 after:content-[''] hover:text-cyan-100"
+            className="relative font-semibold text-white/85 underline decoration-accent/40 underline-offset-2 transition after:absolute after:-inset-2 after:content-[''] hover:text-white"
           >
             {t(item.footnote.linkLabel)}
           </a>
@@ -1001,7 +996,7 @@ function BenefitCard({
         <>
           <span
             aria-hidden
-            className="mt-3 flex items-center gap-1 text-xs font-semibold text-cyan-200/70 sm:hidden"
+            className="mt-3 flex items-center gap-1 text-xs font-semibold text-white/85 sm:hidden"
           >
             {t(open ? dict.benefits.collapse : dict.benefits.expand)}
             <svg
@@ -1058,11 +1053,11 @@ function ProgramStats({ t }: { t: Tfn }) {
                 compiled to nothing and the rule read as three floating numbers. */}
             {i > 0 && <span aria-hidden className="mx-5 h-9 w-px self-center bg-white/[0.14] sm:mx-9" />}
             <div className="flex flex-col items-center px-1">
-              <dd className={`text-[clamp(1.5rem,4vw,2.25rem)] font-black leading-none ${row.strong ? "text-rose-200" : "text-white"}`}>
+              <dd className={`text-[clamp(1.5rem,4vw,2.25rem)] font-black leading-none ${row.strong ? "text-white/85" : "text-white"}`}>
                 {row.n}
                 <span className="ml-0.5 text-[0.5em] font-bold">{t(s.unit)}</span>
               </dd>
-              <dt className={`mt-1.5 text-xs font-bold uppercase tracking-[0.1em] ${row.strong ? "text-rose-300/80" : "text-white/55"}`}>
+              <dt className={`mt-1.5 text-xs font-bold ${row.strong ? "text-white/70" : "text-white/55"}`}>
                 {t(row.label)}
               </dt>
             </div>
@@ -1123,8 +1118,8 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
       // 오늘 카드의 글로우: nav 등록 필이 쓰던 보라 글로우 어법 그대로입니다.
       //   상시 글로우이고 애니메이션은 걸지 않았습니다 - 움직임은 "● 오늘" 필의
       //   펄스 점 하나로 충분하고, 카드 전체가 숨쉬면 격자에서 혼자 튑니다.
-      className={`group relative flex h-full flex-col rounded-2xl border p-5 text-left transition duration-300 hover:-translate-y-1 hover:border-violet-400/30 hover:bg-white/[0.06] ${
-        emphasis === "must" ? "border-rose-400/25 bg-white/[0.055]" : "border-white/[0.08] bg-white/[0.03]"
+      className={`group relative flex h-full flex-col rounded-2xl border p-5 text-left transition duration-300  hover:border-white/25 hover:bg-white/[0.06] ${
+        emphasis === "must" ? "border-accent/25 bg-white/[0.055]" : "border-white/[0.08] bg-white/[0.03]"
       }`}
     >
       {/* FIX 2026-08-20: 모바일에서 DAY 숫자와 날짜가 붙어 보이던 것 - 헤더 행
@@ -1143,7 +1138,7 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
              전 브레이크포인트 동일 - 분기 없습니다. */}
       <div className="flex items-baseline justify-between gap-3">
         <span className="flex items-baseline gap-1.5">
-          <span className="text-xs font-bold uppercase tracking-wider text-violet-300/70">{t(dict.program.dayLabel)}</span>
+          <span className="text-xs font-bold text-accent/70">{t(dict.program.dayLabel)}</span>
           {/* 오늘 카드에서만 숫자가 보라로 섭니다. 노선도의 현재역 이름이 최고
               밝기를 갖는 것과 같은 규칙이에요 - 두 층위가 같은 자리를 같은
               방식으로 가리켜야 합니다. */}
@@ -1160,7 +1155,7 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
           움직여야 합니다. */}
       <div className="mt-3 flex flex-wrap gap-1.5">
         {emphasis === "must" ? (
-          <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/30 bg-rose-400/10 px-2 py-0.5 text-xs font-bold text-rose-200">
+          <span className="inline-flex items-center gap-1 text-xs font-bold text-white/85">
             <span aria-hidden>★</span>{t(dict.program.mandatoryBadge)}
           </span>
         ) : emphasis === "worth" ? (
@@ -1170,14 +1165,14 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
              의무로 번지지 않습니다. 이 날이 선택이라는 사실은 데이 모달의
              "선택 참여" 칩이 글자로 받습니다(schedule.ts spotlight 주석의 거래).
              rose를 쓰거나 ★를 달지 마세요 - 그 순간 필참일이 넷이 됩니다. */
-          <span className="inline-flex items-center gap-1 rounded-full border border-violet-400/30 bg-violet-400/10 px-2 py-0.5 text-xs font-bold text-violet-200">
+          <span className="inline-flex items-center gap-1 text-xs font-bold text-accent">
             <SpotlightGlyph />{t(dict.program.spotlightBadge)}
           </span>
         ) : (
           /* Same slot as the 필참 pill, deliberately quieter: borderless and
              low-contrast so it registers as a fact about the day rather than
              competing with the two anchors. */
-          <span className="inline-flex items-center rounded-full bg-white/[0.06] px-2 py-0.5 text-xs font-semibold text-white/55">
+          <span className="inline-flex items-center text-xs font-semibold text-white/55">
             {t(dict.program.optionalBadge)}
           </span>
         )}
@@ -1191,7 +1186,7 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
             it up. Only Days 3·4·6 have self-paced entries, so this stays rare
             enough to mean something. */}
         {dayHasSelfPaced(day.day) && !(day.selfPacedDay ?? allSelfPaced) && (
-          <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-2 py-0.5 text-xs font-semibold text-white/60">
+          <span className="text-xs font-semibold text-white/60">
             {t(dict.program.selfPacedLabel)}
           </span>
         )}
@@ -1214,7 +1209,7 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
 
             shrink-0: 좁은 폭에서 칩 줄이 접힐 때 이 칩만은 줄어들어 잘리지 않게. */}
         {day.hours && (
-          <span className="shrink-0 rounded-full border border-white/20 bg-white/10 px-2.5 py-0.5 text-xs font-bold text-white/90">
+          <span className="shrink-0 text-xs font-bold text-white/90">
             <span className="sr-only">{t(dict.program.hoursLabel)} </span>
             {day.hours}
           </span>
@@ -1230,8 +1225,8 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
           필참일에는 렌더하지 않습니다 - 갈지 말지 고르는 날이 아니어서, 거기에
           '올 이유'를 붙이면 필참이 설득의 문제로 보입니다. */}
       {day.whyStop && emphasis !== "must" && (
-        <p className="mt-2 flex gap-1.5 break-keep text-xs font-semibold leading-snug text-emerald-200/85">
-          <span aria-hidden className="text-emerald-300/70">→</span>
+        <p className="mt-2 flex gap-1.5 break-keep text-xs font-semibold leading-snug text-white/85">
+          <span aria-hidden className="text-white/70">→</span>
           {t(day.whyStop)}
         </p>
       )}
@@ -1255,7 +1250,7 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
           점은 aria-hidden이고 칩의 글자가 뜻을 그대로 말합니다. */}
       {mentoringOpenOn(day.day) && (
         <p className="mt-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/25 bg-emerald-400/[0.08] px-2 py-0.5 text-xs font-semibold text-emerald-100/90">
+          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/85">
             <MentoringDot />
             {t(dict.program.mentoringChip)}
           </span>
@@ -1281,8 +1276,8 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
           열린다"는 뜻이라 그대로 조건으로 씁니다 - 새 플래그를 만들지 마세요. */}
       {day.awardsBox && (
         <p className="mt-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/[0.09] px-2 py-0.5 text-xs font-semibold text-amber-100/90">
-            <span aria-hidden className="text-amber-300/90">★</span>
+          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/85">
+            <span aria-hidden className="text-white/70">★</span>
             {t(dict.program.awards.countBadge)}
           </span>
         </p>
@@ -1298,7 +1293,7 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
           세지만 같은 것이 아니라, 방문자가 이 숫자로 답할 수 있는 질문이 없습니다.
           그날 무엇을 하는지는 이미 카드의 제목과 요약이, 시간은 hours 칩이,
           내려설 이유는 whyStop 줄이 말합니다. */}
-      <span className="mt-auto pt-4 text-xs font-semibold text-violet-300/75 transition group-hover:text-violet-300">
+      <span className="mt-auto pt-4 text-xs font-semibold text-accent/75 transition group-hover:text-accent">
         {t(dict.program.tapHint)} →
       </span>
     </button>
@@ -1331,14 +1326,14 @@ function PreEventBand({
     <button
       type="button"
       onClick={(e) => onOpen(ev, e.currentTarget)}
-      className="group flex w-full flex-col gap-3 rounded-2xl border border-violet-400/20 bg-violet-500/[0.05] px-5 py-4 text-left transition hover:border-violet-400/40 hover:bg-violet-500/[0.09] sm:flex-row sm:items-center sm:gap-5"
+      className="group flex w-full flex-col gap-3 rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 text-left transition hover:border-white/25 hover:bg-white/[0.06] sm:flex-row sm:items-center sm:gap-5"
     >
       {/* 칩과 연사 소속 로고를 한 묶음으로 둡니다. 모바일에서 밴드가 세로로
           쌓이는데(flex-col), 둘을 따로 두면 로고가 자기 줄을 차지하면서 제목보다
           커 보입니다 - 여기 묶어두면 어느 폭에서도 "언제 · 누구"가 한 줄입니다. */}
       {/* 2026-10-13 (폰 점검): 320px 영문에서 로고가 카드 밖으로 30px 나갔습니다. 좁으면 로고가 다음 줄로 내려갑니다. */}
       <span className="flex flex-wrap items-center gap-x-3 gap-y-2 sm:shrink-0 sm:flex-nowrap">
-        <span className="inline-flex shrink-0 items-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-violet-200">
+        <span className="inline-flex shrink-0 items-center gap-2 text-xs font-bold text-accent">
           {t(dict.program.preEventTag)}
         </span>
         {/* alt를 채웁니다(노선도 마커와 반대). 이 밴드는 어디에도 회사명을 글로
@@ -1356,7 +1351,7 @@ function PreEventBand({
         <span className="block break-keep text-[15px] font-bold leading-snug text-white">{t(ev.title)}</span>
         <span className="mt-0.5 block break-keep text-xs leading-relaxed text-white/60">{t(ev.summary)}</span>
       </span>
-      <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-xs font-semibold text-violet-200/80 transition group-hover:text-violet-100">
+      <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-xs font-semibold text-accent/80 transition group-hover:text-white">
         {t(dict.program.tapHint)}
         <span aria-hidden className={ARROW_CLASS}>→</span>
       </span>
@@ -1512,7 +1507,7 @@ function DayModal({
                 instead of scrolling the page behind the modal. */}
             <div className="overflow-y-auto overscroll-contain px-6 pt-8 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:px-9 sm:py-9">
               <div className="flex flex-wrap items-center gap-2 pr-12">
-                <span className="rounded-full border border-violet-400/25 bg-violet-500/[0.12] px-3 py-1 text-xs font-bold text-violet-200">
+                <span className="text-xs font-bold text-accent">
                   {t(day.phase)}
                 </span>
                 {/* The booked window rides in the same chip as the date - it
@@ -1524,7 +1519,7 @@ function DayModal({
                     다만 칩을 쪼개지는 않습니다(위 문단의 결정) - 한 칩 안에서 시간만
                     굵고 밝게 씁니다. 카드와 같은 무채색 승격이고 날짜는 그대로 둡니다.
                     날짜까지 밝히면 칩 전체가 올라와 대비가 사라집니다. */}
-                <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/70">
+                <span className="text-xs font-semibold text-white/70">
                   {t(dict.program.dayLabel)} {day.day} {day.date} {t(day.weekday)}
                   {day.hours && (
                     <>
@@ -1534,7 +1529,7 @@ function DayModal({
                   )}
                 </span>
                 {dayEmphasis(day) === "must" && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/30 bg-rose-400/10 px-2.5 py-1 text-xs font-bold text-rose-200">
+                  <span className="inline-flex items-center gap-1 text-xs font-bold text-white/85">
                     <span aria-hidden>★</span>{t(dict.program.mandatoryBadge)}
                   </span>
                 )}
@@ -1548,10 +1543,10 @@ function DayModal({
                     여기서 색을 주면 세 번째 축이 하나 더 생깁니다. */}
                 {dayEmphasis(day) === "worth" && (
                   <>
-                    <span className="inline-flex items-center gap-1 rounded-full border border-violet-400/30 bg-violet-400/10 px-2.5 py-1 text-xs font-bold text-violet-200">
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-accent">
                       <SpotlightGlyph />{t(dict.program.spotlightBadge)}
                     </span>
-                    <span className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-xs font-semibold text-white/60">
+                    <span className="inline-flex items-center text-xs font-semibold text-white/60">
                       {t(dict.program.optionalAttendance)}
                     </span>
                   </>
@@ -1635,7 +1630,7 @@ function RunOfShow({
   };
   return (
     <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-4 sm:p-5">
-      <p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-200/80">
+      <p className="text-xs font-bold text-accent/80">
         {t(dict.program.runOfShowTitle)}
       </p>
       <ol className="mt-3 space-y-px">
@@ -1656,7 +1651,7 @@ function RunOfShow({
                 <span className="block break-keep text-xs font-semibold leading-snug text-white/85">
                   {t(row.label)}
                   {(linked || row.href) && (
-                    <span aria-hidden className="ml-1.5 text-violet-300/70 transition group-hover:text-violet-300">→</span>
+                    <span aria-hidden className="ml-1.5 text-accent/70 transition group-hover:text-accent">→</span>
                   )}
                 </span>
                 {row.note && (
@@ -1678,7 +1673,7 @@ function RunOfShow({
                       target="_blank"
                       rel="noopener noreferrer"
                       /* 위 footnote의 지도 링크와 같은 이유로 탭 영역을 넓힙니다. */
-                      className="relative font-semibold text-violet-300/80 underline decoration-violet-300/30 underline-offset-2 transition after:absolute after:-inset-2 after:content-[''] hover:text-violet-200"
+                      className="relative font-semibold text-accent/80 underline decoration-accent/40 underline-offset-2 transition after:absolute after:-inset-2 after:content-[''] hover:text-accent"
                     >
                       {t(row.noteAside.linkLabel)}
                     </a>
@@ -1736,12 +1731,12 @@ function RunOfShow({
 function EntryNoticeBox({ t }: { t: Tfn }) {
   const e = dict.program.entryNotice;
   return (
-    <div className="mt-5 rounded-2xl border border-rose-400/30 bg-rose-400/[0.09] px-5 py-4">
-      <p className="flex flex-wrap items-center gap-1.5 text-sm font-bold leading-snug text-rose-50">
+    <div className="mt-5 rounded-2xl border border-accent/30 bg-accent/[0.09] px-5 py-4">
+      <p className="flex flex-wrap items-center gap-1.5 text-sm font-bold leading-snug text-white">
         <span aria-hidden>★</span>
         {t(e.label)}
       </p>
-      <p className="mt-2 break-keep text-xs leading-relaxed text-rose-50/85">{t(e.body)}</p>
+      <p className="mt-2 break-keep text-xs leading-relaxed text-white">{t(e.body)}</p>
     </div>
   );
 }
@@ -1756,12 +1751,12 @@ function EntryNoticeBox({ t }: { t: Tfn }) {
 function SubmissionBox({ t }: { t: Tfn }) {
   const s = dict.program.submission;
   return (
-    <div className="mt-5 rounded-2xl border border-rose-400/25 bg-rose-400/[0.07] px-5 py-4">
+    <div className="mt-5 rounded-2xl border border-accent/25 bg-accent/[0.07] px-5 py-4">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="inline-flex items-center gap-1 rounded-full border border-rose-400/35 bg-rose-400/[0.12] px-2.5 py-1 text-xs font-bold text-rose-100">
+        <span className="inline-flex items-center gap-1 text-xs font-bold text-white">
           <span aria-hidden>★</span>{t(s.mustBadge)}
         </span>
-        <span className="text-xs font-bold uppercase tracking-[0.14em] text-rose-200/80">{t(s.tag)}</span>
+        <span className="text-xs font-bold text-white/85">{t(s.tag)}</span>
       </div>
       <p className="mt-2.5 break-keep text-sm font-bold leading-snug text-white">{t(s.heading)}</p>
       {/* 한 줄이던 항목이 이름 · 형식 · 본문 세 조각이 됐습니다 (2026-08-19,
@@ -1773,24 +1768,24 @@ function SubmissionBox({ t }: { t: Tfn }) {
           테두리가 있는 것은 필수 배지 하나여야 합니다. */}
       <ul className="mt-3 space-y-2.5">
         {s.items.map((item, i) => (
-          <li key={i} className="flex gap-2.5 text-xs leading-relaxed text-rose-50/85">
+          <li key={i} className="flex gap-2.5 text-xs leading-relaxed text-white">
             <span
               aria-hidden
-              className="mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-rose-300/30 bg-rose-400/10 text-[0.58rem] font-black text-rose-100"
+              className="mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-accent/30 bg-accent/10 text-[0.58rem] font-black text-white"
             >
               {i + 1}
             </span>
             <span className="min-w-0 break-keep">
               <span className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                <span className="font-bold text-rose-50">{t(item.name)}</span>
-                <span className="text-xs font-semibold text-rose-200/70">{t(item.format)}</span>
+                <span className="font-bold text-white">{t(item.name)}</span>
+                <span className="text-xs font-semibold text-white/85">{t(item.format)}</span>
               </span>
               <span className="mt-0.5 block">{t(item)}</span>
             </span>
           </li>
         ))}
       </ul>
-      <p className="mt-3.5 break-keep border-t border-rose-300/15 pt-3 text-xs leading-relaxed text-rose-100/75">
+      <p className="mt-3.5 break-keep border-t border-accent/15 pt-3 text-xs leading-relaxed text-white">
         {t(s.warning)}
       </p>
     </div>
@@ -1810,37 +1805,37 @@ function SubmissionBox({ t }: { t: Tfn }) {
 function AwardsBox({ t }: { t: Tfn }) {
   const a = dict.program.awards;
   return (
-    <div className="mt-5 rounded-2xl border border-amber-400/25 bg-amber-400/[0.07] px-5 py-4">
+    <div className="mt-5 rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/35 bg-amber-400/[0.12] px-2.5 py-1 text-xs font-bold text-amber-100">
+        <span className="inline-flex items-center gap-1 text-xs font-bold text-white/85">
           <span aria-hidden>★</span>{t(a.countBadge)}
         </span>
-        <span className="text-xs font-bold uppercase tracking-[0.14em] text-amber-200/80">{t(a.tag)}</span>
+        <span className="text-xs font-bold text-white/85">{t(a.tag)}</span>
       </div>
       <p className="mt-2.5 break-keep text-sm font-bold leading-snug text-white">{t(a.heading)}</p>
       {/* DECIDED 2026-08-16 (정체성 얼라인, 공모전): 제목 아래 부제 한 줄. 제목이
           관문 프레임으로 올라가면서 "그런데 순위는 없는 거지?"가 제목만으로는
           답이 안 되는 상태가 됐습니다. 순위를 세우지 않는다는 사실은 이 줄에서
           한 번만 말합니다 (note에서는 걷어냈습니다). */}
-      <p className="mt-1.5 break-keep text-xs leading-relaxed text-amber-100/70">{t(a.sub)}</p>
+      <p className="mt-1.5 break-keep text-xs leading-relaxed text-white/85">{t(a.sub)}</p>
       <ul className="mt-3 space-y-3">
         {a.items.map((item, i) => (
           <li key={i} className="flex gap-2.5">
             <span
               aria-hidden
-              className="mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-amber-300/30 bg-amber-400/10 text-[0.58rem] font-black text-amber-100"
+              className="mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-[0.58rem] font-black text-white/85"
             >
               {i + 1}
             </span>
             <div className="min-w-0">
-              <p className="break-keep text-xs font-bold leading-snug text-amber-50">{t(item.name)}</p>
-              <p className="mt-0.5 break-keep text-xs leading-relaxed text-amber-100/60">{t(item.meta)}</p>
-              <p className="mt-1 break-keep text-xs leading-relaxed text-amber-50/85">{t(item.desc)}</p>
+              <p className="break-keep text-xs font-bold leading-snug text-white/85">{t(item.name)}</p>
+              <p className="mt-0.5 break-keep text-xs leading-relaxed text-white/85">{t(item.meta)}</p>
+              <p className="mt-1 break-keep text-xs leading-relaxed text-white/85">{t(item.desc)}</p>
             </div>
           </li>
         ))}
       </ul>
-      <p className="mt-3.5 break-keep border-t border-amber-300/15 pt-3 text-xs leading-relaxed text-amber-100/75">
+      <p className="mt-3.5 break-keep border-t border-white/15 pt-3 text-xs leading-relaxed text-white/85">
         {t(a.note)}
       </p>
       {/* DECIDED 2026-08-16 (정체성 얼라인, 공모전): 어워드가 상으로 끝나지 않고
@@ -1851,9 +1846,9 @@ function AwardsBox({ t }: { t: Tfn }) {
           카피는 dict.program.awards의 next/openToAll이 정본입니다. */}
       <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
         {[a.next, a.openToAll].map((b, i) => (
-          <div key={i} className="rounded-xl border border-amber-300/15 bg-amber-400/[0.05] px-3.5 py-3">
-            <p className="break-keep text-xs font-bold uppercase tracking-[0.1em] text-amber-200/85">{t(b.label)}</p>
-            <p className="mt-1.5 break-keep text-xs leading-relaxed text-amber-50/85">{t(b.body)}</p>
+          <div key={i} className="rounded-xl border border-white/15 bg-white/[0.04] px-3.5 py-3">
+            <p className="break-keep text-xs font-bold text-white/85">{t(b.label)}</p>
+            <p className="mt-1.5 break-keep text-xs leading-relaxed text-white/85">{t(b.body)}</p>
           </div>
         ))}
       </div>
@@ -2017,7 +2012,7 @@ function ScrollToTop() {
           // inline style, and it is why this is the only `!` in the file.
           className={`${chromeHidden ? "max-lg:pointer-events-none max-lg:!opacity-0" : ""} group fixed bottom-[calc(env(safe-area-inset-bottom,0px)+5.25rem)] right-6 z-50 flex h-11 w-11 items-center justify-center transition-opacity duration-200 sm:right-8 lg:bottom-8 lg:h-12 lg:w-12`}
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/[0.07] text-white/65 backdrop-blur-sm transition group-hover:-translate-y-0.5 group-hover:border-white/35 group-hover:text-white lg:h-12 lg:w-12 lg:border-violet-400/40 lg:bg-violet-600/85 lg:text-violet-100 lg:shadow-[0_6px_24px_rgba(124,58,237,0.3)] lg:group-hover:border-violet-400/60 lg:group-hover:bg-violet-500 lg:group-hover:text-white">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/[0.07] text-white/65 backdrop-blur-sm transition group-hover:border-white/35 group-hover:text-white lg:h-12 lg:w-12 lg:border-white/15 lg:bg-violet-600/85 lg:text-white lg:group-hover:border-accent/60 lg:group-hover:bg-violet-500 lg:group-hover:text-white">
             {/* upward chevron */}
             <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4 lg:h-5 lg:w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M6 15l6-6 6 6" />
@@ -2158,7 +2153,7 @@ export default function Journey() {
             {/* clamp caps trimmed (8rem->7.1rem, 3rem->2.65rem) so the 18px root
                 bump doesn't enlarge the hero headline - it stays ~its current size
                 while the rest of the site grows. */}
-            <h1 className="text-[clamp(2.65rem,11vw,7.1rem)] font-black leading-[1.05] tracking-tight drop-shadow-[0_4px_40px_rgba(124,58,237,0.5)] lg:text-[clamp(2.65rem,6vw,5.5rem)]">
+            <h1 className="text-[clamp(2.65rem,11vw,7.1rem)] font-black leading-[1.05] tracking-tight lg:text-[clamp(2.65rem,6vw,5.5rem)]">
               <span className="block text-white">{t(dict.hero.titleLine1)}</span>
               {/* pb-[0.15em]: bg-clip-text only paints the gradient inside the line
                   box; with the tight leading the box cut off g/p descenders, so they
@@ -2172,14 +2167,14 @@ export default function Journey() {
                 좁은 폭에서는 두 줄로 접혀야 합니다. whitespace-nowrap은 각 조각이
                 자기 안에서 쪼개지지 않게 하는 것이고, 조각들 사이의 줄바꿈은
                 허용해야 해요 - 없으면 390px에서 가로로 넘칩니다. */}
-            <p className="mt-8 flex flex-wrap items-center justify-center gap-2 whitespace-nowrap text-xs text-white/90 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:gap-3 sm:text-base lg:justify-start">
+            <p className="mt-8 flex flex-wrap items-center justify-center gap-2 whitespace-nowrap text-xs text-white/90 sm:gap-3 sm:text-base lg:justify-start">
               <span className="font-semibold">{t(dict.hero.dates)}</span>
             </p>
             {/* break-keep - without it Korean breaks between syllables and the
                 paragraph ended "…남깁니" / "다." with a single orphaned syllable
                 on its own line. Wrapping still happens, but only at word
                 boundaries. */}
-            <p className="mx-auto mt-6 max-w-xl break-keep text-sm leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] sm:text-base lg:mx-0">
+            <p className="mx-auto mt-6 max-w-xl break-keep text-sm leading-relaxed text-white/85 sm:text-base lg:mx-0">
               {t(dict.hero.blurb)}
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-3 lg:justify-start">
@@ -2209,7 +2204,7 @@ export default function Journey() {
                   rel="noopener noreferrer"
                   aria-label={t(dict.nav.openChatAria)}
                   onClick={() => track("openchat_click", { src: "hero" })}
-                  className="inline-flex items-center gap-2 rounded-full border border-violet-400/35 bg-violet-500/10 px-5 py-3 text-sm font-semibold text-violet-100 transition hover:border-violet-400/55 hover:bg-violet-500/15 lg:hidden"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition hover:border-accent/55 hover:bg-white/[0.06] lg:hidden"
                 >
                   <ChatGlyph className="h-4 w-4 shrink-0" />
                   {t(dict.nav.openChat)}
@@ -2259,7 +2254,7 @@ export default function Journey() {
       <section id="results" aria-labelledby="results-heading" className="relative w-full px-6 py-14 sm:px-10 sm:py-20">
         <div className="mx-auto max-w-4xl text-center">
           <Eyebrow color="emerald">{t(dict.record.tag)}</Eyebrow>
-          <h2 id="results-heading" className="break-keep text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+          <h2 id="results-heading" className="break-keep text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-tight tracking-tight text-white">
             {t(dict.record.heading)}
           </h2>
           <p className="mx-auto mt-5 max-w-2xl break-keep text-base leading-relaxed text-white/75">{t(dict.record.lead)}</p>
@@ -2289,7 +2284,7 @@ export default function Journey() {
       <Chapter id="about" align="center">
         <div className="text-center">
           <Eyebrow>{t(dict.about.tag)}</Eyebrow>
-          <h2 className="mx-auto max-w-3xl text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+          <h2 className="mx-auto max-w-3xl text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-tight tracking-tight text-white">
             {t(dict.about.heading)}
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/70">
@@ -2299,8 +2294,8 @@ export default function Journey() {
 
         {/* the problem, in numbers - faint violet weight so it reads as "the
             gap" distinct from the lighter "shift" belief cards below */}
-        <div className="mt-10 rounded-3xl border border-violet-400/15 bg-violet-950/20 p-6 sm:p-8">
-          <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
+        <div className="mt-10 rounded-3xl border border-white/15 bg-white/[0.03] p-6 sm:p-8">
+          <p className="text-center text-xs font-bold text-accent">
             {t(dict.about.gapTag)}
           </p>
           <div className="mt-6 grid gap-6 sm:grid-cols-3">
@@ -2321,7 +2316,7 @@ export default function Journey() {
               date · outbound), not a card, so it reads as a citation. Add
               entries to dict.about.press to extend. */}
           <div className="mx-auto mt-6 max-w-2xl">
-            <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-white/55">
+            <p className="text-center text-xs font-bold text-white/55">
               {t(dict.about.pressTag)}
             </p>
             {dict.about.press.map((p) => (
@@ -2330,7 +2325,7 @@ export default function Journey() {
                 href={p.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-center transition hover:border-violet-400/30 hover:bg-white/[0.06]"
+                className="group mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-center transition hover:border-white/25 hover:bg-white/[0.06]"
               >
                 {/* 로고는 선택입니다 (dict의 PressItem 참고). 흰색 트림 자산이 없는
                     매체는 제호를 텍스트로 냅니다 - 이미지와 같은 높이·불투명도라 한
@@ -2344,7 +2339,7 @@ export default function Journey() {
                 )}
                 <span className="text-sm font-semibold text-white/90">{t(p.title)}</span>
                 <span className="text-xs text-white/55">{t(p.date)}</span>
-                <span className="inline-flex items-center gap-1 text-xs font-semibold text-violet-300 transition group-hover:text-violet-200">
+                <span className="inline-flex items-center gap-1 text-xs font-semibold text-accent transition group-hover:text-accent">
                   {t(dict.about.pressCta)}
                   <span aria-hidden>↗</span>
                 </span>
@@ -2354,13 +2349,13 @@ export default function Journey() {
         </div>
 
         {/* the answer - the shift we're building */}
-        <p className="mt-12 text-center text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
+        <p className="mt-12 text-center text-xs font-bold text-accent">
           {t(dict.about.shiftTag)}
         </p>
         <div className="mt-5 grid gap-4 text-left md:grid-cols-3">
           {dict.about.cards.map((c) => (
-            <Glass key={c.kicker.en} className="!p-6 transition hover:border-violet-400/40 hover:bg-white/[0.07]">
-              <span className="text-xs font-bold tracking-[0.2em] text-violet-300">{t(c.kicker)}</span>
+            <Glass key={c.kicker.en} className="!p-6 transition hover:border-white/25 hover:bg-white/[0.07]">
+              <span className="text-xs font-bold text-accent">{t(c.kicker)}</span>
               <h3 className="mt-3 text-lg font-bold text-white">{t(c.title)}</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/75">{t(c.body)}</p>
             </Glass>
@@ -2371,7 +2366,7 @@ export default function Journey() {
             is now its own section between the FAQ and the footer, where it reads
             as a closing note rather than a second ending inside the chapter that
             opens the page. One line keeps the idea present. */}
-        <p className="mx-auto mt-10 max-w-2xl text-sm font-medium leading-relaxed text-violet-100/80">
+        <p className="mx-auto mt-10 max-w-2xl text-sm font-medium leading-relaxed text-white">
           {t(dict.about.visionOneLiner)}
         </p>
 
@@ -2381,7 +2376,7 @@ export default function Journey() {
       <Chapter id="join" align="center">
         <div className="text-center">
           <Eyebrow color="emerald">{t(dict.whoWhat.tag)}</Eyebrow>
-          <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+          <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-tight tracking-tight text-white">
             {t(dict.whoWhat.heading)}
           </h2>
           <p className="mx-auto mt-4 max-w-2xl break-keep text-xs leading-relaxed text-white/60">{t(dict.record.asWritten)}</p>
@@ -2394,11 +2389,11 @@ export default function Journey() {
             job - who it's for, and why the usual reasons not to join don't
             apply - and the next chapter answers "what do I get". */}
         <Glass className="mx-auto mt-10 max-w-2xl text-left">
-          <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-violet-300">{t(dict.whoWhat.whoTitle)}</h3>
+          <h3 className="text-xs font-bold text-accent">{t(dict.whoWhat.whoTitle)}</h3>
           <ul className="mt-4 space-y-3">
             {dict.whoWhat.who.map((item, i) => (
               <li key={i} className="flex items-start gap-3 text-sm leading-relaxed text-white/75">
-                <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400" />
+                <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                 {t(item)}
               </li>
             ))}
@@ -2423,9 +2418,9 @@ export default function Journey() {
               구절은 dict 쪽 ** 마커를 Emph가 굵게 칠합니다.
               로즈로 올리지 마세요 - 그 층은 의무이고, 준비물이 자격 조건처럼
               읽히기 시작합니다(dict.whoWhat.prep 위 주석). */}
-          <div className="mt-4 rounded-xl border border-amber-400/20 bg-amber-400/[0.06] px-4 py-3">
-            <p className="break-keep text-sm leading-relaxed text-amber-50/85">
-              <span className="font-bold text-amber-200">{t(dict.whoWhat.prepLabel)}</span>
+          <div className="mt-4 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3">
+            <p className="break-keep text-sm leading-relaxed text-white/85">
+              <span className="font-bold text-white/85">{t(dict.whoWhat.prepLabel)}</span>
               {": "}
               <Emph text={t(dict.whoWhat.prep)} className="font-semibold text-white" />
             </p>
@@ -2438,7 +2433,7 @@ export default function Journey() {
           360px 폭에서 500px 가까이 비어 덜 불러온 화면처럼 보였습니다. */}
       <Chapter id="benefits" align="center" className="!pb-6 sm:!pb-20 lg:!pb-24">
         <Eyebrow color="cyan">{t(dict.benefits.tag)}</Eyebrow>
-        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white">
           {t(dict.benefits.heading)}
         </h2>
         <p className="mx-auto mt-4 max-w-2xl break-keep text-xs leading-relaxed text-white/60">{t(dict.record.asWritten)}</p>
@@ -2450,8 +2445,8 @@ export default function Journey() {
             been named. Tinted panel + three tangible chips - deliberately the
             most emphatic block in the section, because it is the section's
             answer; the cards are the footnotes to it. */}
-        <div className="mx-auto mt-7 max-w-3xl rounded-2xl border border-cyan-400/25 bg-cyan-400/[0.06] px-5 py-6 sm:px-7">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-cyan-200/90">{t(dict.benefits.spine.tag)}</p>
+        <div className="mx-auto mt-7 max-w-3xl rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-6 sm:px-7">
+          <p className="text-xs font-bold text-white/85">{t(dict.benefits.spine.tag)}</p>
           <p className="mx-auto mt-2.5 max-w-2xl break-keep text-[clamp(1.05rem,2.4vw,1.45rem)] font-bold leading-snug text-white">
             {t(dict.benefits.spine.heading)}
           </p>
@@ -2463,8 +2458,8 @@ export default function Journey() {
               earn it. */}
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
             {dict.benefits.spine.tangibles.map((x, i) => (
-              <span key={i} className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-cyan-400/25 bg-cyan-400/[0.08] px-3 py-1 text-xs font-semibold text-cyan-50/90">
-                <span aria-hidden className="text-cyan-300/80">✓</span>
+              <span key={i} className="inline-flex items-center gap-1.5 whitespace-nowrap text-xs font-semibold text-white/85">
+                <span aria-hidden className="text-white/70">✓</span>
                 {t(x)}
               </span>
             ))}
@@ -2480,13 +2475,13 @@ export default function Journey() {
 
         {/* Participation flow */}
         <div className="mt-12 text-left">
-          <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/70">{t(dict.benefits.flowTitle)}</p>
+          <p className="text-sm font-bold text-white/70">{t(dict.benefits.flowTitle)}</p>
           <FlowStrip
             className="mt-4"
             align="center"
             items={dict.benefits.flow}
             render={(f) => (
-              <div className="flex w-full items-center justify-center rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-3 text-center text-sm font-semibold text-white">{t(f)}</div>
+              <div className="flex w-full items-center justify-center rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-center text-sm font-semibold text-white">{t(f)}</div>
             )}
           />
           <p className="mt-3 text-xs text-white/55">{t(dict.benefits.flowNote)}</p>
@@ -2518,7 +2513,7 @@ export default function Journey() {
             <div className="flex flex-wrap items-center justify-center gap-2">
               <Eyebrow className="!mb-0">{t(dict.program.tag)}</Eyebrow>
             </div>
-            <h2 className="mt-4 text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+            <h2 className="mt-4 text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white">
               {t(dict.program.heading)}
             </h2>
             {/* Three numbers before anything else: the first question this section
@@ -2537,7 +2532,7 @@ export default function Journey() {
                 on mobile, where the row becomes a stack and the → sits to the
                 right of each box. Boxes stretch to equal height per row. */}
             <div className="mx-auto mt-8 max-w-5xl">
-              <p className="text-xs font-bold uppercase tracking-[0.14em] text-violet-300">{t(dict.program.outputTag)}</p>
+              <p className="text-xs font-bold text-accent">{t(dict.program.outputTag)}</p>
               <h3 className="mx-auto mt-2 max-w-3xl text-[clamp(1.05rem,2.4vw,1.5rem)] font-bold leading-snug text-white">
                 {t(dict.program.outputHeading)}
               </h3>
@@ -2545,9 +2540,9 @@ export default function Journey() {
                 className="mt-5 text-left"
                 items={dict.program.outputSteps}
                 render={(st, i) => (
-                  <div className="flex h-full w-full flex-col rounded-xl border border-violet-400/20 bg-violet-500/10 px-4 py-3.5">
+                  <div className="flex h-full w-full flex-col rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3.5">
                     <div className="flex items-center gap-2">
-                      <span aria-hidden className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-violet-400/35 bg-violet-400/10 text-xs font-black text-violet-200">
+                      <span aria-hidden className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-xs font-black text-accent">
                         {i + 1}
                       </span>
                       <p className="text-sm font-bold leading-snug text-white">{t(st.title)}</p>
@@ -2565,8 +2560,8 @@ export default function Journey() {
                 the three answers line up under each other and can be compared in
                 one downward glance. Left-aligned inside a centred section for the
                 same reason. */}
-            <div className="mx-auto mt-3 max-w-2xl rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] px-5 py-4 text-left">
-              <p className="text-xs font-bold leading-relaxed text-amber-100">
+            <div className="mx-auto mt-3 max-w-2xl rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 text-left">
+              <p className="text-xs font-bold leading-relaxed text-white/85">
                 {t(dict.program.modeNote.lead)}
               </p>
               <dl className="mt-2.5 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5">
@@ -2574,12 +2569,12 @@ export default function Journey() {
                   <Fragment key={row.id}>
                     <dt
                       className={`text-xs font-bold leading-relaxed ${
-                        row.id === "required" ? "text-amber-200" : "text-amber-100/55"
+                        row.id === "required" ? "text-white/85" : "text-white/85"
                       }`}
                     >
                       {t(row.label)}
                     </dt>
-                    <dd className="min-w-0 break-keep text-xs leading-relaxed text-amber-100/85">
+                    <dd className="min-w-0 break-keep text-xs leading-relaxed text-white/85">
                       {t(row.body)}
                     </dd>
                   </Fragment>
@@ -2602,7 +2597,7 @@ export default function Journey() {
               return (
               <div key={group[0].day}>
                 <div className="mb-4 flex items-center gap-3">
-                  <span className="text-sm font-bold uppercase tracking-[0.14em] text-violet-200">{t(group[0].phase)}</span>
+                  <span className="text-sm font-bold text-accent">{t(group[0].phase)}</span>
                   <span aria-hidden className="h-px flex-1 bg-white/10" />
                 </div>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -2623,7 +2618,7 @@ export default function Journey() {
               "questions move from thinking to evidence" claim without a sentence.
               Roles only; the question lists themselves stay in the forms. */}
           <div className="mx-auto mt-12 max-w-5xl text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.14em] text-violet-300">{t(dict.program.checkins.tag)}</p>
+            <p className="text-xs font-bold text-accent">{t(dict.program.checkins.tag)}</p>
             <h3 className="mx-auto mt-2 max-w-3xl text-[clamp(1.05rem,2.4vw,1.5rem)] font-bold leading-snug text-white">
               {t(dict.program.checkins.heading)}
             </h3>
@@ -2636,7 +2631,7 @@ export default function Journey() {
               render={(f) => (
                 <div className="flex h-full w-full flex-col rounded-xl border border-white/[0.12] bg-white/[0.04] px-4 py-3.5">
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="rounded-full border border-violet-400/25 bg-violet-500/[0.12] px-2 py-0.5 text-xs font-bold text-violet-200">
+                    <span className="text-xs font-bold text-accent">
                       {t(f.when)}
                     </span>
                     <span className="text-xs font-semibold text-white/55">{t(f.duration)}</span>
@@ -2648,9 +2643,9 @@ export default function Journey() {
             />
             {/* Emerald, not violet: this is the one line here that is an upside
                 rather than an instruction, and it should not read as a fourth box. */}
-            <div className="mx-auto mt-4 max-w-3xl rounded-xl border border-emerald-400/20 bg-emerald-400/[0.06] px-4 py-3 text-left">
-              <p className="break-keep text-xs leading-relaxed text-emerald-50/85">
-                <span className="font-bold text-emerald-200">{t(dict.program.checkins.bonusLabel)}</span>
+            <div className="mx-auto mt-4 max-w-3xl rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-left">
+              <p className="break-keep text-xs leading-relaxed text-white/85">
+                <span className="font-bold text-white/85">{t(dict.program.checkins.bonusLabel)}</span>
                 {": "}
                 {t(dict.program.checkins.bonus)}
               </p>
@@ -2665,7 +2660,7 @@ export default function Journey() {
           naming/likeness to be confirmed with the user (flagged in the handoff). */}
       <Chapter id="speakers" align="center">
         <Eyebrow>{t(dict.speakers.tag)}</Eyebrow>
-        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white">
           {t(dict.speakers.heading)}
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.speakers.intro)}</p>
@@ -2705,12 +2700,12 @@ export default function Journey() {
           {/* keyed by index, not `img` - one speaker can hold two sessions
               (박희덕: Day 7 조언 세션 + Day 8 간담회) and so reuse the same photo */}
           {dict.speakers.people.map((s, si) => (
-            <div key={si} className="row-span-3 grid grid-rows-subgrid gap-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-400/25 hover:bg-white/[0.05]">
+            <div key={si} className="row-span-3 grid grid-rows-subgrid gap-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-white/25 hover:bg-white/[0.05]">
               {/* 라벨과 제목이 한 행입니다 - 줄 세워야 하는 것은 제목의 시작이
                   아니라 끝(=첫 불릿이 앉는 자리)이라, 둘을 묶어야 그 끝이 하나의
                   행 경계가 됩니다. */}
               <div>
-                <span className="block text-xs font-bold uppercase tracking-wide text-violet-300/80">{t(s.day)}</span>
+                <span className="block text-xs font-bold text-accent/80">{t(s.day)}</span>
                 <p className="mt-4 break-keep text-base font-semibold leading-snug text-white">{t(s.topic)}</p>
               </div>
               <ul className="space-y-2">
@@ -2720,7 +2715,7 @@ export default function Journey() {
                   // 보였습니다. span으로 묶어 둘째 줄이 마커가 아니라 텍스트
                   // 시작선에 붙습니다(행잉 인덴트).
                   <li key={i} className="flex items-start gap-2 text-xs leading-relaxed text-white/70">
-                    <span aria-hidden className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-violet-300/70" />
+                    <span aria-hidden className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-accent/70" />
                     <span className="min-w-0 break-keep">{t(p)}</span>
                   </li>
                 ))}
@@ -2752,7 +2747,7 @@ export default function Journey() {
             여기에 색을 더하면 밴드가 섹션 밖에서 온 것처럼 보입니다. */}
         <div className="mt-5 rounded-2xl border border-white/15 bg-white/[0.05] p-6 text-left sm:p-8">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <span className="text-xs font-bold uppercase tracking-wide text-violet-300/80">{t(dict.speakers.panel.label)}</span>
+            <span className="text-xs font-bold text-accent/80">{t(dict.speakers.panel.label)}</span>
             <p className="break-keep text-base font-semibold text-white sm:text-lg">{t(dict.speakers.panel.title)}</p>
           </div>
           <p className="mt-3 max-w-3xl break-keep text-sm leading-relaxed text-white/75">{t(dict.speakers.panel.lead)}</p>
@@ -2784,7 +2779,7 @@ export default function Journey() {
       {/* ── CH 3.3 · MENTORING PHILOSOPHY ──────────────────────────── */}
       <Chapter id="mentoring" align="center">
         <Eyebrow color="emerald">{t(dict.mentoring.tag)}</Eyebrow>
-        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white">
           {t(dict.mentoring.heading)}
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.mentoring.intro)}</p>
@@ -2810,7 +2805,7 @@ export default function Journey() {
               mentoring.gridLabel) a status colour with no status left to report
               read as a badge whose meaning had been cut out. This matches the
               partner wall's tier labels. */}
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">
+          <p className="text-xs font-bold text-white/70">
             {t(dict.mentoring.gridLabel)}
           </p>
 
@@ -2824,7 +2819,7 @@ export default function Journey() {
               {/* Centred like the partner panel below it: this strip spans the full
                   width and two names pinned left left the row looking unfinished. */}
               <div className="flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1">
-                <span className="text-xs font-bold uppercase tracking-[0.14em] text-white/60">
+                <span className="text-xs font-bold text-white/60">
                   {t(dict.mentoring.warmup.label)}
                 </span>
                 <span className="break-keep text-xs text-white/55">{t(dict.mentoring.warmup.note)}</span>
@@ -2839,12 +2834,12 @@ export default function Journey() {
                         크래시코스)라, 날짜가 배정 예고가 아니라 세션 공지입니다.
                         아래 멘토 카드에는 같은 이유로 칩이 없습니다. */}
                     {m.days && (
-                      <span className="rounded-full border border-white/[0.12] bg-white/[0.04] px-1.5 py-0.5 text-xs font-semibold text-white/55">{m.days}</span>
+                      <span className="text-xs font-semibold text-white/55">{m.days}</span>
                     )}
                     {/* 확정 원칙이지만 날짜가 아직 안 잠긴 세션. 지금은 해당자가
                         없습니다 - 새 세션 연사가 들어올 때를 위한 자리입니다. */}
                     {m.daysPending && (
-                      <span className="rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-1.5 py-0.5 text-xs font-semibold text-amber-200/90">
+                      <span className="text-xs font-semibold text-white/85">
                         {m.daysPending} {t(dict.mentoring.dayPendingLabel)}
                       </span>
                     )}
@@ -2862,14 +2857,14 @@ export default function Journey() {
             {dict.mentoring.groups.map((g) => {
               const mentors = dict.mentoring.mentors.filter((m) => m.stages.some((n) => g.stages.includes(n)));
               return (
-                <div key={g.id} className="rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.04] p-4 sm:p-5">
+                <div key={g.id} className="rounded-2xl border border-white/15 bg-white/[0.04] p-4 sm:p-5">
                   {/* Header: what this group is for, then who partners on it. */}
                   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                    <span className="whitespace-nowrap rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-0.5 text-xs font-bold text-emerald-200">
+                    <span className="whitespace-nowrap text-xs font-bold text-white/85">
                       {t(g.dayRange)}
                     </span>
                     <p className="break-keep text-[15px] font-bold text-white">{t(g.title)}</p>
-                    <p className="break-keep text-xs text-emerald-100/70">{t(g.theme)}</p>
+                    <p className="break-keep text-xs text-white/85">{t(g.theme)}</p>
                   </div>
                   {/* No max-width. The partner panel and the mentor grid below
                       both span the full box, so a capped paragraph stopped
@@ -2901,7 +2896,7 @@ export default function Journey() {
                           so two marks pinned to the left edge left a wide empty
                           field to their right and read as an unfinished row rather
                           than a pair. Centring makes the pair the subject. */}
-                      <p className="text-center text-xs font-bold uppercase tracking-[0.14em] text-white/55">
+                      <p className="text-center text-xs font-bold text-white/55">
                         {t(g.partnersLabel)}
                       </p>
                       {/* gap-x-14: the separation IS the grouping here - two marks
@@ -2939,8 +2934,8 @@ export default function Journey() {
                       purpose - it's a qualifier on the grid, not a third heading
                       competing with the box title. */}
                   {g.personalNote && (
-                    <div className="mt-4 border-l-2 border-emerald-400/25 pl-3">
-                      <p className="break-keep text-xs font-bold text-emerald-100/80">{t(g.personalNote.title)}</p>
+                    <div className="mt-4 border-l-2 border-white/15 pl-3">
+                      <p className="break-keep text-xs font-bold text-white/85">{t(g.personalNote.title)}</p>
                       <p className="mt-1 break-keep text-xs leading-relaxed text-white/55">{t(g.personalNote.body)}</p>
                     </div>
                   )}
@@ -2965,7 +2960,7 @@ export default function Journey() {
                       const role = t(m.role);
                       const intro = t(m.intro);
                       return (
-                        <div key={i} className="flex w-[75vw] shrink-0 snap-start flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-emerald-400/25 hover:bg-white/[0.05] sm:w-[calc((100%-0.75rem)/2)] sm:shrink lg:w-[calc((100%-1.5rem)/3)]">
+                        <div key={i} className="flex w-[75vw] shrink-0 snap-start flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-white/25 hover:bg-white/[0.05] sm:w-[calc((100%-0.75rem)/2)] sm:shrink lg:w-[calc((100%-1.5rem)/3)]">
                           <div className="flex items-start justify-between gap-2">
                             {/* break-keep - Korean breaks between syllables by
                                 default, which shreds a 3-syllable name into a
@@ -3020,12 +3015,12 @@ export default function Journey() {
             them breaks the connection - and "can I pick one?" is a question the
             cards provoke, not one a reader arrives with. Answering it directly
             under the faces is answering it where it is asked. */}
-        <div className="mt-8 rounded-2xl border border-emerald-400/25 bg-emerald-400/[0.06] p-5 text-left sm:p-6">
-          <p className="flex items-center gap-2 text-sm font-bold text-emerald-200">
-            <span aria-hidden className="text-emerald-300/70">◇</span>
+        <div className="mt-8 rounded-2xl border border-white/15 bg-white/[0.04] p-5 text-left sm:p-6">
+          <p className="flex items-center gap-2 text-sm font-bold text-white/85">
+            <span aria-hidden className="text-white/70">◇</span>
             {t(dict.mentoring.matchNote.title)}
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-emerald-50/80">
+          <p className="mt-2 text-sm leading-relaxed text-white/85">
             <Emph text={t(dict.mentoring.matchNote.body)} className="font-bold text-white" />
           </p>
         </div>
@@ -3037,7 +3032,7 @@ export default function Journey() {
         <div className="mt-16 border-t border-white/10 pt-12 text-left">
           <div className="text-center">
             <Eyebrow color="violet">{t(dict.judges.tag)}</Eyebrow>
-            <h3 className="text-[clamp(1.5rem,4vw,2.5rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+            <h3 className="text-[clamp(1.5rem,4vw,2.5rem)] font-bold tracking-tight text-white">
               {t(dict.judges.heading)}
             </h3>
             <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-white/75">{t(dict.judges.sub)}</p>
@@ -3059,15 +3054,15 @@ export default function Journey() {
             {dict.judges.people.map((j, i) => {
               const name = t(j.name);
               return (
-                <div key={i} className="flex w-[75vw] shrink-0 snap-start flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-400/25 hover:bg-white/[0.05] sm:w-[calc((100%-1rem)/2)] sm:shrink lg:w-[calc((100%-2rem)/3)]">
+                <div key={i} className="flex w-[75vw] shrink-0 snap-start flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-white/25 hover:bg-white/[0.05] sm:w-[calc((100%-1rem)/2)] sm:shrink lg:w-[calc((100%-2rem)/3)]">
                   <div className="flex items-center gap-3">
                     {/* Face photo when on hand, else initial avatar. */}
                     {j.img ? (
-                      <span className="h-12 w-12 shrink-0 overflow-hidden rounded-full border border-violet-400/20">
+                      <span className="h-12 w-12 shrink-0 overflow-hidden rounded-full border border-white/15">
                         <Image src={j.img} alt={name} width={400} height={400} className="h-full w-full object-cover" />
                       </span>
                     ) : (
-                      <span aria-hidden className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-violet-400/20 bg-violet-400/10 text-base font-black text-violet-200">
+                      <span aria-hidden className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-base font-black text-accent">
                         {name.charAt(0)}
                       </span>
                     )}
@@ -3081,13 +3076,13 @@ export default function Journey() {
                     </div>
                   </div>
                   <div className="mt-4 flex flex-wrap items-center gap-1.5">
-                    <span className="inline-flex w-fit items-center rounded-full border border-violet-400/20 bg-violet-400/[0.08] px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-violet-200/90">
+                    <span className="inline-flex w-fit items-center text-xs font-semibold text-accent/90">
                       {t(j.tag)}
                     </span>
                     {/* Agreed in principle, not locked - same amber dashed pill the
                         mentor grid uses for a pending day, so the two read alike. */}
                     {j.pending && (
-                      <span className="inline-flex items-center rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-2 py-0.5 text-xs font-semibold text-amber-200/90">
+                      <span className="inline-flex items-center text-xs font-semibold text-white/85">
                         {t(dict.judges.pendingLabel)}
                       </span>
                     )}
@@ -3124,7 +3119,7 @@ export default function Journey() {
             the bright background field. */}
         <div className="mx-auto w-full max-w-4xl rounded-[2rem] border border-white/10 bg-[#0a0814]/80 p-8 sm:p-12">
           <Eyebrow>{t(dict.partners.tag)}</Eyebrow>
-          <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+          <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white">
             {t(dict.partners.heading)}
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-sm leading-relaxed text-white/75">{t(dict.partners.note)}</p>
@@ -3141,7 +3136,7 @@ export default function Journey() {
               alpha channel, trimmed + downscaled. Filename carries "-white" so a
               browser can't serve the earlier colour version from cache. */}
           <div className="mt-9 text-left">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.hostLabel)}</p>
+            <p className="text-xs font-bold text-white/70">{t(dict.partners.hostLabel)}</p>
             <div className="mt-3 overflow-hidden rounded-2xl border border-white/[0.12] bg-white/[0.02]">
               {/* Umbrella header - click opens the AXMOS intro modal. */}
               <button
@@ -3186,7 +3181,7 @@ export default function Journey() {
           {/* ── Tier 2 · 주관 (the student associations) ─────────────────── */}
           <div className="mt-8 text-left">
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.organizersLabel)}</p>
+              <p className="text-xs font-bold text-white/70">{t(dict.partners.organizersLabel)}</p>
               <p className="text-xs text-white/55">{t(dict.partners.organizersNote)}</p>
             </div>
             {/* 폰에서 2열입니다 (2026-08-24 모바일 감사). grid-cols-3 고정이라
@@ -3224,7 +3219,7 @@ export default function Journey() {
               deck lists no in-discussion sponsors, and 멘토링 is just another
               role caption here. */}
           <div className="mt-8 border-t border-white/10 pt-8 text-left">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">{t(dict.partners.sponsorsLabel)}</p>
+            <p className="text-xs font-bold text-white/70">{t(dict.partners.sponsorsLabel)}</p>
 
             {/* A green "확정 (CONFIRMED)" pill sat here between the label and the
                 grid. Removed 2026-08-10 - every sponsor below is confirmed, so
@@ -3319,7 +3314,7 @@ export default function Journey() {
                   {/* mass comes from the strip's roster, never from this list -
                       see sponsorMass. */}
                   {url ? <LogoTile {...l} mass={sponsorMass(l.src)} url={url} /> : <LogoTile {...l} mass={sponsorMass(l.src)} onOpen={(el) => openPartner(l.alt, el, url)} />}
-                  <span className="text-center text-xs font-semibold uppercase tracking-[0.1em] text-white/55">{cat}</span>
+                  <span className="text-center text-xs font-semibold text-white/55">{cat}</span>
                 </div>
               ))}
             </div>
@@ -3335,7 +3330,7 @@ export default function Journey() {
       {/* ── CH 5 · FAQ ─────────────────────────────────────────────── */}
       <Chapter id="faq" align="center">
         <Eyebrow>{t(dict.faq.tag)}</Eyebrow>
-        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white">
           {t(dict.faq.heading)}
         </h2>
         <p className="mx-auto mt-4 max-w-2xl break-keep text-xs leading-relaxed text-white/60">{t(dict.record.asWritten)}</p>
@@ -3355,8 +3350,8 @@ export default function Journey() {
             right after the event → autumn → Dec 2026 Seoul → Mar 2027) and the
             order on screen is chronological. Step 1 keeps the "START" badge,
             which is why its `when` carries the date only. */}
-        <div className="mt-14 rounded-3xl border border-violet-400/15 bg-violet-950/20 p-6 sm:p-8">
-          <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-violet-300">
+        <div className="mt-14 rounded-3xl border border-white/15 bg-white/[0.03] p-6 sm:p-8">
+          <p className="text-center text-xs font-bold text-accent">
             {t(dict.about.visionTag)}
           </p>
           <h3 className="mx-auto mt-3 max-w-2xl text-center text-xl font-bold leading-snug text-white sm:text-2xl">
@@ -3373,19 +3368,19 @@ export default function Journey() {
                   key={s.num}
                   className={`relative flex flex-col rounded-2xl border p-4 text-left ${
                     start
-                      ? "border-violet-400/50 bg-violet-500/15"
+                      ? "border-accent/50 bg-white/[0.04]"
                       : "border-white/10 bg-white/[0.03]"
                   }`}
                 >
                   <span
                     className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-black ${
-                      start ? "bg-violet-500 text-white" : "bg-white/10 text-white/80"
+                      start ? "bg-accent text-[#070B1F]" : "bg-white/10 text-white/80"
                     }`}
                   >
                     {s.num}
                   </span>
                   {start && (
-                    <span className="mt-2 inline-flex w-fit items-center gap-1 rounded-full bg-violet-400/20 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-violet-200">
+                    <span className="mt-2 inline-flex w-fit items-center gap-1 text-xs font-bold text-accent">
                       {t(dict.about.visionStartBadge)}
                     </span>
                   )}
@@ -3393,7 +3388,7 @@ export default function Journey() {
                       question this section answers is "when does that happen",
                       and violet-200 keeps it legible on the dark card while
                       still sitting apart from the white title. */}
-                  <p className="mt-2 text-xs font-semibold leading-snug tracking-wide text-violet-200">
+                  <p className="mt-2 text-xs font-semibold leading-snug text-accent">
                     {t(s.when)}
                   </p>
                   <p className="mt-1 text-sm font-bold leading-snug text-white">{t(s.title)}</p>
@@ -3430,7 +3425,7 @@ export default function Journey() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => track("openchat_click", { src: "vision" })}
-                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-violet-600/90 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-violet-500"
+                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-violet-600/90 px-6 py-3 text-sm font-semibold text-white transition hover:bg-violet-500"
               >
                 <ChatGlyph className="h-4 w-4 shrink-0" />
                 {t(dict.about.visionChatCta)}
@@ -3468,10 +3463,10 @@ export default function Journey() {
               이 자리에 적는 이름은 전부 이 페이지가 이미 공개한 것입니다(dict.footer.thanks의 주석).
               DECIDED 2026-10-02 (사용자: 본문을 "centralize"): 본문도 폰까지 가운데 정렬입니다.
               그 전에는 폰에서만 왼쪽 정렬이었습니다. */}
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/55">
+          <p className="text-xs font-bold text-white/55">
             {t(dict.footer.thanks.label)}
           </p>
-          <h2 className="mx-auto mt-4 max-w-3xl break-keep text-[clamp(1.75rem,4.4vw,3rem)] font-bold leading-tight tracking-tight text-white drop-shadow-[0_2px_40px_rgba(124,58,237,0.4)]">
+          <h2 className="mx-auto mt-4 max-w-3xl break-keep text-[clamp(1.75rem,4.4vw,3rem)] font-bold leading-tight tracking-tight text-white">
             {t(dict.footer.thanks.heading)}
           </h2>
           <p className="mx-auto mt-6 max-w-2xl break-keep text-center text-base leading-relaxed text-white/80">
@@ -3491,7 +3486,7 @@ export default function Journey() {
               // 이 페이지에서 /#december로 가는 링크는 라벨이 "프로그램"인 #gaps의 하나뿐입니다.
               href="/"
               onClick={() => track("naru_cta", { src: "august_closing", to: "home" })}
-              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
+              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white transition"
             >
               {t(dict.footer.ctaDecember).replace("{name}", decemberEventLabel(locale))}
               <span aria-hidden className={ARROW_CLASS}>→</span>
@@ -3510,14 +3505,14 @@ export default function Journey() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => track("openchat_click", { src: "footer" })}
-                className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5"
+                className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white transition"
               >
                 <ChatGlyph className="h-5 w-5 shrink-0" />
                 {t(dict.nav.openChatJoin)}
                 <span aria-hidden className={ARROW_CLASS}>→</span>
               </a>
             )}
-            <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-9 py-4 text-base font-semibold text-white/85 transition hover:-translate-y-0.5 hover:bg-white/10">
+            <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-9 py-4 text-base font-semibold text-white/85 transition hover:bg-white/10">
               {t(dict.nav.partner)}
             </a>
           </div>
@@ -3534,7 +3529,7 @@ export default function Journey() {
 
         {/* credits - pinned to the very bottom of the final screen */}
         <div className="mx-auto mt-10 w-full max-w-3xl border-t border-white/10 pt-8 text-center">
-          <p className="text-sm font-bold tracking-widest text-white">ZERO100 AI BUILDERTHON</p>
+          <p className="text-sm font-bold text-white">ZERO100 AI BUILDERTHON</p>
           <p className="mt-2 text-xs text-white/65">{t(dict.footer.hostedBy)}</p>
           {/* DECIDED 2026-10-20 (hwang 브리프 4.2): 여기 서던 FooterNav, 저작권, 배경 움직임 토글은 main 밖의 SiteFooter 하나가 맡습니다
               (세 페이지 같은 푸터). 위 두 줄(ZERO100 AI BUILDERTHON, 주최 표기)은 8월 기록이라 그대로입니다. */}
@@ -3616,7 +3611,7 @@ function FAQList() {
               className="flex w-full items-center justify-between gap-4 py-5 text-left"
             >
               <span className="text-base font-semibold text-white">{t(item.q)}</span>
-              <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 text-white/70 transition ${isOpen ? "rotate-45 border-violet-400 text-violet-300" : ""}`}>
+              <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 text-white/70 transition ${isOpen ? "rotate-45 border-accent text-accent" : ""}`}>
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
               </span>
             </button>
@@ -3661,13 +3656,13 @@ function FAQList() {
                       <div className={`mt-4 grid items-start gap-4 ${item.aGroups.length > 1 ? "sm:grid-cols-2" : ""}`}>
                         {item.aGroups.map((g, gi) => (
                           <div key={gi} className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3.5">
-                            <p className="text-xs font-bold uppercase tracking-[0.12em] text-violet-200/90">
+                            <p className="text-xs font-bold text-accent/90">
                               {t(g.label)}
                             </p>
                             <ul className="mt-2.5 space-y-1.5">
                               {g.items.map((x, xi) => (
                                 <li key={xi} className="flex gap-2 text-[0.8rem] leading-relaxed text-white/70">
-                                  <span aria-hidden className="mt-[0.45em] h-1 w-1 shrink-0 rounded-full bg-violet-300/60" />
+                                  <span aria-hidden className="mt-[0.45em] h-1 w-1 shrink-0 rounded-full bg-accent/60" />
                                   <span className="break-keep">{t(x)}</span>
                                 </li>
                               ))}

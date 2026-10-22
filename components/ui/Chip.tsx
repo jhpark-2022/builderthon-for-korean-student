@@ -25,10 +25,11 @@ import type { ReactNode } from "react";
 export type ChipTone = "neutral" | "amber" | "amberSoft" | "pending" | "outline";
 
 export const CHIP: Record<ChipTone, string> = {
-  neutral: "rounded-full border border-white/[0.12] bg-white/[0.04] px-2 py-0.5 text-[0.68rem] font-semibold text-white/60",
-  amber: "inline-flex items-center gap-1 rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[0.68rem] font-bold text-amber-200",
-  amberSoft: "inline-flex items-center gap-1 rounded-full border border-amber-400/20 bg-amber-400/[0.06] px-2 py-0.5 text-[0.68rem] font-semibold text-amber-100/80",
-  pending: "inline-flex items-center gap-1 rounded-full border border-dashed border-amber-400/30 bg-amber-400/[0.06] px-2 py-0.5 text-[0.68rem] font-bold text-amber-200/90",
+  // DECIDED 2026-10-22 (사용자: 10/19 피드백을 8월 페이지에도): 8월만 쓰는 네 모양은 알약과 amber를 걷은 글자입니다. outline(/naru)은 그대로.
+  neutral: "text-[0.68rem] font-semibold text-white/60",
+  amber: "inline-flex items-center gap-1 text-[0.68rem] font-bold text-white/85",
+  amberSoft: "inline-flex items-center gap-1 text-[0.68rem] font-semibold text-white/70",
+  pending: "inline-flex items-center gap-1 text-[0.68rem] font-bold text-white/70",
   outline: "inline-flex items-center gap-1 rounded-full border border-white/[0.12] bg-transparent px-2 py-0.5 text-[0.68rem] font-semibold text-white/80",
 };
 

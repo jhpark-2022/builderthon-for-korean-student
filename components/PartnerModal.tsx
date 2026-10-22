@@ -167,7 +167,7 @@ export default function PartnerModal({
             {/* overscroll-contain: a flick that hits either end stays here
                 instead of scrolling the page behind the modal. */}
             <div className="overflow-y-auto overscroll-contain px-7 pt-8 pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-10 sm:py-9">
-              <p className="pr-12 text-xs font-semibold uppercase tracking-[0.16em] text-white/60">
+              <p className="pr-12 text-xs font-semibold text-white/60">
                 {t(dict.modal.companyAbout)}
               </p>
 
@@ -197,7 +197,7 @@ export default function PartnerModal({
 
               {partner.articles && partner.articles.length > 0 && (
                 <div className="mt-7 border-t border-white/10 pt-5">
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/50">
+                  <p className="text-xs font-semibold text-white/50">
                     {t(dict.modal.inTheNews)}
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
