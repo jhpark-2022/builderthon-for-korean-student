@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-22 8월 페이지에도 10/19 피드백](#2026-10-22-aug-hwang)
 - [2026-10-22 홈 히어로는 kwan 전으로](#2026-10-22-hero-revert)
 - [2026-10-22 푸터에 나루와 함께한 곳 띠](#2026-10-22-footer-partner-marquee)
 - [2026-10-22 kwan-design 디자인 정리를 합침](#2026-10-22-merge-kwan-design)
@@ -309,6 +310,15 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-22-aug-hwang"></a>
+
+## 2026-10-22 8월 페이지에도 10/19 피드백
+- 범위: components/journey/Journey.tsx, components/ui/Eyebrow.tsx(AugustEyebrow), ui/Chip.tsx(8월 전용 네 모양), EventModal.tsx, PartnerModal.tsx
+- 한 것: 사용자 요청(10/19 리뷰어 피드백을 8월 페이지에도). 10/20에는 8월을 기록이라 그대로 두었던 감사 항목을 적용했습니다. 작은 라벨의 대문자, 넓은 자간, 알약을 걷고 글자 하나로(W1, W4). 알약은 누르는 것에만. rose 필참과 emerald, amber, cyan을 accent와 무채색으로(W5). 보라 면과 테두리는 무채색, 글자는 accent(W2). 제목 발광과 버튼 그림자 발광, hover 들림을 걷음(W2, W6). 원 안의 점은 속 찬 점 하나로(W16). 문구, 레이아웃, 히어로 zero100 그라데이션, 큰 CTA 필은 그대로입니다. 홈과 같이 쓰는 부품(히어로 로고 띠 등)은 건드리지 않았습니다. 근거: brand 5장 성격(조용하다), brand 10장 색 규칙(무지개식 배색 금지).
+- 검증: tsc 통과. localhost 1440 /2026-08 넓은 자간 노드 79 → 4(공용 로고 띠), 라벨 알약 span은 사진 위 배지 하나만.
+- 브리프: docs/hwang-audit-2026-10-19.md
+- 커밋: b623031
 
 <a id="2026-10-22-hero-revert"></a>
 
