@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-22 Analytics 바탕 개선 넷](#2026-10-22-analytics-improve)
 - [2026-10-22 폰 일정 카드 넘김 애니메이션](#2026-10-22-swipe-motion)
 - [2026-10-22 끝에 괄호 붙은 링크 404](#2026-10-22-trailing-paren)
 - [2026-10-22 Analytics 경로 데이터](#2026-10-22-analytics-routes)
@@ -319,6 +320,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-22-analytics-improve"></a>
+
+## 2026-10-22 Analytics 바탕 개선 넷
+- 범위: lib/openChatHref.ts(새), app/go/openchat/[src](새), 오픈채팅 링크 9곳(OpenChatLink, SiteChrome, MobileChatBar, JourneyNav, Journey, RegisterModal), NaruHome(Day 1 칩 줄, 폰 카드 inert), app/2026-08/page.tsx, public/hero/metal-human-poster.webp
+- 한 것: 사용자 요청("1, 3, 4, 6 적용"). 1) Hobby 요금제는 track()을 저장하지 않아, 오픈채팅 버튼이 /go/openchat/<src>를 거쳐 0.35초 뒤 카카오로 갑니다. 그 페이지 방문 수가 버튼별 클릭 수입니다(noindex). 3) 카카오톡(390×664)과 인스타그램 앱 안 브라우저를 흉내 내 세 페이지 확인: 첫 화면 CTA 보임, 가로 넘침 없음. 4) 10/18 결정문의 "Day 1 카드의 matchCta"가 그려지지 않아 /match 입구가 없었습니다. Day 1 칩 줄에 글자 링크로. 히어로 버튼 둘은 그대로. 6) /2026-08 LCP 요소인 영상 포스터를 JPG 111KB → WebP 66KB로, 페이지가 미리 받습니다. 덤: 폰 카드의 inert를 글자 값으로(React 경고). 근거: 판단 질문 1(입구의 문턱), brand 10장 사이트 규칙.
+- 검증: tsc, next build 통과. localhost /go/openchat/test-src에서 pageview 기록 뒤 이동. 홈 오픈채팅 링크 4개 모두 /go/openchat/*.
+- 커밋: 5a454d7
 
 <a id="2026-10-22-trailing-paren"></a>
 
