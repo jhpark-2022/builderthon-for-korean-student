@@ -611,6 +611,15 @@ export default function NaruHome() {
   // DECIDED 2026-10-22 (사용자: "스와이프할 때 넘어가는 애니메이션이 더 있으면"): 카드가 손가락을 따라 끌려오고(dragX), 놓으면 다음 날 카드가
   // 밀어 낸 쪽에서 미끄러져 들어옵니다(slideDir). 끝(Day 0, Day 4)에서는 1/4만 끌리고 제자리로 돌아옵니다. 모션 줄이기에서는 끌림도 미끄러짐도 없습니다.
   const [dragX, setDragX] = useState(0);
+  const panelInner = useRef<HTMLDivElement | null>(null);
+  const [panelH, setPanelH] = useState<number | null>(null);
+  useEffect(() => {
+    const el = panelInner.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => setPanelH(el.offsetHeight));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   const [slideDir, setSlideDir] = useState<1 | -1 | 0>(0);
   const prevOpen = useRef<number | null>(openDay);
   useEffect(() => {
@@ -1075,23 +1084,27 @@ export default function NaruHome() {
             // sm부터는 감싼 div가 통째로 display: none입니다. 그 폭에서는 아래 일정 카드가 같은 내용을 그립니다.
             below={
               <div className="overflow-x-clip sm:hidden" onTouchStart={onSwipeStart} onTouchMove={onSwipeMove} onTouchEnd={onSwipeEnd} onTouchCancel={() => { swipeStart.current = null; setDragX(0); }}>
-                {/* DECIDED 2026-10-22 (사용자: "상자 간 사이즈가 너무 달라서 스와이핑할 때 어색함"): 다섯 카드를 한 칸에 겹쳐 두어(grid-area 1/1)
-                    상자 높이가 가장 긴 날에 맞춰집니다. 닫힌 날은 hidden 대신 invisible + inert라 자리만 차지하고 보이거나 눌리지 않습니다. */}
+                {/* DECIDED 2026-10-22 (사용자: "상자 간 사이즈가 너무 달라서 스와이핑할 때 어색함", 같은 날 고른 안: "부드럽게 늘고 줄기"):
+                    카드는 각자 내용 높이이고, 감싼 상자의 높이가 0.32초에 걸쳐 따라갑니다(panelH, ResizeObserver). 같은 높이로 맞추면 Day 0이 비었습니다. */}
                 <div
-                  className={`mt-3 grid ${openDay === null ? "hidden" : ""}`}
+                  className={`mt-3 overflow-hidden ${openDay === null ? "hidden" : ""}`}
+                  style={{ height: panelH ?? undefined, transition: "height 320ms cubic-bezier(0.22,1,0.36,1)" }}
+                >
+                <div
+                  ref={panelInner}
                   style={{ transform: dragX ? `translateX(${dragX}px)` : undefined, transition: dragX ? "none" : "transform 260ms cubic-bezier(0.22,1,0.36,1)" }}
                 >
                 {naru.december.stages.map((stage, i) => (
                   <div
                     key={`${stage.name.en}-${openDay === i ? slideDir : "x"}`}
                     id={routePanelId(i)}
-                    aria-hidden={openDay !== i || undefined}
-                    inert={openDay !== i || undefined}
-                    className={`[grid-area:1/1] [&>*]:h-full ${openDay !== i ? "invisible" : ""} ${openDay === i && slideDir === 1 ? "motion-safe:animate-[routeSlideFromRight_360ms_cubic-bezier(0.22,1,0.36,1)_both]" : ""} ${openDay === i && slideDir === -1 ? "motion-safe:animate-[routeSlideFromLeft_360ms_cubic-bezier(0.22,1,0.36,1)_both]" : ""}`}
+                    hidden={openDay !== i}
+                    className={`${openDay === i && slideDir === 1 ? "motion-safe:animate-[routeSlideFromRight_360ms_cubic-bezier(0.22,1,0.36,1)_both]" : ""} ${openDay === i && slideDir === -1 ? "motion-safe:animate-[routeSlideFromLeft_360ms_cubic-bezier(0.22,1,0.36,1)_both]" : ""}`}
                   >
                     {stageCard(stage, i, true)}
                   </div>
                 ))}
+                </div>
                 </div>
               </div>
             }
