@@ -611,15 +611,6 @@ export default function NaruHome() {
   // DECIDED 2026-10-22 (사용자: "스와이프할 때 넘어가는 애니메이션이 더 있으면"): 카드가 손가락을 따라 끌려오고(dragX), 놓으면 다음 날 카드가
   // 밀어 낸 쪽에서 미끄러져 들어옵니다(slideDir). 끝(Day 0, Day 4)에서는 1/4만 끌리고 제자리로 돌아옵니다. 모션 줄이기에서는 끌림도 미끄러짐도 없습니다.
   const [dragX, setDragX] = useState(0);
-  const panelInner = useRef<HTMLDivElement | null>(null);
-  const [panelH, setPanelH] = useState<number | null>(null);
-  useEffect(() => {
-    const el = panelInner.current;
-    if (!el || typeof ResizeObserver === "undefined") return;
-    const ro = new ResizeObserver(() => setPanelH(el.offsetHeight));
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
   const [slideDir, setSlideDir] = useState<1 | -1 | 0>(0);
   const prevOpen = useRef<number | null>(openDay);
   useEffect(() => {
@@ -761,8 +752,14 @@ export default function NaruHome() {
           {t(stage.session.body)}
         </p>
       )}
+      {/* DECIDED 2026-10-22 (사용자: "상자 사이즈는 동일한데, 내용이 안 비어 있게"): 폰 카드에서 세션이 없는 날(Day 0, Day 4)은 세션 자리에
+          그날의 진행(stage.body)을 그립니다. 새 글이 아니라 9/20부터 그리지 않던 키입니다. 데스크톱은 그대로. */}
+      {inPanel && !stage.session && (
+        <p className={`break-keep ${BODY} leading-relaxed text-white/70`}>{t(stage.body)}</p>
+      )}
       {stage.chips.length > 0 ? (
-        <p className={`flex flex-wrap justify-center gap-x-3 gap-y-1 ${META} text-white/70`}>
+        // 폰 카드에서 띠가 없는 날(Day 0, Day 4)은 칩 줄을 바닥으로 내려(mt-auto) 다른 날의 미션 띠와 같은 자리에 둡니다(2026-10-22).
+        <p className={`flex flex-wrap justify-center gap-x-3 gap-y-1 ${META} text-white/70 ${inPanel && !stage.milestone && !stage.submit ? "mt-auto" : ""}`}>
           {stage.chips.map((c, j) => <span key={j}>{t(c)}</span>)}
         </p>
       ) : sub && <span aria-hidden />/* 칩이 없는 날도 행 하나를 차지해야 아래 미션이 옆 카드와 같은 행에 섭니다 */}
@@ -787,18 +784,8 @@ export default function NaruHome() {
           { label: t(naru.december.milestoneSubmitLabel), items: stage.milestoneDetail.submit.map(t) },
         ]} center expanded={false} fill={sub} narrow={!inPanel && i === naru.december.stages.length - 1} {...sync} />
       )}
-      {/* DECIDED 2026-10-17 (사용자): 멘토 시간표와 미션 인증으로 들어가는 문은 Day 2, Day 3 카드에만 있습니다. */}
-      {/* 열기 전(TIMETABLE_OPEN false)에는 같은 자리에 잠긴 버튼이 섭니다. */}
-      {/* 데스크톱 표에서는 Day 1~3 아래 한 줄 버튼(timetableButton)이 대신하고, 카드 안 버튼은 폰 패널에만 섭니다. */}
-      {inPanel && stage.timetableCta && (TIMETABLE_OPEN ? (
-        <Link href={stage.timetableCta.href} className={`group w-full justify-center ${buttonClass("secondary")}`}>
-          {t(stage.timetableCta.label)}<span aria-hidden className={ARROW_CLASS}>→</span>
-        </Link>
-      ) : (
-        <span role="link" aria-disabled="true" className={LOCKED_CLASS}>{LOCK_ICON}
-          {t(stage.timetableCta.label)}
-        </span>
-      ))}
+      {/* DECIDED 2026-10-22 (사용자: "상자 사이즈는 동일한데, 내용이 안 비어 있게"): 폰 카드 안의 "멘토 시간표와 미션 인증" 버튼을 뺐습니다.
+          Day 1~3이 같은 버튼이라 데스크톱처럼 상자 아래에 한 번만 섭니다(아래 below). 카드가 짧아져 다섯 카드의 높이 차가 줄어듭니다. */}
       {/* DECIDED 2026-10-19 (사용자): Day 4 카드의 인기투표 버튼. 데스크톱과 폰 패널 모두 카드 안에 섭니다. 열기 전에는 잠긴 버튼입니다. */}
       {stage.voteCta && (
         <div className={`w-full ${inPanel ? "" : "md:max-w-sm"}`}>
@@ -1084,28 +1071,26 @@ export default function NaruHome() {
             // sm부터는 감싼 div가 통째로 display: none입니다. 그 폭에서는 아래 일정 카드가 같은 내용을 그립니다.
             below={
               <div className="overflow-x-clip sm:hidden" onTouchStart={onSwipeStart} onTouchMove={onSwipeMove} onTouchEnd={onSwipeEnd} onTouchCancel={() => { swipeStart.current = null; setDragX(0); }}>
-                {/* DECIDED 2026-10-22 (사용자: "상자 간 사이즈가 너무 달라서 스와이핑할 때 어색함", 같은 날 고른 안: "부드럽게 늘고 줄기"):
-                    카드는 각자 내용 높이이고, 감싼 상자의 높이가 0.32초에 걸쳐 따라갑니다(panelH, ResizeObserver). 같은 높이로 맞추면 Day 0이 비었습니다. */}
+                {/* DECIDED 2026-10-22 (사용자: "상자 사이즈는 동일한데, 내용이 안 비어 있게"): 다섯 카드를 한 칸에 겹쳐(grid-area 1/1) 높이를 가장 긴 날에
+                    맞춥니다. 닫힌 날은 invisible + inert라 자리만 차지합니다. 짧던 Day 0, Day 4는 그날의 진행 한 문단으로 채웁니다(stageCard).
+                    그 전에 고른 "높이가 부드럽게 따라가기"는 같은 날 되돌렸습니다. */}
                 <div
-                  className={`mt-3 overflow-hidden ${openDay === null ? "hidden" : ""}`}
-                  style={{ height: panelH ?? undefined, transition: "height 320ms cubic-bezier(0.22,1,0.36,1)" }}
-                >
-                <div
-                  ref={panelInner}
+                  className={`mt-3 grid ${openDay === null ? "hidden" : ""}`}
                   style={{ transform: dragX ? `translateX(${dragX}px)` : undefined, transition: dragX ? "none" : "transform 260ms cubic-bezier(0.22,1,0.36,1)" }}
                 >
                 {naru.december.stages.map((stage, i) => (
                   <div
                     key={`${stage.name.en}-${openDay === i ? slideDir : "x"}`}
                     id={routePanelId(i)}
-                    hidden={openDay !== i}
-                    className={`${openDay === i && slideDir === 1 ? "motion-safe:animate-[routeSlideFromRight_360ms_cubic-bezier(0.22,1,0.36,1)_both]" : ""} ${openDay === i && slideDir === -1 ? "motion-safe:animate-[routeSlideFromLeft_360ms_cubic-bezier(0.22,1,0.36,1)_both]" : ""}`}
+                    aria-hidden={openDay !== i || undefined}
+                    inert={openDay !== i || undefined}
+                    className={`[grid-area:1/1] [&>*]:h-full ${openDay !== i ? "invisible" : ""} ${openDay === i && slideDir === 1 ? "motion-safe:animate-[routeSlideFromRight_360ms_cubic-bezier(0.22,1,0.36,1)_both]" : ""} ${openDay === i && slideDir === -1 ? "motion-safe:animate-[routeSlideFromLeft_360ms_cubic-bezier(0.22,1,0.36,1)_both]" : ""}`}
                   >
                     {stageCard(stage, i, true)}
                   </div>
                 ))}
                 </div>
-                </div>
+                {timetableButton && <div className="mt-3">{timetableButton}</div>}
               </div>
             }
           />
