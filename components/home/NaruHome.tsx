@@ -724,6 +724,7 @@ export default function NaruHome() {
   const stageCard = (stage: (typeof naru.december.stages)[number], i: number, inPanel = false, sub = false) => {
     const StageHeading = "h4";
     // 데스크톱의 Day 1~3 띠는 함께 열립니다. 폰 패널과 Day 4는 각자.
+    // DECIDED 2026-10-22 (사용자: "아직 비어 있는 느낌, 상자를 세로로 줄여줘"): 폰 카드는 줄 사이 12px, 안쪽 여백 20px.
     const sync = !inPanel && i >= 1 && i <= 3 ? { open: stripsOpen, onToggle: () => setStripsOpen((v) => !v) } : {};
     return (
     <div
@@ -731,7 +732,7 @@ export default function NaruHome() {
       // 노선도의 현재 위치 점이 이 카드로 옵니다(감사 반영 브리프 3.6).
       onMouseEnter={() => setHoverDay(i)}
       onMouseLeave={() => setHoverDay(null)}
-      className={`flex flex-col gap-[20px] md:gap-[24px] items-center text-center ${sub ? "py-0 md:row-span-5 md:grid md:grid-rows-subgrid md:items-stretch md:border-l md:border-white/10 md:pl-[16px] md:first:border-l-0 md:first:pl-0" : inPanel ? "rounded-2xl border border-white/10 bg-[#0B1430]/70 px-[22.5px] py-[28px]" : `px-[22.5px] py-[28px] sm:px-[24px] sm:py-[32px] lg:px-[27px] ${i === 0 ? "border-b border-white/10" : "border-t border-white/10"}`} ${!inPanel && (i === 0 || i === naru.december.stages.length - 1) ? "md:col-span-3" : ""}`}
+      className={`flex flex-col ${inPanel ? "gap-[12px]" : "gap-[20px] md:gap-[24px]"} items-center text-center ${sub ? "py-0 md:row-span-5 md:grid md:grid-rows-subgrid md:items-stretch md:border-l md:border-white/10 md:pl-[16px] md:first:border-l-0 md:first:pl-0" : inPanel ? "rounded-2xl border border-white/10 bg-[#0B1430]/70 px-[20px] py-[20px]" : `px-[22.5px] py-[28px] sm:px-[24px] sm:py-[32px] lg:px-[27px] ${i === 0 ? "border-b border-white/10" : "border-t border-white/10"}`} ${!inPanel && (i === 0 || i === naru.december.stages.length - 1) ? "md:col-span-3" : ""}`}
     >
       <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-[8px]">
         {/* lang="en": DAY는 두 로케일 모두 영어입니다(접근성 감사 7). */}
