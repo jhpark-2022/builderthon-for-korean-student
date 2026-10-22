@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-22 모바일 점검 반영](#2026-10-22-mobile-fixes)
 - [2026-10-22 Analytics 바탕 개선 넷](#2026-10-22-analytics-improve)
 - [2026-10-22 폰 일정 카드 넘김 애니메이션](#2026-10-22-swipe-motion)
 - [2026-10-22 끝에 괄호 붙은 링크 404](#2026-10-22-trailing-paren)
@@ -320,6 +321,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-22-mobile-fixes"></a>
+
+## 2026-10-22 모바일 점검 반영
+- 범위: MobileChatBar, JourneyNav, Journey(8월), NaruPage, NaruHome, SiteChrome, PartnerMarquee, HeroPartnerStrip, RouteMap, Quiz, app/globals.css
+- 한 것: 사용자 요청("make every proposed edit"). 모바일 방문이 늘어 서브에이전트 셋이 폰(iPhone WebKit, 360px, 카카오 높이)으로 세 페이지를 점검한 결과입니다. 떠 있는 오픈채팅 버튼이 투명해 글자를 덮던 것은 Tailwind 단계에 없는 /92가 만들어지지 않은 탓이라 /95로(같은 실수 셋도). 스크롤 헤더는 불투명. 누르기 작은 링크는 보이는 크기 그대로 누르는 영역 44px(.tap-44), 복사 버튼과 노선도 로고 링크도. /match는 blur(80px) 층 대신 방사형 그라데이션(WebKit에서 시작 화면이 안 그려짐). 8월: 진행 순서는 폰에서 시각을 위로, 맨 위로 버튼은 #closing에서 숨김, FAQ 아이콘은 아래 화살표, 캐러셀 스크롤바 숨김, 파트너 줄 라벨 자간 0. 홈 맨 아래 여백 축소, 로고 띠 폰 카드 128x72와 마우스에서만 멈춤, 앵커 이동 포커스 테두리 없음. 헤더 하이드레이션 경고(reduce 분기)도 motion-reduce로. 구간 사이 간격은 /naru의 형상 틈(10/21 결정)이라 그대로. 근거: 판단 질문 1(첫 문턱), brand 10장.
+- 검증: tsc, next build 통과. WebKit /match 시작 화면 보임, 헤더 배경 rgb(7,11,31), 8월 #closing에서 맨 위로 버튼 없음, 홈 마지막 링크에서 © 까지 180 → 100px.
+- 커밋: 5193311
 
 <a id="2026-10-22-analytics-improve"></a>
 
