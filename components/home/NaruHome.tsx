@@ -763,6 +763,17 @@ export default function NaruHome() {
         // 폰 카드에서 띠가 없는 날(Day 0, Day 4)은 칩 줄을 바닥으로 내려(mt-auto) 다른 날의 미션 띠와 같은 자리에 둡니다(2026-10-22).
         <p className={`flex flex-wrap justify-center gap-x-3 gap-y-1 ${META} text-white/70 ${inPanel && !stage.milestone && !stage.submit ? "mt-auto" : ""}`}>
           {stage.chips.map((c, j) => <span key={j}>{t(c)}</span>)}
+          {/* DECIDED 2026-10-22 (사용자: Analytics 개선 4번 "적용"): 10/18 결정문은 "/match는 Day 1 카드의 matchCta가 잇는다"였는데 그리지 않고
+              있었습니다(30일 /match 13명). 히어로 버튼 둘은 그대로 두고, 팀 구성 칩 옆에 글자 링크로 섭니다. */}
+          {stage.matchCta && (
+            <Link
+              href={stage.matchCta.href}
+              onClick={() => track("naru_cta", { src: inPanel ? "day1-phone" : "day1", to: "match" })}
+              className="font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:text-white"
+            >
+              {t(stage.matchCta.label)} <span aria-hidden>→</span>
+            </Link>
+          )}
         </p>
       ) : sub && <span aria-hidden />/* 칩이 없는 날도 행 하나를 차지해야 아래 미션이 옆 카드와 같은 행에 섭니다 */}
       {/* 그날의 마일스톤. amber 띠(홈에서 "결과보다 과정"이 쓰던 색)가 카드 바닥에 섭니다. Day 0에는 없습니다. */}
@@ -1085,7 +1096,8 @@ export default function NaruHome() {
                     key={`${stage.name.en}-${openDay === i ? slideDir : "x"}`}
                     id={routePanelId(i)}
                     aria-hidden={openDay !== i || undefined}
-                    inert={openDay !== i || undefined}
+                    // inert는 이 React 버전에서 글자 값이어야 DOM에 붙습니다(true를 넘기면 경고와 함께 빠짐).
+                    {...(openDay !== i ? ({ inert: "" } as unknown as { inert: boolean }) : {})}
                     className={`[grid-area:1/1] [&>*]:h-full ${openDay !== i ? "invisible" : ""} ${openDay === i && slideDir === 1 ? "motion-safe:animate-[routeSlideFromRight_360ms_cubic-bezier(0.22,1,0.36,1)_both]" : ""} ${openDay === i && slideDir === -1 ? "motion-safe:animate-[routeSlideFromLeft_360ms_cubic-bezier(0.22,1,0.36,1)_both]" : ""}`}
                   >
                     {stageCard(stage, i, true)}

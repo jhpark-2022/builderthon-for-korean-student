@@ -24,6 +24,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useRef, useState } from "react";
+import { openChatHref } from "@/lib/openChatHref";
 import { createPortal } from "react-dom";
 import { track } from "@vercel/analytics";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -352,7 +353,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                   <p className={`mx-auto mt-3 max-w-sm break-keep ${BODY} leading-relaxed text-white/70`}>{t(copy.successBody).replace("{email}", sentEmail)}</p>
                   {/* DECIDED 2026-10-15 (사용자): 소식은 오픈채팅으로만 나가므로, 이 화면에서 그 방으로 가는 버튼이 테스트 카드보다 먼저 섭니다. */}
                   {links.openChat && (
-                    <a href={links.openChat} target="_blank" rel="noopener noreferrer" onClick={() => track("openchat_click", { src: "naru-register-success" })} className={`${buttonClass("secondary", "naru")} mt-5 w-full max-w-sm justify-center`}>
+                    <a href={openChatHref("naru-register-success")} target="_blank" rel="noopener noreferrer" onClick={() => track("openchat_click", { src: "naru-register-success" })} className={`${buttonClass("secondary", "naru")} mt-5 w-full max-w-sm justify-center`}>
                       {t(openChatLabels.december)}<span aria-hidden className="ml-1.5">→</span>
                     </a>
                   )}
@@ -394,7 +395,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                         <button type="submit" disabled aria-describedby={closed ? "crossing-register-preview" : undefined} className={`mt-[3px] inline-flex min-h-[56px] w-full cursor-not-allowed items-center justify-center rounded-full border border-white/20 bg-white/[0.06] px-7 py-3 ${BODY} font-bold text-white/70 sm:w-auto`}>{t(closed ? copy.closed : copy.previewSubmit)}</button>
                         {/* 다 적은 사람이 지금 할 수 있는 일 하나(리뷰 S4). 홈의 알림 버튼과 같은 라벨, 같은 문입니다. */}
                         {!closed && links.openChat && (
-                          <a href={links.openChat} target="_blank" rel="noopener noreferrer" onClick={() => track("openchat_click", { src: "naru-register-modal" })} className={`inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 ${BODY} font-semibold text-accent underline underline-offset-4 hover:text-white sm:w-auto`}>
+                          <a href={openChatHref("naru-register-modal")} target="_blank" rel="noopener noreferrer" onClick={() => track("openchat_click", { src: "naru-register-modal" })} className={`inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 ${BODY} font-semibold text-accent underline underline-offset-4 hover:text-white sm:w-auto`}>
                             {t(openChatLabels.december)}
                             <span aria-hidden>→</span>
                           </a>

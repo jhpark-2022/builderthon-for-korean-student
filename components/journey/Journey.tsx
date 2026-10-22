@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { openChatHref } from "@/lib/openChatHref";
 import Link from "next/link";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -407,7 +408,7 @@ function MobileStickyBar({ t }: { t: Tfn }) {
             등장 조건과 chromeHidden 로직은 하나도 건드리지 않았습니다. */}
         {links.openChat && (
           <a
-            href={links.openChat}
+            href={openChatHref("sticky")}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={t(dict.nav.openChatAria)}
@@ -1884,7 +1885,8 @@ const HERO_VIDEO = {
   enabled: true,
   webm: "",
   mp4: "/hero/metal-human.mp4",
-  poster: "/hero/metal-human-poster.jpg",
+  // DECIDED 2026-10-22 (Speed Insights: /2026-08 LCP p75 2.4초, LCP 요소가 이 포스터): JPG 111KB → WebP 66KB. 페이지가 미리 받습니다(app/2026-08/page.tsx).
+  poster: "/hero/metal-human-poster.webp",
 };
 
 // paused (2026-10-08, WCAG 2.2.2): 자동 재생에 반복인데 멈출 방법이 없었습니다. 모션
@@ -2199,7 +2201,7 @@ export default function Journey() {
                   alternative for someone not ready to act, not a competing primary. */}
               {links.openChat && (
                 <a
-                  href={links.openChat}
+                  href={openChatHref("hero")}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={t(dict.nav.openChatAria)}
@@ -3421,7 +3423,7 @@ export default function Journey() {
             </p>
             {links.openChat && (
               <a
-                href={links.openChat}
+                href={openChatHref("vision")}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => track("openchat_click", { src: "vision" })}
@@ -3501,7 +3503,7 @@ export default function Journey() {
                 화면에서 두 번 열리면 둘 다 약해집니다. */}
             {links.openChat && (
               <a
-                href={links.openChat}
+                href={openChatHref("footer")}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => track("openchat_click", { src: "footer" })}

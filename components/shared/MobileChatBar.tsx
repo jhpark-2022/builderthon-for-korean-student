@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { openChatHref } from "@/lib/openChatHref";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
@@ -112,7 +113,7 @@ export default function MobileChatBar({ afterId = "about", endId = "closing", ph
           <div className="flex items-center justify-center gap-2">
             {links.openChat && (
               <a
-                href={links.openChat}
+                href={openChatHref("mobile-bar")}
                 target="_blank"
                 rel="noopener noreferrer"
                 // 2026-10-11 (리뷰 작은 것): 나루 계열(phone, 홈과 /naru)의 이름은 보이는 글자("오픈채팅")로 시작하고 새 창임을 말합니다

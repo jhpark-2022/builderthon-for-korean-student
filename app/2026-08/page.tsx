@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { preload } from "react-dom";
 import JourneyNav from "@/components/journey/JourneyNav";
 import Journey from "@/components/journey/Journey";
 import ResetHandler from "@/components/ResetHandler";
@@ -71,6 +72,8 @@ export const metadata: Metadata = {
 // 표면도 Journey에서 함께 걷혔습니다. 이 페이지는 완전한 정적 기록입니다.
 
 export default function August2026Archive() {
+  // 첫 화면의 가장 큰 그림(LCP)이 히어로 영상 포스터라 먼저 받습니다(2026-10-22, Speed Insights).
+  preload("/hero/metal-human-poster.webp", { as: "image", fetchPriority: "high" });
   return (
     // RegisterProvider는 이제 "이 기기에서 8월에 등록했었다"는 플래그 하나만 나릅니다
     // (lib/RegisterContext.tsx, 2026-10-08). 모달과 /api/register는 지웠습니다.

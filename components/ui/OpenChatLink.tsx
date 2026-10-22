@@ -1,6 +1,7 @@
 "use client";
 
 import { track } from "@vercel/analytics";
+import { openChatHref } from "@/lib/openChatHref";
 import { coreDict as dict, links, type Phrase } from "@/data/dictionaryCore";
 import ChatGlyph from "@/components/ChatGlyph";
 import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
@@ -72,7 +73,7 @@ export default function OpenChatLink({
   if (variant === "hero" || variant === "secondary") {
     return (
       <a
-        href={links.openChat}
+        href={openChatHref(src)}
         target="_blank"
         rel="noopener noreferrer"
         aria-describedby={describedBy}
@@ -95,7 +96,7 @@ export default function OpenChatLink({
     // Still deliberately NOT a fill: it sits under the violet register pill and
     // must stay a clear step below it. Border + brighter text is the ceiling.
     <a
-      href={links.openChat}
+      href={openChatHref(src)}
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => track("openchat_click", { src })}
