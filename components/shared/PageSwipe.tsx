@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { useRouter } from "next/navigation";
 import { track } from "@vercel/analytics";
 import { coreDict as dict } from "@/data/dictionaryCore";
@@ -21,6 +21,12 @@ import { isScrollLocked } from "@/lib/useBodyScrollLock";
 //
 // 판단: 가로 이동 64px 이상, 세로의 2배 이상, 0.8초 안. 첫 10px에서 축이 세로로 잡히면 그 손짓은 끝까지 스크롤입니다.
 // lg(1024px) 아래에서만 듣습니다. 그 위는 사이트 메뉴가 헤더에 늘 보이고 스와이프가 없습니다.
+//
+// DECIDED 2026-10-22 (사용자: "스와이프를 할 때 넘어가는 애니메이션이 있었으면"): Day 카드와 같은 문법입니다. 본문(#main)과
+// 푸터(#site-footer)가 손가락을 따라 끌려오고(끝에서는 1/4만), 놓으면 민 쪽으로 0.24초에 빠져나간 뒤 페이지가 바뀌고, 새 페이지의
+// 본문이 반대쪽에서 0.36초에 미끄러져 들어옵니다. 방향은 sessionStorage 한 칸(ENTER_KEY)으로 다음 페이지에 넘기고 2초 안에만 씁니다.
+// 헤더와 배경은 제자리입니다. 본문 안의 고정 요소(오픈채팅 바)는 transform 아래에서 자리를 잃으므로 움직이는 동안만 숨깁니다
+// (html[data-page-swiping], globals.css). 모션 줄이기에서는 끌림도 미끄러짐도 없이 바로 옮깁니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const NO_PAGE_SWIPE_ATTR = "data-no-page-swipe";
@@ -31,6 +37,33 @@ const AXIS_LOCK_PX = 10;
 const MIN_DX = 64;
 const RATIO = 2;
 const MAX_MS = 800;
+const EXIT_MS = 240;
+const ENTER_MS = 360;
+const EASE = "cubic-bezier(0.22,1,0.36,1)";
+const ENTER_KEY = "naru.pageSwipe";
+const SWIPING_ATTR = "data-page-swiping";
+
+type Dir = "next" | "prev";
+
+// html[data-page-swiping]를 쥔 손의 수. 떠나는 페이지의 정리와 들어오는 페이지의 미끄러짐이 겹쳐도 먼저 놓는 쪽이 지우지 않게.
+let swipingHolds = 0;
+function holdSwiping() {
+  swipingHolds++;
+  document.documentElement.setAttribute(SWIPING_ATTR, "");
+}
+function releaseSwiping() {
+  swipingHolds = Math.max(0, swipingHolds - 1);
+  if (!swipingHolds) document.documentElement.removeAttribute(SWIPING_ATTR);
+}
+
+function reducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+/** 손가락을 따라 움직이는 것: 본문과 푸터. 헤더(JourneyNav)와 배경은 제자리입니다. */
+function movers(): HTMLElement[] {
+  return Array.from(document.querySelectorAll<HTMLElement>("#main, #site-footer"));
+}
 
 function scrollsSideways(el: HTMLElement): boolean {
   if (el.scrollWidth <= el.clientWidth + 1) return false;
@@ -52,8 +85,52 @@ function ownsGesture(target: EventTarget | null): boolean {
   return true;
 }
 
+function readEnterDir(): Dir | null {
+  try {
+    const raw = window.sessionStorage.getItem(ENTER_KEY);
+    if (!raw) return null;
+    window.sessionStorage.removeItem(ENTER_KEY);
+    const [dir, at] = raw.split(":");
+    if ((dir !== "next" && dir !== "prev") || Date.now() - Number(at) > 2000) return null;
+    return dir;
+  } catch {
+    return null;
+  }
+}
+
+function writeEnterDir(dir: Dir) {
+  try {
+    window.sessionStorage.setItem(ENTER_KEY, `${dir}:${Date.now()}`);
+  } catch {
+    /* 저장소가 막혀 있으면 들어오는 미끄러짐만 없습니다. */
+  }
+}
+
 export default function PageSwipe({ page }: { page: SitePage }) {
   const router = useRouter();
+
+  // 들어오는 미끄러짐. 첫 그리기 전에(useLayoutEffect) 본문을 화면 밖에 세워 두고 제자리로 보냅니다. 소프트 이동이라 한 번에 커밋됩니다.
+  useLayoutEffect(() => {
+    const dir = readEnterDir();
+    if (!dir || window.innerWidth >= MAX_WIDTH || reducedMotion()) return;
+    const from = dir === "next" ? 100 : -100;
+    const anims = movers().map((el) => el.animate([{ transform: `translateX(${from}vw)` }, { transform: "none" }], { duration: ENTER_MS, easing: EASE }));
+    if (!anims.length) return;
+    let held = true;
+    holdSwiping();
+    const release = () => {
+      if (!held) return;
+      held = false;
+      releaseSwiping();
+    };
+    let left = anims.length;
+    anims.forEach((a) => a.addEventListener("finish", () => { if (--left <= 0) release(); }));
+    return () => {
+      anims.forEach((a) => a.cancel());
+      release();
+    };
+  }, [page]);
+
   useEffect(() => {
     const order = dict.pages.map((p) => p.key as SitePage);
     const i = order.indexOf(page);
@@ -68,23 +145,75 @@ export default function PageSwipe({ page }: { page: SitePage }) {
 
     let start: { x: number; y: number; t: number } | null = null;
     let axis: "x" | "y" | null = null;
+    let dragging = false;
+    let leaving = false;
+    let settle: Animation[] = [];
+
+    const setX = (x: number) => {
+      for (const el of movers()) el.style.transform = x ? `translateX(${x}px)` : "";
+    };
+    const beginDrag = () => {
+      if (dragging) return;
+      dragging = true;
+      settle.forEach((a) => a.cancel());
+      settle = [];
+      holdSwiping();
+    };
+    const endDrag = () => {
+      if (!dragging) return;
+      dragging = false;
+      setX(0);
+      releaseSwiping();
+    };
+    // 문턱을 못 넘겼거나 끝에서 놓았을 때: 제자리로 돌아옵니다.
+    const springBack = (fromX: number) => {
+      if (!fromX) return endDrag();
+      const els = movers();
+      setX(0);
+      settle = els.map((el) => el.animate([{ transform: `translateX(${fromX}px)` }, { transform: "none" }], { duration: 200, easing: EASE }));
+      let left = settle.length;
+      settle.forEach((a) => a.addEventListener("finish", () => { if (--left <= 0) endDrag(); }));
+    };
+    const go = (to: { href: string; key: string }, dir: Dir, fromX: number) => {
+      track("page_swipe", { from: page, to: to.key });
+      if (reducedMotion() || !dragging) {
+        endDrag();
+        router.push(to.href);
+        return;
+      }
+      leaving = true;
+      writeEnterDir(dir);
+      const toX = (dir === "next" ? -1 : 1) * window.innerWidth;
+      setX(toX);
+      const anims = movers().map((el) => el.animate([{ transform: `translateX(${fromX}px)` }, { transform: `translateX(${toX}px)` }], { duration: EXIT_MS, easing: "ease-in" }));
+      let left = anims.length;
+      const done = () => { if (--left <= 0) router.push(to.href); };
+      if (!left) router.push(to.href);
+      anims.forEach((a) => a.addEventListener("finish", done));
+    };
 
     const onStart = (e: TouchEvent) => {
       start = null;
       axis = null;
-      if (e.touches.length !== 1 || window.innerWidth >= MAX_WIDTH) return;
+      if (leaving || e.touches.length !== 1 || window.innerWidth >= MAX_WIDTH) return;
       const t0 = e.touches[0];
       if (t0.clientX < EDGE_PX || t0.clientX > window.innerWidth - EDGE_PX) return;
       if (!ownsGesture(e.target)) return;
       start = { x: t0.clientX, y: t0.clientY, t: e.timeStamp };
     };
     const onMove = (e: TouchEvent) => {
-      if (!start || axis) return;
+      if (!start) return;
       const t1 = e.touches[0];
-      const dx = Math.abs(t1.clientX - start.x);
-      const dy = Math.abs(t1.clientY - start.y);
-      if (dx < AXIS_LOCK_PX && dy < AXIS_LOCK_PX) return;
-      axis = dx > dy ? "x" : "y";
+      const dx = t1.clientX - start.x;
+      const dy = t1.clientY - start.y;
+      if (!axis) {
+        if (Math.abs(dx) < AXIS_LOCK_PX && Math.abs(dy) < AXIS_LOCK_PX) return;
+        axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+      }
+      if (axis !== "x" || reducedMotion()) return;
+      beginDrag();
+      const atEdge = (dx > 0 && !prev) || (dx < 0 && !next);
+      setX(atEdge ? dx * 0.25 : dx);
     };
     const onEnd = (e: TouchEvent) => {
       const s0 = start;
@@ -93,16 +222,16 @@ export default function PageSwipe({ page }: { page: SitePage }) {
       const t1 = e.changedTouches[0];
       const dx = t1.clientX - s0.x;
       const dy = t1.clientY - s0.y;
-      if (e.timeStamp - s0.t > MAX_MS) return;
-      if (Math.abs(dx) < MIN_DX || Math.abs(dx) < Math.abs(dy) * RATIO) return;
       const to = dx < 0 ? next : prev;
-      if (!to) return;
-      track("page_swipe", { from: page, to: to.key });
-      router.push(to.href);
+      const atEdge = !to;
+      const fromX = dragging ? (atEdge ? dx * 0.25 : dx) : 0;
+      if (!to || e.timeStamp - s0.t > MAX_MS || Math.abs(dx) < MIN_DX || Math.abs(dx) < Math.abs(dy) * RATIO) return springBack(fromX);
+      go(to, dx < 0 ? "next" : "prev", fromX);
     };
     const onCancel = () => {
       start = null;
       axis = null;
+      if (!leaving) springBack(0);
     };
 
     document.addEventListener("touchstart", onStart, { passive: true });
@@ -114,6 +243,13 @@ export default function PageSwipe({ page }: { page: SitePage }) {
       document.removeEventListener("touchmove", onMove);
       document.removeEventListener("touchend", onEnd);
       document.removeEventListener("touchcancel", onCancel);
+      settle.forEach((a) => a.cancel());
+      // 떠난 페이지의 본문이 남아 있으면(같은 DOM이 재사용될 때) 밀어 둔 자리를 되돌립니다.
+      setX(0);
+      if (dragging) {
+        dragging = false;
+        releaseSwiping();
+      }
     };
   }, [page, router]);
   return null;
