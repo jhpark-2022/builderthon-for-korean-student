@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-22 UX 점검 반영, KR과 EN](#2026-10-22-ux-review)
 - [2026-10-22 iPhone에서 로고 띠가 비던 것](#2026-10-22-marquee-ios)
 - [2026-10-22 모바일 점검 반영](#2026-10-22-mobile-fixes)
 - [2026-10-22 Analytics 바탕 개선 넷](#2026-10-22-analytics-improve)
@@ -322,6 +323,15 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-22-ux-review"></a>
+
+## 2026-10-22 UX 점검 반영, KR과 EN
+- 범위: data/naru.ts, data/dictionary.ts, data/quiz.ts, NaruHome, Quiz, JourneyNav, ArchiveBanner, app/not-found.tsx(새 파일), docs/brand.md 7장
+- 한 것: 사용자 요청("모든 것을 반영"). 프로덕션을 KR과 EN, 데스크톱 1440과 폰 390으로 처음 오는 사람처럼 둘러본 점검의 반영입니다. 등록 블록에 "등록은 11월에 엽니다" 한 줄(메뉴로 들어오면 못 봤음). /match 시작 화면에 "지금은 미리 해 보기입니다" 상자(그 전에는 결과 화면에서야). 멘토 카드는 코드가 강제하는 규칙(하루 두 칸, 2시간 간격) 한 문장으로, 정본 7장의 "하루 횟수 제한은 없다"도 코드 쪽으로 맞춤. "과정에 거는 몫"은 "과정에 주는 지원"(brand 7장 "그날 지원"). 과정 지향 표의 운영자용 두 줄("세션", "왜 날마다") 뺌(brand 2장 판단 질문). Day 4 잠긴 투표 버튼에 언제 여는지. 헤더의 아이콘만 있는 배경 토글 뺌(푸터는 그대로). 브랜드 404 두 언어. EN 메뉴 "Gains"를 "Takeaways"로, 눈썹 "참가 혜택"도 "남는 것"(brand 5장), ariaLabel 불일치 해소. "4 days, issues early"를 풀어 씀. 폰 섹션 줄 오른쪽 페이드 40px. 파트너 둘 영문 병기. /2026-08 제목의 다리 은유를 "자리 / place"로(brand 6장, 9장), 배너에 "글은 그때의 말 그대로". /quiz에 /match 링크.
+- 안 한 것: 폰 일정의 하루씩 보기, 햄버거 둘째 줄, 카운트다운 싱가포르 줄은 10/22와 9/18의 사용자 결정이라 그대로 두고 물어봅니다.
+- 검증: tsc, next build 통과. next start로 404, /match, /quiz, 홈 #register, EN 홈 폰 390px, /2026-08 EN 확인. 점검 때 Lighthouse 모바일 접근성, 모범 사례, SEO 100.
+- 커밋: 5372a44
 
 <a id="2026-10-22-marquee-ios"></a>
 
