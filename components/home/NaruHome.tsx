@@ -1125,12 +1125,7 @@ export default function NaruHome() {
                 <ol role="list" className="mt-[16px] grid grid-cols-2 border-t border-white/10">
                   {naru.december.approach.map((a, i) => (
                     <li key={i} className={`flex flex-col items-start gap-[12px] border-b border-white/10 px-[12px] py-[24px] sm:px-[16px] ${i % 2 === 1 ? "border-l" : ""} border-white/10`}>
-                      {/* DECIDED 2026-10-22 (사용자: "visually engaging"): 칸마다 진행 막대. 01은 1/4, 04는 끝까지 차서 문제로 들어가는 깊이를 그립니다.
-                          끝에 닿은 04의 끝점만 나루 주황(주황은 점으로만, brand 10장). 막대는 선이고 면이 아닙니다. */}
-                      <span aria-hidden className="relative mb-[4px] block h-[2px] w-full rounded-full bg-white/10">
-                        <span className="absolute inset-y-0 left-0 rounded-full bg-accent" style={{ width: `${((i + 1) / naru.december.approach.length) * 100}%` }} />
-                        {i === naru.december.approach.length - 1 && <span className="absolute right-0 top-1/2 h-2 w-2 -translate-y-1/2 translate-x-1/2 rounded-full bg-[#EE8A4F]" />}
-                      </span>
+                      {/* 2026-10-22: 칸마다 길이가 다른 진행 막대를 넣었다가 같은 날 뺐습니다(사용자: "늘리고 줄이는 그거 이상함"). */}
                       <span className={`${META} font-bold tabular-nums text-accent`}>{String(i + 1).padStart(2, "0")}</span>
                       <span className={`break-keep ${BODY} font-bold text-white`}>{t(a.title)}</span>
                       <span className={`break-keep ${META} leading-snug text-white/70`}>{t(a.body)}</span>
