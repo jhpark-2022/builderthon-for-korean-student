@@ -44,6 +44,8 @@ export default function Background({ variant = "field", still = false }: { varia
             scene?.setPaused(p);
             if (!p) scene?.setMotionOptIn(true);
           };
+          // 스와이프(components/shared/PageSwipe.tsx)가 끄는 동안 쥐었다 놓는 손잡이. 2026-10-23.
+          window.__naruHoldBackground = (h: boolean) => scene?.setHeld(h);
           scene.start();
           // 형상 라벨(NaruHome의 ShapeLabels)이 배경과 같이 뜨도록 알립니다.
           window.__naruBackgroundStarted = true;
@@ -68,15 +70,38 @@ export default function Background({ variant = "field", still = false }: { varia
     // DECIDED 2026-09-17: idle 대기 상한 1500 → 400ms. 홈의 히어로는 배경의 형상
     // (싱가포르·서울)이 내용의 일부라 1.5초 뒤에 뜨면 늦게 뜨는 것으로 보입니다.
     // 하이드레이션이 끝나면 바로 시작하고, 바쁘면 400ms 안에는 시작합니다.
+    // 2026-10-23 (스와이프 랙, components/shared/PageSwipe.tsx 맨 위 주석): 원페이저를 옆으로 밀어 들어온 직후라면(html[data-page-swiping])
+    // 본문이 0.36초 미끄러져 들어오는 중입니다. WebGL 컨텍스트와 셰이더 컴파일이 그 위에서 돌면 미끄러짐이 끊기므로 속성이 빠진 뒤에
+    // 시작합니다. 어떤 이유로든 안 빠지면 1.5초 뒤에는 시작합니다.
+    const SWIPING = "data-page-swiping";
+    let settleObserver: MutationObserver | null = null;
+    let settleTimer = 0;
+    const afterSwipeSettles = () => {
+      if (cancelled) return;
+      const html = document.documentElement;
+      if (!html.hasAttribute(SWIPING)) return init();
+      const run = () => {
+        settleObserver?.disconnect();
+        settleObserver = null;
+        clearTimeout(settleTimer);
+        init();
+      };
+      settleObserver = new MutationObserver(() => { if (!html.hasAttribute(SWIPING)) run(); });
+      settleObserver.observe(html, { attributes: true, attributeFilter: [SWIPING] });
+      settleTimer = window.setTimeout(run, 1500);
+    };
     const idleId: number = window.requestIdleCallback
-      ? window.requestIdleCallback(init, { timeout: 400 })
-      : window.setTimeout(init, 100);
+      ? window.requestIdleCallback(afterSwipeSettles, { timeout: 400 })
+      : window.setTimeout(afterSwipeSettles, 100);
 
     return () => {
       delete window.__naruSetBackgroundPaused;
+      delete window.__naruHoldBackground;
       cancelled = true;
       if (window.cancelIdleCallback) window.cancelIdleCallback(idleId);
       else clearTimeout(idleId);
+      settleObserver?.disconnect();
+      clearTimeout(settleTimer);
       scene?.dispose();
       scene = null;
     };

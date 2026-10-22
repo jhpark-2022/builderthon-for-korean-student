@@ -797,6 +797,7 @@ export class BackgroundScene {
     this.rafId = requestAnimationFrame(this.loop);
     if (!this.visible) return; // pause work in background tabs
     if (this.paused) return; // 방문자가 껐습니다
+    if (this.held) return; // 원페이저 스와이프가 잠깐 쥐고 있습니다(setHeld)
 
     const dt = Math.min(this.clock.getDelta(), 0.05);
     const t = this.clock.elapsedTime;
@@ -1140,6 +1141,15 @@ export class BackgroundScene {
     // 켤 때 시계의 빈 구간을 삼킵니다. 그러지 않으면 꺼 둔 시간만큼 fieldTime이
     // 한 프레임에 뛰어 배경이 순간이동합니다.
     if (!paused) this.clock.getDelta();
+  }
+
+  /** 2026-10-23 (스와이프 랙): 원페이저를 손가락으로 끄는 동안 그리기를 쉽니다. 마지막 프레임이 남고, 놓으면 그 자리에서 이어 갑니다.
+   *  방문자의 끄기(setPaused)와 별개의 손잡이라 서로 덮어쓰지 않습니다. */
+  private held = false;
+  setHeld(held: boolean) {
+    if (this.held === held) return;
+    this.held = held;
+    if (!held) this.clock.getDelta();
   }
 
   /** Rolling FPS estimate → step DPR down once if we're below ~45fps sustained. */

@@ -27,6 +27,16 @@ import { isScrollLocked } from "@/lib/useBodyScrollLock";
 // 본문이 반대쪽에서 0.36초에 미끄러져 들어옵니다. 방향은 sessionStorage 한 칸(ENTER_KEY)으로 다음 페이지에 넘기고 2초 안에만 씁니다.
 // 헤더와 배경은 제자리입니다. 본문 안의 고정 요소(오픈채팅 바)는 transform 아래에서 자리를 잃으므로 움직이는 동안만 숨깁니다
 // (html[data-page-swiping], globals.css). 모션 줄이기에서는 끌림도 미끄러짐도 없이 바로 옮깁니다.
+//
+// 2026-10-23 (사용자: "스와이프 해서 넘어갈 때 너무 랙"): 폰 에뮬레이션(CPU 4배 느리게)으로 재니 끌림은 매끄럽고, 손을 뗀 뒤 새 페이지가
+// 뜰 때까지 약 1초가 비었습니다. 빠져나가는 0.24초가 끝난 뒤에야 router.push를 불러서, 그 뒤 새 페이지의 렌더(461ms)와 배경 WebGL
+// 재생성(184ms, 141ms)이 전부 빈 화면 위에서 돌았습니다. 고친 것 셋: push를 손을 떼는 즉시 불러 렌더를 빠져나가는 동안에 겹치고,
+// 움직이는 동안 본문에 will-change: transform을 주고(globals.css), 끄는 동안 배경 WebGL 그리기를 쉬게 하고(window.__naruHoldBackground),
+// 배경 장면의 초기화를 들어오는 미끄러짐이 끝난 뒤로 미룹니다(components/Background.tsx). 프로덕션 빌드에서 다시 재니 새 페이지가 손을 뗀 뒤
+// 약 106ms에 올라와 빠져나가는 중간에서 잘렸습니다. 그래서 push를 PUSH_DELAY_MS(100ms) 뒤에 보냅니다. 빠른 폰에서는 빠져나감이
+// 거의 끝난 자리에서 바뀌고, 느린 폰에서는 빈 화면이 그만큼 줄어듭니다. 들어온 방향 키는 미끄러짐이 끝난 뒤에 지웁니다. 첫 읽기나 useEffect에서 지우면 dev의 StrictMode가
+// 효과를 마운트, 언마운트, 재마운트로 돌릴 때 재마운트가 빈손이라 미끄러짐이 취소됐습니다(프로덕션에는 StrictMode가 없어 실제 폰은
+// 재생됐지만 dev에서 잴 수가 없었습니다). 끝나기 전에 떠나면 키는 2초 뒤 저절로 죽습니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const NO_PAGE_SWIPE_ATTR = "data-no-page-swipe";
@@ -38,6 +48,7 @@ const MIN_DX = 64;
 const RATIO = 2;
 const MAX_MS = 800;
 const EXIT_MS = 240;
+const PUSH_DELAY_MS = 100;
 const ENTER_MS = 360;
 const EASE = "cubic-bezier(0.22,1,0.36,1)";
 const ENTER_KEY = "naru.pageSwipe";
@@ -50,10 +61,14 @@ let swipingHolds = 0;
 function holdSwiping() {
   swipingHolds++;
   document.documentElement.setAttribute(SWIPING_ATTR, "");
+  window.__naruHoldBackground?.(true);
 }
 function releaseSwiping() {
   swipingHolds = Math.max(0, swipingHolds - 1);
-  if (!swipingHolds) document.documentElement.removeAttribute(SWIPING_ATTR);
+  if (!swipingHolds) {
+    document.documentElement.removeAttribute(SWIPING_ATTR);
+    window.__naruHoldBackground?.(false);
+  }
 }
 
 function reducedMotion() {
@@ -85,16 +100,24 @@ function ownsGesture(target: EventTarget | null): boolean {
   return true;
 }
 
+/** 들어온 방향을 읽기만 합니다. 지우는 것은 clearEnterDir(미끄러짐이 끝난 뒤). */
 function readEnterDir(): Dir | null {
   try {
     const raw = window.sessionStorage.getItem(ENTER_KEY);
     if (!raw) return null;
-    window.sessionStorage.removeItem(ENTER_KEY);
     const [dir, at] = raw.split(":");
     if ((dir !== "next" && dir !== "prev") || Date.now() - Number(at) > 2000) return null;
     return dir;
   } catch {
     return null;
+  }
+}
+
+function clearEnterDir() {
+  try {
+    window.sessionStorage.removeItem(ENTER_KEY);
+  } catch {
+    /* 없으면 없는 대로 */
   }
 }
 
@@ -124,7 +147,7 @@ export default function PageSwipe({ page }: { page: SitePage }) {
       releaseSwiping();
     };
     let left = anims.length;
-    anims.forEach((a) => a.addEventListener("finish", () => { if (--left <= 0) release(); }));
+    anims.forEach((a) => a.addEventListener("finish", () => { if (--left <= 0) { clearEnterDir(); release(); } }));
     return () => {
       anims.forEach((a) => a.cancel());
       release();
@@ -185,11 +208,9 @@ export default function PageSwipe({ page }: { page: SitePage }) {
       writeEnterDir(dir);
       const toX = (dir === "next" ? -1 : 1) * window.innerWidth;
       setX(toX);
-      const anims = movers().map((el) => el.animate([{ transform: `translateX(${fromX}px)` }, { transform: `translateX(${toX}px)` }], { duration: EXIT_MS, easing: "ease-in" }));
-      let left = anims.length;
-      const done = () => { if (--left <= 0) router.push(to.href); };
-      if (!left) router.push(to.href);
-      anims.forEach((a) => a.addEventListener("finish", done));
+      for (const el of movers()) el.animate([{ transform: `translateX(${fromX}px)` }, { transform: `translateX(${toX}px)` }], { duration: EXIT_MS, easing: "ease-in" });
+      // 빠져나가는 동안 새 페이지를 같이 그립니다(2026-10-23, 위 주석). 새 페이지가 먼저 준비되면 그 자리에서 바뀌고 반대쪽에서 들어옵니다.
+      window.setTimeout(() => router.push(to.href), PUSH_DELAY_MS);
     };
 
     const onStart = (e: TouchEvent) => {
