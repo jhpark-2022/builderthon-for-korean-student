@@ -1080,8 +1080,10 @@ export default function NaruHome() {
           </div>
         </Reveal>
         <Reveal className={`${WIDE} mt-[72px] border-t border-white/15 pt-[40px] text-left lg:mt-[96px] lg:pt-[48px]`}>
+          {/* DECIDED 2026-10-22 (사용자, 스크린숏: "bottom of both parts가 같아야 함"): lg에서 두 열이 같은 높이로 늘고, 왼쪽은 네 단계 표가
+              아래 끝에, 오른쪽은 다섯 줄이 높이를 나눠 마지막 선이 왼쪽 표의 마지막 선과 같은 높이에 섭니다. */}
           <div className="grid gap-x-[32px] gap-y-[48px] lg:grid-cols-2 lg:gap-x-[64px]">
-            <div className="min-w-0">
+            <div className="min-w-0 lg:flex lg:flex-col">
               <p className={`mt-[12px] first:mt-0 break-keep text-left ${BODY} leading-relaxed text-white/85 sm:mt-[16px]`}>
                 {t(naru.december.programConcrete).replace("{range}", formatDecemberRange(locale)).replace("{city}", DECEMBER_CITY[locale])}
               </p>
@@ -1101,26 +1103,34 @@ export default function NaruHome() {
                     key={stat.label.en}
                     className={`relative flex flex-col items-center ${i > 0 ? "" : "pr-1"} ${
                       i > 0
-                        ? "ml-3 pl-3 pr-1 before:absolute before:left-0 before:top-1/2 before:h-9 before:w-px before:-translate-y-1/2 before:bg-white/[0.14] before:content-[''] sm:ml-9 sm:pl-9"
+                        ? "ml-3 pl-3 pr-1 before:absolute before:left-0 before:top-1/2 before:h-16 before:w-px before:-translate-y-1/2 before:bg-white/[0.14] before:content-[''] sm:ml-9 sm:pl-9"
                         : ""
                     }`}
                   >
                     {/* 2026-10-11 (리뷰 작은 것): DOM은 dt 다음 dd입니다(용어가 먼저). 보이는 순서는 order가 전과 같이 숫자 위, 라벨 아래로 둡니다. */}
-                    <dt className={`order-2 mt-1.5 break-keep text-center ${META} font-bold uppercase text-white/70 ${latinTrack(locale)}`}>
+                    <dt className={`order-2 mt-[12px] break-keep text-center ${META} font-bold uppercase text-white/70 ${latinTrack(locale)}`}>
                       {t(stat.label)}
                     </dt>
-                    <dd className={`order-1 ${BODY} font-black leading-none text-white`}>
+                    {/* DECIDED 2026-10-22 (사용자, 스크린숏: "좀 더 visually engaging, 구성은 유지"): 숫자 줄은 TITLE(2026-09-26 사용자 요청의 크기로 돌아감).
+                        숫자 하나가 문장을 대신합니다(brand 5장). */}
+                    <dd className={`order-1 ${TITLE} font-black leading-none tracking-tight text-white`}>
                       {t(stat.value)}
                     </dd>
                   </div>
                 ))}
               </dl>
 
-              <div className="mt-[36px] lg:mt-[54px]">
+              <div className="mt-[36px] lg:mt-auto lg:pt-[54px]">
                 <p className={`${META} font-bold text-white/85`}>{t(naru.december.approachLabel)}</p>
                 <ol role="list" className="mt-[16px] grid grid-cols-2 border-t border-white/10">
                   {naru.december.approach.map((a, i) => (
                     <li key={i} className={`flex flex-col items-start gap-[12px] border-b border-white/10 px-[12px] py-[24px] sm:px-[16px] ${i % 2 === 1 ? "border-l" : ""} border-white/10`}>
+                      {/* DECIDED 2026-10-22 (사용자: "visually engaging"): 칸마다 진행 막대. 01은 1/4, 04는 끝까지 차서 문제로 들어가는 깊이를 그립니다.
+                          끝에 닿은 04의 끝점만 나루 주황(주황은 점으로만, brand 10장). 막대는 선이고 면이 아닙니다. */}
+                      <span aria-hidden className="relative mb-[4px] block h-[2px] w-full rounded-full bg-white/10">
+                        <span className="absolute inset-y-0 left-0 rounded-full bg-accent" style={{ width: `${((i + 1) / naru.december.approach.length) * 100}%` }} />
+                        {i === naru.december.approach.length - 1 && <span className="absolute right-0 top-1/2 h-2 w-2 -translate-y-1/2 translate-x-1/2 rounded-full bg-[#EE8A4F]" />}
+                      </span>
                       <span className={`${META} font-bold tabular-nums text-accent`}>{String(i + 1).padStart(2, "0")}</span>
                       <span className={`break-keep ${BODY} font-bold text-white`}>{t(a.title)}</span>
                       <span className={`break-keep ${META} leading-snug text-white/70`}>{t(a.body)}</span>
@@ -1130,15 +1140,16 @@ export default function NaruHome() {
 
               </div>
             </div>
-            <div className="min-w-0">
+            <div className="min-w-0 lg:flex lg:flex-col">
               <h3 data-subheading className={SUBHEADING}>{t(naru.december.factsLabel)}</h3>
-              <dl className="mt-[16px]">
+              <dl className="mt-[16px] lg:flex lg:flex-1 lg:flex-col">
                 {naru.december.facts.map((f, i) => (
                   <div
                     key={f.k.en}
-                    className={`grid grid-cols-1 gap-y-[12px] border-t border-white/10 py-[20px] sm:py-[24px] ${i === naru.december.facts.length - 1 ? "border-b" : ""}`}
+                    // DECIDED 2026-10-22 (사용자: "visually engaging"): sm부터 라벨 왼쪽 열(accent), 설명 오른쪽 열. 표처럼 한눈에 훑습니다.
+                    className={`grid grid-cols-1 gap-y-[8px] border-t border-white/10 py-[20px] sm:grid-cols-[7.5rem_1fr] sm:gap-x-[24px] sm:py-[24px] lg:flex-1 lg:content-center ${i === naru.december.facts.length - 1 ? "border-b" : ""}`}
                   >
-                    <dt className={`break-keep ${META} font-semibold uppercase ${latinTrack(locale)} text-white/85`}>{t(f.k)}</dt>
+                    <dt className={`break-keep ${META} font-bold uppercase ${latinTrack(locale)} text-accent sm:pt-[3px]`}>{t(f.k)}</dt>
                     <dd className={`break-keep ${BODY} leading-relaxed text-white/70`}>{t(f.v)}</dd>
                   </div>
                 ))}

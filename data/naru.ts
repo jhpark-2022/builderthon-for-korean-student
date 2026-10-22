@@ -1841,7 +1841,9 @@ export const naru = {
     approach: [
       { title: { ko: "무엇을", en: "What" }, body: { ko: "어떤 AI 기능을 붙일 수 있나", en: "Which AI capability could go in" } },
       { title: { ko: "누구의 일을", en: "Whose work" }, body: { ko: "누구의 어떤 일이 바뀌나", en: "Whose work changes, and how" } },
-      { title: { ko: "왜 막혔나", en: "Why it stuck" }, body: { ko: "회사는 왜 해 보고도 못 했나", en: "Why the company tried and still could not" } },
+      // DECIDED 2026-10-22 (사용자: "왜 못했나 이러면 출제의 원인이 무능인 것처럼 보임"): 회사가 아니라 시도가 멈춘 자리를 묻습니다.
+      // 그 전: "왜 막혔나" / "회사는 왜 해 보고도 못 했나".
+      { title: { ko: "어디서 멈췄나", en: "Where it stopped" }, body: { ko: "먼저 해 본 시도가 어느 지점에서 멈췄나", en: "Where the first attempt came to a stop" } },
       { title: { ko: "어떻게 확인하나", en: "How to check" }, body: { ko: "가장 작게 확인할 방법", en: "The smallest way to check it" } },
     ] as { title: Phrase; body: Phrase }[],
     // 2026-10-19 (시각 감사 1): 바로 아래 findClose와 같은 말을 해서 한 문단으로 합쳤습니다. 화면은 이 문단만 그리고 findClose는 그리지 않습니다.
