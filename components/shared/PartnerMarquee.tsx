@@ -7,7 +7,8 @@ import { partnerUrl } from "@/data/partnerLinks";
 // 나루와 함께한 곳 로고 띠 (DECIDED 2026-10-22, 사용자, 스크린숏: "지금까지 나루와 함께한 기업들 로고 다 이런 식으로").
 // 8월 페이지의 "이 빌더톤이 자라 나온 곳" 띠(둥근 어두운 카드, 두 줄이 반대로 흐름)를 그대로 옮겼습니다.
 // 그 섹션은 같은 날 8월 페이지에서 뺐고(사용자: "빼주고 바로 FAQ로"), 이 띠는 푸터(/naru, /2026-08)에 섭니다.
-// 목록 순서: 12월 크로싱 서울(data/naru.ts decemberPartners) → 8월 후원 → 제로백 네트워크. 이름이 같으면 한 번만.
+// 목록 순서: 12월 크로싱 서울(data/naru.ts decemberPartners) → 8월 후원. 이름이 같으면 한 번만.
+// 같은 날 (사용자: "제로백 네트워크 15곳은 빼줘"): 나루와 직접 일한 곳이 아니라 뺐습니다.
 // 학교 학생회(SMU, NUS, NTU)는 기업이 아니라 넣지 않습니다.
 // 카드는 바탕을 거의 칠하지 않습니다(white/5). 어두운 바탕에 밝은 판을 두지 않습니다.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -15,7 +16,6 @@ import { partnerUrl } from "@/data/partnerLinks";
 type Logo = { src: string; alt: string; w: number; h: number; url?: string };
 
 const W = "/partners/logos/white/trimmed/";
-const Z = "/partners/zero100/";
 
 const december: Logo[] = decemberPartners.groups.flatMap((g) => [
   ...(g.lead ? [{ src: g.lead.src, alt: g.lead.name, w: g.lead.w, h: g.lead.h, url: g.lead.url }] : []),
@@ -36,25 +36,8 @@ const august: Logo[] = [
   { src: `${W}haenyeo-kitchen.png`, alt: "Jeju Haenyeo", w: 316, h: 72 },
 ];
 
-const network: Logo[] = [
-  { src: `${Z}05-startup-alliance.webp`, alt: "Startup Alliance", w: 268, h: 100 },
-  { src: `${Z}06-KAIA.webp`, alt: "KAIA", w: 263, h: 100 },
-  { src: `${Z}07-venturesquare.webp`, alt: "Venture Square", w: 354, h: 100 },
-  { src: `${Z}08-mysc.webp`, alt: "MYSC", w: 256, h: 100 },
-  { src: `${Z}09-eventus.webp`, alt: "EventUs", w: 212, h: 100 },
-  { src: `${Z}26-ukf.webp`, alt: "United Korean Founders", w: 310, h: 100 },
-  { src: `${Z}12-mission.webp`, alt: "Mission", w: 401, h: 100 },
-  { src: `${Z}14-themiilk.webp`, alt: "TheMiilk", w: 427, h: 100 },
-  { src: `${Z}16-andar.webp`, alt: "andar", w: 368, h: 100 },
-  { src: `${Z}17-ceo-suite.webp`, alt: "CEO SUITE", w: 489, h: 100 },
-  { src: `${Z}18-yj.webp`, alt: "YJ", w: 98, h: 100 },
-  { src: `${Z}20-habit-factory.webp`, alt: "Habit Factory", w: 560, h: 75 },
-  { src: `${Z}23-twigfarm.webp`, alt: "Twigfarm", w: 370, h: 100 },
-  { src: `${Z}24-kowork.webp`, alt: "Kowork", w: 478, h: 100 },
-  { src: `${Z}25-one-dgree-labs.webp`, alt: "One Degree Labs", w: 122, h: 100 },
-];
 
-export const NARU_PARTNERS: Logo[] = [...december, ...august, ...network].filter(
+export const NARU_PARTNERS: Logo[] = [...december, ...august].filter(
   (l, i, all) => all.findIndex((o) => o.alt === l.alt) === i,
 );
 
