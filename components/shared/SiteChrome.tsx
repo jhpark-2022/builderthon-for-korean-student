@@ -127,20 +127,13 @@ export function SiteFooter({ page, onMotionToggle }: { page: SitePage; onMotionT
   }, []);
   return (
     <footer id="site-footer" className="relative w-full border-t border-white/10 px-6 py-12 sm:px-10">
-      <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 text-center">
-        <p className={`break-keep ${META} font-semibold text-white/85`}>{t(dict.siteFooter.line)}</p>
-        <nav aria-label={t(dict.footerNav.aria)} className="flex flex-wrap items-center justify-center gap-x-5">
-          {items.map((it) => <MenuLink key={it.key} it={it} page={page} src="footer" className={`${META} text-white/70`} />)}
-          <a href={links.general} onClick={() => track("naru_mail", { src: "footer" })} className={`${LINK} ${META} text-white/70`}>
-            {t(dict.footerNav.contact)}
-          </a>
-        </nav>
-      </div>
+      {/* DECIDED 2026-10-22 (사용자, 스크린숏: "이 부분 빼줘"): 푸터의 한 줄 소개와 메뉴 줄(크로싱 서울, 나루, 8월 기록, 후원 문의, 오픈채팅, 문의)을 뺐습니다.
+          헤더에 같은 메뉴가 있고, 오픈채팅은 하단 바와 헤더에 있습니다. */}
       {/* DECIDED 2026-10-21 (사용자, 스크린숏: "빼줘"): 크로싱 서울 홈에는 이 줄을 두지 않습니다. 바로 위 12월 "함께하는 곳"과 겹칩니다.
           DECIDED 2026-10-22 (사용자, 스크린숏: "지금까지 나루와 함께한 기업들 로고 다 이런 식으로"): 8월 로고 한 줄을
           8월 페이지의 카드 띠 모양으로 바꾸고 12월과 제로백 네트워크까지 담았습니다(PartnerMarquee). 띠는 화면 폭 전체입니다. */}
       {page !== "crossing" && (
-        <div className="-mx-6 mt-8 flex flex-col items-center gap-5 sm:-mx-10">
+        <div className="-mx-6 flex flex-col items-center gap-5 sm:-mx-10">
           <p className={`${META} text-white/70`}>{t(dict.siteFooter.partners)}</p>
           <PartnerMarquee paused={paused} />
         </div>

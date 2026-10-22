@@ -381,7 +381,8 @@ export class BackgroundScene {
       if (join !== null) this.joinTop = join;
       const closing = top("closing");
       if (closing !== null) this.closingTop = closing;
-      const partners = document.getElementById("partners");
+      // DECIDED 2026-10-22 (사용자: "빛 효과 나루에도 넣어줘"): 커서 빛 구간은 #partners(홈), 없으면 [data-cursor-light](/naru 본문 전체).
+      const partners = document.getElementById("partners") ?? document.querySelector<HTMLElement>("[data-cursor-light]");
       if (partners) {
         const r = partners.getBoundingClientRect();
         this.partnersTop = r.top + sy;
