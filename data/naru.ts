@@ -2487,8 +2487,9 @@ export const naru = {
         session: {
           title: { ko: "PO session", en: "PO session" },
           body: {
-            ko: "현업 PO가 무엇을 왜 만들기로 했는지 3시간 동안 풀어 줍니다. 만드는 일은 AI가 빨라졌어도 무엇을 만들지는 사람이 고릅니다.",
-            en: "A working PO spends three hours on what they chose to build and why. AI has made building faster, but people still choose what to build.",
+            // DECIDED 2026-10-22 (사용자: "day 2의 문장을 좀 더 줄여줘"): 둘째 문장을 뺐습니다. 그 전: "...풀어 줍니다. 만드는 일은 AI가 빨라졌어도 무엇을 만들지는 사람이 고릅니다."
+            ko: "현업 PO가 무엇을 왜 만들기로 했는지 3시간 동안 풀어 줍니다.",
+            en: "A working PO spends three hours on what they chose to build and why.",
           },
         },
         // DECIDED 2026-10-13 (사용자, 멘토링 브리프 2, D4): 미션은 Day 2부터이고, 무엇을 냈는가보다 함께 있었는가를 봅니다.

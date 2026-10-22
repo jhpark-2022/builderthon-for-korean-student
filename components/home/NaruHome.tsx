@@ -755,7 +755,8 @@ export default function NaruHome() {
       )}
       {/* DECIDED 2026-10-22 (사용자: "상자 사이즈는 동일한데, 내용이 안 비어 있게"): 폰 카드에서 세션이 없는 날(Day 0, Day 4)은 세션 자리에
           그날의 진행(stage.body)을 그립니다. 새 글이 아니라 9/20부터 그리지 않던 키입니다. 데스크톱은 그대로. */}
-      {inPanel && !stage.session && (
+      {/* 같은 날 이어서(사용자: "전체 상자의 세로 크기를 줄여줘"): Day 4는 자기 한 줄과 투표 버튼으로 이미 차서 Day 0에만 그립니다. */}
+      {inPanel && !stage.session && i === 0 && (
         <p className={`break-keep ${BODY} leading-relaxed text-white/70`}>{t(stage.body)}</p>
       )}
       {stage.chips.length > 0 ? (
