@@ -58,7 +58,8 @@ export const coreDict = {
   },
   siteFooter: {
     line: { ko: "학생이 직접 운영하는 그룹 나루가 엽니다.", en: "Run by NARU, a student-run group." },
-    partners: { ko: "8월에 함께한 곳", en: "With us in August" },
+    // DECIDED 2026-10-22 (사용자: "지금까지 나루와 함께한 기업들"): 8월만이 아니라 12월과 제로백 네트워크까지 담습니다.
+    partners: { ko: "나루와 함께한 곳", en: "With NARU so far" },
     rights: { ko: "© 2026 나루 NARU", en: "© 2026 NARU" },
   },
   footerNav: {

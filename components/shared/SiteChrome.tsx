@@ -10,6 +10,8 @@ import { naruLinks } from "@/data/naru";
 import { META } from "@/components/ui/typography";
 import ChatGlyph from "@/components/ChatGlyph";
 import MotionToggle from "@/components/ui/MotionToggle";
+import PartnerMarquee from "@/components/shared/PartnerMarquee";
+import { readMotionChoice, readMotionPaused } from "@/lib/motionPreference";
 import type { SitePage } from "@/components/shared/PageChips";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -108,33 +110,20 @@ export function useSiteMenu() {
   return { open, id: `site-menu-${id.replace(/:/g, "")}`, toggle: () => setOpen((v) => !v), close: () => setOpen(false) };
 }
 
-// 8월에 실제로 함께한 곳 중 주소가 있는 열여섯(Journey.tsx의 로고 벽과 같은 주소). 학생회 셋은 주소가 없어 빠집니다.
-const AUGUST_PARTNERS: { src: string; alt: string; w: number; h: number; url: string }[] = [
-  { src: "translink.png", alt: "Translink Investment", w: 330, h: 91, url: "https://translink.kr" },
-  { src: "wilt.png", alt: "Wilt Venture Builder", w: 309, h: 148, url: "https://www.wiltvb.com/" },
-  { src: "codepresso.png", alt: "Codepresso", w: 456, h: 91, url: "https://codepresso.io" },
-  { src: "popup-studio.png", alt: "Popup Studio", w: 512, h: 245, url: "https://popupstudio.ai" },
-  { src: "drimaes.png", alt: "Drimaes", w: 332, h: 50, url: "https://www.drimaes.com" },
-  { src: "aws.png", alt: "AWS", w: 512, h: 306, url: "https://aws.amazon.com/" },
-  { src: "hashed.png", alt: "Hashed", w: 355, h: 90, url: "https://www.hashed.com/" },
-  { src: "innovate360.png", alt: "INNOVATE 360", w: 455, h: 54, url: "https://innovate360.sg/" },
-  { src: "life.png", alt: "L^IFE", w: 900, h: 352, url: "https://life-singapore.com/" },
-  { src: "bzcf.png", alt: "BZCF", w: 465, h: 156, url: "https://bzcf.io/" },
-  { src: "korean-association.png", alt: "Korean Association in Singapore", w: 443, h: 90, url: "https://singapore.korean.net/" },
-  { src: "onword-lab.png", alt: "Onword Lab", w: 900, h: 92, url: "https://www.onwordlab.com/" },
-  { src: "remited.png", alt: "REmited", w: 512, h: 105, url: "https://teamremited.com/" },
-  { src: "brandboost.png", alt: "Brand Boost", w: 205, h: 81, url: "https://www.brandboost.kr/" },
-  { src: "nuldam.png", alt: "Nuldam", w: 631, h: 136, url: "https://sg.nuldam.com/" },
-  { src: "haenyeo-kitchen.png", alt: "Jeju Haenyeo", w: 316, h: 72, url: "https://www.jejuhaenyeosg.com/" },
-];
-
 /**
- * 세 페이지의 푸터 하나(hwang 브리프 4.2). 한 줄 소개, 사이트 메뉴(다섯)와 문의, 8월 파트너 로고 줄, 저작권, 배경 움직임 토글.
+ * 세 페이지의 푸터 하나(hwang 브리프 4.2). 한 줄 소개, 사이트 메뉴(다섯)와 문의, 나루와 함께한 곳 로고 띠, 저작권, 배경 움직임 토글.
  * onMotionToggle: 8월 페이지는 같은 누름에 영상과 로고 띠도 멈춥니다.
  */
 export function SiteFooter({ page, onMotionToggle }: { page: SitePage; onMotionToggle?: () => void }) {
   const { t } = useLocale();
   const items = useItems(true, true);
+  // 로고 띠의 멈춤. 배경 움직임 끄기와 같은 값입니다(저장값, 없으면 OS의 모션 줄이기). 서버와 맞추려고 false에서 시작합니다.
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    const saved = readMotionChoice();
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setPaused(saved === "off" || (reduce && saved !== "on"));
+  }, []);
   return (
     <footer id="site-footer" className="relative w-full border-t border-white/10 px-6 py-12 sm:px-10">
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 text-center">
@@ -145,25 +134,19 @@ export function SiteFooter({ page, onMotionToggle }: { page: SitePage; onMotionT
             {t(dict.footerNav.contact)}
           </a>
         </nav>
-        {/* DECIDED 2026-10-21 (사용자, 스크린숏: "빼줘"): 크로싱 서울 홈에는 8월 파트너 줄을 두지 않습니다. 바로 위 12월 "함께하는 곳"과 겹칩니다.
-            /naru와 /2026-08에는 그대로입니다. */}
-        {page !== "crossing" && (
-        <div className="flex w-full flex-col items-center gap-3">
+      </div>
+      {/* DECIDED 2026-10-21 (사용자, 스크린숏: "빼줘"): 크로싱 서울 홈에는 이 줄을 두지 않습니다. 바로 위 12월 "함께하는 곳"과 겹칩니다.
+          DECIDED 2026-10-22 (사용자, 스크린숏: "지금까지 나루와 함께한 기업들 로고 다 이런 식으로"): 8월 로고 한 줄을
+          8월 페이지의 카드 띠 모양으로 바꾸고 12월과 제로백 네트워크까지 담았습니다(PartnerMarquee). 띠는 화면 폭 전체입니다. */}
+      {page !== "crossing" && (
+        <div className="-mx-6 mt-8 flex flex-col items-center gap-5 sm:-mx-10">
           <p className={`${META} text-white/70`}>{t(dict.siteFooter.partners)}</p>
-          <ul role="list" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
-            {AUGUST_PARTNERS.map((p) => (
-              <li key={p.src}>
-                <a href={p.url} target="_blank" rel="noopener noreferrer" aria-label={p.alt} className="inline-flex min-h-[44px] items-center opacity-70 transition hover:opacity-100">
-                  <Image src={`/partners/logos/white/trimmed/${p.src}`} alt="" width={p.w} height={p.h} unoptimized loading="lazy"
-                    className="h-4 w-auto max-w-[5.5rem] object-contain" />
-                </a>
-              </li>
-            ))}
-          </ul>
+          <PartnerMarquee paused={paused} />
         </div>
-        )}
+      )}
+      <div className="mx-auto mt-8 flex max-w-3xl flex-col items-center gap-5 text-center">
         <p className={`${META} text-white/70`}>{t(dict.siteFooter.rights)}</p>
-        <span className="inline-flex" onClick={onMotionToggle}>
+        <span className="inline-flex" onClick={() => { onMotionToggle?.(); setTimeout(() => setPaused(readMotionPaused()), 0); }}>
           <MotionToggle className="min-h-[44px] !text-white/70" />
         </span>
       </div>
