@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-23 팀 방문은 세지 않음](#2026-10-23-team-analytics)
 - [2026-10-23 폰 원페이저 스와이프 랙](#2026-10-23-page-swipe-lag)
 - [2026-10-22 원페이저 넘김 애니메이션](#2026-10-22-page-swipe-motion)
 - [2026-10-22 폰에서 옆으로 밀어 원페이저 옮기기](#2026-10-22-page-swipe)
@@ -326,6 +327,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-23-team-analytics"></a>
+## 2026-10-23 팀 방문은 세지 않음
+- 범위: components/shared/TeamAwareAnalytics.tsx(새 파일), app/layout.tsx
+- 한 것: 사용자 요청(Analytics 30일 점검 뒤 "2번만"). 대시보드 경유를 빼도 Mac 데스크톱 방문이 전체 뷰의 절반을 넘어, 참가자 숫자에 팀 방문이 섞였습니다. 팀원이 브라우저마다 한 번 아무 주소 끝에 ?team=on을 붙여 열면 그 브라우저에 표시(localStorage naru-team)가 남고, beforeSend가 그 브라우저의 페이지뷰와 이벤트를 보내지 않습니다. 오픈채팅 클릭을 세는 /go/openchat 방문도 같이 빠집니다. ?team=off로 되돌립니다. Speed Insights는 그대로 셉니다. 근거: 판단 질문 둘에 직접 닿지 않는 보이지 않는 측정 장치로, 참가자 화면은 바뀌지 않습니다(brand 9장 금지어, 10장 시각과 무관).
+- 검증: dev에서 headless Chromium으로 /naru(셈) → /naru?team=on(안 셈, 표시 1) → /2026-08(안 셈) → /?team=off(셈, 표시 없음) → /(셈). tsc와 next build 통과.
+- 커밋: 53829b3
 
 <a id="2026-10-23-page-swipe-lag"></a>
 ## 2026-10-23 폰 원페이저 스와이프 랙
