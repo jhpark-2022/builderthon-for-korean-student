@@ -1322,7 +1322,8 @@ export default function NaruHome() {
             <p className={`${META} font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.gains.spine.tag)}</p>
             <p className={`mx-auto mt-[11.25px] max-w-[34rem] text-balance break-keep ${BODY} font-bold leading-snug text-white sm:mt-[12px]`}>{t(naru.gains.spine.heading)}</p>
             {/* DECIDED 2026-10-20 (hwang 브리프 1.2, 2.6, 감사 W3, W4): ✓칩 셋(알약)을 걷고 한 문장으로. tangibles 키는 남깁니다. */}
-            <p className={`mx-auto mt-[13.5px] max-w-[34rem] text-balance break-keep ${META} leading-snug text-white/70 sm:mt-[16px]`}>{t(naru.gains.spine.tangiblesLine)}</p>
+            {/* DECIDED 2026-10-23 (사용자: 남는 것 다섯 칸 개편): tangiblesLine(팀의 생각 한 장, 코드로 옮긴 결과물)은 그리지 않습니다.
+                바로 아래 02와 04가 같은 말을 합니다. 키는 data/naru.ts에 남깁니다. */}
           </div>
           {/* DECIDED 2026-10-11 (사용자, 스크린숏: "이거 빼줘"): 판 아래의 8월 숫자 한 줄(naru.gains.concrete)은 그리지 않습니다.
               키는 data/naru.ts에 그대로 둡니다. */}

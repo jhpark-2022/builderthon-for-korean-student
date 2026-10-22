@@ -1036,7 +1036,9 @@ export class BackgroundScene {
         this.glow += (want - this.glow) * Math.min(1, dt * (want > this.glow ? 10 : PL.release));
       }
       // 따라가기: 초당 follow 비율, 한 프레임 이동은 maxRate × dt 이하. 모션 민감 설정에서는 바로 섭니다.
-      if (!this.lightUv || this.reduced) this.lightUv = { ...target };
+      // DECIDED 2026-10-23 (사용자: "왜 빛이 커서를 바로 따라옴?"): 동작 줄이기가 켜진 맥에서는 커서 빛도 바로 섰습니다.
+      // 커서 빛은 손으로 움직이는 것이고, 순간이동이 미끄러지는 것보다 더 튀어 보여 커서 구간에서는 늘 따라가게 합니다.
+      if (!this.lightUv || (this.reduced && this.cursorMix < 0.001)) this.lightUv = { ...target };
       else {
         const F = {
           follow: LIGHT_FOLLOW.follow + (PL.follow - LIGHT_FOLLOW.follow) * this.cursorMix,
