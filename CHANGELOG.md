@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-22 푸터에 나루와 함께한 곳 띠](#2026-10-22-footer-partner-marquee)
 - [2026-10-22 kwan-design 디자인 정리를 합침](#2026-10-22-merge-kwan-design)
 - [2026-10-22 커서 빛 끊김과 머무름](#2026-10-22-cursor-light-hold)
 - [2026-10-22 AXMOS 코어 순서](#2026-10-22-axmos-order)
@@ -307,6 +308,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-22-footer-partner-marquee"></a>
+
+## 2026-10-22 푸터에 나루와 함께한 곳 띠
+- 범위: components/shared/PartnerMarquee.tsx(새), SiteChrome.tsx 푸터, Journey.tsx(#companions 뺌), dictionaryCore siteFooter.partners
+- 한 것: 사용자 요청(스크린숏: "지금까지 나루와 함께한 기업들 로고 다 이런 식으로", "이 빌더톤이 자라 나온 곳 빼주고 바로 FAQ로"). /naru와 /2026-08 푸터의 8월 로고 한 줄을 8월 페이지의 카드 띠 모양으로 바꾸고, 12월 함께하는 곳, 8월 후원, 제로백 네트워크 38곳을 담았습니다. 학교 학생회 셋은 기업이 아니라 뺐습니다. 라벨은 "나루와 함께한 곳". 8월 페이지의 #companions 섹션은 없앴습니다. 근거: brand 3장 원칙 2(무대가 먼저, 나루는 그 안에서), 10장(사진과 판은 카드 안, 어두운 바탕에 밝은 판 없음).
+- 검증: tsc 통과. localhost 1440px /naru 푸터 로고 38개, 깨진 이미지 0, 가로 넘침 없음. /2026-08 builders 다음이 faq.
+- 커밋: d7e0eb9
 
 <a id="2026-10-22-merge-kwan-design"></a>
 
