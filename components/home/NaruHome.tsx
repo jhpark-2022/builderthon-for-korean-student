@@ -443,6 +443,8 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
 // 누르면 같은 띠 안에 설명이 열리고 다시 누르면 닫힙니다. 띠마다 따로 열립니다. 설명이 없으면 전처럼 글만 있는 띠입니다.
 // DECIDED 2026-10-11 (리뷰 A3, A5): id는 useId가 아니라 부르는 쪽이 주는 안정된 값입니다(서버와 클라이언트의 useId가 어긋나
 // aria-controls가 없는 id를 가리켰습니다). 설명 문단은 닫혀 있어도 hidden으로 마운트해 둡니다.
+// DECIDED 2026-10-22 (사용자: 스와이프할 때 상자 크기가 너무 달라 어색함): 폰 카드에서도 띠를 접어 둡니다(expanded={false}). 다섯 카드가 같은 높이라
+// 가장 긴 카드가 짧아야 빈칸이 줄어듭니다. 아래는 그 전의 이유입니다.
 // expanded: 폰의 노선도 카드에서는 띠를 누르지 않습니다. 날짜를 눌러 연 카드 안에서 한 번 더 접혀 있던 것(2단 접힘)을 없애고
 // 설명 한 문장을 펼쳐 둡니다. 데스크톱 일정 카드의 띠는 전과 같이 누르는 것입니다.
 // tone: "plain"은 미션이 아닌 띠입니다(Day 1의 "Day 2에 들고 갈 것"). 같은 자리와 같은 문법이고, 호박색과 ★는 미션에만 씁니다.
@@ -763,7 +765,7 @@ export default function NaruHome() {
         // 이 결정이 바꿉니다. 그 전 라벨 "Day 2에 들고 갈 것"은 두 줄로 꺾여 Day 2, 3 띠보다 높았습니다.
         // DECIDED 2026-10-19 (사용자: "1일차랑 4일차에는 미션을 빼자", 답: 미션 아닌 띠로 남김): Day 1 띠는 다시 무채색, ★ 없음, 라벨 "Day 2에 들고 갈 것".
         // 2026-10-17의 호박색 미션 띠를 되돌립니다. 띠는 이제 늘 쌓은 모양이라 그때의 두 줄 꺾임 문제는 없습니다.
-        <MilestoneStrip id={`carry-day-${stage.dayOffset}`} tone="plain" label={t(naru.december.carryLabel)} title={t(stage.submit)} center expanded={inPanel} fill={sub}
+        <MilestoneStrip id={`carry-day-${stage.dayOffset}${inPanel ? "-phone" : ""}`} tone="plain" label={t(naru.december.carryLabel)} title={t(stage.submit)} center expanded={false} fill={sub}
           {...sync}
           detail={[
             { label: t(naru.december.carryDetail.todoLabel), items: naru.december.carryDetail.todo.map(t) },
@@ -771,10 +773,10 @@ export default function NaruHome() {
           ]} />
       )}
       {stage.milestone && (
-        <MilestoneStrip id={`milestone-day-${stage.dayOffset}`} label={t(naru.december.milestoneLabel)} title={t(stage.milestone)} detail={stage.milestoneDetail && [
+        <MilestoneStrip id={`milestone-day-${stage.dayOffset}${inPanel ? "-phone" : ""}`} label={t(naru.december.milestoneLabel)} title={t(stage.milestone)} detail={stage.milestoneDetail && [
           { label: t(naru.december.milestoneConditionsLabel), items: stage.milestoneDetail.conditions.map(t) },
           { label: t(naru.december.milestoneSubmitLabel), items: stage.milestoneDetail.submit.map(t) },
-        ]} center expanded={inPanel} fill={sub} narrow={!inPanel && i === naru.december.stages.length - 1} {...sync} />
+        ]} center expanded={false} fill={sub} narrow={!inPanel && i === naru.december.stages.length - 1} {...sync} />
       )}
       {/* DECIDED 2026-10-17 (사용자): 멘토 시간표와 미션 인증으로 들어가는 문은 Day 2, Day 3 카드에만 있습니다. */}
       {/* 열기 전(TIMETABLE_OPEN false)에는 같은 자리에 잠긴 버튼이 섭니다. */}
@@ -1073,15 +1075,19 @@ export default function NaruHome() {
             // sm부터는 감싼 div가 통째로 display: none입니다. 그 폭에서는 아래 일정 카드가 같은 내용을 그립니다.
             below={
               <div className="overflow-x-clip sm:hidden" onTouchStart={onSwipeStart} onTouchMove={onSwipeMove} onTouchEnd={onSwipeEnd} onTouchCancel={() => { swipeStart.current = null; setDragX(0); }}>
+                {/* DECIDED 2026-10-22 (사용자: "상자 간 사이즈가 너무 달라서 스와이핑할 때 어색함"): 다섯 카드를 한 칸에 겹쳐 두어(grid-area 1/1)
+                    상자 높이가 가장 긴 날에 맞춰집니다. 닫힌 날은 hidden 대신 invisible + inert라 자리만 차지하고 보이거나 눌리지 않습니다. */}
                 <div
+                  className={`mt-3 grid ${openDay === null ? "hidden" : ""}`}
                   style={{ transform: dragX ? `translateX(${dragX}px)` : undefined, transition: dragX ? "none" : "transform 260ms cubic-bezier(0.22,1,0.36,1)" }}
                 >
                 {naru.december.stages.map((stage, i) => (
                   <div
                     key={`${stage.name.en}-${openDay === i ? slideDir : "x"}`}
                     id={routePanelId(i)}
-                    hidden={openDay !== i}
-                    className={`mt-3 ${openDay === i && slideDir === 1 ? "motion-safe:animate-[routeSlideFromRight_360ms_cubic-bezier(0.22,1,0.36,1)_both]" : ""} ${openDay === i && slideDir === -1 ? "motion-safe:animate-[routeSlideFromLeft_360ms_cubic-bezier(0.22,1,0.36,1)_both]" : ""}`}
+                    aria-hidden={openDay !== i || undefined}
+                    inert={openDay !== i || undefined}
+                    className={`[grid-area:1/1] [&>*]:h-full ${openDay !== i ? "invisible" : ""} ${openDay === i && slideDir === 1 ? "motion-safe:animate-[routeSlideFromRight_360ms_cubic-bezier(0.22,1,0.36,1)_both]" : ""} ${openDay === i && slideDir === -1 ? "motion-safe:animate-[routeSlideFromLeft_360ms_cubic-bezier(0.22,1,0.36,1)_both]" : ""}`}
                   >
                     {stageCard(stage, i, true)}
                   </div>
