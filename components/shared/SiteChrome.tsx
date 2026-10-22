@@ -27,7 +27,8 @@ function useItems(includeChat: boolean, long = false): Item[] {
   const { t } = useLocale();
   // long: 푸터는 긴 이름(footerLabel, EN "CROSSING SEOUL")을 씁니다. 헤더와 폰 메뉴는 짧은 이름(EN "Home").
   const items: Item[] = dict.pages.map((p) => ({ key: p.key, href: p.href, label: t(long ? p.footerLabel : p.label), page: p.key as SitePage }));
-  items.push({ key: "sponsor", href: naruLinks.sponsor, label: t(dict.siteMenu.sponsor), external: "mail" });
+  // DECIDED 2026-10-22 (사용자: "후원 문의는 빼줘"): 헤더와 폰 메뉴에서 뺐습니다. 푸터(long)에는 남깁니다.
+  if (long) items.push({ key: "sponsor", href: naruLinks.sponsor, label: t(dict.siteMenu.sponsor), external: "mail" });
   if (includeChat && links.openChat) items.push({ key: "chat", href: links.openChat, label: t(dict.footerNav.openChat), external: "chat" });
   return items;
 }
