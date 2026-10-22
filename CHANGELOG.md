@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-22 홈 히어로는 kwan 전으로](#2026-10-22-hero-revert)
 - [2026-10-22 푸터에 나루와 함께한 곳 띠](#2026-10-22-footer-partner-marquee)
 - [2026-10-22 kwan-design 디자인 정리를 합침](#2026-10-22-merge-kwan-design)
 - [2026-10-22 커서 빛 끊김과 머무름](#2026-10-22-cursor-light-hold)
@@ -308,6 +309,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-22-hero-revert"></a>
+
+## 2026-10-22 홈 히어로는 kwan 전으로
+- 범위: components/home/NaruHome.tsx(히어로 챕터, CountdownPanel, HeroPhotos), app/globals.css(히어로 버튼 발광)
+- 한 것: 사용자 요청(스크린숏: "여기는 kwan 전의 version으로 되돌려줘"). 히어로만 8784ca1 그대로 되돌렸습니다. 큰 사진 넷, 날짜 줄, 두 도시 카운트다운 패널, 버튼 발광이 돌아옵니다. 히어로 아래 챕터의 kwan 간격 정리는 그대로 둡니다. 근거: brand 10장 사이트 규칙(사진은 둥근 카드 안).
+- 검증: tsc 통과. localhost 1440px 히어로 화면이 8784ca1과 같음.
+- 커밋: 96696a5
 
 <a id="2026-10-22-footer-partner-marquee"></a>
 
