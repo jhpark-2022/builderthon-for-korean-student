@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { Analytics } from "@vercel/analytics/react";
+// DECIDED 2026-10-22 (사용자, Vercel 스크린숏 "No route data found"): /react는 경로 패턴을 보내지 않아 Routes 탭이 비었습니다. Next.js용 진입점으로.
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { LocaleProvider } from "@/lib/LocaleContext";
