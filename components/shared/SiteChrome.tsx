@@ -132,7 +132,8 @@ export function SiteFooter({ page, onMotionToggle }: { page: SitePage; onMotionT
       {/* DECIDED 2026-10-21 (사용자, 스크린숏: "빼줘"): 크로싱 서울 홈에는 이 줄을 두지 않습니다. 바로 위 12월 "함께하는 곳"과 겹칩니다.
           DECIDED 2026-10-22 (사용자, 스크린숏: "지금까지 나루와 함께한 기업들 로고 다 이런 식으로"): 8월 로고 한 줄을
           8월 페이지의 카드 띠 모양으로 바꾸고 12월과 제로백 네트워크까지 담았습니다(PartnerMarquee). 띠는 화면 폭 전체입니다. */}
-      {page !== "crossing" && (
+      {/* DECIDED 2026-10-22 (사용자, 스크린숏: "8월달에는 이거 빼줘"): 8월 페이지에도 띠를 두지 않습니다. /naru에만 섭니다. */}
+      {page === "naru" && (
         <div className="-mx-6 flex flex-col items-center gap-5 sm:-mx-10">
           <p className={`${META} text-white/70`}>{t(dict.siteFooter.partners)}</p>
           <PartnerMarquee paused={paused} />
