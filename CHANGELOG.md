@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-22 iPhone에서 로고 띠가 비던 것](#2026-10-22-marquee-ios)
 - [2026-10-22 모바일 점검 반영](#2026-10-22-mobile-fixes)
 - [2026-10-22 Analytics 바탕 개선 넷](#2026-10-22-analytics-improve)
 - [2026-10-22 폰 일정 카드 넘김 애니메이션](#2026-10-22-swipe-motion)
@@ -321,6 +322,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-22-marquee-ios"></a>
+
+## 2026-10-22 iPhone에서 로고 띠가 비던 것
+- 범위: components/shared/PartnerMarquee.tsx
+- 한 것: 사용자 스크린숏(실제 iPhone 카카오톡 안, /naru 푸터 "나루와 함께한 곳" 카드 대부분이 빈 칸). loading="lazy"를 iOS Safari가 흐르는 띠의 화면 밖 로고에 대해 끝내 풀지 않았습니다. 띠가 화면 800px 안으로 들어오면 그때 로고 전부를 바로 받습니다(페이지 맨 위에서는 받지 않음). 근거: brand 10장 사이트 규칙.
+- 검증: WebKit(iPhone 14)로 /naru 끝까지 내려가 로고 받기: 프로덕션 10/46, 고친 뒤 46/46. tsc 통과.
+- 커밋: 562c1fb
 
 <a id="2026-10-22-mobile-fixes"></a>
 
