@@ -606,13 +606,33 @@ export default function NaruHome() {
   // DECIDED 2026-10-19 (사용자: "timeline 클릭해야만 움직이는 게 아니고, 스와이핑이 가능했으면"): 폰의 Day 카드를 옆으로 밀면 앞뒤 날로 갑니다.
   // 가로 이동이 48px 이상이고 세로보다 1.5배 클 때만 넘깁니다(세로 스크롤은 그대로). 끝(Day 0, Day 4)에서는 멈춥니다. 닫혀 있으면 아무 일도 없습니다.
   const swipeStart = useRef<{ x: number; y: number } | null>(null);
+  // DECIDED 2026-10-22 (사용자: "스와이프할 때 넘어가는 애니메이션이 더 있으면"): 카드가 손가락을 따라 끌려오고(dragX), 놓으면 다음 날 카드가
+  // 밀어 낸 쪽에서 미끄러져 들어옵니다(slideDir). 끝(Day 0, Day 4)에서는 1/4만 끌리고 제자리로 돌아옵니다. 모션 줄이기에서는 끌림도 미끄러짐도 없습니다.
+  const [dragX, setDragX] = useState(0);
+  const [slideDir, setSlideDir] = useState<1 | -1 | 0>(0);
+  const prevOpen = useRef<number | null>(openDay);
+  useEffect(() => {
+    const from = prevOpen.current;
+    prevOpen.current = openDay;
+    if (from !== null && openDay !== null && from !== openDay) setSlideDir(openDay > from ? 1 : -1);
+  }, [openDay]);
   const onSwipeStart = (e: React.TouchEvent) => {
     const t0 = e.touches[0];
     swipeStart.current = e.touches.length === 1 ? { x: t0.clientX, y: t0.clientY } : null;
   };
+  const onSwipeMove = (e: React.TouchEvent) => {
+    const s0 = swipeStart.current;
+    if (!s0 || openDay === null || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const t1 = e.touches[0];
+    const dx = t1.clientX - s0.x;
+    if (Math.abs(dx) < Math.abs(t1.clientY - s0.y)) { setDragX(0); return; }
+    const atEdge = (dx > 0 && openDay === 0) || (dx < 0 && openDay === naru.december.stages.length - 1);
+    setDragX(atEdge ? dx * 0.25 : dx);
+  };
   const onSwipeEnd = (e: React.TouchEvent) => {
     const s0 = swipeStart.current;
     swipeStart.current = null;
+    setDragX(0);
     if (!s0 || openDay === null) return;
     const t1 = e.changedTouches[0];
     const dx = t1.clientX - s0.x;
@@ -1052,12 +1072,21 @@ export default function NaruHome() {
             // 패널 다섯은 늘 마운트돼 있고 열린 것만 hidden이 풀립니다(aria-controls가 가리키는 id가 항상 있습니다).
             // sm부터는 감싼 div가 통째로 display: none입니다. 그 폭에서는 아래 일정 카드가 같은 내용을 그립니다.
             below={
-              <div className="sm:hidden" onTouchStart={onSwipeStart} onTouchEnd={onSwipeEnd} onTouchCancel={() => { swipeStart.current = null; }}>
+              <div className="overflow-x-clip sm:hidden" onTouchStart={onSwipeStart} onTouchMove={onSwipeMove} onTouchEnd={onSwipeEnd} onTouchCancel={() => { swipeStart.current = null; setDragX(0); }}>
+                <div
+                  style={{ transform: dragX ? `translateX(${dragX}px)` : undefined, transition: dragX ? "none" : "transform 260ms cubic-bezier(0.22,1,0.36,1)" }}
+                >
                 {naru.december.stages.map((stage, i) => (
-                  <div key={stage.name.en} id={routePanelId(i)} hidden={openDay !== i} className="mt-3">
+                  <div
+                    key={`${stage.name.en}-${openDay === i ? slideDir : "x"}`}
+                    id={routePanelId(i)}
+                    hidden={openDay !== i}
+                    className={`mt-3 ${openDay === i && slideDir === 1 ? "motion-safe:animate-[routeSlideFromRight_360ms_cubic-bezier(0.22,1,0.36,1)_both]" : ""} ${openDay === i && slideDir === -1 ? "motion-safe:animate-[routeSlideFromLeft_360ms_cubic-bezier(0.22,1,0.36,1)_both]" : ""}`}
+                  >
                     {stageCard(stage, i, true)}
                   </div>
                 ))}
+                </div>
               </div>
             }
           />

@@ -138,7 +138,16 @@ export default function RouteMap({
         {dotLeft && (
           <span
             aria-hidden
-            className="pointer-events-none absolute z-10 h-[9px] w-[9px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-naru-orange shadow-[0_0_0_3px_rgba(7,11,31,0.9),0_0_12px_rgba(238,138,79,0.8)] transition-[left] duration-200 ease-out motion-reduce:transition-none"
+            // DECIDED 2026-10-22 (사용자: "스와이프할 때 여기 원이 넘어가는 효과"): 0.5초에 걸쳐 다음 정거장으로 건너가고, 닿으면 고리 하나가 퍼집니다.
+            className="pointer-events-none absolute z-10 h-[11px] w-[11px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-naru-orange shadow-[0_0_0_3px_rgba(7,11,31,0.9)] transition-[left] duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] motion-reduce:transition-none"
+            style={{ left: dotLeft, top: railTop }}
+          />
+        )}
+        {dotLeft && (
+          <span
+            key={`arrive-${current}`}
+            aria-hidden
+            className="pointer-events-none absolute z-10 h-[11px] w-[11px] rounded-full border border-naru-orange opacity-0 motion-safe:animate-[routeArrive_700ms_ease-out_480ms_1_both]"
             style={{ left: dotLeft, top: railTop }}
           />
         )}

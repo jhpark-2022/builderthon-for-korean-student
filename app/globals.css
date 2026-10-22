@@ -562,3 +562,11 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
 .naru-home-v2 #december { --home-reading-ground: rgba(7, 11, 31, 0.68); }
 /* 2026-10-22: 히어로(#top)는 kwan 전으로 되돌려 발광을 남깁니다. */
 .naru-home-v2 #register .bg-gradient-to-r { box-shadow: none; }
+
+/* DECIDED 2026-10-22 (사용자): 폰 일정 카드를 넘길 때 미끄러짐(NaruHome), 노선도 원이 닿을 때 퍼지는 고리(RouteMap). */
+@keyframes routeSlideFromRight { from { opacity: 0; transform: translateX(48px); } to { opacity: 1; transform: none; } }
+@keyframes routeSlideFromLeft { from { opacity: 0; transform: translateX(-48px); } to { opacity: 1; transform: none; } }
+@keyframes routeArrive {
+  0% { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(3.2); }
+}
