@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-22 프로그램 리드를 더 보이게](#2026-10-22-december-visual)
 - [2026-10-22 8월 페이지에도 10/19 피드백](#2026-10-22-aug-hwang)
 - [2026-10-22 홈 히어로는 kwan 전으로](#2026-10-22-hero-revert)
 - [2026-10-22 푸터에 나루와 함께한 곳 띠](#2026-10-22-footer-partner-marquee)
@@ -310,6 +311,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-22-december-visual"></a>
+
+## 2026-10-22 프로그램 리드를 더 보이게
+- 범위: components/home/NaruHome.tsx(#december 아래 두 열), data/naru.ts(december.approach[2])
+- 한 것: 사용자 요청(스크린숏: "좀 더 visually engaging, 구성은 유지", "bottom of both parts가 같아야 함", "왜 못했나 이러면 출제의 원인이 무능인 것처럼 보임"). 숫자 줄(5일, 무순위)을 TITLE로. 네 단계 칸마다 진행 막대(1/4에서 끝까지, 끝점만 주황). 오른쪽 목록은 라벨 열(accent)과 설명 열. lg에서 두 열의 마지막 선을 같은 높이에. 03은 "어디서 멈췄나 / 먼저 해 본 시도가 어느 지점에서 멈췄나"(회사가 아니라 시도를 묻습니다). 근거: brand 5장(숫자 하나가 문장을 대신, 깎아내리지 않는다), 10장(주황은 점으로만).
+- 검증: tsc 통과. localhost 1440 두 열 아래 끝 3675px로 같음.
+- 커밋: 00fe876
 
 <a id="2026-10-22-aug-hwang"></a>
 
