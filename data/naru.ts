@@ -327,7 +327,9 @@ export const naruNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel
   { id: "schedule", label: { ko: "일정", en: "Schedule" } },
   { id: "mentoring", label: { ko: "멘토링", en: "Mentoring" } },
   { id: "register", label: { ko: "등록", en: "Register" } },
-  { id: "gains", label: { ko: "남는 것", en: "Gains" }, ariaLabel: { ko: "오면 무엇이 남는가", en: "What you leave with" } },
+  // DECIDED 2026-10-22 (UX 점검, 사용자: "모든 것을 반영"): 영문 "Gains"는 "What you leave with"의 라벨로 어색했습니다. ariaLabel은 뺐습니다.
+  // 보이는 글자("남는 것")와 읽히는 이름("오면 무엇이 남는가")이 달라 Lighthouse label-content-name-mismatch에 걸렸습니다.
+  { id: "gains", label: { ko: "남는 것", en: "Takeaways" } },
 ];
 
 // DECIDED 2026-10-10 (구조 브리프 3.2): /naru의 목차 넷. id는 그 페이지의 섹션 id와 같아야 합니다
@@ -870,7 +872,8 @@ export const naru = {
   // 자리에서 공개한다는 한 줄이 "왜 제목뿐인가"의 답입니다. 한글이 정본이고 영문은
   // 초안입니다. TODO: confirm 영문 다섯 줄.
   gains: {
-    eyebrow: { ko: "참가 혜택", en: "What you get" },
+    // DECIDED 2026-10-22 (UX 점검, brand 5장 목소리): "참가 혜택"은 혜택 전단처럼 읽혔습니다. 메뉴의 라벨과 같은 말로.
+    eyebrow: { ko: "남는 것", en: "Takeaways" },
     heading: { ko: "오면 무엇이 남는가", en: "What you leave with" },
     // DECIDED 2026-10-11 (사용자: 8월 페이지의 display 방식을 차용): 다섯 카드 위에 서는 "남기는 단 하나" 판.
     // 문장은 화면에 이미 있는 말로만 지었습니다: 실명 기업의 이슈(items[0]), 문제를 직접 찾는다(Day 1), 그 기업 앞에서(items[2]).
@@ -940,7 +943,9 @@ export const naru = {
         // 무엇을 주는지(형태, 금액)는 여전히 정해지지 않아 "지원"이라고만 씁니다. 전사록에 나온 후보(나눠 주는 상금, 크레딧, 식사)는 모두 미확정입니다.
         // DECIDED 2026-10-19 (사용자: "미션 지원이라고 하지 말고, 좀 다른 way to phrase it", 전사록의 표현 넷 중 선택):
         // 기획자가 회의에서 이 장치를 설명한 말("1위 몫을 쪼개서 나눈다", "과정에 뿌린다")에서 왔습니다. 그 전: "미션 지원".
-        title: { ko: "과정에 거는 몫", en: "A share staked on the process" },
+        // DECIDED 2026-10-22 (UX 점검, 사용자: "모든 것을 반영"): "과정에 거는 몫"은 무엇을 받는지 읽히지 않았습니다. 정본 7장의 말("해낸 팀은
+        // 모두 그날 지원을 받는다")에서 "지원"을 제목으로 올립니다. 형태와 금액은 여전히 쓰지 않습니다.
+        title: { ko: "과정에 주는 지원", en: "Support for the process" },
         // DECIDED 2026-10-19 (사용자, 스크린숏: "너무 평면적"): 카드 아래 Day 0~4 작은 노선에서 불이 켜지는 날. 미션은 Day 2와 Day 3에만(brand 7장).
         days: [2, 3],
         // DECIDED 2026-10-20 (사용자, 스크린숏: "여기 이어줘"): Day 2와 Day 3 막대를 하나로 잇습니다. 2026-10-19의 날마다 끊은 막대(split)를 되돌립니다.
@@ -948,8 +953,9 @@ export const naru = {
           // DECIDED 2026-10-10 (중복 브리프 C3): "해낸 팀 모두"는 노선도 범례와 december.facts가 말합니다. 이 칸에서는 되풀이하지 않습니다.
           // 2026-10-19 (사용자: "1일차랑 4일차에는 미션을 빼자"): "Day 2부터"는 Day 4까지로 읽혀 Day 2와 Day 3으로.
           // DECIDED 2026-10-19 (같은 요청): "A가 아니라 B"는 이 문단에 하나뿐입니다(brand 5장).
-          ko: "Day 2와 Day 3에 해낸 미션마다 나눠 줍니다.",
-          en: "Shared out for every mission completed on Day 2 and Day 3.",
+          // 2026-10-22 (UX 점검): "해낸 팀 모두"를 다시 넣습니다. 제목이 "지원"이 되면서 누가 받는지가 이 칸의 질문이 됐습니다.
+          ko: "Day 2와 Day 3에 미션을 해낸 팀은 모두 그날 지원을 받습니다.",
+          en: "Every team that completes the mission on Day 2 and Day 3 gets that day's support.",
         },
       },
       {
@@ -962,8 +968,10 @@ export const naru = {
           // 첫날부터 사흘째까지이고 Day 4에는 없다는 것이었습니다. 2026-10-13 (멘토링 브리프 3): 멘토링은 Day 2와 Day 3입니다.
           // 2026-10-19 (시각 감사 3): "막힐 때마다 다시 갑니다"가 하루 두 칸, 2시간 간격 규칙(2026-10-17)과 어긋났습니다.
           // DECIDED 2026-10-20 (hwang 브리프 1.2): 두 조각을 한 문장으로.
-          ko: "Day 2와 Day 3에 하루 두 번까지 찾아갈 수 있습니다.",
-          en: "You can go to them up to twice a day on Day 2 and Day 3.",
+          // DECIDED 2026-10-22 (UX 점검): 멘토링 규칙이 세 자리(이 칸, 미션 띠, /crossing/team)에서 조금씩 달랐습니다. 코드가 강제하는 규칙
+          // (app/api/crossing/mentoring/route.ts: 하루 두 칸, 2시간 간격)을 한 문장으로 쓰고 세 자리가 같은 말을 합니다.
+          ko: "Day 2와 Day 3에 하루 두 번까지 찾아갑니다. 한 번 가면 2시간 뒤에 다시 갈 수 있습니다.",
+          en: "On Day 2 and Day 3, up to twice a day. After one visit, the next can be two hours later.",
         },
         evidence: { ko: "8월 11명", en: "August: eleven of them" },
       },
@@ -1884,10 +1892,9 @@ export const naru = {
         k: { ko: "팀 구성", en: "Teams" },
         v: { ko: "모든 팀에 싱가포르에서 공부하는 학생 몇 명과, 서로 다른 학교의 학생이 한 명씩 섞입니다. 나라나 학교끼리 겨루는 대항전이 아닙니다.", en: "Every team mixes a few students studying in Singapore with one student each from different schools. It is not a contest between countries or schools." },
       },
-      {
-        k: { ko: "세션", en: "Sessions" },
-        v: { ko: "닷새 가운데 어느 3시간을 떼어 와도 그것만 따로 열 수 있게 짭니다.", en: "Any three hours of the five days could run on their own." },
-      },
+      // DECIDED 2026-10-22 (UX 점검, brand 2장 판단 질문 둘): "세션"(어느 3시간을 떼어 와도 따로 열 수 있게)과 "왜 날마다"(한 팀에게
+      // 몰아 주는 것보다 나누는 쪽) 두 줄을 뺐습니다. 파트너에게 하는 설계 설명이라 참가자의 어느 코어도 돕지 않았습니다.
+      // 문장은 git 이력에 있고, 세션 설계는 제안서가, 나누는 이유는 혜택 02가 말합니다.
       {
         k: { ko: "공간", en: "Space" },
         // DECIDED 2026-10-12 (등록 브리프 1.5, 리뷰 S11): 시각은 registerFacts.hoursLine이 채워지면 그 값으로, 그 전에는
@@ -1906,12 +1913,6 @@ export const naru = {
         // DECIDED 2026-10-13 (사용자, 멘토링 브리프 2): 미션은 Day 2부터이고 조건은 참여입니다. 그 전에는 Day 2부터라는 말이 없었습니다.
         // 2026-10-19 (사용자): 미션은 Day 2와 Day 3에만. 그 전 "Day 2부터 날마다 하나씩".
         v: { ko: "Day 2와 Day 3에 하나씩 있고, 무엇을 냈는지보다 함께 있었는지를 봅니다. 해낸 팀은 모두 그날 지원을 받고, 그 미션은 팀의 기록으로 남습니다.", en: "There is one on Day 2 and one on Day 3, and what counts is whether you were there together more than what you handed in. Every team that completes one gets support that day, and the mission stays on the team's record." },
-      },
-      {
-        // DECIDED 2026-10-11 (브랜드 브리프 B1, docs/brand.md의 금지어): 참가자가 읽는 자리에 "가설", "검증"을 쓰지 않습니다.
-        // 그 전: k "가설", v "결과만 존재하면 안 됩니다. ... 12월은 그 가설의 검증입니다."
-        k: { ko: "왜 날마다", en: "Why every day" },
-        v: { ko: "한 팀에게 몰아 주는 것보다 과정마다 모두에게 나누는 쪽이 더 좋은 결과물을 낸다고 봅니다.", en: "We think sharing support with everyone along the way produces better work than handing it all to one team." },
       },
     ] as { k: Phrase; v: Phrase }[],
 
@@ -2036,7 +2037,8 @@ export const naru = {
     routeHint: { ko: "날짜를 누르면 그날의 일정이 열립니다", en: "Tap a day to open its schedule" },
     // 2026-10-10 (마일스톤 브리프 2.1): 노선도의 주황 점 줄이 무엇인지 말하는 범례 한 칸.
     // 2026-10-19: 혜택 04의 이름("과정에 거는 몫")에 맞췄습니다. 그 전: "미션 지원, 해낸 팀 모두".
-    routeLegendMilestone: { ko: "과정에 거는 몫, 미션을 해낸 팀 모두", en: "A share staked on the process, for every team that completes the mission" },
+    // 2026-10-22 (UX 점검): 혜택 02의 새 이름("과정에 주는 지원")에 맞췄습니다.
+    routeLegendMilestone: { ko: "과정에 주는 지원, 미션을 해낸 팀 모두", en: "Support for the process, for every team that completes the mission" },
     // 2026-10-11: 날짜 카드와 폰 패널의 띠에 서는 라벨. "마일스톤"에서 "미션"으로.
     milestoneLabel: { ko: "미션", en: "Mission" },
     // DECIDED 2026-10-17 (사용자): 미션 띠를 펼치면 서는 두 목록의 라벨.
@@ -2327,7 +2329,8 @@ export const naru = {
         // 아니라 데이터 공개입니다(stages 첫 칸). 숫자 5일은 12/17~12/21입니다(2026-10-05에 12/10~12/14에서 옮겼습니다).
         // DECIDED 2026-10-07 (이슈 브리프 D3): Day 0에 여는 것은 "이슈 공개"로 적습니다.
         // DECIDED 2026-10-20 (사용자: 영문 전체 감사 후 고침): 두 줄로 꺾여 줄임. 그 전 "Four working days, issues open before".
-        label: { ko: "실질 4일 + 사전 이슈 공개", en: "4 days, issues early" },
+        // 2026-10-22 (UX 점검): "4 days, issues early"는 뜻이 잡히지 않았습니다. 한국어와 같은 두 조각으로.
+        label: { ko: "실질 4일 + 사전 이슈 공개", en: "4 days on site, issues released early" },
       },
       {
         value: { ko: "3곳", en: "3" },
@@ -2615,7 +2618,8 @@ export const naru = {
         chips: [{ ko: "시상과 클로징", en: "Awards and closing" }],
         // DECIDED 2026-10-19 (사용자: "인기 투표 버튼이 4일차에 있으면 좋겠어, 지금은 disable"): 트랙별 인기투표(/crossing/vote)로 가는 버튼.
         // 팀 이름은 Supabase crossing_teams.name 그대로입니다. 열기 전(VOTE_BUTTON_OPEN false)에는 잠긴 버튼입니다.
-        voteCta: { label: { ko: "트랙별 인기투표", en: "Vote by track" }, href: "/crossing/vote" },
+        // 2026-10-22 (UX 점검): 잠긴 버튼 아래 언제 열리는지 한 줄.
+        voteCta: { label: { ko: "트랙별 인기투표", en: "Vote by track" }, href: "/crossing/vote", lockedNote: { ko: "성과 공유회 날 현장에서 엽니다.", en: "Opens on site on the day of the showcase." } },
         // DECIDED 2026-10-13 (사용자: "2,3,4일 모두 이후 공개"): Day 4도 내용을 쓰지 않습니다. 그 전: "성과 공유회 완주"와 그 설명.
         // DECIDED 2026-10-17 (사용자, 스크린숏 표): Day 4의 미션 인정 조건. 팀원 과반이 현장에 오고 성과 공유회에서 발표하면 됩니다.
         // 다 풀지 못해도 됩니다(brand 7장). 운영진이 클로징 때 확인합니다.
@@ -2644,7 +2648,7 @@ export const naru = {
       /** 그 날 카드 바닥의 버튼(2026-10-17, Day 2와 Day 3의 멘토 시간표). */
       timetableCta?: { label: Phrase; href: string };
       /** Day 4 카드 바닥의 인기투표 버튼(2026-10-19). 열기 전에는 잠겨 있습니다(lib/crossingVote.ts VOTE_BUTTON_OPEN). */
-      voteCta?: { label: Phrase; href: string };
+      voteCta?: { label: Phrase; href: string; lockedNote?: Phrase };
       submit?: Phrase;
       /** 그날의 마일스톤(2026-10-10). 넘은 팀 모두가 지원을 받습니다. Day 0에는 없습니다. */
       milestone?: Phrase;
@@ -2689,6 +2693,9 @@ export const naru = {
       ko: "스크리닝 없이, 오는 사람이 참가자입니다.",
       en: "There is no screening: if you come, you are in.",
     },
+    // DECIDED 2026-10-22 (UX 점검, 사용자: "모든 것을 반영"): 메뉴 "등록"으로 들어온 사람은 언제 여는지를 보지 못했습니다(히어로 캡션에만).
+    // 2026-10-13의 "있는 말 반복이니까"는 세 줄 전부를 뺀 결정이고, 여기 서는 것은 그 가운데 언제 여는지 한 문장뿐입니다. 홈에서 두 번째이자 마지막입니다(brand 5장).
+    opensLine: { ko: "등록은 11월에 엽니다.", en: "Registration opens in November." },
     // DECIDED 2026-10-12 (등록 브리프 1.3, 리뷰 S8): 버튼이 아니라 텍스트 링크이고, 누가 누르는 문인지 라벨이 먼저 말합니다.
     // 그 전: "출제사 및 후원 문의". mailto(naruLinks.sponsor)와 그 제목은 그대로입니다.
     ctaMail: { ko: "기업 출제, 후원 문의", en: "For companies: issues and sponsorship" },
@@ -3111,7 +3118,8 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
       label: { ko: "장소", en: "Venues" },
       logos: [
         { name: "GSC Global Startup Center", src: "/partners/logos/white/trimmed/gsc.png", w: 900, h: 259, url: "https://www.kised.or.kr/menu.es?mid=a10214050000" },
-        { name: "아산나눔재단", src: "/partners/logos/white/trimmed/asan-nanum.png", w: 772, h: 154, url: "https://www.asan-nanum.org/" },
+        // 2026-10-22 (UX 점검): 영문 화면의 링크 이름과 alt에 한글만 남아 있었습니다. 로고는 한글이라 두 표기를 같이 둡니다.
+        { name: "아산나눔재단 Asan Nanum Foundation", src: "/partners/logos/white/trimmed/asan-nanum.png", w: 772, h: 154, url: "https://www.asan-nanum.org/" },
         { name: "MARU180", src: "/partners/logos/white/trimmed/maru180.png", w: 385, h: 91, url: "https://maru.org/" },
       ],
     },
@@ -3125,7 +3133,7 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
         { name: "Bloom", src: "/partners/logos/color/bloom.png", w: 900, h: 217, url: "https://bloomworld.ai/" },
         // DECIDED 2026-10-21 (사용자: "노란색 살려줘"): 이 로고만 흰색 단색이 아니라 원래 색입니다. 바깥 흰 바탕만 투명하게 지웠습니다
         // (public/partners/logos/color/, 모서리에서 flood fill). 노란 면이라 어두운 바탕 위에서도 밝은 판 없이 보입니다.
-        { name: "크라이치즈버거", src: "/partners/logos/color/crycheeseburger.png", w: 459, h: 378, square: true, url: "https://www.crycheeseburger.com/" },
+        { name: "크라이치즈버거 Cry Cheese Burger", src: "/partners/logos/color/crycheeseburger.png", w: 459, h: 378, square: true, url: "https://www.crycheeseburger.com/" },
       ],
     },
   ],

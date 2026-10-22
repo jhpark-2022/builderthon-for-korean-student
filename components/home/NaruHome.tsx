@@ -807,9 +807,13 @@ export default function NaruHome() {
               {t(stage.voteCta.label)}<span aria-hidden className={ARROW_CLASS}>→</span>
             </Link>
           ) : (
-            <span role="link" aria-disabled="true" className={LOCKED_CLASS}>{LOCK_ICON}
-              {t(stage.voteCta.label)}
-            </span>
+            <>
+              <span role="link" aria-disabled="true" className={LOCKED_CLASS}>{LOCK_ICON}
+                {t(stage.voteCta.label)}
+              </span>
+              {/* 2026-10-22 (UX 점검): 잠긴 버튼이 언제 열리는지 한 줄. */}
+              {stage.voteCta.lockedNote && <p className={`mt-[8px] ${META} text-white/70`}>{t(stage.voteCta.lockedNote)}</p>}
+            </>
           )}
         </div>
       )}
@@ -1213,6 +1217,10 @@ export default function NaruHome() {
         <p id="december-register-note" className={`break-keep text-center ${BODY} text-white/70`}>
           {t(regState === "closed" ? registerCopy.closed : naru.december.ctaNote)}
         </p>
+        {/* DECIDED 2026-10-22 (UX 점검): 메뉴 "등록"으로 들어온 사람에게 언제 여는지 한 문장. 열리면 사라집니다. */}
+        {regState === "not_open" && (
+          <p className={`mt-[8px] break-keep text-center ${META} text-white/70`}>{t(naru.december.opensLine)}</p>
+        )}
         <div className="mt-[24px] flex flex-col items-center gap-[13.5px] max-sm:[&>*]:w-full sm:mt-[32px] sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-[18px]">
           {regState === "open" ? (
             <button type="button" onClick={() => { track("naru_cta", { src: "december", to: "register" }); reg?.openRegister(); }} className={`group ${buttonClass("primary", "naru")}`}>

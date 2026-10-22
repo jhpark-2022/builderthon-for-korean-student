@@ -26,8 +26,10 @@ import { useLocale } from "@/lib/LocaleContext";
 const COPY = {
   // DECIDED 2026-10-20 (사용자: humanizer와 10/19 피드백을 모든 곳에): 명사 조각으로 시작하던 첫 문장을 합쳤습니다. 뜻은 같습니다.
   note: {
-    ko: "2026년 8월 싱가포르에서 열린 제로백 빌더톤의 기록입니다. 나루는 이 이벤트에서 시작됐고, 이름은 그 뒤에 정해졌습니다.",
-    en: "This is the record of the Zero100 AI Builderthon, held in Singapore in August 2026. NARU grew out of this event, and the name came after it.",
+    // 2026-10-22 (UX 점검): 이 페이지는 8월의 말(검증, 개발 경험 없어도 OK 등)을 그대로 쓴다는 것을 맨 위에서 한 번 말합니다. 홈을 읽고 넘어온 사람이
+    // 다른 목소리를 만나는 이유입니다. 본문의 "모집 당시 안내한 내용을 그대로" 줄들은 그대로입니다.
+    ko: "2026년 8월 싱가포르에서 열린 제로백 빌더톤의 기록입니다. 나루는 이 이벤트에서 시작됐고, 이름은 그 뒤에 정해졌습니다. 글은 그때의 말 그대로 둡니다.",
+    en: "This is the record of the Zero100 AI Builderthon, held in Singapore in August 2026. NARU grew out of this event, and the name came after it. The text is kept as it was written then.",
   },
   // DECIDED 2026-10-13 (등록 브리프 2.1, 리뷰 N2 N3): 이 줄의 버튼 둘("← 나루", "12월 크로싱 서울 보기 →")을 뺐습니다.
   // 바로 위 헤더의 페이지 칩 셋(크로싱 서울, 나루, 8월 기록)이 같은 두 길을 화살표 없이 엽니다. 문장은 그대로입니다.

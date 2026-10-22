@@ -375,8 +375,10 @@ export const dict = {
   about: {
     tag: { ko: "취지", en: "Why this exists" },
     heading: {
-      ko: "우리가 있었으면 했던 다리를 직접 만듭니다.",
-      en: "Building the bridge we wished existed.",
+      // DECIDED 2026-10-22 (UX 점검, brand 6장 은유 규칙, 9장 "전부"): 사이트에서 다리 은유는 쓰지 않습니다. 매니페스토 III장에만.
+      // 그 전: "우리가 있었으면 했던 다리를 직접 만듭니다." / "Building the bridge we wished existed."
+      ko: "우리가 있었으면 했던 자리를 직접 만듭니다.",
+      en: "Building the place we wished existed.",
     },
     intro: {
       ko: "싱가포르의 한인 학생은 1,000명을 넘어섰지만, 학교를 가로질러 이들을 잇는 학생 단체는 사실상 없었습니다. 누군가 조금 더 일찍 열어줬으면 했던 그 문을, 이 빌더톤으로 직접 만들었습니다.",

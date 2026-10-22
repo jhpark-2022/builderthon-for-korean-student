@@ -14,7 +14,6 @@ import { useRegisterOptional } from "@/lib/RegisterContext";
 import { useScrollDirection } from "@/lib/useScrollDirection";
 import { isScrollLocked } from "@/lib/useBodyScrollLock";
 import LocaleToggle from "@/components/LocaleToggle";
-import MotionToggle from "@/components/ui/MotionToggle";
 import ChatGlyph from "@/components/ChatGlyph";
 import type { SitePage } from "@/components/shared/PageChips";
 import { SiteMenuBar, SiteMenuButton, SiteMenuSheet, useSiteMenu } from "@/components/shared/SiteChrome";
@@ -732,11 +731,8 @@ export default function JourneyNav({
               버튼이 화면 밖으로 나갔습니다(실측: 스크롤 뒤 top −51px). 폰·태블릿용은 헤더
               **바깥**의 고정 자리에 있었습니다. 2026-10-11 (리뷰 A4): 그 고정 버튼은 뺐고, xl 아래에서는
               푸터의 버튼 하나입니다. */}
-          {naru && (
-            <div className="hidden xl:flex">
-              <MotionToggle compact />
-            </div>
-          )}
+          {/* DECIDED 2026-10-22 (UX 점검, 사용자: "모든 것을 반영"): 헤더의 아이콘만 있는 배경 토글(▶)을 뺐습니다. 라벨이 없어 무엇인지 읽히지
+              않았고, 푸터에 글자 버튼이 있습니다. 2026-09-18(감사 반영 브리프 2.4)의 "헤더에도"는 이 결정이 대신합니다. */}
           {/* 2026-10-13 (등록 브리프 2.1): 여기 있던 8월 페이지의 "12월 이벤트 →" 알약은 페이지 칩 셋이 대신합니다.
               "항상 보였으면"(2026-09-20)은 그대로 지켜집니다. 칩 셋이 xl부터는 로고 옆에, 그 아래에서는 레일 맨 앞에 늘 있습니다. */}
           {/* Language last - it's a setting, not an action, so it sits after
@@ -793,7 +789,8 @@ export default function JourneyNav({
           ref={railRef}
           // calc 안의 밑줄 두 개(100%_-_16px)가 필요합니다. Tailwind는 임의값의 밑줄을 공백으로 바꾸는데,
           // CSS의 calc는 빼기 부호 양옆에 공백이 없으면 무효입니다(실측 2026-09-20).
-          className="flex items-center gap-2 overflow-x-auto pb-1 pl-3 pr-5 [mask-image:linear-gradient(to_right,transparent,#000_12px,#000_calc(100%_-_16px),transparent)] [scrollbar-width:none] sm:pr-10 xl:pl-5 [&::-webkit-scrollbar]:hidden"
+          // 2026-10-22 (UX 점검): 오른쪽 페이드를 16px에서 40px으로. 390px 영문에서 "Register"가 잘린 채 끝나 더 있다는 것이 보이지 않았습니다.
+          className="flex items-center gap-2 overflow-x-auto pb-1 pl-3 pr-5 [mask-image:linear-gradient(to_right,transparent,#000_12px,#000_calc(100%_-_40px),transparent)] [scrollbar-width:none] sm:pr-10 xl:pl-5 [&::-webkit-scrollbar]:hidden"
         >
           {anchors.map((a) => {
             const here = a.id === activeSection;
