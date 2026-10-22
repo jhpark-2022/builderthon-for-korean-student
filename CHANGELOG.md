@@ -324,10 +324,11 @@
 <a id="2026-10-22-analytics-improve"></a>
 
 ## 2026-10-22 Analytics 바탕 개선 넷
-- 범위: lib/openChatHref.ts(새), app/go/openchat/[src](새), 오픈채팅 링크 9곳(OpenChatLink, SiteChrome, MobileChatBar, JourneyNav, Journey, RegisterModal), NaruHome(Day 1 칩 줄, 폰 카드 inert), app/2026-08/page.tsx, public/hero/metal-human-poster.webp
-- 한 것: 사용자 요청("1, 3, 4, 6 적용"). 1) Hobby 요금제는 track()을 저장하지 않아, 오픈채팅 버튼이 /go/openchat/<src>를 거쳐 0.35초 뒤 카카오로 갑니다. 그 페이지 방문 수가 버튼별 클릭 수입니다(noindex). 3) 카카오톡(390×664)과 인스타그램 앱 안 브라우저를 흉내 내 세 페이지 확인: 첫 화면 CTA 보임, 가로 넘침 없음. 4) 10/18 결정문의 "Day 1 카드의 matchCta"가 그려지지 않아 /match 입구가 없었습니다. Day 1 칩 줄에 글자 링크로. 히어로 버튼 둘은 그대로. 6) /2026-08 LCP 요소인 영상 포스터를 JPG 111KB → WebP 66KB로, 페이지가 미리 받습니다. 덤: 폰 카드의 inert를 글자 값으로(React 경고). 근거: 판단 질문 1(입구의 문턱), brand 10장 사이트 규칙.
-- 검증: tsc, next build 통과. localhost /go/openchat/test-src에서 pageview 기록 뒤 이동. 홈 오픈채팅 링크 4개 모두 /go/openchat/*.
-- 커밋: 5a454d7
+- 범위: lib/openChatCount.ts(새), app/go/openchat/[src](새, 정적 16), 오픈채팅 링크 11곳의 onClick, next.config.mjs(CSP frame-src 'self'), NaruHome(Day 1 /match 링크, 폰 시간표 버튼, inert), data/naru.ts(주석), app/2026-08/page.tsx, public/hero/metal-human-poster.webp
+- 한 것: 사용자 요청("1, 3, 4, 6 적용", 이어서 서브에이전트 넷으로 검토 뒤 "추천안대로, 사용자에게 어색함이 없도록 확실하게"). 1) Hobby는 track()을 저장하지 않습니다. 처음 만든 "중간 페이지 0.35초 뒤 이동"은 iOS에서 카카오톡 앱이 바로 안 열릴 수 있어 되돌렸습니다. 링크는 카카오 주소로 바로 가고, 누르는 순간 원래 페이지에 화면 밖 1px iframe으로 /go/openchat/<src>를 불러 그 방문을 클릭으로 셉니다(8초 뒤 제거, 허용 목록 밖은 404, noindex). 3) 카카오톡, 인스타 앱 크기로 세 페이지 확인. 4) Day 1 칩 줄에 /match 글자 링크(10/11, 10/18 주석 갱신). 6) /2026-08 LCP 포스터 JPG 111KB → WebP 66KB, 미리 받기. 폰 일정 상자 아래 시간표 버튼은 Day 2, 3을 볼 때만(사용자, 정본 7장). 근거: 판단 질문 1, brand 7장, 10장.
+- 검증: 실제 클릭에서 새 탭이 open.kakao.com으로 바로, 원래 탭의 스크롤, 높이, 포커스 그대로, iframe [view] /go/openchat/naru-hero 기록, 8초 뒤 제거. 네 페이지 HTML에 /go 링크 0. 폰 시간표 버튼 Day 0~4: 숨김, 숨김, 보임, 보임, 숨김. tsc, next build 통과.
+- 읽는 법: /go/openchat/<src> 방문 수 = 그 버튼 클릭 수(하한). 전체 PV에서는 /go를 빼고, vercel.com 유입(팀)도 뺍니다. 방문자 수는 날마다 센 값의 합입니다.
+- 커밋: c8e5283
 
 <a id="2026-10-22-trailing-paren"></a>
 
