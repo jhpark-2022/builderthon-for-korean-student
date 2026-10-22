@@ -345,6 +345,8 @@ export class BackgroundScene {
   // 커서 빛이 켜진 정도 0..1(부드럽게), 형상 밝기 0..1, 지난 프레임의 포인터 ndc.
   private cursorMix = 0;
   private glow = 0;
+  // 커서가 마지막으로 둔 빛의 자리(uv). 있으면 정거장 대신 여기에 섭니다. 히어로로 돌아가면 지웁니다.
+  private heldUv: { x: number; y: number } | null = null;
   private readonly prevNdc = new THREE.Vector2();
   // 서울 형상의 화면 자리(px). placeSeoul이 채웁니다. 대학교 휘장 층(#seoul-campuses)이 씁니다(2026-10-22).
   private seoulPx = { cx: 0, cy: 0, s: 0 };
@@ -1011,6 +1013,11 @@ export class BackgroundScene {
       const mid = this.scrollY + vh / 2;
       const edge = PL.edgeVh * vh;
       const inPartners = ss01((mid - this.partnersTop) / edge) * ss01((this.partnersBottom - mid) / edge);
+      // DECIDED 2026-10-22 (사용자: "커서로 빛을 움직이다가 다시 위로 올라가면 원래 위치로 돌아가는데, 그 위치에
+      // 있도록"). 커서가 한 번 빛을 옮기면 구간을 벗어나도 정거장으로 돌아가지 않고 그 자리에 섭니다.
+      // 해가 다시 떠 있는 히어로까지 올라가면 놓고, 그 뒤로는 정거장 길을 다시 따릅니다.
+      if (this.scrollY <= descendEnd) this.heldUv = null;
+      if (this.heldUv) target = { ...this.heldUv };
       const cursorWant = this.pointer.mouse && this.pointer.inside ? inPartners : 0;
       this.cursorMix += (cursorWant - this.cursorMix) * Math.min(1, dt * 4);
       if (this.cursorMix > 0.001) {
@@ -1041,6 +1048,7 @@ export class BackgroundScene {
         this.lightUv.x += gx * k;
         this.lightUv.y += gy * k;
       }
+      if (this.cursorMix > 0.001) this.heldUv = { ...this.lightUv };
       // 해가 내려가는 구간 1에서는 셰이더의 옛 식 그대로, 다 내려간 뒤 0.1화면에 걸쳐 정거장 길로 넘깁니다.
       const lightW = ss01((this.scrollY - descendEnd) / (0.1 * vh));
       this.water.setLightDx(0);
