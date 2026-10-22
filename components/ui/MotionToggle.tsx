@@ -60,8 +60,8 @@ export default function MotionToggle({ className = "", compact = false }: { clas
       aria-label={compact ? t(paused ? COPY.play : COPY.pause) : undefined}
       className={
         compact
-          ? `inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 text-xs text-white/70 transition hover:border-white/30 hover:text-white ${className}`
-          : `inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1.5 text-xs text-white/55 transition hover:border-white/30 hover:text-white ${className}`
+          ? `inline-flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 text-xs text-white/70 transition-[color,border-color,transform] duration-150 active:scale-[0.98] hover:border-white/30 hover:text-white ${className}`
+          : `inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-white/15 px-[12px] py-[8px] text-xs text-white/70 transition-colors duration-150 hover:border-white/30 hover:text-white ${className}`
       }
     >
       <span aria-hidden className="text-[0.7rem]">{paused ? "▶" : "❙❙"}</span>

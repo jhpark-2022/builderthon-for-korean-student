@@ -30,7 +30,7 @@ function useItems(includeChat: boolean, long = false): Item[] {
   return items;
 }
 
-const LINK = "inline-flex min-h-[44px] items-center gap-1.5 whitespace-nowrap underline-offset-[6px] transition hover:text-white hover:underline";
+const LINK = "inline-flex min-h-[44px] items-center gap-1.5 whitespace-nowrap underline-offset-[6px] transition-colors duration-150 hover:text-white hover:underline";
 
 function MenuLink({ it, page, className, src }: { it: Item; page: SitePage; className: string; src: string }) {
   const here = it.page === page;
@@ -75,7 +75,7 @@ export function SiteMenuButton({ open, onToggle, controls }: { open: boolean; on
       aria-controls={controls}
       aria-label={t(open ? dict.siteMenu.close : dict.siteMenu.open)}
       onClick={onToggle}
-      className="inline-flex h-11 w-11 shrink-0 items-center justify-center text-white/85 transition active:scale-[0.96] hover:text-white xl:hidden"
+      className="inline-flex h-[44px] w-[44px] shrink-0 items-center justify-center text-white/85 transition-[color,transform] duration-150 active:scale-[0.96] hover:text-white xl:hidden"
     >
       <svg aria-hidden width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
         {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}

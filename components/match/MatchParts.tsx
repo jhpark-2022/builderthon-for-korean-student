@@ -21,6 +21,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { BODY, META } from "@/components/ui/typography";
+import { buttonClass } from "@/components/ui/Button";
 import { MATCH_PROFILE_KEY, MATCH_DEVICE_KEY, MATCH_SAVED_KEY } from "@/lib/storage";
 import {
   MATCH_EVENT, MATCH_EDITION, MATCH_NAME_MAX, MATCH_COUNTRY_RE, MATCH_COUNTRY_OTHER, MATCH_CODE_MAX, MATCH_CODE_FIELD_ON,
@@ -133,7 +134,7 @@ export const matchSavedSig = (resultId: string, p: MatchProfile): string =>
 
 // 테두리 white/45는 바탕 위 3:1(WCAG 1.4.11), 플레이스홀더 white/55는 6.2:1입니다(접근성 감사 6, 7).
 // 포커스는 전역 :focus-visible 링이 맡고, 테두리는 나루의 accent로 바뀝니다. 글자는 text-base(머리말).
-const INPUT = "w-full rounded-xl border border-white/45 bg-white/[0.04] px-4 py-3 text-base text-white placeholder:text-white/55 outline-none transition focus:border-accent focus:bg-white/[0.06]";
+const INPUT = "min-h-[52px] w-full rounded-xl border border-white/45 bg-white/[0.04] px-[18px] py-[13.5px] text-base text-white placeholder:text-white/55 outline-none transition focus:border-accent focus:bg-white/[0.06]";
 
 export function MatchStartFields({ t, profile, onChange, error }: {
   t: T; profile: MatchProfile; onChange: (p: MatchProfile) => void; error: MatchProfileError | null;
@@ -153,8 +154,8 @@ export function MatchStartFields({ t, profile, onChange, error }: {
   const other = !known && (pickedOther || profile.country !== "");
   const selectValue = known ? profile.country : other ? MATCH_COUNTRY_OTHER : "";
   return (
-    <div className="mt-8 flex w-full max-w-sm flex-col gap-4 text-left">
-      <div className="flex flex-col gap-1.5">
+    <div className="mt-8 flex w-full max-w-sm flex-col gap-[24px] text-left">
+      <div className="flex flex-col gap-[8px]">
         <label htmlFor="match-name" className={`${META} font-semibold text-white/85`}>{t(matchCopy.nameLabel)}</label>
         <input
           id="match-name" type="text" autoComplete="name" required aria-required="true" maxLength={MATCH_NAME_MAX} value={profile.name}
@@ -164,7 +165,7 @@ export function MatchStartFields({ t, profile, onChange, error }: {
         />
         {error === "name" && <span id="match-name-error" role="alert" className={`${META} font-medium text-rose-300`}>{t(matchCopy.errName)}</span>}
       </div>
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-[8px]">
         <label htmlFor="match-country" className={`${META} font-semibold text-white/85`}>{t(matchCopy.countryLabel)}</label>
         <select
           id="match-country" value={selectValue} required aria-required="true" className={`${INPUT} appearance-none`}
@@ -192,21 +193,21 @@ export function MatchStartFields({ t, profile, onChange, error }: {
         {error === "country" && <span id="match-country-error" role="alert" className={`${META} font-medium text-rose-300`}>{t(matchCopy.errCountry)}</span>}
       </div>
       {MATCH_TRACKS.length > 0 && (
-        <div role="group" aria-labelledby="match-tracks-label" aria-describedby={error === "tracks" ? "match-tracks-help match-tracks-error" : "match-tracks-help"} className="flex flex-col gap-1.5">
+        <div role="group" aria-labelledby="match-tracks-label" aria-describedby={error === "tracks" ? "match-tracks-help match-tracks-error" : "match-tracks-help"} className="flex flex-col gap-[8px]">
           <span id="match-tracks-label" className={`${META} font-semibold text-white/85`}>{t(matchCopy.tracksLabel)}</span>
           <span id="match-tracks-help" className={`${META} text-white/70`}>{t(matchCopy.tracksHelp)}</span>
-          <div className="mt-1 flex flex-col gap-2">
+          <div className="mt-[3.25px] flex flex-col gap-[9px]">
             {MATCH_TRACKS.map((tr, i) => {
               const rank = profile.tracks.indexOf(tr.id) + 1;
               return (
                 <button
                   key={tr.id} id={i === 0 ? "match-tracks" : undefined} type="button" aria-pressed={rank > 0} data-track={tr.id} onClick={() => toggleTrack(tr.id)}
-                  className={`flex min-h-[48px] items-center gap-3 rounded-xl border px-4 py-3 text-left transition ${rank > 0 ? "border-accent/70 bg-accent/[0.12]" : "border-white/45 bg-white/[0.04] hover:border-white/60"}`}
+                  className={`flex min-h-[52px] items-center gap-3 rounded-xl border px-[18px] py-[13.5px] text-left transition ${rank > 0 ? "border-accent/70 bg-accent/[0.12]" : "border-white/45 bg-white/[0.04] hover:border-white/60"}`}
                 >
-                  <span aria-hidden className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${META} font-bold ${rank > 0 ? "border-accent bg-naru-purple text-white" : "border-white/45 text-white/60"}`}>{rank > 0 ? rank : ""}</span>
+                  <span aria-hidden className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${META} font-bold ${rank > 0 ? "border-accent bg-naru-purple text-white" : "border-white/45 text-white/70"}`}>{rank > 0 ? rank : ""}</span>
                   <span className="min-w-0">
                     <span className={`block break-keep ${BODY} font-bold leading-snug text-white`}>{t(tr.label)}</span>
-                    {tr.hint && <span className={`mt-0.5 block break-keep ${META} text-white/70`}>{t(tr.hint)}</span>}
+                    {tr.hint && <span className={`mt-[8px] block break-keep ${META} text-white/70`}>{t(tr.hint)}</span>}
                   </span>
                   {rank > 0 && <span className="sr-only">{t(matchCopy.tracksRank).replace("{n}", String(rank))}</span>}
                 </button>
@@ -218,7 +219,7 @@ export function MatchStartFields({ t, profile, onChange, error }: {
       )}
       {/* 현장 코드. 서버가 요구하도록 켰을 때만 보입니다. QR 주소에 실려 왔으면 이미 채워져 있습니다. */}
       {MATCH_CODE_FIELD_ON && (
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-[8px]">
           <label htmlFor="match-code" className={`${META} font-semibold text-white/85`}>{t(matchCopy.codeLabel)}</label>
           <input
             id="match-code" type="text" autoComplete="off" autoCapitalize="characters" autoCorrect="off" spellCheck={false}
@@ -235,7 +236,7 @@ export function MatchStartFields({ t, profile, onChange, error }: {
 
 type SaveState = "idle" | "saving" | "saved" | "preview" | "ended" | "failed" | "failed_kept" | "reload" | "no_profile" | "no_storage" | "code";
 const SAVE_TIMEOUT_MS = 10_000;
-const GHOST = `inline-flex min-h-[44px] items-center rounded-full border border-white/25 bg-white/[0.06] px-5 ${BODY} font-semibold text-white transition active:scale-[0.98] hover:bg-white/10`; // 2026-10-20 (hwang 브리프 3.3): 눌림
+const GHOST = buttonClass("secondary", "naru");
 
 function readSavedSig(): string | null {
   try { return window.localStorage.getItem(MATCH_SAVED_KEY); } catch { return null; }
@@ -328,20 +329,20 @@ export function MatchSave({ t, result, data, fromShare, onFixProfile }: {
   };
   const { title, sub } = copy[state];
   return (
-    <div role="status" aria-live="polite" data-match-save={state} className={`mb-5 w-full max-w-xl rounded-2xl border px-5 py-3 text-center ${tone}`}>
+    <div role="status" aria-live="polite" data-match-save={state} className={`mb-5 w-full max-w-xl rounded-2xl border px-[22.5px] py-[20px] text-center sm:p-[32px] ${tone}`}>
       <p className={`${BODY} font-bold text-white`}>{state === "saved" && <span aria-hidden className="mr-1.5 text-emerald-300">✓</span>}{t(title)}</p>
-      {sub && <p className={`mt-0.5 ${META} text-white/70`}>{t(sub)}</p>}
+      {sub && <p className={`mt-[8px] ${META} text-white/70`}>{t(sub)}</p>}
       {(state === "failed" || state === "failed_kept") && (
-        <button type="button" onClick={() => void send()} className={`mt-2 ${GHOST}`}>{t(matchCopy.retry)}</button>
+        <button type="button" onClick={() => void send()} className={`mt-[12px] ${GHOST}`}>{t(matchCopy.retry)}</button>
       )}
       {state === "reload" && (
-        <button type="button" onClick={() => window.location.reload()} className={`mt-2 ${GHOST}`}>{t(matchCopy.reloadCta)}</button>
+        <button type="button" onClick={() => window.location.reload()} className={`mt-[12px] ${GHOST}`}>{t(matchCopy.reloadCta)}</button>
       )}
       {state === "no_profile" && onFixProfile && (
-        <button type="button" onClick={() => onFixProfile(problem)} className={`mt-2 ${GHOST}`}>{t(matchCopy.noProfileCta)}</button>
+        <button type="button" onClick={() => onFixProfile(problem)} className={`mt-[12px] ${GHOST}`}>{t(matchCopy.noProfileCta)}</button>
       )}
       {state === "code" && (
-        <form className="mx-auto mt-3 flex w-full max-w-xs flex-col gap-2" onSubmit={(e) => { e.preventDefault(); void send(code); }}>
+        <form className="mx-auto mt-[13.5px] flex w-full max-w-xs flex-col gap-[9px]" onSubmit={(e) => { e.preventDefault(); void send(code); }}>
           <label htmlFor="match-save-code" className="sr-only">{t(matchCopy.codeLabel)}</label>
           <input
             id="match-save-code" type="text" autoComplete="off" autoCapitalize="characters" autoCorrect="off" spellCheck={false}

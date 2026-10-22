@@ -2321,7 +2321,7 @@ export default function Journey() {
                 {t(dict.hero.ctaProgram)}
                 <span aria-hidden className={ARROW_CLASS}>→</span>
               </a>
-              <a href={links.partnership} className={`${buttonClass("secondary")} md:hidden`}>
+              <a href={links.partnership} className={`${buttonClass("secondary", "zero100")} md:hidden`}>
                 {t(dict.hero.ctaPartner)}
               </a>
               {/* OPEN CHAT - phones and tablets only (`lg:hidden`). From lg up the

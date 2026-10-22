@@ -12,6 +12,7 @@ import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
 import { naru, naruLinks, openChatLabels, register as registerCopy } from "@/data/naru";
 import type { Phrase } from "@/data/dictionaryCore";
+import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 import { BODY, META } from "@/components/ui/typography";
 import OpenChatLink from "@/components/ui/OpenChatLink";
 
@@ -56,7 +57,7 @@ export function PhoneFold({ id, more, less, children }: { id: string; more: stri
           aria-expanded={open}
           aria-controls={id}
           onClick={() => setOpen((v) => !v)}
-          className={`inline-flex min-h-[44px] items-center gap-2 rounded-full border px-5 ${BODY} font-bold ${open ? "border-accent/50 bg-accent/15 text-white" : "border-white/20 text-accent"}`}
+          className={`inline-flex min-h-[44px] items-center gap-2 rounded-full border px-5 transition-[background-color,border-color,transform] duration-200 active:scale-[0.98] ${BODY} font-bold ${open ? "border-accent/50 bg-accent/15 text-white" : "border-white/20 text-accent"}`}
         >
           {open ? less : more}
           {chevron(open)}
@@ -84,7 +85,7 @@ export function PhoneFold({ id, more, less, children }: { id: string; more: stri
 
 export function Card({ children, className = "", id }: { children: React.ReactNode; className?: string; id?: string }) {
   return (
-    <div id={id} className={`rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-8 ${className}`}>
+    <div id={id} className={`rounded-2xl border border-white/10 bg-white/[0.04] p-[27px] sm:p-[36px] ${className}`}>
       {children}
     </div>
   );
@@ -175,7 +176,7 @@ export function ReadingPlate({ id, read = false }: { id: PlateId; read?: boolean
 // 변화하는게 안보이면 좋겠는데"): 긴 챕터(#december, #naru)의 판을 둘로 나눠 틈을 하나씩 더 둡니다.
 // 형상은 판이 다 덮는 동안 사라지고 틈에서만 보이며, 바뀌는 일은 사라져 있는 동안만 일어납니다
 // (lib/background/scene/BackgroundScene.ts의 schedule). gap은 앞 조각과의 사이를 벌립니다.
-// 216px에서 판의 위아래 확장(48px × 2)을 빼면 판 사이 120px로, 챕터 사이의 틈과 같습니다.
+// DECIDED 2026-10-21: 형상 틈은 naru-shape-gap으로 분리합니다. 판의 위아래 확장을 제외한 120px는 유지합니다.
 // DECIDED 2026-09-29 (사용자: "어떤 건 다 left에 있다가 갑자기 다 센터로 가고, 뒤죽박죽. 문장들과 버튼들도",
 // 왼쪽 끝 브리프): 글은 하나의 왼쪽 끝(READ 폭의 왼쪽)에서 시작합니다. 제목, 알약 라벨, 리드, 문단, 목록, 카드,
 // 버튼 모두. 가운데 정렬은 그림에만 씁니다: #december의 숫자 줄(5일, 2회, 2026-09-26 사용자 요청)과 5일 노선도,
@@ -192,7 +193,7 @@ export function ReadingPlate({ id, read = false }: { id: PlateId; read?: boolean
 // 첫 조각뿐이라 나머지는 read입니다.
 export function PlateSegment({ id, gap = false, read = false, children }: { id: PlateId; gap?: boolean; read?: boolean; children: React.ReactNode }) {
   return (
-    <div className={gap ? "relative mt-[216px] text-left" : "relative text-left"}>
+    <div className={gap ? "relative naru-shape-gap text-left" : "relative text-left"}>
       <ReadingPlate id={id} read={read} />
       {children}
     </div>
@@ -237,10 +238,10 @@ export function PreparingButton({ t, noteId, onOpen, className = "" }: { t: (p: 
       type="button"
       aria-describedby={noteId}
       onClick={() => { track("naru_cta", { src: "preview", to: "register" }); onOpen?.(); }}
-      className={`inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-5 py-3 ${BODY} font-bold text-white/85 transition active:translate-y-0 active:scale-[0.98] active:duration-75 hover:bg-white/10 sm:px-8 sm:py-4 ${className}`}
+      className={`${buttonClass("secondary")} ${className}`}
     >
       {t(registerCopy.previewCta)}
-      <span aria-hidden className="text-white/70">→</span>
+      <span aria-hidden className={ARROW_CLASS}>→</span>
     </button>
   );
 }

@@ -23,7 +23,7 @@ export default function MatchTeaser() {
   const { t } = useLocale();
   return (
     <div className="mx-auto mt-7 max-w-sm rounded-[1.1rem] p-px shadow-[0_12px_48px_rgba(169,154,214,0.28)]" style={{ background: GRADIENT }}>
-      <div className="rounded-2xl bg-naru-surface px-5 pb-5 pt-5 text-center">
+      <div className="rounded-2xl bg-naru-surface p-[22.5px] text-center sm:p-[32px]">
         <div aria-hidden className="flex items-center justify-center">
           {LOGOS.map((file, i) => (
             <span key={file} className={`flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-[#161c3d] ${i ? "-ml-2" : ""}`}>
@@ -31,12 +31,12 @@ export default function MatchTeaser() {
               <img src={`/logos/${file}`} alt="" width={18} height={18} className="h-[18px] w-[18px]" />
             </span>
           ))}
-          <span className={`-ml-2 flex h-9 items-center rounded-full border border-white/25 bg-[#161c3d] px-2.5 ${META} font-semibold text-white/80`}>+{16 - SHOWN}</span>
+          <span className={`-ml-2 flex h-9 items-center rounded-full border border-white/25 bg-[#161c3d] px-2.5 ${META} font-semibold text-white/70`}>+{16 - SHOWN}</span>
         </div>
-        <p className={`mt-4 ${META} font-semibold tracking-wide text-white/65`}>{t(copy.nextLabel)}</p>
+        <p className={`mt-4 ${META} font-semibold tracking-wide text-white/70`}>{t(copy.nextLabel)}</p>
         <p className="mt-1 break-keep bg-clip-text text-base font-extrabold leading-snug text-transparent" style={{ backgroundImage: GRADIENT }}>{t(copy.nextTitle)}</p>
-        <p className={`mt-2 break-keep ${META} leading-relaxed text-white/80`}>{t(copy.nextBody)}</p>
-        <a href="/match" onClick={() => track("match_click", { src: "naru-register-success" })} className={`${buttonClass("primary", "naru")} mt-4 min-h-[48px] w-full justify-center`}>
+        <p className={`mt-2 break-keep ${META} leading-relaxed text-white/70`}>{t(copy.nextBody)}</p>
+        <a href="/match" onClick={() => track("match_click", { src: "naru-register-success" })} className={`${buttonClass("primary", "naru")} mt-4 w-full justify-center`}>
           {t(copy.nextCta)}<span aria-hidden className="ml-1.5">→</span>
         </a>
       </div>

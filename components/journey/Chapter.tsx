@@ -13,6 +13,7 @@ export default function Chapter({
   footer,
   wide = false,
   labelledBy,
+  contentSized = false,
 }: {
   id?: string;
   children: ReactNode;
@@ -36,6 +37,8 @@ export default function Chapter({
    * 레일 하나뿐이 됩니다. 제목을 가리키면 그 제목이 랜드마크의 이름이 됩니다.
    */
   labelledBy?: string;
+  /** 나루 전용 거터와 배경 전환 간격을 구분합니다. 세로 여백과 화면 최소 높이는 공통값을 유지합니다. */
+  contentSized?: boolean;
 }) {
   // DECIDED 2026-10-20 (hwang 브리프 3.1, D5): 챕터 리빌을 걷었습니다(8월 페이지도 같은 부품). 최종 화면은 전과 같습니다.
   // text alignment for the inner column
@@ -59,10 +62,11 @@ export default function Chapter({
       aria-labelledby={labelledBy}
       // A footer (the scroll hint) is pinned to the section's bottom, so it only
       // lands at the real screen bottom if the section fills the viewport. Force
+      // DECIDED 2026-10-21: 6799d58의 63/90/108px 여백과 md 화면 최소 높이를 복원합니다.
       // full height at every breakpoint when a footer exists (min-h-screen →
       // 100dvh via globals.css, correct on iOS). Otherwise keep the collaborator's
       // mobile auto-height (content-sized on phones, full-height from md up).
-      className={`relative flex w-full flex-col justify-center py-14 sm:py-20 lg:py-24 ${footer ? "min-h-screen" : "min-h-[auto] md:min-h-screen"} ${wide ? "" : "px-6 sm:px-10"} ${background ? "isolate" : ""} ${className}`}
+      className={`relative flex w-full flex-col justify-center py-14 sm:py-20 lg:py-24 ${contentSized ? "naru-content-chapter" : ""} ${footer ? "min-h-screen" : "min-h-[auto] md:min-h-screen"} ${wide ? "" : contentSized ? "px-[20px] sm:px-[40px]" : "px-6 sm:px-10"} ${background ? "isolate" : ""} ${className}`}
     >
       {background}
       {/* centered content rail - the real boundary (z-10 keeps it above any

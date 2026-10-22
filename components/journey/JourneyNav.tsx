@@ -247,10 +247,28 @@ export default function JourneyNav({
   // 스크롤해야 돌아오고, 멈춰 있다고 돌아오지 않습니다(idleReveal false). 8월 페이지는 그 전
   // 그대로(헤더 전체 숨김 + 정지 시 복귀).
   const naru = brand === "naru";
-  const chromeHidden = useScrollDirection({ idleReveal: naru ? false : 450 });
+  const directionHidden = useScrollDirection({ idleReveal: naru ? false : 450 });
+  const [anchorPinned, setAnchorPinned] = useState(false);
+  const chromeHidden = directionHidden && !anchorPinned;
+  // DECIDED 2026-10-21: 앵커 이동 중에는 헤더를 펼쳐 착지 여백이 바뀌지 않게 합니다. 직접 스크롤하면 다시 접힙니다.
+  useEffect(() => {
+    if (!naru || !anchorPinned) return;
+    const release = () => setAnchorPinned(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "].includes(e.key)) release();
+    };
+    window.addEventListener("wheel", release, { passive: true });
+    window.addEventListener("touchmove", release, { passive: true });
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("wheel", release);
+      window.removeEventListener("touchmove", release);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [naru, anchorPinned]);
   const headerRef = useRef<HTMLElement | null>(null);
-  // 헤더 실높이를 scroll-padding-top으로(감사 반영 브리프 2.1). 접힌 상태에서는 레일 높이만큼만
-  // 밀어야 앵커 착지가 헤더 아래 잘리지 않습니다. 나루 홈만. 8월 페이지는 globals.css의 고정값.
+  // DECIDED 2026-10-21: 펼친 헤더의 실높이를 예약합니다. 접힘 전환 도중에도 앵커 목적지가 고정됩니다.
+  // 8월 페이지는 globals.css의 기존 고정값을 따릅니다.
   useEffect(() => {
     if (!naru) return;
     const root = document.documentElement;
@@ -259,8 +277,7 @@ export default function JourneyNav({
       raf = 0;
       const h = headerRef.current;
       if (!h) return;
-      const bottom = Math.max(0, h.getBoundingClientRect().bottom);
-      root.style.scrollPaddingTop = `${Math.round(bottom) + 12}px`;
+      root.style.scrollPaddingTop = `${h.offsetHeight + 12}px`;
     };
     const schedule = () => { if (!raf) raf = requestAnimationFrame(apply); };
     // 즉시 한 번 (2026-09-19, 접근성 감사 23). 350ms 타이머만 있으면 그 전에
@@ -272,12 +289,10 @@ export default function JourneyNav({
     const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(schedule) : null;
     if (headerRef.current && ro) ro.observe(headerRef.current);
     window.addEventListener("resize", schedule, { passive: true });
-    window.addEventListener("scroll", schedule, { passive: true });
     return () => {
       window.clearTimeout(timer);
       ro?.disconnect();
       window.removeEventListener("resize", schedule);
-      window.removeEventListener("scroll", schedule);
       if (raf) cancelAnimationFrame(raf);
       root.style.scrollPaddingTop = "";
     };
@@ -294,8 +309,13 @@ export default function JourneyNav({
       const target = id ? document.getElementById(id) : null;
       if (!target) return;
       e.preventDefault();
+      setAnchorPinned(true);
+      const labelId = target.getAttribute("aria-labelledby")?.split(/\s+/)[0];
+      const heading = (labelId ? document.getElementById(labelId) : null)
+        ?? (target.matches("h1,h2,h3") ? target : target.querySelector("h1:not(.sr-only),h2:not(.sr-only),h3:not(.sr-only)"))
+        ?? target;
       const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      target.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+      heading.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
       // 포커스도 옮깁니다 (2026-09-19, 접근성 감사 1). preventDefault()를 하면
       // 브라우저가 기본 동작에서 해 주던 "순차 포커스 시작점 이동"이 사라집니다.
       // 그대로 두면 VoiceOver로 목차 칩을 눌러도 커서가 헤더에 남아 스와이프하면
@@ -369,7 +389,7 @@ export default function JourneyNav({
       // px-6 / sm:px-10을 변수로 옮겼습니다. 여기서 인라인 style을 쓰면 sm 분기가
       // 죽으므로(인라인이 클래스를 이깁니다) 클래스로만 정의합니다.
       className={`fixed inset-x-0 top-0 z-50 [--nav-gutter:1rem] min-[360px]:[--nav-gutter:1.5rem] ${naru ? "[&:has(:focus-visible)]:translate-y-0" : "focus-within:translate-y-0"} sm:[--nav-gutter:2.5rem] lg:!translate-y-0 ${
-        reduce ? "" : "transition-all duration-300 lg:duration-500"
+        reduce ? "" : naru ? "transition-[transform,background-color] duration-200" : "transition-all duration-300 lg:duration-500"
       // DECIDED 2026-08-23 (박주형): /85 → /95. 스크롤하면 헤더 뒤로 본문이 -
       // 특히 파트너 로고 월이 - 비쳐 보였습니다. 15%가 통과하고 있었어요.
       //
@@ -530,7 +550,7 @@ export default function JourneyNav({
                   Re-measure before touching 1500 - it is the EN row width, not a
                   round number. 
                   2026-10-13: 1500 → 1700. 페이지 칩 셋이 로고 옆에 서면서 1536에서 두 묶음 사이가 6px이었습니다(실측). */}
-              <span className={`hidden items-center whitespace-nowrap text-lg font-black leading-none tracking-wide text-white/90 sm:inline-flex sm:text-xl ${locale === "ko" ? "translate-y-[2px]" : "xl:hidden min-[1700px]:inline-flex"}`}>{t(dict.nav.brandSuffix)}</span>
+              <span className={`hidden items-center whitespace-nowrap text-lg font-black leading-none tracking-wide text-white/85 sm:inline-flex sm:text-xl ${locale === "ko" ? "translate-y-[2px]" : "xl:hidden min-[1700px]:inline-flex"}`}>{t(dict.nav.brandSuffix)}</span>
             </a>
           )}
           {/* DECIDED 2026-10-20 (사용자, 스크린숏: "여기서 by 나루는 빼고"): hwang 브리프 4.3의 헤더 바이라인은 넣지 않습니다. 8월 OG의 나루 락업은 그대로. */}
@@ -761,7 +781,7 @@ export default function JourneyNav({
           nav 랜드마크입니다(2026-09-19, 접근성 감사 4). 로고 줄이 접히면 위에도 여백을 둡니다(2026-10-10). */}
       {/* DECIDED 2026-10-20 (hwang 브리프 4.1): 레일에서 페이지 칩을 뺐습니다. 레일은 챕터 목차만, 사이트 메뉴는 레일 왼쪽의 단추가 엽니다
           (레일 밖, 가로로 굴러가지 않습니다). 메뉴는 레일 아래 한 줄입니다. */}
-      <div className={`${anchorRowAt.rail} ${chromeHidden ? "pt-2 lg:pt-0" : ""} ${reduce ? "" : "transition-[padding] duration-300"}`}>
+      <div className={`${anchorRowAt.rail} ${!naru && chromeHidden ? "pt-2 lg:pt-0" : ""} ${reduce || naru ? "" : "transition-[padding] duration-300"}`}>
       <div className="flex items-center pl-1 sm:pl-6 xl:pl-0">
       <SiteMenuButton open={menu.open} onToggle={menu.toggle} controls={menu.id} />
       <span aria-hidden className="h-6 w-px shrink-0 bg-white/20 xl:hidden" />
@@ -787,7 +807,7 @@ export default function JourneyNav({
                 className={`inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center whitespace-nowrap px-1.5 text-[0.75rem] font-semibold underline-offset-4 transition ${
                   here
                     ? "font-bold text-white underline decoration-accent decoration-2"
-                    : "text-white/75"
+                    : "text-white/70"
                 }`}
               >
                 {t(a.label)}

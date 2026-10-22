@@ -20,10 +20,10 @@ const PRIMARY: Record<ButtonTone, string> = {
   // Journey.tsx 히어로 주 CTA의 문자열 그대로.
   zero100:
     "group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)] sm:px-8 sm:py-4 sm:text-base",
-  // 같은 기하, 나루 토큰. 보라(#4B3A8C) → 자주(#9A5A82). 발광은 보라.
+  // 나루 토큰. 보라(#4B3A8C) → 자주(#9A5A82). 발광은 낮추고 실제 높이는 56px 이상.
   // 글자는 흰색입니다: 보라 위 흰 글자 7.2:1, 자주 위 4.9:1 (실측 2026-09-17).
   naru:
-    "group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-naru-purple to-naru-plum px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(75,58,140,0.55)] transition active:translate-y-0 active:scale-[0.98] active:duration-75 hover:shadow-[0_12px_50px_rgba(75,58,140,0.75)] sm:px-8 sm:py-4 sm:text-base",
+    "group inline-flex min-h-[56px] items-center justify-center gap-2 rounded-full bg-gradient-to-r from-naru-purple to-naru-plum px-[24px] py-[13.5px] sm:py-[18px] text-center text-sm font-bold leading-snug text-white shadow-[0_4px_20px_rgba(75,58,140,0.25)] transition-[background-color,box-shadow,transform] duration-150 active:scale-[0.98] hover:shadow-[0_6px_24px_rgba(75,58,140,0.35)] max-sm:w-full sm:px-[36px] sm:text-base",
 };
 
 // Journey.tsx 히어로 보조 CTA의 문자열 그대로. 톤이 없습니다(무채색).
@@ -33,14 +33,18 @@ const PRIMARY: Record<ButtonTone, string> = {
 const SECONDARY =
   "inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 transition active:translate-y-0 active:scale-[0.98] active:duration-75 hover:bg-white/10 sm:px-8 sm:py-4 sm:text-base";
 
+// DECIDED 2026-10-21: 나루 버튼 높이는 실제 px 기준으로 맞추고 8월 팔레트와 기하는 보존합니다.
+const NARU_SECONDARY =
+  "group inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-[24px] py-[13.5px] sm:py-[18px] text-center text-sm font-semibold leading-snug text-white/85 transition-[background-color,transform] duration-150 active:scale-[0.98] hover:bg-white/10 sm:px-[36px] sm:text-base";
+
 const TEXT =
-  "inline-flex items-center gap-1.5 text-sm font-medium text-white/75 underline-offset-4 transition active:text-white hover:text-white hover:underline";
+  "inline-flex min-h-[44px] items-center gap-1.5 text-sm sm:text-base font-medium text-white/85 underline-offset-4 transition-colors duration-150 active:text-white hover:text-white hover:underline";
 
 export function buttonClass(variant: ButtonVariant, tone: ButtonTone = "naru"): string {
   if (variant === "primary") return PRIMARY[tone];
-  if (variant === "secondary") return SECONDARY;
+  if (variant === "secondary") return tone === "naru" ? NARU_SECONDARY : SECONDARY;
   return TEXT;
 }
 
 /** 주 CTA 끝의 화살표. hover에서 오른쪽으로 한 칸. 8월 히어로와 같은 값. */
-export const ARROW_CLASS = "transition-transform duration-300 group-hover:translate-x-1";
+export const ARROW_CLASS = "transition-transform duration-150 motion-safe:group-hover:translate-x-1";
