@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { openChatHref } from "@/lib/openChatHref";
+import { trackOpenChat } from "@/lib/openChatCount";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 // AnimatePresence와 motion은 등록 필이 있던 동안만 쓰였습니다 (2026-08-22 청산).
@@ -684,14 +684,14 @@ export default function JourneyNav({
           )}
           {links.openChat && (
             <a
-              href={openChatHref("nav")}
+              href={links.openChat}
               target="_blank"
               rel="noopener noreferrer"
               // 2026-10-11 (리뷰 작은 것): 나루 계열 헤더의 이름은 보이는 글자("오픈채팅")로 시작하고 새 창임을 말합니다(WCAG 2.5.3).
               aria-label={naru ? t({ ko: "오픈채팅, 카카오톡 새 창", en: "Open chat, KakaoTalk, new window" }) : t(dict.nav.openChatAria)}
               // 2026-10-12 (등록 브리프 1.3, 리뷰 S7): 폰에서는 아이콘만 보이는 자리라, 올려 두면 어디로 가는지 보이게 합니다.
               title={t(dict.nav.openChatTitle)}
-              onClick={() => track("openchat_click", { src: "nav" })}
+              onClick={() => trackOpenChat("nav")}
               className={
                 registered
                   // 2026-10-13 (등록 브리프 2.3, 리뷰 N7): 8월의 보라와 인디고 대신 본 사이트의 나루 그라데이션입니다.

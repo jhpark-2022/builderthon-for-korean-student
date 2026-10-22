@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { openChatHref } from "@/lib/openChatHref";
+import { trackOpenChat } from "@/lib/openChatCount";
 import Link from "next/link";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -408,11 +408,11 @@ function MobileStickyBar({ t }: { t: Tfn }) {
             등장 조건과 chromeHidden 로직은 하나도 건드리지 않았습니다. */}
         {links.openChat && (
           <a
-            href={openChatHref("sticky")}
+            href={links.openChat}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={t(dict.nav.openChatAria)}
-            onClick={() => track("openchat_click", { src: "sticky" })}
+            onClick={() => trackOpenChat("sticky")}
             className={`inline-flex h-12 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-white/15 bg-[#0b0817]/92 px-6 text-sm font-bold text-white  backdrop-blur-md ${
               shown ? "pointer-events-auto" : "pointer-events-none"
             }`}
@@ -2201,11 +2201,11 @@ export default function Journey() {
                   alternative for someone not ready to act, not a competing primary. */}
               {links.openChat && (
                 <a
-                  href={openChatHref("hero")}
+                  href={links.openChat}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={t(dict.nav.openChatAria)}
-                  onClick={() => track("openchat_click", { src: "hero" })}
+                  onClick={() => trackOpenChat("hero")}
                   className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition hover:border-accent/55 hover:bg-white/[0.06] lg:hidden"
                 >
                   <ChatGlyph className="h-4 w-4 shrink-0" />
@@ -3423,10 +3423,10 @@ export default function Journey() {
             </p>
             {links.openChat && (
               <a
-                href={openChatHref("vision")}
+                href={links.openChat}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => track("openchat_click", { src: "vision" })}
+                onClick={() => trackOpenChat("vision")}
                 className="inline-flex shrink-0 items-center gap-2 rounded-full bg-violet-600/90 px-6 py-3 text-sm font-semibold text-white transition hover:bg-violet-500"
               >
                 <ChatGlyph className="h-4 w-4 shrink-0" />
@@ -3503,10 +3503,10 @@ export default function Journey() {
                 화면에서 두 번 열리면 둘 다 약해집니다. */}
             {links.openChat && (
               <a
-                href={openChatHref("footer")}
+                href={links.openChat}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => track("openchat_click", { src: "footer" })}
+                onClick={() => trackOpenChat("footer")}
                 className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white transition"
               >
                 <ChatGlyph className="h-5 w-5 shrink-0" />

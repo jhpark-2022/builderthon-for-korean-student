@@ -562,6 +562,7 @@ export const naru = {
     },
     ctaProgram: { ko: "프로그램 보기", en: "See the programme" },
     // DECIDED 2026-10-11 (사용자): AI 유형 테스트(/match)로 가는 버튼이 일정표의 Day 1에서 히어로의 버튼 줄로 왔습니다.
+    // 2026-10-18에 히어로에서도 빠졌고(버튼 둘만), 2026-10-22부터는 Day 1 카드의 글자 링크(stages[1].matchCta)가 /match의 입구입니다.
     ctaMatch: { ko: "AI 유형 테스트", en: "AI type test" },
     // 버튼 줄 아래의 설명 한 줄(2026-10-11). 버튼 안에는 넣지 않습니다.
     matchNote: {
@@ -2439,8 +2440,10 @@ export const naru = {
         // 2026-10-13 (사용자: "1일차 박스가 너무 비어있음"): 위 body의 첫 문장("현장에서 팀을 맺습니다")을 칩으로 올렸습니다(brand 7장 팀).
         chips: [{ ko: "현장에서 팀 구성", en: "Teams form on site" }],
         // DECIDED 2026-10-17 (사용자: "1일차에도 미션인증은 해야해서, 버튼은 2,3일차처럼"): Day 1 카드에도 같은 버튼. 들어가면 Day 1 탭이고 시간표는 잠겨 있습니다.
+        // 2026-10-22 (사용자: "Day 2, 3일 때만 보이게"): 폰 일정 상자 아래의 공통 버튼은 Day 2, 3을 볼 때만 섭니다(정본 7장: 미션은 Day 2, 3).
         timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Timetable and check-in" }, href: "/crossing/team?day=1" },
-        // 2026-10-11: 화면에 그리지 않습니다. 버튼은 히어로로 갔습니다(eventHero.ctaMatch). 키는 그대로.
+        // 2026-10-11: 화면에 그리지 않았습니다(버튼은 히어로로). DECIDED 2026-10-22 (사용자: Analytics 개선 "적용", 30일 /match 13명): 다시 그립니다.
+        // 히어로 버튼이 아니라 Day 1 칩 줄 옆의 글자 링크입니다(NaruHome stageCard).
         matchCta: { label: { ko: "AI 유형 테스트로 팀 매칭", en: "Team matching with the AI type test" }, href: "/match" },
         session: {
           title: { ko: "Sharing session", en: "Sharing session" },

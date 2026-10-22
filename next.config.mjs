@@ -6,7 +6,8 @@ const CSP_REPORT_ONLY = [
   "media-src 'self'",
   "font-src 'self' data:",
   "connect-src 'self' https://challenges.cloudflare.com https://va.vercel-scripts.com https://vitals.vercel-insights.com",
-  "frame-src https://challenges.cloudflare.com",
+  // 'self' (2026-10-22): 오픈채팅 클릭을 세는 숨은 iframe(/go/openchat/<src>, lib/openChatCount.ts).
+  "frame-src 'self' https://challenges.cloudflare.com",
   "worker-src 'self' blob:",
   "frame-ancestors 'self'",
   "base-uri 'self'",

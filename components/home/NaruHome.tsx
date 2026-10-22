@@ -1104,7 +1104,8 @@ export default function NaruHome() {
                   </div>
                 ))}
                 </div>
-                {timetableButton && <div className="mt-3">{timetableButton}</div>}
+                {/* DECIDED 2026-10-22 (사용자: "Day 2, 3일 때만 보이게"): 폰에서 이 공통 버튼은 미션이 있는 날(Day 2, 3, 정본 7장)을 볼 때만 섭니다. */}
+                {timetableButton && (openDay === 2 || openDay === 3) && <div className="mt-3">{timetableButton}</div>}
               </div>
             }
           />

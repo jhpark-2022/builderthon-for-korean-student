@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { openChatHref } from "@/lib/openChatHref";
+import { trackOpenChat } from "@/lib/openChatCount";
 import Link from "next/link";
 import { useEffect, useId, useState } from "react";
 import { track } from "@vercel/analytics";
@@ -41,7 +41,7 @@ function MenuLink({ it, page, className, src }: { it: Item; page: SitePage; clas
   const cls = `${LINK} ${className} ${here ? "font-bold text-white underline decoration-accent decoration-2" : ""}`;
   if (it.external === "chat") {
     return (
-      <a href={openChatHref(src)} target="_blank" rel="noopener noreferrer" onClick={() => track("openchat_click", { src })} className={cls}>
+      <a href={links.openChat} target="_blank" rel="noopener noreferrer" onClick={() => trackOpenChat(src)} className={cls}>
         <ChatGlyph className="h-3.5 w-3.5 shrink-0" />
         {it.label}
       </a>
