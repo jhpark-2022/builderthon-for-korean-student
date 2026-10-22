@@ -2593,6 +2593,11 @@ export const naru = {
           ko: "이슈를 낸 회사 관계자 앞에서 5분 발표하고 5분 질의를 받습니다. 보는 것은 결과보다 문제에 어떻게 다가갔는지라, 다 풀지 못했어도 무대에 섭니다.",
           en: "You present for five minutes to the people from the company that set the issue, then take five minutes of questions. What we look at is how you approached the problem more than the result, so you go up even if it is not solved.",
         },
+        // DECIDED 2026-10-22 (사용자, 스크린숏: Day 4 폰 카드가 다른 날보다 비어 있음): body의 첫 문장만 폰 카드에 그립니다. 둘 다 넣으면 상자가 다시 길어졌습니다.
+        panelBody: {
+          ko: "이슈를 낸 회사 관계자 앞에서 5분 발표하고 5분 질의를 받습니다.",
+          en: "You present for five minutes to the people from the company that set the issue, then take five minutes of questions.",
+        },
         // #after 챕터와 같은 말입니다. 여기서는 일정 안의 사실로, 저기서는 챕터로.
         // DECIDED 2026-10-08 (프로그램 브리프 2.3, D3): 클로징은 끝난 뒤에 할 일을 말하고 글로 남기며 끝납니다.
         // 그 전의 "이어가는 것은 각자의 몫"은 record.gaps[1](충분히 말하지 않은 것은 주최 측의 몫)과 방향이 어긋났습니다.
@@ -2623,6 +2628,8 @@ export const naru = {
       // url (2026-10-20, hwang 브리프 3.8): 있으면 노선도 로고가 새 창 링크가 됩니다(호버 설명 대신).
       logo?: { src: string; name: string; w: number; h: number; url?: string };
       body: Phrase;
+      /** 폰 노선도 카드에서 세션 자리에 그리는 그날의 진행(2026-10-22). 없으면 그리지 않습니다. body에서 뽑은 문장입니다. */
+      panelBody?: Phrase;
       /** 본문의 마지막 문장. 8월 데이 카드의 "→ 그날의 한 줄" 자리 (2026-09-17). */
       line: Phrase;
       /** 칩 줄. 8월 데이 카드의 필참·현장·시간 칩 자리. 본문에서 나온 낱말만 씁니다. */
