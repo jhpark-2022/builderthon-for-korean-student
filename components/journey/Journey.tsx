@@ -413,7 +413,7 @@ function MobileStickyBar({ t }: { t: Tfn }) {
             rel="noopener noreferrer"
             aria-label={t(dict.nav.openChatAria)}
             onClick={() => trackOpenChat("sticky")}
-            className={`inline-flex h-12 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-white/15 bg-[#0b0817]/92 px-6 text-sm font-bold text-white  backdrop-blur-md ${
+            className={`inline-flex h-12 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-white/15 bg-[#0b0817]/95 px-6 text-sm font-bold text-white  backdrop-blur-md ${
               shown ? "pointer-events-auto" : "pointer-events-none"
             }`}
           >
@@ -1645,7 +1645,8 @@ function RunOfShow({
                   a list of strings rather than a schedule. */}
               {/* 빈 time = 위 줄과 같은 블록의 하위 항목. 시각을 지어내지 않으면서
                   "이어지는 순서"임을 보여줍니다 (Day 1의 문제 공개). */}
-              <span className="w-[6.5rem] shrink-0 pt-[1px] text-xs font-semibold tabular-nums text-white/55 sm:w-[7.5rem]">
+              {/* 2026-10-22 (모바일 점검): 폰에서 시각 열이 폭의 절반을 먹어 설명이 7~8줄로 꺾였습니다. 폰은 시각을 위에, sm부터 두 열. */}
+              <span className="shrink-0 pt-[1px] text-xs font-semibold tabular-nums text-white/55 sm:w-[7.5rem]">
                 {row.time || <span aria-hidden className="pl-3 text-white/25">↳</span>}
               </span>
               <span className="min-w-0 flex-1">
@@ -1689,7 +1690,7 @@ function RunOfShow({
                 <button
                   type="button"
                   onClick={(e) => open(row.eventId!, e.currentTarget)}
-                  className="group flex w-full gap-3 rounded-lg px-1.5 py-2.5 text-left transition hover:bg-white/[0.04]"
+                  className="group flex w-full flex-col gap-1 rounded-lg px-1.5 py-2.5 text-left sm:flex-row sm:gap-3 transition hover:bg-white/[0.04]"
                 >
                   {body}
                   <span className="sr-only">{t(dict.program.runOfShowOpen)}</span>
@@ -1700,12 +1701,12 @@ function RunOfShow({
                 <a
                   href={row.href}
                   onClick={() => track("quiz_click", { src: "run_of_show" })}
-                  className="group flex w-full gap-3 rounded-lg px-1.5 py-2.5 text-left transition hover:bg-white/[0.04]"
+                  className="group flex w-full flex-col gap-1 rounded-lg px-1.5 py-2.5 text-left sm:flex-row sm:gap-3 transition hover:bg-white/[0.04]"
                 >
                   {body}
                 </a>
               ) : (
-                <div className="flex gap-3 px-1.5 py-2.5">{body}</div>
+                <div className="flex flex-col gap-1 px-1.5 py-2.5 sm:flex-row sm:gap-3">{body}</div>
               )}
             </li>
           );
@@ -1933,7 +1934,7 @@ function HeroVideo({ blur, paused = false }: { blur?: MotionValue<string>; pause
       </motion.video>
       {/* legibility scrim - darker top so the headline reads; fades to nothing
           toward the bottom so the mask hands off cleanly to the WebGL field */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0814]/85 via-[#0a0814]/68 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0814]/85 via-[#0a0814]/70 to-transparent" />
     </div>
   );
 }
@@ -1966,7 +1967,10 @@ function ScrollToTop() {
     // Same reason as the register rail: don't read a locked page's fake 0.
     const onScroll = () => {
       if (isScrollLocked()) return;
-      setVisible(window.scrollY > window.innerHeight * 1.5);
+      // 2026-10-22 (모바일 점검): 맨 아래 #closing의 "크로싱 서울 알아보기" 버튼을 덮었습니다. 그 구간이 화면에 들어오면 숨깁니다.
+      const closing = document.getElementById("closing");
+      const atEnd = !!closing && closing.getBoundingClientRect().top < window.innerHeight;
+      setVisible(window.scrollY > window.innerHeight * 1.5 && !atEnd);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -2955,7 +2959,7 @@ export default function Journey() {
                   <div
                     role="region"
                     aria-label={t(g.theme)}
-                    className="-mx-4 mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:justify-center sm:overflow-x-visible sm:px-0 sm:pb-0"
+                    className="-mx-4 mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:justify-center sm:overflow-x-visible sm:px-0 sm:pb-0"
                   >
                     {mentors.map((m, i) => {
                       const name = t(m.name);
@@ -3051,7 +3055,7 @@ export default function Journey() {
           <div
             role="region"
             aria-label={t(dict.judges.heading)}
-            className="-mx-4 mt-9 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:justify-center sm:overflow-x-visible sm:px-0 sm:pb-0"
+            className="-mx-4 mt-9 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:justify-center sm:overflow-x-visible sm:px-0 sm:pb-0"
           >
             {dict.judges.people.map((j, i) => {
               const name = t(j.name);
@@ -3587,7 +3591,7 @@ function PartnerEmailFallback({ t }: { t: Tfn }) {
       <button
         type="button"
         onClick={copy}
-        className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 font-semibold text-white/70 transition hover:bg-white/10 hover:text-white"
+        className="inline-flex min-h-[44px] items-center rounded-full border border-white/15 bg-white/5 px-4 font-semibold text-white/70 transition hover:bg-white/10 hover:text-white"
       >
         {t(copied ? dict.footer.copied : dict.footer.copy)}
       </button>
@@ -3613,8 +3617,9 @@ function FAQList() {
               className="flex w-full items-center justify-between gap-4 py-5 text-left"
             >
               <span className="text-base font-semibold text-white">{t(item.q)}</span>
-              <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 text-white/70 transition ${isOpen ? "rotate-45 border-accent text-accent" : ""}`}>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+              {/* 2026-10-22 (모바일 점검): 열리면 +가 ×로 돌아 "삭제"처럼 읽혔습니다. 아래 화살표가 열리면 위로 뒤집힙니다. */}
+              <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/15 text-white/70 transition ${isOpen ? "rotate-180 border-accent text-accent" : ""}`}>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
               </span>
             </button>
             <AnimatePresence initial={false}>

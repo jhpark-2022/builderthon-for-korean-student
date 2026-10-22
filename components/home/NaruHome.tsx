@@ -527,7 +527,7 @@ function partnerLogo(l: { name: string; src: string; w: number; h: number; url?:
     <Image src={l.src} alt={l.name} width={l.w} height={l.h} unoptimized className={`block w-auto ${h ?? partnerLogoHeight(l)} opacity-90`} />
   );
   return l.url ? (
-    <a key={l.name} href={l.url} target="_blank" rel="noopener noreferrer" aria-label={l.name} className="rounded-sm transition-opacity hover:opacity-100 [&>img]:hover:opacity-100">
+    <a key={l.name} href={l.url} target="_blank" rel="noopener noreferrer" aria-label={l.name} className="tap-44 rounded-sm transition-opacity hover:opacity-100 [&>img]:hover:opacity-100">
       {img}
     </a>
   ) : (
@@ -769,7 +769,7 @@ export default function NaruHome() {
             <Link
               href={stage.matchCta.href}
               onClick={() => track("naru_cta", { src: inPanel ? "day1-phone" : "day1", to: "match" })}
-              className="font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:text-white"
+              className="tap-44 font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:text-white"
             >
               {t(stage.matchCta.label)} <span aria-hidden>→</span>
             </Link>
@@ -1366,7 +1366,7 @@ export default function NaruHome() {
           나루 티저 바로 앞입니다(brand 3장 원칙 2). 분류, 로고 줄, 한 줄 설명을 모든 폭에서 가운데로 쌓습니다
           (같은 날 사용자: "put the logo at the center". 그 전은 lg에서 왼쪽 분류, 오른쪽 로고).
           로고는 원래 색이고(data/naru.ts decemberPartners) 비율로 높이를 맞춥니다. 링크가 확실한 곳만 새 탭 링크입니다. */}
-      <section id="partners" aria-labelledby="partners-title" className="relative w-full px-[20px] pb-[90px] pt-[72px] sm:px-[40px] lg:pb-[126px] lg:pt-[108px]">
+      <section id="partners" aria-labelledby="partners-title" className="relative w-full px-[20px] pb-[45px] pt-[72px] sm:px-[40px] sm:pb-[90px] lg:pb-[126px] lg:pt-[108px]">
         {/* DECIDED 2026-10-22 (사용자): 서울 안에서 빛이 비추면 대학교 휘장이 보입니다(학회 로고는 쓰지 않음). 표보다 먼저 두어 표 아래에 깔립니다. */}
         <SeoulCampuses />
         <div className={WIDE}>
@@ -1412,7 +1412,7 @@ export default function NaruHome() {
               <Link
                 href={naru.teaser.cta.href}
                 onClick={() => track("naru_cta", { src: "partners", to: "naru-page" })}
-                className={`group inline-flex items-center gap-1.5 ${BODY} font-semibold text-accent transition-colors hover:text-white`}
+                className={`tap-44 group inline-flex items-center gap-1.5 ${BODY} font-semibold text-accent transition-colors hover:text-white`}
               >
                 {t(naru.teaser.cta.label)}
                 <span aria-hidden className={ARROW_CLASS}>→</span>

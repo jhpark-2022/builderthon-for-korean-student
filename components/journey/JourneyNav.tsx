@@ -390,7 +390,8 @@ export default function JourneyNav({
       // px-6 / sm:px-10을 변수로 옮겼습니다. 여기서 인라인 style을 쓰면 sm 분기가
       // 죽으므로(인라인이 클래스를 이깁니다) 클래스로만 정의합니다.
       className={`fixed inset-x-0 top-0 z-50 [--nav-gutter:1rem] min-[360px]:[--nav-gutter:1.5rem] ${naru ? "[&:has(:focus-visible)]:translate-y-0" : "focus-within:translate-y-0"} sm:[--nav-gutter:2.5rem] lg:!translate-y-0 ${
-        reduce ? "" : naru ? "transition-[transform,background-color] duration-200" : "transition-all duration-300 lg:duration-500"
+        // 2026-10-22: reduce(useReducedMotion)로 갈랐더니 서버와 첫 렌더가 달라 하이드레이션 경고가 났습니다. CSS의 motion-reduce로 같은 일을 합니다.
+        naru ? "transition-[transform,background-color] duration-200 motion-reduce:transition-none" : "transition-all duration-300 lg:duration-500 motion-reduce:transition-none"
       // DECIDED 2026-08-23 (박주형): /85 → /95. 스크롤하면 헤더 뒤로 본문이 -
       // 특히 파트너 로고 월이 - 비쳐 보였습니다. 15%가 통과하고 있었어요.
       //
@@ -400,7 +401,8 @@ export default function JourneyNav({
       //
       // 두 줄(로고 줄 + 섹션 레일)은 이미 이 배경 하나를 함께 씁니다 - 실측 105px =
       // nav 52 + 레일 53이라 줄 사이에 빈 틈이 없습니다. 여기서 갈라 두지 마세요.
-      } ${scrolled ? "bg-[#070B1F]/95 backdrop-blur-md" : "bg-transparent"} ${
+      // DECIDED 2026-10-22 (모바일 점검: 스크롤하면 탭 줄 뒤로 큰 제목이 비쳐 겹쳐 보임): /95 → 불투명. 5%로도 큰 글자는 읽혔습니다.
+      } ${scrolled ? "bg-[#070B1F]" : "bg-transparent"} ${
         // 로고 줄(52px)만 접고 목차 줄은 남깁니다(감사 반영 브리프 2.1). 레일이 없는 첫 화면
         // 근처(scrolled false)에서는 topZone이 먼저 막아 hidden이 되지 않습니다.
         //
@@ -782,7 +784,7 @@ export default function JourneyNav({
           nav 랜드마크입니다(2026-09-19, 접근성 감사 4). 로고 줄이 접히면 위에도 여백을 둡니다(2026-10-10). */}
       {/* DECIDED 2026-10-20 (hwang 브리프 4.1): 레일에서 페이지 칩을 뺐습니다. 레일은 챕터 목차만, 사이트 메뉴는 레일 왼쪽의 단추가 엽니다
           (레일 밖, 가로로 굴러가지 않습니다). 메뉴는 레일 아래 한 줄입니다. */}
-      <div className={`${anchorRowAt.rail} ${!naru && chromeHidden ? "pt-2 lg:pt-0" : ""} ${reduce || naru ? "" : "transition-[padding] duration-300"}`}>
+      <div className={`${anchorRowAt.rail} ${!naru && chromeHidden ? "pt-2 lg:pt-0" : ""} ${naru ? "" : "transition-[padding] duration-300 motion-reduce:transition-none"}`}>
       <div className="flex items-center pl-1 sm:pl-6 xl:pl-0">
       <SiteMenuButton open={menu.open} onToggle={menu.toggle} controls={menu.id} />
       <span aria-hidden className="h-6 w-px shrink-0 bg-white/20 xl:hidden" />

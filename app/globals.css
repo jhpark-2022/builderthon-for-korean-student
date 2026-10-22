@@ -570,3 +570,11 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
   0% { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
   100% { opacity: 0; transform: translate(-50%, -50%) scale(3.2); }
 }
+
+/* DECIDED 2026-10-22 (모바일 점검: 누르기 작은 링크): 보이는 크기와 자리는 그대로, 누르는 영역만 가운데 기준 최소 44x44px(WCAG 2.5.8 넘어 2.5.5 수준). */
+.tap-44 { position: relative; }
+.tap-44::after { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
+
+/* 2026-10-22 (모바일 점검: /naru 목차 탭을 누르면 매니페스토 칸 전체에 보라 사각 테두리): 앵커 이동으로 포커스를 받는 tabindex="-1" 자리는
+   테두리를 그리지 않습니다(#main과 같음). 이 자리는 읽기 시작점이지 누르는 것이 아니고, 브라우저에 따라 스크립트가 옮긴 포커스도 :focus-visible로 칩니다. */
+[tabindex="-1"]:focus, [tabindex="-1"]:focus-visible { outline: none; }

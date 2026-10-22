@@ -220,7 +220,7 @@ export default function RouteMap({
                   정거장이 폰에서 button이라 링크를 그 안에 넣지 않고 형제로 둡니다(버튼 안의 링크는 HTML에서 허용되지 않습니다). */}
               {hasLogos && s.logo?.url && (
                 <a href={s.logo.url} target="_blank" rel="noopener noreferrer" aria-label={s.logo.name}
-                  className="absolute inset-x-1 top-2.5 z-10 h-7 rounded-md" />
+                  className="absolute inset-x-1 top-1 z-10 h-9 rounded-md" />
               )}
             </li>
           );

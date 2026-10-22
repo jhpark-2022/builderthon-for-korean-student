@@ -140,7 +140,8 @@ export function SiteFooter({ page, onMotionToggle }: { page: SitePage; onMotionT
           <PartnerMarquee paused={paused} />
         </div>
       )}
-      <div className="mx-auto mt-8 flex max-w-3xl flex-col items-center gap-5 text-center">
+      {/* 2026-10-22 (모바일 점검: 홈 맨 아래 빈 공간): 위 로고 띠가 없는 페이지에서는 위 여백 없이. */}
+      <div className={`mx-auto flex max-w-3xl flex-col items-center gap-5 text-center ${page === "naru" ? "mt-8" : ""}`}>
         <p className={`${META} text-white/70`}>{t(dict.siteFooter.rights)}</p>
         <span className="inline-flex" onClick={() => { onMotionToggle?.(); setTimeout(() => setPaused(readMotionPaused()), 0); }}>
           <MotionToggle className="min-h-[44px] !text-white/70" />

@@ -414,8 +414,10 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
       {/* decorative field - same tokens as the main site */}
       <div aria-hidden className="grid-bg pointer-events-none absolute inset-0 opacity-50" />
       {/* 12월판의 빛은 나루의 보라와 자주입니다(#4B3A8C, #9A5A82). 8월판은 그대로. */}
-      <div aria-hidden className="orb" style={{ left: "-12%", top: "-10%", width: "42vh", height: "42vh", background: naru ? "rgba(75,58,140,0.5)" : "rgba(124,58,237,0.4)" }} />
-      <div aria-hidden className="orb" style={{ bottom: "-14%", right: "-10%", width: "46vh", height: "46vh", background: naru ? "rgba(154,90,130,0.3)" : "rgba(6,182,212,0.3)" }} />
+      {/* DECIDED 2026-10-22 (모바일 점검: iPhone WebKit에서 blur(80px) 큰 층 때문에 시작 화면 글자가 통째로 안 그려짐): 흐림 필터 대신 가장자리가 흐린
+          방사형 그라데이션. 공유 카드(아래 ResultCard)가 이미 쓰는 방식입니다. 색과 자리는 그대로. */}
+      <div aria-hidden className="pointer-events-none absolute rounded-full" style={{ left: "-22%", top: "-20%", width: "62vh", height: "62vh", background: `radial-gradient(circle, ${naru ? "rgba(75,58,140,0.5)" : "rgba(124,58,237,0.4)"}, transparent 70%)` }} />
+      <div aria-hidden className="pointer-events-none absolute rounded-full" style={{ bottom: "-24%", right: "-20%", width: "66vh", height: "66vh", background: `radial-gradient(circle, ${naru ? "rgba(154,90,130,0.3)" : "rgba(6,182,212,0.3)"}, transparent 70%)` }} />
       {/* 질문과 결과 화면에는 h1이 없었습니다(?r= 딥링크는 h1 없는 페이지). 시작 화면은 자기 h1이 있습니다. */}
       {phase !== "landing" && <h1 className="sr-only">{t(ed.ui.title)}</h1>}
 

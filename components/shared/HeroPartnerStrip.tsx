@@ -319,7 +319,7 @@ function StripLogo(props: StripLogoSpec & { box: StripBox }) {
   const url = partnerUrl(props.alt);
   if (!url) return <StripLogoImg {...props} />;
   return (
-    <a href={url} target="_blank" rel="noopener noreferrer" aria-label={props.alt} className="inline-flex rounded">
+    <a href={url} target="_blank" rel="noopener noreferrer" aria-label={props.alt} className="tap-44 inline-flex rounded">
       <StripLogoImg {...props} />
     </a>
   );
@@ -332,7 +332,7 @@ function StripLogo(props: StripLogoSpec & { box: StripBox }) {
 // DECIDED 2026-10-13 (폰 점검): 360px 아래에서도 12.6px로 둡니다. 영문 줄이 넘치지 않게 그 폭에서는 자간만 0.08em으로 줄입니다.
 function StripTierLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="shrink-0 whitespace-nowrap text-[0.7rem] font-bold uppercase tracking-[0.08em] min-[360px]:tracking-[0.16em] text-violet-200/85 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)]">
+    <span className="shrink-0 whitespace-nowrap text-[0.7rem] font-bold text-accent drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)]">
       {children}
     </span>
   );
@@ -407,7 +407,7 @@ export default function HeroPartnerStrip({ t }: { t: Tfn }) {
             "radial-gradient(75% 130% at 50% 50%, rgba(6,4,15,0.7) 0%, rgba(6,4,15,0.5) 42%, rgba(6,4,15,0.22) 68%, transparent 88%)",
         }}
       />
-      <p className="text-center text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-white/75 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)] transition group-hover:text-white/90">
+      <p className="text-center text-[0.7rem] font-semibold text-white/75 drop-shadow-[0_1px_8px_rgba(0,0,0,0.95)] transition group-hover:text-white/90">
         {t(dict.hero.partnersLabel)}
       </p>
       {/* ≥sm - one row per tier, caption centred above its own marks. The tiers

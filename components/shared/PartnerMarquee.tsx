@@ -68,12 +68,13 @@ export default function PartnerMarquee({ paused }: { paused: boolean }) {
               role="list"
               key={ri}
               style={paused ? { animationPlayState: "paused" } : undefined}
-              className={`marquee-track ${r.dir} group-hover:[animation-play-state:paused]`}
+              className={`marquee-track ${r.dir} [@media(hover:hover)]:group-hover:[animation-play-state:paused]`}
             >
               {track.map((c, i) => {
                 const url = c.url ?? partnerUrl(c.alt);
                 const dup = i >= r.items.length;
-                const cls = "mr-4 flex h-24 w-44 shrink-0 items-center justify-center rounded-2xl border border-white/[0.10] bg-white/[0.05] px-6 sm:mr-5 sm:h-28 sm:w-52";
+                // 2026-10-22 (모바일 점검: 폰에서 카드가 한 줄에 1.5개만 보여 정신없음): 폰 카드는 128x72, sm부터 그대로.
+                const cls = "mr-3 flex h-[72px] w-32 shrink-0 items-center justify-center rounded-2xl border border-white/[0.10] bg-white/[0.05] px-4 sm:mr-5 sm:h-28 sm:w-52 sm:px-6";
                 const img = (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -82,7 +83,7 @@ export default function PartnerMarquee({ paused }: { paused: boolean }) {
                     loading="lazy"
                     decoding="async"
                     style={{ height: opticalHeight(c.w, c.h) }}
-                    className="w-auto max-w-[82%] object-contain opacity-95"
+                    className="w-auto max-h-[40px] max-w-[82%] object-contain opacity-95 sm:max-h-none"
                   />
                 );
                 return (
