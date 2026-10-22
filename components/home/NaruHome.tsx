@@ -160,10 +160,16 @@ import {
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ─────────────────────────────────────────────────────────────────────────────
-// DECIDED 2026-10-21 (2차): 날짜 아래 보조 정보 줄. 서울·싱가포르 시계와 시작 상태는 그대로입니다.
-// 서버와 첫 클라이언트 렌더는 "--"로 맞추고 마운트 뒤에 숫자를 채웁니다.
+// 카운트다운 패널. 8월 히어로 오른쪽 단의 Glass 패널 문법 (2026-09-17).
+//
+// 숫자는 마운트 뒤에만 채웁니다. 서버는 시각을 모르고(홈은 정적), 첫 페인트에
+// 서버 시각을 박으면 클라이언트에서 다시 계산할 때 숫자가 바뀌며 화면이 튑니다.
+// 패널의 높이는 숫자가 있든 없든 같습니다(빈 자리에 "--"). 8월이 겪은 하이드레이션
+// 밀림(app/2026-08/page.tsx 상단 주석)을 그대로 물려받지 않으려는 것입니다.
+// 0이 되면 "시작했습니다". 아래 미정 칩 셋은 tbd 목록의 앞 둘과 마지막(등록이
+// 열리는 날)입니다. 나머지는 프로그램 챕터의 목록이 갖습니다.
 // ─────────────────────────────────────────────────────────────────────────────
-function CountdownLine({ t, locale, className = "" }: { t: (p: Phrase) => string; locale: "ko" | "en"; className?: string }) {
+function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => string; locale: "ko" | "en"; className?: string }) {
   type Left = { d: number; h: number; m: number } | "started";
   const [left, setLeft] = useState<Left | null>(null);
   // 싱가포르 기준(+08:00)은 같은 날 0시라 서울보다 한 시간 뒤에 시작합니다(2026-09-19, 사용자: 둘 다 있어야).
@@ -189,7 +195,8 @@ function CountdownLine({ t, locale, className = "" }: { t: (p: Phrase) => string
   // 날짜가 같아 뺌). 초는 뺐고, 폰은 일만, sm부터 일·시간·분. 이날 아침의 두 줄·초 단위는
   // 닷새짜리 이벤트에 과했습니다.
   // 2026-09-19 (사용자: 타이머가 박스를 꽉 채우게): 폰에서도 시간까지 보입니다.
-  // DECIDED 2026-10-21 (2차): 큰 패널 대신 날짜 아래 정보 줄입니다. 폰의 일·시간, 데스크톱의 분 표시는 유지합니다.
+  // 전에는 일 하나였고, 그 한 칸이 상자의 왼쪽 40%에서 끝났습니다. 분은 여전히
+  // sm부터입니다(폰 390px에서 세 칸이면 숫자가 줄어들어야 합니다).
   const cellsOf = (l: Left | null): { v: string; u: Phrase; phone: boolean }[] =>
     l && l !== "started"
       ? [{ v: String(l.d), u: units.days, phone: true }, { v: pad(l.h), u: units.hours, phone: true }, { v: pad(l.m), u: units.minutes, phone: false }]
@@ -213,22 +220,70 @@ function CountdownLine({ t, locale, className = "" }: { t: (p: Phrase) => string
             .replace("{h2}", String(leftSg && leftSg !== "started" ? leftSg.h : left.h))
         : t(naru.eventHero.countdownLabel);
   return (
-    <div role="group" aria-label={aria} className={`${META} leading-relaxed text-white/70 ${className}`}>
-      <p aria-hidden className="font-medium">{t(naru.eventHero.countdownLabel)}<span className="sm:hidden">{` (${formatDecemberDayWithWeekday(locale, 0)})`}</span></p>
-      <div aria-hidden className="mt-[6px] flex flex-wrap justify-center gap-x-[24px] gap-y-[8px]">
+    <div role="group" aria-label={aria} className={`w-full rounded-2xl border border-white/[0.12] bg-white/[0.04] px-5 py-4 text-left sm:px-6 sm:py-5 ${className}`}>
+      {/* 2026-09-18 (감사 반영 브리프 1.4): 테두리는 --border-2, 라벨은 흰색. 주황은 옆의 점 하나
+          (상태 표시)뿐입니다. 이 점이 주황 허용 목록의 "카운트다운 옆 점"입니다.
+          2026-09-19 (사용자): 서울·싱가포르 두 줄. 시차 한 시간이라 일은 같고 시간만 다릅니다. */}
+      {/* DECIDED 2026-10-20 (hwang 브리프 2.2, 감사 W1, W16): 대문자, 자간 0.18em, 주황 점을 뺐습니다. META 굵게 글자 하나. */}
+      <p aria-hidden className={`flex items-center gap-2 max-sm:justify-center ${META} font-bold text-white/85`}>
+        {t(naru.eventHero.countdownLabel)}
+        {/* /45 → /60 (2026-09-19, 접근성 감사 2). 이 줄은 sm:hidden이라 **폰에서만**
+            보이는데 흰색 45%는 #070B1F 위에서 4.49:1로 AA(4.5:1)에 못 미칩니다.
+            globals.css의 대비 표도 "/45는 --bg에서 간발의 차로 실패"라고 적어 두었어요.
+            폰에서 이벤트 날짜를 읽으려는 사람이 가장 읽기 어려운 글자로 보게 됩니다.
+            /60은 7.25:1입니다. 감싼 <p>가 aria-hidden이라 낭독 대체 경로도 없습니다.
+            2026-10-07 (이슈 브리프 4.2, 4.3): /60 → /90. 위 숫자는 단색 바탕 기준이고, 폰 히어로에서는 이 줄 뒤로
+            해의 빛이 지나갑니다(실측 3.8:1). 히어로에는 읽기 판이 없어서, 히어로의 작은 글(이 줄, 아래 행 라벨과
+            단위, 등록 버튼 아래 한 줄)은 밝은 쪽에 둡니다. */}
+        <span className="text-white/85 sm:hidden">{` (${formatDecemberDayWithWeekday(locale, 0)})`}</span>
+      </p>
+      {/* 2026-09-19 (사용자: "시간 타이머가 좀 더 박스를 꽉 채워주면 좋겠다"): 칸을 격자로
+          나눕니다. 전에는 flex라 숫자 셋이 왼쪽에 몰리고 상자의 오른쪽 절반이 비어
+          있었습니다. sm부터 라벨 한 칸 + 일·시간·분 세 칸을 같은 너비로 펴고, 숫자도
+          한 단 키웁니다(1.6rem → 2.25rem). 폰은 일만 보이므로 두 칸 그대로입니다. */}
+      <div aria-hidden className="mt-2.5 grid gap-y-2 xl:grid-cols-2 xl:gap-x-12">
         {rows.map((r) => (
-          <span key={r.key.en} className="inline-flex flex-wrap items-center justify-center gap-x-[8px] gap-y-[4px]">
-            <CityShape city={r.city} decorative className={`h-[16px] w-[22px] shrink-0 ${r.city === "seoul" ? "text-naru-logo-from" : "text-naru-logo-to"}`} />
-            <span>{t(r.key)}</span>
+          <div
+            key={r.key.en}
+            // 2026-09-19 (모바일 감사 1): 폰 라벨 트랙 6.5rem(117px) → 4.5rem(81px),
+            // 숫자 칸은 1fr → minmax(0,1fr). `1fr`은 minmax(auto,1fr)이라 **내용보다
+            // 작아지지 못합니다.** 영어 단위(days/hrs)가 한글(일/시간)보다 두 배 넓어
+            // 360px에서 숫자 칸이 패널 밖으로 밀렸습니다(계산상 37px 초과).
+            // 81px은 이 트랙이 담는 최장 문자열("Seoul time" 약 72px, "싱가포르 SGT"
+            // 약 78px)이 한 줄로 들어가는 값입니다.
+            // 2026-10-07: 라벨이 META(13.5px)가 되어 "Singapore SGT"가 92px입니다. 81px 트랙에서는 숫자와
+            // 겹쳤습니다(영문 390px 실측). 트랙을 5.25rem(94.5px)으로 넓힙니다.
+            // DECIDED 2026-10-08 (사용자, 스크린숏: "지역의 형상이 중간에 오면 좋겠어, 지금은 너무 사이드에 있음"): sm부터는
+            // 격자가 아니라 가운데로 쌓습니다. 윤곽과 작은 라벨이 그 묶음의 가운데 위에, 숫자 셋이 그 아래 한 줄로.
+            // 폰은 폭이 좁아 전처럼 왼쪽 라벨 칸 + 숫자 두 칸입니다(아래 contents가 폰에서 숫자 칸을 격자의 자식으로 둡니다).
+            className="grid grid-cols-[5.25rem_repeat(2,minmax(0,1fr))] items-center gap-x-2 sm:flex sm:flex-col sm:items-center sm:gap-3"
+          >
+            {/* DECIDED 2026-10-08 (사용자, 스크린숏: "그냥 서울, 싱가포르 이것보다 나라의 형상이 있었으면"): 행 라벨 자리에
+                그곳의 윤곽을 둡니다. 마케팅 포스트와 같은 그림입니다(components/ui/CityShape.tsx). 어느 곳의 시각인지는
+                윤곽이 먼저 말하고, 작은 글 라벨은 그 아래에 남깁니다(윤곽만으로는 표준시를 알 수 없습니다). 윤곽은
+                로고 그라데이션의 두 끝 색입니다(서울은 남색 틴트, 싱가포르는 자주 틴트). */}
+            {/* DECIDED 2026-10-19 (사용자, 스크린숏: "나라의 shape 사이즈가 동일하지 않음. 그리고 needs to be centralized aligned"):
+                높이만 같게(h-6) 두면 가로로 긴 싱가포르가 서울보다 훨씬 커 보였습니다. 두 윤곽을 같은 상자(w-10 h-7, sm부터
+                w-14 h-10)에 contain으로 넣어 크기를 맞추고, 윤곽과 라벨을 칸의 가운데에 둡니다. */}
+            <span className="flex min-w-0 flex-col items-center gap-1">
+              <CityShape city={r.city} decorative className={`h-7 w-10 sm:h-10 sm:w-14 ${r.city === "seoul" ? "text-naru-logo-from" : "text-naru-logo-to"}`} />
+              <span className={`whitespace-nowrap ${META} font-semibold text-white/85`}>{t(r.key)}</span>
+            </span>
             {r.l === "started" ? (
-              <span className="font-semibold text-white/85">{t(naru.eventHero.started)}</span>
-            ) : cellsOf(r.l).map((c, i) => (
-              <span key={i} className={`items-baseline gap-[3px] ${c.phone ? "inline-flex" : "hidden sm:inline-flex"}`}>
-                <span className="font-semibold tabular-nums text-white/85">{c.v}</span>
-                <span>{t(c.u)}</span>
+              <span className={`col-span-2 ${BODY} font-black text-white sm:col-span-3`}>{t(naru.eventHero.started)}</span>
+            ) : (
+              <span className="contents sm:flex sm:items-baseline sm:justify-center sm:gap-x-8 lg:gap-x-10">
+                {cellsOf(r.l).map((c, i) => (
+                  // 2026-10-08: 패널이 두 단 아래의 전체 폭 띠가 되어 단위가 다시 숫자 옆에 섭니다(10월 7일에는 반쪽 폭이라
+                  // 단위를 숫자 아래로 내렸습니다).
+                  <span key={i} className={`min-w-0 items-baseline gap-1.5 ${c.phone ? "flex" : "hidden sm:flex"}`}>
+                    <span className={`${TITLE} font-black leading-none tabular-nums text-white`}>{c.v}</span>
+                    <span className={`${META} font-semibold text-white/85`}>{t(c.u)}</span>
+                  </span>
+                ))}
               </span>
-            ))}
-          </span>
+            )}
+          </div>
         ))}
       </div>
     </div>
@@ -334,7 +389,7 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
   if (shown.length === 0) return null;
   return (
     <figure className={className}>
-      <div className="grid grid-cols-2 gap-[13.5px] sm:gap-[18px]">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         {shown.map((photo, i) => (
           <button
             key={photo.src}
@@ -351,7 +406,7 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
               setThumbs(next);
               setOpenPhoto(i);
             }}
-            className={`group relative block aspect-[4/3] w-full cursor-zoom-in overflow-hidden rounded-2xl border border-white/10 transition-colors hover:border-white/30`}
+            className={`group relative block aspect-[4/3] w-full cursor-zoom-in overflow-hidden rounded-2xl border border-white/10 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.9)] transition-colors hover:border-white/30`}
           >
             <Image src={photo.src} alt={t(photo.alt)} fill sizes="(max-width: 1023px) 45vw, 280px" priority={!desktopOnly && i < 2} className="object-cover object-center" />
             {photo.day && (
@@ -368,7 +423,7 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
       {/* lg에서는 홀수 칸이 36px 내려가 있어 그만큼 더 띄웁니다. */}
       {/* DECIDED 2026-10-12 (등록 브리프 1.5, 리뷰 S10): 캡션이 8월 기록으로 갑니다. 밑줄은 본문 인라인 링크의 문법입니다.
           같이 붙였던 8월 숫자 문장은 2026-10-13에 뺐습니다(사용자: "이렇게 디테일한 설명은 필요 없음"). */}
-      <figcaption className={`mt-[13.5px] sm:mt-[16px] text-left max-sm:text-center ${META} text-white/70`}>
+      <figcaption className={`mt-3 text-left max-sm:text-center ${META} text-white/85`}>
         <Link href={naruLinks.archive} onClick={() => track("naru_cta", { src: "hero-caption", to: "archive" })} className="-my-3.5 inline-flex min-h-[44px] items-center break-keep underline underline-offset-4 transition hover:text-white">
           {t(naru.eventHero.photosCaption)}
         </Link>
@@ -776,9 +831,9 @@ export default function NaruHome() {
           xl부터는 전과 같습니다(pt-28). */}
       {/* 2026-10-08 (사용자: "크로싱 서울이 너무 위에 있다"): lg의 위 여백을 한 단 늘렸습니다(pt-20 → pt-28). 로고가 헤더에
           바로 붙어 있었습니다. 카운트다운 띠까지 1440×900 한 화면에 들어오는 선에서입니다. */}
-      {/* DECIDED 2026-10-21 (brand 2장): 읽기 쉬운 위계가 안전하게 도전할 자리를 넓히고, 얻는 것과 날짜 근거가 증명할 기회를 선명하게 합니다. */}
-      {/* DECIDED 2026-10-21: 18px 루트에서 히어로의 헤더 여백은 126/162/180/126px로 유지합니다. */}
-      <Chapter id="top" labelledBy="hero-title" align="center" contentSized className="pt-[126px] sm:pt-[162px] lg:pt-[180px] xl:pt-[126px]">
+      {/* DECIDED 2026-10-22 (사용자, 스크린숏: "여기는 kwan 전의 version으로 되돌려줘"): 히어로(이 챕터, CountdownPanel, HeroPhotos)는
+          kwan-design 합치기(a032318) 전의 8784ca1 그대로입니다. 아래 챕터의 kwan 간격 정리는 그대로 둡니다. */}
+      <Chapter id="top" labelledBy="hero-title" align="center" wide className="pt-28 sm:pt-36 lg:pt-40 xl:pt-28">
         {/* relative는 2026-09-17에 framer-motion의 useScroll target 경고 때문에
             붙었습니다. 그 훅은 2026-09-20에 사라졌지만 클래스는 둡니다. 히어로가
             앉는 쌓임 맥락이고, 빼는 것은 아무도 요청하지 않은 레이아웃 변경입니다. */}
@@ -789,7 +844,7 @@ export default function NaruHome() {
             ④ 카운트다운은 왼쪽 단에서 꺼내 두 단 아래의 가로 띠 하나로. 숫자 옆에 단위, xl부터 서울과 싱가포르가
                한 줄에 나란히. 왼쪽 단 안에서는 TITLE 숫자 두 줄이 단을 다 차지해 설명보다 무거웠습니다.
             폰은 순서 그대로입니다(카피, 버튼, 카운트다운, 사진). */}
-        <div className={`${WIDE} relative grid items-start gap-[54px] lg:grid-cols-[1.25fr_0.75fr] lg:gap-[64px]`}>
+        <div className="relative grid items-start gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:gap-14 lg:px-0">
           {/* DECIDED 2026-10-08 (사용자, 스크린숏: "여기를 이 공간에서 centralize, 그 아래 버튼들도 같이"): 왼쪽 단의 글 묶음
               (알약, 로고, 날짜, 한 줄, 설명, 버튼 둘, 안내)은 그 단 안에서 가운데입니다. 폰에서도 가운데입니다
               (가운데인 블록은 폰에서도 가운데, 2026-10-02). 9월 29일의 "글은 하나의 왼쪽 끝"에서 히어로 왼쪽 단은 예외가 됩니다. */}
@@ -797,11 +852,17 @@ export default function NaruHome() {
               더 비워져 있음"): lg부터 이 단은 사진 단의 세로 가운데에 섭니다(lg:self-center). 그리고 묶음 사이(로고와
               날짜, 설명과 버튼)를 벌려 사진 단의 높이를 채웁니다. 글자 크기는 셋 그대로라 크기로 채우지 않습니다.
               그 전에는 윗선에 붙어 있어 로고가 화면 꼭대기에 닿고 아래가 비었습니다. */}
-          <div className="text-center lg:self-center">
+          <div className="text-center lg:self-center lg:pl-10 xl:pl-16">
             {/* DECIDED 2026-10-08 (사용자: "나루 2026 서울이라는 내용을 그냥 빼줘"): 히어로의 알약 라벨(eventHero.eyebrow)은
                 그리지 않습니다. 로고가 첫 줄입니다. 키는 data/naru.ts에 그대로 둡니다. */}
-            {/* DECIDED 2026-10-21 (brand 2장): 이벤트 이름은 TITLE로 두어 날짜와 설명보다 먼저 읽히게 합니다. */}
-            <h1 id="hero-title" className={`${TITLE} font-black leading-[1.05] tracking-tight`}>
+            {/* 2행은 그라데이션 토큰(GRADIENT_TEXT). ko는 "크로싱 서울" / "CROSSING SEOUL", en은 "CROSSING" / "SEOUL".
+                DECIDED 2026-10-07 (이슈 브리프 4.1): 크기는 TITLE 하나입니다. 챕터 h2, 카운트다운 숫자와 같은 값이고,
+                그 전의 히어로 전용 clamp(최대 86.4px)와 2행의 0.82em은 없습니다. 한 화면의 글자 크기가 셋을 넘지
+                않게 하려는 것입니다(components/ui/typography.ts). 390px에서 두 줄 모두 한 줄에 들어갑니다. */}
+            {/* DECIDED 2026-10-11 (사용자, 스크린숏: "좀 더 로고가 크면 좋겠어", 이어서 "둘다 사이즈가 동일해야함"): 히어로의 로고는 TITLE의 1.25배입니다
+                (폰 45px, 데스크톱 84px). 한국어 화면과 영문 화면이 같은 크기입니다. 영문은 글자가 길어 이 크기에서 두 줄로 접힙니다.
+                한 화면의 글자 크기는 셋이라는 규칙(2026-10-07)에서 이 로고 하나만 예외입니다. 글이 아니라 표식입니다. 다른 자리에 이 크기를 쓰지 마세요. */}
+            <h1 id="hero-title" className="text-[clamp(2.5rem,6.875vw,4.6875rem)] font-black leading-[1.05] tracking-tight drop-shadow-[0_4px_40px_rgba(75,58,140,0.5)]">
               {/* DECIDED 2026-10-08 (사용자: "영문 화면에도 같은 로고로", 이어서 "영어 crossing seoul 로고로 바꿨으면"):
                   영문 화면의 로고는 영문입니다. 큰 글자가 "CROSSING SEOUL"이고 같은 그라데이션을 씁니다. 한글 줄은
                   영문 화면에 보이지 않습니다(나루 락업의 규칙과 같아졌습니다). 영문 로고 파일이 따로 없어서 한국어
@@ -851,10 +912,13 @@ export default function NaruHome() {
             {/* 2026-09-18 (감사 반영 브리프 1.5): 주황 틴트 → 흰색 볼드. 주황은 점으로만. */}
             {/* DECIDED 2026-10-11 (사용자: "로고랑 아래 내용의 gap이 조금 더 줄어들어도"): 로고와 날짜 줄 사이를 36/63px에서 27/36px로.
                 로고가 커진 만큼 간격이 줄어 아래 버튼과 카운트다운의 자리는 거의 그대로입니다. */}
-            <p className={`mx-auto mt-[27px] max-w-xl break-keep ${BODY} font-semibold leading-snug text-white/85 lg:mt-[36px]`}>
+            <p className={`mt-6 ${BODY} font-bold text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] lg:mt-8`}>
+              {formatDecemberDateLine(locale)}
+            </p>
+            <p className={`mx-auto mt-4 max-w-xl break-keep ${BODY} font-bold leading-snug text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)]`}>
               {t(naru.december.heading)}
             </p>
-            <p className={`mx-auto mt-[13.5px] max-w-xl text-balance break-keep ${BODY} leading-relaxed text-white/85 sm:mt-[16px]`}>
+            <p className={`mx-auto mt-3 max-w-xl text-balance break-keep ${BODY} leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)]`}>
               {/* 나루 한 문장이 서술 첫 줄(감사 반영 브리프 1.2). TODO: confirm(문구는 사용자가). */}
               {/* DECIDED 2026-10-13 (등록 브리프 2.3): 이 문장의 "나루"는 링크가 아닙니다. 2026-10-10에는 색만 다른 인라인 링크였는데,
                   /naru로 가는 길은 헤더의 페이지 칩과 홈 끝의 티저 버튼이 맡습니다. 본문 인라인 링크는 밑줄 하나로 통일합니다. */}
@@ -864,7 +928,7 @@ export default function NaruHome() {
             {/* DECIDED 2026-10-11 (사용자, 스크린숏: "여기에 있으면 좋겠음. 2x2, 버튼 별 사이즈는 똑같이"): AI 유형 테스트 버튼이 일정표의
                 Day 1에서 여기로 왔습니다. 버튼 넷이 두 칸 두 줄로 서고, 격자가 칸을 늘려 넷의 크기가 같습니다(글은 가운데).
                 폰은 한 칸이고 "프로그램 보기"는 전처럼 폰에서 숨깁니다. */}
-            <div className={`mx-auto mt-[45px] grid w-full max-w-xl grid-cols-1 gap-[13.5px] sm:w-fit ${regState === "not_open" ? "" : "sm:grid-cols-2"} lg:mt-[63px] [&>*]:justify-center [&>*]:whitespace-nowrap max-sm:[&>*]:w-full max-sm:[&>*]:whitespace-normal`}>
+            <div className={`mx-auto mt-10 grid w-fit max-w-full grid-cols-1 gap-3 ${regState === "not_open" ? "" : "sm:grid-cols-2"} lg:mt-14 [&>*]:justify-center [&>*]:whitespace-nowrap max-sm:[&>*]:whitespace-normal`}>
               {regState === "open" ? (
                 <button type="button" onClick={() => { track("naru_cta", { src: "hero", to: "register" }); reg?.openRegister(); }} className={`group ${buttonClass("primary", "naru")}`}>
                   {t(registerCopy.cta)}
@@ -884,7 +948,7 @@ export default function NaruHome() {
                 // 등록이 열리기 전에는 이 링크가 히어로의 주 CTA입니다(그라데이션 필). 히어로의 주 CTA는 언제나
                 // 하나라는 규칙대로, 등록이 열리면 등록 버튼이 그 면을 받고 이 링크는 유령 필로 내려갑니다.
                 regState === "open"
-                  ? <OpenChatLink t={t} src="naru-hero" label={openChatLabels.join} variant="secondary" className={`${HERO_BUTTON_GROUND} sm:!min-h-[56px]`} />
+                  ? <OpenChatLink t={t} src="naru-hero" label={openChatLabels.join} variant="secondary" className={HERO_BUTTON_GROUND} />
                   : <OpenChatLink t={t} src="naru-hero" label={openChatLabels.december} variant="hero" />
               )}
               {/* DECIDED 2026-10-18 (사용자, 스크린숏: "중요한 버튼 2개만 남겨줘"): "프로그램 보기"(#december)와 "AI 유형 테스트"(/match)를 뺐습니다.
@@ -894,13 +958,8 @@ export default function NaruHome() {
             {/* DECIDED 2026-10-12 (등록 브리프 1.2, 리뷰 S1 S3): 언제 열리는지, 혼자 등록해도 되는지, 전공과 코딩 경험이 조건인지가
                 첫 화면 안에서 답해집니다. DECIDED 2026-10-13 (사용자: "너무 길어"): 한 줄(registerNoteShort)입니다. 전부는 모달에(2026-10-13부터 등록 블록은 스크리닝 한 줄만). */}
             {regState === "not_open" && (
-              <p id="hero-register-note" className={`mt-[13.5px] text-balance break-keep ${META} leading-snug text-white/85`}>{t(registerNoteShort)}</p>
+              <p id="hero-register-note" className={`mt-3 text-balance break-keep ${META} leading-snug text-white/85`}>{t(registerNoteShort)}</p>
             )}
-            {/* DECIDED 2026-10-21: 행사 설명과 행동 뒤에 날짜·두 도시의 남은 시간을 보조 정보로 모읍니다. */}
-            <div className="mt-[24px] border-t border-white/10 pt-[16px]">
-              <p className={`${BODY} font-medium text-white/70`}>{formatDecemberDateLine(locale)}</p>
-              <CountdownLine t={t} locale={locale} className="mt-[8px]" />
-            </div>
           </div>
           {/* 오른쪽 단 = 8월 행사 사진 넷 (DECIDED 2026-09-17, 사용자). 8월 히어로의
               메탈 휴먼 자리입니다. 사람이 많이 나온 장면만, 같은 사진은 사이트에 한 번.
@@ -910,11 +969,21 @@ export default function NaruHome() {
               priority가 걸려 있어 폰이 보지도 않을 이미지 둘을 preload 했습니다
               (2026-09-19, 접근성 감사 22). 느린 회선에서 히어로가 늦게 뜨면
               접근성 체감에도 영향이 있습니다. 아래 폰용 묶음이 priority를 맡습니다. */}
-          <div className="hidden w-full max-w-[380px] justify-self-center self-center lg:block">
+          <div className="hidden lg:block lg:pr-10 xl:pr-16">
             <HeroPhotos photos={naru.eventHero.photos} t={t} desktopOnly />
           </div>
         </div>
-        <HeroPhotos photos={naru.eventHero.photos} t={t} className={`${WIDE} mt-[32px] lg:hidden`} />
+        {/* 카운트다운 띠(lg부터). 두 단과 같은 좌우 여백이라 로고의 왼쪽 끝, 사진의 오른쪽 끝과 맞습니다. */}
+        <div className="hidden lg:block lg:px-10 xl:px-16">
+          <CountdownPanel t={t} locale={locale} className="mt-8" />
+        </div>
+        {/* 폰(lg 아래): 카피 바로 다음에 사진 넷(2×2), 그 아래 카운트다운. */}
+        {/* 폰(lg 아래): CTA → 카운트다운 한 줄 → 사진 넷. 데스크톱(왼쪽 단 CTA 아래)과 같은
+            순서(모바일 수정 브리프 2). */}
+        <div className="px-6 sm:px-10 lg:hidden">
+          <CountdownPanel t={t} locale={locale} className="mt-8" />
+          <HeroPhotos photos={naru.eventHero.photos} t={t} className="mt-6" />
+        </div>
       </Chapter>
 
       {/* ── CH1 · 닷새의 모양 (DECIDED 2026-09-17, 홈 흐름 재배치 브리프) ──

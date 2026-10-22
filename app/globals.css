@@ -560,4 +560,5 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
 
 /* DECIDED 2026-10-21 (2차): 홈의 정보 구간만 대비를 고정하고 장식 발광을 낮춥니다. */
 .naru-home-v2 #december { --home-reading-ground: rgba(7, 11, 31, 0.68); }
-.naru-home-v2 :is(#top, #register) .bg-gradient-to-r { box-shadow: none; }
+/* 2026-10-22: 히어로(#top)는 kwan 전으로 되돌려 발광을 남깁니다. */
+.naru-home-v2 #register .bg-gradient-to-r { box-shadow: none; }
