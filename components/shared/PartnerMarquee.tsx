@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { decemberPartners } from "@/data/naru";
 import { partnerUrl } from "@/data/partnerLinks";
 
@@ -48,6 +49,18 @@ const FADE = "linear-gradient(to right, transparent, #000 8%, #000 92%, transpar
 
 /** 두 줄이 반대로 흐르는 로고 카드 띠. paused면 멈춥니다(WCAG 2.2.2, 배경 움직임 끄기와 같은 값). 호버해도 멈춥니다. */
 export default function PartnerMarquee({ paused }: { paused: boolean }) {
+  // DECIDED 2026-10-22 (사용자, 실제 iPhone 카카오톡 스크린숏: 로고 카드 대부분이 비어 있음): loading="lazy"는 iOS Safari가 흐르는 띠의
+  // 화면 밖(오른쪽) 로고를 끝내 받지 않았습니다. 띠가 화면 800px 안으로 들어오면 그때 전부 바로 받습니다(페이지 맨 위에서는 받지 않음).
+  const box = useRef<HTMLDivElement | null>(null);
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") { setNear(true); return; }
+    const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { setNear(true); io.disconnect(); } }, { rootMargin: "800px 0px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   const mid = Math.ceil(NARU_PARTNERS.length / 2);
   const rows = [
     { items: NARU_PARTNERS.slice(0, mid), dir: "marquee-left" },
@@ -56,6 +69,7 @@ export default function PartnerMarquee({ paused }: { paused: boolean }) {
   return (
     // 양끝은 덮개가 아니라 마스크로 흐립니다. 푸터 뒤로 배경이 비쳐서 단색 덮개는 띠처럼 보입니다.
     <div
+      ref={box}
       className="relative w-full"
       style={{ WebkitMaskImage: FADE, maskImage: FADE }}
     >
@@ -78,9 +92,9 @@ export default function PartnerMarquee({ paused }: { paused: boolean }) {
                 const img = (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={c.src}
+                    src={near ? c.src : undefined}
                     alt={url ? "" : c.alt}
-                    loading="lazy"
+                    loading="eager"
                     decoding="async"
                     style={{ height: opticalHeight(c.w, c.h) }}
                     className="w-auto max-h-[40px] max-w-[82%] object-contain opacity-95 sm:max-h-none"
