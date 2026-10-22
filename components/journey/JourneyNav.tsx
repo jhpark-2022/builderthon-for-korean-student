@@ -17,6 +17,7 @@ import LocaleToggle from "@/components/LocaleToggle";
 import ChatGlyph from "@/components/ChatGlyph";
 import type { SitePage } from "@/components/shared/PageChips";
 import { SiteMenuBar, SiteMenuButton, SiteMenuSheet, useSiteMenu } from "@/components/shared/SiteChrome";
+import PageSwipe from "@/components/shared/PageSwipe";
 import { decemberEventLabel } from "@/lib/naruDates";
 import dynamic from "next/dynamic";
 // DECIDED 2026-10-08 (성능 리뷰 4): 인사 칩은 퀴즈 결과 표(data/quiz의 RESULTS, gzip 약 22KB)를 끌고 옵니다.
@@ -820,6 +821,8 @@ export default function JourneyNav({
       <SiteMenuSheet page={page} open={menu.open} id={menu.id} onClose={menu.close} />
       </div>
       </header>
+      {/* DECIDED 2026-10-22 (사용자): 폰에서 옆으로 밀면 원페이저 사이를 옮깁니다. 세 페이지가 이 헤더를 같이 쓰므로 여기서 한 번 답니다. */}
+      <PageSwipe page={page} />
 
       {/* DECIDED 2026-10-11 (리뷰 A4, 결정 D-d): 여기 있던 폰과 태블릿(xl 미만)의 고정 배경 정지 버튼을 뺐습니다.
           오른쪽 아래 63px 원반이 본문 열의 오른쪽 36px을 스크롤 내내 덮었고, DAY 4 버튼의 아래 절반과 360px 화면의

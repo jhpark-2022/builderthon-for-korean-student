@@ -1057,7 +1057,9 @@ export default function NaruHome() {
           </div>
           <div className="mt-[36px]">
           {/* data-center-zone: 노선도와 범례는 그림이라 가운데를 씁니다(왼쪽 끝 브리프 2.2). */}
-          <div data-center-zone="routemap">
+          {/* DECIDED 2026-10-22 (사용자: "12월 이벤트 스케줄 swipe 할 때는 다른 one pager로 이동은 하면 안 됨"): 노선도와 Day 카드에서 시작한
+              손짓은 페이지 스와이프(components/shared/PageSwipe.tsx)가 듣지 않습니다. 여기서는 Day 카드만 넘어갑니다. */}
+          <div data-center-zone="routemap" data-no-page-swipe="">
           <RouteMap
             ariaLabel={t(naru.december.routeAria)}
             stations={naru.december.stages.map((s, i) => ({
