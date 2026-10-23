@@ -264,6 +264,7 @@ export class BackgroundScene {
     const y = (1 - cy * 2) * halfH;
     this.particles.setShapes({ x, y, hw: hwSg }, { x, y, hw: hwSeoul });
     this.seoulPx = { cx: W.cx * w, cy: cy * h, s: (hwSeoul / halfW) * (w / 2) };
+    this.singaporePx = { cx: W.cx * w, cy: cy * h, s: (hwSg / halfW) * (w / 2) };
   }
 
   private placeShapes() {
@@ -357,7 +358,9 @@ export class BackgroundScene {
   private readonly prevNdc = new THREE.Vector2();
   // 서울 형상의 화면 자리(px). placeSeoul이 채웁니다. 대학교 휘장 층(#seoul-campuses)이 씁니다(2026-10-22).
   private seoulPx = { cx: 0, cy: 0, s: 0 };
-  private clubsVars = "";
+  // 싱가포르 형상의 화면 자리(px). 같은 중심, 반너비만 다릅니다. 휘장 층(#singapore-campuses, /naru)이 씁니다(2026-10-23).
+  private singaporePx = { cx: 0, cy: 0, s: 0 };
+  private campusVars: Record<string, string> = {};
   // 구간 4 진행도를 부드럽게 따라가는 값(점의 가로 이동용). 휠의 계단을 지웁니다.
   // 빛 정거장(2026-09-28). 형상이 보이는 틈마다 점이 설 자리. sy는 그 틈이 화면 한가운데에 오는
   // 스크롤, fx·fy는 화면 비율(fx 왼쪽 0, fy 아래 0). schedule()이 채웁니다.
@@ -1080,17 +1083,18 @@ export class BackgroundScene {
         this.particles.setGlow(gx * gw, gy * gh, PL.radius * 2 * gh, this.glow, PL.gain);
         // 서울 안의 대학교 휘장(DECIDED 2026-10-22, components/home/SeoulCampuses.tsx). 빛의 원 안에서만 보입니다.
         // 서울이 온전히 서 있을 때만(건너기 전, 판 뒤가 아닐 때). 값이 바뀔 때만 씁니다.
-        const clubs = document.getElementById("seoul-campuses");
-        if (clubs) {
-          const on = this.cursorMix * shapeOpacity * (1 - morph);
-          const S = this.seoulPx;
-          const vars = `--sx:${S.cx.toFixed(1)}px;--sy:${S.cy.toFixed(1)}px;--ss:${S.s.toFixed(1)}px;` +
-            `--lx:${((gx * 0.5 + 0.5) * window.innerWidth).toFixed(1)}px;--ly:${((0.5 - gy * 0.5) * vh).toFixed(1)}px;` +
-            `--lr:${(PL.radius * vh).toFixed(1)}px;--on:${on.toFixed(3)}`;
-          if (vars !== this.clubsVars) {
-            this.clubsVars = vars;
-            for (const kv of vars.split(";")) { const i = kv.indexOf(":"); clubs.style.setProperty(kv.slice(0, i), kv.slice(i + 1)); }
-          }
+        // DECIDED 2026-10-23 (사용자): 싱가포르(/naru)도 같은 층입니다. 서울은 건너기 전(1 − morph), 싱가포르는 건넌 뒤(morph)에 켜집니다.
+        const light = `--lx:${((gx * 0.5 + 0.5) * window.innerWidth).toFixed(1)}px;--ly:${((0.5 - gy * 0.5) * vh).toFixed(1)}px;--lr:${(PL.radius * vh).toFixed(1)}px`;
+        for (const [id, S, on] of [
+          ["seoul-campuses", this.seoulPx, this.cursorMix * shapeOpacity * (1 - morph)],
+          ["singapore-campuses", this.singaporePx, this.cursorMix * shapeOpacity * morph],
+        ] as const) {
+          const el = document.getElementById(id);
+          if (!el) continue;
+          const vars = `--sx:${S.cx.toFixed(1)}px;--sy:${S.cy.toFixed(1)}px;--ss:${S.s.toFixed(1)}px;${light};--on:${on.toFixed(3)}`;
+          if (vars === this.campusVars[id]) continue;
+          this.campusVars[id] = vars;
+          for (const kv of vars.split(";")) { const i = kv.indexOf(":"); el.style.setProperty(kv.slice(0, i), kv.slice(i + 1)); }
         }
       }
       if (process.env.NODE_ENV !== "production") {

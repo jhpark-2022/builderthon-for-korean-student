@@ -18,11 +18,12 @@
 // 두 페이지가 같이 쓰는 조각은 components/home/shared.tsx에 있습니다.
 // ─────────────────────────────────────────────────────────────────────────────
 import Image from "next/image";
+import ShapeCampuses from "@/components/shared/ShapeCampuses";
 import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "@/lib/LocaleContext";
-import { naru, naruLinks, partnerContact, type Layer, type Stat, type RecordPhoto } from "@/data/naru";
+import { naru, naruLinks, partnerContact, singaporeCampuses, type Layer, type Stat, type RecordPhoto } from "@/data/naru";
 import type { Phrase } from "@/data/dictionaryCore";
 import Chip from "@/components/ui/Chip";
 import { buttonClass } from "@/components/ui/Button";
@@ -52,6 +53,8 @@ export default function NaruPage() {
     {/* naru-min12: 홈과 같은 글자 하한(app/globals.css). */}
     {/* data-cursor-light (2026-10-22, 사용자): 이 페이지 전체에서 배경의 빛이 커서를 따라갑니다(BackgroundScene readAnchors). */}
     <main id="main" tabIndex={-1} data-cursor-light className="naru-min12 focus:outline-none">
+      {/* DECIDED 2026-10-23 (사용자): 싱가포르 형상 안에서 커서 빛이 닿는 자리에 NUS, NTU, SMU 휘장이 보입니다(홈의 서울과 같은 층). */}
+      <ShapeCampuses id="singapore-campuses" campuses={singaporeCampuses} />
       {/* 2026-09-19 (사용자): "8월과 나루는 합칠 수 있음. 나루의 코어가 여기서 나온 거라고." #record
           챕터는 #naru 안의 첫 블록이 됐습니다(아래 id="record"). 헤더 항목 "8월"도 뺐습니다. */}
 

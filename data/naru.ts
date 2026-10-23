@@ -3085,6 +3085,20 @@ export const seoulCampuses: { name: Phrase; src: string; w: number; h: number; u
   { name: { ko: "한동대학교", en: "Handong Global University" }, src: "/partners/logos/white/trimmed/uni-handong.png", w: 480, h: 136, u: 0.5, v: -0.52, size: 0.07 },
 ];
 
+/**
+ * 싱가포르 안의 대학교(DECIDED 2026-10-23, 사용자, 스크린숏: "서울 형상처럼 커서를 따라서 빛이 움직이면서 NUS, NTU, SMU 로고들이 보였으면").
+ * /naru의 싱가포르 형상에서, 커서 빛이 닿는 자리에만 보입니다(components/shared/ShapeCampuses.tsx). 8월의 네 학교 중 셋입니다(brand 8장).
+ * u, v는 lib/background/shapes/singapore.ts와 같은 축이고, scripts/build-shape-points.py의 정규화(경도에 cos(위도), 너비 [-1, 1])로
+ * 각 캠퍼스의 위경도를 옮긴 값입니다: NUS 켄트리지(1.2966, 103.7764), NTU 주롱(1.3483, 103.6831), SMU 시내(1.2966, 103.8497).
+ * 같은 식으로 서울대를 다시 재면 (-0.115, -0.612)로 위 값과 맞습니다. 휘장은 마케팅 템플릿의 uni_*_w.png.
+ * NUS, NTU는 이름이 붙은 가로형이라(한동대와 같은 이유) SMU보다 높이를 낮춥니다.
+ */
+export const singaporeCampuses: { name: Phrase; src: string; w: number; h: number; u: number; v: number; size: number }[] = [
+  { name: { ko: "싱가포르국립대학교", en: "National University of Singapore" }, src: "/partners/logos/white/trimmed/uni-nus.png", w: 480, h: 219, u: -0.268, v: -0.355, size: 0.11 },
+  { name: { ko: "난양공과대학교", en: "Nanyang Technological University" }, src: "/partners/logos/white/trimmed/uni-ntu.png", w: 480, h: 175, u: -0.734, v: -0.097, size: 0.11 },
+  { name: { ko: "싱가포르경영대학교", en: "Singapore Management University" }, src: "/partners/logos/white/trimmed/uni-smu.png", w: 184, h: 240, u: 0.098, v: -0.355, size: 0.15 },
+];
+
 // DECIDED 2026-10-22 (사용자, 스크린숏: "AXMOS라는 컨소시엄 안에 이 5개의 회사가 있다는 느낌을 더 보여줘"): 메인 후원 줄은 AXMOS(lead)가 위에,
 // 그 코어 5개사가 아래 테두리 안에. 순서와 묶음은 AXMOS 공식 사이트(axmos.ai/kr)의 "Consortium · 코어 5개사"를 따릅니다.
 // 같은 날 (사용자: "작동이 안 되는 링크들이 있음, 블룸이랑 크라이치즈버거도 반드시 넣어줘"): translinkinvestment.com은 도메인이 없어
