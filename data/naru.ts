@@ -3114,7 +3114,9 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
     {
       label: { ko: "커뮤니티, 홍보", en: "Community and PR" },
       logos: [
-        { name: "Bloom", src: "/partners/logos/color/bloom.png", w: 900, h: 217, url: "https://bloomworld.ai/" },
+        // DECIDED 2026-10-23 (사용자: "블룸 다른 로고 쓰면 좋을거 같은데"): 꽃 캐릭터 + 세리프 워드마크(color/bloom.png)에서 블록 글자 마크로.
+        // 원본은 CI/bloom.jpg(검정 바탕 공유 이미지)이고, 마크만 잘라 검정 바탕을 투명하게 걷었습니다. 흰 글자와 분홍 칸은 원래 색입니다.
+        { name: "Bloom", src: "/partners/logos/color/bloom-block.png", w: 575, h: 286, url: "https://bloomworld.ai/" },
         // DECIDED 2026-10-21 (사용자: "노란색 살려줘"): 이 로고만 흰색 단색이 아니라 원래 색입니다. 바깥 흰 바탕만 투명하게 지웠습니다
         // (public/partners/logos/color/, 모서리에서 flood fill). 노란 면이라 어두운 바탕 위에서도 밝은 판 없이 보입니다.
         { name: "크라이치즈버거 Cry Cheese Burger", src: "/partners/logos/color/crycheeseburger.png", w: 459, h: 378, square: true, url: "https://www.crycheeseburger.com/" },
