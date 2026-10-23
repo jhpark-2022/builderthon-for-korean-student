@@ -301,21 +301,26 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
 // 첫 판은 막대 끝의 큰 점이 노선보다 무거워 스위치 다섯 개처럼 읽혔고, 막대가 행 가운데에 떠 글과 멀었고, 날 이름이 없었고,
 // 폰에서는 머리가 스크롤로 사라졌습니다. 이제 머리와 다섯 행이 같은 칸 틀(GAIN_COLS) 하나를 씁니다: 왼쪽 글 칸 + 날 다섯 칸.
 // 머리는 "Day N / 날 이름"과 정거장, Day 4 정거장에만 주황 점(도착, 성과 공유회). 막대는 점 없는 얇은 띠이고 제목 줄 높이에 섭니다.
-// split인 행(04)은 날마다 끊어 그립니다. 폰은 머리를 두지 않고 행마다 0~4 작은 노선을 답니다(스크롤해도 스스로 읽힙니다).
-const GAIN_COLS = "sm:grid-cols-[minmax(0,18rem)_repeat(5,minmax(0,1fr))]";
+// split인 행(04)은 날마다 끊어 그립니다.
+// DECIDED 2026-10-23 (사용자: "와서 얻는 것 at 12월 이벤트 디자인만 맞추어줘", 데스크톱이 기준): 폰도 데스크톱과 같은 그림입니다.
+// 판 맨 위에 Day 0~4 머리(이름과 정거장) 하나, 날마다의 옅은 세로 띠, 행마다 같은 다섯 칸 위의 막대. 그 전의 폰 전용
+// 행마다 0~4 작은 노선(GainStrip)은 뺐습니다. 폰은 글 칸이 없어 다섯 칸이 판 너비를 다 쓰고(grid-cols-5), 글은 그 위에 가운데,
+// 막대는 글 아래 섭니다. sm부터는 전과 같이 왼쪽 글 칸 + 다섯 칸.
+const GAIN_COLS = "grid-cols-5 sm:grid-cols-[minmax(0,18rem)_repeat(5,minmax(0,1fr))]";
 // DECIDED 2026-10-20 (사용자, hwang 브리프 3.6, 감사 W2): 막대의 그라데이션을 accent 단색으로.
 const GAIN_BAR = "h-2 rounded-full bg-accent/60";
 
-/** 데스크톱 머리: 왼쪽에 "닷새", 날마다 번호와 이름과 정거장. */
+/** 머리: 왼쪽에 "닷새"(sm부터), 날마다 번호와 이름과 정거장. */
 function GainRouteHead({ label, names }: { label: string; names: string[] }) {
   return (
     <div className={`grid ${GAIN_COLS}`}>
-      <p className={`self-end pr-6 ${META} font-bold text-accent`}>{label}</p>
+      <p className={`hidden self-end pr-6 ${META} font-bold text-accent sm:block`}>{label}</p>
       {[0, 1, 2, 3, 4].map((d) => (
         <div key={d} className="flex flex-col items-center text-center">
           <span className={`${META} font-bold tabular-nums text-white/85`}>Day {d}</span>
           <span className={`${META} break-keep px-1 text-white/70`}>{names[d]}</span>
-          <div className="relative mt-2.5 h-3 w-full">
+          {/* mt-auto: 이름이 두 줄로 접히는 칸(폰의 "컨텍스트 열기")에서도 정거장 다섯이 한 선에 섭니다. */}
+          <div className="relative mt-auto h-3 w-full pt-2.5 box-content">
             <div className={`absolute top-1/2 h-px -translate-y-1/2 bg-white/25 ${d === 0 ? "left-1/2 right-0" : d === 4 ? "left-0 right-1/2" : "inset-x-0"}`} />
             <span className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full ${d === 4 ? "h-3 w-3 bg-[#EE8A4F]" : "h-2.5 w-2.5 border border-white/50 bg-[#0B1430]"}`} />
           </div>
@@ -325,7 +330,8 @@ function GainRouteHead({ label, names }: { label: string; names: string[] }) {
   );
 }
 
-/** 데스크톱 한 행의 막대들. 이어진 날은 한 띠, split이면 날마다 한 칸. 높이는 제목 줄(번호 배지 28px의 가운데)에 맞춥니다. */
+/** 한 행의 막대들. 이어진 날은 한 띠, split이면 날마다 한 칸. sm부터는 제목 줄(번호 배지 28px의 가운데) 높이에 섭니다.
+ *  폰에서는 글 아래 자기 다섯 칸 격자(grid-cols-5) 안에 같은 막대를 긋습니다. 두 폭이 칸 하나씩 다릅니다(sm은 글 칸이 1열). */
 function GainBars({ days, split }: { days: number[]; split?: boolean }) {
   const lo = Math.min(...days);
   const hi = Math.max(...days);
@@ -333,29 +339,18 @@ function GainBars({ days, split }: { days: number[]; split?: boolean }) {
   return (
     <>
       {spans.map(([a, b]) => (
-        <div key={a} aria-hidden className="mt-2.5 px-2 max-sm:hidden" style={{ gridColumn: `${a + 2} / span ${b - a + 1}`, gridRow: 1 }}>
+        <div key={a} aria-hidden className="mt-2.5 hidden px-2 sm:block" style={{ gridColumn: `${a + 2} / span ${b - a + 1}`, gridRow: 1 }}>
           <div className={GAIN_BAR} />
         </div>
       ))}
+      <div aria-hidden className="mt-[14px] grid grid-cols-5 sm:hidden">
+        {spans.map(([a, b]) => (
+          <div key={a} className="px-1.5" style={{ gridColumn: `${a + 1} / span ${b - a + 1}` }}>
+            <div className={GAIN_BAR} />
+          </div>
+        ))}
+      </div>
     </>
-  );
-}
-
-/** 폰의 작은 노선: 다섯 칸과 그 아래 0~4. */
-function GainStrip({ days }: { days: number[] }) {
-  return (
-    <div aria-hidden className="mx-auto mt-3 w-full max-w-[16rem] sm:hidden">
-      <div className="grid grid-cols-5 gap-1">
-        {[0, 1, 2, 3, 4].map((d) => (
-          <span key={d} className={days.includes(d) ? GAIN_BAR.replace("h-2", "h-1.5") : "h-1.5 rounded-full bg-white/10"} />
-        ))}
-      </div>
-      <div className="mt-1.5 grid grid-cols-5">
-        {[0, 1, 2, 3, 4].map((d) => (
-          <span key={d} className={`${META} tabular-nums ${days.includes(d) ? "font-bold text-white/85" : "text-white/30"}`}>{d}</span>
-        ))}
-      </div>
-    </div>
   );
 }
 
@@ -1342,18 +1337,18 @@ export default function NaruHome() {
           <div className="relative mt-[36px] rounded-2xl border border-white/15 bg-white/[0.04] px-[22.5px] py-[12px] sm:px-[32px] sm:py-[27px] lg:mt-[48px] lg:px-[40px]">
             <div className="relative">
               {/* 날마다의 옅은 세로 띠(Day 0, 2, 4). 가는 안내선 대신 칸이 보이게. 머리와 행과 같은 칸 틀입니다. */}
-              <div aria-hidden className={`pointer-events-none absolute inset-0 grid max-sm:hidden ${GAIN_COLS}`}>
-                <div />
+              <div aria-hidden className={`pointer-events-none absolute inset-0 grid ${GAIN_COLS}`}>
+                <div className="hidden sm:block" />
                 {[0, 1, 2, 3, 4].map((d) => (<div key={d} className={d % 2 === 0 ? "rounded-lg bg-white/[0.03]" : ""} />))}
               </div>
-              <div aria-hidden className="relative pb-4 max-sm:hidden">
+              <div aria-hidden className="relative pb-4 pt-[12px] sm:pt-0">
                 <GainRouteHead label={t({ ko: "닷새", en: "Five days" })} names={naru.december.stages.map((st) => t(st.title))} />
               </div>
               <ol role="list" className="relative">
                 {naru.gains.items.map((item, i) => (
                   <li
                     key={item.num}
-                    className={`py-[18px] text-center sm:grid sm:items-start sm:py-[22.5px] sm:text-left ${GAIN_COLS} ${i > 0 ? "border-t border-white/[0.08]" : "sm:border-t sm:border-white/[0.08]"}`}
+                    className={`border-t border-white/[0.08] py-[18px] text-center sm:grid sm:items-start sm:py-[22.5px] sm:text-left ${GAIN_COLS}`}
                   >
                     <div className="min-w-0 sm:pr-6" style={{ gridColumn: 1, gridRow: 1 }}>
                       <div className="flex items-center justify-center gap-2.5 sm:justify-start">
@@ -1364,7 +1359,6 @@ export default function NaruHome() {
                       <span className="sr-only">{item.days.map((d) => `Day ${d}`).join(", ")}</span>
                     </div>
                     <GainBars days={item.days} split={item.split} />
-                    <GainStrip days={item.days} />
                   </li>
                 ))}
               </ol>
