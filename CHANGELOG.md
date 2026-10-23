@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-23 /naru 폰에서도 히어로의 휘장](#2026-10-23-naru-hero-campuses-phone)
 - [2026-10-23 /naru 히어로의 휘장](#2026-10-23-naru-hero-campuses)
 - [2026-10-23 /naru 빛은 늘 커서에](#2026-10-23-naru-cursor-always)
 - [2026-10-23 /naru 커서를 멈춰도 빛이 남음](#2026-10-23-naru-cursor-rest)
@@ -339,6 +340,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-23-naru-hero-campuses-phone"></a>
+## 2026-10-23 /naru 폰에서도 히어로의 휘장
+- 범위: components/shared/ShapeCampuses.tsx(touch), components/naru/NaruPage.tsx
+- 한 것: 사용자 제보("모바일 view에는 적용이 안 돼 있는 것 같은데"). 휘장 층이 마우스가 있는 화면에서만 그려졌습니다. /naru 싱가포르 층은 폰에서도 그려, 히어로에서는 커서 없이 늘 보입니다. 폰에는 커서 빛이 없어 그 아래 틈에서는 보이지 않습니다(홈 서울 층은 그대로). brand 10장 사이트 규칙.
+- 검증: 390x844 터치 에뮬레이션, 맨 위 --on 0.600에서 세 휘장 확인, 900px 아래 0.000. tsc 통과.
+- 커밋: 41aa9a0
 
 <a id="2026-10-23-naru-hero-campuses"></a>
 ## 2026-10-23 /naru 히어로의 휘장
