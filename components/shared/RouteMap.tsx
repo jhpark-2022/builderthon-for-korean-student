@@ -200,9 +200,8 @@ export default function RouteMap({
                 <span className={`break-keep ${META} leading-tight ${anchor || spot ? "font-bold text-white" : "text-white/75"}`}>
                   {s.label}
                 </span>
-                {/* DECIDED 2026-10-23 (사용자: 폰을 데스크톱에 맞춤): 마일스톤 한 줄은 폰에서도 그립니다(그 전은 sm부터). */}
                 {s.milestone && (
-                  <span className={`block break-keep ${META} leading-tight text-white/75`}>
+                  <span className={`hidden break-keep ${META} leading-tight text-white/75 sm:block`}>
                     <span aria-hidden className="mr-1.5 inline-block h-[6px] w-[6px] -translate-y-[2px] rounded-full bg-naru-orange" />
                     {s.milestone}
                   </span>

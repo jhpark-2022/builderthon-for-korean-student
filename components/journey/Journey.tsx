@@ -931,8 +931,19 @@ function RouteMap({ t, onOpen }: { t: Tfn; onOpen: (n: number) => void }) {
   );
 }
 
-// One benefit card. Until 2026-10-23 it collapsed to two bullets on phones with a
-// whole-card tap target; that fold is gone (see the DECIDED note inside).
+// One benefit card. Collapses to two bullets ON MOBILE ONLY.
+//
+// Desktop must render exactly what it rendered before, so the extra points are
+// never removed from the DOM - they are `hidden sm:flex`, which means the phone
+// hides them and every other viewport (and every crawler and screen reader in
+// desktop layout) sees the full list. The toggle itself is `sm:hidden`, so above
+// the breakpoint there is no button, no tab stop and no aria state at all.
+//
+// The tap target is a transparent overlay across the whole card rather than a
+// small "더 보기" link: on a phone the card IS the control, and a 4mm link at the
+// bottom of a card is a worse target than the 200px block above it. The label row
+// stays visible as the affordance - an overlay with no visible cue is a card that
+// silently eats taps.
 function BenefitCard({
   item,
   t,
@@ -940,17 +951,20 @@ function BenefitCard({
   item: (typeof dict.benefits.items)[number];
   t: Tfn;
 }) {
-  // DECIDED 2026-10-23 (사용자: "desktop is the source of truth. sync mobile with desktop"): 폰에서 앞 두 줄만 보이고 카드를 눌러
-  // 펼치던 접기(위 주석)를 없앴습니다. 모든 폭에서 점 전부를 그립니다.
+  const [open, setOpen] = useState(false);
+  const listId = `benefit-${item.num}-points`;
+  const hidden = item.points.length - 2;
   return (
     <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-white/25 hover:bg-white/[0.05]">
       <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.04] text-sm font-black text-white/85">{item.num}</span>
       <h3 className="mt-4 text-lg font-bold text-white">{t(item.title)}</h3>
-      <ul className="mt-3 space-y-2">
+      <ul id={listId} className="mt-3 space-y-2">
         {item.points.map((p, i) => (
           <li
             key={i}
-            className="flex items-start gap-2 text-sm leading-relaxed text-white/70"
+            className={`items-start gap-2 text-sm leading-relaxed text-white/70 ${
+              i > 1 && !open ? "hidden sm:flex" : "flex"
+            }`}
           >
             <span aria-hidden className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-white/50" />
             {t(p)}
@@ -978,6 +992,38 @@ function BenefitCard({
             {t(item.footnote.linkLabel)}
           </a>
         </p>
+      )}
+      {hidden > 0 && (
+        <>
+          <span
+            aria-hidden
+            className="mt-3 flex items-center gap-1 text-xs font-semibold text-white/85 sm:hidden"
+          >
+            {t(open ? dict.benefits.collapse : dict.benefits.expand)}
+            <svg
+              viewBox="0 0 12 8"
+              className={`h-2 w-3 transition-transform ${open ? "rotate-180" : ""}`}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M1 1l5 5 5-5" />
+            </svg>
+          </span>
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls={listId}
+            className="absolute inset-0 rounded-2xl sm:hidden"
+          >
+            <span className="sr-only">
+              {t(item.title)}, {t(open ? dict.benefits.collapse : dict.benefits.expand)}
+            </span>
+          </button>
+        </>
       )}
     </div>
   );
@@ -1171,9 +1217,9 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
         )}
       </div>
       <h4 className="mt-3 text-[15px] font-bold leading-snug text-white">{t(day.theme)}</h4>
-      {/* DECIDED 2026-10-23 (사용자: "desktop is the source of truth. sync mobile with desktop"): 같은 날 아침 모바일 점검에서 폰에서만 접었던
-          요약, 올 이유, 멘토링·어워드 줄을 되돌렸습니다. 폰도 데스크톱과 같은 카드입니다. */}
-      <p className="mt-1.5 text-xs leading-relaxed text-white/65">{t(day.summary)}</p>
+      {/* DECIDED 2026-10-23 (모바일 점검): 폰에서는 요약, 올 이유, 멘토링·어워드 줄을 접어 카드가 제목까지만 섭니다(페이지가 폰에서 33화면이었습니다).
+          누르면 열리는 모달이 같은 내용을 다 보여 줍니다. sm부터는 그대로. */}
+      <p className="mt-1.5 hidden text-xs leading-relaxed text-white/65 sm:block">{t(day.summary)}</p>
       {/* '올 이유' 한 줄 - 요약(무엇을 하는 날인가) 아래, 세션 카운트 위.
           노선도 아래 문단이 "하나하나 내려설 이유가 있도록 설계했습니다"라고
           주장하는데 카드들이 그걸 증명하지 못하고 있었습니다. 이 줄이 증명입니다.
@@ -1182,7 +1228,7 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
           필참일에는 렌더하지 않습니다 - 갈지 말지 고르는 날이 아니어서, 거기에
           '올 이유'를 붙이면 필참이 설득의 문제로 보입니다. */}
       {day.whyStop && emphasis !== "must" && (
-        <p className="mt-2 flex gap-1.5 break-keep text-xs font-semibold leading-snug text-white/85">
+        <p className="mt-2 hidden gap-1.5 break-keep text-xs font-semibold leading-snug text-white/85 sm:flex">
           <span aria-hidden className="text-white/70">→</span>
           {t(day.whyStop)}
         </p>
@@ -1206,7 +1252,7 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
 
           점은 aria-hidden이고 칩의 글자가 뜻을 그대로 말합니다. */}
       {mentoringOpenOn(day.day) && (
-        <p className="mt-2">
+        <p className="mt-2 hidden sm:block">
           <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/85">
             <MentoringDot />
             {t(dict.program.mentoringChip)}
@@ -1232,7 +1278,7 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
           자리에 서는 두 칩이 색으로 갈립니다. day.awardsBox는 "이 날 어워드 박스가
           열린다"는 뜻이라 그대로 조건으로 씁니다 - 새 플래그를 만들지 마세요. */}
       {day.awardsBox && (
-        <p className="mt-2">
+        <p className="mt-2 hidden sm:block">
           <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/85">
             <span aria-hidden className="text-white/70">★</span>
             {t(dict.program.awards.countBadge)}

@@ -34,7 +34,7 @@ import Eyebrow from "@/components/ui/Eyebrow";
 import { TITLE, BODY, META, H2, H3, STATEMENT, GRADIENT_TEXT } from "@/components/ui/typography";
 import NaruMark from "@/components/ui/NaruMark";
 import {
-  Card, SUBHEADING, READ, WIDE, READ_MEASURE_C, MEASURE_C,
+  PhoneFold, Card, SUBHEADING, READ, WIDE, READ_MEASURE_C, MEASURE_C,
   latinTrack, eyebrowTrack, PlateSegment, SiteFooter, usePlateLite,
 } from "@/components/home/shared";
 
@@ -406,7 +406,7 @@ export default function NaruPage() {
 
         {/* 세 곳에 공통된 조건 하나(매니페스토 I장). 장소를 가리지 않습니다.
             같은 I장의 다른 나라 학생과의 비교는 가져오지 않았습니다. */}
-        {/* DECIDED 2026-10-23 (사용자: 폰을 데스크톱에 맞춤): 폰에서 이 아래를 "왜 필요한지 더 읽기"로 접던 PhoneFold를 뺐습니다. */}
+        <PhoneFold id="why-more" more={t({ ko: "왜 필요한지 더 읽기", en: "More on why" })} less={t({ ko: "왜 필요한지 접기", en: "Hide the rest" })}>
         <Reveal>
         <p className={`${READ} ${READ_MEASURE_C} mt-[45px] break-keep text-center ${BODY} leading-relaxed text-white/70 lg:mt-[48px]`}>
           {t(naru.join.milestones)}
@@ -437,6 +437,7 @@ export default function NaruPage() {
             ))}
           </div>
         </Reveal>
+        </PhoneFold>
 
         {/* 매니페스토 PDF 하나(DECIDED 2026-09-19, 사용자: "그냥 공간에는 매니페스토
             pdf 다운로드 받을 수 있게 해").
@@ -749,8 +750,7 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
           </p>
         )}
       </div>
-      {/* DECIDED 2026-10-23 (사용자: 폰을 데스크톱에 맞춤): 내는 것 한 줄은 폰에서도 그립니다(그 전은 md부터). */}
-      <p className={`mt-[12px] break-keep ${META} leading-snug text-white/70 [text-wrap:balance] md:mt-[16px]`}>{t(layer.brings)}</p>
+      <p className={`mt-[12px] hidden break-keep ${META} leading-snug text-white/70 [text-wrap:balance] md:mt-[16px] md:block`}>{t(layer.brings)}</p>
       {/* 얻는 것 한 줄(2026-09-18). 후원 상자에 내는 것만 있고 얻는 것이 없었습니다(ux-researcher P1). */}
       <p className={`mt-[12px] break-keep ${META} leading-snug text-white/70 [text-wrap:balance] md:mt-[16px]`}>
         <span className="font-bold text-accent">{t(naru.how.getsShort)}</span>
@@ -800,17 +800,30 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// "그래서 지키는 것" (2026-09-18, 감사 반영 브리프 6.1). 그 전에는 lg 아래에서 접혀 있고 버튼으로 펼쳤습니다.
-// DECIDED 2026-10-23 (사용자: "desktop is the source of truth. sync mobile with desktop"): 모든 폭에서 데스크톱과 같은 dl입니다. 버튼은 없습니다.
+// "그래서 지키는 것" (2026-09-18, 감사 반영 브리프 6.1). 폰에서는 접혀 있고 버튼으로 펼칩니다.
+// lg부터는 그 전과 같은 dl. 데스크톱 판형은 사용자가 정한 자리라 그대로입니다.
 // ─────────────────────────────────────────────────────────────────────────────
 // 2026-10-11 (리뷰 A5): id는 useId가 아니라 부르는 쪽이 주는 안정된 값(keeps-01, keeps-02)입니다.
 function KeepsPanel({ id, label, body }: { id: string; label: string; body: string }) {
+  const [open, setOpen] = useState(false);
   const { locale } = useLocale();
   return (
     <div className="border-t border-white/10 pt-[13.5px] md:border-l md:border-t-0 md:pl-10 md:pt-2 lg:pt-6 md:lg:pt-2">
+      {/* 누르는 것은 알약 테두리 버튼입니다(가독성 브리프 4.2, 규칙 ①). 전에는 작은 대문자
+          라벨 모양이라 소제목과 구별되지 않았습니다. #naru 문 셋과 같은 알약입니다. */}
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={id}
+        onClick={() => setOpen((v) => !v)}
+        className={`inline-flex min-h-[44px] items-center gap-[12px] rounded-full border border-white/15 bg-[#0B1430]/80 px-4 ${BODY} font-medium text-accent transition hover:border-white/30 hover:text-white lg:hidden`}
+      >
+        {label}
+        <span aria-hidden className={`inline-block text-white/60 transition-transform motion-reduce:transition-none ${open ? "rotate-180" : ""}`}>⌄</span>
+      </button>
       <dl>
-        <dt className={`${META} font-bold uppercase ${latinTrack(locale)} text-accent`}>{label}</dt>
-        <dd id={id} className={`mt-[13.5px] break-keep ${BODY} leading-relaxed text-white/70`}>{body}</dd>
+        <dt className={`hidden ${META} font-bold uppercase ${latinTrack(locale)} text-accent lg:block`}>{label}</dt>
+        <dd id={id} className={`${open ? "mt-[13.5px]" : ""} ${open ? "block" : "hidden"} break-keep ${BODY} leading-relaxed text-white/70 lg:mt-[13.5px] lg:block`}>{body}</dd>
       </dl>
     </div>
   );
