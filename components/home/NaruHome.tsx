@@ -1174,35 +1174,39 @@ export default function NaruHome() {
                 ))}
               </dl>
 
-              <div className="mt-[36px] lg:mt-auto lg:pt-[54px]">
-                <p className={`${META} font-bold text-white/85`}>{t(naru.december.approachLabel)}</p>
-                <ol role="list" className="mt-[16px] grid grid-cols-2 border-t border-white/10">
-                  {naru.december.approach.map((a, i) => (
-                    <li key={i} className={`flex flex-col items-start gap-[12px] border-b border-white/10 px-[12px] py-[24px] sm:px-[16px] ${i % 2 === 1 ? "border-l" : ""} border-white/10`}>
-                      {/* 2026-10-22: 칸마다 길이가 다른 진행 막대를 넣었다가 같은 날 뺐습니다(사용자: "늘리고 줄이는 그거 이상함"). */}
-                      <span className={`${META} font-bold tabular-nums text-accent`}>{String(i + 1).padStart(2, "0")}</span>
-                      <span className={`break-keep ${BODY} font-bold text-white`}>{t(a.title)}</span>
-                      <span className={`break-keep ${META} leading-snug text-white/70`}>{t(a.body)}</span>
-                    </li>
-                  ))}
-                </ol>
-
-              </div>
             </div>
             <div className="min-w-0 lg:flex lg:flex-col">
               <h3 data-subheading className={SUBHEADING}>{t(naru.december.factsLabel)}</h3>
-              <dl className="mt-[16px] lg:flex lg:flex-1 lg:flex-col">
+              {/* DECIDED 2026-10-23 (사용자, 스크린숏: "지금 여기가 너무 비어 있어"): 줄 셋이 왼쪽 열 높이(약 700px)에 맞춰 늘어나
+                  줄마다 위아래가 200px 넘게 비었습니다. 줄 수는 사용자가 줄인 것이라(10/10, 10/22) 늘리지 않고, 줄을 제 높이로 둡니다. */}
+              <dl className="mt-[16px]">
                 {naru.december.facts.map((f, i) => (
                   <div
                     key={f.k.en}
                     // DECIDED 2026-10-22 (사용자: "visually engaging"): sm부터 라벨 왼쪽 열(accent), 설명 오른쪽 열. 표처럼 한눈에 훑습니다.
-                    className={`grid grid-cols-1 gap-y-[8px] border-t border-white/10 py-[20px] sm:grid-cols-[7.5rem_1fr] sm:gap-x-[24px] sm:py-[24px] lg:flex-1 lg:content-center ${i === naru.december.facts.length - 1 ? "border-b" : ""}`}
+                    className={`grid grid-cols-1 gap-y-[8px] border-t border-white/10 py-[20px] sm:grid-cols-[7.5rem_1fr] sm:gap-x-[24px] sm:py-[24px] lg:py-[32px] ${i === naru.december.facts.length - 1 ? "border-b" : ""}`}
                   >
                     <dt className={`break-keep ${META} font-bold uppercase ${latinTrack(locale)} text-accent sm:pt-[3px]`}>{t(f.k)}</dt>
                     <dd className={`break-keep ${BODY} leading-relaxed text-white/70`}>{t(f.v)}</dd>
                   </div>
                 ))}
               </dl>
+
+            </div>
+            {/* DECIDED 2026-10-23 (사용자, 스크린숏: "left가 너무 vertically 길다. 오른쪽과 맞춰줘"): 네 단계를 왼쪽 열 맨 아래에서 빼서
+                두 열 아래 전체 폭 한 줄(데스크톱 네 칸)로 놓았습니다. 왼쪽은 리드와 숫자만 남아 오른쪽 줄 셋과 높이가 비슷해집니다. */}
+            <div className="lg:col-span-2">
+              <p className={`${META} font-bold text-white/85`}>{t(naru.december.approachLabel)}</p>
+              <ol role="list" className="mt-[16px] grid grid-cols-2 border-t border-white/10 lg:grid-cols-4">
+                {naru.december.approach.map((a, i) => (
+                  <li key={i} className={`flex flex-col items-start gap-[12px] border-b border-white/10 px-[12px] py-[24px] sm:px-[16px] ${i % 2 === 1 ? "border-l" : ""} ${i > 0 ? "lg:border-l" : ""} border-white/10`}>
+                    {/* 2026-10-22: 칸마다 길이가 다른 진행 막대를 넣었다가 같은 날 뺐습니다(사용자: "늘리고 줄이는 그거 이상함"). */}
+                    <span className={`${META} font-bold tabular-nums text-accent`}>{String(i + 1).padStart(2, "0")}</span>
+                    <span className={`break-keep ${BODY} font-bold text-white`}>{t(a.title)}</span>
+                    <span className={`break-keep ${META} leading-snug text-white/70`}>{t(a.body)}</span>
+                  </li>
+                ))}
+              </ol>
 
             </div>
             <div className="grid gap-[20px] border-t border-white/10 pt-[32px] text-center md:grid-cols-3 md:gap-[24px] md:pt-[40px] lg:col-span-2">

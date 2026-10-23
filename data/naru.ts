@@ -1825,13 +1825,16 @@ export const naru = {
     // 브리프의 "기능, 업무, 병목, 실험"에서 "실험"은 참가자에게 쓰지 않는 말이라(brand 9장) "어떻게 확인하나"로 씁니다.
     // findClose 바로 위, 상자 없이 헤어라인 네 칸. approachClose는 brand 7장 평가(결과보다 과정)를 사실로 말합니다.
     approachLabel: { ko: "문제에 들어가는 네 단계", en: "Four steps into the problem" },
+    // DECIDED 2026-10-23 (사용자, 스크린숏: "표현들이 어색함"): 제목이 목적어만 남은 조각("무엇을", "누구의 일을")이었고 본문도 "~나"로
+    // 끊겼습니다. 제목은 짧은 이름(브리프의 기능, 업무, 병목, 실험 순서 그대로), 본문은 팀이 실제로 묻는 질문 한 문장으로.
+    // 그 전: 무엇을 / 누구의 일을 / 어디서 멈췄나 / 어떻게 확인하나, 본문 "어떤 AI 기능을 붙일 수 있나" 등.
     approach: [
-      { title: { ko: "무엇을", en: "What" }, body: { ko: "어떤 AI 기능을 붙일 수 있나", en: "Which AI capability could go in" } },
-      { title: { ko: "누구의 일을", en: "Whose work" }, body: { ko: "누구의 어떤 일이 바뀌나", en: "Whose work changes, and how" } },
+      { title: { ko: "기능", en: "Capability" }, body: { ko: "이 이슈에 어떤 AI 기능을 붙일 수 있을까요?", en: "Which AI capability could this issue take?" } },
+      { title: { ko: "바뀌는 일", en: "The work" }, body: { ko: "그 기능으로 누구의 어떤 일이 바뀌나요?", en: "Whose work changes with it, and how?" } },
       // DECIDED 2026-10-22 (사용자: "왜 못했나 이러면 출제의 원인이 무능인 것처럼 보임"): 회사가 아니라 시도가 멈춘 자리를 묻습니다.
       // 그 전: "왜 막혔나" / "회사는 왜 해 보고도 못 했나".
-      { title: { ko: "어디서 멈췄나", en: "Where it stopped" }, body: { ko: "먼저 해 본 시도가 어느 지점에서 멈췄나", en: "Where the first attempt came to a stop" } },
-      { title: { ko: "어떻게 확인하나", en: "How to check" }, body: { ko: "가장 작게 확인할 방법", en: "The smallest way to check it" } },
+      { title: { ko: "멈춘 자리", en: "Where it stopped" }, body: { ko: "먼저 해 본 시도는 어디서 멈췄나요?", en: "Where did the earlier attempt stop?" } },
+      { title: { ko: "확인 방법", en: "The check" }, body: { ko: "가장 작게 확인해 볼 방법은 무엇일까요?", en: "What is the smallest way to check it?" } },
     ] as { title: Phrase; body: Phrase }[],
     // 2026-10-19 (시각 감사 1): 바로 아래 findClose와 같은 말을 해서 한 문단으로 합쳤습니다. 화면은 이 문단만 그리고 findClose는 그리지 않습니다.
     // DECIDED 2026-10-20 (사용자, 스크린숏: "너무 길어"): 프로그램 제목 바로 아래로 올라오며 네 줄이었습니다. 두 문장으로 줄였습니다.
@@ -2574,7 +2577,7 @@ export const naru = {
           // DECIDED 2026-10-08 (프로그램 브리프 2.2, D2): 보는 것은 결과물보다 문제에 다가간 방식입니다. 다 풀지 못해도 섭니다.
           // DECIDED 2026-10-20 (hwang 브리프 1.2): 조각문 넷을 두 문장으로.
           // DECIDED 2026-10-20 (사용자: 과정 절을 앞으로, 도착점 절을 뒤로. 블록마다 첫 문장이 도착점이라 "발표회"로 읽혔습니다): 둘째 문장의 앞뒤를 바꿨습니다.
-          ko: "이슈를 낸 회사 관계자 앞에서 5분 발표하고 5분 질의를 받습니다. 보는 것은 결과보다 문제에 어떻게 다가갔는지라, 다 풀지 못했어도 무대에 섭니다.",
+          ko: "이슈를 낸 회사 관계자 앞에서 발표하고 질의를 받습니다. 보는 것은 결과보다 문제에 어떻게 다가갔는지라, 다 풀지 못했어도 무대에 섭니다.",
           en: "You present for five minutes to the people from the company that set the issue, then take five minutes of questions. What we look at is how you approached the problem more than the result, so you go up even if it is not solved.",
         },
         // DECIDED 2026-10-22 (사용자, 스크린숏: Day 4 폰 카드가 다른 날보다 비어 있음): body의 첫 문장만 폰 카드에 그립니다. 둘 다 넣으면 상자가 다시 길어졌습니다.
@@ -2590,8 +2593,9 @@ export const naru = {
           // line만 그려서 그날 무엇을 발표하는지가 없었습니다. 무엇을 누구 앞에서 얼마나(body 첫 문장), 끝난 뒤 할 일을 차례로 적습니다.
           // 그 전: "끝난 뒤에는 멘토에게 먼저 연락해, 무엇을 만들었는지 한 줄로 전합니다. 클로징에서 이 이야기를 하고, 글로도 남겨 드립니다."
           // 같은 날 이어서(사용자: "또 너무 길어"): 세 문장을 둘로. 클로징 안내 문장을 뺐습니다.
-          ko: "이슈를 낸 기업 앞에서 팀이 찾은 문제와 어디까지 갔는지를 5분 발표하고, 5분 질의를 받습니다. 끝난 뒤에는 멘토에게 무엇을 만들었는지 한 줄로 먼저 연락합니다.",
-          en: "You present to the company that set the issue for five minutes on the problem your team found and how far you got, then take five minutes of questions. Afterwards, message your mentor first with one line on what you built.",
+          // 2026-10-23 (사용자: "정확히 몇 분 발표 질의 하는지는 빼줘"): 5분, 5분을 뺐습니다.
+          ko: "이슈를 낸 기업 앞에서 팀이 찾은 문제와 어디까지 갔는지를 발표하고, 질의를 받습니다. 끝난 뒤에는 멘토에게 무엇을 만들었는지 한 줄로 먼저 연락합니다.",
+          en: "You present to the company that set the issue on the problem your team found and how far you got, then take its questions. Afterwards, message your mentor first with one line on what you built.",
         },
         // DECIDED 2026-10-10 (중복 브리프 B1): 칩 "멘토링 없음"을 뺐습니다(위 Day 3과 같은 이유).
         chips: [{ ko: "시상과 클로징", en: "Awards and closing" }],
