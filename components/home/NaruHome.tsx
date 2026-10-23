@@ -1138,13 +1138,14 @@ export default function NaruHome() {
               아래 끝에, 오른쪽은 다섯 줄이 높이를 나눠 마지막 선이 왼쪽 표의 마지막 선과 같은 높이에 섭니다. */}
           <div className="grid gap-x-[32px] gap-y-[48px] lg:grid-cols-2 lg:gap-x-[64px]">
             <div className="min-w-0 lg:flex lg:flex-col">
-              <p className={`mt-[12px] first:mt-0 break-keep text-left ${BODY} leading-relaxed text-white/85 sm:mt-[16px]`}>
+              {/* DECIDED 2026-10-23 (모바일 점검): 이 세 문단만 폰에서 왼쪽이고 위아래가 모두 가운데라 축이 한 번 바뀌었습니다. 폰은 가운데(brand 10장 "글은 하나의 축"), sm부터 왼쪽. */}
+              <p className={`mt-[12px] first:mt-0 break-keep text-center sm:text-left ${BODY} leading-relaxed text-white/85 sm:mt-[16px]`}>
                 {t(naru.december.programConcrete).replace("{range}", formatDecemberRange(locale)).replace("{city}", DECEMBER_CITY[locale])}
               </p>
-              <p className={`mt-[13.5px] first:mt-0 break-keep text-left ${BODY} leading-relaxed text-white/70 sm:mt-[16px]`}>
+              <p className={`mt-[13.5px] first:mt-0 break-keep text-center sm:text-left ${BODY} leading-relaxed text-white/70 sm:mt-[16px]`}>
                 {t(naru.december.crossingLine)}
               </p>
-              <p className={`mt-[13.5px] first:mt-0 break-keep text-left ${BODY} leading-relaxed text-white/70 sm:mt-[16px]`}>
+              <p className={`mt-[13.5px] first:mt-0 break-keep text-center sm:text-left ${BODY} leading-relaxed text-white/70 sm:mt-[16px]`}>
                 <TermLink text={t(naru.december.notSequel)} term={t(naru.december.notSequelTerm)} href="/naru#core" />
               </p>
               <dl data-center-zone="stats" className="mt-[45px] lg:mt-[48px] flex items-stretch justify-center">

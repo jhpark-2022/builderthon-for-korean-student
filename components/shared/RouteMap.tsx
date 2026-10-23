@@ -161,8 +161,10 @@ export default function RouteMap({
             <li key={s.key} className="relative flex-1">
               <Box
                 {...(onSelect ? { type: "button" as const, ...(controls ? { "aria-expanded": on, "aria-controls": controls(index) } : { "aria-pressed": on }), onClick: () => onSelect(index) } : {})}
-                className={`flex h-full w-full flex-col items-center gap-1.5 rounded-xl px-1 py-2.5 text-center ${onSelect ? `max-sm:cursor-pointer sm:pointer-events-none ${on ? "max-sm:bg-white/[0.07]" : ""}` : ""}`}
+                className={`flex h-full w-full flex-col items-center gap-1.5 rounded-xl px-1 py-2.5 text-center ${onSelect ? "max-sm:cursor-pointer sm:pointer-events-none" : ""}`}
               >
+                {/* DECIDED 2026-10-23 (모바일 점검): 선택 판(max-sm:bg)은 로고 줄을 뺀 정거장 부분에만 깝니다. 그 전에는 Box 전체라
+                    장소 로고(GSC)가 눌린 단추처럼 보였고, 판 없는 옆 로고(MARU180)와 달라 보였습니다. */}
                 {hasLogos && (
                   <span className="flex h-7 w-full items-end justify-center">
                     {s.logo && (
@@ -172,6 +174,7 @@ export default function RouteMap({
                     )}
                   </span>
                 )}
+                <span className={`flex w-full flex-col items-center gap-1.5 rounded-xl ${hasLogos ? "-mx-1 px-1 py-1.5" : ""} ${onSelect && on ? "max-sm:bg-white/[0.07]" : ""}`}>
                 <span className="relative flex h-8 items-center justify-center">
                   {anchor ? (
                     <span
@@ -215,6 +218,7 @@ export default function RouteMap({
                     {s.badge}
                   </span>
                 )}
+                </span>
               </Box>
               {/* DECIDED 2026-10-20 (사용자, hwang 브리프 3.8, 감사 W12): url이 있으면 로고 줄 위에 새 창 링크를 겹칩니다(호버 설명 대신).
                   정거장이 폰에서 button이라 링크를 그 안에 넣지 않고 형제로 둡니다(버튼 안의 링크는 HTML에서 허용되지 않습니다). */}
