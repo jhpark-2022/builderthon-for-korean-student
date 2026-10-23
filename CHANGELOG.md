@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-23 폰 홈 함께하는 곳의 서울 휘장](#2026-10-23-home-campuses-phone)
 - [2026-10-23 /naru 폰에서도 히어로의 휘장](#2026-10-23-naru-hero-campuses-phone)
 - [2026-10-23 /naru 히어로의 휘장](#2026-10-23-naru-hero-campuses)
 - [2026-10-23 /naru 빛은 늘 커서에](#2026-10-23-naru-cursor-always)
@@ -340,6 +341,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-23-home-campuses-phone"></a>
+## 2026-10-23 폰 홈 함께하는 곳의 서울 휘장
+- 범위: lib/background/scene/BackgroundScene.ts(seoulK), components/home/SeoulCampuses.tsx(touch)
+- 한 것: 사용자 요청("폰 버전에서는 12월 이벤트의 경우에는 빛 효과 없이 학교 로고들 맨 아래 도와주시는 분에 보이도록"). 마우스가 없는 화면에서 홈의 함께하는 곳(#partners)이 화면 가운데에 오면 서울 안의 대학교 휘장을 커서 빛 없이 0.6 밝기로 늘 보입니다. /naru 히어로와 같은 방식. 데스크톱은 커서 빛 안에서만 그대로. brand 10장 사이트 규칙.
+- 검증: 390x844 터치 에뮬레이션, 홈 맨 위 --on 0.000, #partners 가운데 0.600에서 휘장 확인. tsc 통과.
+- 커밋: 9d5f21b
 
 <a id="2026-10-23-naru-hero-campuses-phone"></a>
 ## 2026-10-23 /naru 폰에서도 히어로의 휘장
