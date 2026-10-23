@@ -7,7 +7,7 @@
 // (폭과 정렬 토큰, 읽기 판, 폰 접힘, 등록 미리 보기 버튼, 푸터)을 여기 한 곳에 둡니다. 복사하지 않습니다.
 // 아래 조각들은 components/home/NaruHome.tsx에서 정의만 옮긴 것입니다. 마크업과 클래스는 그대로입니다.
 // ─────────────────────────────────────────────────────────────────────────────
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
 import { naru, naruLinks, openChatLabels, register as registerCopy } from "@/data/naru";
@@ -27,61 +27,8 @@ import OpenChatLink from "@/components/ui/OpenChatLink";
 // ──────────────────────────────────────────────────────────────────────────────
 // 카드 한 장. 8월의 Glass와 같은 값이지만, 그 컴포넌트는 Journey.tsx 안에
 // 있습니다. 두 줄짜리 래퍼를 꺼내려고 5,157줄 파일을 건드리지 않았습니다.
-/**
- * 폰에서만 접히는 묶음. DECIDED 2026-10-10 (사용자: 데스크톱은 지금이 좋다, 폰은 내용이 너무 많고 지저분하다).
- * sm(640px) 아래에서는 안의 내용을 숨기고 단추 하나를 둡니다. 누르면 그 아래에 펼쳐집니다.
- * sm 이상에서는 감싸는 div가 display: contents라 상자가 생기지 않고, 단추도 없습니다. 데스크톱의 배치는 그대로입니다.
- * 글은 지우지 않습니다. 안에 앵커(id)가 있는 블록은 감싸지 않습니다. 접혀 있으면 그 링크가 갈 곳이 없습니다.
- *
- * DECIDED 2026-10-10 (사용자: "너무 많다, 뭐를 눌렀고 어디를 눌러야 닫는지 모르겠다"):
- * 단추는 내용의 위에 있고 누른 뒤에도 그 자리에 남습니다. 열리면 색이 차고 글이 "접기"로 바뀝니다.
- * 전에는 단추가 내용 아래에 있어서, 열면 단추가 화면 밖으로 밀려나 무엇을 눌렀는지 알 수 없었습니다.
- * 긴 내용의 끝에도 접기가 하나 더 있고, 누르면 위의 단추로 돌아갑니다.
- * 이름은 묶음마다 다릅니다("이어서 읽기"가 셋이면 구분이 안 됩니다). 짧은 글 둘은 접지 않고 그대로 보입니다. 홈에 넷입니다.
- *
- * 2026-10-11 (리뷰 A5): id는 접히는 묶음의 안정된 id입니다. 단추가 aria-controls로 가리킵니다. 묶음은 닫혀 있어도
- * 마운트돼 있어(폰에서 display: none) 그 id는 항상 있습니다.
- */
-export function PhoneFold({ id, more, less, children }: { id: string; more: string; less: string; children: React.ReactNode }) {
-  const [open, setOpen] = useState(false);
-  const head = useRef<HTMLButtonElement>(null);
-  const chevron = (up: boolean) => (
-    <svg aria-hidden width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={up ? "rotate-180" : ""}><path d="m6 9 6 6 6-6" /></svg>
-  );
-  return (
-    <>
-      <div className="mt-5 text-center sm:hidden">
-        <button
-          ref={head}
-          type="button"
-          aria-expanded={open}
-          aria-controls={id}
-          onClick={() => setOpen((v) => !v)}
-          className={`inline-flex min-h-[44px] items-center gap-2 rounded-full border px-5 transition-[background-color,border-color,transform] duration-200 active:scale-[0.98] ${BODY} font-bold ${open ? "border-accent/50 bg-accent/15 text-white" : "border-white/20 text-accent"}`}
-        >
-          {open ? less : more}
-          {chevron(open)}
-        </button>
-      </div>
-      <div id={id} className={open ? "contents" : "max-sm:hidden sm:contents"}>{children}</div>
-      {open && (
-        <div className="mt-6 text-center sm:hidden">
-          <button
-            type="button"
-            onClick={() => {
-              setOpen(false);
-              requestAnimationFrame(() => head.current?.scrollIntoView({ block: "center" }));
-            }}
-            className={`inline-flex min-h-[44px] items-center gap-2 px-5 ${BODY} font-bold text-accent`}
-          >
-            {less}
-            {chevron(true)}
-          </button>
-        </div>
-      )}
-    </>
-  );
-}
+// DECIDED 2026-10-23 (사용자: "desktop is the source of truth. sync mobile with desktop"): 폰에서만 접던 PhoneFold(2026-10-10)를 없앴습니다.
+// 폰도 데스크톱과 같은 글을 같은 순서로 보여 줍니다. 배치(세로 쌓기, 가운데 축)만 폰에 맞춥니다.
 
 export function Card({ children, className = "", id }: { children: React.ReactNode; className?: string; id?: string }) {
   return (
