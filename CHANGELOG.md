@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-23 모바일 점검 반영 11건](#2026-10-23-mobile-audit)
 - [2026-10-23 폰 홈 함께하는 곳의 서울 휘장](#2026-10-23-home-campuses-phone)
 - [2026-10-23 /naru 폰에서도 히어로의 휘장](#2026-10-23-naru-hero-campuses-phone)
 - [2026-10-23 /naru 히어로의 휘장](#2026-10-23-naru-hero-campuses)
@@ -341,6 +342,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-23-mobile-audit"></a>
+## 2026-10-23 모바일 점검 반영 11건
+- 범위: app/globals.css, lib/background/scene/BackgroundScene.ts, components/journey/Journey.tsx, JourneyNav.tsx, components/shared/RouteMap.tsx, components/home/NaruHome.tsx, components/crossing/TeamTool.tsx, data/crossingTeam.ts
+- 한 것: 390x844로 홈, /naru, 8월, /match, /crossing/team을 화면 단위로 캡처해 점검하고 사용자가 "모든 제안 반영"을 골랐습니다. 공통: 폰의 형상 틈 200 → 96px(빈 공간으로 읽힘), 늘 보이는 휘장은 세로 화면에서 0.35, 홈 함께하는 곳의 휘장은 제목이 가운데를 지나면 끔(표 로고와 포개짐). 8월: 폰에서 맨 위로 단추 뺌(본문과 겹침), 로고 줄은 멈춰도 돌아오지 않음(홈과 같은 규칙, 2026-08-17의 정지 시 복귀 대신), 날 카드는 폰에서 제목까지만(상세는 모달), 레일 왼쪽 페이드 12 → 36px. 홈: 노선도 선택 판에서 장소 로고 제외, 날 카드 아래 세 문단 폰에서 가운데(brand 10장 한 축). 팀 페이지: /match와 같은 돌아가기 머리, amber → 주황(brand 10장 색), 시간표 옆으로 미는 안내와 오른쪽 페이드. 제안하지 않은 것(/naru 푸터 빛 자리, 카드 화살표 방향, 8월의 두 가지 펼침 링크)은 두었습니다.
+- 검증: 390px 재캡처로 11건 모두 확인(8월 헤더 스크롤 뒤 한 줄, 날 카드 접힘, 단추 없음, 노선도 판, 문단 가운데, 팀 머리와 주황). 1440px 홈 노선도, 8월 헤더와 단추, 팀 시간표는 전과 같음. tsc 통과.
+- 커밋: adec124, fe3195c, 7c21738, d336577
 
 <a id="2026-10-23-home-campuses-phone"></a>
 ## 2026-10-23 폰 홈 함께하는 곳의 서울 휘장
