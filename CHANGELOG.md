@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-23 오픈채팅 강조, /naru 빛, 8월 색, 전 페이지 글 리뷰](#2026-10-23-chat-light-aug-copy)
 - [2026-10-23 남는 것 다섯 칸, Day 4, 글 다듬기](#2026-10-23-gains-takeaways)
 - [2026-10-23 팀 방문은 세지 않음](#2026-10-23-team-analytics)
 - [2026-10-23 폰 원페이저 스와이프 랙](#2026-10-23-page-swipe-lag)
@@ -328,6 +329,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-23-chat-light-aug-copy"></a>
+## 2026-10-23 오픈채팅 강조, /naru 빛, 8월 색, 전 페이지 글 리뷰
+- 범위: components/journey/JourneyNav.tsx, Journey.tsx, components/ui/Button.tsx, lib/background(scene, Pointer, Atmosphere, ParticleField), data(naru, dictionary, quiz, quiz-2026-12, quizEditions, quizExplanations), docs/brand.md
+- 한 것: 사용자 요청 넷. (1) 폰 헤더 오픈채팅이 EN/KR 테두리와 무게가 같아 묻혀, 세 탭 모두 나루 그라데이션으로 채움. 폰은 아이콘만(글자를 넣으면 로고와 0px). (2) /naru는 본문 전체가 커서 빛 구간이라 홈의 정거장 길이 한 번도 안 보였음. 마우스를 움직이는 동안만 커서를 따르고 2초 쉬면 정거장으로(사용자 선택). (3) 8월 배경이 다른 두 탭과 달라 어색: 입자 조각은 두고(9/15 결정) 하늘, 입자, 히어로 덮개, 버튼만 나루 색으로(사용자 선택, brand 10장 색). (4) 홈과 /naru 밖의 페이지와 EN 글 리뷰.
+- 글 리뷰에서 고친 것: 8월 "Day 1 참석 59명" 뺌(brand 8장), 뒤집혀 읽히던 멘토 연락 문장, "마지막 날 무대에 선 21팀", 12월 퀴즈의 "덱 제출"과 "발표" → 성과 공유회(brand 7장), "빛나요" → "잘 맞아요"(brand 5장 치켜세우지 않음), EN pitch(brand 5장), EN 번역투 아홉 곳, 현장 멘토링 "Day 2나 Day 3". 사용자 확인 뒤: 8월 "2026 가을 빌더 커리큘럼" 칸 뺌(약속하지 않음), /quiz 저장 안내를 지금 시제로, 12월 ESTP 역할 "그로스, 스프린터", brand 7장에 트랙별 인기투표 한 줄. 8월 원문(배너가 "그때의 말 그대로"라 밝힌 층)은 건드리지 않음.
+- 검증: /naru에서 스크롤만 하면 빛이 정거장 셋을 옮김, 커서를 움직이면 따라가고 3.5초 뒤 정거장 자리로 돌아옴(값으로 확인). 390px에서 헤더 겹침 없음. tsc와 next build 통과.
+- 커밋: 6f25673
 
 <a id="2026-10-23-gains-takeaways"></a>
 ## 2026-10-23 남는 것 다섯 칸, Day 4, 글 다듬기
