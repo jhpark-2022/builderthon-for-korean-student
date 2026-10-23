@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-23 /naru 커서를 멈춰도 빛이 남음](#2026-10-23-naru-cursor-rest)
 - [2026-10-23 /naru 싱가포르 안의 대학교 휘장](#2026-10-23-singapore-campuses)
 - [2026-10-23 Day 3 세션 Open tables](#2026-10-23-day3-open-tables)
 - [2026-10-23 새 Supabase 표의 grant 규칙](#2026-10-23-supabase-grants)
@@ -336,6 +337,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-23-naru-cursor-rest"></a>
+## 2026-10-23 /naru 커서를 멈춰도 빛이 남음
+- 범위: lib/background/interactions/Pointer.ts, lib/background/scene/BackgroundScene.ts
+- 한 것: 사용자 제보(운영 스크린숏: "클릭을 해야 따라가는데?"). 원인은 같은 날 오전의 "커서가 2초 쉬면 정거장으로" 규칙. 휘장을 보려고 커서를 섬 위에 두면 2초 뒤 빛이 떠나 휘장이 꺼지고, 클릭(pointerdown)이 움직임으로 쳐져 다시 왔습니다. 이제 쉬는 것만으로는 돌아가지 않고, 커서를 둔 채 화면 0.25장 넘게 스크롤했을 때만 정거장 길로 돌아갑니다(정거장 길이 보이게 한 오전 결정은 유지). 휠은 커서 자리만 알리고 움직임으로 치지 않습니다. 홈은 바뀌지 않음.
+- 검증: 운영에서 재현(멈춘 뒤 2.5초 --on 0.103, 클릭 뒤 0.964). 고친 뒤 로컬: 5초 멈춤 --on 1.000, 600px 스크롤 뒤 0.000. tsc 통과.
+- 커밋: 4554b08
 
 <a id="2026-10-23-singapore-campuses"></a>
 ## 2026-10-23 /naru 싱가포르 안의 대학교 휘장
