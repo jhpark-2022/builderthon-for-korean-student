@@ -85,8 +85,9 @@ export const CROSSING_FORM: Field[] = [
     help: { ko: "운영진이 따로 연락할 일이 있을 때만 씁니다.", en: "Only used if the organisers need to reach you directly." } },
   { key: "contact", scope: "member", type: "text", required: true, fixed: true, verbatim: true,
     label: { ko: "카카오톡 ID", en: "KakaoTalk ID" },
-    // 2026-10-12 (등록 브리프 1.4, 리뷰 S6): ID를 어디서 보는지, 그 방이 오픈채팅과 다른 방이라는 것을 끝에 붙였습니다.
-    help: { ko: "참가자 카카오톡 방에 초대할 때 씁니다. 장소와 Day 0 안내가 그 방에서 나갑니다. ID는 카카오톡 > 설정 > 프로필에서 볼 수 있습니다. 참가자 방은 오픈채팅과 다른, 참가자만 있는 방입니다.", en: "Used to invite you to the participant KakaoTalk room, where venue and Day 0 details are shared. You can find your ID in KakaoTalk > Settings > Profile. The participant room is separate from the open chat and is for participants only." } },
+    // DECIDED 2026-10-23 (사용자, 스크린숏: "이거는 빼줘"): 아래 설명 세 문장(참가자 방 초대, ID 찾는 곳, 오픈채팅과 다른 방)을 뺐습니다.
+    // 그 전 문장은 git 이력에 있습니다(2026-10-12 등록 브리프 1.4).
+  },
   { key: "university", scope: "member", type: "text", required: true, fixed: true, autoComplete: "organization",
     // DECIDED 2026-10-15 (사용자: "학교 이름은 필수임"): 필수입니다.
     label: { ko: "학교", en: "School" },
