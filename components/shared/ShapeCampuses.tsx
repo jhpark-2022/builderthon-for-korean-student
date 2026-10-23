@@ -34,9 +34,8 @@ export default function ShapeCampuses({ id, campuses, touch = false }: { id: str
         const h = `calc(var(--ss, 0px) * ${c.size} * var(--crest-k, 1))`;
         return (
           <div key={c.name.en}>
-            {/* 캠퍼스 자리의 점. 형상 가장자리 점과 같은 hi0(#C79BB4)라 표의 로고가 아니라 지도의 일부로 읽힙니다. */}
-            <span className="absolute h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C79BB4]" style={{ left, top }} />
-            {/* 휘장은 그 점 바로 위. 흰 휘장의 모양만 빌려 hi0로 칠합니다(마스크). */}
+            {/* DECIDED 2026-10-23 (사용자: "그 점 없애줘"): 캠퍼스 자리에 찍던 점(h-1.5, hi0)을 뺐습니다. 휘장은 전과 같은 자리(그 점이 있던
+                곳 바로 위)에 그대로 섭니다. 흰 휘장의 모양만 빌려 hi0로 칠합니다(마스크). */}
             <span
               className="absolute -translate-x-1/2 bg-[#C79BB4]"
               style={{
