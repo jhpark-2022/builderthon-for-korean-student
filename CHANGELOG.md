@@ -340,8 +340,8 @@
 <a id="2026-10-23-singapore-campuses"></a>
 ## 2026-10-23 /naru 싱가포르 안의 대학교 휘장
 - 범위: components/shared/ShapeCampuses.tsx(새), components/home/SeoulCampuses.tsx, components/naru/NaruPage.tsx, data/naru.ts(singaporeCampuses), lib/background/scene/BackgroundScene.ts, public/partners/logos/white/trimmed/uni-nus, uni-ntu, uni-smu
-- 한 것: 사용자 요청(스크린숏: 서울 형상처럼 커서를 따라 빛이 움직이면서 NUS, NTU, SMU 로고가 보이게). 홈의 서울 휘장 층(10/22)을 공용 컴포넌트로 묶고 /naru 싱가포르 형상에 같은 층을 얹었습니다. 캠퍼스 자리는 형상 생성 스크립트와 같은 정규화로 실제 위경도를 옮긴 값(켄트리지, 주롱, 시내)이고 서울대로 검산했습니다. 휘장은 마케팅 템플릿의 uni_*_w.png. 8월의 네 학교 중 셋(brand 8장), 판 뒤에서는 가려지고 틈에서만 보이는 규칙은 그대로(brand 10장 사이트 규칙).
-- 검증: 1440px /naru에서 세 캠퍼스 위로 커서를 옮겨 --on 1.000과 휘장 확인, 홈 서울(연세대) 그대로. tsc 통과.
+- 한 것: 사용자 요청(스크린숏: 서울 형상처럼 커서를 따라 빛이 움직이면서 NUS, NTU, SMU 로고가 보이게). 홈의 서울 휘장 층(10/22)을 공용 컴포넌트로 묶고 /naru 싱가포르 형상에 같은 층을 얹었습니다. 처음에는 실제 캠퍼스 자리(켄트리지, 주롱, 시내)였고, 같은 날 사용자 요청("중간으로 모여줘", 실제 자리일 필요 없음)으로 서쪽에서 동쪽 순서(NTU, NUS, SMU)만 지켜 섬 가운데 한 줄로 모았습니다. 휘장은 마케팅 템플릿의 uni_*_w.png. 8월의 네 학교 중 셋(brand 8장), 판 뒤에서는 가려지고 틈에서만 보이는 규칙은 그대로(brand 10장 사이트 규칙).
+- 검증: 1440px /naru에서 세 휘장 위로 커서를 옮겨 --on 1.000과 휘장 확인, 홈 서울(연세대) 그대로. tsc 통과.
 - 커밋: 675278a
 
 <a id="2026-10-23-day3-open-tables"></a>
