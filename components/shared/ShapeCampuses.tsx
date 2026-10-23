@@ -11,14 +11,15 @@ export type ShapeCampus = { name: Phrase; src: string; w: number; h: number; u: 
  *   --lx, --ly  빛의 자리(px)                     --lr  빛의 반경(px)
  *   --on        켜진 정도 0..1(커서 빛 구간에서 마우스가 화면 안에 있을 때)
  * id는 배경이 찾는 이름입니다(seoul-campuses, singapore-campuses).
- * 마우스가 있는 화면에서만 그립니다. 꾸밈이라 보조 기술에는 숨깁니다.
+ * 마우스가 있는 화면에서만 그립니다. touch면 폰에서도 그립니다(/naru 히어로에서는 커서 없이 늘 보이므로, DECIDED 2026-10-23 사용자:
+ * "모바일 view에는 적용이 안 돼 있는 것 같은데"). 꾸밈이라 보조 기술에는 숨깁니다.
  */
-export default function ShapeCampuses({ id, campuses }: { id: string; campuses: ShapeCampus[] }) {
+export default function ShapeCampuses({ id, campuses, touch = false }: { id: string; campuses: ShapeCampus[]; touch?: boolean }) {
   return (
     <div
       id={id}
       aria-hidden
-      className="pointer-events-none fixed inset-0 hidden [@media(hover:hover)_and_(pointer:fine)]:block"
+      className={`pointer-events-none fixed inset-0 ${touch ? "block" : "hidden [@media(hover:hover)_and_(pointer:fine)]:block"}`}
       style={{
         opacity: "var(--on, 0)",
         WebkitMaskImage: "radial-gradient(circle var(--lr, 0px) at var(--lx, -999px) var(--ly, -999px), #000 0%, rgba(0,0,0,0.55) 45%, transparent 100%)",
