@@ -362,6 +362,8 @@ export class BackgroundScene {
   private heldUv: { x: number; y: number } | null = null;
   // 커서 빛 구간이 페이지 전체([data-cursor-light], /naru)인가. 그러면 옮긴 자리에 머물게(heldUv) 하지 않습니다(2026-10-23).
   private cursorWholePage = false;
+  // 마우스가 있는 화면인가(휘장 층의 CSS와 같은 조건). 매 프레임 새로 묻지 않게 한 번 만듭니다.
+  private readonly fineMql = typeof window !== "undefined" ? window.matchMedia("(hover: hover) and (pointer: fine)") : null;
   private readonly prevNdc = new THREE.Vector2();
   // 서울 형상의 화면 자리(px). placeSeoul이 채웁니다. 대학교 휘장 층(#seoul-campuses)이 씁니다(2026-10-22).
   private seoulPx = { cx: 0, cy: 0, s: 0 };
@@ -1104,14 +1106,18 @@ export class BackgroundScene {
         // 서울이 온전히 서 있을 때만(건너기 전, 판 뒤가 아닐 때). 값이 바뀔 때만 씁니다.
         // DECIDED 2026-10-23 (사용자): 싱가포르(/naru)도 같은 층입니다. 서울은 건너기 전(1 − morph), 싱가포르는 건넌 뒤(morph)에 켜집니다.
         // /naru 히어로에서는(heroK) 빛의 원 대신 형상 중심의 큰 원으로 휘장 전체를 보입니다.
+        // DECIDED 2026-10-23 (사용자: "폰 버전에서는 12월 이벤트의 경우에는 빛 효과 없이 학교 로고들 맨 아래 도와주시는 분에 보이도록"):
+        // 마우스가 없는 화면에서는 홈의 함께하는 곳(#partners) 구간에서 서울 휘장을 같은 식으로 늘 보입니다(seoulK).
+        const noMouse = !this.fineMql?.matches;
+        const seoulK = noMouse && !this.cursorWholePage ? inPartners : 0;
         const lx = (gx * 0.5 + 0.5) * window.innerWidth, ly = (0.5 - gy * 0.5) * vh;
         for (const [id, S, on] of [
-          ["seoul-campuses", this.seoulPx, this.cursorMix * shapeOpacity * (1 - morph)],
+          ["seoul-campuses", this.seoulPx, Math.max(this.cursorMix, seoulK * HERO_CAMPUS_ON) * shapeOpacity * (1 - morph)],
           ["singapore-campuses", this.singaporePx, Math.max(this.cursorMix, heroK * HERO_CAMPUS_ON) * shapeOpacity * morph],
         ] as const) {
           const el = document.getElementById(id);
           if (!el) continue;
-          const k = id === "singapore-campuses" ? heroK : 0;
+          const k = id === "singapore-campuses" ? heroK : seoulK;
           const light = `--lx:${(lx + (S.cx - lx) * k).toFixed(1)}px;--ly:${(ly + (S.cy - ly) * k).toFixed(1)}px;--lr:${(PL.radius * vh + k * 3 * S.s).toFixed(1)}px`;
           const vars = `--sx:${S.cx.toFixed(1)}px;--sy:${S.cy.toFixed(1)}px;--ss:${S.s.toFixed(1)}px;${light};--on:${on.toFixed(3)}`;
           if (vars === this.campusVars[id]) continue;
