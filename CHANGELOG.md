@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-23 남는 것 판, 폰도 데스크톱 그림으로](#2026-10-23-gains-phone-sync)
 - [2026-10-23 모바일 점검 반영 11건](#2026-10-23-mobile-audit)
 - [2026-10-23 폰 홈 함께하는 곳의 서울 휘장](#2026-10-23-home-campuses-phone)
 - [2026-10-23 /naru 폰에서도 히어로의 휘장](#2026-10-23-naru-hero-campuses-phone)
@@ -342,6 +343,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-23-gains-phone-sync"></a>
+## 2026-10-23 남는 것 판, 폰도 데스크톱 그림으로
+- 범위: components/home/NaruHome.tsx (#gains), 되돌림: components/home/shared.tsx, components/naru/NaruPage.tsx, components/journey/Journey.tsx, components/shared/RouteMap.tsx
+- 한 것: 사용자가 "mobile version and desktop이랑 안 맞는데, desktop is the source of truth"라 해서 세 페이지에서 폰만 접거나 숨기던 글을 모두 데스크톱과 같게 했다가(a6ee612, 0d6f5e4, 올라감), 바로 "undo it, 와서 얻는 것 at 12월 이벤트 디자인만 맞추어줘"로 둘을 되돌리고(b2276b3, 98e8d1a) 홈 "오면 무엇이 남는가" 판만 맞췄습니다. 폰도 데스크톱처럼 판 맨 위에 Day 0~4 머리 하나(이름과 정거장, Day 4만 주황), 날마다의 옅은 세로 띠, 행마다 같은 다섯 칸 위의 막대입니다. 폰은 글 칸이 없어 다섯 칸이 판 너비를 다 쓰고 글은 가운데, 막대는 글 아래. 행마다 달던 0~4 작은 노선(2026-10-19)은 뺐습니다. 머리의 정거장은 mt-auto라 "컨텍스트 열기"가 두 줄로 접혀도 다섯 정거장이 한 선에 섭니다. 근거: brand 7장 닷새, 10장 "글은 하나의 축".
+- 검증: 390px에서 머리 한 선, 다섯 행 막대가 Day 칸에 맞음(01: 0~1, 02: 2~3, 03: 3, 04: 4, 05: 1~4). 1440px은 전과 같음. tsc 통과.
+- 커밋: b2276b3, 98e8d1a, 075cb1e
 
 <a id="2026-10-23-mobile-audit"></a>
 ## 2026-10-23 모바일 점검 반영 11건
