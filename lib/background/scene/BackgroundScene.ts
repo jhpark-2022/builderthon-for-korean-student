@@ -16,8 +16,10 @@ import { computePhases, computeCrossingPhases, crossingToPhases, type CrossingAn
 import { clamp } from "../utils/math";
 import { isScrollLocked } from "../../useBodyScrollLock";
 
-// /naru 히어로에서 늘 보이는 휘장의 밝기(0..1, DECIDED 2026-10-23). 제목과 겹치므로 빛 안에서보다 낮게 둡니다.
+// 커서 빛 없이 늘 보이는 휘장의 밝기(0..1, DECIDED 2026-10-23). 제목과 겹치므로 빛 안에서보다 낮게 둡니다.
+// 폰(세로)은 섬이 작아 휘장이 글자와 더 바짝 겹쳐 더 낮춥니다(같은 날 모바일 점검).
 const HERO_CAMPUS_ON = 0.6;
+const HERO_CAMPUS_ON_PORTRAIT = 0.35;
 
 /**
  * Top-level controller. Owns the renderer, camera, layers, and the animation
@@ -1109,11 +1111,14 @@ export class BackgroundScene {
         // DECIDED 2026-10-23 (사용자: "폰 버전에서는 12월 이벤트의 경우에는 빛 효과 없이 학교 로고들 맨 아래 도와주시는 분에 보이도록"):
         // 마우스가 없는 화면에서는 홈의 함께하는 곳(#partners) 구간에서 서울 휘장을 같은 식으로 늘 보입니다(seoulK).
         const noMouse = !this.fineMql?.matches;
-        const seoulK = noMouse && !this.cursorWholePage ? inPartners : 0;
+        // 2026-10-23 모바일 점검: 표(장소, 기술, 커뮤니티 줄)의 로고와 포개져 보여, 제목 "함께하는 곳"이 화면 가운데를 지난 뒤 0.35화면에 걸쳐 끕니다.
+        const pastHeading = ss01((mid - (this.partnersTop + 0.6 * vh)) / (0.35 * vh));
+        const seoulK = noMouse && !this.cursorWholePage ? inPartners * (1 - pastHeading) : 0;
+        const campusOn = portrait ? HERO_CAMPUS_ON_PORTRAIT : HERO_CAMPUS_ON;
         const lx = (gx * 0.5 + 0.5) * window.innerWidth, ly = (0.5 - gy * 0.5) * vh;
         for (const [id, S, on] of [
-          ["seoul-campuses", this.seoulPx, Math.max(this.cursorMix, seoulK * HERO_CAMPUS_ON) * shapeOpacity * (1 - morph)],
-          ["singapore-campuses", this.singaporePx, Math.max(this.cursorMix, heroK * HERO_CAMPUS_ON) * shapeOpacity * morph],
+          ["seoul-campuses", this.seoulPx, Math.max(this.cursorMix, seoulK * campusOn) * shapeOpacity * (1 - morph)],
+          ["singapore-campuses", this.singaporePx, Math.max(this.cursorMix, heroK * campusOn) * shapeOpacity * morph],
         ] as const) {
           const el = document.getElementById(id);
           if (!el) continue;

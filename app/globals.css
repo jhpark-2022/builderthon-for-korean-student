@@ -552,7 +552,8 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
 }
 
 /* DECIDED 2026-10-21: 콘텐츠 간격과 배경 형상을 보여 주는 틈은 별도입니다. */
-.naru-shape-gap { margin-top: 200px; }
+/* DECIDED 2026-10-23 (모바일 점검, 사용자 "모든 제안 반영"): 폰에서는 형상이 작고 흐려 틈이 빈 공간으로 읽혀 200px → 96px. sm부터는 그대로. */
+.naru-shape-gap { margin-top: 96px; }
 .naru-content-chapter + .naru-content-chapter { margin-top: 120px; }
 @media (min-width: 640px) {
   .naru-shape-gap { margin-top: 216px; }
