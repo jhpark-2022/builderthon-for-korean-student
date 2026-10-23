@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-23 Day 3 세션 Open tables](#2026-10-23-day3-open-tables)
 - [2026-10-23 새 Supabase 표의 grant 규칙](#2026-10-23-supabase-grants)
 - [2026-10-23 등록 폼 카카오톡 ID 설명 뺌](#2026-10-23-kakao-help)
 - [2026-10-23 Bloom 로고 교체](#2026-10-23-bloom-logo)
@@ -334,6 +335,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-23-day3-open-tables"></a>
+## 2026-10-23 Day 3 세션 Open tables
+- 범위: data/naru.ts(stages Day 3의 session, body)
+- 한 것: 사용자 결정. Day 3 세션을 "Founders from abroad"(해외 창업가 3시간, 9/27 결정)에서 "Open tables"(팀 사이의 칸을 걷고, 막힌 지점을 다른 팀에 묻고 서로의 생각을 빌려 갑니다)로. 근거는 Reactor School 피드백 10-22 회의록 3.7(처음 온 사람은 먼저 말을 걸지 않으니 팀이 섞이는 자리를 일부러 둔다). 세션 길이가 정해지지 않아 "3시간"은 쓰지 않음. 본문 둘째 문장(리허설을 팀끼리 보여 주기)은 새 세션과 겹치고 10/17에 미션이 바뀌어 뺌. "피치"는 brand 5장 금지어라 쓰지 않음. 판단 질문: 다른 팀도 막혀 있음을 봄(코어 01), 내 것을 남에게 설명해 봄(코어 02).
+- 검증: 1440px Day 3 카드 확인. tsc 통과.
+- 커밋: 6c37ea1
 
 <a id="2026-10-23-supabase-grants"></a>
 ## 2026-10-23 새 Supabase 표의 grant 규칙
