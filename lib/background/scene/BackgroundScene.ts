@@ -353,11 +353,8 @@ export class BackgroundScene {
   private glow = 0;
   // 커서가 마지막으로 둔 빛의 자리(uv). 있으면 정거장 대신 여기에 섭니다. 히어로로 돌아가면 지웁니다.
   private heldUv: { x: number; y: number } | null = null;
-  // 커서 빛 구간이 페이지 전체([data-cursor-light], /naru)인가. 그러면 커서가 쉬면 정거장 길로 돌아갑니다(2026-10-23).
+  // 커서 빛 구간이 페이지 전체([data-cursor-light], /naru)인가. 그러면 옮긴 자리에 머물게(heldUv) 하지 않습니다(2026-10-23).
   private cursorWholePage = false;
-  // 커서가 마지막으로 움직였을 때의 스크롤(px)과 그 시각. /naru에서 커서를 둔 채 스크롤했는지 봅니다(2026-10-23).
-  private moveScrollY = 0;
-  private lastMoveSeen = -1;
   private readonly prevNdc = new THREE.Vector2();
   // 서울 형상의 화면 자리(px). placeSeoul이 채웁니다. 대학교 휘장 층(#seoul-campuses)이 씁니다(2026-10-22).
   private seoulPx = { cx: 0, cy: 0, s: 0 };
@@ -387,7 +384,9 @@ export class BackgroundScene {
       const hero = document.getElementById("top");
       this.heroEnd = hero ? hero.getBoundingClientRect().bottom + sy : CROSSING.fallbackAnchors.heroEnd;
       // 정지 장면(/naru): 그 페이지의 #top은 히어로가 아니라 첫 챕터입니다. 해가 이미 다 내려간 자리에서 시작합니다.
-      if (this.still) this.heroEnd = -SEOUL_WATERMARK.stages.descendVh * window.innerHeight - 2;
+      // DECIDED 2026-10-23 (사용자: "처음에 스크롤을 안 해도"): 정거장 길로 넘기는 0.1화면(lightW)까지 앞에 둡니다. 전에는 2px만 앞서
+      // 맨 위에서 커서 빛이 거의 꺼져 있었습니다.
+      if (this.still) this.heroEnd = -(SEOUL_WATERMARK.stages.descendVh + 0.1) * window.innerHeight - 2;
       const naru = top("naru");
       if (naru !== null) this.naruTop = naru;
       const join = top("join");
@@ -514,7 +513,9 @@ export class BackgroundScene {
       const c1 = bottom - eBottom;
       // #join 판은 예외입니다. 그 뒤로 형상이 돌아오지 않아(사라짐) 짧게 사라져도 깜빡이지 않습니다.
       // 1920×1080에서 이 판의 덮개는 0.29화면입니다.
-      const hides = c1 > c0 && (c1 - c0 >= minHide || id === "join");
+      // DECIDED 2026-10-23 (사용자: "처음에 스크롤을 안 해도 학교들 로고가 보이게"): 정지 장면(/naru)의 첫 판은 싱가포르를 가리지 않습니다.
+      // 건너기가 없는 페이지라 판 뒤에서 바뀌는 것이 없고, 휘장은 커서 빛의 원 안에서만 보입니다.
+      const hides = c1 > c0 && (c1 - c0 >= minHide || id === "join") && !(this.still && id === "naru");
       plates.push({ id, top, bottom, left, right, coversX, cover: hides ? { c0, c1, f0: fadeMax, f1: fadeMax } : null });
     }
     plates.sort((a, b) => a.top - b.top);
@@ -1040,11 +1041,10 @@ export class BackgroundScene {
       // DECIDED 2026-10-23 같은 날 (사용자, 운영 스크린숏: "클릭을 해야 따라가는데? 커서를 따라 움직이는게 아니고?"): 커서를 섬 위에 두고 멈추면
       // 2초 뒤 빛이 정거장으로 가 버려 휘장이 꺼졌고, 클릭(pointerdown)해야 돌아왔습니다. 이제 쉬는 것만으로는 돌아가지 않고,
       // 커서를 둔 채 화면 0.25장 넘게 스크롤했을 때만 정거장 길로 돌아갑니다. 정거장 길이 보이는 것(오전 결정)은 그대로입니다.
-      const CURSOR_IDLE_S = 2;
-      if (this.pointer.lastMoveAt !== this.lastMoveSeen) { this.lastMoveSeen = this.pointer.lastMoveAt; this.moveScrollY = this.scrollY; }
-      const resting = (performance.now() - this.pointer.lastMoveAt) / 1000 >= CURSOR_IDLE_S && Math.abs(this.scrollY - this.moveScrollY) > 0.25 * vh;
-      const moving = !this.cursorWholePage || !resting;
-      const cursorWant = this.pointer.mouse && this.pointer.inside && moving ? inPartners : 0;
+      // DECIDED 2026-10-23 저녁 (사용자, 운영 스크린숏: "커서를 처음에 gap에 놔도 안 따라감, 클릭을 해야만 따라감"): 마우스를 그대로 두고
+      // 트랙패드로 스크롤하면 위의 "스크롤하면 정거장으로"가 걸려 빛이 떠났습니다. 그 규칙을 거둡니다. /naru에서는 커서 자리를 아는 동안
+      // (움직임, 누름, 휠) 빛이 늘 커서에 있습니다. 오전의 "정거장 길이 보이게"는 이 요청으로 대신합니다.
+      const cursorWant = this.pointer.mouse && this.pointer.inside ? inPartners : 0;
       this.cursorMix += (cursorWant - this.cursorMix) * Math.min(1, dt * 4);
       if (this.cursorMix > 0.001) {
         const c = toUv({ fx: this.pointer.ndc.x * 0.5 + 0.5, fy: this.pointer.ndc.y * 0.5 + 0.5 });
