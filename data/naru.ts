@@ -2509,8 +2509,10 @@ export const naru = {
         when: { ko: "Day 3", en: "Day 3" },
         dayOffset: 3,
         body: {
-          ko: "정의한 지표로 결과를 확인하고, 틀리는 경우를 직접 찾아 한계로 정리합니다. 리허설을 팀끼리 서로 보여 주고 의견을 주고받습니다.",
-          en: "You check the result against the measure you set, hunt for the cases where it fails, and write those down as limits. Teams run their rehearsal for each other and trade notes.",
+          // DECIDED 2026-10-23 (사용자): 둘째 문장 "리허설을 팀끼리 서로 보여 주고 의견을 주고받습니다."를 뺐습니다. 아래 세션(Open tables)이
+          // 같은 말을 하고, 그 미션은 2026-10-17에 멘토 찾아가기와 진척 공유로 바뀌었습니다.
+          ko: "정의한 지표로 결과를 확인하고, 틀리는 경우를 직접 찾아 한계로 정리합니다.",
+          en: "You check the result against the measure you set, hunt for the cases where it fails, and write those down as limits.",
         },
         // DECIDED 2026-10-17 (사용자: "'팀 사이 공유는 8월에 없었던 자리입니다'랑 3일차의 존재 목적이랑 무슨 연관"): 그 전의 줄은 팀끼리
         // 리허설을 보여 주는 자리가 이 날의 요점이던 때(PDF 04, gaps[2])의 것이고, 그 미션은 2026-10-17에 멘토 찾아가기와 진척 공유로 바뀌었습니다.
@@ -2529,11 +2531,15 @@ export const naru = {
         // 결론이었습니다. 함께 여는 단체 이름은 아직 화면에 쓰지 않습니다.
         // DECIDED 2026-10-17 (사용자: "여기에 들어갈 수 있는 button은 day 2 and day 3 상자에 있는걸로"): 멘토 시간표와 미션 인증으로 가는 버튼.
         timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Timetable and check-in" }, href: "/crossing/team?day=3" },
+        // DECIDED 2026-10-23 (사용자, Reactor School 피드백 10-22 회의록 3.7): 위 9/27 결정(해외 창업가 세션)을 대신합니다. Day 3은 바깥 연사가
+        // 아니라 참가 팀끼리 섞이는 자리입니다. 처음 온 사람은 첫날 뒤 다른 팀이 궁금해져도 먼저 말을 걸지 않아서, 섞이는 자리를 일부러 둡니다.
+        // 세션 길이가 정해지지 않아 "3시간"은 쓰지 않습니다. 브랜드 판단: 다른 팀도 막혀 있는 것을 보고(코어 01), 내 것을 남에게 설명해 봅니다(코어 02).
+        // 그 전: title "Founders from abroad", body "한국에 자리 잡은 해외 창업가들에게 3시간 동안 밖에서 본 한국 시장 이야기를 듣습니다."
         session: {
-          title: { ko: "Founders from abroad", en: "Founders from abroad" },
+          title: { ko: "Open tables", en: "Open tables" },
           body: {
-            ko: "한국에 자리 잡은 해외 창업가들에게 3시간 동안 밖에서 본 한국 시장 이야기를 듣습니다.",
-            en: "Founders from abroad who built their companies in Korea spend three hours on how the market looks from outside.",
+            ko: "팀 사이의 칸을 걷고, 막힌 지점을 다른 팀에 묻고 서로의 생각을 빌려 갑니다.",
+            en: "The walls between teams come down: ask other teams about where you are stuck and borrow each other's thinking.",
           },
         },
         submit: { ko: "덱을 포함한 사전 제출물", en: "The deck and what goes with it" },
