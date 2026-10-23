@@ -19,7 +19,9 @@ export default function ShapeCampuses({ id, campuses, touch = false }: { id: str
     <div
       id={id}
       aria-hidden
-      className={`pointer-events-none fixed inset-0 ${touch ? "block" : "hidden [@media(hover:hover)_and_(pointer:fine)]:block"}`}
+      // DECIDED 2026-10-23 (사용자: "모바일에서 보이는 학교들 로고들 더 키워줘", /naru와 홈 둘 다): 폰(sm 아래)에서는 형상 자체가 작아 휘장이 25px쯤이라
+      // 1.8배로 키웁니다(--crest-k). sm부터는 1. 자리(점)는 그대로이고 휘장만 큽니다.
+      className={`pointer-events-none fixed inset-0 [--crest-k:1.8] sm:[--crest-k:1] ${touch ? "block" : "hidden [@media(hover:hover)_and_(pointer:fine)]:block"}`}
       style={{
         opacity: "var(--on, 0)",
         WebkitMaskImage: "radial-gradient(circle var(--lr, 0px) at var(--lx, -999px) var(--ly, -999px), #000 0%, rgba(0,0,0,0.55) 45%, transparent 100%)",
@@ -29,7 +31,7 @@ export default function ShapeCampuses({ id, campuses, touch = false }: { id: str
       {campuses.map((c) => {
         const left = `calc(var(--sx, 50vw) + var(--ss, 0px) * ${c.u})`;
         const top = `calc(var(--sy, 50vh) - var(--ss, 0px) * ${c.v})`;
-        const h = `calc(var(--ss, 0px) * ${c.size})`;
+        const h = `calc(var(--ss, 0px) * ${c.size} * var(--crest-k, 1))`;
         return (
           <div key={c.name.en}>
             {/* 캠퍼스 자리의 점. 형상 가장자리 점과 같은 hi0(#C79BB4)라 표의 로고가 아니라 지도의 일부로 읽힙니다. */}
