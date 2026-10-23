@@ -1061,7 +1061,7 @@ export default function NaruHome() {
               </dl>
 
             </div>
-            <div className="grid gap-[20px] border-t border-white/10 pt-[32px] text-center md:grid-cols-3 md:gap-[24px] md:pt-[40px] lg:col-span-2">
+            <div className="grid gap-[20px] border-t border-white/10 pt-[32px] text-center md:grid-cols-3 md:gap-x-[40px] md:gap-y-[24px] md:pt-[40px] lg:col-span-2">
               {mentoringBoxes}
             </div>
           </div>
