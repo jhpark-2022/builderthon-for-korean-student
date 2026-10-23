@@ -15,6 +15,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocale } from "@/lib/LocaleContext";
 import { BODY, META } from "@/components/ui/typography";
 import { buttonClass } from "@/components/ui/Button";
+import LocaleToggle from "@/components/LocaleToggle";
 import { teamCopy as c } from "@/data/crossingTeam";
 import {
   BUFFER_MINUTES, GRID_MINUTES, MAX_BOOKINGS_PER_TEAM_PER_DAY, PROOF_DAYS, PROOF_MAX_BYTES, PROOF_TYPES, dayDate, fitsWindow, fmtKst, isProofDay, proofKindsFor, slotState, trackTint,
@@ -140,8 +141,13 @@ export default function TeamTool() {
   };
 
   return (
-    <main id="main" className="min-h-screen bg-[#070B1F] px-4 pb-24 pt-10 text-white">
+    <main id="main" className="min-h-screen bg-[#070B1F] px-4 pb-24 pt-4 text-white">
       <div className="mx-auto flex max-w-5xl flex-col gap-[27px]">
+        {/* 2026-10-23 (모바일 점검): /match와 같은 머리(돌아가기, EN/KR). 머리 없이 제목으로 시작해 두 페이지가 달랐습니다. */}
+        <header className="flex min-h-[44px] items-center justify-between">
+          <a href="/" className={`-my-3 inline-flex min-h-[44px] items-center py-3 ${BODY} font-semibold text-white/70 transition hover:text-white`}>← {t(c.back)}</a>
+          <LocaleToggle />
+        </header>
         <h1 className={`${BODY} font-bold`}>{t(c.title)}</h1>
 
         <div className="flex flex-col gap-[24px] rounded-2xl border border-white/10 bg-white/[0.04] p-[20px] sm:p-[32px]">
@@ -167,7 +173,8 @@ export default function TeamTool() {
               ))}
             </div>
           </div>
-          {!picked && <p className={`${META} font-bold text-amber-100`}>{t(c.pickFirst)}</p>}
+          {/* 2026-10-23 (모바일 점검): 노랑(amber)은 팔레트 밖이라 주황(brand 10장)으로. */}
+          {!picked && <p className={`${META} font-bold text-naru-orange`}>{t(c.pickFirst)}</p>}
         </div>
 
         {/* DECIDED 2026-10-17 (사용자, 스크린숏: "인증 올리는 거를 테이블 위로"): 인증이 시간표보다 먼저 섭니다. */}
@@ -175,7 +182,7 @@ export default function TeamTool() {
 
         <h2 className={`mt-[18px] ${BODY} font-bold`}>{t(c.timetableHeading)}</h2>
         <p className={`${BODY} text-white/70`}>{t(c.lead)} {t(c.carry)}</p>
-        {timetableLocked && <p className={`${META} font-bold text-amber-100`}>{t(c.day1Timetable)}</p>}
+        {timetableLocked && <p className={`${META} font-bold text-naru-orange`}>{t(c.day1Timetable)}</p>}
         {tracks.length > 0 && (
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             {tracks.map((x) => (
@@ -190,8 +197,10 @@ export default function TeamTool() {
         {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}
 
         {mentors && !rows.length && <p className={`${BODY} text-white/70`}>{t(c.noMentors)}</p>}
+        {/* 2026-10-23 (모바일 점검): 폰에서 시간표가 옆으로 굴러간다는 것을 잘린 글자로만 알 수 있었습니다. 오른쪽 끝 페이드와 한 줄 안내(sm 아래). */}
+        {!!rows.length && <p className={`${META} text-white/70 sm:hidden`}>{t(c.swipeHint)}</p>}
         {!!rows.length && (
-          <div className="overflow-x-auto rounded-2xl border border-white/15">
+          <div className="overflow-x-auto rounded-2xl border border-white/15 max-sm:[mask-image:linear-gradient(to_right,#000_calc(100%_-_32px),transparent)]">
             <table className="w-full min-w-max border-collapse">
               <thead>
                 <tr className="bg-white/[0.04]">
@@ -279,7 +288,7 @@ function Proofs({ team, day }: { team: string; day: ProofDay }) {
       <div key={kind} className="flex flex-col gap-[13.5px] rounded-2xl border border-white/15 bg-white/[0.03] p-[20px] sm:p-[24px]">
         <div className="flex flex-col gap-[13.5px] sm:flex-row sm:items-baseline sm:justify-between">
           <h3 className={`${BODY} font-bold`}>{t(kind === "photo" ? c.proofPhoto : day === 1 ? c.proofPdfDay1 : c.proofPdf)}</h3>
-          <span className={`${META} ${latest ? "text-amber-100" : "text-white/70"}`}>{latest ? `★ ${t(c.proofDone)} ${fmtKst(latest.createdAt)}` : t(c.proofNone)}</span>
+          <span className={`${META} ${latest ? "text-naru-orange" : "text-white/70"}`}>{latest ? `★ ${t(c.proofDone)} ${fmtKst(latest.createdAt)}` : t(c.proofNone)}</span>
         </div>
         {latest?.url && kind === "photo" && (
           // eslint-disable-next-line @next/next/no-img-element

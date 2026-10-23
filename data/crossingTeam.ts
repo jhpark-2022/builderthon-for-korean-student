@@ -7,6 +7,9 @@ import type { Phrase } from "@/data/dictionaryCore";
 
 export const teamCopy = {
   title: { ko: "멘토 시간표와 미션 인증", en: "Mentor timetable and check-in" },
+  // 2026-10-23 (모바일 점검): /match처럼 돌아가기와 EN/KR이 있는 머리를 둡니다. 그 전에는 제목으로 바로 시작했습니다.
+  back: { ko: "크로싱 서울", en: "Crossing Seoul" },
+  swipeHint: { ko: "옆으로 밀면 다른 멘토의 칸이 보입니다.", en: "Swipe sideways for the other mentors' slots." },
   timetableHeading: { ko: "멘토 시간표", en: "Mentor timetable" },
   teamLabel: { ko: "우리 팀", en: "Your team" },
   teamPick: { ko: "팀을 고르세요", en: "Pick your team" },
