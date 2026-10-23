@@ -1186,7 +1186,8 @@ export default function NaruHome() {
                     // DECIDED 2026-10-22 (사용자: "visually engaging"): sm부터 라벨 왼쪽 열(accent), 설명 오른쪽 열. 표처럼 한눈에 훑습니다.
                     className={`grid grid-cols-1 gap-y-[8px] border-t border-white/10 py-[20px] sm:grid-cols-[7.5rem_1fr] sm:gap-x-[24px] sm:py-[24px] lg:py-[32px] ${i === naru.december.facts.length - 1 ? "border-b" : ""}`}
                   >
-                    <dt className={`break-keep ${META} font-bold uppercase ${latinTrack(locale)} text-accent sm:pt-[3px]`}>{t(f.k)}</dt>
+                    {/* DECIDED 2026-10-23 (사용자, 스크린숏: "팀 구성 같은 제목들도 너무 작고"): 라벨을 META에서 BODY 굵게로 올렸습니다. 새 크기는 만들지 않습니다. */}
+                    <dt className={`break-keep ${BODY} font-bold leading-relaxed text-accent`}>{t(f.k)}</dt>
                     <dd className={`break-keep ${BODY} leading-relaxed text-white/70`}>{t(f.v)}</dd>
                   </div>
                 ))}
@@ -1196,7 +1197,8 @@ export default function NaruHome() {
             {/* DECIDED 2026-10-23 (사용자, 스크린숏: "left가 너무 vertically 길다. 오른쪽과 맞춰줘"): 네 단계를 왼쪽 열 맨 아래에서 빼서
                 두 열 아래 전체 폭 한 줄(데스크톱 네 칸)로 놓았습니다. 왼쪽은 리드와 숫자만 남아 오른쪽 줄 셋과 높이가 비슷해집니다. */}
             <div className="lg:col-span-2">
-              <p className={`${META} font-bold text-white/85`}>{t(naru.december.approachLabel)}</p>
+              {/* DECIDED 2026-10-23 (사용자: 제목들이 너무 작다): 오른쪽 열 제목과 같은 SUBHEADING으로 맞췄습니다. */}
+              <p className={SUBHEADING}>{t(naru.december.approachLabel)}</p>
               <ol role="list" className="mt-[16px] grid grid-cols-2 border-t border-white/10 lg:grid-cols-4">
                 {naru.december.approach.map((a, i) => (
                   <li key={i} className={`flex flex-col items-start gap-[12px] border-b border-white/10 px-[12px] py-[24px] sm:px-[16px] ${i % 2 === 1 ? "border-l" : ""} ${i > 0 ? "lg:border-l" : ""} border-white/10`}>
