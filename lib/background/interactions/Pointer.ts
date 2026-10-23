@@ -29,17 +29,18 @@ export class Pointer {
   /** 마지막으로 커서 자리를 받은 시각(performance.now). /naru는 이 값으로 커서가 쉬는지 봅니다(2026-10-23). */
   lastMoveAt = 0;
 
-  private setFrom(x: number, y: number, type: string) {
+  private setFrom(x: number, y: number, type: string, moved = true) {
     const nx = (x / window.innerWidth) * 2 - 1;
     const ny = -((y / window.innerHeight) * 2 - 1);
     this.ndc.set(nx, ny);
     this.active = true;
     this.mouse = type === "mouse" || type === "pen";
-    this.lastMoveAt = performance.now();
+    if (moved) this.lastMoveAt = performance.now();
   }
   private onMove = (e: PointerEvent) => this.setFrom(e.clientX, e.clientY, e.pointerType);
   // 휠은 마우스와 트랙패드에서만 옵니다. 스크롤 중에도 커서 자리를 실어 옵니다.
-  private onWheel = (e: WheelEvent) => this.setFrom(e.clientX, e.clientY, "mouse");
+  // DECIDED 2026-10-23: 휠은 커서 자리만 알리고 "움직였다"(lastMoveAt)로 치지 않습니다. 커서를 둔 채 스크롤하는 것은 쉬는 것입니다.
+  private onWheel = (e: WheelEvent) => this.setFrom(e.clientX, e.clientY, "mouse", false);
 
   attach() {
     window.addEventListener("pointermove", this.onMove, { passive: true });

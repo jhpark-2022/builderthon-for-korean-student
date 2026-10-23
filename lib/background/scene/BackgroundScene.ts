@@ -355,6 +355,9 @@ export class BackgroundScene {
   private heldUv: { x: number; y: number } | null = null;
   // 커서 빛 구간이 페이지 전체([data-cursor-light], /naru)인가. 그러면 커서가 쉬면 정거장 길로 돌아갑니다(2026-10-23).
   private cursorWholePage = false;
+  // 커서가 마지막으로 움직였을 때의 스크롤(px)과 그 시각. /naru에서 커서를 둔 채 스크롤했는지 봅니다(2026-10-23).
+  private moveScrollY = 0;
+  private lastMoveSeen = -1;
   private readonly prevNdc = new THREE.Vector2();
   // 서울 형상의 화면 자리(px). placeSeoul이 채웁니다. 대학교 휘장 층(#seoul-campuses)이 씁니다(2026-10-22).
   private seoulPx = { cx: 0, cy: 0, s: 0 };
@@ -1034,8 +1037,13 @@ export class BackgroundScene {
       // DECIDED 2026-10-23 (사용자: "빛에 관한 모든 effect at the 12월 tab is not at the 나루", 선택: 둘 다, 커서가 멈추면 복귀):
       // /naru는 본문 전체가 커서 빛 구간이라 빛이 늘 커서에 붙어 홈의 정거장 길이 한 번도 보이지 않았습니다.
       // 거기서는 마우스를 움직이는 동안만 커서를 따르고, CURSOR_IDLE_S초 쉬면 정거장 길로 돌아갑니다. 옮긴 자리에 머물게(heldUv) 하지 않습니다.
+      // DECIDED 2026-10-23 같은 날 (사용자, 운영 스크린숏: "클릭을 해야 따라가는데? 커서를 따라 움직이는게 아니고?"): 커서를 섬 위에 두고 멈추면
+      // 2초 뒤 빛이 정거장으로 가 버려 휘장이 꺼졌고, 클릭(pointerdown)해야 돌아왔습니다. 이제 쉬는 것만으로는 돌아가지 않고,
+      // 커서를 둔 채 화면 0.25장 넘게 스크롤했을 때만 정거장 길로 돌아갑니다. 정거장 길이 보이는 것(오전 결정)은 그대로입니다.
       const CURSOR_IDLE_S = 2;
-      const moving = !this.cursorWholePage || (performance.now() - this.pointer.lastMoveAt) / 1000 < CURSOR_IDLE_S;
+      if (this.pointer.lastMoveAt !== this.lastMoveSeen) { this.lastMoveSeen = this.pointer.lastMoveAt; this.moveScrollY = this.scrollY; }
+      const resting = (performance.now() - this.pointer.lastMoveAt) / 1000 >= CURSOR_IDLE_S && Math.abs(this.scrollY - this.moveScrollY) > 0.25 * vh;
+      const moving = !this.cursorWholePage || !resting;
       const cursorWant = this.pointer.mouse && this.pointer.inside && moving ? inPartners : 0;
       this.cursorMix += (cursorWant - this.cursorMix) * Math.min(1, dt * 4);
       if (this.cursorMix > 0.001) {
