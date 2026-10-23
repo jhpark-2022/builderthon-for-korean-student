@@ -110,7 +110,9 @@ export default function RouteMap({
   }, [current, stations]);
   // 로고 줄(h-7) + 칸의 gap(1.5) 만큼 레일이 내려갑니다. 1.625rem은 노드 줄의 중심(py-2.5 + h-8의 절반).
   const hasLogos = stations.some((s) => s.logo);
-  const railTop = hasLogos ? "3.75rem" : "1.625rem";
+  // 레일 높이 = 노드 중심. 로고 있을 때: py-2.5(10) + 로고 줄 h-7(28) + gap-1.5(6) + 판 py-1.5(6) + h-8의 절반(16) = 66px.
+  // DECIDED 2026-10-24 (사용자 스크린숏: "노란 원이 보라색 원 중간에 있어야"): 7c21738에서 판 여백 6px가 생겼는데 이 값을 안 고쳐 점과 레일이 6px 떠 있었습니다.
+  const railTop = hasLogos ? "4.125rem" : "1.625rem";
   const dotLeft = current === undefined ? null : `calc(${inset} + (100% - 2 * ${inset}) * ${n > 1 ? current / (n - 1) : 0})`;
   return (
     <div className={className}>
