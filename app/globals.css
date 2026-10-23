@@ -584,3 +584,11 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
 html[data-page-swiping] #main .fixed { visibility: hidden; }
 /* 2026-10-23 (스와이프 랙): 움직이는 동안만 본문과 푸터를 합성 레이어로 올려 둡니다. 끝나면 속성이 빠지며 같이 내려옵니다. */
 html[data-page-swiping] #main, html[data-page-swiping] #site-footer { will-change: transform; }
+
+/* DECIDED 2026-10-23 (사용자, 미리보기 2안): /naru 히어로 판은 흐림과 바탕을 걷어 뒤의 싱가포르와 학교 휘장이 보이게 합니다.
+   배경(BackgroundScene, 정지 장면)이 html에 data-naru-hero-open을 답니다. */
+html[data-naru-hero-open] .reading-plate[data-plate="naru"] {
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}

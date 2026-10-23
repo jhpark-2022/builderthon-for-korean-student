@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { CROSSING, RING, SHAPES, FIELD, SEOUL_WATERMARK, PLATE_FEATHER, LIGHT_STATIONS, LIGHT_FOLLOW, PARTNERS_LIGHT, PALETTE, WATER_BASE, pickQuality, type QualityTier } from "../config";
+
 import { SEOUL_POINTS, SEOUL_STRIDE } from "../shapes/seoul";
 import { SINGAPORE_POINTS, SINGAPORE_STRIDE } from "../shapes/singapore";
 import { computeStageLayout, readStageRect, findStageElement, type StageLayout } from "../utils/shapeLayout";
@@ -14,6 +15,9 @@ import { PostFX } from "../renderer/PostFX";
 import { computePhases, computeCrossingPhases, crossingToPhases, type CrossingAnchors } from "../utils/phases";
 import { clamp } from "../utils/math";
 import { isScrollLocked } from "../../useBodyScrollLock";
+
+// /naru 히어로에서 늘 보이는 휘장의 밝기(0..1, DECIDED 2026-10-23). 제목과 겹치므로 빛 안에서보다 낮게 둡니다.
+const HERO_CAMPUS_ON = 0.6;
 
 /**
  * Top-level controller. Owns the renderer, camera, layers, and the animation
@@ -155,6 +159,9 @@ export class BackgroundScene {
   constructor(canvas: HTMLCanvasElement, variant: BackgroundVariant = "field", opts: { still?: boolean } = {}) {
     this.variant = variant;
     this.still = !!opts.still;
+    // DECIDED 2026-10-23 (사용자: 미리보기 셋 중 2안, "여기에서는 빛 효과는 빼고, 배경 안 로고들은 보이게"): /naru 히어로 판의
+    // 흐림과 바탕을 걷습니다(globals.css의 html[data-naru-hero-open]). 히어로에서는 커서 빛이 없고 휘장이 늘 보입니다(아래 heroK).
+    if (this.still && typeof document !== "undefined") document.documentElement.dataset.naruHeroOpen = "";
     this.quality = pickQuality();
     this.renderer = new Renderer(canvas, this.quality);
     this.cam = new CameraController();
@@ -734,6 +741,7 @@ export class BackgroundScene {
     cancelAnimationFrame(this.rafId);
     this.stageObserver?.disconnect();
     this.pointer.detach();
+    if (this.still) delete document.documentElement.dataset.naruHeroOpen;
     window.removeEventListener("resize", this.onResize);
     window.removeEventListener("scroll", this.onScroll);
     document.removeEventListener("visibilitychange", this.onVisibility);
@@ -1044,7 +1052,10 @@ export class BackgroundScene {
       // DECIDED 2026-10-23 저녁 (사용자, 운영 스크린숏: "커서를 처음에 gap에 놔도 안 따라감, 클릭을 해야만 따라감"): 마우스를 그대로 두고
       // 트랙패드로 스크롤하면 위의 "스크롤하면 정거장으로"가 걸려 빛이 떠났습니다. 그 규칙을 거둡니다. /naru에서는 커서 자리를 아는 동안
       // (움직임, 누름, 휠) 빛이 늘 커서에 있습니다. 오전의 "정거장 길이 보이게"는 이 요청으로 대신합니다.
-      const cursorWant = this.pointer.mouse && this.pointer.inside ? inPartners : 0;
+      // /naru 히어로(첫 판 "naru")가 화면 가운데에 있는 동안 1. 판 아래 끝이 화면 0.75 높이를 지나 0.3화면에 걸쳐 0으로.
+      const heroPlate = this.still ? this.plates.find((p) => p.id === "naru") : undefined;
+      const heroK = heroPlate ? 1 - ss01((this.scrollY + 0.75 * vh - heroPlate.bottom) / (0.3 * vh)) : 0;
+      const cursorWant = this.pointer.mouse && this.pointer.inside ? inPartners * (1 - heroK) : 0;
       this.cursorMix += (cursorWant - this.cursorMix) * Math.min(1, dt * 4);
       if (this.cursorMix > 0.001) {
         const c = toUv({ fx: this.pointer.ndc.x * 0.5 + 0.5, fy: this.pointer.ndc.y * 0.5 + 0.5 });
@@ -1078,7 +1089,7 @@ export class BackgroundScene {
       }
       if (this.cursorMix > 0.001 && !this.cursorWholePage) this.heldUv = { ...this.lightUv };
       // 해가 내려가는 구간 1에서는 셰이더의 옛 식 그대로, 다 내려간 뒤 0.1화면에 걸쳐 정거장 길로 넘깁니다.
-      const lightW = ss01((this.scrollY - descendEnd) / (0.1 * vh));
+      const lightW = ss01((this.scrollY - descendEnd) / (0.1 * vh)) * (1 - heroK);
       this.water.setLightDx(0);
       this.water.setLightAt(this.lightUv.x, this.lightUv.y, lightW);
       // 형상의 밝은 자리는 빛이 지금 서 있는 곳입니다(커서를 따라 늦게 오는 빛과 같이 움직입니다).
@@ -1092,13 +1103,16 @@ export class BackgroundScene {
         // 서울 안의 대학교 휘장(DECIDED 2026-10-22, components/home/SeoulCampuses.tsx). 빛의 원 안에서만 보입니다.
         // 서울이 온전히 서 있을 때만(건너기 전, 판 뒤가 아닐 때). 값이 바뀔 때만 씁니다.
         // DECIDED 2026-10-23 (사용자): 싱가포르(/naru)도 같은 층입니다. 서울은 건너기 전(1 − morph), 싱가포르는 건넌 뒤(morph)에 켜집니다.
-        const light = `--lx:${((gx * 0.5 + 0.5) * window.innerWidth).toFixed(1)}px;--ly:${((0.5 - gy * 0.5) * vh).toFixed(1)}px;--lr:${(PL.radius * vh).toFixed(1)}px`;
+        // /naru 히어로에서는(heroK) 빛의 원 대신 형상 중심의 큰 원으로 휘장 전체를 보입니다.
+        const lx = (gx * 0.5 + 0.5) * window.innerWidth, ly = (0.5 - gy * 0.5) * vh;
         for (const [id, S, on] of [
           ["seoul-campuses", this.seoulPx, this.cursorMix * shapeOpacity * (1 - morph)],
-          ["singapore-campuses", this.singaporePx, this.cursorMix * shapeOpacity * morph],
+          ["singapore-campuses", this.singaporePx, Math.max(this.cursorMix, heroK * HERO_CAMPUS_ON) * shapeOpacity * morph],
         ] as const) {
           const el = document.getElementById(id);
           if (!el) continue;
+          const k = id === "singapore-campuses" ? heroK : 0;
+          const light = `--lx:${(lx + (S.cx - lx) * k).toFixed(1)}px;--ly:${(ly + (S.cy - ly) * k).toFixed(1)}px;--lr:${(PL.radius * vh + k * 3 * S.s).toFixed(1)}px`;
           const vars = `--sx:${S.cx.toFixed(1)}px;--sy:${S.cy.toFixed(1)}px;--ss:${S.s.toFixed(1)}px;${light};--on:${on.toFixed(3)}`;
           if (vars === this.campusVars[id]) continue;
           this.campusVars[id] = vars;
