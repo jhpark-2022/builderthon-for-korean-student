@@ -1217,7 +1217,9 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
         )}
       </div>
       <h4 className="mt-3 text-[15px] font-bold leading-snug text-white">{t(day.theme)}</h4>
-      <p className="mt-1.5 text-xs leading-relaxed text-white/65">{t(day.summary)}</p>
+      {/* DECIDED 2026-10-23 (모바일 점검): 폰에서는 요약, 올 이유, 멘토링·어워드 줄을 접어 카드가 제목까지만 섭니다(페이지가 폰에서 33화면이었습니다).
+          누르면 열리는 모달이 같은 내용을 다 보여 줍니다. sm부터는 그대로. */}
+      <p className="mt-1.5 hidden text-xs leading-relaxed text-white/65 sm:block">{t(day.summary)}</p>
       {/* '올 이유' 한 줄 - 요약(무엇을 하는 날인가) 아래, 세션 카운트 위.
           노선도 아래 문단이 "하나하나 내려설 이유가 있도록 설계했습니다"라고
           주장하는데 카드들이 그걸 증명하지 못하고 있었습니다. 이 줄이 증명입니다.
@@ -1226,7 +1228,7 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
           필참일에는 렌더하지 않습니다 - 갈지 말지 고르는 날이 아니어서, 거기에
           '올 이유'를 붙이면 필참이 설득의 문제로 보입니다. */}
       {day.whyStop && emphasis !== "must" && (
-        <p className="mt-2 flex gap-1.5 break-keep text-xs font-semibold leading-snug text-white/85">
+        <p className="mt-2 hidden gap-1.5 break-keep text-xs font-semibold leading-snug text-white/85 sm:flex">
           <span aria-hidden className="text-white/70">→</span>
           {t(day.whyStop)}
         </p>
@@ -1250,7 +1252,7 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
 
           점은 aria-hidden이고 칩의 글자가 뜻을 그대로 말합니다. */}
       {mentoringOpenOn(day.day) && (
-        <p className="mt-2">
+        <p className="mt-2 hidden sm:block">
           <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/85">
             <MentoringDot />
             {t(dict.program.mentoringChip)}
@@ -1276,7 +1278,7 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
           자리에 서는 두 칩이 색으로 갈립니다. day.awardsBox는 "이 날 어워드 박스가
           열린다"는 뜻이라 그대로 조건으로 씁니다 - 새 플래그를 만들지 마세요. */}
       {day.awardsBox && (
-        <p className="mt-2">
+        <p className="mt-2 hidden sm:block">
           <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/85">
             <span aria-hidden className="text-white/70">★</span>
             {t(dict.program.awards.countBadge)}
@@ -1294,7 +1296,7 @@ function DayCard({ day, t, onOpen }: { day: DayMeta; t: Tfn; onOpen: (n: number)
           세지만 같은 것이 아니라, 방문자가 이 숫자로 답할 수 있는 질문이 없습니다.
           그날 무엇을 하는지는 이미 카드의 제목과 요약이, 시간은 hours 칩이,
           내려설 이유는 whyStop 줄이 말합니다. */}
-      <span className="mt-auto pt-4 text-xs font-semibold text-accent/75 transition group-hover:text-accent">
+      <span className="mt-auto pt-3 text-xs font-semibold text-accent/75 transition group-hover:text-accent sm:pt-4">
         {t(dict.program.tapHint)} →
       </span>
     </button>
@@ -2018,7 +2020,8 @@ function ScrollToTop() {
           // top of the body copy the whole way down the page and merely stopped
           // responding to taps. `!important` is the one thing that outranks an
           // inline style, and it is why this is the only `!` in the file.
-          className={`${chromeHidden ? "max-lg:pointer-events-none max-lg:!opacity-0" : ""} group fixed bottom-[calc(env(safe-area-inset-bottom,0px)+5.25rem)] right-6 z-50 flex h-11 w-11 items-center justify-center transition-opacity duration-200 sm:right-8 lg:bottom-8 lg:h-12 lg:w-12`}
+          // DECIDED 2026-10-23 (모바일 점검): 폰(sm 아래)에서는 두지 않습니다. 카드 본문, FAQ의 펼침 단추와 거의 모든 화면에서 겹쳤고, 홈과 /naru에는 없는 단추입니다.
+          className={`${chromeHidden ? "max-lg:pointer-events-none max-lg:!opacity-0" : ""} group fixed bottom-[calc(env(safe-area-inset-bottom,0px)+5.25rem)] right-6 z-50 hidden h-11 w-11 items-center justify-center transition-opacity duration-200 sm:right-8 sm:flex lg:bottom-8 lg:h-12 lg:w-12`}
         >
           <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/[0.07] text-white/65 backdrop-blur-sm transition group-hover:border-white/35 group-hover:text-white lg:h-12 lg:w-12 lg:border-white/15 lg:bg-naru-purple/85 lg:text-white lg:group-hover:border-accent/60 lg:group-hover:bg-naru-plum lg:group-hover:text-white">
             {/* upward chevron */}

@@ -248,7 +248,9 @@ export default function JourneyNav({
   // 스크롤해야 돌아오고, 멈춰 있다고 돌아오지 않습니다(idleReveal false). 8월 페이지는 그 전
   // 그대로(헤더 전체 숨김 + 정지 시 복귀).
   const naru = brand === "naru";
-  const directionHidden = useScrollDirection({ idleReveal: naru ? false : 450 });
+  // DECIDED 2026-10-23 (모바일 점검): 8월 페이지도 멈춰 있다고 로고 줄이 돌아오지 않습니다(idleReveal false). 읽으려고 멈출 때마다
+  // 두 줄(약 190px, 화면의 22%)이 다시 섰고, 홈과 /naru는 한 줄만 남았습니다. 세 페이지가 같은 규칙입니다. 2026-08-17의 "정지 시 복귀"는 이 결정이 대신합니다.
+  const directionHidden = useScrollDirection({ idleReveal: false });
   const [anchorPinned, setAnchorPinned] = useState(false);
   const chromeHidden = directionHidden && !anchorPinned;
   // DECIDED 2026-10-21: 앵커 이동 중에는 헤더를 펼쳐 착지 여백이 바뀌지 않게 합니다. 직접 스크롤하면 다시 접힙니다.
@@ -796,7 +798,8 @@ export default function JourneyNav({
           // calc 안의 밑줄 두 개(100%_-_16px)가 필요합니다. Tailwind는 임의값의 밑줄을 공백으로 바꾸는데,
           // CSS의 calc는 빼기 부호 양옆에 공백이 없으면 무효입니다(실측 2026-09-20).
           // 2026-10-22 (UX 점검): 오른쪽 페이드를 16px에서 40px으로. 390px 영문에서 "Register"가 잘린 채 끝나 더 있다는 것이 보이지 않았습니다.
-          className="flex items-center gap-2 overflow-x-auto pb-1 pl-3 pr-5 [mask-image:linear-gradient(to_right,transparent,#000_12px,#000_calc(100%_-_40px),transparent)] [scrollbar-width:none] sm:pr-10 xl:pl-5 [&::-webkit-scrollbar]:hidden"
+          // 2026-10-23 (모바일 점검): 왼쪽 페이드도 12px에서 36px으로. 레일이 굴러간 뒤 왼쪽 칩이 "지", "택"처럼 글자 하나만 잘려 구분선 옆에 남았습니다.
+          className="flex items-center gap-2 overflow-x-auto pb-1 pl-3 pr-5 [mask-image:linear-gradient(to_right,transparent,#000_36px,#000_calc(100%_-_40px),transparent)] [scrollbar-width:none] sm:pr-10 xl:pl-5 [&::-webkit-scrollbar]:hidden"
         >
           {anchors.map((a) => {
             const here = a.id === activeSection;
