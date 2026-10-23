@@ -294,6 +294,16 @@ export class ParticleField {
     this.points.frustumCulled = true;
   }
 
+  /** field 변형(8월)의 입자 색(2026-10-23). 위쪽 몸통, 위쪽 밝은 점, 아래쪽 몸통, 아래쪽 밝은 점, 안개. */
+  setFieldPalette(accent: string, highlight: string, accent2: string, highlight2: string, fog: string) {
+    const u = this.material.uniforms;
+    u.uAccent.value.set(accent);
+    u.uHighlight.value.set(highlight);
+    u.uAccent2.value.set(accent2);
+    u.uHighlight2.value.set(highlight2);
+    u.uFog.value.set(fog);
+  }
+
   setPixelRatio(pr: number) {
     this.material.uniforms.uPixelRatio.value = pr;
   }

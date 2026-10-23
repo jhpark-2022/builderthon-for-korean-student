@@ -354,7 +354,7 @@ export const dict = {
     },
     stats: [
       { value: { ko: "74명", en: "74" }, label: { ko: "신청", en: "applied" } },
-      { value: { ko: "59명", en: "59" }, label: { ko: "Day\u00a01 참석", en: "showed up on Day\u00a01" } },
+      // DECIDED 2026-10-23 (brand 8장): Day 1 참석(58/59)은 자료마다 달라 확인 전에는 쓰지 않습니다. 공유 카드에서는 이미 뺐습니다.
       { value: { ko: "25팀", en: "25" }, label: { ko: "시작", en: "teams started" } },
       { value: { ko: "21팀", en: "21" }, label: { ko: "발표", en: "teams presented" } },
     ],
@@ -546,30 +546,10 @@ export const dict = {
       // 헤지 셋까지 같이 돌아옵니다.
       // 옛 2번 카드의 정기 빌더 세션 상세(기업 문제 해부 · 소수정예 코어)가 여기로
       // 흡수됐습니다. 별도 칸으로 되살리지 마세요 - 이 칸이 하는 말과 같습니다.
+      // DECIDED 2026-10-23 (사용자, 글 리뷰): "2026 가을 빌더 커리큘럼 준비 중" 칸을 뺐습니다. 가을이 왔는데 열린 것이 없어,
+      // 이 배열의 규칙("값이 아직 없으면 칸을 빼는 편이 낫다")과 brand 5장(약속하지 않는다)을 따릅니다. 옛 칸은 git 이력에.
       {
         num: "2",
-        when: { ko: "2026 가을", en: "Autumn 2026" },
-        title: { ko: "빌더 커리큘럼", en: "Builder curriculum" },
-        // DECIDED 2026-08-21 (운영진 브리핑): 이 칸이 인큐베이션에서 빌더
-        // 커리큘럼으로 바뀌었습니다. 앱을 만드는 일 자체는 쉬워졌고, 빌더톤과
-        // 12월 사이를 메우는 것은 만든 것을 서비스로 띄우고 운영하는 역량입니다.
-        //
-        // ⚠️ 대상 구분을 흐리지 마세요. 커리큘럼은 참가자 전원, 12월 무대 우선
-        // 초청은 수상팀입니다. 커리큘럼을 수상팀 전용으로 좁히거나 우선 초청을
-        // 전원으로 넓히는 편집을 하지 마세요 - 둘은 다른 것에 대한 답이고, 하나로
-        // 합치면 어워드가 무엇을 위한 것인지와 커리큘럼이 누구 것인지가 함께
-        // 무너집니다. 수상팀 몫은 dict.program.awards.next가 말합니다.
-        //
-        // 세부 운영(커리큘럼 주차, 협력사, 담당자)은 확정돼도 비공개입니다.
-        // 협력 논의 중인 회사 이름을 이 칸에 올리지 마세요.
-        // "준비 중" 헤지를 빼지 마세요 - 아직 열린 커리큘럼이 아닙니다.
-        body: {
-          ko: "앱을 만드는 일은 쉬워졌습니다. 만든 것을 서비스로 띄우고 운영하는 솔루션 아키텍트 역량을 기르는 커리큘럼을 준비 중입니다.",
-          en: "Building an app got easy. We're preparing a curriculum for the harder part: putting your build live and keeping it running.",
-        },
-      },
-      {
-        num: "3",
         when: { ko: "2026.12 서울", en: "Dec 2026 Seoul" },
         title: { ko: "크로싱 서울", en: "CROSSING SEOUL" },
         body: {
@@ -578,7 +558,7 @@ export const dict = {
         },
       },
       {
-        num: "4",
+        num: "3",
         when: { ko: "그다음", en: "After that" },
         title: { ko: "다음 크로싱", en: "The next crossing" },
         body: {
@@ -3406,7 +3386,7 @@ export const dict = {
         en: "These eight days ran on other people's time",
       },
       body: {
-        ko: "제로백(Zero100) 커뮤니티의 일부인 AXMOS 소속 회사들이 주최했고, 그중 코드프레소가 실제 기업 문제를 냈습니다. SMU, NUS, NTU 한인 학생회가 주관했고, 싱가포르 한인회가 1:1 멘토링을 위해 한인회관을 내어주었습니다. 멘토로 오신 분들은 대부분 소속 회사와 별개로 개인 자격으로 저녁 시간을 냈습니다. 무대에 선 연사와 전문가, 후원사, 그리고 8일을 건너 마지막 날 앞에 선 21팀까지, 이 페이지에 이름이 적힌 모든 분 덕분입니다.",
+        ko: "제로백(Zero100) 커뮤니티의 일부인 AXMOS 소속 회사들이 주최했고, 그중 코드프레소가 실제 기업 문제를 냈습니다. SMU, NUS, NTU 한인 학생회가 주관했고, 싱가포르 한인회가 1:1 멘토링을 위해 한인회관을 내어주었습니다. 멘토로 오신 분들은 대부분 소속 회사와 별개로 개인 자격으로 저녁 시간을 냈습니다. 무대에 선 연사와 전문가, 후원사, 그리고 8일을 건너 마지막 날 무대에 선 21팀까지, 이 페이지에 이름이 적힌 모든 분 덕분입니다.",
         en: "The member companies of AXMOS, part of the Zero100 community, hosted it, and Codepresso, one of them, set the real company problem. The SMU, NUS and NTU Korean Student Associations ran it, and the Korean Association in Singapore opened its hall for the 1:1 mentoring. Most mentors came on their own evenings, separately from where they work. It happened thanks to everyone named on this page, from the speakers, experts and sponsors to the 21 teams that stood up on the final day.",
       },
       // 마지막 줄이 요점입니다. 감사가 예의로 끝나면 각주가 되고, 결과를 말하면

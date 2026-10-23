@@ -26,6 +26,8 @@ export class Pointer {
    * 이제 끄지 않고 마지막 자리를 그대로 둡니다. 휠(트랙패드 스크롤)과 누름도 커서 자리를 알려 줍니다.
    */
   get inside() { return this.active; }
+  /** 마지막으로 커서 자리를 받은 시각(performance.now). /naru는 이 값으로 커서가 쉬는지 봅니다(2026-10-23). */
+  lastMoveAt = 0;
 
   private setFrom(x: number, y: number, type: string) {
     const nx = (x / window.innerWidth) * 2 - 1;
@@ -33,6 +35,7 @@ export class Pointer {
     this.ndc.set(nx, ny);
     this.active = true;
     this.mouse = type === "mouse" || type === "pen";
+    this.lastMoveAt = performance.now();
   }
   private onMove = (e: PointerEvent) => this.setFrom(e.clientX, e.clientY, e.pointerType);
   // 휠은 마우스와 트랙패드에서만 옵니다. 스크롤 중에도 커서 자리를 실어 옵니다.

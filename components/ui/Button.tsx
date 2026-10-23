@@ -18,8 +18,9 @@ export type ButtonTone = "naru" | "zero100";
 
 const PRIMARY: Record<ButtonTone, string> = {
   // Journey.tsx 히어로 주 CTA의 문자열 그대로.
+  // DECIDED 2026-10-23 (사용자: 8월 색이 다른 두 탭과 달라 어색): 8월의 기하(크기, 발광 세기)는 그대로 두고 색만 나루 토큰으로.
   zero100:
-    "group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(124,58,237,0.7)] sm:px-8 sm:py-4 sm:text-base",
+    "group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-naru-purple to-naru-plum px-5 py-3 text-sm font-bold text-white shadow-[0_8px_40px_rgba(75,58,140,0.5)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_50px_rgba(75,58,140,0.7)] sm:px-8 sm:py-4 sm:text-base",
   // 나루 토큰. 보라(#4B3A8C) → 자주(#9A5A82). 발광은 낮추고 실제 높이는 56px 이상.
   // 글자는 흰색입니다: 보라 위 흰 글자 7.2:1, 자주 위 4.9:1 (실측 2026-09-17).
   naru:

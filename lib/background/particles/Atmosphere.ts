@@ -37,6 +37,12 @@ export class Atmosphere {
     this.resize();
   }
 
+  /** 하늘 두 색을 바꿉니다. 8월 페이지가 홈의 하늘에 맞출 때 씁니다(2026-10-23). */
+  setSky(base: string, mid: string) {
+    this.material.uniforms.uBase.value.set(base);
+    this.material.uniforms.uMid.value.set(mid);
+  }
+
   /** Park the plane far behind everything and scale to cover the frustum. */
   resize() {
     // Big enough to always fill the view; sits deep on -Z.

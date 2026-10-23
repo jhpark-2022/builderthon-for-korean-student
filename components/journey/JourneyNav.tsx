@@ -702,7 +702,12 @@ export default function JourneyNav({
                   // 자리가 비면 폰에서 헤더에 액션이 하나도 없게 되는데, 이
                   // 페이지에서 지금 할 수 있는 일이 이것 하나입니다. 좁은 폭에서는
                   // 패딩과 글자를 줄이고 min-h로 터치 타깃 44px을 지킵니다.
-                  : `shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] font-semibold text-white/85 transition active:translate-y-0 active:scale-[0.98] active:duration-75 hover:border-white/30 hover:bg-white/10 hover:text-white ${
+                  // DECIDED 2026-10-23 (사용자: "모바일에서 오픈 채팅 버튼 at the top 더 visually 강조"): 나루 계열 헤더에서는 테두리 알약 대신
+                  // 히어로의 "카카오톡으로 소식 받기"와 같은 나루 그라데이션으로 채웁니다. 옆의 EN/KR 테두리와 무게가 같아 묻혔습니다.
+                  : `shrink-0 items-center gap-1.5 rounded-full transition active:translate-y-0 active:scale-[0.98] active:duration-75 ${
+                      // 같은 날 이어서: 8월 탭도 색을 나루에 맞추면서 세 탭 모두 같은 버튼입니다.
+                      "bg-gradient-to-r from-naru-purple to-naru-plum font-bold text-white shadow-[0_0_18px_rgba(75,58,140,0.55)] hover:shadow-[0_0_26px_rgba(75,58,140,0.75)]"
+                    } ${
                       showQuiz
                         ? "hidden px-4 py-2 text-sm lg:inline-flex"
                         : "inline-flex min-h-[44px] min-w-[44px] justify-center px-2.5 text-xs min-[360px]:px-3.5 sm:px-4 sm:text-sm"

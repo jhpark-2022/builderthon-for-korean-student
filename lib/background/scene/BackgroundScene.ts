@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { CROSSING, RING, SHAPES, FIELD, SEOUL_WATERMARK, PLATE_FEATHER, LIGHT_STATIONS, LIGHT_FOLLOW, PARTNERS_LIGHT, pickQuality, type QualityTier } from "../config";
+import { CROSSING, RING, SHAPES, FIELD, SEOUL_WATERMARK, PLATE_FEATHER, LIGHT_STATIONS, LIGHT_FOLLOW, PARTNERS_LIGHT, PALETTE, WATER_BASE, pickQuality, type QualityTier } from "../config";
 import { SEOUL_POINTS, SEOUL_STRIDE } from "../shapes/seoul";
 import { SINGAPORE_POINTS, SINGAPORE_STRIDE } from "../shapes/singapore";
 import { computeStageLayout, readStageRect, findStageElement, type StageLayout } from "../utils/shapeLayout";
@@ -200,6 +200,11 @@ export class BackgroundScene {
       this.lantern = null;
       this.atmosphere = new Atmosphere();
       this.particles = new ParticleField(this.quality, 1.0);
+      // DECIDED 2026-10-23 (사용자: "8월의 background colour가 너무 전 2탭이랑 달라서 어색", 선택: 입자는 두고 색만 맞춤):
+      // 8월의 입자 조각(2026-09-15 결정)은 그대로 두고, 하늘은 홈과 /naru의 하늘(WATER_BASE)로, 입자는 인디고와 푸크시아(Tailwind)
+      // 대신 나루 팔레트(brand 10장 남색, 보라, 자주)로 바꿉니다. 주황(hi1)은 넣지 않습니다. 나루 점의 색이라서입니다.
+      this.atmosphere.setSky(WATER_BASE.skyTop, WATER_BASE.skyHorizon);
+      this.particles.setFieldPalette(PALETTE.accent1, PALETTE.hi0, PALETTE.accent0, PALETTE.accent2, PALETTE.base1);
       // NOTE: there is intentionally NO portal object in the scene. The phenomenon
       // is expressed only through particle convergence + screen-space lensing +
       // density-driven bloom - never a rendered disc/sphere with a visible edge.
@@ -347,6 +352,8 @@ export class BackgroundScene {
   private glow = 0;
   // 커서가 마지막으로 둔 빛의 자리(uv). 있으면 정거장 대신 여기에 섭니다. 히어로로 돌아가면 지웁니다.
   private heldUv: { x: number; y: number } | null = null;
+  // 커서 빛 구간이 페이지 전체([data-cursor-light], /naru)인가. 그러면 커서가 쉬면 정거장 길로 돌아갑니다(2026-10-23).
+  private cursorWholePage = false;
   private readonly prevNdc = new THREE.Vector2();
   // 서울 형상의 화면 자리(px). placeSeoul이 채웁니다. 대학교 휘장 층(#seoul-campuses)이 씁니다(2026-10-22).
   private seoulPx = { cx: 0, cy: 0, s: 0 };
@@ -383,6 +390,7 @@ export class BackgroundScene {
       if (closing !== null) this.closingTop = closing;
       // DECIDED 2026-10-22 (사용자: "빛 효과 나루에도 넣어줘"): 커서 빛 구간은 #partners(홈), 없으면 [data-cursor-light](/naru 본문 전체).
       const partners = document.getElementById("partners") ?? document.querySelector<HTMLElement>("[data-cursor-light]");
+      this.cursorWholePage = !document.getElementById("partners") && !!partners;
       if (partners) {
         const r = partners.getBoundingClientRect();
         this.partnersTop = r.top + sy;
@@ -1020,7 +1028,12 @@ export class BackgroundScene {
       // 해가 다시 떠 있는 히어로까지 올라가면 놓고, 그 뒤로는 정거장 길을 다시 따릅니다.
       if (this.scrollY <= descendEnd) this.heldUv = null;
       if (this.heldUv) target = { ...this.heldUv };
-      const cursorWant = this.pointer.mouse && this.pointer.inside ? inPartners : 0;
+      // DECIDED 2026-10-23 (사용자: "빛에 관한 모든 effect at the 12월 tab is not at the 나루", 선택: 둘 다, 커서가 멈추면 복귀):
+      // /naru는 본문 전체가 커서 빛 구간이라 빛이 늘 커서에 붙어 홈의 정거장 길이 한 번도 보이지 않았습니다.
+      // 거기서는 마우스를 움직이는 동안만 커서를 따르고, CURSOR_IDLE_S초 쉬면 정거장 길로 돌아갑니다. 옮긴 자리에 머물게(heldUv) 하지 않습니다.
+      const CURSOR_IDLE_S = 2;
+      const moving = !this.cursorWholePage || (performance.now() - this.pointer.lastMoveAt) / 1000 < CURSOR_IDLE_S;
+      const cursorWant = this.pointer.mouse && this.pointer.inside && moving ? inPartners : 0;
       this.cursorMix += (cursorWant - this.cursorMix) * Math.min(1, dt * 4);
       if (this.cursorMix > 0.001) {
         const c = toUv({ fx: this.pointer.ndc.x * 0.5 + 0.5, fy: this.pointer.ndc.y * 0.5 + 0.5 });
@@ -1052,7 +1065,7 @@ export class BackgroundScene {
         this.lightUv.x += gx * k;
         this.lightUv.y += gy * k;
       }
-      if (this.cursorMix > 0.001) this.heldUv = { ...this.lightUv };
+      if (this.cursorMix > 0.001 && !this.cursorWholePage) this.heldUv = { ...this.lightUv };
       // 해가 내려가는 구간 1에서는 셰이더의 옛 식 그대로, 다 내려간 뒤 0.1화면에 걸쳐 정거장 길로 넘깁니다.
       const lightW = ss01((this.scrollY - descendEnd) / (0.1 * vh));
       this.water.setLightDx(0);

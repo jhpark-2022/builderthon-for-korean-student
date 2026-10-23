@@ -1934,7 +1934,9 @@ function HeroVideo({ blur, paused = false }: { blur?: MotionValue<string>; pause
       </motion.video>
       {/* legibility scrim - darker top so the headline reads; fades to nothing
           toward the bottom so the mask hands off cleanly to the WebGL field */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0814]/85 via-[#0a0814]/70 to-transparent" />
+      {/* DECIDED 2026-10-23 (사용자: 8월 배경이 다른 두 탭과 달라 어색, 선택: 입자는 두고 색만 맞춤): 덮개를 거의 검은 보라(#0a0814)에서
+          홈과 /naru의 하늘(WATER_BASE skyTop #040712, skyHorizon #0E1949)로. 영상과 투명도는 그대로입니다. */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#040712]/85 via-[#0E1949]/70 to-transparent" />
     </div>
   );
 }
@@ -2018,7 +2020,7 @@ function ScrollToTop() {
           // inline style, and it is why this is the only `!` in the file.
           className={`${chromeHidden ? "max-lg:pointer-events-none max-lg:!opacity-0" : ""} group fixed bottom-[calc(env(safe-area-inset-bottom,0px)+5.25rem)] right-6 z-50 flex h-11 w-11 items-center justify-center transition-opacity duration-200 sm:right-8 lg:bottom-8 lg:h-12 lg:w-12`}
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/[0.07] text-white/65 backdrop-blur-sm transition group-hover:border-white/35 group-hover:text-white lg:h-12 lg:w-12 lg:border-white/15 lg:bg-violet-600/85 lg:text-white lg:group-hover:border-accent/60 lg:group-hover:bg-violet-500 lg:group-hover:text-white">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/[0.07] text-white/65 backdrop-blur-sm transition group-hover:border-white/35 group-hover:text-white lg:h-12 lg:w-12 lg:border-white/15 lg:bg-naru-purple/85 lg:text-white lg:group-hover:border-accent/60 lg:group-hover:bg-naru-plum lg:group-hover:text-white">
             {/* upward chevron */}
             <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4 lg:h-5 lg:w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M6 15l6-6 6 6" />
@@ -2264,7 +2266,7 @@ export default function Journey() {
             {t(dict.record.heading)}
           </h2>
           <p className="mx-auto mt-5 max-w-2xl break-keep text-base leading-relaxed text-white/75">{t(dict.record.lead)}</p>
-          <dl className="mx-auto mt-8 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
+          <dl className="mx-auto mt-8 grid max-w-3xl grid-cols-3 gap-3">
             {dict.record.stats.map((st) => (
               <div key={st.label.en} className="flex flex-col-reverse items-center gap-1 rounded-2xl border border-white/[0.08] bg-white/[0.03] px-3 py-5">
                 <dt className="text-xs leading-snug text-white/65">{t(st.label)}</dt>
@@ -3366,7 +3368,7 @@ export default function Journey() {
           <p className="mx-auto mt-3 max-w-2xl text-center text-sm leading-relaxed text-white/70">
             {t(dict.about.visionIntro)}
           </p>
-          <ol className="mt-8 grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <ol className="mt-8 grid gap-3 sm:grid-cols-3">
             {dict.about.visionSteps.map((s, i) => {
               const start = i === 0;
               return (
@@ -3431,7 +3433,7 @@ export default function Journey() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => trackOpenChat("vision")}
-                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-violet-600/90 px-6 py-3 text-sm font-semibold text-white transition hover:bg-violet-500"
+                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-gradient-to-r from-naru-purple to-naru-plum px-6 py-3 text-sm font-semibold text-white transition hover:brightness-110"
               >
                 <ChatGlyph className="h-4 w-4 shrink-0" />
                 {t(dict.about.visionChatCta)}
@@ -3492,7 +3494,7 @@ export default function Journey() {
               // 이 페이지에서 /#december로 가는 링크는 라벨이 "프로그램"인 #gaps의 하나뿐입니다.
               href="/"
               onClick={() => track("naru_cta", { src: "august_closing", to: "home" })}
-              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white transition"
+              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-naru-purple to-naru-plum px-9 py-4 text-base font-bold text-white transition"
             >
               {t(dict.footer.ctaDecember).replace("{name}", decemberEventLabel(locale))}
               <span aria-hidden className={ARROW_CLASS}>→</span>
@@ -3511,7 +3513,7 @@ export default function Journey() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => trackOpenChat("footer")}
-                className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-9 py-4 text-base font-bold text-white transition"
+                className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-naru-purple to-naru-plum px-9 py-4 text-base font-bold text-white transition"
               >
                 <ChatGlyph className="h-5 w-5 shrink-0" />
                 {t(dict.nav.openChatJoin)}

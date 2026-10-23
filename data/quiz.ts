@@ -723,8 +723,9 @@ export const quizUI = {
   // screenshot the moment on-site matching started using it - so the button
   // needs a reason attached, not just a verb.
   saveImageTicket: {
-    ko: "이 이미지를 저장해 두세요. 솔로 참가자는 Day 1 현장 팀 매칭에 쓰여요 🎟️",
-    en: "Save this image. Solo builders use it for on-site team matching on Day 1 🎟️",
+    // DECIDED 2026-10-23 (사용자, 글 리뷰): 8월 행사가 끝나 Day 1 팀 매칭은 지금 할 일이 아닙니다. 12월판(quizEditions)은 따로 씁니다.
+    ko: "이미지로 저장해 두고 공유할 수 있어요 🎟️",
+    en: "Save it as an image and share it 🎟️",
   },
   saveImage: { ko: "이미지로 저장", en: "Save as image" },
   saveImageLoading: { ko: "만드는 중…", en: "Creating…" },
