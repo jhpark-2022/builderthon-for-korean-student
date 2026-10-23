@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-23 새 Supabase 표의 grant 규칙](#2026-10-23-supabase-grants)
 - [2026-10-23 등록 폼 카카오톡 ID 설명 뺌](#2026-10-23-kakao-help)
 - [2026-10-23 Bloom 로고 교체](#2026-10-23-bloom-logo)
 - [2026-10-23 큐레이션 라벨 크기](#2026-10-23-facts-labels)
@@ -333,6 +334,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-23-supabase-grants"></a>
+## 2026-10-23 새 Supabase 표의 grant 규칙
+- 범위: CLAUDE.md(그 밖의 관행)
+- 한 것: 사용자 결정. Supabase가 2026-10-30부터 public의 새 표에 Data API 권한을 자동으로 주지 않아, 새 표를 만드는 마이그레이션에 service_role grant(select, insert, update, delete)를 같은 파일에 쓰는 규칙을 적었습니다. anon, authenticated에는 주지 않고, 표는 마이그레이션 파일로만 만듭니다. 기존 표(0001~0014)는 권한이 그대로라 손대지 않았습니다.
+- 검증: 운영 DB 읽기 확인. crossing_tracks 3행(투표 시각 비어 있음), crossing_teams 0, crossing_votes 0.
+- 커밋: 327011d
 
 <a id="2026-10-23-kakao-help"></a>
 ## 2026-10-23 등록 폼 카카오톡 ID 설명 뺌
