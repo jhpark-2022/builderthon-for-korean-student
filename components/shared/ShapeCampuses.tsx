@@ -14,14 +14,16 @@ export type ShapeCampus = { name: Phrase; src: string; w: number; h: number; u: 
  * 마우스가 있는 화면에서만 그립니다. touch면 폰에서도 그립니다(/naru 히어로에서는 커서 없이 늘 보이므로, DECIDED 2026-10-23 사용자:
  * "모바일 view에는 적용이 안 돼 있는 것 같은데"). 꾸밈이라 보조 기술에는 숨깁니다.
  */
-export default function ShapeCampuses({ id, campuses, touch = false }: { id: string; campuses: ShapeCampus[]; touch?: boolean }) {
+export default function ShapeCampuses({ id, campuses, touch = false, spreadOnPhone = false }: { id: string; campuses: ShapeCampus[]; touch?: boolean; spreadOnPhone?: boolean }) {
   return (
     <div
       id={id}
       aria-hidden
       // DECIDED 2026-10-23 (사용자: "모바일에서 보이는 학교들 로고들 더 키워줘", /naru와 홈 둘 다): 폰(sm 아래)에서는 형상 자체가 작아 휘장이 25px쯤이라
-      // 1.8배로 키웁니다(--crest-k). sm부터는 1. 자리(점)는 그대로이고 휘장만 큽니다.
-      className={`pointer-events-none fixed inset-0 [--crest-k:1.8] sm:[--crest-k:1] ${touch ? "block" : "hidden [@media(hover:hover)_and_(pointer:fine)]:block"}`}
+      // 1.8배로 키웁니다(--crest-k). sm부터는 1. 자리는 그대로이고 휘장만 큽니다.
+      // 이어서 (사용자: "크기는 해도, 로고들끼리 겹치면 안 됨"): 커진 뒤 싱가포르 셋이 폰에서 서로 닿았습니다(NUS가 NTU, SMU와 5~9px 겹침).
+      // spreadOnPhone이면 폰에서 자리를 형상 중심에서 1.5배 밖으로 벌립니다(--crest-spread). 서울 넷은 겹치지 않아 벌리지 않습니다.
+      className={`pointer-events-none fixed inset-0 [--crest-k:1.8] sm:[--crest-k:1] ${spreadOnPhone ? "[--crest-spread:1.5] sm:[--crest-spread:1]" : ""} ${touch ? "block" : "hidden [@media(hover:hover)_and_(pointer:fine)]:block"}`}
       style={{
         opacity: "var(--on, 0)",
         WebkitMaskImage: "radial-gradient(circle var(--lr, 0px) at var(--lx, -999px) var(--ly, -999px), #000 0%, rgba(0,0,0,0.55) 45%, transparent 100%)",
@@ -29,8 +31,8 @@ export default function ShapeCampuses({ id, campuses, touch = false }: { id: str
       }}
     >
       {campuses.map((c) => {
-        const left = `calc(var(--sx, 50vw) + var(--ss, 0px) * ${c.u})`;
-        const top = `calc(var(--sy, 50vh) - var(--ss, 0px) * ${c.v})`;
+        const left = `calc(var(--sx, 50vw) + var(--ss, 0px) * ${c.u} * var(--crest-spread, 1))`;
+        const top = `calc(var(--sy, 50vh) - var(--ss, 0px) * ${c.v} * var(--crest-spread, 1))`;
         const h = `calc(var(--ss, 0px) * ${c.size} * var(--crest-k, 1))`;
         return (
           <div key={c.name.en}>
