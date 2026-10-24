@@ -713,7 +713,9 @@ export default function NaruHome() {
       // 노선도의 현재 위치 점이 이 카드로 옵니다(감사 반영 브리프 3.6).
       onMouseEnter={() => setHoverDay(i)}
       onMouseLeave={() => setHoverDay(null)}
-      className={`flex flex-col ${inPanel ? "gap-[12px]" : "gap-[20px] md:gap-[24px]"} items-center text-center ${sub ? "py-0 md:row-span-5 md:grid md:grid-rows-subgrid md:items-stretch md:border-l md:border-white/10 md:pl-[16px] md:first:border-l-0 md:first:pl-0" : inPanel ? "rounded-2xl border border-white/10 bg-[#0B1430]/70 px-[20px] py-[20px]" : `px-[22.5px] py-[28px] sm:px-[24px] sm:py-[32px] lg:px-[27px] ${i === 0 ? "border-b border-white/10" : "border-t border-white/10"}`} ${!inPanel && (i === 0 || i === naru.december.stages.length - 1) ? "md:col-span-3" : ""}`}
+      // DECIDED 2026-10-24 (사용자, 스크린숏: "이 상자의 크기를 줄여"): 세션 설명이 상자 안으로 내려가 행이 짧아졌는데 행 간격은 24px 그대로라
+      // 카드가 비어 보였습니다. Day 1~3 카드(sub)의 행 간격을 16px로. 폰 패널(12px)과 Day 0, Day 4는 그대로.
+      className={`flex flex-col ${inPanel ? "gap-[12px]" : sub ? "gap-[20px] md:gap-[16px]" : "gap-[20px] md:gap-[24px]"} items-center text-center ${sub ? "py-0 md:row-span-5 md:grid md:grid-rows-subgrid md:items-stretch md:border-l md:border-white/10 md:pl-[16px] md:first:border-l-0 md:first:pl-0" : inPanel ? "rounded-2xl border border-white/10 bg-[#0B1430]/70 px-[20px] py-[20px]" : `px-[22.5px] py-[28px] sm:px-[24px] sm:py-[32px] lg:px-[27px] ${i === 0 ? "border-b border-white/10" : "border-t border-white/10"}`} ${!inPanel && (i === 0 || i === naru.december.stages.length - 1) ? "md:col-span-3" : ""}`}
     >
       <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-[8px]">
         {/* lang="en": DAY는 두 로케일 모두 영어입니다(접근성 감사 7). */}
@@ -1106,7 +1108,8 @@ export default function NaruHome() {
             {/* DECIDED 2026-10-17 (사용자, 스크린숏: "시간표와 미션인증 버튼이 3개의 상자 안에 들어가 있으면"): Day 1~3과 그 버튼을
                 큰 판 하나가 감쌉니다. 버튼이 세 날의 것이라는 것을 판이 말합니다. */}
             {stageCard(naru.december.stages[0], 0)}
-            <div className="flex flex-col gap-[24px] p-[28px] sm:p-[32px] md:col-span-3 md:gap-[48px]">
+            {/* 2026-10-24 (사용자: "이 상자의 크기를 줄여"): 판 안쪽 여백 32px을 24px로, 카드와 버튼 사이 48px을 32px로. */}
+            <div className="flex flex-col gap-[24px] p-[24px] md:col-span-3 md:gap-[32px]">
               {/* DECIDED 2026-10-19 (사용자, 스크린숏: "세션이라는 말도 다 같은 선상에"): 세 카드가 이 격자의 다섯 행(제목, 한 줄, 세션, 칩, 미션)을
                   나눠 씁니다(subgrid). 한 줄의 길이가 날마다 달라도 세션과 미션이 같은 높이에 섭니다. */}
               <div className="grid grid-cols-1 gap-x-[24px] gap-y-[56px] md:grid-cols-3 md:gap-x-[32px] md:gap-y-0">
@@ -1401,6 +1404,8 @@ export default function NaruHome() {
                     {g.logos.map((l) => partnerLogo(l))}
                   </div>
                 )}
+                {/* 2026-10-24 (사용자: "1일차에 lovable 현장 워크샵 진행"): 줄에 note가 있으면 로고 아래 한 줄. lead의 note와 같은 META, 같은 색. */}
+                {g.note && <p className={`${META} text-white/60`}>{t(g.note)}</p>}
               </li>
             ))}
             {/* DECIDED 2026-10-21 (사용자, 스크린숏: "따로 아래에 주최 박스를 넣지 말고, 나루 로고를 주최에 넣어줘 at the table, 로고 옆에 learn more"):

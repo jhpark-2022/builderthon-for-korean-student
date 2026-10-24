@@ -2498,8 +2498,9 @@ export const naru = {
           // 첫 생각 뒤에 "그건 이미 해 봤어요"를 듣게 하려는 순서입니다. 그 전: "출제사가 직접. 회사와 의뢰 문제".
           // 2026-10-19 (사용자: Day 1 카드가 길어짐): 이유 문장("첫 생각을 세운 뒤에 듣는…")은 화면에서 뺐습니다.
           body: {
-            ko: "Lovable 쓰는 법을 익히는 워크숍입니다.",
-            en: "A workshop on working with Lovable.",
+            // 2026-10-24 (사용자: "1일차에 lovable 현장 워크샵 진행"): 사용자가 준 말로.
+            ko: "Lovable 현장 워크숍을 진행합니다.",
+            en: "An on-site Lovable workshop.",
           },
         },
         // DECIDED 2026-10-10 (사용자, 마일스톤 브리프 2.1): 보상은 마지막 날 한 팀이 아니라, 그날의 마일스톤을 넘은 팀 모두에게.
@@ -3172,7 +3173,8 @@ export const singaporeCampuses: { name: Phrase; src: string; w: number; h: numbe
 // 그 코어 5개사가 아래 테두리 안에. 순서와 묶음은 AXMOS 공식 사이트(axmos.ai/kr)의 "Consortium · 코어 5개사"를 따릅니다.
 // 같은 날 (사용자: "작동이 안 되는 링크들이 있음, 블룸이랑 크라이치즈버거도 반드시 넣어줘"): translinkinvestment.com은 도메인이 없어
 // translink.kr로. AXMOS, Bloom(bloomworld.ai), 크라이치즈버거(crycheeseburger.com)에 링크를 넣었습니다. 모든 링크를 curl로 열어 봤습니다.
-export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?: PartnerLogo & { note: Phrase }; logos: PartnerLogo[] }[] } = {
+// note: 로고 줄 아래 한 줄(2026-10-24, 사용자: "1일차에 lovable 현장 워크샵 진행"). 있는 줄에만 그립니다.
+export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?: PartnerLogo & { note: Phrase }; logos: PartnerLogo[]; note?: Phrase }[] } = {
   heading: { ko: "함께하는 곳", en: "With us in December" },
   groups: [
     {
@@ -3199,6 +3201,8 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
     {
       label: { ko: "기술, 크레딧", en: "Tech and credits" },
       logos: [{ name: "Lovable", src: "/partners/logos/color/lovable.png", w: 644, h: 110, url: "https://lovable.dev/" }],
+      // DECIDED 2026-10-24 (사용자, 스크린숏: "1일차에 lovable 현장 워크샵 진행"): 로고 아래 한 줄. 일정 카드 Day 1의 세션과 같은 사실입니다.
+      note: { ko: "Day 1에 Lovable 현장 워크숍을 진행합니다.", en: "An on-site Lovable workshop on Day 1." },
     },
     {
       label: { ko: "커뮤니티, 홍보", en: "Community and PR" },
