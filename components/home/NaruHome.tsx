@@ -1126,12 +1126,13 @@ export default function NaruHome() {
               </p>
               {/* DECIDED 2026-10-24 (사용자, 스크린숏: "나루의 내용을 빼줘"): 셋째 문단(나루가 직접 여는 첫 이벤트로 ... 변하지 않는 두 개를 그대로 잇습니다)을
                   뺐습니다. 나루와 코어 둘은 /naru가 말합니다. 데이터 키 notSequel, notSequelTerm은 남겨 두고 그리지 않습니다. */}
-              {/* DECIDED 2026-10-24 (사용자: "왼쪽과 오른쪽이 vertically 맞았으면" → 바닥에 붙이니 "너무 비어있음"): 숫자 둘을 리드와 열 바닥 사이
-                  남은 공간의 가운데에 둡니다(lg:my-auto). 위아래 여백이 반씩 나뉘어 구멍이 반으로 줍니다. 열은 이미 lg:flex-col입니다. */}
-              <dl data-center-zone="stats" className="mt-[45px] lg:my-auto flex items-stretch justify-center">
+              {/* DECIDED 2026-10-24 (사용자: "왼쪽과 오른쪽이 vertically 맞았으면" → 바닥에 붙이니 "너무 비어있음" → 가운데에 두니 "안맞음"):
+                  lg에서 숫자 둘을 가로 한 줄이 아니라 오른쪽 표와 같은 가는 선 행 둘로 쌓고(숫자 왼쪽, 라벨 오른쪽) 열 바닥에 붙입니다(lg:mt-auto).
+                  행 둘이 높이를 채워 구멍이 줄고, 마지막 선이 오른쪽 표의 마지막 선과 같은 높이에 섭니다. lg 아래는 전과 같은 가로 한 줄입니다. */}
+              <dl data-center-zone="stats" className="mt-[45px] flex items-stretch justify-center lg:mt-auto lg:flex-col lg:items-stretch">
                 {/* DECIDED 2026-10-08 (사용자 승인, 홈 리뷰 12): 둘째 칸이 "2회 중간 제출 지점"이었습니다. 처음 온 사람에게
                     뜻이 없는 숫자라 "무순위, 부문별 시상"(shape[4])으로 바꿉니다. 제출 두 번은 아래 "이렇게 굴립니다"가 말합니다. */}
-                {[naru.december.shape[0], naru.december.shape[4]].map((stat, i) => (
+                {[naru.december.shape[0], naru.december.shape[4]].map((stat, i, arr) => (
                   // dl의 직계는 div 한 겹이고 그 안은 dt/dd뿐입니다. 그래서 구분선을
                   // 엘리먼트로 두지 못하고 ::before로 그립니다. 화면은 같습니다.
                   <div
@@ -1140,10 +1141,10 @@ export default function NaruHome() {
                       i > 0
                         ? "ml-3 pl-3 pr-1 before:absolute before:left-0 before:top-1/2 before:h-16 before:w-px before:-translate-y-1/2 before:bg-white/[0.14] before:content-[''] sm:ml-9 sm:pl-9"
                         : ""
-                    }`}
+                    } lg:ml-0 lg:flex-row lg:items-baseline lg:justify-between lg:gap-x-[24px] lg:border-t lg:border-white/10 lg:px-0 lg:py-[28px] lg:before:hidden ${i === arr.length - 1 ? "lg:border-b" : ""}`}
                   >
                     {/* 2026-10-11 (리뷰 작은 것): DOM은 dt 다음 dd입니다(용어가 먼저). 보이는 순서는 order가 전과 같이 숫자 위, 라벨 아래로 둡니다. */}
-                    <dt className={`order-2 mt-[12px] break-keep text-center ${META} font-bold uppercase text-white/70 ${latinTrack(locale)}`}>
+                    <dt className={`order-2 mt-[12px] break-keep text-center ${META} font-bold uppercase text-white/70 lg:mt-0 lg:text-right ${latinTrack(locale)}`}>
                       {t(stat.label)}
                     </dt>
                     {/* DECIDED 2026-10-22 (사용자, 스크린숏: "좀 더 visually engaging, 구성은 유지"): 숫자 줄은 TITLE(2026-09-26 사용자 요청의 크기로 돌아감).
