@@ -343,6 +343,8 @@ export const dict = {
   // 사전 전체를 번들에 끌어오지 않도록 참조 대신 옮겨 적었습니다. 한쪽을 고치면 다른
   // 쪽도 고치세요. 여기에 없는 숫자, 수상팀 이름, 인용은 지어내지 않습니다.
   record: {
+    // DECIDED 2026-10-24: 결과 판 안에서 "남기지 못한 것" 줄 앞의 라벨. 12월 줄의 naru.december.decemberLabel과 짝.
+    augustLabel: { ko: "8월", en: "August" },
     tag: { ko: "8일의 결과", en: "What happened" },
     heading: {
       ko: "74명이 신청했고, 21팀이 마지막 날 발표했습니다",

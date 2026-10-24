@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { naru } from "@/data/naru";
 import Image from "next/image";
 import { trackOpenChat } from "@/lib/openChatCount";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
@@ -22,7 +24,6 @@ import {
   type DayMeta,
 } from "@/data/schedule";
 import Chapter from "./Chapter";
-import AugustGaps from "@/components/archive/AugustGaps";
 // 2026-10-20 (hwang 브리프 2.3): 8월 페이지는 옛 알약 라벨을 그대로 씁니다.
 import { AugustEyebrow as Eyebrow } from "@/components/ui/Eyebrow";
 import LinkedInLink from "@/components/ui/LinkedInLink";
@@ -2260,43 +2261,59 @@ export default function Journey() {
           히어로 바로 아래에서 숫자 넷과 어워드 한 줄로 말합니다. 숫자의 정본과 옮겨
           적은 사정은 dict.record 주석에 있습니다. 가운데 정렬은 폰에서도 그대로입니다. */}
       <section id="results" aria-labelledby="results-heading" className="relative w-full px-6 py-14 sm:px-10 sm:py-20">
+        {/* DECIDED 2026-10-24 (사용자: "그냥 하나로 합쳐줘야 함. 3개의 따로따로 노는 무언가가 아니고"): 결과, 남기지 못한 것과
+            12월의 답, 고맙습니다를 제목 하나 아래 판 하나로 읽힙니다. 소제목 없이 숫자 → 8월/12월 짝 둘 → 감사 한 줄.
+            그 전 단계(같은 날): 세 블록을 여기 모았다가(각자 제목), 핵심만 남겼습니다. 이 섹션 아래는 모집 당시 그대로의 기록.
+            리드(dict.record.lead), 감사의 긴 문단(thanks.body), 카드 설명(gap.body), "그 밖에 바꾼 것"(december.also)은 키만 둡니다. */}
         <div className="mx-auto max-w-4xl text-center">
           <Eyebrow color="emerald">{t(dict.record.tag)}</Eyebrow>
           <h2 id="results-heading" className="break-keep text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-tight tracking-tight text-white">
             {t(dict.record.heading)}
           </h2>
-          {/* DECIDED 2026-10-24 (사용자: "너무 내용이 많음. essence만"): 리드(날짜, 장소, 스크리닝 없이 기업 앞 발표)는 히어로가
-              이미 말해 그리지 않습니다. 키(dict.record.lead)는 둡니다. */}
-          <dl className="mx-auto mt-8 grid max-w-3xl grid-cols-3 gap-3">
-            {dict.record.stats.map((st) => (
-              <div key={st.label.en} className="flex flex-col-reverse items-center gap-1 rounded-2xl border border-white/[0.08] bg-white/[0.03] px-3 py-5">
-                <dt className="text-xs leading-snug text-white/65">{t(st.label)}</dt>
-                <dd className="text-4xl font-black leading-none tracking-tight text-white">{t(st.value)}</dd>
-              </div>
-            ))}
-          </dl>
-          <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">{t(dict.record.awards)}</p>
-          {/* DECIDED 2026-10-24 (사용자: 다음 이야기는 #gaps 한 곳에서만): "8일의 사진은 크로싱 서울 홈에" 링크를 뺐습니다. 키(dict.record.more)는 둡니다. */}
-        </div>
 
-        {/* DECIDED 2026-10-24 (사용자, 스크린숏 셋: "하나로, 3곳에 흩어져있음"): 행사 뒤에 쓴 글 셋(결과, 남기지 못한 두 가지와
-            12월의 답, 고맙습니다)을 이 섹션 하나에 모읍니다. 그 전에는 결과가 맨 위, 나머지 둘이 맨 아래(FAQ 뒤, 마지막 화면)에
-            있었습니다. 이 섹션 아래는 전부 모집 당시 그대로의 기록입니다. */}
-        <div className="mx-auto mt-20 max-w-6xl sm:mt-24">
-          <AugustGaps />
-        </div>
+          <div className="mt-10 rounded-3xl border border-white/10 bg-white/[0.04] px-6 py-8 sm:px-10 sm:py-10">
+            <dl className="grid grid-cols-3 divide-x divide-white/10">
+              {dict.record.stats.map((st) => (
+                <div key={st.label.en} className="flex flex-col-reverse items-center gap-1 px-2">
+                  <dt className="text-xs leading-snug text-white/65">{t(st.label)}</dt>
+                  <dd className="text-4xl font-black leading-none tracking-tight text-white">{t(st.value)}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="mx-auto mt-5 max-w-2xl break-keep text-sm leading-relaxed text-white/75">{t(dict.record.awards)}</p>
 
-        {/* 고맙습니다. 이 자리에 적는 이름은 전부 이 페이지가 이미 공개한 것입니다(dict.footer.thanks의 주석). 본문은 폰까지 가운데(2026-10-02). */}
-        <div id="thanks" role="region" aria-labelledby="thanks-heading" className="mx-auto mt-20 max-w-3xl text-center sm:mt-24">
-          <p className="text-xs font-bold text-white/55">{t(dict.footer.thanks.label)}</p>
-          <h3 id="thanks-heading" className="mx-auto mt-4 break-keep text-[clamp(1.5rem,3.6vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
-            {t(dict.footer.thanks.heading)}
-          </h3>
-          {/* DECIDED 2026-10-24 (사용자: essence만): 역할을 하나씩 적던 긴 문단(thanks.body)은 파트너 표와 크레딧이 말하므로
-              한 줄(thanks.short)로 줄입니다. body 키는 둡니다. */}
-          <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/80">
-            {t(dict.footer.thanks.short)}
-          </p>
+            {/* 남기지 못한 것과 12월의 답. id="gaps"는 홈의 /2026-08#gaps 링크가 봅니다. */}
+            <ol id="gaps" role="list" className="mt-8 grid scroll-mt-48 grid-cols-1 gap-6 border-t border-white/10 pt-8 text-left sm:grid-cols-2 sm:gap-8">
+              {naru.record.gaps.map((gap) => (
+                <li key={gap.title.en} className="break-keep">
+                  <p className="text-base font-bold leading-snug text-white">
+                    <span className="mr-2 text-xs font-bold text-white/55">{t(dict.record.augustLabel)}</span>
+                    {t(gap.title)}
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-white/80">
+                    <span className="mr-2 text-xs font-bold text-violet-200">{t(naru.december.decemberLabel)}</span>
+                    {gap.answer ? t(gap.answer) : t(naru.record.answerPending)}
+                  </p>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-6 text-left sm:text-center">
+              <Link
+                href="/#december"
+                onClick={() => track("archive_cta", { src: "gaps", to: "december" })}
+                className="inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-white/85 underline underline-offset-4 transition hover:text-white"
+              >
+                {t(naru.december.gapsBackLink)}
+                <span aria-hidden>→</span>
+              </Link>
+            </p>
+
+            {/* 고맙습니다 한 줄. 이름은 전부 이 페이지가 이미 공개한 것(dict.footer.thanks의 주석). */}
+            <p className="mt-6 border-t border-white/10 pt-6 break-keep text-sm leading-relaxed text-white/75">
+              <span className="mr-2 font-bold text-white">{t(dict.footer.thanks.label)}</span>
+              {t(dict.footer.thanks.short)}
+            </p>
+          </div>
         </div>
       </section>
 
