@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-25 결과 판에서 반복되는 숫자를 뺌](#2026-10-25-august-retro-numbers)
 - [2026-10-25 8월 기록 회고를 판 하나로](#2026-10-25-august-retro-one)
 - [2026-10-24 8월 기록 회고 섹션을 핵심만](#2026-10-24-august-retro-trim)
 - [2026-10-24 8월 기록: 결과, 12월의 답, 고맙습니다를 맨 위 한 섹션으로](#2026-10-24-august-retro)
@@ -367,6 +368,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-25-august-retro-numbers"></a>
+## 2026-10-25 결과 판에서 반복되는 숫자를 뺌
+- 범위: components/journey/Journey.tsx(#results), data/naru.ts(record.gaps[].answer), data/dictionary.ts(footer.thanks.short)
+- 한 것: 사용자 요청(스크린숏, "더 줄여, 같은 숫자가 반복됨"). 74와 21이 제목, 숫자 줄, 감사 줄에 세 번 나왔다. 숫자 줄을 빼고(제목이 말함, stats 키는 둠), 감사 줄의 "21팀"을 "끝까지 해 본 팀들"로. 12월의 답 두 줄도 한 줄씩으로 줄임(마지막 날 발표는 제목이, 멘토 연락은 brand 7장 "끝난 뒤"의 말로). 근거: brand 5장(같은 사실은 두 번까지), 쓰는 말 "끝까지 해본 사람".
+- 검증: 1440 KR 스크린숏, 섹션 높이 948 → 840px로 한 화면 안. tsc, build 통과.
+- 커밋: 3e6ae78
 
 <a id="2026-10-25-august-retro-one"></a>
 ## 2026-10-25 8월 기록 회고를 판 하나로
