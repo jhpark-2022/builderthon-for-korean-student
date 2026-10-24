@@ -14,8 +14,6 @@ import {
   DECEMBER_STARTS_AT_SG_MS,
   decemberEventLabel,
   formatDecemberDateLine,
-  formatDecemberRange,
-  DECEMBER_CITY,
   formatDecemberDayWithWeekday,
 } from "@/lib/naruDates";
 import Glass from "@/components/ui/Glass";
@@ -1123,21 +1121,19 @@ export default function NaruHome() {
         <Reveal className={`${WIDE} mt-[72px] border-t border-white/15 pt-[40px] text-left lg:mt-[96px] lg:pt-[48px]`}>
           {/* DECIDED 2026-10-22 (사용자, 스크린숏: "bottom of both parts가 같아야 함"): lg에서 두 열이 같은 높이로 늘고, 왼쪽은 네 단계 표가
               아래 끝에, 오른쪽은 다섯 줄이 높이를 나눠 마지막 선이 왼쪽 표의 마지막 선과 같은 높이에 섭니다. */}
-          <div className="grid gap-x-[32px] gap-y-[48px] lg:grid-cols-2 lg:gap-x-[64px]">
+          {/* DECIDED 2026-10-24 (사용자, 스크린숏 둘: 왼쪽 열의 두 문단은 생략, "맨위에 한줄: 과정 지향적인 이벤트를 큐레이션 합니다"): 오른쪽 열에
+              있던 소제목을 두 열 위 한 줄로 올렸습니다. 왼쪽의 programConcrete, crossingLine 문단은 그리지 않습니다(날짜와 도시는 히어로가, 서울로
+              건너오는 뜻은 /naru가 말함). 키는 남겨 둡니다. */}
+          <h3 data-subheading className={`${SUBHEADING} text-center sm:text-left`}>{t(naru.december.factsLabel)}</h3>
+          <div className="mt-[16px] grid gap-x-[32px] gap-y-[48px] lg:grid-cols-2 lg:gap-x-[64px]">
             <div className="min-w-0 lg:flex lg:flex-col">
-              {/* DECIDED 2026-10-23 (모바일 점검): 이 세 문단만 폰에서 왼쪽이고 위아래가 모두 가운데라 축이 한 번 바뀌었습니다. 폰은 가운데(brand 10장 "글은 하나의 축"), sm부터 왼쪽. */}
-              <p className={`mt-[12px] first:mt-0 break-keep text-center sm:text-left ${BODY} leading-relaxed text-white/85 sm:mt-[16px]`}>
-                {t(naru.december.programConcrete).replace("{range}", formatDecemberRange(locale)).replace("{city}", DECEMBER_CITY[locale])}
-              </p>
-              <p className={`mt-[13.5px] first:mt-0 break-keep text-center sm:text-left ${BODY} leading-relaxed text-white/70 sm:mt-[16px]`}>
-                {t(naru.december.crossingLine)}
-              </p>
               {/* DECIDED 2026-10-24 (사용자, 스크린숏: "나루의 내용을 빼줘"): 셋째 문단(나루가 직접 여는 첫 이벤트로 ... 변하지 않는 두 개를 그대로 잇습니다)을
                   뺐습니다. 나루와 코어 둘은 /naru가 말합니다. 데이터 키 notSequel, notSequelTerm은 남겨 두고 그리지 않습니다. */}
               {/* DECIDED 2026-10-24 (사용자: "왼쪽과 오른쪽이 vertically 맞았으면" → 바닥에 붙이니 "너무 비어있음" → 가운데에 두니 "안맞음"):
                   lg에서 숫자 둘을 가로 한 줄이 아니라 오른쪽 표와 같은 가는 선 행 둘로 쌓고(숫자 왼쪽, 라벨 오른쪽) 열 바닥에 붙입니다(lg:mt-auto).
                   행 둘이 높이를 채워 구멍이 줄고, 마지막 선이 오른쪽 표의 마지막 선과 같은 높이에 섭니다. lg 아래는 전과 같은 가로 한 줄입니다. */}
-              <dl data-center-zone="stats" className="mt-[45px] flex items-stretch justify-center lg:mt-auto lg:flex-col lg:items-stretch">
+              {/* 2026-10-24 (같은 날 뒤): 위 문단이 없어져 두 행이 열 전체를 나눠 씁니다(lg:flex-1). 첫 선은 오른쪽 표의 첫 선과, 마지막 선은 마지막 선과 같은 높이. */}
+              <dl data-center-zone="stats" className="flex items-stretch justify-center lg:mt-0 lg:flex-1 lg:flex-col lg:items-stretch">
                 {/* DECIDED 2026-10-08 (사용자 승인, 홈 리뷰 12): 둘째 칸이 "2회 중간 제출 지점"이었습니다. 처음 온 사람에게
                     뜻이 없는 숫자라 "무순위, 부문별 시상"(shape[4])으로 바꿉니다. 제출 두 번은 아래 "이렇게 굴립니다"가 말합니다. */}
                 {[naru.december.shape[0], naru.december.shape[4]].map((stat, i, arr) => (
@@ -1149,7 +1145,7 @@ export default function NaruHome() {
                       i > 0
                         ? "ml-3 pl-3 pr-1 before:absolute before:left-0 before:top-1/2 before:h-16 before:w-px before:-translate-y-1/2 before:bg-white/[0.14] before:content-[''] sm:ml-9 sm:pl-9"
                         : ""
-                    } lg:ml-0 lg:flex-row lg:items-baseline lg:justify-between lg:gap-x-[24px] lg:border-t lg:border-white/10 lg:px-0 lg:py-[32px] lg:before:hidden ${i === arr.length - 1 ? "lg:border-b" : ""}`}
+                    } lg:ml-0 lg:flex-1 lg:flex-row lg:items-center lg:justify-between lg:gap-x-[24px] lg:border-t lg:border-white/10 lg:px-0 lg:py-[32px] lg:before:hidden ${i === arr.length - 1 ? "lg:border-b" : ""}`}
                   >
                     {/* 2026-10-11 (리뷰 작은 것): DOM은 dt 다음 dd입니다(용어가 먼저). 보이는 순서는 order가 전과 같이 숫자 위, 라벨 아래로 둡니다. */}
                     {/* 2026-10-24 (사용자: "폰트 사이즈가 너무 뒤죽박죽"): lg 행에서는 라벨을 오른쪽 표의 설명과 같은 BODY 보통 굵기로.
@@ -1168,10 +1164,10 @@ export default function NaruHome() {
 
             </div>
             <div className="min-w-0 lg:flex lg:flex-col">
-              <h3 data-subheading className={SUBHEADING}>{t(naru.december.factsLabel)}</h3>
+              {/* 2026-10-24: 소제목(factsLabel)은 두 열 위 한 줄로 올라갔습니다. */}
               {/* DECIDED 2026-10-23 (사용자, 스크린숏: "지금 여기가 너무 비어 있어"): 줄 셋이 왼쪽 열 높이(약 700px)에 맞춰 늘어나
                   줄마다 위아래가 200px 넘게 비었습니다. 줄 수는 사용자가 줄인 것이라(10/10, 10/22) 늘리지 않고, 줄을 제 높이로 둡니다. */}
-              <dl className="mt-[16px]">
+              <dl>
                 {naru.december.facts.map((f, i) => (
                   <div
                     key={f.k.en}
