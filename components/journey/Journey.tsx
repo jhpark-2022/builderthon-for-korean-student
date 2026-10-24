@@ -1,6 +1,5 @@
 "use client";
 
-import { naru } from "@/data/naru";
 import Image from "next/image";
 import { trackOpenChat } from "@/lib/openChatCount";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
@@ -2254,44 +2253,10 @@ export default function Journey() {
         </div>
       </Chapter>
 
-      {/* ── 8일의 결과 ────────────────────────────────────────────────────
-          DECIDED 2026-10-08 (전체 리뷰 반영): 이 페이지는 배너만 얹은 모집 페이지였고,
-          그 자리에 없던 사람이 알고 싶은 "무슨 일이 있었나"가 어디에도 없었습니다.
-          히어로 바로 아래에서 숫자 넷과 어워드 한 줄로 말합니다. 숫자의 정본과 옮겨
-          적은 사정은 dict.record 주석에 있습니다. 가운데 정렬은 폰에서도 그대로입니다. */}
-      <section id="results" aria-labelledby="results-heading" className="relative w-full px-6 py-14 sm:px-10 sm:py-20">
-        {/* DECIDED 2026-10-24 (사용자: "그냥 하나로 합쳐줘야 함. 3개의 따로따로 노는 무언가가 아니고"): 결과, 남기지 못한 것과
-            12월의 답, 고맙습니다를 제목 하나 아래 판 하나로 읽힙니다. 소제목 없이 숫자 → 8월/12월 짝 둘 → 감사 한 줄.
-            그 전 단계(같은 날): 세 블록을 여기 모았다가(각자 제목), 핵심만 남겼습니다. 이 섹션 아래는 모집 당시 그대로의 기록.
-            리드(dict.record.lead), 감사의 긴 문단(thanks.body), 카드 설명(gap.body), "그 밖에 바꾼 것"(december.also)은 키만 둡니다. */}
-        <div className="mx-auto max-w-4xl text-center">
-          <Eyebrow color="emerald">{t(dict.record.tag)}</Eyebrow>
-          <h2 id="results-heading" className="break-keep text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-tight tracking-tight text-white">
-            {t(dict.record.heading)}
-          </h2>
-
-          <div className="mt-10 rounded-3xl border border-white/10 bg-white/[0.04] px-6 py-8 sm:px-10 sm:py-10">
-            {/* DECIDED 2026-10-25 (사용자, 스크린숏: "더 줄여, 같은 숫자가 반복됨"): 숫자 셋(74명, 25팀, 21팀) 줄은 제목이 74와 21을
-                이미 말해 그리지 않습니다. 키(dict.record.stats)는 둡니다. */}
-            <p className="mx-auto max-w-2xl break-keep text-base leading-relaxed text-white/80">{t(dict.record.awards)}</p>
-
-            {/* DECIDED 2026-10-25 (사용자: "아예 지워버려, 8월에 관한 내용만 나오도록"): 12월의 답 줄, "크로싱 서울 프로그램 보기"
-                링크, 8월/12월 라벨을 뺐습니다. 남기지 못한 두 가지(8월의 사실)만 둡니다. answer, gapsBackLink 키는 data/naru.ts에 둡니다. */}
-            <ul id="gaps" role="list" className="mt-6 space-y-2 border-t border-white/10 pt-6 scroll-mt-48">
-              {naru.record.gaps.map((gap) => (
-                <li key={gap.title.en} className="break-keep text-base leading-relaxed text-white/80">{t(gap.title)}</li>
-              ))}
-            </ul>
-
-            {/* 고맙습니다 한 줄. 이름은 전부 이 페이지가 이미 공개한 것(dict.footer.thanks의 주석). */}
-            <p className="mt-6 border-t border-white/10 pt-6 break-keep text-sm leading-relaxed text-white/75">
-              <span className="mr-2 font-bold text-white">{t(dict.footer.thanks.label)}</span>
-              {t(dict.footer.thanks.short)}
-            </p>
-          </div>
-        </div>
-      </section>
-
+      {/* DECIDED 2026-10-25 (사용자, 스크린숏: "그냥 이거를 지워줘"): 히어로 아래의 "8일의 결과" 판(제목, 어워드 한 줄,
+          남기지 못한 두 가지, 고맙습니다 한 줄)을 통째로 내렸습니다. 같은 날 앞선 정리(세 블록을 하나로, 핵심만, 12월 지움)의
+          끝입니다. 이 페이지는 이제 히어로 다음 바로 모집 당시 그대로의 기록입니다. 키(dict.record, naru.record.gaps,
+          dict.footer.thanks)는 둡니다. 옛 마크업은 git 이력에. */}
       {/* ── CH 1 · ABOUT ───────────────────────────────────────────── */}
       <Chapter id="about" align="center">
         <div className="text-center">
@@ -3351,7 +3316,7 @@ export default function Journey() {
         </Glass>
       </Chapter>
 
-      {/* DECIDED 2026-10-24: 비전 챕터는 내렸고(사용자: 감사와 다음 이야기는 한곳에서만), 여기 있던 #gaps는 맨 위 #results 안으로
+      {/* DECIDED 2026-10-24: 비전 챕터는 내렸고(사용자: 감사와 다음 이야기는 한곳에서만), 여기 있던 #gaps는 맨 위 #results 안으로 갔다가 2026-10-25에 그 판째 내렸습니다
           옮겼습니다(사용자: 하나로). 옛 마크업은 git 이력에. */}
 
       {/* ── CH 6 · FOOTER ──────────────────────────────────────────── */}
@@ -3367,7 +3332,7 @@ export default function Journey() {
         />
         {/* hero CTA block - vertically centred */}
         <div className="flex flex-1 flex-col items-center justify-center text-center">
-          {/* DECIDED 2026-10-24 (사용자: 하나로): 이 화면의 제목 자리에 있던 "고맙습니다"는 맨 위 #results 안으로 옮겼습니다.
+          {/* DECIDED 2026-10-24 (사용자: 하나로): 이 화면의 제목 자리에 있던 "고맙습니다"는 맨 위 #results 안으로 옮겼고, 2026-10-25에 그 판째 내렸습니다.
               이 화면은 문(오픈채팅, 파트너십 문의)과 크레딧만 둡니다. */}
           <div className="flex flex-wrap justify-center gap-3">
             {/* Primary CTA. 2026-08-22 (마감 후 청산): 등록 모달을 열던 자리를

@@ -1274,7 +1274,7 @@ export default function NaruHome() {
         </PlateSegment>
         {/* DECIDED 2026-10-10 (사용자: "객관적으로 너무 내용이 많다", 중복 브리프 B3): #december의 둘째 판 조각을 홈에서
             내렸습니다. "8월이 남기지 못한 두 가지, 그리고 12월의 답"(카드 둘)과 "그 밖에 바꾼 것"은 8월 페이지 맨 아래의
-            #gaps로 갔습니다(2026-10-24부터 components/journey/Journey.tsx의 #results 판 안). 홈에는 위의 한 줄 링크만 남습니다. 폰의 접힘 단추 하나가
+            #gaps로 갔습니다(2026-10-25에 그 판째 내림). 홈에는 위의 한 줄 링크만 남습니다. 폰의 접힘 단추 하나가
             같이 사라졌습니다. 이 챕터의 판은 이제 하나라 틈도 하나 줄었고, 배경은 판을 DOM에서 읽어 다시 계산합니다
             (BackgroundScene.readAnchors). 같은 자리에 있던 "문제를 찾는 방식" 두 칸 비교는 2026-10-10 앞선 정리에서 내렸습니다.
             december.find, findLabel, gapsHeading, gapsNote, alsoLabel, also 키는 data/naru.ts에 그대로 있습니다. */}

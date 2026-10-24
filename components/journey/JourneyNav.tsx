@@ -104,7 +104,7 @@ export type NavAnchor = {
 // 영영 켜지지 않습니다. 라벨 키는 dict.wrap.navLabel에 그대로 있습니다.
 const DEFAULT_ANCHORS: NavAnchor[] = [
   // 2026-10-13: 앞의 네 챕터(결과, 취지, 참가, 혜택). id는 Journey.tsx의 섹션 id와 같습니다.
-  { id: "results",   label: dict.nav.results },
+  // 2026-10-25: #results 판을 내려 "결과" 탭도 뺐습니다.
   { id: "about",     label: dict.nav.about },
   { id: "join",      label: dict.nav.join },
   { id: "benefits",  label: dict.nav.benefits },
