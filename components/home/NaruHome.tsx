@@ -642,43 +642,30 @@ export default function NaruHome() {
   };
   const mentoringBoxes = (
     <>
-          {/* DECIDED 2026-10-13 (사용자, 멘토링 브리프 1, D1): 상자는 셋이고 종류로 나눕니다. Day 1의 출제사 컨텍스트, Day 2와 Day 3의
-              General Mentoring, 출제사 일정에 따르는 현장 멘토링. 문법은 셋이 같습니다(이름 BODY 굵게, 기간 META, 설명 BODY).
-              초록 테두리는 가운데 하나뿐이고(초록은 General Mentoring 하나, 2026-09-18), 양옆은 무채색 테두리에 점 색만 다릅니다.
-              규칙 목록(mentoringRules)은 가운데 상자의 설명과 아래 Day 4 한 줄로 올라가 그리지 않습니다.
-              날짜, 횟수, 기업 이름은 쓰지 않습니다(미정). */}
-          <div className="min-w-0 py-[16px]">
-            {/* DECIDED 2026-10-20 (hwang 브리프 2.8, 감사 W16): 이름 앞의 장식 점 셋을 뺐습니다. */}
-            <h3 id="mentoring" className={`break-keep text-center ${BODY} font-bold text-white`}>
-              {t(naru.december.contextMentoring.name)}
-            </h3>
-            <p className={`mt-[8px] ${META} font-semibold text-white/70 sm:mt-[12px]`}>{t(naru.december.contextMentoring.when)}</p>
-            <p className={`mt-[20px] break-keep ${BODY} leading-relaxed text-white/70 sm:mt-[24px]`}>{t(naru.december.contextMentoring.body)}</p>
-          </div>
-          {/* DECIDED 2026-10-20 (사용자, hwang 브리프 2.10, 감사 W5, 시각 리뷰 C3): 홈에서 한 번만 나오던 초록(emerald)을 걷고 옆 상자와 같은 무채색. */}
-          <div className="min-w-0 py-[16px]">
-            <h3 className={`break-keep text-center ${BODY} font-bold text-white`}>
-              {/* lang="en" (2026-09-19, 접근성 감사 7): 한국어 문단 속의 영어 고유명사. */}
-              <span lang="en">General Mentoring</span>
-            </h3>
-            <p className={`mt-[8px] ${META} font-semibold text-white/70 sm:mt-[12px]`}>{t(naru.december.mentoringAlways)}</p>
-            {/* DECIDED 2026-10-10 (사용자, 마일스톤 브리프 2.5): 멘토링은 먼저 찾아가는 자리라는 문장을 상자 안에 그립니다. */}
-            <p className={`mt-[20px] break-keep ${BODY} leading-relaxed text-white/70 sm:mt-[24px]`}>{t(naru.december.mentoringLead)}</p>
-          </div>
-          {/* DECIDED 2026-10-08 (사용자: "멘토가 오는 게 아니고 우리가 직접 간다", 프로그램 브리프 2.5): 현장 멘토링.
-              무채색 테두리에 점만 노선도 둘째 필과 같은 주황입니다(주황은 점으로만). */}
-          {/* DECIDED 2026-10-13 (사용자, 스크린숏: "현장 멘토링 박스는 pending 느낌이 더 나오도록"): 아직 정해지지 않은 자리라는 것이 상자 모양에서
-              읽히게 합니다. 테두리는 점선, 바탕은 비우고, 점은 속이 빈 주황 고리, 글은 한 단 흐리게(이름 /85, 설명 /70).
-              새 색과 새 글자 크기는 없습니다. 정해지면 옆 상자와 같은 실선과 채운 점으로 되돌립니다. */}
-          <div className="min-w-0 border-t border-dashed border-white/25 py-[16px] md:border-l md:border-t-0 md:pl-[24px]">
-            <h3 className={`break-keep text-center ${BODY} font-bold text-white/85`}>
-              {t(naru.december.fieldMentoring.name)}
-            </h3>
-            <p className={`mt-[8px] ${META} font-semibold text-white/70 sm:mt-[12px]`}>{t(naru.december.fieldMentoring.when)}</p>
-            <p className={`mt-[20px] break-keep ${BODY} leading-relaxed text-white/70 sm:mt-[24px]`}>{t(naru.december.fieldMentoring.body)}</p>
-          </div>
-          {/* 세 상자 아래 한 줄. Day 4에는 멘토링이 없다는 것을 상자가 아니라 줄로 말합니다(상자로 두면 "없음" 하나라 비어 보입니다). */}
-          <p className={`break-keep ${META} leading-snug text-white/70 md:col-span-3`}>{t(naru.december.mentoringDay4Line)}</p>
+          {/* DECIDED 2026-10-24 (사용자: "이 부분에 그 내용을 지금 있는 내용 대신 넣자". docs/companies-block-brief.md, lee-review L3 두 청중):
+              멘토링 상자 셋 자리에 이슈 하나의 닷새(이슈가 들어올 때, 닷새 뒤에 남는 기록, 그 다음). 기업이 읽으면 자기 자리인 줄 알되
+              "기업에게", "내는 것", "받는 것"처럼 직접 말하지 않습니다(같은 날 사용자: "너무 직접적임"). 상자 모양, 1×3 그리드, 글자 크기, 자리는 그대로이고
+              내용과 라벨만 바뀝니다. 문법은 셋이 같습니다(이름 BODY 굵게, 기간 META, 설명 BODY). 오른쪽 상자의 점선 구분은 그대로.
+              내려간 멘토링 문장은 Day 1, Day 2, Day 4 카드가 같은 말을 하고(브리프 1.5), 키는 data/naru.ts에 남겨 두었습니다.
+              그 전(2026-10-13 멘토링 브리프 1, D1): 출제사 컨텍스트 / General Mentoring / 현장 멘토링. */}
+          {/* 1.2 상자 위 라벨 한 줄. 새 섹션이 아니라 라벨이라 META입니다. 헤더 칩 "이슈"의 앵커(id="mentoring")는 여기로 옮겼습니다. */}
+          <h3 id="mentoring" className={`break-keep text-center ${META} font-bold text-white/85 md:col-span-3`}>
+            {t(naru.december.forCompanies.label)}
+          </h3>
+          {naru.december.forCompanies.boxes.map((b, i) => (
+            <div
+              key={i}
+              className={i === 2
+                ? "min-w-0 border-t border-dashed border-white/25 py-[16px] md:border-l md:border-t-0 md:pl-[24px]"
+                : "min-w-0 py-[16px]"}
+            >
+              <h4 className={`break-keep text-center ${BODY} font-bold ${i === 2 ? "text-white/85" : "text-white"}`}>{t(b.name)}</h4>
+              <p className={`mt-[8px] ${META} font-semibold text-white/70 sm:mt-[12px]`}>{t(b.when)}</p>
+              <p className={`mt-[20px] break-keep ${BODY} leading-relaxed text-white/70 sm:mt-[24px]`}>{t(b.body)}</p>
+            </div>
+          ))}
+          {/* 1.3 세 상자 아래 한 줄(그 전 Day 4 줄 자리, 같은 크기와 색). 한계를 먼저 말합니다. */}
+          <p className={`break-keep ${META} leading-snug text-white/70 md:col-span-3`}>{t(naru.december.forCompanies.limit)}</p>
           {/* 재는 것. 호박색 강조 상자(8월 "준비물은 하나예요" 문법).
 
               2026-09-20 (사용자: "가장 중요한 것은 완주율이라는 거를 강조"): 라벨과

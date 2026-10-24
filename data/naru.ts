@@ -325,7 +325,9 @@ export const naruNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel
   // "나루"(#naru 티저)는 여전히 페이지 칩이 맡습니다(같은 날 앞의 결정). id는 NaruHome.tsx의 블록 id와 같아야 합니다.
   { id: "december", label: { ko: "프로그램", en: "Programme" } },
   { id: "schedule", label: { ko: "일정", en: "Schedule" } },
-  { id: "mentoring", label: { ko: "멘토링", en: "Mentoring" } },
+  // DECIDED 2026-10-24 (companies-block-brief 1.6, 같은 날 사용자 "너무 직접적임"으로 "기업에게"는 안 씀): 라벨만 "이슈".
+  // id는 그대로라 밖의 #mentoring 링크는 같은 자리에 착지합니다.
+  { id: "mentoring", label: { ko: "이슈", en: "Issues" } },
   { id: "register", label: { ko: "등록", en: "Register" } },
   // DECIDED 2026-10-22 (UX 점검, 사용자: "모든 것을 반영"): 영문 "Gains"는 "What you leave with"의 라벨로 어색했습니다. ariaLabel은 뺐습니다.
   // 보이는 글자("남는 것")와 읽히는 이름("오면 무엇이 남는가")이 달라 Lighthouse label-content-name-mismatch에 걸렸습니다.
@@ -2094,6 +2096,46 @@ export const naru = {
       ko: "Day 4는 멘토링 없이 성과 공유회 무대에서 질의를 받습니다.",
       en: "Day 4 has no mentoring; you take questions on the showcase stage.",
     },
+    // ── 이슈 하나의 닷새 (DECIDED 2026-10-24, 사용자: "이 부분에 그 내용을 지금 있는 내용 대신 넣자". docs/companies-block-brief.md 1.1~1.3) ──
+    // 멘토링 상자 셋 자리에 이슈가 들어와서 닷새 뒤 남는 것, 그 다음. 글은 사이트에 이미 있는 문장에서 왔습니다(/naru 기업 상자, 홈 리드, 8월 깔때기).
+    // DECIDED 2026-10-24 (사용자, 같은 날 뒤: "기업에게, 내는 것, 받는 것은 너무 직접적임. 관계자가 보면 이해할 수 있는 느낌으로"):
+    // 라벨과 이름에서 기업, 주다, 받다를 뺐습니다. 주어는 이슈이고, 기업이 읽으면 자기 자리인 줄 압니다. 브리프 1.1~1.2, 1.6의 라벨은 이 결정이 대신합니다.
+    // 위의 멘토링 키(contextMentoring, mentoringAlways, mentoringLead, fieldMentoring, mentoringDay4Line)는 화면에서만 내리고 지우지 않습니다.
+    // 현장 멘토링이 정해지면 다시 올립니다. 숫자는 8월 사실(9팀, brand 8장)만 쓰고 12월을 약속하지 않습니다.
+    forCompanies: {
+      label: { ko: "이슈 하나의 닷새", en: "One issue, five days" },
+      boxes: [
+        {
+          name: { ko: "이슈가 들어올 때", en: "When an issue comes in" },
+          when: { ko: "Day 1과 Day 4", en: "Day 1 and Day 4" },
+          body: {
+            ko: "지금 겪는 이슈 하나와 자료, 실무자가 멘토로 앉는 시간으로 시작합니다. Day 1 Sharing session 3시간과 마지막 날 질의입니다.",
+            en: "It starts with one live issue, its material, and the hours its practitioners sit as mentors. Three hours at the Day 1 Sharing session and the questions on the last day.",
+          },
+        },
+        {
+          name: { ko: "닷새 뒤에 남는 기록", en: "What five days leave" },
+          when: { ko: "닷새 뒤", en: "After five days" },
+          body: {
+            ko: "같은 이슈를 받은 팀마다 다른 문제를 찾아 들어간 기록입니다. 팀의 생각 1장, 코드로 옮긴 결과물, 마지막 날의 발표와 질의. 8월에는 9팀이 시키지 않았는데 출제사에 직접 자료를 요청했습니다.",
+            en: "A record of each team finding a different problem under the same issue: one page of the team's take, something built in code, the last day's presentation and questions. In August nine teams asked the problem owner directly for data, unprompted.",
+          },
+        },
+        {
+          name: { ko: "그 다음", en: "What comes next" },
+          when: { ko: "끝난 뒤", en: "Afterwards" },
+          body: {
+            ko: "닷새 뒤의 관계는 채용 경로, 발주자, 팀의 첫 파트너까지 갈 수 있습니다. 어디까지 가느냐는 각 단계의 성립 조건이 결정합니다.",
+            en: "What follows the five days can go on to a hiring channel, a client with a real brief, a team's first partner. How far it goes is decided by what each step requires.",
+          },
+        },
+      ] as { name: Phrase; when: Phrase; body: Phrase }[],
+      // 상자 아래 한 줄(그 전 mentoringDay4Line 자리). "기업 출제, 후원 문의" 링크는 바로 아래 등록 블록에 있어 여기 넣지 않습니다.
+      limit: {
+        ko: "닷새 안에 다 풀리지 않을 수 있는 문제를 고릅니다. 8월에는 기업이 가져다 쓸 결과물이 나오지 않았고, 그래서 12월은 문제를 찾아 정의하는 구간부터 엽니다.",
+        en: "We pick problems that may not be solved in five days. In August nothing the company could take and use came out, so December opens from the part where the problem is found and defined.",
+      },
+    },
     // ── 현장 멘토링 (DECIDED 2026-10-08, 사용자: "멘토가 오는 게 아니고 우리가 직접 간다". 프로그램 브리프 2.5, D5) ──
     // General Mentoring(행사장, 예약제)은 그대로이고, 현장 방문이 하나 더 섭니다. 대신하는 것이 아닙니다.
     // TODO: confirm. 기업별 수락, 방문 날짜, 횟수가 정해지지 않았습니다. 그래서 날짜와 횟수를 쓰지 않고
@@ -2471,7 +2513,9 @@ export const naru = {
         // DECIDED 2026-10-17 (사용자: "2,3일차가 겹침. 아이디어 확인 받는 시간이 2일차, 실질적으로 만들어보는 시간이 3일차"):
         // 그 전 "오전 안에 돌아가는 첫 버전을 만들고 계속 고칩니다."는 만드는 날의 말이라 Day 3("코드화하는 시간")과 겹쳤습니다.
         line: { ko: "정의한 문제와 아이디어를 멘토에게 확인받는 시간입니다.", en: "Time to get the problem you defined and your idea checked by mentors." },
-        chips: [{ ko: "방향 전환은 팀의 몫", en: "Changing course is yours to call" }],
+        // DECIDED 2026-10-24 (companies-block-brief 1.5): 멘토링 상자가 내려가며 "시간표로 예약"은 이 칩이 말합니다. 바로 아래 버튼
+        // "멘토 시간표와 미션 인증"으로 이어집니다. 그 전: "방향 전환은 팀의 몫"(그 뜻은 위 body 둘째 문장이 그대로 말합니다).
+        chips: [{ ko: "멘토 시간은 시간표로 예약", en: "Mentor slots are booked on the shared timetable" }],
         // DECIDED 2026-09-27 (사용자, 9/7 8월 참가자 회고): 왜 하는지가 바로 읽히게.
         // UI는 AI가 바로 만들어 주지만 어떤 기능을 왜 넣을지 판단하는 훈련은 배울 곳이
         // 없다는 것이 참가자의 말이었습니다. 인턴도 그 기회를 잘 받지 못합니다.
