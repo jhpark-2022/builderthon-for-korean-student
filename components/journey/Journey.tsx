@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { naru } from "@/data/naru";
 import Image from "next/image";
 import { trackOpenChat } from "@/lib/openChatCount";
@@ -2276,31 +2275,13 @@ export default function Journey() {
                 이미 말해 그리지 않습니다. 키(dict.record.stats)는 둡니다. */}
             <p className="mx-auto max-w-2xl break-keep text-base leading-relaxed text-white/80">{t(dict.record.awards)}</p>
 
-            {/* 남기지 못한 것과 12월의 답. id="gaps"는 홈의 /2026-08#gaps 링크가 봅니다. */}
-            <ol id="gaps" role="list" className="mt-8 grid scroll-mt-48 grid-cols-1 gap-6 border-t border-white/10 pt-8 text-left sm:grid-cols-2 sm:gap-8">
+            {/* DECIDED 2026-10-25 (사용자: "아예 지워버려, 8월에 관한 내용만 나오도록"): 12월의 답 줄, "크로싱 서울 프로그램 보기"
+                링크, 8월/12월 라벨을 뺐습니다. 남기지 못한 두 가지(8월의 사실)만 둡니다. answer, gapsBackLink 키는 data/naru.ts에 둡니다. */}
+            <ul id="gaps" role="list" className="mt-6 space-y-2 border-t border-white/10 pt-6 scroll-mt-48">
               {naru.record.gaps.map((gap) => (
-                <li key={gap.title.en} className="break-keep">
-                  <p className="text-base font-bold leading-snug text-white">
-                    <span className="mr-2 text-xs font-bold text-white/55">{t(dict.record.augustLabel)}</span>
-                    {t(gap.title)}
-                  </p>
-                  <p className="mt-2 text-sm leading-relaxed text-white/80">
-                    <span className="mr-2 text-xs font-bold text-violet-200">{t(naru.december.decemberLabel)}</span>
-                    {gap.answer ? t(gap.answer) : t(naru.record.answerPending)}
-                  </p>
-                </li>
+                <li key={gap.title.en} className="break-keep text-base leading-relaxed text-white/80">{t(gap.title)}</li>
               ))}
-            </ol>
-            <p className="mt-6 text-left sm:text-center">
-              <Link
-                href="/#december"
-                onClick={() => track("archive_cta", { src: "gaps", to: "december" })}
-                className="inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-white/85 underline underline-offset-4 transition hover:text-white"
-              >
-                {t(naru.december.gapsBackLink)}
-                <span aria-hidden>→</span>
-              </Link>
-            </p>
+            </ul>
 
             {/* 고맙습니다 한 줄. 이름은 전부 이 페이지가 이미 공개한 것(dict.footer.thanks의 주석). */}
             <p className="mt-6 border-t border-white/10 pt-6 break-keep text-sm leading-relaxed text-white/75">
