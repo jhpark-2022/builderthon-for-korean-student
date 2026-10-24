@@ -644,26 +644,23 @@ export default function NaruHome() {
     <>
           {/* DECIDED 2026-10-24 (사용자: "이 부분에 그 내용을 지금 있는 내용 대신 넣자". docs/companies-block-brief.md, lee-review L3 두 청중):
               멘토링 상자 셋 자리에 이슈를 낸 기업의 닷새(이슈가 들어올 때, 닷새 뒤에 남는 기록, 그 다음). 기업이 읽으면 자기 자리인 줄 알되
-              "기업에게", "내는 것", "받는 것"처럼 직접 말하지 않습니다(같은 날 사용자: "너무 직접적임"). 상자 모양, 1×3 그리드, 글자 크기, 자리는 그대로이고
-              내용과 라벨만 바뀝니다. 문법은 셋이 같습니다(이름 BODY 굵게, 기간 META, 설명 BODY). 오른쪽 상자의 점선 구분은 그대로.
+              "기업에게", "내는 것", "받는 것"처럼 직접 말하지 않습니다(같은 날 사용자: "너무 직접적임").
               내려간 멘토링 문장은 Day 1, Day 2, Day 4 카드가 같은 말을 하고(브리프 1.5), 키는 data/naru.ts에 남겨 두었습니다.
               그 전(2026-10-13 멘토링 브리프 1, D1): 출제사 컨텍스트 / General Mentoring / 현장 멘토링. */}
-          {/* 1.2 상자 위 라벨 한 줄. 새 섹션이 아니라 라벨이라 META입니다. 헤더 칩 "이슈"의 앵커(id="mentoring")는 여기로 옮겼습니다. */}
-          <h3 id="mentoring" className={`break-keep text-center ${META} font-bold text-white/85 md:col-span-3`}>
-            {t(naru.december.forCompanies.label)}
-          </h3>
-          {naru.december.forCompanies.boxes.map((b, i) => (
-            <div
-              key={i}
-              className={i === 2
-                ? "min-w-0 border-t border-dashed border-white/25 py-[16px] md:border-l md:border-t-0 md:pl-[24px]"
-                : "min-w-0 py-[16px]"}
-            >
-              <h4 className={`break-keep text-center ${BODY} font-bold ${i === 2 ? "text-white/85" : "text-white"}`}>{t(b.name)}</h4>
-              <p className={`mt-[8px] ${META} font-semibold text-white/70 sm:mt-[12px]`}>{t(b.when)}</p>
-              <p className={`mt-[20px] break-keep ${BODY} leading-relaxed text-white/70 sm:mt-[24px]`}>{t(b.body)}</p>
-            </div>
-          ))}
+          {/* DECIDED 2026-10-24 (사용자, 스크린숏: "문제에 들어가는 네 단계와 비슷한 형식으로"): 가운데 정렬 상자 셋을 위 네 단계 표와 같은
+              문법으로 바꿨습니다. 왼쪽 정렬 SUBHEADING 소제목, 가는 선 격자(폰 한 단, md부터 세 칸), 칸마다 강조색 META 한 줄(네 단계의
+              번호 자리에 기간), BODY 굵은 제목, META 본문. 점선 테두리와 흐린 글자(현장 멘토링의 "미정" 표시)는 내용이 바뀌어 뺐습니다.
+              새 글자 크기와 색은 없습니다. 헤더 칩 "이슈"의 앵커(id="mentoring")는 소제목에 있습니다. */}
+          <h3 id="mentoring" className={SUBHEADING}>{t(naru.december.forCompanies.label)}</h3>
+          <ol role="list" className="mt-[16px] grid border-t border-white/10 md:grid-cols-3">
+            {naru.december.forCompanies.boxes.map((b, i) => (
+              <li key={i} className={`flex flex-col items-start gap-[12px] border-b border-white/10 px-[12px] py-[24px] sm:px-[16px] ${i > 0 ? "md:border-l" : ""}`}>
+                <span className={`${META} font-bold text-accent`}>{t(b.when)}</span>
+                <span className={`break-keep ${BODY} font-bold text-white`}>{t(b.name)}</span>
+                <span className={`break-keep ${META} leading-snug text-white/70`}>{t(b.body)}</span>
+              </li>
+            ))}
+          </ol>
           {/* 1.3의 상자 아래 한 줄(forCompanies.limit)은 2026-10-24 사용자("일단 이거는 제외")로 그리지 않습니다. */}
           {/* 재는 것. 호박색 강조 상자(8월 "준비물은 하나예요" 문법).
 
@@ -1194,7 +1191,8 @@ export default function NaruHome() {
               {/* DECIDED 2026-10-24 (사용자): 네 단계가 출제사의 상황에 따라 조정된다는 한 줄. 아래 멘토링 상자의 Day 4 줄과 같은 META, 같은 색. */}
               <p className={`mt-[16px] break-keep ${META} leading-snug text-white/70`}>{t(naru.december.approachNote)}</p>
             </div>
-            <div className="grid gap-[20px] border-t border-white/10 pt-[32px] text-center md:grid-cols-3 md:gap-[24px] md:pt-[40px] lg:col-span-2">
+            {/* 2026-10-24: 네 단계 표와 같은 묶음(소제목 + 격자). 위 표의 border-b가 선을 그어 border-t는 뺐고, 간격만 남깁니다. */}
+            <div className="mt-[32px] md:mt-[40px] lg:col-span-2">
               {mentoringBoxes}
             </div>
           </div>
