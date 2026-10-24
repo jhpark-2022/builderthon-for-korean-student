@@ -1826,7 +1826,9 @@ export const naru = {
     // ── 문제에 들어가는 네 단계 (DECIDED 2026-10-19, 사용자, 출제사 브리프 3장 반영 요청) ─────────────
     // 브리프의 "기능, 업무, 병목, 실험"에서 "실험"은 참가자에게 쓰지 않는 말이라(brand 9장) "어떻게 확인하나"로 씁니다.
     // findClose 바로 위, 상자 없이 헤어라인 네 칸. approachClose는 brand 7장 평가(결과보다 과정)를 사실로 말합니다.
-    approachLabel: { ko: "문제에 들어가는 네 단계", en: "Four steps into the problem" },
+    // DECIDED 2026-10-24 (사용자: "멘토는 답을 주기보다 ... 남는 것이 목표입니다. 이게 제목이 되어야 함. 길이는 훨씬 줄여야"):
+    // 제목이 멘토(답보다 방향)와 목표(행사 뒤에도 남는 묻는 법)를 말합니다. 그 전: "문제에 들어가는 네 단계" / "Four steps into the problem".
+    approachLabel: { ko: "멘토와 익혀 행사 뒤에도 남는 네 질문", en: "Four questions to keep, learned with mentors" },
     // DECIDED 2026-10-23 (사용자, 스크린숏: "표현들이 어색함"): 제목이 목적어만 남은 조각("무엇을", "누구의 일을")이었고 본문도 "~나"로
     // 끊겼습니다. 제목은 짧은 이름(브리프의 기능, 업무, 병목, 실험 순서 그대로), 본문은 팀이 실제로 묻는 질문 한 문장으로.
     // 그 전: 무엇을 / 누구의 일을 / 어디서 멈췄나 / 어떻게 확인하나, 본문 "어떤 AI 기능을 붙일 수 있나" 등.
@@ -2110,29 +2112,34 @@ export const naru = {
       // 상자 안 내용으로, 내용이 너무 많으면 안 됨"): 칸 셋을 시간순으로 다시 짰습니다. 들어올 때(자료 공개 범위, 회사 이름은 허락받은
       // 범위에서만) / 멘토의 자리(Day 2와 Day 3, 네 질문의 답 한 장, 답보다 방향 확인, 이슈와 한 장은 미리 받음) / 닷새 뒤(남는 기록과 그 다음).
       // 칸마다 두세 문장까지. 뺀 것: "9팀이 시키지 않았는데 자료 요청"(8월 기록 페이지에 있음), "어디까지 가느냐는 성립 조건이 결정". 새 사실 없음(brand 7장).
+      // DECIDED 2026-10-24 (사용자, 네 번째: "각 기업마다 1시간, 다음 column 닷새 뒤, optionally 멘토의 자리로. 학생들이 따로 멘토를 찾아갈
+      // 거지만 너희 기업에도 방문하면 좋겠다 느낌. 다 2줄"): 순서는 들어올 때 / 닷새 뒤 / 멘토의 자리. Day 1은 기업마다 1시간.
+      // 셋째 칸은 현장 방문을 권하는 자리라 기간에 "일정이 되면"을 적고 날짜와 기업은 쓰지 않습니다(brand 7장). 칸마다 데스크톱 두 줄 안.
+      // 멘토가 하는 일(답보다 방향)은 위 네 단계 아래 줄(approachMentorNote)이 말합니다.
       boxes: [
         {
           name: { ko: "이슈가 들어올 때", en: "When an issue comes in" },
-          when: { ko: "Day 1 Sharing session 3시간, Day 4 질의", en: "Day 1, three hours; Day 4, questions" },
+          when: { ko: "Day 1 기업마다 1시간, Day 4 질의", en: "Day 1, one hour per company; Day 4, questions" },
           body: {
-            ko: "지금 겪는 이슈 하나와 공개할 수 있는 만큼의 자료로 시작합니다. 회사 이름은 허락받은 범위에서만 씁니다.",
-            en: "It starts with one live issue and as much material as you can share. The company's name is used only as far as you allow.",
-          },
-        },
-        {
-          name: { ko: "멘토의 자리", en: "At the mentor's table" },
-          when: { ko: "Day 2와 Day 3", en: "Day 2 and Day 3" },
-          body: {
-            ko: "팀이 네 질문의 답을 한 장에 적어 현업 멘토를 찾아갑니다. 멘토는 답을 주기보다 방향이 맞는지 확인하고, 이슈와 그 한 장은 미리 받아 봅니다.",
-            en: "Teams bring one page answering the four questions to practitioner mentors. Mentors check the direction rather than hand over answers, and see the issue and that page in advance.",
+            // 2026-10-24: 1440에서 한 줄 약 22자. 두 줄 안에 들어가게 줄였습니다("지금 겪는 이슈 하나와"는 칸 이름이 말합니다).
+            ko: "공개할 수 있는 만큼의 자료만 받습니다. 회사 이름은 허락받은 만큼만 씁니다.",
+            en: "We take only as much material as you can share. The company's name is used only as far as you allow.",
           },
         },
         {
           name: { ko: "남는 기록, 그 다음", en: "What remains, and next" },
           when: { ko: "닷새 뒤", en: "After five days" },
           body: {
-            ko: "같은 이슈를 받은 팀마다 다른 문제를 찾아 들어간 기록이 남습니다. 팀의 생각 1장, 코드로 옮긴 결과물, 마지막 날의 발표와 질의. 그 뒤는 채용 경로, 발주자, 팀의 첫 파트너까지 갈 수 있습니다.",
-            en: "What remains is each team's record of finding a different problem under the same issue: one page of the team's take, something built in code, the last day's presentation and questions. From there it can go on to a hiring channel, a client with a real brief, a team's first partner.",
+            ko: "팀마다 다른 문제를 찾은 기록이 남습니다. 채용, 발주, 첫 파트너까지 갈 수 있습니다.",
+            en: "Each team leaves a record of a different problem found. It can go on to hiring, a real brief, a first partner.",
+          },
+        },
+        {
+          name: { ko: "멘토의 자리", en: "At the mentor's table" },
+          when: { ko: "Day 2나 Day 3, 일정이 되면", en: "Day 2 or 3, if it works" },
+          body: {
+            ko: "네 질문의 답을 들고 멘토를 찾아갑니다. 일정이 되면 기업의 일터에서도 엽니다.",
+            en: "Teams bring their answers to the four questions to mentors. If it works, that also happens at your workplace.",
           },
         },
       ] as { name: Phrase; when: Phrase; body: Phrase }[],

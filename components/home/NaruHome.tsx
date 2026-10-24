@@ -657,7 +657,7 @@ export default function NaruHome() {
               <li key={i} className={`flex flex-col items-start gap-[12px] border-b border-white/10 px-[12px] py-[24px] sm:px-[16px] ${i > 0 ? "md:border-l" : ""}`}>
                 <span className={`${META} font-bold text-accent`}>{t(b.when)}</span>
                 <span className={`break-keep ${BODY} font-bold text-white`}>{t(b.name)}</span>
-                <span className={`break-keep ${META} leading-snug text-white/70`}>{t(b.body)}</span>
+                <span className={`break-keep ${BODY} leading-normal text-white/70`}>{t(b.body)}</span>
               </li>
             ))}
           </ol>
@@ -1185,12 +1185,14 @@ export default function NaruHome() {
                     {/* 2026-10-22: 칸마다 길이가 다른 진행 막대를 넣었다가 같은 날 뺐습니다(사용자: "늘리고 줄이는 그거 이상함"). */}
                     <span className={`${META} font-bold tabular-nums text-accent`}>{String(i + 1).padStart(2, "0")}</span>
                     <span className={`break-keep ${BODY} font-bold text-white`}>{t(a.title)}</span>
-                    <span className={`break-keep ${META} leading-snug text-white/70`}>{t(a.body)}</span>
+                    {/* 2026-10-24 (사용자: "폰트 키워줘, 다른 part와 동일하게"): 칸 설명은 META에서 사이트 본문 BODY로. 아래 세 칸 표와 같습니다. */}
+                    <span className={`break-keep ${BODY} leading-normal text-white/70`}>{t(a.body)}</span>
                   </li>
                 ))}
               </ol>
               {/* DECIDED 2026-10-24 (사용자): 네 단계가 출제사의 상황에 따라 조정된다는 한 줄. 아래 멘토링 상자의 Day 4 줄과 같은 META, 같은 색. */}
               <p className={`mt-[16px] break-keep ${META} leading-snug text-white/70`}>{t(naru.december.approachNote)}</p>
+              {/* 2026-10-24 (사용자): 멘토와 행사 뒤에 남는 것은 표의 제목(approachLabel)이 말합니다. 둘째 줄로 두었던 것을 뺐습니다. */}
             </div>
             {/* 2026-10-24: 네 단계 표와 같은 묶음(소제목 + 격자). 위 표의 border-b가 선을 그어 border-t는 뺐고, 간격만 남깁니다. */}
             <div className="mt-[32px] md:mt-[40px] lg:col-span-2">
