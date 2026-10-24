@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-24 후원 상자의 채용 연계를 빼고 8월 기록을 증거로](#2026-10-24-sponsor-proof)
 - [2026-10-24 /naru 코어 제목 앞의 점을 뺌](#2026-10-24-core-dot)
 - [2026-10-24 큐레이션 소제목과 숫자 둘은 가운데](#2026-10-24-facts-center)
 - [2026-10-24 폰 그릇을 글 양에 맞춤 (max-sm만)](#2026-10-24-density-mobile)
@@ -361,6 +362,15 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-24-sponsor-proof"></a>
+## 2026-10-24 후원 상자의 채용 연계를 빼고 8월 기록을 증거로
+- 범위: data/naru.ts(how.layers 후원), components/naru/NaruPage.tsx(LayerDiagram), data/dictionary.ts(about.pressRelease), components/journey/Journey.tsx(언론 블록), docs/pages-review-2026-10-24.md
+- 한 것: 사용자 요청("다 적용"). /naru 후원 상자의 얻는 것을 "한인 학생과 만나는 자리가 생기고, 회차의 기록에 이름이 남습니다"로(EN 같이). "채용 연계"는 2026-09-29 결정(약속처럼 쓰지 않는다)과 어긋나 있었다. 같은 상자에 8월 파트너 표(/2026-08#builders)로 가는 한 줄. /2026-08 언론 줄 아래에 CNA, The Straits Times 보도자료 링크 한 줄(기사가 아니라 줄 상자 밖, 영문 제목은 쓰지 않음). 점검 문서의 미팅 발언 인용은 방향 요약으로 바꿨다.
+- 판단 질문: 2번(자기 가치를 증명할 기회). 기업이 이슈를 내게 하는 근거를 약속이 아니라 8월의 사실로 댐. 근거: brand 4장(12월을 약속하지 않음), 5장 안 쓰는 말과 공개 레포 규칙, 8장 숫자.
+- 검증: 1440 KR에서 두 자리 스크린숏, dev 서버 HTML에 새 문장 있음, "채용 연계" 0. tsc 통과. build는 dev 서버가 같은 폴더에서 돌고 있어 생략.
+- 브리프: docs/pages-review-2026-10-24.md (A1, N1, N2)
+- 커밋: b5e154d
 
 <a id="2026-10-24-core-dot"></a>
 ## 2026-10-24 /naru 코어 제목 앞의 점을 뺌
