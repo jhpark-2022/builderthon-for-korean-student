@@ -1136,7 +1136,8 @@ export default function NaruHome() {
           {/* DECIDED 2026-10-24 (사용자, 스크린숏 둘: 왼쪽 열의 두 문단은 생략, "맨위에 한줄: 과정 지향적인 이벤트를 큐레이션 합니다"): 오른쪽 열에
               있던 소제목을 두 열 위 한 줄로 올렸습니다. 왼쪽의 programConcrete, crossingLine 문단은 그리지 않습니다(날짜와 도시는 히어로가, 서울로
               건너오는 뜻은 /naru가 말함). 키는 남겨 둡니다. */}
-          <h3 data-subheading className={`${SUBHEADING} text-center sm:text-left`}>{t(naru.december.factsLabel)}</h3>
+          {/* DECIDED 2026-10-24 (사용자, 스크린숏: "put this at the center for both desktop and mobile"): 소제목과 숫자 둘은 모든 폭에서 가운데. 아래 칸들은 왼쪽 그대로(폰 밀도 브리프 D4의 결정). */}
+          <h3 data-subheading className={`${SUBHEADING} text-center`}>{t(naru.december.factsLabel)}</h3>
           {/* DECIDED 2026-10-24 (밀도 브리프 1.1, 1.5): lg에서 두 열을 한 열로. 왼쪽 열 약 500px에 숫자 둘만 있어 비어 보였습니다(화면 3 채움 27%).
               순서는 소제목, 숫자 둘 한 행(TITLE 숫자 + BODY 라벨, 왼쪽 정렬), 팀 구성/공간/미션 세 칸, 네 질문 표, 기업의 닷새 표. 묶음 사이 32px.
               lg 아래는 전과 같습니다. 글은 그대로입니다. */}
@@ -1148,7 +1149,7 @@ export default function NaruHome() {
                   lg에서 숫자 둘을 가로 한 줄이 아니라 오른쪽 표와 같은 가는 선 행 둘로 쌓고(숫자 왼쪽, 라벨 오른쪽) 열 바닥에 붙입니다(lg:mt-auto).
                   행 둘이 높이를 채워 구멍이 줄고, 마지막 선이 오른쪽 표의 마지막 선과 같은 높이에 섭니다. lg 아래는 전과 같은 가로 한 줄입니다. */}
               {/* 2026-10-24 (같은 날 뒤): 위 문단이 없어져 두 행이 열 전체를 나눠 씁니다(lg:flex-1). 첫 선은 오른쪽 표의 첫 선과, 마지막 선은 마지막 선과 같은 높이. */}
-              <dl data-center-zone="stats" className="flex items-stretch justify-center lg:mt-0 lg:items-baseline lg:justify-start lg:gap-x-[48px]">
+              <dl data-center-zone="stats" className="flex items-stretch justify-center lg:mt-0 lg:items-baseline lg:justify-center lg:gap-x-[48px]">
                 {/* DECIDED 2026-10-08 (사용자 승인, 홈 리뷰 12): 둘째 칸이 "2회 중간 제출 지점"이었습니다. 처음 온 사람에게
                     뜻이 없는 숫자라 "무순위, 부문별 시상"(shape[4])으로 바꿉니다. 제출 두 번은 아래 "이렇게 굴립니다"가 말합니다. */}
                 {[naru.december.shape[0], naru.december.shape[4]].map((stat, i, arr) => (
