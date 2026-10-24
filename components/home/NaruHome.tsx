@@ -1205,7 +1205,8 @@ export default function NaruHome() {
                   </li>
                 ))}
               </ol>
-
+              {/* DECIDED 2026-10-24 (사용자): 네 단계가 출제사의 상황에 따라 조정된다는 한 줄. 아래 멘토링 상자의 Day 4 줄과 같은 META, 같은 색. */}
+              <p className={`mt-[16px] break-keep ${META} leading-snug text-white/70`}>{t(naru.december.approachNote)}</p>
             </div>
             <div className="grid gap-[20px] border-t border-white/10 pt-[32px] text-center md:grid-cols-3 md:gap-[24px] md:pt-[40px] lg:col-span-2">
               {mentoringBoxes}

@@ -1836,6 +1836,12 @@ export const naru = {
       { title: { ko: "멈춘 자리", en: "Where it stopped" }, body: { ko: "먼저 해 본 시도는 어디서 멈췄나요?", en: "Where did the earlier attempt stop?" } },
       { title: { ko: "확인 방법", en: "The check" }, body: { ko: "가장 작게 확인해 볼 방법은 무엇일까요?", en: "What is the smallest way to check it?" } },
     ] as { title: Phrase; body: Phrase }[],
+    // DECIDED 2026-10-24 (사용자, 스크린숏: "네 단계나 현장 멘토링은 출제사의 상황에 따라 유연하게 조정 가능이라는 거를 추가"):
+    // 네 칸 아래 META 한 줄. 네 단계는 틀이고, 어느 단계를 깊이 갈지는 이슈를 낸 기업의 상황에 따라 달라진다고 미리 말합니다.
+    approachNote: {
+      ko: "네 단계는 출제사의 상황에 따라 유연하게 조정합니다.",
+      en: "The four steps flex with each company's situation.",
+    },
     // 2026-10-19 (시각 감사 1): 바로 아래 findClose와 같은 말을 해서 한 문단으로 합쳤습니다. 화면은 이 문단만 그리고 findClose는 그리지 않습니다.
     // DECIDED 2026-10-20 (사용자, 스크린숏: "너무 길어"): 프로그램 제목 바로 아래로 올라오며 네 줄이었습니다. 두 문장으로 줄였습니다.
     // 그 전: "...보고, 중간에서 멈춘 팀도 거기까지 간 과정을 발표합니다. 이 닷새에 익히는 것은 현업이 문제에 다가가는 방식이고, 그 방식은 문제가 풀리지 않아도 남습니다."
@@ -2106,9 +2112,10 @@ export const naru = {
         // 누구에게 무엇을 하는지만 남깁니다. "출제사의 일정이 되면"은 바로 위 when 줄이 말합니다.
         // 2026-10-11 (사용자: "그룹의 생각임", "예약 없이 그냥 멘토가 그 공간에 있는 거임"): 내 생각을 팀의 생각으로, 예약 멘토링이라는 말을 뺐습니다.
         // 2026-10-19 (사용자, 스크린숏: 세 상자의 내용 길이가 달라 크기가 달라 보임): 옆 상자와 줄 수를 맞추려 "팀을 나눠"를 뺐습니다. 뜻은 그대로.
-        ko: "이슈를 낸 기업의 일터로 가서 실무자에게 팀의 생각을 말하고 의견을 듣습니다. 갈 수 있는 기업은 정해지면 적습니다.",
+        // DECIDED 2026-10-24 (사용자: "출제사의 상황에 따라 유연하게 조정 가능이라는 거를 추가"): 둘째 문장에 붙였습니다. 문장 수는 둘 그대로.
+        ko: "이슈를 낸 기업의 일터로 가서 실무자에게 팀의 생각을 말하고 의견을 듣습니다. 출제사의 상황에 따라 유연하게 조정하고, 갈 수 있는 기업은 정해지면 적습니다.",
         // 2026-10-20 (영문 감사): 세 칸 중 하나라 영문이 한글의 1.6배 길이로 상자가 늘었습니다. 뜻은 그대로 줄였습니다.
-        en: "Go to the company's workplace, tell the people there what your team thinks, and hear them out. Hosts are listed once settled.",
+        en: "Go to the company's workplace, tell the people there what your team thinks, and hear them out. It flexes with each company's situation; hosts are listed once settled.",
       },
     },
     // 노선도 아래 둘째 필. 첫째 필(mentoringHeading)과 같은 문법입니다.
