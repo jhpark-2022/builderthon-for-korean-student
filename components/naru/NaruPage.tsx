@@ -32,7 +32,6 @@ import Chapter from "@/components/journey/Chapter";
 import Reveal from "@/components/shared/Reveal";
 import Eyebrow from "@/components/ui/Eyebrow";
 import { TITLE, BODY, META, H2, H3, STATEMENT, GRADIENT_TEXT } from "@/components/ui/typography";
-import NaruMark from "@/components/ui/NaruMark";
 import {
   PhoneFold, Card, SUBHEADING, READ, WIDE, READ_MEASURE_C, MEASURE_C,
   latinTrack, eyebrowTrack, PlateSegment, SiteFooter, usePlateLite,
@@ -192,9 +191,7 @@ export default function NaruPage() {
         {/* 코어 둘. 판 두 장.
             ol인 이유: 순서가 뜻입니다. 01이 문턱이고 02가 증명이며, 바로 아래
             note가 그 둘이 한 쌍이라고 말합니다. 번호는 그리지 않습니다(9/16
-            2차의 이유 그대로). 나루 점이 제목 첫 글자 앞에 섭니다.
-            점의 크기는 18px 고정입니다(2026-10-07). 제목이 BODY 크기(15.75~18px)가 되어 em으로 두면
-            로고 가이드의 하한 18px 아래로 내려갑니다. mt는 첫 줄의 한가운데.
+            2차의 이유 그대로). 제목 앞에 서던 나루 점(18px, 2026-10-07)은 2026-10-24에 뺐습니다(아래 h3 주석).
             keeps가 dl인 이유: 항목 이름과 값이지 제목이 아닙니다. */}
         <Reveal>
         {/* DECIDED 2026-10-19 (사용자, 스크린숏: "이거는 원래처럼 보여지면 좋겠는데"): 같은 날 감사 2로 가운데 한 기둥으로 바꿨던 것을
@@ -211,9 +208,10 @@ export default function NaruPage() {
                 {/* DECIDED 2026-09-18 (사용자): 글자가 너무 컸고, 첫 줄을 크게 강조하는 것은
                     "내 스타일이 아님". 제목은 H3 크기(STATEMENT 아님), 두 줄은 같은 본문 크기.
                     STATEMENT 토큰과 core.lines 키는 그대로 둡니다. */}
-                <h3 className={`flex items-start gap-[13.5px] max-sm:justify-center ${BODY} font-bold leading-snug tracking-tight text-white`}>
-                  <NaruMark className="mt-[2px] h-4 w-4 shrink-0 sm:mt-[3px]" />
-                  <span>{t(core.title)}</span>
+                {/* DECIDED 2026-10-24 (사용자, 스크린숏: "저 동그라미가 진짜 싫음"): 제목 앞의 나루 점을 뺐습니다. 홈의 주황 원장
+                    (components/home/NaruHome.tsx 히어로 주석) 다섯 자리 중 "#naru 코어 제목 앞 점"은 이제 없습니다. 제목 글자와 크기는 그대로. */}
+                <h3 className={`${BODY} font-bold leading-snug tracking-tight text-white`}>
+                  {t(core.title)}
                 </h3>
                 <p className={`mt-[18px] max-w-xl break-keep max-sm:mx-auto ${BODY} leading-relaxed text-white/85 lg:mt-[24px]`}>
                   {t(core.lines[0])}
