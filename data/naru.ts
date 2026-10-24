@@ -2103,7 +2103,9 @@ export const naru = {
     // 위의 멘토링 키(contextMentoring, mentoringAlways, mentoringLead, fieldMentoring, mentoringDay4Line)는 화면에서만 내리고 지우지 않습니다.
     // 현장 멘토링이 정해지면 다시 올립니다. 숫자는 8월 사실(9팀, brand 8장)만 쓰고 12월을 약속하지 않습니다.
     forCompanies: {
-      label: { ko: "이슈 하나의 닷새", en: "One issue, five days" },
+      // DECIDED 2026-10-24 (사용자, 세 번째: "그래도 여기에는 회사를 directed 된 part는 느낌이 나면 좋겠음"): "이슈 하나의 닷새"에서
+      // 이슈를 낸 기업(brand 5장의 말)을 라벨에 올렸습니다. "기업에게"처럼 부르지는 않습니다.
+      label: { ko: "이슈를 낸 기업의 닷새", en: "Five days for the company behind the issue" },
       boxes: [
         {
           name: { ko: "이슈가 들어올 때", en: "When an issue comes in" },
@@ -2130,7 +2132,7 @@ export const naru = {
           },
         },
       ] as { name: Phrase; when: Phrase; body: Phrase }[],
-      // 상자 아래 한 줄(그 전 mentoringDay4Line 자리). "기업 출제, 후원 문의" 링크는 바로 아래 등록 블록에 있어 여기 넣지 않습니다.
+      // 상자 아래 한 줄(그 전 mentoringDay4Line 자리). 2026-10-24 (사용자: "일단 이거는 제외"): 그리지 않습니다. 키는 남겨 둡니다.
       limit: {
         ko: "닷새 안에 다 풀리지 않을 수 있는 문제를 고릅니다. 8월에는 기업이 가져다 쓸 결과물이 나오지 않았고, 그래서 12월은 문제를 찾아 정의하는 구간부터 엽니다.",
         en: "We pick problems that may not be solved in five days. In August nothing the company could take and use came out, so December opens from the part where the problem is found and defined.",

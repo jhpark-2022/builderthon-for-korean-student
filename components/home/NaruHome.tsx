@@ -643,7 +643,7 @@ export default function NaruHome() {
   const mentoringBoxes = (
     <>
           {/* DECIDED 2026-10-24 (사용자: "이 부분에 그 내용을 지금 있는 내용 대신 넣자". docs/companies-block-brief.md, lee-review L3 두 청중):
-              멘토링 상자 셋 자리에 이슈 하나의 닷새(이슈가 들어올 때, 닷새 뒤에 남는 기록, 그 다음). 기업이 읽으면 자기 자리인 줄 알되
+              멘토링 상자 셋 자리에 이슈를 낸 기업의 닷새(이슈가 들어올 때, 닷새 뒤에 남는 기록, 그 다음). 기업이 읽으면 자기 자리인 줄 알되
               "기업에게", "내는 것", "받는 것"처럼 직접 말하지 않습니다(같은 날 사용자: "너무 직접적임"). 상자 모양, 1×3 그리드, 글자 크기, 자리는 그대로이고
               내용과 라벨만 바뀝니다. 문법은 셋이 같습니다(이름 BODY 굵게, 기간 META, 설명 BODY). 오른쪽 상자의 점선 구분은 그대로.
               내려간 멘토링 문장은 Day 1, Day 2, Day 4 카드가 같은 말을 하고(브리프 1.5), 키는 data/naru.ts에 남겨 두었습니다.
@@ -664,8 +664,7 @@ export default function NaruHome() {
               <p className={`mt-[20px] break-keep ${BODY} leading-relaxed text-white/70 sm:mt-[24px]`}>{t(b.body)}</p>
             </div>
           ))}
-          {/* 1.3 세 상자 아래 한 줄(그 전 Day 4 줄 자리, 같은 크기와 색). 한계를 먼저 말합니다. */}
-          <p className={`break-keep ${META} leading-snug text-white/70 md:col-span-3`}>{t(naru.december.forCompanies.limit)}</p>
+          {/* 1.3의 상자 아래 한 줄(forCompanies.limit)은 2026-10-24 사용자("일단 이거는 제외")로 그리지 않습니다. */}
           {/* 재는 것. 호박색 강조 상자(8월 "준비물은 하나예요" 문법).
 
               2026-09-20 (사용자: "가장 중요한 것은 완주율이라는 거를 강조"): 라벨과
