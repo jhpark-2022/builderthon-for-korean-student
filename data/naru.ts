@@ -1828,7 +1828,8 @@ export const naru = {
     // findClose 바로 위, 상자 없이 헤어라인 네 칸. approachClose는 brand 7장 평가(결과보다 과정)를 사실로 말합니다.
     // DECIDED 2026-10-24 (사용자: "멘토는 답을 주기보다 ... 남는 것이 목표입니다. 이게 제목이 되어야 함. 길이는 훨씬 줄여야"):
     // 제목이 멘토(답보다 방향)와 목표(행사 뒤에도 남는 묻는 법)를 말합니다. 그 전: "문제에 들어가는 네 단계" / "Four steps into the problem".
-    approachLabel: { ko: "멘토와 익혀 행사 뒤에도 남는 네 질문", en: "Four questions to keep, learned with mentors" },
+    // 2026-10-24 (사용자, 같은 날 뒤): "멘토와 익혀 학생이 행사 이후에 대답할 수 있는 질문들"로. 그 전: "멘토와 익혀 행사 뒤에도 남는 네 질문".
+    approachLabel: { ko: "멘토와 익혀 학생이 행사 이후에 대답할 수 있는 질문들", en: "Questions students can answer after the event, learned with mentors" },
     // DECIDED 2026-10-23 (사용자, 스크린숏: "표현들이 어색함"): 제목이 목적어만 남은 조각("무엇을", "누구의 일을")이었고 본문도 "~나"로
     // 끊겼습니다. 제목은 짧은 이름(브리프의 기능, 업무, 병목, 실험 순서 그대로), 본문은 팀이 실제로 묻는 질문 한 문장으로.
     // 그 전: 무엇을 / 누구의 일을 / 어디서 멈췄나 / 어떻게 확인하나, 본문 "어떤 AI 기능을 붙일 수 있나" 등.
@@ -1840,13 +1841,7 @@ export const naru = {
       { title: { ko: "멈춘 자리", en: "Where it stopped" }, body: { ko: "먼저 해 본 시도는 어디서 멈췄나요?", en: "Where did the earlier attempt stop?" } },
       { title: { ko: "확인 방법", en: "The check" }, body: { ko: "가장 작게 확인해 볼 방법은 무엇일까요?", en: "What is the smallest way to check it?" } },
     ] as { title: Phrase; body: Phrase }[],
-    // DECIDED 2026-10-24 (사용자, 스크린숏: "네 단계나 현장 멘토링은 출제사의 상황에 따라 유연하게 조정 가능이라는 거를 추가"):
-    // 네 칸 아래 META 한 줄. 네 단계는 틀이고, 어느 단계를 깊이 갈지는 이슈를 낸 기업의 상황에 따라 달라진다고 미리 말합니다.
-    approachNote: {
-      // 2026-10-24: 제목이 "네 질문"이 되어 같은 말로 맞췄습니다. 그 전: "네 단계는".
-      ko: "네 질문은 출제사의 상황에 따라 유연하게 조정합니다.",
-      en: "The four questions flex with each company's situation.",
-    },
+    // 2026-10-24 (사용자): 표 아래 "네 질문은 출제사의 상황에 따라 유연하게 조정합니다." 줄은 뺐습니다(같은 날 아침에 넣은 approachNote).
     // 2026-10-19 (시각 감사 1): 바로 아래 findClose와 같은 말을 해서 한 문단으로 합쳤습니다. 화면은 이 문단만 그리고 findClose는 그리지 않습니다.
     // DECIDED 2026-10-20 (사용자, 스크린숏: "너무 길어"): 프로그램 제목 바로 아래로 올라오며 네 줄이었습니다. 두 문장으로 줄였습니다.
     // 그 전: "...보고, 중간에서 멈춘 팀도 거기까지 간 과정을 발표합니다. 이 닷새에 익히는 것은 현업이 문제에 다가가는 방식이고, 그 방식은 문제가 풀리지 않아도 남습니다."
@@ -2123,24 +2118,25 @@ export const naru = {
           when: { ko: "Day 1 기업마다 1시간, Day 4 질의", en: "Day 1, one hour per company; Day 4, questions" },
           body: {
             // 2026-10-24: 1440에서 한 줄 약 22자. 두 줄 안에 들어가게 줄였습니다("지금 겪는 이슈 하나와"는 칸 이름이 말합니다).
-            ko: "공개할 수 있는 만큼의 자료만 받습니다. 회사 이름은 허락받은 만큼만 씁니다.",
-            en: "We take only as much material as you can share. The company's name is used only as far as you allow.",
+            // 2026-10-24 (사용자: 부탁하는 어조로, /humanizer): 받는 쪽 서술을 기업에게 청하는 말로.
+            ko: "공개할 수 있는 자료만 주시면 됩니다. 회사 이름은 허락하신 만큼만 쓰겠습니다.",
+            en: "Share only what you can. We will use the company's name only as far as you allow.",
           },
         },
         {
           name: { ko: "남는 기록, 그 다음", en: "What remains, and next" },
           when: { ko: "닷새 뒤", en: "After five days" },
           body: {
-            ko: "팀마다 다른 문제를 찾은 기록이 남습니다. 채용, 발주, 첫 파트너까지 갈 수 있습니다.",
-            en: "Each team leaves a record of a different problem found. It can go on to hiring, a real brief, a first partner.",
+            ko: "팀마다 다른 문제를 찾은 기록이 남습니다. 채용, 발주, 첫 파트너로 이어 주셔도 됩니다.",
+            en: "Each team leaves a record of a different problem found. Take it on to hiring, a brief, a first partner if you like.",
           },
         },
         {
           name: { ko: "멘토의 자리", en: "At the mentor's table" },
           when: { ko: "Day 2나 Day 3, 일정이 되면", en: "Day 2 or 3, if it works" },
           body: {
-            ko: "네 질문의 답을 들고 멘토를 찾아갑니다. 일정이 되면 기업의 일터에서도 엽니다.",
-            en: "Teams bring their answers to the four questions to mentors. If it works, that also happens at your workplace.",
+            ko: "팀이 네 질문의 답을 들고 멘토를 찾아갑니다. 일정이 되면 일터에서도 열어 주시면 좋겠습니다.",
+            en: "Teams bring their answers to the four questions to mentors. If it works, we would be glad to hold that at your workplace.",
           },
         },
       ] as { name: Phrase; when: Phrase; body: Phrase }[],
