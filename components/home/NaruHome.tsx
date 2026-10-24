@@ -657,7 +657,7 @@ export default function NaruHome() {
           <h3 id="mentoring" className={SUBHEADING}>{t(naru.december.forCompanies.label)}</h3>
           <ol role="list" className="mt-[16px] grid border-t border-white/10 md:grid-cols-3">
             {naru.december.forCompanies.boxes.map((b, i) => (
-              <li key={i} className={`flex flex-col items-start gap-[12px] border-b border-white/10 px-[12px] py-[24px] sm:px-[16px] ${i > 0 ? "md:border-l" : ""}`}>
+              <li key={i} className={`flex flex-col items-start gap-[12px] max-sm:gap-[8px] border-b border-white/10 px-[12px] py-[24px] max-sm:py-[16px] sm:px-[16px] ${i > 0 ? "md:border-l" : ""}`}>
                 <span className={`${META} font-bold text-accent`}>{t(b.when)}</span>
                 <span className={`break-keep ${BODY} font-bold text-white`}>{t(b.name)}</span>
                 <span className={`break-keep ${BODY} leading-normal text-white/70`}>{t(b.body)}</span>
@@ -1129,7 +1129,8 @@ export default function NaruHome() {
             {naru.december.stages.slice(4).map((stage, k) => stageCard(stage, k + 4))}
           </div>
         </Reveal>
-        <Reveal className={`${WIDE} mt-[72px] border-t border-white/15 pt-[40px] text-left lg:mt-[96px] lg:pt-[48px]`}>
+        {/* DECIDED 2026-10-24 (폰 밀도 브리프 1.12~1.18): 폰(sm 미만)만 묶음 사이와 칸 안쪽 여백을 줄입니다(72/40 → 48/32, 칸 24/12 → 16/8, 행 20/8 → 14/6). max-sm: 추가만. */}
+        <Reveal className={`${WIDE} mt-[72px] max-sm:mt-[48px] max-sm:pt-[32px] border-t border-white/15 pt-[40px] text-left lg:mt-[96px] lg:pt-[48px]`}>
           {/* DECIDED 2026-10-22 (사용자, 스크린숏: "bottom of both parts가 같아야 함"): lg에서 두 열이 같은 높이로 늘고, 왼쪽은 네 단계 표가
               아래 끝에, 오른쪽은 다섯 줄이 높이를 나눠 마지막 선이 왼쪽 표의 마지막 선과 같은 높이에 섭니다. */}
           {/* DECIDED 2026-10-24 (사용자, 스크린숏 둘: 왼쪽 열의 두 문단은 생략, "맨위에 한줄: 과정 지향적인 이벤트를 큐레이션 합니다"): 오른쪽 열에
@@ -1139,7 +1140,7 @@ export default function NaruHome() {
           {/* DECIDED 2026-10-24 (밀도 브리프 1.1, 1.5): lg에서 두 열을 한 열로. 왼쪽 열 약 500px에 숫자 둘만 있어 비어 보였습니다(화면 3 채움 27%).
               순서는 소제목, 숫자 둘 한 행(TITLE 숫자 + BODY 라벨, 왼쪽 정렬), 팀 구성/공간/미션 세 칸, 네 질문 표, 기업의 닷새 표. 묶음 사이 32px.
               lg 아래는 전과 같습니다. 글은 그대로입니다. */}
-          <div className="mt-[16px] grid gap-x-[32px] gap-y-[48px] lg:gap-y-[32px]">
+          <div className="mt-[16px] grid gap-x-[32px] gap-y-[48px] max-sm:gap-y-[32px] lg:gap-y-[32px]">
             <div className="min-w-0 lg:flex lg:flex-col">
               {/* DECIDED 2026-10-24 (사용자, 스크린숏: "나루의 내용을 빼줘"): 셋째 문단(나루가 직접 여는 첫 이벤트로 ... 변하지 않는 두 개를 그대로 잇습니다)을
                   뺐습니다. 나루와 코어 둘은 /naru가 말합니다. 데이터 키 notSequel, notSequelTerm은 남겨 두고 그리지 않습니다. */}
@@ -1188,7 +1189,7 @@ export default function NaruHome() {
                   <div
                     key={f.k.en}
                     // DECIDED 2026-10-22 (사용자: "visually engaging"): sm부터 라벨 왼쪽 열(accent), 설명 오른쪽 열. 표처럼 한눈에 훑습니다.
-                    className={`grid grid-cols-1 gap-y-[8px] border-t border-white/10 py-[20px] sm:grid-cols-[7.5rem_1fr] sm:gap-x-[24px] sm:py-[24px] lg:grid-cols-1 lg:content-start lg:gap-y-[12px] lg:border-b lg:px-[16px] lg:py-[24px] ${i > 0 ? "lg:border-l" : ""} ${i === naru.december.facts.length - 1 ? "border-b" : ""}`}
+                    className={`grid grid-cols-1 gap-y-[8px] max-sm:gap-y-[6px] border-t border-white/10 py-[20px] max-sm:py-[14px] sm:grid-cols-[7.5rem_1fr] sm:gap-x-[24px] sm:py-[24px] lg:grid-cols-1 lg:content-start lg:gap-y-[12px] lg:border-b lg:px-[16px] lg:py-[24px] ${i > 0 ? "lg:border-l" : ""} ${i === naru.december.facts.length - 1 ? "border-b" : ""}`}
                   >
                     {/* DECIDED 2026-10-23 (사용자, 스크린숏: "팀 구성 같은 제목들도 너무 작고"): 라벨을 META에서 BODY 굵게로 올렸습니다. 새 크기는 만들지 않습니다. */}
                     <dt className={`break-keep ${BODY} font-bold leading-relaxed text-accent`}>{t(f.k)}</dt>
@@ -1205,7 +1206,7 @@ export default function NaruHome() {
               <p className={SUBHEADING}>{t(naru.december.approachLabel)}</p>
               <ol role="list" className="mt-[16px] grid grid-cols-2 border-t border-white/10 lg:grid-cols-4">
                 {naru.december.approach.map((a, i) => (
-                  <li key={i} className={`flex flex-col items-start gap-[12px] border-b border-white/10 px-[12px] py-[24px] sm:px-[16px] ${i % 2 === 1 ? "border-l" : ""} ${i > 0 ? "lg:border-l" : ""} border-white/10`}>
+                  <li key={i} className={`flex flex-col items-start gap-[12px] max-sm:gap-[8px] border-b border-white/10 px-[12px] py-[24px] max-sm:py-[16px] sm:px-[16px] ${i % 2 === 1 ? "border-l" : ""} ${i > 0 ? "lg:border-l" : ""} border-white/10`}>
                     {/* 2026-10-22: 칸마다 길이가 다른 진행 막대를 넣었다가 같은 날 뺐습니다(사용자: "늘리고 줄이는 그거 이상함"). */}
                     <span className={`${META} font-bold tabular-nums text-accent`}>{String(i + 1).padStart(2, "0")}</span>
                     <span className={`break-keep ${BODY} font-bold text-white`}>{t(a.title)}</span>
@@ -1218,12 +1219,12 @@ export default function NaruHome() {
             </div>
             {/* 2026-10-24: 네 단계 표와 같은 묶음(소제목 + 격자). 위 표의 border-b가 선을 그어 border-t는 뺐고, 간격만 남깁니다. */}
             {/* 2026-10-24 (밀도 브리프 1.5): lg에서 두 표 사이는 격자 간격 32px 하나. */}
-            <div className="mt-[32px] md:mt-[40px] lg:mt-0">
+            <div className="mt-[32px] max-sm:mt-[16px] md:mt-[40px] lg:mt-0">
               {mentoringBoxes}
             </div>
           </div>
         </Reveal>
-        <div id="register" aria-labelledby="december-register-note" className={`${READ} mt-[64px] border-t border-white/10 pt-[40px] text-balance text-center lg:mt-[96px] lg:pt-[48px]`}>
+        <div id="register" aria-labelledby="december-register-note" className={`${READ} mt-[64px] max-sm:mt-[48px] border-t border-white/10 pt-[40px] max-sm:pt-[32px] text-balance text-center lg:mt-[96px] lg:pt-[48px]`}>
         {/* 2026-10-11 (리뷰 A5): 등록 블록의 제목. 화면에는 그리지 않고 제목 목록에서 찾을 수 있게 합니다. */}
         <h3 className="sr-only">{t({ ko: "등록", en: "Registration" })}</h3>
         {/* DECIDED 2026-10-13 (사용자, 스크린숏: "너무 길어, 있는 말 반복이니까"): 여기 서던 registerNote 줄들을 뺐습니다. 언제 여는지와
@@ -1331,8 +1332,9 @@ export default function NaruHome() {
             8월과 다른 점: 색은 cyan이 아니라 홈의 accent(보라), 글자 크기는 홈의 셋(TITLE, BODY, META)만, 카드 안은 가운데입니다
             (같은 날 "뭐는 중간에, 뭐는 left에" 결정). 카드 본문은 불릿이 아니라 한 문장입니다(항목마다 문장이 하나뿐). */}
         <Reveal className={READ}>
-          {/* DECIDED 2026-10-24 (밀도 브리프 1.3): lg에서는 척추 카드의 테두리와 면을 걷고 H2 아래 리드로 둡니다(프로그램 제목 아래 리드와 같은 문법). 글과 글자 크기는 그대로. 폰은 카드 그대로. */}
-          <div className="mt-[36px] rounded-2xl border border-accent/30 bg-accent/[0.08] px-[24px] py-[27px] text-center sm:p-[40px] lg:mt-[32px] lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0">
+          {/* DECIDED 2026-10-24 (밀도 브리프 1.3): lg에서는 척추 카드의 테두리와 면을 걷고 H2 아래 리드로 둡니다(프로그램 제목 아래 리드와 같은 문법). 글과 글자 크기는 그대로.
+              같은 날 뒤(폰 밀도 브리프 1.8): 폰(sm 미만)도 같은 리드. 카드는 sm~md에만 남습니다. */}
+          <div className="mt-[36px] max-sm:mt-[24px] max-sm:rounded-none max-sm:border-0 max-sm:bg-transparent max-sm:p-0 rounded-2xl border border-accent/30 bg-accent/[0.08] px-[24px] py-[27px] text-center sm:p-[40px] lg:mt-[32px] lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0">
             <p className={`${META} font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.gains.spine.tag)}</p>
             <p className={`mx-auto mt-[11.25px] max-w-[34rem] text-balance break-keep ${BODY} font-bold leading-snug text-white sm:mt-[12px]`}>{t(naru.gains.spine.heading)}</p>
             {/* DECIDED 2026-10-20 (hwang 브리프 1.2, 2.6, 감사 W3, W4): ✓칩 셋(알약)을 걷고 한 문장으로. tangibles 키는 남깁니다. */}
@@ -1346,7 +1348,7 @@ export default function NaruHome() {
               자기 날짜만큼 막대를 긋습니다. 정거장에서 내려오는 옅은 세로줄이 다섯 행을 꿰어 같은 노선이라는 것이 보입니다.
               폰은 행 안에서 글 아래에 막대(가운데 정렬), sm부터는 왼쪽에 글, 오른쪽에 막대. 글자는 BODY와 META만.
               role="list" (2026-09-19, 접근성 감사 10): Safari/VoiceOver가 list-style:none인 목록의 역할을 떼어 냅니다. */}
-          <div className="relative mt-[36px] rounded-2xl border border-white/15 bg-white/[0.04] px-[22.5px] py-[12px] sm:px-[32px] sm:py-[27px] lg:mt-[48px] lg:px-[40px]">
+          <div className="relative mt-[36px] max-sm:mt-[24px] rounded-2xl border border-white/15 bg-white/[0.04] px-[22.5px] py-[12px] sm:px-[32px] sm:py-[27px] lg:mt-[48px] lg:px-[40px]">
             <div className="relative">
               {/* 날마다의 옅은 세로 띠(Day 0, 2, 4). 가는 안내선 대신 칸이 보이게. 머리와 행과 같은 칸 틀입니다. */}
               <div aria-hidden className={`pointer-events-none absolute inset-0 grid ${GAIN_COLS}`}>
@@ -1361,14 +1363,14 @@ export default function NaruHome() {
                 {naru.gains.items.map((item, i) => (
                   <li
                     key={item.num}
-                    className={`border-t border-white/[0.08] py-[18px] text-center sm:grid sm:items-start sm:py-[22.5px] sm:text-left lg:py-[16px] ${GAIN_COLS}`}
+                    className={`border-t border-white/[0.08] py-[18px] max-sm:py-[14px] text-center sm:grid sm:items-start sm:py-[22.5px] sm:text-left lg:py-[16px] ${GAIN_COLS}`}
                   >
                     <div className="min-w-0 sm:pr-6" style={{ gridColumn: 1, gridRow: 1 }}>
                       <div className="flex items-center justify-center gap-2.5 sm:justify-start">
                         <span aria-hidden className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent/15 ${META} font-black tabular-nums text-accent`}>{item.num}</span>
                         <h3 className={ROW_HEADING}>{t(item.title)}</h3>
                       </div>
-                      <p className={`mt-[12px] break-keep ${BODY} leading-relaxed text-white/70 sm:mt-[16px]`}>{t(item.body)}</p>
+                      <p className={`mt-[12px] max-sm:mt-[8px] break-keep ${BODY} leading-relaxed text-white/70 sm:mt-[16px]`}>{t(item.body)}</p>
                       <span className="sr-only">{item.days.map((d) => `Day ${d}`).join(", ")}</span>
                     </div>
                     <GainBars days={item.days} split={item.split} />
@@ -1391,7 +1393,7 @@ export default function NaruHome() {
           나루 티저 바로 앞입니다(brand 3장 원칙 2). 분류, 로고 줄, 한 줄 설명을 모든 폭에서 가운데로 쌓습니다
           (같은 날 사용자: "put the logo at the center". 그 전은 lg에서 왼쪽 분류, 오른쪽 로고).
           로고는 원래 색이고(data/naru.ts decemberPartners) 비율로 높이를 맞춥니다. 링크가 확실한 곳만 새 탭 링크입니다. */}
-      <section id="partners" aria-labelledby="partners-title" className="relative w-full px-[20px] pb-[45px] pt-[72px] sm:px-[40px] sm:pb-[90px] lg:pb-[72px] lg:pt-[72px]">
+      <section id="partners" aria-labelledby="partners-title" className="relative w-full px-[20px] pb-[45px] pt-[72px] max-sm:pb-[32px] max-sm:pt-[56px] sm:px-[40px] sm:pb-[90px] lg:pb-[72px] lg:pt-[72px]">
         {/* DECIDED 2026-10-22 (사용자): 서울 안에서 빛이 비추면 대학교 휘장이 보입니다(학회 로고는 쓰지 않음). 표보다 먼저 두어 표 아래에 깔립니다. */}
         <SeoulCampuses />
         <div className={WIDE}>
@@ -1399,9 +1401,11 @@ export default function NaruHome() {
           {/* DECIDED 2026-10-24 (밀도 브리프 1.4, D3): lg에서 다섯 줄을 줄였습니다. 1줄 = 메인 후원(AXMOS + 코어 5개사, 전과 같음), 2줄 = 장소 / 기술, 크레딧 /
               커뮤니티, 홍보 세 묶음이 한 줄(묶음마다 META 라벨 위, 로고 아래, 사이 세로 선). 섹션 위아래 108/126px → 72px. 로고와 글은 그대로. 폰은 그대로.
               같은 날 뒤(사용자, 스크린숏: "주최는 따로 빼주면 좋겠음"): 브리프 D3의 네 묶음에서 주최를 빼 셋째 줄에 따로 둡니다(전처럼 라벨, 로고, 링크 한 줄). */}
-          <ul className="mt-[45px] border-t border-white/10 lg:mt-[48px] lg:grid lg:grid-cols-3">
+          {/* DECIDED 2026-10-24 (폰 밀도 브리프 1.1~1.7, 사용자: "폰도 이렇게 깔끔하면 좋겠다"): 폰(sm 미만)만 묶음 패딩 32 → 20, 로고 사이 45 → 24(코어 상자는 28),
+              주최는 sm처럼 한 줄. 전부 max-sm: 추가이고 sm 이상은 그대로. 로고와 글은 그대로. */}
+          <ul className="mt-[45px] max-sm:mt-[32px] border-t border-white/10 lg:mt-[48px] lg:grid lg:grid-cols-3">
             {decemberPartners.groups.map((g, gi) => (
-              <li key={g.label.en} className={`flex flex-col items-center gap-5 border-b border-white/10 py-[32px] text-center ${g.lead ? "lg:col-span-3 lg:py-[48px]" : `lg:px-[16px] lg:py-[32px] ${gi > 1 ? "lg:border-l lg:border-white/10" : ""}`}`}>
+              <li key={g.label.en} className={`flex flex-col items-center gap-5 border-b border-white/10 py-[32px] text-center max-sm:gap-3 max-sm:py-[20px] ${g.lead ? "lg:col-span-3 lg:py-[48px]" : `lg:px-[16px] lg:py-[32px] ${gi > 1 ? "lg:border-l lg:border-white/10" : ""}`}`}>
                 {/* DECIDED 2026-10-21 (사용자: "그냥 로고만 보여줘"): 설명 줄은 없앴습니다.
                     같은 날 (사용자, 스크린숏: "role 도 각 row 마다 넣어줘"): 분류 이름을 다시 보이게. 주최 줄과 같은 META, 로고 위 가운데.
                     같은 날 (사용자: "글자가 더 잘보이게"): white/50 → white/85, 굵게. 크기는 META 그대로. */}
@@ -1412,13 +1416,13 @@ export default function NaruHome() {
                   <div className="flex flex-col items-center">
                     {partnerLogo(g.lead, "h-8 sm:h-10")}
                     <p className={`mt-3 ${META} text-white/60`}>{t(g.lead.note)}</p>
-                    <span aria-hidden className="h-6 w-px bg-white/25" />
-                    <div className="flex flex-wrap items-center justify-center gap-x-[45px] gap-y-[22.5px] lg:gap-x-[48px] rounded-2xl border border-white/20 px-6 py-6 sm:px-10">
+                    <span aria-hidden className="h-6 w-px bg-white/25 max-sm:h-4" />
+                    <div className="flex flex-wrap items-center justify-center gap-x-[45px] gap-y-[22.5px] lg:gap-x-[48px] rounded-2xl border border-white/20 px-6 py-6 max-sm:gap-x-[28px] max-sm:gap-y-[16px] max-sm:px-[20px] max-sm:py-[18px] sm:px-10">
                       {g.logos.map((l) => partnerLogo(l))}
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-wrap items-center justify-center gap-x-[45px] gap-y-[22.5px] lg:gap-x-[24px] lg:gap-y-[16px]">
+                  <div className="flex flex-wrap items-center justify-center gap-x-[45px] gap-y-[22.5px] max-sm:gap-x-[24px] max-sm:gap-y-[16px] lg:gap-x-[24px] lg:gap-y-[16px]">
                     {g.logos.map((l) => partnerLogo(l))}
                   </div>
                 )}
@@ -1429,7 +1433,7 @@ export default function NaruHome() {
             {/* DECIDED 2026-10-21 (사용자, 스크린숏: "따로 아래에 주최 박스를 넣지 말고, 나루 로고를 주최에 넣어줘 at the table, 로고 옆에 learn more"):
                 아래에 있던 나루 티저 상자를 없애고 이 표의 마지막 줄로. 이벤트가 먼저, 나루는 그 안에서 드러납니다(brand 3장 원칙 2, 6장 나루 = 주최).
                 id="naru"는 옛 링크 /#naru와 목차 칩이 여기에 내려앉게 이 줄로 옮겼습니다. */}
-            <li id="naru" className="flex flex-col items-center gap-4 border-b border-white/10 py-[32px] text-center sm:flex-row sm:justify-center sm:gap-8 lg:col-span-3">
+            <li id="naru" className="flex flex-col items-center gap-4 border-b border-white/10 py-[32px] text-center max-sm:flex-row max-sm:flex-wrap max-sm:justify-center max-sm:gap-x-[20px] max-sm:gap-y-[12px] max-sm:py-[20px] sm:flex-row sm:justify-center sm:gap-8 lg:col-span-3">
               <p className={`${META} font-semibold text-white/85`}>{t(naru.teaser.eyebrow)}</p>
               <Image
                 src={locale === "en" ? "/naru/naru-name-en-rev.svg" : "/naru/naru-name-rev.png"}
