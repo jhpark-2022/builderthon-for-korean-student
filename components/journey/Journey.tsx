@@ -2356,6 +2356,22 @@ export default function Journey() {
                 </span>
               </a>
             ))}
+            {/* DECIDED 2026-10-24 (pages-review N2): 보도자료 한 줄. 기사가 아니라서 줄 상자 밖, 태그와 같은 크기. */}
+            <p className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-xs text-white/55">
+              <span>{t(dict.about.pressRelease.lead)}</span>
+              {dict.about.pressRelease.links.map((l) => (
+                <a
+                  key={l.url}
+                  href={l.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-[44px] items-center gap-1 font-semibold text-accent underline-offset-4 hover:underline sm:min-h-0"
+                >
+                  {t(l.outlet)}
+                  <span aria-hidden>↗</span>
+                </a>
+              ))}
+            </p>
           </div>
         </div>
 

@@ -384,6 +384,8 @@ export interface Layer {
   brings: Phrase;
   does: Phrase;
   gets: Phrase;
+  /** 얻는 것의 증거로 가는 링크 한 줄. 지금은 후원 상자에만 있습니다(2026-10-24). */
+  proof?: { label: Phrase; href: string };
   /**
    * 이 층의 사람이 문의하는 문. #join의 카드 id와 그 링크의 라벨입니다.
    * 2026-09-17: #how에서 #join으로 가는 길이 없어서, 학생회 임원과 기업 담당자가
@@ -1663,12 +1665,19 @@ export const naru = {
         who: { ko: "참여 기업", en: "Participating companies" },
         brings: { ko: "이슈와 자료, 자금, 멘토", en: "Issues and materials, funding, mentors" },
         does: {
-          ko: "자금과 현물, 용역을 내고, 이슈와 자료, 멘토와 피드백 패널, 채용 기회를 가져옵니다.",
-          en: "Puts in funding, goods or services, and brings issues and materials, mentors and the feedback panel, and hiring opportunities.",
+          ko: "자금과 현물, 용역을 내고, 이슈와 자료, 멘토와 피드백 패널을 가져옵니다.",
+          en: "Puts in funding, goods or services, and brings issues and materials, mentors and the feedback panel.",
         },
+        // DECIDED 2026-10-24 (사용자, docs/pages-review-2026-10-24.md A1): "채용 연계"를 뺍니다. 2026-09-29 결정(채용 연계는
+        // 약속처럼 쓰지 않는다)과 어긋나 있었습니다. "회차 크레딧"은 뜻이 보이게 풀어 씁니다. 위 does의 "채용 기회"도 같이 뺐습니다.
         gets: {
-          ko: "한인 학생과 만나는 자리와 채용 연계, 회차 크레딧이 생깁니다.",
-          en: "A way to reach Korean students, a hiring pipeline and credit on the round.",
+          ko: "한인 학생과 만나는 자리가 생기고, 회차의 기록에 이름이 남습니다.",
+          en: "A way to meet Korean students, and your name on the round's record.",
+        },
+        // DECIDED 2026-10-24 (사용자, 같은 문서 N1): "이름이 남는다"의 증거는 8월 파트너 표입니다. 후원 상자에서만 가리킵니다.
+        proof: {
+          label: { ko: "8월에 함께한 곳은 역할과 함께 기록에 남아 있습니다", en: "August's partners are on the record with their roles" },
+          href: "/2026-08#builders",
         },
         join: { id: "join-company", label: { ko: "기업으로 문의하기", en: "As a company" }, mail: naruLinks.sponsor },
       },

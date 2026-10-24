@@ -649,6 +649,16 @@ export const dict = {
       },
     ] as PressItem[],
     pressCta: { ko: "원문 보기", en: "Read the article" },
+    // DECIDED 2026-10-24 (사용자, docs/pages-review-2026-10-24.md N2): data/naru.ts에만 있고 어디에도 보이지 않던
+    // CNA, The Straits Times 링크를 기사 줄 아래 한 줄로 둡니다. 두 글은 코드프레소의 보도자료(CNA "media release",
+    // ST "paid press releases")라 기사 줄과 섞지 않고, "보도"라는 말과 영문 제목("Top Universities")은 쓰지 않습니다.
+    pressRelease: {
+      lead: { ko: "2026.09.15 코드프레소의 보도자료가 실린 곳:", en: "15 Sep 2026, Codepresso's press release ran in:" },
+      links: [
+        { outlet: { ko: "CNA", en: "CNA" }, url: "https://www.channelnewsasia.com/media-release/codepresso-successfully-concludes-zero100-ai-builderthon-in-singapore-forging-strategic-ties-top-universities-6385241" },
+        { outlet: { ko: "The Straits Times", en: "The Straits Times" }, url: "https://www.straitstimes.com/paid-press-releases/codepresso-successfully-concludes-zero100-ai-builderthon-in-singapore-forging-strategic-ties-with-top-universities-20260915" },
+      ],
+    },
   },
 
   whoWhat: {

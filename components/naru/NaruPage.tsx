@@ -755,6 +755,19 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
         {"\u2002"}
         {t(layer.gets)}
       </p>
+      {/* DECIDED 2026-10-24 (pages-review N1): 얻는 것의 증거 한 줄. 같은 META 크기, 새 크기 없음. */}
+      {layer.proof && (
+        <p className={`mt-[9px] break-keep ${META} leading-snug [text-wrap:balance] lg:mt-[12px]`}>
+          <Link
+            href={layer.proof.href}
+            onClick={() => track("naru_cta", { src: "how_sponsor", to: "builders" })}
+            className="text-accent underline-offset-4 transition hover:text-white hover:underline"
+          >
+            {t(layer.proof.label)}
+            <span aria-hidden>{" "}→</span>
+          </Link>
+        </p>
+      )}
     </div>
   );
 
