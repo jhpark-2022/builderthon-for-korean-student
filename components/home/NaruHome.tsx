@@ -1141,10 +1141,12 @@ export default function NaruHome() {
                       i > 0
                         ? "ml-3 pl-3 pr-1 before:absolute before:left-0 before:top-1/2 before:h-16 before:w-px before:-translate-y-1/2 before:bg-white/[0.14] before:content-[''] sm:ml-9 sm:pl-9"
                         : ""
-                    } lg:ml-0 lg:flex-row lg:items-baseline lg:justify-between lg:gap-x-[24px] lg:border-t lg:border-white/10 lg:px-0 lg:py-[28px] lg:before:hidden ${i === arr.length - 1 ? "lg:border-b" : ""}`}
+                    } lg:ml-0 lg:flex-row lg:items-baseline lg:justify-between lg:gap-x-[24px] lg:border-t lg:border-white/10 lg:px-0 lg:py-[32px] lg:before:hidden ${i === arr.length - 1 ? "lg:border-b" : ""}`}
                   >
                     {/* 2026-10-11 (리뷰 작은 것): DOM은 dt 다음 dd입니다(용어가 먼저). 보이는 순서는 order가 전과 같이 숫자 위, 라벨 아래로 둡니다. */}
-                    <dt className={`order-2 mt-[12px] break-keep text-center ${META} font-bold uppercase text-white/70 lg:mt-0 lg:text-right ${latinTrack(locale)}`}>
+                    {/* 2026-10-24 (사용자: "폰트 사이즈가 너무 뒤죽박죽"): lg 행에서는 라벨을 오른쪽 표의 설명과 같은 BODY 보통 굵기로.
+                        이 블록의 글자 크기는 TITLE(숫자)과 BODY 둘이 됩니다. lg 아래의 가로 한 줄은 전과 같은 META 굵게. */}
+                    <dt className={`order-2 mt-[12px] break-keep text-center ${META} font-bold uppercase text-white/70 lg:mt-0 lg:text-right lg:text-base lg:font-normal lg:normal-case lg:tracking-normal lg:leading-relaxed ${latinTrack(locale)}`}>
                       {t(stat.label)}
                     </dt>
                     {/* DECIDED 2026-10-22 (사용자, 스크린숏: "좀 더 visually engaging, 구성은 유지"): 숫자 줄은 TITLE(2026-09-26 사용자 요청의 크기로 돌아감).
