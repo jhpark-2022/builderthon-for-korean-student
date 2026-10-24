@@ -1396,11 +1396,12 @@ export default function NaruHome() {
         <SeoulCampuses />
         <div className={WIDE}>
           <h2 id="partners-title" className={`${H2} text-center`}>{t(decemberPartners.heading)}</h2>
-          {/* DECIDED 2026-10-24 (밀도 브리프 1.4, D3): lg에서 다섯 줄을 두 줄로. 1줄 = 메인 후원(AXMOS + 코어 5개사, 전과 같음), 2줄 = 장소 / 기술, 크레딧 /
-              커뮤니티, 홍보 / 주최 네 묶음이 한 줄(묶음마다 META 라벨 위, 로고 아래, 사이 세로 선). 섹션 위아래 108/126px → 72px. 로고와 글은 그대로. 폰은 그대로. */}
-          <ul className="mt-[45px] border-t border-white/10 lg:mt-[48px] lg:grid lg:grid-cols-4">
+          {/* DECIDED 2026-10-24 (밀도 브리프 1.4, D3): lg에서 다섯 줄을 줄였습니다. 1줄 = 메인 후원(AXMOS + 코어 5개사, 전과 같음), 2줄 = 장소 / 기술, 크레딧 /
+              커뮤니티, 홍보 세 묶음이 한 줄(묶음마다 META 라벨 위, 로고 아래, 사이 세로 선). 섹션 위아래 108/126px → 72px. 로고와 글은 그대로. 폰은 그대로.
+              같은 날 뒤(사용자, 스크린숏: "주최는 따로 빼주면 좋겠음"): 브리프 D3의 네 묶음에서 주최를 빼 셋째 줄에 따로 둡니다(전처럼 라벨, 로고, 링크 한 줄). */}
+          <ul className="mt-[45px] border-t border-white/10 lg:mt-[48px] lg:grid lg:grid-cols-3">
             {decemberPartners.groups.map((g, gi) => (
-              <li key={g.label.en} className={`flex flex-col items-center gap-5 border-b border-white/10 py-[32px] text-center ${g.lead ? "lg:col-span-4 lg:py-[48px]" : `lg:px-[16px] lg:py-[32px] ${gi > 1 ? "lg:border-l lg:border-white/10" : ""}`}`}>
+              <li key={g.label.en} className={`flex flex-col items-center gap-5 border-b border-white/10 py-[32px] text-center ${g.lead ? "lg:col-span-3 lg:py-[48px]" : `lg:px-[16px] lg:py-[32px] ${gi > 1 ? "lg:border-l lg:border-white/10" : ""}`}`}>
                 {/* DECIDED 2026-10-21 (사용자: "그냥 로고만 보여줘"): 설명 줄은 없앴습니다.
                     같은 날 (사용자, 스크린숏: "role 도 각 row 마다 넣어줘"): 분류 이름을 다시 보이게. 주최 줄과 같은 META, 로고 위 가운데.
                     같은 날 (사용자: "글자가 더 잘보이게"): white/50 → white/85, 굵게. 크기는 META 그대로. */}
@@ -1428,7 +1429,7 @@ export default function NaruHome() {
             {/* DECIDED 2026-10-21 (사용자, 스크린숏: "따로 아래에 주최 박스를 넣지 말고, 나루 로고를 주최에 넣어줘 at the table, 로고 옆에 learn more"):
                 아래에 있던 나루 티저 상자를 없애고 이 표의 마지막 줄로. 이벤트가 먼저, 나루는 그 안에서 드러납니다(brand 3장 원칙 2, 6장 나루 = 주최).
                 id="naru"는 옛 링크 /#naru와 목차 칩이 여기에 내려앉게 이 줄로 옮겼습니다. */}
-            <li id="naru" className="flex flex-col items-center gap-4 border-b border-white/10 py-[32px] text-center sm:flex-row sm:justify-center sm:gap-8 lg:flex-col lg:justify-start lg:gap-5 lg:border-l lg:border-white/10 lg:px-[16px] lg:py-[32px]">
+            <li id="naru" className="flex flex-col items-center gap-4 border-b border-white/10 py-[32px] text-center sm:flex-row sm:justify-center sm:gap-8 lg:col-span-3">
               <p className={`${META} font-semibold text-white/85`}>{t(naru.teaser.eyebrow)}</p>
               <Image
                 src={locale === "en" ? "/naru/naru-name-en-rev.svg" : "/naru/naru-name-rev.png"}
