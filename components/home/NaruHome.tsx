@@ -37,7 +37,7 @@ import CityShape, { type City } from "@/components/ui/CityShape";
 import SeoulCampuses from "@/components/home/SeoulCampuses";
 import {
   SUBHEADING, READ, WIDE, MEASURE_C, READ_MEASURE_C, HERO_BUTTON_GROUND,
-  latinTrack, eyebrowTrack, PlateSegment, TermLink, SiteFooter, usePlateLite,
+  latinTrack, eyebrowTrack, PlateSegment, SiteFooter, usePlateLite,
 } from "./shared";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1124,10 +1124,11 @@ export default function NaruHome() {
               <p className={`mt-[13.5px] first:mt-0 break-keep text-center sm:text-left ${BODY} leading-relaxed text-white/70 sm:mt-[16px]`}>
                 {t(naru.december.crossingLine)}
               </p>
-              <p className={`mt-[13.5px] first:mt-0 break-keep text-center sm:text-left ${BODY} leading-relaxed text-white/70 sm:mt-[16px]`}>
-                <TermLink text={t(naru.december.notSequel)} term={t(naru.december.notSequelTerm)} href="/naru#core" />
-              </p>
-              <dl data-center-zone="stats" className="mt-[45px] lg:mt-[48px] flex items-stretch justify-center">
+              {/* DECIDED 2026-10-24 (사용자, 스크린숏: "나루의 내용을 빼줘"): 셋째 문단(나루가 직접 여는 첫 이벤트로 ... 변하지 않는 두 개를 그대로 잇습니다)을
+                  뺐습니다. 나루와 코어 둘은 /naru가 말합니다. 데이터 키 notSequel, notSequelTerm은 남겨 두고 그리지 않습니다. */}
+              {/* DECIDED 2026-10-24 (사용자: "왼쪽과 오른쪽이 vertically 맞았으면"): 숫자 둘을 왼쪽 열 바닥에 붙여(lg:mt-auto) 오른쪽 줄 셋의 마지막 선과
+                  같은 높이에서 끝나게 합니다. 열은 이미 lg:flex-col입니다. */}
+              <dl data-center-zone="stats" className="mt-[45px] lg:mt-auto flex items-stretch justify-center">
                 {/* DECIDED 2026-10-08 (사용자 승인, 홈 리뷰 12): 둘째 칸이 "2회 중간 제출 지점"이었습니다. 처음 온 사람에게
                     뜻이 없는 숫자라 "무순위, 부문별 시상"(shape[4])으로 바꿉니다. 제출 두 번은 아래 "이렇게 굴립니다"가 말합니다. */}
                 {[naru.december.shape[0], naru.december.shape[4]].map((stat, i) => (
