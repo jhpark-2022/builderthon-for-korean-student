@@ -45,7 +45,6 @@ export default function AugustGaps() {
               {String(i + 1).padStart(2, "0")}
             </span>
             <h4 className="mt-3 break-keep text-base font-bold leading-snug text-white">{t(gap.title)}</h4>
-            <p className="mt-2 break-keep text-sm leading-relaxed text-white/75">{t(gap.body)}</p>
             <p className="mt-3 break-keep text-sm leading-relaxed text-white/90">
               <span className="mr-1.5 text-xs font-bold uppercase text-violet-200">{t(naru.december.decemberLabel)}</span>
               {gap.answer ? t(gap.answer) : t(naru.record.answerPending)}
@@ -53,22 +52,8 @@ export default function AugustGaps() {
           </li>
         ))}
       </ol>
-      {/* DECIDED 2026-10-10 (사용자, 스크린숏: "그 밖에 바꾼 것 아래의 내용들이 너무 부실함"): 헤어라인 사이의 한 줄 셋이던 것을
-          위 카드 둘과 같은 유리 카드 셋으로 세웁니다. 번호는 위에서 이어 03부터, 앞에 12월 라벨. 문장은 그대로입니다. */}
-      <h4 className="mt-10 break-keep text-left text-base font-bold text-white">{t(naru.december.alsoLabel)}</h4>
-      <ul role="list" className="mt-4 grid grid-cols-1 gap-4 text-left sm:grid-cols-3">
-        {naru.december.also.map((line, i) => (
-          <li key={i} className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-violet-500/20 text-xs font-black text-violet-200">
-              {String(i + 1 + naru.record.gaps.length).padStart(2, "0")}
-            </span>
-            <p className="mt-3 break-keep text-sm leading-relaxed text-white/90">
-              <span className="mr-1.5 text-xs font-bold uppercase text-violet-200">{t(naru.december.decemberLabel)}</span>
-              {t(line)}
-            </p>
-          </li>
-        ))}
-      </ul>
+      {/* DECIDED 2026-10-24 (사용자: "너무 내용이 많음. essence만"): 카드는 무엇이 모자랐나(제목)와 12월의 답 두 줄만.
+          설명(gap.body)과 "그 밖에 바꾼 것" 카드 셋(december.also)은 그리지 않습니다. 키는 data/naru.ts에 둡니다. */}
     </div>
   );
 }

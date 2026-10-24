@@ -3401,6 +3401,11 @@ export const dict = {
         ko: "제로백(Zero100) 커뮤니티의 일부인 AXMOS 소속 회사들이 주최했고, 그중 코드프레소가 실제 기업 문제를 냈습니다. SMU, NUS, NTU 한인 학생회가 주관했고, 싱가포르 한인회가 1:1 멘토링을 위해 한인회관을 내어주었습니다. 멘토로 오신 분들은 대부분 소속 회사와 별개로 개인 자격으로 저녁 시간을 냈습니다. 무대에 선 연사와 전문가, 후원사, 그리고 8일을 건너 마지막 날 무대에 선 21팀까지, 이 페이지에 이름이 적힌 모든 분 덕분입니다.",
         en: "The member companies of AXMOS, part of the Zero100 community, hosted it, and Codepresso, one of them, set the real company problem. The SMU, NUS and NTU Korean Student Associations ran it, and the Korean Association in Singapore opened its hall for the 1:1 mentoring. Most mentors came on their own evenings, separately from where they work. It happened thanks to everyone named on this page, from the speakers, experts and sponsors to the 21 teams that stood up on the final day.",
       },
+      // DECIDED 2026-10-24 (사용자: essence만): 화면에 그리는 것은 이 한 줄. 위 body는 키만 남습니다.
+      short: {
+        ko: "주최와 주관, 후원, 멘토와 연사, 그리고 마지막 날 무대에 선 21팀까지. 이 페이지에 이름이 적힌 모든 분 덕분입니다.",
+        en: "Hosts, organisers, sponsors, mentors and speakers, and the 21 teams on the final day. It happened thanks to everyone named on this page.",
+      },
       // 마지막 줄이 요점입니다. 감사가 예의로 끝나면 각주가 되고, 결과를 말하면
       // 문장이 됩니다. 12월로 가는 버튼이 바로 아래에 있어(2026-10-02부터) 이 줄이 그 버튼의 근거가 됩니다.
       closing: {

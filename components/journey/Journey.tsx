@@ -2265,7 +2265,8 @@ export default function Journey() {
           <h2 id="results-heading" className="break-keep text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-tight tracking-tight text-white">
             {t(dict.record.heading)}
           </h2>
-          <p className="mx-auto mt-5 max-w-2xl break-keep text-base leading-relaxed text-white/75">{t(dict.record.lead)}</p>
+          {/* DECIDED 2026-10-24 (사용자: "너무 내용이 많음. essence만"): 리드(날짜, 장소, 스크리닝 없이 기업 앞 발표)는 히어로가
+              이미 말해 그리지 않습니다. 키(dict.record.lead)는 둡니다. */}
           <dl className="mx-auto mt-8 grid max-w-3xl grid-cols-3 gap-3">
             {dict.record.stats.map((st) => (
               <div key={st.label.en} className="flex flex-col-reverse items-center gap-1 rounded-2xl border border-white/[0.08] bg-white/[0.03] px-3 py-5">
@@ -2291,8 +2292,10 @@ export default function Journey() {
           <h3 id="thanks-heading" className="mx-auto mt-4 break-keep text-[clamp(1.5rem,3.6vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
             {t(dict.footer.thanks.heading)}
           </h3>
+          {/* DECIDED 2026-10-24 (사용자: essence만): 역할을 하나씩 적던 긴 문단(thanks.body)은 파트너 표와 크레딧이 말하므로
+              한 줄(thanks.short)로 줄입니다. body 키는 둡니다. */}
           <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/80">
-            {t(dict.footer.thanks.body)}
+            {t(dict.footer.thanks.short)}
           </p>
         </div>
       </section>
