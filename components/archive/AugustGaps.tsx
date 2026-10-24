@@ -4,7 +4,6 @@ import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
 import { naru } from "@/data/naru";
-import Chapter from "@/components/journey/Chapter";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // /2026-08의 #gaps: "8월이 남기지 못한 두 가지, 그리고 12월의 답"과 "그 밖에 바꾼 것".
@@ -20,13 +19,15 @@ import Chapter from "@/components/journey/Chapter";
 // 모양은 이 페이지의 문법입니다(Chapter, 제목의 clamp, 유리 카드). 홈의 글자 크기 셋(TITLE, BODY, META)과
 // 왼쪽 끝 규칙은 홈의 것이라 여기에 가져오지 않습니다. 이 페이지의 다른 부분은 바뀌지 않습니다.
 // ─────────────────────────────────────────────────────────────────────────────
+// DECIDED 2026-10-24 (사용자, 스크린숏 셋: "하나로, 3곳에 흩어져있음"): 독립 챕터가 아니라 /2026-08 #results 안의
+// 둘째 블록입니다(결과 → 이 블록 → 고맙습니다). 그래서 Chapter 대신 div, 제목은 h3입니다. id="gaps"는 홈의 링크가 봅니다.
 export default function AugustGaps() {
   const { t } = useLocale();
   return (
-    <Chapter id="gaps" align="center" labelledBy="gaps-heading">
-      <h2 id="gaps-heading" className="break-keep text-[clamp(1.6rem,4vw,2.5rem)] font-bold tracking-tight text-white drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)]">
+    <div id="gaps" role="region" aria-labelledby="gaps-heading" className="scroll-mt-48 text-center">
+      <h3 id="gaps-heading" className="break-keep text-[clamp(1.5rem,3.6vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
         {t(naru.december.gapsHeading)}
-      </h2>
+      </h3>
       <p className="mt-4">
         <Link
           href="/#december"
@@ -43,7 +44,7 @@ export default function AugustGaps() {
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-2xl bg-violet-500/20 text-xs font-black text-violet-200">
               {String(i + 1).padStart(2, "0")}
             </span>
-            <h3 className="mt-3 break-keep text-base font-bold leading-snug text-white">{t(gap.title)}</h3>
+            <h4 className="mt-3 break-keep text-base font-bold leading-snug text-white">{t(gap.title)}</h4>
             <p className="mt-2 break-keep text-sm leading-relaxed text-white/75">{t(gap.body)}</p>
             <p className="mt-3 break-keep text-sm leading-relaxed text-white/90">
               <span className="mr-1.5 text-xs font-bold uppercase text-violet-200">{t(naru.december.decemberLabel)}</span>
@@ -54,7 +55,7 @@ export default function AugustGaps() {
       </ol>
       {/* DECIDED 2026-10-10 (사용자, 스크린숏: "그 밖에 바꾼 것 아래의 내용들이 너무 부실함"): 헤어라인 사이의 한 줄 셋이던 것을
           위 카드 둘과 같은 유리 카드 셋으로 세웁니다. 번호는 위에서 이어 03부터, 앞에 12월 라벨. 문장은 그대로입니다. */}
-      <h3 className="mt-10 break-keep text-left text-base font-bold text-white">{t(naru.december.alsoLabel)}</h3>
+      <h4 className="mt-10 break-keep text-left text-base font-bold text-white">{t(naru.december.alsoLabel)}</h4>
       <ul role="list" className="mt-4 grid grid-cols-1 gap-4 text-left sm:grid-cols-3">
         {naru.december.also.map((line, i) => (
           <li key={i} className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
@@ -68,6 +69,6 @@ export default function AugustGaps() {
           </li>
         ))}
       </ul>
-    </Chapter>
+    </div>
   );
 }

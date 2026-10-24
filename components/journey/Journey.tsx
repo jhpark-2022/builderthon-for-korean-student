@@ -2277,6 +2277,24 @@ export default function Journey() {
           <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">{t(dict.record.awards)}</p>
           {/* DECIDED 2026-10-24 (사용자: 다음 이야기는 #gaps 한 곳에서만): "8일의 사진은 크로싱 서울 홈에" 링크를 뺐습니다. 키(dict.record.more)는 둡니다. */}
         </div>
+
+        {/* DECIDED 2026-10-24 (사용자, 스크린숏 셋: "하나로, 3곳에 흩어져있음"): 행사 뒤에 쓴 글 셋(결과, 남기지 못한 두 가지와
+            12월의 답, 고맙습니다)을 이 섹션 하나에 모읍니다. 그 전에는 결과가 맨 위, 나머지 둘이 맨 아래(FAQ 뒤, 마지막 화면)에
+            있었습니다. 이 섹션 아래는 전부 모집 당시 그대로의 기록입니다. */}
+        <div className="mx-auto mt-20 max-w-6xl sm:mt-24">
+          <AugustGaps />
+        </div>
+
+        {/* 고맙습니다. 이 자리에 적는 이름은 전부 이 페이지가 이미 공개한 것입니다(dict.footer.thanks의 주석). 본문은 폰까지 가운데(2026-10-02). */}
+        <div id="thanks" role="region" aria-labelledby="thanks-heading" className="mx-auto mt-20 max-w-3xl text-center sm:mt-24">
+          <p className="text-xs font-bold text-white/55">{t(dict.footer.thanks.label)}</p>
+          <h3 id="thanks-heading" className="mx-auto mt-4 break-keep text-[clamp(1.5rem,3.6vw,2.25rem)] font-bold leading-tight tracking-tight text-white">
+            {t(dict.footer.thanks.heading)}
+          </h3>
+          <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/80">
+            {t(dict.footer.thanks.body)}
+          </p>
+        </div>
       </section>
 
       {/* ── CH 1 · ABOUT ───────────────────────────────────────────── */}
@@ -3338,16 +3356,11 @@ export default function Journey() {
         </Glass>
       </Chapter>
 
-      {/* DECIDED 2026-10-24 (사용자: "8월 이벤트에서 감사와 다음에 대한 이야기가 중복되게 반복된다, 한곳에서만"):
-          비전 챕터(입구 → 크로싱 서울 → 다음 크로싱, "다음 소식 먼저 받기")를 내렸습니다. 12월 이야기는 바로 아래
-          #gaps("8월이 남기지 못한 두 가지, 그리고 12월의 답") 한 곳에서만 합니다. 사전의 vision* 키와 옛 마크업은 git 이력에. */}
-      {/* DECIDED 2026-10-10 (중복 브리프 B3): 홈에 있던 "8월이 남기지 못한 두 가지, 그리고 12월의 답"이 이 페이지의
-          맨 아래, 마지막 화면 앞에 섭니다. 홈의 프로그램 챕터 끝이 /2026-08#gaps로 링크합니다. 이 페이지의 다른
-          부분은 그대로입니다. 목차 레일에는 넣지 않았습니다. */}
-      <AugustGaps />
+      {/* DECIDED 2026-10-24: 비전 챕터는 내렸고(사용자: 감사와 다음 이야기는 한곳에서만), 여기 있던 #gaps는 맨 위 #results 안으로
+          옮겼습니다(사용자: 하나로). 옛 마크업은 git 이력에. */}
 
       {/* ── CH 6 · FOOTER ──────────────────────────────────────────── */}
-      <section id="closing" className="relative flex min-h-screen w-full flex-col px-6 py-16 sm:px-10">
+      <section id="closing" className="relative flex w-full flex-col px-6 pb-16 pt-24 sm:px-10 sm:pt-32">
         {/* soft dark scrim so the closing CTA + credits stay readable over the field */}
         <div
           aria-hidden
@@ -3359,28 +3372,9 @@ export default function Journey() {
         />
         {/* hero CTA block - vertically centred */}
         <div className="flex flex-1 flex-col items-center justify-center text-center">
-          {/* ── 고맙습니다 ──────────────────────────────────────────────
-              DECIDED 2026-10-02 (사용자: "무대는 끝났습니다. 다음 무대에서 또 만나요. 의 내용 빼고, 그 자리를
-              아래의 고맙습니다 … 로 대체"): 마지막 화면의 제목 자리를 감사가 받습니다. 그 전에는 제목
-              (dict.footer.heading)과 한 문단(dict.footer.closingLead)이 여기 있었고, 감사는 CTA 아래에
-              한 단 작은 글자로 있었습니다(2026-09-20). 이제 그 둘은 그리지 않습니다(사전의 키는 남겨 둡니다).
-              2026-10-24에 감사의 마지막 줄과 12월 버튼은 내렸습니다(아래 주석).
-
-              이 자리에 적는 이름은 전부 이 페이지가 이미 공개한 것입니다(dict.footer.thanks의 주석).
-              DECIDED 2026-10-02 (사용자: 본문을 "centralize"): 본문도 폰까지 가운데 정렬입니다.
-              그 전에는 폰에서만 왼쪽 정렬이었습니다. */}
-          <p className="text-xs font-bold text-white/55">
-            {t(dict.footer.thanks.label)}
-          </p>
-          <h2 className="mx-auto mt-4 max-w-3xl break-keep text-[clamp(1.75rem,4.4vw,3rem)] font-bold leading-tight tracking-tight text-white">
-            {t(dict.footer.thanks.heading)}
-          </h2>
-          <p className="mx-auto mt-6 max-w-2xl break-keep text-center text-base leading-relaxed text-white/80">
-            {t(dict.footer.thanks.body)}
-          </p>
-          {/* DECIDED 2026-10-24 (같은 결정): 감사의 마지막 줄("나루도, 크로싱 서울도 이 8일에서 나왔습니다")과
-              그 아래 12월 버튼을 내렸습니다. 이 화면은 감사만 하고, 12월로 가는 문은 바로 위 #gaps의 링크 하나입니다. */}
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
+          {/* DECIDED 2026-10-24 (사용자: 하나로): 이 화면의 제목 자리에 있던 "고맙습니다"는 맨 위 #results 안으로 옮겼습니다.
+              이 화면은 문(오픈채팅, 파트너십 문의)과 크레딧만 둡니다. */}
+          <div className="flex flex-wrap justify-center gap-3">
             {/* Primary CTA. 2026-08-22 (마감 후 청산): 등록 모달을 열던 자리를
                 오픈채팅이 받습니다. 페이지의 마지막 CTA라 그라디언트 필은 그대로
                 두고 행동만 바꿉니다 - 여기까지 읽고 내려온 사람에게 내밀 수 있는
