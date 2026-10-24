@@ -149,10 +149,7 @@ export default function NaruPage() {
           <p className={`${MEASURE_C} break-keep text-center ${BODY} leading-relaxed text-white/70`}>
             {t(naru.record.lead2)}
           </p>
-          {/* 빚을 적는 한 줄(2026-09-19). 감사는 각주가 아니라 문장이어야 합니다. */}
-          <p className={`${MEASURE_C} mt-[13.5px] lg:mt-[16px] break-keep text-center ${BODY} font-semibold leading-relaxed text-white/85`}>
-            {t(naru.record.credit)}
-          </p>
+          {/* DECIDED 2026-10-24 (사용자: 8월에 대한 감사는 /2026-08 "고맙습니다" 한 곳에서만): 빚을 적던 한 줄(record.credit)을 뺐습니다. 키는 둡니다. */}
           <div className="mt-[27px] flex justify-center lg:mt-[32px]">
             <Link
               href={naruLinks.archive}

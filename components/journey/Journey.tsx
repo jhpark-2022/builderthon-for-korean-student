@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { trackOpenChat } from "@/lib/openChatCount";
-import Link from "next/link";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion, type MotionValue } from "framer-motion";
@@ -2276,16 +2275,7 @@ export default function Journey() {
             ))}
           </dl>
           <p className="mx-auto mt-6 max-w-2xl break-keep text-base leading-relaxed text-white/75">{t(dict.record.awards)}</p>
-          <Link
-            // 2026-10-13 (등록 브리프 2.3, 리뷰 N6): /#record는 /naru#record로 한 번 더 넘어가 두 문장짜리 블록에 닿았고, 거기 버튼은
-            // 다시 이 페이지였습니다. 사진은 홈 히어로에 있으므로 홈 맨 위로 갑니다. 인라인 링크는 밑줄입니다.
-            href="/"
-            onClick={() => track("naru_cta", { src: "august_results", to: "home" })}
-            className="mt-4 inline-flex min-h-[44px] items-center gap-1.5 text-xs font-semibold text-accent underline underline-offset-4 transition hover:text-white"
-          >
-            {t(dict.record.more)}
-            <span aria-hidden>→</span>
-          </Link>
+          {/* DECIDED 2026-10-24 (사용자: 다음 이야기는 #gaps 한 곳에서만): "8일의 사진은 크로싱 서울 홈에" 링크를 뺐습니다. 키(dict.record.more)는 둡니다. */}
         </div>
       </section>
 
