@@ -1033,7 +1033,7 @@ export default function NaruHome() {
         <PlateSegment id="december">
         {/* DECIDED 2026-10-21 (2차, brand 2장): 짧은 소개 다음에 전체 일정이 오고, 운영 설명은 일정 뒤 한 묶음으로 읽습니다. */}
         <h2 id="december-title" className={`${H2} ${READ} text-balance text-center`}>{t(naru.december.programHeading)}</h2>
-        <p className={`${READ} ${READ_MEASURE_C} mt-[27px] break-keep text-center ${BODY} leading-relaxed text-white/85`}>{t(naru.december.approachClose)}</p>
+        {/* 2026-10-24 (사용자: "이 부분을 하나로 합쳐줘, 3줄"): approachClose 문단은 아래 일정 리드(scheduleLead)에 합쳐 여기서는 그리지 않습니다. 키는 남겨 둡니다. */}
         <Reveal id="schedule" className={`${WIDE} mt-[45px] text-center lg:mt-[48px]`}>
           <div className={READ}>
             <h3 data-subheading className={SUBHEADING}>{t(naru.december.scheduleLabel)}</h3>

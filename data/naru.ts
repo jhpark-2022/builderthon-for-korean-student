@@ -1994,8 +1994,11 @@ export const naru = {
       // 데이터가 네 번, 트랙이 네 번 나왔어요. 카드가 말하는 것은 리드가 말하지 않습니다.
       // DECIDED 2026-10-20 (hwang 브리프 1.2, 감사 W3): 조각문 셋을 두 문장으로. 사실은 그대로입니다.
       // DECIDED 2026-10-20 (사용자: 과정 절을 앞으로, 도착점 절을 뒤로. 블록마다 첫 문장이 도착점이라 "발표회"로 읽혔습니다): 스테이지 이름 넷(정본 7장)을 그대로 적고 날마다 남는 것을 붙였습니다.
-      ko: "등록은 혼자 하고, 팀은 Day 1 현장에서 전원이 함께 맺습니다. 그 뒤로는 찾기, 확인받기, 만들기, 공유하기를 하루에 하나씩 지나고, 날마다 그날의 생각이 남습니다.",
-      en: "You register alone, and everyone forms teams together on site on Day 1. From there you pass through Find, Check, Build and Share, one a day, and each day leaves that day's thinking behind.",
+      // DECIDED 2026-10-24 (사용자, 스크린숏: "이 부분을 하나로 합쳐줘, 3줄"): 위 approachClose(닷새 안에 다 풀리지 않을 수 있는 문제, 어디까지
+      // 물어 들어갔는지)와 이 리드를 한 문단 세 줄로. approachClose는 화면에서 내렸습니다. 그 전: "등록은 혼자 하고, 팀은 Day 1 현장에서 전원이
+      // 함께 맺습니다. 그 뒤로는 찾기, 확인받기, 만들기, 공유하기를 하루에 하나씩 지나고, 날마다 그날의 생각이 남습니다."
+      ko: "등록은 혼자, 팀은 Day 1 현장에서 맺습니다. 찾기, 확인받기, 만들기, 공유하기를 하루에 하나씩 지납니다. 닷새 안에 다 풀리지 않을 수 있는 문제라 어디까지 물어 들어갔는지를 봅니다.",
+      en: "Register alone; teams form on site on Day 1. Find, Check, Build and Share pass one a day. The problem may not be solved in five days, so we look at how far into it you got.",
     },
     // 2026-09-20 (크로싱서울_일정.pdf): 라벨이 "워크샵"에서 "세션"으로. PDF가 부르는
     // 이름이고, stages의 필드 이름(workshop -> session)과 같은 말을 씁니다.
