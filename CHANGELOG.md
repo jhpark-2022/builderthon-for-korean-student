@@ -359,8 +359,9 @@
 ## 2026-10-24 일정 카드: 세션은 상자 안으로, Lovable workshop, Open tables 미션
 - 범위: data/naru.ts(stages Day 1~3의 line, session, chips, milestone, timetableCta), components/home/NaruHome.tsx(세션 행, 띠 상세, LOCKED_CLASS)
 - 한 것: 사용자 요청 여섯(스크린숏 셋). (1) 세션 설명을 카드 본문에서 빼고 아래 띠의 펼치는 상세에 "세션" 절로 넣어 날마다의 글을 줄였습니다. 카드에는 "세션 이름"만 남습니다. (2) Day 1 세션은 Lovable workshop(설명 "Lovable 쓰는 법을 익히는 워크숍입니다", 사용자가 준 이름에서 쓴 한 줄). Sharing session의 내용은 Day 1 한 줄로 올라가 "8월과 달리 팀이 문제를 직접 정의합니다. 출제사가 막힌 곳과 해 본 것을 직접 엽니다." 두 줄. (3) Day 2 칩 "멘토 시간은 시간표로 예약"을 뺐습니다. (4) 버튼 라벨은 "예약용 멘토 시간표와 인증"(EN Mentor timetable for booking, and check-in). (5) Day 3 미션은 "멘토 찾아가기와 Open tables 공유", 조건 셋째를 "Open tables에서 다른 팀에게 그날의 진척 공유하기"로. (6) 띠 상세의 "제출" 목록(사진, PDF, 출석 체크)은 뺐고, 잠긴 버튼은 점선 투명 대신 실선 테두리와 옅은 면, 밝은 글자(LOCKED_CLASS, Day 4 투표 버튼도 같이). 근거: brand 7장 멘토링(Day 1 출제사 컨텍스트는 그대로 한 줄에 남음), brand 5장(짧은 평서문).
-- 검증: 1440 KR에서 Day 1 한 줄 2줄, Day 3 미션 제목 1줄, 카드에 Sharing session 0, 띠를 펼치면 세션 절이 보이고 제출 절 없음. tsc 통과.
-- 커밋: 74d34b3
+- 이어서(같은 날, 사용자: "이 상자의 크기를 줄여", "1일차에 lovable 현장 워크샵 진행"): Day 1~3 카드 행 간격 24→16px, 판 안쪽 여백 32→24px, 카드와 버튼 사이 48→32px. 함께하는 곳의 기술, 크레딧 줄 로고 아래 "Day 1에 Lovable 현장 워크숍을 진행합니다." 한 줄(그룹 note 필드 추가, lead의 note와 같은 META). Day 1 세션 설명도 "Lovable 현장 워크숍을 진행합니다."로.
+- 검증: 1440 KR에서 Day 1~3 판 502→438px, 카드 325→293px. Day 1 한 줄 2줄, Day 3 미션 제목 1줄, 카드에 Sharing session 0, 띠를 펼치면 세션 절이 보이고 제출 절 없음. tsc 통과.
+- 커밋: 74d34b3, 6c3988a
 
 <a id="2026-10-24-lead-align"></a>
 ## 2026-10-24 리드의 나루 문단 뺌, 숫자 둘을 오른쪽 끝에
