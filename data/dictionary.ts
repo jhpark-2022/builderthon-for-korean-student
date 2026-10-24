@@ -3405,8 +3405,9 @@ export const dict = {
       },
       // DECIDED 2026-10-24 (사용자: essence만): 화면에 그리는 것은 이 한 줄. 위 body는 키만 남습니다.
       short: {
-        ko: "주최와 주관, 후원, 멘토와 연사, 그리고 마지막 날 무대에 선 21팀까지. 이 페이지에 이름이 적힌 모든 분 덕분입니다.",
-        en: "Hosts, organisers, sponsors, mentors and speakers, and the 21 teams on the final day. It happened thanks to everyone named on this page.",
+        // 2026-10-25 (사용자: 같은 숫자가 반복됨): 21은 제목이 말하므로 뺍니다.
+        ko: "주최와 주관, 후원, 멘토와 연사, 그리고 끝까지 해 본 팀들. 이 페이지에 이름이 적힌 모든 분 덕분입니다.",
+        en: "Hosts, organisers, sponsors, mentors and speakers, and the teams who saw it through. It happened thanks to everyone named on this page.",
       },
       // 마지막 줄이 요점입니다. 감사가 예의로 끝나면 각주가 되고, 결과를 말하면
       // 문장이 됩니다. 12월로 가는 버튼이 바로 아래에 있어(2026-10-02부터) 이 줄이 그 버튼의 근거가 됩니다.

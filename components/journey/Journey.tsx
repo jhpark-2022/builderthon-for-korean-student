@@ -2272,15 +2272,9 @@ export default function Journey() {
           </h2>
 
           <div className="mt-10 rounded-3xl border border-white/10 bg-white/[0.04] px-6 py-8 sm:px-10 sm:py-10">
-            <dl className="grid grid-cols-3 divide-x divide-white/10">
-              {dict.record.stats.map((st) => (
-                <div key={st.label.en} className="flex flex-col-reverse items-center gap-1 px-2">
-                  <dt className="text-xs leading-snug text-white/65">{t(st.label)}</dt>
-                  <dd className="text-4xl font-black leading-none tracking-tight text-white">{t(st.value)}</dd>
-                </div>
-              ))}
-            </dl>
-            <p className="mx-auto mt-5 max-w-2xl break-keep text-sm leading-relaxed text-white/75">{t(dict.record.awards)}</p>
+            {/* DECIDED 2026-10-25 (사용자, 스크린숏: "더 줄여, 같은 숫자가 반복됨"): 숫자 셋(74명, 25팀, 21팀) 줄은 제목이 74와 21을
+                이미 말해 그리지 않습니다. 키(dict.record.stats)는 둡니다. */}
+            <p className="mx-auto max-w-2xl break-keep text-base leading-relaxed text-white/80">{t(dict.record.awards)}</p>
 
             {/* 남기지 못한 것과 12월의 답. id="gaps"는 홈의 /2026-08#gaps 링크가 봅니다. */}
             <ol id="gaps" role="list" className="mt-8 grid scroll-mt-48 grid-cols-1 gap-6 border-t border-white/10 pt-8 text-left sm:grid-cols-2 sm:gap-8">

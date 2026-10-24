@@ -1428,8 +1428,9 @@ export const naru = {
           en: "Given a finished problem, the results came out alike, and the cause lay in how the problem was set up more than in anyone's ability.",
         },
         answer: {
-          ko: "기업은 지금 겪는 이슈를 가져옵니다. 그 아래의 문제는 팀이 직접 찾고, 마지막 날 그 기업 앞에서 발표합니다.",
-          en: "The company brings an issue it is facing now. The team finds the problem underneath it and presents to that company on the last day.",
+          // DECIDED 2026-10-25 (사용자: 더 줄여): 한 줄로. 마지막 날 발표는 결과 판 제목이 말합니다.
+          ko: "기업이 지금 겪는 이슈를 가져오고, 문제는 팀이 직접 찾습니다.",
+          en: "The company brings an issue it faces now, and the team finds the problem itself.",
         },
       },
       {
@@ -1443,8 +1444,9 @@ export const naru = {
         },
         // 뒤 두 문장은 2026-09-30의 답(멘토에게 먼저 연락합니다)에서 그대로 옵니다.
         answer: {
-          ko: "멘토가 해 준 이야기로 무엇을 만들었는지 한 줄 적어 멘토에게 먼저 보내라고, 현장에서 여러 번 말하고 글로도 남깁니다.",
-          en: "We tell you more than once on site, and in writing, to message your mentor first with one line on what you built from what they said.",
+          // DECIDED 2026-10-25 (사용자: 더 줄여): 한 줄로(brand 7장 "끝난 뒤").
+          ko: "끝난 뒤 멘토에게 먼저 연락하라고, 현장에서 여러 번 말합니다.",
+          en: "We tell you, more than once on site, to message your mentor first once it ends.",
         },
       },
     ] as { title: Phrase; body: Phrase; answer: Phrase | null }[],
