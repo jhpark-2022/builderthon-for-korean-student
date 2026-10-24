@@ -447,7 +447,9 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
 // 카드는 가운데 정렬이지만 목록은 글머리가 한 줄로 서야 읽히므로, 목록 묶음만 가운데에 두고 그 안은 왼쪽 정렬입니다.
 // 2026-10-19 (시각 감사 6): 열기 전의 시간표 버튼. 흐린 글자만 있는 큰 알약이 고장 난 버튼처럼 보여, 현장 멘토링 상자와 같은
 // "아직" 문법(점선 테두리)에 자물쇠를 붙입니다. 새 색과 새 글자 크기는 없습니다.
-const LOCKED_CLASS = `w-full cursor-not-allowed justify-center gap-2 !border-dashed !border-white/25 !bg-transparent text-white/70 ${buttonClass("secondary")} hover:!translate-y-0`;
+// DECIDED 2026-10-24 (사용자: "이 button을 더 visually engaging하게"): 점선 투명 필이 고장 난 버튼처럼 보여, 실선 테두리와 옅은 면, 밝은 글자로.
+// 잠김은 자물쇠와 cursor-not-allowed가 말합니다. 그 전: !border-dashed !border-white/25 !bg-transparent text-white/70.
+const LOCKED_CLASS = `w-full cursor-not-allowed justify-center gap-2 !border-white/35 !bg-white/[0.06] font-semibold text-white/90 ${buttonClass("secondary")} hover:!translate-y-0`;
 const LOCK_ICON = (
   <svg aria-hidden width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
     <rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" />
@@ -724,12 +726,13 @@ export default function NaruHome() {
       </div>
       {/* stage.body는 그리지 않습니다(2026-09-20). 키는 data/naru.ts에 그대로 있습니다. */}
       <p className={`mx-auto max-w-3xl break-keep ${BODY} font-medium leading-relaxed text-white/85`}>{t(stage.line)}</p>
+      {/* DECIDED 2026-10-24 (사용자: "세션에 대한 설명도 아래 박스 안에 넣어줘, 각 날의 설명이 더 적어지도록"): 카드에는 세션 이름만 남기고
+          설명은 아래 띠의 펼치는 상세(세션 절)로 내렸습니다. */}
       {stage.session && (
         <p className={`break-keep ${BODY} leading-relaxed text-white/70`}>
           <span className={`mr-1.5 ${META} font-semibold uppercase ${latinTrack(locale)} text-white/70`}>{t(naru.december.sessionLabel)}</span>
           {/* lang="en" (2026-10-11, 리뷰 작은 것): 세션 이름 셋은 두 로케일 모두 영어입니다. */}
-          <span lang="en" className="mr-1.5 font-semibold text-white/85">{t(stage.session.title)}</span>
-          {t(stage.session.body)}
+          <span lang="en" className="font-semibold text-white/85">{t(stage.session.title)}</span>
         </p>
       )}
       {/* DECIDED 2026-10-22 (사용자: "상자 사이즈는 동일한데, 내용이 안 비어 있게"): 폰 카드에서 세션이 없는 날(Day 0, Day 4)은 세션 자리에
@@ -765,15 +768,17 @@ export default function NaruHome() {
         // 2026-10-17의 호박색 미션 띠를 되돌립니다. 띠는 이제 늘 쌓은 모양이라 그때의 두 줄 꺾임 문제는 없습니다.
         <MilestoneStrip id={`carry-day-${stage.dayOffset}${inPanel ? "-phone" : ""}`} tone="plain" label={t(naru.december.carryLabel)} title={t(stage.submit)} center expanded={false} fill={sub}
           {...sync}
+          // 2026-10-24 (사용자: "제출 방법은 생략", 세션 설명은 상자 안으로): 제출 절을 빼고 세션 절을 넣습니다.
           detail={[
             { label: t(naru.december.carryDetail.todoLabel), items: naru.december.carryDetail.todo.map(t) },
-            { label: t(naru.december.carrySubmitLabel), items: naru.december.carryDetail.submit.map(t) },
+            ...(stage.session ? [{ label: t(naru.december.sessionLabel), items: [`${t(stage.session.title)}: ${t(stage.session.body)}`] }] : []),
           ]} />
       )}
       {stage.milestone && (
+        // 2026-10-24 (사용자: "제출 방법은 생략", 세션 설명은 상자 안으로): 제출 절을 빼고(인증은 아래 버튼이 맡음) 세션 절을 넣습니다.
         <MilestoneStrip id={`milestone-day-${stage.dayOffset}${inPanel ? "-phone" : ""}`} label={t(naru.december.milestoneLabel)} title={t(stage.milestone)} detail={stage.milestoneDetail && [
           { label: t(naru.december.milestoneConditionsLabel), items: stage.milestoneDetail.conditions.map(t) },
-          { label: t(naru.december.milestoneSubmitLabel), items: stage.milestoneDetail.submit.map(t) },
+          ...(stage.session ? [{ label: t(naru.december.sessionLabel), items: [`${t(stage.session.title)}: ${t(stage.session.body)}`] }] : []),
         ]} center expanded={false} fill={sub} narrow={!inPanel && i === naru.december.stages.length - 1} {...sync} />
       )}
       {/* DECIDED 2026-10-22 (사용자: "상자 사이즈는 동일한데, 내용이 안 비어 있게"): 폰 카드 안의 "멘토 시간표와 미션 인증" 버튼을 뺐습니다.

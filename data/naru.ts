@@ -2475,8 +2475,10 @@ export const naru = {
         // PDF 03에서 가장 강한 한 줄입니다. 8월과 12월의 차이를 한 문장이 말합니다.
         line: {
           // 2026-10-19 (시각 감사 4): 세 줄로 꺾여 Day 2, 3 카드에 빈 줄이 생겼습니다. 뜻은 그대로 두 줄로.
-          ko: "8월과 달리, 이날 팀이 문제를 직접 정의합니다.",
-          en: "Unlike August, your team defines the problem on this day.",
+          // DECIDED 2026-10-24 (사용자: Sharing session의 내용까지 같이 넣어 두 줄로): 출제사가 여는 자리를 둘째 문장으로.
+          // 1440 카드 폭에서 한 줄 약 24자라 두 줄에 들어가게 줄였습니다("이날"은 카드 제목이 말합니다).
+          ko: "8월과 달리 팀이 문제를 직접 정의합니다. 출제사가 막힌 곳과 해 본 것을 직접 엽니다.",
+          en: "Unlike August, your team defines the problem. The company opens up where it got stuck and what it tried.",
         },
         // DECIDED 2026-10-08 (현장 팀 매칭 브리프 5): "팀 매칭" 칩 자리에 /match로 가는 버튼 하나가 섭니다.
         // 12월에는 AI 유형 테스트가 신청의 일부가 아니라 Day 1 현장의 팀 매칭 도구입니다. 칩은 뺐습니다
@@ -2485,18 +2487,19 @@ export const naru = {
         chips: [{ ko: "현장에서 팀 구성", en: "Teams form on site" }],
         // DECIDED 2026-10-17 (사용자: "1일차에도 미션인증은 해야해서, 버튼은 2,3일차처럼"): Day 1 카드에도 같은 버튼. 들어가면 Day 1 탭이고 시간표는 잠겨 있습니다.
         // 2026-10-22 (사용자: "Day 2, 3일 때만 보이게"): 폰 일정 상자 아래의 공통 버튼은 Day 2, 3을 볼 때만 섭니다(정본 7장: 미션은 Day 2, 3).
-        timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Timetable and check-in" }, href: "/crossing/team?day=1" },
+        timetableCta: { label: { ko: "예약용 멘토 시간표와 인증", en: "Mentor timetable for booking, and check-in" }, href: "/crossing/team?day=1" },
         // 2026-10-11: 화면에 그리지 않았습니다(버튼은 히어로로). DECIDED 2026-10-22 (사용자: Analytics 개선 "적용", 30일 /match 13명): 다시 그립니다.
         // 히어로 버튼이 아니라 Day 1 칩 줄 옆의 글자 링크입니다(NaruHome stageCard).
         matchCta: { label: { ko: "AI 유형 테스트로 팀 매칭", en: "Team matching with the AI type test" }, href: "/match" },
         session: {
-          title: { ko: "Sharing session", en: "Sharing session" },
+          // DECIDED 2026-10-24 (사용자: "day 1 session은 lovable workshop"): Sharing session의 내용은 위 line으로 올라갔습니다.
+          title: { ko: "Lovable workshop", en: "Lovable workshop" },
           // DECIDED 2026-10-19 (사용자, 출제사 브리프 2장): 막힌 지점과 이미 해 본 것은 Day 1에 출제사가 직접 엽니다. 팀이 Day 0에 세운
           // 첫 생각 뒤에 "그건 이미 해 봤어요"를 듣게 하려는 순서입니다. 그 전: "출제사가 직접. 회사와 의뢰 문제".
           // 2026-10-19 (사용자: Day 1 카드가 길어짐): 이유 문장("첫 생각을 세운 뒤에 듣는…")은 화면에서 뺐습니다.
           body: {
-            ko: "출제사가 막힌 지점과 이미 해 본 것을 직접 엽니다",
-            en: "The company walks you through where it got stuck and what it already tried",
+            ko: "Lovable 쓰는 법을 익히는 워크숍입니다.",
+            en: "A workshop on working with Lovable.",
           },
         },
         // DECIDED 2026-10-10 (사용자, 마일스톤 브리프 2.1): 보상은 마지막 날 한 팀이 아니라, 그날의 마일스톤을 넘은 팀 모두에게.
@@ -2526,13 +2529,14 @@ export const naru = {
         line: { ko: "정의한 문제와 아이디어를 멘토에게 확인받는 시간입니다.", en: "Time to get the problem you defined and your idea checked by mentors." },
         // DECIDED 2026-10-24 (companies-block-brief 1.5): 멘토링 상자가 내려가며 "시간표로 예약"은 이 칩이 말합니다. 바로 아래 버튼
         // "멘토 시간표와 미션 인증"으로 이어집니다. 그 전: "방향 전환은 팀의 몫"(그 뜻은 위 body 둘째 문장이 그대로 말합니다).
-        chips: [{ ko: "멘토 시간은 시간표로 예약", en: "Mentor slots are booked on the shared timetable" }],
+        // 2026-10-24 (사용자: "멘토 시간은 시간표로 예약 이 부분은 빼주고"): 예약은 아래 버튼 "예약용 멘토 시간표와 인증"이 말합니다.
+        chips: [],
         // DECIDED 2026-09-27 (사용자, 9/7 8월 참가자 회고): 왜 하는지가 바로 읽히게.
         // UI는 AI가 바로 만들어 주지만 어떤 기능을 왜 넣을지 판단하는 훈련은 배울 곳이
         // 없다는 것이 참가자의 말이었습니다. 인턴도 그 기회를 잘 받지 못합니다.
         // 길이는 Day 3 세션 설명과 비슷하게 맞춥니다.
         // DECIDED 2026-10-17 (사용자: "여기에 들어갈 수 있는 button은 day 2 and day 3 상자에 있는걸로"): 멘토 시간표와 미션 인증으로 가는 버튼.
-        timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Timetable and check-in" }, href: "/crossing/team?day=2" },
+        timetableCta: { label: { ko: "예약용 멘토 시간표와 인증", en: "Mentor timetable for booking, and check-in" }, href: "/crossing/team?day=2" },
         session: {
           title: { ko: "PO session", en: "PO session" },
           body: {
@@ -2592,7 +2596,7 @@ export const naru = {
         // 원하면 만날 수 있지만 한국 안의 외국인 창업가는 닿기 어렵다는 것이 그 자리의
         // 결론이었습니다. 함께 여는 단체 이름은 아직 화면에 쓰지 않습니다.
         // DECIDED 2026-10-17 (사용자: "여기에 들어갈 수 있는 button은 day 2 and day 3 상자에 있는걸로"): 멘토 시간표와 미션 인증으로 가는 버튼.
-        timetableCta: { label: { ko: "멘토 시간표와 미션 인증", en: "Timetable and check-in" }, href: "/crossing/team?day=3" },
+        timetableCta: { label: { ko: "예약용 멘토 시간표와 인증", en: "Mentor timetable for booking, and check-in" }, href: "/crossing/team?day=3" },
         // DECIDED 2026-10-23 (사용자, Reactor School 피드백 10-22 회의록 3.7): 위 9/27 결정(해외 창업가 세션)을 대신합니다. Day 3은 바깥 연사가
         // 아니라 참가 팀끼리 섞이는 자리입니다. 처음 온 사람은 첫날 뒤 다른 팀이 궁금해져도 먼저 말을 걸지 않아서, 섞이는 자리를 일부러 둡니다.
         // 세션 길이가 정해지지 않아 "3시간"은 쓰지 않습니다. 브랜드 판단: 다른 팀도 막혀 있는 것을 보고(코어 01), 내 것을 남에게 설명해 봅니다(코어 02).
@@ -2611,7 +2615,9 @@ export const naru = {
         // DECIDED 2026-10-13 (사용자): Day 2와 같습니다. 같은 날 앞서 적었던 것: "다른 팀의 리허설에 의견 주기".
         // DECIDED 2026-10-17 (사용자, 스크린숏 표): Day 2와 Day 3의 미션 인정 조건이 정해졌습니다. "이후 공개"를 이것으로 바꿉니다.
         // 조건 셋(과반 현장, 멘토 찾아가기, 진척 PDF). 2026-10-17 뒤: 멘토 찾아가기는 Day 2, 3 중 하루 이상. 확인은 현장 체크, 멘토와 찍은 사진(찾아간 날), PDF입니다.
-        milestone: { ko: "멘토 찾아가기와 진척 공유", en: "Visit a mentor, share progress" },
+        // DECIDED 2026-10-24 (사용자: "3일차 미션은 open session과 연관이 있어야 함. 다른 팀에게 progress 공유가 미션의 일부"):
+        // Day 3의 진척 공유는 Open tables에서 다른 팀에게 하는 것입니다.
+        milestone: { ko: "멘토 찾아가기와 Open tables 공유", en: "Visit a mentor, share at Open tables" },
         // DECIDED 2026-10-17 (사용자, 스크린숏: "문장으로 말고, bullet point로, 그리고 제출하는 방법으로"): 설명은 문단이 아니라
         // 인정 조건과 제출 방법 두 목록입니다. 그 전: "세 가지를 모두 채우면 인정됩니다. ..." 한 문단.
         milestoneDetail: {
@@ -2620,7 +2626,7 @@ export const naru = {
             // DECIDED 2026-10-17 (사용자: 멘토 수로는 20팀 × 이틀을 못 채워 "미션을 완화하는걸로"): 멘토 찾아가기는 Day 2, 3 중 하루 이상이면 됩니다.
             // 그 전: "멘토 1명 이상 찾아가기"(날마다). 과반 현장과 진척 PDF는 여전히 날마다입니다.
             { ko: "멘토 찾아가기 (이틀 중 하루 이상)", en: "Visit a mentor (on at least one of the two days)" },
-            { ko: "그날 만든 진척을 PDF로 공유하기", en: "Share that day's progress as a PDF" },
+            { ko: "Open tables에서 다른 팀에게 그날의 진척 공유하기", en: "Share that day's progress with other teams at Open tables" },
           ],
           submit: [
             { ko: "멘토와 찍은 사진 (찾아간 날)", en: "A photo with the mentor (on the day you went)" },
