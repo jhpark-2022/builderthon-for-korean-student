@@ -1893,9 +1893,10 @@ export const dict = {
     // 전원에게 돌아가는 몫은 그대로 앞 절에 두되, 문장이 거기서 끝나지 않고 수상팀에게
     // 이어지는 것까지 갑니다. "순위가 아니라"는 뺐습니다 - 순위형은 이미 없고,
     // 그 사실은 어워드 박스의 sub가 한 번 말합니다.
+    // DECIDED 2026-10-24 (사용자: 감사와 다음 이야기는 한곳에서만): 뒤 문장("다음 자리는 12월의 크로싱 서울로")을 뺐습니다. 12월은 #gaps에서만.
     flowNote: {
-      ko: "네트워크와 경험은 참가자 전원에게 돌아가고, 어워드는 각 팀의 강점을 봅니다. 다음 자리는 12월의 크로싱 서울로 이어집니다.",
-      en: "Network and experience go to everyone, and the awards look at each team's strengths. The next step is CROSSING SEOUL in December.",
+      ko: "네트워크와 경험은 참가자 전원에게 돌아가고, 어워드는 각 팀의 강점을 봅니다.",
+      en: "Network and experience go to everyone, and the awards look at each team's strengths.",
     },
   },
 
@@ -2206,11 +2207,11 @@ export const dict = {
         // Popup Studio are there officially), so a blanket label there would be
         // false - if that ever needs stating, it has to be per person.
         personalNote: {
-          title: { ko: "개인적으로 도움을 주시는 분들", en: "Helping in a personal capacity" },
+          // DECIDED 2026-10-24 (사용자: 감사는 한곳에서만): 감사는 마지막 화면 "고맙습니다"가 합니다. 여기는 사실만.
+          title: { ko: "개인 자격으로 참여한 멘토", en: "Mentors in a personal capacity" },
           body: {
-            // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) - 뜻은 불변
-            ko: "아래 멘토분들은 소속 회사와 별개로, 개인 자격으로 시간을 내어 함께해 주십니다.",
-            en: "The mentors below join in a personal capacity, separately from the companies they work at.",
+            ko: "아래 멘토는 소속 회사와 별개로 개인 자격으로 참여했습니다.",
+            en: "The mentors below took part in a personal capacity, separately from the companies they work at.",
           },
         },
         // The dashed "드롭인 멘토링 · 멘토 명단 공개 예정" card that used to close this

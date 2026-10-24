@@ -11,7 +11,6 @@ import { useLocale } from "@/lib/LocaleContext";
 // 12월 이벤트의 이름과 날짜. 이 페이지가 나루 홈을 가리키는 자리(클로징의 다음
 // 무대 줄)에서만 씁니다. 카피는 data/dictionary.ts가 갖고, 그 안의 {name}·{date}·
 // {city} 자리를 이 셋이 채웁니다. 8월 카피에 12월 날짜를 박지 않기 위해서입니다.
-import { decemberEventLabel } from "@/lib/naruDates";
 import { dict, links, partnerIntros, partnerIntroTBC, partnerArticles, type Phrase } from "@/data/dictionary";
 import {
   categoryMeta,
@@ -27,7 +26,6 @@ import Chapter from "./Chapter";
 import AugustGaps from "@/components/archive/AugustGaps";
 // 2026-10-20 (hwang 브리프 2.3): 8월 페이지는 옛 알약 라벨을 그대로 씁니다.
 import { AugustEyebrow as Eyebrow } from "@/components/ui/Eyebrow";
-import OpenChatLink from "@/components/ui/OpenChatLink";
 import LinkedInLink from "@/components/ui/LinkedInLink";
 import Glass from "@/components/ui/Glass";
 import Chip from "@/components/ui/Chip";
@@ -2036,7 +2034,7 @@ function ScrollToTop() {
 }
 
 export default function Journey() {
-  const { t, locale } = useLocale();
+  const { t } = useLocale();
   // 히어로 영상과 #companions 로고 띠가 함께 읽는 "멈춤" 하나 (2026-10-08).
   // 초기값의 규칙은 MotionToggle과 같습니다: 페이지에서 고른 값이 있으면 그것이, 없으면
   // OS의 모션 줄이기가 정합니다. 서버의 첫 페인트와 맞추려고 false에서 시작합니다.
@@ -2389,13 +2387,8 @@ export default function Journey() {
           ))}
         </div>
 
-        {/* The vision funnel used to sit here, at the end of this chapter. It
-            is now its own section between the FAQ and the footer, where it reads
-            as a closing note rather than a second ending inside the chapter that
-            opens the page. One line keeps the idea present. */}
-        <p className="mx-auto mt-10 max-w-2xl text-sm font-medium leading-relaxed text-white">
-          {t(dict.about.visionOneLiner)}
-        </p>
+        {/* DECIDED 2026-10-24 (같은 결정): "행사가 끝나도 여기서 시작한 연결은 이어집니다" 한 줄을 내렸습니다.
+            다음 이야기는 #gaps 한 곳에서만. */}
 
       </Chapter>
 
@@ -2514,19 +2507,8 @@ export default function Journey() {
           <p className="mt-3 text-xs text-white/55">{t(dict.benefits.flowNote)}</p>
         </div>
 
-        {/* The incentives block (certificate + perks, every line hedged) used to
-            sit here. It doubled the 수료증 card above and read as a wall of
-            "협의 중"; the CTA band below is what it was really holding up.
-
-            DECIDED 2026-08-23 (박주형): 카드 밴드가 통째로 빠지고 오픈채팅 한 줄만
-            남았습니다. 히어로와 같은 훅 카드 두 장을 여기 다시 놓던 자리인데,
-            8/23에 트랙 카드가 빠지고(히어로와 중복) 이번에 퀴즈 카드까지 빠지면서
-            담을 것이 없어졌어요.
-            링크는 남깁니다 - 무엇을 얻는지 다 읽은 직후가 이 페이지에서 오픈채팅이
-            가장 자연스러운 지점이고, 그 문은 지금도 열려 있는 유일한 문입니다. */}
-        <div className="mt-10 flex justify-center">
-          <OpenChatLink t={t} src="band" />
-        </div>
+        {/* DECIDED 2026-10-24 (같은 결정): 여기 있던 "다음 소식은 오픈채팅에서 먼저 알려드려요" 링크를 내렸습니다.
+            오픈채팅 문은 마지막 화면이 받고, 다음 이야기는 #gaps 한 곳에서만 합니다. */}
       </Chapter>
 
       {/* ── CH 3 · PROGRAM ─────────────────────────────────────────── */}
@@ -3366,102 +3348,9 @@ export default function Journey() {
         </Glass>
       </Chapter>
 
-      {/* ── CH 5.5 · VISION FUNNEL ─────────────────────────────────────
-          Moved out of the 취지 chapter: this is the "what it grows into" note,
-          which lands better as the last thing read before the closing CTA than
-          as a coda inside the chapter that opens the page. */}
-      <Chapter id="vision" align="center">
-        {/* Vision roadmap - how the eight days keep going, from a participant's
-            seat. DECIDED 2026-08-15: five concept cards became a five-stop
-            TIMELINE, so each card leads with its `when` (Aug 2026 Singapore →
-            right after the event → autumn → Dec 2026 Seoul → Mar 2027) and the
-            order on screen is chronological. Step 1 keeps the "START" badge,
-            which is why its `when` carries the date only. */}
-        <div className="mt-14 rounded-3xl border border-white/15 bg-white/[0.03] p-6 sm:p-8">
-          <p className="text-center text-xs font-bold text-accent">
-            {t(dict.about.visionTag)}
-          </p>
-          <h3 className="mx-auto mt-3 max-w-2xl text-center text-xl font-bold leading-snug text-white sm:text-2xl">
-            {t(dict.about.visionHeading)}
-          </h3>
-          <p className="mx-auto mt-3 max-w-2xl text-center text-sm leading-relaxed text-white/70">
-            {t(dict.about.visionIntro)}
-          </p>
-          <ol className="mt-8 grid gap-3 sm:grid-cols-3">
-            {dict.about.visionSteps.map((s, i) => {
-              const start = i === 0;
-              return (
-                <li
-                  key={s.num}
-                  className={`relative flex flex-col rounded-2xl border p-4 text-left ${
-                    start
-                      ? "border-accent/50 bg-white/[0.04]"
-                      : "border-white/10 bg-white/[0.03]"
-                  }`}
-                >
-                  <span
-                    className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-black ${
-                      start ? "bg-accent text-[#070B1F]" : "bg-white/10 text-white/80"
-                    }`}
-                  >
-                    {s.num}
-                  </span>
-                  {start && (
-                    <span className="mt-2 inline-flex w-fit items-center gap-1 text-xs font-bold text-accent">
-                      {t(dict.about.visionStartBadge)}
-                    </span>
-                  )}
-                  {/* The timeline stamp. Reads above the title because the
-                      question this section answers is "when does that happen",
-                      and violet-200 keeps it legible on the dark card while
-                      still sitting apart from the white title. */}
-                  <p className="mt-2 text-xs font-semibold leading-snug text-accent">
-                    {t(s.when)}
-                  </p>
-                  <p className="mt-1 text-sm font-bold leading-snug text-white">{t(s.title)}</p>
-                  <p className="mt-1 text-xs leading-relaxed text-white/65">{t(s.body)}</p>
-                </li>
-              );
-            })}
-          </ol>
-
-          {/* Continuity note (small), then the bridge into the CTA that follows
-              immediately below - hence the bridge outranks the note
-              typographically. The button reuses the nav/footer pill style rather
-              than introducing another CTA treatment.
-
-              2026-08-22 (마감 후 청산): 등록 버튼이 오픈채팅으로 바뀌었습니다.
-              이 자리가 하던 일(비전을 읽은 직후의 한 걸음)은 그대로이고, 지금
-              열려 있는 문이 오픈채팅뿐이라 그 문을 겁니다.
-
-              DECIDED 2026-08-24: 브리지 CTA 라벨 분리 - 클로징과 같은 문구가
-              모바일에서 연달아 반복되어 역할을 나눔(브리지=소식, 클로징=합류).
-              라벨만 dict.about.visionChatCta로 갈라졌고 링크·트래킹·스타일은
-              그대로입니다. 두 버튼이 같은 방으로 가는 것은 변함이 없어요 -
-              다른 것은 누르는 이유입니다. */}
-          <p className="mx-auto mt-8 max-w-2xl text-center text-xs leading-relaxed text-white/55">
-            {t(dict.about.visionNote)}
-          </p>
-          <div className="mt-6 flex flex-col items-center gap-4">
-            <p className="max-w-2xl text-center text-base font-bold leading-snug text-white sm:text-lg">
-              {t(dict.about.visionBridge)}
-            </p>
-            {links.openChat && (
-              <a
-                href={links.openChat}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackOpenChat("vision")}
-                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-gradient-to-r from-naru-purple to-naru-plum px-6 py-3 text-sm font-semibold text-white transition hover:brightness-110"
-              >
-                <ChatGlyph className="h-4 w-4 shrink-0" />
-                {t(dict.about.visionChatCta)}
-              </a>
-            )}
-          </div>
-        </div>
-      </Chapter>
-
+      {/* DECIDED 2026-10-24 (사용자: "8월 이벤트에서 감사와 다음에 대한 이야기가 중복되게 반복된다, 한곳에서만"):
+          비전 챕터(입구 → 크로싱 서울 → 다음 크로싱, "다음 소식 먼저 받기")를 내렸습니다. 12월 이야기는 바로 아래
+          #gaps("8월이 남기지 못한 두 가지, 그리고 12월의 답") 한 곳에서만 합니다. 사전의 vision* 키와 옛 마크업은 git 이력에. */}
       {/* DECIDED 2026-10-10 (중복 브리프 B3): 홈에 있던 "8월이 남기지 못한 두 가지, 그리고 12월의 답"이 이 페이지의
           맨 아래, 마지막 화면 앞에 섭니다. 홈의 프로그램 챕터 끝이 /2026-08#gaps로 링크합니다. 이 페이지의 다른
           부분은 그대로입니다. 목차 레일에는 넣지 않았습니다. */}
@@ -3485,7 +3374,7 @@ export default function Journey() {
               아래의 고맙습니다 … 로 대체"): 마지막 화면의 제목 자리를 감사가 받습니다. 그 전에는 제목
               (dict.footer.heading)과 한 문단(dict.footer.closingLead)이 여기 있었고, 감사는 CTA 아래에
               한 단 작은 글자로 있었습니다(2026-09-20). 이제 그 둘은 그리지 않습니다(사전의 키는 남겨 둡니다).
-              감사의 마지막 줄("나루도, 크로싱 서울도 이 8일에서 나왔습니다")이 바로 아래 12월 버튼의 근거입니다.
+              2026-10-24에 감사의 마지막 줄과 12월 버튼은 내렸습니다(아래 주석).
 
               이 자리에 적는 이름은 전부 이 페이지가 이미 공개한 것입니다(dict.footer.thanks의 주석).
               DECIDED 2026-10-02 (사용자: 본문을 "centralize"): 본문도 폰까지 가운데 정렬입니다.
@@ -3499,27 +3388,9 @@ export default function Journey() {
           <p className="mx-auto mt-6 max-w-2xl break-keep text-center text-base leading-relaxed text-white/80">
             {t(dict.footer.thanks.body)}
           </p>
-          <p className="mx-auto mt-4 max-w-2xl break-keep text-base font-semibold leading-relaxed text-white">
-            {t(dict.footer.thanks.closing)}
-          </p>
-          {/* 다음 무대로 가는 문 (2026-09-19, 사용자: "여기를 12월 이벤트 페이지랑 연결시켜줘").
-              버튼이 그라디언트인 것은 지금 이 화면의 첫 CTA이기 때문입니다.
-              오픈채팅이 다시 열리면(links.openChat) 그라디언트가 둘이 됩니다.
-              그때는 둘 중 하나를 외곽선으로 내리세요. 마지막 화면에 같은 무게의
-              버튼이 둘이면 둘 다 약해집니다. */}
+          {/* DECIDED 2026-10-24 (같은 결정): 감사의 마지막 줄("나루도, 크로싱 서울도 이 8일에서 나왔습니다")과
+              그 아래 12월 버튼을 내렸습니다. 이 화면은 감사만 하고, 12월로 가는 문은 바로 위 #gaps의 링크 하나입니다. */}
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link
-              // 2026-10-13 (등록 브리프 2.3, 리뷰 N2): 홈 맨 위로 갑니다. /#december는 히어로와 등록 버튼을 건너뛰었습니다.
-              // 이 페이지에서 /#december로 가는 링크는 라벨이 "프로그램"인 #gaps의 하나뿐입니다.
-              href="/"
-              onClick={() => track("naru_cta", { src: "august_closing", to: "home" })}
-              className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-naru-purple to-naru-plum px-9 py-4 text-base font-bold text-white transition"
-            >
-              {t(dict.footer.ctaDecember).replace("{name}", decemberEventLabel(locale))}
-              <span aria-hidden className={ARROW_CLASS}>→</span>
-            </Link>
-          </div>
-          <div className="mt-4 flex flex-wrap justify-center gap-3">
             {/* Primary CTA. 2026-08-22 (마감 후 청산): 등록 모달을 열던 자리를
                 오픈채팅이 받습니다. 페이지의 마지막 CTA라 그라디언트 필은 그대로
                 두고 행동만 바꿉니다 - 여기까지 읽고 내려온 사람에게 내밀 수 있는
