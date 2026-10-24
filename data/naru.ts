@@ -2106,29 +2106,33 @@ export const naru = {
       // DECIDED 2026-10-24 (사용자, 세 번째: "그래도 여기에는 회사를 directed 된 part는 느낌이 나면 좋겠음"): "이슈 하나의 닷새"에서
       // 이슈를 낸 기업(brand 5장의 말)을 라벨에 올렸습니다. "기업에게"처럼 부르지는 않습니다.
       label: { ko: "이슈를 낸 기업의 닷새", en: "Five days for the company behind the issue" },
+      // DECIDED 2026-10-24 (사용자, 글 먼저 리뷰 "멘토 자리가 가장 비어 있습니다", "기업이 가장 많이 걸린 두 가지" + "줄로 넣지 말고
+      // 상자 안 내용으로, 내용이 너무 많으면 안 됨"): 칸 셋을 시간순으로 다시 짰습니다. 들어올 때(자료 공개 범위, 회사 이름은 허락받은
+      // 범위에서만) / 멘토의 자리(Day 2와 Day 3, 네 질문의 답 한 장, 답보다 방향 확인, 이슈와 한 장은 미리 받음) / 닷새 뒤(남는 기록과 그 다음).
+      // 칸마다 두세 문장까지. 뺀 것: "9팀이 시키지 않았는데 자료 요청"(8월 기록 페이지에 있음), "어디까지 가느냐는 성립 조건이 결정". 새 사실 없음(brand 7장).
       boxes: [
         {
           name: { ko: "이슈가 들어올 때", en: "When an issue comes in" },
-          when: { ko: "Day 1과 Day 4", en: "Day 1 and Day 4" },
+          when: { ko: "Day 1 Sharing session 3시간, Day 4 질의", en: "Day 1, three hours; Day 4, questions" },
           body: {
-            ko: "지금 겪는 이슈 하나와 자료, 실무자가 멘토로 앉는 시간으로 시작합니다. Day 1 Sharing session 3시간과 마지막 날 질의입니다.",
-            en: "It starts with one live issue, its material, and the hours its practitioners sit as mentors. Three hours at the Day 1 Sharing session and the questions on the last day.",
+            ko: "지금 겪는 이슈 하나와 공개할 수 있는 만큼의 자료로 시작합니다. 회사 이름은 허락받은 범위에서만 씁니다.",
+            en: "It starts with one live issue and as much material as you can share. The company's name is used only as far as you allow.",
           },
         },
         {
-          name: { ko: "닷새 뒤에 남는 기록", en: "What five days leave" },
+          name: { ko: "멘토의 자리", en: "At the mentor's table" },
+          when: { ko: "Day 2와 Day 3", en: "Day 2 and Day 3" },
+          body: {
+            ko: "팀이 네 질문의 답을 한 장에 적어 현업 멘토를 찾아갑니다. 멘토는 답을 주기보다 방향이 맞는지 확인하고, 이슈와 그 한 장은 미리 받아 봅니다.",
+            en: "Teams bring one page answering the four questions to practitioner mentors. Mentors check the direction rather than hand over answers, and see the issue and that page in advance.",
+          },
+        },
+        {
+          name: { ko: "남는 기록, 그 다음", en: "What remains, and next" },
           when: { ko: "닷새 뒤", en: "After five days" },
           body: {
-            ko: "같은 이슈를 받은 팀마다 다른 문제를 찾아 들어간 기록입니다. 팀의 생각 1장, 코드로 옮긴 결과물, 마지막 날의 발표와 질의. 8월에는 9팀이 시키지 않았는데 출제사에 직접 자료를 요청했습니다.",
-            en: "A record of each team finding a different problem under the same issue: one page of the team's take, something built in code, the last day's presentation and questions. In August nine teams asked the problem owner directly for data, unprompted.",
-          },
-        },
-        {
-          name: { ko: "그 다음", en: "What comes next" },
-          when: { ko: "끝난 뒤", en: "Afterwards" },
-          body: {
-            ko: "닷새 뒤의 관계는 채용 경로, 발주자, 팀의 첫 파트너까지 갈 수 있습니다. 어디까지 가느냐는 각 단계의 성립 조건이 결정합니다.",
-            en: "What follows the five days can go on to a hiring channel, a client with a real brief, a team's first partner. How far it goes is decided by what each step requires.",
+            ko: "같은 이슈를 받은 팀마다 다른 문제를 찾아 들어간 기록이 남습니다. 팀의 생각 1장, 코드로 옮긴 결과물, 마지막 날의 발표와 질의. 그 뒤는 채용 경로, 발주자, 팀의 첫 파트너까지 갈 수 있습니다.",
+            en: "What remains is each team's record of finding a different problem under the same issue: one page of the team's take, something built in code, the last day's presentation and questions. From there it can go on to a hiring channel, a client with a real brief, a team's first partner.",
           },
         },
       ] as { name: Phrase; when: Phrase; body: Phrase }[],
