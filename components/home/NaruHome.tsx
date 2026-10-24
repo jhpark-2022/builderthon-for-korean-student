@@ -1137,7 +1137,8 @@ export default function NaruHome() {
               있던 소제목을 두 열 위 한 줄로 올렸습니다. 왼쪽의 programConcrete, crossingLine 문단은 그리지 않습니다(날짜와 도시는 히어로가, 서울로
               건너오는 뜻은 /naru가 말함). 키는 남겨 둡니다. */}
           {/* DECIDED 2026-10-24 (사용자, 스크린숏: "put this at the center for both desktop and mobile"): 소제목과 숫자 둘은 모든 폭에서 가운데. 아래 칸들은 왼쪽 그대로(폰 밀도 브리프 D4의 결정). */}
-          <h3 data-subheading className={`${SUBHEADING} text-center`}>{t(naru.december.factsLabel)}</h3>
+          {/* 2026-10-25: 헤더 칩 "진행 방식"의 앵커(id="curation")는 이 소제목에 있습니다. */}
+          <h3 id="curation" data-subheading className={`${SUBHEADING} text-center`}>{t(naru.december.factsLabel)}</h3>
           {/* DECIDED 2026-10-24 (밀도 브리프 1.1, 1.5): lg에서 두 열을 한 열로. 왼쪽 열 약 500px에 숫자 둘만 있어 비어 보였습니다(화면 3 채움 27%).
               순서는 소제목, 숫자 둘 한 행(TITLE 숫자 + BODY 라벨, 왼쪽 정렬), 팀 구성/공간/미션 세 칸, 네 질문 표, 기업의 닷새 표. 묶음 사이 32px.
               lg 아래는 전과 같습니다. 글은 그대로입니다. */}

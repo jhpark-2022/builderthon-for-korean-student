@@ -323,8 +323,11 @@ export const naruNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel
   // DECIDED 2026-10-13 (사용자: "TOC가 어색하거나 수가 너무 적음, 실제 내용에 비해"): 둘에서 다섯으로. 실측으로 홈은 6.9화면인데
   // 칩 둘이 1.3화면과 4.4화면에만 내려앉아, 일정(2.2), 멘토링(3.7), 남는 것(4.8)으로 가는 길이 없었습니다. 순서는 화면 순서입니다.
   // "나루"(#naru 티저)는 여전히 페이지 칩이 맡습니다(같은 날 앞의 결정). id는 NaruHome.tsx의 블록 id와 같아야 합니다.
+  // DECIDED 2026-10-25 (사용자: "flow와 맞게 TOC를 쭉 수정, 특히 12월"): 실측 순서(화면 1.1 닷새, 3.0 큐레이션, 3.7 이슈, 4.1 등록,
+  // 4.6 남는 것, 6.1 함께하는 곳)대로 여섯. "일정"(#schedule, 1.4)은 "프로그램"(#december, 1.1)과 0.3화면 차이라 하나로 합쳤고(#schedule id는 둠),
+  // 칸이 없던 "과정 지향적인 이벤트를 큐레이션합니다"(#curation)와 "함께하는 곳"(#partners)을 더했습니다.
   { id: "december", label: { ko: "프로그램", en: "Programme" } },
-  { id: "schedule", label: { ko: "일정", en: "Schedule" } },
+  { id: "curation", label: { ko: "진행 방식", en: "Format" } },
   // DECIDED 2026-10-24 (companies-block-brief 1.6, 같은 날 사용자 "너무 직접적임"으로 "기업에게"는 안 씀): 라벨만 "이슈".
   // id는 그대로라 밖의 #mentoring 링크는 같은 자리에 착지합니다.
   { id: "mentoring", label: { ko: "이슈", en: "Issues" } },
@@ -332,6 +335,7 @@ export const naruNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel
   // DECIDED 2026-10-22 (UX 점검, 사용자: "모든 것을 반영"): 영문 "Gains"는 "What you leave with"의 라벨로 어색했습니다. ariaLabel은 뺐습니다.
   // 보이는 글자("남는 것")와 읽히는 이름("오면 무엇이 남는가")이 달라 Lighthouse label-content-name-mismatch에 걸렸습니다.
   { id: "gains", label: { ko: "남는 것", en: "Takeaways" } },
+  { id: "partners", label: { ko: "함께하는 곳", en: "Partners" } },
 ];
 
 // DECIDED 2026-10-10 (구조 브리프 3.2): /naru의 목차 넷. id는 그 페이지의 섹션 id와 같아야 합니다

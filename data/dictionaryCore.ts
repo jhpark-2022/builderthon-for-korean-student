@@ -80,7 +80,8 @@ export const coreDict = {
     // 첫 칩(프로그램)이 7.2화면에 있어, 그 앞의 결과, 취지, 참가, 혜택 네 챕터로 가는 길이 없었습니다.
     results: { ko: "결과", en: "Results" },
     about: { ko: "취지", en: "Why" },
-    join: { ko: "참가", en: "Who" },
+    // 2026-10-25 (사용자: TOC를 flow와 맞게): 내려앉는 블록의 아이브로 "누구를 위한 자리였나"에 맞춰 "참가" → "대상".
+    join: { ko: "대상", en: "Who" },
     benefits: { ko: "혜택", en: "Benefits" },
     program: { ko: "프로그램", en: "Programme" },
     // 2026-08-13에 앵커에서 뺐다가 2026-08-23에 되살렸습니다. 뺐던 이유는
