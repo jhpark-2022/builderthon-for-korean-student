@@ -1361,7 +1361,10 @@ export default function NaruHome() {
                 {/* 2026-10-24 (밀도 브리프 1.3): lg에서는 옅은 세로 띠를 걷습니다(좁아진 칸에서 띠가 격자를 더 무겁게 보이게 함). */}
                 {[0, 1, 2, 3, 4].map((d) => (<div key={d} className={d % 2 === 0 ? "rounded-lg bg-white/[0.03] lg:bg-transparent" : ""} />))}
               </div>
-              <div aria-hidden className="relative pb-4 pt-[12px] sm:pt-0">
+              {/* DECIDED 2026-10-25 (사용자, 폰 스크린숏: "스크롤할때 몇일인지가 모를거 같은데"): 폰에서는 Day 머리가 접힌 헤더(탭 줄 48px)
+                  바로 아래에 붙어 01~05를 내리는 동안 남습니다. 판이 끝나면 같이 올라갑니다. 뒤로 막대가 비치지 않게 불투명 바탕을
+                  판 가장자리까지(-mx) 깝니다. sm부터는 머리와 행이 한 화면에 들어 그대로입니다. */}
+              <div aria-hidden className="relative pb-4 pt-[12px] max-sm:sticky max-sm:top-[48px] max-sm:z-20 max-sm:-mx-[22.5px] max-sm:bg-[#0E1229] max-sm:px-[22.5px] sm:pt-0">
                 <GainRouteHead label={t({ ko: "닷새", en: "Five days" })} names={naru.december.stages.map((st) => t(st.title))} />
               </div>
               <ol role="list" className="relative">
