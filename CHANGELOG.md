@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-26 8월 배경을 한 단 가라앉힘](#2026-10-26-aug-field-calm)
 - [2026-10-25 웹 매니페스토: 한국어 기준 영문 v2, Constitution 뺌](#2026-10-25-manifesto-web)
 - [2026-10-25 8월 기록의 FAQ를 빼고 끝 간격을 줄임](#2026-10-25-aug-faq-removed)
 - [2026-10-25 나루 정의문을 두 문장으로](#2026-10-25-definition-short)
@@ -378,6 +379,16 @@
 ### 2026-06
 
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
+
+---
+
+<a id="2026-10-26-aug-field-calm"></a>
+## 2026-10-26 8월 배경을 한 단 가라앉힘
+- 범위: lib/background/config.ts(FIELD_CALM 새로), lib/background/scene/BackgroundScene.ts
+- 한 것: 사용자 "8월 페이지의 webgl effect가 little too much". 입자가 빽빽하고 카드 위로 비쳐 보이며 렌즈 왜곡의 동심원이 보였습니다. field 변형(/2026-08)에만 입자 수 0.6배, 밝기 0.75배, 블룸 0.75배, 렌즈 0.5배를 겁니다. 색, 흐름, 스크롤 연출은 그대로이고 홈과 /naru(water), crossing에는 닿지 않습니다.
+- 근거: brand 10장 사이트 규칙(배경은 판 뒤에서만). 판단 질문 둘에는 직접 닿지 않는 손질이라 글이 읽히는 쪽으로만 줄였습니다.
+- 검증: 1440 화면 스크롤 1800px에서 전후 스크린숏 비교. tsc 통과.
+- 커밋: acbb7a8
 
 ---
 
