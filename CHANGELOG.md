@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-25 일정 판을 Day 0 / Day 1~3 / Day 4 세 줄로](#2026-10-25-schedule-three-rows)
 - [2026-10-25 Day 0~3 카드의 상자를 같은 높이에](#2026-10-25-day-boxes-aligned)
 - [2026-10-25 남는 것의 날 칸을 넓힘](#2026-10-25-gains-wider-days)
 - [2026-10-25 폰에서 남는 것의 Day 머리를 붙여 둠](#2026-10-25-gains-sticky-head)
@@ -374,6 +375,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-25-schedule-three-rows"></a>
+## 2026-10-25 일정 판을 Day 0 / Day 1~3 / Day 4 세 줄로
+- 범위: components/home/NaruHome.tsx(일정 판 격자, stageCard의 lgSub 분기)
+- 한 것: 사용자 요청("위에 day 0, 중간에 day 1 to 3, 맨 아래에 day 4가 좋아"). 2026-10-24 밀도 브리프 D2로 lg에서 Day 0~3을 한 줄 네 칸에 넣었던 것을 되돌려, 모든 폭에서 Day 0 전폭 위, Day 1~3 세 칸, Day 4 전폭 아래. Day 1~3 상자는 같은 높이에서 시작하고 Day 1 칩은 상자 아래 그대로. 근거: brand 10장(글은 하나의 축).
+- 검증: 1440에서 세 줄 배치, Day 1~3 한 줄 설명 2/2/2. tsc 통과.
+- 커밋: 0b9f363
 
 <a id="2026-10-25-day-boxes-aligned"></a>
 ## 2026-10-25 Day 0~3 카드의 상자를 같은 높이에
