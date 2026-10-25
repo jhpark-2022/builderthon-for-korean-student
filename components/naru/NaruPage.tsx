@@ -296,12 +296,15 @@ export default function NaruPage() {
         {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다, 더 과감하게): 넷은 접어 둡니다. 기업만 펼쳐 보면 됩니다.
             라벨은 코어의 "그래서 지키는 것"과 같은 알약입니다. */}
         <Reveal className={`${READ} mt-[45px] text-center lg:mt-[48px]`}>
-          <details className="group">
-          <summary className={`mx-auto inline-flex min-h-[44px] cursor-pointer list-none items-center gap-2 rounded-full border border-white/15 bg-[#0B1430]/80 px-4 ${BODY} font-medium text-accent transition hover:border-white/30 hover:text-white [&::-webkit-details-marker]:hidden`}>
+          {/* DECIDED 2026-10-25 (사용자: "기업이 얻는거 버튼 너무 어색해, 특히 모바일"): 알약을 벗고 표의 머리 한 줄로 둡니다.
+              아래 메일 버튼과 같은 알약이라 누르면 어딘가로 가는 버튼처럼 보였고, 펼치면 표와 떨어져 떠 있었습니다.
+              이제 위아래 가는 선 사이의 한 줄이고, 펼치면 같은 선 안에서 네 칸이 이어집니다. */}
+          <details className="group border-y border-white/10">
+          <summary className={`flex min-h-[52px] cursor-pointer list-none items-center justify-center gap-2 py-[12px] ${BODY} font-medium text-white/85 transition hover:text-white [&::-webkit-details-marker]:hidden`}>
             {t(naru.how.companyLabel)}
-            <span aria-hidden className="inline-block text-white/60 transition-transform group-open:rotate-180 motion-reduce:transition-none">⌄</span>
+            <svg aria-hidden viewBox="0 0 12 12" className="h-3 w-3 text-accent transition-transform group-open:rotate-180 motion-reduce:transition-none"><path d="M2 4.5l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </summary>
-          <ul role="list" className="mt-[13.5px] grid grid-cols-2 border-y border-white/10 md:grid-cols-4 lg:mt-[16px]">
+          <ul role="list" className="grid grid-cols-2 border-t border-white/10 md:grid-cols-4">
             {naru.how.company.map((c, i) => (
               <li key={i} className={`flex flex-col items-center gap-[12px] px-[13.5px] py-[18px] lg:gap-[16px] lg:px-[16px] ${i >= 2 ? "border-t md:border-t-0" : ""} ${i % 2 === 1 ? "border-l" : ""} ${i === 2 ? "md:border-l" : ""} border-white/10`}>
                 <span className={`break-keep ${BODY} font-bold text-white`}>{t(c.title)}</span>
@@ -312,7 +315,9 @@ export default function NaruPage() {
           </details>
         </Reveal>
         <Reveal className={`${READ} mt-[27px] flex flex-col items-center gap-[13.5px] sm:flex-row sm:flex-wrap sm:justify-center sm:gap-[18px] lg:mt-[32px]`}>
-          {naru.how.layers.map((layer) => (
+          {/* DECIDED 2026-10-25 (사용자: "나루 페이지에 문의하기 버튼 다 빼줘"): 학생회와 기업의 "문의하기" 버튼 둘을 그리지 않습니다.
+              운영진으로 함께하기는 문의가 아니라 그대로 둡니다. 연락은 아래 메일 주소 한 줄이 받습니다. 키(join.mail)는 그대로. */}
+          {naru.how.layers.filter((layer) => layer.join.id !== "join-organiser" && layer.join.id !== "join-company").map((layer) => (
             <a
               key={layer.join.id}
               // 2026-09-19: `#${layer.join.id}`(#join의 카드)였습니다. 카드 넷이
