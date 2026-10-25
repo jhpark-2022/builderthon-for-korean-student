@@ -945,12 +945,13 @@ export const naru = {
       },
       {
         num: "02",
+        // DECIDED 2026-10-25 (사용자: 칸마다 줄 수를 같게): 02, 04, 05를 한 줄로 줄였습니다. 그 전 "...하루 두 번까지 찾아가...", "...어디까지 갔는지 발표하고, 질문을...", "...한 팀이 되어, 마지막 날까지 함께합니다."
         // 규칙은 코드가 강제하는 것과 같습니다(app/api/crossing/mentoring/route.ts: 하루 두 칸, 2시간 간격).
         title: { ko: "멘토의 확인", en: "A mentor's check" },
         days: [2, 3],
         body: {
-          ko: "팀의 생각 한 장을 들고 현업 멘토를 하루 두 번까지 찾아가 방향을 확인받습니다.",
-          en: "You take a page of your team's thinking to working mentors, up to twice a day, and check your direction.",
+          ko: "팀의 생각 한 장을 들고 현업 멘토를 찾아가 방향을 확인받습니다.",
+          en: "You take a page of your team's thinking to working mentors and check your direction.",
         },
         evidence: { ko: "8월 11명", en: "August: eleven of them" },
       },
@@ -970,8 +971,8 @@ export const naru = {
         title: { ko: "이슈를 낸 기업의 질문", en: "Questions from the company" },
         days: [4],
         body: {
-          ko: "마지막 날 그 기업 앞에서 어디까지 갔는지 발표하고, 질문을 받습니다.",
-          en: "On the last day you show that company how far you got, and take its questions.",
+          ko: "마지막 날 그 기업 앞에서 발표하고 질문을 받습니다.",
+          en: "On the last day you present to that company and take its questions.",
         },
         evidence: { ko: "8월 21팀 발표", en: "August: 21 teams presented" },
       },
@@ -982,8 +983,8 @@ export const naru = {
         title: { ko: "국경 너머의 팀", en: "A team across borders" },
         days: [1, 2, 3, 4],
         body: {
-          ko: "어느 나라에서 공부하든 Day 1에 한 팀이 되어, 마지막 날까지 함께합니다.",
-          en: "Wherever you study, you become one team on Day 1 and stay together to the last day.",
+          ko: "어느 나라에서 공부하든 Day 1에 한 팀이 되어 끝까지 함께합니다.",
+          en: "Wherever you study, you become one team on Day 1 and stay together to the end.",
         },
       },
     ] as { num: string; title: Phrase; body: Phrase; days: number[]; split?: boolean; evidence?: Phrase }[],
@@ -1848,13 +1849,14 @@ export const naru = {
     // DECIDED 2026-10-23 (사용자, 스크린숏: "표현들이 어색함"): 제목이 목적어만 남은 조각("무엇을", "누구의 일을")이었고 본문도 "~나"로
     // 끊겼습니다. 제목은 짧은 이름(브리프의 기능, 업무, 병목, 실험 순서 그대로), 본문은 팀이 실제로 묻는 질문 한 문장으로.
     // 그 전: 무엇을 / 누구의 일을 / 어디서 멈췄나 / 어떻게 확인하나, 본문 "어떤 AI 기능을 붙일 수 있나" 등.
+    // DECIDED 2026-10-25 (사용자: 칸마다 줄 수를 같게): 네 질문 모두 1440에서 한 줄. 그 전 "이 이슈에 어떤...", "그 기능으로 누구의...", "가장 작게 확인해 볼 방법은 무엇일까요?"
     approach: [
-      { title: { ko: "기능", en: "Capability" }, body: { ko: "이 이슈에 어떤 AI 기능을 붙일 수 있을까요?", en: "Which AI capability could this issue take?" } },
-      { title: { ko: "바뀌는 일", en: "The work" }, body: { ko: "그 기능으로 누구의 어떤 일이 바뀌나요?", en: "Whose work changes with it, and how?" } },
+      { title: { ko: "기능", en: "Capability" }, body: { ko: "어떤 AI 기능을 붙일 수 있을까요?", en: "Which AI capability could this issue take?" } },
+      { title: { ko: "바뀌는 일", en: "The work" }, body: { ko: "누구의 어떤 일이 바뀌나요?", en: "Whose work changes with it, and how?" } },
       // DECIDED 2026-10-22 (사용자: "왜 못했나 이러면 출제의 원인이 무능인 것처럼 보임"): 회사가 아니라 시도가 멈춘 자리를 묻습니다.
       // 그 전: "왜 막혔나" / "회사는 왜 해 보고도 못 했나".
       { title: { ko: "멈춘 자리", en: "Where it stopped" }, body: { ko: "먼저 해 본 시도는 어디서 멈췄나요?", en: "Where did the earlier attempt stop?" } },
-      { title: { ko: "확인 방법", en: "The check" }, body: { ko: "가장 작게 확인해 볼 방법은 무엇일까요?", en: "What is the smallest way to check it?" } },
+      { title: { ko: "확인 방법", en: "The check" }, body: { ko: "어떻게 가장 작게 확인해 볼까요?", en: "What is the smallest way to check it?" } },
     ] as { title: Phrase; body: Phrase }[],
     // 2026-10-24 (사용자): 표 아래 "네 질문은 출제사의 상황에 따라 유연하게 조정합니다." 줄은 뺐습니다(같은 날 아침에 넣은 approachNote).
     // 2026-10-19 (시각 감사 1): 바로 아래 findClose와 같은 말을 해서 한 문단으로 합쳤습니다. 화면은 이 문단만 그리고 findClose는 그리지 않습니다.
@@ -1894,7 +1896,8 @@ export const naru = {
         // 한 명씩 섞입니다. 나라나 학교별 대항전 같은 느낌을 주려는 것이 아닙니다. 인원수는 정해지지 않아 "몇 명"이라고만 씁니다.
         // "유학생"은 쓰지 않습니다(2026-09-29). 팀을 Day 1 현장에서 맺는다는 것은 위 scheduleLead가 말합니다.
         k: { ko: "팀 구성", en: "Teams" },
-        v: { ko: "모든 팀에 싱가포르에서 공부하는 학생 몇 명과, 서로 다른 학교의 학생이 한 명씩 섞입니다. 나라나 학교끼리 겨루는 대항전이 아닙니다.", en: "Every team mixes a few students studying in Singapore with one student each from different schools. It is not a contest between countries or schools." },
+        // DECIDED 2026-10-25 (사용자: 칸마다 줄 수를 같게): 세 칸 모두 두 줄. 그 전 "모든 팀에 싱가포르에서 공부하는 학생 몇 명과, 서로 다른 학교의 학생이 한 명씩 섞입니다. 나라나 학교끼리 겨루는 대항전이 아닙니다."
+        v: { ko: "모든 팀에 싱가포르에서 공부하는 학생과 여러 학교 학생이 섞입니다. 대항전이 아닙니다.", en: "Every team mixes students studying in Singapore with students from several schools. It is not a contest." },
       },
       // DECIDED 2026-10-22 (UX 점검, brand 2장 판단 질문 둘): "세션"(어느 3시간을 떼어 와도 따로 열 수 있게)과 "왜 날마다"(한 팀에게
       // 몰아 주는 것보다 나누는 쪽) 두 줄을 뺐습니다. 파트너에게 하는 설계 설명이라 참가자의 어느 코어도 돕지 않았습니다.
@@ -1916,7 +1919,8 @@ export const naru = {
         k: { ko: "미션", en: "Missions" },
         // DECIDED 2026-10-13 (사용자, 멘토링 브리프 2): 미션은 Day 2부터이고 조건은 참여입니다. 그 전에는 Day 2부터라는 말이 없었습니다.
         // 2026-10-19 (사용자): 미션은 Day 2와 Day 3에만. 그 전 "Day 2부터 날마다 하나씩".
-        v: { ko: "Day 2와 Day 3에 하나씩 있고, 무엇을 냈는지보다 함께 있었는지를 봅니다. 해낸 팀은 모두 그날 지원을 받고, 그 미션은 팀의 기록으로 남습니다.", en: "There is one on Day 2 and one on Day 3, and what counts is whether you were there together more than what you handed in. Every team that completes one gets support that day, and the mission stays on the team's record." },
+        // DECIDED 2026-10-25 (사용자: 칸마다 줄 수를 같게): 두 줄로. 그 전 "Day 2와 Day 3에 하나씩 있고, 무엇을 냈는지보다 함께 있었는지를 봅니다. 해낸 팀은 모두 그날 지원을 받고, 그 미션은 팀의 기록으로 남습니다."
+        v: { ko: "Day 2와 Day 3에 하나씩, 함께 있었는지를 봅니다. 해낸 팀은 모두 그날 지원을 받습니다.", en: "One on Day 2 and one on Day 3, and what counts is whether you were there together. Every team that completes one gets support that day." },
       },
     ] as { k: Phrase; v: Phrase }[],
 
@@ -2469,8 +2473,9 @@ export const naru = {
         // Day 0에 공개됩니다. 나머지 둘(막힌 지점, 이미 해 본 것)은 Day 1 현장 발표에서(아래 Day 1 session).
         // 그 전: "Day 1에 쓸 시간을 벌어 주는 날입니다. 스테이지로 세지 않습니다."
         line: {
-          ko: "출제사가 AI를 붙이려 한 곳과 기대한 효과가 먼저 공개됩니다. Day 1에 쓸 시간을 벌어 주는 날이라 스테이지로 세지 않습니다.",
-          en: "You get where the company tried to put AI and what it hoped for, ahead of time. The day buys back time for Day 1, so it does not count as a stage.",
+          // DECIDED 2026-10-25 (사용자: "각 파트마다 서로 줄 숫자가 똑같이"): Day 0~3 네 칸을 1440에서 두 줄로. 그 전 둘째 문장 "Day 1에 쓸 시간을 벌어 주는 날이라 스테이지로 세지 않습니다."
+          ko: "출제사가 AI를 붙이려 한 곳과 기대한 효과를 먼저 공개합니다.",
+          en: "You get where the company tried to put AI and what it hoped for, ahead of time.",
         },
         chips: [{ ko: "이슈 공개", en: "Issues open" }],
         // DECIDED 2026-10-11 (사용자: "day0은 세션이 따로 있는 건 없음"): 여기 있던 3시간 세션 "활용 가이드"를 뺐습니다.
@@ -2497,8 +2502,9 @@ export const naru = {
           // 2026-10-19 (시각 감사 4): 세 줄로 꺾여 Day 2, 3 카드에 빈 줄이 생겼습니다. 뜻은 그대로 두 줄로.
           // DECIDED 2026-10-24 (사용자: Sharing session의 내용까지 같이 넣어 두 줄로): 출제사가 여는 자리를 둘째 문장으로.
           // 1440 카드 폭에서 한 줄 약 24자라 두 줄에 들어가게 줄였습니다("이날"은 카드 제목이 말합니다).
-          ko: "8월과 달리 팀이 문제를 직접 정의합니다. 출제사가 막힌 곳과 해 본 것을 직접 엽니다.",
-          en: "Unlike August, your team defines the problem. The company opens up where it got stuck and what it tried.",
+          // DECIDED 2026-10-25 (사용자: 칸마다 줄 수를 같게): 세 줄이라 두 줄로. 그 전 "8월과 달리 팀이 문제를 직접 정의합니다. 출제사가 막힌 곳과 해 본 것을 직접 엽니다."
+          ko: "8월과 달리 팀이 문제를 정의하고 출제사가 막힌 곳을 엽니다.",
+          en: "Unlike August, your team defines the problem and the company opens up where it got stuck.",
         },
         // DECIDED 2026-10-08 (현장 팀 매칭 브리프 5): "팀 매칭" 칩 자리에 /match로 가는 버튼 하나가 섭니다.
         // 12월에는 AI 유형 테스트가 신청의 일부가 아니라 Day 1 현장의 팀 매칭 도구입니다. 칩은 뺐습니다

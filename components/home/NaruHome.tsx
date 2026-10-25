@@ -306,7 +306,9 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
 // 막대는 글 아래 섭니다. sm부터는 전과 같이 왼쪽 글 칸 + 다섯 칸.
 // DECIDED 2026-10-24 (밀도 브리프 1.3, D1): lg에서 막대 격자는 날마다 3rem(54px, META 네 글자 "확인받기"의 폭)으로 좁히고 글 칸이 나머지를 씁니다.
 // 브리프의 30%는 날 이름이 META로 들어가는 최소 폭이라 39%(270/688px)에서 멈췄습니다. 표는 유지(D1).
-const GAIN_COLS = "grid-cols-5 sm:grid-cols-[minmax(0,18rem)_repeat(5,minmax(0,1fr))] lg:grid-cols-[minmax(0,1fr)_repeat(5,3rem)]";
+// DECIDED 2026-10-25 (사용자: 줄 수를 같게): 날 칸을 4.5rem으로. "컨텍스트 열기"가 한 줄로 들고 옆 "찾기"와 붙지 않습니다.
+// 글 칸이 좁아진 만큼 행 본문은 제목 줄 아래에서 행 전체 폭을 씁니다(아래 ol).
+const GAIN_COLS = "grid-cols-5 sm:grid-cols-[minmax(0,18rem)_repeat(5,minmax(0,1fr))] lg:grid-cols-[minmax(0,1fr)_repeat(5,4.5rem)]";
 // DECIDED 2026-10-20 (사용자, hwang 브리프 3.6, 감사 W2): 막대의 그라데이션을 accent 단색으로.
 const GAIN_BAR = "h-2 rounded-full bg-accent/60";
 
@@ -318,8 +320,9 @@ function GainRouteHead({ label, names }: { label: string; names: string[] }) {
       {[0, 1, 2, 3, 4].map((d) => (
         <div key={d} className="flex flex-col items-center text-center">
           <span className={`${META} font-bold tabular-nums text-white/85`}>Day {d}</span>
-          {/* lg: 칸(3rem)보다 긴 이름("컨텍스트 열기", "Context Open")은 띄어쓰기에서 꺾이고 칸 가운데에 섭니다(w-max + max-w). */}
-          <span className={`${META} break-keep px-1 text-white/70 lg:w-max lg:max-w-[4rem] lg:px-0`}>{names[d]}</span>
+          {/* DECIDED 2026-10-25 (사용자: "각 파트마다 서로 줄 숫자가 똑같이"): 다섯 이름 모두 한 줄. 칸(lg 3rem)보다 긴 "컨텍스트 열기",
+              "Context Open"은 꺾지 않고 칸 가운데에서 양옆으로 조금 넘칩니다(w-max). 그 전: lg:max-w-[4rem]로 두 줄. */}
+          <span className={`${META} w-max whitespace-nowrap text-white/70`}>{names[d]}</span>
           {/* mt-auto: 이름이 두 줄로 접히는 칸(폰의 "컨텍스트 열기")에서도 정거장 다섯이 한 선에 섭니다. */}
           <div className="relative mt-auto h-3 w-full pt-2.5 box-content">
             <div className={`absolute top-1/2 h-px -translate-y-1/2 bg-white/25 ${d === 0 ? "left-1/2 right-0" : d === 4 ? "left-0 right-1/2" : "inset-x-0"}`} />
@@ -1372,9 +1375,11 @@ export default function NaruHome() {
                         <span aria-hidden className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent/15 ${META} font-black tabular-nums text-accent`}>{item.num}</span>
                         <h3 className={ROW_HEADING}>{t(item.title)}</h3>
                       </div>
-                      <p className={`mt-[12px] max-sm:mt-[8px] break-keep ${BODY} leading-relaxed text-white/70 sm:mt-[16px]`}>{t(item.body)}</p>
                       <span className="sr-only">{item.days.map((d) => `Day ${d}`).join(", ")}</span>
                     </div>
+                    {/* DECIDED 2026-10-25 (사용자: "각 파트마다 서로 줄 숫자가 똑같이"): 본문은 제목 줄 아래에서 행 전체 폭을 씁니다.
+                        막대는 제목 줄에만 서니 겹치지 않고, 다섯 본문이 모두 한 줄에 듭니다. 그 전: 왼쪽 글 칸 안이라 한 줄, 두 줄이 섞임. */}
+                    <p className={`mt-[12px] max-sm:mt-[8px] break-keep ${BODY} leading-relaxed text-white/70 sm:mt-[16px]`} style={{ gridColumn: "1 / -1", gridRow: 2 }}>{t(item.body)}</p>
                     <GainBars days={item.days} split={item.split} />
                   </li>
                 ))}
