@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-25 8월 기록의 FAQ를 빼고 끝 간격을 줄임](#2026-10-25-aug-faq-removed)
 - [2026-10-25 나루 정의문을 두 문장으로](#2026-10-25-definition-short)
 - [2026-10-25 /naru 매니페스토를 넘겨 보는 뷰어](#2026-10-25-manifesto-viewer)
 - [2026-10-25 /naru 문의하기 버튼을 빼고 출제사가 얻는 것을 표 머리로](#2026-10-25-naru-doors)
@@ -378,6 +379,13 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-25-aug-faq-removed"></a>
+## 2026-10-25 8월 기록의 FAQ를 빼고 끝 간격을 줄임
+- 범위: components/journey/Journey.tsx(#faq, #builders, #closing), components/journey/JourneyNav.tsx(탭)
+- 한 것: 사용자 요청("FAQ at the 8월 페이지는 빼줘"). FAQ 챕터와 레일의 FAQ 탭을 뺐습니다. FAQList와 dict.faq는 그대로. 이어서 (스크린숏: "gap이 너무 커"): 파트너 챕터가 마지막 내용이 되면서 화면 높이를 채우며 가운데 서던 것을 내용 높이로 바꾸고, 그 아래 여백과 #closing의 위 여백을 줄였습니다. 근거: brand 6장(8월 기록에서만 제로백이 주인공, 기록은 그대로), 2장 질문에서 이 블록은 어느 쪽도 돕지 않음.
+- 검증: 1440에서 파트너 상자 바닥과 오픈채팅 버튼 사이 약 300px에서 81px. tsc 통과.
+- 커밋: 9232f98
 
 <a id="2026-10-25-definition-short"></a>
 ## 2026-10-25 나루 정의문을 두 문장으로
