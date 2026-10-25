@@ -3312,7 +3312,7 @@ export default function Journey() {
           옮겼습니다(사용자: 하나로). 옛 마크업은 git 이력에. */}
 
       {/* ── CH 6 · FOOTER ──────────────────────────────────────────── */}
-      <section id="closing" className="relative flex w-full flex-col px-6 pb-16 pt-8 sm:px-10 sm:pt-10">
+      <section id="closing" className="relative flex w-full flex-col px-6 pb-10 pt-0 sm:px-10">
         {/* soft dark scrim so the closing CTA + credits stay readable over the field */}
         <div
           aria-hidden
@@ -3322,47 +3322,12 @@ export default function Journey() {
               "radial-gradient(60% 55% at 50% 45%, rgba(7,11,31,0.82) 0%, rgba(7,11,31,0.5) 42%, rgba(7,11,31,0) 78%)",
           }}
         />
-        {/* hero CTA block - vertically centred */}
-        <div className="flex flex-1 flex-col items-center justify-center text-center">
-          {/* DECIDED 2026-10-24 (사용자: 하나로): 이 화면의 제목 자리에 있던 "고맙습니다"는 맨 위 #results 안으로 옮겼고, 2026-10-25에 그 판째 내렸습니다.
-              이 화면은 문(오픈채팅, 파트너십 문의)과 크레딧만 둡니다. */}
-          <div className="flex flex-wrap justify-center gap-3">
-            {/* Primary CTA. 2026-08-22 (마감 후 청산): 등록 모달을 열던 자리를
-                오픈채팅이 받습니다. 페이지의 마지막 CTA라 그라디언트 필은 그대로
-                두고 행동만 바꿉니다 - 여기까지 읽고 내려온 사람에게 내밀 수 있는
-                문이 지금은 이것 하나뿐입니다.
-                아래 OpenChatLink(텍스트 링크)는 함께 뺐습니다. 같은 문이 같은
-                화면에서 두 번 열리면 둘 다 약해집니다. */}
-            {links.openChat && (
-              <a
-                href={links.openChat}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackOpenChat("footer")}
-                className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-naru-purple to-naru-plum px-9 py-4 text-base font-bold text-white transition"
-              >
-                <ChatGlyph className="h-5 w-5 shrink-0" />
-                {t(dict.nav.openChatJoin)}
-                <span aria-hidden className={ARROW_CLASS}>→</span>
-              </a>
-            )}
-            <a href={links.partnership} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-9 py-4 text-base font-semibold text-white/85 transition hover:bg-white/10">
-              {t(dict.nav.partner)}
-            </a>
-          </div>
-
-          {/* mailto: only opens whatever mail client the visitor's device has
-              configured - on a desktop without one, or inside some in-app
-              browsers, the button does nothing at all and the inquiry is simply
-              lost. Show the address as selectable text with a copy button so
-              there's always a way to reach us. */}
-          <PartnerEmailFallback t={t} />
-        </div>
-
+        {/* DECIDED 2026-10-25 (사용자: "저 버튼 두개 더 지워줘. 더 줄여줘"): 오픈채팅, 파트너십 문의 버튼과 그 아래 메일 주소 줄을 뺐습니다.
+            오픈채팅은 헤더와 푸터에 있습니다. 이 화면에는 8월 크레딧만 남습니다. PartnerEmailFallback은 쓰지 않습니다. */}
         {/* 감사 문단은 2026-10-02부터 위 제목 자리에 있습니다(그 전에는 여기, CTA 아래 크레딧 위). */}
 
         {/* credits - pinned to the very bottom of the final screen */}
-        <div className="mx-auto mt-10 w-full max-w-3xl border-t border-white/10 pt-8 text-center">
+        <div className="mx-auto w-full max-w-3xl pt-2 text-center">
           <p className="text-sm font-bold text-white">ZERO100 AI BUILDERTHON</p>
           <p className="mt-2 text-xs text-white/65">{t(dict.footer.hostedBy)}</p>
           {/* DECIDED 2026-10-20 (hwang 브리프 4.2): 여기 서던 FooterNav, 저작권, 배경 움직임 토글은 main 밖의 SiteFooter 하나가 맡습니다
