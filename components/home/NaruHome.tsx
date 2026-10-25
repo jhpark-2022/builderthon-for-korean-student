@@ -755,13 +755,6 @@ export default function NaruHome() {
       {/* DECIDED 2026-10-25 (같은 요청): 데스크톱 Day 0~3 줄(sub, lgSub)은 상자를 칩 줄보다 먼저 둡니다. 칩은 Day 1에만 있어서, 칩이 먼저면
           Day 0, 2, 3의 상자 위에 빈 행이 생겼습니다. 이제 네 상자가 세션 행 바로 아래 같은 높이에서 시작하고 Day 1의 칩과 링크는 그 아래에 섭니다. */}
       {(sub || lgSub) ? <>{/* 상자 먼저 */}
-      {/* DECIDED 2026-10-25 (사용자: "안에 내용물들 때문에 상자 차이가 너무 다름"): 데스크톱 Day 0도 옆 칸과 같은 자리에 무채색 상자를 세웁니다.
-          라벨은 칩 "이슈 공개", 펼치면 그날의 진행(body). lg 아래 전폭 카드에서는 좁게(narrow) 가운데. */}
-      {lgSub && stage.openStrip && (
-        <MilestoneStrip id={`open-day-${stage.dayOffset}`} tone="plain" label={t(stage.chips[0])} title={t(stage.openStrip.title)} center expanded={false} fill narrow
-          {...{ open: stripsOpen, onToggle: () => setStripsOpen((v) => !v) }}
-          detail={[{ label: t(stage.chips[0]), items: [t(stage.body)] }]} />
-      )}
       {/* 그날의 마일스톤. amber 띠(홈에서 "결과보다 과정"이 쓰던 색)가 카드 바닥에 섭니다. Day 0에는 없습니다. */}
       {/* DECIDED 2026-10-13 (사용자, 스크린숏: "1일차 박스가 너무 비어있음"): 미션이 없는 Day 1은 같은 자리에 무채색 띠를 세웁니다.
           그날 쓰는 한 장(stage.submit)이 Day 2에 멘토에게 들고 가는 것이라는, 이미 있는 사실입니다. 호박색과 ★는 미션에만 씁니다. */}
@@ -785,7 +778,7 @@ export default function NaruHome() {
           ...(stage.session ? [{ label: t(naru.december.sessionLabel), items: [`${t(stage.session.title)}: ${t(stage.session.body)}`] }] : []),
         ]} center expanded={false} fill={sub} narrow={!inPanel && i === naru.december.stages.length - 1} {...sync} />
       )}
-      {stage.chips.length > 0 && !(lgSub && stage.openStrip) ? (
+      {stage.chips.length > 0 ? (
         // 폰 카드에서 띠가 없는 날(Day 0, Day 4)은 칩 줄을 바닥으로 내려(mt-auto) 다른 날의 미션 띠와 같은 자리에 둡니다(2026-10-22).
         <p className={`flex flex-wrap justify-center gap-x-3 gap-y-1 ${META} text-white/70 ${inPanel && !stage.milestone && !stage.submit ? "mt-auto" : ""}`}>
           {stage.chips.map((c, j) => <span key={j}>{t(c)}</span>)}
@@ -803,7 +796,7 @@ export default function NaruHome() {
         </p>
       ) : null}
       </> : <>
-      {stage.chips.length > 0 && !(lgSub && stage.openStrip) ? (
+      {stage.chips.length > 0 ? (
         // 폰 카드에서 띠가 없는 날(Day 0, Day 4)은 칩 줄을 바닥으로 내려(mt-auto) 다른 날의 미션 띠와 같은 자리에 둡니다(2026-10-22).
         <p className={`flex flex-wrap justify-center gap-x-3 gap-y-1 ${META} text-white/70 ${inPanel && !stage.milestone && !stage.submit ? "mt-auto" : ""}`}>
           {stage.chips.map((c, j) => <span key={j}>{t(c)}</span>)}

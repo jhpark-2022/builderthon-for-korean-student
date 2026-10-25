@@ -2478,9 +2478,7 @@ export const naru = {
           en: "You get where the company tried to put AI and what it hoped for, ahead of time.",
         },
         chips: [{ ko: "이슈 공개", en: "Issues open" }],
-        // DECIDED 2026-10-25 (사용자, 스크린숏: "안에 내용물들 때문에 상자 차이가 너무 다름"): 데스크톱에서 Day 0만 아래 상자가 없어 칩 하나가
-        // 가운데 떠 있었습니다. 칩 "이슈 공개"를 라벨로 삼아 옆 칸과 같은 무채색 상자로 세웁니다. 펼치면 9/20부터 그리지 않던 body가 나옵니다.
-        openStrip: { title: { ko: "기업의 이슈와 자료 가이드", en: "The issues and a guide to the material" } },
+        // 2026-10-25: 이 칩을 라벨로 한 Day 0 상자(openStrip)를 세웠다가 같은 날 사용자 요청("상자 빼줘")으로 뺐습니다.
         // DECIDED 2026-10-11 (사용자: "day0은 세션이 따로 있는 건 없음"): 여기 있던 3시간 세션 "활용 가이드"를 뺐습니다.
         // Day 0은 이슈와 자료를 여는 날이고 세션은 Day 1부터입니다. 위 주석(2026-09-20)의 "3시간짜리 세션이 있는 하루"는 더 맞지 않습니다.
       },
@@ -2728,8 +2726,6 @@ export const naru = {
       line: Phrase;
       /** 칩 줄. 8월 데이 카드의 필참·현장·시간 칩 자리. 본문에서 나온 낱말만 씁니다. */
       chips: Phrase[];
-      /** Day 0 데스크톱 카드의 무채색 상자(2026-10-25). 라벨은 chips[0], 펼치면 body. */
-      openStrip?: { title: Phrase };
       /** 그날의 3시간 세션. 전에는 workshop이었습니다(2026-09-20, PDF가 부르는 이름). */
       session?: { title: Phrase; body: Phrase };
       /** 그 행의 글 기둥 아래에 서는 버튼 하나(2026-10-08, Day 1의 /match). */
