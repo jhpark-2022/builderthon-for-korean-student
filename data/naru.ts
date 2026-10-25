@@ -569,8 +569,9 @@ export const naru = {
       // 2026-10-11 (브랜드 브리프 B3): 첫 문장 "한국의 대학생과 해외에서 공부하는 한인 학생이 한 팀이 됩니다."를 뺐습니다.
       // 프로그램 챕터의 crossingLine이 같은 말을 합니다. 영문도 첫 문장("Students in Korea ... work in the same teams.")을 뺐습니다.
       // DECIDED 2026-10-20 (사용자: 과정 절을 앞으로, 도착점 절을 뒤로. 블록마다 첫 문장이 도착점이라 "발표회"로 읽혔습니다): 그 전 "...문제를 찾고, 닷새째 그 기업 앞에서 발표합니다."
-      ko: "기업이 지금 겪는 이슈를 받아 닷새 동안 그 아래의 문제를 찾아 들어가고, 마지막 날 그 기업 앞에 섭니다.",
-      en: "Each team takes an issue a company is facing now, spends five days digging into the problem underneath it, and stands in front of that company on the last day.",
+      // DECIDED 2026-10-26 (사용자: 이슈와 문제, 병목 하나를 푸는 툴을 문장 수를 늘리지 않고 기존 문장에. 근거 12월 빌더톤/이벤트 기획/크로싱서울_이슈와_문제_정의_2026-10-26.md). 그 전: "...그 아래의 문제를 찾아 들어가고..."
+      ko: "기업이 지금 겪는 이슈를 받아 닷새 동안 그 아래에서 일이 막히는 지점 하나를 찾아 들어가고, 마지막 날 그 기업 앞에 섭니다.",
+      en: "Each team takes an issue a company is facing now, spends five days digging down to the one point where the work gets stuck, and stands in front of that company on the last day.",
     },
     ctaProgram: { ko: "프로그램 보기", en: "See the programme" },
     // DECIDED 2026-10-11 (사용자): AI 유형 테스트(/match)로 가는 버튼이 일정표의 Day 1에서 히어로의 버튼 줄로 왔습니다.
@@ -964,8 +965,9 @@ export const naru = {
         title: { ko: "코드로 옮긴 결과물", en: "Something built in code" },
         days: [3],
         body: {
-          ko: "정의한 문제를 풀 아이디어를 코드로 옮겨, 손에 쥐고 나갑니다.",
-          en: "You turn the idea for your problem into code and leave holding it.",
+          // DECIDED 2026-10-26 (사용자: 이슈와 문제, 병목 하나를 푸는 툴을 문장 수를 늘리지 않고 기존 문장에. 근거 12월 빌더톤/이벤트 기획/크로싱서울_이슈와_문제_정의_2026-10-26.md). 그 전: "정의한 문제를 풀 아이디어를 코드로 옮겨, 손에 쥐고 나갑니다."
+          ko: "고른 병목 하나를 푸는 작은 툴을 코드로 만들어, 손에 쥐고 나갑니다.",
+          en: "You build a small tool in code that fixes the one bottleneck you picked, and leave holding it.",
         },
       },
       {
@@ -2477,8 +2479,9 @@ export const naru = {
         // 그 전: "Day 1에 쓸 시간을 벌어 주는 날입니다. 스테이지로 세지 않습니다."
         line: {
           // DECIDED 2026-10-25 (사용자: "각 파트마다 서로 줄 숫자가 똑같이"): Day 0~3 네 칸을 1440에서 두 줄로. 그 전 둘째 문장 "Day 1에 쓸 시간을 벌어 주는 날이라 스테이지로 세지 않습니다."
-          ko: "출제사가 AI를 붙이려 한 곳과 기대한 효과를 먼저 공개합니다.",
-          en: "You get where the company tried to put AI and what it hoped for, ahead of time.",
+          // DECIDED 2026-10-26 (사용자: 이슈와 문제, 병목 하나를 푸는 툴을 문장 수를 늘리지 않고 기존 문장에. 근거 12월 빌더톤/이벤트 기획/크로싱서울_이슈와_문제_정의_2026-10-26.md). 그 전: "출제사가 AI를 붙이려 한 곳과 기대한 효과를 먼저 공개합니다." 이슈는 원인도 답도 아직 정해지지 않은 넓은 상황입니다.
+          ko: "출제사가 아직 원인도 답도 모르는 이슈와 기대한 효과를 공개합니다.",
+          en: "The company opens an issue it has no cause or answer for yet, with the effect it hoped for.",
         },
         chips: [{ ko: "이슈 공개", en: "Issues open" }],
         // 2026-10-25: 이 칩을 라벨로 한 Day 0 상자(openStrip)를 세웠다가 같은 날 사용자 요청("상자 빼줘")으로 뺐습니다.
@@ -2507,8 +2510,9 @@ export const naru = {
           // DECIDED 2026-10-24 (사용자: Sharing session의 내용까지 같이 넣어 두 줄로): 출제사가 여는 자리를 둘째 문장으로.
           // 1440 카드 폭에서 한 줄 약 24자라 두 줄에 들어가게 줄였습니다("이날"은 카드 제목이 말합니다).
           // DECIDED 2026-10-25 (사용자: 칸마다 줄 수를 같게): 세 줄이라 두 줄로. 그 전 "8월과 달리 팀이 문제를 직접 정의합니다. 출제사가 막힌 곳과 해 본 것을 직접 엽니다."
-          ko: "8월과 달리 팀이 문제를 정의하고 출제사가 막힌 곳을 엽니다.",
-          en: "Unlike August, your team defines the problem and the company opens up where it got stuck.",
+          // DECIDED 2026-10-26 (사용자: 이슈와 문제, 병목 하나를 푸는 툴을 문장 수를 늘리지 않고 기존 문장에. 근거 12월 빌더톤/이벤트 기획/크로싱서울_이슈와_문제_정의_2026-10-26.md). 그 전: "8월과 달리 팀이 문제를 정의하고 출제사가 막힌 곳을 엽니다." 출제사의 세션은 기업 상자(Day 1 기업마다 1시간)가 말합니다.
+          ko: "팀이 업무 흐름에서 일이 막히는 지점, 병목 하나를 골라 문제로 정합니다.",
+          en: "Your team picks one point in the workflow where the work gets stuck, the bottleneck, as its problem.",
         },
         // DECIDED 2026-10-08 (현장 팀 매칭 브리프 5): "팀 매칭" 칩 자리에 /match로 가는 버튼 하나가 섭니다.
         // 12월에는 AI 유형 테스트가 신청의 일부가 아니라 Day 1 현장의 팀 매칭 도구입니다. 칩은 뺐습니다
@@ -2557,7 +2561,8 @@ export const naru = {
         // 같은 행의 마일스톤 줄과 어긋나 뺐고, 위 body의 첫 문장을 그대로 씁니다(새로 쓴 사실 없음).
         // DECIDED 2026-10-17 (사용자: "2,3일차가 겹침. 아이디어 확인 받는 시간이 2일차, 실질적으로 만들어보는 시간이 3일차"):
         // 그 전 "오전 안에 돌아가는 첫 버전을 만들고 계속 고칩니다."는 만드는 날의 말이라 Day 3("코드화하는 시간")과 겹쳤습니다.
-        line: { ko: "정의한 문제와 아이디어를 멘토에게 확인받는 시간입니다.", en: "Time to get the problem you defined and your idea checked by mentors." },
+        // DECIDED 2026-10-26 (사용자: 이슈와 문제, 병목 하나를 푸는 툴을 문장 수를 늘리지 않고 기존 문장에. 근거 12월 빌더톤/이벤트 기획/크로싱서울_이슈와_문제_정의_2026-10-26.md). 그 전: "정의한 문제와 아이디어를 멘토에게 확인받는 시간입니다."
+        line: { ko: "고른 병목이 현장에서도 정말 막히는 곳인지 멘토에게 확인받습니다.", en: "Mentors check whether the bottleneck you picked is really where the work gets stuck." },
         // DECIDED 2026-10-24 (companies-block-brief 1.5): 멘토링 상자가 내려가며 "시간표로 예약"은 이 칩이 말합니다. 바로 아래 버튼
         // "멘토 시간표와 미션 인증"으로 이어집니다. 그 전: "방향 전환은 팀의 몫"(그 뜻은 위 body 둘째 문장이 그대로 말합니다).
         // 2026-10-24 (사용자: "멘토 시간은 시간표로 예약 이 부분은 빼주고"): 예약은 아래 버튼 "예약용 멘토 시간표와 인증"이 말합니다.
@@ -2616,8 +2621,9 @@ export const naru = {
         // Day 2와 같이 body의 첫 문장, 이 날 무엇을 만드는지를 씁니다(새로 쓴 사실 없음). 그 전: "팀 사이 공유는 8월에 없었던 자리입니다."
         // 같은 날 뒤(사용자: "정의한 문제를 풀 수 있는 아이디어를 코드화시키는 시간이라고 해"): body의 첫 문장 대신 이 문장입니다.
         line: {
-          ko: "정의한 문제를 풀 아이디어를 코드로 옮기는 시간입니다.",
-          en: "Time to put the idea for the problem you defined into code.",
+          // DECIDED 2026-10-26 (사용자: 이슈와 문제, 병목 하나를 푸는 툴을 문장 수를 늘리지 않고 기존 문장에. 근거 12월 빌더톤/이벤트 기획/크로싱서울_이슈와_문제_정의_2026-10-26.md). 그 전: "정의한 문제를 풀 아이디어를 코드로 옮기는 시간입니다."
+          ko: "흐름 전체를 바꾸는 시스템 대신, 그 병목만 푸는 툴을 만듭니다.",
+          en: "You build a tool that fixes just that bottleneck, not a system that redoes the whole workflow.",
         },
         // DECIDED 2026-10-10 (중복 브리프 B1): 칩 "멘토링은 이 날까지"를 뺐습니다. General Mentoring 상자의
         // "Day 3은 피칭 준비, Day 4는 멘토링이 없습니다"가 같은 말을 합니다.
@@ -2699,8 +2705,9 @@ export const naru = {
           // 그 전: "끝난 뒤에는 멘토에게 먼저 연락해, 무엇을 만들었는지 한 줄로 전합니다. 클로징에서 이 이야기를 하고, 글로도 남겨 드립니다."
           // 같은 날 이어서(사용자: "또 너무 길어"): 세 문장을 둘로. 클로징 안내 문장을 뺐습니다.
           // 2026-10-23 (사용자: "정확히 몇 분 발표 질의 하는지는 빼줘"): 5분, 5분을 뺐습니다.
-          ko: "이슈를 낸 기업 앞에서 팀이 찾은 문제와 어디까지 갔는지를 발표하고, 질의를 받습니다. 끝난 뒤에는 멘토에게 무엇을 만들었는지 한 줄로 먼저 연락합니다.",
-          en: "You present to the company that set the issue on the problem your team found and how far you got, then take its questions. Afterwards, message your mentor first with one line on what you built.",
+          // DECIDED 2026-10-26 (사용자: 이슈와 문제, 병목 하나를 푸는 툴을 문장 수를 늘리지 않고 기존 문장에. 근거 12월 빌더톤/이벤트 기획/크로싱서울_이슈와_문제_정의_2026-10-26.md). 그 전: "...팀이 찾은 문제와 어디까지 갔는지를..."
+          ko: "이슈를 낸 기업 앞에서 팀이 고른 병목과 만든 툴, 어디까지 갔는지를 발표하고, 질의를 받습니다. 끝난 뒤에는 멘토에게 무엇을 만들었는지 한 줄로 먼저 연락합니다.",
+          en: "You present to the company that set the issue on the bottleneck your team picked, the tool you built and how far you got, then take its questions. Afterwards, message your mentor first with one line on what you built.",
         },
         // DECIDED 2026-10-10 (중복 브리프 B1): 칩 "멘토링 없음"을 뺐습니다(위 Day 3과 같은 이유).
         chips: [{ ko: "시상과 클로징", en: "Awards and closing" }],
