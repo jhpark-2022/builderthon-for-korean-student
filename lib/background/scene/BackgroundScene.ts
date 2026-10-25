@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { CROSSING, RING, SHAPES, FIELD, SEOUL_WATERMARK, PLATE_FEATHER, LIGHT_STATIONS, LIGHT_FOLLOW, PARTNERS_LIGHT, PALETTE, WATER_BASE, pickQuality, type QualityTier } from "../config";
+import { CROSSING, RING, SHAPES, FIELD, SEOUL_WATERMARK, PLATE_FEATHER, LIGHT_STATIONS, LIGHT_FOLLOW, PARTNERS_LIGHT, PALETTE, WATER_BASE, FIELD_CALM, pickQuality, type QualityTier } from "../config";
 
 import { SEOUL_POINTS, SEOUL_STRIDE } from "../shapes/seoul";
 import { SINGAPORE_POINTS, SINGAPORE_STRIDE } from "../shapes/singapore";
@@ -208,7 +208,15 @@ export class BackgroundScene {
       this.water = null;
       this.lantern = null;
       this.atmosphere = new Atmosphere();
-      this.particles = new ParticleField(this.quality, 1.0);
+      // DECIDED 2026-10-26: 8월 필드를 한 단 가라앉힙니다(config의 FIELD_CALM).
+      this.particles = new ParticleField(
+        {
+          ...this.quality,
+          particles: Math.round(this.quality.particles * FIELD_CALM.particles),
+          intensity: this.quality.intensity * FIELD_CALM.opacity,
+        },
+        1.0
+      );
       // DECIDED 2026-10-23 (사용자: "8월의 background colour가 너무 전 2탭이랑 달라서 어색", 선택: 입자는 두고 색만 맞춤):
       // 8월의 입자 조각(2026-09-15 결정)은 그대로 두고, 하늘은 홈과 /naru의 하늘(WATER_BASE)로, 입자는 인디고와 푸크시아(Tailwind)
       // 대신 나루 팔레트(brand 10장 남색, 보라, 자주)로 바꿉니다. 주황(hi1)은 넣지 않습니다. 나루 점의 색이라서입니다.
@@ -231,11 +239,16 @@ export class BackgroundScene {
       this.quality.bloom,
       variant === "crossing" ? CROSSING.bloomThreshold : undefined,
       // 폰 티어만 값을 갖습니다. 나머지는 undefined → PostFX의 기본 0.6.
-      this.quality.bloomIntensity
+      // field(8월)는 FIELD_CALM.bloom만큼 낮춥니다(2026-10-26).
+      variant === "field"
+        ? (this.quality.bloomIntensity ?? 0.6) * FIELD_CALM.bloom
+        : this.quality.bloomIntensity
     );
     this.post.setSize(window.innerWidth, window.innerHeight);
     // 나루 홈은 렌즈 왜곡을 쓰지 않습니다(2026-09-23, PostFX.setLensScale 주석). 8월 field는 그대로.
     if (variant === "water") this.post.setLensScale(0);
+    // 8월 field의 렌즈는 절반으로(2026-10-26, FIELD_CALM.lens). 동심원 무늬가 눈에 띄었습니다.
+    if (variant === "field") this.post.setLensScale(FIELD_CALM.lens);
 
     this.applyReducedMotion(
       window.matchMedia("(prefers-reduced-motion: reduce)").matches

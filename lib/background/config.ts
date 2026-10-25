@@ -98,6 +98,19 @@ export function pickQuality(): QualityTier {
   return { particles: 4000, dprMax: 2, bloom: true, intensity: 1.0 };
 }
 
+/**
+ * 8월 페이지(/2026-08, field 변형)만 한 단 가라앉힙니다.
+ * DECIDED 2026-10-26 (사용자: "8월 페이지의 webgl effect가 little too much"): 입자가 빽빽하고 카드 위로 비쳐 보이며,
+ * 렌즈 왜곡의 동심원이 눈에 띄었습니다. 입자 수, 밝기, 블룸, 렌즈 왜곡을 각각 이 배수로 줄입니다.
+ * 색, 흐름, 스크롤 연출의 모양은 그대로입니다. water(나루 홈), crossing 변형에는 닿지 않습니다.
+ */
+export const FIELD_CALM = {
+  particles: 0.6,   // 입자 수
+  opacity: 0.75,    // 입자 밝기(ParticleField의 intensity)
+  bloom: 0.75,      // 블룸 기본 세기
+  lens: 0.5,        // 렌즈 왜곡과 색 번짐
+} as const;
+
 /** Camera + motion feel. */
 export const MOTION = {
   cameraLerp: 0.045,          // how fast camera eases to target
