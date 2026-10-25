@@ -120,8 +120,10 @@ export const naruLinks = {
   // DECIDED 2026-10-21 (사용자: "update 매니페스토 based on this", 그룹 기획/매니페스토_나루.pdf): v6. 바뀐 곳은 표지 첫 문장(안전하게
   // 도전하고 스스로를 증명해 볼), 코어 02(모의가 아니라, brand 2장 문장), 방법 문단(8일이 닷새, 빌더톤이 크로싱 서울), 다음 회차 도시,
   // 나루의 뜻(건너기 전에 노 젓는 법을 익히는). 6쪽, 621,513바이트.
-  manifesto: "/naru/naru-manifesto-v6-2026-10.pdf",
-  manifestoEn: "/naru/naru-manifesto-en-v1-2026-10.pdf",
+  // DECIDED 2026-10-25 (사용자: 내려받기 대신 넘겨 보기, "웹사이트 매니페스토에는 Constitution 언급이 없었으면", "korean is the source of truth"):
+  // PDF 두 파일과 manifesto, manifestoEn 키를 지웠습니다. 사이트는 public/naru/manifesto/의 쪽 이미지를 넘겨 보여 줍니다
+  // (components/naru/ManifestoViewer.tsx). 그 이미지의 원본은 docs/manifesto-web/ko.html(한국어 v6 + Constitution 문단 셋을 뺀 웹판)과
+  // en.html(그 한국어판을 옮긴 영문 v2)입니다. 정본 PDF(그룹 기획/매니페스토_나루.pdf)는 그대로입니다.
 } as const;
 
 // ─────────────────────────────────────────────────────────────────────────────

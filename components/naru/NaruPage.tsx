@@ -473,7 +473,7 @@ export default function NaruPage() {
           {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다): 제목 줄("이 챕터의 문장들은 여기서 왔습니다.")은 그리지 않습니다. */}
           <p className={`mt-[16px] text-balance break-keep ${BODY} leading-relaxed text-white/70 lg:mt-[24px]`}>{t(naru.join.manifesto.body)}</p>
           {/* DECIDED 2026-10-25 (사용자: "매니페스토 내려받는게 아니라, 웹사이트에서 그냥 스와이핑해서 페이지 넘겨서 볼 수 있게"):
-              내려받기 버튼 대신 쪽을 넘겨 보는 뷰어. PDF 파일과 naruLinks.manifesto 키는 그대로 있습니다. */}
+              내려받기 버튼 대신 쪽을 넘겨 보는 뷰어. PDF와 그 링크 키는 같은 날 지웠습니다(data/naru.ts naruLinks). */}
           <ManifestoViewer locale={locale === "en" ? "en" : "ko"} t={t} />
         </Reveal>
 

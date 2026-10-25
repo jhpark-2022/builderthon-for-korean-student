@@ -6,8 +6,9 @@
 // 내려받기 버튼 대신 PDF의 쪽을 이미지로 뽑아(public/naru/manifesto/{ko,en}-N.jpg) 옆으로 넘깁니다.
 // 폰 폭에 A4 한 장이면 본문 글자가 작아서, 쪽을 누르면 전체 화면으로 커지고 거기서도 넘기고 확대해 읽습니다.
 // 넘기기는 라이브러리 없이 가로 스크롤 스냅입니다. 손가락 스와이프, 트랙패드, 키보드(←, →, Esc)가 같은 길로 갑니다.
-// PDF가 바뀌면 이미지도 다시 뽑습니다:
-//   pdftoppm -png -scale-to-x 2400 -scale-to-y -1 <pdf> public/naru/manifesto/ko, 같은 것을 1000과 ko-s로 (영문은 en), 후 sips로 jpeg 88.
+// 원본은 docs/manifesto-web/{ko,en}.html입니다. 고친 뒤 이미지를 다시 뽑습니다:
+//   Chrome --headless --no-pdf-header-footer --print-to-pdf로 PDF, pdftoppm -scale-to-x 2400(ko-N)과 1000(ko-s-N)으로 PNG,
+//   크림 #FCFBF8을 곱해(PIL ImageChops.multiply) jpeg 88. 쪽 수가 바뀌면 아래 PAGES도 바꿉니다.
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -15,7 +16,9 @@ import { createPortal } from "react-dom";
 import { track } from "@vercel/analytics";
 import { BODY, META } from "@/components/ui/typography";
 
-const PAGES = { ko: 6, en: 8 } as const;
+const PAGES = { ko: 6, en: 7 } as const;
+// 이미지를 다시 뽑으면 올립니다. 파일 이름이 같아 브라우저가 옛 쪽을 보여 주지 않게.
+const V = "20261025b";
 // 뽑은 이미지의 크기. 2026-10-25 (사용자: "너무 흐린데"): 1400px 한 벌을 next/image가 다시 줄이고 눌러 글자가 흐렸습니다.
 // 넘기는 줄은 1000px(-s-), 전체 화면은 2400px 원본을 최적화 없이(unoptimized) 그대로 씁니다.
 const SMALL = { w: 1000, h: 1416 };
@@ -69,8 +72,8 @@ function Arrow({ dir, onClick, disabled, label, className = "" }: { dir: "prev" 
 
 export default function ManifestoViewer({ locale, t }: Props) {
   const count = PAGES[locale];
-  const srcs = Array.from({ length: count }, (_, i) => `/naru/manifesto/${locale}-${i + 1}.jpg`);
-  const thumbs = Array.from({ length: count }, (_, i) => `/naru/manifesto/${locale}-s-${i + 1}.jpg`);
+  const srcs = Array.from({ length: count }, (_, i) => `/naru/manifesto/${locale}-${i + 1}.jpg?v=${V}`);
+  const thumbs = Array.from({ length: count }, (_, i) => `/naru/manifesto/${locale}-s-${i + 1}.jpg?v=${V}`);
   const alt = (i: number) => t({ ko: `나루 매니페스토 ${i + 1}쪽`, en: `NARU manifesto, page ${i + 1}` });
 
   const inline = useRef<HTMLDivElement>(null);
