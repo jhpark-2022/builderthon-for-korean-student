@@ -1637,7 +1637,8 @@ export const naru = {
         // 세 상자는 각자 일하는 셋이 되고, 나루가 왜 가운데 있는지가 그림에서 빠집니다.
         // 잇는다는 말이 먼저 오고, 회차는 그 다음입니다(Overview 01의 가운데 상자와 같은 순서).
         // 2026-09-29 (사용자: 그룹 기획 폴더의 부제와 정의가 사이트에 반영되게): Overview(2026-09-29)의 주최 칸 그대로.
-        brings: { ko: "학생이 만드는 그룹으로, 먼저 건넌 선배가 후배의 연습 자리를 열고 학생회와 기업을 잇습니다", en: "A group students build, where those who crossed first open the practice for juniors and connect schools with companies" },
+        // DECIDED 2026-10-26 (사용자, 스크린숏: "이거 어색해"): brand 4장 대상별 한 문장에 맞춤. 그 전: "학생이 만드는 그룹으로, 먼저 건넌 선배가..." 그룹의 정의는 이 페이지 위에서 이미 말합니다. 잇는다는 말을 앞으로.
+        brings: { ko: "학생회와 기업을 잇고, 먼저 건넌 선배가 후배의 연습 자리를 엽니다", en: "Connects schools with companies, and those who crossed first open the practice for juniors" },
         does: {
           // DECIDED 2026-10-20 (hwang 브리프 1.2): layers의 does/gets 명사 조각을 서술문 한 문장씩으로(does는 지금 화면에 그리지 않는 키).
           ko: "회차를 기획하고 실행하며, 출제사와 멘토, 후원사와의 관계를 맡고, 회차 사이의 기록을 잇습니다.",
@@ -1645,8 +1646,9 @@ export const naru = {
         },
         gets: {
           // gets는 화면에서 "얻는 것" 라벨 뒤에 붙어 "얻습니다"를 다시 쓰지 않습니다. EN은 "Gets" 뒤의 한 구.
-          ko: "회차의 책임과 이름을 지고, 다음 판을 깔 사람이 생깁니다.",
-          en: "The round's responsibility and name, and the people who will set up the next one.",
+          // DECIDED 2026-10-26 (사용자, 스크린숏: "이거 어색해"): brand 4장 대상별 한 문장에 맞춤. 그 전: "회차의 책임과 이름을 지고, 다음 판을 깔 사람이 생깁니다." 책임은 얻는 것이 아니라서.
+          ko: "회차마다 기록이 쌓이고, 다음 판을 깔 사람이 생깁니다.",
+          en: "A record that builds up round by round, and people who will set up the next one.",
         },
         join: { id: "join-crew", label: { ko: "운영진으로 함께하기", en: "Join the crew" }, mail: naruLinks.crew },
       },
@@ -1667,8 +1669,9 @@ export const naru = {
           en: "Recruits its own students, brings space, resources and the school's standing, and helps run the day.",
         },
         gets: {
-          ko: "학생에게 열어 줄 자리와, 임기를 마친 임원이 이어서 일할 자리가 생깁니다.",
-          en: "Something real to open up for their students, and a place for officers to keep working after their term.",
+          // DECIDED 2026-10-26 (사용자, 스크린숏: "이거 어색해"): brand 4장 대상별 한 문장에 맞춤. 그 전: "학생에게 열어 줄 자리와, 임기를 마친 임원이 이어서 일할 자리가 생깁니다."
+          ko: "교내에서 못 하는 닷새를 부원에게 주고, 임원은 임기 뒤에도 이어서 일합니다.",
+          en: "Five days their members cannot get on campus, and officers who keep working after their term.",
         },
         join: { id: "join-organiser", label: { ko: "학생회, 학회로 문의하기", en: "As an association or club" }, mail: naruLinks.organiser },
       },
@@ -1683,8 +1686,9 @@ export const naru = {
         // DECIDED 2026-10-24 (사용자, docs/pages-review-2026-10-24.md A1): "채용 연계"를 뺍니다. 2026-09-29 결정(채용 연계는
         // 약속처럼 쓰지 않는다)과 어긋나 있었습니다. "회차 크레딧"은 뜻이 보이게 풀어 씁니다. 위 does의 "채용 기회"도 같이 뺐습니다.
         gets: {
-          ko: "한인 학생과 만나는 자리가 생기고, 회차의 기록에 이름이 남습니다.",
-          en: "A way to meet Korean students, and your name on the round's record.",
+          // DECIDED 2026-10-26 (사용자, 스크린숏: "이거 어색해"): brand 4장 대상별 한 문장에 맞춤. 그 전: "한인 학생과 만나는 자리가 생기고, 회차의 기록에 이름이 남습니다."
+          ko: "한 이슈에 대한 서로 다른 시도 여럿을 닷새 안에 보고, 회차의 기록에 이름이 남습니다.",
+          en: "Several independent attempts at one issue within five days, and your name on the round's record.",
         },
         // DECIDED 2026-10-24 (사용자, 같은 문서 N1): "이름이 남는다"의 증거는 8월 파트너 표입니다. 후원 상자에서만 가리킵니다.
         proof: {
