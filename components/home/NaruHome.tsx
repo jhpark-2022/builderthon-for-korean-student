@@ -752,23 +752,16 @@ export default function NaruHome() {
       {inPanel && !stage.session && (i === 0 || stage.panelBody) && (
         <p className={`break-keep ${BODY} leading-relaxed text-white/70`}>{t(stage.panelBody ?? stage.body)}</p>
       )}
-      {stage.chips.length > 0 ? (
-        // 폰 카드에서 띠가 없는 날(Day 0, Day 4)은 칩 줄을 바닥으로 내려(mt-auto) 다른 날의 미션 띠와 같은 자리에 둡니다(2026-10-22).
-        <p className={`flex flex-wrap justify-center gap-x-3 gap-y-1 ${META} text-white/70 ${inPanel && !stage.milestone && !stage.submit ? "mt-auto" : ""}`}>
-          {stage.chips.map((c, j) => <span key={j}>{t(c)}</span>)}
-          {/* DECIDED 2026-10-22 (사용자: Analytics 개선 4번 "적용"): 10/18 결정문은 "/match는 Day 1 카드의 matchCta가 잇는다"였는데 그리지 않고
-              있었습니다(30일 /match 13명). 히어로 버튼 둘은 그대로 두고, 팀 구성 칩 옆에 글자 링크로 섭니다. */}
-          {stage.matchCta && (
-            <Link
-              href={stage.matchCta.href}
-              onClick={() => track("naru_cta", { src: inPanel ? "day1-phone" : "day1", to: "match" })}
-              className="tap-44 font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:text-white"
-            >
-              {t(stage.matchCta.label)} <span aria-hidden>→</span>
-            </Link>
-          )}
-        </p>
-      ) : sub && <span aria-hidden />/* 칩이 없는 날도 행 하나를 차지해야 아래 미션이 옆 카드와 같은 행에 섭니다 */}
+      {/* DECIDED 2026-10-25 (같은 요청): 데스크톱 Day 0~3 줄(sub, lgSub)은 상자를 칩 줄보다 먼저 둡니다. 칩은 Day 1에만 있어서, 칩이 먼저면
+          Day 0, 2, 3의 상자 위에 빈 행이 생겼습니다. 이제 네 상자가 세션 행 바로 아래 같은 높이에서 시작하고 Day 1의 칩과 링크는 그 아래에 섭니다. */}
+      {(sub || lgSub) ? <>{/* 상자 먼저 */}
+      {/* DECIDED 2026-10-25 (사용자: "안에 내용물들 때문에 상자 차이가 너무 다름"): 데스크톱 Day 0도 옆 칸과 같은 자리에 무채색 상자를 세웁니다.
+          라벨은 칩 "이슈 공개", 펼치면 그날의 진행(body). lg 아래 전폭 카드에서는 좁게(narrow) 가운데. */}
+      {lgSub && stage.openStrip && (
+        <MilestoneStrip id={`open-day-${stage.dayOffset}`} tone="plain" label={t(stage.chips[0])} title={t(stage.openStrip.title)} center expanded={false} fill narrow
+          {...{ open: stripsOpen, onToggle: () => setStripsOpen((v) => !v) }}
+          detail={[{ label: t(stage.chips[0]), items: [t(stage.body)] }]} />
+      )}
       {/* 그날의 마일스톤. amber 띠(홈에서 "결과보다 과정"이 쓰던 색)가 카드 바닥에 섭니다. Day 0에는 없습니다. */}
       {/* DECIDED 2026-10-13 (사용자, 스크린숏: "1일차 박스가 너무 비어있음"): 미션이 없는 Day 1은 같은 자리에 무채색 띠를 세웁니다.
           그날 쓰는 한 장(stage.submit)이 Day 2에 멘토에게 들고 가는 것이라는, 이미 있는 사실입니다. 호박색과 ★는 미션에만 씁니다. */}
@@ -792,6 +785,65 @@ export default function NaruHome() {
           ...(stage.session ? [{ label: t(naru.december.sessionLabel), items: [`${t(stage.session.title)}: ${t(stage.session.body)}`] }] : []),
         ]} center expanded={false} fill={sub} narrow={!inPanel && i === naru.december.stages.length - 1} {...sync} />
       )}
+      {stage.chips.length > 0 && !(lgSub && stage.openStrip) ? (
+        // 폰 카드에서 띠가 없는 날(Day 0, Day 4)은 칩 줄을 바닥으로 내려(mt-auto) 다른 날의 미션 띠와 같은 자리에 둡니다(2026-10-22).
+        <p className={`flex flex-wrap justify-center gap-x-3 gap-y-1 ${META} text-white/70 ${inPanel && !stage.milestone && !stage.submit ? "mt-auto" : ""}`}>
+          {stage.chips.map((c, j) => <span key={j}>{t(c)}</span>)}
+          {/* DECIDED 2026-10-22 (사용자: Analytics 개선 4번 "적용"): 10/18 결정문은 "/match는 Day 1 카드의 matchCta가 잇는다"였는데 그리지 않고
+              있었습니다(30일 /match 13명). 히어로 버튼 둘은 그대로 두고, 팀 구성 칩 옆에 글자 링크로 섭니다. */}
+          {stage.matchCta && (
+            <Link
+              href={stage.matchCta.href}
+              onClick={() => track("naru_cta", { src: inPanel ? "day1-phone" : "day1", to: "match" })}
+              className="tap-44 font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:text-white"
+            >
+              {t(stage.matchCta.label)} <span aria-hidden>→</span>
+            </Link>
+          )}
+        </p>
+      ) : null}
+      </> : <>
+      {stage.chips.length > 0 && !(lgSub && stage.openStrip) ? (
+        // 폰 카드에서 띠가 없는 날(Day 0, Day 4)은 칩 줄을 바닥으로 내려(mt-auto) 다른 날의 미션 띠와 같은 자리에 둡니다(2026-10-22).
+        <p className={`flex flex-wrap justify-center gap-x-3 gap-y-1 ${META} text-white/70 ${inPanel && !stage.milestone && !stage.submit ? "mt-auto" : ""}`}>
+          {stage.chips.map((c, j) => <span key={j}>{t(c)}</span>)}
+          {/* DECIDED 2026-10-22 (사용자: Analytics 개선 4번 "적용"): 10/18 결정문은 "/match는 Day 1 카드의 matchCta가 잇는다"였는데 그리지 않고
+              있었습니다(30일 /match 13명). 히어로 버튼 둘은 그대로 두고, 팀 구성 칩 옆에 글자 링크로 섭니다. */}
+          {stage.matchCta && (
+            <Link
+              href={stage.matchCta.href}
+              onClick={() => track("naru_cta", { src: inPanel ? "day1-phone" : "day1", to: "match" })}
+              className="tap-44 font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:text-white"
+            >
+              {t(stage.matchCta.label)} <span aria-hidden>→</span>
+            </Link>
+          )}
+        </p>
+      ) : null}
+      {/* 그날의 마일스톤. amber 띠(홈에서 "결과보다 과정"이 쓰던 색)가 카드 바닥에 섭니다. Day 0에는 없습니다. */}
+      {/* DECIDED 2026-10-13 (사용자, 스크린숏: "1일차 박스가 너무 비어있음"): 미션이 없는 Day 1은 같은 자리에 무채색 띠를 세웁니다.
+          그날 쓰는 한 장(stage.submit)이 Day 2에 멘토에게 들고 가는 것이라는, 이미 있는 사실입니다. 호박색과 ★는 미션에만 씁니다. */}
+      {!stage.milestone && stage.submit && (
+        // DECIDED 2026-10-17 (사용자: "똑같이. 상자 색깔로 동일하게"): Day 1 띠도 호박색과 ★, 라벨 "미션"입니다. 2026-10-13의 "호박색과 ★는 미션에만"을
+        // 이 결정이 바꿉니다. 그 전 라벨 "Day 2에 들고 갈 것"은 두 줄로 꺾여 Day 2, 3 띠보다 높았습니다.
+        // DECIDED 2026-10-19 (사용자: "1일차랑 4일차에는 미션을 빼자", 답: 미션 아닌 띠로 남김): Day 1 띠는 다시 무채색, ★ 없음, 라벨 "Day 2에 들고 갈 것".
+        // 2026-10-17의 호박색 미션 띠를 되돌립니다. 띠는 이제 늘 쌓은 모양이라 그때의 두 줄 꺾임 문제는 없습니다.
+        <MilestoneStrip id={`carry-day-${stage.dayOffset}${inPanel ? "-phone" : ""}`} tone="plain" label={t(naru.december.carryLabel)} title={t(stage.submit)} center expanded={false} fill={sub}
+          {...sync}
+          // 2026-10-24 (사용자: "제출 방법은 생략", 세션 설명은 상자 안으로): 제출 절을 빼고 세션 절을 넣습니다.
+          detail={[
+            { label: t(naru.december.carryDetail.todoLabel), items: naru.december.carryDetail.todo.map(t) },
+            ...(stage.session ? [{ label: t(naru.december.sessionLabel), items: [`${t(stage.session.title)}: ${t(stage.session.body)}`] }] : []),
+          ]} />
+      )}
+      {stage.milestone && (
+        // 2026-10-24 (사용자: "제출 방법은 생략", 세션 설명은 상자 안으로): 제출 절을 빼고(인증은 아래 버튼이 맡음) 세션 절을 넣습니다.
+        <MilestoneStrip id={`milestone-day-${stage.dayOffset}${inPanel ? "-phone" : ""}`} label={t(naru.december.milestoneLabel)} title={t(stage.milestone)} detail={stage.milestoneDetail && [
+          { label: t(naru.december.milestoneConditionsLabel), items: stage.milestoneDetail.conditions.map(t) },
+          ...(stage.session ? [{ label: t(naru.december.sessionLabel), items: [`${t(stage.session.title)}: ${t(stage.session.body)}`] }] : []),
+        ]} center expanded={false} fill={sub} narrow={!inPanel && i === naru.december.stages.length - 1} {...sync} />
+      )}
+      </>}
       {/* DECIDED 2026-10-22 (사용자: "상자 사이즈는 동일한데, 내용이 안 비어 있게"): 폰 카드 안의 "멘토 시간표와 미션 인증" 버튼을 뺐습니다.
           Day 1~3이 같은 버튼이라 데스크톱처럼 상자 아래에 한 번만 섭니다(아래 below). 카드가 짧아져 다섯 카드의 높이 차가 줄어듭니다. */}
       {/* DECIDED 2026-10-19 (사용자): Day 4 카드의 인기투표 버튼. 데스크톱과 폰 패널 모두 카드 안에 섭니다. 열기 전에는 잠긴 버튼입니다. */}
