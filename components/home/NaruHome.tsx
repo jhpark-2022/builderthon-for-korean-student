@@ -307,8 +307,8 @@ function CountdownPanel({ t, locale, className = "" }: { t: (p: Phrase) => strin
 // DECIDED 2026-10-24 (밀도 브리프 1.3, D1): lg에서 막대 격자는 날마다 3rem(54px, META 네 글자 "확인받기"의 폭)으로 좁히고 글 칸이 나머지를 씁니다.
 // 브리프의 30%는 날 이름이 META로 들어가는 최소 폭이라 39%(270/688px)에서 멈췄습니다. 표는 유지(D1).
 // DECIDED 2026-10-25 (사용자: 줄 수를 같게): 날 칸을 4.5rem으로. "컨텍스트 열기"가 한 줄로 들고 옆 "찾기"와 붙지 않습니다.
-// 글 칸이 좁아진 만큼 행 본문은 제목 줄 아래에서 행 전체 폭을 씁니다(아래 ol).
-const GAIN_COLS = "grid-cols-5 sm:grid-cols-[minmax(0,18rem)_repeat(5,minmax(0,1fr))] lg:grid-cols-[minmax(0,1fr)_repeat(5,4.5rem)]";
+// 같은 날 뒤(사용자, 스크린숏: "이부분이 짧은거 같음"): 날 칸을 최대 8rem까지 넓힙니다. 제목 칸은 18rem(가장 긴 "이슈를 낸 기업의 질문")을 지키고 남는 폭을 씁니다.
+const GAIN_COLS = "grid-cols-5 sm:grid-cols-[minmax(0,18rem)_repeat(5,minmax(0,1fr))] lg:grid-cols-[minmax(18rem,1fr)_repeat(5,minmax(4.5rem,8rem))]";
 // DECIDED 2026-10-20 (사용자, hwang 브리프 3.6, 감사 W2): 막대의 그라데이션을 accent 단색으로.
 const GAIN_BAR = "h-2 rounded-full bg-accent/60";
 
@@ -1380,9 +1380,9 @@ export default function NaruHome() {
                       </div>
                       <span className="sr-only">{item.days.map((d) => `Day ${d}`).join(", ")}</span>
                     </div>
-                    {/* DECIDED 2026-10-25 (사용자: "각 파트마다 서로 줄 숫자가 똑같이"): 본문은 제목 줄 아래에서 행 전체 폭을 씁니다.
-                        막대는 제목 줄에만 서니 겹치지 않고, 다섯 본문이 모두 한 줄에 듭니다. 그 전: 왼쪽 글 칸 안이라 한 줄, 두 줄이 섞임. */}
-                    <p className={`mt-[12px] max-sm:mt-[8px] break-keep ${BODY} leading-relaxed text-white/70 sm:mt-[16px]`} style={{ gridColumn: "1 / -1", gridRow: 2 }}>{t(item.body)}</p>
+                    {/* DECIDED 2026-10-25 (사용자: "그렇다고 이런식으로 침범이 되면 안됨"): 본문은 왼쪽 글 칸(1열) 안에만 둡니다. 날 칸 아래로 넘어가지 않습니다.
+                        줄 수는 문장 길이로 맞춥니다(data/naru.ts gains.items). */}
+                    <p className={`mt-[12px] max-sm:mt-[8px] break-keep ${BODY} leading-relaxed text-white/70 sm:mt-[16px] sm:pr-6`} style={{ gridColumn: 1, gridRow: 2 }}>{t(item.body)}</p>
                     <GainBars days={item.days} split={item.split} />
                   </li>
                 ))}
