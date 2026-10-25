@@ -28,6 +28,7 @@ import type { Phrase } from "@/data/dictionaryCore";
 import Chip from "@/components/ui/Chip";
 import { buttonClass } from "@/components/ui/Button";
 import MobileChatBar from "@/components/shared/MobileChatBar";
+import ManifestoViewer from "@/components/naru/ManifestoViewer";
 import Chapter from "@/components/journey/Chapter";
 import Reveal from "@/components/shared/Reveal";
 import Eyebrow from "@/components/ui/Eyebrow";
@@ -467,26 +468,13 @@ export default function NaruPage() {
               (2026-10-21 v6: 621,513바이트라 0.6MB) */}
           <p className={`${META} font-bold uppercase ${latinTrack(locale)} text-white/70`}>
             {t(naru.join.manifesto.label)}
-            <span className="font-medium normal-case tracking-normal text-white/70">{/* 2026-10-10: 영문 화면은 영문판(191,475바이트)을 받습니다. 크기 표기도 로케일을 따릅니다. */}{locale === "en" ? " (PDF 0.2MB)" : " (PDF 0.6MB)"}</span>
+            {/* 2026-10-25: 내려받지 않으므로 "(PDF 0.6MB)" 크기 표기를 뗐습니다. */}
           </p>
           {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다): 제목 줄("이 챕터의 문장들은 여기서 왔습니다.")은 그리지 않습니다. */}
           <p className={`mt-[16px] text-balance break-keep ${BODY} leading-relaxed text-white/70 lg:mt-[24px]`}>{t(naru.join.manifesto.body)}</p>
-          <div className="mt-[27px] flex flex-wrap items-center justify-center gap-x-4 gap-y-2 lg:mt-[32px]">
-            <a
-              href={locale === "en" ? naruLinks.manifestoEn : naruLinks.manifesto}
-              // 같은 탭에서 열리면 이 페이지가 PDF 뷰어에 덮입니다. 돌아오는 길이
-              // 뒤로 가기뿐이면 읽던 자리를 잃습니다.
-              target="_blank"
-              rel="noopener noreferrer"
-              download
-              onClick={() => track("naru_cta", { src: "join", to: locale === "en" ? "manifesto-en" : "manifesto" })}
-              className={buttonClass("secondary")}
-            >
-              {t(naru.join.manifesto.cta)}
-              {/* DECIDED 2026-10-11 (사용자, 스크린숏: "화살표 방향 통일"): ↓를 →로. 바로 아래 두 버튼과 같은 방향입니다(홈 히어로의 2026-10-10 결정과 같음). */}
-              <span aria-hidden className="text-white/70">→</span>
-            </a>
-          </div>
+          {/* DECIDED 2026-10-25 (사용자: "매니페스토 내려받는게 아니라, 웹사이트에서 그냥 스와이핑해서 페이지 넘겨서 볼 수 있게"):
+              내려받기 버튼 대신 쪽을 넘겨 보는 뷰어. PDF 파일과 naruLinks.manifesto 키는 그대로 있습니다. */}
+          <ManifestoViewer locale={locale === "en" ? "en" : "ko"} t={t} />
         </Reveal>
 
         {/* DECIDED 2026-10-21 (사용자, 스크린숏: "이거 빼줘"): 매니페스토 아래의 돌아가는 줄(크로싱 서울 프로그램 보기,
