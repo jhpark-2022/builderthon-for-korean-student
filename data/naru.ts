@@ -714,8 +714,9 @@ export const naru = {
       // 같은 날 group.lead("이벤트는 ... 지금의 방식입니다")는 화면에서 내렸습니다. 같은 말을 아래 "방법은 바뀝니다"가 합니다.
       // 2026-10-11 (브랜드 브리프 B4): docs/brand.md의 정의문 전문 그대로입니다(KO, EN).
       // 그 전: "...영리를 목적으로 하지 않는 그룹입니다. 이벤트로 학생을 모으고, 모인 사람들을 커뮤니티로 잇습니다."
-      ko: "나루는 한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 그룹입니다. 이벤트로 학생을 모으고, 모인 사람들을 진짜 커뮤니티로 잇고, 각 나라의 학생회, 학회와 함께 서울과 싱가포르를 넘어 더 넓게 다가갑니다. 모두 AI로 함께 만듭니다.",
-      en: "A Korea-rooted, student-run, not-for-profit group that brings students in through events, grows them into a genuine community, and reaches out with student associations and clubs across Seoul, Singapore and beyond, building together with AI.",
+      // DECIDED 2026-10-25 (사용자: "너무 길어"): 정본(docs/brand.md 1장)과 함께 두 문장으로 줄였습니다. 같은 커밋.
+      ko: "나루는 한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 그룹입니다. 이벤트로 학생을 모으고, 모인 사람들을 진짜 커뮤니티로 잇습니다.",
+      en: "A Korea-rooted, student-run, not-for-profit group that brings students in through events and grows them into a genuine community.",
     },
   },
 

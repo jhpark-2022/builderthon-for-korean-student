@@ -1,6 +1,6 @@
 # 나루 브랜드 정본
 
-이 파일은 나루와 크로싱 서울의 브랜드가 무엇인지 적은 유일한 정본입니다. 사이트의 글, 그림, 구조, 순서를 바꾸기 전에 읽습니다. 매니페스토(`12월 빌더톤/그룹 기획/매니페스토_나루.pdf`), Overview, 로고 가이드 v2, 대상별 프레이밍, 모객 콘텐츠 전략에서 뽑았고, 서로 어긋나는 곳은 여기 적힌 것이 이깁니다. 마지막 손질 2026-10-24(4장 홈 기업에게 예외).
+이 파일은 나루와 크로싱 서울의 브랜드가 무엇인지 적은 유일한 정본입니다. 사이트의 글, 그림, 구조, 순서를 바꾸기 전에 읽습니다. 매니페스토(`12월 빌더톤/그룹 기획/매니페스토_나루.pdf`), Overview, 로고 가이드 v2, 대상별 프레이밍, 모객 콘텐츠 전략에서 뽑았고, 서로 어긋나는 곳은 여기 적힌 것이 이깁니다. 마지막 손질 2026-10-25(1장 정의문을 두 문장으로).
 
 ## 0. 쓰는 법
 
@@ -11,10 +11,10 @@
 
 ## 1. 나루는 무엇인가
 
-**정의문(KO, 정본)**: 나루는 한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 그룹입니다. 이벤트로 학생을 모으고, 모인 사람들을 진짜 커뮤니티로 잇고, 각 나라의 학생회, 학회와 함께 서울과 싱가포르를 넘어 더 넓게 다가갑니다. 모두 AI로 함께 만듭니다.
+**정의문(KO, 정본)**: 나루는 한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 그룹입니다. 이벤트로 학생을 모으고, 모인 사람들을 진짜 커뮤니티로 잇습니다. (2026-10-25 사용자: "너무 길어". 두 문장으로. 뺀 것: 각 나라의 학생회, 학회와 함께 서울과 싱가포르를 넘어 넓힌다는 구절, "모두 AI로 함께 만듭니다". 뜻은 4장 학생회 줄과 6장 크로싱 서울의 뜻이 받습니다.)
 
 - 짧은 판(한 줄이 필요한 자리): 한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 그룹.
-- EN: A Korea-rooted, student-run, not-for-profit group that brings students in through events, grows them into a genuine community, and reaches out with student associations and clubs across Seoul, Singapore and beyond, building together with AI.
+- EN: A Korea-rooted, student-run, not-for-profit group that brings students in through events and grows them into a genuine community.
 - EN 부제: A Korea-rooted collective of student builders.
 - 쓰지 않는 말: 비영리, non-profit(등록 전), alliance, 모임(정의문에서), 단체.
 
