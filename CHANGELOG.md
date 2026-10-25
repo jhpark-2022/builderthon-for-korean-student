@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-25 웹 매니페스토: 한국어 기준 영문 v2, Constitution 뺌](#2026-10-25-manifesto-web)
 - [2026-10-25 8월 기록의 FAQ를 빼고 끝 간격을 줄임](#2026-10-25-aug-faq-removed)
 - [2026-10-25 나루 정의문을 두 문장으로](#2026-10-25-definition-short)
 - [2026-10-25 /naru 매니페스토를 넘겨 보는 뷰어](#2026-10-25-manifesto-viewer)
@@ -379,6 +380,16 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-25-manifesto-web"></a>
+## 2026-10-25 웹 매니페스토: 한국어 기준 영문 v2, Constitution 뺌
+- 범위: public/naru/manifesto/(KO 6쪽, EN 7쪽), docs/manifesto-web/{ko,en}.html(새 원본), public/naru/naru-master-en-v3.svg(새), ManifestoViewer.tsx, data/naru.ts(PDF 링크 키 삭제), public/naru의 PDF 둘 삭제
+- 한 것: 사용자 질문("영문과 한국어가 같은가")에 비교해 보니 영문은 10/8 v1로 v6의 변경(표지 문장, I장 끝의 다리, 코어 02, IV장 닷새, 성과 공유회, 나루의 뜻)이 빠져 있었습니다. 사용자: "korean is the source of truth". 한국어 v5 원본 HTML에 v6 변경을 옮겨 웹판을 다시 짜고, 그 글을 옮긴 영문 v2를 같은 조판으로 만들었습니다(demo day 대신 showcase, 다리는 III장에만).
+- 이어서 (사용자: "웹사이트 매니페스토에는 Constitution 언급이 없었으면"): 두 판 IX장의 앞 세 문단(왜와 어떻게, Constitution의 목적, 역할 설명)을 뺐습니다. 정본 PDF(그룹 기획)는 그대로. 옛 PDF는 링크가 없어도 주소로 열려 지웠습니다.
+- 이어서 (사용자: "로고도 한국어, 영어마다 달라야지"): 영문 표지는 마스터의 "나루 / N A R U"를 영문 반전판의 아웃라인 NARU(남색)로 바꾼 밝은 바탕 영문 링.
+- 근거: brand 9장(데모데이 안 씀), 6장(다리 은유), 10장(종이는 크림 위 남색, 로고 비율, 색 그대로).
+- 검증: KO 6쪽, EN 7쪽 이미지가 모두 열림. 쪽 이미지 주소에 ?v=를 붙여 옛 캐시를 피함. tsc 통과.
+- 커밋: 77add0e
 
 <a id="2026-10-25-aug-faq-removed"></a>
 ## 2026-10-25 8월 기록의 FAQ를 빼고 끝 간격을 줄임
