@@ -7,7 +7,7 @@
 // 폰 폭에 A4 한 장이면 본문 글자가 작아서, 쪽을 누르면 전체 화면으로 커지고 거기서도 넘기고 확대해 읽습니다.
 // 넘기기는 라이브러리 없이 가로 스크롤 스냅입니다. 손가락 스와이프, 트랙패드, 키보드(←, →, Esc)가 같은 길로 갑니다.
 // PDF가 바뀌면 이미지도 다시 뽑습니다:
-//   pdftoppm -png -scale-to-x 1400 -scale-to-y -1 <pdf> public/naru/manifesto/ko  (영문은 en) 후 sips로 jpeg 82.
+//   pdftoppm -png -scale-to-x 2400 -scale-to-y -1 <pdf> public/naru/manifesto/ko, 같은 것을 1000과 ko-s로 (영문은 en), 후 sips로 jpeg 88.
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -16,9 +16,10 @@ import { track } from "@vercel/analytics";
 import { BODY, META } from "@/components/ui/typography";
 
 const PAGES = { ko: 6, en: 8 } as const;
-// 뽑은 이미지의 크기(1400 x 1982, A4 비율).
-const W = 1400;
-const H = 1982;
+// 뽑은 이미지의 크기. 2026-10-25 (사용자: "너무 흐린데"): 1400px 한 벌을 next/image가 다시 줄이고 눌러 글자가 흐렸습니다.
+// 넘기는 줄은 1000px(-s-), 전체 화면은 2400px 원본을 최적화 없이(unoptimized) 그대로 씁니다.
+const SMALL = { w: 1000, h: 1416 };
+const LARGE = { w: 2400, h: 3397 };
 
 type Props = { locale: "ko" | "en"; t: (p: { ko: string; en: string }) => string };
 
@@ -69,6 +70,7 @@ function Arrow({ dir, onClick, disabled, label, className = "" }: { dir: "prev" 
 export default function ManifestoViewer({ locale, t }: Props) {
   const count = PAGES[locale];
   const srcs = Array.from({ length: count }, (_, i) => `/naru/manifesto/${locale}-${i + 1}.jpg`);
+  const thumbs = Array.from({ length: count }, (_, i) => `/naru/manifesto/${locale}-s-${i + 1}.jpg`);
   const alt = (i: number) => t({ ko: `나루 매니페스토 ${i + 1}쪽`, en: `NARU manifesto, page ${i + 1}` });
 
   const inline = useRef<HTMLDivElement>(null);
@@ -137,9 +139,9 @@ export default function ManifestoViewer({ locale, t }: Props) {
             onClick={(e) => openAt(i, e.currentTarget)}
             aria-label={`${alt(i)}, ${t({ ko: "크게 보기", en: "open full screen" })}`}
             className="w-[min(78vw,420px)] shrink-0 snap-center overflow-hidden rounded-2xl border border-white/10 transition-opacity focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
-            style={{ opacity: i === a.index ? 1 : 0.55 }}
+            style={{ opacity: i === a.index ? 1 : 0.7 }}
           >
-            <Image src={src} alt="" width={W} height={H} sizes="(min-width: 640px) 420px, 78vw" loading={i < 2 ? "eager" : "lazy"} className="block h-auto w-full" />
+            <Image src={thumbs[i]} alt="" width={SMALL.w} height={SMALL.h} unoptimized loading={i < 2 ? "eager" : "lazy"} className="block h-auto w-full" />
           </button>
         ))}
         <span aria-hidden className="w-[calc((100%-min(78vw,420px))/2-12px)] shrink-0 sm:w-[calc((100%-420px)/2-16px)]" />
@@ -169,7 +171,7 @@ export default function ManifestoViewer({ locale, t }: Props) {
           >
             {srcs.map((src, i) => (
               <div key={src} data-slide className="flex h-full w-full shrink-0 snap-center justify-center overflow-y-auto px-[8px] pb-[16px] sm:px-[24px]">
-                <Image src={src} alt={alt(i)} width={W} height={H} sizes="(min-width: 640px) 70vh, 100vw" loading={Math.abs(i - b.index) <= 1 ? "eager" : "lazy"} className="h-auto w-full max-w-[900px] self-start rounded-lg sm:h-full sm:w-auto sm:max-w-full sm:object-contain" />
+                <Image src={src} alt={alt(i)} width={LARGE.w} height={LARGE.h} unoptimized loading={Math.abs(i - b.index) <= 1 ? "eager" : "lazy"} className="h-auto w-full max-w-[900px] self-start rounded-lg sm:h-full sm:w-auto sm:max-w-full sm:object-contain" />
               </div>
             ))}
           </div>
