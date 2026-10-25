@@ -902,6 +902,12 @@ export const naru = {
         en: "You find the problem inside a named company's issue, then show that company how you got there.",
       },
       // DECIDED 2026-10-20 (hwang 브리프 1.2, 2.6, 감사 W3, W4): ✓칩 셋(알약)을 상자 없이 한 문장으로 그립니다(tangiblesLine). tangibles 키는 그대로 둡니다.
+      // DECIDED 2026-10-26 (사용자, 스크린숏: "좀 더 visually 강조"): heading 안에서 크로싱 서울 워드마크 그라데이션으로 칠할 구절.
+      // heading 문자열에 그대로 들어 있어야 합니다. 없으면 그 구절은 칠하지 않고 문장만 그립니다.
+      marks: [
+        { ko: "이슈에서 문제를 찾아 들어가고", en: "find the problem inside a named company's issue" },
+        { ko: "그 기업 앞에서 증명해 봅니다", en: "show that company how you got there" },
+      ] as Phrase[],
       tangiblesLine: {
         ko: "손에는 팀의 생각 한 장과 코드로 옮긴 결과물이 남습니다.",
         en: "You leave with a page of the team's take and something built in code.",

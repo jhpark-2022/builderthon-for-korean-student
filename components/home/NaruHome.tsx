@@ -7,7 +7,7 @@ import { useLocale } from "@/lib/LocaleContext";
 import { naru, naruLinks, openChatLabels, register as registerCopy, registerNoteShort, decemberPartners, type RecordPhoto } from "@/data/naru";
 import { useCrossingRegisterOptional } from "@/components/crossing/RegisterProvider";
 import { links, type Phrase } from "@/data/dictionaryCore";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   DECEMBER_EVENT_NAME,
   DECEMBER_STARTS_AT_MS,
@@ -1388,7 +1388,7 @@ export default function NaruHome() {
               같은 날 뒤(폰 밀도 브리프 1.8): 폰(sm 미만)도 같은 리드. 카드는 sm~md에만 남습니다. */}
           <div className="mt-[36px] max-sm:mt-[24px] max-sm:rounded-none max-sm:border-0 max-sm:bg-transparent max-sm:p-0 rounded-2xl border border-accent/30 bg-accent/[0.08] px-[24px] py-[27px] text-center sm:p-[40px] lg:mt-[32px] lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0">
             <p className={`${META} font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.gains.spine.tag)}</p>
-            <p className={`mx-auto mt-[11.25px] max-w-[34rem] text-balance break-keep ${BODY} font-bold leading-snug text-white sm:mt-[12px]`}>{t(naru.gains.spine.heading)}</p>
+            <p className={`mx-auto mt-[11.25px] max-w-[34rem] text-balance break-keep ${BODY} font-bold leading-snug text-white sm:mt-[12px]`}>{markPhrases(t(naru.gains.spine.heading), naru.gains.spine.marks.map((m) => t(m)))}</p>
             {/* DECIDED 2026-10-20 (hwang 브리프 1.2, 2.6, 감사 W3, W4): ✓칩 셋(알약)을 걷고 한 문장으로. tangibles 키는 남깁니다. */}
             {/* DECIDED 2026-10-23 (사용자: 남는 것 다섯 칸 개편): tangiblesLine(팀의 생각 한 장, 코드로 옮긴 결과물)은 그리지 않습니다.
                 바로 아래 02와 04가 같은 말을 합니다. 키는 data/naru.ts에 남깁니다. */}
@@ -1532,4 +1532,25 @@ export default function NaruHome() {
       <SiteFooter page="crossing" />
     </>
   );
+}
+
+/**
+ * DECIDED 2026-10-26 (사용자: 남는 것의 척추 문장을 "좀 더 visually 강조"): 문장 안의 구절을 크로싱 서울 워드마크 그라데이션으로 칠합니다.
+ * 새 글자 크기는 만들지 않습니다(한 화면 셋). 구절이 문장에 없으면 칠하지 않고 그대로 둡니다.
+ */
+function markPhrases(text: string, marks: string[]) {
+  const out: ReactNode[] = [];
+  let rest = text;
+  let k = 0;
+  for (const m of marks) {
+    const i = rest.indexOf(m);
+    if (!m || i < 0) continue;
+    if (i > 0) out.push(rest.slice(0, i));
+    out.push(
+      <span key={k++} className="gradient-text bg-[linear-gradient(90deg,#9AA8EE_0%,#A99AD6_35%,#C99ACB_68%,#E08A76_100%)] bg-clip-text text-transparent">{m}</span>
+    );
+    rest = rest.slice(i + m.length);
+  }
+  if (rest) out.push(rest);
+  return out;
 }
