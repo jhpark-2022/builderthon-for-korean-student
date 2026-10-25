@@ -722,7 +722,7 @@ export default function NaruHome() {
       // 카드가 비어 보였습니다. Day 1~3 카드(sub)의 행 간격을 16px로. 폰 패널(12px)과 Day 0, Day 4는 그대로.
       // DECIDED 2026-10-24 (밀도 브리프 1.2, D2): lg부터 Day 0~3이 한 줄 네 칸(Day 0 = lgSub). Day 1은 md에서 줄의 첫 칸(왼쪽 선 없음), lg에서는
       // Day 0 다음 칸(왼쪽 선). Day 4(전폭)는 lg에서 위아래 여백 32px → 20px. 글은 그대로, 폰 패널은 그대로.
-      className={`flex flex-col ${inPanel ? "gap-[12px]" : sub ? "gap-[20px] md:gap-[16px]" : lgSub ? "gap-[20px] md:gap-[24px] lg:gap-[16px]" : "gap-[20px] md:gap-[24px]"} items-center text-center ${sub ? `py-0 md:row-span-5 md:grid md:grid-rows-subgrid md:items-stretch md:border-white/10 ${i === 1 ? "md:border-l-0 md:pl-0 lg:border-l lg:pl-[16px]" : "md:border-l md:pl-[16px]"}` : inPanel ? "rounded-2xl border border-white/10 bg-[#0B1430]/70 px-[20px] py-[20px]" : lgSub ? "border-b border-white/10 px-[22.5px] py-[28px] sm:px-[24px] sm:py-[32px] md:col-span-3 md:mb-[24px] lg:col-span-1 lg:row-span-5 lg:mb-0 lg:grid lg:grid-rows-subgrid lg:items-stretch lg:border-b-0 lg:px-0 lg:py-0" : `px-[22.5px] py-[28px] sm:px-[24px] sm:py-[32px] lg:px-[27px] lg:py-[20px] ${i === 0 ? "border-b border-white/10" : "border-t border-white/10"}`} ${!inPanel && !lgSub && (i === 0 || i === naru.december.stages.length - 1) ? "md:col-span-3" : ""}`}
+      className={`flex flex-col ${inPanel ? "gap-[12px]" : sub ? "gap-[20px] md:gap-[16px]" : lgSub ? "gap-[20px] md:gap-[24px] lg:gap-[16px]" : "gap-[20px] md:gap-[24px]"} items-center text-center ${sub ? `py-0 md:row-span-5 md:grid md:grid-rows-subgrid md:items-stretch md:border-white/10 ${i === 1 ? "md:border-l-0 md:pl-0" : "md:border-l md:pl-[16px]"}` : inPanel ? "rounded-2xl border border-white/10 bg-[#0B1430]/70 px-[20px] py-[20px]" : lgSub ? "border-b border-white/10 px-[22.5px] py-[28px] sm:px-[24px] sm:py-[32px] md:col-span-3 md:mb-[24px]" : `px-[22.5px] py-[28px] sm:px-[24px] sm:py-[32px] lg:px-[27px] lg:py-[20px] ${i === 0 ? "border-b border-white/10" : "border-t border-white/10"}`} ${!inPanel && !lgSub && (i === 0 || i === naru.december.stages.length - 1) ? "md:col-span-3" : ""}`}
     >
       <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-[8px]">
         {/* lang="en": DAY는 두 로케일 모두 영어입니다(접근성 감사 7). */}
@@ -745,7 +745,7 @@ export default function NaruHome() {
         </p>
       )}
       {/* 2026-10-24 (밀도 브리프 1.2): 데스크톱 Day 0는 세션이 없어도 subgrid의 세션 행 하나를 비워 둬야 칩이 옆 카드의 칩과 같은 행에 섭니다. lg 아래에서는 없습니다. */}
-      {!stage.session && (sub || lgSub) && <span aria-hidden className={lgSub ? "hidden lg:block" : ""} />}
+      {!stage.session && sub && <span aria-hidden />}
       {/* DECIDED 2026-10-22 (사용자: "상자 사이즈는 동일한데, 내용이 안 비어 있게"): 폰 카드에서 세션이 없는 날(Day 0, Day 4)은 세션 자리에
           그날의 진행(stage.body)을 그립니다. 새 글이 아니라 9/20부터 그리지 않던 키입니다. 데스크톱은 그대로. */}
       {/* 같은 날 이어서(사용자: "전체 상자의 세로 크기를 줄여줘"): Day 4는 자기 한 줄과 투표 버튼으로 이미 차서 Day 0에만 그립니다. */}
@@ -1165,10 +1165,12 @@ export default function NaruHome() {
             {/* 2026-10-24 (사용자: "이 상자의 크기를 줄여"): 판 안쪽 여백 32px을 24px로, 카드와 버튼 사이 48px을 32px로. */}
             {/* DECIDED 2026-10-24 (밀도 브리프 1.2, D2): Day 0 카드가 판 안 격자로 들어옵니다. lg부터 Day 0~3이 한 줄 네 칸(Day 0는 본문 한 줄과 칩이라
                 다른 셋과 높이가 맞음), Day 4는 전폭 그대로(인기투표 버튼이 마무리). md까지는 전처럼 Day 0 전폭 위, Day 1~3 세 칸. 판의 위아래 여백은 lg에서 20px. */}
+            {/* DECIDED 2026-10-25 (사용자: "위에 day 0, 중간에 day 1 to 3, 맨 아래에 day 4"): lg의 네 칸 줄을 되돌립니다. 모든 폭에서 Day 0 전폭 위,
+                Day 1~3 세 칸, Day 4 전폭 아래. Day 0 칸은 lg에서도 md와 같은 전폭 카드입니다(lgSub의 lg 분기를 뺌). */}
             <div className="flex flex-col gap-[24px] p-[24px] md:col-span-3 md:gap-[32px] lg:py-[20px]">
               {/* DECIDED 2026-10-19 (사용자, 스크린숏: "세션이라는 말도 다 같은 선상에"): 세 카드가 이 격자의 다섯 행(제목, 한 줄, 세션, 칩, 미션)을
                   나눠 씁니다(subgrid). 한 줄의 길이가 날마다 달라도 세션과 미션이 같은 높이에 섭니다. */}
-              <div className="grid grid-cols-1 gap-x-[24px] gap-y-[56px] md:grid-cols-3 md:gap-x-[32px] md:gap-y-0 lg:grid-cols-4">
+              <div className="grid grid-cols-1 gap-x-[24px] gap-y-[56px] md:grid-cols-3 md:gap-x-[32px] md:gap-y-0">
                 {stageCard(naru.december.stages[0], 0, false, false, true)}
                 {naru.december.stages.slice(1, 4).map((stage, k) => stageCard(stage, k + 1, false, true))}
               </div>
