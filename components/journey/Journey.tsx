@@ -3091,7 +3091,9 @@ export default function Journey() {
       </Chapter>
 
       {/* ── CH 4 · PARTNERS ────────────────────────────────────────── */}
-      <Chapter id="builders" align="center">
+      {/* DECIDED 2026-10-25 (사용자, 스크린숏: "gap이 너무 커"): FAQ가 빠져 이 챕터가 마지막 내용입니다. 화면 높이(min-h-screen)를 채우며
+          가운데 서던 것을 내용 높이로, 아래 여백도 줄여 바로 아래 오픈채팅 버튼과 붙입니다. */}
+      <Chapter id="builders" align="center" className="md:!min-h-0 !pb-6 sm:!pb-8">
         {/* Contained dark backing box (not full-width) to lift readability over
             the bright background field. */}
         <div className="mx-auto w-full max-w-4xl rounded-[2rem] border border-white/10 bg-[#0a0814]/80 p-8 sm:p-12">
@@ -3304,23 +3306,13 @@ export default function Journey() {
       {/* DECIDED 2026-10-22 (사용자, 스크린숏: "이 빌더톤이 자라 나온 곳 빼주고 바로 FAQ로"): #companions 띠를 뺐습니다.
           그 로고 카드 띠는 푸터의 "나루와 함께한 곳"(components/shared/PartnerMarquee.tsx)으로 옮겼습니다. */}
 
-      {/* ── CH 5 · FAQ ─────────────────────────────────────────────── */}
-      <Chapter id="faq" align="center">
-        <Eyebrow>{t(dict.faq.tag)}</Eyebrow>
-        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold tracking-tight text-white">
-          {t(dict.faq.heading)}
-        </h2>
-        <p className="mx-auto mt-4 max-w-2xl break-keep text-xs leading-relaxed text-white/60">{t(dict.record.asWritten)}</p>
-        <Glass className="mt-8 text-left">
-          <FAQList />
-        </Glass>
-      </Chapter>
+      {/* DECIDED 2026-10-25 (사용자: "FAQ at the 8월 페이지는 빼줘"): FAQ 챕터를 그리지 않습니다. FAQList와 dict.faq는 그대로 둡니다. */}
 
       {/* DECIDED 2026-10-24: 비전 챕터는 내렸고(사용자: 감사와 다음 이야기는 한곳에서만), 여기 있던 #gaps는 맨 위 #results 안으로 갔다가 2026-10-25에 그 판째 내렸습니다
           옮겼습니다(사용자: 하나로). 옛 마크업은 git 이력에. */}
 
       {/* ── CH 6 · FOOTER ──────────────────────────────────────────── */}
-      <section id="closing" className="relative flex w-full flex-col px-6 pb-16 pt-24 sm:px-10 sm:pt-32">
+      <section id="closing" className="relative flex w-full flex-col px-6 pb-16 pt-8 sm:px-10 sm:pt-10">
         {/* soft dark scrim so the closing CTA + credits stay readable over the field */}
         <div
           aria-hidden

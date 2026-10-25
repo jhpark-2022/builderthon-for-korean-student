@@ -114,7 +114,7 @@ const DEFAULT_ANCHORS: NavAnchor[] = [
   // The "For partners" pitch chapter (#why-partner) was removed, so this now
   // lands directly on the partner/logo wall.
   { id: "builders",  label: dict.nav.builders },
-  { id: "faq",       label: dict.nav.faq },
+  // 2026-10-25: FAQ 챕터를 내려 탭도 뺐습니다.
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
