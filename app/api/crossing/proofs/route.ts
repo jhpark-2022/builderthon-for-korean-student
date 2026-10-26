@@ -80,6 +80,12 @@ export async function POST(req: Request) {
     const obj = list?.find((o) => o.name === name);
     if (!obj) return NextResponse.json({ error: "not_uploaded" }, { status: 400 });
     const meta = (obj.metadata ?? {}) as { mimetype?: string; size?: number };
+    // DECIDED 2026-10-26 (사용자: "이거 이상의 파일을 올릴려고 하면 막히게 해줘"): sign 단계의 크기는 브라우저가 알려 준 값이라,
+    // 올라간 파일의 실제 크기를 한 번 더 봅니다. 종류 한도(사진 10MB, PDF 20MB)를 넘으면 파일을 지우고 행을 남기지 않습니다.
+    if (Number(meta.size ?? 0) > PROOF_MAX_BYTES[m[3] as ProofKind]) {
+      await db.storage.from(PROOF_BUCKET).remove([path]);
+      return NextResponse.json({ error: "too_big" }, { status: 400 });
+    }
     const { error } = await db.from("crossing_mission_proofs").insert({
       team_name: team.name, day: Number(m[2]), kind: m[3], storage_path: path,
       content_type: meta.mimetype ?? "application/octet-stream", size_bytes: Math.max(1, Number(meta.size ?? 1)),

@@ -319,10 +319,17 @@ function Proofs({ team, day }: { team: string; day: ProofDay }) {
       const type = blob.type || file.type;
       const post = (body: object) => fetch("/api/crossing/proofs", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ team, ...body }) });
       const s = await post({ action: "sign", day, kind, contentType: type, size: blob.size });
-      if (!s.ok) throw new Error("sign");
+      if (!s.ok) {
+        if ((await s.json().catch(() => ({}))).error === "too_big") setMsg(t(c.proofTooBig).replace("{mb}", String(PROOF_MAX_BYTES[kind] / 1024 / 1024)));
+        throw new Error("sign");
+      }
       const { path, signedUrl } = await s.json();
       if (!(await fetch(signedUrl, { method: "PUT", headers: { "content-type": type }, body: blob })).ok) throw new Error("put");
-      if (!(await post({ action: "confirm", path })).ok) throw new Error("confirm");
+      const cf = await post({ action: "confirm", path });
+      if (!cf.ok) {
+        if ((await cf.json().catch(() => ({}))).error === "too_big") setMsg(t(c.proofTooBig).replace("{mb}", String(PROOF_MAX_BYTES[kind] / 1024 / 1024)));
+        throw new Error("confirm");
+      }
       void refresh();
     } catch {
       setMsg((m) => m ?? t(c.errGeneric));
