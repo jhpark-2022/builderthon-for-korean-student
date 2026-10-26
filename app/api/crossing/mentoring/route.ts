@@ -13,7 +13,7 @@ import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { CURRENT_EVENT } from "@/lib/registrationWindow";
 import { findTeam, listTracks } from "@/lib/crossingOpsServer";
-import { DEFAULT_WINDOW, MAX_BOOKINGS_PER_TEAM_PER_DAY, OPS_DAYS, SESSION_MINUTES, bookingGate, fitsWindow, isOpsDay, isProofDay, kstTime, type Window } from "@/lib/crossingOps";
+import { DEFAULT_WINDOW, MAX_BOOKINGS_PER_TEAM_PER_DAY, OPS_DAYS, SESSION_MINUTES, bookingGate, fitsWindow, isPhoneUA, isOpsDay, isProofDay, kstTime, type Window } from "@/lib/crossingOps";
 
 export const dynamic = "force-dynamic";
 
@@ -66,6 +66,8 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   const db = getSupabaseAdmin();
   if (!db) return NextResponse.json({ error: "not_configured" }, { status: 503 });
+  // 2026-10-26: 폰에서는 칸을 넣지 않습니다(lib/crossingOps.ts isPhoneUA). 화면이 막고, 여기서도 막습니다.
+  if (isPhoneUA(req.headers.get("user-agent") ?? "")) return NextResponse.json({ error: "phone" }, { status: 403 });
   const body = await req.json().catch(() => null);
   const team = await findTeam(db, body?.team);
   const mentorId = typeof body?.mentorId === "string" ? body.mentorId : "";

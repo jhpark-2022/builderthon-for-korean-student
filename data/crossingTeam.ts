@@ -58,6 +58,16 @@ export const teamCopy = {
   // DECIDED 2026-10-26 (사용자: "올리면 팀이 멘토분들에게 사전에 공유줄 수 있도록"): 올린 1장은 우리 팀이 칸을 넣은 멘토가 멘토 페이지(/crossing/mentor)에서 미리 봅니다.
   proofLeadDay1: { ko: "Day 1은 미션이 없습니다. 이슈에 대한 팀의 생각 1장을 PDF로 올려 두면, 우리 팀이 칸을 넣은 멘토가 찾아가기 전에 미리 봅니다.", en: "There is no mission on Day 1. Upload one page of your team's take on the issue as a PDF, and the mentors you book will read it before you visit." },
   proofPick: { ko: "파일 고르기", en: "Choose a file" },
+  // DECIDED 2026-10-26 (사용자: "폰에서는 사진이 바로 갤러리에서 올릴 수 있으면 좋겠고, 파일은 폰의 파일이나 노트북에서 바로, either choose or by dragging"):
+  // 노트북은 상자에 끌어다 놓거나 고르기, 폰은 갤러리(사진)와 파일 앱(PDF)에서 바로 고르기.
+  proofDrop: { ko: "여기로 끌어다 놓거나", en: "Drag a file here, or" },
+  proofDropActive: { ko: "놓으면 골라집니다", en: "Drop to choose this file" },
+  proofPickPhotoPhone: { ko: "갤러리에서 사진 고르기", en: "Choose from your photos" },
+  proofPickPdfPhone: { ko: "파일에서 PDF 고르기", en: "Choose a PDF from Files" },
+  // 같은 날(사용자: "여기에 있는 기능들은 폰으로는 할 수 없도록 for the participants"): 칸 넣기는 노트북이나 PC에서. 폰은 시간표 보기만.
+  phoneNotice: { ko: "칸 넣기는 노트북이나 PC에서 합니다. 폰에서는 시간표를 보기만 할 수 있습니다. 인증 사진과 PDF는 폰에서도 올릴 수 있습니다.", en: "Book slots from a laptop or PC. On a phone you can only view the timetable. Photos and PDFs can be uploaded from a phone." },
+  errPhone: { ko: "칸 넣기는 노트북이나 PC에서 합니다.", en: "Please book from a laptop or PC." },
+  rulesHeading: { ko: "넣는 규칙", en: "How booking works" },
   // 2026-10-26 (사용자: 한 번만 올리기, 하루가 끝나기 전에 신중하게): 고른 뒤 한 번 더 묻고 올립니다.
   // 같은 날 이어서(사용자: "잘못 업로드 하면 운영진에게 알려달라"): 운영진이 crossing_mission_proofs의 그 행을 지우면 다시 올릴 수 있습니다.
   proofOnce: { ko: "사진과 PDF는 날마다 한 번씩만 올릴 수 있고, 올린 뒤에는 바꿀 수 없습니다. 그날이 끝나기 전에 확인하고 올려 주세요. 잘못 올렸다면 운영진에게 알려 주세요.", en: "You can upload each photo and PDF once a day, and it cannot be changed afterwards. Check it carefully before the day ends. If you uploaded the wrong file, tell the organisers." },

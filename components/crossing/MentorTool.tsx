@@ -59,7 +59,7 @@ export default function MentorTool() {
   );
 
   return (
-    <main id="main" className="min-h-screen bg-[#070B1F] px-4 pb-24 pt-4 text-white">
+    <main id="main" className="min-h-screen bg-naru-ink px-4 pb-24 pt-4 text-naru-text">
       <div className="mx-auto flex max-w-3xl flex-col gap-[27px]">
         <header className="flex min-h-[44px] items-center justify-between">
           <a href="/" className={`-my-3 inline-flex min-h-[44px] items-center py-3 ${BODY} font-semibold text-white/70 transition hover:text-white`}>← {t(teamCopy.back)}</a>

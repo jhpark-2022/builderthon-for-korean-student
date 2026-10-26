@@ -159,3 +159,12 @@ export function bookingGate(day: number, t: number, now = Date.now()): BookingGa
   if (now >= kstTime(day, "00:00")!.getTime() && t < kstTime(day, SAME_DAY_FROM)!.getTime()) return "same_day_morning";
   return "ok";
 }
+
+/**
+ * 폰인가(user agent). 화면(TeamTool)과 서버(app/api/crossing/mentoring)가 같은 기준을 씁니다. 태블릿과 노트북은 아닙니다.
+ * DECIDED 2026-10-26 (사용자: "여기에 있는 기능들은 폰으로는 할 수 없도록 for the participants"): 폰에서는 칸을 넣지 않습니다.
+ * 인증 사진과 PDF 올리기는 폰에서도 됩니다(같은 날 사용자: 사진은 갤러리에서 바로).
+ */
+export function isPhoneUA(ua: string): boolean {
+  return /iPhone|iPod|Android.+Mobile|Mobile Safari|Windows Phone|Mobi/i.test(ua) && !/iPad|Tablet/i.test(ua);
+}
