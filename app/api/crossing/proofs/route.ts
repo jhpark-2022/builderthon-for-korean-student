@@ -2,6 +2,7 @@
 // /api/crossing/proofs. Day 2, Day 3 미션 인증(2026-10-17, 상금·인센티브 정리 2장).
 //
 //   GET ?team=                         그 팀이 올린 파일(가장 최근 것부터, 10분짜리 보기 URL)
+//   (2026-10-26) 팀, 날, 종류마다 한 번만. 두 번째는 409 already.
 //   POST {action:"sign", day, kind, contentType, size}   한 번 쓰는 업로드 URL
 //   POST {action:"confirm", path}      파일이 실제로 올라갔는지 보고 행을 남김
 //
@@ -27,6 +28,13 @@ async function auth(teamName: unknown) {
   const team = await findTeam(db, teamName);
   if (!team) return { res: NextResponse.json({ error: "unknown_team" }, { status: 400 }) } as const;
   return { db, team } as const;
+}
+
+// DECIDED 2026-10-26 (사용자: "업로드는 한번만 가능하도록 해, 그러니까 하루 끝나기 전에 신중한 업로드 부탁"):
+// 팀마다, 날마다, 종류(사진, PDF)마다 한 번만 올립니다. sign에서 미리 거절하고, 동시에 두 번 올린 경우는 confirm에서 뒤의 파일을 지웁니다.
+async function alreadyUploaded(db: NonNullable<ReturnType<typeof getSupabaseAdmin>>, teamName: string, day: number, kind: string) {
+  const { count } = await db.from("crossing_mission_proofs").select("id", { count: "exact", head: true }).eq("team_name", teamName).eq("day", day).eq("kind", kind);
+  return (count ?? 0) > 0;
 }
 
 export async function GET(req: Request) {
@@ -60,6 +68,7 @@ export async function POST(req: Request) {
     if (!isProofDay(day) || !proofKindsFor(day).includes(kind)) return NextResponse.json({ error: "invalid" }, { status: 400 });
     if (!PROOF_TYPES[kind].includes(type)) return NextResponse.json({ error: "bad_type" }, { status: 400 });
     if (!(size > 0) || size > PROOF_MAX_BYTES[kind]) return NextResponse.json({ error: "too_big" }, { status: 400 });
+    if (await alreadyUploaded(db, team.name, day, kind)) return NextResponse.json({ error: "already" }, { status: 409 });
     // 경로가 팀과 날을 말합니다. confirm은 이 접두어가 맞는지만 봅니다.
     const path = `${teamFolder(team.name)}/day${day}/${kind}-${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${EXT[type]}`;
     const { data, error } = await db.storage.from(PROOF_BUCKET).createSignedUploadUrl(path);
@@ -85,6 +94,10 @@ export async function POST(req: Request) {
     if (Number(meta.size ?? 0) > PROOF_MAX_BYTES[m[3] as ProofKind]) {
       await db.storage.from(PROOF_BUCKET).remove([path]);
       return NextResponse.json({ error: "too_big" }, { status: 400 });
+    }
+    if (await alreadyUploaded(db, team.name, Number(m[2]), m[3])) {
+      await db.storage.from(PROOF_BUCKET).remove([path]);
+      return NextResponse.json({ error: "already" }, { status: 409 });
     }
     const { error } = await db.from("crossing_mission_proofs").insert({
       team_name: team.name, day: Number(m[2]), kind: m[3], storage_path: path,

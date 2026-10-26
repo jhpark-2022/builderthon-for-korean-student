@@ -309,38 +309,50 @@ function Proofs({ team, day }: { team: string; day: ProofDay }) {
   }, [team]);
   useEffect(() => { void refresh(); }, [refresh]);
 
-  const upload = async (kind: ProofKind, file: File) => {
+  // DECIDED 2026-10-26 (사용자: "업로드는 한번만 가능하도록 해, 그러니까 하루 끝나기 전에 신중한 업로드 부탁"):
+  // 파일을 고르면 바로 올리지 않고 이름과 크기를 보여 주며 한 번 더 묻습니다("이 파일로 올리기"). 올린 뒤에는 고르기 버튼이 사라집니다.
+  // 서버도 팀, 날, 종류마다 한 번만 받습니다(app/api/crossing/proofs, already).
+  const [picked, setPicked] = useState<Partial<Record<ProofKind, { name: string; blob: Blob; type: string }>>>({});
+  const tooBig = (kind: ProofKind) => t(c.proofTooBig).replace("{mb}", String(PROOF_MAX_BYTES[kind] / 1024 / 1024));
+  const errOf = (e: unknown, kind: ProofKind) => (e === "too_big" ? tooBig(kind) : e === "already" ? t(c.proofAlready) : null);
+
+  const choose = async (kind: ProofKind, file: File) => {
     setMsg(null);
     if (!PROOF_TYPES[kind].includes(file.type)) { setMsg(t(c.proofBadType)); return; }
+    const blob = kind === "photo" ? await shrink(file) : file;
+    if (blob.size > PROOF_MAX_BYTES[kind]) { setMsg(tooBig(kind)); return; }
+    setPicked((p) => ({ ...p, [kind]: { name: file.name, blob, type: blob.type || file.type } }));
+  };
+
+  const upload = async (kind: ProofKind) => {
+    const f = picked[kind];
+    if (!f) return;
+    setMsg(null);
     setState((s) => ({ ...s, [kind]: "uploading" }));
     try {
-      const blob = kind === "photo" ? await shrink(file) : file;
-      if (blob.size > PROOF_MAX_BYTES[kind]) { setMsg(t(c.proofTooBig).replace("{mb}", String(PROOF_MAX_BYTES[kind] / 1024 / 1024))); throw new Error("size"); }
-      const type = blob.type || file.type;
       const post = (body: object) => fetch("/api/crossing/proofs", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ team, ...body }) });
-      const s = await post({ action: "sign", day, kind, contentType: type, size: blob.size });
-      if (!s.ok) {
-        if ((await s.json().catch(() => ({}))).error === "too_big") setMsg(t(c.proofTooBig).replace("{mb}", String(PROOF_MAX_BYTES[kind] / 1024 / 1024)));
-        throw new Error("sign");
-      }
+      const s = await post({ action: "sign", day, kind, contentType: f.type, size: f.blob.size });
+      if (!s.ok) { setMsg(errOf((await s.json().catch(() => ({}))).error, kind)); throw new Error("sign"); }
       const { path, signedUrl } = await s.json();
-      if (!(await fetch(signedUrl, { method: "PUT", headers: { "content-type": type }, body: blob })).ok) throw new Error("put");
+      if (!(await fetch(signedUrl, { method: "PUT", headers: { "content-type": f.type }, body: f.blob })).ok) throw new Error("put");
       const cf = await post({ action: "confirm", path });
-      if (!cf.ok) {
-        if ((await cf.json().catch(() => ({}))).error === "too_big") setMsg(t(c.proofTooBig).replace("{mb}", String(PROOF_MAX_BYTES[kind] / 1024 / 1024)));
-        throw new Error("confirm");
-      }
-      void refresh();
+      if (!cf.ok) { setMsg(errOf((await cf.json().catch(() => ({}))).error, kind)); throw new Error("confirm"); }
+      setPicked((p) => ({ ...p, [kind]: undefined }));
     } catch {
       setMsg((m) => m ?? t(c.errGeneric));
     }
+    void refresh();
     setState((x) => ({ ...x, [kind]: "idle" }));
   };
+  // 날이나 팀을 바꾸면 골라 둔 파일은 버립니다(다른 날 상자에 올라가지 않게).
+  useEffect(() => { setPicked({}); setMsg(null); }, [day, team]);
 
   const slot = (kind: ProofKind) => {
     const latest = proofs.find((p) => p.day === day && p.kind === kind);
     const up = state[kind] === "uploading";
     const off = up || !team;
+    const f = picked[kind];
+    const mb = (n: number) => `${(n / 1024 / 1024).toFixed(1)}MB`;
     return (
       <div key={kind} className="flex flex-col gap-[13.5px] rounded-2xl border border-white/15 bg-white/[0.03] p-[20px] sm:p-[24px]">
         <div className="flex flex-col gap-[13.5px] sm:flex-row sm:items-baseline sm:justify-between">
@@ -348,17 +360,33 @@ function Proofs({ team, day }: { team: string; day: ProofDay }) {
           <span className={`${META} ${latest ? "text-naru-orange" : "text-white/70"}`}>{latest ? `★ ${t(c.proofDone)} ${fmtKst(latest.createdAt)}` : t(c.proofNone)}</span>
         </div>
         {kind === "pdf" && day !== 1 && <p className={`${META} leading-relaxed text-white/70`}>{t(day === 3 ? c.proofPdfHintDay3 : c.proofPdfHint)}</p>}
-        <p className={`${META} text-white/50`}>{t(kind === "photo" ? c.proofLimitPhoto : c.proofLimitPdf).replace("{mb}", String(PROOF_MAX_BYTES[kind] / 1024 / 1024))}</p>
+        {!latest && <p className={`${META} text-white/50`}>{t(kind === "photo" ? c.proofLimitPhoto : c.proofLimitPdf).replace("{mb}", String(PROOF_MAX_BYTES[kind] / 1024 / 1024))}</p>}
         {latest?.url && kind === "photo" && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={latest.url} alt="" className="max-h-56 w-fit rounded-xl object-contain" />
         )}
         {latest?.url && kind === "pdf" && <a href={latest.url} target="_blank" rel="noreferrer" className={buttonClass("text")}>{t(c.proofView)}</a>}
-        <label aria-disabled={off} className={`${buttonClass("secondary", "naru")} w-full cursor-pointer justify-center sm:w-fit ${off ? "pointer-events-none opacity-50" : ""}`}>
-          {up ? t(c.proofUploading) : t(latest ? c.proofReplace : c.proofPick)}
-          <input type="file" className="sr-only" disabled={off} accept={kind === "photo" ? "image/*" : "application/pdf"}
-            onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) void upload(kind, f); }} />
-        </label>
+        {latest ? (
+          <p className={`${META} text-white/70`}>{t(c.proofLocked)}</p>
+        ) : f ? (
+          <div className="flex flex-col gap-[9px]">
+            <p className={`${META} break-all text-white/85`}>{f.name} <span className="text-white/50">({mb(f.blob.size)})</span></p>
+            <div className="flex flex-wrap gap-[9px]">
+              <button type="button" disabled={off} onClick={() => void upload(kind)} className={`${buttonClass("primary", "naru")} justify-center ${off ? "opacity-50" : ""}`}>
+                {up ? t(c.proofUploading) : t(c.proofConfirm)}
+              </button>
+              <button type="button" disabled={up} onClick={() => setPicked((p) => ({ ...p, [kind]: undefined }))} className={`${buttonClass("secondary", "naru")} justify-center`}>
+                {t(c.proofCancel)}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <label aria-disabled={off} className={`${buttonClass("secondary", "naru")} w-full cursor-pointer justify-center sm:w-fit ${off ? "pointer-events-none opacity-50" : ""}`}>
+            {t(c.proofPick)}
+            <input type="file" className="sr-only" disabled={off} accept={kind === "photo" ? "image/*" : "application/pdf"}
+              onChange={(e) => { const x = e.target.files?.[0]; e.target.value = ""; if (x) void choose(kind, x); }} />
+          </label>
+        )}
       </div>
     );
   };
@@ -368,6 +396,7 @@ function Proofs({ team, day }: { team: string; day: ProofDay }) {
       <div className="flex flex-col gap-[18px]">
         <h2 id="proof-h" className={`${BODY} font-bold`}>{t(c.proofHeading)}</h2>
         <p className={`${BODY} text-white/70`}>{t(day === 1 ? c.proofLeadDay1 : day === 3 ? c.proofLeadDay3 : c.proofLead)}</p>
+        <p className={`${META} font-bold text-naru-orange`}>{t(c.proofOnce)}</p>
         {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}
       </div>
       <div className="grid gap-[18px] sm:grid-cols-2">{proofKindsFor(day).map((k) => slot(k))}</div>

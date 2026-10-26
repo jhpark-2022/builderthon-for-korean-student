@@ -56,8 +56,13 @@ export const teamCopy = {
   // 2026-10-19 (사용자: Day 1 미션 뺌): Day 1 올리기는 선택입니다.
   // DECIDED 2026-10-26 (사용자: "올리면 팀이 멘토분들에게 사전에 공유줄 수 있도록"): 올린 1장은 우리 팀이 칸을 넣은 멘토가 멘토 페이지(/crossing/mentor)에서 미리 봅니다.
   proofLeadDay1: { ko: "Day 1은 미션이 없습니다. 이슈에 대한 팀의 생각 1장을 PDF로 올려 두면, 우리 팀이 칸을 넣은 멘토가 찾아가기 전에 미리 봅니다.", en: "There is no mission on Day 1. Upload one page of your team's take on the issue as a PDF, and the mentors you book will read it before you visit." },
-  proofPick: { ko: "파일 올리기", en: "Upload a file" },
-  proofReplace: { ko: "다시 올리기", en: "Upload again" },
+  proofPick: { ko: "파일 고르기", en: "Choose a file" },
+  // 2026-10-26 (사용자: 한 번만 올리기, 하루가 끝나기 전에 신중하게): 고른 뒤 한 번 더 묻고 올립니다.
+  proofOnce: { ko: "사진과 PDF는 날마다 한 번씩만 올릴 수 있고, 올린 뒤에는 바꿀 수 없습니다. 그날이 끝나기 전에 확인하고 올려 주세요.", en: "You can upload each photo and PDF once a day, and it cannot be changed afterwards. Check it carefully before the day ends." },
+  proofConfirm: { ko: "이 파일로 올리기", en: "Upload this file" },
+  proofCancel: { ko: "다시 고르기", en: "Choose again" },
+  proofLocked: { ko: "올린 파일은 바꿀 수 없습니다.", en: "An uploaded file cannot be changed." },
+  proofAlready: { ko: "이 날은 이미 올렸습니다. 올린 파일은 바꿀 수 없습니다.", en: "Already uploaded for this day. It cannot be changed." },
   proofUploading: { ko: "올리는 중", en: "Uploading" },
   proofDone: { ko: "올렸습니다", en: "Uploaded" },
   proofView: { ko: "보기", en: "View" },
