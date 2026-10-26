@@ -1563,7 +1563,7 @@ export const schedule: BEvent[] = [
     // 사람에게는 이 로고가 "누가 와서 말하는가"의 유일한 신호입니다.
     speakerLogo: { src: "/partners/logos/white/trimmed/microsoft.png", alt: "Microsoft" },
     summary: {
-      ko: "본 행사 9일 전 SMU 법학대학원에서 열렸습니다. “데모는 쉽고, 시스템은 어렵다”는 주제로 엔터프라이즈 AI 에이전트를 실제로 만드는 이야기를 나눴습니다.",
+      ko: "본 행사 9일 전, SMU 법학대학원. “데모는 쉽고, 시스템은 어렵다”를 주제로 엔터프라이즈 AI 에이전트 만들기를 다뤘습니다.",
       en: "Held in person at SMU's School of Law nine days before the event, on “The demo is easy, the system is hard” and what it takes to build enterprise AI agents for real.",
     },
     // 모달이 스스로 말하는 것은 여기서 반복하지 않습니다: 연사 소속은 연사 행,
