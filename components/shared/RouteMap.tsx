@@ -109,6 +109,10 @@ export default function RouteMap({
     });
   }, [current, stations]);
   // 로고 줄(h-7) + 칸의 gap(1.5) 만큼 레일이 내려갑니다. 1.625rem은 노드 줄의 중심(py-2.5 + h-8의 절반).
+  // DECIDED 2026-10-26 (사용자: "day 123에 선택돼 있을 시 해당 닷에 루프 애니메이션, 선택 영역은 주황 말고 블루, 미선택 점을 더 죽여서"):
+  // 지금 칸(active = 폰에서 연 날, 아니면 현재 위치)만 밝습니다. 그 칸의 점은 블루로 차고 고리가 계속 퍼집니다(모션 줄이기에서는 멈춤),
+  // 칸 바탕은 옅은 블루 면과 블루 테두리. 나머지 점과 이름은 한 단 죽입니다. 움직이는 표시는 주황 점에서 블루 고리로 바뀌어 지금 칸의 점을 감쌉니다.
+  const active = selected ?? current ?? null;
   const hasLogos = stations.some((s) => s.logo);
   // 레일 높이 = 노드 중심. 로고 있을 때: py-2.5(10) + 로고 줄 h-7(28) + gap-1.5(6) + 판 py-1.5(6) + h-8의 절반(16) = 66px.
   // DECIDED 2026-10-24 (사용자 스크린숏: "노란 원이 보라색 원 중간에 있어야"): 7c21738에서 판 여백 6px가 생겼는데 이 값을 안 고쳐 점과 레일이 6px 떠 있었습니다.
@@ -116,6 +120,8 @@ export default function RouteMap({
   const dotLeft = current === undefined ? null : `calc(${inset} + (100% - 2 * ${inset}) * ${n > 1 ? current / (n - 1) : 0})`;
   return (
     <div className={className}>
+      {/* DECIDED 2026-10-26 (사용자: "12.20 날짜가 그래프 위로"): 폰의 안내/날짜 한 줄을 노선 위로. 노선 바로 아래가 그날 카드라 점과 카드가 한 묶음으로 붙습니다. */}
+      {hint && <p className={`mb-1 text-center ${META} font-semibold text-accent sm:hidden`}>{hint}</p>}
       {/* role="list" (2026-09-19, 접근성 감사 10): Tailwind preflight가
           `ol { list-style: none }`을 걸고, Safari/VoiceOver는 그때 목록 역할을
           떼어 냅니다. 역할이 generic으로 떨어지면 **aria-label까지 통째로
@@ -141,7 +147,7 @@ export default function RouteMap({
           <span
             aria-hidden
             // DECIDED 2026-10-22 (사용자: "스와이프할 때 여기 원이 넘어가는 효과"): 0.5초에 걸쳐 다음 정거장으로 건너가고, 닿으면 고리 하나가 퍼집니다.
-            className="pointer-events-none absolute z-10 h-[11px] w-[11px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-naru-orange shadow-[0_0_0_3px_rgb(var(--ui-ink)/0.9)] transition-[left] duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] motion-reduce:transition-none"
+            className="pointer-events-none absolute z-20 h-[26px] w-[26px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-accent transition-[left] duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] motion-reduce:transition-none"
             style={{ left: dotLeft, top: railTop }}
           />
         )}
@@ -149,7 +155,7 @@ export default function RouteMap({
           <span
             key={`arrive-${current}`}
             aria-hidden
-            className="pointer-events-none absolute z-10 h-[11px] w-[11px] rounded-full border border-naru-orange opacity-0 motion-safe:animate-[routeArrive_700ms_ease-out_480ms_1_both]"
+            className="pointer-events-none absolute z-10 h-[11px] w-[11px] rounded-full border border-accent opacity-0 motion-safe:animate-[routeArrive_700ms_ease-out_480ms_1_both]"
             style={{ left: dotLeft, top: railTop }}
           />
         )}
@@ -157,6 +163,7 @@ export default function RouteMap({
           const anchor = s.kind === "anchor";
           const spot = s.kind === "spot";
           const on = selected === index;
+          const here = active === index;
           // 누르는 정거장은 button, 아니면 전과 같은 div입니다. 안쪽 내용과 간격은 같습니다.
           const Box = onSelect ? "button" : "div";
           return (
@@ -176,35 +183,37 @@ export default function RouteMap({
                     )}
                   </span>
                 )}
-                <span className={`flex w-full flex-col items-center gap-1.5 rounded-xl ${hasLogos ? "-mx-1 px-1 py-1.5" : ""} ${onSelect && on ? "max-sm:bg-white/[0.07]" : ""}`}>
+                <span className={`flex w-full flex-col items-center gap-1.5 rounded-xl transition-colors ${hasLogos ? "-mx-1 px-1 py-1.5" : ""} ${here ? "bg-accent/[0.08] ring-1 ring-accent/35" : ""}`}>
                 <span className="relative flex h-8 items-center justify-center">
                   {anchor ? (
                     <span
                       key={flash[stations.indexOf(s)] ?? 0}
-                      className={`relative flex h-7 w-7 items-center justify-center rounded-full border border-naru-plum-tint/60 bg-[#9A5A82]/40 text-[0.6rem] text-white shadow-[0_0_0_4px_rgba(10,6,20,0.85)] ${flash[stations.indexOf(s)] ? "motion-safe:animate-[starFlash_600ms_ease-out_1]" : ""}`}
+                      className={`relative flex h-7 w-7 items-center justify-center rounded-full border text-[0.6rem] shadow-[0_0_0_4px_rgb(var(--ui-ink)/0.9)] ${here ? "border-accent bg-accent/30 text-white" : "border-white/20 bg-white/[0.06] text-white/50"} ${flash[stations.indexOf(s)] ? "motion-safe:animate-[starFlash_600ms_ease-out_1]" : ""}`}
                     >
                       <span aria-hidden>★</span>
                     </span>
                   ) : spot ? (
                     // DECIDED 2026-10-20 (hwang 브리프 2.9, 감사 W16): 테두리 원 안의 점(◉)을 속 찬 원 하나로. Day 0 빈 고리와 ★는 그대로.
-                    <span className="relative h-4 w-4 rounded-full bg-accent shadow-[0_0_0_4px_rgba(10,6,20,0.85)]" />
+                    <span className={`relative h-4 w-4 rounded-full shadow-[0_0_0_4px_rgb(var(--ui-ink)/0.9)] ${here ? "bg-accent" : "bg-white/20"}`}>
+                      {here && <span aria-hidden className="absolute inset-0 rounded-full bg-accent/60 motion-safe:animate-ping" />}
+                    </span>
                   ) : (
-                    <span className="relative h-3 w-3 rounded-full border border-white/35 bg-[#0a0614] shadow-[0_0_0_4px_rgba(10,6,20,0.85)]" />
+                    <span className={`relative h-3 w-3 rounded-full border shadow-[0_0_0_4px_rgb(var(--ui-ink)/0.9)] ${here ? "border-accent bg-accent/40" : "border-white/25 bg-naru-ink"}`} />
                   )}
                 </span>
                 {s.sub && (
                   // 2026-10-07 (이슈 브리프 4): 이 파일의 글자는 전부 META(13.5px)입니다. 그 전의 0.58~0.72rem은
                   // 홈에서 12.24px로 올려 그리고 있었습니다(globals.css의 naru-min12). 회색은 /65 이상.
-                  <span className={`${META} font-bold leading-none ${anchor ? "text-naru-plum-tint" : spot ? "text-accent" : "text-white/65"}`}>
+                  <span className={`${META} font-bold leading-none ${here ? "text-accent" : "text-caption"}`}>
                     {s.sub}
                   </span>
                 )}
-                <span className={`break-keep ${META} leading-tight ${anchor || spot ? "font-bold text-white" : "text-white/75"}`}>
+                <span className={`break-keep ${META} leading-tight ${here ? "font-bold text-white" : "text-white/55"}`}>
                   {s.label}
                 </span>
                 {s.milestone && (
-                  <span className={`hidden break-keep ${META} leading-tight text-white/75 sm:block`}>
-                    <span aria-hidden className="mr-1.5 inline-block h-[6px] w-[6px] -translate-y-[2px] rounded-full bg-naru-orange" />
+                  <span className={`hidden break-keep ${META} leading-tight sm:block ${here ? "text-white/85" : "text-caption"}`}>
+                    <span aria-hidden className={`mr-1.5 inline-block h-[6px] w-[6px] -translate-y-[2px] rounded-full ${here ? "bg-accent" : "bg-white/25"}`} />
                     {s.milestone}
                   </span>
                 )}
@@ -232,7 +241,6 @@ export default function RouteMap({
           );
         })}
       </ol>
-      {hint && <p className={`text-center ${META} text-white/65 sm:hidden`}>{hint}</p>}
       {below}
       {pills && pills.length > 0 && (
         <div className={`flex flex-col items-center gap-1.5 ${hint ? "max-sm:mt-3" : ""}`}>

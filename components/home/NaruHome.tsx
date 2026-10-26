@@ -34,7 +34,7 @@ import { TITLE, BODY, META, H2, H3, LABEL_HEADING, ROW_HEADING, GRADIENT_TEXT } 
 import CityShape, { type City } from "@/components/ui/CityShape";
 import SeoulCampuses from "@/components/home/SeoulCampuses";
 import {
-  SUBHEADING, READ, WIDE, MEASURE_C, READ_MEASURE_C, HERO_BUTTON_GROUND,
+  SUBHEADING, READ, WIDE, HERO_BUTTON_GROUND,
   latinTrack, eyebrowTrack, PlateSegment, SiteFooter, usePlateLite,
 } from "./shared";
 
@@ -746,11 +746,11 @@ export default function NaruHome() {
       // 카드가 비어 보였습니다. Day 1~3 카드(sub)의 행 간격을 16px로. 폰 패널(12px)과 Day 0, Day 4는 그대로.
       // DECIDED 2026-10-24 (밀도 브리프 1.2, D2): lg부터 Day 0~3이 한 줄 네 칸(Day 0 = lgSub). Day 1은 md에서 줄의 첫 칸(왼쪽 선 없음), lg에서는
       // Day 0 다음 칸(왼쪽 선). Day 4(전폭)는 lg에서 위아래 여백 32px → 20px. 글은 그대로, 폰 패널은 그대로.
-      className={`flex flex-col ${inPanel ? "gap-[20px]" : sub ? "gap-[20px] md:gap-[16px]" : lgSub ? "gap-[20px] md:gap-[24px] lg:gap-[16px]" : "gap-[20px] md:gap-[24px]"} ${sub ? "items-start text-left" : "items-center text-center"} ${sub ? `py-0 md:row-span-5 md:grid md:grid-rows-subgrid md:items-stretch md:border-white/10 ${i === 1 ? "md:border-l-0 md:pl-0" : "md:border-l md:pl-[16px]"}` : inPanel ? "rounded-2xl card-base p-4" : lgSub ? "border-b border-white/10 px-4 py-5 sm:px-5 sm:py-6 md:col-span-3 md:mb-[20px]" : `px-4 py-5 sm:px-5 sm:py-6 lg:py-5 ${i === 0 ? "border-b border-white/10" : "border-t border-white/10"}`} ${!inPanel && !lgSub && (i === 0 || i === naru.december.stages.length - 1) ? "md:col-span-3" : ""}`}
+      className={`flex flex-col ${inPanel ? "gap-[20px]" : sub ? "gap-[20px] md:gap-[16px]" : lgSub ? "gap-[20px] md:gap-[24px] lg:gap-[16px]" : "gap-[20px] md:gap-[24px]"} ${sub || inPanel ? "items-start text-left" : "items-center text-center"} ${sub ? `py-0 md:row-span-5 md:grid md:grid-rows-subgrid md:items-stretch md:border-white/10 ${i === 1 ? "md:border-l-0 md:pl-0" : "md:border-l md:pl-[16px]"}` : inPanel ? "rounded-2xl card-base p-4 ring-1 ring-accent/30" : lgSub ? "border-b border-white/10 px-4 py-5 sm:px-5 sm:py-6 md:col-span-3 md:mb-[20px]" : `px-4 py-5 sm:px-5 sm:py-6 lg:py-5 ${i === 0 ? "border-b border-white/10" : "border-t border-white/10"}`} ${!inPanel && !lgSub && (i === 0 || i === naru.december.stages.length - 1) ? "md:col-span-3" : ""}`}
     >
       {/* DECIDED 2026-10-26 (사용자: "day 123쪽은 확실히 좌측 단락으로 구성하는게 읽기 편해"): 일정 판의 Day 1~3(sub)은 머리, 한 줄, 세션, 띠, 칩 모두 왼쪽 정렬.
           Day 0, Day 4(전폭)와 폰 패널은 가운데 그대로입니다. */}
-      <div className={`flex flex-wrap items-center ${sub ? "justify-start" : "justify-center"} gap-x-2.5 gap-y-[8px]`}>
+      <div className={`flex flex-wrap items-center ${sub || inPanel ? "justify-start" : "justify-center"} gap-x-2.5 gap-y-[8px]`}>
         {/* lang="en": DAY는 두 로케일 모두 영어입니다(접근성 감사 7). */}
         {/* DECIDED 2026-10-20 (hwang 브리프 2.5, 감사 W4): 알약을 걷고 글자만. 알약은 누르는 것에만 씁니다. */}
         <span lang="en" className={`${META} font-bold text-accent`}>
@@ -760,7 +760,7 @@ export default function NaruHome() {
         <span className={`${META} text-caption`}>{formatDecemberDayWithWeekday(locale, stage.dayOffset)}</span>
       </div>
       {/* stage.body는 그리지 않습니다(2026-09-20). 키는 data/naru.ts에 그대로 있습니다. */}
-      <p className={`${sub ? "" : "mx-auto"} max-w-3xl break-keep ${BODY} font-medium leading-[1.65] text-white/85`}>{t(stage.line)}</p>
+      <p className={`${sub || inPanel ? "" : "mx-auto"} max-w-3xl break-keep ${BODY} font-medium leading-[1.65] text-white/85`}>{t(stage.line)}</p>
       {/* DECIDED 2026-10-24 (사용자: "세션에 대한 설명도 아래 박스 안에 넣어줘, 각 날의 설명이 더 적어지도록"): 카드에는 세션 이름만 남기고
           설명은 아래 띠의 펼치는 상세(세션 절)로 내렸습니다. */}
       {stage.session && (
@@ -824,7 +824,7 @@ export default function NaruHome() {
       </> : <>
       {stage.chips.length > 0 ? (
         // 폰 카드에서 띠가 없는 날(Day 0, Day 4)은 칩 줄을 바닥으로 내려(mt-auto) 다른 날의 미션 띠와 같은 자리에 둡니다(2026-10-22).
-        <p className={`flex flex-wrap justify-center gap-x-3 gap-y-1 ${META} text-caption ${inPanel && !stage.milestone && !stage.submit ? "mt-auto" : ""}`}>
+        <p className={`flex flex-wrap ${inPanel ? "justify-start" : "justify-center"} gap-x-3 gap-y-1 ${META} text-caption ${inPanel && !stage.milestone && !stage.submit ? "mt-auto" : ""}`}>
           {stage.chips.map((c, j) => <span key={j}>{t(c)}</span>)}
           {/* DECIDED 2026-10-22 (사용자: Analytics 개선 4번 "적용"): 10/18 결정문은 "/match는 Day 1 카드의 matchCta가 잇는다"였는데 그리지 않고
               있었습니다(30일 /match 13명). 히어로 버튼 둘은 그대로 두고, 팀 구성 칩 옆에 글자 링크로 섭니다. */}
@@ -847,7 +847,7 @@ export default function NaruHome() {
         // 이 결정이 바꿉니다. 그 전 라벨 "Day 2에 들고 갈 것"은 두 줄로 꺾여 Day 2, 3 띠보다 높았습니다.
         // DECIDED 2026-10-19 (사용자: "1일차랑 4일차에는 미션을 빼자", 답: 미션 아닌 띠로 남김): Day 1 띠는 다시 무채색, ★ 없음, 라벨 "Day 2에 들고 갈 것".
         // 2026-10-17의 호박색 미션 띠를 되돌립니다. 띠는 이제 늘 쌓은 모양이라 그때의 두 줄 꺾임 문제는 없습니다.
-        <MilestoneStrip id={`carry-day-${stage.dayOffset}${inPanel ? "-phone" : ""}`} tone="plain" label={t(naru.december.carryLabel)} title={t(stage.submit)} center expanded={false} fill={sub}
+        <MilestoneStrip id={`carry-day-${stage.dayOffset}${inPanel ? "-phone" : ""}`} tone="plain" label={t(naru.december.carryLabel)} title={t(stage.submit)} center={!inPanel} expanded={false} fill={sub}
           {...sync}
           // 2026-10-24 (사용자: "제출 방법은 생략", 세션 설명은 상자 안으로): 제출 절을 빼고 세션 절을 넣습니다.
           detail={[
@@ -860,7 +860,7 @@ export default function NaruHome() {
         <MilestoneStrip id={`milestone-day-${stage.dayOffset}${inPanel ? "-phone" : ""}`} label={t(naru.december.milestoneLabel)} title={t(stage.milestone)} detail={stage.milestoneDetail && [
           { label: t(naru.december.milestoneConditionsLabel), items: stage.milestoneDetail.conditions.map(t) },
           ...(stage.session ? [{ label: t(naru.december.sessionLabel), items: [`${t(stage.session.title)}: ${t(stage.session.body)}`] }] : []),
-        ]} center expanded={false} fill={sub} narrow={!inPanel && i === naru.december.stages.length - 1} {...sync} />
+        ]} center={!inPanel} expanded={false} fill={sub} narrow={!inPanel && i === naru.december.stages.length - 1} {...sync} />
       )}
       </>}
       {/* DECIDED 2026-10-22 (사용자: "상자 사이즈는 동일한데, 내용이 안 비어 있게"): 폰 카드 안의 "멘토 시간표와 미션 인증" 버튼을 뺐습니다.
@@ -1128,9 +1128,10 @@ export default function NaruHome() {
         <h2 id="december-title" className={`${H2} max-sm:text-[28px] ${READ} text-balance text-center`}>{t(naru.december.programHeading)}</h2>
         {/* 2026-10-24 (사용자: "이 부분을 하나로 합쳐줘, 3줄"): approachClose 문단은 아래 일정 리드(scheduleLead)에 합쳐 여기서는 그리지 않습니다. 키는 남겨 둡니다. */}
         <Reveal id="schedule" className={`${WIDE} mt-[45px] text-center lg:mt-[48px]`}>
-          <div className={READ}>
+          {/* DECIDED 2026-10-26 (사용자: "'일정' 타이틀이나 day 상세정보 중 일부에는 좌측 단락"): 일정 머리와 리드는 노선도 판의 왼쪽 끝에서 시작합니다. 노선도는 그림이라 가운데 그대로. */}
+          <div className="text-left">
             <h3 data-subheading className={SUBHEADING}>{t(naru.december.scheduleLabel)}</h3>
-            <p className={`${MEASURE_C} mt-[16px] break-keep ${BODY} leading-[1.65] text-naru-muted sm:mt-[24px] lg:mt-[20px]`}>
+            <p className={`mt-[12px] max-w-[40rem] break-keep ${BODY} leading-[1.65] text-naru-muted sm:mt-[16px]`}>
               {t(naru.december.scheduleLead)}
             </p>
           </div>
@@ -1173,7 +1174,7 @@ export default function NaruHome() {
                     맞춥니다. 닫힌 날은 invisible + inert라 자리만 차지합니다. 짧던 Day 0, Day 4는 그날의 진행 한 문단으로 채웁니다(stageCard).
                     그 전에 고른 "높이가 부드럽게 따라가기"는 같은 날 되돌렸습니다. */}
                 <div
-                  className={`mt-3 grid ${openDay === null ? "hidden" : ""}`}
+                  className={`mt-2 grid ${openDay === null ? "hidden" : ""}`}
                   style={{ transform: dragX ? `translateX(${dragX}px)` : undefined, transition: dragX ? "none" : "transform 260ms cubic-bezier(0.22,1,0.36,1)" }}
                 >
                 {naru.december.stages.map((stage, i) => (
