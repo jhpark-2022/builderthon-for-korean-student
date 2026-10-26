@@ -54,7 +54,12 @@ export const trackTint = (c: string | undefined): string => (c && c in TRACK_TIN
 
 export const PROOF_KINDS = ["photo", "pdf"] as const;
 export type ProofKind = (typeof PROOF_KINDS)[number];
-export const PROOF_MAX_BYTES = 20 * 1024 * 1024;
+/**
+ * 파일 하나의 크기 한도(종류마다). DECIDED 2026-10-26 (사용자: "사진의 용량이 pdf 파일과 같으면 좀 그렇지 않나?"):
+ * 사진은 올리기 전에 긴 변 2000px JPEG(보통 1MB 안팎)로 줄어 10MB, PDF(1장, 발표 자료)는 20MB.
+ * 버킷 crossing-proofs의 file_size_limit(20MB, 마이그레이션 0008)이 위의 바닥이라, PDF를 올리면 버킷도 같이 올려야 합니다.
+ */
+export const PROOF_MAX_BYTES: Record<"photo" | "pdf", number> = { photo: 10 * 1024 * 1024, pdf: 20 * 1024 * 1024 };
 export const PROOF_TYPES: Record<ProofKind, string[]> = {
   photo: ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"],
   pdf: ["application/pdf"],
@@ -134,4 +139,23 @@ export function slotStarts(windows: Window[]): number[] {
 /** 시작 시각이 그 멘토의 구간 안에 온전히 들어가고 칸 간격에 맞는지. */
 export function fitsWindow(t: number, windows: Window[]): boolean {
   return slotStarts(windows).includes(t);
+}
+
+/**
+ * 언제 칸을 넣을 수 있는지. 서버(POST)와 화면이 같은 판정을 씁니다.
+ * DECIDED 2026-10-26 (사용자: "day 2,3 둘다 choose 할 수 있도록 at day 1 에 할 수 있도록. 그리고 day 2 에는 오전 시간대는 오후 1시 이상
+ * and day 3, 그리고 시간이 지나면 그 지나간 시간은 block. do the same for the day 3"):
+ * - Day 1(12.18) 12:00 KST부터 Day 2, 3 칸을 함께 넣을 수 있습니다. 그 전에는 닫혀 있습니다.
+ *   (같은 날 사용자: "Day 1(12.18) 에는 12시 부터 열어줘". 그 전 00:00.)
+ * - 그날이 되면 그날의 칸은 SAME_DAY_FROM(13:00) 이후만 넣습니다. 오전 칸은 전날까지 넣어야 멘토가 1장을 미리 봅니다.
+ * - 지난 시간은 막힙니다(slotState의 past, 서버의 past).
+ */
+export const BOOKING_OPENS_DAY = 1;
+export const BOOKING_OPENS_AT = "12:00";
+export const SAME_DAY_FROM = "13:00";
+export type BookingGate = "ok" | "not_yet" | "same_day_morning";
+export function bookingGate(day: number, t: number, now = Date.now()): BookingGate {
+  if (now < kstTime(BOOKING_OPENS_DAY, BOOKING_OPENS_AT)!.getTime()) return "not_yet";
+  if (now >= kstTime(day, "00:00")!.getTime() && t < kstTime(day, SAME_DAY_FROM)!.getTime()) return "same_day_morning";
+  return "ok";
 }

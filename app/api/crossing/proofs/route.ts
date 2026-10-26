@@ -1,7 +1,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // /api/crossing/proofs. Day 2, Day 3 미션 인증(2026-10-17, 상금·인센티브 정리 2장).
 //
-//   GET ?team=                         그 팀이 올린 파일(가장 최근 것부터, 10분짜리 보기 URL)
+//   GET ?team=                         그 팀이 낸 것(날, 종류, 시각). 파일 주소는 주지 않습니다(2026-10-26)
+//   (2026-10-26) 팀, 날, 종류마다 한 번만. 두 번째는 409 already.
 //   POST {action:"sign", day, kind, contentType, size}   한 번 쓰는 업로드 URL
 //   POST {action:"confirm", path}      파일이 실제로 올라갔는지 보고 행을 남김
 //
@@ -29,19 +30,26 @@ async function auth(teamName: unknown) {
   return { db, team } as const;
 }
 
+// DECIDED 2026-10-26 (사용자: "업로드는 한번만 가능하도록 해, 그러니까 하루 끝나기 전에 신중한 업로드 부탁"):
+// 팀마다, 날마다, 종류(사진, PDF)마다 한 번만 올립니다. sign에서 미리 거절하고, 동시에 두 번 올린 경우는 confirm에서 뒤의 파일을 지웁니다.
+async function alreadyUploaded(db: NonNullable<ReturnType<typeof getSupabaseAdmin>>, teamName: string, day: number, kind: string) {
+  const { count } = await db.from("crossing_mission_proofs").select("id", { count: "exact", head: true }).eq("team_name", teamName).eq("day", day).eq("kind", kind);
+  return (count ?? 0) > 0;
+}
+
 export async function GET(req: Request) {
   const a = await auth(new URL(req.url).searchParams.get("team"));
   if ("res" in a) return a.res;
   const { db, team } = a;
   const { data, error } = await db.from("crossing_mission_proofs")
-    .select("id, day, kind, storage_path, created_at").eq("team_name", team.name).order("created_at", { ascending: false });
+    .select("id, day, kind, size_bytes, created_at").eq("team_name", team.name).order("created_at", { ascending: false });
   if (error) return NextResponse.json({ error: "db" }, { status: 500 });
+  // DECIDED 2026-10-26 (사용자: "업로드를 하면 웹사이트에서 보이지 않고, 그냥 submission 되었다 이런식으로만"): 팀 쪽에는 파일 주소를
+  // 내주지 않습니다. 팀은 코드 없이 목록에서 고르므로(10/17), 주소를 주면 다른 팀 이름을 골라 그 팀 파일을 열 수 있었습니다.
+  // 파일은 멘토 페이지(/api/crossing/mentor, 멘토 열쇠)에서만 열립니다. 여기는 제출 여부와 시각만.
   const rows = data ?? [];
-  const signed = rows.length
-    ? (await db.storage.from(PROOF_BUCKET).createSignedUrls(rows.map((r) => r.storage_path), 600)).data ?? []
-    : [];
   return NextResponse.json({
-    proofs: rows.map((r, i) => ({ id: r.id, day: r.day, kind: r.kind, createdAt: r.created_at, url: signed[i]?.signedUrl ?? null })),
+    proofs: rows.map((r) => ({ id: r.id, day: r.day, kind: r.kind, createdAt: r.created_at, sizeBytes: r.size_bytes })),
   });
 }
 
@@ -59,7 +67,8 @@ export async function POST(req: Request) {
     // Day 1은 PDF만(2026-10-17 사용자).
     if (!isProofDay(day) || !proofKindsFor(day).includes(kind)) return NextResponse.json({ error: "invalid" }, { status: 400 });
     if (!PROOF_TYPES[kind].includes(type)) return NextResponse.json({ error: "bad_type" }, { status: 400 });
-    if (!(size > 0) || size > PROOF_MAX_BYTES) return NextResponse.json({ error: "too_big" }, { status: 400 });
+    if (!(size > 0) || size > PROOF_MAX_BYTES[kind]) return NextResponse.json({ error: "too_big" }, { status: 400 });
+    if (await alreadyUploaded(db, team.name, day, kind)) return NextResponse.json({ error: "already" }, { status: 409 });
     // 경로가 팀과 날을 말합니다. confirm은 이 접두어가 맞는지만 봅니다.
     const path = `${teamFolder(team.name)}/day${day}/${kind}-${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${EXT[type]}`;
     const { data, error } = await db.storage.from(PROOF_BUCKET).createSignedUploadUrl(path);
@@ -80,6 +89,16 @@ export async function POST(req: Request) {
     const obj = list?.find((o) => o.name === name);
     if (!obj) return NextResponse.json({ error: "not_uploaded" }, { status: 400 });
     const meta = (obj.metadata ?? {}) as { mimetype?: string; size?: number };
+    // DECIDED 2026-10-26 (사용자: "이거 이상의 파일을 올릴려고 하면 막히게 해줘"): sign 단계의 크기는 브라우저가 알려 준 값이라,
+    // 올라간 파일의 실제 크기를 한 번 더 봅니다. 종류 한도(사진 10MB, PDF 20MB)를 넘으면 파일을 지우고 행을 남기지 않습니다.
+    if (Number(meta.size ?? 0) > PROOF_MAX_BYTES[m[3] as ProofKind]) {
+      await db.storage.from(PROOF_BUCKET).remove([path]);
+      return NextResponse.json({ error: "too_big" }, { status: 400 });
+    }
+    if (await alreadyUploaded(db, team.name, Number(m[2]), m[3])) {
+      await db.storage.from(PROOF_BUCKET).remove([path]);
+      return NextResponse.json({ error: "already" }, { status: 409 });
+    }
     const { error } = await db.from("crossing_mission_proofs").insert({
       team_name: team.name, day: Number(m[2]), kind: m[3], storage_path: path,
       content_type: meta.mimetype ?? "application/octet-stream", size_bytes: Math.max(1, Number(meta.size ?? 1)),

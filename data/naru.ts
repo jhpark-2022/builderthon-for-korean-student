@@ -2607,11 +2607,12 @@ export const naru = {
             // DECIDED 2026-10-26 (사용자: "모든 날 마다, 팀원의 과반이 현장에 와야하며, 같이 멘토를 찾아가야한다", 답: Day 2, 3 모두, 팀이 함께):
             // 10/17의 완화("이틀 중 하루 이상", 멘토 수로 20팀 × 이틀을 못 채워서)를 되돌립니다. 멘토 수는 운영에서 맞춥니다.
             { ko: "팀원이 함께 멘토 찾아가기", en: "Visit a mentor together as a team" },
-            { ko: "그날 만든 진척을 PDF로 공유하기", en: "Share that day's progress as a PDF" },
+            // DECIDED 2026-10-26 (사용자): 진척 PDF는 새 문서가 아니라 1장을 멘토의 피드백과 그날의 진척에 맞춰 고친 것.
+            { ko: "1장을 피드백과 진척에 맞춰 고쳐 공유하기", en: "Update your one page with feedback and progress, and share it" },
           ],
           submit: [
             { ko: "멘토와 팀이 함께 찍은 사진", en: "A photo of the team with the mentor" },
-            { ko: "그날의 진척 PDF", en: "That day's progress as a PDF" },
+            { ko: "고쳐 올린 1장 (PDF)", en: "Your updated one page (PDF)" },
             { ko: "현장 출석은 운영진이 체크합니다", en: "The organisers check who is on site" },
           ],
         },
@@ -2679,7 +2680,8 @@ export const naru = {
           ],
           submit: [
             { ko: "멘토와 팀이 함께 찍은 사진", en: "A photo of the team with the mentor" },
-            { ko: "그날의 진척 PDF", en: "That day's progress as a PDF" },
+            // 2026-10-26 (사용자): Day 3에 올리는 것은 발표 자료(슬라이드 PDF).
+            { ko: "발표 자료 (슬라이드 PDF)", en: "Presentation (slides as PDF)" },
             { ko: "현장 출석은 운영진이 체크합니다", en: "The organisers check who is on site" },
           ],
         },

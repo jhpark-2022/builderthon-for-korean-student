@@ -16,17 +16,20 @@ import { useLocale } from "@/lib/LocaleContext";
 import { BODY, META } from "@/components/ui/typography";
 import { buttonClass } from "@/components/ui/Button";
 import LocaleToggle from "@/components/LocaleToggle";
-import { teamCopy as c } from "@/data/crossingTeam";
+import { teamCopy as c, timetableRules } from "@/data/crossingTeam";
 import {
-  BUFFER_MINUTES, GRID_MINUTES, MAX_BOOKINGS_PER_TEAM_PER_DAY, PROOF_DAYS, PROOF_MAX_BYTES, PROOF_TYPES, dayDate, fitsWindow, fmtKst, isProofDay, proofKindsFor, slotState, trackTint,
+  BUFFER_MINUTES, GRID_MINUTES, bookingGate, kstTime, BOOKING_OPENS_DAY, BOOKING_OPENS_AT, MAX_BOOKINGS_PER_TEAM_PER_DAY, PROOF_DAYS, PROOF_MAX_BYTES, PROOF_TYPES, dayDate, fitsWindow, fmtKst, isProofDay, proofKindsFor, slotState, trackTint,
   type ProofDay, type ProofKind, type Track, type Window,
 } from "@/lib/crossingOps";
 
 const TEAM_KEY = "crossing-team";
+// 2026-10-26 (사용자: "색깔이 좀 더 다채로우면 좋을거 같기는 함 for the teams"): 팀 칸의 트랙 색을 더 진하게.
+// 그 전 22%(38) 한 겹. 이제 왼쪽 위 45%에서 오른쪽 아래 25%로(brand 10장 그라데이션 방향), 왼쪽 띠 4px. 색은 그대로 트랙 네 색입니다.
+const SLOT_ALPHA = "73", SLOT_ALPHA_END = "40";
 const MIN = 60_000;
 type Bk = { id: string; team: string; track: string; startsAt: string; endsAt: string };
 type Mentor = { id: string; name: string; field: string | null; windows: Window[]; bookings: Bk[] };
-type Proof = { id: string; day: number; kind: ProofKind; createdAt: string; url: string | null };
+type Proof = { id: string; day: number; kind: ProofKind; createdAt: string; sizeBytes?: number };
 
 const load = (k: string) => { try { return localStorage.getItem(k) ?? ""; } catch { return ""; } };
 const save = (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* 저장 못 해도 화면은 돕니다 */ } };
@@ -51,6 +54,10 @@ export default function TeamTool() {
   }, []);
   // DECIDED 2026-10-17 (사용자: "day 1으로 들어왔을때는 timetable은 disable, 팀 이름을 넣던 말던"): Day 1 탭에서는 시간표가 늘 잠깁니다.
   const timetableLocked = day === 1;
+  // 2026-10-26: 안내 줄에 쓰는 지금 상태. 칸마다의 판정은 bookingGate가 합니다. 시간표를 다시 읽을 때(20초) 같이 새로 셉니다.
+  const now = Date.now();
+  const notYet = now < kstTime(BOOKING_OPENS_DAY, BOOKING_OPENS_AT)!.getTime();
+  const today = now >= kstTime(day, "00:00")!.getTime();
 
   const refresh = useCallback(async () => {
     const r = await fetch(`/api/crossing/mentoring?day=${day}`, { cache: "no-store" });
@@ -84,7 +91,8 @@ export default function TeamTool() {
     const r = await fetch("/api/crossing/mentoring", { method, headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
     if (!r.ok) {
       const e = (await r.json().catch(() => ({}))).error;
-      setMsg(t(e === "taken" ? c.errTaken : e === "team_busy" ? c.errTeamBusy : e === "team_limit" ? c.errLimit : e === "past" ? c.errPast : c.errGeneric));
+      setMsg(t(e === "taken" ? c.errTaken : e === "team_busy" ? c.errTeamBusy : e === "team_limit" ? c.errLimit : e === "past" ? c.errPast
+        : e === "not_yet" ? c.errNotYet : e === "same_day_morning" ? c.errMorning : c.errGeneric));
     }
     setPending(null); setBusy(false); void refresh();
   };
@@ -108,7 +116,7 @@ export default function TeamTool() {
             // 띠와 흰 테두리를 한 그림자에 둡니다(Tailwind ring도 그림자라 따로 쓰면 하나가 지워짐).
             // DECIDED 2026-10-21 (시각 통일): 예약 높이는 걸친 45px 시간표 줄 수입니다.
             className="rounded-md"
-            style={{ height: `${span.length * 45}px`, background: `${tint}38`, boxShadow: `inset 3px 0 0 ${tint}${ours ? ", inset 0 0 0 2px rgba(255,255,255,0.9)" : ""}` }}>
+            style={{ height: `${span.length * 45}px`, background: `linear-gradient(135deg, ${tint}${SLOT_ALPHA}, ${tint}${SLOT_ALPHA_END})`, boxShadow: `inset 4px 0 0 ${tint}${ours ? ", inset 0 0 0 2px rgba(255,255,255,0.9)" : ""}` }}>
             {/* 한 번 넣은 칸은 바꾸지 못합니다(2026-10-17). 우리 팀 칸도 이름만 보입니다. */}
             <span className={`block truncate py-1.5 pl-2.5 pr-1 ${META} font-bold ${ours ? "text-white" : "text-white/85"}`}>{b.team}</span>
             <span className={`block pl-2.5 ${META} tabular-nums text-white/70`}>{fmtKst(s)}~{fmtKst(e)}</span>
@@ -121,18 +129,23 @@ export default function TeamTool() {
       return (r >= s - BUFFER_MINUTES * MIN && r < s) || (r >= e && r < e + BUFFER_MINUTES * MIN);
     });
     if (gap) return <td key={m.id} className={`border-l border-white/5 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.06)_0_4px,transparent_4px_8px)] px-2 ${META} text-white/70`}>{t(c.gap)}</td>;
+    // 2026-10-26 (사용자: 지난 칸이 막힌 것이 보이게, 넣은 팀의 칸은 그대로 남게): 시작 시각이 지난 빈칸은 빗금과 "지남"입니다.
+    // 쉬는 10분과 같은 빗금이되 더 흐립니다. 팀이 넣은 칸은 위에서 먼저 그려져 시간이 지나도 그대로 남습니다.
+    if (r < Date.now()) return <td key={m.id} className={`border-l border-white/5 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.035)_0_4px,transparent_4px_8px)] px-2 ${META} text-white/40`}>{t(c.past)}</td>;
     const free = fitsWindow(r, m.windows) && slotState(r, m.bookings, []) === "open";
     const full = mine.length >= MAX_BOOKINGS_PER_TEAM_PER_DAY; // 이 날 두 칸을 다 넣었으면 더 열지 않습니다
-    const ok = !timetableLocked && !!picked && !full && free && slotState(r, m.bookings, mine) === "open";
+    // 2026-10-26: Day 1 전에는 닫혀 있고, 그날에는 13:00 전 칸이 닫힙니다(bookingGate). 닫힌 칸도 흐린 "+"로 보입니다.
+    const gated = bookingGate(day, r) !== "ok";
+    const ok = !timetableLocked && !gated && !!picked && !full && free && slotState(r, m.bookings, mine) === "open";
     const asking = pending?.m === m.id && pending.r === r;
-    const locked = (timetableLocked || !picked) && free; // 팀을 고르면 열릴 칸: "+"를 흐리게 보여 줍니다
+    const locked = (timetableLocked || gated || !picked) && free; // 팀을 고르면 열릴 칸: "+"를 흐리게 보여 줍니다
     return (
       <td key={m.id} className="border-l border-white/5 p-0">
         <button type="button" disabled={!ok || busy} aria-label={`${m.name} ${fmtKst(r)}`}
           // 바꿀 수 없으니 두 번 누릅니다: 처음은 "넣기?"로 묻고, 같은 칸을 한 번 더 누르면 넣습니다.
           onClick={() => (asking ? (setPending(null), call("POST", { team: picked, mentorId: m.id, startsAt: new Date(r).toISOString() })) : setPending({ m: m.id, r }))}
           // 묻는 칸은 우리 팀의 트랙 색으로 미리 칠합니다(넣으면 이 색이 됩니다).
-          style={asking ? { background: `${myTint}38`, borderColor: myTint } : undefined}
+          style={asking ? { background: `${myTint}${SLOT_ALPHA}`, borderColor: myTint } : undefined}
           className={`min-h-[44px] w-full rounded-md px-1 py-2 ${META} transition duration-150 ${asking ? "border font-bold text-white" : ok ? "border border-white/20 text-white/70 hover:bg-white/15" : locked ? "cursor-not-allowed border border-white/10 text-white/30" : "text-transparent"}`}>
           {asking ? t(c.confirmPut) : "+"}
         </button>
@@ -183,14 +196,34 @@ export default function TeamTool() {
         {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}
         {/* DECIDED 2026-10-26 (사용자, 스크린숏: "1일차에는 멘토 시간표가 없어야함"): Day 1 탭에서는 시간표 절 전체(제목, 안내, 범례, 표)를 그리지 않습니다.
             그 전(2026-10-17): 잠긴 표와 주황 안내 "Day 1에는 멘토 시간표에 칸을 넣지 않습니다"를 보여 줬습니다. */}
+        {timetableLocked && <p className={`${BODY} text-white/70`}>{t(c.day1BookHint)}</p>}
         {!timetableLocked && <>
         <h2 className={`mt-[18px] ${BODY} font-bold`}>{t(c.timetableHeading)}</h2>
-        <p className={`${BODY} text-white/70`}>{t(c.lead)} {t(c.carry)}</p>
+        {/* DECIDED 2026-10-26 (사용자, 스크린숏: "시간표 사용 설명이 좀 더 visually engaging"): 한 문단을 규칙 카드 여섯 장으로.
+            글자 크기는 BODY(핵심)와 META(한 줄) 둘. 아이콘은 보라(accent) 한 색이고, 그날의 시간 규칙 둘만 주황(나루 점)입니다. */}
+        <ul className="grid gap-[12px] sm:grid-cols-2 lg:grid-cols-3">
+          {timetableRules.map((r) => (
+            <li key={r.icon} className="flex items-start gap-[12px] rounded-2xl border border-white/10 bg-white/[0.03] p-[16px]">
+              <span aria-hidden className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${r.icon === "open" || r.icon === "today" ? "bg-naru-orange/15 text-naru-orange" : "bg-accent/15 text-accent"}`}>
+                <RuleIcon name={r.icon} />
+              </span>
+              <span className="flex flex-col gap-[4px]">
+                <span className={`${BODY} font-bold text-white`}>{t(r.key)}</span>
+                <span className={`${META} leading-relaxed text-white/70`}>{t(r.body)}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p className={`flex items-center gap-[10px] rounded-2xl border border-accent/30 bg-accent/[0.08] px-[16px] py-[12px] ${BODY} text-white/85`}>
+          <span aria-hidden className="text-accent"><RuleIcon name="doc" /></span>{t(c.carry)}
+        </p>
+        {notYet && <p className={`${META} font-bold text-naru-orange`}>{t(c.notYet)}</p>}
+        {!notYet && today && <p className={`${META} font-bold text-naru-orange`}>{t(c.sameDay)}</p>}
         {tracks.length > 0 && (
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             {tracks.map((x) => (
               <span key={x.id} className={`flex items-center gap-2 ${META} ${teamTracks[picked] === x.id ? "font-bold text-white" : "text-white/70"}`}>
-                <span aria-hidden className="h-3 w-5 rounded-sm" style={{ background: `${trackTint(x.color)}38`, boxShadow: `inset 3px 0 0 ${trackTint(x.color)}` }} />
+                <span aria-hidden className="h-3 w-5 rounded-sm" style={{ background: `${trackTint(x.color)}${SLOT_ALPHA}`, boxShadow: `inset 4px 0 0 ${trackTint(x.color)}` }} />
                 {t(x.label)}
               </span>
             ))}
@@ -233,6 +266,20 @@ export default function TeamTool() {
   );
 }
 
+/** 시간표 규칙 카드의 아이콘(2026-10-26). 선 두께 2, 20px. */
+function RuleIcon({ name }: { name: string }) {
+  const p = { width: 20, height: 20, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  switch (name) {
+    case "tap": return <svg {...p}><path d="M9 11V5a2 2 0 0 1 4 0v6" /><path d="M13 10a2 2 0 0 1 4 0v2" /><path d="M17 11a2 2 0 0 1 4 0v4a7 7 0 0 1-7 7h-1a7 7 0 0 1-5.6-2.8L4 15.5a2 2 0 0 1 3-2.6L9 15" /></svg>;
+    case "clock": return <svg {...p}><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>;
+    case "two": return <svg {...p}><rect x="3" y="4" width="18" height="6" rx="2" /><rect x="3" y="14" width="18" height="6" rx="2" /></svg>;
+    case "lock": return <svg {...p}><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>;
+    case "open": return <svg {...p}><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /><path d="m9 15 2 2 4-4" /></svg>;
+    case "today": return <svg {...p}><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>;
+    default: return <svg {...p}><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5M9 13h6M9 17h4" /></svg>;
+  }
+}
+
 /** 사진은 긴 변 2000px JPEG로 줄여 올립니다. 브라우저가 못 여는 형식(HEIC 등)은 그대로. */
 async function shrink(file: File): Promise<Blob> {
   if (!file.type.startsWith("image/") || file.type.includes("heic") || file.type.includes("heif")) return file;
@@ -262,47 +309,95 @@ function Proofs({ team, day }: { team: string; day: ProofDay }) {
   }, [team]);
   useEffect(() => { void refresh(); }, [refresh]);
 
-  const upload = async (kind: ProofKind, file: File) => {
+  // DECIDED 2026-10-26 (사용자: "업로드는 한번만 가능하도록 해, 그러니까 하루 끝나기 전에 신중한 업로드 부탁"):
+  // 파일을 고르면 바로 올리지 않고 이름과 크기를 보여 주며 한 번 더 묻습니다("이 파일로 올리기"). 올린 뒤에는 고르기 버튼이 사라집니다.
+  // 서버도 팀, 날, 종류마다 한 번만 받습니다(app/api/crossing/proofs, already).
+  const [picked, setPicked] = useState<Partial<Record<ProofKind, { name: string; blob: Blob; type: string }>>>({});
+  const tooBig = (kind: ProofKind) => t(c.proofTooBig).replace("{mb}", String(PROOF_MAX_BYTES[kind] / 1024 / 1024));
+  const errOf = (e: unknown, kind: ProofKind) => (e === "too_big" ? tooBig(kind) : e === "already" ? t(c.proofAlready) : null);
+
+  const choose = async (kind: ProofKind, file: File) => {
     setMsg(null);
     if (!PROOF_TYPES[kind].includes(file.type)) { setMsg(t(c.proofBadType)); return; }
+    const blob = kind === "photo" ? await shrink(file) : file;
+    if (blob.size > PROOF_MAX_BYTES[kind]) { setMsg(tooBig(kind)); return; }
+    setPicked((p) => ({ ...p, [kind]: { name: file.name, blob, type: blob.type || file.type } }));
+  };
+
+  const upload = async (kind: ProofKind) => {
+    const f = picked[kind];
+    if (!f) return;
+    setMsg(null);
     setState((s) => ({ ...s, [kind]: "uploading" }));
     try {
-      const blob = kind === "photo" ? await shrink(file) : file;
-      if (blob.size > PROOF_MAX_BYTES) { setMsg(t(c.proofTooBig)); throw new Error("size"); }
-      const type = blob.type || file.type;
       const post = (body: object) => fetch("/api/crossing/proofs", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ team, ...body }) });
-      const s = await post({ action: "sign", day, kind, contentType: type, size: blob.size });
-      if (!s.ok) throw new Error("sign");
+      const s = await post({ action: "sign", day, kind, contentType: f.type, size: f.blob.size });
+      if (!s.ok) { setMsg(errOf((await s.json().catch(() => ({}))).error, kind)); throw new Error("sign"); }
       const { path, signedUrl } = await s.json();
-      if (!(await fetch(signedUrl, { method: "PUT", headers: { "content-type": type }, body: blob })).ok) throw new Error("put");
-      if (!(await post({ action: "confirm", path })).ok) throw new Error("confirm");
-      void refresh();
+      if (!(await fetch(signedUrl, { method: "PUT", headers: { "content-type": f.type }, body: f.blob })).ok) throw new Error("put");
+      const cf = await post({ action: "confirm", path });
+      if (!cf.ok) { setMsg(errOf((await cf.json().catch(() => ({}))).error, kind)); throw new Error("confirm"); }
+      setPicked((p) => ({ ...p, [kind]: undefined }));
     } catch {
       setMsg((m) => m ?? t(c.errGeneric));
     }
+    void refresh();
     setState((x) => ({ ...x, [kind]: "idle" }));
   };
+  // 날이나 팀을 바꾸면 골라 둔 파일은 버립니다(다른 날 상자에 올라가지 않게).
+  useEffect(() => { setPicked({}); setMsg(null); }, [day, team]);
 
   const slot = (kind: ProofKind) => {
     const latest = proofs.find((p) => p.day === day && p.kind === kind);
     const up = state[kind] === "uploading";
     const off = up || !team;
+    const f = picked[kind];
+    const mb = (n: number) => `${(n / 1024 / 1024).toFixed(1)}MB`;
     return (
       <div key={kind} className="flex flex-col gap-[13.5px] rounded-2xl border border-white/15 bg-white/[0.03] p-[20px] sm:p-[24px]">
         <div className="flex flex-col gap-[13.5px] sm:flex-row sm:items-baseline sm:justify-between">
-          <h3 className={`${BODY} font-bold`}>{t(kind === "photo" ? c.proofPhoto : day === 1 ? c.proofPdfDay1 : c.proofPdf)}</h3>
-          <span className={`${META} ${latest ? "text-naru-orange" : "text-white/70"}`}>{latest ? `★ ${t(c.proofDone)} ${fmtKst(latest.createdAt)}` : t(c.proofNone)}</span>
+          <h3 className={`${BODY} font-bold`}>{t(kind === "photo" ? c.proofPhoto : day === 1 ? c.proofPdfDay1 : day === 3 ? c.proofPdfDay3 : c.proofPdf)}</h3>
+          {latest
+            ? <span className={`w-fit rounded-full bg-naru-orange/15 px-[10px] py-[2px] ${META} font-bold text-naru-orange`}>★ {t(c.proofDoneChip)}</span>
+            : <span className={`${META} text-white/70`}>{t(c.proofNone)}</span>}
         </div>
-        {latest?.url && kind === "photo" && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={latest.url} alt="" className="max-h-56 w-fit rounded-xl object-contain" />
+        {kind === "pdf" && day !== 1 && <p className={`${META} leading-relaxed text-white/70`}>{t(day === 3 ? c.proofPdfHintDay3 : c.proofPdfHint)}</p>}
+        {!latest && <p className={`${META} text-white/50`}>{t(kind === "photo" ? c.proofLimitPhoto : c.proofLimitPdf).replace("{mb}", String(PROOF_MAX_BYTES[kind] / 1024 / 1024))}</p>}
+        {/* 2026-10-26: 낸 파일은 이 페이지에서 보이지 않습니다(사진 미리보기, 보기 링크 없음). 멘토 페이지에서만 열립니다. */}
+        {latest ? (
+          // DECIDED 2026-10-26 (사용자, 스크린숏: "너무 상자가 비어있음"): 제출한 상자는 "제출 완료" 패널이 남은 자리를 채웁니다.
+          // 파일은 보여 주지 않으므로(같은 날 결정) 체크, 날짜와 시각, 크기만. 색은 나루 주황(제출 칩과 같은 색).
+          <div className="flex flex-1 items-center gap-[16px] rounded-xl border border-naru-orange/30 bg-naru-orange/[0.08] p-[16px] sm:p-[20px]">
+            <span aria-hidden className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-naru-orange/20 text-naru-orange">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5" /></svg>
+            </span>
+            <span className="flex flex-col gap-[4px]">
+              <span className={`${BODY} font-bold text-white`}>{t(c.proofDone)}</span>
+              <span className={`${META} tabular-nums text-white/85`}>
+                {dayDate(day).slice(5).replace("-", ".")} {fmtKst(latest.createdAt)}{latest.sizeBytes ? `, ${(latest.sizeBytes / 1024 / 1024).toFixed(1)}MB` : ""}
+              </span>
+              <span className={`${META} leading-relaxed text-white/60`}>{t(c.proofLocked)}</span>
+            </span>
+          </div>
+        ) : f ? (
+          <div className="flex flex-col gap-[9px]">
+            <p className={`${META} break-all text-white/85`}>{f.name} <span className="text-white/50">({mb(f.blob.size)})</span></p>
+            <div className="flex flex-wrap gap-[9px]">
+              <button type="button" disabled={off} onClick={() => void upload(kind)} className={`${buttonClass("primary", "naru")} justify-center ${off ? "opacity-50" : ""}`}>
+                {up ? t(c.proofUploading) : t(c.proofConfirm)}
+              </button>
+              <button type="button" disabled={up} onClick={() => setPicked((p) => ({ ...p, [kind]: undefined }))} className={`${buttonClass("secondary", "naru")} justify-center`}>
+                {t(c.proofCancel)}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <label aria-disabled={off} className={`${buttonClass("secondary", "naru")} w-full cursor-pointer justify-center sm:w-fit ${off ? "pointer-events-none opacity-50" : ""}`}>
+            {t(c.proofPick)}
+            <input type="file" className="sr-only" disabled={off} accept={kind === "photo" ? "image/*" : "application/pdf"}
+              onChange={(e) => { const x = e.target.files?.[0]; e.target.value = ""; if (x) void choose(kind, x); }} />
+          </label>
         )}
-        {latest?.url && kind === "pdf" && <a href={latest.url} target="_blank" rel="noreferrer" className={buttonClass("text")}>{t(c.proofView)}</a>}
-        <label aria-disabled={off} className={`${buttonClass("secondary", "naru")} w-full cursor-pointer justify-center sm:w-fit ${off ? "pointer-events-none opacity-50" : ""}`}>
-          {up ? t(c.proofUploading) : t(latest ? c.proofReplace : c.proofPick)}
-          <input type="file" className="sr-only" disabled={off} accept={kind === "photo" ? "image/*" : "application/pdf"}
-            onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) void upload(kind, f); }} />
-        </label>
       </div>
     );
   };
@@ -311,7 +406,8 @@ function Proofs({ team, day }: { team: string; day: ProofDay }) {
     <section aria-labelledby="proof-h" className="flex flex-col gap-[24px]">
       <div className="flex flex-col gap-[18px]">
         <h2 id="proof-h" className={`${BODY} font-bold`}>{t(c.proofHeading)}</h2>
-        <p className={`${BODY} text-white/70`}>{t(day === 1 ? c.proofLeadDay1 : c.proofLead)}</p>
+        <p className={`${BODY} text-white/70`}>{t(day === 1 ? c.proofLeadDay1 : day === 3 ? c.proofLeadDay3 : c.proofLead)}</p>
+        <p className={`${META} font-bold text-naru-orange`}>{t(c.proofOnce)}</p>
         {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}
       </div>
       <div className="grid gap-[18px] sm:grid-cols-2">{proofKindsFor(day).map((k) => slot(k))}</div>

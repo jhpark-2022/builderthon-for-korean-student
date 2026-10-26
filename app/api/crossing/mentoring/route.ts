@@ -13,7 +13,7 @@ import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { CURRENT_EVENT } from "@/lib/registrationWindow";
 import { findTeam, listTracks } from "@/lib/crossingOpsServer";
-import { DEFAULT_WINDOW, MAX_BOOKINGS_PER_TEAM_PER_DAY, OPS_DAYS, SESSION_MINUTES, fitsWindow, isOpsDay, isProofDay, kstTime, type Window } from "@/lib/crossingOps";
+import { DEFAULT_WINDOW, MAX_BOOKINGS_PER_TEAM_PER_DAY, OPS_DAYS, SESSION_MINUTES, bookingGate, fitsWindow, isOpsDay, isProofDay, kstTime, type Window } from "@/lib/crossingOps";
 
 export const dynamic = "force-dynamic";
 
@@ -78,6 +78,9 @@ export async function POST(req: Request) {
   const { data: windows } = await db.from("crossing_mentor_windows").select("day, start_time, end_time").eq("mentor_id", mentorId);
   const hit = OPS_DAYS.map((d) => ({ day: d, ws: windowsFor(d, (windows ?? []).filter((w) => w.day === d)) })).find((x) => fitsWindow(t, x.ws));
   if (!hit) return NextResponse.json({ error: "outside_window" }, { status: 400 });
+  // 2026-10-26: Day 1부터 열리고, 그날에는 13:00 이후 칸만(lib/crossingOps.ts bookingGate).
+  const gate = bookingGate(hit.day, t);
+  if (gate !== "ok") return NextResponse.json({ error: gate }, { status: 400 });
 
   // 하루 두 칸(2026-10-17). 미리 세어 알맞은 말로 거절하고, 동시에 들어온 요청은 DB 트리거가 막습니다(P0001 team_daily_limit).
   const { count } = await db.from("crossing_mentor_bookings").select("id", { count: "exact", head: true }).eq("team_name", team.name).eq("day", hit.day);
