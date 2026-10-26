@@ -18,6 +18,8 @@ import { isScrollLocked } from "../../useBodyScrollLock";
 
 // 커서 빛 없이 늘 보이는 휘장의 밝기(0..1, DECIDED 2026-10-23). 제목과 겹치므로 빛 안에서보다 낮게 둡니다.
 // 폰(세로)은 섬이 작아 휘장이 글자와 더 바짝 겹쳐 더 낮춥니다(같은 날 모바일 점검).
+/** 터치 화면에서 손가락이 닿은 뒤 배경을 쉬는 시간(ms). 2026-10-26, onTouchYield. */
+const TOUCH_YIELD_MS = 120;
 const HERO_CAMPUS_ON = 0.6;
 const HERO_CAMPUS_ON_PORTRAIT = 0.35;
 
@@ -347,6 +349,7 @@ export class BackgroundScene {
     window.addEventListener("scroll", this.onScroll, { passive: true });
     document.addEventListener("visibilitychange", this.onVisibility);
     this.mql.addEventListener("change", this.onReducedChange);
+    if (this.coarse) window.addEventListener("pointerdown", this.onTouchYield, { passive: true, capture: true });
     this.scrollY = window.scrollY;
     this.readAnchors();
     this.placeShapes();
@@ -763,6 +766,7 @@ export class BackgroundScene {
     window.removeEventListener("scroll", this.onScroll);
     document.removeEventListener("visibilitychange", this.onVisibility);
     this.mql.removeEventListener("change", this.onReducedChange);
+    window.removeEventListener("pointerdown", this.onTouchYield, { capture: true });
 
     this.atmosphere?.dispose();
     this.particles?.dispose();
@@ -831,6 +835,14 @@ export class BackgroundScene {
     this.particles?.setPixelRatio(this.renderer.pixelRatio);
   }
 
+  // DECIDED 2026-10-26 (사용자: "핸드폰으로 들어갈 때 interaction들이 너무 반응이 느릴 때가 있음"): 터치 화면에서는 손가락이 닿는
+  // 순간부터 TOUCH_YIELD_MS 동안 배경을 그리지 않습니다. Speed Insights에서 아이폰 사파리만 탭 반응이 느렸고(INP p75 0.24~0.33초,
+  // 안드로이드 0.1초), 매 프레임의 WebGL(블룸 포함)이 탭 뒤 첫 화면을 밀어내고 있었습니다. 그 틈에 브라우저가 누른 것을 먼저 그립니다.
+  // 0.12초 멈춤은 눈에 거의 띄지 않고, 다음 프레임의 dt는 0.05초로 잘려 튀지 않습니다.
+  private readonly coarse = typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
+  private yieldUntil = 0;
+  private onTouchYield = () => { this.yieldUntil = performance.now() + TOUCH_YIELD_MS; };
+
   // ── render loop ─────────────────────────────────────────────────────────────
   private loop = () => {
     if (!this.running) return;
@@ -838,6 +850,7 @@ export class BackgroundScene {
     if (!this.visible) return; // pause work in background tabs
     if (this.paused) return; // 방문자가 껐습니다
     if (this.held) return; // 원페이저 스와이프가 잠깐 쥐고 있습니다(setHeld)
+    if (this.yieldUntil && performance.now() < this.yieldUntil) return; // 손가락이 막 닿았습니다(onTouchYield)
 
     const dt = Math.min(this.clock.getDelta(), 0.05);
     const t = this.clock.elapsedTime;

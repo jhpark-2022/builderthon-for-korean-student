@@ -149,7 +149,8 @@ export const MEASURE_C = "mx-auto lg:max-w-[28rem] text-balance";
 // DECIDED 2026-10-07 (이슈 브리프 4.3, 대비 기준): 히어로의 버튼 둘은 남색 반투명 바탕에 섭니다. 히어로에는 읽기
 // 판이 없고 해의 빛이 버튼 뒤를 지나갑니다. 폰 영문 화면에서 "See the programme"이 빛 위에 걸려 5.1:1이었습니다
 // (본문 기준 7:1). #naru의 문 셋이 같은 이유로 쓰는 알약 바탕(2026-09-23)과 같은 색입니다. 테두리와 크기는 그대로.
-export const HERO_BUTTON_GROUND = "!bg-naru-surface backdrop-blur-sm";
+// 2026-10-26 (아이폰 탭 지연): backdrop-blur를 뺍니다. 움직이는 배경 위의 흐림은 매 프레임 다시 계산됩니다. 바탕은 불투명한 카드 면.
+export const HERO_BUTTON_GROUND = "!bg-naru-surface";
 // 작은 라벨의 자간. 한국어 화면은 0, 영문 화면(라틴 대문자)만 넓게.
 // DECIDED 2026-10-20 (hwang 브리프 2.4, 감사 W1): 영문 0.14em → 0.06em.
 export const latinTrack = (locale: "ko" | "en") => (locale === "en" ? "tracking-[0.06em]" : "tracking-normal");
