@@ -1086,7 +1086,10 @@ export default function NaruHome() {
           틈)에서 서울이 절반 밝기였습니다(실측: 캔버스 대비 0.55). 글 뒤는 읽기 판이 가라앉히므로 띠가
           맡던 가독성은 판이 대신합니다. /2026-08의 띠는 그대로입니다(components/shared/Band.tsx). */}
       {/* 2026-10-24 (밀도 브리프 1.6, D4): lg에서 판 안쪽 바닥 여백만 96px → 56px. 챕터 틈(naru-content-chapter 120px, 형상이 보이는 자리)은 그대로. */}
-      <Chapter id="december" labelledBy="december-title" align="center" contentSized className="lg:!pb-[56px]">
+      {/* DECIDED 2026-10-26 (사용자: "스크롤 섹션마다 레이아웃이 제각각"): 홈의 세 챕터(#december, #gains, #partners)는 같은 폭과 같은 세로 리듬입니다.
+          머리는 READ, 본문과 판은 WIDE, 위아래는 Chapter 기본 여백(lg 108px). 판끼리의 형상 틈은 120px(108 - 48 판 확장, 두 번)로 모두 같습니다.
+          위의 lg:!pb-[56px](2026-10-24)와 챕터 사이 120px 바깥 여백은 이 결정이 대신합니다(globals.css .naru-home-v2 .naru-content-chapter). */}
+      <Chapter id="december" labelledBy="december-title" align="center" contentSized>
         <PlateSegment id="december">
         {/* DECIDED 2026-10-21 (2차, brand 2장): 짧은 소개 다음에 전체 일정이 오고, 운영 설명은 일정 뒤 한 묶음으로 읽습니다. */}
         <h2 id="december-title" className={`${H2} ${READ} text-balance text-center`}>{t(naru.december.programHeading)}</h2>
@@ -1374,7 +1377,7 @@ export default function NaruHome() {
           그리드), 폰은 두 열 + 마지막 한 장 전폭. 아래 한 줄이 "왜 제목뿐인가"의 답.
           8월 참가 혜택 필과 같은 emerald. 기본 이음매. */}
       <Chapter id="gains" labelledBy="gains-title" align="center" contentSized>
-        <PlateSegment id="gains" read>
+        <PlateSegment id="gains">
         {/* DECIDED 2026-09-30 (사용자, 스크린숏): 이 챕터의 머리(알약, h2, 바로 아래 한 줄)는 가운데입니다.
             #december와 #naru의 머리와 같은 축입니다. 아래 다섯 행부터는 왼쪽 끝. */}
         <div className={`${READ} text-center`}><Eyebrow color="purple" className={`${eyebrowTrack(locale)} !mb-0`}>{t(naru.gains.eyebrow)}</Eyebrow></div>
@@ -1385,7 +1388,7 @@ export default function NaruHome() {
             그 아래 번호 카드. 2026-09-20에 카드를 행으로 바꾼 결정은 이 요청으로 되돌립니다.
             8월과 다른 점: 색은 cyan이 아니라 홈의 accent(보라), 글자 크기는 홈의 셋(TITLE, BODY, META)만, 카드 안은 가운데입니다
             (같은 날 "뭐는 중간에, 뭐는 left에" 결정). 카드 본문은 불릿이 아니라 한 문장입니다(항목마다 문장이 하나뿐). */}
-        <Reveal className={READ}>
+        <Reveal className={WIDE}>
           {/* DECIDED 2026-10-24 (밀도 브리프 1.3): lg에서는 척추 카드의 테두리와 면을 걷고 H2 아래 리드로 둡니다(프로그램 제목 아래 리드와 같은 문법). 글과 글자 크기는 그대로.
               같은 날 뒤(폰 밀도 브리프 1.8): 폰(sm 미만)도 같은 리드. 카드는 sm~md에만 남습니다. */}
           <div className="mt-[36px] max-sm:mt-[24px] max-sm:rounded-none max-sm:border-0 max-sm:bg-transparent max-sm:p-0 rounded-2xl border border-accent/30 bg-accent/[0.08] px-[24px] py-[27px] text-center sm:p-[40px] lg:mt-[32px] lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0">
@@ -1452,7 +1455,8 @@ export default function NaruHome() {
           나루 티저 바로 앞입니다(brand 3장 원칙 2). 분류, 로고 줄, 한 줄 설명을 모든 폭에서 가운데로 쌓습니다
           (같은 날 사용자: "put the logo at the center". 그 전은 lg에서 왼쪽 분류, 오른쪽 로고).
           로고는 원래 색이고(data/naru.ts decemberPartners) 비율로 높이를 맞춥니다. 링크가 확실한 곳만 새 탭 링크입니다. */}
-      <section id="partners" aria-labelledby="partners-title" className="relative w-full px-[20px] pb-[45px] pt-[72px] max-sm:pb-[32px] max-sm:pt-[56px] sm:px-[40px] sm:pb-[90px] lg:pb-[72px] lg:pt-[72px]">
+      {/* 2026-10-26: 위아래 여백은 Chapter contentSized와 같은 값입니다(위 #december 주석). 휘장이 fixed라 Chapter의 isolate 안에 넣지 않고 section 그대로 둡니다. */}
+      <section id="partners" aria-labelledby="partners-title" className="naru-content-chapter relative w-full px-[20px] py-14 sm:px-[40px] sm:py-20 lg:py-24">
         {/* DECIDED 2026-10-22 (사용자): 서울 안에서 빛이 비추면 대학교 휘장이 보입니다(학회 로고는 쓰지 않음). 표보다 먼저 두어 표 아래에 깔립니다. */}
         <SeoulCampuses />
         <div className={WIDE}>

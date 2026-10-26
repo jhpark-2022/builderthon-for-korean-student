@@ -70,7 +70,8 @@ export function SiteMenuBar({ page }: { page: SitePage }) {
 }
 
 /** 폰과 태블릿의 메뉴 단추(xl 아래). 목차 레일 밖, 레일 왼쪽에 섭니다. 누르면 레일 아래에 메뉴 한 줄이 열립니다. */
-export function SiteMenuButton({ open, onToggle, controls }: { open: boolean; onToggle: () => void; controls: string }) {
+// desktop: 홈 헤더의 로고 옆 단추(xl부터만). 홈은 xl에서도 사이트 메뉴를 글자 줄 대신 이 단추로 엽니다(DECIDED 2026-10-26).
+export function SiteMenuButton({ open, onToggle, controls, desktop = false }: { open: boolean; onToggle: () => void; controls: string; desktop?: boolean }) {
   const { t } = useLocale();
   return (
     <button
@@ -79,7 +80,7 @@ export function SiteMenuButton({ open, onToggle, controls }: { open: boolean; on
       aria-controls={controls}
       aria-label={t(open ? dict.siteMenu.close : dict.siteMenu.open)}
       onClick={onToggle}
-      className="inline-flex h-[44px] w-[44px] shrink-0 items-center justify-center text-white/85 transition-[color,transform] duration-150 active:scale-[0.96] hover:text-white xl:hidden"
+      className={`h-[44px] w-[44px] shrink-0 items-center justify-center text-white/85 transition-[color,transform] duration-150 active:scale-[0.96] hover:text-white ${desktop ? "hidden xl:inline-flex" : "inline-flex xl:hidden"}`}
     >
       <svg aria-hidden width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
         {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
@@ -88,7 +89,7 @@ export function SiteMenuButton({ open, onToggle, controls }: { open: boolean; on
   );
 }
 
-export function SiteMenuSheet({ page, open, id, onClose }: { page: SitePage; open: boolean; id: string; onClose: () => void }) {
+export function SiteMenuSheet({ page, open, id, onClose, desktop = false }: { page: SitePage; open: boolean; id: string; onClose: () => void; desktop?: boolean }) {
   const { t } = useLocale();
   const items = useItems(true);
   useEffect(() => {
@@ -98,7 +99,7 @@ export function SiteMenuSheet({ page, open, id, onClose }: { page: SitePage; ope
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
   return (
-    <nav id={id} aria-label={t(dict.siteMenu.aria)} hidden={!open} className="border-y border-white/10 bg-[#070B1F]/95 px-5 pb-2 backdrop-blur-md sm:px-10 xl:hidden">
+    <nav id={id} aria-label={t(dict.siteMenu.aria)} hidden={!open} className={`border-y border-white/10 bg-[#070B1F]/95 px-5 pb-2 backdrop-blur-md sm:px-10 ${desktop ? "" : "xl:hidden"}`}>
       <div className="flex flex-wrap items-center gap-x-5" onClick={onClose}>
         {items.map((it) => <MenuLink key={it.key} it={it} page={page} src="site-menu-phone" className={`${META} font-semibold text-white/85`} />)}
       </div>

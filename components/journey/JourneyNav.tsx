@@ -370,7 +370,12 @@ export default function JourneyNav({
   const en = locale === "en";
   // DECIDED 2026-10-20 (hwang 브리프 2.14, 1.3, 감사 W7): 영문도 한국어와 같은 폭에서 한 줄이 됩니다(홈과 /naru는 xl, 8월은 그대로).
   // 그 전에는 영문 홈 1728, /naru 2xl부터였고 1440 영문 헤더가 두 줄이었습니다. 페이지 칩이 글자 메뉴가 되고 EN 문자열이 짧아져 들어갑니다.
-  const anchorRowAt = en && !naru
+  // DECIDED 2026-10-26 (사용자: "상단 네비게이션 정보가 많고 너무 몰려있어"): 홈은 xl부터 로고 옆에 메뉴 단추 하나, 목차는 바 가운데입니다.
+  // 사이트 메뉴(홈, 나루, 8월 기록) 글자 줄이 빠져 두 로케일 모두 xl(1280)에서 들어갑니다. /naru와 8월은 그대로.
+  const home = page === "crossing";
+  const anchorRowAt = home
+    ? { row: "xl:absolute xl:left-1/2 xl:top-1/2 xl:flex xl:-translate-x-1/2 xl:-translate-y-1/2", rail: "xl:hidden" }
+    : en && !naru
     ? { row: "min-[1800px]:ml-6 min-[1800px]:flex", rail: "min-[1800px]:hidden" }
     : naru && en && anchors.length > 4
       // 영문 홈은 낱말이 길어 xl(1280)에서 목차 끝이 오픈채팅과 겹쳐(실측) 1440부터입니다. 영문 /naru는 xl에서 들어갑니다.
@@ -434,7 +439,7 @@ export default function JourneyNav({
           거기에 더합니다. */}
       <nav
         aria-label={t(dict.nav.primaryAria)}
-        className="flex h-[52px] w-full items-center justify-between xl:h-20"
+        className="relative flex h-[52px] w-full items-center justify-between xl:h-20"
         style={{
           paddingLeft: "calc(env(safe-area-inset-left, 0px) + var(--nav-gutter))",
           paddingRight: "calc(env(safe-area-inset-right, 0px) + var(--nav-gutter))",
@@ -561,7 +566,7 @@ export default function JourneyNav({
           {/* DECIDED 2026-10-20 (사용자, 스크린숏: "여기서 by 나루는 빼고"): hwang 브리프 4.3의 헤더 바이라인은 넣지 않습니다. 8월 OG의 나루 락업은 그대로. */}
           {/* DECIDED 2026-10-20 (hwang 브리프 4.1, 감사 W8): 사이트 메뉴는 알약(PageChips)이 아니라 글자 링크입니다(xl부터).
               크로싱 서울(EN Home), 나루, 8월 기록, 후원 문의. 오픈채팅은 같은 줄 오른쪽의 버튼입니다. 그 아래 폭에서는 레일 왼쪽의 메뉴 단추. */}
-          <SiteMenuBar page={page} />
+          {home ? <SiteMenuButton open={menu.open} onToggle={menu.toggle} controls={menu.id} desktop /> : <SiteMenuBar page={page} />}
           {/* ANCHOR ROW - `xl` (1280), not `lg` (1024). See the note on the
               section rail below: between 1024 and 1279 this row does not fit
               next to the brand and the two CTAs in either locale, and flex
@@ -571,7 +576,7 @@ export default function JourneyNav({
           {/* 영문 8월의 아홉 칸은 간격 20px이면 오픈채팅 버튼과 붙어 그 줄만 12px입니다. */}
           <div className={`hidden items-center ${en ? (naru ? "gap-4" : "gap-3") : "gap-5"} ${anchorRowAt.row}`}>
             {/* 2026-10-20 (hwang 브리프 4.1): 사이트 메뉴와 챕터 목차 사이의 1px 선. 목차 줄이 설 때만 섭니다. */}
-            <span aria-hidden className="h-5 w-px shrink-0 bg-white/20" />
+            {!home && <span aria-hidden className="h-5 w-px shrink-0 bg-white/20" />}
             {/* DECIDED 2026-10-10 (사용자: "TOC가 너무 어색함"): 나루 계열 헤더(홈, /naru)의 데스크톱 줄에서는 첫 항목(#top)을
                 그리지 않습니다. 바로 왼쪽의 로고가 같은 이름이고 같은 곳(#top)으로 갑니다. "나루 나루", "크로싱 서울 크로싱 서울"로
                 읽혔습니다. 폰 레일은 로고 줄이 접힌 뒤에 혼자 남으므로 넷 그대로입니다. 8월 페이지는 그대로. */}
@@ -826,8 +831,9 @@ export default function JourneyNav({
         </div>
       </nav>
       </div>
-      <SiteMenuSheet page={page} open={menu.open} id={menu.id} onClose={menu.close} />
       </div>
+      {/* 레일 묶음은 xl부터 숨으므로 시트는 그 밖에 둡니다. 홈은 xl에서도 로고 옆 단추가 엽니다. */}
+      <SiteMenuSheet page={page} open={menu.open} id={menu.id} onClose={menu.close} desktop={home} />
       </header>
       {/* DECIDED 2026-10-22 (사용자): 폰에서 옆으로 밀면 원페이저 사이를 옮깁니다. 세 페이지가 이 헤더를 같이 쓰므로 여기서 한 번 답니다. */}
       <PageSwipe page={page} />
