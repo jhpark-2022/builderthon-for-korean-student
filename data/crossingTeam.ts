@@ -46,6 +46,10 @@ export const teamCopy = {
   proofPhoto: { ko: "멘토와 함께 찍은 인증 사진", en: "Photo with the mentor" },
   // 2026-10-26: 진척 PDF는 새 문서가 아니라 고쳐 올린 1장입니다.
   proofPdf: { ko: "고쳐 올린 1장 (PDF)", en: "Your updated one page (PDF)" },
+  // DECIDED 2026-10-26 (사용자: "day 3에는 pdf를 제출하는 것이 아니고, 발표자료를 제출하는 걸로, slide in pdf"): Day 3의 PDF는 발표 자료입니다.
+  proofLeadDay3: { ko: "발표 자료(슬라이드 PDF)와, 팀이 함께 멘토와 찍은 사진을 올립니다. 현장 출석은 운영진이 체크합니다.", en: "Upload your presentation (slides as a PDF) and a photo of the team with the mentor. The organisers check who is on site." },
+  proofPdfDay3: { ko: "발표 자료 (슬라이드 PDF)", en: "Presentation (slides as PDF)" },
+  proofPdfHintDay3: { ko: "성과 공유회에서 발표할 슬라이드를 PDF로 내보내 올립니다.", en: "Export the slides you will present at the showcase as a PDF." },
   proofPdfHint: { ko: "새로 만들지 않습니다. 지금까지의 1장을 멘토의 피드백과 그날의 진척에 맞춰 고쳐 올립니다.", en: "Not a new document. Update the one page you have with the mentor's feedback and the day's progress." },
   // Day 1은 PDF 하나(2026-10-17 사용자). 홈 Day 1 카드의 "Day 2에 들고 갈 것"과 같은 물건입니다.
   proofPdfDay1: { ko: "이슈에 대한 팀의 생각 1장 (PDF)", en: "One page of the team's take on the issue (PDF)" },
@@ -59,7 +63,7 @@ export const teamCopy = {
   proofView: { ko: "보기", en: "View" },
   proofNone: { ko: "아직 없음", en: "Not yet" },
   proofTooBig: { ko: "20MB까지 올릴 수 있습니다.", en: "Files up to 20 MB." },
-  proofBadType: { ko: "사진은 JPG, PNG, HEIC, 1장은 PDF로 올립니다.", en: "Photos as JPG, PNG or HEIC. The one page as a PDF." },
+  proofBadType: { ko: "사진은 JPG, PNG, HEIC, 문서는 PDF로 올립니다.", en: "Photos as JPG, PNG or HEIC. Documents as a PDF." },
 } satisfies Record<string, Phrase>;
 
 // 시간표 사용 규칙(2026-10-26, 사용자: "시간표 사용 설명이 좀 더 visually engaging 했으면"). 한 문단이던 것을 카드 여섯 장으로.

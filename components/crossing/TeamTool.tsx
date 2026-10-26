@@ -337,10 +337,10 @@ function Proofs({ team, day }: { team: string; day: ProofDay }) {
     return (
       <div key={kind} className="flex flex-col gap-[13.5px] rounded-2xl border border-white/15 bg-white/[0.03] p-[20px] sm:p-[24px]">
         <div className="flex flex-col gap-[13.5px] sm:flex-row sm:items-baseline sm:justify-between">
-          <h3 className={`${BODY} font-bold`}>{t(kind === "photo" ? c.proofPhoto : day === 1 ? c.proofPdfDay1 : c.proofPdf)}</h3>
+          <h3 className={`${BODY} font-bold`}>{t(kind === "photo" ? c.proofPhoto : day === 1 ? c.proofPdfDay1 : day === 3 ? c.proofPdfDay3 : c.proofPdf)}</h3>
           <span className={`${META} ${latest ? "text-naru-orange" : "text-white/70"}`}>{latest ? `★ ${t(c.proofDone)} ${fmtKst(latest.createdAt)}` : t(c.proofNone)}</span>
         </div>
-        {kind === "pdf" && day !== 1 && <p className={`${META} leading-relaxed text-white/70`}>{t(c.proofPdfHint)}</p>}
+        {kind === "pdf" && day !== 1 && <p className={`${META} leading-relaxed text-white/70`}>{t(day === 3 ? c.proofPdfHintDay3 : c.proofPdfHint)}</p>}
         {latest?.url && kind === "photo" && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={latest.url} alt="" className="max-h-56 w-fit rounded-xl object-contain" />
@@ -359,7 +359,7 @@ function Proofs({ team, day }: { team: string; day: ProofDay }) {
     <section aria-labelledby="proof-h" className="flex flex-col gap-[24px]">
       <div className="flex flex-col gap-[18px]">
         <h2 id="proof-h" className={`${BODY} font-bold`}>{t(c.proofHeading)}</h2>
-        <p className={`${BODY} text-white/70`}>{t(day === 1 ? c.proofLeadDay1 : c.proofLead)}</p>
+        <p className={`${BODY} text-white/70`}>{t(day === 1 ? c.proofLeadDay1 : day === 3 ? c.proofLeadDay3 : c.proofLead)}</p>
         {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}
       </div>
       <div className="grid gap-[18px] sm:grid-cols-2">{proofKindsFor(day).map((k) => slot(k))}</div>

@@ -2678,7 +2678,8 @@ export const naru = {
           ],
           submit: [
             { ko: "멘토와 팀이 함께 찍은 사진", en: "A photo of the team with the mentor" },
-            { ko: "고쳐 올린 1장 (PDF)", en: "Your updated one page (PDF)" },
+            // 2026-10-26 (사용자): Day 3에 올리는 것은 발표 자료(슬라이드 PDF).
+            { ko: "발표 자료 (슬라이드 PDF)", en: "Presentation (slides as PDF)" },
             { ko: "현장 출석은 운영진이 체크합니다", en: "The organisers check who is on site" },
           ],
         },
