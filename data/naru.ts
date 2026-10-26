@@ -2505,10 +2505,8 @@ export const naru = {
         title: { ko: "찾기", en: "Find" },
         when: { ko: "Day 1", en: "Day 1" },
         dayOffset: 1,
-        // DECIDED 2026-10-19 (사용자: "day 1 and day 4에 각각 GSC랑 MARU180 로고 넣어줘"): 노선도 정거장 위의 로고.
-        // 흰색 단색(scripts/process-partner-logos.py, 원본은 "12월 빌더톤/CI"). 로고가 무엇을 뜻하는지(장소, 함께하는 곳)는 글로 쓰지 않습니다.
-        // 2026-10-20: GSC는 자체 홈페이지 주소를 확인하지 못해, 운영을 지원하는 창업진흥원의 공식 GSC 안내 페이지로 겁니다. 홈페이지가 확인되면 바꾸세요.
-        logo: { src: "/partners/logos/white/trimmed/gsc.png", name: "GSC Global Startup Center", w: 900, h: 259, url: "https://www.kised.or.kr/menu.es?mid=a10214050000" },
+        // DECIDED 2026-10-26 (사용자: "GSC 를 1일차에 빼줘"): Day 1 정거장 위의 GSC 로고를 뺐습니다. 홈 "함께하는 곳"의 장소 줄은 그대로.
+        // 그 전(2026-10-19): Day 1 GSC, Day 4 MARU180 로고. Day 4 로고는 남습니다.
         body: {
           // DECIDED 2026-10-08 (사용자: "팀 - 전원 현장 편성"): 미리 짠 팀을 확인하는 날이 아니라 이 날 팀을 맺습니다.
           ko: "현장에서 팀을 맺습니다. Day 0에 각자 세운 생각을 꺼내 맞춰 보고, 출제사가 직접 여는 세션에서 회사를 봅니다.",
