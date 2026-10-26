@@ -18,7 +18,7 @@ import { buttonClass } from "@/components/ui/Button";
 import LocaleToggle from "@/components/LocaleToggle";
 import { teamCopy as c } from "@/data/crossingTeam";
 import {
-  BUFFER_MINUTES, GRID_MINUTES, bookingGate, kstTime, BOOKING_OPENS_DAY, MAX_BOOKINGS_PER_TEAM_PER_DAY, PROOF_DAYS, PROOF_MAX_BYTES, PROOF_TYPES, dayDate, fitsWindow, fmtKst, isProofDay, proofKindsFor, slotState, trackTint,
+  BUFFER_MINUTES, GRID_MINUTES, bookingGate, kstTime, BOOKING_OPENS_DAY, BOOKING_OPENS_AT, MAX_BOOKINGS_PER_TEAM_PER_DAY, PROOF_DAYS, PROOF_MAX_BYTES, PROOF_TYPES, dayDate, fitsWindow, fmtKst, isProofDay, proofKindsFor, slotState, trackTint,
   type ProofDay, type ProofKind, type Track, type Window,
 } from "@/lib/crossingOps";
 
@@ -53,7 +53,7 @@ export default function TeamTool() {
   const timetableLocked = day === 1;
   // 2026-10-26: 안내 줄에 쓰는 지금 상태. 칸마다의 판정은 bookingGate가 합니다. 시간표를 다시 읽을 때(20초) 같이 새로 셉니다.
   const now = Date.now();
-  const notYet = now < kstTime(BOOKING_OPENS_DAY, "00:00")!.getTime();
+  const notYet = now < kstTime(BOOKING_OPENS_DAY, BOOKING_OPENS_AT)!.getTime();
   const today = now >= kstTime(day, "00:00")!.getTime();
 
   const refresh = useCallback(async () => {

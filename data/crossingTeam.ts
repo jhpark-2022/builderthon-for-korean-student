@@ -23,10 +23,10 @@ export const teamCopy = {
   },
   carry: { ko: "이슈에 대한 팀의 생각 한 장을 들고 찾아갑니다.", en: "Bring one page of your team's take on the issue." },
   // DECIDED 2026-10-26 (사용자): Day 1부터 Day 2, 3 칸을 넣고, 그날이 되면 13:00 이후 칸만(lib/crossingOps.ts bookingGate).
-  gateRule: { ko: "Day 2, 3 칸은 Day 1(12.18)부터 함께 넣을 수 있습니다. 그날이 되면 그날의 칸은 13:00 이후만 넣을 수 있습니다.", en: "Day 2 and 3 slots open together on Day 1 (Dec 18). On the day itself, only slots from 13:00 can be added." },
-  notYet: { ko: "아직 열리지 않았습니다. Day 1(12.18)부터 넣을 수 있습니다.", en: "Not open yet. You can add slots from Day 1 (Dec 18)." },
+  gateRule: { ko: "Day 2, 3 칸은 Day 1(12.18) 12:00부터 함께 넣을 수 있습니다. 그날이 되면 그날의 칸은 13:00 이후만 넣을 수 있습니다.", en: "Day 2 and 3 slots open together on Day 1 (Dec 18) at 12:00. On the day itself, only slots from 13:00 can be added." },
+  notYet: { ko: "아직 열리지 않았습니다. Day 1(12.18) 12:00부터 넣을 수 있습니다.", en: "Not open yet. You can add slots from Day 1 (Dec 18) at 12:00." },
   sameDay: { ko: "오늘은 13:00 이후 칸만 넣을 수 있습니다. 오전 칸은 전날까지 넣습니다.", en: "Today only slots from 13:00 can be added. Morning slots close the day before." },
-  day1BookHint: { ko: "Day 2, 3 멘토 칸은 Day 1(12.18)부터 Day 2, Day 3 탭에서 넣습니다.", en: "From Day 1 (Dec 18), add your Day 2 and 3 mentor slots in the Day 2 and Day 3 tabs." },
+  day1BookHint: { ko: "Day 2, 3 멘토 칸은 Day 1(12.18) 12:00부터 Day 2, Day 3 탭에서 넣습니다.", en: "From Day 1 (Dec 18) at 12:00, add your Day 2 and 3 mentor slots in the Day 2 and Day 3 tabs." },
   // 2026-10-18 (사용자: "트랙에 따라서 슬롯 색깔이 달라졌으면"). 우리 팀 칸은 흰 테두리로 가립니다.
   trackLegend: { ko: "칸의 색은 그 팀의 트랙입니다. 흰 테두리는 우리 팀입니다.", en: "Each slot takes its team's track colour. A white outline marks your team." },
   time: { ko: "시간", en: "Time" },
@@ -37,7 +37,7 @@ export const teamCopy = {
   errTeamBusy: { ko: "우리 팀의 다른 칸과 2시간이 떨어져야 합니다.", en: "Your slots need to start at least two hours apart." },
   errLimit: { ko: "이 날은 이미 두 칸을 넣었습니다.", en: "Your team already has two slots that day." },
   errPast: { ko: "지난 시간입니다.", en: "That time has passed." },
-  errNotYet: { ko: "Day 1(12.18)부터 넣을 수 있습니다.", en: "Slots open on Day 1 (Dec 18)." },
+  errNotYet: { ko: "Day 1(12.18) 12:00부터 넣을 수 있습니다.", en: "Slots open on Day 1 (Dec 18) at 12:00." },
   errMorning: { ko: "오늘은 13:00 이후 칸만 넣을 수 있습니다.", en: "Today only slots from 13:00 can be added." },
   errGeneric: { ko: "잠시 뒤 다시 해 주세요.", en: "Something went wrong. Try again in a moment." },
 
