@@ -9,13 +9,16 @@
 //   - 트랙마다 패널 하나. 아직 / 열림 / 마감 / 받았음 네 국면. 열림일 때만 발표 순서 번호가 붙은 팀 버튼이 나옵니다.
 //   - 트랙마다 따로 냅니다. 고른 팀 줄과 보내기 버튼. 다 고르면 버튼으로 화면이 내려갑니다(8월 모바일 감사).
 // 다른 것: 색은 8월의 에메랄드가 아니라 그 트랙의 틴트(brand 10장, 시간표와 같은 색), 문장은 합니다체(brand 5장),
+// DECIDED 2026-10-26 (사용자: "12월 이벤트의 모든 부분, 아직 안 연 기능까지 새 UI/UX로"): kwan-design 문법(뉴트럴 잉크, card 면, 블루 강조 하나).
+// 고른 팀은 트랙 틴트가 아니라 블루(강조는 하나), 트랙은 제목 옆 점으로만. 호박색 안내는 없앴습니다. 머리는 /crossing/team과 같습니다.
 // 열리는 시각은 코드가 아니라 트랙 표(0014)입니다. 화면은 15초마다 서버에 다시 묻습니다. 트랙이 열리면 새로 고침 없이 열립니다.
 // 이 기기의 무작위 토큰(localStorage)이 표를 묶습니다. 사람을 저장하지 않습니다(8월 투표와 같음).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale } from "@/lib/LocaleContext";
-import { BODY, META } from "@/components/ui/typography";
+import { BODY, META, SUBTITLE } from "@/components/ui/typography";
+import LocaleToggle from "@/components/LocaleToggle";
 import { buttonClass } from "@/components/ui/Button";
 import { NO_TEAM, VOTE_DEVICE_KEY, VOTE_PICKS, VOTE_TEAM_KEY, formatVoteTime, type VoteTrackInfo } from "@/lib/crossingVote";
 import { trackTint } from "@/lib/crossingOps";
@@ -156,21 +159,25 @@ export default function VoteTool() {
   };
 
   return (
-    <main id="main" className="min-h-screen bg-naru-ink px-4 pb-24 pt-10 text-white">
+    <main id="main" className="min-h-screen bg-naru-ink px-4 pb-24 pt-4 text-naru-text">
       <div className="mx-auto flex max-w-2xl flex-col gap-[24px]">
-        <header className="flex flex-col gap-[13.5px]">
-          <h1 className={`${BODY} font-bold`}>{t(copy.title)}</h1>
-          <p className={`break-keep ${BODY} leading-relaxed text-white/70`}>{t(copy.intro)}</p>
+        <header className="flex min-h-[44px] items-center justify-between">
+          <a href="/" className={`-my-3 inline-flex min-h-[44px] items-center py-3 ${BODY} font-semibold text-naru-muted transition-colors hover:text-white`}>← {t({ ko: "크로싱 서울", en: "Crossing Seoul" })}</a>
+          <LocaleToggle />
         </header>
+        <div className="flex flex-col gap-[8px]">
+          <h1 className={`${SUBTITLE} font-bold tracking-[-0.02em] text-white`}>{t(copy.title)}</h1>
+          <p className={`break-keep ${BODY} leading-relaxed text-naru-muted`}>{t(copy.intro)}</p>
+        </div>
 
         {/* 우리 팀. 네이티브 select입니다(8월과 같은 이유: 폰의 기본 피커가 가장 빠름). 트랙별로 묶습니다. */}
-        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-[27px] sm:p-[32px]">
-          <div className="flex flex-col gap-[9px]">
-            <label htmlFor="vote-my-team" className={`${META} font-bold uppercase tracking-[0.16em] text-white/85`}>{t(copy.myTeamLabel)}</label>
-            <p className={`break-keep ${BODY} leading-relaxed text-white/70`}>{t(copy.myTeamHelp)}</p>
+        <div className="card-base rounded-2xl p-[20px] sm:p-[24px]">
+          <div className="flex flex-col gap-[6px]">
+            <label htmlFor="vote-my-team" className={`${BODY} font-semibold text-white`}>{t(copy.myTeamLabel)}</label>
+            <p className={`break-keep ${META} leading-relaxed text-naru-muted`}>{t(copy.myTeamHelp)}</p>
           </div>
           <select id="vote-my-team" value={voter} disabled={teamLocked} onChange={(e) => chooseMyTeam(e.target.value)}
-            className={`mt-[18px] min-h-[52px] w-full rounded-xl border border-white/45 bg-[#0d1230] px-4 py-3 ${BODY} font-semibold text-white outline-none focus-visible:border-white/50 disabled:cursor-not-allowed disabled:opacity-60`}>
+            className={`mt-[14px] min-h-[44px] w-full rounded-lg border border-white/10 bg-naru-surface-2 px-3 py-2 ${BODY} font-semibold text-white outline-none transition-colors focus-visible:border-accent/60 disabled:cursor-not-allowed disabled:opacity-60`}>
             <option value="" disabled>{t(copy.myTeamPlaceholder)}</option>
             <option value={NO_TEAM}>{t(copy.myTeamNone)}</option>
             {(tracks ?? []).map((tr) => (
@@ -179,10 +186,10 @@ export default function VoteTool() {
               </optgroup>
             ))}
           </select>
-          {teamLocked && <p className={`mt-[13.5px] break-keep ${BODY} text-white/70`}>{t(copy.myTeamLocked)}</p>}
+          {teamLocked && <p className={`mt-[12px] break-keep ${META} text-naru-muted`}>{t(copy.myTeamLocked)}</p>}
         </div>
 
-        {tracks && tracks.length === 0 && <p className={`${BODY} text-white/70`}>{t(copy.empty)}</p>}
+        {tracks && tracks.length === 0 && <p className={`card-sunken rounded-xl px-[16px] py-[14px] ${BODY} text-naru-muted`}>{t(copy.empty)}</p>}
         {(tracks ?? []).map((tr) => (
           <VotePanel key={tr.id} track={tr} locale={locale} t={t} myTeam={voter} picked={picks[tr.id] ?? []} done={done[tr.id]}
             busy={busy === tr.id} error={error[tr.id]} needTeam={!!needTeam[tr.id]} onToggle={toggle} onSubmit={submit} />
@@ -217,46 +224,50 @@ function VotePanel({ track, locale, t, myTeam, picked, done, busy, error, needTe
     wasFull.current = full;
   }, [full, track.state]);
 
-  const box = "mt-[24px] rounded-2xl border px-[22.5px] py-[20px] sm:p-[24px]";
+  const box = "mt-[16px] rounded-xl px-[16px] py-[14px] sm:px-[20px] sm:py-[16px]";
   return (
-    <section className="rounded-2xl border border-white/10 bg-white/[0.04] p-[27px] sm:p-[32px]" aria-labelledby={`vote-${track.id}`}>
-      <h2 id={`vote-${track.id}`} className={`flex items-center gap-[9px] ${BODY} font-bold`}>
+    <section className="card-base rounded-2xl p-[20px] sm:p-[24px]" aria-labelledby={`vote-${track.id}`}>
+      <h2 id={`vote-${track.id}`} className={`flex items-center gap-[9px] ${BODY} font-bold text-white`}>
         <span aria-hidden className="h-2.5 w-2.5 rounded-full" style={{ background: tint }} />{t(track.label)}
       </h2>
 
       {/* 받았음이 무엇보다 먼저입니다. 낸 사람에게 팀 목록을 다시 보여 주면 한 번 더 낼 수 있다는 뜻으로 읽힙니다(8월). */}
       {done !== undefined ? (
-        <div className={box} style={{ borderColor: `${tint}55`, background: `${tint}14` }}>
-          <p className={`${BODY} font-bold text-white`}>{t(copy.doneTitle)}</p>
-          <p className={`mt-[9px] break-keep ${BODY} text-white/85`}><span className="text-white/70">{t(copy.doneChoices)}</span> {done}</p>
-          <p className={`mt-[9px] break-keep ${BODY} text-white/70`}>{t(track.state === "closed" ? copy.closedBody : copy.doneBody)}</p>
+        <div className={`card-tint flex items-start gap-[12px] ${box}`}>
+          <span aria-hidden className="mt-[2px] flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/20 text-accent">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5" /></svg>
+          </span>
+          <span className="flex flex-col gap-[4px]">
+            <span className={`${BODY} font-semibold text-white`}>{t(copy.doneTitle)}</span>
+            <span className={`break-keep ${META} text-naru-text`}><span className="text-naru-muted">{t(copy.doneChoices)}</span> <span className="font-semibold text-white">{done}</span></span>
+            <span className={`break-keep ${META} text-naru-muted`}>{t(track.state === "closed" ? copy.closedBody : copy.doneBody)}</span>
+          </span>
         </div>
       ) : track.state === "before" ? (
-        <div className={`${box} border-white/[0.12] bg-white/[0.03]`}>
-          <p className={`${BODY} font-bold text-white/85`}>{t(copy.lockedTitle)}</p>
-          <p className={`mt-[9px] break-keep ${BODY} leading-relaxed text-white/70`}>
+        <div className={`card-sunken ${box}`}>
+          <p className={`${BODY} font-semibold text-white`}>{t(copy.lockedTitle)}</p>
+          <p className={`mt-[6px] break-keep ${META} leading-relaxed text-naru-muted`}>
             {track.opensAt ? fill(t(copy.lockedAt), { time: formatVoteTime(track.opensAt, locale) }) : t(copy.lockedLater)}{" "}
-            {closeTime && <span className="font-semibold text-white/85">{fill(t(copy.lockedClose), { time: closeTime })}</span>}
+            {closeTime && <span className="font-semibold text-naru-text">{fill(t(copy.lockedClose), { time: closeTime })}</span>}
           </p>
         </div>
       ) : track.state === "closed" ? (
-        <div className={`${box} border-white/[0.12] bg-white/[0.03]`}>
-          <p className={`${BODY} font-bold text-white/85`}>{t(copy.closedTitle)}</p>
-          <p className={`mt-[9px] break-keep ${BODY} text-white/70`}>{t(copy.closedBody)}</p>
+        <div className={`card-sunken ${box}`}>
+          <p className={`${BODY} font-semibold text-white`}>{t(copy.closedTitle)}</p>
+          <p className={`mt-[6px] break-keep ${META} text-naru-muted`}>{t(copy.closedBody)}</p>
         </div>
       ) : (
         <>
-          <div className="mt-[24px] flex flex-wrap items-center gap-x-[13.5px] gap-y-[8px]">
-            <p className={`${BODY} font-bold text-white/85`}>{fill(t(copy.pickHint), { n: String(VOTE_PICKS) })}</p>
-            <span className={`rounded-full border px-2.5 py-0.5 ${META} font-bold ${full ? "text-white" : "border-white/15 bg-white/[0.05] text-white/70"}`}
-              style={full ? { borderColor: `${tint}80`, background: `${tint}26` } : undefined}>
+          <div className="mt-[16px] flex flex-wrap items-center gap-x-[12px] gap-y-[8px]">
+            <p className={`${META} font-semibold text-naru-text`}>{fill(t(copy.pickHint), { n: String(VOTE_PICKS) })}</p>
+            <span className={`rounded-full px-2.5 py-0.5 ${META} font-semibold tabular-nums ${full ? "bg-accent/15 text-accent" : "bg-white/[0.05] text-naru-muted"}`}>
               {fill(t(copy.pickCount), { picked: String(picked.length), n: String(VOTE_PICKS) })}
             </span>
-            {closeTime && <span className={`${META} font-semibold text-amber-200/75`}>{fill(t(copy.closesAt), { time: closeTime })}</span>}
+            {closeTime && <span className={`ml-auto ${META} tabular-nums text-naru-muted`}>{fill(t(copy.closesAt), { time: closeTime })}</span>}
           </div>
 
           {/* 발표 순서 그대로, 번호와 함께. 폰에서는 한 줄에 하나(8월: 두 열이면 긴 이름이 꺾여 오조작). */}
-          <ul role="list" className="mt-[24px] grid gap-[12px] sm:grid-cols-2">
+          <ul role="list" className="mt-[14px] grid gap-[8px] sm:grid-cols-2">
             {track.teams.map((team, i) => {
               const isOwn = team === myTeam;
               const isPicked = picked.includes(team);
@@ -264,25 +275,23 @@ function VotePanel({ track, locale, t, myTeam, picked, done, busy, error, needTe
               return (
                 <li key={team}>
                   <button type="button" onClick={() => onToggle(track.id, team)} disabled={disabled} aria-pressed={isPicked}
-                    className={`flex min-h-[52px] w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition duration-150 ${isPicked ? "text-white" : "border-white/10 bg-white/[0.03] text-white/70"} ${disabled ? "cursor-not-allowed opacity-45" : "hover:border-white/30 hover:text-white"}`}
-                    style={isPicked ? { borderColor: `${tint}aa`, background: `${tint}2e` } : undefined}>
-                    <span aria-hidden className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border ${META} font-black ${isPicked ? "text-white" : "border-white/[0.12] bg-white/[0.05] text-white/70"}`}
-                      style={isPicked ? { borderColor: `${tint}aa`, background: `${tint}40` } : undefined}>{i + 1}</span>
+                    className={`flex min-h-[48px] w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors duration-150 ${isPicked ? "border-accent/60 bg-accent/10 text-white" : "border-white/5 bg-naru-surface-2/60 text-naru-text"} ${disabled ? "cursor-not-allowed opacity-45" : "hover:border-white/20 hover:text-white"}`}>
+                    <span aria-hidden className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md ${META} font-bold tabular-nums ${isPicked ? "bg-accent text-naru-ink" : "bg-white/[0.06] text-naru-muted"}`}>{i + 1}</span>
                     <span className={`break-keep break-words ${BODY} font-semibold leading-snug`}>{team}</span>
-                    {isOwn && <span className={`ml-auto shrink-0 rounded-full border border-white/15 bg-white/[0.06] px-2 py-0.5 ${META} font-bold text-white/70`}>{t(copy.ownTeam)}</span>}
+                    {isOwn && <span className={`ml-auto shrink-0 rounded-full bg-white/[0.06] px-2 py-0.5 ${META} font-semibold text-naru-muted`}>{t(copy.ownTeam)}</span>}
                   </button>
                 </li>
               );
             })}
           </ul>
 
-          {needTeam && <p className={`mt-[18px] break-keep ${BODY} font-semibold text-amber-200/90`}>{t(copy.needTeam)}</p>}
-          {error && <p role="alert" className={`mt-[18px] break-keep ${BODY} font-semibold text-amber-200/90`}>{t(error)}</p>}
+          {needTeam && <p className={`mt-[14px] break-keep ${META} font-semibold text-accent`}>{t(copy.needTeam)}</p>}
+          {error && <p role="alert" className={`mt-[14px] break-keep ${META} font-semibold text-rose-300`}>{t(error)}</p>}
           {picked.length > 0 && (
-            <p className={`mt-[24px] break-keep ${BODY} text-white/85`}><span className="text-white/70">{t(copy.doneChoices)}</span> <span className="font-bold">{picked.join(", ")}</span></p>
+            <p className={`mt-[16px] break-keep ${META} text-naru-text`}><span className="text-naru-muted">{t(copy.doneChoices)}</span> <span className="font-semibold text-white">{picked.join(", ")}</span></p>
           )}
           <button ref={submitRef} type="button" onClick={() => onSubmit(track.id)} disabled={!myTeam || !full || busy}
-            className={`${buttonClass("primary", "naru")} mt-[24px] w-full max-sm:px-[27px] justify-center duration-150 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto`}>
+            className={`${buttonClass("primary", "naru")} mt-[16px] w-full justify-center disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto`}>
             {t(busy ? copy.submitting : copy.submit)}<span className="sr-only"> {t(track.label)}</span>
           </button>
         </>

@@ -416,8 +416,11 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
       {/* 12월판의 빛은 나루의 보라와 자주입니다(#4B3A8C, #9A5A82). 8월판은 그대로. */}
       {/* DECIDED 2026-10-22 (모바일 점검: iPhone WebKit에서 blur(80px) 큰 층 때문에 시작 화면 글자가 통째로 안 그려짐): 흐림 필터 대신 가장자리가 흐린
           방사형 그라데이션. 공유 카드(아래 ResultCard)가 이미 쓰는 방식입니다. 색과 자리는 그대로. */}
+      {/* 2026-10-26 (12월 새 UI/UX): 12월판은 구석의 빛 번짐을 그리지 않습니다(UI Craft: 흐린 그라데이션 원). 8월판만 남습니다. */}
+      {!naru && (<>
       <div aria-hidden className="pointer-events-none absolute rounded-full" style={{ left: "-22%", top: "-20%", width: "62vh", height: "62vh", background: `radial-gradient(circle, ${naru ? "rgba(75,58,140,0.5)" : "rgba(124,58,237,0.4)"}, transparent 70%)` }} />
       <div aria-hidden className="pointer-events-none absolute rounded-full" style={{ bottom: "-24%", right: "-20%", width: "66vh", height: "66vh", background: `radial-gradient(circle, ${naru ? "rgba(154,90,130,0.3)" : "rgba(6,182,212,0.3)"}, transparent 70%)` }} />
+      </>)}
       {/* 질문과 결과 화면에는 h1이 없었습니다(?r= 딥링크는 h1 없는 페이지). 시작 화면은 자기 h1이 있습니다. */}
       {phase !== "landing" && <h1 className="sr-only">{t(ed.ui.title)}</h1>}
 
@@ -464,7 +467,7 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
               aria-label={t(ed.ui.progressLabel)}
             >
               <motion.div
-                className={`h-full rounded-full bg-gradient-to-r ${c("from-violet-500 to-cyan-400", "from-naru-purple to-accent")}`}
+                className={`h-full rounded-full bg-gradient-to-r ${c("from-violet-500 to-cyan-400", "from-accent to-accent")}`}
                 animate={{ width: `${progress}%` }}
                 initial={false}
                 transition={{ duration: reduce ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
@@ -489,7 +492,7 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
                   exit={reduce ? undefined : { opacity: 0, x: -24 }}
                   transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <p className={c("mb-4 text-xs font-bold uppercase tracking-[0.2em] text-violet-300", `mb-4 ${META} font-bold uppercase tracking-[0.16em] text-accent`)}>
+                  <p className={c("mb-4 text-xs font-bold uppercase tracking-[0.2em] text-violet-300", `mb-4 ${META} font-semibold tabular-nums text-naru-muted`)}>
                     {current.id}
                   </p>
                   {/* Focused on every step: the question swaps in place, so a
@@ -500,7 +503,7 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
                   <h2
                     ref={questionRef}
                     tabIndex={-1}
-                    className={c("text-[1.6rem] font-bold leading-snug tracking-tight outline-none sm:text-[1.8rem]", `break-keep ${BODY} font-black leading-snug tracking-tight text-white outline-none`)}
+                    className={c("text-[1.6rem] font-bold leading-snug tracking-tight outline-none sm:text-[1.8rem]", `break-keep ${BODY} font-bold leading-snug tracking-[-0.01em] text-white outline-none`)}
                   >
                     {t(current.text)}
                   </h2>
@@ -517,18 +520,18 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
                           aria-pressed={isSel}
                           onClick={() => handleAnswer(key)}
                           // 2026-10-20 (시각 브리프 3.6): 선택지 눌림 active:scale-[0.99]
-                          className={`flex items-center ${c("gap-4 p-5", "min-h-[52px] gap-[18px] p-[22.5px] sm:p-[32px]")} rounded-2xl border text-left transition active:scale-[0.99] ${
+                          className={`flex items-center ${c("gap-4 p-5", "min-h-[48px] gap-[14px] p-[16px] sm:p-[20px]")} rounded-2xl border text-left transition active:scale-[0.99] ${
                             isSel
-                              ? c("-translate-y-0.5 border-violet-400/50 bg-white/[0.08]", "-translate-y-0.5 border-accent/70 bg-white/[0.08]")
-                              : "border-white/10 bg-white/[0.04] hover:border-white/20 hover:bg-white/[0.07]"
+                              ? c("-translate-y-0.5 border-violet-400/50 bg-white/[0.08]", "border-accent/60 bg-accent/10")
+                              : c("border-white/10 bg-white/[0.04] hover:border-white/20 hover:bg-white/[0.07]", "border-white/5 bg-naru-surface-2/60 hover:border-white/20")
                           }`}
                         >
                           <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border ${c("text-sm", BODY)} font-bold transition ${
-                            isSel ? c("border-violet-400/50 bg-violet-500/20 text-violet-100", "border-accent/70 bg-naru-purple/40 text-white") : "border-white/15 bg-white/[0.04] text-white/60"
+                            isSel ? c("border-violet-400/50 bg-violet-500/20 text-violet-100", "border-accent bg-accent text-naru-ink") : c("border-white/15 bg-white/[0.04] text-white/60", "border-white/10 bg-white/[0.04] text-naru-muted")
                           }`}>
                             {key.toUpperCase()}
                           </span>
-                          <span className={`${c("text-base", BODY)} font-semibold leading-snug ${c("text-white/90", "text-white/85")}`}>
+                          <span className={`${c("text-base", BODY)} font-semibold leading-snug ${c("text-white/90", "text-white")}`}>
                             {t(opt.label)}
                           </span>
                         </button>
@@ -645,15 +648,17 @@ function Landing({
     >
       {/* DECIDED 2026-10-08 (브랜드 감사 2, 4, 9): 12월판은 나루의 Eyebrow, 그라데이션 글자, 버튼, 그리고 글자 크기 셋
           (TITLE/BODY/META)을 씁니다. 8월판의 클래스는 아래 삼항의 앞쪽에 그대로 있습니다. */}
+      {/* DECIDED 2026-10-26 (사용자: "12월 이벤트의 모든 부분을 새 UI/UX로"): 12월판은 kwan-design 문법. ✦ 알약 라벨과 그라데이션 제목을
+          빼고(UI Craft: 제목 위 장식 라벨, 그라데이션 제목) 블루 캡션 한 줄과 흰 제목. 결과 카드의 모델 색(2026-10-09 사용자 결정)은 그대로입니다. */}
       {naru ? (
-        <Eyebrow color="purple">✦ {t(ed.ui.eyebrow)}</Eyebrow>
+        <p className={`mb-3 ${META} font-semibold text-accent`}>{t(ed.ui.eyebrow)}</p>
       ) : (
       <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-400/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-violet-200">
         ✦ {t(ed.ui.eyebrow)}
       </span>
       )}
-      <h1 className={c("text-[2.6rem] font-black leading-[1.05] tracking-tight sm:text-[3rem]", `break-keep ${TITLE} font-black leading-[1.05] tracking-tight`)}>
-        <span className={c("gradient-text gradient-text--zero100 bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text pb-[0.12em] text-transparent", GRADIENT_TEXT)}>
+      <h1 className={c("text-[2.6rem] font-black leading-[1.05] tracking-tight sm:text-[3rem]", `break-keep ${TITLE} font-bold leading-[1.15] tracking-[-0.03em] text-white`)}>
+        <span className={c("gradient-text gradient-text--zero100 bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text pb-[0.12em] text-transparent", "")}>
           {t(ed.ui.title)}
         </span>
       </h1>
@@ -662,7 +667,7 @@ function Landing({
       </p>
       {/* 받기 전의 안내(2026-10-22). 결과 화면의 같은 상자(MatchSave의 preview)와 같은 두 문장, 같은 색입니다. */}
       {preview && (
-        <div role="note" className={`mx-auto mt-6 w-full max-w-md rounded-2xl border border-white/15 bg-white/[0.05] px-5 py-4 text-center`}>
+        <div role="note" className={`card-sunken mx-auto mt-6 w-full max-w-md rounded-xl px-5 py-4 text-center`}>
           <p className={`${BODY} font-semibold text-white`}>{t(matchCopy.closed)}</p>
           <p className={`mt-1 break-keep ${META} text-white/70`}>{t(matchCopy.closedSub)}</p>
         </div>
@@ -891,7 +896,7 @@ function ResultView({
           stranger's result and gets no celebration. */}
       {!fromShare && <Confetti />}
       {naru ? (
-        <Eyebrow color="purple">✦ {t(ed.ui.resultEyebrow)}</Eyebrow>
+        <p className={`mb-4 ${META} font-semibold text-accent`}>{t(ed.ui.resultEyebrow)}</p>
       ) : (
       <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white/60">
         ✦ {t(ed.ui.resultEyebrow)}
@@ -909,9 +914,9 @@ function ResultView({
         {/* full-width shareable result card */}
         <div
           className={`relative w-full overflow-hidden rounded-[28px] border border-white/[0.12] ${c("bg-[#0c0a18]", "bg-naru-surface")} ${c("p-7 text-left sm:p-9", "p-[31.5px] text-left sm:p-[40.5px]")}`}
-          style={{ boxShadow: naru ? "0 30px 70px -28px rgba(75,58,140,0.6)" : "0 30px 70px -28px rgba(217,70,239,0.42)" }}
+          style={{ boxShadow: naru ? "0 30px 70px -28px rgba(0,0,0,0.7)" : "0 30px 70px -28px rgba(217,70,239,0.42)" }}
         >
-          <div className={`pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b ${c("from-fuchsia-500/20", "from-naru-purple/30")} to-transparent`} />
+          <div className={`pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b ${c("from-fuchsia-500/20", "from-white/[0.03]")} to-transparent`} />
           {/* DECIDED 2026-10-09 (사용자: 결과 카드를 더 예쁘게, 더 과감하게): 12월판은 카드가 그 모델의 색을 입습니다.
               로고 뒤와 맞은편 아래에서 색이 번지고, 테두리가 같은 색으로 빛나고, 로고가 오른쪽 위에 크게 비칩니다.
               열여섯 장이 같은 남색이던 것을 유형마다 다른 카드로 보이게 합니다. 8월판(/quiz)은 아래 else 가지 그대로입니다. */}
@@ -1098,7 +1103,7 @@ function ResultView({
             위의 returnToRegister 배너는 등록 모달에서 건너온 왕복 경로라 이제
             켜지지 않지만, 모달 자체는 살아 있어서 그대로 둡니다. */}
         {/* 2026-10-10: 매칭 모드의 폰에서는 이 상자를 뺍니다. 현장에서 팀을 찾는 사람에게 프로그램 안내는 다음 걸음이 아닙니다. */}
-        <div className={`mx-auto w-full max-w-xl rounded-[24px] border border-white/10 bg-white/[0.04] ${c("p-6", "p-[27px] sm:p-[32px]")} text-center ${matchMode ? "max-sm:hidden" : ""}`}>
+        <div className={`mx-auto w-full max-w-xl ${c("rounded-[24px] border border-white/10 bg-white/[0.04] p-6", "card-base rounded-2xl p-[20px] sm:p-[24px]")} text-center ${matchMode ? "max-sm:hidden" : ""}`}>
           <p className={`${c("text-[15px]", BODY)} font-bold leading-relaxed text-white/85`}>{ctaLead}</p>
           <a
             href="/#december"
@@ -1134,7 +1139,9 @@ function ResultView({
                 {t(ed.ui.saveImageLoading)}
               </>
             ) : (
-              <>📸 {t(ed.ui.saveImage)}</>
+              naru ? (
+                <><svg aria-hidden width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 15V4" /><path d="m7 9 5-5 5 5" /><path d="M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3" /></svg>{t(ed.ui.saveImage)}</>
+              ) : <>📸 {t(ed.ui.saveImage)}</>
             )}
           </button>
 
@@ -1146,7 +1153,7 @@ function ResultView({
               onClick={onRetake}
               className={c("inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-3.5 text-sm font-bold text-white shadow-[0_8px_30px_rgba(124,58,237,0.45)] transition hover:-translate-y-0.5", NARU_PRIMARY)}
             >
-              ✦ {t(ed.ui.retakeViral)}
+              {naru ? "" : "✦ "}{t(ed.ui.retakeViral)}
             </button>
           ) : (
             <button
@@ -1441,8 +1448,8 @@ function DreamTeammates({
       aria-label={t(ed.ui.matchTitle)}
     >
       <div className="mb-4 text-center">
-        <p className={c("text-[0.7rem] font-bold uppercase tracking-[0.18em] text-fuchsia-200", `${META} font-bold uppercase tracking-[0.16em] text-accent`)}>
-          ✦ {t(ed.ui.matchTitle)}
+        <p className={c("text-[0.7rem] font-bold uppercase tracking-[0.18em] text-fuchsia-200", `${META} font-semibold text-accent`)}>
+          {naru ? "" : "✦ "}{t(ed.ui.matchTitle)}
         </p>
         <p className={`mx-auto mt-1.5 max-w-md ${c("text-sm", BODY)} leading-relaxed ${c("text-white/60", "text-white/70")}`}>{t(ed.ui.matchSub)}</p>
       </div>
@@ -1454,7 +1461,7 @@ function DreamTeammates({
           return (
             <div
               key={m}
-              className={`flex flex-col rounded-[24px] border border-white/[0.12] ${c("bg-[#0c0a18]", "bg-naru-surface")} ${c("p-6", "p-[22.5px] sm:p-[32px]")} text-left`}
+              className={`flex flex-col ${c("rounded-[24px] border border-white/[0.12] bg-[#0c0a18] p-6", "card-base rounded-2xl p-[20px] sm:p-[24px]")} text-left`}
             >
               <div className="flex items-center gap-3">
                 <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${mate.accent} shadow-lg`}>

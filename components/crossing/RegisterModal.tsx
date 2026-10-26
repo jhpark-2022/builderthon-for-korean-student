@@ -53,7 +53,9 @@ const FOCUSABLE = "a[href], button:not([disabled]), input:not([disabled]):not([t
 const LARGE = "text-base";
 // 테두리 white/45는 면 위에서 3:1을 넘고(1.4.11), 자리표시 글자 white/55는 6:1입니다(1.4.3). 그 전의 /12와 /35는 못 넘었습니다.
 // DECIDED 2026-10-21: 신청 폼은 라벨-입력, 도움말-오류 8px, 필드 사이는 24px로 맞춥니다.
-const FIELD = `min-h-[52px] w-full rounded-xl border border-white/45 bg-white/[0.04] px-[18px] py-[13.5px] ${LARGE} text-white placeholder:text-white/55 transition focus:border-accent focus:bg-white/[0.06]`;
+// DECIDED 2026-10-26 (사용자: "12월 이벤트의 모든 부분을 새 UI/UX로"): kwan-design 문법. 입력칸은 44px, 옅은 테두리, 올라온 면(naru-surface-2),
+// 포커스는 블루 테두리. 그 전: 52px, 흰 45% 테두리, 흰 4% 면. 미리 보기 안내는 호박색 대신 블루 틴트 면(card-tint).
+const FIELD = `min-h-[44px] w-full rounded-lg border border-white/10 bg-naru-surface-2 px-[14px] py-[10px] ${LARGE} text-white placeholder:text-naru-muted/70 transition-colors focus:border-accent/60 focus:outline-none`;
 const PRIMARY = `${buttonClass("primary", "naru")} justify-center disabled:opacity-60 disabled:hover:translate-y-0`;
 
 type Answers = Record<string, string | boolean>;
@@ -246,10 +248,10 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
       // 줄의 높이는 44px 이상입니다(누르는 자리). 상자를 키우지 않고 줄에 여백을 줍니다.
       return (
         <label key={f.key} className={`flex min-h-[44px] cursor-pointer items-start gap-3 py-2 ${BODY} text-white/85`}>
-          <input {...common} type="checkbox" checked={value === true} onChange={(e) => set(e.target.checked)} className="mt-1 h-5 w-5 shrink-0 rounded border-white/45 bg-white/[0.04] accent-accent" />
+          <input {...common} type="checkbox" checked={value === true} onChange={(e) => set(e.target.checked)} className="mt-1 h-5 w-5 shrink-0 rounded border-white/20 bg-naru-surface-2 accent-accent" />
           <span>
             <span className="font-semibold">{label}</span>{f.required && <span aria-hidden className="ml-1 text-rose-400">*</span>}
-            {help && <span id={helpId} className={`mt-[8px] block ${META} leading-relaxed text-white/70`}>{help}</span>}
+            {help && <span id={helpId} className={`mt-[8px] block ${META} leading-relaxed text-naru-muted`}>{help}</span>}
             {err && <span id={errorId} className={`mt-[8px] block ${META} font-medium text-rose-300`}>{errText(err, max)}</span>}
           </span>
         </label>
@@ -266,7 +268,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
           <span id={labelId} className={`${BODY} font-semibold leading-snug text-white/85`}>
             {label}{f.required && <span aria-hidden className="ml-1 text-rose-400">*</span>}
           </span>
-          {help && <span id={helpId} className={`${META} leading-relaxed text-white/70`}>{help}</span>}
+          {help && <span id={helpId} className={`${META} leading-relaxed text-naru-muted`}>{help}</span>}
           <div className="mt-[3.25px] flex flex-col gap-[9px]">
             {(f.options ?? []).map((o, n) => (
               <label key={o.value} className="relative block cursor-pointer">
@@ -276,11 +278,11 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                   aria-describedby={errorId}
                   className="peer sr-only"
                 />
-                <span className="flex min-h-[52px] items-start gap-3 rounded-xl border border-white/45 bg-white/[0.04] px-[18px] py-[13.5px] transition hover:border-white/70 peer-checked:border-accent peer-checked:bg-accent/[0.12] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent peer-checked:[&>span:first-child]:border-accent peer-checked:[&>span:first-child]:bg-action peer-checked:[&>span:first-child]:text-naru-ink">
+                <span className="flex min-h-[44px] items-start gap-3 rounded-lg border border-white/10 bg-naru-surface-2/70 px-[14px] py-[10px] transition-colors hover:border-white/25 peer-checked:border-accent peer-checked:bg-accent/[0.12] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent peer-checked:[&>span:first-child]:border-accent peer-checked:[&>span:first-child]:bg-action peer-checked:[&>span:first-child]:text-naru-ink">
                   <span aria-hidden className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/45 ${META} font-bold text-white/85`}>{(f.firstStep ?? 1) + n}</span>
                   <span className="min-w-0">
                     <span className={`block break-keep ${BODY} font-bold leading-snug text-white`}>{t(o.label)}</span>
-                    {o.hint && <span className={`mt-[8px] block break-keep ${META} leading-relaxed text-white/70`}>{t(o.hint)}</span>}
+                    {o.hint && <span className={`mt-[8px] block break-keep ${META} leading-relaxed text-naru-muted`}>{t(o.hint)}</span>}
                   </span>
                 </span>
               </label>
@@ -294,7 +296,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
       <div key={f.key} className="flex flex-col gap-[8px]">
         <label htmlFor={id} className={`flex items-center gap-1.5 ${BODY} font-semibold text-white/85`}>
           {label}
-          {f.required ? <span aria-hidden className="text-rose-400">*</span> : <span className={`${META} font-normal text-white/70`}>{t(copy.optional)}</span>}
+          {f.required ? <span aria-hidden className="text-rose-400">*</span> : <span className={`${META} font-normal text-naru-muted`}>{t(copy.optional)}</span>}
         </label>
         {f.type === "textarea" ? (
           <textarea {...common} value={String(value ?? "")} maxLength={max} rows={3} onChange={(e) => set(e.target.value)} className={FIELD} />
@@ -311,7 +313,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
             {...(f.verbatim ? { autoCapitalize: "none", autoCorrect: "off", spellCheck: false } : {})}
           />
         )}
-        {help && <span id={helpId} className={`${META} leading-relaxed text-white/70`}>{help}</span>}
+        {help && <span id={helpId} className={`${META} leading-relaxed text-naru-muted`}>{help}</span>}
         {err && <span id={errorId} className={`${META} font-medium text-rose-300`}>{errText(err, max)}</span>}
       </div>
     );
@@ -330,7 +332,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
             animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.985 }}
             transition={{ duration: reduce ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 flex max-h-[88dvh] w-full max-w-[560px] flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-naru-surface shadow-2xl sm:rounded-3xl"
+            className="relative z-10 flex max-h-[88dvh] w-full max-w-[560px] flex-col overflow-hidden rounded-t-3xl border border-white/10 bg-naru-surface shadow-2xl sm:rounded-3xl"
           >
             <span aria-hidden className="h-[2px] w-full shrink-0 bg-gradient-to-r from-accent to-accent-strong" />
             {/* 제목 줄. 스크롤 영역 밖이라 늘 보이고, 닫기 버튼이 입력칸 위에 오지 않습니다(2026-10-12, 리뷰 S14).
@@ -350,7 +352,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                     <svg aria-hidden width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="text-accent"><path d="M4 12.5l5 5L20 6.5" /></svg>
                   </span>
                   <h3 ref={successRef} tabIndex={-1} id="crossing-register-title" className={`mt-6 ${LARGE} font-bold leading-tight text-white focus:outline-none`}>{t(copy.successTitle)}</h3>
-                  <p className={`mx-auto mt-3 max-w-sm break-keep ${BODY} leading-relaxed text-white/70`}>{t(copy.successBody).replace("{email}", sentEmail)}</p>
+                  <p className={`mx-auto mt-3 max-w-sm break-keep ${BODY} leading-relaxed text-naru-muted`}>{t(copy.successBody).replace("{email}", sentEmail)}</p>
                   {/* DECIDED 2026-10-15 (사용자): 소식은 오픈채팅으로만 나가므로, 이 화면에서 그 방으로 가는 버튼이 테스트 카드보다 먼저 섭니다. */}
                   {links.openChat && (
                     <a href={links.openChat} target="_blank" rel="noopener noreferrer" onClick={() => trackOpenChat("naru-register-success")} className={`${buttonClass("secondary", "naru")} mt-5 w-full max-w-sm justify-center`}>
@@ -359,21 +361,21 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                   )}
                   {/* DECIDED 2026-10-15 (사용자): 보낸 뒤의 다음 할 일은 AI 유형 테스트 하나. 이 화면의 주 버튼이고, 닫기는 글자 버튼으로 내렸습니다. */}
                   <MatchTeaser />
-                  <p className={`mx-auto mt-7 max-w-sm break-keep ${META} leading-relaxed text-white/70`}>{t(copy.successHelp)}</p>
+                  <p className={`mx-auto mt-7 max-w-sm break-keep ${META} leading-relaxed text-naru-muted`}>{t(copy.successHelp)}</p>
                   <a href={naruLinks.general} className={`mt-2 inline-flex min-h-[44px] items-center ${BODY} font-semibold text-accent underline underline-offset-4 hover:text-white`}>{naruLinks.contact}</a>
-                  <div className="mt-3"><button type="button" onClick={onClose} className={`inline-flex min-h-[44px] items-center ${BODY} text-white/70 underline underline-offset-4 hover:text-white`}>{t(copy.close)}</button></div>
+                  <div className="mt-3"><button type="button" onClick={onClose} className={`inline-flex min-h-[44px] items-center ${BODY} text-naru-muted underline underline-offset-4 hover:text-white`}>{t(copy.close)}</button></div>
                 </div>
               ) : (
                 <>
                   {/* DECIDED 2026-10-15 (사용자, 스크린숏: "이 내용 빼줘, 그냥 바로 form만 보여줘"): 폼 위의 첫 줄(스크리닝, 혼자 등록)과
                       미리 보기 안내 상자(registerNote 세 줄 + previewKeep)를 뺐습니다. 언제 여는지와 혼자 등록한다는 말은 히어로 한 줄이
                       하고, 꺼진 버튼의 라벨이 11월을 말합니다. 마감 안내만 남깁니다. */}
-                  {!preview && <p className={`${META} leading-relaxed text-white/70`}>{t(copy.draftNote)}</p>}
+                  {!preview && <p className={`${META} leading-relaxed text-naru-muted`}>{t(copy.draftNote)}</p>}
                   {closed && (
-                    <p id="crossing-register-preview" role="note" className={`mt-4 rounded-2xl border border-dashed border-amber-400/40 bg-amber-400/[0.07] p-[20px] ${BODY} leading-relaxed text-amber-50/90 sm:p-[24px]`}>{t(copy.closed)}</p>
+                    <p id="crossing-register-preview" role="note" className={`mt-4 card-tint rounded-xl p-[16px] ${META} leading-relaxed text-white sm:p-[18px]`}>{t(copy.closed)}</p>
                   )}
                   <form onSubmit={onSubmit} className="mt-6 flex flex-col gap-[24px]" noValidate>
-                    <p className={`${META} leading-relaxed text-white/70`}><span aria-hidden className="text-rose-400">*</span> {t(copy.requiredLegend)}</p>
+                    <p className={`${META} leading-relaxed text-naru-muted`}><span aria-hidden className="text-rose-400">*</span> {t(copy.requiredLegend)}</p>
                     {/* 허니팟. 8월과 같은 세 겹의 방어(이름, 매니저 opt-out, 서버 로그). */}
                     <input type="text" name="url_confirm" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} aria-hidden="true" autoComplete="off" data-1p-ignore data-lpignore="true" data-bwignore data-form-type="other" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }} />
                     {MEMBER_FIELDS.map((f) => {
@@ -392,7 +394,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                     {preview ? (
                       // 꺼진 버튼은 흐림이 아니라 색으로 말합니다(히어로의 준비 중 버튼과 같은 문법). 이유는 위 안내가 읽어 줍니다.
                       <>
-                        <button type="submit" disabled aria-describedby={closed ? "crossing-register-preview" : undefined} className={`mt-[3px] inline-flex min-h-[56px] w-full cursor-not-allowed items-center justify-center rounded-full border border-white/20 bg-white/[0.06] px-7 py-3 ${BODY} font-bold text-white/70 sm:w-auto`}>{t(closed ? copy.closed : copy.previewSubmit)}</button>
+                        <button type="submit" disabled aria-describedby={closed ? "crossing-register-preview" : undefined} className={`mt-[3px] inline-flex min-h-[44px] w-full cursor-not-allowed items-center justify-center rounded-full border border-white/10 bg-naru-surface-2 px-6 py-2 ${BODY} font-semibold text-naru-muted sm:min-h-10 sm:w-auto`}>{t(closed ? copy.closed : copy.previewSubmit)}</button>
                         {/* 다 적은 사람이 지금 할 수 있는 일 하나(리뷰 S4). 홈의 알림 버튼과 같은 라벨, 같은 문입니다. */}
                         {!closed && links.openChat && (
                           <a href={links.openChat} target="_blank" rel="noopener noreferrer" onClick={() => trackOpenChat("naru-register-modal")} className={`inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 ${BODY} font-semibold text-accent underline underline-offset-4 hover:text-white sm:w-auto`}>

@@ -479,7 +479,9 @@ function MilestoneStrip({ id, label, title, detail, center = false, expanded = f
         // DECIDED 2026-10-26 (사용자, 스크린숏: "상자 각 파트별로 사이즈가 다름. 통일해줘"): 열린 띠는 제목 칸이 늘어나지 않고 아래 목록 칸이 남는 높이를 받습니다.
         // 그 전에는 버튼이 늘 flex-1이라, 목록이 짧은 상자(Day 1)일수록 제목 칸이 커져 세 상자의 구분선 높이가 달랐습니다. 닫힌 띠는 전처럼 버튼이 채웁니다.
         <button type="button" aria-expanded={open} aria-controls={id} onClick={() => setOpen((v) => !v)} className={`${row} min-h-[44px] ${open ? "" : "flex-1"} rounded-xl transition-colors hover:bg-white/[0.06]`}>
-          {head}
+          {/* DECIDED 2026-10-26 (같은 날 왼쪽 정렬 뒤 다시 어긋남): 데스크톱 Day 1~3 격자(fill)에서는 라벨을 늘 제목 위 한 줄로 쌓습니다.
+              한 줄에 서던 라벨과 제목이 Day 3의 긴 제목에서만 꺾여 세 머리의 높이가 달랐습니다. */}
+          {fill && !center ? <span className="flex min-w-0 flex-col items-start gap-0.5 md:flex-nowrap">{head}</span> : head}
           <svg aria-hidden width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 text-naru-muted transition-transform ${center ? "" : "ml-auto"} ${open ? "rotate-180" : ""}`}><path d="m6 9 6 6 6-6" /></svg>
         </button>
       ) : (

@@ -134,7 +134,9 @@ export const matchSavedSig = (resultId: string, p: MatchProfile): string =>
 
 // 테두리 white/45는 바탕 위 3:1(WCAG 1.4.11), 플레이스홀더 white/55는 6.2:1입니다(접근성 감사 6, 7).
 // 포커스는 전역 :focus-visible 링이 맡고, 테두리는 나루의 accent로 바뀝니다. 글자는 text-base(머리말).
-const INPUT = "min-h-[52px] w-full rounded-xl border border-white/45 bg-white/[0.04] px-[18px] py-[13.5px] text-base text-white placeholder:text-white/55 outline-none transition focus:border-accent focus:bg-white/[0.06]";
+// DECIDED 2026-10-26 (사용자: "12월 이벤트의 모든 부분을 새 UI/UX로"): 입력칸은 등록 창과 같은 44px, 옅은 테두리, naru-surface-2, 블루 포커스.
+// 저장 상태는 초록과 호박 면 대신 블루 틴트(저장됨)와 가라앉은 면(그 밖). 그 전: 52px, 흰 45% 테두리.
+const INPUT = "min-h-[44px] w-full rounded-lg border border-white/10 bg-naru-surface-2 px-[14px] py-[10px] text-base text-white placeholder:text-naru-muted/70 outline-none transition-colors focus:border-accent/60";
 
 export function MatchStartFields({ t, profile, onChange, error }: {
   t: T; profile: MatchProfile; onChange: (p: MatchProfile) => void; error: MatchProfileError | null;
@@ -195,19 +197,19 @@ export function MatchStartFields({ t, profile, onChange, error }: {
       {MATCH_TRACKS.length > 0 && (
         <div role="group" aria-labelledby="match-tracks-label" aria-describedby={error === "tracks" ? "match-tracks-help match-tracks-error" : "match-tracks-help"} className="flex flex-col gap-[8px]">
           <span id="match-tracks-label" className={`${META} font-semibold text-white/85`}>{t(matchCopy.tracksLabel)}</span>
-          <span id="match-tracks-help" className={`${META} text-white/70`}>{t(matchCopy.tracksHelp)}</span>
+          <span id="match-tracks-help" className={`${META} text-naru-muted`}>{t(matchCopy.tracksHelp)}</span>
           <div className="mt-[3.25px] flex flex-col gap-[9px]">
             {MATCH_TRACKS.map((tr, i) => {
               const rank = profile.tracks.indexOf(tr.id) + 1;
               return (
                 <button
                   key={tr.id} id={i === 0 ? "match-tracks" : undefined} type="button" aria-pressed={rank > 0} data-track={tr.id} onClick={() => toggleTrack(tr.id)}
-                  className={`flex min-h-[52px] items-center gap-3 rounded-xl border px-[18px] py-[13.5px] text-left transition ${rank > 0 ? "border-accent/70 bg-accent/[0.12]" : "border-white/45 bg-white/[0.04] hover:border-white/60"}`}
+                  className={`flex min-h-[44px] items-center gap-3 rounded-lg border px-[14px] py-[10px] text-left transition-colors ${rank > 0 ? "border-accent/60 bg-accent/10" : "border-white/10 bg-naru-surface-2/70 hover:border-white/60"}`}
                 >
-                  <span aria-hidden className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${META} font-bold ${rank > 0 ? "border-accent bg-naru-purple text-white" : "border-white/45 text-white/70"}`}>{rank > 0 ? rank : ""}</span>
+                  <span aria-hidden className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${META} font-bold ${rank > 0 ? "border-accent bg-accent text-naru-ink" : "border-white/20 text-naru-muted"}`}>{rank > 0 ? rank : ""}</span>
                   <span className="min-w-0">
                     <span className={`block break-keep ${BODY} font-bold leading-snug text-white`}>{t(tr.label)}</span>
-                    {tr.hint && <span className={`mt-[8px] block break-keep ${META} text-white/70`}>{t(tr.hint)}</span>}
+                    {tr.hint && <span className={`mt-[8px] block break-keep ${META} text-naru-muted`}>{t(tr.hint)}</span>}
                   </span>
                   {rank > 0 && <span className="sr-only">{t(matchCopy.tracksRank).replace("{n}", String(rank))}</span>}
                 </button>
@@ -227,7 +229,7 @@ export function MatchStartFields({ t, profile, onChange, error }: {
             onChange={(e) => onChange({ ...profile, code: normalizeMatchCode(e.target.value) })}
             className={`${INPUT} uppercase`}
           />
-          <span id="match-code-help" className={`${META} text-white/70`}>{t(matchCopy.codeHelp)}</span>
+          <span id="match-code-help" className={`${META} text-naru-muted`}>{t(matchCopy.codeHelp)}</span>
         </div>
       )}
     </div>
@@ -314,7 +316,7 @@ export function MatchSave({ t, result, data, fromShare, onFixProfile }: {
 
   if (fromShare || state === "idle") return null;
   const quiet = state === "saving" || state === "preview" || state === "ended";
-  const tone = state === "saved" ? "border-emerald-400/30 bg-emerald-400/[0.08]" : quiet ? "border-white/15 bg-white/[0.05]" : "border-amber-400/30 bg-amber-400/[0.08]";
+  const tone = state === "saved" ? "card-tint" : quiet ? "card-sunken" : "card-sunken border-rose-300/30";
   const copy: Record<Exclude<SaveState, "idle">, { title: { ko: string; en: string }; sub: { ko: string; en: string } | null }> = {
     saving: { title: matchCopy.saving, sub: null },
     saved: { title: matchCopy.saved, sub: matchCopy.savedSub },
@@ -329,9 +331,9 @@ export function MatchSave({ t, result, data, fromShare, onFixProfile }: {
   };
   const { title, sub } = copy[state];
   return (
-    <div role="status" aria-live="polite" data-match-save={state} className={`mb-5 w-full max-w-xl rounded-2xl border px-[22.5px] py-[20px] text-center sm:p-[32px] ${tone}`}>
-      <p className={`${BODY} font-bold text-white`}>{state === "saved" && <span aria-hidden className="mr-1.5 text-emerald-300">✓</span>}{t(title)}</p>
-      {sub && <p className={`mt-[8px] ${META} text-white/70`}>{t(sub)}</p>}
+    <div role="status" aria-live="polite" data-match-save={state} className={`mb-5 w-full max-w-xl rounded-xl px-[18px] py-[16px] text-center sm:px-[24px] sm:py-[20px] ${tone}`}>
+      <p className={`${BODY} font-bold text-white`}>{state === "saved" && <span aria-hidden className="mr-1.5 text-accent">✓</span>}{t(title)}</p>
+      {sub && <p className={`mt-[8px] ${META} text-naru-muted`}>{t(sub)}</p>}
       {(state === "failed" || state === "failed_kept") && (
         <button type="button" onClick={() => void send()} className={`mt-[12px] ${GHOST}`}>{t(matchCopy.retry)}</button>
       )}
