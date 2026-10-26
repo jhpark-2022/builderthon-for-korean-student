@@ -1,5 +1,15 @@
 # 이 레포에서 일하는 규칙
 
+## 공통 UI 스킬 (Claude Code · Codex)
+
+- 원본은 `skills/ui-craft/SKILL.md`와 `skills/anti-slop/SKILL.md`입니다. `.claude/skills/`와 `.agents/skills/`는 같은 원본을 가리키는 상대 심볼릭 링크입니다. 같은 이름의 전역 설치본보다 레포 원본을 사용합니다.
+- UI 구현·수정·디자인 검토에는 UI Craft를, HTML/CSS의 디자인 패턴 검사에는 Gesso anti-slop을 사용합니다. 명시 호출은 Claude Code에서 `/ui-craft`, `/anti-slop`, Codex에서 `$ui-craft`, `$anti-slop`입니다.
+- 사용자 요청 범위와 이 레포의 브랜드·기존 동작을 우선합니다. 스킬의 디자인 제안은 요청하지 않은 네비게이션 이동, 레이아웃 재설계, 효과 추가의 허가가 아닙니다. 브라우저 실행 등은 현재 작업의 권한을 따릅니다.
+- Gesso 검사기는 HTML 입력을 대상으로 합니다. TSX만 검사해 HTML이 없다는 결과를 받으면 통과로 보고하지 않습니다. 실제 검사 결과와 수동 판단을 구분합니다.
+- 이번 설정은 스킬과 참조 문서를 공유합니다. UI Craft의 별도 MCP 서버·훅·추가 명령 모음은 설치하지 않았으므로 사용 가능하다고 가정하지 않습니다.
+- 설치 버전과 출처는 각 폴더의 `UPSTREAM.json`에 기록합니다. 갱신은 원본에서 한 번만 하고 두 도구의 링크는 유지합니다.
+- 새 설치가 현재 세션에 보이지 않으면 Claude Code는 `/reload-skills` 또는 새 세션, Codex는 새 세션에서 확인합니다.
+
 ## 먼저 읽는 것: 브랜드 정본 (DECIDED 2026-10-12, 사용자)
 
 @docs/brand.md

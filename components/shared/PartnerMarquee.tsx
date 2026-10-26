@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { decemberPartners } from "@/data/naru";
 import { partnerUrl } from "@/data/partnerLinks";
 
@@ -47,26 +46,17 @@ const opticalHeight = (w: number, h: number) => Math.round(Math.min(56, Math.max
 
 // DECIDED 2026-10-26 (사용자: "티커는 절제를 원했지 모두 삭제를 지시하진 않았어"): 같은 날 정지 격자로 바꾼 것을 되돌리고 절제한 띠로.
 // 그 전(2026-10-22)의 두 줄 반대 방향 카드 띠에서 한 줄, 카드 없이 로고만, 90초 한 바퀴(globals.css .marquee-left). 호버해도 멈추지 않고(같은 날 사용자), 모션 줄이기에서는 멈춥니다.
-// 화면 800px 안에 들어오면 로고를 한 번에 받습니다(2026-10-22: iOS Safari가 흐르는 띠의 lazy 이미지를 끝내 받지 않음).
+// 로고는 처음부터 src를 둡니다(eager). 2026-10-26 (anti-slop broken-image): 화면 근처에서만 src를 채우던 방식은 첫 HTML에 빈 img 44개를 남겼습니다.
+// 그 전 이유(2026-10-22: iOS Safari가 흐르는 띠의 lazy 이미지를 끝내 받지 않음)는 eager로 지켜집니다.
 export default function PartnerMarquee() {
-  const box = useRef<HTMLDivElement | null>(null);
-  const [near, setNear] = useState(false);
-  useEffect(() => {
-    const el = box.current;
-    if (!el) return;
-    if (typeof IntersectionObserver === "undefined") { setNear(true); return; }
-    const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { setNear(true); io.disconnect(); } }, { rootMargin: "800px 0px" });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
   const track = [...NARU_PARTNERS, ...NARU_PARTNERS];
   return (
-    <div ref={box} className="group relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)]">
+    <div className="group relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)]">
       <ul role="list" className="marquee-track marquee-left">
         {track.map((logo, i) => {
           const url = logo.url ?? partnerUrl(logo.alt);
           const dup = i >= NARU_PARTNERS.length;
-          const image = <img src={near ? logo.src : undefined} alt={url || dup ? "" : logo.alt} loading="eager" decoding="async" style={{ height: opticalHeight(logo.w, logo.h) }} className="w-auto max-h-12 max-w-[160px] object-contain opacity-80" />;
+          const image = <img src={logo.src} alt={url || dup ? "" : logo.alt} loading="eager" decoding="async" style={{ height: opticalHeight(logo.w, logo.h) }} className="w-auto max-h-12 max-w-[160px] object-contain opacity-80" />;
           return (
             <li key={i} aria-hidden={dup || undefined} className="flex min-h-[64px] shrink-0 items-center justify-center px-[28px] sm:px-[40px]">
               {url ? <a href={url} target="_blank" rel="noopener noreferrer" aria-label={logo.alt} tabIndex={dup ? -1 : undefined} className="inline-flex min-h-[44px] items-center justify-center">{image}</a> : image}

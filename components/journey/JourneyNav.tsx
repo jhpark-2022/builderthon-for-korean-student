@@ -211,7 +211,7 @@ export default function JourneyNav({ anchors = DEFAULT_ANCHORS, page }: { anchor
   };
 
   const sectionLinks = anchors.filter((anchor) => anchor.id !== "top").map((anchor) => (
-    <a key={anchor.id} href={`#${anchor.id}`} onClick={(event) => jump(event, anchor.id)} aria-label={anchor.ariaLabel ? t(anchor.ariaLabel) : undefined} aria-current={activeSection === anchor.id ? "location" : undefined} className={`inline-flex min-h-[44px] shrink-0 items-center whitespace-nowrap text-xs font-semibold underline-offset-4 xl:text-sm ${activeSection === anchor.id ? "text-accent underline decoration-2" : "text-naru-muted hover:text-white"}`}>{t(anchor.label)}</a>
+    <a key={anchor.id} href={`#${anchor.id}`} onClick={(event) => jump(event, anchor.id)} aria-label={anchor.ariaLabel ? t(anchor.ariaLabel) : undefined} aria-current={activeSection === anchor.id ? "location" : undefined} className={`inline-flex min-h-[44px] shrink-0 snap-start items-center whitespace-nowrap text-xs font-semibold underline-offset-4 xl:text-sm ${activeSection === anchor.id ? "text-accent underline decoration-2" : "text-naru-muted hover:text-white"}`}>{t(anchor.label)}</a>
   ));
   return (
     <>
@@ -236,14 +236,16 @@ export default function JourneyNav({ anchors = DEFAULT_ANCHORS, page }: { anchor
             <span aria-hidden className="h-5 w-px shrink-0 bg-white/20" />
             <nav aria-label={t(dict.nav.sectionsAria)} className="flex items-center gap-5">{sectionLinks}</nav>
           </div>
-          <div className="flex shrink-0 items-center gap-1 sm:gap-3">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             {links.openChat && (
-              <a href={links.openChat} target="_blank" rel="noopener noreferrer" aria-label={t({ ko: "오픈채팅, 카카오톡 새 창", en: "Open chat, KakaoTalk, new window" })} onClick={() => trackOpenChat("nav")} className="cta-shimmer inline-flex h-10 min-w-[44px] shrink-0 items-center justify-center gap-2 rounded-full bg-accent-gradient px-3 text-sm font-semibold text-[#fff] transition-[filter] duration-150 hover:brightness-110 sm:px-4">
-                <ChatGlyph className="block h-[18px] w-[18px]" />
+              <a href={links.openChat} target="_blank" rel="noopener noreferrer" aria-label={t({ ko: "오픈채팅, 카카오톡 새 창", en: "Open chat, KakaoTalk, new window" })} onClick={() => trackOpenChat("nav")} className="cta-shimmer inline-flex h-9 min-w-[36px] shrink-0 items-center justify-center gap-1.5 rounded-full bg-accent-gradient px-3 text-xs font-semibold text-[#fff] transition-[filter] duration-150 hover:brightness-110 max-[419px]:w-9 max-[419px]:px-0 xl:text-sm">
+                <ChatGlyph className="block h-4 w-4" />
                 <span className="max-[419px]:sr-only">{t(dict.nav.openChat)}</span>
               </a>
             )}
-            <LocaleToggle />
+            {/* 2026-10-26 (사용자: "카카오 아이콘버튼도 옆 언어들과 안맞아", 이어서 "카카오를 줄이란 의미"): 오픈채팅을 언어 단추 크기로 줄이고 둘 다 36px 알약,
+                같은 글자(xs, xl부터 sm). 폰(420px 아래)의 오픈채팅은 36px 원. */}
+            <LocaleToggle className="h-9 !min-h-0 !py-0 xl:text-sm" />
           </div>
         </div>
         {/* DECIDED 2026-10-26 (사용자: 올리기 전 모바일 손보기): 폰의 목차 줄은 [홈▾ | 목차]. 메뉴는 가로로 굴러가는 칸 밖에 있어 펼친 사이트맵이 잘리지 않습니다. */}
@@ -253,7 +255,9 @@ export default function JourneyNav({ anchors = DEFAULT_ANCHORS, page }: { anchor
           </div>
           <span aria-hidden className="h-5 w-px shrink-0 bg-white/15 sm:hidden" />
           <nav aria-label={t(dict.nav.sectionsAria)} className="min-w-0 flex-1">
-            <div ref={railRef} className="relative flex min-h-[48px] items-center gap-4 overflow-x-auto px-4 [scrollbar-width:none] sm:px-10 lg:justify-center [&::-webkit-scrollbar]:hidden">{sectionLinks}</div>
+            {/* DECIDED 2026-10-26 (사용자: "모바일에서 홈 옆 서브메뉴가 잘리는 경우 방지"): 목차가 화면을 넘으면 양끝을 흐려(왼쪽 16px, 오른쪽 40px) 더 있다는 것을 보이고,
+                칸이 글자 중간에서 끊기지 않게 칸 단위로 멈춥니다(snap). 끝 칸이 흐림 밖으로 나오도록 오른쪽 여백 40px. 지금 칸은 가운데로 옮겨집니다(위 effect). */}
+            <div ref={railRef} className="relative flex min-h-[48px] snap-x snap-proximity scroll-px-4 items-center gap-4 overflow-x-auto pl-4 pr-10 [mask-image:linear-gradient(to_right,transparent,#000_16px,#000_calc(100%_-_40px),transparent)] [scrollbar-width:none] sm:px-10 lg:justify-center lg:[mask-image:none] [&::-webkit-scrollbar]:hidden">{sectionLinks}</div>
           </nav>
         </div>
       </header>

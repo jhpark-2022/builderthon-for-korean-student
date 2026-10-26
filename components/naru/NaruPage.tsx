@@ -301,7 +301,7 @@ export default function NaruPage() {
               아래 메일 버튼과 같은 알약이라 누르면 어딘가로 가는 버튼처럼 보였고, 펼치면 표와 떨어져 떠 있었습니다.
               이제 위아래 가는 선 사이의 한 줄이고, 펼치면 같은 선 안에서 네 칸이 이어집니다. */}
           <details className="group border-y border-white/10">
-          <summary className={`flex min-h-[52px] cursor-pointer list-none items-center justify-center gap-2 py-[12px] ${BODY} font-medium text-white/85 transition hover:text-white [&::-webkit-details-marker]:hidden`}>
+          <summary className={`flex min-h-[44px] cursor-pointer list-none items-center justify-center gap-2 py-[10px] ${BODY} font-medium text-white/85 transition hover:text-white [&::-webkit-details-marker]:hidden`}>
             {t(naru.how.companyLabel)}
             <svg aria-hidden viewBox="0 0 12 12" className="h-3 w-3 text-accent transition-transform group-open:rotate-180 motion-reduce:transition-none"><path d="M2 4.5l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </summary>

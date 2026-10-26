@@ -66,7 +66,7 @@ export default function Chapter({
       // full height at every breakpoint when a footer exists (min-h-screen →
       // 100dvh via globals.css, correct on iOS). Otherwise keep the collaborator's
       // mobile auto-height (content-sized on phones, full-height from md up).
-      className={`relative flex w-full flex-col justify-center py-14 sm:py-20 lg:py-24 ${contentSized ? "naru-content-chapter" : ""} ${footer ? "min-h-screen" : "min-h-[auto] md:min-h-screen"} ${wide ? "" : contentSized ? "px-6 sm:px-12 lg:px-16" : "px-6 sm:px-10"} ${background ? "isolate" : ""} ${className}`}
+      className={`relative flex w-full flex-col justify-center py-14 sm:py-20 lg:py-24 ${contentSized ? "naru-content-chapter" : ""} ${footer ? "min-h-screen" : "min-h-[auto] md:min-h-screen"} ${wide ? "" : "px-6 sm:px-12 lg:px-16"} ${background ? "isolate" : ""} ${className}`}
     >
       {background}
       {/* centered content rail - the real boundary (z-10 keeps it above any

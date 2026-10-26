@@ -397,7 +397,7 @@ function HeroPhotos({ photos, t, className = "", desktopOnly = false }: {
               setThumbs(next);
               setOpenPhoto(i);
             }}
-            className={`group relative block aspect-[4/3] w-full cursor-zoom-in overflow-hidden rounded-2xl shadow-[0_20px_60px_-30px_rgba(0,0,0,0.9)] ring-1 ring-white/5 transition-shadow hover:ring-white/20`}
+            className={`group relative block aspect-[4/3] w-full cursor-zoom-in overflow-hidden rounded-2xl shadow-[0_16px_40px_-24px_rgba(0,0,0,0.3)] ring-1 ring-white/5 transition-shadow hover:ring-white/20`}
           >
             <Image src={photo.src} alt={t(photo.alt)} fill sizes="(max-width: 1023px) 45vw, 280px" priority={!desktopOnly && i < 2} className="object-cover object-center" />
             {photo.day && (
@@ -1427,9 +1427,9 @@ export default function NaruHome() {
             (같은 날 "뭐는 중간에, 뭐는 left에" 결정). 카드 본문은 불릿이 아니라 한 문장입니다(항목마다 문장이 하나뿐). */}
         <Reveal className={WIDE}>
           {/* DECIDED 2026-10-26: 핵심 문장은 모든 화면에서 보라색 채움 카드로 본문과 구분합니다. */}
-          <div className="mt-[36px] max-sm:mt-[24px] rounded-2xl card-tint px-[24px] py-[27px] text-center sm:p-[40px] lg:mt-[32px]">
+          <div className="mt-[32px] rounded-2xl card-tint px-[20px] py-[24px] text-center sm:mt-[40px] sm:px-[40px] sm:py-[36px]">
             <p className={`${META} font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.gains.spine.tag)}</p>
-            <p className={`mx-auto mt-[11.25px] max-w-[34rem] text-balance break-keep ${BODY} font-bold leading-snug text-white sm:mt-[12px]`}>{markPhrases(t(naru.gains.spine.heading), naru.gains.spine.marks.map((m) => t(m)))}</p>
+            <p className={`mx-auto mt-[12px] max-w-[34rem] text-balance break-keep ${BODY} font-bold leading-relaxed text-white`}>{markPhrases(t(naru.gains.spine.heading), naru.gains.spine.marks.map((m) => t(m)))}</p>
             {/* DECIDED 2026-10-20 (hwang 브리프 1.2, 2.6, 감사 W3, W4): ✓칩 셋(알약)을 걷고 한 문장으로. tangibles 키는 남깁니다. */}
             {/* DECIDED 2026-10-23 (사용자: 남는 것 다섯 칸 개편): tangiblesLine(팀의 생각 한 장, 코드로 옮긴 결과물)은 그리지 않습니다.
                 바로 아래 02와 04가 같은 말을 합니다. 키는 data/naru.ts에 남깁니다. */}
@@ -1441,28 +1441,26 @@ export default function NaruHome() {
               자기 날짜만큼 막대를 긋습니다. 정거장에서 내려오는 옅은 세로줄이 다섯 행을 꿰어 같은 노선이라는 것이 보입니다.
               폰은 행 안에서 글 아래에 막대(가운데 정렬), sm부터는 왼쪽에 글, 오른쪽에 막대. 글자는 BODY와 META만.
               role="list" (2026-09-19, 접근성 감사 10): Safari/VoiceOver가 list-style:none인 목록의 역할을 떼어 냅니다. */}
-          <div className="relative mt-[36px] max-sm:mt-[32px] rounded-2xl card-base px-[22.5px] py-[12px] sm:px-[32px] sm:py-[27px] lg:mt-[72px] lg:px-[40px]">
+          {/* DECIDED 2026-10-26 (사용자: "오면 무엇이 남는가 섹션 개박살남. 선택적 좌측단락, 사이즈, 패딩, 간격, 여백"): 핵심 문장 판(가운데) 아래 다섯 행은 모든 폭에서 왼쪽 정렬
+              (폰도. 그 전에는 폰만 가운데라 긴 본문이 가운데로 흘렀습니다). 판 안쪽 20/32/48px, 행 위아래 20/24/28px, 제목과 본문 사이 8/10px.
+              날마다 옅게 칠하던 세로 띠는 걷었습니다(카드 면 위에서 줄무늬로 읽힘). 폰의 붙는 날 머리는 카드 면 색. */}
+          <div className="relative mt-[48px] rounded-2xl card-base px-[20px] py-[8px] sm:px-[32px] sm:py-[20px] lg:mt-[72px] lg:px-[48px] lg:py-[28px]">
             <div className="relative">
               {/* 날마다의 옅은 세로 띠(Day 0, 2, 4). 가는 안내선 대신 칸이 보이게. 머리와 행과 같은 칸 틀입니다. */}
-              <div aria-hidden className={`pointer-events-none absolute inset-0 grid ${GAIN_COLS}`}>
-                <div className="hidden sm:block" />
-                {/* 2026-10-24 (밀도 브리프 1.3): lg에서는 옅은 세로 띠를 걷습니다(좁아진 칸에서 띠가 격자를 더 무겁게 보이게 함). */}
-                {[0, 1, 2, 3, 4].map((d) => (<div key={d} className={d % 2 === 0 ? "rounded-lg bg-white/[0.03] lg:bg-transparent" : ""} />))}
-              </div>
               {/* DECIDED 2026-10-25 (사용자, 폰 스크린숏: "스크롤할때 몇일인지가 모를거 같은데"): 폰에서는 Day 머리가 접힌 헤더(탭 줄 48px)
                   바로 아래에 붙어 01~05를 내리는 동안 남습니다. 판이 끝나면 같이 올라갑니다. 뒤로 막대가 비치지 않게 불투명 바탕을
                   판 가장자리까지(-mx) 깝니다. sm부터는 머리와 행이 한 화면에 들어 그대로입니다. */}
-              <div aria-hidden className="relative pb-4 pt-[12px] max-sm:sticky max-sm:top-[48px] max-sm:z-20 max-sm:-mx-[22.5px] max-sm:bg-naru-surface-2 max-sm:px-[22.5px] sm:pt-0">
+              <div aria-hidden className="relative pb-4 pt-[12px] max-sm:sticky max-sm:top-[var(--site-header-height,96px)] max-sm:z-20 max-sm:-mx-[20px] max-sm:bg-naru-surface max-sm:px-[20px] sm:pt-0">
                 <GainRouteHead label={t({ ko: "닷새", en: "Five days" })} names={naru.december.stages.map((st) => t(st.title))} />
               </div>
               <ol role="list" className="relative">
                 {naru.gains.items.map((item, i) => (
                   <li
                     key={item.num}
-                    className={`border-t border-white/[0.08] py-[18px] max-sm:py-[24px] text-center sm:grid sm:items-start sm:py-[22.5px] sm:text-left lg:py-[16px] ${GAIN_COLS}`}
+                    className={`border-t border-white/[0.08] py-[20px] text-left sm:grid sm:items-start sm:py-[24px] lg:py-[28px] ${GAIN_COLS}`}
                   >
                     <div className="min-w-0 sm:pr-6" style={{ gridColumn: 1, gridRow: 1 }}>
-                      <div className="flex items-center justify-center gap-2.5 sm:justify-start">
+                      <div className="flex items-center gap-2.5">
                         <span aria-hidden className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent/15 ${META} font-black tabular-nums text-accent`}>{item.num}</span>
                         <h3 className={ROW_HEADING}>{t(item.title)}</h3>
                       </div>
@@ -1470,7 +1468,7 @@ export default function NaruHome() {
                     </div>
                     {/* DECIDED 2026-10-25 (사용자: "그렇다고 이런식으로 침범이 되면 안됨"): 본문은 왼쪽 글 칸(1열) 안에만 둡니다. 날 칸 아래로 넘어가지 않습니다.
                         줄 수는 문장 길이로 맞춥니다(data/naru.ts gains.items). */}
-                    <p className={`mt-[12px] break-keep ${BODY} leading-relaxed text-naru-muted sm:mt-[16px] sm:pr-6`} style={{ gridColumn: 1, gridRow: 2 }}>{t(item.body)}</p>
+                    <p className={`mt-[8px] break-keep pl-[38px] ${BODY} leading-relaxed text-naru-muted sm:mt-[10px] sm:pr-8`} style={{ gridColumn: 1, gridRow: 2 }}>{t(item.body)}</p>
                     <GainBars days={item.days} split={item.split} />
                   </li>
                 ))}

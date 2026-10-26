@@ -952,7 +952,7 @@ function BenefitCard({
   return (
     <div className="relative rounded-2xl card-base p-6 transition hover:border-white/25 hover:bg-white/[0.05]">
       <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.04] text-sm font-black text-white/85">{item.num}</span>
-      <h3 className="mt-4 text-lg font-bold text-white">{t(item.title)}</h3>
+      <h3 className="mt-4 text-base font-bold text-white sm:text-lg">{t(item.title)}</h3>
       <ul id={listId} className="mt-3 space-y-2">
         {item.points.map((p, i) => (
           <li
@@ -2116,6 +2116,9 @@ export default function Journey() {
       <ScrollToTop />
       <MobileChatBar />
 
+      {/* DECIDED 2026-10-26 (사용자: "8월 페이지 간격, 정렬, 디자인 고도화 조건 적용된 거 맞아? 빽빽하고 어긋나 보임, 모바일 텍스트 더 줄일 수 있음"):
+          장 머리(가운데) → 본문(왼쪽 카드) 전환마다 lg 64px, 같은 장 안의 큰 묶음 전환 lg 96px, 카드 안쪽 20~28px, 카드 사이 lg 24px.
+          폰에서 장 제목 28px, 히어로 제목 36px, 숫자 24px, 카드 제목 BODY. 장 좌우 여백 24/48/64px(Chapter). */}
       {/* ── CH 0 · HERO ─────────────────────────────────────────────── */}
       {/* DECIDED 2026-10-26 (사용자: 아카이브 배너 "쓸데가 있는 말임?", "배너 통째로 빼고 헤더 아래 여백만 히어로 쪽으로"): ArchiveBanner를 뺐습니다.
           배너가 메우던 고정 헤더 높이를 히어로 위 여백에 더합니다. 헤더는 로고 줄 + 목차 레일 108px(xl부터 136px), 목차가 로고 줄에 서는 폭
@@ -2162,7 +2165,7 @@ export default function Journey() {
             {/* clamp caps trimmed (8rem->7.1rem, 3rem->2.65rem) so the 18px root
                 bump doesn't enlarge the hero headline - it stays ~its current size
                 while the rest of the site grows. */}
-            <h1 className="text-[clamp(2.65rem,11vw,7.1rem)] font-black leading-[1.05] tracking-tight lg:text-[clamp(2.65rem,6vw,5.5rem)]">
+            <h1 className="text-[clamp(2.65rem,11vw,7.1rem)] max-sm:text-[2.25rem] font-black leading-[1.05] tracking-tight lg:text-[clamp(2.65rem,6vw,5.5rem)]">
               <span className="block text-white">{t(dict.hero.titleLine1)}</span>
               {/* pb-[0.15em]: bg-clip-text only paints the gradient inside the line
                   box; with the tight leading the box cut off g/p descenders, so they
@@ -2263,7 +2266,7 @@ export default function Journey() {
       <Chapter id="about" align="center">
         <div className="text-center">
           <Eyebrow>{t(dict.about.tag)}</Eyebrow>
-          <h2 className="mx-auto max-w-3xl text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
+          <h2 className="mx-auto max-w-3xl text-[clamp(2rem,5.5vw,3.75rem)] max-sm:text-[28px] font-bold leading-[1.12] tracking-[-0.03em] text-white">
             {t(dict.about.heading)}
           </h2>
           <p className="mx-auto mt-5 max-w-2xl leading-relaxed  text-sm sm:text-base text-naru-muted">
@@ -2273,14 +2276,15 @@ export default function Journey() {
 
         {/* the problem, in numbers - faint violet weight so it reads as "the
             gap" distinct from the lighter "shift" belief cards below */}
-        <div className="mt-10 rounded-3xl card-base p-6 sm:p-8">
+        {/* 2026-10-26 (anti-slop nested-cards): 카드 안의 카드를 걷었습니다. 소개 상자 안 보도 줄, 대상 상자 안 준비물, 멘토 그룹 틀, 파트너 큰 틀은 면 없이 선으로 나눕니다. */}
+        <div className="mt-12 rounded-3xl card-base p-6 sm:p-10 lg:mt-16">
           <p className="text-center text-xs font-bold text-accent">
             {t(dict.about.gapTag)}
           </p>
           <div className="mt-6 grid gap-6 sm:grid-cols-3">
             {dict.about.gap.map((s) => (
               <div key={s.num.en} className="text-center">
-                <div className="text-3xl font-black text-white sm:text-4xl">{t(s.num)}</div>
+                <div className="text-2xl font-black text-white sm:text-4xl">{t(s.num)}</div>
                 <p className="mx-auto mt-2 max-w-[15rem] text-xs leading-relaxed text-white/70">{t(s.label)}</p>
               </div>
             ))}
@@ -2304,7 +2308,7 @@ export default function Journey() {
                 href={p.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 rounded-xl card-base px-4 py-3 text-center transition hover:border-white/25 hover:bg-white/[0.06]"
+                className="group mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 border-t border-white/10 px-1 py-3 text-center transition hover:border-white/25 hover:bg-white/[0.06]"
               >
                 {/* 로고는 선택입니다 (dict의 PressItem 참고). 흰색 트림 자산이 없는
                     매체는 제호를 텍스트로 냅니다 - 이미지와 같은 높이·불투명도라 한
@@ -2344,10 +2348,10 @@ export default function Journey() {
         </div>
 
         {/* the answer - the shift we're building */}
-        <p className="mt-12 text-center text-xs font-bold text-accent">
+        <p className="mt-16 text-center text-xs font-bold text-accent lg:mt-24">
           {t(dict.about.shiftTag)}
         </p>
-        <div className="mt-5 grid gap-4 text-left md:grid-cols-3">
+        <div className="mt-6 grid gap-4 text-left md:grid-cols-3 lg:gap-6">
           {dict.about.cards.map((c) => (
             <Glass key={c.kicker.en} className="!p-6 transition hover:border-white/25 hover:bg-white/[0.07]">
               <span className="text-xs font-bold text-accent">{t(c.kicker)}</span>
@@ -2366,7 +2370,7 @@ export default function Journey() {
       <Chapter id="join" align="center">
         <div className="text-center">
           <Eyebrow color="emerald">{t(dict.whoWhat.tag)}</Eyebrow>
-          <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
+          <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] max-sm:text-[28px] font-bold leading-[1.12] tracking-[-0.03em] text-white">
             {t(dict.whoWhat.heading)}
           </h2>
           <p className="mx-auto mt-5 max-w-2xl leading-relaxed  text-sm sm:text-base text-naru-muted">
@@ -2377,7 +2381,7 @@ export default function Journey() {
             chapter that follows immediately after. This chapter now does one
             job - who it's for, and why the usual reasons not to join don't
             apply - and the next chapter answers "what do I get". */}
-        <Glass className="mx-auto mt-10 max-w-2xl text-left">
+        <Glass className="mx-auto mt-12 max-w-2xl text-left lg:mt-16">
           <h3 className="text-xs font-bold text-accent">{t(dict.whoWhat.whoTitle)}</h3>
           <ul className="mt-4 space-y-3">
             {dict.whoWhat.who.map((item, i) => (
@@ -2407,7 +2411,7 @@ export default function Journey() {
               구절은 dict 쪽 ** 마커를 Emph가 굵게 칠합니다.
               로즈로 올리지 마세요 - 그 층은 의무이고, 준비물이 자격 조건처럼
               읽히기 시작합니다(dict.whoWhat.prep 위 주석). */}
-          <div className="mt-4 rounded-xl card-tint px-4 py-3">
+          <div className="mt-4 border-t border-white/10 pt-4">
             <p className="break-keep text-sm leading-relaxed text-white/85">
               <span className="font-bold text-white/85">{t(dict.whoWhat.prepLabel)}</span>
               {": "}
@@ -2422,7 +2426,7 @@ export default function Journey() {
           360px 폭에서 500px 가까이 비어 덜 불러온 화면처럼 보였습니다. */}
       <Chapter id="benefits" align="center" className="!pb-6 sm:!pb-20 lg:!pb-24">
         <Eyebrow color="cyan">{t(dict.benefits.tag)}</Eyebrow>
-        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
+        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] max-sm:text-[28px] font-bold leading-[1.12] tracking-[-0.03em] text-white">
           {t(dict.benefits.heading)}
         </h2>
         {/* ── Q1 spine ──────────────────────────────────────────────────────
@@ -2433,7 +2437,7 @@ export default function Journey() {
             been named. Tinted panel + three tangible chips - deliberately the
             most emphatic block in the section, because it is the section's
             answer; the cards are the footnotes to it. */}
-        <div className="mx-auto mt-7 max-w-3xl rounded-2xl card-tint px-5 py-6 sm:px-7">
+        <div className="mx-auto mt-10 max-w-3xl rounded-2xl card-tint px-5 py-6 sm:px-7">
           <p className="text-xs font-bold text-white/85">{t(dict.benefits.spine.tag)}</p>
           <p className="mx-auto mt-2.5 max-w-2xl break-keep text-base lg:text-2xl font-bold leading-[1.3] tracking-[-0.02em] text-accent">
             {t(dict.benefits.spine.heading)}
@@ -2455,7 +2459,7 @@ export default function Journey() {
         </div>
         <p className="mx-auto mt-5 max-w-2xl leading-relaxed  text-sm sm:text-base text-naru-muted">{t(dict.benefits.intro)}</p>
 
-        <div className="mt-10 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-4 text-left sm:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-6">
           {dict.benefits.items.map((it) => (
             <BenefitCard key={it.num} item={it} t={t} />
           ))}
@@ -2478,7 +2482,7 @@ export default function Journey() {
             <div className="flex flex-wrap items-center justify-center gap-2">
               <Eyebrow className="!mb-0">{t(dict.program.tag)}</Eyebrow>
             </div>
-            <h2 className="mt-4 text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
+            <h2 className="mt-4 text-[clamp(2rem,5.5vw,3.75rem)] max-sm:text-[28px] font-bold leading-[1.12] tracking-[-0.03em] text-white">
               {t(dict.program.heading)}
             </h2>
             {/* Three numbers before anything else: the first question this section
@@ -2496,7 +2500,7 @@ export default function Journey() {
                 kind of thing. Numbered pills carry ①②③ for the arrows' benefit
                 on mobile, where the row becomes a stack and the → sits to the
                 right of each box. Boxes stretch to equal height per row. */}
-            <div className="mx-auto mt-8 max-w-5xl">
+            <div className="mx-auto mt-12 max-w-5xl lg:mt-16">
               <p className="text-xs font-bold text-accent">{t(dict.program.outputTag)}</p>
               <h3 className="mx-auto mt-2 max-w-3xl text-base lg:text-2xl font-bold leading-[1.3] tracking-[-0.02em] text-accent">
                 {t(dict.program.outputHeading)}
@@ -2505,7 +2509,7 @@ export default function Journey() {
                 className="mt-5 text-left"
                 items={dict.program.outputSteps}
                 render={(st, i) => (
-                  <div className="flex h-full w-full flex-col rounded-xl card-raised px-4 py-3.5">
+                  <div className="flex h-full w-full flex-col rounded-xl card-raised px-5 py-4">
                     <div className="flex items-center gap-2">
                       <span aria-hidden className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-xs font-black text-accent">
                         {i + 1}
@@ -2524,7 +2528,7 @@ export default function Journey() {
                 the three answers line up under each other and can be compared in
                 one downward glance. Left-aligned inside a centred section for the
                 same reason. */}
-            <div className="mx-auto mt-3 max-w-2xl rounded-2xl card-sunken px-5 py-4 text-left">
+            <div className="mx-auto mt-8 max-w-2xl rounded-2xl card-sunken px-5 py-5 text-left sm:px-7">
               <p className="text-xs font-bold leading-relaxed text-white/85">
                 {t(dict.program.modeNote.lead)}
               </p>
@@ -2554,7 +2558,7 @@ export default function Journey() {
           {/* Two Labs, four clean day cards each. Tapping a card opens the day
               detail modal (that day's sessions) instead of exploding all ~18
               sessions inline - the 8-day arc stays scannable. */}
-          <div className="mt-12 space-y-8">
+          <div className="mt-12 space-y-10 lg:mt-16">
             {/* Prologue row - before Lab 1, outside the eight days. */}
             <PreEventBand t={t} onOpen={selectEvent} />
             {[days.slice(0, 4), days.slice(4, 8)].map((group) => {
@@ -2581,7 +2585,7 @@ export default function Journey() {
               by → - because this is also a sequence, and the arrows carry the
               "questions move from thinking to evidence" claim without a sentence.
               Roles only; the question lists themselves stay in the forms. */}
-          <div className="mx-auto mt-12 max-w-5xl text-center">
+          <div className="mx-auto mt-16 max-w-5xl text-center lg:mt-24">
             <p className="text-xs font-bold text-accent">{t(dict.program.checkins.tag)}</p>
             <h3 className="mx-auto mt-2 max-w-3xl text-base lg:text-2xl font-bold leading-[1.3] tracking-[-0.02em] text-accent">
               {t(dict.program.checkins.heading)}
@@ -2590,7 +2594,7 @@ export default function Journey() {
               className="mt-5 text-left"
               items={dict.program.checkins.forms}
               render={(f) => (
-                <div className="flex h-full w-full flex-col rounded-xl card-raised px-4 py-3.5">
+                <div className="flex h-full w-full flex-col rounded-xl card-raised px-5 py-4">
                   <div className="flex flex-wrap items-center gap-1.5">
                     <span className="text-xs font-bold text-accent">
                       {t(f.when)}
@@ -2621,7 +2625,7 @@ export default function Journey() {
           naming/likeness to be confirmed with the user (flagged in the handoff). */}
       <Chapter id="speakers" align="center">
         <Eyebrow>{t(dict.speakers.tag)}</Eyebrow>
-        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
+        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] max-sm:text-[28px] font-bold leading-[1.12] tracking-[-0.03em] text-white">
           {t(dict.speakers.heading)}
         </h2>
         <p className="mx-auto mt-4 max-w-2xl leading-relaxed  text-sm sm:text-base text-naru-muted">{t(dict.speakers.intro)}</p>
@@ -2657,7 +2661,7 @@ export default function Journey() {
 
             subgrid를 모르는 브라우저에서는 규칙이 통째로 무시되고 카드가 각자
             3행 그리드가 됩니다 - 예전처럼 카드끼리 어긋날 뿐, 깨지지 않습니다. */}
-        <div className="mt-10 grid grid-cols-1 items-stretch gap-5 text-left sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid grid-cols-1 items-stretch gap-5 text-left sm:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-6">
           {/* keyed by index, not `img` - one speaker can hold two sessions
               (박희덕: Day 7 조언 세션 + Day 8 간담회) and so reuse the same photo */}
           {dict.speakers.people.map((s, si) => (
@@ -2694,7 +2698,7 @@ export default function Journey() {
             자리에서 이 밴드는 border-white/15에 배경을 한 단계 올립니다.
             새 유채색을 쓰지 마세요 - 이 섹션은 violet 하나로 도는 자리이고,
             여기에 색을 더하면 밴드가 섹션 밖에서 온 것처럼 보입니다. */}
-        <div className="mt-5 rounded-2xl card-raised p-6 text-left sm:p-8">
+        <div className="mt-8 rounded-2xl card-raised p-6 text-left sm:p-8">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <span className="text-xs font-bold text-accent/80">{t(dict.speakers.panel.label)}</span>
             <p className="break-keep text-base font-semibold text-white sm:text-lg">{t(dict.speakers.panel.title)}</p>
@@ -2725,7 +2729,7 @@ export default function Journey() {
       {/* ── CH 3.3 · MENTORING PHILOSOPHY ──────────────────────────── */}
       <Chapter id="mentoring" align="center">
         <Eyebrow color="emerald">{t(dict.mentoring.tag)}</Eyebrow>
-        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
+        <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] max-sm:text-[28px] font-bold leading-[1.12] tracking-[-0.03em] text-white">
           {t(dict.mentoring.heading)}
         </h2>
         <p className="mx-auto mt-4 max-w-2xl leading-relaxed  text-sm sm:text-base text-naru-muted">{t(dict.mentoring.intro)}</p>
@@ -2744,7 +2748,7 @@ export default function Journey() {
             Which box a card lands in comes from `mentors[].stages` joined against
             each group's own `stages` - no counts, no name lists here. Add or drop
             a mentor in data/dictionary.ts and the boxes rearrange themselves. */}
-        <div className="mt-8 text-left">
+        <div className="mt-12 text-left lg:mt-16">
           {/* Plain section label, not the emerald pill it used to be. The pill's
               green was carrying the word 확정; with that word gone (see
               mentoring.gridLabel) a status colour with no status left to report
@@ -2798,11 +2802,11 @@ export default function Journey() {
           {/* The two boxes. Stacked, not side by side: each holds a full mentor
               grid, and two grids in parallel columns would halve the card width
               for no gain. */}
-          <div className="mt-4 space-y-4">
+          <div className="mt-5 space-y-6">
             {dict.mentoring.groups.map((g) => {
               const mentors = dict.mentoring.mentors.filter((m) => m.stages.some((n) => g.stages.includes(n)));
               return (
-                <div key={g.id} className="rounded-2xl card-raised p-4 sm:p-5">
+                <div key={g.id} className="border-t border-white/10 pt-6 sm:pt-8">
                   {/* Header: what this group is for, then who partners on it. */}
                   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                     <span className="whitespace-nowrap text-xs font-bold text-white/85">
@@ -2898,7 +2902,7 @@ export default function Journey() {
                       const name = t(m.name);
                       const role = t(m.role);
                       return (
-                        <div key={i} className="flex w-[75vw] shrink-0 snap-start flex-col rounded-2xl card-base p-4 transition hover:border-white/25 hover:bg-white/[0.05] sm:w-[calc((100%-0.75rem)/2)] sm:shrink lg:w-[calc((100%-1.5rem)/3)]">
+                        <div key={i} className="flex w-[75vw] shrink-0 snap-start flex-col rounded-2xl card-base p-5 transition hover:border-white/25 hover:bg-white/[0.05] sm:w-[calc((100%-0.75rem)/2)] sm:shrink lg:w-[calc((100%-1.5rem)/3)]">
                           <div className="flex items-start justify-between gap-2">
                             {/* break-keep - Korean breaks between syllables by
                                 default, which shreds a 3-syllable name into a
@@ -2950,7 +2954,7 @@ export default function Journey() {
             them breaks the connection - and "can I pick one?" is a question the
             cards provoke, not one a reader arrives with. Answering it directly
             under the faces is answering it where it is asked. */}
-        <div className="mt-8 rounded-2xl card-tint p-5 text-left sm:p-6">
+        <div className="mt-10 rounded-2xl card-tint p-5 text-left sm:p-7">
           <p className="flex items-center gap-2 text-sm font-bold text-white/85">
             <span aria-hidden className="text-white/70">◇</span>
             {t(dict.mentoring.matchNote.title)}
@@ -2964,7 +2968,7 @@ export default function Journey() {
             Judge cards, all with face photos. LinkedIn icon only where a
             confirmed URL exists. A judge who is agreed but not locked keeps a
             normal card and adds an amber "협의 중" pill (dict.judges.people[].pending). */}
-        <div className="mt-16 border-t border-white/10 pt-12 text-left">
+        <div className="mt-20 border-t border-white/10 pt-14 text-left lg:mt-24 lg:pt-16">
           <div className="text-center">
             <Eyebrow color="violet">{t(dict.judges.tag)}</Eyebrow>
             <h3 className="text-base lg:text-2xl font-bold leading-[1.3] tracking-[-0.02em] text-accent">
@@ -3053,9 +3057,9 @@ export default function Journey() {
       <Chapter id="builders" align="center" className="md:!min-h-0 !pb-6 sm:!pb-8">
         {/* Contained dark backing box (not full-width) to lift readability over
             the bright background field. */}
-        <div className="mx-auto w-full max-w-4xl rounded-[2rem] card-base p-5 sm:p-12">
+        <div className="mx-auto w-full max-w-4xl ">
           <Eyebrow>{t(dict.partners.tag)}</Eyebrow>
-          <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
+          <h2 className="text-[clamp(2rem,5.5vw,3.75rem)] max-sm:text-[28px] font-bold leading-[1.12] tracking-[-0.03em] text-white">
             {t(dict.partners.heading)}
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-center leading-relaxed  text-sm sm:text-base text-naru-muted">{t(dict.partners.note)}</p>
@@ -3071,9 +3075,9 @@ export default function Journey() {
               the white member logos below - recoloured from CI/AXMOS.png via its
               alpha channel, trimmed + downscaled. Filename carries "-white" so a
               browser can't serve the earlier colour version from cache. */}
-          <div className="mt-9 text-left">
+          <div className="mt-12 text-left">
             <p className="text-xs font-bold text-white/70">{t(dict.partners.hostLabel)}</p>
-            <div className="mt-3 overflow-hidden rounded-2xl card-base">
+            <div className="mt-3 overflow-hidden border-y border-white/10">
               {/* Umbrella header - click opens the AXMOS intro modal. */}
               <button
                 type="button"
@@ -3115,7 +3119,7 @@ export default function Journey() {
           </div>
 
           {/* ── Tier 2 · 주관 (the student associations) ─────────────────── */}
-          <div className="mt-8 text-left">
+          <div className="mt-10 text-left">
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <p className="text-xs font-bold text-white/70">{t(dict.partners.organizersLabel)}</p>
               <p className="text-xs text-caption">{t(dict.partners.organizersNote)}</p>
@@ -3154,7 +3158,7 @@ export default function Journey() {
               "협의 중" tier and the separate 멘토사 tier were folded away - the
               deck lists no in-discussion sponsors, and 멘토링 is just another
               role caption here. */}
-          <div className="mt-8 border-t border-white/10 pt-8 text-left">
+          <div className="mt-10 border-t border-white/10 pt-10 text-left">
             <p className="text-xs font-bold text-white/70">{t(dict.partners.sponsorsLabel)}</p>
 
             {/* A green "확정 (CONFIRMED)" pill sat here between the label and the
@@ -3410,7 +3414,7 @@ function FAQList() {
                     {"aGroups" in item && item.aGroups && (
                       <div className={`mt-4 grid items-start gap-4 ${item.aGroups.length > 1 ? "sm:grid-cols-2" : ""}`}>
                         {item.aGroups.map((g, gi) => (
-                          <div key={gi} className="rounded-xl card-base px-4 py-3.5">
+                          <div key={gi} className="rounded-xl card-base px-5 py-4">
                             <p className="text-xs font-bold text-accent/90">
                               {t(g.label)}
                             </p>
