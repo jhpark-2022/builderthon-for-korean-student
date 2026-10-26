@@ -7,7 +7,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import "server-only";
-import { createHash } from "node:crypto";
+import { createHash, createHmac } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { CURRENT_EVENT } from "@/lib/registrationWindow";
 
@@ -33,3 +33,15 @@ export async function listTracks(db: SupabaseClient) {
 export const teamFolder = (name: string) => createHash("sha256").update(name).digest("hex").slice(0, 16);
 
 export const PROOF_BUCKET = "crossing-proofs";
+
+/**
+ * 멘토 페이지(/crossing/mentor?k=)의 열쇠. 멘토 ID를 서버 비밀로 서명한 20자입니다. 표에 따로 적지 않습니다.
+ * DECIDED 2026-10-26 (사용자: 멘토가 팀의 1장을 미리 보는 방법으로 "멘토 전용 페이지"): 멘토마다 자기 링크가 있고,
+ * 링크가 없으면 다른 멘토나 팀의 칸은 볼 수 없습니다. 링크는 scripts/mentor-links.mjs가 뽑습니다(같은 계산).
+ * 비밀은 MENTOR_LINK_SECRET, 없으면 SUPABASE_SERVICE_ROLE_KEY. 비밀을 바꾸면 모든 링크가 바뀝니다.
+ */
+export function mentorKey(mentorId: string): string | null {
+  const secret = process.env.MENTOR_LINK_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!secret) return null;
+  return createHmac("sha256", secret).update(`crossing-mentor:${mentorId}`).digest("hex").slice(0, 20);
+}

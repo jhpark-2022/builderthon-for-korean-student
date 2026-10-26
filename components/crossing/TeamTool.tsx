@@ -18,7 +18,7 @@ import { buttonClass } from "@/components/ui/Button";
 import LocaleToggle from "@/components/LocaleToggle";
 import { teamCopy as c } from "@/data/crossingTeam";
 import {
-  BUFFER_MINUTES, GRID_MINUTES, MAX_BOOKINGS_PER_TEAM_PER_DAY, PROOF_DAYS, PROOF_MAX_BYTES, PROOF_TYPES, dayDate, fitsWindow, fmtKst, isProofDay, proofKindsFor, slotState, trackTint,
+  BUFFER_MINUTES, GRID_MINUTES, bookingGate, kstTime, BOOKING_OPENS_DAY, MAX_BOOKINGS_PER_TEAM_PER_DAY, PROOF_DAYS, PROOF_MAX_BYTES, PROOF_TYPES, dayDate, fitsWindow, fmtKst, isProofDay, proofKindsFor, slotState, trackTint,
   type ProofDay, type ProofKind, type Track, type Window,
 } from "@/lib/crossingOps";
 
@@ -51,6 +51,10 @@ export default function TeamTool() {
   }, []);
   // DECIDED 2026-10-17 (사용자: "day 1으로 들어왔을때는 timetable은 disable, 팀 이름을 넣던 말던"): Day 1 탭에서는 시간표가 늘 잠깁니다.
   const timetableLocked = day === 1;
+  // 2026-10-26: 안내 줄에 쓰는 지금 상태. 칸마다의 판정은 bookingGate가 합니다. 시간표를 다시 읽을 때(20초) 같이 새로 셉니다.
+  const now = Date.now();
+  const notYet = now < kstTime(BOOKING_OPENS_DAY, "00:00")!.getTime();
+  const today = now >= kstTime(day, "00:00")!.getTime();
 
   const refresh = useCallback(async () => {
     const r = await fetch(`/api/crossing/mentoring?day=${day}`, { cache: "no-store" });
@@ -84,7 +88,8 @@ export default function TeamTool() {
     const r = await fetch("/api/crossing/mentoring", { method, headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
     if (!r.ok) {
       const e = (await r.json().catch(() => ({}))).error;
-      setMsg(t(e === "taken" ? c.errTaken : e === "team_busy" ? c.errTeamBusy : e === "team_limit" ? c.errLimit : e === "past" ? c.errPast : c.errGeneric));
+      setMsg(t(e === "taken" ? c.errTaken : e === "team_busy" ? c.errTeamBusy : e === "team_limit" ? c.errLimit : e === "past" ? c.errPast
+        : e === "not_yet" ? c.errNotYet : e === "same_day_morning" ? c.errMorning : c.errGeneric));
     }
     setPending(null); setBusy(false); void refresh();
   };
@@ -123,9 +128,11 @@ export default function TeamTool() {
     if (gap) return <td key={m.id} className={`border-l border-white/5 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.06)_0_4px,transparent_4px_8px)] px-2 ${META} text-white/70`}>{t(c.gap)}</td>;
     const free = fitsWindow(r, m.windows) && slotState(r, m.bookings, []) === "open";
     const full = mine.length >= MAX_BOOKINGS_PER_TEAM_PER_DAY; // 이 날 두 칸을 다 넣었으면 더 열지 않습니다
-    const ok = !timetableLocked && !!picked && !full && free && slotState(r, m.bookings, mine) === "open";
+    // 2026-10-26: Day 1 전에는 닫혀 있고, 그날에는 13:00 전 칸이 닫힙니다(bookingGate). 닫힌 칸도 흐린 "+"로 보입니다.
+    const gated = bookingGate(day, r) !== "ok";
+    const ok = !timetableLocked && !gated && !!picked && !full && free && slotState(r, m.bookings, mine) === "open";
     const asking = pending?.m === m.id && pending.r === r;
-    const locked = (timetableLocked || !picked) && free; // 팀을 고르면 열릴 칸: "+"를 흐리게 보여 줍니다
+    const locked = (timetableLocked || gated || !picked) && free; // 팀을 고르면 열릴 칸: "+"를 흐리게 보여 줍니다
     return (
       <td key={m.id} className="border-l border-white/5 p-0">
         <button type="button" disabled={!ok || busy} aria-label={`${m.name} ${fmtKst(r)}`}
@@ -183,9 +190,12 @@ export default function TeamTool() {
         {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}
         {/* DECIDED 2026-10-26 (사용자, 스크린숏: "1일차에는 멘토 시간표가 없어야함"): Day 1 탭에서는 시간표 절 전체(제목, 안내, 범례, 표)를 그리지 않습니다.
             그 전(2026-10-17): 잠긴 표와 주황 안내 "Day 1에는 멘토 시간표에 칸을 넣지 않습니다"를 보여 줬습니다. */}
+        {timetableLocked && <p className={`${BODY} text-white/70`}>{t(c.day1BookHint)}</p>}
         {!timetableLocked && <>
         <h2 className={`mt-[18px] ${BODY} font-bold`}>{t(c.timetableHeading)}</h2>
-        <p className={`${BODY} text-white/70`}>{t(c.lead)} {t(c.carry)}</p>
+        <p className={`${BODY} text-white/70`}>{t(c.lead)} {t(c.gateRule)} {t(c.carry)}</p>
+        {notYet && <p className={`${META} font-bold text-naru-orange`}>{t(c.notYet)}</p>}
+        {!notYet && today && <p className={`${META} font-bold text-naru-orange`}>{t(c.sameDay)}</p>}
         {tracks.length > 0 && (
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             {tracks.map((x) => (

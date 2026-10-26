@@ -135,3 +135,20 @@ export function slotStarts(windows: Window[]): number[] {
 export function fitsWindow(t: number, windows: Window[]): boolean {
   return slotStarts(windows).includes(t);
 }
+
+/**
+ * 언제 칸을 넣을 수 있는지. 서버(POST)와 화면이 같은 판정을 씁니다.
+ * DECIDED 2026-10-26 (사용자: "day 2,3 둘다 choose 할 수 있도록 at day 1 에 할 수 있도록. 그리고 day 2 에는 오전 시간대는 오후 1시 이상
+ * and day 3, 그리고 시간이 지나면 그 지나간 시간은 block. do the same for the day 3"):
+ * - Day 1(12.18) 00:00 KST부터 Day 2, 3 칸을 함께 넣을 수 있습니다. 그 전에는 닫혀 있습니다.
+ * - 그날이 되면 그날의 칸은 SAME_DAY_FROM(13:00) 이후만 넣습니다. 오전 칸은 전날까지 넣어야 멘토가 1장을 미리 봅니다.
+ * - 지난 시간은 막힙니다(slotState의 past, 서버의 past).
+ */
+export const BOOKING_OPENS_DAY = 1;
+export const SAME_DAY_FROM = "13:00";
+export type BookingGate = "ok" | "not_yet" | "same_day_morning";
+export function bookingGate(day: number, t: number, now = Date.now()): BookingGate {
+  if (now < kstTime(BOOKING_OPENS_DAY, "00:00")!.getTime()) return "not_yet";
+  if (now >= kstTime(day, "00:00")!.getTime() && t < kstTime(day, SAME_DAY_FROM)!.getTime()) return "same_day_morning";
+  return "ok";
+}
