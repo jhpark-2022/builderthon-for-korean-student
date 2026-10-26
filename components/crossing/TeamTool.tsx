@@ -16,7 +16,7 @@ import { useLocale } from "@/lib/LocaleContext";
 import { BODY, META } from "@/components/ui/typography";
 import { buttonClass } from "@/components/ui/Button";
 import LocaleToggle from "@/components/LocaleToggle";
-import { teamCopy as c } from "@/data/crossingTeam";
+import { teamCopy as c, timetableRules } from "@/data/crossingTeam";
 import {
   BUFFER_MINUTES, GRID_MINUTES, bookingGate, kstTime, BOOKING_OPENS_DAY, BOOKING_OPENS_AT, MAX_BOOKINGS_PER_TEAM_PER_DAY, PROOF_DAYS, PROOF_MAX_BYTES, PROOF_TYPES, dayDate, fitsWindow, fmtKst, isProofDay, proofKindsFor, slotState, trackTint,
   type ProofDay, type ProofKind, type Track, type Window,
@@ -199,7 +199,24 @@ export default function TeamTool() {
         {timetableLocked && <p className={`${BODY} text-white/70`}>{t(c.day1BookHint)}</p>}
         {!timetableLocked && <>
         <h2 className={`mt-[18px] ${BODY} font-bold`}>{t(c.timetableHeading)}</h2>
-        <p className={`${BODY} text-white/70`}>{t(c.lead)} {t(c.gateRule)} {t(c.carry)}</p>
+        {/* DECIDED 2026-10-26 (사용자, 스크린숏: "시간표 사용 설명이 좀 더 visually engaging"): 한 문단을 규칙 카드 여섯 장으로.
+            글자 크기는 BODY(핵심)와 META(한 줄) 둘. 아이콘은 보라(accent) 한 색이고, 그날의 시간 규칙 둘만 주황(나루 점)입니다. */}
+        <ul className="grid gap-[12px] sm:grid-cols-2 lg:grid-cols-3">
+          {timetableRules.map((r) => (
+            <li key={r.icon} className="flex items-start gap-[12px] rounded-2xl border border-white/10 bg-white/[0.03] p-[16px]">
+              <span aria-hidden className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${r.icon === "open" || r.icon === "today" ? "bg-naru-orange/15 text-naru-orange" : "bg-accent/15 text-accent"}`}>
+                <RuleIcon name={r.icon} />
+              </span>
+              <span className="flex flex-col gap-[4px]">
+                <span className={`${BODY} font-bold text-white`}>{t(r.key)}</span>
+                <span className={`${META} leading-relaxed text-white/70`}>{t(r.body)}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p className={`flex items-center gap-[10px] rounded-2xl border border-accent/30 bg-accent/[0.08] px-[16px] py-[12px] ${BODY} text-white/85`}>
+          <span aria-hidden className="text-accent"><RuleIcon name="doc" /></span>{t(c.carry)}
+        </p>
         {notYet && <p className={`${META} font-bold text-naru-orange`}>{t(c.notYet)}</p>}
         {!notYet && today && <p className={`${META} font-bold text-naru-orange`}>{t(c.sameDay)}</p>}
         {tracks.length > 0 && (
@@ -247,6 +264,20 @@ export default function TeamTool() {
       </div>
     </main>
   );
+}
+
+/** 시간표 규칙 카드의 아이콘(2026-10-26). 선 두께 2, 20px. */
+function RuleIcon({ name }: { name: string }) {
+  const p = { width: 20, height: 20, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  switch (name) {
+    case "tap": return <svg {...p}><path d="M9 11V5a2 2 0 0 1 4 0v6" /><path d="M13 10a2 2 0 0 1 4 0v2" /><path d="M17 11a2 2 0 0 1 4 0v4a7 7 0 0 1-7 7h-1a7 7 0 0 1-5.6-2.8L4 15.5a2 2 0 0 1 3-2.6L9 15" /></svg>;
+    case "clock": return <svg {...p}><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>;
+    case "two": return <svg {...p}><rect x="3" y="4" width="18" height="6" rx="2" /><rect x="3" y="14" width="18" height="6" rx="2" /></svg>;
+    case "lock": return <svg {...p}><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>;
+    case "open": return <svg {...p}><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /><path d="m9 15 2 2 4-4" /></svg>;
+    case "today": return <svg {...p}><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>;
+    default: return <svg {...p}><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5M9 13h6M9 17h4" /></svg>;
+  }
 }
 
 /** 사진은 긴 변 2000px JPEG로 줄여 올립니다. 브라우저가 못 여는 형식(HEIC 등)은 그대로. */

@@ -17,13 +17,7 @@ export const teamCopy = {
   // 2026-10-26: Day 1 탭에는 시간표가 없어(TeamTool) 안내에서 시간표를 뺍니다.
   pickFirstDay1: { ko: "팀을 고르면 인증 올리기가 열립니다.", en: "Pick your team to unlock uploads." },
   dayTab: { ko: "Day", en: "Day" },
-  lead: {
-    ko: "빈 칸을 두 번 누르면 우리 팀 이름이 들어가고, 멘토와 모든 팀이 같은 시간표를 봅니다. 한 칸은 40분이고 앞뒤 10분은 비워 두며, 한 번 넣은 칸은 바꿀 수 없습니다. 하루 두 칸까지 넣을 수 있고, 두 칸은 2시간 이상 떨어져야 합니다.",
-    en: "Tap an empty cell twice to put your team in, and mentors and every team see the same timetable. Each slot is 40 minutes with 10 minutes kept free on either side, and it cannot be changed once it is in. You can take up to two a day, at least two hours apart.",
-  },
-  carry: { ko: "이슈에 대한 팀의 생각 한 장을 들고 찾아갑니다.", en: "Bring one page of your team's take on the issue." },
-  // DECIDED 2026-10-26 (사용자): Day 1부터 Day 2, 3 칸을 넣고, 그날이 되면 13:00 이후 칸만(lib/crossingOps.ts bookingGate).
-  gateRule: { ko: "Day 2, 3 칸은 Day 1(12.18) 12:00부터 함께 넣을 수 있습니다. 그날이 되면 그날의 칸은 13:00 이후만 넣을 수 있습니다.", en: "Day 2 and 3 slots open together on Day 1 (Dec 18) at 12:00. On the day itself, only slots from 13:00 can be added." },
+  carry: { ko: "이슈에 대한 팀의 생각 한 장을 들고 찾아갑니다. 멘토는 그 한 장을 미리 봅니다.", en: "Bring one page of your team's take on the issue. Your mentor reads it beforehand." },
   notYet: { ko: "아직 열리지 않았습니다. Day 1(12.18) 12:00부터 넣을 수 있습니다.", en: "Not open yet. You can add slots from Day 1 (Dec 18) at 12:00." },
   sameDay: { ko: "오늘은 13:00 이후 칸만 넣을 수 있습니다. 오전 칸은 전날까지 넣습니다.", en: "Today only slots from 13:00 can be added. Morning slots close the day before." },
   day1BookHint: { ko: "Day 2, 3 멘토 칸은 Day 1(12.18) 12:00부터 Day 2, Day 3 탭에서 넣습니다.", en: "From Day 1 (Dec 18) at 12:00, add your Day 2 and 3 mentor slots in the Day 2 and Day 3 tabs." },
@@ -64,6 +58,18 @@ export const teamCopy = {
   proofTooBig: { ko: "20MB까지 올릴 수 있습니다.", en: "Files up to 20 MB." },
   proofBadType: { ko: "사진은 JPG, PNG, HEIC, 진척은 PDF로 올립니다.", en: "Photos as JPG, PNG or HEIC. Progress as a PDF." },
 } satisfies Record<string, Phrase>;
+
+// 시간표 사용 규칙(2026-10-26, 사용자: "시간표 사용 설명이 좀 더 visually engaging 했으면"). 한 문단이던 것을 카드 여섯 장으로.
+// 카드마다 핵심 한마디(key, 굵게)와 한 줄(body). 순서는 넣는 방법, 칸의 길이, 하루 상한, 바꿀 수 없음, 여는 때, 그날의 규칙.
+// 규칙의 정본은 lib/crossingOps.ts(SESSION_MINUTES, BUFFER_MINUTES, MAX_BOOKINGS_PER_TEAM_PER_DAY, TEAM_COOLDOWN_MINUTES, BOOKING_OPENS_AT, SAME_DAY_FROM)입니다.
+export const timetableRules: { icon: "tap" | "clock" | "two" | "lock" | "open" | "today"; key: Phrase; body: Phrase }[] = [
+  { icon: "tap", key: { ko: "두 번 눌러 넣기", en: "Tap twice" }, body: { ko: "빈 칸을 두 번 누르면 우리 팀 이름이 들어갑니다. 멘토와 모든 팀이 같은 표를 봅니다.", en: "Tap an empty cell twice to put your team in. Mentors and every team see the same table." } },
+  { icon: "clock", key: { ko: "한 칸 40분", en: "40 minutes a slot" }, body: { ko: "앞뒤 10분은 멘토가 쉬는 시간으로 비워 둡니다.", en: "Ten minutes on either side stay free for the mentor." } },
+  { icon: "two", key: { ko: "하루 두 칸", en: "Two slots a day" }, body: { ko: "두 칸은 2시간 이상 떨어져야 합니다.", en: "The two need to start at least two hours apart." } },
+  { icon: "lock", key: { ko: "넣으면 못 바꿈", en: "No changes" }, body: { ko: "한 번 넣은 칸은 바꾸거나 뺄 수 없습니다.", en: "Once a slot is in, it cannot be changed or removed." } },
+  { icon: "open", key: { ko: "12.18 12:00 열림", en: "Opens Dec 18, 12:00" }, body: { ko: "Day 1 낮 12시부터 Day 2, 3 칸을 함께 넣습니다.", en: "From noon on Day 1, add Day 2 and 3 slots together." } },
+  { icon: "today", key: { ko: "당일은 13:00부터", en: "On the day, from 13:00" }, body: { ko: "그날이 되면 그날의 칸은 13:00 이후만 넣습니다.", en: "On the day itself, only slots from 13:00 can be added." } },
+];
 
 // 멘토 페이지(/crossing/mentor?k=)의 글(2026-10-26). 멘토가 찾아올 팀과 그 팀의 1장을 미리 봅니다.
 export const mentorCopy = {
