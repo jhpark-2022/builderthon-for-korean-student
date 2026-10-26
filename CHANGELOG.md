@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-26 12월 화면 전부를 새 디자인으로](#2026-10-26-december-redesign)
 - [2026-10-26 시간표와 인증 페이지 새 디자인, 폰 막기, 멘토 링크 파일](#2026-10-26-team-page-design)
 - [2026-10-26 Claude Code와 Codex의 공통 UI 스킬 설정](#2026-10-26-shared-ui-skills)
 - [2026-10-26 노선도 선택을 블루로, 날짜 위로, 일정 왼쪽 정렬](#2026-10-26-route-blue)
@@ -422,6 +423,16 @@
 ### 2026-06
 
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
+
+---
+
+<a id="2026-10-26-december-redesign"></a>
+## 2026-10-26 12월 화면 전부를 새 디자인으로
+- 범위: components/crossing/VoteTool.tsx, MentorTool.tsx, RegisterModal.tsx, MatchTeaser.tsx, components/match/MatchParts.tsx, components/Quiz.tsx(12월판 /match만), components/home/NaruHome.tsx(일정 띠 머리)
+- 한 것: 사용자 "12월 이벤트와 관련된 모든 부분, 아직 안 연 기능까지 새 UI/UX 디자인으로". kwan-design 문법(뉴트럴 잉크, card 면, 블루 강조 하나, 입력칸 44px)으로 인기투표(안 엶), 멘토 페이지, 등록 창(11월 엶), AI 유형 테스트 /match를 맞췄습니다. UI Craft가 꼽는 것들을 정리: 보라 그라데이션 제목, 제목 위 ✦ 라벨, 흐린 빛 번짐, 굵은 색 띠 카드, 호박색과 초록 안내, 이모지 아이콘. /match 결과 카드의 모델 색(2026-10-09 사용자 결정)과 8월판 /quiz는 그대로. 홈 Day 1~3 띠는 왼쪽 정렬 뒤 머리 높이가 다시 어긋나 라벨을 제목 위로 쌓았습니다.
+- 근거: brand 10장 사이트 규칙(글자 크기 넷), CLAUDE.md UI 스킬(ui-craft) 규칙. 노선도의 주황 현재 위치 점은 brand 10장 나루 점이라 남김.
+- 검증: 데스크톱과 폰(390px)에서 다섯 화면 가로 넘침 없음. 홈 세 띠 머리 62px, 상자 290px로 같음. 투표와 멘토와 매칭 결과는 예시 데이터를 브라우저 안에서만 얹어 확인(DB 쓰기 없음).
+- 커밋: 974c21d
 
 ---
 
