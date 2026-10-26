@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-26 폰 탭 반응 개선](#2026-10-26-mobile-inp)
 - [2026-10-26 잘못 올리면 운영진에게](#2026-10-26-wrong-upload)
 - [2026-10-26 예약 시점과 멘토 페이지](#2026-10-26-mentor-preread)
 - [2026-10-26 Day 1 탭에서 멘토 시간표를 뺌](#2026-10-26-day1-no-timetable)
@@ -390,6 +391,16 @@
 ### 2026-06
 
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
+
+---
+
+<a id="2026-10-26-mobile-inp"></a>
+## 2026-10-26 폰 탭 반응 개선
+- 범위: lib/background/scene/BackgroundScene.ts(onTouchYield), components/home/NaruHome.tsx(히어로 문단 그림자), components/home/shared.tsx(HERO_BUTTON_GROUND), components/shared/MobileChatBar.tsx
+- 한 것: 사용자 "핸드폰으로 들어갈 때 interaction들이 너무 반응이 느릴 때가 있음". Speed Insights 7일: 폰 INP p75 0.14초인데 아이폰 사파리만 0.24~0.33초, 느린 탭(0.4~1.7초)은 히어로 문단. 터치 화면에서는 손가락이 닿은 뒤 0.12초 동안 WebGL 배경을 그리지 않습니다. 히어로 문단 셋의 drop-shadow 필터는 같은 값의 text-shadow로, 히어로 버튼과 아래 오픈채팅 바의 backdrop-blur는 빼고 바탕 불투명도로. 화면은 그대로입니다(폰 스크린숏 전후 비교).
+- 검증: 폰 흉내에서 터치 직후 0.1초 그리기 0번, 그 뒤 원래대로. 콘솔 오류 없음. 실제 아이폰 INP는 며칠 뒤 Speed Insights로 다시 봅니다.
+- 근거: brand 10장 사이트 규칙(배경 형상은 판 뒤에서만 바뀐다, 모습은 그대로).
+- 커밋: 4442ccf
 
 ---
 
