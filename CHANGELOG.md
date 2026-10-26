@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-26 시간표와 인증 페이지 새 디자인, 폰 막기, 멘토 링크 파일](#2026-10-26-team-page-design)
 - [2026-10-26 Claude Code와 Codex의 공통 UI 스킬 설정](#2026-10-26-shared-ui-skills)
 - [2026-10-26 노선도 선택을 블루로, 날짜 위로, 일정 왼쪽 정렬](#2026-10-26-route-blue)
 - [2026-10-26 루트 16px 압축안: 글자, 행간, 카드, 섹션, 버튼](#2026-10-26-compact)
@@ -421,6 +422,17 @@
 ### 2026-06
 
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
+
+---
+
+<a id="2026-10-26-team-page-design"></a>
+## 2026-10-26 시간표와 인증 페이지 새 디자인, 폰 막기, 멘토 링크 파일
+- 범위: components/crossing/TeamTool.tsx, components/crossing/MentorTool.tsx(바탕색), data/crossingTeam.ts, lib/crossingOps.ts(isPhoneUA), app/api/crossing/mentoring
+- 한 것: 사용자 "시간표와 인증 기능은 폰으로는 할 수 없도록 for the participants", 이어서 "폰에서는 사진은 갤러리에서, 파일은 폰의 파일이나 노트북에서, choose or dragging", "main의 디자인 기준으로 UI/UX를". GitHub main(kwan-design, PR #7)을 받아 그 문법(뉴트럴 잉크, card 면, 블루 강조 하나)으로 다시 그렸습니다. 올리기 상자는 노트북에서 끌어다 놓기나 고르기, 폰에서는 갤러리와 파일 앱에서 바로. 폰에서는 칸 넣기를 화면과 서버 둘 다 막고 시간표는 보기만. 규칙 여섯은 카드 여섯 장 대신 한 판 목록(UI Craft 템플릿 문법 회피). 주황 안내 글씨는 회색 안내 줄과 블루 상태 줄로.
+- 멘토 링크 10개를 운영진 폴더(12월 빌더톤)에 파일로 두었습니다(레포 밖, 링크는 레포에 적지 않음). 실제 사이트에서 10개 모두 열림 확인.
+- 근거: brand 7장 멘토링, 10장 사이트 규칙(글자 크기 넷: SUBTITLE, BODY, META).
+- 검증: 아이폰 UA에서 칸 버튼 0개 활성, 서버 403 phone(맥과 아이패드는 통과). 노트북에서 PDF 끌어다 놓기로 고른 파일과 확인 버튼. 폰 390px 가로 넘침 없음.
+- 커밋: 5f93603
 
 ---
 
