@@ -4,7 +4,7 @@
 // /crossing/mentor?k=. 멘토 한 사람의 페이지(2026-10-26).
 //
 // DECIDED 2026-10-26 (사용자: "올리면 팀이 멘토분들에게 사전에 공유줄 수 있도록", "멘토 전용 페이지"): 멘토는 자기 링크로 들어와
-// Day 2, 3에 자기 칸을 넣은 팀과 그 팀의 1장(Day 1 PDF)을 봅니다. Day 3 칸에는 Day 2에 고쳐 올린 1장도 붙습니다.
+// Day 2, 3에 자기 칸을 넣은 팀과 그 팀이 올린 PDF 전부(Day 1 1장, Day 2 고친 1장, Day 3 발표 자료)를 눌러 엽니다(2026-10-26).
 // 다른 멘토의 칸과 인증 사진은 보이지 않습니다. 보기 URL은 30분짜리라 1분마다 다시 읽습니다.
 // 머리와 글자 크기는 /crossing/team과 같습니다(BODY, META 둘).
 // ─────────────────────────────────────────────────────────────────────────────
@@ -16,7 +16,7 @@ import LocaleToggle from "@/components/LocaleToggle";
 import { mentorCopy as c, teamCopy } from "@/data/crossingTeam";
 import { OPS_DAYS, dayDate, fmtKst, trackTint, type Track } from "@/lib/crossingOps";
 
-type Row = { id: string; day: number; team: string; track: string; startsAt: string; endsAt: string; day1Pdf: string | null; day2Pdf: string | null };
+type Row = { id: string; day: number; team: string; track: string; startsAt: string; endsAt: string; files: { day: number; url: string }[] };
 type Data = { mentor: { name: string; field: string | null }; tracks: Track[]; bookings: Row[] };
 
 export default function MentorTool() {
@@ -76,8 +76,8 @@ export default function MentorTool() {
                           {trackOf(b.track) && <span className={`${META} text-white/70`}>{t(trackOf(b.track)!.label)}</span>}
                         </div>
                         <div className="flex flex-col sm:items-end">
-                          {b.day1Pdf ? link(b.day1Pdf, t(c.day1Pdf)) : <span className={`${META} text-white/70`}>{t(c.noPdf)}</span>}
-                          {b.day2Pdf && link(b.day2Pdf, t(c.day2Pdf))}
+                          {b.files.length ? b.files.map((f) => <span key={f.day}>{link(f.url, t(f.day === 1 ? c.file1 : f.day === 2 ? c.file2 : c.file3))}</span>)
+                            : <span className={`${META} text-white/70`}>{t(c.noPdf)}</span>}
                         </div>
                       </div>
                     );

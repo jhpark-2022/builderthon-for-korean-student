@@ -17,7 +17,8 @@ export const teamCopy = {
   // 2026-10-26: Day 1 탭에는 시간표가 없어(TeamTool) 안내에서 시간표를 뺍니다.
   pickFirstDay1: { ko: "팀을 고르면 인증 올리기가 열립니다.", en: "Pick your team to unlock uploads." },
   dayTab: { ko: "Day", en: "Day" },
-  carry: { ko: "이슈에 대한 팀의 생각 한 장을 들고 찾아갑니다. 멘토는 그 한 장을 미리 봅니다.", en: "Bring one page of your team's take on the issue. Your mentor reads it beforehand." },
+  // 2026-10-26 (사용자: "업로드 한 파일을 멘토들이 볼 수 있도록 이라고 워딩을 바꿔줘"): 멘토마다 자기 링크(/crossing/mentor)에서 자기 칸에 들어온 팀의 파일을 엽니다.
+  carry: { ko: "우리 팀이 올린 파일은 칸을 넣은 멘토가 각자의 멘토 링크에서 열어 볼 수 있습니다.", en: "The mentors you book can open the files your team uploaded from their own mentor link." },
   notYet: { ko: "아직 열리지 않았습니다. Day 1(12.18) 12:00부터 넣을 수 있습니다.", en: "Not open yet. You can add slots from Day 1 (Dec 18) at 12:00." },
   sameDay: { ko: "오늘은 13:00 이후 칸만 넣을 수 있습니다. 오전 칸은 전날까지 넣습니다.", en: "Today only slots from 13:00 can be added. Morning slots close the day before." },
   day1BookHint: { ko: "Day 2, 3 멘토 칸은 Day 1(12.18) 12:00부터 Day 2, Day 3 탭에서 넣습니다.", en: "From Day 1 (Dec 18) at 12:00, add your Day 2 and 3 mentor slots in the Day 2 and Day 3 tabs." },
@@ -90,15 +91,17 @@ export const timetableRules: { icon: "tap" | "clock" | "two" | "lock" | "open" |
 export const mentorCopy = {
   title: { ko: "멘토 페이지", en: "Mentor page" },
   lead: {
-    ko: "우리 칸에 들어온 팀과, 그 팀이 올린 이슈에 대한 생각 1장입니다. 팀은 이 한 장을 들고 찾아옵니다. Day 3 칸에는 그 팀이 Day 2에 고쳐 올린 1장도 붙습니다.",
-    en: "The teams that booked you, and the one page each team wrote on its issue. They bring this page when they visit. Day 3 slots also carry the page as the team updated it on Day 2.",
+    ko: "내 칸에 들어온 팀과, 그 팀이 지금까지 올린 파일입니다. 파일 이름을 누르면 새 창에서 열립니다.",
+    en: "The teams that booked you, and the files each team has uploaded so far. Tap a file to open it in a new tab.",
   },
   refresh: { ko: "1분마다 새로 읽습니다.", en: "Refreshes every minute." },
   day: { ko: "Day", en: "Day" },
   empty: { ko: "아직 넣은 팀이 없습니다.", en: "No teams yet." },
-  day1Pdf: { ko: "이슈에 대한 생각 1장", en: "One page on the issue" },
-  day2Pdf: { ko: "Day 2에 고친 1장", en: "Updated on Day 2" },
-  noPdf: { ko: "1장을 아직 올리지 않았습니다", en: "No page uploaded yet" },
+  // 2026-10-26: 팀이 올린 PDF를 날마다 하나씩(Day 1 1장, Day 2 고친 1장, Day 3 발표 자료). 인증 사진은 내보내지 않습니다.
+  file1: { ko: "Day 1 이슈에 대한 생각 1장", en: "Day 1 one page on the issue" },
+  file2: { ko: "Day 2 고친 1장", en: "Day 2 updated page" },
+  file3: { ko: "Day 3 발표 자료", en: "Day 3 slides" },
+  noPdf: { ko: "아직 올린 파일이 없습니다", en: "No files uploaded yet" },
   badLink: { ko: "링크가 맞지 않습니다. 운영진에게 다시 받아 주세요.", en: "This link does not match. Please ask the organisers for it again." },
   errGeneric: { ko: "잠시 뒤 다시 열어 주세요.", en: "Something went wrong. Please reopen in a moment." },
 } satisfies Record<string, Phrase>;

@@ -4,7 +4,7 @@
 //   GET ?k=<멘토 열쇠>   그 멘토의 Day 2, 3 칸과, 칸을 넣은 팀이 올린 PDF(30분짜리 보기 URL)
 //
 // DECIDED 2026-10-26 (사용자: "올리면 팀이 멘토분들에게 사전에 공유줄 수 있도록", "멘토 전용 페이지"): 멘토는 찾아올 팀의
-// 이슈에 대한 생각 1장(Day 1 PDF)을 미리 봅니다. Day 3 칸에는 그 팀의 Day 2에 고쳐 올린 1장도 붙습니다. 사진은 내보내지 않습니다.
+// 이슈에 대한 생각 1장(Day 1 PDF)을 미리 봅니다. 2026-10-26부터 칸마다 그 팀이 올린 PDF 전부(Day 1 1장, Day 2 고친 1장, Day 3 발표 자료). 사진은 내보내지 않습니다.
 // 열쇠는 lib/crossingOpsServer.ts mentorKey. 맞는 멘토가 없으면 404입니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -40,7 +40,7 @@ export async function GET(req: Request) {
   const latest = new Map<string, string>(); // `${team}|${day}` → storage_path
   if (teams.length) {
     const { data: proofs } = await db.from("crossing_mission_proofs").select("team_name, day, storage_path, created_at")
-      .in("team_name", teams).eq("kind", "pdf").in("day", [1, 2]).order("created_at", { ascending: false });
+      .in("team_name", teams).eq("kind", "pdf").in("day", [1, 2, 3]).order("created_at", { ascending: false });
     for (const p of proofs ?? []) { const key = `${p.team_name}|${p.day}`; if (!latest.has(key)) latest.set(key, p.storage_path); }
   }
   const paths = [...latest.values()];
@@ -53,8 +53,8 @@ export async function GET(req: Request) {
     tracks,
     bookings: (bookings ?? []).map((b) => ({
       id: b.id, day: b.day, team: b.team_name, track: b.track, startsAt: b.starts_at, endsAt: b.ends_at,
-      day1Pdf: file(b.team_name, 1),
-      day2Pdf: b.day === 3 ? file(b.team_name, 2) : null,
+      // 2026-10-26 (사용자: "멘토가 본인의 링크에 들어가서 클릭했을 때 그 파일들을 볼 수 있게"): 그 팀이 지금까지 올린 PDF 전부(날마다 하나).
+      files: [1, 2, 3].map((d) => ({ day: d, url: file(b.team_name, d) })).filter((f) => f.url),
     })),
   });
 }
