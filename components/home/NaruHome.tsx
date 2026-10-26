@@ -484,7 +484,9 @@ function MilestoneStrip({ id, label, title, detail, center = false, expanded = f
     // fill(2026-10-19): 데스크톱 Day 1~3 격자의 띠는 행 높이를 채웁니다. 제목 길이 때문에 화살표가 한 줄에 들어가는 띠만 낮아지던 것.
     <div className={`mt-auto flex w-full flex-col ${expanded ? "border-t border-white/15" : "rounded-xl border border-white/15 bg-white/[0.04]"} ${fill ? "md:mt-[16px]" : ""} ${narrow ? "md:mx-auto md:max-w-[17rem]" : ""}`}>
       {detail && !expanded ? (
-        <button type="button" aria-expanded={open} aria-controls={id} onClick={() => setOpen((v) => !v)} className={`${row} min-h-[44px] flex-1 rounded-xl transition-colors hover:bg-white/[0.06]`}>
+        // DECIDED 2026-10-26 (사용자, 스크린숏: "상자 각 파트별로 사이즈가 다름. 통일해줘"): 열린 띠는 제목 칸이 늘어나지 않고 아래 목록 칸이 남는 높이를 받습니다.
+        // 그 전에는 버튼이 늘 flex-1이라, 목록이 짧은 상자(Day 1)일수록 제목 칸이 커져 세 상자의 구분선 높이가 달랐습니다. 닫힌 띠는 전처럼 버튼이 채웁니다.
+        <button type="button" aria-expanded={open} aria-controls={id} onClick={() => setOpen((v) => !v)} className={`${row} min-h-[44px] ${open ? "" : "flex-1"} rounded-xl transition-colors hover:bg-white/[0.06]`}>
           {head}
           <svg aria-hidden width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 text-white/70 transition-transform ${center ? "" : "ml-auto"} ${open ? "rotate-180" : ""}`}><path d="m6 9 6 6 6-6" /></svg>
         </button>
@@ -492,7 +494,7 @@ function MilestoneStrip({ id, label, title, detail, center = false, expanded = f
         <p className={`${row} min-h-[44px] pb-[7px] pl-[13px] pr-[11px] pt-[9px]`}>{head}</p>
       )}
       {detail && (
-        <div id={expanded ? undefined : id} hidden={!expanded && !open} className={`break-keep border-t border-white/10 px-3 py-3`}>
+        <div id={expanded ? undefined : id} hidden={!expanded && !open} className={`flex-1 break-keep border-t border-white/10 px-3 py-3`}>
           <div className={`flex w-fit flex-col gap-2.5 text-left ${center ? "mx-auto" : ""}`}>
             {detail.map((g) => (
               <div key={g.label}>
