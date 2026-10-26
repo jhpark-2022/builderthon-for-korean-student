@@ -101,7 +101,8 @@ export const mentorCopy = {
   file1: { ko: "Day 1 이슈에 대한 생각 1장", en: "Day 1 one page on the issue" },
   file2: { ko: "Day 2 고친 1장", en: "Day 2 updated page" },
   file3: { ko: "Day 3 발표 자료", en: "Day 3 slides" },
-  noPdf: { ko: "아직 올린 파일이 없습니다", en: "No files uploaded yet" },
+  notYet: { ko: "아직", en: "Not yet" },
+  teamCount: { ko: "{n}팀", en: "{n} teams" },
   badLink: { ko: "링크가 맞지 않습니다. 운영진에게 다시 받아 주세요.", en: "This link does not match. Please ask the organisers for it again." },
   errGeneric: { ko: "잠시 뒤 다시 열어 주세요.", en: "Something went wrong. Please reopen in a moment." },
 } satisfies Record<string, Phrase>;

@@ -34,10 +34,28 @@ export default function MentorTool() {
   useEffect(() => { void refresh(); const id = setInterval(refresh, 60_000); return () => clearInterval(id); }, [refresh]);
 
   const trackOf = (id: string) => data?.tracks.find((x) => x.id === id);
-  const link = (href: string, label: string) => (
-    <a href={href} target="_blank" rel="noreferrer" className={`inline-flex min-h-[44px] items-center ${BODY} font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:text-white`}>
-      {label} <span aria-hidden className="ml-1">↗</span>
+  // DECIDED 2026-10-26 (사용자, 스크린숏: "뭔가 더 visually catchy 했으면"): 칸 카드는 트랙 색 그라데이션 위에 시간 칩, 팀, 트랙 점,
+  // 그리고 파일 타일. 파일은 그 칸의 날까지(Day 2 칸은 Day 1, 2, Day 3 칸은 Day 1~3) 자리를 모두 두고, 올라온 것은 채운 타일(누르면 새 창),
+  // 아직이면 점선 타일입니다. 색은 트랙 네 색과 보라(accent)만, 글자 크기는 BODY와 META 둘.
+  const fileLabel = (d: number) => t(d === 1 ? c.file1 : d === 2 ? c.file2 : c.file3);
+  const tile = (d: number, url: string | undefined, tint: string) => url ? (
+    <a key={d} href={url} target="_blank" rel="noreferrer"
+      className="group flex min-h-[52px] items-center gap-[10px] rounded-xl border px-[12px] py-[8px] transition duration-150 hover:-translate-y-0.5 hover:bg-white/[0.08]"
+      style={{ borderColor: `${tint}66`, background: `${tint}1F` }}>
+      <span aria-hidden className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg" style={{ background: `${tint}33`, color: tint }}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5M9 13h6M9 17h4" /></svg>
+      </span>
+      <span className={`flex-1 ${META} font-semibold text-white`}>{fileLabel(d)}</span>
+      <span aria-hidden className={`${META} text-white/70 transition group-hover:translate-x-0.5 group-hover:text-white`}>↗</span>
     </a>
+  ) : (
+    <div key={d} className="flex min-h-[52px] items-center gap-[10px] rounded-xl border border-dashed border-white/15 px-[12px] py-[8px]">
+      <span aria-hidden className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.04] text-white/30">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5" /></svg>
+      </span>
+      <span className={`flex-1 ${META} text-white/50`}>{fileLabel(d)}</span>
+      <span className={`${META} text-white/40`}>{t(c.notYet)}</span>
+    </div>
   );
 
   return (
@@ -61,23 +79,26 @@ export default function MentorTool() {
               const rows = data.bookings.filter((b) => b.day === d);
               return (
                 <section key={d} aria-labelledby={`mentor-day-${d}`} className="flex flex-col gap-[13.5px]">
-                  <h2 id={`mentor-day-${d}`} className={`${BODY} font-bold`}>
+                  <h2 id={`mentor-day-${d}`} className={`flex items-baseline gap-[10px] ${BODY} font-bold`}>
                     {t(c.day)} {d} <span className={`${META} font-normal text-white/70`}>{dayDate(d).slice(5).replace("-", ".")}</span>
+                    {rows.length > 0 && <span className={`ml-auto rounded-full bg-accent/15 px-[10px] py-[2px] ${META} font-semibold text-accent`}>{t(c.teamCount).replace("{n}", String(rows.length))}</span>}
                   </h2>
-                  {!rows.length && <p className={`${BODY} text-white/70`}>{t(c.empty)}</p>}
+                  {!rows.length && <p className={`rounded-2xl border border-dashed border-white/10 px-[20px] py-[18px] ${BODY} text-white/50`}>{t(c.empty)}</p>}
                   {rows.map((b) => {
                     const tint = trackTint(trackOf(b.track)?.color);
+                    const tr = trackOf(b.track);
                     return (
-                      <div key={b.id} className="flex flex-col gap-[9px] rounded-2xl border border-white/15 bg-white/[0.03] p-[20px] sm:flex-row sm:items-center sm:justify-between sm:p-[24px]"
-                        style={{ boxShadow: `inset 3px 0 0 ${tint}` }}>
-                        <div className="flex flex-col gap-[4px]">
-                          <span className={`${META} tabular-nums text-white/70`}>{fmtKst(b.startsAt)}~{fmtKst(b.endsAt)}</span>
+                      <div key={b.id} className="flex flex-col gap-[16px] rounded-2xl border p-[20px] sm:flex-row sm:items-center sm:gap-[24px] sm:p-[24px]"
+                        style={{ borderColor: `${tint}40`, background: `linear-gradient(135deg, ${tint}2E, ${tint}0A 60%)`, boxShadow: `inset 4px 0 0 ${tint}` }}>
+                        <div className="flex shrink-0 flex-col gap-[8px] sm:w-[11rem]">
+                          <span className={`w-fit rounded-full px-[10px] py-[3px] ${META} font-bold tabular-nums text-white`} style={{ background: `${tint}55` }}>
+                            {fmtKst(b.startsAt)}~{fmtKst(b.endsAt)}
+                          </span>
                           <span className={`${BODY} font-bold`}>{b.team}</span>
-                          {trackOf(b.track) && <span className={`${META} text-white/70`}>{t(trackOf(b.track)!.label)}</span>}
+                          {tr && <span className={`flex items-center gap-[6px] ${META} text-white/70`}><span aria-hidden className="h-2 w-2 rounded-full" style={{ background: tint }} />{t(tr.label)}</span>}
                         </div>
-                        <div className="flex flex-col sm:items-end">
-                          {b.files.length ? b.files.map((f) => <span key={f.day}>{link(f.url, t(f.day === 1 ? c.file1 : f.day === 2 ? c.file2 : c.file3))}</span>)
-                            : <span className={`${META} text-white/70`}>{t(c.noPdf)}</span>}
+                        <div className="grid flex-1 gap-[8px]">
+                          {Array.from({ length: b.day }, (_, i) => i + 1).map((fd) => tile(fd, b.files.find((f) => f.day === fd)?.url, tint))}
                         </div>
                       </div>
                     );
