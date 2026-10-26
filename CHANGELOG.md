@@ -8,6 +8,28 @@
 
 ### 2026-10
 
+- [2026-10-26 8월 글 덜기와 위계, CTA 흰 아이콘과 shimmer, 모바일 손보기](#2026-10-26-aug-cta-mobile)
+- [2026-10-26 매니페스토 뷰어 넓힘, 3.5초, 애플식 점과 진행 막대](#2026-10-26-manifesto-dots)
+- [2026-10-26 매니페스토 뷰어 화살표, 3초 자동 넘김, 양끝 흐림](#2026-10-26-manifesto-autoplay)
+- [2026-10-26 크로싱 서울 워드마크 그라데이션을 8월만큼 밝게](#2026-10-26-wordmark-gradient)
+- [2026-10-26 쨍한 블루와 7:3 그라데이션, 캡션 톤, 티커 멈춤 없앰, 메뉴 여백](#2026-10-26-vivid-blue)
+- [2026-10-26 강조 블루 하나, PC 티커 확장, Day 1~3 왼쪽 정렬, 히어로 간격](#2026-10-26-accent-blue)
+- [2026-10-26 메가 메뉴 세로 나열, 카드 면과 그림자](#2026-10-26-cards-shadow)
+- [2026-10-26 크로싱 서울 메인 로고, 가운데 메뉴와 메가 메뉴, 띠 복구, 뉴트럴 버튼, 여백](#2026-10-26-megamenu)
+- [2026-10-26 헤더 로고와 홈▾ 메뉴 복구, 히어로 정렬, 눈부심 완화](#2026-10-26-header-restore)
+- [2026-10-26 사이트 UI를 뉴트럴 블랙 + 보라 포인트로](#2026-10-26-neutral-ui)
+- [2026-10-26 카운트다운 상자와 강조색 걷음, 기준 시각, 단위](#2026-10-26-countdown-plain)
+- [2026-10-26 카운트다운 가운데, 서울과 싱가포르 스위치](#2026-10-26-countdown-switch)
+- [2026-10-26 메뉴 단추와 말풍선의 움직임](#2026-10-26-menu-motion)
+- [2026-10-26 8월 아카이브 배너 뺌](#2026-10-26-aug-banner-off)
+- [2026-10-26 세 페이지 같은 헤더, 말풍선 메뉴, 로고 띠, 초 단위 카운트다운, 제목 위계](#2026-10-26-header-menu-ticker)
+- [2026-10-26 블루 UI 색상 시스템 적용](#2026-10-26-blue-ui-palette)
+
+- [2026-10-26 홈 햄버거 위치와 채움 카드 구분](#2026-10-26-home-menu-chat)
+
+- [2026-10-26 PC 홈 소제목 크기와 여백, 글 양](#2026-10-26-desktop-density)
+- [2026-10-26 홈 모바일 크기와 내부 간격](#2026-10-26-home-mobile-spacing)
+
 - [2026-10-26 홈 헤더 목차를 가운데로, 세 챕터의 폭과 간격을 하나로](#2026-10-26-home-nav-rhythm)
 - [2026-10-26 Day 1 탭에서 멘토 시간표를 뺌](#2026-10-26-day1-no-timetable)
 - [2026-10-26 멘토 찾아가기를 날마다 팀이 함께로, 세션 설명 길이를 같게](#2026-10-26-mentor-every-day)
@@ -391,6 +413,180 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-26-aug-cta-mobile"></a>
+## 2026-10-26 8월 글 덜기와 위계, CTA 흰 아이콘과 shimmer, 모바일 손보기
+- 범위: components/journey/Journey.tsx, ui/Eyebrow, ui/Glass, ui/Button, ChatGlyph, OpenChatLink, JourneyNav, NaruHome, globals.css
+- 한 것: 사용자 요청 셋. 8월("텍스트가 너무 많고 위계, 액센트 구분이 안 됨"): "모집 당시 그대로" 줄 둘, 참가 흐름 띠, 산출물 주석, 체크인 소개, 연사 요점 목록, 패널 맺음말, 멘토링 구분 주석,
+  멘토 그룹 설명은 첫 문단만, 개인 메모, 멘토 소개문, 심사위원 약력, 파트너 단계 주석을 그리지 않음(데이터 키는 둠). 제목 자간 -0.03em, 소제목 lg 27px 블루, 장 소개 BODY, 캡션 35곳 낮은 톤, 카드 19곳 테두리 대신 card 면, 알약 라벨 색 블루 하나.
+  CTA: 카카오 말풍선을 흰 면 하나로, 주요 CTA(나루 primary, 헤더 오픈채팅)는 #4F68F5 → #3550DC 7:3 그라데이션에 흰 글자(4.5~6.3:1), 호버 shimmer 0.9초(모션 줄이기 없음).
+  모바일: 폰 헤더는 워드마크와 오픈채팅, EN/KR만, 홈▾는 목차 줄 맨 앞(360px 영문 넘침). 카운트다운 단위 폰 META, 네 질문 칸 폰 한 열, 카드 안쪽 폰 20px, 8월 큰 상자 폰 20px.
+  brand 5장(같은 사실 두 번까지), 10장(강조 블루 하나).
+- 검증: tsc --noEmit 통과, git diff --check 통과. 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-manifesto-dots"></a>
+## 2026-10-26 매니페스토 뷰어 넓힘, 3.5초, 애플식 점과 진행 막대
+- 범위: components/naru/ManifestoViewer.tsx, app/globals.css(@keyframes manifestoProgress)
+- 한 것: 사용자 요청("아예 잘리는 경계를 넓혀야", "넘기는건 3.5초, 아래 점들과 프로그레스바, 애플처럼").
+  sm부터 넘기는 줄이 글 기둥 밖 화면 폭(양옆 24px, 최대 72rem)까지. 아래 줄은 쪽 번호 대신 점 줄: 지금 쪽은 알약이 3.5초 동안 차오르고, 다 차면 다음 쪽.
+  시계(setInterval)를 없애고 막대 애니메이션 끝이 넘김을 이끌어 둘이 늘 맞습니다. 호버, 포커스에서는 막대가 그 자리에 멈춤. 점을 누르면 그 쪽으로. 재생/정지 단추는 그대로.
+- 검증: tsc --noEmit 통과, git diff --check 통과. 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-manifesto-autoplay"></a>
+## 2026-10-26 매니페스토 뷰어 화살표, 3초 자동 넘김, 양끝 흐림
+- 범위: components/naru/ManifestoViewer.tsx (/naru)
+- 한 것: 사용자 요청("누르기 전에도 슬라이더 화살표", "3초마다 자동으로", "그라디언트로 빠지는 페이지 너무 금방 사라져").
+  화살표가 넘기는 줄 위 양옆에(끝에서는 반대쪽 끝으로). 3초마다 다음 쪽, 끝에서 첫 쪽. 마우스가 올라가 있거나 포커스가 있을 때, 손가락으로 넘긴 뒤, 전체 화면, 가려진 탭,
+  모션 줄이기에서는 멈추고 아래 재생/정지 단추가 있습니다(WCAG 2.2.2). 쪽 번호는 자동으로 넘어가는 동안 낭독하지 않습니다.
+  양끝 흐림 14% → 8%, 끝은 35%까지만 흐림. 옆 쪽 불투명도 0.7 → 0.85.
+  brand 2장: 매니페스토를 끝까지 읽는 길을 넓힘.
+- 검증: tsc --noEmit 통과, git diff --check 통과. 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-wordmark-gradient"></a>
+## 2026-10-26 크로싱 서울 워드마크 그라데이션을 8월만큼 밝게
+- 범위: components/home/NaruHome.tsx(히어로 h1 두 곳, 영문 줄), docs/brand.md 10장
+- 한 것: 사용자 질문("빌드의 무대 쪽 그라디언트와 홈 크로싱 서울의 그라디언트가 같아? 다르다면 크로싱 서울쪽을 더 수정해"). 달랐음: 8월은 Tailwind violet-300, fuchsia-300, cyan-300, 홈은 로고 원색의 흐린 틴트.
+  순서(남색에서 주황)와 위치(0, 35, 68, 100%)는 지키고 #9AA8EE, #A99AD6, #C99ACB, #E08A76 → #8FA6FF, #B49CFF, #E79CF0, #FFA97A. 영문 줄도 끝 색으로.
+  OG와 결과 카드(lib/ogCard.ts), MatchTeaser는 그 전 값 그대로.
+  brand 10장 색(그라데이션은 남색에서 주황으로).
+- 검증: tsc --noEmit 통과, git diff --check 통과. 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-vivid-blue"></a>
+## 2026-10-26 쨍한 블루와 7:3 그라데이션, 캡션 톤, 티커 멈춤 없앰, 메뉴 여백
+- 범위: globals.css(--ui-link, --ui-link-strong, --ui-caption, .bg-accent-gradient, .text-caption), Button, NaruHome, NaruPage, SiteChrome, PartnerMarquee
+- 한 것: 사용자 요청. 강조 블루 #9AA8EE → #7C95FF(대비 6.7:1), 짝 #5470FF. 주요 버튼(나루 primary)과 남는 것 날 막대만 7:3 그라데이션(70%까지 #7C95FF, 끝 30% #5470FF), 글자 잉크.
+  캡션(날짜, 단위, 분류 이름, 안내 한 줄의 META 보조색)은 #8A8A95로 한 단 낮춤(대비 5.4:1). 홈 14곳, /naru 9곳, 푸터 2곳.
+  티커: 호버 멈춤 제거(홈, /naru 푸터). 함께하는 곳 로고 줄 위아래 lg 48 → 64px, 띠 줄 56px, 로고 칸 위아래 12/20px.
+  메가 메뉴: 안쪽 왼쪽 여백 16px(제목 세로선은 단추 글자와 그대로), 제목 칸 9.5rem, 패널 40rem.
+  brand 10장: 강조는 블루 하나, 그라데이션은 주요 에셋 둘에만.
+- 검증: tsc --noEmit 통과, git diff --check 통과. 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-accent-blue"></a>
+## 2026-10-26 강조 블루 하나, PC 티커 확장, Day 1~3 왼쪽 정렬, 히어로 간격
+- 범위: globals.css(--ui-link, card-tint), NaruHome(PartnerTicker, stageCard, 히어로 격자), docs/brand.md 10장
+- 한 것: 사용자 요청("그레이랑 네이비가 따로 논다", 이어서 "배경 그레이는 차분해져서 좋아, 액센트 블루를 현명하게"). 바탕 회색은 그대로, 강조색을 로고 남색 틴트 #9AA8EE 하나로(보라 #A99AD6에서).
+  쓰는 자리는 현위치, 본문 링크, 소제목, 작은 라벨 넷. card-tint의 스밈도 보라에서 남색으로. 대비 8.1:1.
+  PC 티커: 띠가 챕터 여백까지 넓어지고(lg 64px, 2xl 144px) 로고 1.25배, 칸 간격 72px. Day 1~3 카드: 머리, 한 줄, 세션, 띠, 칩 왼쪽 정렬(Day 0, 4와 폰은 가운데).
+  히어로: 화면 양끝에 붙던 두 단을 72rem 판 안에, 글 단은 글 폭만큼, 사이 64px.
+  3999 dev 서버: 재시작해도 .next/cache/webpack이 옛 tailwind 설정의 CSS를 내보내 캐시를 치우고(scratchpad로 옮김) 다시 띄움. bg-action, text-naru-muted 생성 확인.
+- 검증: tsc --noEmit 통과, git diff --check 통과. 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-cards-shadow"></a>
+## 2026-10-26 메가 메뉴 세로 나열, 카드 면과 그림자
+- 범위: SiteChrome(SiteMenu), JourneyNav, globals.css(card-sunken/base/raised/tint), NaruHome, NaruPage, home/shared.tsx(Card)
+- 한 것: 사용자 요청. 메가 메뉴의 세 페이지를 세로 한 줄로, 패널 왼쪽 끝을 단추 왼쪽 끝에 맞춰 단추 글자와 페이지 제목이 한 세로선. 목차는 제목 오른쪽.
+  카드: 테두리를 걷고 면 명도 넷(sunken, base, raised, tint)과 그림자, 위쪽 1px 안쪽 빛으로 층을 나눔. 절제된 세로/대각 그라데이션. 팀 구성 칸 raised, 네 질문 base, 기업의 닷새와 핵심 문장 tint, 미션 띠와 코어 5개사 묶음 sunken.
+  오픈채팅 글자가 안 보이던 원인: 3999 dev 서버가 14:08에 뜬 뒤 tailwind.config의 새 색(action, naru-text, naru-muted)을 다시 읽지 않아 bg-action이 생성되지 않음(버튼 면 투명 + 잉크 글자). 코드 문제 아님, 서버 재시작 필요.
+  brand 10장 화면 규칙(무지개식 배색 금지, 포인트는 보라 하나).
+- 검증: tsc --noEmit 통과, tailwindcss 단독 빌드에서 card-* 와 bg-action 생성 확인, git diff --check 통과. 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-megamenu"></a>
+## 2026-10-26 크로싱 서울 메인 로고, 가운데 메뉴와 메가 메뉴, 띠 복구, 뉴트럴 버튼, 여백
+- 범위: JourneyNav, SiteChrome(SiteMenu), ChatGlyph, OpenChatLink, PartnerMarquee, NaruHome, Chapter, Background, globals.css, docs/brand.md 10장
+- 한 것: 사용자 요청. 헤더 왼쪽은 세 페이지 모두 크로싱 서울 워드마크, 8월의 Zero100은 메뉴 이름 옆 서브 로고. 가운데는 홈▾ | 목차가 한 묶음(한국어 xl, 영문 1440부터).
+  홈▾는 메가 메뉴: 호버나 누름으로 세 페이지와 각 목차가 사이트맵처럼 펼쳐집니다.
+  오픈채팅 아이콘: 밝은 버튼 위에서 말풍선을 카카오 노랑으로 채움(노란 점이 밝은 면에서 사라져 깨져 보였음), 18px, 버튼 높이 40px.
+  띠: 같은 날 정지 격자(PC에서 다섯째 로고만 아래 줄)로 바뀐 것을 한 줄 90초 띠로 되돌림(홈 함께하는 곳, /naru 푸터). 호버 멈춤, 모션 줄이기 정지.
+  색: 채운 버튼 보라 → 뉴트럴 #E4E4E7(잉크 글자 15:1), 보라는 링크와 현위치만. 배경 캔버스 60%.
+  여백: 챕터 좌우 20/40 → 24/48/64px. 정렬이 바뀌는 자리(히어로 글 → 카운트다운, 큐레이션 숫자 → 세 칸, 남는 것 머리 → 행 판)를 lg에서 64~90px로.
+  brand 6장 표기 C와 관계 한 문장(크로싱 서울이 먼저), 10장.
+- 검증: tsc --noEmit 통과, git diff --check 통과. 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-header-restore"></a>
+## 2026-10-26 헤더 로고와 홈▾ 메뉴 복구, 히어로 정렬, 눈부심 완화
+- 범위: components/journey/JourneyNav.tsx, components/home/NaruHome.tsx(히어로 왼쪽 단), app/globals.css(--ui 토큰, .text-white), app/layout.tsx, docs/brand.md 10장
+- 한 것: 사용자 요청("홈 로고쪽은 아예 사라져버려서 복구", "기존 쓰던 홈|서브메뉴 구조로", "컬러 완화안도 적용"). 같은 날 다른 세션이 다시 쓴 헤더에서 빠진 페이지 로고를 되살렸습니다.
+  바 왼쪽: 로고(홈 워드마크, /naru 나루 락업, 8월 Zero100) | 페이지 메뉴(홈▾, 호버나 누름으로 펼침). 목차는 바 가운데, 서는 폭은 홈과 /naru 한국어 xl, 영문 1440, 8월 2xl(영문 1800).
+  히어로 왼쪽 단의 글은 한 기둥에서 가운데, 두 단(lg)에서 왼쪽(같은 날 "레이아웃 따라 유연히").
+  색: 바탕 #141418, 카드 #1C1C21, 강조 면 #26262D, 본문 #D6D6DC, 순백 text-white도 본문색으로. 대비 본문 12.7:1, 보조 7.4:1, 버튼 글자 7.2:1.
+  brand 6장 표기 C(홈 헤더 워드마크 국문 단독), brand 10장.
+- 검증: tsc --noEmit 통과, git diff --check 통과. 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-neutral-ui"></a>
+## 2026-10-26 사이트 UI를 뉴트럴 블랙 + 보라 포인트로
+- 범위: app/globals.css(--ui 토큰), lib/background/config.ts(WATER_BASE), components/ui/Button.tsx, JourneyNav, SkipLink, RegisterModal, Journey(8월 덮개), RouteMap, app/layout.tsx, 페이지 바탕 여섯(match, not-found, quiz 둘, team, vote), docs/brand.md 10장
+- 한 것: 사용자 요청("네이비 색상이 아직 너무 강렬", 추천 안 C 승인). 바탕 #101014, 카드 #18181D, 강조 면 #222229, 버튼과 링크 #A99AD6(버튼 글자 잉크), 본문 #ECECF1, 보조 #A3A3B0.
+  바탕 채도 49% → 11%. 읽기 판과 헤더는 이미 토큰을 읽어 같이 바뀝니다. 배경 하늘(홈, /naru, 8월)도 남색에서 뉴트럴로, 페이지 바탕 하드코딩 #070B1F는 토큰으로.
+  대비: 본문 16.1:1, 보조 7.6:1, 버튼 글자 7.5:1. OG 이미지, 유형 테스트 저장 이미지, 8월 입자 팔레트(PALETTE)는 그대로.
+  brand 10장: 무지개식 배색 금지, 포인트 색은 보라 하나로 로고 그라데이션이 화면의 유일한 색 흐름.
+- 검증: tsc --noEmit 통과, git diff --check 통과. 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-countdown-plain"></a>
+## 2026-10-26 카운트다운 상자와 강조색 걷음, 기준 시각, 단위
+- 범위: components/home/NaruHome.tsx (CountdownPanel)
+- 한 것: 사용자 요청("실제 기준시까지 표기, 스위치가 최하단, 타이머 더 크게, 박스 없애, 액센트 컬러 없애, : 자리에 단위").
+  상자와 칸 상자, 주황 초와 점, 커서 빛을 걷었습니다. 숫자는 TITLE(폰 28px, 1440 67.5px) 보통 굵기, 쌍점 대신 단위(일, 시간, 분, 초)가 숫자 옆.
+  숫자 아래에 고른 곳의 시작 시각("12.17 목 00:00 KST (UTC+9)" / SGT (UTC+8), lib/naruDates 상수에서 계산), 스위치는 맨 아래. 색은 흰색 단계만.
+  brand 5장: 숫자 하나가 문장을 대신한다. brand 10장: 무지개식 배색 금지.
+- 검증: tsc --noEmit 통과, git diff --check 통과. 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-countdown-switch"></a>
+## 2026-10-26 카운트다운 가운데, 서울과 싱가포르 스위치
+- 범위: components/home/NaruHome.tsx (CountdownPanel)
+- 한 것: 사용자 요청("시간이 중앙에 오게 하고 싱가폴 서울을 스위치로 전환"). 라벨, 날짜, 스위치, 일:시:분:초 칸을 상자 가운데 한 기둥으로.
+  스위치(서울 기준 / 싱가포르 SGT, 처음은 서울)가 숫자를 바꿉니다. 싱가포르 META 한 줄은 뺐습니다. 두 곳 다 보여 준다는 2026-09-19 결정은 스위치로 지킵니다.
+  brand 2장: 서울과 싱가포르 학생 모두 자기 시각으로 날짜를 읽습니다.
+- 검증: tsc --noEmit 통과, git diff --check 통과. 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-menu-motion"></a>
+## 2026-10-26 메뉴 단추와 말풍선의 움직임
+- 범위: components/shared/SiteChrome.tsx (SiteMenu)
+- 한 것: 사용자 요청("햄버거 툴팁이 호버나 클릭시 이펙트"). 단추는 호버하면 둥근 면이 밝아지고 가운데 줄이 짧아지며, 누르면 눌리고 세 줄이 X로 접힙니다.
+  말풍선은 오른쪽 위에서 커지며 나타나고 항목이 30ms씩 차례로 들어옵니다. 항목 호버는 면, 왼쪽 강조선, 오른쪽 화살표. 모션 줄이기에서는 움직임 없음.
+  brand 2장: 다른 페이지로 가는 길이 눌리는 것으로 보이게.
+- 검증: tsc --noEmit 통과, git diff --check 통과. 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-aug-banner-off"></a>
+## 2026-10-26 8월 아카이브 배너 뺌
+- 범위: components/archive/ArchiveBanner.tsx(삭제), app/2026-08/page.tsx, components/journey/Journey.tsx
+- 한 것: 사용자 요청("쓸데가 있는 말임?", "배너 통째로 빼고 헤더 아래 여백만 히어로 쪽으로"). /2026-08 맨 위 배너 한 줄(제로백 빌더톤의 기록, 나루의 시작, 그때의 말 그대로)을 뺐습니다.
+  지난 이벤트라는 것은 헤더 메뉴의 "8월 기록"과 히어로가 말합니다. 배너가 메우던 고정 헤더 높이(108/136/80px)는 히어로 위 여백에 더했습니다.
+  brand 5장: 조용하고 사실로 말한다(해명 문장 뺌). brand 2장 판단 질문 어느 쪽도 돕지 않는 블록.
+- 검증: tsc --noEmit 통과, git diff --check 통과. 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-header-menu-ticker"></a>
+## 2026-10-26 세 페이지 같은 헤더, 말풍선 메뉴, 로고 띠, 초 단위 카운트다운, 제목 위계
+- 범위: components/journey/JourneyNav.tsx, components/shared/SiteChrome.tsx, components/home/NaruHome.tsx, components/home/shared.tsx, components/ui/typography.ts
+- 한 것: 사용자 요청 다섯.
+  헤더: /naru와 /2026-08도 홈과 같은 구조(로고 / 가운데 목차 / 메뉴 단추, 오픈채팅, EN/KR). 로고 옆 사이트 메뉴 글자 줄과 레일 왼쪽 단추를 걷었습니다.
+  메뉴: 단추 아래 말풍선 목록 하나(모든 폭). 바깥 누름, Esc, 링크로 닫힘. SiteMenuBar, SiteMenuButton, SiteMenuSheet는 SiteMenu 하나로.
+  함께하는 곳: 메인 후원 아래 세 칸을 로고 띠 하나로(칸 이름은 로고 아래 META). 마우스를 올리면 멈춤.
+  카운트다운: 숫자 67.5px → 28/27px, 일:시:분:초 칸, 초는 주황(나루 점 색), 1초마다. 싱가포르는 아래 META 한 줄. 마우스 빛.
+  제목 위계: H2 자간 -0.03em 행간 1.12, 소제목 logo-from 틴트 -0.02em 1.3, 칸 제목 -0.01em snug.
+  brand 2장(찾기 쉬운 길과 진짜 날짜), 3장 원칙 2(이벤트 먼저). 초 단위 긴박감은 5장 "조용하고"와 어긋날 수 있어 사용자 요청으로 남깁니다.
+- 검증: tsc --noEmit 통과, git diff --check 통과. 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-blue-ui-palette"></a>
+## 2026-10-26 블루 UI 색상 시스템 적용
+- 범위: globals.css, Tailwind 색상 토큰, layout, 홈과 나루 페이지, 공통 버튼·헤더·메뉴·모달, 브랜드 정본 10장
+- 한 것: 사용자 승인으로 리뷰에서 제안한 블루 시스템을 적용했습니다. 배경 #0B1220, 카드 #162338, 강조 면 #1E2D45, 주요 버튼 #2563EB, 링크 #93C5FD, 본문 #E8EEF7, 보조 글자 #A8B5C8.
+  CSS가 UI 색을 소유하고 Tailwind가 같은 RGB 채널을 읽습니다. 보라색 버튼 그라데이션과 발광을 빼고 카드 면을 밝힙니다. 브랜드 로고 그라데이션, 주황 점, 정보와 배치는 유지합니다.
+  brand 2장과 10장: 참가자가 정보를 구분하고 참여할 경로를 찾기 쉽게 합니다. 화면 UI와 로고·저장 이미지의 색상 역할을 구분합니다.
+- 검증: TypeScript(`tsc --noEmit --incremental false`)와 Tailwind 프로덕션 CSS 빌드 통과. 흰 글자/주요 버튼 대비 5.17:1. 브라우저 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-home-menu-chat"></a>
+## 2026-10-26 홈 햄버거 위치와 채움 카드 구분
+- 범위: components/journey/JourneyNav.tsx, components/shared/SiteChrome.tsx, components/home/NaruHome.tsx
+- 한 것: 사용자 요청으로 홈의 햄버거를 모바일과 데스크톱 모두 상단 오픈채팅 바로 왼쪽으로 옮기고, 햄버거 메뉴 안의 중복 오픈채팅 링크를 뺐습니다.
+  brand 2장과 10장에 따라 참가자가 정보를 찾고 참여 경로에 접근하기 쉽게 합니다. 팀 구성·공간·미션, 네 단계, 기업의 닷새를 남색 채움 카드로 나누고 핵심 문장은 보라색 카드로 구분합니다. 기존 작업의 글자 크기와 묶음 사이 여백은 유지합니다.
+- 검증: TypeScript(`tsc --noEmit --incremental false`)와 diff 공백 검사 통과. 브라우저 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-desktop-density"></a>
+## 2026-10-26 PC 홈 소제목 크기와 여백, 글 양
+- 범위: components/ui/typography.ts, components/home/shared.tsx, components/home/NaruHome.tsx, app/globals.css, data/naru.ts, docs/brand.md, CLAUDE.md
+- 한 것: 사용자 요청("pc쪽이 다시 너무 빽빽해졌어. 위계, 불필요한 텍스트 양, 사이즈 분화"). 사용자 승인으로 글자 크기 규칙을 셋에서 넷으로(brand 10장 사이트 규칙, CLAUDE.md 같은 커밋).
+  SUBTITLE 추가(lg부터 27px, 그 아래는 BODY와 같음). 챕터 안 소제목(SUBHEADING: 일정, 과정 지향적인..., 네 질문, 이슈를 낸 기업의 닷새, /naru 한 자리)이 본문 18px에서 떨어집니다.
+  lg부터 챕터 위아래 108→144px(판 사이 틈 120→192px), 소제목 아래 24~32px, 소제목 묶음 사이 32→80px.
+  글 양: 일정 리드의 가운데 문장(바로 아래 노선도와 같은 이름 넷)을 뺐고, 휴대폰 안내 한 줄은 lg에서 그리지 않습니다. brand 5장 같은 사실은 한 페이지에 두 번까지.
+- 검증: tsc --noEmit 통과, git diff --check 통과. 화면 확인은 사용자 QA.
+
+<a id="2026-10-26-home-mobile-spacing"></a>
+## 2026-10-26 홈 모바일 크기와 내부 간격
+- 범위: NaruHome, JourneyNav, globals.css
+- 한 것: 사용자 요청으로 병합된 코드에서 모바일 크기와 내부 간격을 조정했습니다. brand 2장과 10장에 따라 참가 정보를 읽기 쉽게 하고 기존 색, 본문 크기와 데스크톱 구성을 유지합니다.
+  640px 미만에서 히어로 제목 45→28px, 챕터 제목과 카운트다운 숫자 36→28px, 주요 버튼 최소 높이 48px. 헤더 한글 워드마크 20px, 목차 간격 16px.
+  일정 패널 내부 간격 12→20px, 혜택 행 위아래 여백 14→24px, 기업 설명 칸 여백 16→24px로 늘립니다. 380px 미만의 네 단계 설명은 한 열로 쌓습니다.
+- 검증: TypeScript(`tsc --noEmit --incremental false`)와 diff 공백 검사 통과. 브라우저 조작과 실기기 시각 검증은 수행하지 않았습니다.
 
 <a id="2026-10-26-home-nav-rhythm"></a>
 ## 2026-10-26 홈 헤더 목차를 가운데로, 세 챕터의 폭과 간격을 하나로
