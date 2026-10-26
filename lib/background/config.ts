@@ -98,6 +98,19 @@ export function pickQuality(): QualityTier {
   return { particles: 4000, dprMax: 2, bloom: true, intensity: 1.0 };
 }
 
+/**
+ * 8월 페이지(/2026-08, field 변형)만 한 단 가라앉힙니다.
+ * DECIDED 2026-10-26 (사용자: "8월 페이지의 webgl effect가 little too much"): 입자가 빽빽하고 카드 위로 비쳐 보이며,
+ * 렌즈 왜곡의 동심원이 눈에 띄었습니다. 입자 수, 밝기, 블룸, 렌즈 왜곡을 각각 이 배수로 줄입니다.
+ * 색, 흐름, 스크롤 연출의 모양은 그대로입니다. water(나루 홈), crossing 변형에는 닿지 않습니다.
+ */
+export const FIELD_CALM = {
+  particles: 0.6,   // 입자 수
+  opacity: 0.75,    // 입자 밝기(ParticleField의 intensity)
+  bloom: 0.75,      // 블룸 기본 세기
+  lens: 0.5,        // 렌즈 왜곡과 색 번짐
+} as const;
+
 /** Camera + motion feel. */
 export const MOTION = {
   cameraLerp: 0.045,          // how fast camera eases to target
@@ -264,6 +277,27 @@ export const LIGHT_STATIONS = [
  * 0.12로는 빠르게 읽을 때(600px/s) 첫 틈에 닿지 못했습니다(실측 1728×906: 첫 틈에서 아래 37%).
  */
 export const LIGHT_FOLLOW = { follow: 2.5, maxRate: 0.25 } as const;
+
+/**
+ * 함께하는 곳(#partners)의 커서 빛. DECIDED 2026-10-22 (사용자: "이 부분에서는 빛이 커서를 따라가게,
+ * 움직이면 서울 형상도 빛이 나도록"). 이 구간이 화면 가운데를 덮는 동안에만, 마우스일 때만 켭니다.
+ * 손가락(폰)은 스크롤이라 정거장 길 그대로입니다.
+ *  - edgeVh: 구간의 위아래 끝이 화면 가운데에서 이만큼(화면 높이 배) 안쪽에 들어와야 다 켜집니다.
+ *  - follow, maxRate: 빛이 커서를 따라가는 빠르기(정거장 길보다 훨씬 빠르게).
+ *  - radius: 형상이 밝아지는 반경(화면 높이 대비). gain: 그 안의 최대 밝기 배수 증가.
+ *  - speedFull: 이 속도(화면 높이/초)로 움직이면 밝기가 다 오릅니다. release: 멈춘 뒤 잦아드는 빠르기(초당).
+ */
+export const PARTNERS_LIGHT = {
+  edgeVh: 0.25,
+  // 2026-10-22 사용자 "바로 따라가는 게 아니라 조금의 lag, 따라가는 속도가 너무 빨라서": 7, 2.5 → 1.6, 0.6.
+  // 초당 남은 거리의 약 1.6배만큼 다가가, 커서가 멈춘 뒤 약 1초에 걸쳐 닿습니다.
+  follow: 1.6,
+  maxRate: 0.6,
+  radius: 0.32,
+  gain: 1.8,
+  speedFull: 1.2,
+  release: 1.4,
+} as const;
 
 export const RING = {
   baseRate: 0.5,

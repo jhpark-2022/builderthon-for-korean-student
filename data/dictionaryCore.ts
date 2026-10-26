@@ -43,7 +43,8 @@ export const coreDict = {
   pages: [
     // DECIDED 2026-10-20 (hwang 브리프 1.3, 4.1): EN 메뉴 이름은 "Home". 헤더 워드마크와 같은 글자가 한 줄에 둘 서지 않게. 푸터(footerLabel)는 그대로.
     // 같은 날 8월의 EN footerLabel "Zero100 builderthon, Aug 2026"을 "Aug 2026"으로 줄였습니다(EN 푸터 줄바꿈).
-    { key: "crossing", href: "/", label: { ko: "크로싱 서울", en: "Home" }, footerLabel: { ko: "크로싱 서울", en: "CROSSING SEOUL" } },
+    // DECIDED 2026-10-22 (사용자, 스크린숏: "크로싱 서울이 3개나 있네"): KO 메뉴도 "홈". 헤더 워드마크, 메뉴, 히어로 제목에 같은 이름이 셋 서던 것.
+    { key: "crossing", href: "/", label: { ko: "홈", en: "Home" }, footerLabel: { ko: "크로싱 서울", en: "CROSSING SEOUL" } },
     { key: "naru", href: "/naru", label: { ko: "나루", en: "NARU" }, footerLabel: { ko: "나루", en: "NARU" } },
     { key: "aug", href: "/2026-08", label: { ko: "8월 기록", en: "Aug 2026" }, footerLabel: { ko: "제로백 빌더톤 8월 기록", en: "Aug 2026" } },
   ],
@@ -58,7 +59,8 @@ export const coreDict = {
   },
   siteFooter: {
     line: { ko: "학생이 직접 운영하는 그룹 나루가 엽니다.", en: "Run by NARU, a student-run group." },
-    partners: { ko: "8월에 함께한 곳", en: "With us in August" },
+    // DECIDED 2026-10-22 (사용자: "지금까지 나루와 함께한 기업들"): 8월만이 아니라 12월과 제로백 네트워크까지 담습니다.
+    partners: { ko: "나루와 함께한 곳", en: "With NARU so far" },
     rights: { ko: "© 2026 나루 NARU", en: "© 2026 NARU" },
   },
   footerNav: {
@@ -78,7 +80,8 @@ export const coreDict = {
     // 첫 칩(프로그램)이 7.2화면에 있어, 그 앞의 결과, 취지, 참가, 혜택 네 챕터로 가는 길이 없었습니다.
     results: { ko: "결과", en: "Results" },
     about: { ko: "취지", en: "Why" },
-    join: { ko: "참가", en: "Who" },
+    // 2026-10-25 (사용자: TOC를 flow와 맞게): 내려앉는 블록의 아이브로 "누구를 위한 자리였나"에 맞춰 "참가" → "대상".
+    join: { ko: "대상", en: "Who" },
     benefits: { ko: "혜택", en: "Benefits" },
     program: { ko: "프로그램", en: "Programme" },
     // 2026-08-13에 앵커에서 뺐다가 2026-08-23에 되살렸습니다. 뺐던 이유는

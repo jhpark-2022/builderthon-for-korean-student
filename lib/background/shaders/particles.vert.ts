@@ -59,6 +59,10 @@ uniform float uEdgeBright;
 uniform float uInnerBright;
 uniform vec2  uWave;
 uniform float uBreath;    // 숨 진폭 배수
+// 함께하는 곳의 커서 빛(2026-10-22). xy = 커서 자리(점 평면의 좌표), z = 반경. uGlow 0이면 전과 같습니다.
+uniform vec3  uGlowAt;
+uniform float uGlow;
+uniform float uGlowGain;
 // ── 깊이 층과 국면 (2026-09-17 수정 브리프 1.3~1.5) ─────────────────────────
 uniform vec3  uFar;        // 건너는 점들의 목적지. 깊이 층 안의 먼 점
 uniform float uShift;      // 형상을 히어로와 같이 스크롤시키는 월드 y 오프셋
@@ -206,13 +210,17 @@ void crossingMain(){
   // 골만 올립니다. 진폭(config.ts waveAmp)이 바뀌어도 점이 골에서 사라지지 않습니다.
   float wave = max(1.0 + uWave.y * sin(6.2831853 * (aPhase - uTime / uWave.x)), 0.8);
   vBright = mix(uInnerBright, uEdgeBright * wave, aEdge);
+  // 커서 빛: 커서 가까운 점이 밝아지고 조금 커지며 hi0 쪽으로 뜹니다.
+  float glowK = uGlow * smoothstep(uGlowAt.z, 0.0, length(pos.xy - uGlowAt.xy));
+  vBright *= 1.0 + glowK * uGlowGain;
+  vNear = max(vNear, glowK * 0.9);
 
   vec4 mv = modelViewMatrix * vec4(pos, 1.0);
   gl_Position = projectionMatrix * mv;
   float zCam = -mv.z;
   vDepth = clamp((zCam - 6.0) / 60.0, 0.0, 1.0);
   // 크기는 화면 px로 정합니다(z = 0 평면, 카메라 30에서 그대로). 멀어지면 작아집니다.
-  float px = mix(uInnerPx, uEdgePx, aEdge) * (1.0 + arc * 0.5) * (1.0 + vSpeed * 0.6);
+  float px = mix(uInnerPx, uEdgePx, aEdge) * (1.0 + arc * 0.5) * (1.0 + vSpeed * 0.6) * (1.0 + glowK * 0.45);
   gl_PointSize = min(px * uPixelRatio * (30.0 / max(zCam, 0.001)), 22.0 * uPixelRatio);
 }
 

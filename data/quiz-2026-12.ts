@@ -254,6 +254,8 @@ const TEXT: Partial<Record<MbtiKey, Partial<Result>>> = {
     weakness: { ko: "흥이 먼저, 꼼꼼한 마무리는 팀과 함께", en: "Energy first; the careful finish goes better with the team" },
   },
   ESTP: {
+    // 2026-10-23 (사용자, 글 리뷰): 8월의 "해커톤 스프린터"가 12월판에 그대로 나왔습니다. 12월에는 해커톤이라 부르지 않습니다.
+    role: { ko: "그로스, 스프린터", en: "Growth, sprinter" },
     phrase: { ko: "기획서는 됐고, 예고편부터 봐요.", en: "Skip the brief. Watch the trailer." },
     // 8월의 "경량, 고속, 가성비"는 Mistral의 이야기였습니다.
     strengths: { ko: "한 번에 한 편을 뽑는 속도, 빠른 출시", en: "A whole clip in one go, and shipping fast" },
@@ -362,13 +364,13 @@ export const QUESTIONS_2026_12: Question[] = [
   },
   {
     id: "Q9", axis: "TACTICS", w: 2,
-    text: { ko: "덱 제출 12시간 전, 더 좋은 아이디어가 떠올랐다.", en: "12 hours before the deck is due, a better idea hits me." },
+    text: { ko: "성과 공유회 12시간 전, 더 좋은 아이디어가 떠올랐다.", en: "12 hours before the showcase, a better idea hits me." },
     a: { label: { ko: "위험해, 원래 계획 고수", en: "Too risky, stick to the plan" }, pole: "J" },
     b: { label: { ko: "가보자고, 갈아엎기", en: "Let's go, tear it up and rebuild" }, pole: "P" },
   },
   {
     id: "Q10", axis: "IDENTITY", w: 7,
-    text: { ko: "발표는 끝났는데 회사 쪽 질문이 하나도 안 나왔다. 반응이 미지근하다. 집 가는 길의 나는?", en: "The showcase is over and the company asked zero questions. Lukewarm room. On the way home I…" },
+    text: { ko: "성과 공유회가 끝났는데 회사 쪽 질문이 하나도 안 나왔다. 반응이 미지근하다. 집 가는 길의 나는?", en: "The showcase is over and the company asked zero questions. Lukewarm room. On the way home I…" },
     a: { label: { ko: "“그때 그것만 고쳤어도…” 곱씹기", en: "“If only we'd fixed that…” Replay it" }, pole: "Tid" },
     b: { label: { ko: "“잘했으니 됐지, 다음에 또” 툭툭 털기", en: "“We did well, next time.” Shake it off" }, pole: "A" },
   },

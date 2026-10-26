@@ -1,6 +1,7 @@
 "use client";
 
 import { track } from "@vercel/analytics";
+import { trackOpenChat } from "@/lib/openChatCount";
 import { coreDict as dict, links, type Phrase } from "@/data/dictionaryCore";
 import ChatGlyph from "@/components/ChatGlyph";
 import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
@@ -76,7 +77,7 @@ export default function OpenChatLink({
         target="_blank"
         rel="noopener noreferrer"
         aria-describedby={describedBy}
-        onClick={() => track("openchat_click", { src })}
+        onClick={() => trackOpenChat(src)}
         className={`${buttonClass(variant === "hero" ? "primary" : "secondary", "naru")} ${className}`}
       >
         <ChatGlyph className="h-4 w-4 shrink-0" />
@@ -98,7 +99,7 @@ export default function OpenChatLink({
       href={links.openChat}
       target="_blank"
       rel="noopener noreferrer"
-      onClick={() => track("openchat_click", { src })}
+      onClick={() => trackOpenChat(src)}
       className={`inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-[18px] py-[11.25px] text-center text-sm sm:text-base font-medium leading-relaxed text-white/85 transition-[background-color,border-color,transform] duration-150 active:scale-[0.98] hover:border-white/35 hover:bg-white/10 hover:text-white ${className}`}
     >
       <ChatGlyph className="h-4 w-4 shrink-0" />

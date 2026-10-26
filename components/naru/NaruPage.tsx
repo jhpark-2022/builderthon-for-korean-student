@@ -18,21 +18,21 @@
 // 두 페이지가 같이 쓰는 조각은 components/home/shared.tsx에 있습니다.
 // ─────────────────────────────────────────────────────────────────────────────
 import Image from "next/image";
+import ShapeCampuses from "@/components/shared/ShapeCampuses";
 import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "@/lib/LocaleContext";
-import { naru, naruLinks, openChatLabels, partnerContact, type Layer, type Stat, type RecordPhoto } from "@/data/naru";
+import { naru, naruLinks, partnerContact, singaporeCampuses, type Layer, type Stat, type RecordPhoto } from "@/data/naru";
 import type { Phrase } from "@/data/dictionaryCore";
 import Chip from "@/components/ui/Chip";
-import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
+import { buttonClass } from "@/components/ui/Button";
 import MobileChatBar from "@/components/shared/MobileChatBar";
+import ManifestoViewer from "@/components/naru/ManifestoViewer";
 import Chapter from "@/components/journey/Chapter";
 import Reveal from "@/components/shared/Reveal";
 import Eyebrow from "@/components/ui/Eyebrow";
-import OpenChatLink from "@/components/ui/OpenChatLink";
-import { TITLE, BODY, META, H3, STATEMENT, GRADIENT_TEXT } from "@/components/ui/typography";
-import NaruMark from "@/components/ui/NaruMark";
+import { TITLE, BODY, META, H2, H3, STATEMENT, GRADIENT_TEXT } from "@/components/ui/typography";
 import {
   PhoneFold, Card, SUBHEADING, READ, WIDE, READ_MEASURE_C, MEASURE_C,
   latinTrack, eyebrowTrack, PlateSegment, SiteFooter, usePlateLite,
@@ -51,7 +51,10 @@ export default function NaruPage() {
     <>
     {/* tabIndex=-1: skip link가 여기로 보낼 때 브라우저가 실제로 포커스를 옮기도록 합니다. */}
     {/* naru-min12: 홈과 같은 글자 하한(app/globals.css). */}
-    <main id="main" tabIndex={-1} className="naru-min12 focus:outline-none">
+    {/* data-cursor-light (2026-10-22, 사용자): 이 페이지 전체에서 배경의 빛이 커서를 따라갑니다(BackgroundScene readAnchors). */}
+    <main id="main" tabIndex={-1} data-cursor-light className="naru-min12 focus:outline-none">
+      {/* DECIDED 2026-10-23 (사용자): 싱가포르 형상 안에서 커서 빛이 닿는 자리에 NUS, NTU, SMU 휘장이 보입니다(홈의 서울과 같은 층). */}
+      <ShapeCampuses id="singapore-campuses" campuses={singaporeCampuses} touch spreadOnPhone />
       {/* 2026-09-19 (사용자): "8월과 나루는 합칠 수 있음. 나루의 코어가 여기서 나온 거라고." #record
           챕터는 #naru 안의 첫 블록이 됐습니다(아래 id="record"). 헤더 항목 "8월"도 뺐습니다. */}
 
@@ -147,10 +150,7 @@ export default function NaruPage() {
           <p className={`${MEASURE_C} break-keep text-center ${BODY} leading-relaxed text-white/70`}>
             {t(naru.record.lead2)}
           </p>
-          {/* 빚을 적는 한 줄(2026-09-19). 감사는 각주가 아니라 문장이어야 합니다. */}
-          <p className={`${MEASURE_C} mt-[13.5px] lg:mt-[16px] break-keep text-center ${BODY} font-semibold leading-relaxed text-white/85`}>
-            {t(naru.record.credit)}
-          </p>
+          {/* DECIDED 2026-10-24 (사용자: 8월에 대한 감사는 /2026-08 "고맙습니다" 한 곳에서만): 빚을 적던 한 줄(record.credit)을 뺐습니다. 키는 둡니다. */}
           <div className="mt-[27px] flex justify-center lg:mt-[32px]">
             <Link
               href={naruLinks.archive}
@@ -189,9 +189,7 @@ export default function NaruPage() {
         {/* 코어 둘. 판 두 장.
             ol인 이유: 순서가 뜻입니다. 01이 문턱이고 02가 증명이며, 바로 아래
             note가 그 둘이 한 쌍이라고 말합니다. 번호는 그리지 않습니다(9/16
-            2차의 이유 그대로). 나루 점이 제목 첫 글자 앞에 섭니다.
-            점의 크기는 18px 고정입니다(2026-10-07). 제목이 BODY 크기(15.75~18px)가 되어 em으로 두면
-            로고 가이드의 하한 18px 아래로 내려갑니다. mt는 첫 줄의 한가운데.
+            2차의 이유 그대로). 제목 앞에 서던 나루 점(18px, 2026-10-07)은 2026-10-24에 뺐습니다(아래 h3 주석).
             keeps가 dl인 이유: 항목 이름과 값이지 제목이 아닙니다. */}
         <Reveal>
         {/* DECIDED 2026-10-19 (사용자, 스크린숏: "이거는 원래처럼 보여지면 좋겠는데"): 같은 날 감사 2로 가운데 한 기둥으로 바꿨던 것을
@@ -208,21 +206,15 @@ export default function NaruPage() {
                 {/* DECIDED 2026-09-18 (사용자): 글자가 너무 컸고, 첫 줄을 크게 강조하는 것은
                     "내 스타일이 아님". 제목은 H3 크기(STATEMENT 아님), 두 줄은 같은 본문 크기.
                     STATEMENT 토큰과 core.lines 키는 그대로 둡니다. */}
-                <h3 className={`flex items-start gap-[13.5px] max-sm:justify-center ${BODY} font-bold leading-snug tracking-tight text-white`}>
-                  <NaruMark className="mt-[2px] h-4 w-4 shrink-0 sm:mt-[3px]" />
-                  <span>{t(core.title)}</span>
+                {/* DECIDED 2026-10-24 (사용자, 스크린숏: "저 동그라미가 진짜 싫음"): 제목 앞의 나루 점을 뺐습니다. 홈의 주황 원장
+                    (components/home/NaruHome.tsx 히어로 주석) 다섯 자리 중 "#naru 코어 제목 앞 점"은 이제 없습니다. 제목 글자와 크기는 그대로. */}
+                <h3 className={`${BODY} font-bold leading-snug tracking-tight text-white`}>
+                  {t(core.title)}
                 </h3>
                 <p className={`mt-[18px] max-w-xl break-keep max-sm:mx-auto ${BODY} leading-relaxed text-white/85 lg:mt-[24px]`}>
                   {t(core.lines[0])}
                 </p>
-                {/* 폰에서는 코어가 제목 + 한 문장(감사 반영 브리프 6, 나루 챕터 4.4화면). 둘째 줄은
-                    lg부터. 키는 그대로. */}
-                {/* DECIDED 2026-10-20 (hwang 브리프 1.2): 코어 01은 한 문단이 되어 둘째 줄이 없습니다. */}
-                {core.lines[1] && (
-                  <p className={`mt-[12px] hidden max-w-xl break-keep ${BODY} leading-relaxed text-white/70 lg:mt-[16px] lg:block`}>
-                    {t(core.lines[1])}
-                  </p>
-                )}
+                {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다): 코어 02도 한 문단이 되어 두 코어 모두 둘째 줄이 없습니다. */}
               </div>
               <KeepsPanel id={`keeps-${core.index}`} label={t(naru.why.keepsLabel)} body={t(core.keeps)} />
             </li>
@@ -238,15 +230,10 @@ export default function NaruPage() {
           <p className={`text-balance break-keep text-center ${BODY} font-bold leading-snug tracking-tight text-white`}>
             {t(naru.why.note)}
           </p>
-          {/* 경첩 옆의 구체적인 한 줄(가독성 브리프 5, 2026-09-25 사용자 승인). 폰에서도 보입니다. */}
-          <p className={`${MEASURE_C} mt-[13.5px] break-keep text-center ${BODY} leading-relaxed text-white/70 lg:mt-[16px]`}>{t(naru.why.noteConcrete)}</p>
-          {/* 폰에서는 경첩의 부연을 접습니다(나루 챕터 길이 목표 2,200). 굵은 한 문장만. */}
-          <p className={`${MEASURE_C} mt-[13.5px] hidden break-keep text-center ${BODY} leading-relaxed text-white/70 lg:mt-[16px] lg:block`}>
+          {/* DECIDED 2026-10-21 (사용자: "나루 page 문장이 너무 많다", 더 과감하게): 경첩은 굵은 줄과 한 줄. noteConcrete와
+              noteClose는 그리지 않고, 짧아진 noteBody는 폰에서도 보입니다. 키는 data/naru.ts에 그대로. */}
+          <p className={`${MEASURE_C} mt-[13.5px] break-keep text-center ${BODY} leading-relaxed text-white/70 lg:mt-[16px]`}>
             {t(naru.why.noteBody)}
-          </p>
-          {/* DECIDED 2026-10-05 (사용자: "설명을 더"): 부연이 두 문단입니다. 둘 다 폰에서는 접습니다(위와 같은 이유). */}
-          <p className={`${MEASURE_C} mt-[13.5px] hidden break-keep text-center ${BODY} leading-relaxed text-white/70 lg:mt-[16px] lg:block`}>
-            {t(naru.why.noteClose)}
           </p>
         </Reveal>
 
@@ -256,7 +243,7 @@ export default function NaruPage() {
         <Reveal className={`${READ} mt-[36px] text-balance text-center lg:mt-[54px]`}>
           <h3 data-subheading className={SUBHEADING}>{t(naru.why.agendaLabel)}</h3>
           <p className={`${MEASURE_C} mt-[16px] break-keep text-center ${BODY} leading-relaxed text-white/70 lg:mt-[24px]`}>{t(naru.why.agenda)}</p>
-          <p className={`${MEASURE_C} mt-[13.5px] break-keep text-center ${BODY} leading-relaxed text-white/70 lg:mt-[16px]`}>{t(naru.why.agendaMore)}</p>
+          {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다): agendaMore는 agenda와 합쳐 그리지 않습니다. */}
         </Reveal>
               {/* ── 어떻게 일하는가 (DECIDED 2026-09-18, 사용자: "나루와 학생회와 기업 내용은 하나의
             챕터로 합쳐져야 함"). 따로 있던 #how 챕터(세 층, 문 셋, 하지 않는 것)가 이 챕터의
@@ -264,10 +251,14 @@ export default function NaruPage() {
             옛 링크와 층별 문(#join-*)의 출발점을 위해 남깁니다. 카피 키(naru.how.*)는 그대로.
             그 전의 주석: #december 뒤로 내려온 이유(2026-09-17)는 git 이력에. */}
         {/* 2026-09-26 (한 축 브리프): 헤어라인과 머리, 리드는 READ. 세 층 도식만 WIDE(LayerDiagram). */}
-        {/* 운영 방식은 이름 있는 section이며 제목은 h2입니다. */}
-        <section id="how" aria-labelledby="how-title" className="mt-[45px] text-left lg:mt-[72px]">
+        {/* 2026-10-11 (리뷰 A5): 함께하기도 이름 있는 section, 제목은 h2(모양은 H3 토큰 그대로). */}
+        </PlateSegment>
+        {/* DECIDED 2026-10-21 (사용자: "나루 탭에 형상이 3번만 보이게", 싱가포르 그대로): 판을 하나 더 나눠 코어와 "어떻게 일하는가"
+            사이에 틈을 둡니다. 형상이 보이는 틈은 히어로 뒤, 여기, "왜" 앞의 셋입니다. 틈이 둘을 나누므로 윗선과 위 여백은 뺐습니다. */}
+        <PlateSegment id="naru-3" gap read>
+        <section id="how" aria-labelledby="how-title" className="text-left">
         {/* DECIDED 2026-10-05 (사용자, 스크린숏: "다 중간에"): 소제목, h3, 리드는 가운데. 도식과 버튼 셋이 이미 가운데입니다. */}
-        <div className={`${READ} border-t border-white/10 pt-[36px] text-balance text-center lg:pt-[54px]`}>
+        <div className={`${READ} pt-[36px] text-balance text-center lg:pt-[54px]`}>
 
           {/* "세 층"은 챕터 라벨이 아니라 챕터 안 소제목입니다(가독성 브리프 4.2의 표). 알약을 벗습니다. */}
           {/* DECIDED 2026-10-06 (사용자, 스크린숏: "세 층 빼주고"): 소제목 "세 층"(how.eyebrow)은 그리지 않습니다.
@@ -303,9 +294,18 @@ export default function NaruPage() {
             그 전에는 READ의 왼쪽 끝이었습니다. 폰의 세로 쌓기도 가운데입니다. */}
         {/* DECIDED 2026-10-19 (/naru 감사 7, 출제사 브리프 1장): 기업이 얻는 것 넷. 홈의 "문제에 들어가는 네 단계"와 같은 모양(가는 선 네 칸, 폰 두 칸).
             기업에게 하는 말은 이 자리에만 씁니다(brand 4장). */}
+        {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다, 더 과감하게): 넷은 접어 둡니다. 기업만 펼쳐 보면 됩니다.
+            라벨은 코어의 "그래서 지키는 것"과 같은 알약입니다. */}
         <Reveal className={`${READ} mt-[45px] text-center lg:mt-[48px]`}>
-          <h3 data-subheading className={SUBHEADING}>{t(naru.how.companyLabel)}</h3>
-          <ul role="list" className="mt-[13.5px] grid grid-cols-2 border-y border-white/10 md:grid-cols-4 lg:mt-[16px]">
+          {/* DECIDED 2026-10-25 (사용자: "기업이 얻는거 버튼 너무 어색해, 특히 모바일"): 알약을 벗고 표의 머리 한 줄로 둡니다.
+              아래 메일 버튼과 같은 알약이라 누르면 어딘가로 가는 버튼처럼 보였고, 펼치면 표와 떨어져 떠 있었습니다.
+              이제 위아래 가는 선 사이의 한 줄이고, 펼치면 같은 선 안에서 네 칸이 이어집니다. */}
+          <details className="group border-y border-white/10">
+          <summary className={`flex min-h-[52px] cursor-pointer list-none items-center justify-center gap-2 py-[12px] ${BODY} font-medium text-white/85 transition hover:text-white [&::-webkit-details-marker]:hidden`}>
+            {t(naru.how.companyLabel)}
+            <svg aria-hidden viewBox="0 0 12 12" className="h-3 w-3 text-accent transition-transform group-open:rotate-180 motion-reduce:transition-none"><path d="M2 4.5l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </summary>
+          <ul role="list" className="grid grid-cols-2 border-t border-white/10 md:grid-cols-4">
             {naru.how.company.map((c, i) => (
               <li key={i} className={`flex flex-col items-center gap-[12px] px-[13.5px] py-[18px] lg:gap-[16px] lg:px-[16px] ${i >= 2 ? "border-t md:border-t-0" : ""} ${i % 2 === 1 ? "border-l" : ""} ${i === 2 ? "md:border-l" : ""} border-white/10`}>
                 <span className={`break-keep ${BODY} font-bold text-white`}>{t(c.title)}</span>
@@ -313,9 +313,12 @@ export default function NaruPage() {
               </li>
             ))}
           </ul>
+          </details>
         </Reveal>
         <Reveal className={`${READ} mt-[27px] flex flex-col items-center gap-[13.5px] sm:flex-row sm:flex-wrap sm:justify-center sm:gap-[18px] lg:mt-[32px]`}>
-          {naru.how.layers.map((layer) => (
+          {/* DECIDED 2026-10-25 (사용자: "나루 페이지에 문의하기 버튼 다 빼줘"): 학생회와 기업의 "문의하기" 버튼 둘을 그리지 않습니다.
+              운영진으로 함께하기는 문의가 아니라 그대로 둡니다. 연락은 아래 메일 주소 한 줄이 받습니다. 키(join.mail)는 그대로. */}
+          {naru.how.layers.filter((layer) => layer.join.id !== "join-organiser" && layer.join.id !== "join-company").map((layer) => (
             <a
               key={layer.join.id}
               // 2026-09-19: `#${layer.join.id}`(#join의 카드)였습니다. 카드 넷이
@@ -392,13 +395,11 @@ export default function NaruPage() {
             // 항목의 점이 위로 올라가 어긋났습니다. 줄 사이 간격은 부모의 gap이 아니라 문단의 위 여백입니다.
             <li
               key={need.place.en}
-              className="border-b border-white/10 py-[20px] last:border-b-0 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-[24px] lg:grid lg:grid-rows-subgrid lg:row-span-3 lg:gap-y-0 lg:p-[32px]"
+              className="border-b border-white/10 py-[20px] last:border-b-0 sm:rounded-2xl sm:border sm:border-white/10 sm:bg-white/[0.03] sm:p-[24px] lg:grid lg:grid-rows-subgrid lg:row-span-2 lg:gap-y-0 lg:p-[32px]"
             >
               <h3 className={H3}>{t(need.place)}</h3>
-              <p className={`mt-[12px] break-keep ${BODY} leading-relaxed text-white/70 lg:mt-[16px]`}>{t(need.lack)}</p>
-              <p className={`self-start break-keep pt-[18px] ${BODY} leading-relaxed text-white/85`}>
-                {t(need.opens)}
-              </p>
+              {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다, 더 과감하게): 칸마다 없는 것 한 줄만. opens는 그리지 않습니다. */}
+              <p className={`mt-[12px] break-keep ${BODY} leading-relaxed text-white/85 lg:mt-[16px]`}>{t(need.lack)}</p>
             </li>
           ))}
         </ul>
@@ -413,20 +414,8 @@ export default function NaruPage() {
         </p>
         </Reveal>
 
-        {/* 안전장치 두 줄(왜 브리프 2.1). 카드가 아니라 문단입니다. 둘 다 있어야
-            합니다. 첫 줄이 없으면 폐쇄적인 모임으로, 둘째 줄이 없으면 억울함의
-            호소로 읽힙니다. 한 줄만 그리지 마세요.
-            DECIDED 2026-10-02 (사용자: 가독성 리뷰): 밝기 /55 → /70. 이 두 줄은 각주가 아니라 주장입니다. */}
-        {/* 2026-10-19 (/naru 감사 3): 문단 일곱이 소제목 없이 이어졌습니다. 안전장치 둘 위에 가는 선과 소제목 하나. */}
-        <Reveal className={`${READ} ${READ_MEASURE_C} mt-[45px] border-t border-white/10 pt-[36px] text-center lg:mt-[48px] lg:pt-[48px]`}>
-          <h3 data-subheading className={SUBHEADING}>{t(naru.join.guardsLabel)}</h3>
-        </Reveal>
-        <Reveal className={`${READ} ${READ_MEASURE_C} mt-[13.5px] space-y-[13.5px] break-keep text-center ${BODY} leading-relaxed text-white/70 lg:mt-[16px] lg:space-y-[16px]`}>
-          {naru.join.guards.map((guard, i) => (
-            <p key={i} className="text-balance">{t(guard)}</p>
-          ))}
-        </Reveal>
-
+        {/* DECIDED 2026-10-21 (사용자: "나루 page 문장이 너무 많다", 더 과감하게): "우리가 서는 방식"(guardsLabel, guards 두 줄)을
+            그리지 않습니다. brand 3장 원칙 1, 2이고 매니페스토에 그대로 있습니다. 그 전의 "한 줄만 그리지 마세요"는 둘 다 빼는 것으로 지킵니다. */}
         {/* 규모 숫자는 출처가 확인되기 전까지 그리지 않습니다. statTbd 키는
             data/naru.ts에 있습니다. */}
         {JOIN_STAT_CONFIRMED && (
@@ -475,43 +464,21 @@ export default function NaruPage() {
               아니라 라벨 옆의 한 조각입니다. 버튼의 ↓는 **형식을 말하지 않고**,
               셀룰러에서 1MB는 데스크톱에서와 다른 값입니다. 그 결정의 이유
               ("무엇을 받는지 모르고 누르게 하지 않습니다")를 셀룰러까지 넓힙니다.
-              파일이 바뀌면 이 숫자도 바꾸세요: public/naru/naru-manifesto-v5-2026-10.pdf
-              (2026-10-20 v5: 1,286,556바이트라 1.3MB) */}
+              파일이 바뀌면 이 숫자도 바꾸세요: public/naru/naru-manifesto-v6-2026-10.pdf
+              (2026-10-21 v6: 621,513바이트라 0.6MB) */}
           <p className={`${META} font-bold uppercase ${latinTrack(locale)} text-white/70`}>
             {t(naru.join.manifesto.label)}
-            <span className="font-medium normal-case tracking-normal text-white/70">{/* 2026-10-10: 영문 화면은 영문판(191,475바이트)을 받습니다. 크기 표기도 로케일을 따릅니다. */}{locale === "en" ? " (PDF 0.2MB)" : " (PDF 1.3MB)"}</span>
+            {/* 2026-10-25: 내려받지 않으므로 "(PDF 0.6MB)" 크기 표기를 뗐습니다. */}
           </p>
-          <h3 className={`mt-[13.5px] break-keep ${BODY} font-bold text-white`}>{t(naru.join.manifesto.title)}</h3>
+          {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다): 제목 줄("이 챕터의 문장들은 여기서 왔습니다.")은 그리지 않습니다. */}
           <p className={`mt-[16px] text-balance break-keep ${BODY} leading-relaxed text-white/70 lg:mt-[24px]`}>{t(naru.join.manifesto.body)}</p>
-          <div className="mt-[27px] flex flex-wrap items-center justify-center gap-x-4 gap-y-2 lg:mt-[32px]">
-            <a
-              href={locale === "en" ? naruLinks.manifestoEn : naruLinks.manifesto}
-              // 같은 탭에서 열리면 이 페이지가 PDF 뷰어에 덮입니다. 돌아오는 길이
-              // 뒤로 가기뿐이면 읽던 자리를 잃습니다.
-              target="_blank"
-              rel="noopener noreferrer"
-              download
-              onClick={() => track("naru_cta", { src: "join", to: locale === "en" ? "manifesto-en" : "manifesto" })}
-              className={buttonClass("secondary")}
-            >
-              {t(naru.join.manifesto.cta)}
-              {/* DECIDED 2026-10-11 (사용자, 스크린숏: "화살표 방향 통일"): ↓를 →로. 바로 아래 두 버튼과 같은 방향입니다(홈 히어로의 2026-10-10 결정과 같음). */}
-              <span aria-hidden className="text-white/70">→</span>
-            </a>
-          </div>
+          {/* DECIDED 2026-10-25 (사용자: "매니페스토 내려받는게 아니라, 웹사이트에서 그냥 스와이핑해서 페이지 넘겨서 볼 수 있게"):
+              내려받기 버튼 대신 쪽을 넘겨 보는 뷰어. PDF와 그 링크 키는 같은 날 지웠습니다(data/naru.ts naruLinks). */}
+          <ManifestoViewer locale={locale === "en" ? "en" : "ko"} t={t} />
         </Reveal>
 
-        {/* DECIDED 2026-10-10 (구조 브리프 3.3): 페이지의 맨 끝, 매니페스토 상자 아래의 돌아가는 줄. 새 문장은 없습니다.
-            앞의 것은 8월 페이지 #gaps에서 홈으로 가는 줄과 같은 라벨이고, 뒤의 것은 홈의 프로그램 챕터 끝에 있는 버튼과
-            같은 버튼입니다(같은 곳으로 갑니다). data-naru-return은 글자 보존 검증이 이 줄을 빼고 비교하는 손잡이입니다. */}
-        <div data-naru-return className={`${READ} mt-[45px] flex flex-col items-center gap-[13.5px] sm:flex-row sm:flex-wrap sm:justify-center sm:gap-[18px] lg:mt-[48px]`}>
-          {/* 2026-10-19 (/naru 감사 6): 버튼 셋이 같은 모양이었습니다. 주 버튼은 이벤트로 가는 것 하나(brand 3장 원칙 2: 무대가 먼저). */}
-          <Link href="/#december" onClick={() => track("naru_cta", { src: "naru-page", to: "december" })} className={`${buttonClass("primary", "naru")} w-full sm:w-auto`}>
-            {t(naru.december.gapsBackLink)}
-            <span aria-hidden className={ARROW_CLASS}>→</span>
-          </Link>
-          <OpenChatLink t={t} src="naru-join" label={openChatLabels.december} variant="secondary" className="w-full !min-h-[56px] sm:w-auto" />
-        </div>
+        {/* DECIDED 2026-10-21 (사용자, 스크린숏: "이거 빼줘"): 매니페스토 아래의 돌아가는 줄(크로싱 서울 프로그램 보기,
+            카카오톡으로 소식 받기)을 뺐습니다. 헤더에 크로싱 서울이, 하단 바와 푸터에 오픈채팅이 있습니다. */}
 
         </PlateSegment>
       </Chapter>
@@ -708,7 +675,7 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
       // 영역이었습니다. 상자 하나가 7% 알파로 약 370x110px이라 히어로 CTA의
       // 두 배가 넘어요. "주황은 점이지 면이 아니다"라는 규칙이 아무도 주황
       // 챕터라고 생각하지 않는 여기서 가장 크게 깨지고 있었습니다.
-      // 둘, 강조가 애초에 뒤집혀 있었습니다. 양옆 상자가 border-white/12를
+      // 둘, 강조가 애초에 뒤집혀 있었습니다. 양옆 상자가 border-white/[0.12]를
       // 쓰고 있었고 그건 CSS를 만들지 않아 Preflight의 #e5e7eb로 떨어졌어요.
       // 그래서 강조하려던 가운데는 1.4:1 테두리, 양옆은 14:1 테두리였습니다.
       // 다이어그램에서 가장 조용한 상자가 주인공이었던 셈입니다.
@@ -778,6 +745,19 @@ function LayerDiagram({ t }: { t: (p: { ko: string; en: string }) => string }) {
         {"\u2002"}
         {t(layer.gets)}
       </p>
+      {/* DECIDED 2026-10-24 (pages-review N1): 얻는 것의 증거 한 줄. 같은 META 크기, 새 크기 없음. */}
+      {layer.proof && (
+        <p className={`mt-[9px] break-keep ${META} leading-snug [text-wrap:balance] lg:mt-[12px]`}>
+          <Link
+            href={layer.proof.href}
+            onClick={() => track("naru_cta", { src: "how_sponsor", to: "builders" })}
+            className="text-accent underline-offset-4 transition hover:text-white hover:underline"
+          >
+            {t(layer.proof.label)}
+            <span aria-hidden>{" "}→</span>
+          </Link>
+        </p>
+      )}
     </div>
   );
 

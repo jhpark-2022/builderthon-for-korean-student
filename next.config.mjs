@@ -6,7 +6,8 @@ const CSP_REPORT_ONLY = [
   "media-src 'self'",
   "font-src 'self' data:",
   "connect-src 'self' https://challenges.cloudflare.com https://va.vercel-scripts.com https://vitals.vercel-insights.com",
-  "frame-src https://challenges.cloudflare.com",
+  // 'self' (2026-10-22): 오픈채팅 클릭을 세는 숨은 iframe(/go/openchat/<src>, lib/openChatCount.ts).
+  "frame-src 'self' https://challenges.cloudflare.com",
   "worker-src 'self' blob:",
   "frame-ancestors 'self'",
   "base-uri 'self'",
@@ -28,6 +29,14 @@ const nextConfig = {
   // Tighter tree-shaking for framer-motion's barrel imports.
   experimental: {
     optimizePackageImports: ["framer-motion"],
+  },
+  // DECIDED 2026-10-22 (Vercel Analytics: "/)" 11명, "/2026-08)" 1명이 404를 봄): 글 안에 붙인 링크 끝에 괄호나 마침표가 따라붙은 주소를
+  // 원래 페이지로 보냅니다. 예: "(https://.../)"를 메신저가 ")"까지 링크로 잡은 경우.
+  async redirects() {
+    // 끝에 붙는 것: ")" "." ","(path-to-regexp에서 ")"와 "."은 이스케이프). 페이지 다섯.
+    const pages = ["/", "/naru", "/2026-08", "/match", "/quiz"];
+    const tails = ["\\)", "\\.", ","];
+    return pages.flatMap((p) => tails.map((tail) => ({ source: `${p}${tail}`, destination: p, permanent: true })));
   },
   async headers() {
     return [

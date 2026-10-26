@@ -7,10 +7,15 @@ import type { Phrase } from "@/data/dictionaryCore";
 
 export const teamCopy = {
   title: { ko: "멘토 시간표와 미션 인증", en: "Mentor timetable and check-in" },
+  // 2026-10-23 (모바일 점검): /match처럼 돌아가기와 EN/KR이 있는 머리를 둡니다. 그 전에는 제목으로 바로 시작했습니다.
+  back: { ko: "크로싱 서울", en: "Crossing Seoul" },
+  swipeHint: { ko: "옆으로 밀면 다른 멘토의 칸이 보입니다.", en: "Swipe sideways for the other mentors' slots." },
   timetableHeading: { ko: "멘토 시간표", en: "Mentor timetable" },
   teamLabel: { ko: "우리 팀", en: "Your team" },
   teamPick: { ko: "팀을 고르세요", en: "Pick your team" },
   pickFirst: { ko: "팀을 고르면 인증 올리기와 시간표 칸 넣기가 열립니다.", en: "Pick your team to unlock uploads and timetable slots." },
+  // 2026-10-26: Day 1 탭에는 시간표가 없어(TeamTool) 안내에서 시간표를 뺍니다.
+  pickFirstDay1: { ko: "팀을 고르면 인증 올리기가 열립니다.", en: "Pick your team to unlock uploads." },
   dayTab: { ko: "Day", en: "Day" },
   lead: {
     ko: "빈 칸을 두 번 누르면 우리 팀 이름이 들어가고, 멘토와 모든 팀이 같은 시간표를 봅니다. 한 칸은 40분이고 앞뒤 10분은 비워 두며, 한 번 넣은 칸은 바꿀 수 없습니다. 하루 두 칸까지 넣을 수 있고, 두 칸은 2시간 이상 떨어져야 합니다.",
@@ -31,9 +36,9 @@ export const teamCopy = {
 
   proofHeading: { ko: "미션 인증", en: "Mission check-in" },
   proofLead: {
-    // 2026-10-17 (사용자: 미션 완화): 멘토 사진은 찾아간 날에만. Day 2, 3 중 하루 이상이면 됩니다.
-    ko: "그날 만든 진척 PDF를 올립니다. 멘토를 찾아간 날에는 함께 찍은 사진도 올립니다(Day 2, 3 중 하루 이상). 현장 출석은 운영진이 체크합니다.",
-    en: "Upload that day's progress as a PDF. On the day you visit a mentor, upload a photo with them too (on at least one of Day 2 and 3). The organisers check who is on site.",
+    // DECIDED 2026-10-26 (사용자): 멘토 찾아가기는 Day 2, 3 날마다 팀이 함께. 10/17의 "하루 이상" 완화를 되돌립니다.
+    ko: "그날 만든 진척 PDF와 팀이 함께 멘토와 찍은 사진을 올립니다. 현장 출석은 운영진이 체크합니다.",
+    en: "Upload that day's progress as a PDF and a photo of the team with the mentor. The organisers check who is on site.",
   },
   proofPhoto: { ko: "멘토와 함께 찍은 인증 사진", en: "Photo with the mentor" },
   proofPdf: { ko: "그날의 진척 PDF", en: "That day's progress PDF" },
@@ -41,7 +46,6 @@ export const teamCopy = {
   proofPdfDay1: { ko: "이슈에 대한 팀의 생각 1장 (PDF)", en: "One page of the team's take on the issue (PDF)" },
   // 2026-10-19 (사용자: Day 1 미션 뺌): Day 1 올리기는 선택입니다.
   proofLeadDay1: { ko: "Day 1은 미션이 없습니다. 이슈에 대한 팀의 생각 1장을 PDF로 올려 둘 수 있습니다.", en: "There is no mission on Day 1. You can upload one page of your team's take on the issue as a PDF." },
-  day1Timetable: { ko: "Day 1에는 멘토 시간표에 칸을 넣지 않습니다. 시간표는 Day 2, 3에 씁니다.", en: "There are no mentor slots on Day 1. The timetable is for Day 2 and 3." },
   proofPick: { ko: "파일 올리기", en: "Upload a file" },
   proofReplace: { ko: "다시 올리기", en: "Upload again" },
   proofUploading: { ko: "올리는 중", en: "Uploading" },

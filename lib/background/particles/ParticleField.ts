@@ -265,6 +265,9 @@ export class ParticleField {
         uInnerBright: { value: SHAPES.innerBright },
         uWave: { value: new THREE.Vector2(SHAPES.wavePeriod, SHAPES.waveAmp) },
         uBreath: { value: SHAPES.breath },
+        uGlowAt: { value: new THREE.Vector3(0, 0, 1) },
+        uGlow: { value: 0 },
+        uGlowGain: { value: 0 },
         // 깊이 층과 국면(2026-09-17 수정 브리프)
         uFar: { value: new THREE.Vector3(CROSSING.far.x, CROSSING.far.y, CROSSING.far.z) },
         uShift: { value: 0 },          // 형상을 히어로와 같이 스크롤시키는 월드 y 오프셋
@@ -289,6 +292,16 @@ export class ParticleField {
 
     this.points = new THREE.Points(this.geometry, this.material);
     this.points.frustumCulled = true;
+  }
+
+  /** field 변형(8월)의 입자 색(2026-10-23). 위쪽 몸통, 위쪽 밝은 점, 아래쪽 몸통, 아래쪽 밝은 점, 안개. */
+  setFieldPalette(accent: string, highlight: string, accent2: string, highlight2: string, fog: string) {
+    const u = this.material.uniforms;
+    u.uAccent.value.set(accent);
+    u.uHighlight.value.set(highlight);
+    u.uAccent2.value.set(accent2);
+    u.uHighlight2.value.set(highlight2);
+    u.uFog.value.set(fog);
   }
 
   setPixelRatio(pr: number) {
@@ -354,6 +367,14 @@ export class ParticleField {
    */
   setMorph(v: number) {
     this.material.uniforms.uMorph.value = v;
+  }
+
+  /** water 변형: 함께하는 곳의 커서 빛(2026-10-22). x, y, r은 점 평면의 좌표. strength 0이면 꺼집니다. */
+  setGlow(x: number, y: number, r: number, strength: number, gain: number) {
+    const u = this.material.uniforms;
+    u.uGlowAt.value.set(x, y, r);
+    u.uGlow.value = strength;
+    u.uGlowGain.value = gain;
   }
 
   /** crossing: 등불의 월드 좌표. 세로 화면에서는 왼쪽으로 물러납니다(BackgroundScene). */

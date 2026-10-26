@@ -166,7 +166,8 @@ export const eyebrowTrack = (_locale: "ko" | "en") => "";
 // 전과 같습니다. 모양(투명도, 흐림, 가장자리)은 그대로입니다.
 // 2026-09-26 (판 덮개 브리프 2.1): data-plate는 배경(BackgroundScene.readAnchors)이 판을 찾는 손잡이입니다.
 // 형상이 바뀌는 구간을 이 판들 뒤에 둡니다. 값은 챕터 id.
-export type PlateId = "december" | "gains" | "naru" | "naru-2" | "join";
+// DECIDED 2026-10-21 (사용자: "나루 탭에 형상이 3번만 보이게"): /naru의 셋째 조각 naru-3("어떻게 일하는가").
+export type PlateId = "december" | "gains" | "naru" | "naru-2" | "naru-3" | "join";
 export function ReadingPlate({ id, read = false }: { id: PlateId; read?: boolean }) {
   return <div aria-hidden data-plate={id} className={read ? "reading-plate reading-plate--read" : "reading-plate"} />;
 }

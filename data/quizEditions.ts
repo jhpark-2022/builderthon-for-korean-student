@@ -63,7 +63,7 @@ const UI_2026_12: typeof quizUI = {
   roleLabel: { ko: "추천 역할", en: "Your role" },
   matchSub: { ko: "이 유형 보이면 일단 잡으세요. 이유는 Day 4에 알게 돼요 ✦", en: "See one of these? Grab them. You'll find out why on Day 4 ✦" },
   matchRoleLabel: { ko: "이 친구 추천 역할", en: "Their role" },
-  ctaLead: { ko: "이 성격이면 크로싱 서울에서 {role} 포지션으로 빛나요 ✦", en: "With this type, you'll shine in the {role} role at CROSSING SEOUL ✦" },
+  ctaLead: { ko: "이 성격이면 크로싱 서울에서 {role} 포지션이 잘 맞아요 ✦", en: "With this type, the {role} role suits you at CROSSING SEOUL ✦" },
   ctaApply: { ko: "프로그램 보기", en: "See the programme" },
   storyTicket: { ko: "CROSSING SEOUL 팀 매칭 티켓  DAY 1  12.18", en: "CROSSING SEOUL TEAM-MATCHING TICKET  DAY 1  12.18" },
   // DECIDED 2026-10-08 (사용자: "팀 - 전원 현장 편성"): 8월 문장의 "솔로 참가자는"을 뺍니다. 12월은 모두가 Day 1 현장에서 팀을 맺습니다.

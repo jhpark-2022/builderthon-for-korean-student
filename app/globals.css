@@ -552,7 +552,8 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
 }
 
 /* DECIDED 2026-10-21: 콘텐츠 간격과 배경 형상을 보여 주는 틈은 별도입니다. */
-.naru-shape-gap { margin-top: 200px; }
+/* DECIDED 2026-10-23 (모바일 점검, 사용자 "모든 제안 반영"): 폰에서는 형상이 작고 흐려 틈이 빈 공간으로 읽혀 200px → 96px. sm부터는 그대로. */
+.naru-shape-gap { margin-top: 96px; }
 .naru-content-chapter + .naru-content-chapter { margin-top: 120px; }
 @media (min-width: 640px) {
   .naru-shape-gap { margin-top: 216px; }
@@ -560,4 +561,35 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
 
 /* DECIDED 2026-10-21 (2차): 홈의 정보 구간만 대비를 고정하고 장식 발광을 낮춥니다. */
 .naru-home-v2 #december { --home-reading-ground: rgba(7, 11, 31, 0.68); }
-.naru-home-v2 :is(#top, #register) .bg-gradient-to-r { box-shadow: none; }
+/* 2026-10-22: 히어로(#top)는 kwan 전으로 되돌려 발광을 남깁니다. */
+.naru-home-v2 #register .bg-gradient-to-r { box-shadow: none; }
+
+/* DECIDED 2026-10-22 (사용자): 폰 일정 카드를 넘길 때 미끄러짐(NaruHome), 노선도 원이 닿을 때 퍼지는 고리(RouteMap). */
+@keyframes routeSlideFromRight { from { opacity: 0; transform: translateX(48px); } to { opacity: 1; transform: none; } }
+@keyframes routeSlideFromLeft { from { opacity: 0; transform: translateX(-48px); } to { opacity: 1; transform: none; } }
+@keyframes routeArrive {
+  0% { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(3.2); }
+}
+
+/* DECIDED 2026-10-22 (모바일 점검: 누르기 작은 링크): 보이는 크기와 자리는 그대로, 누르는 영역만 가운데 기준 최소 44x44px(WCAG 2.5.8 넘어 2.5.5 수준). */
+.tap-44 { position: relative; }
+.tap-44::after { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
+
+/* 2026-10-22 (모바일 점검: /naru 목차 탭을 누르면 매니페스토 칸 전체에 보라 사각 테두리): 앵커 이동으로 포커스를 받는 tabindex="-1" 자리는
+   테두리를 그리지 않습니다(#main과 같음). 이 자리는 읽기 시작점이지 누르는 것이 아니고, 브라우저에 따라 스크립트가 옮긴 포커스도 :focus-visible로 칩니다. */
+[tabindex="-1"]:focus, [tabindex="-1"]:focus-visible { outline: none; }
+
+/* DECIDED 2026-10-22 (사용자: 원페이저를 넘길 때 애니메이션): 본문(#main)이 손가락을 따라 밀리는 동안 그 안의 고정 요소(오픈채팅 바)는
+   transform 아래에서 자리를 잃습니다. 움직이는 동안만 숨깁니다(components/shared/PageSwipe.tsx가 html에 data-page-swiping을 답니다). */
+html[data-page-swiping] #main .fixed { visibility: hidden; }
+/* 2026-10-23 (스와이프 랙): 움직이는 동안만 본문과 푸터를 합성 레이어로 올려 둡니다. 끝나면 속성이 빠지며 같이 내려옵니다. */
+html[data-page-swiping] #main, html[data-page-swiping] #site-footer { will-change: transform; }
+
+/* DECIDED 2026-10-23 (사용자, 미리보기 2안): /naru 히어로 판은 흐림과 바탕을 걷어 뒤의 싱가포르와 학교 휘장이 보이게 합니다.
+   배경(BackgroundScene, 정지 장면)이 html에 data-naru-hero-open을 답니다. */
+html[data-naru-hero-open] .reading-plate[data-plate="naru"] {
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}

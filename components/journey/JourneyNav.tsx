@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { trackOpenChat } from "@/lib/openChatCount";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 // AnimatePresence와 motion은 등록 필이 있던 동안만 쓰였습니다 (2026-08-22 청산).
@@ -13,10 +14,10 @@ import { useRegisterOptional } from "@/lib/RegisterContext";
 import { useScrollDirection } from "@/lib/useScrollDirection";
 import { isScrollLocked } from "@/lib/useBodyScrollLock";
 import LocaleToggle from "@/components/LocaleToggle";
-import MotionToggle from "@/components/ui/MotionToggle";
 import ChatGlyph from "@/components/ChatGlyph";
 import type { SitePage } from "@/components/shared/PageChips";
 import { SiteMenuBar, SiteMenuButton, SiteMenuSheet, useSiteMenu } from "@/components/shared/SiteChrome";
+import PageSwipe from "@/components/shared/PageSwipe";
 import { decemberEventLabel } from "@/lib/naruDates";
 import dynamic from "next/dynamic";
 // DECIDED 2026-10-08 (성능 리뷰 4): 인사 칩은 퀴즈 결과 표(data/quiz의 RESULTS, gzip 약 22KB)를 끌고 옵니다.
@@ -103,7 +104,7 @@ export type NavAnchor = {
 // 영영 켜지지 않습니다. 라벨 키는 dict.wrap.navLabel에 그대로 있습니다.
 const DEFAULT_ANCHORS: NavAnchor[] = [
   // 2026-10-13: 앞의 네 챕터(결과, 취지, 참가, 혜택). id는 Journey.tsx의 섹션 id와 같습니다.
-  { id: "results",   label: dict.nav.results },
+  // 2026-10-25: #results 판을 내려 "결과" 탭도 뺐습니다.
   { id: "about",     label: dict.nav.about },
   { id: "join",      label: dict.nav.join },
   { id: "benefits",  label: dict.nav.benefits },
@@ -113,7 +114,7 @@ const DEFAULT_ANCHORS: NavAnchor[] = [
   // The "For partners" pitch chapter (#why-partner) was removed, so this now
   // lands directly on the partner/logo wall.
   { id: "builders",  label: dict.nav.builders },
-  { id: "faq",       label: dict.nav.faq },
+  // 2026-10-25: FAQ 챕터를 내려 탭도 뺐습니다.
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -247,7 +248,9 @@ export default function JourneyNav({
   // 스크롤해야 돌아오고, 멈춰 있다고 돌아오지 않습니다(idleReveal false). 8월 페이지는 그 전
   // 그대로(헤더 전체 숨김 + 정지 시 복귀).
   const naru = brand === "naru";
-  const directionHidden = useScrollDirection({ idleReveal: naru ? false : 450 });
+  // DECIDED 2026-10-23 (모바일 점검): 8월 페이지도 멈춰 있다고 로고 줄이 돌아오지 않습니다(idleReveal false). 읽으려고 멈출 때마다
+  // 두 줄(약 190px, 화면의 22%)이 다시 섰고, 홈과 /naru는 한 줄만 남았습니다. 세 페이지가 같은 규칙입니다. 2026-08-17의 "정지 시 복귀"는 이 결정이 대신합니다.
+  const directionHidden = useScrollDirection({ idleReveal: false });
   const [anchorPinned, setAnchorPinned] = useState(false);
   const chromeHidden = directionHidden && !anchorPinned;
   // DECIDED 2026-10-21: 앵커 이동 중에는 헤더를 펼쳐 착지 여백이 바뀌지 않게 합니다. 직접 스크롤하면 다시 접힙니다.
@@ -389,7 +392,8 @@ export default function JourneyNav({
       // px-6 / sm:px-10을 변수로 옮겼습니다. 여기서 인라인 style을 쓰면 sm 분기가
       // 죽으므로(인라인이 클래스를 이깁니다) 클래스로만 정의합니다.
       className={`fixed inset-x-0 top-0 z-50 [--nav-gutter:1rem] min-[360px]:[--nav-gutter:1.5rem] ${naru ? "[&:has(:focus-visible)]:translate-y-0" : "focus-within:translate-y-0"} sm:[--nav-gutter:2.5rem] lg:!translate-y-0 ${
-        reduce ? "" : naru ? "transition-[transform,background-color] duration-200" : "transition-all duration-300 lg:duration-500"
+        // 2026-10-22: reduce(useReducedMotion)로 갈랐더니 서버와 첫 렌더가 달라 하이드레이션 경고가 났습니다. CSS의 motion-reduce로 같은 일을 합니다.
+        naru ? "transition-[transform,background-color] duration-200 motion-reduce:transition-none" : "transition-all duration-300 lg:duration-500 motion-reduce:transition-none"
       // DECIDED 2026-08-23 (박주형): /85 → /95. 스크롤하면 헤더 뒤로 본문이 -
       // 특히 파트너 로고 월이 - 비쳐 보였습니다. 15%가 통과하고 있었어요.
       //
@@ -399,7 +403,8 @@ export default function JourneyNav({
       //
       // 두 줄(로고 줄 + 섹션 레일)은 이미 이 배경 하나를 함께 씁니다 - 실측 105px =
       // nav 52 + 레일 53이라 줄 사이에 빈 틈이 없습니다. 여기서 갈라 두지 마세요.
-      } ${scrolled ? "bg-[#070B1F]/95 backdrop-blur-md" : "bg-transparent"} ${
+      // DECIDED 2026-10-22 (모바일 점검: 스크롤하면 탭 줄 뒤로 큰 제목이 비쳐 겹쳐 보임): /95 → 불투명. 5%로도 큰 글자는 읽혔습니다.
+      } ${scrolled ? "bg-[#070B1F]" : "bg-transparent"} ${
         // 로고 줄(52px)만 접고 목차 줄은 남깁니다(감사 반영 브리프 2.1). 레일이 없는 첫 화면
         // 근처(scrolled false)에서는 topZone이 먼저 막아 hidden이 되지 않습니다.
         //
@@ -690,7 +695,7 @@ export default function JourneyNav({
               aria-label={naru ? t({ ko: "오픈채팅, 카카오톡 새 창", en: "Open chat, KakaoTalk, new window" }) : t(dict.nav.openChatAria)}
               // 2026-10-12 (등록 브리프 1.3, 리뷰 S7): 폰에서는 아이콘만 보이는 자리라, 올려 두면 어디로 가는지 보이게 합니다.
               title={t(dict.nav.openChatTitle)}
-              onClick={() => track("openchat_click", { src: "nav" })}
+              onClick={() => trackOpenChat("nav")}
               className={
                 registered
                   // 2026-10-13 (등록 브리프 2.3, 리뷰 N7): 8월의 보라와 인디고 대신 본 사이트의 나루 그라데이션입니다.
@@ -699,7 +704,12 @@ export default function JourneyNav({
                   // 자리가 비면 폰에서 헤더에 액션이 하나도 없게 되는데, 이
                   // 페이지에서 지금 할 수 있는 일이 이것 하나입니다. 좁은 폭에서는
                   // 패딩과 글자를 줄이고 min-h로 터치 타깃 44px을 지킵니다.
-                  : `shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/[0.06] font-semibold text-white/85 transition active:translate-y-0 active:scale-[0.98] active:duration-75 hover:border-white/30 hover:bg-white/10 hover:text-white ${
+                  // DECIDED 2026-10-23 (사용자: "모바일에서 오픈 채팅 버튼 at the top 더 visually 강조"): 나루 계열 헤더에서는 테두리 알약 대신
+                  // 히어로의 "카카오톡으로 소식 받기"와 같은 나루 그라데이션으로 채웁니다. 옆의 EN/KR 테두리와 무게가 같아 묻혔습니다.
+                  : `shrink-0 items-center gap-1.5 rounded-full transition active:translate-y-0 active:scale-[0.98] active:duration-75 ${
+                      // 같은 날 이어서: 8월 탭도 색을 나루에 맞추면서 세 탭 모두 같은 버튼입니다.
+                      "bg-gradient-to-r from-naru-purple to-naru-plum font-bold text-white shadow-[0_0_18px_rgba(75,58,140,0.55)] hover:shadow-[0_0_26px_rgba(75,58,140,0.75)]"
+                    } ${
                       showQuiz
                         ? "hidden px-4 py-2 text-sm lg:inline-flex"
                         : "inline-flex min-h-[44px] min-w-[44px] justify-center px-2.5 text-xs min-[360px]:px-3.5 sm:px-4 sm:text-sm"
@@ -729,11 +739,8 @@ export default function JourneyNav({
               버튼이 화면 밖으로 나갔습니다(실측: 스크롤 뒤 top −51px). 폰·태블릿용은 헤더
               **바깥**의 고정 자리에 있었습니다. 2026-10-11 (리뷰 A4): 그 고정 버튼은 뺐고, xl 아래에서는
               푸터의 버튼 하나입니다. */}
-          {naru && (
-            <div className="hidden xl:flex">
-              <MotionToggle compact />
-            </div>
-          )}
+          {/* DECIDED 2026-10-22 (UX 점검, 사용자: "모든 것을 반영"): 헤더의 아이콘만 있는 배경 토글(▶)을 뺐습니다. 라벨이 없어 무엇인지 읽히지
+              않았고, 푸터에 글자 버튼이 있습니다. 2026-09-18(감사 반영 브리프 2.4)의 "헤더에도"는 이 결정이 대신합니다. */}
           {/* 2026-10-13 (등록 브리프 2.1): 여기 있던 8월 페이지의 "12월 이벤트 →" 알약은 페이지 칩 셋이 대신합니다.
               "항상 보였으면"(2026-09-20)은 그대로 지켜집니다. 칩 셋이 xl부터는 로고 옆에, 그 아래에서는 레일 맨 앞에 늘 있습니다. */}
           {/* Language last - it's a setting, not an action, so it sits after
@@ -781,7 +788,7 @@ export default function JourneyNav({
           nav 랜드마크입니다(2026-09-19, 접근성 감사 4). 로고 줄이 접히면 위에도 여백을 둡니다(2026-10-10). */}
       {/* DECIDED 2026-10-20 (hwang 브리프 4.1): 레일에서 페이지 칩을 뺐습니다. 레일은 챕터 목차만, 사이트 메뉴는 레일 왼쪽의 단추가 엽니다
           (레일 밖, 가로로 굴러가지 않습니다). 메뉴는 레일 아래 한 줄입니다. */}
-      <div className={`${anchorRowAt.rail} ${!naru && chromeHidden ? "pt-2 lg:pt-0" : ""} ${reduce || naru ? "" : "transition-[padding] duration-300"}`}>
+      <div className={`${anchorRowAt.rail} ${!naru && chromeHidden ? "pt-2 lg:pt-0" : ""} ${naru ? "" : "transition-[padding] duration-300 motion-reduce:transition-none"}`}>
       <div className="flex items-center pl-1 sm:pl-6 xl:pl-0">
       <SiteMenuButton open={menu.open} onToggle={menu.toggle} controls={menu.id} />
       <span aria-hidden className="h-6 w-px shrink-0 bg-white/20 xl:hidden" />
@@ -790,7 +797,9 @@ export default function JourneyNav({
           ref={railRef}
           // calc 안의 밑줄 두 개(100%_-_16px)가 필요합니다. Tailwind는 임의값의 밑줄을 공백으로 바꾸는데,
           // CSS의 calc는 빼기 부호 양옆에 공백이 없으면 무효입니다(실측 2026-09-20).
-          className="flex items-center gap-2 overflow-x-auto pb-1 pl-3 pr-5 [mask-image:linear-gradient(to_right,transparent,#000_12px,#000_calc(100%_-_16px),transparent)] [scrollbar-width:none] sm:pr-10 xl:pl-5 [&::-webkit-scrollbar]:hidden"
+          // 2026-10-22 (UX 점검): 오른쪽 페이드를 16px에서 40px으로. 390px 영문에서 "Register"가 잘린 채 끝나 더 있다는 것이 보이지 않았습니다.
+          // 2026-10-23 (모바일 점검): 왼쪽 페이드도 12px에서 36px으로. 레일이 굴러간 뒤 왼쪽 칩이 "지", "택"처럼 글자 하나만 잘려 구분선 옆에 남았습니다.
+          className="flex items-center gap-2 overflow-x-auto pb-1 pl-3 pr-5 [mask-image:linear-gradient(to_right,transparent,#000_36px,#000_calc(100%_-_40px),transparent)] [scrollbar-width:none] sm:pr-10 xl:pl-5 [&::-webkit-scrollbar]:hidden"
         >
           {anchors.map((a) => {
             const here = a.id === activeSection;
@@ -820,6 +829,8 @@ export default function JourneyNav({
       <SiteMenuSheet page={page} open={menu.open} id={menu.id} onClose={menu.close} />
       </div>
       </header>
+      {/* DECIDED 2026-10-22 (사용자): 폰에서 옆으로 밀면 원페이저 사이를 옮깁니다. 세 페이지가 이 헤더를 같이 쓰므로 여기서 한 번 답니다. */}
+      <PageSwipe page={page} />
 
       {/* DECIDED 2026-10-11 (리뷰 A4, 결정 D-d): 여기 있던 폰과 태블릿(xl 미만)의 고정 배경 정지 버튼을 뺐습니다.
           오른쪽 아래 63px 원반이 본문 열의 오른쪽 36px을 스크롤 내내 덮었고, DAY 4 버튼의 아래 절반과 360px 화면의

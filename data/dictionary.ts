@@ -343,6 +343,8 @@ export const dict = {
   // 사전 전체를 번들에 끌어오지 않도록 참조 대신 옮겨 적었습니다. 한쪽을 고치면 다른
   // 쪽도 고치세요. 여기에 없는 숫자, 수상팀 이름, 인용은 지어내지 않습니다.
   record: {
+    // DECIDED 2026-10-24: 결과 판 안에서 "남기지 못한 것" 줄 앞의 라벨. 12월 줄의 naru.december.decemberLabel과 짝.
+    augustLabel: { ko: "8월", en: "August" },
     tag: { ko: "8일의 결과", en: "What happened" },
     heading: {
       ko: "74명이 신청했고, 21팀이 마지막 날 발표했습니다",
@@ -354,7 +356,7 @@ export const dict = {
     },
     stats: [
       { value: { ko: "74명", en: "74" }, label: { ko: "신청", en: "applied" } },
-      { value: { ko: "59명", en: "59" }, label: { ko: "Day\u00a01 참석", en: "showed up on Day\u00a01" } },
+      // DECIDED 2026-10-23 (brand 8장): Day 1 참석(58/59)은 자료마다 달라 확인 전에는 쓰지 않습니다. 공유 카드에서는 이미 뺐습니다.
       { value: { ko: "25팀", en: "25" }, label: { ko: "시작", en: "teams started" } },
       { value: { ko: "21팀", en: "21" }, label: { ko: "발표", en: "teams presented" } },
     ],
@@ -375,8 +377,10 @@ export const dict = {
   about: {
     tag: { ko: "취지", en: "Why this exists" },
     heading: {
-      ko: "우리가 있었으면 했던 다리를 직접 만듭니다.",
-      en: "Building the bridge we wished existed.",
+      // DECIDED 2026-10-22 (UX 점검, brand 6장 은유 규칙, 9장 "전부"): 사이트에서 다리 은유는 쓰지 않습니다. 매니페스토 III장에만.
+      // 그 전: "우리가 있었으면 했던 다리를 직접 만듭니다." / "Building the bridge we wished existed."
+      ko: "우리가 있었으면 했던 자리를 직접 만듭니다.",
+      en: "Building the place we wished existed.",
     },
     intro: {
       ko: "싱가포르의 한인 학생은 1,000명을 넘어섰지만, 학교를 가로질러 이들을 잇는 학생 단체는 사실상 없었습니다. 누군가 조금 더 일찍 열어줬으면 했던 그 문을, 이 빌더톤으로 직접 만들었습니다.",
@@ -544,30 +548,10 @@ export const dict = {
       // 헤지 셋까지 같이 돌아옵니다.
       // 옛 2번 카드의 정기 빌더 세션 상세(기업 문제 해부 · 소수정예 코어)가 여기로
       // 흡수됐습니다. 별도 칸으로 되살리지 마세요 - 이 칸이 하는 말과 같습니다.
+      // DECIDED 2026-10-23 (사용자, 글 리뷰): "2026 가을 빌더 커리큘럼 준비 중" 칸을 뺐습니다. 가을이 왔는데 열린 것이 없어,
+      // 이 배열의 규칙("값이 아직 없으면 칸을 빼는 편이 낫다")과 brand 5장(약속하지 않는다)을 따릅니다. 옛 칸은 git 이력에.
       {
         num: "2",
-        when: { ko: "2026 가을", en: "Autumn 2026" },
-        title: { ko: "빌더 커리큘럼", en: "Builder curriculum" },
-        // DECIDED 2026-08-21 (운영진 브리핑): 이 칸이 인큐베이션에서 빌더
-        // 커리큘럼으로 바뀌었습니다. 앱을 만드는 일 자체는 쉬워졌고, 빌더톤과
-        // 12월 사이를 메우는 것은 만든 것을 서비스로 띄우고 운영하는 역량입니다.
-        //
-        // ⚠️ 대상 구분을 흐리지 마세요. 커리큘럼은 참가자 전원, 12월 무대 우선
-        // 초청은 수상팀입니다. 커리큘럼을 수상팀 전용으로 좁히거나 우선 초청을
-        // 전원으로 넓히는 편집을 하지 마세요 - 둘은 다른 것에 대한 답이고, 하나로
-        // 합치면 어워드가 무엇을 위한 것인지와 커리큘럼이 누구 것인지가 함께
-        // 무너집니다. 수상팀 몫은 dict.program.awards.next가 말합니다.
-        //
-        // 세부 운영(커리큘럼 주차, 협력사, 담당자)은 확정돼도 비공개입니다.
-        // 협력 논의 중인 회사 이름을 이 칸에 올리지 마세요.
-        // "준비 중" 헤지를 빼지 마세요 - 아직 열린 커리큘럼이 아닙니다.
-        body: {
-          ko: "앱을 만드는 일은 쉬워졌습니다. 만든 것을 서비스로 띄우고 운영하는 솔루션 아키텍트 역량을 기르는 커리큘럼을 준비 중입니다.",
-          en: "Building an app got easy. We're preparing a curriculum for the harder part: putting your build live and keeping it running.",
-        },
-      },
-      {
-        num: "3",
         when: { ko: "2026.12 서울", en: "Dec 2026 Seoul" },
         title: { ko: "크로싱 서울", en: "CROSSING SEOUL" },
         body: {
@@ -576,7 +560,7 @@ export const dict = {
         },
       },
       {
-        num: "4",
+        num: "3",
         when: { ko: "그다음", en: "After that" },
         title: { ko: "다음 크로싱", en: "The next crossing" },
         body: {
@@ -667,6 +651,16 @@ export const dict = {
       },
     ] as PressItem[],
     pressCta: { ko: "원문 보기", en: "Read the article" },
+    // DECIDED 2026-10-24 (사용자, docs/pages-review-2026-10-24.md N2): data/naru.ts에만 있고 어디에도 보이지 않던
+    // CNA, The Straits Times 링크를 기사 줄 아래 한 줄로 둡니다. 두 글은 코드프레소의 보도자료(CNA "media release",
+    // ST "paid press releases")라 기사 줄과 섞지 않고, "보도"라는 말과 영문 제목("Top Universities")은 쓰지 않습니다.
+    pressRelease: {
+      lead: { ko: "2026.09.15 코드프레소의 보도자료가 실린 곳:", en: "15 Sep 2026, Codepresso's press release ran in:" },
+      links: [
+        { outlet: { ko: "CNA", en: "CNA" }, url: "https://www.channelnewsasia.com/media-release/codepresso-successfully-concludes-zero100-ai-builderthon-in-singapore-forging-strategic-ties-top-universities-6385241" },
+        { outlet: { ko: "The Straits Times", en: "The Straits Times" }, url: "https://www.straitstimes.com/paid-press-releases/codepresso-successfully-concludes-zero100-ai-builderthon-in-singapore-forging-strategic-ties-with-top-universities-20260915" },
+      ],
+    },
   },
 
   whoWhat: {
@@ -1888,7 +1882,8 @@ export const dict = {
       // 프로그램의 결론이라, 참여 여정 전체가 "좋은 경험을 하고 끝난다"로 닫혔습니다.
       // 네트워크와 경험이 사라진 것은 아닙니다 - 바로 아래 flowNote가 그것들을
       // 전원에게 돌아가는 몫으로 계속 말합니다.
-      { ko: "어워드와 다음 무대", en: "Awards and the next stage" },
+      // DECIDED 2026-10-24 (사용자: 다음 이야기는 #gaps 한 곳에서만): "어워드와 다음 무대"에서 "다음 무대"를 뺐습니다.
+      { ko: "어워드", en: "Awards" },
     ],
     // DECIDED 2026-08-05 (파트너 피드백): 경쟁형 데모데이 → 결과 공유회. 이 줄은
     // "시상은 상위 팀"으로 끝나면서 앞의 세 스텝을 예선처럼 읽히게 만들었습니다.
@@ -1901,9 +1896,10 @@ export const dict = {
     // 전원에게 돌아가는 몫은 그대로 앞 절에 두되, 문장이 거기서 끝나지 않고 수상팀에게
     // 이어지는 것까지 갑니다. "순위가 아니라"는 뺐습니다 - 순위형은 이미 없고,
     // 그 사실은 어워드 박스의 sub가 한 번 말합니다.
+    // DECIDED 2026-10-24 (사용자: 감사와 다음 이야기는 한곳에서만): 뒤 문장("다음 자리는 12월의 크로싱 서울로")을 뺐습니다. 12월은 #gaps에서만.
     flowNote: {
-      ko: "네트워크와 경험은 참가자 전원에게 돌아가고, 어워드는 각 팀의 강점을 봅니다. 다음 자리는 12월의 크로싱 서울로 이어집니다.",
-      en: "Network and experience go to everyone, and the awards look at each team's strengths. The next step is CROSSING SEOUL in December.",
+      ko: "네트워크와 경험은 참가자 전원에게 돌아가고, 어워드는 각 팀의 강점을 봅니다.",
+      en: "Network and experience go to everyone, and the awards look at each team's strengths.",
     },
   },
 
@@ -2214,11 +2210,11 @@ export const dict = {
         // Popup Studio are there officially), so a blanket label there would be
         // false - if that ever needs stating, it has to be per person.
         personalNote: {
-          title: { ko: "개인적으로 도움을 주시는 분들", en: "Helping in a personal capacity" },
+          // DECIDED 2026-10-24 (사용자: 감사는 한곳에서만): 감사는 마지막 화면 "고맙습니다"가 합니다. 여기는 사실만.
+          title: { ko: "개인 자격으로 참여한 멘토", en: "Mentors in a personal capacity" },
           body: {
-            // EDIT 2026-08-09: AI-티 감량(부정 대구·강조어·공식 어미) - 뜻은 불변
-            ko: "아래 멘토분들은 소속 회사와 별개로, 개인 자격으로 시간을 내어 함께해 주십니다.",
-            en: "The mentors below join in a personal capacity, separately from the companies they work at.",
+            ko: "아래 멘토는 소속 회사와 별개로 개인 자격으로 참여했습니다.",
+            en: "The mentors below took part in a personal capacity, separately from the companies they work at.",
           },
         },
         // The dashed "드롭인 멘토링 · 멘토 명단 공개 예정" card that used to close this
@@ -3404,8 +3400,14 @@ export const dict = {
         en: "These eight days ran on other people's time",
       },
       body: {
-        ko: "제로백(Zero100) 커뮤니티의 일부인 AXMOS 소속 회사들이 주최했고, 그중 코드프레소가 실제 기업 문제를 냈습니다. SMU, NUS, NTU 한인 학생회가 주관했고, 싱가포르 한인회가 1:1 멘토링을 위해 한인회관을 내어주었습니다. 멘토로 오신 분들은 대부분 소속 회사와 별개로 개인 자격으로 저녁 시간을 냈습니다. 무대에 선 연사와 전문가, 후원사, 그리고 8일을 건너 마지막 날 앞에 선 21팀까지, 이 페이지에 이름이 적힌 모든 분 덕분입니다.",
+        ko: "제로백(Zero100) 커뮤니티의 일부인 AXMOS 소속 회사들이 주최했고, 그중 코드프레소가 실제 기업 문제를 냈습니다. SMU, NUS, NTU 한인 학생회가 주관했고, 싱가포르 한인회가 1:1 멘토링을 위해 한인회관을 내어주었습니다. 멘토로 오신 분들은 대부분 소속 회사와 별개로 개인 자격으로 저녁 시간을 냈습니다. 무대에 선 연사와 전문가, 후원사, 그리고 8일을 건너 마지막 날 무대에 선 21팀까지, 이 페이지에 이름이 적힌 모든 분 덕분입니다.",
         en: "The member companies of AXMOS, part of the Zero100 community, hosted it, and Codepresso, one of them, set the real company problem. The SMU, NUS and NTU Korean Student Associations ran it, and the Korean Association in Singapore opened its hall for the 1:1 mentoring. Most mentors came on their own evenings, separately from where they work. It happened thanks to everyone named on this page, from the speakers, experts and sponsors to the 21 teams that stood up on the final day.",
+      },
+      // DECIDED 2026-10-24 (사용자: essence만): 화면에 그리는 것은 이 한 줄. 위 body는 키만 남습니다.
+      short: {
+        // 2026-10-25 (사용자: 같은 숫자가 반복됨): 21은 제목이 말하므로 뺍니다.
+        ko: "주최와 주관, 후원, 멘토와 연사, 그리고 끝까지 해 본 팀들. 이 페이지에 이름이 적힌 모든 분 덕분입니다.",
+        en: "Hosts, organisers, sponsors, mentors and speakers, and the teams who saw it through. It happened thanks to everyone named on this page.",
       },
       // 마지막 줄이 요점입니다. 감사가 예의로 끝나면 각주가 되고, 결과를 말하면
       // 문장이 됩니다. 12월로 가는 버튼이 바로 아래에 있어(2026-10-02부터) 이 줄이 그 버튼의 근거가 됩니다.

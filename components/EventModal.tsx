@@ -192,7 +192,7 @@ export default function EventModal({
               {/* Category + day chips */}
               <div className="flex flex-wrap items-center gap-2 pr-12">
                 <span
-                  className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold"
                   style={{ backgroundColor: `${meta.dot}1f`, color: meta.dot }}
                 >
                   {isMain && (
@@ -203,15 +203,15 @@ export default function EventModal({
                   {t(meta.label)}
                 </span>
                 {dayMeta && (
-                  <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-white/70">
+                  <span className="text-xs font-semibold text-white/70">
                     {timeChip}
                   </span>
                 )}
                 <span
-                  className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold ${
+                  className={`inline-flex items-center gap-1 text-xs font-bold ${
                     !selfPaced && event.mode === "offline"
-                      ? "border border-amber-400/30 bg-amber-400/10 text-amber-200"
-                      : "border border-white/15 bg-white/5 text-white/65"
+                      ? "text-white/85"
+                      : " text-white/65"
                   }`}
                 >
                   {!selfPaced && event.mode === "offline" && <span aria-hidden>●</span>}
@@ -226,7 +226,7 @@ export default function EventModal({
                   )}
                 </span>
                 {event.confirmed && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-accent/10 px-2.5 py-1 text-xs font-bold text-accent ring-1 ring-accent/20">
+                  <span className="inline-flex items-center gap-1 text-xs font-bold text-accent ">
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden>
                       <path
                         d="M1.5 5.2 4 7.5 8.5 2.5"
@@ -264,7 +264,7 @@ export default function EventModal({
                   runs it" answers a question nobody nervous about coding asked. */}
               {event.speakerProfile && (
                 <div className="mt-7 rounded-2xl border border-accent/20 bg-accent/[0.05] p-6">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-white/70">
+                  <p className="text-xs font-semibold text-white/70">
                     {t(dict.modal.runBy)}
                   </p>
                   <div className="mt-3 flex items-start gap-4">
@@ -302,7 +302,7 @@ export default function EventModal({
 
               {event.org && (
                 <div className="mt-7 rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-white/70">
+                  <p className="text-xs font-semibold text-white/70">
                     {t(dict.modal.about)}
                   </p>
                   <div className="mt-3 flex flex-wrap items-center gap-3">
@@ -329,7 +329,7 @@ export default function EventModal({
                   checkpoints가 없는 카드는 이 블록 자체가 렌더되지 않습니다. */}
               {event.checkpoints && event.checkpoints.length > 0 && (
                 <div className="mt-7">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-white/70">
+                  <p className="text-xs font-semibold text-white/70">
                     {t(dict.modal.checkpoints)}
                   </p>
                   <ul className="mt-3 space-y-3">
@@ -353,7 +353,7 @@ export default function EventModal({
               {/* What's in it for you - concrete opportunities */}
               {event.opportunities && event.opportunities.length > 0 && (
                 <div className="mt-7">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-white/70">
+                  <p className="text-xs font-semibold text-white/70">
                     {t(dict.modal.opportunities)}
                   </p>
                   <ul className="mt-3 space-y-3">
@@ -376,7 +376,7 @@ export default function EventModal({
               {/* Detail rows */}
               <dl className="mt-8 grid grid-cols-1 gap-x-8 gap-y-5 rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-sm sm:grid-cols-2">
                 <div className="flex flex-col gap-1">
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/70">
+                  <dt className="text-xs font-semibold text-white/70">
                     {t(dict.modal.category)}
                   </dt>
                   <dd className="font-semibold text-white">
@@ -384,13 +384,13 @@ export default function EventModal({
                   </dd>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/70">
+                  <dt className="text-xs font-semibold text-white/70">
                     {t(dict.modal.time)}
                   </dt>
                   <dd className="font-semibold text-white">{timeChip}</dd>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/70">
+                  <dt className="text-xs font-semibold text-white/70">
                     {t(dict.modal.speaker)}
                   </dt>
                   <dd className="font-semibold text-white">
@@ -403,7 +403,7 @@ export default function EventModal({
                     FORMAT and say plainly that there's no time and nothing to
                     join. Every other category keeps its real venue. */}
                 <div className="flex flex-col gap-1">
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-white/70">
+                  <dt className="text-xs font-semibold text-white/70">
                     {t(selfPaced ? dict.modal.mode : dict.modal.location)}
                   </dt>
                   {/* A venue with its own site becomes a link (Day 1's Foundry

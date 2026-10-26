@@ -35,3 +35,4 @@
 - em dash 문자를 쓰지 않습니다.
 - 한 화면(뷰포트 한 장) 안의 글자 크기는 셋 이하(`TITLE`/`BODY`/`META`). 새 크기를 만들지 않습니다. (DECIDED 2026-10-07)
 - `main` 푸시는 곧 프로덕션 배포입니다. 브리프의 검증을 마친 뒤에 푸시합니다.
+- Supabase에 새 표를 만드는 마이그레이션에는 `grant select, insert, update, delete on public.<표> to service_role;`을 같은 파일에 넣습니다. 2026-10-30부터 `public`의 새 표에는 Data API 권한이 자동으로 붙지 않아, 빠뜨리면 그 표를 쓰는 기능이 "permission denied"로 멈춥니다. `anon`, `authenticated`에는 주지 않습니다(브라우저는 서버를 거칩니다). 기존 표의 행, 칸 변경은 해당 없음. 표는 Table Editor가 아니라 마이그레이션 파일로만 만듭니다. (DECIDED 2026-10-23, 사용자)

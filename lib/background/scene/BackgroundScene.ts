@@ -1,5 +1,6 @@
 import * as THREE from "three";
-import { CROSSING, RING, SHAPES, FIELD, SEOUL_WATERMARK, PLATE_FEATHER, LIGHT_STATIONS, LIGHT_FOLLOW, pickQuality, type QualityTier } from "../config";
+import { CROSSING, RING, SHAPES, FIELD, SEOUL_WATERMARK, PLATE_FEATHER, LIGHT_STATIONS, LIGHT_FOLLOW, PARTNERS_LIGHT, PALETTE, WATER_BASE, FIELD_CALM, pickQuality, type QualityTier } from "../config";
+
 import { SEOUL_POINTS, SEOUL_STRIDE } from "../shapes/seoul";
 import { SINGAPORE_POINTS, SINGAPORE_STRIDE } from "../shapes/singapore";
 import { computeStageLayout, readStageRect, findStageElement, type StageLayout } from "../utils/shapeLayout";
@@ -14,6 +15,11 @@ import { PostFX } from "../renderer/PostFX";
 import { computePhases, computeCrossingPhases, crossingToPhases, type CrossingAnchors } from "../utils/phases";
 import { clamp } from "../utils/math";
 import { isScrollLocked } from "../../useBodyScrollLock";
+
+// 커서 빛 없이 늘 보이는 휘장의 밝기(0..1, DECIDED 2026-10-23). 제목과 겹치므로 빛 안에서보다 낮게 둡니다.
+// 폰(세로)은 섬이 작아 휘장이 글자와 더 바짝 겹쳐 더 낮춥니다(같은 날 모바일 점검).
+const HERO_CAMPUS_ON = 0.6;
+const HERO_CAMPUS_ON_PORTRAIT = 0.35;
 
 /**
  * Top-level controller. Owns the renderer, camera, layers, and the animation
@@ -155,6 +161,9 @@ export class BackgroundScene {
   constructor(canvas: HTMLCanvasElement, variant: BackgroundVariant = "field", opts: { still?: boolean } = {}) {
     this.variant = variant;
     this.still = !!opts.still;
+    // DECIDED 2026-10-23 (사용자: 미리보기 셋 중 2안, "여기에서는 빛 효과는 빼고, 배경 안 로고들은 보이게"): /naru 히어로 판의
+    // 흐림과 바탕을 걷습니다(globals.css의 html[data-naru-hero-open]). 히어로에서는 커서 빛이 없고 휘장이 늘 보입니다(아래 heroK).
+    if (this.still && typeof document !== "undefined") document.documentElement.dataset.naruHeroOpen = "";
     this.quality = pickQuality();
     this.renderer = new Renderer(canvas, this.quality);
     this.cam = new CameraController();
@@ -199,7 +208,20 @@ export class BackgroundScene {
       this.water = null;
       this.lantern = null;
       this.atmosphere = new Atmosphere();
-      this.particles = new ParticleField(this.quality, 1.0);
+      // DECIDED 2026-10-26: 8월 필드를 한 단 가라앉힙니다(config의 FIELD_CALM).
+      this.particles = new ParticleField(
+        {
+          ...this.quality,
+          particles: Math.round(this.quality.particles * FIELD_CALM.particles),
+          intensity: this.quality.intensity * FIELD_CALM.opacity,
+        },
+        1.0
+      );
+      // DECIDED 2026-10-23 (사용자: "8월의 background colour가 너무 전 2탭이랑 달라서 어색", 선택: 입자는 두고 색만 맞춤):
+      // 8월의 입자 조각(2026-09-15 결정)은 그대로 두고, 하늘은 홈과 /naru의 하늘(WATER_BASE)로, 입자는 인디고와 푸크시아(Tailwind)
+      // 대신 나루 팔레트(brand 10장 남색, 보라, 자주)로 바꿉니다. 주황(hi1)은 넣지 않습니다. 나루 점의 색이라서입니다.
+      this.atmosphere.setSky(WATER_BASE.skyTop, WATER_BASE.skyHorizon);
+      this.particles.setFieldPalette(PALETTE.accent1, PALETTE.hi0, PALETTE.accent0, PALETTE.accent2, PALETTE.base1);
       // NOTE: there is intentionally NO portal object in the scene. The phenomenon
       // is expressed only through particle convergence + screen-space lensing +
       // density-driven bloom - never a rendered disc/sphere with a visible edge.
@@ -217,11 +239,16 @@ export class BackgroundScene {
       this.quality.bloom,
       variant === "crossing" ? CROSSING.bloomThreshold : undefined,
       // 폰 티어만 값을 갖습니다. 나머지는 undefined → PostFX의 기본 0.6.
-      this.quality.bloomIntensity
+      // field(8월)는 FIELD_CALM.bloom만큼 낮춥니다(2026-10-26).
+      variant === "field"
+        ? (this.quality.bloomIntensity ?? 0.6) * FIELD_CALM.bloom
+        : this.quality.bloomIntensity
     );
     this.post.setSize(window.innerWidth, window.innerHeight);
     // 나루 홈은 렌즈 왜곡을 쓰지 않습니다(2026-09-23, PostFX.setLensScale 주석). 8월 field는 그대로.
     if (variant === "water") this.post.setLensScale(0);
+    // 8월 field의 렌즈는 절반으로(2026-10-26, FIELD_CALM.lens). 동심원 무늬가 눈에 띄었습니다.
+    if (variant === "field") this.post.setLensScale(FIELD_CALM.lens);
 
     this.applyReducedMotion(
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -258,6 +285,8 @@ export class BackgroundScene {
     const x = (W.cx * 2 - 1) * halfW;
     const y = (1 - cy * 2) * halfH;
     this.particles.setShapes({ x, y, hw: hwSg }, { x, y, hw: hwSeoul });
+    this.seoulPx = { cx: W.cx * w, cy: cy * h, s: (hwSeoul / halfW) * (w / 2) };
+    this.singaporePx = { cx: W.cx * w, cy: cy * h, s: (hwSg / halfW) * (w / 2) };
   }
 
   private placeShapes() {
@@ -338,6 +367,24 @@ export class BackgroundScene {
   private joinTop = Infinity;
   // 푸터(#closing) 상단. 문서 끝에서 빛을 거두는 기준(2026-09-26). 없으면 Infinity라 거두지 않습니다.
   private closingTop = Infinity;
+  // 함께하는 곳(#partners)의 위아래(문서 px). 그 안에서 빛이 커서를 따라갑니다(2026-10-22). 없으면 꺼집니다.
+  private partnersTop = Infinity;
+  private partnersBottom = -Infinity;
+  // 커서 빛이 켜진 정도 0..1(부드럽게), 형상 밝기 0..1, 지난 프레임의 포인터 ndc.
+  private cursorMix = 0;
+  private glow = 0;
+  // 커서가 마지막으로 둔 빛의 자리(uv). 있으면 정거장 대신 여기에 섭니다. 히어로로 돌아가면 지웁니다.
+  private heldUv: { x: number; y: number } | null = null;
+  // 커서 빛 구간이 페이지 전체([data-cursor-light], /naru)인가. 그러면 옮긴 자리에 머물게(heldUv) 하지 않습니다(2026-10-23).
+  private cursorWholePage = false;
+  // 마우스가 있는 화면인가(휘장 층의 CSS와 같은 조건). 매 프레임 새로 묻지 않게 한 번 만듭니다.
+  private readonly fineMql = typeof window !== "undefined" ? window.matchMedia("(hover: hover) and (pointer: fine)") : null;
+  private readonly prevNdc = new THREE.Vector2();
+  // 서울 형상의 화면 자리(px). placeSeoul이 채웁니다. 대학교 휘장 층(#seoul-campuses)이 씁니다(2026-10-22).
+  private seoulPx = { cx: 0, cy: 0, s: 0 };
+  // 싱가포르 형상의 화면 자리(px). 같은 중심, 반너비만 다릅니다. 휘장 층(#singapore-campuses, /naru)이 씁니다(2026-10-23).
+  private singaporePx = { cx: 0, cy: 0, s: 0 };
+  private campusVars: Record<string, string> = {};
   // 구간 4 진행도를 부드럽게 따라가는 값(점의 가로 이동용). 휠의 계단을 지웁니다.
   // 빛 정거장(2026-09-28). 형상이 보이는 틈마다 점이 설 자리. sy는 그 틈이 화면 한가운데에 오는
   // 스크롤, fx·fy는 화면 비율(fx 왼쪽 0, fy 아래 0). schedule()이 채웁니다.
@@ -361,13 +408,26 @@ export class BackgroundScene {
       const hero = document.getElementById("top");
       this.heroEnd = hero ? hero.getBoundingClientRect().bottom + sy : CROSSING.fallbackAnchors.heroEnd;
       // 정지 장면(/naru): 그 페이지의 #top은 히어로가 아니라 첫 챕터입니다. 해가 이미 다 내려간 자리에서 시작합니다.
-      if (this.still) this.heroEnd = -SEOUL_WATERMARK.stages.descendVh * window.innerHeight - 2;
+      // DECIDED 2026-10-23 (사용자: "처음에 스크롤을 안 해도"): 정거장 길로 넘기는 0.1화면(lightW)까지 앞에 둡니다. 전에는 2px만 앞서
+      // 맨 위에서 커서 빛이 거의 꺼져 있었습니다.
+      if (this.still) this.heroEnd = -(SEOUL_WATERMARK.stages.descendVh + 0.1) * window.innerHeight - 2;
       const naru = top("naru");
       if (naru !== null) this.naruTop = naru;
       const join = top("join");
       if (join !== null) this.joinTop = join;
       const closing = top("closing");
       if (closing !== null) this.closingTop = closing;
+      // DECIDED 2026-10-22 (사용자: "빛 효과 나루에도 넣어줘"): 커서 빛 구간은 #partners(홈), 없으면 [data-cursor-light](/naru 본문 전체).
+      const partners = document.getElementById("partners") ?? document.querySelector<HTMLElement>("[data-cursor-light]");
+      this.cursorWholePage = !document.getElementById("partners") && !!partners;
+      if (partners) {
+        const r = partners.getBoundingClientRect();
+        this.partnersTop = r.top + sy;
+        this.partnersBottom = r.bottom + sy;
+      } else {
+        this.partnersTop = Infinity;
+        this.partnersBottom = -Infinity;
+      }
       this.readPlates();
       this.schedule();
       this.warnShortSeoul();
@@ -477,7 +537,9 @@ export class BackgroundScene {
       const c1 = bottom - eBottom;
       // #join 판은 예외입니다. 그 뒤로 형상이 돌아오지 않아(사라짐) 짧게 사라져도 깜빡이지 않습니다.
       // 1920×1080에서 이 판의 덮개는 0.29화면입니다.
-      const hides = c1 > c0 && (c1 - c0 >= minHide || id === "join");
+      // DECIDED 2026-10-23 (사용자: "처음에 스크롤을 안 해도 학교들 로고가 보이게"): 정지 장면(/naru)의 첫 판은 싱가포르를 가리지 않습니다.
+      // 건너기가 없는 페이지라 판 뒤에서 바뀌는 것이 없고, 휘장은 커서 빛의 원 안에서만 보입니다.
+      const hides = c1 > c0 && (c1 - c0 >= minHide || id === "join") && !(this.still && id === "naru");
       plates.push({ id, top, bottom, left, right, coversX, cover: hides ? { c0, c1, f0: fadeMax, f1: fadeMax } : null });
     }
     plates.sort((a, b) => a.top - b.top);
@@ -696,6 +758,7 @@ export class BackgroundScene {
     cancelAnimationFrame(this.rafId);
     this.stageObserver?.disconnect();
     this.pointer.detach();
+    if (this.still) delete document.documentElement.dataset.naruHeroOpen;
     window.removeEventListener("resize", this.onResize);
     window.removeEventListener("scroll", this.onScroll);
     document.removeEventListener("visibilitychange", this.onVisibility);
@@ -774,6 +837,7 @@ export class BackgroundScene {
     this.rafId = requestAnimationFrame(this.loop);
     if (!this.visible) return; // pause work in background tabs
     if (this.paused) return; // 방문자가 껐습니다
+    if (this.held) return; // 원페이저 스와이프가 잠깐 쥐고 있습니다(setHeld)
 
     const dt = Math.min(this.clock.getDelta(), 0.05);
     const t = this.clock.elapsedTime;
@@ -985,10 +1049,53 @@ export class BackgroundScene {
           target = { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
         }
       }
+      // 함께하는 곳의 커서 빛(DECIDED 2026-10-22, config의 PARTNERS_LIGHT). 그 구간이 화면 가운데를 덮고
+      // 마우스가 화면 안에 있으면 정거장 대신 커서로 갑니다. 켜고 끄는 것은 0.25초쯤에 걸쳐 섞습니다.
+      const PL = PARTNERS_LIGHT;
+      const mid = this.scrollY + vh / 2;
+      const edge = PL.edgeVh * vh;
+      const inPartners = ss01((mid - this.partnersTop) / edge) * ss01((this.partnersBottom - mid) / edge);
+      // DECIDED 2026-10-22 (사용자: "커서로 빛을 움직이다가 다시 위로 올라가면 원래 위치로 돌아가는데, 그 위치에
+      // 있도록"). 커서가 한 번 빛을 옮기면 구간을 벗어나도 정거장으로 돌아가지 않고 그 자리에 섭니다.
+      // 해가 다시 떠 있는 히어로까지 올라가면 놓고, 그 뒤로는 정거장 길을 다시 따릅니다.
+      if (this.scrollY <= descendEnd) this.heldUv = null;
+      if (this.heldUv) target = { ...this.heldUv };
+      // DECIDED 2026-10-23 (사용자: "빛에 관한 모든 effect at the 12월 tab is not at the 나루", 선택: 둘 다, 커서가 멈추면 복귀):
+      // /naru는 본문 전체가 커서 빛 구간이라 빛이 늘 커서에 붙어 홈의 정거장 길이 한 번도 보이지 않았습니다.
+      // 거기서는 마우스를 움직이는 동안만 커서를 따르고, CURSOR_IDLE_S초 쉬면 정거장 길로 돌아갑니다. 옮긴 자리에 머물게(heldUv) 하지 않습니다.
+      // DECIDED 2026-10-23 같은 날 (사용자, 운영 스크린숏: "클릭을 해야 따라가는데? 커서를 따라 움직이는게 아니고?"): 커서를 섬 위에 두고 멈추면
+      // 2초 뒤 빛이 정거장으로 가 버려 휘장이 꺼졌고, 클릭(pointerdown)해야 돌아왔습니다. 이제 쉬는 것만으로는 돌아가지 않고,
+      // 커서를 둔 채 화면 0.25장 넘게 스크롤했을 때만 정거장 길로 돌아갑니다. 정거장 길이 보이는 것(오전 결정)은 그대로입니다.
+      // DECIDED 2026-10-23 저녁 (사용자, 운영 스크린숏: "커서를 처음에 gap에 놔도 안 따라감, 클릭을 해야만 따라감"): 마우스를 그대로 두고
+      // 트랙패드로 스크롤하면 위의 "스크롤하면 정거장으로"가 걸려 빛이 떠났습니다. 그 규칙을 거둡니다. /naru에서는 커서 자리를 아는 동안
+      // (움직임, 누름, 휠) 빛이 늘 커서에 있습니다. 오전의 "정거장 길이 보이게"는 이 요청으로 대신합니다.
+      // /naru 히어로(첫 판 "naru")가 화면 가운데에 있는 동안 1. 판 아래 끝이 화면 0.75 높이를 지나 0.3화면에 걸쳐 0으로.
+      const heroPlate = this.still ? this.plates.find((p) => p.id === "naru") : undefined;
+      const heroK = heroPlate ? 1 - ss01((this.scrollY + 0.75 * vh - heroPlate.bottom) / (0.3 * vh)) : 0;
+      const cursorWant = this.pointer.mouse && this.pointer.inside ? inPartners * (1 - heroK) : 0;
+      this.cursorMix += (cursorWant - this.cursorMix) * Math.min(1, dt * 4);
+      if (this.cursorMix > 0.001) {
+        const c = toUv({ fx: this.pointer.ndc.x * 0.5 + 0.5, fy: this.pointer.ndc.y * 0.5 + 0.5 });
+        target = { x: target.x + (c.x - target.x) * this.cursorMix, y: target.y + (c.y - target.y) * this.cursorMix };
+      }
+      // 커서가 움직인 빠르기(화면 높이/초)로 형상의 밝기를 올립니다. 오를 때는 빠르게, 멈추면 천천히 잦아듭니다.
+      {
+        const dxPx = (this.pointer.ndc.x - this.prevNdc.x) * window.innerWidth / 2;
+        const dyPx = (this.pointer.ndc.y - this.prevNdc.y) * vh / 2;
+        this.prevNdc.copy(this.pointer.ndc);
+        const speed = Math.hypot(dxPx, dyPx) / vh / Math.max(dt, 1e-3);
+        const want = clamp(speed / PL.speedFull, 0, 1) * this.cursorMix;
+        this.glow += (want - this.glow) * Math.min(1, dt * (want > this.glow ? 10 : PL.release));
+      }
       // 따라가기: 초당 follow 비율, 한 프레임 이동은 maxRate × dt 이하. 모션 민감 설정에서는 바로 섭니다.
-      if (!this.lightUv || this.reduced) this.lightUv = { ...target };
+      // DECIDED 2026-10-23 (사용자: "왜 빛이 커서를 바로 따라옴?"): 동작 줄이기가 켜진 맥에서는 커서 빛도 바로 섰습니다.
+      // 커서 빛은 손으로 움직이는 것이고, 순간이동이 미끄러지는 것보다 더 튀어 보여 커서 구간에서는 늘 따라가게 합니다.
+      if (!this.lightUv || (this.reduced && this.cursorMix < 0.001)) this.lightUv = { ...target };
       else {
-        const F = LIGHT_FOLLOW;
+        const F = {
+          follow: LIGHT_FOLLOW.follow + (PL.follow - LIGHT_FOLLOW.follow) * this.cursorMix,
+          maxRate: LIGHT_FOLLOW.maxRate + (PL.maxRate - LIGHT_FOLLOW.maxRate) * this.cursorMix,
+        };
         const gx = (target.x - this.lightUv.x) * Math.min(1, dt * F.follow);
         const gy = (target.y - this.lightUv.y) * Math.min(1, dt * F.follow);
         const len = Math.hypot(gx, gy);
@@ -997,17 +1104,52 @@ export class BackgroundScene {
         this.lightUv.x += gx * k;
         this.lightUv.y += gy * k;
       }
+      if (this.cursorMix > 0.001 && !this.cursorWholePage) this.heldUv = { ...this.lightUv };
       // 해가 내려가는 구간 1에서는 셰이더의 옛 식 그대로, 다 내려간 뒤 0.1화면에 걸쳐 정거장 길로 넘깁니다.
-      const lightW = ss01((this.scrollY - descendEnd) / (0.1 * vh));
+      const lightW = ss01((this.scrollY - descendEnd) / (0.1 * vh)) * (1 - heroK);
       this.water.setLightDx(0);
       this.water.setLightAt(this.lightUv.x, this.lightUv.y, lightW);
+      // 형상의 밝은 자리는 빛이 지금 서 있는 곳입니다(커서를 따라 늦게 오는 빛과 같이 움직입니다).
+      // 점은 카메라에서 30 떨어진 평면에 있으니 화면 비율을 그 평면의 좌표로 바꿉니다.
+      if (this.particles) {
+        const gh = 30 * Math.tan(((portrait ? 75 : 60) * Math.PI) / 360);
+        const gw = gh * (window.innerWidth / vh);
+        const gx = (0.5 + (this.lightUv.x - 0.5) * uvSpan) * 2 - 1;
+        const gy = (0.5 + (this.lightUv.y - 0.5) * uvSpanY) * 2 - 1;
+        this.particles.setGlow(gx * gw, gy * gh, PL.radius * 2 * gh, this.glow, PL.gain);
+        // 서울 안의 대학교 휘장(DECIDED 2026-10-22, components/home/SeoulCampuses.tsx). 빛의 원 안에서만 보입니다.
+        // 서울이 온전히 서 있을 때만(건너기 전, 판 뒤가 아닐 때). 값이 바뀔 때만 씁니다.
+        // DECIDED 2026-10-23 (사용자): 싱가포르(/naru)도 같은 층입니다. 서울은 건너기 전(1 − morph), 싱가포르는 건넌 뒤(morph)에 켜집니다.
+        // /naru 히어로에서는(heroK) 빛의 원 대신 형상 중심의 큰 원으로 휘장 전체를 보입니다.
+        // DECIDED 2026-10-23 (사용자: "폰 버전에서는 12월 이벤트의 경우에는 빛 효과 없이 학교 로고들 맨 아래 도와주시는 분에 보이도록"):
+        // 마우스가 없는 화면에서는 홈의 함께하는 곳(#partners) 구간에서 서울 휘장을 같은 식으로 늘 보입니다(seoulK).
+        const noMouse = !this.fineMql?.matches;
+        // 2026-10-23 모바일 점검: 표(장소, 기술, 커뮤니티 줄)의 로고와 포개져 보여, 제목 "함께하는 곳"이 화면 가운데를 지난 뒤 0.35화면에 걸쳐 끕니다.
+        const pastHeading = ss01((mid - (this.partnersTop + 0.6 * vh)) / (0.35 * vh));
+        const seoulK = noMouse && !this.cursorWholePage ? inPartners * (1 - pastHeading) : 0;
+        const campusOn = portrait ? HERO_CAMPUS_ON_PORTRAIT : HERO_CAMPUS_ON;
+        const lx = (gx * 0.5 + 0.5) * window.innerWidth, ly = (0.5 - gy * 0.5) * vh;
+        for (const [id, S, on] of [
+          ["seoul-campuses", this.seoulPx, Math.max(this.cursorMix, seoulK * campusOn) * shapeOpacity * (1 - morph)],
+          ["singapore-campuses", this.singaporePx, Math.max(this.cursorMix, heroK * campusOn) * shapeOpacity * morph],
+        ] as const) {
+          const el = document.getElementById(id);
+          if (!el) continue;
+          const k = id === "singapore-campuses" ? heroK : seoulK;
+          const light = `--lx:${(lx + (S.cx - lx) * k).toFixed(1)}px;--ly:${(ly + (S.cy - ly) * k).toFixed(1)}px;--lr:${(PL.radius * vh + k * 3 * S.s).toFixed(1)}px`;
+          const vars = `--sx:${S.cx.toFixed(1)}px;--sy:${S.cy.toFixed(1)}px;--ss:${S.s.toFixed(1)}px;${light};--on:${on.toFixed(3)}`;
+          if (vars === this.campusVars[id]) continue;
+          this.campusVars[id] = vars;
+          for (const kv of vars.split(";")) { const i = kv.indexOf(":"); el.style.setProperty(kv.slice(0, i), kv.slice(i + 1)); }
+        }
+      }
       if (process.env.NODE_ENV !== "production") {
         // 개발 빌드에서만. 속도를 스크린숏이 아니라 값으로 재기 위해서입니다(브리프 4장).
         // 2026-09-26 (판 덮개 브리프 4): 형상이 바뀌는 세 진행도와 판 덮개도 값으로 잽니다.
         (window as unknown as { __naruBg?: unknown }).__naruBg = {
           uvSpan, uvSpanY, light: { ...this.lightUv, w: lightW, target }, lightKeys: this.lightKeys, t: performance.now(),
           sy: this.scrollY, vh, s1, s2, reveal, morph, dissolve, closeShape, visible, shapeVis: this.shapeVis,
-          scrollSpeed: this.scrollSpeed, reappearHold: this.reappearHold, ringPhase: this.ringPhase,
+          scrollSpeed: this.scrollSpeed, reappearHold: this.reappearHold, ringPhase: this.ringPhase, cursorMix: this.cursorMix, glow: this.glow,
           shapeBox: this.shapeBox, plates: this.plates, schedule: this.sched,
         };
       }
@@ -1064,6 +1206,15 @@ export class BackgroundScene {
     // 켤 때 시계의 빈 구간을 삼킵니다. 그러지 않으면 꺼 둔 시간만큼 fieldTime이
     // 한 프레임에 뛰어 배경이 순간이동합니다.
     if (!paused) this.clock.getDelta();
+  }
+
+  /** 2026-10-23 (스와이프 랙): 원페이저를 손가락으로 끄는 동안 그리기를 쉽니다. 마지막 프레임이 남고, 놓으면 그 자리에서 이어 갑니다.
+   *  방문자의 끄기(setPaused)와 별개의 손잡이라 서로 덮어쓰지 않습니다. */
+  private held = false;
+  setHeld(held: boolean) {
+    if (this.held === held) return;
+    this.held = held;
+    if (!held) this.clock.getDelta();
   }
 
   /** Rolling FPS estimate → step DPR down once if we're below ~45fps sustained. */

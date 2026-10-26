@@ -22,7 +22,7 @@ import { saveOwnResult, loadOwnResult, type OwnResult } from "@/lib/quizResult";
 import { QUIZ_EDITIONS, type QuizEdition, type EditionConfig } from "@/data/quizEditions";
 import { getExplanation } from "@/data/quizExplanations";
 import { MatchStartFields, MatchSave, loadMatchProfile, saveMatchProfile, matchProfileError, matchCopy, type MatchProfile, type MatchProfileError } from "@/components/match/MatchParts";
-import { normalizeMatchCode } from "@/lib/crossingMatch";
+import { normalizeMatchCode, matchWindowState } from "@/lib/crossingMatch";
 import { TITLE, BODY, META, GRADIENT_TEXT } from "@/components/ui/typography";
 import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 import Eyebrow from "@/components/ui/Eyebrow";
@@ -414,8 +414,10 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
       {/* decorative field - same tokens as the main site */}
       <div aria-hidden className="grid-bg pointer-events-none absolute inset-0 opacity-50" />
       {/* 12월판의 빛은 나루의 보라와 자주입니다(#4B3A8C, #9A5A82). 8월판은 그대로. */}
-      <div aria-hidden className="orb" style={{ left: "-12%", top: "-10%", width: "42vh", height: "42vh", background: naru ? "rgba(75,58,140,0.5)" : "rgba(124,58,237,0.4)" }} />
-      <div aria-hidden className="orb" style={{ bottom: "-14%", right: "-10%", width: "46vh", height: "46vh", background: naru ? "rgba(154,90,130,0.3)" : "rgba(6,182,212,0.3)" }} />
+      {/* DECIDED 2026-10-22 (모바일 점검: iPhone WebKit에서 blur(80px) 큰 층 때문에 시작 화면 글자가 통째로 안 그려짐): 흐림 필터 대신 가장자리가 흐린
+          방사형 그라데이션. 공유 카드(아래 ResultCard)가 이미 쓰는 방식입니다. 색과 자리는 그대로. */}
+      <div aria-hidden className="pointer-events-none absolute rounded-full" style={{ left: "-22%", top: "-20%", width: "62vh", height: "62vh", background: `radial-gradient(circle, ${naru ? "rgba(75,58,140,0.5)" : "rgba(124,58,237,0.4)"}, transparent 70%)` }} />
+      <div aria-hidden className="pointer-events-none absolute rounded-full" style={{ bottom: "-24%", right: "-20%", width: "66vh", height: "66vh", background: `radial-gradient(circle, ${naru ? "rgba(154,90,130,0.3)" : "rgba(6,182,212,0.3)"}, transparent 70%)` }} />
       {/* 질문과 결과 화면에는 h1이 없었습니다(?r= 딥링크는 h1 없는 페이지). 시작 화면은 자기 h1이 있습니다. */}
       {phase !== "landing" && <h1 className="sr-only">{t(ed.ui.title)}</h1>}
 
@@ -587,6 +589,11 @@ function Landing({
   // 다시 채웁니다. 8월판(/quiz)에서는 아래 세 줄이 아무 일도 하지 않습니다.
   const [profile, setProfile] = useState<MatchProfile>({ name: "", country: "", tracks: [] });
   const [profileError, setProfileError] = useState<MatchProfileError | null>(null);
+  // DECIDED 2026-10-22 (UX 점검, 사용자: "모든 것을 반영"): 받기 전("미리 해 보기")에는 시작 화면에서 먼저 말합니다. 그 전에는 14문항을
+  // 다 푼 뒤 결과 화면에서야 "결과는 저장되지 않습니다"가 나와, "등록할 때 쓴 본명"을 묻는 첫 칸이 등록도 열리기 전에 어리둥절했습니다.
+  // 마운트 뒤에 정합니다(시각을 읽는 값이라 서버와 첫 렌더가 같아야 합니다).
+  const [preview, setPreview] = useState(false);
+  useEffect(() => { setPreview(matchMode && matchWindowState() === "before"); }, [matchMode]);
   const cleanProfile = (p: MatchProfile): MatchProfile => ({
     name: p.name.trim(), country: p.country.trim().toUpperCase(), tracks: p.tracks, ...(p.code ? { code: p.code } : {}),
   });
@@ -653,6 +660,13 @@ function Landing({
       <p className={`mx-auto mt-5 max-w-md ${c("text-base", BODY)} leading-relaxed text-white/70`}>
         {t(ed.ui.subtitle)}
       </p>
+      {/* 받기 전의 안내(2026-10-22). 결과 화면의 같은 상자(MatchSave의 preview)와 같은 두 문장, 같은 색입니다. */}
+      {preview && (
+        <div role="note" className={`mx-auto mt-6 w-full max-w-md rounded-2xl border border-white/15 bg-white/[0.05] px-5 py-4 text-center`}>
+          <p className={`${BODY} font-semibold text-white`}>{t(matchCopy.closed)}</p>
+          <p className={`mt-1 break-keep ${META} text-white/70`}>{t(matchCopy.closedSub)}</p>
+        </div>
+      )}
       {/* 매칭 모드에서는 8월 로고 줄 자리에 이름과 나라 입력이 섭니다. */}
       {matchMode ? (
         <MatchStartFields t={t} profile={profile} onChange={changeProfile} error={profileError} />
@@ -680,6 +694,12 @@ function Landing({
         <span aria-hidden className={c("transition-transform duration-300 group-hover:translate-x-1", ARROW_CLASS)}>→</span>
       </button>
       <p className={`mt-5 ${c("text-xs", META)} font-medium ${c("text-white/55", "text-white/70")}`}>{t(ed.ui.meta)}</p>
+      {/* 2026-10-22 (UX 점검): 8월판(/quiz)에서 12월의 /match로 가는 글자 링크. 매칭판에는 없습니다. */}
+      {!matchMode && (
+        <a href="/match" className={`mt-3 inline-flex min-h-[44px] items-center ${c("text-xs", META)} font-semibold text-violet-200 underline decoration-violet-200/40 underline-offset-4 transition hover:text-white`}>
+          {t(ed.ui.matchLink)} <span aria-hidden>→</span>
+        </a>
+      )}
 
       {/* Returning taker: a low-key link back to their saved result. Fades in
           post-mount (ownResult loads client-side), so it never disrupts the
