@@ -599,6 +599,9 @@
   brand 3장 원칙 2: 무대(이벤트 목차)가 먼저, 나루는 메뉴 안에서. brand 10장 사이트 규칙: 글은 하나의 축.
 - 검증: tsc --noEmit 통과, git diff --check 통과. 화면 확인은 사용자 QA.
 - 커밋: 50fb5bc
+
+---
+
 <a id="2026-10-26-wrong-upload"></a>
 ## 2026-10-26 잘못 올리면 운영진에게
 - 범위: data/crossingTeam.ts(proofOnce, proofLocked, proofAlready)
