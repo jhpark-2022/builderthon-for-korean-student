@@ -3237,7 +3237,7 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
     {
       label: { ko: "장소", en: "Venues" },
       logos: [
-        { name: "GSC Global Startup Center", src: "/partners/logos/white/trimmed/gsc.png", w: 900, h: 259, url: "https://www.kised.or.kr/menu.es?mid=a10214050000" },
+        // DECIDED 2026-10-26 (사용자: "다 빼줘"): GSC 로고를 장소 줄에서도 뺐습니다. 노선도 Day 1 로고도 같은 날 뺐습니다.
         // 2026-10-22 (UX 점검): 영문 화면의 링크 이름과 alt에 한글만 남아 있었습니다. 로고는 한글이라 두 표기를 같이 둡니다.
         { name: "아산나눔재단 Asan Nanum Foundation", src: "/partners/logos/white/trimmed/asan-nanum.png", w: 772, h: 154, url: "https://www.asan-nanum.org/" },
         { name: "MARU180", src: "/partners/logos/white/trimmed/maru180.png", w: 385, h: 91, url: "https://maru.org/" },
