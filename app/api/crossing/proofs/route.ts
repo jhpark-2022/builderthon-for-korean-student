@@ -59,7 +59,7 @@ export async function POST(req: Request) {
     // Day 1은 PDF만(2026-10-17 사용자).
     if (!isProofDay(day) || !proofKindsFor(day).includes(kind)) return NextResponse.json({ error: "invalid" }, { status: 400 });
     if (!PROOF_TYPES[kind].includes(type)) return NextResponse.json({ error: "bad_type" }, { status: 400 });
-    if (!(size > 0) || size > PROOF_MAX_BYTES) return NextResponse.json({ error: "too_big" }, { status: 400 });
+    if (!(size > 0) || size > PROOF_MAX_BYTES[kind]) return NextResponse.json({ error: "too_big" }, { status: 400 });
     // 경로가 팀과 날을 말합니다. confirm은 이 접두어가 맞는지만 봅니다.
     const path = `${teamFolder(team.name)}/day${day}/${kind}-${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${EXT[type]}`;
     const { data, error } = await db.storage.from(PROOF_BUCKET).createSignedUploadUrl(path);

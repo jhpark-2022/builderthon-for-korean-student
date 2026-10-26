@@ -315,7 +315,7 @@ function Proofs({ team, day }: { team: string; day: ProofDay }) {
     setState((s) => ({ ...s, [kind]: "uploading" }));
     try {
       const blob = kind === "photo" ? await shrink(file) : file;
-      if (blob.size > PROOF_MAX_BYTES) { setMsg(t(c.proofTooBig)); throw new Error("size"); }
+      if (blob.size > PROOF_MAX_BYTES[kind]) { setMsg(t(c.proofTooBig).replace("{mb}", String(PROOF_MAX_BYTES[kind] / 1024 / 1024))); throw new Error("size"); }
       const type = blob.type || file.type;
       const post = (body: object) => fetch("/api/crossing/proofs", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ team, ...body }) });
       const s = await post({ action: "sign", day, kind, contentType: type, size: blob.size });
@@ -341,7 +341,7 @@ function Proofs({ team, day }: { team: string; day: ProofDay }) {
           <span className={`${META} ${latest ? "text-naru-orange" : "text-white/70"}`}>{latest ? `★ ${t(c.proofDone)} ${fmtKst(latest.createdAt)}` : t(c.proofNone)}</span>
         </div>
         {kind === "pdf" && day !== 1 && <p className={`${META} leading-relaxed text-white/70`}>{t(day === 3 ? c.proofPdfHintDay3 : c.proofPdfHint)}</p>}
-        <p className={`${META} text-white/50`}>{t(kind === "photo" ? c.proofLimitPhoto : c.proofLimitPdf).replace("{mb}", String(PROOF_MAX_BYTES / 1024 / 1024))}</p>
+        <p className={`${META} text-white/50`}>{t(kind === "photo" ? c.proofLimitPhoto : c.proofLimitPdf).replace("{mb}", String(PROOF_MAX_BYTES[kind] / 1024 / 1024))}</p>
         {latest?.url && kind === "photo" && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={latest.url} alt="" className="max-h-56 w-fit rounded-xl object-contain" />

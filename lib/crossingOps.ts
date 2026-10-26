@@ -54,7 +54,12 @@ export const trackTint = (c: string | undefined): string => (c && c in TRACK_TIN
 
 export const PROOF_KINDS = ["photo", "pdf"] as const;
 export type ProofKind = (typeof PROOF_KINDS)[number];
-export const PROOF_MAX_BYTES = 20 * 1024 * 1024;
+/**
+ * 파일 하나의 크기 한도(종류마다). DECIDED 2026-10-26 (사용자: "사진의 용량이 pdf 파일과 같으면 좀 그렇지 않나?"):
+ * 사진은 올리기 전에 긴 변 2000px JPEG(보통 1MB 안팎)로 줄어 10MB, PDF(1장, 발표 자료)는 20MB.
+ * 버킷 crossing-proofs의 file_size_limit(20MB, 마이그레이션 0008)이 위의 바닥이라, PDF를 올리면 버킷도 같이 올려야 합니다.
+ */
+export const PROOF_MAX_BYTES: Record<"photo" | "pdf", number> = { photo: 10 * 1024 * 1024, pdf: 20 * 1024 * 1024 };
 export const PROOF_TYPES: Record<ProofKind, string[]> = {
   photo: ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"],
   pdf: ["application/pdf"],

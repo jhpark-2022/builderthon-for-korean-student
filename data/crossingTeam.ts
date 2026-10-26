@@ -65,7 +65,7 @@ export const teamCopy = {
   // 2026-10-26 (사용자: 올리는 상자마다 용량 한도를 표시): {mb}는 lib/crossingOps.ts PROOF_MAX_BYTES에서 채웁니다.
   proofLimitPhoto: { ko: "JPG, PNG, HEIC 사진, {mb}MB까지", en: "JPG, PNG or HEIC photo, up to {mb} MB" },
   proofLimitPdf: { ko: "PDF 파일, {mb}MB까지", en: "PDF file, up to {mb} MB" },
-  proofTooBig: { ko: "파일 하나는 20MB까지 올릴 수 있습니다.", en: "Files up to 20 MB." },
+  proofTooBig: { ko: "이 파일은 {mb}MB까지 올릴 수 있습니다.", en: "This file can be up to {mb} MB." },
   proofBadType: { ko: "사진은 JPG, PNG, HEIC, 문서는 PDF로 올립니다.", en: "Photos as JPG, PNG or HEIC. Documents as a PDF." },
 } satisfies Record<string, Phrase>;
 
