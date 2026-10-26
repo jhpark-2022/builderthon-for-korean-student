@@ -10,35 +10,47 @@
     -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif;
 
-  /* ── 나루 팔레트 (DECIDED 2026-09-15) ──────────────────────────────────
-     정본은 로고 가이드입니다: 남색 #12246B, 보라 #4B3A8C, 자주 #9A5A82,
-     주황 #EE8A4F. 로고 그라데이션이 왼쪽 위 남색에서 오른쪽 아래 주황으로
-     흐르고, 주황 점 하나가 나루 자리입니다.
+  /* 브랜드 원색은 로고에, 블루 역할별 색은 UI에 씁니다(docs/brand.md 10장).
+     공통 토큰은 8월 기록도 읽지만 그 페이지 고유의 색은 일괄 치환하지 않습니다.
+     주황은 로고의 점과 소수의 강조점에만 남깁니다. */
 
-     바탕이 보라 검정(#080810)에서 남색 검정(#070B1F)으로 옮겨 갑니다. 8월
-     사이트는 일렉트릭 바이올렛이 기본색이었는데, 나루의 기준색은 남색이에요.
-     완전한 검정으로 가지 않은 것은 로고가 남색 계열 바탕을 전제로 하기
-     때문입니다(반전 로고의 조건: "배경색은 남색 계열을 쓴다").
-
-     /2026-08 아카이브도 이 토큰을 함께 읽습니다. 의도입니다. 한 사이트이고,
-     8월 페이지는 나루의 1회차 기록이지 별개의 사이트가 아닙니다. 다만 8월
-     페이지의 컴포넌트가 쓰는 Tailwind 기본 violet 계열(violet-400 등)은
-     토큰이 아니라 그대로 남습니다. 5,157줄짜리 파일의 색을 일괄 치환하는 것은
-     이번 작업의 범위가 아니고, 그 페이지는 그때의 모습으로 남는 편이 맞습니다.
-
-     주황은 아껴 씁니다. CTA와 강조점에만 점처럼 쓰세요. 면으로 칠하면
-     로고 안의 나루 점이 더 이상 눈에 띄지 않습니다.                          */
+  /* DECIDED 2026-10-26: UI는 역할별 토큰, 로고는 기존 나루 네 색입니다.
+     RGB 채널을 Tailwind에서도 읽어 투명도 변형까지 같은 값으로 만듭니다.
+     DECIDED 2026-10-26 (사용자: "네이비 색상이 아직 너무 강렬", 안 C 승인): 블루 토큰을 뉴트럴 블랙 + 브랜드 보라 포인트로.
+     바탕 채도 49% → 11%. 버튼과 링크는 brand 10장 보라의 틴트 #A99AD6 하나, 버튼 글자는 잉크.
+     DECIDED 2026-10-26 (사용자: "눈아파", 완화안 승인): 바탕을 한 단 띄우고(#101014 → #141418) 본문을 순백에 가까운 #ECECF1에서 #D6D6DC로.
+     대비 본문 12.7:1, 보조 7.4:1, 링크 7.2:1, 버튼 글자 7.2:1. 순백 text-white도 아래(파일 끝) 규칙으로 본문색이 됩니다. */
+  --ui-ink:          20 20 24;    /* #141418 */
+  --ui-surface:      28 28 33;    /* #1C1C21 */
+  --ui-raised:       38 38 45;    /* #26262D */
+  /* DECIDED 2026-10-26 (사용자: "아직 컬러가 크게 완화된 느낌이 안 들어", 비슷한 성격의 웹 구성): 채운 버튼은 보라에서 뉴트럴 밝은 면으로
+     (Linear, Vercel 계열). 보라는 링크와 현위치 표시만. 버튼 글자 잉크 대비 15:1. */
+  --ui-primary:      228 228 231; /* #E4E4E7 */
+  --ui-primary-hover: 244 244 245; /* #F4F4F5 */
+  /* DECIDED 2026-10-26 (사용자: "그레이랑 네이비가 따로 논다", "배경 그레이는 차분해져서 좋아, 액센트 블루를 얼마나 현명하게 쓸지가 관건"):
+     바탕 회색은 그대로 두고, 강조색 하나를 로고 남색의 밝은 틴트(#9AA8EE, 로고 그라데이션의 첫 색)로 모읍니다. 보라는 로고 그라데이션에만.
+     강조 블루를 쓰는 자리는 넷뿐: 현위치(목차 밑줄, 메뉴), 본문 안 링크, 소제목, 작은 라벨(DAY n, 번호). 면과 버튼은 칠하지 않습니다. 대비 8.1:1. */
+  /* 같은 날 뒤(사용자: "액센트 블루 더 쨍해도 좋아"): #9AA8EE → #7C95FF. 바탕 대비 6.7:1. 더 쨍한 짝 #5470FF는 7:3 그라데이션의 끝(아래 .bg-accent-gradient). */
+  --ui-link:         124 149 255; /* #7C95FF */
+  --ui-link-strong:  84 112 255;  /* #5470FF */
+  /* 캡션(날짜, 단위, 분류 이름, 안내 한 줄). 본문 보조색보다 한 단 낮게, 바탕 대비 5.4:1(사용자: "캡션은 명도 더 낮춰서 덜 보이게"). */
+  --ui-caption:      138 138 149; /* #8A8A95 */
+  /* 주요 CTA 면(흰 글자, 같은 날 사용자: "카카오 아이콘 플랫한 화이트"). 쨍한 블루 #4F68F5에서 더 쨍한 #3550DC로 7:3. 흰 글자 대비 4.5:1 → 6.3:1. */
+  --ui-cta:          79 104 245;  /* #4F68F5 */
+  --ui-cta-strong:   53 80 220;   /* #3550DC */
+  --ui-text:         214 214 220; /* #D6D6DC */
+  --ui-muted:        163 163 176; /* #A3A3B0 */
 
   /* Core palette */
-  --bg:          #070B1F;
-  --surface:     #0C1230;
-  --surface-2:   #111A3A;
+  --bg:          rgb(var(--ui-ink));
+  --surface:     rgb(var(--ui-surface));
+  --surface-2:   rgb(var(--ui-raised));
   --border:      rgba(255,255,255,0.07);
   --border-2:    rgba(255,255,255,0.12);
 
   /* Text */
-  --text:        #EEF0FA;
-  --text-muted:  #8288AE;
+  --text:        rgb(var(--ui-text));
+  --text-muted:  rgb(var(--ui-muted));
   --text-faint:  #3A4066;
 
   /* Accent: 나루 4색 */
@@ -47,11 +59,9 @@
   --plum:        #9A5A82;
   --orange:      #EE8A4F;
 
-  /* 아래 네 이름은 이 파일 안에서만 쓰입니다(포커스 링, 그리드 배경).
-     이름은 그대로 두고 값만 나루로 옮겼습니다. 원색 #4B3A8C를 포커스 링에
-     쓰면 어두운 바탕에서 링이 보이지 않아, 링에는 밝은 쪽(#9A8CC9)을 씁니다. */
+  /* 기존 배경 장식의 이름은 유지하고, 포커스 링은 UI 링크 색을 읽습니다. */
   --violet:      #4B3A8C;
-  --violet-soft: #9A8CC9;
+  --violet-soft: rgb(var(--ui-link));
   --cyan:        #6E7FC4;
   --cyan-soft:   #A7B4E4;
   --green:       #10b981;
@@ -195,8 +205,6 @@ body {
      there is no longer any animation to exempt - which also retires the awkward
      part of this rule: an exemption that overrode a user's reduced-motion
      preference because the layout depended on movement to stay reachable. */
-  .marquee-left  { animation-duration: 60s !important; }
-  .marquee-right { animation-duration: 60s !important; }
 }
 
 ::-webkit-scrollbar { width: 6px; }
@@ -266,36 +274,47 @@ body {
 
    The survivors are here because a string builds them at runtime:
      .orb / .grid-bg          - decorative background layers
-     .marquee-track / -left / -right - #companions band (dir is a data string)
-     .quiz-confetti           - components/Confetti.tsx, and the reduced-motion
-                                gate below is the only thing that can hide it   */
+     .marquee-track / -left - 홈 #partners 띠와 /naru 푸터 띠 */
 
-/* ── Glow orbs (decorative background blobs) ───────────────────────────────── */
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  pointer-events: none;
-}
+/* DECIDED 2026-10-26: 매니페스토 뷰어(/naru)의 점 줄 진행 막대. 끝나면 다음 쪽으로 넘깁니다(ManifestoViewer onAnimationEnd). */
+@keyframes manifestoProgress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
-/* ── Animated grid background ──────────────────────────────────────────────── */
-.grid-bg {
-  background-image:
-    linear-gradient(rgba(75,58,140,0.10) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(75,58,140,0.10) 1px, transparent 1px);
-  background-size: 60px 60px;
+@keyframes ctaShimmer { from { transform: translateX(-120%); } to { transform: translateX(120%); } }
+
+/* ── Cards ─────────────────────────────────────────────────────────────────── */
+/* DECIDED 2026-10-26 (사용자: "카드 에셋에 보더 최소화하고 그림자 효과를 적절히, 절제된 그라디언트, fill 명도 구분을 좀 더 다양하게"):
+   테두리 대신 면의 명도 넷과 그림자로 층을 나눕니다. 위쪽 1px 안쪽 빛(inset)이 테두리 대신 가장자리를 잡습니다.
+     card-sunken  바탕보다 어두운 오목한 면. 카드 안의 칸(미션 띠, 코어 5개사 묶음).
+     card-base    기본 카드. 표면색 위에서 아래로 아주 옅게 가라앉는 그라데이션.
+     card-raised  한 단 밝은 면. 정보 칸, 메뉴 패널.
+     card-tint    보라가 한 겹 스민 면. 핵심 문장, 기업 쪽 칸.
+   @layer components라 sm: 같은 변형과 패딩 유틸리티를 같이 씁니다. */
+@layer components {
+  /* DECIDED 2026-10-26 (사용자: "쨍한 액센트-더 쨍한 액센트 7:3 비율로 일부 주요 에셋에 그라디언트 허용"): 70%까지 #7C95FF, 마지막 30%에서 #5470FF로.
+     쓰는 곳은 주요 버튼(Button primary naru)과 남는 것의 날 막대 둘뿐입니다. 글자는 잉크(대비 6.7:1 → 4.5:1). */
+  .bg-accent-gradient { background-image: linear-gradient(90deg, rgb(var(--ui-cta)) 0%, rgb(var(--ui-cta)) 70%, rgb(var(--ui-cta-strong)) 100%); }
+  /* DECIDED 2026-10-26 (사용자: "주요 cta 호버시 shimmer 이펙트"): 마우스를 올리면 빛 한 줄이 왼쪽에서 오른쪽으로 한 번 지나갑니다(0.9초). 모션 줄이기에서는 없음. */
+  .cta-shimmer { position: relative; overflow: hidden; isolation: isolate; }
+  .cta-shimmer::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.32) 50%, transparent 70%); transform: translateX(-120%); }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .cta-shimmer:hover::after { animation: ctaShimmer 900ms ease-out; }
+  }
+  .text-caption { color: rgb(var(--ui-caption)); }
+  .card-sunken { background: rgb(var(--ui-ink) / 0.55); box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.45), inset 0 0 0 1px rgb(255 255 255 / 0.03); }
+  .card-base { background: linear-gradient(180deg, rgb(var(--ui-surface)) 0%, rgb(var(--ui-surface) / 0.86) 100%); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.05), 0 12px 32px -16px rgb(0 0 0 / 0.7); }
+  .card-raised { background: linear-gradient(180deg, rgb(var(--ui-raised)) 0%, rgb(var(--ui-surface)) 100%); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.07), 0 16px 40px -18px rgb(0 0 0 / 0.75); }
+  .card-tint { background: linear-gradient(135deg, rgb(var(--ui-raised)) 0%, rgb(84 112 255 / 0.16) 100%); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.07), 0 16px 40px -18px rgb(0 0 0 / 0.75); }
 }
 
 /* ── Marquee ───────────────────────────────────────────────────────────────── */
+/* DECIDED 2026-10-26 (사용자: "티커는 절제를 원했지 모두 삭제를 지시하진 않았어"): 같은 날 정지 목록으로 바꾼 것을 되돌리고 절제합니다.
+   한 줄, 한 방향, 90초 한 바퀴(그 전 60초), 모션 줄이기에서는 멈춘 띠. 같은 날 뒤(사용자): 호버해도 멈추지 않음. */
 .marquee-track { display: flex; width: max-content; }
-.marquee-left  { animation: marquee 60s linear infinite; }
-.marquee-right { animation: marquee-reverse 60s linear infinite; }
-/* `.marquee-hero` lived here for the hero confirmed-partner strip on mobile.
-   Removed 2026-08-03: that strip is now a static wrapped grid at every width, so
-   nothing referenced this rule. `.marquee-track` stays - the #companions band
-   still uses it with marquee-left / marquee-right. */
+.marquee-left  { animation: marquee 90s linear infinite; }
 @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-@keyframes marquee-reverse { from{transform:translateX(-50%)} to{transform:translateX(0)} }
+@media (prefers-reduced-motion: reduce) {
+  .marquee-left { animation: none !important; }
+}
 
 /* ── Quiz hook micro-animations ──────────────────────────────────────────────
    Both are opacity/blur only - no layout properties, so nothing here can shift
@@ -485,7 +504,7 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
   transform: translateX(-50%);
   z-index: -1;
   pointer-events: none;
-  background: var(--home-reading-ground, rgba(7, 11, 31, 0.52));
+  background: var(--home-reading-ground, rgb(var(--ui-ink) / 0.52));
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   -webkit-mask-image:
@@ -507,7 +526,7 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
     right: -1.5rem;
     width: auto;
     transform: none;
-    background: var(--home-reading-ground, rgba(7, 11, 31, 0.47));
+    background: var(--home-reading-ground, rgb(var(--ui-ink) / 0.47));
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     -webkit-mask-image: linear-gradient(to bottom, transparent, #000 64px, #000 calc(100% - 64px), transparent);
@@ -521,7 +540,7 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
 :root[data-plate="lite"] .reading-plate {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
-  background: rgba(7, 11, 31, 0.8);
+  background: rgb(var(--ui-ink) / 0.8);
 }
 /* DECIDED 2026-10-19 (사용자: 폰에서 열면 랙이 너무 많다): 폰 폭(639px 이하)에서는 판의 흐림을 늘 빼고 lite와 같은 0.8 바탕을 씁니다.
    위의 lite 판정은 기기 메모리(navigator.deviceMemory)로 하는데 iOS Safari는 그 값을 주지 않아 모든 아이폰이 흐림을 받았습니다.
@@ -531,21 +550,21 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
   .reading-plate, :root[data-plate="lite"] .reading-plate {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    background: rgba(7, 11, 31, 0.8);
+    background: rgb(var(--ui-ink) / 0.8);
   }
   header * { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
 }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .reading-plate { background: rgba(7, 11, 31, 0.82); }
+  .reading-plate { background: rgb(var(--ui-ink) / 0.82); }
 }
 /* 모션 민감(가독성 브리프 7, 검증 8): 배경이 멈추더라도 점은 남으니 판을 불투명에
    가깝게 세웁니다. 투명도 줄이기는 흐림까지 뺍니다. 뒤에 오는 쪽이 이깁니다. */
 @media (prefers-reduced-motion: reduce) {
-  .reading-plate, :root[data-plate="lite"] .reading-plate { background: rgba(7, 11, 31, 0.85); }
+  .reading-plate, :root[data-plate="lite"] .reading-plate { background: rgb(var(--ui-ink) / 0.85); }
 }
 @media (prefers-reduced-transparency: reduce) {
   .reading-plate, :root[data-plate="lite"] .reading-plate {
-    background: rgba(7, 11, 31, 0.9);
+    background: rgb(var(--ui-ink) / 0.9);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
@@ -561,9 +580,13 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
 /* DECIDED 2026-10-26 (사용자: 섹션마다 레이아웃이 제각각): 홈은 챕터 사이 바깥 여백과 화면 높이 강제를 두지 않습니다.
    틈은 Chapter의 위아래 여백만으로 정해집니다(NaruHome #december 주석). /naru는 그대로. */
 .naru-home-v2 .naru-content-chapter { margin-top: 0; min-height: auto; }
+/* DECIDED 2026-10-26 (사용자: "pc쪽이 다시 너무 빽빽"): lg부터 챕터 위아래 108 → 144px. 판 사이 형상 틈은 120 → 192px. 폰과 태블릿은 그대로. */
+@media (min-width: 1024px) {
+  .naru-home-v2 .naru-content-chapter { padding-top: 144px; padding-bottom: 144px; }
+}
 
 /* DECIDED 2026-10-21 (2차): 홈의 정보 구간만 대비를 고정하고 장식 발광을 낮춥니다. */
-.naru-home-v2 #december { --home-reading-ground: rgba(7, 11, 31, 0.68); }
+.naru-home-v2 #december { --home-reading-ground: rgb(var(--ui-ink) / 0.68); }
 /* 2026-10-22: 히어로(#top)는 kwan 전으로 되돌려 발광을 남깁니다. */
 .naru-home-v2 #register .bg-gradient-to-r { box-shadow: none; }
 
@@ -596,3 +619,26 @@ html[data-naru-hero-open] .reading-plate[data-plate="naru"] {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
+
+/* DECIDED 2026-10-26: 홈 모바일 크기는 낮추고, 목차 간격과 터치 영역은 확보합니다.
+   같은 날 뒤: 헤더 워드마크와 목차 간격 규칙은 헤더가 다시 짜여 걸리지 않아 뺐습니다(크기는 JourneyNav 안에서 정함). */
+@media (max-width: 639px) {
+  .naru-home-v2 :is(a, button, [aria-disabled="true"])[class*="rounded-full"] {
+    min-height: 48px;
+    padding: 12px 20px;
+  }
+}
+
+/* DECIDED 2026-10-26: 도시 기준을 바꿀 때 달라지는 시간 텍스트만 세로 전환합니다. */
+@keyframes cityValueIn {
+  from { opacity: 0; transform: translateY(100%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes cityValueOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-100%); }
+}
+
+/* DECIDED 2026-10-26 (사용자: "눈아파"): 순백 글자(text-white)는 본문 토큰(#D6D6DC)으로 내립니다. 거의 검은 바탕 위 순백은 대비 19:1로 번져 보였습니다.
+   white/70 같은 투명도 단계와 호버의 순백은 그대로입니다. utilities 뒤에 있어야 이깁니다(파일 끝). */
+.text-white { color: rgb(var(--ui-text)); }

@@ -410,7 +410,7 @@ export default function Quiz({ edition = "2026-08", matchMode = false }: { editi
 
   return (
     // id="main": 건너뛰기 링크(components/SkipLink.tsx)가 #main으로 갑니다. 이 화면에는 그 id가 없어 링크가 죽어 있었습니다(2026-10-08).
-    <main id="main" tabIndex={-1} className="relative min-h-screen overflow-hidden bg-[#070B1F] text-white focus:outline-none">
+    <main id="main" tabIndex={-1} className="relative min-h-screen overflow-hidden bg-naru-ink text-white focus:outline-none">
       {/* decorative field - same tokens as the main site */}
       <div aria-hidden className="grid-bg pointer-events-none absolute inset-0 opacity-50" />
       {/* 12월판의 빛은 나루의 보라와 자주입니다(#4B3A8C, #9A5A82). 8월판은 그대로. */}

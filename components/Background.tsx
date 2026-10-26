@@ -113,7 +113,8 @@ export default function Background({ variant = "field", still = false }: { varia
     <canvas
       ref={canvasRef}
       aria-hidden
-      className="pointer-events-none fixed inset-0 -z-10 h-full w-full"
+      // DECIDED 2026-10-26 (사용자: 색이 아직 강함): 배경 캔버스 전체를 60%로. 형상, 빛, 입자의 색이 바탕 잉크 쪽으로 한 단 가라앉습니다.
+      className="pointer-events-none fixed inset-0 -z-10 h-full w-full opacity-60"
     />
   );
 }
@@ -126,14 +127,14 @@ function CssFallback() {
       className="pointer-events-none fixed inset-0 -z-10"
       style={{
         background:
-          "radial-gradient(120% 90% at 50% 30%, #12246B 0%, #0B1430 45%, #070B1F 75%, #03050F 100%)",
+          "radial-gradient(120% 90% at 50% 30%, rgb(var(--ui-raised)) 0%, rgb(var(--ui-surface)) 45%, rgb(var(--ui-ink)) 75%)",
       }}
     >
       <div
         className="absolute inset-0 opacity-50"
         style={{
           background:
-            "radial-gradient(40% 40% at 30% 25%, rgba(124,58,237,0.25), transparent 70%), radial-gradient(35% 35% at 75% 60%, rgba(192,132,252,0.18), transparent 70%)",
+            "radial-gradient(40% 40% at 30% 25%, rgb(var(--ui-primary) / 0.12), transparent 70%), radial-gradient(35% 35% at 75% 60%, rgb(var(--ui-link) / 0.06), transparent 70%)",
         }}
       />
     </div>

@@ -13,7 +13,7 @@ import { useLocale } from "@/lib/LocaleContext";
 import { naru, naruLinks, openChatLabels, register as registerCopy } from "@/data/naru";
 import type { Phrase } from "@/data/dictionaryCore";
 import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
-import { BODY, META } from "@/components/ui/typography";
+import { BODY, META, SUBTITLE } from "@/components/ui/typography";
 import OpenChatLink from "@/components/ui/OpenChatLink";
 
 // ── 상자를 쓰는 자리 (DECIDED 2026-09-20, 표현 방식 브리프) ──────────────────
@@ -85,7 +85,7 @@ export function PhoneFold({ id, more, less, children }: { id: string; more: stri
 
 export function Card({ children, className = "", id }: { children: React.ReactNode; className?: string; id?: string }) {
   return (
-    <div id={id} className={`rounded-2xl border border-white/10 bg-white/[0.04] p-[27px] sm:p-[36px] ${className}`}>
+    <div id={id} className={`rounded-2xl card-base p-[27px] sm:p-[36px] ${className}`}>
       {children}
     </div>
   );
@@ -107,7 +107,10 @@ export function Card({ children, className = "", id }: { children: React.ReactNo
 // 표현 방식 브리프 7) 안에서 16 이상인 가장 작은 단이 18입니다. 새 단을 만들지 않았습니다.
 // ──────────────────────────────────────────────────────────────────────────────
 // 2026-10-07 (이슈 브리프 4.1): 소제목은 BODY 크기에 굵게입니다. 본문과의 차이는 굵기와 색(/85)뿐입니다.
-export const SUBHEADING = `break-keep ${BODY} font-semibold tracking-normal text-white/85`;
+// DECIDED 2026-10-26 (사용자: "pc쪽이 다시 너무 빽빽", 위계와 크기 분화): lg부터 SUBTITLE(27px), 굵게, 흰색. 폰은 크기 그대로.
+// DECIDED 2026-10-26 (사용자: "타이틀 위계가 볼드 아니면 두께로만 구분돼서 어려워. 컬러, 행간, 자간 위계"): 소제목은 로고 그라데이션의 첫 색(logo-from) 틴트.
+// 흰 칸 제목(H3)과 흰 챕터 제목(H2) 사이에서 색으로 한 단 구분됩니다. 자간 -0.02em, 행간 1.3.
+export const SUBHEADING = `break-keep ${SUBTITLE} font-bold leading-[1.3] tracking-[-0.02em] text-naru-logo-from`;
 // ── 축 (DECIDED 2026-09-26, 한 축 브리프, 사용자: "어떤 건 left, 어떤 건 central, 뒤죽박죽") ──
 // 축은 하나입니다. 모든 블록은 화면 가운데 축에 놓고(mx-auto), 글은 그 안에서 왼쪽 정렬합니다.
 // 글의 정렬과 블록의 위치는 다른 문제입니다. 9월 25일 BODY_AXIS가 둘을 섞어 본문 블록을 넓은
@@ -146,7 +149,7 @@ export const MEASURE_C = "mx-auto lg:max-w-[28rem] text-balance";
 // DECIDED 2026-10-07 (이슈 브리프 4.3, 대비 기준): 히어로의 버튼 둘은 남색 반투명 바탕에 섭니다. 히어로에는 읽기
 // 판이 없고 해의 빛이 버튼 뒤를 지나갑니다. 폰 영문 화면에서 "See the programme"이 빛 위에 걸려 5.1:1이었습니다
 // (본문 기준 7:1). #naru의 문 셋이 같은 이유로 쓰는 알약 바탕(2026-09-23)과 같은 색입니다. 테두리와 크기는 그대로.
-export const HERO_BUTTON_GROUND = "!bg-[#0B1430]/60 backdrop-blur-sm";
+export const HERO_BUTTON_GROUND = "!bg-naru-surface backdrop-blur-sm";
 // 작은 라벨의 자간. 한국어 화면은 0, 영문 화면(라틴 대문자)만 넓게.
 // DECIDED 2026-10-20 (hwang 브리프 2.4, 감사 W1): 영문 0.14em → 0.06em.
 export const latinTrack = (locale: "ko" | "en") => (locale === "en" ? "tracking-[0.06em]" : "tracking-normal");

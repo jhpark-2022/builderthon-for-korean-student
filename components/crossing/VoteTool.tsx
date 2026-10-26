@@ -156,7 +156,7 @@ export default function VoteTool() {
   };
 
   return (
-    <main id="main" className="min-h-screen bg-[#070B1F] px-4 pb-24 pt-10 text-white">
+    <main id="main" className="min-h-screen bg-naru-ink px-4 pb-24 pt-10 text-white">
       <div className="mx-auto flex max-w-2xl flex-col gap-[24px]">
         <header className="flex flex-col gap-[13.5px]">
           <h1 className={`${BODY} font-bold`}>{t(copy.title)}</h1>

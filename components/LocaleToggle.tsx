@@ -19,7 +19,7 @@ export default function LocaleToggle({ className = "", variant = "zero100" }: { 
           // min-w-[44px] (2026-09-19, 모바일 감사 2): 세로는 44px이었지만 가로가
           // px-1.5 + "EN" 두 글자로 34px이었고, 두 버튼 사이에는 "/" 한 글자뿐이라
           // 엄지로 KR을 누르려다 EN이 눌렸습니다. WCAG 2.5.5의 하한이 44px입니다.
-          className={`inline-flex min-h-[44px] min-w-[44px] items-center justify-center px-2 underline-offset-4 transition-colors duration-150 ${here ? "font-bold text-white underline decoration-accent decoration-2" : "font-medium text-white/70 hover:text-white"}`}
+          className={`inline-flex min-h-[44px] min-w-[44px] items-center justify-center px-2 underline-offset-4 transition-colors duration-150 ${here ? "font-bold !text-accent underline decoration-accent decoration-2" : "font-medium text-white/70 hover:text-white"}`}
         >
           {label}
         </button>

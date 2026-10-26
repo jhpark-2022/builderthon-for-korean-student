@@ -27,7 +27,7 @@ function Both({ ko, en }: { ko: string; en: string }) {
 
 export default function NotFound() {
   return (
-    <main id="main" tabIndex={-1} className="relative flex min-h-screen flex-col items-center justify-center bg-[#070B1F] px-6 text-center text-white focus:outline-none">
+    <main id="main" tabIndex={-1} className="relative flex min-h-screen flex-col items-center justify-center bg-naru-ink px-6 text-center text-white focus:outline-none">
       <p className={`${META} font-bold uppercase tracking-[0.16em] text-white/70`}>404</p>
       <h1 className={`mt-4 break-keep ${TITLE} font-bold tracking-tight`}>
         <Both ko="이 주소에는 페이지가 없습니다." en="There is no page at this address." />

@@ -2033,8 +2033,10 @@ export const naru = {
       // DECIDED 2026-10-24 (사용자, 스크린숏: "이 부분을 하나로 합쳐줘, 3줄"): 위 approachClose(닷새 안에 다 풀리지 않을 수 있는 문제, 어디까지
       // 물어 들어갔는지)와 이 리드를 한 문단 세 줄로. approachClose는 화면에서 내렸습니다. 그 전: "등록은 혼자 하고, 팀은 Day 1 현장에서 전원이
       // 함께 맺습니다. 그 뒤로는 찾기, 확인받기, 만들기, 공유하기를 하루에 하나씩 지나고, 날마다 그날의 생각이 남습니다."
-      ko: "등록은 혼자, 팀은 Day 1 현장에서 맺습니다. 찾기, 확인받기, 만들기, 공유하기를 하루에 하나씩 지납니다. 닷새 안에 다 풀리지 않을 수 있는 문제라 어디까지 물어 들어갔는지를 봅니다.",
-      en: "Register alone; teams form on site on Day 1. Find, Check, Build and Share pass one a day. The problem may not be solved in five days, so we look at how far into it you got.",
+      // DECIDED 2026-10-26 (사용자: "불필요한 텍스트 양"): 가운데 문장(찾기, 확인받기, 만들기, 공유하기를 하루에 하나씩)을 뺐습니다.
+      // 바로 아래 노선도가 같은 이름 넷을 날마다 적습니다. 세 줄이 두 줄이 됩니다.
+      ko: "등록은 혼자, 팀은 Day 1 현장에서 맺습니다. 닷새 안에 다 풀리지 않을 수 있는 문제라 어디까지 물어 들어갔는지를 봅니다.",
+      en: "Register alone; teams form on site on Day 1. The problem may not be solved in five days, so we look at how far into it you got.",
     },
     // 2026-09-20 (크로싱서울_일정.pdf): 라벨이 "워크샵"에서 "세션"으로. PDF가 부르는
     // 이름이고, stages의 필드 이름(workshop -> session)과 같은 말을 씁니다.

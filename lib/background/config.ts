@@ -45,10 +45,12 @@ export const PALETTE = {
  *               앉을 자리가 없습니다. 같은 색상환에서 명도만 내린 값입니다.
  *   deep        가까운 물. 그 전 #04060F
  */
+// DECIDED 2026-10-26 (사용자: 네이비가 너무 강렬, 안 C): 남색 하늘을 보랏빛이 아주 옅은 뉴트럴로. 명도는 그 전과 비슷하게 둡니다.
+// 그 전 skyTop #040712, skyHorizon #0E1949, deep #050812.
 export const WATER_BASE = {
-  skyTop: "#040712",
-  skyHorizon: "#0E1949",
-  deep: "#050812",
+  skyTop: "#0B0B0E",
+  skyHorizon: "#1A1823",
+  deep: "#08080B",
 } as const;
 
 /** Responsive particle budget. Picked at init from viewport + device tier. */
