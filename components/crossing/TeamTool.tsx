@@ -29,7 +29,7 @@ const SLOT_ALPHA = "73", SLOT_ALPHA_END = "40";
 const MIN = 60_000;
 type Bk = { id: string; team: string; track: string; startsAt: string; endsAt: string };
 type Mentor = { id: string; name: string; field: string | null; windows: Window[]; bookings: Bk[] };
-type Proof = { id: string; day: number; kind: ProofKind; createdAt: string };
+type Proof = { id: string; day: number; kind: ProofKind; createdAt: string; sizeBytes?: number };
 
 const load = (k: string) => { try { return localStorage.getItem(k) ?? ""; } catch { return ""; } };
 const save = (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* 저장 못 해도 화면은 돕니다 */ } };
@@ -357,13 +357,28 @@ function Proofs({ team, day }: { team: string; day: ProofDay }) {
       <div key={kind} className="flex flex-col gap-[13.5px] rounded-2xl border border-white/15 bg-white/[0.03] p-[20px] sm:p-[24px]">
         <div className="flex flex-col gap-[13.5px] sm:flex-row sm:items-baseline sm:justify-between">
           <h3 className={`${BODY} font-bold`}>{t(kind === "photo" ? c.proofPhoto : day === 1 ? c.proofPdfDay1 : day === 3 ? c.proofPdfDay3 : c.proofPdf)}</h3>
-          <span className={`${META} ${latest ? "text-naru-orange" : "text-white/70"}`}>{latest ? `★ ${t(c.proofDone)} ${fmtKst(latest.createdAt)}` : t(c.proofNone)}</span>
+          {latest
+            ? <span className={`w-fit rounded-full bg-naru-orange/15 px-[10px] py-[2px] ${META} font-bold text-naru-orange`}>★ {t(c.proofDoneChip)}</span>
+            : <span className={`${META} text-white/70`}>{t(c.proofNone)}</span>}
         </div>
         {kind === "pdf" && day !== 1 && <p className={`${META} leading-relaxed text-white/70`}>{t(day === 3 ? c.proofPdfHintDay3 : c.proofPdfHint)}</p>}
         {!latest && <p className={`${META} text-white/50`}>{t(kind === "photo" ? c.proofLimitPhoto : c.proofLimitPdf).replace("{mb}", String(PROOF_MAX_BYTES[kind] / 1024 / 1024))}</p>}
         {/* 2026-10-26: 낸 파일은 이 페이지에서 보이지 않습니다(사진 미리보기, 보기 링크 없음). 멘토 페이지에서만 열립니다. */}
         {latest ? (
-          <p className={`${META} text-white/70`}>{t(c.proofLocked)}</p>
+          // DECIDED 2026-10-26 (사용자, 스크린숏: "너무 상자가 비어있음"): 제출한 상자는 "제출 완료" 패널이 남은 자리를 채웁니다.
+          // 파일은 보여 주지 않으므로(같은 날 결정) 체크, 날짜와 시각, 크기만. 색은 나루 주황(제출 칩과 같은 색).
+          <div className="flex flex-1 items-center gap-[16px] rounded-xl border border-naru-orange/30 bg-naru-orange/[0.08] p-[16px] sm:p-[20px]">
+            <span aria-hidden className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-naru-orange/20 text-naru-orange">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5" /></svg>
+            </span>
+            <span className="flex flex-col gap-[4px]">
+              <span className={`${BODY} font-bold text-white`}>{t(c.proofDone)}</span>
+              <span className={`${META} tabular-nums text-white/85`}>
+                {dayDate(day).slice(5).replace("-", ".")} {fmtKst(latest.createdAt)}{latest.sizeBytes ? `, ${(latest.sizeBytes / 1024 / 1024).toFixed(1)}MB` : ""}
+              </span>
+              <span className={`${META} leading-relaxed text-white/60`}>{t(c.proofLocked)}</span>
+            </span>
+          </div>
         ) : f ? (
           <div className="flex flex-col gap-[9px]">
             <p className={`${META} break-all text-white/85`}>{f.name} <span className="text-white/50">({mb(f.blob.size)})</span></p>

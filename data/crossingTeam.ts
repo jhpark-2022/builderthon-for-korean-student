@@ -66,6 +66,7 @@ export const teamCopy = {
   proofAlready: { ko: "이 날은 이미 제출했습니다. 제출한 파일은 바꿀 수 없습니다.", en: "Already submitted for this day. It cannot be changed." },
   proofUploading: { ko: "올리는 중", en: "Uploading" },
   proofDone: { ko: "제출되었습니다", en: "Submitted" },
+  proofDoneChip: { ko: "제출 완료", en: "Done" },
   proofNone: { ko: "아직 없음", en: "Not yet" },
   // 2026-10-26 (사용자: 올리는 상자마다 용량 한도를 표시): {mb}는 lib/crossingOps.ts PROOF_MAX_BYTES에서 채웁니다.
   proofLimitPhoto: { ko: "JPG, PNG, HEIC 사진, {mb}MB까지", en: "JPG, PNG or HEIC photo, up to {mb} MB" },

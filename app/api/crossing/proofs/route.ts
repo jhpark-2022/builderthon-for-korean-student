@@ -42,14 +42,14 @@ export async function GET(req: Request) {
   if ("res" in a) return a.res;
   const { db, team } = a;
   const { data, error } = await db.from("crossing_mission_proofs")
-    .select("id, day, kind, storage_path, created_at").eq("team_name", team.name).order("created_at", { ascending: false });
+    .select("id, day, kind, size_bytes, created_at").eq("team_name", team.name).order("created_at", { ascending: false });
   if (error) return NextResponse.json({ error: "db" }, { status: 500 });
   // DECIDED 2026-10-26 (사용자: "업로드를 하면 웹사이트에서 보이지 않고, 그냥 submission 되었다 이런식으로만"): 팀 쪽에는 파일 주소를
   // 내주지 않습니다. 팀은 코드 없이 목록에서 고르므로(10/17), 주소를 주면 다른 팀 이름을 골라 그 팀 파일을 열 수 있었습니다.
   // 파일은 멘토 페이지(/api/crossing/mentor, 멘토 열쇠)에서만 열립니다. 여기는 제출 여부와 시각만.
   const rows = data ?? [];
   return NextResponse.json({
-    proofs: rows.map((r) => ({ id: r.id, day: r.day, kind: r.kind, createdAt: r.created_at })),
+    proofs: rows.map((r) => ({ id: r.id, day: r.day, kind: r.kind, createdAt: r.created_at, sizeBytes: r.size_bytes })),
   });
 }
 
