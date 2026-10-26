@@ -2493,7 +2493,7 @@ export const dict = {
           ko: "컴퓨터 비전과 NLP 3년+. VLM 문서 처리와 검색엔진 고도화.",
           en: "3+ yrs in computer vision & NLP. VLM document processing, search.",
         },
-        days: "", daysPending: "", stages: [1], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620",
+        days: "", daysPending: "", stages: [1], img: "/partners/people/hwang-young-jun.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hopper0620",
       },
       {
         name: { ko: "이유택 님", en: "Lee Yoo-taek" }, org: { ko: "NTU", en: "NTU" }, role: { ko: "前 Naver", en: "ex-Naver" },
@@ -2505,7 +2505,7 @@ export const dict = {
         // 두 stage를 가진 첫 멘토라 카드가 두 박스에 모두 섭니다 - 조인이 원래
         // 그렇게 설계돼 있고(사람을 세지 않습니다), 실제로 두 가지를 다 도우니
         // 맞는 표시입니다. Day 7에 안 오시면 3을 빼면 그만입니다.
-        days: "", daysPending: "", stages: [1, 3], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek",
+        days: "", daysPending: "", stages: [1, 3], img: "/partners/people/lee-yoo-taek.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/yutaek",
       },
       // Stage-2 mentoring is Popup Studio's, but it has NO card here:
       // this grid is named people you may be matched with 1:1, and Popup Studio
@@ -2527,7 +2527,7 @@ export const dict = {
           ko: "싱가포르 근무. 前 브로드컴 어카운트 디렉터, VMware 5년+.",
           en: "Based in Singapore. Ex-Broadcom account director; 5+ yrs at VMware.",
         },
-        days: "", daysPending: "", stages: [3], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hwayoung-lee-bbb79a134",
+        days: "", daysPending: "", stages: [3], img: "/partners/people/lee-hwa-young.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/hwayoung-lee-bbb79a134",
       },
       {
         name: { ko: "임석건 님", en: "Lim Seok-geon" }, org: { ko: "NetApp", en: "NetApp" }, role: { ko: "APAC", en: "APAC" },
