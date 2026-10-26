@@ -2686,10 +2686,9 @@ export const naru = {
         title: { ko: "공유하기", en: "Share" },
         when: { ko: "Day 4", en: "Day 4" },
         dayOffset: 4,
-        // DECIDED 2026-10-19 (사용자: "day 1 and day 4에 각각 GSC랑 MARU180 로고 넣어줘"): 노선도 정거장 위의 로고.
-        // 흰색 단색(scripts/process-partner-logos.py, 원본은 "12월 빌더톤/CI"). 로고가 무엇을 뜻하는지(장소, 함께하는 곳)는 글로 쓰지 않습니다.
-        // 2026-10-20: 아산나눔재단 사이트가 마루(MARU180, MARU360)로 거는 공식 주소입니다.
-        logo: { src: "/partners/logos/white/trimmed/maru180.png", name: "MARU180", w: 385, h: 91, url: "https://maru.org/" },
+        // DECIDED 2026-10-26 (사용자: "4일차에 maru180 도 빼줘, 저기 하루만 있으니까 이상하네"): Day 4 정거장 위의 MARU180 로고를 뺐습니다.
+        // 같은 날 Day 1 GSC를 뺀 뒤 로고가 한 정거장에만 남았습니다. 노선도에 로고가 하나도 없으면 RouteMap이 로고 줄을 그리지 않습니다.
+        // 홈 "함께하는 곳"의 장소 줄의 MARU180은 그대로. 그 전(2026-10-19): Day 1 GSC, Day 4 MARU180 로고.
         // 2026-09-30 (사용자, 문장 감사): "완성도가 아니라 과정을 봅니다"였습니다. "결과보다 과정"은 #naru의
         // 코어 01과 measure가 이미 세 번 말합니다. 여기서는 그 말이 이 무대에서 무슨 뜻인지만.
         body: {
