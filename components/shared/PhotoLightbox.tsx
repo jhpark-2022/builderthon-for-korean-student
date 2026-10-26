@@ -33,7 +33,7 @@ export function warmPhoto(src: string) {
 }
 
 const FOCUSABLE = 'a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])';
-const ROUND = "flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-[#070B1F]/70 text-white/80 backdrop-blur-sm transition hover:bg-white/10 hover:text-white active:scale-95";
+const ROUND = "flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-naru-surface/90 text-white/80 backdrop-blur-sm transition hover:bg-white/10 hover:text-white active:scale-95";
 
 export default function PhotoLightbox({ photos, index, onIndex, onClose, labels }: {
   photos: LightboxPhoto[];
@@ -118,7 +118,7 @@ export default function PhotoLightbox({ photos, index, onIndex, onClose, labels 
           exit={{ opacity: 0 }}
           transition={{ duration: reduce ? 0 : 0.2 }}
         >
-          <div aria-hidden onClick={onClose} className="absolute inset-0 cursor-zoom-out touch-none bg-[#070B1F]/95" />
+          <div aria-hidden onClick={onClose} className="absolute inset-0 cursor-zoom-out touch-none bg-naru-ink/95" />
 
           {/* figure는 사진만큼만 자리를 잡습니다. 그 밖을 누르면 뒤의 바탕이 받아 닫힙니다. */}
           {/* 폭은 원본 폭, 화면 폭, "높이 80dvh에 맞는 폭" 중 가장 작은 값입니다. 폭을 여기서 정해야 사진이 비율대로 섭니다

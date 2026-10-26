@@ -4,7 +4,6 @@ import JourneyNav from "@/components/journey/JourneyNav";
 import Journey from "@/components/journey/Journey";
 import ResetHandler from "@/components/ResetHandler";
 import BackgroundMount from "@/components/BackgroundMount";
-import ArchiveBanner from "@/components/archive/ArchiveBanner";
 import { RegisterProvider } from "@/lib/RegisterContext";
 import StickyBarSpace from "@/components/archive/StickyBarSpace";
 
@@ -23,7 +22,8 @@ import StickyBarSpace from "@/components/archive/StickyBarSpace";
 // 왜 크레딧을 고치지 않는가. 이 이벤트의 주최는 제로백(Zero100) 커뮤니티의 일부인
 // AXMOS 소속 회사들이었고(DECIDED 2026-10-08, 사용자) 파트너 표기도 그때의 것입니다. 나루라는 이름은 이 이벤트가 끝난 뒤에 정해졌어요. 지난 이벤트의
 // 표기를 나중에 생긴 이름으로 덮어쓰면 그건 기록이 아니라 개작입니다. 그 사정은
-// 페이지 맨 위 배너 한 줄이 말합니다(components/archive/ArchiveBanner.tsx).
+// 페이지에서 따로 말하지 않습니다. 2026-10-26 (사용자): 그 사정을 말하던 맨 위 배너(ArchiveBanner)를 뺐습니다.
+// 방문자에게 필요한 말이 아니었고, 헤더 메뉴의 "8월 기록"과 히어로가 지난 이벤트라는 것을 이미 말합니다.
 //
 // 제로백 빌더톤은 이 이벤트의 이름이지 나루의 이름이 아니고, 12월 이벤트의
 // 이름도 아닙니다. 12월을 "제로백 2회차"라고 부르지 마세요.
@@ -88,8 +88,7 @@ export default function August2026Archive() {
       {/* DECIDED 2026-10-10 (사용자: "유형 테스트는 8월 페이지에서 보이지 않게, 12월과 혼동할 수 있음"): 헤더의 유형 테스트
           링크(데스크톱 줄, 폰 칩, 다시 온 사람 인사)를 그리지 않습니다. 12월에는 /match가 따로 있어 두 테스트가 섞여 보였습니다.
           /quiz 페이지는 주소로는 그대로 열립니다. */}
-      <JourneyNav showQuiz={false} page="aug" />
-      <ArchiveBanner />
+      <JourneyNav page="aug" />
       <Journey />
     </RegisterProvider>
   );

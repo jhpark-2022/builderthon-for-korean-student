@@ -154,7 +154,7 @@ export default function TeamTool() {
   };
 
   return (
-    <main id="main" className="min-h-screen bg-[#070B1F] px-4 pb-24 pt-4 text-white">
+    <main id="main" className="min-h-screen bg-naru-ink px-4 pb-24 pt-4 text-white">
       <div className="mx-auto flex max-w-5xl flex-col gap-[27px]">
         {/* 2026-10-23 (모바일 점검): /match와 같은 머리(돌아가기, EN/KR). 머리 없이 제목으로 시작해 두 페이지가 달랐습니다. */}
         <header className="flex min-h-[44px] items-center justify-between">

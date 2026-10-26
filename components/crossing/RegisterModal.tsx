@@ -276,7 +276,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                   aria-describedby={errorId}
                   className="peer sr-only"
                 />
-                <span className="flex min-h-[52px] items-start gap-3 rounded-xl border border-white/45 bg-white/[0.04] px-[18px] py-[13.5px] transition hover:border-white/70 peer-checked:border-accent peer-checked:bg-accent/[0.12] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent peer-checked:[&>span:first-child]:border-accent peer-checked:[&>span:first-child]:bg-naru-purple peer-checked:[&>span:first-child]:text-white">
+                <span className="flex min-h-[52px] items-start gap-3 rounded-xl border border-white/45 bg-white/[0.04] px-[18px] py-[13.5px] transition hover:border-white/70 peer-checked:border-accent peer-checked:bg-accent/[0.12] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent peer-checked:[&>span:first-child]:border-accent peer-checked:[&>span:first-child]:bg-action peer-checked:[&>span:first-child]:text-naru-ink">
                   <span aria-hidden className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/45 ${META} font-bold text-white/85`}>{(f.firstStep ?? 1) + n}</span>
                   <span className="min-w-0">
                     <span className={`block break-keep ${BODY} font-bold leading-snug text-white`}>{t(o.label)}</span>

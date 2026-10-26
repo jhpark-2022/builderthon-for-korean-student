@@ -122,7 +122,7 @@ export default function MobileChatBar({ afterId = "about", endId = "closing", ph
                 // 2026-10-26 (아이폰 탭 지연): backdrop-blur를 뺐습니다. 바탕이 95%라 흐림은 보이지 않으면서 움직이는 배경 위에서 매 프레임 다시 그려졌습니다.
                 aria-label={phone ? t({ ko: "오픈채팅, 카카오톡 새 창", en: "Open chat, KakaoTalk, new window" }) : t(dict.nav.openChatAria)}
                 onClick={() => trackOpenChat("mobile-bar")}
-                className={`pointer-events-auto inline-flex h-12 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border ${phone ? "border-accent/40 text-accent" : "border-violet-400/45 text-violet-100"} bg-[#070B1F]/95 px-6 text-sm font-bold shadow-[0_8px_30px_-8px_rgba(0,0,0,0.9)] transition active:scale-95`}
+                className={`pointer-events-auto inline-flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-accent/40 text-accent bg-naru-ink/95 px-5 text-sm font-bold shadow-[0_8px_24px_-10px_rgba(0,0,0,0.3)] transition active:scale-95`}
               >
                 <ChatGlyph className="h-5 w-5 shrink-0" />
                 {t(dict.nav.openChat)}

@@ -3,16 +3,15 @@
 import Image from "next/image";
 import { trackOpenChat } from "@/lib/openChatCount";
 import Link from "next/link";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
-import { coreDict as dict, links } from "@/data/dictionaryCore";
+import { coreDict as dict, links, type Phrase } from "@/data/dictionaryCore";
 import { naruLinks } from "@/data/naru";
 import { META } from "@/components/ui/typography";
 import ChatGlyph from "@/components/ChatGlyph";
 import MotionToggle from "@/components/ui/MotionToggle";
 import PartnerMarquee from "@/components/shared/PartnerMarquee";
-import { readMotionChoice, readMotionPaused } from "@/lib/motionPreference";
 import type { SitePage } from "@/components/shared/PageChips";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -38,7 +37,7 @@ const LINK = "inline-flex min-h-[44px] items-center gap-1.5 whitespace-nowrap un
 
 function MenuLink({ it, page, className, src }: { it: Item; page: SitePage; className: string; src: string }) {
   const here = it.page === page;
-  const cls = `${LINK} ${className} ${here ? "font-bold text-white underline decoration-accent decoration-2" : ""}`;
+  const cls = `${LINK} ${className} ${here ? "font-bold !text-accent underline decoration-accent decoration-2" : ""}`;
   if (it.external === "chat") {
     return (
       <a href={links.openChat} target="_blank" rel="noopener noreferrer" onClick={() => trackOpenChat(src)} className={cls}>
@@ -57,59 +56,93 @@ function MenuLink({ it, page, className, src }: { it: Item; page: SitePage; clas
   );
 }
 
-/** 데스크톱 헤더의 사이트 메뉴(xl부터). 오픈채팅은 같은 줄의 버튼이 맡아 여기서는 넷입니다. */
-export function SiteMenuBar({ page }: { page: SitePage }) {
-  const { t, locale } = useLocale();
+/** 메가 메뉴의 한 칸: 페이지 하나와 그 페이지의 목차. */
+export type SitemapPage = { page: SitePage; anchors: { id: string; label: Phrase }[] };
+
+/**
+ * 사이트 메뉴(메가 메뉴). 현재 페이지 이름 하나(홈▾, 나루▾, 8월 기록▾)가 단추이고, 호버하거나 누르면 아래로 사이트맵이 펼쳐집니다.
+ * DECIDED 2026-10-26 (사용자: "호버하면 핵심 타이틀뿐 아니라 서브메뉴가 떠서 사이트맵처럼"): 세 페이지가 칸 하나씩, 칸마다 페이지 제목과 그 목차.
+ * 같은 페이지의 목차는 해시로, 다른 페이지는 그 페이지의 해시로 갑니다. 바깥을 누르거나 Esc, 링크를 누르면 닫힙니다.
+ * 8월 페이지에서는 단추 이름 옆에 Zero100 워드마크가 작은 서브 로고로 섭니다(같은 날 사용자: "8월기록쪽 로고는 해당 타이틀 옆에 서브로고로").
+ * DECIDED 2026-10-26 (같은 날 뒤, 사용자: "3칼럼 가로방향인데 세로로", "호버 위치와 핵심 타이틀이 대강 직선으로"): 세 페이지를 세로 한 줄로 쌓고,
+ * 패널의 왼쪽 끝을 단추 왼쪽 끝에 맞춰 단추 글자와 페이지 제목들이 같은 세로선에 섭니다. 목차는 제목 오른쪽에 이어 붙습니다.
+ * 같은 날 뒤(사용자: "좌측이 너무 좁아"): 패널 안쪽 왼쪽 여백 8 → 16px, 패널을 8px 왼쪽으로 내어 제목의 세로선은 그대로. 제목 칸 6.5 → 9.5rem, 패널 34 → 40rem.
+ */
+export function SiteMenu({ page, sitemap }: { page: SitePage; sitemap: SitemapPage[] }) {
+  const { t } = useLocale();
   const items = useItems(false);
-  // 영문은 낱말이 길어 간격을 한 단 좁힙니다(1440 영문 홈에서 목차와 오픈채팅이 닿지 않게, 실측 2026-10-20).
-  return (
-    <nav aria-label={t(dict.siteMenu.aria)} className={`ml-4 hidden shrink-0 items-center xl:flex ${locale === "en" ? "gap-3" : "gap-4"}`}>
-      {items.map((it) => <MenuLink key={it.key} it={it} page={page} src="site-menu" className="text-sm font-semibold text-white/85" />)}
-    </nav>
-  );
-}
-
-/** 폰과 태블릿의 메뉴 단추(xl 아래). 목차 레일 밖, 레일 왼쪽에 섭니다. 누르면 레일 아래에 메뉴 한 줄이 열립니다. */
-export function SiteMenuButton({ open, onToggle, controls }: { open: boolean; onToggle: () => void; controls: string }) {
-  const { t } = useLocale();
-  return (
-    <button
-      type="button"
-      aria-expanded={open}
-      aria-controls={controls}
-      aria-label={t(open ? dict.siteMenu.close : dict.siteMenu.open)}
-      onClick={onToggle}
-      className="inline-flex h-[44px] w-[44px] shrink-0 items-center justify-center text-white/85 transition-[color,transform] duration-150 active:scale-[0.96] hover:text-white xl:hidden"
-    >
-      <svg aria-hidden width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-        {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
-      </svg>
-    </button>
-  );
-}
-
-export function SiteMenuSheet({ page, open, id, onClose }: { page: SitePage; open: boolean; id: string; onClose: () => void }) {
-  const { t } = useLocale();
-  const items = useItems(true);
+  const current = items.find((item) => item.page === page);
+  const [open, setOpen] = useState(false);
+  const id = `site-menu-${useId().replace(/:/g, "")}`;
+  const box = useRef<HTMLDivElement | null>(null);
+  const trigger = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { setOpen(false); trigger.current?.focus(); }
+    };
+    const onDown = (event: PointerEvent) => { if (!box.current?.contains(event.target as Node)) setOpen(false); };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+    window.addEventListener("pointerdown", onDown);
+    return () => { window.removeEventListener("keydown", onKey); window.removeEventListener("pointerdown", onDown); };
+  }, [open]);
   return (
-    <nav id={id} aria-label={t(dict.siteMenu.aria)} hidden={!open} className="border-y border-white/10 bg-[#070B1F]/95 px-5 pb-2 backdrop-blur-md sm:px-10 xl:hidden">
-      <div className="flex flex-wrap items-center gap-x-5" onClick={onClose}>
-        {items.map((it) => <MenuLink key={it.key} it={it} page={page} src="site-menu-phone" className={`${META} font-semibold text-white/85`} />)}
+    <div
+      ref={box}
+      className="relative shrink-0"
+      onPointerEnter={(event) => { if (event.pointerType === "mouse") setOpen(true); }}
+      onPointerLeave={(event) => { if (event.pointerType === "mouse" && !box.current?.contains(document.activeElement)) setOpen(false); }}
+      onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false); }}
+    >
+      <button
+        ref={trigger}
+        type="button"
+        aria-expanded={open}
+        aria-controls={id}
+        aria-label={`${current?.label ?? ""}, ${t(open ? dict.siteMenu.close : dict.siteMenu.open)}`}
+        onClick={() => setOpen((value) => !value)}
+        className={`inline-flex min-h-[44px] items-center justify-center gap-2 whitespace-nowrap rounded-lg px-2 text-sm font-semibold transition-colors duration-150 hover:bg-white/[0.06] ${open ? "text-white" : "text-white/85"}`}
+      >
+        {current?.label}
+        {page === "aug" && (
+          <Image src="/partners/zero100-wordmark.png" alt="" width={602} height={127} className="h-3 w-auto opacity-70 brightness-0 invert" />
+        )}
+        <svg aria-hidden width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={`transition-transform duration-200 motion-reduce:transition-none ${open ? "rotate-180" : ""}`}>
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </button>
+      {/* 패널 위의 pt-2는 단추와 패널 사이의 빈틈을 호버가 지나가도 닫히지 않게 하는 다리입니다. */}
+      <div
+        className={`absolute -left-2 top-full z-50 pt-2 transition-[opacity,transform,visibility] duration-150 ease-out motion-reduce:transition-none ${open ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0"}`}
+      >
+        <nav id={id} aria-label={t(dict.siteMenu.aria)} className="card-raised w-[min(40rem,calc(100vw-40px))] rounded-xl py-2">
+          <ul role="list" className="flex flex-col" onClick={() => setOpen(false)}>
+            {sitemap.map((col) => {
+              const item = items.find((it) => it.page === col.page);
+              if (!item) return null;
+              const here = col.page === page;
+              return (
+                <li key={col.page} className={`grid grid-cols-1 gap-x-8 px-4 py-1.5 sm:grid-cols-[9.5rem_1fr] ${here ? "bg-white/[0.03]" : ""}`}>
+                  <MenuLink it={item} page={page} src="site-menu" className="text-sm font-bold text-white hover:no-underline" />
+                  <ul role="list" className="flex flex-wrap gap-x-4 pb-1 sm:pb-0">
+                    {col.anchors.filter((a) => a.id !== "top").map((a) => {
+                      const href = here ? `#${a.id}` : `${item.href}#${a.id}`;
+                      const cls = "inline-flex min-h-[36px] items-center text-sm text-naru-muted transition-colors hover:text-white";
+                      return (
+                        <li key={a.id}>
+                          {here ? <a href={href} className={cls}>{t(a.label)}</a> : <Link href={href} onClick={() => track("page_chip", { from: page, to: `${col.page}#${a.id}` })} className={cls}>{t(a.label)}</Link>}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
       </div>
-    </nav>
+    </div>
   );
-}
-
-export function useSiteMenu() {
-  const [open, setOpen] = useState(false);
-  const id = useId();
-  return { open, id: `site-menu-${id.replace(/:/g, "")}`, toggle: () => setOpen((v) => !v), close: () => setOpen(false) };
 }
 
 /**
@@ -118,14 +151,6 @@ export function useSiteMenu() {
  */
 export function SiteFooter({ page, onMotionToggle }: { page: SitePage; onMotionToggle?: () => void }) {
   const { t } = useLocale();
-  const items = useItems(true, true);
-  // 로고 띠의 멈춤. 배경 움직임 끄기와 같은 값입니다(저장값, 없으면 OS의 모션 줄이기). 서버와 맞추려고 false에서 시작합니다.
-  const [paused, setPaused] = useState(false);
-  useEffect(() => {
-    const saved = readMotionChoice();
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setPaused(saved === "off" || (reduce && saved !== "on"));
-  }, []);
   return (
     <footer id="site-footer" className="relative w-full border-t border-white/10 px-6 py-12 sm:px-10">
       {/* DECIDED 2026-10-22 (사용자, 스크린숏: "이 부분 빼줘"): 푸터의 한 줄 소개와 메뉴 줄(크로싱 서울, 나루, 8월 기록, 후원 문의, 오픈채팅, 문의)을 뺐습니다.
@@ -136,14 +161,14 @@ export function SiteFooter({ page, onMotionToggle }: { page: SitePage; onMotionT
       {/* DECIDED 2026-10-22 (사용자, 스크린숏: "8월달에는 이거 빼줘"): 8월 페이지에도 띠를 두지 않습니다. /naru에만 섭니다. */}
       {page === "naru" && (
         <div className="-mx-6 flex flex-col items-center gap-5 sm:-mx-10">
-          <p className={`${META} text-white/70`}>{t(dict.siteFooter.partners)}</p>
-          <PartnerMarquee paused={paused} />
+          <p className={`${META} text-caption`}>{t(dict.siteFooter.partners)}</p>
+          <PartnerMarquee />
         </div>
       )}
       {/* 2026-10-22 (모바일 점검: 홈 맨 아래 빈 공간): 위 로고 띠가 없는 페이지에서는 위 여백 없이. */}
       <div className={`mx-auto flex max-w-3xl flex-col items-center gap-5 text-center ${page === "naru" ? "mt-8" : ""}`}>
-        <p className={`${META} text-white/70`}>{t(dict.siteFooter.rights)}</p>
-        <span className="inline-flex" onClick={() => { onMotionToggle?.(); setTimeout(() => setPaused(readMotionPaused()), 0); }}>
+        <p className={`${META} text-caption`}>{t(dict.siteFooter.rights)}</p>
+        <span className="inline-flex" onClick={onMotionToggle}>
           <MotionToggle className="min-h-[44px] !text-white/70" />
         </span>
       </div>

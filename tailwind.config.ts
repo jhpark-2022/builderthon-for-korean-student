@@ -14,25 +14,18 @@ const config: Config = {
       fontFamily: {
         sans: ["Pretendard Variable", "Pretendard", "-apple-system", "sans-serif"],
       },
-      // Accent tokens used across EventModal (and elsewhere). Without these,
-      // Tailwind v3 silently drops `text-accent`/`bg-accent`/`text-gold` etc.,
-      // so the modal's neon strip, confirmed badge, gold star and links lost
-      // their colour. Values mirror the violet/indigo/amber used site-wide.
+      // DECIDED 2026-10-26: UI 값은 globals.css가 소유하고 Tailwind는 같은 채널을 읽습니다.
       colors: {
-        // ── DECIDED 2026-09-15 (나루 런칭) ────────────────────────────────
-        // accent는 EventModal·PartnerModal·RegisterModal에서 어두운 면 위의
-        // 글자색으로 쓰입니다. 그래서 브랜드 원색(#4B3A8C)을 그대로 넣을 수
-        // 없어요. --surface-2 위에서 2:1도 나오지 않아 읽히지 않습니다.
-        // 원색의 밝은 틴트를 씁니다(6.1:1). 브랜드 원색은 아래 naru.purple에
-        // 있고, 면이나 테두리로 쓸 때 그쪽을 부르세요.
-        accent: "#A99AD6",
-        // from-accent to-accent-strong 2px 헤어라인에만 쓰입니다. 보라에서
-        // 자주로 흐르게 해 로고 그라데이션의 방향과 같은 쪽을 봅니다.
-        "accent-strong": "#9A5A82",
+        // 밝은 링크 색과 흰 글자를 얹는 버튼 면을 구분합니다.
+        accent: "rgb(var(--ui-link) / <alpha-value>)",
+        // 모달의 2px 헤어라인은 밝은 블루에서 버튼 블루로 이어집니다.
+        "accent-strong": "rgb(var(--ui-primary) / <alpha-value>)",
+        action: {
+          DEFAULT: "rgb(var(--ui-primary) / <alpha-value>)",
+          hover: "rgb(var(--ui-primary-hover) / <alpha-value>)",
+        },
         gold: "#fcd34d",
-        // 나루 4색. 정본은 로고 가이드 v1(2026-09-13)입니다.
-        // ink/surface는 app/globals.css의 --bg/--surface와 같은 값이라,
-        // 한쪽을 바꾸면 반드시 다른 쪽도 바꾸세요.
+        // 브랜드 원색은 로고용으로 유지합니다. ink/surface/text는 공통 UI 토큰입니다.
         naru: {
           navy: "#12246B",
           purple: "#4B3A8C",
@@ -44,9 +37,11 @@ const config: Config = {
           "logo-from": "#9AA8EE",
           "logo-to": "#C99ACB",
           orange: "#EE8A4F",
-          ink: "#070B1F",
-          surface: "#0C1230",
-          "surface-2": "#111A3A",
+          ink: "rgb(var(--ui-ink) / <alpha-value>)",
+          surface: "rgb(var(--ui-surface) / <alpha-value>)",
+          "surface-2": "rgb(var(--ui-raised) / <alpha-value>)",
+          text: "rgb(var(--ui-text) / <alpha-value>)",
+          muted: "rgb(var(--ui-muted) / <alpha-value>)",
         },
       },
       maxWidth: {

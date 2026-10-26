@@ -80,7 +80,7 @@ export default function OpenChatLink({
         onClick={() => trackOpenChat(src)}
         className={`${buttonClass(variant === "hero" ? "primary" : "secondary", "naru")} ${className}`}
       >
-        <ChatGlyph className="h-4 w-4 shrink-0" />
+        <ChatGlyph className="h-[18px] w-[18px]" />
         {t(label ?? dict.register.openChatCta)}
         <span aria-hidden className={variant === "hero" ? ARROW_CLASS : "text-white/50"}>→</span>
       </a>

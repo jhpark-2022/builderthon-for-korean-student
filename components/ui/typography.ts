@@ -15,8 +15,11 @@
 //
 //   TITLE  히어로 제목, 장면을 바꾸는 챕터 제목. 카운트다운과 숫자 줄은 BODY.
 //          화면 폭마다 값 하나: 390px에서 36px, 1000px에서 55px, 1440px에서 67.5px.
-//   BODY   리드, 문단, 목록, 카드 제목, h3/h4 소제목, 버튼. 폰 15.75px, sm(640px)부터 18px.
-//          카드 제목과 소제목은 크기가 아니라 굵기와 색으로만 구분합니다.
+//   SUBTITLE 챕터 안 소제목(h3, SUBHEADING)만. lg 아래는 BODY와 같고 lg(1024px)부터 22px(2026-10-26 압축안, 그 전 27px).
+//          DECIDED 2026-10-26 (사용자: "pc쪽이 너무 빽빽", 크기 넷 승인): 데스크톱에서 TITLE 67.5px와 BODY 18px 사이에
+//          단이 없어 소제목, 칸 제목, 본문이 한 덩어리로 읽혔습니다. 폰은 그대로입니다.
+//   BODY   리드, 문단, 목록, 카드 제목, h4, 버튼. 폰 15.75px, sm(640px)부터 18px.
+//          카드 제목은 크기가 아니라 굵기와 색으로만 구분합니다.
 //   META   알약 라벨, Day 날짜, 칩, 표의 행 라벨, 캡션, 도식 안의 설명. 13.5px. 13px 아래로 내리지 않습니다.
 //
 // 그 전(2026-09-20, 표현 방식 브리프 7)에는 본문 넷(12.24 / 13.5 / 15.75 / 18)에 제목 계열
@@ -30,11 +33,14 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** 제목. DECIDED 2026-10-21: 기존 세 크기를 유지하고 역할만 정리합니다. */
-export const TITLE = "text-[clamp(2rem,5.5vw,3.75rem)]";
+// DECIDED 2026-10-26 (압축안, 루트 16px): 장 제목 28~48px, 소제목 22px(lg), 본문 15/16px, 캡션 13px.
+export const TITLE = "text-[clamp(1.75rem,4.5vw,3rem)]";
 /** 본문. 버튼(components/ui/Button.tsx)과 같은 값입니다. */
-export const BODY = "text-sm sm:text-base";
+export const BODY = "text-[0.9375rem] sm:text-base";
+/** 챕터 안 소제목. lg부터만 BODY보다 큽니다(2026-10-26). */
+export const SUBTITLE = "text-[0.9375rem] sm:text-base lg:text-[1.375rem]";
 /** 라벨과 캡션. 알약 라벨(components/ui/Eyebrow.tsx)과 같은 값입니다. */
-export const META = "text-xs";
+export const META = "text-[0.8125rem]";
 
 // ── 아래는 크기가 아니라 역할입니다. 크기는 위 셋에서만 옵니다. ─────────────────────────
 
@@ -48,13 +54,15 @@ export const META = "text-xs";
  * 2026-09-26 (한 축 브리프, 사용자: "h2도 맞게"): max-w-[52rem] → max-w-3xl. 챕터 제목도
  * 본문과 같은 READ 기둥(NaruHome.tsx의 READ, 864px) 안에 섭니다.
  */
-export const H2 = `mx-auto w-full max-w-3xl ${TITLE} font-bold tracking-tight text-white`;
+// DECIDED 2026-10-26 (사용자: 제목 위계를 색, 행간, 자간으로도): 챕터 제목은 가장 좁은 자간(-0.03em)과 가장 촘촘한 행간(1.12).
+// 소제목(SUBHEADING, logo-from 틴트, -0.02em, 1.3), 칸 제목(H3, 흰색, -0.01em, snug), 본문(white/70, relaxed) 순으로 넓어집니다.
+export const H2 = `mx-auto w-full max-w-3xl ${TITLE} font-bold leading-[1.15] tracking-[-0.03em] text-white`;
 
 /**
  * 챕터 안의 하위 블록 제목(h3). 2026-10-07부터 BODY 크기에 굵게입니다. 그 전의
  * clamp(24.3~34.2px)는 없습니다.
  */
-export const H3 = `break-keep ${BODY} font-bold tracking-tight text-white`;
+export const H3 = `break-keep ${BODY} font-bold leading-snug tracking-[-0.01em] text-white`;
 
 /** 목록 한 행의 제목(#gains 다섯 행, #december 일정 다섯 행). H3와 같은 모양입니다. 그 전의 24.3px은 없습니다. */
 export const ROW_HEADING = H3;

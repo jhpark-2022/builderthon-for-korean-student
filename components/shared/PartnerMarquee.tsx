@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { decemberPartners } from "@/data/naru";
 import { partnerUrl } from "@/data/partnerLinks";
 
@@ -45,77 +44,26 @@ export const NARU_PARTNERS: Logo[] = [...december, ...august].filter(
 // 같은 넓이 규칙(Journey.tsx opticalHeight와 같은 식). 넓은 로고는 낮게, 좁은 로고는 높게.
 const opticalHeight = (w: number, h: number) => Math.round(Math.min(56, Math.max(28, Math.sqrt(3000 / (w / h)))));
 
-const FADE = "linear-gradient(to right, transparent, #000 8%, #000 92%, transparent)";
-
-/** 두 줄이 반대로 흐르는 로고 카드 띠. paused면 멈춥니다(WCAG 2.2.2, 배경 움직임 끄기와 같은 값). 호버해도 멈춥니다. */
-export default function PartnerMarquee({ paused }: { paused: boolean }) {
-  // DECIDED 2026-10-22 (사용자, 실제 iPhone 카카오톡 스크린숏: 로고 카드 대부분이 비어 있음): loading="lazy"는 iOS Safari가 흐르는 띠의
-  // 화면 밖(오른쪽) 로고를 끝내 받지 않았습니다. 띠가 화면 800px 안으로 들어오면 그때 전부 바로 받습니다(페이지 맨 위에서는 받지 않음).
-  const box = useRef<HTMLDivElement | null>(null);
-  const [near, setNear] = useState(false);
-  useEffect(() => {
-    const el = box.current;
-    if (!el) return;
-    if (typeof IntersectionObserver === "undefined") { setNear(true); return; }
-    const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { setNear(true); io.disconnect(); } }, { rootMargin: "800px 0px" });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-  const mid = Math.ceil(NARU_PARTNERS.length / 2);
-  const rows = [
-    { items: NARU_PARTNERS.slice(0, mid), dir: "marquee-left" },
-    { items: NARU_PARTNERS.slice(mid), dir: "marquee-right" },
-  ];
+// DECIDED 2026-10-26 (사용자: "티커는 절제를 원했지 모두 삭제를 지시하진 않았어"): 같은 날 정지 격자로 바꾼 것을 되돌리고 절제한 띠로.
+// 그 전(2026-10-22)의 두 줄 반대 방향 카드 띠에서 한 줄, 카드 없이 로고만, 90초 한 바퀴(globals.css .marquee-left). 호버해도 멈추지 않고(같은 날 사용자), 모션 줄이기에서는 멈춥니다.
+// 로고는 처음부터 src를 둡니다(eager). 2026-10-26 (anti-slop broken-image): 화면 근처에서만 src를 채우던 방식은 첫 HTML에 빈 img 44개를 남겼습니다.
+// 그 전 이유(2026-10-22: iOS Safari가 흐르는 띠의 lazy 이미지를 끝내 받지 않음)는 eager로 지켜집니다.
+export default function PartnerMarquee() {
+  const track = [...NARU_PARTNERS, ...NARU_PARTNERS];
   return (
-    // 양끝은 덮개가 아니라 마스크로 흐립니다. 푸터 뒤로 배경이 비쳐서 단색 덮개는 띠처럼 보입니다.
-    <div
-      ref={box}
-      className="relative w-full"
-      style={{ WebkitMaskImage: FADE, maskImage: FADE }}
-    >
-      <div className="group flex flex-col gap-4 overflow-hidden sm:gap-5">
-        {rows.map((r, ri) => {
-          // 같은 목록을 두 번 이어 -50% 이동으로 끊김 없이 돕니다. 두 번째 것은 낭독과 키보드에서 뺍니다.
-          const track = [...r.items, ...r.items];
+    <div className="group relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)]">
+      <ul role="list" className="marquee-track marquee-left">
+        {track.map((logo, i) => {
+          const url = logo.url ?? partnerUrl(logo.alt);
+          const dup = i >= NARU_PARTNERS.length;
+          const image = <img src={logo.src} alt={url || dup ? "" : logo.alt} loading="eager" decoding="async" style={{ height: opticalHeight(logo.w, logo.h) }} className="w-auto max-h-12 max-w-[160px] object-contain opacity-80" />;
           return (
-            <ul
-              role="list"
-              key={ri}
-              style={paused ? { animationPlayState: "paused" } : undefined}
-              className={`marquee-track ${r.dir} [@media(hover:hover)]:group-hover:[animation-play-state:paused]`}
-            >
-              {track.map((c, i) => {
-                const url = c.url ?? partnerUrl(c.alt);
-                const dup = i >= r.items.length;
-                // 2026-10-22 (모바일 점검: 폰에서 카드가 한 줄에 1.5개만 보여 정신없음): 폰 카드는 128x72, sm부터 그대로.
-                const cls = "mr-3 flex h-[72px] w-32 shrink-0 items-center justify-center rounded-2xl border border-white/[0.10] bg-white/[0.05] px-4 sm:mr-5 sm:h-28 sm:w-52 sm:px-6";
-                const img = (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={near ? c.src : undefined}
-                    alt={url ? "" : c.alt}
-                    loading="eager"
-                    decoding="async"
-                    style={{ height: opticalHeight(c.w, c.h) }}
-                    className="w-auto max-h-[40px] max-w-[82%] object-contain opacity-95 sm:max-h-none"
-                  />
-                );
-                return (
-                  <li key={i} aria-hidden={dup || undefined}>
-                    {url ? (
-                      <a href={url} target="_blank" rel="noopener noreferrer" aria-label={c.alt} tabIndex={dup ? -1 : undefined} className={cls}>
-                        {img}
-                      </a>
-                    ) : (
-                      <div className={cls}>{img}</div>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
+            <li key={i} aria-hidden={dup || undefined} className="flex min-h-[64px] shrink-0 items-center justify-center px-[28px] sm:px-[40px]">
+              {url ? <a href={url} target="_blank" rel="noopener noreferrer" aria-label={logo.alt} tabIndex={dup ? -1 : undefined} className="inline-flex min-h-[44px] items-center justify-center">{image}</a> : image}
+            </li>
           );
         })}
-      </div>
+      </ul>
     </div>
   );
 }

@@ -41,7 +41,8 @@ export function AugustEyebrow({ children, color = "violet", className = "" }: { 
     orange: "border-naru-orange/35 bg-transparent text-[#F2B183]", // #F2B183 10.58:1
   } as const;
   void map;
-  const AUG_TEXT = { violet: "text-accent", cyan: "text-white/85", emerald: "text-white/85", purple: "text-accent", plum: "text-naru-plum-tint", orange: "text-[#F2B183]" } as const;
+  // DECIDED 2026-10-26 (사용자: 8월 페이지 액센트 구분이 안 됨): 8월 알약 라벨은 색 이름과 관계없이 강조 블루 하나(무지개식 배색 금지, brand 10장).
+  const AUG_TEXT = { violet: "text-accent", cyan: "text-accent", emerald: "text-accent", purple: "text-accent", plum: "text-accent", orange: "text-accent" } as const;
   return (
     // DECIDED 2026-10-22 (사용자: 10/19 피드백을 8월 페이지에도): 홈의 Eyebrow와 같은 모양입니다. 알약, 대문자, 넓은 자간, 면을 걷고
     // 글자색 하나만 남깁니다(hwang 감사 W1, W4). 8월의 cyan, emerald는 무채색으로, violet은 accent로 모았습니다.

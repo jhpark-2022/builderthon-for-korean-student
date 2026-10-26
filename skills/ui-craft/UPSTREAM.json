@@ -1,0 +1,8 @@
+{
+  "repository": "https://github.com/educlopez/ui-craft",
+  "revision": "49b751742b013ebb3e0495eb7992423185f04be0",
+  "path": "skills/ui-craft",
+  "localChanges": [
+    "Bundled examples/animation-storyboard.md under references/ and updated its link for a self-contained skill."
+  ]
+}

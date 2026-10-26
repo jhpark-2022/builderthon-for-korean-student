@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function MatchPage() {
   return (
-    <Suspense fallback={<main id="main" className="min-h-screen bg-[#070B1F]" />}>
+    <Suspense fallback={<main id="main" className="min-h-screen bg-naru-ink" />}>
       <Quiz edition="2026-12" matchMode />
     </Suspense>
   );
