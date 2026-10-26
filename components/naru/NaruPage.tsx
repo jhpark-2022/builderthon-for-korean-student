@@ -28,7 +28,7 @@ import OpenChatLink from "@/components/ui/OpenChatLink";
 import { decemberEventLabel, formatDecemberRange, DECEMBER_CITY } from "@/lib/naruDates";
 import type { Phrase } from "@/data/dictionaryCore";
 import Chip from "@/components/ui/Chip";
-import { buttonClass } from "@/components/ui/Button";
+import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
 import MobileChatBar from "@/components/shared/MobileChatBar";
 import ManifestoViewer from "@/components/naru/ManifestoViewer";
 import Chapter from "@/components/journey/Chapter";
@@ -164,11 +164,12 @@ export default function NaruPage() {
                 <p className={`break-keep ${BODY} font-semibold leading-snug text-white`}>{t(naru.december.heading)}</p>
                 <p className={`break-keep ${META} leading-relaxed text-naru-muted`}>{t(registerNoteShort)}</p>
                 <div className="mt-[6px] flex flex-wrap gap-[8px]">
-                  <OpenChatLink t={t} src="home-crossing" label={openChatLabels.december} variant="hero" />
-                  <Link href="/crossing" onClick={() => track("naru_cta", { src: "home-crossing", to: "crossing" })} className={buttonClass("secondary")}>
+                  {/* DECIDED 2026-10-26 (사용자: "반대였으면 좋겠는데 크로싱 서울이 더 중요함"): 주 버튼은 크로싱 서울 보기, 카카오톡은 보조. */}
+                  <Link href="/crossing" onClick={() => track("naru_cta", { src: "home-crossing", to: "crossing" })} className={`group ${buttonClass("primary")}`}>
                     {t(naru.events.crossingCta)}
-                    <span aria-hidden className="text-naru-muted">→</span>
+                    <span aria-hidden className={ARROW_CLASS}>→</span>
                   </Link>
+                  <OpenChatLink t={t} src="home-crossing" label={openChatLabels.december} variant="secondary" />
                 </div>
               </div>
             </li>
