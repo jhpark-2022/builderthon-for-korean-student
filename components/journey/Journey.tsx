@@ -28,6 +28,7 @@ import LinkedInLink from "@/components/ui/LinkedInLink";
 import Glass from "@/components/ui/Glass";
 import Chip from "@/components/ui/Chip";
 import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
+import ThanksStrip from "./ThanksStrip";
 import HeroPartnerStrip, { sortLikeHeroStrip, sponsorMass } from "@/components/shared/HeroPartnerStrip";
 import MobileChatBar from "@/components/shared/MobileChatBar";
 import { SiteFooter } from "@/components/shared/SiteChrome";
@@ -2254,6 +2255,8 @@ export default function Journey() {
             instead, which also keeps one more element off the scroll-linked
             repaint path. */}
         <div className="px-6 sm:px-10 lg:px-10 xl:px-16">
+          {/* DECIDED 2026-10-26 (사용자): 함께해 주신 분들을 로고 띠 위에. components/journey/ThanksStrip.tsx */}
+          <ThanksStrip t={t} />
           <HeroPartnerStrip t={t} />
         </div>
       </Chapter>
@@ -2968,7 +2971,7 @@ export default function Journey() {
             Judge cards, all with face photos. LinkedIn icon only where a
             confirmed URL exists. A judge who is agreed but not locked keeps a
             normal card and adds an amber "협의 중" pill (dict.judges.people[].pending). */}
-        <div className="mt-20 border-t border-white/10 pt-14 text-left lg:mt-24 lg:pt-16">
+        <div id="feedback-panel" className="mt-20 border-t border-white/10 pt-14 text-left lg:mt-24 lg:pt-16">
           <div className="text-center">
             <Eyebrow color="violet">{t(dict.judges.tag)}</Eyebrow>
             <h3 className="text-base lg:text-[1.375rem] font-bold leading-[1.3] tracking-[-0.02em] text-accent">
