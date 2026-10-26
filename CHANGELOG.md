@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-26 Day 1 탭에서 멘토 시간표를 뺌](#2026-10-26-day1-no-timetable)
 - [2026-10-26 멘토 찾아가기를 날마다 팀이 함께로, 세션 설명 길이를 같게](#2026-10-26-mentor-every-day)
 - [2026-10-26 노선도에서 MARU180 로고를 뺌](#2026-10-26-route-maru-off)
 - [2026-10-26 Day 1~3 상자의 제목 칸 높이를 같게](#2026-10-26-strip-heads-equal)
@@ -387,6 +388,15 @@
 ### 2026-06
 
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
+
+---
+
+<a id="2026-10-26-day1-no-timetable"></a>
+## 2026-10-26 Day 1 탭에서 멘토 시간표를 뺌
+- 범위: components/crossing/TeamTool.tsx, data/crossingTeam.ts(day1Timetable 삭제, pickFirstDay1 추가)
+- 한 것: 사용자 스크린숏 "1일차에는 멘토 시간표가 없어야함". /crossing/team의 Day 1 탭에서 잠긴 표와 주황 안내를 보여 주던 것(10/17)을 시간표 절 전체(제목, 안내, 범례, 표)를 그리지 않는 것으로 바꿨습니다. 팀 고르기 안내도 Day 1에서는 "팀을 고르면 인증 올리기가 열립니다."
+- 근거: brand 7장 멘토링(Day 1은 출제사의 컨텍스트, 찾아가는 멘토링은 Day 2, 3).
+- 커밋: 97d1448
 
 ---
 
