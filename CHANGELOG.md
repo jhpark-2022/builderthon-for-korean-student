@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-26 홈 헤더 목차를 가운데로, 세 챕터의 폭과 간격을 하나로](#2026-10-26-home-nav-rhythm)
 - [2026-10-26 Day 1 탭에서 멘토 시간표를 뺌](#2026-10-26-day1-no-timetable)
 - [2026-10-26 멘토 찾아가기를 날마다 팀이 함께로, 세션 설명 길이를 같게](#2026-10-26-mentor-every-day)
 - [2026-10-26 노선도에서 MARU180 로고를 뺌](#2026-10-26-route-maru-off)
@@ -390,6 +391,16 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-10-26-home-nav-rhythm"></a>
+## 2026-10-26 홈 헤더 목차를 가운데로, 세 챕터의 폭과 간격을 하나로
+- 범위: components/journey/JourneyNav.tsx, components/shared/SiteChrome.tsx, components/home/NaruHome.tsx, app/globals.css
+- 한 것: 사용자 요청("상단 네비게이션 정보가 많고 너무 몰려있어", "스크롤 섹션마다 레이아웃이 제각각").
+  홈 헤더(xl부터)는 로고 옆 메뉴 단추 하나와 바 가운데 목차 여섯, 오른쪽 오픈채팅과 EN/KR. 사이트 메뉴 글자 줄(홈, 나루, 8월 기록)은 단추가 엽니다. /naru와 8월은 그대로.
+  #december, #gains, #partners는 머리 READ, 본문과 판 WIDE, 위아래 Chapter 기본 여백. #gains를 READ에서 WIDE로, #december의 lg 바닥 56px와 챕터 사이 120px 바깥 여백, 화면 높이 강제를 걷었습니다. 판 사이 형상 틈은 모두 120px.
+  brand 3장 원칙 2: 무대(이벤트 목차)가 먼저, 나루는 메뉴 안에서. brand 10장 사이트 규칙: 글은 하나의 축.
+- 검증: tsc --noEmit 통과, git diff --check 통과. 화면 확인은 사용자 QA.
+- 커밋: 50fb5bc
 
 <a id="2026-10-26-day1-no-timetable"></a>
 ## 2026-10-26 Day 1 탭에서 멘토 시간표를 뺌
