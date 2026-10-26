@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-26 예약 시점과 멘토 페이지](#2026-10-26-mentor-preread)
 - [2026-10-26 Day 1 탭에서 멘토 시간표를 뺌](#2026-10-26-day1-no-timetable)
 - [2026-10-26 멘토 찾아가기를 날마다 팀이 함께로, 세션 설명 길이를 같게](#2026-10-26-mentor-every-day)
 - [2026-10-26 노선도에서 MARU180 로고를 뺌](#2026-10-26-route-maru-off)
@@ -388,6 +389,18 @@
 ### 2026-06
 
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
+
+---
+
+<a id="2026-10-26-mentor-preread"></a>
+## 2026-10-26 예약 시점과 멘토 페이지
+- 범위: lib/crossingOps.ts(bookingGate), app/api/crossing/mentoring, components/crossing/TeamTool.tsx, 새 app/api/crossing/mentor, app/crossing/mentor, components/crossing/MentorTool.tsx, scripts/mentor-links.mjs, data/crossingTeam.ts, docs/brand.md 7장
+- 한 것: 사용자 "올리면 팀이 멘토분들에게 사전에 공유줄 수 있도록", "day 2,3 둘다 choose 할 수 있도록 at day 1", "day 2에는 오후 1시 이상", "지나간 시간은 block", "멘토 전용 페이지".
+  - 예약: Day 1(12.18) 00:00 KST부터 Day 2, 3 칸을 함께 넣습니다. 그날이 되면 그날의 칸은 13:00 이후만. 지난 시간은 막힙니다. 서버와 화면이 같은 판정(bookingGate)을 씁니다.
+  - 멘토 페이지 /crossing/mentor?k=: 멘토마다 서명한 링크로 자기 칸의 팀과 그 팀의 Day 1 PDF(이슈에 대한 생각 1장)를 봅니다. Day 3 칸에는 Day 2 진척 PDF도. 사진과 다른 멘토의 칸은 보이지 않습니다. 링크는 scripts/mentor-links.mjs로 뽑습니다.
+- 근거: brand 7장 멘토링(팀의 생각 한 장을 들고 먼저 찾아간다), 판단 질문 2(멘토 앞에서 자기 판단을 설명해 볼 준비).
+- 검증: bookingGate 8개 경우 통과. 잘못된 링크는 안내 문장. 시간표 Day 2 탭은 12.18 전이라 잠김과 안내.
+- 커밋: 350e048
 
 ---
 
