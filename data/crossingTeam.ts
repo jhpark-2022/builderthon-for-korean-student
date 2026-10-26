@@ -34,9 +34,9 @@ export const teamCopy = {
 
   proofHeading: { ko: "미션 인증", en: "Mission check-in" },
   proofLead: {
-    // 2026-10-17 (사용자: 미션 완화): 멘토 사진은 찾아간 날에만. Day 2, 3 중 하루 이상이면 됩니다.
-    ko: "그날 만든 진척 PDF를 올립니다. 멘토를 찾아간 날에는 함께 찍은 사진도 올립니다(Day 2, 3 중 하루 이상). 현장 출석은 운영진이 체크합니다.",
-    en: "Upload that day's progress as a PDF. On the day you visit a mentor, upload a photo with them too (on at least one of Day 2 and 3). The organisers check who is on site.",
+    // DECIDED 2026-10-26 (사용자): 멘토 찾아가기는 Day 2, 3 날마다 팀이 함께. 10/17의 "하루 이상" 완화를 되돌립니다.
+    ko: "그날 만든 진척 PDF와 팀이 함께 멘토와 찍은 사진을 올립니다. 현장 출석은 운영진이 체크합니다.",
+    en: "Upload that day's progress as a PDF and a photo of the team with the mentor. The organisers check who is on site.",
   },
   proofPhoto: { ko: "멘토와 함께 찍은 인증 사진", en: "Photo with the mentor" },
   proofPdf: { ko: "그날의 진척 PDF", en: "That day's progress PDF" },
