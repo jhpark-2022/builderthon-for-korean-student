@@ -74,7 +74,10 @@
    screen: every rem-based text size, spacing value, and max-width content rail
    scales up together. The hero "Build" headline is held at its size separately
    (its clamp caps were trimmed to compensate). */
-html { font-size: 112.5%; scroll-padding-top: 96px; }
+/* DECIDED 2026-10-26 (사용자: "하나하나가 크고 면적을 많이 먹는다", HIG와 M3 비교 뒤 압축안 승인): 루트를 다시 16px(100%)로.
+   rem으로 잡힌 글자, 여백, 기둥 폭이 모두 약 11% 줄어듭니다. 본문 16px(폰 15px), 캡션 13px, 장 제목 최대 48px, 소제목 22px,
+   행간 1.65, 카드 안쪽 16~24px, 섹션 위아래 96px, 버튼 40px(폰 터치 44px). 값은 components/ui/typography.ts. */
+html { font-size: 100%; scroll-padding-top: 96px; }
 /* 2026-09-18 (감사 반영 브리프 9.4): scroll-behavior: smooth를 html에서 뺐습니다. 나루 홈은
    JourneyNav의 앵커 클릭 핸들러가 scrollIntoView({ behavior: "smooth" })로 하고, prefers-reduced-
    motion이면 auto입니다. CSS 값이 남아 있으면 프로그램적 스크롤(감사 캡처)까지 0.7초를 끌어
@@ -581,10 +584,7 @@ html:not([data-locale="en"]) [data-l="ko"] { display: inline; }
 /* DECIDED 2026-10-26 (사용자: 섹션마다 레이아웃이 제각각): 홈은 챕터 사이 바깥 여백과 화면 높이 강제를 두지 않습니다.
    틈은 Chapter의 위아래 여백만으로 정해집니다(NaruHome #december 주석). /naru는 그대로. */
 .naru-home-v2 .naru-content-chapter { margin-top: 0; min-height: auto; }
-/* DECIDED 2026-10-26 (사용자: "pc쪽이 다시 너무 빽빽"): lg부터 챕터 위아래 108 → 144px. 판 사이 형상 틈은 120 → 192px. 폰과 태블릿은 그대로. */
-@media (min-width: 1024px) {
-  .naru-home-v2 .naru-content-chapter { padding-top: 144px; padding-bottom: 144px; }
-}
+/* 2026-10-26: 같은 날 lg 144px로 늘렸던 챕터 위아래는 압축안(루트 16px)에서 Chapter 기본 lg:py-24(96px)로 돌아갑니다. */
 
 /* DECIDED 2026-10-21 (2차): 홈의 정보 구간만 대비를 고정하고 장식 발광을 낮춥니다. */
 .naru-home-v2 #december { --home-reading-ground: rgb(var(--ui-ink) / 0.68); }

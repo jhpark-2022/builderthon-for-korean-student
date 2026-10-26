@@ -114,13 +114,13 @@ export default function NaruPage() {
             본문보다 한 단 작습니다. 주석이지 주장이 아닙니다.
             DECIDED 2026-10-02 (사용자: 가독성 리뷰): 밝기는 /55 → /70. 작고 흐리고 줄까지 길어 읽히지 않았습니다. */}
         {/* DECIDED 2026-10-21 (brand 2장): 태그라인, 이름 풀이, 구체적인 한 줄을 가운데 축에서 읽습니다. 6799d58보다 줄어든 간격만 복원하고, 이미 넓어진 데스크톱 간격은 유지합니다. */}
-        <p className={`${READ} ${READ_MEASURE_C} mt-[22.5px] lg:mt-[24px] break-keep text-center ${BODY} leading-relaxed text-naru-muted`}>
+        <p className={`${READ} ${READ_MEASURE_C} mt-[22.5px] lg:mt-[24px] break-keep text-center ${BODY} leading-[1.65] text-naru-muted`}>
           {t(naru.group.name)}
         </p>
         {/* 태그라인 옆의 구체적인 한 줄(가독성 브리프 5, 2026-09-25 사용자 승인). 이름 풀이 다음,
             리드 앞입니다. 머리 문단은 이름 풀이 하나라 이 줄은 본문 축에 섭니다. 리드의 첫
             문장과 뜻이 겹치는 것은 알고 둔 것입니다(사용자: 표의 제안대로). */}
-        <p className={`${READ} ${READ_MEASURE_C} mt-[36px] break-keep text-center ${BODY} leading-relaxed text-white/85`}>
+        <p className={`${READ} ${READ_MEASURE_C} mt-[36px] break-keep text-center ${BODY} leading-[1.65] text-white/85`}>
           {t(naru.group.concrete)}
         </p>
         {/* DECIDED 2026-10-05 3차 (사용자, 스크린숏: "너무 길어. 간략하게"): 리드(group.lead)는 그리지 않습니다.
@@ -147,7 +147,7 @@ export default function NaruPage() {
             가운데입니다. 글이 가운데면 버튼도 가운데(2026-09-29). */}
         <Reveal id="record" className={`${READ} mt-[36px] lg:mt-[48px] text-center`}>
           {/* DECIDED 2026-10-02 (사용자: "폰에서도 가운데 정렬로 되돌려줘"): 두 문장은 폰에서도 가운데(위 12월 머리와 같은 결정). */}
-          <p className={`${MEASURE_C} break-keep text-center ${BODY} leading-relaxed text-naru-muted`}>
+          <p className={`${MEASURE_C} break-keep text-center ${BODY} leading-[1.65] text-naru-muted`}>
             {t(naru.record.lead2)}
           </p>
           {/* DECIDED 2026-10-24 (사용자: 8월에 대한 감사는 /2026-08 "고맙습니다" 한 곳에서만): 빚을 적던 한 줄(record.credit)을 뺐습니다. 키는 둡니다. */}
@@ -211,7 +211,7 @@ export default function NaruPage() {
                 <h3 className={`${BODY} font-bold leading-snug tracking-tight text-white`}>
                   {t(core.title)}
                 </h3>
-                <p className={`mt-[18px] max-w-xl break-keep max-sm:mx-auto ${BODY} leading-relaxed text-white/85 lg:mt-[24px]`}>
+                <p className={`mt-[18px] max-w-xl break-keep max-sm:mx-auto ${BODY} leading-[1.65] text-white/85 lg:mt-[24px]`}>
                   {t(core.lines[0])}
                 </p>
                 {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다): 코어 02도 한 문단이 되어 두 코어 모두 둘째 줄이 없습니다. */}
@@ -232,7 +232,7 @@ export default function NaruPage() {
           </p>
           {/* DECIDED 2026-10-21 (사용자: "나루 page 문장이 너무 많다", 더 과감하게): 경첩은 굵은 줄과 한 줄. noteConcrete와
               noteClose는 그리지 않고, 짧아진 noteBody는 폰에서도 보입니다. 키는 data/naru.ts에 그대로. */}
-          <p className={`${MEASURE_C} mt-[13.5px] break-keep text-center ${BODY} leading-relaxed text-naru-muted lg:mt-[16px]`}>
+          <p className={`${MEASURE_C} mt-[13.5px] break-keep text-center ${BODY} leading-[1.65] text-naru-muted lg:mt-[16px]`}>
             {t(naru.why.noteBody)}
           </p>
         </Reveal>
@@ -242,7 +242,7 @@ export default function NaruPage() {
             12월을 미리 설명합니다. */}
         <Reveal className={`${READ} mt-[36px] text-balance text-center lg:mt-[54px]`}>
           <h3 data-subheading className={SUBHEADING}>{t(naru.why.agendaLabel)}</h3>
-          <p className={`${MEASURE_C} mt-[16px] break-keep text-center ${BODY} leading-relaxed text-naru-muted lg:mt-[24px]`}>{t(naru.why.agenda)}</p>
+          <p className={`${MEASURE_C} mt-[16px] break-keep text-center ${BODY} leading-[1.65] text-naru-muted lg:mt-[24px]`}>{t(naru.why.agenda)}</p>
           {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다): agendaMore는 agenda와 합쳐 그리지 않습니다. */}
         </Reveal>
               {/* ── 어떻게 일하는가 (DECIDED 2026-09-18, 사용자: "나루와 학생회와 기업 내용은 하나의
@@ -337,7 +337,7 @@ export default function NaruPage() {
             아무 일이 없었습니다. 주소를 고를 수 있는 글자로 보여 주고, 기업에 먼저 부탁하는 것을 한 줄로 적습니다.
             위 세 버튼과 같은 가운데입니다. */}
         <Reveal className={`${READ} mt-[18px] text-center`}>
-          <p className={`${MEASURE_C} break-keep ${META} leading-relaxed text-caption`}>{t(partnerContact.ask)}</p>
+          <p className={`${MEASURE_C} break-keep ${META} leading-[1.65] text-caption`}>{t(partnerContact.ask)}</p>
           <p className={`mt-[12px] ${META} text-caption lg:mt-[16px]`}>
             {t(partnerContact.addressLabel)}
             {"\u2002"}
@@ -377,7 +377,7 @@ export default function NaruPage() {
             join.eyebrow 키는 data/naru.ts에 그대로 있습니다. */}
         {/* DECIDED 2026-10-21 (brand 2장): 챕터 제목을 세워 안전한 도전과 가치 증명의 두 축을 분명히 합니다. */}
         <h2 id="join-title" className={`${READ} ${TITLE} font-bold tracking-tight text-white text-balance text-center`}>{t(naru.join.heading)}</h2>
-        <p className={`${READ} ${READ_MEASURE_C} mt-[27px] break-keep text-center ${BODY} leading-relaxed text-white/85`}>
+        <p className={`${READ} ${READ_MEASURE_C} mt-[27px] break-keep text-center ${BODY} leading-[1.65] text-white/85`}>
           {t(naru.join.lead)}
         </p>
 
@@ -395,11 +395,11 @@ export default function NaruPage() {
             // 항목의 점이 위로 올라가 어긋났습니다. 줄 사이 간격은 부모의 gap이 아니라 문단의 위 여백입니다.
             <li
               key={need.place.en}
-              className="border-b border-white/10 py-[20px] last:border-b-0 sm:rounded-2xl sm:border-b-0 sm:card-base sm:p-[24px] lg:grid lg:grid-rows-subgrid lg:row-span-2 lg:gap-y-0 lg:p-[32px]"
+              className="border-b border-white/10 py-[20px] last:border-b-0 sm:rounded-2xl sm:border-b-0 sm:card-base sm:p-5 lg:grid lg:grid-rows-subgrid lg:row-span-2 lg:gap-y-0 lg:p-6"
             >
               <h3 className={H3}>{t(need.place)}</h3>
               {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다, 더 과감하게): 칸마다 없는 것 한 줄만. opens는 그리지 않습니다. */}
-              <p className={`mt-[12px] break-keep ${BODY} leading-relaxed text-white/85 lg:mt-[16px]`}>{t(need.lack)}</p>
+              <p className={`mt-[12px] break-keep ${BODY} leading-[1.65] text-white/85 lg:mt-[16px]`}>{t(need.lack)}</p>
             </li>
           ))}
         </ul>
@@ -409,7 +409,7 @@ export default function NaruPage() {
             같은 I장의 다른 나라 학생과의 비교는 가져오지 않았습니다. */}
         <PhoneFold id="why-more" more={t({ ko: "왜 필요한지 더 읽기", en: "More on why" })} less={t({ ko: "왜 필요한지 접기", en: "Hide the rest" })}>
         <Reveal>
-        <p className={`${READ} ${READ_MEASURE_C} mt-[45px] break-keep text-center ${BODY} leading-relaxed text-naru-muted lg:mt-[48px]`}>
+        <p className={`${READ} ${READ_MEASURE_C} mt-[45px] break-keep text-center ${BODY} leading-[1.65] text-naru-muted lg:mt-[48px]`}>
           {t(naru.join.milestones)}
         </p>
         </Reveal>
@@ -419,7 +419,7 @@ export default function NaruPage() {
         {/* 규모 숫자는 출처가 확인되기 전까지 그리지 않습니다. statTbd 키는
             data/naru.ts에 있습니다. */}
         {JOIN_STAT_CONFIRMED && (
-          <p className={`${READ} ${READ_MEASURE_C} mt-[27px] break-keep text-center ${BODY} leading-relaxed text-naru-muted lg:mt-[32px]`}>
+          <p className={`${READ} ${READ_MEASURE_C} mt-[27px] break-keep text-center ${BODY} leading-[1.65] text-naru-muted lg:mt-[32px]`}>
             {t(naru.join.statTbd)}
           </p>
         )}
@@ -432,7 +432,7 @@ export default function NaruPage() {
           {/* 닫는 문장 옆의 구체적인 한 줄(가독성 브리프 5, 2026-09-25 사용자 승인). 이름은 naruDates. */}
           {/* DECIDED 2026-10-10 (중복 브리프 C8): closingConcrete("{name}은 스크리닝 없이, 오는 사람이 참가자입니다")를 그리지 않습니다.
               #december 끝의 등록 안내가 같은 말을 합니다. 키는 data/naru.ts에 그대로. */}
-          <div className={`${MEASURE_C} mt-[22.5px] space-y-[13.5px] break-keep ${BODY} leading-relaxed text-naru-muted lg:mt-[24px] lg:space-y-[16px]`}>
+          <div className={`${MEASURE_C} mt-[22.5px] space-y-[13.5px] break-keep ${BODY} leading-[1.65] text-naru-muted lg:mt-[24px] lg:space-y-[16px]`}>
             {naru.join.closingBody.map((line, i) => (
               <p key={i} className="text-balance">{t(line)}</p>
             ))}
@@ -471,7 +471,7 @@ export default function NaruPage() {
             {/* 2026-10-25: 내려받지 않으므로 "(PDF 0.6MB)" 크기 표기를 뗐습니다. */}
           </p>
           {/* DECIDED 2026-10-21 (사용자: 문장이 너무 많다): 제목 줄("이 챕터의 문장들은 여기서 왔습니다.")은 그리지 않습니다. */}
-          <p className={`mt-[16px] text-balance break-keep ${BODY} leading-relaxed text-naru-muted lg:mt-[24px]`}>{t(naru.join.manifesto.body)}</p>
+          <p className={`mt-[16px] text-balance break-keep ${BODY} leading-[1.65] text-naru-muted lg:mt-[24px]`}>{t(naru.join.manifesto.body)}</p>
           {/* DECIDED 2026-10-25 (사용자: "매니페스토 내려받는게 아니라, 웹사이트에서 그냥 스와이핑해서 페이지 넘겨서 볼 수 있게"):
               내려받기 버튼 대신 쪽을 넘겨 보는 뷰어. PDF와 그 링크 키는 같은 날 지웠습니다(data/naru.ts naruLinks). */}
           <ManifestoViewer locale={locale === "en" ? "en" : "ko"} t={t} />
@@ -493,18 +493,18 @@ export default function NaruPage() {
         <Chapter id="people" labelledBy="people-title" align="center" contentSized>
           <div className={`${READ} text-center`}><Eyebrow color="purple" className={`${eyebrowTrack(locale)} !mb-0`}>{t(naru.people.eyebrow)}</Eyebrow></div>
           <h2 id="people-title" className={`${READ} ${TITLE} mt-[18px] font-bold tracking-tight text-white text-center`}>{t(naru.people.heading)}</h2>
-          <p className={`${READ} ${READ_MEASURE_C} mt-[27px] break-keep text-center ${BODY} leading-relaxed text-naru-muted`}>
+          <p className={`${READ} ${READ_MEASURE_C} mt-[27px] break-keep text-center ${BODY} leading-[1.65] text-naru-muted`}>
             {t(naru.people.lead)}
           </p>
           <div className="mt-[54px] grid gap-[18px] text-left md:grid-cols-2">
             {naru.people.stories.map((story) => (
               <Card key={story.name.en}>
-                <blockquote className={`break-keep ${BODY} leading-relaxed text-white/85`}>
+                <blockquote className={`break-keep ${BODY} leading-[1.65] text-white/85`}>
                   {t(story.quote)}
                 </blockquote>
                 <p className={`mt-[22.5px] ${BODY} font-semibold text-white lg:mt-[24px]`}>{t(story.name)}</p>
                 <p className={`mt-[8px] ${META} text-caption lg:mt-[12px]`}>{t(story.school)}</p>
-                <p className={`mt-[13.5px] break-keep ${BODY} leading-relaxed text-naru-muted lg:mt-[16px]`}>{t(story.after)}</p>
+                <p className={`mt-[13.5px] break-keep ${BODY} leading-[1.65] text-naru-muted lg:mt-[16px]`}>{t(story.after)}</p>
               </Card>
             ))}
           </div>
@@ -824,7 +824,7 @@ function KeepsPanel({ id, label, body }: { id: string; label: string; body: stri
       </button>
       <dl>
         <dt className={`hidden ${META} font-bold uppercase ${latinTrack(locale)} text-accent lg:block`}>{label}</dt>
-        <dd id={id} className={`${open ? "mt-[13.5px]" : ""} ${open ? "block" : "hidden"} break-keep ${BODY} leading-relaxed text-naru-muted lg:mt-[13.5px] lg:block`}>{body}</dd>
+        <dd id={id} className={`${open ? "mt-[13.5px]" : ""} ${open ? "block" : "hidden"} break-keep ${BODY} leading-[1.65] text-naru-muted lg:mt-[13.5px] lg:block`}>{body}</dd>
       </dl>
     </div>
   );

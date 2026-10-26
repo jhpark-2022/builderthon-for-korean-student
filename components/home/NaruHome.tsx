@@ -491,7 +491,7 @@ function MilestoneStrip({ id, label, title, detail, center = false, expanded = f
             {detail.map((g) => (
               <div key={g.label}>
                 <p className={`${META} font-bold text-white/85`}>{g.label}</p>
-                <ul className={`mt-1 ${BODY} leading-relaxed text-white/85`}>
+                <ul className={`mt-1 ${BODY} leading-[1.65] text-white/85`}>
                   {g.items.map((it) => (
                     <li key={it} className="flex gap-2"><span aria-hidden className="text-white/50">•</span><span>{it}</span></li>
                   ))}
@@ -684,10 +684,10 @@ export default function NaruHome() {
           <h3 id="mentoring" className={SUBHEADING}>{t(naru.december.forCompanies.label)}</h3>
           <ol role="list" className="mt-[16px] grid gap-[16px] md:grid-cols-3 lg:mt-[24px]">
             {naru.december.forCompanies.boxes.map((b, i) => (
-              <li key={i} className="flex flex-col items-start gap-[12px] rounded-2xl card-tint p-[20px] sm:p-[24px]">
+              <li key={i} className="flex flex-col items-start gap-[12px] rounded-2xl card-tint p-4 sm:p-5">
                 <span className={`${META} font-bold text-accent`}>{t(b.when)}</span>
                 <span className={`break-keep ${BODY} font-bold text-white`}>{t(b.name)}</span>
-                <span className={`break-keep ${BODY} leading-normal text-naru-muted`}>{t(b.body)}</span>
+                <span className={`break-keep ${BODY} leading-[1.65] text-naru-muted`}>{t(b.body)}</span>
               </li>
             ))}
           </ol>
@@ -746,7 +746,7 @@ export default function NaruHome() {
       // 카드가 비어 보였습니다. Day 1~3 카드(sub)의 행 간격을 16px로. 폰 패널(12px)과 Day 0, Day 4는 그대로.
       // DECIDED 2026-10-24 (밀도 브리프 1.2, D2): lg부터 Day 0~3이 한 줄 네 칸(Day 0 = lgSub). Day 1은 md에서 줄의 첫 칸(왼쪽 선 없음), lg에서는
       // Day 0 다음 칸(왼쪽 선). Day 4(전폭)는 lg에서 위아래 여백 32px → 20px. 글은 그대로, 폰 패널은 그대로.
-      className={`flex flex-col ${inPanel ? "gap-[20px]" : sub ? "gap-[20px] md:gap-[16px]" : lgSub ? "gap-[20px] md:gap-[24px] lg:gap-[16px]" : "gap-[20px] md:gap-[24px]"} ${sub ? "items-start text-left" : "items-center text-center"} ${sub ? `py-0 md:row-span-5 md:grid md:grid-rows-subgrid md:items-stretch md:border-white/10 ${i === 1 ? "md:border-l-0 md:pl-0" : "md:border-l md:pl-[16px]"}` : inPanel ? "rounded-2xl card-base px-[20px] py-[20px]" : lgSub ? "border-b border-white/10 px-[22.5px] py-[28px] sm:px-[24px] sm:py-[32px] md:col-span-3 md:mb-[24px]" : `px-[22.5px] py-[28px] sm:px-[24px] sm:py-[32px] lg:px-[27px] lg:py-[20px] ${i === 0 ? "border-b border-white/10" : "border-t border-white/10"}`} ${!inPanel && !lgSub && (i === 0 || i === naru.december.stages.length - 1) ? "md:col-span-3" : ""}`}
+      className={`flex flex-col ${inPanel ? "gap-[20px]" : sub ? "gap-[20px] md:gap-[16px]" : lgSub ? "gap-[20px] md:gap-[24px] lg:gap-[16px]" : "gap-[20px] md:gap-[24px]"} ${sub ? "items-start text-left" : "items-center text-center"} ${sub ? `py-0 md:row-span-5 md:grid md:grid-rows-subgrid md:items-stretch md:border-white/10 ${i === 1 ? "md:border-l-0 md:pl-0" : "md:border-l md:pl-[16px]"}` : inPanel ? "rounded-2xl card-base p-4" : lgSub ? "border-b border-white/10 px-4 py-5 sm:px-5 sm:py-6 md:col-span-3 md:mb-[20px]" : `px-4 py-5 sm:px-5 sm:py-6 lg:py-5 ${i === 0 ? "border-b border-white/10" : "border-t border-white/10"}`} ${!inPanel && !lgSub && (i === 0 || i === naru.december.stages.length - 1) ? "md:col-span-3" : ""}`}
     >
       {/* DECIDED 2026-10-26 (사용자: "day 123쪽은 확실히 좌측 단락으로 구성하는게 읽기 편해"): 일정 판의 Day 1~3(sub)은 머리, 한 줄, 세션, 띠, 칩 모두 왼쪽 정렬.
           Day 0, Day 4(전폭)와 폰 패널은 가운데 그대로입니다. */}
@@ -760,11 +760,11 @@ export default function NaruHome() {
         <span className={`${META} text-caption`}>{formatDecemberDayWithWeekday(locale, stage.dayOffset)}</span>
       </div>
       {/* stage.body는 그리지 않습니다(2026-09-20). 키는 data/naru.ts에 그대로 있습니다. */}
-      <p className={`${sub ? "" : "mx-auto"} max-w-3xl break-keep ${BODY} font-medium leading-relaxed text-white/85`}>{t(stage.line)}</p>
+      <p className={`${sub ? "" : "mx-auto"} max-w-3xl break-keep ${BODY} font-medium leading-[1.65] text-white/85`}>{t(stage.line)}</p>
       {/* DECIDED 2026-10-24 (사용자: "세션에 대한 설명도 아래 박스 안에 넣어줘, 각 날의 설명이 더 적어지도록"): 카드에는 세션 이름만 남기고
           설명은 아래 띠의 펼치는 상세(세션 절)로 내렸습니다. */}
       {stage.session && (
-        <p className={`break-keep ${BODY} leading-relaxed text-naru-muted`}>
+        <p className={`break-keep ${BODY} leading-[1.65] text-naru-muted`}>
           <span className={`mr-1.5 ${META} font-semibold uppercase ${latinTrack(locale)} text-naru-muted`}>{t(naru.december.sessionLabel)}</span>
           {/* lang="en" (2026-10-11, 리뷰 작은 것): 세션 이름 셋은 두 로케일 모두 영어입니다. */}
           <span lang="en" className="font-semibold text-white/85">{t(stage.session.title)}</span>
@@ -776,7 +776,7 @@ export default function NaruHome() {
           그날의 진행(stage.body)을 그립니다. 새 글이 아니라 9/20부터 그리지 않던 키입니다. 데스크톱은 그대로. */}
       {/* 같은 날 이어서(사용자: "전체 상자의 세로 크기를 줄여줘"): Day 4는 자기 한 줄과 투표 버튼으로 이미 차서 Day 0에만 그립니다. */}
       {inPanel && !stage.session && (i === 0 || stage.panelBody) && (
-        <p className={`break-keep ${BODY} leading-relaxed text-naru-muted`}>{t(stage.panelBody ?? stage.body)}</p>
+        <p className={`break-keep ${BODY} leading-[1.65] text-naru-muted`}>{t(stage.panelBody ?? stage.body)}</p>
       )}
       {/* DECIDED 2026-10-25 (같은 요청): 데스크톱 Day 0~3 줄(sub, lgSub)은 상자를 칩 줄보다 먼저 둡니다. 칩은 Day 1에만 있어서, 칩이 먼저면
           Day 0, 2, 3의 상자 위에 빈 행이 생겼습니다. 이제 네 상자가 세션 행 바로 아래 같은 높이에서 시작하고 Day 1의 칩과 링크는 그 아래에 섭니다. */}
@@ -1026,7 +1026,7 @@ export default function NaruHome() {
             <p className={`mx-auto mt-4 max-w-xl break-keep ${BODY} font-bold leading-snug lg:mx-0 text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)]`}>
               {t(naru.december.heading)}
             </p>
-            <p className={`mx-auto mt-3 max-w-xl text-balance break-keep ${BODY} leading-relaxed lg:mx-0 text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)]`}>
+            <p className={`mx-auto mt-3 max-w-xl text-balance break-keep ${BODY} leading-[1.65] lg:mx-0 text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)]`}>
               {/* 나루 한 문장이 서술 첫 줄(감사 반영 브리프 1.2). TODO: confirm(문구는 사용자가). */}
               {/* DECIDED 2026-10-13 (등록 브리프 2.3): 이 문장의 "나루"는 링크가 아닙니다. 2026-10-10에는 색만 다른 인라인 링크였는데,
                   /naru로 가는 길은 헤더의 페이지 칩과 홈 끝의 티저 버튼이 맡습니다. 본문 인라인 링크는 밑줄 하나로 통일합니다. */}
@@ -1130,7 +1130,7 @@ export default function NaruHome() {
         <Reveal id="schedule" className={`${WIDE} mt-[45px] text-center lg:mt-[48px]`}>
           <div className={READ}>
             <h3 data-subheading className={SUBHEADING}>{t(naru.december.scheduleLabel)}</h3>
-            <p className={`${MEASURE_C} mt-[16px] break-keep ${BODY} leading-relaxed text-naru-muted sm:mt-[24px] lg:mt-[20px]`}>
+            <p className={`${MEASURE_C} mt-[16px] break-keep ${BODY} leading-[1.65] text-naru-muted sm:mt-[24px] lg:mt-[20px]`}>
               {t(naru.december.scheduleLead)}
             </p>
           </div>
@@ -1205,7 +1205,7 @@ export default function NaruHome() {
                 다른 셋과 높이가 맞음), Day 4는 전폭 그대로(인기투표 버튼이 마무리). md까지는 전처럼 Day 0 전폭 위, Day 1~3 세 칸. 판의 위아래 여백은 lg에서 20px. */}
             {/* DECIDED 2026-10-25 (사용자: "위에 day 0, 중간에 day 1 to 3, 맨 아래에 day 4"): lg의 네 칸 줄을 되돌립니다. 모든 폭에서 Day 0 전폭 위,
                 Day 1~3 세 칸, Day 4 전폭 아래. Day 0 칸은 lg에서도 md와 같은 전폭 카드입니다(lgSub의 lg 분기를 뺌). */}
-            <div className="flex flex-col gap-[24px] p-[24px] md:col-span-3 md:gap-[32px] lg:py-[20px]">
+            <div className="flex flex-col gap-[20px] p-5 md:col-span-3 md:gap-[24px] lg:p-6">
               {/* DECIDED 2026-10-19 (사용자, 스크린숏: "세션이라는 말도 다 같은 선상에"): 세 카드가 이 격자의 다섯 행(제목, 한 줄, 세션, 칩, 미션)을
                   나눠 씁니다(subgrid). 한 줄의 길이가 날마다 달라도 세션과 미션이 같은 높이에 섭니다. */}
               <div className="grid grid-cols-1 gap-x-[24px] gap-y-[56px] md:grid-cols-3 md:gap-x-[32px] md:gap-y-0">
@@ -1218,7 +1218,7 @@ export default function NaruHome() {
           </div>
         </Reveal>
         {/* DECIDED 2026-10-24 (폰 밀도 브리프 1.12~1.18): 폰(sm 미만)만 묶음 사이와 칸 안쪽 여백을 줄입니다(72/40 → 48/32, 칸 24/12 → 16/8, 행 20/8 → 14/6). max-sm: 추가만. */}
-        <Reveal className={`${WIDE} mt-[72px] max-sm:mt-[48px] max-sm:pt-[32px] border-t border-white/15 pt-[40px] text-left lg:mt-[96px] lg:pt-[48px]`}>
+        <Reveal className={`${WIDE} mt-[56px] max-sm:mt-[40px] max-sm:pt-[28px] border-t border-white/15 pt-[32px] text-left lg:mt-[64px] lg:pt-[40px]`}>
           {/* DECIDED 2026-10-22 (사용자, 스크린숏: "bottom of both parts가 같아야 함"): lg에서 두 열이 같은 높이로 늘고, 왼쪽은 네 단계 표가
               아래 끝에, 오른쪽은 다섯 줄이 높이를 나눠 마지막 선이 왼쪽 표의 마지막 선과 같은 높이에 섭니다. */}
           {/* DECIDED 2026-10-24 (사용자, 스크린숏 둘: 왼쪽 열의 두 문단은 생략, "맨위에 한줄: 과정 지향적인 이벤트를 큐레이션 합니다"): 오른쪽 열에
@@ -1256,7 +1256,7 @@ export default function NaruHome() {
                     {/* 2026-10-11 (리뷰 작은 것): DOM은 dt 다음 dd입니다(용어가 먼저). 보이는 순서는 order가 전과 같이 숫자 위, 라벨 아래로 둡니다. */}
                     {/* 2026-10-24 (사용자: "폰트 사이즈가 너무 뒤죽박죽"): lg 행에서는 라벨을 오른쪽 표의 설명과 같은 BODY 보통 굵기로.
                         이 블록의 글자 크기는 TITLE(숫자)과 BODY 둘이 됩니다. lg 아래의 가로 한 줄은 전과 같은 META 굵게. */}
-                    <dt className={`order-2 mt-[12px] break-keep text-center ${META} font-bold uppercase text-caption lg:mt-0 lg:text-left lg:text-base lg:font-normal lg:normal-case lg:tracking-normal lg:leading-relaxed ${latinTrack(locale)}`}>
+                    <dt className={`order-2 mt-[12px] break-keep text-center ${META} font-bold uppercase text-caption lg:mt-0 lg:text-left lg:text-base lg:font-normal lg:normal-case lg:tracking-normal lg:leading-[1.65] ${latinTrack(locale)}`}>
                       {t(stat.label)}
                     </dt>
                     {/* DECIDED 2026-10-22 (사용자, 스크린숏: "좀 더 visually engaging, 구성은 유지"): 숫자 줄은 TITLE(2026-09-26 사용자 요청의 크기로 돌아감).
@@ -1282,11 +1282,11 @@ export default function NaruHome() {
                   <div
                     key={f.k.en}
                     // DECIDED 2026-10-22 (사용자: "visually engaging"): sm부터 라벨 왼쪽 열(accent), 설명 오른쪽 열. 표처럼 한눈에 훑습니다.
-                    className="grid grid-cols-1 gap-y-[8px] rounded-2xl card-raised p-[20px] sm:p-[24px] sm:grid-cols-[7.5rem_1fr] sm:gap-x-[24px] lg:grid-cols-1 lg:content-start lg:gap-y-[12px]"
+                    className="grid grid-cols-1 gap-y-[8px] rounded-2xl card-raised p-4 sm:p-5 sm:grid-cols-[7.5rem_1fr] sm:gap-x-[24px] lg:grid-cols-1 lg:content-start lg:gap-y-[12px]"
                   >
                     {/* DECIDED 2026-10-23 (사용자, 스크린숏: "팀 구성 같은 제목들도 너무 작고"): 라벨을 META에서 BODY 굵게로 올렸습니다. 새 크기는 만들지 않습니다. */}
-                    <dt className={`break-keep ${BODY} font-bold leading-relaxed text-naru-text`}>{t(f.k)}</dt>
-                    <dd className={`break-keep ${BODY} leading-relaxed text-naru-muted`}>{t(f.v)}</dd>
+                    <dt className={`break-keep ${BODY} font-bold leading-[1.65] text-naru-text`}>{t(f.k)}</dt>
+                    <dd className={`break-keep ${BODY} leading-[1.65] text-naru-muted`}>{t(f.v)}</dd>
                   </div>
                 ))}
               </dl>
@@ -1299,12 +1299,12 @@ export default function NaruHome() {
               <p className={SUBHEADING}>{t(naru.december.approachLabel)}</p>
               <ol role="list" className="mt-[16px] grid grid-cols-1 gap-[12px] sm:grid-cols-2 sm:gap-[16px] lg:mt-[24px] lg:grid-cols-4">
                 {naru.december.approach.map((a, i) => (
-                  <li key={i} className="flex flex-col items-start gap-[12px] rounded-2xl card-base p-[20px] sm:p-[24px]">
+                  <li key={i} className="flex flex-col items-start gap-[12px] rounded-2xl card-base p-4 sm:p-5">
                     {/* 2026-10-22: 칸마다 길이가 다른 진행 막대를 넣었다가 같은 날 뺐습니다(사용자: "늘리고 줄이는 그거 이상함"). */}
                     <span className={`${META} font-bold tabular-nums text-accent`}>{String(i + 1).padStart(2, "0")}</span>
                     <span className={`break-keep ${BODY} font-bold text-white`}>{t(a.title)}</span>
                     {/* 2026-10-24 (사용자: "폰트 키워줘, 다른 part와 동일하게"): 칸 설명은 META에서 사이트 본문 BODY로. 아래 세 칸 표와 같습니다. */}
-                    <span className={`break-keep ${BODY} leading-normal text-naru-muted`}>{t(a.body)}</span>
+                    <span className={`break-keep ${BODY} leading-[1.65] text-naru-muted`}>{t(a.body)}</span>
                   </li>
                 ))}
               </ol>
@@ -1317,7 +1317,7 @@ export default function NaruHome() {
             </div>
           </div>
         </Reveal>
-        <div id="register" aria-labelledby="december-register-note" className={`${READ} mt-[64px] max-sm:mt-[48px] border-t border-white/10 pt-[40px] max-sm:pt-[32px] text-balance text-center lg:mt-[96px] lg:pt-[48px]`}>
+        <div id="register" aria-labelledby="december-register-note" className={`${READ} mt-[56px] max-sm:mt-[40px] border-t border-white/10 pt-[32px] max-sm:pt-[28px] text-balance text-center lg:mt-[64px] lg:pt-[48px]`}>
         {/* 2026-10-11 (리뷰 A5): 등록 블록의 제목. 화면에는 그리지 않고 제목 목록에서 찾을 수 있게 합니다. */}
         <h3 className="sr-only">{t({ ko: "등록", en: "Registration" })}</h3>
         {/* DECIDED 2026-10-13 (사용자, 스크린숏: "너무 길어, 있는 말 반복이니까"): 여기 서던 registerNote 줄들을 뺐습니다. 언제 여는지와
@@ -1427,9 +1427,9 @@ export default function NaruHome() {
             (같은 날 "뭐는 중간에, 뭐는 left에" 결정). 카드 본문은 불릿이 아니라 한 문장입니다(항목마다 문장이 하나뿐). */}
         <Reveal className={WIDE}>
           {/* DECIDED 2026-10-26: 핵심 문장은 모든 화면에서 보라색 채움 카드로 본문과 구분합니다. */}
-          <div className="mt-[32px] rounded-2xl card-tint px-[20px] py-[24px] text-center sm:mt-[40px] sm:px-[40px] sm:py-[36px]">
+          <div className="mt-[32px] rounded-2xl card-tint px-5 py-5 text-center sm:mt-[40px] sm:px-6 sm:py-6">
             <p className={`${META} font-bold uppercase ${latinTrack(locale)} text-accent`}>{t(naru.gains.spine.tag)}</p>
-            <p className={`mx-auto mt-[12px] max-w-[34rem] text-balance break-keep ${BODY} font-bold leading-relaxed text-white`}>{markPhrases(t(naru.gains.spine.heading), naru.gains.spine.marks.map((m) => t(m)))}</p>
+            <p className={`mx-auto mt-[12px] max-w-[34rem] text-balance break-keep ${BODY} font-bold leading-[1.65] text-white`}>{markPhrases(t(naru.gains.spine.heading), naru.gains.spine.marks.map((m) => t(m)))}</p>
             {/* DECIDED 2026-10-20 (hwang 브리프 1.2, 2.6, 감사 W3, W4): ✓칩 셋(알약)을 걷고 한 문장으로. tangibles 키는 남깁니다. */}
             {/* DECIDED 2026-10-23 (사용자: 남는 것 다섯 칸 개편): tangiblesLine(팀의 생각 한 장, 코드로 옮긴 결과물)은 그리지 않습니다.
                 바로 아래 02와 04가 같은 말을 합니다. 키는 data/naru.ts에 남깁니다. */}
@@ -1444,7 +1444,7 @@ export default function NaruHome() {
           {/* DECIDED 2026-10-26 (사용자: "오면 무엇이 남는가 섹션 개박살남. 선택적 좌측단락, 사이즈, 패딩, 간격, 여백"): 핵심 문장 판(가운데) 아래 다섯 행은 모든 폭에서 왼쪽 정렬
               (폰도. 그 전에는 폰만 가운데라 긴 본문이 가운데로 흘렀습니다). 판 안쪽 20/32/48px, 행 위아래 20/24/28px, 제목과 본문 사이 8/10px.
               날마다 옅게 칠하던 세로 띠는 걷었습니다(카드 면 위에서 줄무늬로 읽힘). 폰의 붙는 날 머리는 카드 면 색. */}
-          <div className="relative mt-[48px] rounded-2xl card-base px-[20px] py-[8px] sm:px-[32px] sm:py-[20px] lg:mt-[72px] lg:px-[48px] lg:py-[28px]">
+          <div className="relative mt-[48px] rounded-2xl card-base px-4 py-1 sm:px-5 sm:py-2 lg:mt-12 lg:px-6 lg:py-2">
             <div className="relative">
               {/* 날마다의 옅은 세로 띠(Day 0, 2, 4). 가는 안내선 대신 칸이 보이게. 머리와 행과 같은 칸 틀입니다. */}
               {/* DECIDED 2026-10-25 (사용자, 폰 스크린숏: "스크롤할때 몇일인지가 모를거 같은데"): 폰에서는 Day 머리가 접힌 헤더(탭 줄 48px)
@@ -1468,7 +1468,7 @@ export default function NaruHome() {
                     </div>
                     {/* DECIDED 2026-10-25 (사용자: "그렇다고 이런식으로 침범이 되면 안됨"): 본문은 왼쪽 글 칸(1열) 안에만 둡니다. 날 칸 아래로 넘어가지 않습니다.
                         줄 수는 문장 길이로 맞춥니다(data/naru.ts gains.items). */}
-                    <p className={`mt-[8px] break-keep pl-[38px] ${BODY} leading-relaxed text-naru-muted sm:mt-[10px] sm:pr-8`} style={{ gridColumn: 1, gridRow: 2 }}>{t(item.body)}</p>
+                    <p className={`mt-[8px] break-keep pl-[38px] ${BODY} leading-[1.65] text-naru-muted sm:mt-[10px] sm:pr-8`} style={{ gridColumn: 1, gridRow: 2 }}>{t(item.body)}</p>
                     <GainBars days={item.days} split={item.split} />
                   </li>
                 ))}
@@ -1514,7 +1514,7 @@ export default function NaruHome() {
                     {partnerLogo(g.lead, "h-8 sm:h-10")}
                     <p className={`mt-3 ${META} text-caption`}>{t(g.lead.note)}</p>
                     <span aria-hidden className="h-6 w-px bg-white/25 max-sm:h-4" />
-                    <div className="flex flex-wrap items-center justify-center gap-x-[45px] gap-y-[22.5px] lg:gap-x-[48px] rounded-2xl card-sunken px-6 py-6 max-sm:gap-x-[28px] max-sm:gap-y-[16px] max-sm:px-[20px] max-sm:py-[18px] sm:px-10">
+                    <div className="flex flex-wrap items-center justify-center gap-x-[45px] gap-y-[22.5px] lg:gap-x-[48px] rounded-2xl card-sunken px-4 py-4 max-sm:gap-x-[28px] max-sm:gap-y-[16px] sm:px-6 sm:py-5">
                       {g.logos.map((l) => partnerLogo(l))}
                     </div>
                   </div>

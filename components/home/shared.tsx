@@ -85,7 +85,7 @@ export function PhoneFold({ id, more, less, children }: { id: string; more: stri
 
 export function Card({ children, className = "", id }: { children: React.ReactNode; className?: string; id?: string }) {
   return (
-    <div id={id} className={`rounded-2xl card-base p-[27px] sm:p-[36px] ${className}`}>
+    <div id={id} className={`rounded-2xl card-base p-5 sm:p-6 ${className}`}>
       {children}
     </div>
   );
@@ -107,7 +107,7 @@ export function Card({ children, className = "", id }: { children: React.ReactNo
 // 표현 방식 브리프 7) 안에서 16 이상인 가장 작은 단이 18입니다. 새 단을 만들지 않았습니다.
 // ──────────────────────────────────────────────────────────────────────────────
 // 2026-10-07 (이슈 브리프 4.1): 소제목은 BODY 크기에 굵게입니다. 본문과의 차이는 굵기와 색(/85)뿐입니다.
-// DECIDED 2026-10-26 (사용자: "pc쪽이 다시 너무 빽빽", 위계와 크기 분화): lg부터 SUBTITLE(27px), 굵게, 흰색. 폰은 크기 그대로.
+// DECIDED 2026-10-26 (사용자: "pc쪽이 다시 너무 빽빽", 위계와 크기 분화): lg부터 SUBTITLE(22px, 루트 16px 기준), 굵게, 흰색. 폰은 크기 그대로.
 // DECIDED 2026-10-26 (사용자: "타이틀 위계가 볼드 아니면 두께로만 구분돼서 어려워. 컬러, 행간, 자간 위계"): 소제목은 로고 그라데이션의 첫 색(logo-from) 틴트.
 // 흰 칸 제목(H3)과 흰 챕터 제목(H2) 사이에서 색으로 한 단 구분됩니다. 자간 -0.02em, 행간 1.3.
 export const SUBHEADING = `break-keep ${SUBTITLE} font-bold leading-[1.3] tracking-[-0.02em] text-naru-logo-from`;
