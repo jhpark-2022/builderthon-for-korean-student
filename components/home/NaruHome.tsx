@@ -895,7 +895,8 @@ export default function NaruHome() {
   useEffect(() => {
     const moved: Record<string, string> = { "#join": "why", "#how": "how", "#why": "core", "#record": "record", "#join-ways": "join-ways" };
     const to = moved[window.location.hash];
-    if (to) window.location.replace(`/naru#${to}`);
+    // 2026-10-26 (naru-first): 나루는 이제 홈(/)입니다. /naru를 거치지 않고 바로.
+    if (to) window.location.replace(`/#${to}`);
   }, []);
 
   return (

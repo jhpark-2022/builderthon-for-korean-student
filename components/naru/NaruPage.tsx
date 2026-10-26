@@ -23,7 +23,9 @@ import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "@/lib/LocaleContext";
-import { naru, naruLinks, partnerContact, singaporeCampuses, type Layer, type Stat, type RecordPhoto } from "@/data/naru";
+import { naru, naruLinks, partnerContact, singaporeCampuses, openChatLabels, registerNoteShort, type Layer, type Stat, type RecordPhoto } from "@/data/naru";
+import OpenChatLink from "@/components/ui/OpenChatLink";
+import { decemberEventLabel, formatDecemberRange, DECEMBER_CITY } from "@/lib/naruDates";
 import type { Phrase } from "@/data/dictionaryCore";
 import Chip from "@/components/ui/Chip";
 import { buttonClass } from "@/components/ui/Button";
@@ -145,23 +147,51 @@ export default function NaruPage() {
             같은 문단과 짝을 볼 자리). 명단은 아래 아카이브 버튼 너머에 있습니다. */}
         {/* DECIDED 2026-09-30 (사용자, 스크린숏: "이것들도 center로"): 이 블록 전체(알약, h3, 두 문장, 버튼)는
             가운데입니다. 글이 가운데면 버튼도 가운데(2026-09-29). */}
-        <Reveal id="record" className={`${READ} mt-[36px] lg:mt-[48px] text-center`}>
-          {/* DECIDED 2026-10-02 (사용자: "폰에서도 가운데 정렬로 되돌려줘"): 두 문장은 폰에서도 가운데(위 12월 머리와 같은 결정). */}
-          <p className={`${MEASURE_C} break-keep text-center ${BODY} leading-[1.65] text-naru-muted`}>
-            {t(naru.record.lead2)}
-          </p>
-          {/* DECIDED 2026-10-24 (사용자: 8월에 대한 감사는 /2026-08 "고맙습니다" 한 곳에서만): 빚을 적던 한 줄(record.credit)을 뺐습니다. 키는 둡니다. */}
-          <div className="mt-[27px] flex justify-center lg:mt-[32px]">
-            <Link
-              href={naruLinks.archive}
-              onClick={() => track("naru_cta", { src: "record", to: "archive" })}
-              className={buttonClass("secondary")}
-            >
-              {t(naru.record.cta)}
-              <span aria-hidden className="text-naru-muted">→</span>
-            </Link>
-          </div>
-        </Reveal>
+        {/* DECIDED 2026-10-26 (사용자, 외부 리뷰: 홈은 나루, 그 밑에 12월 이벤트, 제로백, 앞으로의 이벤트. 홈 나루 페이지에 12월을 좀 더 띄우기,
+            docs/naru-first-brief.md 1.3): 8월 블록 자리에 "여는 자리" 표. 1행 크로싱 서울만 강조 면(card-tint)으로 띄우고, 2행과 3행은 가는 선 행입니다.
+            새 문장은 없습니다. 2행의 빚 한 줄(record.credit)은 10/24 결정대로 그리지 않습니다. id="record"는 2행에 남깁니다(옛 링크, 배경 국면, 하단 바).
+            2행과 3행은 잉크 80% 바탕(읽기 판과 같은 값)입니다. 이 자리 뒤로 싱가포르 형상과 학교 로고가 지나가 글자를 가렸습니다. */}
+        <section aria-labelledby="events-title" className={`${READ} mt-[36px] lg:mt-[48px] text-left`}>
+          <h2 id="events-title" className={`${SUBHEADING} text-center`}>{t(naru.events.label)}</h2>
+          <ol className="mt-[20px] flex flex-col">
+            {/* 1행: 지금 여는 자리 */}
+            <li className="card-tint flex flex-col gap-[14px] rounded-2xl p-[20px] sm:grid sm:grid-cols-[11rem_1fr] sm:gap-x-[24px] sm:p-[24px]">
+              <div className="flex flex-col gap-[2px]">
+                <span className={`${BODY} font-bold text-white`}>{decemberEventLabel(locale)}</span>
+                <span className={`${META} tabular-nums text-naru-muted`}>{formatDecemberRange(locale)}, {DECEMBER_CITY[locale]}</span>
+              </div>
+              <div className="flex flex-col gap-[10px]">
+                <p className={`break-keep ${BODY} font-semibold leading-snug text-white`}>{t(naru.december.heading)}</p>
+                <p className={`break-keep ${META} leading-relaxed text-naru-muted`}>{t(registerNoteShort)}</p>
+                <div className="mt-[6px] flex flex-wrap gap-[8px]">
+                  <OpenChatLink t={t} src="home-crossing" label={openChatLabels.december} variant="hero" />
+                  <Link href="/crossing" onClick={() => track("naru_cta", { src: "home-crossing", to: "crossing" })} className={buttonClass("secondary")}>
+                    {t(naru.events.crossingCta)}
+                    <span aria-hidden className="text-naru-muted">→</span>
+                  </Link>
+                </div>
+              </div>
+            </li>
+            {/* 2행: 시작한 자리 */}
+            <li id="record" className="mt-[12px] flex flex-col gap-[10px] rounded-t-2xl border-b border-white/10 bg-naru-ink/80 px-[16px] py-[20px] sm:grid sm:grid-cols-[11rem_1fr] sm:gap-x-[24px] sm:px-[24px] sm:py-[24px]">
+              <div className="flex flex-col gap-[2px]">
+                <span className={`${BODY} font-bold text-white`}>{t(naru.events.zero100Name)}</span>
+                <span className={`${META} tabular-nums text-naru-muted`}>{t(naru.events.zero100When)}</span>
+              </div>
+              <div className="flex flex-col items-start gap-[10px]">
+                <p className={`break-keep ${BODY} leading-relaxed text-naru-text`}>{t(naru.record.lead2)}</p>
+                <Link href={naruLinks.archive} onClick={() => track("naru_cta", { src: "record", to: "archive" })} className={`${buttonClass("text")} !min-h-[36px] text-accent`}>
+                  {t(naru.record.cta)} <span aria-hidden>→</span>
+                </Link>
+              </div>
+            </li>
+            {/* 3행: 다음. 날짜와 도시는 쓰지 않습니다(brand 6장: 다음 회차는 정해지지 않음). */}
+            <li className="flex flex-col gap-[10px] rounded-b-2xl bg-naru-ink/80 px-[16px] py-[20px] sm:grid sm:grid-cols-[11rem_1fr] sm:gap-x-[24px] sm:px-[24px] sm:py-[24px]">
+              <span className={`${BODY} font-bold text-white`}>{t(naru.events.nextName)}</span>
+              <p className={`break-keep ${BODY} leading-relaxed text-naru-muted`}>{t(naru.events.next)}</p>
+            </li>
+          </ol>
+        </section>
 
         </PlateSegment>
         <PlateSegment id="naru-2" gap>

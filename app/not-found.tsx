@@ -40,8 +40,9 @@ export default function NotFound() {
           <Both ko="홈으로" en="Home" />
           <span aria-hidden className={ARROW_CLASS}>→</span>
         </Link>
-        <Link href="/naru" className={`group ${buttonClass("secondary", "naru")}`}>
-          <Both ko="나루 알아보기" en="About NARU" />
+        {/* 2026-10-26 (naru-first): 홈이 나루가 되어 "나루 알아보기"(/naru)는 "홈으로"와 같은 곳입니다. 둘째 문은 크로싱 서울(홈 "여는 자리" 표와 같은 라벨). */}
+        <Link href="/crossing" className={`group ${buttonClass("secondary", "naru")}`}>
+          <Both ko="크로싱 서울 보기" en="See CROSSING SEOUL" />
         </Link>
       </div>
     </main>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { trackOpenChat } from "@/lib/openChatCount";
 import { useEffect, useRef, useState } from "react";
 import { decemberEventLabel } from "@/lib/naruDates";
@@ -161,9 +162,10 @@ export default function JourneyNav({ anchors = DEFAULT_ANCHORS, page }: { anchor
   // 2026-10-26 (같은 날 뒤): 왼쪽은 크로싱 서울 워드마크 하나라 세 페이지 같은 폭입니다. 한국어 xl, 영문은 낱말이 길어 1440.
   const bp = en ? { row: "min-[1440px]:flex", rail: "min-[1440px]:hidden" } : { row: "xl:flex", rail: "xl:hidden" };
   // 메가 메뉴의 세 칸. 페이지마다 그 페이지의 목차를 그대로 씁니다(홈 data/naru.ts naruNav, /naru naruPageNav, 8월 이 파일의 DEFAULT_ANCHORS).
+  // 2026-10-26 (naru-first): 홈(나루) / 크로싱 서울 / 8월 기록 순서(data/dictionaryCore.ts pages와 같음).
   const sitemap: SitemapPage[] = [
-    { page: "crossing", anchors: naruNav },
     { page: "naru", anchors: naruPageNav },
+    { page: "crossing", anchors: naruNav },
     { page: "aug", anchors: DEFAULT_ANCHORS },
   ];
   const headerRef = useRef<HTMLElement | null>(null);
@@ -221,11 +223,29 @@ export default function JourneyNav({ anchors = DEFAULT_ANCHORS, page }: { anchor
               바 왼쪽은 세 페이지 모두 크로싱 서울 워드마크 하나(brand 6장 표기 C, 홈이 아니면 홈으로 가는 링크). 바 가운데는 페이지 메뉴(홈▾, 메가 메뉴) | 목차가
               한 묶음으로 붙어 섭니다. 8월의 Zero100은 메뉴 이름 옆 서브 로고입니다(SiteMenu). 그 폭 아래에서는 메뉴가 워드마크 옆, 목차는 바 아래 줄. */}
           <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-            <a href={page === "crossing" ? "#top" : "/"} className="-my-1 flex min-h-[44px] shrink-0 items-center py-1 leading-none">
+            {/* DECIDED 2026-10-26 (사용자, 외부 리뷰: 홈은 나루, 그 밑에 12월. docs/naru-first-brief.md 1.4): 위 10/26 "세 페이지 모두 크로싱 서울 워드마크"를
+                되돌립니다. 크로싱 서울 페이지(/crossing)만 크로싱 서울 글자 워드마크(brand 6장 표기 C), 홈(나루)과 8월 기록은 나루 가로 락업(이름만, 반전).
+                락업은 5360254 전의 것 그대로입니다(한글 PNG, 영문 SVG, 영문은 한글 높이의 142/168, 로고 가이드: 비율, 색, 회전, 그림자 금지).
+                지금 페이지면 #top, 아니면 홈(/)으로. */}
+            {page === "crossing" ? (
+            <a href="#top" className="-my-1 flex min-h-[44px] shrink-0 items-center py-1 leading-none">
               <span lang={en ? "en" : undefined} className={`whitespace-nowrap pb-[0.08em] font-black tracking-[-0.02em] text-white ${en ? "text-sm sm:text-xl xl:text-2xl" : "text-xl sm:text-2xl xl:text-3xl"}`}>
                 {decemberEventLabel(locale)}
               </span>
             </a>
+            ) : (
+            <a href={page === "naru" ? "#top" : "/"} className="-my-1 flex min-h-[44px] shrink-0 items-center py-1 leading-none">
+              <Image
+                src={en ? "/naru/naru-name-en-rev.svg" : "/naru/naru-name-rev.png"}
+                alt={en ? "NARU" : "나루 NARU"}
+                width={en ? 857 : 604}
+                height={en ? 142 : 168}
+                unoptimized={en}
+                priority
+                className={en ? "h-[1rem] w-auto min-[360px]:h-[1.1rem] min-[380px]:h-[1.35rem] min-[430px]:h-[1.69rem] sm:h-[1.9rem]" : "h-6 w-auto min-[360px]:h-7 min-[380px]:h-8 sm:h-9"}
+              />
+            </a>
+            )}
             {/* 폰(sm 아래)에서는 메뉴가 바 아래 목차 줄 맨 앞으로 내려갑니다(아래). 360px 영문에서 워드마크 + 메뉴 + 오픈채팅 + EN/KR이 한 줄을 넘었습니다(계산 약 385px). */}
             <div className={`hidden sm:block ${bp.rail}`}>
               <SiteMenu page={page} sitemap={sitemap} />

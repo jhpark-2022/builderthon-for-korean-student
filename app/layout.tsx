@@ -6,7 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { LocaleProvider } from "@/lib/LocaleContext";
 import SkipLink from "@/components/SkipLink";
-import { DECEMBER_EVENT_NAME } from "@/lib/naruDates";
+import { SITE_NAME, HOME_TITLE, SITE_DESCRIPTION, OG_TITLE, OG_DESCRIPTION } from "@/lib/crossingMeta";
 
 // Self-hosted Pretendard (variable) - served same-origin from the Vercel edge,
 // preloaded, with a metric-matched fallback (no CLS). Replaces the old
@@ -52,14 +52,12 @@ import { SITE_URL } from "@/lib/siteUrl";
 // 2026-09-17: 기간이 확정되어(12/10~12/14) 기간으로 바꿨습니다.
 // 2026-09-24: 기간이 12/18~12/22로 옮겨졌습니다(lib/naruDates.ts의 DECIDED 주석).
 // 2026-10-05: 기간이 12/17~12/21로 하루 당겨졌습니다(같은 파일의 DECIDED 주석).
-const SITE_NAME = "나루 NARU";
+// DECIDED 2026-10-26 (naru-first, docs/naru-first-brief.md 1.2): 아래 다섯 값은 lib/crossingMeta.ts로 옮겼습니다. 홈(/)이 나루가 되면서
+// 크로싱 서울 페이지(/crossing)가 같은 값을 자기 메타로 씁니다. 레이아웃의 기본값(다른 페이지의 바탕)은 그대로입니다. 아래 주석은 그 값들의 이유입니다.
 // 2026-09-18 (감사 반영 브리프 9.5): 홈의 기본 제목에 이벤트 키워드. 검색 결과에서 "나루 NARU"만으로는
 // 무엇을 하는 사이트인지 없었습니다. 다른 페이지는 template("%s | 나루 NARU")을 그대로 씁니다.
-const HOME_TITLE = `${DECEMBER_EVENT_NAME?.ko ?? "크로싱 서울"} 2026 | ${SITE_NAME}`;
 // 검색 결과용. 구글은 155자 남짓을 보여 주므로 이벤트 이름과 날짜, 무엇을 하는
 // 자리인지, 나루가 무엇인지까지 한 벌에 넣습니다.
-const SITE_DESCRIPTION =
-  `${DECEMBER_EVENT_NAME?.ko ?? "크로싱 서울"} 2026년 12월 17~21일, 서울. 한국의 대학생과 해외에서 공부하는 한인 학생이 기업의 이슈에서 문제를 찾아 그 기업 앞에서 발표하는 닷새입니다. 나루는 한국에 뿌리를 두고 학생이 직접 운영하는, 영리를 목적으로 하지 않는 학생 빌더 그룹입니다.`;
 // DECIDED 2026-09-28 (나루 공식 표기 브리프 4.5, 2026-09-29 재개정): 마지막 문장을 정의 짧은 판의 문장으로.
 // 2026-10-08 (사용자 승인, 문장 감사 A1): 10월 7일의 "데이터가 아니라 이슈에서 출발" 결정이 이 줄과 아래 카드 설명에
 // 닿지 않았습니다. "데이터에서 문제를 찾아"를 이슈 기준으로 바꿉니다. 전체 144자(155자 예산 안).
@@ -82,10 +80,6 @@ const SITE_DESCRIPTION =
 // 문제를 찾고 마지막 날 그 기업 앞에서 발표한다)으로 바꿨습니다. 카카오가 두 줄에서 잘라도 무대가 진짜라는 사실이
 // 남게 앞에 둡니다(brand 5장 "무대가 진짜라는 사실로 부른다"). 전에는 "앞에서 발표"에 누구 앞인지가 빠져 있었고,
 // "국경과 상관없이"는 정본에 없는 말이었습니다. 둘째 문장은 크로싱 서울의 뜻(brand 6장)입니다.
-const OG_TITLE = `${DECEMBER_EVENT_NAME?.ko ?? "크로싱 서울"}, 2026년 12월 17~21일`;
-const OG_DESCRIPTION =
-  // 2026-09-29 (9/28 자문): "유학생" 대신 "해외의 한인 학생". 길이 때문에 본문의 "해외에서 공부하는"보다 짧게.
-  "기업의 이슈를 받아 문제를 찾고, 마지막 날 그 기업 앞에서 발표하는 닷새. 한국의 대학생과 해외의 한인 학생이 한 팀이 됩니다.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

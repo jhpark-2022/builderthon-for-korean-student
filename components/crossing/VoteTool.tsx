@@ -162,7 +162,7 @@ export default function VoteTool() {
     <main id="main" className="min-h-screen bg-naru-ink px-4 pb-24 pt-4 text-naru-text">
       <div className="mx-auto flex max-w-2xl flex-col gap-[24px]">
         <header className="flex min-h-[44px] items-center justify-between">
-          <a href="/" className={`-my-3 inline-flex min-h-[44px] items-center py-3 ${BODY} font-semibold text-naru-muted transition-colors hover:text-white`}>← {t({ ko: "크로싱 서울", en: "Crossing Seoul" })}</a>
+          <a href="/crossing" className={`-my-3 inline-flex min-h-[44px] items-center py-3 ${BODY} font-semibold text-naru-muted transition-colors hover:text-white`}>← {t({ ko: "크로싱 서울", en: "Crossing Seoul" })}</a>
           <LocaleToggle />
         </header>
         <div className="flex flex-col gap-[8px]">

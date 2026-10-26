@@ -15,6 +15,8 @@ export const OPENCHAT_SOURCES = [
   "band", "footer", "wrap", "naru-hero", "naru-december", "naru-join", "naru-footer",
   "site-menu", "site-menu-phone", "mobile-bar", "nav", "sticky", "hero", "vision",
   "naru-register-modal", "naru-register-success",
+  // 2026-10-26 (naru-first): 나루 홈 "여는 자리" 표 1행의 소식 받기.
+  "home-crossing",
 ] as const;
 
 /** 오픈채팅 링크의 onClick. 기본 이동(카카오 주소)은 막지 않습니다. */

@@ -47,7 +47,7 @@ export default function OpenChatLink({
   // 링크가 눌렸는지 가르는 값이라, 자리를 새로 만들면 여기에 이름을 더합니다.
   // naru-* = 나루 홈의 자리들 (2026-09-15). 8월 페이지의 계열과 섞이지 않도록
   // 접두사를 답니다. 두 페이지의 퍼널은 따로 읽어야 합니다.
-  src: "band" | "footer" | "wrap" | "naru-hero" | "naru-december" | "naru-join" | "naru-footer";
+  src: "band" | "footer" | "wrap" | "naru-hero" | "naru-december" | "naru-join" | "naru-footer" | "home-crossing";
   className?: string;
   // DECIDED 2026-09-17: "primary"가 생겼습니다. 위 주석의 "이 칩은 어디에 있든
   // 같은 무게"는 등록 버튼이 있는 페이지의 규칙이었습니다. 나루 홈 #december에는

@@ -462,7 +462,8 @@ export const naru = {
       ko: "학생이 직접 운영하는 그룹입니다. 2026년 8월 싱가포르에서 시작했습니다.",
       en: "A student-run group that started in Singapore in August 2026.",
     },
-    cta: { label: { ko: "나루 알아보기", en: "About NARU" }, href: "/naru" },
+    // 2026-10-26 (naru-first): 나루는 이제 홈(/)입니다. /naru는 /로 308.
+    cta: { label: { ko: "나루 알아보기", en: "About NARU" }, href: "/" },
   },
   // ── CH0 · 히어로 ──────────────────────────────────────────────────────────
   // 구체적인 사실로 시작합니다. 코어는 다음 챕터의 몫이에요.
@@ -1016,6 +1017,22 @@ export const naru = {
     bridge: { ko: "이걸 들고 어디로 건너가는가", en: "Where you take all this" },
   },
 
+  // ── 여는 자리 (DECIDED 2026-10-26, 사용자, docs/naru-first-brief.md 1.3) ──────────────────────
+  // 홈(/)은 나루이고, 그 맨 위에 나루가 여는 자리를 표로 둡니다. 1행 크로싱 서울(지금 여는 자리, 띄움), 2행 제로백 빌더톤(시작),
+  // 3행 다음. 새 문장은 없고 라벨 둘("여는 자리", "다음")만 새 낱말입니다. 1행과 2행의 문장은 이미 있는 키를 씁니다
+  // (december.heading, registerNoteShort, openChatLabels.december, record.lead2, record.cta). 날짜 줄은 lib/naruDates.ts에서 조립합니다.
+  events: {
+    label: { ko: "여는 자리", en: "What NARU opens" },
+    zero100Name: { ko: "제로백 빌더톤", en: "Zero100 Builderthon" },
+    zero100When: { ko: "2026년 8월 22일부터 29일까지, 싱가포르", en: "22–29 August 2026, Singapore" },
+    nextName: { ko: "다음", en: "Next" },
+    // /2026-08 비전 셋째 칸(data/dictionary.ts, num "3")의 문장 그대로입니다. 한쪽을 고치면 다른 쪽도 고칩니다.
+    next: {
+      ko: "이벤트는 이어집니다. 어디서 열릴지는 그때의 학생회와 기업이 정합니다.",
+      en: "The events continue. Where the next one opens is decided by the student associations and companies of that round.",
+    },
+    crossingCta: { ko: "크로싱 서울 보기", en: "See CROSSING SEOUL" },
+  },
   record: {
     // 8월 이벤트의 이름이 여기에 있습니다. 홈에서 "제로백 빌더톤"이라는 말이
     // 나오는 자리는 이 챕터와 아카이브로 가는 링크뿐입니다. december 블록에

@@ -73,7 +73,7 @@ const UI_2026_12: typeof quizUI = {
 export const QUIZ_EDITIONS: Record<QuizEdition, EditionConfig> = {
   "2026-08": { results: RESULTS, path: "/quiz", backHref: "/2026-08", ownKey: QUIZ_OWN_KEY, resultKey: QUIZ_RESULT_KEY,
     ui: quizUI, cardStamp: { ko: "제로백 빌더톤 2026.08", en: "Zero100 builderthon, Aug 2026" }, fileStem: "zero100-quiz", tone: "zero100" },
-  "2026-12": { results: RESULTS_2026_12, path: "/match", backHref: "/", ownKey: MATCH_OWN_KEY, resultKey: MATCH_RESULT_KEY,
+  "2026-12": { results: RESULTS_2026_12, path: "/match", backHref: "/crossing", ownKey: MATCH_OWN_KEY, resultKey: MATCH_RESULT_KEY,
     ui: UI_2026_12, cardStamp: { ko: "크로싱 서울 2026.12", en: "CROSSING SEOUL, Dec 2026" }, fileStem: "crossing-seoul-match", tone: "naru",
     // 2026-10-09: 12월 Q1의 첫마디가 바뀌어, 그 대사를 인용하는 축 설명도 같이 바꿉니다.
     explainSwaps: {

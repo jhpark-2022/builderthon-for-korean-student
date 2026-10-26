@@ -1083,7 +1083,7 @@ function ResultView({
           <div className="mx-auto w-full max-w-xl rounded-[24px] border border-emerald-400/25 bg-emerald-400/[0.06] p-6 text-center">
             <p className="text-[15px] font-bold leading-relaxed text-white/85">{t(ed.ui.ctaBackToRegisterNote)}</p>
             <a
-              href="/?register=1&ref=quiz-return"
+              href="/crossing?register=1&ref=quiz-return"
               className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(16,185,129,0.4)] transition hover:-translate-y-0.5"
             >
               {t(ed.ui.ctaBackToRegister)}
@@ -1106,7 +1106,7 @@ function ResultView({
         <div className={`mx-auto w-full max-w-xl ${c("rounded-[24px] border border-white/10 bg-white/[0.04] p-6", "card-base rounded-2xl p-[20px] sm:p-[24px]")} text-center ${matchMode ? "max-sm:hidden" : ""}`}>
           <p className={`${c("text-[15px]", BODY)} font-bold leading-relaxed text-white/85`}>{ctaLead}</p>
           <a
-            href="/#december"
+            href="/crossing#december"
             className={c("mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-4 text-base font-bold text-white shadow-[0_8px_36px_rgba(124,58,237,0.5)] transition hover:-translate-y-0.5", `mt-4 ${NARU_PRIMARY}`)}
           >
             {t(ed.ui.ctaApply)} →

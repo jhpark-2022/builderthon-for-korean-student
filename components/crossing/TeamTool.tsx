@@ -166,7 +166,7 @@ export default function TeamTool() {
       <div className="mx-auto flex max-w-5xl flex-col gap-[32px]">
         {/* 2026-10-23 (모바일 점검): /match와 같은 머리(돌아가기, EN/KR). */}
         <header className="flex min-h-[44px] items-center justify-between">
-          <a href="/" className={`-my-3 inline-flex min-h-[44px] items-center py-3 ${BODY} font-semibold text-naru-muted transition-colors hover:text-white`}>← {t(c.back)}</a>
+          <a href="/crossing" className={`-my-3 inline-flex min-h-[44px] items-center py-3 ${BODY} font-semibold text-naru-muted transition-colors hover:text-white`}>← {t(c.back)}</a>
           <LocaleToggle />
         </header>
 

@@ -63,7 +63,7 @@ export default function MentorTool() {
     <main id="main" className="min-h-screen bg-naru-ink px-4 pb-24 pt-4 text-naru-text">
       <div className="mx-auto flex max-w-3xl flex-col gap-[32px]">
         <header className="flex min-h-[44px] items-center justify-between">
-          <a href="/" className={`-my-3 inline-flex min-h-[44px] items-center py-3 ${BODY} font-semibold text-naru-muted transition-colors hover:text-white`}>← {t(teamCopy.back)}</a>
+          <a href="/crossing" className={`-my-3 inline-flex min-h-[44px] items-center py-3 ${BODY} font-semibold text-naru-muted transition-colors hover:text-white`}>← {t(teamCopy.back)}</a>
           <LocaleToggle />
         </header>
         <div className="flex flex-col gap-[6px]">
