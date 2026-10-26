@@ -39,11 +39,14 @@ export const teamCopy = {
   proofHeading: { ko: "미션 인증", en: "Mission check-in" },
   proofLead: {
     // DECIDED 2026-10-26 (사용자): 멘토 찾아가기는 Day 2, 3 날마다 팀이 함께. 10/17의 "하루 이상" 완화를 되돌립니다.
-    ko: "그날 만든 진척 PDF와 팀이 함께 멘토와 찍은 사진을 올립니다. 현장 출석은 운영진이 체크합니다.",
-    en: "Upload that day's progress as a PDF and a photo of the team with the mentor. The organisers check who is on site.",
+    // DECIDED 2026-10-26 (사용자: "진척 pdf가 새로운 pdf를 만드는 것이 아니고, 기존 내용을 멘토의 피드백과 팀들의 progress에 맞추어 updated 된 pdf"):
+    ko: "멘토의 피드백과 그날의 진척에 맞춰 고친 1장(PDF)과, 팀이 함께 멘토와 찍은 사진을 올립니다. 현장 출석은 운영진이 체크합니다.",
+    en: "Upload your one page, updated with the mentor's feedback and the day's progress, as a PDF, and a photo of the team with the mentor. The organisers check who is on site.",
   },
   proofPhoto: { ko: "멘토와 함께 찍은 인증 사진", en: "Photo with the mentor" },
-  proofPdf: { ko: "그날의 진척 PDF", en: "That day's progress PDF" },
+  // 2026-10-26: 진척 PDF는 새 문서가 아니라 고쳐 올린 1장입니다.
+  proofPdf: { ko: "고쳐 올린 1장 (PDF)", en: "Your updated one page (PDF)" },
+  proofPdfHint: { ko: "새로 만들지 않습니다. 지금까지의 1장을 멘토의 피드백과 그날의 진척에 맞춰 고쳐 올립니다.", en: "Not a new document. Update the one page you have with the mentor's feedback and the day's progress." },
   // Day 1은 PDF 하나(2026-10-17 사용자). 홈 Day 1 카드의 "Day 2에 들고 갈 것"과 같은 물건입니다.
   proofPdfDay1: { ko: "이슈에 대한 팀의 생각 1장 (PDF)", en: "One page of the team's take on the issue (PDF)" },
   // 2026-10-19 (사용자: Day 1 미션 뺌): Day 1 올리기는 선택입니다.
@@ -56,7 +59,7 @@ export const teamCopy = {
   proofView: { ko: "보기", en: "View" },
   proofNone: { ko: "아직 없음", en: "Not yet" },
   proofTooBig: { ko: "20MB까지 올릴 수 있습니다.", en: "Files up to 20 MB." },
-  proofBadType: { ko: "사진은 JPG, PNG, HEIC, 진척은 PDF로 올립니다.", en: "Photos as JPG, PNG or HEIC. Progress as a PDF." },
+  proofBadType: { ko: "사진은 JPG, PNG, HEIC, 1장은 PDF로 올립니다.", en: "Photos as JPG, PNG or HEIC. The one page as a PDF." },
 } satisfies Record<string, Phrase>;
 
 // 시간표 사용 규칙(2026-10-26, 사용자: "시간표 사용 설명이 좀 더 visually engaging 했으면"). 한 문단이던 것을 카드 여섯 장으로.
@@ -75,14 +78,14 @@ export const timetableRules: { icon: "tap" | "clock" | "two" | "lock" | "open" |
 export const mentorCopy = {
   title: { ko: "멘토 페이지", en: "Mentor page" },
   lead: {
-    ko: "우리 칸에 들어온 팀과, 그 팀이 올린 이슈에 대한 생각 1장입니다. 팀은 이 한 장을 들고 찾아옵니다. Day 3 칸에는 그 팀의 Day 2 진척 PDF도 붙습니다.",
-    en: "The teams that booked you, and the one page each team wrote on its issue. They bring this page when they visit. Day 3 slots also carry the team's Day 2 progress PDF.",
+    ko: "우리 칸에 들어온 팀과, 그 팀이 올린 이슈에 대한 생각 1장입니다. 팀은 이 한 장을 들고 찾아옵니다. Day 3 칸에는 그 팀이 Day 2에 고쳐 올린 1장도 붙습니다.",
+    en: "The teams that booked you, and the one page each team wrote on its issue. They bring this page when they visit. Day 3 slots also carry the page as the team updated it on Day 2.",
   },
   refresh: { ko: "1분마다 새로 읽습니다.", en: "Refreshes every minute." },
   day: { ko: "Day", en: "Day" },
   empty: { ko: "아직 넣은 팀이 없습니다.", en: "No teams yet." },
   day1Pdf: { ko: "이슈에 대한 생각 1장", en: "One page on the issue" },
-  day2Pdf: { ko: "Day 2 진척 PDF", en: "Day 2 progress PDF" },
+  day2Pdf: { ko: "Day 2에 고친 1장", en: "Updated on Day 2" },
   noPdf: { ko: "1장을 아직 올리지 않았습니다", en: "No page uploaded yet" },
   badLink: { ko: "링크가 맞지 않습니다. 운영진에게 다시 받아 주세요.", en: "This link does not match. Please ask the organisers for it again." },
   errGeneric: { ko: "잠시 뒤 다시 열어 주세요.", en: "Something went wrong. Please reopen in a moment." },

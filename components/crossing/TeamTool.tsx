@@ -340,6 +340,7 @@ function Proofs({ team, day }: { team: string; day: ProofDay }) {
           <h3 className={`${BODY} font-bold`}>{t(kind === "photo" ? c.proofPhoto : day === 1 ? c.proofPdfDay1 : c.proofPdf)}</h3>
           <span className={`${META} ${latest ? "text-naru-orange" : "text-white/70"}`}>{latest ? `★ ${t(c.proofDone)} ${fmtKst(latest.createdAt)}` : t(c.proofNone)}</span>
         </div>
+        {kind === "pdf" && day !== 1 && <p className={`${META} leading-relaxed text-white/70`}>{t(c.proofPdfHint)}</p>}
         {latest?.url && kind === "photo" && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={latest.url} alt="" className="max-h-56 w-fit rounded-xl object-contain" />
