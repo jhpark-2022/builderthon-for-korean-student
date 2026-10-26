@@ -989,13 +989,16 @@ export default function NaruHome() {
             {/* 2026-09-18 (감사 반영 브리프 1.5): 주황 틴트 → 흰색 볼드. 주황은 점으로만. */}
             {/* DECIDED 2026-10-11 (사용자: "로고랑 아래 내용의 gap이 조금 더 줄어들어도"): 로고와 날짜 줄 사이를 36/63px에서 27/36px로.
                 로고가 커진 만큼 간격이 줄어 아래 버튼과 카운트다운의 자리는 거의 그대로입니다. */}
-            <p className={`mt-6 ${BODY} font-bold text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)] lg:mt-8`}>
+            {/* DECIDED 2026-10-26 (사용자: "핸드폰으로 들어갈 때 interaction들이 너무 반응이 느릴 때가 있음"): 히어로 문단 셋의 그림자는
+                drop-shadow 필터가 아니라 text-shadow입니다(같은 값). 필터는 움직이는 WebGL 배경 위에서 아이폰 사파리가 매 프레임 다시 그려,
+                Speed Insights의 느린 탭(0.4~1.7초)이 바로 이 문단들을 가리켰습니다. */}
+            <p className={`mt-6 ${BODY} font-bold text-white [text-shadow:0_1px_10px_rgba(0,0,0,0.6)] lg:mt-8`}>
               {formatDecemberDateLine(locale)}
             </p>
-            <p className={`mx-auto mt-4 max-w-xl break-keep ${BODY} font-bold leading-snug text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)]`}>
+            <p className={`mx-auto mt-4 max-w-xl break-keep ${BODY} font-bold leading-snug text-white [text-shadow:0_1px_10px_rgba(0,0,0,0.6)]`}>
               {t(naru.december.heading)}
             </p>
-            <p className={`mx-auto mt-3 max-w-xl text-balance break-keep ${BODY} leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(0,0,0,0.6)]`}>
+            <p className={`mx-auto mt-3 max-w-xl text-balance break-keep ${BODY} leading-relaxed text-white/85 [text-shadow:0_1px_10px_rgba(0,0,0,0.6)]`}>
               {/* 나루 한 문장이 서술 첫 줄(감사 반영 브리프 1.2). TODO: confirm(문구는 사용자가). */}
               {/* DECIDED 2026-10-13 (등록 브리프 2.3): 이 문장의 "나루"는 링크가 아닙니다. 2026-10-10에는 색만 다른 인라인 링크였는데,
                   /naru로 가는 길은 헤더의 페이지 칩과 홈 끝의 티저 버튼이 맡습니다. 본문 인라인 링크는 밑줄 하나로 통일합니다. */}
