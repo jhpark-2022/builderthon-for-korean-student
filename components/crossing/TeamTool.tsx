@@ -174,15 +174,18 @@ export default function TeamTool() {
             </div>
           </div>
           {/* 2026-10-23 (모바일 점검): 노랑(amber)은 팔레트 밖이라 주황(brand 10장)으로. */}
-          {!picked && <p className={`${META} font-bold text-naru-orange`}>{t(c.pickFirst)}</p>}
+          {!picked && <p className={`${META} font-bold text-naru-orange`}>{t(timetableLocked ? c.pickFirstDay1 : c.pickFirst)}</p>}
         </div>
 
         {/* DECIDED 2026-10-17 (사용자, 스크린숏: "인증 올리는 거를 테이블 위로"): 인증이 시간표보다 먼저 섭니다. */}
         <Proofs team={picked} day={day} />
 
+        {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}
+        {/* DECIDED 2026-10-26 (사용자, 스크린숏: "1일차에는 멘토 시간표가 없어야함"): Day 1 탭에서는 시간표 절 전체(제목, 안내, 범례, 표)를 그리지 않습니다.
+            그 전(2026-10-17): 잠긴 표와 주황 안내 "Day 1에는 멘토 시간표에 칸을 넣지 않습니다"를 보여 줬습니다. */}
+        {!timetableLocked && <>
         <h2 className={`mt-[18px] ${BODY} font-bold`}>{t(c.timetableHeading)}</h2>
         <p className={`${BODY} text-white/70`}>{t(c.lead)} {t(c.carry)}</p>
-        {timetableLocked && <p className={`${META} font-bold text-naru-orange`}>{t(c.day1Timetable)}</p>}
         {tracks.length > 0 && (
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             {tracks.map((x) => (
@@ -194,7 +197,6 @@ export default function TeamTool() {
             <span className={`${META} text-white/70`}>{t(c.trackLegend)}</span>
           </div>
         )}
-        {msg && <p role="alert" className={`${META} text-rose-300`}>{msg}</p>}
 
         {mentors && !rows.length && <p className={`${BODY} text-white/70`}>{t(c.noMentors)}</p>}
         {/* 2026-10-23 (모바일 점검): 폰에서 시간표가 옆으로 굴러간다는 것을 잘린 글자로만 알 수 있었습니다. 오른쪽 끝 페이드와 한 줄 안내(sm 아래). */}
@@ -224,6 +226,7 @@ export default function TeamTool() {
             </table>
           </div>
         )}
+        </>}
 
       </div>
     </main>

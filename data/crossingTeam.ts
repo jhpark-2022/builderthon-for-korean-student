@@ -14,6 +14,8 @@ export const teamCopy = {
   teamLabel: { ko: "우리 팀", en: "Your team" },
   teamPick: { ko: "팀을 고르세요", en: "Pick your team" },
   pickFirst: { ko: "팀을 고르면 인증 올리기와 시간표 칸 넣기가 열립니다.", en: "Pick your team to unlock uploads and timetable slots." },
+  // 2026-10-26: Day 1 탭에는 시간표가 없어(TeamTool) 안내에서 시간표를 뺍니다.
+  pickFirstDay1: { ko: "팀을 고르면 인증 올리기가 열립니다.", en: "Pick your team to unlock uploads." },
   dayTab: { ko: "Day", en: "Day" },
   lead: {
     ko: "빈 칸을 두 번 누르면 우리 팀 이름이 들어가고, 멘토와 모든 팀이 같은 시간표를 봅니다. 한 칸은 40분이고 앞뒤 10분은 비워 두며, 한 번 넣은 칸은 바꿀 수 없습니다. 하루 두 칸까지 넣을 수 있고, 두 칸은 2시간 이상 떨어져야 합니다.",
@@ -44,7 +46,6 @@ export const teamCopy = {
   proofPdfDay1: { ko: "이슈에 대한 팀의 생각 1장 (PDF)", en: "One page of the team's take on the issue (PDF)" },
   // 2026-10-19 (사용자: Day 1 미션 뺌): Day 1 올리기는 선택입니다.
   proofLeadDay1: { ko: "Day 1은 미션이 없습니다. 이슈에 대한 팀의 생각 1장을 PDF로 올려 둘 수 있습니다.", en: "There is no mission on Day 1. You can upload one page of your team's take on the issue as a PDF." },
-  day1Timetable: { ko: "Day 1에는 멘토 시간표에 칸을 넣지 않습니다. 시간표는 Day 2, 3에 씁니다.", en: "There are no mentor slots on Day 1. The timetable is for Day 2 and 3." },
   proofPick: { ko: "파일 올리기", en: "Upload a file" },
   proofReplace: { ko: "다시 올리기", en: "Upload again" },
   proofUploading: { ko: "올리는 중", en: "Uploading" },
