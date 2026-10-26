@@ -31,6 +31,7 @@ export const teamCopy = {
   trackLegend: { ko: "칸의 색은 그 팀의 트랙입니다. 흰 테두리는 우리 팀입니다.", en: "Each slot takes its team's track colour. A white outline marks your team." },
   time: { ko: "시간", en: "Time" },
   gap: { ko: "쉬는 10분", en: "10-minute gap" },
+  past: { ko: "지남", en: "Past" },
   confirmPut: { ko: "넣기?", en: "Put in?" },
   noMentors: { ko: "이 날 시간을 연 멘토가 아직 없습니다.", en: "No mentors have opened times on this day yet." },
   errTaken: { ko: "방금 다른 팀이 들어간 칸입니다.", en: "Another team just took that cell." },

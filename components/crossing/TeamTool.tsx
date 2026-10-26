@@ -23,6 +23,9 @@ import {
 } from "@/lib/crossingOps";
 
 const TEAM_KEY = "crossing-team";
+// 2026-10-26 (사용자: "색깔이 좀 더 다채로우면 좋을거 같기는 함 for the teams"): 팀 칸의 트랙 색을 더 진하게.
+// 그 전 22%(38) 한 겹. 이제 왼쪽 위 45%에서 오른쪽 아래 25%로(brand 10장 그라데이션 방향), 왼쪽 띠 4px. 색은 그대로 트랙 네 색입니다.
+const SLOT_ALPHA = "73", SLOT_ALPHA_END = "40";
 const MIN = 60_000;
 type Bk = { id: string; team: string; track: string; startsAt: string; endsAt: string };
 type Mentor = { id: string; name: string; field: string | null; windows: Window[]; bookings: Bk[] };
@@ -113,7 +116,7 @@ export default function TeamTool() {
             // 띠와 흰 테두리를 한 그림자에 둡니다(Tailwind ring도 그림자라 따로 쓰면 하나가 지워짐).
             // DECIDED 2026-10-21 (시각 통일): 예약 높이는 걸친 45px 시간표 줄 수입니다.
             className="rounded-md"
-            style={{ height: `${span.length * 45}px`, background: `${tint}38`, boxShadow: `inset 3px 0 0 ${tint}${ours ? ", inset 0 0 0 2px rgba(255,255,255,0.9)" : ""}` }}>
+            style={{ height: `${span.length * 45}px`, background: `linear-gradient(135deg, ${tint}${SLOT_ALPHA}, ${tint}${SLOT_ALPHA_END})`, boxShadow: `inset 4px 0 0 ${tint}${ours ? ", inset 0 0 0 2px rgba(255,255,255,0.9)" : ""}` }}>
             {/* 한 번 넣은 칸은 바꾸지 못합니다(2026-10-17). 우리 팀 칸도 이름만 보입니다. */}
             <span className={`block truncate py-1.5 pl-2.5 pr-1 ${META} font-bold ${ours ? "text-white" : "text-white/85"}`}>{b.team}</span>
             <span className={`block pl-2.5 ${META} tabular-nums text-white/70`}>{fmtKst(s)}~{fmtKst(e)}</span>
@@ -126,6 +129,9 @@ export default function TeamTool() {
       return (r >= s - BUFFER_MINUTES * MIN && r < s) || (r >= e && r < e + BUFFER_MINUTES * MIN);
     });
     if (gap) return <td key={m.id} className={`border-l border-white/5 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.06)_0_4px,transparent_4px_8px)] px-2 ${META} text-white/70`}>{t(c.gap)}</td>;
+    // 2026-10-26 (사용자: 지난 칸이 막힌 것이 보이게, 넣은 팀의 칸은 그대로 남게): 시작 시각이 지난 빈칸은 빗금과 "지남"입니다.
+    // 쉬는 10분과 같은 빗금이되 더 흐립니다. 팀이 넣은 칸은 위에서 먼저 그려져 시간이 지나도 그대로 남습니다.
+    if (r < Date.now()) return <td key={m.id} className={`border-l border-white/5 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.035)_0_4px,transparent_4px_8px)] px-2 ${META} text-white/40`}>{t(c.past)}</td>;
     const free = fitsWindow(r, m.windows) && slotState(r, m.bookings, []) === "open";
     const full = mine.length >= MAX_BOOKINGS_PER_TEAM_PER_DAY; // 이 날 두 칸을 다 넣었으면 더 열지 않습니다
     // 2026-10-26: Day 1 전에는 닫혀 있고, 그날에는 13:00 전 칸이 닫힙니다(bookingGate). 닫힌 칸도 흐린 "+"로 보입니다.
@@ -139,7 +145,7 @@ export default function TeamTool() {
           // 바꿀 수 없으니 두 번 누릅니다: 처음은 "넣기?"로 묻고, 같은 칸을 한 번 더 누르면 넣습니다.
           onClick={() => (asking ? (setPending(null), call("POST", { team: picked, mentorId: m.id, startsAt: new Date(r).toISOString() })) : setPending({ m: m.id, r }))}
           // 묻는 칸은 우리 팀의 트랙 색으로 미리 칠합니다(넣으면 이 색이 됩니다).
-          style={asking ? { background: `${myTint}38`, borderColor: myTint } : undefined}
+          style={asking ? { background: `${myTint}${SLOT_ALPHA}`, borderColor: myTint } : undefined}
           className={`min-h-[44px] w-full rounded-md px-1 py-2 ${META} transition duration-150 ${asking ? "border font-bold text-white" : ok ? "border border-white/20 text-white/70 hover:bg-white/15" : locked ? "cursor-not-allowed border border-white/10 text-white/30" : "text-transparent"}`}>
           {asking ? t(c.confirmPut) : "+"}
         </button>
@@ -200,7 +206,7 @@ export default function TeamTool() {
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             {tracks.map((x) => (
               <span key={x.id} className={`flex items-center gap-2 ${META} ${teamTracks[picked] === x.id ? "font-bold text-white" : "text-white/70"}`}>
-                <span aria-hidden className="h-3 w-5 rounded-sm" style={{ background: `${trackTint(x.color)}38`, boxShadow: `inset 3px 0 0 ${trackTint(x.color)}` }} />
+                <span aria-hidden className="h-3 w-5 rounded-sm" style={{ background: `${trackTint(x.color)}${SLOT_ALPHA}`, boxShadow: `inset 4px 0 0 ${trackTint(x.color)}` }} />
                 {t(x.label)}
               </span>
             ))}
