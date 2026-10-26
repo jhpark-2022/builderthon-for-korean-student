@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // /api/crossing/proofs. Day 2, Day 3 미션 인증(2026-10-17, 상금·인센티브 정리 2장).
 //
-//   GET ?team=                         그 팀이 올린 파일(가장 최근 것부터, 10분짜리 보기 URL)
+//   GET ?team=                         그 팀이 낸 것(날, 종류, 시각). 파일 주소는 주지 않습니다(2026-10-26)
 //   (2026-10-26) 팀, 날, 종류마다 한 번만. 두 번째는 409 already.
 //   POST {action:"sign", day, kind, contentType, size}   한 번 쓰는 업로드 URL
 //   POST {action:"confirm", path}      파일이 실제로 올라갔는지 보고 행을 남김
@@ -44,12 +44,12 @@ export async function GET(req: Request) {
   const { data, error } = await db.from("crossing_mission_proofs")
     .select("id, day, kind, storage_path, created_at").eq("team_name", team.name).order("created_at", { ascending: false });
   if (error) return NextResponse.json({ error: "db" }, { status: 500 });
+  // DECIDED 2026-10-26 (사용자: "업로드를 하면 웹사이트에서 보이지 않고, 그냥 submission 되었다 이런식으로만"): 팀 쪽에는 파일 주소를
+  // 내주지 않습니다. 팀은 코드 없이 목록에서 고르므로(10/17), 주소를 주면 다른 팀 이름을 골라 그 팀 파일을 열 수 있었습니다.
+  // 파일은 멘토 페이지(/api/crossing/mentor, 멘토 열쇠)에서만 열립니다. 여기는 제출 여부와 시각만.
   const rows = data ?? [];
-  const signed = rows.length
-    ? (await db.storage.from(PROOF_BUCKET).createSignedUrls(rows.map((r) => r.storage_path), 600)).data ?? []
-    : [];
   return NextResponse.json({
-    proofs: rows.map((r, i) => ({ id: r.id, day: r.day, kind: r.kind, createdAt: r.created_at, url: signed[i]?.signedUrl ?? null })),
+    proofs: rows.map((r) => ({ id: r.id, day: r.day, kind: r.kind, createdAt: r.created_at })),
   });
 }
 

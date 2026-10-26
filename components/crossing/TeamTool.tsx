@@ -29,7 +29,7 @@ const SLOT_ALPHA = "73", SLOT_ALPHA_END = "40";
 const MIN = 60_000;
 type Bk = { id: string; team: string; track: string; startsAt: string; endsAt: string };
 type Mentor = { id: string; name: string; field: string | null; windows: Window[]; bookings: Bk[] };
-type Proof = { id: string; day: number; kind: ProofKind; createdAt: string; url: string | null };
+type Proof = { id: string; day: number; kind: ProofKind; createdAt: string };
 
 const load = (k: string) => { try { return localStorage.getItem(k) ?? ""; } catch { return ""; } };
 const save = (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* 저장 못 해도 화면은 돕니다 */ } };
@@ -361,11 +361,7 @@ function Proofs({ team, day }: { team: string; day: ProofDay }) {
         </div>
         {kind === "pdf" && day !== 1 && <p className={`${META} leading-relaxed text-white/70`}>{t(day === 3 ? c.proofPdfHintDay3 : c.proofPdfHint)}</p>}
         {!latest && <p className={`${META} text-white/50`}>{t(kind === "photo" ? c.proofLimitPhoto : c.proofLimitPdf).replace("{mb}", String(PROOF_MAX_BYTES[kind] / 1024 / 1024))}</p>}
-        {latest?.url && kind === "photo" && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={latest.url} alt="" className="max-h-56 w-fit rounded-xl object-contain" />
-        )}
-        {latest?.url && kind === "pdf" && <a href={latest.url} target="_blank" rel="noreferrer" className={buttonClass("text")}>{t(c.proofView)}</a>}
+        {/* 2026-10-26: 낸 파일은 이 페이지에서 보이지 않습니다(사진 미리보기, 보기 링크 없음). 멘토 페이지에서만 열립니다. */}
         {latest ? (
           <p className={`${META} text-white/70`}>{t(c.proofLocked)}</p>
         ) : f ? (
