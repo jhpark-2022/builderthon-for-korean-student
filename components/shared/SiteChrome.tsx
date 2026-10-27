@@ -72,7 +72,13 @@ export function SiteMenu({ page, sitemap }: { page: SitePage; sitemap: SitemapPa
   const { t } = useLocale();
   const items = useItems(false);
   const current = items.find((item) => item.page === page);
-  const [open, setOpen] = useState(false);
+  const [open, setOpenState] = useState(false);
+  // 열림 값을 ref에도 바로 적습니다. 커서가 들어오자마자 누르면 그 클릭이 아직 다시 그리기 전의 "닫힘"을 보고 메뉴를 곧바로 닫았습니다(2026-10-27 폰 점검).
+  const openRef = useRef(false);
+  const setOpen = (next: boolean | ((value: boolean) => boolean)) => {
+    openRef.current = typeof next === "function" ? next(openRef.current) : next;
+    setOpenState(openRef.current);
+  };
   const id = `site-menu-${useId().replace(/:/g, "")}`;
   const box = useRef<HTMLDivElement | null>(null);
   const trigger = useRef<HTMLButtonElement | null>(null);
@@ -83,7 +89,7 @@ export function SiteMenu({ page, sitemap }: { page: SitePage; sitemap: SitemapPa
   const hold = useRef(false);
   const lastPointer = useRef<string>("");
   const hoverOpen = (event: React.PointerEvent) => {
-    if (event.pointerType !== "mouse" || hold.current || open) return;
+    if (event.pointerType !== "mouse" || hold.current || openRef.current) return;
     byHover.current = true;
     setOpen(true);
   };
@@ -129,9 +135,9 @@ export function SiteMenu({ page, sitemap }: { page: SitePage; sitemap: SitemapPa
         onPointerDown={(event) => { lastPointer.current = event.pointerType; }}
         onClick={(event) => {
           const mouse = event.detail > 0 && lastPointer.current === "mouse";
-          if (mouse && open && byHover.current) { byHover.current = false; return; }
+          if (mouse && openRef.current && byHover.current) { byHover.current = false; return; }
           byHover.current = false;
-          if (open) hold.current = mouse;
+          if (openRef.current) hold.current = mouse;
           setOpen((value) => !value);
         }}
         className={`inline-flex min-h-[44px] items-center justify-center gap-2 whitespace-nowrap rounded-lg px-2 text-sm font-semibold transition-colors duration-150 hover:bg-white/[0.06] ${open ? "text-white" : "text-white/85"}`}
