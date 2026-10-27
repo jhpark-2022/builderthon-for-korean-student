@@ -76,10 +76,21 @@ export function SiteMenu({ page, sitemap }: { page: SitePage; sitemap: SitemapPa
   const id = `site-menu-${useId().replace(/:/g, "")}`;
   const box = useRef<HTMLDivElement | null>(null);
   const trigger = useRef<HTMLButtonElement | null>(null);
+  // DECIDED 2026-10-27 (사용자: "커서를 가져다 댔을 때 바로 안 나오는 경우가 많았음"): 호버로 연 뒤 단추를 누르면 그 클릭이 메뉴를 닫았고,
+  // 링크나 Esc로 닫은 뒤에는 커서가 나갔다 들어와야 다시 열렸습니다(pointerenter는 한 번만 옴). 이제 호버로 연 메뉴는 첫 클릭에 닫히지 않고,
+  // 커서가 안에서 움직이면 열립니다. 안에서 닫은 경우만 커서가 나갈 때까지 다시 열지 않습니다.
+  const byHover = useRef(false);
+  const hold = useRef(false);
+  const lastPointer = useRef<string>("");
+  const hoverOpen = (event: React.PointerEvent) => {
+    if (event.pointerType !== "mouse" || hold.current || open) return;
+    byHover.current = true;
+    setOpen(true);
+  };
   useEffect(() => {
     if (!open) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") { setOpen(false); trigger.current?.focus(); }
+      if (event.key === "Escape") { hold.current = true; setOpen(false); trigger.current?.focus(); }
     };
     const onDown = (event: PointerEvent) => { if (!box.current?.contains(event.target as Node)) setOpen(false); };
     window.addEventListener("keydown", onKey);
@@ -90,8 +101,14 @@ export function SiteMenu({ page, sitemap }: { page: SitePage; sitemap: SitemapPa
     <div
       ref={box}
       className="relative shrink-0"
-      onPointerEnter={(event) => { if (event.pointerType === "mouse") setOpen(true); }}
-      onPointerLeave={(event) => { if (event.pointerType === "mouse" && !box.current?.contains(document.activeElement)) setOpen(false); }}
+      onPointerEnter={hoverOpen}
+      onPointerMove={hoverOpen}
+      onPointerLeave={(event) => {
+        if (event.pointerType !== "mouse") return;
+        hold.current = false;
+        // 키보드로 들어온 포커스(:focus-visible)가 안에 있을 때만 열어 둡니다. 마우스 클릭으로 생긴 포커스는 닫힘을 막지 않습니다.
+        if (!box.current?.querySelector(":focus-visible")) setOpen(false);
+      }}
       onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false); }}
     >
       <button
@@ -100,7 +117,14 @@ export function SiteMenu({ page, sitemap }: { page: SitePage; sitemap: SitemapPa
         aria-expanded={open}
         aria-controls={id}
         aria-label={`${current?.label ?? ""}, ${t(open ? dict.siteMenu.close : dict.siteMenu.open)}`}
-        onClick={() => setOpen((value) => !value)}
+        onPointerDown={(event) => { lastPointer.current = event.pointerType; }}
+        onClick={(event) => {
+          const mouse = event.detail > 0 && lastPointer.current === "mouse";
+          if (mouse && open && byHover.current) { byHover.current = false; return; }
+          byHover.current = false;
+          if (open) hold.current = mouse;
+          setOpen((value) => !value);
+        }}
         className={`inline-flex min-h-[44px] items-center justify-center gap-2 whitespace-nowrap rounded-lg px-2 text-sm font-semibold transition-colors duration-150 hover:bg-white/[0.06] ${open ? "text-white" : "text-white/85"}`}
       >
         {current?.label}
@@ -116,7 +140,7 @@ export function SiteMenu({ page, sitemap }: { page: SitePage; sitemap: SitemapPa
         className={`absolute -left-2 top-full z-50 pt-2 transition-[opacity,transform,visibility] duration-150 ease-out motion-reduce:transition-none ${open ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0"}`}
       >
         <nav id={id} aria-label={t(dict.siteMenu.aria)} className="card-raised w-[min(40rem,calc(100vw-40px))] rounded-xl py-2">
-          <ul role="list" className="flex flex-col" onClick={() => setOpen(false)}>
+          <ul role="list" className="flex flex-col" onClick={() => { hold.current = true; setOpen(false); }}>
             {sitemap.map((col) => {
               const item = items.find((it) => it.page === col.page);
               if (!item) return null;
