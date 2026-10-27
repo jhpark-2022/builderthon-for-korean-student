@@ -87,6 +87,15 @@ export function SiteMenu({ page, sitemap }: { page: SitePage; sitemap: SitemapPa
     byHover.current = true;
     setOpen(true);
   };
+  // DECIDED 2026-10-27 (사용자: "tab을 바꾸고 커서를 대면 안 나옴"): 탭이 가려지면 브라우저가 pointerleave를 보내지 않아 "커서가 나갈 때까지 열지 않음"이
+  // 남거나 열린 상태가 어긋날 수 있습니다. 탭이 가려지거나 창이 포커스를 잃으면 메뉴를 닫고 표시를 모두 처음으로 돌립니다. 돌아와 커서를 움직이면 다시 열립니다.
+  useEffect(() => {
+    const reset = () => { hold.current = false; byHover.current = false; setOpen(false); };
+    const onVisibility = () => { if (document.visibilityState === "hidden") reset(); };
+    window.addEventListener("blur", reset);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => { window.removeEventListener("blur", reset); document.removeEventListener("visibilitychange", onVisibility); };
+  }, []);
   useEffect(() => {
     if (!open) return;
     const onKey = (event: KeyboardEvent) => {
