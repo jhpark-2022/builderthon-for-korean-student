@@ -669,8 +669,9 @@ export default function NaruHome() {
     if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
     const next = openDay + (dx < 0 ? 1 : -1);
     if (next < 0 || next >= naru.december.stages.length) return;
+    // DECIDED 2026-10-27 (사용자: "스와이프해서 다른 날로 가면 화면이 움직임"): 스와이프로 날을 바꿀 때는 스크롤하지 않습니다. 보고 있던 자리 그대로
+    // 카드만 바뀝니다. 다섯 카드가 같은 높이라 아래도 움직이지 않습니다. 노선도의 날짜를 누를 때(selectDay)는 그대로 카드를 화면 안으로 맞춥니다.
     setOpenDay(next);
-    revealPanel(next);
   };
   const mentoringBoxes = (
     <>
@@ -867,6 +868,10 @@ export default function NaruHome() {
       </>}
       {/* DECIDED 2026-10-22 (사용자: "상자 사이즈는 동일한데, 내용이 안 비어 있게"): 폰 카드 안의 "멘토 시간표와 미션 인증" 버튼을 뺐습니다.
           Day 1~3이 같은 버튼이라 데스크톱처럼 상자 아래에 한 번만 섭니다(아래 below). 카드가 짧아져 다섯 카드의 높이 차가 줄어듭니다. */}
+      {/* DECIDED 2026-10-27 (사용자, 폰 스크린숏: "4일차의 상자 크기가 다른 상자와 사이즈가 달라", "2일차와 3일차 상자 안의 내용이 너무 없음"): 10/22에 상자 밖으로
+          뺐던 시간표 버튼을 폰 Day 2, 3 상자 안 바닥으로 되돌립니다. 390px에서 Day 2, 3의 내용은 236px, 가장 긴 Day 4는 305px이라 상자 안이 70px 비었고,
+          버튼이 상자 밖에 붙어 날마다 아래 높이가 달랐습니다. 이제 다섯 상자가 같은 크기이고 Day 4의 투표 버튼과 같은 자리에 버튼이 섭니다. */}
+      {inPanel && (i === 2 || i === 3) && timetableButton && <div className="w-full">{timetableButton}</div>}
       {/* DECIDED 2026-10-19 (사용자): Day 4 카드의 인기투표 버튼. 데스크톱과 폰 패널 모두 카드 안에 섭니다. 열기 전에는 잠긴 버튼입니다. */}
       {stage.voteCta && (
         <div className={`w-full ${inPanel ? "" : "md:max-w-sm"}`}>
@@ -1196,8 +1201,7 @@ export default function NaruHome() {
                   </div>
                 ))}
                 </div>
-                {/* DECIDED 2026-10-22 (사용자: "Day 2, 3일 때만 보이게"): 폰에서 이 공통 버튼은 미션이 있는 날(Day 2, 3, 정본 7장)을 볼 때만 섭니다. */}
-                {timetableButton && (openDay === 2 || openDay === 3) && <div className="mt-3">{timetableButton}</div>}
+                {/* 2026-10-22에 여기 섰던 Day 2, 3 공통 버튼은 2026-10-27에 카드 안으로 옮겼습니다(stageCard inPanel). */}
               </div>
             }
           />
