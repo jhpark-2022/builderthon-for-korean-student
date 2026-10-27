@@ -7,13 +7,15 @@
 // Day 2, 3에 자기 칸을 넣은 팀과 그 팀이 올린 PDF 전부(Day 1 1장, Day 2 고친 1장, Day 3 발표 자료)를 눌러 엽니다(2026-10-26).
 // 다른 멘토의 칸과 인증 사진은 보이지 않습니다. 보기 URL은 30분짜리라 1분마다 다시 읽습니다.
 // 머리와 글자 크기는 /crossing/team과 같습니다(BODY, META 둘).
+// DECIDED 2026-10-27 (사용자: 멘토 링크도 kwan-design을 따르게): 머리는 사이트 바와 같은 ToolHeader(워드마크, 가는 선, EN/KR).
+// Day 제목은 /crossing/team의 구획 제목처럼 SUBTITLE 굵게 흰색, 날짜는 META. 블루는 칸 안의 파일 타일에만 남깁니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useCallback, useEffect, useState } from "react";
 import { useLocale } from "@/lib/LocaleContext";
 import { BODY, META, SUBTITLE } from "@/components/ui/typography";
-import LocaleToggle from "@/components/LocaleToggle";
-import { mentorCopy as c, teamCopy } from "@/data/crossingTeam";
+import ToolHeader from "@/components/crossing/ToolHeader";
+import { mentorCopy as c } from "@/data/crossingTeam";
 import { OPS_DAYS, dayDate, fmtKst, trackTint, type Track } from "@/lib/crossingOps";
 
 type Row = { id: string; day: number; team: string; track: string; startsAt: string; endsAt: string; files: { day: number; url: string }[] };
@@ -60,12 +62,10 @@ export default function MentorTool() {
   );
 
   return (
-    <main id="main" className="min-h-screen bg-naru-ink px-4 pb-24 pt-4 text-naru-text">
+    <div className="min-h-screen bg-naru-ink text-naru-text">
+    <ToolHeader />
+    <main id="main" className="px-4 pb-24 pt-[40px] sm:pt-[56px]">
       <div className="mx-auto flex max-w-3xl flex-col gap-[32px]">
-        <header className="flex min-h-[44px] items-center justify-between">
-          <a href="/crossing" className={`-my-3 inline-flex min-h-[44px] items-center py-3 ${BODY} font-semibold text-naru-muted transition-colors hover:text-white`}>← {t(teamCopy.back)}</a>
-          <LocaleToggle />
-        </header>
         <div className="flex flex-col gap-[6px]">
           <p className={`${META} font-semibold text-naru-muted`}>{t(c.title)}</p>
           {data && <h1 className={`${SUBTITLE} font-bold tracking-[-0.02em] text-white`}>{data.mentor.name}{data.mentor.field && <span className={`ml-2 ${META} font-normal text-naru-muted`}>{data.mentor.field}</span>}</h1>}
@@ -81,8 +81,8 @@ export default function MentorTool() {
               const rows = data.bookings.filter((b) => b.day === d);
               return (
                 <section key={d} aria-labelledby={`mentor-day-${d}`} className="flex flex-col gap-[12px]">
-                  <h2 id={`mentor-day-${d}`} className={`flex items-baseline gap-[10px] ${BODY} font-bold text-white`}>
-                    <span className="text-accent">{t(c.day)} {d}</span> <span className={`${META} font-normal text-naru-muted`}>{dayDate(d).slice(5).replace("-", ".")}</span>
+                  <h2 id={`mentor-day-${d}`} className={`flex items-baseline gap-[10px] ${SUBTITLE} font-bold tracking-[-0.02em] text-white`}>
+                    <span>{t(c.day)} {d}</span> <span className={`${META} font-normal text-naru-muted`}>{dayDate(d).slice(5).replace("-", ".")}</span>
                     {rows.length > 0 && <span className={`ml-auto ${META} font-semibold tabular-nums text-naru-muted`}>{t(c.teamCount).replace("{n}", String(rows.length))}</span>}
                   </h2>
                   {!rows.length && <p className={`card-sunken rounded-xl px-[16px] py-[14px] ${META} text-naru-muted`}>{t(c.empty)}</p>}
@@ -111,5 +111,6 @@ export default function MentorTool() {
         )}
       </div>
     </main>
+    </div>
   );
 }
