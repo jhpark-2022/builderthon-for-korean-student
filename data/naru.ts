@@ -3268,8 +3268,7 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
     {
       label: { ko: "기술, 크레딧", en: "Tech and credits" },
       logos: [{ name: "Lovable", src: "/partners/logos/color/lovable.png", w: 644, h: 110, url: "https://lovable.dev/" }],
-      // DECIDED 2026-10-24 (사용자, 스크린숏: "1일차에 lovable 현장 워크샵 진행"): 로고 아래 한 줄. 일정 카드 Day 1의 세션과 같은 사실입니다.
-      note: { ko: "Day 1에 Lovable 현장 워크숍을 진행합니다.", en: "An on-site Lovable workshop on Day 1." },
+      // DECIDED 2026-10-27 (사용자: "'Day 1에 Lovable 현장 워크숍을 진행합니다.' 이거 빼줘"): 로고 띠 아래 한 줄을 뺐습니다. 일정 카드 Day 1의 세션은 그대로입니다.
     },
     {
       label: { ko: "커뮤니티, 홍보", en: "Community and PR" },

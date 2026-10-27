@@ -54,4 +54,10 @@ export function writeMotionPaused(paused: boolean) {
     /* storage blocked: 이 세션 동안만 적용됩니다 */
   }
   window.__naruSetBackgroundPaused?.(paused);
+  setMotionAttr(paused);
+}
+
+/** CSS 움직임(로고 띠 .marquee-left)이 버튼을 따르게 html에 다는 표시(2026-10-27). */
+export function setMotionAttr(paused: boolean) {
+  document.documentElement.dataset.motion = paused ? "off" : "on";
 }

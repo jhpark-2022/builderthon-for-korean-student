@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useLocale } from "@/lib/LocaleContext";
-import { readMotionChoice, writeMotionPaused } from "@/lib/motionPreference";
+import { readMotionChoice, setMotionAttr, writeMotionPaused } from "@/lib/motionPreference";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 배경 움직임 끄기.
@@ -39,7 +39,9 @@ export default function MotionToggle({ className = "", compact = false }: { clas
     // 2026-09-23: 페이지 안에서 켠 적이 있으면("on") 동작 줄이기가 켜져 있어도 켜짐으로 보입니다.
     // 배경도 그 값을 따릅니다(components/Background.tsx).
     const saved = readMotionChoice();
-    setPaused(saved === "off" || (reduce && saved !== "on"));
+    const initial = saved === "off" || (reduce && saved !== "on");
+    setPaused(initial);
+    setMotionAttr(initial);
     // 배경은 requestIdleCallback 뒤에 뜹니다(components/Background.tsx). 이
     // 컴포넌트가 먼저 마운트되면 그 시점에는 손잡이가 아직 없어서, 저장된 "꺼짐"이
     // 적용되지 않습니다. 그래서 Background 쪽도 자기가 뜰 때 저장값을 한 번

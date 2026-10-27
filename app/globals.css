@@ -319,6 +319,10 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .marquee-left { animation: none !important; }
 }
+/* DECIDED 2026-10-27 (사용자: "배경움직임이 안꺼져있는데 움직이게해"): 로고 띠는 OS 설정보다 페이지의 "배경 움직임" 버튼을 따릅니다.
+   버튼이 켜짐이면 동작 줄이기에서도 흐르고, 끔이면 멈춥니다. html[data-motion]은 MotionToggle과 writeMotionPaused가 답니다. */
+html[data-motion="on"] .marquee-left { animation: marquee 90s linear infinite !important; }
+html[data-motion="off"] .marquee-left { animation: none !important; }
 
 /* ── Quiz hook micro-animations ──────────────────────────────────────────────
    Both are opacity/blur only - no layout properties, so nothing here can shift
