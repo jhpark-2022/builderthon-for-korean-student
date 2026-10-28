@@ -2465,7 +2465,8 @@ export const dict = {
       // 한글 이름은 본인 표기라 더 이상 확인 대상이 아닙니다.
       //
       // DECIDED 2026-10-28: 본인 요청으로 호칭을 "김종현 이사님"으로, 사진을 본인이
-      // 보내온 정장 사진으로 바꿨습니다(호칭 규칙: 이름 + 직함 + 님).
+      // 보내온 정장 사진으로 바꿨습니다(호칭 규칙: 이름 + 직함 + 님). 같은 날 role 줄도
+      // 사용자 요청으로 "이사"로 맞췄습니다(그 전 "해외사업개발, 싱가포르 법인장").
       //
       // 카드는 org 줄에 직함, intro에 도메인과 이력을 나눠 싣습니다 - 두 줄이 같은
       // 말을 하지 않도록 intro에서 "사업개발"을 빼세요(Brian Bae 카드와 같은 이유).
@@ -2479,7 +2480,7 @@ export const dict = {
       // `img` is set even though the mentor card doesn't render a photo - the
       // file is on hand, so the field is ready if the avatar ever returns.
       {
-        name: { ko: "김종현 이사님", en: "Joseph JongHyun Kim" }, org: { ko: "YMX", en: "YMX" }, role: { ko: "해외사업개발, 싱가포르 법인장", en: "Overseas BD, Singapore Country Head" },
+        name: { ko: "김종현 이사님", en: "Joseph JongHyun Kim" }, org: { ko: "YMX", en: "YMX" }, role: { ko: "이사", en: "Director" },
         intro: {
           ko: "산업 XR과 디지털 트윈. 정보보호 침해사고대응 20년+, 前 더존비즈온 보안 수석. KISA/KITRI BoB 멘토.",
           en: "Industrial XR & digital twin. 20+ yrs in security incident response, ex-Douzone Bizon. KISA/KITRI BoB mentor.",
