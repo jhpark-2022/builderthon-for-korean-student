@@ -1977,7 +1977,9 @@ export const dict = {
         // in one line.
         day: { ko: "Day\u00a01 AWS 세션", en: "Day\u00a01 AWS session" },
         name: { ko: "한장환 님", en: "Jang Whan Han" },
-        role: { ko: "AWS 솔루션 아키텍트 Well-Architected Solution Innovation", en: "Well-Architected Solution Innovation SA, AWS" },
+        // DECIDED 2026-10-28 (사용자): 지금은 Oracle입니다. 직함은 그의 LinkedIn 그대로.
+        // 세션 이름("Day 1 AWS 세션")은 8월에 AWS 소속으로 한 세션이라 그대로 둡니다.
+        role: { ko: "Oracle AI Database 제품관리 Senior Director Architect", en: "Senior Director Architect, AI Database Product Management, Oracle" },
         topic: { ko: "‘AI-DLC’: AI가 주도하는 개발 라이프사이클", en: "“AI-DLC”: the AI-Driven Development Lifecycle" },
         img: "/partners/logos/speaker-han.jpeg",
         linkedin: "https://www.linkedin.com/in/jangwhan/",
@@ -2400,10 +2402,12 @@ export const dict = {
       // speaker and nothing else. Do not re-add a Day 7 unless he is booked for it
       // again; the Day 3 event copy counts the mentoring seniors and moves with it.
       {
-        name: { ko: "한장환 님", en: "Han Jang-whan" }, org: { ko: "AWS", en: "AWS" }, role: { ko: "SA", en: "SA" },
+        // DECIDED 2026-10-28 (사용자, LinkedIn 확인): AWS에서 Oracle로 옮겼습니다.
+        // 지금 직함 "Senior Director Architect, AI Database Product Management".
+        name: { ko: "한장환 님", en: "Han Jang-whan" }, org: { ko: "Oracle", en: "Oracle" }, role: { ko: "Senior Director Architect", en: "Senior Director Architect" },
         intro: {
-          ko: "싱가포르 근무, 클라우드와 인프라 18년+. 前 오라클 JAPAC, Dell EMC.",
-          en: "Based in Singapore, 18+ yrs in cloud & infrastructure. Ex-Oracle JAPAC, Dell EMC.",
+          ko: "싱가포르 근무, 클라우드와 인프라 18년+. AI Database 제품관리. 前 AWS, Dell EMC.",
+          en: "Based in Singapore, 18+ yrs in cloud & infrastructure. AI Database product management. Ex-AWS, Dell EMC.",
         },
         days: "Day\u00a01", daysPending: "", stages: [], img: "", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/jangwhan",
       },
@@ -2485,7 +2489,7 @@ export const dict = {
           ko: "산업 XR과 디지털 트윈. 정보보호 침해사고대응 20년+, 前 더존비즈온 보안 수석. KISA/KITRI BoB 멘토.",
           en: "Industrial XR & digital twin. 20+ yrs in security incident response, ex-Douzone Bizon. KISA/KITRI BoB mentor.",
         },
-        days: "", daysPending: "", stages: [1], img: "/partners/people/joseph-jonghyun-kim.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/joseph-jonghyun-kim-009b244a",
+        days: "", daysPending: "", stages: [1], img: "/partners/people/joseph-jonghyun-kim-2026-10.jpg", logo: "", logoW: 0, logoH: 0, linkedin: "https://www.linkedin.com/in/joseph-jonghyun-kim-009b244a",
       },
       // 황영준 · 이유택 were "Day 3·4·7" until their Day 7 was dropped. 이유택's
       // Day 7 came back on 2026-08-18 (stages [1, 3]); 황영준 is still stage-1

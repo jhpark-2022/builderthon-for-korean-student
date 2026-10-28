@@ -8,6 +8,7 @@
 
 ### 2026-10
 
+- [2026-10-28 함께해 주신 분들에서 LinkedIn으로, 한장환 님 Oracle](#2026-10-28-thanks-linkedin)
 - [2026-10-28 멘토 한 분의 호칭과 사진](#2026-10-28-mentor-photo)
 - [2026-10-27 폰 Day 상자 크기 맞춤, 스와이프에 화면 고정](#2026-10-27-phone-days)
 - [2026-10-27 사이트 메뉴가 호버에 바로 열리게](#2026-10-27-menu-hover)
@@ -431,6 +432,15 @@
 ### 2026-06
 
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
+
+---
+
+<a id="2026-10-28-thanks-linkedin"></a>
+## 2026-10-28 함께해 주신 분들에서 LinkedIn으로, 한장환 님 Oracle
+- 범위: components/journey/ThanksStrip.tsx, data/dictionary.ts (연사 카드, 멘토 카드), public/partners/people/joseph-jonghyun-kim-2026-10.jpg
+- 한 것: 사용자 요청. 8월 기록 첫머리 얼굴 띠에서 얼굴을 누르면 그 분의 LinkedIn이 새 창으로 열립니다(없으면 전처럼 챕터로). 한장환 님은 LinkedIn에서 확인한 대로 소속을 Oracle, 직함을 Senior Director Architect(AI Database 제품관리)로 바꿨습니다. 8월 일정의 "AWS 세션"은 그때 소속이라 그대로 둡니다. 김종현 이사님 사진은 띠에 옛 사진이 남아 보여 새 파일 이름으로 바꿨습니다. 근거는 brand 3장 원칙 4(사람을 앞에 세운다).
+- 검증: tsc 통과.
+- 커밋: 이 항목과 같은 커밋
 
 ---
 

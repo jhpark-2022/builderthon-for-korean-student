@@ -9,7 +9,7 @@
 //
 // 사람은 새로 적지 않습니다. dict.speakers.people, dict.judges.people, dict.mentoring.mentors에서 이름(ko)으로 한 사람씩 모읍니다.
 // 한 사람은 한 번만 나오고, 줄은 첫 역할(연사, 피드백 패널, 멘토 순)로 정합니다. 맡은 역할은 모두 적습니다.
-// 누르면 그 역할의 챕터(#speakers, #feedback-panel, #mentoring)로 내려갑니다.
+// 누르면 그 분의 LinkedIn이 새 창으로 열립니다(DECIDED 2026-10-28 사용자). LinkedIn이 없는 분만 그 역할의 챕터로 내려갑니다.
 // 폰에서는 한 줄에 네 분(카드 5.25rem). 세 분이면 띠가 한 화면 반을 넘고 한 분이 혼자 떨어졌습니다.
 // 사진이 없으면 이름 첫 글자를 둡니다(2026-10-26 기준 열여섯 분 모두 사진 있음). 사진이 생기면 dictionary.ts의 img에 넣으면 여기에도 나옵니다.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -34,22 +34,23 @@ const HEADING: Phrase = { ko: "함께해 주신 분들", en: "With thanks to" };
 // 멘토 카드에는 사진이 비어 있지만 같은 분의 사진이 다른 자리(schedule.ts)에 이미 있는 경우.
 const EXTRA_IMG: Record<string, string> = { "김지훈 이사님": "/partners/people/kim-ji-hoon.jpg" };
 
-type Person = { key: string; name: Phrase; org: Phrase | null; img: string; roles: RoleKey[] };
+type Person = { key: string; name: Phrase; org: Phrase | null; img: string; linkedin: string; roles: RoleKey[] };
 
 function collect(): Person[] {
   const map = new Map<string, Person>();
-  const add = (name: Phrase, role: RoleKey, img: string, org: Phrase | null) => {
-    const p = map.get(name.ko) ?? { key: name.ko, name, org: null, img: "", roles: [] };
+  const add = (name: Phrase, role: RoleKey, img: string, org: Phrase | null, linkedin = "") => {
+    const p = map.get(name.ko) ?? { key: name.ko, name, org: null, img: "", linkedin: "", roles: [] };
+    if (!p.linkedin && linkedin) p.linkedin = linkedin;
     if (!p.roles.includes(role)) p.roles.push(role);
     // 사진은 피드백 패널(people/의 정사각 사진)을 먼저, 그다음 연사, 멘토.
     if (!p.img && img) p.img = img;
     if (!p.org && org && org.ko) p.org = org;
     map.set(name.ko, p);
   };
-  dict.judges.people.forEach((j) => add(j.name, "panel", j.img, j.org));
-  dict.speakers.people.forEach((s) => add(s.name, "speaker", s.img, null));
-  dict.speakers.panel.people.forEach((s) => add(s.name, "speaker", s.img, null));
-  dict.mentoring.mentors.forEach((m) => add(m.name, "mentor", m.img || EXTRA_IMG[m.name.ko] || "", m.org));
+  dict.judges.people.forEach((j) => add(j.name, "panel", j.img, j.org, j.linkedin));
+  dict.speakers.people.forEach((s) => add(s.name, "speaker", s.img, null, s.linkedin));
+  dict.speakers.panel.people.forEach((s) => add(s.name, "speaker", s.img, null, s.linkedin));
+  dict.mentoring.mentors.forEach((m) => add(m.name, "mentor", m.img || EXTRA_IMG[m.name.ko] || "", m.org, m.linkedin));
   const list = [...map.values()];
   list.forEach((p) => p.roles.sort((a, b) => ORDER.indexOf(a) - ORDER.indexOf(b)));
   return list;
@@ -71,7 +72,8 @@ export default function ThanksStrip({ t }: { t: Tfn }) {
               {row.map((p) => (
                 <li key={p.key} className="w-[5.25rem] sm:w-[7.5rem]">
                   <a
-                    href={ROLE[role].href}
+                    href={p.linkedin || ROLE[role].href}
+                    {...(p.linkedin ? { target: "_blank", rel: "noopener noreferrer", title: "LinkedIn" } : {})}
                     className="group flex flex-col items-center gap-[6px] rounded-xl px-[2px] py-[6px] sm:px-[4px] text-center transition-colors hover:bg-white/[0.04]"
                   >
                     {p.img ? (
