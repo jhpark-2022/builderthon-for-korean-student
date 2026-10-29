@@ -168,8 +168,9 @@ export const openChatLabels = {
 // 부탁하는 것은 #join 기업 카드의 문장(자금보다 먼저 묻는 것)과 같은 사실입니다.
 export const partnerContact = {
   ask: {
-    ko: "기업에 먼저 부탁드리는 것은 이슈와 자료, 멘토로 들어오는 시간입니다.",
-    en: "What we ask of a company first is an issue, its material, and hours as a mentor.",
+    // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md H3, humanize-korean 우선): 그 전 문장은 git 9c77437.
+    ko: "기업에 먼저 부탁드리는 것은 이슈와 자료, 그리고 멘토로 와 주실 시간입니다.",
+    en: "What we ask of a company first is an issue, its material, and the hours you can give as a mentor.",
   },
   addressLabel: { ko: "메일 주소", en: "Email" },
 } as const;
@@ -571,8 +572,9 @@ export const naru = {
       // 프로그램 챕터의 crossingLine이 같은 말을 합니다. 영문도 첫 문장("Students in Korea ... work in the same teams.")을 뺐습니다.
       // DECIDED 2026-10-20 (사용자: 과정 절을 앞으로, 도착점 절을 뒤로. 블록마다 첫 문장이 도착점이라 "발표회"로 읽혔습니다): 그 전 "...문제를 찾고, 닷새째 그 기업 앞에서 발표합니다."
       // DECIDED 2026-10-26 (사용자: 이슈와 문제, 병목 하나를 푸는 툴을 문장 수를 늘리지 않고 기존 문장에. 근거 12월 빌더톤/이벤트 기획/크로싱서울_이슈와_문제_정의_2026-10-26.md). 그 전: "...그 아래의 문제를 찾아 들어가고..."
-      ko: "기업이 지금 겪는 이슈를 받아 닷새 동안 그 아래에서 일이 막히는 지점 하나를 찾아 들어가고, 마지막 날 그 기업 앞에 섭니다.",
-      en: "Each team takes an issue a company is facing now, spends five days digging down to the one point where the work gets stuck, and stands in front of that company on the last day.",
+      // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C1, humanize-korean 우선): 그 전 문장은 git 9c77437.
+      ko: "기업이 지금 겪는 이슈를 받습니다. 닷새 동안 그 아래에서 일이 막히는 지점 하나를 파고들고, 마지막 날 그 기업 앞에 섭니다.",
+      en: "Each team takes an issue a company is facing now. Over five days it digs into the one point where the work gets stuck, and on the last day it stands in front of that company.",
     },
     ctaProgram: { ko: "프로그램 보기", en: "See the programme" },
     // DECIDED 2026-10-11 (사용자): AI 유형 테스트(/match)로 가는 버튼이 일정표의 Day 1에서 히어로의 버튼 줄로 왔습니다.
@@ -752,8 +754,9 @@ export const naru = {
         keeps: {
           // DECIDED 2026-10-10 (중복 브리프 C5): "스크리닝 없이"와 "순위 대신"을 뺐습니다. 바로 위 본문이 둘 다 말합니다.
           // DECIDED 2026-10-30 (사용자): 두 코어의 지키는 것이 엇갈려 있어 바꿨습니다. 스크리닝 없음(학점, 이력서)은 코어 01, 전원에게 이슈는 코어 02.
-          ko: "학점도 이력서도 보지 않습니다. 부문별로 시상하고, 평가는 결과물보다 과정에 무게를 둡니다.",
-          en: "No grades, no CV. Awards by category, and the weight sits on the process.",
+          // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md H1', humanize-korean 우선): 그 전 문장은 git 9c77437.
+          ko: "학점도 이력서도 보지 않습니다. 부문별로 시상하고, 결과물보다 과정을 봅니다.",
+          en: "No grades, no CV. Awards by category, and we look at the process over the output.",
         },
       },
       {
@@ -905,14 +908,16 @@ export const naru = {
       tag: { ko: "이 닷새에 남는 것", en: "What these five days leave you" },
       heading: {
         // DECIDED 2026-10-20 (사용자: 과정 절을 앞으로, 도착점 절을 뒤로. 블록마다 첫 문장이 도착점이라 "발표회"로 읽혔습니다): "증명"은 남기고 무엇을 증명하는지(거기까지 간 과정)를 앞에 둡니다.
-        ko: "실명 기업의 이슈에서 문제를 찾아 들어가고, 거기까지 간 과정을 그 기업 앞에서 증명해 봅니다.",
-        en: "You find the problem inside a named company's issue, then show that company how you got there.",
+        // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C11, humanize-korean 우선): 그 전 문장은 git 9c77437.
+        ko: "실명 기업의 이슈에서 문제를 파고들고, 거기까지 간 과정을 그 기업 앞에서 증명해 봅니다.",
+        en: "You dig into a named company's issue, then show that company how you got there.",
       },
       // DECIDED 2026-10-20 (hwang 브리프 1.2, 2.6, 감사 W3, W4): ✓칩 셋(알약)을 상자 없이 한 문장으로 그립니다(tangiblesLine). tangibles 키는 그대로 둡니다.
       // DECIDED 2026-10-26 (사용자, 스크린숏: "좀 더 visually 강조"): heading 안에서 크로싱 서울 워드마크 그라데이션으로 칠할 구절.
       // heading 문자열에 그대로 들어 있어야 합니다. 없으면 그 구절은 칠하지 않고 문장만 그립니다.
       marks: [
-        { ko: "이슈에서 문제를 찾아 들어가고", en: "find the problem inside a named company's issue" },
+        // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C11 marks, humanize-korean 우선): 그 전 문장은 git 9c77437.
+        { ko: "이슈에서 문제를 파고들고", en: "dig into a named company's issue" },
         { ko: "그 기업 앞에서 증명해 봅니다", en: "show that company how you got there" },
       ] as Phrase[],
       tangiblesLine: {
@@ -955,8 +960,9 @@ export const naru = {
         title: { ko: "실명 기업의 진짜 이슈", en: "A named company's real issue" },
         days: [0, 1],
         body: {
-          ko: "어느 회사의 어떤 이슈인지 숨기지 않고 회사 이름과 함께 받습니다.",
-          en: "You get it with the company's name on it, nothing hidden about who or what.",
+          // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C12, humanize-korean 우선): 그 전 문장은 git 9c77437.
+          ko: "어느 회사의 어떤 이슈인지, 회사 이름과 함께 받습니다.",
+          en: "You get it with the company's name on it, who and what included.",
         },
         evidence: { ko: "8월 코드프레소 출제", en: "August: Codepresso set the problem" },
       },
@@ -1716,8 +1722,9 @@ export const naru = {
         // 약속처럼 쓰지 않는다)과 어긋나 있었습니다. "회차 크레딧"은 뜻이 보이게 풀어 씁니다. 위 does의 "채용 기회"도 같이 뺐습니다.
         gets: {
           // DECIDED 2026-10-26 (사용자, 스크린숏: "이거 어색해"): brand 4장 대상별 한 문장에 맞춤. 그 전: "한인 학생과 만나는 자리가 생기고, 회차의 기록에 이름이 남습니다."
-          ko: "한 이슈에 대한 서로 다른 시도 여럿을 닷새 안에 보고, 회차의 기록에 이름이 남습니다.",
-          en: "Several independent attempts at one issue within five days, and your name on the round's record.",
+          // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md H4, humanize-korean 우선): 그 전 문장은 git 9c77437.
+          ko: "한 이슈에 대한 서로 다른 시도 여럿을 닷새 안에 보고, 회차의 기록에 회사 이름이 적힙니다.",
+          en: "You see several different attempts at one issue within five days, and the company's name is written into the record of that edition.",
         },
         // DECIDED 2026-10-24 (사용자, 같은 문서 N1): "이름이 남는다"의 증거는 8월 파트너 표입니다. 후원 상자에서만 가리킵니다.
         proof: {
@@ -1883,7 +1890,8 @@ export const naru = {
     // DECIDED 2026-10-24 (사용자: "멘토는 답을 주기보다 ... 남는 것이 목표입니다. 이게 제목이 되어야 함. 길이는 훨씬 줄여야"):
     // 제목이 멘토(답보다 방향)와 목표(행사 뒤에도 남는 묻는 법)를 말합니다. 그 전: "문제에 들어가는 네 단계" / "Four steps into the problem".
     // 2026-10-24 (사용자, 같은 날 뒤): "멘토와 익혀 학생이 행사 이후에 대답할 수 있는 질문들"로. 그 전: "멘토와 익혀 행사 뒤에도 남는 네 질문".
-    approachLabel: { ko: "멘토와 익혀 학생이 행사 이후에 대답할 수 있는 질문들", en: "Questions students can answer after the event, learned with mentors" },
+    // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C7, humanize-korean 우선): 그 전 문장은 git 9c77437.
+    approachLabel: { ko: "멘토와 함께 익혀, 행사 뒤에도 학생이 답할 수 있는 네 질문", en: "Four questions students learn with mentors and can still answer after the event" },
     // DECIDED 2026-10-23 (사용자, 스크린숏: "표현들이 어색함"): 제목이 목적어만 남은 조각("무엇을", "누구의 일을")이었고 본문도 "~나"로
     // 끊겼습니다. 제목은 짧은 이름(브리프의 기능, 업무, 병목, 실험 순서 그대로), 본문은 팀이 실제로 묻는 질문 한 문장으로.
     // 그 전: 무엇을 / 누구의 일을 / 어디서 멈췄나 / 어떻게 확인하나, 본문 "어떤 AI 기능을 붙일 수 있나" 등.
@@ -2058,8 +2066,9 @@ export const naru = {
       // 함께 맺습니다. 그 뒤로는 찾기, 확인받기, 만들기, 공유하기를 하루에 하나씩 지나고, 날마다 그날의 생각이 남습니다."
       // DECIDED 2026-10-26 (사용자: "불필요한 텍스트 양"): 가운데 문장(찾기, 확인받기, 만들기, 공유하기를 하루에 하나씩)을 뺐습니다.
       // 바로 아래 노선도가 같은 이름 넷을 날마다 적습니다. 세 줄이 두 줄이 됩니다.
-      ko: "등록은 혼자, 팀은 Day 1 현장에서 맺습니다. 닷새 안에 다 풀리지 않을 수 있는 문제라 어디까지 물어 들어갔는지를 봅니다.",
-      en: "Register alone; teams form on site on Day 1. The problem may not be solved in five days, so we look at how far into it you got.",
+      // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C2, humanize-korean 우선): 그 전 문장은 git 9c77437.
+      ko: "등록은 혼자, 팀은 Day 1 현장에서 맺습니다. 닷새 안에 다 풀리지 않을 수 있는 문제라, 어디까지 파고들었는지를 봅니다.",
+      en: "Register alone; teams form on site on Day 1. The problem may not be solved in five days, so we look at how deep you got.",
     },
     // 2026-09-20 (크로싱서울_일정.pdf): 라벨이 "워크샵"에서 "세션"으로. PDF가 부르는
     // 이름이고, stages의 필드 이름(workshop -> session)과 같은 말을 씁니다.
@@ -2188,19 +2197,22 @@ export const naru = {
           },
         },
         {
-          name: { ko: "남는 기록, 그 다음", en: "What remains, and next" },
+          // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C8, humanize-korean 우선): 그 전 문장은 git 9c77437.
+          name: { ko: "닷새 뒤의 기록, 그 다음", en: "The record after five days, and next" },
           when: { ko: "닷새 뒤", en: "After five days" },
           body: {
-            ko: "팀마다 다른 문제를 찾은 기록이 남습니다. 채용, 발주, 첫 파트너로 이어 주셔도 됩니다.",
-            en: "Each team leaves a record of a different problem found. Take it on to hiring, a brief, a first partner if you like.",
+            // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C9, D2 채용 뺌, humanize-korean 우선): 그 전 문장은 git 9c77437.
+            ko: "팀마다 다른 문제를 찾은 기록을 받으십니다. 발주나 첫 파트너로 이어 주셔도 됩니다.",
+            en: "You receive a record of each team finding a different problem. Take it on to a brief or a first partnership if you like.",
           },
         },
         {
           name: { ko: "멘토의 자리", en: "At the mentor's table" },
           when: { ko: "Day 2나 Day 3, 일정이 되면", en: "Day 2 or 3, if it works" },
           body: {
-            ko: "팀이 네 질문의 답을 들고 멘토를 찾아갑니다. 일정이 되면 일터에서도 열어 주시면 좋겠습니다.",
-            en: "Teams bring their answers to the four questions to mentors. If it works, we would be glad to hold that at your workplace.",
+            // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C10, humanize-korean 우선): 그 전 문장은 git 9c77437.
+            ko: "팀이 네 질문의 답을 들고 멘토를 찾아갑니다. 일정이 되면 일터에서도 만나 주시면 좋겠습니다.",
+            en: "Teams bring their answers to the four questions to mentors. If it works, we would be glad if you met them at your workplace too.",
           },
         },
       ] as { name: Phrase; when: Phrase; body: Phrase }[],
@@ -2435,7 +2447,8 @@ export const naru = {
         // DECIDED 2026-10-07 (이슈 브리프 D3): Day 0에 여는 것은 "이슈 공개"로 적습니다.
         // DECIDED 2026-10-20 (사용자: 영문 전체 감사 후 고침): 두 줄로 꺾여 줄임. 그 전 "Four working days, issues open before".
         // 2026-10-22 (UX 점검): "4 days, issues early"는 뜻이 잡히지 않았습니다. 한국어와 같은 두 조각으로.
-        label: { ko: "실질 4일 + 사전 이슈 공개", en: "4 days on site, issues released early" },
+        // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C6, humanize-korean 우선): 그 전 문장은 git 9c77437.
+        label: { ko: "실질 4일, 사전 이슈 공개", en: "4 full days, issues opened in advance" },
       },
       {
         value: { ko: "3곳", en: "3" },
@@ -2504,8 +2517,9 @@ export const naru = {
         dayOffset: 0,
         body: {
           // 2026-10-08 (사용자 승인, 문장 감사 A1): 10월 7일의 "이슈에서 출발" 결정이 이 본문에 닿지 않았습니다. 바로 아래 칩은 "이슈 공개"였습니다.
-          ko: "기업의 이슈와 회사 소개, 자료 활용 가이드를 공개합니다. 자료는 정리해서 드리지 않고, 무엇이 어디에 있는지만 알려 드립니다.",
-          en: "The companies' issues open, with an introduction to each company and a guide to the material. The material is not cleaned up for you. We only tell you where things are.",
+          // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C3, humanize-korean 우선): 그 전 문장은 git 9c77437.
+          ko: "기업의 이슈와 회사 소개, 자료 활용 가이드를 공개합니다. 자료는 정리해서 드리는 대신, 무엇이 어디에 있는지를 알려 드립니다.",
+          en: "The companies' issues open, with an introduction to each company and a guide to the material. Instead of cleaning up the material for you, we tell you where things are.",
         },
         // 2026-09-30 (사용자, 문장 감사): "…장치이지, 별도의 스테이지가 아닙니다"였습니다. 부정 병치를 풀었습니다.
         // 뜻(스테이지가 아니다)은 그대로입니다. (2026-10-07부터 NaruHome은 이 행을 한 단 낮게 그리지 않습니다.)
@@ -2544,8 +2558,9 @@ export const naru = {
           // 1440 카드 폭에서 한 줄 약 24자라 두 줄에 들어가게 줄였습니다("이날"은 카드 제목이 말합니다).
           // DECIDED 2026-10-25 (사용자: 칸마다 줄 수를 같게): 세 줄이라 두 줄로. 그 전 "8월과 달리 팀이 문제를 직접 정의합니다. 출제사가 막힌 곳과 해 본 것을 직접 엽니다."
           // DECIDED 2026-10-26 (사용자: 이슈와 문제, 병목 하나를 푸는 툴을 문장 수를 늘리지 않고 기존 문장에. 근거 12월 빌더톤/이벤트 기획/크로싱서울_이슈와_문제_정의_2026-10-26.md). 그 전: "8월과 달리 팀이 문제를 정의하고 출제사가 막힌 곳을 엽니다." 출제사의 세션은 기업 상자(Day 1 기업마다 1시간)가 말합니다.
-          ko: "팀이 업무 흐름에서 일이 막히는 지점, 병목 하나를 골라 문제로 정합니다.",
-          en: "Your team picks one point in the workflow where the work gets stuck, the bottleneck, as its problem.",
+          // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C4, humanize-korean 우선): 그 전 문장은 git 9c77437.
+          ko: "팀이 업무 흐름에서 일이 막히는 병목 하나를 골라 문제로 정합니다.",
+          en: "Your team picks one bottleneck where the work gets stuck and makes it the problem.",
         },
         // DECIDED 2026-10-08 (현장 팀 매칭 브리프 5): "팀 매칭" 칩 자리에 /match로 가는 버튼 하나가 섭니다.
         // 12월에는 AI 유형 테스트가 신청의 일부가 아니라 Day 1 현장의 팀 매칭 도구입니다. 칩은 뺐습니다
@@ -2566,8 +2581,9 @@ export const naru = {
           // 2026-10-19 (사용자: Day 1 카드가 길어짐): 이유 문장("첫 생각을 세운 뒤에 듣는…")은 화면에서 뺐습니다.
           body: {
             // 2026-10-24 (사용자: "1일차에 lovable 현장 워크샵 진행"): 사용자가 준 말로.
-            ko: "Lovable 현장 워크숍을 진행합니다.",
-            en: "An on-site Lovable workshop.",
+            // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C5, humanize-korean 우선): 그 전 문장은 git 9c77437.
+            ko: "현장 워크숍입니다.",
+            en: "An on-site workshop.",
           },
         },
         // DECIDED 2026-10-10 (사용자, 마일스톤 브리프 2.1): 보상은 마지막 날 한 팀이 아니라, 그날의 마일스톤을 넘은 팀 모두에게.
@@ -2994,8 +3010,9 @@ export const naru = {
         en: "The sentences in this chapter come from here.",
       },
       body: {
-        ko: "무엇을 위해 모였는지, 그리고 무엇이 바뀌어도 무엇만은 바뀌지 않는지를 적은 문서입니다.",
-        en: "It says what we gathered for, and what does not change when everything else does.",
+        // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md H5, humanize-korean 우선): 그 전 문장은 git 9c77437.
+        ko: "왜 모였는지, 그리고 무엇이 바뀌어도 바뀌지 않는 것이 무엇인지를 적은 문서입니다.",
+        en: "It says why we gathered, and what stays the same when everything else changes.",
       },
       // 2026-09-19 (사용자): 쪽 수와 파일 크기 줄(meta)은 뺐습니다. 받는 것이
       // 무엇인지는 버튼 라벨이 이미 말하고, 그 뒤의 숫자들은 이 자리에서
@@ -3100,7 +3117,8 @@ export const naru = {
         who: { ko: "기업", en: "Companies" },
         lines: [
           {
-            ko: "행사 비용은 병목이 아닙니다. 자금보다 먼저 물어볼 것은 이슈와 자료, 멘토로 들어오는 시간, 채용의 실제 기준입니다.",
+            // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md H3과 같이(화면 밖 옛 블록), humanize-korean 우선): 그 전 문장은 git 9c77437.
+            ko: "행사 비용은 병목이 아닙니다. 자금보다 먼저 물어볼 것은 이슈와 자료, 멘토로 와 주실 시간, 채용의 실제 기준입니다.",
             en: "The cost of the event is not the bottleneck. Before money we ask about the issue and its material, the hours you can give as a mentor, and what you actually hire on.",
           },
           {
