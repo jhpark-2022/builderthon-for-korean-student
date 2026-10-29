@@ -495,7 +495,7 @@ export const naru = {
     // 그 전 문장은 연습 쪽 절반이 빠져 차갑게 들렸습니다. brand 6장 "연습"도 같은 날 고쳤습니다.
     // 영문(같은 날, 사용자: "영어표현에서 나루터 이게 잘 사나?"): "나루터 할 때 나루"의 말맛은 영어로 옮겨지지 않아 뜻만 한 줄로 줍니다.
     // 같은 날 (사용자: "나루터 할 때 나루입니다. 는 좀 짜침", 후보 셋 중 1번): 첫 줄을 "처음부터 잘 젓는 사람은 없습니다."로. 전사록의
-    // "연습도 안 시켜 놓고 왜 못하냐고 하면 안 된다"를 순하게 옮긴 말이고, 코어 01 "못해도 되는 자리"와 이어집니다.
+    // "연습도 안 시켜 놓고 왜 못하냐고 하면 안 된다"를 순하게 옮긴 말이고, 코어 01(판단받지 않고 말해 보는 자리)과 이어집니다.
     // 같은 날 (사용자, 스크린숏: "너무 기니까 또 부담스럽다", 후보 셋 중 1번): 두 줄을 절반 길이로. "처음엔 다 서툽니다. / 건너기 전에 연습부터."
     titleLine1: { ko: "처음엔 다 서툽니다.", en: "Everyone starts out clumsy." },
     titleLine2: { ko: "건너기 전에 연습부터.", en: "Practice before you cross." },
@@ -743,14 +743,17 @@ export const naru = {
           {
             // DECIDED 2026-10-23 (humanizer 리뷰, brand 2장 코어 01): "~만 남기 때문에, 우리가 보는 것도 순위가 아니라 완주입니다"를
             // 정본 문장(대신 끝까지 해본 것은 남는다)으로 되돌렸습니다. 한 문장에 순위가 두 번, 대비 문형이 겹쳤습니다.
-            ko: "스크리닝도 순위도 없는, 못해도 되는 자리입니다. 여기서 잘하지 못한 것은 어디에도 남지 않고, 끝까지 해본 것은 남습니다.",
-            en: "With no screening and no ranking, this is a place where doing badly is allowed. Nothing you do poorly here is kept anywhere, but what you see through to the end stays.",
+            // DECIDED 2026-10-30 (사용자: 전사록의 코어 설명과 다르다, brand 2장을 같은 커밋에서 바꿈): 판단받지 않고 자기 목소리로 말해 보는 자리로.
+            // 그 전: "스크리닝도 순위도 없는, 못해도 되는 자리입니다. 여기서 잘하지 못한 것은 어디에도 남지 않고, 끝까지 해본 것은 남습니다."
+            ko: "스크리닝도 순위도 없습니다. 자기 아이디어를 자기 목소리로 꺼내도 점수로 돌아오지 않고, 듣는 사람은 다음에 고칠 점을 말합니다. 끝까지 해본 것은 남습니다.",
+            en: "No screening, no ranking. You can put your own idea in your own voice and no score comes back; the people listening tell you what to fix next. What you see through to the end stays.",
           },
         ],
         keeps: {
           // DECIDED 2026-10-10 (중복 브리프 C5): "스크리닝 없이"와 "순위 대신"을 뺐습니다. 바로 위 본문이 둘 다 말합니다.
-          ko: "전원에게 실제 기업의 이슈를 줍니다. 부문별로 시상하고, 평가는 결과물보다 과정에 무게를 둡니다.",
-          en: "A real company issue for everyone. Awards by category, and the weight sits on the process.",
+          // DECIDED 2026-10-30 (사용자): 두 코어의 지키는 것이 엇갈려 있어 바꿨습니다. 스크리닝 없음(학점, 이력서)은 코어 01, 전원에게 이슈는 코어 02.
+          ko: "학점도 이력서도 보지 않습니다. 부문별로 시상하고, 평가는 결과물보다 과정에 무게를 둡니다.",
+          en: "No grades, no CV. Awards by category, and the weight sits on the process.",
         },
       },
       {
@@ -766,14 +769,17 @@ export const naru = {
             // DECIDED 2026-10-20 (사용자: "모든 곳들에 적용", brand 2장을 같은 커밋에서 바꿈): 셋 나열을 한 문장으로.
             // DECIDED 2026-10-21 (사용자: "나루 page 문장이 너무 많다", 더 과감하게): 두 문단을 한 문단으로. 둘째 문단
             // ("그 앞에서 자기 판단으로 무언가를 만들고, 그 경험을 증명하는 실물을 손에 쥐고 나갑니다.")을 여기에 합쳤습니다.
-            ko: "모의가 아니라 진짜 앞에 섭니다. 실명이 박힌 기업이 아직 답을 모르는 문제를 실제로 그 일을 하는 사람 앞에서 자기 판단으로 풀고, 그 경험을 증명하는 실물을 손에 쥐고 나갑니다.",
-            en: "Not a mock run. You take a problem a named company has no answer to yet, work it on your own judgement in front of the person who actually does that work, and leave holding proof of it.",
+            // DECIDED 2026-10-30 (사용자: 전사록에 맞춤, AI는 빼고): 혼자 만든 것으로는 증명이 안 되고 써 주고 들어 주는 사람이 있어야 한다는 뜻으로.
+            // 그 전: "모의가 아니라 진짜 앞에 섭니다. 실명이 박힌 기업이 아직 답을 모르는 문제를 실제로 그 일을 하는 사람 앞에서 자기 판단으로 풀고, 그 경험을 증명하는 실물을 손에 쥐고 나갑니다."
+            ko: "혼자 만든 것만으로는 증명이 되지 않습니다. 실명이 박힌 기업이 아직 답을 모르는 이슈를 두고 직접 만들고, 실제로 그 일을 하는 사람이 써 보고 들어 준 기록까지 손에 쥐고 나갑니다.",
+            en: "Something you built alone does not prove much. You build against an issue a named company has no answer to yet, and leave holding a record of people who actually do that work trying it and hearing it out.",
           },
         ],
         keeps: {
           // DECIDED 2026-10-10 (중복 브리프 C6): "증명은 마지막 날 그 기업 앞에서 합니다"를 뺐습니다. 히어로와 프로그램 리드가 말합니다.
-          ko: "학점도 이력서도 보지 않습니다. 실명이 박힌 기업의 이슈 하나가 전부입니다.",
-          en: "No grades, no CV. One issue from a named company is all there is.",
+          // DECIDED 2026-10-30 (사용자): 코어 01과 바꿈. 마지막 날 성과 공유회는 히어로와 프로그램 리드가 말해서 넣지 않습니다(brand 5장, 두 번까지).
+          ko: "전원에게 실제 기업의 이슈를 줍니다.",
+          en: "A real company issue for everyone.",
         },
       },
     ],

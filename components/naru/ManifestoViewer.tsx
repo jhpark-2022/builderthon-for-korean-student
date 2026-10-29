@@ -18,7 +18,7 @@ import { BODY, META } from "@/components/ui/typography";
 
 const PAGES = { ko: 6, en: 7 } as const;
 // 이미지를 다시 뽑으면 올립니다. 파일 이름이 같아 브라우저가 옛 쪽을 보여 주지 않게.
-const V = "20261025b";
+const V = "20261030";
 // 뽑은 이미지의 크기. 2026-10-25 (사용자: "너무 흐린데"): 1400px 한 벌을 next/image가 다시 줄이고 눌러 글자가 흐렸습니다.
 // 넘기는 줄은 1000px(-s-), 전체 화면은 2400px 원본을 최적화 없이(unoptimized) 그대로 씁니다.
 const SMALL = { w: 1000, h: 1416 };
