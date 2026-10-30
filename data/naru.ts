@@ -747,8 +747,11 @@ export const naru = {
             // 정본 문장(대신 끝까지 해본 것은 남는다)으로 되돌렸습니다. 한 문장에 순위가 두 번, 대비 문형이 겹쳤습니다.
             // DECIDED 2026-10-30 (사용자: 전사록의 코어 설명과 다르다, brand 2장을 같은 커밋에서 바꿈): 판단받지 않고 자기 목소리로 말해 보는 자리로.
             // 그 전: "스크리닝도 순위도 없는, 못해도 되는 자리입니다. 여기서 잘하지 못한 것은 어디에도 남지 않고, 끝까지 해본 것은 남습니다."
-            ko: "스크리닝도 순위도 없습니다. 자기 아이디어를 자기 목소리로 꺼내도 점수로 돌아오지 않고, 듣는 사람은 다음에 고칠 점을 말합니다. 끝까지 해본 것은 남습니다.",
-            en: "No screening, no ranking. You can put your own idea in your own voice and no score comes back; the people listening tell you what to fix next. What you see through to the end stays.",
+            // DECIDED 2026-10-31 (사용자: "나의 코어에 대한 표현과 다른데", 코어 검증, 가설 검증 인터뷰 여섯(10/15~10/24)의 말로 다시): 판단받지 않고 말해 볼 자리가 없었고,
+            // 현업이 점수 없이 끝까지 들어 준다. 그 전 문장의 "고칠 점을 말한다", "끝까지 해본 것은 남는다"는 전사록에 없는 말이라 뺐습니다.
+            // 그 전: "스크리닝도 순위도 없습니다. 자기 아이디어를 자기 목소리로 꺼내도 점수로 돌아오지 않고, 듣는 사람은 다음에 고칠 점을 말합니다. 끝까지 해본 것은 남습니다."
+            ko: "자기 아이디어를 말하지 못하는 것이 아니라, 판단받지 않고 말해 볼 자리가 없었을 뿐입니다. 여기서는 점수를 매기지 않고, 현업에 있는 사람들이 끝까지 들어 줍니다.",
+            en: "It isn't that you can't speak up about your own idea; there has been nowhere to try it without being judged. Here nobody scores it, and people who work in the field listen all the way through.",
           },
         ],
         keeps: {
@@ -774,8 +777,11 @@ export const naru = {
             // ("그 앞에서 자기 판단으로 무언가를 만들고, 그 경험을 증명하는 실물을 손에 쥐고 나갑니다.")을 여기에 합쳤습니다.
             // DECIDED 2026-10-30 (사용자: 전사록에 맞춤, AI는 빼고): 혼자 만든 것으로는 증명이 안 되고 써 주고 들어 주는 사람이 있어야 한다는 뜻으로.
             // 그 전: "모의가 아니라 진짜 앞에 섭니다. 실명이 박힌 기업이 아직 답을 모르는 문제를 실제로 그 일을 하는 사람 앞에서 자기 판단으로 풀고, 그 경험을 증명하는 실물을 손에 쥐고 나갑니다."
-            ko: "혼자 만든 것만으로는 증명이 되지 않습니다. 실명이 박힌 기업이 아직 답을 모르는 이슈를 두고 직접 만들고, 실제로 그 일을 하는 사람이 써 보고 들어 준 기록까지 손에 쥐고 나갑니다.",
-            en: "Something you built alone does not prove much. You build against an issue a named company has no answer to yet, and leave holding a record of people who actually do that work trying it and hearing it out.",
+            // DECIDED 2026-10-31 (사용자: 전사록의 표현과 다르다): 기업은 증명하라는데 학생은 내밀 것이 없고, 혼자 만든 것으로는 안 되며,
+            // 이슈로 만들고 멘토와 고쳐 화면에 띄울 것을 들고 나간다는 순서로. 발표는 히어로와 프로그램 리드가 말해서 뺐고(brand 5장), AI도 그대로 빼 둡니다(10/30 결정).
+            // 그 전: "혼자 만든 것만으로는 증명이 되지 않습니다. 실명이 박힌 기업이 아직 답을 모르는 이슈를 두고 직접 만들고, 실제로 그 일을 하는 사람이 써 보고 들어 준 기록까지 손에 쥐고 나갑니다."
+            ko: "기업은 다양하게 생각해 봤다는 증거를 보여 달라고 하지만, 학생에게는 내밀 것이 없습니다. 혼자 만든 것만으로는 증명이 되지 않고, 써 보고 들어 주는 사람이 있어야 합니다. 여기서는 기업의 이슈로 만들고 멘토와 고쳐, 화면에 띄워 보여 줄 수 있는 것을 들고 나갑니다.",
+            en: "Companies ask for evidence that you have thought things through, and students have nothing to show. Something you built alone does not prove much; someone has to use it and hear it out. Here you build on a company's issue, rework it with mentors, and leave with something you can put on a screen and show.",
           },
         ],
         keeps: {
