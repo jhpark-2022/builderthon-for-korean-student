@@ -780,8 +780,10 @@ export const naru = {
             // DECIDED 2026-10-31 (사용자: 전사록의 표현과 다르다): 기업은 증명하라는데 학생은 내밀 것이 없고, 혼자 만든 것으로는 안 되며,
             // 이슈로 만들고 멘토와 고쳐 화면에 띄울 것을 들고 나간다는 순서로. 발표는 히어로와 프로그램 리드가 말해서 뺐고(brand 5장), AI도 그대로 빼 둡니다(10/30 결정).
             // 그 전: "혼자 만든 것만으로는 증명이 되지 않습니다. 실명이 박힌 기업이 아직 답을 모르는 이슈를 두고 직접 만들고, 실제로 그 일을 하는 사람이 써 보고 들어 준 기록까지 손에 쥐고 나갑니다."
-            ko: "기업은 다양하게 생각해 봤다는 증거를 보여 달라고 하지만, 학생에게는 내밀 것이 없습니다. 혼자 만든 것만으로는 증명이 되지 않고, 써 보고 들어 주는 사람이 있어야 합니다. 여기서는 기업의 이슈로 만들고 멘토와 고쳐, 화면에 띄워 보여 줄 수 있는 것을 들고 나갑니다.",
-            en: "Companies ask for evidence that you have thought things through, and students have nothing to show. Something you built alone does not prove much; someone has to use it and hear it out. Here you build on a company's issue, rework it with mentors, and leave with something you can put on a screen and show.",
+            // DECIDED 2026-10-31 (사용자, 홈 스크린숏 "3줄"): 데스크톱에서 다섯 줄이라 세 줄로. "써 보고 들어 주는 사람"은 코어 01의 "끝까지 들어 줍니다"가 받습니다.
+            // 줄이기 전: "기업은 다양하게 생각해 봤다는 증거를 보여 달라고 하지만, 학생에게는 내밀 것이 없습니다. 혼자 만든 것만으로는 증명이 되지 않고, 써 보고 들어 주는 사람이 있어야 합니다. 여기서는 ..."
+            ko: "기업은 증명하라고 하지만 학생에게는 내밀 것이 없고, 혼자 만든 것으로는 증명이 되지 않습니다. 여기서는 기업의 이슈로 만들고 멘토와 고쳐, 화면에 띄워 보여 줄 것을 들고 나갑니다.",
+            en: "Companies ask for proof, and students have nothing to show; something built alone proves little. Here you build on a company's issue, rework it with mentors, and leave with something you can put on a screen and show.",
           },
         ],
         keeps: {
