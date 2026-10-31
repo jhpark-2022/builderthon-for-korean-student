@@ -2590,8 +2590,10 @@ export const naru = {
           body: {
             // 2026-10-24 (사용자: "1일차에 lovable 현장 워크샵 진행"): 사용자가 준 말로.
             // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C5, humanize-korean 우선): 그 전 문장은 git 9c77437.
-            ko: "현장 워크숍입니다.",
-            en: "An on-site workshop.",
+            // DECIDED 2026-10-31 (사용자: "이 사람들이 설명해줄거라는 내용 추가", 둘 중 "경험까지 적기"): 워크숍을 맡은 회사와 그 근거 하나.
+            // 사이트 넷은 10/29 미팅에서 진행자가 말한 숫자("러버블로 띄운 사이트가 4개 정도"). 그 전: "현장 워크숍입니다." / "An on-site workshop."
+            ko: "Lovable로 만든 사이트 넷을 운영하는 Carraway & Gatsby가 현장에서 알려 줍니다.",
+            en: "Carraway & Gatsby, who run four sites built with Lovable, show you how on site.",
           },
         },
         // DECIDED 2026-10-10 (사용자, 마일스톤 브리프 2.1): 보상은 마지막 날 한 팀이 아니라, 그날의 마일스톤을 넘은 팀 모두에게.
@@ -3304,6 +3306,14 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
       label: { ko: "기술, 크레딧", en: "Tech and credits" },
       logos: [{ name: "Lovable", src: "/partners/logos/color/lovable.png", w: 644, h: 110, url: "https://lovable.dev/" }],
       // DECIDED 2026-10-27 (사용자: "'Day 1에 Lovable 현장 워크숍을 진행합니다.' 이거 빼줘"): 로고 띠 아래 한 줄을 뺐습니다. 일정 카드 Day 1의 세션은 그대로입니다.
+    },
+    // DECIDED 2026-10-31 (사용자: 10/29 워크숍 인트로 미팅과 10/30 회신 메일, "이분이 있는 business를 넣어줘야함"): Day 1 Lovable 워크숍을 맡은 회사.
+    // 회신 메일에서 법인 명칭을 함께 표기해 달라고 했습니다. 정식 이름은 Carraway & Gatsby Corporation이고, 회사 사이트(cgcorp.io)의 제목이
+    // "Carraway & Gatsby"라 로고는 나침반 심볼 + "Carraway &" / "Gatsby" 두 줄입니다(사용자가 세 시안 중 고름). 전체 이름은 링크 이름과 대체 글에.
+    // 원본은 CI/CGC (러버블 워크샵).jpeg(흰 바탕 남색). 바탕을 걷고 남색은 흰색으로, 파란 점은 밝은 파랑으로 올렸습니다(밝은 판 없이).
+    {
+      label: { ko: "Lovable 워크숍", en: "Lovable workshop" },
+      logos: [{ name: "Carraway & Gatsby Corporation", src: "/partners/logos/color/cgc.png", w: 833, h: 232, url: "https://cgcorp.io" }],
     },
     {
       label: { ko: "커뮤니티, 홍보", en: "Community and PR" },
