@@ -3248,6 +3248,9 @@ export const seoulCampuses: { name: Phrase; src: string; w: number; h: number; u
   { name: { ko: "서울대학교", en: "Seoul National University" }, src: "/partners/logos/white/trimmed/uni-snu.png", w: 232, h: 240, u: -0.115, v: -0.616, size: 0.15 },
   { name: { ko: "연세대학교", en: "Yonsei University" }, src: "/partners/logos/white/trimmed/uni-yonsei.png", w: 240, h: 240, u: -0.178, v: 0.022, size: 0.15 },
   { name: { ko: "건국대학교", en: "Konkuk University" }, src: "/partners/logos/white/trimmed/uni-konkuk.png", w: 240, h: 240, u: 0.493, v: -0.128, size: 0.15 },
+  // DECIDED 2026-10-31 (사용자, 스크린숏: "여기에 서울시립대도 넣어줘"). 전농동 캠퍼스(37.584, 127.059)를 같은 축으로 옮긴 자리(v 0.131)에서, 폰에서 건국대 휘장과 2px 닿아 조금 북쪽으로.
+  // 로고는 파트너맵 소스(크로싱서울_파트너맵_소스/logos/uos.png)의 가로형 워드마크를 흰색으로. 한동대처럼 높이를 낮춥니다.
+  { name: { ko: "서울시립대학교", en: "University of Seoul" }, src: "/partners/logos/white/trimmed/uni-uos.png", w: 480, h: 80, u: 0.394, v: 0.19, size: 0.06 },
   // DECIDED 2026-10-22 (사용자: "한동대도 일단 넣어줘"). 포항은 서울 밖이라 실제 자리 대신 형상의 동남쪽(포항 쪽) 빈자리에 둡니다.
   // 가로형 워드마크라 높이를 낮춰 너비가 다른 휘장과 비슷하게 보이게 합니다.
   { name: { ko: "한동대학교", en: "Handong Global University" }, src: "/partners/logos/white/trimmed/uni-handong.png", w: 480, h: 136, u: 0.5, v: -0.52, size: 0.07 },

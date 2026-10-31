@@ -22,7 +22,7 @@ export default function ShapeCampuses({ id, campuses, touch = false, spreadOnPho
       // DECIDED 2026-10-23 (사용자: "모바일에서 보이는 학교들 로고들 더 키워줘", /naru와 홈 둘 다): 폰(sm 아래)에서는 형상 자체가 작아 휘장이 25px쯤이라
       // 1.8배로 키웁니다(--crest-k). sm부터는 1. 자리는 그대로이고 휘장만 큽니다.
       // 이어서 (사용자: "크기는 해도, 로고들끼리 겹치면 안 됨"): 커진 뒤 싱가포르 셋이 폰에서 서로 닿았습니다(NUS가 NTU, SMU와 5~9px 겹침).
-      // spreadOnPhone이면 폰에서 자리를 형상 중심에서 1.5배 밖으로 벌립니다(--crest-spread). 서울 넷은 겹치지 않아 벌리지 않습니다.
+      // spreadOnPhone이면 폰에서 자리를 형상 중심에서 1.5배 밖으로 벌립니다(--crest-spread). 서울 다섯은 겹치지 않아 벌리지 않습니다(2026-10-31 서울시립대를 더한 뒤에도 폰, 데스크톱에서 겹침 0).
       className={`pointer-events-none fixed inset-0 [--crest-k:1.8] sm:[--crest-k:1] ${spreadOnPhone ? "[--crest-spread:1.5] sm:[--crest-spread:1]" : ""} ${touch ? "block" : "hidden [@media(hover:hover)_and_(pointer:fine)]:block"}`}
       style={{
         opacity: "var(--on, 0)",
