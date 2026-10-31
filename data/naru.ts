@@ -2592,8 +2592,10 @@ export const naru = {
             // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C5, humanize-korean 우선): 그 전 문장은 git 9c77437.
             // DECIDED 2026-10-31 (사용자: "이 사람들이 설명해줄거라는 내용 추가", 둘 중 "경험까지 적기"): 워크숍을 맡은 회사와 그 근거 하나.
             // 사이트 넷은 10/29 미팅에서 진행자가 말한 숫자("러버블로 띄운 사이트가 4개 정도"). 그 전: "현장 워크숍입니다." / "An on-site workshop."
-            ko: "Lovable로 만든 사이트 넷을 운영하는 Carraway & Gatsby가 현장에서 알려 줍니다.",
-            en: "Carraway & Gatsby, who run four sites built with Lovable, show you how on site.",
+            // 같은 날 (사용자, 스크린숏: "3줄인데, 2줄로 조정"): 옆 날의 세션(PO session, Open tables)처럼 두 줄로. 제목이 Lovable이라 "Lovable로"는 뺐습니다.
+            // 줄이기 전: "Lovable로 만든 사이트 넷을 운영하는 Carraway & Gatsby가 현장에서 알려 줍니다."
+            ko: "사이트 넷을 띄운 Carraway & Gatsby가 진행합니다.",
+            en: "Run by Carraway & Gatsby, who launched four sites with it.",
           },
         },
         // DECIDED 2026-10-10 (사용자, 마일스톤 브리프 2.1): 보상은 마지막 날 한 팀이 아니라, 그날의 마일스톤을 넘은 팀 모두에게.
