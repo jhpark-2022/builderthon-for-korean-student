@@ -2686,9 +2686,11 @@ export const naru = {
             // DECIDED 2026-10-26 (사용자: "모든 날 마다, 팀원의 과반이 현장에 와야하며, 같이 멘토를 찾아가야한다", 답: Day 2, 3 모두, 팀이 함께):
             // 10/17의 완화("이틀 중 하루 이상", 멘토 수로 20팀 × 이틀을 못 채워서)를 되돌립니다. 멘토 수는 운영에서 맞춥니다.
             // DECIDED 2026-10-31 (docs/rephrase-briefs-2026-10-31.md C8/C10, 사용자: 내용을 늘리지 말고 있는 문장을 다시 씀. 이슈는 기업이 아직 손으로 하는 일): 그 전 문장은 git 29f24f4.
-            { ko: "팀원 과반이 함께 멘토를 찾아가 사진 한 장", en: "Most of the team visits a mentor together, one photo" },
+            // DECIDED 2026-10-31 (사용자, 스크린숏: "상자의 길이가 다름. day 1 이랑 day 2 and 3 가 다름"): 인정 조건을 1440 칸에서 한 줄씩으로. Day 1(할 것 셋 + 세션 두 줄)과 같은 다섯 줄. 그 전: 팀원 과반이 함께 멘토를 찾아가 사진 한 장
+            { ko: "팀원 과반이 멘토를 찾아가 사진 한 장", en: "Most of the team visits a mentor, one photo" },
             // DECIDED 2026-10-26 (사용자): 진척 PDF는 새 문서가 아니라 1장을 멘토의 피드백과 그날의 진척에 맞춰 고친 것.
-            { ko: "1장을 피드백과 진척에 맞춰 고쳐 공유하기", en: "Update your one page with feedback and progress, and share it" },
+            // DECIDED 2026-10-31 (사용자, 스크린숏: "상자의 길이가 다름. day 1 이랑 day 2 and 3 가 다름"): 인정 조건을 1440 칸에서 한 줄씩으로. Day 1(할 것 셋 + 세션 두 줄)과 같은 다섯 줄. 그 전: 1장을 피드백과 진척에 맞춰 고쳐 공유하기(진척은 띠 제목이 말함)
+            { ko: "1장을 피드백에 맞춰 고쳐 공유하기", en: "Update your one page with feedback and share it" },
           ],
           submit: [
             { ko: "멘토와 팀이 함께 찍은 사진", en: "A photo of the team with the mentor" },
@@ -2757,8 +2759,10 @@ export const naru = {
             // DECIDED 2026-10-26 (사용자: "모든 날 마다, 팀원의 과반이 현장에 와야하며, 같이 멘토를 찾아가야한다", 답: Day 2, 3 모두, 팀이 함께):
             // 10/17의 완화("이틀 중 하루 이상", 멘토 수로 20팀 × 이틀을 못 채워서)를 되돌립니다. 멘토 수는 운영에서 맞춥니다.
             // DECIDED 2026-10-31 (docs/rephrase-briefs-2026-10-31.md C8/C10, 사용자: 내용을 늘리지 말고 있는 문장을 다시 씀. 이슈는 기업이 아직 손으로 하는 일): 그 전 문장은 git 29f24f4.
-            { ko: "팀원 과반이 함께 멘토를 찾아가 사진 한 장", en: "Most of the team visits a mentor together, one photo" },
-            { ko: "Open tables에서 다른 팀에게 그날의 진척 공유하기", en: "Share that day's progress with other teams at Open tables" },
+            // DECIDED 2026-10-31 (사용자, 스크린숏: "상자의 길이가 다름. day 1 이랑 day 2 and 3 가 다름"): 인정 조건을 1440 칸에서 한 줄씩으로. Day 1(할 것 셋 + 세션 두 줄)과 같은 다섯 줄. 그 전: 팀원 과반이 함께 멘토를 찾아가 사진 한 장
+            { ko: "팀원 과반이 멘토를 찾아가 사진 한 장", en: "Most of the team visits a mentor, one photo" },
+            // DECIDED 2026-10-31 (사용자, 스크린숏: "상자의 길이가 다름. day 1 이랑 day 2 and 3 가 다름"): 인정 조건을 1440 칸에서 한 줄씩으로. Day 1(할 것 셋 + 세션 두 줄)과 같은 다섯 줄. 그 전: Open tables에서 다른 팀에게 그날의 진척 공유하기(다른 팀은 세션 줄이 말함)
+            { ko: "Open tables에서 진척 공유하기", en: "Share progress at Open tables" },
           ],
           submit: [
             { ko: "멘토와 팀이 함께 찍은 사진", en: "A photo of the team with the mentor" },
