@@ -920,16 +920,18 @@ export const naru = {
         // DECIDED 2026-10-20 (사용자: 과정 절을 앞으로, 도착점 절을 뒤로. 블록마다 첫 문장이 도착점이라 "발표회"로 읽혔습니다): "증명"은 남기고 무엇을 증명하는지(거기까지 간 과정)를 앞에 둡니다.
         // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C11, humanize-korean 우선): 그 전 문장은 git 9c77437.
         // DECIDED 2026-10-31 (docs/rephrase-briefs-2026-10-31.md C24, 사용자: 내용을 늘리지 말고 있는 문장을 다시 씀. 이슈는 기업이 아직 손으로 하는 일): 그 전 문장은 git 29f24f4.
-        ko: "만들 줄 아는 학생이 일을 해 본 사람의 감각이 닿는 툴을 만들어 보고, 거기까지 간 과정을 그 기업 앞에서 증명해 봅니다.",
-        en: "Students who can already build make a tool that carries the sense of people who have done the work, then show that company how they got there.",
+        // DECIDED 2026-10-31 (docs/outputs-two-sides-brief.md O1, 사용자: 남는 것은 둘, 한 물건의 양면. 학생의 감각과 기업이 가져다 쓸 수 있는 툴): 그 전 문장은 git 6413abe.
+        ko: "학생은 일을 해 본 사람의 감각을 익혀 빌더로 건너가고, 기업은 아직 손으로 하는 일에 가져다 쓸 수 있는 툴을 받습니다. 거기까지 간 과정을 그 기업 앞에서 증명해 봅니다.",
+        en: "Students pick up the sense of people who have done the work and cross over to being builders; the company gets a tool it could use on a task it still does by hand. Then you show that company how you got there.",
       },
       // DECIDED 2026-10-20 (hwang 브리프 1.2, 2.6, 감사 W3, W4): ✓칩 셋(알약)을 상자 없이 한 문장으로 그립니다(tangiblesLine). tangibles 키는 그대로 둡니다.
       // DECIDED 2026-10-26 (사용자, 스크린숏: "좀 더 visually 강조"): heading 안에서 크로싱 서울 워드마크 그라데이션으로 칠할 구절.
       // heading 문자열에 그대로 들어 있어야 합니다. 없으면 그 구절은 칠하지 않고 문장만 그립니다.
       marks: [
         // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C11 marks, humanize-korean 우선): 그 전 문장은 git 9c77437.
-        { ko: "일을 해 본 사람의 감각이 닿는 툴", en: "a tool that carries the sense of people who have done the work" },
-        { ko: "그 기업 앞에서 증명해 봅니다", en: "show that company how they got there" },
+        { ko: "일을 해 본 사람의 감각", en: "the sense of people who have done the work" },
+        { ko: "가져다 쓸 수 있는 툴", en: "a tool it could use" },
+        { ko: "그 기업 앞에서 증명해 봅니다", en: "show that company how you got there" },
       ] as Phrase[],
       tangiblesLine: {
         ko: "손에는 팀의 생각 한 장과 코드로 옮긴 결과물이 남습니다.",
@@ -982,25 +984,27 @@ export const naru = {
         num: "02",
         // DECIDED 2026-10-25 (사용자: 칸마다 줄 수를 같게): 02, 04, 05를 한 줄로 줄였습니다. 그 전 "...하루 두 번까지 찾아가...", "...어디까지 갔는지 발표하고, 질문을...", "...한 팀이 되어, 마지막 날까지 함께합니다."
         // 규칙은 코드가 강제하는 것과 같습니다(app/api/crossing/mentoring/route.ts: 하루 두 칸, 2시간 간격).
-        title: { ko: "멘토의 확인", en: "A mentor's check" },
+        // DECIDED 2026-10-31 (docs/outputs-two-sides-brief.md O2, 사용자: 남는 것은 둘, 한 물건의 양면. 학생의 감각과 기업이 가져다 쓸 수 있는 툴): 그 전 문장은 git 6413abe.
+        title: { ko: "현업의 반박", en: "Pushback from the field" },
         days: [2, 3],
         body: {
           // DECIDED 2026-10-31 (docs/rephrase-briefs-2026-10-31.md C26, 사용자: 내용을 늘리지 말고 있는 문장을 다시 씀. 이슈는 기업이 아직 손으로 하는 일): 그 전 문장은 git 29f24f4.
-          ko: "팀의 생각 한 장을 들고 현업 멘토를 찾아가, 일을 해 본 사람의 감각으로 반박을 듣습니다.",
-          en: "You take your team's one page to a mentor and get pushed back on, with the sense of someone who has done the work.",
+          ko: "팀의 생각 한 장과 시안을 들고 현업 멘토를 찾아가, 일을 해 본 사람의 감각으로 반박을 듣고 고칩니다.",
+          en: "You take your team's one page and a draft to a mentor, get pushed back on with the sense of someone who has done the work, and fix it.",
         },
         evidence: { ko: "8월 11명", en: "August: eleven of them" },
       },
       {
         num: "03",
         // Day 3 "정의한 문제를 풀 아이디어를 코드로 옮기는 시간"과 같은 사실입니다.
-        title: { ko: "코드로 옮긴 결과물", en: "Something built in code" },
+        // DECIDED 2026-10-31 (docs/outputs-two-sides-brief.md O3, 사용자: 남는 것은 둘, 한 물건의 양면. 학생의 감각과 기업이 가져다 쓸 수 있는 툴): 그 전 문장은 git 6413abe.
+        title: { ko: "기업이 가져다 쓸 수 있는 툴", en: "A tool the company could use" },
         days: [3],
         body: {
           // DECIDED 2026-10-26 (사용자: 이슈와 문제, 병목 하나를 푸는 툴을 문장 수를 늘리지 않고 기존 문장에. 근거 12월 빌더톤/이벤트 기획/크로싱서울_이슈와_문제_정의_2026-10-26.md). 그 전: "정의한 문제를 풀 아이디어를 코드로 옮겨, 손에 쥐고 나갑니다."
           // DECIDED 2026-10-31 (docs/rephrase-briefs-2026-10-31.md C27, 사용자: 내용을 늘리지 말고 있는 문장을 다시 씀. 이슈는 기업이 아직 손으로 하는 일): 그 전 문장은 git 29f24f4.
-          ko: "고른 병목 하나를 푸는 작은 툴을 코드로 만들고, 효과를 숫자 하나로 확인해 손에 쥐고 나갑니다.",
-          en: "You build a small tool for the one bottleneck you chose, check its effect in one number, and leave holding it.",
+          ko: "반박을 거쳐 고친 작은 툴을 코드로 만들고, 기업이 그 일에 가져다 쓸 수 있는지 숫자 하나로 확인해 손에 쥐고 나갑니다.",
+          en: "You build the small tool, fixed through that pushback, in code, check in one number whether the company could use it on that task, and leave holding it.",
         },
       },
       {
@@ -1009,8 +1013,9 @@ export const naru = {
         title: { ko: "이슈를 낸 기업의 질문", en: "Questions from the company" },
         days: [4],
         body: {
-          ko: "마지막 날 그 기업 앞에서 발표하고 질문을 받습니다.",
-          en: "On the last day you present to that company and take its questions.",
+          // DECIDED 2026-10-31 (docs/outputs-two-sides-brief.md O4, 사용자: 남는 것은 둘, 한 물건의 양면. 학생의 감각과 기업이 가져다 쓸 수 있는 툴): 그 전 문장은 git 6413abe.
+          ko: "마지막 날 그 기업 앞에서 툴과 거기까지 간 과정을 발표하고, 가져다 쓸 수 있을지 질문을 받습니다.",
+          en: "On the last day you present the tool and how you got there in front of that company, and take their questions on whether they could use it.",
         },
         evidence: { ko: "8월 21팀 발표", en: "August: 21 teams presented" },
       },
@@ -1658,7 +1663,8 @@ export const naru = {
       { title: { ko: "일하는 모습으로 보는 사람", en: "People seen at work" }, body: { ko: "이력서 대신, 묻고 반박받고 고치는 모습을 닷새 동안 봅니다.", en: "Instead of a CV, you watch five days of asking, being pushed back on, and fixing." } },
       // DECIDED 2026-10-31 (docs/rephrase-briefs-2026-10-31.md H5, 사용자: 내용을 늘리지 말고 있는 문장을 다시 씀. 이슈는 기업이 아직 손으로 하는 일): 그 전 문장은 git 29f24f4.
       { title: { ko: "바깥에서 보는 여러 답", en: "Several answers from outside" }, body: { ko: "같은 이슈를 받은 팀마다 다른 병목을 골라 다른 툴을 만들고, 안에서 묻지 않던 전제가 드러납니다.", en: "Each team given the same issue picks a different bottleneck and builds a different tool, and assumptions nobody inside questioned come up." } },
-      { title: { ko: "결과보다 과정", en: "Process over output" }, body: { ko: "첫날의 생각이 마지막 날까지 어떻게 달라졌는지 봅니다.", en: "You see how the first day's thinking changed by the last." } },
+      // DECIDED 2026-10-31 (docs/outputs-two-sides-brief.md O7, 사용자: 남는 것은 둘, 한 물건의 양면. 학생의 감각과 기업이 가져다 쓸 수 있는 툴): 그 전 문장은 git 6413abe.
+      { title: { ko: "결과보다 과정", en: "Process over output" }, body: { ko: "첫날의 생각이 반박을 거쳐 마지막 날의 툴까지 어떻게 달라졌는지 봅니다.", en: "You see how the first day's thinking changed, through pushback, into the last day's tool." } },
       // DECIDED 2026-10-31 (docs/rephrase-briefs-2026-10-31.md H6, 사용자: 내용을 늘리지 말고 있는 문장을 다시 씀. 이슈는 기업이 아직 손으로 하는 일): 그 전 문장은 git 29f24f4.
       { title: { ko: "이어지는 만남", en: "A conversation that continues" }, body: { ko: "마지막 날 더 이야기하고 싶은 한 팀을 고르시면 따로 자리를 만듭니다. 결과물을 도입할 의무는 없습니다.", en: "On the last day you pick one team you want to keep talking with, and we set up a time. There is no obligation to adopt what they built." } },
     ] as { title: Phrase; body: Phrase }[],
@@ -2231,8 +2237,9 @@ export const naru = {
           body: {
             // DECIDED 2026-10-30 (docs/humanize-review-2026-10-30.md C9, D2 채용 뺌, humanize-korean 우선): 그 전 문장은 git 9c77437.
             // DECIDED 2026-10-31 (docs/rephrase-briefs-2026-10-31.md C21, 사용자: 내용을 늘리지 말고 있는 문장을 다시 씀. 이슈는 기업이 아직 손으로 하는 일): 그 전 문장은 git 29f24f4.
-            ko: "팀의 생각 한 장과 결과물, 발표와 질의를 기록으로 받으십니다. 더 이야기하고 싶은 한 팀을 골라 주시면 됩니다.",
-            en: "You receive each team's one page, what it built, and the presentation and questions as a record. Pick one team you want to keep talking with.",
+            // DECIDED 2026-10-31 (docs/outputs-two-sides-brief.md O6, 사용자: 남는 것은 둘, 한 물건의 양면. 학생의 감각과 기업이 가져다 쓸 수 있는 툴): 그 전 문장은 git 6413abe.
+            ko: "팀마다 다른 병목을 반박을 거쳐 푼 작은 툴과 생각 한 장, 발표와 질의를 기록으로 받으십니다. 더 이야기하고 싶은 한 팀을 골라 주시면 됩니다.",
+            en: "You receive each team's small tool, fixed through pushback on a different bottleneck, with its one page, presentation and questions as a record. Pick one team you want to keep talking with.",
           },
         },
         {
@@ -2717,8 +2724,9 @@ export const naru = {
         line: {
           // DECIDED 2026-10-26 (사용자: 이슈와 문제, 병목 하나를 푸는 툴을 문장 수를 늘리지 않고 기존 문장에. 근거 12월 빌더톤/이벤트 기획/크로싱서울_이슈와_문제_정의_2026-10-26.md). 그 전: "정의한 문제를 풀 아이디어를 코드로 옮기는 시간입니다."
           // DECIDED 2026-10-31 (docs/rephrase-briefs-2026-10-31.md C9, 사용자: 내용을 늘리지 말고 있는 문장을 다시 씀. 이슈는 기업이 아직 손으로 하는 일): 그 전 문장은 git 29f24f4.
-          ko: "흐름 전체를 바꾸는 시스템 대신 그 병목만 푸는 작은 툴을 만들고, 현업에서 살아남을지 멘토에게 여쭙니다.",
-          en: "Instead of a system that changes the whole flow, you build a small tool for that one bottleneck, and ask a mentor whether it would survive at work.",
+          // DECIDED 2026-10-31 (docs/outputs-two-sides-brief.md O5, 사용자: 남는 것은 둘, 한 물건의 양면. 학생의 감각과 기업이 가져다 쓸 수 있는 툴): 그 전 문장은 git 6413abe.
+          ko: "흐름 전체를 바꾸는 시스템 대신 그 병목만 푸는 작은 툴을 만들고, 기업이 가져다 쓸 수 있을지 멘토에게 여쭙습니다.",
+          en: "Instead of a system that changes the whole flow, you build a small tool for that one bottleneck and ask a mentor whether the company could use it.",
         },
         // DECIDED 2026-10-10 (중복 브리프 B1): 칩 "멘토링은 이 날까지"를 뺐습니다. General Mentoring 상자의
         // "Day 3은 피칭 준비, Day 4는 멘토링이 없습니다"가 같은 말을 합니다.
