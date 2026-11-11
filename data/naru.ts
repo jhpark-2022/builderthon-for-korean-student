@@ -2319,9 +2319,11 @@ export const naru = {
     // DECIDED 2026-11-11 (사용자: "200만원 for the 과정을 모두 함께하는 사람", 같은 날 뒤 "상금 후원 로고는 빼주고"): 로고 띠의 상금은 후원처 로고 없이 금액만.
     // 금액을 쓰는 예외 하나(brand 9장).
     bandPrize: {
-      label: { ko: "상금", en: "Prize" },
+      // 같은 날 뒤 (사용자: "이러면 특정 인원들에게만 주는거처럼 보임. 200만원 is for everyone that comes and join the process"):
+      // "상금"과 "끝까지 함께한 사람에게"를 버리고, 과정에 함께하는 모두를 위한 돈으로.
+      label: { ko: "지원금", en: "Support fund" },
       amount: { ko: "200만원", en: "KRW 2,000,000" },
-      note: { ko: "과정을 끝까지 함께한 사람에게", en: "For finishing the whole program" },
+      note: { ko: "과정에 함께하는 모두를 위해", en: "For everyone who joins the process" },
     },
     // 같은 날 사용자("로고로 넣어줘"): 문장 아래 두 곳의 로고. Bloom은 #partners와 같은 파일.
     // 가짜연구소는 따로 된 로고 파일이 없어 pseudo-lab.com의 512px 아이콘(별 마크)을 잘라 쓰고, 그 사이트처럼 마크 옆에 이름을 글자로 붙입니다.
