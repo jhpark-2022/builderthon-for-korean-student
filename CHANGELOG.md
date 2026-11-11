@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-11 로고 띠 둘째 줄에 금액과 멘토](#2026-11-11-band-row2)
 - [2026-11-11 로고 띠에 받는 것 셋](#2026-11-11-band-rewards)
 - [2026-11-11 멘토 줄은 Bloom과 가짜연구소 로고](#2026-11-11-mentor-sources)
 - [2026-11-11 멘토 줄은 소속만](#2026-11-11-mentor-places)
@@ -553,6 +554,15 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-11-11-band-row2"></a>
+## 2026-11-11 로고 띠 둘째 줄에 금액과 멘토
+- 범위: components/crossing/redesign/CrossingSeoul.tsx(#sponsors-band, #mentors 삭제), copy.ts, data/naru.ts(bandPrize, bandNote, mentorBandNote), docs/brand.md 5장, 9장
+- 한 것: 상금은 후원처 로고를 빼고 "200만원"과 받는 사람만. 트레바리는 참가자 모두에게 10만원 쿠폰, Readray는 수상 팀원에게 Pro 2개월(각 후원 회신 메일의 값, 팀 수와 인원은 쓰지 않음). 따로 있던 멘토 장을 없애고 Bloom, 가짜연구소 묶음을 같은 줄로. "전체 보기" 링크는 첫 줄 끝으로. 사용자 요청.
+- brand 9장 금액 예외를 로고 띠의 세 값으로 넓힘. Readray 줄에는 Lovable 표기 조건대로 "크레딧"을 쓰지 않음.
+- 판단 질문: 2 자기 가치를 증명할 기회(끝까지 해본 사람이 받는 것이 보임).
+- 검증: 1440 KO, EN 모두 두 줄, 390 가로 스크롤, 넘침 0. 첫 버튼 위치 그대로(KO 406, EN 484).
+- 커밋: fa5c722
 
 <a id="2026-11-11-band-rewards"></a>
 ## 2026-11-11 로고 띠에 받는 것 셋
