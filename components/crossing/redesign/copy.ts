@@ -26,7 +26,7 @@ export const copy = {
   heroFactKeys: kos(["어디서", "누가", "받는 것"], h.posterFacts.map((f) => f.k)),
   heroFacts: kos(
     [
-      "서울. Day 1 FASTFIVE, Day 2 디캠프 선릉, Day 4 MARU180.\n한국 스타트업 생태계에서 중요한 공간들에서 열려요.",
+      "서울. Day 1 FASTFIVE, Day 2 디캠프 선릉, Day 4 MARU180.\n스타트업들이 일하고 모이는 공간에서 열려요.",
       "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 등록하고, 팀은 Day 1 현장에서 꾸려요.",
       "Lovable 크레딧과 워크숍, 트레바리 독서모임 쿠폰.\n미션을 해낸 팀은 모두 지원받고, 마지막 날 부문별로 시상해요.",
     ],
