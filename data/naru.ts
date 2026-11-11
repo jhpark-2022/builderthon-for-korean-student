@@ -2312,15 +2312,16 @@ export const naru = {
     // 2026-11-06 (사용자: "이 맨토들 다 AI community 에서 활동하고 있는 사람들이라고 써줘"): 명단 머리 아래 한 줄.
     // DECIDED 2026-11-08 (사용자: "ai 를 적극적으로 각자의 도메인 안 현업에서 쓰는 사람들"): 커뮤니티 활동 대신 자기 일에 AI를 쓰는 사람으로.
     mentorsListNote: { ko: "그중 몇 분을 먼저 소개합니다. 모두 각자의 현업에서 AI를 적극적으로 쓰는 분들이고, 이 밖에도 여러 분야의 멘토가 함께합니다.", en: "A few of them, all actively using AI in their own work. Mentors from other fields join too." },
-    // DECIDED 2026-11-11 (사용자: "이름이나 이런걸 까지 말고, 이런곳들의 멘토들을 모신다 라고 넣어줘"): /crossing 멘토 줄은 이름 없이 소속만.
-    // 멘토 명단(mentors)의 소속을 사람 단위로 묶지 않고 곳 단위로 풀었습니다. 명단이 바뀌면 같이 고칩니다. 멘토 수는 쓰지 않습니다(brand 8장).
-    mentorPlacesNote: { ko: "이런 곳에서 일하는 현업 멘토들을 모십니다.", en: "We bring in working mentors from places like these." },
-    mentorPlaces: [
-      { ko: "Kia", en: "Kia" }, { ko: "C&R Research", en: "C&R Research" }, { ko: "Aside (YC F25)", en: "Aside (YC F25)" },
-      { ko: "KAIST AI 대학원", en: "KAIST Graduate School of AI" }, { ko: "인클리즈랩", en: "Inclease Lab" },
-      { ko: "DanaMed", en: "DanaMed" }, { ko: "수일개발", en: "SOOIL Development" }, { ko: "BIGPIE C&T", en: "BIGPIE C&T" },
-      { ko: "Bloom", en: "Bloom" }, { ko: "실리콘밸리 게임기업", en: "A Silicon Valley game company" }, { ko: "식품 기업", en: "A food company" },
-    ] as Phrase[],
+    // DECIDED 2026-11-11 (사용자: "이름이나 이런걸 까지 말고", 같은 날 뒤 "멘토는 확정 아직, 정확히 어떤분들이 오시는 지는 아직은 넣을 수 없음"):
+    // /crossing 멘토 줄은 사람도 회사도 적지 않고, 멘토가 오는 두 곳(Bloom, 가짜연구소)만 한 문장으로. 멘토 수는 쓰지 않습니다(brand 8장).
+    mentorPlacesNote: { ko: "Bloom과 가짜연구소에서 활동하는 현업 멘토들이 함께합니다.", en: "Working mentors join us from Bloom and Pseudo Lab." },
+    // 같은 날 사용자("로고로 넣어줘"): 문장 아래 두 곳의 로고. Bloom은 #partners와 같은 파일.
+    // 가짜연구소는 따로 된 로고 파일이 없어 pseudo-lab.com의 512px 아이콘(별 마크)을 잘라 쓰고, 그 사이트처럼 마크 옆에 이름을 글자로 붙입니다.
+    // 공식 로고 파일을 받으면 pseudolab-mark.png를 바꿉니다.
+    mentorSources: [
+      { name: "Bloom", src: "/partners/logos/paper/bloom-block.png", w: 575, h: 286, url: "https://bloomworld.ai/" },
+      { name: "가짜연구소", src: "/partners/logos/paper/pseudolab-mark.png", w: 391, h: 439, url: "https://pseudo-lab.com/", label: { ko: "가짜연구소", en: "Pseudo Lab" } as Phrase },
+    ] as { name: string; src: string; w: number; h: number; url: string; label?: Phrase }[],
     mentorsLead: {
       ko: "멘토는 답을 주러 오지 않습니다. 일을 해 본 사람이면 누구나 아는 감각으로, 팀이 들고 간 한 장과 시안에 \"실제로는 그렇게 안 돌아간다\"를 그대로 말해 줍니다.",
       en: "Mentors do not come with answers. With the sense anyone who has done the work has, they tell the team, to its one page and draft, \"that is not how it works in practice.\"",

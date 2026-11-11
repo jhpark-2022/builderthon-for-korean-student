@@ -365,15 +365,20 @@ export default function CrossingSeoul() {
 
         {/* ── 멘토 줄 ─────────────────────────────────────────────── */}
         {/* DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P3): 화면 글에 멘토가 보이게.
-            같은 날 사용자("너무 여기 못생김", "이름이나 이런걸 까지 말고, 이런곳들의 멘토들을 모신다 라고 넣어줘"): 흐르는 카드 줄 대신
-            멘토가 일하는 곳만 한 줄 문장 아래 나열합니다. 이름, 얼굴, 멘토 수는 두지 않습니다. 이름과 경력은 지금처럼 멘토 모달에. */}
+            같은 날 사용자("너무 여기 못생김", "멘토는 확정 아직, 정확히 어떤분들이 오시는 지는 아직은 넣을 수 없음"): 흐르는 카드 줄 대신
+            멘토가 오는 두 곳(Bloom, 가짜연구소)을 말하는 한 문장과 두 곳의 로고. 이름, 회사, 얼굴, 멘토 수는 두지 않습니다. */}
         <section id="mentors" aria-labelledby="mentors-title" className="mt-10 lg:mt-14">
           <div className={FRAME}>
             <h2 id="mentors-title" className={`break-keep ${HEADING} ${NAVY}`}>{t(C.mentorsStripLabel)}</h2>
-            <p className={`mt-1 break-keep ${BODY} ${SOFT}`}>{t(C.mentorPlacesNote)}</p>
-            <ul className={`mt-4 flex flex-wrap gap-x-6 gap-y-2 lg:gap-x-[18px] border-y ${RULE} py-4`}>
-              {d.mentorPlaces.map((p) => (
-                <li key={p.ko} className={`${BODY} font-semibold ${INK}`}>{t(p)}</li>
+            <p className={`mt-1 break-keep ${BODY} ${INK}`}>{t(C.mentorPlacesNote)}</p>
+            <ul className="mt-4 flex flex-wrap items-center gap-x-10 gap-y-3">
+              {d.mentorSources.map((l) => (
+                <li key={l.name}>
+                  <a href={l.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center gap-2 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naru-navy">
+                    <Image src={l.src} alt={l.label ? "" : l.name} width={l.w} height={l.h} unoptimized className="block h-7 w-auto lg:h-8" />
+                    {l.label && <span className={`${BODY} font-bold ${INK}`}>{t(l.label)}</span>}
+                  </a>
+                </li>
               ))}
             </ul>
           </div>
