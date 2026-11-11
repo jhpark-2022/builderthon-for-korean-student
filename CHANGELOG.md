@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-11 첫 화면과 공유 카드를 포스터로](#2026-11-11-poster-first)
 - [2026-11-11 등록은 11월 16일(월)에 열어요](#2026-11-11-opens-16)
 - [2026-11-10 남는 것 리드 두 줄](#2026-11-10-gains-two)
 - [2026-11-10 Day 3 멘토링은 직접 찾아가기](#2026-11-10-day3-inperson)
@@ -548,6 +549,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-11-11-poster-first"></a>
+## 2026-11-11 첫 화면과 공유 카드를 포스터로
+- 범위: components/crossing/redesign/CrossingSeoul.tsx(히어로, #sponsors-band, #mentors, #december 리드), copy.ts, data/naru.ts(eventHero.posterFacts, registerFact), app/globals.css(.mentor-strip), lib/ogCards.tsx, lib/crossingMeta.ts, scripts/colorize-partner-logos.py(ink), public/partners/logos/paper 잉크 판 셋, OG 서체, docs/brand.md 5장 6장 10장
+- 한 것: 2026-11-11 주간 회의, 포스터 대신 카카오톡 방에 링크를 올리므로 미리보기 카드와 폰 첫 화면이 포스터 몫. 히어로 캐치프레이즈 아래 문단 대신 사실 넷(어디서, 누가, 받는 것, 등록, 문장은 사용자 승인). 히어로 아래 로고 띠(메인 후원, 공간 후원, 기술과 크레딧)와 확정 멘토 카드 줄(흐름, hover와 focus와 동작 줄이기에서 멈춤). 정체성 세 줄은 닷새 리드 첫 문단으로, 나루 한 줄은 화면에서 뺌. 공유 카드는 캐치프레이즈 첫 줄과 공간 후원 넷, Lovable 로고 줄. 근거: 판단 질문 2(무대가 진짜라는 사실을 첫 화면에서), brand 6장 정체성, 10장 로고 조건, 8장 숫자(인원, 금액 없음).
+- 검증: 390 첫 버튼 아래 끝 KO 406, EN 484(기준 640). 1440 사실 넷과 버튼 KO 781, EN 835, 로고 띠 머리 KO 813, EN 867(기준 900). 순서 #top, #sponsors-band, #mentors, #december. 멘토 이름 화면 글에 있음, 멘토 줄 img 0. 알약 0, 그라데이션 면 0, 새 글자 크기 0, 가로 넘침 0, 동작 줄이기에서 animation none. 공유 카드 KO, EN 1200x630, 500px에서 로고 줄과 캐치프레이즈 읽힘. npm run build 통과.
+- 브리프: docs/poster-first-brief.md
+- 커밋: 90df562, 06cb89a
 
 <a id="2026-11-11-opens-16"></a>
 ## 2026-11-11 등록은 11월 16일(월)에 열어요

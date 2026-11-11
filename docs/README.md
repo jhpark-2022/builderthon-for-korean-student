@@ -44,6 +44,7 @@
 | 11-05 | `merge-paper-brief.md` | 종이 가지를 main에, 백엔드와 도구 페이지 | 적용 (651e963, 합치기 b2d5c79) |
 | 11-06 | `first-click-brief.md` | 처음 보는 사람은 어디를 누르나 | 적용 (652f85c) |
 | 11-08 | 새 화면(`components/*/redesign/`)은 브리프 없이 들어옴 | 해요체, 공용 헤더 | `brand-voice-brief.md`가 정본을 뒤따라 맞춤 |
+| 11-11 | `poster-first-brief.md` | 첫 화면과 공유 카드를 포스터로(사실 넷, 로고 띠, 멘토 줄), 등록 여는 날 11월 16일 | 적용(`design/poster-first`, P6은 main) (7d5e673, 90df562, 06cb89a) |
 
 ### 배경 (WebGL 캔버스. 2026-11-05 종이 팔레트로 전부 폐기)
 
