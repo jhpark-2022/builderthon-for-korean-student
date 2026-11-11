@@ -3759,6 +3759,9 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
     {
       label: { ko: "기술, 크레딧", en: "Tech and credits" },
       logos: [{ name: "Lovable", src: "/partners/logos/paper/lovable.png", w: 644, h: 110, url: "https://lovable.dev/" }],
+      // DECIDED 2026-11-12 (사용자: "러버블의 경우에는 참여자 모두에게 얼마만큼의 benefit 을 준다 + 워크샵 제공을 gmail 통해서 확인"):
+      // 2026-10-20 Lovable 승인 메일 "100 free Lovable credits per participant", Day 1 워크숍은 2026-10-30 회신 메일(아래 Carraway & Gatsby).
+      bandNote: { ko: "참가자 모두에게 100 크레딧, Day 1 워크숍", en: "100 credits each, Day 1 workshop" },
       // DECIDED 2026-10-27 (사용자: "'Day 1에 Lovable 현장 워크숍을 진행합니다.' 이거 빼줘"): 로고 띠 아래 한 줄을 뺐습니다. 일정 카드 Day 1의 세션은 그대로입니다.
     },
     // DECIDED 2026-11-03 (사용자: "Readray 와도 확정", "lovable 과 같이 묶이면 안되서, 수상 상품으로 크레딧 지원임. 따로 빼야함"): 시상에 쓰는 크레딧이라

@@ -325,7 +325,8 @@ export default function CrossingSeoul() {
             <h2 id="sponsors-band-title" className="sr-only">{t(decemberPartners.heading)}</h2>
             <div className={`border-y ${RULE}`}>
               <div className="-mx-5 overflow-x-auto px-5 sm:-mx-8 sm:px-8 lg:mx-0 lg:overflow-visible lg:px-0">
-                <ul className="flex w-max items-start gap-x-8 py-4 lg:w-full lg:flex-wrap lg:gap-x-10 lg:gap-y-3">
+                {/* DECIDED 2026-11-12 (사용자: "조금 더 채워져있으면 좋겠고"): 데스크톱은 두 줄 모두 묶음 사이를 고르게 벌려 폭을 채웁니다. */}
+                <ul className="flex w-max items-start gap-x-8 py-4 lg:w-full lg:flex-wrap lg:justify-between lg:gap-x-10 lg:gap-y-3">
                   {/* DECIDED 2026-11-11 (사용자, 스크린숏: "매인후원은 안나오게, 그리고 day 1 to 4 공간들이 보이게"): 메인 후원을 빼고,
                       공간 후원을 Day 1~4 순서로 날 이름과 함께. 장소는 닷새 카드와 같은 데이터(stages의 logo, Day 3은 venueText).
                       Day 4는 MARU180과 그 공간을 내준 아산나눔재단. 디캠프는 "공간 후원" 이름 아래 그대로(2026-11-10 표기 조건). */}
@@ -350,8 +351,11 @@ export default function CrossingSeoul() {
                   </li>
                   <li className="shrink-0">
                     <p className={`${META} font-bold ${INK}`}>{t(decemberPartners.groups[2].label)}</p>
-                    <div className="mt-1 flex items-center gap-x-5">
-                      {decemberPartners.groups[2].logos.map((l) => <BandLogo key={l.name} l={l as PartnerLogo} />)}
+                    <div className="mt-1 flex flex-col">
+                      <div className="flex items-center gap-x-5">
+                        {decemberPartners.groups[2].logos.map((l) => <BandLogo key={l.name} l={l as PartnerLogo} />)}
+                      </div>
+                      {decemberPartners.groups[2].bandNote && <span className={`-mt-1.5 whitespace-nowrap ${META} ${SOFT}`}>{t(decemberPartners.groups[2].bandNote)}</span>}
                     </div>
                   </li>
                   <li className="order-last shrink-0 self-center lg:order-none lg:ml-auto">
