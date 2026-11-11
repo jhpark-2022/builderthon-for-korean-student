@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-11 멘토 줄은 소속만](#2026-11-11-mentor-places)
 - [2026-11-11 로고 띠는 Day 1~4 공간](#2026-11-11-band-days)
 - [2026-11-11 첫 화면과 공유 카드를 포스터로](#2026-11-11-poster-first)
 - [2026-11-11 등록은 11월 16일(월)에 열어요](#2026-11-11-opens-16)
@@ -550,6 +551,15 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-11-11-mentor-places"></a>
+## 2026-11-11 멘토 줄은 소속만
+- 범위: components/crossing/redesign/CrossingSeoul.tsx(#mentors), copy.ts, data/naru.ts(mentorPlaces, mentorPlacesNote), app/globals.css(.mentor-strip 삭제)
+- 한 것: 흐르는 멘토 카드 줄을 빼고, "이런 곳에서 일하는 현업 멘토들을 모셔요." 한 줄 아래 멘토가 일하는 곳만 나열함. 이름, 얼굴, 멘토 수는 두지 않음(brand 8장). 이름과 경력은 멘토 모달 그대로. 사용자 요청(카드 줄이 보기 좋지 않고, 이름 대신 어떤 곳의 멘토인지만).
+- 판단 질문: 2 자기 가치를 증명할 기회(어떤 현업이 들어 주는지 첫 화면 근처에서 보임).
+- 검증: KO 1440 한 줄, EN 1440 두 줄, 390 가로 넘침 0. 움직이는 요소는 로고 띠만 남음.
+- 브리프: docs/poster-first-brief.md (P3을 고침)
+- 커밋: 0aa81cf
 
 <a id="2026-11-11-band-days"></a>
 ## 2026-11-11 로고 띠는 Day 1~4 공간
