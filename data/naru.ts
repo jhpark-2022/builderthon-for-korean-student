@@ -2314,7 +2314,15 @@ export const naru = {
     mentorsListNote: { ko: "그중 몇 분을 먼저 소개합니다. 모두 각자의 현업에서 AI를 적극적으로 쓰는 분들이고, 이 밖에도 여러 분야의 멘토가 함께합니다.", en: "A few of them, all actively using AI in their own work. Mentors from other fields join too." },
     // DECIDED 2026-11-11 (사용자: "이름이나 이런걸 까지 말고", 같은 날 뒤 "멘토는 확정 아직, 정확히 어떤분들이 오시는 지는 아직은 넣을 수 없음"):
     // /crossing 멘토 줄은 사람도 회사도 적지 않고, 멘토가 오는 두 곳(Bloom, 가짜연구소)만 한 문장으로. 멘토 수는 쓰지 않습니다(brand 8장).
-    mentorPlacesNote: { ko: "Bloom과 가짜연구소에서 활동하는 현업 멘토들이 함께합니다.", en: "Working mentors join us from Bloom and Pseudo Lab." },
+    // 같은 날 뒤 사용자("맨토 내용 needs to be at the same row with the 트레바리 and readray"): 따로 된 멘토 장을 없애고 로고 띠 둘째 줄의 한 묶음으로.
+    mentorBandNote: { ko: "여기서 활동하는 현업 멘토", en: "Working mentors from here" },
+    // DECIDED 2026-11-11 (사용자: "200만원 for the 과정을 모두 함께하는 사람", 같은 날 뒤 "상금 후원 로고는 빼주고"): 로고 띠의 상금은 후원처 로고 없이 금액만.
+    // 금액을 쓰는 예외 하나(brand 9장).
+    bandPrize: {
+      label: { ko: "상금", en: "Prize" },
+      amount: { ko: "200만원", en: "KRW 2,000,000" },
+      note: { ko: "과정을 끝까지 함께한 사람에게", en: "For finishing the whole program" },
+    },
     // 같은 날 사용자("로고로 넣어줘"): 문장 아래 두 곳의 로고. Bloom은 #partners와 같은 파일.
     // 가짜연구소는 따로 된 로고 파일이 없어 pseudo-lab.com의 512px 아이콘(별 마크)을 잘라 쓰고, 그 사이트처럼 마크 옆에 이름을 글자로 붙입니다.
     // 공식 로고 파일을 받으면 pseudolab-mark.png를 바꿉니다.
@@ -3756,15 +3764,15 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
       // 플레이북 정리: Lovable이 행사의 exclusive tool, 다른 파트너는 보조 이름으로만). 행사 크레딧은 Lovable 한 곳이라 Readray 줄에서 "크레딧"을 빼고 상품으로. 그 전: 시상 크레딧 / Award credits.
       label: { ko: "시상 상품", en: "Award prizes" },
       // DECIDED 2026-11-11 (사용자: "수상팀 readray 크래딧 후원"): 로고 띠의 받는 사람. "크레딧"은 위 2026-11-10 Lovable 조건대로 쓰지 않습니다.
-      bandNote: { ko: "수상 팀에게", en: "For award-winning teams" },
+      // 같은 날 뒤 (사용자: "gmail 참고해서 정확한 지원 amount"): 2026-11-03 Readray CPO 메일 "네, 가능합니다"(수상팀 1인당 Readray Pro 2개월 상당).
+      // 팀 수와 인원은 쓰지 않습니다(brand 8장).
+      bandNote: { ko: "수상 팀원에게 Pro 2개월", en: "2 months of Pro per award winner" },
       logos: [{ name: "Readray", src: "/partners/logos/paper/readray.png", w: 1983, h: 377, url: "https://readray.ai" }],
     },
     // DECIDED 2026-11-06 (사용자: "와이드모바일 (상금 후원) 넣어줘"). 로고는 CI/250207_도시락eSIM_LogoGuide.pdf의 가로형(도시락eSIM은 와이드모바일의 브랜드,
     // App Store 판매자 Wide Mobile Co., Ltd.). 흰 바탕만 걷은 원래 색입니다. 사이트가 열리지 않아 링크 없이 둡니다.
     {
       label: { ko: "상금 후원", en: "Prize sponsor" },
-      // DECIDED 2026-11-11 (사용자: "200만원 for the 과정을 모두 함께하는 사람", "이거는 금액을 써도됨"): 금액을 쓰는 예외 하나(brand 9장).
-      bandNote: { ko: "과정을 끝까지 함께한 사람에게 200만원", en: "KRW 2,000,000 for those who stay through the whole program" },
       logos: [{ name: "와이드모바일 도시락eSIM WideMobile", src: "/partners/logos/paper/dosirak-esim.png", w: 846, h: 122 }],
     },
     // DECIDED 2026-11-06 (사용자: "terminal espresso house (다과지원) 넣어줘"). 원본은 CI/Terminal Espresso House.jpeg(검정 바탕 흰 글자)이고,
@@ -3778,7 +3786,8 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
     {
       label: { ko: "독서모임 쿠폰", en: "Book club vouchers" },
       // DECIDED 2026-11-11 (사용자: "참여자모두에게 트레바리 후원"): 로고 띠의 받는 사람.
-      bandNote: { ko: "참가자 모두에게", en: "For every participant" },
+      // 같은 날 뒤 (사용자: "gmail 참고해서 정확한 지원 amount"): 2026-11-07 트레바리 대표 메일, 전원에게 10만원짜리 독서모임 쿠폰.
+      bandNote: { ko: "참가자 모두에게 10만원 쿠폰", en: "KRW 100,000 for every participant" },
       logos: [{ name: "트레바리 TREVARI", src: "/partners/logos/paper/trevari.png", w: 903, h: 160, url: "https://trevari.co.kr" }],
     },
     // DECIDED 2026-10-31 (사용자: 10/29 워크숍 인트로 미팅과 10/30 회신 메일, "이분이 있는 business를 넣어줘야함"): Day 1 Lovable 워크숍을 맡은 회사.

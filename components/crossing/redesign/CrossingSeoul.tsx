@@ -354,14 +354,25 @@ export default function CrossingSeoul() {
                       {decemberPartners.groups[2].logos.map((l) => <BandLogo key={l.name} l={l as PartnerLogo} />)}
                     </div>
                   </li>
-                  {/* DECIDED 2026-11-11 (사용자: "200만원 for the 과정을 모두 함께하는 사람, 참여자모두에게 트레바리 후원, 그리고 수상팀 readray 크래딧 후원"):
-                      받는 것 셋을 같은 모양으로. 로고 아래에는 Day 대신 누가 받는지(data/naru.ts의 bandNote). 순서는 사용자가 말한 순서. */}
-                  {/* 데스크톱은 둘째 줄을 여기서 시작: 위는 공간과 기술, 아래는 받는 것 셋. 폰은 가로 스크롤 한 줄 그대로. */}
+                  <li className="order-last shrink-0 self-center lg:order-none lg:ml-auto">
+                    <a href="#partners" className={`${LINK} whitespace-nowrap`}>{t(C.partnersAll)}</a>
+                  </li>
+                  {/* DECIDED 2026-11-11 (사용자: "200만원 for the 과정을 모두 함께하는 사람, 참여자모두에게 트레바리 후원, 그리고 수상팀 readray 크래딧 후원",
+                      같은 날 뒤 "상금 후원 로고는 빼주고", "맨토 내용 needs to be at the same row with the 트레바리 and readray"):
+                      둘째 줄은 상금(로고 없이 금액), 트레바리, Readray, 함께하는 멘토(Bloom, 가짜연구소). 로고 아래에는 누가 무엇을 받는지.
+                      금액과 기간은 Gmail의 후원 회신 그대로(data/naru.ts bandNote). 따로 된 #mentors 장은 이 묶음으로 옮기며 없앴습니다. */}
+                  {/* 데스크톱은 둘째 줄을 여기서 시작. 폰은 가로 스크롤 한 줄 그대로. */}
                   <li aria-hidden className="hidden lg:block lg:h-0 lg:basis-full" />
-                  {["상금 후원", "독서모임 쿠폰", "시상 상품"].map((label) => {
+                  <li className="shrink-0">
+                    <p className={`${META} font-bold ${INK}`}>{t(d.bandPrize.label)}</p>
+                    <div className="mt-1 flex flex-col">
+                      <span className={`flex min-h-[44px] items-center ${BODY} font-bold tabular-nums ${INK}`}>{t(d.bandPrize.amount)}</span>
+                      <span className={`-mt-1.5 whitespace-nowrap ${META} ${SOFT}`}>{t(d.bandPrize.note)}</span>
+                    </div>
+                  </li>
+                  {["독서모임 쿠폰", "시상 상품"].map((label) => {
                     const g = decemberPartners.groups.find((x) => x.label.ko === label);
                     if (!g) return null;
-                    const note = g.bandNote;
                     return (
                       <li key={label} className="shrink-0">
                         <p className={`${META} font-bold ${INK}`}>{t(g.label)}</p>
@@ -369,38 +380,28 @@ export default function CrossingSeoul() {
                           <div className="flex items-center gap-x-5">
                             {g.logos.map((l) => <BandLogo key={l.name} l={l as PartnerLogo} />)}
                           </div>
-                          {note && <span className={`-mt-1.5 whitespace-nowrap ${META} ${SOFT}`}>{t(note)}</span>}
+                          {g.bandNote && <span className={`-mt-1.5 whitespace-nowrap ${META} ${SOFT}`}>{t(g.bandNote)}</span>}
                         </div>
                       </li>
                     );
                   })}
-                  <li className="shrink-0 self-center lg:ml-auto">
-                    <a href="#partners" className={`${LINK} whitespace-nowrap`}>{t(C.partnersAll)}</a>
+                  <li className="shrink-0">
+                    <p className={`${META} font-bold ${INK}`}>{t(C.mentorsStripLabel)}</p>
+                    <div className="mt-1 flex flex-col">
+                      <div className="flex items-center gap-x-5">
+                        {d.mentorSources.map((l) => (
+                          <a key={l.name} href={l.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center gap-1.5 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naru-navy">
+                            <Image src={l.src} alt={l.label ? "" : l.name} width={l.w} height={l.h} unoptimized className="block h-6 w-auto lg:h-7" />
+                            {l.label && <span className={`whitespace-nowrap ${BODY} font-bold ${INK}`}>{t(l.label)}</span>}
+                          </a>
+                        ))}
+                      </div>
+                      <span className={`-mt-1.5 whitespace-nowrap ${META} ${SOFT}`}>{t(d.mentorBandNote)}</span>
+                    </div>
                   </li>
                 </ul>
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* ── 멘토 줄 ─────────────────────────────────────────────── */}
-        {/* DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P3): 화면 글에 멘토가 보이게.
-            같은 날 사용자("너무 여기 못생김", "멘토는 확정 아직, 정확히 어떤분들이 오시는 지는 아직은 넣을 수 없음"): 흐르는 카드 줄 대신
-            멘토가 오는 두 곳(Bloom, 가짜연구소)을 말하는 한 문장과 두 곳의 로고. 이름, 회사, 얼굴, 멘토 수는 두지 않습니다. */}
-        <section id="mentors" aria-labelledby="mentors-title" className="mt-10 lg:mt-14">
-          <div className={FRAME}>
-            <h2 id="mentors-title" className={`break-keep ${HEADING} ${NAVY}`}>{t(C.mentorsStripLabel)}</h2>
-            <p className={`mt-1 break-keep ${BODY} ${INK}`}>{t(C.mentorPlacesNote)}</p>
-            <ul className="mt-4 flex flex-wrap items-center gap-x-10 gap-y-3">
-              {d.mentorSources.map((l) => (
-                <li key={l.name}>
-                  <a href={l.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center gap-2 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naru-navy">
-                    <Image src={l.src} alt={l.label ? "" : l.name} width={l.w} height={l.h} unoptimized className="block h-7 w-auto lg:h-8" />
-                    {l.label && <span className={`${BODY} font-bold ${INK}`}>{t(l.label)}</span>}
-                  </a>
-                </li>
-              ))}
-            </ul>
           </div>
         </section>
 
