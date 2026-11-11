@@ -591,15 +591,18 @@ export const naru = {
     catchAnswer: { ko: "생각부터 하고, 현업에 묻고, 팀마다 다르게 만들어 서로 봅니다.", en: "Think first, ask the field, build what no other team builds, and see each other's work." },
     // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P1, D1 문장 승인): 캐치프레이즈 아래 사실 넷(어디서, 누가, 받는 것, 등록).
     // 그 전 이 자리의 sub와 naruLine은 #december 리드와 #partners 주최 줄로(P4). 확정된 것만 씁니다: 장소는 december.stages의 로고와 같고,
-    // 받는 것은 decemberPartners의 Lovable(기술, 크레딧, Day 1 워크숍)과 트레바리(참가 학생 전원). 인원, 금액, 기간, 수량은 쓰지 않습니다(brand 8장, 9장).
+    // 받는 것은 decemberPartners의 Lovable(기술, 크레딧)과 트레바리(참가 학생 전원), 미션 지원금, Readray(시상 상품).
+    // DECIDED 2026-11-12 (사용자, docs/poster-phone-brief.md Q2, D1 승인): 받는 것 줄에 금액과 기간을 씁니다(brand 9장 예외: 히어로 받는 것 줄과 로고 띠).
+    // 값은 각 후원 회신 메일 그대로이고, 띠의 bandNote, bandPrize와 같은 말. 인원과 팀 수는 쓰지 않습니다(brand 8장).
     // 바뀌면 이 줄과 copy.ts의 heroFacts를 같이 고칩니다. (아래의 facts는 다른 키, 히어로 아래 숫자 띠.)
+    // DECIDED 2026-11-12 (사용자, docs/poster-phone-brief.md Q1): 순서는 누가, 받는 것, 어디서, 등록. 카카오톡 인앱(390x660) 첫 화면에 받는 것이 오게.
     posterFacts: [
+      { k: { ko: "누가", en: "Who" }, v: { ko: "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 등록하고, 팀은 Day 1 현장에서 꾸려요.", en: "University students in Korea and Korean students studying abroad.\nRegister alone; teams form on site on Day 1." } },
+      { k: { ko: "받는 것", en: "What you get" }, v: { ko: "참가자 모두에게 Lovable 100 크레딧과 트레바리 10만원 쿠폰.\n미션을 해낸 팀 모두에게 지원금 총 200만원.\n수상 팀원에게는 Readray Pro 2개월.", en: "Lovable 100 credits and a KRW 100,000 Trevari voucher for every participant.\nA KRW 2,000,000 support fund in total, for every team that completes a mission.\nTwo months of Readray Pro for each award-winning team member." } },
       // DECIDED 2026-11-11 (사용자: "day 3 는 줌으로 열어요 내용 빼고, 장소에, 한국 스타트업 생태계에서 중요한 공간들에게 벌어진다고 해"):
       // 같은 날 뒤 (사용자: "Fastfive 가 생태계에서 중요한 공간은 아니여서 약간의 rephrase"): 세 곳 모두에 맞게 "스타트업들이 일하고 모이는 공간".
       // 둘째 줄의 Day 3 Zoom을 빼고 장소의 뜻으로. Day 3 Zoom은 닷새 카드와 미션 조건에 그대로 있습니다.
       { k: { ko: "어디서", en: "Where" }, v: { ko: "서울. Day 1 FASTFIVE, Day 2 디캠프 선릉, Day 4 MARU180.\n스타트업들이 일하고 모이는 공간에서 열려요.", en: "Seoul. Day 1 at FASTFIVE, Day 2 at DCAMP Seolleung, Day 4 at MARU180.\nHeld where Korean startups work and gather." } },
-      { k: { ko: "누가", en: "Who" }, v: { ko: "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 등록하고, 팀은 Day 1 현장에서 꾸려요.", en: "University students in Korea and Korean students studying abroad.\nRegister alone; teams form on site on Day 1." } },
-      { k: { ko: "받는 것", en: "What you get" }, v: { ko: "Lovable 크레딧과 워크숍, 트레바리 독서모임 쿠폰.\n미션을 해낸 팀은 모두 지원받고, 마지막 날 부문별로 시상해요.", en: "Lovable credits and a workshop, and a Trevari book club voucher.\nEvery team that completes a mission gets support, and the last day gives awards by category." } },
     ] as { k: Phrase; v: Phrase }[],
     // 넷째 줄. 등록 창 상태마다 다릅니다: 열기 전, 열린 뒤. 마감 뒤는 register.closed. 여는 시각은 쓰지 않습니다(P6).
     registerFact: {
@@ -2327,8 +2330,10 @@ export const naru = {
       // 같은 날 뒤 (사용자: "이러면 특정 인원들에게만 주는거처럼 보임. 200만원 is for everyone that comes and join the process"):
       // "상금"과 "끝까지 함께한 사람에게"를 버리고, 과정에 함께하는 모두를 위한 돈으로.
       label: { ko: "지원금", en: "Support fund" },
-      amount: { ko: "200만원", en: "KRW 2,000,000" },
-      note: { ko: "과정에 함께하는 모두를 위해", en: "For everyone who joins the process" },
+      // DECIDED 2026-11-12 (사용자, docs/poster-phone-brief.md Q3, D2: "미션을 해낸 팀에게 주는것"): 200만원은 미션 지원과 같은 돈.
+      // 1인당으로 읽히지 않게 "총", 조건은 히어로 받는 것 줄과 같은 말. 그 전 note: "과정에 함께하는 모두를 위해".
+      amount: { ko: "총 200만원", en: "KRW 2,000,000 in total" },
+      note: { ko: "미션을 해낸 팀 모두에게", en: "For every team that completes a mission" },
     },
     // 같은 날 사용자("로고로 넣어줘"): 문장 아래 두 곳의 로고. Bloom은 #partners와 같은 파일.
     // 가짜연구소는 따로 된 로고 파일이 없어 pseudo-lab.com의 512px 아이콘(별 마크)을 잘라 쓰고, 그 사이트처럼 마크 옆에 이름을 글자로 붙입니다.
@@ -3727,10 +3732,15 @@ export const singaporeCampuses: { name: Phrase; src: string; w: number; h: numbe
 // 같은 날 (사용자: "작동이 안 되는 링크들이 있음, 블룸이랑 크라이치즈버거도 반드시 넣어줘"): translinkinvestment.com은 도메인이 없어
 // translink.kr로. AXMOS, Bloom(bloomworld.ai), 크라이치즈버거(crycheeseburger.com)에 링크를 넣었습니다. 모든 링크를 curl로 열어 봤습니다.
 // note: 로고 줄 아래 한 줄(2026-10-24, 사용자: "1일차에 lovable 현장 워크샵 진행"). 있는 줄에만 그립니다.
-export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?: PartnerLogo & { note: Phrase }; logos: PartnerLogo[]; note?: Phrase; bandNote?: Phrase }[] } = {
+// DECIDED 2026-11-12 (docs/poster-phone-brief.md Q6): 묶음마다 id. 로고 띠와 copy.ts는 순서나 이름이 아니라 id로 찾고(partnerGroup),
+// 없으면 모듈을 읽을 때 throw해서 빌드가 멈춥니다(HeroPartnerStrip의 DECEMBER_MASS와 같은 방식). 줄 이름이나 순서를 바꿔도 묶음이 조용히 사라지지 않게.
+export type PartnerGroupId = "main" | "venue" | "tech" | "award" | "prize" | "snack" | "coupon" | "workshop" | "community" | "media";
+export type PartnerGroup = { id: PartnerGroupId; label: Phrase; lead?: PartnerLogo & { note: Phrase }; logos: PartnerLogo[]; note?: Phrase; bandNote?: Phrase };
+export const decemberPartners: { heading: Phrase; groups: PartnerGroup[] } = {
   heading: { ko: "함께하는 곳", en: "With us in December" },
   groups: [
     {
+      id: "main",
       label: { ko: "메인 후원", en: "Main sponsors" },
       lead: { name: "AXMOS", src: "/partners/logos/white/trimmed/axmos.png", w: 900, h: 240, url: "https://axmos.ai/kr", note: { ko: "컨소시엄 코어 5개사", en: "Consortium, five core members" } },
       logos: [
@@ -3745,6 +3755,7 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
     },
     {
       // DECIDED 2026-11-10 (디캠프 대관 승인 메일: 홍보물 표기는 "공간 후원 : (디캠프 로고)"): 장소 줄 이름을 "공간 후원"으로. 아산나눔재단(MARU180), FASTFIVE도 공간을 내준 곳이라 같은 이름. 그 전: 장소 / Venues.
+      id: "venue",
       label: { ko: "공간 후원", en: "Venue sponsors" },
       logos: [
         // DECIDED 2026-10-26 (사용자: "다 빼줘"): GSC 로고를 장소 줄에서도 뺐습니다. 노선도 Day 1 로고도 같은 날 뺐습니다.
@@ -3759,6 +3770,7 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
       ],
     },
     {
+      id: "tech",
       label: { ko: "기술, 크레딧", en: "Tech and credits" },
       logos: [{ name: "Lovable", src: "/partners/logos/paper/lovable.png", w: 644, h: 110, url: "https://lovable.dev/" }],
       // DECIDED 2026-11-12 (사용자: "러버블의 경우에는 참여자 모두에게 얼마만큼의 benefit 을 준다 + 워크샵 제공을 gmail 통해서 확인"):
@@ -3772,6 +3784,7 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
     {
       // DECIDED 2026-11-10 (사용자: "러버블 조건을 보면 무조건 본인들이 행사 크레딧 후원이어야 한다", 근거 12월 빌더톤/이벤트 기획/툴의 Lovable 승인 메일과
       // 플레이북 정리: Lovable이 행사의 exclusive tool, 다른 파트너는 보조 이름으로만). 행사 크레딧은 Lovable 한 곳이라 Readray 줄에서 "크레딧"을 빼고 상품으로. 그 전: 시상 크레딧 / Award credits.
+      id: "award",
       label: { ko: "시상 상품", en: "Award prizes" },
       // DECIDED 2026-11-11 (사용자: "수상팀 readray 크래딧 후원"): 로고 띠의 받는 사람. "크레딧"은 위 2026-11-10 Lovable 조건대로 쓰지 않습니다.
       // 같은 날 뒤 (사용자: "gmail 참고해서 정확한 지원 amount"): 2026-11-03 Readray CPO 메일 "네, 가능합니다"(수상팀 1인당 Readray Pro 2개월 상당).
@@ -3782,18 +3795,21 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
     // DECIDED 2026-11-06 (사용자: "와이드모바일 (상금 후원) 넣어줘"). 로고는 CI/250207_도시락eSIM_LogoGuide.pdf의 가로형(도시락eSIM은 와이드모바일의 브랜드,
     // App Store 판매자 Wide Mobile Co., Ltd.). 흰 바탕만 걷은 원래 색입니다. 사이트가 열리지 않아 링크 없이 둡니다.
     {
+      id: "prize",
       label: { ko: "상금 후원", en: "Prize sponsor" },
       logos: [{ name: "와이드모바일 도시락eSIM WideMobile", src: "/partners/logos/paper/dosirak-esim.png", w: 846, h: 122 }],
     },
     // DECIDED 2026-11-06 (사용자: "terminal espresso house (다과지원) 넣어줘"). 원본은 CI/Terminal Espresso House.jpeg(검정 바탕 흰 글자)이고,
     // 바탕을 걷어 흰 실루엣으로(크림 위에서는 globals.css가 잉크 색으로). 사람 그림 아래 두 줄 글자라 크라이치즈버거처럼 square 높이.
     {
+      id: "snack",
       label: { ko: "다과 지원", en: "Refreshments" },
       logos: [{ name: "Terminal Espresso House", src: "/partners/logos/white/trimmed/terminal-espresso.png", w: 363, h: 321, square: true }],
     },
     // DECIDED 2026-11-08 (사용자: "트레바리 ... 반영을 해줘"). 파트너맵(11-07 확정): 참가 학생 전원에게 독서모임 쿠폰. 금액은 쓰지 않습니다(brand 9장).
     // 로고는 파트너맵 소스(크로싱서울_파트너맵_소스/logos/trevari.png)의 주황 워드마크를 여백만 잘라 원래 색 그대로. 사이트를 curl로 열어 봤습니다.
     {
+      id: "coupon",
       label: { ko: "독서모임 쿠폰", en: "Book club vouchers" },
       // DECIDED 2026-11-11 (사용자: "참여자모두에게 트레바리 후원"): 로고 띠의 받는 사람.
       // 같은 날 뒤 (사용자: "gmail 참고해서 정확한 지원 amount"): 2026-11-07 트레바리 대표 메일, 전원에게 10만원짜리 독서모임 쿠폰.
@@ -3805,10 +3821,12 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
     // "Carraway & Gatsby"라 로고는 나침반 심볼 + "Carraway &" / "Gatsby" 두 줄입니다(사용자가 세 시안 중 고름). 전체 이름은 링크 이름과 대체 글에.
     // 원본은 CI/CGC (러버블 워크샵).jpeg(흰 바탕 남색). 바탕을 걷고 남색은 흰색으로, 파란 점은 밝은 파랑으로 올렸습니다(밝은 판 없이).
     {
+      id: "workshop",
       label: { ko: "Lovable 워크숍", en: "Lovable workshop" },
       logos: [{ name: "Carraway & Gatsby Corporation", src: "/partners/logos/paper/cgc.png", w: 833, h: 232, url: "https://cgcorp.io" }],
     },
     {
+      id: "community",
       label: { ko: "커뮤니티, 홍보", en: "Community and PR" },
       logos: [
         // DECIDED 2026-10-23 (사용자: "블룸 다른 로고 쓰면 좋을거 같은데"): 꽃 캐릭터 + 세리프 워드마크(color/bloom.png)에서 블록 글자 마크로.
@@ -3823,8 +3841,22 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
     // DECIDED 2026-11-05 (사용자: "아이디어파트너스 로고를 웹사이트에 반영해줘, 미디어파트너로"). 원본은 CI/아이디어파트너스_영문.png(잉크 글자, 파란 심볼)이고
     // 크림 바탕에 그대로 읽혀 투명 여백만 잘랐습니다. 사이트(ideapartners.co.kr)를 curl로 열어 봤습니다.
     {
+      id: "media",
       label: { ko: "미디어 파트너", en: "Media partner" },
       logos: [{ name: "아이디어파트너스 Idea Partners", src: "/partners/logos/paper/idea-partners.png", w: 345, h: 64, url: "https://www.ideapartners.co.kr" }],
     },
   ],
 };
+
+/** id로 묶음을 찾습니다. 없으면 throw(빌드가 멈춤). 2026-11-12 poster-phone Q6. */
+export function partnerGroup(id: PartnerGroupId): PartnerGroup {
+  const g = decemberPartners.groups.find((x) => x.id === id);
+  if (!g) throw new Error(`decemberPartners: no group with id "${id}". The logo band and copy.ts look groups up by id.`);
+  return g;
+}
+/** 묶음 안의 로고를 src로 찾습니다. 없으면 throw. */
+export function partnerLogo(id: PartnerGroupId, src: string): PartnerLogo {
+  const l = partnerGroup(id).logos.find((x) => x.src === src);
+  if (!l) throw new Error(`decemberPartners: no logo ${src} in group "${id}".`);
+  return l;
+}

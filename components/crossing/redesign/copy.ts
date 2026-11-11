@@ -1,4 +1,4 @@
-import { naru, register as registerCopy, registerNoteShort, registerNoteOpen, decemberPartners } from "@/data/naru";
+import { naru, register as registerCopy, registerNoteShort, registerNoteOpen, partnerGroup } from "@/data/naru";
 import { type Phrase } from "@/data/dictionaryCore";
 
 // DECIDED 2026-11-07 (redesign/crossing): 이 페이지 전용 한국어 문구. 영어는 data/naru.ts의 원문 그대로입니다.
@@ -12,6 +12,12 @@ const kos = (texts: string[], from: readonly Phrase[]): Phrase[] =>
   from.length === texts.length ? texts.map((x, i) => ko(x, from[i])) : [...from];
 
 const stage = (n: number) => d.stages.find((s) => s.dayOffset === n)!;
+// 2026-11-12 (poster-phone Q6): 메인 후원은 순서가 아니라 id로. lead가 없으면 모듈을 읽을 때 멈춥니다.
+const MAIN_LEAD_NOTE = (() => {
+  const lead = partnerGroup("main").lead;
+  if (!lead) throw new Error('decemberPartners: group "main" has no lead.');
+  return lead.note;
+})();
 
 export const copy = {
   catchAnswer: ko("먼저 생각하고, 현업에 물어보고,\n팀마다 다른 걸 만들어 서로 보여 줘요.", h.catchAnswer),
@@ -22,13 +28,13 @@ export const copy = {
   photosCaption: ko("8월 싱가포르, 제로백 빌더톤", h.photosCaption),
   photosMore: (n: number): Phrase => ({ ko: `사진 ${n}장 더 보기`, en: `View ${n} photos` }),
 
-  // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P1, D1 문장 승인): 히어로의 사실 넷. 기본값과 영어는 data/naru.ts eventHero.posterFacts.
-  heroFactKeys: kos(["어디서", "누가", "받는 것"], h.posterFacts.map((f) => f.k)),
+  // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P1, D1 문장 승인): 히어로의 사실 넷. 2026-11-12 (poster-phone Q1): 누가, 받는 것, 어디서 순. 기본값과 영어는 data/naru.ts eventHero.posterFacts.
+  heroFactKeys: kos(["누가", "받는 것", "어디서"], h.posterFacts.map((f) => f.k)),
   heroFacts: kos(
     [
-      "서울. Day 1 FASTFIVE, Day 2 디캠프 선릉, Day 4 MARU180.\n스타트업들이 일하고 모이는 공간에서 열려요.",
       "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 등록하고, 팀은 Day 1 현장에서 꾸려요.",
-      "Lovable 크레딧과 워크숍, 트레바리 독서모임 쿠폰.\n미션을 해낸 팀은 모두 지원받고, 마지막 날 부문별로 시상해요.",
+      "참가자 모두에게 Lovable 100 크레딧과 트레바리 10만원 쿠폰.\n미션을 해낸 팀 모두에게 지원금 총 200만원.\n수상 팀원에게는 Readray Pro 2개월.",
+      "서울. Day 1 FASTFIVE, Day 2 디캠프 선릉, Day 4 MARU180.\n스타트업들이 일하고 모이는 공간에서 열려요.",
     ],
     h.posterFacts.map((f) => f.v),
   ),
@@ -216,5 +222,5 @@ export const copy = {
     naru.gains.items.map((x) => x.body),
   ),
 
-  leadNote: ko("컨소시엄 핵심 회사 다섯 곳", decemberPartners.groups[0].lead!.note),
+  leadNote: ko("컨소시엄 핵심 회사 다섯 곳", MAIN_LEAD_NOTE),
 };
