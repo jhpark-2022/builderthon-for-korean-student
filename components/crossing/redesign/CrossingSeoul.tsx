@@ -317,7 +317,7 @@ export default function CrossingSeoul() {
 
         {/* ── 로고 띠 ─────────────────────────────────────────────── */}
         {/* DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P2, D2): 로고가 1440에서 네 번째 화면, 폰에서 여섯 번째 화면에 있어
-            무대가 진짜라는 사실이 첫 화면 근처에 없었습니다. 함께하는 곳의 앞 세 줄(메인 후원은 lead와 note만, 공간 후원 넷, 기술과 크레딧)을
+            무대가 진짜라는 사실이 첫 화면 근처에 없었습니다. 함께하는 곳의 줄(같은 날 뒤 사용자: 메인 후원은 빼고 공간 후원을 Day 1~4로, 기술과 크레딧)을
             상자 없이 한 단으로. 크기(logoSize)와 흰 실루엣의 잉크 처리(globals.css)는 #partners와 같고, 나머지는 "전체 보기"로. #partners 장은 그대로.
             디캠프는 "공간 후원" 이름과 함께, Lovable은 원래 색(brand 10장, 2026-11-10 표기 조건). 폰은 가로 스크롤. */}
         <section id="sponsors-band" aria-labelledby="sponsors-band-title" className="mt-10 lg:mt-8">
@@ -326,21 +326,35 @@ export default function CrossingSeoul() {
             <div className={`border-y ${RULE}`}>
               <div className="-mx-5 overflow-x-auto px-5 sm:-mx-8 sm:px-8 lg:mx-0 lg:overflow-visible lg:px-0">
                 <ul className="flex w-max items-start gap-x-8 py-4 lg:w-full lg:flex-wrap lg:gap-x-10 lg:gap-y-3">
-                  {decemberPartners.groups.slice(0, 3).map((g) => (
-                    <li key={g.label.en} className="shrink-0">
-                      <p className={`${META} font-bold ${INK}`}>{t(g.label)}</p>
-                      <div className="mt-1 flex items-center gap-x-5">
-                        {g.lead ? (
-                          <span className="flex flex-col">
-                            <BandLogo l={g.lead} />
-                            <span className={`-mt-1.5 whitespace-nowrap ${META} ${SOFT}`}>{t(C.leadNote)}</span>
-                          </span>
-                        ) : (
-                          g.logos.map((l) => <BandLogo key={l.name} l={l as PartnerLogo} />)
-                        )}
-                      </div>
-                    </li>
-                  ))}
+                  {/* DECIDED 2026-11-11 (사용자, 스크린숏: "매인후원은 안나오게, 그리고 day 1 to 4 공간들이 보이게"): 메인 후원을 빼고,
+                      공간 후원을 Day 1~4 순서로 날 이름과 함께. 장소는 닷새 카드와 같은 데이터(stages의 logo, Day 3은 venueText).
+                      Day 4는 MARU180과 그 공간을 내준 아산나눔재단. 디캠프는 "공간 후원" 이름 아래 그대로(2026-11-10 표기 조건). */}
+                  <li className="shrink-0">
+                    <p className={`${META} font-bold ${INK}`}>{t(decemberPartners.groups[1].label)}</p>
+                    <div className="mt-1 flex items-start gap-x-7">
+                      {stages.filter((st) => st.dayOffset >= 1 && st.dayOffset <= 4).map((st) => (
+                        <div key={st.dayOffset} className="flex flex-col">
+                          <div className="flex items-center gap-x-4">
+                            {st.logo ? (
+                              <>
+                                {st.dayOffset === 4 && <BandLogo l={decemberPartners.groups[1].logos[0] as PartnerLogo} />}
+                                <BandLogo l={st.logo as PartnerLogo} />
+                              </>
+                            ) : (
+                              st.venueText && <span className={`inline-flex min-h-[44px] items-center whitespace-nowrap ${BODY} font-semibold ${INK}`}>{t(st.venueText)}</span>
+                            )}
+                          </div>
+                          <span className={`-mt-1.5 whitespace-nowrap ${META} tabular-nums ${SOFT}`}>{t(d.dayLabel)} {st.dayOffset}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </li>
+                  <li className="shrink-0">
+                    <p className={`${META} font-bold ${INK}`}>{t(decemberPartners.groups[2].label)}</p>
+                    <div className="mt-1 flex items-center gap-x-5">
+                      {decemberPartners.groups[2].logos.map((l) => <BandLogo key={l.name} l={l as PartnerLogo} />)}
+                    </div>
+                  </li>
                   <li className="shrink-0 self-center lg:ml-auto">
                     <a href="#partners" className={`${LINK} whitespace-nowrap`}>{t(C.partnersAll)}</a>
                   </li>
