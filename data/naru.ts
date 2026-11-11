@@ -3712,7 +3712,7 @@ export const singaporeCampuses: { name: Phrase; src: string; w: number; h: numbe
 // 같은 날 (사용자: "작동이 안 되는 링크들이 있음, 블룸이랑 크라이치즈버거도 반드시 넣어줘"): translinkinvestment.com은 도메인이 없어
 // translink.kr로. AXMOS, Bloom(bloomworld.ai), 크라이치즈버거(crycheeseburger.com)에 링크를 넣었습니다. 모든 링크를 curl로 열어 봤습니다.
 // note: 로고 줄 아래 한 줄(2026-10-24, 사용자: "1일차에 lovable 현장 워크샵 진행"). 있는 줄에만 그립니다.
-export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?: PartnerLogo & { note: Phrase }; logos: PartnerLogo[]; note?: Phrase }[] } = {
+export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?: PartnerLogo & { note: Phrase }; logos: PartnerLogo[]; note?: Phrase; bandNote?: Phrase }[] } = {
   heading: { ko: "함께하는 곳", en: "With us in December" },
   groups: [
     {
@@ -3755,12 +3755,16 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
       // DECIDED 2026-11-10 (사용자: "러버블 조건을 보면 무조건 본인들이 행사 크레딧 후원이어야 한다", 근거 12월 빌더톤/이벤트 기획/툴의 Lovable 승인 메일과
       // 플레이북 정리: Lovable이 행사의 exclusive tool, 다른 파트너는 보조 이름으로만). 행사 크레딧은 Lovable 한 곳이라 Readray 줄에서 "크레딧"을 빼고 상품으로. 그 전: 시상 크레딧 / Award credits.
       label: { ko: "시상 상품", en: "Award prizes" },
+      // DECIDED 2026-11-11 (사용자: "수상팀 readray 크래딧 후원"): 로고 띠의 받는 사람. "크레딧"은 위 2026-11-10 Lovable 조건대로 쓰지 않습니다.
+      bandNote: { ko: "수상 팀에게", en: "For award-winning teams" },
       logos: [{ name: "Readray", src: "/partners/logos/paper/readray.png", w: 1983, h: 377, url: "https://readray.ai" }],
     },
     // DECIDED 2026-11-06 (사용자: "와이드모바일 (상금 후원) 넣어줘"). 로고는 CI/250207_도시락eSIM_LogoGuide.pdf의 가로형(도시락eSIM은 와이드모바일의 브랜드,
-    // App Store 판매자 Wide Mobile Co., Ltd.). 흰 바탕만 걷은 원래 색입니다. 금액은 쓰지 않습니다(brand 9장). 사이트가 열리지 않아 링크 없이 둡니다.
+    // App Store 판매자 Wide Mobile Co., Ltd.). 흰 바탕만 걷은 원래 색입니다. 사이트가 열리지 않아 링크 없이 둡니다.
     {
       label: { ko: "상금 후원", en: "Prize sponsor" },
+      // DECIDED 2026-11-11 (사용자: "200만원 for the 과정을 모두 함께하는 사람", "이거는 금액을 써도됨"): 금액을 쓰는 예외 하나(brand 9장).
+      bandNote: { ko: "과정을 끝까지 함께한 사람에게 200만원", en: "KRW 2,000,000 for those who stay through the whole program" },
       logos: [{ name: "와이드모바일 도시락eSIM WideMobile", src: "/partners/logos/paper/dosirak-esim.png", w: 846, h: 122 }],
     },
     // DECIDED 2026-11-06 (사용자: "terminal espresso house (다과지원) 넣어줘"). 원본은 CI/Terminal Espresso House.jpeg(검정 바탕 흰 글자)이고,
@@ -3773,6 +3777,8 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
     // 로고는 파트너맵 소스(크로싱서울_파트너맵_소스/logos/trevari.png)의 주황 워드마크를 여백만 잘라 원래 색 그대로. 사이트를 curl로 열어 봤습니다.
     {
       label: { ko: "독서모임 쿠폰", en: "Book club vouchers" },
+      // DECIDED 2026-11-11 (사용자: "참여자모두에게 트레바리 후원"): 로고 띠의 받는 사람.
+      bandNote: { ko: "참가자 모두에게", en: "For every participant" },
       logos: [{ name: "트레바리 TREVARI", src: "/partners/logos/paper/trevari.png", w: 903, h: 160, url: "https://trevari.co.kr" }],
     },
     // DECIDED 2026-10-31 (사용자: 10/29 워크숍 인트로 미팅과 10/30 회신 메일, "이분이 있는 business를 넣어줘야함"): Day 1 Lovable 워크숍을 맡은 회사.

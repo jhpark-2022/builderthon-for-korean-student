@@ -354,6 +354,26 @@ export default function CrossingSeoul() {
                       {decemberPartners.groups[2].logos.map((l) => <BandLogo key={l.name} l={l as PartnerLogo} />)}
                     </div>
                   </li>
+                  {/* DECIDED 2026-11-11 (사용자: "200만원 for the 과정을 모두 함께하는 사람, 참여자모두에게 트레바리 후원, 그리고 수상팀 readray 크래딧 후원"):
+                      받는 것 셋을 같은 모양으로. 로고 아래에는 Day 대신 누가 받는지(data/naru.ts의 bandNote). 순서는 사용자가 말한 순서. */}
+                  {/* 데스크톱은 둘째 줄을 여기서 시작: 위는 공간과 기술, 아래는 받는 것 셋. 폰은 가로 스크롤 한 줄 그대로. */}
+                  <li aria-hidden className="hidden lg:block lg:h-0 lg:basis-full" />
+                  {["상금 후원", "독서모임 쿠폰", "시상 상품"].map((label) => {
+                    const g = decemberPartners.groups.find((x) => x.label.ko === label);
+                    if (!g) return null;
+                    const note = g.bandNote;
+                    return (
+                      <li key={label} className="shrink-0">
+                        <p className={`${META} font-bold ${INK}`}>{t(g.label)}</p>
+                        <div className="mt-1 flex flex-col">
+                          <div className="flex items-center gap-x-5">
+                            {g.logos.map((l) => <BandLogo key={l.name} l={l as PartnerLogo} />)}
+                          </div>
+                          {note && <span className={`-mt-1.5 whitespace-nowrap ${META} ${SOFT}`}>{t(note)}</span>}
+                        </div>
+                      </li>
+                    );
+                  })}
                   <li className="shrink-0 self-center lg:ml-auto">
                     <a href="#partners" className={`${LINK} whitespace-nowrap`}>{t(C.partnersAll)}</a>
                   </li>
