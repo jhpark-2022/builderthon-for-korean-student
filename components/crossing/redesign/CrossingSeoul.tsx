@@ -331,20 +331,19 @@ export default function CrossingSeoul() {
                       Day 4는 MARU180과 그 공간을 내준 아산나눔재단. 디캠프는 "공간 후원" 이름 아래 그대로(2026-11-10 표기 조건). */}
                   <li className="shrink-0">
                     <p className={`${META} font-bold ${INK}`}>{t(decemberPartners.groups[1].label)}</p>
-                    <div className="mt-1 flex items-start gap-x-7">
-                      {stages.filter((st) => st.dayOffset >= 1 && st.dayOffset <= 4).map((st) => (
-                        <div key={st.dayOffset} className="flex flex-col">
-                          <div className="flex items-center gap-x-4">
-                            {st.logo ? (
-                              <>
-                                {st.dayOffset === 4 && <BandLogo l={decemberPartners.groups[1].logos[0] as PartnerLogo} />}
-                                <BandLogo l={st.logo as PartnerLogo} />
-                              </>
-                            ) : (
-                              st.venueText && <span className={`inline-flex min-h-[44px] items-center whitespace-nowrap ${BODY} font-semibold ${INK}`}>{t(st.venueText)}</span>
-                            )}
+                    {/* 같은 날 뒤 (사용자: "keep 후원, 자연스럽게 공간들이 이어지도록 from day 1 to 4. 중간에 zoom 부분은 빼줘"): 장소가 있는 날만,
+                        가는 선으로 이어 한 줄로. 날 이름은 로고 아래. */}
+                    <div className="mt-1 flex items-start">
+                      {stages.filter((st) => st.dayOffset >= 1 && st.dayOffset <= 4 && st.logo).map((st, k) => (
+                        <div key={st.dayOffset} className="flex items-start">
+                          {k > 0 && <span aria-hidden className="mx-4 mt-[22px] h-px w-8 shrink-0 bg-naru-navy/25 lg:mx-5 lg:w-10" />}
+                          <div className="flex flex-col">
+                            <div className="flex items-center gap-x-4">
+                              {st.dayOffset === 4 && <BandLogo l={decemberPartners.groups[1].logos[0] as PartnerLogo} />}
+                              <BandLogo l={st.logo as PartnerLogo} />
+                            </div>
+                            <span className={`-mt-1.5 whitespace-nowrap ${META} tabular-nums ${SOFT}`}>{t(d.dayLabel)} {st.dayOffset}</span>
                           </div>
-                          <span className={`-mt-1.5 whitespace-nowrap ${META} tabular-nums ${SOFT}`}>{t(d.dayLabel)} {st.dayOffset}</span>
                         </div>
                       ))}
                     </div>

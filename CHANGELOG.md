@@ -555,6 +555,7 @@
 ## 2026-11-11 로고 띠는 Day 1~4 공간
 - 범위: components/crossing/redesign/CrossingSeoul.tsx(#sponsors-band), docs/brand.md 5장
 - 한 것: 사용자 스크린숏 "매인후원은 안나오게, 그리고 day 1 to 4 공간들이 보이게". 메인 후원(AXMOS)을 띠에서 빼고, 공간 후원을 닷새 카드와 같은 장소 데이터로 Day 1 FASTFIVE, Day 2 디캠프, Day 3 온라인 (Zoom), Day 4 아산나눔재단과 MARU180 순서로, 날 이름과 함께. 메인 후원은 #partners에 그대로. 근거: brand 10장 로고 조건(디캠프는 "공간 후원" 이름과 함께).
+- 같은 날 뒤: 사용자 "keep 후원, 자연스럽게 공간들이 이어지도록 from day 1 to 4. 중간에 zoom 부분은 빼줘". "공간 후원" 이름은 그대로(디캠프 조건), Day 3 Zoom 글을 빼고 Day 1, 2, 4 장소를 가는 선으로 이어 한 줄로. 장식 점은 쓰지 않음(site-tells).
 - 검증: 1440 KO, EN 한 단, 띠 머리 813, 867(기준 900), 가로 넘침 0
 - 브리프: docs/poster-first-brief.md(P2, D2를 바꿈)
 - 커밋: b036ccd
