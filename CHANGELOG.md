@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-12 로고 띠에 Lovable 혜택, 폭을 채움](#2026-11-12-band-lovable)
 - [2026-11-11 히어로 어디서 줄은 장소의 뜻으로](#2026-11-11-where-line)
 - [2026-11-11 로고 띠 둘째 줄에 금액과 멘토](#2026-11-11-band-row2)
 - [2026-11-11 로고 띠에 받는 것 셋](#2026-11-11-band-rewards)
@@ -555,6 +556,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-11-12-band-lovable"></a>
+## 2026-11-12 로고 띠에 Lovable 혜택, 폭을 채움
+- 범위: components/crossing/redesign/CrossingSeoul.tsx(#sponsors-band), data/naru.ts(Lovable bandNote)
+- 한 것: Lovable 로고 아래 "참가자 모두에게 100 크레딧, Day 1 워크숍"(2026-10-20 Lovable 승인 메일, Day 1 워크숍은 10-30 회신 메일). 데스크톱 두 줄은 묶음 사이를 고르게 벌려 폭을 채움(justify-between). 사용자 요청.
+- 판단 질문: 2 자기 가치를 증명할 기회(만드는 도구를 모두가 받음).
+- 검증: 1440 KO, EN 두 줄, 390 넘침 0, 첫 버튼 위치 그대로.
+- 커밋: ea9a0c7
 
 <a id="2026-11-11-where-line"></a>
 ## 2026-11-11 히어로 어디서 줄은 장소의 뜻으로
