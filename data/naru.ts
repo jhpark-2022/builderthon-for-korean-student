@@ -594,7 +594,9 @@ export const naru = {
     // 받는 것은 decemberPartners의 Lovable(기술, 크레딧, Day 1 워크숍)과 트레바리(참가 학생 전원). 인원, 금액, 기간, 수량은 쓰지 않습니다(brand 8장, 9장).
     // 바뀌면 이 줄과 copy.ts의 heroFacts를 같이 고칩니다. (아래의 facts는 다른 키, 히어로 아래 숫자 띠.)
     posterFacts: [
-      { k: { ko: "어디서", en: "Where" }, v: { ko: "서울. Day 1 FASTFIVE, Day 2 디캠프 선릉, Day 4 MARU180.\nDay 3은 Zoom으로 만나요.", en: "Seoul. Day 1 at FASTFIVE, Day 2 at DCAMP Seolleung, Day 4 at MARU180.\nDay 3 meets on Zoom." } },
+      // DECIDED 2026-11-11 (사용자: "day 3 는 줌으로 열어요 내용 빼고, 장소에, 한국 스타트업 생태계에서 중요한 공간들에게 벌어진다고 해"):
+      // 둘째 줄의 Day 3 Zoom을 빼고 장소의 뜻으로. Day 3 Zoom은 닷새 카드와 미션 조건에 그대로 있습니다.
+      { k: { ko: "어디서", en: "Where" }, v: { ko: "서울. Day 1 FASTFIVE, Day 2 디캠프 선릉, Day 4 MARU180.\n한국 스타트업 생태계에서 중요한 공간들에서 열려요.", en: "Seoul. Day 1 at FASTFIVE, Day 2 at DCAMP Seolleung, Day 4 at MARU180.\nHeld at spaces that matter in Korea's startup ecosystem." } },
       { k: { ko: "누가", en: "Who" }, v: { ko: "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 등록하고, 팀은 Day 1 현장에서 꾸려요.", en: "University students in Korea and Korean students studying abroad.\nRegister alone; teams form on site on Day 1." } },
       { k: { ko: "받는 것", en: "What you get" }, v: { ko: "Lovable 크레딧과 워크숍, 트레바리 독서모임 쿠폰.\n미션을 해낸 팀은 모두 지원받고, 마지막 날 부문별로 시상해요.", en: "Lovable credits and a workshop, and a Trevari book club voucher.\nEvery team that completes a mission gets support, and the last day gives awards by category." } },
     ] as { k: Phrase; v: Phrase }[],
