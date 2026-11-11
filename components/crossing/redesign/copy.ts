@@ -35,8 +35,9 @@ export const copy = {
   heroRegisterKey: ko("등록", h.registerFact.k),
   heroRegisterNotOpen: ko("11월 16일(월)에 열어요.\n소식은 카카오톡에서 먼저 알려요.", h.registerFact.notOpen),
   heroRegisterOpen: ko("지금 등록할 수 있어요.\n소식은 카카오톡에서 먼저 알려요.", h.registerFact.open),
-  // DECIDED 2026-11-11 (P3): 멘토 줄의 제목. 카드를 누르면 멘토 모달.
+  // DECIDED 2026-11-11 (P3, 같은 날 사용자): 멘토 줄의 제목과 한 줄. 이름 없이 소속만.
   mentorsStripLabel: ko("함께하는 멘토", d.mentorsListLabel),
+  mentorPlacesNote: ko("이런 곳에서 일하는 현업 멘토들을 모셔요.", d.mentorPlacesNote),
   // DECIDED 2026-11-11 (P2): 로고 띠 끝의 링크.
   partnersAll: { ko: "함께하는 곳 전체 보기", en: "See everyone with us" } as Phrase,
 

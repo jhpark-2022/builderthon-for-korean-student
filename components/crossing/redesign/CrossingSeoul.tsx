@@ -364,36 +364,18 @@ export default function CrossingSeoul() {
         </section>
 
         {/* ── 멘토 줄 ─────────────────────────────────────────────── */}
-        {/* DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P3, D5): 멘토 명단이 모달 안에만 있어 화면 글에 멘토 이름이 없었습니다.
-            확정된 멘토(confirmed)만, 얼굴 사진 없이(2026-11-07) 이름, 소속과 직책, 한 줄. 왼쪽으로 흐르고(한 바퀴 60초), hover와 focus에서 멈추며,
-            동작 줄이기에서는 멈춘 가로 스크롤(globals.css .mentor-strip). 움직이는 것은 이 줄 하나(site-tells 2026-11-04). 카드를 누르면 지금의 멘토 모달. */}
+        {/* DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P3): 화면 글에 멘토가 보이게.
+            같은 날 사용자("너무 여기 못생김", "이름이나 이런걸 까지 말고, 이런곳들의 멘토들을 모신다 라고 넣어줘"): 흐르는 카드 줄 대신
+            멘토가 일하는 곳만 한 줄 문장 아래 나열합니다. 이름, 얼굴, 멘토 수는 두지 않습니다. 이름과 경력은 지금처럼 멘토 모달에. */}
         <section id="mentors" aria-labelledby="mentors-title" className="mt-10 lg:mt-14">
           <div className={FRAME}>
             <h2 id="mentors-title" className={`break-keep ${HEADING} ${NAVY}`}>{t(C.mentorsStripLabel)}</h2>
-            <p className={`mt-1 break-keep ${META} ${SOFT}`}>{t(C.mentorsListNote)}</p>
-          </div>
-          <div className="mentor-strip mt-5 overflow-hidden">
-            <div className="mentor-track flex w-max">
-              {[0, 1].map((copyIdx) => (
-                <ul key={copyIdx} aria-hidden={copyIdx === 1 || undefined} className="mentor-copy flex gap-3 pr-3">
-                  {mentorsShown.map((m) => (
-                    <li key={m.name.ko} className="flex">
-                      <button
-                        type="button"
-                        aria-haspopup="dialog"
-                        tabIndex={copyIdx === 1 ? -1 : undefined}
-                        onClick={() => { track("naru_cta", { src: "mentors-strip", to: "mentors" }); setMentorsDay(2); }}
-                        className={`flex w-[240px] flex-col gap-1 rounded-xl border ${RULE} bg-[#FFFFFF] p-4 text-left transition-colors hover:border-naru-navy/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naru-navy sm:w-[280px]`}
-                      >
-                        <span className={`${BODY} font-bold ${INK}`}>{t(m.name)}</span>
-                        {t(m.org) && <span className={`break-keep ${META} ${INK}`}>{t(m.org)} <span className={SOFT}>{t(m.role)}</span></span>}
-                        {m.bio && <span className={`break-keep ${META} ${SOFT}`}>{t(m.bio)}</span>}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+            <p className={`mt-1 break-keep ${BODY} ${SOFT}`}>{t(C.mentorPlacesNote)}</p>
+            <ul className={`mt-4 flex flex-wrap gap-x-6 gap-y-2 lg:gap-x-[18px] border-y ${RULE} py-4`}>
+              {d.mentorPlaces.map((p) => (
+                <li key={p.ko} className={`${BODY} font-semibold ${INK}`}>{t(p)}</li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
 

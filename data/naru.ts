@@ -2312,6 +2312,15 @@ export const naru = {
     // 2026-11-06 (사용자: "이 맨토들 다 AI community 에서 활동하고 있는 사람들이라고 써줘"): 명단 머리 아래 한 줄.
     // DECIDED 2026-11-08 (사용자: "ai 를 적극적으로 각자의 도메인 안 현업에서 쓰는 사람들"): 커뮤니티 활동 대신 자기 일에 AI를 쓰는 사람으로.
     mentorsListNote: { ko: "그중 몇 분을 먼저 소개합니다. 모두 각자의 현업에서 AI를 적극적으로 쓰는 분들이고, 이 밖에도 여러 분야의 멘토가 함께합니다.", en: "A few of them, all actively using AI in their own work. Mentors from other fields join too." },
+    // DECIDED 2026-11-11 (사용자: "이름이나 이런걸 까지 말고, 이런곳들의 멘토들을 모신다 라고 넣어줘"): /crossing 멘토 줄은 이름 없이 소속만.
+    // 멘토 명단(mentors)의 소속을 사람 단위로 묶지 않고 곳 단위로 풀었습니다. 명단이 바뀌면 같이 고칩니다. 멘토 수는 쓰지 않습니다(brand 8장).
+    mentorPlacesNote: { ko: "이런 곳에서 일하는 현업 멘토들을 모십니다.", en: "We bring in working mentors from places like these." },
+    mentorPlaces: [
+      { ko: "Kia", en: "Kia" }, { ko: "C&R Research", en: "C&R Research" }, { ko: "Aside (YC F25)", en: "Aside (YC F25)" },
+      { ko: "KAIST AI 대학원", en: "KAIST Graduate School of AI" }, { ko: "인클리즈랩", en: "Inclease Lab" },
+      { ko: "DanaMed", en: "DanaMed" }, { ko: "수일개발", en: "SOOIL Development" }, { ko: "BIGPIE C&T", en: "BIGPIE C&T" },
+      { ko: "Bloom", en: "Bloom" }, { ko: "실리콘밸리 게임기업", en: "A Silicon Valley game company" }, { ko: "식품 기업", en: "A food company" },
+    ] as Phrase[],
     mentorsLead: {
       ko: "멘토는 답을 주러 오지 않습니다. 일을 해 본 사람이면 누구나 아는 감각으로, 팀이 들고 간 한 장과 시안에 \"실제로는 그렇게 안 돌아간다\"를 그대로 말해 줍니다.",
       en: "Mentors do not come with answers. With the sense anyone who has done the work has, they tell the team, to its one page and draft, \"that is not how it works in practice.\"",

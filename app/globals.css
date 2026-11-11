@@ -327,18 +327,6 @@ html .marquee-left {
 }
 @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
-/* DECIDED 2026-11-11 (docs/poster-first-brief.md P3, D5): 크로싱 서울 멘토 줄. 복제 두 벌을 -50%로 흘리는 방식은 위 띠와 같지만,
-   로고 띠(늘 흐름, 2026-11-05)와 달리 hover와 focus에서 멈추고, 동작 줄이기에서는 움직임 없이 가로 스크롤(복제 줄은 숨김).
-   위 * 규칙(0.001ms)보다 구체적인 선택자와 !important로 멈춥니다. 한 바퀴 60초. */
-.mentor-track { animation: marquee 60s linear infinite; }
-.mentor-strip:hover .mentor-track,
-.mentor-strip:focus-within .mentor-track { animation-play-state: paused; }
-@media (prefers-reduced-motion: reduce) {
-  .mentor-strip { overflow-x: auto; padding-inline: 20px; }
-  .mentor-strip .mentor-track { animation: none !important; transform: none !important; }
-  .mentor-strip .mentor-copy[aria-hidden="true"] { display: none; }
-}
-
 /* ── Quiz hook micro-animations ──────────────────────────────────────────────
    Both are opacity/blur only - no layout properties, so nothing here can shift
    the page. Wrapped in motion-safe at the call site AND gated here, so a
