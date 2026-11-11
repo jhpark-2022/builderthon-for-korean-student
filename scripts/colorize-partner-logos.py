@@ -12,6 +12,7 @@
 그 알파로 흰색을 걷어 낸 색을 되돌립니다(가장자리에 흰 테가 남지 않게).
 
     python3 scripts/colorize-partner-logos.py
+    python3 scripts/colorize-partner-logos.py ink   (공유 카드용 잉크 판, 2026-11-11)
 """
 import colorsys
 import subprocess
@@ -79,6 +80,27 @@ def recolor(rgb: np.ndarray) -> np.ndarray:
     return out
 
 
+# DECIDED 2026-11-11 (docs/poster-first-brief.md P5): 공유 카드(lib/ogCards.tsx)의 로고 줄. 흰 실루엣 로고는 사이트에서 CSS 필터
+# (globals.css, brightness(0) opacity(0.78))로 잉크가 되지만 satori는 필터를 그리지 않습니다. 같은 모양을 같은 색(검정 78%)으로 칠한 판을
+# paper/에 둡니다. 모양(알파)은 그대로이고 색만 바뀝니다. 원본은 white/trimmed/.
+#     python3 scripts/colorize-partner-logos.py ink
+INK_JOBS = ["asan-nanum.png", "maru180.png", "fastfive.png"]
+INK_ALPHA = 0.78
+
+
+def ink():
+    src_dir = LOGOS / "white" / "trimmed"
+    out_dir = LOGOS / "paper"
+    for name in INK_JOBS:
+        a = np.asarray(Image.open(src_dir / name).convert("RGBA")).astype(float)
+        alpha = a[:, :, 3] * INK_ALPHA
+        rgb = np.zeros_like(a[:, :, :3])
+        img = Image.fromarray(np.dstack([rgb, alpha]).astype(np.uint8), "RGBA")
+        out = name.replace(".png", "-ink.png")
+        img.save(out_dir / out, "PNG", optimize=True)
+        print(f"  paper/{out:20s} {img.size[0]}x{img.size[1]}")
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     for src, out in JOBS:
@@ -100,4 +122,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+    ink() if sys.argv[1:] == ["ink"] else main()

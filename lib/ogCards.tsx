@@ -71,14 +71,48 @@ const TAGLINE = { ko: "처음엔 다 서툽니다. 건너기 전에 연습부터
 // 영문 화면의 히어로와 같습니다). 로고는 이름 락업으로 왼쪽 위에 작게, 영어 카드는 영문 락업(NARU)입니다.
 // 텔레그램, 카카오의 카드는 폭 500px 남짓으로 줄어 보이므로 작은 줄은 둘까지만 둡니다.
 // DECIDED 2026-11-06 (종이): 크로싱 서울 워드마크는 사이트 히어로와 같이 남색 글자 끝에 주황 점 하나(brand 10장). 영문 줄은 두지 않습니다(히어로와 같음).
-// 바닥 왼쪽은 이 페이지의 캐치프레이즈 첫 줄(brand 6장: 크로싱 서울 페이지는 캐치프레이즈, 나루 홈은 태그라인).
+// 캐치프레이즈 첫 줄은 2026-11-11부터 워드마크 위(brand 6장: 크로싱 서울 페이지는 캐치프레이즈, 나루 홈은 태그라인).
 const CATCH = { ko: "왜 아직, 손으로?", en: "Why still by hand?" };
+
+// DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P5): 포스터를 따로 만들지 않고 카카오톡 방에 링크를 올리기로 해, 방에서 먼저 보이는
+// 이 카드가 포스터 몫을 합니다. 위에서부터 나루 락업, 캐치프레이즈 첫 줄(56px, 잉크), 워드마크, 날짜와 도시. 바닥 줄은 글 대신 로고 줄:
+// "공간 후원" 넷과 "기술, 크레딧" Lovable(data/naru.ts decemberPartners의 둘째, 셋째 줄과 같은 이름). 그 전 바닥 줄은 캐치프레이즈(26px)와
+// 한 팀 문장이었고, 로고는 0이었습니다(Lovable 승인 조건은 포스터와 SNS에도 로고).
+// 로고 조건(brand 10장, 2026-11-10 표기 조건): 디캠프는 "공간 후원" 이름과 함께 공식 검정 로고, Lovable은 공식 파일 원래 색에 밝은 바탕.
+// 흰 실루엣 셋(아산나눔재단, MARU180, FASTFIVE)은 satori가 CSS 필터를 그리지 않아, 사이트와 같은 잉크로 칠한 판(paper 폴더의 -ink.png,
+// scripts/colorize-partner-logos.py ink)을 씁니다. 크기는 사이트처럼 넓이를 맞추고(높이 44px 안팎) 비율은 바꾸지 않습니다.
+const CARD_LOGOS = {
+  venues: {
+    label: { ko: "공간 후원", en: "Venue sponsors" },
+    logos: [
+      { src: "partners/logos/paper/asan-nanum-ink.png", name: "아산나눔재단", w: 772, h: 154 },
+      { src: "partners/logos/paper/maru180-ink.png", name: "MARU180", w: 385, h: 91 },
+      { src: "partners/logos/paper/fastfive-ink.png", name: "FASTFIVE", w: 457, h: 78 },
+      { src: "partners/logos/paper/dcamp.png", name: "디캠프", w: 900, h: 220 },
+    ],
+  },
+  tech: {
+    label: { ko: "기술, 크레딧", en: "Tech and credits" },
+    logos: [{ src: "partners/logos/paper/lovable.png", name: "Lovable", w: 644, h: 110 }],
+  },
+};
+function ogLogoSize(l: { w: number; h: number }, area = 6200, maxH = 44) {
+  const r = l.w / l.h;
+  let w = Math.sqrt(area * r);
+  let h = w / r;
+  if (h > maxH) { h = maxH; w = h * r; }
+  return { width: Math.round(w), height: Math.round(h) };
+}
+
 export async function renderHomeCard(locale: Locale) {
-  const [logoSrc, fonts] = await Promise.all([
+  const groups = [CARD_LOGOS.venues, CARD_LOGOS.tech];
+  const [logoSrc, fonts, ...logoSrcs] = await Promise.all([
     locale === "en" ? publicSvgDataUri("naru/naru-name-en-paper.svg") : publicPngDataUri("naru/naru-name-paper.png"),
     loadOgFonts(),
+    ...groups.flatMap((g) => g.logos.map((l) => publicPngDataUri(l.src))),
   ]);
   const name = locale === "en" ? "CROSSING SEOUL" : "크로싱 서울";
+  let n = 0;
 
   return new ImageResponse(
     (
@@ -87,19 +121,33 @@ export async function renderHomeCard(locale: Locale) {
         {locale === "en" ? <img src={logoSrc} width={290} height={48} alt="NARU" /> : <img src={logoSrc} width={173} height={48} alt="나루 NARU" />}
 
         <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", fontSize: 56, fontWeight: 700, letterSpacing: -1, lineHeight: 1.15, color: OG_INK }}>{CATCH[locale]}</div>
           <div style={{ display: "flex", alignItems: "baseline", whiteSpace: "nowrap", fontSize: locale === "en" ? 116 : 156, fontWeight: 900, letterSpacing: locale === "en" ? -3 : -4, lineHeight: 1.1, color: OG_NAVY }}>
             <div style={{ display: "flex" }}>{name}</div>
             <div style={{ display: "flex", color: OG_ORANGE }}>.</div>
           </div>
-          <div style={{ display: "flex", marginTop: 36, fontSize: 40, fontWeight: 700, color: OG_INK }}>
+          <div style={{ display: "flex", marginTop: 14, fontSize: 40, fontWeight: 700, color: OG_INK }}>
             {locale === "en" ? "17–21 December 2026, Seoul" : "2026년 12월 17~21일, 서울"}
           </div>
         </div>
 
-        <FootLine
-          left={CATCH[locale]}
-          right={locale === "en" ? "Wherever you study, the same team" : "한국의 대학생과 해외의 한인 학생이 한 팀으로"}
-        />
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <Hairline />
+          <div style={{ display: "flex", marginTop: 20, gap: 56 }}>
+            {groups.map((g) => (
+              <div key={g.label.en} style={{ display: "flex", flexDirection: "column" }}>
+                <div style={{ display: "flex", fontSize: 22, fontWeight: 700, color: OG_MUTED }}>{g.label[locale]}</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 28, height: 48, marginTop: 8 }}>
+                  {g.logos.map((l) => {
+                    const s = ogLogoSize(l);
+                    // eslint-disable-next-line @next/next/no-img-element
+                    return <img key={l.name} src={logoSrcs[n++]} width={s.width} height={s.height} alt={l.name} />;
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     ),
     { ...OG_SIZE, fonts }
