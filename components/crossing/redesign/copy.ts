@@ -53,7 +53,7 @@ export const copy = {
     [
       "한 팀에 한국 학생과 싱가포르 학생이, 직접 만드는 사람과 숫자를 보는 사람이 섞여요.\n나라끼리 겨루는 대항전이 아니라는 뜻이죠.",
       "4일 모두 아침부터 저녁까지 열려 있어요. 노트북은 각자 챙겨 오세요.",
-      "Day 2와 Day 3에 하나씩. 기준은 팀이 같이 있었는지, 한 장이 어떻게 바뀌었는지예요.\n해낸 팀이라면 전부, 그날 세션이 끝난 뒤 지원받아요.",
+      "Day 2와 Day 3에 하나씩. 기준은 팀이 같이 있었는지, 한 장이 어떻게 바뀌었는지예요.\n해낸 팀이라면 전부 지원받아요. Day 2는 그날 세션 뒤, Day 3은 마지막 날에요.",
     ],
     d.facts.map((f) => f.v),
   ),
@@ -94,6 +94,8 @@ export const copy = {
     pdf: ko("PDF 1장", d.checkLabels.pdf),
   },
   milestoneReward: ko("다 하면 그날 세션이 끝난 뒤 지원을 받아요.", d.milestoneReward),
+  // DECIDED 2026-11-12 (사용자): Day 3 미션의 지원은 마지막 날.
+  milestoneRewardLast: ko("다 하면 마지막 날 지원을 받아요.", d.milestoneRewardLast),
   milestoneUpload: ko("사진과 PDF는 시간표 페이지에서, 날마다 한 번씩.", d.milestoneUpload),
   // 2026-11-08: 펼친 미션 카드(mission-card-brief)부터 이 화면은 submit을 그리지 않습니다. 확인 칩이 대신합니다. 키는 남겨 둡니다.
   submit: {

@@ -2100,7 +2100,7 @@ export const naru = {
         // DECIDED 2026-10-25 (사용자: 칸마다 줄 수를 같게): 두 줄로. 그 전 "Day 2와 Day 3에 하나씩 있고, 무엇을 냈는지보다 함께 있었는지를 봅니다. 해낸 팀은 모두 그날 지원을 받고, 그 미션은 팀의 기록으로 남습니다."
         // DECIDED 2026-11-06 (docs/think-different-brief.md T4, 사용자: 생각과 팀마다 다른 것을 강조, 상자는 그대로): 11/05 출제사 미팅: 생각이 어떻게 바뀌었는지를 1장으로.
         // DECIDED 2026-11-08 (docs/mission-card-brief.md S9): 지원은 그날 세션이 끝난 뒤. 그 전 둘째 문장 "해낸 팀은 모두 그날 지원을 받습니다." / "Each team that does it gets support."
-        v: { ko: "Day 2와 Day 3에 하나씩, 함께 있었는지와 생각이 어떻게 달라졌는지(고친 1장)를 봅니다. 해낸 팀은 모두 그날 세션이 끝난 뒤 지원을 받습니다.", en: "Day 2 and 3: together on site, and how your thinking changed (revised page). Every team that does it gets that day's support after the session." },
+        v: { ko: "Day 2와 Day 3에 하나씩, 함께 있었는지와 생각이 어떻게 달라졌는지(고친 1장)를 봅니다. 해낸 팀은 모두 지원을 받습니다. Day 2는 그날 세션이 끝난 뒤, Day 3은 마지막 날.", en: "Day 2 and 3: together on site, and how your thinking changed (revised page). Every team that does it gets support: Day 2 after the session, Day 3 on the last day." },
       },
     ] as { k: Phrase; v: Phrase }[],
 
@@ -2254,6 +2254,8 @@ export const naru = {
       pdf: { ko: "PDF 1장", en: "One PDF" },
     } as { staff: Phrase; photo: Phrase; pdf: Phrase },
     milestoneReward: { ko: "다 하면 그날 세션이 끝난 뒤 지원을 받습니다.", en: "Do all of these and your team gets that day's support after the session." },
+    // DECIDED 2026-11-12 (사용자: "3일차에 한 미션에 대한 지원은 마지막날에"): Day 3 미션의 지원은 그날이 아니라 Day 4에.
+    milestoneRewardLast: { ko: "다 하면 마지막 날 지원을 받습니다.", en: "Do all of these and your team gets the support on the last day." },
     milestoneUpload: { ko: "사진과 PDF는 시간표 페이지에서 날마다 한 번씩 올립니다.", en: "Photos and PDFs go up on the timetable page, once a day." },
     // DECIDED 2026-11-05 (사이트 점검, UX): /crossing Day 카드에서 빠진 멘토링 정보 둘. 문장은 brand 7장과 data/crossingTeam.ts에서 가져옵니다.
     visitLabel: { ko: "멘토 찾아가기", en: "Visiting a mentor" },

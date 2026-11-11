@@ -460,7 +460,7 @@ export default function CrossingSeoul() {
                       const k = s.milestoneDetail?.checks?.[j];
                       return { text: t(c), check: k ? t(C.checkLabels[k]) : "" };
                     })}
-                    reward={t(C.milestoneReward)}
+                    reward={t(s.dayOffset === 3 ? C.milestoneRewardLast : C.milestoneReward)}
                     upload={t(C.milestoneUpload)}
                     href={`/crossing/team?day=${s.dayOffset}`}
                   />
