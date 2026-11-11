@@ -161,6 +161,27 @@ function PartnerCell({ l, caption, area, maxH, className = "" }: { l: PartnerLog
   );
 }
 
+/** 로고 띠의 로고 하나(2026-11-11 P2). 넓이는 #partners와 같은 방식(logoSize), 높이는 데스크톱 28px까지, 폰은 그 0.8배(22px 안팎). */
+function BandLogo({ l }: { l: PartnerLogo }) {
+  const s = logoSize(l, 2600, 28, 130);
+  const img = (
+    <Image
+      src={l.src}
+      alt={l.name}
+      width={l.w}
+      height={l.h}
+      unoptimized
+      style={{ "--bw": `${s.width}px`, "--bh": `${s.height}px` } as React.CSSProperties}
+      className="block h-[calc(var(--bh)*0.8)] w-[calc(var(--bw)*0.8)] lg:h-[var(--bh)] lg:w-[var(--bw)]"
+    />
+  );
+  return l.url ? (
+    <a href={l.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naru-navy">{img}</a>
+  ) : (
+    <span className="inline-flex min-h-[44px] items-center">{img}</span>
+  );
+}
+
 /** 주최, 메인 후원처럼 따로 빼는 한 줄. 회색 띠에 로고, 한 줄 설명, 바깥으로 나가는 표시. */
 function Banner({ href, external, logo, note, onClick }: { href: string; external?: boolean; logo: React.ReactNode; note: string; onClick?: () => void }) {
   const body = (
@@ -191,6 +212,7 @@ export default function CrossingSeoul() {
   // 2026-11-09: 설명이 펼쳐진 세션(그날의 dayOffset). 한 번에 하나.
   const [openSession, setOpenSession] = useState<number | null>(null);
   const [mentorsDay, setMentorsDay] = useState<number | null>(null);
+  const mentorsShown = d.mentors.filter((m) => m.confirmed);
 
   const name = locale === "en" ? (DECEMBER_EVENT_NAME?.en ?? decemberEventLabel(locale)) : (DECEMBER_EVENT_NAME?.ko ?? decemberEventLabel(locale));
   const note = t(regState === "open" ? C.noteOpen : C.noteShort);
@@ -242,21 +264,31 @@ export default function CrossingSeoul() {
               {name}<span aria-hidden className="text-naru-orange">.</span>
             </h1>
 
-            <div className="mt-6 grid gap-8 lg:mt-8 lg:grid-cols-12 lg:gap-12">
-              <div className="lg:col-span-6 lg:pt-1">
+            <div className="mt-6 grid gap-8 lg:mt-7 lg:grid-cols-12 lg:gap-10">
+              {/* DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P1): 카카오톡 방에 링크만 올리기로 해 폰 첫 화면이 포스터 몫을 합니다.
+                  캐치프레이즈 아래 문단(C.sub, C.naruLine) 대신 사실 넷(어디서, 누가, 받는 것, 등록). 버튼은 폰에서 사실 위, 데스크톱에서 아래.
+                  버튼 아래 등록 한 줄(hero-register-note)은 등록 줄이 같은 말이라 뺐고, 미리 보기 버튼의 aria-describedby는 그 dd를 가리킵니다. */}
+              <div className="flex flex-col lg:col-span-7 lg:pt-1">
                 <p className={`break-keep ${HEADING} ${INK}`}>
                   <span className="block">{t(hero.catch)}</span>
                   <span className="block"><Lines text={t(C.catchAnswer)} /></span>
                 </p>
-                <p className={`mt-5 max-w-[34rem] break-keep ${BODY} ${SOFT}`}>
-                  <Lines text={`${t(C.sub)}\n${t(C.naruLine)}`} />
-                </p>
-                <div className="mt-8">{ctas("naru-hero", "hero-register-note")}</div>
-                {regState !== "closed" && <p id="hero-register-note" className={`mt-3 break-keep ${META} ${SOFT}`}>{note}</p>}
+                <div className="mt-6 lg:order-last lg:mt-6">{ctas("naru-hero", "hero-register-fact")}</div>
+                <dl className={`mt-7 border-t ${RULE} lg:mt-5`}>
+                  {[
+                    ...C.heroFactKeys.map((k, i) => ({ k, v: C.heroFacts[i], id: undefined as string | undefined })),
+                    { k: C.heroRegisterKey, v: regState === "open" ? C.heroRegisterOpen : regState === "closed" ? registerCopy.closed : C.heroRegisterNotOpen, id: "hero-register-fact" },
+                  ].map((f) => (
+                    <div key={f.k.en} className={`grid gap-1 border-b ${RULE} py-3 sm:grid-cols-[6.5rem_minmax(0,1fr)] sm:gap-4 lg:py-2.5`}>
+                      <dt className={`${META} font-bold ${INK} sm:pt-[0.1rem]`}>{t(f.k)}</dt>
+                      <dd id={f.id} className={`break-keep ${BODY} ${SOFT}`}><Lines text={t(f.v)} /></dd>
+                    </div>
+                  ))}
+                </dl>
               </div>
 
               {photos.length > 0 && (
-                <figure className="lg:col-span-6">
+                <figure className="lg:col-span-5">
                   <button
                     type="button"
                     aria-haspopup="dialog"
@@ -264,7 +296,7 @@ export default function CrossingSeoul() {
                     onClick={() => setPhotoOpen(0)}
                     className="group relative block aspect-[4/3] w-full cursor-zoom-in overflow-hidden rounded-[18px] bg-[#F6F4EE] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naru-navy"
                   >
-                    <Image src={photos[0].src} alt={t(photos[0].alt)} fill priority sizes="(max-width: 1023px) 100vw, 560px" className="object-cover" />
+                    <Image src={photos[0].src} alt={t(photos[0].alt)} fill priority sizes="(max-width: 1023px) 100vw, 470px" className="object-cover" />
                   </button>
                   <figcaption className={`mt-2 flex items-center justify-between gap-4 ${META} text-caption`}>
                     <Link href={naruLinks.archive} className="inline-flex min-h-[44px] items-center break-keep underline decoration-[#6B6964]/40 underline-offset-4 hover:text-naru-text">
@@ -283,12 +315,85 @@ export default function CrossingSeoul() {
           </div>
         </section>
 
+        {/* ── 로고 띠 ─────────────────────────────────────────────── */}
+        {/* DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P2, D2): 로고가 1440에서 네 번째 화면, 폰에서 여섯 번째 화면에 있어
+            무대가 진짜라는 사실이 첫 화면 근처에 없었습니다. 함께하는 곳의 앞 세 줄(메인 후원은 lead와 note만, 공간 후원 넷, 기술과 크레딧)을
+            상자 없이 한 단으로. 크기(logoSize)와 흰 실루엣의 잉크 처리(globals.css)는 #partners와 같고, 나머지는 "전체 보기"로. #partners 장은 그대로.
+            디캠프는 "공간 후원" 이름과 함께, Lovable은 원래 색(brand 10장, 2026-11-10 표기 조건). 폰은 가로 스크롤. */}
+        <section id="sponsors-band" aria-labelledby="sponsors-band-title" className="mt-10 lg:mt-8">
+          <div className={FRAME}>
+            <h2 id="sponsors-band-title" className="sr-only">{t(decemberPartners.heading)}</h2>
+            <div className={`border-y ${RULE}`}>
+              <div className="-mx-5 overflow-x-auto px-5 sm:-mx-8 sm:px-8 lg:mx-0 lg:overflow-visible lg:px-0">
+                <ul className="flex w-max items-start gap-x-8 py-4 lg:w-full lg:flex-wrap lg:gap-x-10 lg:gap-y-3">
+                  {decemberPartners.groups.slice(0, 3).map((g) => (
+                    <li key={g.label.en} className="shrink-0">
+                      <p className={`${META} font-bold ${INK}`}>{t(g.label)}</p>
+                      <div className="mt-1 flex items-center gap-x-5">
+                        {g.lead ? (
+                          <span className="flex flex-col">
+                            <BandLogo l={g.lead} />
+                            <span className={`-mt-1.5 whitespace-nowrap ${META} ${SOFT}`}>{t(C.leadNote)}</span>
+                          </span>
+                        ) : (
+                          g.logos.map((l) => <BandLogo key={l.name} l={l as PartnerLogo} />)
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                  <li className="shrink-0 self-center lg:ml-auto">
+                    <a href="#partners" className={`${LINK} whitespace-nowrap`}>{t(C.partnersAll)}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── 멘토 줄 ─────────────────────────────────────────────── */}
+        {/* DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P3, D5): 멘토 명단이 모달 안에만 있어 화면 글에 멘토 이름이 없었습니다.
+            확정된 멘토(confirmed)만, 얼굴 사진 없이(2026-11-07) 이름, 소속과 직책, 한 줄. 왼쪽으로 흐르고(한 바퀴 60초), hover와 focus에서 멈추며,
+            동작 줄이기에서는 멈춘 가로 스크롤(globals.css .mentor-strip). 움직이는 것은 이 줄 하나(site-tells 2026-11-04). 카드를 누르면 지금의 멘토 모달. */}
+        <section id="mentors" aria-labelledby="mentors-title" className="mt-10 lg:mt-14">
+          <div className={FRAME}>
+            <h2 id="mentors-title" className={`break-keep ${HEADING} ${NAVY}`}>{t(C.mentorsStripLabel)}</h2>
+            <p className={`mt-1 break-keep ${META} ${SOFT}`}>{t(C.mentorsListNote)}</p>
+          </div>
+          <div className="mentor-strip mt-5 overflow-hidden">
+            <div className="mentor-track flex w-max">
+              {[0, 1].map((copyIdx) => (
+                <ul key={copyIdx} aria-hidden={copyIdx === 1 || undefined} className="mentor-copy flex gap-3 pr-3">
+                  {mentorsShown.map((m) => (
+                    <li key={m.name.ko} className="flex">
+                      <button
+                        type="button"
+                        aria-haspopup="dialog"
+                        tabIndex={copyIdx === 1 ? -1 : undefined}
+                        onClick={() => { track("naru_cta", { src: "mentors-strip", to: "mentors" }); setMentorsDay(2); }}
+                        className={`flex w-[240px] flex-col gap-1 rounded-xl border ${RULE} bg-[#FFFFFF] p-4 text-left transition-colors hover:border-naru-navy/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naru-navy sm:w-[280px]`}
+                      >
+                        <span className={`${BODY} font-bold ${INK}`}>{t(m.name)}</span>
+                        {t(m.org) && <span className={`break-keep ${META} ${INK}`}>{t(m.org)} <span className={SOFT}>{t(m.role)}</span></span>}
+                        {m.bio && <span className={`break-keep ${META} ${SOFT}`}>{t(m.bio)}</span>}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ── 닷새 ─────────────────────────────────────────────── */}
         <section id="december" aria-labelledby="december-title" className="mt-14 lg:mt-20">
           <div className={FRAME}>
             <div className="grid gap-6 lg:grid-cols-12 lg:gap-12">
               <h2 id="december-title" className={`break-keep ${TITLE} ${NAVY} lg:col-span-5`}>{t(C.programHeading)}</h2>
-              <p id="mentoring" className={`break-keep ${BODY} ${SOFT} lg:col-span-7 lg:pt-2`}><Lines text={t(C.scheduleLead)} /></p>
+              {/* DECIDED 2026-11-11 (docs/poster-first-brief.md P4, D3): 히어로에서 내려온 정체성 세 줄(C.sub, brand 6장)이 리드의 첫 문단. */}
+              <div className="flex flex-col gap-4 lg:col-span-7 lg:pt-2">
+                <p className={`break-keep ${BODY} ${INK}`}><Lines text={t(C.sub)} /></p>
+                <p id="mentoring" className={`break-keep ${BODY} ${SOFT}`}><Lines text={t(C.scheduleLead)} /></p>
+              </div>
             </div>
 
             <dl className={`mt-6 border-t ${RULE}`}>
@@ -592,7 +697,7 @@ export default function CrossingSeoul() {
 
       {(() => {
         const st = mentorsDay != null ? stages[mentorsDay] : null;
-        const ms = d.mentors.filter((m) => m.confirmed);
+        const ms = mentorsShown;
         return (
           <DayFlowModal
             onClose={() => setMentorsDay(null)}

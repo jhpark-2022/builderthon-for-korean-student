@@ -17,9 +17,28 @@ export const copy = {
   catchAnswer: ko("먼저 생각하고, 현업에 물어보고,\n팀마다 다른 걸 만들어 서로 보여 줘요.", h.catchAnswer),
   sub: ko("만드는 건 이제 AI 몫이에요.\n그래서 이번 닷새는 거의 다, 무엇을 왜 만들지 정하는 데 쓸 거예요.\n정한 게 맞았는지는 직접 만든 결과물이 증명하죠.", h.sub),
   // DECIDED 2026-11-09 (docs/brand-voice-brief.md D3): 새 화면에 남은 합니다체 한 줄을 해요체로. 그 전 "나루가 엽니다."
+  // 2026-11-11 (docs/poster-first-brief.md P4): 화면에서 뺌(#partners 주최 줄이 같은 말). 키는 남김.
   naruLine: ko("학생들이 직접 꾸리는 그룹, 나루가 열어요.", h.naruLine),
   photosCaption: ko("8월 싱가포르, 제로백 빌더톤", h.photosCaption),
   photosMore: (n: number): Phrase => ({ ko: `사진 ${n}장 더 보기`, en: `View ${n} photos` }),
+
+  // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P1, D1 문장 승인): 히어로의 사실 넷. 기본값과 영어는 data/naru.ts eventHero.posterFacts.
+  heroFactKeys: kos(["어디서", "누가", "받는 것"], h.posterFacts.map((f) => f.k)),
+  heroFacts: kos(
+    [
+      "서울. Day 1 FASTFIVE, Day 2 디캠프 선릉, Day 4 MARU180.\nDay 3은 Zoom으로 만나요.",
+      "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 등록하고, 팀은 Day 1 현장에서 꾸려요.",
+      "Lovable 크레딧과 워크숍, 트레바리 독서모임 쿠폰.\n미션을 해낸 팀은 모두 지원받고, 마지막 날 부문별로 시상해요.",
+    ],
+    h.posterFacts.map((f) => f.v),
+  ),
+  heroRegisterKey: ko("등록", h.registerFact.k),
+  heroRegisterNotOpen: ko("11월 16일(월)에 열어요.\n소식은 카카오톡에서 먼저 알려요.", h.registerFact.notOpen),
+  heroRegisterOpen: ko("지금 등록할 수 있어요.\n소식은 카카오톡에서 먼저 알려요.", h.registerFact.open),
+  // DECIDED 2026-11-11 (P3): 멘토 줄의 제목. 카드를 누르면 멘토 모달.
+  mentorsStripLabel: ko("함께하는 멘토", d.mentorsListLabel),
+  // DECIDED 2026-11-11 (P2): 로고 띠 끝의 링크.
+  partnersAll: { ko: "함께하는 곳 전체 보기", en: "See everyone with us" } as Phrase,
 
   noteShort: ko("등록 시작은 11월 16일(월).\n팀 없이 혼자 등록하면 돼요.", registerNoteShort),
   noteOpen: ko("팀 없이 혼자 등록하면 돼요.", registerNoteOpen),

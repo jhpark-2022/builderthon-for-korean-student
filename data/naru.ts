@@ -589,6 +589,21 @@ export const naru = {
     // DECIDED 2026-11-05 (사용자: 네 가지(생각 → 만들기, 현업의 터치, 팀마다 다른 것, 팀 간 교류)를 닷새 순서의 동사로): 질문 줄은 그대로, 답 줄만.
     // Day 1 생각, Day 2·3 현업에 묻고 만들기, Day 4 서로 봄. 그 전 답 줄 "생각하는 힘을 기르는 닷새"는 남는 것 리드(gains.spine)가 받습니다. 그 전 문장은 git b2d5c79.
     catchAnswer: { ko: "생각부터 하고, 현업에 묻고, 팀마다 다르게 만들어 서로 봅니다.", en: "Think first, ask the field, build what no other team builds, and see each other's work." },
+    // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P1, D1 문장 승인): 캐치프레이즈 아래 사실 넷(어디서, 누가, 받는 것, 등록).
+    // 그 전 이 자리의 sub와 naruLine은 #december 리드와 #partners 주최 줄로(P4). 확정된 것만 씁니다: 장소는 december.stages의 로고와 같고,
+    // 받는 것은 decemberPartners의 Lovable(기술, 크레딧, Day 1 워크숍)과 트레바리(참가 학생 전원). 인원, 금액, 기간, 수량은 쓰지 않습니다(brand 8장, 9장).
+    // 바뀌면 이 줄과 copy.ts의 heroFacts를 같이 고칩니다. (아래의 facts는 다른 키, 히어로 아래 숫자 띠.)
+    posterFacts: [
+      { k: { ko: "어디서", en: "Where" }, v: { ko: "서울. Day 1 FASTFIVE, Day 2 디캠프 선릉, Day 4 MARU180.\nDay 3은 Zoom으로 만나요.", en: "Seoul. Day 1 at FASTFIVE, Day 2 at DCAMP Seolleung, Day 4 at MARU180.\nDay 3 meets on Zoom." } },
+      { k: { ko: "누가", en: "Who" }, v: { ko: "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 등록하고, 팀은 Day 1 현장에서 꾸려요.", en: "University students in Korea and Korean students studying abroad.\nRegister alone; teams form on site on Day 1." } },
+      { k: { ko: "받는 것", en: "What you get" }, v: { ko: "Lovable 크레딧과 워크숍, 트레바리 독서모임 쿠폰.\n미션을 해낸 팀은 모두 지원받고, 마지막 날 부문별로 시상해요.", en: "Lovable credits and a workshop, and a Trevari book club voucher.\nEvery team that completes a mission gets support, and the last day gives awards by category." } },
+    ] as { k: Phrase; v: Phrase }[],
+    // 넷째 줄. 등록 창 상태마다 다릅니다: 열기 전, 열린 뒤. 마감 뒤는 register.closed. 여는 시각은 쓰지 않습니다(P6).
+    registerFact: {
+      k: { ko: "등록", en: "Registration" },
+      notOpen: { ko: "11월 16일(월)에 열어요.\n소식은 카카오톡에서 먼저 알려요.", en: "Opens Monday, 16 November.\nNews goes out first on KakaoTalk." },
+      open: { ko: "지금 등록할 수 있어요.\n소식은 카카오톡에서 먼저 알려요.", en: "Open now.\nNews goes out first on KakaoTalk." },
+    },
     // 사진 넷 아래 한 줄(감사 반영 브리프 1.3). 캡션이 없으면 12월 사진으로 읽힙니다.
     photosCaption: { ko: "제로백 빌더톤 2026.08 싱가포르", en: "Zero100 builderthon Aug 2026, Singapore" },
     // DECIDED 2026-10-13 (사용자, 스크린숏: "이렇게 디테일한 설명은 필요 없음"): 2026-10-12에 캡션 뒤에 붙였던 8월 숫자 문장
