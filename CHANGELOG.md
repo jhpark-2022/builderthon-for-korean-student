@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-11 등록은 11월 16일(월)에 열어요](#2026-11-11-opens-16)
 - [2026-11-10 남는 것 리드 두 줄](#2026-11-10-gains-two)
 - [2026-11-10 Day 3 멘토링은 직접 찾아가기](#2026-11-10-day3-inperson)
 - [2026-11-10 디캠프, Lovable 로고 표기 조건 점검](#2026-11-10-logo-rules)
@@ -547,6 +548,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-11-11-opens-16"></a>
+## 2026-11-11 등록은 11월 16일(월)에 열어요
+- 범위: components/crossing/redesign/copy.ts(noteShort), data/naru.ts(등록 줄 네 자리, ko와 en), README.md
+- 한 것: 2026-11-11 주간 회의 결정, 여는 날을 11월 14일(토)에서 11월 16일(월)로(EN "Monday, 16 November", 짧은 판 "Mon 16 Nov"). 여는 시각은 쓰지 않고 opensAt은 그대로 비움, 등록 창 스위치는 그대로. 근거: brand 8장 숫자(약속하지 않는 것은 쓰지 않음), 판단 질문 2.
+- 검증: "11월 14일", "14 November", "14 Nov"가 CHANGELOG.md와 docs/ 밖에서 0, tsc 통과
+- 브리프: docs/poster-first-brief.md P6
+- 커밋: 7d5e673
 
 <a id="2026-11-10-gains-two"></a>
 ## 2026-11-10 남는 것 리드 두 줄
