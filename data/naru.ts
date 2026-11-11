@@ -228,8 +228,9 @@ function registerNoteLines(): Phrase[] {
     ? { ko: `${venue.ko}.`, en: `${venue.en}.` }
     : { ko: "장소는 등록이 열릴 때 이 페이지에 적습니다.", en: "The venue will be written on this page when registration opens." };
   return [
-    // DECIDED 2026-11-02 (사용자, 등록 UX 브리프 D2: "14일에 여는 걸로"): 여는 날을 "11월 둘째 주 끝"에서 11월 14일(토)로. 여는 시각은 보류(opensAt은 비움), 카운트다운은 그대로.
-    { ko: "등록은 11월 14일(토)에 엽니다. 여는 시각은 카카오톡 오픈채팅에서 먼저 알립니다.", en: "Registration opens on Saturday, 14 November. The time it opens is announced first in the KakaoTalk open chat." },
+    // DECIDED 2026-11-02 (사용자, 등록 UX 브리프 D2: "14일에 여는 걸로"): 여는 날을 "11월 둘째 주 끝"에서 14일(토)로. 여는 시각은 보류(opensAt은 비움), 카운트다운은 그대로.
+    // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P6): 여는 날을 16일(월)로. 여는 시각은 그대로 쓰지 않음(opensAt 비움).
+    { ko: "등록은 11월 16일(월)에 엽니다. 여는 시각은 카카오톡 오픈채팅에서 먼저 알립니다.", en: "Registration opens on Monday, 16 November. The time it opens is announced first in the KakaoTalk open chat." },
     // DECIDED 2026-11-06 (사용자: 정체성 한 줄의 "만들 줄 아는 학생들"을 그대로 쓰고 "전공과 코딩 경험은 조건이 아닙니다"는 뺌): 아래 두 줄도 같음.
     { ko: "등록은 혼자, 팀은 Day 1에 맺습니다.", en: "Register alone; teams form on Day 1." },
     { ko: `${venueLine.ko} 진행은 한국어입니다.`, en: `${venueLine.en} The programme runs in Korean.` },
@@ -240,10 +241,11 @@ export const registerNote: Phrase[] = registerNoteLines();
 // 남긴 줄이고, 전부는 모달이 읽습니다. 알림 버튼의 "휴대폰에서 열면…" 줄도 히어로에서는 뺐습니다(등록 블록에만).
 export const registerNoteShort: Phrase = {
   // DECIDED 2026-11-02 (사용자: "will be open at the end of second week of november"): 여는 때를 11월에서 11월 둘째 주 끝으로 좁힙니다.
-  // DECIDED 2026-11-02 (사용자, 등록 UX 브리프 D2: "14일에 여는 걸로"): 여는 날을 "11월 둘째 주 끝"에서 11월 14일(토)로. 여는 시각은 보류(opensAt은 비움), 카운트다운은 그대로.
+  // DECIDED 2026-11-02 (사용자, 등록 UX 브리프 D2: "14일에 여는 걸로"): 여는 날을 "11월 둘째 주 끝"에서 14일(토)로. 여는 시각은 보류(opensAt은 비움), 카운트다운은 그대로.
+  // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P6): 여는 날을 16일(월)로. 여는 시각은 그대로 쓰지 않음(opensAt 비움).
   // DECIDED 2026-11-06 (사용자: 정체성 한 줄과 어긋나 "전공과 코딩 경험은 조건이 아닙니다"를 뺌).
-  ko: "등록은 11월 14일(토)에 엽니다. 혼자 등록합니다.",
-  en: "Registration opens Sat 14 Nov. Register alone.",
+  ko: "등록은 11월 16일(월)에 엽니다. 혼자 등록합니다.",
+  en: "Registration opens Mon 16 Nov. Register alone.",
 };
 
 // DECIDED 2026-11-02 (브리프 O3): 등록이 열리면 위 줄의 "11월 둘째 주 끝"만 빠지고, 혼자 등록과 조건 없음은 같은 자리에 남습니다.
@@ -263,8 +265,9 @@ export const register = {
   // 말고"(2026-09-18)는 이 결정이 대신합니다. 서버는 전과 같이 창이 열리기 전의 제출을 403으로 막습니다.
   previewCta: { ko: "등록 폼 미리 보기", en: "Preview the form" },
   // DECIDED 2026-10-15 (사용자: "그냥 바로 form만 보여줘"): 모달의 미리 보기 안내 상자와 previewKeep은 없앴습니다.
-  // DECIDED 2026-11-02 (사용자, 등록 UX 브리프 D2: "14일에 여는 걸로"): 여는 날을 "11월 둘째 주 끝"에서 11월 14일(토)로. 여는 시각은 보류(opensAt은 비움), 카운트다운은 그대로.
-  previewSubmit: { ko: "11월 14일(토)에 열리면 보낼 수 있습니다", en: "You can send this when it opens on Saturday, 14 November" },
+  // DECIDED 2026-11-02 (사용자, 등록 UX 브리프 D2: "14일에 여는 걸로"): 여는 날을 "11월 둘째 주 끝"에서 14일(토)로. 여는 시각은 보류(opensAt은 비움), 카운트다운은 그대로.
+  // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P6): 여는 날을 16일(월)로. 여는 시각은 그대로 쓰지 않음(opensAt 비움).
+  previewSubmit: { ko: "11월 16일(월)에 열리면 보낼 수 있습니다", en: "You can send this when it opens on Monday, 16 November" },
   // 미리 보기일 때의 제목. 등록이 열리면 아래 title을 그대로 씁니다.
   previewTitle: { ko: "크로싱 서울 등록 (미리 보기)", en: "CROSSING SEOUL registration (preview)" },
   requiredLegend: { ko: "필수", en: "required" },
@@ -3253,8 +3256,9 @@ export const naru = {
     },
     // DECIDED 2026-10-22 (UX 점검, 사용자: "모든 것을 반영"): 메뉴 "등록"으로 들어온 사람은 언제 여는지를 보지 못했습니다(히어로 캡션에만).
     // 2026-10-13의 "있는 말 반복이니까"는 세 줄 전부를 뺀 결정이고, 여기 서는 것은 그 가운데 언제 여는지 한 문장뿐입니다. 홈에서 두 번째이자 마지막입니다(brand 5장).
-    // DECIDED 2026-11-02 (사용자, 등록 UX 브리프 D2: "14일에 여는 걸로"): 여는 날을 "11월 둘째 주 끝"에서 11월 14일(토)로. 여는 시각은 보류(opensAt은 비움), 카운트다운은 그대로.
-    opensLine: { ko: "등록은 11월 14일(토)에 엽니다.", en: "Registration opens on Saturday, 14 November." },
+    // DECIDED 2026-11-02 (사용자, 등록 UX 브리프 D2: "14일에 여는 걸로"): 여는 날을 "11월 둘째 주 끝"에서 14일(토)로. 여는 시각은 보류(opensAt은 비움), 카운트다운은 그대로.
+    // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P6): 여는 날을 16일(월)로. 여는 시각은 그대로 쓰지 않음(opensAt 비움).
+    opensLine: { ko: "등록은 11월 16일(월)에 엽니다.", en: "Registration opens on Monday, 16 November." },
     // DECIDED 2026-10-12 (등록 브리프 1.3, 리뷰 S8): 버튼이 아니라 텍스트 링크이고, 누가 누르는 문인지 라벨이 먼저 말합니다.
     // 그 전: "출제사 및 후원 문의". mailto(naruLinks.sponsor)와 그 제목은 그대로입니다.
     ctaMail: { ko: "기업 출제, 후원 문의", en: "For companies: issues and sponsorship" },

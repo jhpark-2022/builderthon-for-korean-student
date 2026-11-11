@@ -21,7 +21,7 @@ export const copy = {
   photosCaption: ko("8월 싱가포르, 제로백 빌더톤", h.photosCaption),
   photosMore: (n: number): Phrase => ({ ko: `사진 ${n}장 더 보기`, en: `View ${n} photos` }),
 
-  noteShort: ko("등록 시작은 11월 14일(토).\n팀 없이 혼자 등록하면 돼요.", registerNoteShort),
+  noteShort: ko("등록 시작은 11월 16일(월).\n팀 없이 혼자 등록하면 돼요.", registerNoteShort),
   noteOpen: ko("팀 없이 혼자 등록하면 돼요.", registerNoteOpen),
   previewCta: ko("등록 폼 먼저 보기", registerCopy.previewCta),
 
