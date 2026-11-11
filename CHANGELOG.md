@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-11 멘토 줄은 Bloom과 가짜연구소 로고](#2026-11-11-mentor-sources)
 - [2026-11-11 멘토 줄은 소속만](#2026-11-11-mentor-places)
 - [2026-11-11 로고 띠는 Day 1~4 공간](#2026-11-11-band-days)
 - [2026-11-11 첫 화면과 공유 카드를 포스터로](#2026-11-11-poster-first)
@@ -551,6 +552,15 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-11-11-mentor-sources"></a>
+## 2026-11-11 멘토 줄은 Bloom과 가짜연구소 로고
+- 범위: components/crossing/redesign/CrossingSeoul.tsx(#mentors), copy.ts, data/naru.ts(mentorSources), public/partners/logos/paper/pseudolab-mark.png
+- 한 것: 멘토가 아직 확정되지 않아 회사 목록을 뺌. "Bloom과 가짜연구소에서 활동하는 현업 멘토들이 함께해요." 한 줄과 두 곳의 로고(같은 높이, 각 사이트로 링크). 사용자 요청.
+- 가짜연구소는 따로 된 로고 파일이 없어 pseudo-lab.com의 아이콘 마크에 이름을 글자로 붙임(그 사이트 머리와 같은 방식). 공식 파일을 받으면 바꿈.
+- 판단 질문: 1 안전하게 도전할 자리(끝까지 들어 줄 현업이 어디서 오는지 보임).
+- 검증: KO, EN 1440과 390 가로 넘침 0.
+- 커밋: 82ed9e0
 
 <a id="2026-11-11-mentor-places"></a>
 ## 2026-11-11 멘토 줄은 소속만
