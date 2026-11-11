@@ -5,13 +5,16 @@ import Link from "next/link";
 import { useState } from "react";
 import { track } from "@vercel/analytics";
 import { useLocale } from "@/lib/LocaleContext";
-import { type Phrase } from "@/data/dictionaryCore";
+import { type Phrase, links as coreLinks } from "@/data/dictionaryCore";
+import { trackOpenChat } from "@/lib/openChatCount";
 import {
   naru,
   naruLinks,
   openChatLabels,
   register as registerCopy,
   decemberPartners,
+  partnerGroup,
+  partnerLogo,
 } from "@/data/naru";
 import { DECEMBER_EVENT_NAME, decemberEventLabel, formatDecemberDateLine, formatDecemberDayWithWeekday } from "@/lib/naruDates";
 import { TIMETABLE_OPEN } from "@/lib/crossingOps";
@@ -162,6 +165,16 @@ function PartnerCell({ l, caption, area, maxH, className = "" }: { l: PartnerLog
 }
 
 /** 로고 띠의 로고 하나(2026-11-11 P2). 넓이는 #partners와 같은 방식(logoSize), 높이는 데스크톱 28px까지, 폰은 그 0.8배(22px 안팎). */
+// DECIDED 2026-11-12 (docs/poster-phone-brief.md Q6): 로고 띠의 묶음은 id로, Day 4의 아산나눔재단은 로고 src로 찾습니다.
+// 하나라도 없으면 모듈을 읽을 때 throw해서 빌드가 멈춥니다.
+const BAND = {
+  venue: partnerGroup("venue"),
+  asan: partnerLogo("venue", "/partners/logos/white/trimmed/asan-nanum.png"),
+  tech: partnerGroup("tech"),
+  coupon: partnerGroup("coupon"),
+  award: partnerGroup("award"),
+};
+
 function BandLogo({ l }: { l: PartnerLogo }) {
   const s = logoSize(l, 2600, 28, 130);
   const img = (
@@ -217,7 +230,11 @@ export default function CrossingSeoul() {
   const name = locale === "en" ? (DECEMBER_EVENT_NAME?.en ?? decemberEventLabel(locale)) : (DECEMBER_EVENT_NAME?.ko ?? decemberEventLabel(locale));
   const note = t(regState === "open" ? C.noteOpen : C.noteShort);
 
-  const ctas = (src: "naru-hero" | "naru-december", noteId: string) => (
+  // DECIDED 2026-11-12 (사용자, docs/poster-phone-brief.md Q4): 히어로는 640px 아래에서 버튼 하나. 둘째 행동(열기 전 등록 폼 먼저 보기,
+  // 열린 뒤 오픈채팅)은 등록 줄 dd 끝의 LINK(heroSecondLink)로. 640px부터는 두 버튼. 맨 아래 #register(naru-december)는 그대로.
+  const ctas = (src: "naru-hero" | "naru-december", noteId: string) => {
+    const second = src === "naru-hero" ? "max-sm:hidden" : "";
+    return (
     <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
       {regState === "open" && (
         <button
@@ -234,7 +251,7 @@ export default function CrossingSeoul() {
           src={src}
           label={regState === "open" ? openChatLabels.join : openChatLabels.december}
           variant={regState === "open" ? "secondary" : "hero"}
-          className="!min-h-[48px] !rounded-[10px] max-sm:w-full"
+          className={`!min-h-[48px] !rounded-[10px] max-sm:w-full ${regState === "open" ? second : ""}`}
         />
       )}
       {regState === "not_open" && (
@@ -242,14 +259,31 @@ export default function CrossingSeoul() {
           type="button"
           aria-describedby={noteId}
           onClick={() => { track("naru_cta", { src, to: "register-preview" }); reg?.openRegister(); }}
-          className={`${BTN_GHOST} max-sm:w-full`}
+          className={`${BTN_GHOST} max-sm:w-full ${second}`}
         >
           {t(C.previewCta)}
         </button>
       )}
       {regState === "closed" && <span className={`${BTN_GHOST} cursor-default ${SOFT}`}>{t(registerCopy.closed)}</span>}
     </div>
-  );
+    );
+  };
+  // 폰(640px 아래) 히어로 등록 줄 끝의 둘째 행동. track 이름과 aria-describedby는 버튼과 같습니다.
+  const heroSecondLink =
+    regState === "not_open" ? (
+      <button
+        type="button"
+        aria-describedby="hero-register-fact"
+        onClick={() => { track("naru_cta", { src: "naru-hero", to: "register-preview" }); reg?.openRegister(); }}
+        className={LINK}
+      >
+        {t(C.previewCta)}
+      </button>
+    ) : regState === "open" && coreLinks.openChat ? (
+      <a href={coreLinks.openChat} target="_blank" rel="noopener noreferrer" onClick={() => trackOpenChat("naru-hero")} className={LINK}>
+        {t(openChatLabels.join)}
+      </a>
+    ) : null;
 
   const timetable = d.stages[1].timetableCta;
 
@@ -281,7 +315,10 @@ export default function CrossingSeoul() {
                   ].map((f) => (
                     <div key={f.k.en} className={`grid gap-1 border-b ${RULE} py-3 sm:grid-cols-[6.5rem_minmax(0,1fr)] sm:gap-4 lg:py-2.5`}>
                       <dt className={`${META} font-bold ${INK} sm:pt-[0.1rem]`}>{t(f.k)}</dt>
-                      <dd id={f.id} className={`break-keep ${BODY} ${SOFT}`}><Lines text={t(f.v)} /></dd>
+                      <dd id={f.id} className={`break-keep ${BODY} ${SOFT}`}>
+                        <Lines text={t(f.v)} />
+                        {f.id === "hero-register-fact" && heroSecondLink && <span className="block sm:hidden">{heroSecondLink}</span>}
+                      </dd>
                     </div>
                   ))}
                 </dl>
@@ -324,23 +361,25 @@ export default function CrossingSeoul() {
           <div className={FRAME}>
             <h2 id="sponsors-band-title" className="sr-only">{t(decemberPartners.heading)}</h2>
             <div className={`border-y ${RULE}`}>
-              <div className="-mx-5 overflow-x-auto px-5 sm:-mx-8 sm:px-8 lg:mx-0 lg:overflow-visible lg:px-0">
-                {/* DECIDED 2026-11-12 (사용자: "조금 더 채워져있으면 좋겠고"): 데스크톱은 두 줄 모두 묶음 사이를 고르게 벌려 폭을 채웁니다. */}
-                <ul className="flex w-max items-start gap-x-8 py-4 lg:w-full lg:flex-wrap lg:justify-between lg:gap-x-10 lg:gap-y-3">
+              <div>
+                {/* DECIDED 2026-11-12 (사용자: "조금 더 채워져있으면 좋겠고"): 데스크톱은 두 줄 모두 묶음 사이를 고르게 벌려 폭을 채웁니다.
+                    같은 날 (사용자, docs/poster-phone-brief.md Q5): lg 아래는 가로 스크롤 대신 두 칸 격자. 공간 후원은 두 칸을 다 쓰는 첫 줄,
+                    나머지 다섯 묶음은 두 칸씩, 아래 글은 두 줄까지, "전체 보기"는 맨 끝 줄. lg부터는 두 줄 그대로. */}
+                <ul className="grid grid-cols-2 items-start gap-x-6 gap-y-5 py-4 lg:flex lg:w-full lg:flex-wrap lg:justify-between lg:gap-x-10 lg:gap-y-3">
                   {/* DECIDED 2026-11-11 (사용자, 스크린숏: "매인후원은 안나오게, 그리고 day 1 to 4 공간들이 보이게"): 메인 후원을 빼고,
                       공간 후원을 Day 1~4 순서로 날 이름과 함께. 장소는 닷새 카드와 같은 데이터(stages의 logo, Day 3은 venueText).
                       Day 4는 MARU180과 그 공간을 내준 아산나눔재단. 디캠프는 "공간 후원" 이름 아래 그대로(2026-11-10 표기 조건). */}
-                  <li className="shrink-0">
-                    <p className={`${META} font-bold ${INK}`}>{t(decemberPartners.groups[1].label)}</p>
+                  <li className="col-span-2 min-w-0 lg:shrink-0">
+                    <p className={`${META} font-bold ${INK}`}>{t(BAND.venue.label)}</p>
                     {/* 같은 날 뒤 (사용자: "keep 후원, 자연스럽게 공간들이 이어지도록 from day 1 to 4. 중간에 zoom 부분은 빼줘"): 장소가 있는 날만,
                         가는 선으로 이어 한 줄로. 날 이름은 로고 아래. */}
-                    <div className="mt-1 flex items-start">
+                    <div className="mt-1 flex flex-wrap items-start gap-x-6 gap-y-2 lg:flex-nowrap lg:gap-0">
                       {stages.filter((st) => st.dayOffset >= 1 && st.dayOffset <= 4 && st.logo).map((st, k) => (
                         <div key={st.dayOffset} className="flex items-start">
-                          {k > 0 && <span aria-hidden className="mx-4 mt-[22px] h-px w-8 shrink-0 bg-naru-navy/25 lg:mx-5 lg:w-10" />}
+                          {k > 0 && <span aria-hidden className="mt-[22px] hidden h-px shrink-0 bg-naru-navy/25 lg:mx-5 lg:block lg:w-10" />}
                           <div className="flex flex-col">
                             <div className="flex items-center gap-x-4">
-                              {st.dayOffset === 4 && <BandLogo l={decemberPartners.groups[1].logos[0] as PartnerLogo} />}
+                              {st.dayOffset === 4 && <BandLogo l={BAND.asan} />}
                               <BandLogo l={st.logo as PartnerLogo} />
                             </div>
                             <span className={`-mt-1.5 whitespace-nowrap ${META} tabular-nums ${SOFT}`}>{t(d.dayLabel)} {st.dayOffset}</span>
@@ -349,50 +388,48 @@ export default function CrossingSeoul() {
                       ))}
                     </div>
                   </li>
-                  <li className="shrink-0">
-                    <p className={`${META} font-bold ${INK}`}>{t(decemberPartners.groups[2].label)}</p>
+                  <li className="min-w-0 lg:shrink-0">
+                    <p className={`${META} font-bold ${INK}`}>{t(BAND.tech.label)}</p>
                     <div className="mt-1 flex flex-col">
                       <div className="flex items-center gap-x-5">
-                        {decemberPartners.groups[2].logos.map((l) => <BandLogo key={l.name} l={l as PartnerLogo} />)}
+                        {BAND.tech.logos.map((l) => <BandLogo key={l.name} l={l} />)}
                       </div>
-                      {decemberPartners.groups[2].bandNote && <span className={`-mt-1.5 whitespace-nowrap ${META} ${SOFT}`}>{t(decemberPartners.groups[2].bandNote)}</span>}
+                      {BAND.tech.bandNote && <span className={`-mt-1.5 break-keep ${META} ${SOFT} lg:whitespace-nowrap`}>{t(BAND.tech.bandNote)}</span>}
                     </div>
                   </li>
-                  <li className="order-last shrink-0 self-center lg:order-none lg:ml-auto">
+                  <li className="order-last col-span-2 lg:order-none lg:shrink-0 lg:self-center lg:ml-auto">
                     <a href="#partners" className={`${LINK} whitespace-nowrap`}>{t(C.partnersAll)}</a>
                   </li>
                   {/* DECIDED 2026-11-11 (사용자: "200만원 for the 과정을 모두 함께하는 사람, 참여자모두에게 트레바리 후원, 그리고 수상팀 readray 크래딧 후원",
                       같은 날 뒤 "상금 후원 로고는 빼주고", "맨토 내용 needs to be at the same row with the 트레바리 and readray"):
                       둘째 줄은 상금(로고 없이 금액), 트레바리, Readray, 함께하는 멘토(Bloom, 가짜연구소). 로고 아래에는 누가 무엇을 받는지.
                       금액과 기간은 Gmail의 후원 회신 그대로(data/naru.ts bandNote). 따로 된 #mentors 장은 이 묶음으로 옮기며 없앴습니다. */}
-                  {/* 데스크톱은 둘째 줄을 여기서 시작. 폰은 가로 스크롤 한 줄 그대로. */}
+                  {/* 데스크톱은 둘째 줄을 여기서 시작. lg 아래 격자에서는 숨김. */}
                   <li aria-hidden className="hidden lg:block lg:h-0 lg:basis-full" />
-                  <li className="shrink-0">
+                  <li className="min-w-0 lg:shrink-0">
                     <p className={`${META} font-bold ${INK}`}>{t(d.bandPrize.label)}</p>
                     <div className="mt-1 flex flex-col">
                       <span className={`flex min-h-[44px] items-center ${BODY} font-bold tabular-nums ${INK}`}>{t(d.bandPrize.amount)}</span>
-                      <span className={`-mt-1.5 whitespace-nowrap ${META} ${SOFT}`}>{t(d.bandPrize.note)}</span>
+                      <span className={`-mt-1.5 break-keep ${META} ${SOFT} lg:whitespace-nowrap`}>{t(d.bandPrize.note)}</span>
                     </div>
                   </li>
-                  {["독서모임 쿠폰", "시상 상품"].map((label) => {
-                    const g = decemberPartners.groups.find((x) => x.label.ko === label);
-                    if (!g) return null;
+                  {[BAND.coupon, BAND.award].map((g) => {
                     return (
-                      <li key={label} className="shrink-0">
+                      <li key={g.id} className="min-w-0 lg:shrink-0">
                         <p className={`${META} font-bold ${INK}`}>{t(g.label)}</p>
                         <div className="mt-1 flex flex-col">
                           <div className="flex items-center gap-x-5">
-                            {g.logos.map((l) => <BandLogo key={l.name} l={l as PartnerLogo} />)}
+                            {g.logos.map((l) => <BandLogo key={l.name} l={l} />)}
                           </div>
-                          {g.bandNote && <span className={`-mt-1.5 whitespace-nowrap ${META} ${SOFT}`}>{t(g.bandNote)}</span>}
+                          {g.bandNote && <span className={`-mt-1.5 break-keep ${META} ${SOFT} lg:whitespace-nowrap`}>{t(g.bandNote)}</span>}
                         </div>
                       </li>
                     );
                   })}
-                  <li className="shrink-0">
+                  <li className="min-w-0 lg:shrink-0">
                     <p className={`${META} font-bold ${INK}`}>{t(C.mentorsStripLabel)}</p>
                     <div className="mt-1 flex flex-col">
-                      <div className="flex items-center gap-x-5">
+                      <div className="flex flex-wrap items-center gap-x-5 lg:flex-nowrap">
                         {d.mentorSources.map((l) => (
                           <a key={l.name} href={l.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center gap-1.5 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naru-navy">
                             <Image src={l.src} alt={l.label ? "" : l.name} width={l.w} height={l.h} unoptimized className="block h-6 w-auto lg:h-7" />
@@ -400,7 +437,7 @@ export default function CrossingSeoul() {
                           </a>
                         ))}
                       </div>
-                      <span className={`-mt-1.5 whitespace-nowrap ${META} ${SOFT}`}>{t(d.mentorBandNote)}</span>
+                      <span className={`-mt-1.5 break-keep ${META} ${SOFT} lg:whitespace-nowrap`}>{t(d.mentorBandNote)}</span>
                     </div>
                   </li>
                 </ul>
