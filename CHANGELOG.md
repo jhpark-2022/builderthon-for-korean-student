@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-12 Day 3 미션의 지원은 마지막 날](#2026-11-12-day3-reward)
 - [2026-11-12 로고 띠에 Lovable 혜택, 폭을 채움](#2026-11-12-band-lovable)
 - [2026-11-11 히어로 어디서 줄은 장소의 뜻으로](#2026-11-11-where-line)
 - [2026-11-11 로고 띠 둘째 줄에 금액과 멘토](#2026-11-11-band-row2)
@@ -556,6 +557,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-11-12-day3-reward"></a>
+## 2026-11-12 Day 3 미션의 지원은 마지막 날
+- 범위: CrossingSeoul.tsx(미션 카드), copy.ts, data/naru.ts(milestoneRewardLast, 미션 칸), docs/brand.md 7장
+- 한 것: Day 3 미션 카드 끝 줄을 "다 하면 마지막 날 지원을 받아요."로. Day 2는 그날 세션이 끝난 뒤 그대로. 닷새 사실 칸의 미션 줄도 둘을 나눠 씀. 사용자 요청.
+- 판단 질문: 2 자기 가치를 증명할 기회(해낸 팀 모두가 받는 때를 정확히).
+- 검증: /crossing, /en/crossing의 mission-2, mission-3 끝 줄 확인.
+- 커밋: d7b38e9
 
 <a id="2026-11-12-band-lovable"></a>
 ## 2026-11-12 로고 띠에 Lovable 혜택, 폭을 채움
