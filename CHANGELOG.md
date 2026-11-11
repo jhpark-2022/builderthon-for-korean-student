@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-11 로고 띠는 Day 1~4 공간](#2026-11-11-band-days)
 - [2026-11-11 첫 화면과 공유 카드를 포스터로](#2026-11-11-poster-first)
 - [2026-11-11 등록은 11월 16일(월)에 열어요](#2026-11-11-opens-16)
 - [2026-11-10 남는 것 리드 두 줄](#2026-11-10-gains-two)
@@ -549,6 +550,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-11-11-band-days"></a>
+## 2026-11-11 로고 띠는 Day 1~4 공간
+- 범위: components/crossing/redesign/CrossingSeoul.tsx(#sponsors-band), docs/brand.md 5장
+- 한 것: 사용자 스크린숏 "매인후원은 안나오게, 그리고 day 1 to 4 공간들이 보이게". 메인 후원(AXMOS)을 띠에서 빼고, 공간 후원을 닷새 카드와 같은 장소 데이터로 Day 1 FASTFIVE, Day 2 디캠프, Day 3 온라인 (Zoom), Day 4 아산나눔재단과 MARU180 순서로, 날 이름과 함께. 메인 후원은 #partners에 그대로. 근거: brand 10장 로고 조건(디캠프는 "공간 후원" 이름과 함께).
+- 검증: 1440 KO, EN 한 단, 띠 머리 813, 867(기준 900), 가로 넘침 0
+- 브리프: docs/poster-first-brief.md(P2, D2를 바꿈)
+- 커밋: b036ccd
 
 <a id="2026-11-11-poster-first"></a>
 ## 2026-11-11 첫 화면과 공유 카드를 포스터로
