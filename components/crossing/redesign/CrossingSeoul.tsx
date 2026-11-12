@@ -232,7 +232,7 @@ export default function CrossingSeoul() {
 
   // DECIDED 2026-11-12 (사용자, docs/poster-phone-brief.md Q4): 히어로는 640px 아래에서 버튼 하나. 둘째 행동(열기 전 등록 폼 먼저 보기,
   // 열린 뒤 오픈채팅)은 등록 줄 dd 끝의 LINK(heroSecondLink)로. 640px부터는 두 버튼. 맨 아래 #register(naru-december)는 그대로.
-  const ctas = (src: "naru-hero" | "naru-december", noteId: string) => {
+  const ctas = (src: "naru-hero" | "naru-december", noteId?: string) => {
     const second = src === "naru-hero" ? "max-sm:hidden" : "";
     return (
     <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -261,7 +261,7 @@ export default function CrossingSeoul() {
           onClick={() => { track("naru_cta", { src, to: "register-preview" }); reg?.openRegister(); }}
           className={`${BTN_GHOST} max-sm:w-full ${second}`}
         >
-          {t(C.previewCta)}
+          {t(src === "naru-hero" ? C.heroPreviewCta : C.previewCta)}
         </button>
       )}
       {regState === "closed" && <span className={`${BTN_GHOST} cursor-default ${SOFT}`}>{t(registerCopy.closed)}</span>}
@@ -273,11 +273,10 @@ export default function CrossingSeoul() {
     regState === "not_open" ? (
       <button
         type="button"
-        aria-describedby="hero-register-fact"
         onClick={() => { track("naru_cta", { src: "naru-hero", to: "register-preview" }); reg?.openRegister(); }}
         className={LINK}
       >
-        {t(C.previewCta)}
+        {t(C.heroPreviewCta)}
       </button>
     ) : regState === "open" && coreLinks.openChat ? (
       <a href={coreLinks.openChat} target="_blank" rel="noopener noreferrer" onClick={() => trackOpenChat("naru-hero")} className={LINK}>
@@ -307,17 +306,24 @@ export default function CrossingSeoul() {
                   <span className="block">{t(hero.catch)}</span>
                   <span className="block"><Lines text={t(C.catchAnswer)} /></span>
                 </p>
-                <div className="mt-6 lg:order-last lg:mt-6">{ctas("naru-hero", "hero-register-fact")}</div>
+                <div className="mt-6 lg:order-last lg:mt-6">
+                  {ctas("naru-hero")}
+                  {/* 2026-11-12 (사용자: 등록 날짜는 버튼에): 등록 줄을 빼면서 폰의 둘째 행동(Q4)은 버튼 바로 아래 링크로. */}
+                  {heroSecondLink && <div className="mt-1 sm:hidden">{heroSecondLink}</div>}
+                </div>
                 <dl className={`mt-7 border-t ${RULE} lg:mt-5`}>
                   {[
-                    ...C.heroFactKeys.map((k, i) => ({ k, v: C.heroFacts[i], id: undefined as string | undefined })),
-                    { k: C.heroRegisterKey, v: regState === "open" ? C.heroRegisterOpen : regState === "closed" ? registerCopy.closed : C.heroRegisterNotOpen, id: "hero-register-fact" },
+                    // DECIDED 2026-11-12 (사용자): 넷째 줄은 등록 대신 멘토(posterFacts). 여는 날은 히어로 미리 보기 버튼(heroPreviewCta)이 말합니다.
+                    ...C.heroFactKeys.map((k, i) => ({ k, sub: naru.eventHero.posterFacts[i]?.sub, v: C.heroFacts[i], id: undefined as string | undefined })),
                   ].map((f) => (
                     <div key={f.k.en} className={`grid gap-1 border-b ${RULE} py-3 sm:grid-cols-[6.5rem_minmax(0,1fr)] sm:gap-4 lg:py-2.5`}>
-                      <dt className={`${META} font-bold ${INK} sm:pt-[0.1rem]`}>{t(f.k)}</dt>
+                      <dt className={`${META} font-bold ${INK} sm:pt-[0.1rem]`}>
+                        {t(f.k)}
+                        {/* 2026-11-12 (사용자): 멘토를 만나는 날은 줄 이름 아래에. */}
+                        {f.sub && <span className={`ml-2 font-normal tabular-nums ${SOFT} sm:ml-0 sm:block`}>{t(f.sub)}</span>}
+                      </dt>
                       <dd id={f.id} className={`break-keep ${BODY} ${SOFT}`}>
                         <Lines text={t(f.v)} />
-                        {f.id === "hero-register-fact" && heroSecondLink && <span className="block sm:hidden">{heroSecondLink}</span>}
                       </dd>
                     </div>
                   ))}
