@@ -599,10 +599,8 @@ export const naru = {
     posterFacts: [
       { k: { ko: "누가", en: "Who" }, v: { ko: "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 등록하고, 팀은 Day 1 현장에서 꾸려요.", en: "University students in Korea and Korean students studying abroad.\nRegister alone; teams form on site on Day 1." } },
       { k: { ko: "받는 것", en: "What you get" }, v: { ko: "참가자 모두에게 Lovable 100 크레딧과 트레바리 10만원 쿠폰.\n지원금 총 200만원은 미션을 해낸 팀들이 나눠 받습니다.\n수상 팀원에게는 Readray Pro 2개월.", en: "Lovable 100 credits and a KRW 100,000 Trevari voucher for every participant.\nA KRW 2,000,000 support pool, shared among the teams that complete a mission.\nTwo months of Readray Pro for each award-winning team member." } },
-      // DECIDED 2026-11-11 (사용자: "day 3 는 줌으로 열어요 내용 빼고, 장소에, 한국 스타트업 생태계에서 중요한 공간들에게 벌어진다고 해"):
-      // 같은 날 뒤 (사용자: "Fastfive 가 생태계에서 중요한 공간은 아니여서 약간의 rephrase"): 세 곳 모두에 맞게 "스타트업들이 일하고 모이는 공간".
-      // 둘째 줄의 Day 3 Zoom을 빼고 장소의 뜻으로. Day 3 Zoom은 닷새 카드와 미션 조건에 그대로 있습니다.
-      { k: { ko: "어디서", en: "Where" }, v: { ko: "서울. Day 1 FASTFIVE, Day 2 디캠프 선릉, Day 4 MARU180.\n스타트업들이 일하고 모이는 공간에서 열려요.", en: "Seoul. Day 1 at FASTFIVE, Day 2 at DCAMP Seolleung, Day 4 at MARU180.\nHeld where Korean startups work and gather." } },
+      // DECIDED 2026-11-12 (사용자: "어디서는 빼줘"): 어디서 줄을 뺌. 장소는 바로 아래 로고 띠의 공간 후원(Day 1, 2, 4)과 닷새 카드가 말합니다.
+      // 그 전 문장: "서울. Day 1 FASTFIVE, Day 2 디캠프 선릉, Day 4 MARU180. / 스타트업들이 일하고 모이는 공간에서 열려요."
       // DECIDED 2026-11-12 (사용자: "등록 row 에 그거 대신 어떤 맨토님들이 오시는지, 다양한 sector에서 AI 잘 쓰시는 분들에게 받을 수 있는 현업 터치,
       // 어떤 회사에서 일하는지도 좀 briefly"): 넷째 줄은 등록 대신 멘토. 분야와 회사는 naru.december.mentors의 소속과 경력 한 줄에서 뽑았습니다.
       // 사람 이름은 쓰지 않습니다. 멘토 명단이 바뀌면 이 줄도 같이 고칩니다. 반박은 brand 7장 멘토링 줄의 "일을 해 본 사람의 감각".

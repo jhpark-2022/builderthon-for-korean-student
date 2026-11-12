@@ -29,12 +29,11 @@ export const copy = {
   photosMore: (n: number): Phrase => ({ ko: `사진 ${n}장 더 보기`, en: `View ${n} photos` }),
 
   // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P1, D1 문장 승인): 히어로의 사실 넷. 2026-11-12 (poster-phone Q1): 누가, 받는 것, 어디서 순. 기본값과 영어는 data/naru.ts eventHero.posterFacts.
-  heroFactKeys: kos(["누가", "받는 것", "어디서", "멘토"], h.posterFacts.map((f) => f.k)),
+  heroFactKeys: kos(["누가", "받는 것", "멘토"], h.posterFacts.map((f) => f.k)),
   heroFacts: kos(
     [
       "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 등록하고, 팀은 Day 1 현장에서 꾸려요.",
       "참가자 모두에게 Lovable 100 크레딧과 트레바리 10만원 쿠폰.\n지원금 총 200만원은 미션을 해낸 팀들이 나눠 받아요.\n수상 팀원에게는 Readray Pro 2개월.",
-      "서울. Day 1 FASTFIVE, Day 2 디캠프 선릉, Day 4 MARU180.\n스타트업들이 일하고 모이는 공간에서 열려요.",
       "임상 연구, 의료기기, K-뷰티, 자동차, 게임 분야에서 AI를 잘 쓰는 현업이에요.\nKia, C&R Research, Aside (YC F25), BIGPIE C&T 등에서 일해요.\n팀이 찾아가면 일해 본 감각으로 생각을 반박해 줘요.",
     ],
     h.posterFacts.map((f) => f.v),
