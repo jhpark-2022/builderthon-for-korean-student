@@ -3867,11 +3867,11 @@ export const decemberPartners: { heading: Phrase; groups: PartnerGroup[] } = {
       logos: [{ name: "아이디어파트너스 Idea Partners", src: "/partners/logos/paper/idea-partners.png", w: 345, h: 64, url: "https://www.ideapartners.co.kr" }],
     },
     // DECIDED 2026-11-12 (사용자: "그룹바이도 로고에 넣어줘, 어떤 포지션으로 오는지는 gmail 참고해서"). 11-09 우리 제안 메일의 역할 그대로
-    // "기업과 AI 인재를 연결하는 도메인 파트너"(그룹바이 회신은 아직 없음). 원본은 CI/그룹바이.png, 원래 색 그대로 여백만 잘랐습니다.
+    // "기업과 AI 인재를 연결하는 도메인 파트너"(그룹바이 회신은 아직 없음). 원본은 CI/그룹바이.webp(악수 심볼이 있는 흔히 쓰는 판, 같은 날 사용자), 원래 색 그대로 여백만 잘랐습니다.
     {
       id: "domain",
       label: { ko: "도메인 파트너", en: "Domain partner" },
-      logos: [{ name: "그룹바이 GroupBy", src: "/partners/logos/paper/groupby.png", w: 973, h: 240, url: "https://groupby.kr" }],
+      logos: [{ name: "그룹바이 GroupBy", src: "/partners/logos/paper/groupby-hand.png", w: 765, h: 144, url: "https://groupby.kr" }],
     },
   ],
 };

@@ -272,7 +272,7 @@ const DECEMBER_MASS: Record<string, number> = {
   "/partners/logos/paper/idea-partners.png": 0.243, // 2026-11-05 측정, 미디어 파트너
   "/partners/logos/paper/dosirak-esim.png": 0.487, // 2026-11-06 측정, 상금 후원
   "/partners/logos/paper/chunji-tax.png": 0.176, // 2026-11-12 측정, 상금 후원
-  "/partners/logos/paper/groupby.png": 0.348, // 2026-11-12 측정, 도메인 파트너
+  "/partners/logos/paper/groupby-hand.png": 0.336, // 2026-11-12 측정, 도메인 파트너
   "/partners/logos/white/trimmed/terminal-espresso.png": 0.232, // 2026-11-06 측정, 다과 지원
   "/partners/logos/paper/trevari.png": 0.577, // 2026-11-08 측정, 독서모임 쿠폰
 };
