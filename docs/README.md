@@ -46,6 +46,7 @@
 | 11-08 | 새 화면(`components/*/redesign/`)은 브리프 없이 들어옴 | 해요체, 공용 헤더 | `brand-voice-brief.md`가 정본을 뒤따라 맞춤 |
 | 11-11 | `poster-first-brief.md` | 첫 화면과 공유 카드를 포스터로(사실 넷, 로고 띠, 멘토 줄), 등록 여는 날 11월 16일 | 적용(`design/poster-first`, P6은 main) (7d5e673, 90df562, 06cb89a) |
 | 11-12 | `poster-phone-brief.md` | 폰에서 받는 것이 보이게(사실 순서, 받는 것 숫자, 총 200만원, 폰 버튼 하나, 띠 두 칸 격자, 묶음 id) | 적용(`design/poster-phone`) (8a65a6e, e648b82) |
+| 11-12 | `dedupe-brief.md` | 같은 말을 한 자리에만(받는 것 줄, 남는 것 항목, Day 2와 3 하루 일정, 칩, 사실 목록 넷, Day 2 시간) | 적용(`content/dedupe`) |
 
 ### 배경 (WebGL 캔버스. 2026-11-05 종이 팔레트로 전부 폐기)
 

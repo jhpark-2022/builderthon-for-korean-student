@@ -21,6 +21,11 @@ const MAIN_LEAD_NOTE = (() => {
 
 export const copy = {
   // DECIDED 2026-11-12 (사용자: 캐치프레이즈와 그 아래 한 줄을 "bold 3줄로 합쳐줘"): 히어로 굵은 문단 세 줄. 넷(생각, 현업, 팀마다 다르게, 서로 봄)과 순서는 brand 6장 그대로.
+  // DECIDED 2026-11-12 (docs/dedupe-brief.md R6, D1): "팀 구성" 줄을 "누가" 줄에 합침. 셋째 줄은 팀 구성의 첫 문장 그대로.
+  factWho: {
+    ko: "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 등록하고, 팀은 Day 1 현장에서 꾸려요.\n한 팀에 한국 학생과 싱가포르 학생이, 직접 만드는 사람과 숫자를 보는 사람이 섞여요.",
+    en: "University students in Korea and Korean students studying abroad.\nRegister alone; teams form on site on Day 1.\nTeams mix Korea and Singapore, makers and numbers people, so each answers one issue its own way.",
+  } as Phrase,
   heroBold: {
     ko: "왜 아직, 손으로?\n진짜 기업 문제로 먼저 생각하고, 현업에 물어보고,\n팀마다 다른 실물을 만들어 서로 보여 주며 자기 가치를 증명해요.",
     en: "Why still by hand?\nTake a real company problem, think first, ask the field,\nbuild something different, show each other, prove your worth.",
@@ -72,8 +77,8 @@ export const copy = {
   facts: kos(
     [
       "한 팀에 한국 학생과 싱가포르 학생이, 직접 만드는 사람과 숫자를 보는 사람이 섞여요.\n나라끼리 겨루는 대항전이 아니라는 뜻이죠.",
-      "4일 모두 아침부터 저녁까지 열려 있어요. 노트북은 각자 챙겨 오세요.",
-      "Day 2와 Day 3에 하나씩. 기준은 팀이 같이 있었는지, 한 장이 어떻게 바뀌었는지예요.\n해낸 팀이라면 전부 지원받아요. Day 2는 그날 세션 뒤, Day 3은 마지막 날에요.",
+      "노트북은 각자 챙겨 오세요.",
+      "Day 2와 Day 3에 하나씩. 기준은 팀이 같이 있었는지, 한 장이 어떻게 바뀌었는지예요.",
     ],
     d.facts.map((f) => f.v),
   ),
@@ -82,12 +87,11 @@ export const copy = {
     0: ko("어느 회사가 어떤 고민을 들고 오는지 미리 알려 드려요. 자세한 얘기는 Day 1에 회사가 직접.", stage(0).line),
     1: ko("팀을 꾸리고, 그 일에서 누가 어디서 막히는지 하나를 골라요. 왜 거기인지는 팀이 먼저 한 장으로 적어 두세요.", stage(1).line),
     2: ko("고른 병목이 맞는지 멘토를 찾아가 물어봐요.\n일을 해 본 사람은 바로 반박하거든요. 그 말을 듣고 한 장을 고치는 날이에요.", stage(2).line),
-    3: ko("그 병목 하나만 푸는 작은 툴을 만들어요. 회사가 정말 가져다 쓸 수 있을지, 멘토에게 한 번 더 물어보세요.\n일요일이라 만들기와 Open tables는 Zoom으로 하고, 멘토만 직접 찾아가요. 닷새를 다 현장에서 하면 지치거든요.", stage(3).line),
+    3: ko("그 병목 하나만 푸는 작은 툴을 만들어요. 회사가 정말 가져다 쓸 수 있을지, 멘토에게 한 번 더 물어보세요.\n일요일은 Zoom이에요. 닷새를 다 현장에서 하면 지치거든요.", stage(3).line),
     4: ko("이슈를 낸 회사 앞에서 고른 병목과 만든 툴을 발표하고 질문을 받아요.\n회사로서는 같은 고민에 대한 서로 다른 답을 한자리에서 보는 셈이죠.\n끝나면 멘토에게 뭘 만들었는지 한 줄로 먼저 연락해 주세요.", stage(4).line),
   } as Record<number, Phrase>,
 
   chips: {
-    1: kos(["현장에서 팀 꾸리기"], stage(1).chips),
     4: kos(["시상, 마무리"], stage(4).chips),
   } as Record<number, Phrase[]>,
 

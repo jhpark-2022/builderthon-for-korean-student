@@ -18,7 +18,7 @@ import { useActiveSection, DEFAULT_ANCHORS, type NavAnchor } from "@/components/
 // 목차는 가운데가 아니라 워드마크 바로 옆, 본문과 같은 왼쪽 선에서 시작합니다. 글자는 본문 크기(17px)이고,
 // 지금 보고 있는 장은 잉크색 글자와 주황 점 하나로 표시합니다(주황은 점에만, brand 10장).
 // 순서는 이 페이지의 화면 순서입니다. naruNav의 순서는 옛 홈(함께하는 곳이 맨 위)의 것이라 여기서 다시 늘어놓습니다.
-const ORDER = ["december", "gains", "partners", "register"];
+const ORDER = ["december", "partners", "register"]; // 2026-11-12 dedupe R2: 남는 것을 뺌
 const CROSSING_ANCHORS: NavAnchor[] = ORDER.map((id) => naruNav.find((a) => a.id === id)).filter((a): a is NavAnchor => !!a);
 
 const ANCHORS: Record<SitePage, NavAnchor[]> = { naru: naruPageNav, crossing: CROSSING_ANCHORS, aug: DEFAULT_ANCHORS };

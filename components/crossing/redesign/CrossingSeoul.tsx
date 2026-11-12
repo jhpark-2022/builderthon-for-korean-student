@@ -305,14 +305,25 @@ export default function CrossingSeoul() {
         {/* ── 히어로 ─────────────────────────────────────────────── */}
         <section id="top" aria-labelledby="hero-title" className="pt-[calc(var(--site-header-height,96px)+28px)] lg:pt-[calc(var(--site-header-height,96px)+40px)]">
           <div className={FRAME}>
-            <p className={`${HEADING} tabular-nums ${INK}`}>{formatDecemberDateLine(locale)}</p>
-            <h1 id="hero-title" lang={locale} className={`mt-2 break-keep ${DISPLAY} ${NAVY}`}>
-              {name}<span aria-hidden className="text-naru-orange">.</span>
-            </h1>
-
-            <div className="mt-6 grid gap-8 lg:mt-7 lg:grid-cols-12 lg:gap-10">
+            {/* DECIDED 2026-11-12 (사용자, 스크린숏: "사진을 위로 올려줘"): 한국어는 날짜와 워드마크를 왼쪽 칸에 넣어 사진 위끝이 날짜 줄과 맞음.
+                영어 워드마크(CROSSING SEOUL.)는 왼쪽 칸보다 넓어 그 전처럼 위에 한 줄로 둡니다. 폰 순서는 같음. */}
+            {(() => {
+              const top = (
+                <>
+                  <p className={`${HEADING} tabular-nums ${INK}`}>{formatDecemberDateLine(locale)}</p>
+                  <h1 id="hero-title" lang={locale} className={`mt-2 break-keep ${DISPLAY} ${NAVY}`}>
+                    {name}<span aria-hidden className="text-naru-orange">.</span>
+                  </h1>
+                </>
+              );
+              const side = locale === "ko";
+              return (
+            <>
+            {!side && top}
+            <div className={`grid gap-8 lg:grid-cols-12 lg:gap-10 ${side ? "" : "mt-6 lg:mt-7"}`}>
               {/* DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P1): 폰 첫 화면이 포스터 몫. 2026-11-12부터 사실 줄 없이 굵은 세 줄과 버튼. */}
               <div className="flex flex-col lg:col-span-7 lg:pt-1">
+                {side && <div className="mb-6 lg:mb-7 lg:-mt-1">{top}</div>}
                 {/* DECIDED 2026-11-12 (사용자): 캐치프레이즈와 아래 한 줄을 굵은 세 줄로(C.heroBold). 사실 셋(누가, 받는 것, 멘토)은 #december 목록으로 옮김. */}
                 <p className={`break-keep ${HEADING} ${INK}`}>
                   <Lines text={t(C.heroBold)} />
@@ -347,6 +358,9 @@ export default function CrossingSeoul() {
                 </figure>
               )}
             </div>
+            </>
+              );
+            })()}
 
           </div>
         </section>
@@ -462,7 +476,8 @@ export default function CrossingSeoul() {
               {(() => {
                 const hf = (i: number) => ({ k: C.heroFactKeys[i], sub: naru.eventHero.posterFacts[i]?.sub, v: C.heroFacts[i] });
                 const df = (i: number) => ({ k: d.facts[i].k, sub: undefined, v: C.facts[i] });
-                return [hf(0), df(0), df(1), hf(2), df(2), hf(1)];
+                // DECIDED 2026-11-12 (docs/dedupe-brief.md R1, R6~R8): 누가(팀 구성을 합침), 준비, 멘토, 미션 네 줄. 받는 것은 로고 띠 한 자리라 뺌(키 hf(1)은 남김).
+                return [{ ...hf(0), v: C.factWho }, df(1), hf(2), df(2)];
               })().map((f) => (
                 <div key={f.k.en} className={`grid gap-1.5 border-b ${RULE} py-5 lg:grid-cols-[11rem_minmax(0,1fr)] lg:gap-8 lg:py-6`}>
                   <dt className={`${META} font-bold ${INK} lg:pt-0.5`}>
@@ -532,6 +547,7 @@ export default function CrossingSeoul() {
                           <Image src={s.logo.src} alt="" width={s.logo.w} height={s.logo.h} className="h-[18px] w-auto" />
                         </a>
                       )}
+                      {s.venueTime && <span className={`${META} font-semibold tabular-nums ${SOFT} lg:-mt-1`}>{t(s.venueTime)}</span>}
                       {!s.logo && s.venueText && (
                         <span className={`flex flex-col gap-1 ${META} font-semibold ${SOFT} lg:mt-2`}>
                           <span className="inline-flex items-center gap-1.5">
@@ -586,7 +602,8 @@ export default function CrossingSeoul() {
                       {strip && <div className="mt-5 max-w-[42rem] lg:max-w-none">{strip}</div>}
                       {(s.flow?.length || s.matchCta || mentorsOn) && (
                         <div className="mt-3 flex flex-wrap gap-x-6">
-                          {s.flow && s.flow.length > 0 && (
+                          {/* DECIDED 2026-11-12 (docs/dedupe-brief.md R3): 하루 일정은 Day 1과 Day 4만. Day 2, 3의 flow 데이터는 남김. */}
+                          {s.flow && s.flow.length > 0 && (s.dayOffset === 1 || s.dayOffset === 4) && (
                             <button type="button" aria-haspopup="dialog" onClick={() => setFlowDay(i)} className={LINK}>{t(C.dayFlowLabel)}</button>
                           )}
                           {mentorsOn && (
@@ -624,25 +641,7 @@ export default function CrossingSeoul() {
               <h2 id="gains-title" className={`break-keep ${TITLE} ${NAVY} lg:col-span-5`}>{t(C.gainsHeading)}</h2>
               <p className={`break-keep ${HEADING} ${INK} lg:col-span-7 lg:pt-1`}><Lines text={t(C.gainsSpine)} /></p>
             </div>
-            <ul className={`mt-6 border-t ${RULE}`}>
-              {naru.gains.items.map((it, k) => (
-                <li key={it.num} className={`grid gap-x-10 gap-y-2 border-b ${RULE} py-5 sm:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,17rem)_minmax(0,1fr)_auto] lg:items-baseline lg:py-6`}>
-                  <h3 className={`break-keep ${BODY} font-bold tracking-[-0.01em] ${INK}`}>{t(C.gainsTitles[k])}</h3>
-                  <p className={`break-keep ${BODY} ${SOFT}`}><Lines text={t(C.gainsBodies[k])} /></p>
-                  <div className="flex items-center gap-3 sm:col-start-2 lg:col-start-auto">
-                    <span aria-hidden className="relative flex items-center gap-[7px]">
-                      <span className="absolute inset-x-0 top-1/2 h-px bg-naru-navy/20" />
-                      {[0, 1, 2, 3, 4].map((n) => (
-                        <span key={n} className={`relative h-2 w-2 rounded-full ${it.days.includes(n) ? (n === 4 ? "bg-naru-orange" : "bg-naru-navy") : "border border-naru-navy/30 bg-[#FCFBF8]"}`} />
-                      ))}
-                    </span>
-                    <span className={`w-[4.75rem] shrink-0 whitespace-nowrap ${META} font-semibold tabular-nums ${NAVY}`}>
-                      {it.days.length > 1 && !it.split ? `Day ${Math.min(...it.days)}–${Math.max(...it.days)}` : it.days.map((n) => `Day ${n}`).join(", ")}
-                    </span>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            {/* DECIDED 2026-11-12 (docs/dedupe-brief.md R2): 다섯 항목은 Day 카드와 같은 말이라 뺌. 제목과 리드만. 항목 데이터(naru.gains.items)는 남김. */}
           </div>
         </section>
 
@@ -749,7 +748,8 @@ export default function CrossingSeoul() {
               dayLabel: `${t(d.dayLabel)} ${st.dayOffset}`,
               date: formatDecemberDayWithWeekday(locale, st.dayOffset),
               title: t(st.title),
-              lead: t(C.line[st.dayOffset] ?? st.line),
+              // 2026-11-12 dedupe R3: 카드 본문을 모달 머리에서 되풀이하지 않음.
+              lead: "",
               venue: st.logo,
               venueText: st.venueText && t(st.venueText),
               venueNote: st.venueNote && t(st.venueNote),

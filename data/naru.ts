@@ -367,7 +367,7 @@ export const naruNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel
   // DECIDED 2026-11-05 (사용자: 등록 블록을 뺌): "등록" 칸을 뺍니다. 등록 버튼은 히어로(id="register")에 있어 목차의 순서와 현위치가 어긋났습니다.
   // DECIDED 2026-10-22 (UX 점검, 사용자: "모든 것을 반영"): 영문 "Gains"는 "What you leave with"의 라벨로 어색했습니다. ariaLabel은 뺐습니다.
   // 보이는 글자("남는 것")와 읽히는 이름("오면 무엇이 남는가")이 달라 Lighthouse label-content-name-mismatch에 걸렸습니다.
-  { id: "gains", label: { ko: "남는 것", en: "Takeaways" } },
+  // DECIDED 2026-11-12 (docs/dedupe-brief.md R2): "남는 것"을 목차와 메뉴에서 뺌. #gains는 제목과 리드만 남고 id는 그대로라 옛 링크는 열림.
   // DECIDED 2026-11-05 (사용자: "TOC를 다시 for 12월 page"): 페이지 순서대로 넷. 등록은 맨 끝 등록 줄(id="register")로 갑니다.
   { id: "register", label: { ko: "등록", en: "Register" } },
 ];
@@ -2092,13 +2092,14 @@ export const naru = {
       // 몰아 주는 것보다 나누는 쪽) 두 줄을 뺐습니다. 파트너에게 하는 설계 설명이라 참가자의 어느 코어도 돕지 않았습니다.
       // 문장은 git 이력에 있고, 세션 설계는 제안서가, 나누는 이유는 혜택 02가 말합니다.
       {
-        k: { ko: "공간", en: "Space" },
+        // DECIDED 2026-11-12 (docs/dedupe-brief.md R8, D3): 이름은 준비, 글은 노트북 한 문장. "4일 모두 아침부터 저녁까지"는 Day 2(16:00~18:00), Day 3(Zoom)과 맞지 않아 뺌.
+        k: { ko: "준비", en: "What to bring" },
         // DECIDED 2026-10-12 (등록 브리프 1.5, 리뷰 S11): 시각은 registerFacts.hoursLine이 채워지면 그 값으로, 그 전에는
         // "아침부터 저녁까지" 그대로입니다. 준비물 한 문장을 붙였습니다.
         v: {
           // DECIDED 2026-10-20 (hwang 브리프 1.1, 감사 P3): 4일 모두 열립니다. 그 전 "...까지. 마지막 날은 제외입니다."는 4일 모두와 어긋났습니다.
-          ko: `4일 모두 ${registerFacts.hoursLine?.ko ?? "아침부터 저녁까지"} 열려 있고, 노트북은 각자 가져옵니다.`,
-          en: `Open ${registerFacts.hoursLine?.en ?? "morning to evening"} on all four days. Bring your own laptop.`,
+          ko: "노트북은 각자 챙겨 오세요.",
+          en: "Bring your own laptop.",
         },
       },
       {
@@ -2111,7 +2112,8 @@ export const naru = {
         // DECIDED 2026-10-25 (사용자: 칸마다 줄 수를 같게): 두 줄로. 그 전 "Day 2와 Day 3에 하나씩 있고, 무엇을 냈는지보다 함께 있었는지를 봅니다. 해낸 팀은 모두 그날 지원을 받고, 그 미션은 팀의 기록으로 남습니다."
         // DECIDED 2026-11-06 (docs/think-different-brief.md T4, 사용자: 생각과 팀마다 다른 것을 강조, 상자는 그대로): 11/05 출제사 미팅: 생각이 어떻게 바뀌었는지를 1장으로.
         // DECIDED 2026-11-08 (docs/mission-card-brief.md S9): 지원은 그날 세션이 끝난 뒤. 그 전 둘째 문장 "해낸 팀은 모두 그날 지원을 받습니다." / "Each team that does it gets support."
-        v: { ko: "Day 2와 Day 3에 하나씩, 함께 있었는지와 생각이 어떻게 달라졌는지(고친 1장)를 봅니다. 해낸 팀은 모두 지원을 받습니다. Day 2는 그날 세션이 끝난 뒤, Day 3은 마지막 날.", en: "Day 2 and 3: together on site, and how your thinking changed (revised page). Every team that does it gets support: Day 2 after the session, Day 3 on the last day." },
+        // DECIDED 2026-11-12 (docs/dedupe-brief.md R7): 첫 문장(기준)만. 받는 때는 미션 카드, 금액은 로고 띠.
+        v: { ko: "Day 2와 Day 3에 하나씩, 함께 있었는지와 생각이 어떻게 달라졌는지(고친 1장)를 봅니다.", en: "Day 2 and 3: together on site, and how your thinking changed (revised page)." },
       },
     ] as { k: Phrase; v: Phrase }[],
 
@@ -2923,7 +2925,7 @@ export const naru = {
         // 12월에는 AI 유형 테스트가 신청의 일부가 아니라 Day 1 현장의 팀 매칭 도구입니다. 칩은 뺐습니다
         // (버튼이 같은 말을 합니다). 버튼은 이 행의 글 기둥 왼쪽 끝에 섭니다(NaruHome).
         // 2026-10-13 (사용자: "1일차 박스가 너무 비어있음"): 위 body의 첫 문장("현장에서 팀을 맺습니다")을 칩으로 올렸습니다(brand 7장 팀).
-        chips: [{ ko: "현장에서 팀 구성", en: "Teams form on site" }],
+        chips: [], // 2026-11-12 dedupe R6: "현장에서 팀 구성"은 본문 첫마디와 같은 말이라 뺌.
         // DECIDED 2026-10-17 (사용자: "1일차에도 미션인증은 해야해서, 버튼은 2,3일차처럼"): Day 1 카드에도 같은 버튼. 들어가면 Day 1 탭이고 시간표는 잠겨 있습니다.
         // 2026-10-22 (사용자: "Day 2, 3일 때만 보이게"): 폰 일정 상자 아래의 공통 버튼은 Day 2, 3을 볼 때만 섭니다(정본 7장: 미션은 Day 2, 3).
         // DECIDED 2026-11-06 (docs/first-click-brief.md F3): "예약용"과 "인증"은 운영진의 말이고, 카드의 미션 띠가 이미 "제출"이라 씁니다. 그 전 "예약용 멘토 시간표와 인증" / "Book & check in". Day 2, 3 버튼도 같은 라벨.
@@ -2976,6 +2978,8 @@ export const naru = {
         logo: { src: "/partners/logos/paper/dcamp.png", name: "디캠프 선릉", w: 900, h: 220, url: "https://dcamp.kr/" },
         // 2026-11-10 (사용자: "멘토링은 직접 찾아가기 이거 day 2 에도 추가"): Day 3과 같은 줄.
         venueNote: { ko: "멘토링은 직접 찾아가기", en: "Mentoring in person" },
+        // DECIDED 2026-11-12 (사용자, docs/dedupe-brief.md R4): 디캠프 선릉은 16:00~18:00. 로고 옆에 META로.
+        venueTime: { ko: "16:00~18:00", en: "16:00-18:00" },
         // DECIDED 2026-11-05 (docs/day-flow-brief.md 2장, 사용자): 하루의 흐름. 시각은 아직 넣지 않습니다(같은 날 사용자: "아직 정확한 시간은 넣지 말아줘"). 정해지면 time만 채웁니다. 필참 표시 없음(같은 날 사용자: "다 참여해야지").
         flow: [
           { what: { ko: "멘토 찾아가기. 넣은 칸의 시각에 팀이 함께, 생각 1장을 들고", en: "Visiting a mentor: the team goes together at the booked time, with the one page" }, where: { ko: "멘토 계신 곳(오피스, 카페, 온라인)", en: "Where the mentor is (an office, a café, or online)" } },
@@ -3003,7 +3007,7 @@ export const naru = {
         // 2026-10-24 (사용자: "멘토 시간은 시간표로 예약 이 부분은 빼주고"): 예약은 아래 버튼 "멘토 시간표와 미션 제출"(2026-11-06 전 "예약용 멘토 시간표와 인증")이 말합니다.
         // 2026-11-06 (사용자, 스크린숏 둘: "이렇게 보여주지 말고, day 2,3 을 클릭하면 보여지면 좋겠는데", Day 1의 "현장에서 팀 구성 / AI 유형 테스트로 팀 매칭 →" 모양으로):
         // 멘토는 Day 2, 3 카드의 글자 링크를 눌러 모달에서 봅니다. 그날의 멘토를 나눈 데이터가 없어 두 날 모두 같은 명단입니다.
-        chips: [{ ko: "멘토 찾아가기", en: "Visiting mentors" }],
+        chips: [], // 2026-11-12 dedupe R5: "멘토 찾아가기"는 장소 줄 "멘토링은 직접 찾아가기"와 같은 말이라 뺌.
         mentorsCta: true,
         // DECIDED 2026-09-27 (사용자, 9/7 8월 참가자 회고): 왜 하는지가 바로 읽히게.
         // UI는 AI가 바로 만들어 주지만 어떤 기능을 왜 넣을지 판단하는 훈련은 배울 곳이
@@ -3100,12 +3104,13 @@ export const naru = {
           // DECIDED 2026-11-05 (사용자, 스크린숏: "3일 문장 길이를 1,2일에 맞춰줘"): 앞의 "흐름 전체를 바꾸는 시스템 대신"을 뺌. 네 줄에서 세 줄. 그 전 문장은 git 80e0e1f.
           // DECIDED 2026-11-06 (docs/think-different-brief.md T7, 사용자: 생각과 팀마다 다른 것을 강조, 상자는 그대로): 문장 +1. 브리프의 앞부분("흐름 전체를 바꾸는 시스템 대신")은 11-05 사용자 결정대로 넣지 않음.
           // 2026-11-09 (사용자): 일요일은 Zoom, 그 이유 한 문장을 끝에.
-          ko: "그 병목만 푸는 작은 툴을 만들고, 기업이 가져다 쓸 수 있을지 멘토에게 여쭙니다. 같은 이슈에서 팀마다 다른 툴이 나옵니다. 일요일이라 만들기와 Open tables는 Zoom으로 하고, 멘토만 직접 찾아갑니다. 닷새를 다 현장에서 하면 지치기 때문입니다.",
-          en: "Build a small tool for it and ask a mentor if the company could use it. Each team's tool differs. It's Sunday, so building and Open tables are on Zoom and only mentor visits are in person: five full days on site is a lot.",
+          ko: "그 병목만 푸는 작은 툴을 만들고, 기업이 가져다 쓸 수 있을지 멘토에게 여쭙니다. 같은 이슈에서 팀마다 다른 툴이 나옵니다. 일요일은 Zoom입니다. 닷새를 다 현장에서 하면 지치기 때문입니다.",
+          // 2026-11-12 (docs/dedupe-brief.md R5, D2): 둘째 문단은 이유만. Open tables와 멘토 찾아가기는 하루 일정과 장소 줄이 말함.
+          en: "Build a small tool for it and ask a mentor if the company could use it. Each team's tool differs. Sunday is on Zoom: five full days on site is a lot.",
         },
         // DECIDED 2026-10-10 (중복 브리프 B1): 칩 "멘토링은 이 날까지"를 뺐습니다. General Mentoring 상자의
         // "Day 3은 피칭 준비, Day 4는 멘토링이 없습니다"가 같은 말을 합니다.
-        chips: [{ ko: "멘토 찾아가기", en: "Visiting mentors" }],
+        chips: [], // 2026-11-12 dedupe R5: "멘토 찾아가기"는 장소 줄 "멘토링은 직접 찾아가기"와 같은 말이라 뺌.
         mentorsCta: true,
         // DECIDED 2026-09-27 (사용자, 9/27 학생 단체 미팅): Empower session이
         // 한국에서 창업한 해외 창업가를 만나는 세션이 됐습니다. 국내 VC와 창업가는
@@ -3247,6 +3252,7 @@ export const naru = {
       // 2026-11-10 (사용자: "day 3 는 온라인으로 한다는걸 여기에도"): 로고 대신 장소를 글자로(온라인 날).
       venueText?: Phrase;
       venueNote?: Phrase;
+      venueTime?: Phrase;
       body: Phrase;
       /** 폰 노선도 카드에서 세션 자리에 그리는 그날의 진행(2026-10-22). 없으면 그리지 않습니다. body에서 뽑은 문장입니다. */
       panelBody?: Phrase;

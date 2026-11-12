@@ -140,7 +140,7 @@ export default function DayFlowModal({
                 )}
               </p>
               <h3 id="day-flow-title" className={`mt-1.5 pr-12 ${SUBTITLE} font-bold tracking-[-0.01em] text-naru-navy`}>{day.title}</h3>
-              <p className={`mt-2 break-keep ${META} leading-[1.65] text-naru-muted`}>{day.lead}</p>
+              {day.lead && <p className={`mt-2 break-keep ${META} leading-[1.65] text-naru-muted`}>{day.lead}</p>}
               <div className="mt-6 flex items-center justify-between gap-3 border-t border-white/10 pt-5">
                 <p className={`${META} font-bold text-white/85`}>{heading}</p>
               </div>
