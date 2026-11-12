@@ -53,6 +53,12 @@ export const copy = {
   // DECIDED 2026-11-12 (사용자: "등록 date 은 버튼에 반영"): 히어로 사실 줄에서 등록을 빼고, 여는 날을 히어로 미리 보기 버튼에. 맨 아래 #register는 그대로.
   heroPreviewCta: { ko: "11월 16일(월) 등록, 폼 먼저 보기", en: "Opens Mon 16 Nov, preview the form" } as Phrase,
 
+  // DECIDED 2026-11-12 (사용자: 닷새 리드 두 문단을 "3줄로 내용을 합쳐줘"): 정체성 세 줄(sub)과 scheduleLead를 한 문단 세 줄로.
+  // 등록은 혼자, 팀은 Day 1은 히어로 누가 줄이 말해 뺐고, 규칙 한 문장은 그대로(brand 5장, 6장 방법 한 문장). 두 키는 남김.
+  programLead: {
+    ko: "만드는 건 이제 AI 몫이라, 닷새는 거의 다 무엇을 왜 만들지 정하는 데 써요.\n규칙은 하나예요: AI가 쓴 걸 고치지 말고, 내가 쓴 걸 AI한테 고치게 할 것.\n닷새 안에 다 못 풀어도 괜찮아요. 얼마나 깊이 팠는지는 직접 만든 결과물이 증명하죠.",
+    en: "With AI doing the making, these five days go to deciding what to build and why.\nOne rule: don't fix what AI wrote. Let AI fix what you wrote.\nIt's fine if five days don't solve it. What you build shows how deep you dug.",
+  } as Phrase,
   programHeading: ko("닷새, 이렇게 보내요", d.programHeading),
   scheduleLead: ko(
     "등록은 혼자, 팀은 Day 1 현장에서.\n규칙은 하나에요: AI가 쓴 걸 고치지 말고, 내가 쓴 걸 AI한테 고치게 할 것.\n닷새 안에 다 못 풀어도 괜찮아요. 중요한 건 답보다, 얼마나 깊이 팠는지예요.",

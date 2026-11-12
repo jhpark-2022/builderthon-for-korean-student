@@ -463,8 +463,8 @@ export default function CrossingSeoul() {
               <h2 id="december-title" className={`break-keep ${TITLE} ${NAVY} lg:col-span-5`}>{t(C.programHeading)}</h2>
               {/* DECIDED 2026-11-11 (docs/poster-first-brief.md P4, D3): 히어로에서 내려온 정체성 세 줄(C.sub, brand 6장)이 리드의 첫 문단. */}
               <div className="flex flex-col gap-4 lg:col-span-7 lg:pt-2">
-                <p className={`break-keep ${BODY} ${INK}`}><Lines text={t(C.sub)} /></p>
-                <p id="mentoring" className={`break-keep ${BODY} ${SOFT}`}><Lines text={t(C.scheduleLead)} /></p>
+                {/* 2026-11-12 (사용자): 두 문단을 한 문단 세 줄로(C.programLead). */}
+                <p id="mentoring" className={`break-keep ${BODY} ${INK}`}><Lines text={t(C.programLead)} /></p>
               </div>
             </div>
 
