@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-12 함께하는 곳에 그룹바이](#2026-11-12-groupby)
 - [2026-11-12 멘토 줄에 Bloom과 가짜연구소](#2026-11-12-mentor-orgs)
 - [2026-11-12 같은 말을 한 자리에만](#2026-11-12-dedupe)
 - [2026-11-12 히어로 굵은 세 줄, 사실은 닷새 목록으로](#2026-11-12-hero-bold)
@@ -567,6 +568,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-11-12-groupby"></a>
+## 2026-11-12 함께하는 곳에 그룹바이
+- 범위: data/naru.ts(decemberPartners domain), HeroPartnerStrip.tsx(mass 0.348), public/partners/logos/paper/groupby.png
+- 한 것: #partners 후원 칸 끝에 그룹바이를 "도메인 파트너"로(사용자 요청, 역할은 11-09 제안 메일의 "기업과 AI 인재를 연결하는 도메인 파트너". 회신은 아직 없음). 로고는 CI/그룹바이.png 원래 색 그대로(brand 10장). 로고 띠는 그대로.
+- 판단 질문: 2 자기 가치를 증명할 기회(기업과 이어지는 곳을 보임).
+- 검증: 빌드 통과.
+- 커밋: c80da9e
 
 <a id="2026-11-12-mentor-orgs"></a>
 ## 2026-11-12 멘토 줄에 Bloom과 가짜연구소
