@@ -610,7 +610,7 @@ export const naru = {
       // 어떤 회사에서 일하는지도 좀 briefly"): 넷째 줄은 등록 대신 멘토. 분야와 회사는 naru.december.mentors의 소속과 경력 한 줄에서 뽑았습니다.
       // 사람 이름은 쓰지 않습니다. 멘토 명단이 바뀌면 이 줄도 같이 고칩니다. 반박은 brand 7장 멘토링 줄의 "일을 해 본 사람의 감각".
       // 같은 날 뒤 (사용자: "2,3 일에 만난다는 멘토 아래에, 글의 내용에는 언제 만난다 이 내용 넣지는 말고"): 만나는 날은 줄 이름 아래(sub), 본문에는 쓰지 않음.
-      { k: { ko: "멘토", en: "Mentors" }, sub: { ko: "Day 2, 3", en: "Day 2 and 3" }, v: { ko: "임상 연구, 의료기기, K-뷰티, 자동차, 게임 분야에서 AI를 잘 쓰는 현업.\nKia, C&R Research, Aside (YC F25), BIGPIE C&T 등에서 일해요.\n팀이 찾아가면 일해 본 감각으로 생각을 반박해 줘요.", en: "Working professionals who use AI well, in clinical research, medical devices, K-beauty, cars and games.\nThey work at Kia, C&R Research, Aside (YC F25), BIGPIE C&T and more.\nYour team visits them, and they push back with the sense of someone who has done the work." } },
+      { k: { ko: "멘토", en: "Mentors" }, sub: { ko: "Day 2, 3", en: "Day 2 and 3" }, v: { ko: "임상 연구, 의료기기, K-뷰티, 자동차, 게임 분야에서 AI를 잘 쓰는 현업.\nBloom과 가짜연구소에서 오시고, Kia, C&R Research, Aside (YC F25), BIGPIE C&T 등에서 일해요.\n팀이 찾아가면 일해 본 감각으로 생각을 반박해 줘요.", en: "Working professionals who use AI well, in clinical research, medical devices, K-beauty, cars and games.\nThey come through Bloom and Pseudo Lab, and work at Kia, C&R Research, Aside (YC F25), BIGPIE C&T and more.\nYour team visits them, and they push back with the sense of someone who has done the work." } },
     ] as { k: Phrase; sub?: Phrase; v: Phrase }[],
     // 넷째 줄. 등록 창 상태마다 다릅니다: 열기 전, 열린 뒤. 마감 뒤는 register.closed. 여는 시각은 쓰지 않습니다(P6).
     registerFact: {
