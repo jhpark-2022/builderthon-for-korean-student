@@ -306,6 +306,10 @@ export default function CrossingSeoul() {
                   <span className="block">{t(hero.catch)}</span>
                   <span className="block"><Lines text={t(C.catchAnswer)} /></span>
                 </p>
+                {/* DECIDED 2026-11-12 (사용자): 캐치프레이즈 아래 이 닷새가 무엇인지 한 줄. */}
+                <p className={`mt-3 break-keep ${BODY} ${SOFT}`}>
+                  <Lines text={t(C.heroLine)} />
+                </p>
                 <div className="mt-6 lg:order-last lg:mt-6">
                   {ctas("naru-hero")}
                   {/* 2026-11-12 (사용자: 등록 날짜는 버튼에): 등록 줄을 빼면서 폰의 둘째 행동(Q4)은 버튼 바로 아래 링크로. */}

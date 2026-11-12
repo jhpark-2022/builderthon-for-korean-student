@@ -20,6 +20,7 @@ const MAIN_LEAD_NOTE = (() => {
 })();
 
 export const copy = {
+  heroLine: ko("진짜 기업 문제를 붙잡고 스스로 생각해,\n자기 가치를 증명할 실물을 들고 나가는 닷새예요.", h.heroLine),
   catchAnswer: ko("먼저 생각하고, 현업에 물어보고,\n팀마다 다른 걸 만들어 서로 보여 줘요.", h.catchAnswer),
   sub: ko("만드는 건 이제 AI 몫이에요.\n그래서 이번 닷새는 거의 다, 무엇을 왜 만들지 정하는 데 쓸 거예요.\n정한 게 맞았는지는 직접 만든 결과물이 증명하죠.", h.sub),
   // DECIDED 2026-11-09 (docs/brand-voice-brief.md D3): 새 화면에 남은 합니다체 한 줄을 해요체로. 그 전 "나루가 엽니다."

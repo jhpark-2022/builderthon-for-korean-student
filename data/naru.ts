@@ -589,6 +589,11 @@ export const naru = {
     // DECIDED 2026-11-05 (사용자: 네 가지(생각 → 만들기, 현업의 터치, 팀마다 다른 것, 팀 간 교류)를 닷새 순서의 동사로): 질문 줄은 그대로, 답 줄만.
     // Day 1 생각, Day 2·3 현업에 묻고 만들기, Day 4 서로 봄. 그 전 답 줄 "생각하는 힘을 기르는 닷새"는 남는 것 리드(gains.spine)가 받습니다. 그 전 문장은 git b2d5c79.
     catchAnswer: { ko: "생각부터 하고, 현업에 묻고, 팀마다 다르게 만들어 서로 봅니다.", en: "Think first, ask the field, build what no other team builds, and see each other's work." },
+    // DECIDED 2026-11-12 (사용자, 히어로 스크린숏 "여기에 반영해줘"): 캐치프레이즈 아래 한 줄. 사이트는 해요체라 끝만 "닷새예요"(사용자 원문은 "닷새입니다").
+    heroLine: {
+      ko: "진짜 기업 문제를 붙잡고 스스로 생각해, 자기 가치를 증명할 실물을 들고 나가는 닷새입니다.",
+      en: "Five days to take on a real company problem, think it through yourself, and leave with proof of your own worth.",
+    },
     // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P1, D1 문장 승인): 캐치프레이즈 아래 사실 넷(어디서, 누가, 받는 것, 등록).
     // 그 전 이 자리의 sub와 naruLine은 #december 리드와 #partners 주최 줄로(P4). 확정된 것만 씁니다: 장소는 december.stages의 로고와 같고,
     // 받는 것은 decemberPartners의 Lovable(기술, 크레딧)과 트레바리(참가 학생 전원), 미션 지원금, Readray(시상 상품).
