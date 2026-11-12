@@ -150,8 +150,21 @@ const ROW5 = "w-[calc((100%-0.75rem)/2)] sm:w-[calc((100%-3rem)/5)]";
 const ROW4 = "w-[calc((100%-0.75rem)/2)] sm:w-[calc((100%-1.5rem)/3)] lg:w-[calc((100%-2.25rem)/4)]";
 
 /** 후원사 한 칸. 로고는 흰 카드 가운데, 맡은 일은 카드 아래 한 줄. 링크가 있으면 카드가 링크입니다. */
-function PartnerCell({ l, caption, area, maxH, className = "" }: { l: PartnerLogo; caption?: string; area: number; maxH: number; className?: string }) {
+function PartnerCell({ l, more = [], caption, area, maxH, className = "" }: { l: PartnerLogo; more?: PartnerLogo[]; caption?: string; area: number; maxH: number; className?: string }) {
   const logo = <Image src={l.src} alt={l.name} width={l.w} height={l.h} unoptimized style={logoSize(l, area, maxH, 140)} className="block" />;
+  // 2026-11-12 (사용자: 천지세무법인을 와이드모바일과 같은 상자에): oneCard 묶음은 로고를 한 카드에 세로로. 높이는 카드 안에 맞게 줄입니다.
+  if (more.length) {
+    const all = [l, ...more];
+    const h = Math.floor(maxH / all.length) + 9;
+    return (
+      <div className={className}>
+        <div className={`${CARD} flex-col gap-2`}>
+          {all.map((x) => <Image key={x.name} src={x.src} alt={x.name} width={x.w} height={x.h} unoptimized style={logoSize(x, area, h, 130)} className="block" />)}
+        </div>
+        {caption && <p className={`mt-2 break-keep text-center ${META} text-caption`}>{caption}</p>}
+      </div>
+    );
+  }
   return (
     <div className={className}>
       {l.url ? (
@@ -655,7 +668,9 @@ export default function CrossingSeoul() {
             <h2 id="partners-title" className={`break-keep ${TITLE} ${NAVY}`}>{t(decemberPartners.heading)}</h2>
             {(() => {
               const [main, ...rest] = decemberPartners.groups;
-              const others = rest.flatMap((g) => g.logos.map((l) => ({ l: l as PartnerLogo, caption: t(g.label) })));
+              const others = rest.flatMap((g) =>
+                g.oneCard ? [{ l: g.logos[0] as PartnerLogo, more: g.logos.slice(1) as PartnerLogo[], caption: t(g.label) }] : g.logos.map((l) => ({ l: l as PartnerLogo, more: [] as PartnerLogo[], caption: t(g.label) })),
+              );
               const GROUP = `mt-6 border-t ${RULE} pt-6`;
               return (
                 <>
@@ -703,8 +718,8 @@ export default function CrossingSeoul() {
                   <div className={GROUP}>
                     <h3 className={`${META} font-bold ${INK}`}>{t({ ko: "후원", en: "Sponsors and partners" })}</h3>
                     <div className="mt-3 flex flex-wrap justify-center gap-x-3 gap-y-5">
-                      {others.map(({ l, caption }) => (
-                        <PartnerCell key={l.name} l={l} caption={caption} area={2600} maxH={42} className={ROW4} />
+                      {others.map(({ l, more, caption }) => (
+                        <PartnerCell key={l.name} l={l} more={more} caption={caption} area={2600} maxH={42} className={ROW4} />
                       ))}
                     </div>
                   </div>

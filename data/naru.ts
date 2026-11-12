@@ -3744,7 +3744,7 @@ export const singaporeCampuses: { name: Phrase; src: string; w: number; h: numbe
 // DECIDED 2026-11-12 (docs/poster-phone-brief.md Q6): 묶음마다 id. 로고 띠와 copy.ts는 순서나 이름이 아니라 id로 찾고(partnerGroup),
 // 없으면 모듈을 읽을 때 throw해서 빌드가 멈춥니다(HeroPartnerStrip의 DECEMBER_MASS와 같은 방식). 줄 이름이나 순서를 바꿔도 묶음이 조용히 사라지지 않게.
 export type PartnerGroupId = "main" | "venue" | "tech" | "award" | "prize" | "snack" | "coupon" | "workshop" | "community" | "media";
-export type PartnerGroup = { id: PartnerGroupId; label: Phrase; lead?: PartnerLogo & { note: Phrase }; logos: PartnerLogo[]; note?: Phrase; bandNote?: Phrase };
+export type PartnerGroup = { id: PartnerGroupId; label: Phrase; lead?: PartnerLogo & { note: Phrase }; logos: PartnerLogo[]; note?: Phrase; bandNote?: Phrase; oneCard?: boolean };
 export const decemberPartners: { heading: Phrase; groups: PartnerGroup[] } = {
   heading: { ko: "함께하는 곳", en: "With us in December" },
   groups: [
@@ -3806,7 +3806,13 @@ export const decemberPartners: { heading: Phrase; groups: PartnerGroup[] } = {
     {
       id: "prize",
       label: { ko: "상금 후원", en: "Prize sponsor" },
-      logos: [{ name: "와이드모바일 도시락eSIM WideMobile", src: "/partners/logos/paper/dosirak-esim.png", w: 846, h: 122 }],
+      // 2026-11-12 (사용자: "같은 상자에"): #partners에서 이 묶음의 로고들은 카드 하나에.
+      oneCard: true,
+      // DECIDED 2026-11-12 (사용자: "천지세무법인 로고도 와이드모바일과 같은 상자에"). 원본은 CI/천지세무법인.png, 흰 바탕만 걷은 원래 색.
+      logos: [
+        { name: "와이드모바일 도시락eSIM WideMobile", src: "/partners/logos/paper/dosirak-esim.png", w: 846, h: 122 },
+        { name: "천지세무법인 Chunji Tax", src: "/partners/logos/paper/chunji-tax.png", w: 769, h: 292 },
+      ],
     },
     // DECIDED 2026-11-06 (사용자: "terminal espresso house (다과지원) 넣어줘"). 원본은 CI/Terminal Espresso House.jpeg(검정 바탕 흰 글자)이고,
     // 바탕을 걷어 흰 실루엣으로(크림 위에서는 globals.css가 잉크 색으로). 사람 그림 아래 두 줄 글자라 크라이치즈버거처럼 square 높이.
