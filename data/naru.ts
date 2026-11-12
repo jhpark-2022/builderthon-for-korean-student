@@ -598,7 +598,7 @@ export const naru = {
     // DECIDED 2026-11-12 (사용자, docs/poster-phone-brief.md Q1): 순서는 누가, 받는 것, 어디서, 등록. 카카오톡 인앱(390x660) 첫 화면에 받는 것이 오게.
     posterFacts: [
       { k: { ko: "누가", en: "Who" }, v: { ko: "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 등록하고, 팀은 Day 1 현장에서 꾸려요.", en: "University students in Korea and Korean students studying abroad.\nRegister alone; teams form on site on Day 1." } },
-      { k: { ko: "받는 것", en: "What you get" }, v: { ko: "참가자 모두에게 Lovable 100 크레딧과 트레바리 10만원 쿠폰.\n미션을 해낸 팀 모두에게 지원금 총 200만원.\n수상 팀원에게는 Readray Pro 2개월.", en: "Lovable 100 credits and a KRW 100,000 Trevari voucher for every participant.\nA KRW 2,000,000 support fund in total, for every team that completes a mission.\nTwo months of Readray Pro for each award-winning team member." } },
+      { k: { ko: "받는 것", en: "What you get" }, v: { ko: "참가자 모두에게 Lovable 100 크레딧과 트레바리 10만원 쿠폰.\n지원금 총 200만원은 미션을 해낸 팀들이 나눠 받습니다.\n수상 팀원에게는 Readray Pro 2개월.", en: "Lovable 100 credits and a KRW 100,000 Trevari voucher for every participant.\nA KRW 2,000,000 support pool, shared among the teams that complete a mission.\nTwo months of Readray Pro for each award-winning team member." } },
       // DECIDED 2026-11-11 (사용자: "day 3 는 줌으로 열어요 내용 빼고, 장소에, 한국 스타트업 생태계에서 중요한 공간들에게 벌어진다고 해"):
       // 같은 날 뒤 (사용자: "Fastfive 가 생태계에서 중요한 공간은 아니여서 약간의 rephrase"): 세 곳 모두에 맞게 "스타트업들이 일하고 모이는 공간".
       // 둘째 줄의 Day 3 Zoom을 빼고 장소의 뜻으로. Day 3 Zoom은 닷새 카드와 미션 조건에 그대로 있습니다.
@@ -2338,7 +2338,8 @@ export const naru = {
       // DECIDED 2026-11-12 (사용자, docs/poster-phone-brief.md Q3, D2: "미션을 해낸 팀에게 주는것"): 200만원은 미션 지원과 같은 돈.
       // 1인당으로 읽히지 않게 "총", 조건은 히어로 받는 것 줄과 같은 말. 그 전 note: "과정에 함께하는 모두를 위해".
       amount: { ko: "총 200만원", en: "KRW 2,000,000 in total" },
-      note: { ko: "미션을 해낸 팀 모두에게", en: "For every team that completes a mission" },
+      // 같은 날 뒤 (사용자: "이게 각 팀마다 200만원으로 읽히네"): 팀마다가 아니라 나눠 받는 돈. 히어로 받는 것 줄도 같은 말.
+      note: { ko: "미션을 해낸 팀들이 나눠 받아요", en: "Shared by teams that complete a mission" },
     },
     // 같은 날 사용자("로고로 넣어줘"): 문장 아래 두 곳의 로고. Bloom은 #partners와 같은 파일.
     // 가짜연구소는 따로 된 로고 파일이 없어 pseudo-lab.com의 512px 아이콘(별 마크)을 잘라 쓰고, 그 사이트처럼 마크 옆에 이름을 글자로 붙입니다.
