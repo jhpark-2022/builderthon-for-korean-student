@@ -3749,7 +3749,7 @@ export const singaporeCampuses: { name: Phrase; src: string; w: number; h: numbe
 // note: 로고 줄 아래 한 줄(2026-10-24, 사용자: "1일차에 lovable 현장 워크샵 진행"). 있는 줄에만 그립니다.
 // DECIDED 2026-11-12 (docs/poster-phone-brief.md Q6): 묶음마다 id. 로고 띠와 copy.ts는 순서나 이름이 아니라 id로 찾고(partnerGroup),
 // 없으면 모듈을 읽을 때 throw해서 빌드가 멈춥니다(HeroPartnerStrip의 DECEMBER_MASS와 같은 방식). 줄 이름이나 순서를 바꿔도 묶음이 조용히 사라지지 않게.
-export type PartnerGroupId = "main" | "venue" | "tech" | "award" | "prize" | "snack" | "coupon" | "workshop" | "community" | "media";
+export type PartnerGroupId = "main" | "venue" | "tech" | "award" | "prize" | "snack" | "coupon" | "workshop" | "community" | "media" | "domain";
 export type PartnerGroup = { id: PartnerGroupId; label: Phrase; lead?: PartnerLogo & { note: Phrase }; logos: PartnerLogo[]; note?: Phrase; bandNote?: Phrase; oneCard?: boolean };
 export const decemberPartners: { heading: Phrase; groups: PartnerGroup[] } = {
   heading: { ko: "함께하는 곳", en: "With us in December" },
@@ -3865,6 +3865,13 @@ export const decemberPartners: { heading: Phrase; groups: PartnerGroup[] } = {
       id: "media",
       label: { ko: "미디어 파트너", en: "Media partner" },
       logos: [{ name: "아이디어파트너스 Idea Partners", src: "/partners/logos/paper/idea-partners.png", w: 345, h: 64, url: "https://www.ideapartners.co.kr" }],
+    },
+    // DECIDED 2026-11-12 (사용자: "그룹바이도 로고에 넣어줘, 어떤 포지션으로 오는지는 gmail 참고해서"). 11-09 우리 제안 메일의 역할 그대로
+    // "기업과 AI 인재를 연결하는 도메인 파트너"(그룹바이 회신은 아직 없음). 원본은 CI/그룹바이.png, 원래 색 그대로 여백만 잘랐습니다.
+    {
+      id: "domain",
+      label: { ko: "도메인 파트너", en: "Domain partner" },
+      logos: [{ name: "그룹바이 GroupBy", src: "/partners/logos/paper/groupby.png", w: 973, h: 240, url: "https://groupby.kr" }],
     },
   ],
 };
