@@ -20,6 +20,11 @@ const MAIN_LEAD_NOTE = (() => {
 })();
 
 export const copy = {
+  // DECIDED 2026-11-12 (사용자: 캐치프레이즈와 그 아래 한 줄을 "bold 3줄로 합쳐줘"): 히어로 굵은 문단 세 줄. 넷(생각, 현업, 팀마다 다르게, 서로 봄)과 순서는 brand 6장 그대로.
+  heroBold: {
+    ko: "왜 아직, 손으로?\n진짜 기업 문제로 먼저 생각하고, 현업에 물어보고,\n팀마다 다른 실물을 만들어 서로 보여 주며 자기 가치를 증명해요.",
+    en: "Why still by hand?\nTake a real company problem, think first, ask the field,\nbuild something different, show each other, prove your worth.",
+  } as Phrase,
   heroLine: ko("진짜 기업 문제를 붙잡고 스스로 생각해,\n자기 가치를 증명할 실물을 들고 나가는 닷새예요.", h.heroLine),
   catchAnswer: ko("먼저 생각하고, 현업에 물어보고,\n팀마다 다른 걸 만들어 서로 보여 줘요.", h.catchAnswer),
   sub: ko("만드는 건 이제 AI 몫이에요.\n그래서 이번 닷새는 거의 다, 무엇을 왜 만들지 정하는 데 쓸 거예요.\n정한 게 맞았는지는 직접 만든 결과물이 증명하죠.", h.sub),

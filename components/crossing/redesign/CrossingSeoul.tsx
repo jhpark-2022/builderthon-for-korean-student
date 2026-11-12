@@ -311,40 +311,16 @@ export default function CrossingSeoul() {
             </h1>
 
             <div className="mt-6 grid gap-8 lg:mt-7 lg:grid-cols-12 lg:gap-10">
-              {/* DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P1): 카카오톡 방에 링크만 올리기로 해 폰 첫 화면이 포스터 몫을 합니다.
-                  캐치프레이즈 아래 문단(C.sub, C.naruLine) 대신 사실 넷(어디서, 누가, 받는 것, 등록). 버튼은 폰에서 사실 위, 데스크톱에서 아래.
-                  버튼 아래 등록 한 줄(hero-register-note)은 등록 줄이 같은 말이라 뺐고, 미리 보기 버튼의 aria-describedby는 그 dd를 가리킵니다. */}
+              {/* DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P1): 폰 첫 화면이 포스터 몫. 2026-11-12부터 사실 줄 없이 굵은 세 줄과 버튼. */}
               <div className="flex flex-col lg:col-span-7 lg:pt-1">
+                {/* DECIDED 2026-11-12 (사용자): 캐치프레이즈와 아래 한 줄을 굵은 세 줄로(C.heroBold). 사실 셋(누가, 받는 것, 멘토)은 #december 목록으로 옮김. */}
                 <p className={`break-keep ${HEADING} ${INK}`}>
-                  <span className="block">{t(hero.catch)}</span>
-                  <span className="block"><Lines text={t(C.catchAnswer)} /></span>
+                  <Lines text={t(C.heroBold)} />
                 </p>
-                {/* DECIDED 2026-11-12 (사용자): 캐치프레이즈 아래 이 닷새가 무엇인지 한 줄. */}
-                <p className={`mt-3 break-keep ${BODY} ${SOFT}`}>
-                  <Lines text={t(C.heroLine)} />
-                </p>
-                <div className="mt-6 lg:order-last lg:mt-6">
+                <div className="mt-6 lg:order-last lg:mt-7">
                   {ctas("naru-hero")}
-                  {/* 2026-11-12 (사용자: 등록 날짜는 버튼에): 등록 줄을 빼면서 폰의 둘째 행동(Q4)은 버튼 바로 아래 링크로. */}
                   {heroSecondLink && <div className="mt-1 sm:hidden">{heroSecondLink}</div>}
                 </div>
-                <dl className={`mt-7 border-t ${RULE} lg:mt-5`}>
-                  {[
-                    // DECIDED 2026-11-12 (사용자): 넷째 줄은 등록 대신 멘토(posterFacts). 여는 날은 히어로 미리 보기 버튼(heroPreviewCta)이 말합니다.
-                    ...C.heroFactKeys.map((k, i) => ({ k, sub: naru.eventHero.posterFacts[i]?.sub, v: C.heroFacts[i], id: undefined as string | undefined })),
-                  ].map((f) => (
-                    <div key={f.k.en} className={`grid gap-1 border-b ${RULE} py-3 sm:grid-cols-[6.5rem_minmax(0,1fr)] sm:gap-4 lg:py-2.5`}>
-                      <dt className={`${META} font-bold ${INK} sm:pt-[0.1rem]`}>
-                        {t(f.k)}
-                        {/* 2026-11-12 (사용자): 멘토를 만나는 날은 줄 이름 아래에. */}
-                        {f.sub && <span className={`ml-2 font-normal tabular-nums ${SOFT} sm:ml-0 sm:block`}>{t(f.sub)}</span>}
-                      </dt>
-                      <dd id={f.id} className={`break-keep ${BODY} ${SOFT}`}>
-                        <Lines text={t(f.v)} />
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
               </div>
 
               {photos.length > 0 && (
@@ -482,10 +458,18 @@ export default function CrossingSeoul() {
             </div>
 
             <dl className={`mt-6 border-t ${RULE}`}>
-              {d.facts.map((f, i) => (
+              {/* DECIDED 2026-11-12 (사용자: 히어로의 사실 셋을 "여기로 옮겨줘"): 누가, 팀 구성, 공간, 멘토, 미션, 받는 것 순. 지원금이 미션 뒤에 오게. */}
+              {(() => {
+                const hf = (i: number) => ({ k: C.heroFactKeys[i], sub: naru.eventHero.posterFacts[i]?.sub, v: C.heroFacts[i] });
+                const df = (i: number) => ({ k: d.facts[i].k, sub: undefined, v: C.facts[i] });
+                return [hf(0), df(0), df(1), hf(2), df(2), hf(1)];
+              })().map((f) => (
                 <div key={f.k.en} className={`grid gap-1.5 border-b ${RULE} py-5 lg:grid-cols-[11rem_minmax(0,1fr)] lg:gap-8 lg:py-6`}>
-                  <dt className={`${META} font-bold ${INK} lg:pt-0.5`}>{t(f.k)}</dt>
-                  <dd className={`break-keep ${BODY} ${SOFT}`}><Lines text={t(C.facts[i])} /></dd>
+                  <dt className={`${META} font-bold ${INK} lg:pt-0.5`}>
+                    {t(f.k)}
+                    {f.sub && <span className={`ml-2 font-normal tabular-nums ${SOFT} lg:ml-0 lg:block`}>{t(f.sub)}</span>}
+                  </dt>
+                  <dd className={`break-keep ${BODY} ${SOFT}`}><Lines text={t(f.v)} /></dd>
                 </div>
               ))}
             </dl>
