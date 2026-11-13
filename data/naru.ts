@@ -475,6 +475,31 @@ export interface Story {
 
 // DECIDED 2026-10-20 (사용자: humanizer.md로 내용을 돌리고 10/19 피드백 반영): 하나면 될 문장을 잘게 끊은 곳, 명사로 끝나는 조각문,
 // 셋 나열, "A가 아니라 B", 맺음 경구를 홈과 /naru에서 걷었습니다. 정본에서 그대로 온 문장(정의문, 코어 둘, 원칙, 크로싱 서울의 뜻)은 그대로입니다.
+// ── 미디어 (DECIDED 2026-11-13) ─────────────────────────────────────────
+// naru.community에 다른 기여자가 먼저 올린 "미디어" 블록을 레포에 옮겼습니다(코드는 GitHub에 없었음).
+// 나루 홈(#why 다음)은 전부, 크로싱 서울(#partners 다음)은 crossing 기사만. 최신순, 새 기사는 맨 위에.
+// 제로백 빌더톤 기사 셋은 naru.record.press를 그대로 씁니다(제목의 「」는 화면에서 뗌).
+export type MediaEvent = "crossing" | "zero100";
+export const media = {
+  heading: { ko: "미디어", en: "Media" },
+  events: {
+    crossing: { ko: "크로싱 서울", en: "CROSSING SEOUL" },
+    zero100: { ko: "제로백 빌더톤", en: "Zero100 Builderthon" },
+  } as Record<MediaEvent, Phrase>,
+  newTab: { ko: "새 창에서 열림", en: "opens in a new tab" },
+  crossing: [
+    {
+      outlet: { ko: "이넷뉴스", en: "enetnews" },
+      date: { ko: "2026.11.13", en: "13 Nov 2026" },
+      title: {
+        ko: "기업현장 고민, 싱가포르 한인 유학생과 국내 대학생 함께 푼다···'크로싱 서울' 개최",
+        en: "Korean students in Singapore and Korea take on real company problems together at 'CROSSING SEOUL'",
+      },
+      url: "https://www.enetnews.co.kr/news/articleView.html?idxno=56332",
+    },
+  ] as PressEntry[],
+};
+
 export const naru = {
   // DECIDED 2026-10-10 (사용자: 나루 내용은 전부 다른 탭으로, 구조 브리프 2.3): 홈의 마지막 블록(#naru)에 서는 티저.
   // 그룹의 글은 /naru에 있고, 홈에는 누가 여는지 한 상자만 남습니다. 문장 둘은 브리프의 것 그대로입니다.

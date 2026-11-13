@@ -9,6 +9,7 @@
 //   #core       변하지 않는 두 개, 경첩, 방법은 바뀝니다
 //   #how        세 층, 회사가 얻는 것, 연락
 //   #why        왜 이런 자리가 필요한가
+//   #media      미디어(2026-11-13, components/shared/MediaSection)
 //   #join-ways  매니페스토
 import Image from "next/image";
 import Link from "next/link";
@@ -22,6 +23,7 @@ import ManifestoViewer from "@/components/naru/ManifestoViewer";
 import { SiteFooter } from "@/components/home/shared";
 import { copy as crossingCopy } from "@/components/crossing/redesign/copy";
 import { DISPLAY, TITLE, HEADING, BODY, META, INK, SOFT, NAVY, RULE, FRAME, BTN_PRIMARY, BTN_GHOST, LINK, Lines } from "@/components/shared/redesign";
+import MediaSection from "@/components/shared/MediaSection";
 import { copy as C } from "./copy";
 
 /** "주최 HOST"에서 한국어 이름만. 영문 화면은 "Host"처럼 첫 글자만 크게. */
@@ -214,6 +216,8 @@ export default function NaruHome() {
             </div>
           </div>
         </section>
+
+        <MediaSection />
 
         {/* ── 매니페스토 ─────────────────────────────────────────────── */}
         <section id="join-ways" aria-labelledby="manifesto-title" className="mt-14 pb-16 lg:mt-20 lg:pb-20">

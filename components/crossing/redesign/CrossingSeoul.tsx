@@ -26,6 +26,7 @@ import MobileChatBar from "@/components/shared/MobileChatBar";
 import OpenChatLink from "@/components/ui/OpenChatLink";
 import { SiteFooter } from "@/components/home/shared";
 import { copy as C } from "./copy";
+import MediaSection from "@/components/shared/MediaSection";
 import { DISPLAY, TITLE, HEADING, BODY, META, INK, SOFT, NAVY, RULE, FRAME, BTN, BTN_GHOST, LINK, Lines } from "@/components/shared/redesign";
 
 const BTN_LOCKED = `${BTN} w-full cursor-not-allowed gap-2 border border-dashed ${RULE} bg-transparent ${SOFT}`;
@@ -711,6 +712,8 @@ export default function CrossingSeoul() {
             })()}
           </div>
         </section>
+
+        <MediaSection only="crossing" />
 
         {/* ── 등록 ─────────────────────────────────────────────── */}
         {regState !== "closed" && (
