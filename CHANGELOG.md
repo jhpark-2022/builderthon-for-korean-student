@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-13 미션 인증 한 번만을 DB에서도](#2026-11-13-proofs-once)
 - [2026-11-13 미디어 블록](#2026-11-13-media)
 - [2026-11-12 함께하는 곳에 그룹바이](#2026-11-12-groupby)
 - [2026-11-12 멘토 줄에 Bloom과 가짜연구소](#2026-11-12-mentor-orgs)
@@ -569,6 +570,15 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-11-13-proofs-once"></a>
+## 2026-11-13 미션 인증 한 번만을 DB에서도
+- 범위: supabase/migrations/0023, app/api/crossing/proofs/route.ts, docs/README.md
+- 한 것: 2026-10-26 "업로드는 한 번만"(팀, 날, 종류마다)을 라우트만 지켜 동시 confirm이면 두 행이 들어갈 수 있었음. 유니크 인덱스 crossing_mission_proofs_once가 막고, 라우트는 그 23505에 뒤 파일을 지우고 409 already. 멘토 전용 crossing-issue-briefs 버킷을 마이그레이션에 적음(비공개, 25MB). 화면과 글은 그대로(brand 7장 미션 줄).
+- 판단 질문: 1 안전하게 도전할 자리(인증이 꼬이지 않음).
+- 검증: 동시 confirm 201과 409, 진 파일 삭제. 적용 기록 23개와 파일 23개 같음. tsc 통과. DB 적용은 2026-11-13.
+- 브리프: docs/proofs-once-brief.md
+- 커밋: 7c14be0
 
 <a id="2026-11-13-media"></a>
 ## 2026-11-13 미디어 블록
