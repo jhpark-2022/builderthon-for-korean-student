@@ -97,6 +97,7 @@
 | 11-08 | `missions-brief.md` | 미션 조건 넷 | `mission-card-brief.md`가 대체 (브리프 0b4ea00, 적용은 bbda6cc) |
 | 11-08 | `mission-card-brief.md` | 미션을 펼친 카드로, 세션 뒤 지원 | 적용(그 뒤 누르면 펼쳐지게 바뀜) (bbda6cc, 접기 6f5be85) |
 | 11-08 | `booking-cutoff-brief.md` | 멘토 칸 마감, 팀 간격 2시간, 칸 수 제한 없음 | 적용(0022) (ca5ce6b) |
+| 11-13 | `proofs-once-brief.md` | 미션 인증 한 번만을 DB에서도, 이슈 브리프 버킷을 마이그레이션에 | 적용(0023, DB는 11-13에 적용) |
 
 ### 등록과 도구 페이지
 

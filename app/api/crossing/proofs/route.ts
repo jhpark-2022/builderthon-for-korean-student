@@ -34,6 +34,7 @@ async function auth(teamName: unknown) {
 
 // DECIDED 2026-10-26 (사용자: "업로드는 한번만 가능하도록 해, 그러니까 하루 끝나기 전에 신중한 업로드 부탁"):
 // 팀마다, 날마다, 종류(사진, PDF)마다 한 번만 올립니다. sign에서 미리 거절하고, 동시에 두 번 올린 경우는 confirm에서 뒤의 파일을 지웁니다.
+// 2026-11-13: 두 confirm이 같은 순간에 오는 경우는 DB의 crossing_mission_proofs_once(0023)가 막습니다(아래 insert의 23505).
 async function alreadyUploaded(db: NonNullable<ReturnType<typeof getSupabaseAdmin>>, teamName: string, day: number, kind: string) {
   const { count } = await db.from("crossing_mission_proofs").select("id", { count: "exact", head: true }).eq("team_name", teamName).eq("day", day).eq("kind", kind);
   return (count ?? 0) > 0;
@@ -112,7 +113,16 @@ export async function POST(req: Request) {
       team_name: team.name, day: Number(m[2]), kind: m[3], storage_path: path,
       content_type: meta.mimetype ?? "application/octet-stream", size_bytes: Math.max(1, Number(meta.size ?? 1)),
     });
-    if (error && error.code !== "23505") return NextResponse.json({ error: "db" }, { status: 500 });
+    if (error) {
+      if (error.code !== "23505") return NextResponse.json({ error: "db" }, { status: 500 });
+      // DECIDED 2026-11-13 (사용자, docs/proofs-once-brief.md P1): 동시에 온 두 confirm이 위 확인을 함께 지나도 DB의 유니크 인덱스
+      // crossing_mission_proofs_once(팀, 날, 종류. 0023)가 둘째 행을 막습니다. 그때는 뒤의 파일을 지우고 already.
+      // 같은 경로가 두 번 온 23505(storage_path)는 전처럼 성공으로 답합니다.
+      if ((error.message ?? "").includes("crossing_mission_proofs_once")) {
+        await db.storage.from(PROOF_BUCKET).remove([path]);
+        return NextResponse.json({ error: "already" }, { status: 409 });
+      }
+    }
     return NextResponse.json({ ok: true }, { status: 201 });
   }
 
