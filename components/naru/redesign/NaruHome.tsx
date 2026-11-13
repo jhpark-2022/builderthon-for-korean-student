@@ -45,20 +45,23 @@ export default function NaruHome() {
         {/* ── 히어로 ─────────────────────────────────────────────── */}
         <section id="top" aria-labelledby="naru-title" className="pt-[calc(var(--site-header-height,96px)+28px)] lg:pt-[calc(var(--site-header-height,96px)+40px)]">
           <div className={FRAME}>
-            <Image
-              src={locale === "en" ? "/naru/naru-master-en-v3-paper.svg" : "/naru/naru-master-v3-paper.png"}
-              alt={t(naru.hero.logoAlt)}
-              width={900}
-              height={900}
-              unoptimized={locale === "en"}
-              priority
-              className="block h-auto w-[88px] lg:w-[104px]"
-            />
-            <h1 id="naru-title" className={`mt-5 break-keep ${DISPLAY} ${NAVY}`}>
-              <span className="block">{t(naru.hero.titleLine1)}</span>{" "}
-              <span className="block text-[#845185]">{t(naru.hero.titleLine2)}</span>
-            </h1>
-            <div className="mt-6 grid gap-4 lg:mt-8 lg:grid-cols-12 lg:gap-12">
+            {/* DECIDED 2026-11-13 (사용자: naru.community에 맞춤): 인장을 오른쪽 위에 크게, 태그라인이 그 위로 겹쳐 지나갑니다. */}
+            <div className="relative">
+              <Image
+                src={locale === "en" ? "/naru/naru-master-en-v3-paper.svg" : "/naru/naru-master-v3-paper.png"}
+                alt={t(naru.hero.logoAlt)}
+                width={900}
+                height={900}
+                unoptimized={locale === "en"}
+                priority
+                className="absolute right-0 top-0 block h-auto w-[150px] sm:w-[240px] lg:w-[420px]"
+              />
+              <h1 id="naru-title" className={`relative z-10 break-keep pt-[72px] sm:pt-[104px] lg:pt-[120px] ${DISPLAY} ${NAVY}`}>
+                <span className="block">{t(naru.hero.titleLine1)}</span>{" "}
+                <span className="block text-[#845185]">{t(naru.hero.titleLine2)}</span>
+              </h1>
+            </div>
+            <div className="relative z-10 mt-12 grid gap-4 lg:mt-[60px] lg:grid-cols-12 lg:gap-12">
               <p className={`break-keep ${HEADING} ${INK} lg:col-span-8`}><Lines text={t(C.groupConcrete)} /></p>
               <p className={`break-keep ${BODY} ${SOFT} lg:col-span-8`}><Lines text={t(C.groupName)} /></p>
             </div>

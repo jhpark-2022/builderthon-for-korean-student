@@ -223,7 +223,6 @@ export default function ManifestoViewer({ locale, t }: Props) {
         </button>
         <span className="sr-only" aria-live={running ? "off" : "polite"}>{counter(a.index)}</span>
       </div>
-      <p className={`mt-[8px] ${META} text-white/70`}>{t({ ko: "쪽을 누르면 크게 봅니다", en: "Tap a page to read it full screen" })}</p>
 
       {/* 전체 화면. 폰은 폭에 맞춰 세로로 스크롤하며 읽고, 데스크톱은 높이에 맞춥니다. 손가락으로 확대할 수 있습니다. */}
       {/* 포털: 이 블록을 감싼 Reveal의 transform 안에서는 fixed가 화면이 아니라 그 상자를 기준으로 잡힙니다. */}

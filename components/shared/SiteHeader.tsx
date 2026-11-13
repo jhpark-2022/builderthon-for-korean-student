@@ -12,7 +12,7 @@ import ChatGlyph from "@/components/ChatGlyph";
 import { SiteMenu, type SitemapPage } from "@/components/shared/SiteChrome";
 import type { SitePage } from "@/components/shared/PageChips";
 import PageSwipe from "@/components/shared/PageSwipe";
-import { useActiveSection, DEFAULT_ANCHORS, type NavAnchor } from "@/components/journey/JourneyNav";
+import { useActiveSection, type NavAnchor } from "@/components/journey/JourneyNav";
 
 // DECIDED 2026-11-07 (redesign/crossing): 세 페이지(나루 홈, 크로싱 서울, 8월 기록)의 새 헤더. JourneyNav를 대신합니다.
 // 목차는 가운데가 아니라 워드마크 바로 옆, 본문과 같은 왼쪽 선에서 시작합니다. 글자는 본문 크기(17px)이고,
@@ -21,7 +21,16 @@ import { useActiveSection, DEFAULT_ANCHORS, type NavAnchor } from "@/components/
 const ORDER = ["december", "partners", "register"]; // 2026-11-12 dedupe R2: 남는 것을 뺌
 const CROSSING_ANCHORS: NavAnchor[] = ORDER.map((id) => naruNav.find((a) => a.id === id)).filter((a): a is NavAnchor => !!a);
 
-const ANCHORS: Record<SitePage, NavAnchor[]> = { naru: naruPageNav, crossing: CROSSING_ANCHORS, aug: DEFAULT_ANCHORS };
+// DECIDED 2026-11-13: 8월 기록의 새 화면(components/archive/redesign/Aug2026.tsx)의 다섯 장. 다른 두 페이지와 같은 폭에서 목차가 섭니다.
+const AUG_ANCHORS: NavAnchor[] = [
+  { id: "days", label: { ko: "8일", en: "Eight days" } },
+  { id: "photos", label: { ko: "사진", en: "Photos" } },
+  { id: "people", label: { ko: "사람들", en: "People" } },
+  { id: "partners", label: { ko: "함께한 곳", en: "Partners" } },
+  { id: "media", label: { ko: "미디어", en: "Media" } },
+];
+
+const ANCHORS: Record<SitePage, NavAnchor[]> = { naru: naruPageNav, crossing: CROSSING_ANCHORS, aug: AUG_ANCHORS };
 
 const SITEMAP: SitemapPage[] = [
   { page: "naru", anchors: ANCHORS.naru },
@@ -110,9 +119,9 @@ export default function SiteHeader({ page }: { page: SitePage }) {
     });
 
   // 바에 목차가 서는 폭. 영문은 낱말이 길어 더 넓어야 합니다. Tailwind가 읽도록 클래스는 통째로 씁니다.
-  // 8월 기록은 칸이 일곱이라 한 단 더 넓어야 합니다.
-  const row = page === "aug" ? (en ? "min-[1440px]:flex" : "xl:flex") : en ? "min-[1180px]:flex" : "lg:flex";
-  const rail = page === "aug" ? (en ? "min-[1440px]:hidden" : "xl:hidden") : en ? "min-[1180px]:hidden" : "lg:hidden";
+  // 2026-11-13: 8월 기록도 칸이 다섯이 되어 다른 두 페이지와 같은 폭입니다.
+  const row = en ? "min-[1180px]:flex" : "lg:flex";
+  const rail = en ? "min-[1180px]:hidden" : "lg:hidden";
 
   return (
     <>

@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
-import { preload } from "react-dom";
 import SiteHeader from "@/components/shared/SiteHeader";
-import Journey from "@/components/journey/Journey";
+import Aug2026 from "@/components/archive/redesign/Aug2026";
 import ResetHandler from "@/components/ResetHandler";
-import BackgroundMount from "@/components/BackgroundMount";
 import { RegisterProvider } from "@/lib/RegisterContext";
-import StickyBarSpace from "@/components/archive/StickyBarSpace";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // /2026-08: 제로백 빌더톤(2026년 8월, 싱가포르)의 기록. 나루가 시작된 이벤트입니다(주최는 AXMOS 소속 회사들, 2026-10-08).
@@ -72,24 +69,17 @@ export const metadata: Metadata = {
 // 표면도 Journey에서 함께 걷혔습니다. 이 페이지는 완전한 정적 기록입니다.
 
 export default function August2026Archive() {
-  // 첫 화면의 가장 큰 그림(LCP)이 히어로 영상 포스터라 먼저 받습니다(2026-10-22, Speed Insights).
-  preload("/hero/metal-human-poster.webp", { as: "image", fetchPriority: "high" });
+  // DECIDED 2026-11-13 (사용자: naru.community에 맞춤): 새 화면(components/archive/redesign/Aug2026.tsx). 그 전 Journey와
+  // 배경, 모바일 스티키 바의 자리는 이 페이지에서 내렸습니다(Journey 파일은 그대로 남김).
   return (
-    // RegisterProvider는 이제 "이 기기에서 8월에 등록했었다"는 플래그 하나만 나릅니다
-    // (lib/RegisterContext.tsx, 2026-10-08). 모달과 /api/register는 지웠습니다.
     <RegisterProvider>
-      {/* 모바일 스티키 바의 자리(72px)를 예약하는 CSS가 <body>의 data-sticky를
-          봅니다(app/globals.css). 나루 홈에는 스티키 바가 없어서 전역으로 걸면
-          그 페이지 푸터 아래가 빈 채로 남습니다. 이 페이지만 켭니다. */}
-      <StickyBarSpace />
       {/* First child: the ?reset=1 sweep runs before greeting/register read storage. */}
       <ResetHandler />
-      <BackgroundMount />
       {/* DECIDED 2026-10-10 (사용자: "유형 테스트는 8월 페이지에서 보이지 않게, 12월과 혼동할 수 있음"): 헤더의 유형 테스트
           링크(데스크톱 줄, 폰 칩, 다시 온 사람 인사)를 그리지 않습니다. 12월에는 /match가 따로 있어 두 테스트가 섞여 보였습니다.
           /quiz 페이지는 주소로는 그대로 열립니다. */}
       <SiteHeader page="aug" />
-      <Journey />
+      <Aug2026 />
     </RegisterProvider>
   );
 }
