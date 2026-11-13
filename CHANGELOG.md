@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-13 미디어 블록](#2026-11-13-media)
 - [2026-11-12 함께하는 곳에 그룹바이](#2026-11-12-groupby)
 - [2026-11-12 멘토 줄에 Bloom과 가짜연구소](#2026-11-12-mentor-orgs)
 - [2026-11-12 같은 말을 한 자리에만](#2026-11-12-dedupe)
@@ -568,6 +569,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-11-13-media"></a>
+## 2026-11-13 미디어 블록
+- 범위: components/shared/MediaSection.tsx(새), data/naru.ts(media), NaruHome.tsx, CrossingSeoul.tsx
+- 한 것: naru.community에 다른 기여자가 먼저 올린 "미디어" 블록을 레포에 옮김(사용자 요청: 새 디자인에 맞추기. 그 코드는 GitHub 어느 가지에도 없었음). 홈은 #why 다음에 행사 이름과 기사 넷, 크로싱 서울은 #partners 다음에 이넷뉴스 기사 하나. 제로백 빌더톤 기사 셋은 naru.record.press를 그대로 읽음.
+- 판단 질문: 2 자기 가치를 증명할 기회(무대가 진짜라는 사실, brand 5장 성격).
+- 검증: 라이브 naru.community의 #media와 로컬 1440 스크린숏이 같음, 섹션 순서 같음, 390 가로 넘침 0.
+- 커밋: d604dc5
 
 <a id="2026-11-12-groupby"></a>
 ## 2026-11-12 함께하는 곳에 그룹바이
