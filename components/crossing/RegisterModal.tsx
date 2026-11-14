@@ -340,7 +340,8 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                   aria-describedby={errorId}
                   className="peer sr-only"
                 />
-                <span className="flex min-h-[44px] items-start gap-3 rounded-lg border border-white/10 bg-naru-surface-2/70 px-[14px] py-[10px] transition-colors hover:border-white/25 peer-checked:border-accent peer-checked:bg-accent/[0.12] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent peer-checked:[&>span:first-child]:border-accent peer-checked:[&>span:first-child]:bg-action peer-checked:[&>span:first-child]:text-naru-ink">
+                <span className={`flex min-h-[44px] items-start gap-3 rounded-lg border border-white/10 bg-naru-surface-2/70 px-[14px] py-[10px] transition-colors hover:border-white/25 peer-checked:border-accent peer-checked:bg-accent/[0.12] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${f.plain ? "" : "peer-checked:[&>span:first-child]:border-accent peer-checked:[&>span:first-child]:bg-action peer-checked:[&>span:first-child]:text-naru-ink"}`}>
+                  {/* 2026-11-14: 번호 동그라미를 칠하는 선택 표시는 번호가 있을 때만. plain 카드에서는 첫 자식이 글자 줄이라 글이 덮였습니다. */}
                   {!f.plain && <span aria-hidden className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/45 ${META} font-bold text-white/85`}>{(f.firstStep ?? 1) + n}</span>}
                   <span className="min-w-0">
                     <span className={`block break-keep ${BODY} font-bold leading-snug text-white`}>{t(o.label)}</span>
