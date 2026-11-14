@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-14 등록을 혼자 또는 둘이 한 팀으로](#2026-11-14-pair-registration)
 - [2026-11-14 Builder session, 후원 묶음, Day 0 로고, AXMOS](#2026-11-14-builder-session)
 - [2026-11-13 8월 기록 새 화면, 홈 인장](#2026-11-13-aug-redesign)
 - [2026-11-13 미션 인증 한 번만을 DB에서도](#2026-11-13-proofs-once)
@@ -572,6 +573,16 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-11-14-pair-registration"></a>
+## 2026-11-14 등록을 혼자 또는 둘이 한 팀으로
+- 범위: data/crossingForm.ts, RegisterModal.tsx, app/api/crossing/register, supabase/migrations/0024, 등록 안내 줄(data/naru.ts, crossing/redesign/copy.ts), docs/brand.md
+- 한 것: 사용자 요청("8월달 참고해줘, 혼자해도 되고, team of two 로도"). 2026-10-08 "전원 현장 편성"의 한 폼 한 사람을 대신해, 폼 맨 위에서 혼자 또는 둘이 한 팀을 고르고 둘이면 팀원의 같은 칸을 같은 폼에 적음. 둘은 Day 1에 같은 팀, 나머지는 현장에서. 동의 문구에 팀원 항목, 목적은 "팀 편성". 둘 중 한 사람이 이미 등록했으면 409 team_registered. 0024는 팀 짜기 명단에 pair_with만 더함(표 변경 없음).
+- 근거: brand 7장 팀 줄(같은 커밋에서 고침).
+- 판단 질문: 1 안전하게 도전할 자리(같이 올 사람이 있으면 문턱이 낮아짐).
+- 검증: tsc, build 통과. 폰 390 스크린숏. 0024 DB 적용(기록 24개). 실제 insert는 등록이 열리는 11/16에 확인.
+- 브리프: docs/pair-registration-brief.md
+- 커밋: 366cb65
 
 <a id="2026-11-14-builder-session"></a>
 ## 2026-11-14 Builder session, 후원 묶음, Day 0 로고, AXMOS
