@@ -23,8 +23,8 @@ export const copy = {
   // DECIDED 2026-11-12 (사용자: 캐치프레이즈와 그 아래 한 줄을 "bold 3줄로 합쳐줘"): 히어로 굵은 문단 세 줄. 넷(생각, 현업, 팀마다 다르게, 서로 봄)과 순서는 brand 6장 그대로.
   // DECIDED 2026-11-12 (docs/dedupe-brief.md R6, D1): "팀 구성" 줄을 "누가" 줄에 합침. 셋째 줄은 팀 구성의 첫 문장 그대로.
   factWho: {
-    ko: "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 등록하고, 팀은 Day 1 현장에서 꾸려요.\n한 팀에 한국 학생과 싱가포르 학생이, 직접 만드는 사람과 숫자를 보는 사람이 섞여요.",
-    en: "University students in Korea and Korean students studying abroad.\nRegister alone; teams form on site on Day 1.\nTeams mix Korea and Singapore, makers and numbers people, so each answers one issue its own way.",
+    ko: "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 또는 둘이 한 팀으로 등록하고, 팀은 Day 1 현장에서 꾸려요.\n한 팀에 한국 학생과 싱가포르 학생이, 직접 만드는 사람과 숫자를 보는 사람이 섞여요.",
+    en: "University students in Korea and Korean students studying abroad.\nRegister alone or as a team of two; teams form on site on Day 1.\nTeams mix Korea and Singapore, makers and numbers people, so each answers one issue its own way.",
   } as Phrase,
   heroBold: {
     ko: "왜 아직, 손으로?\n진짜 기업 문제로 먼저 생각하고, 현업에 물어보고,\n팀마다 다른 실물을 만들어 서로 보여 주며 자기 가치를 증명해요.",
@@ -44,7 +44,7 @@ export const copy = {
   heroFactKeys: kos(["누가", "받는 것", "멘토"], h.posterFacts.map((f) => f.k)),
   heroFacts: kos(
     [
-      "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 등록하고, 팀은 Day 1 현장에서 꾸려요.",
+      "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 또는 둘이 한 팀으로 등록하고, 팀은 Day 1 현장에서 꾸려요.",
       "참가자 모두에게 Lovable 100 크레딧과 트레바리 10만원 쿠폰.\n지원금 총 200만원은 미션을 해낸 팀들이 나눠 받아요.\n수상 팀원에게는 Readray Pro 2개월.",
       "임상 연구, 의료기기, K-뷰티, 자동차, 게임 분야에서 AI를 잘 쓰는 현업이에요.\nBloom과 가짜연구소에서 오시고, Kia, C&R Research, Aside (YC F25), BIGPIE C&T 등에서 일해요.\n팀이 찾아가면 일해 본 감각으로 생각을 반박해 줘요.",
     ],
@@ -58,8 +58,9 @@ export const copy = {
   // DECIDED 2026-11-11 (P2): 로고 띠 끝의 링크.
   partnersAll: { ko: "함께하는 곳 전체 보기", en: "See everyone with us" } as Phrase,
 
-  noteShort: ko("등록 시작은 11월 16일(월).\n팀 없이 혼자 등록하면 돼요.", registerNoteShort),
-  noteOpen: ko("팀 없이 혼자 등록하면 돼요.", registerNoteOpen),
+  // DECIDED 2026-11-14 (사용자: 혼자도, 둘이 한 팀도): 그 전 "팀 없이 혼자 등록하면 돼요."
+  noteShort: ko("등록 시작은 11월 16일(월).\n혼자 또는 둘이 한 팀으로 등록하면 돼요.", registerNoteShort),
+  noteOpen: ko("혼자 또는 둘이 한 팀으로 등록하면 돼요.", registerNoteOpen),
   previewCta: ko("등록 폼 먼저 보기", registerCopy.previewCta),
   // DECIDED 2026-11-12 (사용자: "등록 date 은 버튼에 반영"): 히어로 사실 줄에서 등록을 빼고, 여는 날을 히어로 미리 보기 버튼에. 맨 아래 #register는 그대로.
   heroPreviewCta: { ko: "11월 16일(월) 등록, 폼 먼저 보기", en: "Opens Mon 16 Nov, preview the form" } as Phrase,
@@ -72,7 +73,7 @@ export const copy = {
   } as Phrase,
   programHeading: ko("닷새, 이렇게 보내요", d.programHeading),
   scheduleLead: ko(
-    "등록은 혼자, 팀은 Day 1 현장에서.\n규칙은 하나에요: AI가 쓴 걸 고치지 말고, 내가 쓴 걸 AI한테 고치게 할 것.\n닷새 안에 다 못 풀어도 괜찮아요. 중요한 건 답보다, 얼마나 깊이 팠는지예요.",
+    "등록은 혼자나 둘이, 팀은 Day 1 현장에서.\n규칙은 하나에요: AI가 쓴 걸 고치지 말고, 내가 쓴 걸 AI한테 고치게 할 것.\n닷새 안에 다 못 풀어도 괜찮아요. 중요한 건 답보다, 얼마나 깊이 팠는지예요.",
     d.scheduleLead,
   ),
   facts: kos(

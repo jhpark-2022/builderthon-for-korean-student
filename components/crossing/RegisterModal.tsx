@@ -8,6 +8,8 @@
 //
 // DECIDED 2026-10-08 (사용자: "팀 - 전원 현장 편성"): 한 폼에 한 사람입니다. 참가 형태, 팀 이름, 팀원 줄, 팀 매칭
 // 희망은 없습니다. 팀은 현장에서 맺습니다.
+// DECIDED 2026-11-14 (사용자: "혼자해도 되고, team of two 로도 할 수 있도록"): 위 10-08을 대신합니다. 맨 위에 참가 형태(혼자, 둘이 한 팀).
+// 둘이 한 팀이면 "내 정보" 아래에 "함께 오는 팀원" 묶음이 같은 칸으로 열립니다. 팀 이름과 매칭 희망은 여전히 묻지 않습니다.
 //
 // 2026-10-08 (폼 리뷰, 접근성 감사, 브랜드 감사 반영):
 //   포커스  열릴 때 닫기 버튼으로, Tab은 대화상자 안에서 돌고, 뒤의 페이지는 inert, 닫으면 연 버튼으로 돌아갑니다
@@ -40,7 +42,7 @@ import { links, type Phrase } from "@/data/dictionaryCore";
 import { BODY, META } from "@/components/ui/typography";
 import { buttonClass } from "@/components/ui/Button";
 import {
-  COUNTRY_OTHER, COUNTRY_OTHER_KEY, MEMBER_FIELDS, REGISTRATION_FIELDS, MAX_TEXT, MAX_TEXTAREA,
+  COUNTRY_OTHER, COUNTRY_OTHER_KEY, JOIN_TEAM, MEMBER_FIELDS, REGISTRATION_FIELDS, MAX_TEXT, MAX_TEXTAREA, TEAMMATE_COPY,
   type Field, validateField, validatePerson,
 } from "@/data/crossingForm";
 
@@ -78,6 +80,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
   const { t, locale } = useLocale();
   const reduce = useReducedMotion();
   const [person, setPerson] = useState<Answers>({});
+  const [mate, setMate] = useState<Answers>({}); // 둘이 한 팀일 때의 팀원(2026-11-14)
   const [reg, setReg] = useState<Answers>({});
   const [website, setWebsite] = useState(""); // 허니팟(url_confirm). 초안에 넣지 않습니다.
   const [status, setStatus] = useState<Status>("idle");
@@ -111,9 +114,10 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
     try {
       const raw = window.localStorage.getItem(DRAFT_KEY);
       if (!raw) return;
-      const d = JSON.parse(raw) as { person?: Answers; reg?: Answers; members?: { a?: Answers }[] };
+      const d = JSON.parse(raw) as { person?: Answers; mate?: Answers; reg?: Answers; members?: { a?: Answers }[] };
       const p = d.person ?? d.members?.[0]?.a;
       if (p && typeof p === "object") setPerson(p);
+      if (d.mate && typeof d.mate === "object") setMate(d.mate);
       if (d.reg && typeof d.reg === "object") {
         const known = new Set(REGISTRATION_FIELDS.map((f) => f.key));
         setReg(Object.fromEntries(Object.entries(d.reg).filter(([k]) => known.has(k) && k !== "consent")));
@@ -125,9 +129,9 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
     if (!touched || status === "success") return;
     try {
       const regDraft = Object.fromEntries(Object.entries(reg).filter(([k]) => k !== "consent"));
-      window.localStorage.setItem(DRAFT_KEY, JSON.stringify({ person, reg: regDraft }));
+      window.localStorage.setItem(DRAFT_KEY, JSON.stringify({ person, mate, reg: regDraft }));
     } catch { /* ignore */ }
-  }, [person, reg, touched, status]);
+  }, [person, mate, reg, touched, status]);
 
   // 열고 닫을 때의 상태 정리(2026-10-08).
   //   열 때  지난번에 등록을 마친 채 닫았다면 빈 폼으로. 그 전에는 새로고침할 때까지 "등록됐습니다"만 보였습니다.
@@ -137,7 +141,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
       // DECIDED 2026-11-02 (브리프 O1, D4): 이 기기에서 등록했으면 완료 화면으로 엽니다. 버튼이 "등록했습니다"이고, 오픈채팅과 테스트와 문의가 그 화면에 있습니다.
       if (registeredEcho && !preview && !another) { setEcho(registeredEcho); setStatus("success"); return; }
       if (statusRef.current === "success") {
-        setPerson({}); setReg({}); setErrors({}); setTouched(false); setEcho(null); setStatus("idle");
+        setPerson({}); setMate({}); setReg({}); setErrors({}); setTouched(false); setEcho(null); setStatus("idle");
       }
       return;
     }
@@ -188,12 +192,20 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
   const clearError = (key: string) => setErrors((e) => (key in e ? Object.fromEntries(Object.entries(e).filter(([k]) => k !== key)) : e));
   const setPersonField = (k: string, v: string | boolean) => { setTouched(true); setPerson((p) => ({ ...p, [k]: v })); clearError(`m.${k}`); };
   const setRegField = (k: string, v: string | boolean) => { setTouched(true); setReg((r) => ({ ...r, [k]: v })); clearError(`reg.${k}`); };
+  const setMateField = (k: string, v: string | boolean) => { setTouched(true); setMate((p) => ({ ...p, [k]: v })); clearError(`t.${k}`); };
 
   const otherCountry = person.study_country === COUNTRY_OTHER;
+  const mateOtherCountry = mate.study_country === COUNTRY_OTHER;
+  const isTeam = reg.join_type === JOIN_TEAM;
 
   const validate = (): Record<string, string> => {
     const e: Record<string, string> = {};
     for (const [k, code] of Object.entries(validatePerson(person))) e[`m.${k}`] = code;
+    if (isTeam) {
+      for (const [k, code] of Object.entries(validatePerson(mate))) e[`t.${k}`] = code;
+      const a = String(person.email ?? "").trim().toLowerCase();
+      if (!e["t.email"] && a && a === String(mate.email ?? "").trim().toLowerCase()) e["t.email"] = "same_email";
+    }
     for (const f of REGISTRATION_FIELDS) {
       const err = validateField(f, reg[f.key]);
       if (err) e[`reg.${f.key}`] = f.key === "consent" ? "consent_required" : err;
@@ -228,9 +240,11 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
 
   const send = async () => {
     setStatus("submitting");
-    // 서버로 보내는 꼴. 한 폼에 한 사람이라 members는 늘 하나입니다. 나라가 목록에 있으면 나라 이름 칸은 보내지 않습니다.
+    // 서버로 보내는 꼴. 혼자면 members는 하나, 둘이 한 팀이면 [나, 팀원]. 나라가 목록에 있으면 나라 이름 칸은 보내지 않습니다.
     const member: Answers = { ...person };
     if (!otherCountry) delete member[COUNTRY_OTHER_KEY];
+    const teammate: Answers = { ...mate };
+    if (!mateOtherCountry) delete teammate[COUNTRY_OTHER_KEY];
     const email = String(person.email ?? "").trim();
     // 응답이 오지 않으면 20초 뒤에 끊습니다. 그 전에는 "보내는 중"에서 영영 멈췄습니다.
     const ctrl = new AbortController();
@@ -242,13 +256,16 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
         signal: ctrl.signal,
         body: JSON.stringify({
           eventSlug: CURRENT_EVENT, ref: refSource, submittedAt: new Date().toISOString(), url_confirm: website,
-          registration: reg, members: [member], turnstileToken: botToken,
+          registration: reg, members: isTeam ? [member, teammate] : [member], turnstileToken: botToken,
         }),
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) { setStatus("error"); setErrorCode(data.error ?? "generic"); setBotToken(null); setBotReset((n) => n + 1); return; }
       // 되비침은 서버 응답이 아니라 보낸 값 그대로입니다(브리프 O2, 5장 4).
-      const sent: RegisteredEcho = { name: String(person.name ?? "").trim(), contact: String(person.contact ?? "").trim(), email };
+      const sent: RegisteredEcho = {
+        name: String(person.name ?? "").trim(), contact: String(person.contact ?? "").trim(), email,
+        ...(isTeam ? { mate: String(mate.name ?? "").trim() } : {}),
+      };
       setEcho(sent); setAnother(false);
       setStatus("success");
       try { window.localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
@@ -273,7 +290,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
 
   // "다른 사람으로 등록"(브리프 O1): 같은 기기에서 친구를 등록합니다. 빈 폼으로, 보안 확인도 새로.
   const registerAnother = () => {
-    setPerson({}); setReg({}); setErrors({}); setTouched(false); setErrorCode(null); setEcho(null);
+    setPerson({}); setMate({}); setReg({}); setErrors({}); setTouched(false); setErrorCode(null); setEcho(null);
     setAnother(true); setStatus("idle"); setBotToken(null); setBotReset((n) => n + 1);
   };
 
@@ -324,7 +341,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                   className="peer sr-only"
                 />
                 <span className="flex min-h-[44px] items-start gap-3 rounded-lg border border-white/10 bg-naru-surface-2/70 px-[14px] py-[10px] transition-colors hover:border-white/25 peer-checked:border-accent peer-checked:bg-accent/[0.12] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent peer-checked:[&>span:first-child]:border-accent peer-checked:[&>span:first-child]:bg-action peer-checked:[&>span:first-child]:text-naru-ink">
-                  <span aria-hidden className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/45 ${META} font-bold text-white/85`}>{(f.firstStep ?? 1) + n}</span>
+                  {!f.plain && <span aria-hidden className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/45 ${META} font-bold text-white/85`}>{(f.firstStep ?? 1) + n}</span>}
                   <span className="min-w-0">
                     <span className={`block break-keep ${BODY} font-bold leading-snug text-white`}>{t(o.label)}</span>
                     {o.hint && <span className={`mt-[8px] block break-keep ${META} leading-relaxed text-naru-muted`}>{t(o.hint)}</span>}
@@ -402,6 +419,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                   {echo?.email && (
                     <p id="crossing-register-echo" className={`mx-auto mt-3 max-w-sm break-keep ${BODY} leading-relaxed text-white/85`}>
                       {t(copy.successEcho).replace("{name}", echo.name).replace("{contact}", echo.contact).replace("{email}", echo.email)}
+                      {echo.mate && <> {t(copy.successEchoMate).replace("{mate}", echo.mate)}</>}
                     </p>
                   )}
                   <p className={`mx-auto mt-2 max-w-sm break-keep ${META} leading-relaxed text-naru-muted`}>{t(copy.successResend)}</p>
@@ -437,11 +455,25 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                     <p className={`${META} leading-relaxed text-naru-muted`}><span aria-hidden className="text-rose-400">*</span> {t(copy.requiredLegend)}</p>
                     {/* 허니팟. 8월과 같은 세 겹의 방어(이름, 매니저 opt-out, 서버 로그). */}
                     <input type="text" name="url_confirm" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} aria-hidden="true" autoComplete="off" data-1p-ignore data-lpignore="true" data-bwignore data-form-type="other" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }} />
+                    {/* DECIDED 2026-11-14: 참가 형태가 맨 위. 고른 것에 따라 아래 묶음이 하나 또는 둘. */}
+                    {REGISTRATION_FIELDS.filter((f) => f.key === "join_type").map((f) => renderField(f, reg[f.key], (v) => setRegField(f.key, v), errors[`reg.${f.key}`], `reg-${f.key}`))}
+                    {isTeam && <h4 className={`-mb-[8px] border-t border-white/10 pt-[20px] ${BODY} font-bold text-white`}>{t(TEAMMATE_COPY.me)}</h4>}
                     {MEMBER_FIELDS.map((f) => {
                       // 나라 이름은 "그 밖의 나라"를 골랐을 때만 묻고, 그때는 필수입니다(validatePerson과 같은 규칙).
                       if (f.key === COUNTRY_OTHER_KEY && !otherCountry) return null;
                       const field = f.key === COUNTRY_OTHER_KEY ? { ...f, required: true } : f;
                       return renderField(field, person[f.key], (v) => setPersonField(f.key, v), errors[`m.${f.key}`], `m-${f.key}`);
+                    })}
+                    {isTeam && (
+                      <div className="-mb-[8px] flex flex-col gap-[8px] border-t border-white/10 pt-[20px]">
+                        <h4 className={`${BODY} font-bold text-white`}>{t(TEAMMATE_COPY.heading)}</h4>
+                        <p className={`${META} leading-relaxed text-naru-muted`}>{t(TEAMMATE_COPY.note)}</p>
+                      </div>
+                    )}
+                    {isTeam && MEMBER_FIELDS.map((f) => {
+                      if (f.key === COUNTRY_OTHER_KEY && !mateOtherCountry) return null;
+                      const field = f.key === COUNTRY_OTHER_KEY ? { ...f, required: true } : f;
+                      return renderField(field, mate[f.key], (v) => setMateField(f.key, v), errors[`t.${f.key}`], `t-${f.key}`);
                     })}
                     {REGISTRATION_FIELDS.filter((f) => !f.fixed).map((f) => renderField(f, reg[f.key], (v) => setRegField(f.key, v), errors[`reg.${f.key}`], `reg-${f.key}`))}
                     {REGISTRATION_FIELDS.filter((f) => f.key === "consent").map((f) => renderField(f, reg[f.key], (v) => setRegField(f.key, v), errors[`reg.${f.key}`], `reg-${f.key}`))}

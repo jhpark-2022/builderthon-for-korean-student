@@ -12,7 +12,7 @@
 # 선택지가 있는 답(ai_level)은 값이 아니라 "3. 터미널에서 ..."처럼 단계 번호와 한국어 라벨로 낸다(option_labels).
 # 결과 docx는 레포에 커밋하지 않는다.
 #
-# 2026-10-08 (사용자: "팀 - 전원 현장 편성"): 폼이 한 사람씩만 받는다. 새 행은 전부 개인(join_type solo, ordinal 1)이다.
+# 2026-10-08 (사용자: "팀 - 전원 현장 편성"): 폼이 한 사람씩만 받았다. 2026-11-14부터 둘이 한 팀(join_type team, ordinal 1과 2)도 받는다.
 # 그 전에 시험으로 들어간 팀 행이 있을 수 있어 유형, 팀명, 역할 열은 "있을 때만" 낸다(없는 열을 읽다 죽지 않게 .get).
 # 나라가 목록에 없던 사람은 study_country가 비어 있고 적은 이름이 member_answers.study_country_other에 있다.
 
@@ -124,7 +124,7 @@ def main():
     add_table(doc, ["구분", "값"], [
         ["총 신청 건수", f"{len(regs)}건"],
         ["명단 인원", f"{len(people)}명"],
-        *([["참가 유형", f"개인 {solo}건, 팀 {team}건 (팀은 2026-10-08 전의 옛 폼)"]] if has_team else []),
+        *([["참가 유형", f"개인 {solo}건, 팀 {team}건 (팀은 둘이 한 팀으로 온 등록. 2026-11-14부터)"]] if has_team else []),
         ["공부하는 나라", ", ".join(f"{k} {v}명" for k, v in countries) or "-"],
         ["학교", ", ".join(f"{k} {v}명" for k, v in unis) or "-"],
         ["최초 신청", kst(next(iter(regs.values()))["created_at"]) if regs else "-"],

@@ -9,6 +9,10 @@
 //
 // DECIDED 2026-10-08 (사용자: "팀 - 전원 현장 편성"): 한 폼에 한 사람입니다. members는 정확히 하나여야 하고,
 // join_type은 "solo", team_name은 null, wants_matching은 false로 씁니다. 표는 그대로입니다. 팀 꼴의 요청은 400.
+// DECIDED 2026-11-14 (사용자: "혼자해도 되고, team of two 로도 할 수 있도록"): 위를 대신합니다. join_type "solo"면 members 하나,
+// "team"이면 정확히 둘(등록자 ordinal 1, 팀원 ordinal 2)이고 두 이메일은 달라야 합니다. join_type이 없는 요청(이 배포 전의 폼)은 solo.
+// 두 사람은 한 번의 insert라 함께 들어가거나 함께 실패합니다. 혼자의 23505는 그대로 조용한 201이고, 둘의 23505는 409 team_registered입니다
+// (조용한 201이면 아직 등록하지 않은 사람까지 등록되지 않은 채 "됐다"는 화면을 봅니다. 알려 주는 것은 둘 중 한 사람이라는 사실뿐입니다).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { NextResponse } from "next/server";
@@ -21,7 +25,7 @@ import {
 } from "@/lib/register/shared";
 import { verifyTurnstile } from "@/lib/register/turnstile";
 import {
-  CONSENT_NOTICE_READY, COUNTRY_OTHER, COUNTRY_OTHER_KEY, CROSSING_FORM, REGISTRATION_FIELDS, MAX_TEXTAREA,
+  CONSENT_NOTICE_READY, COUNTRY_OTHER, COUNTRY_OTHER_KEY, CROSSING_FORM, JOIN_SOLO, JOIN_TEAM, REGISTRATION_FIELDS, MAX_TEXTAREA, TEAM_SIZE,
   validateField, validatePerson,
 } from "@/data/crossingForm";
 
@@ -126,43 +130,50 @@ export async function POST(req: Request) {
   // ── 검증(스키마) ─────────────────────────────────────────────────────────
   const reg = body.registration ?? {};
   if (!isPlainObject(reg)) return NextResponse.json({ error: "invalid_registration" }, { status: 400 });
-  // 한 폼에 한 사람. 팀 꼴(여러 사람, join_type "team")은 받지 않습니다.
-  if (!Array.isArray(body.members) || body.members.length !== 1 || !isPlainObject(body.members[0])) {
+  // 혼자면 한 사람, 둘이 한 팀이면 두 사람. join_type이 없으면(이 배포 전의 폼) 혼자로 봅니다.
+  if (reg.join_type === undefined) reg.join_type = JOIN_SOLO;
+  const isTeam = reg.join_type === JOIN_TEAM;
+  const expected = isTeam ? TEAM_SIZE : 1;
+  if (!Array.isArray(body.members) || body.members.length !== expected || !body.members.every(isPlainObject)) {
     return NextResponse.json({ error: "invalid_members" }, { status: 400 });
   }
-  if (reg.join_type !== undefined && reg.join_type !== "solo") {
-    return NextResponse.json({ error: "invalid_members" }, { status: 400 });
-  }
-  const m = body.members[0];
+  const people = body.members as Json[];
   for (const f of REGISTRATION_FIELDS) {
     if (f.key === "consent") continue; // 아래에서 따로
     const err = validateField(f, reg[f.key]);
     if (err) return NextResponse.json({ error: err, field: f.key }, { status: 400 });
   }
-  const personErrors = Object.entries(validatePerson(m));
-  if (personErrors.length) {
-    const [field, error] = personErrors[0];
-    return NextResponse.json({ error, field }, { status: 400 });
+  for (const [i, p] of people.entries()) {
+    const personErrors = Object.entries(validatePerson(p));
+    if (personErrors.length) {
+      const [field, error] = personErrors[0];
+      return NextResponse.json({ error, field, member: i + 1 }, { status: 400 });
+    }
+  }
+  if (isTeam && str(people[0].email).toLowerCase() === str(people[1].email).toLowerCase()) {
+    return NextResponse.json({ error: "same_email", field: "email", member: 2 }, { status: 400 });
   }
   if (reg.consent !== true) {
     return NextResponse.json({ error: "consent_required" }, { status: 400 });
   }
 
   // 나라: 목록의 두 글자 코드는 열로, "그 밖의 나라"는 열을 비우고 적은 이름을 answers로(표의 check가 두 글자만 받습니다).
-  const otherCountry = str(m.study_country) === COUNTRY_OTHER;
-  const memberAnswers = pickAnswers(m, "member");
-  if (!otherCountry) delete memberAnswers[COUNTRY_OTHER_KEY];
-  const member = {
-    ordinal: 1,
-    event_slug: CURRENT_EVENT,
-    name: str(m.name),
-    email: str(m.email),
-    contact: normalizeKakaoId(str(m.contact)) ?? str(m.contact),
-    university: optStr(m.university),
-    study_country: otherCountry ? null : str(m.study_country),
-    linkedin: linkedinUrl(optStr(m.linkedin)),
-    answers: memberAnswers,
-  };
+  const members = people.map((m, i) => {
+    const otherCountry = str(m.study_country) === COUNTRY_OTHER;
+    const memberAnswers = pickAnswers(m, "member");
+    if (!otherCountry) delete memberAnswers[COUNTRY_OTHER_KEY];
+    return {
+      ordinal: i + 1,
+      event_slug: CURRENT_EVENT,
+      name: str(m.name),
+      email: str(m.email),
+      contact: normalizeKakaoId(str(m.contact)) ?? str(m.contact),
+      university: optStr(m.university),
+      study_country: otherCountry ? null : str(m.study_country),
+      linkedin: linkedinUrl(optStr(m.linkedin)),
+      answers: memberAnswers,
+    };
+  });
 
   const submittedAt = typeof body.submittedAt === "string" && !Number.isNaN(Date.parse(body.submittedAt)) ? body.submittedAt : null;
 
@@ -171,7 +182,7 @@ export async function POST(req: Request) {
     .from(TABLE)
     .insert({
       event_slug: CURRENT_EVENT,
-      join_type: "solo",
+      join_type: isTeam ? JOIN_TEAM : JOIN_SOLO,
       team_name: null,
       wants_matching: false,
       answers: pickAnswers(reg, "registration"),
@@ -188,10 +199,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "db_error" }, { status: 500 });
   }
 
-  const { error: memErr } = await supabase.from(MEMBERS).insert({ ...member, registration_id: row.id });
+  const { error: memErr } = await supabase.from(MEMBERS).insert(members.map((m) => ({ ...m, registration_id: row.id })));
   if (memErr) {
     // 같은 트랜잭션이 아니므로 부모 행을 직접 지웁니다. 고아 행을 남기지 않습니다.
     await supabase.from(TABLE).delete().eq("id", row.id);
+    if (memErr.code === "23505" && isTeam) return NextResponse.json({ error: "team_registered" }, { status: 409 });
     if (memErr.code === "23505") {
       // 2026-10-08 (보안 감사 M3): 이미 등록된 이메일도 성공과 같은 201입니다. 409를 돌려주면 누구든 남의 이메일로
       // 신청 여부를 알아낼 수 있었습니다. 처음 등록이 그대로 남고, 새 행은 쓰지 않습니다. id는 허니팟처럼 버리는 값입니다.

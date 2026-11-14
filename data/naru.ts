@@ -232,7 +232,7 @@ function registerNoteLines(): Phrase[] {
     // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P6): 여는 날을 16일(월)로. 여는 시각은 그대로 쓰지 않음(opensAt 비움).
     { ko: "등록은 11월 16일(월)에 엽니다. 여는 시각은 카카오톡 오픈채팅에서 먼저 알립니다.", en: "Registration opens on Monday, 16 November. The time it opens is announced first in the KakaoTalk open chat." },
     // DECIDED 2026-11-06 (사용자: 정체성 한 줄의 "만들 줄 아는 학생들"을 그대로 쓰고 "전공과 코딩 경험은 조건이 아닙니다"는 뺌): 아래 두 줄도 같음.
-    { ko: "등록은 혼자, 팀은 Day 1에 맺습니다.", en: "Register alone; teams form on Day 1." },
+    { ko: "등록은 혼자 또는 둘이 한 팀으로, 팀은 Day 1에 꾸립니다.", en: "Register alone or as a team of two; teams form on Day 1." },
     { ko: `${venueLine.ko} 진행은 한국어입니다.`, en: `${venueLine.en} The programme runs in Korean.` },
   ];
 }
@@ -244,14 +244,14 @@ export const registerNoteShort: Phrase = {
   // DECIDED 2026-11-02 (사용자, 등록 UX 브리프 D2: "14일에 여는 걸로"): 여는 날을 "11월 둘째 주 끝"에서 14일(토)로. 여는 시각은 보류(opensAt은 비움), 카운트다운은 그대로.
   // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P6): 여는 날을 16일(월)로. 여는 시각은 그대로 쓰지 않음(opensAt 비움).
   // DECIDED 2026-11-06 (사용자: 정체성 한 줄과 어긋나 "전공과 코딩 경험은 조건이 아닙니다"를 뺌).
-  ko: "등록은 11월 16일(월)에 엽니다. 혼자 등록합니다.",
-  en: "Registration opens Mon 16 Nov. Register alone.",
+  ko: "등록은 11월 16일(월)에 엽니다. 혼자 또는 둘이 한 팀으로 등록합니다.",
+  en: "Registration opens Mon 16 Nov. Register alone or as a team of two.",
 };
 
 // DECIDED 2026-11-02 (브리프 O3): 등록이 열리면 위 줄의 "11월 둘째 주 끝"만 빠지고, 혼자 등록과 조건 없음은 같은 자리에 남습니다.
 export const registerNoteOpen: Phrase = {
-  ko: "혼자 등록합니다.",
-  en: "Register alone.",
+  ko: "혼자 또는 둘이 한 팀으로 등록합니다.",
+  en: "Register alone or as a team of two.",
 };
 
 export const register = {
@@ -295,6 +295,8 @@ export const register = {
   successTitle: { ko: "등록됐습니다.", en: "You are registered." },
   // DECIDED 2026-11-02 (브리프 O2): 확인 메일이 없고(10/15) 카카오톡 ID는 형식 검사가 없어, 오타를 잡을 순간이 이 화면 하나입니다. 보낸 값을 그대로 되비칩니다.
   successEcho: { ko: "이름 {name}, 카카오톡 ID {contact}, 이메일 {email}로 등록됐습니다.", en: "Registered as {name}, KakaoTalk ID {contact}, {email}." },
+  // DECIDED 2026-11-14 (둘이 한 팀): 팀원도 함께 등록됐다는 한 줄. {mate}는 팀원 이름.
+  successEchoMate: { ko: "팀원 {mate}도 같은 팀으로 함께 등록됐습니다.", en: "{mate} is registered with you, on the same team." },
   // DECIDED 2026-11-02 (브리프 O1, D4): 같은 이메일로 다시 보내면 서버는 처음 것을 남기고 조용히 201입니다(보안 감사 M3). 그 사실을 이 한 줄로 말합니다.
   successResend: { ko: "고칠 것은 아래 주소로 알려 주세요. 같은 이메일로 다시 보내도 처음 것이 남습니다.", en: "Send corrections to the address below. Sending again with the same email keeps the first one." },
   // DECIDED 2026-10-08 (사용자: 등록 뒤 안내 메일은 "내가 수동으로"): 자동 메일을 약속하지 않습니다. 운영진이 직접
@@ -340,6 +342,9 @@ export const register = {
     // 2026-10-08 (폼 리뷰 9): 스크립트가 막혔을 때(광고 차단, 네트워크). 그 전에는 안내 없이 기다리게만 했습니다.
     bot_check_load_failed: { ko: "보안 확인을 불러오지 못했습니다. 광고 차단을 끄거나 새로고침해 주세요.", en: "The security check could not load. Turn off your ad blocker or refresh the page." },
     bot_check_unavailable: { ko: "보안 확인 서버에 닿지 못했습니다. 잠시 뒤 다시 보내 주세요.", en: "The security check service could not be reached. Please resend in a moment." },
+    // DECIDED 2026-11-14 (둘이 한 팀): 나와 팀원의 이메일이 같을 때, 둘 중 한 사람이 이미 등록돼 있을 때.
+    same_email: { ko: "나와 팀원의 이메일이 같아요. 팀원의 이메일을 적어 주세요.", en: "Your email and your teammate's are the same. Please enter your teammate's email." },
+    team_registered: { ko: "둘 중 한 사람은 이미 등록돼 있어요. 아직 안 한 사람은 혼자로 등록하고, 같은 팀이 되고 싶다고 아래 주소로 알려 주세요.", en: "One of you is already registered. The other can register on their own, then tell us at the address below that you want to be on the same team." },
     generic: { ko: "보내지 못했습니다. 잠시 뒤 다시 시도해 주세요.", en: "Could not send. Please try again in a moment." },
   },
 } as const;
@@ -627,7 +632,7 @@ export const naru = {
     // 바뀌면 이 줄과 copy.ts의 heroFacts를 같이 고칩니다. (아래의 facts는 다른 키, 히어로 아래 숫자 띠.)
     // DECIDED 2026-11-12 (사용자, docs/poster-phone-brief.md Q1): 순서는 누가, 받는 것, 어디서, 등록. 카카오톡 인앱(390x660) 첫 화면에 받는 것이 오게.
     posterFacts: [
-      { k: { ko: "누가", en: "Who" }, v: { ko: "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 등록하고, 팀은 Day 1 현장에서 꾸려요.", en: "University students in Korea and Korean students studying abroad.\nRegister alone; teams form on site on Day 1." } },
+      { k: { ko: "누가", en: "Who" }, v: { ko: "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 또는 둘이 한 팀으로 등록하고, 팀은 Day 1 현장에서 꾸려요.", en: "University students in Korea and Korean students studying abroad.\nRegister alone or as a team of two; teams form on site on Day 1." } },
       { k: { ko: "받는 것", en: "What you get" }, v: { ko: "참가자 모두에게 Lovable 100 크레딧과 트레바리 10만원 쿠폰.\n지원금 총 200만원은 미션을 해낸 팀들이 나눠 받습니다.\n수상 팀원에게는 Readray Pro 2개월.", en: "Lovable 100 credits and a KRW 100,000 Trevari voucher for every participant.\nA KRW 2,000,000 support pool, shared among the teams that complete a mission.\nTwo months of Readray Pro for each award-winning team member." } },
       // DECIDED 2026-11-12 (사용자: "어디서는 빼줘"): 어디서 줄을 뺌. 장소는 바로 아래 로고 띠의 공간 후원(Day 1, 2, 4)과 닷새 카드가 말합니다.
       // 그 전 문장: "서울. Day 1 FASTFIVE, Day 2 디캠프 선릉, Day 4 MARU180. / 스타트업들이 일하고 모이는 공간에서 열려요."
@@ -2247,8 +2252,8 @@ export const naru = {
       // DECIDED 2026-11-06 (docs/think-different-brief.md T2, 사용자: 생각과 팀마다 다른 것을 강조, 상자는 그대로): 둘째 문장만.
       // DECIDED 2026-11-06 (docs/write-first-brief.md W1, D2 예): 문장 +1. S1("AI가 쓴 것을 고치지 말고, 내가 쓴 것을 AI가 고치게.")이 사이트에 그대로 서는 유일한 자리. 그 전 문장은 git 5360254.
       // 2026-11-06 (사용자, 스크린숏: "여기는 좀 너무 긴거 같음"): 브리프 D2의 대안대로 "날마다 팀의 생각을 한 장으로 씁니다"를 빼고 S1만 남김. 한 장을 먼저 쓰는 일은 Day 1 줄(W4)이 말합니다.
-      ko: "등록은 혼자, 팀은 Day 1 현장에서 맺습니다. AI가 쓴 것을 고치지 말고, 내가 쓴 것을 AI가 고치게. 닷새 안에 다 풀리지 않을 수 있는 문제라, 답이 아니라 어디까지 생각해 파고들었는지를 봅니다.",
-      en: "Register alone; teams form on site on Day 1. Don't fix what AI wrote. Let AI fix what you wrote. Five days may not solve it, so we look at how far you dug, not the answer.",
+      ko: "등록은 혼자 또는 둘이 한 팀으로, 팀은 Day 1 현장에서 맺습니다. AI가 쓴 것을 고치지 말고, 내가 쓴 것을 AI가 고치게. 닷새 안에 다 풀리지 않을 수 있는 문제라, 답이 아니라 어디까지 생각해 파고들었는지를 봅니다.",
+      en: "Register alone or as a team of two; teams form on site on Day 1. Don't fix what AI wrote. Let AI fix what you wrote. Five days may not solve it, so we look at how far you dug, not the answer.",
     },
     // 2026-09-20 (크로싱서울_일정.pdf): 라벨이 "워크샵"에서 "세션"으로. PDF가 부르는
     // 이름이고, stages의 필드 이름(workshop -> session)과 같은 말을 씁니다.

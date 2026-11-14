@@ -18,7 +18,8 @@ export const CROSSING_REGISTERED_KEY = `naru.register.${CURRENT_EVENT}.done`;
 /** 완료 화면이 되비치는 보낸 값(이 기기에만). DECIDED 2026-11-02 (docs/register-ux-brief.md O1, O2): done 키는 그 전에 "1"만 쓰고
  *  읽는 곳이 없었습니다. 이제 보낸 이름, 카카오톡 ID, 이메일을 담아, 새로고침 뒤에도 버튼이 "등록했습니다"이고 완료 화면이 같은 값으로 열립니다.
  *  예전 값("1")은 등록한 것으로 보되 되비칠 값은 비웁니다. */
-export type RegisteredEcho = { name: string; contact: string; email: string };
+// mate (2026-11-14): 둘이 한 팀으로 보냈을 때 팀원의 이름. 혼자면 없습니다.
+export type RegisteredEcho = { name: string; contact: string; email: string; mate?: string };
 
 interface Value {
   openRegister: () => void;
@@ -56,7 +57,7 @@ export function CrossingRegisterProvider({ children }: { children: React.ReactNo
         setRegistered(true);
         try {
           const e = JSON.parse(done) as Partial<RegisteredEcho>;
-          if (e && typeof e === "object" && typeof e.email === "string") setEcho({ name: String(e.name ?? ""), contact: String(e.contact ?? ""), email: e.email });
+          if (e && typeof e === "object" && typeof e.email === "string") setEcho({ name: String(e.name ?? ""), contact: String(e.contact ?? ""), email: e.email, ...(typeof e.mate === "string" && e.mate ? { mate: e.mate } : {}) });
         } catch { /* 예전 값 "1" */ }
       }
     } catch { /* storage blocked */ }

@@ -13,6 +13,10 @@
 // DECIDED 2026-10-08 (사용자: "팀 - 전원 현장 편성"): 모두 혼자 등록하고 팀은 현장에서 맺습니다. 폼에서 참가 형태,
 // 팀 이름, 팀원 줄, 팀 매칭 희망을 뺐습니다. 표는 그대로입니다(마이그레이션 없음). 라우트가 join_type을 "solo"로,
 // team_name을 null로, wants_matching을 false로 씁니다. 한 폼에 한 사람입니다.
+// DECIDED 2026-11-14 (사용자: "8월달 참고해줘, 혼자해도 되고, team of two 로도 할 수 있도록"): 위 10-08을 이 결정이 대신합니다.
+// 참가 형태(join_type)를 다시 묻습니다. 혼자(solo)면 한 사람, 둘이 한 팀(team)이면 같은 폼에 팀원 한 사람을 더 적습니다.
+// 팀원도 같은 사람 칸(MEMBER_FIELDS)을 다 채우고 crossing_members의 ordinal 2로 들어갑니다. 팀 이름과 매칭 희망은 묻지 않습니다
+// (team_name null, wants_matching false). 둘은 Day 1에 같은 팀이 되고, 팀의 나머지는 현장에서 꾸립니다(brand 7장 팀 줄).
 // 카피는 data/naru.ts의 register 블록이 아니라 여기 label에 {ko, en}으로 둡니다. 질문과
 // 라벨이 한 줄에 있어야 질문을 바꿀 때 한 곳만 고칩니다.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -20,6 +24,11 @@
 import { registerFacts } from "./naru";
 
 // radio (2026-10-07, 신청 폼 브리프 2.3): 하나만 고르는 선택 카드. 검증은 select와 같습니다(목록 안의 값인지).
+export const JOIN_SOLO = "solo";
+export const JOIN_TEAM = "team";
+/** 둘이 한 팀일 때 한 폼의 사람 수(등록자 + 팀원 한 명). */
+export const TEAM_SIZE = 2;
+
 export type FieldType = "text" | "email" | "select" | "radio" | "textarea" | "checkbox" | "country";
 /** hint: 선택지 아래 작은 설명(예시). radio 카드가 그립니다. */
 export interface FieldOption { value: string; label: { ko: string; en: string }; hint?: { ko: string; en: string } }
@@ -41,6 +50,8 @@ export interface Field {
   verbatim?: boolean;
   /** radio 카드의 첫 번호. 기본 1. 폼(RegisterModal)과 명단 스크립트(build-crossing-roster.py)가 같이 읽습니다. */
   firstStep?: number;
+  /** radio 카드에 단계 번호를 그리지 않습니다(참가 형태처럼 순서가 없는 선택). */
+  plain?: boolean;
 }
 
 export const MAX_TEXT = 200;
@@ -66,8 +77,9 @@ export const CONSENT_RETENTION: { ko: string; en: string } | null = registerFact
 export const CONSENT_NOTICE_READY = CONSENT_RETENTION !== null;
 const retention = CONSENT_RETENTION;
 const CONSENT_BASE = {
-  ko: "수집 항목: 이름, 이메일, 카카오톡 ID, 학교, 공부하는 나라, 전공, AI로 해 본 것, 링크드인(선택). 목적: 참가 안내와 현장 팀 편성. 동의하지 않을 수 있고, 그 경우 등록할 수 없습니다.",
-  en: "What we collect: name, email, KakaoTalk ID, school, country of study, major, your AI step, and LinkedIn (optional). Purpose: participation notices and on-site team formation. You may decline, in which case you cannot register.",
+  // DECIDED 2026-11-14: 둘이 한 팀이면 팀원의 같은 항목도 받으므로 수집 항목에 적고, 목적은 "현장 팀 편성"에서 "팀 편성"으로.
+  ko: "수집 항목: 이름, 이메일, 카카오톡 ID, 학교, 공부하는 나라, 전공, AI로 해 본 것, 링크드인(선택). 둘이 한 팀으로 오면 팀원의 같은 항목도 받습니다. 목적: 참가 안내와 팀 편성. 동의하지 않을 수 있고, 그 경우 등록할 수 없습니다. 팀원의 정보는 팀원에게 먼저 알리고 적어 주세요.",
+  en: "What we collect: name, email, KakaoTalk ID, school, country of study, major, your AI step, and LinkedIn (optional), and the same for your teammate if you come as a team of two. Purpose: participation notices and team formation. You may decline, in which case you cannot register. Tell your teammate before you enter their details.",
 };
 const CONSENT_HELP = retention
   ? { ko: `${CONSENT_BASE.ko} 보유 기간: ${retention.ko}.`, en: `${CONSENT_BASE.en} Retention: ${retention.en}.` }
@@ -107,6 +119,15 @@ export const CROSSING_FORM: Field[] = [
     label: { ko: "나라 이름", en: "Country name" },
     placeholder: { ko: "예: 프랑스", en: "e.g. France" } },
   // ── 폼 단위 ──────────────────────────────────────────────────────────────
+  // DECIDED 2026-11-14 (위 머리 주석): 참가 형태. 폼의 맨 위에 그립니다(RegisterModal). 값은 표의 join_type 열 그대로(0004의 check: solo, team).
+  { key: "join_type", scope: "registration", type: "radio", required: true, fixed: true, plain: true,
+    label: { ko: "어떻게 오나요?", en: "How are you joining?" },
+    options: [
+      { value: JOIN_SOLO, label: { ko: "혼자", en: "On my own" },
+        hint: { ko: "팀은 Day 1 현장에서 꾸려요.", en: "Teams form on site on Day 1." } },
+      { value: JOIN_TEAM, label: { ko: "둘이 한 팀으로", en: "As a team of two" },
+        hint: { ko: "같이 올 한 사람의 정보도 이 폼에 적어요. 둘은 Day 1에 같은 팀이 돼요.", en: "Add the one person coming with you on this form. You two will be on the same team on Day 1." } },
+    ] },
   { key: "consent", scope: "registration", type: "checkbox", required: true, fixed: true,
     label: { ko: "개인정보 수집과 이용에 동의합니다.", en: "I agree to the collection and use of my personal data." },
     help: CONSENT_HELP },
@@ -184,6 +205,13 @@ export function validateField(f: Field, raw: unknown): string | null {
  * 한 사람의 답 전체 검증. {키: 오류 코드}. 서버와 클라이언트가 같이 씁니다.
  * 필드 하나로는 알 수 없는 규칙 하나가 여기 있습니다: 나라가 "그 밖의 나라"면 나라 이름이 필수입니다.
  */
+/** 팀원 칸 묶음 위의 제목과 안내(둘이 한 팀일 때만). */
+export const TEAMMATE_COPY = {
+  me: { ko: "내 정보", en: "About you" },
+  heading: { ko: "함께 오는 팀원", en: "Your teammate" },
+  note: { ko: "팀원은 따로 등록하지 않아도 돼요. 이 폼 하나로 둘 다 등록돼요.", en: "Your teammate does not need to register separately. This one form registers you both." },
+};
+
 export function validatePerson(a: Record<string, unknown>): Record<string, string> {
   const e: Record<string, string> = {};
   const other = a.study_country === COUNTRY_OTHER;
