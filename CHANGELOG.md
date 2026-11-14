@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-14 등록 폼 디자인 점검 반영](#2026-11-14-register-form-review)
 - [2026-11-14 Supabase 전체 점검 (규칙 30개 통과)](#2026-11-14-supabase-check)
 - [2026-11-14 등록을 혼자 또는 둘이 한 팀으로](#2026-11-14-pair-registration)
 - [2026-11-14 Builder session, 후원 묶음, Day 0 로고, AXMOS](#2026-11-14-builder-session)
@@ -574,6 +575,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-11-14-register-form-review"></a>
+## 2026-11-14 등록 폼 디자인 점검 반영
+- 범위: components/crossing/RegisterModal.tsx, data/crossingForm.ts, data/naru.ts(register), app/api/crossing/register
+- 한 것: 사용자 요청(폼 디자인 점검 뒤 "make the proposed edits", "팀원의 AI 능력까지는 볼 필요가 없음"). 폼의 합니다체를 해요체로, 별표 17개 대신 선택 칸에만 (선택), 팀원은 AI 질문 없이(서버도 건너뜀) 도움말 없이, "내 정보"와 "함께 오는 팀원" 소제목은 스크롤할 때 위에 고정, 제목 18px. 앞서 같은 날, 참가 형태 카드를 고르면 글자가 남색에 덮이던 버그를 고침(d95b4f9).
+- 근거: brand 5장 문체(사이트는 해요체).
+- 검증: 둘이 한 팀일 때 폼 길이 4.9→3.9화면(1440), 5.6→4.4화면(390). 폼에 합니다체 0. tsc, build 통과.
+- 커밋: f3ea9b6, d95b4f9
 
 <a id="2026-11-14-supabase-check"></a>
 ## 2026-11-14 Supabase 전체 점검 (규칙 30개 통과)
