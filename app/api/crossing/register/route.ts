@@ -25,7 +25,7 @@ import {
 } from "@/lib/register/shared";
 import { verifyTurnstile } from "@/lib/register/turnstile";
 import {
-  CONSENT_NOTICE_READY, COUNTRY_OTHER, COUNTRY_OTHER_KEY, CROSSING_FORM, JOIN_SOLO, JOIN_TEAM, REGISTRATION_FIELDS, MAX_TEXTAREA, TEAM_SIZE,
+  CONSENT_NOTICE_READY, COUNTRY_OTHER, COUNTRY_OTHER_KEY, CROSSING_FORM, JOIN_SOLO, JOIN_TEAM, REGISTRATION_FIELDS, MAX_TEXTAREA, TEAM_SIZE, TEAMMATE_SKIP,
   validateField, validatePerson,
 } from "@/data/crossingForm";
 
@@ -144,7 +144,7 @@ export async function POST(req: Request) {
     if (err) return NextResponse.json({ error: err, field: f.key }, { status: 400 });
   }
   for (const [i, p] of people.entries()) {
-    const personErrors = Object.entries(validatePerson(p));
+    const personErrors = Object.entries(validatePerson(p, i === 1)); // 팀원(두 번째)은 AI 단계를 묻지 않음
     if (personErrors.length) {
       const [field, error] = personErrors[0];
       return NextResponse.json({ error, field, member: i + 1 }, { status: 400 });
@@ -162,6 +162,7 @@ export async function POST(req: Request) {
     const otherCountry = str(m.study_country) === COUNTRY_OTHER;
     const memberAnswers = pickAnswers(m, "member");
     if (!otherCountry) delete memberAnswers[COUNTRY_OTHER_KEY];
+    if (i === 1) for (const k of TEAMMATE_SKIP) delete memberAnswers[k];
     return {
       ordinal: i + 1,
       event_slug: CURRENT_EVENT,

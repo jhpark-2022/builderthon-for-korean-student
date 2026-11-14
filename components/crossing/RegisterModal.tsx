@@ -42,7 +42,7 @@ import { links, type Phrase } from "@/data/dictionaryCore";
 import { BODY, META } from "@/components/ui/typography";
 import { buttonClass } from "@/components/ui/Button";
 import {
-  COUNTRY_OTHER, COUNTRY_OTHER_KEY, JOIN_TEAM, MEMBER_FIELDS, REGISTRATION_FIELDS, MAX_TEXT, MAX_TEXTAREA, TEAMMATE_COPY,
+  COUNTRY_OTHER, COUNTRY_OTHER_KEY, JOIN_TEAM, MEMBER_FIELDS, REGISTRATION_FIELDS, MAX_TEXT, MAX_TEXTAREA, TEAMMATE_COPY, TEAMMATE_SKIP,
   type Field, validateField, validatePerson,
 } from "@/data/crossingForm";
 
@@ -202,7 +202,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
     const e: Record<string, string> = {};
     for (const [k, code] of Object.entries(validatePerson(person))) e[`m.${k}`] = code;
     if (isTeam) {
-      for (const [k, code] of Object.entries(validatePerson(mate))) e[`t.${k}`] = code;
+      for (const [k, code] of Object.entries(validatePerson(mate, true))) e[`t.${k}`] = code;
       const a = String(person.email ?? "").trim().toLowerCase();
       if (!e["t.email"] && a && a === String(mate.email ?? "").trim().toLowerCase()) e["t.email"] = "same_email";
     }
@@ -312,7 +312,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
         <label key={f.key} className={`flex min-h-[44px] cursor-pointer items-start gap-3 py-2 ${BODY} text-white/85`}>
           <input {...common} type="checkbox" checked={value === true} onChange={(e) => set(e.target.checked)} className="mt-1 h-5 w-5 shrink-0 rounded border-white/20 bg-naru-surface-2 accent-accent" />
           <span>
-            <span className="font-semibold">{label}</span>{f.required && <span aria-hidden className="ml-1 text-rose-400">*</span>}
+            <span className="font-semibold">{label}</span>
             {help && <span id={helpId} className={`mt-[8px] block ${META} leading-relaxed text-naru-muted`}>{help}</span>}
             {err && <span id={errorId} className={`mt-[8px] block ${META} font-medium text-rose-300`}>{errText(err, max)}</span>}
           </span>
@@ -328,7 +328,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
       return (
         <div key={f.key} role="radiogroup" aria-labelledby={labelId} aria-describedby={described} aria-required={f.required || undefined} aria-invalid={err ? true : undefined} className="flex flex-col gap-[8px]">
           <span id={labelId} className={`${BODY} font-semibold leading-snug text-white/85`}>
-            {label}{f.required && <span aria-hidden className="ml-1 text-rose-400">*</span>}
+            {label}
           </span>
           {help && <span id={helpId} className={`${META} leading-relaxed text-naru-muted`}>{help}</span>}
           <div className="mt-[3.25px] flex flex-col gap-[9px]">
@@ -359,7 +359,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
       <div key={f.key} className="flex flex-col gap-[8px]">
         <label htmlFor={id} className={`flex items-center gap-1.5 ${BODY} font-semibold text-white/85`}>
           {label}
-          {f.required ? <span aria-hidden className="text-rose-400">*</span> : <span className={`${META} font-normal text-naru-muted`}>{t(copy.optional)}</span>}
+          {!f.required && <span className={`${META} font-normal text-naru-muted`}>{t(copy.optional)}</span>}
         </label>
         {f.type === "textarea" ? (
           <textarea {...common} value={String(value ?? "")} maxLength={max} rows={3} onChange={(e) => set(e.target.value)} className={FIELD} />
@@ -402,7 +402,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                 완료 화면에서는 제목이 본문 안에 있어 이 줄에는 닫기 버튼만 남습니다. */}
             <div className="flex shrink-0 items-center justify-between gap-3 px-[27px] pb-[13.5px] pt-[18px] sm:px-[40.5px] sm:pt-[27px]">
               {status === "success" ? <span /> : (
-                <h3 id="crossing-register-title" className={`break-keep ${LARGE} font-bold leading-tight text-white`}>{t(preview && !closed ? copy.previewTitle : copy.title)}</h3>
+                <h3 id="crossing-register-title" className={`break-keep text-lg font-bold leading-tight text-white`}>{t(preview && !closed ? copy.previewTitle : copy.title)}</h3>
               )}
               <button ref={closeRef} type="button" onClick={onClose} aria-label={t(copy.close)} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/25 bg-naru-surface text-white/85 transition hover:border-white/45 hover:text-white active:scale-95">
                 <svg aria-hidden width="16" height="16" viewBox="0 0 15 15" fill="none"><path d="M1 1l13 13M14 1L1 14" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg>
@@ -414,7 +414,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                   <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-accent/40 bg-accent/10">
                     <svg aria-hidden width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="text-accent"><path d="M4 12.5l5 5L20 6.5" /></svg>
                   </span>
-                  <h3 ref={successRef} tabIndex={-1} id="crossing-register-title" className={`mt-6 ${LARGE} font-bold leading-tight text-white focus:outline-none`}>{t(copy.successTitle)}</h3>
+                  <h3 ref={successRef} tabIndex={-1} id="crossing-register-title" className={`mt-6 text-lg font-bold leading-tight text-white focus:outline-none`}>{t(copy.successTitle)}</h3>
                   {/* DECIDED 2026-11-02 (브리프 O2): 보낸 이름, 카카오톡 ID, 이메일을 그대로 되비칩니다. 오타를 잡을 곳이 이 화면 하나입니다.
                       예전 done 값("1")으로 열려 되비칠 값이 없으면 그리지 않습니다. 아래 한 줄은 고치는 길과 다시 보냈을 때 일어나는 일(O1). */}
                   {echo?.email && (
@@ -453,12 +453,14 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                     <p id="crossing-register-preview" role="note" className={`mt-4 card-tint rounded-xl p-[16px] ${META} leading-relaxed text-white sm:p-[18px]`}>{t(copy.closed)}</p>
                   )}
                   <form onSubmit={onSubmit} className="mt-6 flex flex-col gap-[24px]" noValidate>
-                    <p className={`${META} leading-relaxed text-naru-muted`}><span aria-hidden className="text-rose-400">*</span> {t(copy.requiredLegend)}</p>
+                    {/* DECIDED 2026-11-14 (폼 디자인 점검): 선택 칸이 링크드인 하나뿐이라 별표 17개와 "* 필수" 줄을 빼고, 선택 칸에만 "(선택)". 필수는 aria-required로 그대로 읽힙니다. */}
                     {/* 허니팟. 8월과 같은 세 겹의 방어(이름, 매니저 opt-out, 서버 로그). */}
                     <input type="text" name="url_confirm" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} aria-hidden="true" autoComplete="off" data-1p-ignore data-lpignore="true" data-bwignore data-form-type="other" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }} />
                     {/* DECIDED 2026-11-14: 참가 형태가 맨 위. 고른 것에 따라 아래 묶음이 하나 또는 둘. */}
                     {REGISTRATION_FIELDS.filter((f) => f.key === "join_type").map((f) => renderField(f, reg[f.key], (v) => setRegField(f.key, v), errors[`reg.${f.key}`], `reg-${f.key}`))}
-                    {isTeam && <h4 className={`-mb-[8px] border-t border-white/10 pt-[20px] ${BODY} font-bold text-white`}>{t(TEAMMATE_COPY.me)}</h4>}
+                    {/* DECIDED 2026-11-14 (폼 디자인 점검): 둘이면 "내 정보"와 "함께 오는 팀원" 소제목이 스크롤할 때 위에 붙어, 지금 누구 칸을 적는지 보입니다. */}
+                    {isTeam && <div aria-hidden className="-mb-[16px] border-t border-white/10" />}
+                    {isTeam && <h4 className={`sticky top-0 z-10 -mx-1 bg-naru-surface px-1 py-[8px] -mb-[8px] ${BODY} font-bold text-white`}>{t(TEAMMATE_COPY.me)}</h4>}
                     {MEMBER_FIELDS.map((f) => {
                       // 나라 이름은 "그 밖의 나라"를 골랐을 때만 묻고, 그때는 필수입니다(validatePerson과 같은 규칙).
                       if (f.key === COUNTRY_OTHER_KEY && !otherCountry) return null;
@@ -466,14 +468,17 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                       return renderField(field, person[f.key], (v) => setPersonField(f.key, v), errors[`m.${f.key}`], `m-${f.key}`);
                     })}
                     {isTeam && (
-                      <div className="-mb-[8px] flex flex-col gap-[8px] border-t border-white/10 pt-[20px]">
-                        <h4 className={`${BODY} font-bold text-white`}>{t(TEAMMATE_COPY.heading)}</h4>
-                        <p className={`${META} leading-relaxed text-naru-muted`}>{t(TEAMMATE_COPY.note)}</p>
-                      </div>
+                      <>
+                        <div aria-hidden className="-mb-[16px] border-t border-white/10" />
+                        <h4 className={`sticky top-0 z-10 -mx-1 bg-naru-surface px-1 py-[8px] -mb-[16px] ${BODY} font-bold text-white`}>{t(TEAMMATE_COPY.heading)}</h4>
+                        <p className={`-mb-[8px] ${META} leading-relaxed text-naru-muted`}>{t(TEAMMATE_COPY.note)}</p>
+                      </>
                     )}
+                    {/* DECIDED 2026-11-14 (사용자: "팀원의 AI 능력까지는 볼 필요가 없음", 폼 디자인 점검): 팀원은 AI 질문을 묻지 않고, 위에서 읽은 도움말은 다시 보이지 않습니다. */}
                     {isTeam && MEMBER_FIELDS.map((f) => {
                       if (f.key === COUNTRY_OTHER_KEY && !mateOtherCountry) return null;
-                      const field = f.key === COUNTRY_OTHER_KEY ? { ...f, required: true } : f;
+                      if (TEAMMATE_SKIP.includes(f.key)) return null;
+                      const field = { ...(f.key === COUNTRY_OTHER_KEY ? { ...f, required: true } : f), help: undefined };
                       return renderField(field, mate[f.key], (v) => setMateField(f.key, v), errors[`t.${f.key}`], `t-${f.key}`);
                     })}
                     {REGISTRATION_FIELDS.filter((f) => !f.fixed).map((f) => renderField(f, reg[f.key], (v) => setRegField(f.key, v), errors[`reg.${f.key}`], `reg-${f.key}`))}

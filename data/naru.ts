@@ -259,7 +259,7 @@ export const register = {
   // 2026-09-18 (감사 반영 브리프 1.1): 창이 열리기 전의 버튼 라벨과 그 아래 캡션. 비활성
   // "등록하기"에 이유가 없어 첫 화면에서 이탈한다는 것이 여섯 관점의 P0였습니다.
   preparing: { ko: "등록 준비 중", en: "Registration opens later" },
-  preparingNote: { ko: "열리면 이 자리에서 알립니다", en: "It opens right here when it does" },
+  preparingNote: { ko: "열리면 이 자리에서 알려요", en: "It opens right here when it does" },
   // DECIDED 2026-10-08 (사용자: "등록은 볼 수 있는데, submit만 못하게"): 창이 열리기 전에도 버튼을 누르면 등록
   // 폼이 열립니다. 무엇을 묻는지 미리 볼 수 있고, 제출 버튼만 꺼져 있습니다. 아래 notYet의 "클릭이 되게 하지는
   // 말고"(2026-09-18)는 이 결정이 대신합니다. 서버는 전과 같이 창이 열리기 전의 제출을 403으로 막습니다.
@@ -267,22 +267,22 @@ export const register = {
   // DECIDED 2026-10-15 (사용자: "그냥 바로 form만 보여줘"): 모달의 미리 보기 안내 상자와 previewKeep은 없앴습니다.
   // DECIDED 2026-11-02 (사용자, 등록 UX 브리프 D2: "14일에 여는 걸로"): 여는 날을 "11월 둘째 주 끝"에서 14일(토)로. 여는 시각은 보류(opensAt은 비움), 카운트다운은 그대로.
   // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P6): 여는 날을 16일(월)로. 여는 시각은 그대로 쓰지 않음(opensAt 비움).
-  previewSubmit: { ko: "11월 16일(월)에 열리면 보낼 수 있습니다", en: "You can send this when it opens on Monday, 16 November" },
+  previewSubmit: { ko: "11월 16일(월)에 열리면 보낼 수 있어요", en: "You can send this when it opens on Monday, 16 November" },
   // 미리 보기일 때의 제목. 등록이 열리면 아래 title을 그대로 씁니다.
   previewTitle: { ko: "크로싱 서울 등록 (미리 보기)", en: "CROSSING SEOUL registration (preview)" },
   requiredLegend: { ko: "필수", en: "required" },
   // 창이 열리기 전에도 버튼은 보입니다(사용자, 2026-09-18: "넣어는 줘. 클릭이 되게 하지는 말고").
   // disabled이고 title로 이 문장을 보여 줍니다.
-  notYet: { ko: "등록은 아직 열리지 않았습니다. 열리면 이 버튼이 켜집니다.", en: "Registration is not open yet. This button turns on when it is." },
-  closed: { ko: "등록이 마감됐습니다.", en: "Registration has closed." },
+  notYet: { ko: "등록은 아직 열리지 않았어요. 열리면 이 버튼이 켜져요.", en: "Registration is not open yet. This button turns on when it is." },
+  closed: { ko: "등록이 마감됐어요.", en: "Registration has closed." },
   title: { ko: "크로싱 서울 등록", en: "Register for CROSSING SEOUL" },
   // DECIDED 2026-10-15 (사용자: "이 내용 빼줘"): 폼 첫 줄(intro, 스크리닝과 혼자 등록)은 없앴습니다. 폼이 바로 시작합니다.
   // 2026-10-08 (폼 리뷰 10): 초안이 이 기기에 남는다는 것을 알립니다. 동의 표시는 초안에 넣지 않습니다.
   // 2026-10-12: 등록이 열린 뒤에만 그립니다.
-  draftNote: { ko: "입력한 내용은 보내기 전까지 이 기기에만 임시로 저장됩니다.", en: "What you type is kept on this device only until you send it." },
+  draftNote: { ko: "입력한 내용은 보내기 전까지 이 기기에만 임시로 저장돼요.", en: "What you type is kept on this device only until you send it." },
   // DECIDED 2026-11-02 (docs/register-ux-brief.md R1, D1 둠): 미리 보기에서도 적은 내용이 이 기기에 남습니다. 열린 뒤 draftNote가 서는 그 한 줄 자리에 섭니다.
   // 2026-10-15에 뺀 것은 안내 상자 세 줄이고 이것은 그 상자가 아닙니다.
-  previewNote: { ko: "적은 내용은 보내기 전까지 이 기기에만 남고 열리면 그대로 보낼 수 있습니다.", en: "What you type stays on this device only until you send it, and you can send it as it is when registration opens." },
+  previewNote: { ko: "적은 내용은 보내기 전까지 이 기기에만 남고, 열리면 그대로 보낼 수 있어요.", en: "What you type stays on this device only until you send it, and you can send it as it is when registration opens." },
   optional: { ko: "(선택)", en: "(optional)" },
   selectPlaceholder: { ko: "선택", en: "Select" },
   submit: { ko: "등록 보내기", en: "Send registration" },
@@ -290,22 +290,22 @@ export const register = {
   // DECIDED 2026-11-02 (브리프 O4): 보안 확인 토큰이 오기 전에 보내기를 누르면 이 라벨로 기다렸다가 토큰이 오는 순간 같은 제출을 이어 보냅니다.
   checking: { ko: "보안 확인 중", en: "Checking" },
   // DECIDED 2026-11-02 (브리프 O1, D4 함): 이 기기에서 등록을 마친 뒤의 버튼 라벨. 누르면 완료 화면이 다시 열립니다.
-  registered: { ko: "등록했습니다", en: "You are registered" },
+  registered: { ko: "등록했어요", en: "You are registered" },
   registerAnother: { ko: "다른 사람으로 등록", en: "Register someone else" },
-  successTitle: { ko: "등록됐습니다.", en: "You are registered." },
+  successTitle: { ko: "등록됐어요.", en: "You are registered." },
   // DECIDED 2026-11-02 (브리프 O2): 확인 메일이 없고(10/15) 카카오톡 ID는 형식 검사가 없어, 오타를 잡을 순간이 이 화면 하나입니다. 보낸 값을 그대로 되비칩니다.
-  successEcho: { ko: "이름 {name}, 카카오톡 ID {contact}, 이메일 {email}로 등록됐습니다.", en: "Registered as {name}, KakaoTalk ID {contact}, {email}." },
+  successEcho: { ko: "이름 {name}, 카카오톡 ID {contact}, 이메일 {email}로 등록됐어요.", en: "Registered as {name}, KakaoTalk ID {contact}, {email}." },
   // DECIDED 2026-11-14 (둘이 한 팀): 팀원도 함께 등록됐다는 한 줄. {mate}는 팀원 이름.
-  successEchoMate: { ko: "팀원 {mate}도 같은 팀으로 함께 등록됐습니다.", en: "{mate} is registered with you, on the same team." },
+  successEchoMate: { ko: "팀원 {mate}도 같은 팀으로 함께 등록됐어요.", en: "{mate} is registered with you, on the same team." },
   // DECIDED 2026-11-02 (브리프 O1, D4): 같은 이메일로 다시 보내면 서버는 처음 것을 남기고 조용히 201입니다(보안 감사 M3). 그 사실을 이 한 줄로 말합니다.
-  successResend: { ko: "고칠 것은 아래 주소로 알려 주세요. 같은 이메일로 다시 보내도 처음 것이 남습니다.", en: "Send corrections to the address below. Sending again with the same email keeps the first one." },
+  successResend: { ko: "고칠 것은 아래 주소로 알려 주세요. 같은 이메일로 다시 보내도 처음 것이 남아요.", en: "Send corrections to the address below. Sending again with the same email keeps the first one." },
   // DECIDED 2026-10-08 (사용자: 등록 뒤 안내 메일은 "내가 수동으로"): 자동 메일을 약속하지 않습니다. 운영진이 직접
   // 보낸다고 적고, 오지 않을 때 할 일과 수정, 삭제의 길을 같이 적습니다. {email}은 등록한 주소로 바뀝니다.
   // DECIDED 2026-10-08 (사용자: 참가비와 장소, Day 0은 "참여자 대상 카톡방으로 공개"): 그 안내가 어디서 오는지도 여기서 말합니다.
   // DECIDED 2026-10-15 (사용자: "그냥 mention을 하지마 메일에 대해서", "계속 up to date 하려면 카톡으로 들어와야 한다고 해줘"):
   // 위 2026-10-08의 안내 메일 문장을 뺐습니다. 메일 이야기는 하지 않고, 소식은 오픈채팅으로 들어와야 받는다고만 씁니다.
   successBody: {
-    ko: "소식은 카카오톡 오픈채팅에서 알립니다. 계속 받으려면 지금 들어와 주세요. 장소와 Day 0 안내는 참가자 카카오톡 방에서 알립니다.",
+    ko: "소식은 카카오톡 오픈채팅에서 알려요. 계속 받으려면 지금 들어와 주세요. 장소와 Day 0 안내는 참가자 카카오톡 방에서 알려요.",
     en: "News goes out in the KakaoTalk open chat. Join it now to stay up to date. Venue and Day 0 details are shared in the participant KakaoTalk room.",
   },
   // DECIDED 2026-10-15 (사용자, 스크린숏: "궁금한게 있으면 여기에 알려주세요"): 수정, 삭제 안내 대신 문의 한 줄.
@@ -322,7 +322,7 @@ export const register = {
   nextLabel: { ko: "등록 다음, 3분", en: "Next, 3 minutes" },
   nextTitle: { ko: "나는 16개 AI 중 누구일까?", en: "Which of 16 AIs are you?" },
   nextBody: {
-    ko: "14문항짜리 AI 유형 테스트이고, Day 1 현장에서 팀을 맺을 때 이 결과를 씁니다. 미리 해 보고 오세요.",
+    ko: "14문항짜리 AI 유형 테스트예요. Day 1 현장에서 팀을 꾸릴 때 이 결과를 써요. 미리 해 보고 오세요.",
     en: "It is a 14-question AI type test, and teams are formed on Day 1 using the result. Try it before you come.",
   },
   nextCta: { ko: "내 AI 유형 알아보기", en: "Find my AI type" },
@@ -333,19 +333,19 @@ export const register = {
     too_long: { ko: "{max}자 이내로 적어 주세요.", en: "Please keep it under {max} characters." },
     invalid_email: { ko: "이메일 주소를 다시 확인해 주세요. 예: name@example.com", en: "Please check the email address. Example: name@example.com" },
     invalid_option: { ko: "목록에서 하나를 골라 주세요.", en: "Please pick one from the list." },
-    consent_required: { ko: "동의해야 등록할 수 있습니다.", en: "You need to agree to register." },
-    rate_limited: { ko: "요청이 많습니다. 잠시 뒤 다시 시도해 주세요.", en: "Too many requests. Please try again in a moment." },
-    registration_not_open: { ko: "등록이 아직 열리지 않았습니다.", en: "Registration is not open yet." },
-    registration_closed: { ko: "등록이 마감됐습니다.", en: "Registration has closed." },
+    consent_required: { ko: "동의해야 등록할 수 있어요.", en: "You need to agree to register." },
+    rate_limited: { ko: "요청이 많아요. 잠시 뒤 다시 시도해 주세요.", en: "Too many requests. Please try again in a moment." },
+    registration_not_open: { ko: "등록이 아직 열리지 않았어요.", en: "Registration is not open yet." },
+    registration_closed: { ko: "등록이 마감됐어요.", en: "Registration has closed." },
     bot_check_pending: { ko: "보안 확인이 끝날 때까지 잠시 기다려 주세요.", en: "Please wait for the security check to finish." },
-    bot_check_failed: { ko: "보안 확인을 통과하지 못했습니다. 확인을 다시 마친 뒤 보내 주세요.", en: "The security check did not pass. Please complete it again and resend." },
+    bot_check_failed: { ko: "보안 확인을 통과하지 못했어요. 확인을 다시 마친 뒤 보내 주세요.", en: "The security check did not pass. Please complete it again and resend." },
     // 2026-10-08 (폼 리뷰 9): 스크립트가 막혔을 때(광고 차단, 네트워크). 그 전에는 안내 없이 기다리게만 했습니다.
-    bot_check_load_failed: { ko: "보안 확인을 불러오지 못했습니다. 광고 차단을 끄거나 새로고침해 주세요.", en: "The security check could not load. Turn off your ad blocker or refresh the page." },
-    bot_check_unavailable: { ko: "보안 확인 서버에 닿지 못했습니다. 잠시 뒤 다시 보내 주세요.", en: "The security check service could not be reached. Please resend in a moment." },
+    bot_check_load_failed: { ko: "보안 확인을 불러오지 못했어요. 광고 차단을 끄거나 새로고침해 주세요.", en: "The security check could not load. Turn off your ad blocker or refresh the page." },
+    bot_check_unavailable: { ko: "보안 확인 서버에 닿지 못했어요. 잠시 뒤 다시 보내 주세요.", en: "The security check service could not be reached. Please resend in a moment." },
     // DECIDED 2026-11-14 (둘이 한 팀): 나와 팀원의 이메일이 같을 때, 둘 중 한 사람이 이미 등록돼 있을 때.
     same_email: { ko: "나와 팀원의 이메일이 같아요. 팀원의 이메일을 적어 주세요.", en: "Your email and your teammate's are the same. Please enter your teammate's email." },
     team_registered: { ko: "둘 중 한 사람은 이미 등록돼 있어요. 아직 안 한 사람은 혼자로 등록하고, 같은 팀이 되고 싶다고 아래 주소로 알려 주세요.", en: "One of you is already registered. The other can register on their own, then tell us at the address below that you want to be on the same team." },
-    generic: { ko: "보내지 못했습니다. 잠시 뒤 다시 시도해 주세요.", en: "Could not send. Please try again in a moment." },
+    generic: { ko: "보내지 못했어요. 잠시 뒤 다시 시도해 주세요.", en: "Could not send. Please try again in a moment." },
   },
 } as const;
 
