@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-14 Builder session, 후원 묶음, Day 0 로고, AXMOS](#2026-11-14-builder-session)
 - [2026-11-13 8월 기록 새 화면, 홈 인장](#2026-11-13-aug-redesign)
 - [2026-11-13 미션 인증 한 번만을 DB에서도](#2026-11-13-proofs-once)
 - [2026-11-13 미디어 블록](#2026-11-13-media)
@@ -571,6 +572,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-11-14-builder-session"></a>
+## 2026-11-14 Builder session, 후원 묶음, Day 0 로고, AXMOS
+- 범위: data/naru.ts, components/crossing/redesign/(copy.ts, CrossingSeoul.tsx), docs/brand.md, public/partners/logos/paper/(feed-media, lazy-yogurt)
+- 한 것: 사용자 요청 넷. Day 2 PO session을 Builder session으로(근거 연사 미팅 11-11~11-13: 가짜연구소 빌더들이 자기 기준으로 쳐내 하나를 남긴 과정, 한 사람 25~30분. 기록에 없는 대담은 뺌). brand 5장 빌더 금지어에 그 이름 하나의 예외. #partners 후원 열넷을 공간, 참가자가 받는 것, 프로그램, 알리고 잇는 곳으로 나눔. Day 0 카드에 이야기 중인 출제사 둘과 그룹바이 로고(확정 전이라 "이야기 중", brand 4장). 메인 후원을 "8월부터 함께한 곳"으로(12월 지원 규모에 맞게, brand 6장 관계 한 문장).
+- 판단 질문: 2 자기 가치를 증명할 기회(누가 와서 무엇을 하는지 사실로).
+- 검증: 1440, 390 스크린숏, 가로 넘침 0, 빌드 통과.
+- 커밋: fd877bf
 
 <a id="2026-11-13-aug-redesign"></a>
 ## 2026-11-13 8월 기록 새 화면, 홈 인장
