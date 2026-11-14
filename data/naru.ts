@@ -3008,7 +3008,7 @@ export const naru = {
         // DECIDED 2026-11-05 (docs/day-flow-brief.md 2장, 사용자): 하루의 흐름. 시각은 아직 넣지 않습니다(같은 날 사용자: "아직 정확한 시간은 넣지 말아줘"). 정해지면 time만 채웁니다. 필참 표시 없음(같은 날 사용자: "다 참여해야지").
         flow: [
           { what: { ko: "멘토 찾아가기. 넣은 칸의 시각에 팀이 함께, 생각 1장을 들고", en: "Visiting a mentor: the team goes together at the booked time, with the one page" }, where: { ko: "멘토 계신 곳(오피스, 카페, 온라인)", en: "Where the mentor is (an office, a café, or online)" } },
-          { what: { ko: "PO session. 현업 PO 셋이 각각 무엇을 왜 만들기로 했는지와 멈춘 지점, 그 뒤 대담", en: "PO session: three working POs on what they chose to build, why, and where they stopped, then a conversation" }, where: { ko: "현장", en: "On site" } },
+          { what: { ko: "Builder session. 가짜연구소에서 프로젝트를 책임지는 빌더들이 무엇을 쳐내고 무엇을 남겼는지", en: "Builder session: builders who lead projects at Pseudo Lab on what they cut and what they kept" }, where: { ko: "현장", en: "On site" } },
           { what: { ko: "미션 제출. 멘토와 찍은 사진, 고친 1장 PDF", en: "Mission submission: a photo with the mentor and the revised one-page PDF" }, where: { ko: "멘토 시간표 페이지", en: "Timetable page" }, href: "/crossing/team?day=2" },
         ],
         // DECIDED 2026-11-04 (사용자, site-tells 목업, 3장 C1): /crossing Day 카드의 한 줄. 긴 line과 세션, 미션은 /crossing/team과 이 키들에 남습니다.
@@ -3041,20 +3041,23 @@ export const naru = {
         // DECIDED 2026-10-17 (사용자: "여기에 들어갈 수 있는 button은 day 2 and day 3 상자에 있는걸로"): 멘토 시간표와 미션 인증으로 가는 버튼.
         timetableCta: { label: { ko: "멘토 시간표와 미션 제출", en: "Mentor timetable & mission uploads" }, href: "/crossing/team?day=2" },
         // DECIDED 2026-11-05 (사용자, 같은 날 뒤: "lovable 과 PO session 을 다시 바꾸자, lovable workshop 이 1일차에 오도록"): Day 1 Lovable workshop, Day 2 PO session으로 되돌림.
+        // DECIDED 2026-11-14 (사용자: "PO Session이 아닌 Builder Session, 가짜연구소에서 프로젝트 책임지는 빌더들이"): 이름과 설명을 바꿈.
+        // 근거는 연사 미팅 기록(11-11, 11-12, 11-13): 가짜연구소 빌더들이 여러 인풋 가운데 자기 기준으로 쳐내 하나를 남긴 과정을 한 사람 25~30분.
+        // "셋이 대담"은 그 기록에 없어 뺐습니다. 여기서 빌더는 가짜연구소의 역할 이름이라 참가자를 부르는 말이 아닙니다(brand 5장).
         session: {
-          title: { ko: "PO session", en: "PO session" },
+          title: { ko: "Builder session", en: "Builder session" },
           body: {
             // DECIDED 2026-10-22 (사용자: "day 2의 문장을 좀 더 줄여줘"): 둘째 문장을 뺐습니다. 그 전: "...풀어 줍니다. 만드는 일은 AI가 빨라졌어도 무엇을 만들지는 사람이 고릅니다."
             // DECIDED 2026-10-26 (사용자: "각 세션에 대한 설명의 length는 동일해야함"): 세 세션 설명을 같은 길이로. "3시간 동안"을 뺐습니다.
-            ko: "현업 PO가 무엇을 왜 만들기로 했는지 풀어 줍니다.",
-            en: "A working PO walks through what they chose to build and why.",
+            ko: "가짜연구소에서 프로젝트를 책임지는 빌더들이 무엇을 남기고 뺐는지 풀어 줍니다.",
+            en: "Builders who lead projects at Pseudo Lab walk through what they kept and what they cut.",
           },
           // DECIDED 2026-11-09 (사용자, 스크린숏: "각 세션 클릭하면 세션 설명이 나오게"): 세션 이름을 누르면 펼쳐지는 설명. 같은 날 "너무 긴 거 같아"로 두 줄씩.
           // 근거는 운영 미팅 기록(워크숍 진행자와의 10/29, 11/05 미팅, 10/21~11/04 주간 회의). 시각은 아직 쓰지 않습니다(day-flow 결정).
           // 주간 회의(10/21: PO 셋이 차례로 멈춘 지점, 그 뒤 대담, 10/28과 11/04: 주제는 덜어내기, PO session과 멘토는 다른 일).
           detail: [
-            { ko: "현업 PO 세 명이 무엇을 왜 만들기로 했고 어디서 멈췄는지 들려줍니다.", en: "Three working POs tell what they chose to build, why, and where they stopped." },
-            { ko: "주제는 덜어내기, 하나를 남기려고 무엇을 뺐는지입니다. 끝에 셋이 대담합니다.", en: "The theme is cutting: what they dropped to keep one thing. It ends with a conversation." },
+            { ko: "가짜연구소에서 프로젝트를 책임지는 빌더들이, 자기 기준으로 하나를 남긴 과정을 들려줍니다.", en: "Builders who lead projects at Pseudo Lab show how they set their own criteria and turned many inputs into one output." },
+            { ko: "주제는 덜어내기입니다. 무엇을 쳐내고 어디에 집중했는지, 한 사람씩 30분 안팎으로.", en: "The theme is cutting: what they dropped and where they focused, about 30 minutes each." },
           ],
         },
         // DECIDED 2026-10-13 (사용자, 멘토링 브리프 2, D4): 미션은 Day 2부터이고, 무엇을 냈는가보다 함께 있었는가를 봅니다.
@@ -3064,7 +3067,7 @@ export const naru = {
         // DECIDED 2026-10-17 (사용자, 스크린숏 표): Day 2와 Day 3의 미션 인정 조건이 정해졌습니다. "이후 공개"를 이것으로 바꿉니다.
         // 조건 셋(과반 현장, 멘토 찾아가기, 진척 PDF). 2026-10-26: 멘토 찾아가기는 Day 2, 3 날마다 팀이 함께(10/17의 하루 이상 완화를 되돌림). 확인은 현장 체크, 멘토와 찍은 사진(찾아간 날), PDF입니다.
         // DECIDED 2026-11-08 (docs/mission-card-brief.md S1, missions-brief): 조건에 PO session이 들어와 제목에도. 그 전 "멘토 찾아가기와 진척 공유" / "Visit a mentor, share progress".
-        milestone: { ko: "멘토 만나기, PO session, 고친 1장 올리기", en: "Meet a mentor, sit in the PO session, upload your revised page" },
+        milestone: { ko: "멘토 만나기, Builder session, 고친 1장 올리기", en: "Meet a mentor, sit in the Builder session, upload your revised page" },
         // DECIDED 2026-10-17 (사용자, 스크린숏: "문장으로 말고, bullet point로, 그리고 제출하는 방법으로"): 설명은 문단이 아니라
         // 인정 조건과 제출 방법 두 목록입니다. 그 전: "세 가지를 모두 채우면 인정됩니다. ..." 한 문단.
         milestoneDetail: {
@@ -3077,7 +3080,7 @@ export const naru = {
             // DECIDED 2026-11-08 (docs/mission-card-brief.md S3, missions-brief): 조건은 넷. 멘토는 한 분 이상을 과반이 함께, 그날 세션(PO session)에 함께 있기.
             // 그 전 둘째 줄 "팀원 과반이 멘토를 찾아가 사진 한 장", 넷째 줄 "1장을 반박에 맞춰 고쳐 공유하기".
             { ko: "멘토 한 분 이상을 과반이 함께 찾아가기", en: "Visit at least one mentor, more than half of you together" },
-            { ko: "PO session에 함께 있기", en: "Be at the PO session together" },
+            { ko: "Builder session에 함께 있기", en: "Be at the Builder session together" },
             // DECIDED 2026-10-26 (사용자): 진척 PDF는 새 문서가 아니라 1장을 멘토의 피드백과 그날의 진척에 맞춰 고친 것.
             // DECIDED 2026-10-31 (사용자, 스크린숏: "상자의 길이가 다름. day 1 이랑 day 2 and 3 가 다름"): 인정 조건을 1440 칸에서 한 줄씩으로. Day 1(할 것 셋 + 세션 두 줄)과 같은 다섯 줄. 그 전: 1장을 피드백과 진척에 맞춰 고쳐 공유하기(진척은 띠 제목이 말함)
             // DECIDED 2026-11-06 (docs/write-first-brief.md W6): "피드백"을 사이트의 말 "반박"으로. 그 전 문장은 git 93a69c2.
@@ -3776,13 +3779,28 @@ export const singaporeCampuses: { name: Phrase; src: string; w: number; h: numbe
 // 없으면 모듈을 읽을 때 throw해서 빌드가 멈춥니다(HeroPartnerStrip의 DECEMBER_MASS와 같은 방식). 줄 이름이나 순서를 바꿔도 묶음이 조용히 사라지지 않게.
 export type PartnerGroupId = "main" | "venue" | "tech" | "award" | "prize" | "snack" | "coupon" | "workshop" | "community" | "media" | "domain";
 export type PartnerGroup = { id: PartnerGroupId; label: Phrase; lead?: PartnerLogo & { note: Phrase }; logos: PartnerLogo[]; note?: Phrase; bandNote?: Phrase; oneCard?: boolean };
+// ── Day 0 카드의 출제사 로고 줄 (DECIDED 2026-11-14, 사용자: "Feed Media, 레이지요거트, 그리고 그룹바이 통해서 더 알아볼 생각", 같은 날 "로고로 보여줘") ──
+// 확정이 아니라 이야기 중이라 "이야기 중"으로 씀(레이지 요거트는 11-13 첫 미팅에서 긍정적 의사, brand 4장 약속하지 않음). 확정되면 이름을 바꾸고 Day 0 문장에 맞춥니다.
+// 레이지 요거트는 CI의 흰 실루엣을 그 회사의 초록(#095548)으로 칠한 판, Feed Media는 CI 원래 색(검정).
+export const issueTalks = {
+  label: { ko: "이야기 중", en: "In talks" },
+  logos: [
+    { name: "Feed Media", src: "/partners/logos/paper/feed-media.png", w: 900, h: 140 },
+    { name: "Lazy Yogurt 레이지 요거트", src: "/partners/logos/paper/lazy-yogurt.png", w: 343, h: 345 },
+  ],
+  moreLabel: { ko: "함께 더 찾는 곳", en: "Finding more with" },
+  more: { name: "그룹바이 GroupBy", src: "/partners/logos/paper/groupby-hand.png", w: 765, h: 144 },
+};
+
 export const decemberPartners: { heading: Phrase; groups: PartnerGroup[] } = {
   heading: { ko: "함께하는 곳", en: "With us in December" },
   groups: [
     {
       id: "main",
-      label: { ko: "메인 후원", en: "Main sponsors" },
-      lead: { name: "AXMOS", src: "/partners/logos/white/trimmed/axmos.png", w: 900, h: 240, url: "https://axmos.ai/kr", note: { ko: "컨소시엄 코어 5개사", en: "Consortium, five core members" } },
+      // DECIDED 2026-11-14 (사용자: "rephrase axmos, 메인 후원치고는 좀 지원이 너무 없어서"): "메인 후원"을 사실만 말하는 이름으로.
+      // AXMOS는 8월 제로백 빌더톤의 주최(brand 6장 관계 한 문장)이고 12월에 따로 큰 후원이 있는 것은 아니라, 함께해 온 사이로 적습니다. 그 전: 메인 후원 / Main sponsors, 컨소시엄 코어 5개사.
+      label: { ko: "8월부터 함께한 곳", en: "With us since August" },
+      lead: { name: "AXMOS", src: "/partners/logos/white/trimmed/axmos.png", w: 900, h: 240, url: "https://axmos.ai/kr", note: { ko: "8월 제로백 빌더톤을 주최한 AX 컨소시엄의 5개사", en: "The AX consortium that hosted Zero100 in August, five core members" } },
       logos: [
         // DECIDED 2026-10-22 (사용자: "translink, wilt, codepresso, popup, 드림에이스 순서임").
         { name: "Translink Investment", src: "/partners/logos/white/trimmed/translink.png", w: 330, h: 91, url: "https://translink.kr" },

@@ -102,14 +102,14 @@ export const copy = {
 
   milestone: {
     // DECIDED 2026-11-08 (docs/mission-card-brief.md S1, S2).
-    2: ko("멘토 만나고, PO session 듣고, 고친 한 장 올리기", stage(2).milestone!),
+    2: ko("멘토 만나고, Builder session 듣고, 고친 한 장 올리기", stage(2).milestone!),
     3: ko("멘토 만나고, Open tables에서 나누고, 발표 자료 올리기", stage(3).milestone!),
   } as Record<number, Phrase>,
   milestoneConditionsLabel: ko("이걸 다 하면 돼요", d.milestoneConditionsLabel),
   milestoneSubmitLabel: ko("올리는 것", d.milestoneSubmitLabel),
   // DECIDED 2026-11-08 (docs/mission-card-brief.md S3, S4): 조건 넷. kos는 길이가 같을 때만 덮어쓰므로 data/naru.ts의 conditions도 넷입니다.
   conditions: {
-    2: kos(["팀원 절반 넘게 현장에 오기", "멘토 한 분 이상을 절반 넘게 같이 찾아가기", "PO session에 같이 있기", "반박 들은 대로 한 장을 고쳐서 올리기"], stage(2).milestoneDetail!.conditions),
+    2: kos(["팀원 절반 넘게 현장에 오기", "멘토 한 분 이상을 절반 넘게 같이 찾아가기", "Builder session에 같이 있기", "반박 들은 대로 한 장을 고쳐서 올리기"], stage(2).milestoneDetail!.conditions),
     3: kos(["팀원 절반 넘게 Zoom에 들어오기", "멘토 한 분 이상을 절반 넘게 같이 찾아가기", "Open tables에서 어디까지 왔는지 나누기", "발표 자료 올리기"], stage(3).milestoneDetail!.conditions),
   } as Record<number, Phrase[]>,
   // S5~S7: 확인 칩 셋과 카드 아래 두 줄. "시간표 페이지"는 CrossingSeoul이 링크로 그립니다.
@@ -132,7 +132,7 @@ export const copy = {
   // 같은 날 사용자("설명이 너무 긴 거 같아"): 네 줄에서 두 줄씩으로.
   sessionDetail: {
     1: kos(["자기 프로덕트를 Lovable로 기획부터 운영까지 해 온 Carraway & Gatsby가 진행해요.", "생각을 화면으로 빨리 띄워, 멘토에게 한 장과 같이 보여 줄 시안을 만드는 법을 배워요."], stage(1).session?.detail ?? []),
-    2: kos(["현업 PO 세 명이 뭘 왜 만들기로 했고 어디서 멈췄는지 들려줘요.", "주제는 덜어내기, 하나를 남기려고 뭘 뺐는지예요. 끝엔 셋이 대담해요."], stage(2).session?.detail ?? []),
+    2: kos(["가짜연구소에서 프로젝트를 책임지는 빌더들이, 자기 기준으로 하나를 남긴 과정을 들려줘요.", "주제는 덜어내기예요. 뭘 쳐내고 어디에 집중했는지, 한 사람씩 30분 안팎으로."], stage(2).session?.detail ?? []),
     3: kos(["만드는 날, 팀과 팀이 Zoom에 모여 어디까지 왔는지 나눠요.", "막힌 지점을 다른 팀에 묻고 서로의 생각을 빌려 가요."], stage(3).session?.detail ?? []),
   } as Record<number, Phrase[]>,
   dayFlowLabel: ko("하루 일정 보기", d.dayFlowLabel),
@@ -181,7 +181,7 @@ export const copy = {
     2: kos(
       [
         "멘토 찾아가기. 잡아 둔 시간에 팀이 같이, 한 장을 들고",
-        "PO session. 현업 PO 세 명이 뭘 왜 만들기로 했고 어디서 멈췄는지 들려주고, 이어서 대담",
+        "Builder session. 가짜연구소에서 프로젝트를 책임지는 빌더들이 뭘 쳐내고 뭘 남겼는지 들려줘요",
         "미션 올리기. 멘토랑 찍은 사진, 고친 한 장 PDF",
       ],
       (stage(2).flow ?? []).map((r) => r.what),
@@ -241,5 +241,5 @@ export const copy = {
     naru.gains.items.map((x) => x.body),
   ),
 
-  leadNote: ko("컨소시엄 핵심 회사 다섯 곳", MAIN_LEAD_NOTE),
+  leadNote: ko("8월 제로백 빌더톤을 연 AX 컨소시엄, 핵심 회사 다섯 곳", MAIN_LEAD_NOTE),
 };

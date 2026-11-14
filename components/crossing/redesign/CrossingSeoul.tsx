@@ -13,6 +13,7 @@ import {
   openChatLabels,
   register as registerCopy,
   decemberPartners,
+  issueTalks,
   partnerGroup,
   partnerLogo,
 } from "@/data/naru";
@@ -567,6 +568,21 @@ export default function CrossingSeoul() {
                     <div className="mt-3 min-w-0 lg:mt-0 lg:pl-10">
                       <h3 className={`break-keep ${HEADING} ${INK}`}>{t(s.title)}</h3>
                       <p className={`mt-2 max-w-[42rem] break-keep ${BODY} ${SOFT} lg:max-w-none`}><Lines text={t(C.line[s.dayOffset] ?? s.line)} /></p>
+                      {/* DECIDED 2026-11-14 (사용자: "로고로 보여줘"): Day 0에 이야기 중인 출제사와 함께 더 찾는 곳을 로고로. 데이터는 data/naru.ts issueTalks. */}
+                      {s.dayOffset === 0 && (
+                        <div className="mt-4 flex flex-wrap items-center gap-x-8 gap-y-3">
+                          <div className="flex items-center gap-4">
+                            <span className={`${META} ${SOFT}`}>{t(issueTalks.label)}</span>
+                            {issueTalks.logos.map((l) => (
+                              <Image key={l.name} src={l.src} alt={l.name} width={l.w} height={l.h} unoptimized style={logoSize(l, 3000, 60, 108)} className="block" />
+                            ))}
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <span className={`${META} ${SOFT}`}>{t(issueTalks.moreLabel)}</span>
+                            <Image src={issueTalks.more.src} alt={issueTalks.more.name} width={issueTalks.more.w} height={issueTalks.more.h} unoptimized style={logoSize(issueTalks.more, 3000, 60, 108)} className="block" />
+                          </div>
+                        </div>
+                      )}
                       {(s.session || s.chips.length > 0) && (
                         <p className={`mt-4 flex flex-wrap gap-x-5 gap-y-1 ${META} text-caption`}>
                           {/* DECIDED 2026-11-09 (사용자, 스크린숏: "각 세션 클릭하면 세션 설명이 나오게"): 세션 이름이 버튼이고, 누르면 아래에 설명이 펼쳐집니다. */}
@@ -652,9 +668,18 @@ export default function CrossingSeoul() {
             <h2 id="partners-title" className={`break-keep ${TITLE} ${NAVY}`}>{t(decemberPartners.heading)}</h2>
             {(() => {
               const [main, ...rest] = decemberPartners.groups;
-              const others = rest.flatMap((g) =>
-                g.oneCard ? [{ l: g.logos[0] as PartnerLogo, more: g.logos.slice(1) as PartnerLogo[], caption: t(g.label) }] : g.logos.map((l) => ({ l: l as PartnerLogo, more: [] as PartnerLogo[], caption: t(g.label) })),
-              );
+              const cells = (ids: string[]) =>
+                rest.filter((g) => ids.includes(g.id)).flatMap((g) =>
+                  g.oneCard ? [{ l: g.logos[0] as PartnerLogo, more: g.logos.slice(1) as PartnerLogo[], caption: t(g.label) }] : g.logos.map((l) => ({ l: l as PartnerLogo, more: [] as PartnerLogo[], caption: t(g.label) })),
+                );
+              // DECIDED 2026-11-14 (사용자, 스크린숏: "종류별로 나누어져 있으면 좋겠음"): 후원 열넷을 한 격자에서 넷으로 나눔.
+              // 카드 아래 캡션(무엇으로 함께하는지)은 그대로 두고, 묶음 이름이 위에 섭니다. 새 묶음 id가 생기면 아래 넷 중 하나에 넣어야 화면에 나옵니다.
+              const KINDS = [
+                { label: { ko: "공간", en: "Venues" }, ids: ["venue"] },
+                { label: { ko: "참가자가 받는 것", en: "What participants get" }, ids: ["tech", "award", "prize", "coupon"] },
+                { label: { ko: "프로그램", en: "Programme" }, ids: ["workshop", "snack"] },
+                { label: { ko: "알리고 잇는 곳", en: "Community and partners" }, ids: ["community", "media", "domain"] },
+              ];
               const GROUP = `mt-6 border-t ${RULE} pt-6`;
               return (
                 <>
@@ -701,11 +726,16 @@ export default function CrossingSeoul() {
 
                   <div className={GROUP}>
                     <h3 className={`${META} font-bold ${INK}`}>{t({ ko: "후원", en: "Sponsors and partners" })}</h3>
-                    <div className="mt-3 flex flex-wrap justify-center gap-x-3 gap-y-5">
-                      {others.map(({ l, more, caption }) => (
-                        <PartnerCell key={l.name} l={l} more={more} caption={caption} area={2600} maxH={42} className={ROW4} />
-                      ))}
-                    </div>
+                    {KINDS.map((k) => (
+                      <div key={k.label.en} className="mt-4 first-of-type:mt-3">
+                        <h4 className={`${META} font-semibold ${SOFT}`}>{t(k.label)}</h4>
+                        <div className="mt-2 flex flex-wrap gap-x-3 gap-y-5">
+                          {cells(k.ids).map(({ l, more, caption }) => (
+                            <PartnerCell key={l.name} l={l} more={more} caption={caption} area={2600} maxH={42} className={ROW4} />
+                          ))}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </>
               );
