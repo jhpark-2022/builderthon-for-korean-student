@@ -8,8 +8,6 @@
 //
 // DECIDED 2026-10-08 (사용자: "팀 - 전원 현장 편성"): 한 폼에 한 사람입니다. 참가 형태, 팀 이름, 팀원 줄, 팀 매칭
 // 희망은 없습니다. 팀은 현장에서 맺습니다.
-// DECIDED 2026-11-14 (사용자: "혼자해도 되고, team of two 로도 할 수 있도록"): 위 10-08을 대신합니다. 맨 위에 참가 형태(혼자, 둘이 한 팀).
-// 둘이 한 팀이면 "내 정보" 아래에 "함께 오는 팀원" 묶음이 같은 칸으로 열립니다. 팀 이름과 매칭 희망은 여전히 묻지 않습니다.
 //
 // 2026-10-08 (폼 리뷰, 접근성 감사, 브랜드 감사 반영):
 //   포커스  열릴 때 닫기 버튼으로, Tab은 대화상자 안에서 돌고, 뒤의 페이지는 inert, 닫으면 연 버튼으로 돌아갑니다
@@ -23,6 +21,12 @@
 //           스크롤 영역 위에 떠 있어, 폰에서 입력칸의 오른쪽 끝을 누르면 폼이 닫혔습니다.
 //   안내    2026-10-15부터 없습니다. 폼이 바로 시작합니다(아래 DECIDED 2026-10-15).
 //   끝      꺼진 버튼의 라벨은 언제 켜지는지를 말하고, 바로 아래에 오픈채팅 링크가 있습니다.
+//
+// DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): naru.community 판.
+//   제목    24px(sm 28px). 폼 위의 한 줄(초안이 이 기기에 남는다는 안내)은 없습니다.
+//   완료    보낸 값은 문장이 아니라 이름, 카카오톡 ID, 이메일 세 줄의 표. 안내 문장은 문장마다 줄을 나눕니다.
+//   화살표  오픈채팅 버튼과 링크 끝의 →를 뺐습니다(OpenChatLink와 같음).
+//   팀 코드는 사람 칸의 하나라(data/crossingForm.ts) 이 파일은 따로 그리지 않고, 서버의 team_code_full은 아래 오류 줄이 읽습니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useRef, useState } from "react";
@@ -42,7 +46,7 @@ import { links, type Phrase } from "@/data/dictionaryCore";
 import { BODY, META } from "@/components/ui/typography";
 import { buttonClass } from "@/components/ui/Button";
 import {
-  COUNTRY_OTHER, COUNTRY_OTHER_KEY, JOIN_TEAM, MEMBER_FIELDS, REGISTRATION_FIELDS, MAX_TEXT, MAX_TEXTAREA, TEAMMATE_COPY, TEAMMATE_SKIP,
+  COUNTRY_OTHER, COUNTRY_OTHER_KEY, MEMBER_FIELDS, REGISTRATION_FIELDS, MAX_TEXT, MAX_TEXTAREA,
   type Field, validateField, validatePerson,
 } from "@/data/crossingForm";
 
@@ -66,6 +70,11 @@ const SELECT_ARROW = `appearance-none bg-[url("data:image/svg+xml,%3Csvg%20xmlns
 // 보안 확인 토큰을 기다리는 시간(브리프 O4). 넘으면 그 전의 "잠시 기다려 주세요" 문구를 보여 줍니다.
 const BOT_WAIT_MS = 20_000;
 
+/** 문장마다 줄을 나눕니다(완료 화면의 안내 두 문단). */
+function sentences(text: string) {
+  return text.split(/(?<=[.?!])\s+/).map((x, i) => <span key={i} className="block">{x}</span>);
+}
+
 type Answers = Record<string, string | boolean>;
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -80,7 +89,6 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
   const { t, locale } = useLocale();
   const reduce = useReducedMotion();
   const [person, setPerson] = useState<Answers>({});
-  const [mate, setMate] = useState<Answers>({}); // 둘이 한 팀일 때의 팀원(2026-11-14)
   const [reg, setReg] = useState<Answers>({});
   const [website, setWebsite] = useState(""); // 허니팟(url_confirm). 초안에 넣지 않습니다.
   const [status, setStatus] = useState<Status>("idle");
@@ -114,10 +122,9 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
     try {
       const raw = window.localStorage.getItem(DRAFT_KEY);
       if (!raw) return;
-      const d = JSON.parse(raw) as { person?: Answers; mate?: Answers; reg?: Answers; members?: { a?: Answers }[] };
+      const d = JSON.parse(raw) as { person?: Answers; reg?: Answers; members?: { a?: Answers }[] };
       const p = d.person ?? d.members?.[0]?.a;
       if (p && typeof p === "object") setPerson(p);
-      if (d.mate && typeof d.mate === "object") setMate(d.mate);
       if (d.reg && typeof d.reg === "object") {
         const known = new Set(REGISTRATION_FIELDS.map((f) => f.key));
         setReg(Object.fromEntries(Object.entries(d.reg).filter(([k]) => known.has(k) && k !== "consent")));
@@ -129,9 +136,9 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
     if (!touched || status === "success") return;
     try {
       const regDraft = Object.fromEntries(Object.entries(reg).filter(([k]) => k !== "consent"));
-      window.localStorage.setItem(DRAFT_KEY, JSON.stringify({ person, mate, reg: regDraft }));
+      window.localStorage.setItem(DRAFT_KEY, JSON.stringify({ person, reg: regDraft }));
     } catch { /* ignore */ }
-  }, [person, mate, reg, touched, status]);
+  }, [person, reg, touched, status]);
 
   // 열고 닫을 때의 상태 정리(2026-10-08).
   //   열 때  지난번에 등록을 마친 채 닫았다면 빈 폼으로. 그 전에는 새로고침할 때까지 "등록됐습니다"만 보였습니다.
@@ -141,7 +148,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
       // DECIDED 2026-11-02 (브리프 O1, D4): 이 기기에서 등록했으면 완료 화면으로 엽니다. 버튼이 "등록했습니다"이고, 오픈채팅과 테스트와 문의가 그 화면에 있습니다.
       if (registeredEcho && !preview && !another) { setEcho(registeredEcho); setStatus("success"); return; }
       if (statusRef.current === "success") {
-        setPerson({}); setMate({}); setReg({}); setErrors({}); setTouched(false); setEcho(null); setStatus("idle");
+        setPerson({}); setReg({}); setErrors({}); setTouched(false); setEcho(null); setStatus("idle");
       }
       return;
     }
@@ -192,20 +199,12 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
   const clearError = (key: string) => setErrors((e) => (key in e ? Object.fromEntries(Object.entries(e).filter(([k]) => k !== key)) : e));
   const setPersonField = (k: string, v: string | boolean) => { setTouched(true); setPerson((p) => ({ ...p, [k]: v })); clearError(`m.${k}`); };
   const setRegField = (k: string, v: string | boolean) => { setTouched(true); setReg((r) => ({ ...r, [k]: v })); clearError(`reg.${k}`); };
-  const setMateField = (k: string, v: string | boolean) => { setTouched(true); setMate((p) => ({ ...p, [k]: v })); clearError(`t.${k}`); };
 
   const otherCountry = person.study_country === COUNTRY_OTHER;
-  const mateOtherCountry = mate.study_country === COUNTRY_OTHER;
-  const isTeam = reg.join_type === JOIN_TEAM;
 
   const validate = (): Record<string, string> => {
     const e: Record<string, string> = {};
     for (const [k, code] of Object.entries(validatePerson(person))) e[`m.${k}`] = code;
-    if (isTeam) {
-      for (const [k, code] of Object.entries(validatePerson(mate, true))) e[`t.${k}`] = code;
-      const a = String(person.email ?? "").trim().toLowerCase();
-      if (!e["t.email"] && a && a === String(mate.email ?? "").trim().toLowerCase()) e["t.email"] = "same_email";
-    }
     for (const f of REGISTRATION_FIELDS) {
       const err = validateField(f, reg[f.key]);
       if (err) e[`reg.${f.key}`] = f.key === "consent" ? "consent_required" : err;
@@ -240,11 +239,9 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
 
   const send = async () => {
     setStatus("submitting");
-    // 서버로 보내는 꼴. 혼자면 members는 하나, 둘이 한 팀이면 [나, 팀원]. 나라가 목록에 있으면 나라 이름 칸은 보내지 않습니다.
+    // 서버로 보내는 꼴. 한 폼에 한 사람이라 members는 늘 하나입니다. 나라가 목록에 있으면 나라 이름 칸은 보내지 않습니다.
     const member: Answers = { ...person };
     if (!otherCountry) delete member[COUNTRY_OTHER_KEY];
-    const teammate: Answers = { ...mate };
-    if (!mateOtherCountry) delete teammate[COUNTRY_OTHER_KEY];
     const email = String(person.email ?? "").trim();
     // 응답이 오지 않으면 20초 뒤에 끊습니다. 그 전에는 "보내는 중"에서 영영 멈췄습니다.
     const ctrl = new AbortController();
@@ -256,16 +253,13 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
         signal: ctrl.signal,
         body: JSON.stringify({
           eventSlug: CURRENT_EVENT, ref: refSource, submittedAt: new Date().toISOString(), url_confirm: website,
-          registration: reg, members: isTeam ? [member, teammate] : [member], turnstileToken: botToken,
+          registration: reg, members: [member], turnstileToken: botToken,
         }),
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) { setStatus("error"); setErrorCode(data.error ?? "generic"); setBotToken(null); setBotReset((n) => n + 1); return; }
       // 되비침은 서버 응답이 아니라 보낸 값 그대로입니다(브리프 O2, 5장 4).
-      const sent: RegisteredEcho = {
-        name: String(person.name ?? "").trim(), contact: String(person.contact ?? "").trim(), email,
-        ...(isTeam ? { mate: String(mate.name ?? "").trim() } : {}),
-      };
+      const sent: RegisteredEcho = { name: String(person.name ?? "").trim(), contact: String(person.contact ?? "").trim(), email };
       setEcho(sent); setAnother(false);
       setStatus("success");
       try { window.localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
@@ -290,7 +284,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
 
   // "다른 사람으로 등록"(브리프 O1): 같은 기기에서 친구를 등록합니다. 빈 폼으로, 보안 확인도 새로.
   const registerAnother = () => {
-    setPerson({}); setMate({}); setReg({}); setErrors({}); setTouched(false); setErrorCode(null); setEcho(null);
+    setPerson({}); setReg({}); setErrors({}); setTouched(false); setErrorCode(null); setEcho(null);
     setAnother(true); setStatus("idle"); setBotToken(null); setBotReset((n) => n + 1);
   };
 
@@ -312,7 +306,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
         <label key={f.key} className={`flex min-h-[44px] cursor-pointer items-start gap-3 py-2 ${BODY} text-white/85`}>
           <input {...common} type="checkbox" checked={value === true} onChange={(e) => set(e.target.checked)} className="mt-1 h-5 w-5 shrink-0 rounded border-white/20 bg-naru-surface-2 accent-accent" />
           <span>
-            <span className="font-semibold">{label}</span>
+            <span className="font-semibold">{label}</span>{f.required && <span aria-hidden className="ml-1 text-rose-400">*</span>}
             {help && <span id={helpId} className={`mt-[8px] block ${META} leading-relaxed text-naru-muted`}>{help}</span>}
             {err && <span id={errorId} className={`mt-[8px] block ${META} font-medium text-rose-300`}>{errText(err, max)}</span>}
           </span>
@@ -328,7 +322,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
       return (
         <div key={f.key} role="radiogroup" aria-labelledby={labelId} aria-describedby={described} aria-required={f.required || undefined} aria-invalid={err ? true : undefined} className="flex flex-col gap-[8px]">
           <span id={labelId} className={`${BODY} font-semibold leading-snug text-white/85`}>
-            {label}
+            {label}{f.required && <span aria-hidden className="ml-1 text-rose-400">*</span>}
           </span>
           {help && <span id={helpId} className={`${META} leading-relaxed text-naru-muted`}>{help}</span>}
           <div className="mt-[3.25px] flex flex-col gap-[9px]">
@@ -340,9 +334,8 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                   aria-describedby={errorId}
                   className="peer sr-only"
                 />
-                <span className={`flex min-h-[44px] items-start gap-3 rounded-lg border border-white/10 bg-naru-surface-2/70 px-[14px] py-[10px] transition-colors hover:border-white/25 peer-checked:border-accent peer-checked:bg-accent/[0.12] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${f.plain ? "" : "peer-checked:[&>span:first-child]:border-accent peer-checked:[&>span:first-child]:bg-action peer-checked:[&>span:first-child]:text-naru-ink"}`}>
-                  {/* 2026-11-14: 번호 동그라미를 칠하는 선택 표시는 번호가 있을 때만. plain 카드에서는 첫 자식이 글자 줄이라 글이 덮였습니다. */}
-                  {!f.plain && <span aria-hidden className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/45 ${META} font-bold text-white/85`}>{(f.firstStep ?? 1) + n}</span>}
+                <span className="flex min-h-[44px] items-start gap-3 rounded-lg border border-white/10 bg-naru-surface-2/70 px-[14px] py-[10px] transition-colors hover:border-white/25 peer-checked:border-accent peer-checked:bg-accent/[0.12] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent peer-checked:[&>span:first-child]:border-accent peer-checked:[&>span:first-child]:bg-action peer-checked:[&>span:first-child]:text-naru-ink">
+                  <span aria-hidden className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/45 ${META} font-bold text-white/85`}>{(f.firstStep ?? 1) + n}</span>
                   <span className="min-w-0">
                     <span className={`block break-keep ${BODY} font-bold leading-snug text-white`}>{t(o.label)}</span>
                     {o.hint && <span className={`mt-[8px] block break-keep ${META} leading-relaxed text-naru-muted`}>{t(o.hint)}</span>}
@@ -359,7 +352,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
       <div key={f.key} className="flex flex-col gap-[8px]">
         <label htmlFor={id} className={`flex items-center gap-1.5 ${BODY} font-semibold text-white/85`}>
           {label}
-          {!f.required && <span className={`${META} font-normal text-naru-muted`}>{t(copy.optional)}</span>}
+          {f.required ? <span aria-hidden className="text-rose-400">*</span> : <span className={`${META} font-normal text-naru-muted`}>{t(copy.optional)}</span>}
         </label>
         {f.type === "textarea" ? (
           <textarea {...common} value={String(value ?? "")} maxLength={max} rows={3} onChange={(e) => set(e.target.value)} className={FIELD} />
@@ -402,7 +395,7 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                 완료 화면에서는 제목이 본문 안에 있어 이 줄에는 닫기 버튼만 남습니다. */}
             <div className="flex shrink-0 items-center justify-between gap-3 px-[27px] pb-[13.5px] pt-[18px] sm:px-[40.5px] sm:pt-[27px]">
               {status === "success" ? <span /> : (
-                <h3 id="crossing-register-title" className={`break-keep text-lg font-bold leading-tight text-white`}>{t(preview && !closed ? copy.previewTitle : copy.title)}</h3>
+                <h3 id="crossing-register-title" className="break-keep text-[1.5rem] font-bold leading-tight text-white sm:text-[1.75rem]">{t(preview && !closed ? copy.previewTitle : copy.title)}</h3>
               )}
               <button ref={closeRef} type="button" onClick={onClose} aria-label={t(copy.close)} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/25 bg-naru-surface text-white/85 transition hover:border-white/45 hover:text-white active:scale-95">
                 <svg aria-hidden width="16" height="16" viewBox="0 0 15 15" fill="none"><path d="M1 1l13 13M14 1L1 14" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg>
@@ -414,21 +407,25 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                   <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-accent/40 bg-accent/10">
                     <svg aria-hidden width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="text-accent"><path d="M4 12.5l5 5L20 6.5" /></svg>
                   </span>
-                  <h3 ref={successRef} tabIndex={-1} id="crossing-register-title" className={`mt-6 text-lg font-bold leading-tight text-white focus:outline-none`}>{t(copy.successTitle)}</h3>
+                  <h3 ref={successRef} tabIndex={-1} id="crossing-register-title" className="mt-6 text-[1.5rem] font-bold leading-tight text-white focus:outline-none sm:text-[1.75rem]">{t(copy.successTitle)}</h3>
                   {/* DECIDED 2026-11-02 (브리프 O2): 보낸 이름, 카카오톡 ID, 이메일을 그대로 되비칩니다. 오타를 잡을 곳이 이 화면 하나입니다.
                       예전 done 값("1")으로 열려 되비칠 값이 없으면 그리지 않습니다. 아래 한 줄은 고치는 길과 다시 보냈을 때 일어나는 일(O1). */}
                   {echo?.email && (
-                    <p id="crossing-register-echo" className={`mx-auto mt-3 max-w-sm break-keep ${BODY} leading-relaxed text-white/85`}>
-                      {t(copy.successEcho).replace("{name}", echo.name).replace("{contact}", echo.contact).replace("{email}", echo.email)}
-                      {echo.mate && <> {t(copy.successEchoMate).replace("{mate}", echo.mate)}</>}
-                    </p>
+                    <dl id="crossing-register-echo" aria-label={t(copy.successEchoLabel)} className={`mx-auto mt-4 w-full max-w-sm divide-y divide-white/10 rounded-xl border border-white/10 text-left ${META}`}>
+                      {([[copy.echoName, echo.name], [copy.echoContact, echo.contact], [copy.echoEmail, echo.email]] as const).map(([k, v]) => (
+                        <div key={k.en} className="flex items-baseline justify-between gap-4 px-4 py-2.5">
+                          <dt className="shrink-0 text-naru-muted">{t(k)}</dt>
+                          <dd className="min-w-0 break-all text-right font-semibold text-white">{v}</dd>
+                        </div>
+                      ))}
+                    </dl>
                   )}
-                  <p className={`mx-auto mt-2 max-w-sm break-keep ${META} leading-relaxed text-naru-muted`}>{t(copy.successResend)}</p>
-                  <p className={`mx-auto mt-3 max-w-sm break-keep ${BODY} leading-relaxed text-naru-muted`}>{t(copy.successBody)}</p>
+                  <p className={`mx-auto mt-3 max-w-sm break-keep ${META} leading-relaxed text-naru-muted`}>{sentences(t(copy.successResend))}</p>
+                  <p className={`mx-auto mt-6 max-w-sm break-keep ${BODY} leading-relaxed text-white/85`}>{sentences(t(copy.successBody))}</p>
                   {/* DECIDED 2026-10-15 (사용자): 소식은 오픈채팅으로만 나가므로, 이 화면에서 그 방으로 가는 버튼이 테스트 카드보다 먼저 섭니다. */}
                   {links.openChat && (
                     <a href={links.openChat} target="_blank" rel="noopener noreferrer" onClick={() => trackOpenChat("naru-register-success")} className={`${buttonClass("secondary", "naru")} mt-5 w-full max-w-sm justify-center`}>
-                      {t(openChatLabels.december)}<span aria-hidden className="ml-1.5">→</span>
+                      {t(openChatLabels.december)}
                     </a>
                   )}
                   {/* DECIDED 2026-11-02 (브리프 O5, D6 뒤집음): 카카오톡 설치 안내가 뜨는 쪽은 데스크톱이라 휴대폰 안내는 lg부터만. */}
@@ -447,39 +444,18 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                       미리 보기 안내 상자(registerNote 세 줄 + previewKeep)를 뺐습니다. 언제 여는지와 혼자 등록한다는 말은 히어로 한 줄이
                       하고, 꺼진 버튼의 라벨이 11월을 말합니다. 마감 안내만 남깁니다. */}
                   {/* DECIDED 2026-11-02 (브리프 R1, D1 둠): 미리 보기에서도 적은 내용이 이 기기에 남으므로 같은 한 줄 자리에 previewNote. 마감 뒤에는 없음. */}
-                  {!preview ? <p className={`${META} leading-relaxed text-naru-muted`}>{t(copy.draftNote)}</p>
-                    : !closed && <p id="crossing-register-preview-note" className={`${META} leading-relaxed text-naru-muted`}>{t(copy.previewNote)}</p>}
                   {closed && (
                     <p id="crossing-register-preview" role="note" className={`mt-4 card-tint rounded-xl p-[16px] ${META} leading-relaxed text-white sm:p-[18px]`}>{t(copy.closed)}</p>
                   )}
                   <form onSubmit={onSubmit} className="mt-6 flex flex-col gap-[24px]" noValidate>
-                    {/* DECIDED 2026-11-14 (폼 디자인 점검): 선택 칸이 링크드인 하나뿐이라 별표 17개와 "* 필수" 줄을 빼고, 선택 칸에만 "(선택)". 필수는 aria-required로 그대로 읽힙니다. */}
+                    <p className={`${META} leading-relaxed text-naru-muted`}><span aria-hidden className="text-rose-400">*</span> {t(copy.requiredLegend)}</p>
                     {/* 허니팟. 8월과 같은 세 겹의 방어(이름, 매니저 opt-out, 서버 로그). */}
                     <input type="text" name="url_confirm" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} aria-hidden="true" autoComplete="off" data-1p-ignore data-lpignore="true" data-bwignore data-form-type="other" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }} />
-                    {/* DECIDED 2026-11-14: 참가 형태가 맨 위. 고른 것에 따라 아래 묶음이 하나 또는 둘. */}
-                    {REGISTRATION_FIELDS.filter((f) => f.key === "join_type").map((f) => renderField(f, reg[f.key], (v) => setRegField(f.key, v), errors[`reg.${f.key}`], `reg-${f.key}`))}
-                    {/* DECIDED 2026-11-14 (폼 디자인 점검): 둘이면 "내 정보"와 "함께 오는 팀원" 소제목이 스크롤할 때 위에 붙어, 지금 누구 칸을 적는지 보입니다. */}
-                    {isTeam && <div aria-hidden className="-mb-[16px] border-t border-white/10" />}
-                    {isTeam && <h4 className={`sticky top-0 z-10 -mx-1 bg-naru-surface px-1 py-[8px] -mb-[8px] ${BODY} font-bold text-white`}>{t(TEAMMATE_COPY.me)}</h4>}
                     {MEMBER_FIELDS.map((f) => {
                       // 나라 이름은 "그 밖의 나라"를 골랐을 때만 묻고, 그때는 필수입니다(validatePerson과 같은 규칙).
                       if (f.key === COUNTRY_OTHER_KEY && !otherCountry) return null;
                       const field = f.key === COUNTRY_OTHER_KEY ? { ...f, required: true } : f;
                       return renderField(field, person[f.key], (v) => setPersonField(f.key, v), errors[`m.${f.key}`], `m-${f.key}`);
-                    })}
-                    {isTeam && (
-                      <>
-                        <div aria-hidden className="-mb-[16px] border-t border-white/10" />
-                        <h4 className={`sticky top-0 z-10 -mx-1 bg-naru-surface px-1 py-[8px] -mb-[16px] ${BODY} font-bold text-white`}>{t(TEAMMATE_COPY.heading)}</h4>
-                        <p className={`-mb-[8px] ${META} leading-relaxed text-naru-muted`}>{t(TEAMMATE_COPY.note)}</p>
-                      </>
-                    )}
-                    {/* DECIDED 2026-11-14 (사용자: "팀원의 AI 능력까지는 볼 필요가 없음", 폼 디자인 점검): 팀원은 AI 질문을 묻지 않고, 위에서 읽은 도움말은 다시 보이지 않습니다. */}
-                    {isTeam && MEMBER_FIELDS.map((f) => {
-                      if (f.key === COUNTRY_OTHER_KEY && !mateOtherCountry) return null;
-                      if (TEAMMATE_SKIP.includes(f.key)) return null;
-                      const field = { ...(f.key === COUNTRY_OTHER_KEY ? { ...f, required: true } : f), help: undefined };
-                      return renderField(field, mate[f.key], (v) => setMateField(f.key, v), errors[`t.${f.key}`], `t-${f.key}`);
                     })}
                     {REGISTRATION_FIELDS.filter((f) => !f.fixed).map((f) => renderField(f, reg[f.key], (v) => setRegField(f.key, v), errors[`reg.${f.key}`], `reg-${f.key}`))}
                     {REGISTRATION_FIELDS.filter((f) => f.key === "consent").map((f) => renderField(f, reg[f.key], (v) => setRegField(f.key, v), errors[`reg.${f.key}`], `reg-${f.key}`))}
@@ -496,7 +472,6 @@ export default function RegisterModal({ open, onClose, onRegistered, refSource, 
                         {!closed && links.openChat && (
                           <a href={links.openChat} target="_blank" rel="noopener noreferrer" onClick={() => trackOpenChat("naru-register-modal")} className={`inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 ${BODY} font-semibold text-accent underline underline-offset-4 hover:text-white sm:w-auto`}>
                             {t(openChatLabels.december)}
-                            <span aria-hidden>→</span>
                           </a>
                         )}
                       </>

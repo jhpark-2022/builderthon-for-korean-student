@@ -44,9 +44,9 @@
 | 11-05 | `merge-paper-brief.md` | 종이 가지를 main에, 백엔드와 도구 페이지 | 적용 (651e963, 합치기 b2d5c79) |
 | 11-06 | `first-click-brief.md` | 처음 보는 사람은 어디를 누르나 | 적용 (652f85c) |
 | 11-08 | 새 화면(`components/*/redesign/`)은 브리프 없이 들어옴 | 해요체, 공용 헤더 | `brand-voice-brief.md`가 정본을 뒤따라 맞춤 |
-| 11-11 | `poster-first-brief.md` | 첫 화면과 공유 카드를 포스터로(사실 넷, 로고 띠, 멘토 줄), 등록 여는 날 11월 16일 | 적용(`design/poster-first`, P6은 main) (7d5e673, 90df562, 06cb89a) |
-| 11-12 | `poster-phone-brief.md` | 폰에서 받는 것이 보이게(사실 순서, 받는 것 숫자, 총 200만원, 폰 버튼 하나, 띠 두 칸 격자, 묶음 id) | 적용(`design/poster-phone`) (8a65a6e, e648b82) |
-| 11-12 | `dedupe-brief.md` | 같은 말을 한 자리에만(받는 것 줄, 남는 것 항목, Day 2와 3 하루 일정, 칩, 사실 목록 넷, Day 2 시간) | 적용(`content/dedupe`) |
+| 11-11 | `poster-first-brief.md` | 첫 화면과 공유 카드를 포스터로(사실 넷, 로고 띠, 멘토 줄), 등록 여는 날 11월 16일 | 적용(`design/poster-first`, P6은 main) (7d5e673, 90df562, 06cb89a). 화면은 2026-11-15 naru.community 판이 대체(사실 넷, 로고 띠, 멘토 줄, 공유 카드 로고 줄을 걷음. 등록 여는 날 11월 16일은 남음) |
+| 11-12 | `poster-phone-brief.md` | 폰에서 받는 것이 보이게(사실 순서, 받는 것 숫자, 총 200만원, 폰 버튼 하나, 띠 두 칸 격자, 묶음 id) | 적용(`design/poster-phone`) (8a65a6e, e648b82). 2026-11-15 naru.community 판이 대체 |
+| 11-12 | `dedupe-brief.md` | 같은 말을 한 자리에만(받는 것 줄, 남는 것 항목, Day 2와 3 하루 일정, 칩, 사실 목록 넷, Day 2 시간) | 적용(`content/dedupe`). 2026-11-15 naru.community 판이 대체(사실 목록, 남는 것, 하루 일정, Builder session을 그 판으로) |
 
 ### 배경 (WebGL 캔버스. 2026-11-05 종이 팔레트로 전부 폐기)
 
@@ -98,7 +98,7 @@
 | 11-08 | `mission-card-brief.md` | 미션을 펼친 카드로, 세션 뒤 지원 | 적용(그 뒤 누르면 펼쳐지게 바뀜) (bbda6cc, 접기 6f5be85) |
 | 11-08 | `booking-cutoff-brief.md` | 멘토 칸 마감, 팀 간격 2시간, 칸 수 제한 없음 | 적용(0022) (ca5ce6b) |
 | 11-13 | `proofs-once-brief.md` | 미션 인증 한 번만을 DB에서도, 이슈 브리프 버킷을 마이그레이션에 | 적용(0023, DB는 11-13에 적용) |
-| 11-14 | `pair-registration-brief.md` | 등록을 혼자 또는 둘이 한 팀으로, 팀 짜기 명단에 pair_with | 적용(0024, DB는 11-14에 적용) |
+| 11-14 | `pair-registration-brief.md` | 등록을 혼자 또는 둘이 한 팀으로, 팀 짜기 명단에 pair_with | 적용(0024, DB는 11-14에 적용). 폼은 2026-11-15 naru.community 판의 팀 코드(answers.team_code, 한 코드에 둘)가 대체. 표와 0024는 그대로 |
 
 ### 등록과 도구 페이지
 

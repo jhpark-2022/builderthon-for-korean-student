@@ -180,20 +180,20 @@ export default function NaruHome() {
               ))}
             </dl>
 
-            <div className="mt-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-8">
-              {crew && (
-                <a href={crew.join.mail} onClick={() => track("naru_mail", { src: `how_${crew.join.id}` })} className={`${BTN_GHOST} self-start`}>
-                  {t(crew.join.label)}
-                </a>
-              )}
-              <div>
-                <p className={`break-keep ${META} ${SOFT}`}>{t(C.ask)}</p>
-                <p className={`${META} ${SOFT}`}>
-                  {t(partnerContact.addressLabel)}{" "}
-                  <a href={`mailto:${naruLinks.contact}`} className={`-my-3 inline-flex min-h-[44px] select-all items-center py-3 font-semibold ${NAVY} underline decoration-naru-navy/30 underline-offset-4 hover:decoration-naru-navy`}>{naruLinks.contact}</a>
-                </p>
+            {/* DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): naru.community 판. 운영진 줄은 버튼이
+                아니라 위 목록과 같은 한 줄(이름과 부탁, 그 아래 메일 주소). */}
+            <dl className={`border-b ${RULE}`}>
+              <div className="grid gap-1 py-5 sm:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] sm:gap-x-10 lg:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] lg:py-6">
+                <dt className={`break-keep ${BODY} font-bold ${INK}`}>{crew ? t(crew.join.label) : null}</dt>
+                <dd className={`break-keep ${BODY} ${SOFT}`}>
+                  {t(C.ask)}
+                  <span className="mt-2 block">
+                    {t(partnerContact.addressLabel)}{" "}
+                    <a href={`mailto:${naruLinks.contact}`} className={`-my-3 inline-flex min-h-[44px] select-all items-center py-3 font-semibold ${NAVY} underline decoration-naru-navy/30 underline-offset-4 hover:decoration-naru-navy`}>{naruLinks.contact}</a>
+                  </span>
+                </dd>
               </div>
-            </div>
+            </dl>
           </div>
         </section>
 
@@ -225,7 +225,7 @@ export default function NaruHome() {
         {/* ── 매니페스토 ─────────────────────────────────────────────── */}
         <section id="join-ways" aria-labelledby="manifesto-title" className="mt-14 pb-16 lg:mt-20 lg:pb-20">
           <div className={FRAME}>
-            <div className="rounded-[22px] bg-[#FFFFFF] px-6 py-10 ring-1 ring-[#E3E0D8] sm:px-10 lg:grid lg:grid-cols-12 lg:gap-12 lg:px-12 lg:py-12">
+            <div className="rounded-[22px] px-6 py-10 ring-1 ring-[#E3E0D8] sm:px-10 lg:grid lg:grid-cols-12 lg:gap-12 lg:px-12 lg:py-12">
               <div className="lg:col-span-5">
                 <h2 id="manifesto-title" className={`${TITLE} ${INK}`}>{t(naru.join.manifesto.label)}</h2>
                 <p className={`mt-3 break-keep ${BODY} ${SOFT}`}><Lines text={t(C.manifestoBody)} /></p>

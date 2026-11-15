@@ -158,7 +158,7 @@ export const openChatLabels = {
   // DECIDED 2026-10-13 (사용자, 스크린숏: "등록 소식 받기를 그냥 소식 받기 이런 느낌으로"): "카카오톡으로 등록 소식 받기"였습니다.
   december: { ko: "카카오톡으로 소식 받기", en: "Get news on KakaoTalk" },
   // 알림 버튼 바로 아래의 한 줄(META). 데스크톱에서 누르면 카카오톡 설치 안내만 뜹니다.
-  phoneHint: { ko: "휴대폰에서 열면 바로 들어갑니다.", en: "On a phone, it opens the chat directly." },
+  phoneHint: { ko: "컴퓨터에서는 설치 안내가 뜰 수 있어요. 휴대폰으로 열면 바로 들어가요.", en: "On a phone, it opens the chat directly." },
   join: { ko: "오픈채팅에서 소식 받기", en: "Get news in the open chat" },
   footer: { ko: "오픈채팅", en: "Open chat" },
 } as const;
@@ -232,7 +232,7 @@ function registerNoteLines(): Phrase[] {
     // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P6): 여는 날을 16일(월)로. 여는 시각은 그대로 쓰지 않음(opensAt 비움).
     { ko: "등록은 11월 16일(월)에 엽니다. 여는 시각은 카카오톡 오픈채팅에서 먼저 알립니다.", en: "Registration opens on Monday, 16 November. The time it opens is announced first in the KakaoTalk open chat." },
     // DECIDED 2026-11-06 (사용자: 정체성 한 줄의 "만들 줄 아는 학생들"을 그대로 쓰고 "전공과 코딩 경험은 조건이 아닙니다"는 뺌): 아래 두 줄도 같음.
-    { ko: "등록은 혼자 또는 둘이 한 팀으로, 팀은 Day 1에 꾸립니다.", en: "Register alone or as a team of two; teams form on Day 1." },
+    { ko: "등록은 한 사람씩, 팀은 Day 1에 맺습니다. 같이 할 사람은 팀 코드로 미리 묶입니다.", en: "Register one person at a time; teams form on Day 1. Two people can pair up in advance with a team code." },
     { ko: `${venueLine.ko} 진행은 한국어입니다.`, en: `${venueLine.en} The programme runs in Korean.` },
   ];
 }
@@ -244,14 +244,15 @@ export const registerNoteShort: Phrase = {
   // DECIDED 2026-11-02 (사용자, 등록 UX 브리프 D2: "14일에 여는 걸로"): 여는 날을 "11월 둘째 주 끝"에서 14일(토)로. 여는 시각은 보류(opensAt은 비움), 카운트다운은 그대로.
   // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P6): 여는 날을 16일(월)로. 여는 시각은 그대로 쓰지 않음(opensAt 비움).
   // DECIDED 2026-11-06 (사용자: 정체성 한 줄과 어긋나 "전공과 코딩 경험은 조건이 아닙니다"를 뺌).
-  ko: "등록은 11월 16일(월)에 엽니다. 혼자 또는 둘이 한 팀으로 등록합니다.",
-  en: "Registration opens Mon 16 Nov. Register alone or as a team of two.",
+  // DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): naru.community 판. 한 사람씩 등록하고, 같이 할 사람은 폼의 팀 코드로 묶입니다.
+  ko: "등록은 11월 16일(월)에 열어요. 한 사람씩 등록해요.",
+  en: "Registration opens Mon 16 Nov. Register alone.",
 };
 
 // DECIDED 2026-11-02 (브리프 O3): 등록이 열리면 위 줄의 "11월 둘째 주 끝"만 빠지고, 혼자 등록과 조건 없음은 같은 자리에 남습니다.
 export const registerNoteOpen: Phrase = {
-  ko: "혼자 또는 둘이 한 팀으로 등록합니다.",
-  en: "Register alone or as a team of two.",
+  ko: "한 사람씩 등록해요.",
+  en: "Register alone.",
 };
 
 export const register = {
@@ -259,7 +260,7 @@ export const register = {
   // 2026-09-18 (감사 반영 브리프 1.1): 창이 열리기 전의 버튼 라벨과 그 아래 캡션. 비활성
   // "등록하기"에 이유가 없어 첫 화면에서 이탈한다는 것이 여섯 관점의 P0였습니다.
   preparing: { ko: "등록 준비 중", en: "Registration opens later" },
-  preparingNote: { ko: "열리면 이 자리에서 알려요", en: "It opens right here when it does" },
+  preparingNote: { ko: "열리면 이 자리에서 알립니다", en: "It opens right here when it does" },
   // DECIDED 2026-10-08 (사용자: "등록은 볼 수 있는데, submit만 못하게"): 창이 열리기 전에도 버튼을 누르면 등록
   // 폼이 열립니다. 무엇을 묻는지 미리 볼 수 있고, 제출 버튼만 꺼져 있습니다. 아래 notYet의 "클릭이 되게 하지는
   // 말고"(2026-09-18)는 이 결정이 대신합니다. 서버는 전과 같이 창이 열리기 전의 제출을 403으로 막습니다.
@@ -267,45 +268,48 @@ export const register = {
   // DECIDED 2026-10-15 (사용자: "그냥 바로 form만 보여줘"): 모달의 미리 보기 안내 상자와 previewKeep은 없앴습니다.
   // DECIDED 2026-11-02 (사용자, 등록 UX 브리프 D2: "14일에 여는 걸로"): 여는 날을 "11월 둘째 주 끝"에서 14일(토)로. 여는 시각은 보류(opensAt은 비움), 카운트다운은 그대로.
   // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P6): 여는 날을 16일(월)로. 여는 시각은 그대로 쓰지 않음(opensAt 비움).
-  previewSubmit: { ko: "11월 16일(월)에 열리면 보낼 수 있어요", en: "You can send this when it opens on Monday, 16 November" },
+  previewSubmit: { ko: "11월 16일(월)부터 보낼 수 있어요", en: "You can send this when it opens on Monday, 16 November" },
   // 미리 보기일 때의 제목. 등록이 열리면 아래 title을 그대로 씁니다.
-  previewTitle: { ko: "크로싱 서울 등록 (미리 보기)", en: "CROSSING SEOUL registration (preview)" },
+  previewTitle: { ko: "크로싱 서울 등록 미리 보기", en: "CROSSING SEOUL registration (preview)" },
   requiredLegend: { ko: "필수", en: "required" },
   // 창이 열리기 전에도 버튼은 보입니다(사용자, 2026-09-18: "넣어는 줘. 클릭이 되게 하지는 말고").
   // disabled이고 title로 이 문장을 보여 줍니다.
-  notYet: { ko: "등록은 아직 열리지 않았어요. 열리면 이 버튼이 켜져요.", en: "Registration is not open yet. This button turns on when it is." },
-  closed: { ko: "등록이 마감됐어요.", en: "Registration has closed." },
+  notYet: { ko: "등록은 아직 열리지 않았습니다. 열리면 이 버튼이 켜집니다.", en: "Registration is not open yet. This button turns on when it is." },
+  closed: { ko: "등록이 마감됐습니다.", en: "Registration has closed." },
   title: { ko: "크로싱 서울 등록", en: "Register for CROSSING SEOUL" },
   // DECIDED 2026-10-15 (사용자: "이 내용 빼줘"): 폼 첫 줄(intro, 스크리닝과 혼자 등록)은 없앴습니다. 폼이 바로 시작합니다.
   // 2026-10-08 (폼 리뷰 10): 초안이 이 기기에 남는다는 것을 알립니다. 동의 표시는 초안에 넣지 않습니다.
   // 2026-10-12: 등록이 열린 뒤에만 그립니다.
-  draftNote: { ko: "입력한 내용은 보내기 전까지 이 기기에만 임시로 저장돼요.", en: "What you type is kept on this device only until you send it." },
+  draftNote: { ko: "적은 내용은 보내기 전까지 이 기기에만 저장돼요.", en: "What you type is kept on this device only until you send it." },
   // DECIDED 2026-11-02 (docs/register-ux-brief.md R1, D1 둠): 미리 보기에서도 적은 내용이 이 기기에 남습니다. 열린 뒤 draftNote가 서는 그 한 줄 자리에 섭니다.
   // 2026-10-15에 뺀 것은 안내 상자 세 줄이고 이것은 그 상자가 아닙니다.
-  previewNote: { ko: "적은 내용은 보내기 전까지 이 기기에만 남고, 열리면 그대로 보낼 수 있어요.", en: "What you type stays on this device only until you send it, and you can send it as it is when registration opens." },
+  previewNote: { ko: "적은 내용은 이 기기에만 저장되니, 등록이 열리면 그대로 보내면 돼요.", en: "What you type stays on this device only until you send it, and you can send it as it is when registration opens." },
   optional: { ko: "(선택)", en: "(optional)" },
   selectPlaceholder: { ko: "선택", en: "Select" },
-  submit: { ko: "등록 보내기", en: "Send registration" },
+  submit: { ko: "등록하기", en: "Register" },
   submitting: { ko: "보내는 중", en: "Sending" },
   // DECIDED 2026-11-02 (브리프 O4): 보안 확인 토큰이 오기 전에 보내기를 누르면 이 라벨로 기다렸다가 토큰이 오는 순간 같은 제출을 이어 보냅니다.
   checking: { ko: "보안 확인 중", en: "Checking" },
   // DECIDED 2026-11-02 (브리프 O1, D4 함): 이 기기에서 등록을 마친 뒤의 버튼 라벨. 누르면 완료 화면이 다시 열립니다.
-  registered: { ko: "등록했어요", en: "You are registered" },
+  registered: { ko: "등록했습니다", en: "You are registered" },
   registerAnother: { ko: "다른 사람으로 등록", en: "Register someone else" },
-  successTitle: { ko: "등록됐어요.", en: "You are registered." },
+  successTitle: { ko: "등록됐어요", en: "You are registered" },
+  // DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): 완료 화면의 되비침은 문장이 아니라 이름, 카카오톡 ID, 이메일 세 줄의 표입니다(RegisterModal).
+  successEchoLabel: { ko: "등록한 내용", en: "What you registered" },
+  echoName: { ko: "이름", en: "Name" },
+  echoContact: { ko: "카카오톡 ID", en: "KakaoTalk ID" },
+  echoEmail: { ko: "이메일", en: "Email" },
   // DECIDED 2026-11-02 (브리프 O2): 확인 메일이 없고(10/15) 카카오톡 ID는 형식 검사가 없어, 오타를 잡을 순간이 이 화면 하나입니다. 보낸 값을 그대로 되비칩니다.
-  successEcho: { ko: "이름 {name}, 카카오톡 ID {contact}, 이메일 {email}로 등록됐어요.", en: "Registered as {name}, KakaoTalk ID {contact}, {email}." },
-  // DECIDED 2026-11-14 (둘이 한 팀): 팀원도 함께 등록됐다는 한 줄. {mate}는 팀원 이름.
-  successEchoMate: { ko: "팀원 {mate}도 같은 팀으로 함께 등록됐어요.", en: "{mate} is registered with you, on the same team." },
+  successEcho: { ko: "이름 {name}, 카카오톡 ID {contact}, 이메일 {email}로 등록됐습니다.", en: "Registered as {name}, KakaoTalk ID {contact}, {email}." },
   // DECIDED 2026-11-02 (브리프 O1, D4): 같은 이메일로 다시 보내면 서버는 처음 것을 남기고 조용히 201입니다(보안 감사 M3). 그 사실을 이 한 줄로 말합니다.
-  successResend: { ko: "고칠 것은 아래 주소로 알려 주세요. 같은 이메일로 다시 보내도 처음 것이 남아요.", en: "Send corrections to the address below. Sending again with the same email keeps the first one." },
+  successResend: { ko: "틀린 게 있으면 맨 아래 주소로 알려 주세요. 같은 이메일로 다시 등록하면 처음 것이 남아요.", en: "Send corrections to the address below. Sending again with the same email keeps the first one." },
   // DECIDED 2026-10-08 (사용자: 등록 뒤 안내 메일은 "내가 수동으로"): 자동 메일을 약속하지 않습니다. 운영진이 직접
   // 보낸다고 적고, 오지 않을 때 할 일과 수정, 삭제의 길을 같이 적습니다. {email}은 등록한 주소로 바뀝니다.
   // DECIDED 2026-10-08 (사용자: 참가비와 장소, Day 0은 "참여자 대상 카톡방으로 공개"): 그 안내가 어디서 오는지도 여기서 말합니다.
   // DECIDED 2026-10-15 (사용자: "그냥 mention을 하지마 메일에 대해서", "계속 up to date 하려면 카톡으로 들어와야 한다고 해줘"):
   // 위 2026-10-08의 안내 메일 문장을 뺐습니다. 메일 이야기는 하지 않고, 소식은 오픈채팅으로 들어와야 받는다고만 씁니다.
   successBody: {
-    ko: "소식은 카카오톡 오픈채팅에서 알려요. 계속 받으려면 지금 들어와 주세요. 장소와 Day 0 안내는 참가자 카카오톡 방에서 알려요.",
+    ko: "소식은 카카오톡 오픈채팅에서 알려요. 지금 들어와 두면 놓치지 않아요. 장소와 Day 0 안내는 참가자 카카오톡 방에서 따로 드려요.",
     en: "News goes out in the KakaoTalk open chat. Join it now to stay up to date. Venue and Day 0 details are shared in the participant KakaoTalk room.",
   },
   // DECIDED 2026-10-15 (사용자, 스크린숏: "궁금한게 있으면 여기에 알려주세요"): 수정, 삭제 안내 대신 문의 한 줄.
@@ -322,7 +326,7 @@ export const register = {
   nextLabel: { ko: "등록 다음, 3분", en: "Next, 3 minutes" },
   nextTitle: { ko: "나는 16개 AI 중 누구일까?", en: "Which of 16 AIs are you?" },
   nextBody: {
-    ko: "14문항짜리 AI 유형 테스트예요. Day 1 현장에서 팀을 꾸릴 때 이 결과를 써요. 미리 해 보고 오세요.",
+    ko: "14문항짜리 AI 유형 테스트이고, Day 1 현장에서 팀을 맺을 때 이 결과를 씁니다. 미리 해 보고 오세요.",
     en: "It is a 14-question AI type test, and teams are formed on Day 1 using the result. Try it before you come.",
   },
   nextCta: { ko: "내 AI 유형 알아보기", en: "Find my AI type" },
@@ -333,19 +337,19 @@ export const register = {
     too_long: { ko: "{max}자 이내로 적어 주세요.", en: "Please keep it under {max} characters." },
     invalid_email: { ko: "이메일 주소를 다시 확인해 주세요. 예: name@example.com", en: "Please check the email address. Example: name@example.com" },
     invalid_option: { ko: "목록에서 하나를 골라 주세요.", en: "Please pick one from the list." },
-    consent_required: { ko: "동의해야 등록할 수 있어요.", en: "You need to agree to register." },
-    rate_limited: { ko: "요청이 많아요. 잠시 뒤 다시 시도해 주세요.", en: "Too many requests. Please try again in a moment." },
-    registration_not_open: { ko: "등록이 아직 열리지 않았어요.", en: "Registration is not open yet." },
-    registration_closed: { ko: "등록이 마감됐어요.", en: "Registration has closed." },
+    consent_required: { ko: "동의해야 등록할 수 있습니다.", en: "You need to agree to register." },
+    rate_limited: { ko: "요청이 많습니다. 잠시 뒤 다시 시도해 주세요.", en: "Too many requests. Please try again in a moment." },
+    registration_not_open: { ko: "등록이 아직 열리지 않았습니다.", en: "Registration is not open yet." },
+    registration_closed: { ko: "등록이 마감됐습니다.", en: "Registration has closed." },
     bot_check_pending: { ko: "보안 확인이 끝날 때까지 잠시 기다려 주세요.", en: "Please wait for the security check to finish." },
-    bot_check_failed: { ko: "보안 확인을 통과하지 못했어요. 확인을 다시 마친 뒤 보내 주세요.", en: "The security check did not pass. Please complete it again and resend." },
+    bot_check_failed: { ko: "보안 확인을 통과하지 못했습니다. 확인을 다시 마친 뒤 보내 주세요.", en: "The security check did not pass. Please complete it again and resend." },
     // 2026-10-08 (폼 리뷰 9): 스크립트가 막혔을 때(광고 차단, 네트워크). 그 전에는 안내 없이 기다리게만 했습니다.
-    bot_check_load_failed: { ko: "보안 확인을 불러오지 못했어요. 광고 차단을 끄거나 새로고침해 주세요.", en: "The security check could not load. Turn off your ad blocker or refresh the page." },
-    bot_check_unavailable: { ko: "보안 확인 서버에 닿지 못했어요. 잠시 뒤 다시 보내 주세요.", en: "The security check service could not be reached. Please resend in a moment." },
-    // DECIDED 2026-11-14 (둘이 한 팀): 나와 팀원의 이메일이 같을 때, 둘 중 한 사람이 이미 등록돼 있을 때.
-    same_email: { ko: "나와 팀원의 이메일이 같아요. 팀원의 이메일을 적어 주세요.", en: "Your email and your teammate's are the same. Please enter your teammate's email." },
-    team_registered: { ko: "둘 중 한 사람은 이미 등록돼 있어요. 아직 안 한 사람은 혼자로 등록하고, 같은 팀이 되고 싶다고 아래 주소로 알려 주세요.", en: "One of you is already registered. The other can register on their own, then tell us at the address below that you want to be on the same team." },
-    generic: { ko: "보내지 못했어요. 잠시 뒤 다시 시도해 주세요.", en: "Could not send. Please try again in a moment." },
+    bot_check_load_failed: { ko: "보안 확인을 불러오지 못했습니다. 광고 차단을 끄거나 새로고침해 주세요.", en: "The security check could not load. Turn off your ad blocker or refresh the page." },
+    bot_check_unavailable: { ko: "보안 확인 서버에 닿지 못했습니다. 잠시 뒤 다시 보내 주세요.", en: "The security check service could not be reached. Please resend in a moment." },
+    // DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): 링크드인 주소 검사(data/crossingForm.ts)와 팀 코드 한도(한 코드에 두 명, app/api/crossing/register의 409).
+    invalid_linkedin: { ko: "링크드인 프로필 주소를 넣어 주세요. 예: linkedin.com/in/이름", en: "Please enter a LinkedIn profile URL. Example: linkedin.com/in/name" },
+    team_code_full: { ko: "이 팀 코드는 이미 두 명이 썼어요. 다른 코드로 바꿔 주세요.", en: "Two people already used this team code. Please choose another." },
+    generic: { ko: "보내지 못했습니다. 잠시 뒤 다시 시도해 주세요.", en: "Could not send. Please try again in a moment." },
   },
 } as const;
 
@@ -372,7 +376,7 @@ export const naruNav: { id: string; label: Phrase; railLines?: Phrase; ariaLabel
   // DECIDED 2026-11-05 (사용자: 등록 블록을 뺌): "등록" 칸을 뺍니다. 등록 버튼은 히어로(id="register")에 있어 목차의 순서와 현위치가 어긋났습니다.
   // DECIDED 2026-10-22 (UX 점검, 사용자: "모든 것을 반영"): 영문 "Gains"는 "What you leave with"의 라벨로 어색했습니다. ariaLabel은 뺐습니다.
   // 보이는 글자("남는 것")와 읽히는 이름("오면 무엇이 남는가")이 달라 Lighthouse label-content-name-mismatch에 걸렸습니다.
-  // DECIDED 2026-11-12 (docs/dedupe-brief.md R2): "남는 것"을 목차와 메뉴에서 뺌. #gains는 제목과 리드만 남고 id는 그대로라 옛 링크는 열림.
+  { id: "gains", label: { ko: "남는 것", en: "Takeaways" } },
   // DECIDED 2026-11-05 (사용자: "TOC를 다시 for 12월 page"): 페이지 순서대로 넷. 등록은 맨 끝 등록 줄(id="register")로 갑니다.
   { id: "register", label: { ko: "등록", en: "Register" } },
 ];
@@ -619,35 +623,6 @@ export const naru = {
     // DECIDED 2026-11-05 (사용자: 네 가지(생각 → 만들기, 현업의 터치, 팀마다 다른 것, 팀 간 교류)를 닷새 순서의 동사로): 질문 줄은 그대로, 답 줄만.
     // Day 1 생각, Day 2·3 현업에 묻고 만들기, Day 4 서로 봄. 그 전 답 줄 "생각하는 힘을 기르는 닷새"는 남는 것 리드(gains.spine)가 받습니다. 그 전 문장은 git b2d5c79.
     catchAnswer: { ko: "생각부터 하고, 현업에 묻고, 팀마다 다르게 만들어 서로 봅니다.", en: "Think first, ask the field, build what no other team builds, and see each other's work." },
-    // DECIDED 2026-11-12 (사용자, 히어로 스크린숏 "여기에 반영해줘"): 캐치프레이즈 아래 한 줄. 사이트는 해요체라 끝만 "닷새예요"(사용자 원문은 "닷새입니다").
-    heroLine: {
-      ko: "진짜 기업 문제를 붙잡고 스스로 생각해, 자기 가치를 증명할 실물을 들고 나가는 닷새입니다.",
-      en: "Five days to take on a real company problem, think it through yourself, and leave with proof of your own worth.",
-    },
-    // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P1, D1 문장 승인): 캐치프레이즈 아래 사실 넷(어디서, 누가, 받는 것, 등록).
-    // 그 전 이 자리의 sub와 naruLine은 #december 리드와 #partners 주최 줄로(P4). 확정된 것만 씁니다: 장소는 december.stages의 로고와 같고,
-    // 받는 것은 decemberPartners의 Lovable(기술, 크레딧)과 트레바리(참가 학생 전원), 미션 지원금, Readray(시상 상품).
-    // DECIDED 2026-11-12 (사용자, docs/poster-phone-brief.md Q2, D1 승인): 받는 것 줄에 금액과 기간을 씁니다(brand 9장 예외: 히어로 받는 것 줄과 로고 띠).
-    // 값은 각 후원 회신 메일 그대로이고, 띠의 bandNote, bandPrize와 같은 말. 인원과 팀 수는 쓰지 않습니다(brand 8장).
-    // 바뀌면 이 줄과 copy.ts의 heroFacts를 같이 고칩니다. (아래의 facts는 다른 키, 히어로 아래 숫자 띠.)
-    // DECIDED 2026-11-12 (사용자, docs/poster-phone-brief.md Q1): 순서는 누가, 받는 것, 어디서, 등록. 카카오톡 인앱(390x660) 첫 화면에 받는 것이 오게.
-    posterFacts: [
-      { k: { ko: "누가", en: "Who" }, v: { ko: "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 또는 둘이 한 팀으로 등록하고, 팀은 Day 1 현장에서 꾸려요.", en: "University students in Korea and Korean students studying abroad.\nRegister alone or as a team of two; teams form on site on Day 1." } },
-      { k: { ko: "받는 것", en: "What you get" }, v: { ko: "참가자 모두에게 Lovable 100 크레딧과 트레바리 10만원 쿠폰.\n지원금 총 200만원은 미션을 해낸 팀들이 나눠 받습니다.\n수상 팀원에게는 Readray Pro 2개월.", en: "Lovable 100 credits and a KRW 100,000 Trevari voucher for every participant.\nA KRW 2,000,000 support pool, shared among the teams that complete a mission.\nTwo months of Readray Pro for each award-winning team member." } },
-      // DECIDED 2026-11-12 (사용자: "어디서는 빼줘"): 어디서 줄을 뺌. 장소는 바로 아래 로고 띠의 공간 후원(Day 1, 2, 4)과 닷새 카드가 말합니다.
-      // 그 전 문장: "서울. Day 1 FASTFIVE, Day 2 디캠프 선릉, Day 4 MARU180. / 스타트업들이 일하고 모이는 공간에서 열려요."
-      // DECIDED 2026-11-12 (사용자: "등록 row 에 그거 대신 어떤 맨토님들이 오시는지, 다양한 sector에서 AI 잘 쓰시는 분들에게 받을 수 있는 현업 터치,
-      // 어떤 회사에서 일하는지도 좀 briefly"): 넷째 줄은 등록 대신 멘토. 분야와 회사는 naru.december.mentors의 소속과 경력 한 줄에서 뽑았습니다.
-      // 사람 이름은 쓰지 않습니다. 멘토 명단이 바뀌면 이 줄도 같이 고칩니다. 반박은 brand 7장 멘토링 줄의 "일을 해 본 사람의 감각".
-      // 같은 날 뒤 (사용자: "2,3 일에 만난다는 멘토 아래에, 글의 내용에는 언제 만난다 이 내용 넣지는 말고"): 만나는 날은 줄 이름 아래(sub), 본문에는 쓰지 않음.
-      { k: { ko: "멘토", en: "Mentors" }, sub: { ko: "Day 2, 3", en: "Day 2 and 3" }, v: { ko: "임상 연구, 의료기기, K-뷰티, 자동차, 게임 분야에서 AI를 잘 쓰는 현업.\nBloom과 가짜연구소에서 오시고, Kia, C&R Research, Aside (YC F25), BIGPIE C&T 등에서 일해요.\n팀이 찾아가면 일해 본 감각으로 생각을 반박해 줘요.", en: "Working professionals who use AI well, in clinical research, medical devices, K-beauty, cars and games.\nThey come through Bloom and Pseudo Lab, and work at Kia, C&R Research, Aside (YC F25), BIGPIE C&T and more.\nYour team visits them, and they push back with the sense of someone who has done the work." } },
-    ] as { k: Phrase; sub?: Phrase; v: Phrase }[],
-    // 넷째 줄. 등록 창 상태마다 다릅니다: 열기 전, 열린 뒤. 마감 뒤는 register.closed. 여는 시각은 쓰지 않습니다(P6).
-    registerFact: {
-      k: { ko: "등록", en: "Registration" },
-      notOpen: { ko: "11월 16일(월)에 열어요.\n소식은 카카오톡에서 먼저 알려요.", en: "Opens Monday, 16 November.\nNews goes out first on KakaoTalk." },
-      open: { ko: "지금 등록할 수 있어요.\n소식은 카카오톡에서 먼저 알려요.", en: "Open now.\nNews goes out first on KakaoTalk." },
-    },
     // 사진 넷 아래 한 줄(감사 반영 브리프 1.3). 캡션이 없으면 12월 사진으로 읽힙니다.
     photosCaption: { ko: "제로백 빌더톤 2026.08 싱가포르", en: "Zero100 builderthon Aug 2026, Singapore" },
     // DECIDED 2026-10-13 (사용자, 스크린숏: "이렇게 디테일한 설명은 필요 없음"): 2026-10-12에 캡션 뒤에 붙였던 8월 숫자 문장
@@ -2122,14 +2097,13 @@ export const naru = {
       // 몰아 주는 것보다 나누는 쪽) 두 줄을 뺐습니다. 파트너에게 하는 설계 설명이라 참가자의 어느 코어도 돕지 않았습니다.
       // 문장은 git 이력에 있고, 세션 설계는 제안서가, 나누는 이유는 혜택 02가 말합니다.
       {
-        // DECIDED 2026-11-12 (docs/dedupe-brief.md R8, D3): 이름은 준비, 글은 노트북 한 문장. "4일 모두 아침부터 저녁까지"는 Day 2(16:00~18:00), Day 3(Zoom)과 맞지 않아 뺌.
-        k: { ko: "준비", en: "What to bring" },
+        k: { ko: "공간", en: "Space" },
         // DECIDED 2026-10-12 (등록 브리프 1.5, 리뷰 S11): 시각은 registerFacts.hoursLine이 채워지면 그 값으로, 그 전에는
         // "아침부터 저녁까지" 그대로입니다. 준비물 한 문장을 붙였습니다.
         v: {
           // DECIDED 2026-10-20 (hwang 브리프 1.1, 감사 P3): 4일 모두 열립니다. 그 전 "...까지. 마지막 날은 제외입니다."는 4일 모두와 어긋났습니다.
-          ko: "노트북은 각자 챙겨 오세요.",
-          en: "Bring your own laptop.",
+          ko: `4일 모두 ${registerFacts.hoursLine?.ko ?? "아침부터 저녁까지"} 열려 있고, 노트북은 각자 가져옵니다.`,
+          en: `Open ${registerFacts.hoursLine?.en ?? "morning to evening"} on all four days. Bring your own laptop.`,
         },
       },
       {
@@ -2142,8 +2116,7 @@ export const naru = {
         // DECIDED 2026-10-25 (사용자: 칸마다 줄 수를 같게): 두 줄로. 그 전 "Day 2와 Day 3에 하나씩 있고, 무엇을 냈는지보다 함께 있었는지를 봅니다. 해낸 팀은 모두 그날 지원을 받고, 그 미션은 팀의 기록으로 남습니다."
         // DECIDED 2026-11-06 (docs/think-different-brief.md T4, 사용자: 생각과 팀마다 다른 것을 강조, 상자는 그대로): 11/05 출제사 미팅: 생각이 어떻게 바뀌었는지를 1장으로.
         // DECIDED 2026-11-08 (docs/mission-card-brief.md S9): 지원은 그날 세션이 끝난 뒤. 그 전 둘째 문장 "해낸 팀은 모두 그날 지원을 받습니다." / "Each team that does it gets support."
-        // DECIDED 2026-11-12 (docs/dedupe-brief.md R7): 첫 문장(기준)만. 받는 때는 미션 카드, 금액은 로고 띠.
-        v: { ko: "Day 2와 Day 3에 하나씩, 함께 있었는지와 생각이 어떻게 달라졌는지(고친 1장)를 봅니다.", en: "Day 2 and 3: together on site, and how your thinking changed (revised page)." },
+        v: { ko: "Day 2와 Day 3에 하나씩, 함께 있었는지와 생각이 어떻게 달라졌는지(고친 1장)를 봅니다. 해낸 팀은 모두 그날 세션이 끝난 뒤 지원을 받습니다.", en: "Day 2 and 3: together on site, and how your thinking changed (revised page). Every team that does it gets that day's support after the session." },
       },
     ] as { k: Phrase; v: Phrase }[],
 
@@ -2252,8 +2225,8 @@ export const naru = {
       // DECIDED 2026-11-06 (docs/think-different-brief.md T2, 사용자: 생각과 팀마다 다른 것을 강조, 상자는 그대로): 둘째 문장만.
       // DECIDED 2026-11-06 (docs/write-first-brief.md W1, D2 예): 문장 +1. S1("AI가 쓴 것을 고치지 말고, 내가 쓴 것을 AI가 고치게.")이 사이트에 그대로 서는 유일한 자리. 그 전 문장은 git 5360254.
       // 2026-11-06 (사용자, 스크린숏: "여기는 좀 너무 긴거 같음"): 브리프 D2의 대안대로 "날마다 팀의 생각을 한 장으로 씁니다"를 빼고 S1만 남김. 한 장을 먼저 쓰는 일은 Day 1 줄(W4)이 말합니다.
-      ko: "등록은 혼자 또는 둘이 한 팀으로, 팀은 Day 1 현장에서 맺습니다. AI가 쓴 것을 고치지 말고, 내가 쓴 것을 AI가 고치게. 닷새 안에 다 풀리지 않을 수 있는 문제라, 답이 아니라 어디까지 생각해 파고들었는지를 봅니다.",
-      en: "Register alone or as a team of two; teams form on site on Day 1. Don't fix what AI wrote. Let AI fix what you wrote. Five days may not solve it, so we look at how far you dug, not the answer.",
+      ko: "등록은 혼자, 팀은 Day 1 현장에서 맺습니다. AI가 쓴 것을 고치지 말고, 내가 쓴 것을 AI가 고치게. 닷새 안에 다 풀리지 않을 수 있는 문제라, 답이 아니라 어디까지 생각해 파고들었는지를 봅니다.",
+      en: "Register alone; teams form on site on Day 1. Don't fix what AI wrote. Let AI fix what you wrote. Five days may not solve it, so we look at how far you dug, not the answer.",
     },
     // 2026-09-20 (크로싱서울_일정.pdf): 라벨이 "워크샵"에서 "세션"으로. PDF가 부르는
     // 이름이고, stages의 필드 이름(workshop -> session)과 같은 말을 씁니다.
@@ -2297,8 +2270,6 @@ export const naru = {
       pdf: { ko: "PDF 1장", en: "One PDF" },
     } as { staff: Phrase; photo: Phrase; pdf: Phrase },
     milestoneReward: { ko: "다 하면 그날 세션이 끝난 뒤 지원을 받습니다.", en: "Do all of these and your team gets that day's support after the session." },
-    // DECIDED 2026-11-12 (사용자: "3일차에 한 미션에 대한 지원은 마지막날에"): Day 3 미션의 지원은 그날이 아니라 Day 4에.
-    milestoneRewardLast: { ko: "다 하면 마지막 날 지원을 받습니다.", en: "Do all of these and your team gets the support on the last day." },
     milestoneUpload: { ko: "사진과 PDF는 시간표 페이지에서 날마다 한 번씩 올립니다.", en: "Photos and PDFs go up on the timetable page, once a day." },
     // DECIDED 2026-11-05 (사이트 점검, UX): /crossing Day 카드에서 빠진 멘토링 정보 둘. 문장은 brand 7장과 data/crossingTeam.ts에서 가져옵니다.
     visitLabel: { ko: "멘토 찾아가기", en: "Visiting a mentor" },
@@ -2360,29 +2331,6 @@ export const naru = {
     // 2026-11-06 (사용자: "이 맨토들 다 AI community 에서 활동하고 있는 사람들이라고 써줘"): 명단 머리 아래 한 줄.
     // DECIDED 2026-11-08 (사용자: "ai 를 적극적으로 각자의 도메인 안 현업에서 쓰는 사람들"): 커뮤니티 활동 대신 자기 일에 AI를 쓰는 사람으로.
     mentorsListNote: { ko: "그중 몇 분을 먼저 소개합니다. 모두 각자의 현업에서 AI를 적극적으로 쓰는 분들이고, 이 밖에도 여러 분야의 멘토가 함께합니다.", en: "A few of them, all actively using AI in their own work. Mentors from other fields join too." },
-    // DECIDED 2026-11-11 (사용자: "이름이나 이런걸 까지 말고", 같은 날 뒤 "멘토는 확정 아직, 정확히 어떤분들이 오시는 지는 아직은 넣을 수 없음"):
-    // /crossing 멘토 줄은 사람도 회사도 적지 않고, 멘토가 오는 두 곳(Bloom, 가짜연구소)만 한 문장으로. 멘토 수는 쓰지 않습니다(brand 8장).
-    // 같은 날 뒤 사용자("맨토 내용 needs to be at the same row with the 트레바리 and readray"): 따로 된 멘토 장을 없애고 로고 띠 둘째 줄의 한 묶음으로.
-    mentorBandNote: { ko: "여기서 활동하는 현업 멘토", en: "Working mentors from here" },
-    // DECIDED 2026-11-11 (사용자: "200만원 for the 과정을 모두 함께하는 사람", 같은 날 뒤 "상금 후원 로고는 빼주고"): 로고 띠의 상금은 후원처 로고 없이 금액만.
-    // 금액을 쓰는 예외 하나(brand 9장).
-    bandPrize: {
-      // 같은 날 뒤 (사용자: "이러면 특정 인원들에게만 주는거처럼 보임. 200만원 is for everyone that comes and join the process"):
-      // "상금"과 "끝까지 함께한 사람에게"를 버리고, 과정에 함께하는 모두를 위한 돈으로.
-      label: { ko: "지원금", en: "Support fund" },
-      // DECIDED 2026-11-12 (사용자, docs/poster-phone-brief.md Q3, D2: "미션을 해낸 팀에게 주는것"): 200만원은 미션 지원과 같은 돈.
-      // 1인당으로 읽히지 않게 "총", 조건은 히어로 받는 것 줄과 같은 말. 그 전 note: "과정에 함께하는 모두를 위해".
-      amount: { ko: "총 200만원", en: "KRW 2,000,000 in total" },
-      // 같은 날 뒤 (사용자: "이게 각 팀마다 200만원으로 읽히네"): 팀마다가 아니라 나눠 받는 돈. 히어로 받는 것 줄도 같은 말.
-      note: { ko: "미션을 해낸 팀들이 나눠 받아요", en: "Shared by teams that complete a mission" },
-    },
-    // 같은 날 사용자("로고로 넣어줘"): 문장 아래 두 곳의 로고. Bloom은 #partners와 같은 파일.
-    // 가짜연구소는 따로 된 로고 파일이 없어 pseudo-lab.com의 512px 아이콘(별 마크)을 잘라 쓰고, 그 사이트처럼 마크 옆에 이름을 글자로 붙입니다.
-    // 공식 로고 파일을 받으면 pseudolab-mark.png를 바꿉니다.
-    mentorSources: [
-      { name: "Bloom", src: "/partners/logos/paper/bloom-block.png", w: 575, h: 286, url: "https://bloomworld.ai/" },
-      { name: "가짜연구소", src: "/partners/logos/paper/pseudolab-mark.png", w: 391, h: 439, url: "https://pseudo-lab.com/", label: { ko: "가짜연구소", en: "Pseudo Lab" } as Phrase },
-    ] as { name: string; src: string; w: number; h: number; url: string; label?: Phrase }[],
     mentorsLead: {
       ko: "멘토는 답을 주러 오지 않습니다. 일을 해 본 사람이면 누구나 아는 감각으로, 팀이 들고 간 한 장과 시안에 \"실제로는 그렇게 안 돌아간다\"를 그대로 말해 줍니다.",
       en: "Mentors do not come with answers. With the sense anyone who has done the work has, they tell the team, to its one page and draft, \"that is not how it works in practice.\"",
@@ -2955,7 +2903,7 @@ export const naru = {
         // 12월에는 AI 유형 테스트가 신청의 일부가 아니라 Day 1 현장의 팀 매칭 도구입니다. 칩은 뺐습니다
         // (버튼이 같은 말을 합니다). 버튼은 이 행의 글 기둥 왼쪽 끝에 섭니다(NaruHome).
         // 2026-10-13 (사용자: "1일차 박스가 너무 비어있음"): 위 body의 첫 문장("현장에서 팀을 맺습니다")을 칩으로 올렸습니다(brand 7장 팀).
-        chips: [], // 2026-11-12 dedupe R6: "현장에서 팀 구성"은 본문 첫마디와 같은 말이라 뺌.
+        chips: [{ ko: "현장에서 팀 구성", en: "Teams form on site" }],
         // DECIDED 2026-10-17 (사용자: "1일차에도 미션인증은 해야해서, 버튼은 2,3일차처럼"): Day 1 카드에도 같은 버튼. 들어가면 Day 1 탭이고 시간표는 잠겨 있습니다.
         // 2026-10-22 (사용자: "Day 2, 3일 때만 보이게"): 폰 일정 상자 아래의 공통 버튼은 Day 2, 3을 볼 때만 섭니다(정본 7장: 미션은 Day 2, 3).
         // DECIDED 2026-11-06 (docs/first-click-brief.md F3): "예약용"과 "인증"은 운영진의 말이고, 카드의 미션 띠가 이미 "제출"이라 씁니다. 그 전 "예약용 멘토 시간표와 인증" / "Book & check in". Day 2, 3 버튼도 같은 라벨.
@@ -3008,12 +2956,10 @@ export const naru = {
         logo: { src: "/partners/logos/paper/dcamp.png", name: "디캠프 선릉", w: 900, h: 220, url: "https://dcamp.kr/" },
         // 2026-11-10 (사용자: "멘토링은 직접 찾아가기 이거 day 2 에도 추가"): Day 3과 같은 줄.
         venueNote: { ko: "멘토링은 직접 찾아가기", en: "Mentoring in person" },
-        // DECIDED 2026-11-12 (사용자, docs/dedupe-brief.md R4): 디캠프 선릉은 16:00~18:00. 로고 옆에 META로.
-        venueTime: { ko: "16:00~18:00", en: "16:00-18:00" },
         // DECIDED 2026-11-05 (docs/day-flow-brief.md 2장, 사용자): 하루의 흐름. 시각은 아직 넣지 않습니다(같은 날 사용자: "아직 정확한 시간은 넣지 말아줘"). 정해지면 time만 채웁니다. 필참 표시 없음(같은 날 사용자: "다 참여해야지").
         flow: [
           { what: { ko: "멘토 찾아가기. 넣은 칸의 시각에 팀이 함께, 생각 1장을 들고", en: "Visiting a mentor: the team goes together at the booked time, with the one page" }, where: { ko: "멘토 계신 곳(오피스, 카페, 온라인)", en: "Where the mentor is (an office, a café, or online)" } },
-          { what: { ko: "Builder session. 가짜연구소에서 프로젝트를 책임지는 빌더들이 무엇을 쳐내고 무엇을 남겼는지", en: "Builder session: builders who lead projects at Pseudo Lab on what they cut and what they kept" }, where: { ko: "현장", en: "On site" } },
+          { what: { ko: "빌더 세션. 현업 PO 셋이 각각 무엇을 왜 만들기로 했는지와 멈춘 지점, 그 뒤 대담", en: "Builder session: three working POs on what they chose to build, why, and where they stopped, then a conversation" }, where: { ko: "현장", en: "On site" } },
           { what: { ko: "미션 제출. 멘토와 찍은 사진, 고친 1장 PDF", en: "Mission submission: a photo with the mentor and the revised one-page PDF" }, where: { ko: "멘토 시간표 페이지", en: "Timetable page" }, href: "/crossing/team?day=2" },
         ],
         // DECIDED 2026-11-04 (사용자, site-tells 목업, 3장 C1): /crossing Day 카드의 한 줄. 긴 line과 세션, 미션은 /crossing/team과 이 키들에 남습니다.
@@ -3037,7 +2983,7 @@ export const naru = {
         // 2026-10-24 (사용자: "멘토 시간은 시간표로 예약 이 부분은 빼주고"): 예약은 아래 버튼 "멘토 시간표와 미션 제출"(2026-11-06 전 "예약용 멘토 시간표와 인증")이 말합니다.
         // 2026-11-06 (사용자, 스크린숏 둘: "이렇게 보여주지 말고, day 2,3 을 클릭하면 보여지면 좋겠는데", Day 1의 "현장에서 팀 구성 / AI 유형 테스트로 팀 매칭 →" 모양으로):
         // 멘토는 Day 2, 3 카드의 글자 링크를 눌러 모달에서 봅니다. 그날의 멘토를 나눈 데이터가 없어 두 날 모두 같은 명단입니다.
-        chips: [], // 2026-11-12 dedupe R5: "멘토 찾아가기"는 장소 줄 "멘토링은 직접 찾아가기"와 같은 말이라 뺌.
+        chips: [{ ko: "멘토 찾아가기", en: "Visiting mentors" }],
         mentorsCta: true,
         // DECIDED 2026-09-27 (사용자, 9/7 8월 참가자 회고): 왜 하는지가 바로 읽히게.
         // UI는 AI가 바로 만들어 주지만 어떤 기능을 왜 넣을지 판단하는 훈련은 배울 곳이
@@ -3046,23 +2992,21 @@ export const naru = {
         // DECIDED 2026-10-17 (사용자: "여기에 들어갈 수 있는 button은 day 2 and day 3 상자에 있는걸로"): 멘토 시간표와 미션 인증으로 가는 버튼.
         timetableCta: { label: { ko: "멘토 시간표와 미션 제출", en: "Mentor timetable & mission uploads" }, href: "/crossing/team?day=2" },
         // DECIDED 2026-11-05 (사용자, 같은 날 뒤: "lovable 과 PO session 을 다시 바꾸자, lovable workshop 이 1일차에 오도록"): Day 1 Lovable workshop, Day 2 PO session으로 되돌림.
-        // DECIDED 2026-11-14 (사용자: "PO Session이 아닌 Builder Session, 가짜연구소에서 프로젝트 책임지는 빌더들이"): 이름과 설명을 바꿈.
-        // 근거는 연사 미팅 기록(11-11, 11-12, 11-13): 가짜연구소 빌더들이 여러 인풋 가운데 자기 기준으로 쳐내 하나를 남긴 과정을 한 사람 25~30분.
-        // "셋이 대담"은 그 기록에 없어 뺐습니다. 여기서 빌더는 가짜연구소의 역할 이름이라 참가자를 부르는 말이 아닙니다(brand 5장).
+        // DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): 세션 이름은 한국어 "빌더 세션", 영문 Builder session. 설명은 그대로(현업 PO 셋).
         session: {
-          title: { ko: "Builder session", en: "Builder session" },
+          title: { ko: "빌더 세션", en: "Builder session" },
           body: {
             // DECIDED 2026-10-22 (사용자: "day 2의 문장을 좀 더 줄여줘"): 둘째 문장을 뺐습니다. 그 전: "...풀어 줍니다. 만드는 일은 AI가 빨라졌어도 무엇을 만들지는 사람이 고릅니다."
             // DECIDED 2026-10-26 (사용자: "각 세션에 대한 설명의 length는 동일해야함"): 세 세션 설명을 같은 길이로. "3시간 동안"을 뺐습니다.
-            ko: "가짜연구소에서 프로젝트를 책임지는 빌더들이 무엇을 남기고 뺐는지 풀어 줍니다.",
-            en: "Builders who lead projects at Pseudo Lab walk through what they kept and what they cut.",
+            ko: "현업 PO가 무엇을 왜 만들기로 했는지 풀어 줍니다.",
+            en: "A working PO walks through what they chose to build and why.",
           },
           // DECIDED 2026-11-09 (사용자, 스크린숏: "각 세션 클릭하면 세션 설명이 나오게"): 세션 이름을 누르면 펼쳐지는 설명. 같은 날 "너무 긴 거 같아"로 두 줄씩.
           // 근거는 운영 미팅 기록(워크숍 진행자와의 10/29, 11/05 미팅, 10/21~11/04 주간 회의). 시각은 아직 쓰지 않습니다(day-flow 결정).
           // 주간 회의(10/21: PO 셋이 차례로 멈춘 지점, 그 뒤 대담, 10/28과 11/04: 주제는 덜어내기, PO session과 멘토는 다른 일).
           detail: [
-            { ko: "가짜연구소에서 프로젝트를 책임지는 빌더들이, 자기 기준으로 하나를 남긴 과정을 들려줍니다.", en: "Builders who lead projects at Pseudo Lab show how they set their own criteria and turned many inputs into one output." },
-            { ko: "주제는 덜어내기입니다. 무엇을 쳐내고 어디에 집중했는지, 한 사람씩 30분 안팎으로.", en: "The theme is cutting: what they dropped and where they focused, about 30 minutes each." },
+            { ko: "현업 PO 세 명이 무엇을 왜 만들기로 했고 어디서 멈췄는지 들려줍니다.", en: "Three working POs tell what they chose to build, why, and where they stopped." },
+            { ko: "주제는 덜어내기, 하나를 남기려고 무엇을 뺐는지입니다. 끝에 셋이 대담합니다.", en: "The theme is cutting: what they dropped to keep one thing. It ends with a conversation." },
           ],
         },
         // DECIDED 2026-10-13 (사용자, 멘토링 브리프 2, D4): 미션은 Day 2부터이고, 무엇을 냈는가보다 함께 있었는가를 봅니다.
@@ -3072,7 +3016,7 @@ export const naru = {
         // DECIDED 2026-10-17 (사용자, 스크린숏 표): Day 2와 Day 3의 미션 인정 조건이 정해졌습니다. "이후 공개"를 이것으로 바꿉니다.
         // 조건 셋(과반 현장, 멘토 찾아가기, 진척 PDF). 2026-10-26: 멘토 찾아가기는 Day 2, 3 날마다 팀이 함께(10/17의 하루 이상 완화를 되돌림). 확인은 현장 체크, 멘토와 찍은 사진(찾아간 날), PDF입니다.
         // DECIDED 2026-11-08 (docs/mission-card-brief.md S1, missions-brief): 조건에 PO session이 들어와 제목에도. 그 전 "멘토 찾아가기와 진척 공유" / "Visit a mentor, share progress".
-        milestone: { ko: "멘토 만나기, Builder session, 고친 1장 올리기", en: "Meet a mentor, sit in the Builder session, upload your revised page" },
+        milestone: { ko: "멘토 만나기, 빌더 세션, 고친 1장 올리기", en: "Meet a mentor, sit in the Builder session, upload your revised page" },
         // DECIDED 2026-10-17 (사용자, 스크린숏: "문장으로 말고, bullet point로, 그리고 제출하는 방법으로"): 설명은 문단이 아니라
         // 인정 조건과 제출 방법 두 목록입니다. 그 전: "세 가지를 모두 채우면 인정됩니다. ..." 한 문단.
         milestoneDetail: {
@@ -3085,7 +3029,7 @@ export const naru = {
             // DECIDED 2026-11-08 (docs/mission-card-brief.md S3, missions-brief): 조건은 넷. 멘토는 한 분 이상을 과반이 함께, 그날 세션(PO session)에 함께 있기.
             // 그 전 둘째 줄 "팀원 과반이 멘토를 찾아가 사진 한 장", 넷째 줄 "1장을 반박에 맞춰 고쳐 공유하기".
             { ko: "멘토 한 분 이상을 과반이 함께 찾아가기", en: "Visit at least one mentor, more than half of you together" },
-            { ko: "Builder session에 함께 있기", en: "Be at the Builder session together" },
+            { ko: "빌더 세션에 함께 있기", en: "Be at the Builder session together" },
             // DECIDED 2026-10-26 (사용자): 진척 PDF는 새 문서가 아니라 1장을 멘토의 피드백과 그날의 진척에 맞춰 고친 것.
             // DECIDED 2026-10-31 (사용자, 스크린숏: "상자의 길이가 다름. day 1 이랑 day 2 and 3 가 다름"): 인정 조건을 1440 칸에서 한 줄씩으로. Day 1(할 것 셋 + 세션 두 줄)과 같은 다섯 줄. 그 전: 1장을 피드백과 진척에 맞춰 고쳐 공유하기(진척은 띠 제목이 말함)
             // DECIDED 2026-11-06 (docs/write-first-brief.md W6): "피드백"을 사이트의 말 "반박"으로. 그 전 문장은 git 93a69c2.
@@ -3137,13 +3081,12 @@ export const naru = {
           // DECIDED 2026-11-05 (사용자, 스크린숏: "3일 문장 길이를 1,2일에 맞춰줘"): 앞의 "흐름 전체를 바꾸는 시스템 대신"을 뺌. 네 줄에서 세 줄. 그 전 문장은 git 80e0e1f.
           // DECIDED 2026-11-06 (docs/think-different-brief.md T7, 사용자: 생각과 팀마다 다른 것을 강조, 상자는 그대로): 문장 +1. 브리프의 앞부분("흐름 전체를 바꾸는 시스템 대신")은 11-05 사용자 결정대로 넣지 않음.
           // 2026-11-09 (사용자): 일요일은 Zoom, 그 이유 한 문장을 끝에.
-          ko: "그 병목만 푸는 작은 툴을 만들고, 기업이 가져다 쓸 수 있을지 멘토에게 여쭙니다. 같은 이슈에서 팀마다 다른 툴이 나옵니다. 일요일은 Zoom입니다. 닷새를 다 현장에서 하면 지치기 때문입니다.",
-          // 2026-11-12 (docs/dedupe-brief.md R5, D2): 둘째 문단은 이유만. Open tables와 멘토 찾아가기는 하루 일정과 장소 줄이 말함.
-          en: "Build a small tool for it and ask a mentor if the company could use it. Each team's tool differs. Sunday is on Zoom: five full days on site is a lot.",
+          ko: "그 병목만 푸는 작은 툴을 만들고, 기업이 가져다 쓸 수 있을지 멘토에게 여쭙니다. 같은 이슈에서 팀마다 다른 툴이 나옵니다. 일요일이라 만들기와 Open tables는 Zoom으로 하고, 멘토만 직접 찾아갑니다. 닷새를 다 현장에서 하면 지치기 때문입니다.",
+          en: "Build a small tool for it and ask a mentor if the company could use it. Each team's tool differs. It's Sunday, so building and Open tables are on Zoom and only mentor visits are in person: five full days on site is a lot.",
         },
         // DECIDED 2026-10-10 (중복 브리프 B1): 칩 "멘토링은 이 날까지"를 뺐습니다. General Mentoring 상자의
         // "Day 3은 피칭 준비, Day 4는 멘토링이 없습니다"가 같은 말을 합니다.
-        chips: [], // 2026-11-12 dedupe R5: "멘토 찾아가기"는 장소 줄 "멘토링은 직접 찾아가기"와 같은 말이라 뺌.
+        chips: [{ ko: "멘토 찾아가기", en: "Visiting mentors" }],
         mentorsCta: true,
         // DECIDED 2026-09-27 (사용자, 9/27 학생 단체 미팅): Empower session이
         // 한국에서 창업한 해외 창업가를 만나는 세션이 됐습니다. 국내 VC와 창업가는
@@ -3216,7 +3159,8 @@ export const naru = {
         // DECIDED 2026-11-05 (docs/day-flow-brief.md 2장, 사용자): 하루의 흐름. 시각은 아직 넣지 않습니다(같은 날 사용자: "아직 정확한 시간은 넣지 말아줘"). 정해지면 time만 채웁니다. 필참 표시 없음(같은 날 사용자: "다 참여해야지").
         flow: [
           { what: { ko: "트랙별 발표. 출제사와 멘토, 투자사 앞에서 고른 병목과 만든 툴, 숫자 하나로 본 효과. 출제사는 트랙마다 1.5시간을 비워 두고 옴", en: "Presentations by track, in front of the issuing companies, mentors and investors: the bottleneck you chose, the tool you built, and its effect in one number. Each issuing company sets aside 1.5 hours per track" }, where: { ko: "현장", en: "On site" } },
-          { what: { ko: "트랙별 인기투표", en: "Vote by track" }, where: { ko: "/crossing/vote", en: "/crossing/vote" } },
+          // DECIDED 2026-11-15 (naru.community 판): 일정 목록에 주소가 장소처럼 보여 where를 뺌. 투표 버튼은 아래 voteCta.
+          { what: { ko: "트랙별 인기투표", en: "Vote by track" } },
           { what: { ko: "시상과 클로징. 출제사가 트랙마다 한 팀, 투자사가 고른 팀, 인기투표. 출제사가 고른 팀은 행사 뒤 그 기업과 한 번 더 만남", en: "Awards and closing: one team per track picked by the issuing company, a team picked by the investors, and the vote. The team an issuing company picks meets that company once more after the event" }, where: { ko: "현장", en: "On site" } },
           { what: { ko: "끝난 뒤 멘토에게 무엇을 만들었는지 한 줄로 먼저 연락", en: "Afterwards, write to your mentor first, with one line on what you built" } },
         ],
@@ -3285,7 +3229,6 @@ export const naru = {
       // 2026-11-10 (사용자: "day 3 는 온라인으로 한다는걸 여기에도"): 로고 대신 장소를 글자로(온라인 날).
       venueText?: Phrase;
       venueNote?: Phrase;
-      venueTime?: Phrase;
       body: Phrase;
       /** 폰 노선도 카드에서 세션 자리에 그리는 그날의 진행(2026-10-22). 없으면 그리지 않습니다. body에서 뽑은 문장입니다. */
       panelBody?: Phrase;
@@ -3775,37 +3718,26 @@ export const singaporeCampuses: { name: Phrase; src: string; w: number; h: numbe
   { name: { ko: "싱가포르경영대학교", en: "Singapore Management University" }, src: "/partners/logos/white/trimmed/uni-smu.png", w: 184, h: 240, u: 0.28, v: -0.06, size: 0.15 },
 ];
 
+// DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): 이슈를 낸 회사(출제사) 줄. /crossing 함께하는 곳에서 주최 다음, "8월부터 함께한 곳" 앞에 섭니다.
+// square: 정사각 로고는 넓이를 키워 다른 로고와 같은 무게로 보이게 합니다(CrossingSeoul의 PartnerCell).
+export const problemSetters: PartnerLogo[] = [
+  { name: "Lazy Yogurt", src: "/partners/logos/paper/lazy-yogurt.webp", w: 447, h: 447, square: true },
+  { name: "Feed Media", src: "/partners/logos/paper/feed-media.webp", w: 1670, h: 259 },
+  { name: "GroupBy", src: "/partners/logos/paper/groupby.webp", w: 845, h: 277 },
+];
+
 // DECIDED 2026-10-22 (사용자, 스크린숏: "AXMOS라는 컨소시엄 안에 이 5개의 회사가 있다는 느낌을 더 보여줘"): 메인 후원 줄은 AXMOS(lead)가 위에,
 // 그 코어 5개사가 아래 테두리 안에. 순서와 묶음은 AXMOS 공식 사이트(axmos.ai/kr)의 "Consortium · 코어 5개사"를 따릅니다.
 // 같은 날 (사용자: "작동이 안 되는 링크들이 있음, 블룸이랑 크라이치즈버거도 반드시 넣어줘"): translinkinvestment.com은 도메인이 없어
 // translink.kr로. AXMOS, Bloom(bloomworld.ai), 크라이치즈버거(crycheeseburger.com)에 링크를 넣었습니다. 모든 링크를 curl로 열어 봤습니다.
 // note: 로고 줄 아래 한 줄(2026-10-24, 사용자: "1일차에 lovable 현장 워크샵 진행"). 있는 줄에만 그립니다.
-// DECIDED 2026-11-12 (docs/poster-phone-brief.md Q6): 묶음마다 id. 로고 띠와 copy.ts는 순서나 이름이 아니라 id로 찾고(partnerGroup),
-// 없으면 모듈을 읽을 때 throw해서 빌드가 멈춥니다(HeroPartnerStrip의 DECEMBER_MASS와 같은 방식). 줄 이름이나 순서를 바꿔도 묶음이 조용히 사라지지 않게.
-export type PartnerGroupId = "main" | "venue" | "tech" | "award" | "prize" | "snack" | "coupon" | "workshop" | "community" | "media" | "domain";
-export type PartnerGroup = { id: PartnerGroupId; label: Phrase; lead?: PartnerLogo & { note: Phrase }; logos: PartnerLogo[]; note?: Phrase; bandNote?: Phrase; oneCard?: boolean };
-// ── Day 0 카드의 출제사 로고 줄 (DECIDED 2026-11-14, 사용자: "Feed Media, 레이지요거트, 그리고 그룹바이 통해서 더 알아볼 생각", 같은 날 "로고로 보여줘") ──
-// 확정이 아니라 이야기 중이라 "이야기 중"으로 씀(레이지 요거트는 11-13 첫 미팅에서 긍정적 의사, brand 4장 약속하지 않음). 확정되면 이름을 바꾸고 Day 0 문장에 맞춥니다.
-// 레이지 요거트는 CI의 흰 실루엣을 그 회사의 초록(#095548)으로 칠한 판, Feed Media는 CI 원래 색(검정).
-export const issueTalks = {
-  label: { ko: "이야기 중", en: "In talks" },
-  logos: [
-    { name: "Feed Media", src: "/partners/logos/paper/feed-media.png", w: 900, h: 140 },
-    { name: "Lazy Yogurt 레이지 요거트", src: "/partners/logos/paper/lazy-yogurt.png", w: 343, h: 345 },
-  ],
-  moreLabel: { ko: "함께 더 찾는 곳", en: "Finding more with" },
-  more: { name: "그룹바이 GroupBy", src: "/partners/logos/paper/groupby-hand.png", w: 765, h: 144 },
-};
-
-export const decemberPartners: { heading: Phrase; groups: PartnerGroup[] } = {
+export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?: PartnerLogo & { note: Phrase }; logos: PartnerLogo[]; note?: Phrase }[] } = {
   heading: { ko: "함께하는 곳", en: "With us in December" },
   groups: [
     {
-      id: "main",
-      // DECIDED 2026-11-14 (사용자: "rephrase axmos, 메인 후원치고는 좀 지원이 너무 없어서"): "메인 후원"을 사실만 말하는 이름으로.
-      // AXMOS는 8월 제로백 빌더톤의 주최(brand 6장 관계 한 문장)이고 12월에 따로 큰 후원이 있는 것은 아니라, 함께해 온 사이로 적습니다. 그 전: 메인 후원 / Main sponsors, 컨소시엄 코어 5개사.
+      // DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): "메인 후원"을 "8월부터 함께한 곳"으로.
       label: { ko: "8월부터 함께한 곳", en: "With us since August" },
-      lead: { name: "AXMOS", src: "/partners/logos/white/trimmed/axmos.png", w: 900, h: 240, url: "https://axmos.ai/kr", note: { ko: "8월 제로백 빌더톤을 주최한 AX 컨소시엄의 5개사", en: "The AX consortium that hosted Zero100 in August, five core members" } },
+      lead: { name: "AXMOS", src: "/partners/logos/white/trimmed/axmos.png", w: 900, h: 240, url: "https://axmos.ai/kr", note: { ko: "컨소시엄 코어 5개사", en: "Consortium, five core members" } },
       logos: [
         // DECIDED 2026-10-22 (사용자: "translink, wilt, codepresso, popup, 드림에이스 순서임").
         { name: "Translink Investment", src: "/partners/logos/white/trimmed/translink.png", w: 330, h: 91, url: "https://translink.kr" },
@@ -3818,7 +3750,6 @@ export const decemberPartners: { heading: Phrase; groups: PartnerGroup[] } = {
     },
     {
       // DECIDED 2026-11-10 (디캠프 대관 승인 메일: 홍보물 표기는 "공간 후원 : (디캠프 로고)"): 장소 줄 이름을 "공간 후원"으로. 아산나눔재단(MARU180), FASTFIVE도 공간을 내준 곳이라 같은 이름. 그 전: 장소 / Venues.
-      id: "venue",
       label: { ko: "공간 후원", en: "Venue sponsors" },
       logos: [
         // DECIDED 2026-10-26 (사용자: "다 빼줘"): GSC 로고를 장소 줄에서도 뺐습니다. 노선도 Day 1 로고도 같은 날 뺐습니다.
@@ -3833,12 +3764,8 @@ export const decemberPartners: { heading: Phrase; groups: PartnerGroup[] } = {
       ],
     },
     {
-      id: "tech",
       label: { ko: "기술, 크레딧", en: "Tech and credits" },
       logos: [{ name: "Lovable", src: "/partners/logos/paper/lovable.png", w: 644, h: 110, url: "https://lovable.dev/" }],
-      // DECIDED 2026-11-12 (사용자: "러버블의 경우에는 참여자 모두에게 얼마만큼의 benefit 을 준다 + 워크샵 제공을 gmail 통해서 확인"):
-      // 2026-10-20 Lovable 승인 메일 "100 free Lovable credits per participant", Day 1 워크숍은 2026-10-30 회신 메일(아래 Carraway & Gatsby).
-      bandNote: { ko: "참가자 모두에게 100 크레딧, Day 1 워크숍", en: "100 credits each, Day 1 workshop" },
       // DECIDED 2026-10-27 (사용자: "'Day 1에 Lovable 현장 워크숍을 진행합니다.' 이거 빼줘"): 로고 띠 아래 한 줄을 뺐습니다. 일정 카드 Day 1의 세션은 그대로입니다.
     },
     // DECIDED 2026-11-03 (사용자: "Readray 와도 확정", "lovable 과 같이 묶이면 안되서, 수상 상품으로 크레딧 지원임. 따로 빼야함"): 시상에 쓰는 크레딧이라
@@ -3847,42 +3774,25 @@ export const decemberPartners: { heading: Phrase; groups: PartnerGroup[] } = {
     {
       // DECIDED 2026-11-10 (사용자: "러버블 조건을 보면 무조건 본인들이 행사 크레딧 후원이어야 한다", 근거 12월 빌더톤/이벤트 기획/툴의 Lovable 승인 메일과
       // 플레이북 정리: Lovable이 행사의 exclusive tool, 다른 파트너는 보조 이름으로만). 행사 크레딧은 Lovable 한 곳이라 Readray 줄에서 "크레딧"을 빼고 상품으로. 그 전: 시상 크레딧 / Award credits.
-      id: "award",
       label: { ko: "시상 상품", en: "Award prizes" },
-      // DECIDED 2026-11-11 (사용자: "수상팀 readray 크래딧 후원"): 로고 띠의 받는 사람. "크레딧"은 위 2026-11-10 Lovable 조건대로 쓰지 않습니다.
-      // 같은 날 뒤 (사용자: "gmail 참고해서 정확한 지원 amount"): 2026-11-03 Readray CPO 메일 "네, 가능합니다"(수상팀 1인당 Readray Pro 2개월 상당).
-      // 팀 수와 인원은 쓰지 않습니다(brand 8장).
-      bandNote: { ko: "수상 팀원에게 Pro 2개월", en: "2 months of Pro per award winner" },
       logos: [{ name: "Readray", src: "/partners/logos/paper/readray.png", w: 1983, h: 377, url: "https://readray.ai" }],
     },
     // DECIDED 2026-11-06 (사용자: "와이드모바일 (상금 후원) 넣어줘"). 로고는 CI/250207_도시락eSIM_LogoGuide.pdf의 가로형(도시락eSIM은 와이드모바일의 브랜드,
-    // App Store 판매자 Wide Mobile Co., Ltd.). 흰 바탕만 걷은 원래 색입니다. 사이트가 열리지 않아 링크 없이 둡니다.
+    // App Store 판매자 Wide Mobile Co., Ltd.). 흰 바탕만 걷은 원래 색입니다. 금액은 쓰지 않습니다(brand 9장). 사이트가 열리지 않아 링크 없이 둡니다.
     {
-      id: "prize",
       label: { ko: "상금 후원", en: "Prize sponsor" },
-      // 2026-11-12 (사용자: "같은 상자에"): #partners에서 이 묶음의 로고들은 카드 하나에.
-      oneCard: true,
-      // DECIDED 2026-11-12 (사용자: "천지세무법인 로고도 와이드모바일과 같은 상자에"). 원본은 CI/천지세무법인.png, 흰 바탕만 걷은 원래 색.
-      logos: [
-        { name: "와이드모바일 도시락eSIM WideMobile", src: "/partners/logos/paper/dosirak-esim.png", w: 846, h: 122 },
-        { name: "천지세무법인 Chunji Tax", src: "/partners/logos/paper/chunji-tax.png", w: 769, h: 292 },
-      ],
+      logos: [{ name: "와이드모바일 도시락eSIM WideMobile", src: "/partners/logos/paper/dosirak-esim.png", w: 846, h: 122 }],
     },
     // DECIDED 2026-11-06 (사용자: "terminal espresso house (다과지원) 넣어줘"). 원본은 CI/Terminal Espresso House.jpeg(검정 바탕 흰 글자)이고,
     // 바탕을 걷어 흰 실루엣으로(크림 위에서는 globals.css가 잉크 색으로). 사람 그림 아래 두 줄 글자라 크라이치즈버거처럼 square 높이.
     {
-      id: "snack",
       label: { ko: "다과 지원", en: "Refreshments" },
       logos: [{ name: "Terminal Espresso House", src: "/partners/logos/white/trimmed/terminal-espresso.png", w: 363, h: 321, square: true }],
     },
     // DECIDED 2026-11-08 (사용자: "트레바리 ... 반영을 해줘"). 파트너맵(11-07 확정): 참가 학생 전원에게 독서모임 쿠폰. 금액은 쓰지 않습니다(brand 9장).
     // 로고는 파트너맵 소스(크로싱서울_파트너맵_소스/logos/trevari.png)의 주황 워드마크를 여백만 잘라 원래 색 그대로. 사이트를 curl로 열어 봤습니다.
     {
-      id: "coupon",
       label: { ko: "독서모임 쿠폰", en: "Book club vouchers" },
-      // DECIDED 2026-11-11 (사용자: "참여자모두에게 트레바리 후원"): 로고 띠의 받는 사람.
-      // 같은 날 뒤 (사용자: "gmail 참고해서 정확한 지원 amount"): 2026-11-07 트레바리 대표 메일, 전원에게 10만원짜리 독서모임 쿠폰.
-      bandNote: { ko: "참가자 모두에게 10만원 쿠폰", en: "KRW 100,000 for every participant" },
       logos: [{ name: "트레바리 TREVARI", src: "/partners/logos/paper/trevari.png", w: 903, h: 160, url: "https://trevari.co.kr" }],
     },
     // DECIDED 2026-10-31 (사용자: 10/29 워크숍 인트로 미팅과 10/30 회신 메일, "이분이 있는 business를 넣어줘야함"): Day 1 Lovable 워크숍을 맡은 회사.
@@ -3890,12 +3800,10 @@ export const decemberPartners: { heading: Phrase; groups: PartnerGroup[] } = {
     // "Carraway & Gatsby"라 로고는 나침반 심볼 + "Carraway &" / "Gatsby" 두 줄입니다(사용자가 세 시안 중 고름). 전체 이름은 링크 이름과 대체 글에.
     // 원본은 CI/CGC (러버블 워크샵).jpeg(흰 바탕 남색). 바탕을 걷고 남색은 흰색으로, 파란 점은 밝은 파랑으로 올렸습니다(밝은 판 없이).
     {
-      id: "workshop",
       label: { ko: "Lovable 워크숍", en: "Lovable workshop" },
       logos: [{ name: "Carraway & Gatsby Corporation", src: "/partners/logos/paper/cgc.png", w: 833, h: 232, url: "https://cgcorp.io" }],
     },
     {
-      id: "community",
       label: { ko: "커뮤니티, 홍보", en: "Community and PR" },
       logos: [
         // DECIDED 2026-10-23 (사용자: "블룸 다른 로고 쓰면 좋을거 같은데"): 꽃 캐릭터 + 세리프 워드마크(color/bloom.png)에서 블록 글자 마크로.
@@ -3910,29 +3818,8 @@ export const decemberPartners: { heading: Phrase; groups: PartnerGroup[] } = {
     // DECIDED 2026-11-05 (사용자: "아이디어파트너스 로고를 웹사이트에 반영해줘, 미디어파트너로"). 원본은 CI/아이디어파트너스_영문.png(잉크 글자, 파란 심볼)이고
     // 크림 바탕에 그대로 읽혀 투명 여백만 잘랐습니다. 사이트(ideapartners.co.kr)를 curl로 열어 봤습니다.
     {
-      id: "media",
       label: { ko: "미디어 파트너", en: "Media partner" },
       logos: [{ name: "아이디어파트너스 Idea Partners", src: "/partners/logos/paper/idea-partners.png", w: 345, h: 64, url: "https://www.ideapartners.co.kr" }],
     },
-    // DECIDED 2026-11-12 (사용자: "그룹바이도 로고에 넣어줘, 어떤 포지션으로 오는지는 gmail 참고해서"). 11-09 우리 제안 메일의 역할 그대로
-    // "기업과 AI 인재를 연결하는 도메인 파트너"(그룹바이 회신은 아직 없음). 원본은 CI/그룹바이.webp(악수 심볼이 있는 흔히 쓰는 판, 같은 날 사용자), 원래 색 그대로 여백만 잘랐습니다.
-    {
-      id: "domain",
-      label: { ko: "도메인 파트너", en: "Domain partner" },
-      logos: [{ name: "그룹바이 GroupBy", src: "/partners/logos/paper/groupby-hand.png", w: 765, h: 144, url: "https://groupby.kr" }],
-    },
   ],
 };
-
-/** id로 묶음을 찾습니다. 없으면 throw(빌드가 멈춤). 2026-11-12 poster-phone Q6. */
-export function partnerGroup(id: PartnerGroupId): PartnerGroup {
-  const g = decemberPartners.groups.find((x) => x.id === id);
-  if (!g) throw new Error(`decemberPartners: no group with id "${id}". The logo band and copy.ts look groups up by id.`);
-  return g;
-}
-/** 묶음 안의 로고를 src로 찾습니다. 없으면 throw. */
-export function partnerLogo(id: PartnerGroupId, src: string): PartnerLogo {
-  const l = partnerGroup(id).logos.find((x) => x.src === src);
-  if (!l) throw new Error(`decemberPartners: no logo ${src} in group "${id}".`);
-  return l;
-}

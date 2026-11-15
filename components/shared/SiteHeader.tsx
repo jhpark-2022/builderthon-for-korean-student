@@ -18,7 +18,9 @@ import { useActiveSection, type NavAnchor } from "@/components/journey/JourneyNa
 // 목차는 가운데가 아니라 워드마크 바로 옆, 본문과 같은 왼쪽 선에서 시작합니다. 글자는 본문 크기(17px)이고,
 // 지금 보고 있는 장은 잉크색 글자와 주황 점 하나로 표시합니다(주황은 점에만, brand 10장).
 // 순서는 이 페이지의 화면 순서입니다. naruNav의 순서는 옛 홈(함께하는 곳이 맨 위)의 것이라 여기서 다시 늘어놓습니다.
-const ORDER = ["december", "partners", "register"]; // 2026-11-12 dedupe R2: 남는 것을 뺌
+// DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): 남는 것(#gains)이 화면에 다시 서서 목차에도 둡니다.
+// 그 전 2026-11-12 dedupe R2는 남는 것을 뺐습니다.
+const ORDER = ["december", "gains", "partners", "register"];
 const CROSSING_ANCHORS: NavAnchor[] = ORDER.map((id) => naruNav.find((a) => a.id === id)).filter((a): a is NavAnchor => !!a);
 
 // DECIDED 2026-11-13: 8월 기록의 새 화면(components/archive/redesign/Aug2026.tsx)의 다섯 장. 다른 두 페이지와 같은 폭에서 목차가 섭니다.
@@ -101,6 +103,8 @@ export default function SiteHeader({ page }: { page: SitePage }) {
     window.history.pushState(null, "", `#${id}`);
   };
 
+  // DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): naru.community 판. 지금 보는 장은
+  // 앞의 주황 점 대신 주황 밑줄(주황은 선 하나로만), 오픈채팅 버튼 모서리는 10px.
   const sectionLinks = (size: string) =>
     anchors.map((a) => {
       const here = active === a.id;
@@ -110,9 +114,8 @@ export default function SiteHeader({ page }: { page: SitePage }) {
           href={`#${a.id}`}
           onClick={(event) => jump(event, a.id)}
           aria-current={here ? "location" : undefined}
-          className={`inline-flex min-h-[44px] shrink-0 items-center gap-2 whitespace-nowrap rounded-md font-semibold transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naru-navy ${size} ${here ? "text-naru-text" : "text-naru-muted hover:text-naru-text"}`}
+          className={`inline-flex min-h-[44px] shrink-0 items-center gap-2 whitespace-nowrap rounded-md font-semibold transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naru-navy ${size} underline-offset-[8px] ${here ? "text-naru-text underline decoration-naru-orange decoration-2" : "text-naru-muted hover:text-naru-text"}`}
         >
-          <span aria-hidden className={`h-1.5 w-1.5 shrink-0 rounded-full bg-naru-orange transition-opacity duration-150 ${here ? "opacity-100" : "opacity-0"}`} />
           {t(a.label)}
         </a>
       );
@@ -163,7 +166,7 @@ export default function SiteHeader({ page }: { page: SitePage }) {
                 rel="noopener noreferrer"
                 aria-label={t({ ko: "오픈채팅, 카카오톡 새 창", en: "Open chat, KakaoTalk, new window" })}
                 onClick={() => trackOpenChat("nav")}
-                className="inline-flex h-10 min-w-[40px] items-center justify-center gap-2 rounded-full bg-naru-navy px-4 text-[0.9375rem] font-bold text-[#fff] transition-colors duration-150 hover:bg-[#1D338A] max-[419px]:w-10 max-[419px]:px-0"
+                className="inline-flex h-10 min-w-[40px] items-center justify-center gap-2 rounded-[10px] bg-naru-navy px-4 text-[0.9375rem] font-bold text-[#fff] transition-colors duration-150 hover:bg-[#1D338A] max-[419px]:w-10 max-[419px]:px-0"
               >
                 <ChatGlyph className="block h-4 w-4" />
                 <span className="max-[419px]:sr-only">{t(dict.nav.openChat)}</span>

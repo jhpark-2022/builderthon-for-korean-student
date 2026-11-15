@@ -13,10 +13,10 @@
 // DECIDED 2026-10-08 (사용자: "팀 - 전원 현장 편성"): 모두 혼자 등록하고 팀은 현장에서 맺습니다. 폼에서 참가 형태,
 // 팀 이름, 팀원 줄, 팀 매칭 희망을 뺐습니다. 표는 그대로입니다(마이그레이션 없음). 라우트가 join_type을 "solo"로,
 // team_name을 null로, wants_matching을 false로 씁니다. 한 폼에 한 사람입니다.
-// DECIDED 2026-11-14 (사용자: "8월달 참고해줘, 혼자해도 되고, team of two 로도 할 수 있도록"): 위 10-08을 이 결정이 대신합니다.
-// 참가 형태(join_type)를 다시 묻습니다. 혼자(solo)면 한 사람, 둘이 한 팀(team)이면 같은 폼에 팀원 한 사람을 더 적습니다.
-// 팀원도 같은 사람 칸(MEMBER_FIELDS)을 다 채우고 crossing_members의 ordinal 2로 들어갑니다. 팀 이름과 매칭 희망은 묻지 않습니다
-// (team_name null, wants_matching false). 둘은 Day 1에 같은 팀이 되고, 팀의 나머지는 현장에서 꾸립니다(brand 7장 팀 줄).
+// DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): naru.community 판. 한 폼에 한 사람은 그대로이고,
+// 같이 할 사람이 있으면 둘이 같은 "팀 코드"(team_code, answers jsonb, 10자 안)를 적습니다. 같은 코드끼리 Day 1에 한 팀이 되고,
+// 한 코드에 두 명까지입니다. 셋째는 서버가 409 team_code_full로 막습니다(app/api/crossing/register). 2026-11-14의 "둘이 한 팀으로" 폼은 없앴습니다
+// (표와 0024 마이그레이션은 그대로). 폼 글은 naru.community의 해요체 문장 그대로입니다. 링크드인은 주소 꼴을 검사합니다(invalid_linkedin).
 // 카피는 data/naru.ts의 register 블록이 아니라 여기 label에 {ko, en}으로 둡니다. 질문과
 // 라벨이 한 줄에 있어야 질문을 바꿀 때 한 곳만 고칩니다.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -24,11 +24,6 @@
 import { registerFacts } from "./naru";
 
 // radio (2026-10-07, 신청 폼 브리프 2.3): 하나만 고르는 선택 카드. 검증은 select와 같습니다(목록 안의 값인지).
-export const JOIN_SOLO = "solo";
-export const JOIN_TEAM = "team";
-/** 둘이 한 팀일 때 한 폼의 사람 수(등록자 + 팀원 한 명). */
-export const TEAM_SIZE = 2;
-
 export type FieldType = "text" | "email" | "select" | "radio" | "textarea" | "checkbox" | "country";
 /** hint: 선택지 아래 작은 설명(예시). radio 카드가 그립니다. */
 export interface FieldOption { value: string; label: { ko: string; en: string }; hint?: { ko: string; en: string } }
@@ -50,8 +45,6 @@ export interface Field {
   verbatim?: boolean;
   /** radio 카드의 첫 번호. 기본 1. 폼(RegisterModal)과 명단 스크립트(build-crossing-roster.py)가 같이 읽습니다. */
   firstStep?: number;
-  /** radio 카드에 단계 번호를 그리지 않습니다(참가 형태처럼 순서가 없는 선택). */
-  plain?: boolean;
 }
 
 export const MAX_TEXT = 200;
@@ -77,25 +70,23 @@ export const CONSENT_RETENTION: { ko: string; en: string } | null = registerFact
 export const CONSENT_NOTICE_READY = CONSENT_RETENTION !== null;
 const retention = CONSENT_RETENTION;
 const CONSENT_BASE = {
-  // DECIDED 2026-11-14: 둘이 한 팀이면 팀원의 같은 항목도 받으므로 수집 항목에 적고, 목적은 "현장 팀 편성"에서 "팀 편성"으로.
-  // DECIDED 2026-11-14 (사용자: 폼 디자인 점검 "make the proposed edits"): 폼 글을 해요체로(brand 5장). 팀원은 AI로 해 본 것을 받지 않음.
-  ko: "수집 항목: 이름, 이메일, 카카오톡 ID, 학교, 공부하는 나라, 전공, AI로 해 본 것, 링크드인(선택). 둘이 한 팀으로 오면 팀원의 같은 항목도 받아요(AI로 해 본 것은 빼고). 목적: 참가 안내와 팀 편성. 동의하지 않을 수 있고, 그러면 등록할 수 없어요. 팀원의 정보는 팀원에게 먼저 알리고 적어 주세요.",
-  en: "What we collect: name, email, KakaoTalk ID, school, country of study, major, your AI step, and LinkedIn (optional), and the same for your teammate (except the AI step) if you come as a team of two. Purpose: participation notices and team formation. You may decline, in which case you cannot register. Tell your teammate before you enter their details.",
+  ko: "수집 항목: 이름, 이메일, 카카오톡 ID, 학교, 공부하는 나라, 전공, AI로 해 본 것, 링크드인(선택). 목적: 참가 안내와 현장 팀 편성. 동의하지 않을 수도 있지만, 그러면 등록할 수 없어요.",
+  en: "What we collect: name, email, KakaoTalk ID, school, country of study, major, your AI step, and LinkedIn (optional). Purpose: participation notices and on-site team formation. You may decline, in which case you cannot register.",
 };
 const CONSENT_HELP = retention
   ? { ko: `${CONSENT_BASE.ko} 보유 기간: ${retention.ko}.`, en: `${CONSENT_BASE.en} Retention: ${retention.en}.` }
-  : { ko: `${CONSENT_BASE.ko} 보유 기간은 등록이 열릴 때 함께 적어요.`, en: `${CONSENT_BASE.en} The retention period will be written here when registration opens.` };
+  : { ko: `${CONSENT_BASE.ko} 보유 기간은 등록이 열릴 때 같이 적을게요.`, en: `${CONSENT_BASE.en} The retention period will be written here when registration opens.` };
 
 export const CROSSING_FORM: Field[] = [
   // ── 사람 단위 ────────────────────────────────────────────────────────────
   { key: "name", scope: "member", type: "text", required: true, fixed: true, autoComplete: "name",
     label: { ko: "이름", en: "Name" },
     // DECIDED 2026-10-17 (사용자: "등록에도 본명을 쓰라는걸 명시"): Day 1 유형 테스트와 팀 명단을 이 이름으로 잇습니다(0010 crossing_matching_pool).
-    help: { ko: "본명으로 적어 주세요. Day 1의 AI 유형 테스트와 팀 구성을 이 이름으로 이어요.", en: "Use your real name. Your Day 1 AI type test and your team are matched to it." } },
+    help: { ko: "본명으로 적어 주세요. Day 1 AI 유형 테스트와 팀을 이 이름으로 맞춰요.", en: "Use your real name. Your Day 1 AI type test and your team are matched to it." } },
   { key: "email", scope: "member", type: "email", required: true, fixed: true, autoComplete: "email", inputMode: "email", verbatim: true,
     label: { ko: "이메일", en: "Email" },
     // DECIDED 2026-10-15 (사용자: 메일은 보내지 않고 소식은 카카오톡으로): 안내 메일을 약속하지 않습니다.
-    help: { ko: "운영진이 따로 연락할 일이 있을 때만 써요.", en: "Only used if the organisers need to reach you directly." } },
+    help: { ko: "따로 연락할 일이 있을 때만 써요.", en: "Only used if the organisers need to reach you directly." } },
   { key: "contact", scope: "member", type: "text", required: true, fixed: true, verbatim: true,
     label: { ko: "카카오톡 ID", en: "KakaoTalk ID" },
     // DECIDED 2026-10-23 (사용자, 스크린숏: "이거는 빼줘"): 아래 설명 세 문장(참가자 방 초대, ID 찾는 곳, 오픈채팅과 다른 방)을 뺐습니다.
@@ -105,10 +96,10 @@ export const CROSSING_FORM: Field[] = [
     // DECIDED 2026-10-15 (사용자: "학교 이름은 필수임"): 필수입니다.
     label: { ko: "학교", en: "School" },
     // DECIDED 2026-10-15 (사용자: "서울대랑 nus 넣지 말아줘, 가장 좋은 학교를 넣으면 intimidate 될 수 있어"): 예시에 학교 이름을 두지 않습니다.
-    placeholder: { ko: "다니는 학교 이름", en: "Your school's name" } },
+    placeholder: { ko: "학교 이름", en: "Your school's name" } },
   { key: "study_country", scope: "member", type: "country", required: true, fixed: true,
     label: { ko: "공부하는 나라", en: "Country you study in" },
-    help: { ko: "한국과 해외의 학생이 한 팀에 섞이도록 팀을 꾸릴 때 봐요.", en: "Used when forming teams so students in Korea and abroad are mixed." },
+    help: { ko: "한국과 해외 학생이 한 팀에 섞이도록 팀을 짤 때 봐요.", en: "Used when forming teams so students in Korea and abroad are mixed." },
     options: [
       { value: "KR", label: { ko: "한국", en: "Korea" } },
       { value: "SG", label: { ko: "싱가포르", en: "Singapore" } },
@@ -120,17 +111,8 @@ export const CROSSING_FORM: Field[] = [
     label: { ko: "나라 이름", en: "Country name" },
     placeholder: { ko: "예: 프랑스", en: "e.g. France" } },
   // ── 폼 단위 ──────────────────────────────────────────────────────────────
-  // DECIDED 2026-11-14 (위 머리 주석): 참가 형태. 폼의 맨 위에 그립니다(RegisterModal). 값은 표의 join_type 열 그대로(0004의 check: solo, team).
-  { key: "join_type", scope: "registration", type: "radio", required: true, fixed: true, plain: true,
-    label: { ko: "어떻게 오나요?", en: "How are you joining?" },
-    options: [
-      { value: JOIN_SOLO, label: { ko: "혼자", en: "On my own" },
-        hint: { ko: "팀은 Day 1 현장에서 꾸려요.", en: "Teams form on site on Day 1." } },
-      { value: JOIN_TEAM, label: { ko: "둘이 한 팀으로", en: "As a team of two" },
-        hint: { ko: "같이 올 한 사람의 정보도 이 폼에 적어요. 둘은 Day 1에 같은 팀이 돼요.", en: "Add the one person coming with you on this form. You two will be on the same team on Day 1." } },
-    ] },
   { key: "consent", scope: "registration", type: "checkbox", required: true, fixed: true,
-    label: { ko: "개인정보 수집과 이용에 동의해요.", en: "I agree to the collection and use of my personal data." },
+    label: { ko: "개인정보 수집과 이용에 동의합니다.", en: "I agree to the collection and use of my personal data." },
     help: CONSENT_HELP },
   // ── 추가 질문 ────────────────────────────────────────────────────────────
   // 여기에 줄을 더합니다. fixed 없이(answers jsonb로 갑니다. 표의 스키마는 바뀌지 않습니다).
@@ -153,25 +135,31 @@ export const CROSSING_FORM: Field[] = [
     // 전공과 아래 AI 질문은 선발처럼 읽히기 쉬운 두 칸입니다. 둘 다 바로 아래에 왜 묻는지를 적습니다.
     // DECIDED 2026-10-12 (등록 브리프 1.4, 리뷰 S5): "스크리닝이 아닙니다"는 두 도움말에서 빼고 모달 도입부 한 번만 둡니다.
     // 세 번 되풀이하니 오히려 선발처럼 읽혔습니다(docs/brand.md 9장: 한 자리에 한 번).
-    help: { ko: "여러분에게 맞는 과정을 준비하려고 물어요. 무엇을 적어도 참가에는 영향이 없어요.", en: "We ask so we can prepare a programme that fits you. Your answer does not affect whether you can join." },
+    help: { ko: "무엇을 적어도 참가에는 영향이 없어요. 과정을 맞춰 준비하려고 묻는 거예요.", en: "We ask so we can prepare a programme that fits you. Your answer does not affect whether you can join." },
     placeholder: { ko: "예: 경영학, 컴퓨터공학, 미정", en: "e.g. Business, Computer Science, Undeclared" } },
   // DECIDED 2026-10-12 (등록 브리프 1.4 D2, 리뷰 S5): 0단계 "아직 거의 써 보지 않았다"(값 none)를 맨 앞에 더합니다. 그 전에는
   // 아무것도 해 보지 않은 사람이 고를 칸이 없는데 필수였습니다. 번호는 0부터입니다(firstStep). 기존 넷의 값과 번호(1~4)는
   // 그대로라 이미 있는 답과 명단의 번호가 바뀌지 않습니다. 라벨은 "가장 위"가 아니라 "번호가 가장 큰 것"입니다(카드는 1번이 맨 위).
   { key: "ai_level", scope: "member", type: "radio", required: true, firstStep: 0,
-    label: { ko: "AI로 해 본 것 중 번호가 가장 큰 것 하나를 골라 주세요.", en: "Of the things you have done with AI, pick the one with the highest number." },
-    help: { ko: "여러분에게 맞는 과정을 준비하려고 물어요. 무엇을 골라도 참가에는 영향이 없어요.", en: "We ask so we can prepare a programme that fits you. Your answer does not affect whether you can join." },
+    label: { ko: "AI로 해 본 것 중 가장 큰 번호 하나를 골라 주세요.", en: "Of the things you have done with AI, pick the one with the highest number." },
+    help: { ko: "이것도 참가에는 영향이 없어요.", en: "We ask so we can prepare a programme that fits you. Your answer does not affect whether you can join." },
     options: [
-      { value: "none", label: { ko: "아직 거의 써 보지 않았다", en: "Have barely used it yet" } },
+      { value: "none", label: { ko: "아직 거의 안 써 봤다", en: "Have barely used it yet" } },
       { value: "chat", label: { ko: "채팅창에 물어보고 답을 받아 써 봤다", en: "Asked a chatbot and used its answers" },
-        hint: { ko: "ChatGPT나 Claude에 질문하고 글, 요약, 번역을 받아 씀", en: "Questions, drafts, summaries or translations from ChatGPT or Claude" } },
+        hint: { ko: "ChatGPT나 Claude에게 글, 요약, 번역을 받아 씀", en: "Questions, drafts, summaries or translations from ChatGPT or Claude" } },
       { value: "agent", label: { ko: "AI에게 일을 맡겨 끝까지 해내게 해 봤다", en: "Handed AI a task and let it finish the job" },
         hint: { ko: "Claude Cowork나 ChatGPT 에이전트 모드로 파일 정리, 자료 조사, 문서 만들기", en: "Sorting files, research or making documents with Claude Cowork or ChatGPT agent mode" } },
-      { value: "terminal", label: { ko: "터미널에서 AI 코딩 도구를 켜서 무언가를 만들어 봤다", en: "Opened an AI coding tool in the terminal and built something" },
+      { value: "terminal", label: { ko: "터미널에서 AI 코딩 도구로 뭔가 만들어 봤다", en: "Opened an AI coding tool in the terminal and built something" },
         hint: { ko: "Claude Code나 Codex CLI로 앱이나 스크립트 만들기", en: "An app or a script with Claude Code or Codex CLI" } },
-      { value: "connect", label: { ko: "AI에 다른 도구를 연결해 함께 쓰게 해 봤다", en: "Connected other tools to AI so it can use them" },
+      { value: "connect", label: { ko: "AI에 다른 도구를 연결해 써 봤다", en: "Connected other tools to AI so it can use them" },
         hint: { ko: "MCP로 Claude나 ChatGPT에 노션, 깃허브, 캘린더 등을 연결", en: "Notion, GitHub or a calendar linked to Claude or ChatGPT through MCP" } },
     ] },
+  // DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): 팀 코드. 선택이고 answers로 갑니다(고정 열 아님). 서버가 같은 행사에서 같은 코드(앞뒤 공백 없이,
+  // 대소문자 무시)를 이미 두 명이 썼으면 셋째를 409 team_code_full로 막습니다. 명단 스크립트는 answers의 키로 읽습니다.
+  { key: "team_code", scope: "member", type: "text", required: false, maxLen: 10,
+    label: { ko: "팀 코드", en: "Team code" },
+    help: { ko: "같이 하고 싶은 사람이 있으면 둘이 같은 코드를 적어 주세요. 같은 코드끼리 한 팀이 되고, 한 코드에 두 명까지예요. 남과 겹치지 않게 10자 안으로 지어 주세요.", en: "Want to team up with someone? Both of you enter the same code and you'll be on one team. Up to two people per code. Make it something no one else would pick." },
+    placeholder: { ko: "예: 지존법사123, 역삼동파이터", en: "e.g. wizard123, yeoksam-fighter" } },
   // DECIDED 2026-11-02 (사용자: "질문의 순서를 다시 생각. 필수가 먼저 와야함"): 필수 질문을 다 묻고 선택을 맨 끝에 둡니다.
   // 링크드인이 학교와 나라 다음, 필수인 전공과 AI 질문 앞에 있었습니다. 고정 열이라 answers와 명단 열 순서는 바뀌지 않습니다.
   // 폼에 그리는 순서는 이 배열의 순서이고, 동의 칸은 RegisterModal이 언제나 맨 끝에 그립니다.
@@ -185,7 +173,16 @@ export const REGISTRATION_FIELDS = CROSSING_FORM.filter((f) => f.scope === "regi
 /** answers jsonb로 가는 키(고정 열이 아닌 것) */
 export const ANSWER_KEYS = { registration: REGISTRATION_FIELDS.filter((f) => !f.fixed).map((f) => f.key), member: MEMBER_FIELDS.filter((f) => !f.fixed).map((f) => f.key) };
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): 이메일은 끝이 두 글자 이상의 영문 도메인이어야 하고(점이 겹치지 않게),
+// 링크드인은 linkedin.com/in/ 또는 /pub/ 꼴의 프로필 주소여야 합니다(https://는 없어도 됨. 서버가 붙여 저장).
+const EMAIL_RE = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[A-Za-z]{2,}$/;
+const LINKEDIN_RE = /^(https?:\/\/)?([a-z]{2,3}\.)?linkedin\.com\/(in|pub)\/[^\s/?#]+\/?([?#]\S*)?$/i;
+/** 팀 코드를 비교하는 꼴. 앞뒤 공백을 떼고 소문자로(서버의 409 검사와 명단이 같이 씁니다). */
+export const TEAM_CODE_KEY = "team_code";
+export const TEAM_CODE_MAX_MEMBERS = 2;
+export function normalizeTeamCode(v: unknown): string {
+  return typeof v === "string" ? v.trim().toLowerCase() : "";
+}
 
 /** 필드 하나의 값 검증. 문제 없으면 null, 있으면 오류 코드. 서버와 클라이언트가 같이 씁니다. */
 export function validateField(f: Field, raw: unknown): string | null {
@@ -198,6 +195,7 @@ export function validateField(f: Field, raw: unknown): string | null {
   if (!v) return f.required ? "required" : null;
   if (v.length > max) return "too_long";
   if (f.type === "email" && !EMAIL_RE.test(v)) return "invalid_email";
+  if (f.key === "linkedin" && !LINKEDIN_RE.test(v)) return "invalid_linkedin";
   if ((f.type === "select" || f.type === "radio" || f.type === "country") && !(f.options ?? []).some((o) => o.value === v)) return "invalid_option";
   return null;
 }
@@ -206,21 +204,10 @@ export function validateField(f: Field, raw: unknown): string | null {
  * 한 사람의 답 전체 검증. {키: 오류 코드}. 서버와 클라이언트가 같이 씁니다.
  * 필드 하나로는 알 수 없는 규칙 하나가 여기 있습니다: 나라가 "그 밖의 나라"면 나라 이름이 필수입니다.
  */
-/** 팀원 칸 묶음 위의 제목과 안내(둘이 한 팀일 때만). */
-export const TEAMMATE_COPY = {
-  me: { ko: "내 정보", en: "About you" },
-  heading: { ko: "함께 오는 팀원", en: "Your teammate" },
-  note: { ko: "팀원은 따로 등록하지 않아도 돼요. 이 폼 하나로 둘 다 등록돼요.", en: "Your teammate does not need to register separately. This one form registers you both." },
-};
-
-// DECIDED 2026-11-14 (사용자: "팀원의 AI 능력까지는 볼 필요가 없음"): 팀원 칸에서는 묻지 않고 검증도 하지 않는 키.
-export const TEAMMATE_SKIP = ["ai_level"];
-
-export function validatePerson(a: Record<string, unknown>, teammate = false): Record<string, string> {
+export function validatePerson(a: Record<string, unknown>): Record<string, string> {
   const e: Record<string, string> = {};
   const other = a.study_country === COUNTRY_OTHER;
   for (const f of MEMBER_FIELDS) {
-    if (teammate && TEAMMATE_SKIP.includes(f.key)) continue;
     if (f.key === COUNTRY_OTHER_KEY && !other) continue;
     const err = validateField(f.key === COUNTRY_OTHER_KEY ? { ...f, required: true } : f, a[f.key]);
     if (err) e[f.key] = err;

@@ -12,9 +12,11 @@ import { CONSENT_NOTICE_READY } from "@/data/crossingForm";
 /** 지금 등록을 받는 회차. crossing_registrations.event_slug에 그대로 들어갑니다. */
 export const CURRENT_EVENT = "crossing-seoul-2026-12";
 
-/** TODO: confirm. 등록 창. 예: opensAt "2026-10-20T12:00:00+09:00". 둘 다 null = 아직 안 엶. */
+/** 등록 창. 예: opensAt "2026-10-20T12:00:00+09:00". 둘 다 null = 아직 안 엶.
+ *  DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): 계획한 여는 날 11월 16일(월) 0시(KST).
+ *  naru.community 배포는 15일 0시로 이미 열려 있습니다. 화면의 "등록 시작은 11.16 월요일"과 맞춥니다. 마감은 아직 없음. */
 export const CROSSING_WINDOW: { opensAt: string | null; closesAt: string | null } = {
-  opensAt: null,
+  opensAt: "2026-11-16T00:00:00+09:00",
   closesAt: null,
 };
 

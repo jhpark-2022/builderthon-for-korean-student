@@ -11,7 +11,8 @@ const p = (ko: string, en: string): Phrase => ({ ko, en });
 const same = (s: string): Phrase => ({ ko: s, en: s });
 
 export const aug = {
-  date: p("2026년 8월 22일부터 29일까지, 싱가포르", "22 to 29 August 2026, Singapore"),
+  // DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): naru.community 판의 점 표기. 아래 날짜 칸도 08.22 꼴.
+  date: p("2026.08.22–08.29, 싱가포르", "2026.08.22–08.29, Singapore"),
   title: p("제로백 빌더톤", "Zero100 Builderthon"),
   lead: p(
     "나루는 이 8일에서 시작했어요.\n스크리닝 없이 들어온 학생들이 실제 회사의 문제를 받아 풀고 마지막 날 그 회사 앞에서 발표했어요.",
@@ -36,14 +37,14 @@ export const aug = {
     "The first two days were for the problem and the basics, the middle five for building with mentors.\nOn the last day, teams stood in front of the company that set the problem.",
   ),
   days: [
-    { date: "08/22", dow: p("토", "Sat"), what: p("오프닝, 문제 공개", "Opening, problem release") },
-    { date: "08/23", dow: p("일", "Sun"), what: p("크래시코스", "Crash course") },
-    { date: "08/24", dow: p("월", "Mon"), what: p("만들면서 1:1 멘토링", "Build, with 1:1 mentoring") },
-    { date: "08/25", dow: p("화", "Tue"), what: p("만들면서 1:1 멘토링", "Build, with 1:1 mentoring") },
-    { date: "08/26", dow: p("수", "Wed"), what: p("중간 점검", "Mid-point check") },
-    { date: "08/27", dow: p("목", "Thu"), what: p("각자 만드는 날", "Self-paced build") },
-    { date: "08/28", dow: p("금", "Fri"), what: p("파이널 리허설", "Final rehearsal") },
-    { date: "08/29", dow: p("토", "Sat"), what: p("결과 공유회", "Showcase") },
+    { date: "08.22", dow: p("토", "Sat"), what: p("오프닝, 문제 공개", "Opening, problem release") },
+    { date: "08.23", dow: p("일", "Sun"), what: p("크래시코스", "Crash course") },
+    { date: "08.24", dow: p("월", "Mon"), what: p("만들면서 1:1 멘토링", "Build, with 1:1 mentoring") },
+    { date: "08.25", dow: p("화", "Tue"), what: p("만들면서 1:1 멘토링", "Build, with 1:1 mentoring") },
+    { date: "08.26", dow: p("수", "Wed"), what: p("중간 점검", "Mid-point check") },
+    { date: "08.27", dow: p("목", "Thu"), what: p("각자 만드는 날", "Self-paced build") },
+    { date: "08.28", dow: p("금", "Fri"), what: p("파이널 리허설", "Final rehearsal") },
+    { date: "08.29", dow: p("토", "Sat"), what: p("결과 공유회", "Showcase") },
   ],
 
   photosTitle: p("사진", "Photos"),

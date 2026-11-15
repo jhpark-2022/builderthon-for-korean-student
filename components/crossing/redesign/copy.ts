@@ -1,4 +1,4 @@
-import { naru, register as registerCopy, registerNoteShort, registerNoteOpen, partnerGroup } from "@/data/naru";
+import { naru, register as registerCopy, registerNoteShort, registerNoteOpen, decemberPartners } from "@/data/naru";
 import { type Phrase } from "@/data/dictionaryCore";
 
 // DECIDED 2026-11-07 (redesign/crossing): 이 페이지 전용 한국어 문구. 영어는 data/naru.ts의 원문 그대로입니다.
@@ -12,75 +12,31 @@ const kos = (texts: string[], from: readonly Phrase[]): Phrase[] =>
   from.length === texts.length ? texts.map((x, i) => ko(x, from[i])) : [...from];
 
 const stage = (n: number) => d.stages.find((s) => s.dayOffset === n)!;
-// 2026-11-12 (poster-phone Q6): 메인 후원은 순서가 아니라 id로. lead가 없으면 모듈을 읽을 때 멈춥니다.
-const MAIN_LEAD_NOTE = (() => {
-  const lead = partnerGroup("main").lead;
-  if (!lead) throw new Error('decemberPartners: group "main" has no lead.');
-  return lead.note;
-})();
 
 export const copy = {
-  // DECIDED 2026-11-12 (사용자: 캐치프레이즈와 그 아래 한 줄을 "bold 3줄로 합쳐줘"): 히어로 굵은 문단 세 줄. 넷(생각, 현업, 팀마다 다르게, 서로 봄)과 순서는 brand 6장 그대로.
-  // DECIDED 2026-11-12 (docs/dedupe-brief.md R6, D1): "팀 구성" 줄을 "누가" 줄에 합침. 셋째 줄은 팀 구성의 첫 문장 그대로.
-  factWho: {
-    ko: "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 또는 둘이 한 팀으로 등록하고, 팀은 Day 1 현장에서 꾸려요.\n한 팀에 한국 학생과 싱가포르 학생이, 직접 만드는 사람과 숫자를 보는 사람이 섞여요.",
-    en: "University students in Korea and Korean students studying abroad.\nRegister alone or as a team of two; teams form on site on Day 1.\nTeams mix Korea and Singapore, makers and numbers people, so each answers one issue its own way.",
-  } as Phrase,
-  heroBold: {
-    ko: "왜 아직, 손으로?\n진짜 기업 문제로 먼저 생각하고, 현업에 물어보고,\n팀마다 다른 실물을 만들어 서로 보여 주며 자기 가치를 증명해요.",
-    en: "Why still by hand?\nTake a real company problem, think first, ask the field,\nbuild something different, show each other, prove your worth.",
-  } as Phrase,
-  heroLine: ko("진짜 기업 문제를 붙잡고 스스로 생각해,\n자기 가치를 증명할 실물을 들고 나가는 닷새예요.", h.heroLine),
   catchAnswer: ko("먼저 생각하고, 현업에 물어보고,\n팀마다 다른 걸 만들어 서로 보여 줘요.", h.catchAnswer),
   sub: ko("만드는 건 이제 AI 몫이에요.\n그래서 이번 닷새는 거의 다, 무엇을 왜 만들지 정하는 데 쓸 거예요.\n정한 게 맞았는지는 직접 만든 결과물이 증명하죠.", h.sub),
   // DECIDED 2026-11-09 (docs/brand-voice-brief.md D3): 새 화면에 남은 합니다체 한 줄을 해요체로. 그 전 "나루가 엽니다."
-  // 2026-11-11 (docs/poster-first-brief.md P4): 화면에서 뺌(#partners 주최 줄이 같은 말). 키는 남김.
   naruLine: ko("학생들이 직접 꾸리는 그룹, 나루가 열어요.", h.naruLine),
   photosCaption: ko("8월 싱가포르, 제로백 빌더톤", h.photosCaption),
   photosMore: (n: number): Phrase => ({ ko: `사진 ${n}장 더 보기`, en: `View ${n} photos` }),
 
-  // DECIDED 2026-11-11 (사용자, docs/poster-first-brief.md P1, D1 문장 승인): 히어로의 사실 넷. 2026-11-12 (poster-phone Q1): 누가, 받는 것, 어디서 순. 기본값과 영어는 data/naru.ts eventHero.posterFacts.
-  // 2026-11-12 (사용자: "블룸과 가짜연구소에서 오시는 멘토분들이라고 내용 추가"): 멘토 줄 둘째 줄에. 띠의 함께하는 멘토와 같은 두 곳.
-  heroFactKeys: kos(["누가", "받는 것", "멘토"], h.posterFacts.map((f) => f.k)),
-  heroFacts: kos(
-    [
-      "한국의 대학생과 해외에서 공부하는 한인 학생.\n혼자 또는 둘이 한 팀으로 등록하고, 팀은 Day 1 현장에서 꾸려요.",
-      "참가자 모두에게 Lovable 100 크레딧과 트레바리 10만원 쿠폰.\n지원금 총 200만원은 미션을 해낸 팀들이 나눠 받아요.\n수상 팀원에게는 Readray Pro 2개월.",
-      "임상 연구, 의료기기, K-뷰티, 자동차, 게임 분야에서 AI를 잘 쓰는 현업이에요.\nBloom과 가짜연구소에서 오시고, Kia, C&R Research, Aside (YC F25), BIGPIE C&T 등에서 일해요.\n팀이 찾아가면 일해 본 감각으로 생각을 반박해 줘요.",
-    ],
-    h.posterFacts.map((f) => f.v),
-  ),
-  heroRegisterKey: ko("등록", h.registerFact.k),
-  heroRegisterNotOpen: ko("11월 16일(월)에 열어요.\n소식은 카카오톡에서 먼저 알려요.", h.registerFact.notOpen),
-  heroRegisterOpen: ko("지금 등록할 수 있어요.\n소식은 카카오톡에서 먼저 알려요.", h.registerFact.open),
-  // DECIDED 2026-11-11 (P3, 같은 날 사용자): 로고 띠 멘토 묶음의 이름. 사람도 회사도 적지 않고 멘토가 오는 두 곳만.
-  mentorsStripLabel: ko("함께하는 멘토", d.mentorsListLabel),
-  // DECIDED 2026-11-11 (P2): 로고 띠 끝의 링크.
-  partnersAll: { ko: "함께하는 곳 전체 보기", en: "See everyone with us" } as Phrase,
-
-  // DECIDED 2026-11-14 (사용자: 혼자도, 둘이 한 팀도): 그 전 "팀 없이 혼자 등록하면 돼요."
-  noteShort: ko("등록 시작은 11월 16일(월).\n혼자 또는 둘이 한 팀으로 등록하면 돼요.", registerNoteShort),
-  noteOpen: ko("혼자 또는 둘이 한 팀으로 등록하면 돼요.", registerNoteOpen),
+  // DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): 등록은 한 사람씩, 같이 할 사람은 폼의 팀 코드를 똑같이 적어 미리 묶입니다(한 코드에 두 명까지).
+  // 맨 아래 등록 블록은 문장마다 줄을 나눕니다(CrossingSeoul). 나루 홈도 noteShort를 씁니다.
+  noteShort: ko("등록 시작은 11.16 월요일.\n등록은 각자 해요. 같이 하고 싶은 사람이 있으면 팀 코드를 똑같이 적어 주세요.", registerNoteShort),
+  noteOpen: ko("등록은 각자 해요. 같이 하고 싶은 사람이 있으면 팀 코드를 똑같이 적어 주세요.", registerNoteOpen),
   previewCta: ko("등록 폼 먼저 보기", registerCopy.previewCta),
-  // DECIDED 2026-11-12 (사용자: "등록 date 은 버튼에 반영"): 히어로 사실 줄에서 등록을 빼고, 여는 날을 히어로 미리 보기 버튼에. 맨 아래 #register는 그대로.
-  heroPreviewCta: { ko: "11월 16일(월) 등록, 폼 먼저 보기", en: "Opens Mon 16 Nov, preview the form" } as Phrase,
 
-  // DECIDED 2026-11-12 (사용자: 닷새 리드 두 문단을 "3줄로 내용을 합쳐줘"): 정체성 세 줄(sub)과 scheduleLead를 한 문단 세 줄로.
-  // 등록은 혼자, 팀은 Day 1은 히어로 누가 줄이 말해 뺐고, 규칙 한 문장은 그대로(brand 5장, 6장 방법 한 문장). 두 키는 남김.
-  programLead: {
-    ko: "만드는 건 이제 AI 몫이라, 닷새는 거의 다 무엇을 왜 만들지 정하는 데 써요.\n규칙은 하나예요: AI가 쓴 걸 고치지 말고, 내가 쓴 걸 AI한테 고치게 할 것.\n닷새 안에 다 못 풀어도 괜찮아요. 얼마나 깊이 팠는지는 직접 만든 결과물이 증명하죠.",
-    en: "With AI doing the making, these five days go to deciding what to build and why.\nOne rule: don't fix what AI wrote. Let AI fix what you wrote.\nIt's fine if five days don't solve it. What you build shows how deep you dug.",
-  } as Phrase,
   programHeading: ko("닷새, 이렇게 보내요", d.programHeading),
   scheduleLead: ko(
-    "등록은 혼자나 둘이, 팀은 Day 1 현장에서.\n규칙은 하나에요: AI가 쓴 걸 고치지 말고, 내가 쓴 걸 AI한테 고치게 할 것.\n닷새 안에 다 못 풀어도 괜찮아요. 중요한 건 답보다, 얼마나 깊이 팠는지예요.",
+    "등록은 한 사람씩, 팀은 Day 1 현장에서. 같이 할 사람은 팀 코드로 미리 묶여요.\n규칙은 하나에요: AI가 쓴 걸 고치지 말고, 내가 쓴 걸 AI한테 고치게 할 것.\n닷새 안에 다 못 풀어도 괜찮아요. 중요한 건 답보다, 얼마나 깊이 팠는지예요.",
     d.scheduleLead,
   ),
   facts: kos(
     [
       "한 팀에 한국 학생과 싱가포르 학생이, 직접 만드는 사람과 숫자를 보는 사람이 섞여요.\n나라끼리 겨루는 대항전이 아니라는 뜻이죠.",
-      "노트북은 각자 챙겨 오세요.",
-      "Day 2와 Day 3에 하나씩. 기준은 팀이 같이 있었는지, 한 장이 어떻게 바뀌었는지예요.",
+      "4일 모두 아침부터 저녁까지 열려 있어요. 노트북은 각자 챙겨 오세요.",
+      "Day 2와 Day 3에 하나씩. 기준은 팀이 같이 있었는지, 한 장이 어떻게 바뀌었는지예요.\n해낸 팀이라면 전부, 그날 세션이 끝난 뒤 지원받아요.",
     ],
     d.facts.map((f) => f.v),
   ),
@@ -89,11 +45,12 @@ export const copy = {
     0: ko("어느 회사가 어떤 고민을 들고 오는지 미리 알려 드려요. 자세한 얘기는 Day 1에 회사가 직접.", stage(0).line),
     1: ko("팀을 꾸리고, 그 일에서 누가 어디서 막히는지 하나를 골라요. 왜 거기인지는 팀이 먼저 한 장으로 적어 두세요.", stage(1).line),
     2: ko("고른 병목이 맞는지 멘토를 찾아가 물어봐요.\n일을 해 본 사람은 바로 반박하거든요. 그 말을 듣고 한 장을 고치는 날이에요.", stage(2).line),
-    3: ko("그 병목 하나만 푸는 작은 툴을 만들어요. 회사가 정말 가져다 쓸 수 있을지, 멘토에게 한 번 더 물어보세요.\n일요일은 Zoom이에요. 닷새를 다 현장에서 하면 지치거든요.", stage(3).line),
+    3: ko("그 병목 하나만 푸는 작은 툴을 만들어요. 회사가 정말 가져다 쓸 수 있을지, 멘토에게 한 번 더 물어보세요.\n일요일이라 만들기와 Open tables는 Zoom으로 하고, 멘토만 직접 찾아가요. 닷새를 다 현장에서 하면 지치거든요.", stage(3).line),
     4: ko("이슈를 낸 회사 앞에서 고른 병목과 만든 툴을 발표하고 질문을 받아요.\n회사로서는 같은 고민에 대한 서로 다른 답을 한자리에서 보는 셈이죠.\n끝나면 멘토에게 뭘 만들었는지 한 줄로 먼저 연락해 주세요.", stage(4).line),
   } as Record<number, Phrase>,
 
   chips: {
+    1: kos(["현장에서 팀 꾸리기"], stage(1).chips),
     4: kos(["시상, 마무리"], stage(4).chips),
   } as Record<number, Phrase[]>,
 
@@ -103,14 +60,14 @@ export const copy = {
 
   milestone: {
     // DECIDED 2026-11-08 (docs/mission-card-brief.md S1, S2).
-    2: ko("멘토 만나고, Builder session 듣고, 고친 한 장 올리기", stage(2).milestone!),
+    2: ko("멘토 만나고, 빌더 세션 듣고, 고친 한 장 올리기", stage(2).milestone!),
     3: ko("멘토 만나고, Open tables에서 나누고, 발표 자료 올리기", stage(3).milestone!),
   } as Record<number, Phrase>,
   milestoneConditionsLabel: ko("이걸 다 하면 돼요", d.milestoneConditionsLabel),
   milestoneSubmitLabel: ko("올리는 것", d.milestoneSubmitLabel),
   // DECIDED 2026-11-08 (docs/mission-card-brief.md S3, S4): 조건 넷. kos는 길이가 같을 때만 덮어쓰므로 data/naru.ts의 conditions도 넷입니다.
   conditions: {
-    2: kos(["팀원 절반 넘게 현장에 오기", "멘토 한 분 이상을 절반 넘게 같이 찾아가기", "Builder session에 같이 있기", "반박 들은 대로 한 장을 고쳐서 올리기"], stage(2).milestoneDetail!.conditions),
+    2: kos(["팀원 절반 넘게 현장에 오기", "멘토 한 분 이상을 절반 넘게 같이 찾아가기", "빌더 세션에 같이 있기", "반박 들은 대로 한 장을 고쳐서 올리기"], stage(2).milestoneDetail!.conditions),
     3: kos(["팀원 절반 넘게 Zoom에 들어오기", "멘토 한 분 이상을 절반 넘게 같이 찾아가기", "Open tables에서 어디까지 왔는지 나누기", "발표 자료 올리기"], stage(3).milestoneDetail!.conditions),
   } as Record<number, Phrase[]>,
   // S5~S7: 확인 칩 셋과 카드 아래 두 줄. "시간표 페이지"는 CrossingSeoul이 링크로 그립니다.
@@ -120,8 +77,6 @@ export const copy = {
     pdf: ko("PDF 1장", d.checkLabels.pdf),
   },
   milestoneReward: ko("다 하면 그날 세션이 끝난 뒤 지원을 받아요.", d.milestoneReward),
-  // DECIDED 2026-11-12 (사용자): Day 3 미션의 지원은 마지막 날.
-  milestoneRewardLast: ko("다 하면 마지막 날 지원을 받아요.", d.milestoneRewardLast),
   milestoneUpload: ko("사진과 PDF는 시간표 페이지에서, 날마다 한 번씩.", d.milestoneUpload),
   // 2026-11-08: 펼친 미션 카드(mission-card-brief)부터 이 화면은 submit을 그리지 않습니다. 확인 칩이 대신합니다. 키는 남겨 둡니다.
   submit: {
@@ -133,7 +88,7 @@ export const copy = {
   // 같은 날 사용자("설명이 너무 긴 거 같아"): 네 줄에서 두 줄씩으로.
   sessionDetail: {
     1: kos(["자기 프로덕트를 Lovable로 기획부터 운영까지 해 온 Carraway & Gatsby가 진행해요.", "생각을 화면으로 빨리 띄워, 멘토에게 한 장과 같이 보여 줄 시안을 만드는 법을 배워요."], stage(1).session?.detail ?? []),
-    2: kos(["가짜연구소에서 프로젝트를 책임지는 빌더들이, 자기 기준으로 하나를 남긴 과정을 들려줘요.", "주제는 덜어내기예요. 뭘 쳐내고 어디에 집중했는지, 한 사람씩 30분 안팎으로."], stage(2).session?.detail ?? []),
+    2: kos(["현업 PO 세 명이 뭘 왜 만들기로 했고 어디서 멈췄는지 들려줘요.", "주제는 덜어내기, 하나를 남기려고 뭘 뺐는지예요. 끝엔 셋이 대담해요."], stage(2).session?.detail ?? []),
     3: kos(["만드는 날, 팀과 팀이 Zoom에 모여 어디까지 왔는지 나눠요.", "막힌 지점을 다른 팀에 묻고 서로의 생각을 빌려 가요."], stage(3).session?.detail ?? []),
   } as Record<number, Phrase[]>,
   dayFlowLabel: ko("하루 일정 보기", d.dayFlowLabel),
@@ -182,7 +137,7 @@ export const copy = {
     2: kos(
       [
         "멘토 찾아가기. 잡아 둔 시간에 팀이 같이, 한 장을 들고",
-        "Builder session. 가짜연구소에서 프로젝트를 책임지는 빌더들이 뭘 쳐내고 뭘 남겼는지 들려줘요",
+        "빌더 세션. 현업 PO 세 명이 뭘 왜 만들기로 했고 어디서 멈췄는지 들려주고, 이어서 대담",
         "미션 올리기. 멘토랑 찍은 사진, 고친 한 장 PDF",
       ],
       (stage(2).flow ?? []).map((r) => r.what),
@@ -242,5 +197,5 @@ export const copy = {
     naru.gains.items.map((x) => x.body),
   ),
 
-  leadNote: ko("8월 제로백 빌더톤을 연 AX 컨소시엄, 핵심 회사 다섯 곳", MAIN_LEAD_NOTE),
+  leadNote: ko("컨소시엄 핵심 회사 다섯 곳", decemberPartners.groups[0].lead!.note),
 };

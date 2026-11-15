@@ -2,6 +2,7 @@
 
 // DECIDED 2026-11-13: 미디어 블록. 나루 홈은 행사 이름과 함께 전부, 크로싱 서울은 그 행사 기사만(이름 칸 없이).
 // 왼쪽 11rem 날짜 칸과 오른쪽 매체, 제목. 같은 글이 여러 매체에 실리면(PressGroup) 링크는 매체 이름에.
+// DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): 제목 끝의 ↗를 뺌(naru.community 판).
 import { useLocale } from "@/lib/LocaleContext";
 import { media, naru, type MediaEvent } from "@/data/naru";
 import type { PressEntry } from "@/components/shared/PressRows";
@@ -11,7 +12,8 @@ const FOCUS = "focus-visible:outline focus-visible:outline-2 focus-visible:outli
 const UNDER = "underline decoration-naru-navy/25 underline-offset-[5px] transition-colors hover:decoration-naru-navy";
 const strip = (s: string) => s.replace(/^「(.*)」$/, "$1");
 
-export default function MediaSection({ only }: { only?: MediaEvent }) {
+// chapter: 8월 기록처럼 제목을 다른 장과 같은 12칸 격자에 둡니다(naru.community 판).
+export default function MediaSection({ only, chapter = false }: { only?: MediaEvent; chapter?: boolean }) {
   const { t } = useLocale();
   const all: { event: MediaEvent; item: PressEntry }[] = [
     ...media.crossing.map((item) => ({ event: "crossing" as const, item })),
@@ -23,7 +25,13 @@ export default function MediaSection({ only }: { only?: MediaEvent }) {
   return (
     <section id="media" aria-labelledby="media-title" className="mt-14 lg:mt-20">
       <div className={FRAME}>
-        <h2 id="media-title" className={`${TITLE} ${NAVY}`}>{t(media.heading)}</h2>
+        {chapter ? (
+          <div className="grid gap-4 lg:grid-cols-12 lg:gap-12">
+            <h2 id="media-title" className={`break-keep ${TITLE} ${NAVY} lg:col-span-5`}>{t(media.heading)}</h2>
+          </div>
+        ) : (
+          <h2 id="media-title" className={`${TITLE} ${NAVY}`}>{t(media.heading)}</h2>
+        )}
         <div className="mt-6 lg:mt-8">
           <ul className={`border-t ${RULE}`}>
             {rows.map(({ event, item }) => (
@@ -38,7 +46,6 @@ export default function MediaSection({ only }: { only?: MediaEvent }) {
                       <p className={`${META} font-semibold ${SOFT}`}><span>{t(item.outlet)}</span></p>
                       <a href={item.url} target="_blank" rel="noopener noreferrer" className={`mt-1 inline break-keep ${HEADING} ${INK} ${UNDER} ${FOCUS}`}>
                         {strip(t(item.title))}
-                        <span aria-hidden="true" className={`ml-1.5 ${META} ${SOFT}`}>↗</span>
                         {newTab}
                       </a>
                     </>

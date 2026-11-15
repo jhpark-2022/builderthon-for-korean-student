@@ -24,8 +24,10 @@ import { DISPLAY, TITLE, HEADING, BODY, META, INK, SOFT, NAVY, RULE, FRAME, BTN_
 import { aug as C } from "./copy";
 
 const ZOOM = "relative block aspect-[4/3] w-full cursor-zoom-in overflow-hidden bg-[#F6F4EE] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naru-navy";
-const SUB = `text-[1.125rem] font-bold leading-[1.4] lg:text-[1.25rem] ${INK}`;
-const CARD = "flex h-[5.5rem] items-center justify-center rounded-2xl bg-[#FFFFFF] px-4 ring-1 ring-[#E3E0D8] lg:h-24";
+// DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): naru.community 판. 소제목은 HEADING,
+// 로고 칸은 흰 면 없이 선만, 로고 파일은 최적화 없이 그대로(unoptimized), 날짜는 08.22 꼴(copy.ts).
+const SUB = `${HEADING} ${INK}`;
+const CARD = "flex h-[5.5rem] items-center justify-center rounded-2xl px-4 ring-1 ring-[#E3E0D8] lg:h-24";
 const LOGO = "block h-auto max-h-10 w-auto max-w-[8.5rem] object-contain brightness-0 opacity-75";
 
 type Logo = { name: string; src: string; w: number; h: number };
@@ -49,7 +51,7 @@ function Logos({ list, cols }: { list: Logo[]; cols: string }) {
     <ul className={`mt-3 grid grid-cols-2 gap-3 ${cols}`}>
       {list.map((l) => (
         <li key={l.name} className={CARD}>
-          <Image src={l.src} alt={l.name} width={l.w} height={l.h} className={LOGO} />
+          <Image src={l.src} alt={l.name} width={l.w} height={l.h} unoptimized className={LOGO} />
         </li>
       ))}
     </ul>
@@ -88,12 +90,13 @@ export default function Aug2026() {
 
         {/* ── 숫자 ─────────────────────────────────────────────── */}
         <Chapter id="numbers" title={t(C.numbersTitle)}>
-          <ol className={`grid border-t ${RULE} sm:grid-cols-2 lg:grid-cols-4`}>
+          {/* DECIDED 2026-11-15 (naru.community 판): 숫자 넷은 네 칸 격자가 아니라 한 줄씩(숫자, 무엇, 한마디). */}
+          <ol className={`border-t ${RULE}`}>
             {C.numbers.map((n, i) => (
-              <li key={i} className={`border-b ${RULE} py-5 sm:pr-6 lg:border-b-0 lg:py-6 ${i > 0 ? "lg:border-l lg:pl-6" : ""}`}>
-                <p className={`${TITLE} tabular-nums ${i === 3 ? "text-naru-orange" : NAVY}`}>{t(n.value)}</p>
-                <p className={`mt-1 break-keep ${BODY} font-semibold ${INK}`}>{t(n.label)}</p>
-                {n.note && <p className={`mt-0.5 ${META} ${SOFT}`}>{t(n.note)}</p>}
+              <li key={i} className={`flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b ${RULE} py-4 lg:py-5`}>
+                <span className={`w-[4.5rem] shrink-0 ${HEADING} tabular-nums ${i === 3 ? "text-naru-orange" : NAVY}`}>{t(n.value)}</span>
+                <span className={`break-keep ${BODY} font-semibold ${INK}`}>{t(n.label)}</span>
+                {n.note && <span className={`${META} ${SOFT}`}>{t(n.note)}</span>}
               </li>
             ))}
           </ol>
@@ -168,7 +171,7 @@ export default function Aug2026() {
             <div>
               <h3 className={SUB}>{t(C.hostLabel)}</h3>
               <div className="mt-3 flex items-center gap-5 rounded-2xl bg-[#F0EEE8] px-5 py-4 lg:px-7">
-                <Image src={C.hostMark.src} alt={C.hostMark.name} width={C.hostMark.w} height={C.hostMark.h} className="block h-7 w-auto shrink-0" />
+                <Image src={C.hostMark.src} alt={C.hostMark.name} width={C.hostMark.w} height={C.hostMark.h} unoptimized className="block h-7 w-auto shrink-0" />
                 <span className={`min-w-0 break-keep ${META} ${SOFT}`}>{t(C.hostLine)}</span>
               </div>
               <Logos list={C.hosts} cols="sm:grid-cols-5" />
@@ -184,7 +187,7 @@ export default function Aug2026() {
           </div>
         </Chapter>
 
-        <MediaSection only="zero100" />
+        <MediaSection only="zero100" chapter />
 
         {/* ── 고마운 이름들 ─────────────────────────────────────────────── */}
         <Chapter id="thanks" title={t(C.thanksTitle)} last>

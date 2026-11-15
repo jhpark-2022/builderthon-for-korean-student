@@ -4,7 +4,7 @@ import { track } from "@vercel/analytics";
 import { trackOpenChat } from "@/lib/openChatCount";
 import { coreDict as dict, links, type Phrase } from "@/data/dictionaryCore";
 import ChatGlyph from "@/components/ChatGlyph";
-import { buttonClass, ARROW_CLASS } from "@/components/ui/Button";
+import { buttonClass } from "@/components/ui/Button";
 
 type Tfn = (p: Phrase) => string;
 
@@ -70,6 +70,7 @@ export default function OpenChatLink({
   describedBy?: string;
 }) {
   if (!links.openChat) return null;
+  // DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): naru.community 판. 끝의 →를 뺐고, 고스트 칩의 모서리는 사이트 버튼과 같은 10px.
   if (variant === "hero" || variant === "secondary") {
     return (
       <a
@@ -82,7 +83,6 @@ export default function OpenChatLink({
       >
         <ChatGlyph className="h-[18px] w-[18px]" />
         {t(label ?? dict.register.openChatCta)}
-        <span aria-hidden className={variant === "hero" ? ARROW_CLASS : "text-white/50"}>→</span>
       </a>
     );
   }
@@ -100,11 +100,10 @@ export default function OpenChatLink({
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => trackOpenChat(src)}
-      className={`inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full border border-white/20 bg-white/[0.06] px-[18px] py-[11.25px] text-center text-sm sm:text-base font-medium leading-relaxed text-white/85 transition-[background-color,border-color,transform] duration-150 active:scale-[0.98] hover:border-white/35 hover:bg-white/10 hover:text-white ${className}`}
+      className={`inline-flex min-h-[44px] items-center justify-center gap-2 rounded-[10px] border border-white/20 bg-white/[0.06] px-[18px] py-[11.25px] text-center text-sm sm:text-base font-medium leading-relaxed text-white/85 transition-[background-color,border-color,transform] duration-150 active:scale-[0.98] hover:border-white/35 hover:bg-white/10 hover:text-white ${className}`}
     >
       <ChatGlyph className="h-4 w-4 shrink-0" />
       {t(label ?? dict.register.openChatCta)}
-      <span aria-hidden className="text-white/50">→</span>
     </a>
   );
 }

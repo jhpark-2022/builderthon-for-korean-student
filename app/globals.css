@@ -688,3 +688,8 @@ img[src^="/logos/"]:not(.ink-scope img), img[src*="url=%2Flogos%2F"]:not(.ink-sc
 /* DECIDED 2026-11-05 (폰 점검: /2026-08 등에 12px 글자 201개, 한 화면 크기 넷 초과): Tailwind text-xs(12px)를 META(13px)로 올립니다.
    글자 크기 넷(TITLE/SUBTITLE/BODY/META) 안으로. 파일 끝이라 utilities를 이깁니다. */
 .text-xs { font-size: 0.8125rem; line-height: 1.25rem; }
+
+/* DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): /crossing 닷새 노선의 정거장.
+   스크롤로 지나간 정거장이 한 번 커졌다 돌아옵니다(CrossingSeoul의 Stop). 움직임을 끈 사람에게는 없습니다. */
+@keyframes naruStopPop { 0% { transform: scale(1); } 45% { transform: scale(1.7); } 100% { transform: scale(1); } }
+html[data-motion="off"] [class*="naruStopPop"] { animation: none !important; }
