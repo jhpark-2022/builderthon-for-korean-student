@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-15 폰 화면 점검](#2026-11-15-mobile-audit)
 - [2026-11-15 naru.community 판으로 맞춤](#2026-11-15-naru-community)
 - [2026-11-14 등록 폼 디자인 점검 반영](#2026-11-14-register-form-review)
 - [2026-11-14 Supabase 전체 점검 (규칙 30개 통과)](#2026-11-14-supabase-check)
@@ -574,6 +575,15 @@
 ### 2026-06
 
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
+
+---
+
+<a id="2026-11-15-mobile-audit"></a>
+## 2026-11-15 폰 화면 점검
+- 범위: components/shared/SiteHeader.tsx, components/crossing/redesign/CrossingSeoul.tsx, components/naru/ManifestoViewer.tsx
+- 한 것: 사용자 요청("audit the mobile views and make edit for the part that looks not well"). iPhone 13 너비로 /crossing, 홈, /2026-08을 보고 넷을 고침. 목차 줄이 맨 위로 돌아와도 밀린 채 남아 첫 칸이 반쯤 잘리던 것(지금 칸이 없으면 처음으로, 옮길 때는 지금 칸을 왼쪽 끝에). 연사 사진이 글 높이만큼 늘어나던 것을 폰에서 4:5로. 주최와 8월부터 함께한 곳 칸의 설명을 폰에서 로고 아래로. 홈 매니페스토의 화살표가 표지 글을 가려 폰에서 숨김. 근거: brand 10장 사이트 규칙(글은 하나의 축, 사진은 둥근 카드 안).
+- 검증: 로컬 build 뒤 같은 너비로 네 곳 다시 찍어 확인. 등록 서버와 Supabase는 건드리지 않음.
+- 커밋: bda4c14
 
 ---
 
