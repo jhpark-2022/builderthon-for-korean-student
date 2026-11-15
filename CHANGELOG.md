@@ -582,7 +582,7 @@
 - 범위: components/crossing/redesign(CrossingSeoul, copy), RegisterModal, RegisterProvider, data/crossingForm.ts, data/naru.ts, app/api/crossing/register, NaruHome, archive/redesign, shared(SiteHeader, MediaSection, redesign), OpenChatLink, lib(registrationWindow, ogCards, crossingMeta), globals.css, 출제사 로고 셋, docs/brand.md, docs/README.md
 - 한 것: 사용자 요청("https://naru.community/crossing 이거 대로 내 version update 해줘", "전부 그대로"). 다른 기여자가 GitHub 밖에서 올린 naru.community 배포(11-11 main 7d5e673 위에 수정)를 화면과 번들에서 되살려 옮김. 11-12~11-14의 포스터 히어로, 로고 띠, dedupe, Builder session, 둘이 한 팀 등록은 그 판으로 되돌림.
 - /crossing: 날짜 줄 2026.12.17–12.21, 날마다 카드 안 일정 목록(연사 카드), Day 2, 3 확정 멘토 이름과 소속, 접는 미션과 들고 갈 것, 출제사 줄, 8월부터 함께한 곳, 후원 문의 칸, 미디어, 빌더 세션, 남는 것 다시 목차에.
-- 등록: 한 폼에 한 사람과 선택 칸 팀 코드(10자). 서버는 같은 코드(앞뒤 공백 없이, 대소문자 무시)를 다른 이메일 둘이 이미 썼으면 409 team_code_full. 같은 이메일 재등록은 세지 않고 조용한 201 그대로. 조회 실패는 막지 않음. 둘이 한 팀 경로는 뺐고 0024는 그대로. 여는 때 11-16 0시.
+- 등록: 화면의 폼만 naru.community 판(한 폼에 한 사람과 선택 칸 팀 코드 10자). 등록 서버(app/api/crossing/register)와 여는 때(opensAt null)는 main 그대로 둠. 사용자: "sign up 에 지장을 줄 backend 를 건드는 행동은 일절하지마", 등록은 naru.community에서 받음. 이 배포는 등록을 받지 않음. Supabase는 건드리지 않음.
 - 근거: brand 7장 팀 줄, 5장 문체와 사람 이름 예외, 6장 정체성 사이트 판, 9장 금액(화면에 없음). 같은 커밋에서 고침.
 - 판단 질문: 1 안전하게 도전할 자리(같이 올 사람과 묶일 수 있음), 2 자기 가치(일정과 멘토가 보임).
 - 검증: SSR 글 /, /crossing, /en/crossing, /2026-08, /match, /crossing/team, mentor, vote가 naru.community와 같음. 열린 상태 화면 글과 등록 폼 글(한, 영) 같음. 태그와 클래스 뼈대 같음. 팀 코드 조회는 실제 DB에 읽기만. build 통과.

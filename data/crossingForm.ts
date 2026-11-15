@@ -204,10 +204,18 @@ export function validateField(f: Field, raw: unknown): string | null {
  * 한 사람의 답 전체 검증. {키: 오류 코드}. 서버와 클라이언트가 같이 씁니다.
  * 필드 하나로는 알 수 없는 규칙 하나가 여기 있습니다: 나라가 "그 밖의 나라"면 나라 이름이 필수입니다.
  */
-export function validatePerson(a: Record<string, unknown>): Record<string, string> {
+// DECIDED 2026-11-15 (사용자: "sign up 에 지장을 줄 backend 를 건드는 행동은 일절하지마"): 등록 서버(app/api/crossing/register)는
+// main 판 그대로 둡니다. 그 서버가 읽는 이름 넷을 여기 남겨 둡니다. 폼은 둘이 한 팀을 보내지 않습니다. 등록은 naru.community에서 받습니다.
+export const JOIN_SOLO = "solo";
+export const JOIN_TEAM = "team";
+export const TEAM_SIZE = 2;
+export const TEAMMATE_SKIP = ["ai_level"];
+
+export function validatePerson(a: Record<string, unknown>, teammate = false): Record<string, string> {
   const e: Record<string, string> = {};
   const other = a.study_country === COUNTRY_OTHER;
   for (const f of MEMBER_FIELDS) {
+    if (teammate && TEAMMATE_SKIP.includes(f.key)) continue;
     if (f.key === COUNTRY_OTHER_KEY && !other) continue;
     const err = validateField(f.key === COUNTRY_OTHER_KEY ? { ...f, required: true } : f, a[f.key]);
     if (err) e[f.key] = err;
