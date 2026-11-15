@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-15 신청자 명단 뷰 crossing_applicants (0025)](#2026-11-15-applicants-view)
 - [2026-11-14 등록 폼 디자인 점검 반영](#2026-11-14-register-form-review)
 - [2026-11-14 Supabase 전체 점검 (규칙 30개 통과)](#2026-11-14-supabase-check)
 - [2026-11-14 등록을 혼자 또는 둘이 한 팀으로](#2026-11-14-pair-registration)
@@ -575,6 +576,14 @@
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
 
 ---
+
+<a id="2026-11-15-applicants-view"></a>
+## 2026-11-15 신청자 명단 뷰 crossing_applicants (0025)
+- 범위: supabase/migrations/0025_crossing_applicants_view.sql(새 뷰 하나, 표 변경 없음)
+- 한 것: 사용자 요청. 12월 신청자를 이름, 이메일, 카톡 ID, 학교, 공부하는 나라, 전공, AI 번호(0~4), team code, 링크드인 순서로 한 화면에. 폼에는 팀 코드가 없어 둘이 한 팀이면 등록 id 앞 6자리를 같은 코드로, 혼자는 비움. 기타 나라는 적은 이름. crossing_participants는 명단 스크립트가 select=*로 읽어 그대로 둠. 근거: brand 7장 팀 줄(둘이 한 팀).
+- 판단 질문: 운영 도구라 화면 글은 바뀌지 않음. 둘이 온 사람을 Day 1에 같은 팀으로 넣는 데 씀(1 안전하게 도전할 자리).
+- 검증: supabase db query --linked로 적용(pooler 직접 접속은 시간 초과), 적용 기록 25개. REST service_role로 3행, 열 순서 확인. anon 401.
+- 커밋: (이 커밋)
 
 <a id="2026-11-14-register-form-review"></a>
 ## 2026-11-14 등록 폼 디자인 점검 반영
