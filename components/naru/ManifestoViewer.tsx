@@ -178,8 +178,9 @@ export default function ManifestoViewer({ locale, t }: Props) {
         ))}
         <span aria-hidden className="w-[calc((100%-min(78vw,420px))/2-12px)] shrink-0 sm:w-[calc((100%-420px)/2-16px)]" />
       </div>
-      <Arrow dir="prev" onClick={() => step(-1)} disabled={false} label={prevLabel} className="absolute left-[4px] top-1/2 z-10 -translate-y-1/2 sm:left-[12px]" />
-      <Arrow dir="next" onClick={() => step(1)} disabled={false} label={nextLabel} className="absolute right-[4px] top-1/2 z-10 -translate-y-1/2 sm:right-[12px]" />
+      {/* DECIDED 2026-11-15 (모바일 점검): 폰에서는 화살표가 표지 글 위에 얹혀 가려서 숨깁니다. 폰은 밀어 넘기기와 아래 점으로 넘깁니다(크게 보기와 같음). */}
+      <Arrow dir="prev" onClick={() => step(-1)} disabled={false} label={prevLabel} className="absolute left-[4px] top-1/2 z-10 hidden -translate-y-1/2 sm:left-[12px] sm:flex" />
+      <Arrow dir="next" onClick={() => step(1)} disabled={false} label={nextLabel} className="absolute right-[4px] top-1/2 z-10 hidden -translate-y-1/2 sm:right-[12px] sm:flex" />
       </div>
       {/* 애플식 점 줄: 지금 쪽은 길쭉한 알약이 되어 3.5초 동안 차오르고, 나머지는 점. 점을 누르면 그 쪽으로. 오른쪽에 재생/정지. */}
       <div className="mt-[16px] flex items-center justify-center gap-[8px]">

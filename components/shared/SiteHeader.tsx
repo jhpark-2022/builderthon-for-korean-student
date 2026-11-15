@@ -84,12 +84,14 @@ export default function SiteHeader({ page }: { page: SitePage }) {
   // 더 밀려, 지금 칸(프로그램)이 왼쪽으로 숨었습니다. 줄 기준으로 재고, 칸이 이미 보이면 움직이지 않습니다.
   useEffect(() => {
     const rail = railRef.current;
-    const current = rail?.querySelector<HTMLElement>(`a[href="#${active ?? "top"}"]`);
-    if (!rail || !current || rail.scrollWidth <= rail.clientWidth + 1) return;
+    if (!rail || rail.scrollWidth <= rail.clientWidth + 1) return;
+    const current = rail.querySelector<HTMLElement>(`a[href="#${active ?? "top"}"]`);
+    // DECIDED 2026-11-15 (모바일 점검): 맨 위로 돌아오면(지금 칸이 줄에 없으면) 줄도 처음으로. 오른쪽으로 옮길 때는 지금 칸의
+    // 왼쪽 끝을 줄의 왼쪽 끝에 맞춰, 앞 칸이 반쯤 잘린 채("프로그램"이 "램"으로) 남지 않게 합니다.
+    if (!current) { rail.scrollLeft = 0; return; }
     const r = rail.getBoundingClientRect(), c = current.getBoundingClientRect();
     const fade = 32; // 오른쪽 끝의 흐려지는 폭(mask)
-    if (c.left < r.left) rail.scrollLeft += c.left - r.left;
-    else if (c.right > r.right - fade) rail.scrollLeft += c.right - (r.right - fade);
+    if (c.left < r.left || c.right > r.right - fade) rail.scrollLeft += c.left - r.left;
   }, [active]);
 
   const jump = (event: React.MouseEvent<HTMLAnchorElement>, id: string) => {

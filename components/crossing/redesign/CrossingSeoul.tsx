@@ -271,7 +271,9 @@ function logoSize(l: { w: number; h: number; boost?: boolean }, area: number, ma
 
 const CARD = "flex h-[5.5rem] items-center justify-center rounded-2xl px-3 ring-1 ring-[#E3E0D8] lg:h-24";
 const CARD_LINK = "transition-colors hover:bg-[#F6F4EE] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naru-navy";
-const BANNER = "flex min-h-[5rem] items-center gap-5 rounded-2xl bg-[#F0EEE8] px-5 py-4 transition-colors hover:bg-[#E9E6DE] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naru-navy lg:px-7";
+// DECIDED 2026-11-15 (모바일 점검): 폰에서는 로고 아래에 설명을 둡니다. 옆에 두면 설명이 좁은 칸에서 "곳" 한 글자로 줄을 넘겼습니다.
+// 연사 사진도 폰에서는 4:5 한 장(글 높이만큼 늘어나 긴 띠가 되던 것).
+const BANNER = "flex min-h-[5rem] flex-col items-start gap-3 rounded-2xl sm:flex-row sm:items-center sm:gap-5 bg-[#F0EEE8] px-5 py-4 transition-colors hover:bg-[#E9E6DE] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naru-navy lg:px-7";
 /** 줄마다 칸 수가 같고, 남는 마지막 줄은 가운데로 모입니다. 칸 너비는 gap-3(0.75rem) 기준입니다. */
 const ROW5 = "w-[calc((100%-0.75rem)/2)] sm:w-[calc((100%-3rem)/5)]";
 const ROW4 = "w-[calc((100%-0.75rem)/2)] sm:w-[calc((100%-1.5rem)/3)] lg:w-[calc((100%-2.25rem)/4)]";
@@ -564,7 +566,7 @@ export default function CrossingSeoul() {
                                         {sp && (
                                           <div className="mt-2 flex gap-4">
                                             {sp.photo && (
-                                              <span className="relative w-20 shrink-0 self-stretch overflow-hidden rounded-xl sm:w-24">
+                                              <span className="relative aspect-[4/5] w-20 shrink-0 self-start overflow-hidden rounded-xl sm:aspect-auto sm:w-24 sm:self-stretch">
                                                 <Image src={sp.photo} alt="" fill sizes="96px" className="object-cover" />
                                               </span>
                                             )}
