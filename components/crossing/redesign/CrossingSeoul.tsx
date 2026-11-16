@@ -287,8 +287,19 @@ const ROW5 = "w-[calc((100%-0.75rem)/2)] sm:w-[calc((100%-3rem)/5)]";
 const ROW4 = "w-[calc((100%-0.75rem)/2)] sm:w-[calc((100%-1.5rem)/3)] lg:w-[calc((100%-2.25rem)/4)]";
 
 /** 후원사 한 칸. 로고는 카드 가운데, 맡은 일은 카드 아래 한 줄. 링크가 있으면 카드가 링크입니다. */
-function PartnerCell({ l, caption, area, maxH, className = "" }: { l: PartnerLogo; caption?: string; area: number; maxH: number; className?: string }) {
-  const logo = <Image src={l.src} alt={l.name} width={l.w} height={l.h} unoptimized style={logoSize(l, area, maxH, 140)} className="block" />;
+/**
+ * 광학 질량(mass)으로 무게를 맞춘 크기. HeroPartnerStrip과 같은 식: h = h0 · (1.45 / (비율 × mass)) ^ 0.35.
+ * DECIDED 2026-11-16 (사용자: "로고 사이즈 동일하게"): 출제사 줄 셋. h0 28이면 가장 넓은 로고도 140px 안이라 셋이 같은 비례로 줄어듭니다.
+ */
+function inkSize(l: PartnerLogo, h0: number) {
+  const r = l.w / l.h;
+  // 정사각 마크(레이지 요거트)는 가는 선과 빈 속 때문에 같은 질량에서도 가벼워 보여 1.25배, 칸 높이 안(68px)에서.
+  const h = Math.min(68, h0 * Math.pow(1.45 / (r * (l.mass ?? 0.42)), 0.35) * (l.square ? 1.25 : 1));
+  return { width: Math.round(h * r), height: Math.round(h) };
+}
+
+function PartnerCell({ l, caption, area, maxH, size, className = "" }: { l: PartnerLogo; caption?: string; area: number; maxH: number; size?: { width: number; height: number }; className?: string }) {
+  const logo = <Image src={l.src} alt={l.name} width={l.w} height={l.h} unoptimized style={size ?? logoSize(l, area, maxH, 140)} className="block" />;
   return (
     <div className={className}>
       {l.url ? (
@@ -728,7 +739,7 @@ export default function CrossingSeoul() {
                     <h3 className={`${HEADING} ${INK}`}>{t({ ko: "출제사", en: "Problem setters" })}</h3>
                     <div className="mt-3 flex flex-wrap justify-center gap-3">
                       {problemSetters.map((l) => (
-                        <PartnerCell key={l.name} l={l} area={l.square ? 5200 : 3000} maxH={l.square ? 68 : 40} className={ROW4} />
+                        <PartnerCell key={l.name} l={l} area={l.square ? 5200 : 3000} maxH={l.square ? 68 : 40} size={inkSize(l, 28)} className={ROW4} />
                       ))}
                     </div>
                   </div>

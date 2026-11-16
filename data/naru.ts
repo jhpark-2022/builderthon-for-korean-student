@@ -3682,7 +3682,7 @@ export const naru = {
 // 금액, 무료 여부는 쓰지 않습니다(brand 9장).
 // DECIDED 2026-10-21 (사용자, 스크린숏: "그냥 로고만 보여줘"): 줄마다의 설명은 지웠습니다. 같은 날 (사용자: "role 도 각 row 마다 넣어줘"): 분류 이름(label)은 줄마다 로고 위에 보입니다.
 // ─────────────────────────────────────────────────────────────────────────────
-export type PartnerLogo = { name: string; src: string; w: number; h: number; url?: string; square?: boolean; boost?: boolean };
+export type PartnerLogo = { name: string; src: string; w: number; h: number; url?: string; square?: boolean; boost?: boolean; mass?: number };
 /**
  * 서울 안의 대학교(DECIDED 2026-10-22, 사용자: "서울 안에서 빛이 비추면 안 보이던 한국 대학교 학회 로고가 보이면 좋겠어. 한동대는 일단 빼줘", 같은 날 다시 넣음,
  * 이어서 "로고는 지금 쓰면 안 되겠다. 대학교 로고로 해줘"). 학회 로고는 쓰지 않고, 함께하는 학회가 있는 대학교의 휘장을 씁니다.
@@ -3721,9 +3721,12 @@ export const singaporeCampuses: { name: Phrase; src: string; w: number; h: numbe
 // DECIDED 2026-11-15 (사용자: "https://naru.community/crossing 이거 대로 내 version update 해줘"): 이슈를 낸 회사(출제사) 줄. /crossing 함께하는 곳에서 주최 다음, "8월부터 함께한 곳" 앞에 섭니다.
 // square: 정사각 로고는 넓이를 키워 다른 로고와 같은 무게로 보이게 합니다(CrossingSeoul의 PartnerCell).
 export const problemSetters: PartnerLogo[] = [
-  { name: "Lazy Yogurt", src: "/partners/logos/paper/lazy-yogurt.webp", w: 447, h: 447, square: true },
-  { name: "Feed Media", src: "/partners/logos/paper/feed-media.webp", w: 1670, h: 259 },
-  { name: "GroupBy", src: "/partners/logos/paper/groupby.webp", w: 845, h: 277 },
+  // DECIDED 2026-11-16 (사용자, 스크린숏: "로고 사이즈 동일하게, 그리고 레이지 요거트 logo image background 가 색깔이 이상함"):
+  // 레이지 요거트는 초록 네모를 걷고 흰 선을 그 초록(#085547)으로, Feed Media는 흰 바탕을 걷음. 셋 다 여백을 잘라 png로.
+  // mass는 scripts/measure-logo-mass.py의 광학 질량이고, 출제사 줄은 이 값으로 셋의 무게를 맞춥니다(CrossingSeoul의 inkSize).
+  { name: "Lazy Yogurt", src: "/partners/logos/paper/lazy-yogurt.png", w: 368, h: 370, square: true, mass: 0.225 },
+  { name: "Feed Media", src: "/partners/logos/paper/feed-media.png", w: 1670, h: 259, mass: 0.499 },
+  { name: "GroupBy", src: "/partners/logos/paper/groupby.png", w: 765, h: 144, mass: 0.336 },
 ];
 
 // DECIDED 2026-10-22 (사용자, 스크린숏: "AXMOS라는 컨소시엄 안에 이 5개의 회사가 있다는 느낌을 더 보여줘"): 메인 후원 줄은 AXMOS(lead)가 위에,
