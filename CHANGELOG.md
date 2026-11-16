@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-16 프로그램 빈 화면](#2026-11-16-reveal-fix)
 - [2026-11-16 상금 후원에 법무법인 웨이브](#2026-11-16-lawfirm-wave)
 - [2026-11-15 폰 화면 점검](#2026-11-15-mobile-audit)
 - [2026-11-15 naru.community 판으로 맞춤](#2026-11-15-naru-community)
@@ -576,6 +577,16 @@
 ### 2026-06
 
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
+
+---
+
+<a id="2026-11-16-reveal-fix"></a>
+## 2026-11-16 프로그램 빈 화면
+- 범위: components/crossing/redesign/CrossingSeoul.tsx(useReveal, ROW_REVEAL, DetailRow)
+- 한 것: 사용자 요청(docs/reveal-fix-brief.md R1, R2만). /crossing 닷새 카드의 줄(일정, 미션, 멘토)이 중간부터 보이면 끝내 뜨지 않던 것. 관찰하는 줄에서 clip-path를 빼 dt와 dd로 옮기고(R1), 한 번 나타난 것은 다시 숨기지 않음(R2). 글, 레이아웃, 시간과 곡선 값은 그대로. 근거: brand 2장 판단 질문 2(누가 와서 무엇을 하는지가 보여야 함).
+- 검증(390×844 / 1440×900, 전과 뒤 각 3번 같은 값): 가장 긴 줄(일정) 맨 위를 화면 위 300px에 두고 2초 뒤 false/false → true/true. /match에서 뒤로 3초 뒤 화면 위쪽 78% 안의 빈 넓이 45%/33% → 0%/0%. 목차 "등록" 뒤 120px씩 위로, 25% 넘게 빈 걸음 11/79, 4/52 → 0. 끝까지 내려갔다 천천히 올라오면 다시 숨는 줄 9/9 → 0, 다시 쳐지는 단계 이름 5/5 → 0. 천천히 내려온 Day 1, 2 화면 픽셀 차이 0. 움직임 끔에서 줄 9/9 보임. tsc, build 통과.
+- 브리프: docs/reveal-fix-brief.md
+- 커밋: 5f5d633
 
 ---
 
