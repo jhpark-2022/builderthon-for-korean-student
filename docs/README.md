@@ -99,6 +99,7 @@
 | 11-08 | `booking-cutoff-brief.md` | 멘토 칸 마감, 팀 간격 2시간, 칸 수 제한 없음 | 적용(0022) (ca5ce6b) |
 | 11-13 | `proofs-once-brief.md` | 미션 인증 한 번만을 DB에서도, 이슈 브리프 버킷을 마이그레이션에 | 적용(0023, DB는 11-13에 적용) |
 | 11-14 | `pair-registration-brief.md` | 등록을 혼자 또는 둘이 한 팀으로, 팀 짜기 명단에 pair_with | 적용(0024, DB는 11-14에 적용). 폼은 2026-11-15 naru.community 판의 팀 코드(answers.team_code, 한 코드에 둘)가 대체. 표와 0024는 그대로 |
+| 11-16 | `reveal-fix-brief.md` | 닷새 카드의 줄이 중간부터 보여도 나타나게(R1), 한 번 나타나면 그대로(R2) | 적용 |
 
 ### 등록과 도구 페이지
 

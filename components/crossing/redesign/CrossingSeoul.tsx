@@ -127,32 +127,40 @@ function Disclosure({ id, title, groups }: { id: string; title: string; groups: 
   );
 }
 
-/** 화면에 들어오면 보이고, 화면 아래로 다시 나가면 숨깁니다(위로 지나간 것은 그대로). */
+/**
+ * 화면 위쪽 78% 안에 들어오면 보입니다.
+ * DECIDED 2026-11-16 (docs/reveal-fix-brief.md R2): 한 번 나타난 것은 다시 숨기지 않고, 켜진 뒤에는 관찰을 끊습니다(RevealGroup과 같은 방식).
+ * 그 전에는 화면 아래로 나간 줄을 다시 숨겨, 오르내릴 때마다 약 1초의 등장을 되풀이했습니다. 단계 이름(TypeHeading)도 한 번만 쳐집니다.
+ */
 function useReveal<T extends HTMLElement>() {
   const ref = useRef<T>(null);
   const [shown, setShown] = useState(false);
   useEffect(() => {
     const el = ref.current;
     if (!el || typeof IntersectionObserver === "undefined") { setShown(true); return; }
-    const enter = new IntersectionObserver(([e]) => { if (e.isIntersecting) setShown(true); }, { rootMargin: "0px 0px -22% 0px" });
-    const leave = new IntersectionObserver(([e]) => { if (!e.isIntersecting && e.boundingClientRect.top > 0) setShown(false); });
-    enter.observe(el);
-    leave.observe(el);
-    return () => { enter.disconnect(); leave.disconnect(); };
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setShown(true); io.disconnect(); } }, { rootMargin: "0px 0px -22% 0px" });
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
   return { ref, shown };
 }
 
+// DECIDED 2026-11-16 (docs/reveal-fix-brief.md R1): 관찰하는 바깥 줄에는 clip-path를 두지 않습니다. 숨은 동안 그 요소의 보이는 넓이가
+// 맨 위 선 하나라, 줄의 맨 위가 화면 위로 지나간 뒤에는 몸통이 화면에 있어도 끝내 나타나지 않았습니다(뒤로 가기, 목차로 건너뛴 뒤 위로).
+// 바깥 줄은 opacity, transform, blur만 갖고, 위에서 아래로 열리는 clip-path는 안의 dt와 dd가 group-data-[shown=true]/row로 받습니다.
+// 시간과 곡선 값은 그 전과 같습니다.
 const ROW_REVEAL =
-  "origin-top transition-[opacity,clip-path,transform,filter] duration-[1000ms] ease-[cubic-bezier(0.16,1,0.3,1)] opacity-0 translate-y-6 scale-[0.985] blur-[2px] [clip-path:inset(0_0_100%_0)] data-[shown=true]:translate-y-0 data-[shown=true]:scale-100 data-[shown=true]:blur-0 data-[shown=true]:opacity-100 data-[shown=true]:[clip-path:inset(0_0_0_0)] motion-reduce:translate-y-0 motion-reduce:scale-100 motion-reduce:blur-0 motion-reduce:opacity-100 motion-reduce:[clip-path:none] motion-reduce:transition-none [html[data-motion=off]_&]:translate-y-0 [html[data-motion=off]_&]:scale-100 [html[data-motion=off]_&]:blur-0 [html[data-motion=off]_&]:opacity-100 [html[data-motion=off]_&]:[clip-path:none] [html[data-motion=off]_&]:transition-none";
+  "origin-top transition-[opacity,transform,filter] duration-[1000ms] ease-[cubic-bezier(0.16,1,0.3,1)] opacity-0 translate-y-6 scale-[0.985] blur-[2px] data-[shown=true]:translate-y-0 data-[shown=true]:scale-100 data-[shown=true]:blur-0 data-[shown=true]:opacity-100 motion-reduce:translate-y-0 motion-reduce:scale-100 motion-reduce:blur-0 motion-reduce:opacity-100 motion-reduce:transition-none [html[data-motion=off]_&]:translate-y-0 [html[data-motion=off]_&]:scale-100 [html[data-motion=off]_&]:blur-0 [html[data-motion=off]_&]:opacity-100 [html[data-motion=off]_&]:transition-none";
+const ROW_CLIP =
+  "transition-[clip-path] duration-[1000ms] ease-[cubic-bezier(0.16,1,0.3,1)] [clip-path:inset(0_0_100%_0)] group-data-[shown=true]/row:[clip-path:inset(0_0_0_0)] motion-reduce:[clip-path:none] motion-reduce:transition-none [html[data-motion=off]_&]:[clip-path:none] [html[data-motion=off]_&]:transition-none";
 
 /** 닷새 카드 안의 한 줄(일정, 미션, 멘토). 왼쪽 이름, 오른쪽 내용. */
 function DetailRow({ label, first, children }: { label: string; first?: boolean; children: ReactNode }) {
   const { ref, shown } = useReveal<HTMLDivElement>();
   return (
-    <div ref={ref} data-shown={shown} className={`group grid gap-1.5 py-4 sm:grid-cols-[5rem_minmax(0,1fr)] sm:gap-5 ${ROW_REVEAL} ${first ? "" : `border-t ${RULE}`}`}>
-      <dt className={`${META} font-semibold text-caption sm:pt-[3px]`}>{label}</dt>
-      <dd className="min-w-0">{children}</dd>
+    <div ref={ref} data-shown={shown} className={`group group/row grid gap-1.5 py-4 sm:grid-cols-[5rem_minmax(0,1fr)] sm:gap-5 ${ROW_REVEAL} ${first ? "" : `border-t ${RULE}`}`}>
+      <dt className={`${META} font-semibold text-caption sm:pt-[3px] ${ROW_CLIP}`}>{label}</dt>
+      <dd className={`min-w-0 ${ROW_CLIP}`}>{children}</dd>
     </div>
   );
 }
