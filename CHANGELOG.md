@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-16 상금 후원에 법무법인 웨이브](#2026-11-16-lawfirm-wave)
 - [2026-11-15 폰 화면 점검](#2026-11-15-mobile-audit)
 - [2026-11-15 naru.community 판으로 맞춤](#2026-11-15-naru-community)
 - [2026-11-14 등록 폼 디자인 점검 반영](#2026-11-14-register-form-review)
@@ -575,6 +576,15 @@
 ### 2026-06
 
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
+
+---
+
+<a id="2026-11-16-lawfirm-wave"></a>
+## 2026-11-16 상금 후원에 법무법인 웨이브
+- 범위: data/naru.ts(상금 후원 묶음), public/partners/logos/paper/lawfirm-wave.png, components/crossing/redesign/CrossingSeoul.tsx, components/shared/HeroPartnerStrip.tsx
+- 한 것: 사용자 요청("상금 후원에 여기도 크로싱 tab 에 추가", 로고 이미지). 도시락eSIM 옆 상금 후원 두 번째 칸. 준 이미지의 흰 여백만 잘라 원래 색 그대로, 링크와 금액 없음(brand 9장). 마름모 아래 두 줄 글자가 높이 42에서 읽히지 않아, 후원 칸의 정사각 로고는 출제사 줄처럼 더 크게(Terminal도 같이).
+- 검증: build 통과. 데스크톱 1280, 폰 390 너비로 후원 칸을 찍어 확인.
+- 커밋: 466386c
 
 ---
 
