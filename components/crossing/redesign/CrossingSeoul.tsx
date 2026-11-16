@@ -748,7 +748,8 @@ export default function CrossingSeoul() {
                     <h3 className={`${HEADING} ${INK}`}>{t({ ko: "후원", en: "Sponsors and partners" })}</h3>
                     <div className="mt-3 flex flex-wrap justify-center gap-x-3 gap-y-5">
                       {others.map(({ l, caption }) => (
-                        <PartnerCell key={l.name} l={l} caption={caption} area={2600} maxH={42} className={ROW4} />
+                        // DECIDED 2026-11-16 (법무법인 웨이브를 넣으며): 마름모 아래 두 줄 글자인 정사각 로고는 높이 42에서 글자가 읽히지 않아, 출제사 줄처럼 더 큰 넓이와 높이.
+                        <PartnerCell key={l.name} l={l} caption={caption} area={l.square ? 4400 : 2600} maxH={l.square ? 64 : 42} className={ROW4} />
                       ))}
                       <div className={ROW4}>
                         <a

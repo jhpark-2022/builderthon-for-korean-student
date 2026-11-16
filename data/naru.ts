@@ -3781,7 +3781,12 @@ export const decemberPartners: { heading: Phrase; groups: { label: Phrase; lead?
     // App Store 판매자 Wide Mobile Co., Ltd.). 흰 바탕만 걷은 원래 색입니다. 금액은 쓰지 않습니다(brand 9장). 사이트가 열리지 않아 링크 없이 둡니다.
     {
       label: { ko: "상금 후원", en: "Prize sponsor" },
-      logos: [{ name: "와이드모바일 도시락eSIM WideMobile", src: "/partners/logos/paper/dosirak-esim.png", w: 846, h: 122 }],
+      // DECIDED 2026-11-16 (사용자: "상금 후원에 여기도 크로싱 tab 에 추가", 법무법인 웨이브 로고 이미지). 사용자가 준 이미지의 흰 여백을 잘라
+      // 바탕만 걷은 원래 색. 마름모 아래 두 줄 글자라 square 높이. 링크 없이 둡니다.
+      logos: [
+        { name: "와이드모바일 도시락eSIM WideMobile", src: "/partners/logos/paper/dosirak-esim.png", w: 846, h: 122 },
+        { name: "법무법인 웨이브 Lawfirm WAVE", src: "/partners/logos/paper/lawfirm-wave.png", w: 618, h: 465, square: true },
+      ],
     },
     // DECIDED 2026-11-06 (사용자: "terminal espresso house (다과지원) 넣어줘"). 원본은 CI/Terminal Espresso House.jpeg(검정 바탕 흰 글자)이고,
     // 바탕을 걷어 흰 실루엣으로(크림 위에서는 globals.css가 잉크 색으로). 사람 그림 아래 두 줄 글자라 크라이치즈버거처럼 square 높이.
