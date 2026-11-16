@@ -8,6 +8,7 @@
 
 ### 2026-11
 
+- [2026-11-16 출제사 로고 크기와 레이지 요거트 바탕](#2026-11-16-problem-setter-logos)
 - [2026-11-16 프로그램 빈 화면](#2026-11-16-reveal-fix)
 - [2026-11-16 상금 후원에 법무법인 웨이브](#2026-11-16-lawfirm-wave)
 - [2026-11-15 폰 화면 점검](#2026-11-15-mobile-audit)
@@ -577,6 +578,15 @@
 ### 2026-06
 
 - [2026-06-15 Design-revamp polish cycle](#changelog-june-15-2026)
+
+---
+
+<a id="2026-11-16-problem-setter-logos"></a>
+## 2026-11-16 출제사 로고 크기와 레이지 요거트 바탕
+- 범위: data/naru.ts(problemSetters), public/partners/logos/paper/lazy-yogurt.png, feed-media.png, groupby.png, components/crossing/redesign/CrossingSeoul.tsx(inkSize)
+- 한 것: 사용자 요청(스크린숏, "로고 사이즈 동일하게", "레이지 요거트 logo image background 가 색깔이 이상함"). 레이지 요거트의 초록 네모를 걷고 선을 그 초록으로, Feed Media의 흰 바탕을 걷음. 출제사 줄 셋은 광학 질량으로 크기를 맞춤(가는 선의 정사각 마크는 1.25배). 근거: brand 10장 색(크림 위에, 글자와 점의 색은 같다), 로고 비율은 그대로.
+- 검증: tsc, build 통과. 1280과 390 너비에서 67x67, 137x21, 138x26.
+- 커밋: 52aa0a5
 
 ---
 
